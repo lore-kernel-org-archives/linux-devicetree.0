@@ -1,84 +1,142 @@
-From: Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v5 0/2] arm64: Add basic support for Marvell Berlin4CT
- SoC
-Date: Thu, 30 Jul 2015 11:57:27 +0200
-Message-ID: <55B9F507.8090706@gmail.com>
-References: <1438248922-2919-1-git-send-email-jszhang@marvell.com>
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1438248922-2919-1-git-send-email-jszhang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jisheng Zhang <jszhang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, khilman-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, sudeep.holla-5wv7dgnIgG8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Mikhail Yakshin <greycat@whiteboxes.ch>
+Subject: ARM: dts: sunxi: Regulators at common board layouts
+Date: Thu, 30 Jul 2015 12:45:41 +0300
+Message-ID: <55B9F245.2000300@whiteboxes.ch>
+Mime-Version: 1.0
+Content-Type: multipart/mixed; boundary="===============5233856204809508069=="
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: linux-sunxi@googlegroups.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 07/30/2015 11:35 AM, Jisheng Zhang wrote:
-> Marvell Berlin4CT is a SoC based on 64bit ARMv8 architecture. It contains
-> quad CA53 cores.
->
-> This SoC shares many HW IP with BG2Q and other berlin series. This patchset
-> was tested on Berlin4CT DMP board, and boot to shell ok.
->
-> Since v4:
->   - rebased on the latest next tree
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--===============5233856204809508069==
+Content-Type: multipart/signed; micalg=pgp-sha1;
+ protocol="application/pgp-signature";
+ boundary="Axcpkq2O7U4fGtsmmFBMUT5uP5lpWHvqi"
 
-Jisheng,
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--Axcpkq2O7U4fGtsmmFBMUT5uP5lpWHvqi
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-some git basics, so you get a better idea of the merge process:
+Hi,
 
-Please do not base your patches on linux-next. It is not a stable branch
-I can refer to. Also, if there was any dependency with another feature
-that your patches require, you should mention that dependency by
-pointing out either a floating patch set or even better a _stable_
-topic branch of the feature that will be added in the same cycle you
-expect your patches to be merged.
+I've been analyzing various boards based on Allwinner A20 CPU and
+X-Powers AXP209 PMU (to make a proper configuration for our board,
+Whitebox Labs Watermelon).
 
-AFAIKS, there is no dependency at all so please just base them on -rc1
-(No need to resend, I can take care of it).
+There are some things very common and some things pretty different on
+various boards.
 
-Anyway, I am fine with the series and it has been out for a while now.
-I pick it up, let is set on linux-next for a while and send out a
-topic PR at the end of the week.
+Namely, there's agreement on that DCDC2 and DCDC3 and used for CPU
+voltages (VDD-CPU and (VDD-SYS=3DVDD-INT)+VDD-DLL respectively) on all
+boards I've analyzed (Olimex boards, Cubieboard / Cubietruck, BananaPi,
+PCDuino, Watermelon, etc) and probably it should be kept this way.
 
-Thanks!
+However, what puzzles me the most so far is LDO1 regulator. According to
+[AXP209 datasheet, p. 13, p. 23][1] and all the boards I've
+investigated, it's used exclusively for powering VDD-RTC input of A20
+CPU that supports internal CPU's RTC. LDO1 gets very special status in
+AXP209 - basically, it's as close to "always on" (even on backup
+battery) as possible the purpose of timekeeping.
 
-Sebastian
+According to the same spec, LDO1 allows 2 distinct voltage choices: 1.3V
+and 3.3V. However, according to the [A20 datasheet][2], VDD-RTC (pin K8)
+has absolute minimum and maximum voltage ratings of 3.0V. I'm not sure
+how is it supposed to work together, given that X-Powers AXP209 and
+Allwinner A20 is basically produced by different branches the same
+company and are meant to be totally compatible.
 
->   - adopt Sebastian suggestions such as: move osc out of "/soc" node, use
->     "Marvell BG4CT DMP board" as model, etc.
->   - use correct memory size for BG4CT DMP. The total DDR size is 2GB, we start
->     from 0x01000000, so the avaiable linux memory should be 0x7f000000.
->
-> Since v3:
->   - remove bootargs. follow the same behavior as other arm64 SoCs.
->
-> Since v2:
->   - remove the memreserve which isn't removed by mistake
->   - add earlycon to enable earlyconsole, inspired by Sudeep
->
-> Since v1:
->   - remove "earlyprintk" bootargs which doesn't work on arm64
->   - fix GICC_DIR size as pointed out by Mark
->   - define memory start address instead of memory reservation as suggested by Mark
->   - add interrupt-affinity to pmu node as pointed out by Sudeep
->
-> Jisheng Zhang (2):
->    arm64: dts: Add dts files for Marvell Berlin4CT SoC
->    arm64: Enable Marvell Berlin SoC family in Kconfig and defconfig
->
->   arch/arm64/Kconfig.platforms                  |   6 +
->   arch/arm64/boot/dts/Makefile                  |   1 +
->   arch/arm64/boot/dts/marvell/Makefile          |   5 +
->   arch/arm64/boot/dts/marvell/berlin4ct-dmp.dts |  66 +++++++++++
->   arch/arm64/boot/dts/marvell/berlin4ct.dtsi    | 164 ++++++++++++++++++++++++++
->   arch/arm64/configs/defconfig                  |   1 +
->   6 files changed, 243 insertions(+)
->   create mode 100644 arch/arm64/boot/dts/marvell/Makefile
->   create mode 100644 arch/arm64/boot/dts/marvell/berlin4ct-dmp.dts
->   create mode 100644 arch/arm64/boot/dts/marvell/berlin4ct.dtsi
->
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+What's even more weird, is that all configurations I've encountered so
+far (i.e. FEX configurations for 3.4 sunxi kernel and DTS for modern
+mainline kernels) use hard locked 1.3V setting for LDO1. For example,
+kernel 3.4:
+
+/sys/devices/platform/sunxi-i2c.0/i2c-0/0-0034/axp20-regulator.21/regulat=
+or/regulator.1/
+name    axp20_ldo1
+microvolts      1300000
+min_microvolts  1300000
+max_microvolts  1300000
+
+and similar construction in mainline DTSes:
+
+    vdd_rtc: ldo1 {
+            regulator-min-microvolt =3D <1300000>;
+            regulator-max-microvolt =3D <1300000>;
+            regulator-always-on;
+    };
+
+or in axp209.dtsi:
+
+    reg_ldo1: ldo1 {
+            /* LDO1 is a fixed output regulator */
+            regulator-always-on;
+            regulator-min-microvolt =3D <1300000>;
+            regulator-max-microvolt =3D <1300000>;
+            regulator-name =3D "ldo1";
+    };
+
+If we'll take a look at default power-on setup for AXP209 in the
+datasheet (page 24), we'll see that it's determined by LDO1SET pin. If
+it's connected to GND, then LDO1 will start with 1.3V, if it's connected
+to VINT, then it would be 3.3V.
+
+I've analyzed all the schematics I found in public:
+
+* Older Olimex schematics (Lime rev C, Lime rev D, Lime2 rev B) state
+that LDO1 line is "3V3/30mA". LDO1SET is grounded.
+* Newer Olimex schematics (Lime2 rev C) call that "1V3/30mA". LDO1SET is
+grounded.
+* All Bananapi and Cubieboard schematics look very similar and seem to
+be originating from the same source (reference Allwinner design?) and do
+not hint any voltages. LDO1SET is grounded.
+
+Can someone explain to me how does it work / supposed to work?
+
+[1]: http://linux-sunxi.org/images/8/89/AXP209_Datasheet_v1.0en.pdf
+[2]:
+https://github.com/OLIMEX/OLINUXINO/raw/master/HARDWARE/A20-PDFs/A20%20Da=
+tasheet%20v1.0%2020130227.pdf
+
+--=20
+WBR, Mikhail Yakshin
+
+
+--Axcpkq2O7U4fGtsmmFBMUT5uP5lpWHvqi
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iEYEARECAAYFAlW58k4ACgkQvXjOht2i9jtK0wCfTMMhO0LwkvzHXAjgR24X8ore
+wZsAn0pwGFotXIxZ/5+6wkpOG3LxKUNV
+=r0YH
+-----END PGP SIGNATURE-----
+
+--Axcpkq2O7U4fGtsmmFBMUT5uP5lpWHvqi--
+
+
+--===============5233856204809508069==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+linux-arm-kernel mailing list
+linux-arm-kernel@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+
+--===============5233856204809508069==--
