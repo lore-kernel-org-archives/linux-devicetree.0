@@ -1,268 +1,144 @@
-From: Liviu Dudau <Liviu.Dudau@arm.com>
-Subject: Re: [PATCH v6] PCI: Store PCIe bus address in struct of_pci_range
-Date: Thu, 30 Jul 2015 12:20:38 +0100
-Message-ID: <20150730112038.GE20890@e106497-lin.cambridge.arm.com>
-References: <1438010223-124422-1-git-send-email-gabriele.paoloni@huawei.com>
- <20150729172053.GE31170@google.com>
- <EE11001F9E5DDD47B7634E2F8A612F2E01D6F350@lhreml503-mbs>
- <20150729214710.GE9640@google.com>
- <EE11001F9E5DDD47B7634E2F8A612F2E01D6F6F8@lhreml503-mbs>
+From: "Tirdea, Irina" <irina.tirdea@intel.com>
+Subject: RE: [PATCH v3 1/5] Input: goodix - reset device at init
+Date: Thu, 30 Jul 2015 11:27:31 +0000
+Message-ID: <1F3AC3675D538145B1661F571FE1805F2F0AC0D3@irsmsx105.ger.corp.intel.com>
+References: <1435595304-4840-1-git-send-email-irina.tirdea@intel.com>
+	 <1435595304-4840-2-git-send-email-irina.tirdea@intel.com>
+ <1435679809.2612.13.camel@hadess.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <EE11001F9E5DDD47B7634E2F8A612F2E01D6F6F8@lhreml503-mbs>
-Content-Disposition: inline
-Sender: linux-pci-owner@vger.kernel.org
-To: Gabriele Paoloni <gabriele.paoloni@huawei.com>
-Cc: Bjorn Helgaas <bhelgaas@google.com>, "arnd@arndb.de" <arnd@arndb.de>, Lorenzo Pieralisi <Lorenzo.Pieralisi@arm.com>, "Wangzhou (B)" <wangzhou1@hisilicon.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, James Morse <James.Morse@arm.com>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Yuanzhichang <yuanzhichang@hisilicon.com>, Zhudacai <zhudacai@hisilicon.com>, zhangjukuo <zhangjukuo@huawei.com>, qiuzhenfa <qiuzhenfa@hisilicon.com>, "liguozhu@hisilicon.com" <liguozhu@hisilicon.com>, Andrew Murray <amurray@embedded-bits.co.uk>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1435679809.2612.13.camel@hadess.net>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Bastien Nocera <hadess@hadess.net>, "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "Purdila, Octavian" <octavian.purdila@intel.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello,
-
-On Thu, Jul 30, 2015 at 09:30:41AM +0100, Gabriele Paoloni wrote:
-> > -----Original Message-----
-> > From: Bjorn Helgaas [mailto:bhelgaas@google.com]
-> > Sent: Wednesday, July 29, 2015 10:47 PM
-> > To: Gabriele Paoloni
-> > Cc: arnd@arndb.de; lorenzo.pieralisi@arm.com; Wangzhou (B);
-> > robh+dt@kernel.org; james.morse@arm.com; Liviu.Dudau@arm.com; linux=
--
-> > pci@vger.kernel.org; linux-arm-kernel@lists.infradead.org;
-> > devicetree@vger.kernel.org; Yuanzhichang; Zhudacai; zhangjukuo;
-> > qiuzhenfa; Liguozhu (Kenneth); Andrew Murray
-> > Subject: Re: [PATCH v6] PCI: Store PCIe bus address in struct
-> > of_pci_range
-> >=20
-> > [+cc Andrew]
-> >=20
-> > On Wed, Jul 29, 2015 at 07:44:18PM +0000, Gabriele Paoloni wrote:
-> > > > -----Original Message-----
-> > > > From: Bjorn Helgaas [mailto:bhelgaas@google.com]
-> > > > Sent: Wednesday, July 29, 2015 6:21 PM
-> > > > To: Gabriele Paoloni
-> >=20
-> > > > On Mon, Jul 27, 2015 at 11:17:03PM +0800, Gabriele Paoloni wrot=
-e:
-> > > > > From: gabriele paoloni <gabriele.paoloni@huawei.com>
-> >=20
-> > > > >     This patch adds a new field in "struct of_pci_range" to s=
-tore
-> > the
-> > > > >     pci bus start address; it fills the field in
-> > > > of_pci_range_parser_one();
-> > > > >     in of_pci_get_host_bridge_resources() it retrieves the
-> > resource
-> > > > entry
-> > > > >     after it is created and added to the resource list and us=
-es
-> > > > >     entry->__res.start to store the pci controller address
-> > > >
-> > > > struct of_pci_range is starting to get confusing to non-OF folk=
-s
-> > like
-> > > > me.
-> > > > It now contains:
-> > > >
-> > > >   u32 pci_space;
-> > > >   u64 pci_addr;
-> > > >   u64 cpu_addr;
-> > > >   u64 bus_addr;
-> > > >
-> > > > Can you explain what all these things mean, and maybe even add =
-one-
-> > > > line comments to the structure?
-
-I can try to do that, as I worked with Andrew Murray when he did the pa=
-tch.
-
-- pci_space is indeed the range.flags variable and it was trying to kee=
-p
-  the original value from the DT mainly to try to identify the config s=
-pace
-  in the ranges described. It has now become clear that declaring confi=
-g
-  space in the ranges area is wrong even if one supports ECAM so pci_sp=
-ace
-  could be removed as suggested by Bjorn.
-- pci_addr is the address that goes on the PCI(e) bus.
-- cpu_addr is the translated address that the CPU uses. It does not nec=
-essarily
-  means it is the same address that the Root Complex sees when requeste=
-d to
-  do Address Translation between host side and bus side. Also, what get=
-s stored
-  in the cpu_addr is not equal to what gets declared in the ranges prop=
-erty if
-  there are other address translation parents between the Root Complex =
-and the
-  CPU.
-- bus_addr is meant to be the un-translated cpu_addr that DesignWare ne=
-eds
-  in order to setup its ATS service. The reason for putting it in the o=
-f_pci_range
-  is because the struct resource does not have the concept of an untran=
-slated
-  address.
-
-Best regards,
-Liviu
-
-
-> >=20
-> > > > pci_space: The only uses I see are to determine whether to prin=
-t
-> > > > "Prefetch".  I don't see any real functionality that uses this.
-> > >
-> > > Looking at the code I agree. it's seems to be used only in powerp=
-c
-> > > and microblaze to print out.
-> > > However from my understanding pci_space is the phys.hi field of t=
-he
-> > > ranges property: it defines the properties of the address space
-> > associated
-> > > to the PCI address. if you're curious you can find a nice and qui=
-ck
-> > to read
-> > > "guide" in http://devicetree.org/MPC5200:PCI
-> >=20
-> > I think pci_space should be removed and the users should test
-> > "range.flags & IORESOURCE_PREFETCH" instead.  That's already set by
-> > of_bus_pci_get_flags().  This is separate from your current patch, =
-of
-> > course.
->=20
-> Ok so I'll do nothing in my patch about this; maybe I can propose a s=
-eparate
-> patch for this, but I cannot test it (I've got no microblaze and powe=
-rpc=20
-> neither....)
->=20
-> >=20
-> > 29b635c00f3e ("of/pci: Provide support for parsing PCI DT ranges
-> > property") added struct of_pci_range, and even at the time,
-> > of_bus_pci_get_flags() set IORESOURCE_PREFETCH in of_pci_range.flag=
-s.
-> >=20
-> > 654837e8fe8d ("powerpc/pci: Use of_pci_range_parser helper in
-> > pci_process_bridge_OF_ranges") converted powerpc to use
-> > of_pci_range_parser() instead of parsing manually.  It converted ot=
-her
-> > references to look at struct of_pci_range.flags; I'm not sure why i=
-t
-> > didn't do that for the prefetch bit.
-> >=20
-> > I copied Andrew in case there's some subtlety here.
-> >=20
-> > > > pci_addr: I assume this is a PCI bus address, like what you wou=
-ld
-> > see
-> > > > if
-> > > > you put an analyzer on the bus/link.  This address could go in =
-a
-> > BAR.
-> > >
-> > > Yes, this is the PCI start address of the range: phys.mid + phys.=
-low
-> > in the
-> > > guide mentioned above
-> > >
-> > > > cpu_addr: I assume this is a CPU physical address, like what yo=
-u
-> > would
-> > > > see
-> > > > in /proc/iomem and what you would pass to ioremap().
-> > >
-> > > Yes correct
-> > >
-> > > > bus_addr: ?
-> > >
-> > > According to the guide above, this is the address into which the
-> > pci_address
-> > > get translated to and that is passed to the root complex. Between=
- the
-> > root
-> > > complex and the CPU there can be intermediate translation layers:
-> >=20
-> > I can't quite parse this, but I do understand how a host bridge can
-> > translate CPU physical addresses to a different range of PCI bus
-> > addresses.  What I don't understand is the difference between
-> > "pci_addr"
-> > and the "bus_addr" you're adding.
->=20
-> For example see:
-> http://lxr.free-electrons.com/source/arch/arm/boot/dts/imx6qdl.dtsi#L=
-148
->=20
-> ranges =3D <0x00000800 0 0x01f00000 0x01f00000 0 0x00080000   /* conf=
-iguration space */
->           0x81000000 0 0          0x01f80000 0 0x00010000   /* downst=
-ream I/O */
->           0x82000000 0 0x01000000 0x01000000 0 0x00f00000>; /* non-pr=
-efetchable memory *
->                /\          /\          /\
->            pci_space    pci_addr     bus_addr           =20
->=20
->=20
-> The host bridge performs the first translation from pci_addr to bus_a=
-ddr.
-> If there are other ranges in the parents nodes in the DT bus_addr get=
-s=20
-> translated further till you get the cpu_addr.
->=20
-> Hope it is a bit clearer now....
->=20
-> >=20
-> > > see that to
-> > > get pci_address we call "of_translate_address"; this will apply a=
-ll
-> > the
-> > > translation layers (ranges in the DT) that it finds till it comes=
- to
-> > the root
-> > > node of the DT (thus retrieving the CPU address).
-> > > Now said that, for designware we need the first translated PCI
-> > address, that we call
-> > > here bus_addr after Rob Herring suggested the name...honestly I
-> > cannot think of a
-> > > different name
-> > >
-> > >
-> > >
-> > > > I'm trying to imagine how this might be expressed in ACPI.  A h=
-ost
-> > > > bridge
-> > > > ACPI _CRS contains a CPU physical address and applying a _TRA
-> > > > (translation
-> > > > offset) to the CPU address gives you a PCI bus address.  I know
-> > this
-> > > > code
-> > > > is OF, not ACPI, but I assume that it should be possible to
-> > describe
-> > > > your
-> > > > hardware via ACPI as well as by OF.
-> >=20
-> > > > > diff --git a/include/linux/of_address.h
-> > b/include/linux/of_address.h
-> > > > > index d88e81b..865f96e 100644
-> > > > > --- a/include/linux/of_address.h
-> > > > > +++ b/include/linux/of_address.h
-> > > > > @@ -16,6 +16,7 @@ struct of_pci_range {
-> > > > >  	u32 pci_space;
-> > > > >  	u64 pci_addr;
-> > > > >  	u64 cpu_addr;
-> > > > > +	u64 bus_addr;
-> > > > >  	u64 size;
-> > > > >  	u32 flags;
-> > > > >  };
->=20
-
---=20
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-| I would like to |
-| fix the world,  |
-| but they're not |
-| giving me the   |
- \ source code!  /
-  ---------------
-    =C2=AF\_(=E3=83=84)_/=C2=AF
+DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogQmFzdGllbiBOb2NlcmEg
+W21haWx0bzpoYWRlc3NAaGFkZXNzLm5ldF0NCj4gU2VudDogMzAgSnVuZSwgMjAxNSAxODo1Nw0K
+PiBUbzogVGlyZGVhLCBJcmluYTsgRG1pdHJ5IFRvcm9raG92OyBNYXJrIFJ1dGxhbmQ7IGxpbnV4
+LWlucHV0QHZnZXIua2VybmVsLm9yZzsgZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5vcmcNCj4gQ2M6
+IGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc7IFJvYiBIZXJyaW5nOyBQYXdlbCBNb2xsOyBJ
+YW4gQ2FtcGJlbGw7IEt1bWFyIEdhbGE7IFB1cmRpbGEsIE9jdGF2aWFuDQo+IFN1YmplY3Q6IFJl
+OiBbUEFUQ0ggdjMgMS81XSBJbnB1dDogZ29vZGl4IC0gcmVzZXQgZGV2aWNlIGF0IGluaXQNCj4g
+DQo+IE9uIE1vbiwgMjAxNS0wNi0yOSBhdCAxOToyOCArMDMwMCwgSXJpbmEgVGlyZGVhIHdyb3Rl
+Og0KPiA+IEFmdGVyIHBvd2VyIG9uLCBpdCBpcyByZWNvbW1lbmRlZCB0aGF0IHRoZSBkcml2ZXIg
+cmVzZXRzIHRoZSBkZXZpY2UuDQo+ID4gVGhlIHJlc2V0IHByb2NlZHVyZSB0aW1pbmcgaXMgZGVz
+Y3JpYmVkIGluIHRoZSBkYXRhc2hlZXQgYW5kIGlzIHVzZWQNCj4gPiBhdCBkZXZpY2UgaW5pdCAo
+YmVmb3JlIHdyaXRpbmcgZGV2aWNlIGNvbmZpZ3VyYXRpb24pIGFuZA0KPiA+IGZvciBwb3dlciBt
+YW5hZ2VtZW50LiBJdCBpcyBhIHNlcXVlbmNlIG9mIHNldHRpbmcgdGhlIGludGVycnVwdA0KPiA+
+IGFuZCByZXNldCBwaW5zIGhpZ2gvbG93IGF0IHNwZWNpZmljIHRpbWluZyBpbnRlcnZhbHMuIFRo
+aXMgcHJvY2VkdXJlDQo+ID4gYWxzbyBpbmNsdWRlcyBzZXR0aW5nIHRoZSBzbGF2ZSBhZGRyZXNz
+IHRvIHRoZSBvbmUgc3BlY2lmaWVkIGluIHRoZQ0KPiA+IEFDUEkvZGV2aWNlIHRyZWUuDQo+ID4N
+Cj4gPiBUaGlzIGlzIGJhc2VkIG9uIEdvb2RpeCBkYXRhc2hlZXRzIGZvciBHVDkxMSBhbmQgR1Q5
+MjcxIGFuZCBvbiBHb29kaXgNCj4gPiBkcml2ZXIgZ3Q5eHguYyBmb3IgQW5kcm9pZCAocHVibGlj
+bHkgYXZhaWxhYmxlIGluIEFuZHJvaWQga2VybmVsDQo+ID4gdHJlZXMgZm9yIHZhcmlvdXMgZGV2
+aWNlcykuDQo+ID4NCj4gPiBGb3IgcmVzZXQgdGhlIGRyaXZlciBuZWVkcyB0byBjb250cm9sIHRo
+ZSBpbnRlcnJ1cHQgYW5kDQo+ID4gcmVzZXQgZ3BpbyBwaW5zIChjb25maWd1cmVkIHRocm91Z2gg
+QUNQSS9kZXZpY2UgdHJlZSkuIEZvciBkZXZpY2VzDQo+ID4gdGhhdCBkbyBub3QgaGF2ZSB0aGUg
+Z3BpbyBwaW5zIGRlY2xhcmVkLCB0aGUgZnVuY3Rpb25hbGl0eSBkZXBlbmRpbmcNCj4gPiBvbiB0
+aGVzZSBwaW5zIHdpbGwgbm90IGJlIGF2YWlsYWJsZSwgYnV0IHRoZSBkZXZpY2UgY2FuIHN0aWxs
+IGJlIHVzZWQNCj4gPiB3aXRoIGJhc2ljIGZ1bmN0aW9uYWxpdHkuDQo+IA0KPiANCj4gSSdtIGhh
+dmluZyBhIGxpdHRsZSB0cm91YmxlIHdpdGggdGhpcyBmaXJzdCBwYXRjaCwgb24gYSA0LjIgInBy
+ZSIgTGludXMNCj4gdHJlZSBhbmQgb24gYSA0LjEga2VybmVsLg0KPiANCj4gWyAgICA2LjcyMDIx
+NF0gLS0tLS0tLS0tLS0tWyBjdXQgaGVyZSBdLS0tLS0tLS0tLS0tDQo+IFsgICAgNi43MjAyMzBd
+IFdBUk5JTkc6IENQVTogMiBQSUQ6IDQ3NSBhdCBkcml2ZXJzL3BpbmN0cmwvaW50ZWwvcGluY3Ry
+bC1iYXl0cmFpbC5jOjMzOCBieXRfZ3Bpb19kaXJlY3Rpb25fb3V0cHV0KzB4OTcvMHhhMCgpDQo+
+IFsgICAgNi43MjAyMzRdIFBvdGVudGlhbCBFcnJvcjogU2V0dGluZyBHUElPIHdpdGggZGlyZWN0
+X2lycV9lbiB0byBvdXRwdXQNCj4gWyAgICA2LjcyMDIzOF0gTW9kdWxlcyBsaW5rZWQgaW46DQo+
+IFsgICAgNi43MjAyNDFdICByZWdtYXBfaTJjIGludGVsX3NvY19kdHNfaW9zZiBpbnQzNDB4X3Ro
+ZXJtYWxfem9uZSBzb3VuZGNvcmUgaW5kdXN0cmlhbGlvIGJhdHRlcnkgaW9zZl9tYmkgYWNwaV90
+aGVybWFsX3JlbA0KPiBkZWxsX3Ntbzg4MDAgc25kX3NvY19zc3RfYWNwaSBnb29kaXhfYmFja3Bv
+cnQoT0UrKSBpMmNfaGlkIGFjcGlfcGFkIGFjIHJma2lsbF9ncGlvIGkyY19kZXNpZ253YXJlX3Bs
+YXRmb3JtIHJma2lsbA0KPiBwd21fbHBzc19wbGF0Zm9ybSBwd21fbHBzcyBpMmNfZGVzaWdud2Fy
+ZV9jb3JlIG5mc2QgYXV0aF9ycGNnc3MgbmZzX2FjbCBsb2NrZCBncmFjZSBzdW5ycGMgaTkxNSBt
+bWNfYmxvY2sgaTJjX2FsZ29fYml0DQo+IGRybV9rbXNfaGVscGVyIGRybSB2aWRlbyBzZGhjaV9h
+Y3BpIHNkaGNpIG1tY19jb3JlDQo+IFsgICAgNi43MjAyOTJdIENQVTogMiBQSUQ6IDQ3NSBDb21t
+OiBzeXN0ZW1kLXVkZXZkIFRhaW50ZWQ6IEcgICAgICAgIFcgIE9FICAgNC4yLjAtMC5yYzAuZ2l0
+Mi4yLmZjMjIuaTY4NiAjMQ0KPiBbICAgIDYuNzIwMjk1XSBIYXJkd2FyZSBuYW1lOiBUbyBiZSBm
+aWxsZWQgYnkgTy5FLk0uIFRvIGJlIGZpbGxlZCBieSBPLkUuTS4vQXB0aW8gQ1JCLCBCSU9TIDUu
+Ni41IDA3LzI1LzIwMTQNCj4gWyAgICA2LjcyMDI5OV0gIGMwZDM5OTY3IDExMTk3MjA0IDAwMDAw
+MDAwIGY2ZDM3YmM4IGMwYTljZTNjIGY2ZDM3YzA4IGY2ZDM3YmY4IGMwNDVjNjc3DQo+IFsgICAg
+Ni43MjAzMTFdICBjMGNiNjJhNCBmNmQzN2MyOCAwMDAwMDFkYiBjMGNiNjJlMCAwMDAwMDE1MiBj
+MDczYmZjNyBjMDczYmZjNyBmN2M1ODBiOA0KPiBbICAgIDYuNzIwMzIxXSAgZjQ0MTQwOWMgZjdj
+NTgwYjAgZjZkMzdjMTQgYzA0NWM2ZWUgMDAwMDAwMDkgZjZkMzdjMDggYzBjYjYyYTQgZjZkMzdj
+MjgNCj4gWyAgICA2LjcyMDMzMV0gQ2FsbCBUcmFjZToNCj4gWyAgICA2LjcyMDM0Ml0gIFs8YzBh
+OWNlM2M+XSBkdW1wX3N0YWNrKzB4NDEvMHg1Mg0KPiBbICAgIDYuNzIwMzQ5XSAgWzxjMDQ1YzY3
+Nz5dIHdhcm5fc2xvd3BhdGhfY29tbW9uKzB4ODcvMHhjMA0KPiBbICAgIDYuNzIwMzU1XSAgWzxj
+MDczYmZjNz5dID8gYnl0X2dwaW9fZGlyZWN0aW9uX291dHB1dCsweDk3LzB4YTANCj4gWyAgICA2
+LjcyMDM2MF0gIFs8YzA3M2JmYzc+XSA/IGJ5dF9ncGlvX2RpcmVjdGlvbl9vdXRwdXQrMHg5Ny8w
+eGEwDQo+IFsgICAgNi43MjAzNjVdICBbPGMwNDVjNmVlPl0gd2Fybl9zbG93cGF0aF9mbXQrMHgz
+ZS8weDYwDQo+IFsgICAgNi43MjAzNzBdICBbPGMwNzNiZmM3Pl0gYnl0X2dwaW9fZGlyZWN0aW9u
+X291dHB1dCsweDk3LzB4YTANCj4gWyAgICA2LjcyMDM3Nl0gIFs8YzA3M2JmMzA+XSA/IGJ5dF9n
+cGlvX2lycV9oYW5kbGVyKzB4YzAvMHhjMA0KPiBbICAgIDYuNzIwMzgyXSAgWzxjMDczZTkzOT5d
+IF9ncGlvZF9kaXJlY3Rpb25fb3V0cHV0X3JhdysweDU5LzB4MWMwDQo+IFsgICAgNi43MjAzODhd
+ICBbPGMwYWEyMDJkPl0gPyBfcmF3X3NwaW5fdW5sb2NrX2lycXJlc3RvcmUrMHhkLzB4MTANCj4g
+WyAgICA2LjcyMDM5M10gIFs8YzA3M2JiNzM+XSA/IGJ5dF9ncGlvX2RpcmVjdGlvbl9pbnB1dCsw
+eDQzLzB4NTANCj4gWyAgICA2LjcyMDM5OF0gIFs8YzA3M2JiMzA+XSA/IGJ5dF9ncGlvX3NldCsw
+eDcwLzB4NzANCj4gWyAgICA2LjcyMDQwNF0gIFs8YzA3M2ViMGE+XSBncGlvZF9kaXJlY3Rpb25f
+b3V0cHV0KzB4MmEvMHg1MA0KPiBbICAgIDYuNzIwNDEzXSAgWzxmN2ZlNzY4Yj5dIGdvb2RpeF90
+c19wcm9iZSsweDJmYi8weDVmZCBbZ29vZGl4X2JhY2twb3J0XQ0KPiBbICAgIDYuNzIwNDIyXSAg
+WzxjMDkwOTY5MT5dIGkyY19kZXZpY2VfcHJvYmUrMHgxMDEvMHgxYjANCj4gWyAgICA2LjcyMDQy
+OF0gIFs8YzA2MTJlOTU+XSA/IHN5c2ZzX2NyZWF0ZV9saW5rKzB4MjUvMHg1MA0KPiBbICAgIDYu
+NzIwNDM2XSAgWzxmN2ZlNzM5MD5dID8gZ29vZGl4X3RzX2lycV9oYW5kbGVyKzB4MWYwLzB4MWYw
+IFtnb29kaXhfYmFja3BvcnRdDQo+IFsgICAgNi43MjA0NDJdICBbPGMwODE5YzUyPl0gPyBkcml2
+ZXJfc3lzZnNfYWRkKzB4NjIvMHg4MA0KPiBbICAgIDYuNzIwNDQ4XSAgWzxjMDgxYTU2YT5dIGRy
+aXZlcl9wcm9iZV9kZXZpY2UrMHgxY2EvMHg0NjANCj4gWyAgICA2LjcyMDQ1NF0gIFs8YzA4MWE4
+MDA+XSA/IGRyaXZlcl9wcm9iZV9kZXZpY2UrMHg0NjAvMHg0NjANCj4gWyAgICA2LjcyMDQ2MV0g
+IFs8YzA3OGQwYjE+XSA/IGFjcGlfZHJpdmVyX21hdGNoX2RldmljZSsweDM2LzB4M2YNCj4gWyAg
+ICA2LjcyMDQ2N10gIFs8YzA4MWE4Nzk+XSBfX2RyaXZlcl9hdHRhY2grMHg3OS8weDgwDQo+IFsg
+ICAgNi43MjA0NzNdICBbPGMwODFhODAwPl0gPyBkcml2ZXJfcHJvYmVfZGV2aWNlKzB4NDYwLzB4
+NDYwDQo+IFsgICAgNi43MjA0NzhdICBbPGMwODE4NDY3Pl0gYnVzX2Zvcl9lYWNoX2RldisweDU3
+LzB4YTANCj4gWyAgICA2LjcyMDQ4NF0gIFs8YzA4MTlkZmU+XSBkcml2ZXJfYXR0YWNoKzB4MWUv
+MHgyMA0KPiBbICAgIDYuNzIwNDg5XSAgWzxjMDgxYTgwMD5dID8gZHJpdmVyX3Byb2JlX2Rldmlj
+ZSsweDQ2MC8weDQ2MA0KPiBbICAgIDYuNzIwNDk0XSAgWzxjMDgxOTliZj5dIGJ1c19hZGRfZHJp
+dmVyKzB4MWVmLzB4MjkwDQo+IFsgICAgNi43MjA1MDFdICBbPGY3Y2E3MDAwPl0gPyAweGY3Y2E3
+MDAwDQo+IFsgICAgNi43MjA1MDZdICBbPGY3Y2E3MDAwPl0gPyAweGY3Y2E3MDAwDQo+IFsgICAg
+Ni43MjA1MTJdICBbPGMwODFiMDdkPl0gZHJpdmVyX3JlZ2lzdGVyKzB4NWQvMHhmMA0KPiBbICAg
+IDYuNzIwNTE4XSAgWzxjMDkwYTNjYT5dIGkyY19yZWdpc3Rlcl9kcml2ZXIrMHgyYS8weGEwDQo+
+IFsgICAgNi43MjA1MjRdICBbPGMwNDAwNDZmPl0gPyBkb19vbmVfaW5pdGNhbGwrMHg5Zi8weDIw
+MA0KPiBbICAgIDYuNzIwNTMxXSAgWzxmN2NhNzAxMj5dIGdvb2RpeF90c19kcml2ZXJfaW5pdCsw
+eDEyLzB4MTAwMCBbZ29vZGl4X2JhY2twb3J0XQ0KPiBbICAgIDYuNzIwNTM2XSAgWzxjMDQwMDQ3
+YT5dIGRvX29uZV9pbml0Y2FsbCsweGFhLzB4MjAwDQo+IFsgICAgNi43MjA1NDFdICBbPGY3Y2E3
+MDAwPl0gPyAweGY3Y2E3MDAwDQo+IFsgICAgNi43MjA1NDddICBbPGMwNTgwMWM4Pl0gPyBmcmVl
+X3ZtYXBfYXJlYV9ub2ZsdXNoKzB4MzgvMHg4MA0KPiBbICAgIDYuNzIwNTU0XSAgWzxjMDU5NGI5
+NT5dID8ga21lbV9jYWNoZV9hbGxvY190cmFjZSsweDE3NS8weDFmMA0KPiBbICAgIDYuNzIwNTYw
+XSAgWzxjMGE5YzY0Zj5dID8gZG9faW5pdF9tb2R1bGUrMHgyMS8weDFhMQ0KPiBbICAgIDYuNzIw
+NTY1XSAgWzxjMGE5YzY0Zj5dID8gZG9faW5pdF9tb2R1bGUrMHgyMS8weDFhMQ0KPiBbICAgIDYu
+NzIwNTcyXSAgWzxjMGE5YzY3ZT5dIGRvX2luaXRfbW9kdWxlKzB4NTAvMHgxYTENCj4gWyAgICA2
+LjcyMDU3OF0gIFs8YzA0ZDkxN2I+XSBsb2FkX21vZHVsZSsweDFjZWIvMHgyMmYwDQo+IFsgICAg
+Ni43MjA1ODVdICBbPGMwNGQ2MTU5Pl0gPyBjb3B5X21vZHVsZV9mcm9tX2ZkLmlzcmEuNDcrMHhm
+OS8weDE5MA0KPiBbICAgIDYuNzIwNTkyXSAgWzxjMDRkOTlhNT5dIFN5U19maW5pdF9tb2R1bGUr
+MHhhNS8weGYwDQo+IFsgICAgNi43MjA1OThdICBbPGMwNTY0OTBiPl0gPyB2bV9tbWFwX3Bnb2Zm
+KzB4OWIvMHhjMA0KPiBbICAgIDYuNzIwNjA1XSAgWzxjMGFhMjZkZj5dIHN5c2VudGVyX2RvX2Nh
+bGwrMHgxMi8weDEyDQo+IFsgICAgNi43MjA2MTBdIC0tLVsgZW5kIHRyYWNlIGQ1MTgzYjNlNjBm
+MGY2NzUgXS0tLQ0KDQpIaSBCYXN0aWVuLA0KDQpJJ3ZlIGJlZW4gbG9va2luZyBpbnRvIHRoZSB3
+YXJuaW5nIHlvdSBtZW50aW9uZWQgYWJvdmUuDQoNCkFsbCB0aGUgR29vZGl4IHBhdGNoZXMgaW4g
+dGhpcyBzZXJpZXMgbXVzdCB1c2UgdGhlIGludGVycnVwdCBwaW4gYXMgb3V0cHV0Og0KdGhlIGZ1
+bmN0aW9uYWxpdHkgaW1wbGVtZW50ZWQgZGVwZW5kcyBvbiB0aGlzLCBhcyBzcGVjaWZpZWQgaW4g
+dGhlIEdvb2RpeA0KZGF0YXNoZWV0IChmdW5jdGlvbmFsaXR5IGluY2x1ZGVzIHJlc2V0LCB3cml0
+aW5nIGNvbmZpZ3VyYXRpb24sIHBvd2VyDQptYW5hZ2VtZW50LCBFU0QgcHJvdGVjdGlvbikuIFRo
+ZSBCYXl0cmFpbCBwaW5jdHJsIGRyaXZlciBwcmludHMgc29tZQ0Kd2FybmluZ3Mgd2hlbiBwaW5z
+IG1hcmtlZCB3aXRoIHRoZSBESVJFQ1RfSVJRIGZsYWcgYXJlIHVzZWQgYXMgb3V0cHV0IFsxXSBb
+Ml0uDQpUaGlzIGZsYWcgaXMgc2V0IGJ5IHRoZSBCSU9TIGFuZCBjb3VsZCBpbmRpY2F0ZSBhbiBh
+Y3R1YWwgSFcgcHJvYmxlbSBvcg0KYSBidWdneSBCSU9TLiBJIGFtIGFjdHVhbGx5IHRlc3Rpbmcg
+dGhlc2UgY2hhbmdlcyBvbiBhIEJheXRyYWlsIHBsYXRmb3JtDQp0aGF0IGhhcyB0aGUgc2FtZSBw
+aW5jdHJsIGRyaXZlciwgYnV0IGRpZCBub3QgcnVuIGludG8gdGhpcyBwcm9ibGVtLg0KDQpBcyBm
+YXIgYXMgSSBjYW4gdGVsbCwgdGhlIG9ubHkgd2F5IHRvIGZpbmQgb3V0IGlmIGl0IGlzIGEgSFcg
+b3IgYSBCSU9TIHByb2JsZW0NCmlzIHRvIHRlc3QgaWYgdXNpbmcgdGhlIGludGVycnVwdCBwaW4g
+YXMgb3V0cHV0IGFjdHVhbGx5IHdvcmtzICAoYnkgdGVzdGluZw0KdGhlIGZ1bmN0aW9uYWxpdHkg
+dGhhdCBkaXJlY3RseSBkZXBlbmRzIG9uIGl0KS4NCg0KSSB0aGluayB3ZSBoYXZlIHR3byBvcHRp
+b25zIGhlcmUuDQoNCjEuIEkgY291bGQgcmVtb3ZlIHRoZSBuZXcgZnVuY3Rpb25hbGl0eSBmb3Ig
+eW91ciBwbGF0Zm9ybXMuIFVuZm9ydHVuYXRlbHkNCnRoaXMgd291bGQgbWVhbiBub25lIG9mIHRo
+ZSBuZXcgZmVhdHVyZXMgd2lsbCBiZSBhdmFpbGFibGUgb24geW91cg0KZGV2aWNlcywgYnV0IHRo
+YXQgd2lsbCBnZXQgcmlkIG9mIHRoZSB3YXJuaW5nIGVudGlyZWx5Lg0KDQoyLiBJIGNhbiBzZW5k
+IHNvbWUgYWRkaXRpb25hbCBwYXRjaGVzIHRoYXQgd2lsbCBzaW1wbGlmeSB0ZXN0aW5nIHRoZQ0K
+Y29uZmlndXJhdGlvbiB1cGRhdGUgdG8gdGhlIEdvb2RpeCBkZXZpY2UuIEkgdGhpbmsgdGhpcyBm
+ZWF0dXJlIGlzIHRoZSBlYXNpZXN0DQp0byB0ZXN0IHNvIHdlIGNhbiBkZXRlcm1pbmUgaWYgd3Jp
+dGluZyB0byB0aGUgaW50ZXJydXB0IHBpbiBhY3R1YWxseSB3b3Jrcy4NCkhvd2V2ZXIsIGV2ZW4g
+aWYgaXQgaXMgYSBCSU9TIHByb2JsZW0gYW5kIHRoZSBjb2RlIHdpbGwgd29yaywgdGhlIHdhcm5p
+bmcNCndpbGwgc3RpbGwgYmUgcHJpbnRlZCBpbiBkbWVzZy4NCg0KV2hhdCBkbyB5b3UgdGhpbms/
+DQoNClRoYW5rcywNCklyaW5hDQoNClsxXSBodHRwczovL2xrbWwub3JnL2xrbWwvMjAxNC82LzIv
+NjU0DQpbMl0gaHR0cHM6Ly9sa21sLm9yZy9sa21sLzIwMTQvOS8xOC8xMjkNCg0K
