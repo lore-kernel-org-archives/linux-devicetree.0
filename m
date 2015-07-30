@@ -1,7 +1,7 @@
 From: Peter Griffin <peter.griffin@linaro.org>
-Subject: [PATCH v2 08/11] [media] c8sectpfe: Add support for various ST NIM cards.
-Date: Thu, 30 Jul 2015 18:08:58 +0100
-Message-ID: <1438276141-16902-9-git-send-email-peter.griffin@linaro.org>
+Subject: [PATCH v2 07/11] [media] c8sectpfe: Add LDVB helper functions.
+Date: Thu, 30 Jul 2015 18:08:57 +0100
+Message-ID: <1438276141-16902-8-git-send-email-peter.griffin@linaro.org>
 References: <1438276141-16902-1-git-send-email-peter.griffin@linaro.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1438276141-16902-1-git-send-email-peter.griffin@linaro.org>
@@ -10,277 +10,299 @@ To: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, srinivas
 Cc: peter.griffin@linaro.org, lee.jones@linaro.org, hugues.fruchet@st.com, linux-media@vger.kernel.org, devicetree@vger.kernel.org, joe@perches.com
 List-Id: devicetree@vger.kernel.org
 
-This patch adds support for the following 2 NIM cards: -
-1) B2100A (2x stv0367 demods & 2x NXP tda18212 tuners)
-2) STV0903-6110NIM (stv0903 demod + 6110 tuner, lnb24)
+These functions are used by the core code for creating the LDVB
+devices and adapter.
 
-A NIM card is a cold plugable expansion card which usually
-features a demodulator / tuner combination.
+Addtionally some older SoC's (and potentially newer ones) have different
+frontend HW which would allow those devices to be easily supported
+in the future by keeping the code specific to the IP separate from the
+more generic code.
 
 Signed-off-by: Peter Griffin <peter.griffin@linaro.org>
 ---
- .../media/platform/sti/c8sectpfe/c8sectpfe-dvb.c   | 244 +++++++++++++++++++++
- .../media/platform/sti/c8sectpfe/c8sectpfe-dvb.h   |  20 ++
- 2 files changed, 264 insertions(+)
- create mode 100644 drivers/media/platform/sti/c8sectpfe/c8sectpfe-dvb.c
- create mode 100644 drivers/media/platform/sti/c8sectpfe/c8sectpfe-dvb.h
+ .../platform/sti/c8sectpfe/c8sectpfe-common.c      | 265 +++++++++++++++++++++
+ .../platform/sti/c8sectpfe/c8sectpfe-common.h      |  64 +++++
+ 2 files changed, 329 insertions(+)
+ create mode 100644 drivers/media/platform/sti/c8sectpfe/c8sectpfe-common.c
+ create mode 100644 drivers/media/platform/sti/c8sectpfe/c8sectpfe-common.h
 
-diff --git a/drivers/media/platform/sti/c8sectpfe/c8sectpfe-dvb.c b/drivers/media/platform/sti/c8sectpfe/c8sectpfe-dvb.c
+diff --git a/drivers/media/platform/sti/c8sectpfe/c8sectpfe-common.c b/drivers/media/platform/sti/c8sectpfe/c8sectpfe-common.c
 new file mode 100644
-index 0000000..69d7fe4
+index 0000000..95223ab
 --- /dev/null
-+++ b/drivers/media/platform/sti/c8sectpfe/c8sectpfe-dvb.c
-@@ -0,0 +1,244 @@
++++ b/drivers/media/platform/sti/c8sectpfe/c8sectpfe-common.c
+@@ -0,0 +1,265 @@
 +/*
-+ *  c8sectpfe-dvb.c - C8SECTPFE STi DVB driver
++ * c8sectpfe-common.c - C8SECTPFE STi DVB driver
 + *
 + * Copyright (c) STMicroelectronics 2015
 + *
-+ *  Author Peter Griffin <peter.griffin@linaro.org>
++ *   Author: Peter Griffin <peter.griffin@linaro.org>
 + *
-+ *  This program is free software; you can redistribute it and/or modify
-+ *  it under the terms of the GNU General Public License as published by
-+ *  the Free Software Foundation; either version 2 of the License, or
-+ *  (at your option) any later version.
-+ *
-+ *  This program is distributed in the hope that it will be useful,
-+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ *
-+ *  GNU General Public License for more details.
++ *      This program is free software; you can redistribute it and/or
++ *      modify it under the terms of the GNU General Public License as
++ *      published by the Free Software Foundation; either version 2 of
++ *      the License, or (at your option) any later version.
 + */
 +#include <linux/completion.h>
 +#include <linux/delay.h>
-+#include <linux/i2c.h>
++#include <linux/device.h>
++#include <linux/dvb/dmx.h>
++#include <linux/errno.h>
++#include <linux/init.h>
 +#include <linux/interrupt.h>
-+#include <linux/version.h>
++#include <linux/io.h>
++#include <linux/ioport.h>
++#include <linux/module.h>
++#include <linux/slab.h>
++#include <linux/time.h>
++#include <linux/wait.h>
 +
-+#include <dt-bindings/media/c8sectpfe.h>
++#include "dmxdev.h"
++#include "dvbdev.h"
++#include "dvb_demux.h"
++#include "dvb_frontend.h"
++#include "dvb_net.h"
 +
 +#include "c8sectpfe-common.h"
 +#include "c8sectpfe-core.h"
 +#include "c8sectpfe-dvb.h"
 +
-+#include "dvb-pll.h"
-+#include "lnbh24.h"
-+#include "stv0367.h"
-+#include "stv0367_priv.h"
-+#include "stv6110x.h"
-+#include "stv090x.h"
-+#include "tda18212.h"
-+
-+static inline const char *dvb_card_str(unsigned int c)
++static int register_dvb(struct stdemux *demux, struct dvb_adapter *adap,
++				void *start_feed, void *stop_feed,
++				struct c8sectpfei *fei)
 +{
-+	switch (c) {
-+	case STV0367_TDA18212_NIMA_1:	return "STV0367_TDA18212_NIMA_1";
-+	case STV0367_TDA18212_NIMA_2:	return "STV0367_TDA18212_NIMA_2";
-+	case STV0367_TDA18212_NIMB_1:	return "STV0367_TDA18212_NIMB_1";
-+	case STV0367_TDA18212_NIMB_2:	return "STV0367_TDA18212_NIMB_2";
-+	case STV0903_6110_LNB24_NIMA:	return "STV0903_6110_LNB24_NIMA";
-+	case STV0903_6110_LNB24_NIMB:	return "STV0903_6110_LNB24_NIMB";
-+	default:			return "unknown dvb frontend card";
-+	}
-+}
++	int result;
 +
-+static struct stv090x_config stv090x_config = {
-+	.device                 = STV0903,
-+	.demod_mode             = STV090x_SINGLE,
-+	.clk_mode               = STV090x_CLK_EXT,
-+	.xtal                   = 16000000,
-+	.address                = 0x69,
++	demux->dvb_demux.dmx.capabilities = DMX_TS_FILTERING |
++					DMX_SECTION_FILTERING |
++					DMX_MEMORY_BASED_FILTERING;
 +
-+	.ts1_mode               = STV090x_TSMODE_SERIAL_CONTINUOUS,
-+	.ts2_mode               = STV090x_TSMODE_SERIAL_CONTINUOUS,
++	demux->dvb_demux.priv = demux;
++	demux->dvb_demux.filternum = C8SECTPFE_MAXCHANNEL;
++	demux->dvb_demux.feednum = C8SECTPFE_MAXCHANNEL;
 +
-+	.repeater_level         = STV090x_RPTLEVEL_64,
++	demux->dvb_demux.start_feed = start_feed;
++	demux->dvb_demux.stop_feed = stop_feed;
++	demux->dvb_demux.write_to_decoder = NULL;
 +
-+	.tuner_init             = NULL,
-+	.tuner_set_mode         = NULL,
-+	.tuner_set_frequency    = NULL,
-+	.tuner_get_frequency    = NULL,
-+	.tuner_set_bandwidth    = NULL,
-+	.tuner_get_bandwidth    = NULL,
-+	.tuner_set_bbgain       = NULL,
-+	.tuner_get_bbgain       = NULL,
-+	.tuner_set_refclk       = NULL,
-+	.tuner_get_status       = NULL,
-+};
-+
-+static struct stv6110x_config stv6110x_config = {
-+	.addr                   = 0x60,
-+	.refclk                 = 16000000,
-+};
-+
-+#define NIMA 0
-+#define NIMB 1
-+
-+static struct stv0367_config stv0367_tda18212_config[] = {
-+	{
-+		.demod_address = 0x1c,
-+		.xtal = 16000000,
-+		.if_khz = 4500,
-+		.if_iq_mode = FE_TER_NORMAL_IF_TUNER,
-+		.ts_mode = STV0367_SERIAL_PUNCT_CLOCK,
-+		.clk_pol = STV0367_CLOCKPOLARITY_DEFAULT,
-+	}, {
-+		.demod_address = 0x1d,
-+		.xtal = 16000000,
-+		.if_khz = 4500,
-+		.if_iq_mode = FE_TER_NORMAL_IF_TUNER,
-+		.ts_mode = STV0367_SERIAL_PUNCT_CLOCK,
-+		.clk_pol = STV0367_CLOCKPOLARITY_DEFAULT,
-+	}, {
-+		.demod_address = 0x1e,
-+		.xtal = 16000000,
-+		.if_khz = 4500,
-+		.if_iq_mode = FE_TER_NORMAL_IF_TUNER,
-+		.ts_mode = STV0367_SERIAL_PUNCT_CLOCK,
-+		.clk_pol = STV0367_CLOCKPOLARITY_DEFAULT,
-+	},
-+};
-+
-+static struct tda18212_config tda18212_conf = {
-+	.if_dvbt_6 = 4150,
-+	.if_dvbt_7 = 4150,
-+	.if_dvbt_8 = 4500,
-+	.if_dvbc = 5000,
-+};
-+
-+int c8sectpfe_frontend_attach(struct dvb_frontend **fe,
-+		struct c8sectpfe *c8sectpfe,
-+		struct channel_info *tsin, int chan_num)
-+{
-+	struct tda18212_config *tda18212;
-+	struct stv6110x_devctl *fe2;
-+	struct i2c_client *client;
-+	struct i2c_board_info tda18212_info = {
-+		.type = "tda18212",
-+		.addr = 0x60,
-+	};
-+
-+	if (!tsin)
-+		return -EINVAL;
-+
-+	switch (tsin->dvb_card) {
-+
-+	case STV0367_TDA18212_NIMA_1:
-+	case STV0367_TDA18212_NIMA_2:
-+	case STV0367_TDA18212_NIMB_1:
-+	case STV0367_TDA18212_NIMB_2:
-+		if (tsin->dvb_card == STV0367_TDA18212_NIMA_1)
-+			*fe = dvb_attach(stv0367ter_attach,
-+				 &stv0367_tda18212_config[0],
-+					tsin->i2c_adapter);
-+		else if (tsin->dvb_card == STV0367_TDA18212_NIMB_1)
-+			*fe = dvb_attach(stv0367ter_attach,
-+				 &stv0367_tda18212_config[1],
-+					tsin->i2c_adapter);
-+		else
-+			*fe = dvb_attach(stv0367ter_attach,
-+				 &stv0367_tda18212_config[2],
-+					tsin->i2c_adapter);
-+
-+		if (!*fe) {
-+			dev_err(c8sectpfe->device,
-+				"%s: stv0367ter_attach failed for NIM card %s\n"
-+				, __func__, dvb_card_str(tsin->dvb_card));
-+			return -ENODEV;
-+		};
-+
-+		/*
-+		 * init the demod so that i2c gate_ctrl
-+		 * to the tuner works correctly
-+		 */
-+		(*fe)->ops.init(*fe);
-+
-+		/* Allocate the tda18212 structure */
-+		tda18212 = devm_kzalloc(c8sectpfe->device,
-+					sizeof(struct tda18212_config),
-+					GFP_KERNEL);
-+		if (!tda18212) {
-+			dev_err(c8sectpfe->device,
-+				"%s: devm_kzalloc failed\n", __func__);
-+			return -ENOMEM;
-+		}
-+
-+		memcpy(tda18212, &tda18212_conf,
-+			sizeof(struct tda18212_config));
-+
-+		tda18212->fe = (*fe);
-+
-+		tda18212_info.platform_data = tda18212;
-+
-+		/* attach tuner */
-+		request_module("tda18212");
-+		client = i2c_new_device(tsin->i2c_adapter, &tda18212_info);
-+		if (!client || !client->dev.driver) {
-+			dvb_frontend_detach(*fe);
-+			return -ENODEV;
-+		}
-+
-+		if (!try_module_get(client->dev.driver->owner)) {
-+			i2c_unregister_device(client);
-+			dvb_frontend_detach(*fe);
-+			return -ENODEV;
-+		}
-+
-+		tsin->i2c_client = client;
-+
-+		break;
-+
-+	case STV0903_6110_LNB24_NIMA:
-+		*fe = dvb_attach(stv090x_attach,	&stv090x_config,
-+				tsin->i2c_adapter, STV090x_DEMODULATOR_0);
-+		if (!*fe) {
-+			dev_err(c8sectpfe->device, "%s: stv090x_attach failed\n"
-+				"\tfor NIM card %s\n",
-+				__func__, dvb_card_str(tsin->dvb_card));
-+			return -ENODEV;
-+		}
-+
-+		fe2 = dvb_attach(stv6110x_attach, *fe,
-+					&stv6110x_config, tsin->i2c_adapter);
-+		if (!fe2) {
-+			dev_err(c8sectpfe->device,
-+				"%s: stv6110x_attach failed for NIM card %s\n"
-+				, __func__, dvb_card_str(tsin->dvb_card));
-+			return -ENODEV;
-+		};
-+
-+		stv090x_config.tuner_init = fe2->tuner_init;
-+		stv090x_config.tuner_set_mode = fe2->tuner_set_mode;
-+		stv090x_config.tuner_set_frequency = fe2->tuner_set_frequency;
-+		stv090x_config.tuner_get_frequency = fe2->tuner_get_frequency;
-+		stv090x_config.tuner_set_bandwidth = fe2->tuner_set_bandwidth;
-+		stv090x_config.tuner_get_bandwidth = fe2->tuner_get_bandwidth;
-+		stv090x_config.tuner_set_bbgain = fe2->tuner_set_bbgain;
-+		stv090x_config.tuner_get_bbgain = fe2->tuner_get_bbgain;
-+		stv090x_config.tuner_set_refclk = fe2->tuner_set_refclk;
-+		stv090x_config.tuner_get_status = fe2->tuner_get_status;
-+
-+		dvb_attach(lnbh24_attach, *fe, tsin->i2c_adapter, 0, 0, 0x9);
-+		break;
-+
-+	default:
-+		dev_err(c8sectpfe->device,
-+			"%s: DVB frontend card %s not yet supported\n",
-+			__func__, dvb_card_str(tsin->dvb_card));
-+		return -ENODEV;
++	result = dvb_dmx_init(&demux->dvb_demux);
++	if (result < 0) {
++		dev_err(fei->dev, "dvb_dmx_init failed (errno = %d)\n",
++			result);
++		goto err_dmx;
 +	}
 +
-+	(*fe)->id = chan_num;
++	demux->dmxdev.filternum = demux->dvb_demux.filternum;
++	demux->dmxdev.demux = &demux->dvb_demux.dmx;
++	demux->dmxdev.capabilities = 0;
 +
-+	dev_info(c8sectpfe->device,
-+			"DVB frontend card %s successfully attached",
-+			dvb_card_str(tsin->dvb_card));
++	result = dvb_dmxdev_init(&demux->dmxdev, adap);
++	if (result < 0) {
++		dev_err(fei->dev, "dvb_dmxdev_init failed (errno = %d)\n",
++			result);
++
++		goto err_dmxdev;
++	}
++
++	demux->hw_frontend.source = DMX_FRONTEND_0 + demux->tsin_index;
++
++	result = demux->dvb_demux.dmx.add_frontend(&demux->dvb_demux.dmx,
++						&demux->hw_frontend);
++	if (result < 0) {
++		dev_err(fei->dev, "add_frontend failed (errno = %d)\n", result);
++		goto err_fe_hw;
++	}
++
++	demux->mem_frontend.source = DMX_MEMORY_FE;
++	result = demux->dvb_demux.dmx.add_frontend(&demux->dvb_demux.dmx,
++						&demux->mem_frontend);
++	if (result < 0) {
++		dev_err(fei->dev, "add_frontend failed (%d)\n", result);
++		goto err_fe_mem;
++	}
++
++	result = demux->dvb_demux.dmx.connect_frontend(&demux->dvb_demux.dmx,
++							&demux->hw_frontend);
++	if (result < 0) {
++		dev_err(fei->dev, "connect_frontend (%d)\n", result);
++		goto err_fe_con;
++	}
++
 +	return 0;
++
++err_fe_con:
++	demux->dvb_demux.dmx.remove_frontend(&demux->dvb_demux.dmx,
++						     &demux->mem_frontend);
++err_fe_mem:
++	demux->dvb_demux.dmx.remove_frontend(&demux->dvb_demux.dmx,
++						     &demux->hw_frontend);
++err_fe_hw:
++	dvb_dmxdev_release(&demux->dmxdev);
++err_dmxdev:
++	dvb_dmx_release(&demux->dvb_demux);
++err_dmx:
++	return result;
++
 +}
-diff --git a/drivers/media/platform/sti/c8sectpfe/c8sectpfe-dvb.h b/drivers/media/platform/sti/c8sectpfe/c8sectpfe-dvb.h
++
++static void unregister_dvb(struct stdemux *demux)
++{
++
++	demux->dvb_demux.dmx.remove_frontend(&demux->dvb_demux.dmx,
++						     &demux->mem_frontend);
++
++	demux->dvb_demux.dmx.remove_frontend(&demux->dvb_demux.dmx,
++						     &demux->hw_frontend);
++
++	dvb_dmxdev_release(&demux->dmxdev);
++
++	dvb_dmx_release(&demux->dvb_demux);
++}
++
++static struct c8sectpfe *c8sectpfe_create(struct c8sectpfei *fei,
++				void *start_feed,
++				void *stop_feed)
++{
++	struct c8sectpfe *c8sectpfe;
++	int result;
++	int i, j;
++
++	short int ids[] = { -1 };
++
++	c8sectpfe = kzalloc(sizeof(struct c8sectpfe), GFP_KERNEL);
++	if (!c8sectpfe)
++		goto err1;
++
++	mutex_init(&c8sectpfe->lock);
++
++	c8sectpfe->device = fei->dev;
++
++	result = dvb_register_adapter(&c8sectpfe->adapter, "STi c8sectpfe",
++					THIS_MODULE, fei->dev, ids);
++	if (result < 0) {
++		dev_err(fei->dev, "dvb_register_adapter failed (errno = %d)\n",
++			result);
++		goto err2;
++	}
++
++	c8sectpfe->adapter.priv = fei;
++
++	for (i = 0; i < fei->tsin_count; i++) {
++
++		c8sectpfe->demux[i].tsin_index = i;
++		c8sectpfe->demux[i].c8sectpfei = fei;
++
++		result = register_dvb(&c8sectpfe->demux[i], &c8sectpfe->adapter,
++				start_feed, stop_feed, fei);
++		if (result < 0) {
++			dev_err(fei->dev,
++				"register_dvb feed=%d failed (errno = %d)\n",
++				result, i);
++
++			/* we take a all or nothing approach */
++			for (j = 0; j < i; j++)
++				unregister_dvb(&c8sectpfe->demux[j]);
++			goto err3;
++		}
++	}
++
++	c8sectpfe->num_feeds = fei->tsin_count;
++
++	return c8sectpfe;
++err3:
++	dvb_unregister_adapter(&c8sectpfe->adapter);
++err2:
++	kfree(c8sectpfe);
++err1:
++	return NULL;
++};
++
++static void c8sectpfe_delete(struct c8sectpfe *c8sectpfe)
++{
++	int i;
++
++	if (!c8sectpfe)
++		return;
++
++	for (i = 0; i < c8sectpfe->num_feeds; i++)
++		unregister_dvb(&c8sectpfe->demux[i]);
++
++	dvb_unregister_adapter(&c8sectpfe->adapter);
++
++	kfree(c8sectpfe);
++};
++
++void c8sectpfe_tuner_unregister_frontend(struct c8sectpfe *c8sectpfe,
++					struct c8sectpfei *fei)
++{
++	int n;
++	struct channel_info *tsin;
++
++	for (n = 0; n < fei->tsin_count; n++) {
++
++		tsin = fei->channel_data[n];
++
++		if (tsin && tsin->frontend) {
++			dvb_unregister_frontend(tsin->frontend);
++			dvb_frontend_detach(tsin->frontend);
++		}
++
++		if (tsin && tsin->i2c_adapter)
++			i2c_put_adapter(tsin->i2c_adapter);
++
++		if (tsin && tsin->i2c_client) {
++			if (tsin->i2c_client->dev.driver->owner)
++				module_put(tsin->i2c_client->dev.driver->owner);
++			i2c_unregister_device(tsin->i2c_client);
++		}
++	}
++
++	c8sectpfe_delete(c8sectpfe);
++};
++
++int c8sectpfe_tuner_register_frontend(struct c8sectpfe **c8sectpfe,
++				struct c8sectpfei *fei,
++				void *start_feed,
++				void *stop_feed)
++{
++	struct channel_info *tsin;
++	struct dvb_frontend *frontend;
++	int n, res;
++
++	*c8sectpfe = c8sectpfe_create(fei, start_feed, stop_feed);
++	if (!*c8sectpfe)
++		return -ENOMEM;
++
++	for (n = 0; n < fei->tsin_count; n++) {
++		tsin = fei->channel_data[n];
++
++		res = c8sectpfe_frontend_attach(&frontend, *c8sectpfe, tsin, n);
++		if (res)
++			goto err;
++
++		res = dvb_register_frontend(&c8sectpfe[0]->adapter, frontend);
++		if (res < 0) {
++			dev_err(fei->dev, "dvb_register_frontend failed (%d)\n",
++				res);
++			goto err;
++		}
++
++		tsin->frontend = frontend;
++	}
++
++	return 0;
++
++err:
++	c8sectpfe_tuner_unregister_frontend(*c8sectpfe, fei);
++	return res;
++}
+diff --git a/drivers/media/platform/sti/c8sectpfe/c8sectpfe-common.h b/drivers/media/platform/sti/c8sectpfe/c8sectpfe-common.h
 new file mode 100644
-index 0000000..bd366db
+index 0000000..da21c0a
 --- /dev/null
-+++ b/drivers/media/platform/sti/c8sectpfe/c8sectpfe-dvb.h
-@@ -0,0 +1,20 @@
++++ b/drivers/media/platform/sti/c8sectpfe/c8sectpfe-common.h
+@@ -0,0 +1,64 @@
 +/*
 + * c8sectpfe-common.h - C8SECTPFE STi DVB driver
 + *
@@ -293,12 +315,56 @@ index 0000000..bd366db
 + *      published by the Free Software Foundation; either version 2 of
 + *      the License, or (at your option) any later version.
 + */
-+#ifndef _C8SECTPFE_DVB_H_
-+#define _C8SECTPFE_DVB_H_
++#ifndef _C8SECTPFE_COMMON_H_
++#define _C8SECTPFE_COMMON_H_
 +
-+int c8sectpfe_frontend_attach(struct dvb_frontend **fe,
-+			struct c8sectpfe *c8sectpfe, struct channel_info *tsin,
-+			int chan_num);
++#include <linux/dvb/dmx.h>
++#include <linux/dvb/frontend.h>
++#include <linux/gpio.h>
++#include <linux/version.h>
++
++#include "dmxdev.h"
++#include "dvb_demux.h"
++#include "dvb_frontend.h"
++#include "dvb_net.h"
++
++/* Maximum number of channels */
++#define C8SECTPFE_MAXADAPTER (4)
++#define C8SECTPFE_MAXCHANNEL 64
++#define STPTI_MAXCHANNEL 64
++
++#define MAX_INPUTBLOCKS 7
++
++struct c8sectpfe;
++struct stdemux;
++
++struct stdemux {
++	struct dvb_demux	dvb_demux;
++	struct dmxdev		dmxdev;
++	struct dmx_frontend	hw_frontend;
++	struct dmx_frontend	mem_frontend;
++	int			tsin_index;
++	int			running_feed_count;
++	struct			c8sectpfei *c8sectpfei;
++};
++
++struct c8sectpfe {
++	struct stdemux demux[MAX_INPUTBLOCKS];
++	struct mutex lock;
++	struct dvb_adapter adapter;
++	struct device *device;
++	int mapping;
++	int num_feeds;
++};
++
++/* Channel registration */
++int c8sectpfe_tuner_register_frontend(struct c8sectpfe **c8sectpfe,
++					struct c8sectpfei *fei,
++					void *start_feed,
++					void *stop_feed);
++
++void c8sectpfe_tuner_unregister_frontend(struct c8sectpfe *c8sectpfe,
++						struct c8sectpfei *fei);
 +
 +#endif
 -- 
