@@ -1,99 +1,145 @@
-From: Boris Brezillon <boris.brezillon@free-electrons.com>
-Subject: Re: [RFC PATCH 2/2] dt: spi: s3c64xx: add compatible to
- controller-data
-Date: Thu, 30 Jul 2015 09:50:51 +0200
-Message-ID: <20150730095051.06eff8b1@bbrezillon>
-References: <cover.1438170519.git.hramrach@gmail.com>
-	<557c1962448393b2a8736f26bfa2a3a5ba4aeb7a.1438170519.git.hramrach@gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <557c1962448393b2a8736f26bfa2a3a5ba4aeb7a.1438170519.git.hramrach@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Michal Suchanek <hramrach@gmail.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, David Woodhouse <dwmw2@infradead.org>, Brian Norris <computersforpeace@gmail.com>, Kukjin Kim <kgene@kernel.org>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, Mark Brown <broonie@kernel.org>, Padmavathi Venna <padma.kvr@gmail.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-spi@vger.kernel.org
+From: Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v4 1/2] arm64: dts: Add dts files for Marvell Berlin4CT
+ SoC
+Date: Thu, 30 Jul 2015 10:06:38 +0200
+Message-ID: <55B9DB0E.7010303@gmail.com>
+References: <1437557992-7111-1-git-send-email-jszhang@marvell.com> <1437557992-7111-2-git-send-email-jszhang@marvell.com>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1437557992-7111-2-git-send-email-jszhang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jisheng Zhang <jszhang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, khilman-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, sudeep.holla-5wv7dgnIgG8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Michal,
-
-On Wed, 29 Jul 2015 12:19:57 +0200
-Michal Suchanek <hramrach@gmail.com> wrote:
-
-> The controller-data subnode has no compatible. This can lead to other
-> drivers getting confused by it. Add a compatible to make devicetreee
-> unambiguous.
-> 
-> Signed-off-by: Michal Suchanek <hramrach@gmail.com>
+On 07/22/2015 11:39 AM, Jisheng Zhang wrote:
+> Add initial dtsi file to support Marvell Berlin4CT SoC with
+> quad Cortex-A53 CPUs.
+>
+> It also adds dts file for Marvell Berlin4CT DMP board which is
+> based on Berlin4CT SoC.
+>
+> Signed-off-by: Jisheng Zhang <jszhang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
 > ---
->  Documentation/devicetree/bindings/spi/spi-samsung.txt | 3 +++
->  drivers/spi/spi-s3c64xx.c                             | 4 ++++
->  2 files changed, 7 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/spi/spi-samsung.txt b/Documentation/devicetree/bindings/spi/spi-samsung.txt
-> index 6dbdeb3..b1e98d1 100644
-> --- a/Documentation/devicetree/bindings/spi/spi-samsung.txt
-> +++ b/Documentation/devicetree/bindings/spi/spi-samsung.txt
-> @@ -92,16 +92,19 @@ Example:
->  			spi-max-frequency = <10000>;
->  
->  			controller-data {
-> +				compatible = "samsung,s3c-controller-data";
+[...]
+> diff --git a/arch/arm64/boot/dts/marvell/berlin4ct-dmp.dts b/arch/arm64/boot/dts/marvell/berlin4ct-dmp.dts
+> new file mode 100644
+> index 0000000..d1152c0
+> --- /dev/null
+> +++ b/arch/arm64/boot/dts/marvell/berlin4ct-dmp.dts
+> @@ -0,0 +1,66 @@
+> +/*
+> + * Copyright (C) 2015 Marvell Technology Group Ltd.
+> + *
+> + * Author: Jisheng Zhang <jszhang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
+[...]
+> +/ {
 
-AFAIK compatible should (as much as possible :-)) only be used to encode
-HW type, and here you're using it to expose what you want to do with
-your data in Linux.
+Jisheng,
 
->  				samsung,spi-feedback-delay = <0>;
->  			};
->  
->  			partition@0 {
-> +				compatible = "linux,ofpart-partition";
+before I take this series, some nitpicking.
 
-Ditto.
+> +	model = "MARVELL BG4CT DMP BOARD";
 
-Since you have to patch your DTs anyway, how about putting your
-partitions in a subnode and patch the ofpart code to parse this subnode
-if it is present (see the following patch).
+Are you fine with fixing the broken CAPSLOCK key, i.e. make above
+"Marvell BG4CT DMP board" ?
 
-Best Regards,
+> +	compatible = "marvell,berlin4ct-dmp", "marvell,berlin4ct", "marvell,berlin";
+> +
+> +	chosen {
+> +		stdout-path = "serial0:115200n8";
+> +	};
+> +
+> +	memory {
+> +		device_type = "memory";
+> +		/* the first 16MB is for firmwares's usage */
+> +		reg = <0 0x01000000 0 0x80000000>;
+> +	};
+> +};
+> +
+> +&uart0 {
+> +	status = "okay";
+> +};
+> diff --git a/arch/arm64/boot/dts/marvell/berlin4ct.dtsi b/arch/arm64/boot/dts/marvell/berlin4ct.dtsi
+> new file mode 100644
+> index 0000000..becaedc
+> --- /dev/null
+> +++ b/arch/arm64/boot/dts/marvell/berlin4ct.dtsi
+> @@ -0,0 +1,164 @@
+> +/*
+> + * Copyright (C) 2015 Marvell Technology Group Ltd.
+> + *
+> + * Author: Jisheng Zhang <jszhang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
+[...]
+> +
+> +/ {
+> +	compatible = "marvell,berlin";
 
-Boris
+compatible = "marvell,berlin4ct", "marvell,berlin";
 
---- >8 ---
+> +	interrupt-parent = <&gic>;
+> +	#address-cells = <2>;
+> +	#size-cells = <2>;
+[...]
+> +	soc {
+> +		compatible = "simple-bus";
+> +		#address-cells = <1>;
+> +		#size-cells = <1>;
+> +		ranges = <0 0 0xf7000000 0x1000000>;
+> +
+> +		osc: osc {
+> +			compatible = "fixed-clock";
+> +			#clock-cells = <0>;
+> +			clock-frequency = <25000000>;
+> +		};
 
->From e342860932bda3a6354a0a6e17540db5c85a14e0 Mon Sep 17 00:00:00 2001
-From: Boris Brezillon <boris.brezillon@free-electrons.com>
-Date: Thu, 30 Jul 2015 09:44:07 +0200
-Subject: [PATCH] mtd: ofpart: search for a partitions node
+Is the oscillator above really part of the SoC bus fabric? If 25MHz is
+the only option for an external OSC, I suggest to move it at least out
+of the soc {} node.
 
-The DT partition parser currently assumes the parition definitions are
-directly stored in the MTD device node, but sometime this device node
-contains other child nodes used to store device specific information.
+Sebastian
 
-Search for a partitions subnode containing the partition definitions,
-if it is not there, parse the definitions in the device node.
-
-Signed-off-by: Boris Brezillon <boris.brezillon@free-electrons.com>
----
- drivers/mtd/ofpart.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/mtd/ofpart.c b/drivers/mtd/ofpart.c
-index 8a06cfb..ba52b88 100644
---- a/drivers/mtd/ofpart.c
-+++ b/drivers/mtd/ofpart.c
-@@ -38,7 +38,10 @@ static int parse_ofpart_partitions(struct mtd_info *master,
- 	if (!data)
- 		return 0;
- 
--	node = data->of_node;
-+	node = of_get_child_by_name(data->of_node, "partitions");
-+	if (!node)
-+		node = data->of_node;
-+
- 	if (!node)
- 		return 0;
- 
--- 
-1.9.1
+> +		gic: interrupt-controller@901000 {
+> +			compatible = "arm,gic-400";
+> +			#interrupt-cells = <3>;
+> +			interrupt-controller;
+> +			reg = <0x901000 0x1000>,
+> +			      <0x902000 0x2000>,
+> +			      <0x904000 0x2000>,
+> +			      <0x906000 0x2000>;
+> +			interrupts = <GIC_PPI 9 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_HIGH)>;
+> +		};
+> +
+> +		apb@fc0000 {
+> +			compatible = "simple-bus";
+> +			#address-cells = <1>;
+> +			#size-cells = <1>;
+> +			ranges = <0 0xfc0000 0x10000>;
+> +			interrupt-parent = <&sic>;
+> +
+> +			sic: interrupt-controller@1000 {
+> +				compatible = "snps,dw-apb-ictl";
+> +				reg = <0x1000 0x30>;
+> +				interrupt-controller;
+> +				#interrupt-cells = <1>;
+> +				interrupt-parent = <&gic>;
+> +				interrupts = <GIC_SPI 17 IRQ_TYPE_LEVEL_HIGH>;
+> +			};
+> +
+> +			uart0: uart@d000 {
+> +				compatible = "snps,dw-apb-uart";
+> +				reg = <0xd000 0x100>;
+> +				interrupts = <8>;
+> +				clocks = <&osc>;
+> +				reg-shift = <2>;
+> +				status = "disabled";
+> +			};
+> +		};
+> +	};
+> +};
+>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
