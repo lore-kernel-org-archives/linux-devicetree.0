@@ -1,149 +1,73 @@
-From: Michal Simek <michal.simek@xilinx.com>
-Subject: Re: [RFCv2 1/3] docs: dts: Added documentation for Xilinx Zynq Reset
- Controller bindings.
-Date: Thu, 30 Jul 2015 16:37:30 +0200
-Message-ID: <55BA36AA.2030601@xilinx.com>
-References: <1437783682-13632-1-git-send-email-moritz.fischer@ettus.com>
- <1437783682-13632-2-git-send-email-moritz.fischer@ettus.com>
- <20150728025833.GQ2650@xsjsorenbubuntu>
- <CAAtXAHejK2vL2qSdhqrtHmkV_RBfkLzQNM8ZbDvREvienNqzXw@mail.gmail.com>
- <20150728225337.GF2650@xsjsorenbubuntu>
- <CAAtXAHd8kG_FtKTW-2T2KToXesWgsgxkZ3vpXZ_oRjGCSfpFgw@mail.gmail.com>
- <20150729173802.GO2650@xsjsorenbubuntu>
+From: Rob Herring <robherring2@gmail.com>
+Subject: Re: [PATCH] backlight: pm8941-wled: Add default-brightness property
+Date: Thu, 30 Jul 2015 10:26:19 -0500
+Message-ID: <CAL_JsqJYxDROqbv-wh37=MjwbsEtrYKFTvC1NfneonLH2_gL2A@mail.gmail.com>
+References: <1437681127-15760-1-git-send-email-bjorn.andersson@sonymobile.com>
+ <CAL_JsqKxdF5sj=edURFLDCk1OyCJR-w6+STL4r3zM6+be3tjhg@mail.gmail.com> <20150729235139.GC6519@usrtlx11787.corpusers.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20150729173802.GO2650@xsjsorenbubuntu>
-Sender: linux-kernel-owner@vger.kernel.org
-To: =?UTF-8?Q?S=c3=b6ren_Brinkmann?= <soren.brinkmann@xilinx.com>, Moritz Fischer <moritz.fischer@ettus.com>
-Cc: Philipp Zabel <p.zabel@pengutronix.de>, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, Kumar Gala <galak@codeaurora.org>, Michal Simek <michal.simek@xilinx.com>, linux@arm.linux.org.uk, devicetree@vger.kernel.org, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <20150729235139.GC6519@usrtlx11787.corpusers.net>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Bjorn Andersson <bjorn.andersson@sonymobile.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Jingoo Han <jingoohan1@gmail.com>, Lee Jones <lee.jones@linaro.org>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, Tomi Valkeinen <tomi.valkeinen@ti.com>, Rob Clark <robdclark@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-fbdev@vger.kernel.org" <linux-fbdev@vger.kernel.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 07/29/2015 07:38 PM, S=C3=B6ren Brinkmann wrote:
-> On Tue, 2015-07-28 at 11:14PM -0700, Moritz Fischer wrote:
->> Hi S=C3=B6ren,
+On Wed, Jul 29, 2015 at 6:51 PM, Bjorn Andersson
+<bjorn.andersson@sonymobile.com> wrote:
+> On Fri 24 Jul 08:29 PDT 2015, Rob Herring wrote:
+>
+>> On Thu, Jul 23, 2015 at 2:52 PM, Bjorn Andersson
+>> <bjorn.andersson@sonymobile.com> wrote:
+>> > Add the possibility of specifying the default brightness in DT.
+>> >
+>> > Signed-off-by: Bjorn Andersson <bjorn.andersson@sonymobile.com>
+>> > ---
+>> >
+>> > This depends on the patch moving pm8941-wled to backlight [1]. The dt property
+>> > is used by several other backlight drivers, so I considered this to be a
+>> > "common" property and it's hence not prefixed with "qcom,".
 >>
->> On Tue, Jul 28, 2015 at 3:53 PM, S=C3=B6ren Brinkmann
->> <soren.brinkmann@xilinx.com> wrote:
->>> On Mon, 2015-07-27 at 09:52PM -0700, Moritz Fischer wrote:
->>>> Hi S=C3=B6ren,
->>>>
->>>> thanks for your feedback.
->>>>
->>>> On Mon, Jul 27, 2015 at 7:58 PM, S=C3=B6ren Brinkmann
->>>> <soren.brinkmann@xilinx.com> wrote:
->>>>> Hi Moritz,
->>>>>
->>>>> On Fri, 2015-07-24 at 05:21PM -0700, Moritz Fischer wrote:
->>>>>> Signed-off-by: Moritz Fischer <moritz.fischer@ettus.com>
->>>>>> ---
->>>>>>  Documentation/devicetree/bindings/reset/zynq-reset-pl.txt | 13 =
-+++++++++++++
->>>>>>  1 file changed, 13 insertions(+)
->>>>>>  create mode 100644 Documentation/devicetree/bindings/reset/zynq=
--reset-pl.txt
->>>>>>
->>>>>> diff --git a/Documentation/devicetree/bindings/reset/zynq-reset-=
-pl.txt b/Documentation/devicetree/bindings/reset/zynq-reset-pl.txt
->>>>>> new file mode 100644
->>>>>> index 0000000..ac4499e
->>>>>> --- /dev/null
->>>>>> +++ b/Documentation/devicetree/bindings/reset/zynq-reset-pl.txt
->>>>>> @@ -0,0 +1,13 @@
->>>>>> +Xilinx Zynq PL Reset Manager
->>>>>> +
->>>>>> +Required properties:
->>>>>> +- compatible: "xlnx,zynq-reset-pl"
->>>>>> +- syscon <&slcr>;
->>>>>> +- #reset-cells: 1
->>>>>> +
->>>>>> +Example:
->>>>>> +     rstc: rstc@240 {
->>>>>> +             #reset-cells =3D <1>;
->>>>>> +             compatible =3D "xlnx,zynq-reset-pl";
->>>>>> +             syscon =3D <&slcr>;
->>>>>> +     };
->>>>>
->>>>> I think you also have to add the outputs and make them part of th=
-e
->>>>> binding. Otherwise you'd have to read the implementation to find
->>>>> out what device should be hooked up to which output of the reset-=
-controller.
->>>>
->>>> Is something like this what you had in mind? I had that prepared f=
-or
->>>> the next round of patches:
->>>>
->>>> Reset outputs:
->>>>  0  : soft reset
->>>>  32 : ddr reset
->>>>  64 : topsw reset
->>>>  96 : dmac reset
->>>>  128: usb0 reset
->>>>  129: usb1 reset
->>>>  160: gem0 reset
->>>>  161: gem1 reset
->>>>  164: gem0 rx reset
->>>>  165: gem1 rx reset
->>>>  166: gem0 ref reset
->>>>  167: gem1 ref reset
->>>>  192: sdio0 reset
->>>>  193: sdio1 reset
->>>>  196: sdio0 ref reset
->>>>  197: sdio1 ref reset
->>>>  224: spi0 reset
->>>>  225: spi1 reset
->>>>  226: spi0 ref reset
->>>>  227: spi1 ref reset
->>>>  256: can0 reset
->>>>  257: can1 reset
->>>>  258: can0 ref reset
->>>>  259: can1 ref reset
->>>>  288: i2c0 reset
->>>>  289: i2c1 reset
->>>>  320: uart0 reset
->>>>  321: uart1 reset
->>>>  322: uart0 ref reset
->>>>  323: uart1 ref reset
->>>>  352: gpio reset
->>>>  384: lqspi reset
->>>>  385: qspi ref reset
->>>>  416: smc reset
->>>>  417: smc ref reset
->>>>  448: ocm reset
->>>>  512: fpga0 out reset
->>>>  513: fpga1 out reset
->>>>  514: fpga2 out reset
->>>>  515: fpga3 out reset
->>>>  544: a9 reset 0
->>>>  545: a9 reset 1
->>>>  552: peri reset
->>>
->>> Basically, yes. I guess the gaps are due to directly mapping this n=
-umber
->>> to bank and bit instead of doing some more complex mapping in betwe=
-en?
->>> I'm not sure whether I like this :) I guess if a number is off the
->>> driver would still toggle the addressed bit?
+>> Well, we have "default-brightness" and "default-brightness-level" used
+>> by 1 driver each. But default-brightness-level is much more commonly
+>> used (in dts files) since it is in the pwm backlight binding, so we
+>> should go with it. I'd like to see this moved to a common backlight
+>> doc.
 >>
->> My assumption was that people would use a #include
->> <dt-bindings/xlnx,zynq-reset.h> in their dts. Assuming I got the
->> numbers in there right this makes it hard to misuse by accident.
->> I'm not saying it's perfect ...
->=20
-> Michal always turned down the #include patches with the argument of
-> re-using the dts files outside of the Linux sources where those inclu=
-des
-> etc may not be available in this form.
+>
+> As I looked at these, the default-brightness used in tps65217 is a value
+> between 0 and 100, so that can be interpreted as a percentage.
+>
+> The pwm binding however uses a separate array of "brightness-levels" and
+> then default-brightness-level is supposed to be an index into that
+> array.
 
-yes. All these includes end up in more work when you want to generate
-them or move to any other project.
-I don't think that make sense to caused another problem just because of
-that. Simple add these values to reset binding doc and then you <&rstc
-number> in nodes.
-Because we agreed that it has to be done on driver basis this is just
-copy that macros from one file to another.
+Uggg. I missed that minor detail...
 
-Thanks,
-Michal
+
+> As we're trying to specify a default brightness within the range [0,
+> max_brightness) the latter doesn't make much sense.
+>
+> Therefor my suggestion is that we make the "default-brightness" the
+> common property and we define it as a percentage of [0,max_brightness).
+
+Okay.
+
+I wonder if we should have units such as
+"default-brightness-percentage" or "default-brightness-%" so it is
+clear. Otherwise, we might have some people doing a range of [0,max].
+The former is a bit long and the latter is a bit unusual.
+
+>> Really, I think all the backlight documentation should be merged with
+>> LEDs docs. Things like "default-on" are common. But I won't ask to do
+>> that here.
+>
+> I think the backlight framework should be merged with the LED framework.
+> There's several hw blocks that are split between the two, with an mfd
+> tying them together...
+
+Fully agree. BTW, doing that doesn't have to be in sync between the
+bindings and drivers. Of course, if we've designed the bindings with
+sub devices to fit the MFD structure, then that is another problem.
+
+Rob
