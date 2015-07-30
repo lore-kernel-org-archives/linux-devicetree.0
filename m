@@ -1,44 +1,57 @@
-From: Jan =?ISO-8859-1?Q?L=FCbbe?= <jlu@pengutronix.de>
-Subject: Re: [PATCH v3 2/6] mmc: sdhci-esdhc-imx: add tuning-step seting
- support
-Date: Thu, 30 Jul 2015 18:25:06 +0200
-Message-ID: <1438273506.26075.2.camel@pengutronix.de>
-References: <1438160637-28061-1-git-send-email-haibo.chen@freescale.com>
-	 <1438160637-28061-3-git-send-email-haibo.chen@freescale.com>
-Reply-To: jlu@pengutronix.de
+From: Bjorn Andersson <bjorn.andersson@sonymobile.com>
+Subject: Re: [PATCH] backlight: pm8941-wled: Add default-brightness property
+Date: Thu, 30 Jul 2015 09:44:33 -0700
+Message-ID: <20150730164433.GE6519@usrtlx11787.corpusers.net>
+References: <1437681127-15760-1-git-send-email-bjorn.andersson@sonymobile.com>
+ <CAL_JsqKxdF5sj=edURFLDCk1OyCJR-w6+STL4r3zM6+be3tjhg@mail.gmail.com>
+ <20150729235139.GC6519@usrtlx11787.corpusers.net>
+ <CAL_JsqJYxDROqbv-wh37=MjwbsEtrYKFTvC1NfneonLH2_gL2A@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-mmc-owner@vger.kernel.org>
-In-Reply-To: <1438160637-28061-3-git-send-email-haibo.chen@freescale.com>
-Sender: linux-mmc-owner@vger.kernel.org
-To: Haibo Chen <haibo.chen@freescale.com>
-Cc: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, shawnguo@kernel.org, kernel@pengutronix.de, linux@arm.linux.org.uk, ulf.hansson@linaro.org, aisheng.dong@freescale.com, fabio.estevam@freescale.com, devicetree@vger.kernel.org, linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org, johan.derycke@barco.com, b29396@freescale.com, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="us-ascii"
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAL_JsqJYxDROqbv-wh37=MjwbsEtrYKFTvC1NfneonLH2_gL2A@mail.gmail.com>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Rob Herring <robherring2@gmail.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Jingoo Han <jingoohan1@gmail.com>, Lee Jones <lee.jones@linaro.org>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, Tomi Valkeinen <tomi.valkeinen@ti.com>, Rob Clark <robdclark@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-fbdev@vger.kernel.org" <linux-fbdev@vger.kernel.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mi, 2015-07-29 at 17:03 +0800, Haibo Chen wrote:
-> tuning-step is the delay cell steps in tuning procedure. The default
-> value of tuning-step is 1. For imx6 series usdhc, tuning procedure ca=
-n
-> be passed when the tuning-step value is 1. But imx7d usdhc need the
-> tuning-step value as 2, otherwise it can't pass the tuning procedure.
->=20
-> So this patch add the tuning-step setting in driver, so that user can
-> set the tuning-step value in dts.
+On Thu 30 Jul 08:26 PDT 2015, Rob Herring wrote:
 
-=46rom your description, the correct tuning-step value only depends on =
-the
-SoC. Why not derive it from the compatible string?
+> On Wed, Jul 29, 2015 at 6:51 PM, Bjorn Andersson
+> <bjorn.andersson@sonymobile.com> wrote:
+> > On Fri 24 Jul 08:29 PDT 2015, Rob Herring wrote:
+[..]
+> > As we're trying to specify a default brightness within the range [0,
+> > max_brightness) the latter doesn't make much sense.
+> >
+> > Therefor my suggestion is that we make the "default-brightness" the
+> > common property and we define it as a percentage of [0,max_brightness).
+> 
+> Okay.
+> 
+> I wonder if we should have units such as
+> "default-brightness-percentage" or "default-brightness-%" so it is
+> clear. Otherwise, we might have some people doing a range of [0,max].
+> The former is a bit long and the latter is a bit unusual.
+> 
+
+I discussed this further with my colleague and gave it some though over
+the night;
+
+If the boot loader sets the brightness, it would need to convert this to
+a percentage just to have the kernel convert it back - with a expected
+lack of precision (especially w/ non-linear brightness ranges or odd
+step-sizes).
+
+In the case where it's manually tweaked by the developer he/she would
+most likely modify the brightness through sysfs until a reasonable value
+is found; and we have that extra step again of converting this to a
+percentage.
+
+
+Therefor I think it's better to just specify this in "units of
+brightness" - which would be a unit-less property.
 
 Regards,
-Jan L=C3=BCbbe
---=20
-Pengutronix e.K.                           |                           =
-  |
-Industrial Linux Solutions                 | http://www.pengutronix.de/=
-  |
-Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0  =
-  |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-555=
-5 |
-
+Bjorn
