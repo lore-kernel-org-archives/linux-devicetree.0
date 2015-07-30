@@ -1,99 +1,208 @@
-From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: [PATCH 3/3] clk: add bindings for the Ux500 clocks
-Date: Thu, 30 Jul 2015 15:20:00 +0200
-Message-ID: <1438262400-29213-1-git-send-email-linus.walleij@linaro.org>
+From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH V3 01/16] PM / OPP: Update bindings to make opp-hz a 64
+ bit value
+Date: Thu, 30 Jul 2015 08:23:59 -0500
+Message-ID: <CAL_Jsq+FBNLi8viCENmutrfWiefN0QBEKSCAY_KUi94ebthFCg@mail.gmail.com>
+References: <cover.1438166099.git.viresh.kumar@linaro.org> <f87ca786bca8abce6261dbd79a34218550355684.1438166099.git.viresh.kumar@linaro.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <f87ca786bca8abce6261dbd79a34218550355684.1438166099.git.viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+To: Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Rafael Wysocki <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "linaro-kernel-cunTk1MwBs8s++Sfvej+rw@public.gmane.org" <linaro-kernel-cunTk1MwBs8s++Sfvej+rw@public.gmane.org>, "linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Arnd Bergmann <arnd.bergmann-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Sudeep Holla <Sudeep.Holla-5wv7dgnIgG8@public.gmane.org>, Viswanath Puttagunta <viswanath.puttagunta-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Thomas Abraham <ta.omasab-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Abhilash Kesavan <kesavan.abhilash-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Kevin Hilman <khilman-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Santosh Shilimkar <santosh.shilimkar-QHcLZuEGTsvQT0dZR+AlfA@public.gmane.org>, Bartlomiej Zolnierkiewicz <b.zolnierkie-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree@vge>
 List-Id: devicetree@vger.kernel.org
 
-These Ux500 clocks have been around for years and were never
-properly documented. Add the proper binding documentation.
+On Wed, Jul 29, 2015 at 5:52 AM, Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+> With a 32 bit value, the maximum frequency that the bindings can
+> support is ~ 4 GHz. And that might fall short of what newer systems may
+> have.
 
-Cc: Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Signed-off-by: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
----
-Ulf/Mike: please ACK this patch so I can take it through
-ARM SoC.
----
- Documentation/devicetree/bindings/clock/ux500.txt | 64 +++++++++++++++++++++++
- 1 file changed, 64 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/clock/ux500.txt
+4GHz should be fast enough for anyone...
 
-diff --git a/Documentation/devicetree/bindings/clock/ux500.txt b/Documentation/devicetree/bindings/clock/ux500.txt
-new file mode 100644
-index 000000000000..e52bd4b72348
---- /dev/null
-+++ b/Documentation/devicetree/bindings/clock/ux500.txt
-@@ -0,0 +1,64 @@
-+Clock bindings for ST-Ericsson Ux500 clocks
-+
-+Required properties :
-+- compatible : shall contain only one of the following:
-+  "stericsson,u8500-clks"
-+  "stericsson,u8540-clks"
-+  "stericsson,u9540-clks"
-+- reg : shall contain base register location and length for
-+  CLKRST1, 2, 3, 5, and 6 in an array. Note the absence of
-+  CLKRST4, which does not exist.
-+
-+Required subnodes:
-+- prcmu-clock: a subnode with one clock cell for PRCMU (power,
-+  reset, control unit) clocks. The cell indicates which PRCMU
-+  clock in the prcmu-clock node the consumer wants to use.
-+- prcc-periph-clock: a subnode with two clock cells for
-+  PRCC (programmable reset- and clock controller) peripheral clocks.
-+  The first cell indicates which PRCC block the consumer
-+  wants to use, possible values are 1, 2, 3, 5, 6. The second
-+  cell indicates which clock inside the PRCC block it wants,
-+  possible values are 0 thru 31.
-+- prcc-kernel-clock: a subnode with two clock cells for
-+  PRCC (programmable reset- and clock controller) kernel clocks
-+  The first cell indicates which PRCC block the consumer
-+  wants to use, possible values are 1, 2, 3, 5, 6. The second
-+  cell indicates which clock inside the PRCC block it wants,
-+  possible values are 0 thru 31.
-+- rtc32k-clock: a subnode with zero clock cells for the 32kHz
-+  RTC clock.
-+- smp-twd-clock: a subnode for the ARM SMP Timer Watchdog cluster
-+  with zero clock cells.
-+
-+Example:
-+
-+clocks {
-+	compatible = "stericsson,u8500-clks";
-+	/*
-+	 * Registers for the CLKRST block on peripheral
-+	 * groups 1, 2, 3, 5, 6,
-+	 */
-+	reg = <0x8012f000 0x1000>, <0x8011f000 0x1000>,
-+	    <0x8000f000 0x1000>, <0xa03ff000 0x1000>,
-+	    <0xa03cf000 0x1000>;
-+
-+	prcmu_clk: prcmu-clock {
-+		#clock-cells = <1>;
-+	};
-+
-+	prcc_pclk: prcc-periph-clock {
-+		#clock-cells = <2>;
-+	};
-+
-+	prcc_kclk: prcc-kernel-clock {
-+		#clock-cells = <2>;
-+	};
-+
-+	rtc_clk: rtc32k-clock {
-+		#clock-cells = <0>;
-+	};
-+
-+	smp_twd_clk: smp-twd-clock {
-+		#clock-cells = <0>;
-+	};
-+};
--- 
-2.4.3
+> Allow opp-hz to be a 64 bit big-endian value.
+>
+> Cc: Rob Herring <rob.herring-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+
+> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> Suggested-by: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+> Suggested-by: Bartlomiej Zolnierkiewicz <b.zolnierkie-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+> Signed-off-by: Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> ---
+>  Documentation/devicetree/bindings/power/opp.txt | 40 ++++++++++++-------------
+>  1 file changed, 20 insertions(+), 20 deletions(-)
+>
+> diff --git a/Documentation/devicetree/bindings/power/opp.txt b/Documentation/devicetree/bindings/power/opp.txt
+> index 0d5e7c978121..0cb44dc21f97 100644
+> --- a/Documentation/devicetree/bindings/power/opp.txt
+> +++ b/Documentation/devicetree/bindings/power/opp.txt
+> @@ -88,7 +88,7 @@ This defines voltage-current-frequency combinations along with other related
+>  properties.
+>
+>  Required properties:
+> -- opp-hz: Frequency in Hz
+> +- opp-hz: Frequency in Hz, expressed as a 64-bit big-endian integer.
+>
+>  Optional properties:
+>  - opp-microvolt: voltage in micro Volts.
+> @@ -158,20 +158,20 @@ Example 1: Single cluster Dual-core ARM cortex A9, switch DVFS states together.
+>                 opp-shared;
+>
+>                 opp00 {
+> -                       opp-hz = <1000000000>;
+> +                       opp-hz = /bits/ 64 <1000000000>;
+>                         opp-microvolt = <970000 975000 985000>;
+>                         opp-microamp = <70000>;
+>                         clock-latency-ns = <300000>;
+>                         opp-suspend;
+>                 };
+>                 opp01 {
+> -                       opp-hz = <1100000000>;
+> +                       opp-hz = /bits/ 64 <1100000000>;
+>                         opp-microvolt = <980000 1000000 1010000>;
+>                         opp-microamp = <80000>;
+>                         clock-latency-ns = <310000>;
+>                 };
+>                 opp02 {
+> -                       opp-hz = <1200000000>;
+> +                       opp-hz = /bits/ 64 <1200000000>;
+>                         opp-microvolt = <1025000>;
+>                         clock-latency-ns = <290000>;
+>                         turbo-mode;
+> @@ -237,20 +237,20 @@ independently.
+>                  */
+>
+>                 opp00 {
+> -                       opp-hz = <1000000000>;
+> +                       opp-hz = /bits/ 64 <1000000000>;
+>                         opp-microvolt = <970000 975000 985000>;
+>                         opp-microamp = <70000>;
+>                         clock-latency-ns = <300000>;
+>                         opp-suspend;
+>                 };
+>                 opp01 {
+> -                       opp-hz = <1100000000>;
+> +                       opp-hz = /bits/ 64 <1100000000>;
+>                         opp-microvolt = <980000 1000000 1010000>;
+>                         opp-microamp = <80000>;
+>                         clock-latency-ns = <310000>;
+>                 };
+>                 opp02 {
+> -                       opp-hz = <1200000000>;
+> +                       opp-hz = /bits/ 64 <1200000000>;
+>                         opp-microvolt = <1025000>;
+>                         opp-microamp = <90000;
+>                         lock-latency-ns = <290000>;
+> @@ -313,20 +313,20 @@ DVFS state together.
+>                 opp-shared;
+>
+>                 opp00 {
+> -                       opp-hz = <1000000000>;
+> +                       opp-hz = /bits/ 64 <1000000000>;
+>                         opp-microvolt = <970000 975000 985000>;
+>                         opp-microamp = <70000>;
+>                         clock-latency-ns = <300000>;
+>                         opp-suspend;
+>                 };
+>                 opp01 {
+> -                       opp-hz = <1100000000>;
+> +                       opp-hz = /bits/ 64 <1100000000>;
+>                         opp-microvolt = <980000 1000000 1010000>;
+>                         opp-microamp = <80000>;
+>                         clock-latency-ns = <310000>;
+>                 };
+>                 opp02 {
+> -                       opp-hz = <1200000000>;
+> +                       opp-hz = /bits/ 64 <1200000000>;
+>                         opp-microvolt = <1025000>;
+>                         opp-microamp = <90000>;
+>                         clock-latency-ns = <290000>;
+> @@ -339,20 +339,20 @@ DVFS state together.
+>                 opp-shared;
+>
+>                 opp10 {
+> -                       opp-hz = <1300000000>;
+> +                       opp-hz = /bits/ 64 <1300000000>;
+>                         opp-microvolt = <1045000 1050000 1055000>;
+>                         opp-microamp = <95000>;
+>                         clock-latency-ns = <400000>;
+>                         opp-suspend;
+>                 };
+>                 opp11 {
+> -                       opp-hz = <1400000000>;
+> +                       opp-hz = /bits/ 64 <1400000000>;
+>                         opp-microvolt = <1075000>;
+>                         opp-microamp = <100000>;
+>                         clock-latency-ns = <400000>;
+>                 };
+>                 opp12 {
+> -                       opp-hz = <1500000000>;
+> +                       opp-hz = /bits/ 64 <1500000000>;
+>                         opp-microvolt = <1010000 1100000 1110000>;
+>                         opp-microamp = <95000>;
+>                         clock-latency-ns = <400000>;
+> @@ -379,7 +379,7 @@ Example 4: Handling multiple regulators
+>                 opp-shared;
+>
+>                 opp00 {
+> -                       opp-hz = <1000000000>;
+> +                       opp-hz = /bits/ 64 <1000000000>;
+>                         opp-microvolt = <970000>, /* Supply 0 */
+>                                         <960000>, /* Supply 1 */
+>                                         <960000>; /* Supply 2 */
+> @@ -392,7 +392,7 @@ Example 4: Handling multiple regulators
+>                 /* OR */
+>
+>                 opp00 {
+> -                       opp-hz = <1000000000>;
+> +                       opp-hz = /bits/ 64 <1000000000>;
+>                         opp-microvolt = <970000 975000 985000>, /* Supply 0 */
+>                                         <960000 965000 975000>, /* Supply 1 */
+>                                         <960000 965000 975000>; /* Supply 2 */
+> @@ -405,7 +405,7 @@ Example 4: Handling multiple regulators
+>                 /* OR */
+>
+>                 opp00 {
+> -                       opp-hz = <1000000000>;
+> +                       opp-hz = /bits/ 64 <1000000000>;
+>                         opp-microvolt = <970000 975000 985000>, /* Supply 0 */
+>                                         <960000 965000 975000>, /* Supply 1 */
+>                                         <960000 965000 975000>; /* Supply 2 */
+> @@ -437,12 +437,12 @@ Example 5: Multiple OPP tables
+>                 opp-shared;
+>
+>                 opp00 {
+> -                       opp-hz = <600000000>;
+> +                       opp-hz = /bits/ 64 <600000000>;
+>                         ...
+>                 };
+>
+>                 opp01 {
+> -                       opp-hz = <800000000>;
+> +                       opp-hz = /bits/ 64 <800000000>;
+>                         ...
+>                 };
+>         };
+> @@ -453,12 +453,12 @@ Example 5: Multiple OPP tables
+>                 opp-shared;
+>
+>                 opp10 {
+> -                       opp-hz = <1000000000>;
+> +                       opp-hz = /bits/ 64 <1000000000>;
+>                         ...
+>                 };
+>
+>                 opp11 {
+> -                       opp-hz = <1100000000>;
+> +                       opp-hz = /bits/ 64 <1100000000>;
+>                         ...
+>                 };
+>         };
+> --
+> 2.4.0
+>
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
