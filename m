@@ -1,54 +1,161 @@
-From: Joe Perches <joe@perches.com>
-Subject: Re: [PATCH 02/12] [media] dvb-pll: Add support for THOMSON DTT7546X
- tuner.
-Date: Thu, 30 Jul 2015 03:08:48 -0700
-Message-ID: <1438250928.2677.10.camel@perches.com>
-References: <1435158670-7195-1-git-send-email-peter.griffin@linaro.org>
-	 <1435158670-7195-3-git-send-email-peter.griffin@linaro.org>
-	 <1435195057.9377.18.camel@perches.com> <20150722185811.2d718baa@recife.lan>
-	 <20150730094738.GD488@griffinp-ThinkPad-X1-Carbon-2nd>
+From: Paul Bolle <pebolle-IWqWACnzNjzz+pZb47iToQ@public.gmane.org>
+Subject: Re: [PATCH] nfc: s3fwrn5: Add driver for Samsung S3FWRN5 NFC Chip
+Date: Thu, 30 Jul 2015 12:22:43 +0200
+Message-ID: <1438251763.15571.29.camel@tiscali.nl>
+References: <1438172116-27099-1-git-send-email-r.baldyga@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20150730094738.GD488@griffinp-ThinkPad-X1-Carbon-2nd>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Peter Griffin <peter.griffin@linaro.org>
-Cc: Mauro Carvalho Chehab <mchehab@osg.samsung.com>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, srinivas.kandagatla@gmail.com, maxime.coquelin@st.com, patrice.chotard@st.com, lee.jones@linaro.org, hugues.fruchet@st.com, linux-media@vger.kernel.org, devicetree@vger.kernel.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1438172116-27099-1-git-send-email-r.baldyga-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Robert Baldyga <r.baldyga-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Cc: lauro.venancio-430g2QfJUUCGglJvpFV4uA@public.gmane.org, aloisio.almeida-430g2QfJUUCGglJvpFV4uA@public.gmane.org, sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-nfc-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org, m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 2015-07-30 at 10:47 +0100, Peter Griffin wrote:
-> Hi Mauro / Joe,
-> 
-> On Wed, 22 Jul 2015, Mauro Carvalho Chehab wrote:
-> 
-> > Em Wed, 24 Jun 2015 18:17:37 -0700
-> > Joe Perches <joe@perches.com> escreveu:
-> > 
-> > > On Wed, 2015-06-24 at 16:11 +0100, Peter Griffin wrote:
-> > > > This is used in conjunction with the STV0367 demodulator on
-> > > > the STV0367-NIM-V1.0 NIM card which can be used with the STi
-> > > > STB SoC's.
-> > > 
-> > > Barely associated to this specific patch, but for
-> > > dvb-pll.c, another thing that seems possible is to
-> > > convert the struct dvb_pll_desc uses to const and
-> > > change the "entries" fixed array size from 12 to []
-> > > 
-> > > It'd save a couple KB overall and remove ~5KB of data.
-> > > 
-> > > $ size drivers/media/dvb-frontends/dvb-pll.o*
-> > >    text	   data	    bss	    dec	    hex	filename
-> > >    8520	   1552	   2120	  12192	   2fa0	drivers/media/dvb-frontends/dvb-pll.o.new
-> > >    5624	   6363	   2120	  14107	   371b	drivers/media/dvb-frontends/dvb-pll.o.old
-> > 
-> > Peter,
-> > 
-> > Please add this patch on the next patch series you submit.
-> 
-> Ok will do, I've added this patch with a slightly updated commit message
-> to my series.
-> 
-> Joe - Can I add your signed-off-by?
+On wo, 2015-07-29 at 14:15 +0200, Robert Baldyga wrote:
+> --- /dev/null
+> +++ b/drivers/nfc/s3fwrn5/Kconfig
+> @@ -0,0 +1,22 @@
+> +config NFC_S3FWRN5
+> +	tristate "Samsung S3FWRN5 NFC driver"
+> +	depends on NFC_NCI
+> +	default n
+> +	---help---
+> +	  Core driver for Samsung S3FWRN5 NFC chip.
+> +
+> +	  To compile this driver as a module, choose m here. The module will
+> +	  be called s3fwrn5.ko.
+> +	  Say N if unsure.
 
-Signed-off-by: Joe Perches <joe@perches.com>
+If I scanned the code correctly then all this module does is exporting
+three functions to s3fwrn5_i2c.ko. Note that there's also no
+module_unit() in sight. So it's a library, of sorts. And there's no
+reason to load this module without also loading s3fwrn5_i2c.ko. Likewise
+there's no reason to build it without also building s3fwrn5_i2c.ko.
+
+So perhaps you could merge the two Kconfig symbols you add in this
+patch.
+
+Or, if you'd like to keep both Kconfig symbols, for whatever reason, you
+might want to make NFC_S3FWRN5 a "silent" symbol that will be selected
+by NFC_S3FWRN5_I2C. (That probably requires NFC_S3FWRN5_I2C to depend on
+both NFC_NCI and I2C.)
+
+Would either of the above two options work here?
+
+> +config NFC_S3FWRN5_I2C
+> +	tristate "Samsung S3FWRN5 I2C support"
+> +	depends on NFC_S3FWRN5 && I2C
+> +	default y
+
+You only added "default y" to make setting this symbol in "make *config"
+a one step process, right?
+
+> +	---help---
+> +	  This module adds support for an I2C interface to the S3FWRN5 chip.
+> +	  Select this if your platform is using the I2C bus.
+> +
+> +	  To compile this driver as a module, choose m here. The module will
+> +	  be called s3fwrn5_i2c.ko.
+> +	  Say N if unsure.
+
+(This advice is at odds with "default y" above, by the way.)
+
+> --- /dev/null
+> +++ b/drivers/nfc/s3fwrn5/Makefile
+
+> +s3fwrn5-objs = core.o firmware.o nci.o
+> +s3fwrn5_i2c-objs = i2c.o
+> +
+> +obj-$(CONFIG_NFC_S3FWRN5) += s3fwrn5.o
+> +obj-$(CONFIG_NFC_S3FWRN5_I2C) += s3fwrn5_i2c.o
+
+> --- /dev/null
+> +++ b/drivers/nfc/s3fwrn5/core.c
+
+> + * This program is free software; you can redistribute it and/or modify it
+> + * under the terms and conditions of the GNU General Public License,
+> + * version 2, as published by the Free Software Foundation.
+
+> +int s3fwrn5_probe(struct nci_dev **ndev, void *phy_id, struct device *pdev,
+> +	struct s3fwrn5_phy_ops *phy_ops, unsigned int max_payload)
+> +{
+> +	[...]
+> +}
+> +EXPORT_SYMBOL(s3fwrn5_probe);
+> +
+> +void s3fwrn5_remove(struct nci_dev *ndev)
+> +{
+> +	[...]
+> +}
+> +EXPORT_SYMBOL(s3fwrn5_remove);
+> +
+> +int s3fwrn5_recv_frame(struct nci_dev *ndev, struct sk_buff *skb,
+> +	enum s3fwrn5_mode mode)
+> +{
+> +	[...]
+> +}
+> +EXPORT_SYMBOL(s3fwrn5_recv_frame);
+
+> +MODULE_LICENSE("GPL");
+
+> --- /dev/null
+> +++ b/drivers/nfc/s3fwrn5/i2c.c
+
+> + * This program is free software; you can redistribute it and/or modify it
+> + * under the terms and conditions of the GNU General Public License,
+> + * version 2, as published by the Free Software Foundation.
+
+> +static int s3fwrn5_i2c_fw_read(struct s3fwrn5_i2c_phy *phy)
+> +{
+> +	[...]
+> +
+> +	return s3fwrn5_recv_frame(phy->ndev, skb, S3FWRN5_MODE_FW);
+> +}
+> +
+> +static int s3fwrn5_i2c_nci_read(struct s3fwrn5_i2c_phy *phy)
+> +{
+> +	[...]
+> +
+> +	return s3fwrn5_recv_frame(phy->ndev, skb, S3FWRN5_MODE_NCI);
+> +}
+
+> +static int s3fwrn5_i2c_probe(struct i2c_client *client,
+> +				  const struct i2c_device_id *id)
+> +{
+> +	[...]
+> +
+> +	ret = s3fwrn5_probe(&phy->ndev, phy, &phy->i2c_dev->dev, &i2c_phy_ops,
+> +		S3FWRN5_I2C_MAX_PAYLOAD);
+> +	[...]
+> +		s3fwrn5_remove(phy->ndev);
+> +
+> +	[...]
+> +}
+> +
+> +static int s3fwrn5_i2c_remove(struct i2c_client *client)
+> +{
+> +	[...]
+> +
+> +	s3fwrn5_remove(phy->ndev);
+> +
+> +	[...]
+> +}
+
+> +MODULE_LICENSE("GPL");
+
+Nit: both modules' code contain a comment referring to the "GNU General
+Public License, version 2". They also both use the "GPL" ident in their
+MODULE_LICENSE() macro. And, according to include/linux/module.h, that
+ident states the license is GPL v2 or later. So I think either the
+comments or the idents need to change.
+
+Thanks,
+
+
+Paul Bolle
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
