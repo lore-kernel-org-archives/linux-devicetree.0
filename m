@@ -1,83 +1,167 @@
-From: Michal Suchanek <hramrach-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [RFC PATCH 2/2] dt: spi: s3c64xx: add compatible to controller-data
-Date: Thu, 30 Jul 2015 10:24:37 +0200
-Message-ID: <CAOMqctQTc-8_rU6URCPHXno-OqH6wf_rHY4mW+Sf-epNhCwhFQ@mail.gmail.com>
-References: <cover.1438170519.git.hramrach@gmail.com> <557c1962448393b2a8736f26bfa2a3a5ba4aeb7a.1438170519.git.hramrach@gmail.com>
- <20150729140046.GB11082@sirena.org.uk> <CAOMqctTZVET=U=2o65HpWSm4W660XZtYYbBND2k4u9CnfjfMhQ@mail.gmail.com>
- <20150729171613.GI11162@sirena.org.uk> <CAOMqctQzh69RCQu8pK1EuuYkrZsh6mg34+YWJFzSvimcK3B0rA@mail.gmail.com>
- <20150729184043.GL11162@sirena.org.uk>
+From: Jisheng Zhang <jszhang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH v4 1/2] arm64: dts: Add dts files for Marvell Berlin4CT
+ SoC
+Date: Thu, 30 Jul 2015 16:24:44 +0800
+Message-ID: <20150730162444.25e4f360@xhacker>
+References: <1437557992-7111-1-git-send-email-jszhang@marvell.com>
+	<1437557992-7111-2-git-send-email-jszhang@marvell.com>
+	<55B9DB0E.7010303@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20150729184043.GL11162-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
-Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Kukjin Kim <kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Padmavathi Venna <padma.kvr-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, MTD Maling List <linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-samsung-soc <linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-spi <linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <55B9DB0E.7010303-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, khilman-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, sudeep.holla-5wv7dgnIgG8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 29 July 2015 at 20:40, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
-> On Wed, Jul 29, 2015 at 08:21:34PM +0200, Michal Suchanek wrote:
->> On 29 July 2015 at 19:16, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
->
->> >> It will not break anything. It will just spam dmesg.
->
->> > I'm confused - if all this change does is to spam dmesg then what's the
->> > point?
->
->> Presumably when your SPI NOR flash fails to probe this message will be
->> just above and you will look into the binding doc and add the
->> compatible.
->
-> If you're looking to add a warning message when the flash device fails
-> to probe then add that in the flash driver when it detects an error,
-> this will cause needless noise for everyone else using this controller
-> purely to work around the broken binding.
+On Thu, 30 Jul 2015 10:06:38 +0200
+Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
 
-Technically nobody needs to see the warning with in-tree boards since
-the dts can be amended with the compatible.
+> On 07/22/2015 11:39 AM, Jisheng Zhang wrote:
+> > Add initial dtsi file to support Marvell Berlin4CT SoC with
+> > quad Cortex-A53 CPUs.
+> >
+> > It also adds dts file for Marvell Berlin4CT DMP board which is
+> > based on Berlin4CT SoC.
+> >
+> > Signed-off-by: Jisheng Zhang <jszhang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
+> > ---
+> [...]
+> > diff --git a/arch/arm64/boot/dts/marvell/berlin4ct-dmp.dts b/arch/arm64/boot/dts/marvell/berlin4ct-dmp.dts
+> > new file mode 100644
+> > index 0000000..d1152c0
+> > --- /dev/null
+> > +++ b/arch/arm64/boot/dts/marvell/berlin4ct-dmp.dts
+> > @@ -0,0 +1,66 @@
+> > +/*
+> > + * Copyright (C) 2015 Marvell Technology Group Ltd.
+> > + *
+> > + * Author: Jisheng Zhang <jszhang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
+> [...]
+> > +/ {
+> 
+> Jisheng,
+> 
+> before I take this series, some nitpicking.
+> 
+> > +	model = "MARVELL BG4CT DMP BOARD";
+> 
+> Are you fine with fixing the broken CAPSLOCK key, i.e. make above
+> "Marvell BG4CT DMP board" ?
 
-There is no error in flash device driver.
+It doesn't matter, will do in newer version.
 
-There is only error parsing partition scheme. In my opinion this
-should never cause an error. With disk drives failure to parse
-partition table results in unpartitioned disk. As there are number of
-partitioning schemes failure to parse one still does not prevent other
-in succeding.
+> 
+> > +	compatible = "marvell,berlin4ct-dmp", "marvell,berlin4ct", "marvell,berlin";
+> > +
+> > +	chosen {
+> > +		stdout-path = "serial0:115200n8";
+> > +	};
+> > +
+> > +	memory {
+> > +		device_type = "memory";
+> > +		/* the first 16MB is for firmwares's usage */
+> > +		reg = <0 0x01000000 0 0x80000000>;
+> > +	};
+> > +};
+> > +
+> > +&uart0 {
+> > +	status = "okay";
+> > +};
+> > diff --git a/arch/arm64/boot/dts/marvell/berlin4ct.dtsi b/arch/arm64/boot/dts/marvell/berlin4ct.dtsi
+> > new file mode 100644
+> > index 0000000..becaedc
+> > --- /dev/null
+> > +++ b/arch/arm64/boot/dts/marvell/berlin4ct.dtsi
+> > @@ -0,0 +1,164 @@
+> > +/*
+> > + * Copyright (C) 2015 Marvell Technology Group Ltd.
+> > + *
+> > + * Author: Jisheng Zhang <jszhang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
+> [...]
+> > +
+> > +/ {
+> > +	compatible = "marvell,berlin";
+> 
+> compatible = "marvell,berlin4ct", "marvell,berlin";
 
->
-> And like I say compatible really seems like it isn't an appropriate
-> property here.
+Thanks for pointing this out.
 
-So to sum up the discussion adding compatible to s3c64xx
-controller-data is not desirable and making ofpart more robust is
-desirable.
+> 
+> > +	interrupt-parent = <&gic>;
+> > +	#address-cells = <2>;
+> > +	#size-cells = <2>;
+> [...]
+> > +	soc {
+> > +		compatible = "simple-bus";
+> > +		#address-cells = <1>;
+> > +		#size-cells = <1>;
+> > +		ranges = <0 0 0xf7000000 0x1000000>;
+> > +
+> > +		osc: osc {
+> > +			compatible = "fixed-clock";
+> > +			#clock-cells = <0>;
+> > +			clock-frequency = <25000000>;
+> > +		};
+> 
+> Is the oscillator above really part of the SoC bus fabric? If 25MHz is
 
-I think the suggestion to use a subnode for ofpart gives the most
-robust solution.
+No. it's not part of SoC bus.
 
-Even adding compatibles to the partition subnodes ofpart still
-monopolizes the address and cells property of the mtd node which does
-not pass the 'if another driver did the same would it work together?'
-test.
+> the only option for an external OSC, I suggest to move it at least out
+> of the soc {} node.
 
-So my suggestion is to
+Good idea.
 
-1) search of ofpart subnode in mtd node. If present read address and
-reg from it and search partitions as subnodes of the ofpart node. In
-this case unknown nodes can cause error.
+Thanks for the review,
+Jisheng
 
-2) failing that issue a warning and try to parse ofpart partitions
-from the mtd node itself. In this case unknown nodes cannot cause
-error for compatibility with other drivers including the already
-exisitn s3c64xx controller-data node.
+> 
+> Sebastian
+> 
+> > +		gic: interrupt-controller@901000 {
+> > +			compatible = "arm,gic-400";
+> > +			#interrupt-cells = <3>;
+> > +			interrupt-controller;
+> > +			reg = <0x901000 0x1000>,
+> > +			      <0x902000 0x2000>,
+> > +			      <0x904000 0x2000>,
+> > +			      <0x906000 0x2000>;
+> > +			interrupts = <GIC_PPI 9 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_HIGH)>;
+> > +		};
+> > +
+> > +		apb@fc0000 {
+> > +			compatible = "simple-bus";
+> > +			#address-cells = <1>;
+> > +			#size-cells = <1>;
+> > +			ranges = <0 0xfc0000 0x10000>;
+> > +			interrupt-parent = <&sic>;
+> > +
+> > +			sic: interrupt-controller@1000 {
+> > +				compatible = "snps,dw-apb-ictl";
+> > +				reg = <0x1000 0x30>;
+> > +				interrupt-controller;
+> > +				#interrupt-cells = <1>;
+> > +				interrupt-parent = <&gic>;
+> > +				interrupts = <GIC_SPI 17 IRQ_TYPE_LEVEL_HIGH>;
+> > +			};
+> > +
+> > +			uart0: uart@d000 {
+> > +				compatible = "snps,dw-apb-uart";
+> > +				reg = <0xd000 0x100>;
+> > +				interrupts = <8>;
+> > +				clocks = <&osc>;
+> > +				reg-shift = <2>;
+> > +				status = "disabled";
+> > +			};
+> > +		};
+> > +	};
+> > +};
+> >
 
-The parser code can be the same for both cases and only operate on
-different node with a flag to reject unknown subnodes or not.
-
-Thanks
-
-Michal
 --
-To unsubscribe from this list: send the line "unsubscribe linux-spi" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
