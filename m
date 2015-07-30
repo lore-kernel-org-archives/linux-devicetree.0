@@ -1,116 +1,149 @@
-From: Peter Griffin <peter.griffin@linaro.org>
-Subject: Re: [PATCH 02/12] [media] dvb-pll: Add support for THOMSON DTT7546X
- tuner.
-Date: Thu, 30 Jul 2015 15:34:37 +0100
-Message-ID: <20150730143437.GB22196@griffinp-ThinkPad-X1-Carbon-2nd>
-References: <1435158670-7195-1-git-send-email-peter.griffin@linaro.org>
- <1435158670-7195-3-git-send-email-peter.griffin@linaro.org>
- <1435195057.9377.18.camel@perches.com>
- <20150722185811.2d718baa@recife.lan>
- <20150730094738.GD488@griffinp-ThinkPad-X1-Carbon-2nd>
- <1438250928.2677.10.camel@perches.com>
- <CAOcJUbw5hSmPdrz6rPPYU6iMBHnvOZc1p3f+4WhEYq2-XmAPVw@mail.gmail.com>
- <CAOcJUbwVBVxmaP-vNkw0n8Cf3-=Fn8Aou8FG81Ajab1B2h4Z4A@mail.gmail.com>
+From: Michal Simek <michal.simek@xilinx.com>
+Subject: Re: [RFCv2 1/3] docs: dts: Added documentation for Xilinx Zynq Reset
+ Controller bindings.
+Date: Thu, 30 Jul 2015 16:37:30 +0200
+Message-ID: <55BA36AA.2030601@xilinx.com>
+References: <1437783682-13632-1-git-send-email-moritz.fischer@ettus.com>
+ <1437783682-13632-2-git-send-email-moritz.fischer@ettus.com>
+ <20150728025833.GQ2650@xsjsorenbubuntu>
+ <CAAtXAHejK2vL2qSdhqrtHmkV_RBfkLzQNM8ZbDvREvienNqzXw@mail.gmail.com>
+ <20150728225337.GF2650@xsjsorenbubuntu>
+ <CAAtXAHd8kG_FtKTW-2T2KToXesWgsgxkZ3vpXZ_oRjGCSfpFgw@mail.gmail.com>
+ <20150729173802.GO2650@xsjsorenbubuntu>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAOcJUbwVBVxmaP-vNkw0n8Cf3-=Fn8Aou8FG81Ajab1B2h4Z4A@mail.gmail.com>
+In-Reply-To: <20150729173802.GO2650@xsjsorenbubuntu>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Michael Ira Krufky <mkrufky@linuxtv.org>
-Cc: Joe Perches <joe@perches.com>, Mauro Carvalho Chehab <mchehab@osg.samsung.com>, linux-arm-kernel@lists.infradead.org, LKML <linux-kernel@vger.kernel.org>, srinivas.kandagatla@gmail.com, maxime.coquelin@st.com, patrice.chotard@st.com, lee.jones@linaro.org, hugues.fruchet@st.com, linux-media <linux-media@vger.kernel.org>, devicetree@vger.kernel.org
+To: =?UTF-8?Q?S=c3=b6ren_Brinkmann?= <soren.brinkmann@xilinx.com>, Moritz Fischer <moritz.fischer@ettus.com>
+Cc: Philipp Zabel <p.zabel@pengutronix.de>, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, Kumar Gala <galak@codeaurora.org>, Michal Simek <michal.simek@xilinx.com>, linux@arm.linux.org.uk, devicetree@vger.kernel.org, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Michael,
+On 07/29/2015 07:38 PM, S=C3=B6ren Brinkmann wrote:
+> On Tue, 2015-07-28 at 11:14PM -0700, Moritz Fischer wrote:
+>> Hi S=C3=B6ren,
+>>
+>> On Tue, Jul 28, 2015 at 3:53 PM, S=C3=B6ren Brinkmann
+>> <soren.brinkmann@xilinx.com> wrote:
+>>> On Mon, 2015-07-27 at 09:52PM -0700, Moritz Fischer wrote:
+>>>> Hi S=C3=B6ren,
+>>>>
+>>>> thanks for your feedback.
+>>>>
+>>>> On Mon, Jul 27, 2015 at 7:58 PM, S=C3=B6ren Brinkmann
+>>>> <soren.brinkmann@xilinx.com> wrote:
+>>>>> Hi Moritz,
+>>>>>
+>>>>> On Fri, 2015-07-24 at 05:21PM -0700, Moritz Fischer wrote:
+>>>>>> Signed-off-by: Moritz Fischer <moritz.fischer@ettus.com>
+>>>>>> ---
+>>>>>>  Documentation/devicetree/bindings/reset/zynq-reset-pl.txt | 13 =
++++++++++++++
+>>>>>>  1 file changed, 13 insertions(+)
+>>>>>>  create mode 100644 Documentation/devicetree/bindings/reset/zynq=
+-reset-pl.txt
+>>>>>>
+>>>>>> diff --git a/Documentation/devicetree/bindings/reset/zynq-reset-=
+pl.txt b/Documentation/devicetree/bindings/reset/zynq-reset-pl.txt
+>>>>>> new file mode 100644
+>>>>>> index 0000000..ac4499e
+>>>>>> --- /dev/null
+>>>>>> +++ b/Documentation/devicetree/bindings/reset/zynq-reset-pl.txt
+>>>>>> @@ -0,0 +1,13 @@
+>>>>>> +Xilinx Zynq PL Reset Manager
+>>>>>> +
+>>>>>> +Required properties:
+>>>>>> +- compatible: "xlnx,zynq-reset-pl"
+>>>>>> +- syscon <&slcr>;
+>>>>>> +- #reset-cells: 1
+>>>>>> +
+>>>>>> +Example:
+>>>>>> +     rstc: rstc@240 {
+>>>>>> +             #reset-cells =3D <1>;
+>>>>>> +             compatible =3D "xlnx,zynq-reset-pl";
+>>>>>> +             syscon =3D <&slcr>;
+>>>>>> +     };
+>>>>>
+>>>>> I think you also have to add the outputs and make them part of th=
+e
+>>>>> binding. Otherwise you'd have to read the implementation to find
+>>>>> out what device should be hooked up to which output of the reset-=
+controller.
+>>>>
+>>>> Is something like this what you had in mind? I had that prepared f=
+or
+>>>> the next round of patches:
+>>>>
+>>>> Reset outputs:
+>>>>  0  : soft reset
+>>>>  32 : ddr reset
+>>>>  64 : topsw reset
+>>>>  96 : dmac reset
+>>>>  128: usb0 reset
+>>>>  129: usb1 reset
+>>>>  160: gem0 reset
+>>>>  161: gem1 reset
+>>>>  164: gem0 rx reset
+>>>>  165: gem1 rx reset
+>>>>  166: gem0 ref reset
+>>>>  167: gem1 ref reset
+>>>>  192: sdio0 reset
+>>>>  193: sdio1 reset
+>>>>  196: sdio0 ref reset
+>>>>  197: sdio1 ref reset
+>>>>  224: spi0 reset
+>>>>  225: spi1 reset
+>>>>  226: spi0 ref reset
+>>>>  227: spi1 ref reset
+>>>>  256: can0 reset
+>>>>  257: can1 reset
+>>>>  258: can0 ref reset
+>>>>  259: can1 ref reset
+>>>>  288: i2c0 reset
+>>>>  289: i2c1 reset
+>>>>  320: uart0 reset
+>>>>  321: uart1 reset
+>>>>  322: uart0 ref reset
+>>>>  323: uart1 ref reset
+>>>>  352: gpio reset
+>>>>  384: lqspi reset
+>>>>  385: qspi ref reset
+>>>>  416: smc reset
+>>>>  417: smc ref reset
+>>>>  448: ocm reset
+>>>>  512: fpga0 out reset
+>>>>  513: fpga1 out reset
+>>>>  514: fpga2 out reset
+>>>>  515: fpga3 out reset
+>>>>  544: a9 reset 0
+>>>>  545: a9 reset 1
+>>>>  552: peri reset
+>>>
+>>> Basically, yes. I guess the gaps are due to directly mapping this n=
+umber
+>>> to bank and bit instead of doing some more complex mapping in betwe=
+en?
+>>> I'm not sure whether I like this :) I guess if a number is off the
+>>> driver would still toggle the addressed bit?
+>>
+>> My assumption was that people would use a #include
+>> <dt-bindings/xlnx,zynq-reset.h> in their dts. Assuming I got the
+>> numbers in there right this makes it hard to misuse by accident.
+>> I'm not saying it's perfect ...
+>=20
+> Michal always turned down the #include patches with the argument of
+> re-using the dts files outside of the Linux sources where those inclu=
+des
+> etc may not be available in this form.
 
-On Thu, 30 Jul 2015, Michael Ira Krufky wrote:
+yes. All these includes end up in more work when you want to generate
+them or move to any other project.
+I don't think that make sense to caused another problem just because of
+that. Simple add these values to reset binding doc and then you <&rstc
+number> in nodes.
+Because we agreed that it has to be done on driver basis this is just
+copy that macros from one file to another.
 
-> On Thu, Jul 30, 2015 at 7:14 AM, Michael Ira Krufky <mkrufky@linuxtv.org> wrote:
-> > On Thu, Jul 30, 2015 at 6:08 AM, Joe Perches <joe@perches.com> wrote:
-> >> On Thu, 2015-07-30 at 10:47 +0100, Peter Griffin wrote:
-> >>> Hi Mauro / Joe,
-> >>>
-> >>> On Wed, 22 Jul 2015, Mauro Carvalho Chehab wrote:
-> >>>
-> >>> > Em Wed, 24 Jun 2015 18:17:37 -0700
-> >>> > Joe Perches <joe@perches.com> escreveu:
-> >>> >
-> >>> > > On Wed, 2015-06-24 at 16:11 +0100, Peter Griffin wrote:
-> >>> > > > This is used in conjunction with the STV0367 demodulator on
-> >>> > > > the STV0367-NIM-V1.0 NIM card which can be used with the STi
-> >>> > > > STB SoC's.
-> >>> > >
-> >>> > > Barely associated to this specific patch, but for
-> >>> > > dvb-pll.c, another thing that seems possible is to
-> >>> > > convert the struct dvb_pll_desc uses to const and
-> >>> > > change the "entries" fixed array size from 12 to []
-> >>> > >
-> >>> > > It'd save a couple KB overall and remove ~5KB of data.
-> >>> > >
-> >>> > > $ size drivers/media/dvb-frontends/dvb-pll.o*
-> >>> > >    text      data     bss     dec     hex filename
-> >>> > >    8520      1552    2120   12192    2fa0 drivers/media/dvb-frontends/dvb-pll.o.new
-> >>> > >    5624      6363    2120   14107    371b drivers/media/dvb-frontends/dvb-pll.o.old
-> >>> >
-> >>> > Peter,
-> >>> >
-> >>> > Please add this patch on the next patch series you submit.
-> >>>
-> >>> Ok will do, I've added this patch with a slightly updated commit message
-> >>> to my series.
-> >>>
-> >>> Joe - Can I add your signed-off-by?
-> >>
-> >> Signed-off-by: Joe Perches <joe@perches.com>
-> >
-> > Reviewed-by: Michael Ira Krufky <m.krufky@samsung.com>
-> >
-> > Joe, nice optimization - thanks for that.
-> >
-> > With regards to Peter's patch, is this a digital-only tuner, or is it
-> > a hybrid tuner?
-> >
-> > The 5th byte that you send to the THOMSON DTT7546X seems to resemble
-> > the 'auxiliary byte' that gets set in tuner-simple.c
-> >
-> > I'm not sure that dvb-pll is the right place for this tuner
-> > definition, if this is the case.  Maybe this definition belongs in
-> > tuner-simple instead, if the pattern matches better there.
-> >
-> > Mauro, can we hold off on merging Peter's patch until we resolve this?
-> 
-> This code block, specifically, I would rather not see added into dvb-pll:
-> 
-> +static int dvb_pll_get_num_regs(struct dvb_pll_priv *priv)
-> +{
-> +       int num_regs = 4;
-> +
-> +       if (strncmp(priv->pll_desc->name, "Thomson dtt7546x", 16) == 0)
-> +               num_regs = 5;
-> +
-> +       return num_regs;
-> +}
-> +
-> 
-> tuner-simple provides an infrastructure that allows this tuner to be
-> added in a more elegant way without the need to add special cases to
-> otherwise generic code, as done in the above.
-> 
-> I'm sorry, Peter.  Can you take a look at tuner-simple and consider
-> sending a new patch?
-
-Yes sure. I wasn't actually aware that tuner-simple existed. From what I
-can see briefly looking at it, it does look a more suitable way of adding
-support for this tuner.
-
-The dtt7546x is a dual tuner in that it supports dvb-t and dvb-c, however
-I have only tested it with DVB-T as that is the only feed I have to my home office.
-
-As I have a V2 incorporating all of Mauro's changes ready to send, and I'm 
-on holiday for 3 weeks from Friday, I will temporarily drop support for this
-tuner and NIM card in V2, and migrate over to the new driver when I return end
-of August.
-
-regards,
-
-Peter.
+Thanks,
+Michal
