@@ -1,43 +1,76 @@
-From: Nicolas Ferre <nicolas.ferre@atmel.com>
-Subject: Re: [PATCH v2 1/2] ARM: at91: dts: add isi & ov2640 dt nodes for
- at91sam9m10g45ek board
-Date: Thu, 30 Jul 2015 14:03:54 +0200
-Message-ID: <55BA12AA.3030102@atmel.com>
-References: <1434449315-9243-1-git-send-email-josh.wu@atmel.com> <20150618154537.GM27492@piout.net>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+From: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Subject: Re: [PATCH v5 0/2] arm64: Add basic support for Marvell Berlin4CT
+ SoC
+Date: Thu, 30 Jul 2015 14:06:12 +0200
+Message-ID: <55BA1334.3010000@gmail.com>
+References: <1438248922-2919-1-git-send-email-jszhang@marvell.com> <55B9F507.8090706@gmail.com> <20150730191304.752db88c@xhacker>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20150618154537.GM27492@piout.net>
+In-Reply-To: <20150730191304.752db88c@xhacker>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Alexandre Belloni <alexandre.belloni@free-electrons.com>, Josh Wu <josh.wu@atmel.com>
-Cc: linux-arm-kernel@lists.infradead.org, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Russell King <linux@arm.linux.org.uk>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, Andrew Victor <linux@maxim.org.za>
+To: Jisheng Zhang <jszhang@marvell.com>
+Cc: catalin.marinas@arm.com, will.deacon@arm.com, khilman@linaro.org, arnd@arndb.de, olof@lixom.net, mark.rutland@arm.com, sudeep.holla@arm.com, robh+dt@kernel.org, galak@codeaurora.org, pawel.moll@arm.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Le 18/06/2015 17:45, Alexandre Belloni a =E9crit :
-> Hi,
->=20
-> Seems good to me, a small comment below:
->=20
-> On 16/06/2015 at 18:08:34 +0800, Josh Wu wrote :
->> @@ -1068,8 +1076,12 @@
->>  				clocks =3D <&isi_clk>;
->>  				clock-names =3D "isi_clk";
->>  				pinctrl-names =3D "default";
->> -				pinctrl-0 =3D <&pinctrl_isi>;
->> +				pinctrl-0 =3D <&pinctrl_isi_data_0_7>;
->=20
-> I would say that the pinctrl is board specific so both pinctrl-names =
-and
-> pinctrl-0 should go to at91sam9m10g45ek.dts
+On 07/30/2015 01:13 PM, Jisheng Zhang wrote:
+> On Thu, 30 Jul 2015 11:57:27 +0200
+> Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com> wrote:
+>
+>> On 07/30/2015 11:35 AM, Jisheng Zhang wrote:
+>>> Marvell Berlin4CT is a SoC based on 64bit ARMv8 architecture. It contains
+>>> quad CA53 cores.
+>>>
+>>> This SoC shares many HW IP with BG2Q and other berlin series. This patchset
+>>> was tested on Berlin4CT DMP board, and boot to shell ok.
+>>>
+>>> Since v4:
+>>>    - rebased on the latest next tree
+>>
+>> Jisheng,
+>>
+>> some git basics, so you get a better idea of the merge process:
+>>
+>> Please do not base your patches on linux-next. It is not a stable branch
+>> I can refer to. Also, if there was any dependency with another feature
+>> that your patches require, you should mention that dependency by
+>> pointing out either a floating patch set or even better a _stable_
+>> topic branch of the feature that will be added in the same cycle you
+>> expect your patches to be merged.
+>
+> Got it. Thanks for the kindly remind. There's only one dependency:
+> "arm64: Split out platform options to separate Kconfig" from Olof.
 
-I move it in the board file.
+AFAIKS, the patch in question has been applied by Olof for the next
+cycle and after 4.2-rc2. You just name the patch, while Olof and I
+will have to work it out:
 
-Otherwise:
-Acked-by: Nicolas Ferre <nicolas.ferre@atmel.com>
+@Olof: Any specific branch you want me to base a potential PR for
+the initial Berlin4CT patches on? If you prefer to pick up the
+two patches directly, feel free to add my
 
-and stacked on top of at91-4.3-dt.
+Acked-by: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
 
-Bye,
---=20
-Nicolas Ferre
+>> AFAIKS, there is no dependency at all so please just base them on -rc1
+>
+> I'd like to learn more to avoid future inconvenience. This means it's better
+> to rebase on 4.2-rc, right?
+
+You can rebase on anything that is considered stable, i.e. my
+berlin/foo-for-4.x-n branches become stable as soon as I send out a PR
+to arm-soc. Before stable I can reorder/squash/fixup any patches
+in there (or anything that will change the commit hash). Once I
+declare it stable and anything needs to be changed, I'll have to
+apply proper patches or even apply revert patches.
+
+> Another question is: could patches be based on arm-soc tree if necessary?
+> for example: if I need the "arm64: Split out platform options to separate
+> Kconfig" commit.
+
+Not directly, arm-soc by itself has no stable branches I know of. But
+there may be stable topic branches that can be referred to but that
+will be worked out on single topics by arm-soc/subsystem maintainers
+and patch authors. Likely cross-subsystem patch sets or large patch
+sets will end up in topic branches.
+
+Sebastian
