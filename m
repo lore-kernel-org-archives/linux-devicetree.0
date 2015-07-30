@@ -1,39 +1,100 @@
-From: Rob Herring <robherring2@gmail.com>
-Subject: Re: [PATCH V3 02/16] PM / OPP: Create a directory for opp bindings
-Date: Thu, 30 Jul 2015 08:18:50 -0500
-Message-ID: <CAL_Jsq+J41c7qx11L13-g0UyD+hY9W36Wu9P+6O3cnDv7ysY6Q@mail.gmail.com>
-References: <cover.1438166099.git.viresh.kumar@linaro.org> <4dfe565ff17766b7df127d475d84958e96fdab1b.1438166099.git.viresh.kumar@linaro.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <4dfe565ff17766b7df127d475d84958e96fdab1b.1438166099.git.viresh.kumar@linaro.org>
-Sender: linux-pm-owner@vger.kernel.org
-To: Viresh Kumar <viresh.kumar@linaro.org>
-Cc: Rafael Wysocki <rjw@rjwysocki.net>, Stephen Boyd <sboyd@codeaurora.org>, Nishanth Menon <nm@ti.com>, Abhilash Kesavan <kesavan.abhilash@gmail.com>, "linaro-kernel@lists.linaro.org" <linaro-kernel@lists.linaro.org>, Kevin Hilman <khilman@linaro.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, Viswanath Puttagunta <viswanath.puttagunta@linaro.org>, Michael Turquette <mturquette@baylibre.com>, Santosh Shilimkar <santosh.shilimkar@oracle.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Mark Brown <broonie@kernel.org>, Sudeep Holla <Sudeep.Holla@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Lucas Stach <l.stach@pengutronix.de>
+From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: [PATCH 3/3] clk: add bindings for the Ux500 clocks
+Date: Thu, 30 Jul 2015 15:20:00 +0200
+Message-ID: <1438262400-29213-1-git-send-email-linus.walleij@linaro.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jul 29, 2015 at 5:52 AM, Viresh Kumar <viresh.kumar@linaro.org> wrote:
-> More platform specific extended opp bindings will follow and it would be
-> easy to manage them with a directory for opp. Lets create that and move
-> the existing opp bindings into it.
->
-> Cc: Rob Herring <rob.herring@linaro.org>
+These Ux500 clocks have been around for years and were never
+properly documented. Add the proper binding documentation.
 
-Use get_maintainers.pl please so you send to right people and right email.
+Cc: Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Signed-off-by: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+---
+Ulf/Mike: please ACK this patch so I can take it through
+ARM SoC.
+---
+ Documentation/devicetree/bindings/clock/ux500.txt | 64 +++++++++++++++++++++++
+ 1 file changed, 64 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/clock/ux500.txt
 
-> Cc: devicetree@vger.kernel.org
-> Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
-> ---
->  Documentation/devicetree/bindings/power/{ => opp}/opp.txt | 0
->  1 file changed, 0 insertions(+), 0 deletions(-)
->  rename Documentation/devicetree/bindings/power/{ => opp}/opp.txt (100%)
->
-> diff --git a/Documentation/devicetree/bindings/power/opp.txt b/Documentation/devicetree/bindings/power/opp/opp.txt
-> similarity index 100%
-> rename from Documentation/devicetree/bindings/power/opp.txt
-> rename to Documentation/devicetree/bindings/power/opp/opp.txt
+diff --git a/Documentation/devicetree/bindings/clock/ux500.txt b/Documentation/devicetree/bindings/clock/ux500.txt
+new file mode 100644
+index 000000000000..e52bd4b72348
+--- /dev/null
++++ b/Documentation/devicetree/bindings/clock/ux500.txt
+@@ -0,0 +1,64 @@
++Clock bindings for ST-Ericsson Ux500 clocks
++
++Required properties :
++- compatible : shall contain only one of the following:
++  "stericsson,u8500-clks"
++  "stericsson,u8540-clks"
++  "stericsson,u9540-clks"
++- reg : shall contain base register location and length for
++  CLKRST1, 2, 3, 5, and 6 in an array. Note the absence of
++  CLKRST4, which does not exist.
++
++Required subnodes:
++- prcmu-clock: a subnode with one clock cell for PRCMU (power,
++  reset, control unit) clocks. The cell indicates which PRCMU
++  clock in the prcmu-clock node the consumer wants to use.
++- prcc-periph-clock: a subnode with two clock cells for
++  PRCC (programmable reset- and clock controller) peripheral clocks.
++  The first cell indicates which PRCC block the consumer
++  wants to use, possible values are 1, 2, 3, 5, 6. The second
++  cell indicates which clock inside the PRCC block it wants,
++  possible values are 0 thru 31.
++- prcc-kernel-clock: a subnode with two clock cells for
++  PRCC (programmable reset- and clock controller) kernel clocks
++  The first cell indicates which PRCC block the consumer
++  wants to use, possible values are 1, 2, 3, 5, 6. The second
++  cell indicates which clock inside the PRCC block it wants,
++  possible values are 0 thru 31.
++- rtc32k-clock: a subnode with zero clock cells for the 32kHz
++  RTC clock.
++- smp-twd-clock: a subnode for the ARM SMP Timer Watchdog cluster
++  with zero clock cells.
++
++Example:
++
++clocks {
++	compatible = "stericsson,u8500-clks";
++	/*
++	 * Registers for the CLKRST block on peripheral
++	 * groups 1, 2, 3, 5, 6,
++	 */
++	reg = <0x8012f000 0x1000>, <0x8011f000 0x1000>,
++	    <0x8000f000 0x1000>, <0xa03ff000 0x1000>,
++	    <0xa03cf000 0x1000>;
++
++	prcmu_clk: prcmu-clock {
++		#clock-cells = <1>;
++	};
++
++	prcc_pclk: prcc-periph-clock {
++		#clock-cells = <2>;
++	};
++
++	prcc_kclk: prcc-kernel-clock {
++		#clock-cells = <2>;
++	};
++
++	rtc_clk: rtc32k-clock {
++		#clock-cells = <0>;
++	};
++
++	smp_twd_clk: smp-twd-clock {
++		#clock-cells = <0>;
++	};
++};
+-- 
+2.4.3
 
-"power" seems to be a random collection of things. I'd prefer you move
-this to .../bindings/opp/opp.txt.
-
-Rob
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
