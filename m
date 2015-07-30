@@ -1,128 +1,378 @@
-From: Peter Griffin <peter.griffin@linaro.org>
-Subject: [PATCH v2 00/11]  Add c8sectpfe LinuxDVB demux driver
-Date: Thu, 30 Jul 2015 18:08:50 +0100
-Message-ID: <1438276141-16902-1-git-send-email-peter.griffin@linaro.org>
+From: Bjorn Helgaas <bhelgaas@google.com>
+Subject: Re: [PATCH v6] PCI: Store PCIe bus address in struct of_pci_range
+Date: Thu, 30 Jul 2015 12:14:45 -0500
+Message-ID: <20150730171445.GI9640@google.com>
+References: <1438010223-124422-1-git-send-email-gabriele.paoloni@huawei.com>
+ <20150729172053.GE31170@google.com>
+ <EE11001F9E5DDD47B7634E2F8A612F2E01D6F350@lhreml503-mbs>
+ <CAL_JsqKs11-sXQTdBD+ZjbVYFWUHBARTW9q5MF1hCXUhZ+nWLQ@mail.gmail.com>
+ <EE11001F9E5DDD47B7634E2F8A612F2E01D6F94A@lhreml503-mbs>
+ <20150730161447.GG9640@google.com>
+ <EE11001F9E5DDD47B7634E2F8A612F2E01D6FB3B@lhreml503-mbs>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, srinivas.kandagatla@gmail.com, maxime.coquelin@st.com, patrice.chotard@st.com, mchehab@osg.samsung.com, m.krufky@samsung.com
-Cc: devicetree@vger.kernel.org, peter.griffin@linaro.org, joe@perches.com, hugues.fruchet@st.com, lee.jones@linaro.org, linux-media@vger.kernel.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-pci-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <EE11001F9E5DDD47B7634E2F8A612F2E01D6FB3B@lhreml503-mbs>
+Sender: linux-pci-owner@vger.kernel.org
+To: Gabriele Paoloni <gabriele.paoloni@huawei.com>
+Cc: Rob Herring <robherring2@gmail.com>, "arnd@arndb.de" <arnd@arndb.de>, "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>, "Wangzhou (B)" <wangzhou1@hisilicon.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "james.morse@arm.com" <james.morse@arm.com>, "Liviu.Dudau@arm.com" <Liviu.Dudau@arm.com>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Yuanzhichang <yuanzhichang@hisilicon.com>, Zhudacai <zhudacai@hisilicon.com>, zhangjukuo <zhangjukuo@huawei.com>, qiuzhenfa <qiuzhenfa@hisilicon.com>, "Liguozhu (Kenneth)" <liguozhu@hisilicon.com>, Jingoo Han <jingoohan1@gmail.com>, Pratyush Anand <pratyush.anand@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Maruro and linux-media folks,
+[+cc Jingoo, Pratyush]
 
-This patchset adds support for a LinuxDVB demux driver for the
-ST STB stih407 family SoC's. Mauro - it is what I spoke to you about
-when we met at ELC-E in Dusseldorf last year.
+On Thu, Jul 30, 2015 at 04:50:55PM +0000, Gabriele Paoloni wrote:
+> > -----Original Message-----
+> > From: linux-pci-owner@vger.kernel.org [mailto:linux-pci-
+> > owner@vger.kernel.org] On Behalf Of Bjorn Helgaas
+> > Sent: Thursday, July 30, 2015 5:15 PM
+> > To: Gabriele Paoloni
+> > Cc: Rob Herring; arnd@arndb.de; lorenzo.pieralisi@arm.com; Wangzhou=
+ (B);
+> > robh+dt@kernel.org; james.morse@arm.com; Liviu.Dudau@arm.com; linux=
+-
+> > pci@vger.kernel.org; linux-arm-kernel@lists.infradead.org;
+> > devicetree@vger.kernel.org; Yuanzhichang; Zhudacai; zhangjukuo;
+> > qiuzhenfa; Liguozhu (Kenneth)
+> > Subject: Re: [PATCH v6] PCI: Store PCIe bus address in struct
+> > of_pci_range
+> >=20
+> > On Thu, Jul 30, 2015 at 01:52:13PM +0000, Gabriele Paoloni wrote:
+> > >
+> > >
+> > > > -----Original Message-----
+> > > > From: linux-pci-owner@vger.kernel.org [mailto:linux-pci-
+> > > > owner@vger.kernel.org] On Behalf Of Rob Herring
+> > > > Sent: Thursday, July 30, 2015 2:43 PM
+> > > > To: Gabriele Paoloni
+> > > > Cc: Bjorn Helgaas; arnd@arndb.de; lorenzo.pieralisi@arm.com;
+> > Wangzhou
+> > > > (B); robh+dt@kernel.org; james.morse@arm.com; Liviu.Dudau@arm.c=
+om;
+> > > > linux-pci@vger.kernel.org; linux-arm-kernel@lists.infradead.org=
+;
+> > > > devicetree@vger.kernel.org; Yuanzhichang; Zhudacai; zhangjukuo;
+> > > > qiuzhenfa; Liguozhu (Kenneth)
+> > > > Subject: Re: [PATCH v6] PCI: Store PCIe bus address in struct
+> > > > of_pci_range
+> > > >
+> > > > On Wed, Jul 29, 2015 at 2:44 PM, Gabriele Paoloni
+> > > > <gabriele.paoloni@huawei.com> wrote:
+> > > > > Hi Bjorn
+> > > > >
+> > > > > Many Thanks for your reply
+> > > > >
+> > > > > I have commented back inline with resolutions from my side.
+> > > > >
+> > > > > If you're ok with them I'll send it out a new version in the
+> > > > appropriate patchset
+> > > > >
+> > > > > Cheers
+> > > > >
+> > > > > Gab
+> > > > >
+> > > > >> -----Original Message-----
+> > > > >> From: Bjorn Helgaas [mailto:bhelgaas@google.com]
+> > > > >> Sent: Wednesday, July 29, 2015 6:21 PM
+> > > > >> To: Gabriele Paoloni
+> > > > >> Cc: arnd@arndb.de; lorenzo.pieralisi@arm.com; Wangzhou (B);
+> > > > >> robh+dt@kernel.org; james.morse@arm.com; Liviu.Dudau@arm.com=
+;
+> > linux-
+> > > > >> pci@vger.kernel.org; linux-arm-kernel@lists.infradead.org;
+> > > > >> devicetree@vger.kernel.org; Yuanzhichang; Zhudacai; zhangjuk=
+uo;
+> > > > >> qiuzhenfa; Liguozhu (Kenneth)
+> > > > >> Subject: Re: [PATCH v6] PCI: Store PCIe bus address in struc=
+t
+> > > > >> of_pci_range
+> > > > >>
+> > > > >> Hi Gabriele,
+> > > > >>
+> > > > >> As far as I can tell, this is not specific to PCIe, so pleas=
+e
+> > use
+> > > > "PCI"
+> > > > >> in
+> > > > >> the subject as a generic term that includes both PCI and PCI=
+e.
+> > > > >
+> > > > > sure agreed
+> > > > >
+> > > > >>
+> > > > >> On Mon, Jul 27, 2015 at 11:17:03PM +0800, Gabriele Paoloni w=
+rote:
+> > > > >> > From: gabriele paoloni <gabriele.paoloni@huawei.com>
+> > > > >> >
+> > > > >> >     This patch is needed port PCIe designware to new DT
+> > parsing
+> > > > API
+> > > > >> >     As discussed in
+> > > > >> >     http://lists.infradead.org/pipermail/linux-arm-
+> > kernel/2015-
+> > > > >> January/317743.html
+> > > > >> >     in designware we have a problem as the PCI addresses i=
+n
+> > the
+> > > > PCIe
+> > > > >> controller
+> > > > >> >     address space are required in order to perform correct=
+ HW
+> > > > >> operation.
+> > > > >> >
+> > > > >> >     In order to solve this problem commit f4c55c5a3 "PCI:
+> > > > designware:
+> > > > >> >     Program ATU with untranslated address" added code to r=
+ead
+> > the
+> > > > >> PCIe
+> > > > >>
+> > > > >> Conventional reference is 12-char SHA1, like this:
+> > > > >>
+> > > > >>   f4c55c5a3f7f ("PCI: designware: Program ATU with untransla=
+ted
+> > > > >> address")
+> > > > >
+> > > > > Agreed, will change this
+> > > > >
+> > > > >>
+> > > > >> >     controller start address directly from the DT ranges.
+> > > > >> >
+> > > > >> >     In the new DT parsing API
+> > of_pci_get_host_bridge_resources()
+> > > > >> hides the
+> > > > >> >     DT parser from the host controller drivers, so it is n=
+ot
+> > > > possible
+> > > > >> >     for drivers to parse values directly from the DT.
+> > > > >> >
+> > > > >> >     In http://www.spinics.net/lists/linux-pci/msg42540.htm=
+l we
+> > > > >> already tried
+> > > > >> >     to use the new DT parsing API but there is a bug
+> > (obviously)
+> > > > in
+> > > > >> setting
+> > > > >> >     the <*>_mod_base addresses
+> > > > >> >     Applying this patch we can easily set "<*>_mod_base =3D=
+ win-
+> > > > >> >__res.start"
+> > > > >>
+> > > > >> By itself, this patch adds something.  It would help me
+> > understand
+> > > > it
+> > > > >> if
+> > > > >> the *user* of this new something were in the same patch seri=
+es.
+> > > > >
+> > > > > the user is: "[PATCH v5 2/5] PCI: designware: Add ARM64 suppo=
+rt"
+> > > > > I will ask Zhou Wang to include this patch in his patchset
+> > > > >
+> > > > >
+> > > > >>
+> > > > >> >     This patch adds a new field in "struct of_pci_range" t=
+o
+> > store
+> > > > the
+> > > > >> >     pci bus start address; it fills the field in
+> > > > >> of_pci_range_parser_one();
+> > > > >> >     in of_pci_get_host_bridge_resources() it retrieves the
+> > > > resource
+> > > > >> entry
+> > > > >> >     after it is created and added to the resource list and
+> > uses
+> > > > >> >     entry->__res.start to store the pci controller address
+> > > > >>
+> > > > >> struct of_pci_range is starting to get confusing to non-OF f=
+olks
+> > > > like
+> > > > >> me.
+> > > > >> It now contains:
+> > > > >>
+> > > > >>   u32 pci_space;
+> > > > >>   u64 pci_addr;
+> > > > >>   u64 cpu_addr;
+> > > > >>   u64 bus_addr;
+> > > > >>
+> > > > >> Can you explain what all these things mean, and maybe even a=
+dd
+> > one-
+> > > > line
+> > > > >> comments to the structure?
+> > > > >
+> > > > > sure I can add comments inline in the code
+> > > > >
+> > > > >>
+> > > > >> pci_space: The only uses I see are to determine whether to p=
+rint
+> > > > >> "Prefetch".  I don't see any real functionality that uses th=
+is.
+> > > > >
+> > > > > Looking at the code I agree. it's seems to be used only in
+> > powerpc
+> > > > > and microblaze to print out.
+> > > > > However from my understanding pci_space is the phys.hi field =
+of
+> > the
+> > > > > ranges property: it defines the properties of the address spa=
+ce
+> > > > associated
+> > > > > to the PCI address. if you're curious you can find a nice and
+> > quick
+> > > > to read
+> > > > > "guide" in http://devicetree.org/MPC5200:PCI
+> > > > >
+> > > > >>
+> > > > >> pci_addr: I assume this is a PCI bus address, like what you
+> > would
+> > > > see
+> > > > >> if
+> > > > >> you put an analyzer on the bus/link.  This address could go =
+in a
+> > BAR.
+> > > > >
+> > > > > Yes, this is the PCI start address of the range: phys.mid +
+> > phys.low
+> > > > in the
+> > > > > guide mentioned above
+> > > > >
+> > > > >>
+> > > > >> cpu_addr: I assume this is a CPU physical address, like what=
+ you
+> > > > would
+> > > > >> see
+> > > > >> in /proc/iomem and what you would pass to ioremap().
+> > > > >
+> > > > > Yes correct
+> > > > >
+> > > > >>
+> > > > >> bus_addr: ?
+> > > > >>
+> > > > >
+> > > > > According to the guide above, this is the address into which =
+the
+> > > > pci_address
+> > > > > get translated to and that is passed to the root complex. Bet=
+ween
+> > the
+> > > > root
+> > > > > complex and the CPU there can be intermediate translation lay=
+ers:
+> > see
+> > > > that to
+> > > > > get pci_address we call "of_translate_address"; this will app=
+ly
+> > all
+> > > > the
+> > > > > translation layers (ranges in the DT) that it finds till it c=
+omes
+> > to
+> > > > the root
+> > > > > node of the DT (thus retrieving the CPU address).
+> > > > > Now said that, for designware we need the first translated PC=
+I
+> > > > address, that we call
+> > > >
+> > > > I think you mean "translated CPU address." The flow of addresse=
+s
+> > looks
+> > > > like this:
+> > > >
+> > > > CPU -> CPU bus address -> bus fabric address decoding -> bus
+> > address
+> > > > -> DW PCI -> PCI address
+> > > >
+> > > > This is quite common that an IP block does not see the full add=
+ress.
+> > > > It is unusual that the IP block needs to know its full address =
+on
+> > the
+> > > > slave side. It is quite common for the master side and the kern=
+el
+> > > > deals with that all the time with DMA mapping
+> > > >
+> > > > > here bus_addr after Rob Herring suggested the name...honestly=
+ I
+> > > > cannot think of a
+> > > > > different name
+> > > >
+> > > > Thinking about this some more, is this really a translation ver=
+sus
+> > > > just a stripping of high bits? Does the DW IP have less than 32=
+-
+> > bits
+> > > > address? If so, we could express differently and just mask the =
+CPU
+> > > > address within the driver instead.
+> > >
+> > > I don=E2=80=99t think we should rely on [CPU] addresses...what if=
+ the
+> > intermediate
+> > > translation layer changes the lower significant bits of the "bus
+> > address"
+> > > to translate into a cpu address?
+> >=20
+> > Is it really a possiblity that the lower bits could be changed?
+>=20
+> I've checked all the current deignware users DTs except "pci-layersca=
+pe"=20
+> that I could not find:
+> spear1310.dtsi
+> spear1340.dtsi
+> dra7.dtsi
+> imx6qdl.dtsi
+> imx6sx.dtsi
+> keystone.dtsi
+> exynos5440.dtsi
+>=20
+> None of them modifies the lower bits. To be more precise the only guy
+> that provides another translation layer is "dra7.dtsi":
+> axi0
+> http://lxr.free-electrons.com/source/arch/arm/boot/dts/dra7.dtsi#L207
+>=20
+> axi1
+> http://lxr.free-electrons.com/source/arch/arm/boot/dts/dra7.dtsi#L241
+>=20
+> For this case masking the top 4bits (bits28 to 31) should make the jo=
+b.
+>=20
+> Speaking in general terms so far I've always seen linear mappings
+> that differ by bitmask offset, however linear does not mean that you=20
+> cannot affect the lower bits: e.g. <0x0> to <0x0 + size> can map to
+> <0x0000cafe to 0x0000cafe + size>, but I guess that for HW design rea=
+sons
+> it is much easier to remap directly using a bitmask...but I was not s=
+ure
+> and I didn't think about the problems that can arise with ACPI.
 
-One big advantage of having a upstream demux driver for ST
-SoC's is that it will be easier to maintain support for the ST demodulators
-and tuners which are already upstream (and also add support for newer demods
-such as the stv6120 and stv910). As this driver allows ST NIM reference boards
-(which typically have a tuner/demod combination on)
-to be used easily with a upstream kernel on ST STB reference designs.
+As I said, it wouldn't make sense for the bits that comprise the
+offset into the window to change, so the mapping only has to be linear
+inside the window.
 
-Up until now it is not easy to test stv0367, stv6110 stv90x.c demod and tuner
-drivers which are supported upstream with ST STB reference hardware,
-and as such makes helping support these devices difficult.
+=46or the bits outside the window offset, I don't know enough to say
+whether masking is sufficient or safe.
 
-It also furthers the aim of having a completely open source A/V pipeline for STi
-chipsets. A upstream DRM driver is already merged for STi SoC's. ALSA SoC is
-current under review, and when this driver is accepted we would have a totaly
-open source frontend support (tuner->demod->demux) :-)
+> If you think the bitmask is Ok then I can directly define it in
+> designware and we can drop this patch.
 
-This initial patchset adds support for the following demux HW called c8sectpfe: -
-* Input Block HW
-* HW PID filtering
-* memdma engine (moves TS from input block sram to RAM)
+It's OK by me, but I know nothing about the actual hardware involved.
+=46or the DesignWare question, I think you would just have to convince
+Jingoo and Pratyush (cc'd).
 
-The driver creates one Linux DVB adapter, and each tsin channel which is
-described in DT has a set of LDVB device nodes.
-
-Currently the driver supports 7 tsin channels. This driver has been tested with
-the stih407-b2120 board and stih410-b2120 reference design boards, and currently
-we support the following DVB fronend cards:
- - STMicroelectronics DVB-T B2100A (STV0367 + TDA18212)
- - STMicroelectronics DVB-S/S2 STV0903 + STV6110 + LNBP24 board
-
-This patchset also includes some small changes to stv0367.c to get
-the upstream driver working correctly with the ST NIM reference board. Also Joe
-Perches dvb-pll patch is included with this series.
-
-regards,
-
-Peter.
-
-Changes since v1:
-- Rebase patches on v4.2-rc3 (Peter)
-- Rework firmware loading mechanism to be async (Peter)
-- Rework ELF firmware loading code (Peter)
-- Add support for 8192 special PID (Peter)
-- Fixup Kconfig depedencies for c8sectpfe (Peter)
-- Fix typo in Makefile rule for c8sectpfe-debugfs (Paul)
-
-- Include Joe Perches dvb-pll patch as requested by (Mauro)
-- Remove BUG_ON from various places (Mauro)
-- Drop THOMSON DTT7546X tuner support (rework based on tuner-simple later) (Mike)
-- Move driver to drivers/media/platform/sti/c8sectpfe/
-- usleep_range instead of msleep (Mauro)
-
-Joe Perches (1):
-  dvb-pll: Convert struct dvb_pll_desc uses to const.
-
-Peter Griffin (10):
-  [media] stv0367: Refine i2c error trace to include i2c address
-  [media] stv0367: Add support for 16Mhz reference clock
-  [media] c8sectpfe: Add DT bindings documentation for c8sectpfe driver.
-  ARM: DT: STi: STiH407: Add c8sectpfe LinuxDVB DT node.
-  [media] c8sectpfe: STiH407/10 Linux DVB demux support
-  [media] c8sectpfe: Add LDVB helper functions.
-  [media] c8sectpfe: Add support for various ST NIM cards.
-  [media] c8sectpfe: Add c8sectpfe debugfs support.
-  [media] c8sectpfe: Add Kconfig and Makefile for the driver.
-  MAINTAINERS: Add c8sectpfe driver directory to STi section
-
- .../bindings/media/stih407-c8sectpfe.txt           |   89 ++
- MAINTAINERS                                        |    1 +
- arch/arm/boot/dts/stihxxx-b2120.dtsi               |   38 +
- drivers/media/dvb-frontends/dvb-pll.c              |   50 +-
- drivers/media/dvb-frontends/stv0367.c              |   17 +-
- drivers/media/platform/Kconfig                     |    4 +-
- drivers/media/platform/Makefile                    |    1 +
- drivers/media/platform/sti/c8sectpfe/Kconfig       |   28 +
- drivers/media/platform/sti/c8sectpfe/Makefile      |    9 +
- .../platform/sti/c8sectpfe/c8sectpfe-common.c      |  265 +++++
- .../platform/sti/c8sectpfe/c8sectpfe-common.h      |   64 +
- .../media/platform/sti/c8sectpfe/c8sectpfe-core.c  | 1235 ++++++++++++++++++++
- .../media/platform/sti/c8sectpfe/c8sectpfe-core.h  |  288 +++++
- .../platform/sti/c8sectpfe/c8sectpfe-debugfs.c     |  271 +++++
- .../platform/sti/c8sectpfe/c8sectpfe-debugfs.h     |   26 +
- .../media/platform/sti/c8sectpfe/c8sectpfe-dvb.c   |  244 ++++
- .../media/platform/sti/c8sectpfe/c8sectpfe-dvb.h   |   20 +
- include/dt-bindings/media/c8sectpfe.h              |   12 +
- 18 files changed, 2632 insertions(+), 30 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/media/stih407-c8sectpfe.txt
- create mode 100644 drivers/media/platform/sti/c8sectpfe/Kconfig
- create mode 100644 drivers/media/platform/sti/c8sectpfe/Makefile
- create mode 100644 drivers/media/platform/sti/c8sectpfe/c8sectpfe-common.c
- create mode 100644 drivers/media/platform/sti/c8sectpfe/c8sectpfe-common.h
- create mode 100644 drivers/media/platform/sti/c8sectpfe/c8sectpfe-core.c
- create mode 100644 drivers/media/platform/sti/c8sectpfe/c8sectpfe-core.h
- create mode 100644 drivers/media/platform/sti/c8sectpfe/c8sectpfe-debugfs.c
- create mode 100644 drivers/media/platform/sti/c8sectpfe/c8sectpfe-debugfs.h
- create mode 100644 drivers/media/platform/sti/c8sectpfe/c8sectpfe-dvb.c
- create mode 100644 drivers/media/platform/sti/c8sectpfe/c8sectpfe-dvb.h
- create mode 100644 include/dt-bindings/media/c8sectpfe.h
-
--- 
-1.9.1
+> > I think we're talking about MMIO here, and a bridge has an MMIO
+> > window.  A window is a range of CPU physical addresses that the
+> > bridge forwards to PCI.  The PCI core assumes that a CPU physical
+> > address range is linearly mapped to PCI bus addresses, i.e., if the
+> > window base is X and maps to PCI address Y, then as long as X+n is
+> > inside the window, it must map to Y+n.
+> >=20
+> > That means the low-order bits (the ones that are the offset into th=
+e
+> > window) cannot change.
+> > --
+> > To unsubscribe from this list: send the line "unsubscribe linux-pci=
+" in
+> > the body of a message to majordomo@vger.kernel.org
+> > More majordomo info at  http://vger.kernel.org/majordomo-info.html
