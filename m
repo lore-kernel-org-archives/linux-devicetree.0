@@ -1,161 +1,63 @@
-From: Paul Bolle <pebolle-IWqWACnzNjzz+pZb47iToQ@public.gmane.org>
-Subject: Re: [PATCH] nfc: s3fwrn5: Add driver for Samsung S3FWRN5 NFC Chip
-Date: Thu, 30 Jul 2015 12:22:43 +0200
-Message-ID: <1438251763.15571.29.camel@tiscali.nl>
-References: <1438172116-27099-1-git-send-email-r.baldyga@samsung.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1438172116-27099-1-git-send-email-r.baldyga-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Robert Baldyga <r.baldyga-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Cc: lauro.venancio-430g2QfJUUCGglJvpFV4uA@public.gmane.org, aloisio.almeida-430g2QfJUUCGglJvpFV4uA@public.gmane.org, sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-nfc-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org, m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org
+From: Javier Martinez Canillas <javier@osg.samsung.com>
+Subject: [PATCH v3 0/4] mfd: Improve DT binding docs for max77686 and max77802
+Date: Thu, 30 Jul 2015 12:32:03 +0200
+Message-ID: <1438252327-28427-1-git-send-email-javier@osg.samsung.com>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Lee Jones <lee.jones@linaro.org>
+Cc: devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, Mark Brown <broonie@kernel.org>, linux-kernel@vger.kernel.org, Krzysztof Kozlowski <k.kozlowski@samsung.com>, linux-arm-kernel@lists.infradead.org, Javier Martinez Canillas <javier@osg.samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-On wo, 2015-07-29 at 14:15 +0200, Robert Baldyga wrote:
-> --- /dev/null
-> +++ b/drivers/nfc/s3fwrn5/Kconfig
-> @@ -0,0 +1,22 @@
-> +config NFC_S3FWRN5
-> +	tristate "Samsung S3FWRN5 NFC driver"
-> +	depends on NFC_NCI
-> +	default n
-> +	---help---
-> +	  Core driver for Samsung S3FWRN5 NFC chip.
-> +
-> +	  To compile this driver as a module, choose m here. The module will
-> +	  be called s3fwrn5.ko.
-> +	  Say N if unsure.
+Hello Lee,
 
-If I scanned the code correctly then all this module does is exporting
-three functions to s3fwrn5_i2c.ko. Note that there's also no
-module_unit() in sight. So it's a library, of sorts. And there's no
-reason to load this module without also loading s3fwrn5_i2c.ko. Likewise
-there's no reason to build it without also building s3fwrn5_i2c.ko.
+This series contains some improvements for the Device Tree bindings of
+the Maxim MAX77686 and MAX77802 multi-function devices.
 
-So perhaps you could merge the two Kconfig symbols you add in this
-patch.
+This is the third version of the series that addresses issues pointed
+out by Sergei Shtylyov and you.
 
-Or, if you'd like to keep both Kconfig symbols, for whatever reason, you
-might want to make NFC_S3FWRN5 a "silent" symbol that will be selected
-by NFC_S3FWRN5_I2C. (That probably requires NFC_S3FWRN5_I2C to depend on
-both NFC_NCI and I2C.)
+Patch #1 changes the max77686 binding to not suggest using a deprecated
+property of the regulator DT binding.
 
-Would either of the above two options work here?
+Patch #2 changes the max77686 example to use a generic node name instead
+of the chip's name.
 
-> +config NFC_S3FWRN5_I2C
-> +	tristate "Samsung S3FWRN5 I2C support"
-> +	depends on NFC_S3FWRN5 && I2C
-> +	default y
+Patch #3 adds a DT binding for the mfd portion of the max77802 that was
+missing.
 
-You only added "default y" to make setting this symbol in "make *config"
-a one step process, right?
+Patch #4 moves the regulator portion of the max77686 to the regulator's
+DT binding sub-directory since it is a better fit for this information.
+This fourth patch needs an ack from the regulator sub-system maintainer.
 
-> +	---help---
-> +	  This module adds support for an I2C interface to the S3FWRN5 chip.
-> +	  Select this if your platform is using the I2C bus.
-> +
-> +	  To compile this driver as a module, choose m here. The module will
-> +	  be called s3fwrn5_i2c.ko.
-> +	  Say N if unsure.
+Changes in v3:
+ - Fix typo in ePAPR document name. Suggested by Sergei Shtylyov
+- Add Krzysztof Kozlowski Reviewed-by tag to patch #3.
+- Capitalise all acronyms. Suggested by Lee Jones.
+- Use relative path to refer other bindings. Suggested by Lee Jones.
+- Use IRQ_TYPE_NONE instead of 0 in example. Suggested by Lee Jones.
+- Add Krzysztof Kozlowski Reviewed-by tag to patch #4.
+- Add Lee Jones Acked-by tag to patch #4.
 
-(This advice is at odds with "default y" above, by the way.)
+Changes in v2:
+- Add Krzysztof Kozlowski Reviewed-by tag in patch #1.
+- Use the correct "maxim,max77802" compatible string.
+  Suggested by Krzysztof Kozlowski
+- Use a pmic generic node name for the max77802 node example.
+  Suggested by Sergei Shtylyov.
+- Use a generic name for the max77686 node in the regulator example.
 
-> --- /dev/null
-> +++ b/drivers/nfc/s3fwrn5/Makefile
+Javier Martinez Canillas (4):
+  mfd: max77686: Don't suggest in binding to use a deprecated property
+  mfd: max77686: Use a generic name for the PMIC node in the example
+  mfd: Add DT binding for Maxim MAX77802 IC
+  mfd: max77686: Split out regulator part from the DT binding
 
-> +s3fwrn5-objs = core.o firmware.o nci.o
-> +s3fwrn5_i2c-objs = i2c.o
-> +
-> +obj-$(CONFIG_NFC_S3FWRN5) += s3fwrn5.o
-> +obj-$(CONFIG_NFC_S3FWRN5_I2C) += s3fwrn5_i2c.o
+ Documentation/devicetree/bindings/mfd/max77686.txt | 63 ++-----------------
+ Documentation/devicetree/bindings/mfd/max77802.txt | 26 ++++++++
+ .../devicetree/bindings/regulator/max77686.txt     | 71 ++++++++++++++++++++++
+ 3 files changed, 101 insertions(+), 59 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/mfd/max77802.txt
+ create mode 100644 Documentation/devicetree/bindings/regulator/max77686.txt
 
-> --- /dev/null
-> +++ b/drivers/nfc/s3fwrn5/core.c
-
-> + * This program is free software; you can redistribute it and/or modify it
-> + * under the terms and conditions of the GNU General Public License,
-> + * version 2, as published by the Free Software Foundation.
-
-> +int s3fwrn5_probe(struct nci_dev **ndev, void *phy_id, struct device *pdev,
-> +	struct s3fwrn5_phy_ops *phy_ops, unsigned int max_payload)
-> +{
-> +	[...]
-> +}
-> +EXPORT_SYMBOL(s3fwrn5_probe);
-> +
-> +void s3fwrn5_remove(struct nci_dev *ndev)
-> +{
-> +	[...]
-> +}
-> +EXPORT_SYMBOL(s3fwrn5_remove);
-> +
-> +int s3fwrn5_recv_frame(struct nci_dev *ndev, struct sk_buff *skb,
-> +	enum s3fwrn5_mode mode)
-> +{
-> +	[...]
-> +}
-> +EXPORT_SYMBOL(s3fwrn5_recv_frame);
-
-> +MODULE_LICENSE("GPL");
-
-> --- /dev/null
-> +++ b/drivers/nfc/s3fwrn5/i2c.c
-
-> + * This program is free software; you can redistribute it and/or modify it
-> + * under the terms and conditions of the GNU General Public License,
-> + * version 2, as published by the Free Software Foundation.
-
-> +static int s3fwrn5_i2c_fw_read(struct s3fwrn5_i2c_phy *phy)
-> +{
-> +	[...]
-> +
-> +	return s3fwrn5_recv_frame(phy->ndev, skb, S3FWRN5_MODE_FW);
-> +}
-> +
-> +static int s3fwrn5_i2c_nci_read(struct s3fwrn5_i2c_phy *phy)
-> +{
-> +	[...]
-> +
-> +	return s3fwrn5_recv_frame(phy->ndev, skb, S3FWRN5_MODE_NCI);
-> +}
-
-> +static int s3fwrn5_i2c_probe(struct i2c_client *client,
-> +				  const struct i2c_device_id *id)
-> +{
-> +	[...]
-> +
-> +	ret = s3fwrn5_probe(&phy->ndev, phy, &phy->i2c_dev->dev, &i2c_phy_ops,
-> +		S3FWRN5_I2C_MAX_PAYLOAD);
-> +	[...]
-> +		s3fwrn5_remove(phy->ndev);
-> +
-> +	[...]
-> +}
-> +
-> +static int s3fwrn5_i2c_remove(struct i2c_client *client)
-> +{
-> +	[...]
-> +
-> +	s3fwrn5_remove(phy->ndev);
-> +
-> +	[...]
-> +}
-
-> +MODULE_LICENSE("GPL");
-
-Nit: both modules' code contain a comment referring to the "GNU General
-Public License, version 2". They also both use the "GPL" ident in their
-MODULE_LICENSE() macro. And, according to include/linux/module.h, that
-ident states the license is GPL v2 or later. So I think either the
-comments or the idents need to change.
-
-Thanks,
-
-
-Paul Bolle
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+2.4.3
