@@ -1,58 +1,69 @@
-From: Loc Ho <lho-qTEPVZfXA3Y@public.gmane.org>
-Subject: Re: [PATCH v2 2/3] edac: Add L3/SoC support to the APM X-Gene SoC
- EDAC driver
-Date: Wed, 29 Jul 2015 22:31:49 -0700
-Message-ID: <CAPw-ZTnipyRLnRxNTvq6FJTHyt2EbhObJMOa542LYOGna3FgjA@mail.gmail.com>
-References: <1437808063-17592-1-git-send-email-lho@apm.com>
-	<1437808063-17592-2-git-send-email-lho@apm.com>
-	<1437808063-17592-3-git-send-email-lho@apm.com>
-	<20150729142941.GC17367@nazgul.tnic>
-	<CAPw-ZTkZ7q8PUWydFad5TXrhcY6YBRjdVvz+SR+LV4sOLDKkEg@mail.gmail.com>
-	<20150730043148.GC7209@nazgul.tnic>
+From: Stefan Wahren <info-saaNCTdWVBT7BZbvpMY5sg@public.gmane.org>
+Subject: Re: [PATCH 1/2] spi: bcm2835: add spi-bcm2835aux driver for the
+ auxiliar spi1 and spi2
+Date: Thu, 30 Jul 2015 07:36:47 +0200
+Message-ID: <55B9B7EF.2070108@lategoodbye.de>
+References: <1434980408-4086-1-git-send-email-kernel@martin.sperl.org>
+ <55A0A150.3060809@wwwdotorg.org>
+ <ECFBB7BF-1316-4565-B1F2-FB2651131882@martin.sperl.org>
+ <55A49662.3000706@wwwdotorg.org>
+ <2768BFA9-7FE9-4EDC-8692-AC3F070BD874@martin.sperl.org>
+ <55AEF828.20908@wwwdotorg.org>
+ <0125992E-40F4-4702-8404-2943FF9A8788@martin.sperl.org>
+ <55B1BA7A.1090104@wwwdotorg.org>
+ <9005ABEC-C60A-4814-AD60-AD5BB09808F2@martin.sperl.org>
+ <55B6EE1A.2070605@wwwdotorg.org>
+ <836DA157-3072-441A-A160-E1FDBB119E88@martin.sperl.org>
+ <55B75E07.1080104@martin.sperl.org> <55B9014C.7020105@lategoodbye.de>
+ <C767C9AD-A9B5-428F-A207-D67269B380C6@martin.sperl.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20150730043148.GC7209-K5JNixvcfoxupOikMc4+xw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Borislav Petkov <bp-Gina5bIWoIWzQB+pC5nmwQ@public.gmane.org>
-Cc: Doug Thompson <dougthompson-aS9lmoZGLiVWk0Htik3J/w@public.gmane.org>, Mauro Carvalho Chehab <mchehab-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, linux-edac-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Jon Masters <jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, "patches-qTEPVZfXA3Y@public.gmane.org" <patches-qTEPVZfXA3Y@public.gmane.org>
+Content-Type: text/plain; charset=utf-8;
+	format=flowed
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <C767C9AD-A9B5-428F-A207-D67269B380C6-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org>
+Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Martin Sperl <kernel-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org>
+Cc: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Hi Martin,
 
->> Debug folder node shows up at /sys/kernel/debug/<file here> while the
->> MC debug node shows up at /sys/kernel/debug/edac where <file here> is
->> the driver node name. It would be better if everything shows up at
->> /sys/kernel/debug/edac. For this to happen, I need EDAC core change to
->> provide an parent node.
+Am 29.07.2015 um 23:16 schrieb Martin Sperl:
 >
-> Sure, feel free to add accessors for edac_debugfs from
-> drivers/edac/edac_mc_sysfs.c which edac drivers can call and thus
-> receive the top-level debugfs node.
-
-Okay...
-
 >
-> For that, you can put all those accessor prototypes into a
-> drivers/edac/edac-internal.h header which should be included only by
-> edac drivers.
+>> On 29.07.2015, at 18:37, Stefan Wahren <info-saaNCTdWVBT7BZbvpMY5sg@public.gmane.org> wrote:
+>>
+>> Hi Martin,
+>>
+>>> Am 28.07.2015 um 12:48 schrieb Martin Sperl:
+>>>> On 28.07.2015 08:18, Martin Sperl wrote:
+>>>> Hi Stephen!
+>>>> But the bigger question you have not answered is: =E2=80=9Cwhere s=
+hould such an
+>>>> auxiliar driver go in the kernel tree?=E2=80=9D i.e. which directo=
+ry?
+>>> One thing: could the "module" be a regulator?
+>>
+>> IMHO that won't be acceptable.
+> Why would it not be acceptable?
 >
->> No... each EDAC instance has its own context as we allocated via
->> function edac_device_alloc_ctl_info. Per type of instance will use the
->> same type function.
->
-> So you have multiple instances running on the system? I don't think
-> anyone has audited the edac core and whether it can actually handle
-> that...
 
-Let me clarify a bit. I have one top level driver node and multiple
-instance of subnodes -  4 MC, 4 L2/L1, 1 L3C, and 1 SoC EDAC for now.
-The L3C many be multiple instance in the future. Just a note,  the way
-EDAC looks up instance is by pointer of struct device. It doesn't need
-anything more than that.
+first of all, sorry i didn't follow this thread in every detail. My=20
+intention was to give you some ideas. I'm a not maintainer.
 
--Loc
+IMU a regulator is a hardware part who controls voltage or current.
+
+Does it apply in your case?
+
+Any question: would a user expect this function in the regulator framew=
+ork?
+
+Regards Stefan
+
+
+
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe linux-spi" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
