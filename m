@@ -1,108 +1,55 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH v7 5/5] clk: dt: Introduce binding for critical clock
- support
-Date: Thu, 30 Jul 2015 10:23:41 +0100
-Message-ID: <20150730092341.GC14642@x1>
-References: <1437570255-21049-1-git-send-email-lee.jones@linaro.org>
- <1437570255-21049-6-git-send-email-lee.jones@linaro.org>
- <20150727071013.GO2564@lukather>
- <20150727073149.GV3436@x1>
- <20150728093222.GV2564@lukather>
+From: Jisheng Zhang <jszhang@marvell.com>
+Subject: [PATCH v5 0/2] arm64: Add basic support for Marvell Berlin4CT SoC
+Date: Thu, 30 Jul 2015 17:35:20 +0800
+Message-ID: <1438248922-2919-1-git-send-email-jszhang@marvell.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20150728093222.GV2564@lukather>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Maxime Ripard <maxime.ripard@free-electrons.com>
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, kernel@stlinux.com, mturquette@linaro.org, sboyd@codeaurora.org, devicetree@vger.kernel.org, geert@linux-m68k.org, s.hauer@pengutronix.de
+To: catalin.marinas@arm.com, will.deacon@arm.com, khilman@linaro.org, arnd@arndb.de, olof@lixom.net, mark.rutland@arm.com, sudeep.holla@arm.com, robh+dt@kernel.org, galak@codeaurora.org, pawel.moll@arm.com, sebastian.hesselbarth@gmail.com
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Jisheng Zhang <jszhang@marvell.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 28 Jul 2015, Maxime Ripard wrote:
+Marvell Berlin4CT is a SoC based on 64bit ARMv8 architecture. It contains
+quad CA53 cores.
 
-> On Mon, Jul 27, 2015 at 08:31:49AM +0100, Lee Jones wrote:
-> > On Mon, 27 Jul 2015, Maxime Ripard wrote:
-> >=20
-> > > Hi Lee,
-> > >=20
-> > > On Wed, Jul 22, 2015 at 02:04:15PM +0100, Lee Jones wrote:
-> > > > Signed-off-by: Lee Jones <lee.jones@linaro.org>
-> > > > ---
-> > > >  .../devicetree/bindings/clock/clock-bindings.txt   | 39 ++++++=
-++++++++++++++++
-> > > >  1 file changed, 39 insertions(+)
-> > > >=20
-> > > > diff --git a/Documentation/devicetree/bindings/clock/clock-bind=
-ings.txt b/Documentation/devicetree/bindings/clock/clock-bindings.txt
-> > > > index 06fc6d5..4137034 100644
-> > > > --- a/Documentation/devicetree/bindings/clock/clock-bindings.tx=
-t
-> > > > +++ b/Documentation/devicetree/bindings/clock/clock-bindings.tx=
-t
-> > > > @@ -44,6 +44,45 @@ For example:
-> > > >    clocks by index. The names should reflect the clock output s=
-ignal
-> > > >    names for the device.
-> > > > =20
-> > > > +critical-clock:	Some hardware contains bunches of clocks which=
-, in normal
-> > > > +		circumstances, must never be turned off.  If drivers a) fail=
- to
-> > > > +		obtain a reference to any of these or b) give up a previousl=
-y
-> > > > +		obtained reference during suspend, it is possible that some
-> > > > +		Operating Systems might attempt to disable them to save powe=
-r.
-> > > > +		If this happens a platform can fail irrecoverably as a resul=
-t.
-> > > > +		Usually the only way to recover from these failures is to
-> > > > +		reboot.
-> > > > +
-> > > > +		To avoid either of these two scenarios from catastrophically
-> > > > +		disabling an otherwise perfectly healthy running system,
-> > > > +		clocks can be identified as 'critical' using this property f=
-rom
-> > > > +		inside a clocksource's node.
-> > > > +
-> > > > +		This property is not to be abused.  It is only to be used to
-> > > > +		protect platforms from being crippled by gated clocks, NOT a=
-s a
-> > > > +		convenience function to avoid using the framework correctly
-> > > > +		inside device drivers.
-> > > > +
-> > > > +		Expected values are hardware clock indices.  If the
-> > > > +		clock-indices property (see below) is used, then supplied
-> > > > +		values must correspond to one of the listed identifiers.
-> > > > +		Using the clock-indices example below, hardware clock <2>
-> > > > +		is missing, therefore it is considered invalid to then
-> > > > +		list clock <2> as a critical clock.
-> > >=20
-> > > I think we should also consider having it simply as a boolean. Us=
-ing
-> > > indices for clocks that don't have any (for example because it on=
-ly
-> > > provides a single clock) seem to not really make much sense.
-> >=20
-> > Then how would you distinguish between the clocks if the provider
-> > provides more than a single clock?
->=20
-> What I had in mind was that, you would have three cases:
->=20
->   - critical-clocks is not there: no clocks are made critical
->=20
->   - critical-clocks is there, but doesn't have any values: all the
->     clocks provided are marked critical
->=20
->   - critical-clocks is there and it has a list of values: only the
->     clocks listed are marked critical.
->=20
-> Does that make sense to you?
+This SoC shares many HW IP with BG2Q and other berlin series. This patchset
+was tested on Berlin4CT DMP board, and boot to shell ok.
 
-Yep, sounds good.
+Since v4:
+ - rebased on the latest next tree
+ - adopt Sebastian suggestions such as: move osc out of "/soc" node, use
+   "Marvell BG4CT DMP board" as model, etc.
+ - use correct memory size for BG4CT DMP. The total DDR size is 2GB, we start
+   from 0x01000000, so the avaiable linux memory should be 0x7f000000.
 
---=20
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-=46ollow Linaro: Facebook | Twitter | Blog
+Since v3:
+ - remove bootargs. follow the same behavior as other arm64 SoCs.
+
+Since v2:
+ - remove the memreserve which isn't removed by mistake
+ - add earlycon to enable earlyconsole, inspired by Sudeep
+
+Since v1:
+ - remove "earlyprintk" bootargs which doesn't work on arm64
+ - fix GICC_DIR size as pointed out by Mark
+ - define memory start address instead of memory reservation as suggested by Mark
+ - add interrupt-affinity to pmu node as pointed out by Sudeep
+
+Jisheng Zhang (2):
+  arm64: dts: Add dts files for Marvell Berlin4CT SoC
+  arm64: Enable Marvell Berlin SoC family in Kconfig and defconfig
+
+ arch/arm64/Kconfig.platforms                  |   6 +
+ arch/arm64/boot/dts/Makefile                  |   1 +
+ arch/arm64/boot/dts/marvell/Makefile          |   5 +
+ arch/arm64/boot/dts/marvell/berlin4ct-dmp.dts |  66 +++++++++++
+ arch/arm64/boot/dts/marvell/berlin4ct.dtsi    | 164 ++++++++++++++++++++++++++
+ arch/arm64/configs/defconfig                  |   1 +
+ 6 files changed, 243 insertions(+)
+ create mode 100644 arch/arm64/boot/dts/marvell/Makefile
+ create mode 100644 arch/arm64/boot/dts/marvell/berlin4ct-dmp.dts
+ create mode 100644 arch/arm64/boot/dts/marvell/berlin4ct.dtsi
+
+-- 
+2.5.0
