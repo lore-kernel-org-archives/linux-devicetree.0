@@ -1,63 +1,95 @@
-From: "Tirdea, Irina" <irina.tirdea@intel.com>
-Subject: RE: [PATCH v3 3/5] Input: goodix - add power management support
-Date: Thu, 30 Jul 2015 11:32:11 +0000
-Message-ID: <1F3AC3675D538145B1661F571FE1805F2F0AC0F0@irsmsx105.ger.corp.intel.com>
-References: <1435595304-4840-1-git-send-email-irina.tirdea@intel.com>
-	 <1435595304-4840-4-git-send-email-irina.tirdea@intel.com>
- <1435679772.2612.12.camel@hadess.net>
+From: Michael Ira Krufky <mkrufky@linuxtv.org>
+Subject: Re: [PATCH 02/12] [media] dvb-pll: Add support for THOMSON DTT7546X tuner.
+Date: Thu, 30 Jul 2015 07:37:41 -0400
+Message-ID: <CAOcJUbwVBVxmaP-vNkw0n8Cf3-=Fn8Aou8FG81Ajab1B2h4Z4A@mail.gmail.com>
+References: <1435158670-7195-1-git-send-email-peter.griffin@linaro.org>
+	<1435158670-7195-3-git-send-email-peter.griffin@linaro.org>
+	<1435195057.9377.18.camel@perches.com>
+	<20150722185811.2d718baa@recife.lan>
+	<20150730094738.GD488@griffinp-ThinkPad-X1-Carbon-2nd>
+	<1438250928.2677.10.camel@perches.com>
+	<CAOcJUbw5hSmPdrz6rPPYU6iMBHnvOZc1p3f+4WhEYq2-XmAPVw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=UTF-8
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1435679772.2612.12.camel@hadess.net>
-Content-Language: en-US
+In-Reply-To: <CAOcJUbw5hSmPdrz6rPPYU6iMBHnvOZc1p3f+4WhEYq2-XmAPVw@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Bastien Nocera <hadess@hadess.net>, "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "Purdila, Octavian" <octavian.purdila@intel.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+To: Joe Perches <joe@perches.com>
+Cc: Peter Griffin <peter.griffin@linaro.org>, Mauro Carvalho Chehab <mchehab@osg.samsung.com>, linux-arm-kernel@lists.infradead.org, LKML <linux-kernel@vger.kernel.org>, srinivas.kandagatla@gmail.com, maxime.coquelin@st.com, patrice.chotard@st.com, lee.jones@linaro.org, hugues.fruchet@st.com, linux-media <linux-media@vger.kernel.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogbGludXgtaW5wdXQtb3du
-ZXJAdmdlci5rZXJuZWwub3JnIFttYWlsdG86bGludXgtaW5wdXQtb3duZXJAdmdlci5rZXJuZWwu
-b3JnXSBPbiBCZWhhbGYgT2YgQmFzdGllbiBOb2NlcmENCj4gU2VudDogMzAgSnVuZSwgMjAxNSAx
-ODo1Ng0KPiBUbzogVGlyZGVhLCBJcmluYTsgRG1pdHJ5IFRvcm9raG92OyBNYXJrIFJ1dGxhbmQ7
-IGxpbnV4LWlucHV0QHZnZXIua2VybmVsLm9yZzsgZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5vcmcN
-Cj4gQ2M6IGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc7IFJvYiBIZXJyaW5nOyBQYXdlbCBN
-b2xsOyBJYW4gQ2FtcGJlbGw7IEt1bWFyIEdhbGE7IFB1cmRpbGEsIE9jdGF2aWFuDQo+IFN1Ympl
-Y3Q6IFJlOiBbUEFUQ0ggdjMgMy81XSBJbnB1dDogZ29vZGl4IC0gYWRkIHBvd2VyIG1hbmFnZW1l
-bnQgc3VwcG9ydA0KPiANCj4gT24gTW9uLCAyMDE1LTA2LTI5IGF0IDE5OjI4ICswMzAwLCBJcmlu
-YSBUaXJkZWEgd3JvdGU6DQo+ID4gSW1wbGVtZW50IHN1c3BlbmQvcmVzdW1lIGZvciBnb29kaXgg
-ZHJpdmVyLg0KPiA+DQo+ID4gVGhlIHN1c3BlbmQgYW5kIHJlc3VtZSBwcm9jZXNzIHVzZXMgdGhl
-IGdwaW8gcGlucy4NCj4gPiBJZiB0aGUgZGV2aWNlIEFDUEkvRFQgaW5mb3JtYXRpb24gZG9lcyBu
-b3QgZGVjbGFyZSBncGlvIHBpbnMsDQo+ID4gc3VzcGVuZC9yZXN1bWUgd2lsbCBub3QgYmUgYXZh
-aWxhYmxlIGZvciB0aGVzZSBkZXZpY2VzLg0KPiA+DQo+ID4gVGhpcyBpcyBiYXNlZCBvbiBHb29k
-aXggZGF0YXNoZWV0cyBmb3IgR1Q5MTEgYW5kIEdUOTI3MQ0KPiA+IGFuZCBvbiBHb29kaXggZHJp
-dmVyIGd0OXh4LmMgZm9yIEFuZHJvaWQgKHB1YmxpY2x5IGF2YWlsYWJsZQ0KPiA+IGluIEFuZHJv
-aWQga2VybmVsIHRyZWVzIGZvciB2YXJpb3VzIGRldmljZXMpLg0KPiANCj4gSG93IGNhbiBJIGZ1
-bmN0aW9uYWxseSB0ZXN0IHRoaXM/DQoNCldlIGFyZSB0ZXN0aW5nIHRoZSBwb3dlciBtYW5hZ2Vt
-ZW50IGZlYXR1cmUgYnkgcHV0dGluZyB0aGUgc3lzdGVtDQppbiBzdXNwZW5kIGFuZCBtZWFzdXJp
-bmcgdGhlIHBvd2VyIGNvbnN1bWVkIGJ5IHRoZSB0b3VjaHNjcmVlbg0KdXNpbmcgSFcgbWVhc3Vy
-ZW1lbnQgdG9vbHMuDQoNCkkgY2FuIHNlbmQgYSBzZXQgb2YgcGF0Y2hlcyB0aGF0IGV4cG9ydCBh
-biBpbnRlcmZhY2UgdG8gcHV0DQp0aGUgdG91Y2hzY3JlZW4gaW50byBzdXNwZW5kIGZyb20gc3lz
-ZnMgKHNvbWV0aGluZyBzaW1pbGFyIHRvDQp3aGF0IGFkczc4NDYgaGFzKS4gSW4gdGhpcyB3YXkg
-eW91IGNhbiB0ZXN0IHdoYXQgaGFwcGVucyB0bw0KdGhlIHRvdWNoc2NyZWVuIGFsb25lIHdpdGhv
-dXQgcHV0dGluZyB0aGUgZW50aXJlIHN5c3RlbSBpbnRvDQpzdXNwZW5kLg0KDQpXaGVuIHN1c3Bl
-bmRpbmcgdGhlIGRldmljZSB5b3Ugd2lsbCBzZWUgdGhhdCB0aGVyZSBhcmUgbm8gZXZlbnRzDQpy
-ZWNlaXZlZCBmcm9tIHRoZSB0b3VjaHNjcmVlbiAodGhlIGludGVycnVwdCBpcyB1bnJlZ2lzdGVy
-ZWQgYmVmb3JlDQpzdXNwZW5kaW5nIHRoZSBkZXZpY2UpLiBUbyBhY3R1YWxseSBjaGVjayB0aGF0
-IHRoZSBkZXZpY2UNCmhhcyBiZWVuIHN1c3BlbmRlZCBhbmQgaXMgbm90IGNvbnN1bWluZyBwb3dl
-ciB5b3UgbmVlZCB0byBtZWFzdXJlDQp0aGUgcG93ZXIgY29uc3VtZWQgYnkgdGhlIHRvdWNoc2Ny
-ZWVuLiBUbyBkbyB0aGF0IGVudGlyZWx5IGZyb20NCnNvZnR3YXJlLCB5b3UgY291bGQgY29tcGFy
-ZSB0aGUgcG93ZXIgY29uc3VtZWQgYnkgdGhlIGJhdHRlcnkgd2hlbiB0aGUNCnRvdWNoc2NyZWVu
-IGlzIHBvd2VyZWQgb24gd2l0aCB0aGUgcG93ZXIgY29uc3VtZWQgYnkgdGhlIGJhdHRlcnkNCndo
-ZW4gdGhlIHRvdWNoc2NyZWVuIGlzIHBvd2VyZWQgb2ZmIChiYXR0ZXJpZXMgZXhwb3J0IGludGVy
-ZmFjZXMgaW4NCnN5c2ZzIHRoYXQgY2FuIGJlIHVzZWQgZm9yIHRoYXQpLiBUaGUgZGlmZmVyZW5j
-ZSBzaG91bGQgbWF0Y2ggdGhlDQpkZXZpY2Ugc3BlY2lmaWNhdGlvbnMuIEkgYW0gZG9pbmcgc29t
-ZSB0ZXN0cyB0byBzZWUgaG93IHRoYXQgd29ya3MsDQpidXQgSSBhbSBub3QgZ2V0dGluZyB0aGUg
-ZXhwZWN0ZWQgcmVzdWx0cyBzbyBmYXIgKHNlZW1zIHRoZXJlIGFyZSBvdGhlcg0KY29tcG9uZW50
-cyB0aGF0IGFmZmVjdCB0aGUgbWVhc3VyZW1lbnRzKS4gSSB3aWxsIGxvb2sgbW9yZSBpbnRvIHRo
-aXMgYW5kDQpjb21lIGJhY2sgd2l0aCBkZXRhaWxzIGlmIHlvdSB0aGluayB0aGlzIHdvdWxkIHdv
-cmsgZm9yIHlvdS4NCg0KVGhhbmtzLA0KSXJpbmENCg0KPiAtLQ0KPiBUbyB1bnN1YnNjcmliZSBm
-cm9tIHRoaXMgbGlzdDogc2VuZCB0aGUgbGluZSAidW5zdWJzY3JpYmUgbGludXgtaW5wdXQiIGlu
-DQo+IHRoZSBib2R5IG9mIGEgbWVzc2FnZSB0byBtYWpvcmRvbW9Admdlci5rZXJuZWwub3JnDQo+
-IE1vcmUgbWFqb3Jkb21vIGluZm8gYXQgIGh0dHA6Ly92Z2VyLmtlcm5lbC5vcmcvbWFqb3Jkb21v
-LWluZm8uaHRtbA0K
+On Thu, Jul 30, 2015 at 7:14 AM, Michael Ira Krufky <mkrufky@linuxtv.org> wrote:
+> On Thu, Jul 30, 2015 at 6:08 AM, Joe Perches <joe@perches.com> wrote:
+>> On Thu, 2015-07-30 at 10:47 +0100, Peter Griffin wrote:
+>>> Hi Mauro / Joe,
+>>>
+>>> On Wed, 22 Jul 2015, Mauro Carvalho Chehab wrote:
+>>>
+>>> > Em Wed, 24 Jun 2015 18:17:37 -0700
+>>> > Joe Perches <joe@perches.com> escreveu:
+>>> >
+>>> > > On Wed, 2015-06-24 at 16:11 +0100, Peter Griffin wrote:
+>>> > > > This is used in conjunction with the STV0367 demodulator on
+>>> > > > the STV0367-NIM-V1.0 NIM card which can be used with the STi
+>>> > > > STB SoC's.
+>>> > >
+>>> > > Barely associated to this specific patch, but for
+>>> > > dvb-pll.c, another thing that seems possible is to
+>>> > > convert the struct dvb_pll_desc uses to const and
+>>> > > change the "entries" fixed array size from 12 to []
+>>> > >
+>>> > > It'd save a couple KB overall and remove ~5KB of data.
+>>> > >
+>>> > > $ size drivers/media/dvb-frontends/dvb-pll.o*
+>>> > >    text      data     bss     dec     hex filename
+>>> > >    8520      1552    2120   12192    2fa0 drivers/media/dvb-frontends/dvb-pll.o.new
+>>> > >    5624      6363    2120   14107    371b drivers/media/dvb-frontends/dvb-pll.o.old
+>>> >
+>>> > Peter,
+>>> >
+>>> > Please add this patch on the next patch series you submit.
+>>>
+>>> Ok will do, I've added this patch with a slightly updated commit message
+>>> to my series.
+>>>
+>>> Joe - Can I add your signed-off-by?
+>>
+>> Signed-off-by: Joe Perches <joe@perches.com>
+>
+> Reviewed-by: Michael Ira Krufky <m.krufky@samsung.com>
+>
+> Joe, nice optimization - thanks for that.
+>
+> With regards to Peter's patch, is this a digital-only tuner, or is it
+> a hybrid tuner?
+>
+> The 5th byte that you send to the THOMSON DTT7546X seems to resemble
+> the 'auxiliary byte' that gets set in tuner-simple.c
+>
+> I'm not sure that dvb-pll is the right place for this tuner
+> definition, if this is the case.  Maybe this definition belongs in
+> tuner-simple instead, if the pattern matches better there.
+>
+> Mauro, can we hold off on merging Peter's patch until we resolve this?
+
+This code block, specifically, I would rather not see added into dvb-pll:
+
++static int dvb_pll_get_num_regs(struct dvb_pll_priv *priv)
++{
++       int num_regs = 4;
++
++       if (strncmp(priv->pll_desc->name, "Thomson dtt7546x", 16) == 0)
++               num_regs = 5;
++
++       return num_regs;
++}
++
+
+tuner-simple provides an infrastructure that allows this tuner to be
+added in a more elegant way without the need to add special cases to
+otherwise generic code, as done in the above.
+
+I'm sorry, Peter.  Can you take a look at tuner-simple and consider
+sending a new patch?
+
+-Michael Ira Krufky
