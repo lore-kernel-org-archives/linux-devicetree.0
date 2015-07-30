@@ -1,371 +1,138 @@
 From: Peter Griffin <peter.griffin@linaro.org>
-Subject: [PATCH v2 07/11] [media] c8sectpfe: Add LDVB helper functions.
-Date: Thu, 30 Jul 2015 18:08:57 +0100
-Message-ID: <1438276141-16902-8-git-send-email-peter.griffin@linaro.org>
+Subject: [PATCH v2 04/11] [media] c8sectpfe: Add DT bindings documentation for c8sectpfe driver.
+Date: Thu, 30 Jul 2015 18:08:54 +0100
+Message-ID: <1438276141-16902-5-git-send-email-peter.griffin@linaro.org>
 References: <1438276141-16902-1-git-send-email-peter.griffin@linaro.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <linux-media-owner@vger.kernel.org>
 In-Reply-To: <1438276141-16902-1-git-send-email-peter.griffin@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
+Sender: linux-media-owner@vger.kernel.org
 To: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, srinivas.kandagatla@gmail.com, maxime.coquelin@st.com, patrice.chotard@st.com, mchehab@osg.samsung.com, m.krufky@samsung.com
 Cc: peter.griffin@linaro.org, lee.jones@linaro.org, hugues.fruchet@st.com, linux-media@vger.kernel.org, devicetree@vger.kernel.org, joe@perches.com
 List-Id: devicetree@vger.kernel.org
 
-These functions are used by the core code for creating the LDVB
-devices and adapter.
-
-Addtionally some older SoC's (and potentially newer ones) have different
-frontend HW which would allow those devices to be easily supported
-in the future by keeping the code specific to the IP separate from the
-more generic code.
+This patch adds the DT bindings documentation for the c8sectpfe LinuxDVB
+demux driver whose IP is in the STiH407 family silicon SoC's.
 
 Signed-off-by: Peter Griffin <peter.griffin@linaro.org>
 ---
- .../platform/sti/c8sectpfe/c8sectpfe-common.c      | 265 +++++++++++++++++++++
- .../platform/sti/c8sectpfe/c8sectpfe-common.h      |  64 +++++
- 2 files changed, 329 insertions(+)
- create mode 100644 drivers/media/platform/sti/c8sectpfe/c8sectpfe-common.c
- create mode 100644 drivers/media/platform/sti/c8sectpfe/c8sectpfe-common.h
+ .../bindings/media/stih407-c8sectpfe.txt           | 89 ++++++++++++++++++++++
+ include/dt-bindings/media/c8sectpfe.h              | 12 +++
+ 2 files changed, 101 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/media/stih407-c8sectpfe.txt
+ create mode 100644 include/dt-bindings/media/c8sectpfe.h
 
-diff --git a/drivers/media/platform/sti/c8sectpfe/c8sectpfe-common.c b/drivers/media/platform/sti/c8sectpfe/c8sectpfe-common.c
+diff --git a/Documentation/devicetree/bindings/media/stih407-c8sectpfe.txt b/Documentation/devicetree/bindings/media/stih407-c8sectpfe.txt
 new file mode 100644
-index 0000000..95223ab
+index 0000000..d4def76
 --- /dev/null
-+++ b/drivers/media/platform/sti/c8sectpfe/c8sectpfe-common.c
-@@ -0,0 +1,265 @@
-+/*
-+ * c8sectpfe-common.c - C8SECTPFE STi DVB driver
-+ *
-+ * Copyright (c) STMicroelectronics 2015
-+ *
-+ *   Author: Peter Griffin <peter.griffin@linaro.org>
-+ *
-+ *      This program is free software; you can redistribute it and/or
-+ *      modify it under the terms of the GNU General Public License as
-+ *      published by the Free Software Foundation; either version 2 of
-+ *      the License, or (at your option) any later version.
-+ */
-+#include <linux/completion.h>
-+#include <linux/delay.h>
-+#include <linux/device.h>
-+#include <linux/dvb/dmx.h>
-+#include <linux/errno.h>
-+#include <linux/init.h>
-+#include <linux/interrupt.h>
-+#include <linux/io.h>
-+#include <linux/ioport.h>
-+#include <linux/module.h>
-+#include <linux/slab.h>
-+#include <linux/time.h>
-+#include <linux/wait.h>
++++ b/Documentation/devicetree/bindings/media/stih407-c8sectpfe.txt
+@@ -0,0 +1,89 @@
++STMicroelectronics STi c8sectpfe binding
++============================================
 +
-+#include "dmxdev.h"
-+#include "dvbdev.h"
-+#include "dvb_demux.h"
-+#include "dvb_frontend.h"
-+#include "dvb_net.h"
++This document describes the c8sectpfe device bindings that is used to get transport
++stream data into the SoC on the TS pins, and into DDR for further processing.
 +
-+#include "c8sectpfe-common.h"
-+#include "c8sectpfe-core.h"
-+#include "c8sectpfe-dvb.h"
++It is typically used in conjunction with one or more demodulator and tuner devices
++which converts from the RF to digital domain. Demodulators and tuners are usually
++located on an external DVB frontend card connected to SoC TS input pins.
 +
-+static int register_dvb(struct stdemux *demux, struct dvb_adapter *adap,
-+				void *start_feed, void *stop_feed,
-+				struct c8sectpfei *fei)
-+{
-+	int result;
++Currently 7 TS input (tsin) channels are supported on the stih407 family SoC.
 +
-+	demux->dvb_demux.dmx.capabilities = DMX_TS_FILTERING |
-+					DMX_SECTION_FILTERING |
-+					DMX_MEMORY_BASED_FILTERING;
++Required properties (controller (parent) node):
++- compatible	: Should be "stih407-c8sectpfe"
 +
-+	demux->dvb_demux.priv = demux;
-+	demux->dvb_demux.filternum = C8SECTPFE_MAXCHANNEL;
-+	demux->dvb_demux.feednum = C8SECTPFE_MAXCHANNEL;
++- reg		: Address and length of register sets for each device in
++		  "reg-names"
 +
-+	demux->dvb_demux.start_feed = start_feed;
-+	demux->dvb_demux.stop_feed = stop_feed;
-+	demux->dvb_demux.write_to_decoder = NULL;
++- reg-names	: The names of the register addresses corresponding to the
++		  registers filled in "reg":
++			- c8sectpfe: c8sectpfe registers
++			- c8sectpfe-ram: c8sectpfe internal sram
 +
-+	result = dvb_dmx_init(&demux->dvb_demux);
-+	if (result < 0) {
-+		dev_err(fei->dev, "dvb_dmx_init failed (errno = %d)\n",
-+			result);
-+		goto err_dmx;
-+	}
++- clocks	: phandle list of c8sectpfe clocks
++- clock-names	: should be "c8sectpfe"
++See: Documentation/devicetree/bindings/clock/clock-bindings.txt
 +
-+	demux->dmxdev.filternum = demux->dvb_demux.filternum;
-+	demux->dmxdev.demux = &demux->dvb_demux.dmx;
-+	demux->dmxdev.capabilities = 0;
++- pinctrl-names	: a pinctrl state named tsin%d-serial or tsin%d-parallel (where %d is tsin-num)
++		   must be defined for each tsin child node.
++- pinctrl-0	: phandle referencing pin configuration for this tsin configuration
++See: Documentation/devicetree/bindings/pinctrl/pinctrl-binding.txt
 +
-+	result = dvb_dmxdev_init(&demux->dmxdev, adap);
-+	if (result < 0) {
-+		dev_err(fei->dev, "dvb_dmxdev_init failed (errno = %d)\n",
-+			result);
 +
-+		goto err_dmxdev;
-+	}
++Required properties (tsin (child) node):
 +
-+	demux->hw_frontend.source = DMX_FRONTEND_0 + demux->tsin_index;
++- tsin-num	: tsin id of the InputBlock (must be between 0 to 6)
++- i2c-bus	: phandle to the I2C bus DT node which the demodulators & tuners on this tsin channel are connected.
++- rst-gpio	: reset gpio for this tsin channel.
 +
-+	result = demux->dvb_demux.dmx.add_frontend(&demux->dvb_demux.dmx,
-+						&demux->hw_frontend);
-+	if (result < 0) {
-+		dev_err(fei->dev, "add_frontend failed (errno = %d)\n", result);
-+		goto err_fe_hw;
-+	}
++Optional properties (tsin (child) node):
 +
-+	demux->mem_frontend.source = DMX_MEMORY_FE;
-+	result = demux->dvb_demux.dmx.add_frontend(&demux->dvb_demux.dmx,
-+						&demux->mem_frontend);
-+	if (result < 0) {
-+		dev_err(fei->dev, "add_frontend failed (%d)\n", result);
-+		goto err_fe_mem;
-+	}
++- invert-ts-clk		: Bool property to control sense of ts input clock (data stored on falling edge of clk).
++- serial-not-parallel	: Bool property to configure input bus width (serial on ts_data<7>).
++- async-not-sync	: Bool property to control if data is received in asynchronous mode
++			   (all bits/bytes with ts_valid or ts_packet asserted are valid).
 +
-+	result = demux->dvb_demux.dmx.connect_frontend(&demux->dvb_demux.dmx,
-+							&demux->hw_frontend);
-+	if (result < 0) {
-+		dev_err(fei->dev, "connect_frontend (%d)\n", result);
-+		goto err_fe_con;
-+	}
++- dvb-card		: Describes the NIM card connected to this tsin channel.
 +
-+	return 0;
++Example:
 +
-+err_fe_con:
-+	demux->dvb_demux.dmx.remove_frontend(&demux->dvb_demux.dmx,
-+						     &demux->mem_frontend);
-+err_fe_mem:
-+	demux->dvb_demux.dmx.remove_frontend(&demux->dvb_demux.dmx,
-+						     &demux->hw_frontend);
-+err_fe_hw:
-+	dvb_dmxdev_release(&demux->dmxdev);
-+err_dmxdev:
-+	dvb_dmx_release(&demux->dvb_demux);
-+err_dmx:
-+	return result;
++/* stih410 SoC b2120 + b2004a + stv0367-pll(NIMB) + stv0367-tda18212 (NIMA) DT example) */
 +
-+}
++	c8sectpfe@08a20000 {
++		compatible = "st,stih407-c8sectpfe";
++		status = "okay";
++		reg = <0x08a20000 0x10000>, <0x08a00000 0x4000>;
++		reg-names = "stfe", "stfe-ram";
++		interrupts = <0 34 0>, <0 35 0>;
++		interrupt-names = "stfe-error-irq", "stfe-idle-irq";
 +
-+static void unregister_dvb(struct stdemux *demux)
-+{
++		pinctrl-names	= "tsin0-serial", "tsin0-parallel", "tsin3-serial",
++				"tsin4-serial", "tsin5-serial";
 +
-+	demux->dvb_demux.dmx.remove_frontend(&demux->dvb_demux.dmx,
-+						     &demux->mem_frontend);
++		pinctrl-0	= <&pinctrl_tsin0_serial>;
++		pinctrl-1	= <&pinctrl_tsin0_parallel>;
++		pinctrl-2	= <&pinctrl_tsin3_serial>;
++		pinctrl-3	= <&pinctrl_tsin4_serial_alt3>;
++		pinctrl-4	= <&pinctrl_tsin5_serial_alt1>;
 +
-+	demux->dvb_demux.dmx.remove_frontend(&demux->dvb_demux.dmx,
-+						     &demux->hw_frontend);
++		clocks = <&clk_s_c0_flexgen CLK_PROC_STFE>;
++		clock-names = "stfe";
 +
-+	dvb_dmxdev_release(&demux->dmxdev);
++		/* tsin0 is TSA on NIMA */
++		tsin0: port@0 {
++			tsin-num		= <0>;
++			serial-not-parallel;
++			i2c-bus			= <&ssc2>;
++			rst-gpio		= <&pio15 4 0>;
++			dvb-card		= <STV0367_TDA18212_NIMA_1>;
++		};
 +
-+	dvb_dmx_release(&demux->dvb_demux);
-+}
-+
-+static struct c8sectpfe *c8sectpfe_create(struct c8sectpfei *fei,
-+				void *start_feed,
-+				void *stop_feed)
-+{
-+	struct c8sectpfe *c8sectpfe;
-+	int result;
-+	int i, j;
-+
-+	short int ids[] = { -1 };
-+
-+	c8sectpfe = kzalloc(sizeof(struct c8sectpfe), GFP_KERNEL);
-+	if (!c8sectpfe)
-+		goto err1;
-+
-+	mutex_init(&c8sectpfe->lock);
-+
-+	c8sectpfe->device = fei->dev;
-+
-+	result = dvb_register_adapter(&c8sectpfe->adapter, "STi c8sectpfe",
-+					THIS_MODULE, fei->dev, ids);
-+	if (result < 0) {
-+		dev_err(fei->dev, "dvb_register_adapter failed (errno = %d)\n",
-+			result);
-+		goto err2;
-+	}
-+
-+	c8sectpfe->adapter.priv = fei;
-+
-+	for (i = 0; i < fei->tsin_count; i++) {
-+
-+		c8sectpfe->demux[i].tsin_index = i;
-+		c8sectpfe->demux[i].c8sectpfei = fei;
-+
-+		result = register_dvb(&c8sectpfe->demux[i], &c8sectpfe->adapter,
-+				start_feed, stop_feed, fei);
-+		if (result < 0) {
-+			dev_err(fei->dev,
-+				"register_dvb feed=%d failed (errno = %d)\n",
-+				result, i);
-+
-+			/* we take a all or nothing approach */
-+			for (j = 0; j < i; j++)
-+				unregister_dvb(&c8sectpfe->demux[j]);
-+			goto err3;
-+		}
-+	}
-+
-+	c8sectpfe->num_feeds = fei->tsin_count;
-+
-+	return c8sectpfe;
-+err3:
-+	dvb_unregister_adapter(&c8sectpfe->adapter);
-+err2:
-+	kfree(c8sectpfe);
-+err1:
-+	return NULL;
-+};
-+
-+static void c8sectpfe_delete(struct c8sectpfe *c8sectpfe)
-+{
-+	int i;
-+
-+	if (!c8sectpfe)
-+		return;
-+
-+	for (i = 0; i < c8sectpfe->num_feeds; i++)
-+		unregister_dvb(&c8sectpfe->demux[i]);
-+
-+	dvb_unregister_adapter(&c8sectpfe->adapter);
-+
-+	kfree(c8sectpfe);
-+};
-+
-+void c8sectpfe_tuner_unregister_frontend(struct c8sectpfe *c8sectpfe,
-+					struct c8sectpfei *fei)
-+{
-+	int n;
-+	struct channel_info *tsin;
-+
-+	for (n = 0; n < fei->tsin_count; n++) {
-+
-+		tsin = fei->channel_data[n];
-+
-+		if (tsin && tsin->frontend) {
-+			dvb_unregister_frontend(tsin->frontend);
-+			dvb_frontend_detach(tsin->frontend);
-+		}
-+
-+		if (tsin && tsin->i2c_adapter)
-+			i2c_put_adapter(tsin->i2c_adapter);
-+
-+		if (tsin && tsin->i2c_client) {
-+			if (tsin->i2c_client->dev.driver->owner)
-+				module_put(tsin->i2c_client->dev.driver->owner);
-+			i2c_unregister_device(tsin->i2c_client);
-+		}
-+	}
-+
-+	c8sectpfe_delete(c8sectpfe);
-+};
-+
-+int c8sectpfe_tuner_register_frontend(struct c8sectpfe **c8sectpfe,
-+				struct c8sectpfei *fei,
-+				void *start_feed,
-+				void *stop_feed)
-+{
-+	struct channel_info *tsin;
-+	struct dvb_frontend *frontend;
-+	int n, res;
-+
-+	*c8sectpfe = c8sectpfe_create(fei, start_feed, stop_feed);
-+	if (!*c8sectpfe)
-+		return -ENOMEM;
-+
-+	for (n = 0; n < fei->tsin_count; n++) {
-+		tsin = fei->channel_data[n];
-+
-+		res = c8sectpfe_frontend_attach(&frontend, *c8sectpfe, tsin, n);
-+		if (res)
-+			goto err;
-+
-+		res = dvb_register_frontend(&c8sectpfe[0]->adapter, frontend);
-+		if (res < 0) {
-+			dev_err(fei->dev, "dvb_register_frontend failed (%d)\n",
-+				res);
-+			goto err;
-+		}
-+
-+		tsin->frontend = frontend;
-+	}
-+
-+	return 0;
-+
-+err:
-+	c8sectpfe_tuner_unregister_frontend(*c8sectpfe, fei);
-+	return res;
-+}
-diff --git a/drivers/media/platform/sti/c8sectpfe/c8sectpfe-common.h b/drivers/media/platform/sti/c8sectpfe/c8sectpfe-common.h
++		tsin3: port@3 {
++			tsin-num		= <3>;
++			serial-not-parallel;
++			i2c-bus			= <&ssc3>;
++			rst-gpio		= <&pio15 7 0>;
++			dvb-card		= <STV0367_TDA18212_NIMB_1>;
++		};
++	};
+diff --git a/include/dt-bindings/media/c8sectpfe.h b/include/dt-bindings/media/c8sectpfe.h
 new file mode 100644
-index 0000000..da21c0a
+index 0000000..a0b5c7b
 --- /dev/null
-+++ b/drivers/media/platform/sti/c8sectpfe/c8sectpfe-common.h
-@@ -0,0 +1,64 @@
-+/*
-+ * c8sectpfe-common.h - C8SECTPFE STi DVB driver
-+ *
-+ * Copyright (c) STMicroelectronics 2015
-+ *
-+ *   Author: Peter Griffin <peter.griffin@linaro.org>
-+ *
-+ *      This program is free software; you can redistribute it and/or
-+ *      modify it under the terms of the GNU General Public License as
-+ *      published by the Free Software Foundation; either version 2 of
-+ *      the License, or (at your option) any later version.
-+ */
-+#ifndef _C8SECTPFE_COMMON_H_
-+#define _C8SECTPFE_COMMON_H_
++++ b/include/dt-bindings/media/c8sectpfe.h
+@@ -0,0 +1,12 @@
++#ifndef __DT_C8SECTPFE_H
++#define __DT_C8SECTPFE_H
 +
-+#include <linux/dvb/dmx.h>
-+#include <linux/dvb/frontend.h>
-+#include <linux/gpio.h>
-+#include <linux/version.h>
++#define STV0367_TDA18212_NIMA_1	0
++#define STV0367_TDA18212_NIMA_2	1
++#define STV0367_TDA18212_NIMB_1	2
++#define STV0367_TDA18212_NIMB_2	3
 +
-+#include "dmxdev.h"
-+#include "dvb_demux.h"
-+#include "dvb_frontend.h"
-+#include "dvb_net.h"
++#define STV0903_6110_LNB24_NIMA	4
++#define STV0903_6110_LNB24_NIMB	5
 +
-+/* Maximum number of channels */
-+#define C8SECTPFE_MAXADAPTER (4)
-+#define C8SECTPFE_MAXCHANNEL 64
-+#define STPTI_MAXCHANNEL 64
-+
-+#define MAX_INPUTBLOCKS 7
-+
-+struct c8sectpfe;
-+struct stdemux;
-+
-+struct stdemux {
-+	struct dvb_demux	dvb_demux;
-+	struct dmxdev		dmxdev;
-+	struct dmx_frontend	hw_frontend;
-+	struct dmx_frontend	mem_frontend;
-+	int			tsin_index;
-+	int			running_feed_count;
-+	struct			c8sectpfei *c8sectpfei;
-+};
-+
-+struct c8sectpfe {
-+	struct stdemux demux[MAX_INPUTBLOCKS];
-+	struct mutex lock;
-+	struct dvb_adapter adapter;
-+	struct device *device;
-+	int mapping;
-+	int num_feeds;
-+};
-+
-+/* Channel registration */
-+int c8sectpfe_tuner_register_frontend(struct c8sectpfe **c8sectpfe,
-+					struct c8sectpfei *fei,
-+					void *start_feed,
-+					void *stop_feed);
-+
-+void c8sectpfe_tuner_unregister_frontend(struct c8sectpfe *c8sectpfe,
-+						struct c8sectpfei *fei);
-+
-+#endif
++#endif /* __DT_C8SECTPFE_H */
 -- 
 1.9.1
