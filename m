@@ -1,26 +1,30 @@
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH v3] ARM: shmobile: silk: initial device tree
-Date: Thu, 30 Jul 2015 09:07:52 +0900
-Message-ID: <20150730000752.GA22515@verge.net.au>
+From: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
+Subject: Re: [PATCH RESEND] ARM: shmobile: silk: add Ether DT support
+Date: Thu, 30 Jul 2015 09:08:05 +0900
+Message-ID: <20150730000805.GB22515@verge.net.au>
 References: <201404250239.39150.sergei.shtylyov@cogentembedded.com>
- <2360526.88foRQAOiM@wasted.cogentembedded.com>
+ <6826396.5PIZbPW8q4@wasted.cogentembedded.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-sh-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <2360526.88foRQAOiM@wasted.cogentembedded.com>
-Sender: linux-sh-owner@vger.kernel.org
-To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Cc: linux-sh@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org, magnus.damm@gmail.com, linux@arm.linux.org.uk, linux-arm-kernel@lists.infradead.org
+In-Reply-To: <6826396.5PIZbPW8q4-gHKXc3Y1Z8zGSmamagVegGFoWSdPRAKMAL8bYrjMMd8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+Cc: linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jul 29, 2015 at 01:14:59AM +0300, Sergei Shtylyov wrote:
-> Add the initial device  tree for the R8A7794 SoC based SILK low cost board.
-> SCIF2 serial port support is included, so that the serial console can work.
+On Wed, Jul 29, 2015 at 01:16:02AM +0300, Sergei Shtylyov wrote:
+> Define the SILK board dependent part of the Ether device node.
+> Enable DHCP and NFS root for the kernel booting.
 > 
 > Based on the original patch by Vladimir Barinov
-> <vladimir.barinov@cogentembedded.com>.
+> <vladimir.barinov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>.
 > 
-> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+> Signed-off-by: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
 
 Thanks, I have queued this up.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
