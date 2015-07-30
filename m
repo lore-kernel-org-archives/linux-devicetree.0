@@ -1,158 +1,301 @@
-From: "Tirdea, Irina" <irina.tirdea@intel.com>
-Subject: RE: [PATCH 8/9] input: goodix: add support for ESD
-Date: Thu, 30 Jul 2015 12:06:08 +0000
-Message-ID: <1F3AC3675D538145B1661F571FE1805F2F0AC11D@irsmsx105.ger.corp.intel.com>
-References: <1432817265-23891-1-git-send-email-irina.tirdea@intel.com>
- <1432817265-23891-9-git-send-email-irina.tirdea@intel.com>
- <20150528132353.GJ23176@leverpostej>
- <1F3AC3675D538145B1661F571FE1805F19A77432@irsmsx105.ger.corp.intel.com>
- <1433422675.5346.21.camel@hadess.net>
- <1F3AC3675D538145B1661F571FE1805F19A79DF9@irsmsx105.ger.corp.intel.com>
- <20150605164602.GD26708@dtor-ws>
- <1F3AC3675D538145B1661F571FE1805F19A7A4F8@irsmsx105.ger.corp.intel.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1F3AC3675D538145B1661F571FE1805F19A7A4F8@irsmsx105.ger.corp.intel.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: "Tirdea, Irina" <irina.tirdea@intel.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Mark Rutland <mark.rutland@arm.com>
-Cc: Bastien Nocera <hadess@hadess.net>, "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "Purdila, Octavian" <octavian.purdila@intel.com>
+From: Rameshwar Prasad Sahu <rsahu@apm.com>
+Subject: [PATCH v1 3/4] Crypto: Add support for APM X-Gene SoC CRC32C h/w accelerator driver
+Date: Thu, 30 Jul 2015 17:41:07 +0530
+Message-ID: <1438258268-3099-4-git-send-email-rsahu@apm.com>
+References: <1438258268-3099-1-git-send-email-rsahu@apm.com>
+Return-path: <linux-crypto-owner@vger.kernel.org>
+In-Reply-To: <1438258268-3099-1-git-send-email-rsahu@apm.com>
+Sender: linux-crypto-owner@vger.kernel.org
+To: vinod.koul@intel.com, dan.j.williams@intel.com, herbert@gondor.apana.org.au, davem@davemloft.net
+Cc: linux-crypto@vger.kernel.org, dmaengine@vger.kernel.org, arnd@arndb.de, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, jcm@redhat.com, patches@apm.com, Rameshwar Prasad Sahu <rsahu@apm.com>
 List-Id: devicetree@vger.kernel.org
 
+This patch implements support for APM X-Gene SoC CRC32C h/w accelerator.
+DMA engine in APM X-Gene SoC is capable of doing CRC32C calculations.
 
+Signed-off-by: Rameshwar Prasad Sahu <rsahu@apm.com>
+---
+ drivers/crypto/Kconfig        |   8 ++
+ drivers/crypto/Makefile       |   1 +
+ drivers/crypto/xgene-crc32c.c | 244 ++++++++++++++++++++++++++++++++++++++++++
+ 3 files changed, 253 insertions(+)
+ create mode 100755 drivers/crypto/xgene-crc32c.c
 
-> -----Original Message-----
-> From: linux-input-owner@vger.kernel.org [mailto:linux-input-owner@vger.kernel.org] On Behalf Of Tirdea, Irina
-> Sent: 08 June, 2015 17:29
-> To: Dmitry Torokhov
-> Cc: Bastien Nocera; Mark Rutland; linux-input@vger.kernel.org; devicetree@vger.kernel.org; linux-kernel@vger.kernel.org
-> Subject: RE: [PATCH 8/9] input: goodix: add support for ESD
-> 
-> 
-> 
-> > -----Original Message-----
-> > From: Dmitry Torokhov [mailto:dmitry.torokhov@gmail.com]
-> > Sent: 05 June, 2015 19:46
-> > To: Tirdea, Irina
-> > Cc: Bastien Nocera; Mark Rutland; linux-input@vger.kernel.org; devicetree@vger.kernel.org; linux-kernel@vger.kernel.org
-> > Subject: Re: [PATCH 8/9] input: goodix: add support for ESD
-> >
-> > On Fri, Jun 05, 2015 at 04:37:49PM +0000, Tirdea, Irina wrote:
-> > >
-> > >
-> > > > -----Original Message-----
-> > > > From: Bastien Nocera [mailto:hadess@hadess.net]
-> > > > Sent: 04 June, 2015 15:58
-> > > > To: Tirdea, Irina
-> > > > Cc: Mark Rutland; Dmitry Torokhov; linux-input@vger.kernel.org; devicetree@vger.kernel.org; linux-kernel@vger.kernel.org
-> > > > Subject: Re: [PATCH 8/9] input: goodix: add support for ESD
-> > > >
-> > > > On Thu, 2015-05-28 at 14:26 +0000, Tirdea, Irina wrote:
-> > > > >
-> > > > > > -----Original Message-----
-> > > > > > From: linux-input-owner@vger.kernel.org [mailto:
-> > > > > > linux-input-owner@vger.kernel.org] On Behalf Of Mark Rutland
-> > > > > > Sent: 28 May, 2015 16:24
-> > > > > > To: Tirdea, Irina
-> > > > > > Cc: Dmitry Torokhov; Bastien Nocera; linux-input@vger.kernel.org;
-> > > > > > devicetree@vger.kernel.org; linux-kernel@vger.kernel.org
-> > > > > > Subject: Re: [PATCH 8/9] input: goodix: add support for ESD
-> > > > > >
-> > > > > > On Thu, May 28, 2015 at 01:47:44PM +0100, Irina Tirdea wrote:
-> > > > > > > Add ESD (Electrostatic Discharge) protection mechanism.
-> > > > > > >
-> > > > > > > The driver enables ESD protection in HW and checks a register
-> > > > > > > to determine if ESD occurred. If ESD is signalled by the HW,
-> > > > > > > the driver will reset the device.
-> > > > > > >
-> > > > > > > The ESD poll time (in ms) can be set through
-> > > > > > > esd-recovery-timeout-ms ACPI/DT property. If it is set to 0,
-> > > > > > > ESD protection is disabled.
-> > > > > > >
-> > > > > > > Signed-off-by: Irina Tirdea <irina.tirdea@intel.com>
-> > > > > > > ---
-> > > > > > >  .../bindings/input/touchscreen/goodix.txt          |   4 +
-> > > > > > >  drivers/input/touchscreen/goodix.c                 | 106
-> > > > > > > ++++++++++++++++++++-
-> > > > > > >  2 files changed, 106 insertions(+), 4 deletions(-)
-> > > > > > >
-> > > > > > > diff --git
-> > > > > > > a/Documentation/devicetree/bindings/input/touchscreen/goodix.txt
-> > > > > > b/Documentation/devicetree/bindings/input/touchscreen/goodix.txt
-> > > > > > > index 9e4ff69..9132ee0 100644
-> > > > > > > ---
-> > > > > > > a/Documentation/devicetree/bindings/input/touchscreen/goodix.txt
-> > > > > > > +++
-> > > > > > > b/Documentation/devicetree/bindings/input/touchscreen/goodix.txt
-> > > > > > > @@ -19,6 +19,10 @@ Optional properties:
-> > > > > > >
-> > > > > > >   - device-config : device configuration information
-> > > > > > > (specified as byte
-> > > > > > >                     array). Maximum size is 240 bytes.
-> > > > > > > + - esd-recovery-timeout-ms : ESD poll time (in milli seconds)
-> > > > > > > for the driver to
-> > > > > > > +                      check if ESD occurred and in that
-> > > > > > > case reset the
-> > > > > > > +                      device. ESD is disabled if this
-> > > > > > > property is not set
-> > > > > > > +                      or is set to 0.
-> > > > > >
-> > > > > > This sounds like software configuration rather than HW description.
-> > > > > > Is
-> > > > > > there any reason this needs to be a DT property?
-> > > > > >
-> > > > >
-> > > > > Although this enables a software feature, it depends on the platform
-> > > > > if electrostatic discharge
-> > > > > protection should be enabled or not. Some platform designs handle ESD
-> > > > > better and do not need
-> > > > > the SW mechanism, so the property can be used to disable it.
-> >
-> > Even though it depends on the platform it describes software function,
-> > not hardware. Since it is not necessary for starting the device maybe we
-> > should indeed export it through sysfs and userspace board code should
-> > activate it as needed?
-> 
-> Sure, I can do it through sysfs.
-> The only confusing part is that the tsc2005 touchscreen driver uses the
-> device tree property esd-recovery-timeout-ms.
-> 
-> >
-> > I'll leave the decision to DT folks here.
-> >
-> 
-> OK. I will keep this version of the esd patch in v2 and wait for an answer
-> from DT folks so I know exactly how to handle it.
-> 
+diff --git a/drivers/crypto/Kconfig b/drivers/crypto/Kconfig
+index 4044125..bd6eff5 100644
+--- a/drivers/crypto/Kconfig
++++ b/drivers/crypto/Kconfig
+@@ -480,4 +480,12 @@ config CRYPTO_DEV_IMGTEC_HASH
+ 	  hardware hash accelerator. Supporting MD5/SHA1/SHA224/SHA256
+ 	  hashing algorithms.
 
-Hi Mark, Dmitry,
-
-We have been experimenting with the ESD property exported through sysfs
-and found it difficult to use. We are testing this on Android tablets which
-do not provide userspace code customized for each subvariant of the same
-platform. So the only way for us to set specific parameters for each subvariant
-is to specify this in ACPI or DT. 
-
-I could keep the sysfs interface that exports the esd_timeout attribute, but
-initialize its value to what ACPI/DT provides. As I mentioned before, I could
-separate the esd enabling from the actual timeout if that makes more sense.
-
-What do you think?
-
-Thanks,
-Irina
-
-
-> Thanks,
-> Irina
-> 
-> > Thanks.
-> >
-> > --
-> > Dmitry
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-input" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
++config CRYPTO_DEV_XGENE_CRC32C
++	tristate "Support for APM SoC X-Gene CRC32C HW accelerator"
++	depends on XGENE_DMA
++	select CRYPTO_HASH
++	help
++	  This option enables support for CRC32C offload by using
++	  APM X-Gene SoC DMA engine.
++
+ endif # CRYPTO_HW
+diff --git a/drivers/crypto/Makefile b/drivers/crypto/Makefile
+index e35c07a..2cc3f4f 100644
+--- a/drivers/crypto/Makefile
++++ b/drivers/crypto/Makefile
+@@ -28,3 +28,4 @@ obj-$(CONFIG_CRYPTO_DEV_UX500) += ux500/
+ obj-$(CONFIG_CRYPTO_DEV_QAT) += qat/
+ obj-$(CONFIG_CRYPTO_DEV_QCE) += qce/
+ obj-$(CONFIG_CRYPTO_DEV_VMX) += vmx/
++obj-$(CONFIG_CRYPTO_DEV_XGENE_CRC32C) += xgene-crc32c.o
+diff --git a/drivers/crypto/xgene-crc32c.c b/drivers/crypto/xgene-crc32c.c
+new file mode 100755
+index 0000000..c0a483b
+--- /dev/null
++++ b/drivers/crypto/xgene-crc32c.c
+@@ -0,0 +1,244 @@
++/*
++ * Applied Micro X-Gene SoC CRC32C HW acceleration by using DMA engine
++ *
++ * Copyright (c) 2015, Applied Micro Circuits Corporation
++ * Authors: Rameshwar Prasad Sahu <rsahu@apm.com>
++ *
++ * This program is free software; you can redistribute  it and/or modify it
++ * under  the terms of  the GNU General  Public License as published by the
++ * Free Software Foundation;  either version 2 of the  License, or (at your
++ * option) any later version.
++ *
++ * This program is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
++ * GNU General Public License for more details.
++ *
++ * You should have received a copy of the GNU General Public License
++ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
++ */
++
++#include <linux/dmaengine.h>
++#include <linux/init.h>
++#include <crypto/internal/hash.h>
++#include <linux/interrupt.h>
++#include <linux/kernel.h>
++#include <linux/module.h>
++#include <linux/string.h>
++
++#define CRC32C_DIGEST_SIZE		4
++#define CRC32C_BLOCK_SIZE		1
++#define XGENE_DMA_MAX_FLYBY_SRC_CNT	5
++#define XGENE_DMA_MAX_FLYBY_BYTE_CNT	0x7FFF	/* (32 KB - 1) */
++
++struct xgene_crc32c_session_ctx {
++	struct dma_chan *dchan;
++	u32 key;
++};
++
++struct xgene_crc32c_reqctx {
++	struct device *dev;
++	u32 nents;
++	u32 seed;
++};
++
++static void xgene_crc32c_callback(void *ctx)
++{
++	struct ahash_request *req = ctx;
++	struct xgene_crc32c_reqctx *reqctx = ahash_request_ctx(req);
++
++	if (req->base.complete)
++		req->base.complete(&req->base, 0);
++
++	dma_unmap_sg(reqctx->dev, req->src,
++		     reqctx->nents, DMA_TO_DEVICE);
++}
++
++static int xgene_crc32c_handle_req(struct ahash_request *req,
++				   struct dma_chan *dchan)
++{
++	struct xgene_crc32c_reqctx *reqctx = ahash_request_ctx(req);
++	struct device *dev = dchan->device->dev;
++	struct dma_async_tx_descriptor *tx;
++	enum dma_ctrl_flags flags;
++	u32 nents, sg_count;
++	dma_cookie_t cookie;
++
++	if (req->nbytes > XGENE_DMA_MAX_FLYBY_BYTE_CNT) {
++		dev_err(dev, "Src len is too long 0x%X\n", req->nbytes);
++		return -EINVAL;
++	}
++
++	nents = sg_nents(req->src);
++	sg_count = dma_map_sg(dev, req->src, nents, DMA_TO_DEVICE);
++	if (!sg_count) {
++		dev_err(dev, "Failed to map src sg");
++		return -ENOMEM;
++	}
++
++	if (sg_count > XGENE_DMA_MAX_FLYBY_SRC_CNT) {
++		dev_err(dev, "Unsupported src sg len\n");
++		goto err;
++	}
++
++	flags = DMA_CTRL_ACK;
++
++	tx = dchan->device->device_prep_dma_crc32c(dchan, req->src,
++						   req->nbytes,
++						   reqctx->seed,
++						   req->result,
++						   flags);
++	if (!tx)
++		goto err;
++
++	/* Set callback parameters */
++	reqctx->dev = dev;
++	reqctx->nents = nents;
++	tx->callback_param = req;
++	tx->callback = xgene_crc32c_callback;
++
++	cookie = tx->tx_submit(tx);
++	if (dma_submit_error(cookie)) {
++		dev_err(dev, "Failed to submit descriptor\n");
++		goto err;
++	}
++
++	dma_async_issue_pending(dchan);
++
++	return -EINPROGRESS;
++
++err:
++	dma_unmap_sg(dev, req->src, nents, DMA_TO_DEVICE);
++	return -EINVAL;
++}
++
++static int xgene_crc32c_init(struct ahash_request *req)
++{
++	struct crypto_ahash *tfm = crypto_ahash_reqtfm(req);
++	struct xgene_crc32c_session_ctx *session = crypto_ahash_ctx(tfm);
++
++	*(__le32 *)req->result = cpu_to_le32(session->key);
++
++	return 0;
++}
++
++static int xgene_crc32c_update(struct ahash_request *req)
++{
++	struct xgene_crc32c_reqctx *reqctx = ahash_request_ctx(req);
++	struct crypto_ahash *tfm = crypto_ahash_reqtfm(req);
++	struct xgene_crc32c_session_ctx *session = crypto_ahash_ctx(tfm);
++
++	reqctx->seed = le32_to_cpu(*(__le32 *)req->result);
++
++	return xgene_crc32c_handle_req(req, session->dchan);
++}
++
++static int xgene_crc32c_final(struct ahash_request *req)
++{
++	return 0;
++}
++
++static int xgene_crc32c_finup(struct ahash_request *req)
++{
++	struct xgene_crc32c_reqctx *reqctx = ahash_request_ctx(req);
++	struct crypto_ahash *tfm = crypto_ahash_reqtfm(req);
++	struct xgene_crc32c_session_ctx *session = crypto_ahash_ctx(tfm);
++
++	reqctx->seed = le32_to_cpu(*(__le32 *)req->result);
++
++	return xgene_crc32c_handle_req(req, session->dchan);
++}
++
++static int xgene_crc32c_digest(struct ahash_request *req)
++{
++	struct xgene_crc32c_reqctx *reqctx = ahash_request_ctx(req);
++	struct crypto_ahash *tfm = crypto_ahash_reqtfm(req);
++	struct xgene_crc32c_session_ctx *session = crypto_ahash_ctx(tfm);
++
++	reqctx->seed = session->key;
++
++	return xgene_crc32c_handle_req(req, session->dchan);
++}
++
++static int xgene_crc32c_setkey(struct crypto_ahash *tfm, const u8 *key,
++			       unsigned int keylen)
++{
++	struct xgene_crc32c_session_ctx *session = crypto_ahash_ctx(tfm);
++
++	if (keylen != CRC32C_DIGEST_SIZE) {
++		crypto_ahash_set_flags(tfm, CRYPTO_TFM_RES_BAD_KEY_LEN);
++		return -EINVAL;
++	}
++
++	session->key = le32_to_cpu(*(__le32 *)key);
++
++	return 0;
++}
++
++static int xgene_crc32c_cra_init(struct crypto_tfm *tfm)
++{
++	struct xgene_crc32c_session_ctx *session = crypto_tfm_ctx(tfm);
++	dma_cap_mask_t mask;
++
++	crypto_ahash_set_reqsize(__crypto_ahash_cast(tfm),
++				 sizeof(struct xgene_crc32c_reqctx));
++	session->key = ~0;
++
++	dma_cap_zero(mask);
++	dma_cap_set(DMA_CRC32C, mask);
++
++	session->dchan = dma_request_channel(mask, NULL, NULL);
++	if (!session->dchan) {
++		pr_err("Failed to request CRC32C DMA channel\n");
++		return -ENXIO;
++	}
++
++	return 0;
++}
++
++static void xgene_crc32c_cra_exit(struct crypto_tfm *tfm)
++{
++	struct xgene_crc32c_session_ctx *session = crypto_tfm_ctx(tfm);
++
++	if (session->dchan)
++		dma_release_channel(session->dchan);
++}
++
++static struct ahash_alg xgene_crc32c_alg = {
++	.init		= xgene_crc32c_init,
++	.update		= xgene_crc32c_update,
++	.final		= xgene_crc32c_final,
++	.finup		= xgene_crc32c_finup,
++	.digest		= xgene_crc32c_digest,
++	.setkey		= xgene_crc32c_setkey,
++	.halg.digestsize = CRC32C_DIGEST_SIZE,
++	.halg.base	= {
++		.cra_name		= "xgene(crc32c)",
++		.cra_driver_name	= "crc32c-xgene",
++		.cra_flags		= (CRYPTO_ALG_TYPE_AHASH |
++					   CRYPTO_ALG_ASYNC),
++		.cra_blocksize		= CRC32C_BLOCK_SIZE,
++		.cra_ctxsize		= sizeof(
++					  struct xgene_crc32c_session_ctx),
++		.cra_init		= xgene_crc32c_cra_init,
++		.cra_exit		= xgene_crc32c_cra_exit,
++		.cra_module		= THIS_MODULE,
++	},
++};
++
++static int __init xgene_crc32c_mod_init(void)
++{
++	return crypto_register_ahash(&xgene_crc32c_alg);
++}
++late_initcall(xgene_crc32c_mod_init);
++
++static void __exit xgene_crc32c_mod_exit(void)
++{
++	crypto_unregister_ahash(&xgene_crc32c_alg);
++}
++module_exit(xgene_crc32c_mod_exit);
++
++MODULE_DESCRIPTION("APM X-Gene SoC CRC32C HW accelerator driver");
++MODULE_AUTHOR("Rameshwar Prasad Sahu <rsahu@apm.com>");
++MODULE_LICENSE("GPL");
++MODULE_VERSION("1.0");
+--
+1.8.2.1
