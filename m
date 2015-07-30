@@ -1,69 +1,74 @@
-From: Kishon Vijay Abraham I <kishon@ti.com>
-Subject: [PATCH 2/7] ARM: dts: dra7-evm: add evm_3v3_sd regulator
-Date: Thu, 30 Jul 2015 13:43:35 +0530
-Message-ID: <1438244020-4244-3-git-send-email-kishon@ti.com>
-References: <1438244020-4244-1-git-send-email-kishon@ti.com>
+From: Jisheng Zhang <jszhang@marvell.com>
+Subject: Re: [PATCH v4 2/2] arm64: Enable Marvell Berlin SoC family in
+ Kconfig and defconfig
+Date: Thu, 30 Jul 2015 16:15:08 +0800
+Message-ID: <20150730161508.7efb0174@xhacker>
+References: <1437557992-7111-1-git-send-email-jszhang@marvell.com>
+	<1437557992-7111-3-git-send-email-jszhang@marvell.com>
+	<55B9DB50.3070907@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="US-ASCII"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1438244020-4244-1-git-send-email-kishon@ti.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: tony@atomide.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mmc@vger.kernel.org
-Cc: mark.rutland@arm.com, linux@arm.linux.org.uk, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, nsekhar@ti.com, kishon@ti.com, robh+dt@kernel.org, bcousson@baylibre.com, galak@codeaurora.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <55B9DB50.3070907@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Cc: catalin.marinas@arm.com, will.deacon@arm.com, khilman@linaro.org, arnd@arndb.de, olof@lixom.net, mark.rutland@arm.com, sudeep.holla@arm.com, robh+dt@kernel.org, galak@codeaurora.org, pawel.moll@arm.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-From: Balaji T K <balajitk@ti.com>
+Dear Sebastian,
 
-Add a node for evm_3v3_sd using onboard pcf GPIO expander which feeds
-on to mmc vdd.
+On Thu, 30 Jul 2015 10:07:44 +0200
+Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com> wrote:
 
-Update mapping for vmmc-supply and vmmc_aux-supply.
-evm_3v3_sd supplies to SD card vdd, and ldo1 to sdcard i/o lines.
+> On 07/22/2015 11:39 AM, Jisheng Zhang wrote:
+> > This patch introduces ARCH_BERLIN to enable Marvell Berlin SoC family in
+> > Kconfig and defconfig.
+> >
+> > Signed-off-by: Jisheng Zhang <jszhang@marvell.com>
+> 
+> I guess this will go through arm64 directly? If so,
 
-Signed-off-by: Balaji T K <balajitk@ti.com>
-Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
----
- arch/arm/boot/dts/dra7-evm.dts |   12 +++++++++++-
- 1 file changed, 11 insertions(+), 1 deletion(-)
+I dunno. But from previous pull request for mt8173, rk3368, their according
+change goes through arm-soc tree.
 
-diff --git a/arch/arm/boot/dts/dra7-evm.dts b/arch/arm/boot/dts/dra7-evm.dts
-index 096f68b..1e0c88e 100644
---- a/arch/arm/boot/dts/dra7-evm.dts
-+++ b/arch/arm/boot/dts/dra7-evm.dts
-@@ -19,6 +19,15 @@
- 		reg = <0x80000000 0x60000000>; /* 1536 MB */
- 	};
- 
-+	evm_3v3_sd: fixedregulator-sd {
-+		compatible = "regulator-fixed";
-+		regulator-name = "evm_3v3_sd";
-+		regulator-min-microvolt = <3300000>;
-+		regulator-max-microvolt = <3300000>;
-+		enable-active-high;
-+		gpio = <&pcf_gpio_21 5 GPIO_ACTIVE_HIGH>;
-+	};
-+
- 	mmc2_3v3: fixedregulator-mmc2 {
- 		compatible = "regulator-fixed";
- 		regulator-name = "mmc2_3v3";
-@@ -462,7 +471,8 @@
- 
- &mmc1 {
- 	status = "okay";
--	vmmc-supply = <&ldo1_reg>;
-+	vmmc-supply = <&evm_3v3_sd>;
-+	vmmc_aux-supply = <&ldo1_reg>;
- 	bus-width = <4>;
- };
- 
--- 
-1.7.9.5
+Thanks,
+Jisheng
+
+> 
+> Acked-by: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+> 
+> > ---
+> >   arch/arm64/Kconfig.platforms | 6 ++++++
+> >   arch/arm64/configs/defconfig | 1 +
+> >   2 files changed, 7 insertions(+)
+> >
+> > diff --git a/arch/arm64/Kconfig.platforms b/arch/arm64/Kconfig.platforms
+> > index f7e4327..37b8fc5 100644
+> > --- a/arch/arm64/Kconfig.platforms
+> > +++ b/arch/arm64/Kconfig.platforms
+> > @@ -1,5 +1,11 @@
+> >   menu "Platform selection"
+> >
+> > +config ARCH_BERLIN
+> > +	bool "Marvell Berlin SoC Family"
+> > +	select DW_APB_ICTL
+> > +	help
+> > +	  This enables support for Marvell Berlin SoC Family
+> > +
+> >   config ARCH_EXYNOS
+> >   	bool
+> >   	help
+> > diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
+> > index 506b466..83843f9 100644
+> > --- a/arch/arm64/configs/defconfig
+> > +++ b/arch/arm64/configs/defconfig
+> > @@ -31,6 +31,7 @@ CONFIG_MODULES=y
+> >   CONFIG_MODULE_UNLOAD=y
+> >   # CONFIG_BLK_DEV_BSG is not set
+> >   # CONFIG_IOSCHED_DEADLINE is not set
+> > +CONFIG_ARCH_BERLIN=y
+> >   CONFIG_ARCH_EXYNOS7=y
+> >   CONFIG_ARCH_FSL_LS2085A=y
+> >   CONFIG_ARCH_HISI=y
+> >
