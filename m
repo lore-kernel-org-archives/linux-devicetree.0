@@ -1,50 +1,46 @@
-From: Rameshwar Sahu <rsahu@apm.com>
-Subject: Re: [PATCH v1 0/4] Crypto: tcrypt: Add test case for APM X-Gene SoC
- CRC32C algo
-Date: Thu, 30 Jul 2015 17:50:58 +0530
-Message-ID: <CAFd313wpsfYtK=fZ4Qin1y8vtX7-tgAEPPBtVDqAW8wxtisgAw@mail.gmail.com>
-References: <1438258268-3099-1-git-send-email-rsahu@apm.com>
+From: Paul Bolle <pebolle-IWqWACnzNjzz+pZb47iToQ@public.gmane.org>
+Subject: Re: [PATCH v2 3/6] mailbox: Add support for ST's Mailbox IP
+Date: Thu, 30 Jul 2015 14:48:42 +0200
+Message-ID: <1438260522.25464.12.camel@tiscali.nl>
+References: <1437990272-23111-1-git-send-email-lee.jones@linaro.org>
+	 <1437990272-23111-4-git-send-email-lee.jones@linaro.org>
+	 <1438121215.30903.27.camel@tiscali.nl> <20150730114545.GG14642@x1>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-crypto-owner@vger.kernel.org>
-In-Reply-To: <1438258268-3099-1-git-send-email-rsahu@apm.com>
-Sender: linux-crypto-owner@vger.kernel.org
-To: Vinod Koul <vinod.koul@intel.com>, dan.j.williams@intel.com, herbert@gondor.apana.org.au, davem@davemloft.net
-Cc: linux-crypto@vger.kernel.org, dmaengine@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, jcm@redhat.com, patches@apm.com, Rameshwar Prasad Sahu <rsahu@apm.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20150730114545.GG14642@x1>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-F5mvAk5X5gdBDgjK7y7TUQ@public.gmane.org, jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi All,
+On do, 2015-07-30 at 12:45 +0100, Lee Jones wrote:
+> On Wed, 29 Jul 2015, Paul Bolle wrote:
+> > Besides, if I read sti_max_probe() correctly, without OF support
+> > loading
+> > this module won't accomplish much. So what would another way of
+> > autoloading this module buy you?
+> 
+> I think this line can be safely removed.
 
-On Thu, Jul 30, 2015 at 5:41 PM, Rameshwar Prasad Sahu <rsahu@apm.com> wrote:
-> This patch adds test case for APM X-Gene SoC CRC32C algorithm.
+Looking at this patch a little more I notice there's no line reading
+     MODULE_DEVICE_TABLE(of, sti_mailbox_match);
 
-Please discard this patch description and subject line in this cover
-letter, I have resent it again.
+The three mailbox drivers that currently support OF do have such a line.
+So "another way of autoloading" was rather sloppy as now I don't see how
+this driver, if build as a module, will get auto-loaded. Maybe there's
+an auto-loading mechanism that I'm not aware of here. Or perhaps auto
+-loading is not needed.
+
+Similar question for patch 5/6 and the lack of a line reading
+    MODULE_DEVICE_TABLE(of, mbox_test_match);
 
 Thanks,
-Ram
 
->
-> Signed-off-by: Rameshwar Prasad Sahu <rsahu@apm.com>
-> ---
->
-> Rameshwar Prasad Sahu (4):
->   dmaengine: Add support for new feature CRC32C
->   dmaengine: xgene-dma: Add support for CRC32C calculation via DMA
->     engine
->   Crypto: Add support for APM X-Gene SoC CRC32C h/w accelerator driver
->   Crypto: tcrypt: Add test case for APM X-Gene SoC CRC32C algo
->
->  crypto/tcrypt.c               |   4 +
->  crypto/testmgr.c              |   9 ++
->  drivers/crypto/Kconfig        |   8 ++
->  drivers/crypto/Makefile       |   1 +
->  drivers/crypto/xgene-crc32c.c | 244 ++++++++++++++++++++++++++++++++
->  drivers/dma/dmaengine.c       |   2 +
->  drivers/dma/xgene-dma.c       | 317 ++++++++++++++++++++++++++++++++++++++++--
->  include/linux/dmaengine.h     |   5 +
->  8 files changed, 575 insertions(+), 15 deletions(-)
->  create mode 100755 drivers/crypto/xgene-crc32c.c
->
-> --
-> 1.8.2.1
+
+Paul Bolle
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
