@@ -1,76 +1,44 @@
-From: Rob Herring <robherring2@gmail.com>
-Subject: Re: [PATCH V3 02/16] PM / OPP: Create a directory for opp bindings
-Date: Thu, 30 Jul 2015 11:24:03 -0500
-Message-ID: <CAL_JsqLeBcaaJ05AtW+tyD5Uxuo5uVYLrq3_oKzrv94xhNpZGg@mail.gmail.com>
-References: <cover.1438166099.git.viresh.kumar@linaro.org> <4dfe565ff17766b7df127d475d84958e96fdab1b.1438166099.git.viresh.kumar@linaro.org>
- <CAL_Jsq+J41c7qx11L13-g0UyD+hY9W36Wu9P+6O3cnDv7ysY6Q@mail.gmail.com> <20150730134959.GB17794@linux>
+From: Jan =?ISO-8859-1?Q?L=FCbbe?= <jlu@pengutronix.de>
+Subject: Re: [PATCH v3 2/6] mmc: sdhci-esdhc-imx: add tuning-step seting
+ support
+Date: Thu, 30 Jul 2015 18:25:06 +0200
+Message-ID: <1438273506.26075.2.camel@pengutronix.de>
+References: <1438160637-28061-1-git-send-email-haibo.chen@freescale.com>
+	 <1438160637-28061-3-git-send-email-haibo.chen@freescale.com>
+Reply-To: jlu@pengutronix.de
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <20150730134959.GB17794@linux>
-Sender: linux-pm-owner@vger.kernel.org
-To: Viresh Kumar <viresh.kumar@linaro.org>
-Cc: Rafael Wysocki <rjw@rjwysocki.net>, Stephen Boyd <sboyd@codeaurora.org>, Nishanth Menon <nm@ti.com>, Abhilash Kesavan <kesavan.abhilash@gmail.com>, "linaro-kernel@lists.linaro.org" <linaro-kernel@lists.linaro.org>, Kevin Hilman <khilman@linaro.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, Viswanath Puttagunta <viswanath.puttagunta@linaro.org>, Michael Turquette <mturquette@baylibre.com>, Santosh Shilimkar <santosh.shilimkar@oracle.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Mark Brown <broonie@kernel.org>, Sudeep Holla <Sudeep.Holla@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Lucas Stach <l.stach@pengutronix.de>
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <1438160637-28061-3-git-send-email-haibo.chen@freescale.com>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Haibo Chen <haibo.chen@freescale.com>
+Cc: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, shawnguo@kernel.org, kernel@pengutronix.de, linux@arm.linux.org.uk, ulf.hansson@linaro.org, aisheng.dong@freescale.com, fabio.estevam@freescale.com, devicetree@vger.kernel.org, linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org, johan.derycke@barco.com, b29396@freescale.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jul 30, 2015 at 8:49 AM, Viresh Kumar <viresh.kumar@linaro.org> wrote:
-> On 30-07-15, 08:18, Rob Herring wrote:
->> On Wed, Jul 29, 2015 at 5:52 AM, Viresh Kumar <viresh.kumar@linaro.org> wrote:
->> > More platform specific extended opp bindings will follow and it would be
->> > easy to manage them with a directory for opp. Lets create that and move
->> > the existing opp bindings into it.
->> >
->> > Cc: Rob Herring <rob.herring@linaro.org>
->>
->> Use get_maintainers.pl please so you send to right people and right email.
->
-> Already done, you were just cc'd as an extra guy :)
+On Mi, 2015-07-29 at 17:03 +0800, Haibo Chen wrote:
+> tuning-step is the delay cell steps in tuning procedure. The default
+> value of tuning-step is 1. For imx6 series usdhc, tuning procedure ca=
+n
+> be passed when the tuning-step value is 1. But imx7d usdhc need the
+> tuning-step value as 2, otherwise it can't pass the tuning procedure.
+>=20
+> So this patch add the tuning-step setting in driver, so that user can
+> set the tuning-step value in dts.
 
-No, because no one that is a maintainer of
-Documentation/devicetree/bindings is cc'ed here. You did on the other
-patch, but not here as neither Ian, Mark, Kumar nor Pawel are cc'ed.
+=46rom your description, the correct tuning-step value only depends on =
+the
+SoC. Why not derive it from the compatible string?
 
->> > Cc: devicetree@vger.kernel.org
->> > Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
->> > ---
->> >  Documentation/devicetree/bindings/power/{ => opp}/opp.txt | 0
->> >  1 file changed, 0 insertions(+), 0 deletions(-)
->> >  rename Documentation/devicetree/bindings/power/{ => opp}/opp.txt (100%)
->> >
->> > diff --git a/Documentation/devicetree/bindings/power/opp.txt b/Documentation/devicetree/bindings/power/opp/opp.txt
->> > similarity index 100%
->> > rename from Documentation/devicetree/bindings/power/opp.txt
->> > rename to Documentation/devicetree/bindings/power/opp/opp.txt
->>
->> "power" seems to be a random collection of things. I'd prefer you move
->> this to .../bindings/opp/opp.txt.
->
-> Hmm, sure. That would be better I think.
->
-> --------------8<-------------------
->
-> Message-Id: <29597667e2c8afdbf396c5fcc9269fb27794131c.1438264123.git.viresh.kumar@linaro.org>
-> From: Viresh Kumar <viresh.kumar@linaro.org>
-> Date: Mon, 27 Jul 2015 10:04:21 +0530
-> Subject: [PATCH] PM / OPP: Create a directory for opp bindings
->
-> More platform specific extended opp bindings will follow and it would be
-> easy to manage them with a directory for opp. Lets create that and move
-> the existing opp bindings into it.
->
-> Cc: Rob Herring <rob.herring@linaro.org>
+Regards,
+Jan L=C3=BCbbe
+--=20
+Pengutronix e.K.                           |                           =
+  |
+Industrial Linux Solutions                 | http://www.pengutronix.de/=
+  |
+Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0  =
+  |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-555=
+5 |
 
-Still wrong...
-
-
-> Cc: devicetree@vger.kernel.org
-> Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
-> ---
->  Documentation/devicetree/bindings/{power => opp}/opp.txt | 0
->  1 file changed, 0 insertions(+), 0 deletions(-)
->  rename Documentation/devicetree/bindings/{power => opp}/opp.txt (100%)
->
-> diff --git a/Documentation/devicetree/bindings/power/opp.txt b/Documentation/devicetree/bindings/opp/opp.txt
-> similarity index 100%
-> rename from Documentation/devicetree/bindings/power/opp.txt
-> rename to Documentation/devicetree/bindings/opp/opp.txt
