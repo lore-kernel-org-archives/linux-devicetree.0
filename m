@@ -1,97 +1,201 @@
-From: Lina Iyer <lina.iyer-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: How-to: Uniquely identify a DT node in the driver?
-Date: Thu, 30 Jul 2015 09:33:25 -0600
-Message-ID: <20150730153325.GI51847@linaro.org>
-References: <20150728193833.GC51847@linaro.org>
- <20150729163958.GC5093@leverpostej>
+From: Bjorn Helgaas <bhelgaas@google.com>
+Subject: Re: [PATCH v6] PCI: Store PCIe bus address in struct of_pci_range
+Date: Thu, 30 Jul 2015 11:06:01 -0500
+Message-ID: <20150730160601.GF9640@google.com>
+References: <1438010223-124422-1-git-send-email-gabriele.paoloni@huawei.com>
+ <20150729172053.GE31170@google.com>
+ <EE11001F9E5DDD47B7634E2F8A612F2E01D6F350@lhreml503-mbs>
+ <CAL_JsqKs11-sXQTdBD+ZjbVYFWUHBARTW9q5MF1hCXUhZ+nWLQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-pci-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20150729163958.GC5093@leverpostej>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: Device Tree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAL_JsqKs11-sXQTdBD+ZjbVYFWUHBARTW9q5MF1hCXUhZ+nWLQ@mail.gmail.com>
+Sender: linux-pci-owner@vger.kernel.org
+To: Rob Herring <robherring2@gmail.com>
+Cc: Gabriele Paoloni <gabriele.paoloni@huawei.com>, "arnd@arndb.de" <arnd@arndb.de>, "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>, "Wangzhou (B)" <wangzhou1@hisilicon.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "james.morse@arm.com" <james.morse@arm.com>, "Liviu.Dudau@arm.com" <Liviu.Dudau@arm.com>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Yuanzhichang <yuanzhichang@hisilicon.com>, Zhudacai <zhudacai@hisilicon.com>, zhangjukuo <zhangjukuo@huawei.com>, qiuzhenfa <qiuzhenfa@hisilicon.com>, "Liguozhu (Kenneth)" <liguozhu@hisilicon.com>
 List-Id: devicetree@vger.kernel.org
 
-Hey Mark,
+On Thu, Jul 30, 2015 at 08:42:53AM -0500, Rob Herring wrote:
+> On Wed, Jul 29, 2015 at 2:44 PM, Gabriele Paoloni
+> <gabriele.paoloni@huawei.com> wrote:
+> > Hi Bjorn
+> >
+> > Many Thanks for your reply
+> >
+> > I have commented back inline with resolutions from my side.
+> >
+> > If you're ok with them I'll send it out a new version in the appropriate patchset
+> >
+> > Cheers
+> >
+> > Gab
+> >
+> >> -----Original Message-----
+> >> From: Bjorn Helgaas [mailto:bhelgaas@google.com]
+> >> Sent: Wednesday, July 29, 2015 6:21 PM
+> >> To: Gabriele Paoloni
+> >> Cc: arnd@arndb.de; lorenzo.pieralisi@arm.com; Wangzhou (B);
+> >> robh+dt@kernel.org; james.morse@arm.com; Liviu.Dudau@arm.com; linux-
+> >> pci@vger.kernel.org; linux-arm-kernel@lists.infradead.org;
+> >> devicetree@vger.kernel.org; Yuanzhichang; Zhudacai; zhangjukuo;
+> >> qiuzhenfa; Liguozhu (Kenneth)
+> >> Subject: Re: [PATCH v6] PCI: Store PCIe bus address in struct
+> >> of_pci_range
+> >>
+> >> Hi Gabriele,
+> >>
+> >> As far as I can tell, this is not specific to PCIe, so please use "PCI"
+> >> in
+> >> the subject as a generic term that includes both PCI and PCIe.
+> >
+> > sure agreed
+> >
+> >>
+> >> On Mon, Jul 27, 2015 at 11:17:03PM +0800, Gabriele Paoloni wrote:
+> >> > From: gabriele paoloni <gabriele.paoloni@huawei.com>
+> >> >
+> >> >     This patch is needed port PCIe designware to new DT parsing API
+> >> >     As discussed in
+> >> >     http://lists.infradead.org/pipermail/linux-arm-kernel/2015-
+> >> January/317743.html
+> >> >     in designware we have a problem as the PCI addresses in the PCIe
+> >> controller
+> >> >     address space are required in order to perform correct HW
+> >> operation.
+> >> >
+> >> >     In order to solve this problem commit f4c55c5a3 "PCI: designware:
+> >> >     Program ATU with untranslated address" added code to read the
+> >> PCIe
+> >>
+> >> Conventional reference is 12-char SHA1, like this:
+> >>
+> >>   f4c55c5a3f7f ("PCI: designware: Program ATU with untranslated
+> >> address")
+> >
+> > Agreed, will change this
+> >
+> >>
+> >> >     controller start address directly from the DT ranges.
+> >> >
+> >> >     In the new DT parsing API of_pci_get_host_bridge_resources()
+> >> hides the
+> >> >     DT parser from the host controller drivers, so it is not possible
+> >> >     for drivers to parse values directly from the DT.
+> >> >
+> >> >     In http://www.spinics.net/lists/linux-pci/msg42540.html we
+> >> already tried
+> >> >     to use the new DT parsing API but there is a bug (obviously) in
+> >> setting
+> >> >     the <*>_mod_base addresses
+> >> >     Applying this patch we can easily set "<*>_mod_base = win-
+> >> >__res.start"
+> >>
+> >> By itself, this patch adds something.  It would help me understand it
+> >> if
+> >> the *user* of this new something were in the same patch series.
+> >
+> > the user is: "[PATCH v5 2/5] PCI: designware: Add ARM64 support"
+> > I will ask Zhou Wang to include this patch in his patchset
+> >
+> >
+> >>
+> >> >     This patch adds a new field in "struct of_pci_range" to store the
+> >> >     pci bus start address; it fills the field in
+> >> of_pci_range_parser_one();
+> >> >     in of_pci_get_host_bridge_resources() it retrieves the resource
+> >> entry
+> >> >     after it is created and added to the resource list and uses
+> >> >     entry->__res.start to store the pci controller address
+> >>
+> >> struct of_pci_range is starting to get confusing to non-OF folks like
+> >> me.
+> >> It now contains:
+> >>
+> >>   u32 pci_space;
+> >>   u64 pci_addr;
+> >>   u64 cpu_addr;
+> >>   u64 bus_addr;
+> >>
+> >> Can you explain what all these things mean, and maybe even add one-line
+> >> comments to the structure?
+> >
+> > sure I can add comments inline in the code
+> >
+> >>
+> >> pci_space: The only uses I see are to determine whether to print
+> >> "Prefetch".  I don't see any real functionality that uses this.
+> >
+> > Looking at the code I agree. it's seems to be used only in powerpc
+> > and microblaze to print out.
+> > However from my understanding pci_space is the phys.hi field of the
+> > ranges property: it defines the properties of the address space associated
+> > to the PCI address. if you're curious you can find a nice and quick to read
+> > "guide" in http://devicetree.org/MPC5200:PCI
+> >
+> >>
+> >> pci_addr: I assume this is a PCI bus address, like what you would see
+> >> if
+> >> you put an analyzer on the bus/link.  This address could go in a BAR.
+> >
+> > Yes, this is the PCI start address of the range: phys.mid + phys.low in the
+> > guide mentioned above
+> >
+> >>
+> >> cpu_addr: I assume this is a CPU physical address, like what you would
+> >> see
+> >> in /proc/iomem and what you would pass to ioremap().
+> >
+> > Yes correct
+> >
+> >>
+> >> bus_addr: ?
+> >>
+> >
+> > According to the guide above, this is the address into which the pci_address
+> > get translated to and that is passed to the root complex. Between the root
+> > complex and the CPU there can be intermediate translation layers: see that to
+> > get pci_address we call "of_translate_address"; this will apply all the
+> > translation layers (ranges in the DT) that it finds till it comes to the root
+> > node of the DT (thus retrieving the CPU address).
+> > Now said that, for designware we need the first translated PCI address, that we call
+> 
+> I think you mean "translated CPU address." The flow of addresses looks
+> like this:
+> 
+> CPU -> CPU bus address -> bus fabric address decoding -> bus address
+> -> DW PCI -> PCI address
+> 
+> This is quite common that an IP block does not see the full address.
+> It is unusual that the IP block needs to know its full address on the
+> slave side. It is quite common for the master side and the kernel
+> deals with that all the time with DMA mapping
+> 
+> > here bus_addr after Rob Herring suggested the name...honestly I cannot think of a
+> > different name
+> 
+> Thinking about this some more, is this really a translation versus
+> just a stripping of high bits? Does the DW IP have less than 32-bits
+> address? If so, we could express differently and just mask the CPU
+> address within the driver instead.
 
-On Wed, Jul 29 2015 at 10:40 -0600, Mark Rutland wrote:
->On Tue, Jul 28, 2015 at 08:38:33PM +0100, Lina Iyer wrote:
->> Hello,
->>
->> I am looking to find a way to uniquely identify a device in the driver.
->> Here is an example -
->>
->> 	big: power-controller@1 {
->> 		compatible = "soc,foo";
->> 		...
->> 	};
->>
->> 	little: power-controller@2 {
->> 		compatible = "soc,foo";
->> 		...
->> 	};
->
->Ok, so these are two instances of the same block...
->
->> In the driver for the power-controller foo.c, would like to do -
->>
->> 	struct xyz {
->> 		const char *name;
->> 		...
->> 	};
->>
->> 	static struct xyz a = {
->> 		.name = "big"; // To be associated with big device
->> 		...
->> 	};
->>
->> 	static struct xyz b = {
->> 		.name = "little"; // To be associated with little device
->> 		...
->> 	};
->
->... which we're magically assuming things about.
->
->> What would be the best way to associate the power-controller devices 'big'
->> and 'little' with 'a' and 'b' respectively? A string comparison would be
->> ideal but possibly can work with other ways.
->>
->> I could think of adding compatibles to achieve this, but was hoping to
->> find something more elegant and appropriate. Or, is compatible the
->> recommended way to uniquely identify devices by the driver?
->
->There's no recommended way to uniquely idetnify a device, because in
->general it doesn't make sense to do so. Doing so implies intimate
->knowledge of a particular board and a lack of hardware description in
->the DT (otherwise you wouldn't need to associate additional information
->with the instance).
->
-Fair enough.
+I would like this much better if it would be sufficient.
 
->Either you need to describe some characteristic of the device with some
->properties on each instance, or you need to derive that form the linkage
->to other devices.
->
->It looks like you're trying to give different behviours to "big" and
->"little" clusters, which doesn't really fit either case. What do you
->want to differ? e.g. is it just the set of OPPs?
->
-I explained the context in my response to Sudeep. Guess our mails
-crossed at the same time.
+If I understand this correctly, this is all for the MMIO path, i.e., it has
+nothing to do with DMA addresses generated by the device being translated
+to main memory addresses.
 
-You are right. The differenciation is based on the intimate knowledge of
-the hardware characteristics of these individual power-controllers. So,
-in a way, compatibles are a better way to describe these devices
-uniquely instead of a property.
+ACPI has a fairly good abstract model for describing the address
+translations the kernel and drivers need to know about.  We should assume
+we'll need to describe this hardware via ACPI in addition to DT eventually,
+so I'm trying to figure out how we would map this into ACPI terms.
 
-Thank you for your time.
+If the driver really needs this intermediate address (the "bus address"
+above), I think that would mean adding a second ACPI bridge device.  The
+first bridge would have a _TRA showing the offset from CPU physical address
+to bus address, and the second bridge would have a _TRA showing the offset
+from bus address to PCI address.
 
--- Lina
-
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+If you only had a single ACPI bridge device, you'd only have one _TRA (from
+CPU physical to PCI bus address), and there'd be no way for the driver to
+learn about the intermediate bus address.
