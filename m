@@ -1,95 +1,43 @@
-From: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?=
-	<u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: Re: [RFC] improve binding for linux,wdt-gpio
-Date: Thu, 30 Jul 2015 09:33:16 +0200
-Message-ID: <20150730073316.GK15360@pengutronix.de>
-References: <1438115628-2819-1-git-send-email-u.kleine-koenig@pengutronix.de>
- <20150728212155.GA18137@roeck-us.net>
- <20150729073513.GB15360@pengutronix.de>
- <55B8F603.4000003@roeck-us.net>
- <20150730065951.GI15360@pengutronix.de>
- <55B9D153.5080202@roeck-us.net>
+From: Borislav Petkov <bp-Gina5bIWoIWzQB+pC5nmwQ@public.gmane.org>
+Subject: Re: [PATCH v2 2/3] edac: Add L3/SoC support to the APM X-Gene SoC
+ EDAC driver
+Date: Thu, 30 Jul 2015 09:43:16 +0200
+Message-ID: <20150730074316.GB8984@nazgul.tnic>
+References: <1437808063-17592-1-git-send-email-lho@apm.com>
+ <1437808063-17592-2-git-send-email-lho@apm.com>
+ <1437808063-17592-3-git-send-email-lho@apm.com>
+ <20150729142941.GC17367@nazgul.tnic>
+ <CAPw-ZTkZ7q8PUWydFad5TXrhcY6YBRjdVvz+SR+LV4sOLDKkEg@mail.gmail.com>
+ <20150730043148.GC7209@nazgul.tnic>
+ <CAPw-ZTnipyRLnRxNTvq6FJTHyt2EbhObJMOa542LYOGna3FgjA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain; charset=utf-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <55B9D153.5080202-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+In-Reply-To: <CAPw-ZTnipyRLnRxNTvq6FJTHyt2EbhObJMOa542LYOGna3FgjA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Alexander Shiyan <shc_work-JGs/UdohzUI@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Mike Looijmans <mike.looijmans-Oq418RWZeHk@public.gmane.org>, Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+To: Loc Ho <lho-qTEPVZfXA3Y@public.gmane.org>
+Cc: Doug Thompson <dougthompson-aS9lmoZGLiVWk0Htik3J/w@public.gmane.org>, Mauro Carvalho Chehab <mchehab-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, linux-edac-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Jon Masters <jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, "patches-qTEPVZfXA3Y@public.gmane.org" <patches-qTEPVZfXA3Y@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello Guenter,
+On Wed, Jul 29, 2015 at 10:31:49PM -0700, Loc Ho wrote:
+> Let me clarify a bit. I have one top level driver node and multiple
+> instance of subnodes -  4 MC, 4 L2/L1, 1 L3C, and 1 SoC EDAC for now.
+> The L3C many be multiple instance in the future. Just a note,  the way
+> EDAC looks up instance is by pointer of struct device. It doesn't need
+> anything more than that.
 
-On Thu, Jul 30, 2015 at 12:25:07AM -0700, Guenter Roeck wrote:
-> On 07/29/2015 11:59 PM, Uwe Kleine-K=F6nig wrote:
-> >On Wed, Jul 29, 2015 at 08:49:23AM -0700, Guenter Roeck wrote:
-> >>On 07/29/2015 12:35 AM, Uwe Kleine-K=F6nig wrote:
-> >>>>always-running is meant to indicate that the watchdog can not be =
-stopped
-> >>>>(meaning a timer has to be used to send keepalives while the watc=
-hdog
-> >>>>device is closed). The documentation specifically states that.
-> >>>>
-> >>>>	"If the watchdog timer cannot be disabled ..."
-> >>>>
-> >>>>How would you express that condition without always-running or a =
-similar
-> >>>>attribute ?  I am also not sure how that relates to hw_algo; I th=
-ought
-> >>>>those properties are orthogonal.
-> >>>For hw_algo =3D "level" the inactive level of the gpio disables th=
-e
-> >>>watchdog (and resets the counter). So always-running doesn't make =
-sense
-> >>>for this type.
-> >>>
-> >>That is not what is currently implemented. "level" just means that
-> >I'm not talking (yet) about the implementation.
-> >>the watchdog is pinged using a -high-low-high- or -low-high-low-
-> >>sequence, while toggle means that the level is changed with each
-> >>ping (-low-(wait)-high-(wait)-low-(wait)-high-...).
-> >Currently the document tells us:
-> >
-> >	hw_algo: [...]
-> >	- level: Low or high level starts counting WDT timeout, the
-> >	  opposite level disables the WDT.
-> >
-> >So similar to the "toggle" description there is some behaviour about
-> >being disabled in certain states implied.
-> >
->=20
-> It might be that you put too much emphasis on the documentation and
-> little or none on the code. We already established that the documenta=
-tion
-> is less than perfect. It might make sense to clean up the documentati=
-on
-> first to ensure that it matches what it is actually meant to document=
-=2E
-I'm not sure you wrote here what you intended to write?!
-=20
-> Sure, I understand, the devicetree bindings are supposed to be
-> implementation independent. We all know that this is an ideal view
-> which often does not match reality, as the code tends to be written
-> first and the devicetree bindings tend to be an afterthought.
-I think for drivers that work with a single type of device it works wel=
-l
-the other way round. But for something as generic as a gpio watchdog
-that is supposed to drive several different types of devices I think
-agreeing on which way to go is more time saving than to come up with an
-implementation first that then needs change on feedback.
+That's not what I mean - I mean all those instances calling into the
+EDAC core concurrently without any locking. From a quick scan, nothing
+problematic sticks out but it needs careful auditing.
 
-Best regards
-Uwe
+-- 
+Regards/Gruss,
+    Boris.
 
---=20
-Pengutronix e.K.                           | Uwe Kleine-K=F6nig        =
-    |
-Industrial Linux Solutions                 | http://www.pengutronix.de/=
-  |
+ECO tip #101: Trim your mails when you reply.
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
