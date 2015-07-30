@@ -1,30 +1,70 @@
-From: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
-Subject: Re: [PATCH RESEND] ARM: shmobile: silk: add Ether DT support
-Date: Thu, 30 Jul 2015 09:08:05 +0900
-Message-ID: <20150730000805.GB22515@verge.net.au>
-References: <201404250239.39150.sergei.shtylyov@cogentembedded.com>
- <6826396.5PIZbPW8q4@wasted.cogentembedded.com>
+From: Bjorn Andersson <bjorn.andersson@sonymobile.com>
+Subject: Re: [PATCH v1 1/7] ARM: dts: ifc6410: Add pwrseq support for WLAN
+Date: Wed, 29 Jul 2015 17:12:30 -0700
+Message-ID: <20150730001230.GD6519@usrtlx11787.corpusers.net>
+References: <1438087956-17307-1-git-send-email-srinivas.kandagatla@linaro.org>
+ <1438088022-17350-1-git-send-email-srinivas.kandagatla@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <6826396.5PIZbPW8q4-gHKXc3Y1Z8zGSmamagVegGFoWSdPRAKMAL8bYrjMMd8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
-Cc: linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+In-Reply-To: <1438088022-17350-1-git-send-email-srinivas.kandagatla@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Cc: agross@codeaurora.org, linux-arm-msm@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jul 29, 2015 at 01:16:02AM +0300, Sergei Shtylyov wrote:
-> Define the SILK board dependent part of the Ether device node.
-> Enable DHCP and NFS root for the kernel booting.
-> 
-> Based on the original patch by Vladimir Barinov
-> <vladimir.barinov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>.
-> 
-> Signed-off-by: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+On Tue 28 Jul 05:53 PDT 2015, Srinivas Kandagatla wrote:
 
-Thanks, I have queued this up.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> This patch adds pwrseq for WLAN which resets the WLAN just before the
+> SDIO bus is up.
+> 
+
+Does this mean that we have the !power-of-2 patch in mmc on the way?
+
+> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+> ---
+>  arch/arm/boot/dts/qcom-apq8064-ifc6410.dts | 24 ++++++++++++++++++++++++
+>  1 file changed, 24 insertions(+)
+> 
+> diff --git a/arch/arm/boot/dts/qcom-apq8064-ifc6410.dts b/arch/arm/boot/dts/qcom-apq8064-ifc6410.dts
+> index 88d6655..df560cf 100644
+> --- a/arch/arm/boot/dts/qcom-apq8064-ifc6410.dts
+> +++ b/arch/arm/boot/dts/qcom-apq8064-ifc6410.dts
+> @@ -1,5 +1,6 @@
+>  #include "qcom-apq8064-v2.0.dtsi"
+>  #include <dt-bindings/gpio/gpio.h>
+> +#include <dt-bindings/pinctrl/qcom,pmic-gpio.h>
+>  
+>  / {
+>  	model = "Qualcomm APQ8064/IFC6410";
+> @@ -206,6 +207,28 @@
+>  			status = "okay";
+>  		};
+>  
+> +		qcom,ssbi@500000 {
+> +			pmicintc: pmic@0 {
+> +				pm8921_gpio: gpio@150 {
+
+These should already be labeled in the apq8064 dtsi (or in a
+qcom-pm8921.dtsi).
+
+> +					pinctrl-names = "default";
+> +					pinctrl-0 = <&wlan_default_gpios>;
+
+Please move these to the pwrseq node, as that's the consumer of this.
+
+> +					wlan_default_gpios: wlan-gpios {
+> +						pios {
+> +							pins = "gpio43";
+> +							function = "normal";
+> +							bias-disable;
+> +							power-source = <PM8921_GPIO_S4>;
+> +						};
+> +					};
+> +				};
+> +			};
+> +		};
+
+Regards,
+Bjorn
