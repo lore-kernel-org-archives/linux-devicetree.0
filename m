@@ -1,212 +1,252 @@
-From: Michael Turquette <mturquette@linaro.org>
+From: Michael Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 Subject: Re: [PATCH v7 3/5] clk: Supply the critical clock {init, enable,
  disable} framework
-Date: Wed, 29 Jul 2015 18:02:13 -0700
-Message-ID: <20150730010213.642.10831@quantum>
+Date: Wed, 29 Jul 2015 18:19:32 -0700
+Message-ID: <20150730011932.642.85168@quantum>
 References: <1437570255-21049-1-git-send-email-lee.jones@linaro.org>
  <1437570255-21049-4-git-send-email-lee.jones@linaro.org>
+ <20150727072549.GP2564@lukather> <20150727085338.GW3436@x1>
+ <20150728114022.GW2564@lukather> <20150728130055.GV14943@x1>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1437570255-21049-4-git-send-email-lee.jones@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc: kernel@stlinux.com, sboyd@codeaurora.org, devicetree@vger.kernel.org, geert@linux-m68k.org, maxime.ripard@free-electrons.com, s.hauer@pengutronix.de, Lee Jones <lee.jones@linaro.org>, linux-clk@vger.kernel.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20150728130055.GV14943@x1>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-F5mvAk5X5gdBDgjK7y7TUQ@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org, s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Lee,
+Quoting Lee Jones (2015-07-28 06:00:55)
+> On Tue, 28 Jul 2015, Maxime Ripard wrote:
+>=20
+> > On Mon, Jul 27, 2015 at 09:53:38AM +0100, Lee Jones wrote:
+> > > On Mon, 27 Jul 2015, Maxime Ripard wrote:
+> > >=20
+> > > > On Wed, Jul 22, 2015 at 02:04:13PM +0100, Lee Jones wrote:
+> > > > > These new API calls will firstly provide a mechanisms to tag =
+a clock as
+> > > > > critical and secondly allow any knowledgeable driver to (un)g=
+ate clocks,
+> > > > > even if they are marked as critical.
+> > > > >=20
+> > > > > Suggested-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org=
+>
+> > > > > Signed-off-by: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> > > > > ---
+> > > > >  drivers/clk/clk.c            | 45 ++++++++++++++++++++++++++=
+++++++++++++++++++
+> > > > >  include/linux/clk-provider.h |  2 ++
+> > > > >  include/linux/clk.h          | 30 ++++++++++++++++++++++++++=
++++
+> > > > >  3 files changed, 77 insertions(+)
+> > > > >=20
+> > > > > diff --git a/drivers/clk/clk.c b/drivers/clk/clk.c
+> > > > > index 61c3fc5..486b1da 100644
+> > > > > --- a/drivers/clk/clk.c
+> > > > > +++ b/drivers/clk/clk.c
+> > > > > @@ -46,6 +46,21 @@ static struct clk_core *clk_core_lookup(co=
+nst char *name);
+> > > > > =20
+> > > > >  /***    private data structures    ***/
+> > > > > =20
+> > > > > +/**
+> > > > > + * struct critical -   Provides 'play' over critical clocks.=
+  A clock can be
+> > > > > + *                     marked as critical, meaning that it s=
+hould not be
+> > > > > + *                     disabled.  However, if a driver which=
+ is aware of the
+> > > > > + *                     critical behaviour wants to control i=
+t, it can do so
+> > > > > + *                     using clk_enable_critical() and clk_d=
+isable_critical().
+> > > > > + *
+> > > > > + * @enabled    Is clock critical?  Once set, doesn't change
+> > > > > + * @leave_on   Self explanatory.  Can be disabled by knowled=
+geable drivers
+> > > > > + */
+> > > > > +struct critical {
+> > > > > +       bool enabled;
+> > > > > +       bool leave_on;
+> > > > > +};
+> > > > > +
+> > > > >  struct clk_core {
+> > > > >         const char              *name;
+> > > > >         const struct clk_ops    *ops;
+> > > > > @@ -75,6 +90,7 @@ struct clk_core {
+> > > > >         struct dentry           *dentry;
+> > > > >  #endif
+> > > > >         struct kref             ref;
+> > > > > +       struct critical         critical;
+> > > > >  };
+> > > > > =20
+> > > > >  struct clk {
+> > > > > @@ -995,6 +1011,10 @@ static void clk_core_disable(struct clk=
+_core *clk)
+> > > > >         if (WARN_ON(clk->enable_count =3D=3D 0))
+> > > > >                 return;
+> > > > > =20
+> > > > > +       /* Refuse to turn off a critical clock */
+> > > > > +       if (clk->enable_count =3D=3D 1 && clk->critical.leave=
+_on)
+> > > > > +               return;
+> > > > > +
+> > > >=20
+> > > > I think it should be handled by a separate counting. Otherwise,=
+ if you
+> > > > have two users that marked the clock as critical, and then one =
+of them
+> > > > disable it...
+> > > >=20
+> > > > >         if (--clk->enable_count > 0)
+> > > > >                 return;
+> > > > > =20
+> > > > > @@ -1037,6 +1057,13 @@ void clk_disable(struct clk *clk)
+> > > > >  }
+> > > > >  EXPORT_SYMBOL_GPL(clk_disable);
+> > > > > =20
+> > > > > +void clk_disable_critical(struct clk *clk)
+> > > > > +{
+> > > > > +       clk->core->critical.leave_on =3D false;
+> > > >=20
+> > > > .. you just lost the fact that it was critical in the first pla=
+ce.
+> > >=20
+> > > I thought about both of these points, which is why I came up with=
+ this
+> > > strategy.
+> > >=20
+> > > Any device which uses the *_critical() API should a) have knowled=
+ge of
+> > > what happens when a particular critical clock is gated and b) hav=
+e
+> > > thought about the consequences.
+> >=20
+> > Indeed.
+> >=20
+> > > I don't think we can use reference counting, because we'd need as
+> > > many critical clock owners as there are critical clocks.
+> >=20
+> > Which we can have if we replace the call to clk_prepare_enable you =
+add
+> > in your fourth patch in __set_critical_clocks.
+>=20
+> What should it be replaced with?
+>=20
+> > > Cast your mind back to the reasons for this critical clock API.  =
+One
+> > > of the most important intentions of this API is the requirement
+> > > mitigation for each of the critical clocks to have an owner
+> > > (driver).
+> > >=20
+> > > With regards to your second point, that's what 'critical.enabled'
+> > > is for.  Take a look at clk_enable_critical().
+> >=20
+> > I don't think this addresses the issue, if you just throw more
+> > customers at it, the issue remain with your implementation.
+> >=20
+> > If you have three customers that used the critical API, and if on o=
+f
+> > these calls clk_disable_critical, you're losing leave_on.
+>=20
+> That's the idea.  See my point above, the one you replied "Indeed"
+> to.  So when a driver uses clk_disable_critical() it's saying, "I kno=
+w
+> why this clock is a critical clock, and I know that nothing terrible
+> will happen if I disable it, as I have that covered".  So then if it'=
+s
+> not the last user to call clk_disable(), the last one out the door
+> will be allowed to finally gate the clock, regardless whether it's
+> critical aware or not.
+>=20
+> Then, when we come to enable the clock again, the critical aware user
+> then re-marks the clock as leave_on, so not critical un-aware user ca=
+n
+> take the final reference and disable the clock.
+>=20
+> > Which means that if there's one of the two users left that calls
+> > clk_disable on it, the clock will actually be disabled, which is
+> > clearly not what we want to do, as we have still a user that want t=
+he
+> > clock to be enabled.
+>=20
+> That's not what happens (at least it shouldn't if I've coded it up
+> right).  The API _still_ requires all of the users to give-up their
+> reference.
+>=20
+> > It would be much more robust to have another count for the critical
+> > stuff, initialised to one by the __set_critical_clocks function.
+>=20
+> If I understand you correctly, we already have a count.  We use the
+> original reference count.  No need for one of our own.
+>=20
+> Using your RAM Clock (Clock 4) as an example
+> --------------------------------------------
+>=20
+> Early start-up:
+>   Clock 4 is marked as critical and a reference is taken (ref =3D=3D =
+1)
+>=20
+> Driver probe:
+>   SPI enables Clock 4 (ref =3D=3D 2)
+>   I2C enables Clock 4 (ref =3D=3D 3)
+>=20
+> Suspend (without RAM driver's permission):
+>   SPI disables Clock 4 (ref =3D=3D 2)
+>   I2C disables Clock 4 (ref =3D=3D 1)
+>   /*
+>    * Clock won't be gated because:
+>    *   .leave_on is True - can't dec final reference
 
-+ linux-clk ml
+I am clearly missing the point. The clock won't be gated because the
+enable_count is still 1! What does .leave_on do here?
 
-Quoting Lee Jones (2015-07-22 06:04:13)
-> These new API calls will firstly provide a mechanisms to tag a clock as
-> critical and secondly allow any knowledgeable driver to (un)gate clocks,
-> even if they are marked as critical.
-> 
-> Suggested-by: Maxime Ripard <maxime.ripard@free-electrons.com>
-> Signed-off-by: Lee Jones <lee.jones@linaro.org>
-> ---
->  drivers/clk/clk.c            | 45 ++++++++++++++++++++++++++++++++++++++++++++
->  include/linux/clk-provider.h |  2 ++
->  include/linux/clk.h          | 30 +++++++++++++++++++++++++++++
->  3 files changed, 77 insertions(+)
-> 
-> diff --git a/drivers/clk/clk.c b/drivers/clk/clk.c
-> index 61c3fc5..486b1da 100644
-> --- a/drivers/clk/clk.c
-> +++ b/drivers/clk/clk.c
-> @@ -46,6 +46,21 @@ static struct clk_core *clk_core_lookup(const char *name);
->  
->  /***    private data structures    ***/
->  
-> +/**
-> + * struct critical -   Provides 'play' over critical clocks.  A clock can be
-> + *                     marked as critical, meaning that it should not be
-> + *                     disabled.  However, if a driver which is aware of the
-> + *                     critical behaviour wants to control it, it can do so
-> + *                     using clk_enable_critical() and clk_disable_critical().
-> + *
-> + * @enabled    Is clock critical?  Once set, doesn't change
-> + * @leave_on   Self explanatory.  Can be disabled by knowledgeable drivers
+>    */
+>=20
+> Suspend (with RAM driver's permission):
+>   /* Order is unimportant */
+>   SPI disables Clock 4 (ref =3D=3D 2)
+>   RAM disables Clock 4 (ref =3D=3D 1) /* Won't turn off here (ref > 0=
+)
+>   I2C disables Clock 4 (ref =3D=3D 0) /* (.leave_on =3D=3D False) las=
+t ref can be taken */
+>   /*
+>    * Clock will be gated because:
+>    *   .leave_on is False, so (ref =3D=3D 0)
 
-Not self explanatory. I need this explained to me. What does leave_on
-do? Better yet, what would happen if leave_on did not exist?
+Again, .leave_on does nothing new here. We gate the clock because the
+reference count is 0.
 
-> + */
-> +struct critical {
-> +       bool enabled;
-> +       bool leave_on;
-> +};
-> +
->  struct clk_core {
->         const char              *name;
->         const struct clk_ops    *ops;
-> @@ -75,6 +90,7 @@ struct clk_core {
->         struct dentry           *dentry;
->  #endif
->         struct kref             ref;
-> +       struct critical         critical;
->  };
->  
->  struct clk {
-> @@ -995,6 +1011,10 @@ static void clk_core_disable(struct clk_core *clk)
->         if (WARN_ON(clk->enable_count == 0))
->                 return;
->  
-> +       /* Refuse to turn off a critical clock */
-> +       if (clk->enable_count == 1 && clk->critical.leave_on)
-> +               return;
+>    */
+>=20
+> Resume:
+>   /* Order is unimportant */
+>   SPI enables Clock 4 (ref =3D=3D 1)
+>   RAM enables Clock 4 and re-enables .leave_on (ref =3D=3D 2)
+>   I2C enables Clock 4 (ref =3D=3D 3)
 
-How do we get to this point? clk_enable_critical actually calls
-clk_enable, thus incrementing the enable_count. The only time that we
-could hit the above case is if,
-
-a) there is an imbalance in clk_enable and clk_disable calls. If this is
-the case then the drivers need to be fixed. Or better yet some
-infrastructure to catch that, now that we have per-user struct clk
-cookies.
-
-b) a driver knowingly calls clk_enable_critical(foo) and then regular,
-old clk_disable(foo). But why would a driver do that?
-
-It might be that I am missing the point here, so please feel free to
-clue me in.
+Same again. As soon as RAM calls clk_enable_critical the ref count goes
+up. .leave_on does nothing as far as I can tell. The all works because
+of the reference counting, which already exists before this patch
+series.
 
 Regards,
 Mike
 
-> +
->         if (--clk->enable_count > 0)
->                 return;
->  
-> @@ -1037,6 +1057,13 @@ void clk_disable(struct clk *clk)
->  }
->  EXPORT_SYMBOL_GPL(clk_disable);
->  
-> +void clk_disable_critical(struct clk *clk)
-> +{
-> +       clk->core->critical.leave_on = false;
-> +       clk_disable(clk);
-> +}
-> +EXPORT_SYMBOL_GPL(clk_disable_critical);
-> +
->  static int clk_core_enable(struct clk_core *clk)
->  {
->         int ret = 0;
-> @@ -1100,6 +1127,15 @@ int clk_enable(struct clk *clk)
->  }
->  EXPORT_SYMBOL_GPL(clk_enable);
->  
-> +int clk_enable_critical(struct clk *clk)
-> +{
-> +       if (clk->core->critical.enabled)
-> +               clk->core->critical.leave_on = true;
-> +
-> +       return clk_enable(clk);
-> +}
-> +EXPORT_SYMBOL_GPL(clk_enable_critical);
-> +
->  static unsigned long clk_core_round_rate_nolock(struct clk_core *clk,
->                                                 unsigned long rate,
->                                                 unsigned long min_rate,
-> @@ -2482,6 +2518,15 @@ fail_out:
->  }
->  EXPORT_SYMBOL_GPL(clk_register);
->  
-> +void clk_init_critical(struct clk *clk)
-> +{
-> +       struct critical *critical = &clk->core->critical;
-> +
-> +       critical->enabled = true;
-> +       critical->leave_on = true;
-> +}
-> +EXPORT_SYMBOL_GPL(clk_init_critical);
-> +
->  /*
->   * Free memory allocated for a clock.
->   * Caller must hold prepare_lock.
-> diff --git a/include/linux/clk-provider.h b/include/linux/clk-provider.h
-> index 5591ea7..15ef8c9 100644
-> --- a/include/linux/clk-provider.h
-> +++ b/include/linux/clk-provider.h
-> @@ -563,6 +563,8 @@ struct clk *devm_clk_register(struct device *dev, struct clk_hw *hw);
->  void clk_unregister(struct clk *clk);
->  void devm_clk_unregister(struct device *dev, struct clk *clk);
->  
-> +void clk_init_critical(struct clk *clk);
-> +
->  /* helper functions */
->  const char *__clk_get_name(struct clk *clk);
->  struct clk_hw *__clk_get_hw(struct clk *clk);
-> diff --git a/include/linux/clk.h b/include/linux/clk.h
-> index 8381bbf..9807f3b 100644
-> --- a/include/linux/clk.h
-> +++ b/include/linux/clk.h
-> @@ -231,6 +231,19 @@ struct clk *devm_clk_get(struct device *dev, const char *id);
->  int clk_enable(struct clk *clk);
->  
->  /**
-> + * clk_enable_critical - inform the system when the clock source should be
-> + *                      running, even if clock is critical.
-> + * @clk: clock source
-> + *
-> + * If the clock can not be enabled/disabled, this should return success.
-> + *
-> + * May be called from atomic contexts.
-> + *
-> + * Returns success (0) or negative errno.
-> + */
-> +int clk_enable_critical(struct clk *clk);
-> +
-> +/**
->   * clk_disable - inform the system when the clock source is no longer required.
->   * @clk: clock source
->   *
-> @@ -247,6 +260,23 @@ int clk_enable(struct clk *clk);
->  void clk_disable(struct clk *clk);
->  
->  /**
-> + * clk_disable_critical - inform the system when the clock source is no
-> + *                       longer required, even if clock is critical.
-> + * @clk: clock source
-> + *
-> + * Inform the system that a clock source is no longer required by
-> + * a driver and may be shut down.
-> + *
-> + * May be called from atomic contexts.
-> + *
-> + * Implementation detail: if the clock source is shared between
-> + * multiple drivers, clk_enable_critical() calls must be balanced
-> + * by the same number of clk_disable_critical() calls for the clock
-> + * source to be disabled.
-> + */
-> +void clk_disable_critical(struct clk *clk);
-> +
-> +/**
->   * clk_get_rate - obtain the current clock rate (in Hz) for a clock source.
->   *               This is only valid once the clock source has been enabled.
->   * @clk: clock source
-> -- 
-> 1.9.1
-> 
+>=20
+> Hopefully that clears things up.
+>=20
+> Please tell me if the code doesn't reflect this strategy, or if you
+> can see anything wrong with how it operates.
+>=20
+> --=20
+> Lee Jones
+> Linaro STMicroelectronics Landing Team Lead
+> Linaro.org =E2=94=82 Open source software for ARM SoCs
+> Follow Linaro: Facebook | Twitter | Blog
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
