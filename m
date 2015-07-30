@@ -1,67 +1,43 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH v2 3/6] mailbox: Add support for ST's Mailbox IP
-Date: Thu, 30 Jul 2015 12:45:45 +0100
-Message-ID: <20150730114545.GG14642@x1>
-References: <1437990272-23111-1-git-send-email-lee.jones@linaro.org>
- <1437990272-23111-4-git-send-email-lee.jones@linaro.org>
- <1438121215.30903.27.camel@tiscali.nl>
+From: Nicolas Ferre <nicolas.ferre@atmel.com>
+Subject: Re: [PATCH v2 1/2] ARM: at91: dts: add isi & ov2640 dt nodes for
+ at91sam9m10g45ek board
+Date: Thu, 30 Jul 2015 14:03:54 +0200
+Message-ID: <55BA12AA.3030102@atmel.com>
+References: <1434449315-9243-1-git-send-email-josh.wu@atmel.com> <20150618154537.GM27492@piout.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=windows-1252
 Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1438121215.30903.27.camel@tiscali.nl>
+In-Reply-To: <20150618154537.GM27492@piout.net>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Paul Bolle <pebolle@tiscali.nl>
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, kernel@stlinux.com, jassisinghbrar@gmail.com, devicetree@vger.kernel.org
+To: Alexandre Belloni <alexandre.belloni@free-electrons.com>, Josh Wu <josh.wu@atmel.com>
+Cc: linux-arm-kernel@lists.infradead.org, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Russell King <linux@arm.linux.org.uk>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, Andrew Victor <linux@maxim.org.za>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 29 Jul 2015, Paul Bolle wrote:
+Le 18/06/2015 17:45, Alexandre Belloni a =E9crit :
+> Hi,
+>=20
+> Seems good to me, a small comment below:
+>=20
+> On 16/06/2015 at 18:08:34 +0800, Josh Wu wrote :
+>> @@ -1068,8 +1076,12 @@
+>>  				clocks =3D <&isi_clk>;
+>>  				clock-names =3D "isi_clk";
+>>  				pinctrl-names =3D "default";
+>> -				pinctrl-0 =3D <&pinctrl_isi>;
+>> +				pinctrl-0 =3D <&pinctrl_isi_data_0_7>;
+>=20
+> I would say that the pinctrl is board specific so both pinctrl-names =
+and
+> pinctrl-0 should go to at91sam9m10g45ek.dts
 
-> On ma, 2015-07-27 at 10:44 +0100, Lee Jones wrote:
-> > --- /dev/null
-> > +++ b/drivers/mailbox/mailbox-sti.c
->=20
-> > +static int sti_mbox_probe(struct platform_device *pdev)
-> > +{
-> > +	[...]
-> > +
-> > +	match =3D of_match_device(sti_mailbox_match, &pdev->dev);
-> > +	if (!match) {
-> > +		dev_err(&pdev->dev, "No configuration found\n");
-> > +		return -ENODEV;
-> > +	}
-> > +	pdev->dev.platform_data =3D (struct sti_mbox_pdata *) match->data=
-;
-> > +
-> > +	[...]
-> > +}
->=20
-> > +static struct platform_driver sti_mbox_driver =3D {
-> > +	.probe =3D sti_mbox_probe,
-> > +	.remove =3D sti_mbox_remove,
-> > +	.driver =3D {
-> > +		.name =3D "sti-mailbox",
-> > +		.of_match_table =3D sti_mailbox_match,
-> > +	},
-> > +};
-> > +module_platform_driver(sti_mbox_driver);
->=20
-> > +MODULE_ALIAS("platform:mailbox-sti");
->=20
-> It seems this alias is only useful if there's a corresponding struct
-> platform_device with a "mailbox-sti" .name. I couldn't spot that
-> platform_device.
->=20
-> Besides, if I read sti_max_probe() correctly, without OF support load=
-ing
-> this module won't accomplish much. So what would another way of
-> autoloading this module buy you?
+I move it in the board file.
 
-I think this line can be safely removed.
+Otherwise:
+Acked-by: Nicolas Ferre <nicolas.ferre@atmel.com>
 
+and stacked on top of at91-4.3-dt.
+
+Bye,
 --=20
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-=46ollow Linaro: Facebook | Twitter | Blog
+Nicolas Ferre
