@@ -1,102 +1,166 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH v7 0/5] clk: Provide support for always-on clocks
-Date: Thu, 30 Jul 2015 10:09:57 +0100
-Message-ID: <20150730090957.GA14642@x1>
+From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v7 3/5] clk: Supply the critical clock {init, enable,
+ disable} framework
+Date: Thu, 30 Jul 2015 10:21:39 +0100
+Message-ID: <20150730092139.GB14642@x1>
 References: <1437570255-21049-1-git-send-email-lee.jones@linaro.org>
- <20150730002726.642.33056@quantum>
+ <1437570255-21049-4-git-send-email-lee.jones@linaro.org>
+ <20150727072549.GP2564@lukather>
+ <20150727085338.GW3436@x1>
+ <20150730012132.642.59489@quantum>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20150730002726.642.33056@quantum>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Michael Turquette <mturquette@linaro.org>
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, kernel@stlinux.com, sboyd@codeaurora.org, devicetree@vger.kernel.org, geert@linux-m68k.org, maxime.ripard@free-electrons.com, s.hauer@pengutronix.de
+In-Reply-To: <20150730012132.642.59489@quantum>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Michael Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-F5mvAk5X5gdBDgjK7y7TUQ@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org, s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
 On Wed, 29 Jul 2015, Michael Turquette wrote:
-> Quoting Lee Jones (2015-07-22 06:04:10)
-> > Lots of platforms contain clocks which if turned off would prove fa=
-tal.
-> > The only way to recover from these catastrophic failures is to rest=
-art
-> > the board(s).  Now, when a clock provider is registered with the
-> > framework it is possible for a list of critical clocks to be suppli=
-ed
-> > which must be kept ungated.  Each clock mentioned in the newly
-> > introduced 'critical-clock' property will be clk_prepare_enable()d
-> > where the normal references will be taken.  This will prevent the
-> > common clk framework from attempting to gate them during the normal
-> > clk_disable_unused() and disable_clock() procedures.
+> Quoting Lee Jones (2015-07-27 01:53:38)
+> > On Mon, 27 Jul 2015, Maxime Ripard wrote:
 > >=20
-> > Note that it will still be possible for knowledgeable drivers to tu=
-rn
-> > these clocks off using clk_{enable,disable}_critical() calls.
->=20
-> Hi Lee,
->=20
-> Thanks for submitting the series.
->=20
-> It has been a little while since v6. It would be helpful to remind me=
+> > > On Wed, Jul 22, 2015 at 02:04:13PM +0100, Lee Jones wrote:
+> > > > These new API calls will firstly provide a mechanisms to tag a =
+clock as
+> > > > critical and secondly allow any knowledgeable driver to (un)gat=
+e clocks,
+> > > > even if they are marked as critical.
+> > > >=20
+> > > > Suggested-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+> > > > Signed-off-by: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> > > > ---
+> > > >  drivers/clk/clk.c            | 45 ++++++++++++++++++++++++++++=
+++++++++++++++++
+> > > >  include/linux/clk-provider.h |  2 ++
+> > > >  include/linux/clk.h          | 30 ++++++++++++++++++++++++++++=
++
+> > > >  3 files changed, 77 insertions(+)
+> > > >=20
+> > > > diff --git a/drivers/clk/clk.c b/drivers/clk/clk.c
+> > > > index 61c3fc5..486b1da 100644
+> > > > --- a/drivers/clk/clk.c
+> > > > +++ b/drivers/clk/clk.c
+> > > > @@ -46,6 +46,21 @@ static struct clk_core *clk_core_lookup(cons=
+t char *name);
+> > > > =20
+> > > >  /***    private data structures    ***/
+> > > > =20
+> > > > +/**
+> > > > + * struct critical -       Provides 'play' over critical clock=
+s.  A clock can be
+> > > > + *                 marked as critical, meaning that it should =
+not be
+> > > > + *                 disabled.  However, if a driver which is aw=
+are of the
+> > > > + *                 critical behaviour wants to control it, it =
+can do so
+> > > > + *                 using clk_enable_critical() and clk_disable=
+_critical().
+> > > > + *
+> > > > + * @enabled        Is clock critical?  Once set, doesn't chang=
+e
+> > > > + * @leave_on       Self explanatory.  Can be disabled by knowl=
+edgeable drivers
+> > > > + */
+> > > > +struct critical {
+> > > > +   bool enabled;
+> > > > +   bool leave_on;
+> > > > +};
+> > > > +
+> > > >  struct clk_core {
+> > > >     const char              *name;
+> > > >     const struct clk_ops    *ops;
+> > > > @@ -75,6 +90,7 @@ struct clk_core {
+> > > >     struct dentry           *dentry;
+> > > >  #endif
+> > > >     struct kref             ref;
+> > > > +   struct critical         critical;
+> > > >  };
+> > > > =20
+> > > >  struct clk {
+> > > > @@ -995,6 +1011,10 @@ static void clk_core_disable(struct clk_c=
+ore *clk)
+> > > >     if (WARN_ON(clk->enable_count =3D=3D 0))
+> > > >             return;
+> > > > =20
+> > > > +   /* Refuse to turn off a critical clock */
+> > > > +   if (clk->enable_count =3D=3D 1 && clk->critical.leave_on)
+> > > > +           return;
+> > > > +
+> > >=20
+> > > I think it should be handled by a separate counting. Otherwise, i=
+f you
+> > > have two users that marked the clock as critical, and then one of=
+ them
+> > > disable it...
+> > >=20
+> > > >     if (--clk->enable_count > 0)
+> > > >             return;
+> > > > =20
+> > > > @@ -1037,6 +1057,13 @@ void clk_disable(struct clk *clk)
+> > > >  }
+> > > >  EXPORT_SYMBOL_GPL(clk_disable);
+> > > > =20
+> > > > +void clk_disable_critical(struct clk *clk)
+> > > > +{
+> > > > +   clk->core->critical.leave_on =3D false;
+> > >=20
+> > > .. you just lost the fact that it was critical in the first place=
+=2E
+> >=20
+> > I thought about both of these points, which is why I came up with t=
+his
+> > strategy.
+> >=20
+> > Any device which uses the *_critical() API should a) have knowledge=
  of
-> why a new api is necessary, versus using the existing clk_prepare_unu=
-sed
-> call at the time that a clock is enabled.
+> > what happens when a particular critical clock is gated and b) have
+> > thought about the consequences.
 >=20
-> I'm looking over the patches in detail now, but one question stands o=
-ut:
-> besides the DT use case, would a Linux device driver ever call
-> clk_enable_critical instead of using clk_enable? If so, why?
+> If this statement above is true then I fail to see the need for a new
+> api. A driver which has a really great idea of when it is safe or uns=
+afe
+> to gate a clock should call clk_prepare_enable at probe and then only
+> call clk_disable_unprepare once it is safe to do so.
+>=20
+> The existing bookkeeping in the clock framework will do the rest.
 
-Looks like a have a lot of emails to reply to.  Let's start here and
-work our way through them, there are good answers to all of your
-reasonable questions.
+I think you are viewing this particular API back-to-front.  The idea
+is to mark all of the critical clocks at start-up by taking a
+reference.  Then, if there are no knowledgable drivers who wish to
+turn the clock off, the CCF will leave the clock ungated becuase the
+reference count will always be >0.
 
-This set only supports the DT way of marking clocks as critical, due
-to the fact that that's the way we'll be using the API.  I can spend
-more time, once we have the ground work done, writing a similar
-generic call (or expand the current one, whatever's deemed the best
-approach) which will allow this to be possible from C.
+The clk_{disable,enable}_critical() calls are to be used by
+knowledgable drivers to say "[disable] I know what I'm doing and it's
+okay for this clock to be turned off" and "[enable] right I'm done
+with this clock now, let's turn it back on and mark it back as
+critical, so no one else can turn it off".
 
-> > Changelog:
-> > v6 =3D> v7:
-> >   - Introduce API to enable and disable critical clocks
-> >   - Rename 'always-on-clock' to 'critical-clock'
+To put things simply, the knowledgable driver will _not_ be enabling
+the clock in the first place.  The first interaction it has with it is
+to gate it.  Then, once it's done, it will enable it again and mark it
+back up as critical.
+
+Still confused ... let's go on another Q in one of your other emails
+for another way of putting it.
+
+> > I don't think we can use reference
+> > counting, because we'd need as many critical clock owners as there =
+are
+> > critical clocks.  Cast your mind back to the reasons for this criti=
+cal
+> > clock API.  One of the most important intentions of this API is the
+> > requirement mitigation for each of the critical clocks to have an o=
+wner
+> > (driver).
 > >=20
-> > v5 =3D> v6:
-> >   - Use of_clk_get_from_provider() instead of of_clk_get_by_clkspec=
-()
-> >   - Explicitly describe expected DT values
-> >   - Be pedantic with regards to printk() format specifiers
-> >=20
-> > vX =3D> v5:
-> >   Implementations have changed drastically between versions, thus I
-> >   would like for this set to be thought of independently from its
-> >   predecessors.  The only reason for identifying as 'v5' is ease of
-> >   differentiation on the list, which stems from the confusion cause=
-d
-> >   by submitting 'v4' as a separate entity.
-> >=20
-> > Lee Jones (5):
-> >   ARM: sti: stih407-family: Supply defines for CLOCKGEN A0
-> >   ARM: sti: stih410-clocks: Identify critical clocks
-> >   clk: Supply the critical clock {init, enable, disable} framework
-> >   clk: Provide critical clock support
-> >   clk: dt: Introduce binding for critical clock support
-> >=20
-> >  .../devicetree/bindings/clock/clock-bindings.txt   | 39 ++++++++++=
-+++++++++
-> >  arch/arm/boot/dts/stih410-clock.dtsi               | 10 +++++
-> >  drivers/clk/clk-conf.c                             | 45 ++++++++++=
-+++++++++++-
-> >  drivers/clk/clk.c                                  | 45 ++++++++++=
-++++++++++++
-> >  include/dt-bindings/clock/stih407-clks.h           |  4 ++
-> >  include/linux/clk-provider.h                       |  2 +
-> >  include/linux/clk.h                                | 30 ++++++++++=
-+++++
-> >  7 files changed, 174 insertions(+), 1 deletion(-)
+> > With regards to your second point, that's what 'critical.enabled'
+> > is for.  Take a look at clk_enable_critical().
 > >=20
 
 --=20
@@ -104,3 +168,8 @@ Lee Jones
 Linaro STMicroelectronics Landing Team Lead
 Linaro.org =E2=94=82 Open source software for ARM SoCs
 =46ollow Linaro: Facebook | Twitter | Blog
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
