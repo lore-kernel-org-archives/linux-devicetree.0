@@ -1,57 +1,76 @@
-From: Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
-Subject: Re: [PATCH v2] dtb: Create a common home for cross-architecture dtsi files.
-Date: Fri, 31 Jul 2015 14:46:18 +0900
-Message-ID: <CAK7LNAQ4hT133v0iH7z6JxfaBDjrGgaX2M9pA9H=sPxsmorDNw@mail.gmail.com>
-References: <1437993343-9542-1-git-send-email-ian.campbell@citrix.com>
-	<CAK7LNAQKswPzeFYdSVq3JDk2qawZ8e5ogBFMWdor-CibMovU3g@mail.gmail.com>
-	<1438176174.11600.198.camel@citrix.com>
-	<CAL_JsqL7KRcSv5jSneWYj1PJOYbvMQ8HOAGK+w-+MDBMpMatow@mail.gmail.com>
-	<CAK7LNAS_P65k3T_J_vXZ9dxBB-uVbrTW-qFE_fJEOSLcOW4JsA@mail.gmail.com>
+From: Bruno =?UTF-8?B?UHLDqW1vbnQ=?= <bonbons-ud5FBsm0p/xEiooADzr8i9i2O/JbrIOy@public.gmane.org>
+Subject: Re: [PATCH 6/8] ARM: dts: axp209: Add usb_power_supply
+ child node to the ax209 node
+Date: Fri, 31 Jul 2015 07:51:04 +0200
+Message-ID: <20150731075104.48c467e6@pluto.restena.lu>
+References: <1433885881-19809-1-git-send-email-hdegoede@redhat.com>
+	<1433885881-19809-7-git-send-email-hdegoede@redhat.com>
+	<CAGb2v66X79dK84hG8NVTho-kPPMNcKXQspvT2pCM8Zbmnme53A@mail.gmail.com>
+Reply-To: bonbons-ud5FBsm0p/xEiooADzr8i9i2O/JbrIOy@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAK7LNAS_P65k3T_J_vXZ9dxBB-uVbrTW-qFE_fJEOSLcOW4JsA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Ian Campbell <ian.campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Linux Kbuild mailing list <linux-kbuild-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Liviu Dudau <liviu.dudau-5wv7dgnIgG8@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Kristina Martsenko <kristina.martsenko-5wv7dgnIgG8@public.gmane.org>, Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>, Kevin Hilman <khilman-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Return-path: <linux-sunxi+bncBDCZ5GUK4UNRBSUZ5SWQKGQESFLA4ZA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <CAGb2v66X79dK84hG8NVTho-kPPMNcKXQspvT2pCM8Zbmnme53A-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <http://groups.google.com/group/linux-sunxi/subscribe>
+To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Cc: Hans De Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Dmitry Eremin-Solenikov <dbaryshkov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi.
+Hi ChenYu,
 
-2015-07-30 10:30 GMT+09:00 Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>:
-> Hi,
->
->
-> 2015-07-30 0:23 GMT+09:00 Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>:
->> On Wed, Jul 29, 2015 at 8:22 AM, Ian Campbell <ian.campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org> wrote:
->>> On Wed, 2015-07-29 at 20:07 +0900, Masahiro Yamada wrote:
->>>> Hi Ian,
->>>>
->>>>
->>>> 2015-07-27 19:35 GMT+09:00 Ian Campbell <ian.campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>:
->>>> > Commit 9ccd608070b6 "arm64: dts: add device tree for ARM SMM-A53x2 on
->>>> > LogicTile Express 20MG" added a new dts file to arch/arm64 which
->>>> > included "../../../../arm/boot/dts/vexpress-v2m-rs1.dtsi", i.e. a
->>>> > .dtsi supplied by arch/arm.
+On Fri, 31 Jul 2015 13:31:53 +0800 Chen-Yu Tsai wrote:
+> Hi Hans,
+> 
+> On Wed, Jun 10, 2015 at 5:37 AM, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org> wrote:
+> > Add a node representing the usb power supply part of the axp209 pmic, note
+> > that the usb power supply and the (to be added later) ac power supply will
+> > each have their own child-node, so that they can be separately specified
+> > as power-supply for other nodes using a power-supply property with a
+> > phandle pointing to the right axp209 child-node.
+> >
+> > Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+> > ---
+> >  arch/arm/boot/dts/axp209.dtsi | 5 +++++
+> >  1 file changed, 5 insertions(+)
+> >
+> > diff --git a/arch/arm/boot/dts/axp209.dtsi b/arch/arm/boot/dts/axp209.dtsi
+> > index 24c935c..051ab3b 100644
+> > --- a/arch/arm/boot/dts/axp209.dtsi
+> > +++ b/arch/arm/boot/dts/axp209.dtsi
+> > @@ -89,4 +89,9 @@
+> >                         regulator-name = "ldo5";
+> >                 };
+> >         };
+> > +
+> > +       usb_power_supply: usb_power_supply {
+> > +               compatible = "x-powers,axp202-usb-power-supply";
+> > +               status = "disabled";
+> 
+> Is there any reason to have this disabled by default?
+> AFAIK this is not something configurable in hardware,
+> and the driver just gives readouts and status updates.
 
+There are some devices that only have 'AC-IN' instead of usb/otg power
+(set-top boxes) so having the devices tell what power sources they
+have makes sense (otherwise those that have ac-in instead of otg would
+have to disable usb_power_supply) and avoids confusion by explicitly
+stating presence in device dts.
 
+NB: I should hopefully get my battery supply driver ported this WE,
+ac-in/rtc are done, this WE. I'm going to default-off for them as well
+(note that for some extra details should be provided in dts).
 
-BTW, is there any chance to merge arch/arm64 and arch/arm in the future?
+Bruno
 
-For example, U-boot supports ARM64/32 in a single arch directory, arch/arm/.
-
-
-I guess, the cross-arch home directory for DTSI would be only used to
-share device trees between arm64 and arm32.
-
-
-
-
-
--- 
-Best Regards
-Masahiro Yamada
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> ChenYu
+> 
+> > +       };
+> >  };
+> > --
+> > 2.3.6
