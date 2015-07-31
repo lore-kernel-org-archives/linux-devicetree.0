@@ -1,57 +1,82 @@
-From: Chunfeng Yun <chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Subject: [PATCH v4 1/5] dt-bindings: Add usb3.0 phy binding for MT65xx SoCs
-Date: Fri, 31 Jul 2015 21:03:52 +0800
-Message-ID: <1438347836-29060-2-git-send-email-chunfeng.yun@mediatek.com>
+From: Chunfeng Yun <chunfeng.yun@mediatek.com>
+Subject: [PATCH v4 2/5] dt-bindings: Add a binding for Mediatek xHCI host controller
+Date: Fri, 31 Jul 2015 21:03:53 +0800
+Message-ID: <1438347836-29060-3-git-send-email-chunfeng.yun@mediatek.com>
 References: <1438347836-29060-1-git-send-email-chunfeng.yun@mediatek.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1438347836-29060-1-git-send-email-chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mathias Nyman <mathias.nyman-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, Chunfeng Yun <chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, John Crispin <blogic-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>, Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1438347836-29060-1-git-send-email-chunfeng.yun@mediatek.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Mathias Nyman <mathias.nyman@intel.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, Felipe Balbi <balbi@ti.com>, Chunfeng Yun <chunfeng.yun@mediatek.com>, Sascha Hauer <s.hauer@pengutronix.de>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Roger Quadros <rogerq@ti.com>, linux-usb@vger.kernel.org, linux-mediatek@lists.infradead.org, John Crispin <blogic@openwrt.org>, Daniel Kurtz <djkurtz@chromium.org>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, Kishon Vijay Abraham I <kishon@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-add a DT binding documentation of usb3.0 phy for MT65xx
-SoCs from Mediatek.
+add a DT binding documentation of xHCI host controller for the
+MT8173 SoC from Mediatek.
 
-Signed-off-by: Chunfeng Yun <chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Signed-off-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
 ---
- .../devicetree/bindings/phy/phy-mt65xx-usb.txt      | 21 +++++++++++++++++++++
- 1 file changed, 21 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/phy/phy-mt65xx-usb.txt
+ .../devicetree/bindings/usb/mt8173-xhci.txt        | 51 ++++++++++++++++++++++
+ 1 file changed, 51 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/usb/mt8173-xhci.txt
 
-diff --git a/Documentation/devicetree/bindings/phy/phy-mt65xx-usb.txt b/Documentation/devicetree/bindings/phy/phy-mt65xx-usb.txt
+diff --git a/Documentation/devicetree/bindings/usb/mt8173-xhci.txt b/Documentation/devicetree/bindings/usb/mt8173-xhci.txt
 new file mode 100644
-index 0000000..752abc0
+index 0000000..364be5a
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/phy/phy-mt65xx-usb.txt
-@@ -0,0 +1,21 @@
-+MT65xx USB3.0 PHY
++++ b/Documentation/devicetree/bindings/usb/mt8173-xhci.txt
+@@ -0,0 +1,51 @@
++MT65XX xhci
 +
-+The device node for Mediatek SOC usb3.0 phy
++The device node for Mediatek SOC usb3.0 host controller
 +
 +Required properties:
-+ - compatible : Should be "mediatek,mt8173-u3phy"
-+ - reg        : Offset and length of registers for phy domain
-+ - clocks     : must support all clocks that phy need
-+ - clock-names: should be "u3phya_ref" for u3phya reference clock.
-+ - #phy-cells : must be 1 for the phy
++ - compatible : Supports "mediatek,mt8173-xhci"
++ - reg : Specifies physical base address and size of the registers,
++	the first one for MAC, the second for IPPC
++ - interrupts : Interrupt mode, number and trigger mode
++ - power-domains : To enable usb's mtcmos
++ - vusb33-supply : Regulator of usb avdd3.3v
++ - clocks : Must support all clocks that xhci needs
++ - clock-names : Should be "sys_mac" for sys and mac clocks, and
++	"wakeup_deb_p0", "wakeup_deb_p1" for wakeup debounce control
++	clocks
++ - phys : List of PHY specifiers (used by generic PHY framework).
++ - phy-names : Must be "usb-phy0", "usb-phy1",.., "usb-phyN", based on
++	the number of PHYs as specified in @phys property.
++ - usb3-lpm-capable : Supports USB3 LPM
++ - mediatek,usb-wakeup : To access usb wakeup control register
++ - mediatek,wakeup-src : 1: Ip sleep wakeup mode; 2: line state wakeup
++	mode; others means don't enable wakeup source of usb
++ - mediatek,u2port-num : The number should not greater than the number
++	of phys
++
++Optional properties:
++ - vbus-supply : Reference to the VBUS regulator;
 +
 +Example:
-+
-+u3phy: usb-phy@11290000 {
-+	compatible = "mediatek,mt8173-u3phy";
-+	reg = <0 0x11290000 0 0x3000>;
-+	clocks = <&apmixedsys CLK_APMIXED_REF2USB_TX>;
-+	clock-names = "u3phya_ref";
-+	#phy-cells = <1>;
++usb: usb@11270000 {
++	compatible = "mediatek,mt8173-xhci";
++	reg = <0 0x11270000 0 0x4000>,
++	      <0 0x11280000 0 0x0800>;
++	interrupts = <GIC_SPI 115 IRQ_TYPE_LEVEL_LOW>;
++	power-domains = <&scpsys MT8173_POWER_DOMAIN_USB>;
++	clocks = <&topckgen CLK_TOP_USB30_SEL>,
++		 <&pericfg CLK_PERI_USB0>,
++		 <&pericfg CLK_PERI_USB1>;
++	clock-names = "sys_mac",
++		      "wakeup_deb_p0",
++		      "wakeup_deb_p1";
++	phys = <&u3phy 0>, <&u3phy 1>;
++	phy-names = "usb-phy0", "usb-phy1";
++	vusb33-supply = <&mt6397_vusb_reg>;
++	vbus-supply = <&usb_p1_vbus>;
++	usb3-lpm-capable;
++	mediatek,usb-wakeup = <&pericfg>;
++	mediatek,wakeup-src = <1>;
++	mediatek,u2port-num = <2>;
 +	status = "okay";
 +};
 -- 
 1.8.1.1.dirty
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
