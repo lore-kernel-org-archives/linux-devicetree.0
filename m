@@ -1,42 +1,65 @@
-From: "santosh.shilimkar@oracle.com" <santosh.shilimkar@oracle.com>
-Subject: Re: [PATCH 2/2] ARM: dts: keystone: fix dt bindings to use post div
- register for mainpll
-Date: Fri, 31 Jul 2015 15:06:50 -0700
-Message-ID: <55BBF17A.2030102@oracle.com>
-References: <1432915453-409-1-git-send-email-m-karicheri2@ti.com> <1432915453-409-2-git-send-email-m-karicheri2@ti.com> <55BB947B.7090608@oracle.com> <20150731203035.GA23144@localhost>
+From: Michal Suchanek <hramrach-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v2 5/5] mtd: ofpart: move ofpart partitions to a dedicated
+ dt node
+Date: Sat, 1 Aug 2015 00:32:32 +0200
+Message-ID: <CAOMqctS4jXf=Mr=pUk6QLdtsrKAh6usXmj6hRiMUyrC7z_WPzQ@mail.gmail.com>
+References: <cover.1438340815.git.hramrach@gmail.com> <4982216b5cb602c71ade6810cecdb9535e0862fc.1438340815.git.hramrach@gmail.com>
+ <20150731180614.162852ee@bbrezillon> <CAOMqctROw6wrKa+3jF275m=nd6qy7mRy0k3ztJB5s2Vy8r=DZw@mail.gmail.com>
+ <20150731192458.457c6c9d@bbrezillon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20150731203035.GA23144@localhost>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Olof Johansson <olof@lixom.net>
-Cc: mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, ssantosh@kernel.org, mturquette@linaro.org, sboyd@codeaurora.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, arm@kernel.org, Murali Karicheri <m-karicheri2@ti.com>, robh+dt@kernel.org, pawel.moll@arm.com, linux@arm.linux.org.uk, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20150731192458.457c6c9d@bbrezillon>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, MTD Maling List <linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 7/31/15 1:30 PM, Olof Johansson wrote:
-> On Fri, Jul 31, 2015 at 08:30:03AM -0700, santosh shilimkar wrote:
->> Olof,
->>
->> As discussed patch 1/2 is already made it via clock tree. Please
->> pick the subject fix for your upcoming fixes pull request.
->>
->> On 5/29/2015 9:04 AM, Murali Karicheri wrote:
->>> All of the keystone devices have a separate register to hold post
->>> divider value for main pll clock. Currently the fixed-postdiv
->>> value used for k2hk/l/e SoCs works by sheer luck as u-boot happens to
->>> use a value of 2 for this. Now that we have fixed this in the pll
->>> clock driver change the dt bindings for the same.
->>>
->>> Signed-off-by: Murali Karicheri <m-karicheri2@ti.com>
->>> ---
->> Acked-by: Santosh Shilimkar <ssantosh@kernel.org>
->>
->>
+On 31 July 2015 at 19:24, Boris Brezillon
+<boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
+> On Fri, 31 Jul 2015 18:52:01 +0200
+> Michal Suchanek <hramrach-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
 >
-> Thanks, applied.
 >
-Thanks Olof !!
+>> >
+>> >>               (*pparts)[i].offset = of_read_number(reg, a_cells);
+>> >>               (*pparts)[i].size = of_read_number(reg + a_cells, s_cells);
+>> >>
+>> >> @@ -92,15 +116,15 @@ static int parse_ofpart_partitions(struct mtd_info *master,
+>> >>               i++;
+>> >>       }
+>> >>
+>> >> -     if (!i) {
+>> >> -             of_node_put(pp);
+>> >> -             pr_err("No valid partition found on %s\n", node->full_name);
+>> >> -             kfree(*pparts);
+>> >> -             *pparts = NULL;
+>> >> -             return -EINVAL;
+>> >> -     }
+>> >> -
+>> >
+>> > Are you sure you can safely remove this check?
+>>
+>> Yes. It was incomplete check to reject some partitioning schemes
+>> considered invalid.
+>>
+>> Now there is stricter checking above so this can be removed.
+>
+> Indeed, I was worried about resources deallocation, but this is handle
+> by the caller, and if nr_parts is zero the master MTD device will
+> be exposed.
 
-Regards,
-Santosh
+Due to compatibility with the previous scheme there is still
+possibility that partitions are allocated, and no partitions are
+returned due to the nr_parts--;
+
+So yes, the pparts could possibly leak in this case if there were more
+partition parsers following ofpart and should be deallocated.
+
+Thanks
+
+Michal
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
