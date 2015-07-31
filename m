@@ -1,74 +1,99 @@
-From: Dong Aisheng <aisheng.dong-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: Re: [PATCH v3 6/6] mmc: sdhci-esdhc-imx: set back the
- burst_length_enable bit to 1
-Date: Fri, 31 Jul 2015 22:57:52 +0800
-Message-ID: <20150731145751.GG27806@shlinux1.ap.freescale.net>
-References: <1438160637-28061-1-git-send-email-haibo.chen@freescale.com>
- <1438160637-28061-7-git-send-email-haibo.chen@freescale.com>
+From: Gabriele Paoloni <gabriele.paoloni@huawei.com>
+Subject: RE: [PATCH v6] PCI: Store PCIe bus address in struct of_pci_range
+Date: Fri, 31 Jul 2015 15:09:41 +0000
+Message-ID: <EE11001F9E5DDD47B7634E2F8A612F2E01D70641@lhreml503-mbs>
+References: <1438010223-124422-1-git-send-email-gabriele.paoloni@huawei.com>
+ <20150729172053.GE31170@google.com>
+ <EE11001F9E5DDD47B7634E2F8A612F2E01D6F350@lhreml503-mbs>
+ <CAL_JsqKs11-sXQTdBD+ZjbVYFWUHBARTW9q5MF1hCXUhZ+nWLQ@mail.gmail.com>
+ <EE11001F9E5DDD47B7634E2F8A612F2E01D6F94A@lhreml503-mbs>
+ <20150730161447.GG9640@google.com>
+ <EE11001F9E5DDD47B7634E2F8A612F2E01D6FB3B@lhreml503-mbs>
+ <20150730171445.GI9640@google.com>
+ <EE11001F9E5DDD47B7634E2F8A612F2E01D6FC15@lhreml503-mbs>
+ <CAL_Jsq+aQVakaZf4xo7sxnVyTmPR+HJ-9ByyS6OYJ0PHDYOwmg@mail.gmail.com>
+ <EE11001F9E5DDD47B7634E2F8A612F2E01D70589@lhreml503-mbs>
+ <55BB8CC6.1080203@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1438160637-28061-7-git-send-email-haibo.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Haibo Chen <haibo.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, johan.derycke-ob4gmnvZ1/cAvxtiuMwx3w@public.gmane.org, fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org, b29396-KZfg59tc24xl57MIdRCFDg@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <55BB8CC6.1080203@ti.com>
+Content-Language: en-US
+Sender: linux-pci-owner@vger.kernel.org
+To: Kishon Vijay Abraham I <kishon@ti.com>, Rob Herring <robherring2@gmail.com>
+Cc: Bjorn Helgaas <bhelgaas@google.com>, "arnd@arndb.de" <arnd@arndb.de>, "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>, "Wangzhou (B)" <wangzhou1@hisilicon.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "james.morse@arm.com" <james.morse@arm.com>, "Liviu.Dudau@arm.com" <Liviu.Dudau@arm.com>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Yuanzhichang <yuanzhichang@hisilicon.com>, Zhudacai <zhudacai@hisilicon.com>, zhangjukuo <zhangjukuo@huawei.com>, qiuzhenfa <qiuzhenfa@hisilicon.com>, "Liguozhu (Kenneth)" <liguozhu@hisilicon.com>, Jingoo Han <jingoohan1@gmail.com>, Pratyush Anand <pratyush.anand@gmail.com>, Arnd Bergmann <arnd@linaro.org>Arnd Bergmann <arnd@arndb.de>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jul 29, 2015 at 05:03:57PM +0800, Haibo Chen wrote:
-> Currently we find that if a usdhc is choosed to boot system, then ROM
-> code will set the burst length enable bit of this usdhc as 0.
-> 
-> This will make performance drop a lot if this usdhc's burst length is
-> 16. So this patch set back the burst_length_enable bit as 1, which is
-> the default value, and means burst length is enabled for INCR.
-> 
-> Signed-off-by: Haibo Chen <haibo.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-> ---
->  drivers/mmc/host/sdhci-esdhc-imx.c | 11 +++++++++++
->  1 file changed, 11 insertions(+)
-> 
-> diff --git a/drivers/mmc/host/sdhci-esdhc-imx.c b/drivers/mmc/host/sdhci-esdhc-imx.c
-> index 37d0095..dd945e5 100644
-> --- a/drivers/mmc/host/sdhci-esdhc-imx.c
-> +++ b/drivers/mmc/host/sdhci-esdhc-imx.c
-> @@ -32,6 +32,7 @@
->  #include "sdhci-esdhc.h"
->  
->  #define	ESDHC_CTRL_D3CD			0x08
-> +#define ESDHC_BURST_LEN_EN_INCR		(1 << 27)
->  /* VENDOR SPEC register */
->  #define ESDHC_VENDOR_SPEC		0xc0
->  #define  ESDHC_VENDOR_SPEC_SDIO_QUIRK	(1 << 1)
-> @@ -1158,6 +1159,16 @@ static int sdhci_esdhc_imx_probe(struct platform_device *pdev)
->  		host->quirks2 |= SDHCI_QUIRK2_PRESET_VALUE_BROKEN;
->  		host->mmc->caps |= MMC_CAP_1_8V_DDR;
->  
-> +		/*
-> +		 * ROM code will change the burst_length_enable setting to
-> +		 * zero if this usdhc is choosed to boot system. Change it
-> +		 * back here, otherwise it will impact the performance a
-> +		 * lot if the burst length is 16.
-
-Can you clarify a bit more on why performance drops a lot if burst
-length is 16?
-Caused by the burst length setting did not work due to ROM disabled it?
-
-Regards
-Dong Aisheng
-
-> +		 */
-> +		writel(readl(host->ioaddr + SDHCI_HOST_CONTROL)
-> +			| ESDHC_BURST_LEN_EN_INCR,
-> +			host->ioaddr + SDHCI_HOST_CONTROL);
-> +
->  		if (!(imx_data->socdata->flags & ESDHC_FLAG_HS200))
->  			host->quirks2 |= SDHCI_QUIRK2_BROKEN_HS200;
->  
-> -- 
-> 1.9.1
-> 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogS2lzaG9uIFZpamF5IEFi
+cmFoYW0gSSBbbWFpbHRvOmtpc2hvbkB0aS5jb21dDQo+IFNlbnQ6IEZyaWRheSwgSnVseSAzMSwg
+MjAxNSAzOjU3IFBNDQo+IFRvOiBHYWJyaWVsZSBQYW9sb25pOyBSb2IgSGVycmluZw0KPiBDYzog
+Qmpvcm4gSGVsZ2FhczsgYXJuZEBhcm5kYi5kZTsgbG9yZW56by5waWVyYWxpc2lAYXJtLmNvbTsg
+V2FuZ3pob3UNCj4gKEIpOyByb2JoK2R0QGtlcm5lbC5vcmc7IGphbWVzLm1vcnNlQGFybS5jb207
+IExpdml1LkR1ZGF1QGFybS5jb207DQo+IGxpbnV4LXBjaUB2Z2VyLmtlcm5lbC5vcmc7IGxpbnV4
+LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZzsNCj4gZGV2aWNldHJlZUB2Z2VyLmtlcm5l
+bC5vcmc7IFl1YW56aGljaGFuZzsgWmh1ZGFjYWk7IHpoYW5nanVrdW87DQo+IHFpdXpoZW5mYTsg
+TGlndW96aHUgKEtlbm5ldGgpOyBKaW5nb28gSGFuOyBQcmF0eXVzaCBBbmFuZDsgQXJuZA0KPiBC
+ZXJnbWFubjsgQXJuZCBCZXJnbWFubg0KPiBTdWJqZWN0OiBSZTogW1BBVENIIHY2XSBQQ0k6IFN0
+b3JlIFBDSWUgYnVzIGFkZHJlc3MgaW4gc3RydWN0DQo+IG9mX3BjaV9yYW5nZQ0KPiANCj4gK0Fy
+bmQNCj4gDQo+IEhpLA0KPiANCj4gT24gRnJpZGF5IDMxIEp1bHkgMjAxNSAwNzo1NSBQTSwgR2Fi
+cmllbGUgUGFvbG9uaSB3cm90ZToNCj4gPiBbK2NjIEtpc2hvbl0NCj4gPg0KPiA+PiAtLS0tLU9y
+aWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiA+PiBGcm9tOiBsaW51eC1wY2ktb3duZXJAdmdlci5rZXJu
+ZWwub3JnIFttYWlsdG86bGludXgtcGNpLQ0KPiA+PiBvd25lckB2Z2VyLmtlcm5lbC5vcmddIE9u
+IEJlaGFsZiBPZiBSb2IgSGVycmluZw0KPiA+PiBTZW50OiBUaHVyc2RheSwgSnVseSAzMCwgMjAx
+NSA5OjQyIFBNDQo+ID4+IFRvOiBHYWJyaWVsZSBQYW9sb25pDQo+ID4+IENjOiBCam9ybiBIZWxn
+YWFzOyBhcm5kQGFybmRiLmRlOyBsb3JlbnpvLnBpZXJhbGlzaUBhcm0uY29tOw0KPiBXYW5nemhv
+dQ0KPiA+PiAoQik7IHJvYmgrZHRAa2VybmVsLm9yZzsgamFtZXMubW9yc2VAYXJtLmNvbTsgTGl2
+aXUuRHVkYXVAYXJtLmNvbTsNCj4gPj4gbGludXgtcGNpQHZnZXIua2VybmVsLm9yZzsgbGludXgt
+YXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnOw0KPiA+PiBkZXZpY2V0cmVlQHZnZXIua2Vy
+bmVsLm9yZzsgWXVhbnpoaWNoYW5nOyBaaHVkYWNhaTsgemhhbmdqdWt1bzsNCj4gPj4gcWl1emhl
+bmZhOyBMaWd1b3podSAoS2VubmV0aCk7IEppbmdvbyBIYW47IFByYXR5dXNoIEFuYW5kDQo+ID4+
+IFN1YmplY3Q6IFJlOiBbUEFUQ0ggdjZdIFBDSTogU3RvcmUgUENJZSBidXMgYWRkcmVzcyBpbiBz
+dHJ1Y3QNCj4gPj4gb2ZfcGNpX3JhbmdlDQo+ID4+DQo+ID4+IE9uIFRodSwgSnVsIDMwLCAyMDE1
+IGF0IDEyOjM0IFBNLCBHYWJyaWVsZSBQYW9sb25pDQo+ID4+IDxnYWJyaWVsZS5wYW9sb25pQGh1
+YXdlaS5jb20+IHdyb3RlOg0KPiA+Pj4+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+ID4+
+Pj4gRnJvbTogQmpvcm4gSGVsZ2FhcyBbbWFpbHRvOmJoZWxnYWFzQGdvb2dsZS5jb21dDQo+ID4+
+Pj4gU2VudDogMzAgSnVseSAyMDE1IDE4OjE1DQo+ID4+Pj4gT24gVGh1LCBKdWwgMzAsIDIwMTUg
+YXQgMDQ6NTA6NTVQTSArMDAwMCwgR2FicmllbGUgUGFvbG9uaSB3cm90ZToNCj4gPj4+Pj4+IC0t
+LS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+ID4+Pj4+PiBGcm9tOiBsaW51eC1wY2ktb3duZXJA
+dmdlci5rZXJuZWwub3JnIFttYWlsdG86bGludXgtcGNpLQ0KPiA+Pj4+Pj4gb3duZXJAdmdlci5r
+ZXJuZWwub3JnXSBPbiBCZWhhbGYgT2YgQmpvcm4gSGVsZ2Fhcw0KPiA+Pj4+Pj4gU2VudDogVGh1
+cnNkYXksIEp1bHkgMzAsIDIwMTUgNToxNSBQTQ0KPiA+Pj4+Pj4gT24gVGh1LCBKdWwgMzAsIDIw
+MTUgYXQgMDE6NTI6MTNQTSArMDAwMCwgR2FicmllbGUgUGFvbG9uaSB3cm90ZToNCj4gPj4NCj4g
+Pj4gWy4uLl0NCj4gPj4NCj4gPj4+Pj4+PiBJIGRvbuKAmXQgdGhpbmsgd2Ugc2hvdWxkIHJlbHkg
+b24gW0NQVV0gYWRkcmVzc2VzLi4ud2hhdCBpZiB0aGUNCj4gPj4+Pj4+IGludGVybWVkaWF0ZQ0K
+PiA+Pj4+Pj4+IHRyYW5zbGF0aW9uIGxheWVyIGNoYW5nZXMgdGhlIGxvd2VyIHNpZ25pZmljYW50
+IGJpdHMgb2YgdGhlDQo+ID4+ICJidXMNCj4gPj4+Pj4+IGFkZHJlc3MiDQo+ID4+Pj4+Pj4gdG8g
+dHJhbnNsYXRlIGludG8gYSBjcHUgYWRkcmVzcz8NCj4gPj4+Pj4+DQo+ID4+Pj4+PiBJcyBpdCBy
+ZWFsbHkgYSBwb3NzaWJsaXR5IHRoYXQgdGhlIGxvd2VyIGJpdHMgY291bGQgYmUgY2hhbmdlZD8N
+Cj4gPj4+Pj4NCj4gPj4+Pj4gSSd2ZSBjaGVja2VkIGFsbCB0aGUgY3VycmVudCBkZWlnbndhcmUg
+dXNlcnMgRFRzIGV4Y2VwdCAicGNpLQ0KPiA+Pj4+IGxheWVyc2NhcGUiDQo+ID4+Pj4+IHRoYXQg
+SSBjb3VsZCBub3QgZmluZDoNCj4gPj4+Pj4gc3BlYXIxMzEwLmR0c2kNCj4gPj4+Pj4gc3BlYXIx
+MzQwLmR0c2kNCj4gPj4+Pj4gZHJhNy5kdHNpDQo+ID4+Pj4+IGlteDZxZGwuZHRzaQ0KPiA+Pj4+
+PiBpbXg2c3guZHRzaQ0KPiA+Pj4+PiBrZXlzdG9uZS5kdHNpDQo+ID4+Pj4+IGV4eW5vczU0NDAu
+ZHRzaQ0KPiA+Pj4+Pg0KPiA+Pj4+PiBOb25lIG9mIHRoZW0gbW9kaWZpZXMgdGhlIGxvd2VyIGJp
+dHMuIFRvIGJlIG1vcmUgcHJlY2lzZSB0aGUgb25seQ0KPiA+PiBndXkNCj4gPj4+Pj4gdGhhdCBw
+cm92aWRlcyBhbm90aGVyIHRyYW5zbGF0aW9uIGxheWVyIGlzICJkcmE3LmR0c2kiOg0KPiA+Pj4+
+PiBheGkwDQo+ID4+Pj4+IGh0dHA6Ly9seHIuZnJlZS0NCj4gPj4gZWxlY3Ryb25zLmNvbS9zb3Vy
+Y2UvYXJjaC9hcm0vYm9vdC9kdHMvZHJhNy5kdHNpI0wyMDcNCj4gPj4+Pj4NCj4gPj4+Pj4gYXhp
+MQ0KPiA+Pj4+PiBodHRwOi8vbHhyLmZyZWUtDQo+ID4+IGVsZWN0cm9ucy5jb20vc291cmNlL2Fy
+Y2gvYXJtL2Jvb3QvZHRzL2RyYTcuZHRzaSNMMjQxDQo+ID4+Pj4+DQo+ID4+Pj4+IEZvciB0aGlz
+IGNhc2UgbWFza2luZyB0aGUgdG9wIDRiaXRzIChiaXRzMjggdG8gMzEpIHNob3VsZCBtYWtlDQo+
+IHRoZQ0KPiA+PiBqb2IuDQo+ID4+DQo+ID4+IElNTywgd2Ugc2hvdWxkIGp1c3QgZml4IHRoaXMg
+Y2FzZS4gQWZ0ZXIgZnVydGhlciBzdHVkeSwgSSBkb24ndA0KPiB0aGluaw0KPiA+PiB0aGlzIGlz
+IGEgRFcgaXNzdWUsIGJ1dCByYXRoZXIgYW4gU09DIGludGVncmF0aW9uIGlzc3VlLg0KPiA+Pg0K
+PiA+PiBJIGJlbGlldmUgeW91IGNhbiBqdXN0IGZpeHVwIHRoZSBhZGRyZXNzIGluIHRoZSBwcC0+
+b3BzLT5ob3N0X2luaXQNCj4gaG9vay4NCj4gPj4NCj4gPg0KPiA+IFllcyBJIGd1ZXNzIHRoYXQg
+SSBjb3VsZCBqdXN0IGFzc2lnbiBwcC0+KCopX21vZF9iYXNlIHRvIHRoZSBDUFUNCj4gYWRkcmVz
+cw0KPiA+IGluIERXIGFuZCBtYXNrIGl0IG91dCBpbiBkcmE3eHhfcGNpZV9ob3N0X2luaXQoKS4u
+Lg0KPiA+DQo+ID4gS2lzaG9uLCB3b3VsZCB5b3UgYmUgb2sgd2l0aCB0aGF0Pw0KPiANCj4gSW5p
+dGlhbGx5IEkgd2FzIHVzaW5nICpiYXNlLW1hc2sqIHByb3BlcnR5IGZyb20gZHQuIE1lIGFuZCBB
+cm5kIChjYydlZCkNCj4gaGFkDQo+IHRoaXMgZGlzY3Vzc2lvbiBbMV0gYmVmb3JlIHdlIGRlY2lk
+ZWQgdGhlIGN1cnJlbnQgYXBwcm9hY2guIEl0J2xsIGJlDQo+IGdvb2QgdG8NCj4gY2hlY2sgd2l0
+aCBBcm5kIHRvby4NCj4gDQo+IFsxXSAtPiAgaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvcGlw
+ZXJtYWlsL2xpbnV4LWFybS1rZXJuZWwvMjAxNC0NCj4gTWF5LzI1MzUyOC5odG1sDQoNCg0KSW4g
+dGhpcyBwYXRjaCB5b3UgdXNlIHRoZSBtYXNrIGludG8gZGVzaWdud2FyZS4uLi5pbnN0ZWFkIHRo
+ZSBhcHByb2FjaCANCnByb3Bvc2VkIGJ5IFJvYiBtZWFucyB0byBoYXZlIHRoZSBtYXNrIGRlY2xh
+cmVkIGluIHRoZSBkcmE3IGRyaXZlciBhbmQNCnlvdSBtb2RpZmllZCB0aGUgcHAgbWVtYmVycyBp
+biBkcmE3eHhfcGNpZV9ob3N0X2luaXQgYnkgbWFza2luZyB0aGVtLi4uDQoNCkJUVyBnb29kIHRv
+IGhhdmUgQXJuZCBvcGluaW9uIHRvby4uDQo+IA0KPiBUaGFua3MNCj4gS2lzaG9uDQo=
