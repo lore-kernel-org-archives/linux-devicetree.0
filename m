@@ -1,124 +1,68 @@
-From: Dudley Du <dudl@cypress.com>
-Subject: RE: [PATCH 1/3] input: cyapa: add regulator vcc support
-Date: Fri, 31 Jul 2015 01:45:46 +0000
-Message-ID: <CY1PR06MB181765F297F80F07270BDCA7D18A0@CY1PR06MB1817.namprd06.prod.outlook.com>
-References: <1437714359-2484-1-git-send-email-dudl@cypress.com>
- <1437714359-2484-2-git-send-email-dudl@cypress.com>
- <20150730183303.GH13165@dtor-ws>
+From: Magnus Damm <magnus.damm@gmail.com>
+Subject: Re: [PATCH] DT: mmc: sh_mmcif: fix "compatible" property text
+Date: Fri, 31 Jul 2015 11:23:04 +0900
+Message-ID: <CANqRtoSVU77Q7hnoMJ2_VbqprJYxbvbbe5MHBReH_dVxyvGAQQ@mail.gmail.com>
+References: <201404250239.39150.sergei.shtylyov@cogentembedded.com>
+	<3979266.lQrOKbu0yo@wasted.cogentembedded.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="Windows-1252"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20150730183303.GH13165@dtor-ws>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "bleung@google.com" <bleung@google.com>, "jmmahler@gmail.com" <jmmahler@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <3979266.lQrOKbu0yo@wasted.cogentembedded.com>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, ulf.hansson@linaro.org, linux-mmc@vger.kernel.org, SH-Linux <linux-sh@vger.kernel.org>, "Simon Horman [Horms]" <horms@verge.net.au>, Geert Uytterhoeven <geert+renesas@glider.be>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>
 List-Id: devicetree@vger.kernel.org
 
-Dmitry,
+Hi Sergei,
 
-Thank your very much.
+On Fri, Jul 31, 2015 at 4:59 AM, Sergei Shtylyov
+<sergei.shtylyov@cogentembedded.com> wrote:
+> The "compatible" property text contradicts even the example given in the MMCIF
+> binding document itself; moreover, the Renesas MMCIF driver only  matches  on
+> the generic "compatible" string, and doesn't look for at SoC specific strings
+> currently at all. Thus describe "renesas,sh-mmcif" string as mandatory and the
+> others as optional.
+>
+> Fixes: b4c27763d749 ("mmc: sh_mmcif: Document DT bindings")
+> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+
+Thanks for your efforts trying to improve the DT binding documentation.
+
+> --- renesas.orig/Documentation/devicetree/bindings/mmc/renesas,mmcif.txt
+> +++ renesas/Documentation/devicetree/bindings/mmc/renesas,mmcif.txt
+> @@ -6,11 +6,11 @@ and the properties used by the MMCIF dev
+>
+>  Required properties:
+>
+> -- compatible: must contain one of the following
+> +- compatible: must contain "renesas,sh-mmcif"; may also contain one of
+> +  the following:
+>         - "renesas,mmcif-r8a7740" for the MMCIF found in r8a7740 SoCs
+>         - "renesas,mmcif-r8a7790" for the MMCIF found in r8a7790 SoCs
+>         - "renesas,mmcif-r8a7791" for the MMCIF found in r8a7791 SoCs
+> -       - "renesas,sh-mmcif" for the generic MMCIF
+
+As you know, each SoC contains a wide range of on-chip devices and the
+MMCIF device is just one of them. Exactly how to manage the DT
+bindings must be up to each maintainer and of course this needs to be
+aligned with the SoC maintainer and SoC vendor with policies used for
+SoC support and BSPs and whatnot. Changing policy like this for a
+single device without at least discussing this with the SoC
+maintainers does not help.
+
+For Renesas hardware we so far use both SoC part number and optionally
+a generic binding as well. As commonly expected, the DT binding is
+supposed to describe the hardware and if hardware devices are
+compatible. Unless we use SoC part number in the compatible string
+there is a risk that the SoC integrator simply copy-and-pastes generic
+bindings "because it works" but this will result in DT binding based
+on software compatibility and not hardware compatibility. Later when
+the driver support is extended this may result in broken software due
+to incorrect compatibility information through generic bindings.
+
+If anything is unclear please ask and feel free to discuss this DT
+topic with Simon, Laurent, Geert and/or me.
 
 Thanks,
-Dudley
 
-> -----Original Message-----
-> From: Dmitry Torokhov [mailto:dmitry.torokhov@gmail.com]
-> Sent: 2015?7?31? 2:33
-> To: Dudley Du
-> Cc: mark.rutland@arm.com; robh+dt@kernel.org; bleung@google.com;
-> jmmahler@gmail.com; devicetree@vger.kernel.org; linux-input@vger.kernel.org;
-> linux-kernel@vger.kernel.org
-> Subject: Re: [PATCH 1/3] input: cyapa: add regulator vcc support
->
-> On Fri, Jul 24, 2015 at 01:05:57PM +0800, Dudley Du wrote:
-> > Add power management regulator vcc support.
-> > It's described to be supported in the cypress,cyapa.txt document.
-> >
-> > Signed-off-by: Dudley Du <dudl@cypress.com>
->
-> It looks like we were missing linux/regulator/consumer.h include, I
-> added it and applied.
->
-> Thanks.
->
-> > ---
-> >  drivers/input/mouse/cyapa.c | 28 ++++++++++++++++++++++++++++
-> >  drivers/input/mouse/cyapa.h |  1 +
-> >  2 files changed, 29 insertions(+)
-> >
-> > diff --git a/drivers/input/mouse/cyapa.c b/drivers/input/mouse/cyapa.c
-> > index 6195ccb..2159c5e 100644
-> > --- a/drivers/input/mouse/cyapa.c
-> > +++ b/drivers/input/mouse/cyapa.c
-> > @@ -1241,6 +1241,13 @@ static void cyapa_remove_sysfs_group(void *data)
-> >  sysfs_remove_group(&cyapa->client->dev.kobj, &cyapa_sysfs_group);
-> >  }
-> >
-> > +static void cyapa_disable_regulator(void *data)
-> > +{
-> > +struct cyapa *cyapa = data;
-> > +
-> > +regulator_disable(cyapa->vcc);
-> > +}
-> > +
-> >  static int cyapa_probe(struct i2c_client *client,
-> >         const struct i2c_device_id *dev_id)
-> >  {
-> > @@ -1274,6 +1281,27 @@ static int cyapa_probe(struct i2c_client *client,
-> >  sprintf(cyapa->phys, "i2c-%d-%04x/input0", client->adapter->nr,
-> >  client->addr);
-> >
-> > +cyapa->vcc = devm_regulator_get(dev, "vcc");
-> > +if (IS_ERR(cyapa->vcc)) {
-> > +error = PTR_ERR(cyapa->vcc);
-> > +dev_err(dev, "failed to get vcc regulator: %d\n", error);
-> > +return error;
-> > +}
-> > +
-> > +error = regulator_enable(cyapa->vcc);
-> > +if (error) {
-> > +dev_err(dev, "failed to enable regulator: %d\n", error);
-> > +return error;
-> > +}
-> > +
-> > +error = devm_add_action(dev, cyapa_disable_regulator, cyapa);
-> > +if (error) {
-> > +cyapa_disable_regulator(cyapa);
-> > +dev_err(dev, "failed to add disable regulator action: %d\n",
-> > +error);
-> > +return error;
-> > +}
-> > +
-> >  error = cyapa_initialize(cyapa);
-> >  if (error) {
-> >  dev_err(dev, "failed to detect and initialize tp device.\n");
-> > diff --git a/drivers/input/mouse/cyapa.h b/drivers/input/mouse/cyapa.h
-> > index af12536..b812bba 100644
-> > --- a/drivers/input/mouse/cyapa.h
-> > +++ b/drivers/input/mouse/cyapa.h
-> > @@ -321,6 +321,7 @@ struct cyapa {
-> >  u8 status[BL_STATUS_SIZE];
-> >  bool operational; /* true: ready for data reporting; false: not. */
-> >
-> > +struct regulator *vcc;
-> >  struct i2c_client *client;
-> >  struct input_dev *input;
-> >  char phys[32];/* Device physical location */
-> > --
-> > 1.9.1
-> >
-> >
-> > ---------------------------------------------------------------
-> > This message and any attachments may contain Cypress (or its
-> > subsidiaries) confidential information. If it has been received
-> > in error, please advise the sender and immediately delete this
-> > message.
-> > ---------------------------------------------------------------
-> >
->
-> --
-> Dmitry
-
-This message and any attachments may contain Cypress (or its subsidiaries) confidential information. If it has been received in error, please advise the sender and immediately delete this message.
+/ magnus
