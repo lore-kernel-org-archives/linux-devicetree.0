@@ -1,113 +1,238 @@
-From: Lina Iyer <lina.iyer-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: How-to: Uniquely identify a DT node in the driver?
-Date: Fri, 31 Jul 2015 09:57:09 -0600
-Message-ID: <20150731155709.GJ51847@linaro.org>
-References: <20150728193833.GC51847@linaro.org>
- <55B8A061.6060306@arm.com>
- <20150729160120.GH51847@linaro.org>
- <20150730185110.GA9328@leverpostej>
+From: Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [PATCH v5 1/8] Documentation: add DT binding for ARM System
+ Control and Power Interface(SCPI) protocol
+Date: Fri, 31 Jul 2015 17:00:27 +0100
+Message-ID: <20150731160027.GG25118@leverpostej>
+References: <1437649828-14540-1-git-send-email-sudeep.holla@arm.com>
+ <1437649828-14540-2-git-send-email-sudeep.holla@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20150730185110.GA9328@leverpostej>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: Sudeep Holla <Sudeep.Holla-5wv7dgnIgG8@public.gmane.org>, Device Tree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1437649828-14540-2-git-send-email-sudeep.holla@arm.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Sudeep Holla <sudeep.holla@arm.com>
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Liviu Dudau <Liviu.Dudau@arm.com>, Punit Agrawal <Punit.Agrawal@arm.com>, "Jon Medhurst (Tixy)" <tixy@linaro.org>, Lorenzo Pieralisi <Lorenzo.Pieralisi@arm.com>, Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>, Kevin Hilman <khilman@kernel.org>, Rob Herring <robh+dt@kernel.org>, Jassi Brar <jassisinghbrar@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jul 30 2015 at 12:53 -0600, Mark Rutland wrote:
->Hi,
->
->Sorry for the corss-talk on my previous reply.
->
->> I am trying to instantiate generic PM domains for different CPU clusters
->> commonly. Individual platform code may have different actions for
->> powering down/up the CPU domain. It could be different set of bucks that
->> they need to talk to or bunch of devices. The common code would like to
->> provide the opportunity for the platform code to perform their
->> activities.
->>
->> CPUs may be organized into 'n' clusters, the common code would create
->> genpd for each of these clusters. In a multi machine image, to identify
->> the right platform driver for the cluster, is a challenge. I am trying
->> to solve it the same way as CPUidle - using __init section tables.  To
->> uniquely identify a cluster in a SoC, I need a way to match the domain
->> provider's DT node, with a callback in the driver. Like the 'method'
->> attribute of the CPUIdle macros. The CPU compatibles are too generic and
->> could duplicate across SoCs to be used for comparison. For e.g, you
->> could have two clusters of A53 cores that could use the same compatible
->> string. Distinguishing the domains for each of these clusters is a pain
->> (but doable using phandles to the domain referenced by the CPU).
->>
->> To make it easy for the driver, I could only think of adding an unique
->> compatible string to the domain node and the platform driver would then
->> be able to same compatible string to distinguish between domains for the
->> different clusters.
->>
->> Alternately, I was exploring a way to use phandles for the device nodes
->> as unique comparison attributes, but that is more complex and doesnt
->> provide any better benefit than the compatible.
->
->I don't believe using compatible strings is the right thing to do. The
->thing which varies per-domain is the relationships of various
->components, which should be described with phandles. At the level of the
->domain, the interface is identical, and thus they should have the same
->compatible string.
->
->Using different compatible strings implies that we have to add new
->compatible strings for each new variation that appears, leaving us with
->a completely arbitrary set of compatible strings with (likely)
->ill-defined semantics. That makes it really difficult to reuse code, and
->necessitates adding far more.
->
-Okay.
+Hi,
 
->The inter-device relationships (and the attibutes of those devices)
->should be explicit in the DT.
->
-Alright. That makes sense. My example does not violate this.
+On Thu, Jul 23, 2015 at 12:10:21PM +0100, Sudeep Holla wrote:
+> This patch adds devicetree binding for System Control and Power
+> Interface (SCPI) Message Protocol used between the Application Cores(AP)
+> and the System Control Processor(SCP). The MHU peripheral provides a
+> mechanism for inter-processor communication between SCP's M3 processor
+> and AP.
+> 
+> SCP offers control and management of the core/cluster power states,
+> various power domain DVFS including the core/cluster, certain system
+> clocks configuration, thermal sensors and many others.
+> 
+> Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
+> Cc: Rob Herring <robh+dt@kernel.org>
+> Cc: Mark Rutland <mark.rutland@arm.com>
+> CC: Jassi Brar <jassisinghbrar@gmail.com>
+> Cc: Liviu Dudau <Liviu.Dudau@arm.com>
+> Cc: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+> Cc: Jon Medhurst (Tixy) <tixy@linaro.org>
+> Cc: devicetree@vger.kernel.org
+> ---
+>  Documentation/devicetree/bindings/arm/arm,scpi.txt | 151 +++++++++++++++++++++
+>  MAINTAINERS                                        |   6 +
+>  2 files changed, 157 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/arm/arm,scpi.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/arm/arm,scpi.txt b/Documentation/devicetree/bindings/arm/arm,scpi.txt
+> new file mode 100644
+> index 000000000000..e21cce646561
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/arm/arm,scpi.txt
+> @@ -0,0 +1,151 @@
+> +System Control and Power Interface (SCPI) Message Protocol
+> +----------------------------------------------------------
+> +
+> +Firmware implementing the SCPI described in ARM document number ARM DUI 0922B
+> +("ARM Compute Subsystem SCP: Message Interface Protocols")[0] can be used
+> +by Linux to initiate various system control and power operations.
+> +
+> +Required properties:
+> +
+> +- compatible : should be "arm,scpi"
+> +- mboxes: List of phandle and mailbox channel specifiers
+> +	  All the channels reserved by remote SCP firmware for use by
+> +	  SCPI message protocol should be specified in any order
+> +- shmem : List of phandle pointing to the shared memory(SHM) area between the
+> +	  processors using these mailboxes for IPC, one for each mailbox
+> +	  SHM can be any memory reserved for the purpose of this communication
+> +	  between the processors.
+> +
+> +See Documentation/devicetree/bindings/mailbox/mailbox.txt
+> +for more details about the generic mailbox controller and
+> +client driver bindings.
+> +
+> +Clock bindings for the clocks based on SCPI Message Protocol
+> +------------------------------------------------------------
+> +
+> +This binding uses the common clock binding[1].
+> +
+> +Container Node
+> +==============
+> +Required properties:
+> +- compatible : should be "arm,scpi-clocks"
+> +	       All the clocks provided by SCP firmware via SCPI message
+> +	       protocol much be listed as sub-nodes under this node.
+> +
+> +Sub-nodes
+> +=========
+> +Required properties:
+> +- compatible : shall include one of the following
+> +	"arm,scpi-dvfs-clocks" - all the clocks that are variable and index based.
+> +		These clocks don't provide an entire range of values between the
+> +		limits but only discrete points within the range. The firmware
+> +		provides the mapping for each such operating frequency and the
+> +		index associated with it. The firmware also manages the
+> +		voltage scaling appropriately with the clock scaling.
+> +	"arm,scpi-variable-clocks" - all the clocks that are variable and provide full
+> +		range within the specified range. The firmware provides the
+> +		range of values within a specified range.
+> +
+> +Other required properties for all clocks(all from common clock binding):
+> +- #clock-cells : should be set to 1 as each of the SCPI clocks have multiple
+> +	outputs.
 
-I have an established relationship between device nodes in the device
-tree - CPUs reference their power-controller handles. I have two
-clusters of CPUs. Would compatible strings still be an incorrect use (as
-an alternate to property attributes) to distinguish these devices for
-the driver?
+Could you change this to:
 
-I am doing something like this (the patches are not on any ML yet) - 
+#clock-cells: Should be 1. Contains the Clock ID value used by SCPI
+              commands.
 
-static struct of_arm_pd_ops pd_ops_big __initdata = {
-        .init = pd_init_big,
-        .power_on = pd_power_on,
-        .power_off = pd_power_off,
-};
-ARM_PD_METHOD_OF_DECLARE(big, "foo,big" , &pd_ops_big);
+That will make it clear what value should be used when writing a dts
+(the raw value commands use, as opposed to some logical abstraction
+thereof).
 
-static struct of_arm_pd_ops pd_ops_little __initdata = {
-        .init = pd_init_little,
-        .power_on = pd_power_on,
-        .power_off = pd_power_off,
-};
-ARM_PD_METHOD_OF_DECLARE(little, "foo,little" , &pd_ops_little);
+With that:
 
-The ARM_PD_METHOD_OF_DECLARE is a macro that adds pd_ops_xxx to the
-__init section tables, just like cpuidle does. ARM common code issues a
-callback to the .init() of the ops at _initcall allowing the platform
-code to update the controller properties specific to the platform.
-Comparing the compatible read from the device node with that of the ops,
-ARM common code knows which platform ops to call. This also allows,
-driver to register multiple ops based on different compatibles.
-
-Having these compatibles, eases the driver's work of identifying the
-power controller without having to parse through the CPU, to figure out
-which power-controller device the .init() callback is referring to.
-
-What do you think? Sorry, if I went into too much specifics. Couldnt
-think of a better way to explain.
+Acked-by: Mark Rutland <mark.rutland@arm.com>
 
 Thanks,
-Lina
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Mark.
+
+> +- clock-output-names : shall be the corresponding names of the outputs.
+> +- clock-indices: The identifying number for the clocks(i.e.clock_id) in the
+> +	node. It can be non linear and hence provide the mapping of identifiers
+> +	into the clock-output-names array.
+> +
+> +SRAM and Shared Memory for SCPI
+> +-------------------------------
+> +
+> +A small area of SRAM is reserved for SCPI communication between application
+> +processors and SCP.
+> +
+> +Required properties:
+> +- compatible : should be "arm,juno-sram-ns" for Non-secure SRAM on Juno
+> +
+> +The rest of the properties should follow the generic mmio-sram description
+> +found in ../../misc/sysram.txt
+> +
+> +Each sub-node represents the reserved area for SCPI.
+> +
+> +Required sub-node properties:
+> +- reg : The base offset and size of the reserved area with the SRAM
+> +- compatible : should be "arm,juno-scp-shmem" for Non-secure SRAM based
+> +	       shared memory on Juno platforms
+> +
+> +[0] http://community.arm.com/servlet/JiveServlet/download/8401-45-18326/DUI0922B_scp_message_interface.pdf
+> +[1] Documentation/devicetree/bindings/clock/clock-bindings.txt
+> +
+> +Example:
+> +
+> +sram: sram@50000000 {
+> +	compatible = "arm,juno-sram-ns", "mmio-sram";
+> +	reg = <0x0 0x50000000 0x0 0x10000>;
+> +
+> +	#address-cells = <1>;
+> +	#size-cells = <1>;
+> +	ranges = <0 0x0 0x50000000 0x10000>;
+> +
+> +	cpu_scp_lpri: scp-shmem@0 {
+> +		compatible = "arm,juno-scp-shmem";
+> +		reg = <0x0 0x200>;
+> +	};
+> +
+> +	cpu_scp_hpri: scp-shmem@200 {
+> +		compatible = "arm,juno-scp-shmem";
+> +		reg = <0x200 0x200>;
+> +	};
+> +};
+> +
+> +mailbox: mailbox0@40000000 {
+> +	....
+> +	#mbox-cells = <1>;
+> +};
+> +
+> +scpi_protocol: scpi@2e000000 {
+> +	compatible = "arm,scpi";
+> +	mboxes = <&mailbox 0 &mailbox 1>;
+> +	shmem = <&cpu_scp_lpri &cpu_scp_hpri>;
+> +
+> +	clocks {
+> +		compatible = "arm,scpi-clocks";
+> +
+> +		scpi_dvfs: scpi_clocks@0 {
+> +			compatible = "arm,scpi-dvfs-clocks";
+> +			#clock-cells = <1>;
+> +			clock-indices = <0>, <1>, <2>;
+> +			clock-output-names = "atlclk", "aplclk","gpuclk";
+> +		};
+> +		scpi_clk: scpi_clocks@3 {
+> +			compatible = "arm,scpi-variable-clocks";
+> +			#clock-cells = <1>;
+> +			clock-indices = <3>, <4>;
+> +			clock-output-names = "pxlclk0", "pxlclk1";
+> +		};
+> +	};
+> +};
+> +
+> +cpu@0 {
+> +	...
+> +	reg = <0 0>;
+> +	clocks = <&scpi_dvfs 0>;
+> +};
+> +
+> +hdlcd@7ff60000 {
+> +	...
+> +	reg = <0 0x7ff60000 0 0x1000>;
+> +	clocks = <&scpi_clk 4>;
+> +};
+> +
+> +In the above example, the #clock-cells is set to 1 as required.
+> +scpi_dvfs has 3 output clocks namely: vbig, vlittle and vgpu with 0, 1
+> +and 2 as clock-indices. scpi_clk has 2 output clocks namely: pxlclk0 and
+> +pxlclk1 with 3 and 4 as clock-indices.
+> +
+> +The first consumer in the example is cpu@0 and it has '0' as the clock
+> +specifier which points to the first entry in the output clocks of
+> +scpi_dvfs i.e. "atlclk".
+> +
+> +Similarly the second example is hdlcd@7ff60000 and it has pxlclk1 as input
+> +clock. '4' in the clock specifier here points to the second entry
+> +in the output clocks of scpi_clocks  i.e. "pxlclk1"
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index a2264167791a..9351b62dbbd7 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -8955,6 +8955,12 @@ W:	http://www.sunplus.com
+>  S:	Supported
+>  F:	arch/score/
+>  
+> +SYSTEM CONTROL & POWER INTERFACE (SCPI) Message Protocol drivers
+> +M:	Sudeep Holla <sudeep.holla@arm.com>
+> +L:	linux-arm-kernel@lists.infradead.org
+> +S:	Maintained
+> +F:	Documentation/devicetree/bindings/arm/arm,scpi.txt
+> +
+>  SCSI CDROM DRIVER
+>  M:	Jens Axboe <axboe@kernel.dk>
+>  L:	linux-scsi@vger.kernel.org
+> -- 
+> 1.9.1
+> 
