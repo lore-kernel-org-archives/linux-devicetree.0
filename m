@@ -1,8 +1,8 @@
 From: Dong Aisheng <aisheng.dong@freescale.com>
 Subject: Re: [PATCH v3 5/6] mmc: sdhci-esdhc-imx: config watermark level
  and burst length
-Date: Fri, 31 Jul 2015 22:51:41 +0800
-Message-ID: <20150731145140.GE27806@shlinux1.ap.freescale.net>
+Date: Fri, 31 Jul 2015 22:55:17 +0800
+Message-ID: <20150731145516.GF27806@shlinux1.ap.freescale.net>
 References: <1438160637-28061-1-git-send-email-haibo.chen@freescale.com>
  <1438160637-28061-6-git-send-email-haibo.chen@freescale.com>
 Mime-Version: 1.0
@@ -30,6 +30,15 @@ On Wed, Jul 29, 2015 at 05:03:56PM +0800, Haibo Chen wrote:
 > no stop during the eMMC HS400 operation. For other imx usdhc, remain
 > the default value: burst length as 8, watermark level as 16.
 > 
+
+Add please change patch title a bit since this patch change is actually
+for mx7d:
+
+mmc: sdhci-esdhc-imx: change watermark level and burst length for imx7d
+
+Regards
+Dong Aisheng
+
 > Signed-off-by: Haibo Chen <haibo.chen@freescale.com>
 > ---
 >  drivers/mmc/host/sdhci-esdhc-imx.c | 11 ++++++++++-
@@ -47,9 +56,6 @@ On Wed, Jul 29, 2015 at 05:03:56PM +0800, Haibo Chen wrote:
 > +{
 > +	return data->socdata == &usdhc_imx7d_data;
 > +}
-
-Can we using flag to check instead of adding more is_imx_usdhc()?
-
 > +
 >  static inline int esdhc_is_usdhc(struct pltfm_imx_data *data)
 >  {
@@ -67,10 +73,6 @@ Can we using flag to check instead of adding more is_imx_usdhc()?
 >  		host->quirks2 |= SDHCI_QUIRK2_PRESET_VALUE_BROKEN;
 >  		host->mmc->caps |= MMC_CAP_1_8V_DDR;
 >  
-
-Regards
-Dong Aisheng
-
 > -- 
 > 1.9.1
 > 
