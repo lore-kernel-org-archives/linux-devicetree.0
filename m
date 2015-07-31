@@ -1,47 +1,42 @@
-From: Brian Norris <computersforpeace@gmail.com>
-Subject: Re: [RFC PATCH 4/5] ARM: dts: DRA7: Add memory map region entries
- for qspi
-Date: Fri, 31 Jul 2015 14:28:47 -0700
-Message-ID: <20150731212847.GH10676@google.com>
-References: <1438072876-16338-1-git-send-email-vigneshr@ti.com>
- <1438072876-16338-5-git-send-email-vigneshr@ti.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1438072876-16338-5-git-send-email-vigneshr@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Vignesh R <vigneshr@ti.com>
-Cc: Mark Brown <broonie@kernel.org>, David Woodhouse <dwmw2@infradead.org>, Tony Lindgren <tony@atomide.com>, Russell King <linux@arm.linux.org.uk>, Huang Shijie <b32955@freescale.com>, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org, linux-spi@vger.kernel.org
-List-Id: devicetree@vger.kernel.org
+Return-Path: <sergei.shtylyov@cogentembedded.com>
+Subject: Re: [PATCH] DT: mmc: sh_mmcif: fix "compatible" property text
+References: <201404250239.39150.sergei.shtylyov@cogentembedded.com>
+ <3979266.lQrOKbu0yo@wasted.cogentembedded.com>
+ <CANqRtoSVU77Q7hnoMJ2_VbqprJYxbvbbe5MHBReH_dVxyvGAQQ@mail.gmail.com>
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Message-ID: <55BB521D.5070207@cogentembedded.com>
+Date: Fri, 31 Jul 2015 13:46:53 +0300
+MIME-Version: 1.0
+In-Reply-To: <CANqRtoSVU77Q7hnoMJ2_VbqprJYxbvbbe5MHBReH_dVxyvGAQQ@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+To: Magnus Damm <magnus.damm@gmail.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, ulf.hansson@linaro.org, linux-mmc@vger.kernel.org, SH-Linux <linux-sh@vger.kernel.org>, Simon, Horms, horms@verge.net.au, Geert Uytterhoeven <geert+renesas@glider.be>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+List-ID: <devicetree@vger.kernel.org>
 
-On Tue, Jul 28, 2015 at 02:11:15PM +0530, Vignesh R wrote:
-> Add qspi memory mapped region entries for DRA7xx based SoCs.
-> 
-> Signed-off-by: Vignesh R <vigneshr@ti.com>
-> ---
->  arch/arm/boot/dts/am4372.dtsi | 4 +++-
->  1 file changed, 3 insertions(+), 1 deletion(-)
-> 
-> diff --git a/arch/arm/boot/dts/am4372.dtsi b/arch/arm/boot/dts/am4372.dtsi
-> index ade28c790f4b..5317a0f24ab9 100644
-> --- a/arch/arm/boot/dts/am4372.dtsi
-> +++ b/arch/arm/boot/dts/am4372.dtsi
-> @@ -902,7 +902,9 @@
->  
->  		qspi: qspi@47900000 {
->  			compatible = "ti,am4372-qspi";
-> -			reg = <0x47900000 0x100>;
-> +			reg = <0x47900000 0x100>,
-> +			      <0x30000000 0x3ffffff>;
+On 7/31/2015 5:23 AM, Magnus Damm wrote:
 
-Are you sure this region is 1 byte shy of 64MB in length? Same question
-for patch 5.
+>> The "compatible" property text contradicts even the example given in the MMCIF
+>> binding document itself; moreover, the Renesas MMCIF driver only  matches  on
+>> the generic "compatible" string, and doesn't look for at SoC specific strings
+>> currently at all. Thus describe "renesas,sh-mmcif" string as mandatory and the
+>> others as optional.
 
-> +			reg-names = "qspi_base", "qspi_mmap";
->  			#address-cells = <1>;
->  			#size-cells = <0>;
->  			ti,hwmods = "qspi";
-> -- 
-> 2.4.6
-> 
+>> Fixes: b4c27763d749 ("mmc: sh_mmcif: Document DT bindings")
+>> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+
+[...]
+
+> If anything is unclear please ask and feel free to discuss this DT
+> topic with Simon, Laurent, Geert and/or me.
+
+    BTW, I have raised this question back in February (!). Not much of a 
+discussion followed:
+
+http://marc.info/?l=linux-sh&m=142436538404802
+
+> Thanks,
+
+> / magnus
+
+MBR, Sergei
