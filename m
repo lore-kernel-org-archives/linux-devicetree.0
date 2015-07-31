@@ -1,126 +1,172 @@
-From: Gabriele Paoloni <gabriele.paoloni@huawei.com>
-Subject: RE: [PATCH v6] PCI: Store PCIe bus address in struct of_pci_range
-Date: Fri, 31 Jul 2015 14:25:09 +0000
-Message-ID: <EE11001F9E5DDD47B7634E2F8A612F2E01D70589@lhreml503-mbs>
-References: <1438010223-124422-1-git-send-email-gabriele.paoloni@huawei.com>
- <20150729172053.GE31170@google.com>
- <EE11001F9E5DDD47B7634E2F8A612F2E01D6F350@lhreml503-mbs>
- <CAL_JsqKs11-sXQTdBD+ZjbVYFWUHBARTW9q5MF1hCXUhZ+nWLQ@mail.gmail.com>
- <EE11001F9E5DDD47B7634E2F8A612F2E01D6F94A@lhreml503-mbs>
- <20150730161447.GG9640@google.com>
- <EE11001F9E5DDD47B7634E2F8A612F2E01D6FB3B@lhreml503-mbs>
- <20150730171445.GI9640@google.com>
- <EE11001F9E5DDD47B7634E2F8A612F2E01D6FC15@lhreml503-mbs>
- <CAL_Jsq+aQVakaZf4xo7sxnVyTmPR+HJ-9ByyS6OYJ0PHDYOwmg@mail.gmail.com>
+From: Ian Campbell <ian.campbell@citrix.com>
+Subject: [PATCH v3] dtb: Create a common home for cross-architecture dtsi files.
+Date: Fri, 31 Jul 2015 15:31:49 +0100
+Message-ID: <1438353109-373-1-git-send-email-ian.campbell@citrix.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <CAL_Jsq+aQVakaZf4xo7sxnVyTmPR+HJ-9ByyS6OYJ0PHDYOwmg@mail.gmail.com>
-Content-Language: en-US
-Sender: linux-pci-owner@vger.kernel.org
-To: Rob Herring <robherring2@gmail.com>
-Cc: Bjorn Helgaas <bhelgaas@google.com>, "arnd@arndb.de" <arnd@arndb.de>, "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>, "Wangzhou (B)" <wangzhou1@hisilicon.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "james.morse@arm.com" <james.morse@arm.com>, "Liviu.Dudau@arm.com" <Liviu.Dudau@arm.com>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Yuanzhichang <yuanzhichang@hisilicon.com>, Zhudacai <zhudacai@hisilicon.com>, zhangjukuo <zhangjukuo@huawei.com>, qiuzhenfa <qiuzhenfa@hisilicon.com>, "Liguozhu (Kenneth)" <liguozhu@hisilicon.com>, Jingoo Han <jingoohan1@gmail.com>, Pratyush Anand <pratyush.anand@gmail.com>, "kishon@ti.com" <kishon@ti.com>
+Content-Type: text/plain
+Return-path: <linux-kbuild-owner@vger.kernel.org>
+Sender: linux-kbuild-owner@vger.kernel.org
+To: devicetree@vger.kernel.org
+Cc: Ian Campbell <ian.campbell@citrix.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Kumar Gala <galak@codeaurora.org>, Liviu Dudau <liviu.dudau@arm.com>, Sudeep Holla <sudeep.holla@arm.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Russell King <linux@arm.linux.org.uk>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Kristina Martsenko <kristina.martsenko@arm.com>, Kevin Hilman <khilman@linaro.org>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kbuild@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-WytjYyBLaXNob25dDQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogbGlu
-dXgtcGNpLW93bmVyQHZnZXIua2VybmVsLm9yZyBbbWFpbHRvOmxpbnV4LXBjaS0NCj4gb3duZXJA
-dmdlci5rZXJuZWwub3JnXSBPbiBCZWhhbGYgT2YgUm9iIEhlcnJpbmcNCj4gU2VudDogVGh1cnNk
-YXksIEp1bHkgMzAsIDIwMTUgOTo0MiBQTQ0KPiBUbzogR2FicmllbGUgUGFvbG9uaQ0KPiBDYzog
-Qmpvcm4gSGVsZ2FhczsgYXJuZEBhcm5kYi5kZTsgbG9yZW56by5waWVyYWxpc2lAYXJtLmNvbTsg
-V2FuZ3pob3UNCj4gKEIpOyByb2JoK2R0QGtlcm5lbC5vcmc7IGphbWVzLm1vcnNlQGFybS5jb207
-IExpdml1LkR1ZGF1QGFybS5jb207DQo+IGxpbnV4LXBjaUB2Z2VyLmtlcm5lbC5vcmc7IGxpbnV4
-LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZzsNCj4gZGV2aWNldHJlZUB2Z2VyLmtlcm5l
-bC5vcmc7IFl1YW56aGljaGFuZzsgWmh1ZGFjYWk7IHpoYW5nanVrdW87DQo+IHFpdXpoZW5mYTsg
-TGlndW96aHUgKEtlbm5ldGgpOyBKaW5nb28gSGFuOyBQcmF0eXVzaCBBbmFuZA0KPiBTdWJqZWN0
-OiBSZTogW1BBVENIIHY2XSBQQ0k6IFN0b3JlIFBDSWUgYnVzIGFkZHJlc3MgaW4gc3RydWN0DQo+
-IG9mX3BjaV9yYW5nZQ0KPiANCj4gT24gVGh1LCBKdWwgMzAsIDIwMTUgYXQgMTI6MzQgUE0sIEdh
-YnJpZWxlIFBhb2xvbmkNCj4gPGdhYnJpZWxlLnBhb2xvbmlAaHVhd2VpLmNvbT4gd3JvdGU6DQo+
-ID4+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+ID4+IEZyb206IEJqb3JuIEhlbGdhYXMg
-W21haWx0bzpiaGVsZ2Fhc0Bnb29nbGUuY29tXQ0KPiA+PiBTZW50OiAzMCBKdWx5IDIwMTUgMTg6
-MTUNCj4gPj4gT24gVGh1LCBKdWwgMzAsIDIwMTUgYXQgMDQ6NTA6NTVQTSArMDAwMCwgR2Ficmll
-bGUgUGFvbG9uaSB3cm90ZToNCj4gPj4gPiA+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+
-ID4+ID4gPiBGcm9tOiBsaW51eC1wY2ktb3duZXJAdmdlci5rZXJuZWwub3JnIFttYWlsdG86bGlu
-dXgtcGNpLQ0KPiA+PiA+ID4gb3duZXJAdmdlci5rZXJuZWwub3JnXSBPbiBCZWhhbGYgT2YgQmpv
-cm4gSGVsZ2Fhcw0KPiA+PiA+ID4gU2VudDogVGh1cnNkYXksIEp1bHkgMzAsIDIwMTUgNToxNSBQ
-TQ0KPiA+PiA+ID4gT24gVGh1LCBKdWwgMzAsIDIwMTUgYXQgMDE6NTI6MTNQTSArMDAwMCwgR2Fi
-cmllbGUgUGFvbG9uaSB3cm90ZToNCj4gDQo+IFsuLi5dDQo+IA0KPiA+PiA+ID4gPiBJIGRvbuKA
-mXQgdGhpbmsgd2Ugc2hvdWxkIHJlbHkgb24gW0NQVV0gYWRkcmVzc2VzLi4ud2hhdCBpZiB0aGUN
-Cj4gPj4gPiA+IGludGVybWVkaWF0ZQ0KPiA+PiA+ID4gPiB0cmFuc2xhdGlvbiBsYXllciBjaGFu
-Z2VzIHRoZSBsb3dlciBzaWduaWZpY2FudCBiaXRzIG9mIHRoZQ0KPiAiYnVzDQo+ID4+ID4gPiBh
-ZGRyZXNzIg0KPiA+PiA+ID4gPiB0byB0cmFuc2xhdGUgaW50byBhIGNwdSBhZGRyZXNzPw0KPiA+
-PiA+ID4NCj4gPj4gPiA+IElzIGl0IHJlYWxseSBhIHBvc3NpYmxpdHkgdGhhdCB0aGUgbG93ZXIg
-Yml0cyBjb3VsZCBiZSBjaGFuZ2VkPw0KPiA+PiA+DQo+ID4+ID4gSSd2ZSBjaGVja2VkIGFsbCB0
-aGUgY3VycmVudCBkZWlnbndhcmUgdXNlcnMgRFRzIGV4Y2VwdCAicGNpLQ0KPiA+PiBsYXllcnNj
-YXBlIg0KPiA+PiA+IHRoYXQgSSBjb3VsZCBub3QgZmluZDoNCj4gPj4gPiBzcGVhcjEzMTAuZHRz
-aQ0KPiA+PiA+IHNwZWFyMTM0MC5kdHNpDQo+ID4+ID4gZHJhNy5kdHNpDQo+ID4+ID4gaW14NnFk
-bC5kdHNpDQo+ID4+ID4gaW14NnN4LmR0c2kNCj4gPj4gPiBrZXlzdG9uZS5kdHNpDQo+ID4+ID4g
-ZXh5bm9zNTQ0MC5kdHNpDQo+ID4+ID4NCj4gPj4gPiBOb25lIG9mIHRoZW0gbW9kaWZpZXMgdGhl
-IGxvd2VyIGJpdHMuIFRvIGJlIG1vcmUgcHJlY2lzZSB0aGUgb25seQ0KPiBndXkNCj4gPj4gPiB0
-aGF0IHByb3ZpZGVzIGFub3RoZXIgdHJhbnNsYXRpb24gbGF5ZXIgaXMgImRyYTcuZHRzaSI6DQo+
-ID4+ID4gYXhpMA0KPiA+PiA+IGh0dHA6Ly9seHIuZnJlZS0NCj4gZWxlY3Ryb25zLmNvbS9zb3Vy
-Y2UvYXJjaC9hcm0vYm9vdC9kdHMvZHJhNy5kdHNpI0wyMDcNCj4gPj4gPg0KPiA+PiA+IGF4aTEN
-Cj4gPj4gPiBodHRwOi8vbHhyLmZyZWUtDQo+IGVsZWN0cm9ucy5jb20vc291cmNlL2FyY2gvYXJt
-L2Jvb3QvZHRzL2RyYTcuZHRzaSNMMjQxDQo+ID4+ID4NCj4gPj4gPiBGb3IgdGhpcyBjYXNlIG1h
-c2tpbmcgdGhlIHRvcCA0Yml0cyAoYml0czI4IHRvIDMxKSBzaG91bGQgbWFrZSB0aGUNCj4gam9i
-Lg0KPiANCj4gSU1PLCB3ZSBzaG91bGQganVzdCBmaXggdGhpcyBjYXNlLiBBZnRlciBmdXJ0aGVy
-IHN0dWR5LCBJIGRvbid0IHRoaW5rDQo+IHRoaXMgaXMgYSBEVyBpc3N1ZSwgYnV0IHJhdGhlciBh
-biBTT0MgaW50ZWdyYXRpb24gaXNzdWUuDQo+IA0KPiBJIGJlbGlldmUgeW91IGNhbiBqdXN0IGZp
-eHVwIHRoZSBhZGRyZXNzIGluIHRoZSBwcC0+b3BzLT5ob3N0X2luaXQgaG9vay4NCj4gDQoNClll
-cyBJIGd1ZXNzIHRoYXQgSSBjb3VsZCBqdXN0IGFzc2lnbiBwcC0+KCopX21vZF9iYXNlIHRvIHRo
-ZSBDUFUgYWRkcmVzcyANCmluIERXIGFuZCBtYXNrIGl0IG91dCBpbiBkcmE3eHhfcGNpZV9ob3N0
-X2luaXQoKS4uLg0KDQpLaXNob24sIHdvdWxkIHlvdSBiZSBvayB3aXRoIHRoYXQ/IA0KDQoNCj4g
-SW4gbG9va2luZyBhdCB0aGlzLCBJJ20gY3VyaW91cyB3aHkgb25seSAyIEFUVSB2aWV3cG9ydHMg
-YXJlIHVzZWQgYnkNCj4gZGVmYXVsdCBhcyB0aGlzIGNhdXNlcyBzd2l0Y2hpbmcgb24gY29uZmln
-IGFjY2Vzc2VzLiBQcm9iYWJseSBzb21lDQo+IGNvbmZpZ3VyYXRpb24gb25seSBoYXMgMiB2aWV3
-cG9ydHMuIFRoaXMgd291bGQgbm90IGV2ZW4gd29yayBvbiBTTVANCj4gc3lzdGVtcyEgTWVtb3J5
-IGFuZCBpL28gYWNjZXNzZXMgZG8gbm90IGhhdmUgYW55IGxvY2suIEEgY29uZmlnIGFjY2Vzcw0K
-PiBvbiBvbmUgY29yZSB3aWxsIHRlbXBvcmFyaWx5IGRpc2FibGUgdGhlIGkvbyBvciBtZW1vcnkg
-dmlld3BvcnQgd2hpY2gNCj4gd2lsbCBjYXVzZSBhbiBhYm9ydCwgZHJvcHBlZCwgb3IgZ2FyYmFn
-ZSBkYXRhIG9uIGFuIGkvbyBvciBtZW1vcnkNCj4gYWNjZXNzIGZyb20gYW5vdGhlciBjb3JlLiBZ
-b3Ugd291bGQgaGF2ZSB0byBiZSBhY2Nlc3NpbmcgY2ZnIHNwYWNlIG9uDQo+IGEgYnVzIG90aGVy
-IHRoYW4gdGhlIHJvb3QgYnVzLCBzbyBtYXliZSBubyBvbmUgaXMgZG9pbmcgdGhhdC4NCj4gDQo+
-ID4+ID4NCj4gPj4gPiBTcGVha2luZyBpbiBnZW5lcmFsIHRlcm1zIHNvIGZhciBJJ3ZlIGFsd2F5
-cyBzZWVuIGxpbmVhciBtYXBwaW5ncw0KPiA+PiA+IHRoYXQgZGlmZmVyIGJ5IGJpdG1hc2sgb2Zm
-c2V0LCBob3dldmVyIGxpbmVhciBkb2VzIG5vdCBtZWFuIHRoYXQNCj4geW91DQo+ID4+ID4gY2Fu
-bm90IGFmZmVjdCB0aGUgbG93ZXIgYml0czogZS5nLiA8MHgwPiB0byA8MHgwICsgc2l6ZT4gY2Fu
-IG1hcA0KPiB0bw0KPiA+PiA+IDwweDAwMDBjYWZlIHRvIDB4MDAwMGNhZmUgKyBzaXplPiwgYnV0
-IEkgZ3Vlc3MgdGhhdCBmb3IgSFcgZGVzaWduDQo+ID4+IHJlYXNvbnMNCj4gPj4gPiBpdCBpcyBt
-dWNoIGVhc2llciB0byByZW1hcCBkaXJlY3RseSB1c2luZyBhIGJpdG1hc2suLi5idXQgSSB3YXMN
-Cj4gbm90DQo+ID4+IHN1cmUNCj4gPj4gPiBhbmQgSSBkaWRuJ3QgdGhpbmsgYWJvdXQgdGhlIHBy
-b2JsZW1zIHRoYXQgY2FuIGFyaXNlIHdpdGggQUNQSS4NCj4gDQo+IEZvciBoaWdoZXIgc3BlZWQg
-YnVzZXMsIHRoZSBoL3cgZGVzaWducyBhcmUgbm90IGdvaW5nIHRvIGJlIGRvaW5nDQo+IGNvbXBs
-aWNhdGVkIHRyYW5zbGF0aW9ucyBpbiBvcmRlciB0byBtZWV0IHRpbWluZyByZXF1aXJlbWVudHMu
-IEF0IHRoZQ0KPiB0b3AgbGV2ZWwgb25seSB0aGUgaGlnaGVzdCBvcmRlciBiaXRzIGFyZSBnb2lu
-ZyB0byBiZSBsb29rZWQgYXQuIEZvcg0KPiBkb3duc3RyZWFtIHNlZ21lbnRzLCB0aGUgaGlnaCBv
-cmRlciBiaXRzIG1heSBnZXQgZHJvcHBlZCB0byBzaW1wbGlmeQ0KPiByb3V0aW5nLiBJZiBhbiBJ
-UCBibG9jayBoYXMgZnVsbCBhZGRyZXNzIGJpdHMgaW4gdGhpcyBjYXNlLCB0aGV5IGNvdWxkDQo+
-IGVpdGhlciBiZSB0aWVkIHRvIDAgb3IgdGllZCBvZmYgdG8gdGhlIGNvcnJlY3QgYWRkcmVzcy4g
-RWl0aGVyIGlzDQo+IHJlYXNvbmFibGUsIHNvIEknbSBzdXJlIHRoZXJlIGlzIGgvdyBkb2luZyBi
-b3RoLiBUaGF0IGRvZXNuJ3QgbWVhbiBoL3cNCj4gZGVzaWduZXJzIGhhdmVuJ3QgZG9uZSBzb21l
-dGhpbmcgY3JhenksIHRvby4NCj4gDQo+ID4+IEFzIEkgc2FpZCwgaXQgd291bGRuJ3QgbWFrZSBz
-ZW5zZSBmb3IgdGhlIGJpdHMgdGhhdCBjb21wcmlzZSB0aGUNCj4gPj4gb2Zmc2V0IGludG8gdGhl
-IHdpbmRvdyB0byBjaGFuZ2UsIHNvIHRoZSBtYXBwaW5nIG9ubHkgaGFzIHRvIGJlDQo+IGxpbmVh
-cg0KPiA+PiBpbnNpZGUgdGhlIHdpbmRvdy4NCj4gPj4NCj4gPj4gRm9yIHRoZSBiaXRzIG91dHNp
-ZGUgdGhlIHdpbmRvdyBvZmZzZXQsIEkgZG9uJ3Qga25vdyBlbm91Z2ggdG8gc2F5DQo+ID4+IHdo
-ZXRoZXIgbWFza2luZyBpcyBzdWZmaWNpZW50IG9yIHNhZmUuDQo+ID4+DQo+ID4+ID4gSWYgeW91
-IHRoaW5rIHRoZSBiaXRtYXNrIGlzIE9rIHRoZW4gSSBjYW4gZGlyZWN0bHkgZGVmaW5lIGl0IGlu
-DQo+ID4+ID4gZGVzaWdud2FyZSBhbmQgd2UgY2FuIGRyb3AgdGhpcyBwYXRjaC4NCj4gPj4NCj4g
-Pj4gSXQncyBPSyBieSBtZSwgYnV0IEkga25vdyBub3RoaW5nIGFib3V0IHRoZSBhY3R1YWwgaGFy
-ZHdhcmUgaW52b2x2ZWQuDQo+ID4+IEZvciB0aGUgRGVzaWduV2FyZSBxdWVzdGlvbiwgSSB0aGlu
-ayB5b3Ugd291bGQganVzdCBoYXZlIHRvIGNvbnZpbmNlDQo+ID4+IEppbmdvbyBhbmQgUHJhdHl1
-c2ggKGNjJ2QpLg0KPiA+DQo+ID4gWWVzIGFjdHVhbGx5IGxvb2tpbmcgYXQNCj4gPiBodHRwOi8v
-bHhyLmZyZWUtDQo+IGVsZWN0cm9ucy5jb20vc291cmNlL2FyY2gvYXJtL2Jvb3QvZHRzL3NwZWFy
-MTMxMC5kdHNpI0w5OQ0KPiA+IEkgY2FuIHNlZSB0aGF0IHBjaV9hZGRyPTAgaXMgbWFwcGVkIHRv
-IGJ1c19hZGRyIDB4ODAwMjAwMDAsIHNvDQo+IGNsZWFyaW5nDQo+ID4gdGhlIHRvcCA0IGJpdHMg
-d291bGQgYWx0ZXIgdGhlIGJlaGF2aW91ciBvZiB0aGUgY3VycmVudCBkZXNpZ253YXJlDQo+ID4g
-U1cgZnJhbWV3b3JrLi4ubm93IEkgZG9uJ3Qga25vdyBpZiBEVyBuZWVkcyBvbmx5IHRoZSBsb3cg
-MjhiIG9mIHRoYXQNCj4gPiB2YWx1ZSBvciBub3QuLi4uDQo+IA0KPiBHaXZlbiB0aGF0IG1vc3Qg
-Y2FzZXMgaGF2ZSBzYW1lIGNwdSBhbmQgYnVzIGFkZHJlc3MsIG1hc2tpbmcgaXMgbm90DQo+IHRo
-ZSByaWdodCBzb2x1dGlvbiBpbiBnZW5lcmFsLg0KPiANCj4gVGhlcmUgaXMgYWxzbyBhIGJ1ZyBo
-ZXJlIEJUVy4gcGNpZTAgYW5kIHBjaWUyIGhhdmUgdGhlIHNhbWUgQ1BVDQo+IGFkZHJlc3MgZm9y
-IHRoZSBtZW1vcnkgcmFuZ2UuDQo+IA0KPiBSb2INCj4gLS0NCj4gVG8gdW5zdWJzY3JpYmUgZnJv
-bSB0aGlzIGxpc3Q6IHNlbmQgdGhlIGxpbmUgInVuc3Vic2NyaWJlIGxpbnV4LXBjaSIgaW4NCj4g
-dGhlIGJvZHkgb2YgYSBtZXNzYWdlIHRvIG1ham9yZG9tb0B2Z2VyLmtlcm5lbC5vcmcNCj4gTW9y
-ZSBtYWpvcmRvbW8gaW5mbyBhdCAgaHR0cDovL3ZnZXIua2VybmVsLm9yZy9tYWpvcmRvbW8taW5m
-by5odG1sDQo=
+Commit 9ccd608070b6 "arm64: dts: add device tree for ARM SMM-A53x2 on
+LogicTile Express 20MG" added a new dts file to arch/arm64 which
+included "../../../../arm/boot/dts/vexpress-v2m-rs1.dtsi", i.e. a
+.dtsi supplied by arch/arm.
+
+Unfortunately this causes some issues for the split device tree
+repository[0], since things get moved around there. In that context
+the new .dts ends up at src/arm64/arm/vexpress-v2f-1xv7-ca53x2.dts
+while the include is at src/arm/vexpress-v2m-rs1.dtsi.
+
+The sharing of the .dtsi is legitimate since the baseboard is the same
+for various vexpress systems whatever processor they use.
+
+Rather than using ../../ tricks to pickup .dtsi files from another
+arch this patch creates a new directory include/dt-dtsi as a
+home for such cross-arch .dtsi files, arranges for it to be in the
+include path when the .dts files are processed by cpp and switches the
+.dts files to use cpp #include instead of /include/. The dtsi file
+itself is moved into a vendor subdir in this case "arm" (the vendor,
+not the ARCH=).
+
+[0] https://git.kernel.org/cgit/linux/kernel/git/devicetree/devicetree-rebasing.git/
+
+Signed-off-by: Ian Campbell <ian.campbell@citrix.com>
+Cc: Rob Herring <robh+dt@kernel.org>
+Cc: Pawel Moll <pawel.moll@arm.com>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: Kumar Gala <galak@codeaurora.org>
+Cc: Liviu Dudau <liviu.dudau@arm.com>
+Cc: Sudeep Holla <sudeep.holla@arm.com>
+Cc: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Cc: Russell King <linux@arm.linux.org.uk>
+Cc: Catalin Marinas <catalin.marinas@arm.com>
+Cc: Will Deacon <will.deacon@arm.com>
+Cc: Kristina Martsenko <kristina.martsenko@arm.com>
+Cc: Kevin Hilman <khilman@linaro.org>
+Cc: devicetree@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+Cc: linux-arm-kernel@lists.infradead.org
+Cc: linux-kbuild@vger.kernel.org
+---
+v2: Move to include/dt-dtsi and introduce a per-vendor subdirectory.
+
+v3: Move to kernel/dts.
+    Include new directory in DTC include path as well as cpp path, and
+    therefore switch back to /include/.
+    Update MAINTAINERS
+---
+ Documentation/devicetree/bindings/arm/vexpress.txt          | 2 +-
+ MAINTAINERS                                                 | 1 +
+ arch/arm/boot/dts/vexpress-v2p-ca15-tc1.dts                 | 2 +-
+ arch/arm/boot/dts/vexpress-v2p-ca15_a7.dts                  | 2 +-
+ arch/arm/boot/dts/vexpress-v2p-ca5s.dts                     | 2 +-
+ arch/arm64/boot/dts/arm/vexpress-v2f-1xv7-ca53x2.dts        | 2 +-
+ {arch/arm/boot/dts => kernel/dts/arm}/vexpress-v2m-rs1.dtsi | 0
+ scripts/Makefile.lib                                        | 3 ++-
+ 8 files changed, 8 insertions(+), 6 deletions(-)
+ rename {arch/arm/boot/dts => kernel/dts/arm}/vexpress-v2m-rs1.dtsi (100%)
+
+diff --git a/Documentation/devicetree/bindings/arm/vexpress.txt b/Documentation/devicetree/bindings/arm/vexpress.txt
+index 39844cd..b6031d9 100644
+--- a/Documentation/devicetree/bindings/arm/vexpress.txt
++++ b/Documentation/devicetree/bindings/arm/vexpress.txt
+@@ -223,7 +223,7 @@ Example of a VE tile description (simplified)
+ 		/* Active high IRQ 0 is connected to GIC's SPI0 */
+ 		interrupt-map = <0 0 0 &gic 0 0 4>;
+ 
+-		/include/ "vexpress-v2m-rs1.dtsi"
++		/include/ "arm/vexpress-v2m-rs1.dtsi"
+ 	};
+ };
+ 
+diff --git a/MAINTAINERS b/MAINTAINERS
+index a226416..1941078 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -7537,6 +7537,7 @@ S:	Maintained
+ F:	Documentation/devicetree/
+ F:	arch/*/boot/dts/
+ F:	include/dt-bindings/
++F:	kernel/dts/
+ 
+ OPEN FIRMWARE AND DEVICE TREE OVERLAYS
+ M:	Pantelis Antoniou <pantelis.antoniou@konsulko.com>
+diff --git a/arch/arm/boot/dts/vexpress-v2p-ca15-tc1.dts b/arch/arm/boot/dts/vexpress-v2p-ca15-tc1.dts
+index 9420053..b144092 100644
+--- a/arch/arm/boot/dts/vexpress-v2p-ca15-tc1.dts
++++ b/arch/arm/boot/dts/vexpress-v2p-ca15-tc1.dts
+@@ -278,6 +278,6 @@
+ 				<0 0 41 &gic 0 41 4>,
+ 				<0 0 42 &gic 0 42 4>;
+ 
+-		/include/ "vexpress-v2m-rs1.dtsi"
++		/include/ "arm/vexpress-v2m-rs1.dtsi"
+ 	};
+ };
+diff --git a/arch/arm/boot/dts/vexpress-v2p-ca15_a7.dts b/arch/arm/boot/dts/vexpress-v2p-ca15_a7.dts
+index 17f63f7..350f402 100644
+--- a/arch/arm/boot/dts/vexpress-v2p-ca15_a7.dts
++++ b/arch/arm/boot/dts/vexpress-v2p-ca15_a7.dts
+@@ -636,6 +636,6 @@
+ 				<0 0 41 &gic 0 41 4>,
+ 				<0 0 42 &gic 0 42 4>;
+ 
+-		/include/ "vexpress-v2m-rs1.dtsi"
++		/include/ "arm/vexpress-v2m-rs1.dtsi"
+ 	};
+ };
+diff --git a/arch/arm/boot/dts/vexpress-v2p-ca5s.dts b/arch/arm/boot/dts/vexpress-v2p-ca5s.dts
+index d2709b7..585ced0 100644
+--- a/arch/arm/boot/dts/vexpress-v2p-ca5s.dts
++++ b/arch/arm/boot/dts/vexpress-v2p-ca5s.dts
+@@ -248,6 +248,6 @@
+ 				<0 0 41 &gic 0 41 4>,
+ 				<0 0 42 &gic 0 42 4>;
+ 
+-		/include/ "vexpress-v2m-rs1.dtsi"
++		/include/ "arm/vexpress-v2m-rs1.dtsi"
+ 	};
+ };
+diff --git a/arch/arm64/boot/dts/arm/vexpress-v2f-1xv7-ca53x2.dts b/arch/arm64/boot/dts/arm/vexpress-v2f-1xv7-ca53x2.dts
+index 5b1d018..c044804 100644
+--- a/arch/arm64/boot/dts/arm/vexpress-v2f-1xv7-ca53x2.dts
++++ b/arch/arm64/boot/dts/arm/vexpress-v2f-1xv7-ca53x2.dts
+@@ -186,6 +186,6 @@
+ 				<0 0 41 &gic GIC_SPI 41 IRQ_TYPE_LEVEL_HIGH>,
+ 				<0 0 42 &gic GIC_SPI 42 IRQ_TYPE_LEVEL_HIGH>;
+ 
+-		/include/ "../../../../arm/boot/dts/vexpress-v2m-rs1.dtsi"
++		/include/ "arm/vexpress-v2m-rs1.dtsi"
+ 	};
+ };
+diff --git a/arch/arm/boot/dts/vexpress-v2m-rs1.dtsi b/kernel/dts/arm/vexpress-v2m-rs1.dtsi
+similarity index 100%
+rename from arch/arm/boot/dts/vexpress-v2m-rs1.dtsi
+rename to kernel/dts/arm/vexpress-v2m-rs1.dtsi
+diff --git a/scripts/Makefile.lib b/scripts/Makefile.lib
+index 79e8661..b4d9fb6 100644
+--- a/scripts/Makefile.lib
++++ b/scripts/Makefile.lib
+@@ -163,6 +163,7 @@ dtc_cpp_flags  = -Wp,-MD,$(depfile).pre.tmp -nostdinc                    \
+ 		 -I$(srctree)/arch/$(SRCARCH)/boot/dts                   \
+ 		 -I$(srctree)/arch/$(SRCARCH)/boot/dts/include           \
+ 		 -I$(srctree)/drivers/of/testcase-data                   \
++		 -I$(srctree)/kernel/dts                                 \
+ 		 -undef -D__DTS__
+ 
+ # Finds the multi-part object the current object will be linked into
+@@ -285,7 +286,7 @@ quiet_cmd_dtc = DTC     $@
+ cmd_dtc = mkdir -p $(dir ${dtc-tmp}) ; \
+ 	$(CPP) $(dtc_cpp_flags) -x assembler-with-cpp -o $(dtc-tmp) $< ; \
+ 	$(objtree)/scripts/dtc/dtc -O dtb -o $@ -b 0 \
+-		-i $(dir $<) $(DTC_FLAGS) \
++		-i $(dir $<) -i $(srctree)/kernel/dts $(DTC_FLAGS) \
+ 		-d $(depfile).dtc.tmp $(dtc-tmp) ; \
+ 	cat $(depfile).pre.tmp $(depfile).dtc.tmp > $(depfile)
+ 
+-- 
+2.1.4
+
