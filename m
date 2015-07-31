@@ -1,13 +1,11 @@
 From: Ley Foon Tan <lftan@altera.com>
-Subject: [PATCH v2 1/5] arm: add msi.h to Kbuild
-Date: Fri, 31 Jul 2015 18:15:11 +0800
-Message-ID: <1438337715-22594-2-git-send-email-lftan@altera.com>
-References: <1438337715-22594-1-git-send-email-lftan@altera.com>
+Subject: [PATCH v2 0/5] Altera PCIe host controller driver with MSI support
+Date: Fri, 31 Jul 2015 18:15:10 +0800
+Message-ID: <1438337715-22594-1-git-send-email-lftan@altera.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1438337715-22594-1-git-send-email-lftan@altera.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -21,27 +19,55 @@ To: Bjorn Helgaas <bhelgaas@google.com>, Russell King <linux@arm.linux.org.uk>, 
 Cc: devicetree@vger.kernel.org, lftan.linux@gmail.com, linux-doc@vger.kernel.org, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Ley Foon Tan <lftan@altera.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Include asm-generic/msi.h to support CONFIG_GENERIC_MSI_IRQ_DOMAIN.
-This to fix compilation error:
-"include/linux/msi.h:123:21: fatal error: asm/msi.h:
-No such file or directory"
+This is the 2nd version of patch set to add support for Altera PCIe host
+controller with MSI feature on Altera FPGA device families. This patchset
+have resolved all comments in v1. Thanks everyone for reviewing.
 
-Signed-off-by: Ley Foon Tan <lftan@altera.com>
----
- arch/arm/include/asm/Kbuild | 1 +
- 1 file changed, 1 insertion(+)
+It is based on patch series from Marc Zyngier "Per-device MSI domain &
+platform MSI" [1] to get rid of struct msi_controller.
 
-diff --git a/arch/arm/include/asm/Kbuild b/arch/arm/include/asm/Kbuild
-index 83c5019..ddc2761 100644
---- a/arch/arm/include/asm/Kbuild
-+++ b/arch/arm/include/asm/Kbuild
-@@ -14,6 +14,7 @@ generic-y += local.h
- generic-y += local64.h
- generic-y += mcs_spinlock.h
- generic-y += msgbuf.h
-+generic-y += msi.h
- generic-y += param.h
- generic-y += parport.h
- generic-y += poll.h
+[1]: https://lkml.org/lkml/2015/7/23/172
+
+v1->v2 changes:
+- arm: socfpga: remove ununsed ARCH_SUPPORTS_MSI and PCI from Kconfig
+- pci: host: remove depends on OF from Kconfig
+- pci: host: remove depends PCIE_ALTERA from Kconfig
+- pci: host: change pcie-altera to tristate in Kconfig
+- pcie-altera: remove unnecessary newlines and .owner
+- pcie-altera: remove altera_pcie_map_irq
+- pcie-altera: remove dependency on hw_pci and use pci_scan_root_bus
+- pcie-altera-msi: change to use phys_addr_t
+- pcie-altera-msi: change to use irq_set_chained_handler
+- pcie-altera-msi: add inner_domain
+- pcie-altera-msi: add add MSI_FLAG_PCI_MSIX flag
+- pcie-altera-msi: return -EINVAL for altera_msi_set_affinity
+- pcie-altera-msi: return PTR_ERR() instead of -EADDRNOTAVAIL
+- change to use write_relaxed and read_relaxed
+
+History:
+-------
+[v1]: https://lkml.org/lkml/2015/7/28/395
+
+Ley Foon Tan (5):
+  arm: add msi.h to Kbuild
+  pci:host: Add Altera PCIe host controller driver
+  pci: altera: Add Altera PCIe MSI driver
+  Documentation: dt-bindings: pci: altera pcie device tree binding
+  MAINTAINERS: Add Altera PCIe and MSI drivers maintainer
+
+ .../devicetree/bindings/pci/altera-pcie-msi.txt    |  27 ++
+ .../devicetree/bindings/pci/altera-pcie.txt        |  49 ++
+ MAINTAINERS                                        |  16 +
+ arch/arm/include/asm/Kbuild                        |   1 +
+ drivers/pci/host/Kconfig                           |  15 +
+ drivers/pci/host/Makefile                          |   2 +
+ drivers/pci/host/pcie-altera-msi.c                 | 324 +++++++++++++
+ drivers/pci/host/pcie-altera.c                     | 526 +++++++++++++++++++++
+ 8 files changed, 960 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/pci/altera-pcie-msi.txt
+ create mode 100644 Documentation/devicetree/bindings/pci/altera-pcie.txt
+ create mode 100644 drivers/pci/host/pcie-altera-msi.c
+ create mode 100644 drivers/pci/host/pcie-altera.c
+
 -- 
 1.8.2.1
