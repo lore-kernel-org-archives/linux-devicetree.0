@@ -1,238 +1,165 @@
-From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH v5 1/8] Documentation: add DT binding for ARM System
- Control and Power Interface(SCPI) protocol
-Date: Fri, 31 Jul 2015 17:00:27 +0100
-Message-ID: <20150731160027.GG25118@leverpostej>
-References: <1437649828-14540-1-git-send-email-sudeep.holla@arm.com>
- <1437649828-14540-2-git-send-email-sudeep.holla@arm.com>
+From: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v2 5/5] mtd: ofpart: move ofpart partitions to a
+ dedicated dt node
+Date: Fri, 31 Jul 2015 18:06:14 +0200
+Message-ID: <20150731180614.162852ee@bbrezillon>
+References: <cover.1438340815.git.hramrach@gmail.com>
+	<4982216b5cb602c71ade6810cecdb9535e0862fc.1438340815.git.hramrach@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1437649828-14540-2-git-send-email-sudeep.holla@arm.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Sudeep Holla <sudeep.holla@arm.com>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Liviu Dudau <Liviu.Dudau@arm.com>, Punit Agrawal <Punit.Agrawal@arm.com>, "Jon Medhurst (Tixy)" <tixy@linaro.org>, Lorenzo Pieralisi <Lorenzo.Pieralisi@arm.com>, Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>, Kevin Hilman <khilman@kernel.org>, Rob Herring <robh+dt@kernel.org>, Jassi Brar <jassisinghbrar@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <4982216b5cb602c71ade6810cecdb9535e0862fc.1438340815.git.hramrach-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Michal Suchanek <hramrach-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Hi Michal,
 
-On Thu, Jul 23, 2015 at 12:10:21PM +0100, Sudeep Holla wrote:
-> This patch adds devicetree binding for System Control and Power
-> Interface (SCPI) Message Protocol used between the Application Cores(AP)
-> and the System Control Processor(SCP). The MHU peripheral provides a
-> mechanism for inter-processor communication between SCP's M3 processor
-> and AP.
+On Thu, 30 Jul 2015 12:10:42 +0200
+Michal Suchanek <hramrach-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+
+> Parsing direct subnodes of a mtd device as partitions is unreliable
+> since the mtd device is also part of its bus subsystem and can contain
+> bus data in subnodes.
 > 
-> SCP offers control and management of the core/cluster power states,
-> various power domain DVFS including the core/cluster, certain system
-> clocks configuration, thermal sensors and many others.
+> Move ofpart data to a subnode of its own so it is clear which data is
+> part of the partition layout.
 > 
-> Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
-> Cc: Rob Herring <robh+dt@kernel.org>
-> Cc: Mark Rutland <mark.rutland@arm.com>
-> CC: Jassi Brar <jassisinghbrar@gmail.com>
-> Cc: Liviu Dudau <Liviu.Dudau@arm.com>
-> Cc: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-> Cc: Jon Medhurst (Tixy) <tixy@linaro.org>
-> Cc: devicetree@vger.kernel.org
+> Signed-off-by: Michal Suchanek <hramrach-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 > ---
->  Documentation/devicetree/bindings/arm/arm,scpi.txt | 151 +++++++++++++++++++++
->  MAINTAINERS                                        |   6 +
->  2 files changed, 157 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/arm/arm,scpi.txt
+>  drivers/mtd/ofpart.c | 56 +++++++++++++++++++++++++++++++++++++---------------
+>  1 file changed, 40 insertions(+), 16 deletions(-)
 > 
-> diff --git a/Documentation/devicetree/bindings/arm/arm,scpi.txt b/Documentation/devicetree/bindings/arm/arm,scpi.txt
-> new file mode 100644
-> index 000000000000..e21cce646561
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/arm/arm,scpi.txt
-> @@ -0,0 +1,151 @@
-> +System Control and Power Interface (SCPI) Message Protocol
-> +----------------------------------------------------------
-> +
-> +Firmware implementing the SCPI described in ARM document number ARM DUI 0922B
-> +("ARM Compute Subsystem SCP: Message Interface Protocols")[0] can be used
-> +by Linux to initiate various system control and power operations.
-> +
-> +Required properties:
-> +
-> +- compatible : should be "arm,scpi"
-> +- mboxes: List of phandle and mailbox channel specifiers
-> +	  All the channels reserved by remote SCP firmware for use by
-> +	  SCPI message protocol should be specified in any order
-> +- shmem : List of phandle pointing to the shared memory(SHM) area between the
-> +	  processors using these mailboxes for IPC, one for each mailbox
-> +	  SHM can be any memory reserved for the purpose of this communication
-> +	  between the processors.
-> +
-> +See Documentation/devicetree/bindings/mailbox/mailbox.txt
-> +for more details about the generic mailbox controller and
-> +client driver bindings.
-> +
-> +Clock bindings for the clocks based on SCPI Message Protocol
-> +------------------------------------------------------------
-> +
-> +This binding uses the common clock binding[1].
-> +
-> +Container Node
-> +==============
-> +Required properties:
-> +- compatible : should be "arm,scpi-clocks"
-> +	       All the clocks provided by SCP firmware via SCPI message
-> +	       protocol much be listed as sub-nodes under this node.
-> +
-> +Sub-nodes
-> +=========
-> +Required properties:
-> +- compatible : shall include one of the following
-> +	"arm,scpi-dvfs-clocks" - all the clocks that are variable and index based.
-> +		These clocks don't provide an entire range of values between the
-> +		limits but only discrete points within the range. The firmware
-> +		provides the mapping for each such operating frequency and the
-> +		index associated with it. The firmware also manages the
-> +		voltage scaling appropriately with the clock scaling.
-> +	"arm,scpi-variable-clocks" - all the clocks that are variable and provide full
-> +		range within the specified range. The firmware provides the
-> +		range of values within a specified range.
-> +
-> +Other required properties for all clocks(all from common clock binding):
-> +- #clock-cells : should be set to 1 as each of the SCPI clocks have multiple
-> +	outputs.
-
-Could you change this to:
-
-#clock-cells: Should be 1. Contains the Clock ID value used by SCPI
-              commands.
-
-That will make it clear what value should be used when writing a dts
-(the raw value commands use, as opposed to some logical abstraction
-thereof).
-
-With that:
-
-Acked-by: Mark Rutland <mark.rutland@arm.com>
-
-Thanks,
-Mark.
-
-> +- clock-output-names : shall be the corresponding names of the outputs.
-> +- clock-indices: The identifying number for the clocks(i.e.clock_id) in the
-> +	node. It can be non linear and hence provide the mapping of identifiers
-> +	into the clock-output-names array.
-> +
-> +SRAM and Shared Memory for SCPI
-> +-------------------------------
-> +
-> +A small area of SRAM is reserved for SCPI communication between application
-> +processors and SCP.
-> +
-> +Required properties:
-> +- compatible : should be "arm,juno-sram-ns" for Non-secure SRAM on Juno
-> +
-> +The rest of the properties should follow the generic mmio-sram description
-> +found in ../../misc/sysram.txt
-> +
-> +Each sub-node represents the reserved area for SCPI.
-> +
-> +Required sub-node properties:
-> +- reg : The base offset and size of the reserved area with the SRAM
-> +- compatible : should be "arm,juno-scp-shmem" for Non-secure SRAM based
-> +	       shared memory on Juno platforms
-> +
-> +[0] http://community.arm.com/servlet/JiveServlet/download/8401-45-18326/DUI0922B_scp_message_interface.pdf
-> +[1] Documentation/devicetree/bindings/clock/clock-bindings.txt
-> +
-> +Example:
-> +
-> +sram: sram@50000000 {
-> +	compatible = "arm,juno-sram-ns", "mmio-sram";
-> +	reg = <0x0 0x50000000 0x0 0x10000>;
-> +
-> +	#address-cells = <1>;
-> +	#size-cells = <1>;
-> +	ranges = <0 0x0 0x50000000 0x10000>;
-> +
-> +	cpu_scp_lpri: scp-shmem@0 {
-> +		compatible = "arm,juno-scp-shmem";
-> +		reg = <0x0 0x200>;
-> +	};
-> +
-> +	cpu_scp_hpri: scp-shmem@200 {
-> +		compatible = "arm,juno-scp-shmem";
-> +		reg = <0x200 0x200>;
-> +	};
-> +};
-> +
-> +mailbox: mailbox0@40000000 {
-> +	....
-> +	#mbox-cells = <1>;
-> +};
-> +
-> +scpi_protocol: scpi@2e000000 {
-> +	compatible = "arm,scpi";
-> +	mboxes = <&mailbox 0 &mailbox 1>;
-> +	shmem = <&cpu_scp_lpri &cpu_scp_hpri>;
-> +
-> +	clocks {
-> +		compatible = "arm,scpi-clocks";
-> +
-> +		scpi_dvfs: scpi_clocks@0 {
-> +			compatible = "arm,scpi-dvfs-clocks";
-> +			#clock-cells = <1>;
-> +			clock-indices = <0>, <1>, <2>;
-> +			clock-output-names = "atlclk", "aplclk","gpuclk";
-> +		};
-> +		scpi_clk: scpi_clocks@3 {
-> +			compatible = "arm,scpi-variable-clocks";
-> +			#clock-cells = <1>;
-> +			clock-indices = <3>, <4>;
-> +			clock-output-names = "pxlclk0", "pxlclk1";
-> +		};
-> +	};
-> +};
-> +
-> +cpu@0 {
-> +	...
-> +	reg = <0 0>;
-> +	clocks = <&scpi_dvfs 0>;
-> +};
-> +
-> +hdlcd@7ff60000 {
-> +	...
-> +	reg = <0 0x7ff60000 0 0x1000>;
-> +	clocks = <&scpi_clk 4>;
-> +};
-> +
-> +In the above example, the #clock-cells is set to 1 as required.
-> +scpi_dvfs has 3 output clocks namely: vbig, vlittle and vgpu with 0, 1
-> +and 2 as clock-indices. scpi_clk has 2 output clocks namely: pxlclk0 and
-> +pxlclk1 with 3 and 4 as clock-indices.
-> +
-> +The first consumer in the example is cpu@0 and it has '0' as the clock
-> +specifier which points to the first entry in the output clocks of
-> +scpi_dvfs i.e. "atlclk".
-> +
-> +Similarly the second example is hdlcd@7ff60000 and it has pxlclk1 as input
-> +clock. '4' in the clock specifier here points to the second entry
-> +in the output clocks of scpi_clocks  i.e. "pxlclk1"
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index a2264167791a..9351b62dbbd7 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -8955,6 +8955,12 @@ W:	http://www.sunplus.com
->  S:	Supported
->  F:	arch/score/
+> diff --git a/drivers/mtd/ofpart.c b/drivers/mtd/ofpart.c
+> index aa26c32..2c28aaa 100644
+> --- a/drivers/mtd/ofpart.c
+> +++ b/drivers/mtd/ofpart.c
+> @@ -29,23 +29,33 @@ static int parse_ofpart_partitions(struct mtd_info *master,
+>  				   struct mtd_partition **pparts,
+>  				   struct mtd_part_parser_data *data)
+>  {
+> -	struct device_node *node;
+> +	struct device_node *mtd_node;
+> +	struct device_node *ofpart_node;
+>  	const char *partname;
+>  	struct device_node *pp;
+>  	int nr_parts, i;
+> +	bool dedicated = true;
 >  
-> +SYSTEM CONTROL & POWER INTERFACE (SCPI) Message Protocol drivers
-> +M:	Sudeep Holla <sudeep.holla@arm.com>
-> +L:	linux-arm-kernel@lists.infradead.org
-> +S:	Maintained
-> +F:	Documentation/devicetree/bindings/arm/arm,scpi.txt
+>  
+>  	if (!data)
+>  		return 0;
+>  
+> -	node = data->of_node;
+> -	if (!node)
+> +	mtd_node = data->of_node;
+> +	if (!mtd_node)
+>  		return 0;
+>  
+> +	ofpart_node = of_get_child_by_name(mtd_node, "ofpart");
+
+Hm, you should use a more generic name, ofpart of the linux MTD
+DT partition parser, but another operating system might decide to name
+it otherwise. I think "partitions" is more appropriate. 
+
+> +	if (!ofpart_node) {
+> +		pr_warn("%s: 'ofpart' subnode not found on %s. Trying to parse direct subnodes as partitions.\n",
+> +			master->name, mtd_node->full_name);
+
+Do we really want to complain here. I mean, a lot of users do not need
+to define their partition in a different node.
+
+> +		ofpart_node = mtd_node;
+> +		dedicated = false;
+> +	}
 > +
->  SCSI CDROM DRIVER
->  M:	Jens Axboe <axboe@kernel.dk>
->  L:	linux-scsi@vger.kernel.org
-> -- 
-> 1.9.1
-> 
+>  	/* First count the subnodes */
+>  	nr_parts = 0;
+> -	for_each_child_of_node(node,  pp) {
+> -		if (node_has_compatible(pp))
+> +	for_each_child_of_node(ofpart_node,  pp) {
+> +		if (!dedicated && node_has_compatible(pp))
+>  			continue;
+>  
+>  		nr_parts++;
+> @@ -59,22 +69,36 @@ static int parse_ofpart_partitions(struct mtd_info *master,
+>  		return -ENOMEM;
+>  
+>  	i = 0;
+> -	for_each_child_of_node(node,  pp) {
+> +	for_each_child_of_node(ofpart_node,  pp) {
+>  		const __be32 *reg;
+>  		int len;
+>  		int a_cells, s_cells;
+>  
+> -		if (node_has_compatible(pp))
+> -			continue;
+> +		if (!dedicated && node_has_compatible(pp))
+> +				continue;
+
+Check your indentation (checkpatch should complain here).
+
+>  
+>  		reg = of_get_property(pp, "reg", &len);
+>  		if (!reg) {
+> +			if (dedicated) {
+> +				pr_debug("%s: ofpart partition %s (%s) missing reg property.\n",
+> +					 master->name, pp->full_name,
+> +					 mtd_node->full_name);
+> +				goto ofpart_fail;
+> +			} else {
+>  			nr_parts--;
+>  			continue;
+
+Ditto.
+
+> +			}
+>  		}
+>  
+>  		a_cells = of_n_addr_cells(pp);
+>  		s_cells = of_n_size_cells(pp);
+> +		if (len / 4 != a_cells + s_cells) {
+> +			pr_debug("%s: ofpart partition %s (%s) error parsing reg property.\n",
+> +				 master->name, pp->full_name,
+> +				 mtd_node->full_name);
+> +			goto ofpart_fail;
+> +		}
+> +
+
+The above changes have nothing to do with the description you gave in
+your commit message.
+
+>  		(*pparts)[i].offset = of_read_number(reg, a_cells);
+>  		(*pparts)[i].size = of_read_number(reg + a_cells, s_cells);
+>  
+> @@ -92,15 +116,15 @@ static int parse_ofpart_partitions(struct mtd_info *master,
+>  		i++;
+>  	}
+>  
+> -	if (!i) {
+> -		of_node_put(pp);
+> -		pr_err("No valid partition found on %s\n", node->full_name);
+> -		kfree(*pparts);
+> -		*pparts = NULL;
+> -		return -EINVAL;
+> -	}
+> -
+
+Are you sure you can safely remove this check?
+
+
+Best Regards,
+
+Boris
+
+
+-- 
+Boris Brezillon, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
