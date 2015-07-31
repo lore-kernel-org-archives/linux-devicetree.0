@@ -1,56 +1,62 @@
-From: Rob Herring <robherring2@gmail.com>
-Subject: Re: [PATCH v2] dtb: Create a common home for cross-architecture dtsi files.
-Date: Fri, 31 Jul 2015 08:05:50 -0500
-Message-ID: <CAL_JsqJm1SxvYbkp4B1GteyvtDGKqH3qvRXPHOfqBxA3TRzAXA@mail.gmail.com>
-References: <1437993343-9542-1-git-send-email-ian.campbell@citrix.com>
- <CAK7LNAQKswPzeFYdSVq3JDk2qawZ8e5ogBFMWdor-CibMovU3g@mail.gmail.com>
- <1438176174.11600.198.camel@citrix.com> <CAL_JsqL7KRcSv5jSneWYj1PJOYbvMQ8HOAGK+w-+MDBMpMatow@mail.gmail.com>
- <CAK7LNAS_P65k3T_J_vXZ9dxBB-uVbrTW-qFE_fJEOSLcOW4JsA@mail.gmail.com> <CAK7LNAQ4hT133v0iH7z6JxfaBDjrGgaX2M9pA9H=sPxsmorDNw@mail.gmail.com>
+From: Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [PATCH v3 2/5] dt-bindings: Add a binding for Mediatek xHCI host
+ controller
+Date: Fri, 31 Jul 2015 14:37:07 +0100
+Message-ID: <20150731133707.GB25118@leverpostej>
+References: <1437573945-31586-1-git-send-email-chunfeng.yun@mediatek.com>
+ <1437573945-31586-3-git-send-email-chunfeng.yun@mediatek.com>
+ <20150722142208.GC15809@leverpostej>
+ <1437882325.3040.22.camel@mhfsdcap03>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAK7LNAQ4hT133v0iH7z6JxfaBDjrGgaX2M9pA9H=sPxsmorDNw@mail.gmail.com>
+Content-Disposition: inline
+In-Reply-To: <1437882325.3040.22.camel@mhfsdcap03>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc: Ian Campbell <ian.campbell@citrix.com>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Russell King <linux@arm.linux.org.uk>, Pawel Moll <pawel.moll@arm.com>, Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, Kumar Gala <galak@codeaurora.org>, Liviu Dudau <liviu.dudau@arm.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Will Deacon <will.deacon@arm.com>, Rob Herring <robh+dt@kernel.org>, Kristina Martsenko <kristina.martsenko@arm.com>, Sudeep Holla <sudeep.holla@arm.com>, Kevin Hilman <khilman@linaro.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+To: chunfeng yun <chunfeng.yun@mediatek.com>
+Cc: Mathias Nyman <mathias.nyman@intel.com>, Rob Herring <robh+dt@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>, Felipe Balbi <balbi@ti.com>, Sascha Hauer <s.hauer@pengutronix.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Roger Quadros <rogerq@ti.com>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "linux-mediatek@lists.infradead.org" <linux-mediatek@lists.infradead.org>, John Crispin <blogic@openwrt.org>, Daniel Kurtz <djkurtz@chromium.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jul 31, 2015 at 12:46 AM, Masahiro Yamada
-<yamada.masahiro@socionext.com> wrote:
-> Hi.
->
-> 2015-07-30 10:30 GMT+09:00 Masahiro Yamada <yamada.masahiro@socionext.com>:
->> Hi,
->>
->>
->> 2015-07-30 0:23 GMT+09:00 Rob Herring <robherring2@gmail.com>:
->>> On Wed, Jul 29, 2015 at 8:22 AM, Ian Campbell <ian.campbell@citrix.com> wrote:
->>>> On Wed, 2015-07-29 at 20:07 +0900, Masahiro Yamada wrote:
->>>>> Hi Ian,
->>>>>
->>>>>
->>>>> 2015-07-27 19:35 GMT+09:00 Ian Campbell <ian.campbell@citrix.com>:
->>>>> > Commit 9ccd608070b6 "arm64: dts: add device tree for ARM SMM-A53x2 on
->>>>> > LogicTile Express 20MG" added a new dts file to arch/arm64 which
->>>>> > included "../../../../arm/boot/dts/vexpress-v2m-rs1.dtsi", i.e. a
->>>>> > .dtsi supplied by arch/arm.
->
->
->
-> BTW, is there any chance to merge arch/arm64 and arch/arm in the future?
+Hi,
 
-In the kernel tree, not likely. It may happen if we ever move dts
-files out of the kernel.
+> > > + - mediatek,usb-wakeup: to access usb wakeup control register
+> > 
+> > What exactly does this property imply?
+> > 
+> There are some control registers for usb wakeup which are put in another
+> module, here to get the node of that module, and then use regmap and
+> syscon to operate it.
 
-> For example, U-boot supports ARM64/32 in a single arch directory, arch/arm/.
->
->
-> I guess, the cross-arch home directory for DTSI would be only used to
-> share device trees between arm64 and arm32.
+Ok. You need to specify the type of this property (i.e. that it is a
+phandle to a syscon node). The description makes it sound like a boolean.
 
-For SOC files, I think the amount sharing will be limited. While we
-will probably see very similar SOCs, I'd guess the memory maps and
-irqs will be different. Sharing is going to be limited to things like
-daughter boards such as this case.
+> 
+> > > + - mediatek,wakeup-src: 1: ip sleep wakeup mode; 2: line state wakeup
+> > > +	mode; others means don't enable wakeup source of usb
+> > 
+> > This sounds like configuration rather than a hardware property. Why do
+> > you think this needs to be in the DT?
+> > 
+> Yes, it's better to put it in the DT. 
 
-Rob
+That doesn't answer my question.
+
+_why_ do you think this needs to be in the DT? What do you think is
+better for it being there?
+
+> 
+> > > + - mediatek,u2port-num: the number should not greater than the number
+> > > +	of phys
+> > 
+> > What exactly does this property imply?
+> > 
+> On some platform, it only makes use of partial usb ports, so disable
+> others to save power.
+
+What exactly do you mean by "partial USB ports"?
+
+If a phy isn't wired up, it won't be listed in the phys property, if it
+is then disabling it sounds like a run-time decision.
+
+Thanks,
+Mark.
