@@ -1,224 +1,184 @@
-From: Sudeep Holla <sudeep.holla@arm.com>
-Subject: [PATCH v6 1/8] Documentation: add DT binding for ARM System Control
- and Power Interface(SCPI) protocol
-Date: Fri, 31 Jul 2015 18:43:04 +0100
-Message-ID: <1438364591-1144-2-git-send-email-sudeep.holla@arm.com>
-References: <1438364591-1144-1-git-send-email-sudeep.holla@arm.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1438364591-1144-1-git-send-email-sudeep.holla@arm.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: arm@kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Olof Johansson <olof@lixom.net>, Kevin Hilman <khilman@kernel.org>
-Cc: "Jon Medhurst (Tixy)" <tixy@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Arnd Bergmann <arnd@arndb.de>, devicetree@vger.kernel.org, Punit Agrawal <punit.agrawal@arm.com>, Liviu Dudau <Liviu.Dudau@arm.com>, Jassi Brar <jassisinghbrar@gmail.com>, Rob Herring <robh+dt@kernel.org>, Sudeep Holla <sudeep.holla@arm.com>
+From: Irina Tirdea <irina.tirdea@intel.com>
+Subject: [PATCH v4 4/8] Input: goodix - add power management support
+Date: Fri, 31 Jul 2015 20:42:08 +0300
+Message-ID: <1438364532-27150-5-git-send-email-irina.tirdea@intel.com>
+References: <1438364532-27150-1-git-send-email-irina.tirdea@intel.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1438364532-27150-1-git-send-email-irina.tirdea@intel.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Bastien Nocera <hadess@hadess.net>, linux-input@vger.kernel.org
+Cc: Mark Rutland <mark.rutland@arm.com>, Octavian Purdila <octavian.purdila@intel.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Irina Tirdea <irina.tirdea@intel.com>
 List-Id: devicetree@vger.kernel.org
 
-This patch adds devicetree binding for System Control and Power
-Interface (SCPI) Message Protocol used between the Application Cores(AP)
-and the System Control Processor(SCP). The MHU peripheral provides a
-mechanism for inter-processor communication between SCP's M3 processor
-and AP.
+Implement suspend/resume for goodix driver.
 
-SCP offers control and management of the core/cluster power states,
-various power domain DVFS including the core/cluster, certain system
-clocks configuration, thermal sensors and many others.
+The suspend and resume process uses the gpio pins.
+If the device ACPI/DT information does not declare gpio pins,
+suspend/resume will not be available for these devices.
 
-Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
-Acked-by: Mark Rutland <mark.rutland@arm.com>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Rob Herring <robh+dt@kernel.org>
-CC: Jassi Brar <jassisinghbrar@gmail.com>
-Cc: Liviu Dudau <Liviu.Dudau@arm.com>
-Cc: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Cc: Jon Medhurst (Tixy) <tixy@linaro.org>
-Cc: devicetree@vger.kernel.org
+This is based on Goodix datasheets for GT911 and GT9271
+and on Goodix driver gt9xx.c for Android (publicly available
+in Android kernel trees for various devices).
+
+Signed-off-by: Octavian Purdila <octavian.purdila@intel.com>
+Signed-off-by: Irina Tirdea <irina.tirdea@intel.com>
 ---
- Documentation/devicetree/bindings/arm/arm,scpi.txt | 150 +++++++++++++++++++++
- MAINTAINERS                                        |   6 +
- 2 files changed, 156 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/arm/arm,scpi.txt
+ drivers/input/touchscreen/goodix.c | 94 ++++++++++++++++++++++++++++++++++++--
+ 1 file changed, 89 insertions(+), 5 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/arm/arm,scpi.txt b/Documentation/devicetree/bindings/arm/arm,scpi.txt
-new file mode 100644
-index 000000000000..e309249db536
---- /dev/null
-+++ b/Documentation/devicetree/bindings/arm/arm,scpi.txt
-@@ -0,0 +1,150 @@
-+System Control and Power Interface (SCPI) Message Protocol
-+----------------------------------------------------------
-+
-+Firmware implementing the SCPI described in ARM document number ARM DUI 0922B
-+("ARM Compute Subsystem SCP: Message Interface Protocols")[0] can be used
-+by Linux to initiate various system control and power operations.
-+
-+Required properties:
-+
-+- compatible : should be "arm,scpi"
-+- mboxes: List of phandle and mailbox channel specifiers
-+	  All the channels reserved by remote SCP firmware for use by
-+	  SCPI message protocol should be specified in any order
-+- shmem : List of phandle pointing to the shared memory(SHM) area between the
-+	  processors using these mailboxes for IPC, one for each mailbox
-+	  SHM can be any memory reserved for the purpose of this communication
-+	  between the processors.
-+
-+See Documentation/devicetree/bindings/mailbox/mailbox.txt
-+for more details about the generic mailbox controller and
-+client driver bindings.
-+
-+Clock bindings for the clocks based on SCPI Message Protocol
-+------------------------------------------------------------
-+
-+This binding uses the common clock binding[1].
-+
-+Container Node
-+==============
-+Required properties:
-+- compatible : should be "arm,scpi-clocks"
-+	       All the clocks provided by SCP firmware via SCPI message
-+	       protocol much be listed as sub-nodes under this node.
-+
-+Sub-nodes
-+=========
-+Required properties:
-+- compatible : shall include one of the following
-+	"arm,scpi-dvfs-clocks" - all the clocks that are variable and index based.
-+		These clocks don't provide an entire range of values between the
-+		limits but only discrete points within the range. The firmware
-+		provides the mapping for each such operating frequency and the
-+		index associated with it. The firmware also manages the
-+		voltage scaling appropriately with the clock scaling.
-+	"arm,scpi-variable-clocks" - all the clocks that are variable and provide full
-+		range within the specified range. The firmware provides the
-+		range of values within a specified range.
-+
-+Other required properties for all clocks(all from common clock binding):
-+- #clock-cells : Should be 1. Contains the Clock ID value used by SCPI commands.
-+- clock-output-names : shall be the corresponding names of the outputs.
-+- clock-indices: The identifying number for the clocks(i.e.clock_id) in the
-+	node. It can be non linear and hence provide the mapping of identifiers
-+	into the clock-output-names array.
-+
-+SRAM and Shared Memory for SCPI
-+-------------------------------
-+
-+A small area of SRAM is reserved for SCPI communication between application
-+processors and SCP.
-+
-+Required properties:
-+- compatible : should be "arm,juno-sram-ns" for Non-secure SRAM on Juno
-+
-+The rest of the properties should follow the generic mmio-sram description
-+found in ../../misc/sysram.txt
-+
-+Each sub-node represents the reserved area for SCPI.
-+
-+Required sub-node properties:
-+- reg : The base offset and size of the reserved area with the SRAM
-+- compatible : should be "arm,juno-scp-shmem" for Non-secure SRAM based
-+	       shared memory on Juno platforms
-+
-+[0] http://community.arm.com/servlet/JiveServlet/download/8401-45-18326/DUI0922B_scp_message_interface.pdf
-+[1] Documentation/devicetree/bindings/clock/clock-bindings.txt
-+
-+Example:
-+
-+sram: sram@50000000 {
-+	compatible = "arm,juno-sram-ns", "mmio-sram";
-+	reg = <0x0 0x50000000 0x0 0x10000>;
-+
-+	#address-cells = <1>;
-+	#size-cells = <1>;
-+	ranges = <0 0x0 0x50000000 0x10000>;
-+
-+	cpu_scp_lpri: scp-shmem@0 {
-+		compatible = "arm,juno-scp-shmem";
-+		reg = <0x0 0x200>;
-+	};
-+
-+	cpu_scp_hpri: scp-shmem@200 {
-+		compatible = "arm,juno-scp-shmem";
-+		reg = <0x200 0x200>;
-+	};
-+};
-+
-+mailbox: mailbox0@40000000 {
-+	....
-+	#mbox-cells = <1>;
-+};
-+
-+scpi_protocol: scpi@2e000000 {
-+	compatible = "arm,scpi";
-+	mboxes = <&mailbox 0 &mailbox 1>;
-+	shmem = <&cpu_scp_lpri &cpu_scp_hpri>;
-+
-+	clocks {
-+		compatible = "arm,scpi-clocks";
-+
-+		scpi_dvfs: scpi_clocks@0 {
-+			compatible = "arm,scpi-dvfs-clocks";
-+			#clock-cells = <1>;
-+			clock-indices = <0>, <1>, <2>;
-+			clock-output-names = "atlclk", "aplclk","gpuclk";
-+		};
-+		scpi_clk: scpi_clocks@3 {
-+			compatible = "arm,scpi-variable-clocks";
-+			#clock-cells = <1>;
-+			clock-indices = <3>, <4>;
-+			clock-output-names = "pxlclk0", "pxlclk1";
-+		};
-+	};
-+};
-+
-+cpu@0 {
-+	...
-+	reg = <0 0>;
-+	clocks = <&scpi_dvfs 0>;
-+};
-+
-+hdlcd@7ff60000 {
-+	...
-+	reg = <0 0x7ff60000 0 0x1000>;
-+	clocks = <&scpi_clk 4>;
-+};
-+
-+In the above example, the #clock-cells is set to 1 as required.
-+scpi_dvfs has 3 output clocks namely: atlclk, aplclk, and gpuclk with 0,
-+1 and 2 as clock-indices. scpi_clk has 2 output clocks namely: pxlclk0
-+and pxlclk1 with 3 and 4 as clock-indices.
-+
-+The first consumer in the example is cpu@0 and it has '0' as the clock
-+specifier which points to the first entry in the output clocks of
-+scpi_dvfs i.e. "atlclk".
-+
-+Similarly the second example is hdlcd@7ff60000 and it has pxlclk1 as input
-+clock. '4' in the clock specifier here points to the second entry
-+in the output clocks of scpi_clocks  i.e. "pxlclk1"
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 9289ecb57b68..7dadaa87afac 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -8960,6 +8960,12 @@ W:	http://www.sunplus.com
- S:	Supported
- F:	arch/score/
+diff --git a/drivers/input/touchscreen/goodix.c b/drivers/input/touchscreen/goodix.c
+index 3d4feea..8485293 100644
+--- a/drivers/input/touchscreen/goodix.c
++++ b/drivers/input/touchscreen/goodix.c
+@@ -44,6 +44,7 @@ struct goodix_ts_data {
+ 	u16 id;
+ 	u16 version;
+ 	char *cfg_name;
++	unsigned long irq_flags;
+ };
  
-+SYSTEM CONTROL & POWER INTERFACE (SCPI) Message Protocol drivers
-+M:	Sudeep Holla <sudeep.holla@arm.com>
-+L:	linux-arm-kernel@lists.infradead.org
-+S:	Maintained
-+F:	Documentation/devicetree/bindings/arm/arm,scpi.txt
+ #define GOODIX_MAX_HEIGHT		4096
+@@ -57,6 +58,9 @@ struct goodix_ts_data {
+ #define GOODIX_CONFIG_967_LENGTH	228
+ 
+ /* Register defines */
++#define GOODIX_REG_COMMAND		0x8040
++#define GOODIX_CMD_SCREEN_OFF		0x05
 +
- SCSI CDROM DRIVER
- M:	Jens Axboe <axboe@kernel.dk>
- L:	linux-scsi@vger.kernel.org
+ #define GOODIX_READ_COOR_ADDR		0x814E
+ #define GOODIX_REG_CONFIG_DATA		0x8047
+ #define GOODIX_REG_ID			0x8140
+@@ -182,6 +186,11 @@ static int goodix_i2c_write(struct i2c_client *client, u16 reg, const u8 *buf,
+ 	return ret < 0 ? ret : (ret != 1 ? -EIO : 0);
+ }
+ 
++static int goodix_i2c_write_u8(struct i2c_client *client, u16 reg, u8 value)
++{
++	return goodix_i2c_write(client, reg, &value, sizeof(value));
++}
++
+ static int goodix_get_cfg_len(u16 id)
+ {
+ 	switch (id) {
+@@ -301,6 +310,18 @@ static irqreturn_t goodix_ts_irq_handler(int irq, void *dev_id)
+ 	return IRQ_HANDLED;
+ }
+ 
++static void goodix_free_irq(struct goodix_ts_data *ts)
++{
++	devm_free_irq(&ts->client->dev, ts->client->irq, ts);
++}
++
++static int goodix_request_irq(struct goodix_ts_data *ts)
++{
++	return devm_request_threaded_irq(&ts->client->dev, ts->client->irq,
++					 NULL, goodix_ts_irq_handler,
++					 ts->irq_flags, ts->client->name, ts);
++}
++
+ /**
+  * goodix_check_cfg - Checks if config fw is valid
+  *
+@@ -617,7 +638,6 @@ static int goodix_request_input_dev(struct goodix_ts_data *ts)
+ static int goodix_configure_dev(struct goodix_ts_data *ts)
+ {
+ 	int error;
+-	unsigned long irq_flags;
+ 
+ 	goodix_read_config(ts);
+ 
+@@ -625,10 +645,8 @@ static int goodix_configure_dev(struct goodix_ts_data *ts)
+ 	if (error)
+ 		return error;
+ 
+-	irq_flags = goodix_irq_flags[ts->int_trigger_type] | IRQF_ONESHOT;
+-	error = devm_request_threaded_irq(&ts->client->dev, ts->client->irq,
+-					  NULL, goodix_ts_irq_handler,
+-					  irq_flags, ts->client->name, ts);
++	ts->irq_flags = goodix_irq_flags[ts->int_trigger_type] | IRQF_ONESHOT;
++	error = goodix_request_irq(ts);
+ 	if (error) {
+ 		dev_err(&ts->client->dev, "request IRQ failed: %d\n", error);
+ 		return error;
+@@ -732,6 +750,71 @@ static int goodix_ts_probe(struct i2c_client *client,
+ 	return goodix_configure_dev(ts);
+ }
+ 
++static int __maybe_unused goodix_suspend(struct device *dev)
++{
++	struct i2c_client *client = to_i2c_client(dev);
++	struct goodix_ts_data *ts = i2c_get_clientdata(client);
++	int ret;
++
++	/* We need gpio pins to suspend/resume */
++	if (!ts->gpiod_int || !ts->gpiod_rst)
++		return 0;
++
++	/* Free IRQ as IRQ pin is used as output in the suspend sequence */
++	goodix_free_irq(ts);
++	/* Output LOW on the INT pin for 5 ms */
++	ret = gpiod_direction_output(ts->gpiod_int, 0);
++	if (ret) {
++		goodix_request_irq(ts);
++		return ret;
++	}
++	usleep_range(5000, 6000);
++
++	ret = goodix_i2c_write_u8(ts->client, GOODIX_REG_COMMAND,
++				  GOODIX_CMD_SCREEN_OFF);
++	if (ret) {
++		dev_err(&ts->client->dev, "Screen off command failed\n");
++		gpiod_direction_input(ts->gpiod_int);
++		goodix_request_irq(ts);
++		return -EAGAIN;
++	}
++
++	/*
++	 * The datasheet specifies that the interval between sending screen-off
++	 * command and wake-up should be longer than 58 ms. To avoid waking up
++	 * sooner, delay 58ms here.
++	 */
++	msleep(58);
++	return 0;
++}
++
++static int __maybe_unused goodix_resume(struct device *dev)
++{
++	struct i2c_client *client = to_i2c_client(dev);
++	struct goodix_ts_data *ts = i2c_get_clientdata(client);
++	int ret;
++
++	if (!ts->gpiod_int || !ts->gpiod_rst)
++		return 0;
++
++	/*
++	 * Exit sleep mode by outputting HIGH level to INT pin
++	 * for 2ms~5ms.
++	 */
++	ret = gpiod_direction_output(ts->gpiod_int, 1);
++	if (ret)
++		return ret;
++	usleep_range(2000, 5000);
++
++	ret = goodix_int_sync(ts);
++	if (ret)
++		return ret;
++
++	return goodix_request_irq(ts);
++}
++
++static SIMPLE_DEV_PM_OPS(goodix_pm_ops, goodix_suspend, goodix_resume);
++
+ static const struct i2c_device_id goodix_ts_id[] = {
+ 	{ "GDIX1001:00", 0 },
+ 	{ }
+@@ -767,6 +850,7 @@ static struct i2c_driver goodix_ts_driver = {
+ 		.owner = THIS_MODULE,
+ 		.acpi_match_table = ACPI_PTR(goodix_acpi_match),
+ 		.of_match_table = of_match_ptr(goodix_of_match),
++		.pm = &goodix_pm_ops,
+ 	},
+ };
+ module_i2c_driver(goodix_ts_driver);
 -- 
 1.9.1
