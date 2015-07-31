@@ -1,88 +1,54 @@
-From: Murali Karicheri <m-karicheri2@ti.com>
-Subject: Re: [PATCH 2/2] ARM: dts: keystone: fix dt bindings to use post div
- register for mainpll
-Date: Fri, 31 Jul 2015 10:20:02 -0400
-Message-ID: <55BB8412.2000905@ti.com>
-References: <1432915453-409-1-git-send-email-m-karicheri2@ti.com> <1432915453-409-2-git-send-email-m-karicheri2@ti.com>
+From: Jonathan Liu <net147-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [linux-sunxi] [PATCH v5 2/7] phy-sun4i-usb: Add extcon support
+ for the otg phy (phy0)
+Date: Sat, 01 Aug 2015 00:23:19 +1000
+Message-ID: <55BB84D7.70109@gmail.com>
+References: <1434199071-22127-1-git-send-email-hdegoede@redhat.com> <1434199071-22127-3-git-send-email-hdegoede@redhat.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1432915453-409-2-git-send-email-m-karicheri2@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, ssantosh@kernel.org, mturquette@linaro.org, sboyd@codeaurora.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, linux@arm.linux.org.uk, linux-arm-kernel@lists.infradead.org
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1434199071-22127-3-git-send-email-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
+Cc: Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Roman Byshko <rbyshko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 05/29/2015 12:04 PM, Murali Karicheri wrote:
-> All of the keystone devices have a separate register to hold post
-> divider value for main pll clock. Currently the fixed-postdiv
-> value used for k2hk/l/e SoCs works by sheer luck as u-boot happens to
-> use a value of 2 for this. Now that we have fixed this in the pll
-> clock driver change the dt bindings for the same.
+Hi Hans,
+
+On 13/06/2015 10:37 PM, Hans de Goede wrote:
+> The sunxi musb glue needs to know if a host or normal usb cable is plugged
+> in, add extcon support so that the musb glue can monitor the host status.
 >
-> Signed-off-by: Murali Karicheri <m-karicheri2@ti.com>
+> Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 > ---
->   arch/arm/boot/dts/k2e-clocks.dtsi  | 5 ++---
->   arch/arm/boot/dts/k2hk-clocks.dtsi | 5 ++---
->   arch/arm/boot/dts/k2l-clocks.dtsi  | 5 ++---
->   3 files changed, 6 insertions(+), 9 deletions(-)
+> Changes in v5:
+> -Split out of the "Add id and vbus detection support" commit
+> -Ported to the new extcon API queued for 4.2
+> ---
+>   drivers/phy/Kconfig         |  1 +
+>   drivers/phy/phy-sun4i-usb.c | 32 +++++++++++++++++++++++++++++++-
+>   2 files changed, 32 insertions(+), 1 deletion(-)
 >
-> diff --git a/arch/arm/boot/dts/k2e-clocks.dtsi b/arch/arm/boot/dts/k2e-clocks.dtsi
-> index 4773d6a..d56d68f 100644
-> --- a/arch/arm/boot/dts/k2e-clocks.dtsi
-> +++ b/arch/arm/boot/dts/k2e-clocks.dtsi
-> @@ -13,9 +13,8 @@ clocks {
->   		#clock-cells = <0>;
->   		compatible = "ti,keystone,main-pll-clock";
->   		clocks = <&refclksys>;
-> -		reg = <0x02620350 4>, <0x02310110 4>;
-> -		reg-names = "control", "multiplier";
-> -		fixed-postdiv = <2>;
-> +		reg = <0x02620350 4>, <0x02310110 4>, <0x02310108 4>;
-> +		reg-names = "control", "multiplier", "post-divider";
->   	};
+> diff --git a/drivers/phy/Kconfig b/drivers/phy/Kconfig
+> index a53bd5b..9841780 100644
+> --- a/drivers/phy/Kconfig
+> +++ b/drivers/phy/Kconfig
+> @@ -173,6 +173,7 @@ config PHY_SUN4I_USB
+>   	tristate "Allwinner sunxi SoC USB PHY driver"
+>   	depends on ARCH_SUNXI && HAS_IOMEM && OF
+>   	depends on RESET_CONTROLLER
+> +	depends on EXTCON
+>   	select GENERIC_PHY
+>   	help
+>   	  Enable this to support the transceiver that is part of Allwinner
 >
->   	papllclk: papllclk@2620358 {
-> diff --git a/arch/arm/boot/dts/k2hk-clocks.dtsi b/arch/arm/boot/dts/k2hk-clocks.dtsi
-> index d5adee3..af9b719 100644
-> --- a/arch/arm/boot/dts/k2hk-clocks.dtsi
-> +++ b/arch/arm/boot/dts/k2hk-clocks.dtsi
-> @@ -22,9 +22,8 @@ clocks {
->   		#clock-cells = <0>;
->   		compatible = "ti,keystone,main-pll-clock";
->   		clocks = <&refclksys>;
-> -		reg = <0x02620350 4>, <0x02310110 4>;
-> -		reg-names = "control", "multiplier";
-> -		fixed-postdiv = <2>;
-> +		reg = <0x02620350 4>, <0x02310110 4>, <0x02310108 4>;
-> +		reg-names = "control", "multiplier", "post-divider";
->   	};
->
->   	papllclk: papllclk@2620358 {
-> diff --git a/arch/arm/boot/dts/k2l-clocks.dtsi b/arch/arm/boot/dts/k2l-clocks.dtsi
-> index eb1e3e2..ef8464b 100644
-> --- a/arch/arm/boot/dts/k2l-clocks.dtsi
-> +++ b/arch/arm/boot/dts/k2l-clocks.dtsi
-> @@ -22,9 +22,8 @@ clocks {
->   		#clock-cells = <0>;
->   		compatible = "ti,keystone,main-pll-clock";
->   		clocks = <&refclksys>;
-> -		reg = <0x02620350 4>, <0x02310110 4>;
-> -		reg-names = "control", "multiplier";
-> -		fixed-postdiv = <2>;
-> +		reg = <0x02620350 4>, <0x02310110 4>, <0x02310108 4>;
-> +		reg-names = "control", "multiplier", "post-divider";
->   	};
->
->   	papllclk: papllclk@2620358 {
->
-Santosh,
+Should probably add CONFIG_EXTCON=y to arch/arm/configs/sunxi_defconfig 
+so that CONFIG_PHY_SUN4I_USB=y works out of the box.
 
-The clk driver update is already merged to v4.2-rc. Could you send this 
-DT update as well for 4.2-rc?
-
-Murali
-
--- 
-Murali Karicheri
-Linux Kernel, Keystone
+Regards,
+Jonathan
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
