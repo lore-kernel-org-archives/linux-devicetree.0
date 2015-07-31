@@ -1,63 +1,57 @@
-From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH v2 3/3] ARM: dts: sun8i: Enable USB DRC on Ippo
- Q8H-A33 tablet
-Date: Fri, 31 Jul 2015 14:53:38 +0200
-Message-ID: <1438347218-8158-3-git-send-email-hdegoede@redhat.com>
-References: <1438347218-8158-1-git-send-email-hdegoede@redhat.com>
-Reply-To: hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org
+From: Chunfeng Yun <chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Subject: [PATCH v4 1/5] dt-bindings: Add usb3.0 phy binding for MT65xx SoCs
+Date: Fri, 31 Jul 2015 21:03:52 +0800
+Message-ID: <1438347836-29060-2-git-send-email-chunfeng.yun@mediatek.com>
+References: <1438347836-29060-1-git-send-email-chunfeng.yun@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBDRZXY4CYYORBWO75WWQKGQEWERLR6Y-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <1438347218-8158-1-git-send-email-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <http://groups.google.com/group/linux-sunxi/subscribe>
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1438347836-29060-1-git-send-email-chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mathias Nyman <mathias.nyman-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, Chunfeng Yun <chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, John Crispin <blogic-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>, Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Enable the otg/drc usb controller on the Ippo Q8H-A33 tablet, for now it
-is enabled in host-only mode, because true OTG support requires support
-for detecting and enabling Vbus through the axp221 pmic.
+add a DT binding documentation of usb3.0 phy for MT65xx
+SoCs from Mediatek.
 
-For this to work the Vbus on the port must be enabled by u-boot,
-or a powered hub must be used.
-
-Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Signed-off-by: Chunfeng Yun <chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 ---
-Changes in v2:
--Add a FIXME comment to the usb_otg block in the dts, pointing out the need
- to add full otg support once we get axp22x pmic support for a33 based devices
----
- arch/arm/boot/dts/sun8i-a33-ippo-q8h-v1.2.dts | 15 +++++++++++++++
- 1 file changed, 15 insertions(+)
+ .../devicetree/bindings/phy/phy-mt65xx-usb.txt      | 21 +++++++++++++++++++++
+ 1 file changed, 21 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/phy/phy-mt65xx-usb.txt
 
-diff --git a/arch/arm/boot/dts/sun8i-a33-ippo-q8h-v1.2.dts b/arch/arm/boot/dts/sun8i-a33-ippo-q8h-v1.2.dts
-index 8bb75ee..a438975 100644
---- a/arch/arm/boot/dts/sun8i-a33-ippo-q8h-v1.2.dts
-+++ b/arch/arm/boot/dts/sun8i-a33-ippo-q8h-v1.2.dts
-@@ -116,3 +116,18 @@
- 	pinctrl-0 = <&r_uart_pins_a>;
- 	status = "okay";
- };
+diff --git a/Documentation/devicetree/bindings/phy/phy-mt65xx-usb.txt b/Documentation/devicetree/bindings/phy/phy-mt65xx-usb.txt
+new file mode 100644
+index 0000000..752abc0
+--- /dev/null
++++ b/Documentation/devicetree/bindings/phy/phy-mt65xx-usb.txt
+@@ -0,0 +1,21 @@
++MT65xx USB3.0 PHY
 +
-+/*
-+ * FIXME for now we only support host mode and rely on u-boot to have
-+ * turned on Vbus which is controlled by the axp223 pmic on the board.
-+ *
-+ * Once we have axp223 support we should switch to fully supporting otg.
-+ */
-+&usb_otg {
-+	dr_mode = "host";
-+	status = "okay";
-+};
++The device node for Mediatek SOC usb3.0 phy
 +
-+&usbphy {
++Required properties:
++ - compatible : Should be "mediatek,mt8173-u3phy"
++ - reg        : Offset and length of registers for phy domain
++ - clocks     : must support all clocks that phy need
++ - clock-names: should be "u3phya_ref" for u3phya reference clock.
++ - #phy-cells : must be 1 for the phy
++
++Example:
++
++u3phy: usb-phy@11290000 {
++	compatible = "mediatek,mt8173-u3phy";
++	reg = <0 0x11290000 0 0x3000>;
++	clocks = <&apmixedsys CLK_APMIXED_REF2USB_TX>;
++	clock-names = "u3phya_ref";
++	#phy-cells = <1>;
 +	status = "okay";
 +};
 -- 
-2.4.3
+1.8.1.1.dirty
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
