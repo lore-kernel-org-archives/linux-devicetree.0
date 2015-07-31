@@ -1,47 +1,58 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v2 3/3] ARM: dts: sun8i: Enable USB DRC on
- Ippo Q8H-A33 tablet
-Date: Fri, 31 Jul 2015 18:58:24 +0200
-Message-ID: <20150731165824.GJ2564@lukather>
-References: <1438347218-8158-1-git-send-email-hdegoede@redhat.com>
- <1438347218-8158-3-git-send-email-hdegoede@redhat.com>
-Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
+From: Boris Brezillon <boris.brezillon@free-electrons.com>
+Subject: Re: [PATCH v2 5/5] mtd: ofpart: move ofpart partitions to a
+ dedicated dt node
+Date: Fri, 31 Jul 2015 19:24:58 +0200
+Message-ID: <20150731192458.457c6c9d@bbrezillon>
+References: <cover.1438340815.git.hramrach@gmail.com>
+	<4982216b5cb602c71ade6810cecdb9535e0862fc.1438340815.git.hramrach@gmail.com>
+	<20150731180614.162852ee@bbrezillon>
+	<CAOMqctROw6wrKa+3jF275m=nd6qy7mRy0k3ztJB5s2Vy8r=DZw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="e+CieX+hyvUQgATU"
-Return-path: <linux-sunxi+bncBD2ZNBF5VYJRBWGS52WQKGQE3FNJ2GQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1438347218-8158-3-git-send-email-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <http://groups.google.com/group/linux-sunxi/subscribe>
-To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAOMqctROw6wrKa+3jF275m=nd6qy7mRy0k3ztJB5s2Vy8r=DZw@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Michal Suchanek <hramrach@gmail.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, David Woodhouse <dwmw2@infradead.org>, Brian Norris <computersforpeace@gmail.com>, devicetree <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, MTD Maling List <linux-mtd@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
---e+CieX+hyvUQgATU
-Content-Type: text/plain; charset=UTF-8
-Content-Disposition: inline
+On Fri, 31 Jul 2015 18:52:01 +0200
+Michal Suchanek <hramrach@gmail.com> wrote:
 
-On Fri, Jul 31, 2015 at 02:53:38PM +0200, Hans de Goede wrote:
-> Enable the otg/drc usb controller on the Ippo Q8H-A33 tablet, for now it
-> is enabled in host-only mode, because true OTG support requires support
-> for detecting and enabling Vbus through the axp221 pmic.
-> 
-> For this to work the Vbus on the port must be enabled by u-boot,
-> or a powered hub must be used.
-> 
-> Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 
-Applied, thanks!
-Maxime
+> >
+> >>               (*pparts)[i].offset = of_read_number(reg, a_cells);
+> >>               (*pparts)[i].size = of_read_number(reg + a_cells, s_cells);
+> >>
+> >> @@ -92,15 +116,15 @@ static int parse_ofpart_partitions(struct mtd_info *master,
+> >>               i++;
+> >>       }
+> >>
+> >> -     if (!i) {
+> >> -             of_node_put(pp);
+> >> -             pr_err("No valid partition found on %s\n", node->full_name);
+> >> -             kfree(*pparts);
+> >> -             *pparts = NULL;
+> >> -             return -EINVAL;
+> >> -     }
+> >> -
+> >
+> > Are you sure you can safely remove this check?
+> 
+> Yes. It was incomplete check to reject some partitioning schemes
+> considered invalid.
+> 
+> Now there is stricter checking above so this can be removed.
+
+Indeed, I was worried about resources deallocation, but this is handle
+by the caller, and if nr_parts is zero the master MTD device will
+be exposed.
+
+
+
 
 -- 
-Maxime Ripard, Free Electrons
-Embedded Linux, Kernel and Android engineering
+Boris Brezillon, Free Electrons
+Embedded Linux and Kernel engineering
 http://free-electrons.com
---e+CieX+hyvUQgATU--
