@@ -1,73 +1,173 @@
-From: Ley Foon Tan <lftan@altera.com>
-Subject: [PATCH v2 0/5] Altera PCIe host controller driver with MSI support
-Date: Fri, 31 Jul 2015 18:15:10 +0800
-Message-ID: <1438337715-22594-1-git-send-email-lftan@altera.com>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH 5/5] ARM: dts: sun7i: Add dts file for Wits
+ Pro A20 DKT
+Date: Fri, 31 Jul 2015 12:20:28 +0200
+Message-ID: <20150731102028.GE2564@lukather>
+References: <1438333194-21181-1-git-send-email-hdegoede@redhat.com>
+ <1438333194-21181-6-git-send-email-hdegoede@redhat.com>
+Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Bjorn Helgaas <bhelgaas@google.com>, Russell King <linux@arm.linux.org.uk>, Arnd Bergmann <arnd@arndb.de>, Dinh Nguyen <dinguyen@opensource.altera.com>
-Cc: devicetree@vger.kernel.org, lftan.linux@gmail.com, linux-doc@vger.kernel.org, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Ley Foon Tan <lftan@altera.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="Vl4kNlnRfHfswxag"
+Return-path: <linux-sunxi+bncBD2ZNBF5VYJRBFEY5WWQKGQEFAVHCMY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1438333194-21181-6-git-send-email-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <http://groups.google.com/group/linux-sunxi/subscribe>
+To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Jelle de Jong <jelledejong-OIcJOM8/mISwoUgIn9SVlA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This is the 2nd version of patch set to add support for Altera PCIe host
-controller with MSI feature on Altera FPGA device families. This patchset
-have resolved all comments in v1. Thanks everyone for reviewing.
+--Vl4kNlnRfHfswxag
+Content-Type: text/plain; charset=UTF-8
+Content-Disposition: inline
 
-It is based on patch series from Marc Zyngier "Per-device MSI domain &
-platform MSI" [1] to get rid of struct msi_controller.
+On Fri, Jul 31, 2015 at 10:59:54AM +0200, Hans de Goede wrote:
+> From: Jelle de Jong <jelledejong-OIcJOM8/mISwoUgIn9SVlA@public.gmane.org>
+> 
+> The Wits Pro A20 DKT is an A20 Development KiT with 1G RAM, 4G NAND,
+> sdio wifi, 1Gbit ethernet, 1024x768 lcd screen with ft5x_ts touchscreen
+> and a ton of IO connectors.
+> 
+> Note there seem to be multiple sdcard slots on the board (4 in total), but
+> other then mmc0 none of these are hooked up by default, there is a ton of
+> dip-switches which likely allow hooking some of these up, but the
+> documentation of the board only describes the use of a fraction of them,
+> so for now we only support mmc0.
+> 
+> Signed-off-by: Jelle de Jong <jelledejong-OIcJOM8/mISwoUgIn9SVlA@public.gmane.org>
+> Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+> ---
+> Also see: http://www.merrii.com/en/pla_d.asp?id=163
+> ---
+>  arch/arm/boot/dts/Makefile                       |   3 +-
+>  arch/arm/boot/dts/sun7i-a20-wits-pro-a20-dkt.dts | 209 +++++++++++++++++++++++
+>  2 files changed, 211 insertions(+), 1 deletion(-)
+>  create mode 100644 arch/arm/boot/dts/sun7i-a20-wits-pro-a20-dkt.dts
+> 
+> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+> index f830e1f..151a413 100644
+> --- a/arch/arm/boot/dts/Makefile
+> +++ b/arch/arm/boot/dts/Makefile
+> @@ -595,7 +595,8 @@ dtb-$(CONFIG_MACH_SUN7I) += \
+>  	sun7i-a20-orangepi-mini.dtb \
+>  	sun7i-a20-pcduino3.dtb \
+>  	sun7i-a20-pcduino3-nano.dtb \
+> -	sun7i-a20-wexler-tab7200.dtb
+> +	sun7i-a20-wexler-tab7200.dtb \
+> +        sun7i-a20-wits-pro-a20-dkt.dtb
 
-[1]: https://lkml.org/lkml/2015/7/23/172
+The indentation is off.
 
-v1->v2 changes:
-- arm: socfpga: remove ununsed ARCH_SUPPORTS_MSI and PCI from Kconfig
-- pci: host: remove depends on OF from Kconfig
-- pci: host: remove depends PCIE_ALTERA from Kconfig
-- pci: host: change pcie-altera to tristate in Kconfig
-- pcie-altera: remove unnecessary newlines and .owner
-- pcie-altera: remove altera_pcie_map_irq
-- pcie-altera: remove dependency on hw_pci and use pci_scan_root_bus
-- pcie-altera-msi: change to use phys_addr_t
-- pcie-altera-msi: change to use irq_set_chained_handler
-- pcie-altera-msi: add inner_domain
-- pcie-altera-msi: add add MSI_FLAG_PCI_MSIX flag
-- pcie-altera-msi: return -EINVAL for altera_msi_set_affinity
-- pcie-altera-msi: return PTR_ERR() instead of -EADDRNOTAVAIL
-- change to use write_relaxed and read_relaxed
+>  dtb-$(CONFIG_MACH_SUN8I) += \
+>  	sun8i-a23-evb.dtb \
+>  	sun8i-a23-ippo-q8h-v5.dtb \
+> diff --git a/arch/arm/boot/dts/sun7i-a20-wits-pro-a20-dkt.dts b/arch/arm/boot/dts/sun7i-a20-wits-pro-a20-dkt.dts
+> new file mode 100644
+> index 0000000..db4d32c
+> --- /dev/null
+> +++ b/arch/arm/boot/dts/sun7i-a20-wits-pro-a20-dkt.dts
+> @@ -0,0 +1,209 @@
+> +/*
+> + * Copyright 2015 Jelle de Jong <jelledejong-OIcJOM8/mISwoUgIn9SVlA@public.gmane.org>
+> + *
+> + * This file is dual-licensed: you can use it either under the terms
+> + * of the GPL or the X11 license, at your option. Note that this dual
+> + * licensing only applies to this file, and not this project as a
+> + * whole.
+> + *
+> + *  a) This file is free software; you can redistribute it and/or
+> + *     modify it under the terms of the GNU General Public License as
+> + *     published by the Free Software Foundation; either version 2 of the
+> + *     License, or (at your option) any later version.
+> + *
+> + *     This file is distributed in the hope that it will be useful,
+> + *     but WITHOUT ANY WARRANTY; without even the implied warranty of
+> + *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+> + *     GNU General Public License for more details.
+> + *
+> + * Or, alternatively,
+> + *
+> + *  b) Permission is hereby granted, free of charge, to any person
+> + *     obtaining a copy of this software and associated documentation
+> + *     files (the "Software"), to deal in the Software without
+> + *     restriction, including without limitation the rights to use,
+> + *     copy, modify, merge, publish, distribute, sublicense, and/or
+> + *     sell copies of the Software, and to permit persons to whom the
+> + *     Software is furnished to do so, subject to the following
+> + *     conditions:
+> + *
+> + *     The above copyright notice and this permission notice shall be
+> + *     included in all copies or substantial portions of the Software.
+> + *
+> + *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+> + *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+> + *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+> + *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+> + *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+> + *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+> + *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+> + *     OTHER DEALINGS IN THE SOFTWARE.
+> + */
+> +
+> +/dts-v1/;
+> +#include "sun7i-a20.dtsi"
+> +#include "sunxi-common-regulators.dtsi"
+> +
+> +#include <dt-bindings/gpio/gpio.h>
+> +#include <dt-bindings/input/input.h>
+> +#include <dt-bindings/interrupt-controller/irq.h>
+> +
+> +/ {
+> +	model = "Wits Pro A20 DKT";
+> +	compatible = "wits,pro-a20-dkt", "allwinner,sun7i-a20";
+> +
+> +	aliases {
+> +		serial0 = &uart0;
+> +	};
+> +
+> +	chosen {
+> +		stdout-path = "serial0:115200n8";
+> +	};
+> +
+> +	reg_vmmc3: vmmc3 {
+> +		compatible = "regulator-fixed";
+> +		pinctrl-names = "default";
+> +		pinctrl-0 = <&vmmc3_pin_ap6xxx_wl_regon>;
+> +		regulator-name = "vmmc3";
+> +		regulator-min-microvolt = <3300000>;
+> +		regulator-max-microvolt = <3300000>;
+> +		enable-active-high;
+> +		gpio = <&pio 7 9 GPIO_ACTIVE_HIGH>; /* PH9 */
+> +	};
 
-History:
--------
-[v1]: https://lkml.org/lkml/2015/7/28/395
+It's not really vmmc. The reg_on stuff is actually more of a reset
+line: when tied to VCC, the WLAN part of the chip and its regulators
+are enabled, while when it's tied to ground, the WLAN is in reset, and
+the internal regulators disabled.
 
-Ley Foon Tan (5):
-  arm: add msi.h to Kbuild
-  pci:host: Add Altera PCIe host controller driver
-  pci: altera: Add Altera PCIe MSI driver
-  Documentation: dt-bindings: pci: altera pcie device tree binding
-  MAINTAINERS: Add Altera PCIe and MSI drivers maintainer
+So it can be seen as either an active-low reset line, or an
+active-high regulator for the WiFi part, but VMMC is the power line of
+the MMC bus itself, which usually is provided by a regulator through
+the pin 22 of the AP6210, usually tied directly to the 3.3V line.
 
- .../devicetree/bindings/pci/altera-pcie-msi.txt    |  27 ++
- .../devicetree/bindings/pci/altera-pcie.txt        |  49 ++
- MAINTAINERS                                        |  16 +
- arch/arm/include/asm/Kbuild                        |   1 +
- drivers/pci/host/Kconfig                           |  15 +
- drivers/pci/host/Makefile                          |   2 +
- drivers/pci/host/pcie-altera-msi.c                 | 324 +++++++++++++
- drivers/pci/host/pcie-altera.c                     | 526 +++++++++++++++++++++
- 8 files changed, 960 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/pci/altera-pcie-msi.txt
- create mode 100644 Documentation/devicetree/bindings/pci/altera-pcie.txt
- create mode 100644 drivers/pci/host/pcie-altera-msi.c
- create mode 100644 drivers/pci/host/pcie-altera.c
+So you actually have two regulators here: one for vmmc (reg_3v3), and
+one for reg_on which is the one that you just defined.
+
+Note that it's a bit of a pain for now to support such cases, as
+there's nothing to tie something from the DT to an SDIO device. I
+don't have a better solution than marking it always-on at the moment,
+with a big FIXME comment on top... :/
+
+Maxime
 
 -- 
-1.8.2.1
+Maxime Ripard, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
+--Vl4kNlnRfHfswxag--
