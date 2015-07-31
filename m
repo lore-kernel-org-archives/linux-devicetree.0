@@ -1,132 +1,205 @@
-From: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH v5 1/8] Documentation: add DT binding for ARM System Control
- and Power Interface(SCPI) protocol
-Date: Fri, 31 Jul 2015 17:07:26 +0100
-Message-ID: <55BB9D3E.1000605@arm.com>
-References: <1437649828-14540-1-git-send-email-sudeep.holla@arm.com> <1437649828-14540-2-git-send-email-sudeep.holla@arm.com> <20150731160027.GG25118@leverpostej>
+From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Subject: Re: Re: [PATCH 5/5] ARM: dts: sun7i: Add dts file for
+ Wits Pro A20 DKT
+Date: Fri, 31 Jul 2015 18:13:06 +0200
+Message-ID: <55BB9E92.30604@redhat.com>
+References: <1438333194-21181-1-git-send-email-hdegoede@redhat.com>
+ <1438333194-21181-6-git-send-email-hdegoede@redhat.com>
+ <20150731102028.GE2564@lukather>
+ <CAGb2v65TEogqYFAfen1VnOaiepvez5t8Oh+Q=OYsRS_aZUMO3A@mail.gmail.com>
+Reply-To: hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20150731160027.GG25118@leverpostej>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Liviu Dudau <Liviu.Dudau-5wv7dgnIgG8@public.gmane.org>, Punit Agrawal <Punit.Agrawal-5wv7dgnIgG8@public.gmane.org>, "Jon Medhurst (Tixy)" <tixy-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Lorenzo Pieralisi <Lorenzo.Pieralisi-5wv7dgnIgG8@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Kevin Hilman <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Return-path: <linux-sunxi+bncBDRZXY4CYYORBF5552WQKGQEDZ6PXZQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <CAGb2v65TEogqYFAfen1VnOaiepvez5t8Oh+Q=OYsRS_aZUMO3A-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <http://groups.google.com/group/linux-sunxi/subscribe>
+To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, Jelle de Jong <jelledejong-OIcJOM8/mISwoUgIn9SVlA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+Hi,
 
-
-On 31/07/15 17:00, Mark Rutland wrote:
-> Hi,
->
-> On Thu, Jul 23, 2015 at 12:10:21PM +0100, Sudeep Holla wrote:
->> This patch adds devicetree binding for System Control and Power
->> Interface (SCPI) Message Protocol used between the Application Cores(AP)
->> and the System Control Processor(SCP). The MHU peripheral provides a
->> mechanism for inter-processor communication between SCP's M3 processor
->> and AP.
+On 31-07-15 12:25, Chen-Yu Tsai wrote:
+> On Fri, Jul 31, 2015 at 6:20 PM, Maxime Ripard
+> <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
+>> On Fri, Jul 31, 2015 at 10:59:54AM +0200, Hans de Goede wrote:
+>>> From: Jelle de Jong <jelledejong-OIcJOM8/mISwoUgIn9SVlA@public.gmane.org>
+>>>
+>>> The Wits Pro A20 DKT is an A20 Development KiT with 1G RAM, 4G NAND,
+>>> sdio wifi, 1Gbit ethernet, 1024x768 lcd screen with ft5x_ts touchscreen
+>>> and a ton of IO connectors.
+>>>
+>>> Note there seem to be multiple sdcard slots on the board (4 in total), but
+>>> other then mmc0 none of these are hooked up by default, there is a ton of
+>>> dip-switches which likely allow hooking some of these up, but the
+>>> documentation of the board only describes the use of a fraction of them,
+>>> so for now we only support mmc0.
+>>>
+>>> Signed-off-by: Jelle de Jong <jelledejong-OIcJOM8/mISwoUgIn9SVlA@public.gmane.org>
+>>> Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+>>> ---
+>>> Also see: http://www.merrii.com/en/pla_d.asp?id=163
+>>> ---
+>>>   arch/arm/boot/dts/Makefile                       |   3 +-
+>>>   arch/arm/boot/dts/sun7i-a20-wits-pro-a20-dkt.dts | 209 +++++++++++++++++++++++
+>>>   2 files changed, 211 insertions(+), 1 deletion(-)
+>>>   create mode 100644 arch/arm/boot/dts/sun7i-a20-wits-pro-a20-dkt.dts
+>>>
+>>> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+>>> index f830e1f..151a413 100644
+>>> --- a/arch/arm/boot/dts/Makefile
+>>> +++ b/arch/arm/boot/dts/Makefile
+>>> @@ -595,7 +595,8 @@ dtb-$(CONFIG_MACH_SUN7I) += \
+>>>        sun7i-a20-orangepi-mini.dtb \
+>>>        sun7i-a20-pcduino3.dtb \
+>>>        sun7i-a20-pcduino3-nano.dtb \
+>>> -     sun7i-a20-wexler-tab7200.dtb
+>>> +     sun7i-a20-wexler-tab7200.dtb \
+>>> +        sun7i-a20-wits-pro-a20-dkt.dtb
 >>
->> SCP offers control and management of the core/cluster power states,
->> various power domain DVFS including the core/cluster, certain system
->> clocks configuration, thermal sensors and many others.
+>> The indentation is off.
 >>
->> Signed-off-by: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
->> Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
->> Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
->> CC: Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->> Cc: Liviu Dudau <Liviu.Dudau-5wv7dgnIgG8@public.gmane.org>
->> Cc: Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
->> Cc: Jon Medhurst (Tixy) <tixy-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
->> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
->> ---
->>   Documentation/devicetree/bindings/arm/arm,scpi.txt | 151 +++++++++++++++++++++
->>   MAINTAINERS                                        |   6 +
->>   2 files changed, 157 insertions(+)
->>   create mode 100644 Documentation/devicetree/bindings/arm/arm,scpi.txt
+>>>   dtb-$(CONFIG_MACH_SUN8I) += \
+>>>        sun8i-a23-evb.dtb \
+>>>        sun8i-a23-ippo-q8h-v5.dtb \
+>>> diff --git a/arch/arm/boot/dts/sun7i-a20-wits-pro-a20-dkt.dts b/arch/arm/boot/dts/sun7i-a20-wits-pro-a20-dkt.dts
+>>> new file mode 100644
+>>> index 0000000..db4d32c
+>>> --- /dev/null
+>>> +++ b/arch/arm/boot/dts/sun7i-a20-wits-pro-a20-dkt.dts
+>>> @@ -0,0 +1,209 @@
+>>> +/*
+>>> + * Copyright 2015 Jelle de Jong <jelledejong-OIcJOM8/mISwoUgIn9SVlA@public.gmane.org>
+>>> + *
+>>> + * This file is dual-licensed: you can use it either under the terms
+>>> + * of the GPL or the X11 license, at your option. Note that this dual
+>>> + * licensing only applies to this file, and not this project as a
+>>> + * whole.
+>>> + *
+>>> + *  a) This file is free software; you can redistribute it and/or
+>>> + *     modify it under the terms of the GNU General Public License as
+>>> + *     published by the Free Software Foundation; either version 2 of the
+>>> + *     License, or (at your option) any later version.
+>>> + *
+>>> + *     This file is distributed in the hope that it will be useful,
+>>> + *     but WITHOUT ANY WARRANTY; without even the implied warranty of
+>>> + *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+>>> + *     GNU General Public License for more details.
+>>> + *
+>>> + * Or, alternatively,
+>>> + *
+>>> + *  b) Permission is hereby granted, free of charge, to any person
+>>> + *     obtaining a copy of this software and associated documentation
+>>> + *     files (the "Software"), to deal in the Software without
+>>> + *     restriction, including without limitation the rights to use,
+>>> + *     copy, modify, merge, publish, distribute, sublicense, and/or
+>>> + *     sell copies of the Software, and to permit persons to whom the
+>>> + *     Software is furnished to do so, subject to the following
+>>> + *     conditions:
+>>> + *
+>>> + *     The above copyright notice and this permission notice shall be
+>>> + *     included in all copies or substantial portions of the Software.
+>>> + *
+>>> + *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+>>> + *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+>>> + *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+>>> + *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+>>> + *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+>>> + *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+>>> + *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+>>> + *     OTHER DEALINGS IN THE SOFTWARE.
+>>> + */
+>>> +
+>>> +/dts-v1/;
+>>> +#include "sun7i-a20.dtsi"
+>>> +#include "sunxi-common-regulators.dtsi"
+>>> +
+>>> +#include <dt-bindings/gpio/gpio.h>
+>>> +#include <dt-bindings/input/input.h>
+>>> +#include <dt-bindings/interrupt-controller/irq.h>
+>>> +
+>>> +/ {
+>>> +     model = "Wits Pro A20 DKT";
+>>> +     compatible = "wits,pro-a20-dkt", "allwinner,sun7i-a20";
+>>> +
+>>> +     aliases {
+>>> +             serial0 = &uart0;
+>>> +     };
+>>> +
+>>> +     chosen {
+>>> +             stdout-path = "serial0:115200n8";
+>>> +     };
+>>> +
+>>> +     reg_vmmc3: vmmc3 {
+>>> +             compatible = "regulator-fixed";
+>>> +             pinctrl-names = "default";
+>>> +             pinctrl-0 = <&vmmc3_pin_ap6xxx_wl_regon>;
+>>> +             regulator-name = "vmmc3";
+>>> +             regulator-min-microvolt = <3300000>;
+>>> +             regulator-max-microvolt = <3300000>;
+>>> +             enable-active-high;
+>>> +             gpio = <&pio 7 9 GPIO_ACTIVE_HIGH>; /* PH9 */
+>>> +     };
 >>
->> diff --git a/Documentation/devicetree/bindings/arm/arm,scpi.txt b/Documentation/devicetree/bindings/arm/arm,scpi.txt
->> new file mode 100644
->> index 000000000000..e21cce646561
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/arm/arm,scpi.txt
->> @@ -0,0 +1,151 @@
->> +System Control and Power Interface (SCPI) Message Protocol
->> +----------------------------------------------------------
->> +
->> +Firmware implementing the SCPI described in ARM document number ARM DUI 0922B
->> +("ARM Compute Subsystem SCP: Message Interface Protocols")[0] can be used
->> +by Linux to initiate various system control and power operations.
->> +
->> +Required properties:
->> +
->> +- compatible : should be "arm,scpi"
->> +- mboxes: List of phandle and mailbox channel specifiers
->> +	  All the channels reserved by remote SCP firmware for use by
->> +	  SCPI message protocol should be specified in any order
->> +- shmem : List of phandle pointing to the shared memory(SHM) area between the
->> +	  processors using these mailboxes for IPC, one for each mailbox
->> +	  SHM can be any memory reserved for the purpose of this communication
->> +	  between the processors.
->> +
->> +See Documentation/devicetree/bindings/mailbox/mailbox.txt
->> +for more details about the generic mailbox controller and
->> +client driver bindings.
->> +
->> +Clock bindings for the clocks based on SCPI Message Protocol
->> +------------------------------------------------------------
->> +
->> +This binding uses the common clock binding[1].
->> +
->> +Container Node
->> +==============
->> +Required properties:
->> +- compatible : should be "arm,scpi-clocks"
->> +	       All the clocks provided by SCP firmware via SCPI message
->> +	       protocol much be listed as sub-nodes under this node.
->> +
->> +Sub-nodes
->> +=========
->> +Required properties:
->> +- compatible : shall include one of the following
->> +	"arm,scpi-dvfs-clocks" - all the clocks that are variable and index based.
->> +		These clocks don't provide an entire range of values between the
->> +		limits but only discrete points within the range. The firmware
->> +		provides the mapping for each such operating frequency and the
->> +		index associated with it. The firmware also manages the
->> +		voltage scaling appropriately with the clock scaling.
->> +	"arm,scpi-variable-clocks" - all the clocks that are variable and provide full
->> +		range within the specified range. The firmware provides the
->> +		range of values within a specified range.
->> +
->> +Other required properties for all clocks(all from common clock binding):
->> +- #clock-cells : should be set to 1 as each of the SCPI clocks have multiple
->> +	outputs.
+>> It's not really vmmc. The reg_on stuff is actually more of a reset
+>> line: when tied to VCC, the WLAN part of the chip and its regulators
+>> are enabled, while when it's tied to ground, the WLAN is in reset, and
+>> the internal regulators disabled.
+>>
+>> So it can be seen as either an active-low reset line, or an
+>> active-high regulator for the WiFi part, but VMMC is the power line of
+>> the MMC bus itself, which usually is provided by a regulator through
+>> the pin 22 of the AP6210, usually tied directly to the 3.3V line.
+>>
+>> So you actually have two regulators here: one for vmmc (reg_3v3), and
+>> one for reg_on which is the one that you just defined.
+>>
+>> Note that it's a bit of a pain for now to support such cases, as
+>> there's nothing to tie something from the DT to an SDIO device. I
+>> don't have a better solution than marking it always-on at the moment,
+>> with a big FIXME comment on top... :/
 >
-> Could you change this to:
->
-> #clock-cells: Should be 1. Contains the Clock ID value used by SCPI
->                commands.
->
+> One could use the mmc-pwr-seq stuff.
 
-Changed now.
+Good idea, I've just written, tested and posted a patch for this for the
+cubietruck. I do not have access to the A20 Wits DKT atm, so I will post
+a new version of this patch with pwrseq support coming Tuesday when I have
+access to the board again.
 
-> That will make it clear what value should be used when writing a dts
-> (the raw value commands use, as opposed to some logical abstraction
-> thereof).
->
+ > I don't know if it has been
+> extended for multiple GPIOs, not that you would need it in this use
+> case.
 
-Agreed.
+mmc-pwrseq-simple supports multiple reset/enable gpios (by listing
+them all as reset-gpios and setting GPIO_ACTIVE_LOW/HIGH depending
+on which value they need to be to activate things).
 
-> With that:
->
-> Acked-by: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
->
+It also supports listing clocks which need to be enabled. I think
+that it may be a good idea to use this to also enable the bluetooth
+bits of the ap6210 module on the cubietruck. I know that the
+actual bt is interfaced over an uart, and we really should have
+a mechanism to enable/disable it separately, but for not this seems
+like a good way to get bluetooth to work.
 
-Thanks.
+We should ofcourse add a comment to the dts file that this is not a
+100% ideal solution, but other then that I think this should work
+nicely. Maxime would enabling the bluetooth bits of this sdio
+module via mmc-pwrseq be acceptable to you?
+
+ChenYu if Maxime acks this solution I hope you can write a patch
+for this, since you've been working on the bluetooth support before.
+
+> Maybe we ought to fix up the other ones, like the CubieTruck and A31
+> Hummingbird?
+
+Ack, can you take care of the Hummingbird ? (I don't have one).
 
 Regards,
-Sudeep
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+
+Hans
