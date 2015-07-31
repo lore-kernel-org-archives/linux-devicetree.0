@@ -1,39 +1,64 @@
-From: santosh shilimkar <santosh.shilimkar@oracle.com>
-Subject: Re: [PATCH 2/2] ARM: dts: keystone: fix dt bindings to use post div
- register for mainpll
-Date: Fri, 31 Jul 2015 08:30:44 -0700
-Message-ID: <55BB94A4.1010200@oracle.com>
-References: <1432915453-409-1-git-send-email-m-karicheri2@ti.com>
- <1432915453-409-2-git-send-email-m-karicheri2@ti.com>
- <55BB8412.2000905@ti.com>
+From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Subject: [PATCH] ARM: dts: sun7i: Change cubietruck wifi enable
+ pin to use mmc-pwrseq
+Date: Fri, 31 Jul 2015 17:41:52 +0200
+Message-ID: <1438357312-17378-1-git-send-email-hdegoede@redhat.com>
+Reply-To: hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <55BB8412.2000905@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Murali Karicheri <m-karicheri2@ti.com>, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, ssantosh@kernel.org, mturquette@linaro.org, sboyd@codeaurora.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, linux@arm.linux.org.uk, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sunxi+bncBDRZXY4CYYORBQ5O52WQKGQEKUZQTGI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <http://groups.google.com/group/linux-sunxi/subscribe>
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 7/31/2015 7:20 AM, Murali Karicheri wrote:
-> On 05/29/2015 12:04 PM, Murali Karicheri wrote:
->> All of the keystone devices have a separate register to hold post
->> divider value for main pll clock. Currently the fixed-postdiv
->> value used for k2hk/l/e SoCs works by sheer luck as u-boot happens to
->> use a value of 2 for this. Now that we have fixed this in the pll
->> clock driver change the dt bindings for the same.
->>
->> Signed-off-by: Murali Karicheri <m-karicheri2@ti.com>
->> ---
+The wifi-enable pin of the ap6210 module is not really a regulator,
+switch to the mmc-pwrseq framework for controlling it. This more
+accurately reflects how the hardware actually works.
 
-[..]
+Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+---
+ arch/arm/boot/dts/sun7i-a20-cubietruck.dts | 13 +++++--------
+ 1 file changed, 5 insertions(+), 8 deletions(-)
 
-> Santosh,
->
-> The clk driver update is already merged to v4.2-rc. Could you send this
-> DT update as well for 4.2-rc?
->
-Sure.
-
-Regards,
-Santosh
+diff --git a/arch/arm/boot/dts/sun7i-a20-cubietruck.dts b/arch/arm/boot/dts/sun7i-a20-cubietruck.dts
+index de3e195..0b2f914 100644
+--- a/arch/arm/boot/dts/sun7i-a20-cubietruck.dts
++++ b/arch/arm/boot/dts/sun7i-a20-cubietruck.dts
+@@ -88,15 +88,11 @@
+ 		};
+ 	};
+ 
+-	reg_vmmc3: vmmc3 {
+-		compatible = "regulator-fixed";
++	mmc3_pwrseq: mmc3_pwrseq {
++		compatible = "mmc-pwrseq-simple";
+ 		pinctrl-names = "default";
+ 		pinctrl-0 = <&vmmc3_pin_cubietruck>;
+-		regulator-name = "vmmc3";
+-		regulator-min-microvolt = <3300000>;
+-		regulator-max-microvolt = <3300000>;
+-		enable-active-high;
+-		gpio = <&pio 7 9 GPIO_ACTIVE_HIGH>;
++		reset-gpios = <&pio 7 9 GPIO_ACTIVE_LOW>; /* PH9 WIFI_EN */
+ 	};
+ };
+ 
+@@ -179,7 +175,8 @@
+ &mmc3 {
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&mmc3_pins_a>;
+-	vmmc-supply = <&reg_vmmc3>;
++	vmmc-supply = <&reg_vcc3v3>;
++	mmc-pwrseq = <&mmc3_pwrseq>;
+ 	bus-width = <4>;
+ 	non-removable;
+ 	status = "okay";
+-- 
+2.4.3
