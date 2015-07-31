@@ -1,63 +1,126 @@
-From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [linux-sunxi] [PATCH v5 2/7] phy-sun4i-usb: Add extcon support
- for the otg phy (phy0)
-Date: Fri, 31 Jul 2015 16:24:31 +0200
-Message-ID: <55BB851F.4090602@redhat.com>
-References: <1434199071-22127-1-git-send-email-hdegoede@redhat.com>
- <1434199071-22127-3-git-send-email-hdegoede@redhat.com>
- <55BB84D7.70109@gmail.com>
+From: Gabriele Paoloni <gabriele.paoloni@huawei.com>
+Subject: RE: [PATCH v6] PCI: Store PCIe bus address in struct of_pci_range
+Date: Fri, 31 Jul 2015 14:25:09 +0000
+Message-ID: <EE11001F9E5DDD47B7634E2F8A612F2E01D70589@lhreml503-mbs>
+References: <1438010223-124422-1-git-send-email-gabriele.paoloni@huawei.com>
+ <20150729172053.GE31170@google.com>
+ <EE11001F9E5DDD47B7634E2F8A612F2E01D6F350@lhreml503-mbs>
+ <CAL_JsqKs11-sXQTdBD+ZjbVYFWUHBARTW9q5MF1hCXUhZ+nWLQ@mail.gmail.com>
+ <EE11001F9E5DDD47B7634E2F8A612F2E01D6F94A@lhreml503-mbs>
+ <20150730161447.GG9640@google.com>
+ <EE11001F9E5DDD47B7634E2F8A612F2E01D6FB3B@lhreml503-mbs>
+ <20150730171445.GI9640@google.com>
+ <EE11001F9E5DDD47B7634E2F8A612F2E01D6FC15@lhreml503-mbs>
+ <CAL_Jsq+aQVakaZf4xo7sxnVyTmPR+HJ-9ByyS6OYJ0PHDYOwmg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <55BB84D7.70109-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jonathan Liu <net147-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
-Cc: Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Roman Byshko <rbyshko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <CAL_Jsq+aQVakaZf4xo7sxnVyTmPR+HJ-9ByyS6OYJ0PHDYOwmg@mail.gmail.com>
+Content-Language: en-US
+Sender: linux-pci-owner@vger.kernel.org
+To: Rob Herring <robherring2@gmail.com>
+Cc: Bjorn Helgaas <bhelgaas@google.com>, "arnd@arndb.de" <arnd@arndb.de>, "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>, "Wangzhou (B)" <wangzhou1@hisilicon.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "james.morse@arm.com" <james.morse@arm.com>, "Liviu.Dudau@arm.com" <Liviu.Dudau@arm.com>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Yuanzhichang <yuanzhichang@hisilicon.com>, Zhudacai <zhudacai@hisilicon.com>, zhangjukuo <zhangjukuo@huawei.com>, qiuzhenfa <qiuzhenfa@hisilicon.com>, "Liguozhu (Kenneth)" <liguozhu@hisilicon.com>, Jingoo Han <jingoohan1@gmail.com>, Pratyush Anand <pratyush.anand@gmail.com>, "kishon@ti.com" <kishon@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-
-On 31-07-15 16:23, Jonathan Liu wrote:
-> Hi Hans,
->
-> On 13/06/2015 10:37 PM, Hans de Goede wrote:
->> The sunxi musb glue needs to know if a host or normal usb cable is plugged
->> in, add extcon support so that the musb glue can monitor the host status.
->>
->> Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
->> ---
->> Changes in v5:
->> -Split out of the "Add id and vbus detection support" commit
->> -Ported to the new extcon API queued for 4.2
->> ---
->>   drivers/phy/Kconfig         |  1 +
->>   drivers/phy/phy-sun4i-usb.c | 32 +++++++++++++++++++++++++++++++-
->>   2 files changed, 32 insertions(+), 1 deletion(-)
->>
->> diff --git a/drivers/phy/Kconfig b/drivers/phy/Kconfig
->> index a53bd5b..9841780 100644
->> --- a/drivers/phy/Kconfig
->> +++ b/drivers/phy/Kconfig
->> @@ -173,6 +173,7 @@ config PHY_SUN4I_USB
->>       tristate "Allwinner sunxi SoC USB PHY driver"
->>       depends on ARCH_SUNXI && HAS_IOMEM && OF
->>       depends on RESET_CONTROLLER
->> +    depends on EXTCON
->>       select GENERIC_PHY
->>       help
->>         Enable this to support the transceiver that is part of Allwinner
->>
-> Should probably add CONFIG_EXTCON=y to arch/arm/configs/sunxi_defconfig so that CONFIG_PHY_SUN4I_USB=y works out of the box.
-
-Right, ChenYu just send out 2 defconfig patches fixing this.
-
-Thanks for the heads up.
-
-Regards,
-
-Hans
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+WytjYyBLaXNob25dDQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogbGlu
+dXgtcGNpLW93bmVyQHZnZXIua2VybmVsLm9yZyBbbWFpbHRvOmxpbnV4LXBjaS0NCj4gb3duZXJA
+dmdlci5rZXJuZWwub3JnXSBPbiBCZWhhbGYgT2YgUm9iIEhlcnJpbmcNCj4gU2VudDogVGh1cnNk
+YXksIEp1bHkgMzAsIDIwMTUgOTo0MiBQTQ0KPiBUbzogR2FicmllbGUgUGFvbG9uaQ0KPiBDYzog
+Qmpvcm4gSGVsZ2FhczsgYXJuZEBhcm5kYi5kZTsgbG9yZW56by5waWVyYWxpc2lAYXJtLmNvbTsg
+V2FuZ3pob3UNCj4gKEIpOyByb2JoK2R0QGtlcm5lbC5vcmc7IGphbWVzLm1vcnNlQGFybS5jb207
+IExpdml1LkR1ZGF1QGFybS5jb207DQo+IGxpbnV4LXBjaUB2Z2VyLmtlcm5lbC5vcmc7IGxpbnV4
+LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZzsNCj4gZGV2aWNldHJlZUB2Z2VyLmtlcm5l
+bC5vcmc7IFl1YW56aGljaGFuZzsgWmh1ZGFjYWk7IHpoYW5nanVrdW87DQo+IHFpdXpoZW5mYTsg
+TGlndW96aHUgKEtlbm5ldGgpOyBKaW5nb28gSGFuOyBQcmF0eXVzaCBBbmFuZA0KPiBTdWJqZWN0
+OiBSZTogW1BBVENIIHY2XSBQQ0k6IFN0b3JlIFBDSWUgYnVzIGFkZHJlc3MgaW4gc3RydWN0DQo+
+IG9mX3BjaV9yYW5nZQ0KPiANCj4gT24gVGh1LCBKdWwgMzAsIDIwMTUgYXQgMTI6MzQgUE0sIEdh
+YnJpZWxlIFBhb2xvbmkNCj4gPGdhYnJpZWxlLnBhb2xvbmlAaHVhd2VpLmNvbT4gd3JvdGU6DQo+
+ID4+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+ID4+IEZyb206IEJqb3JuIEhlbGdhYXMg
+W21haWx0bzpiaGVsZ2Fhc0Bnb29nbGUuY29tXQ0KPiA+PiBTZW50OiAzMCBKdWx5IDIwMTUgMTg6
+MTUNCj4gPj4gT24gVGh1LCBKdWwgMzAsIDIwMTUgYXQgMDQ6NTA6NTVQTSArMDAwMCwgR2Ficmll
+bGUgUGFvbG9uaSB3cm90ZToNCj4gPj4gPiA+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+
+ID4+ID4gPiBGcm9tOiBsaW51eC1wY2ktb3duZXJAdmdlci5rZXJuZWwub3JnIFttYWlsdG86bGlu
+dXgtcGNpLQ0KPiA+PiA+ID4gb3duZXJAdmdlci5rZXJuZWwub3JnXSBPbiBCZWhhbGYgT2YgQmpv
+cm4gSGVsZ2Fhcw0KPiA+PiA+ID4gU2VudDogVGh1cnNkYXksIEp1bHkgMzAsIDIwMTUgNToxNSBQ
+TQ0KPiA+PiA+ID4gT24gVGh1LCBKdWwgMzAsIDIwMTUgYXQgMDE6NTI6MTNQTSArMDAwMCwgR2Fi
+cmllbGUgUGFvbG9uaSB3cm90ZToNCj4gDQo+IFsuLi5dDQo+IA0KPiA+PiA+ID4gPiBJIGRvbuKA
+mXQgdGhpbmsgd2Ugc2hvdWxkIHJlbHkgb24gW0NQVV0gYWRkcmVzc2VzLi4ud2hhdCBpZiB0aGUN
+Cj4gPj4gPiA+IGludGVybWVkaWF0ZQ0KPiA+PiA+ID4gPiB0cmFuc2xhdGlvbiBsYXllciBjaGFu
+Z2VzIHRoZSBsb3dlciBzaWduaWZpY2FudCBiaXRzIG9mIHRoZQ0KPiAiYnVzDQo+ID4+ID4gPiBh
+ZGRyZXNzIg0KPiA+PiA+ID4gPiB0byB0cmFuc2xhdGUgaW50byBhIGNwdSBhZGRyZXNzPw0KPiA+
+PiA+ID4NCj4gPj4gPiA+IElzIGl0IHJlYWxseSBhIHBvc3NpYmxpdHkgdGhhdCB0aGUgbG93ZXIg
+Yml0cyBjb3VsZCBiZSBjaGFuZ2VkPw0KPiA+PiA+DQo+ID4+ID4gSSd2ZSBjaGVja2VkIGFsbCB0
+aGUgY3VycmVudCBkZWlnbndhcmUgdXNlcnMgRFRzIGV4Y2VwdCAicGNpLQ0KPiA+PiBsYXllcnNj
+YXBlIg0KPiA+PiA+IHRoYXQgSSBjb3VsZCBub3QgZmluZDoNCj4gPj4gPiBzcGVhcjEzMTAuZHRz
+aQ0KPiA+PiA+IHNwZWFyMTM0MC5kdHNpDQo+ID4+ID4gZHJhNy5kdHNpDQo+ID4+ID4gaW14NnFk
+bC5kdHNpDQo+ID4+ID4gaW14NnN4LmR0c2kNCj4gPj4gPiBrZXlzdG9uZS5kdHNpDQo+ID4+ID4g
+ZXh5bm9zNTQ0MC5kdHNpDQo+ID4+ID4NCj4gPj4gPiBOb25lIG9mIHRoZW0gbW9kaWZpZXMgdGhl
+IGxvd2VyIGJpdHMuIFRvIGJlIG1vcmUgcHJlY2lzZSB0aGUgb25seQ0KPiBndXkNCj4gPj4gPiB0
+aGF0IHByb3ZpZGVzIGFub3RoZXIgdHJhbnNsYXRpb24gbGF5ZXIgaXMgImRyYTcuZHRzaSI6DQo+
+ID4+ID4gYXhpMA0KPiA+PiA+IGh0dHA6Ly9seHIuZnJlZS0NCj4gZWxlY3Ryb25zLmNvbS9zb3Vy
+Y2UvYXJjaC9hcm0vYm9vdC9kdHMvZHJhNy5kdHNpI0wyMDcNCj4gPj4gPg0KPiA+PiA+IGF4aTEN
+Cj4gPj4gPiBodHRwOi8vbHhyLmZyZWUtDQo+IGVsZWN0cm9ucy5jb20vc291cmNlL2FyY2gvYXJt
+L2Jvb3QvZHRzL2RyYTcuZHRzaSNMMjQxDQo+ID4+ID4NCj4gPj4gPiBGb3IgdGhpcyBjYXNlIG1h
+c2tpbmcgdGhlIHRvcCA0Yml0cyAoYml0czI4IHRvIDMxKSBzaG91bGQgbWFrZSB0aGUNCj4gam9i
+Lg0KPiANCj4gSU1PLCB3ZSBzaG91bGQganVzdCBmaXggdGhpcyBjYXNlLiBBZnRlciBmdXJ0aGVy
+IHN0dWR5LCBJIGRvbid0IHRoaW5rDQo+IHRoaXMgaXMgYSBEVyBpc3N1ZSwgYnV0IHJhdGhlciBh
+biBTT0MgaW50ZWdyYXRpb24gaXNzdWUuDQo+IA0KPiBJIGJlbGlldmUgeW91IGNhbiBqdXN0IGZp
+eHVwIHRoZSBhZGRyZXNzIGluIHRoZSBwcC0+b3BzLT5ob3N0X2luaXQgaG9vay4NCj4gDQoNClll
+cyBJIGd1ZXNzIHRoYXQgSSBjb3VsZCBqdXN0IGFzc2lnbiBwcC0+KCopX21vZF9iYXNlIHRvIHRo
+ZSBDUFUgYWRkcmVzcyANCmluIERXIGFuZCBtYXNrIGl0IG91dCBpbiBkcmE3eHhfcGNpZV9ob3N0
+X2luaXQoKS4uLg0KDQpLaXNob24sIHdvdWxkIHlvdSBiZSBvayB3aXRoIHRoYXQ/IA0KDQoNCj4g
+SW4gbG9va2luZyBhdCB0aGlzLCBJJ20gY3VyaW91cyB3aHkgb25seSAyIEFUVSB2aWV3cG9ydHMg
+YXJlIHVzZWQgYnkNCj4gZGVmYXVsdCBhcyB0aGlzIGNhdXNlcyBzd2l0Y2hpbmcgb24gY29uZmln
+IGFjY2Vzc2VzLiBQcm9iYWJseSBzb21lDQo+IGNvbmZpZ3VyYXRpb24gb25seSBoYXMgMiB2aWV3
+cG9ydHMuIFRoaXMgd291bGQgbm90IGV2ZW4gd29yayBvbiBTTVANCj4gc3lzdGVtcyEgTWVtb3J5
+IGFuZCBpL28gYWNjZXNzZXMgZG8gbm90IGhhdmUgYW55IGxvY2suIEEgY29uZmlnIGFjY2Vzcw0K
+PiBvbiBvbmUgY29yZSB3aWxsIHRlbXBvcmFyaWx5IGRpc2FibGUgdGhlIGkvbyBvciBtZW1vcnkg
+dmlld3BvcnQgd2hpY2gNCj4gd2lsbCBjYXVzZSBhbiBhYm9ydCwgZHJvcHBlZCwgb3IgZ2FyYmFn
+ZSBkYXRhIG9uIGFuIGkvbyBvciBtZW1vcnkNCj4gYWNjZXNzIGZyb20gYW5vdGhlciBjb3JlLiBZ
+b3Ugd291bGQgaGF2ZSB0byBiZSBhY2Nlc3NpbmcgY2ZnIHNwYWNlIG9uDQo+IGEgYnVzIG90aGVy
+IHRoYW4gdGhlIHJvb3QgYnVzLCBzbyBtYXliZSBubyBvbmUgaXMgZG9pbmcgdGhhdC4NCj4gDQo+
+ID4+ID4NCj4gPj4gPiBTcGVha2luZyBpbiBnZW5lcmFsIHRlcm1zIHNvIGZhciBJJ3ZlIGFsd2F5
+cyBzZWVuIGxpbmVhciBtYXBwaW5ncw0KPiA+PiA+IHRoYXQgZGlmZmVyIGJ5IGJpdG1hc2sgb2Zm
+c2V0LCBob3dldmVyIGxpbmVhciBkb2VzIG5vdCBtZWFuIHRoYXQNCj4geW91DQo+ID4+ID4gY2Fu
+bm90IGFmZmVjdCB0aGUgbG93ZXIgYml0czogZS5nLiA8MHgwPiB0byA8MHgwICsgc2l6ZT4gY2Fu
+IG1hcA0KPiB0bw0KPiA+PiA+IDwweDAwMDBjYWZlIHRvIDB4MDAwMGNhZmUgKyBzaXplPiwgYnV0
+IEkgZ3Vlc3MgdGhhdCBmb3IgSFcgZGVzaWduDQo+ID4+IHJlYXNvbnMNCj4gPj4gPiBpdCBpcyBt
+dWNoIGVhc2llciB0byByZW1hcCBkaXJlY3RseSB1c2luZyBhIGJpdG1hc2suLi5idXQgSSB3YXMN
+Cj4gbm90DQo+ID4+IHN1cmUNCj4gPj4gPiBhbmQgSSBkaWRuJ3QgdGhpbmsgYWJvdXQgdGhlIHBy
+b2JsZW1zIHRoYXQgY2FuIGFyaXNlIHdpdGggQUNQSS4NCj4gDQo+IEZvciBoaWdoZXIgc3BlZWQg
+YnVzZXMsIHRoZSBoL3cgZGVzaWducyBhcmUgbm90IGdvaW5nIHRvIGJlIGRvaW5nDQo+IGNvbXBs
+aWNhdGVkIHRyYW5zbGF0aW9ucyBpbiBvcmRlciB0byBtZWV0IHRpbWluZyByZXF1aXJlbWVudHMu
+IEF0IHRoZQ0KPiB0b3AgbGV2ZWwgb25seSB0aGUgaGlnaGVzdCBvcmRlciBiaXRzIGFyZSBnb2lu
+ZyB0byBiZSBsb29rZWQgYXQuIEZvcg0KPiBkb3duc3RyZWFtIHNlZ21lbnRzLCB0aGUgaGlnaCBv
+cmRlciBiaXRzIG1heSBnZXQgZHJvcHBlZCB0byBzaW1wbGlmeQ0KPiByb3V0aW5nLiBJZiBhbiBJ
+UCBibG9jayBoYXMgZnVsbCBhZGRyZXNzIGJpdHMgaW4gdGhpcyBjYXNlLCB0aGV5IGNvdWxkDQo+
+IGVpdGhlciBiZSB0aWVkIHRvIDAgb3IgdGllZCBvZmYgdG8gdGhlIGNvcnJlY3QgYWRkcmVzcy4g
+RWl0aGVyIGlzDQo+IHJlYXNvbmFibGUsIHNvIEknbSBzdXJlIHRoZXJlIGlzIGgvdyBkb2luZyBi
+b3RoLiBUaGF0IGRvZXNuJ3QgbWVhbiBoL3cNCj4gZGVzaWduZXJzIGhhdmVuJ3QgZG9uZSBzb21l
+dGhpbmcgY3JhenksIHRvby4NCj4gDQo+ID4+IEFzIEkgc2FpZCwgaXQgd291bGRuJ3QgbWFrZSBz
+ZW5zZSBmb3IgdGhlIGJpdHMgdGhhdCBjb21wcmlzZSB0aGUNCj4gPj4gb2Zmc2V0IGludG8gdGhl
+IHdpbmRvdyB0byBjaGFuZ2UsIHNvIHRoZSBtYXBwaW5nIG9ubHkgaGFzIHRvIGJlDQo+IGxpbmVh
+cg0KPiA+PiBpbnNpZGUgdGhlIHdpbmRvdy4NCj4gPj4NCj4gPj4gRm9yIHRoZSBiaXRzIG91dHNp
+ZGUgdGhlIHdpbmRvdyBvZmZzZXQsIEkgZG9uJ3Qga25vdyBlbm91Z2ggdG8gc2F5DQo+ID4+IHdo
+ZXRoZXIgbWFza2luZyBpcyBzdWZmaWNpZW50IG9yIHNhZmUuDQo+ID4+DQo+ID4+ID4gSWYgeW91
+IHRoaW5rIHRoZSBiaXRtYXNrIGlzIE9rIHRoZW4gSSBjYW4gZGlyZWN0bHkgZGVmaW5lIGl0IGlu
+DQo+ID4+ID4gZGVzaWdud2FyZSBhbmQgd2UgY2FuIGRyb3AgdGhpcyBwYXRjaC4NCj4gPj4NCj4g
+Pj4gSXQncyBPSyBieSBtZSwgYnV0IEkga25vdyBub3RoaW5nIGFib3V0IHRoZSBhY3R1YWwgaGFy
+ZHdhcmUgaW52b2x2ZWQuDQo+ID4+IEZvciB0aGUgRGVzaWduV2FyZSBxdWVzdGlvbiwgSSB0aGlu
+ayB5b3Ugd291bGQganVzdCBoYXZlIHRvIGNvbnZpbmNlDQo+ID4+IEppbmdvbyBhbmQgUHJhdHl1
+c2ggKGNjJ2QpLg0KPiA+DQo+ID4gWWVzIGFjdHVhbGx5IGxvb2tpbmcgYXQNCj4gPiBodHRwOi8v
+bHhyLmZyZWUtDQo+IGVsZWN0cm9ucy5jb20vc291cmNlL2FyY2gvYXJtL2Jvb3QvZHRzL3NwZWFy
+MTMxMC5kdHNpI0w5OQ0KPiA+IEkgY2FuIHNlZSB0aGF0IHBjaV9hZGRyPTAgaXMgbWFwcGVkIHRv
+IGJ1c19hZGRyIDB4ODAwMjAwMDAsIHNvDQo+IGNsZWFyaW5nDQo+ID4gdGhlIHRvcCA0IGJpdHMg
+d291bGQgYWx0ZXIgdGhlIGJlaGF2aW91ciBvZiB0aGUgY3VycmVudCBkZXNpZ253YXJlDQo+ID4g
+U1cgZnJhbWV3b3JrLi4ubm93IEkgZG9uJ3Qga25vdyBpZiBEVyBuZWVkcyBvbmx5IHRoZSBsb3cg
+MjhiIG9mIHRoYXQNCj4gPiB2YWx1ZSBvciBub3QuLi4uDQo+IA0KPiBHaXZlbiB0aGF0IG1vc3Qg
+Y2FzZXMgaGF2ZSBzYW1lIGNwdSBhbmQgYnVzIGFkZHJlc3MsIG1hc2tpbmcgaXMgbm90DQo+IHRo
+ZSByaWdodCBzb2x1dGlvbiBpbiBnZW5lcmFsLg0KPiANCj4gVGhlcmUgaXMgYWxzbyBhIGJ1ZyBo
+ZXJlIEJUVy4gcGNpZTAgYW5kIHBjaWUyIGhhdmUgdGhlIHNhbWUgQ1BVDQo+IGFkZHJlc3MgZm9y
+IHRoZSBtZW1vcnkgcmFuZ2UuDQo+IA0KPiBSb2INCj4gLS0NCj4gVG8gdW5zdWJzY3JpYmUgZnJv
+bSB0aGlzIGxpc3Q6IHNlbmQgdGhlIGxpbmUgInVuc3Vic2NyaWJlIGxpbnV4LXBjaSIgaW4NCj4g
+dGhlIGJvZHkgb2YgYSBtZXNzYWdlIHRvIG1ham9yZG9tb0B2Z2VyLmtlcm5lbC5vcmcNCj4gTW9y
+ZSBtYWpvcmRvbW8gaW5mbyBhdCAgaHR0cDovL3ZnZXIua2VybmVsLm9yZy9tYWpvcmRvbW8taW5m
+by5odG1sDQo=
