@@ -1,55 +1,76 @@
-From: <dinguyen@opensource.altera.com>
-Subject: [PATCHv2 4/4] ARM: socfpga: dts: Add resets for EMACs on Arria10
-Date: Fri, 31 Jul 2015 16:03:11 -0500
-Message-ID: <1438376591-22100-5-git-send-email-dinguyen@opensource.altera.com>
+From: <dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
+Subject: [PATCHv2 2/4] ARM: socfpga: dts: add "altr,modrst-offset" property
+Date: Fri, 31 Jul 2015 16:03:09 -0500
+Message-ID: <1438376591-22100-3-git-send-email-dinguyen@opensource.altera.com>
 References: <1438376591-22100-1-git-send-email-dinguyen@opensource.altera.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1438376591-22100-1-git-send-email-dinguyen@opensource.altera.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: p.zabel@pengutronix.de
-Cc: dinh.linux@gmail.com, robh+dt@kernel.org, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, mark.rutland@arm.com, pawel.moll@arm.com, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, s.trumtrar@pengutronix.de, Dinh Nguyen <dinguyen@opensource.altera.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1438376591-22100-1-git-send-email-dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
+Cc: dinh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Dinh Nguyen <dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Dinh Nguyen <dinguyen@opensource.altera.com>
+From: Dinh Nguyen <dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
 
-Add the reset property for the EMAC controllers on Arria10.
+The "altr,modrst-offset" property represents the offset into the reset manager
+that is the first register to be used by the driver to bring peripherals out
+of reset.
 
-Signed-off-by: Dinh Nguyen <dinguyen@opensource.altera.com>
+Signed-off-by: Dinh Nguyen <dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
 ---
- arch/arm/boot/dts/socfpga_arria10.dtsi | 5 +++++
- 1 file changed, 5 insertions(+)
+ Documentation/devicetree/bindings/reset/socfpga-reset.txt | 2 ++
+ arch/arm/boot/dts/socfpga.dtsi                            | 1 +
+ arch/arm/boot/dts/socfpga_arria10.dtsi                    | 1 +
+ 3 files changed, 4 insertions(+)
 
+diff --git a/Documentation/devicetree/bindings/reset/socfpga-reset.txt b/Documentation/devicetree/bindings/reset/socfpga-reset.txt
+index 32c1c8b..98c9f56 100644
+--- a/Documentation/devicetree/bindings/reset/socfpga-reset.txt
++++ b/Documentation/devicetree/bindings/reset/socfpga-reset.txt
+@@ -3,6 +3,7 @@ Altera SOCFPGA Reset Manager
+ Required properties:
+ - compatible : "altr,rst-mgr"
+ - reg : Should contain 1 register ranges(address and length)
++- altr,modrst-offset : Should contain the offset of the first modrst register.
+ - #reset-cells: 1
+ 
+ Example:
+@@ -10,4 +11,5 @@ Example:
+ 		#reset-cells = <1>;
+ 		compatible = "altr,rst-mgr";
+ 		reg = <0xffd05000 0x1000>;
++		altr,modrst-offset = <0x10>;
+ 	};
+diff --git a/arch/arm/boot/dts/socfpga.dtsi b/arch/arm/boot/dts/socfpga.dtsi
+index 86e0fb6..0bda96a 100644
+--- a/arch/arm/boot/dts/socfpga.dtsi
++++ b/arch/arm/boot/dts/socfpga.dtsi
+@@ -783,6 +783,7 @@
+ 			#reset-cells = <1>;
+ 			compatible = "altr,rst-mgr";
+ 			reg = <0xffd05000 0x1000>;
++			altr,modrst-offset = <0x10>;
+ 		};
+ 
+ 		usbphy0: usbphy@0 {
 diff --git a/arch/arm/boot/dts/socfpga_arria10.dtsi b/arch/arm/boot/dts/socfpga_arria10.dtsi
-index 22e7d82..2340fcb 100644
+index a252905..22e7d82 100644
 --- a/arch/arm/boot/dts/socfpga_arria10.dtsi
 +++ b/arch/arm/boot/dts/socfpga_arria10.dtsi
-@@ -16,6 +16,7 @@
- 
- #include "skeleton.dtsi"
- #include <dt-bindings/interrupt-controller/arm-gic.h>
-+#include <dt-bindings/reset/altr,rst-mgr-a10.h>
- 
- / {
- 	#address-cells = <1>;
-@@ -414,6 +415,8 @@
- 			rx-fifo-depth = <16384>;
- 			clocks = <&l4_mp_clk>;
- 			clock-names = "stmmaceth";
-+			resets = <&rst EMAC0_RESET>;
-+			reset-names = "stmmaceth";
- 			status = "disabled";
+@@ -593,6 +593,7 @@
+ 			#reset-cells = <1>;
+ 			compatible = "altr,rst-mgr";
+ 			reg = <0xffd05000 0x100>;
++			altr,modrst-offset = <0x20>;
  		};
  
-@@ -431,6 +434,8 @@
- 			rx-fifo-depth = <16384>;
- 			clocks = <&l4_mp_clk>;
- 			clock-names = "stmmaceth";
-+			resets = <&rst EMAC1_RESET>;
-+			reset-names = "stmmaceth";
- 			status = "disabled";
- 		};
- 
+ 		scu: snoop-control-unit@ffffc000 {
 -- 
 2.4.5
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
