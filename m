@@ -1,82 +1,103 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [RFC PATCH 4/5] ARM: dts: DRA7: Add memory map region entries
- for qspi
-Date: Fri, 31 Jul 2015 19:19:03 +0100
-Message-ID: <20150731181903.GN20873@sirena.org.uk>
-References: <1438072876-16338-1-git-send-email-vigneshr@ti.com>
- <1438072876-16338-5-git-send-email-vigneshr@ti.com>
+From: <dinguyen@opensource.altera.com>
+Subject: [PATCHv2 3/4] reset: socfpga: Update reset-socfpga to read the altr,modrst-offset property
+Date: Fri, 31 Jul 2015 16:03:10 -0500
+Message-ID: <1438376591-22100-4-git-send-email-dinguyen@opensource.altera.com>
+References: <1438376591-22100-1-git-send-email-dinguyen@opensource.altera.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============1845614372539546579=="
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1438072876-16338-5-git-send-email-vigneshr@ti.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Vignesh R <vigneshr@ti.com>
-Cc: devicetree@vger.kernel.org, Brian Norris <computersforpeace@gmail.com>, Russell King <linux@arm.linux.org.uk>, Tony Lindgren <tony@atomide.com>, linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org, Huang Shijie <b32955@freescale.com>, linux-mtd@lists.infradead.org, linux-omap@vger.kernel.org, David Woodhouse <dwmw2@infradead.org>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1438376591-22100-1-git-send-email-dinguyen@opensource.altera.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: p.zabel@pengutronix.de
+Cc: dinh.linux@gmail.com, robh+dt@kernel.org, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, mark.rutland@arm.com, pawel.moll@arm.com, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, s.trumtrar@pengutronix.de, Dinh Nguyen <dinguyen@opensource.altera.com>
 List-Id: devicetree@vger.kernel.org
 
+From: Dinh Nguyen <dinguyen@opensource.altera.com>
 
---===============1845614372539546579==
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="MSd2ShuMixI0uVaZ"
-Content-Disposition: inline
+In order for the Arria10 to be able to re-use the reset driver for SoCFPGA
+Cyclone5/Arria5, we need to read the 'altr,modrst-offset' property from the
+device tree entry. The 'altr,modrst-offset' property is the first register
+into the reset manager that is used for bringing peripherals out of reset.
 
+The driver assumes a modrst-offset of 0x10 in order to support legacy
+Cyclone5/Arria5 hardware.
 
---MSd2ShuMixI0uVaZ
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Signed-off-by: Dinh Nguyen <dinguyen@opensource.altera.com>
+---
+v2: assume a modrst-offset of 0x10 if the property is not specified in order
+    to support legacy boards that do not have the property.
+---
+ drivers/reset/reset-socfpga.c | 19 +++++++++++++------
+ 1 file changed, 13 insertions(+), 6 deletions(-)
 
-On Tue, Jul 28, 2015 at 02:11:15PM +0530, Vignesh R wrote:
-> Add qspi memory mapped region entries for DRA7xx based SoCs.
->=20
-> Signed-off-by: Vignesh R <vigneshr@ti.com>
-
->  		qspi: qspi@47900000 {
->  			compatible =3D "ti,am4372-qspi";
-> -			reg =3D <0x47900000 0x100>;
-> +			reg =3D <0x47900000 0x100>,
-> +			      <0x30000000 0x3ffffff>;
-> +			reg-names =3D "qspi_base", "qspi_mmap";
-
-The DT binding document for the controller needs to be extended to
-document this change in the binding.
-
---MSd2ShuMixI0uVaZ
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQEcBAEBCAAGBQJVu7wXAAoJECTWi3JdVIfQvi8H/2W+R7cKglm9p4j8auQ7ZMvY
-87fE/A0i6i5RnQF2TW2eDB4V1QTHIi8rPQPOY7CAt2rP0URkAHDJPY5Nw0p7LRrt
-VLMWSndfvZrL9tmhTxwXIXuQM2ZanipaEx555WtJTbdPcttcuqmWt6MHiH1kWlfc
-YK0VkfbdI7YtBctKCZfGTk1aUE/5jJZ4A4pi4FSUUSYFR4U/GypjxisNkNo4e+1L
-xKZg25o6iRhWh6RlDi3zxLFhVBMG5UJz3LZ3GhQM0+6pbDpyfy9kqaJkorCyj0ss
-x+oZq31kYiknF1O9zAuuXvlrLYNqkYFEkCBJASZJbNq/0LOmqKSB4Yg1AtheJtI=
-=kTX6
------END PGP SIGNATURE-----
-
---MSd2ShuMixI0uVaZ--
-
-
---===============1845614372539546579==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-linux-arm-kernel mailing list
-linux-arm-kernel@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-
---===============1845614372539546579==--
+diff --git a/drivers/reset/reset-socfpga.c b/drivers/reset/reset-socfpga.c
+index 0a8def3..1a6c5d6 100644
+--- a/drivers/reset/reset-socfpga.c
++++ b/drivers/reset/reset-socfpga.c
+@@ -24,11 +24,11 @@
+ #include <linux/types.h>
+ 
+ #define NR_BANKS		4
+-#define OFFSET_MODRST		0x10
+ 
+ struct socfpga_reset_data {
+ 	spinlock_t			lock;
+ 	void __iomem			*membase;
++	u32				modrst_offset;
+ 	struct reset_controller_dev	rcdev;
+ };
+ 
+@@ -45,8 +45,8 @@ static int socfpga_reset_assert(struct reset_controller_dev *rcdev,
+ 
+ 	spin_lock_irqsave(&data->lock, flags);
+ 
+-	reg = readl(data->membase + OFFSET_MODRST + (bank * NR_BANKS));
+-	writel(reg | BIT(offset), data->membase + OFFSET_MODRST +
++	reg = readl(data->membase + data->modrst_offset + (bank * NR_BANKS));
++	writel(reg | BIT(offset), data->membase + data->modrst_offset +
+ 				 (bank * NR_BANKS));
+ 	spin_unlock_irqrestore(&data->lock, flags);
+ 
+@@ -67,8 +67,8 @@ static int socfpga_reset_deassert(struct reset_controller_dev *rcdev,
+ 
+ 	spin_lock_irqsave(&data->lock, flags);
+ 
+-	reg = readl(data->membase + OFFSET_MODRST + (bank * NR_BANKS));
+-	writel(reg & ~BIT(offset), data->membase + OFFSET_MODRST +
++	reg = readl(data->membase + data->modrst_offset + (bank * NR_BANKS));
++	writel(reg & ~BIT(offset), data->membase + data->modrst_offset +
+ 				  (bank * NR_BANKS));
+ 
+ 	spin_unlock_irqrestore(&data->lock, flags);
+@@ -85,7 +85,7 @@ static int socfpga_reset_status(struct reset_controller_dev *rcdev,
+ 	int offset = id % BITS_PER_LONG;
+ 	u32 reg;
+ 
+-	reg = readl(data->membase + OFFSET_MODRST + (bank * NR_BANKS));
++	reg = readl(data->membase + data->modrst_offset + (bank * NR_BANKS));
+ 
+ 	return !(reg & BIT(offset));
+ }
+@@ -100,6 +100,8 @@ static int socfpga_reset_probe(struct platform_device *pdev)
+ {
+ 	struct socfpga_reset_data *data;
+ 	struct resource *res;
++	struct device *dev = &pdev->dev;
++	struct device_node *np = dev->of_node;
+ 
+ 	/*
+ 	 * The binding was mainlined without the required property.
+@@ -120,6 +122,11 @@ static int socfpga_reset_probe(struct platform_device *pdev)
+ 	if (IS_ERR(data->membase))
+ 		return PTR_ERR(data->membase);
+ 
++	if (of_property_read_u32(np, "altr,modrst-offset", &data->modrst_offset)) {
++		dev_warn(dev, "missing altr,modrst-offset property, assuming 0x10!\n");
++		data->modrst_offset = 0x10;
++	}
++
+ 	spin_lock_init(&data->lock);
+ 
+ 	data->rcdev.owner = THIS_MODULE;
+-- 
+2.4.5
