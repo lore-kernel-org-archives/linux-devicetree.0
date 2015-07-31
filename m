@@ -1,76 +1,143 @@
-From: <dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
-Subject: [PATCHv2 2/4] ARM: socfpga: dts: add "altr,modrst-offset" property
-Date: Fri, 31 Jul 2015 16:03:09 -0500
-Message-ID: <1438376591-22100-3-git-send-email-dinguyen@opensource.altera.com>
+From: <dinguyen@opensource.altera.com>
+Subject: [PATCHv2 1/4] dt-bindings: Add reset manager offsets for Arria10
+Date: Fri, 31 Jul 2015 16:03:08 -0500
+Message-ID: <1438376591-22100-2-git-send-email-dinguyen@opensource.altera.com>
 References: <1438376591-22100-1-git-send-email-dinguyen@opensource.altera.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1438376591-22100-1-git-send-email-dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
-Cc: dinh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Dinh Nguyen <dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1438376591-22100-1-git-send-email-dinguyen@opensource.altera.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: p.zabel@pengutronix.de
+Cc: dinh.linux@gmail.com, robh+dt@kernel.org, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, mark.rutland@arm.com, pawel.moll@arm.com, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, s.trumtrar@pengutronix.de, Dinh Nguyen <dinguyen@opensource.altera.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Dinh Nguyen <dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
+From: Dinh Nguyen <dinguyen@opensource.altera.com>
 
-The "altr,modrst-offset" property represents the offset into the reset manager
-that is the first register to be used by the driver to bring peripherals out
-of reset.
+The reset manager for is pretty similar to the one for SoCFPGA
+cyclone5/arria5 except for a few offsets. This patch adds those offsets.
 
-Signed-off-by: Dinh Nguyen <dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
+Signed-off-by: Dinh Nguyen <dinguyen@opensource.altera.com>
 ---
- Documentation/devicetree/bindings/reset/socfpga-reset.txt | 2 ++
- arch/arm/boot/dts/socfpga.dtsi                            | 1 +
- arch/arm/boot/dts/socfpga_arria10.dtsi                    | 1 +
- 3 files changed, 4 insertions(+)
+ include/dt-bindings/reset/altr,rst-mgr-a10.h | 110 +++++++++++++++++++++++++++
+ 1 file changed, 110 insertions(+)
+ create mode 100644 include/dt-bindings/reset/altr,rst-mgr-a10.h
 
-diff --git a/Documentation/devicetree/bindings/reset/socfpga-reset.txt b/Documentation/devicetree/bindings/reset/socfpga-reset.txt
-index 32c1c8b..98c9f56 100644
---- a/Documentation/devicetree/bindings/reset/socfpga-reset.txt
-+++ b/Documentation/devicetree/bindings/reset/socfpga-reset.txt
-@@ -3,6 +3,7 @@ Altera SOCFPGA Reset Manager
- Required properties:
- - compatible : "altr,rst-mgr"
- - reg : Should contain 1 register ranges(address and length)
-+- altr,modrst-offset : Should contain the offset of the first modrst register.
- - #reset-cells: 1
- 
- Example:
-@@ -10,4 +11,5 @@ Example:
- 		#reset-cells = <1>;
- 		compatible = "altr,rst-mgr";
- 		reg = <0xffd05000 0x1000>;
-+		altr,modrst-offset = <0x10>;
- 	};
-diff --git a/arch/arm/boot/dts/socfpga.dtsi b/arch/arm/boot/dts/socfpga.dtsi
-index 86e0fb6..0bda96a 100644
---- a/arch/arm/boot/dts/socfpga.dtsi
-+++ b/arch/arm/boot/dts/socfpga.dtsi
-@@ -783,6 +783,7 @@
- 			#reset-cells = <1>;
- 			compatible = "altr,rst-mgr";
- 			reg = <0xffd05000 0x1000>;
-+			altr,modrst-offset = <0x10>;
- 		};
- 
- 		usbphy0: usbphy@0 {
-diff --git a/arch/arm/boot/dts/socfpga_arria10.dtsi b/arch/arm/boot/dts/socfpga_arria10.dtsi
-index a252905..22e7d82 100644
---- a/arch/arm/boot/dts/socfpga_arria10.dtsi
-+++ b/arch/arm/boot/dts/socfpga_arria10.dtsi
-@@ -593,6 +593,7 @@
- 			#reset-cells = <1>;
- 			compatible = "altr,rst-mgr";
- 			reg = <0xffd05000 0x100>;
-+			altr,modrst-offset = <0x20>;
- 		};
- 
- 		scu: snoop-control-unit@ffffc000 {
+diff --git a/include/dt-bindings/reset/altr,rst-mgr-a10.h b/include/dt-bindings/reset/altr,rst-mgr-a10.h
+new file mode 100644
+index 0000000..acb0bbf
+--- /dev/null
++++ b/include/dt-bindings/reset/altr,rst-mgr-a10.h
+@@ -0,0 +1,110 @@
++/*
++ * Copyright (c) 2014, Steffen Trumtrar <s.trumtrar@pengutronix.de>
++ *
++ * This software is licensed under the terms of the GNU General Public
++ * License version 2, as published by the Free Software Foundation, and
++ * may be copied, distributed, and modified under those terms.
++ *
++ * This program is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ * GNU General Public License for more details.
++ */
++
++#ifndef _DT_BINDINGS_RESET_ALTR_RST_MGR_A10_H
++#define _DT_BINDINGS_RESET_ALTR_RST_MGR_A10_H
++
++/* MPUMODRST */
++#define CPU0_RESET		0
++#define CPU1_RESET		1
++#define WDS_RESET		2
++#define SCUPER_RESET		3
++
++/* PER0MODRST */
++#define EMAC0_RESET		32
++#define EMAC1_RESET		33
++#define EMAC2_RESET		34
++#define USB0_RESET		35
++#define USB1_RESET		36
++#define NAND_RESET		37
++#define QSPI_RESET		38
++#define SDMMC_RESET		39
++#define EMAC0_OCP_RESET		40
++#define EMAC1_OCP_RESET		41
++#define EMAC2_OCP_RESET		42
++#define USB0_OCP_RESET		43
++#define USB1_OCP_RESET		44
++#define NAND_OCP_RESET		45
++#define QSPI_OCP_RESET		46
++#define SDMMC_OCP_RESET		47
++#define DMA_RESET		48
++#define SPIM0_RESET		49
++#define SPIM1_RESET		50
++#define SPIS0_RESET		51
++#define SPIS1_RESET		52
++#define DMA_OCP_RESET		53
++#define EMAC_PTP_RESET		54
++/* 55 is empty*/
++#define DMAIF0_RESET		56
++#define DMAIF1_RESET		57
++#define DMAIF2_RESET		58
++#define DMAIF3_RESET		59
++#define DMAIF4_RESET		60
++#define DMAIF5_RESET		61
++#define DMAIF6_RESET		62
++#define DMAIF7_RESET		63
++
++/* PER1MODRST */
++#define L4WD0_RESET		64
++#define L4WD1_RESET		65
++#define L4SYSTIMER0_RESET	66
++#define L4SYSTIMER1_RESET	67
++#define SPTIMER0_RESET		68
++#define SPTIMER1_RESET		69
++/* 70-71 is reserved */
++#define I2C0_RESET		72
++#define I2C1_RESET		73
++#define I2C2_RESET		74
++#define I2C3_RESET		75
++#define I2C4_RESET		76
++/* 77-79 is reserved */
++#define UART0_RESET		80
++#define UART1_RESET		81
++/* 82-87 is reserved */
++#define GPIO0_RESET		88
++#define GPIO1_RESET		89
++#define GPIO2_RESET		90
++
++/* BRGMODRST */
++#define HPS2FPGA_RESET		96
++#define LWHPS2FPGA_RESET	97
++#define FPGA2HPS_RESET		98
++#define F2SSDRAM0_RESET		99
++#define F2SSDRAM1_RESET		100
++#define F2SSDRAM2_RESET		101
++#define DDRSCH_RESET		102
++
++/* SYSMODRST*/
++#define ROM_RESET		128
++#define OCRAM_RESET		129
++/* 130 is reserved */
++#define FPGAMGR_RESET		131
++#define S2F_RESET		132
++#define SYSDBG_RESET		133
++#define OCRAM_OCP_RESET		134
++
++/* COLDMODRST */
++#define CLKMGRCOLD_RESET	160
++/* 161-162 is reserved */
++#define S2FCOLD_RESET		163
++#define TIMESTAMPCOLD_RESET	164
++#define TAPCOLD_RESET		165
++#define HMCCOLD_RESET		166
++#define IOMGRCOLD_RESET		167
++
++/* NRSTMODRST */
++#define NRSTPINOE_RESET		192
++
++/* DBGMODRST */
++#define DBG_RESET		224
++#endif
 -- 
 2.4.5
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
