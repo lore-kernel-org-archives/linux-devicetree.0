@@ -1,54 +1,42 @@
-Return-Path: <joro@lemmy.home.8bytes.org>
-From: Joerg Roedel <joro@8bytes.org>
-Subject: [PATCH 0/2 v2] Fix MAX_PHANDLE_ARGS limitations
-Date: Thu, 16 Jul 2015 10:22:55 +0200
-Message-Id: <1437034977-5266-1-git-send-email-joro@8bytes.org>
-To: Will Deacon <will.deacon@arm.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>
-Cc: linux-arm-kernel@lists.infradead.org, iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Joerg Roedel <jroedel@suse.de>
-List-ID: <devicetree@vger.kernel.org>
+From: "santosh.shilimkar@oracle.com" <santosh.shilimkar@oracle.com>
+Subject: Re: [PATCH 2/2] ARM: dts: keystone: fix dt bindings to use post div
+ register for mainpll
+Date: Fri, 31 Jul 2015 15:06:50 -0700
+Message-ID: <55BBF17A.2030102@oracle.com>
+References: <1432915453-409-1-git-send-email-m-karicheri2@ti.com> <1432915453-409-2-git-send-email-m-karicheri2@ti.com> <55BB947B.7090608@oracle.com> <20150731203035.GA23144@localhost>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20150731203035.GA23144@localhost>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Olof Johansson <olof@lixom.net>
+Cc: mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, ssantosh@kernel.org, mturquette@linaro.org, sboyd@codeaurora.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, arm@kernel.org, Murali Karicheri <m-karicheri2@ti.com>, robh+dt@kernel.org, pawel.moll@arm.com, linux@arm.linux.org.uk, linux-arm-kernel@lists.infradead.org
+List-Id: devicetree@vger.kernel.org
 
-From: Joerg Roedel <jroedel@suse.de>
+On 7/31/15 1:30 PM, Olof Johansson wrote:
+> On Fri, Jul 31, 2015 at 08:30:03AM -0700, santosh shilimkar wrote:
+>> Olof,
+>>
+>> As discussed patch 1/2 is already made it via clock tree. Please
+>> pick the subject fix for your upcoming fixes pull request.
+>>
+>> On 5/29/2015 9:04 AM, Murali Karicheri wrote:
+>>> All of the keystone devices have a separate register to hold post
+>>> divider value for main pll clock. Currently the fixed-postdiv
+>>> value used for k2hk/l/e SoCs works by sheer luck as u-boot happens to
+>>> use a value of 2 for this. Now that we have fixed this in the pll
+>>> clock driver change the dt bindings for the same.
+>>>
+>>> Signed-off-by: Murali Karicheri <m-karicheri2@ti.com>
+>>> ---
+>> Acked-by: Santosh Shilimkar <ssantosh@kernel.org>
+>>
+>>
+>
+> Thanks, applied.
+>
+Thanks Olof !!
 
-Hi,
-
-here is the second version of my patches to fix the
-MAX_PHANDLE_ARGS limitation for the arm-smmu driver. On my
-AMD Seattle system the max value of 16 is not enough to
-initialize the SMMU, as the device tree node has an entry
-with 25 phandle args (possible are up to 128). The result is
-a WARNING and incorrect SMMU initialization.
-
-On the other side MAX_PHANDLE_ARGS can't grow indefinitly,
-as it causes 'struct of_phandle_args' to get bigger. This
-struct is often allocated on-stack and should be small by
-default.
-
-So these patches introduce a way to make 'struct
-of_phandle_args' bigger only when needed and change the
-ARM-SMMU driver to make use of it.
-
-The patches have been tested on my AMD Seattle system.
-
-Please review.
-
-Thanks,
-
-	Joerg
-
-Changes to v1:
-
-	* Rebased to v4.2-rc2
-	* Fixed leak in patch 2, as pointed out by Will
-	  Deacon
-
-Joerg Roedel (2):
-  of: base: Allow more args than MAX_PHANDLE_ARGS if required
-  arm/smmu: Make use of of_parse_phandle_with_var_args
-
- drivers/iommu/arm-smmu.c | 23 ++++++++++++++++-------
- drivers/of/base.c        | 43 ++++++++++++++++++++++++++++++++++++-------
- include/linux/of.h       |  7 +++++++
- 3 files changed, 59 insertions(+), 14 deletions(-)
-
--- 
-1.8.4.5
+Regards,
+Santosh
