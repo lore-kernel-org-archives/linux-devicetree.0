@@ -1,150 +1,37 @@
-From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH v4 2/5] dt-bindings: Add a binding for Mediatek xHCI host
- controller
-Date: Fri, 31 Jul 2015 14:45:56 +0100
-Message-ID: <20150731134556.GC25118@leverpostej>
-References: <1438347836-29060-1-git-send-email-chunfeng.yun@mediatek.com>
- <1438347836-29060-3-git-send-email-chunfeng.yun@mediatek.com>
+From: Sekhar Nori <nsekhar@ti.com>
+Subject: Re: [RFC PATCH 4/5] ARM: dts: DRA7: Add memory map region entries
+ for qspi
+Date: Fri, 31 Jul 2015 19:18:20 +0530
+Message-ID: <55BB7CA4.1020300@ti.com>
+References: <1438072876-16338-1-git-send-email-vigneshr@ti.com> <1438072876-16338-5-git-send-email-vigneshr@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1438347836-29060-3-git-send-email-chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Chunfeng Yun <chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Cc: Mathias Nyman <mathias.nyman-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>, "linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, John Crispin <blogic-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>, Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1438072876-16338-5-git-send-email-vigneshr@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Vignesh R <vigneshr@ti.com>, Mark Brown <broonie@kernel.org>, David Woodhouse <dwmw2@infradead.org>, Brian Norris <computersforpeace@gmail.com>, Tony Lindgren <tony@atomide.com>, Russell King <linux@arm.linux.org.uk>
+Cc: Huang Shijie <b32955@freescale.com>, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org, linux-spi@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-
-Sorry for my late reply to a prior version of this series, but I still
-have concerns with some of the properties.
-
-I'll repeat those below.
-
-On Fri, Jul 31, 2015 at 02:03:53PM +0100, Chunfeng Yun wrote:
-> add a DT binding documentation of xHCI host controller for the
-> MT8173 SoC from Mediatek.
+On Tuesday 28 July 2015 02:11 PM, Vignesh R wrote:
+> Add qspi memory mapped region entries for DRA7xx based SoCs.
 > 
-> Signed-off-by: Chunfeng Yun <chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+> Signed-off-by: Vignesh R <vigneshr@ti.com>
 > ---
->  .../devicetree/bindings/usb/mt8173-xhci.txt        | 51 ++++++++++++++++++++++
->  1 file changed, 51 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/usb/mt8173-xhci.txt
+>  arch/arm/boot/dts/am4372.dtsi | 4 +++-
+>  1 file changed, 3 insertions(+), 1 deletion(-)
 > 
-> diff --git a/Documentation/devicetree/bindings/usb/mt8173-xhci.txt b/Documentation/devicetree/bindings/usb/mt8173-xhci.txt
-> new file mode 100644
-> index 0000000..364be5a
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/usb/mt8173-xhci.txt
-> @@ -0,0 +1,51 @@
-> +MT65XX xhci
-> +
-> +The device node for Mediatek SOC usb3.0 host controller
-> +
-> +Required properties:
-> + - compatible : Supports "mediatek,mt8173-xhci"
+> diff --git a/arch/arm/boot/dts/am4372.dtsi b/arch/arm/boot/dts/am4372.dtsi
+> index ade28c790f4b..5317a0f24ab9 100644
+> --- a/arch/arm/boot/dts/am4372.dtsi
+> +++ b/arch/arm/boot/dts/am4372.dtsi
 
-s/Supports/should contain/
+The patch talks about DRA7x in subject and description but you modify
+AM437x here. You have got commit text mixed up between 4/5 and 5/5.
 
-> + - reg : Specifies physical base address and size of the registers,
-> +	the first one for MAC, the second for IPPC
-> + - interrupts : Interrupt mode, number and trigger mode
-
-Just specify what this logically corresponds to; the format of the
-interrupts proeprty depends on the interrupt controller.
-
-> + - power-domains : To enable usb's mtcmos
-
-Please describe what this contains. I assume you exped a single power
-domain to be described, covering the whole xHCI controller?
-
-> + - vusb33-supply : Regulator of usb avdd3.3v
-> + - clocks : Must support all clocks that xhci needs
-
-- clocks: a list of phandle + clock-specifier pairs, one for each entry
-  in clock-names.
-
-> + - clock-names : Should be "sys_mac" for sys and mac clocks, and
-> +	"wakeup_deb_p0", "wakeup_deb_p1" for wakeup debounce control
-> +	clocks
-
-This would be better as a list, e.g.
-
-- clock-names: should contain:
-  * "sys_mac" <description here if necessary>
-  * "wakeup_deb_p0" <description here if necessary>
-  * "wakeup_deb_p1" <description here if necessary>
-
-Is sys_mac a single clock input line? Or is it jsut the case that a
-single line feeds two inputs currently? if the latter they should be
-separate entries.
-
-> + - phys : List of PHY specifiers (used by generic PHY framework).
-
-The bracketed part should go. The bidnigns should know nothing of Linux
-internals.
-
-> + - phy-names : Must be "usb-phy0", "usb-phy1",.., "usb-phyN", based on
-> +	the number of PHYs as specified in @phys property.
-
-This is useless.
-
-You either don't need names, and can acquire the phys by index, or you
-need names which correspond to those on the data sheet for the xHCI
-controller.
-
-> + - mediatek,usb-wakeup : To access usb wakeup control register
-
-Please describe what this points to (I guess it's a syscon)/
-
-> + - mediatek,wakeup-src : 1: Ip sleep wakeup mode; 2: line state wakeup
-> +	mode; others means don't enable wakeup source of usb
-
-This sounds like a runtime decision.
-
-_why_ do you think this needs to be in the DT?
-
-> + - mediatek,u2port-num : The number should not greater than the number
-> +	of phys
-
-This is useless. Either this is implied by the entries in the phys
-property, or it should be a runtime decision.
+Probably not the kind of feedback you are looking for an RFC, but since
+I noticed it..
 
 Thanks,
-Mark.
-
-> +
-> +Optional properties:
-> + - vbus-supply : Reference to the VBUS regulator;
-> +
-> +Example:
-> +usb: usb@11270000 {
-> +	compatible = "mediatek,mt8173-xhci";
-> +	reg = <0 0x11270000 0 0x4000>,
-> +	      <0 0x11280000 0 0x0800>;
-> +	interrupts = <GIC_SPI 115 IRQ_TYPE_LEVEL_LOW>;
-> +	power-domains = <&scpsys MT8173_POWER_DOMAIN_USB>;
-> +	clocks = <&topckgen CLK_TOP_USB30_SEL>,
-> +		 <&pericfg CLK_PERI_USB0>,
-> +		 <&pericfg CLK_PERI_USB1>;
-> +	clock-names = "sys_mac",
-> +		      "wakeup_deb_p0",
-> +		      "wakeup_deb_p1";
-> +	phys = <&u3phy 0>, <&u3phy 1>;
-> +	phy-names = "usb-phy0", "usb-phy1";
-> +	vusb33-supply = <&mt6397_vusb_reg>;
-> +	vbus-supply = <&usb_p1_vbus>;
-> +	usb3-lpm-capable;
-> +	mediatek,usb-wakeup = <&pericfg>;
-> +	mediatek,wakeup-src = <1>;
-> +	mediatek,u2port-num = <2>;
-> +	status = "okay";
-> +};
-> -- 
-> 1.8.1.1.dirty
-> 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Sekhar
