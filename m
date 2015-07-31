@@ -1,370 +1,110 @@
-From: Irina Tirdea <irina.tirdea@intel.com>
-Subject: [PATCH v4 3/8] Input: goodix - write configuration data to device
-Date: Fri, 31 Jul 2015 20:42:07 +0300
-Message-ID: <1438364532-27150-4-git-send-email-irina.tirdea@intel.com>
-References: <1438364532-27150-1-git-send-email-irina.tirdea@intel.com>
+From: Sudeep Holla <sudeep.holla@arm.com>
+Subject: [PATCH v6 0/8] ARM64: juno: add SCPI mailbox protocol, clock and CPUFreq support
+Date: Fri, 31 Jul 2015 18:43:03 +0100
+Message-ID: <1438364591-1144-1-git-send-email-sudeep.holla@arm.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1438364532-27150-1-git-send-email-irina.tirdea@intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Bastien Nocera <hadess@hadess.net>, linux-input@vger.kernel.org
-Cc: Mark Rutland <mark.rutland@arm.com>, Octavian Purdila <octavian.purdila@intel.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Irina Tirdea <irina.tirdea@intel.com>
+To: arm@kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Olof Johansson <olof@lixom.net>, Kevin Hilman <khilman@kernel.org>
+Cc: Sudeep Holla <sudeep.holla@arm.com>, Liviu Dudau <liviu.dudau@arm.com>, Punit Agrawal <punit.agrawal@arm.com>, "Jon Medhurst (Tixy)" <tixy@linaro.org>, Lorenzo Pieralisi <Lorenzo.Pieralisi@arm.com>, Arnd Bergmann <arnd@arndb.de>, devicetree@vger.kernel.org, linux-clk@vger.kernel.org, linux-pm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Goodix devices can be configured by writing custom data to the device at
-init. The configuration data is read with request_firmware from
-"goodix_<id>_cfg.bin", where <id> is the product id read from the device
-(e.g.: goodix_911_cfg.bin for Goodix GT911, goodix_9271_cfg.bin for
-GT9271).
+Hi ARM-SoC guys,
 
-The configuration information has a specific format described in the Goodix
-datasheet. It includes X/Y resolution, maximum supported touch points,
-interrupt flags, various sesitivity factors and settings for advanced
-features (like gesture recognition).
+It has been on the list for a while and have got all the necessary ACKs.
+Can you please pull this series for v4.3 ?
 
-Before writing the firmware, it is necessary to reset the device. If
-the device ACPI/DT information does not declare gpio pins (needed for
-reset), writing the firmware will not be available for these devices.
+Regards,
+Sudeep
 
-This is based on Goodix datasheets for GT911 and GT9271 and on Goodix
-driver gt9xx.c for Android (publicly available in Android kernel
-trees for various devices).
+This patch series adds support for:
+  1. SCPI(System Control and Power Interface) mailbox protocol driver.
+     It uses ARM MHU mailbox controller driver on Juno but can work with
+     any mailbox controllers using standard mailbox APIs
+  2. Add support for clocks provided by SCP firmware through the SCPI
+     interface
+  3. Using the existing arm_big_little cpufreq driver and the newly
+     added SCPI clock driver, it also adds support for CPU DVFS on
+     ARM64 JUNO development platforms.
 
-Signed-off-by: Octavian Purdila <octavian.purdila@intel.com>
-Signed-off-by: Irina Tirdea <irina.tirdea@intel.com>
----
- drivers/input/touchscreen/goodix.c | 225 +++++++++++++++++++++++++++++++------
- 1 file changed, 192 insertions(+), 33 deletions(-)
+The SCPI protocol document is available @[1],[2]
 
-diff --git a/drivers/input/touchscreen/goodix.c b/drivers/input/touchscreen/goodix.c
-index 79b948c..3d4feea 100644
---- a/drivers/input/touchscreen/goodix.c
-+++ b/drivers/input/touchscreen/goodix.c
-@@ -25,6 +25,7 @@
- #include <linux/interrupt.h>
- #include <linux/slab.h>
- #include <linux/acpi.h>
-+#include <linux/firmware.h>
- #include <linux/gpio.h>
- #include <linux/of.h>
- #include <asm/unaligned.h>
-@@ -40,6 +41,9 @@ struct goodix_ts_data {
- 	struct gpio_desc *gpiod_int;
- 	struct gpio_desc *gpiod_rst;
- 	int cfg_len;
-+	u16 id;
-+	u16 version;
-+	char *cfg_name;
- };
- 
- #define GOODIX_MAX_HEIGHT		4096
-@@ -145,6 +149,39 @@ static int goodix_i2c_read(struct i2c_client *client,
- 	return ret < 0 ? ret : (ret != ARRAY_SIZE(msgs) ? -EIO : 0);
- }
- 
-+/**
-+ * goodix_i2c_write - write data to a register of the i2c slave device.
-+ *
-+ * @client: i2c device.
-+ * @reg: the register to write to.
-+ * @buf: raw data buffer to write.
-+ * @len: length of the buffer to write
-+ */
-+static int goodix_i2c_write(struct i2c_client *client, u16 reg, const u8 *buf,
-+			    unsigned len)
-+{
-+	u8 *addr_buf;
-+	struct i2c_msg msg;
-+	int ret;
-+
-+	addr_buf = kmalloc(len + 2, GFP_KERNEL);
-+	if (!addr_buf)
-+		return -ENOMEM;
-+
-+	addr_buf[0] = reg >> 8;
-+	addr_buf[1] = reg & 0xFF;
-+	memcpy(&addr_buf[2], buf, len);
-+
-+	msg.flags = 0;
-+	msg.addr = client->addr;
-+	msg.buf = addr_buf;
-+	msg.len = len + 2;
-+
-+	ret = i2c_transfer(client->adapter, &msg, 1);
-+	kfree(addr_buf);
-+	return ret < 0 ? ret : (ret != 1 ? -EIO : 0);
-+}
-+
- static int goodix_get_cfg_len(u16 id)
- {
- 	switch (id) {
-@@ -264,6 +301,73 @@ static irqreturn_t goodix_ts_irq_handler(int irq, void *dev_id)
- 	return IRQ_HANDLED;
- }
- 
-+/**
-+ * goodix_check_cfg - Checks if config fw is valid
-+ *
-+ * @ts: goodix_ts_data pointer
-+ * @cfg: firmware config data
-+ */
-+static int goodix_check_cfg(struct goodix_ts_data *ts,
-+			    const struct firmware *cfg)
-+{
-+	int i, raw_cfg_len;
-+	u8 check_sum = 0;
-+
-+	if (cfg->size > GOODIX_CONFIG_MAX_LENGTH) {
-+		dev_err(&ts->client->dev,
-+			"The length of the config fw is not correct");
-+		return -EINVAL;
-+	}
-+
-+	raw_cfg_len = cfg->size - 2;
-+	for (i = 0; i < raw_cfg_len; i++)
-+		check_sum += cfg->data[i];
-+	check_sum = (~check_sum) + 1;
-+	if (check_sum != cfg->data[raw_cfg_len]) {
-+		dev_err(&ts->client->dev,
-+			"The checksum of the config fw is not correct");
-+		return -EINVAL;
-+	}
-+
-+	if (cfg->data[raw_cfg_len + 1] != 1) {
-+		dev_err(&ts->client->dev,
-+			"Config fw must have Config_Fresh register set");
-+		return -EINVAL;
-+	}
-+
-+	return 0;
-+}
-+
-+/**
-+ * goodix_send_cfg - Write fw config to device
-+ *
-+ * @ts: goodix_ts_data pointer
-+ * @cfg: config firmware to write to device
-+ */
-+static int goodix_send_cfg(struct goodix_ts_data *ts,
-+			   const struct firmware *cfg)
-+{
-+	int ret;
-+
-+	ret = goodix_check_cfg(ts, cfg);
-+	if (ret)
-+		return ret;
-+
-+	ret = goodix_i2c_write(ts->client, GOODIX_REG_CONFIG_DATA, cfg->data,
-+			       cfg->size);
-+	if (ret) {
-+		dev_err(&ts->client->dev, "Failed to write config data: %d",
-+			ret);
-+		return ret;
-+	}
-+	dev_dbg(&ts->client->dev, "Config sent successfully.");
-+
-+	/* Let the firmware reconfigure itself, so sleep for 10ms */
-+	usleep_range(10000, 11000);
-+
-+	return 0;
-+}
-+
- static int goodix_int_sync(struct goodix_ts_data *ts)
- {
- 	int ret;
-@@ -406,30 +510,29 @@ static void goodix_read_config(struct goodix_ts_data *ts)
- /**
-  * goodix_read_version - Read goodix touchscreen version
-  *
-- * @client: the i2c client
-- * @version: output buffer containing the version on success
-- * @id: output buffer containing the id on success
-+ * @ts: our goodix_ts_data pointer
-  */
--static int goodix_read_version(struct i2c_client *client, u16 *version, u16 *id)
-+static int goodix_read_version(struct goodix_ts_data *ts)
- {
- 	int error;
- 	u8 buf[6];
- 	char id_str[5];
- 
--	error = goodix_i2c_read(client, GOODIX_REG_ID, buf, sizeof(buf));
-+	error = goodix_i2c_read(ts->client, GOODIX_REG_ID, buf, sizeof(buf));
- 	if (error) {
--		dev_err(&client->dev, "read version failed: %d\n", error);
-+		dev_err(&ts->client->dev, "read version failed: %d\n", error);
- 		return error;
- 	}
- 
- 	memcpy(id_str, buf, 4);
- 	id_str[4] = 0;
--	if (kstrtou16(id_str, 10, id))
--		*id = 0x1001;
-+	if (kstrtou16(id_str, 10, &ts->id))
-+		ts->id = 0x1001;
- 
--	*version = get_unaligned_le16(&buf[4]);
-+	ts->version = get_unaligned_le16(&buf[4]);
- 
--	dev_info(&client->dev, "ID %d, version: %04x\n", *id, *version);
-+	dev_info(&ts->client->dev, "ID %d, version: %04x\n", ts->id,
-+		 ts->version);
- 
- 	return 0;
- }
-@@ -463,13 +566,10 @@ static int goodix_i2c_test(struct i2c_client *client)
-  * goodix_request_input_dev - Allocate, populate and register the input device
-  *
-  * @ts: our goodix_ts_data pointer
-- * @version: device firmware version
-- * @id: device ID
-  *
-  * Must be called during probe
-  */
--static int goodix_request_input_dev(struct goodix_ts_data *ts, u16 version,
--				    u16 id)
-+static int goodix_request_input_dev(struct goodix_ts_data *ts)
- {
- 	int error;
- 
-@@ -493,8 +593,8 @@ static int goodix_request_input_dev(struct goodix_ts_data *ts, u16 version,
- 	ts->input_dev->phys = "input/ts";
- 	ts->input_dev->id.bustype = BUS_I2C;
- 	ts->input_dev->id.vendor = 0x0416;
--	ts->input_dev->id.product = id;
--	ts->input_dev->id.version = version;
-+	ts->input_dev->id.product = ts->id;
-+	ts->input_dev->id.version = ts->version;
- 
- 	error = input_register_device(ts->input_dev);
- 	if (error) {
-@@ -506,13 +606,68 @@ static int goodix_request_input_dev(struct goodix_ts_data *ts, u16 version,
- 	return 0;
- }
- 
-+/**
-+ * goodix_configure_dev - Finish device initialization
-+ *
-+ * @ts: our goodix_ts_data pointer
-+ *
-+ * Must be called from request_firmware_wait callback to
-+ * finish initialization of the device.
-+ */
-+static int goodix_configure_dev(struct goodix_ts_data *ts)
-+{
-+	int error;
-+	unsigned long irq_flags;
-+
-+	goodix_read_config(ts);
-+
-+	error = goodix_request_input_dev(ts);
-+	if (error)
-+		return error;
-+
-+	irq_flags = goodix_irq_flags[ts->int_trigger_type] | IRQF_ONESHOT;
-+	error = devm_request_threaded_irq(&ts->client->dev, ts->client->irq,
-+					  NULL, goodix_ts_irq_handler,
-+					  irq_flags, ts->client->name, ts);
-+	if (error) {
-+		dev_err(&ts->client->dev, "request IRQ failed: %d\n", error);
-+		return error;
-+	}
-+
-+	return 0;
-+}
-+
-+/**
-+ * goodix_config_cb - Callback to finish device init
-+ *
-+ * @ts: our goodix_ts_data pointer
-+ *
-+ * request_firmware_wait callback that finishes
-+ * initialization of the device.
-+ */
-+static void goodix_config_cb(const struct firmware *cfg, void *ctx)
-+{
-+	struct goodix_ts_data *ts = (struct goodix_ts_data *)ctx;
-+	int error;
-+
-+	if (cfg) {
-+		/* send device configuration to the firmware */
-+		error = goodix_send_cfg(ts, cfg);
-+		if (error)
-+			goto err_release_cfg;
-+	}
-+	goodix_configure_dev(ts);
-+
-+err_release_cfg:
-+	kfree(ts->cfg_name);
-+	release_firmware(cfg);
-+}
-+
- static int goodix_ts_probe(struct i2c_client *client,
- 			   const struct i2c_device_id *id)
- {
- 	struct goodix_ts_data *ts;
--	unsigned long irq_flags;
- 	int error;
--	u16 version_info, id_info;
- 
- 	dev_dbg(&client->dev, "I2C Address: 0x%02x\n", client->addr);
- 
-@@ -534,13 +689,13 @@ static int goodix_ts_probe(struct i2c_client *client,
- 		return error;
- 	}
- 
--	error = goodix_read_version(client, &version_info, &id_info);
-+	error = goodix_read_version(ts);
- 	if (error) {
- 		dev_err(&client->dev, "Read version failed.\n");
- 		return error;
- 	}
- 
--	ts->cfg_len = goodix_get_cfg_len(id_info);
-+	ts->cfg_len = goodix_get_cfg_len(ts->id);
- 
- 	error = goodix_get_gpio_config(ts, id);
- 	if (error)
-@@ -553,24 +708,28 @@ static int goodix_ts_probe(struct i2c_client *client,
- 			dev_err(&client->dev, "Controller reset failed.\n");
- 			return error;
- 		}
--	}
- 
--	goodix_read_config(ts);
-+		/* update device config */
-+		ts->cfg_name = kasprintf(GFP_KERNEL, "goodix_%d_cfg.bin",
-+					 ts->id);
-+		if (!ts->cfg_name)
-+			return -ENOMEM;
- 
--	error = goodix_request_input_dev(ts, version_info, id_info);
--	if (error)
--		return error;
-+		error = request_firmware_nowait(THIS_MODULE, true, ts->cfg_name,
-+						&client->dev, GFP_KERNEL, ts,
-+						goodix_config_cb);
-+		if (error) {
-+			dev_err(&client->dev,
-+				"Failed to invoke firmware loader: %d\n",
-+				error);
-+			kfree(ts->cfg_name);
-+			return error;
-+		}
- 
--	irq_flags = goodix_irq_flags[ts->int_trigger_type] | IRQF_ONESHOT;
--	error = devm_request_threaded_irq(&ts->client->dev, client->irq,
--					  NULL, goodix_ts_irq_handler,
--					  irq_flags, client->name, ts);
--	if (error) {
--		dev_err(&client->dev, "request IRQ failed: %d\n", error);
--		return error;
-+		return 0;
- 	}
- 
--	return 0;
-+	return goodix_configure_dev(ts);
- }
- 
- static const struct i2c_device_id goodix_ts_id[] = {
+Changes v5->v6:
+	- Minor review comments on clock bindings and clock driver
+	- Added all the ACKs necessary
+
+Changes v4->v5:
+	- Updated the SCPI clock bindings to correct the clock specifier
+	  usage and other minor updates as per review feedback
+	- Updated clock driver to use SCPI specifier clock specifier
+	  decode function
+	- Minor reshuffling in Juno DTS files, no functionality change
+
+Changes v3->v4:
+	- Updated the SCPI binding based on MarkR's feedback
+	- Updated SCPI clock driver to incorporate Stephen Boyd's review
+	  comments + used clk_set_rate_range to limit the clock range
+	- Since no major changes are expected in SCPI DT, updated the
+	  Juno DTS to support SCPI and dependent device nodes.
+
+Changes v2->v3:
+	- Minor fix in SCPI driver and added Tixy's reviewed-by tag
+	- Updated scpi clock driver to incorporate all the comments from
+	  Stephen
+	- Added Viresh's ack
+
+Changes v1->v2:
+	- Updated the token handling in scpi driver as per Tixy's
+	  suggestion along with other review comments
+	- Removed multiple drivers in scpi clock as Lorenzo suggested
+	- Added free_opp_table in scpi-cpufreq as Viresh suggested
+	- Separated the DT binding document
+	- Moved SCPI protocol driver to drivers/firmware
+
+[1] http://community.arm.com/servlet/JiveServlet/download/8401-45-18326/DUI0922B_scp_message_interface.pdf
+[2] https://wiki.linaro.org/ARM/Juno?action=AttachFile&do=get&target=DUI0922B_scp_message_interface.pdf
+v1: https://lkml.org/lkml/2015/4/27/232
+v2: https://lkml.org/lkml/2015/5/14/470
+v3: https://lkml.org/lkml/2015/5/27/220
+v4: https://lkml.org/lkml/2015/6/8/178
+v5: https://lkml.org/lkml/2015/7/23/270
+
+Cc: devicetree@vger.kernel.org
+Cc: linux-clk@vger.kernel.org
+Cc: linux-pm@vger.kernel.org
+
+Sudeep Holla (8):
+  Documentation: add DT binding for ARM System Control and Power
+    Interface(SCPI) protocol
+  firmware: add support for ARM System Control and Power Interface(SCPI)
+    protocol
+  clk: add support for clocks provided by SCP(System Control Processor)
+  clk: scpi: add support for cpufreq virtual device
+  cpufreq: arm_big_little: add SCPI interface driver
+  arm64: dts: add SRAM, MHU mailbox and SCPI support on Juno
+  arm64: dts: add CPU topology on Juno
+  arm64: dts: add clock support for all the cpus
+
+ Documentation/devicetree/bindings/arm/arm,scpi.txt | 150 +++++
+ MAINTAINERS                                        |  10 +
+ arch/arm64/boot/dts/arm/juno-base.dtsi             |  54 ++
+ arch/arm64/boot/dts/arm/juno-r1.dts                |  32 +
+ arch/arm64/boot/dts/arm/juno.dts                   |  32 +
+ drivers/clk/Kconfig                                |  10 +
+ drivers/clk/Makefile                               |   1 +
+ drivers/clk/clk-scpi.c                             | 325 ++++++++++
+ drivers/cpufreq/Kconfig.arm                        |   9 +
+ drivers/cpufreq/Makefile                           |   1 +
+ drivers/cpufreq/scpi-cpufreq.c                     | 124 ++++
+ drivers/firmware/Kconfig                           |  19 +
+ drivers/firmware/Makefile                          |   1 +
+ drivers/firmware/arm_scpi.c                        | 711 +++++++++++++++++++++
+ include/linux/scpi_protocol.h                      |  61 ++
+ 15 files changed, 1540 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/arm/arm,scpi.txt
+ create mode 100644 drivers/clk/clk-scpi.c
+ create mode 100644 drivers/cpufreq/scpi-cpufreq.c
+ create mode 100644 drivers/firmware/arm_scpi.c
+ create mode 100644 include/linux/scpi_protocol.h
+
 -- 
 1.9.1
