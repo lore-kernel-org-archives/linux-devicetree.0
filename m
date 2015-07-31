@@ -1,170 +1,87 @@
-From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: Re: Re: [PATCH 5/5] ARM: dts: sun7i: Add dts file for
- Wits Pro A20 DKT
-Date: Fri, 31 Jul 2015 18:25:29 +0800
-Message-ID: <CAGb2v65TEogqYFAfen1VnOaiepvez5t8Oh+Q=OYsRS_aZUMO3A@mail.gmail.com>
-References: <1438333194-21181-1-git-send-email-hdegoede@redhat.com>
- <1438333194-21181-6-git-send-email-hdegoede@redhat.com> <20150731102028.GE2564@lukather>
-Reply-To: wens-jdAy2FN1RRM@public.gmane.org
+From: Tomeu Vizoso <tomeu.vizoso@collabora.com>
+Subject: Re: [PATCH v2 0/22] On-demand device probing
+Date: Fri, 31 Jul 2015 12:28:13 +0200
+Message-ID: <CAAObsKDALm94ZFwY+jBv3o8++-trTviiaGctAvvuySw9sxmLRQ@mail.gmail.com>
+References: <1438089593-7696-1-git-send-email-tomeu.vizoso@collabora.com>
+ <CAL_Jsq+2q=c6JbER8EMOGFtR=a6gvHermb8DRo9dKyj6fvdnXg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBCMILY6JWQBBBME25WWQKGQETFMRUOQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <20150731102028.GE2564@lukather>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <http://groups.google.com/group/linux-sunxi/subscribe>
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, Jelle de Jong <jelledejong-OIcJOM8/mISwoUgIn9SVlA@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <CAL_Jsq+2q=c6JbER8EMOGFtR=a6gvHermb8DRo9dKyj6fvdnXg@mail.gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Rob Herring <robherring2@gmail.com>
+Cc: "linux-fbdev@vger.kernel.org" <linux-fbdev@vger.kernel.org>, Linux USB List <linux-usb@vger.kernel.org>, Wolfram Sang <wsa@the-dreams.de>, David Airlie <airlied@linux.ie>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Linus Walleij <linus.walleij@linaro.org>, Linux-ALSA <alsa-devel@alsa-project.org>, dri-devel <dri-devel@lists.freedesktop.org>, Liam Girdwood <lgirdwood@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Thierry Reding <thierry.reding@gmail.com>, "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>, Lee Jones <lee.jones@linaro.org>, linux-clk@vger.kernel.org, Alexandre Courbot <gnurou@gmail.com>, =?UTF-8?Q?Terje_Bergstr=C3=B6m?= <tbergstrom@nvidia.com>, Javier Martinez Canillas <javier@osg.samsung.com>, Vinod Koul <vinod.koul@intel.com>, Stephen Warren <swarren@wwwdotorg.org>, Kishon Vijay Abraham I <kishon@ti.com>, linux-acpi@vger.ke
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jul 31, 2015 at 6:20 PM, Maxime Ripard
-<maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
-> On Fri, Jul 31, 2015 at 10:59:54AM +0200, Hans de Goede wrote:
->> From: Jelle de Jong <jelledejong-OIcJOM8/mISwoUgIn9SVlA@public.gmane.org>
->>
->> The Wits Pro A20 DKT is an A20 Development KiT with 1G RAM, 4G NAND,
->> sdio wifi, 1Gbit ethernet, 1024x768 lcd screen with ft5x_ts touchscreen
->> and a ton of IO connectors.
->>
->> Note there seem to be multiple sdcard slots on the board (4 in total), but
->> other then mmc0 none of these are hooked up by default, there is a ton of
->> dip-switches which likely allow hooking some of these up, but the
->> documentation of the board only describes the use of a fraction of them,
->> so for now we only support mmc0.
->>
->> Signed-off-by: Jelle de Jong <jelledejong-OIcJOM8/mISwoUgIn9SVlA@public.gmane.org>
->> Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
->> ---
->> Also see: http://www.merrii.com/en/pla_d.asp?id=163
->> ---
->>  arch/arm/boot/dts/Makefile                       |   3 +-
->>  arch/arm/boot/dts/sun7i-a20-wits-pro-a20-dkt.dts | 209 +++++++++++++++++++++++
->>  2 files changed, 211 insertions(+), 1 deletion(-)
->>  create mode 100644 arch/arm/boot/dts/sun7i-a20-wits-pro-a20-dkt.dts
->>
->> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
->> index f830e1f..151a413 100644
->> --- a/arch/arm/boot/dts/Makefile
->> +++ b/arch/arm/boot/dts/Makefile
->> @@ -595,7 +595,8 @@ dtb-$(CONFIG_MACH_SUN7I) += \
->>       sun7i-a20-orangepi-mini.dtb \
->>       sun7i-a20-pcduino3.dtb \
->>       sun7i-a20-pcduino3-nano.dtb \
->> -     sun7i-a20-wexler-tab7200.dtb
->> +     sun7i-a20-wexler-tab7200.dtb \
->> +        sun7i-a20-wits-pro-a20-dkt.dtb
->
-> The indentation is off.
->
->>  dtb-$(CONFIG_MACH_SUN8I) += \
->>       sun8i-a23-evb.dtb \
->>       sun8i-a23-ippo-q8h-v5.dtb \
->> diff --git a/arch/arm/boot/dts/sun7i-a20-wits-pro-a20-dkt.dts b/arch/arm/boot/dts/sun7i-a20-wits-pro-a20-dkt.dts
->> new file mode 100644
->> index 0000000..db4d32c
->> --- /dev/null
->> +++ b/arch/arm/boot/dts/sun7i-a20-wits-pro-a20-dkt.dts
->> @@ -0,0 +1,209 @@
->> +/*
->> + * Copyright 2015 Jelle de Jong <jelledejong-OIcJOM8/mISwoUgIn9SVlA@public.gmane.org>
->> + *
->> + * This file is dual-licensed: you can use it either under the terms
->> + * of the GPL or the X11 license, at your option. Note that this dual
->> + * licensing only applies to this file, and not this project as a
->> + * whole.
->> + *
->> + *  a) This file is free software; you can redistribute it and/or
->> + *     modify it under the terms of the GNU General Public License as
->> + *     published by the Free Software Foundation; either version 2 of the
->> + *     License, or (at your option) any later version.
->> + *
->> + *     This file is distributed in the hope that it will be useful,
->> + *     but WITHOUT ANY WARRANTY; without even the implied warranty of
->> + *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
->> + *     GNU General Public License for more details.
->> + *
->> + * Or, alternatively,
->> + *
->> + *  b) Permission is hereby granted, free of charge, to any person
->> + *     obtaining a copy of this software and associated documentation
->> + *     files (the "Software"), to deal in the Software without
->> + *     restriction, including without limitation the rights to use,
->> + *     copy, modify, merge, publish, distribute, sublicense, and/or
->> + *     sell copies of the Software, and to permit persons to whom the
->> + *     Software is furnished to do so, subject to the following
->> + *     conditions:
->> + *
->> + *     The above copyright notice and this permission notice shall be
->> + *     included in all copies or substantial portions of the Software.
->> + *
->> + *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
->> + *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
->> + *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
->> + *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
->> + *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
->> + *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
->> + *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
->> + *     OTHER DEALINGS IN THE SOFTWARE.
->> + */
->> +
->> +/dts-v1/;
->> +#include "sun7i-a20.dtsi"
->> +#include "sunxi-common-regulators.dtsi"
->> +
->> +#include <dt-bindings/gpio/gpio.h>
->> +#include <dt-bindings/input/input.h>
->> +#include <dt-bindings/interrupt-controller/irq.h>
->> +
->> +/ {
->> +     model = "Wits Pro A20 DKT";
->> +     compatible = "wits,pro-a20-dkt", "allwinner,sun7i-a20";
->> +
->> +     aliases {
->> +             serial0 = &uart0;
->> +     };
->> +
->> +     chosen {
->> +             stdout-path = "serial0:115200n8";
->> +     };
->> +
->> +     reg_vmmc3: vmmc3 {
->> +             compatible = "regulator-fixed";
->> +             pinctrl-names = "default";
->> +             pinctrl-0 = <&vmmc3_pin_ap6xxx_wl_regon>;
->> +             regulator-name = "vmmc3";
->> +             regulator-min-microvolt = <3300000>;
->> +             regulator-max-microvolt = <3300000>;
->> +             enable-active-high;
->> +             gpio = <&pio 7 9 GPIO_ACTIVE_HIGH>; /* PH9 */
->> +     };
->
-> It's not really vmmc. The reg_on stuff is actually more of a reset
-> line: when tied to VCC, the WLAN part of the chip and its regulators
-> are enabled, while when it's tied to ground, the WLAN is in reset, and
-> the internal regulators disabled.
->
-> So it can be seen as either an active-low reset line, or an
-> active-high regulator for the WiFi part, but VMMC is the power line of
-> the MMC bus itself, which usually is provided by a regulator through
-> the pin 22 of the AP6210, usually tied directly to the 3.3V line.
->
-> So you actually have two regulators here: one for vmmc (reg_3v3), and
-> one for reg_on which is the one that you just defined.
->
-> Note that it's a bit of a pain for now to support such cases, as
-> there's nothing to tie something from the DT to an SDIO device. I
-> don't have a better solution than marking it always-on at the moment,
-> with a big FIXME comment on top... :/
-
-One could use the mmc-pwr-seq stuff. I don't know if it has been
-extended for multiple GPIOs, not that you would need it in this use
-case.
-
-Maybe we ought to fix up the other ones, like the CubieTruck and A31
-Hummingbird?
-
-ChenYu
+T24gMzAgSnVseSAyMDE1IGF0IDA1OjA2LCBSb2IgSGVycmluZyA8cm9iaGVycmluZzJAZ21haWwu
+Y29tPiB3cm90ZToKPiBPbiBUdWUsIEp1bCAyOCwgMjAxNSBhdCA4OjE5IEFNLCBUb21ldSBWaXpv
+c28KPiA8dG9tZXUudml6b3NvQGNvbGxhYm9yYS5jb20+IHdyb3RlOgo+PiBIZWxsbywKPj4KPj4g
+SSBoYXZlIGEgcHJvYmxlbSB3aXRoIHRoZSBwYW5lbCBvbiBteSBUZWdyYSBDaHJvbWVib29rIHRh
+a2luZyBsb25nZXIKPj4gdGhhbiBleHBlY3RlZCB0byBiZSByZWFkeSBkdXJpbmcgYm9vdCAoU3TD
+qXBoYW5lIE1hcmNoZXNpbiByZXBvcnRlZCB3aGF0Cj4+IGlzIGJhc2ljYWxseSB0aGUgc2FtZSBp
+c3N1ZSBpbiBbMF0pLCBhbmQgaGF2ZSBsb29rZWQgaW50byBvcmRlcmVkCj4+IHByb2JpbmcgYXMg
+YSBiZXR0ZXIgd2F5IG9mIHNvbHZpbmcgdGhpcyB0aGFuIG1vdmluZyBub2RlcyBhcm91bmQgaW4g
+dGhlCj4+IERUIG9yIHBsYXlpbmcgd2l0aCBpbml0Y2FsbCBsZXZlbHMgYW5kIGxpbmtpbmcgb3Jk
+ZXIuCj4+Cj4+IFdoaWxlIHJlYWRpbmcgdGhlIHRocmVhZCBbMV0gdGhhdCBBbGV4YW5kZXIgSG9s
+bGVyIHN0YXJ0ZWQgd2l0aCBoaXMKPj4gc2VyaWVzIHRvIG1ha2UgcHJvYmluZyBvcmRlciBkZXRl
+cm1pbmlzdGljLCBpdCBvY2N1cnJlZCB0byBtZSB0aGF0IGl0Cj4+IHNob3VsZCBiZSBwb3NzaWJs
+ZSB0byBhY2hpZXZlIHRoZSBzYW1lIGJ5IHByb2JpbmcgZGV2aWNlcyBhcyB0aGV5IGFyZQo+PiBy
+ZWZlcmVuY2VkIGJ5IG90aGVyIGRldmljZXMuCj4+Cj4+IFRoaXMgYmFzaWNhbGx5IHJldXNlcyB0
+aGUgaW5mb3JtYXRpb24gdGhhdCBpcyBhbHJlYWR5IGltcGxpY2l0IGluIHRoZQo+PiBwcm9iZSgp
+IGltcGxlbWVudGF0aW9ucywgc2F2aW5nIHVzIGZyb20gcmVmYWN0b3JpbmcgZXhpc3RpbmcgZHJp
+dmVycyBvcgo+PiBhZGRpbmcgaW5mb3JtYXRpb24gdG8gRFRCcy4KPj4KPj4gRHVyaW5nIHJldmll
+dyBvZiB2MSBvZiB0aGlzIHNlcmllcyBMaW51cyBXYWxsZWlqIHN1Z2dlc3RlZCB0aGF0IGl0Cj4+
+IHNob3VsZCBiZSB0aGUgZGV2aWNlIGRyaXZlciBjb3JlIHRvIG1ha2Ugc3VyZSB0aGF0IGRlcGVu
+ZGVuY2llcyBhcmUKPj4gcmVhZHkgYmVmb3JlIHByb2JpbmcgYSBkZXZpY2UuIEkgZ2F2ZSB0aGlz
+IGlkZWEgYSB0cnkgWzJdIGJ1dCBNYXJrIEJyb3duCj4+IHBvaW50ZWQgb3V0IHRvIHRoZSBsb2dp
+YyBkdXBsaWNhdGlvbiBiZXR3ZWVuIHRoZSByZXNvdXJjZSBhY3F1aXNpdGlvbgo+PiBhbmQgZGVw
+ZW5kZW5jeSBkaXNjb3ZlcnkgY29kZSBwYXRocyAodGhvdWdoIEkgdGhpbmsgaXQncyBmYWlybHkg
+bWlub3IpLgo+Pgo+PiBUbyBhZGRyZXNzIHRoYXQgY29kZSBkdXBsaWNhdGlvbiBJIGV4cGVyaW1l
+bnRlZCB3aXRoIEFybmQncyBkZXZtX3Byb2JlCj4+IFszXSBjb25jZXB0IG9mIGhhdmluZyBkcml2
+ZXJzIGRlY2xhcmUgdGhlaXIgZGVwZW5kZW5jaWVzIGluc3RlYWQgb2YKPj4gYWNxdWlyaW5nIHRo
+ZW0gZHVyaW5nIHByb2JlLCBhbmQgd2hpbGUgaXQgd29ya2VkIFs0XSwgSSBkb24ndCB0aGluayB3
+ZQo+PiBlbmQgdXAgd2lubmluZyBhbnl0aGluZyB3aGVuIGNvbXBhcmVkIHRvIGp1c3QgcHJvYmlu
+ZyBkZXZpY2VzIG9uLWRlbWFuZAo+PiBmcm9tIHJlc291cmNlIGdldHRlcnMuCj4+Cj4+IE9uZSBy
+ZW1haW5pbmcgb2JqZWN0aW9uIGlzIHRvIHRoZSAic3ByaW5rbGluZyIgb2YgY2FsbHMgdG8KPj4g
+Zndub2RlX2Vuc3VyZV9kZXZpY2UoKSBpbiB0aGUgcmVzb3VyY2UgZ2V0dGVycyBvZiBlYWNoIHN1
+YnN5c3RlbSwgYnV0IEkKPj4gdGhpbmsgaXQncyB0aGUgcmlnaHQgdGhpbmcgdG8gZG8gZ2l2ZW4g
+dGhhdCB0aGUgc3RvcmFnZSBvZiByZXNvdXJjZXMgaXMKPj4gY3VycmVudGx5IHN1YnN5c3RlbS1z
+cGVjaWZpYy4KPgo+IFNlZW1zIGxpa2UgYSBtaW5vciBjaGFuZ2UgdG8gbWUuCj4KPj4gV2UgY291
+bGQgYXZvaWQgdGhlIGFib3ZlIGJ5IG1vdmluZyByZXNvdXJjZSBzdG9yYWdlIGludG8gdGhlIGNv
+cmUsIGJ1dCBJCj4+IGRvbid0IHRoaW5rIHRoZXJlJ3MgYSBjb21wZWxsaW5nIGNhc2UgZm9yIHRo
+YXQuCj4+Cj4+IEkgaGF2ZSB0ZXN0ZWQgdGhpcyBvbiBib2FyZHMgd2l0aCBUZWdyYSwgaU1YLjYs
+IEV4eW5vcyBhbmQgT01BUCBTb0NzLAo+PiBhbmQgdGhlc2UgcGF0Y2hlcyB3ZXJlIGVub3VnaCB0
+byBlbGltaW5hdGUgYWxsIHRoZSBkZWZlcnJlZCBwcm9iZXMKPj4gKGV4Y2VwdCBvbmUgaW4gUGFu
+ZGFCb2FyZCBiZWNhdXNlIG9tYXBfZG1hX3N5c3RlbSBkb2Vzbid0IGhhdmUgYQo+PiBmaXJtd2Fy
+ZSBub2RlIGFzIG9mIHlldCkuCj4+Cj4+IFdpdGggdGhpcyBzZXJpZXMgSSBnZXQgdGhlIGtlcm5l
+bCB0byBvdXRwdXQgdG8gdGhlIHBhbmVsIGluIDAuNXMsCj4+IGluc3RlYWQgb2YgMi44cy4KPgo+
+IEdlbmVyYWxseSwgSSB0aGluayB0aGlzIGxvb2tzIHByZXR0eSBnb29kLiBJdCBpcyBzaW1wbGUg
+YW5kIHRoZSBlcnJvcgo+IHBhdGggaXMgc2ltcGx5IGZhbGxpbmcgYmFjayB0byBkZWZlcnJlZCBw
+cm9iZS4KPgo+IE9uZSBvdmVyYWxsIGNvbW1lbnQgaXMgSSdtIG5vdCBzbyBzdXJlIGlmIGZ3bm9k
+ZV9lbnN1cmVfZGV2aWNlCj4gc2hvdWxkbid0IGp1c3QgYmUgb2ZfZW5zdXJlX2RldmljZS4gQXQg
+bGVhc3QgY3VycmVudGx5LCBpdCBsb29rcyBsaWtlCj4gYWxsIHRoZSBjYWxsaW5nIGxvY2F0aW9u
+cyBhcmUgRFQgc3BlY2lmaWMgZnVuY3Rpb25zIGFueXdheS4gVGhlcmUncwo+IHZlcnkgbGl0dGxl
+IGxvZ2ljIHdpdGhpbiB0aGUgZnVuY3Rpb24gdG8gcmVhbGx5IGJlbmVmaXQgc2hhcmluZyB3aXRo
+Cj4gQUNQSS4gSXQgaXMgYmFzaWNhbGx5IGp1c3QgYSBjYWxsIHRvIG9mX3BsYXRmb3JtX2Rldmlj
+ZV9maW5kIGFuZCB0aGVuCj4gYnVzX3Byb2JlX2RldmljZS4gSSBleHBlY3QgdGhlIGdldCBmdW5j
+dGlvbnMgd2lsbCBhbHdheXMgY2FsbCBpbnRvCj4gRFQvQUNQSSBzcGVjaWZpYyBmdW5jdGlvbnMg
+d2hpY2ggY2FuIHRoZW4gY2FsbCB0aGUgZmlybXdhcmUgc3BlY2lmaWMKPiBkZXZpY2UgZmluZCBm
+dW5jdGlvbi4KClRoYXQncyBmaW5lIHdpdGggbWUuIEkganVzdCB3ZW50IHRoYXQgd2F5IGJlY2F1
+c2UgSSBhc3N1bWVkIHRoZSBwbGFuCndhcyBmb3Igc3Vic3lzdGVtcyB0byBtb3ZlIHRvIGNvbnN1
+bWUgZncgZGF0YSB0aHJvdWdoIGZ3bm9kZSBhbmQgZHJvcAphcyBtdWNoIGZ3LXNwZWNpZmljIGNv
+ZGUgYXMgcG9zc2libGUuCgpCdXQgSSBoYXZlIGp1c3QgbG9va2VkIGF0IGZ3bm9kZV9nZXRfbmFt
+ZWRfZ3Bpb2QgYW5kIHRoZSBPRiBhbmQgQUNQSQpjb2RlIHBhdGhzIGFyZSBzbyBkaXNzaW1pbGFy
+IHRoYXQgSSBndWVzcyB0aGF0J3Mgbm90IHNvIGFuZCB3b3VsZCBiZQpiZXR0ZXIgdG8gZG8gYXMg
+eW91IHNheS4KClRoYW5rcywKClRvbWV1CgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fXwpsaW51eC1hcm0ta2VybmVsIG1haWxpbmcgbGlzdApsaW51eC1hcm0t
+a2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFp
+bG1hbi9saXN0aW5mby9saW51eC1hcm0ta2VybmVsCg==
