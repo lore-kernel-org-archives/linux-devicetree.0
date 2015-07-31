@@ -1,133 +1,253 @@
-From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: Re: [PATCH 6/8] ARM: dts: axp209: Add usb_power_supply
- child node to the ax209 node
-Date: Fri, 31 Jul 2015 17:00:43 +0800
-Message-ID: <CAGb2v66+CZe0v=CuYOLfnNwkX70kwPOP28Nya2Y8xw8yrg4-8Q@mail.gmail.com>
-References: <1433885881-19809-1-git-send-email-hdegoede@redhat.com>
- <1433885881-19809-7-git-send-email-hdegoede@redhat.com> <CAGb2v66X79dK84hG8NVTho-kPPMNcKXQspvT2pCM8Zbmnme53A@mail.gmail.com>
- <20150731075104.48c467e6@pluto.restena.lu> <CAGb2v67nM7pauyjyhBdfgX7p_Rud6TEsNqphB+gx4ROekVqtbw@mail.gmail.com>
- <20150731083541.5f2c683a@pluto.restena.lu> <55BB3262.5000403@redhat.com>
-Reply-To: wens-jdAy2FN1RRM@public.gmane.org
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH v7 3/5] clk: Supply the critical clock {init, enable,
+ disable} framework
+Date: Fri, 31 Jul 2015 10:02:19 +0100
+Message-ID: <20150731090219.GE3208@x1>
+References: <1437570255-21049-1-git-send-email-lee.jones@linaro.org>
+ <1437570255-21049-4-git-send-email-lee.jones@linaro.org>
+ <20150730010213.642.10831@quantum>
+ <20150730111747.GF14642@x1>
+ <20150730233530.23791.17746@quantum>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-sunxi+bncBCMILY6JWQBBBUXS5SWQKGQEOGQU4DI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <55BB3262.5000403-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <http://groups.google.com/group/linux-sunxi/subscribe>
-To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Cc: =?UTF-8?Q?Bruno_Pr=C3=A9mont?= <bonbons-ud5FBsm0p/xEiooADzr8i9i2O/JbrIOy@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Dmitry Eremin-Solenikov <dbaryshkov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20150730233530.23791.17746@quantum>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Michael Turquette <mturquette@linaro.org>
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, kernel@stlinux.com, sboyd@codeaurora.org, devicetree@vger.kernel.org, geert@linux-m68k.org, maxime.ripard@free-electrons.com, s.hauer@pengutronix.de, linux-clk@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jul 31, 2015 at 4:31 PM, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org> wrote:
-> Hi,
->
->
-> On 31-07-15 08:35, Bruno Pr=C3=A9mont wrote:
->>
->> On Fri, 31 Jul 2015 14:14:28 +0800 Chen-Yu Tsai wrote:
->>>
->>> On Fri, Jul 31, 2015 at 1:51 PM, Bruno Pr=C3=A9mont wrote:
->>>>
->>>> Hi ChenYu,
->>>>
->>>> On Fri, 31 Jul 2015 13:31:53 +0800 Chen-Yu Tsai wrote:
->>>>>
->>>>> Hi Hans,
->>>>>
->>>>> On Wed, Jun 10, 2015 at 5:37 AM, Hans de Goede wrote:
->>>>>>
->>>>>> Add a node representing the usb power supply part of the axp209 pmic=
-,
->>>>>> note
->>>>>> that the usb power supply and the (to be added later) ac power suppl=
-y
->>>>>> will
->>>>>> each have their own child-node, so that they can be separately
->>>>>> specified
->>>>>> as power-supply for other nodes using a power-supply property with a
->>>>>> phandle pointing to the right axp209 child-node.
->>>>>>
->>>>>> Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
->>>>>> ---
->>>>>>   arch/arm/boot/dts/axp209.dtsi | 5 +++++
->>>>>>   1 file changed, 5 insertions(+)
->>>>>>
->>>>>> diff --git a/arch/arm/boot/dts/axp209.dtsi
->>>>>> b/arch/arm/boot/dts/axp209.dtsi
->>>>>> index 24c935c..051ab3b 100644
->>>>>> --- a/arch/arm/boot/dts/axp209.dtsi
->>>>>> +++ b/arch/arm/boot/dts/axp209.dtsi
->>>>>> @@ -89,4 +89,9 @@
->>>>>>                          regulator-name =3D "ldo5";
->>>>>>                  };
->>>>>>          };
->>>>>> +
->>>>>> +       usb_power_supply: usb_power_supply {
->>>>>> +               compatible =3D "x-powers,axp202-usb-power-supply";
->>>>>> +               status =3D "disabled";
->>>>>
->>>>>
->>>>> Is there any reason to have this disabled by default?
->>>>> AFAIK this is not something configurable in hardware,
->>>>> and the driver just gives readouts and status updates.
->>>>
->>>>
->>>> There are some devices that only have 'AC-IN' instead of usb/otg power
->>>> (set-top boxes) so having the devices tell what power sources they
->>>> have makes sense (otherwise those that have ac-in instead of otg would
->>>> have to disable usb_power_supply) and avoids confusion by explicitly
->>>> stating presence in device dts.
->>>
->>>
->>> That's true. But this is a bit of hardware inside the AXP.
->>> If it's power isn't routed, it should report it, shouldn't it?
->>
->>
->> If the device does not use the input there are two cases:
->> - ac-in and usb/otg in short-circuited (there is a bit in AXP registers
->>    to provide this indication)
->> - the unused one is just not connected/connectable
->>
->> In either case the voltage of the unused/unusable branch is not really
->> useful, nor is it useful to have it show up in sysfs.
->
->
-> Exactly my thinking on this, +1 .
->
->>> And normal users would probably expect to read the input
->>> voltage/current/status through sysfs (or maybe hwmon?),
->>> instead of not finding the device and having to look through
->>> the DTS.
->>
->>
->> Only those supplies effectively present (in-use or with connectors
->> to eventually use them) should be visible in sysfs.
->> Having more of them will just confuse the users, they would be searching
->> how they can connect the supply while there is no means to do so
->> except soldering to the tiny AXP pins.
->
->
-> +1
+On Thu, 30 Jul 2015, Michael Turquette wrote:
 
-OK. So mostly tablets and dev boards would benefit from having both
-power supplies. Is there a preference for usb-power-supply over
-vbus-det-gpio if both are available? Or just list them both and
-let the driver sort it out?
+> Quoting Lee Jones (2015-07-30 04:17:47)
+> > On Wed, 29 Jul 2015, Michael Turquette wrote:
+> >=20
+> > > Hi Lee,
+> > >=20
+> > > + linux-clk ml
+> > >=20
+> > > Quoting Lee Jones (2015-07-22 06:04:13)
+> > > > These new API calls will firstly provide a mechanisms to tag a =
+clock as
+> > > > critical and secondly allow any knowledgeable driver to (un)gat=
+e clocks,
+> > > > even if they are marked as critical.
+> > > >=20
+> > > > Suggested-by: Maxime Ripard <maxime.ripard@free-electrons.com>
+> > > > Signed-off-by: Lee Jones <lee.jones@linaro.org>
+> > > > ---
+> > > >  drivers/clk/clk.c            | 45 ++++++++++++++++++++++++++++=
+++++++++++++++++
+> > > >  include/linux/clk-provider.h |  2 ++
+> > > >  include/linux/clk.h          | 30 ++++++++++++++++++++++++++++=
++
+> > > >  3 files changed, 77 insertions(+)
+> > > >=20
+> > > > diff --git a/drivers/clk/clk.c b/drivers/clk/clk.c
+> > > > index 61c3fc5..486b1da 100644
+> > > > --- a/drivers/clk/clk.c
+> > > > +++ b/drivers/clk/clk.c
+> > > > @@ -46,6 +46,21 @@ static struct clk_core *clk_core_lookup(cons=
+t char *name);
+> > > > =20
+> > > >  /***    private data structures    ***/
+> > > > =20
+> > > > +/**
+> > > > + * struct critical -   Provides 'play' over critical clocks.  =
+A clock can be
+> > > > + *                     marked as critical, meaning that it sho=
+uld not be
+> > > > + *                     disabled.  However, if a driver which i=
+s aware of the
+> > > > + *                     critical behaviour wants to control it,=
+ it can do so
+> > > > + *                     using clk_enable_critical() and clk_dis=
+able_critical().
+> > > > + *
+> > > > + * @enabled    Is clock critical?  Once set, doesn't change
+> > > > + * @leave_on   Self explanatory.  Can be disabled by knowledge=
+able drivers
+> > >=20
+> > > Not self explanatory. I need this explained to me. What does leav=
+e_on
+> > > do? Better yet, what would happen if leave_on did not exist?
+> > >=20
+> > > > + */
+> > > > +struct critical {
+> > > > +       bool enabled;
+> > > > +       bool leave_on;
+> > > > +};
+> > > > +
+> > > >  struct clk_core {
+> > > >         const char              *name;
+> > > >         const struct clk_ops    *ops;
+> > > > @@ -75,6 +90,7 @@ struct clk_core {
+> > > >         struct dentry           *dentry;
+> > > >  #endif
+> > > >         struct kref             ref;
+> > > > +       struct critical         critical;
+> > > >  };
+> > > > =20
+> > > >  struct clk {
+> > > > @@ -995,6 +1011,10 @@ static void clk_core_disable(struct clk_c=
+ore *clk)
+> > > >         if (WARN_ON(clk->enable_count =3D=3D 0))
+> > > >                 return;
+> > > > =20
+> > > > +       /* Refuse to turn off a critical clock */
+> > > > +       if (clk->enable_count =3D=3D 1 && clk->critical.leave_o=
+n)
+> > > > +               return;
+> > >=20
+> > > How do we get to this point? clk_enable_critical actually calls
+> > > clk_enable, thus incrementing the enable_count. The only time tha=
+t we
+> > > could hit the above case is if,
+> > >=20
+> > > a) there is an imbalance in clk_enable and clk_disable calls. If =
+this is
+> > > the case then the drivers need to be fixed. Or better yet some
+> > > infrastructure to catch that, now that we have per-user struct cl=
+k
+> > > cookies.
+> > >=20
+> > > b) a driver knowingly calls clk_enable_critical(foo) and then reg=
+ular,
+> > > old clk_disable(foo). But why would a driver do that?
+> > >=20
+> > > It might be that I am missing the point here, so please feel free=
+ to
+> > > clue me in.
+> >=20
+> > This check behaves in a very similar to the WARN() above.  It's mor=
+e
+> > of a fail-safe.  If all drivers are behaving properly, then it
+> > shouldn't ever be true.  If they're not, it prevents an incorrectly
+> > written driver from irrecoverably crippling the system.
+>=20
+> Then this check should be replaced with a generic approach that refus=
+es
+> to honor imbalances anyways. Below are two patches that probably reso=
+lve
+> the issue of badly behaving drivers that cause enable imbalances.
 
-Thanks.
+Your patch should make the requirement for this check moot, so it can
+probably be removed.
 
+> > As I said in the other mail.  We can do without these 3 new wrapper=
+s.
+> > We _could_ just write a driver which only calls clk_enable() _after=
+_
+> > it calls clk_disable(), a kind of intentional unbalance and it woul=
+d
+> > do that same thing.
+>=20
+> This naive approach will not work with per-user imbalance tracking.
 
-ChenYu
+Steady on.  I said we "_could_", that that I think it's a good idea.
+
+I think it's a bad idea, which is why I wrote this set. ;)
+
+> > However, what we're trying to do here is provide
+> > a proper API, so we can see at first glance what the 'knowledgeable=
+'
+> > driver is trying to do and not have someone attempt to submit a 'fi=
+x'
+> > which calls clk_enable() or something.
+>=20
+> We'll need some type of api for sure for the handoff.
+
+This set will not trigger your new checks.  The clocks will be in
+perfect ballance becuase a reference will be taken at start-up.
+
+Again:
+
+start-up:
+  clk_prepare_enable()
+
+knowlegable_driver_probe:
+  clk_get()
+
+knowlegable_driver_gate_clk:
+  clk_disable_critical()
+
+knowlegable_driver_ungate_clk:
+  clk_enable_critical()
+
+knowlegable_driver_remove:
+  clk_put()
+
+> From 3599ed206da9ce770bfafcfd95cbb9a03ac44473 Mon Sep 17 00:00:00 200=
+1
+> From: Michael Turquette <mturquette@baylibre.com>
+> Date: Wed, 29 Jul 2015 18:22:45 -0700
+> Subject: [PATCH 1/2] clk: per-user clk prepare & enable ref counts
+>=20
+> This patch adds prepare and enable reference counts for the per-user
+> handles that clock consumers have for a clock node. This patch warns =
+if
+> an imbalance occurs while trying to disable or unprepare a clock and
+> aborts, leaving the hardware unaffected.
+>=20
+> Signed-off-by: Michael Turquette <mturquette@baylibre.com>
+> ---
+>  drivers/clk/clk.c | 10 ++++++++++
+>  1 file changed, 10 insertions(+)
+>=20
+> diff --git a/drivers/clk/clk.c b/drivers/clk/clk.c
+> index 898052e..72feee9 100644
+> --- a/drivers/clk/clk.c
+> +++ b/drivers/clk/clk.c
+> @@ -84,6 +84,8 @@ struct clk {
+>  	unsigned long min_rate;
+>  	unsigned long max_rate;
+>  	struct hlist_node clks_node;
+> +	unsigned int enable_count;
+> +	unsigned int prepare_count;
+>  };
+> =20
+>  /***           locking             ***/
+> @@ -600,6 +602,9 @@ void clk_unprepare(struct clk *clk)
+>  		return;
+> =20
+>  	clk_prepare_lock();
+> +	if (WARN_ON(clk->prepare_count =3D=3D 0))
+> +		return;
+> +	clk->prepare_count--;
+>  	clk_core_unprepare(clk->core);
+>  	clk_prepare_unlock();
+>  }
+> @@ -657,6 +662,7 @@ int clk_prepare(struct clk *clk)
+>  		return 0;
+> =20
+>  	clk_prepare_lock();
+> +	clk->prepare_count++;
+>  	ret =3D clk_core_prepare(clk->core);
+>  	clk_prepare_unlock();
+> =20
+> @@ -707,6 +713,9 @@ void clk_disable(struct clk *clk)
+>  		return;
+> =20
+>  	flags =3D clk_enable_lock();
+> +	if (WARN_ON(clk->enable_count =3D=3D 0))
+> +		return;
+> +	clk->enable_count--;
+>  	clk_core_disable(clk->core);
+>  	clk_enable_unlock(flags);
+>  }
+> @@ -769,6 +778,7 @@ int clk_enable(struct clk *clk)
+>  		return 0;
+> =20
+>  	flags =3D clk_enable_lock();
+> +	clk->enable_count++;
+>  	ret =3D clk_core_enable(clk->core);
+>  	clk_enable_unlock(flags);
+> =20
 
 --=20
-You received this message because you are subscribed to the Google Groups "=
-linux-sunxi" group.
-To unsubscribe from this group and stop receiving emails from it, send an e=
-mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-For more options, visit https://groups.google.com/d/optout.
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org =E2=94=82 Open source software for ARM SoCs
+=46ollow Linaro: Facebook | Twitter | Blog
