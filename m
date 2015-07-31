@@ -1,134 +1,170 @@
-From: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH 03/12] mtd: nand: omap: Move IRQ handling from GPMC to
- NAND driver
-Date: Fri, 31 Jul 2015 13:21:17 +0300
-Message-ID: <55BB4C1D.5080905@ti.com>
-References: <1436531019-18088-1-git-send-email-rogerq@ti.com> <1436531019-18088-4-git-send-email-rogerq@ti.com> <20150713071008.GC26485@atomide.com> <55A38D2E.9010500@ti.com> <20150713124059.GF26485@atomide.com> <55B8C1D5.3090807@ti.com>
+From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Subject: Re: Re: [PATCH 5/5] ARM: dts: sun7i: Add dts file for
+ Wits Pro A20 DKT
+Date: Fri, 31 Jul 2015 18:25:29 +0800
+Message-ID: <CAGb2v65TEogqYFAfen1VnOaiepvez5t8Oh+Q=OYsRS_aZUMO3A@mail.gmail.com>
+References: <1438333194-21181-1-git-send-email-hdegoede@redhat.com>
+ <1438333194-21181-6-git-send-email-hdegoede@redhat.com> <20150731102028.GE2564@lukather>
+Reply-To: wens-jdAy2FN1RRM@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <55B8C1D5.3090807-l0cyMroinI0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Cc: dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, ezequiel-30ULvvUtt6G51wMPkGsGjgyUoB5FGQPZ@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sunxi+bncBCMILY6JWQBBBME25WWQKGQETFMRUOQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <20150731102028.GE2564@lukather>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <http://groups.google.com/group/linux-sunxi/subscribe>
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, Jelle de Jong <jelledejong-OIcJOM8/mISwoUgIn9SVlA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 29/07/15 15:06, Roger Quadros wrote:
-> Tony,
-> 
-> On 13/07/15 15:40, Tony Lindgren wrote:
->> * Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org> [150713 03:07]:
->>> Tony,
->>>
->>> On 13/07/15 10:10, Tony Lindgren wrote:
->>>> * Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org> [150710 05:26]:
->>>>> Since the Interrupt Events are used only by the NAND driver,
->>>>> there is no point in managing the Interrupt registers
->>>>> in the GPMC driver and complicating it with irqchip modeling.
->>>>
->>>> I don't think it's a good idea to allow external drivers to
->>>> tinker directly with GPMC registers. How about just set up GPMC
->>>> as an irqchip for the edge detection interrupts?
->>>>
->>>> I think we already have devices with multiple NAND chips. And
->>>> there's nothing stopping other drivers from using the edge
->>>> detection interrupts.
->>>
->>> OK. The GPMC_IRQ registers manage 2 NAND specific interrupts
->>> (terminalcount and fifo) and 'n' WAIT pin edge interrupts.
->>>
->>>  So we can model this as a irqchip with 'n + 2' interrupts.
+On Fri, Jul 31, 2015 at 6:20 PM, Maxime Ripard
+<maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
+> On Fri, Jul 31, 2015 at 10:59:54AM +0200, Hans de Goede wrote:
+>> From: Jelle de Jong <jelledejong-OIcJOM8/mISwoUgIn9SVlA@public.gmane.org>
 >>
->> OK
-> 
-> For the wait pins irqchip is not sufficient and it needs to be gpiochip
-> with irqchip. Waitpin status can be read from GPIO_STATUS register.
-> 
-> Just getting the interrupt is not enough and we want to know if the
-> line is high or low. That is how nand->dev_ready works.
-> 
-> How about having 2 IRQ domains?
-> One is irqchip with 2 interrupts (terminalcount and fifo) and second is
-> gpiochip + irqchip for the n wait pins.
-> 
-> The nand driver can then be modified to use GPIO to get Read/Busy
-> pin status from the wait pin.
+>> The Wits Pro A20 DKT is an A20 Development KiT with 1G RAM, 4G NAND,
+>> sdio wifi, 1Gbit ethernet, 1024x768 lcd screen with ft5x_ts touchscreen
+>> and a ton of IO connectors.
+>>
+>> Note there seem to be multiple sdcard slots on the board (4 in total), but
+>> other then mmc0 none of these are hooked up by default, there is a ton of
+>> dip-switches which likely allow hooking some of these up, but the
+>> documentation of the board only describes the use of a fraction of them,
+>> so for now we only support mmc0.
+>>
+>> Signed-off-by: Jelle de Jong <jelledejong-OIcJOM8/mISwoUgIn9SVlA@public.gmane.org>
+>> Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+>> ---
+>> Also see: http://www.merrii.com/en/pla_d.asp?id=163
+>> ---
+>>  arch/arm/boot/dts/Makefile                       |   3 +-
+>>  arch/arm/boot/dts/sun7i-a20-wits-pro-a20-dkt.dts | 209 +++++++++++++++++++++++
+>>  2 files changed, 211 insertions(+), 1 deletion(-)
+>>  create mode 100644 arch/arm/boot/dts/sun7i-a20-wits-pro-a20-dkt.dts
+>>
+>> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+>> index f830e1f..151a413 100644
+>> --- a/arch/arm/boot/dts/Makefile
+>> +++ b/arch/arm/boot/dts/Makefile
+>> @@ -595,7 +595,8 @@ dtb-$(CONFIG_MACH_SUN7I) += \
+>>       sun7i-a20-orangepi-mini.dtb \
+>>       sun7i-a20-pcduino3.dtb \
+>>       sun7i-a20-pcduino3-nano.dtb \
+>> -     sun7i-a20-wexler-tab7200.dtb
+>> +     sun7i-a20-wexler-tab7200.dtb \
+>> +        sun7i-a20-wits-pro-a20-dkt.dtb
+>
+> The indentation is off.
+>
+>>  dtb-$(CONFIG_MACH_SUN8I) += \
+>>       sun8i-a23-evb.dtb \
+>>       sun8i-a23-ippo-q8h-v5.dtb \
+>> diff --git a/arch/arm/boot/dts/sun7i-a20-wits-pro-a20-dkt.dts b/arch/arm/boot/dts/sun7i-a20-wits-pro-a20-dkt.dts
+>> new file mode 100644
+>> index 0000000..db4d32c
+>> --- /dev/null
+>> +++ b/arch/arm/boot/dts/sun7i-a20-wits-pro-a20-dkt.dts
+>> @@ -0,0 +1,209 @@
+>> +/*
+>> + * Copyright 2015 Jelle de Jong <jelledejong-OIcJOM8/mISwoUgIn9SVlA@public.gmane.org>
+>> + *
+>> + * This file is dual-licensed: you can use it either under the terms
+>> + * of the GPL or the X11 license, at your option. Note that this dual
+>> + * licensing only applies to this file, and not this project as a
+>> + * whole.
+>> + *
+>> + *  a) This file is free software; you can redistribute it and/or
+>> + *     modify it under the terms of the GNU General Public License as
+>> + *     published by the Free Software Foundation; either version 2 of the
+>> + *     License, or (at your option) any later version.
+>> + *
+>> + *     This file is distributed in the hope that it will be useful,
+>> + *     but WITHOUT ANY WARRANTY; without even the implied warranty of
+>> + *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+>> + *     GNU General Public License for more details.
+>> + *
+>> + * Or, alternatively,
+>> + *
+>> + *  b) Permission is hereby granted, free of charge, to any person
+>> + *     obtaining a copy of this software and associated documentation
+>> + *     files (the "Software"), to deal in the Software without
+>> + *     restriction, including without limitation the rights to use,
+>> + *     copy, modify, merge, publish, distribute, sublicense, and/or
+>> + *     sell copies of the Software, and to permit persons to whom the
+>> + *     Software is furnished to do so, subject to the following
+>> + *     conditions:
+>> + *
+>> + *     The above copyright notice and this permission notice shall be
+>> + *     included in all copies or substantial portions of the Software.
+>> + *
+>> + *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+>> + *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+>> + *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+>> + *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+>> + *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+>> + *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+>> + *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+>> + *     OTHER DEALINGS IN THE SOFTWARE.
+>> + */
+>> +
+>> +/dts-v1/;
+>> +#include "sun7i-a20.dtsi"
+>> +#include "sunxi-common-regulators.dtsi"
+>> +
+>> +#include <dt-bindings/gpio/gpio.h>
+>> +#include <dt-bindings/input/input.h>
+>> +#include <dt-bindings/interrupt-controller/irq.h>
+>> +
+>> +/ {
+>> +     model = "Wits Pro A20 DKT";
+>> +     compatible = "wits,pro-a20-dkt", "allwinner,sun7i-a20";
+>> +
+>> +     aliases {
+>> +             serial0 = &uart0;
+>> +     };
+>> +
+>> +     chosen {
+>> +             stdout-path = "serial0:115200n8";
+>> +     };
+>> +
+>> +     reg_vmmc3: vmmc3 {
+>> +             compatible = "regulator-fixed";
+>> +             pinctrl-names = "default";
+>> +             pinctrl-0 = <&vmmc3_pin_ap6xxx_wl_regon>;
+>> +             regulator-name = "vmmc3";
+>> +             regulator-min-microvolt = <3300000>;
+>> +             regulator-max-microvolt = <3300000>;
+>> +             enable-active-high;
+>> +             gpio = <&pio 7 9 GPIO_ACTIVE_HIGH>; /* PH9 */
+>> +     };
+>
+> It's not really vmmc. The reg_on stuff is actually more of a reset
+> line: when tied to VCC, the WLAN part of the chip and its regulators
+> are enabled, while when it's tied to ground, the WLAN is in reset, and
+> the internal regulators disabled.
+>
+> So it can be seen as either an active-low reset line, or an
+> active-high regulator for the WiFi part, but VMMC is the power line of
+> the MMC bus itself, which usually is provided by a regulator through
+> the pin 22 of the AP6210, usually tied directly to the 3.3V line.
+>
+> So you actually have two regulators here: one for vmmc (reg_3v3), and
+> one for reg_on which is the one that you just defined.
+>
+> Note that it's a bit of a pain for now to support such cases, as
+> there's nothing to tie something from the DT to an SDIO device. I
+> don't have a better solution than marking it always-on at the moment,
+> with a big FIXME comment on top... :/
 
-One more observation I've had is that using irqchip modelling for
-the 2 NAND events causes a performance impact.
+One could use the mmc-pwr-seq stuff. I don't know if it has been
+extended for multiple GPIOs, not that you would need it in this use
+case.
 
-Using mtd_oobtest I see the following on dra7-evm
+Maybe we ought to fix up the other ones, like the CubieTruck and A31
+Hummingbird?
 
-1) v4.2-rc4 with prefetch-polled (no IRQs used)
-mtd_speedtest: eraseblock write speed is 7142 KiB/s
-mtd_speedtest: eraseblock read speed is 13721 KiB/s
-
-2) v4.2-rc4 with prefetch-irq (IRQchip model)
-eraseblock write speed is 5475 KiB/s
-eraseblock read speed is 6420 KiB/s
-
-3) this series (*) with prefetch-irq (no IRQchip model, nand driver
-directly accesses irqstatus/irqenable)
-eraseblock write speed is 6564 KiB/s
-eraseblock read speed is 10850 KiB/s
-
-(*) diff at the end is required on top to fix an issue with this series.
-
-So should we continue IRQchip modelling for the NAND events
-or use the GPMC interrupt as shared and add APIs to access
-the NAND bits of the IRQSTATUS/ENABLE register.
-
-cheers,
--roger
-
---
-
-diff --git a/drivers/mtd/nand/omap2.c b/drivers/mtd/nand/omap2.c
-index fecc054..26ef2bd 100644
---- a/drivers/mtd/nand/omap2.c
-+++ b/drivers/mtd/nand/omap2.c
-@@ -1832,13 +1832,14 @@ static int omap_get_dt_info(struct device *dev, struct omap_nand_info *info)
- 		for (i = 0; i < ARRAY_SIZE(nand_xfer_types); i++) {
- 			if (!strcasecmp(s, nand_xfer_types[i])) {
- 				info->xfer_type = i;
--				break;
-+				goto next;
- 			}
- 		}
- 
- 		dev_err(dev, "unrecognized value for ti,nand-xfer-type\n");
- 		return -EINVAL;
- 	}
-+next:
- 
- 	of_get_nand_on_flash_bbt(child);
- 
-diff --git a/drivers/mtd/nand/omap2.c b/drivers/mtd/nand/omap2.c
-index 26ef2bd..e8bdff5 100644
---- a/drivers/mtd/nand/omap2.c
-+++ b/drivers/mtd/nand/omap2.c
-@@ -670,17 +670,12 @@ static irqreturn_t omap_nand_irq(int this_irq, void *dev)
- 			goto done;
- 	}
- 
--	/* Clear FIFOEVENT STATUS */
--	irqstatus &= ~GPMC_IRQ_FIFOEVENT;
--	writel(irqstatus, info->reg.gpmc_irqstatus);
--
- 	return IRQ_HANDLED;
- 
- done:
- 	complete(&info->comp);
- 
--	/* Clear FIFOEVENT and TERMCOUNT STATUS */
--	irqstatus &= ~(GPMC_IRQ_TERMCOUNT | GPMC_IRQ_FIFOEVENT);
-+	/* Clear IRQ STATUS */
- 	writel(irqstatus, info->reg.gpmc_irqstatus);
- 
- 	/* Disable Interrupt generation */
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+ChenYu
