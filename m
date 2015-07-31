@@ -1,103 +1,47 @@
-From: <dinguyen@opensource.altera.com>
-Subject: [PATCHv2 3/4] reset: socfpga: Update reset-socfpga to read the altr,modrst-offset property
-Date: Fri, 31 Jul 2015 16:03:10 -0500
-Message-ID: <1438376591-22100-4-git-send-email-dinguyen@opensource.altera.com>
-References: <1438376591-22100-1-git-send-email-dinguyen@opensource.altera.com>
+From: Brian Norris <computersforpeace@gmail.com>
+Subject: Re: [RFC PATCH 4/5] ARM: dts: DRA7: Add memory map region entries
+ for qspi
+Date: Fri, 31 Jul 2015 14:28:47 -0700
+Message-ID: <20150731212847.GH10676@google.com>
+References: <1438072876-16338-1-git-send-email-vigneshr@ti.com>
+ <1438072876-16338-5-git-send-email-vigneshr@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1438376591-22100-1-git-send-email-dinguyen@opensource.altera.com>
+Content-Disposition: inline
+In-Reply-To: <1438072876-16338-5-git-send-email-vigneshr@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: p.zabel@pengutronix.de
-Cc: dinh.linux@gmail.com, robh+dt@kernel.org, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, mark.rutland@arm.com, pawel.moll@arm.com, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, s.trumtrar@pengutronix.de, Dinh Nguyen <dinguyen@opensource.altera.com>
+To: Vignesh R <vigneshr@ti.com>
+Cc: Mark Brown <broonie@kernel.org>, David Woodhouse <dwmw2@infradead.org>, Tony Lindgren <tony@atomide.com>, Russell King <linux@arm.linux.org.uk>, Huang Shijie <b32955@freescale.com>, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org, linux-spi@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-From: Dinh Nguyen <dinguyen@opensource.altera.com>
+On Tue, Jul 28, 2015 at 02:11:15PM +0530, Vignesh R wrote:
+> Add qspi memory mapped region entries for DRA7xx based SoCs.
+> 
+> Signed-off-by: Vignesh R <vigneshr@ti.com>
+> ---
+>  arch/arm/boot/dts/am4372.dtsi | 4 +++-
+>  1 file changed, 3 insertions(+), 1 deletion(-)
+> 
+> diff --git a/arch/arm/boot/dts/am4372.dtsi b/arch/arm/boot/dts/am4372.dtsi
+> index ade28c790f4b..5317a0f24ab9 100644
+> --- a/arch/arm/boot/dts/am4372.dtsi
+> +++ b/arch/arm/boot/dts/am4372.dtsi
+> @@ -902,7 +902,9 @@
+>  
+>  		qspi: qspi@47900000 {
+>  			compatible = "ti,am4372-qspi";
+> -			reg = <0x47900000 0x100>;
+> +			reg = <0x47900000 0x100>,
+> +			      <0x30000000 0x3ffffff>;
 
-In order for the Arria10 to be able to re-use the reset driver for SoCFPGA
-Cyclone5/Arria5, we need to read the 'altr,modrst-offset' property from the
-device tree entry. The 'altr,modrst-offset' property is the first register
-into the reset manager that is used for bringing peripherals out of reset.
+Are you sure this region is 1 byte shy of 64MB in length? Same question
+for patch 5.
 
-The driver assumes a modrst-offset of 0x10 in order to support legacy
-Cyclone5/Arria5 hardware.
-
-Signed-off-by: Dinh Nguyen <dinguyen@opensource.altera.com>
----
-v2: assume a modrst-offset of 0x10 if the property is not specified in order
-    to support legacy boards that do not have the property.
----
- drivers/reset/reset-socfpga.c | 19 +++++++++++++------
- 1 file changed, 13 insertions(+), 6 deletions(-)
-
-diff --git a/drivers/reset/reset-socfpga.c b/drivers/reset/reset-socfpga.c
-index 0a8def3..1a6c5d6 100644
---- a/drivers/reset/reset-socfpga.c
-+++ b/drivers/reset/reset-socfpga.c
-@@ -24,11 +24,11 @@
- #include <linux/types.h>
- 
- #define NR_BANKS		4
--#define OFFSET_MODRST		0x10
- 
- struct socfpga_reset_data {
- 	spinlock_t			lock;
- 	void __iomem			*membase;
-+	u32				modrst_offset;
- 	struct reset_controller_dev	rcdev;
- };
- 
-@@ -45,8 +45,8 @@ static int socfpga_reset_assert(struct reset_controller_dev *rcdev,
- 
- 	spin_lock_irqsave(&data->lock, flags);
- 
--	reg = readl(data->membase + OFFSET_MODRST + (bank * NR_BANKS));
--	writel(reg | BIT(offset), data->membase + OFFSET_MODRST +
-+	reg = readl(data->membase + data->modrst_offset + (bank * NR_BANKS));
-+	writel(reg | BIT(offset), data->membase + data->modrst_offset +
- 				 (bank * NR_BANKS));
- 	spin_unlock_irqrestore(&data->lock, flags);
- 
-@@ -67,8 +67,8 @@ static int socfpga_reset_deassert(struct reset_controller_dev *rcdev,
- 
- 	spin_lock_irqsave(&data->lock, flags);
- 
--	reg = readl(data->membase + OFFSET_MODRST + (bank * NR_BANKS));
--	writel(reg & ~BIT(offset), data->membase + OFFSET_MODRST +
-+	reg = readl(data->membase + data->modrst_offset + (bank * NR_BANKS));
-+	writel(reg & ~BIT(offset), data->membase + data->modrst_offset +
- 				  (bank * NR_BANKS));
- 
- 	spin_unlock_irqrestore(&data->lock, flags);
-@@ -85,7 +85,7 @@ static int socfpga_reset_status(struct reset_controller_dev *rcdev,
- 	int offset = id % BITS_PER_LONG;
- 	u32 reg;
- 
--	reg = readl(data->membase + OFFSET_MODRST + (bank * NR_BANKS));
-+	reg = readl(data->membase + data->modrst_offset + (bank * NR_BANKS));
- 
- 	return !(reg & BIT(offset));
- }
-@@ -100,6 +100,8 @@ static int socfpga_reset_probe(struct platform_device *pdev)
- {
- 	struct socfpga_reset_data *data;
- 	struct resource *res;
-+	struct device *dev = &pdev->dev;
-+	struct device_node *np = dev->of_node;
- 
- 	/*
- 	 * The binding was mainlined without the required property.
-@@ -120,6 +122,11 @@ static int socfpga_reset_probe(struct platform_device *pdev)
- 	if (IS_ERR(data->membase))
- 		return PTR_ERR(data->membase);
- 
-+	if (of_property_read_u32(np, "altr,modrst-offset", &data->modrst_offset)) {
-+		dev_warn(dev, "missing altr,modrst-offset property, assuming 0x10!\n");
-+		data->modrst_offset = 0x10;
-+	}
-+
- 	spin_lock_init(&data->lock);
- 
- 	data->rcdev.owner = THIS_MODULE;
--- 
-2.4.5
+> +			reg-names = "qspi_base", "qspi_mmap";
+>  			#address-cells = <1>;
+>  			#size-cells = <0>;
+>  			ti,hwmods = "qspi";
+> -- 
+> 2.4.6
+> 
