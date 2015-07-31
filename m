@@ -1,7 +1,8 @@
 From: Michal Suchanek <hramrach@gmail.com>
-Subject: [PATCH v2 3/5] mtd: ofpart: update devicetree binding specification
-Date: Thu, 30 Jul 2015 10:43:17 +0200
-Message-ID: <db876ebdebb301c24f1ba466830149a0ff40abc5.1438340815.git.hramrach@gmail.com>
+Subject: [PATCH v2 2/5] mtd: mtdpart: Do not fail mtd probe when parsing
+ partitions fails.
+Date: 31 Jul 2015 11:19:24 -0000
+Message-ID: <5deae3946cc9422b451b95bc5886bcef30176c67.1438340815.git.hramrach@gmail.com>
 References: <cover.1438340815.git.hramrach@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -20,115 +21,51 @@ Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
 To: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, David Woodhouse <dwmw2@infradead.org>, Brian Norris <computersforpeace@gmail.com>, Michal Suchanek <hramrach@gmail.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-To avoid conflict with other drivers using subnodes of the mtd device
-create only one ofpart-specific node rather than any number of
-arbitrary partition subnodes.
+Due to wrong assumption in ofpart ofpart fails on Exynos on SPI chips
+with no partitions because the subnode containing controller data
+confuses the ofpart parser.
+
+Thus compiling in ofpart support automatically fails probing any SPI NOR
+flash without partitions on Exynos.
+
+Compiling in a partitioning scheme should not cause probe of otherwise
+valid device to fail.
+
+Remove that failure possibility when MTD_PARTITIONED_MASTER is set.
 
 Signed-off-by: Michal Suchanek <hramrach@gmail.com>
----
- .../devicetree/bindings/mtd/partition.txt          | 68 +++++++++++++---------
- 1 file changed, 40 insertions(+), 28 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/mtd/partition.txt b/Documentation/devicetree/bindings/mtd/partition.txt
-index 8e5557d..367ce4e 100644
---- a/Documentation/devicetree/bindings/mtd/partition.txt
-+++ b/Documentation/devicetree/bindings/mtd/partition.txt
-@@ -4,10 +4,16 @@ Partitions can be represented by sub-nodes of an mtd device. This can be used
- on platforms which have strong conventions about which portions of a flash are
- used for what purposes, but which don't use an on-flash partition table such
- as RedBoot.
-+
-+The partition table should be in ofpart subnode of the mtd node. Partitions are
-+defined as subnodes of the ofpart node.
-+
-+For backwards compatibility partitions as direct subnodes of the mtd device are
-+supported. This use is discouraged.
- NOTE: if the sub-node has a compatible string, then it is not a partition.
+---
+v2:
+
+ - only allow partition parsing failure when MTD_PARTITIONED_MASTER is
+   set
+---
+ drivers/mtd/mtdpart.c | 9 +++++++--
+ 1 file changed, 7 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/mtd/mtdpart.c b/drivers/mtd/mtdpart.c
+index 31888c2..6eafbe9 100644
+--- a/drivers/mtd/mtdpart.c
++++ b/drivers/mtd/mtdpart.c
+@@ -774,10 +774,15 @@ int parse_mtd_partitions(struct mtd_info *master, const char *const *types,
+ 		if (ret > 0) {
+ 			printk(KERN_NOTICE "%d %s partitions found on MTD device %s\n",
+ 			       ret, parser->name, master->name);
+-			break;
++			return ret;
++		}
++		if (!IS_ENABLED(CONFIG_MTD_PARTITIONED_MASTER) && (ret < 0)) {
++			pr_err("Error parsing %s partitions on %s\n",
++			       parser->name, master->name);
++			return ret;
+ 		}
+ 	}
+-	return ret;
++	return 0;
+ }
  
--#address-cells & #size-cells must both be present in the mtd device. There are
--two valid values for both:
-+#address-cells & #size-cells must both be present in the ofpart subnode of the
-+mtd device. There are two valid values for both:
- <1>: for partitions that require a single 32-bit cell to represent their
-      size/address (aka the value is below 4 GiB)
- <2>: for partitions that require two 32-bit cells to represent their
-@@ -28,44 +34,50 @@ Examples:
- 
- 
- flash@0 {
--	#address-cells = <1>;
--	#size-cells = <1>;
-+	ofpart {
-+		#address-cells = <1>;
-+		#size-cells = <1>;
- 
--	partition@0 {
--		label = "u-boot";
--		reg = <0x0000000 0x100000>;
--		read-only;
--	};
-+		partition@0 {
-+			label = "u-boot";
-+			reg = <0x0000000 0x100000>;
-+			read-only;
-+		};
- 
--	uimage@100000 {
--		reg = <0x0100000 0x200000>;
-+		uimage@100000 {
-+			reg = <0x0100000 0x200000>;
-+		};
- 	};
- };
- 
- flash@1 {
--	#address-cells = <1>;
--	#size-cells = <2>;
-+	ofpart {
-+		#address-cells = <1>;
-+		#size-cells = <2>;
- 
--	/* a 4 GiB partition */
--	partition@0 {
--		label = "filesystem";
--		reg = <0x00000000 0x1 0x00000000>;
-+		/* a 4 GiB partition */
-+		partition@0 {
-+			label = "filesystem";
-+			reg = <0x00000000 0x1 0x00000000>;
-+		};
- 	};
- };
- 
- flash@2 {
--	#address-cells = <2>;
--	#size-cells = <2>;
-+	ofpart {
-+		#address-cells = <2>;
-+		#size-cells = <2>;
- 
--	/* an 8 GiB partition */
--	partition@0 {
--		label = "filesystem #1";
--		reg = <0x0 0x00000000 0x2 0x00000000>;
--	};
-+		/* an 8 GiB partition */
-+		partition@0 {
-+			label = "filesystem #1";
-+			reg = <0x0 0x00000000 0x2 0x00000000>;
-+		};
- 
--	/* a 4 GiB partition */
--	partition@200000000 {
--		label = "filesystem #2";
--		reg = <0x2 0x00000000 0x1 0x00000000>;
-+		/* a 4 GiB partition */
-+		partition@200000000 {
-+			label = "filesystem #2";
-+			reg = <0x2 0x00000000 0x1 0x00000000>;
-+		};
- 	};
- };
+ int mtd_is_partition(const struct mtd_info *mtd)
 -- 
 2.1.4
 
