@@ -1,56 +1,82 @@
-From: <dinguyen@opensource.altera.com>
-Subject: [PATCHv2 0/4] reset: socfpga: Add reset driver support for Arria10 platform
-Date: Fri, 31 Jul 2015 16:03:07 -0500
-Message-ID: <1438376591-22100-1-git-send-email-dinguyen@opensource.altera.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [RFC PATCH 1/5] spi: introduce flag for memory mapped read
+Date: Fri, 31 Jul 2015 19:17:45 +0100
+Message-ID: <20150731181745.GM20873@sirena.org.uk>
+References: <1438072876-16338-1-git-send-email-vigneshr@ti.com>
+ <1438072876-16338-2-git-send-email-vigneshr@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: p.zabel@pengutronix.de
-Cc: dinh.linux@gmail.com, robh+dt@kernel.org, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, mark.rutland@arm.com, pawel.moll@arm.com, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, s.trumtrar@pengutronix.de, Dinh Nguyen <dinguyen@opensource.altera.com>
+Content-Type: multipart/mixed; boundary="===============3341315158122503325=="
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1438072876-16338-2-git-send-email-vigneshr@ti.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Vignesh R <vigneshr@ti.com>
+Cc: devicetree@vger.kernel.org, Brian Norris <computersforpeace@gmail.com>, Russell King <linux@arm.linux.org.uk>, Tony Lindgren <tony@atomide.com>, linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org, Huang Shijie <b32955@freescale.com>, linux-mtd@lists.infradead.org, linux-omap@vger.kernel.org, David Woodhouse <dwmw2@infradead.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-From: Dinh Nguyen <dinguyen@opensource.altera.com>
 
-v2: For the reset driver, assume a modrst-offset of 0x10 in order to support
-    legacy boards that do have the property..
+--===============3341315158122503325==
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="00sTfE/IIAT5d2r5"
+Content-Disposition: inline
 
-v1:
-This patch series adds reset driver support for the SoCFPGA Arria10 SOC. The
-reset manager on the Arria10 is very similar to the one on Cyclone5/Arria5,
-thus I think it's best to try to re-use the same reset driver.
 
-The biggest difference between the reset manager on Arria10 and Cyclone is
-the addition of security features. Since the driver does not support these
-security features, it winds down to just a driver that will release IPs from
-reset.
+--00sTfE/IIAT5d2r5
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-The other difference between Arria10 and Cyclone5 are register offsets, and
-register bits for different IPs. For the register offset, the main register
-offset is the very first register that is needed by the driver for releasing
-IPs from reset. To handle this difference, I've introduced a new DTS property,
-"altr,modrst-offset", that will represent this register.
+On Tue, Jul 28, 2015 at 02:11:12PM +0530, Vignesh R wrote:
 
-The register bits for all the resets are in a new file:
+> Introduce use_mmap_read field in spi_message struct. This can be set by
+> mtd devices (m25p80) to indicate to spi-master (ti-qspi) to perform
+> memory mapped read. This helps to distinguish whether the spi-message is
+> from mtd layer(hence mmap read is possible) or by other spi devices.
 
-include/dt-bindings/reset/altr,rst-mgr-a10.h
+Based on this description and...
 
-Thanks,
+> + * @use_mmap_mode: Indicate to spi master to perform memory mapped
+> + *	read if possible.
 
-Dinh Nguyen (4):
-  dt-bindings: Add reset manager offsets for Arria10
-  ARM: socfpga: dts: add "altr,modrst-offset" property
-  reset: socfpga: Update reset-socfpga to read the altr,modrst-offset
-    property
-  ARM: socfpga: dts: Add resets for EMACs on Arria10
+...the internal documentation I unable to tell what is meant by "perform
+a memory mapped read", at least to the extent where it is visible
+outside of the driver.  This means we can't really use this as a generic
+API since other people won't be able to tell what it does.
 
- .../devicetree/bindings/reset/socfpga-reset.txt    |   2 +
- arch/arm/boot/dts/socfpga.dtsi                     |   1 +
- arch/arm/boot/dts/socfpga_arria10.dtsi             |   6 ++
- drivers/reset/reset-socfpga.c                      |  19 ++--
- include/dt-bindings/reset/altr,rst-mgr-a10.h       | 110 +++++++++++++++++++++
- 5 files changed, 132 insertions(+), 6 deletions(-)
- create mode 100644 include/dt-bindings/reset/altr,rst-mgr-a10.h
+--00sTfE/IIAT5d2r5
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
--- 
-2.4.5
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQEcBAEBCAAGBQJVu7vIAAoJECTWi3JdVIfQfrcH/0pJFX98izm/xHRxCwsEfEd3
+J1YH0uS6BbvZ4CEpe6XuitCyh6Fl7YRTq1LRSQ1Gy7drdZSrajyJcgdTNI8CO81L
+qDZ2xasU9Fuqo4r/oOozKS1WG8op3jRtpVxAnajm2A0vMqA6YQLdK28F46dggDWQ
+opCortabqzzgp/3/fgNSxpPmIeEW+IwO4yGeIvr3Sz05krSdYcTZTmgFSCgfdKVP
+m/K4bURA0/J483komR39SeYaVccYkeyvz8jfvlPSK+sIGDc3hMQ4Q7dQqhNIU4ol
+Yo+xShyIgcyUTVM3NRTxgYfAWCDgXgPlfCvDUTo3oxsVERcjQBQ8WkuKDLHqatk=
+=x6wY
+-----END PGP SIGNATURE-----
+
+--00sTfE/IIAT5d2r5--
+
+
+--===============3341315158122503325==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+linux-arm-kernel mailing list
+linux-arm-kernel@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+
+--===============3341315158122503325==--
