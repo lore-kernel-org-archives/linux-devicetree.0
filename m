@@ -1,21 +1,17 @@
 From: Michael Turquette <mturquette@baylibre.com>
-Subject: Re: [PATCH v2 3/9] arm: twr-k70f120m: clock driver for Kinetis SoC
-Date: Fri, 31 Jul 2015 17:58:10 -0700
-Message-ID: <20150801005810.23791.8199@quantum>
-References: <1435667250-28299-1-git-send-email-pawelo@king.net.pl>
- <alpine.DEB.2.11.1507030006280.3916@nanos> <2009463.YLtdMegFel@wuerfel>
- <alpine.LNX.2.00.1507042327490.1296@localhost.localdomain>
- <20150724034229.642.88156@quantum>
- <alpine.LNX.2.00.1507262211470.28341@localhost.localdomain>
- <20150728160347.642.31950@quantum>
- <alpine.LNX.2.00.1507282201220.2619@localhost.localdomain>
- <20150729230517.642.66061@quantum>
- <alpine.LNX.2.00.1507302326500.20387@localhost.localdomain>
+Subject: Re: [PATCH v7 3/5] clk: Supply the critical clock {init, enable,
+ disable} framework
+Date: Fri, 31 Jul 2015 17:59:55 -0700
+Message-ID: <20150801005955.23791.75791@quantum>
+References: <1437570255-21049-1-git-send-email-lee.jones@linaro.org>
+ <1437570255-21049-4-git-send-email-lee.jones@linaro.org>
+ <20150730010213.642.10831@quantum> <20150730111747.GF14642@x1>
+ <20150730233530.23791.17746@quantum> <20150731090219.GE3208@x1>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <alpine.LNX.2.00.1507302326500.20387@localhost.localdomain>
+In-Reply-To: <20150731090219.GE3208@x1>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -25,566 +21,162 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-Cc: Mark Rutland <mark.rutland@arm.com>, Nicolas Pitre <nicolas.pitre@linaro.org>, Linus Walleij <linus.walleij@linaro.org>, Rob Herring <r.herring@freescale.com>, Alexander Potashev <aspotashev@emcraft.com>, Frank Li <Frank.Li@freescale.com>, Jiri Slaby <jslaby@suse.cz>, linux-clk@vger.kernel.org, Russell King <linux@arm.linux.org.uk>, Arnd Bergmann <arnd@arndb.de>, Vinod Koul <vinod.koul@intel.com>, Geert Uytterhoeven <geert@linux-m68k.org>, linux-serial@vger.kernel.org, Uwe Kleine-Koenig <u.kleine-koenig@pengutronix.de>, Anson Huang <b20788@freescale.com>, devicetree@vger.kernel.org, Paul Osmialowski <pawelo@king.net.pl>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Jingchang Lu <jingchang.lu@freescale.com>, Yuri Tikhonov <yur@emcraft.com>, linux-gpio@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Thomas Gleixner <tglx@linutronix.de>
+To: Lee Jones <lee.jones@linaro.org>
+Cc: devicetree@vger.kernel.org, kernel@stlinux.com, s.hauer@pengutronix.de, sboyd@codeaurora.org, linux-kernel@vger.kernel.org, geert@linux-m68k.org, maxime.ripard@free-electrons.com, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Quoting Paul Osmialowski (2015-07-30 14:40:48)
-> Hi Mike,
-> 
-> I encountered some trouble while I tried to implement code fitting to DTS 
-> that you proposed. SIM_CLKDIVx are SIM device registers, not MCG. 
-> Therefore, in MCG device code I won't be able to figure out clock rate 
-> for outputed clocks unles I try to access SIM registers from MCG driver - 
-
-Right, the MCG driver will only know the rates of the clocks that it
-outputs, namely:
-
-MCGIRCLK
-MCGFFCLK
-MCGOUTCLK
-MCGFLLCLK
-MCGPLL0CLK
-MCGPLL1CLK
-
-The naming scheme in the TRM is a bit unfortunate; it looks like some of
-the clock outputs coming out of SIM also retain the MCG* names.
-
-> that's what we wanted to avoid. Looks like it's the mcgoutclk that we want 
-> to expose not core, bus and the others:
-
-Right again. SIM is both a clock provider and a consumer. It will
-consume MCGOUTCLK (as well as some of the other clocks I mentioned above
-I think) and output the OUTDIVn dividers and gates (Core, Bus, FlexBus,
-Flash).
-
-> 
->         soc {
->                 mcg: clock-controller@40064000 {
->                         compatible = "fsl,kinetis-mcg";
->                         clock-cells = <0>;
-
-Why is clock-cells zero? I think the MCG block outputs all of the clocks
-that I listed above? As such they should be addressable as <&mcg N> by
-any downstream users.
-
->                         reg = <0x40064000 0x14>;
->                         clocks = <&osc0>, <&osc1>, <&rtc>;
->                         clock-names = "osc0", "osc1", "rtc";
-
-Are the oscN and rtc clocks modeled as fixed-rate clocks in DT?
-
->                 };
->                 sim: clock-controller@40047000 {
->                         compatible = "fsl,kinetis-sim";
->                         clock-cells = <1>;
->                         reg = <0x40047000 0x1100>;
->                         clocks = <&mcg>,
->                                  <&osc0>;
-
-It looks like the SIM block should also consume:
-
-MCGFLLCLK
-MCGIRCLK
-MCGFFCLK
-MCGPLL0CLK
-MCGPLL1CLK
-OSC0ERCLK
-OSC1ERCLK
-OSC032KCLK
-RTCCLK (I made that name up)
-
-The mcg clocks should come out of the mcg node. It looks like you
-already modeled oscN and rtc clocks, which is great. There are some
-gates after these clocks (e.g. OSC0ERCLK). I wonder if those gates are
-actually in the osc IP block or if they actually live in SIM. More on
-that below...
-
->                         clock-names = "mcgoutclk", "enet";
->                 };
-> 
->                 uart0: serial@4006a000 {
->                         compatible = "fsl,kinetis-lpuart";
->                         reg = <0x4006a000 0x1000>;
->                         interrupts = <45>, <46>;
->                         interrupt-names = "uart-stat", "uart-err";
->                         clocks = <&sim SIM_SCGC4_UART0_CLK>;
->                         clock-names = "ipg";
->                         dmas = <&edma 0 2>;
->                         dma-names = "rx";
->                         status = "disabled";
->                 };
->         };
-> 
-> Now fsl,kinetis-sim device will be responsible for clock gating and it 
-> will know about core, bus, flexbus and flash clocks only internally - 
-> none of them are exposed.
-
-Well they certainly can be exposed if you need them to be. If a device
-driver wants to get the core clock and set it's rate then it should be
-able to with something like <&sim CORE_CLK>.
-
-> 
-> Also note that fec (ethernet device) driver is connected directly to osc0 
-> (though clock gate, you can see this CG attached to osc0 on the diagram 
-> too) - to control this gate I need to access SIM device registers, so it 
-> should be covered by the same fsl,kinetis-sim driver.
-
-Do you mean the SIM_SOPT2 register? It looks like the connection is not
-"direct", as the osc0 signal feeds into the SIM block and the gate there
-controls it.  Perhaps the diagram is incorrect by placing the CG block
-inside osc0? It looks like you correctly modeled this relationship in
-the sim node.
-
-Besides my annoying questions above this binding is starting to shape up
-very well. Thanks for your patience!
-
-Regards,
-Mike
-
-> 
-> On Wed, 29 Jul 2015, Michael Turquette wrote:
-> 
-> > Quoting Paul Osmialowski (2015-07-28 13:30:17)
-> > > Hi Mike,
-> > > 
-> > > My trouble is that now I'm dealing with two conradictory opinions on how 
-> > > this driver should be written. The one you presented in your previous post 
-> > > assumes that there will be a header file with defines shared between the 
-> > > clock driver and DTS, also with clock gating details hidden behind some 
-> > > additional level of indirection, e.g.:
-> > > 
-> > > clocks = <&sim SIM_SCGC4_UART1_CLK>;
-> > > 
-> > > Note that I've been through this at the very beginning, though the names 
-> > > I used have been bit different, e.g.:
-> > > 
-> > > #define KINETIS_CG_UART1       KINETIS_MKCG(3, 11)     /* SIM_SCGC4[11] */
-> > > 
-> > > This was rejected with a comment by Arnd:
-> > > 
-> > > Instead of using a triple indirection here, just put the tuples
-> > > in the DT directly using #clock-cells=<2>, and get rid of both this
-> > > header file and the dt-bindings/clock/kinetis-mcg.h file.
-> > 
-> > Arnd, are you OK with my type of binding description now that I
-> > explained it with some examples?
-> > 
-> > > 
-> > > So I dropped all of these includes and started to use magic numbers (as 
-> > > you put it). Now I need to go one way or another or even go the third way: 
-> > > extend #clock-cells to <3> and address it like: <&sim parent_clock_id 
-> > > scgc_register_number bit_index_number>.
-> > 
-> > Paul,
-> > 
-> > >From my understanding the DT folks do not like register-level or
-> > bit-level details going into DT. It is better to handle the clock
-> > signals as abstract resources and link a provider and consumer with a
-> > simple phandle plus an index representing that abstract resource (i.e.
-> > the clock output signal).
-> > 
-> > > 
-> > > Reading your previous post I'm starting to feel that it would bring me 
-> > > closer to final acceptance if I stick to what you proposed in that post 
-> > > (I'm really grateful to you for writting so huge chunk of DTS for me!), so 
-> > > I'll probably adopt that.
-> > > 
-> > > You're right about my "get things up and running" attitude - currently I 
-> > > want to develop things extensively (cover as much subsystems as 
-> > > possible) and then at some stage switch to intensive approach. This board 
-> > > is a somewhat huge monster (for a Cortex-M4 SoC) and there will be a lot 
-> > > of coding opportunity in this field in the future.
-> > 
-> > I'm happy to take clock drivers and add my Reviewed-by to .dts files
-> > that make use of fixed-rate and fixed-factor clocks as an interim
-> > solution.  Of course it will be best to get The Real Thing merged
-> > upstream asap, but this is something I've done before to help get new
-> > platform upstream before and I'm fine to do it again.
-> > 
-> > With that said, Devicetree bindings are allegedly a stable ABI that
-> > cannot be broken. So let's make sure that any Kinetis clock binding
-> > description is in good shape before merging it. The rest can follow on
-> > later if it needs to.
-> > 
-> > Regards,
-> > Mike
-> > 
-> > > 
-> > > Thanks,
-> > > Paul
-> > > 
-> > > On Tue, 28 Jul 2015, Michael Turquette wrote:
-> > > 
-> > > > Quoting Paul Osmialowski (2015-07-26 13:24:08)
-> > > > > Hi Mike,
-> > > > > 
-> > > > > Thank you for spending time on this and pointing me into the right 
-> > > > > direction. I'm wondering about going even further with it. Assuming that I 
-> > > > 
-> > > > Hi Paul,
-> > > > 
-> > > > No problem! And thanks for the quick turnaround on your patches so far.
-> > > > 
-> > > > > know everything about my board, I can skip run-time discovery phase (note 
-> > > > > that the original driver was designed for other Kinetis-based boards too) 
-> > > > > and move everything into DTS, somewhat like this:
-> > > > > 
-> > > > > / {
-> > > > >         osc0: clock {
-> > > > >                 compatible = "fixed-clock";
-> > > > >                 #clock-cells = <0>;
-> > > > >                 clock-frequency = <50000000>;
-> > > > >         };
-> > > > > 
-> > > > >         osc1: clock {
-> > > > >                 compatible = "fixed-clock";
-> > > > >                 #clock-cells = <0>;
-> > > > >                 clock-frequency = <12000000>;
-> > > > >         };
-> > > > > 
-> > > > >         rtc: clock {
-> > > > >                 compatible = "fixed-clock";
-> > > > >                 #clock-cells = <0>;
-> > > > >                 clock-frequency = <32768>;
-> > > > >         };
-> > > > > 
-> > > > >         mcgout: clock {
-> > > > >                 compatible = "fixed-factor-clock";
-> > > > >                 #clock-cells = <0>;
-> > > > >                 clocks = <&osc0>;
-> > > > >                 clock-mult = <12>;
-> > > > >                 clock-div = <5>;
-> > > > >         };
-> > > > 
-> > > > I think this is a step backwards.
-> > > > 
-> > > > Did you look at the qcom clock binding and read the email where I
-> > > > detailed how that binding works?
-> > > > 
-> > > > The point of that type of binding is to not shove per-clock data into
-> > > > DT, but instead to declare every clock controller IP block (e.g. the
-> > > > device) as well as every board-level clock (e.g. as osc that feeds into
-> > > > your mcu). Once these "clock providers" are enumerated in DT, then we
-> > > > create linkage between the clock providers and the clock consumers by
-> > > > using phandles + an index. Linux device drivers tap into this by using
-> > > > clk_get() and using the "clock-names" property from DT.
-> > > > 
-> > > > Put another way: we mostly use DT to model "devices". That is open to
-> > > > interpretation for but for clock-related stuff we typically interpret
-> > > > the clock controller as the device, not the individual clock outputs
-> > > > coming out of the controller.
-> > > > 
-> > > > Note that a clock controller IP block may be both a provider and a
-> > > > consumer.  I/O controllers are a very common type of consumer (e.g. USB
-> > > > host controller, MMC controller, GPU, etc).
-> > > > 
-> > > > Additionally, from my reading of the reference manual, mcgout is defined
-> > > > as:
-> > > > 
-> > > > """
-> > > > MCG output of either IRC, MCGFLLCLK MCGPLL0CLK,
-> > > > MCGPLL1CLK, or MCG's external reference clock that
-> > > > sources the core, system, bus, FlexBus, and flash clock. It is
-> > > > also an option for the debug trace clock.
-> > > > """
-> > > > 
-> > > > So why is it listed here as a fixed-factor clock? Is it not a
-> > > > multiplexer? Also, why is it listed here at all? Please take another
-> > > > look at the qcom binding example I linked to in my previous mail.
-> > > > 
-> > > > > 
-> > > > >         core: clock {
-> > > > >                 compatible = "fixed-factor-clock";
-> > > > >                 #clock-cells = <0>;
-> > > > >                 clocks = <&mcgout>;
-> > > > >                 clock-mult = <1>;
-> > > > >                 clock-div = <1>;
-> > > > >         };
-> > > > > 
-> > > > >         bus: clock {
-> > > > >                 compatible = "fixed-factor-clock";
-> > > > >                 #clock-cells = <0>;
-> > > > >                 clocks = <&mcgout>;
-> > > > >                 clock-mult = <1>;
-> > > > >                 clock-div = <2>;
-> > > > 
-> > > > These are actually not fixed dividers but programmable dividers. You can
-> > > > probably use drivers/clk/clk-divider.c for these. I'm fine with using
-> > > > fixed-dividers for the initial merge just to get things up and running
-> > > > if that is your strategy, but you'll need to revisit them later on when
-> > > > you need more flexible support for other boards.
-> > > > 
-> > > > Again, I'm not sure why these clocks are enumerated in DT. Why not just
-> > > > enumerate your mcg clock controller and your sim clock controller? If
-> > > > you want to be a perfectionist then it appears that there is an osc
-> > > > clock controller upstream from the mcg controller as well ;-)
-> > > > 
-> > > > It occurs to me that maybe you are trying to use fixed-factor clocks so
-> > > > that you can program a sane default rate? We use the
-> > > > assigned-clock-rates property for that. Note that this value is a
-> > > > property of some device which *consumes* the clock, not the clock
-> > > > controller or the clock output itself.
-> > > > 
-> > > > >         };
-> > > > > 
-> > > > >         soc {
-> > > > >                 cmu@0x40047000 {
-> > > > >                         compatible = "fsl,kinetis-gate-clock";
-> > > > >                         reg = <0x40047000 0x1100>;
-> > > > > 
-> > > > >                         mcg_core_gate: clock-gate {
-> > > > >                                 clocks = <&core>;
-> > > > >                                 #clock-cells = <2>;
-> > > > >                         };
-> > > > > 
-> > > > >                         mcg_bus_gate: clock-gate {
-> > > > >                                 clocks = <&bus>;
-> > > > >                                 #clock-cells = <2>;
-> > > > >                         };
-> > > > > 
-> > > > >                         osc0_erclk_gate: clock-gate {
-> > > > >                                 clocks = <&osc0>;
-> > > > >                                 #clock-cells = <2>;
-> > > > >                         };
-> > > > >                 };
-> > > > > 
-> > > > >                 uart0: serial@4006a000 {
-> > > > >                         compatible = "fsl,kinetis-lpuart";
-> > > > >                         reg = <0x4006a000 0x1000>;
-> > > > >                         interrupts = <45>, <46>;
-> > > > >                         interrupt-names = "uart-stat", "uart-err";
-> > > > >                         clocks = <&mcg_core_gate 3 10>;
-> > > > 
-> > > > Magic numbers are not good. dtc has been able to use preprocessor macros
-> > > > for a while now which means we can use constants instead of magic
-> > > > numbers. Please look at the shared header in the qcom binding for an
-> > > > example.
-> > > > 
-> > > > >                         clock-names = "ipg";
-> > > > >                         dmas = <&edma 0 2>;
-> > > > >                         dma-names = "rx";
-> > > > >                         status = "disabled";
-> > > > >                 };
-> > > > >         };
-> > > > > };
-> > > > > 
-> > > > > As you can see, mcg part is not required anymore.
-> > > > 
-> > > > I think the mcg should be required. The mcg is a real IP block on your
-> > > > SoC, according to my reading of your technical reference manual. Just
-> > > > because you can model a few of its output clocks in dts does not mean
-> > > > that you should.
-> > > > 
-> > > > I did a quick grep and didn't find "cmu" anywhere in the reference
-> > > > manual.
-> > > > 
-> > > > > 
-> > > > > I guess that the approach above would require split into soc-specific and 
-> > > > > board-specific part (as I said, dividers arrangement is something board 
-> > > > > specific), but I wonder what you thing about this proposal.
-> > > > 
-> > > > Splitting is good. Chip-specific stuff can go into the chip-specific
-> > > > dtsi file. The board-level (osc) stuff can go into the individual board
-> > > > files. The ultimate goal is to make it trivial to add new boards.
-> > > > 
-> > > > Regards,
-> > > > Mike
-> > > > 
-> > > > > 
-> > > > > Thanks,
-> > > > > Paul
-> > > > > 
-> > > > > On Thu, 23 Jul 2015, Michael Turquette wrote:
-> > > > > 
-> > > > > > Quoting Paul Osmialowski (2015-07-04 14:50:03)
-> > > > > > > Hi Arnd,
-> > > > > > > 
-> > > > > > > I'm attaching excerpt from Kinetis reference manual that may make 
-> > > > > > > situation clearer.
-> > > > > > 
-> > > > > > Hi Paul,
-> > > > > > 
-> > > > > > Can you please post the patch in the body of the email instead of an
-> > > > > > attachment? It makes it easier to review. Another small nitpick is that
-> > > > > > the $SUBJECT for this patch might be better off as something like:
-> > > > > > 
-> > > > > > clk: mcg and sim clock drivers for twr-k70f120m Kinetis SoC
-> > > > > > 
-> > > > > > At least it helps me find the patch I care about when skimming the
-> > > > > > series ;-)
-> > > > > > 
-> > > > > > > 
-> > > > > > > These MCG and SIM registers are used only to determine configuration 
-> > > > > > > (clock fixed rates and clock signal origins) at run time.
-> > > > > > > 
-> > > > > > > Namely, the real MCGOUTCLK source (in the middle) which is the parent for 
-> > > > > > > core clock (CCLK) and peripheral clock (PCLK) is determined at run time by 
-> > > > > > > reading MCG registers, let me quote commit message from Emcraft git repo:
-> > > > > > > 
-> > > > > > >       * Determine in run-time what oscillator module (OSC0 or OSC1) is used
-> > > > > > >      as clock source for the main PLL.
-> > > > > > 
-> > > > > > According to [0] there are three options: a 32k RTC osc clock and osc0
-> > > > > > both feed into a mux. You should model this 32k clock with the
-> > > > > > fixed-rate binding.
-> > > > > > 
-> > > > > > >       * When OSC1 is selected, assume its frequency to be 12 MHz on all
-> > > > > > >      boards (there is a 12 MHz oscillator on XTAL1/EXTAL1 on K70-SOM and
-> > > > > > >      TWR-K70F120M boards).
-> > > > > > > 
-> > > > > > > In my .dts I'm trying to possibly follow real clock hierarchy, but to go 
-> > > > > > > anywhere behind MCGOUTCLK would require ability to rewrite .dtb e.g. by 
-> > > > > > > U-boot. But that's too demanding for any potential users of this BSP. So 
-> > > > > > > let's asume that MCGOUTCLK is the root clock and a parent for CCLK and 
-> > > > > > > PCLK.
-> > > > > > 
-> > > > > > I'm confused. The point of device tree is to solve problems like this;
-> > > > > > i.e. board-specific differences such as different oscillator
-> > > > > > frequencies.
-> > > > > > 
-> > > > > > OSC0 and OSC1 should each be a fixed-rate clock in your board-specific
-> > > > > > TWR-K70F120M DTS (not a chip-specific file). They do not belong in the
-> > > > > > cmu node, and they should use the "fixed-clock" binding. The 32k RTC osc
-> > > > > > can probably go in your chip-specific .dtsi as a fixed-rate clock since
-> > > > > > it appears to mandated in the reference manual[0].
-> > > > > > 
-> > > > > > These three fixed-rate clocks are your root clock nodes. Customers only
-> > > > > > need to worry about this if they spin a board, and then they will need
-> > > > > > to populate the frequencies of OSC0 and OSC1 in their board-specific
-> > > > > > .dts.
-> > > > > > 
-> > > > > > Please break clk-kinetis.c into two files:
-> > > > > > drivers/clk/kinetis/clk-mcg.c
-> > > > > > drivers/clk/kinetis/clk-sim.c
-> > > > > > 
-> > > > > > Below is what your binding/dts should look like:
-> > > > > > 
-> > > > > > {
-> > > > > >       osc0: clock {
-> > > > > >               compatible = "fixed-clock";
-> > > > > >               #clock-cells = <0>;
-> > > > > >               clock-frequency = <50000000>;
-> > > > > >       };
-> > > > > > 
-> > > > > >       osc1: clock {
-> > > > > >               compatible = "fixed-clock";
-> > > > > >               #clock-cells = <0>;
-> > > > > >               clock-frequency = <12000000>;
-> > > > > >       };
-> > > > > > 
-> > > > > >       rtc: clock {
-> > > > > >               compatible = "fixed-clock";
-> > > > > >               #clock-cells = <0>;
-> > > > > >               clock-frequency = <32768>;
-> > > > > >       };
-> > > > > > 
-> > > > > >       soc: soc {
-> > > > > >               mcg: clock-controller@40064000 {
-> > > > > >                       compatible = "fsl,kinetis-mcg";
-> > > > > >                       clock-cells = <1>;
-> > > > > >                       reg = <0x40064000 0x14>;
-> > > > > >                       clocks = <&osc0>, <&osc1>, <&rtc>;
-> > > > > >                       clock-names = "osc0", "osc1", "rtc";
-> > > > > >               };
-> > > > > > 
-> > > > > >               sim: clock-controller@40047000 {
-> > > > > >                       compatible = "fsl,kinetis-sim";
-> > > > > >                       clock-cells = <1>;
-> > > > > >                       reg = <0x40047000 0x1100>;
-> > > > > >                       clocks = <&mcg MCG_MCGOUTCLK_DIV1>, <&mcg MCG_MCGOUTCLK_DIV2>, <&mcg MCG_MCGOUTCLK_DIV3> <&mcg MCG_MCGOUTCLK_DIV4>;
-> > > > > >                       clock-names = "core", "bus", "flexbus", "flash";
-> > > > > >               };
-> > > > > >       };
-> > > > > > 
-> > > > > >       uart0: serial@4006a000 {
-> > > > > >               compatible = "fsl,kinetis-lpuart";
-> > > > > >               reg = <0x4006a000 0x1000>;
-> > > > > >               clocks = <&sim SIM_SCGC4_UART1_CLK>;
-> > > > > >               clock-names = "gate";
-> > > > > >       };
-> > > > > > 
-> > > > > > I removed the interrupts and dma stuff from the uart0 node for clarity.
-> > > > > > The above is the only style of binding that I have been accepting for
-> > > > > > some time; first declare the clock controller and establish its register
-> > > > > > space, and then consumers can consume clocks by providing the phandle to
-> > > > > > the controller plus an offset corresponding to a unique clock. The
-> > > > > > clock-names property makes it really easy to use with the clkdev stuff
-> > > > > > (e.g. clk_get()).
-> > > > > > 
-> > > > > > I've covered this before on the mailing list so here is a link
-> > > > > > describing how the qcom bindings do it in detail:
-> > > > > > 
-> > > > > > http://lkml.kernel.org/r/<20150416192014.19585.9663@quantum>
-> > > > > > 
-> > > > > > Technically you could encode the same bits as sub-nodes of the mcg and
-> > > > > > sim nodes, but the shared header is how the magic happens with the
-> > > > > > driver so it's best to keep the clock controller binding small and
-> > > > > > light.
-> > > > > > 
-> > > > > > I think this means you can also get rid of kinetis_of_clk_get_name and
-> > > > > > kinetis_clk_gate_get but my brain is tired so I'll leave that as an
-> > > > > > exercise to the reader.
-> > > > > > 
-> > > > > > [0] http://cache.freescale.com/files/microcontrollers/doc/ref_manual/K70P256M150SF3RM.pdf
-> > > > > > 
-> > > > > > Regards,
-> > > > > > Mike
-> > > > > > 
-> > > > > > > 
-> > > > > > > In my most recent version I added OSC0ERCLK explicitly as one more root 
-> > > > > > > clock, since it is also used directly (through CG reg. 1 bit 0) by 
-> > > > > > > Freescale fec network device whose in-tree driver I'm trying to make 
-> > > > > > > usable for Kinetis.
-> > > > > > > 
-> > > > > > > On Sat, 4 Jul 2015, Arnd Bergmann wrote:
-> > > > > > > 
-> > > > > > > > On Friday 03 July 2015 00:08:27 Thomas Gleixner wrote:
-> > > > > > > >> On Thu, 2 Jul 2015, Paul Osmialowski wrote:
-> > > > > > > >>> On Thu, 2 Jul 2015, Arnd Bergmann wrote:
-> > > > > > > >>>
-> > > > > > > >>>> I wonder if you could move out the fixed rate clocks into their own
-> > > > > > > >>>> nodes. Are they actually controlled by the same block? If they are
-> > > > > > > >>>> just fixed, you can use the normal binding for fixed rate clocks
-> > > > > > > >>>> and only describe the clocks that are related to the driver.
-> > > > > > > >>>
-> > > > > > > >>> In my view having these clocks grouped together looks more convincing. After
-> > > > > > > >>> all, they all share the same I/O regs in order to read configuration.
-> > > > > > > >>
-> > > > > > > >> The fact that they share a register is not making them a group. That's
-> > > > > > > >> just a HW design decision and you need to deal with that by protecting
-> > > > > > > >> the register access, but not by trying to group them artificially at
-> > > > > > > >> the functional level.
-> > > > > > > >
-> > > > > > > > I'd disagree with that: The clock controller is the device that owns the
-> > > > > > > > registers and that should be one node in DT, as Paul's first version does.
-> > > > > > > >
-> > > > > > > > The part I'm still struggling with is understanding how the fixed-rate
-> > > > > > > > clocks are controlled through those registers. If they are indeed configured
-> > > > > > > > through the registers, the name is probably wrong and should be changed
-> > > > > > > > to whatever kind of non-fixed clock this is.
-> > > > > > > >
-> > > > > > > >       Arnd
-> > > > > > > >
-> > > > > > > 
-> > > > > > > _______________________________________________
-> > > > > > > linux-arm-kernel mailing list
-> > > > > > > linux-arm-kernel@lists.infradead.org
-> > > > > > > http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-> > > > > > 
-> > > > > --
-> > > > > To unsubscribe from this list: send the line "unsubscribe linux-kernel" in
-> > > > > the body of a message to majordomo@vger.kernel.org
-> > > > > More majordomo info at  http://vger.kernel.org/majordomo-info.html
-> > > > > Please read the FAQ at  http://www.tux.org/lkml/
-> > > > 
-> > > --
-> > > To unsubscribe from this list: send the line "unsubscribe linux-kernel" in
-> > > the body of a message to majordomo@vger.kernel.org
-> > > More majordomo info at  http://vger.kernel.org/majordomo-info.html
-> > > Please read the FAQ at  http://www.tux.org/lkml/
-> > 
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-kernel" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
-> Please read the FAQ at  http://www.tux.org/lkml/
+UXVvdGluZyBMZWUgSm9uZXMgKDIwMTUtMDctMzEgMDI6MDI6MTkpCj4gT24gVGh1LCAzMCBKdWwg
+MjAxNSwgTWljaGFlbCBUdXJxdWV0dGUgd3JvdGU6Cj4gCj4gPiBRdW90aW5nIExlZSBKb25lcyAo
+MjAxNS0wNy0zMCAwNDoxNzo0NykKPiA+ID4gT24gV2VkLCAyOSBKdWwgMjAxNSwgTWljaGFlbCBU
+dXJxdWV0dGUgd3JvdGU6Cj4gPiA+IAo+ID4gPiA+IEhpIExlZSwKPiA+ID4gPiAKPiA+ID4gPiAr
+IGxpbnV4LWNsayBtbAo+ID4gPiA+IAo+ID4gPiA+IFF1b3RpbmcgTGVlIEpvbmVzICgyMDE1LTA3
+LTIyIDA2OjA0OjEzKQo+ID4gPiA+ID4gVGhlc2UgbmV3IEFQSSBjYWxscyB3aWxsIGZpcnN0bHkg
+cHJvdmlkZSBhIG1lY2hhbmlzbXMgdG8gdGFnIGEgY2xvY2sgYXMKPiA+ID4gPiA+IGNyaXRpY2Fs
+IGFuZCBzZWNvbmRseSBhbGxvdyBhbnkga25vd2xlZGdlYWJsZSBkcml2ZXIgdG8gKHVuKWdhdGUg
+Y2xvY2tzLAo+ID4gPiA+ID4gZXZlbiBpZiB0aGV5IGFyZSBtYXJrZWQgYXMgY3JpdGljYWwuCj4g
+PiA+ID4gPiAKPiA+ID4gPiA+IFN1Z2dlc3RlZC1ieTogTWF4aW1lIFJpcGFyZCA8bWF4aW1lLnJp
+cGFyZEBmcmVlLWVsZWN0cm9ucy5jb20+Cj4gPiA+ID4gPiBTaWduZWQtb2ZmLWJ5OiBMZWUgSm9u
+ZXMgPGxlZS5qb25lc0BsaW5hcm8ub3JnPgo+ID4gPiA+ID4gLS0tCj4gPiA+ID4gPiAgZHJpdmVy
+cy9jbGsvY2xrLmMgICAgICAgICAgICB8IDQ1ICsrKysrKysrKysrKysrKysrKysrKysrKysrKysr
+KysrKysrKysrKysrKysrCj4gPiA+ID4gPiAgaW5jbHVkZS9saW51eC9jbGstcHJvdmlkZXIuaCB8
+ICAyICsrCj4gPiA+ID4gPiAgaW5jbHVkZS9saW51eC9jbGsuaCAgICAgICAgICB8IDMwICsrKysr
+KysrKysrKysrKysrKysrKysrKysrKysrCj4gPiA+ID4gPiAgMyBmaWxlcyBjaGFuZ2VkLCA3NyBp
+bnNlcnRpb25zKCspCj4gPiA+ID4gPiAKPiA+ID4gPiA+IGRpZmYgLS1naXQgYS9kcml2ZXJzL2Ns
+ay9jbGsuYyBiL2RyaXZlcnMvY2xrL2Nsay5jCj4gPiA+ID4gPiBpbmRleCA2MWMzZmM1Li40ODZi
+MWRhIDEwMDY0NAo+ID4gPiA+ID4gLS0tIGEvZHJpdmVycy9jbGsvY2xrLmMKPiA+ID4gPiA+ICsr
+KyBiL2RyaXZlcnMvY2xrL2Nsay5jCj4gPiA+ID4gPiBAQCAtNDYsNiArNDYsMjEgQEAgc3RhdGlj
+IHN0cnVjdCBjbGtfY29yZSAqY2xrX2NvcmVfbG9va3VwKGNvbnN0IGNoYXIgKm5hbWUpOwo+ID4g
+PiA+ID4gIAo+ID4gPiA+ID4gIC8qKiogICAgcHJpdmF0ZSBkYXRhIHN0cnVjdHVyZXMgICAgKioq
+Lwo+ID4gPiA+ID4gIAo+ID4gPiA+ID4gKy8qKgo+ID4gPiA+ID4gKyAqIHN0cnVjdCBjcml0aWNh
+bCAtICAgUHJvdmlkZXMgJ3BsYXknIG92ZXIgY3JpdGljYWwgY2xvY2tzLiAgQSBjbG9jayBjYW4g
+YmUKPiA+ID4gPiA+ICsgKiAgICAgICAgICAgICAgICAgICAgIG1hcmtlZCBhcyBjcml0aWNhbCwg
+bWVhbmluZyB0aGF0IGl0IHNob3VsZCBub3QgYmUKPiA+ID4gPiA+ICsgKiAgICAgICAgICAgICAg
+ICAgICAgIGRpc2FibGVkLiAgSG93ZXZlciwgaWYgYSBkcml2ZXIgd2hpY2ggaXMgYXdhcmUgb2Yg
+dGhlCj4gPiA+ID4gPiArICogICAgICAgICAgICAgICAgICAgICBjcml0aWNhbCBiZWhhdmlvdXIg
+d2FudHMgdG8gY29udHJvbCBpdCwgaXQgY2FuIGRvIHNvCj4gPiA+ID4gPiArICogICAgICAgICAg
+ICAgICAgICAgICB1c2luZyBjbGtfZW5hYmxlX2NyaXRpY2FsKCkgYW5kIGNsa19kaXNhYmxlX2Ny
+aXRpY2FsKCkuCj4gPiA+ID4gPiArICoKPiA+ID4gPiA+ICsgKiBAZW5hYmxlZCAgICBJcyBjbG9j
+ayBjcml0aWNhbD8gIE9uY2Ugc2V0LCBkb2Vzbid0IGNoYW5nZQo+ID4gPiA+ID4gKyAqIEBsZWF2
+ZV9vbiAgIFNlbGYgZXhwbGFuYXRvcnkuICBDYW4gYmUgZGlzYWJsZWQgYnkga25vd2xlZGdlYWJs
+ZSBkcml2ZXJzCj4gPiA+ID4gCj4gPiA+ID4gTm90IHNlbGYgZXhwbGFuYXRvcnkuIEkgbmVlZCB0
+aGlzIGV4cGxhaW5lZCB0byBtZS4gV2hhdCBkb2VzIGxlYXZlX29uCj4gPiA+ID4gZG8/IEJldHRl
+ciB5ZXQsIHdoYXQgd291bGQgaGFwcGVuIGlmIGxlYXZlX29uIGRpZCBub3QgZXhpc3Q/Cj4gPiA+
+ID4gCj4gPiA+ID4gPiArICovCj4gPiA+ID4gPiArc3RydWN0IGNyaXRpY2FsIHsKPiA+ID4gPiA+
+ICsgICAgICAgYm9vbCBlbmFibGVkOwo+ID4gPiA+ID4gKyAgICAgICBib29sIGxlYXZlX29uOwo+
+ID4gPiA+ID4gK307Cj4gPiA+ID4gPiArCj4gPiA+ID4gPiAgc3RydWN0IGNsa19jb3JlIHsKPiA+
+ID4gPiA+ICAgICAgICAgY29uc3QgY2hhciAgICAgICAgICAgICAgKm5hbWU7Cj4gPiA+ID4gPiAg
+ICAgICAgIGNvbnN0IHN0cnVjdCBjbGtfb3BzICAgICpvcHM7Cj4gPiA+ID4gPiBAQCAtNzUsNiAr
+OTAsNyBAQCBzdHJ1Y3QgY2xrX2NvcmUgewo+ID4gPiA+ID4gICAgICAgICBzdHJ1Y3QgZGVudHJ5
+ICAgICAgICAgICAqZGVudHJ5Owo+ID4gPiA+ID4gICNlbmRpZgo+ID4gPiA+ID4gICAgICAgICBz
+dHJ1Y3Qga3JlZiAgICAgICAgICAgICByZWY7Cj4gPiA+ID4gPiArICAgICAgIHN0cnVjdCBjcml0
+aWNhbCAgICAgICAgIGNyaXRpY2FsOwo+ID4gPiA+ID4gIH07Cj4gPiA+ID4gPiAgCj4gPiA+ID4g
+PiAgc3RydWN0IGNsayB7Cj4gPiA+ID4gPiBAQCAtOTk1LDYgKzEwMTEsMTAgQEAgc3RhdGljIHZv
+aWQgY2xrX2NvcmVfZGlzYWJsZShzdHJ1Y3QgY2xrX2NvcmUgKmNsaykKPiA+ID4gPiA+ICAgICAg
+ICAgaWYgKFdBUk5fT04oY2xrLT5lbmFibGVfY291bnQgPT0gMCkpCj4gPiA+ID4gPiAgICAgICAg
+ICAgICAgICAgcmV0dXJuOwo+ID4gPiA+ID4gIAo+ID4gPiA+ID4gKyAgICAgICAvKiBSZWZ1c2Ug
+dG8gdHVybiBvZmYgYSBjcml0aWNhbCBjbG9jayAqLwo+ID4gPiA+ID4gKyAgICAgICBpZiAoY2xr
+LT5lbmFibGVfY291bnQgPT0gMSAmJiBjbGstPmNyaXRpY2FsLmxlYXZlX29uKQo+ID4gPiA+ID4g
+KyAgICAgICAgICAgICAgIHJldHVybjsKPiA+ID4gPiAKPiA+ID4gPiBIb3cgZG8gd2UgZ2V0IHRv
+IHRoaXMgcG9pbnQ/IGNsa19lbmFibGVfY3JpdGljYWwgYWN0dWFsbHkgY2FsbHMKPiA+ID4gPiBj
+bGtfZW5hYmxlLCB0aHVzIGluY3JlbWVudGluZyB0aGUgZW5hYmxlX2NvdW50LiBUaGUgb25seSB0
+aW1lIHRoYXQgd2UKPiA+ID4gPiBjb3VsZCBoaXQgdGhlIGFib3ZlIGNhc2UgaXMgaWYsCj4gPiA+
+ID4gCj4gPiA+ID4gYSkgdGhlcmUgaXMgYW4gaW1iYWxhbmNlIGluIGNsa19lbmFibGUgYW5kIGNs
+a19kaXNhYmxlIGNhbGxzLiBJZiB0aGlzIGlzCj4gPiA+ID4gdGhlIGNhc2UgdGhlbiB0aGUgZHJp
+dmVycyBuZWVkIHRvIGJlIGZpeGVkLiBPciBiZXR0ZXIgeWV0IHNvbWUKPiA+ID4gPiBpbmZyYXN0
+cnVjdHVyZSB0byBjYXRjaCB0aGF0LCBub3cgdGhhdCB3ZSBoYXZlIHBlci11c2VyIHN0cnVjdCBj
+bGsKPiA+ID4gPiBjb29raWVzLgo+ID4gPiA+IAo+ID4gPiA+IGIpIGEgZHJpdmVyIGtub3dpbmds
+eSBjYWxscyBjbGtfZW5hYmxlX2NyaXRpY2FsKGZvbykgYW5kIHRoZW4gcmVndWxhciwKPiA+ID4g
+PiBvbGQgY2xrX2Rpc2FibGUoZm9vKS4gQnV0IHdoeSB3b3VsZCBhIGRyaXZlciBkbyB0aGF0Pwo+
+ID4gPiA+IAo+ID4gPiA+IEl0IG1pZ2h0IGJlIHRoYXQgSSBhbSBtaXNzaW5nIHRoZSBwb2ludCBo
+ZXJlLCBzbyBwbGVhc2UgZmVlbCBmcmVlIHRvCj4gPiA+ID4gY2x1ZSBtZSBpbi4KPiA+ID4gCj4g
+PiA+IFRoaXMgY2hlY2sgYmVoYXZlcyBpbiBhIHZlcnkgc2ltaWxhciB0byB0aGUgV0FSTigpIGFi
+b3ZlLiAgSXQncyBtb3JlCj4gPiA+IG9mIGEgZmFpbC1zYWZlLiAgSWYgYWxsIGRyaXZlcnMgYXJl
+IGJlaGF2aW5nIHByb3Blcmx5LCB0aGVuIGl0Cj4gPiA+IHNob3VsZG4ndCBldmVyIGJlIHRydWUu
+ICBJZiB0aGV5J3JlIG5vdCwgaXQgcHJldmVudHMgYW4gaW5jb3JyZWN0bHkKPiA+ID4gd3JpdHRl
+biBkcml2ZXIgZnJvbSBpcnJlY292ZXJhYmx5IGNyaXBwbGluZyB0aGUgc3lzdGVtLgo+ID4gCj4g
+PiBUaGVuIHRoaXMgY2hlY2sgc2hvdWxkIGJlIHJlcGxhY2VkIHdpdGggYSBnZW5lcmljIGFwcHJv
+YWNoIHRoYXQgcmVmdXNlcwo+ID4gdG8gaG9ub3IgaW1iYWxhbmNlcyBhbnl3YXlzLiBCZWxvdyBh
+cmUgdHdvIHBhdGNoZXMgdGhhdCBwcm9iYWJseSByZXNvbHZlCj4gPiB0aGUgaXNzdWUgb2YgYmFk
+bHkgYmVoYXZpbmcgZHJpdmVycyB0aGF0IGNhdXNlIGVuYWJsZSBpbWJhbGFuY2VzLgo+IAo+IFlv
+dXIgcGF0Y2ggc2hvdWxkIG1ha2UgdGhlIHJlcXVpcmVtZW50IGZvciB0aGlzIGNoZWNrIG1vb3Qs
+IHNvIGl0IGNhbgo+IHByb2JhYmx5IGJlIHJlbW92ZWQuCj4gCj4gPiA+IEFzIEkgc2FpZCBpbiB0
+aGUgb3RoZXIgbWFpbC4gIFdlIGNhbiBkbyB3aXRob3V0IHRoZXNlIDMgbmV3IHdyYXBwZXJzLgo+
+ID4gPiBXZSBfY291bGRfIGp1c3Qgd3JpdGUgYSBkcml2ZXIgd2hpY2ggb25seSBjYWxscyBjbGtf
+ZW5hYmxlKCkgX2FmdGVyXwo+ID4gPiBpdCBjYWxscyBjbGtfZGlzYWJsZSgpLCBhIGtpbmQgb2Yg
+aW50ZW50aW9uYWwgdW5iYWxhbmNlIGFuZCBpdCB3b3VsZAo+ID4gPiBkbyB0aGF0IHNhbWUgdGhp
+bmcuCj4gPiAKPiA+IFRoaXMgbmFpdmUgYXBwcm9hY2ggd2lsbCBub3Qgd29yayB3aXRoIHBlci11
+c2VyIGltYmFsYW5jZSB0cmFja2luZy4KPiAKPiBTdGVhZHkgb24uICBJIHNhaWQgd2UgIl9jb3Vs
+ZF8iLCB0aGF0IHRoYXQgSSB0aGluayBpdCdzIGEgZ29vZCBpZGVhLgo+IAo+IEkgdGhpbmsgaXQn
+cyBhIGJhZCBpZGVhLCB3aGljaCBpcyB3aHkgSSB3cm90ZSB0aGlzIHNldC4gOykKPiAKPiA+ID4g
+SG93ZXZlciwgd2hhdCB3ZSdyZSB0cnlpbmcgdG8gZG8gaGVyZSBpcyBwcm92aWRlCj4gPiA+IGEg
+cHJvcGVyIEFQSSwgc28gd2UgY2FuIHNlZSBhdCBmaXJzdCBnbGFuY2Ugd2hhdCB0aGUgJ2tub3ds
+ZWRnZWFibGUnCj4gPiA+IGRyaXZlciBpcyB0cnlpbmcgdG8gZG8gYW5kIG5vdCBoYXZlIHNvbWVv
+bmUgYXR0ZW1wdCB0byBzdWJtaXQgYSAnZml4Jwo+ID4gPiB3aGljaCBjYWxscyBjbGtfZW5hYmxl
+KCkgb3Igc29tZXRoaW5nLgo+ID4gCj4gPiBXZSdsbCBuZWVkIHNvbWUgdHlwZSBvZiBhcGkgZm9y
+IHN1cmUgZm9yIHRoZSBoYW5kb2ZmLgo+IAo+IFRoaXMgc2V0IHdpbGwgbm90IHRyaWdnZXIgeW91
+ciBuZXcgY2hlY2tzLiAgVGhlIGNsb2NrcyB3aWxsIGJlIGluCj4gcGVyZmVjdCBiYWxsYW5jZSBi
+ZWN1YXNlIGEgcmVmZXJlbmNlIHdpbGwgYmUgdGFrZW4gYXQgc3RhcnQtdXAuCj4gCj4gQWdhaW46
+Cj4gCj4gc3RhcnQtdXA6Cj4gICBjbGtfcHJlcGFyZV9lbmFibGUoKQo+IAo+IGtub3dsZWdhYmxl
+X2RyaXZlcl9wcm9iZToKPiAgIGNsa19nZXQoKQo+IAo+IGtub3dsZWdhYmxlX2RyaXZlcl9nYXRl
+X2NsazoKPiAgIGNsa19kaXNhYmxlX2NyaXRpY2FsKCkKClRoZSBjYWxsIHRvIGNsa19kaXNhYmxl
+KCkgbmVzdGVkIGluc2lkZSBjbGtfZGlzYWJsZV9jcml0aWNhbCB3aWxsIGZhaWwKd2l0aCB0aGUg
+bmV3IGNoZWNrcy4gVGhpcyBpcyBiZWNhdXNlIHRoZSBzdHJ1Y3QgY2xrIGluc3RhbmNlIHdpbGwg
+YmUKZGlmZmVyZW50IGZyb20gb25lIHVzZWQgaW4geW91ciAic3RhcnQtdXAiIHNlY3Rpb24gYWJv
+dmUuIGNsa19nZXQoKQpjcmVhdGVzIGEgdW5pcXVlIHN0cnVjdCBjbGsgZXZlcnkgdGltZSB5b3Ug
+Y2FsbCBpdC4KClB1dCBhbm90aGVyIHdheSwgYSB1bmlxdWUgdXNlciBvZiBhIGNsb2NrIGNhbm5v
+dCBjYWxsIGNsa19kaXNhYmxlKCkgd2hlbgp0aGUgcGVyLXVzZXIgZW5hYmxlX2NvdW50IGlzIDAu
+CgpGdXJ0aGVybW9yZSwgdGhlcmUgaXMgbm8gd2F5IHRoYXQgSSB3aWxsIGV2ZXIgYmUgaGFwcHkg
+d2l0aCBhIHRlY2huaXF1ZQp0aGF0IHJlcXVpcmVzIGNhbGxpbmcgZGlzYWJsZSBwcmlvciB0byBh
+biBlbmFibGUgd2l0aGluIGEgZHJpdmVyLiBUaGF0CmdvZXMgYWdhaW5zdCBhIGxvbmctc3RhbmRp
+bmcgYXBpIGRlc2lnbnMgYW5kIGlzIGNvbmZ1c2luZyBhcyBoZWxsIHRvCmRyaXZlciBhdXRob3Jz
+LgoKUmVnYXJkcywKTWlrZQoKPiAKPiBrbm93bGVnYWJsZV9kcml2ZXJfdW5nYXRlX2NsazoKPiAg
+IGNsa19lbmFibGVfY3JpdGljYWwoKQo+IAo+IGtub3dsZWdhYmxlX2RyaXZlcl9yZW1vdmU6Cj4g
+ICBjbGtfcHV0KCkKPiAKPiA+IEZyb20gMzU5OWVkMjA2ZGE5Y2U3NzBiZmFmY2ZkOTVjYmI5YTAz
+YWM0NDQ3MyBNb24gU2VwIDE3IDAwOjAwOjAwIDIwMDEKPiA+IEZyb206IE1pY2hhZWwgVHVycXVl
+dHRlIDxtdHVycXVldHRlQGJheWxpYnJlLmNvbT4KPiA+IERhdGU6IFdlZCwgMjkgSnVsIDIwMTUg
+MTg6MjI6NDUgLTA3MDAKPiA+IFN1YmplY3Q6IFtQQVRDSCAxLzJdIGNsazogcGVyLXVzZXIgY2xr
+IHByZXBhcmUgJiBlbmFibGUgcmVmIGNvdW50cwo+ID4gCj4gPiBUaGlzIHBhdGNoIGFkZHMgcHJl
+cGFyZSBhbmQgZW5hYmxlIHJlZmVyZW5jZSBjb3VudHMgZm9yIHRoZSBwZXItdXNlcgo+ID4gaGFu
+ZGxlcyB0aGF0IGNsb2NrIGNvbnN1bWVycyBoYXZlIGZvciBhIGNsb2NrIG5vZGUuIFRoaXMgcGF0
+Y2ggd2FybnMgaWYKPiA+IGFuIGltYmFsYW5jZSBvY2N1cnMgd2hpbGUgdHJ5aW5nIHRvIGRpc2Fi
+bGUgb3IgdW5wcmVwYXJlIGEgY2xvY2sgYW5kCj4gPiBhYm9ydHMsIGxlYXZpbmcgdGhlIGhhcmR3
+YXJlIHVuYWZmZWN0ZWQuCj4gPiAKPiA+IFNpZ25lZC1vZmYtYnk6IE1pY2hhZWwgVHVycXVldHRl
+IDxtdHVycXVldHRlQGJheWxpYnJlLmNvbT4KPiA+IC0tLQo+ID4gIGRyaXZlcnMvY2xrL2Nsay5j
+IHwgMTAgKysrKysrKysrKwo+ID4gIDEgZmlsZSBjaGFuZ2VkLCAxMCBpbnNlcnRpb25zKCspCj4g
+PiAKPiA+IGRpZmYgLS1naXQgYS9kcml2ZXJzL2Nsay9jbGsuYyBiL2RyaXZlcnMvY2xrL2Nsay5j
+Cj4gPiBpbmRleCA4OTgwNTJlLi43MmZlZWU5IDEwMDY0NAo+ID4gLS0tIGEvZHJpdmVycy9jbGsv
+Y2xrLmMKPiA+ICsrKyBiL2RyaXZlcnMvY2xrL2Nsay5jCj4gPiBAQCAtODQsNiArODQsOCBAQCBz
+dHJ1Y3QgY2xrIHsKPiA+ICAgICAgIHVuc2lnbmVkIGxvbmcgbWluX3JhdGU7Cj4gPiAgICAgICB1
+bnNpZ25lZCBsb25nIG1heF9yYXRlOwo+ID4gICAgICAgc3RydWN0IGhsaXN0X25vZGUgY2xrc19u
+b2RlOwo+ID4gKyAgICAgdW5zaWduZWQgaW50IGVuYWJsZV9jb3VudDsKPiA+ICsgICAgIHVuc2ln
+bmVkIGludCBwcmVwYXJlX2NvdW50Owo+ID4gIH07Cj4gPiAgCj4gPiAgLyoqKiAgICAgICAgICAg
+bG9ja2luZyAgICAgICAgICAgICAqKiovCj4gPiBAQCAtNjAwLDYgKzYwMiw5IEBAIHZvaWQgY2xr
+X3VucHJlcGFyZShzdHJ1Y3QgY2xrICpjbGspCj4gPiAgICAgICAgICAgICAgIHJldHVybjsKPiA+
+ICAKPiA+ICAgICAgIGNsa19wcmVwYXJlX2xvY2soKTsKPiA+ICsgICAgIGlmIChXQVJOX09OKGNs
+ay0+cHJlcGFyZV9jb3VudCA9PSAwKSkKPiA+ICsgICAgICAgICAgICAgcmV0dXJuOwo+ID4gKyAg
+ICAgY2xrLT5wcmVwYXJlX2NvdW50LS07Cj4gPiAgICAgICBjbGtfY29yZV91bnByZXBhcmUoY2xr
+LT5jb3JlKTsKPiA+ICAgICAgIGNsa19wcmVwYXJlX3VubG9jaygpOwo+ID4gIH0KPiA+IEBAIC02
+NTcsNiArNjYyLDcgQEAgaW50IGNsa19wcmVwYXJlKHN0cnVjdCBjbGsgKmNsaykKPiA+ICAgICAg
+ICAgICAgICAgcmV0dXJuIDA7Cj4gPiAgCj4gPiAgICAgICBjbGtfcHJlcGFyZV9sb2NrKCk7Cj4g
+PiArICAgICBjbGstPnByZXBhcmVfY291bnQrKzsKPiA+ICAgICAgIHJldCA9IGNsa19jb3JlX3By
+ZXBhcmUoY2xrLT5jb3JlKTsKPiA+ICAgICAgIGNsa19wcmVwYXJlX3VubG9jaygpOwo+ID4gIAo+
+ID4gQEAgLTcwNyw2ICs3MTMsOSBAQCB2b2lkIGNsa19kaXNhYmxlKHN0cnVjdCBjbGsgKmNsaykK
+PiA+ICAgICAgICAgICAgICAgcmV0dXJuOwo+ID4gIAo+ID4gICAgICAgZmxhZ3MgPSBjbGtfZW5h
+YmxlX2xvY2soKTsKPiA+ICsgICAgIGlmIChXQVJOX09OKGNsay0+ZW5hYmxlX2NvdW50ID09IDAp
+KQo+ID4gKyAgICAgICAgICAgICByZXR1cm47Cj4gPiArICAgICBjbGstPmVuYWJsZV9jb3VudC0t
+Owo+ID4gICAgICAgY2xrX2NvcmVfZGlzYWJsZShjbGstPmNvcmUpOwo+ID4gICAgICAgY2xrX2Vu
+YWJsZV91bmxvY2soZmxhZ3MpOwo+ID4gIH0KPiA+IEBAIC03NjksNiArNzc4LDcgQEAgaW50IGNs
+a19lbmFibGUoc3RydWN0IGNsayAqY2xrKQo+ID4gICAgICAgICAgICAgICByZXR1cm4gMDsKPiA+
+ICAKPiA+ICAgICAgIGZsYWdzID0gY2xrX2VuYWJsZV9sb2NrKCk7Cj4gPiArICAgICBjbGstPmVu
+YWJsZV9jb3VudCsrOwo+ID4gICAgICAgcmV0ID0gY2xrX2NvcmVfZW5hYmxlKGNsay0+Y29yZSk7
+Cj4gPiAgICAgICBjbGtfZW5hYmxlX3VubG9jayhmbGFncyk7Cj4gPiAgCj4gCj4gLS0gCj4gTGVl
+IEpvbmVzCj4gTGluYXJvIFNUTWljcm9lbGVjdHJvbmljcyBMYW5kaW5nIFRlYW0gTGVhZAo+IExp
+bmFyby5vcmcg4pSCIE9wZW4gc291cmNlIHNvZnR3YXJlIGZvciBBUk0gU29Dcwo+IEZvbGxvdyBM
+aW5hcm86IEZhY2Vib29rIHwgVHdpdHRlciB8IEJsb2cKPiAtLQo+IFRvIHVuc3Vic2NyaWJlIGZy
+b20gdGhpcyBsaXN0OiBzZW5kIHRoZSBsaW5lICJ1bnN1YnNjcmliZSBsaW51eC1jbGsiIGluCj4g
+dGhlIGJvZHkgb2YgYSBtZXNzYWdlIHRvIG1ham9yZG9tb0B2Z2VyLmtlcm5lbC5vcmcKPiBNb3Jl
+IG1ham9yZG9tbyBpbmZvIGF0ICBodHRwOi8vdmdlci5rZXJuZWwub3JnL21ham9yZG9tby1pbmZv
+Lmh0bWwKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmxp
+bnV4LWFybS1rZXJuZWwgbWFpbGluZyBsaXN0CmxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFk
+ZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4
+LWFybS1rZXJuZWwK
