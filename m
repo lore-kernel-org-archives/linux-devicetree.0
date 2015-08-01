@@ -1,163 +1,77 @@
-From: Gregory Fong <gregory.0xf0@gmail.com>
-Subject: [PATCH v4 3/4] gpio: brcmstb: support wakeup from S5 cold boot
-Date: Fri, 31 Jul 2015 18:17:44 -0700
-Message-ID: <1438391865-7862-4-git-send-email-gregory.0xf0@gmail.com>
-References: <1438391865-7862-1-git-send-email-gregory.0xf0@gmail.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1438391865-7862-1-git-send-email-gregory.0xf0@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Gregory Fong <gregory.0xf0@gmail.com>, Alexandre Courbot <gnurou@gmail.com>, bcm-kernel-feedback-list@broadcom.com, Brian Norris <computersforpeace@gmail.com>, devicetree@vger.kernel.org, Florian Fainelli <f.fainelli@gmail.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>, Russell King <linux@arm.linux.org.uk>
+From: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v9 2/5] mtd: nand: vf610_nfc: add hardware BCH-ECC support
+Date: Fri, 31 Jul 2015 18:50:58 -0700
+Message-ID: <20150801015058.GA11837@localhost>
+References: <1438361581-2702-1-git-send-email-stefan@agner.ch>
+ <1438361581-2702-3-git-send-email-stefan@agner.ch>
+ <20150731230901.GK10676@google.com>
+ <9dd7975072cf16dd6ea1947bd4ae830a@agner.ch>
+ <20150731234718.GO10676@google.com>
+ <e0e476c1106c814c4eaadf1b7e5e2b47@agner.ch>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <e0e476c1106c814c4eaadf1b7e5e2b47-XLVq0VzYD2Y@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
+Cc: dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, sebastian-E0PNVn5OA6ohrxcnuTQ+TQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, marb-Z4QKGCRq86k@public.gmane.org, aaron-yuhzfaV+M/Wz3Dx2OeFgIA@public.gmane.org, bpringlemeir-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, albert.aribaud-iEu9NFBzPZE@public.gmane.org, Bill Pringlemeir <bpringlemeir-ygJ1pmMJ17cAvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-For wake from S5, we need to:
-- register a reboot handler
-- set wakeup capability before requesting IRQ so wakeup count is
-  incremented
-- mask all GPIO IRQs and clear any pending interrupts during driver
-  probe to since no driver will yet be registered to handle any IRQs
-  carried over from boot at that time, and it's possible that the
-  booted kernel does not request the same IRQ anyway.
+On Sat, Aug 01, 2015 at 02:28:06AM +0200, Stefan Agner wrote:
+> Did the measurement:
+> 
+> As is:
+> ...
+> [   30.955675] mtd_speedtest: testing eraseblock write speed
+> [  143.349572] mtd_speedtest: eraseblock write speed is 4641 KiB/s
+> [  143.355606] mtd_speedtest: testing eraseblock read speed
+> [  183.816690] mtd_speedtest: eraseblock read speed is 12893 KiB/s
+> [  185.874702] mtd_speedtest: testing page write speed
+> [  302.608719] mtd_speedtest: page write speed is 4468 KiB/s
+> [  302.614229] mtd_speedtest: testing page read speed
+> [  343.831663] mtd_speedtest: page read speed is 12656 KiB/s
+> ...
+> 
+> Unconditionally read OOB:
+> ...
+> [   29.076983] mtd_speedtest: testing eraseblock write speed
+> [  140.829920] mtd_speedtest: eraseblock write speed is 4667 KiB/s
+> [  140.835960] mtd_speedtest: testing eraseblock read speed
+> [  181.594498] mtd_speedtest: eraseblock read speed is 12798 KiB/s
+> [  183.652793] mtd_speedtest: testing page write speed
+> [  299.772069] mtd_speedtest: page write speed is 4492 KiB/s
+> [  299.777583] mtd_speedtest: testing page read speed
+> [  341.283668] mtd_speedtest: page read speed is 12568 KiB/s
+> ...
+> 
+> And with conditional OOB again, reading OOB if required in
+> vf610_nfc_correct_data.
+> ...
+> [   29.907147] mtd_speedtest: testing eraseblock write speed
+> [  141.146171] mtd_speedtest: eraseblock write speed is 4689 KiB/s
+> [  141.152185] mtd_speedtest: testing eraseblock read speed
+> [  181.644380] mtd_speedtest: eraseblock read speed is 12883 KiB/s
+> [  183.703198] mtd_speedtest: testing page write speed
+> [  299.423179] mtd_speedtest: page write speed is 4507 KiB/s
+> [  299.428671] mtd_speedtest: testing page read speed
+> [  340.695925] mtd_speedtest: page read speed is 12640 KiB/s
+> [  342.747510] mtd_speedtest: testing 2 page write speed
+> ...
+> 
+> The last test is probably pointless since we never read a empty page in
+> the speedtest. So performance hit is measurable but small (somewhat
+> below 100KiB/s).
+> 
+> This is with 64 bytes OOB. Since OOB sizes are only getting bigger, I
+> would rather still consider it... What do you think?
 
-This means that /sys/.../power/wakeup_count is valid at boot time, and
-we can properly account for S5 wakeup stats. e.g.:
+If the code isn't that ugly, then keep the conditional OOB. But I'd
+consider that performance difference almost negligible, given the noise
+for the write tests is on the order of 40 KB/s.
 
-  ### After waking from S5 from a GPIO key
-  # cat /sys/bus/platform/drivers/brcmstb-gpio/f04172c0.gpio/power/wakeup
-  enabled
-  # cat /sys/bus/platform/drivers/brcmstb-gpio/f04172c0.gpio/power/wakeup_count
-  1
-
-Signed-off-by: Gregory Fong <gregory.0xf0@gmail.com>
----
-v4: rename __brcmstb_gpio_irq_set_wake() to brcmstb_gpio_priv_set_wake().
-
- drivers/gpio/gpio-brcmstb.c | 56 ++++++++++++++++++++++++++++++++++++++++-----
- 1 file changed, 50 insertions(+), 6 deletions(-)
-
-diff --git a/drivers/gpio/gpio-brcmstb.c b/drivers/gpio/gpio-brcmstb.c
-index 46cc4e9..9ea86d2 100644
---- a/drivers/gpio/gpio-brcmstb.c
-+++ b/drivers/gpio/gpio-brcmstb.c
-@@ -20,6 +20,7 @@
- #include <linux/irqdomain.h>
- #include <linux/irqchip/chained_irq.h>
- #include <linux/interrupt.h>
-+#include <linux/reboot.h>
- 
- #define GIO_BANK_SIZE           0x20
- #define GIO_ODEN(bank)          (((bank) * GIO_BANK_SIZE) + 0x00)
-@@ -48,6 +49,7 @@ struct brcmstb_gpio_priv {
- 	int gpio_base;
- 	bool can_wake;
- 	int parent_wake_irq;
-+	struct notifier_block reboot_notifier;
- };
- 
- #define MAX_GPIO_PER_BANK           32
-@@ -167,10 +169,9 @@ static int brcmstb_gpio_irq_set_type(struct irq_data *d, unsigned int type)
- 	return 0;
- }
- 
--static int brcmstb_gpio_irq_set_wake(struct irq_data *d, unsigned int enable)
-+static int brcmstb_gpio_priv_set_wake(struct brcmstb_gpio_priv *priv,
-+		unsigned int enable)
- {
--	struct gpio_chip *gc = irq_data_get_irq_chip_data(d);
--	struct brcmstb_gpio_priv *priv = brcmstb_gpio_gc_to_priv(gc);
- 	int ret = 0;
- 
- 	/*
-@@ -188,6 +189,14 @@ static int brcmstb_gpio_irq_set_wake(struct irq_data *d, unsigned int enable)
- 	return ret;
- }
- 
-+static int brcmstb_gpio_irq_set_wake(struct irq_data *d, unsigned int enable)
-+{
-+	struct gpio_chip *gc = irq_data_get_irq_chip_data(d);
-+	struct brcmstb_gpio_priv *priv = brcmstb_gpio_gc_to_priv(gc);
-+
-+	return brcmstb_gpio_priv_set_wake(priv, enable);
-+}
-+
- static irqreturn_t brcmstb_gpio_wake_irq_handler(int irq, void *data)
- {
- 	struct brcmstb_gpio_priv *priv = data;
-@@ -246,6 +255,19 @@ static void brcmstb_gpio_irq_handler(unsigned int irq, struct irq_desc *desc)
- 	chained_irq_exit(chip, desc);
- }
- 
-+static int brcmstb_gpio_reboot(struct notifier_block *nb,
-+		unsigned long action, void *data)
-+{
-+	struct brcmstb_gpio_priv *priv =
-+		container_of(nb, struct brcmstb_gpio_priv, reboot_notifier);
-+
-+	/* Enable GPIO for S5 cold boot */
-+	if (action == SYS_POWER_OFF)
-+		brcmstb_gpio_priv_set_wake(priv, 1);
-+
-+	return NOTIFY_DONE;
-+}
-+
- /* Make sure that the number of banks matches up between properties */
- static int brcmstb_gpio_sanity_check_banks(struct device *dev,
- 		struct device_node *np, struct resource *res)
-@@ -285,6 +307,12 @@ static int brcmstb_gpio_remove(struct platform_device *pdev)
- 		if (ret)
- 			dev_err(&pdev->dev, "gpiochip_remove fail in cleanup\n");
- 	}
-+	if (priv->reboot_notifier.notifier_call) {
-+		ret = unregister_reboot_notifier(&priv->reboot_notifier);
-+		if (ret)
-+			dev_err(&pdev->dev,
-+				"failed to unregister reboot notifier\n");
-+	}
- 	return ret;
- }
- 
-@@ -342,7 +370,16 @@ static int brcmstb_gpio_irq_setup(struct platform_device *pdev,
- 			dev_warn(dev,
- 				"Couldn't get wake IRQ - GPIOs will not be able to wake from sleep");
- 		} else {
--			int err = devm_request_irq(dev, priv->parent_wake_irq,
-+			int err;
-+
-+			/*
-+			 * Set wakeup capability before requesting wakeup
-+			 * interrupt, so we can process boot-time "wakeups"
-+			 * (e.g., from S5 cold boot)
-+			 */
-+			device_set_wakeup_capable(dev, true);
-+			device_wakeup_enable(dev);
-+			err = devm_request_irq(dev, priv->parent_wake_irq,
- 					brcmstb_gpio_wake_irq_handler, 0,
- 					"brcmstb-gpio-wake", priv);
- 
-@@ -351,8 +388,9 @@ static int brcmstb_gpio_irq_setup(struct platform_device *pdev,
- 				return err;
- 			}
- 
--			device_set_wakeup_capable(dev, true);
--			device_wakeup_enable(dev);
-+			priv->reboot_notifier.notifier_call =
-+				brcmstb_gpio_reboot;
-+			register_reboot_notifier(&priv->reboot_notifier);
- 			priv->can_wake = true;
- 		}
- 	}
-@@ -455,6 +493,12 @@ static int brcmstb_gpio_probe(struct platform_device *pdev)
- 		/* not all ngpio lines are valid, will use bank width later */
- 		gc->ngpio = MAX_GPIO_PER_BANK;
- 
-+		/*
-+		 * Mask all interrupts by default, since wakeup interrupts may
-+		 * be retained from S5 cold boot
-+		 */
-+		bank->bgc.write_reg(reg_base + GIO_MASK(bank->id), 0);
-+
- 		err = gpiochip_add(gc);
- 		if (err) {
- 			dev_err(dev, "Could not add gpiochip for bank %d\n",
--- 
-1.9.1
+Brian
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
