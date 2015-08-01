@@ -1,35 +1,86 @@
-From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Subject: Re: [PATCH 1/2] spi: bcm2835: add spi-bcm2835aux driver for the auxiliar
- spi1 and spi2
-Date: Fri, 31 Jul 2015 20:55:59 -0600
-Message-ID: <55BC353F.1000906@wwwdotorg.org>
-References: <1434980408-4086-1-git-send-email-kernel@martin.sperl.org> <55A0A150.3060809@wwwdotorg.org> <ECFBB7BF-1316-4565-B1F2-FB2651131882@martin.sperl.org> <55A49662.3000706@wwwdotorg.org> <2768BFA9-7FE9-4EDC-8692-AC3F070BD874@martin.sperl.org> <55AEF828.20908@wwwdotorg.org> <0125992E-40F4-4702-8404-2943FF9A8788@martin.sperl.org> <55B1BA7A.1090104@wwwdotorg.org> <9005ABEC-C60A-4814-AD60-AD5BB09808F2@martin.sperl.org> <55B6EE1A.2070605@wwwdotorg.org> <836DA157-3072-441A-A160-E1FDBB119E88@martin.sperl.org> <55B75E07.1080104@martin.sperl.org>
+From: chunfeng yun <chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH v3 2/5] dt-bindings: Add a binding for Mediatek xHCI
+ host controller
+Date: Sat, 1 Aug 2015 11:42:02 +0800
+Message-ID: <1438400522.31933.25.camel@mhfsdcap03>
+References: <1437573945-31586-1-git-send-email-chunfeng.yun@mediatek.com>
+	 <1437573945-31586-3-git-send-email-chunfeng.yun@mediatek.com>
+	 <20150722142208.GC15809@leverpostej> <1437882325.3040.22.camel@mhfsdcap03>
+	 <20150731133707.GB25118@leverpostej>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <55B75E07.1080104-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org>
-Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Martin Sperl <kernel-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org>
-Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Lee Jones <lee-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20150731133707.GB25118@leverpostej>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: Mathias Nyman <mathias.nyman-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>, "linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, John Crispin <blogic-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>, Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 07/28/2015 04:48 AM, Martin Sperl wrote:
-> On 28.07.2015 08:18, Martin Sperl wrote:
->> Hi Stephen!
->> But the bigger question you have not answered is: =93where should su=
-ch an
->> auxiliar driver go in the kernel tree?=94 i.e. which directory?
->
-> One thing: could the "module" be a regulator?
+hi,
+On Fri, 2015-07-31 at 14:37 +0100, Mark Rutland wrote:
+> Hi,
+> 
+> > > > + - mediatek,usb-wakeup: to access usb wakeup control register
+> > > 
+> > > What exactly does this property imply?
+> > > 
+> > There are some control registers for usb wakeup which are put in another
+> > module, here to get the node of that module, and then use regmap and
+> > syscon to operate it.
+> 
+> Ok. You need to specify the type of this property (i.e. that it is a
+> phandle to a syscon node). The description makes it sound like a boolean.
+> 
+Is it ok to add a prefix of syscon, and name it syscon-usb-wakeup?
 
-The HW docs aren't very detailed on this point, but they certainly don'=
-t
-state that these bits control a regulator (or power domain as mentioned
-later in the thread). I guess it's possible, but it feels like an
-assumption to me. The HW modules seem small enough that it doesn't feel
-likely anyone would have bothered with power-gating them.
+> > 
+> > > > + - mediatek,wakeup-src: 1: ip sleep wakeup mode; 2: line state wakeup
+> > > > +	mode; others means don't enable wakeup source of usb
+> > > 
+> > > This sounds like configuration rather than a hardware property. Why do
+> > > you think this needs to be in the DT?
+> > > 
+> > Yes, it's better to put it in the DT. 
+> 
+> That doesn't answer my question.
+> 
+> _why_ do you think this needs to be in the DT? What do you think is
+> better for it being there?
+> 
+It is unthoughtful to put it here;
+There is different configuration on platforms, such as on tablet which
+only needs line-state wakeup (because system can't enter suspend when
+plug in usb cable, so don't need ip-sleep-wakeup to remote wakeup
+system), and on box just needs ip-sleep wakeup mode. so it is better to
+put in each board's dts.
+ 
+> > 
+> > > > + - mediatek,u2port-num: the number should not greater than the number
+> > > > +	of phys
+> > > 
+> > > What exactly does this property imply?
+> > > 
+> > On some platform, it only makes use of partial usb ports, so disable
+> > others to save power.
+> 
+> What exactly do you mean by "partial USB ports"?
+> 
+> If a phy isn't wired up, it won't be listed in the phys property, if it
+> is then disabling it sounds like a run-time decision.
+> 
+Yes, you are right.
+This confuse me a little before. It was a property of old phy driver at
+first, and then ported it here, so did not remove it temp.
+After I re-write the phy driver, I will remove it.
+
+Thanks a lot.
+
+> Thanks,
+> Mark.
+
+
 --
-To unsubscribe from this list: send the line "unsubscribe linux-spi" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
