@@ -1,50 +1,98 @@
-From: Gregory Fong <gregory.0xf0-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH v4 0/4] GPIO support for BRCMSTB
-Date: Fri, 31 Jul 2015 18:17:41 -0700
-Message-ID: <1438391865-7862-1-git-send-email-gregory.0xf0@gmail.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Gregory Fong <gregory.0xf0-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+From: Gregory Fong <gregory.0xf0@gmail.com>
+Subject: [PATCH v4 1/4] dt-bindings: brcmstb-gpio: document properties for wakeup
+Date: Fri, 31 Jul 2015 18:17:42 -0700
+Message-ID: <1438391865-7862-2-git-send-email-gregory.0xf0@gmail.com>
+References: <1438391865-7862-1-git-send-email-gregory.0xf0@gmail.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1438391865-7862-1-git-send-email-gregory.0xf0@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Gregory Fong <gregory.0xf0@gmail.com>, Alexandre Courbot <gnurou@gmail.com>, bcm-kernel-feedback-list@broadcom.com, Brian Norris <computersforpeace@gmail.com>, devicetree@vger.kernel.org, Florian Fainelli <f.fainelli@gmail.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>, Russell King <linux@arm.linux.org.uk>
 List-Id: devicetree@vger.kernel.org
 
-Adds interrupt support for the GPIO controller (UPG GIO) used on Broadcom's
-various BRCMSTB SoCs (BCM7XXX and others).  For all existing hardware, this
-block hooks up to the BCM7120 L2 IRQ controller and so will require
-CONFIG_BCM7120_L2_IRQ=y.
+Some brcmstb GPIO controllers can be used to wake from suspend, so use
+the de facto standard property 'wakeup-source' to mark the nodes of
+controllers with that capability.
 
-New in v4:
-- add nodes for the BRCMSTB GPIO controller to the BCM7445 dts file
-- a few improvements suggested by Linus Walleij on v3
-- remove unused 'irq' argument to brcmstb_gpio_irq_bank_handler()
+Also document interrupts-extended, which will be used for wakeup
+handling because the interrupt parent for the wake IRQ is different
+from the regular IRQ.
 
-The following are not included in this patchset:
-- Initial device tree bindings (merged from v1 to GPIO tree)
-- Initial GPIO support w/o interrupts (merged from v2 to GPIO tree)
-- ARM Kconfig changes (merged from v2 to arm-soc tree)
-- fix for null ptr deref in driver remove (merged from v3)
+While we're at it, a few more fixes: We don't actually use the
+"interrupt-names" property, so remove it from the listed optional
+properties and from the examples.  And since we're modifying the
+examples, also follow Brian's suggestions to:
+- change #gpio-cells, #interrupt-cells, and brcm,gpio-bank-widths from
+  hex to dec
+- use phandles
 
-Previous versions:
-v1: https://lkml.org/lkml/2015/5/6/199
-v2: https://lkml.org/lkml/2015/5/28/853
-v3: https://lkml.org/lkml/2015/6/17/960
+Reviewed-by: Brian Norris <computersforpeace@gmail.com>
+Acked-by: Florian Fainelli <f.fainelli@gmail.com>
+Signed-off-by: Gregory Fong <gregory.0xf0@gmail.com>
+---
+v4: no changes from v3
 
-Gregory Fong (4):
-  dt-bindings: brcmstb-gpio: document properties for wakeup
-  gpio: brcmstb: Add interrupt and wakeup source support
-  gpio: brcmstb: support wakeup from S5 cold boot
-  ARM: dts: brcmstb: add BCM7445 GPIO nodes
+ .../devicetree/bindings/gpio/brcm,brcmstb-gpio.txt | 35 +++++++++++++++++-----
+ 1 file changed, 28 insertions(+), 7 deletions(-)
 
- .../devicetree/bindings/gpio/brcm,brcmstb-gpio.txt |  35 ++-
- arch/arm/boot/dts/bcm7445.dtsi                     |  50 ++++
- drivers/gpio/Kconfig                               |   1 +
- drivers/gpio/gpio-brcmstb.c                        | 306 ++++++++++++++++++++-
- 4 files changed, 379 insertions(+), 13 deletions(-)
-
+diff --git a/Documentation/devicetree/bindings/gpio/brcm,brcmstb-gpio.txt b/Documentation/devicetree/bindings/gpio/brcm,brcmstb-gpio.txt
+index 435f1bc..b405b44 100644
+--- a/Documentation/devicetree/bindings/gpio/brcm,brcmstb-gpio.txt
++++ b/Documentation/devicetree/bindings/gpio/brcm,brcmstb-gpio.txt
+@@ -33,6 +33,13 @@ Optional properties:
+ - interrupt-parent:
+     phandle of the parent interrupt controller
+ 
++- interrupts-extended:
++    Alternate form of specifying interrupts and parents that allows for
++    multiple parents.  This takes precedence over 'interrupts' and
++    'interrupt-parent'.  Wakeup-capable GPIO controllers often route their
++    wakeup interrupt lines through a different interrupt controller than the
++    primary interrupt line, making this property necessary.
++
+ - #interrupt-cells:
+     Should be <2>.  The first cell is the GPIO number, the second should specify
+     flags.  The following subset of flags is supported:
+@@ -47,19 +54,33 @@ Optional properties:
+ - interrupt-controller:
+     Marks the device node as an interrupt controller
+ 
+-- interrupt-names:
+-    The name of the IRQ resource used by this controller
++- wakeup-source:
++    GPIOs for this controller can be used as a wakeup source
+ 
+ Example:
+ 	upg_gio: gpio@f040a700 {
+-		#gpio-cells = <0x2>;
+-		#interrupt-cells = <0x2>;
++		#gpio-cells = <2>;
++		#interrupt-cells = <2>;
+ 		compatible = "brcm,bcm7445-gpio", "brcm,brcmstb-gpio";
+ 		gpio-controller;
+ 		interrupt-controller;
+ 		reg = <0xf040a700 0x80>;
+-		interrupt-parent = <0xf>;
++		interrupt-parent = <&irq0_intc>;
++		interrupts = <0x6>;
++		brcm,gpio-bank-widths = <32 32 32 24>;
++	};
++
++	upg_gio_aon: gpio@f04172c0 {
++		#gpio-cells = <2>;
++		#interrupt-cells = <2>;
++		compatible = "brcm,bcm7445-gpio", "brcm,brcmstb-gpio";
++		gpio-controller;
++		interrupt-controller;
++		reg = <0xf04172c0 0x40>;
++		interrupt-parent = <&irq0_aon_intc>;
+ 		interrupts = <0x6>;
+-		interrupt-names = "upg_gio";
+-		brcm,gpio-bank-widths = <0x20 0x20 0x20 0x18>;
++		interrupts-extended = <&irq0_aon_intc 0x6>,
++			<&aon_pm_l2_intc 0x5>;
++		wakeup-source;
++		brcm,gpio-bank-widths = <18 4>;
+ 	};
 -- 
 1.9.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
