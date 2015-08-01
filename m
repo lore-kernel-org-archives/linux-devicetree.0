@@ -1,36 +1,84 @@
-From: Matt Ranostay <mranostay-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH 1/2] devicetree: add PulsedLight vendor prefix
-Date: Fri, 31 Jul 2015 20:58:03 -0700
-Message-ID: <1438401484-22101-2-git-send-email-mranostay@gmail.com>
-References: <1438401484-22101-1-git-send-email-mranostay@gmail.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1438401484-22101-1-git-send-email-mranostay-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: marex-ynQEQJNshbs@public.gmane.org, matt-agtwNxEcTQJWk0Htik3J/w@public.gmane.org, pantelis.antoniou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
-Cc: linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Matt Ranostay <mranostay-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+From: Masahiro Yamada <yamada.masahiro@socionext.com>
+Subject: Re: [PATCH v3] dtb: Create a common home for cross-architecture dtsi files.
+Date: Sat, 1 Aug 2015 15:21:15 +0900
+Message-ID: <CAK7LNATj96OKFDTgyPC8Uu0qt=4NQ7ZVeLKEEP3K7-smFP2SCw@mail.gmail.com>
+References: <1438353109-373-1-git-send-email-ian.campbell@citrix.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kbuild-owner@vger.kernel.org>
+In-Reply-To: <1438353109-373-1-git-send-email-ian.campbell@citrix.com>
+Sender: linux-kbuild-owner@vger.kernel.org
+To: Ian Campbell <ian.campbell@citrix.com>
+Cc: devicetree@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Russell King <linux@arm.linux.org.uk>, Pawel Moll <pawel.moll@arm.com>, Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, Sudeep Holla <sudeep.holla@arm.com>, Liviu Dudau <liviu.dudau@arm.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Will Deacon <will.deacon@arm.com>, Rob Herring <robh+dt@kernel.org>, Kristina Martsenko <kristina.martsenko@arm.com>, Kumar Gala <galak@codeaurora.org>, Kevin Hilman <khilman@linaro.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Matt Ranostay <mranostay-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
----
- Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
- 1 file changed, 1 insertion(+)
+2015-07-31 23:31 GMT+09:00 Ian Campbell <ian.campbell@citrix.com>:
+> Commit 9ccd608070b6 "arm64: dts: add device tree for ARM SMM-A53x2 on
+> LogicTile Express 20MG" added a new dts file to arch/arm64 which
+> included "../../../../arm/boot/dts/vexpress-v2m-rs1.dtsi", i.e. a
+> .dtsi supplied by arch/arm.
+>
+> Unfortunately this causes some issues for the split device tree
+> repository[0], since things get moved around there. In that context
+> the new .dts ends up at src/arm64/arm/vexpress-v2f-1xv7-ca53x2.dts
+> while the include is at src/arm/vexpress-v2m-rs1.dtsi.
 
-diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
-index 181b53e..e466902 100644
---- a/Documentation/devicetree/bindings/vendor-prefixes.txt
-+++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
-@@ -163,6 +163,7 @@ phytec	PHYTEC Messtechnik GmbH
- picochip	Picochip Ltd
- plathome	Plat'Home Co., Ltd.
- pixcir  PIXCIR MICROELECTRONICS Co., Ltd
-+pulsedlight	PulsedLight, Inc
- powervr	PowerVR (deprecated, use img)
- qca	Qualcomm Atheros, Inc.
- qcom	Qualcomm Technologies, Inc
+Typo?
+
+src/arm64  ->  arch/arm64
+src/arm    ->  arch/arm
+
+
+
+> The sharing of the .dtsi is legitimate since the baseboard is the same
+> for various vexpress systems whatever processor they use.
+>
+> Rather than using ../../ tricks to pickup .dtsi files from another
+> arch this patch creates a new directory include/dt-dtsi as a
+> home for such cross-arch .dtsi files, arranges for it to be in the
+> include path when the .dts files are processed by cpp and switches the
+> .dts files to use cpp #include instead of /include/. The dtsi file
+> itself is moved into a vendor subdir in this case "arm" (the vendor,
+> not the ARCH=).
+
+As Rob pointed out, this does not match the code.
+
+
+> [0] https://git.kernel.org/cgit/linux/kernel/git/devicetree/devicetree-rebasing.git/
+
+
+
+
+Nit just in case.
+
+scripts/checkpatch.pl reported 1 error, 1 warning:
+
+
+ERROR: Please use git commit description style 'commit <12+ chars of
+sha1> ("<title line>")' - ie: 'Commit 9ccd608070b6 ("arm64: dts: add
+device tree for ARM SMM-A53x2 on LogicTile Express 20MG")'
+#23:
+Commit 9ccd608070b6 "arm64: dts: add device tree for ARM SMM-A53x2 on
+
+WARNING: Possible unwrapped commit description (prefer a maximum 75
+chars per line)
+#44:
+[0] https://git.kernel.org/cgit/linux/kernel/git/devicetree/devicetree-rebasing.git/
+
+total: 1 errors, 1 warnings, 58 lines checked
+
+
+
+The URL should not be split into two lines, so I think the warning can
+be ignored.
+But I think it is better to fix the error of commit description style.
+
+
+Apart from the git-description,
+
+Reviewed-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+
+
 -- 
-1.9.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Best Regards
+Masahiro Yamada
