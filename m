@@ -1,131 +1,63 @@
 From: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 8/8] iio: mma8452: add devicetree property to allow all
- pin wirings
-Date: Sun, 2 Aug 2015 17:24:24 +0100
-Message-ID: <55BE4438.3000302@kernel.org>
-References: <1438006095-26920-1-git-send-email-martink@posteo.de>
- <1438006095-26920-9-git-send-email-martink@posteo.de>
- <20150727142336.GB10821@leverpostej> <55B6423C.7030301@posteo.de>
- <20150727173345.GF10821@leverpostej> <55B74741.3000408@theobroma-systems.com>
- <20150728092809.GA15213@leverpostej> <55B80C6D.5040607@posteo.de>
+Subject: Re: [PATCH 4/4] iio: adc: ti-adc128s052: Add devicetree support
+Date: Sun, 2 Aug 2015 18:01:03 +0100
+Message-ID: <55BE4CCF.1080102@kernel.org>
+References: <1437581064-9733-1-git-send-email-denis@eukrea.com>
+ <1437581064-9733-4-git-send-email-denis@eukrea.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=windows-1252
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <55B80C6D.5040607-1KBjaw7Xf1+zQB+pC5nmwQ@public.gmane.org>
+In-Reply-To: <1437581064-9733-4-git-send-email-denis-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
 Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Martin Kepplinger <martink-1KBjaw7Xf1+zQB+pC5nmwQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Martin Kepplinger <martin.kepplinger-SN7IsUiht6C/RdPyistoZJqQE7yCjDx5@public.gmane.org>
-Cc: "knaack.h-Mmb7MZpHnFY@public.gmane.org" <knaack.h-Mmb7MZpHnFY@public.gmane.org>, "lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org" <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, "pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org" <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, "mfuzzey-mB3Nsq4MPf1BDgjK7y7TUQ@public.gmane.org" <mfuzzey-mB3Nsq4MPf1BDgjK7y7TUQ@public.gmane.org>, "roberta.dobrescu-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <roberta.dobrescu-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, "ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org" <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, "galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org" <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "christoph.muellner-SN7IsUiht6C/RdPyistoZJqQE7yCjDx5@public.gmane.org" <christoph.muellner-SN7IsUiht6C/RdPyistoZJqQE7yCjDx5@public.gmane.org>
+To: Denis Carikli <denis-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: =?UTF-8?Q?Eric_B=c3=a9nard?= <eric-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 29/07/15 00:12, Martin Kepplinger wrote:
-> Am 2015-07-28 um 11:28 schrieb Mark Rutland:
->> On Tue, Jul 28, 2015 at 10:11:29AM +0100, Martin Kepplinger wrote:
->>>
->>>
->>> On 2015-07-27 19:33, Mark Rutland wrote:
->>>> On Mon, Jul 27, 2015 at 03:37:48PM +0100, Martin Kepplinger wrote:
->>>>> Am 2015-07-27 um 16:23 schrieb Mark Rutland:
->>>>>> On Mon, Jul 27, 2015 at 03:08:15PM +0100, Martin Kepplinger wrote:
->>>>>>> For the devices supported by the mma8452 driver, two interrupt pins are
->>>>>>> available to route the interrupt signals to. By default INT1 is assumed.
->>>>>>>
->>>>>>> This adds a bitmask DT property for users to configure interrupt sources
->>>>>>> for INT2, if that is the wired interrupt pin for them.
->>>>>>
->>>>>> This sounds like configureation rather than a HW property. Why does this
->>>>>> need to be in the DT?
->>>>>
->>>>> It's a hardware property of the board that uses the device. There might
->>>>> be boards that connect just one of them at random, which is the reason
->>>>> for this DT property. There also might be exotic users who will want
->>>>> to use both pins to route different interrupt sources to (not yet
->>>>> supported, but no problem with such a bitmask).
->>>>
->>>> Ok, so I'm somewhat confused as to what the hardware looks like and what
->>>> this means.
->>>>
->>>> Could you elaborate on how INT1 and INT2 are used? It looks like they're
->>>> used as output pins, and so interrupt-names would seem appropriate for
->>>> describing the combination which is wired up.
->>>
->>> They are just the chip's two possible interrupt lines for us to get
->>> notified about event.
->>
->> Ok. So that matches my understanding.
->>
->>> You build a board, you use one of these 4 chips, wiring up just one of
->>> the 2 interrupt pins. By far most people won't ever need both pins.
->>>
->>> DT describes your hardware, right? So you describe how you built your
->>> board (wired the accelerometer chip) with this DT property.
->>
->> Ok.
->>
->>>> w.r.t. configuring the choice of output(s), that sounds like a runtime
->>>> decision rather than something which needs to be configured statically.
->>>
->>> This won't be useful during runtime. (De)activating events is what you
->>> do in iio sysfs.
->>>
->>> Even in the rare case (maybe supported in the future) when you want one
->>> interrupt source on one pin and another source on the other pin, that
->>> describes your hardware. You wire, say, data-ready to Linux and
->>> motion-detection to some strange alarm system. When you change your
->>> hardware (say, use Linux for both pins), I think it would justify
->>> changing a DT property.
->>
->> In that case you would need additional properties anyway.
->>
->>> Btw, we are talking about very theoretical stuff here. For now (and even
->>> possibly forever) we just don't ever want to break a DT propery we
->>> introduce here, thus the bitmask.
->>
->> I don't think you need the bitmask.
->>
->> I think all you need is interrupt-names, e.g.
->>
->> dev1 {
->> 	/* both wired up */
->> 	interrupts = <&some_ic 0 47>, <&some_ic 5 62>;
->> 	interrupt-names = "INT1", "INT2";
->> }
->>
->> dev2 {
->> 	/* only INT2 wired up */
->> 	interrupts = <&some_ic 3 96>;
->> 	interrupt-names = "INT2";
->> }
->>
->> You can figure out which interrupts are wired up by trying to acquire
->> them by name, then falling back to acquiting an anonymouos interrupt
->> (assuming it's INT1) to keep compatible with existing DTBs. You can
->> choose which to use arbitrarily, try to load balance, or whatever you'd
->> like.
->>
->> If it's later necessary to route some interrupts to another device,
->> additional properties can be added to accomodate that. We already know
->> that the bitmask alone is not sufficient for that case.
->>
+On 22/07/15 17:04, Denis Carikli wrote:
+> Signed-off-by: Denis Carikli <denis-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
+> ---
+>  drivers/iio/adc/ti-adc128s052.c | 14 +++++++++++++-
+>  1 file changed, 13 insertions(+), 1 deletion(-)
 > 
-> Yes, this sounds reasonable indeed. I like the idea. I'm sorry I won't
-> rewrite patch 8/8 now. Relocation and a lot to do before holidays. I'll
-> be happy to write and test this properly in one month from now, if not
-> done by somebody until then.
+> diff --git a/drivers/iio/adc/ti-adc128s052.c b/drivers/iio/adc/ti-adc128s052.c
+> index 8aca0ff..2558508 100644
+> --- a/drivers/iio/adc/ti-adc128s052.c
+> +++ b/drivers/iio/adc/ti-adc128s052.c
+> @@ -13,10 +13,11 @@
+>   */
+>  
+>  #include <linux/err.h>
+> -#include <linux/spi/spi.h>
+>  #include <linux/module.h>
+>  #include <linux/iio/iio.h>
+> +#include <linux/of.h>
+>  #include <linux/regulator/consumer.h>
+> +#include <linux/spi/spi.h>
+Why the reorder?
+>  
+>  struct adc128_configuration {
+>  	const struct iio_chan_spec	*channels;
+> @@ -183,10 +184,21 @@ static const struct spi_device_id adc128_id[] = {
+>  };
+>  MODULE_DEVICE_TABLE(spi, adc128_id);
+>  
+> +#ifdef CONFIG_OF
+> +static const struct of_device_id adc128_of_match[] = {
+> +	{ .compatible = "ti,adc128s052" },
+> +	{ .compatible = "ti,adc122s021" },
+> +	{ .compatible = "ti,adc108s022" },
+> +	{}
+> +};
+> +MODULE_DEVICE_TABLE(of, adc128_of_match);
+> +#endif
+> +
+>  static struct spi_driver adc128_driver = {
+>  	.driver = {
+>  		.name = "adc128s052",
+>  		.owner = THIS_MODULE,
+> +		.of_match_table = of_match_ptr(adc128_of_match),
+>  	},
+>  	.probe = adc128_probe,
+>  	.remove = adc128_remove,
 > 
-> Until then, since patches 1-7 only introduce a bindings document, they
-> shouldn't be problematic for devicetree people.
-> 
-> 
-> So if Jonathan and IIO people find anybody for review, feel free to take
-> patches 1-7. In any case, there is direct register access via debugfs to
-> at least somehow make the driver work for everybody ;)
-> 
-> so long, thanks.
->                     martin
-Cool, will kick this one into the long grass until you get back most
-likely!
-
-Have a good holiday when you get to it!
-
-Jonathan
