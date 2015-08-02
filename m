@@ -1,44 +1,38 @@
-From: Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>
-Subject: Re: [PATCH 2/2] iio: proximity: add support for PulsedLight LIDAR
-Date: Sun, 02 Aug 2015 11:45:01 +0200
-Message-ID: <55BDE69D.3010708@metafoo.de>
-References: <1438401484-22101-1-git-send-email-mranostay@gmail.com> <1438401484-22101-3-git-send-email-mranostay@gmail.com>
+From: Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
+Subject: Re: [PATCH] irqchip: bcm2836: Use a CPU notifier enable IPIs.
+Date: Sun, 2 Aug 2015 12:22:24 +0200 (CEST)
+Message-ID: <alpine.DEB.2.11.1508021221370.3825@nanos>
+References: <55B67C81.1010900@gmail.com> <1438027789-1637-1-git-send-email-eric@anholt.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1438401484-22101-3-git-send-email-mranostay-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Matt Ranostay <mranostay-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, marex-ynQEQJNshbs@public.gmane.org, matt-agtwNxEcTQJWk0Htik3J/w@public.gmane.org, pantelis.antoniou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
-Cc: linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: TEXT/PLAIN; charset=US-ASCII
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1438027789-1637-1-git-send-email-eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Lee Jones <lee-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 08/01/2015 05:58 AM, Matt Ranostay wrote:
-> +static int lidar_read_raw(struct iio_dev *indio_dev,
-> +			  struct iio_chan_spec const *chan,
-> +			  int *val, int *val2, long mask)
+On Mon, 27 Jul 2015, Eric Anholt wrote:
+> +/* Unmasks the IPI on the CPU wen it's first brought online. */
+
+when
+
+> +static int bcm2836_arm_irqchip_cpu_notify(struct notifier_block *nfb,
+> +					  unsigned long action, void *hcpu)
 > +{
-> +	struct lidar_data *data = iio_priv(indio_dev);
-> +	int ret = -EINVAL;
+> +	unsigned int cpu = (unsigned long)hcpu;
+> +	unsigned int int_reg = LOCAL_MAILBOX_INT_CONTROL0;
+> +	unsigned int mailbox = 0;
 > +
-> +	if (iio_buffer_enabled(indio_dev) && mask == IIO_CHAN_INFO_RAW)
-> +		return -EBUSY;
+> +	if (action == CPU_STARTING || action == CPU_STARTING_FROZEN)
+> +		bcm2836_arm_irqchip_unmask_per_cpu_irq(int_reg, mailbox, cpu);
 
-For this to work without race conditions you need to hold the
-indio_dev->mlock while doing the check and until the conversion is done.
+Shouldn't you mask the irq on CPU_DYING?
 
-> +
-> +	mutex_lock(&data->lock);
-> +
-> +	switch (mask) {
-> +	case IIO_CHAN_INFO_RAW: {
-> +		u16 reg;
-> +
-> +		ret = lidar_get_measurement(data, &reg);
-> +		if (!ret) {
-> +			*val = reg / 100;
-> +			*val2 = (reg % 100) * 10000;
-> +			ret = IIO_VAL_INT_PLUS_MICRO;
-> +		}
-> +		break;
-> +	}
+Thanks,
+
+	tglx
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
