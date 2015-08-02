@@ -1,42 +1,64 @@
-From: Liberman Igal <Igal.Liberman-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: RE: [PATCH v4] powerpc/mpc85xx: Add MDIO bus muxing support to the
- board device tree(s)
-Date: Sun, 2 Aug 2015 11:42:25 +0000
-Message-ID: <DM2PR03MB509FD00DD1CB7AB0449B5ADE6880@DM2PR03MB509.namprd03.prod.outlook.com>
-References: <1438231630-11056-1-git-send-email-igal.liberman@freescale.com>
- <1438287351.2993.369.camel@freescale.com>
+From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Subject: Re: Re: [PATCH 5/5] ARM: dts: sun7i: Add dts file for
+ Wits Pro A20 DKT
+Date: Sun, 2 Aug 2015 14:58:11 +0200
+Message-ID: <55BE13E3.8060503@redhat.com>
+References: <1438333194-21181-1-git-send-email-hdegoede@redhat.com>
+ <1438333194-21181-6-git-send-email-hdegoede@redhat.com>
+ <20150731102028.GE2564@lukather>
+ <CAGb2v65TEogqYFAfen1VnOaiepvez5t8Oh+Q=OYsRS_aZUMO3A@mail.gmail.com>
+ <55BB9E92.30604@redhat.com> <20150801093046.GX2564@lukather>
+Reply-To: hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1438287351.2993.369.camel-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Madalin-Cristian Bucur <madalin.bucur-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Shaohui Xie <Shaohui.Xie-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Return-path: <linux-sunxi+bncBDRZXY4CYYORB2FH7CWQKGQEBLJMALQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <20150801093046.GX2564@lukather>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <http://groups.google.com/group/linux-sunxi/subscribe>
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, Jelle de Jong <jelledejong-OIcJOM8/mISwoUgIn9SVlA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-DQoNClJlZ2FyZHMsDQpJZ2FsIExpYmVybWFuLg0KDQo+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0t
-LS0tDQo+IEZyb206IFdvb2QgU2NvdHQtQjA3NDIxDQo+IFNlbnQ6IFRodXJzZGF5LCBKdWx5IDMw
-LCAyMDE1IDExOjE2IFBNDQo+IFRvOiBMaWJlcm1hbiBJZ2FsLUIzMTk1MA0KPiBDYzogZGV2aWNl
-dHJlZUB2Z2VyLmtlcm5lbC5vcmc7IGxpbnV4cHBjLWRldkBsaXN0cy5vemxhYnMub3JnOyBCdWN1
-cg0KPiBNYWRhbGluLUNyaXN0aWFuLUIzMjcxNjsgWGllIFNoYW9odWktQjIxOTg5OyBsaW51eC1r
-ZXJuZWxAdmdlci5rZXJuZWwub3JnDQo+IFN1YmplY3Q6IFJlOiBbUEFUQ0ggdjRdIHBvd2VycGMv
-bXBjODV4eDogQWRkIE1ESU8gYnVzIG11eGluZyBzdXBwb3J0DQo+IHRvIHRoZSBib2FyZCBkZXZp
-Y2UgdHJlZShzKQ0KPiANCj4gT24gVGh1LCAyMDE1LTA3LTMwIGF0IDA3OjQ3ICswMzAwLCBJZ2Fs
-LkxpYmVybWFuIHdyb3RlOg0KPiA+IEZyb206IElnYWwgTGliZXJtYW4gPElnYWwuTGliZXJtYW5A
-ZnJlZXNjYWxlLmNvbT4NCj4gPg0KPiA+IERlc2NyaWJlIHRoZSBQSFkgdG9wb2xvZ3kgZm9yIGFs
-bCBjb25maWd1cmF0aW9ucyBzdXBwb3J0ZWQgYnkgZWFjaA0KPiA+IGJvYXJkDQo+ID4NCj4gPiBC
-YXNlZCBvbiBwcmlvciB3b3JrIGJ5IEFuZHkgRmxlbWluZyA8YWZsZW1pbmdAZnJlZXNjYWxlLmNv
-bT4NCj4gPg0KPiA+IFNpZ25lZC1vZmYtYnk6IElnYWwgTGliZXJtYW4gPElnYWwuTGliZXJtYW5A
-ZnJlZXNjYWxlLmNvbT4NCj4gPiBTaWduZWQtb2ZmLWJ5OiBTaHJ1dGkgS2FuZXRrYXIgPFNocnV0
-aUBmcmVlc2NhbGUuY29tPg0KPiA+IFNpZ25lZC1vZmYtYnk6IEVtaWwgTWVkdmUgPEVtaWxpYW4u
-TWVkdmVARnJlZXNjYWxlLmNvbT4NCj4gDQo+IFNpZ25vZmZzIHNob3VsZCBiZSBpbiBjaHJvbm9s
-b2dpY2FsIG9yZGVyLiAgWW91IHdlcmUgdGhlIGxhc3QgdG8gdG91Y2gvc3VibWl0DQo+IHRoaXMs
-IHNvIHlvdXJzIHNob3VsZCBnbyBsYXN0LiAgTGlrZXdpc2UgaW4gdGhlIG90aGVyIHBhdGNoZXMg
-eW91IGp1c3QgcG9zdGVkLg0KPiANCg0KT2ssIEknbGwga2VlcCB0aGUgY29ycmVjdCBvcmRlciwg
-dGhhbmtzIGZvciBwb2ludGluZyBvdXQuIA0KDQo+IC1TY290dA0KDQo=
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Hi,
+
+On 01-08-15 11:30, Maxime Ripard wrote:
+> On Fri, Jul 31, 2015 at 06:13:06PM +0200, Hans de Goede wrote:
+>> mmc-pwrseq-simple supports multiple reset/enable gpios (by listing
+>> them all as reset-gpios and setting GPIO_ACTIVE_LOW/HIGH depending
+>> on which value they need to be to activate things).
+>>
+>> It also supports listing clocks which need to be enabled. I think
+>> that it may be a good idea to use this to also enable the bluetooth
+>> bits of the ap6210 module on the cubietruck. I know that the
+>> actual bt is interfaced over an uart, and we really should have
+>> a mechanism to enable/disable it separately, but for not this seems
+>> like a good way to get bluetooth to work.
+>>
+>> We should ofcourse add a comment to the dts file that this is not a
+>> 100% ideal solution, but other then that I think this should work
+>> nicely. Maxime would enabling the bluetooth bits of this sdio
+>> module via mmc-pwrseq be acceptable to you?
+>
+> As long as we have some comment on top, yep.
+
+Great, thanks.
+
+>> ChenYu if Maxime acks this solution I hope you can write a patch for
+>> this, since you've been working on the bluetooth support before.
+>
+> Note that I'm in holidays starting today. I plan on doing my
+> pull-requests for 4.3 later today, and will probably not be able to
+> merge any patches during the next two weeks, which mean that your
+> mmc-power seq patch for the cubietruck was probably the last one I was
+> merging for the 4.3 merge window.
+
+OK, that is good to know, thanks for the headsup and enjoy your hollidays.
+
+Regards,
+
+Hans
