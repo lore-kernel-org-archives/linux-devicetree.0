@@ -1,65 +1,76 @@
-From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [linux-sunxi] Re: [PATCH 5/5] ARM: dts: sun7i: Add dts file for
- Wits Pro A20 DKT
-Date: Sun, 2 Aug 2015 15:00:37 +0200
-Message-ID: <55BE1475.6040904@redhat.com>
-References: <1438333194-21181-1-git-send-email-hdegoede@redhat.com>
- <1438333194-21181-6-git-send-email-hdegoede@redhat.com>
- <20150731102028.GE2564@lukather>
- <CAGb2v65TEogqYFAfen1VnOaiepvez5t8Oh+Q=OYsRS_aZUMO3A@mail.gmail.com>
- <55BB9E92.30604@redhat.com> <20150801093046.GX2564@lukather>
+From: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v4 0/2] iio: light: add support for APDS9660 sensor
+Date: Sun, 2 Aug 2015 16:45:39 +0100
+Message-ID: <55BE3B23.8010608@kernel.org>
+References: <1437364640-7470-1-git-send-email-mranostay@gmail.com>
+ <CAKzfze8tccxiWTcx4DWocdnm4M=W-5fToK-ABELW-JrdKtq-iA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20150801093046.GX2564@lukather>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, Jelle de Jong <jelledejong-OIcJOM8/mISwoUgIn9SVlA@public.gmane.org>
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAKzfze8tccxiWTcx4DWocdnm4M=W-5fToK-ABELW-JrdKtq-iA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Matt Ranostay <mranostay-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: "linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, =?UTF-8?Q?Marek_Va=c5=a1ut?= <marex-ynQEQJNshbs@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-
-On 01-08-15 11:30, Maxime Ripard wrote:
-> On Fri, Jul 31, 2015 at 06:13:06PM +0200, Hans de Goede wrote:
->> mmc-pwrseq-simple supports multiple reset/enable gpios (by listing
->> them all as reset-gpios and setting GPIO_ACTIVE_LOW/HIGH depending
->> on which value they need to be to activate things).
+On 29/07/15 05:28, Matt Ranostay wrote:
+> Jonathan,
+> 
+> Does this solve the issues in v3 minus the apds9960_regfield_init() cleanup?
+> 
+> 
+> Thanks,
+> 
+> Matt
+> 
+Sorry, was on holiday last week.  Catching up now.
+> On Sun, Jul 19, 2015 at 8:57 PM, Matt Ranostay <mranostay-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+>> This patchset adds support for the APDS9960 ALS + proximity + gesture
+>> sensor.
 >>
->> It also supports listing clocks which need to be enabled. I think
->> that it may be a good idea to use this to also enable the bluetooth
->> bits of the ap6210 module on the cubietruck. I know that the
->> actual bt is interfaced over an uart, and we really should have
->> a mechanism to enable/disable it separately, but for not this seems
->> like a good way to get bluetooth to work.
+>> Included support for the various adjustable settings and controls:
+>>  * Falling and rising ALS + proximity thresholds events
+>>  * Gain controls
+>>  * ALS time integration
 >>
->> We should ofcourse add a comment to the dts file that this is not a
->> 100% ideal solution, but other then that I think this should work
->> nicely. Maxime would enabling the bluetooth bits of this sdio
->> module via mmc-pwrseq be acceptable to you?
->
-> As long as we have some comment on top, yep.
->
->> ChenYu if Maxime acks this solution I hope you can write a patch for
->> this, since you've been working on the bluetooth support before.
->
-> Note that I'm in holidays starting today. I plan on doing my
-> pull-requests for 4.3 later today, and will probably not be able to
-> merge any patches during the next two weeks, which mean that your
-> mmc-power seq patch for the cubietruck was probably the last one I was
-> merging for the 4.3 merge window.
-
-I just noticed that your last push to
-
-https://git.kernel.org/cgit/linux/kernel/git/mripard/linux.git/log/?h=sunxi/for-next
-
-Is not in your github sunxi-next branch, it would be good if you could
-merge the last changes there (when your back from your holliday).
-
-Regards,
-
-Hans
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>> Changes from v3:
+>>  * Added interrupt client mode document reference in DT bindings
+>>  * Add missing dep for CONFIG_REGMAP_I2C in respective Kconfig
+>>  * Changed from iio_trigger_poll_chained() to irq_work queue
+>>  * Changed channel masks to prevent channels that can't be polled from
+>>    having sysfs entries
+>>  * Renamed regmap_field declarations with apds9660_* prefix
+>>  * Added available channel masks and removed unneeded buffer copy in
+>>    poll function
+>>  * Remove unneeded default regmap values in apds9960_reg_defaults
+>>  * Clear interrupts from ALS and proximity sensor seperately to avoid
+>>    race condition
+>>  * Changed max threshold values to a macro define, and prevent values
+>>    less than 0
+>>  * Avoid needlessly checking the APDS9960_REG_GFLVL value until we read
+>>    all the FIFO from the count value. Note this can save up to 32
+>>    superfluous i2c reads per gesture engine entry
+>>
+>> Matt Ranostay (2):
+>>   iio: light: DT binding docs for APDS9960 driver
+>>   iio: light: add APDS9960 ALS + promixity driver
+>>
+>>  .../ABI/testing/sysfs-bus-iio-light-apds9960       |    7 +
+>>  .../devicetree/bindings/iio/light/apds9960.txt     |   22 +
+>>  drivers/iio/light/Kconfig                          |   13 +
+>>  drivers/iio/light/Makefile                         |    1 +
+>>  drivers/iio/light/apds9960.c                       | 1191 ++++++++++++++++++++
+>>  5 files changed, 1234 insertions(+)
+>>  create mode 100644 Documentation/ABI/testing/sysfs-bus-iio-light-apds9960
+>>  create mode 100644 Documentation/devicetree/bindings/iio/light/apds9960.txt
+>>  create mode 100644 drivers/iio/light/apds9960.c
+>>
+>> --
+>> 1.9.1
+>>
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-iio" in
+> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 
