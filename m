@@ -1,173 +1,42 @@
-From: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+From: Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>
 Subject: Re: [PATCH 2/2] iio: proximity: add support for PulsedLight LIDAR
-Date: Sun, 2 Aug 2015 19:23:33 +0100
-Message-ID: <55BE6025.5030001@kernel.org>
-References: <1438401484-22101-1-git-send-email-mranostay@gmail.com>
- <1438401484-22101-3-git-send-email-mranostay@gmail.com>
- <55BDE5F8.9090201@metafoo.de>
+Date: Sun, 02 Aug 2015 20:39:46 +0200
+Message-ID: <55BE63F2.5080204@metafoo.de>
+References: <1438401484-22101-1-git-send-email-mranostay@gmail.com> <1438401484-22101-3-git-send-email-mranostay@gmail.com> <55BDE5F8.9090201@metafoo.de> <55BE6025.5030001@kernel.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=windows-1252
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <55BDE5F8.9090201-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>
+In-Reply-To: <55BE6025.5030001-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Matt Ranostay <mranostay-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, marex-ynQEQJNshbs@public.gmane.org, matt-agtwNxEcTQJWk0Htik3J/w@public.gmane.org, pantelis.antoniou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+To: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Matt Ranostay <mranostay-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, marex-ynQEQJNshbs@public.gmane.org, matt-agtwNxEcTQJWk0Htik3J/w@public.gmane.org, pantelis.antoniou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 Cc: linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 02/08/15 10:42, Lars-Peter Clausen wrote:
-> On 08/01/2015 05:58 AM, Matt Ranostay wrote:
-> [...]
->> +
->> +struct lidar_data {
->> +	struct mutex lock;
->> +	struct iio_dev *indio_dev;
->> +	struct i2c_client *client;
->> +
->> +	/* config */
->> +	int calib_bias;
->> +
->> +	u16 buffer[5]; /* 2 byte distance + 8 byte timestamp */
-> 
-> Needs to be in its own cacheline to avoid issues if the I2C controller is
-> using DMA.
-Would do if spi, but in the case of i2c I thought all bus drivers were
-obliged to deal with this rather than leaving it to the client drivers?
+On 08/02/2015 08:23 PM, Jonathan Cameron wrote:
+> On 02/08/15 10:42, Lars-Peter Clausen wrote:
+>> On 08/01/2015 05:58 AM, Matt Ranostay wrote:
+>> [...]
+>>> +
+>>> +struct lidar_data {
+>>> +	struct mutex lock;
+>>> +	struct iio_dev *indio_dev;
+>>> +	struct i2c_client *client;
+>>> +
+>>> +	/* config */
+>>> +	int calib_bias;
+>>> +
+>>> +	u16 buffer[5]; /* 2 byte distance + 8 byte timestamp */
+>>
+>> Needs to be in its own cacheline to avoid issues if the I2C controller is
+>> using DMA.
+> Would do if spi, but in the case of i2c I thought all bus drivers were
+> obliged to deal with this rather than leaving it to the client drivers?
 
-Has this changed?
+Where did you find this? There definitely seem to be I2C drivers which
+directly map the i2c_msg buffers.
 
-> 
-> 	u16 buffer[5] ____cacheline_aligned;
-> 
->> +};
-> [...]
->> +static inline int lidar_read_byte(struct lidar_data *data, int reg)
-> 
-> I'd drop the inline. The compiler is smart enough to figure out whether it
-> makes sense to inline it or not.
-> 
->> +{
->> +	struct i2c_client *client = data->client;
->> +	int ret;
->> +
->> +	ret = i2c_smbus_write_byte(client, reg);
->> +	if (ret < 0) {
->> +		dev_err(&client->dev, "cannot write addr value");
->> +		return ret;
->> +	}
->> +
->> +	ret = i2c_smbus_read_byte(client);
->> +	if (ret < 0) {
->> +		dev_err(&client->dev, "cannot read data value");
->> +		return ret;
->> +	}
-> 
-> Instead of using a write_byte/read_byte combination rather use
-> i2c_smbus_read_byte_data(). I think that will do the same, but in one atomic
-> operation.
-> 
->> +
->> +	return ret;
->> +}
-> [...]
->> +static int lidar_read_measurement(struct lidar_data *data, u16 *reg)
->> +{
->> +	int ret;
->> +	int val;
->> +
->> +	ret = lidar_read_byte(data, LIDAR_REG_DATA_HBYTE);
->> +	if (ret < 0)
->> +		return ret;
->> +	val = ret << 8;
->> +
->> +	ret = lidar_read_byte(data, LIDAR_REG_DATA_LBYTE);
->> +	if (ret < 0)
->> +		return ret;
->> +	val |= ret;
->> +
->> +	/* correct any possible overflow or underflow */
->> +	val += data->calib_bias / 10000;
-> 
-> Typically calib bias is only meant for a offset correction that is done in
-> hardware rather than in software. What's the usecase for doing it in
-> kernelspace rather than in userspace?
-> 
->> +	if (val < 0)
->> +		val = 0;
->> +
->> +	if (val > LIDAR_REG_DATA_MAX)
->> +		val = LIDAR_REG_DATA_MAX;
->> +
->> +	*reg = val;
->> +
->> +	return 0;
->> +}
-> [...]
->> +static int lidar_read_raw(struct iio_dev *indio_dev,
->> +			  struct iio_chan_spec const *chan,
->> +			  int *val, int *val2, long mask)
->> +{
->> +	struct lidar_data *data = iio_priv(indio_dev);
->> +	int ret = -EINVAL;
->> +
->> +	if (iio_buffer_enabled(indio_dev) && mask == IIO_CHAN_INFO_RAW)
->> +		return -EBUSY;
->> +
->> +	mutex_lock(&data->lock);
->> +
->> +	switch (mask) {
->> +	case IIO_CHAN_INFO_RAW: {
->> +		u16 reg;
->> +
->> +		ret = lidar_get_measurement(data, &reg);
->> +		if (!ret) {
->> +			*val = reg / 100;
->> +			*val2 = (reg % 100) * 10000;
->> +			ret = IIO_VAL_INT_PLUS_MICRO;
-> 
-> The raw attribute is supposed to return the raw value as a IIO_VAL_INT. A
-> scale attribute should be used to indicate the conversion factor to get the
-> proper unit.
-> 
->> +		}
->> +		break;
->> +	}
->> +	case IIO_CHAN_INFO_CALIBBIAS:
->> +		*val = 0;
->> +		*val2 = data->calib_bias;
->> +		ret = IIO_VAL_INT_PLUS_MICRO;
->> +		break;
->> +	}
->> +
->> +	mutex_unlock(&data->lock);
->> +
->> +	return ret;
->> +}
-> [...]
->> +static struct iio_info lidar_info = {
-> 
-> const
-> 
->> +	.driver_module = THIS_MODULE,
->> +	.read_raw = lidar_read_raw,
->> +	.write_raw = lidar_write_raw,
->> +};
-> [...]
->> +static struct i2c_driver lidar_driver = {
->> +	.driver = {
->> +		.name	= LIDAR_DRV_NAME,
->> +		.owner	= THIS_MODULE,
-> 
-> You added a DT vendor prefix, but there is no of match table for the driver.
-> 
->> +	},
->> +	.probe		= lidar_probe,
->> +	.remove		= lidar_remove,
->> +	.id_table	= lidar_id,
->> +};
->> +module_i2c_driver(lidar_driver);
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-iio" in
-> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
-> 
+But I just realized that in this case the buffer is not passed to the i2c
+driver anyway so we should be fine.
+
+- Lars
