@@ -1,97 +1,160 @@
-From: Chen Bough <Haibo.Chen@freescale.com>
-Subject: RE: [PATCH v3 4/6] mmc: sdhci-esdhc-imx: add compatible string in
- bingding doc
-Date: Sun, 2 Aug 2015 09:02:21 +0000
-Message-ID: <BY1PR03MB138864C76E6D8922405CA2359A880@BY1PR03MB1388.namprd03.prod.outlook.com>
-References: <1438160637-28061-1-git-send-email-haibo.chen@freescale.com>
- <1438160637-28061-5-git-send-email-haibo.chen@freescale.com>
- <20150731144354.GC27806@shlinux1.ap.freescale.net>
+From: Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>
+Subject: Re: [PATCH 2/2] iio: proximity: add support for PulsedLight LIDAR
+Date: Sun, 02 Aug 2015 11:42:16 +0200
+Message-ID: <55BDE5F8.9090201@metafoo.de>
+References: <1438401484-22101-1-git-send-email-mranostay@gmail.com> <1438401484-22101-3-git-send-email-mranostay@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20150731144354.GC27806@shlinux1.ap.freescale.net>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, Fabio Estevam <Fabio.Estevam@freescale.com>, "ulf.hansson@linaro.org" <ulf.hansson@linaro.org>, "linux@arm.linux.org.uk" <linux@arm.linux.org.uk>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "Dong
- A.S." <Aisheng.Dong@freescale.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "galak@codeaurora.org" <galak@codeaurora.org>, "johan.derycke@barco.com" <johan.derycke@barco.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1438401484-22101-3-git-send-email-mranostay-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Matt Ranostay <mranostay-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, marex-ynQEQJNshbs@public.gmane.org, matt-agtwNxEcTQJWk0Htik3J/w@public.gmane.org, pantelis.antoniou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Cc: linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+On 08/01/2015 05:58 AM, Matt Ranostay wrote:
+[...]
+> +
+> +struct lidar_data {
+> +	struct mutex lock;
+> +	struct iio_dev *indio_dev;
+> +	struct i2c_client *client;
+> +
+> +	/* config */
+> +	int calib_bias;
+> +
+> +	u16 buffer[5]; /* 2 byte distance + 8 byte timestamp */
 
+Needs to be in its own cacheline to avoid issues if the I2C controller is
+using DMA.
 
-> -----Original Message-----
-> From: Dong Aisheng [mailto:aisheng.dong@freescale.com]
-> Sent: Friday, July 31, 2015 10:44 PM
-> To: Chen Haibo-B51421
-> Cc: robh+dt@kernel.org; pawel.moll@arm.com; mark.rutland@arm.com;
-> ijc+devicetree@hellion.org.uk; galak@codeaurora.org; shawnguo@kernel.org;
-> kernel@pengutronix.de; linux@arm.linux.org.uk; ulf.hansson@linaro.org;
-> johan.derycke@barco.com; Estevam Fabio-R49496; Dong Aisheng-B29396;
-> devicetree@vger.kernel.org; linux-kernel@vger.kernel.org; linux-arm-
-> kernel@lists.infradead.org; linux-mmc@vger.kernel.org
-> Subject: Re: [PATCH v3 4/6] mmc: sdhci-esdhc-imx: add compatible string
-> in bingding doc
-> 
-> On Wed, Jul 29, 2015 at 05:03:55PM +0800, Haibo Chen wrote:
-> > Add a required property "fsl,imx7d-usdhc" in binding doc.
-> > Add an optional property "fsl,tuning-step" in binding doc.
-> >
-> 
-> Better change to:
-> mmc: sdhci-esdhc-imx: add imx7d support in bingding doc
-> 
-> > Signed-off-by: Haibo Chen <haibo.chen@freescale.com>
-> > ---
-> >  Documentation/devicetree/bindings/mmc/fsl-imx-esdhc.txt | 2 ++
-> >  1 file changed, 2 insertions(+)
-> >
-> > diff --git a/Documentation/devicetree/bindings/mmc/fsl-imx-esdhc.txt
-> > b/Documentation/devicetree/bindings/mmc/fsl-imx-esdhc.txt
-> > index 211e778..c6624bc 100644
-> > --- a/Documentation/devicetree/bindings/mmc/fsl-imx-esdhc.txt
-> > +++ b/Documentation/devicetree/bindings/mmc/fsl-imx-esdhc.txt
-> > @@ -15,6 +15,7 @@ Required properties:
-> >  	       "fsl,imx6q-usdhc"
-> >  	       "fsl,imx6sl-usdhc"
-> >  	       "fsl,imx6sx-usdhc"
-> > +	       "fsl,imx7d-usdhc"
-> >
-> >  Optional properties:
-> >  - fsl,wp-controller : Indicate to use controller internal write
-> > protection @@ -27,6 +28,7 @@ Optional properties:
-> >    transparent level shifters on the outputs of the controller. Two
-> cells are
-> >    required, first cell specifies minimum slot voltage (mV), second
-> cell
-> >    specifies maximum slot voltage (mV). Several ranges could be
-> specified.
-> > +- fsl,tuning-step: Specify the increasing delay cell steps in tuning
-> procedure.
-> 
-> we could add more explain about this property for better understanding:
-> e.g. The uSDHC is using one delay cell as default increasing step to do
-> tuning process. This property allows user to change the tuning step to
-> more than one delay cells which is useful for some special boards or
-> cards when the default tuning step can't find the proper delay window
-> within limited tuning reties.
+	u16 buffer[5] ____cacheline_aligned;
 
-[haibo] for imx7d, seems this is soc related. But here, yes, I should do more explain.
- 
-> 
-> >
-> >  Examples:
-> >
-> > --
-> > 1.9.1
-> >
-> 
-> Regards
-> Dong Aisheng
+> +};
+[...]
+> +static inline int lidar_read_byte(struct lidar_data *data, int reg)
+
+I'd drop the inline. The compiler is smart enough to figure out whether it
+makes sense to inline it or not.
+
+> +{
+> +	struct i2c_client *client = data->client;
+> +	int ret;
+> +
+> +	ret = i2c_smbus_write_byte(client, reg);
+> +	if (ret < 0) {
+> +		dev_err(&client->dev, "cannot write addr value");
+> +		return ret;
+> +	}
+> +
+> +	ret = i2c_smbus_read_byte(client);
+> +	if (ret < 0) {
+> +		dev_err(&client->dev, "cannot read data value");
+> +		return ret;
+> +	}
+
+Instead of using a write_byte/read_byte combination rather use
+i2c_smbus_read_byte_data(). I think that will do the same, but in one atomic
+operation.
+
+> +
+> +	return ret;
+> +}
+[...]
+> +static int lidar_read_measurement(struct lidar_data *data, u16 *reg)
+> +{
+> +	int ret;
+> +	int val;
+> +
+> +	ret = lidar_read_byte(data, LIDAR_REG_DATA_HBYTE);
+> +	if (ret < 0)
+> +		return ret;
+> +	val = ret << 8;
+> +
+> +	ret = lidar_read_byte(data, LIDAR_REG_DATA_LBYTE);
+> +	if (ret < 0)
+> +		return ret;
+> +	val |= ret;
+> +
+> +	/* correct any possible overflow or underflow */
+> +	val += data->calib_bias / 10000;
+
+Typically calib bias is only meant for a offset correction that is done in
+hardware rather than in software. What's the usecase for doing it in
+kernelspace rather than in userspace?
+
+> +	if (val < 0)
+> +		val = 0;
+> +
+> +	if (val > LIDAR_REG_DATA_MAX)
+> +		val = LIDAR_REG_DATA_MAX;
+> +
+> +	*reg = val;
+> +
+> +	return 0;
+> +}
+[...]
+> +static int lidar_read_raw(struct iio_dev *indio_dev,
+> +			  struct iio_chan_spec const *chan,
+> +			  int *val, int *val2, long mask)
+> +{
+> +	struct lidar_data *data = iio_priv(indio_dev);
+> +	int ret = -EINVAL;
+> +
+> +	if (iio_buffer_enabled(indio_dev) && mask == IIO_CHAN_INFO_RAW)
+> +		return -EBUSY;
+> +
+> +	mutex_lock(&data->lock);
+> +
+> +	switch (mask) {
+> +	case IIO_CHAN_INFO_RAW: {
+> +		u16 reg;
+> +
+> +		ret = lidar_get_measurement(data, &reg);
+> +		if (!ret) {
+> +			*val = reg / 100;
+> +			*val2 = (reg % 100) * 10000;
+> +			ret = IIO_VAL_INT_PLUS_MICRO;
+
+The raw attribute is supposed to return the raw value as a IIO_VAL_INT. A
+scale attribute should be used to indicate the conversion factor to get the
+proper unit.
+
+> +		}
+> +		break;
+> +	}
+> +	case IIO_CHAN_INFO_CALIBBIAS:
+> +		*val = 0;
+> +		*val2 = data->calib_bias;
+> +		ret = IIO_VAL_INT_PLUS_MICRO;
+> +		break;
+> +	}
+> +
+> +	mutex_unlock(&data->lock);
+> +
+> +	return ret;
+> +}
+[...]
+> +static struct iio_info lidar_info = {
+
+const
+
+> +	.driver_module = THIS_MODULE,
+> +	.read_raw = lidar_read_raw,
+> +	.write_raw = lidar_write_raw,
+> +};
+[...]
+> +static struct i2c_driver lidar_driver = {
+> +	.driver = {
+> +		.name	= LIDAR_DRV_NAME,
+> +		.owner	= THIS_MODULE,
+
+You added a DT vendor prefix, but there is no of match table for the driver.
+
+> +	},
+> +	.probe		= lidar_probe,
+> +	.remove		= lidar_remove,
+> +	.id_table	= lidar_id,
+> +};
+> +module_i2c_driver(lidar_driver);
