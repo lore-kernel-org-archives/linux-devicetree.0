@@ -1,47 +1,38 @@
-From: "Timo Sigurdsson" <public_timo.s-fWgRPtSzPNU3WX+qO2AYSQ@public.gmane.org>
-Subject: Re: [RFC] ARM: dts: sunxi: Add regulators and
- board-specific operating points for LeMaker BananaPi
-Date: Mon,  3 Aug 2015 00:00:06 +0200 (CEST)
-Message-ID: <20150802220006.E5BE06C810BC@dd34104.kasserver.com>
-References: <1437960486-2809-1-git-send-email-public_timo.s@silentcreek.de> <55B5E6DB.8020009@redhat.com> <20150727120918.191F76C82FB4@dd34104.kasserver.com> <55B62768.6040403@redhat.com> <20150728124911.GA2564@lukather><55B790BA.5000509@redhat.com> <20150728150929.233B56C80391@dd34104.kasserver.com><55B79FCA.7070907@redhat.com>
-Reply-To: public_timo.s-fWgRPtSzPNU3WX+qO2AYSQ@public.gmane.org
+From: <artyomvpd-HPQIj1OAFZMvJsYlp49lxw@public.gmane.org>
+Subject: yru
+Date: Sun, 02 Aug 2015 03:26:40 +0300
+Message-ID: <OOaOSCAgXSQCxOqkec@zIWePCUxwIgjRGtonVQa>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBCSJLSE35MGBB2FF7KWQKGQE4ESWQGI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <55B79FCA.7070907-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <http://groups.google.com/group/linux-sunxi/subscribe>
-To: monnier-CRDzTM1onBSWkKpYnGOUKg@public.gmane.org
-Cc: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org
+Content-Type: TEXT/PLAIN; charset=ISO-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Stefan,
 
-you didn't include me in your answer, hence the late reply...
+=E4=EE=E1=F0=FB=E9 =E4=E5=ED=FC!
 
-Stefan Monnier schrieb am 29.07.2015 02:02:
->> IMHO for a common maximum opp that's a good approach. But for the lowest
->> frequency setting, it would seem more logical to me, to raise the voltage
->> to a point where all boards will run fine with them, unless those boards
->> cannot handle the frequency regardless of the higher voltage.
+B=E0=EC =EF=F0=E8=F8=EB=EE =EF=F0=E8=E3=EB=E0=F8=E5=ED=E8=E5 =ED=E0 =E1=
+=E5=F1=EF=EB=E0=F2=ED=FB=E9 =E2=E5=E1=E8=ED=E0=F0 =EF=EE =EF=F0=EE=E4=E0=
+=E6=E0=EC =F2=EE=E2=E0=F0=EE=E2 =E8=E7 =CA=E8=F2=E0=FF.
 
-> I generally agre, tho IIRC some measurements seem to indicate that the
-> lowest frequency settings did not bring much (if any) reduction in power
-> consumption, making them rather useless.
+M=FB =E2=FB=E1=F0=E0=EB=E8 =E2=E0=F1 =F1=F0=E5=E4=E8 =F2=FB=F1=FF=F7=E8=
+ =EF=EE=F2=E5=ED=F6=E8=E0=EB=FC=ED=FB=F5 =E1=E8=E7=ED=E5=F1=EC=E5=ED=EE=
+=E2, =F2=E0=EA =EA=E0=EA =F0=E0=E1=EE=F2=E0 =E2 =E4=E0=ED=ED=EE=E9 =E8=ED=
+=E4=F3=F1=F2=F0=E8=E8 =F2=F0=E5=E1=F3=E5=F2 =F6=E5=EB=E5=F3=F1=F2=F0=E5=
+=EC=EB=E5=ED=ED=EE=F1=F2=E8 =E8 =E6=E5=EB=E0=ED=E8=FF =E4=EE=E1=E8=E2=E0=
+=F2=FC=F1=FF =F1=E2=EE=E5=E3=EE.   http://vicasol.ru
 
-That's an interesting point. However, that would be a different discussion. I
-wouldn't mind if the 144MHz would be removed - my point was just that if it's 
-supposed to be a common setting, it should work on all boards. I posted a patch
-today to fix this. [1] That might be a good place to discuss whether this
-setting should be removed entirely.
+H=E0=E1=EE=F0 =ED=E0 =ED=E0=F8=E8 =EA=F3=F0=F1=FB =E2=F1=E5 =E5=F9=E5 =E1=
+=E5=F1=EF=EB=E0=F2=ED=FB=E9, =ED=E5=F2 =F1=EC=FB=F1=EB=E0 =EE=F2=EA=EB=E0=
+=E4=FB=E2=E0=F2=FC =ED=E0 =EF=EE=F2=EE=EC.
 
-Regards,
 
-Timo
 
-[1] https://groups.google.com/forum/#!topic/linux-sunxi/fIfbdn7mrQA
+X=EE=F0=EE=F8=E5=E9 =C2=E0=EC =ED=E5=E4=E5=EB=E8!
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
