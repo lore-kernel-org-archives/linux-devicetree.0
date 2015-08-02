@@ -1,38 +1,45 @@
-From: <artyomvpd-HPQIj1OAFZMvJsYlp49lxw@public.gmane.org>
-Subject: yru
-Date: Sun, 02 Aug 2015 03:26:40 +0300
-Message-ID: <OOaOSCAgXSQCxOqkec@zIWePCUxwIgjRGtonVQa>
+From: Julian Calaby <julian.calaby-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [linux-sunxi] [PATCH] ARM: dts: sunxi: Raise minimum CPU voltage
+ for sun7i-a20 to a level all boards can supply
+Date: Mon, 3 Aug 2015 09:35:51 +1000
+Message-ID: <CAGRGNgV6b9yt2HnB2x2Wyc05KEahoX-Y+mVhxsryztcfA36H1g@mail.gmail.com>
+References: <1438543386-7253-1-git-send-email-public_timo.s@silentcreek.de>
 Mime-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=ISO-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1438543386-7253-1-git-send-email-public_timo.s-fWgRPtSzPNU3WX+qO2AYSQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: public_timo.s-fWgRPtSzPNU3WX+qO2AYSQ@public.gmane.org
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "Mailing List, Arm" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+Hi Timo,
 
-=E4=EE=E1=F0=FB=E9 =E4=E5=ED=FC!
+On Mon, Aug 3, 2015 at 5:23 AM, Timo Sigurdsson
+<public_timo.s-fWgRPtSzPNU3WX+qO2AYSQ@public.gmane.org> wrote:
+> sun7i-a20.dtsi contains an cpufreq operating point at 0.9 volts. Most A20 boards
+> (or all?), however, do not allow the voltage to go below 1.0V. Thus, raise the
+> voltage for the lowest operating point to 1.0V so all boards can actually use
+> it.
 
-B=E0=EC =EF=F0=E8=F8=EB=EE =EF=F0=E8=E3=EB=E0=F8=E5=ED=E8=E5 =ED=E0 =E1=
-=E5=F1=EF=EB=E0=F2=ED=FB=E9 =E2=E5=E1=E8=ED=E0=F0 =EF=EE =EF=F0=EE=E4=E0=
-=E6=E0=EC =F2=EE=E2=E0=F0=EE=E2 =E8=E7 =CA=E8=F2=E0=FF.
+Surely it wouldn't be added here if some could supply 0.9v.
 
-M=FB =E2=FB=E1=F0=E0=EB=E8 =E2=E0=F1 =F1=F0=E5=E4=E8 =F2=FB=F1=FF=F7=E8=
- =EF=EE=F2=E5=ED=F6=E8=E0=EB=FC=ED=FB=F5 =E1=E8=E7=ED=E5=F1=EC=E5=ED=EE=
-=E2, =F2=E0=EA =EA=E0=EA =F0=E0=E1=EE=F2=E0 =E2 =E4=E0=ED=ED=EE=E9 =E8=ED=
-=E4=F3=F1=F2=F0=E8=E8 =F2=F0=E5=E1=F3=E5=F2 =F6=E5=EB=E5=F3=F1=F2=F0=E5=
-=EC=EB=E5=ED=ED=EE=F1=F2=E8 =E8 =E6=E5=EB=E0=ED=E8=FF =E4=EE=E1=E8=E2=E0=
-=F2=FC=F1=FF =F1=E2=EE=E5=E3=EE.   http://vicasol.ru
+Is the code that uses this smart enough to sensibly switch between two
+operating points with the same frequency and different voltages? If
+so, maybe just add a 144MHz @ 1.0v operating point?
 
-H=E0=E1=EE=F0 =ED=E0 =ED=E0=F8=E8 =EA=F3=F0=F1=FB =E2=F1=E5 =E5=F9=E5 =E1=
-=E5=F1=EF=EB=E0=F2=ED=FB=E9, =ED=E5=F2 =F1=EC=FB=F1=EB=E0 =EE=F2=EA=EB=E0=
-=E4=FB=E2=E0=F2=FC =ED=E0 =EF=EE=F2=EE=EC.
+(Alternatively, would it make sense to modify the code that uses this
+to use frequencies with voltages specified that are lower than can be
+supplied with the lowest voltage it can?)
 
+Thanks,
 
+-- 
+Julian Calaby
 
-X=EE=F0=EE=F8=E5=E9 =C2=E0=EC =ED=E5=E4=E5=EB=E8!
+Email: julian.calaby-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Profile: http://www.google.com/profiles/julian.calaby/
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
