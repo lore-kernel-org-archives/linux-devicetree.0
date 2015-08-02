@@ -1,42 +1,45 @@
-From: Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>
-Subject: Re: [PATCH 2/2] iio: proximity: add support for PulsedLight LIDAR
-Date: Sun, 02 Aug 2015 20:39:46 +0200
-Message-ID: <55BE63F2.5080204@metafoo.de>
-References: <1438401484-22101-1-git-send-email-mranostay@gmail.com> <1438401484-22101-3-git-send-email-mranostay@gmail.com> <55BDE5F8.9090201@metafoo.de> <55BE6025.5030001@kernel.org>
+From: Timo Sigurdsson <public_timo.s-fWgRPtSzPNU3WX+qO2AYSQ@public.gmane.org>
+Subject: [PATCH] ARM: dts: sunxi: Raise minimum CPU voltage for
+ sun7i-a20 to a level all boards can supply
+Date: Sun,  2 Aug 2015 21:23:06 +0200
+Message-ID: <1438543386-7253-1-git-send-email-public_timo.s@silentcreek.de>
+Reply-To: public_timo.s-fWgRPtSzPNU3WX+qO2AYSQ@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <55BE6025.5030001-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Matt Ranostay <mranostay-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, marex-ynQEQJNshbs@public.gmane.org, matt-agtwNxEcTQJWk0Htik3J/w@public.gmane.org, pantelis.antoniou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
-Cc: linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sunxi+bncBCSJLSE35MGBBJG47GWQKGQEGPMP2YI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <http://groups.google.com/group/linux-sunxi/subscribe>
+To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Cc: wens-jdAy2FN1RRM@public.gmane.org, Timo Sigurdsson <public_timo.s-fWgRPtSzPNU3WX+qO2AYSQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 08/02/2015 08:23 PM, Jonathan Cameron wrote:
-> On 02/08/15 10:42, Lars-Peter Clausen wrote:
->> On 08/01/2015 05:58 AM, Matt Ranostay wrote:
->> [...]
->>> +
->>> +struct lidar_data {
->>> +	struct mutex lock;
->>> +	struct iio_dev *indio_dev;
->>> +	struct i2c_client *client;
->>> +
->>> +	/* config */
->>> +	int calib_bias;
->>> +
->>> +	u16 buffer[5]; /* 2 byte distance + 8 byte timestamp */
->>
->> Needs to be in its own cacheline to avoid issues if the I2C controller is
->> using DMA.
-> Would do if spi, but in the case of i2c I thought all bus drivers were
-> obliged to deal with this rather than leaving it to the client drivers?
+sun7i-a20.dtsi contains an cpufreq operating point at 0.9 volts. Most A20 boards
+(or all?), however, do not allow the voltage to go below 1.0V. Thus, raise the
+voltage for the lowest operating point to 1.0V so all boards can actually use
+it.
 
-Where did you find this? There definitely seem to be I2C drivers which
-directly map the i2c_msg buffers.
+Signed-off-by: Timo Sigurdsson <public_timo.s-fWgRPtSzPNU3WX+qO2AYSQ@public.gmane.org>
+---
+ arch/arm/boot/dts/sun7i-a20.dtsi | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-But I just realized that in this case the buffer is not passed to the i2c
-driver anyway so we should be fine.
-
-- Lars
+diff --git a/arch/arm/boot/dts/sun7i-a20.dtsi b/arch/arm/boot/dts/sun7i-a20.dtsi
+index 6a63f30..f5f384c 100644
+--- a/arch/arm/boot/dts/sun7i-a20.dtsi
++++ b/arch/arm/boot/dts/sun7i-a20.dtsi
+@@ -107,7 +107,7 @@
+ 				720000	1200000
+ 				528000	1100000
+ 				312000	1000000
+-				144000	900000
++				144000	1000000
+ 				>;
+ 			#cooling-cells = <2>;
+ 			cooling-min-level = <0>;
+-- 
+2.1.4
