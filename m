@@ -1,30 +1,33 @@
-From: Constantine Shulyupin <const@MakeLinux.com>
-Subject: [PATCH v1] of: Add vendor prefix for Nuvoton
-Date: Sun,  2 Aug 2015 01:21:19 +0300
-Message-ID: <1438467682-14399-1-git-send-email-const@MakeLinux.com>
+From: Viresh Kumar <viresh.kumar@linaro.org>
+Subject: Re: [PATCH v6 0/4] Add Mediatek MT8173 cpufreq driver
+Date: Sun, 2 Aug 2015 12:57:08 +0530
+Message-ID: <CAKohpo=jnXkcbE-2N7BVPnuNBQz=zX97Eydc0NwFXSaCcZZJLg@mail.gmail.com>
+References: <1436437661-17606-1-git-send-email-pi-cheng.chen@linaro.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1436437661-17606-1-git-send-email-pi-cheng.chen@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Thierry Reding <treding@nvidia.com>, Arnd Bergmann <arnd@arndb.de>, Philipp Zabel <p.zabel@pengutronix.de>, Lee Jones <lee.jones@linaro.org>, Arnaud Ebalard <arno@natisbad.org>, Hayato Suzuki <hytszk@gmail.com>, Antony Pavlov <antonynpavlov@gmail.com>, Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>, "open list:OPEN FIRMWARE AND FLATTENED
-	DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
-Cc: Guenter Roeck <linux@roeck-us.net>, Constantine Shulyupin <const@MakeLinux.com>
+To: Pi-Cheng Chen <pi-cheng.chen@linaro.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Cc: Michael Turquette <mturquette@baylibre.com>, Matthias Brugger <matthias.bgg@gmail.com>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, Linaro Kernel Mailman List <linaro-kernel@lists.linaro.org>, linux-mediatek@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Constantine Shulyupin <const@MakeLinux.com>
----
- Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
- 1 file changed, 1 insertion(+)
+On 9 July 2015 at 15:57, Pi-Cheng Chen <pi-cheng.chen@linaro.org> wrote:
+> MT8173 is a ARMv8 based SoC with 2 clusters. All CPUs in a single cluster
+> share the same power and clock domain. This series tries to add cpufreq support
+> for MT8173 SoC.
+>
+> changes in v6:
+> - Move clock and regulator consumer properties document to the device tree
+>   bindings documents of MT8173 CPU DVFS clock driver
+> - Add change log to describe what is implemented in the MT8173 cpufreq driver
+> - Add missed rcu_read_unlock() in the error path
+> - Move of_init_opp_table() call to make sure all required hardware resources
+>   are already there before it is called
+> - Add comments to describe why both platform driver and deivce registration
+>   codes are put in the initcall function
+> - Use the term "voltage tracking" instead of "voltage trace" according to an
+>   internal SoC document
+>
 
-diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
-index 181b53e..449805a 100644
---- a/Documentation/devicetree/bindings/vendor-prefixes.txt
-+++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
-@@ -149,6 +149,7 @@ netxeon		Shenzhen Netxeon Technology CO., LTD
- newhaven	Newhaven Display International
- nintendo	Nintendo
- nokia	Nokia
-+nuvoton	Nuvoton Technology Corporation
- nvidia	NVIDIA
- nxp	NXP Semiconductors
- onnn	ON Semiconductor Corp.
--- 
-1.9.1
+@Rafael: Can you please apply these patches [1,3,4] for 4.3?
