@@ -1,189 +1,47 @@
-From: Matt Ranostay <mranostay-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 2/2] iio: proximity: add support for PulsedLight LIDAR
-Date: Sun, 2 Aug 2015 14:28:02 -0700
-Message-ID: <CAKzfze_ZNeSBo_hKn4ju1uNM4iyaFrvGo89Dv_80DK3Tfb24yg@mail.gmail.com>
-References: <1438401484-22101-1-git-send-email-mranostay@gmail.com>
-	<1438401484-22101-3-git-send-email-mranostay@gmail.com>
-	<55BDE5F8.9090201@metafoo.de>
+From: "Timo Sigurdsson" <public_timo.s-fWgRPtSzPNU3WX+qO2AYSQ@public.gmane.org>
+Subject: Re: [RFC] ARM: dts: sunxi: Add regulators and
+ board-specific operating points for LeMaker BananaPi
+Date: Mon,  3 Aug 2015 00:00:06 +0200 (CEST)
+Message-ID: <20150802220006.E5BE06C810BC@dd34104.kasserver.com>
+References: <1437960486-2809-1-git-send-email-public_timo.s@silentcreek.de> <55B5E6DB.8020009@redhat.com> <20150727120918.191F76C82FB4@dd34104.kasserver.com> <55B62768.6040403@redhat.com> <20150728124911.GA2564@lukather><55B790BA.5000509@redhat.com> <20150728150929.233B56C80391@dd34104.kasserver.com><55B79FCA.7070907@redhat.com>
+Reply-To: public_timo.s-fWgRPtSzPNU3WX+qO2AYSQ@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <55BDE5F8.9090201-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>
-Cc: =?UTF-8?B?TWFyZWsgVmHFoXV0?= <marex-ynQEQJNshbs@public.gmane.org>, Matt Porter <matt-agtwNxEcTQJWk0Htik3J/w@public.gmane.org>, Pantelis Antoniou <pantelis.antoniou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-sunxi+bncBCSJLSE35MGBB2FF7KWQKGQE4ESWQGI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <55B79FCA.7070907-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <http://groups.google.com/group/linux-sunxi/subscribe>
+To: monnier-CRDzTM1onBSWkKpYnGOUKg@public.gmane.org
+Cc: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Aug 2, 2015 at 2:42 AM, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org> wrote:
-> On 08/01/2015 05:58 AM, Matt Ranostay wrote:
-> [...]
->> +
->> +struct lidar_data {
->> +     struct mutex lock;
->> +     struct iio_dev *indio_dev;
->> +     struct i2c_client *client;
->> +
->> +     /* config */
->> +     int calib_bias;
->> +
->> +     u16 buffer[5]; /* 2 byte distance + 8 byte timestamp */
->
-> Needs to be in its own cacheline to avoid issues if the I2C controller is
-> using DMA.
+Hi Stefan,
 
-Ah though this was only needed for SPI.
+you didn't include me in your answer, hence the late reply...
 
->
->         u16 buffer[5] ____cacheline_aligned;
->
->> +};
-> [...]
->> +static inline int lidar_read_byte(struct lidar_data *data, int reg)
->
-> I'd drop the inline. The compiler is smart enough to figure out whether it
-> makes sense to inline it or not.
->
-Got it.
+Stefan Monnier schrieb am 29.07.2015 02:02:
+>> IMHO for a common maximum opp that's a good approach. But for the lowest
+>> frequency setting, it would seem more logical to me, to raise the voltage
+>> to a point where all boards will run fine with them, unless those boards
+>> cannot handle the frequency regardless of the higher voltage.
 
->> +{
->> +     struct i2c_client *client = data->client;
->> +     int ret;
->> +
->> +     ret = i2c_smbus_write_byte(client, reg);
->> +     if (ret < 0) {
->> +             dev_err(&client->dev, "cannot write addr value");
->> +             return ret;
->> +     }
->> +
->> +     ret = i2c_smbus_read_byte(client);
->> +     if (ret < 0) {
->> +             dev_err(&client->dev, "cannot read data value");
->> +             return ret;
->> +     }
->
-> Instead of using a write_byte/read_byte combination rather use
-> i2c_smbus_read_byte_data(). I think that will do the same, but in one atomic
-> operation.
-Yes I would normally do that but this device doesn't seem to support
-that functionally, always returns zeros.
+> I generally agre, tho IIRC some measurements seem to indicate that the
+> lowest frequency settings did not bring much (if any) reduction in power
+> consumption, making them rather useless.
 
->
->> +
->> +     return ret;
->> +}
-> [...]
->> +static int lidar_read_measurement(struct lidar_data *data, u16 *reg)
->> +{
->> +     int ret;
->> +     int val;
->> +
->> +     ret = lidar_read_byte(data, LIDAR_REG_DATA_HBYTE);
->> +     if (ret < 0)
->> +             return ret;
->> +     val = ret << 8;
->> +
->> +     ret = lidar_read_byte(data, LIDAR_REG_DATA_LBYTE);
->> +     if (ret < 0)
->> +             return ret;
->> +     val |= ret;
->> +
->> +     /* correct any possible overflow or underflow */
->> +     val += data->calib_bias / 10000;
->
-> Typically calib bias is only meant for a offset correction that is done in
-> hardware rather than in software. What's the usecase for doing it in
-> kernelspace rather than in userspace?
+That's an interesting point. However, that would be a different discussion. I
+wouldn't mind if the 144MHz would be removed - my point was just that if it's 
+supposed to be a common setting, it should work on all boards. I posted a patch
+today to fix this. [1] That might be a good place to discuss whether this
+setting should be removed entirely.
 
-There is hardware functionality for this but do does nothing more than
-add/subtraction to the final result.
-Could just drop it completely.
+Regards,
 
->
->> +     if (val < 0)
->> +             val = 0;
->> +
->> +     if (val > LIDAR_REG_DATA_MAX)
->> +             val = LIDAR_REG_DATA_MAX;
->> +
->> +     *reg = val;
->> +
->> +     return 0;
->> +}
-> [...]
->> +static int lidar_read_raw(struct iio_dev *indio_dev,
->> +                       struct iio_chan_spec const *chan,
->> +                       int *val, int *val2, long mask)
->> +{
->> +     struct lidar_data *data = iio_priv(indio_dev);
->> +     int ret = -EINVAL;
->> +
->> +     if (iio_buffer_enabled(indio_dev) && mask == IIO_CHAN_INFO_RAW)
->> +             return -EBUSY;
->> +
->> +     mutex_lock(&data->lock);
->> +
->> +     switch (mask) {
->> +     case IIO_CHAN_INFO_RAW: {
->> +             u16 reg;
->> +
->> +             ret = lidar_get_measurement(data, &reg);
->> +             if (!ret) {
->> +                     *val = reg / 100;
->> +                     *val2 = (reg % 100) * 10000;
->> +                     ret = IIO_VAL_INT_PLUS_MICRO;
->
-> The raw attribute is supposed to return the raw value as a IIO_VAL_INT. A
-> scale attribute should be used to indicate the conversion factor to get the
-> proper unit.
-Ok makes sense.
+Timo
 
->
->> +             }
->> +             break;
->> +     }
->> +     case IIO_CHAN_INFO_CALIBBIAS:
->> +             *val = 0;
->> +             *val2 = data->calib_bias;
->> +             ret = IIO_VAL_INT_PLUS_MICRO;
->> +             break;
->> +     }
->> +
->> +     mutex_unlock(&data->lock);
->> +
->> +     return ret;
->> +}
-> [...]
->> +static struct iio_info lidar_info = {
->
-> const
->
->> +     .driver_module = THIS_MODULE,
->> +     .read_raw = lidar_read_raw,
->> +     .write_raw = lidar_write_raw,
->> +};
-> [...]
->> +static struct i2c_driver lidar_driver = {
->> +     .driver = {
->> +             .name   = LIDAR_DRV_NAME,
->> +             .owner  = THIS_MODULE,
->
-> You added a DT vendor prefix, but there is no of match table for the driver.
-
-So without of_match_table it isn't needed to have a vendor id?
-"pulsedlight,lidar" maps to the i2c_device_id
-
->
->> +     },
->> +     .probe          = lidar_probe,
->> +     .remove         = lidar_remove,
->> +     .id_table       = lidar_id,
->> +};
->> +module_i2c_driver(lidar_driver);
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-iio" in
-> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+[1] https://groups.google.com/forum/#!topic/linux-sunxi/fIfbdn7mrQA
