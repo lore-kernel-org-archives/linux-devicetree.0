@@ -1,33 +1,53 @@
-From: Viresh Kumar <viresh.kumar@linaro.org>
-Subject: Re: [PATCH v6 0/4] Add Mediatek MT8173 cpufreq driver
-Date: Sun, 2 Aug 2015 12:57:08 +0530
-Message-ID: <CAKohpo=jnXkcbE-2N7BVPnuNBQz=zX97Eydc0NwFXSaCcZZJLg@mail.gmail.com>
-References: <1436437661-17606-1-git-send-email-pi-cheng.chen@linaro.org>
+From: Vladimir Barinov <vladimir.barinov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH 2/2] iio: proximity: add support for PulsedLight LIDAR
+Date: Sun, 02 Aug 2015 10:36:15 +0300
+Message-ID: <55BDC86F.8050609@cogentembedded.com>
+References: <1438401484-22101-1-git-send-email-mranostay@gmail.com>	<1438401484-22101-3-git-send-email-mranostay@gmail.com>	<55BC85AF.1030608@cogentembedded.com>	<791628AC-C26A-4D88-8A5B-54B2E4EED75B@jic23.retrosnub.co.uk> <CAKzfze9D6NYgJoT-271GUj1ei-PwUfHwJ38w8uMcgPoQz6yyUQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1436437661-17606-1-git-send-email-pi-cheng.chen@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Pi-Cheng Chen <pi-cheng.chen@linaro.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Cc: Michael Turquette <mturquette@baylibre.com>, Matthias Brugger <matthias.bgg@gmail.com>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, Linaro Kernel Mailman List <linaro-kernel@lists.linaro.org>, linux-mediatek@lists.infradead.org
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAKzfze9D6NYgJoT-271GUj1ei-PwUfHwJ38w8uMcgPoQz6yyUQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Matt Ranostay <mranostay-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jonathan Cameron <jic23-tko9wxEg+fIOOJlXag/Snyp2UmYkHbXO@public.gmane.org>
+Cc: =?UTF-8?B?TWFyZWsgVmHFoXV0?= <marex-ynQEQJNshbs@public.gmane.org>, Matt Porter <matt-agtwNxEcTQJWk0Htik3J/w@public.gmane.org>, Pantelis Antoniou <pantelis.antoniou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 9 July 2015 at 15:57, Pi-Cheng Chen <pi-cheng.chen@linaro.org> wrote:
-> MT8173 is a ARMv8 based SoC with 2 clusters. All CPUs in a single cluster
-> share the same power and clock domain. This series tries to add cpufreq support
-> for MT8173 SoC.
->
-> changes in v6:
-> - Move clock and regulator consumer properties document to the device tree
->   bindings documents of MT8173 CPU DVFS clock driver
-> - Add change log to describe what is implemented in the MT8173 cpufreq driver
-> - Add missed rcu_read_unlock() in the error path
-> - Move of_init_opp_table() call to make sure all required hardware resources
->   are already there before it is called
-> - Add comments to describe why both platform driver and deivce registration
->   codes are put in the initcall function
-> - Use the term "voltage tracking" instead of "voltage trace" according to an
->   internal SoC document
->
+On 02.08.2015 01:22, Matt Ranostay wrote:
+> On Sat, Aug 1, 2015 at 2:17 PM, Jonathan Cameron
+> <jic23-tko9wxEg+fIOOJlXag/Snyp2UmYkHbXO@public.gmane.org> wrote:
+>>
+>>
+>> On 1 August 2015 09:39:11 BST, Vladimir Barinov <vladimir.barinov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org> wrote:
+>>> Hi Matt,
+>>>
+>>> Find minor comments.
+>>>
+>>> On 01.08.2015 06:58, Matt Ranostay wrote:
+>>>> Add support for the PulsedLight LIDAR rangefinder sensor which allows
+>>>> high speed (over 300Hz) distance measurements using Barker Coding
+>>> within
+>>>> 40 meter range.
+>>>>
+>>>> Support only tested on the "blue label" rev 2, but may work using
+>>> polling
+>>>> at low sample frequencies on the original version.
+>>>>
+>>>> Signed-off-by: Matt Ranostay <mranostay-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+>>>> ---
+>>>>    drivers/iio/proximity/Kconfig  |  13 ++
+>>>>    drivers/iio/proximity/Makefile |   1 +
+>>>>    drivers/iio/proximity/lidar.c  | 309
+>>> +++++++++++++++++++++++++++++++++++++++++
+>>> Add ABI documentation
+>>> Documentation/ABI/testing/sysfs-bus-iio-proximity-lidar
+>> Why?  Reading on phone so may have missed something but all ABI is standard.
+>> Covered by top level docs.
+> Only thing that would be documented that IIO_DISTANCE is in meters.
+> But seems standard.
+I understand.
+I was thinking that reading in_distance_raw units needs to be docimented 
+(looking on the sample sysfs-bus-iio-proximity-as3935)
 
-@Rafael: Can you please apply these patches [1,3,4] for 4.3?
+Regards,
+Vladimir
