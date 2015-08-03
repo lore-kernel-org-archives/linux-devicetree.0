@@ -1,46 +1,113 @@
-From: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
-Subject: Re: [PATCH v2] usb: phy: msm: Add D+/D- lines route control
-Date: Mon, 3 Aug 2015 11:46:57 +0200
-Message-ID: <CAMuHMdXEO8SeMwpQYvh4XQ=bAXW2HcpaBewWrFKuhM1PQ_gM9Q@mail.gmail.com>
-References: <1438071022-17580-1-git-send-email-ivan.ivanov@linaro.org>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v2] ARM: dts: sunxi: Add regulators for
+ LeMaker BananaPi
+Date: Mon, 3 Aug 2015 11:47:23 +0200
+Message-ID: <20150803094723.GD2564@lukather>
+References: <1438532305-5884-1-git-send-email-public_timo.s@silentcreek.de>
+Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1438071022-17580-1-git-send-email-ivan.ivanov-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: "Ivan T. Ivanov" <ivan.ivanov-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, ": Rob Herring" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, USB list <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="zxqg9xXBu59m0EHX"
+Return-path: <linux-sunxi+bncBD2ZNBF5VYJRBLPR7SWQKGQEKNBHXLQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1438532305-5884-1-git-send-email-public_timo.s-fWgRPtSzPNU3WX+qO2AYSQ@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <http://groups.google.com/group/linux-sunxi/subscribe>
+To: Timo Sigurdsson <public_timo.s-fWgRPtSzPNU3WX+qO2AYSQ@public.gmane.org>
+Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jul 28, 2015 at 10:10 AM, Ivan T. Ivanov <ivan.ivanov-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
-> --- a/Documentation/devicetree/bindings/usb/msm-hsusb.txt
-> +++ b/Documentation/devicetree/bindings/usb/msm-hsusb.txt
-> @@ -52,6 +52,10 @@ Required properties:
->  Optional properties:
->  - dr_mode:      One of "host", "peripheral" or "otg". Defaults to "otg"
->
-> +- switch-gpio:  A phandle + gpio-specifier pair. Some boards are using Dual
-> +                SPDT USB Switch, witch is cotrolled by GPIO to de/multiplex
+--zxqg9xXBu59m0EHX
+Content-Type: text/plain; charset=UTF-8
+Content-Disposition: inline
 
-which is controlled
-
-> +                D+/D- USB lines between connectors.
+On Sun, Aug 02, 2015 at 06:18:25PM +0200, Timo Sigurdsson wrote:
+> sun7i-a20-bananapi.dts doesn't contain regulator nodes for the AXP209 PMU
+> driver, so add them to allow for voltage-scaling with cpufreq-dt.
+> 
+> Signed-off-by: Timo Sigurdsson <public_timo.s-fWgRPtSzPNU3WX+qO2AYSQ@public.gmane.org>
+> ---
+> Changes since v1 (RFC):
+> 
+> - Dropped the changes to the cpufreq operating points and renamed the patch
+> accordingly
+> - Limited the CPU voltage range so it doesn't exceed the SOC specifications
+> ---
+>  arch/arm/boot/dts/sun7i-a20-bananapi.dts | 35 ++++++++++++++++++++++++++++----
+>  1 file changed, 31 insertions(+), 4 deletions(-)
+> 
+> diff --git a/arch/arm/boot/dts/sun7i-a20-bananapi.dts b/arch/arm/boot/dts/sun7i-a20-bananapi.dts
+> index 9f7b472..74382f3 100644
+> --- a/arch/arm/boot/dts/sun7i-a20-bananapi.dts
+> +++ b/arch/arm/boot/dts/sun7i-a20-bananapi.dts
+> @@ -92,6 +92,10 @@
+>  	status = "okay";
+>  };
+>  
+> +&cpu0 {
+> +	cpu-supply = <&reg_dcdc2>;
+> +};
 > +
->  - qcom,phy-init-sequence: PHY configuration sequence values. This is related to Device
->                  Mode Eye Diagram test. Start address at which these values will be
->                  written is ULPI_EXT_VENDOR_SPECIFIC. Value of -1 is reserved as
+>  &ehci0 {
+>  	status = "okay";
+>  };
+> @@ -119,13 +123,9 @@
+>  	status = "okay";
+>  
+>  	axp209: pmic@34 {
+> -		compatible = "x-powers,axp209";
+>  		reg = <0x34>;
+>  		interrupt-parent = <&nmi_intc>;
+>  		interrupts = <0 IRQ_TYPE_LEVEL_LOW>;
+> -
+> -		interrupt-controller;
+> -		#interrupt-cells = <1>;
+>  	};
+>  };
+>  
+> @@ -182,6 +182,33 @@
+>  	};
+>  };
+>  
+> +#include "axp209.dtsi"
+> +
+> +&reg_dcdc2 {
+> +	regulator-always-on;
+> +	regulator-min-microvolt = <1000000>;
+> +	regulator-max-microvolt = <1400000>;
+> +	regulator-name = "vdd-cpu";
+> +};
+> +
+> +&reg_dcdc3 {
+> +	regulator-always-on;
+> +	regulator-min-microvolt = <1000000>;
+> +	regulator-max-microvolt = <1400000>;
+> +	regulator-name = "vdd-int-dll";
+> +};
+> +
+> +&reg_ldo1 {
+> +	regulator-name = "vdd-rtc";
+> +};
+> +
+> +&reg_ldo2 {
+> +	regulator-always-on;
+> +	regulator-min-microvolt = <3000000>;
+> +	regulator-max-microvolt = <3000000>;
+> +	regulator-name = "avcc";
+> +};
 
-Gr{oetje,eeting}s,
+What regulator provides the 3.3V regulator used in the rest of this DT
+then (MMC, GMAC) ?
 
-                        Geert
+Maxime
 
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+Maxime Ripard, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
+--zxqg9xXBu59m0EHX--
