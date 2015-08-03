@@ -1,166 +1,143 @@
-From: Punit Agrawal <punit.agrawal@arm.com>
-Subject: [PATCH v2 03/10] cpufreq: arm_big_little: Add support
-	to register a cpufreq cooling device
-Date: Mon,  3 Aug 2015 16:22:51 +0100
-Message-ID: <1438615378-14241-4-git-send-email-punit.agrawal@arm.com>
-References: <1438615378-14241-1-git-send-email-punit.agrawal@arm.com>
+From: maitysanchayan@gmail.com
+Subject: Re: [PATCH v2 3/4] touchscreen: colibri-vf50-ts: Add touchscreen
+ support for Colibri VF50
+Date: Mon, 3 Aug 2015 20:55:44 +0530
+Message-ID: <20150803152544.GA9716@Sanchayan-Arch.toradex.int>
+References: <cover.1437058481.git.maitysanchayan@gmail.com>
+ <26748bd9a7bde7c2304b6b971f1150bb575e4938.1437058481.git.maitysanchayan@gmail.com>
+ <20150717234242.GJ39282@dtor-ws>
+ <40d7c372e64c7f25b7df3e48930386de@agner.ch>
+ <20150721172044.GC39076@dtor-ws>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <lm-sensors-bounces@lm-sensors.org>
-In-Reply-To: <1438615378-14241-1-git-send-email-punit.agrawal@arm.com>
-List-Unsubscribe: <http://lists.lm-sensors.org/mailman/options/lm-sensors>,
-	<mailto:lm-sensors-request@lm-sensors.org?subject=unsubscribe>
-List-Archive: <http://lists.lm-sensors.org/pipermail/lm-sensors/>
-List-Post: <mailto:lm-sensors@lm-sensors.org>
-List-Help: <mailto:lm-sensors-request@lm-sensors.org?subject=help>
-List-Subscribe: <http://lists.lm-sensors.org/mailman/listinfo/lm-sensors>,
-	<mailto:lm-sensors-request@lm-sensors.org?subject=subscribe>
-Sender: lm-sensors-bounces@lm-sensors.org
-Errors-To: lm-sensors-bounces@lm-sensors.org
-To: linux-pm@vger.kernel.org
-Cc: devicetree@vger.kernel.org, Punit Agrawal <punit.agrawal@arm.com>, liviu.dudau@arm.com, linux-kernel@vger.kernel.org, lm-sensors@lm-sensors.org, Eduardo Valentin <edubezval@gmail.com>, Sudeep Holla <sudeep.holla@arm.com>
+Content-Type: text/plain; charset=utf-8
+Return-path: <linux-input-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20150721172044.GC39076@dtor-ws>
+Sender: linux-input-owner@vger.kernel.org
+To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc: Stefan Agner <stefan@agner.ch>, linux-input@vger.kernel.org, devicetree@vger.kernel.org, mark.rutland@arm.com, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, linux-kernel@vger.kernel.org, robh+dt@kernel.org, kernel@pengutronix.de, galak@codeaurora.org, shawn.guo@linaro.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Register passive cooling devices when initialising cpufreq on
-big.LITTLE systems. If the device tree provides a dynamic power
-coefficient for the CPUs then the bound cooling device will support
-the extensions that allow it to be used with all the existing thermal
-governors including the power allocator governor.
+Hello Dmitry,
 
-A cooling device will be created per individual frequency domain and
-can be bound to thermal zones via the thermal DT bindings.
+On 15-07-21 10:20:44, Dmitry Torokhov wrote:
+> Hi Stefan,
+> 
+> On Tue, Jul 21, 2015 at 04:43:36PM +0200, Stefan Agner wrote:
+> > Hi Dmitry,
+> > 
+> > As the original author of the driver I have some remarks to your review
+> > 
+> > On 2015-07-18 01:42, Dmitry Torokhov wrote:
+> > >> +		/*
+> > >> +		 * If touch pressure is too low, stop measuring and reenable
+> > >> +		 * touch detection
+> > >> +		 */
+> > >> +		if (val_p < min_pressure || val_p > 2000)
+> > >> +			break;
+> > 
+> > This is where the modules touch pressure is used to stop the measurement
+> > process and switch back to interrupt mode. See my remarks at the end.
+> > 
+> > >> +
+> > >> +		/*
+> > >> +		 * The pressure may not be enough for the first x and the
+> > >> +		 * second y measurement, but, the pressure is ok when the
+> > >> +		 * driver is doing the third and fourth measurement. To
+> > >> +		 * take care of this, we drop the first measurement always.
+> > >> +		 */
+> > >> +		if (discard_val_on_start) {
+> > >> +			discard_val_on_start = false;
+> > >> +		} else {
+> > >> +			/*
+> > >> +			 * Report touch position and sleep for
+> > >> +			 * next measurement
+> > >> +			 */
+> > >> +			input_report_abs(vf50_ts->ts_input,
+> > >> +					ABS_X, VF_ADC_MAX - val_x);
+> > >> +			input_report_abs(vf50_ts->ts_input,
+> > >> +					ABS_Y, VF_ADC_MAX - val_y);
+> > >> +			input_report_abs(vf50_ts->ts_input,
+> > >> +					ABS_PRESSURE, val_p);
+> > >> +			input_report_key(vf50_ts->ts_input, BTN_TOUCH, 1);
+> > >> +			input_sync(vf50_ts->ts_input);
+> > >> +		}
+> > >> +
+> > >> +		msleep(10);
+> > >> +	}
+> > >> +
+> > >> +	/* Report no more touch, reenable touch detection */
+> > >> +	input_report_abs(vf50_ts->ts_input, ABS_PRESSURE, 0);
+> > >> +	input_report_key(vf50_ts->ts_input, BTN_TOUCH, 0);
+> > >> +	input_sync(vf50_ts->ts_input);
+> > >> +
+> > >> +	vf50_ts_enable_touch_detection(vf50_ts);
+> > >> +
+> > >> +	/* Wait for the pull-up to be stable on high */
+> > >> +	msleep(10);
+> > >> +
+> > >> +	/* Reenable IRQ to detect touch */
+> > >> +	enable_irq(vf50_ts->pen_irq);
+> > >> +
+> > >> +	dev_dbg(dev, "Reenabled touch detection interrupt\n");
+> > >> +}
+> > >> +
+> > >> +static irqreturn_t vf50_ts_touched(int irq, void *dev_id)
+> > >> +{
+> > >> +	struct vf50_touch_device *vf50_ts = (struct vf50_touch_device *)dev_id;
+> > >> +	struct device *dev = &vf50_ts->pdev->dev;
+> > >> +
+> > >> +	dev_dbg(dev, "Touch detected, start worker thread\n");
+> > >> +
+> > >> +	disable_irq_nosync(irq);
+> > >> +
+> > >> +	/* Disable the touch detection plates */
+> > >> +	gpiod_set_value(vf50_ts->gpio_ym, 0);
+> > >> +
+> > >> +	/* Let the platform mux to default state in order to mux as ADC */
+> > >> +	pinctrl_pm_select_default_state(dev);
+> > >> +
+> > >> +	queue_work(vf50_ts->ts_workqueue, &vf50_ts->ts_work);
+> > > 
+> > > If you convert this to a threaded interrupt you won't need to
+> > > disable/reenable interrupt or queue work. You should also be able to use
+> > > gpiod_set_value_cansleep() extending the range of ways the controller
+> > > could be connected to systems.
+> > > 
+> > 
+> > I'm not sure if a threaded interrupt is the right thing here. While the
+> > pen is on the touchscreen (which can be for several seconds)
+> > measurements have to be made in a continuous loop. Is it ok for a
+> > threaded interrupt to run that long?
+> 
+> Yes, why not? Threaded interrupt is simply a kernel thread that is woken
+> when hard interrupt handler tells it to wake up. Very similar to
+> interrupt + work queue, except that the kernel manages interactions
+> properly for you. There are several drivers in kernel that do that, for
+> example auo-pixcir-ts.c or tsc2007.c
+> 
+> > 
+> > I'm also not sure if it is really safe to _not_ disable the pen down
+> > GPIO interrupt. If we get a interrupt while measuring, we should ignore
+> > that interrupt.
+> 
+> The interrupt management core (you'll have to annotate it as
+> IRQF_ONESHOT) will make sure it stays masked properly until the threaded
+> handler completes so you do not need to disable it explicitly.
 
-Signed-off-by: Punit Agrawal <punit.agrawal@arm.com>
-Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
-Cc: Sudeep Holla <sudeep.holla@arm.com>
-Cc: Eduardo Valentin <edubezval@gmail.com>
----
- drivers/cpufreq/arm_big_little.c | 52 ++++++++++++++++++++++++++++++++++++++--
- 1 file changed, 50 insertions(+), 2 deletions(-)
+After working some more on threaded irq implementation, if IRQ_ONESHOT
+flag is used while requesting threaded irq, on entering the IRQ handler
+the vf610_gpio_irq_mask is not called and vf610_gpio_irq_unmask is not
+called on exiting the thread function, not something we expected.
 
-diff --git a/drivers/cpufreq/arm_big_little.c b/drivers/cpufreq/arm_big_little.c
-index f1e42f8..72a2777 100644
---- a/drivers/cpufreq/arm_big_little.c
-+++ b/drivers/cpufreq/arm_big_little.c
-@@ -23,6 +23,7 @@
- #include <linux/cpu.h>
- #include <linux/cpufreq.h>
- #include <linux/cpumask.h>
-+#include <linux/cpu_cooling.h>
- #include <linux/export.h>
- #include <linux/module.h>
- #include <linux/mutex.h>
-@@ -55,6 +56,10 @@ static bool bL_switching_enabled;
- #define ACTUAL_FREQ(cluster, freq)  ((cluster == A7_CLUSTER) ? freq << 1 : freq)
- #define VIRT_FREQ(cluster, freq)    ((cluster == A7_CLUSTER) ? freq >> 1 : freq)
- 
-+struct private_data {
-+	struct thermal_cooling_device *cdev;
-+};
-+
- static struct cpufreq_arm_bL_ops *arm_bL_ops;
- static struct clk *clk[MAX_CLUSTERS];
- static struct cpufreq_frequency_table *freq_table[MAX_CLUSTERS + 1];
-@@ -440,6 +445,7 @@ static int bL_cpufreq_init(struct cpufreq_policy *policy)
- {
- 	u32 cur_cluster = cpu_to_cluster(policy->cpu);
- 	struct device *cpu_dev;
-+	struct private_data *priv;
- 	int ret;
- 
- 	cpu_dev = get_cpu_device(policy->cpu);
-@@ -457,9 +463,15 @@ static int bL_cpufreq_init(struct cpufreq_policy *policy)
- 	if (ret) {
- 		dev_err(cpu_dev, "CPU %d, cluster: %d invalid freq table\n",
- 				policy->cpu, cur_cluster);
--		put_cluster_clk_and_freq_table(cpu_dev);
--		return ret;
-+		goto out_free_cpufreq_table;
-+	}
-+
-+	priv = kzalloc(sizeof(*priv), GFP_KERNEL);
-+	if (!priv) {
-+		ret = -ENOMEM;
-+		goto out_free_cpufreq_table;
- 	}
-+	policy->driver_data = priv;
- 
- 	if (cur_cluster < MAX_CLUSTERS) {
- 		int cpu;
-@@ -484,12 +496,19 @@ static int bL_cpufreq_init(struct cpufreq_policy *policy)
- 
- 	dev_info(cpu_dev, "%s: CPU %d initialized\n", __func__, policy->cpu);
- 	return 0;
-+
-+out_free_cpufreq_table:
-+	put_cluster_clk_and_freq_table(cpu_dev);
-+
-+	return ret;
- }
- 
- static int bL_cpufreq_exit(struct cpufreq_policy *policy)
- {
- 	struct device *cpu_dev;
-+	struct private_data *priv = policy->driver_data;
- 
-+	cpufreq_cooling_unregister(priv->cdev);
- 	cpu_dev = get_cpu_device(policy->cpu);
- 	if (!cpu_dev) {
- 		pr_err("%s: failed to get cpu%d device\n", __func__,
-@@ -498,11 +517,39 @@ static int bL_cpufreq_exit(struct cpufreq_policy *policy)
- 	}
- 
- 	put_cluster_clk_and_freq_table(cpu_dev);
-+	kfree(priv);
- 	dev_dbg(cpu_dev, "%s: Exited, cpu: %d\n", __func__, policy->cpu);
- 
- 	return 0;
- }
- 
-+static void bL_cpufreq_ready(struct cpufreq_policy *policy)
-+{
-+	struct device *cpu_dev = get_cpu_device(policy->cpu);
-+	struct device_node *np = of_node_get(cpu_dev->of_node);
-+	struct private_data *priv = policy->driver_data;
-+
-+	if (WARN_ON(!np))
-+		return;
-+
-+	if (of_find_property(np, "#cooling-cells", NULL)) {
-+		u32 power_coefficient = 0;
-+
-+		of_property_read_u32(np, "dynamic-power-coefficient",
-+				     &power_coefficient);
-+
-+		priv->cdev = of_cpufreq_power_cooling_register(np,
-+				policy->related_cpus, power_coefficient, NULL);
-+		if (IS_ERR(priv->cdev)) {
-+			dev_err(cpu_dev,
-+				"running cpufreq without cooling device: %ld\n",
-+				PTR_ERR(priv->cdev));
-+			priv->cdev = NULL;
-+		}
-+	}
-+	of_node_put(np);
-+}
-+
- static struct cpufreq_driver bL_cpufreq_driver = {
- 	.name			= "arm-big-little",
- 	.flags			= CPUFREQ_STICKY |
-@@ -513,6 +560,7 @@ static struct cpufreq_driver bL_cpufreq_driver = {
- 	.get			= bL_cpufreq_get_rate,
- 	.init			= bL_cpufreq_init,
- 	.exit			= bL_cpufreq_exit,
-+	.ready			= bL_cpufreq_ready,
- 	.attr			= cpufreq_generic_attr,
- };
- 
--- 
-2.1.4
+In contrast, using explicit disable_irq_nosync and enable_irq in the IRQ
+handler and thread respectively results in the respective mask and unmask
+function being called.
 
+The vf610_gpio_irq_*mask functions are in the gpio driver for Vybrid in
+drivers/gpio/gpio-vf610.c.
 
-_______________________________________________
-lm-sensors mailing list
-lm-sensors@lm-sensors.org
-http://lists.lm-sensors.org/mailman/listinfo/lm-sensors
+Can you point me in the right direction?
+
+Thanks & Regards,
+Sanchayan.
