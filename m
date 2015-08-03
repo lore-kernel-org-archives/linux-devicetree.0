@@ -1,39 +1,48 @@
-From: Matt Porter <mporter@konsulko.com>
-Subject: [PATCH 3/3] MAINTAINERS: add max6675 driver
-Date: Mon,  3 Aug 2015 16:56:50 -0400
-Message-ID: <1438635410-3757-4-git-send-email-mporter@konsulko.com>
-References: <1438635410-3757-1-git-send-email-mporter@konsulko.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1438635410-3757-1-git-send-email-mporter@konsulko.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Linux IIO List <linux-iio@vger.kernel.org>, Devicetree List <devicetree@vger.kernel.org>
-Cc: Jonathan Cameron <jic23@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+From: Stephen Boyd <sboyd@codeaurora.org>
+Subject: Re: [PATCH v3 5/5] arm: qcom: dts: Enable NAND node on IPQ8064 AP148
+ platform
+Date: Mon, 3 Aug 2015 13:58:29 -0700
+Message-ID: <20150803205829.GA21068@codeaurora.org>
+References: <1421419702-17812-1-git-send-email-architt@codeaurora.org>
+ <1438578498-32254-1-git-send-email-architt@codeaurora.org>
+ <1438578498-32254-6-git-send-email-architt@codeaurora.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1438578498-32254-6-git-send-email-architt@codeaurora.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Archit Taneja <architt@codeaurora.org>
+Cc: linux-mtd@lists.infradead.org, dehrenberg@google.com, cernekee@gmail.com, computersforpeace@gmail.com, linux-arm-msm@vger.kernel.org, agross@codeaurora.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Add myself as the MAX6675 driver maintainer.
+On 08/03, Archit Taneja wrote:
+> @@ -93,5 +115,19 @@
+>  		sata@29000000 {
+>  			status = "ok";
+>  		};
+> +
+> +		nand@1ac00000 {
+> +			status = "ok";
+> +
+> +			pinctrl-0 = <&nand_pins>;
+> +			pinctrl-names = "default";
+> +
+> +			nand-ecc-strength = <4>;
+> +			nand-bus-width = <8>;
+> +		};
+>  	};
+>  };
+> +
+> +&adm_dma {
+> +	status = "ok";
+> +};
 
-Signed-off-by: Matt Porter <mporter@konsulko.com>
----
- MAINTAINERS | 7 +++++++
- 1 file changed, 7 insertions(+)
+I think the preference is to put the full path to the device in
+the dts file and then have status = "ok". So please move this
+into the soc node and give the correct offset, etc. like we've
+done for other nodes.
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index a226416..355cc09 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -6543,6 +6543,13 @@ S:	Maintained
- F:	Documentation/hwmon/max6650
- F:	drivers/hwmon/max6650.c
- 
-+MAX6675 THERMOCOUPLE CONVERTER DRIVER
-+M:	Matt Porter <mporter@konsulko.com>
-+L:	linux-iio@vger.kernel.org
-+S:	Maintained
-+F:	Documentation/devicetree/bindings/iio/temperature/max6675.txt
-+F:	drivers/iio/temperature/max6675.c
-+
- MAX6697 HARDWARE MONITOR DRIVER
- M:	Guenter Roeck <linux@roeck-us.net>
- L:	lm-sensors@lm-sensors.org
 -- 
-2.1.4
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project
