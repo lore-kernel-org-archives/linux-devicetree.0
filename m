@@ -1,48 +1,31 @@
-From: Murali Karicheri <m-karicheri2@ti.com>
-Subject: Re: [PATCH 1/2] ARM: dts: keystone: fix the clock node for mdio
-Date: Mon, 3 Aug 2015 14:22:19 -0400
-Message-ID: <55BFB15B.8040207@ti.com>
-References: <1438625518-21315-1-git-send-email-m-karicheri2@ti.com>
+From: Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>
+Subject: Re: [PATCH 3/3] MIPS: ath79: Add the reset controller to the AR9132
+ dtsi
+Date: Mon, 3 Aug 2015 20:23:36 +0200
+Message-ID: <20150803182336.GH2843@linux-mips.org>
+References: <1438622633-9407-1-git-send-email-albeu@free.fr>
+ <1438622633-9407-4-git-send-email-albeu@free.fr>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1438625518-21315-1-git-send-email-m-karicheri2@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, santosh.shilimkar@oracle.com, ssantosh@kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1438622633-9407-4-git-send-email-albeu-GANU6spQydw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Alban Bedel <albeu-GANU6spQydw@public.gmane.org>
+Cc: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 08/03/2015 02:11 PM, Murali Karicheri wrote:
-> Currently the MDIO clock is pointing to clkpa instead of clkcpgmac.
-> MDIO is part of the ethss and the clock should be clkcpgmac.
->
-> Signed-off-by: Murali Karicheri <m-karicheri2@ti.com>
-> ---
->   arch/arm/boot/dts/keystone.dtsi | 2 +-
->   1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/arch/arm/boot/dts/keystone.dtsi b/arch/arm/boot/dts/keystone.dtsi
-> index e7a6f6d..6245a17 100644
-> --- a/arch/arm/boot/dts/keystone.dtsi
-> +++ b/arch/arm/boot/dts/keystone.dtsi
-> @@ -273,7 +273,7 @@
->   			#size-cells = <0>;
->   			reg		= <0x02090300 0x100>;
->   			status = "disabled";
-> -			clocks = <&clkpa>;
-> +			clocks = <&clkcpgmac>;
->   			clock-names = "fck";
->   			bus_freq	= <2500000>;
->   		};
->
-Santosh,
+On Mon, Aug 03, 2015 at 07:23:53PM +0200, Alban Bedel wrote:
 
-This is a big fix and needs to go in v4.2-rc. So please review and apply 
-asap. v4.2 is the first release that has netcp driver fully functional 
-and I want to fix as many known bugs as possible.
+Acked-by: Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>
 
-Thanks.
+Philipp,
 
--- 
-Murali Karicheri
-Linux Kernel, Keystone
+Feel free to take this through the reset tree.  Or I can carry this in
+the MIPS tree which is probably better for testing.  Just lemme know.
+
+  Ralf
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
