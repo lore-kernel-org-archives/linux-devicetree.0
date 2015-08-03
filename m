@@ -1,38 +1,45 @@
-From: Liberman Igal <Igal.Liberman@freescale.com>
-Subject: RE: [PATCH v2 1/2] powerpc/mpc85xx: Create dts components for the FSL
- QorIQ DPAA FMan
-Date: Mon, 3 Aug 2015 07:36:22 +0000
-Message-ID: <DM2PR03MB50930473A7D6DD5B7FD7D20E6770@DM2PR03MB509.namprd03.prod.outlook.com>
-References: <1438230764-10951-1-git-send-email-igal.liberman@freescale.com>
- <1438286389.2993.365.camel@freescale.com>
+From: Liberman Igal <Igal.Liberman-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: RE: [PATCH v2 2/2] powerpc/mpc85xx: Add FSL QorIQ DPAA FMan support
+ to the SoC device tree(s)
+Date: Mon, 3 Aug 2015 07:49:29 +0000
+Message-ID: <DM2PR03MB509D0BD6BD59FE38B692545E6770@DM2PR03MB509.namprd03.prod.outlook.com>
+References: <1438230794-10983-1-git-send-email-igal.liberman@freescale.com>
+ <1438287143.2993.367.camel@freescale.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: base64
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1438286389.2993.365.camel@freescale.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1438287143.2993.367.camel-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Scott Wood <scottwood@freescale.com>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>, Madalin-Cristian Bucur <madalin.bucur@freescale.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Madalin-Cristian Bucur <madalin.bucur-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
 DQoNClJlZ2FyZHMsDQpJZ2FsIExpYmVybWFuLg0KDQo+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0t
 LS0tDQo+IEZyb206IFdvb2QgU2NvdHQtQjA3NDIxDQo+IFNlbnQ6IFRodXJzZGF5LCBKdWx5IDMw
-LCAyMDE1IDExOjAwIFBNDQo+IFRvOiBMaWJlcm1hbiBJZ2FsLUIzMTk1MA0KPiBDYzogZGV2aWNl
+LCAyMDE1IDExOjEyIFBNDQo+IFRvOiBMaWJlcm1hbiBJZ2FsLUIzMTk1MA0KPiBDYzogZGV2aWNl
 dHJlZUB2Z2VyLmtlcm5lbC5vcmc7IGxpbnV4cHBjLWRldkBsaXN0cy5vemxhYnMub3JnOyBCdWN1
 cg0KPiBNYWRhbGluLUNyaXN0aWFuLUIzMjcxNjsgbGludXgta2VybmVsQHZnZXIua2VybmVsLm9y
-Zw0KPiBTdWJqZWN0OiBSZTogW1BBVENIIHYyIDEvMl0gcG93ZXJwYy9tcGM4NXh4OiBDcmVhdGUg
-ZHRzIGNvbXBvbmVudHMgZm9yDQo+IHRoZSBGU0wgUW9ySVEgRFBBQSBGTWFuDQo+IA0KPiBPbiBU
-aHUsIDIwMTUtMDctMzAgYXQgMDc6MzIgKzAzMDAsIElnYWwuTGliZXJtYW4gd3JvdGU6DQo+ID4g
-K2ZtYW4wOiAgZm1hbkA0MDAwMDB7DQo+ID4gKyAgICAgI2FkZHJlc3MtY2VsbHMgPSA8MT47DQo+
-ID4gKyAgICAgI3NpemUtY2VsbHMgPSA8MT47DQo+ID4gKyAgICAgY2VsbC1pbmRleCA9IDwwPjsN
-Cj4gPiArICAgICBjb21wYXRpYmxlID0gImZzbCxmbWFuIjsNCj4gPiArICAgICByYW5nZXMgPSA8
-MCAweDQwMDAwMCAweDEwMDAwMD47DQo+ID4gKyAgICAgcmVnID0gPDB4NDAwMDAwIDB4MTAwMDAw
-PjsNCj4gPiArICAgICBpbnRlcnJ1cHRzID0gPDk2IDIgMCAwPiwgPDE2IDIgMSAxPjsNCj4gPiAr
-ICAgICBjbG9ja3MgPSA8JmNsb2NrZ2VuIDMgMD47DQo+ID4gKyAgICAgY2xvY2stbmFtZXMgPSAi
-Zm0wY2xrIjsNCj4gDQo+IGNsb2NrLW5hbWVzIHNob3VsZCBiZSAiZm1hbmNsayIgYXMgcGVyIHRo
-ZSBiaW5kaW5nLiAgQW5kIHdoeSB3b3VsZCB5b3UNCj4gd2FudCB0aGUgZHJpdmVyIHRvIGhhdmUg
-dG8gZW5jb2RlIHRoZSBmbWFuIGluZGV4IGludG8gdGhlIG5hbWUgaW4gb3JkZXIgdG8NCj4gbG9v
-ayB0aGUgY2xvY2sgdXAgYnkgbmFtZT8NCj4gDQoNCldlbGwsIHllcywgdGhpcyBzaG91bGQgYmUg
-ImZtYW5jbGsiLiBUaGUgZHJpdmVyIGRvZXNuJ3QgbmVlZCB0byBrbm93IHRoZSBpbmRleC4NCkkn
-bGwgZml4IHRoYXQgYW5kIHJlLXN1Ym1pdC4NCg0KSWdhbC4NCg0KPiAtU2NvdHQNCg0K
+Zw0KPiBTdWJqZWN0OiBSZTogW1BBVENIIHYyIDIvMl0gcG93ZXJwYy9tcGM4NXh4OiBBZGQgRlNM
+IFFvcklRIERQQUEgRk1hbg0KPiBzdXBwb3J0IHRvIHRoZSBTb0MgZGV2aWNlIHRyZWUocykNCj4g
+DQo+IE9uIFRodSwgMjAxNS0wNy0zMCBhdCAwNzozMyArMDMwMCwgSWdhbC5MaWJlcm1hbiB3cm90
+ZToNCj4gPiBAQCAtMzA3LDQgKzMwNywxMTcgQEANCj4gPiAgICAgICAgICAgICAgIHJlZyA9IDww
+eGUwMDAwIDB4MTAwMD47DQo+ID4gICAgICAgICAgICAgICBmc2wsaGFzLXJzdGNyOw0KPiA+ICAg
+ICAgIH07DQo+ID4gKw0KPiA+ICsgICAgICBmbWFuQDEwMDAwMHsNCj4gPiArICAgICAgICAgICAg
+ICNhZGRyZXNzLWNlbGxzID0gPDE+Ow0KPiA+ICsgICAgICAgICAgICAgI3NpemUtY2VsbHMgPSA8
+MT47DQo+ID4gKyAgICAgICAgICAgICBjZWxsLWluZGV4ID0gPDA+Ow0KPiA+ICsgICAgICAgICAg
+ICAgcmFuZ2VzID0gPDAgMHgxMDAwMDAgMHgxMDAwMDA+Ow0KPiA+ICsgICAgICAgICAgICAgY29t
+cGF0aWJsZSA9ICJmc2wsZm1hbiI7DQo+ID4gKyAgICAgICAgICAgICByZWcgPSA8MHgxMDAwMDAg
+MHgxMDAwMDA+Ow0KPiA+ICsgICAgICAgICAgICAgaW50ZXJydXB0cyA9IDwyNCAyIDAgMD4sIDwx
+NiAyIDEgMzA+Ow0KPiA+ICsgICAgICAgICAgICAgY2xvY2stZnJlcXVlbmN5ID0gPDA+Ow0KPiA+
+ICsgICAgICAgICAgICAgZnNsLHFtYW4tY2hhbm5lbC1yYW5nZSA9IDwweDQwIDB4Nz47DQo+IA0K
+PiBmbWFuIGlzIHN1cHBvc2VkIHRvIGhhdmUgY2xvY2tzL2Nsb2NrLW5hbWVzLCBub3QgY2xvY2st
+ZnJlcXVlbmN5Lg0KPiANCg0KVGhlIG5ldyBjbG9jayBiaW5kaW5nIGRvZXNuJ3Qgc3VwcG9ydCBQ
+MTAyMyB5ZXQuIA0KSSdsbCBkcm9wIFAxMDIzIGZyb20gdGhpcyBzdWJtaXNzaW9uLCBpdCdzIG5v
+dCBzdXBwb3J0ZWQgY3VycmVudGx5IGJ5IHRoZSBkcml2ZXIsIHdlJ2xsIHJlLWFkZCBpdCBsYXRl
+ci4gDQoNCj4gLVNjb3R0DQoNCg==
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
