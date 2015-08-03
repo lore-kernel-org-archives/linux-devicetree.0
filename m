@@ -1,45 +1,45 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH v3 00/16] ARM: shmobile: Add CPG/MSTP Clock Domain
-Date: Mon, 3 Aug 2015 19:20:47 +0200
-Message-ID: <CAMuHMdUxCgXnF6AM=LefR7ZHX0d8XNcn-O=eA7o4C18O4kJbAg@mail.gmail.com>
-References: <1435766290-3005-1-git-send-email-geert+renesas@glider.be>
-	<CAPDyKFp=zoo1OY9K-dYh9e2OV-OFVp36MbXX83vT19uFWB+0Yg@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <CAPDyKFp=zoo1OY9K-dYh9e2OV-OFVp36MbXX83vT19uFWB+0Yg@mail.gmail.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Ulf Hansson <ulf.hansson@linaro.org>
-Cc: Geert Uytterhoeven <geert+renesas@glider.be>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Kevin Hilman <khilman@kernel.org>, linux-clk@vger.kernel.org, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, Linux-sh list <linux-sh@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+From: Alban Bedel <albeu@free.fr>
+Subject: [PATCH 0/3] reset: Add a driver for the reset controller on the AR71XX/AR9XXX
+Date: Mon,  3 Aug 2015 19:23:50 +0200
+Message-ID: <1438622633-9407-1-git-send-email-albeu@free.fr>
+Return-path: <linux-mips-bounce@linux-mips.org>
+Sender: linux-mips-bounce@linux-mips.org
+Errors-to: linux-mips-bounce@linux-mips.org
+List-help: <mailto:ecartis@linux-mips.org?Subject=help>
+List-unsubscribe: <mailto:ecartis@linux-mips.org?subject=unsubscribe%20linux-mips>
+List-software: Ecartis version 1.0.0
+List-subscribe: <mailto:ecartis@linux-mips.org?subject=subscribe%20linux-mips>
+List-owner: <mailto:ralf@linux-mips.org>
+List-post: <mailto:linux-mips@linux-mips.org>
+List-archive: <http://www.linux-mips.org/archives/linux-mips/>
+To: Philipp Zabel <p.zabel@pengutronix.de>
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Ralf Baechle <ralf@linux-mips.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mips@linux-mips.org, Alban Bedel <albeu@free.fr>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jul 22, 2015 at 3:00 PM, Ulf Hansson <ulf.hansson@linaro.org> wrote:
-> On 1 July 2015 at 17:57, Geert Uytterhoeven <geert+renesas@glider.be> wrote:
->> This patch series adds Clock Domain support to the Clock Pulse Generator
->> (CPG) Module Stop (MSTP) Clocks driver using the generic PM Domain, to
->> be used on shmobile SoCs without device power domains (R-Car Gen1 and
->> Gen2, RZ).  This allows to power-manage the module clocks of SoC devices
->> that are part of the CPG/MSTP Clock Domain using Runtime PM, or for
->> system suspend/resume, similar to SoCs with device power domains
->> (SH-Mobile and R-Mobile).
+Hi all,
 
-[...]
+this small serie add a trivial driver for the reset controller found
+on the AR71XX/AR9XXX SoC. Of note is only the fact that the ATH79 board
+support code use a custom API for this and ioremap the same memory area.
+However this custom API is only used by board not supporting OF, so it
+won't come into play for boards using OF. As such it should still be safe,
+even if the double ioremap is a bit ugly.
 
-> Unless it's too late; for the series - feel free to add:
->
-> Reviewed-by: Ulf Hansson <ulf.hansson@linaro.org>
+Alban
 
-Thank you.
+Alban Bedel (3):
+  devicetree: Add bindings for the ATH79 reset controller
+  reset: Add a driver for the reset controller on the AR71XX/AR9XXX
+  MIPS: ath79: Add the reset controller to the AR9132 dtsi
 
-I have to respin anyway, as new nodes have been added to various .dtsi files.
+ .../devicetree/bindings/reset/ath79-reset.txt      |  20 ++++
+ arch/mips/Kconfig                                  |   1 +
+ arch/mips/boot/dts/qca/ar9132.dtsi                 |   8 ++
+ drivers/reset/Makefile                             |   1 +
+ drivers/reset/reset-ath79.c                        | 128 +++++++++++++++++++++
+ 5 files changed, 158 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/reset/ath79-reset.txt
+ create mode 100644 drivers/reset/reset-ath79.c
 
-Gr{oetje,eeting}s,
-
-                        Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+-- 
+2.0.0
