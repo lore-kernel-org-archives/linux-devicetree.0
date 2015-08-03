@@ -1,48 +1,128 @@
-From: Sudeep Holla <sudeep.holla@arm.com>
-Subject: Re: [PATCH v6 0/8] ARM64: juno: add SCPI mailbox protocol, clock
- and CPUFreq support
-Date: Mon, 03 Aug 2015 11:48:37 +0100
-Message-ID: <55BF4705.9030300@arm.com>
-References: <1438364591-1144-1-git-send-email-sudeep.holla@arm.com> <20150803101845.GU20890@e106497-lin.cambridge.arm.com>
+From: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH v2 3/5] pci: altera: Add Altera PCIe MSI driver
+Date: Mon, 03 Aug 2015 11:53:36 +0100
+Message-ID: <55BF4830.9050104@arm.com>
+References: <1438337715-22594-1-git-send-email-lftan@altera.com>	<1438337715-22594-4-git-send-email-lftan@altera.com>	<55BB6621.9060505@arm.com> <CAFiDJ5-5eZEBFwbuzrPB+XKX_E2Fd0qEeP-_H3Wz2jT8pcbJfQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <20150803101845.GU20890@e106497-lin.cambridge.arm.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Liviu Dudau <Liviu.Dudau@arm.com>
-Cc: Sudeep Holla <sudeep.holla@arm.com>, "arm@kernel.org" <arm@kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Olof Johansson <olof@lixom.net>, Kevin Hilman <khilman@kernel.org>, Punit Agrawal <Punit.Agrawal@arm.com>, "Jon Medhurst (Tixy)" <tixy@linaro.org>, Lorenzo Pieralisi <Lorenzo.Pieralisi@arm.com>, Arnd Bergmann <arnd@arndb.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAFiDJ5-5eZEBFwbuzrPB+XKX_E2Fd0qEeP-_H3Wz2jT8pcbJfQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Ley Foon Tan <lftan-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>
+Cc: Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Dinh Nguyen <dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-
-
-On 03/08/15 11:18, Liviu Dudau wrote:
-> On Fri, Jul 31, 2015 at 06:43:03PM +0100, Sudeep Holla wrote:
->> Hi ARM-SoC guys,
+On 03/08/15 11:37, Ley Foon Tan wrote:
+> On Fri, Jul 31, 2015 at 8:12 PM, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org> wrote:
+>> On 31/07/15 11:15, Ley Foon Tan wrote:
+>>> This patch adds Altera PCIe MSI driver. This soft IP supports configurable
+>>> number of vectors, which is a dts parameter.
 >>
->> It has been on the list for a while and have got all the necessary ACKs.
->> Can you please pull this series for v4.3 ?
->>
->> Regards,
->> Sudeep
->>
->> This patch series adds support for:
->>    1. SCPI(System Control and Power Interface) mailbox protocol driver.
->>       It uses ARM MHU mailbox controller driver on Juno but can work with
->>       any mailbox controllers using standard mailbox APIs
->>    2. Add support for clocks provided by SCP firmware through the SCPI
->>       interface
->>    3. Using the existing arm_big_little cpufreq driver and the newly
->>       added SCPI clock driver, it also adds support for CPU DVFS on
->>       ARM64 JUNO development platforms.
->
-> Hi Sudeep,
->
-> Is there a branch where I can pull this series from?
->
+>> I've reviewed the initial drop of this code; basic courtesy would be to
+>> keep me CCed on the follow-up series.
+> Will keep you in CC for the following revision. Sorry about this.
+> 
+>>>
+>>> Signed-off-by: Ley Foon Tan <lftan-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>
+>>> ---
+>>>  drivers/pci/host/Kconfig           |   7 +
+>>>  drivers/pci/host/Makefile          |   1 +
+>>>  drivers/pci/host/pcie-altera-msi.c | 324 +++++++++++++++++++++++++++++++++++++
+>>>  3 files changed, 332 insertions(+)
+>>>  create mode 100644 drivers/pci/host/pcie-altera-msi.c
+>>>
 
-Yes, you can pull from
-git://linux-arm.org/linux-skn.git juno_dvfs
+[...]
 
-Regards,
-Sudeep
+>>> +
+>>> +     msg->address_lo = lower_32_bits(addr);
+>>> +     msg->address_hi = upper_32_bits(addr);
+>>> +     msg->data = data->hwirq;
+>>> +
+>>> +     mask = msi_readl(msi, MSI_INTMASK);
+>>> +     mask |= 1 << data->hwirq;
+>>> +     msi_writel(msi, mask, MSI_INTMASK);
+>>
+>> It feels a bit weird to unmask the interrupt when you compose the
+>> message. I'd expect this to be done in the mask/unmask methods.
+> Do you refer to these 2 callbacks?
+> .irq_mask = pci_msi_mask_irq,
+> .irq_unmask = pci_msi_unmask_irq,
+> 
+> How about we move this INTMASK code above to altera_irq_domain_alloc()?
+> We have unmask code in altera_irq_domain_free() now.
+
+Either you move the mask/unmask code to local irq_mask/irq_unmask
+methods (and call pci_msi_(un)mask_irq from there), or you move it
+entierely to alloc/free.
+
+Some level of symmetry helps following what is going on in the code.
+
+[...]
+
+>>> +static int altera_irq_domain_alloc(struct irq_domain *domain, unsigned int virq,
+>>> +                               unsigned int nr_irqs, void *args)
+>>> +{
+>>> +     struct altera_msi *msi = domain->host_data;
+>>> +     int bit;
+>>> +
+>>> +     mutex_lock(&msi->lock);
+>>> +
+>>> +     bit = find_first_zero_bit(msi->used, msi->num_of_vectors);
+>>> +     if (bit < msi->num_of_vectors)
+>>> +             set_bit(bit, msi->used);
+>>> +
+>>> +     mutex_unlock(&msi->lock);
+>>> +
+>>> +     if (bit < 0)
+>>> +             return bit;
+>>
+>> How can "bit" be negative here? find_first_zero_bit returns an unsigned
+>> long... You probably want to change the type of "bit" to reflect that.
+> Okay, will change to "unsigned long" type.
+>>
+>>> +     else if (bit >= msi->num_of_vectors)
+>>
+>> Useless "else" anyway.
+> 
+> I think we still need to check for failing case, if we don't have
+> available unused bit.
+> This could be rewritten  as below:
+> 
+> bit = find_first_zero_bit(msi->used, msi->num_of_vectors);
+> if (bit < msi->num_of_vectors)
+>       set_bit(bit, msi->used);
+> else
+>       return -ENOSPC;
+
+The more logical to write this is:
+
+	if (bit >= msi->num_of_vectors)
+		return -ENOSPC;
+
+	set_bit(bit, msi->used);
+
+which gets rid of the error case early and streamlines the normal case.
+
+> 
+>>
+>>> +             return -ENOSPC;
+>>> +
+>>> +     irq_domain_set_info(domain, virq, bit, &altera_msi_bottom_irq_chip,
+>>> +                         domain->host_data, handle_simple_irq,
+>>> +                         NULL, NULL);
+>>> +     set_irq_flags(virq, IRQF_VALID);
+>>> +
+>>> +     return 0;
+>>> +}
+
+Thanks,
+
+	M.
+-- 
+Jazz is not dead. It just smells funny...
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
