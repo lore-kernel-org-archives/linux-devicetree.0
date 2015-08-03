@@ -1,76 +1,83 @@
-From: Viresh Kumar <viresh.kumar@linaro.org>
-Subject: Re: [PATCH v4 2/2] dt: power: st: Provide bindings for ST's OPPs
-Date: Mon, 3 Aug 2015 09:16:42 +0530
-Message-ID: <20150803034642.GV899@linux>
-References: <1438010430-5802-1-git-send-email-lee.jones@linaro.org>
- <1438010430-5802-2-git-send-email-lee.jones@linaro.org>
- <20150728022936.GB1229@linux>
- <20150728225510.GB3159@codeaurora.org>
- <20150729081403.GH2284@x1>
- <20150729221526.GE3159@codeaurora.org>
- <20150730084634.GD9319@x1>
- <CAL_JsqKQLQ15qSt95zBZykzzPhcUrtZzhk29a76n+r_3719AiA@mail.gmail.com>
- <20150731163715.GV3159@codeaurora.org>
+From: Julian Calaby <julian.calaby-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH] ARM: dts: sunxi: Raise minimum CPU voltage
+ for sun7i-a20 to a level all boards can supply
+Date: Mon, 3 Aug 2015 14:22:13 +1000
+Message-ID: <CAGRGNgXH90m9h0DDejd5MTf8enduGFQ8dPKrRhmc8Z6y_PaC1w@mail.gmail.com>
+References: <1438543386-7253-1-git-send-email-public_timo.s@silentcreek.de>
+ <CAGRGNgV6b9yt2HnB2x2Wyc05KEahoX-Y+mVhxsryztcfA36H1g@mail.gmail.com> <CAGb2v67o-=_cL2RWfXJ+3C86zfQ_1b5DYRi3_zwvwy6su6+gdw@mail.gmail.com>
+Reply-To: julian.calaby-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-pm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20150731163715.GV3159@codeaurora.org>
-Sender: linux-pm-owner@vger.kernel.org
-To: Stephen Boyd <sboyd@codeaurora.org>
-Cc: Rob Herring <robherring2@gmail.com>, Lee Jones <lee.jones@linaro.org>, Nishanth Menon <nm@ti.com>, kernel@stlinux.com, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, Rafael Wysocki <rjw@rjwysocki.net>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Sebastian Reichel <sre@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Arnd Bergmann <arnd.bergmann@linaro.org>, Ajit Pal Singh <ajitpal.singh@st.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sunxi+bncBDQIP76OUQLBBCOZ7OWQKGQE72YS5MY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <CAGb2v67o-=_cL2RWfXJ+3C86zfQ_1b5DYRi3_zwvwy6su6+gdw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <http://groups.google.com/group/linux-sunxi/subscribe>
+To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Cc: public_timo.s-fWgRPtSzPNU3WX+qO2AYSQ@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "Mailing List, Arm" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 31-07-15, 09:37, Stephen Boyd wrote:
-> For qcom platforms, the frequency is almost always constant.
-> There may be some tables where we have a couple higher
-> frequencies than others because the speed bin is different.
-> Otherwise the voltage/current is changing based on the silicon
-> characteristics. So the biggest duplication is the frequency
-> property.
-> 
-> As far as I know there isn't any algorithm to generate the
-> voltage values. It's all hand tuned tables based on the silicon
-> characterization, so we're left to store these tables in DT and
-> pick the right one at runtime. With regards to the table
-> explosion, on qcom platforms we haven't worried that we have ~40
-> tables, but I'm not opposed to expressing it in a smaller set of
-> nodes, tables, etc. if that's what's desired.
-> 
-> Do we need vendor specific properties for that though? Or do we
-> need some sort of extended frequency/voltage properties that are
-> arrays of values that we can index into based on some silicon
-> characteristics? I like the name based approach because it's
-> simple. Use this OPP table because it's called
-> x-y-z-characteristics and be done. Cramming the tables into less
-> lines may save us some typing and dtb space, but I'm not sure
-> what else it does.
+Hi Chen-Yu,
 
-What about something like this:
+On Mon, Aug 3, 2015 at 12:37 PM, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org> wrote:
+> Hi,
+>
+> On Mon, Aug 3, 2015 at 7:35 AM, Julian Calaby <julian.calaby-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+>> Hi Timo,
+>>
+>> On Mon, Aug 3, 2015 at 5:23 AM, Timo Sigurdsson
+>> <public_timo.s-fWgRPtSzPNU3WX+qO2AYSQ@public.gmane.org> wrote:
+>>> sun7i-a20.dtsi contains an cpufreq operating point at 0.9 volts. Most A20 boards
+>>> (or all?), however, do not allow the voltage to go below 1.0V. Thus, raise the
+>>> voltage for the lowest operating point to 1.0V so all boards can actually use
+>>> it.
+>>
+>> Surely it wouldn't be added here if some could supply 0.9v.
+>
+> On the side, the original OPPs in the FEX files are actually
+> frequency/voltage ranges, and not just points. Mainlines OPPv2
+> will support these, along with turbo frequencies.
 
-diff --git a/Documentation/devicetree/bindings/opp/opp.txt b/Documentation/devicetree/bindings/opp/opp.txt
-index 0cb44dc21f97..bad7a8299b9c 100644
---- a/Documentation/devicetree/bindings/opp/opp.txt
-+++ b/Documentation/devicetree/bindings/opp/opp.txt
-@@ -74,6 +74,8 @@ This describes the OPPs belonging to a device. This node can have following
-   reference an OPP.
- 
- Optional properties:
-+- opp-cuts: One or more strings, describing the versions of hardware the OPPs
-+  can support.
- - opp-shared: Indicates that device nodes using this OPP Table Node's phandle
-   switch their DVFS state together, i.e. they share clock/voltage/current lines.
-   Missing property means devices have independent clock/voltage/current lines,
-@@ -100,6 +102,9 @@ properties.
-   Entries for multiple regulators must be present in the same order as
-   regulators are specified in device's DT node.
- 
-+  If used with 'opp-cuts', then the number of entries present here must match
-+  the number of strings present in 'opp-cuts'.
-+
- - opp-microamp: The maximum current drawn by the device in microamperes
-   considering system specific parameters (such as transients, process, aging,
-   maximum operating temperature range etc.) as necessary. This may be used to
+Ah, that makes sense.
+
+> Furthermore, the FEX files also have fields that limit the
+> minimum and maximum frequencies.
+
+Is this going to be supported by OPPv2 too?
+
+>> Is the code that uses this smart enough to sensibly switch between two
+>> operating points with the same frequency and different voltages? If
+>> so, maybe just add a 144MHz @ 1.0v operating point?
+>
+> You could try. Though I really don't see much to gain here.
+
+>From what I recall, lower frequency = less power usage, though my
+experience is from x86 laptops, not ARM SoCs and I'm sure I'm missing
+a lot of details. This is the sort of thing that requires thorough
+testing on a dev board.
+
+>> (Alternatively, would it make sense to modify the code that uses this
+>> to use frequencies with voltages specified that are lower than can be
+>> supplied with the lowest voltage it can?)
+>
+> I think that's a bit harder to get accepted.
+
+Oh, definitely. It kinda makes sense, but at the same time it'll
+require some seriously thorough testing on a lot of different boards.
+
+My only real objection here is are there boards that can go down to
+0.9v and if so, won't this change make them less power efficient in
+the almost-idle case? And are those power savings enough to justify
+not accepting this patch?
+
+Thanks,
 
 -- 
-viresh
+Julian Calaby
+
+Email: julian.calaby-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Profile: http://www.google.com/profiles/julian.calaby/
