@@ -1,86 +1,47 @@
-From: Archit Taneja <architt@codeaurora.org>
-Subject: [PATCH v3 3/5] dt/bindings: qcom_nandc: Add DT bindings
-Date: Mon,  3 Aug 2015 10:38:16 +0530
-Message-ID: <1438578498-32254-4-git-send-email-architt@codeaurora.org>
-References: <1421419702-17812-1-git-send-email-architt@codeaurora.org>
- <1438578498-32254-1-git-send-email-architt@codeaurora.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1438578498-32254-1-git-send-email-architt@codeaurora.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-mtd@lists.infradead.org, dehrenberg@google.com, cernekee@gmail.com, computersforpeace@gmail.com
-Cc: linux-arm-msm@vger.kernel.org, agross@codeaurora.org, sboyd@codeaurora.org, linux-kernel@vger.kernel.org, Archit Taneja <architt@codeaurora.org>, devicetree@vger.kernel.org
+From: Vignesh R <vigneshr-l0cyMroinI0@public.gmane.org>
+Subject: Re: [RFC PATCH 4/5] ARM: dts: DRA7: Add memory map region entries
+ for qspi
+Date: Mon, 3 Aug 2015 10:39:38 +0530
+Message-ID: <55BEF792.7000307@ti.com>
+References: <1438072876-16338-1-git-send-email-vigneshr@ti.com> <1438072876-16338-5-git-send-email-vigneshr@ti.com> <55BB7CA4.1020300@ti.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <55BB7CA4.1020300-l0cyMroinI0@public.gmane.org>
+Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+Cc: Huang Shijie <b32955-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Add DT bindings document for the Qualcomm NAND controller driver.
 
-Cc: devicetree@vger.kernel.org
 
-v3:
-- Don't use '0x' when specifying nand controller address space
-- Add optional property for on-flash bbt usage
+On 07/31/2015 07:18 PM, Sekhar Nori wrote:
+> On Tuesday 28 July 2015 02:11 PM, Vignesh R wrote:
+>> Add qspi memory mapped region entries for DRA7xx based SoCs.
+>>
+>> Signed-off-by: Vignesh R <vigneshr-l0cyMroinI0@public.gmane.org>
+>> ---
+>>  arch/arm/boot/dts/am4372.dtsi | 4 +++-
+>>  1 file changed, 3 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/arch/arm/boot/dts/am4372.dtsi b/arch/arm/boot/dts/am4372.dtsi
+>> index ade28c790f4b..5317a0f24ab9 100644
+>> --- a/arch/arm/boot/dts/am4372.dtsi
+>> +++ b/arch/arm/boot/dts/am4372.dtsi
+> 
+> The patch talks about DRA7x in subject and description but you modify
+> AM437x here. You have got commit text mixed up between 4/5 and 5/5.
+> 
+> Probably not the kind of feedback you are looking for an RFC, but since
+> I noticed it..
 
-Acked-by: Andy Gross <agross@codeaurora.org>
-Signed-off-by: Archit Taneja <architt@codeaurora.org>
----
- .../devicetree/bindings/mtd/qcom_nandc.txt         | 49 ++++++++++++++++++++++
- 1 file changed, 49 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/mtd/qcom_nandc.txt
+Oh, my bad.. I will correct $subject when I submit actual patch series.
 
-diff --git a/Documentation/devicetree/bindings/mtd/qcom_nandc.txt b/Documentation/devicetree/bindings/mtd/qcom_nandc.txt
-new file mode 100644
-index 0000000..1de4643
---- /dev/null
-+++ b/Documentation/devicetree/bindings/mtd/qcom_nandc.txt
-@@ -0,0 +1,49 @@
-+* Qualcomm NAND controller
-+
-+Required properties:
-+- compatible:		should be "qcom,ebi2-nand" for IPQ806x
-+- reg:			MMIO address range
-+- clocks:		must contain core clock and always on clock
-+- clock-names:		must contain "core" for the core clock and "aon" for the
-+			always on clock
-+- dmas:			DMA specifier, consisting of a phandle to the ADM DMA
-+			controller node and the channel number to be used for
-+			NAND. Refer to dma.txt and qcom_adm.txt for more details
-+- dma-names:		must be "rxtx"
-+- qcom,cmd-crci:	must contain the ADM command type CRCI block instance
-+			number specified for the NAND controller on the given
-+			platform
-+- qcom,data-crci:	must contain the ADM data type CRCI block instance
-+			number specified for the NAND controller on the given
-+			platform
-+
-+Optional properties:
-+- nand-bus-width:	bus width. Must be 8 or 16. If not present, 8 is chosen
-+			as default
-+
-+- nand-ecc-strength:	number of bits to correct per ECC step. Must be 4 or 8
-+			bits. If not present, 4 is chosen as default
-+- nand-on-flash-bbt:	Create/use on-flash bad block table
-+
-+The device tree may optionally contain sub-nodes describing partitions of the
-+address space. See partition.txt for more detail.
-+
-+Example:
-+
-+nand@1ac00000 {
-+	compatible = "qcom,ebi2-nandc";
-+	reg = <0x1ac00000 0x800>;
-+
-+	clocks = <&gcc EBI2_CLK>,
-+		 <&gcc EBI2_AON_CLK>;
-+	clock-names = "core", "aon";
-+
-+	dmas = <&adm_dma 3>;
-+	dma-names = "rxtx";
-+	qcom,cmd-crci = <15>;
-+	qcom,data-crci = <3>;
-+
-+	partition@0 {
-+	...
-+	};
-+};
 -- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-hosted by The Linux Foundation
+Regards
+Vignesh
+--
+To unsubscribe from this list: send the line "unsubscribe linux-spi" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
