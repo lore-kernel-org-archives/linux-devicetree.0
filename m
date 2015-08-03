@@ -1,114 +1,158 @@
-From: Philipp Zabel <p.zabel@pengutronix.de>
-Subject: Re: [PATCHv2 3/4] reset: socfpga: Update reset-socfpga to read the
- altr,modrst-offset property
-Date: Mon, 03 Aug 2015 13:16:38 +0200
-Message-ID: <1438600598.3844.10.camel@pengutronix.de>
-References: <1438376591-22100-1-git-send-email-dinguyen@opensource.altera.com>
-	 <1438376591-22100-4-git-send-email-dinguyen@opensource.altera.com>
+From: Gabriele Paoloni <gabriele.paoloni@huawei.com>
+Subject: RE: [PATCH v6] PCI: Store PCIe bus address in struct of_pci_range
+Date: Mon, 3 Aug 2015 11:18:09 +0000
+Message-ID: <EE11001F9E5DDD47B7634E2F8A612F2E01D712E7@lhreml503-mbs>
+References: <1438010223-124422-1-git-send-email-gabriele.paoloni@huawei.com>
+ <20150729172053.GE31170@google.com>
+ <EE11001F9E5DDD47B7634E2F8A612F2E01D6F350@lhreml503-mbs>
+ <CAL_JsqKs11-sXQTdBD+ZjbVYFWUHBARTW9q5MF1hCXUhZ+nWLQ@mail.gmail.com>
+ <EE11001F9E5DDD47B7634E2F8A612F2E01D6F94A@lhreml503-mbs>
+ <20150730161447.GG9640@google.com>
+ <EE11001F9E5DDD47B7634E2F8A612F2E01D6FB3B@lhreml503-mbs>
+ <20150730171445.GI9640@google.com>
+ <EE11001F9E5DDD47B7634E2F8A612F2E01D6FC15@lhreml503-mbs>
+ <CAL_Jsq+aQVakaZf4xo7sxnVyTmPR+HJ-9ByyS6OYJ0PHDYOwmg@mail.gmail.com>
+ <EE11001F9E5DDD47B7634E2F8A612F2E01D70589@lhreml503-mbs>
+ <55BB8CC6.1080203@ti.com>
+ <CAL_JsqJqjiWVaKs-3ghQ1EBQzRRQ38GzkMV+FELPj53bSF-yXQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1438376591-22100-4-git-send-email-dinguyen@opensource.altera.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: dinguyen@opensource.altera.com
-Cc: dinh.linux@gmail.com, robh+dt@kernel.org, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, mark.rutland@arm.com, pawel.moll@arm.com, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, s.trumtrar@pengutronix.de
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <CAL_JsqJqjiWVaKs-3ghQ1EBQzRRQ38GzkMV+FELPj53bSF-yXQ@mail.gmail.com>
+Content-Language: en-US
+Sender: linux-pci-owner@vger.kernel.org
+To: Rob Herring <robherring2@gmail.com>, Kishon Vijay Abraham I <kishon@ti.com>
+Cc: Bjorn Helgaas <bhelgaas@google.com>, "arnd@arndb.de" <arnd@arndb.de>, "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>, "Wangzhou (B)" <wangzhou1@hisilicon.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "james.morse@arm.com" <james.morse@arm.com>, "Liviu.Dudau@arm.com" <Liviu.Dudau@arm.com>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Yuanzhichang <yuanzhichang@hisilicon.com>, Zhudacai <zhudacai@hisilicon.com>, zhangjukuo <zhangjukuo@huawei.com>, qiuzhenfa <qiuzhenfa@hisilicon.com>, "Liguozhu (Kenneth)" <liguozhu@hisilicon.com>, Jingoo Han <jingoohan1@gmail.com>, Pratyush Anand <pratyush.anand@gmail.com>, Arnd Bergmann <arnd@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Dinh,
-
-Am Freitag, den 31.07.2015, 16:03 -0500 schrieb
-dinguyen@opensource.altera.com:
-> From: Dinh Nguyen <dinguyen@opensource.altera.com>
-> 
-> In order for the Arria10 to be able to re-use the reset driver for SoCFPGA
-> Cyclone5/Arria5, we need to read the 'altr,modrst-offset' property from the
-> device tree entry. The 'altr,modrst-offset' property is the first register
-> into the reset manager that is used for bringing peripherals out of reset.
-> 
-> The driver assumes a modrst-offset of 0x10 in order to support legacy
-> Cyclone5/Arria5 hardware.
-> 
-> Signed-off-by: Dinh Nguyen <dinguyen@opensource.altera.com>
-
-Applied, thanks.
-
-regards
-Philipp
-
-> ---
-> v2: assume a modrst-offset of 0x10 if the property is not specified in order
->     to support legacy boards that do not have the property.
-> ---
->  drivers/reset/reset-socfpga.c | 19 +++++++++++++------
->  1 file changed, 13 insertions(+), 6 deletions(-)
-> 
-> diff --git a/drivers/reset/reset-socfpga.c b/drivers/reset/reset-socfpga.c
-> index 0a8def3..1a6c5d6 100644
-> --- a/drivers/reset/reset-socfpga.c
-> +++ b/drivers/reset/reset-socfpga.c
-> @@ -24,11 +24,11 @@
->  #include <linux/types.h>
->  
->  #define NR_BANKS		4
-> -#define OFFSET_MODRST		0x10
->  
->  struct socfpga_reset_data {
->  	spinlock_t			lock;
->  	void __iomem			*membase;
-> +	u32				modrst_offset;
->  	struct reset_controller_dev	rcdev;
->  };
->  
-> @@ -45,8 +45,8 @@ static int socfpga_reset_assert(struct reset_controller_dev *rcdev,
->  
->  	spin_lock_irqsave(&data->lock, flags);
->  
-> -	reg = readl(data->membase + OFFSET_MODRST + (bank * NR_BANKS));
-> -	writel(reg | BIT(offset), data->membase + OFFSET_MODRST +
-> +	reg = readl(data->membase + data->modrst_offset + (bank * NR_BANKS));
-> +	writel(reg | BIT(offset), data->membase + data->modrst_offset +
->  				 (bank * NR_BANKS));
->  	spin_unlock_irqrestore(&data->lock, flags);
->  
-> @@ -67,8 +67,8 @@ static int socfpga_reset_deassert(struct reset_controller_dev *rcdev,
->  
->  	spin_lock_irqsave(&data->lock, flags);
->  
-> -	reg = readl(data->membase + OFFSET_MODRST + (bank * NR_BANKS));
-> -	writel(reg & ~BIT(offset), data->membase + OFFSET_MODRST +
-> +	reg = readl(data->membase + data->modrst_offset + (bank * NR_BANKS));
-> +	writel(reg & ~BIT(offset), data->membase + data->modrst_offset +
->  				  (bank * NR_BANKS));
->  
->  	spin_unlock_irqrestore(&data->lock, flags);
-> @@ -85,7 +85,7 @@ static int socfpga_reset_status(struct reset_controller_dev *rcdev,
->  	int offset = id % BITS_PER_LONG;
->  	u32 reg;
->  
-> -	reg = readl(data->membase + OFFSET_MODRST + (bank * NR_BANKS));
-> +	reg = readl(data->membase + data->modrst_offset + (bank * NR_BANKS));
->  
->  	return !(reg & BIT(offset));
->  }
-> @@ -100,6 +100,8 @@ static int socfpga_reset_probe(struct platform_device *pdev)
->  {
->  	struct socfpga_reset_data *data;
->  	struct resource *res;
-> +	struct device *dev = &pdev->dev;
-> +	struct device_node *np = dev->of_node;
->  
->  	/*
->  	 * The binding was mainlined without the required property.
-> @@ -120,6 +122,11 @@ static int socfpga_reset_probe(struct platform_device *pdev)
->  	if (IS_ERR(data->membase))
->  		return PTR_ERR(data->membase);
->  
-> +	if (of_property_read_u32(np, "altr,modrst-offset", &data->modrst_offset)) {
-> +		dev_warn(dev, "missing altr,modrst-offset property, assuming 0x10!\n");
-> +		data->modrst_offset = 0x10;
-> +	}
-> +
->  	spin_lock_init(&data->lock);
->  
->  	data->rcdev.owner = THIS_MODULE;
+Um9iLCBLaXNob24gd2hhdCBhYm91dCB0aGUgZm9sbG93aW5nIHNvbHV0aW9uPy4uLi4NCg0KLS0t
+DQogZHJpdmVycy9wY2kvaG9zdC9wY2ktZHJhN3h4LmMgICAgICB8IDEyICsrKysrKysrKysrKw0K
+IGRyaXZlcnMvcGNpL2hvc3QvcGNpZS1kZXNpZ253YXJlLmMgfCAgOSArKystLS0tLS0NCiAyIGZp
+bGVzIGNoYW5nZWQsIDE1IGluc2VydGlvbnMoKyksIDYgZGVsZXRpb25zKC0pDQoNCmRpZmYgLS1n
+aXQgYS9kcml2ZXJzL3BjaS9ob3N0L3BjaS1kcmE3eHguYyBiL2RyaXZlcnMvcGNpL2hvc3QvcGNp
+LWRyYTd4eC5jDQppbmRleCA4MGRiMDllLi5iYjI2MzVmIDEwMDY0NA0KLS0tIGEvZHJpdmVycy9w
+Y2kvaG9zdC9wY2ktZHJhN3h4LmMNCisrKyBiL2RyaXZlcnMvcGNpL2hvc3QvcGNpLWRyYTd4eC5j
+DQpAQCAtNjEsNiArNjEsNyBAQA0KIA0KICNkZWZpbmUJUENJRUNUUkxfRFJBN1hYX0NPTkZfUEhZ
+X0NTCQkJMHgwMTBDDQogI2RlZmluZQlMSU5LX1VQCQkJCQkJQklUKDE2KQ0KKyNkZWZpbmUgQ1BV
+X1RPX0JVU19BRERSICAgICAgICAgICAgIDB4MEZGRkZGRkYNCiANCiBzdHJ1Y3QgZHJhN3h4X3Bj
+aWUgew0KIAl2b2lkIF9faW9tZW0JCSpiYXNlOw0KQEAgLTEzOCw2ICsxMzksMTcgQEAgc3RhdGlj
+IHZvaWQgZHJhN3h4X3BjaWVfZW5hYmxlX2ludGVycnVwdHMoc3RydWN0IHBjaWVfcG9ydCAqcHAp
+DQogDQogc3RhdGljIHZvaWQgZHJhN3h4X3BjaWVfaG9zdF9pbml0KHN0cnVjdCBwY2llX3BvcnQg
+KnBwKQ0KIHsNCisJaWYgKHBwLT5pb19tb2RfYmFzZSkNCisJCXBwLT5pb19tb2RfYmFzZSAmPSBD
+UFVfVE9fQlVTX0FERFI7DQorDQorCWlmIChwcC0+bWVtX21vZF9iYXNlKQ0KKwkJcHAtPm1lbV9t
+b2RfYmFzZSAmPSBDUFVfVE9fQlVTX0FERFI7DQorDQorCWlmIChwcC0+Y2ZnMF9tb2RfYmFzZSkg
+ew0KKwkJcHAtPmNmZzBfbW9kX2Jhc2UgJj0gQ1BVX1RPX0JVU19BRERSOw0KKwkJcHAtPmNmZzFf
+bW9kX2Jhc2UgJj0gQ1BVX1RPX0JVU19BRERSOw0KKwl9DQorDQogCWR3X3BjaWVfc2V0dXBfcmMo
+cHApOw0KIAlkcmE3eHhfcGNpZV9lc3RhYmxpc2hfbGluayhwcCk7DQogCWlmIChJU19FTkFCTEVE
+KENPTkZJR19QQ0lfTVNJKSkNCmRpZmYgLS1naXQgYS9kcml2ZXJzL3BjaS9ob3N0L3BjaWUtZGVz
+aWdud2FyZS5jIGIvZHJpdmVycy9wY2kvaG9zdC9wY2llLWRlc2lnbndhcmUuYw0KaW5kZXggNjk0
+ODZiZS4uMDZjNjgyYiAxMDA2NDQNCi0tLSBhL2RyaXZlcnMvcGNpL2hvc3QvcGNpZS1kZXNpZ253
+YXJlLmMNCisrKyBiL2RyaXZlcnMvcGNpL2hvc3QvcGNpZS1kZXNpZ253YXJlLmMNCkBAIC00MTYs
+OCArNDE2LDcgQEAgaW50IGR3X3BjaWVfaG9zdF9pbml0KHN0cnVjdCBwY2llX3BvcnQgKnBwKQ0K
+IAkJCXBwLT5pb19iYXNlID0gcmFuZ2UuY3B1X2FkZHI7DQogDQogCQkJLyogRmluZCB0aGUgdW50
+cmFuc2xhdGVkIElPIHNwYWNlIGFkZHJlc3MgKi8NCi0JCQlwcC0+aW9fbW9kX2Jhc2UgPSBvZl9y
+ZWFkX251bWJlcihwYXJzZXIucmFuZ2UgLQ0KLQkJCQkJCQkgcGFyc2VyLm5wICsgbmEsIG5zKTsN
+CisJCQlwcC0+aW9fbW9kX2Jhc2UgPSByYW5nZS5jcHVfYWRkcjs7DQogCQl9DQogCQlpZiAocmVz
+dHlwZSA9PSBJT1JFU09VUkNFX01FTSkgew0KIAkJCW9mX3BjaV9yYW5nZV90b19yZXNvdXJjZSgm
+cmFuZ2UsIG5wLCAmcHAtPm1lbSk7DQpAQCAtNDI2LDggKzQyNSw3IEBAIGludCBkd19wY2llX2hv
+c3RfaW5pdChzdHJ1Y3QgcGNpZV9wb3J0ICpwcCkNCiAJCQlwcC0+bWVtX2J1c19hZGRyID0gcmFu
+Z2UucGNpX2FkZHI7DQogDQogCQkJLyogRmluZCB0aGUgdW50cmFuc2xhdGVkIE1FTSBzcGFjZSBh
+ZGRyZXNzICovDQotCQkJcHAtPm1lbV9tb2RfYmFzZSA9IG9mX3JlYWRfbnVtYmVyKHBhcnNlci5y
+YW5nZSAtDQotCQkJCQkJCSAgcGFyc2VyLm5wICsgbmEsIG5zKTsNCisJCQlwcC0+bWVtX21vZF9i
+YXNlID0gcmFuZ2UuY3B1X2FkZHI7DQogCQl9DQogCQlpZiAocmVzdHlwZSA9PSAwKSB7DQogCQkJ
+b2ZfcGNpX3JhbmdlX3RvX3Jlc291cmNlKCZyYW5nZSwgbnAsICZwcC0+Y2ZnKTsNCkBAIC00Mzcs
+OCArNDM1LDcgQEAgaW50IGR3X3BjaWVfaG9zdF9pbml0KHN0cnVjdCBwY2llX3BvcnQgKnBwKQ0K
+IAkJCXBwLT5jZmcxX2Jhc2UgPSBwcC0+Y2ZnLnN0YXJ0ICsgcHAtPmNmZzBfc2l6ZTsNCiANCiAJ
+CQkvKiBGaW5kIHRoZSB1bnRyYW5zbGF0ZWQgY29uZmlndXJhdGlvbiBzcGFjZSBhZGRyZXNzICov
+DQotCQkJcHAtPmNmZzBfbW9kX2Jhc2UgPSBvZl9yZWFkX251bWJlcihwYXJzZXIucmFuZ2UgLQ0K
+LQkJCQkJCQkgICBwYXJzZXIubnAgKyBuYSwgbnMpOw0KKwkJCXBwLT5jZmcwX21vZF9iYXNlID0g
+cmFuZ2UuY3B1X2FkZHI7DQogCQkJcHAtPmNmZzFfbW9kX2Jhc2UgPSBwcC0+Y2ZnMF9tb2RfYmFz
+ZSArDQogCQkJCQkgICAgcHAtPmNmZzBfc2l6ZTsNCiAJCX0NCi0tIA0KMS45LjENCg0KDQo+IC0t
+LS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+IEZyb206IGxpbnV4LXBjaS1vd25lckB2Z2VyLmtl
+cm5lbC5vcmcgW21haWx0bzpsaW51eC1wY2ktDQo+IG93bmVyQHZnZXIua2VybmVsLm9yZ10gT24g
+QmVoYWxmIE9mIFJvYiBIZXJyaW5nDQo+IFNlbnQ6IEZyaWRheSwgSnVseSAzMSwgMjAxNSA1OjUz
+IFBNDQo+IFRvOiBLaXNob24gVmlqYXkgQWJyYWhhbSBJDQo+IENjOiBHYWJyaWVsZSBQYW9sb25p
+OyBCam9ybiBIZWxnYWFzOyBhcm5kQGFybmRiLmRlOw0KPiBsb3JlbnpvLnBpZXJhbGlzaUBhcm0u
+Y29tOyBXYW5nemhvdSAoQik7IHJvYmgrZHRAa2VybmVsLm9yZzsNCj4gamFtZXMubW9yc2VAYXJt
+LmNvbTsgTGl2aXUuRHVkYXVAYXJtLmNvbTsgbGludXgtcGNpQHZnZXIua2VybmVsLm9yZzsNCj4g
+bGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnOyBkZXZpY2V0cmVlQHZnZXIua2Vy
+bmVsLm9yZzsNCj4gWXVhbnpoaWNoYW5nOyBaaHVkYWNhaTsgemhhbmdqdWt1bzsgcWl1emhlbmZh
+OyBMaWd1b3podSAoS2VubmV0aCk7DQo+IEppbmdvbyBIYW47IFByYXR5dXNoIEFuYW5kOyBBcm5k
+IEJlcmdtYW5uDQo+IFN1YmplY3Q6IFJlOiBbUEFUQ0ggdjZdIFBDSTogU3RvcmUgUENJZSBidXMg
+YWRkcmVzcyBpbiBzdHJ1Y3QNCj4gb2ZfcGNpX3JhbmdlDQo+IA0KPiBPbiBGcmksIEp1bCAzMSwg
+MjAxNSBhdCA5OjU3IEFNLCBLaXNob24gVmlqYXkgQWJyYWhhbSBJIDxraXNob25AdGkuY29tPg0K
+PiB3cm90ZToNCj4gPiArQXJuZA0KPiA+DQo+ID4gSGksDQo+ID4NCj4gPiBPbiBGcmlkYXkgMzEg
+SnVseSAyMDE1IDA3OjU1IFBNLCBHYWJyaWVsZSBQYW9sb25pIHdyb3RlOg0KPiA+PiBbK2NjIEtp
+c2hvbl0NCj4gPj4NCj4gPj4+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+ID4+PiBGcm9t
+OiBsaW51eC1wY2ktb3duZXJAdmdlci5rZXJuZWwub3JnIFttYWlsdG86bGludXgtcGNpLQ0KPiA+
+Pj4gb3duZXJAdmdlci5rZXJuZWwub3JnXSBPbiBCZWhhbGYgT2YgUm9iIEhlcnJpbmcNCj4gPj4+
+IFNlbnQ6IFRodXJzZGF5LCBKdWx5IDMwLCAyMDE1IDk6NDIgUE0NCj4gPj4+IFRvOiBHYWJyaWVs
+ZSBQYW9sb25pDQo+ID4+PiBDYzogQmpvcm4gSGVsZ2FhczsgYXJuZEBhcm5kYi5kZTsgbG9yZW56
+by5waWVyYWxpc2lAYXJtLmNvbTsNCj4gV2FuZ3pob3UNCj4gPj4+IChCKTsgcm9iaCtkdEBrZXJu
+ZWwub3JnOyBqYW1lcy5tb3JzZUBhcm0uY29tOyBMaXZpdS5EdWRhdUBhcm0uY29tOw0KPiA+Pj4g
+bGludXgtcGNpQHZnZXIua2VybmVsLm9yZzsgbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRl
+YWQub3JnOw0KPiA+Pj4gZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5vcmc7IFl1YW56aGljaGFuZzsg
+Wmh1ZGFjYWk7IHpoYW5nanVrdW87DQo+ID4+PiBxaXV6aGVuZmE7IExpZ3Vvemh1IChLZW5uZXRo
+KTsgSmluZ29vIEhhbjsgUHJhdHl1c2ggQW5hbmQNCj4gPj4+IFN1YmplY3Q6IFJlOiBbUEFUQ0gg
+djZdIFBDSTogU3RvcmUgUENJZSBidXMgYWRkcmVzcyBpbiBzdHJ1Y3QNCj4gPj4+IG9mX3BjaV9y
+YW5nZQ0KPiA+Pj4NCj4gPj4+IE9uIFRodSwgSnVsIDMwLCAyMDE1IGF0IDEyOjM0IFBNLCBHYWJy
+aWVsZSBQYW9sb25pDQo+ID4+PiA8Z2FicmllbGUucGFvbG9uaUBodWF3ZWkuY29tPiB3cm90ZToN
+Cj4gPj4+Pj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gPj4+Pj4gRnJvbTogQmpvcm4g
+SGVsZ2FhcyBbbWFpbHRvOmJoZWxnYWFzQGdvb2dsZS5jb21dDQo+ID4+Pj4+IFNlbnQ6IDMwIEp1
+bHkgMjAxNSAxODoxNQ0KPiA+Pj4+PiBPbiBUaHUsIEp1bCAzMCwgMjAxNSBhdCAwNDo1MDo1NVBN
+ICswMDAwLCBHYWJyaWVsZSBQYW9sb25pIHdyb3RlOg0KPiA+Pj4+Pj4+IC0tLS0tT3JpZ2luYWwg
+TWVzc2FnZS0tLS0tDQo+ID4+Pj4+Pj4gRnJvbTogbGludXgtcGNpLW93bmVyQHZnZXIua2VybmVs
+Lm9yZyBbbWFpbHRvOmxpbnV4LXBjaS0NCj4gPj4+Pj4+PiBvd25lckB2Z2VyLmtlcm5lbC5vcmdd
+IE9uIEJlaGFsZiBPZiBCam9ybiBIZWxnYWFzDQo+ID4+Pj4+Pj4gU2VudDogVGh1cnNkYXksIEp1
+bHkgMzAsIDIwMTUgNToxNSBQTQ0KPiA+Pj4+Pj4+IE9uIFRodSwgSnVsIDMwLCAyMDE1IGF0IDAx
+OjUyOjEzUE0gKzAwMDAsIEdhYnJpZWxlIFBhb2xvbmkNCj4gd3JvdGU6DQo+ID4+Pg0KPiA+Pj4g
+Wy4uLl0NCj4gPj4+DQo+ID4+Pj4+Pj4+IEkgZG9u4oCZdCB0aGluayB3ZSBzaG91bGQgcmVseSBv
+biBbQ1BVXSBhZGRyZXNzZXMuLi53aGF0IGlmIHRoZQ0KPiA+Pj4+Pj4+IGludGVybWVkaWF0ZQ0K
+PiA+Pj4+Pj4+PiB0cmFuc2xhdGlvbiBsYXllciBjaGFuZ2VzIHRoZSBsb3dlciBzaWduaWZpY2Fu
+dCBiaXRzIG9mIHRoZQ0KPiA+Pj4gImJ1cw0KPiA+Pj4+Pj4+IGFkZHJlc3MiDQo+ID4+Pj4+Pj4+
+IHRvIHRyYW5zbGF0ZSBpbnRvIGEgY3B1IGFkZHJlc3M/DQo+ID4+Pj4+Pj4NCj4gPj4+Pj4+PiBJ
+cyBpdCByZWFsbHkgYSBwb3NzaWJsaXR5IHRoYXQgdGhlIGxvd2VyIGJpdHMgY291bGQgYmUgY2hh
+bmdlZD8NCj4gPj4+Pj4+DQo+ID4+Pj4+PiBJJ3ZlIGNoZWNrZWQgYWxsIHRoZSBjdXJyZW50IGRl
+aWdud2FyZSB1c2VycyBEVHMgZXhjZXB0ICJwY2ktDQo+ID4+Pj4+IGxheWVyc2NhcGUiDQo+ID4+
+Pj4+PiB0aGF0IEkgY291bGQgbm90IGZpbmQ6DQo+ID4+Pj4+PiBzcGVhcjEzMTAuZHRzaQ0KPiA+
+Pj4+Pj4gc3BlYXIxMzQwLmR0c2kNCj4gPj4+Pj4+IGRyYTcuZHRzaQ0KPiA+Pj4+Pj4gaW14NnFk
+bC5kdHNpDQo+ID4+Pj4+PiBpbXg2c3guZHRzaQ0KPiA+Pj4+Pj4ga2V5c3RvbmUuZHRzaQ0KPiA+
+Pj4+Pj4gZXh5bm9zNTQ0MC5kdHNpDQo+ID4+Pj4+Pg0KPiA+Pj4+Pj4gTm9uZSBvZiB0aGVtIG1v
+ZGlmaWVzIHRoZSBsb3dlciBiaXRzLiBUbyBiZSBtb3JlIHByZWNpc2UgdGhlDQo+IG9ubHkNCj4g
+Pj4+IGd1eQ0KPiA+Pj4+Pj4gdGhhdCBwcm92aWRlcyBhbm90aGVyIHRyYW5zbGF0aW9uIGxheWVy
+IGlzICJkcmE3LmR0c2kiOg0KPiA+Pj4+Pj4gYXhpMA0KPiA+Pj4+Pj4gaHR0cDovL2x4ci5mcmVl
+LQ0KPiA+Pj4gZWxlY3Ryb25zLmNvbS9zb3VyY2UvYXJjaC9hcm0vYm9vdC9kdHMvZHJhNy5kdHNp
+I0wyMDcNCj4gPj4+Pj4+DQo+ID4+Pj4+PiBheGkxDQo+ID4+Pj4+PiBodHRwOi8vbHhyLmZyZWUt
+DQo+ID4+PiBlbGVjdHJvbnMuY29tL3NvdXJjZS9hcmNoL2FybS9ib290L2R0cy9kcmE3LmR0c2kj
+TDI0MQ0KPiA+Pj4+Pj4NCj4gPj4+Pj4+IEZvciB0aGlzIGNhc2UgbWFza2luZyB0aGUgdG9wIDRi
+aXRzIChiaXRzMjggdG8gMzEpIHNob3VsZCBtYWtlDQo+IHRoZQ0KPiA+Pj4gam9iLg0KPiA+Pj4N
+Cj4gPj4+IElNTywgd2Ugc2hvdWxkIGp1c3QgZml4IHRoaXMgY2FzZS4gQWZ0ZXIgZnVydGhlciBz
+dHVkeSwgSSBkb24ndA0KPiB0aGluaw0KPiA+Pj4gdGhpcyBpcyBhIERXIGlzc3VlLCBidXQgcmF0
+aGVyIGFuIFNPQyBpbnRlZ3JhdGlvbiBpc3N1ZS4NCj4gPj4+DQo+ID4+PiBJIGJlbGlldmUgeW91
+IGNhbiBqdXN0IGZpeHVwIHRoZSBhZGRyZXNzIGluIHRoZSBwcC0+b3BzLT5ob3N0X2luaXQNCj4g
+aG9vay4NCj4gPj4+DQo+ID4+DQo+ID4+IFllcyBJIGd1ZXNzIHRoYXQgSSBjb3VsZCBqdXN0IGFz
+c2lnbiBwcC0+KCopX21vZF9iYXNlIHRvIHRoZSBDUFUNCj4gYWRkcmVzcw0KPiA+PiBpbiBEVyBh
+bmQgbWFzayBpdCBvdXQgaW4gZHJhN3h4X3BjaWVfaG9zdF9pbml0KCkuLi4NCj4gPj4NCj4gPj4g
+S2lzaG9uLCB3b3VsZCB5b3UgYmUgb2sgd2l0aCB0aGF0Pw0KPiA+DQo+ID4gSW5pdGlhbGx5IEkg
+d2FzIHVzaW5nICpiYXNlLW1hc2sqIHByb3BlcnR5IGZyb20gZHQuIE1lIGFuZCBBcm5kDQo+IChj
+YydlZCkgaGFkDQo+ID4gdGhpcyBkaXNjdXNzaW9uIFsxXSBiZWZvcmUgd2UgZGVjaWRlZCB0aGUg
+Y3VycmVudCBhcHByb2FjaC4gSXQnbGwgYmUNCj4gZ29vZCB0bw0KPiA+IGNoZWNrIHdpdGggQXJu
+ZCB0b28uDQo+ID4NCj4gPiBbMV0gLT4gIGh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL3BpcGVy
+bWFpbC9saW51eC1hcm0ta2VybmVsLzIwMTQtDQo+IE1heS8yNTM1MjguaHRtbA0KPiANCj4gVGhl
+IHByb2JsZW0gSSBoYXZlIGhlcmUgaXMgdGhlIHVzZSBvZiByYW5nZXMgZG9lcyBub3QgbmVjZXNz
+YXJpbHkgbWVhbg0KPiBmZXdlciBhZGRyZXNzIGJpdHMgYXJlIGF2YWlsYWJsZS4gSXQgY2FuIGJl
+IHVzZWQganVzdCBmb3IgY29udmVuaWVuY2UNCj4gb2Ygbm90IHB1dHRpbmcgdGhlIGZ1bGwgYWRk
+cmVzcyBpbnRvIGV2ZXJ5IG5vZGUncyByZWcgcHJvcGVydHkuIEFuZA0KPiB2aWNlIHZlcnNhLCB0
+aGVyZSBhcmUgcHJvYmFibHkgcGxlbnR5IG9mIGNhc2VzIHdoZXJlIHdlIGhhdmUgdGhlIGZ1bGwN
+Cj4gYWRkcmVzcyBpbiB0aGUgbm9kZXMsIGJ1dCByZWFsbHkgb25seSBzb21lIG9mIHRoZSBhZGRy
+ZXNzIGJpdHMgYXJlDQo+IGRlY29kZWQgYXQgdGhlIElQIGJsb2NrLiBXaGV0aGVyIHRoZSBhZGRy
+ZXNzIGJpdHMgYXJlIHByZXNlbnQgaXMNCj4gcmFyZWx5IGNhcmVkIGFib3V0IG9yIGtub3duIGJ5
+IHMvdyBmb2xrcyB1bnRpbCB5b3UgaGl0IGEgcHJvYmxlbSBsaWtlDQo+IHRoaXMuIEdpdmVuIHRo
+aXMgaXMgYW4gaXNvbGF0ZWQgY2FzZSBBVE0sIEkgd291bGQgZml4IGl0IGluIGFuDQo+IGlzb2xh
+dGVkIHdheS4gSXQgZG9lcyBub3QgYWZmZWN0IHRoZSBiaW5kaW5nIGFuZCBjb3VsZCBiZSBjaGFu
+Z2VkIGluDQo+IHRoZSBrZXJuZWwgbGF0ZXIgaWYgdGhpcyBiZWNvbWVzIGEgY29tbW9uIG5lZWQu
+DQo+IA0KPiBSb2INCj4gLS0NCj4gVG8gdW5zdWJzY3JpYmUgZnJvbSB0aGlzIGxpc3Q6IHNlbmQg
+dGhlIGxpbmUgInVuc3Vic2NyaWJlIGxpbnV4LXBjaSIgaW4NCj4gdGhlIGJvZHkgb2YgYSBtZXNz
+YWdlIHRvIG1ham9yZG9tb0B2Z2VyLmtlcm5lbC5vcmcNCj4gTW9yZSBtYWpvcmRvbW8gaW5mbyBh
+dCAgaHR0cDovL3ZnZXIua2VybmVsLm9yZy9tYWpvcmRvbW8taW5mby5odG1sDQo=
