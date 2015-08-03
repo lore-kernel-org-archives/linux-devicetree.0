@@ -1,357 +1,69 @@
-From: Matt Ranostay <mranostay-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH v2 2/2] iio: proximity: add support for PulsedLight LIDAR
-Date: Sun,  2 Aug 2015 21:27:56 -0700
-Message-ID: <1438576076-7890-3-git-send-email-mranostay@gmail.com>
-References: <1438576076-7890-1-git-send-email-mranostay@gmail.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1438576076-7890-1-git-send-email-mranostay-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: marex-ynQEQJNshbs@public.gmane.org, jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, vladimir.barinov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org
-Cc: linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Matt Ranostay <mranostay-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+From: Vignesh R <vigneshr@ti.com>
+Subject: Re: [RFC PATCH 1/5] spi: introduce flag for memory mapped read
+Date: Mon, 3 Aug 2015 10:27:19 +0530
+Message-ID: <55BEF4AF.5090704@ti.com>
+References: <1438072876-16338-1-git-send-email-vigneshr@ti.com>
+ <1438072876-16338-2-git-send-email-vigneshr@ti.com>
+ <20150731181745.GM20873@sirena.org.uk>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20150731181745.GM20873@sirena.org.uk>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Mark Brown <broonie@kernel.org>
+Cc: devicetree@vger.kernel.org, Brian Norris <computersforpeace@gmail.com>, Russell King <linux@arm.linux.org.uk>, Tony Lindgren <tony@atomide.com>, linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org, Huang Shijie <b32955@freescale.com>, linux-mtd@lists.infradead.org, linux-omap@vger.kernel.org, David Woodhouse <dwmw2@infradead.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Add support for the PulsedLight LIDAR rangefinder sensor which allows
-high speed (over 300Hz) distance measurements using Barker Coding within
-40 meter range.
+Hi,
 
-Support only tested on the "blue label" rev 2, but may work using low
-sample frequencies on the original version.
+On 7/31/2015 11:47 PM, Mark Brown wrote:
+> On Tue, Jul 28, 2015 at 02:11:12PM +0530, Vignesh R wrote:
+> 
+>> Introduce use_mmap_read field in spi_message struct. This can be set by
+>> mtd devices (m25p80) to indicate to spi-master (ti-qspi) to perform
+>> memory mapped read. This helps to distinguish whether the spi-message is
+>> from mtd layer(hence mmap read is possible) or by other spi devices.
+> 
+> Based on this description and...
+> 
+>> + * @use_mmap_mode: Indicate to spi master to perform memory mapped
+>> + *	read if possible.
+> 
+> ...the internal documentation I unable to tell what is meant by "perform
+> a memory mapped read", at least to the extent where it is visible
+> outside of the driver.  This means we can't really use this as a generic
+> API since other people won't be able to tell what it does.
+> 
 
-Signed-off-by: Matt Ranostay <mranostay-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
----
- drivers/iio/proximity/Kconfig  |  12 ++
- drivers/iio/proximity/Makefile |   1 +
- drivers/iio/proximity/lidar.c  | 284 +++++++++++++++++++++++++++++++++++++++++
- 3 files changed, 297 insertions(+)
- create mode 100644 drivers/iio/proximity/lidar.c
 
-diff --git a/drivers/iio/proximity/Kconfig b/drivers/iio/proximity/Kconfig
-index 41a8d8f..e64fc5b 100644
---- a/drivers/iio/proximity/Kconfig
-+++ b/drivers/iio/proximity/Kconfig
-@@ -20,6 +20,18 @@ endmenu
- 
- menu "Proximity sensors"
- 
-+config LIDAR
-+	tristate "PulsedLight LIDAR sensor"
-+	select IIO_BUFFER
-+	select IIO_TRIGGERED_BUFFER
-+	depends on I2C
-+	help
-+	  Say Y to build a driver for PulsedLight LIDAR range finding
-+	  sensor.
-+
-+	  To compile this driver as a module, choose M here: the
-+	  module will be called lidar.
-+
- config SX9500
- 	tristate "SX9500 Semtech proximity sensor"
- 	select IIO_BUFFER
-diff --git a/drivers/iio/proximity/Makefile b/drivers/iio/proximity/Makefile
-index 9818dc5..36a95f3 100644
---- a/drivers/iio/proximity/Makefile
-+++ b/drivers/iio/proximity/Makefile
-@@ -4,4 +4,5 @@
- 
- # When adding new entries keep the list in alphabetical order
- obj-$(CONFIG_AS3935)		+= as3935.o
-+obj-$(CONFIG_LIDAR)		+= lidar.o
- obj-$(CONFIG_SX9500)		+= sx9500.o
-diff --git a/drivers/iio/proximity/lidar.c b/drivers/iio/proximity/lidar.c
-new file mode 100644
-index 0000000..e7c2df4
---- /dev/null
-+++ b/drivers/iio/proximity/lidar.c
-@@ -0,0 +1,284 @@
-+/*
-+ * lidar.c - Support for PulsedLight LIDAR range finding sensor
-+ *
-+ * Copyright (C) 2015 Matt Ranostay <mranostay-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License as published by
-+ * the Free Software Foundation; either version 2 of the License, or
-+ * (at your option) any later version.
-+ *
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-+ * GNU General Public License for more details.
-+ *
-+ * TODO: runtime pm, interrupt mode, and signal strength reporting
-+ *
-+ */
-+
-+#include <linux/err.h>
-+#include <linux/init.h>
-+#include <linux/i2c.h>
-+#include <linux/delay.h>
-+#include <linux/mutex.h>
-+#include <linux/module.h>
-+#include <linux/iio/iio.h>
-+#include <linux/iio/sysfs.h>
-+#include <linux/iio/buffer.h>
-+#include <linux/iio/trigger.h>
-+#include <linux/iio/triggered_buffer.h>
-+#include <linux/iio/trigger_consumer.h>
-+
-+#define LIDAR_REG_CONTROL		0x00
-+#define LIDAR_REG_CONTROL_ACQUIRE	BIT(2)
-+
-+#define LIDAR_REG_STATUS		0x01
-+#define LIDAR_REG_STATUS_INVALID	BIT(3)
-+#define LIDAR_REG_STATUS_READY		BIT(0)
-+
-+#define LIDAR_REG_DATA_HBYTE	0x0f
-+#define LIDAR_REG_DATA_LBYTE	0x10
-+
-+#define LIDAR_DRV_NAME "lidar"
-+
-+struct lidar_data {
-+	struct mutex lock;
-+	struct iio_dev *indio_dev;
-+	struct i2c_client *client;
-+
-+	/* 2 byte distance + 8 byte timestamp */
-+	u16 buffer[5] ____cacheline_aligned;
-+};
-+
-+static const struct iio_chan_spec lidar_channels[] = {
-+	{
-+		.type = IIO_DISTANCE,
-+		.info_mask_separate =
-+			BIT(IIO_CHAN_INFO_RAW) | BIT(IIO_CHAN_INFO_SCALE),
-+		.scan_index = 0,
-+		.scan_type = {
-+			.sign = 'u',
-+			.realbits = 16,
-+			.storagebits = 16,
-+		},
-+	},
-+	IIO_CHAN_SOFT_TIMESTAMP(1),
-+};
-+
-+static int lidar_read_byte(struct lidar_data *data, int reg)
-+{
-+	struct i2c_client *client = data->client;
-+	int ret;
-+
-+	ret = i2c_smbus_write_byte(client, reg);
-+	if (ret < 0) {
-+		dev_err(&client->dev, "cannot write addr value");
-+		return ret;
-+	}
-+
-+	ret = i2c_smbus_read_byte(client);
-+	if (ret < 0) {
-+		dev_err(&client->dev, "cannot read data value");
-+		return ret;
-+	}
-+
-+	return ret;
-+}
-+
-+static inline int lidar_write_control(struct lidar_data *data, int val)
-+{
-+	return i2c_smbus_write_byte_data(data->client, LIDAR_REG_CONTROL, val);
-+}
-+
-+static int lidar_read_measurement(struct lidar_data *data, u16 *reg)
-+{
-+	int ret;
-+	int val;
-+
-+	ret = lidar_read_byte(data, LIDAR_REG_DATA_HBYTE);
-+	if (ret < 0)
-+		return ret;
-+	val = ret << 8;
-+
-+	ret = lidar_read_byte(data, LIDAR_REG_DATA_LBYTE);
-+	if (ret < 0)
-+		return ret;
-+
-+	val |= ret;
-+	*reg = val;
-+
-+	return 0;
-+}
-+
-+static int lidar_get_measurement(struct lidar_data *data, u16 *reg)
-+{
-+	struct i2c_client *client = data->client;
-+	int tries = 10;
-+	int ret;
-+
-+	/* start sample */
-+	ret = lidar_write_control(data, LIDAR_REG_CONTROL_ACQUIRE);
-+	if (ret < 0) {
-+		dev_err(&client->dev, "cannot send start measurement command");
-+		return ret;
-+	}
-+
-+	while (tries--) {
-+		usleep_range(1000, 2000);
-+
-+		ret = lidar_read_byte(data, LIDAR_REG_STATUS);
-+		if (ret < 0)
-+			break;
-+
-+		/* return 0 since laser is likely pointed out of range */
-+		if (ret & LIDAR_REG_STATUS_INVALID) {
-+			*reg = 0;
-+			ret = 0;
-+			break;
-+		}
-+
-+		/* sample ready to read */
-+		if (!(ret & LIDAR_REG_STATUS_READY)) {
-+			ret = lidar_read_measurement(data, reg);
-+			break;
-+		}
-+	}
-+
-+	return ret;
-+}
-+
-+static int lidar_read_raw(struct iio_dev *indio_dev,
-+			  struct iio_chan_spec const *chan,
-+			  int *val, int *val2, long mask)
-+{
-+	struct lidar_data *data = iio_priv(indio_dev);
-+	int ret = -EINVAL;
-+
-+	mutex_lock(&data->lock);
-+
-+	if (iio_buffer_enabled(indio_dev) && mask == IIO_CHAN_INFO_RAW) {
-+		ret = -EBUSY;
-+		goto error_busy;
-+	}
-+
-+
-+	switch (mask) {
-+	case IIO_CHAN_INFO_RAW: {
-+		u16 reg;
-+
-+		ret = lidar_get_measurement(data, &reg);
-+		if (!ret) {
-+			*val = reg;
-+			ret = IIO_VAL_INT;
-+		}
-+		break;
-+	}
-+	case IIO_CHAN_INFO_SCALE:
-+		*val = 0;
-+		*val2 = 10000;
-+		ret = IIO_VAL_INT_PLUS_MICRO;
-+		break;
-+	}
-+
-+error_busy:
-+	mutex_unlock(&data->lock);
-+
-+	return ret;
-+}
-+
-+static irqreturn_t lidar_trigger_handler(int irq, void *private)
-+{
-+	struct iio_poll_func *pf = private;
-+	struct iio_dev *indio_dev = pf->indio_dev;
-+	struct lidar_data *data = iio_priv(indio_dev);
-+	int ret;
-+
-+	ret = lidar_get_measurement(data, &data->buffer[0]);
-+	if (!ret) {
-+		iio_push_to_buffers_with_timestamp(indio_dev, data->buffer,
-+						   iio_get_time_ns());
-+	} else {
-+		dev_err(&data->client->dev, "cannot read LIDAR measurement");
-+	}
-+
-+	iio_trigger_notify_done(indio_dev->trig);
-+
-+	return IRQ_HANDLED;
-+}
-+
-+static const struct iio_info lidar_info = {
-+	.driver_module = THIS_MODULE,
-+	.read_raw = lidar_read_raw,
-+};
-+
-+static int lidar_probe(struct i2c_client *client,
-+		       const struct i2c_device_id *id)
-+{
-+	struct lidar_data *data;
-+	struct iio_dev *indio_dev;
-+	int ret;
-+
-+	indio_dev = devm_iio_device_alloc(&client->dev, sizeof(*data));
-+	if (!indio_dev)
-+		return -ENOMEM;
-+
-+	indio_dev->info = &lidar_info;
-+	indio_dev->name = LIDAR_DRV_NAME;
-+	indio_dev->channels = lidar_channels;
-+	indio_dev->num_channels = ARRAY_SIZE(lidar_channels);
-+	indio_dev->modes = INDIO_DIRECT_MODE;
-+
-+	data = iio_priv(indio_dev);
-+	i2c_set_clientdata(client, indio_dev);
-+
-+	data->client = client;
-+	data->indio_dev = indio_dev;
-+	mutex_init(&data->lock);
-+
-+	ret = iio_triggered_buffer_setup(indio_dev, NULL,
-+					 lidar_trigger_handler, NULL);
-+	if (ret)
-+		return ret;
-+
-+	ret = iio_device_register(indio_dev);
-+	if (ret)
-+		goto error_unreg_buffer;
-+
-+	return 0;
-+
-+error_unreg_buffer:
-+	iio_triggered_buffer_cleanup(indio_dev);
-+
-+	return ret;
-+}
-+
-+static int lidar_remove(struct i2c_client *client)
-+{
-+	struct iio_dev *indio_dev = i2c_get_clientdata(client);
-+
-+	iio_device_unregister(indio_dev);
-+	iio_triggered_buffer_cleanup(indio_dev);
-+
-+	return 0;
-+}
-+
-+static const struct i2c_device_id lidar_id[] = {
-+	{"lidar", 0},
-+	{ },
-+};
-+MODULE_DEVICE_TABLE(i2c, lidar_id);
-+
-+static struct i2c_driver lidar_driver = {
-+	.driver = {
-+		.name	= LIDAR_DRV_NAME,
-+	},
-+	.probe		= lidar_probe,
-+	.remove		= lidar_remove,
-+	.id_table	= lidar_id,
-+};
-+module_i2c_driver(lidar_driver);
-+
-+MODULE_AUTHOR("Matt Ranostay <mranostay-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>");
-+MODULE_DESCRIPTION("PulsedLight LIDAR sensor");
-+MODULE_LICENSE("GPL");
--- 
-1.9.1
+Will the following documentation provide better idea regarding the flag:
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+@use_mmap_mode: Some SPI controller chips are optimized for interacting
+with serial flash memories. These chips have memory mapped interface,
+through which entire serial flash memory slave can be read/written as if
+though they are physical memories (like RAM). Using this interface,
+flash can be accessed using memcpy() function and the spi controller
+hardware will take care of communicating with serial flash over SPI.
+Setting this flag will indicate the SPI controller driver that the
+spi_message is from mtd layer to read from/write to flash. The SPI
+master driver can then appropriately switch the controller to memory
+mapped interface to read from/write to flash, based on this flag (See
+drivers/spi/spi-ti-qspi.c for example).
+NOTE: If the SPI controller chip lacks memory mapped interface, then the
+driver will ignore this flag and use normal SPI protocol to read
+from/write to flash. Communication with non-flash SPI devices is not
+possible using the memory mapped interface.
+
+I can update the patch commit message and documentation accordingly?
+
+Regards
+Vignesh
