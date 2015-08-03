@@ -1,33 +1,239 @@
-From: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: Re: [PATCH v3 1/5] clk: hisi: refine parameter checking for init
-Date: Mon, 3 Aug 2015 14:46:03 -0700
-Message-ID: <20150803214603.GC21068@codeaurora.org>
-References: <1438564418-15948-1-git-send-email-leo.yan@linaro.org>
- <1438564418-15948-2-git-send-email-leo.yan@linaro.org>
+From: Matt Ranostay <mranostay-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 2/3] iio: temperature: add max6675 thermocouple converter driver
+Date: Mon, 3 Aug 2015 15:39:00 -0700
+Message-ID: <CAKzfze9EcW0=yRGq=JBim7P8kQ4q+UgOd00qm=zA6oLz+Ut4DQ@mail.gmail.com>
+References: <1438635410-3757-1-git-send-email-mporter@konsulko.com>
+	<1438635410-3757-3-git-send-email-mporter@konsulko.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1438564418-15948-2-git-send-email-leo.yan-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+In-Reply-To: <1438635410-3757-3-git-send-email-mporter-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Leo Yan <leo.yan-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Wei Xu <xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Haojian Zhuang <haojian.zhuang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Bintian Wang <bintian.wang-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Guodong Xu <guodong.xu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Jian Zhang <zhangjian001-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Zhenwei Wang <Zhenwei.wang-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Haoju Mo <mohaoju-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Dan Zhao <dan.zhao-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, sunzhaosheng-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, victor.lixin-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org
+To: Matt Porter <mporter-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
+Cc: Linux IIO List <linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Devicetree List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 08/03, Leo Yan wrote:
-> *of_iomap()* will check the device node pointer, and if the pointer is
-> NULL it will return error code. So refine clock's init flow by checking
-> the device node with this simple way; and polish a little for the print
-> out message.
-> 
-> Signed-off-by: Leo Yan <leo.yan-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+On Mon, Aug 3, 2015 at 1:56 PM, Matt Porter <mporter-OWPKS81ov/FWk0Htik3J/w@public.gmane.org> wrote:
+> Add a driver for the MAX6675 thermocouple converter. This
+> device interfaces with K-type thermocouples and provides
+> cold-junction compensated temperature readings via a
+> SPI interface.
+>
+> Signed-off-by: Matt Porter <mporter-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
 > ---
+>  drivers/iio/temperature/Kconfig   |  11 +++
+>  drivers/iio/temperature/Makefile  |   1 +
+>  drivers/iio/temperature/max6675.c | 155 ++++++++++++++++++++++++++++++++++++++
+>  3 files changed, 167 insertions(+)
+>  create mode 100644 drivers/iio/temperature/max6675.c
+>
+> diff --git a/drivers/iio/temperature/Kconfig b/drivers/iio/temperature/Kconfig
+> index 21feaa4..b73fbf4 100644
+> --- a/drivers/iio/temperature/Kconfig
+> +++ b/drivers/iio/temperature/Kconfig
+> @@ -3,6 +3,17 @@
+>  #
+>  menu "Temperature sensors"
+>
+> +config MAX6675
+> +       tristate "MAX6675 thermocouple converter"
+> +       depends on SPI
+> +       help
+> +         If you say yes here you get support for the Maxim
+> +         MAX6675 thermocouple converter connected with SPI.
+> +
+> +         This driver can also be built as a module. If so, the module will
+> +         be called max6675.
+> +
+> +
+>  config MLX90614
+>         tristate "MLX90614 contact-less infrared sensor"
+>         depends on I2C
+> diff --git a/drivers/iio/temperature/Makefile b/drivers/iio/temperature/Makefile
+> index 40710a8..d67ef40 100644
+> --- a/drivers/iio/temperature/Makefile
+> +++ b/drivers/iio/temperature/Makefile
+> @@ -2,5 +2,6 @@
+>  # Makefile for industrial I/O temperature drivers
+>  #
+>
+> +obj-$(CONFIG_MAX6675) += max6675.o
+>  obj-$(CONFIG_MLX90614) += mlx90614.o
+>  obj-$(CONFIG_TMP006) += tmp006.o
+> diff --git a/drivers/iio/temperature/max6675.c b/drivers/iio/temperature/max6675.c
+> new file mode 100644
+> index 0000000..2d1fda2
+> --- /dev/null
+> +++ b/drivers/iio/temperature/max6675.c
+> @@ -0,0 +1,155 @@
+> +/*
+> + * max6675.c - MAX6675 thermocouple converter driver
+> + *
+> + * Copyright (C) 2015 Konsulko Group, Matt Porter <mporter-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
+> + *
+> + * This program is free software; you can redistribute it and/or modify
+> + * it under the terms of the GNU General Public License as published by
+> + * the Free Software Foundation; either version 2 of the License, or
+> + * (at your option) any later version.
+> + *
+> + * This program is distributed in the hope that it will be useful,
+> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
+> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+> + * GNU General Public License for more details.
+> + *
+> + */
+> +
+> +#include <linux/acpi.h>
+> +#include <linux/init.h>
+> +#include <linux/module.h>
+> +#include <linux/of.h>
+> +#include <linux/iio/iio.h>
+> +#include <linux/spi/spi.h>
+> +
+> +struct max6675_state {
+> +       struct spi_device *spi;
+> +};
+> +
+> +static const struct iio_chan_spec max6675_channels[] = {
+> +       {
+> +               .type = IIO_TEMP,
+> +               .info_mask_separate =
+> +                       BIT(IIO_CHAN_INFO_RAW) |
+> +                       BIT(IIO_CHAN_INFO_SCALE),
+> +       },
+> +};
+> +
+> +static int max6675_read(struct max6675_state *st, int *val)
+> +{
+> +       int ret;
+> +
+> +       ret = spi_read(st->spi, val, 2);
+> +       if (ret < 0)
+> +               return ret;
+> +
+> +       /* Temperature is bits 14..3 */
+> +       *val = (*val >> 3) & 0xfff;
+> +
+> +       return ret;
+> +}
+> +
+> +static int max6675_read_raw(struct iio_dev *indio_dev,
+> +                           struct iio_chan_spec const *chan,
+> +                           int *val,
+> +                           int *val2,
+> +                           long m)
+> +{
+> +       struct max6675_state *st = iio_priv(indio_dev);
+> +       int ret;
+> +
+> +       if (m == IIO_CHAN_INFO_RAW) {
+> +               *val2 = 0;
+> +               ret = max6675_read(st, val);
+> +               if (ret)
+> +                       return ret;
+> +       } else if (m == IIO_CHAN_INFO_SCALE) {
+> +               *val = 250;
+> +               *val2 = 0;
+> +       } else
+> +               return -EINVAL;
+> +
+> +       return IIO_VAL_INT;
+> +}
+> +
+> +static const struct iio_info max6675_info = {
+> +       .driver_module = THIS_MODULE,
+> +       .read_raw = &max6675_read_raw,
+> +};
+> +
+> +static int max6675_probe(struct spi_device *spi)
+> +{
+> +       struct iio_dev *indio_dev;
+> +       struct max6675_state *st;
+> +       int ret = 0;
+> +
+> +       indio_dev = devm_iio_device_alloc(&spi->dev, sizeof(*st));
+> +       if (!indio_dev)
+> +               return -ENOMEM;
+> +
+> +       st = iio_priv(indio_dev);
+> +       st->spi = spi;
+> +
+> +       spi->mode = SPI_MODE_1;
+> +       spi->bits_per_word = 16;
 
-Applied to clk-next
+Have this error or display a warning when it doesn't match the passed
+DT binding settings. Otherwise it may get confusing why other SPI
+modes and word sizes don't work.
 
--- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project
+> +
+> +       spi_set_drvdata(spi, indio_dev);
+> +
+> +       indio_dev->dev.parent = &spi->dev;
+> +       indio_dev->name = spi_get_device_id(spi)->name;
+> +       indio_dev->channels = max6675_channels;
+> +       indio_dev->num_channels = ARRAY_SIZE(max6675_channels);
+> +       indio_dev->modes = INDIO_DIRECT_MODE;
+> +       indio_dev->info = &max6675_info;
+> +
+> +       ret = iio_device_register(indio_dev);
+> +       if (ret < 0)
+> +               dev_err(&spi->dev, "unable to register device\n");
+> +
+> +       return ret;
+> +}
+> +
+> +static int max6675_remove(struct spi_device *spi)
+> +{
+> +       struct iio_dev *indio_dev = spi_get_drvdata(spi);
+> +
+> +       iio_device_unregister(indio_dev);
+> +
+> +       return 0;
+> +}
+> +
+> +static const struct acpi_device_id max6675_acpi_ids[] = {
+> +       { "MXIM6675", 0 },
+> +       {},
+> +};
+> +MODULE_DEVICE_TABLE(acpi, max6675_acpi_ids);
+> +
+> +static const struct of_device_id max6675_dt_ids[] = {
+> +       { .compatible = "maxim,max6675" },
+> +       {},
+> +};
+> +MODULE_DEVICE_TABLE(of, max6675_dt_ids);
+> +
+> +static const struct spi_device_id max6675_spi_ids[] = {
+> +       {"max6675", 0},
+> +       {},
+> +};
+> +MODULE_DEVICE_TABLE(spi, max6675_spi_ids);
+> +
+> +static struct spi_driver max6675_driver = {
+> +       .driver = {
+> +               .name   = "max6675",
+> +               .owner  = THIS_MODULE,
+> +               .acpi_match_table = ACPI_PTR(max6675_acpi_ids),
+> +               .of_match_table = of_match_ptr(max6675_dt_ids),
+> +       },
+> +       .probe          = max6675_probe,
+> +       .remove         = max6675_remove,
+> +       .id_table       = max6675_spi_ids,
+> +};
+> +module_spi_driver(max6675_driver);
+> +
+> +MODULE_AUTHOR("Matt Porter <mporter-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>");
+> +MODULE_DESCRIPTION("MAX6675 thermocouple converter driver");
+> +MODULE_LICENSE("GPL");
+> +MODULE_ALIAS("spi:max6675");
+> --
+> 2.1.4
+>
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-kernel" in
+> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> Please read the FAQ at  http://www.tux.org/lkml/
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
