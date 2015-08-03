@@ -1,61 +1,120 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH] ARM: dts: sunxi: Raise minimum CPU voltage
- for sun7i-a20 to a level all boards can supply
-Date: Mon, 3 Aug 2015 11:23:25 +0200
-Message-ID: <20150803092325.GA2564@lukather>
-References: <1438543386-7253-1-git-send-email-public_timo.s@silentcreek.de>
- <CAGRGNgV6b9yt2HnB2x2Wyc05KEahoX-Y+mVhxsryztcfA36H1g@mail.gmail.com>
- <20150803083751.1BCF56C80391@dd34104.kasserver.com>
-Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="gQ68Z+YvpGk0qVJK"
-Return-path: <linux-sunxi+bncBD2ZNBF5VYJRBD7G7SWQKGQEGSNHL3A-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20150803083751.1BCF56C80391-RzmsueL7+k6AvxNu/8lEInnhMCiq3JZZ@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <http://groups.google.com/group/linux-sunxi/subscribe>
-To: Timo Sigurdsson <public_timo.s-fWgRPtSzPNU3WX+qO2AYSQ@public.gmane.org>
-Cc: julian.calaby-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org
+From: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
+Subject: [PATCH v10 0/5] mtd: nand: vf610_nfc: Freescale NFC for VF610
+Date: Mon,  3 Aug 2015 11:27:25 +0200
+Message-ID: <1438594050-4595-1-git-send-email-stefan@agner.ch>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Cc: sebastian-E0PNVn5OA6ohrxcnuTQ+TQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, marb-Z4QKGCRq86k@public.gmane.org, aaron-yuhzfaV+M/Wz3Dx2OeFgIA@public.gmane.org, bpringlemeir-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, albert.aribaud-iEu9NFBzPZE@public.gmane.org, klimov.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
---gQ68Z+YvpGk0qVJK
-Content-Type: text/plain; charset=UTF-8
-Content-Disposition: inline
+The 10th revision includes some more review comments, including an
+improved handling of empty NAND pages with hardware ECC.
 
-On Mon, Aug 03, 2015 at 10:37:51AM +0200, Timo Sigurdsson wrote:
-> Hi Julian,
-> 
-> Julian Calaby schrieb am 03.08.2015 01:35:
-> >> sun7i-a20.dtsi contains an cpufreq operating point at 0.9 volts. Most A20
-> >> boards
-> >> (or all?), however, do not allow the voltage to go below 1.0V. Thus, raise the
-> >> voltage for the lowest operating point to 1.0V so all boards can actually use
-> >> it.
-> > 
-> > Surely it wouldn't be added here if some could supply 0.9v.
-> 
-> Maybe. I just know some boards don't (e.g. Cubieboard 2, Cubietruck, BananaPi)
-> and don't know of any that does. But that's not my point. I think that a common
-> minimum operating point, defined on the SOC level, should be defined in a way
-> that works on all boards.
+More information and the full test log of earlier patchset version
+can be found in the cover letter of the last revision v6:
+http://thread.gmane.org/gmane.linux.kernel/1979868
 
-All of them can supply it. The DCDC2 regulator they use for the CPU
-can go as low as 0.7V. The question is whether the CPU itself can work
-at such a low voltage. And the operating limits for the CPU is
-documented to be 1V - 1.4V. Anything else is either over or
-underclocking, which might or might not work on individual SoCs. So
-it's not something that we're going to support.
+Changes since v9:
+- Remove inline of vf610_nfc_done
+- Add __iomem to src argument of vf610_nfc_memcpy
+- Handle return value of mtd_device_parse_register correctly
+- Count bits in OOB too (only non-ECC bits)
+- Return bitflips in ecc.read_page callback vf610_nfc_read_page
+- Fall-through ALT_BUF_ONFI
+- Use BIT macros
 
-Maxime
+Changes since v8:
+- Fix 16-Bit NAND flash support by splitting up initialization
+  (introduce vf610_nfc_preinit_controller)
+- Updated comments in initialziation functions
+
+Changes since v7:
+- vf610-twr.dts: Moved NFC pinmux into the existing iomuxc node
+  and sort new nfc node behind the existing iomuxc node as well.
+- vf610-twr.dts/vf-colibri.dtsi: Dropped _1 suffixes
+
+Changes since v6:
+- Rebased ontop of l2-mtd/master (v4.2-rc1 based)
+- Removed HAVE_NAND_VF610_NFC and use depends on. This made
+  "[PATCH v6 4/6] ARM: vf610: enable NAND Flash Controller" unnecessary
+
+Changes since v5:
+- Removed fsl,mpc5125-nfc compatible string
+- Removed readl/writel_relaxed
+- Change interface of vf610_nfc_transfer_size to match other accessors
+
+Changes since v4:
+- Rebased ontop of l2-mtd/master (v4.1-rc4 based)
+- Eliminate unnecessary page read (NAND_CMD_SEQIN) since the driver does
+  not support sub-page writes anyway (improves write performance)
+- Support ONFI by enabling READID command with offset and parameter page
+  reads (CMD_PARAM)
+- Change to dedicated read_page/write_page function, enables raw writes
+- Use __LITTLE_ENDIAN to distingush between LE/BE relevant statements
+- Eliminated vf610_nfc_probe_dt in favor of common DT init code
+- Use wait_for_completion_timeout
+- Some style fixes (spaces, etc.)
+
+Changes since v3:
+- Make the driver selectable when COMPILE_TEST is set
+- Fix compile error due to superfluous ECC_STATUS configuration in initial
+  patch (without ECC correction ECC_STATUS does not need to be configured)
+- Remove custom BBT pattern and switch to in-band BBT in the initial patch
+- Include two bug fixes, for details see the corresponding U-Boot patches:
+  http://thread.gmane.org/gmane.comp.boot-loaders.u-boot/215802
+
+Changes since v2:
+- Updated binding documentation
+
+Changes since v1:
+- Nest nfc_config struct within the main nfc struct
+- Use assigned clock binding to specify NFC clock
+- Rebased ontop of MSCM IR patchset (driver parts have been merged)
+- Split out arch Kconfig in a separate config
+- Fix module license
+- Updated MAINTAINERS
+
+Changes since RFC (Bill Pringlemeir):
+- Renamed driver from fsl_nfc to vf610_nfc
+- Use readl/writel for all register in accessor functions
+- Optimized field accessor functions
+- Implemented PM (suspend/resume) functions
+- Implemented basic support for ECC strength/ECC step size from dt
+- Improved performance of count_written_bits by using hweight32
+- Support ECC with 60-bytes to correct up to 32 bit errors
+- Changed to in-band BBT (NAND_BBT_NO_OOB) which also allows ECC modes
+  which uses up to 60 bytes on 64 byte OOB
+- Removed custom (downstream) BBT pattern since BBT table won't be
+  compatible anyway (due to the change above)
+
+*** SUBJECT HERE ***
+
+*** BLURB HERE ***
+
+Stefan Agner (5):
+  mtd: nand: vf610_nfc: Freescale NFC for VF610, MPC5125 and others
+  mtd: nand: vf610_nfc: add hardware BCH-ECC support
+  mtd: nand: vf610_nfc: add device tree bindings
+  ARM: dts: vf610twr: add NAND flash controller peripherial
+  ARM: dts: vf-colibri: enable NAND flash controller
+
+ .../devicetree/bindings/mtd/vf610-nfc.txt          |  45 ++
+ MAINTAINERS                                        |   6 +
+ arch/arm/boot/dts/vf-colibri.dtsi                  |  32 +
+ arch/arm/boot/dts/vf610-twr.dts                    |  40 +
+ arch/arm/boot/dts/vfxxx.dtsi                       |   8 +
+ drivers/mtd/nand/Kconfig                           |  11 +
+ drivers/mtd/nand/Makefile                          |   1 +
+ drivers/mtd/nand/vf610_nfc.c                       | 849 +++++++++++++++++++++
+ 8 files changed, 992 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/mtd/vf610-nfc.txt
+ create mode 100644 drivers/mtd/nand/vf610_nfc.c
 
 -- 
-Maxime Ripard, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
---gQ68Z+YvpGk0qVJK--
+2.5.0
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
