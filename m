@@ -1,116 +1,57 @@
-From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Subject: Re: Re: [PATCH v2] ARM: dts: sunxi: Add regulators for
- LeMaker BananaPi
-Date: Mon, 3 Aug 2015 15:11:41 +0200
-Message-ID: <55BF688D.5010905@redhat.com>
-References: <1438532305-5884-1-git-send-email-public_timo.s@silentcreek.de>
- <20150803094723.GD2564@lukather>
-Reply-To: hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org
+From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v2 04/10] Doc: usb: ci-hdrc-usb2: add ahb-burst-config for
+ binding doc
+Date: Mon, 3 Aug 2015 09:00:46 -0500
+Message-ID: <CAL_Jsq+GNQq+SQCeMhy=W-XTPJn1ROAYHpm2+W9wwUa9+t-XwA@mail.gmail.com>
+References: <1438577238-10153-1-git-send-email-peter.chen@freescale.com> <1438577238-10153-5-git-send-email-peter.chen@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Return-path: <linux-sunxi+bncBDRZXY4CYYORBE6R7WWQKGQE5PL2TMA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <20150803094723.GD2564@lukather>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <http://groups.google.com/group/linux-sunxi/subscribe>
-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, Timo Sigurdsson <public_timo.s-fWgRPtSzPNU3WX+qO2AYSQ@public.gmane.org>
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1438577238-10153-5-git-send-email-peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Cc: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org" <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Li Jun <jun.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Linux USB List <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-
-On 03-08-15 11:47, Maxime Ripard wrote:
-> On Sun, Aug 02, 2015 at 06:18:25PM +0200, Timo Sigurdsson wrote:
->> sun7i-a20-bananapi.dts doesn't contain regulator nodes for the AXP209 PMU
->> driver, so add them to allow for voltage-scaling with cpufreq-dt.
->>
->> Signed-off-by: Timo Sigurdsson <public_timo.s-fWgRPtSzPNU3WX+qO2AYSQ@public.gmane.org>
->> ---
->> Changes since v1 (RFC):
->>
->> - Dropped the changes to the cpufreq operating points and renamed the patch
->> accordingly
->> - Limited the CPU voltage range so it doesn't exceed the SOC specifications
->> ---
->>   arch/arm/boot/dts/sun7i-a20-bananapi.dts | 35 ++++++++++++++++++++++++++++----
->>   1 file changed, 31 insertions(+), 4 deletions(-)
->>
->> diff --git a/arch/arm/boot/dts/sun7i-a20-bananapi.dts b/arch/arm/boot/dts/sun7i-a20-bananapi.dts
->> index 9f7b472..74382f3 100644
->> --- a/arch/arm/boot/dts/sun7i-a20-bananapi.dts
->> +++ b/arch/arm/boot/dts/sun7i-a20-bananapi.dts
->> @@ -92,6 +92,10 @@
->>   	status = "okay";
->>   };
->>
->> +&cpu0 {
->> +	cpu-supply = <&reg_dcdc2>;
->> +};
->> +
->>   &ehci0 {
->>   	status = "okay";
->>   };
->> @@ -119,13 +123,9 @@
->>   	status = "okay";
->>
->>   	axp209: pmic@34 {
->> -		compatible = "x-powers,axp209";
->>   		reg = <0x34>;
->>   		interrupt-parent = <&nmi_intc>;
->>   		interrupts = <0 IRQ_TYPE_LEVEL_LOW>;
->> -
->> -		interrupt-controller;
->> -		#interrupt-cells = <1>;
->>   	};
->>   };
->>
->> @@ -182,6 +182,33 @@
->>   	};
->>   };
->>
->> +#include "axp209.dtsi"
->> +
->> +&reg_dcdc2 {
->> +	regulator-always-on;
->> +	regulator-min-microvolt = <1000000>;
->> +	regulator-max-microvolt = <1400000>;
->> +	regulator-name = "vdd-cpu";
->> +};
->> +
->> +&reg_dcdc3 {
->> +	regulator-always-on;
->> +	regulator-min-microvolt = <1000000>;
->> +	regulator-max-microvolt = <1400000>;
->> +	regulator-name = "vdd-int-dll";
->> +};
->> +
->> +&reg_ldo1 {
->> +	regulator-name = "vdd-rtc";
->> +};
->> +
->> +&reg_ldo2 {
->> +	regulator-always-on;
->> +	regulator-min-microvolt = <3000000>;
->> +	regulator-max-microvolt = <3000000>;
->> +	regulator-name = "avcc";
->> +};
+On Sun, Aug 2, 2015 at 11:47 PM, Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org> wrote:
+> It is used to change ahb burst configuration for platforms, it is
+> vendor specific.
 >
-> What regulator provides the 3.3V regulator used in the rest of this DT
-> then (MMC, GMAC) ?
+> Signed-off-by: Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+> ---
+>  Documentation/devicetree/bindings/usb/ci-hdrc-usb2.txt | 4 ++++
+>  1 file changed, 4 insertions(+)
+>
+> diff --git a/Documentation/devicetree/bindings/usb/ci-hdrc-usb2.txt b/Documentation/devicetree/bindings/usb/ci-hdrc-usb2.txt
+> index 4159c8c..3c377a3 100644
+> --- a/Documentation/devicetree/bindings/usb/ci-hdrc-usb2.txt
+> +++ b/Documentation/devicetree/bindings/usb/ci-hdrc-usb2.txt
+> @@ -32,6 +32,8 @@ Optional properties:
+>  - external-vbus-divider: (FSL only) enables off-chip resistor divider for Vbus
+>  - itc-setting: interrupt threshold control register control, the setting
+>    should be aligned with ITC bits at register USBCMD.
+> +- ahb-burst-config: it is vendor dependent, the required value should be
+> +  aligned with AHBBRST at SBUSCFG, the range is from 0x0 to 0x7.
 
-A separate fixed regulator, like most (all?) other axp209 using boards,
-e.g. the cubieboard has a TCS4199 regulator for this, and the banana
-boards use a XL8206/UP1746 for this, according to the schematics I
-have.
+What do the values mean and what happens if the property is not
+present? Please define that here.
 
-Regards,
-
-Hans
+Rob
 
 >
-> Maxime
+>  Example:
 >
+> @@ -44,4 +46,6 @@ Example:
+>                 phy-names = "usb-phy";
+>                 vbus-supply = <&reg_usb0_vbus>;
+>                 gadget-itc-setting = <0x4>; /* 4 micro-frames */
+> +                /* Incremental burst of unspecified length */
+> +               ahb-burst-config = <0x0>;
+>         };
+> --
+> 1.9.1
+>
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
