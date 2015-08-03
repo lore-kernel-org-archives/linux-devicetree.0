@@ -1,76 +1,55 @@
-From: YH Huang <yh.huang@mediatek.com>
-Subject: Re: [PATCH v6 0/3] Add MediaTek display PWM driver
-Date: Mon, 3 Aug 2015 14:21:32 +0800
-Message-ID: <1438582892.19953.4.camel@mtksdaap41>
-References: <1437380237-28961-1-git-send-email-yh.huang@mediatek.com>
-	 <2181696.fQcvS98Cqx@ubix> <1437729058.11386.4.camel@mtksdaap41>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-pwm-owner@vger.kernel.org>
-In-Reply-To: <1437729058.11386.4.camel@mtksdaap41>
-Sender: linux-pwm-owner@vger.kernel.org
-To: Thierry Reding <thierry.reding@gmail.com>
-Cc: Matthias Brugger <matthias.bgg@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, srv_heupstream@mediatek.com, linux-mediatek@lists.infradead.org, Sascha Hauer <kernel@pengutronix.de>, yingjoe.chen@mediatek.com
+From: Sagar Dharia <sdharia@codeaurora.org>
+Subject: [PATCH V3 0/6] Introduce framework for SLIMbus device drivers
+Date: Mon,  3 Aug 2015 00:59:44 -0600
+Message-ID: <1438585190-11894-1-git-send-email-sdharia@codeaurora.org>
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: gregkh@linuxfoundation.org, bp@suse.de, poeschel@lemonage.de, sdharia@codeaurora.org, treding@nvidia.com, broonie@kernel.org, gong.chen@linux.intel.com, andreas.noever@gmail.com, alan@linux.intel.com, mathieu.poirier@linaro.org, daniel@ffwll.ch, oded.gabbay@amd.com, jkosina@suse.cz, sharon.dvir1@mail.huji.ac.il, joe@perches.com, davem@davemloft.net, james.hogan@imgtec.com, michael.opdenacker@free-electrons.com, daniel.thompson@linaro.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: kheitke@audience.com, mlocke@codeaurora.org, agross@codeaurora.org, linux-arm-msm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 2015-07-24 at 17:10 +0800, YH Huang wrote:
-> On Fri, 2015-07-24 at 10:42 +0200, Matthias Brugger wrote:
-> > On Monday, July 20, 2015 04:17:14 PM YH Huang wrote:
-> > > This patch series add the use of display PWM driver, documentation
-> > > and device tree for Mediatek SoCs. The driver is used to support
-> > > the backlight of the panel. This is based on v4.2-rc1.
-> > > 
-> > > The clock definitions (CLK_MM_DISP_PWM*) are added by James Liao's patch:
-> > > clk: mediatek: Add subsystem clocks of MT8173
-> > > 
-> > > Change in v6:
-> > > 1. Enable clocks in the pwm_enable function
-> > > 2. Remove suspend/resume code since pwm-backlight driver has done the same
-> > > things 3. Revise some code to make it easier to read
-> > > 
-> > 
-> > Can you please provide the whole change log for all versions the next time.
-> > It's easier this way to understand the evolution of the series.
-> 
-> Change in v6:
-> 1. Enable clocks in the pwm_enable function.
-> 2. Remove suspend/resume code since pwm-backlight driver has done the
-> same things.
-> 3. Revise some code to make it easier to read.
-> 
-> Change in v5:
-> 1. Configure PWM output via pinctrl.
-> 2. Fix the parameter name in dtsi.
-> 
-> Change in v4:
-> 1. Codebase is on v4.2-rc1.
-> 2. Add the PWM node in dtsi.
-> 3. Change the dependency in Kconfig.
-> 4. Rewrite some code for readability.
-> 
-> Change in v3:
-> 1. Add suspend/resume function.
-> 2. Fix the formula for high_width calculation.
-> 3. Rewrite some code to make it easier to read.
-> 4. Add more information in the commit message.
-> 
-> Change in v2:
-> 1. Rewrite descriptions for driver in kconfig to make it much clear.
-> 2. Rename the driver from "pwm-mediatek-disp" to "pwm-mtk-disp".
-> 3. Disable clocks in the error path.
-> 4. Change the shift values in decimal instead of hex.
-> 5. Rename and add some variables or function name for consistency and
-> readability.
-> 6. Drop unnecessary parentheses, spaces, variables and add newlines to
-> make the code easiler to read.
-> 
-> Thanks for your suggestion.
+Changes since V2:
+* Multiple files to represent corresponding functionality of the
+  framework per Srini's suggestion
+* Documentation/slimbus/summary to capture documentation
+* register_controller now adds slave devices as well for that
+  controller (rather than additional step) per Mark's suggestion
+* Changed framework to make sure synchronous transactions are waited-
+  for in framework itself per Mark's suggestion
+* Addressed other inline comments.
 
-Hi Thierry,
+Sagar Dharia (6):
+  SLIMbus: Device management on SLIMbus
+  of/slimbus: OF helper for SLIMbus
+  slimbus: Add messaging APIs to slimbus framework
+  slim: qcom: Add Qualcomm Slimbus controller driver
+  slimbus: Add support for 'clock-pause' feature
+  slim: qcom: Add runtime-pm support using clock-pause feature
 
-Do you have any suggestions?
-Maybe we could apply the patch?
+ Documentation/devicetree/bindings/slimbus/bus.txt  |  46 ++
+ .../devicetree/bindings/slimbus/slim-qcom-ctrl.txt |  42 +
+ drivers/Kconfig                                    |   2 +
+ drivers/Makefile                                   |   1 +
+ drivers/slimbus/Kconfig                            |  21 +
+ drivers/slimbus/Makefile                           |   5 +
+ drivers/slimbus/slim-core.c                        | 855 +++++++++++++++++++++
+ drivers/slimbus/slim-messaging.c                   | 378 +++++++++
+ drivers/slimbus/slim-qcom-ctrl.c                   | 734 ++++++++++++++++++
+ drivers/slimbus/slim-qcom.h                        |  66 ++
+ drivers/slimbus/slim-sched.c                       | 121 +++
+ include/linux/mod_devicetable.h                    |  13 +
+ include/linux/slimbus.h                            | 678 ++++++++++++++++
+ 13 files changed, 2962 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/slimbus/bus.txt
+ create mode 100644 Documentation/devicetree/bindings/slimbus/slim-qcom-ctrl.txt
+ create mode 100644 drivers/slimbus/Kconfig
+ create mode 100644 drivers/slimbus/Makefile
+ create mode 100644 drivers/slimbus/slim-core.c
+ create mode 100644 drivers/slimbus/slim-messaging.c
+ create mode 100644 drivers/slimbus/slim-qcom-ctrl.c
+ create mode 100644 drivers/slimbus/slim-qcom.h
+ create mode 100644 drivers/slimbus/slim-sched.c
+ create mode 100644 include/linux/slimbus.h
 
-Regards,
-YH Huang
+-- 
+1.8.2.1
