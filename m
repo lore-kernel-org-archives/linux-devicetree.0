@@ -1,147 +1,76 @@
-From: Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: [PATCH v2 10/10] usb: chipidea: add tx/rx burst size configuration interface
-Date: Mon, 3 Aug 2015 12:47:18 +0800
-Message-ID: <1438577238-10153-11-git-send-email-peter.chen@freescale.com>
-References: <1438577238-10153-1-git-send-email-peter.chen@freescale.com>
+From: YH Huang <yh.huang@mediatek.com>
+Subject: Re: [PATCH v6 0/3] Add MediaTek display PWM driver
+Date: Mon, 3 Aug 2015 14:21:32 +0800
+Message-ID: <1438582892.19953.4.camel@mtksdaap41>
+References: <1437380237-28961-1-git-send-email-yh.huang@mediatek.com>
+	 <2181696.fQcvS98Cqx@ubix> <1437729058.11386.4.camel@mtksdaap41>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1438577238-10153-1-git-send-email-peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, jun.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-pwm-owner@vger.kernel.org>
+In-Reply-To: <1437729058.11386.4.camel@mtksdaap41>
+Sender: linux-pwm-owner@vger.kernel.org
+To: Thierry Reding <thierry.reding@gmail.com>
+Cc: Matthias Brugger <matthias.bgg@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, srv_heupstream@mediatek.com, linux-mediatek@lists.infradead.org, Sascha Hauer <kernel@pengutronix.de>, yingjoe.chen@mediatek.com
 List-Id: devicetree@vger.kernel.org
 
-The user can adjust it through dts or platform data
+On Fri, 2015-07-24 at 17:10 +0800, YH Huang wrote:
+> On Fri, 2015-07-24 at 10:42 +0200, Matthias Brugger wrote:
+> > On Monday, July 20, 2015 04:17:14 PM YH Huang wrote:
+> > > This patch series add the use of display PWM driver, documentation
+> > > and device tree for Mediatek SoCs. The driver is used to support
+> > > the backlight of the panel. This is based on v4.2-rc1.
+> > > 
+> > > The clock definitions (CLK_MM_DISP_PWM*) are added by James Liao's patch:
+> > > clk: mediatek: Add subsystem clocks of MT8173
+> > > 
+> > > Change in v6:
+> > > 1. Enable clocks in the pwm_enable function
+> > > 2. Remove suspend/resume code since pwm-backlight driver has done the same
+> > > things 3. Revise some code to make it easier to read
+> > > 
+> > 
+> > Can you please provide the whole change log for all versions the next time.
+> > It's easier this way to understand the evolution of the series.
+> 
+> Change in v6:
+> 1. Enable clocks in the pwm_enable function.
+> 2. Remove suspend/resume code since pwm-backlight driver has done the
+> same things.
+> 3. Revise some code to make it easier to read.
+> 
+> Change in v5:
+> 1. Configure PWM output via pinctrl.
+> 2. Fix the parameter name in dtsi.
+> 
+> Change in v4:
+> 1. Codebase is on v4.2-rc1.
+> 2. Add the PWM node in dtsi.
+> 3. Change the dependency in Kconfig.
+> 4. Rewrite some code for readability.
+> 
+> Change in v3:
+> 1. Add suspend/resume function.
+> 2. Fix the formula for high_width calculation.
+> 3. Rewrite some code to make it easier to read.
+> 4. Add more information in the commit message.
+> 
+> Change in v2:
+> 1. Rewrite descriptions for driver in kconfig to make it much clear.
+> 2. Rename the driver from "pwm-mediatek-disp" to "pwm-mtk-disp".
+> 3. Disable clocks in the error path.
+> 4. Change the shift values in decimal instead of hex.
+> 5. Rename and add some variables or function name for consistency and
+> readability.
+> 6. Drop unnecessary parentheses, spaces, variables and add newlines to
+> make the code easiler to read.
+> 
+> Thanks for your suggestion.
 
-Signed-off-by: Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
----
- drivers/usb/chipidea/bits.h  |  4 ++++
- drivers/usb/chipidea/ci.h    |  1 +
- drivers/usb/chipidea/core.c  | 35 +++++++++++++++++++++++++++++++++++
- include/linux/usb/chipidea.h |  4 ++++
- 4 files changed, 44 insertions(+)
+Hi Thierry,
 
-diff --git a/drivers/usb/chipidea/bits.h b/drivers/usb/chipidea/bits.h
-index 462ad02..e462f55 100644
---- a/drivers/usb/chipidea/bits.h
-+++ b/drivers/usb/chipidea/bits.h
-@@ -61,6 +61,10 @@
- /* Set non-zero value for internal TT Hub address representation */
- #define TTCTRL_TTHA		(0x7fUL << 24)
- 
-+/* BURSTSIZE */
-+#define RX_BURST_MASK		0xff
-+#define TX_BURST_MASK		0xff00
-+
- /* PORTSC */
- #define PORTSC_CCS            BIT(0)
- #define PORTSC_CSC            BIT(1)
-diff --git a/drivers/usb/chipidea/ci.h b/drivers/usb/chipidea/ci.h
-index b562544..41d7cf6 100644
---- a/drivers/usb/chipidea/ci.h
-+++ b/drivers/usb/chipidea/ci.h
-@@ -51,6 +51,7 @@ enum ci_hw_regs {
- 	OP_DEVICEADDR,
- 	OP_ENDPTLISTADDR,
- 	OP_TTCTRL,
-+	OP_BURSTSIZE,
- 	OP_PORTSC,
- 	OP_DEVLC,
- 	OP_OTGSC,
-diff --git a/drivers/usb/chipidea/core.c b/drivers/usb/chipidea/core.c
-index f60cbf6..0375412 100644
---- a/drivers/usb/chipidea/core.c
-+++ b/drivers/usb/chipidea/core.c
-@@ -86,6 +86,7 @@ static const u8 ci_regs_nolpm[] = {
- 	[OP_DEVICEADDR]		= 0x14U,
- 	[OP_ENDPTLISTADDR]	= 0x18U,
- 	[OP_TTCTRL]		= 0x1CU,
-+	[OP_BURSTSIZE]		= 0x20U,
- 	[OP_PORTSC]		= 0x44U,
- 	[OP_DEVLC]		= 0x84U,
- 	[OP_OTGSC]		= 0x64U,
-@@ -109,6 +110,7 @@ static const u8 ci_regs_lpm[] = {
- 	[OP_DEVICEADDR]		= 0x14U,
- 	[OP_ENDPTLISTADDR]	= 0x18U,
- 	[OP_TTCTRL]		= 0x1CU,
-+	[OP_BURSTSIZE]		= 0x20U,
- 	[OP_PORTSC]		= 0x44U,
- 	[OP_DEVLC]		= 0x84U,
- 	[OP_OTGSC]		= 0xC4U,
-@@ -442,6 +444,17 @@ void ci_platform_configure(struct ci_hdrc *ci)
- 	if (ci->platdata->flags & CI_HDRC_OVERRIDE_AHB_BURST)
- 		hw_write_id_reg(ci, ID_SBUSCFG, AHBBRST_MASK,
- 			ci->platdata->ahb_burst_config);
-+
-+	/* override burst size, take effect only when ahb_burst_config is 0 */
-+	if (!hw_read_id_reg(ci, ID_SBUSCFG, AHBBRST_MASK)) {
-+		if (ci->platdata->flags & CI_HDRC_OVERRIDE_TX_BURST)
-+			hw_write(ci, OP_BURSTSIZE, TX_BURST_MASK,
-+			ci->platdata->tx_burst_size << __ffs(TX_BURST_MASK));
-+
-+		if (ci->platdata->flags & CI_HDRC_OVERRIDE_RX_BURST)
-+			hw_write(ci, OP_BURSTSIZE, RX_BURST_MASK,
-+				ci->platdata->rx_burst_size);
-+	}
- }
- 
- /**
-@@ -661,6 +674,28 @@ static int ci_get_platdata(struct device *dev,
- 		platdata->flags |= CI_HDRC_OVERRIDE_AHB_BURST;
- 	}
- 
-+	if (of_find_property(dev->of_node, "tx-burst-size-dword", NULL)) {
-+		ret = of_property_read_u32(dev->of_node, "tx-burst-size-dword",
-+			&platdata->tx_burst_size);
-+		if (ret) {
-+			dev_err(dev,
-+				"failed to get tx-burst-size-dword\n");
-+			return ret;
-+		}
-+		platdata->flags |= CI_HDRC_OVERRIDE_TX_BURST;
-+	}
-+
-+	if (of_find_property(dev->of_node, "rx-burst-size-dword", NULL)) {
-+		ret = of_property_read_u32(dev->of_node, "rx-burst-size-dword",
-+			&platdata->rx_burst_size);
-+		if (ret) {
-+			dev_err(dev,
-+				"failed to get rx-burst-size-dword\n");
-+			return ret;
-+		}
-+		platdata->flags |= CI_HDRC_OVERRIDE_RX_BURST;
-+	}
-+
- 	return 0;
- }
- 
-diff --git a/include/linux/usb/chipidea.h b/include/linux/usb/chipidea.h
-index fe3c8eb..a41833c 100644
---- a/include/linux/usb/chipidea.h
-+++ b/include/linux/usb/chipidea.h
-@@ -34,6 +34,8 @@ struct ci_hdrc_platform_data {
- #define CI_HDRC_TURN_VBUS_EARLY_ON	BIT(7)
- #define CI_HDRC_SET_NON_ZERO_TTHA	BIT(8)
- #define CI_HDRC_OVERRIDE_AHB_BURST	BIT(9)
-+#define CI_HDRC_OVERRIDE_TX_BURST	BIT(10)
-+#define CI_HDRC_OVERRIDE_RX_BURST	BIT(11)
- 	enum usb_dr_mode	dr_mode;
- #define CI_HDRC_CONTROLLER_RESET_EVENT		0
- #define CI_HDRC_CONTROLLER_STOPPED_EVENT	1
-@@ -44,6 +46,8 @@ struct ci_hdrc_platform_data {
- 	/* interrupt threshold setting */
- 	u32			itc_setting;
- 	u32			ahb_burst_config;
-+	u32			tx_burst_size;
-+	u32			rx_burst_size;
- };
- 
- /* Default offset of capability registers */
--- 
-1.9.1
+Do you have any suggestions?
+Maybe we could apply the patch?
 
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Regards,
+YH Huang
