@@ -1,176 +1,68 @@
-From: Sagar Dharia <sdharia@codeaurora.org>
-Subject: [PATCH V3 2/6] of/slimbus: OF helper for SLIMbus
-Date: Mon,  3 Aug 2015 00:59:46 -0600
-Message-ID: <1438585190-11894-3-git-send-email-sdharia@codeaurora.org>
-References: <1438585190-11894-1-git-send-email-sdharia@codeaurora.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1438585190-11894-1-git-send-email-sdharia@codeaurora.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: gregkh@linuxfoundation.org, bp@suse.de, poeschel@lemonage.de, sdharia@codeaurora.org, treding@nvidia.com, broonie@kernel.org, gong.chen@linux.intel.com, andreas.noever@gmail.com, alan@linux.intel.com, mathieu.poirier@linaro.org, daniel@ffwll.ch, oded.gabbay@amd.com, jkosina@suse.cz, sharon.dvir1@mail.huji.ac.il, joe@perches.com, davem@davemloft.net, james.hogan@imgtec.com, michael.opdenacker@free-electrons.com, daniel.thompson@linaro.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: kheitke@audience.com, mlocke@codeaurora.org, agross@codeaurora.org, linux-arm-msm@vger.kernel.org
+From: Andreas Fenkart <afenkart@gmail.com>
+Subject: Re: [PATCH 00/17] omap_hsmmc: regulator usage cleanup and fixes
+Date: Mon, 3 Aug 2015 09:28:24 +0200
+Message-ID: <CALtMJEDP1-Q9W=x-0hq3tZQ1QZ2LVwVj47=ADYDjT7BsfanffA@mail.gmail.com>
+References: <1438168187-1614-1-git-send-email-kishon@ti.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <1438168187-1614-1-git-send-email-kishon@ti.com>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Kishon Vijay Abraham I <kishon@ti.com>
+Cc: Tony Lindgren <tony@atomide.com>, Ulf Hansson <ulf.hansson@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-kernel@vger.kernel.org, linux-omap <linux-omap@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, linux-mmc <linux-mmc@vger.kernel.org>, nsekhar@ti.com
 List-Id: devicetree@vger.kernel.org
 
-OF helper routine scans the SLIMbus DeviceTree, allocates resources,
-and creates slim_devices according to the hierarchy.
+Hi Kishon,
 
-Signed-off-by: Sagar Dharia <sdharia@codeaurora.org>
----
- Documentation/devicetree/bindings/slimbus/bus.txt | 46 ++++++++++++++
- drivers/slimbus/slim-core.c                       | 75 +++++++++++++++++++++++
- 2 files changed, 121 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/slimbus/bus.txt
+Thanks for taking a look at the regulator code. Do you have a public
+git repository so I can pull your patches instead of cherry picking
+1-by-1?
 
-diff --git a/Documentation/devicetree/bindings/slimbus/bus.txt b/Documentation/devicetree/bindings/slimbus/bus.txt
-new file mode 100644
-index 0000000..a79ed7a
---- /dev/null
-+++ b/Documentation/devicetree/bindings/slimbus/bus.txt
-@@ -0,0 +1,46 @@
-+SLIM(Serial Low Power Interchip Media Bus) bus
-+
-+SLIMbus is a 2-wire bus, and is used to communicate with peripheral
-+components like audio-codec.
-+
-+Controller is a normal device using binding for whatever bus it is
-+on (e.g. platform bus).
-+Required property for SLIMbus controller node:
-+- compatible	- name of SLIMbus controller following generic names
-+		recommended practice.
-+- #address-cells - should be 6 (number of cells required to define
-+		enumeration address of the device on SLIMbus)
-+- #size-cells	- should be 0
-+
-+No other properties are required in the SLIMbus controller bus node.
-+
-+Child nodes:
-+Every SLIMbus controller node can contain zero or more child nodes
-+representing slave devices on the bus. Every SLIMbus slave device is
-+uniquely determined by the 6 byte enumeration address.
-+
-+Required property for SLIMbus child node:
-+- reg		- 6 byte enumeration address of the slave
-+
-+Optional:
-+- compatible	- Slave devices can use compatible field to have a name.
-+		If this field is missing, name of the device will be
-+		determined using slave's enumeration address.
-+		(e.g. in the example below, slave's name will be:
-+		0x217:0x60:0x1:0x0)
-+
-+SLIMbus example for Qualcomm's slimbus manager compoent:
-+
-+	slim@28080000 {
-+		compatible = "qcom,slim-msm";
-+		reg = <0x28080000 0x2000>,
-+		reg-names = "slimbus_physical";
-+		interrupts = <0 33 0>;
-+		interrupt-names = "slimbus_irq";
-+		clocks = <&lcc SLIMBUS_SRC>, <&lcc AUDIO_SLIMBUS_CLK>;
-+		clock-names = "iface_clk", "core_clk";
-+
-+		slim_codec_slave {
-+			reg = <00 01 60 00 17 02>;
-+		};
-+	};
-diff --git a/drivers/slimbus/slim-core.c b/drivers/slimbus/slim-core.c
-index ee80c1b..d3fa28b 100644
---- a/drivers/slimbus/slim-core.c
-+++ b/drivers/slimbus/slim-core.c
-@@ -18,6 +18,7 @@
- #include <linux/idr.h>
- #include <linux/pm_runtime.h>
- #include <linux/slimbus.h>
-+#include <linux/of.h>
- 
- static DEFINE_MUTEX(slim_lock);
- static DEFINE_IDR(ctrl_idr);
-@@ -289,6 +290,79 @@ static LIST_HEAD(board_list);
- static LIST_HEAD(slim_ctrl_list);
- static DEFINE_MUTEX(board_lock);
- 
-+#if IS_ENABLED(CONFIG_OF)
-+/* OF helpers for SLIMbus */
-+static void of_register_slim_devices(struct slim_controller *ctrl)
-+{
-+	struct device_node *node;
-+	struct slim_boardinfo *temp, *binfo = NULL;
-+	int n = 0;
-+
-+	if (!ctrl->dev.of_node)
-+		return;
-+
-+	for_each_child_of_node(ctrl->dev.of_node, node) {
-+		int ret;
-+		u32 ea[6];
-+		struct slim_device *slim;
-+		char *name;
-+
-+		ret = of_property_read_u32_array(node, "reg", ea, 6);
-+		if (ret) {
-+			dev_err(&ctrl->dev, "of_slim: E-addr err:%d\n", ret);
-+			continue;
-+		}
-+		name = kcalloc(SLIMBUS_NAME_SIZE, sizeof(char), GFP_KERNEL);
-+		if (!name)
-+			goto of_slim_err;
-+
-+		slim = kzalloc(sizeof(struct slim_device), GFP_KERNEL);
-+		if (!slim) {
-+			kfree(name);
-+			goto of_slim_err;
-+		}
-+		slim->e_addr.manf_id = (u16)((ea[5] << 8) | ea[4]);
-+		slim->e_addr.prod_code = (u16)((ea[3] << 8) | ea[2]);
-+		slim->e_addr.dev_index = (u8)ea[1];
-+		slim->e_addr.instance = (u8)ea[0];
-+
-+		ret = of_modalias_node(node, name, SLIMBUS_NAME_SIZE);
-+		if (ret < 0) {
-+			/* use device address for name, if not specified */
-+			snprintf(name, SLIMBUS_NAME_SIZE, "0x%x:0x%x:0x%x:0x%x",
-+				 slim->e_addr.manf_id, slim->e_addr.prod_code,
-+				 slim->e_addr.dev_index, slim->e_addr.instance);
-+		}
-+
-+		temp = krealloc(binfo, (n + 1) * sizeof(struct slim_boardinfo),
-+					GFP_KERNEL);
-+		if (!temp) {
-+			kfree(name);
-+			kfree(slim);
-+			goto of_slim_err;
-+		}
-+		binfo = temp;
-+		slim->dev.of_node = of_node_get(node);
-+		slim->name = name;
-+		binfo[n].bus_num = ctrl->nr;
-+		binfo[n].slim_slave = slim;
-+		n++;
-+	}
-+	slim_register_board_info(binfo, n);
-+	return;
-+
-+of_slim_err:
-+	n--;
-+	while (n >= 0) {
-+		kfree(binfo[n].slim_slave->name);
-+		kfree(binfo[n].slim_slave);
-+	}
-+	kfree(binfo);
-+}
-+#else
-+static void of_register_slim_devices(struct slim_controller *ctrl) { }
-+#endif
-+
- /* If controller is not present, only add to boards list */
- static void slim_match_ctrl_to_boardinfo(struct slim_controller *ctrl,
- 					 struct slim_boardinfo *bi)
-@@ -338,6 +412,7 @@ static void slim_ctrl_add_boarddevs(struct slim_controller *ctrl)
- {
- 	struct sbi_boardinfo *bi;
- 
-+	of_register_slim_devices(ctrl);
- 	mutex_lock(&board_lock);
- 	list_add_tail(&ctrl->list, &slim_ctrl_list);
- 	list_for_each_entry(bi, &board_list, list)
--- 
-1.8.2.1
+/Andi
+
+2015-07-29 13:09 GMT+02:00 Kishon Vijay Abraham I <kishon@ti.com>:
+> This patch series does the following
+> *) Uses devm_regulator_get_optional() for vmmc and then removes the
+>    CONFIG_REGULATOR check altogether.
+> *) return on -EPROBE_DEFER
+> *) enable/disable vmmc_aux regulator based on prior state
+>
+> This series is in preparation for implementing the voltage switch
+> sequence so that UHS cards can be supported.
+>
+> Did basic read/write test in J6, J6 Eco, Beagle-x15, AM437x EVM,
+> Beaglebone black, OMAP5 uEVM and OMAP4 PANDA.
+>
+> Kishon Vijay Abraham I (16):
+>   mmc: host: omap_hsmmc: use devm_regulator_get_optional() for vmmc
+>   mmc: host: omap_hsmmc: return error from omap_hsmmc_reg_get on
+>     -EPROBE_DEFER
+>   mmc: host: omap_hsmmc: cleanup omap_hsmmc_reg_get()
+>   mmc: host: omap_hsmmc: use the ocrmask provided by the vmmc regulator
+>   mmc: host: omap_hsmmc: use mmc_host's vmmc and vqmmc
+>   mmc: host: omap_hsmmc: remove unnecessary pbias set_voltage
+>   mmc: host: omap_hsmmc: return error if any of the regulator APIs fail
+>   mmc: host: omap_hsmmc: add separate functions for enable/disable
+>     supply
+>   mmc: host: omap_hsmmc: add separate function to set pbias
+>   mmc: host: omap_hsmmc: avoid pbias regulator enable on power off
+>   mmc: host: omap_hsmmc: don't use ->set_power to set initial regulator
+>     state
+>   ARM: dts: am57xx-beagle-x15: Fix regulator populated in MMC1 dt node
+>   mmc: host: omap_hsmmc: enable/disable vmmc_aux regulator based on
+>     prior state
+>   mmc: host: omap_hsmmc: use regulator_is_enabled to find pbias status
+>   mmc: host: omap_hsmmc: use ios->vdd for setting vmmc voltage
+>   mmc: host: omap_hsmmc: remove CONFIG_REGULATOR check
+>
+> Roger Quadros (1):
+>   mmc: host: omap_hsmmc: use "mmc_of_parse_voltage" to get ocr_avail
+>
+>  .../devicetree/bindings/mmc/ti-omap-hsmmc.txt      |    2 +
+>  arch/arm/boot/dts/am57xx-beagle-x15.dts            |    1 -
+>  drivers/mmc/host/omap_hsmmc.c                      |  333 +++++++++++++-------
+>  3 files changed, 216 insertions(+), 120 deletions(-)
+>
+> --
+> 1.7.9.5
+>
