@@ -1,65 +1,61 @@
-From: Stefan Agner <stefan@agner.ch>
-Subject: Re: [PATCH v10 2/5] mtd: nand: vf610_nfc: add hardware BCH-ECC
- support
-Date: Mon, 03 Aug 2015 11:28:43 +0200
-Message-ID: <ff2e2716578a1ae5f0c4b0e0ca8bbdc3@agner.ch>
-References: <1438594050-4595-1-git-send-email-stefan@agner.ch>
- <1438594050-4595-3-git-send-email-stefan@agner.ch>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH] ARM: dts: sunxi: Raise minimum CPU voltage
+ for sun7i-a20 to a level all boards can supply
+Date: Mon, 3 Aug 2015 11:34:20 +0200
+Message-ID: <20150803093420.GC2564@lukather>
+References: <1438543386-7253-1-git-send-email-public_timo.s@silentcreek.de>
+ <CAGRGNgV6b9yt2HnB2x2Wyc05KEahoX-Y+mVhxsryztcfA36H1g@mail.gmail.com>
+ <CAGb2v67o-=_cL2RWfXJ+3C86zfQ_1b5DYRi3_zwvwy6su6+gdw@mail.gmail.com>
+ <CAGRGNgXH90m9h0DDejd5MTf8enduGFQ8dPKrRhmc8Z6y_PaC1w@mail.gmail.com>
+ <20150803090352.621CC6C80865@dd34104.kasserver.com>
+Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1438594050-4595-3-git-send-email-stefan@agner.ch>
-Sender: linux-kernel-owner@vger.kernel.org
-To: computersforpeace@gmail.com
-Cc: sebastian@breakpoint.cc, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, shawn.guo@linaro.org, kernel@pengutronix.de, boris.brezillon@free-electrons.com, marb@ixxat.de, aaron@tastycactus.com, bpringlemeir@gmail.com, linux-mtd@lists.infradead.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, albert.aribaud@3adev.fr, klimov.linux@gmail.com, Bill Pringlemeir <bpringlemeir@nbsps.com>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="gErn/dzahY/aMKz2"
+Return-path: <linux-sunxi+bncBD2ZNBF5VYJRBHPL7SWQKGQEO2ERSNY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20150803090352.621CC6C80865-RzmsueL7+k6AvxNu/8lEInnhMCiq3JZZ@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <http://groups.google.com/group/linux-sunxi/subscribe>
+To: Timo Sigurdsson <public_timo.s-fWgRPtSzPNU3WX+qO2AYSQ@public.gmane.org>
+Cc: wens-jdAy2FN1RRM@public.gmane.org, julian.calaby-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, monnier-CRDzTM1onBSWkKpYnGOUKg@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Brian,
+--gErn/dzahY/aMKz2
+Content-Type: text/plain; charset=UTF-8
+Content-Disposition: inline
 
-On 2015-08-03 11:27, Stefan Agner wrote:
-<snip>
-> +static inline int vf610_nfc_correct_data(struct mtd_info *mtd, uint8_t *dat,
-> +					 uint8_t *oob, int oob_loaded)
-> +{
-> +	struct vf610_nfc *nfc = mtd_to_nfc(mtd);
-> +	u8 ecc_status;
-> +	u8 ecc_count;
-> +	int flip;
-> +
-> +	ecc_status = __raw_readb(nfc->regs + ECC_SRAM_ADDR * 8 + ECC_OFFSET);
-> +	ecc_count = ecc_status & ECC_ERR_COUNT;
-> +
-> +	if (!(ecc_status & ECC_STATUS_MASK))
-> +		return ecc_count;
-> +
-> +	if (!oob_loaded)
-> +		vf610_nfc_read_buf(mtd, oob, mtd->oobsize);
-> +
-> +	/*
-> +	 * On an erased page, bit count (including OOB) should be zero or
-> +	 * at least less then half of the ECC strength.
-> +	 */
-> +	flip = count_written_bits(dat, nfc->chip.ecc.size, ecc_count);
-> +	flip += count_written_bits(oob, mtd->oobsize - nfc->chip.ecc.bytes,
-> +				   ecc_count);
+On Mon, Aug 03, 2015 at 11:03:52AM +0200, Timo Sigurdsson wrote:
+> Hi again,
+> 
+> Julian Calaby schrieb am 03.08.2015 06:22:
+> > My only real objection here is are there boards that can go down to
+> > 0.9v and if so, won't this change make them less power efficient in
+> > the almost-idle case? And are those power savings enough to justify
+> > not accepting this patch?
+> 
+> It will probably make those boards less power efficient, yes. On the
+> other hand, boards that have their CPU regulator set to min. 1.0V might
+> also draw more power because the lowest frequency is not available, 
+> even though the savings due to frequency are likely to be lower than
+> the savings due to voltage.
 
-With ECC the controller seems to clear the ECC bytes in SRAM buffer.
-This is a dump of 64 Bit OOB with the 32-error ECC mode which requires
-60 bytes of OOB for ECC:
+Guys, isn't this whole discussion a bit moot? We're not doing any kind
+of power management but cpufreq, so maybe there's a lot more to do
+before we actually can have these kind of arguments?
 
-[   22.190273] ff ff ff ff 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-[   22.209698] vf610_nfc_correct_data, flips 1
+Plus this OPP has never been used anyway, so this patch is not going
+to increase the power consumption either.
 
-Not sure if this is acceptable, but I now only count the bits in the
-non-ECC area of the OOB.
+Maxime
 
-Btw, if the ECC check fails, the controller seems kind of count the
-amount of bitflips. It works for most devices reliable, but we had
-devices for which that number was not accurate, see:
-http://thread.gmane.org/gmane.linux.ports.arm.kernel/357439
-
---
-Stefan
+-- 
+Maxime Ripard, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
+--gErn/dzahY/aMKz2--
