@@ -1,183 +1,203 @@
-From: Ian Campbell <ian.campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH v5] dtb: Create a common home for cross-architecture dtsi files.
-Date: Mon, 3 Aug 2015 17:06:40 +0100
-Message-ID: <1438618000-1091-1-git-send-email-ian.campbell@citrix.com>
+From: Rob Herring <robherring2@gmail.com>
+Subject: Re: [PATCH V3 2/6] of/slimbus: OF helper for SLIMbus
+Date: Mon, 3 Aug 2015 11:13:55 -0500
+Message-ID: <CAL_JsqLDzLXR5aC__YhCUzGzVcVYcv_H7QS6zG0vezQPST_Y2Q@mail.gmail.com>
+References: <1438585190-11894-1-git-send-email-sdharia@codeaurora.org> <1438585190-11894-3-git-send-email-sdharia@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Ian Campbell <ian.campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Liviu Dudau <liviu.dudau-5wv7dgnIgG8@public.gmane.org>, Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>, Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Kristina Martsenko <kristina.martsenko-5wv7dgnIgG8@public.gmane.org>, Kevin Hilman <khilman-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kbuild-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <1438585190-11894-3-git-send-email-sdharia@codeaurora.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Sagar Dharia <sdharia@codeaurora.org>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, bp@suse.de, poeschel@lemonage.de, Thierry Reding <treding@nvidia.com>, Mark Brown <broonie@kernel.org>, gong.chen@linux.intel.com, andreas.noever@gmail.com, Alan Cox <alan@linux.intel.com>, Mathieu Poirier <mathieu.poirier@linaro.org>, daniel@ffwll.ch, oded.gabbay@amd.com, jkosina@suse.cz, sharon.dvir1@mail.huji.ac.il, Joe Perches <joe@perches.com>, David Miller <davem@davemloft.net>, James Hogan <james.hogan@imgtec.com>, michael.opdenacker@free-electrons.com, Daniel Thompson <daniel.thompson@linaro.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, kheitke@aud
 List-Id: devicetree@vger.kernel.org
 
-Commit 9ccd608070b6 ("arm64: dts: add device tree for ARM SMM-A53x2 on
-LogicTile Express 20MG") added a new dts file to arch/arm64 which
-included "../../../../arm/boot/dts/vexpress-v2m-rs1.dtsi", i.e. a
-.dtsi supplied by arch/arm.
+On Mon, Aug 3, 2015 at 1:59 AM, Sagar Dharia <sdharia@codeaurora.org> wrote:
+> OF helper routine scans the SLIMbus DeviceTree, allocates resources,
+> and creates slim_devices according to the hierarchy.
+>
+> Signed-off-by: Sagar Dharia <sdharia@codeaurora.org>
+> ---
+>  Documentation/devicetree/bindings/slimbus/bus.txt | 46 ++++++++++++++
+>  drivers/slimbus/slim-core.c                       | 75 +++++++++++++++++++++++
+>  2 files changed, 121 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/slimbus/bus.txt
+>
+> diff --git a/Documentation/devicetree/bindings/slimbus/bus.txt b/Documentation/devicetree/bindings/slimbus/bus.txt
+> new file mode 100644
+> index 0000000..a79ed7a
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/slimbus/bus.txt
+> @@ -0,0 +1,46 @@
+> +SLIM(Serial Low Power Interchip Media Bus) bus
+> +
+> +SLIMbus is a 2-wire bus, and is used to communicate with peripheral
+> +components like audio-codec.
+> +
+> +Controller is a normal device using binding for whatever bus it is
+> +on (e.g. platform bus).
+> +Required property for SLIMbus controller node:
+> +- compatible   - name of SLIMbus controller following generic names
+> +               recommended practice.
+> +- #address-cells - should be 6 (number of cells required to define
+> +               enumeration address of the device on SLIMbus)
+> +- #size-cells  - should be 0
+> +
+> +No other properties are required in the SLIMbus controller bus node.
+> +
+> +Child nodes:
+> +Every SLIMbus controller node can contain zero or more child nodes
+> +representing slave devices on the bus. Every SLIMbus slave device is
+> +uniquely determined by the 6 byte enumeration address.
+> +
+> +Required property for SLIMbus child node:
+> +- reg          - 6 byte enumeration address of the slave
 
-Unfortunately this causes some issues for the split device tree
-repository[0], since things get moved around there. In that context
-the new .dts ends up at src/arm64/arm/vexpress-v2f-1xv7-ca53x2.dts
-while the include is at src/arm/vexpress-v2m-rs1.dtsi.
+6 cell... I don't think it is a big deal to use 6 words to store 6
+bytes, but is there some reason not to pack the address into 2 cells?
 
-The sharing of the .dtsi is legitimate since the baseboard is the same
-for various vexpress systems whatever processor they use.
+> +
+> +Optional:
+> +- compatible   - Slave devices can use compatible field to have a name.
+> +               If this field is missing, name of the device will be
+> +               determined using slave's enumeration address.
+> +               (e.g. in the example below, slave's name will be:
+> +               0x217:0x60:0x1:0x0)
 
-Rather than using ../../ tricks to pickup .dtsi files from another
-arch this patch creates a new directory kernel/dts as a home for such
-cross-arch .dtsi files and arranges for it to be in the include path
-for both dtc and cpp. The dtsi file itself is moved into a vendor
-subdir in this case "arm" (the vendor, not the ARCH=).
+Are devices discoverable and uniquely identifiable? This would be
+something like a VID/PID which can be read in a generic way. It looks
+like the address contains this info, but can you discover the
+addresses of devices on the bus? If not compatible should not be
+optional.
 
-[0] https://git.kernel.org/cgit/linux/kernel/git/devicetree/devicetree-rebasing.git/
+> +
+> +SLIMbus example for Qualcomm's slimbus manager compoent:
 
-Signed-off-by: Ian Campbell <ian.campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: Liviu Dudau <liviu.dudau-5wv7dgnIgG8@public.gmane.org>
-Cc: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
-Cc: Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
-Cc: Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
-Cc: Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>
-Cc: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
-Cc: Kristina Martsenko <kristina.martsenko-5wv7dgnIgG8@public.gmane.org>
-Cc: Kevin Hilman <khilman-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: linux-kbuild-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Acked-by: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Acked-by: Liviu Dudau <Liviu.Dudau-5wv7dgnIgG8@public.gmane.org>
-Reviewed-by: Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
----
-v2: Move to include/dt-dtsi and introduce a per-vendor subdirectory.
+typo.
 
-v3: Move to kernel/dts.
-    Include new directory in DTC include path as well as cpp path, and
-    therefore switch back to /include/.
-    Update MAINTAINERS
+> +
+> +       slim@28080000 {
+> +               compatible = "qcom,slim-msm";
+> +               reg = <0x28080000 0x2000>,
+> +               reg-names = "slimbus_physical";
 
-v4: Change path in changelog too.
-    Add ()s to title of 9ccd608070b6.
+Pretty pointless to have names with a single element.
 
-v5: Remove stale reference to switching from /include/ to #include.
----
- Documentation/devicetree/bindings/arm/vexpress.txt          | 2 +-
- MAINTAINERS                                                 | 1 +
- arch/arm/boot/dts/vexpress-v2p-ca15-tc1.dts                 | 2 +-
- arch/arm/boot/dts/vexpress-v2p-ca15_a7.dts                  | 2 +-
- arch/arm/boot/dts/vexpress-v2p-ca5s.dts                     | 2 +-
- arch/arm64/boot/dts/arm/vexpress-v2f-1xv7-ca53x2.dts        | 2 +-
- {arch/arm/boot/dts => kernel/dts/arm}/vexpress-v2m-rs1.dtsi | 0
- scripts/Makefile.lib                                        | 3 ++-
- 8 files changed, 8 insertions(+), 6 deletions(-)
- rename {arch/arm/boot/dts => kernel/dts/arm}/vexpress-v2m-rs1.dtsi (100%)
+> +               interrupts = <0 33 0>;
+> +               interrupt-names = "slimbus_irq";
+> +               clocks = <&lcc SLIMBUS_SRC>, <&lcc AUDIO_SLIMBUS_CLK>;
+> +               clock-names = "iface_clk", "core_clk";
+> +
+> +               slim_codec_slave {
 
-diff --git a/Documentation/devicetree/bindings/arm/vexpress.txt b/Documentation/devicetree/bindings/arm/vexpress.txt
-index 39844cd..b6031d9 100644
---- a/Documentation/devicetree/bindings/arm/vexpress.txt
-+++ b/Documentation/devicetree/bindings/arm/vexpress.txt
-@@ -223,7 +223,7 @@ Example of a VE tile description (simplified)
- 		/* Active high IRQ 0 is connected to GIC's SPI0 */
- 		interrupt-map = <0 0 0 &gic 0 0 4>;
- 
--		/include/ "vexpress-v2m-rs1.dtsi"
-+		/include/ "arm/vexpress-v2m-rs1.dtsi"
- 	};
- };
- 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index a226416..1941078 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -7537,6 +7537,7 @@ S:	Maintained
- F:	Documentation/devicetree/
- F:	arch/*/boot/dts/
- F:	include/dt-bindings/
-+F:	kernel/dts/
- 
- OPEN FIRMWARE AND DEVICE TREE OVERLAYS
- M:	Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
-diff --git a/arch/arm/boot/dts/vexpress-v2p-ca15-tc1.dts b/arch/arm/boot/dts/vexpress-v2p-ca15-tc1.dts
-index 9420053..b144092 100644
---- a/arch/arm/boot/dts/vexpress-v2p-ca15-tc1.dts
-+++ b/arch/arm/boot/dts/vexpress-v2p-ca15-tc1.dts
-@@ -278,6 +278,6 @@
- 				<0 0 41 &gic 0 41 4>,
- 				<0 0 42 &gic 0 42 4>;
- 
--		/include/ "vexpress-v2m-rs1.dtsi"
-+		/include/ "arm/vexpress-v2m-rs1.dtsi"
- 	};
- };
-diff --git a/arch/arm/boot/dts/vexpress-v2p-ca15_a7.dts b/arch/arm/boot/dts/vexpress-v2p-ca15_a7.dts
-index 17f63f7..350f402 100644
---- a/arch/arm/boot/dts/vexpress-v2p-ca15_a7.dts
-+++ b/arch/arm/boot/dts/vexpress-v2p-ca15_a7.dts
-@@ -636,6 +636,6 @@
- 				<0 0 41 &gic 0 41 4>,
- 				<0 0 42 &gic 0 42 4>;
- 
--		/include/ "vexpress-v2m-rs1.dtsi"
-+		/include/ "arm/vexpress-v2m-rs1.dtsi"
- 	};
- };
-diff --git a/arch/arm/boot/dts/vexpress-v2p-ca5s.dts b/arch/arm/boot/dts/vexpress-v2p-ca5s.dts
-index d2709b7..585ced0 100644
---- a/arch/arm/boot/dts/vexpress-v2p-ca5s.dts
-+++ b/arch/arm/boot/dts/vexpress-v2p-ca5s.dts
-@@ -248,6 +248,6 @@
- 				<0 0 41 &gic 0 41 4>,
- 				<0 0 42 &gic 0 42 4>;
- 
--		/include/ "vexpress-v2m-rs1.dtsi"
-+		/include/ "arm/vexpress-v2m-rs1.dtsi"
- 	};
- };
-diff --git a/arch/arm64/boot/dts/arm/vexpress-v2f-1xv7-ca53x2.dts b/arch/arm64/boot/dts/arm/vexpress-v2f-1xv7-ca53x2.dts
-index 5b1d018..c044804 100644
---- a/arch/arm64/boot/dts/arm/vexpress-v2f-1xv7-ca53x2.dts
-+++ b/arch/arm64/boot/dts/arm/vexpress-v2f-1xv7-ca53x2.dts
-@@ -186,6 +186,6 @@
- 				<0 0 41 &gic GIC_SPI 41 IRQ_TYPE_LEVEL_HIGH>,
- 				<0 0 42 &gic GIC_SPI 42 IRQ_TYPE_LEVEL_HIGH>;
- 
--		/include/ "../../../../arm/boot/dts/vexpress-v2m-rs1.dtsi"
-+		/include/ "arm/vexpress-v2m-rs1.dtsi"
- 	};
- };
-diff --git a/arch/arm/boot/dts/vexpress-v2m-rs1.dtsi b/kernel/dts/arm/vexpress-v2m-rs1.dtsi
-similarity index 100%
-rename from arch/arm/boot/dts/vexpress-v2m-rs1.dtsi
-rename to kernel/dts/arm/vexpress-v2m-rs1.dtsi
-diff --git a/scripts/Makefile.lib b/scripts/Makefile.lib
-index 79e8661..b4d9fb6 100644
---- a/scripts/Makefile.lib
-+++ b/scripts/Makefile.lib
-@@ -163,6 +163,7 @@ dtc_cpp_flags  = -Wp,-MD,$(depfile).pre.tmp -nostdinc                    \
- 		 -I$(srctree)/arch/$(SRCARCH)/boot/dts                   \
- 		 -I$(srctree)/arch/$(SRCARCH)/boot/dts/include           \
- 		 -I$(srctree)/drivers/of/testcase-data                   \
-+		 -I$(srctree)/kernel/dts                                 \
- 		 -undef -D__DTS__
- 
- # Finds the multi-part object the current object will be linked into
-@@ -285,7 +286,7 @@ quiet_cmd_dtc = DTC     $@
- cmd_dtc = mkdir -p $(dir ${dtc-tmp}) ; \
- 	$(CPP) $(dtc_cpp_flags) -x assembler-with-cpp -o $(dtc-tmp) $< ; \
- 	$(objtree)/scripts/dtc/dtc -O dtb -o $@ -b 0 \
--		-i $(dir $<) $(DTC_FLAGS) \
-+		-i $(dir $<) -i $(srctree)/kernel/dts $(DTC_FLAGS) \
- 		-d $(depfile).dtc.tmp $(dtc-tmp) ; \
- 	cat $(depfile).pre.tmp $(depfile).dtc.tmp > $(depfile)
- 
--- 
-2.1.4
+You should have unit address here. Probably with "." in between fields
+of the address that have defined meaning. So that may be something
+like "0217.0060.01.00" based on what you do with the address bytes
+below.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> +                       reg = <00 01 60 00 17 02>;
+> +               };
+> +       };
+> diff --git a/drivers/slimbus/slim-core.c b/drivers/slimbus/slim-core.c
+> index ee80c1b..d3fa28b 100644
+> --- a/drivers/slimbus/slim-core.c
+> +++ b/drivers/slimbus/slim-core.c
+> @@ -18,6 +18,7 @@
+>  #include <linux/idr.h>
+>  #include <linux/pm_runtime.h>
+>  #include <linux/slimbus.h>
+> +#include <linux/of.h>
+>
+>  static DEFINE_MUTEX(slim_lock);
+>  static DEFINE_IDR(ctrl_idr);
+> @@ -289,6 +290,79 @@ static LIST_HEAD(board_list);
+>  static LIST_HEAD(slim_ctrl_list);
+>  static DEFINE_MUTEX(board_lock);
+>
+> +#if IS_ENABLED(CONFIG_OF)
+> +/* OF helpers for SLIMbus */
+> +static void of_register_slim_devices(struct slim_controller *ctrl)
+> +{
+> +       struct device_node *node;
+> +       struct slim_boardinfo *temp, *binfo = NULL;
+> +       int n = 0;
+> +
+> +       if (!ctrl->dev.of_node)
+> +               return;
+> +
+> +       for_each_child_of_node(ctrl->dev.of_node, node) {
+> +               int ret;
+> +               u32 ea[6];
+> +               struct slim_device *slim;
+> +               char *name;
+> +
+> +               ret = of_property_read_u32_array(node, "reg", ea, 6);
+> +               if (ret) {
+> +                       dev_err(&ctrl->dev, "of_slim: E-addr err:%d\n", ret);
+> +                       continue;
+> +               }
+> +               name = kcalloc(SLIMBUS_NAME_SIZE, sizeof(char), GFP_KERNEL);
+> +               if (!name)
+> +                       goto of_slim_err;
+> +
+> +               slim = kzalloc(sizeof(struct slim_device), GFP_KERNEL);
+> +               if (!slim) {
+> +                       kfree(name);
+> +                       goto of_slim_err;
+> +               }
+> +               slim->e_addr.manf_id = (u16)((ea[5] << 8) | ea[4]);
+> +               slim->e_addr.prod_code = (u16)((ea[3] << 8) | ea[2]);
+> +               slim->e_addr.dev_index = (u8)ea[1];
+> +               slim->e_addr.instance = (u8)ea[0];
+> +
+> +               ret = of_modalias_node(node, name, SLIMBUS_NAME_SIZE);
+> +               if (ret < 0) {
+> +                       /* use device address for name, if not specified */
+> +                       snprintf(name, SLIMBUS_NAME_SIZE, "0x%x:0x%x:0x%x:0x%x",
+> +                                slim->e_addr.manf_id, slim->e_addr.prod_code,
+> +                                slim->e_addr.dev_index, slim->e_addr.instance);
+> +               }
+> +
+> +               temp = krealloc(binfo, (n + 1) * sizeof(struct slim_boardinfo),
+> +                                       GFP_KERNEL);
+> +               if (!temp) {
+> +                       kfree(name);
+> +                       kfree(slim);
+> +                       goto of_slim_err;
+> +               }
+> +               binfo = temp;
+> +               slim->dev.of_node = of_node_get(node);
+> +               slim->name = name;
+> +               binfo[n].bus_num = ctrl->nr;
+> +               binfo[n].slim_slave = slim;
+> +               n++;
+> +       }
+> +       slim_register_board_info(binfo, n);
+> +       return;
+> +
+> +of_slim_err:
+> +       n--;
+> +       while (n >= 0) {
+> +               kfree(binfo[n].slim_slave->name);
+> +               kfree(binfo[n].slim_slave);
+> +       }
+> +       kfree(binfo);
+> +}
+> +#else
+> +static void of_register_slim_devices(struct slim_controller *ctrl) { }
+> +#endif
+> +
+>  /* If controller is not present, only add to boards list */
+>  static void slim_match_ctrl_to_boardinfo(struct slim_controller *ctrl,
+>                                          struct slim_boardinfo *bi)
+> @@ -338,6 +412,7 @@ static void slim_ctrl_add_boarddevs(struct slim_controller *ctrl)
+>  {
+>         struct sbi_boardinfo *bi;
+>
+> +       of_register_slim_devices(ctrl);
+>         mutex_lock(&board_lock);
+>         list_add_tail(&ctrl->list, &slim_ctrl_list);
+>         list_for_each_entry(bi, &board_list, list)
+> --
+> 1.8.2.1
+>
