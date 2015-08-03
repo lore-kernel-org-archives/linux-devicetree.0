@@ -1,99 +1,305 @@
-From: Ley Foon Tan <lftan-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH v2 3/5] pci: altera: Add Altera PCIe MSI driver
-Date: Mon, 3 Aug 2015 19:00:13 +0800
-Message-ID: <CAFiDJ5_WaNwXMppkhbxVakW2UddN29ypxE9dxhnyfEw5iwvmcQ@mail.gmail.com>
-References: <1438337715-22594-1-git-send-email-lftan@altera.com>
-	<1438337715-22594-4-git-send-email-lftan@altera.com>
-	<55BB6621.9060505@arm.com>
-	<CAFiDJ5-5eZEBFwbuzrPB+XKX_E2Fd0qEeP-_H3Wz2jT8pcbJfQ@mail.gmail.com>
-	<55BF4830.9050104@arm.com>
+From: Pi-Cheng Chen <pi-cheng.chen-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH] clk: mediatek: Export CPU mux clocks for CPU frequency
+ control
+Date: Mon, 3 Aug 2015 19:13:36 +0800
+Message-ID: <20150803111335.GA5165@gmail.com>
+References: <CAGS+omAa=3W+SZLmFaDD6uJuhXtu2zX12TsvL2etDif+mKkoVA@mail.gmail.com>
+ <1436942326-19747-1-git-send-email-pi-cheng.chen@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <55BF4830.9050104-5wv7dgnIgG8@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1436942326-19747-1-git-send-email-pi-cheng.chen-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
-Cc: Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Dinh Nguyen <dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+To: Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, James Liao <jamesjj.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linaro-kernel-cunTk1MwBs8s++Sfvej+rw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Aug 3, 2015 at 6:53 PM, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org> wrote:
-> On 03/08/15 11:37, Ley Foon Tan wrote:
+On Wed, Jul 15, 2015 at 02:38:46PM +0800, Pi-Cheng Chen wrote:
+> From: "pi-cheng.chen" <pi-cheng.chen-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> 
+> This patch adds CPU mux clocks which are used by Mediatek cpufreq driver
+> for intermediate clock source switching.
 
->>>> +     msg->address_lo = lower_32_bits(addr);
->>>> +     msg->address_hi = upper_32_bits(addr);
->>>> +     msg->data = data->hwirq;
->>>> +
->>>> +     mask = msi_readl(msi, MSI_INTMASK);
->>>> +     mask |= 1 << data->hwirq;
->>>> +     msi_writel(msi, mask, MSI_INTMASK);
->>>
->>> It feels a bit weird to unmask the interrupt when you compose the
->>> message. I'd expect this to be done in the mask/unmask methods.
->> Do you refer to these 2 callbacks?
->> .irq_mask = pci_msi_mask_irq,
->> .irq_unmask = pci_msi_unmask_irq,
->>
->> How about we move this INTMASK code above to altera_irq_domain_alloc()?
->> We have unmask code in altera_irq_domain_free() now.
->
-> Either you move the mask/unmask code to local irq_mask/irq_unmask
-> methods (and call pci_msi_(un)mask_irq from there), or you move it
-> entierely to alloc/free.
->
-> Some level of symmetry helps following what is going on in the code.
-Okay, will move it to alloc/free.
->
-> [...]
->
->>>> +static int altera_irq_domain_alloc(struct irq_domain *domain, unsigned int virq,
->>>> +                               unsigned int nr_irqs, void *args)
->>>> +{
->>>> +     struct altera_msi *msi = domain->host_data;
->>>> +     int bit;
->>>> +
->>>> +     mutex_lock(&msi->lock);
->>>> +
->>>> +     bit = find_first_zero_bit(msi->used, msi->num_of_vectors);
->>>> +     if (bit < msi->num_of_vectors)
->>>> +             set_bit(bit, msi->used);
->>>> +
->>>> +     mutex_unlock(&msi->lock);
->>>> +
->>>> +     if (bit < 0)
->>>> +             return bit;
->>>
->>> How can "bit" be negative here? find_first_zero_bit returns an unsigned
->>> long... You probably want to change the type of "bit" to reflect that.
->> Okay, will change to "unsigned long" type.
->>>
->>>> +     else if (bit >= msi->num_of_vectors)
->>>
->>> Useless "else" anyway.
->>
->> I think we still need to check for failing case, if we don't have
->> available unused bit.
->> This could be rewritten  as below:
->>
->> bit = find_first_zero_bit(msi->used, msi->num_of_vectors);
->> if (bit < msi->num_of_vectors)
->>       set_bit(bit, msi->used);
->> else
->>       return -ENOSPC;
->
-> The more logical to write this is:
->
->         if (bit >= msi->num_of_vectors)
->                 return -ENOSPC;
->
->         set_bit(bit, msi->used);
->
-> which gets rid of the error case early and streamlines the normal case.
-Yes, will change to this way.
+Hi Mike and Stephen,
 
+since the MT8173 cpufreq driver is likely going to be merged[1] and we still
+need the CPU MUX clocks consumed by MT8173 cpufreq driver, may I have some
+comments from you to get this patch moving forwards so that MT8173 cpufreq
+driver could work completely?
+
+Or the regmap supported basic clock type[2] is the prefered way?
 Thanks.
 
-Regards
-Ley Foon
+Best Regards,
+Pi-Cheng
+
+[1] http://marc.info/?l=linux-pm&m=143850044118837&w=2
+[2] http://marc.info/?l=linux-kernel&m=143835585905028&w=2
+
+> 
+> Signed-off-by: Pi-Cheng Chen <pi-cheng.chen-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> Reviewed-by: Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+> ---
+> Changes in v4:
+> - Address comments for v3
+> - Rebase to the patch that adds 13mhz clock for MT8173[1]
+> 
+> Changes in v3:
+> - Rebase to 4.2-rc1
+> - Fix some issues of v2
+> 
+> Changes in v2:
+> - Remove use of .determine_rate callback
+> 
+> [1] http://patchwork.kernerl.xyz/patch/6777041/
+> ---
+>  drivers/clk/mediatek/Makefile          |   2 +-
+>  drivers/clk/mediatek/clk-cpumux.c      | 127 +++++++++++++++++++++++++++++++++
+>  drivers/clk/mediatek/clk-cpumux.h      |  22 ++++++
+>  drivers/clk/mediatek/clk-mt8173.c      |  23 ++++++
+>  include/dt-bindings/clock/mt8173-clk.h |   4 +-
+>  5 files changed, 176 insertions(+), 2 deletions(-)
+>  create mode 100644 drivers/clk/mediatek/clk-cpumux.c
+>  create mode 100644 drivers/clk/mediatek/clk-cpumux.h
+> 
+> diff --git a/drivers/clk/mediatek/Makefile b/drivers/clk/mediatek/Makefile
+> index 8e4b2a4..299917a 100644
+> --- a/drivers/clk/mediatek/Makefile
+> +++ b/drivers/clk/mediatek/Makefile
+> @@ -1,4 +1,4 @@
+> -obj-y += clk-mtk.o clk-pll.o clk-gate.o
+> +obj-y += clk-mtk.o clk-pll.o clk-gate.o clk-cpumux.o
+>  obj-$(CONFIG_RESET_CONTROLLER) += reset.o
+>  obj-y += clk-mt8135.o
+>  obj-y += clk-mt8173.o
+> diff --git a/drivers/clk/mediatek/clk-cpumux.c b/drivers/clk/mediatek/clk-cpumux.c
+> new file mode 100644
+> index 0000000..fb04fe1
+> --- /dev/null
+> +++ b/drivers/clk/mediatek/clk-cpumux.c
+> @@ -0,0 +1,127 @@
+> +/*
+> + * Copyright (c) 2015 Linaro Ltd.
+> + * Author: Pi-Cheng Chen <pi-cheng.chen-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> + *
+> + * This program is free software; you can redistribute it and/or modify
+> + * it under the terms of the GNU General Public License version 2 as
+> + * published by the Free Software Foundation.
+> + *
+> + * This program is distributed in the hope that it will be useful,
+> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
+> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+> + * GNU General Public License for more details.
+> + */
+> +
+> +#include <linux/clk-provider.h>
+> +#include <linux/mfd/syscon.h>
+> +#include <linux/slab.h>
+> +
+> +#include "clk-mtk.h"
+> +#include "clk-cpumux.h"
+> +
+> +struct mtk_clk_cpumux {
+> +	struct clk_hw	hw;
+> +	struct regmap	*regmap;
+> +	u32		reg;
+> +	u32		mask;
+> +	u8		shift;
+> +};
+> +
+> +static inline struct mtk_clk_cpumux *to_clk_mux(struct clk_hw *_hw)
+> +{
+> +	return container_of(_hw, struct mtk_clk_cpumux, hw);
+> +}
+> +
+> +static u8 clk_cpumux_get_parent(struct clk_hw *hw)
+> +{
+> +	struct mtk_clk_cpumux *mux = to_clk_mux(hw);
+> +	int num_parents = __clk_get_num_parents(hw->clk);
+> +	unsigned int val;
+> +
+> +	regmap_read(mux->regmap, mux->reg, &val);
+> +
+> +	val >>= mux->shift;
+> +	val &= mux->mask;
+> +
+> +	if (val >= num_parents)
+> +		return -EINVAL;
+> +
+> +	return val;
+> +}
+> +
+> +static int clk_cpumux_set_parent(struct clk_hw *hw, u8 index)
+> +{
+> +	struct mtk_clk_cpumux *mux = to_clk_mux(hw);
+> +	u32 mask, val;
+> +
+> +	val = index << mux->shift;
+> +	mask = mux->mask << mux->shift;
+> +
+> +	return regmap_update_bits(mux->regmap, mux->reg, mask, val);
+> +}
+> +
+> +static const struct clk_ops clk_cpumux_ops = {
+> +	.get_parent = clk_cpumux_get_parent,
+> +	.set_parent = clk_cpumux_set_parent,
+> +};
+> +
+> +static struct clk __init *mtk_clk_register_cpumux(const struct mtk_composite *mux,
+> +					   struct regmap *regmap)
+> +{
+> +	struct mtk_clk_cpumux *cpumux;
+> +	struct clk *clk;
+> +	struct clk_init_data init;
+> +
+> +	cpumux = kzalloc(sizeof(*cpumux), GFP_KERNEL);
+> +	if (!cpumux)
+> +		return ERR_PTR(-ENOMEM);
+> +
+> +	init.name = mux->name;
+> +	init.ops = &clk_cpumux_ops;
+> +	init.parent_names = mux->parent_names;
+> +	init.num_parents = mux->num_parents;
+> +	init.flags = mux->flags;
+> +
+> +	cpumux->reg = mux->mux_reg;
+> +	cpumux->shift = mux->mux_shift;
+> +	cpumux->mask = BIT(mux->mux_width) - 1;
+> +	cpumux->regmap = regmap;
+> +	cpumux->hw.init = &init;
+> +
+> +	clk = clk_register(NULL, &cpumux->hw);
+> +	if (IS_ERR(clk))
+> +		kfree(cpumux);
+> +
+> +	return clk;
+> +}
+> +
+> +int __init mtk_clk_register_cpumuxes(struct device_node *node,
+> +			      const struct mtk_composite *clks, int num,
+> +			      struct clk_onecell_data *clk_data)
+> +{
+> +	int i;
+> +	struct clk *clk;
+> +	struct regmap *regmap;
+> +
+> +	regmap = syscon_node_to_regmap(node);
+> +	if (IS_ERR(regmap)) {
+> +		pr_err("Cannot find regmap for %s: %ld\n", node->full_name,
+> +		       PTR_ERR(regmap));
+> +		return PTR_ERR(regmap);
+> +	}
+> +
+> +	for (i = 0; i < num; i++) {
+> +		const struct mtk_composite *mux = &clks[i];
+> +
+> +		clk = mtk_clk_register_cpumux(mux, regmap);
+> +		if (IS_ERR(clk)) {
+> +			pr_err("Failed to register clk %s: %ld\n",
+> +			       mux->name, PTR_ERR(clk));
+> +			continue;
+> +		}
+> +
+> +		clk_data->clks[mux->id] = clk;
+> +	}
+> +
+> +	return 0;
+> +}
+> diff --git a/drivers/clk/mediatek/clk-cpumux.h b/drivers/clk/mediatek/clk-cpumux.h
+> new file mode 100644
+> index 0000000..52c769f
+> --- /dev/null
+> +++ b/drivers/clk/mediatek/clk-cpumux.h
+> @@ -0,0 +1,22 @@
+> +/*
+> + * Copyright (c) 2015 Linaro Ltd.
+> + * Author: Pi-Cheng Chen <pi-cheng.chen-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> + *
+> + * This program is free software; you can redistribute it and/or modify
+> + * it under the terms of the GNU General Public License version 2 as
+> + * published by the Free Software Foundation.
+> + *
+> + * This program is distributed in the hope that it will be useful,
+> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
+> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+> + * GNU General Public License for more details.
+> + */
+> +
+> +#ifndef __DRV_CLK_CPUMUX_H
+> +#define __DRV_CLK_CPUMUX_H
+> +
+> +int mtk_clk_register_cpumuxes(struct device_node *node,
+> +			      const struct mtk_composite *clks, int num,
+> +			      struct clk_onecell_data *clk_data);
+> +
+> +#endif /* __DRV_CLK_CPUMUX_H */
+> diff --git a/drivers/clk/mediatek/clk-mt8173.c b/drivers/clk/mediatek/clk-mt8173.c
+> index 540c5c3..053ca27 100644
+> --- a/drivers/clk/mediatek/clk-mt8173.c
+> +++ b/drivers/clk/mediatek/clk-mt8173.c
+> @@ -19,6 +19,7 @@
+>  
+>  #include "clk-mtk.h"
+>  #include "clk-gate.h"
+> +#include "clk-cpumux.h"
+>  
+>  #include <dt-bindings/clock/mt8173-clk.h>
+>  
+> @@ -517,6 +518,25 @@ static const char * const i2s3_b_ck_parents[] __initconst = {
+>  	"apll2_div5"
+>  };
+>  
+> +static const char * const ca53_parents[] __initconst = {
+> +	"clk26m",
+> +	"armca7pll",
+> +	"mainpll",
+> +	"univpll"
+> +};
+> +
+> +static const char * const ca57_parents[] __initconst = {
+> +	"clk26m",
+> +	"armca15pll",
+> +	"mainpll",
+> +	"univpll"
+> +};
+> +
+> +static const struct mtk_composite cpu_muxes[] __initconst = {
+> +	MUX(CLK_INFRA_CA53SEL, "infra_ca53_sel", ca53_parents, 0x0000, 0, 2),
+> +	MUX(CLK_INFRA_CA57SEL, "infra_ca57_sel", ca57_parents, 0x0000, 2, 2),
+> +};
+> +
+>  static const struct mtk_composite top_muxes[] __initconst = {
+>  	/* CLK_CFG_0 */
+>  	MUX(CLK_TOP_AXI_SEL, "axi_sel", axi_parents, 0x0040, 0, 3),
+> @@ -743,6 +763,9 @@ static void __init mtk_infrasys_init(struct device_node *node)
+>  						clk_data);
+>  	mtk_clk_register_factors(infra_divs, ARRAY_SIZE(infra_divs), clk_data);
+>  
+> +	mtk_clk_register_cpumuxes(node, cpu_muxes, ARRAY_SIZE(cpu_muxes),
+> +						clk_data);
+> +
+>  	r = of_clk_add_provider(node, of_clk_src_onecell_get, clk_data);
+>  	if (r)
+>  		pr_err("%s(): could not register clock provider: %d\n",
+> diff --git a/include/dt-bindings/clock/mt8173-clk.h b/include/dt-bindings/clock/mt8173-clk.h
+> index fa2a2bb..a17cbaa 100644
+> --- a/include/dt-bindings/clock/mt8173-clk.h
+> +++ b/include/dt-bindings/clock/mt8173-clk.h
+> @@ -188,7 +188,9 @@
+>  #define CLK_INFRA_PMICSPI		10
+>  #define CLK_INFRA_PMICWRAP		11
+>  #define CLK_INFRA_CLK_13M		12
+> -#define CLK_INFRA_NR_CLK		13
+> +#define CLK_INFRA_CA53SEL		13
+> +#define CLK_INFRA_CA57SEL		14
+> +#define CLK_INFRA_NR_CLK		15
+>  
+>  /* PERI_SYS */
+>  
+> -- 
+> 1.9.1
+> 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
