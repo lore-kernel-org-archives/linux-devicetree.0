@@ -1,78 +1,95 @@
-From: "santosh.shilimkar@oracle.com" <santosh.shilimkar@oracle.com>
-Subject: Re: [PATCH 1/2] ARM: dts: keystone: fix the clock node for mdio
-Date: Mon, 03 Aug 2015 12:00:27 -0700
-Message-ID: <55BFBA4B.6070406@oracle.com>
-References: <1438625518-21315-1-git-send-email-m-karicheri2@ti.com> <55BFB15B.8040207@ti.com> <55BFB32C.6080201@oracle.com> <55BFB7EC.4060408@ti.com>
+From: Andy Gross <agross@codeaurora.org>
+Subject: Re: [PATCH v3 5/5] arm: qcom: dts: Enable NAND node on IPQ8064 AP148
+ platform
+Date: Mon, 3 Aug 2015 14:35:14 -0500
+Message-ID: <20150803193514.GA19772@qualcomm.com>
+References: <1421419702-17812-1-git-send-email-architt@codeaurora.org>
+ <1438578498-32254-1-git-send-email-architt@codeaurora.org>
+ <1438578498-32254-6-git-send-email-architt@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <55BFB7EC.4060408@ti.com>
+Content-Disposition: inline
+In-Reply-To: <1438578498-32254-6-git-send-email-architt@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Murali Karicheri <m-karicheri2@ti.com>, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, ssantosh@kernel.org
+To: Archit Taneja <architt@codeaurora.org>
+Cc: linux-mtd@lists.infradead.org, dehrenberg@google.com, cernekee@gmail.com, computersforpeace@gmail.com, linux-arm-msm@vger.kernel.org, sboyd@codeaurora.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+On Mon, Aug 03, 2015 at 10:38:18AM +0530, Archit Taneja wrote:
+> Enable the NAND controller node on the AP148 platform. Provide pinmux
+> information.
+> 
+> Cc: devicetree@vger.kernel.org
+> 
+> Signed-off-by: Archit Taneja <architt@codeaurora.org>
+> ---
+>  arch/arm/boot/dts/qcom-ipq8064-ap148.dts | 36 ++++++++++++++++++++++++++++++++
+>  1 file changed, 36 insertions(+)
+> 
+> diff --git a/arch/arm/boot/dts/qcom-ipq8064-ap148.dts b/arch/arm/boot/dts/qcom-ipq8064-ap148.dts
+> index 7f9ea50..2e88eff 100644
+> --- a/arch/arm/boot/dts/qcom-ipq8064-ap148.dts
+> +++ b/arch/arm/boot/dts/qcom-ipq8064-ap148.dts
+> @@ -30,6 +30,28 @@
+>  					bias-none;
+>  				};
+>  			};
+> +			nand_pins: nand_pins {
+> +				mux {
+> +					pins = "gpio34", "gpio35", "gpio36",
+> +					       "gpio37", "gpio38", "gpio39",
+> +					       "gpio40", "gpio41", "gpio42",
+> +					       "gpio43", "gpio44", "gpio45",
+> +					       "gpio46", "gpio47";
+> +					function = "nand";
+> +					drive-strength = <10>;
+> +					bias-disable;
+> +				};
+> +				pullups {
+> +					pins = "gpio39";
+> +					bias-pull-up;
+> +				};
+> +				hold {
+> +					pins = "gpio40", "gpio41", "gpio42",
+> +					       "gpio43", "gpio44", "gpio45",
+> +					       "gpio46", "gpio47";
+> +					bias-bus-hold;
 
+Maybe split out the bias-disable into a separate set and remove that property
+from the mux.
 
-On 8/3/15 11:50 AM, Murali Karicheri wrote:
-> On 08/03/2015 02:30 PM, santosh.shilimkar@oracle.com wrote:
->> On 8/3/15 11:22 AM, Murali Karicheri wrote:
->>> On 08/03/2015 02:11 PM, Murali Karicheri wrote:
->>>> Currently the MDIO clock is pointing to clkpa instead of clkcpgmac.
->>>> MDIO is part of the ethss and the clock should be clkcpgmac.
->>>>
->>>> Signed-off-by: Murali Karicheri <m-karicheri2@ti.com>
->>>> ---
->>>>   arch/arm/boot/dts/keystone.dtsi | 2 +-
->>>>   1 file changed, 1 insertion(+), 1 deletion(-)
->>>>
->>>> diff --git a/arch/arm/boot/dts/keystone.dtsi
->>>> b/arch/arm/boot/dts/keystone.dtsi
->>>> index e7a6f6d..6245a17 100644
->>>> --- a/arch/arm/boot/dts/keystone.dtsi
->>>> +++ b/arch/arm/boot/dts/keystone.dtsi
->>>> @@ -273,7 +273,7 @@
->>>>               #size-cells = <0>;
->>>>               reg        = <0x02090300 0x100>;
->>>>               status = "disabled";
->>>> -            clocks = <&clkpa>;
->>>> +            clocks = <&clkcpgmac>;
->>>>               clock-names = "fck";
->>>>               bus_freq    = <2500000>;
->>>>           };
->>>>
->>> Santosh,
->>>
->>> This is a big fix and needs to go in v4.2-rc. So please review and apply
->>> asap. v4.2 is the first release that has netcp driver fully functional
->>> and I want to fix as many known bugs as possible.
->>>
->> Do you have more fixes ? If yes, please post them so that I can include
->> them along with these two. I will try to send them up next week.
->
-> I think we have got most of the know issues fixed in the netcp driver
-> and dts for v4.2-rc. Another lingering issue is the one with multiple
-> clock handling not supported in run time pm API causing us to use the
-> work around 'clk_ignore_unused'. Probably this needs to be addressed in
-> the future as fixing this is not trivial. Generic PD support would
-> partially solve the issue for Keystone, but also needs to handle
-> multiple clocks for keystone.
->
-Yeah. I was also wondering on what happened to that work which was
-active at some point of time.
+> +				};
+> +			};
+>  		};
+>  
+>  		gsbi@16300000 {
+> @@ -93,5 +115,19 @@
+>  		sata@29000000 {
+>  			status = "ok";
+>  		};
+> +
+> +		nand@1ac00000 {
+> +			status = "ok";
+> +
+> +			pinctrl-0 = <&nand_pins>;
+> +			pinctrl-names = "default";
+> +
+> +			nand-ecc-strength = <4>;
+> +			nand-bus-width = <8>;
+> +		};
+>  	};
+>  };
+> +
+> +&adm_dma {
+> +	status = "ok";
+> +};
+> -- 
+> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+> hosted by The Linux Foundation
+> 
 
-> Another option is to  fix the NetCP and QMSS/KNAV driver for now in
-> v4.0-rc using explicit clock APIs so that we don't have to use
-> 'clk_ignore_unused'. And then migrate all of the drivers to run time PM
-> API later when proper framework is implemented along with K2G support.
-> Does this make sense?
->
-Multiple clock node support work which was started needs to be revived.
-Direct clock isn't the way to go about it.
-
-> Anyways, please submit these patches at your earliest opportunity.
->
-Sure.
-
-Regards,
-Santosh
+-- 
+Qualcomm Innovation Center, Inc.
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
