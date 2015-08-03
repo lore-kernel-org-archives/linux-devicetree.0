@@ -1,68 +1,70 @@
-From: Stefan Agner <stefan@agner.ch>
-Subject: Re: [PATCH v5 2/2] ARM: dts: add property for maximum ADC clock
- frequencies
-Date: Mon, 03 Aug 2015 14:22:30 +0200
-Message-ID: <f598169164aaacc28292d8ccc6afb32d@agner.ch>
-References: <1432730872-14325-1-git-send-email-stefan@agner.ch>
- <1432730872-14325-3-git-send-email-stefan@agner.ch>
- <557477BE.5050108@kernel.org>
+From: Kishon Vijay Abraham I <kishon@ti.com>
+Subject: [PATCH v2 00/16] omap_hsmmc: regulator usage cleanup and fixes
+Date: Mon, 3 Aug 2015 17:56:25 +0530
+Message-ID: <1438604801-11823-1-git-send-email-kishon@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <557477BE.5050108@kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: shawn.guo@linaro.org
-Cc: Jonathan Cameron <jic23@kernel.org>, kernel@pengutronix.de, knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, B38611@freescale.com, maitysanchayan@gmail.com, devicetree@vger.kernel.org, linux-iio@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain
+Return-path: <linux-mmc-owner@vger.kernel.org>
+Sender: linux-mmc-owner@vger.kernel.org
+To: ulf.hansson@linaro.org, afenkart@gmail.com, tony@atomide.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mmc@vger.kernel.org, linux-omap@vger.kernel.org
+Cc: nsekhar@ti.com, kishon@ti.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Shawn,
+Changes from v1:
+*) return on -EPROBE_DEFER and other fatal errors. (Don't return only
+   if the return value is -ENODEV)
+*) Remove the beagle x15 dts patch. It can be part of a different
+   series.
+*) Avoid using regulator_is_enabled for vqmmc since if the regulator
+   is shared and the other users are not using regulator_is_enabled
+   then there can be unbalanced regulator_enable/regulator_disable
 
-I guess this will go through your tree? Haven't seen it appear on imx/dt
-so far...
+This patch series does the following
+*) Uses devm_regulator_get_optional() for vmmc and then removes the
+   CONFIG_REGULATOR check altogether.
+*) return on -EPROBE_DEFER and any other fatal errors
+*) enable/disable vmmc_aux regulator based on prior state
 
---
-Stefan
+I've pushed this patch series to
+git://git.ti.com/linux-phy/linux-phy.git mmc_regulator_cleanup_fixes_v2
 
-On 2015-06-07 18:56, Jonathan Cameron wrote:
-> On 27/05/15 13:47, Stefan Agner wrote:
->> The ADC clock frequency is limited depending on modes used. Add
->> device tree property which allow to set the mode used and the
->> maximum frequency ratings for the instance. These allows to
->> set the ADC clock to a frequency which is within specification
->> according to the actual mode used.
->>
->> Acked-by: Fugang Duan <B38611@freescale.com>
->> Signed-off-by: Stefan Agner <stefan@agner.ch>
-> I'm happy to take this via IIO if people want me to, otherwise give
-> it's connection to the previous patch that I just applied,
-> 
-> Acked-by: Jonathan Cameron <jic23@kernel.org>
-> 
->> ---
->>  arch/arm/boot/dts/vfxxx.dtsi | 4 ++++
->>  1 file changed, 4 insertions(+)
->>
->> diff --git a/arch/arm/boot/dts/vfxxx.dtsi b/arch/arm/boot/dts/vfxxx.dtsi
->> index a29c7ce..c6609bd 100644
->> --- a/arch/arm/boot/dts/vfxxx.dtsi
->> +++ b/arch/arm/boot/dts/vfxxx.dtsi
->> @@ -189,6 +189,8 @@
->>  				clocks = <&clks VF610_CLK_ADC0>;
->>  				clock-names = "adc";
->>  				status = "disabled";
->> +				fsl,adck-max-frequency = <30000000>, <40000000>,
->> +							<20000000>;
->>  			};
->>
->>  			wdoga5: wdog@4003e000 {
->> @@ -387,6 +389,8 @@
->>  				clocks = <&clks VF610_CLK_ADC1>;
->>  				clock-names = "adc";
->>  				status = "disabled";
->> +				fsl,adck-max-frequency = <30000000>, <40000000>,
->> +							<20000000>;
->>  			};
->>
->>  			esdhc1: esdhc@400b2000 {
->>
+Please note the branch also has the pbias fixes [1] & [2].
+[1] -> https://lkml.org/lkml/2015/7/27/358
+[2] -> https://lkml.org/lkml/2015/7/27/391
+
+This series is in preparation for implementing the voltage switch
+sequence so that UHS cards can be supported.
+
+Did basic read/write test in J6, J6 Eco, Beagle-x15, AM437x EVM,
+Beaglebone black, OMAP5 uEVM and OMAP4 PANDA.
+
+Kishon Vijay Abraham I (15):
+  mmc: host: omap_hsmmc: use devm_regulator_get_optional() for vmmc
+  mmc: host: omap_hsmmc: return on fatal errors from omap_hsmmc_reg_get
+  mmc: host: omap_hsmmc: cleanup omap_hsmmc_reg_get()
+  mmc: host: omap_hsmmc: use the ocrmask provided by the vmmc regulator
+  mmc: host: omap_hsmmc: use mmc_host's vmmc and vqmmc
+  mmc: host: omap_hsmmc: remove unnecessary pbias set_voltage
+  mmc: host: omap_hsmmc: return error if any of the regulator APIs fail
+  mmc: host: omap_hsmmc: add separate functions for enable/disable
+    supply
+  mmc: host: omap_hsmmc: add separate function to set pbias
+  mmc: host: omap_hsmmc: avoid pbias regulator enable on power off
+  mmc: host: omap_hsmmc: don't use ->set_power to set initial regulator
+    state
+  mmc: host: omap_hsmmc: enable/disable vmmc_aux regulator based on
+    previous state
+  mmc: host: omap_hsmmc: use regulator_is_enabled to find pbias status
+  mmc: host: omap_hsmmc: use ios->vdd for setting vmmc voltage
+  mmc: host: omap_hsmmc: remove CONFIG_REGULATOR check
+
+Roger Quadros (1):
+  mmc: host: omap_hsmmc: use "mmc_of_parse_voltage" to get ocr_avail
+
+ .../devicetree/bindings/mmc/ti-omap-hsmmc.txt      |    2 +
+ drivers/mmc/host/omap_hsmmc.c                      |  340 +++++++++++++-------
+ 2 files changed, 224 insertions(+), 118 deletions(-)
+
+-- 
+1.7.9.5
+
