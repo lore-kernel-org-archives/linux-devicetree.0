@@ -1,135 +1,48 @@
 From: Murali Karicheri <m-karicheri2@ti.com>
-Subject: [PATCH 2/2] ARM: dts: keystone: Fix the mdio bindings by moving it to soc specific file
-Date: Mon, 3 Aug 2015 14:11:58 -0400
-Message-ID: <1438625518-21315-2-git-send-email-m-karicheri2@ti.com>
+Subject: Re: [PATCH 1/2] ARM: dts: keystone: fix the clock node for mdio
+Date: Mon, 3 Aug 2015 14:22:19 -0400
+Message-ID: <55BFB15B.8040207@ti.com>
 References: <1438625518-21315-1-git-send-email-m-karicheri2@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1438625518-21315-1-git-send-email-m-karicheri2@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, santosh.shilimkar@oracle.com, ssantosh@kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Currently mdio bindings are defined in keystone.dtsi and this results
-in incorrect unit address for the node on K2E and K2L SoCs. Fix this
-by moving them to SoC specific DTS file.
+On 08/03/2015 02:11 PM, Murali Karicheri wrote:
+> Currently the MDIO clock is pointing to clkpa instead of clkcpgmac.
+> MDIO is part of the ethss and the clock should be clkcpgmac.
+>
+> Signed-off-by: Murali Karicheri <m-karicheri2@ti.com>
+> ---
+>   arch/arm/boot/dts/keystone.dtsi | 2 +-
+>   1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/arch/arm/boot/dts/keystone.dtsi b/arch/arm/boot/dts/keystone.dtsi
+> index e7a6f6d..6245a17 100644
+> --- a/arch/arm/boot/dts/keystone.dtsi
+> +++ b/arch/arm/boot/dts/keystone.dtsi
+> @@ -273,7 +273,7 @@
+>   			#size-cells = <0>;
+>   			reg		= <0x02090300 0x100>;
+>   			status = "disabled";
+> -			clocks = <&clkpa>;
+> +			clocks = <&clkcpgmac>;
+>   			clock-names = "fck";
+>   			bus_freq	= <2500000>;
+>   		};
+>
+Santosh,
 
-Signed-off-by: Murali Karicheri <m-karicheri2@ti.com>
----
- arch/arm/boot/dts/k2e.dtsi      | 15 +++++++++++----
- arch/arm/boot/dts/k2hk.dtsi     | 11 +++++++++++
- arch/arm/boot/dts/k2l.dtsi      | 16 +++++++++++-----
- arch/arm/boot/dts/keystone.dtsi | 11 -----------
- 4 files changed, 33 insertions(+), 20 deletions(-)
+This is a big fix and needs to go in v4.2-rc. So please review and apply 
+asap. v4.2 is the first release that has netcp driver fully functional 
+and I want to fix as many known bugs as possible.
 
-diff --git a/arch/arm/boot/dts/k2e.dtsi b/arch/arm/boot/dts/k2e.dtsi
-index 1b6494f..675fb8e 100644
---- a/arch/arm/boot/dts/k2e.dtsi
-+++ b/arch/arm/boot/dts/k2e.dtsi
-@@ -131,10 +131,17 @@
- 					<GIC_SPI 376 IRQ_TYPE_EDGE_RISING>;
- 			};
- 		};
-+
-+		mdio: mdio@24200f00 {
-+			compatible	= "ti,keystone_mdio", "ti,davinci_mdio";
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			reg = <0x24200f00 0x100>;
-+			status = "disabled";
-+			clocks = <&clkcpgmac>;
-+			clock-names = "fck";
-+			bus_freq	= <2500000>;
-+		};
- 		/include/ "k2e-netcp.dtsi"
- 	};
- };
--
--&mdio {
--	reg = <0x24200f00 0x100>;
--};
-diff --git a/arch/arm/boot/dts/k2hk.dtsi b/arch/arm/boot/dts/k2hk.dtsi
-index ae64724..d0810a5 100644
---- a/arch/arm/boot/dts/k2hk.dtsi
-+++ b/arch/arm/boot/dts/k2hk.dtsi
-@@ -98,6 +98,17 @@
- 			#gpio-cells = <2>;
- 			gpio,syscon-dev = <&devctrl 0x25c>;
- 		};
-+
-+		mdio: mdio@02090300 {
-+			compatible	= "ti,keystone_mdio", "ti,davinci_mdio";
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			reg = <0x02090300 0x100>;
-+			status = "disabled";
-+			clocks = <&clkcpgmac>;
-+			clock-names = "fck";
-+			bus_freq	= <2500000>;
-+		};
- 		/include/ "k2hk-netcp.dtsi"
- 	};
- };
-diff --git a/arch/arm/boot/dts/k2l.dtsi b/arch/arm/boot/dts/k2l.dtsi
-index 0e00748..49fd414 100644
---- a/arch/arm/boot/dts/k2l.dtsi
-+++ b/arch/arm/boot/dts/k2l.dtsi
-@@ -29,7 +29,6 @@
- 	};
- 
- 	soc {
--
- 		/include/ "k2l-clocks.dtsi"
- 
- 		uart2: serial@02348400 {
-@@ -79,6 +78,17 @@
- 			#gpio-cells = <2>;
- 			gpio,syscon-dev = <&devctrl 0x24c>;
- 		};
-+
-+		mdio: mdio@26200f00 {
-+			compatible	= "ti,keystone_mdio", "ti,davinci_mdio";
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			reg = <0x26200f00 0x100>;
-+			status = "disabled";
-+			clocks = <&clkcpgmac>;
-+			clock-names = "fck";
-+			bus_freq	= <2500000>;
-+		};
- 		/include/ "k2l-netcp.dtsi"
- 	};
- };
-@@ -96,7 +106,3 @@
-        /* Pin muxed. Enabled and configured by Bootloader */
-        status = "disabled";
- };
--
--&mdio {
--	reg = <0x26200f00 0x100>;
--};
-diff --git a/arch/arm/boot/dts/keystone.dtsi b/arch/arm/boot/dts/keystone.dtsi
-index 6245a17..72816d6 100644
---- a/arch/arm/boot/dts/keystone.dtsi
-+++ b/arch/arm/boot/dts/keystone.dtsi
-@@ -267,17 +267,6 @@
- 				  1 0 0x21000A00 0x00000100>;
- 		};
- 
--		mdio: mdio@02090300 {
--			compatible	= "ti,keystone_mdio", "ti,davinci_mdio";
--			#address-cells = <1>;
--			#size-cells = <0>;
--			reg		= <0x02090300 0x100>;
--			status = "disabled";
--			clocks = <&clkcpgmac>;
--			clock-names = "fck";
--			bus_freq	= <2500000>;
--		};
--
- 		kirq0: keystone_irq@26202a0 {
- 			compatible = "ti,keystone-irq";
- 			interrupts = <GIC_SPI 4 IRQ_TYPE_EDGE_RISING>;
+Thanks.
+
 -- 
-1.9.1
+Murali Karicheri
+Linux Kernel, Keystone
