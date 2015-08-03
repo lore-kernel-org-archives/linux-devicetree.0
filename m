@@ -1,45 +1,94 @@
-From: Liberman Igal <Igal.Liberman-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: RE: [PATCH v2 2/2] powerpc/mpc85xx: Add FSL QorIQ DPAA FMan support
- to the SoC device tree(s)
-Date: Mon, 3 Aug 2015 07:49:29 +0000
-Message-ID: <DM2PR03MB509D0BD6BD59FE38B692545E6770@DM2PR03MB509.namprd03.prod.outlook.com>
-References: <1438230794-10983-1-git-send-email-igal.liberman@freescale.com>
- <1438287143.2993.367.camel@freescale.com>
+From: Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>
+Subject: Re: [PATCH 2/2] iio: proximity: add support for PulsedLight LIDAR
+Date: Mon, 03 Aug 2015 10:00:29 +0200
+Message-ID: <55BF1F9D.30207@metafoo.de>
+References: <1438401484-22101-1-git-send-email-mranostay@gmail.com>	<1438401484-22101-3-git-send-email-mranostay@gmail.com>	<55BDE5F8.9090201@metafoo.de> <CAKzfze_ZNeSBo_hKn4ju1uNM4iyaFrvGo89Dv_80DK3Tfb24yg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1438287143.2993.367.camel-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Madalin-Cristian Bucur <madalin.bucur-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAKzfze_ZNeSBo_hKn4ju1uNM4iyaFrvGo89Dv_80DK3Tfb24yg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Matt Ranostay <mranostay-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: =?UTF-8?B?TWFyZWsgVmHFoXV0?= <marex-ynQEQJNshbs@public.gmane.org>, Matt Porter <matt-agtwNxEcTQJWk0Htik3J/w@public.gmane.org>, Pantelis Antoniou <pantelis.antoniou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-DQoNClJlZ2FyZHMsDQpJZ2FsIExpYmVybWFuLg0KDQo+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0t
-LS0tDQo+IEZyb206IFdvb2QgU2NvdHQtQjA3NDIxDQo+IFNlbnQ6IFRodXJzZGF5LCBKdWx5IDMw
-LCAyMDE1IDExOjEyIFBNDQo+IFRvOiBMaWJlcm1hbiBJZ2FsLUIzMTk1MA0KPiBDYzogZGV2aWNl
-dHJlZUB2Z2VyLmtlcm5lbC5vcmc7IGxpbnV4cHBjLWRldkBsaXN0cy5vemxhYnMub3JnOyBCdWN1
-cg0KPiBNYWRhbGluLUNyaXN0aWFuLUIzMjcxNjsgbGludXgta2VybmVsQHZnZXIua2VybmVsLm9y
-Zw0KPiBTdWJqZWN0OiBSZTogW1BBVENIIHYyIDIvMl0gcG93ZXJwYy9tcGM4NXh4OiBBZGQgRlNM
-IFFvcklRIERQQUEgRk1hbg0KPiBzdXBwb3J0IHRvIHRoZSBTb0MgZGV2aWNlIHRyZWUocykNCj4g
-DQo+IE9uIFRodSwgMjAxNS0wNy0zMCBhdCAwNzozMyArMDMwMCwgSWdhbC5MaWJlcm1hbiB3cm90
-ZToNCj4gPiBAQCAtMzA3LDQgKzMwNywxMTcgQEANCj4gPiAgICAgICAgICAgICAgIHJlZyA9IDww
-eGUwMDAwIDB4MTAwMD47DQo+ID4gICAgICAgICAgICAgICBmc2wsaGFzLXJzdGNyOw0KPiA+ICAg
-ICAgIH07DQo+ID4gKw0KPiA+ICsgICAgICBmbWFuQDEwMDAwMHsNCj4gPiArICAgICAgICAgICAg
-ICNhZGRyZXNzLWNlbGxzID0gPDE+Ow0KPiA+ICsgICAgICAgICAgICAgI3NpemUtY2VsbHMgPSA8
-MT47DQo+ID4gKyAgICAgICAgICAgICBjZWxsLWluZGV4ID0gPDA+Ow0KPiA+ICsgICAgICAgICAg
-ICAgcmFuZ2VzID0gPDAgMHgxMDAwMDAgMHgxMDAwMDA+Ow0KPiA+ICsgICAgICAgICAgICAgY29t
-cGF0aWJsZSA9ICJmc2wsZm1hbiI7DQo+ID4gKyAgICAgICAgICAgICByZWcgPSA8MHgxMDAwMDAg
-MHgxMDAwMDA+Ow0KPiA+ICsgICAgICAgICAgICAgaW50ZXJydXB0cyA9IDwyNCAyIDAgMD4sIDwx
-NiAyIDEgMzA+Ow0KPiA+ICsgICAgICAgICAgICAgY2xvY2stZnJlcXVlbmN5ID0gPDA+Ow0KPiA+
-ICsgICAgICAgICAgICAgZnNsLHFtYW4tY2hhbm5lbC1yYW5nZSA9IDwweDQwIDB4Nz47DQo+IA0K
-PiBmbWFuIGlzIHN1cHBvc2VkIHRvIGhhdmUgY2xvY2tzL2Nsb2NrLW5hbWVzLCBub3QgY2xvY2st
-ZnJlcXVlbmN5Lg0KPiANCg0KVGhlIG5ldyBjbG9jayBiaW5kaW5nIGRvZXNuJ3Qgc3VwcG9ydCBQ
-MTAyMyB5ZXQuIA0KSSdsbCBkcm9wIFAxMDIzIGZyb20gdGhpcyBzdWJtaXNzaW9uLCBpdCdzIG5v
-dCBzdXBwb3J0ZWQgY3VycmVudGx5IGJ5IHRoZSBkcml2ZXIsIHdlJ2xsIHJlLWFkZCBpdCBsYXRl
-ci4gDQoNCj4gLVNjb3R0DQoNCg==
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+On 08/02/2015 11:28 PM, Matt Ranostay wrote:
+> On Sun, Aug 2, 2015 at 2:42 AM, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org> wrote:
+>> On 08/01/2015 05:58 AM, Matt Ranostay wrote:
+>> [...]
+>>> +
+>>> +struct lidar_data {
+>>> +     struct mutex lock;
+>>> +     struct iio_dev *indio_dev;
+>>> +     struct i2c_client *client;
+>>> +
+>>> +     /* config */
+>>> +     int calib_bias;
+>>> +
+>>> +     u16 buffer[5]; /* 2 byte distance + 8 byte timestamp */
+>>
+>> Needs to be in its own cacheline to avoid issues if the I2C controller is
+>> using DMA.
+> 
+> Ah though this was only needed for SPI.
+
+At least some I2C master drivers directly use the buffer for DMA. But I was
+being stupid here anyway, you don't actually pass the buffer itself to the
+I2C transfer functions so everything is fine as it was.
+
+> 
+>>
+>>         u16 buffer[5] ____cacheline_aligned;
+>>
+>>> +};
+>> [...]
+>>> +static inline int lidar_read_byte(struct lidar_data *data, int reg)
+>>
+>> I'd drop the inline. The compiler is smart enough to figure out whether it
+>> makes sense to inline it or not.
+>>
+> Got it.
+> 
+>>> +{
+>>> +     struct i2c_client *client = data->client;
+>>> +     int ret;
+>>> +
+>>> +     ret = i2c_smbus_write_byte(client, reg);
+>>> +     if (ret < 0) {
+>>> +             dev_err(&client->dev, "cannot write addr value");
+>>> +             return ret;
+>>> +     }
+>>> +
+>>> +     ret = i2c_smbus_read_byte(client);
+>>> +     if (ret < 0) {
+>>> +             dev_err(&client->dev, "cannot read data value");
+>>> +             return ret;
+>>> +     }
+>>
+>> Instead of using a write_byte/read_byte combination rather use
+>> i2c_smbus_read_byte_data(). I think that will do the same, but in one atomic
+>> operation.
+> Yes I would normally do that but this device doesn't seem to support
+> that functionally, always returns zeros.
+
+That's an interesting device. Maybe add a comment explaining the oddity. I'm
+sure I'm not the only one who'll wonder about this.
+
+[...]
+>>> +static struct i2c_driver lidar_driver = {
+>>> +     .driver = {
+>>> +             .name   = LIDAR_DRV_NAME,
+>>> +             .owner  = THIS_MODULE,
+>>
+>> You added a DT vendor prefix, but there is no of match table for the driver.
+> 
+> So without of_match_table it isn't needed to have a vendor id?
+> "pulsedlight,lidar" maps to the i2c_device_id
+
+I thinking the other way around. If you intend to instantiate the device via
+devicetree it is better to explicit add a of_device_id table rather than
+relying on the implicit mechanism that uses i2c_device_id.
+
+You should also add an entry for the device to
+Documentation/devicetree/bindings/i2c/trivial-devices.txt
