@@ -1,7 +1,7 @@
 From: Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: [PATCH v2 06/10] usb: chipidea: add ahb burst configuration interface
-Date: Mon, 3 Aug 2015 12:47:14 +0800
-Message-ID: <1438577238-10153-7-git-send-email-peter.chen@freescale.com>
+Subject: [PATCH v2 03/10] usb: chipidea: imx: add stream mode enable for device mode at imx6sl/imx6sx
+Date: Mon, 3 Aug 2015 12:47:11 +0800
+Message-ID: <1438577238-10153-4-git-send-email-peter.chen@freescale.com>
 References: <1438577238-10153-1-git-send-email-peter.chen@freescale.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -12,82 +12,65 @@ To: shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
 Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, jun.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The users can change it through dts or platform data if they
-want to change the default value.
+Stream mode enable is known for better performance, this stream mode
+enable patch has been passed with stress tests at device mode for
+imx6sl and imx6sx, and no issue is found.
 
 Signed-off-by: Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 ---
- drivers/usb/chipidea/bits.h  |  3 +++
- drivers/usb/chipidea/core.c  | 14 ++++++++++++++
- include/linux/usb/chipidea.h |  2 ++
- 3 files changed, 19 insertions(+)
+ drivers/usb/chipidea/ci_hdrc_imx.c | 16 ++++++++++------
+ 1 file changed, 10 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/usb/chipidea/bits.h b/drivers/usb/chipidea/bits.h
-index 831a8f6..462ad02 100644
---- a/drivers/usb/chipidea/bits.h
-+++ b/drivers/usb/chipidea/bits.h
-@@ -25,6 +25,9 @@
- #define VERSION		      (0xF << 25)
- #define CIVERSION	      (0x7 << 29)
- 
-+/* SBUSCFG */
-+#define AHBBRST_MASK		0x7
-+
- /* HCCPARAMS */
- #define HCCPARAMS_LEN         BIT(17)
- 
-diff --git a/drivers/usb/chipidea/core.c b/drivers/usb/chipidea/core.c
-index 38bd036..f60cbf6 100644
---- a/drivers/usb/chipidea/core.c
-+++ b/drivers/usb/chipidea/core.c
-@@ -439,6 +439,9 @@ void ci_platform_configure(struct ci_hdrc *ci)
- 
- 	hw_write(ci, OP_USBCMD, 0xff0000, ci->platdata->itc_setting << 16);
- 
-+	if (ci->platdata->flags & CI_HDRC_OVERRIDE_AHB_BURST)
-+		hw_write_id_reg(ci, ID_SBUSCFG, AHBBRST_MASK,
-+			ci->platdata->ahb_burst_config);
- }
- 
- /**
-@@ -647,6 +650,17 @@ static int ci_get_platdata(struct device *dev,
- 		}
- 	}
- 
-+	if (of_find_property(dev->of_node, "ahb-burst-config", NULL)) {
-+		ret = of_property_read_u32(dev->of_node, "ahb-burst-config",
-+			&platdata->ahb_burst_config);
-+		if (ret) {
-+			dev_err(dev,
-+				"failed to get ahb-burst-config\n");
-+			return ret;
-+		}
-+		platdata->flags |= CI_HDRC_OVERRIDE_AHB_BURST;
-+	}
-+
- 	return 0;
- }
- 
-diff --git a/include/linux/usb/chipidea.h b/include/linux/usb/chipidea.h
-index 034f7e1..fe3c8eb 100644
---- a/include/linux/usb/chipidea.h
-+++ b/include/linux/usb/chipidea.h
-@@ -33,6 +33,7 @@ struct ci_hdrc_platform_data {
- #define CI_HDRC_FORCE_FULLSPEED		BIT(6)
- #define CI_HDRC_TURN_VBUS_EARLY_ON	BIT(7)
- #define CI_HDRC_SET_NON_ZERO_TTHA	BIT(8)
-+#define CI_HDRC_OVERRIDE_AHB_BURST	BIT(9)
- 	enum usb_dr_mode	dr_mode;
- #define CI_HDRC_CONTROLLER_RESET_EVENT		0
- #define CI_HDRC_CONTROLLER_STOPPED_EVENT	1
-@@ -42,6 +43,7 @@ struct ci_hdrc_platform_data {
- 	bool			tpl_support;
- 	/* interrupt threshold setting */
- 	u32			itc_setting;
-+	u32			ahb_burst_config;
+diff --git a/drivers/usb/chipidea/ci_hdrc_imx.c b/drivers/usb/chipidea/ci_hdrc_imx.c
+index 6d2a85a..3f41679 100644
+--- a/drivers/usb/chipidea/ci_hdrc_imx.c
++++ b/drivers/usb/chipidea/ci_hdrc_imx.c
+@@ -29,26 +29,31 @@ struct ci_hdrc_imx_platform_flag {
  };
  
- /* Default offset of capability registers */
+ static const struct ci_hdrc_imx_platform_flag imx27_usb_data = {
++		CI_HDRC_DISABLE_STREAMING,
+ };
+ 
+ static const struct ci_hdrc_imx_platform_flag imx28_usb_data = {
+ 	.flags = CI_HDRC_IMX28_WRITE_FIX |
+-		CI_HDRC_TURN_VBUS_EARLY_ON,
++		CI_HDRC_TURN_VBUS_EARLY_ON |
++		CI_HDRC_DISABLE_STREAMING,
+ };
+ 
+ static const struct ci_hdrc_imx_platform_flag imx6q_usb_data = {
+ 	.flags = CI_HDRC_SUPPORTS_RUNTIME_PM |
+-		CI_HDRC_TURN_VBUS_EARLY_ON,
++		CI_HDRC_TURN_VBUS_EARLY_ON |
++		CI_HDRC_DISABLE_STREAMING,
+ };
+ 
+ static const struct ci_hdrc_imx_platform_flag imx6sl_usb_data = {
+ 	.flags = CI_HDRC_SUPPORTS_RUNTIME_PM |
+-		CI_HDRC_TURN_VBUS_EARLY_ON,
++		CI_HDRC_TURN_VBUS_EARLY_ON |
++		CI_HDRC_DISABLE_HOST_STREAMING,
+ };
+ 
+ static const struct ci_hdrc_imx_platform_flag imx6sx_usb_data = {
+ 	.flags = CI_HDRC_SUPPORTS_RUNTIME_PM |
+-		CI_HDRC_TURN_VBUS_EARLY_ON,
++		CI_HDRC_TURN_VBUS_EARLY_ON |
++		CI_HDRC_DISABLE_HOST_STREAMING,
+ };
+ 
+ static const struct of_device_id ci_hdrc_imx_dt_ids[] = {
+@@ -126,8 +131,7 @@ static int ci_hdrc_imx_probe(struct platform_device *pdev)
+ 	struct ci_hdrc_platform_data pdata = {
+ 		.name		= dev_name(&pdev->dev),
+ 		.capoffset	= DEF_CAPOFFSET,
+-		.flags		= CI_HDRC_DISABLE_STREAMING |
+-					CI_HDRC_SET_NON_ZERO_TTHA,
++		.flags		= CI_HDRC_SET_NON_ZERO_TTHA,
+ 	};
+ 	int ret;
+ 	const struct of_device_id *of_id =
 -- 
 1.9.1
 
