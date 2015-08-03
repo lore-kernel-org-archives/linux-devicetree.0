@@ -1,54 +1,48 @@
-From: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
-Subject: Re: [PATCH v2 04/10] thermal: Fix thermal_zone_of_sensor_register
- to match documentation
-Date: Mon, 03 Aug 2015 08:56:21 -0700
-Message-ID: <55BF8F25.9010305@roeck-us.net>
-References: <1438615378-14241-1-git-send-email-punit.agrawal@arm.com> <1438615378-14241-5-git-send-email-punit.agrawal@arm.com>
+From: Ian Campbell <ian.campbell@citrix.com>
+Subject: Re: [PATCH v4] dtb: Create a common home for cross-architecture
+ dtsi files.
+Date: Mon, 3 Aug 2015 17:03:59 +0100
+Message-ID: <1438617839.31129.30.camel@citrix.com>
+References: <1438592111-8471-1-git-send-email-ian.campbell@citrix.com>
+	 <CAL_JsqLU_CMaYN=FpVdeenVYgvBNDUQsqvi=uwuENOk=pt0WZQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1438615378-14241-5-git-send-email-punit.agrawal-5wv7dgnIgG8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Punit Agrawal <punit.agrawal-5wv7dgnIgG8@public.gmane.org>, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: lm-sensors-GZX6beZjE8VD60Wz+7aTrA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, liviu.dudau-5wv7dgnIgG8@public.gmane.org, Eduardo Valentin <edubezval-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Zhang Rui <rui.zhang-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Return-path: <linux-kbuild-owner@vger.kernel.org>
+In-Reply-To: <CAL_JsqLU_CMaYN=FpVdeenVYgvBNDUQsqvi=uwuENOk=pt0WZQ@mail.gmail.com>
+Sender: linux-kbuild-owner@vger.kernel.org
+To: Rob Herring <robherring2@gmail.com>
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Kumar Gala <galak@codeaurora.org>, Liviu Dudau <liviu.dudau@arm.com>, Sudeep Holla <sudeep.holla@arm.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Russell King <linux@arm.linux.org.uk>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Kristina Martsenko <kristina.martsenko@arm.com>, Kevin Hilman <khilman@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 08/03/2015 08:22 AM, Punit Agrawal wrote:
-> thermal_zone_of_sensor_register is documented as returning a pointer
-> to either a valid thermal_zone_device on success, or a corresponding
-> ERR_PTR() value.
->
-> In contrast, the function returns NULL when THERMAL_OF is configured
-> off. Fix this.
->
-> Signed-off-by: Punit Agrawal <punit.agrawal-5wv7dgnIgG8@public.gmane.org>
-> Cc: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
-> Cc: Eduardo Valentin <edubezval-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> Cc: Zhang Rui <rui.zhang-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+On Mon, 2015-08-03 at 10:55 -0500, Rob Herring wrote:
+> On Mon, Aug 3, 2015 at 3:55 AM, Ian Campbell <ian.campbell@citrix.com> 
+> wrote:
+> > Commit 9ccd608070b6 ("arm64: dts: add device tree for ARM SMM-A53x2 on
+> > LogicTile Express 20MG") added a new dts file to arch/arm64 which
+> > included "../../../../arm/boot/dts/vexpress-v2m-rs1.dtsi", i.e. a
+> > .dtsi supplied by arch/arm.
+> > 
+> > Unfortunately this causes some issues for the split device tree
+> > repository[0], since things get moved around there. In that context
+> > the new .dts ends up at src/arm64/arm/vexpress-v2f-1xv7-ca53x2.dts
+> > while the include is at src/arm/vexpress-v2m-rs1.dtsi.
+> > 
+> > The sharing of the .dtsi is legitimate since the baseboard is the same
+> > for various vexpress systems whatever processor they use.
+> > 
+> > Rather than using ../../ tricks to pickup .dtsi files from another
+> > arch this patch creates a new directory kernel/dts as a home for such
+> > cross-arch .dtsi files, arranges for it to be in the include path when
+> > the .dts files are processed by cpp and switches the .dts files to use
+> > cpp #include instead of /include/. The dtsi file itself is moved into
+> > a vendor subdir in this case "arm" (the vendor, not the ARCH=).
+> 
+> Sigh, it was not the include path I was referring to being wrong
+> although that was too. It was the part about using #include instead of
+> /include/.
 
-Acked-by: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+Damn, how did I miss that!
 
-> ---
->   include/linux/thermal.h | 2 +-
->   1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/include/linux/thermal.h b/include/linux/thermal.h
-> index 037e9df..a47b34a 100644
-> --- a/include/linux/thermal.h
-> +++ b/include/linux/thermal.h
-> @@ -364,7 +364,7 @@ static inline struct thermal_zone_device *
->   thermal_zone_of_sensor_register(struct device *dev, int id, void *data,
->   				const struct thermal_zone_of_device_ops *ops)
->   {
-> -	return NULL;
-> +	return ERR_PTR(-ENOSYS);
->   }
->
->   static inline
->
+v5 coming up, sorry :-/
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
