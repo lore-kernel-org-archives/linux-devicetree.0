@@ -1,95 +1,51 @@
-From: Andy Gross <agross@codeaurora.org>
-Subject: Re: [PATCH v3 5/5] arm: qcom: dts: Enable NAND node on IPQ8064 AP148
- platform
-Date: Mon, 3 Aug 2015 14:35:14 -0500
-Message-ID: <20150803193514.GA19772@qualcomm.com>
-References: <1421419702-17812-1-git-send-email-architt@codeaurora.org>
- <1438578498-32254-1-git-send-email-architt@codeaurora.org>
- <1438578498-32254-6-git-send-email-architt@codeaurora.org>
+From: Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: Re: [PATCH v5] powerpc/rcpm: add RCPM driver
+Date: Mon, 3 Aug 2015 15:23:43 -0500
+Message-ID: <1438633423.2097.33.camel@freescale.com>
+References: <1435304656-34505-1-git-send-email-Yuantian.Tang@freescale.com>
+	 <1438389906.19345.101.camel@freescale.com>
+	 <1438600486.7515.1@remotesmtp.freescale.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1438578498-32254-6-git-send-email-architt@codeaurora.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Archit Taneja <architt@codeaurora.org>
-Cc: linux-mtd@lists.infradead.org, dehrenberg@google.com, cernekee@gmail.com, computersforpeace@gmail.com, linux-arm-msm@vger.kernel.org, sboyd@codeaurora.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1438600486.7515.1-2YSKY4EJvOYVsECt/c03T2VHu4YV8NEM@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Chenhui Zhao <chenhui.zhao-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Cc: Yuantian.Tang-KZfg59tc24xl57MIdRCFDg@public.gmane.org, b07421-KZfg59tc24xl57MIdRCFDg@public.gmane.org, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Aug 03, 2015 at 10:38:18AM +0530, Archit Taneja wrote:
-> Enable the NAND controller node on the AP148 platform. Provide pinmux
-> information.
+On Mon, 2015-08-03 at 19:14 +0800, Chenhui Zhao wrote:
+> On Sat, Aug 1, 2015 at 8:45 AM, Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org> 
+> wrote:
+> > On Fri, 2015-06-26 at 15:44 +0800,  Yuantian.Tang-KZfg59tc24xbyU9ht3tbJc3S4LfKanw8@public.gmane.org:
+> > >  +static void rcpm_v1_set_ip_power(bool enable, u32 *mask)
+> > >  +{
+> > >  +     if (enable)
+> > >  +             setbits32(&rcpm_v1_regs->ippdexpcr, *mask);
+> > >  +     else
+> > >  +             clrbits32(&rcpm_v1_regs->ippdexpcr, *mask);
+> > >  +}
+> > >  +
+> > >  +static void rcpm_v2_set_ip_power(bool enable, u32 *mask)
+> > >  +{
+> > >  +     if (enable)
+> > >  +             setbits32(&rcpm_v2_regs->ippdexpcr[0], *mask);
+> > >  +     else
+> > >  +             clrbits32(&rcpm_v2_regs->ippdexpcr[0], *mask);
+> > >  +}
+> > 
+> > Why do these take "u32 *mask" instead of "u32 mask"?
+> > 
+> > -Scott
 > 
-> Cc: devicetree@vger.kernel.org
-> 
-> Signed-off-by: Archit Taneja <architt@codeaurora.org>
-> ---
->  arch/arm/boot/dts/qcom-ipq8064-ap148.dts | 36 ++++++++++++++++++++++++++++++++
->  1 file changed, 36 insertions(+)
-> 
-> diff --git a/arch/arm/boot/dts/qcom-ipq8064-ap148.dts b/arch/arm/boot/dts/qcom-ipq8064-ap148.dts
-> index 7f9ea50..2e88eff 100644
-> --- a/arch/arm/boot/dts/qcom-ipq8064-ap148.dts
-> +++ b/arch/arm/boot/dts/qcom-ipq8064-ap148.dts
-> @@ -30,6 +30,28 @@
->  					bias-none;
->  				};
->  			};
-> +			nand_pins: nand_pins {
-> +				mux {
-> +					pins = "gpio34", "gpio35", "gpio36",
-> +					       "gpio37", "gpio38", "gpio39",
-> +					       "gpio40", "gpio41", "gpio42",
-> +					       "gpio43", "gpio44", "gpio45",
-> +					       "gpio46", "gpio47";
-> +					function = "nand";
-> +					drive-strength = <10>;
-> +					bias-disable;
-> +				};
-> +				pullups {
-> +					pins = "gpio39";
-> +					bias-pull-up;
-> +				};
-> +				hold {
-> +					pins = "gpio40", "gpio41", "gpio42",
-> +					       "gpio43", "gpio44", "gpio45",
-> +					       "gpio46", "gpio47";
-> +					bias-bus-hold;
+> I think it can be used in the case where there are several mask values.
 
-Maybe split out the bias-disable into a separate set and remove that property
-from the mux.
+When would that be?
 
-> +				};
-> +			};
->  		};
->  
->  		gsbi@16300000 {
-> @@ -93,5 +115,19 @@
->  		sata@29000000 {
->  			status = "ok";
->  		};
-> +
-> +		nand@1ac00000 {
-> +			status = "ok";
-> +
-> +			pinctrl-0 = <&nand_pins>;
-> +			pinctrl-names = "default";
-> +
-> +			nand-ecc-strength = <4>;
-> +			nand-bus-width = <8>;
-> +		};
->  	};
->  };
-> +
-> +&adm_dma {
-> +	status = "ok";
-> +};
-> -- 
-> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-> hosted by The Linux Foundation
-> 
+-Scott
 
--- 
-Qualcomm Innovation Center, Inc.
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
