@@ -1,7 +1,7 @@
 From: Sagar Dharia <sdharia@codeaurora.org>
-Subject: [PATCH V3 4/6] slim: qcom: Add Qualcomm Slimbus controller driver
-Date: Mon,  3 Aug 2015 00:59:48 -0600
-Message-ID: <1438585190-11894-5-git-send-email-sdharia@codeaurora.org>
+Subject: [PATCH V3 5/6] slimbus: Add support for 'clock-pause' feature
+Date: Mon,  3 Aug 2015 00:59:49 -0600
+Message-ID: <1438585190-11894-6-git-send-email-sdharia@codeaurora.org>
 References: <1438585190-11894-1-git-send-email-sdharia@codeaurora.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1438585190-11894-1-git-send-email-sdharia@codeaurora.org>
@@ -10,107 +10,52 @@ To: gregkh@linuxfoundation.org, bp@suse.de, poeschel@lemonage.de, sdharia@codeau
 Cc: kheitke@audience.com, mlocke@codeaurora.org, agross@codeaurora.org, linux-arm-msm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-This controller driver programs manager, interface, and framer
-devices for Qualcomm's slimbus HW block.
-Manager component currently implements logical address setting,
-and messaging interface.
-Interface device reports bus synchronization information, and framer
-device clocks the bus from the time it's woken up, until clock-pause
-is executed by the manager device.
+Per slimbus specification, a reconfiguration sequence known as
+'clock pause' needs to be broadcast over the bus while entering low-
+power mode. Clock-pause is initiated by the controller driver.
+To exit clock-pause, controller typically wakes up the framer device.
+Since wakeup precedure is controller-specific, framework calls it via
+controller's function pointer to invoke it.
 
 Signed-off-by: Sagar Dharia <sdharia@codeaurora.org>
 ---
- .../devicetree/bindings/slimbus/slim-qcom-ctrl.txt |  42 ++
- drivers/slimbus/Kconfig                            |  10 +
- drivers/slimbus/Makefile                           |   1 +
- drivers/slimbus/slim-qcom-ctrl.c                   | 587 +++++++++++++++++++++
- drivers/slimbus/slim-qcom.h                        |  65 +++
- 5 files changed, 705 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/slimbus/slim-qcom-ctrl.txt
- create mode 100644 drivers/slimbus/slim-qcom-ctrl.c
- create mode 100644 drivers/slimbus/slim-qcom.h
+ drivers/slimbus/Makefile     |   2 +-
+ drivers/slimbus/slim-core.c  |   2 +
+ drivers/slimbus/slim-sched.c | 121 +++++++++++++++++++++++++++++++++++++++++++
+ include/linux/slimbus.h      |  65 +++++++++++++++++++++++
+ 4 files changed, 189 insertions(+), 1 deletion(-)
+ create mode 100644 drivers/slimbus/slim-sched.c
 
-diff --git a/Documentation/devicetree/bindings/slimbus/slim-qcom-ctrl.txt b/Documentation/devicetree/bindings/slimbus/slim-qcom-ctrl.txt
-new file mode 100644
-index 0000000..5dd6e0f
---- /dev/null
-+++ b/Documentation/devicetree/bindings/slimbus/slim-qcom-ctrl.txt
-@@ -0,0 +1,42 @@
-+Qualcomm SLIMBUS controller
-+"qcom,slim-msm": This controller is used if applications processor
-+	driver is controlling slimbus master component. This driver is
-+	responsible for communicating with slave HW directly using
-+	messaging interface, and doing data channel management.
-+
-+Required properties:
-+
-+ - reg : Offset and length of the register region(s) for the device
-+ - reg-names : Register region name(s) referenced in reg above
-+	 Required register resource entries are:
-+	 "slimbus_physical": Physical adderss of controller register blocks
-+	 "slimbus_bam_physical": Physical address of Bus Access Module (BAM)
-+				 for this controller
-+ - compatible : should be "qcom,slim-msm" if this is master component driver
-+ - interrupts : Interrupt numbers used by this controller
-+ - interrupt-names : Required interrupt resource entries are:
-+	"slimbus_irq" : Interrupt for SLIMBUS core
-+ - clocks : Interface and core clocks used by this slimbus controller
-+ - clock-names : Required clock-name entries are:
-+	"iface_clk" : Interface clock for this controller
-+	"core_clk" : Interrupt for controller core's BAM
-+
-+Optional property:
-+ - reg entry for slew rate : If slew rate control register is provided, this
-+	entry should be used.
-+ - reg-name for slew rate: "slimbus_slew_reg"
-+
-+Example:
-+	slim@28080000 {
-+		compatible = "qcom,slim-msm";
-+		reg = <0x28080000 0x2000>,
-+		reg-names = "slimbus_physical";
-+		interrupts = <0 33 0>;
-+		interrupt-names = "slimbus_irq";
-+		clocks = <&lcc SLIMBUS_SRC>, <&lcc AUDIO_SLIMBUS_CLK>;
-+		clock-names = "iface_clk", "core_clk";
-+
-+		slim_codec_slave {
-+			enumeration-addr = [00 01 60 00 17 02];
-+		};
-+	};
-diff --git a/drivers/slimbus/Kconfig b/drivers/slimbus/Kconfig
-index f0b118a..afe15b3 100644
---- a/drivers/slimbus/Kconfig
-+++ b/drivers/slimbus/Kconfig
-@@ -9,3 +9,13 @@ menuconfig SLIMBUS
- 
- 	  If unsure, choose N.
- 
-+if SLIMBUS
-+config SLIM_QCOM_CTRL
-+	tristate "Qualcomm Slimbus Manager Component"
-+	depends on SLIMBUS
-+	default n
-+	help
-+	  Select driver if Qualcomm's Slimbus Manager Component is
-+	  programmed using Linux kernel.
-+
-+endif
 diff --git a/drivers/slimbus/Makefile b/drivers/slimbus/Makefile
-index d95a0a2..574a892 100644
+index 574a892..cc0d20a 100644
 --- a/drivers/slimbus/Makefile
 +++ b/drivers/slimbus/Makefile
-@@ -2,3 +2,4 @@
+@@ -1,5 +1,5 @@
+ #
  # Makefile for kernel slimbus framework.
  #
- obj-$(CONFIG_SLIMBUS)			+= slim-core.o slim-messaging.o
-+obj-$(CONFIG_SLIM_QCOM_CTRL)		+= slim-qcom-ctrl.o
-diff --git a/drivers/slimbus/slim-qcom-ctrl.c b/drivers/slimbus/slim-qcom-ctrl.c
+-obj-$(CONFIG_SLIMBUS)			+= slim-core.o slim-messaging.o
++obj-$(CONFIG_SLIMBUS)			+= slim-core.o slim-messaging.o slim-sched.o
+ obj-$(CONFIG_SLIM_QCOM_CTRL)		+= slim-qcom-ctrl.o
+diff --git a/drivers/slimbus/slim-core.c b/drivers/slimbus/slim-core.c
+index 9d104ee..5d27ff2 100644
+--- a/drivers/slimbus/slim-core.c
++++ b/drivers/slimbus/slim-core.c
+@@ -459,6 +459,8 @@ int slim_register_controller(struct slim_controller *ctrl)
+ 	mutex_init(&ctrl->m_ctrl);
+ 	spin_lock_init(&ctrl->tx.lock);
+ 	spin_lock_init(&ctrl->rx.lock);
++	mutex_init(&ctrl->sched.m_reconf);
++	init_completion(&ctrl->sched.pause_comp);
+ 
+ 	ctrl->pending_wr = kcalloc((ctrl->tx.n - 1),
+ 				   sizeof(struct slim_pending),
+diff --git a/drivers/slimbus/slim-sched.c b/drivers/slimbus/slim-sched.c
 new file mode 100644
-index 0000000..7ff0536
+index 0000000..e44922d
 --- /dev/null
-+++ b/drivers/slimbus/slim-qcom-ctrl.c
-@@ -0,0 +1,587 @@
++++ b/drivers/slimbus/slim-sched.c
+@@ -0,0 +1,121 @@
 +/* Copyright (c) 2011-2015, The Linux Foundation. All rights reserved.
 + *
 + * This program is free software; you can redistribute it and/or modify
@@ -119,655 +64,239 @@ index 0000000..7ff0536
 + *
 + * This program is distributed in the hope that it will be useful,
 + * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 + * GNU General Public License for more details.
 + */
-+#include <linux/irq.h>
-+#include <linux/kernel.h>
-+#include <linux/init.h>
-+#include <linux/slab.h>
-+#include <linux/io.h>
-+#include <linux/interrupt.h>
-+#include <linux/platform_device.h>
-+#include <linux/delay.h>
-+#include <linux/clk.h>
-+#include <linux/of.h>
++
++#include <linux/errno.h>
 +#include <linux/slimbus.h>
-+#include "slim-qcom.h"
-+
-+#define MSM_SLIM_NAME	"msm_slim_ctrl"
-+
-+/* Manager registers */
-+#define	MGR_CFG		0x200
-+#define	MGR_STATUS	0x204
-+#define	MGR_INT_EN	0x210
-+#define	MGR_INT_STAT	0x214
-+#define	MGR_INT_CLR	0x218
-+#define	MGR_TX_MSG	0x230
-+#define	MGR_RX_MSG	0x270
-+#define	MGR_IE_STAT	0x2F0
-+#define	MGR_VE_STAT	0x300
-+#define	MGR_CFG_ENABLE	1
-+
-+/* Framer registers */
-+#define	FRM_CFG		0x400
-+#define	FRM_STAT	0x404
-+#define	FRM_INT_EN	0x410
-+#define	FRM_INT_STAT	0x414
-+#define	FRM_INT_CLR	0x418
-+#define	FRM_WAKEUP	0x41C
-+#define	FRM_CLKCTL_DONE	0x420
-+#define	FRM_IE_STAT	0x430
-+#define	FRM_VE_STAT	0x440
-+
-+/* Interface registers */
-+#define	INTF_CFG	0x600
-+#define	INTF_STAT	0x604
-+#define	INTF_INT_EN	0x610
-+#define	INTF_INT_STAT	0x614
-+#define	INTF_INT_CLR	0x618
-+#define	INTF_IE_STAT	0x630
-+#define	INTF_VE_STAT	0x640
-+
-+/* Interrupt status bits */
-+#define	MGR_INT_TX_NACKED_2	BIT(25)
-+#define	MGR_INT_MSG_BUF_CONTE	BIT(26)
-+#define	MGR_INT_RX_MSG_RCVD	BIT(30)
-+#define	MGR_INT_TX_MSG_SENT	BIT(31)
-+
-+/* Framer config register settings */
-+#define	FRM_ACTIVE	1
-+#define	CLK_GEAR	7
-+#define	ROOT_FREQ	11
-+#define	REF_CLK_GEAR	15
-+#define	INTR_WAKE	19
-+
-+static int msm_slim_queue_tx(struct msm_slim_ctrl *dev, u32 *buf, u8 len,
-+			     u32 tx_reg)
-+{
-+	int i;
-+
-+	for (i = 0; i < (len + 3) >> 2; i++) {
-+		dev_dbg(dev->dev, "AHB TX data:0x%x\n", buf[i]);
-+		writel_relaxed(buf[i], dev->base + tx_reg + (i * 4));
-+	}
-+	/* Guarantee that message is sent before returning */
-+	mb();
-+	return 0;
-+}
-+
-+static irqreturn_t msm_slim_interrupt(int irq, void *d)
-+{
-+	struct msm_slim_ctrl *dev = d;
-+	u32 stat = readl_relaxed(dev->base + MGR_INT_STAT);
-+	int err = 0;
-+
-+	if (stat & MGR_INT_TX_MSG_SENT || stat & MGR_INT_TX_NACKED_2) {
-+		if (stat & MGR_INT_TX_MSG_SENT)
-+			writel_relaxed(MGR_INT_TX_MSG_SENT,
-+				       dev->base + MGR_INT_CLR);
-+		if (stat & MGR_INT_TX_NACKED_2) {
-+			u32 mgr_stat = readl_relaxed(dev->base + MGR_STATUS);
-+			u32 mgr_ie_stat = readl_relaxed(dev->base +
-+							MGR_IE_STAT);
-+			u32 frm_stat = readl_relaxed(dev->base + FRM_STAT);
-+			u32 frm_cfg = readl_relaxed(dev->base + FRM_CFG);
-+			u32 frm_intr_stat = readl_relaxed(dev->base +
-+							  FRM_INT_STAT);
-+			u32 frm_ie_stat = readl_relaxed(dev->base +
-+							FRM_IE_STAT);
-+			u32 intf_stat = readl_relaxed(dev->base + INTF_STAT);
-+			u32 intf_intr_stat = readl_relaxed(dev->base +
-+							   INTF_INT_STAT);
-+			u32 intf_ie_stat = readl_relaxed(dev->base +
-+							 INTF_IE_STAT);
-+
-+			writel_relaxed(MGR_INT_TX_NACKED_2, dev->base +
-+				       MGR_INT_CLR);
-+			dev_err(dev->dev, "TX Nack MGR:int:0x%x, stat:0x%x\n",
-+				stat, mgr_stat);
-+			dev_err(dev->dev, "TX Nack MGR:ie:0x%x\n", mgr_ie_stat);
-+			dev_err(dev->dev, "TX Nack FRM:int:0x%x, stat:0x%x\n",
-+				frm_intr_stat, frm_stat);
-+			dev_err(dev->dev, "TX Nack FRM:cfg:0x%x, ie:0x%x\n",
-+				frm_cfg, frm_ie_stat);
-+			dev_err(dev->dev, "TX Nack INTF:intr:0x%x, stat:0x%x\n",
-+				intf_intr_stat, intf_stat);
-+			dev_err(dev->dev, "TX Nack INTF:ie:0x%x\n",
-+				intf_ie_stat);
-+			err = -ENOTCONN;
-+		}
-+		/**
-+		 * Guarantee that interrupt clear bit write goes through before
-+		 * signalling completion/exiting ISR
-+		 */
-+		mb();
-+		slim_return_tx(&dev->ctrl, err);
-+	}
-+	if (stat & MGR_INT_RX_MSG_RCVD) {
-+		u8 mc, mt;
-+		u8 len, i;
-+		u32 *rx_buf, pkt[10];
-+		bool q_rx = false;
-+
-+		pkt[0] = readl_relaxed(dev->base + MGR_RX_MSG);
-+		mt = (pkt[0] >> 5) & 0x7;
-+		mc = (pkt[0] >> 8) & 0xff;
-+		len = pkt[0] & 0x1F;
-+		dev_dbg(dev->dev, "RX-IRQ: MC: %x, MT: %x\n", mc, mt);
-+
-+		/**
-+		 * this message cannot be handled by ISR, so
-+		 * let work-queue handle it
-+		 */
-+		if (mt == SLIM_MSG_MT_CORE &&
-+			mc == SLIM_MSG_MC_REPORT_PRESENT)
-+			rx_buf = (u32 *)slim_get_rx(&dev->ctrl);
-+		else
-+			rx_buf = pkt;
-+
-+		if (rx_buf == NULL) {
-+			dev_err(dev->dev, "dropping RX:0x%x due to RX full\n",
-+						pkt[0]);
-+			goto rx_ret_irq;
-+		}
-+
-+		rx_buf[0] = pkt[0];
-+		for (i = 1; i < ((len + 3) >> 2); i++) {
-+			rx_buf[i] = readl_relaxed(dev->base + MGR_RX_MSG +
-+						(4 * i));
-+			dev_dbg(dev->dev, "reading data: %x\n", rx_buf[i]);
-+		}
-+
-+		switch (mc) {
-+			u8 *buf, la;
-+			u16 ele;
-+
-+		case SLIM_MSG_MC_REPORT_PRESENT:
-+			q_rx = true;
-+			break;
-+		case SLIM_MSG_MC_REPLY_INFORMATION:
-+		case SLIM_MSG_MC_REPLY_VALUE:
-+			slim_msg_response(&dev->ctrl, (u8 *)(rx_buf + 1),
-+					  (u8)(*rx_buf >> 24), (len - 4));
-+			break;
-+		case SLIM_MSG_MC_REPORT_INFORMATION:
-+			buf = (u8 *)rx_buf;
-+			la = buf[2];
-+			ele = (u16)buf[4] << 4;
-+
-+			ele |= ((buf[3] & 0xf0) >> 4);
-+			/**
-+			 * report information is most likely loss of
-+			 * sync or collision detected in data slots
-+			 */
-+			dev_err(dev->dev, "LA:%d report inf ele:0x%x\n",
-+				la, ele);
-+			for (i = 0; i < len - 5; i++)
-+				dev_err(dev->dev, "bit-mask:%x\n",
-+					buf[i+5]);
-+			break;
-+		default:
-+			dev_err(dev->dev, "unsupported MC,%x MT:%x\n",
-+				mc, mt);
-+			break;
-+		}
-+rx_ret_irq:
-+		writel_relaxed(MGR_INT_RX_MSG_RCVD, dev->base +
-+			       MGR_INT_CLR);
-+		/**
-+		 * Guarantee that CLR bit write goes through
-+		 * before exiting
-+		 */
-+		mb();
-+		if (q_rx)
-+			queue_work(dev->rxwq, &dev->wd);
-+	}
-+	/**
-+	 * All interrupts are handled: complex RX messages requiring more work
-+	 * are queued to work-queue, others are handled above
-+	 */
-+	return IRQ_HANDLED;
-+}
-+
 +/**
-+ * Qualcomm slimbus controller may experience interference on the lines
-+ * causing some early messages (e.g. logical-address assignment) to be
-+ * NACKed. Retry after sometime (typically 1 superframe)
++ * slim_ctrl_clk_pause: Called by slimbus controller to enter/exit 'clock pause'
++ * Slimbus specification needs this sequence to turn-off clocks for the bus.
++ * The sequence involves sending 3 broadcast messages (reconfiguration
++ * sequence) to inform all devices on the bus.
++ * To exit clock-pause, controller typically wakes up active framer device.
++ * @ctrl: controller requesting bus to be paused or woken up
++ * @wakeup: Wakeup this controller from clock pause.
++ * @restart: Restart time value per spec used for clock pause. This value
++ *	isn't used when controller is to be woken up.
++ * This API executes clock pause reconfiguration sequence if wakeup is false.
++ * If wakeup is true, controller's wakeup is called.
++ * For entering clock-pause, -EBUSY is returned if a message txn in pending.
 + */
-+static void msm_slim_wait_retry(struct msm_slim_ctrl *dev)
++int slim_ctrl_clk_pause(struct slim_controller *ctrl, bool wakeup, u8 restart)
 +{
-+	int msec_per_frm = 0;
-+	int sfr_per_sec;
++	int i, ret = 0;
++	unsigned long flags;
++	struct slim_sched *sched = &ctrl->sched;
++	struct slim_val_inf msg = {0, 0, NULL, NULL, NULL, NULL};
 +
-+	/* Wait for 1 superframe, or default time and then retry */
-+	sfr_per_sec = dev->framer.superfreq /
-+			(1 << (SLIM_MAX_CLK_GEAR - dev->ctrl.clkgear));
-+	if (sfr_per_sec)
-+		msec_per_frm = MSEC_PER_SEC / sfr_per_sec;
-+	if (msec_per_frm < DEF_RETRY_MS)
-+		msec_per_frm = DEF_RETRY_MS;
-+	msleep(msec_per_frm);
-+}
++	DEFINE_SLIM_BCAST_TXN(txn, SLIM_MSG_MC_BEGIN_RECONFIGURATION,
++				3, SLIM_LA_MANAGER, &msg);
 +
-+static int msm_xfer_msg(struct slim_controller *ctrl, struct slim_msg_txn *txn,
-+			void *pbuf)
-+{
-+	struct msm_slim_ctrl *dev = slim_get_ctrldata(ctrl);
-+	DECLARE_COMPLETION_ONSTACK(done);
-+	u32 *head = (u32 *)pbuf;
-+	u8 *puc = (u8 *)pbuf;
-+	u8 la = txn->la;
-+
-+	/* HW expects length field to be excluded */
-+	txn->rl--;
-+
-+	if (txn->dt == SLIM_MSG_DEST_LOGICALADDR)
-+		*head = SLIM_MSG_ASM_FIRST_WORD(txn->rl, txn->mt, txn->mc, 0,
-+						la);
-+	else
-+		*head = SLIM_MSG_ASM_FIRST_WORD(txn->rl, txn->mt, txn->mc, 1,
-+						la);
-+
-+	if (txn->dt == SLIM_MSG_DEST_LOGICALADDR)
-+		puc += 3;
-+	else
-+		puc += 2;
-+	if (txn->mt == SLIM_MSG_MT_CORE && slim_tid_txn(txn->mt, txn->mc))
-+		*(puc++) = txn->tid;
-+	if ((txn->mt == SLIM_MSG_MT_CORE) &&
-+		((txn->mc >= SLIM_MSG_MC_REQUEST_INFORMATION &&
-+		txn->mc <= SLIM_MSG_MC_REPORT_INFORMATION) ||
-+		(txn->mc >= SLIM_MSG_MC_REQUEST_VALUE &&
-+		 txn->mc <= SLIM_MSG_MC_CHANGE_VALUE))) {
-+		*(puc++) = (txn->ec & 0xFF);
-+		*(puc++) = (txn->ec >> 8) & 0xFF;
-+	}
-+	if (txn->msg && txn->msg->wbuf)
-+		memcpy(puc, txn->msg->wbuf, txn->msg->num_bytes);
-+
-+	return msm_slim_queue_tx(dev, head, txn->rl, MGR_TX_MSG);
-+}
-+
-+static int msm_set_laddr(struct slim_controller *ctrl,
-+				struct slim_eaddr *ead, u8 laddr)
-+{
-+	struct msm_slim_ctrl *dev = slim_get_ctrldata(ctrl);
-+	u8 buf[7];
-+	int ret, retries = 0;
-+	struct slim_val_inf msg = {0};
-+
-+	DEFINE_SLIM_EDEST_TXN(txn, SLIM_MSG_MC_ASSIGN_LOGICAL_ADDRESS,
-+			      10, laddr, &msg);
-+
-+	/* Enumeration address */
-+	buf[0] = (u8)(ead->manf_id >> 8);
-+	buf[1] = (u8)(ead->manf_id & 0xFF);
-+	buf[2] = (u8) (ead->prod_code >> 8);
-+	buf[3] = (u8) (ead->prod_code & 0xFF);
-+	buf[4] = ead->dev_index;
-+	buf[5] = ead->instance;
-+	/* Logical address for this EA */
-+	buf[6] = laddr;
-+	/**
-+	 * Retries are needed since bus may lose sync when multiple devices
-+	 * are coming up and reporting present
-+	 */
-+	msg.wbuf = buf;
-+	msg.num_bytes = 7;
-+
-+retry_laddr:
-+	ret = slim_processtxn(&dev->ctrl, &txn);
-+
-+	if (ret) {
-+		dev_err(dev->dev, "set LA:0x%x failed:ret:%dretry:%d\n",
-+			laddr, ret, retries);
-+		if (retries < INIT_MX_RETRIES) {
-+			msm_slim_wait_retry(dev);
-+			retries++;
-+			goto retry_laddr;
-+		} else {
-+			dev_err(dev->dev, "set LADDR failed:ret:%d\n", ret);
++	if (wakeup == false && restart > SLIM_CLK_UNSPECIFIED)
++		return -EINVAL;
++	mutex_lock(&sched->m_reconf);
++	if (wakeup) {
++		if (sched->clk_state == SLIM_CLK_ACTIVE) {
++			mutex_unlock(&sched->m_reconf);
++			return 0;
 +		}
-+	}
-+	return ret;
-+}
-+
-+static void msm_slim_rxwq(struct work_struct *work)
-+{
-+	u8 buf[40];
-+	u8 mc, mt, len;
-+	int i, ret;
-+	struct msm_slim_ctrl *dev = container_of(work, struct msm_slim_ctrl,
-+						 wd);
-+
-+	while ((slim_return_rx(&dev->ctrl, buf)) != -ENODATA) {
-+		len = buf[0] & 0x1F;
-+		mt = (buf[0] >> 5) & 0x7;
-+		mc = buf[1];
-+		if (mt == SLIM_MSG_MT_CORE &&
-+			mc == SLIM_MSG_MC_REPORT_PRESENT) {
-+			u8 laddr;
-+			struct slim_eaddr ea;
-+			u8 e_addr[6];
-+
-+			for (i = 0; i < 6; i++)
-+				e_addr[i] = buf[7-i];
-+
-+			ea.manf_id = (u16)(e_addr[5] << 8) | e_addr[4];
-+			ea.prod_code = (u16)(e_addr[3] << 8) | e_addr[2];
-+			ea.dev_index = e_addr[1];
-+			ea.instance = e_addr[0];
-+			ret = slim_assign_laddr(&dev->ctrl, &ea, &laddr, false);
-+			if (ret)
-+				dev_err(dev->dev, "assign laddr failed:%d\n",
-+					ret);
-+		} else {
-+			dev_err(dev->dev, "unexpected message:mc:%x, mt:%x\n",
-+				mc, mt);
-+
++		/**
++		 * Fine-tune calculation based on clock gear,
++		 * message-bandwidth after bandwidth management
++		 */
++		ret = wait_for_completion_timeout(&sched->pause_comp,
++				msecs_to_jiffies(100));
++		if (!ret) {
++			mutex_unlock(&sched->m_reconf);
++			pr_err("Previous clock pause did not finish");
++			return -ETIMEDOUT;
 +		}
-+
-+	}
-+}
-+
-+static void msm_slim_prg_slew(struct platform_device *pdev,
-+				struct msm_slim_ctrl *dev)
-+{
-+	void __iomem *slew_reg;
-+
-+	/* SLEW RATE register for this slimbus */
-+	dev->slew_mem = platform_get_resource_byname(pdev, IORESOURCE_MEM,
-+						"slimbus_slew_reg");
-+	if (!dev->slew_mem) {
-+		dev_warn(&pdev->dev, "no slimbus slew resource\n");
-+		return;
-+	}
-+
-+	slew_reg = devm_ioremap(&pdev->dev, dev->slew_mem->start,
-+				resource_size(dev->slew_mem));
-+	if (!slew_reg) {
-+		dev_err(dev->dev, "slew register mapping failed");
-+		release_mem_region(dev->slew_mem->start,
-+					resource_size(dev->slew_mem));
-+		dev->slew_mem = NULL;
-+		return;
-+	}
-+	writel_relaxed(1, slew_reg);
-+	/* Make sure slimbus-slew rate enabling goes through */
-+	wmb();
-+}
-+
-+static int msm_slim_probe(struct platform_device *pdev)
-+{
-+	struct msm_slim_ctrl *dev;
-+	struct resource *slim_mem;
-+	struct resource *irq;
-+	struct clk *hclk, *rclk;
-+	int ret;
-+
-+	hclk = devm_clk_get(&pdev->dev, "iface_clk");
-+	if (IS_ERR(hclk))
-+		return PTR_ERR(hclk);
-+
-+	rclk = devm_clk_get(&pdev->dev, "core_clk");
-+	if (IS_ERR(rclk)) {
-+		/* unlikely that this is probe-defer */
-+		dev_err(&pdev->dev, "rclk get failed:%ld\n", PTR_ERR(rclk));
-+		devm_clk_put(&pdev->dev, hclk);
-+		return PTR_ERR(rclk);
-+	}
-+
-+	ret = clk_set_rate(rclk, SLIM_ROOT_FREQ);
-+	if (ret) {
-+		dev_err(&pdev->dev, "ref-clock set-rate failed:%d\n", ret);
++		ret = 0;
++		/**
++		 * Slimbus framework will call controller wakeup
++		 * Controller should make sure that it sets active framer
++		 * out of clock pause
++		 */
++		if (sched->clk_state == SLIM_CLK_PAUSED && ctrl->wakeup)
++			ret = ctrl->wakeup(ctrl);
++		if (!ret)
++			sched->clk_state = SLIM_CLK_ACTIVE;
++		mutex_unlock(&sched->m_reconf);
 +		return ret;
 +	}
 +
-+	slim_mem = platform_get_resource_byname(pdev, IORESOURCE_MEM,
-+						"slimbus_physical");
-+	if (!slim_mem) {
-+		dev_err(&pdev->dev, "no slimbus physical memory resource\n");
-+		return -ENODEV;
++	/* already paused */
++	if (ctrl->sched.clk_state == SLIM_CLK_PAUSED) {
++		mutex_unlock(&sched->m_reconf);
++		return 0;
 +	}
 +
-+	irq = platform_get_resource_byname(pdev, IORESOURCE_IRQ,
-+						"slimbus_irq");
-+	if (!irq) {
-+		dev_err(&pdev->dev, "no slimbus IRQ resource\n");
-+		return -ENODEV;
++	spin_lock_irqsave(&ctrl->txn_lock, flags);
++	for (i = 0; i < ctrl->last_tid; i++) {
++		/* Pending response for a message */
++		if (ctrl->tid_tbl[i]) {
++			spin_unlock_irqrestore(&ctrl->txn_lock, flags);
++			mutex_unlock(&sched->m_reconf);
++			return -EBUSY;
++		}
 +	}
++	spin_unlock_irqrestore(&ctrl->txn_lock, flags);
 +
-+	dev = devm_kzalloc(&pdev->dev, sizeof(*dev), GFP_KERNEL);
-+	if (!dev)
-+		return -ENOMEM;
++	sched->clk_state = SLIM_CLK_ENTERING_PAUSE;
 +
-+	dev->hclk = hclk;
-+	dev->rclk = rclk;
-+
-+	dev->dev = &pdev->dev;
-+	platform_set_drvdata(pdev, dev);
-+	slim_set_ctrldata(&dev->ctrl, dev);
-+	dev->base = devm_ioremap(dev->dev, slim_mem->start,
-+				 resource_size(slim_mem));
-+	if (!dev->base) {
-+		dev_err(&pdev->dev, "IOremap failed\n");
-+		return -ENOMEM;
-+	}
-+
-+	dev->ctrl.set_laddr = msm_set_laddr;
-+	dev->ctrl.xfer_msg = msm_xfer_msg;
-+	dev->ctrl.tx.n = MSM_TX_MSGS;
-+	dev->ctrl.rx.n = MSM_RX_MSGS;
-+	dev->ctrl.tx.sl_sz = SLIM_MSGQ_BUF_LEN;
-+	dev->ctrl.rx.sl_sz = SLIM_MSGQ_BUF_LEN;
-+
-+	dev->irq = irq->start;
-+
-+	INIT_WORK(&dev->wd, msm_slim_rxwq);
-+	dev->rxwq = create_singlethread_workqueue("msm_slim_rx");
-+	if (!dev->rxwq) {
-+		dev_err(dev->dev, "Failed to start Rx WQ\n");
-+		return -ENOMEM;
-+	}
-+
-+	dev->framer.rootfreq = SLIM_ROOT_FREQ >> 3;
-+	dev->framer.superfreq =
-+		dev->framer.rootfreq / SLIM_CL_PER_SUPERFRAME_DIV8;
-+	dev->ctrl.a_framer = &dev->framer;
-+	dev->ctrl.clkgear = SLIM_MAX_CLK_GEAR;
-+	dev->ctrl.dev.parent = &pdev->dev;
-+	dev->ctrl.dev.of_node = pdev->dev.of_node;
-+
-+	msm_slim_prg_slew(pdev, dev);
-+
-+	ret = devm_request_irq(&pdev->dev, dev->irq, msm_slim_interrupt,
-+				IRQF_TRIGGER_HIGH, "msm_slim_irq", dev);
-+	if (ret) {
-+		dev_err(&pdev->dev, "request IRQ failed\n");
-+		goto err_request_irq_failed;
-+	}
-+
-+	ret = clk_prepare_enable(hclk);
++	/* clock pause sequence */
++	ret = slim_processtxn(ctrl, &txn);
 +	if (ret)
-+		goto err_hclk_enable_failed;
++		goto clk_pause_ret;
 +
-+	ret = clk_prepare_enable(rclk);
++	txn.mc = SLIM_MSG_MC_NEXT_PAUSE_CLOCK;
++	txn.rl = 4;
++	msg.num_bytes = 1;
++	msg.wbuf = &restart;
++	ret = slim_processtxn(ctrl, &txn);
 +	if (ret)
-+		goto err_rclk_enable_failed;
++		goto clk_pause_ret;
 +
-+	/* Register with framework before enabling frame, clock */
-+	ret = slim_register_controller(&dev->ctrl);
++	txn.mc = SLIM_MSG_MC_RECONFIGURE_NOW;
++	txn.rl = 3;
++	msg.num_bytes = 1;
++	msg.wbuf = NULL;
++	ret = slim_processtxn(ctrl, &txn);
++
++clk_pause_ret:
 +	if (ret) {
-+		dev_err(dev->dev, "error adding controller\n");
-+		goto err_ctrl_failed;
++		sched->clk_state = SLIM_CLK_ACTIVE;
++	} else {
++		sched->clk_state = SLIM_CLK_PAUSED;
++		complete(&sched->pause_comp);
 +	}
-+
-+	dev->ver = readl_relaxed(dev->base);
-+	/* Version info in 16 MSbits */
-+	dev->ver >>= 16;
-+	/* Component register initialization */
-+	writel_relaxed(1, dev->base + CFG_PORT(COMP_CFG, dev->ver));
-+	writel_relaxed((EE_MGR_RSC_GRP | EE_NGD_2 | EE_NGD_1),
-+				dev->base + CFG_PORT(COMP_TRUST_CFG, dev->ver));
-+
-+	writel_relaxed((MGR_INT_TX_NACKED_2 |
-+			MGR_INT_MSG_BUF_CONTE | MGR_INT_RX_MSG_RCVD |
-+			MGR_INT_TX_MSG_SENT), dev->base + MGR_INT_EN);
-+	writel_relaxed(1, dev->base + MGR_CFG);
-+	/*
-+	 * Framer registers are beyond 1K memory region after Manager and/or
-+	 * component registers. Make sure those writes are ordered
-+	 * before framer register writes
-+	 */
-+	wmb();
-+
-+	/* Framer register initialization */
-+	writel_relaxed((1 << INTR_WAKE) | (0xA << REF_CLK_GEAR) |
-+		(0xA << CLK_GEAR) | (1 << ROOT_FREQ) | (1 << FRM_ACTIVE) | 1,
-+		dev->base + FRM_CFG);
-+	/*
-+	 * Make sure that framer wake-up and enabling writes go through
-+	 * before any other component is enabled. Framer is responsible for
-+	 * clocking the bus and enabling framer first will ensure that other
-+	 * devices can report presence when they are enabled
-+	 */
-+	mb();
-+
-+	writel_relaxed(MGR_CFG_ENABLE, dev->base + MGR_CFG);
-+	/*
-+	 * Make sure that manager-enable is written through before interface
-+	 * device is enabled
-+	 */
-+	mb();
-+	writel_relaxed(1, dev->base + INTF_CFG);
-+	/*
-+	 * Make sure that interface-enable is written through before enabling
-+	 * ported generic device inside MSM manager
-+	 */
-+	mb();
-+
-+	writel_relaxed(1, dev->base + CFG_PORT(COMP_CFG, dev->ver));
-+	/*
-+	 * Make sure that all writes have gone through before exiting this
-+	 * function
-+	 */
-+	mb();
-+
-+	dev_dbg(dev->dev, "MSM SB controller is up:ver:0x%x!\n", dev->ver);
-+	return 0;
-+
-+err_ctrl_failed:
-+	clk_disable_unprepare(dev->rclk);
-+err_rclk_enable_failed:
-+	clk_disable_unprepare(dev->hclk);
-+err_hclk_enable_failed:
-+err_request_irq_failed:
-+	destroy_workqueue(dev->rxwq);
++	mutex_unlock(&sched->m_reconf);
 +	return ret;
 +}
++EXPORT_SYMBOL_GPL(slim_ctrl_clk_pause);
 +
-+static int msm_slim_remove(struct platform_device *pdev)
-+{
-+	struct msm_slim_ctrl *dev = platform_get_drvdata(pdev);
+diff --git a/include/linux/slimbus.h b/include/linux/slimbus.h
+index 8c9bd3d..660da15 100644
+--- a/include/linux/slimbus.h
++++ b/include/linux/slimbus.h
+@@ -117,11 +117,21 @@ struct slim_addrt {
+ #define SLIM_MSG_MC_REPLY_VALUE                  0x64
+ #define SLIM_MSG_MC_CHANGE_VALUE                 0x68
+ 
++/* Clock pause Reconfiguration messages */
++#define SLIM_MSG_MC_BEGIN_RECONFIGURATION        0x40
++#define SLIM_MSG_MC_NEXT_PAUSE_CLOCK             0x4A
++#define SLIM_MSG_MC_RECONFIGURE_NOW              0x5F
 +
-+	slim_del_controller(&dev->ctrl);
-+	destroy_workqueue(dev->rxwq);
-+	return 0;
-+}
+ /* Destination type Values */
+ #define SLIM_MSG_DEST_LOGICALADDR	0
+ #define SLIM_MSG_DEST_ENUMADDR		1
+ #define	SLIM_MSG_DEST_BROADCAST		3
+ 
++/* Clock pause values per slimbus spec */
++#define SLIM_CLK_FAST				0
++#define SLIM_CLK_CONST_PHASE			1
++#define SLIM_CLK_UNSPECIFIED			2
 +
-+static const struct of_device_id msm_slim_dt_match[] = {
-+	{
-+		.compatible = "qcom,slim-msm",
-+	},
-+	{}
-+};
-+
-+static struct platform_driver msm_slim_driver = {
-+	.probe = msm_slim_probe,
-+	.remove = msm_slim_remove,
-+	.driver	= {
-+		.name = MSM_SLIM_NAME,
-+		.owner = THIS_MODULE,
-+		.of_match_table = msm_slim_dt_match,
-+	},
-+};
-+module_platform_driver(msm_slim_driver);
-+
-+MODULE_LICENSE("GPL v2");
-+MODULE_VERSION("0.1");
-+MODULE_DESCRIPTION("Qualcomm Slimbus controller");
-+MODULE_ALIAS("platform:qcom-slim");
-diff --git a/drivers/slimbus/slim-qcom.h b/drivers/slimbus/slim-qcom.h
-new file mode 100644
-index 0000000..115a8b8
---- /dev/null
-+++ b/drivers/slimbus/slim-qcom.h
-@@ -0,0 +1,65 @@
-+/* Copyright (c) 2011-2015, The Linux Foundation. All rights reserved.
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 and
-+ * only version 2 as published by the Free Software Foundation.
-+ *
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
+ /**
+  * struct slim_val_inf: Slimbus value or information element
+  * @start_offset: Specifies starting offset in information/value element map
+@@ -215,6 +225,39 @@ struct slim_pending {
+ };
+ 
+ /**
++ * enum slim_clk_state: Slimbus controller's clock state used internally for
++ *	maintaining current clock state.
++ * @SLIM_CLK_ACTIVE: Slimbus clock is active
++ * @SLIM_CLK_ENTERING_PAUSE: Slimbus clock pause sequence is being sent on the
++ *	bus. If this succeeds, state changes to SLIM_CLK_PAUSED. If the
++ *	transition fails, state changes back to SLIM_CLK_ACTIVE
++ * @SLIM_CLK_PAUSED: Slimbus controller clock has paused.
 + */
-+
-+#ifndef _SLIM_QCOM_H
-+#define _SLIM_QCOM_H
-+
-+#include <linux/irq.h>
-+#include <linux/workqueue.h>
-+
-+#define QC_MFGID_LSB	0x2
-+#define QC_MFGID_MSB	0x17
-+
-+#define SLIM_MSG_ASM_FIRST_WORD(l, mt, mc, dt, ad) \
-+		((l) | ((mt) << 5) | ((mc) << 8) | ((dt) << 15) | ((ad) << 16))
-+
-+#define SLIM_ROOT_FREQ 24576000
-+#define INIT_MX_RETRIES 10
-+#define DEF_RETRY_MS	10
-+
-+/* MAX message size over control channel */
-+#define SLIM_MSGQ_BUF_LEN	40
-+#define MSM_TX_MSGS 2
-+#define MSM_RX_MSGS	8
-+
-+#define CFG_PORT(r, v) ((v) ? CFG_PORT_V2(r) : CFG_PORT_V1(r))
-+
-+/* V2 Component registers */
-+#define CFG_PORT_V2(r) ((r ## _V2))
-+#define	COMP_CFG_V2		4
-+#define	COMP_TRUST_CFG_V2	0x3000
-+
-+/* V1 Component registers */
-+#define CFG_PORT_V1(r) ((r ## _V1))
-+#define	COMP_CFG_V1		0
-+#define	COMP_TRUST_CFG_V1	0x14
-+
-+/* Resource group info for manager, and non-ported generic device-components */
-+#define EE_MGR_RSC_GRP	(1 << 10)
-+#define EE_NGD_2	(2 << 6)
-+#define EE_NGD_1	0
-+
-+struct msm_slim_ctrl {
-+	struct slim_controller  ctrl;
-+	struct slim_framer	framer;
-+	struct device		*dev;
-+	void __iomem		*base;
-+	struct resource		*slew_mem;
-+	int			irq;
-+	struct workqueue_struct *rxwq;
-+	struct work_struct	wd;
-+	struct clk		*rclk;
-+	struct clk		*hclk;
-+	u32			ver;
++enum slim_clk_state {
++	SLIM_CLK_ACTIVE,
++	SLIM_CLK_ENTERING_PAUSE,
++	SLIM_CLK_PAUSED,
 +};
 +
-+#endif
++/**
++ * struct slim_sched: Framework uses this structure internally for scheduling.
++ * @clk_state: Controller's clock state from enum slim_clk_state
++ * @pause_comp: Signals completion of clock pause sequence. This is useful when
++ *	client tries to call slimbus transaction when controller is entering
++ *	clock pause.
++ * @m_reconf: This mutex is held until current reconfiguration (data channel
++ *	scheduling, message bandwidth reservation) is done. Message APIs can
++ *	use the bus concurrently when this mutex is held since elemental access
++ *	messages can be sent on the bus when reconfiguration is in progress.
++ */
++struct slim_sched {
++	int			clkgear;
++	enum slim_clk_state	clk_state;
++	struct completion	pause_comp;
++	struct mutex		m_reconf;
++};
++
++/**
+  * struct slim_controller: Controls every instance of SLIMbus
+  *				(similar to 'master' on SPI)
+  *	'Manager device' is responsible for  device management, bandwidth
+@@ -259,6 +302,7 @@ struct slim_pending {
+  * @pending_wr: Pending write transactions to be acknowledged by controller
+  * @tx_sem: Semaphore for available TX buffers for this controller
+  * @last_tid: Last used entry for TID transactions
++ * @sched: scheduler structure used by the controller
+  * @dev_released: completion used to signal when sysfs has released this
+  *	controller so that it can be deleted during shutdown
+  * @xfer_msg: Transfer a message on this controller (this can be a broadcast
+@@ -270,6 +314,9 @@ struct slim_pending {
+  * @get_laddr: It is possible that controller needs to set fixed logical
+  *	address table and get_laddr can be used in that case so that controller
+  *	can do this assignment.
++ * @wakeup: This function pointer implements controller-specific procedure
++ *	to wake it up from clock-pause. Framework will call this to bring
++ *	the controller out of clock pause.
+  */
+ struct slim_controller {
+ 	struct device		dev;
+@@ -292,6 +339,7 @@ struct slim_controller {
+ 	struct slim_ctrl_buf	rx;
+ 	struct slim_pending	*pending_wr;
+ 	struct semaphore	tx_sem;
++	struct slim_sched	sched;
+ 	struct completion	dev_released;
+ 	int			(*xfer_msg)(struct slim_controller *ctrl,
+ 					    struct slim_msg_txn *tx, void *buf);
+@@ -299,6 +347,7 @@ struct slim_controller {
+ 					     struct slim_eaddr *ea, u8 laddr);
+ 	int			(*get_laddr)(struct slim_controller *ctrl,
+ 					     struct slim_eaddr *ea, u8 *laddr);
++	int			(*wakeup)(struct slim_controller *ctrl);
+ };
+ 
+ #define to_slim_controller(d) container_of(d, struct slim_controller, dev)
+@@ -612,4 +661,20 @@ static inline bool slim_tid_txn(u8 mt, u8 mc)
+ }
+ /* end of message apis */
+ 
++/**
++ * slim_ctrl_clk_pause: Called by slimbus controller to enter/exit 'clock pause'
++ * Slimbus specification needs this sequence to turn-off clocks for the bus.
++ * The sequence involves sending 3 broadcast messages (reconfiguration
++ * sequence) to inform all devices on the bus.
++ * To exit clock-pause, controller typically wakes up active framer device.
++ * @ctrl: controller requesting bus to be paused or woken up
++ * @wakeup: Wakeup this controller from clock pause.
++ * @restart: Restart time value per spec used for clock pause. This value
++ *	isn't used when controller is to be woken up.
++ * This API executes clock pause reconfiguration sequence if wakeup is false.
++ * If wakeup is true, controller's wakeup is called.
++ * For entering clock-pause, -EBUSY is returned if a message txn in pending.
++ */
++int slim_ctrl_clk_pause(struct slim_controller *ctrl, bool wakeup, u8 restart);
++
+ #endif /* _LINUX_SLIMBUS_H */
 -- 
 1.8.2.1
