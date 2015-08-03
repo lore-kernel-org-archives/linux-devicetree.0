@@ -1,7 +1,7 @@
 From: Ian Campbell <ian.campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH v4] dtb: Create a common home for cross-architecture dtsi files.
-Date: Mon, 3 Aug 2015 17:06:33 +0100
-Message-ID: <1438617993-1012-1-git-send-email-ian.campbell@citrix.com>
+Subject: [PATCH v5] dtb: Create a common home for cross-architecture dtsi files.
+Date: Mon, 3 Aug 2015 17:06:40 +0100
+Message-ID: <1438618000-1091-1-git-send-email-ian.campbell@citrix.com>
 Mime-Version: 1.0
 Content-Type: text/plain
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
