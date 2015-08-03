@@ -1,7 +1,7 @@
 From: Matt Porter <mporter@konsulko.com>
-Subject: [PATCH 1/3] iio: temperature: add max6675 dt binding
-Date: Mon,  3 Aug 2015 16:56:48 -0400
-Message-ID: <1438635410-3757-2-git-send-email-mporter@konsulko.com>
+Subject: [PATCH 3/3] MAINTAINERS: add max6675 driver
+Date: Mon,  3 Aug 2015 16:56:50 -0400
+Message-ID: <1438635410-3757-4-git-send-email-mporter@konsulko.com>
 References: <1438635410-3757-1-git-send-email-mporter@konsulko.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1438635410-3757-1-git-send-email-mporter@konsulko.com>
@@ -10,40 +10,30 @@ To: Linux IIO List <linux-iio@vger.kernel.org>, Devicetree List <devicetree@vger
 Cc: Jonathan Cameron <jic23@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Add a DT binding for the MAX6675 SPI thermocouple converter.
-The datasheet for this device may be found at
-http://datasheets.maximintegrated.com/en/ds/MAX6675.pdf
+Add myself as the MAX6675 driver maintainer.
 
 Signed-off-by: Matt Porter <mporter@konsulko.com>
 ---
- .../devicetree/bindings/iio/temperature/max6675.txt   | 19 +++++++++++++++++++
- 1 file changed, 19 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/iio/temperature/max6675.txt
+ MAINTAINERS | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/iio/temperature/max6675.txt b/Documentation/devicetree/bindings/iio/temperature/max6675.txt
-new file mode 100644
-index 0000000..4e643e9
---- /dev/null
-+++ b/Documentation/devicetree/bindings/iio/temperature/max6675.txt
-@@ -0,0 +1,19 @@
-+Maxim MAX6675 thermocouple converter
+diff --git a/MAINTAINERS b/MAINTAINERS
+index a226416..355cc09 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -6543,6 +6543,13 @@ S:	Maintained
+ F:	Documentation/hwmon/max6650
+ F:	drivers/hwmon/max6650.c
+ 
++MAX6675 THERMOCOUPLE CONVERTER DRIVER
++M:	Matt Porter <mporter@konsulko.com>
++L:	linux-iio@vger.kernel.org
++S:	Maintained
++F:	Documentation/devicetree/bindings/iio/temperature/max6675.txt
++F:	drivers/iio/temperature/max6675.c
 +
-+Required properties:
-+
-+	- compatible: must be "maxim,max6675"
-+	- reg: SPI chip select number for the device
-+	- spi-max-frequency: must be 4300000
-+	- spi-cpha: SPI Mode 1.
-+
-+	Refer to spi/spi-bus.txt for generic SPI slave bindings
-+
-+Example:
-+
-+	max6675@0 {
-+		compatible = "maxim,max6675";
-+		reg = <0>;
-+		spi-max-frequency = <4300000>;
-+		spi-cpha;
-+	};
+ MAX6697 HARDWARE MONITOR DRIVER
+ M:	Guenter Roeck <linux@roeck-us.net>
+ L:	lm-sensors@lm-sensors.org
 -- 
 2.1.4
