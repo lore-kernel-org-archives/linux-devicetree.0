@@ -1,79 +1,61 @@
-From: James Liao <jamesjj.liao@mediatek.com>
-Subject: [PATCH v6 9/9] arm64: dts: mt8173: Add subsystem clock controller device nodes
-Date: Tue, 4 Aug 2015 16:16:58 +0800
-Message-ID: <1438676218-11310-10-git-send-email-jamesjj.liao@mediatek.com>
-References: <1438676218-11310-1-git-send-email-jamesjj.liao@mediatek.com>
+From: Michal Simek <michal.simek@xilinx.com>
+Subject: Re: [RFCv3 1/4] docs: dts: Added documentation for Xilinx Zynq Reset
+ Controller bindings.
+Date: Tue, 4 Aug 2015 10:18:54 +0200
+Message-ID: <55C0756E.8050003@xilinx.com>
+References: <1438305237-18497-1-git-send-email-moritz.fischer@ettus.com>
+ <1438305237-18497-2-git-send-email-moritz.fischer@ettus.com>
+ <1438675772.3793.18.camel@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1438676218-11310-1-git-send-email-jamesjj.liao@mediatek.com>
+In-Reply-To: <1438675772.3793.18.camel@pengutronix.de>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Matthias Brugger <matthias.bgg@gmail.com>, Mike Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Heiko Stubner <heiko@sntech.de>
-Cc: srv_heupstream@mediatek.com, Daniel Kurtz <djkurtz@chromium.org>, Ricky Liang <jcliang@chromium.org>, Rob Herring <robh+dt@kernel.org>, Sascha Hauer <kernel@pengutronix.de>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org, James Liao <jamesjj.liao@mediatek.com>
+To: Philipp Zabel <p.zabel@pengutronix.de>, Moritz Fischer <moritz.fischer@ettus.com>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, linux@arm.linux.org.uk, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, michal.simek@xilinx.com, linux-kernel@vger.kernel.org, robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org, galak@codeaurora.org, soren.brinkmann@xilinx.com
 List-Id: devicetree@vger.kernel.org
 
-This patch adds device nodes providing subsystem clocks on MT8173,
-includes mmsys, imgsys, vdecsys, vencsys and vencltsys.
+On 08/04/2015 10:09 AM, Philipp Zabel wrote:
+> Hi Moritz,
+> 
+> Am Donnerstag, den 30.07.2015, 18:13 -0700 schrieb Moritz Fischer:
+>> Signed-off-by: Moritz Fischer <moritz.fischer@ettus.com>
+>> ---
+>>  .../devicetree/bindings/reset/zynq-reset.txt       | 68 ++++++++++++++++++++++
+>>  1 file changed, 68 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/reset/zynq-reset.txt
+>>
+>> diff --git a/Documentation/devicetree/bindings/reset/zynq-reset.txt b/Documentation/devicetree/bindings/reset/zynq-reset.txt
+>> new file mode 100644
+>> index 0000000..498c037a
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/reset/zynq-reset.txt
+>> @@ -0,0 +1,68 @@
+>> +Xilinx Zynq Reset Manager
+>> +
+>> +The Zynq AP-SoC has several different resets.
+>> +
+>> +See Chapter 26 of the Zynq TRM (UG585) for more information about Zynq resets.
+>> +
+>> +Required properties:
+>> +- compatible: "xlnx,zynq-reset"
+>> +- reg: SLCR offset and size taken via syscon <0x200 0x48>
+>> +- syscon: <&slcr>
+>> +  This should be a phandle to the Zynq's SLCR register.
+> 
+>                                                  ^ register singular?
+> 
+> I still think the syscon phandle property is superfluous,
+> but I'm fine with keeping it for consistency.
+> It could always be made optional later.
 
-Signed-off-by: James Liao <jamesjj.liao@mediatek.com>
----
- arch/arm64/boot/dts/mediatek/mt8173.dtsi | 37 ++++++++++++++++++++++++++++++++
- 1 file changed, 37 insertions(+)
+Great.
 
-diff --git a/arch/arm64/boot/dts/mediatek/mt8173.dtsi b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
-index a2f63e4..32c85cc 100644
---- a/arch/arm64/boot/dts/mediatek/mt8173.dtsi
-+++ b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
-@@ -102,6 +102,13 @@
- 		clock-output-names = "clk32k";
- 	};
- 
-+	cpum_ck: oscillator@2 {
-+		compatible = "fixed-clock";
-+		#clock-cells = <0>;
-+		clock-frequency = <0>;
-+		clock-output-names = "cpum_ck";
-+	};
-+
- 	timer {
- 		compatible = "arm,armv8-timer";
- 		interrupt-parent = <&gic>;
-@@ -227,6 +234,36 @@
- 			clocks = <&uart_clk>;
- 			status = "disabled";
- 		};
-+
-+		mmsys: clock-controller@14000000 {
-+			compatible = "mediatek,mt8173-mmsys", "syscon";
-+			reg = <0 0x14000000 0 0x1000>;
-+			#clock-cells = <1>;
-+		};
-+
-+		imgsys: clock-controller@15000000 {
-+			compatible = "mediatek,mt8173-imgsys", "syscon";
-+			reg = <0 0x15000000 0 0x1000>;
-+			#clock-cells = <1>;
-+		};
-+
-+		vdecsys: clock-controller@16000000 {
-+			compatible = "mediatek,mt8173-vdecsys", "syscon";
-+			reg = <0 0x16000000 0 0x1000>;
-+			#clock-cells = <1>;
-+		};
-+
-+		vencsys: clock-controller@18000000 {
-+			compatible = "mediatek,mt8173-vencsys", "syscon";
-+			reg = <0 0x18000000 0 0x1000>;
-+			#clock-cells = <1>;
-+		};
-+
-+		vencltsys: clock-controller@19000000 {
-+			compatible = "mediatek,mt8173-vencltsys", "syscon";
-+			reg = <0 0x19000000 0 0x1000>;
-+			#clock-cells = <1>;
-+		};
- 	};
- };
- 
--- 
-1.8.1.1.dirty
+Philipp: I expect you want to take at least 1/4 and 3/4 via your tree.
+I am fine if you also want to add 2/4 and 4/4 via your tree.
+If you think that they should go via arm-soc please let me know and I
+will add them to the queue.
+
+Thanks,
+Michal
