@@ -1,53 +1,43 @@
-From: Archit Taneja <architt@codeaurora.org>
-Subject: Re: [PATCH v3 5/5] arm: qcom: dts: Enable NAND node on IPQ8064 AP148
- platform
-Date: Tue, 04 Aug 2015 20:36:34 +0530
-Message-ID: <55C0D4FA.9080305@codeaurora.org>
-References: <1421419702-17812-1-git-send-email-architt@codeaurora.org> <1438578498-32254-1-git-send-email-architt@codeaurora.org> <1438578498-32254-6-git-send-email-architt@codeaurora.org> <20150803205829.GA21068@codeaurora.org>
+From: Philipp Zabel <p.zabel@pengutronix.de>
+Subject: Re: [RFCv3 1/4] docs: dts: Added documentation for Xilinx Zynq
+ Reset Controller bindings.
+Date: Tue, 04 Aug 2015 17:10:17 +0200
+Message-ID: <1438701017.3793.45.camel@pengutronix.de>
+References: <1438305237-18497-1-git-send-email-moritz.fischer@ettus.com>
+	 <1438305237-18497-2-git-send-email-moritz.fischer@ettus.com>
+	 <1438675772.3793.18.camel@pengutronix.de>
+	 <CAAtXAHeauiD5smAqMbheJWuv4BT-2YqJWOSBjYPq900icpT1Rg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20150803205829.GA21068@codeaurora.org>
+In-Reply-To: <CAAtXAHeauiD5smAqMbheJWuv4BT-2YqJWOSBjYPq900icpT1Rg@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Stephen Boyd <sboyd@codeaurora.org>
-Cc: devicetree@vger.kernel.org, dehrenberg@google.com, linux-arm-msm@vger.kernel.org, cernekee@gmail.com, linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org, agross@codeaurora.org, computersforpeace@gmail.com
+To: Moritz Fischer <moritz.fischer@ettus.com>
+Cc: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, Kumar Gala <galak@codeaurora.org>, Michal Simek <michal.simek@xilinx.com>, =?ISO-8859-1?Q?S=F6ren?= Brinkmann <soren.brinkmann@xilinx.com>, linux@arm.linux.org.uk, devicetree@vger.kernel.org, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+Hi Moritz,
 
+Am Dienstag, den 04.08.2015, 08:05 -0700 schrieb Moritz Fischer:
+> Hi Philip,
+> 
+> On Tue, Aug 4, 2015 at 1:09 AM, Philipp Zabel <p.zabel@pengutronix.de> wrote:
+> > Hi Moritz,
+> >
+> > Am Donnerstag, den 30.07.2015, 18:13 -0700 schrieb Moritz Fischer:
+[...]
+> >> +Required properties:
+> >> +- compatible: "xlnx,zynq-reset"
+> >> +- reg: SLCR offset and size taken via syscon <0x200 0x48>
+> >> +- syscon: <&slcr>
+> >> +  This should be a phandle to the Zynq's SLCR register.
+> >
+> >                                                  ^ register singular?
+> Do you want me to resend the entire set, or are you cool with just git
+> amending the 's' for registers?
 
-On 8/4/2015 2:28 AM, Stephen Boyd wrote:
-> On 08/03, Archit Taneja wrote:
->> @@ -93,5 +115,19 @@
->>   		sata@29000000 {
->>   			status = "ok";
->>   		};
->> +
->> +		nand@1ac00000 {
->> +			status = "ok";
->> +
->> +			pinctrl-0 = <&nand_pins>;
->> +			pinctrl-names = "default";
->> +
->> +			nand-ecc-strength = <4>;
->> +			nand-bus-width = <8>;
->> +		};
->>   	};
->>   };
->> +
->> +&adm_dma {
->> +	status = "ok";
->> +};
->
-> I think the preference is to put the full path to the device in
-> the dts file and then have status = "ok". So please move this
-> into the soc node and give the correct offset, etc. like we've
-> done for other nodes.
+Amended and applied, thanks.
 
-I'll do that.
-
-Archit
-
--- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project
+regards
+Philipp
