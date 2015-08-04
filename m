@@ -1,58 +1,49 @@
-From: James Liao <jamesjj.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Subject: [PATCH v6 1/9] clk: mediatek: Removed unused dpi_ck clock from MT8173
-Date: Tue, 4 Aug 2015 16:16:50 +0800
-Message-ID: <1438676218-11310-2-git-send-email-jamesjj.liao@mediatek.com>
-References: <1438676218-11310-1-git-send-email-jamesjj.liao@mediatek.com>
+From: Anson Huang <b20788-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: [PATCH] ARM: dts: imx6ul: add RTC support
+Date: Tue, 4 Aug 2015 23:54:58 +0800
+Message-ID: <1438703698-2445-1-git-send-email-b20788@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-In-Reply-To: <1438676218-11310-1-git-send-email-jamesjj.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mediatek>,
- <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-mediatek/>
-List-Post: <mailto:linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mediatek>,
- <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "Linux-mediatek" <linux-mediatek-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mike Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Heiko Stubner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, James Liao <jamesjj.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ricky Liang <jcliang-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-The dpi_ck clock can be removed because it not actually used
-in topckgen and subsystems.
+Add RTC support for i.MX6UL.
 
-Signed-off-by: James Liao <jamesjj.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Signed-off-by: Anson Huang <b20788-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 ---
- drivers/clk/mediatek/clk-mt8173.c      | 1 -
- include/dt-bindings/clock/mt8173-clk.h | 1 -
- 2 files changed, 2 deletions(-)
+ arch/arm/boot/dts/imx6ul.dtsi | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
 
-diff --git a/drivers/clk/mediatek/clk-mt8173.c b/drivers/clk/mediatek/clk-mt8173.c
-index 8b6523d..80871e2 100644
---- a/drivers/clk/mediatek/clk-mt8173.c
-+++ b/drivers/clk/mediatek/clk-mt8173.c
-@@ -26,7 +26,6 @@ static DEFINE_SPINLOCK(mt8173_clk_lock);
+diff --git a/arch/arm/boot/dts/imx6ul.dtsi b/arch/arm/boot/dts/imx6ul.dtsi
+index af865d3..b6c6c31 100644
+--- a/arch/arm/boot/dts/imx6ul.dtsi
++++ b/arch/arm/boot/dts/imx6ul.dtsi
+@@ -393,6 +393,18 @@
+ 				fsl,anatop = <&anatop>;
+ 			};
  
- static const struct mtk_fixed_factor root_clk_alias[] __initconst = {
- 	FACTOR(CLK_TOP_CLKPH_MCK_O, "clkph_mck_o", "clk_null", 1, 1),
--	FACTOR(CLK_TOP_DPI, "dpi_ck", "clk_null", 1, 1),
- 	FACTOR(CLK_TOP_USB_SYSPLL_125M, "usb_syspll_125m", "clk_null", 1, 1),
- 	FACTOR(CLK_TOP_HDMITX_DIG_CTS, "hdmitx_dig_cts", "clk_null", 1, 1),
- };
-diff --git a/include/dt-bindings/clock/mt8173-clk.h b/include/dt-bindings/clock/mt8173-clk.h
-index 4ad76ed..7230c38 100644
---- a/include/dt-bindings/clock/mt8173-clk.h
-+++ b/include/dt-bindings/clock/mt8173-clk.h
-@@ -18,7 +18,6 @@
- /* TOPCKGEN */
- 
- #define CLK_TOP_CLKPH_MCK_O		1
--#define CLK_TOP_DPI			2
- #define CLK_TOP_USB_SYSPLL_125M		3
- #define CLK_TOP_HDMITX_DIG_CTS		4
- #define CLK_TOP_ARMCA7PLL_754M		5
++			snvs: snvs@020cc000 {
++				compatible = "fsl,sec-v4.0-mon", "syscon", "simple-mfd";
++				reg = <0x020cc000 0x4000>;
++
++				snvs_rtc: snvs-rtc-lp {
++					compatible = "fsl,sec-v4.0-mon-rtc-lp";
++					regmap = <&snvs>;
++					offset = <0x34>;
++					interrupts = <GIC_SPI 19 IRQ_TYPE_LEVEL_HIGH>, <GIC_SPI 20 IRQ_TYPE_LEVEL_HIGH>;
++				};
++			};
++
+ 			epit1: epit@020d0000 {
+ 				reg = <0x020d0000 0x4000>;
+ 				interrupts = <GIC_SPI 56 IRQ_TYPE_LEVEL_HIGH>;
 -- 
-1.8.1.1.dirty
+1.9.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
