@@ -1,70 +1,386 @@
-From: Leo Yan <leo.yan@linaro.org>
-Subject: [PATCH v4 4/4] arm64: dts: add Hi6220's stub clock node
-Date: Tue,  4 Aug 2015 15:27:29 +0800
-Message-ID: <1438673249-6051-5-git-send-email-leo.yan@linaro.org>
-References: <1438673249-6051-1-git-send-email-leo.yan@linaro.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1438673249-6051-1-git-send-email-leo.yan@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Wei Xu <xuwei5@hisilicon.com>, Haojian Zhuang <haojian.zhuang@linaro.org>, Bintian Wang <bintian.wang@huawei.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org, Guodong Xu <guodong.xu@linaro.org>, Jian Zhang <zhangjian001@hisilicon.com>, Zhenwei Wang <Zhenwei.wang@hisilicon.com>, Haoju Mo <mohaoju@hisilicon.com>, Dan Zhao <dan.zhao@hisilicon.com>, sunzhaosheng@hisilicon.com, victor.lixin@hisilicon.com
-Cc: Leo Yan <leo.yan@linaro.org>
+From: Matt Ranostay <mranostay-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v3 2/2] iio: proximity: add support for PulsedLight LIDAR
+Date: Tue, 4 Aug 2015 00:34:36 -0700
+Message-ID: <CAKzfze-jdJHd-Vn=pTnRyiPmO0Fb00-Nbt4AUjZ9RJStdG9PUw@mail.gmail.com>
+References: <1438662237-19991-1-git-send-email-mranostay@gmail.com>
+	<1438662237-19991-3-git-send-email-mranostay@gmail.com>
+	<alpine.DEB.2.02.1508040918550.3094@pmeerw.net>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <alpine.DEB.2.02.1508040918550.3094-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Peter Meerwald <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>
+Cc: =?UTF-8?B?TWFyZWsgVmHFoXV0?= <marex-ynQEQJNshbs@public.gmane.org>, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Vladimir Barinov <vladimir.barinov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>, "linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Enable SRAM node and stub clock node for Hi6220; furthermore
-add the CPU's clock so it will be used by cpufreq-dt driver.
+On Tue, Aug 4, 2015 at 12:27 AM, Peter Meerwald <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org> wrote:
+>
+>> Add support for the PulsedLight LIDAR rangefinder sensor which allows
+>> high speed (over 300Hz) distance measurements using Barker Coding within
+>> 40 meter range.
+>
+> comments inline
+>
+>> Support only tested on the "blue label" rev 2, but may work using low
+>> sample frequencies on the original version.
+>>
+>> Signed-off-by: Matt Ranostay <mranostay-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+>> ---
+>>  drivers/iio/proximity/Kconfig  |  12 ++
+>>  drivers/iio/proximity/Makefile |   1 +
+>>  drivers/iio/proximity/lidar.c  | 295 +++++++++++++++++++++++++++++++++++++++++
+>>  3 files changed, 308 insertions(+)
+>>  create mode 100644 drivers/iio/proximity/lidar.c
+>>
+>> diff --git a/drivers/iio/proximity/Kconfig b/drivers/iio/proximity/Kconfig
+>> index 41a8d8f..e64fc5b 100644
+>> --- a/drivers/iio/proximity/Kconfig
+>> +++ b/drivers/iio/proximity/Kconfig
+>> @@ -20,6 +20,18 @@ endmenu
+>>
+>>  menu "Proximity sensors"
+>>
+>> +config LIDAR
+>> +     tristate "PulsedLight LIDAR sensor"
+>> +     select IIO_BUFFER
+>> +     select IIO_TRIGGERED_BUFFER
+>> +     depends on I2C
+>> +     help
+>> +       Say Y to build a driver for PulsedLight LIDAR range finding
+>> +       sensor.
+>> +
+>> +       To compile this driver as a module, choose M here: the
+>> +       module will be called lidar.
+>> +
+>>  config SX9500
+>>       tristate "SX9500 Semtech proximity sensor"
+>>       select IIO_BUFFER
+>> diff --git a/drivers/iio/proximity/Makefile b/drivers/iio/proximity/Makefile
+>> index 9818dc5..36a95f3 100644
+>> --- a/drivers/iio/proximity/Makefile
+>> +++ b/drivers/iio/proximity/Makefile
+>> @@ -4,4 +4,5 @@
+>>
+>>  # When adding new entries keep the list in alphabetical order
+>>  obj-$(CONFIG_AS3935)         += as3935.o
+>> +obj-$(CONFIG_LIDAR)          += lidar.o
+>>  obj-$(CONFIG_SX9500)         += sx9500.o
+>> diff --git a/drivers/iio/proximity/lidar.c b/drivers/iio/proximity/lidar.c
+>> new file mode 100644
+>> index 0000000..133e016
+>> --- /dev/null
+>> +++ b/drivers/iio/proximity/lidar.c
+>> @@ -0,0 +1,295 @@
+>> +/*
+>> + * lidar.c - Support for PulsedLight LIDAR range finding sensor
+>> + *
+>> + * Copyright (C) 2015 Matt Ranostay <mranostay-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+>> + *
+>> + * This program is free software; you can redistribute it and/or modify
+>> + * it under the terms of the GNU General Public License as published by
+>> + * the Free Software Foundation; either version 2 of the License, or
+>> + * (at your option) any later version.
+>> + *
+>> + * This program is distributed in the hope that it will be useful,
+>> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
+>> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+>> + * GNU General Public License for more details.
+>> + *
+>> + * TODO: runtime pm, interrupt mode, and signal strength reporting
+>> + *
+>> + */
+>> +
+>> +#include <linux/err.h>
+>> +#include <linux/init.h>
+>> +#include <linux/i2c.h>
+>> +#include <linux/delay.h>
+>> +#include <linux/mutex.h>
+>> +#include <linux/module.h>
+>> +#include <linux/iio/iio.h>
+>> +#include <linux/iio/sysfs.h>
+>> +#include <linux/iio/buffer.h>
+>> +#include <linux/iio/trigger.h>
+>> +#include <linux/iio/triggered_buffer.h>
+>> +#include <linux/iio/trigger_consumer.h>
+>> +
+>> +#define LIDAR_REG_CONTROL            0x00
+>> +#define LIDAR_REG_CONTROL_ACQUIRE    BIT(2)
+>> +
+>> +#define LIDAR_REG_STATUS             0x01
+>> +#define LIDAR_REG_STATUS_INVALID     BIT(3)
+>> +#define LIDAR_REG_STATUS_READY               BIT(0)
+>> +
+>> +#define LIDAR_REG_DATA_HBYTE 0x0f
+>> +#define LIDAR_REG_DATA_LBYTE 0x10
+>> +
+>> +#define LIDAR_DRV_NAME "lidar"
+>> +
+>> +struct lidar_data {
+>> +     struct mutex lock;
+>> +     struct iio_dev *indio_dev;
+>> +     struct i2c_client *client;
+>> +
+>> +     u16 buffer[5]; /* 2 byte distance + 8 byte timestamp */
+>
+> at least 16 bytes are necessary; the timestamp is 8-byte aligned by
+> iio_push_to_buffers_with_timestamp()
+>
+Ok noted will be fixed in v5.
 
-Signed-off-by: Leo Yan <leo.yan@linaro.org>
----
- arch/arm64/boot/dts/hisilicon/hi6220.dtsi | 23 +++++++++++++++++++++++
- 1 file changed, 23 insertions(+)
+>> +};
+>> +
+>> +static const struct iio_chan_spec lidar_channels[] = {
+>> +     {
+>> +             .type = IIO_DISTANCE,
+>> +             .info_mask_separate =
+>> +                     BIT(IIO_CHAN_INFO_RAW) | BIT(IIO_CHAN_INFO_SCALE),
+>> +             .scan_index = 0,
+>> +             .scan_type = {
+>> +                     .sign = 'u',
+>> +                     .realbits = 16,
+>> +                     .storagebits = 16,
+>> +             },
+>> +     },
+>> +     IIO_CHAN_SOFT_TIMESTAMP(1),
+>> +};
+>> +
+>> +static int lidar_read_byte(struct lidar_data *data, int reg)
+>> +{
+>> +     struct i2c_client *client = data->client;
+>> +     int ret;
+>> +
+>> +     ret = i2c_smbus_write_byte(client, reg);
+>> +     if (ret < 0) {
+>> +             dev_err(&client->dev, "cannot write addr value");
+>> +             return ret;
+>> +     }
+>> +
+>> +     ret = i2c_smbus_read_byte(client);
+>> +     if (ret < 0) {
+>> +             dev_err(&client->dev, "cannot read data value");
+>> +             return ret;
+>> +     }
+>> +
+>> +     return ret;
+>> +}
+>> +
+>> +static inline int lidar_write_control(struct lidar_data *data, int val)
+>> +{
+>> +     return i2c_smbus_write_byte_data(data->client, LIDAR_REG_CONTROL, val);
+>> +}
+>> +
+>> +static int lidar_read_measurement(struct lidar_data *data, u16 *reg)
+>> +{
+>> +     int ret;
+>> +     int val;
+>> +
+>> +     /*
+>> +      * Device needs a STOP condition between address write, and data read
+>> +      * so in turn i2c_smbus_read_byte_data cannot be used
+>> +      */
+>> +
+>> +     ret = lidar_read_byte(data, LIDAR_REG_DATA_HBYTE);
+>> +     if (ret < 0)
+>> +             return ret;
+>> +     val = ret << 8;
+>> +
+>> +     ret = lidar_read_byte(data, LIDAR_REG_DATA_LBYTE);
+>> +     if (ret < 0)
+>> +             return ret;
+>> +
+>> +     val |= ret;
+>> +     *reg = val;
+>> +
+>> +     return 0;
+>> +}
+>> +
+>> +static int lidar_get_measurement(struct lidar_data *data, u16 *reg)
+>> +{
+>> +     struct i2c_client *client = data->client;
+>> +     int tries = 10;
+>> +     int ret;
+>> +
+>> +     /* start sample */
+>> +     ret = lidar_write_control(data, LIDAR_REG_CONTROL_ACQUIRE);
+>> +     if (ret < 0) {
+>> +             dev_err(&client->dev, "cannot send start measurement command");
+>> +             return ret;
+>> +     }
+>> +
+>> +     while (tries--) {
+>> +             usleep_range(1000, 2000);
+>> +
+>> +             ret = lidar_read_byte(data, LIDAR_REG_STATUS);
+>> +             if (ret < 0)
+>> +                     break;
+>> +
+>> +             /* return 0 since laser is likely pointed out of range */
+>> +             if (ret & LIDAR_REG_STATUS_INVALID) {
+>> +                     *reg = 0;
+>> +                     ret = 0;
+>> +                     break;
+>> +             }
+>> +
+>> +             /* sample ready to read */
+>> +             if (!(ret & LIDAR_REG_STATUS_READY)) {
+>> +                     ret = lidar_read_measurement(data, reg);
+>> +                     break;
+>> +             }
+>> +             ret = -EIO;
+>> +     }
+>> +
+>> +     return ret;
+>> +}
+>> +
+>> +static int lidar_read_raw(struct iio_dev *indio_dev,
+>> +                       struct iio_chan_spec const *chan,
+>> +                       int *val, int *val2, long mask)
+>> +{
+>> +     struct lidar_data *data = iio_priv(indio_dev);
+>> +     int ret = -EINVAL;
+>> +
+>> +     mutex_lock(&data->lock);
+>> +
+>> +     if (iio_buffer_enabled(indio_dev) && mask == IIO_CHAN_INFO_RAW) {
+>> +             ret = -EBUSY;
+>> +             goto error_busy;
+>> +     }
+>> +
+>
+> extra newline
+>
+Yeah noticed right after submitting :).
 
-diff --git a/arch/arm64/boot/dts/hisilicon/hi6220.dtsi b/arch/arm64/boot/dts/hisilicon/hi6220.dtsi
-index b42a9b7..94b8310 100644
---- a/arch/arm64/boot/dts/hisilicon/hi6220.dtsi
-+++ b/arch/arm64/boot/dts/hisilicon/hi6220.dtsi
-@@ -57,6 +57,17 @@
- 			device_type = "cpu";
- 			reg = <0x0 0x0>;
- 			enable-method = "psci";
-+			clocks = <&stub_clock 0>;
-+			clock-latency = <0>;
-+			operating-points = <
-+				/* kHz */
-+				1200000  0
-+				960000   0
-+				729000   0
-+				432000   0
-+				208000   0
-+			>;
-+			#cooling-cells = <2>; /* min followed by max */
- 		};
- 
- 		cpu1: cpu@1 {
-@@ -136,6 +147,11 @@
- 		#size-cells = <2>;
- 		ranges;
- 
-+		sram: sram@fff80000 {
-+			compatible = "hisilicon,hi6220-sramctrl", "syscon";
-+			reg = <0x0 0xfff80000 0x0 0x12000>;
-+		};
-+
- 		ao_ctrl: ao_ctrl@f7800000 {
- 			compatible = "hisilicon,hi6220-aoctrl", "syscon";
- 			reg = <0x0 0xf7800000 0x0 0x2000>;
-@@ -160,6 +176,13 @@
- 			#clock-cells = <1>;
- 		};
- 
-+		stub_clock: stub_clock {
-+			compatible = "hisilicon,hi6220-stub-clk";
-+			hisilicon,hi6220-clk-sram = <&sram>;
-+			#clock-cells = <1>;
-+			mboxes = <&mailbox 1>;
-+		};
-+
- 		uart0: uart@f8015000 {	/* console */
- 			compatible = "arm,pl011", "arm,primecell";
- 			reg = <0x0 0xf8015000 0x0 0x1000>;
--- 
-1.9.1
+>> +
+>> +     switch (mask) {
+>> +     case IIO_CHAN_INFO_RAW: {
+>> +             u16 reg;
+>> +
+>> +             ret = lidar_get_measurement(data, &reg);
+>> +             if (!ret) {
+>> +                     *val = reg;
+>> +                     ret = IIO_VAL_INT;
+>> +             }
+>> +             break;
+>> +     }
+>> +     case IIO_CHAN_INFO_SCALE:
+>> +             *val = 0;
+>> +             *val2 = 10000;
+>> +             ret = IIO_VAL_INT_PLUS_MICRO;
+>> +             break;
+>> +     }
+>> +
+>> +error_busy:
+>> +     mutex_unlock(&data->lock);
+>> +
+>> +     return ret;
+>> +}
+>> +
+>> +static irqreturn_t lidar_trigger_handler(int irq, void *private)
+>> +{
+>> +     struct iio_poll_func *pf = private;
+>> +     struct iio_dev *indio_dev = pf->indio_dev;
+>> +     struct lidar_data *data = iio_priv(indio_dev);
+>> +     int ret;
+>> +
+>> +     ret = lidar_get_measurement(data, &data->buffer[0]);
+>> +     if (!ret) {
+>> +             iio_push_to_buffers_with_timestamp(indio_dev, data->buffer,
+>> +                                                iio_get_time_ns());
+>> +     } else {
+>> +             dev_err(&data->client->dev, "cannot read LIDAR measurement");
+>> +     }
+>> +
+>> +     iio_trigger_notify_done(indio_dev->trig);
+>> +
+>> +     return IRQ_HANDLED;
+>> +}
+>> +
+>> +static const struct iio_info lidar_info = {
+>> +     .driver_module = THIS_MODULE,
+>> +     .read_raw = lidar_read_raw,
+>> +};
+>> +
+>> +static int lidar_probe(struct i2c_client *client,
+>> +                    const struct i2c_device_id *id)
+>> +{
+>> +     struct lidar_data *data;
+>> +     struct iio_dev *indio_dev;
+>> +     int ret;
+>> +
+>> +     indio_dev = devm_iio_device_alloc(&client->dev, sizeof(*data));
+>> +     if (!indio_dev)
+>> +             return -ENOMEM;
+>> +
+>> +     indio_dev->info = &lidar_info;
+>> +     indio_dev->name = LIDAR_DRV_NAME;
+>> +     indio_dev->channels = lidar_channels;
+>> +     indio_dev->num_channels = ARRAY_SIZE(lidar_channels);
+>> +     indio_dev->modes = INDIO_DIRECT_MODE;
+>> +
+>> +     data = iio_priv(indio_dev);
+>> +     i2c_set_clientdata(client, indio_dev);
+>> +
+>> +     data->client = client;
+>> +     data->indio_dev = indio_dev;
+>> +     mutex_init(&data->lock);
+>> +
+>> +     ret = iio_triggered_buffer_setup(indio_dev, NULL,
+>> +                                      lidar_trigger_handler, NULL);
+>> +     if (ret)
+>> +             return ret;
+>> +
+>> +     ret = iio_device_register(indio_dev);
+>> +     if (ret)
+>> +             goto error_unreg_buffer;
+>> +
+>> +     return 0;
+>> +
+>> +error_unreg_buffer:
+>> +     iio_triggered_buffer_cleanup(indio_dev);
+>> +
+>> +     return ret;
+>> +}
+>> +
+>> +static int lidar_remove(struct i2c_client *client)
+>> +{
+>> +     struct iio_dev *indio_dev = i2c_get_clientdata(client);
+>> +
+>> +     iio_device_unregister(indio_dev);
+>> +     iio_triggered_buffer_cleanup(indio_dev);
+>> +
+>> +     return 0;
+>> +}
+>> +
+>> +static const struct i2c_device_id lidar_id[] = {
+>> +     {"lidar", 0},
+>> +     { },
+>> +};
+>> +MODULE_DEVICE_TABLE(i2c, lidar_id);
+>> +
+>> +static const struct of_device_id lidar_dt_ids[] = {
+>> +     { .compatible = "pulsedlight,lidar" },
+>> +     { }
+>> +};
+>> +
+>> +static struct i2c_driver lidar_driver = {
+>> +     .driver = {
+>> +             .name   = LIDAR_DRV_NAME,
+>> +             .of_match_table = of_match_ptr(lidar_dt_ids),
+>> +     },
+>> +     .probe          = lidar_probe,
+>> +     .remove         = lidar_remove,
+>> +     .id_table       = lidar_id,
+>> +};
+>> +module_i2c_driver(lidar_driver);
+>> +
+>> +MODULE_AUTHOR("Matt Ranostay <mranostay-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>");
+>> +MODULE_DESCRIPTION("PulsedLight LIDAR sensor");
+>> +MODULE_LICENSE("GPL");
+>>
+>
+> --
+>
+> Peter Meerwald
+> +43-664-2444418 (mobile)
