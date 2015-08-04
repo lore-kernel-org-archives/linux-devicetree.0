@@ -1,51 +1,304 @@
-From: Paul Bolle <pebolle-IWqWACnzNjzz+pZb47iToQ@public.gmane.org>
-Subject: Re: [RFC PATCH 2/3] mailbox: Hisilicon: add mailbox driver
-Date: Tue, 04 Aug 2015 11:17:39 +0200
-Message-ID: <1438679859.8734.35.camel@tiscali.nl>
-References: <1438564390-28111-1-git-send-email-leo.yan@linaro.org>
-	 <1438564390-28111-3-git-send-email-leo.yan@linaro.org>
-	 <1438677024.8734.24.camel@tiscali.nl> <20150804084930.GA27609@leoy-linaro>
+From: Daniel Lezcano <daniel.lezcano@linaro.org>
+Subject: Re: [PATCH v4 6/7] clocksource: Add Pistachio clocksource-only driver
+Date: Tue, 04 Aug 2015 11:21:41 +0200
+Message-ID: <55C08425.503@linaro.org>
+References: <1438005755-27051-1-git-send-email-govindraj.raja@imgtec.com> <1438005755-27051-2-git-send-email-govindraj.raja@imgtec.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20150804084930.GA27609@leoy-linaro>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Leo Yan <leo.yan-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Wei Xu <xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Bintian Wang <bintian.wang-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, Haojian Zhuang <haojian.zhuang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Guodong Xu <guodong.xu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Jian Zhang <zhangjian001-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Zhenwei Wang <Zhenwei.wang-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Haoju Mo <mohaoju-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Dan Zhao <dan.zhao-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, kongfei-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, Guangyue Zeng <zengguangyue-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8;
+	format=flowed
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1438005755-27051-2-git-send-email-govindraj.raja@imgtec.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Govindraj Raja <govindraj.raja@imgtec.com>, linux-kernel@vger.kernel.org, linux-mips@linux-mips.org, devicetree@vger.kernel.org
+Cc: Thomas Gleixner <tglx@linutronix.de>, Andrew Bresticker <abrestic@chromium.org>, James Hartley <James.Hartley@imgtec.com>, Damien Horsley <Damien.Horsley@imgtec.com>, James Hogan <James.Hogan@imgtec.com>, Ezequiel Garcia <ezequiel@vanguardiasur.com.ar>, Ezequiel Garcia <ezequiel.garcia@imgtec.com>
 List-Id: devicetree@vger.kernel.org
 
-On di, 2015-08-04 at 16:49 +0800, Leo Yan wrote:
-> On Tue, Aug 04, 2015 at 10:30:24AM +0200, Paul Bolle wrote:
-> > On ma, 2015-08-03 at 09:13 +0800, Leo Yan wrote:
-> > > --- /dev/null
-> > > +++ b/drivers/mailbox/hisilicon/Kconfig
-> > 
-> > > +config HISI_MBOX
-> > > +	bool "Hisilicon's Mailbox"
-> > > +	depends on ARCH_HISI || OF
-> > 
-> > ARCH_HISI is available on either ARM64 or ARM. ARM64 selects OF. On ARM
-> > ARCH_HISI depends on ARCH_MULTIV7 which depends on ARCH_MULTIPLATFORM.
-> > That selects USE_OF which on its turn selects OF.
-> > 
-> > So, HISI_MBOX implies OF, correct?
-> 
-> Exactly, will simply use "depends on ARCH_HISI".
+On 07/27/2015 04:02 PM, Govindraj Raja wrote:
+> From: Ezequiel Garcia <ezequiel.garcia@imgtec.com>
+>
+> The Pistachio SoC provides four general purpose timers, and allow
+> to implement a clocksource driver.
+>
+> This driver can be used as a replacement for the MIPS GIC and MIPS R4=
+K
+> clocksources and sched clocks, which are clocked from the CPU clock.
+>
+> Given the general purpose timers are clocked from an independent cloc=
+k,
+> this new clocksource driver will be useful to introduce CPUFreq suppo=
+rt
+> for Pistachio machines.
+>
+> Signed-off-by: Govindraj Raja <Govindraj.Raja@imgtec.com>
+> Signed-off-by: Ezequiel Garcia <ezequiel.garcia@imgtec.com>
+> ---
+>   drivers/clocksource/Kconfig          |   4 +
+>   drivers/clocksource/Makefile         |   1 +
+>   drivers/clocksource/time-pistachio.c | 194 ++++++++++++++++++++++++=
++++++++++++
+>   3 files changed, 199 insertions(+)
+>   create mode 100644 drivers/clocksource/time-pistachio.c
+>
+> diff --git a/drivers/clocksource/Kconfig b/drivers/clocksource/Kconfi=
+g
+> index 4e57730..74e002e 100644
+> --- a/drivers/clocksource/Kconfig
+> +++ b/drivers/clocksource/Kconfig
+> @@ -111,6 +111,10 @@ config CLKSRC_LPC32XX
+>   	select CLKSRC_MMIO
+>   	select CLKSRC_OF
+>
+> +config CLKSRC_PISTACHIO
+> +	bool
+> +	select CLKSRC_OF
+> +
+>   config CLKSRC_STM32
+>   	bool "Clocksource for STM32 SoCs" if !ARCH_STM32
+>   	depends on OF && ARM && (ARCH_STM32 || COMPILE_TEST)
+> diff --git a/drivers/clocksource/Makefile b/drivers/clocksource/Makef=
+ile
+> index f228354..066337e 100644
+> --- a/drivers/clocksource/Makefile
+> +++ b/drivers/clocksource/Makefile
+> @@ -44,6 +44,7 @@ obj-$(CONFIG_FSL_FTM_TIMER)	+=3D fsl_ftm_timer.o
+>   obj-$(CONFIG_VF_PIT_TIMER)	+=3D vf_pit_timer.o
+>   obj-$(CONFIG_CLKSRC_QCOM)	+=3D qcom-timer.o
+>   obj-$(CONFIG_MTK_TIMER)		+=3D mtk_timer.o
+> +obj-$(CONFIG_CLKSRC_PISTACHIO)	+=3D time-pistachio.o
+>
+>   obj-$(CONFIG_ARM_ARCH_TIMER)		+=3D arm_arch_timer.o
+>   obj-$(CONFIG_ARM_GLOBAL_TIMER)		+=3D arm_global_timer.o
+> diff --git a/drivers/clocksource/time-pistachio.c b/drivers/clocksour=
+ce/time-pistachio.c
+> new file mode 100644
+> index 0000000..d461bd1
+> --- /dev/null
+> +++ b/drivers/clocksource/time-pistachio.c
+> @@ -0,0 +1,194 @@
+> +/*
+> + * Pistachio clocksource based on general-purpose timers
+> + *
+> + * Copyright (C) 2015 Imagination Technologies
+> + *
+> + * This file is subject to the terms and conditions of the GNU Gener=
+al Public
+> + * License. See the file "COPYING" in the main directory of this arc=
+hive
+> + * for more details.
+> + */
+> +
+> +#define pr_fmt(fmt) "%s: " fmt, __func__
+> +
+> +#include <linux/clk.h>
+> +#include <linux/clocksource.h>
+> +#include <linux/clockchips.h>
+> +#include <linux/delay.h>
+> +#include <linux/err.h>
+> +#include <linux/init.h>
+> +#include <linux/spinlock.h>
+> +#include <linux/mfd/syscon.h>
+> +#include <linux/of.h>
+> +#include <linux/of_address.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/regmap.h>
+> +#include <linux/sched_clock.h>
+> +#include <linux/time.h>
+> +
+> +/* Top level reg */
+> +#define CR_TIMER_CTRL_CFG		0x00
+> +#define  TIMER_ME_GLOBAL		BIT(0)
 
-That change would alter the dependencies. My remark was made just to
-make clear why I think CONFIG_OF will always be defined. But now I guess
-you actually meant
-	depends on ARCH_HISI && OF
+extra space.
 
-And that would, I think, indeed be equivalent to
-	depends on ARCH_HISI
+> +#define CR_TIMER_REV			0x10
+> +
+> +/* Timer specific registers */
+> +#define TIMER_CFG			0x20
+> +#define  TIMER_ME_LOCAL			BIT(0)
 
-Thanks,
+extra space.
+
+> +#define TIMER_RELOAD_VALUE		0x24
+> +#define TIMER_CURRENT_VALUE		0x28
+> +#define TIMER_CURRENT_OVERFLOW_VALUE	0x2C
+> +#define TIMER_IRQ_STATUS		0x30
+> +#define TIMER_IRQ_CLEAR			0x34
+> +#define TIMER_IRQ_MASK			0x38
+> +
+> +#define PERIP_TIMER_CONTROL		0x90
+> +
+> +/* Timer specific configuration Values */
+> +#define RELOAD_VALUE	0xffffffff
+> +
+> +static void __iomem *timer_base;
+> +static DEFINE_RAW_SPINLOCK(lock);
+> +
+> +static inline u32 gpt_readl(u32 offset, u32 gpt_id)
+> +{
+> +	return readl(timer_base + 0x20 * gpt_id + offset);
+> +}
+> +
+> +static inline void gpt_writel(u32 value, u32 offset, u32 gpt_id)
+> +{
+> +	writel(value, timer_base + 0x20 * gpt_id + offset);
+> +}
+> +
+> +static cycle_t pistachio_clocksource_read_cycles(struct clocksource =
+*cs)
+> +{
+> +	u32 counter, overflw;
+> +	unsigned long flags;
+> +
+> +	raw_spin_lock_irqsave(&lock, flags);
+> +	overflw =3D gpt_readl(TIMER_CURRENT_OVERFLOW_VALUE, 0);
+
+Why do you need to read 'overflw' here ? It is not used.
+
+> +	counter =3D gpt_readl(TIMER_CURRENT_VALUE, 0);
+> +	raw_spin_unlock_irqrestore(&lock, flags);
+> +
+> +	return ~(cycle_t)counter;
+> +}
+> +
+> +static u64 notrace pistachio_read_sched_clock(void)
+> +{
+> +	return pistachio_clocksource_read_cycles(NULL);
+> +}
+> +
+> +static void pistachio_clksrc_enable(int timeridx)
+> +{
+> +	u32 val;
+> +
+> +	/* Disable GPT local before loading reload value */
+> +	val =3D gpt_readl(TIMER_CFG, timeridx);
+> +	val &=3D ~TIMER_ME_LOCAL;
+> +	gpt_writel(val, TIMER_CFG, timeridx);
+> +
+> +	gpt_writel(RELOAD_VALUE, TIMER_RELOAD_VALUE, timeridx);
+> +
+> +	val =3D gpt_readl(TIMER_CFG, timeridx);
+> +	val |=3D TIMER_ME_LOCAL;
+> +	gpt_writel(val, TIMER_CFG, timeridx);
+> +}
+> +
+> +static void pistachio_clksrc_disable(int timeridx)
+> +{
+> +	u32 val;
+> +
+> +	/* Disable GPT local */
+> +	val =3D gpt_readl(TIMER_CFG, timeridx);
+> +	val &=3D ~TIMER_ME_LOCAL;
+> +	gpt_writel(val, TIMER_CFG, timeridx);
+> +}
+
+Duplicate code with 'pistachio_clksrc_enable', please reuse this=20
+function in the enable one.
+
+> +
+> +static int pistachio_clocksource_enable(struct clocksource *cs)
+> +{
+> +	pistachio_clksrc_enable(0);
+> +	return 0;
+> +}
+> +
+> +static void pistachio_clocksource_disable(struct clocksource *cs)
+> +{
+> +	pistachio_clksrc_disable(0);
+> +}
+
+It will be better if you don't wrap these function but use container_of=
+=20
+to retrieve the timer_base from the clocksource structure.
+
+> +/* Desirable clock source for pistachio platform */
+> +static struct clocksource pistachio_clocksource_gpt =3D {
+> +	.name		=3D "gptimer",
+> +	.rating		=3D 300,
+> +	.enable		=3D pistachio_clocksource_enable,
+> +	.disable	=3D pistachio_clocksource_disable,
+> +	.read		=3D pistachio_clocksource_read_cycles,
+> +	.mask		=3D CLOCKSOURCE_MASK(32),
+> +	.flags		=3D CLOCK_SOURCE_IS_CONTINUOUS |
+> +			  CLOCK_SOURCE_SUSPEND_NONSTOP,
+> +};
+> +
+> +static void __init pistachio_clksrc_of_init(struct device_node *node=
+)
+> +{
+> +	struct clk *sys_clk, *fast_clk;
+> +	struct regmap *periph_regs;
+> +	unsigned long rate;
+> +	int ret;
+> +
+> +	timer_base =3D of_iomap(node, 0);
+> +	if (!timer_base) {
+> +		pr_err("cannot iomap\n");
+> +		return;
+> +	}
+> +
+> +	periph_regs =3D syscon_regmap_lookup_by_phandle(node, "img,cr-perip=
+h");
+> +	if (IS_ERR(periph_regs)) {
+> +		pr_err("cannot get peripheral regmap (%lu)\n",
+> +		       PTR_ERR(periph_regs));
+> +		return;
+> +	}
+> +
+> +	/* Switch to using the fast counter clock */
+> +	ret =3D regmap_update_bits(periph_regs, PERIP_TIMER_CONTROL,
+> +				 0xf, 0x0);
+> +	if (ret)
+> +		return;
+> +
+> +	sys_clk =3D of_clk_get_by_name(node, "sys");
+> +	if (IS_ERR(sys_clk)) {
+> +		pr_err("clock get failed (%lu)\n", PTR_ERR(sys_clk));
+> +		return;
+> +	}
+> +
+> +	fast_clk =3D of_clk_get_by_name(node, "fast");
+> +	if (IS_ERR(fast_clk)) {
+> +		pr_err("clock get failed (%lu)\n", PTR_ERR(fast_clk));
+> +		return;
+> +	}
+> +
+> +	ret =3D clk_prepare_enable(sys_clk);
+> +	if (ret < 0) {
+> +		pr_err("failed to enable clock (%d)\n", ret);
+> +		return;
+> +	}
+> +
+> +	ret =3D clk_prepare_enable(fast_clk);
+> +	if (ret < 0) {
+> +		pr_err("failed to enable clock (%d)\n", ret);
+> +		clk_disable_unprepare(sys_clk);
+> +		return;
+> +	}
+> +
+> +	rate =3D clk_get_rate(fast_clk);
+> +
+> +	/* Disable irq's for clocksource usage */
+> +	gpt_writel(0, TIMER_IRQ_MASK, 0);
+> +	gpt_writel(0, TIMER_IRQ_MASK, 1);
+> +	gpt_writel(0, TIMER_IRQ_MASK, 2);
+> +	gpt_writel(0, TIMER_IRQ_MASK, 3);
+> +
+> +	/* Enable timer block */
+> +	writel(TIMER_ME_GLOBAL, timer_base);
+> +
+> +	sched_clock_register(pistachio_read_sched_clock, 32, rate);
+> +	clocksource_register_hz(&pistachio_clocksource_gpt, rate);
+> +}
+> +CLOCKSOURCE_OF_DECLARE(pistachio_gptimer, "img,pistachio-gptimer",
+> +		       pistachio_clksrc_of_init);
+>
 
 
-Paul Bolle
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--=20
+  <http://www.linaro.org/> Linaro.org =E2=94=82 Open source software fo=
+r ARM SoCs
+
+=46ollow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
