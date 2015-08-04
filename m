@@ -1,50 +1,38 @@
-From: Leo Yan <leo.yan@linaro.org>
-Subject: Re: [RFC PATCH 2/3] mailbox: Hisilicon: add mailbox driver
-Date: Tue, 4 Aug 2015 17:00:59 +0800
-Message-ID: <20150804090059.GB27609@leoy-linaro>
-References: <1438564390-28111-1-git-send-email-leo.yan@linaro.org>
- <1438564390-28111-3-git-send-email-leo.yan@linaro.org>
- <1438677024.8734.24.camel@tiscali.nl>
- <20150804084930.GA27609@leoy-linaro>
+From: "Timo Sigurdsson" <public_timo.s-fWgRPtSzPNU3WX+qO2AYSQ@public.gmane.org>
+Subject: Re: [PATCH v2] ARM: dts: sunxi: Add regulators for
+ LeMaker BananaPi
+Date: Tue,  4 Aug 2015 11:02:24 +0200 (CEST)
+Message-ID: <20150804090224.4B5676C83963@dd34104.kasserver.com>
+References: <1438532305-5884-1-git-send-email-public_timo.s@silentcreek.de><20150803094723.GD2564@lukather>
+Reply-To: public_timo.s-fWgRPtSzPNU3WX+qO2AYSQ@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20150804084930.GA27609@leoy-linaro>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Paul Bolle <pebolle@tiscali.nl>
-Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Jassi Brar <jassisinghbrar@gmail.com>, Wei Xu <xuwei5@hisilicon.com>, Bintian Wang <bintian.wang@huawei.com>, Haojian Zhuang <haojian.zhuang@linaro.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Guodong Xu <guodong.xu@linaro.org>, Jian Zhang <zhangjian001@hisilicon.com>, Zhenwei Wang <Zhenwei.wang@hisilicon.com>, Haoju Mo <mohaoju@hisilicon.com>, Dan Zhao <dan.zhao@hisilicon.com>, kongfei@hisilicon.com, Guangyue Zeng <zengguangyue@hisilicon.com>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sunxi+bncBCSJLSE35MGBBIP7QGXAKGQEZQSKQDQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <20150803094723.GD2564@lukather>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <http://groups.google.com/group/linux-sunxi/subscribe>
+To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
+Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Paul,
+Hi Maxime,
 
-On Tue, Aug 04, 2015 at 04:49:30PM +0800, Leo Yan wrote:
-> On Tue, Aug 04, 2015 at 10:30:24AM +0200, Paul Bolle wrote:
-> > (This RFC was part of this mornings catch of my crude mail filter. So,
-> > for what it's worth, what follows are a few random comments for the few
-> > things I'm able to spot.)
+Maxime Ripard schrieb am 03.08.2015 11:47:
+> What regulator provides the 3.3V regulator used in the rest of this DT
+> then (MMC, GMAC) ?
 
-[...]
+For GMAC, there is a reg_gmac_3v3 defined in sun7i-a20-bananapi.dts [1].
+MMC uses reg_vcc3v3 included from sunxi-common-regulators.dtsi. Am I
+missing something? Is this not sufficient?
 
-> > > +static int __init hi6220_mbox_init(void)
-> > > +{
-> > > +	return platform_driver_register(&hi6220_mbox_driver);
-> > > +}
-> > > +module_init(hi6220_mbox_init);
-> > > +
-> > > +static void __exit hi6220_mbox_exit(void)
-> > > +{
-> > > +	platform_driver_unregister(&hi6220_mbox_driver);
-> > > +}
-> > > +module_exit(hi6220_mbox_exit);
-> > 
-> > This could be flattened into one line:
-> >     module_platform_driver(hi6220_mbox_driver);
-
-Need clarify one thing: will modify to use core_initcall() for driver's
-initialization; due another clock driver depends on this mailbox driver,
-so mailbox init firstly with core_initcall() and use subsys_initcall()
-for clock driver.
 
 Thanks,
-Leo Yan
+
+Timo
+
+[1] https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git/tree/arch/arm/boot/dts/sun7i-a20-bananapi.dts?id=v4.2-rc5#n78
