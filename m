@@ -1,59 +1,104 @@
-From: Chenhui Zhao <chenhui.zhao@freescale.com>
-Subject: Re: [PATCH v5] powerpc/rcpm: add RCPM driver
-Date: Tue, 4 Aug 2015 10:46:08 +0800
-Message-ID: <1438656368.10331.0@remotesmtp.freescale.net>
-References: <1435304656-34505-1-git-send-email-Yuantian.Tang@freescale.com>
-	<1438389906.19345.101.camel@freescale.com>
-	<1438600486.7515.1@remotesmtp.freescale.net>
-	<1438633423.2097.33.camel@freescale.com>
+From: Scott Shu <scott.shu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Subject: [PATCH] ARM64: dts: mt6795: enable basic SMP bringup for MT6795
+Date: Tue, 4 Aug 2015 10:47:37 +0800
+Message-ID: <1438656457-60278-1-git-send-email-scott.shu@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1438633423.2097.33.camel@freescale.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Scott Wood <scottwood@freescale.com>
-Cc: Yuantian.Tang@freescale.com, b07421@freescale.com, linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mars Cheng <mars.cheng-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, wsd_upstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, loda.chou-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, jades.shih-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, scott.shu-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Scott Shu <scott.shu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+This patch adds support SMP on MediaTek MT6795 Cortex-A53 Octa-core SoC.
 
+The patch is based on v4.2-rc1 and following patch series:
+(1) Mars Cheng's "Add mt6795 basic chip support" [1]
 
-On Tue, Aug 4, 2015 at 4:23 AM, Scott Wood <scottwood@freescale.com> 
-wrote:
-> On Mon, 2015-08-03 at 19:14 +0800, Chenhui Zhao wrote:
->>  On Sat, Aug 1, 2015 at 8:45 AM, Scott Wood <scottwood@freescale.com>
->>  wrote:
->>  > On Fri, 2015-06-26 at 15:44 +0800,  
->> Yuantian.Tang@freescale.comwrote:
->>  > >  +static void rcpm_v1_set_ip_power(bool enable, u32 *mask)
->>  > >  +{
->>  > >  +     if (enable)
->>  > >  +             setbits32(&rcpm_v1_regs->ippdexpcr, *mask);
->>  > >  +     else
->>  > >  +             clrbits32(&rcpm_v1_regs->ippdexpcr, *mask);
->>  > >  +}
->>  > >  +
->>  > >  +static void rcpm_v2_set_ip_power(bool enable, u32 *mask)
->>  > >  +{
->>  > >  +     if (enable)
->>  > >  +             setbits32(&rcpm_v2_regs->ippdexpcr[0], *mask);
->>  > >  +     else
->>  > >  +             clrbits32(&rcpm_v2_regs->ippdexpcr[0], *mask);
->>  > >  +}
->>  >
->>  > Why do these take "u32 *mask" instead of "u32 mask"?
->>  >
->>  > -Scott
->> 
->>  I think it can be used in the case where there are several mask 
->> values.
-> 
-> When would that be?
-> 
-> -Scott
+[1] https://lkml.org/lkml/2015/7/14/63
 
-So far, only use one register, even though the register name is 
-"IPPDEXPCRn" (has "n" suffix) in T4 RM.
+Signed-off-by: Scott Shu <scott.shu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+---
+ arch/arm64/boot/dts/mediatek/mt6795.dtsi |   13 +++++++++++++
+ 1 file changed, 13 insertions(+)
 
-OK. Just change the parameter to "u32 mask".
+diff --git a/arch/arm64/boot/dts/mediatek/mt6795.dtsi b/arch/arm64/boot/dts/mediatek/mt6795.dtsi
+index da200e7..c85659d 100644
+--- a/arch/arm64/boot/dts/mediatek/mt6795.dtsi
++++ b/arch/arm64/boot/dts/mediatek/mt6795.dtsi
+@@ -20,6 +20,11 @@
+ 	#address-cells = <2>;
+ 	#size-cells = <2>;
+ 
++	psci {
++		compatible = "arm,psci-0.2";
++		method = "smc";
++	};
++
+ 	cpus {
+ 		#address-cells = <1>;
+ 		#size-cells = <0>;
+@@ -27,48 +32,56 @@
+ 		cpu0: cpu@0 {
+ 			device_type = "cpu";
+ 			compatible = "arm,cortex-a53";
++			enable-method = "psci";
+ 			reg = <0x000>;
+ 		};
+ 
+ 		cpu1: cpu@1 {
+ 			device_type = "cpu";
+ 			compatible = "arm,cortex-a53";
++			enable-method = "psci";
+ 			reg = <0x001>;
+ 		};
+ 
+ 		cpu2: cpu@2 {
+ 			device_type = "cpu";
+ 			compatible = "arm,cortex-a53";
++			enable-method = "psci";
+ 			reg = <0x002>;
+ 		};
+ 
+ 		cpu3: cpu@3 {
+ 			device_type = "cpu";
+ 			compatible = "arm,cortex-a53";
++			enable-method = "psci";
+ 			reg = <0x003>;
+ 		};
+ 
+ 		cpu4: cpu@100 {
+ 			device_type = "cpu";
+ 			compatible = "arm,cortex-a53";
++			enable-method = "psci";
+ 			reg = <0x100>;
+ 		};
+ 
+ 		cpu5: cpu@101 {
+ 			device_type = "cpu";
+ 			compatible = "arm,cortex-a53";
++			enable-method = "psci";
+ 			reg = <0x101>;
+ 		};
+ 
+ 		cpu6: cpu@102 {
+ 			device_type = "cpu";
+ 			compatible = "arm,cortex-a53";
++			enable-method = "psci";
+ 			reg = <0x102>;
+ 		};
+ 
+ 		cpu7: cpu@103 {
+ 			device_type = "cpu";
+ 			compatible = "arm,cortex-a53";
++			enable-method = "psci";
+ 			reg = <0x103>;
+ 		};
+ 	};
+-- 
+1.7.9.5
 
--Chenhui
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
