@@ -1,52 +1,51 @@
-From: Dave Gerlach <d-gerlach@ti.com>
-Subject: Re: [PATCH v2 3/3] soc: ti: Add wkup_m3_ipc driver
-Date: Tue, 4 Aug 2015 15:58:41 -0500
-Message-ID: <55C12781.1070007@ti.com>
-References: <1437166592-25378-1-git-send-email-d-gerlach@ti.com>
- <1437166592-25378-4-git-send-email-d-gerlach@ti.com>
- <20150720061559.GX17550@atomide.com>
+From: Timo Sigurdsson <public_timo.s-fWgRPtSzPNU3WX+qO2AYSQ@public.gmane.org>
+Subject: [PATCH v2] ARM: dts: sunxi: Raise minimum CPU voltage
+ for sun7i-a20 to meet SoC specifications
+Date: Tue,  4 Aug 2015 23:08:01 +0200
+Message-ID: <1438722481-2302-1-git-send-email-public_timo.s@silentcreek.de>
+Reply-To: public_timo.s-fWgRPtSzPNU3WX+qO2AYSQ@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20150720061559.GX17550@atomide.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Tony Lindgren <tony@atomide.com>
-Cc: devicetree@vger.kernel.org, Keerthy <j-keerthy@ti.com>, Jassi Brar <jassisinghbrar@gmail.com>, linux-kernel@vger.kernel.org, Santosh Shilimkar <ssantosh@kernel.org>, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sunxi+bncBCSJLSE35MGBBTWTQSXAKGQEQGXB3GQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <http://groups.google.com/group/linux-sunxi/subscribe>
+To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Cc: wens-jdAy2FN1RRM@public.gmane.org, Timo Sigurdsson <public_timo.s-fWgRPtSzPNU3WX+qO2AYSQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 07/20/2015 01:16 AM, Tony Lindgren wrote:
-> * Dave Gerlach <d-gerlach@ti.com> [150717 13:59]:
->> +
->> +/* Public functions */
-> ...
->> +EXPORT_SYMBOL_GPL(wkup_m3_set_mem_type);
->> +EXPORT_SYMBOL_GPL(wkup_m3_set_resume_address);
->> +EXPORT_SYMBOL_GPL(wkup_m3_request_pm_status);
->> +EXPORT_SYMBOL_GPL(wkup_m3_prepare_low_power);
->> +EXPORT_SYMBOL_GPL(wkup_m3_finish_low_power);
->
-> I think you can avoid exporting these SoC specific functions
-> by just exporting wkup_m3_request() and wkup_m3_free() type
-> functions with a data structure containing the necessary
-> function pointers.
+sun7i-a20.dtsi contains a cpufreq operating point at 0.9 volts. The minimum
+CPU voltage for the Allwinner A20 SoC, however, is 1.0 volts. Thus, raise
+the voltage for the lowest operating point to 1.0 volts in order to stay
+within the SoC specifications. It is an undervolted setting that isn't
+stable across all SoCs and boards out there.
 
-Ok thanks for the comment, I can try that change out, I agree it 
-probably isn't necessary to export so much.
+Signed-off-by: Timo Sigurdsson <public_timo.s-fWgRPtSzPNU3WX+qO2AYSQ@public.gmane.org>
+---
+Changes since v1:
 
-Regards,
-Dave
+- Fixed checkpatch warnings
+- Changed the commit message and title to clarify that this is not a board-specific issue, but rather a limitation by the SoC  
+---
+ arch/arm/boot/dts/sun7i-a20.dtsi | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
->
-> Regards,
->
-> Tony
->
+diff --git a/arch/arm/boot/dts/sun7i-a20.dtsi b/arch/arm/boot/dts/sun7i-a20.dtsi
+index 6a63f30..f5f384c 100644
+--- a/arch/arm/boot/dts/sun7i-a20.dtsi
++++ b/arch/arm/boot/dts/sun7i-a20.dtsi
+@@ -107,7 +107,7 @@
+ 				720000	1200000
+ 				528000	1100000
+ 				312000	1000000
+-				144000	900000
++				144000	1000000
+ 				>;
+ 			#cooling-cells = <2>;
+ 			cooling-min-level = <0>;
+-- 
+2.1.4
