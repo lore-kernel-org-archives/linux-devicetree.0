@@ -1,85 +1,38 @@
-From: Li Jun <b47624-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: Re: [PATCH v8 00/23] usb gadget update for OTG 2.0
-Date: Tue, 4 Aug 2015 08:00:31 +0800
-Message-ID: <20150804000029.GA19818@shlinux2>
-References: <1437622667-6735-1-git-send-email-jun.li@freescale.com>
- <20150727072157.GA20654@shlinux2>
- <20150729150427.GA32418@saruman.tx.rr.com>
- <20150729232401.GA8175@shlinux2>
- <20150730021141.GB3811@saruman.tx.rr.com>
- <20150730014657.GB8175@shlinux2>
- <20150730141006.GB18246@saruman.tx.rr.com>
+From: Scott Wood <scottwood@freescale.com>
+Subject: Re: [v3,1/2] powerpc/mpc85xx: Create dts components for the FSL
+ QorIQ DPAA FMan
+Date: Mon, 3 Aug 2015 20:28:31 -0500
+Message-ID: <20150804012831.GA15131@home.buserror.net>
+References: <1438584241-10460-1-git-send-email-igal.liberman@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
 Content-Disposition: inline
-In-Reply-To: <20150730141006.GB18246-HgARHv6XitJaoMGHk7MhZQC/G2K4zDHf@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>
-Cc: Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Li Jun <jun.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, robh+d-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, macpaul-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, rogerq-l0cyMroinI0@public.gmane.org
+In-Reply-To: <1438584241-10460-1-git-send-email-igal.liberman@freescale.com>
+List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
+ <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev/>
+List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
+List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
+ <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
+Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
+Sender: "Linuxppc-dev"
+ <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+To: "Igal.Liberman" <igal.liberman@freescale.com>
+Cc: devicetree@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org, madalin.bucur@freescale.com
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jul 30, 2015 at 09:10:06AM -0500, Felipe Balbi wrote:
-> On Thu, Jul 30, 2015 at 09:46:58AM +0800, Li Jun wrote:
-> > On Wed, Jul 29, 2015 at 09:11:41PM -0500, Felipe Balbi wrote:
-> > > On Thu, Jul 30, 2015 at 07:24:03AM +0800, Li Jun wrote:
-> > > > On Wed, Jul 29, 2015 at 10:04:27AM -0500, Felipe Balbi wrote:
-> > > > > On Mon, Jul 27, 2015 at 03:21:59PM +0800, Peter Chen wrote:
-> > > > > > On Thu, Jul 23, 2015 at 11:37:24AM +0800, Li Jun wrote:
-> > > > > > > Change for v8:
-> > > > > > > - Add Peter's ACk for chipidea driver; and Roger's Reviewed-by for patch
-> > > > > > >   07, 21~23.
-> > > > > > > - Add ci->is_otg condition before enable ci->gadget.is_otg for chipidea
-> > > > > > >   driver in patch 8.
-> > > > > > > 
-> > > > > > 
-> > > > > > Hi Felipe,
-> > > > > > 
-> > > > > > For chipidea patches in this series, help to queue them in your tree 
-> > > > > > please, thanks.
-> > > > > 
-> > > > > all there, please make sure they're correct. There were so many versions
-> > > > > of this series that I might have picked up the wrong one :-p
-> > > > > 
-> > > > 
-> > > > Patch [8/23]: "usb: chipidea: set usb otg capabilities", you picked up the V7,
-> > > > I have a small change for V8, others are correct.
-> > > 
-> > > Can you send an incremental diff, please ?
-> > > 
-> > 
-> > diff --git a/drivers/usb/chipidea/udc.c b/drivers/usb/chipidea/udc.c
-> > index 61fde89..c6d1595 100644
-> > --- a/drivers/usb/chipidea/udc.c
-> > +++ b/drivers/usb/chipidea/udc.c
-> > @@ -1838,8 +1838,8 @@ static int udc_start(struct ci_hdrc *ci)
-> >  	ci->gadget.name         = ci->platdata->name;
-> >  	ci->gadget.otg_caps	= otg_caps;
-> >  
-> > -	if (otg_caps->hnp_support || otg_caps->srp_support ||
-> > -					otg_caps->adp_support)
-> > +	if (ci->is_otg && (otg_caps->hnp_support || otg_caps->srp_support ||
-> > +						otg_caps->adp_support))
-> >  		ci->gadget.is_otg = 1;
-> >  
-> >  	INIT_LIST_HEAD(&ci->gadget.ep_list);
-> 
-> I need it as a real patch with Signed-off-by and all, so I can apply :-)
-> 
-Hi Felipe,
-
-I have sent it out as a formal patch for this incremental diff, but still not
-in your next tree.
-
-[PATCH] usb: chipidea: add ci->is_otg condition for otg judgement
-https://www.mail-archive.com/linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org/msg62227.html
-
-Li Jun
-> -- 
-> balbi
-
-
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+T24gTW9uLCBBdWcgMDMsIDIwMTUgYXQgMDk6NDQ6MDFBTSArMDMwMCwgSWdhbC5MaWJlcm1hbiB3
+cm90ZToKPiArCXhtZGlvMDogbWRpb0BmMTAwMCB7Cj4gKwkJI2FkZHJlc3MtY2VsbHMgPSA8MT47
+Cj4gKwkJI3NpemUtY2VsbHMgPSA8MD47Cj4gKwkJY29tcGF0aWJsZSA9ICJmc2wsZm1hbi14bWRp
+byI7Cj4gKwkJcmVnID0gPDB4ZjEwMDAgMHgxMDAwPjsKPiArCQlpbnRlcnJ1cHRzID0gPDEwMSAx
+IDAgMD47Cj4gKwl9OwoKV2h5IGlzIHRoaXMgPDEwMSAxIDAgMD4gYW5kIG5vdCA8MTAxIDIgMCAw
+Pj8gIEludGVybmFsIGludGVycnVwdHMgYXJlCmFjdGl2ZS1oaWdoLgoKPiArCW1kaW8wOiBtZGlv
+QGUxMTIwIHsKPiArCQkjYWRkcmVzcy1jZWxscyA9IDwxPjsKPiArCQkjc2l6ZS1jZWxscyA9IDww
+PjsKPiArCQljb21wYXRpYmxlID0gImZzbCxmbWFuLW1kaW8iOwo+ICsJCXJlZyA9IDwweGUxMTIw
+IDB4ZWUwPjsKPiArCQlpbnRlcnJ1cHRzID0gPDEwMCAxIDAgMD47CgpMaWtld2lzZS4KCi1TY290
+dApfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpMaW51eHBw
+Yy1kZXYgbWFpbGluZyBsaXN0CkxpbnV4cHBjLWRldkBsaXN0cy5vemxhYnMub3JnCmh0dHBzOi8v
+bGlzdHMub3psYWJzLm9yZy9saXN0aW5mby9saW51eHBwYy1kZXY=
