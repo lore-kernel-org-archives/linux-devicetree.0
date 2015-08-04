@@ -1,79 +1,59 @@
-From: Sjoerd Simons <sjoerd.simons-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>
-Subject: [PATCH v2 3/4] ARM: dts: rockchip: Add SPDIF transceiver for RK3188
-Date: Tue,  4 Aug 2015 13:18:18 +0200
-Message-ID: <1438687099-14282-4-git-send-email-sjoerd.simons@collabora.co.uk>
-References: <1438687099-14282-1-git-send-email-sjoerd.simons@collabora.co.uk>
+From: Masahiro Yamada <yamada.masahiro@socionext.com>
+Subject: [PATCH 0/3] Device Tree updates of UniPhier SoCs for Linux 4.3
+Date: Tue,  4 Aug 2015 20:21:01 +0900
+Message-ID: <1438687264-26538-1-git-send-email-yamada.masahiro@socionext.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-In-Reply-To: <1438687099-14282-1-git-send-email-sjoerd.simons-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
-List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: arm@kernel.org
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Russell King <linux@arm.linux.org.uk>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-kernel@vger.kernel.org, Masahiro Yamada <yamada.masahiro@socionext.com>, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Add the SPDIF transceiver controller and pin for RK3188
+Hi Olof and Arnd,
 
-Signed-off-by: Sjoerd Simons <sjoerd.simons-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>
 
----
+Here are a little more updates for device trees for UniPhier SoCs.
 
-Changes in v2:
-- Sort the spdif node properties
-- Drop the 0x prefix from the node name
-- Rename the spdif@ node to sound@
+Please consider applying this series to your ARM-SOC tree.
 
- arch/arm/boot/dts/rk3188.dtsi | 22 ++++++++++++++++++++++
- 1 file changed, 22 insertions(+)
+Thanks!
 
-diff --git a/arch/arm/boot/dts/rk3188.dtsi b/arch/arm/boot/dts/rk3188.dtsi
-index 0f23aed..abdb5bc 100644
---- a/arch/arm/boot/dts/rk3188.dtsi
-+++ b/arch/arm/boot/dts/rk3188.dtsi
-@@ -121,6 +121,22 @@
- 		status = "disabled";
- 	};
- 
-+	spdif: sound@1011e000 {
-+		compatible = "rockchip,rk3188-spdif", "rockchip,rk3066-spdif";
-+		reg = <0x1011e000 0x2000>;
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		#sound-dai-cells = <0>;
-+		clock-names = "spdif_hclk", "spdif_clk";
-+		clocks = <&cru HCLK_SPDIF>, <&cru SCLK_SPDIF>;
-+		dmas = <&dmac1_s 8>;
-+		dma-names = "tx";
-+		interrupts = <GIC_SPI 32 IRQ_TYPE_LEVEL_HIGH>;
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&spdif_tx>;
-+		status = "disabled";
-+	};
-+
- 	cru: clock-controller@20000000 {
- 		compatible = "rockchip,rk3188-cru";
- 		reg = <0x20000000 0x1000>;
-@@ -462,6 +478,12 @@
- 						<RK_GPIO1 21 RK_FUNC_1 &pcfg_pull_none>;
- 			};
- 		};
-+
-+		spdif {
-+			spdif_tx: spdif-tx {
-+				rockchip,pins = <RK_GPIO1 14 RK_FUNC_1 &pcfg_pull_none>;
-+			};
-+		};
- 	};
- };
- 
+
+
+Masahiro Yamada (3):
+  ARM: dts: UniPhier: add I2C controller device nodes
+  ARM: dts: UniPhier: add PH1-Pro5 SoC support
+  ARM: dts: UniPhier: add ProXstream2 and PH1-LD6b SoC/board support
+
+ arch/arm/boot/dts/Makefile                  |   3 +-
+ arch/arm/boot/dts/uniphier-ph1-ld4-ref.dts  |   8 +
+ arch/arm/boot/dts/uniphier-ph1-ld4.dtsi     |  58 ++++++
+ arch/arm/boot/dts/uniphier-ph1-ld6b-ref.dts | 105 +++++++++++
+ arch/arm/boot/dts/uniphier-ph1-ld6b.dtsi    |  67 +++++++
+ arch/arm/boot/dts/uniphier-ph1-pro4-ref.dts |  10 +
+ arch/arm/boot/dts/uniphier-ph1-pro4.dtsi    |  82 +++++++++
+ arch/arm/boot/dts/uniphier-ph1-pro5.dtsi    | 252 +++++++++++++++++++++++++
+ arch/arm/boot/dts/uniphier-ph1-sld3-ref.dts |   9 +
+ arch/arm/boot/dts/uniphier-ph1-sld3.dtsi    |  61 +++++++
+ arch/arm/boot/dts/uniphier-ph1-sld8-ref.dts |   8 +
+ arch/arm/boot/dts/uniphier-ph1-sld8.dtsi    |  58 ++++++
+ arch/arm/boot/dts/uniphier-pinctrl.dtsi     |  20 ++
+ arch/arm/boot/dts/uniphier-proxstream2.dtsi | 273 ++++++++++++++++++++++++++++
+ 14 files changed, 1013 insertions(+), 1 deletion(-)
+ create mode 100644 arch/arm/boot/dts/uniphier-ph1-ld6b-ref.dts
+ create mode 100644 arch/arm/boot/dts/uniphier-ph1-ld6b.dtsi
+ create mode 100644 arch/arm/boot/dts/uniphier-ph1-pro5.dtsi
+ create mode 100644 arch/arm/boot/dts/uniphier-proxstream2.dtsi
+
 -- 
-2.5.0
+1.9.1
