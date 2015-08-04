@@ -1,57 +1,50 @@
-From: "Timo Sigurdsson" <public_timo.s-fWgRPtSzPNU3WX+qO2AYSQ@public.gmane.org>
-Subject: Re: [PATCH] ARM: dts: sunxi: Raise minimum CPU voltage
- for sun7i-a20 to a level all boards can supply
-Date: Tue,  4 Aug 2015 10:51:30 +0200 (CEST)
-Message-ID: <20150804085130.602FA6C83EF9@dd34104.kasserver.com>
-References: <1438543386-7253-1-git-send-email-public_timo.s@silentcreek.de> <CAGRGNgV6b9yt2HnB2x2Wyc05KEahoX-Y+mVhxsryztcfA36H1g@mail.gmail.com> <CAGb2v67o-=_cL2RWfXJ+3C86zfQ_1b5DYRi3_zwvwy6su6+gdw@mail.gmail.com> <CAGRGNgXH90m9h0DDejd5MTf8enduGFQ8dPKrRhmc8Z6y_PaC1w@mail.gmail.com> <20150803090352.621CC6C80865@dd34104.kasserver.com><20150803093420.GC2564@lukather>
-Reply-To: public_timo.s-fWgRPtSzPNU3WX+qO2AYSQ@public.gmane.org
+From: Leo Yan <leo.yan@linaro.org>
+Subject: Re: [RFC PATCH 2/3] mailbox: Hisilicon: add mailbox driver
+Date: Tue, 4 Aug 2015 17:00:59 +0800
+Message-ID: <20150804090059.GB27609@leoy-linaro>
+References: <1438564390-28111-1-git-send-email-leo.yan@linaro.org>
+ <1438564390-28111-3-git-send-email-leo.yan@linaro.org>
+ <1438677024.8734.24.camel@tiscali.nl>
+ <20150804084930.GA27609@leoy-linaro>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBCSJLSE35MGBBE72QGXAKGQEYO7TP6I-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <20150803093420.GC2564@lukather>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <http://groups.google.com/group/linux-sunxi/subscribe>
-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
-Cc: wens-jdAy2FN1RRM@public.gmane.org, julian.calaby-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, monnier-CRDzTM1onBSWkKpYnGOUKg@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20150804084930.GA27609@leoy-linaro>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Paul Bolle <pebolle@tiscali.nl>
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Jassi Brar <jassisinghbrar@gmail.com>, Wei Xu <xuwei5@hisilicon.com>, Bintian Wang <bintian.wang@huawei.com>, Haojian Zhuang <haojian.zhuang@linaro.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Guodong Xu <guodong.xu@linaro.org>, Jian Zhang <zhangjian001@hisilicon.com>, Zhenwei Wang <Zhenwei.wang@hisilicon.com>, Haoju Mo <mohaoju@hisilicon.com>, Dan Zhao <dan.zhao@hisilicon.com>, kongfei@hisilicon.com, Guangyue Zeng <zengguangyue@hisilicon.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Maxime,
+Hi Paul,
 
-Maxime Ripard schrieb am 03.08.2015 11:34:
+On Tue, Aug 04, 2015 at 04:49:30PM +0800, Leo Yan wrote:
+> On Tue, Aug 04, 2015 at 10:30:24AM +0200, Paul Bolle wrote:
+> > (This RFC was part of this mornings catch of my crude mail filter. So,
+> > for what it's worth, what follows are a few random comments for the few
+> > things I'm able to spot.)
 
-> On Mon, Aug 03, 2015 at 11:03:52AM +0200, Timo Sigurdsson wrote:
->> Julian Calaby schrieb am 03.08.2015 06:22:
->> > My only real objection here is are there boards that can go down to
->> > 0.9v and if so, won't this change make them less power efficient in
->> > the almost-idle case? And are those power savings enough to justify
->> > not accepting this patch?
->> 
->> It will probably make those boards less power efficient, yes. On the
->> other hand, boards that have their CPU regulator set to min. 1.0V might
->> also draw more power because the lowest frequency is not available, 
->> even though the savings due to frequency are likely to be lower than
->> the savings due to voltage.
-> 
-> Guys, isn't this whole discussion a bit moot? We're not doing any kind
-> of power management but cpufreq, so maybe there's a lot more to do
-> before we actually can have these kind of arguments?
-> 
-> Plus this OPP has never been used anyway, so this patch is not going
-> to increase the power consumption either.
+[...]
 
-You are right. When I wrote that, I was under the impression that the
-Olinuxino Lime 2 board at least used this setting since it has has a cpu
-regulator defined to go as low as 0.7V. But now I checked again and see
-the regulator is not referenced in the cpu node, so I guess cpufreq
-doesn't use it. So, this discussion was really hypothetical and more
-importantly, as you mentioned, it's an out-of-spec opp that shouldn't
-be supported anyway.
+> > > +static int __init hi6220_mbox_init(void)
+> > > +{
+> > > +	return platform_driver_register(&hi6220_mbox_driver);
+> > > +}
+> > > +module_init(hi6220_mbox_init);
+> > > +
+> > > +static void __exit hi6220_mbox_exit(void)
+> > > +{
+> > > +	platform_driver_unregister(&hi6220_mbox_driver);
+> > > +}
+> > > +module_exit(hi6220_mbox_exit);
+> > 
+> > This could be flattened into one line:
+> >     module_platform_driver(hi6220_mbox_driver);
+
+Need clarify one thing: will modify to use core_initcall() for driver's
+initialization; due another clock driver depends on this mailbox driver,
+so mailbox init firstly with core_initcall() and use subsys_initcall()
+for clock driver.
 
 Thanks,
-
-Timo
+Leo Yan
