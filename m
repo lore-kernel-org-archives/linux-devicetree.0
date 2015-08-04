@@ -1,40 +1,361 @@
-From: Scott Wood <scottwood@freescale.com>
-Subject: Re: [v3,1/2] powerpc/mpc85xx: Create dts components for the FSL
- QorIQ DPAA FMan
-Date: Tue, 4 Aug 2015 00:00:26 -0500
-Message-ID: <1438664426.2097.75.camel@freescale.com>
-References: <1438584241-10460-1-git-send-email-igal.liberman@freescale.com>
+From: Leo Yan <leo.yan-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v3 4/5] clk: Hi6220: add stub clock driver
+Date: Tue, 4 Aug 2015 14:27:46 +0800
+Message-ID: <20150804062746.GA9112@leoy-linaro>
+References: <1438564418-15948-1-git-send-email-leo.yan@linaro.org>
+ <1438564418-15948-5-git-send-email-leo.yan@linaro.org>
+ <20150803213752.GB21068@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
-In-Reply-To: <1438584241-10460-1-git-send-email-igal.liberman@freescale.com>
-List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
- <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev/>
-List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
-List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
- <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
-Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
-Sender: "Linuxppc-dev"
- <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
-To: "Igal.Liberman" <igal.liberman@freescale.com>
-Cc: devicetree@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org, madalin.bucur@freescale.com
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20150803213752.GB21068-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Wei Xu <xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Haojian Zhuang <haojian.zhuang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Bintian Wang <bintian.wang-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Guodong Xu <guodong.xu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Jian Zhang <zhangjian001-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Zhenwei Wang <Zhenwei.wang-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Haoju Mo <mohaoju-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Dan Zhao <dan.zhao-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, sunzhaosheng-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, victor.lixin-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-W1Jlc2VuZGluZyBhZnRlciBib2dvZmlsdGVyIGFkanVzdG1lbnQgb24gdmdlci5rZXJuZWwub3Jn
-XQoKT24gTW9uLCBBdWcgMDMsIDIwMTUgYXQgMDk6NDQ6MDFBTSArMDMwMCwgSWdhbC5MaWJlcm1h
-biB3cm90ZToKPiArICAgICB4bWRpbzA6ICBtZGlvQGYxMDAwewo+ICsgICAgICAgICAgICAgI2Fk
-ZHJlc3MtY2VsbHMgPSA8MT47Cj4gKyAgICAgICAgICAgICAjc2l6ZS1jZWxscyA9IDwwPjsKPiAr
-ICAgICAgICAgICAgIGNvbXBhdGlibGUgPSAiZnNsLGZtYW4teG1kaW8iOwo+ICsgICAgICAgICAg
-ICAgcmVnID0gPDB4ZjEwMDAgMHgxMDAwPjsKPiArICAgICAgICAgICAgIGludGVycnVwdHMgPSA8
-MTAxIDEgMCAwPjsKPiArICAgICB9OwoKV2h5IGlzIHRoaXMgPDEwMSAxIDAgMD4gYW5kIG5vdCA8
-MTAxIDIgMCAwPj8gIEludGVybmFsIGludGVycnVwdHMgYXJlCmFjdGl2ZS1oaWdoLgoKPiArICAg
-ICBtZGlvMDogIG1kaW9AZTExMjB7Cj4gKyAgICAgICAgICAgICAjYWRkcmVzcy1jZWxscyA9IDwx
-PjsKPiArICAgICAgICAgICAgICNzaXplLWNlbGxzID0gPDA+Owo+ICsgICAgICAgICAgICAgY29t
-cGF0aWJsZSA9ICJmc2wsZm1hbi1tZGlvIjsKPiArICAgICAgICAgICAgIHJlZyA9IDwweGUxMTIw
-IDB4ZWUwPjsKPiArICAgICAgICAgICAgIGludGVycnVwdHMgPSA8MTAwIDEgMCAwPjsKCkxpa2V3
-aXNlLgoKLVNjb3R0Cl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fCkxpbnV4cHBjLWRldiBtYWlsaW5nIGxpc3QKTGludXhwcGMtZGV2QGxpc3RzLm96bGFicy5v
-cmcKaHR0cHM6Ly9saXN0cy5vemxhYnMub3JnL2xpc3RpbmZvL2xpbnV4cHBjLWRldg==
+Hi Stephen,
+
+On Mon, Aug 03, 2015 at 02:37:52PM -0700, Stephen Boyd wrote:
+> On 08/03, Leo Yan wrote:
+> > diff --git a/drivers/clk/hisilicon/clk-hi6220-stub.c b/drivers/clk/hisilicon/clk-hi6220-stub.c
+> > new file mode 100644
+> > index 0000000..0931666
+> > --- /dev/null
+> > +++ b/drivers/clk/hisilicon/clk-hi6220-stub.c
+> > @@ -0,0 +1,279 @@
+> > +/*
+> > + * Hi6220 stub clock driver
+> > + *
+> > + * Copyright (c) 2015 Hisilicon Limited.
+> > + * Copyright (c) 2015 Linaro Limited.
+> > + *
+> > + * Author: Leo Yan <leo.yan-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> > + *
+> > + * This program is free software; you can redistribute it and/or modify
+> > + * it under the terms of the GNU General Public License version 2 as
+> > + * published by the Free Software Foundation.
+> > + *
+> > + */
+> > +
+> > +#include <linux/clkdev.h>
+> 
+> Is this include used?
+> 
+> > +#include <linux/clk-provider.h>
+> > +#include <linux/clk.h>
+> 
+> Is this include used?
+> 
+> > +#include <linux/err.h>
+> > +#include <linux/mfd/syscon.h>
+> > +#include <linux/mailbox_client.h>
+> > +#include <linux/of.h>
+> > +#include <linux/of_device.h>
+> > +#include <linux/regmap.h>
+> > +#include <linux/slab.h>
+> > +#include <linux/kernel.h>
+> > +
+> > +#include <dt-bindings/clock/hi6220-clock.h>
+> > +
+> > +/* Stub clocks id */
+> > +#define HI6220_STUB_ACPU0		0
+> > +#define HI6220_STUB_ACPU1		1
+> > +#define HI6220_STUB_GPU			2
+> > +#define HI6220_STUB_DDR			5
+> > +
+> > +/* Mailbox message */
+> > +#define HI6220_MBOX_MSG_LEN		8
+> > +
+> > +#define HI6220_MBOX_FREQ		(0xA)
+> > +#define HI6220_MBOX_CMD_SET		(0x3)
+> > +#define HI6220_MBOX_OBJ_AP		(0x0)
+> > +
+> > +/* CPU dynamic frequency scaling */
+> > +#define ACPU_DFS_FREQ_MAX		(0x1724)
+> > +#define ACPU_DFS_CUR_FREQ		(0x17CC)
+> > +#define ACPU_DFS_FLAG			(0x1B30)
+> > +#define ACPU_DFS_FREQ_REQ		(0x1B34)
+> > +#define ACPU_DFS_FREQ_LMT		(0x1B38)
+> > +#define ACPU_DFS_LOCK_FLAG		(0xAEAEAEAE)
+> 
+> We don't need parenthesis around single values in these macros.
+> 
+> > +
+> > +#define to_stub_clk(hw) container_of(hw, struct hi6220_stub_clk, hw)
+> > +
+> > +struct hi6220_stub_clk {
+> > +	u32 id;
+> > +	u32 rate;
+> > +
+> > +	struct device *dev;
+> > +	struct clk_hw hw;
+> > +
+> > +	struct regmap *dfs_map;
+> > +	struct mbox_client cl;
+> > +	struct mbox_chan *mbox;
+> > +};
+> > +
+> > +struct hi6220_mbox_msg {
+> > +	unsigned char type;
+> > +	unsigned char cmd;
+> > +	unsigned char obj;
+> > +	unsigned char src;
+> > +	unsigned char para[4];
+> > +};
+> > +
+> > +union hi6220_mbox_data {
+> > +	unsigned int data[HI6220_MBOX_MSG_LEN];
+> > +	struct hi6220_mbox_msg msg;
+> > +};
+> > +
+> > +static unsigned int hi6220_acpu_get_freq(struct hi6220_stub_clk *stub_clk)
+> > +{
+> > +	unsigned int freq;
+> > +
+> > +	regmap_read(stub_clk->dfs_map, ACPU_DFS_CUR_FREQ, &freq);
+> > +	return freq;
+> > +}
+> > +
+> > +static int hi6220_acpu_set_freq(struct hi6220_stub_clk *stub_clk,
+> > +				unsigned int freq)
+> > +{
+> > +	union hi6220_mbox_data data;
+> > +
+> > +	stub_clk->mbox = mbox_request_channel(&stub_clk->cl, 0);
+> 
+> Why not request the channel once in probe?
+> 
+> > +	if (IS_ERR(stub_clk->mbox)) {
+> > +		dev_err(stub_clk->dev, "failed get mailbox channel\n");
+> > +		return PTR_ERR(stub_clk->mbox);
+> > +	};
+> > +
+> > +	/* set the frequency in sram */
+> > +	regmap_write(stub_clk->dfs_map, ACPU_DFS_FREQ_REQ, freq);
+> > +
+> > +	/* compound mailbox message */
+> > +	data.msg.type = HI6220_MBOX_FREQ;
+> > +	data.msg.cmd  = HI6220_MBOX_CMD_SET;
+> > +	data.msg.obj  = HI6220_MBOX_OBJ_AP;
+> > +	data.msg.src  = HI6220_MBOX_OBJ_AP;
+> > +
+> > +	mbox_send_message(stub_clk->mbox, &data);
+> > +	mbox_free_channel(stub_clk->mbox);
+> > +	return 0;
+> > +}
+> > +
+> > +static int hi6220_acpu_round_freq(struct hi6220_stub_clk *stub_clk,
+> > +				  unsigned int freq)
+> > +{
+> > +	unsigned int limit_flag, limit_freq = UINT_MAX;
+> > +	unsigned int max_freq;
+> > +
+> > +	/* check the constrainted frequency */
+> 
+> s/constrainted/constrained/ ?
+> 
+> > +	regmap_read(stub_clk->dfs_map, ACPU_DFS_FLAG, &limit_flag);
+> > +	if (limit_flag == ACPU_DFS_LOCK_FLAG)
+> > +		regmap_read(stub_clk->dfs_map, ACPU_DFS_FREQ_LMT, &limit_freq);
+> > +
+> > +	/* check the supported maximum frequency */
+> > +	regmap_read(stub_clk->dfs_map, ACPU_DFS_FREQ_MAX, &max_freq);
+> > +
+> > +	/* calculate the real maximum frequency */
+> > +	max_freq = min(max_freq, limit_freq);
+> > +
+> > +	if (WARN_ON(freq > max_freq))
+> > +		freq = max_freq;
+> > +
+> > +	return freq;
+> > +}
+> > +
+> > +static unsigned long hi6220_stub_clk_recalc_rate(struct clk_hw *hw,
+> > +		unsigned long parent_rate)
+> > +{
+> > +	u32 rate = 0;
+> > +	struct hi6220_stub_clk *stub_clk = to_stub_clk(hw);
+> > +
+> > +	switch (stub_clk->id) {
+> > +	case HI6220_STUB_ACPU0:
+> > +		rate = hi6220_acpu_get_freq(stub_clk);
+> > +
+> > +		/* convert from KHz to Hz */
+> 
+> s/KHz/kHz/ ?
+> 
+> > +		rate *= 1000;
+> > +		break;
+> > +
+> > +	default:
+> > +		dev_err(stub_clk->dev, "%s: un-supported clock id %d\n",
+> > +			__func__, stub_clk->id);
+> > +		break;
+> > +	}
+> > +
+> > +	return rate;
+> > +}
+> > +
+> > +static int hi6220_stub_clk_set_rate(struct clk_hw *hw, unsigned long rate,
+> > +                    unsigned long parent_rate)
+> > +{
+> > +	struct hi6220_stub_clk *stub_clk = to_stub_clk(hw);
+> > +	unsigned long new_rate = rate / 1000;  /* Khz */
+> 
+> s/KHz/kHz/ ?
+> 
+> > +	int ret = 0;
+> > +
+> > +	switch (stub_clk->id) {
+> > +	case HI6220_STUB_ACPU0:
+> > +		ret = hi6220_acpu_set_freq(stub_clk, new_rate);
+> > +		if (ret < 0)
+> > +			return ret;
+> > +
+> > +		break;
+> > +
+> > +	default:
+> > +		dev_err(stub_clk->dev, "%s: un-supported clock id %d\n",
+> > +			__func__, stub_clk->id);
+> > +		break;
+> > +	}
+> > +
+> > +	stub_clk->rate = new_rate;
+> 
+> Why do we store away the rate? Is this used anywhere?
+> 
+> > +
+> > +	pr_debug("%s: set rate=%ldKhz\n", __func__, new_rate);
+> > +	return ret;
+> > +}
+> > +
+> > +static long hi6220_stub_clk_round_rate(struct clk_hw *hw, unsigned long rate,
+> > +		unsigned long *parent_rate)
+> > +{
+> > +	struct hi6220_stub_clk *stub_clk = to_stub_clk(hw);
+> > +	unsigned long new_rate = rate / 1000;  /* Khz */
+> 
+> s/KHz/kHz/ ?
+> 
+> > +
+> > +	switch (stub_clk->id) {
+> > +	case HI6220_STUB_ACPU0:
+> > +		new_rate = hi6220_acpu_round_freq(stub_clk, new_rate);
+> > +
+> > +		/* convert from KHz to Hz */
+> 
+> s/KHz/kHz/ ?
+> 
+> > +		new_rate *= 1000;
+> > +		break;
+> > +
+> > +	default:
+> > +		dev_err(stub_clk->dev, "%s: un-supported clock id %d\n",
+> > +			__func__, stub_clk->id);
+> > +		break;
+> > +	}
+> > +
+> > +	return new_rate;
+> > +}
+> > +
+> > +static struct clk_ops hi6220_stub_clk_ops = {
+> 
+> const?
+> 
+> > +	.recalc_rate	= hi6220_stub_clk_recalc_rate,
+> > +	.round_rate	= hi6220_stub_clk_round_rate,
+> > +	.set_rate	= hi6220_stub_clk_set_rate,
+> > +};
+> > +
+> > +static int hi6220_stub_clk_probe(struct platform_device *pdev)
+> > +{
+> > +	struct device *dev = &pdev->dev;
+> > +	struct clk_init_data init;
+> > +	struct hi6220_stub_clk *stub_clk;
+> > +	struct clk *clk;
+> > +	struct device_node *np = pdev->dev.of_node;
+> > +
+> > +	stub_clk = devm_kzalloc(&pdev->dev, sizeof(*stub_clk), GFP_KERNEL);
+> 
+> just use dev?
+> 
+> > +	if (!stub_clk)
+> > +		return -ENOMEM;
+> > +
+> > +	stub_clk->dfs_map = syscon_regmap_lookup_by_phandle(np,
+> > +				"hisilicon,hi6220-clk-sram");
+> > +	if (IS_ERR(stub_clk->dfs_map)) {
+> > +		dev_err(dev, "failed to get sram regmap\n");
+> > +		return PTR_ERR(stub_clk->dfs_map);
+> > +	}
+> > +
+> > +	stub_clk->hw.init = &init;
+> > +	stub_clk->dev = dev;
+> > +	stub_clk->id = HI6220_STUB_ACPU0;
+> > +
+> > +	/* Use mailbox client with blocking mode */
+> > +	stub_clk->cl.dev = &pdev->dev;
+> 
+> just use dev?
+> 
+> > +	stub_clk->cl.tx_done = NULL;
+> > +	stub_clk->cl.tx_block = true;
+> > +	stub_clk->cl.tx_tout = 500;
+> > +	stub_clk->cl.knows_txdone = false;
+> > +
+> > +	init.name = "acpu0";
+> > +	init.ops = &hi6220_stub_clk_ops;
+> > +	init.num_parents = 0;
+> > +	init.flags = CLK_IS_ROOT;
+> > +
+> > +	clk = clk_register(NULL, &stub_clk->hw);
+> 
+> why not devm_clk_register?
+> 
+> > +	if (IS_ERR(clk))
+> > +		return PTR_ERR(clk);
+> > +
+> > +	of_clk_add_provider(pdev->dev.of_node, of_clk_src_simple_get, clk);
+> 
+> And check this for an error return value? Also, just use dev?
+> 
+> > +
+> > +	/* initialize buffer to zero */
+> > +	regmap_write(stub_clk->dfs_map, ACPU_DFS_FLAG, 0x0);
+> > +	regmap_write(stub_clk->dfs_map, ACPU_DFS_FREQ_REQ, 0x0);
+> > +	regmap_write(stub_clk->dfs_map, ACPU_DFS_FREQ_LMT, 0x0);
+> > +
+> > +	dev_dbg(&pdev->dev, "Registered clock '%s'\n", init.name);
+> 
+> just use dev?
+> 
+> > +	return 0;
+> > +}
+> > +
+> > +static const struct of_device_id hi6220_stub_clk_of_match[] = {
+> > +	{ .compatible = "hisilicon,hi6220-stub-clk", },
+> > +	{}
+> > +};
+> > +
+> > +static struct platform_driver hi6220_stub_clk_driver = {
+> > +	.driver	= {
+> > +		.name = "hi6220-stub-clk",
+> > +		.of_match_table = of_match_ptr(hi6220_stub_clk_of_match),
+> 
+> We can leave off of_match_ptr() here.
+> 
+> > +	},
+> > +	.probe = hi6220_stub_clk_probe,
+> > +};
+
+
+Thanks for review; Accept all comments and will refine for them :)
+
+Thanks,
+Leo Yan
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
