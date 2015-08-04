@@ -1,49 +1,142 @@
-From: Paul Bolle <pebolle-IWqWACnzNjzz+pZb47iToQ@public.gmane.org>
-Subject: Re: [PATCH 2/3] iio: temperature: add max6675 thermocouple
- converter driver
-Date: Tue, 04 Aug 2015 11:30:36 +0200
-Message-ID: <1438680636.8734.45.camel@tiscali.nl>
-References: <1438635410-3757-1-git-send-email-mporter@konsulko.com>
-	 <1438635410-3757-3-git-send-email-mporter@konsulko.com>
+From: James Morse <james.morse-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH v5 2/5] PCI: designware: Add ARM64 support
+Date: Tue, 04 Aug 2015 10:34:38 +0100
+Message-ID: <55C0872E.9060507@arm.com>
+References: <1437794486-21134-1-git-send-email-wangzhou1@hisilicon.com> <1437794486-21134-3-git-send-email-wangzhou1@hisilicon.com> <55B71F75.5030907@hisilicon.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=windows-1252
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1438635410-3757-3-git-send-email-mporter-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
+In-Reply-To: <55B71F75.5030907-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Matt Porter <mporter-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
-Cc: Linux IIO List <linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Devicetree List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Zhou Wang <wangzhou1-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
+Cc: Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Jingoo Han <jg1.han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Pratyush Anand <pratyush.anand-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, "gabriele.paoloni-hv44wF8Li93QT0dZR+AlfA@public.gmane.org" <gabriele.paoloni-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, Lorenzo Pieralisi <Lorenzo.Pieralisi-5wv7dgnIgG8@public.gmane.org>, Liviu Dudau <Liviu.Dudau-5wv7dgnIgG8@public.gmane.org>, "thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org" <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, "robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "yuanzhichang-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org" <yuanzhichang-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, "zhudacai-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org" <zhudacai-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, "zhangjukuo-hv44wF8Li93QT0dZR+AlfA@public.gmane.org" <zhangjukuo-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, "qiuzhenfa-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org" <qiuzhenfa-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>"liudongdong3-hv44wF8Li93QT0dZR+AlfA@public.gmane.org" <li>
 List-Id: devicetree@vger.kernel.org
 
-On ma, 2015-08-03 at 16:56 -0400, Matt Porter wrote:
-> --- /dev/null
-> +++ b/drivers/iio/temperature/max6675.c
-> +static const struct spi_device_id max6675_spi_ids[] = {
-> +	{"max6675", 0},
-> +	{},
-> +};
-> +MODULE_DEVICE_TABLE(spi, max6675_spi_ids);
+On 28/07/15 07:21, Zhou Wang wrote:
+> On 2015/7/25 11:21, Zhou Wang wrote:
+>> This patch tries to unify ARM32 and ARM64 PCIe in designware driver. Delete
+>> function dw_pcie_setup, dw_pcie_scan_bus, dw_pcie_map_irq and struct hw_pci,
+>> move related operations to dw_pcie_host_init. Also set pp->root_bus_nr = 0 in
+>> each PCIe host driver which is based on pcie-designware. This patch also try
+>> to use of_pci_get_host_bridge_resources for ARM32 and ARM64 according to the
+>> suggestion for Gabriele[1]
+>>
+>> This patch is based on Gabriele's patch about of_pci_range fix[2]
+>>
+>> I have compiled the driver with multi_v7_defconfig. However, I don't have
+>> ARM32 PCIe related board to do test. It will be appreciated if someone could
+>> help to test it.
+>>
+> 
+> Hi James,
+> 
+> If you have time, could you help to test this patch on i.MX 6Quad board?
+> You need apply Gabriele's patch before applying this patch.
+> 
+> It will be very appreciate and helpful if we can get test result from you.
 
-> +MODULE_ALIAS("spi:max6675");
+Applying patches 1 and 2, from v5, onto 4.2-rc5, I still get the same
+problem as before: config cycles to enumerate the second bus aren't
+working. (good news - I have a workaround)
 
-For the "spi" alias this is "belt and suspenders":
-    modinfo ./max6675.ko | grep alias
-    alias:          spi:max6675
-    alias:          acpi*:MXIM6675:*
-    alias:          of:N*T*Cmaxim,max6675*
-    alias:          spi:max6675
+Output from dmesg below, the lines 'dw_pcie_cfg_read(0xf0180000, 0x0, 0x4,
+=0x8878086)' were added by me, 0x8878086 is the intel wireless card
+attached to the board.
 
-I'd drop the MODULE_ALIAS().
+>From v4.2-rc5:
+----------------------------------------------------------------------------------
+imx6q-pcie 1ffc000.pcie: PCI host bridge to bus 0000:00
+pci_bus 0000:00: root bus resource [io 0x1000-0xffff]
+pci_bus 0000:00: root bus resource [mem 0x01000000-0x01efffff]
+pci_bus 0000:00: root bus resource [bus 00-ff]
+pci 0000:00:00.0: [16c3:abcd] type 01 class 0x060400
+pci 0000:00:00.0: reg 0x10: [mem 0x00000000-0x000fffff]
+pci 0000:00:00.0: reg 0x38: [mem 0x00000000-0x0000ffff pref]
+pci 0000:00:00.0: IOMMU is currently not supported for PCI
+pci 0000:00:00.0: supports D1
+pci 0000:00:00.0: PME# supported from D0 D1 D3hot D3cold
+PCI: bus0: Fast back to back transfers disabled
+dw_pcie_cfg_read(0xf0180000, 0x0, 0x4, =0x8878086)
+pci 0000:01:00.0: [8086:0887] type 00 class 0x028000
+dw_pcie_cfg_read(0xf0180000, 0x0, 0x4, =0x8878086)
+pci 0000:01:00.0: reg 0x10: [mem 0x00000000-0x00001fff 64bit]
+pci 0000:01:00.0: IOMMU is currently not supported for PCI
+pci 0000:01:00.0: PME# supported from D0 D3hot D3cold
+PCI: bus1: Fast back to back transfers disabled
+pci_bus 0000:01: busn_res: [bus 01-ff] end is updated to 01
+pci 0000:00:00.0: BAR 0: assigned [mem 0x01000000-0x010fffff]
+pci 0000:00:00.0: BAR 8: assigned [mem 0x01100000-0x011fffff]
+pci 0000:00:00.0: BAR 6: assigned [mem 0x01200000-0x0120ffff pref
+]
+pci 0000:01:00.0: BAR 0: assigned [mem 0x01100000-0x01101fff 64bi
+t]
+pci 0000:00:00.0: PCI bridge to [bus 01]
+pci 0000:00:00.0:bridge window [mem 0x01100000-0x011fffff]
+pcieport 0000:00:00.0: Signaling PME through PCIe PME interrupt
+pci 0000:01:00.0: Signaling PME through PCIe PME interrupt
+pcie_pme 0000:00:00.0:pcie01: service driver pcie_pme loaded
+----------------------------------------------------------------------------------
 
-(Mark Brown made it quite clear I shouldn't nag people about the origin
-of the various strings used in these module aliases. So I won't. But if
-you'd volunteer to explain me where "max6675" might come from for the
-spi alias that would, at least, satisfy my curiosity.)
+And then with your two patches:
+----------------------------------------------------------------------------------
+PCI host bridge /soc/pcie@0x01000000 ranges:
+No bus range found for /soc/pcie@0x01000000, using [bus 00-ff]
+err 0x01f00000..0x01f7ffff -> 0x01f00000
+IO 0x01f80000..0x01f8ffff -> 0x00000000
+MEM 0x01000000..0x01efffff -> 0x01000000
+imx6q-pcie 1ffc000.pcie: PCI host bridge to bus 0000:00
+pci_bus 0000:00: root bus resource [bus 00-ff]
+pci_bus 0000:00: root bus resource [??? 0x01f00000-0x01f7ffff fla
+gs 0x0]
+pci_bus 0000:00: root bus resource [io 0x0000-0xffff]
+pci_bus 0000:00: root bus resource [mem 0x01000000-0x01efffff]
+pci 0000:00:00.0: [16c3:abcd] type 01 class 0x060400
+pci 0000:00:00.0: reg 0x10: [mem 0x00000000-0x000fffff]
+pci 0000:00:00.0: reg 0x38: [mem 0x00000000-0x0000ffff pref]
+pci 0000:00:00.0: IOMMU is currently not supported for PCI
+pci 0000:00:00.0: supports D1
+pci 0000:00:00.0: PME# supported from D0 D1 D3hot D3cold
+PCI: bus0: Fast back to back transfers disabled
+dw_pcie_cfg_read(0xf0180000, 0x0, 0x4, =0x0)
+PCI: bus1: Fast back to back transfers enabled
+pci 0000:00:00.0: BAR 0: assigned [mem 0x01000000-0x010fffff]
+pci 0000:00:00.0: BAR 6: assigned [mem 0x01100000-0x0110ffff pref
+]
+pci 0000:00:00.0: PCI bridge to [bus 01]
+pcieport 0000:00:00.0: Signaling PME through PCIe PME interrupt
+pcie_pme 0000:00:00.0:pcie01: service driver pcie_pme loaded
+----------------------------------------------------------------------------------
 
-Thanks,
+Root-cause appears to be that the designware driver relies on ATU for
+config and IO accesses. dw_pcie_rd_other_conf() does the appropriate magic,
+but with your patches 'pp->cfg0_base' is NULL, despite being correctly
+initialised in dw_pcie_host_init().
+
+dw_pcie_host_init() initialises the pp->cfg* values correctly after its call:
+>  platform_get_resource_byname(pdev, IORESOURCE_MEM, "config");
+
+But the new code introduced by patch 2 then walks the whole resource_list
+and re-initialises the pp->cfg* values. The fault occurs at:
+> /* Find the untranslated configuration space address */
+> pp->cfg0_mod_base = win->__res.start
+
+where win->__res is uninitialised. The comment in linux/resource_ext.h says
+this is the 'default storage for res', so its not valid to assume it
+contains different values to win->res. (in this case, it contains no useful
+values).
+
+The workaround is to remove the re-initialisation of the pp->cfg* values,
+as they were already correctly initialised earlier. However, other resource
+types are accessing __res directly ... which is probably not correct.
+
+I need to read-up on what these 'untranslated' addresses are for...
 
 
-Paul Bolle
+
+James
+
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
