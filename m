@@ -1,55 +1,59 @@
-From: Matt Porter <mporter-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH 2/3] iio: temperature: add max6675 thermocouple converter
- driver
-Date: Tue, 4 Aug 2015 09:18:56 -0400
-Message-ID: <20150804131856.GM15004@beef>
-References: <1438635410-3757-1-git-send-email-mporter@konsulko.com>
- <1438635410-3757-3-git-send-email-mporter@konsulko.com>
- <1438680636.8734.45.camel@tiscali.nl>
+From: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v4 15/16] clk: shmobile: mstp: Consider "zb_clk" suitable
+ for power management
+Date: Tue, 4 Aug 2015 16:20:17 +0300
+Message-ID: <55C0BC11.3030509@cogentembedded.com>
+References: <1438691297-29235-1-git-send-email-geert+renesas@glider.be>
+ <1438691297-29235-16-git-send-email-geert+renesas@glider.be>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1438680636.8734.45.camel-IWqWACnzNjzz+pZb47iToQ@public.gmane.org>
+In-Reply-To: <1438691297-29235-16-git-send-email-geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Paul Bolle <pebolle-IWqWACnzNjzz+pZb47iToQ@public.gmane.org>
-Cc: Linux IIO List <linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Devicetree List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>, Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Laurent Pinchart <Laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, "Rafael J. Wysocki" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, Kevin Hilman <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Aug 04, 2015 at 11:30:36AM +0200, Paul Bolle wrote:
-> On ma, 2015-08-03 at 16:56 -0400, Matt Porter wrote:
-> > --- /dev/null
-> > +++ b/drivers/iio/temperature/max6675.c
-> > +static const struct spi_device_id max6675_spi_ids[] = {
-> > +	{"max6675", 0},
-> > +	{},
-> > +};
-> > +MODULE_DEVICE_TABLE(spi, max6675_spi_ids);
-> 
-> > +MODULE_ALIAS("spi:max6675");
-> 
-> For the "spi" alias this is "belt and suspenders":
->     modinfo ./max6675.ko | grep alias
->     alias:          spi:max6675
->     alias:          acpi*:MXIM6675:*
->     alias:          of:N*T*Cmaxim,max6675*
->     alias:          spi:max6675
-> 
-> I'd drop the MODULE_ALIAS().
+Hello.
 
-Ok, given that it generates a redundant alias I'll drop it.
+On 08/04/2015 03:28 PM, Geert Uytterhoeven wrote:
 
-> (Mark Brown made it quite clear I shouldn't nag people about the origin
-> of the various strings used in these module aliases. So I won't. But if
-> you'd volunteer to explain me where "max6675" might come from for the
-> spi alias that would, at least, satisfy my curiosity.)
+> Currently the CPG/MSTP Clock Domain code looks for MSTP clocks to power
+> manage a device.
 
-Sure, one might hotplug in an entire SPI master and this SPI slave device
-via any discoverable bus and need the alias to match the module. It's
-also typically used in a board file on embedded x86 stuff where overriding
-the DSDT is not desirable.
+> Unfortunately, on R-Mobile APE6 (r8a73a4) and SH-Mobile AG5 (sh73a0),
+> the Bus State Controller (BSC) is not power-managed by an MSTP clock,
+> but by a plain CPG clock (zb_clk).  Add a special case to handle this,
+> so the clock is properly managed, and devices connected to the BSC work
+> as expected.
 
--Matt
+> Signed-off-by: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+> Reviewed-by: Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+[...]
+
+> diff --git a/drivers/clk/shmobile/clk-mstp.c b/drivers/clk/shmobile/clk-mstp.c
+> index b1df7b2f1e970adb..a117c3f0f257b5e1 100644
+> --- a/drivers/clk/shmobile/clk-mstp.c
+> +++ b/drivers/clk/shmobile/clk-mstp.c
+> @@ -259,6 +259,10 @@ int cpg_mstp_attach_dev(struct generic_pm_domain *domain, struct device *dev)
+>   					    "renesas,cpg-mstp-clocks"))
+>   			goto found;
+>
+> +		/* BSC on r8a73a4/sh73a0 uses zb_clk instead of an mstp clock*/
+
+    Please add a space before */.
+
+> +		if (!strcmp(clkspec.np->name, "zb_clk"))
+> +			goto found;
+> +
+>   		of_node_put(clkspec.np);
+>   		i++;
+>   	}
+
+MBR, Sergei
+
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
