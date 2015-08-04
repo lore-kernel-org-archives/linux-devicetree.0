@@ -1,48 +1,73 @@
-From: Sjoerd Simons <sjoerd.simons-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>
-Subject: [PATCH v2 0/4] Add SPDIF support for rockchip
-Date: Tue,  4 Aug 2015 13:18:15 +0200
-Message-ID: <1438687099-14282-1-git-send-email-sjoerd.simons@collabora.co.uk>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: Jaroslav Kysela <perex-/Fr2/VpizcU@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Takashi Iwai <tiwai-IBi9RG/b67k@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+From: Sjoerd Simons <sjoerd.simons@collabora.co.uk>
+Subject: [PATCH v2 1/4] ASoC: dt-bindings: add rockchip tranceiver bindings
+Date: Tue,  4 Aug 2015 13:18:16 +0200
+Message-ID: <1438687099-14282-2-git-send-email-sjoerd.simons@collabora.co.uk>
+References: <1438687099-14282-1-git-send-email-sjoerd.simons@collabora.co.uk>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1438687099-14282-1-git-send-email-sjoerd.simons@collabora.co.uk>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-rockchip@lists.infradead.org
+Cc: devicetree@vger.kernel.org, Heiko Stuebner <heiko@sntech.de>, Kumar Gala <galak@codeaurora.org>, linux-kernel@vger.kernel.org, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-This patchset adds support for the Rockchip SPDIF transceiver as present
-on RK3066, RK3188 and RK3288 boards and enables it on a Radxa rock pro.
-Tested on a Radxa Rock Pro board.
+Add devicetree bindings for the spdif tranceiver found on
+found on rk3066, rk3188 and rk3288 SoCs
 
-Changes in v2:
-- Remove platform: module alias as it was unused
-- Call MODULE_DEVICE_TABLE(of, ) right after the of match table
-- use rk_spdif as a prefix consistenly throughout the driver
-- Check return code of regmap_update and bubble it up
-- Sort the spdif node properties
-- Drop the 0x prefix from the node name
-- Rename the spdif@ node to sound@
+Signed-off-by: Sjoerd Simons <sjoerd.simons@collabora.co.uk>
+---
 
-Sjoerd Simons (4):
-  ASoC: dt-bindings: add rockchip tranceiver bindings
-  ASoc: rockchip: Add rockchip SPDIF transceiver driver
-  ARM: dts: rockchip: Add SPDIF transceiver for RK3188
-  ARM: dts: rockchip: Add SPDIF optical out on Radxa Rock
+Changes in v2: None
 
- .../devicetree/bindings/sound/rockchip-spdif.txt   |  41 +++
- arch/arm/boot/dts/rk3188-radxarock.dts             |  19 +
- arch/arm/boot/dts/rk3188.dtsi                      |  22 ++
- sound/soc/rockchip/Kconfig                         |   8 +
- sound/soc/rockchip/Makefile                        |   2 +
- sound/soc/rockchip/rockchip_spdif.c                | 381 +++++++++++++++++++++
- sound/soc/rockchip/rockchip_spdif.h                |  63 ++++
- 7 files changed, 536 insertions(+)
+ .../devicetree/bindings/sound/rockchip-spdif.txt   | 41 ++++++++++++++++++++++
+ 1 file changed, 41 insertions(+)
  create mode 100644 Documentation/devicetree/bindings/sound/rockchip-spdif.txt
- create mode 100644 sound/soc/rockchip/rockchip_spdif.c
- create mode 100644 sound/soc/rockchip/rockchip_spdif.h
 
+diff --git a/Documentation/devicetree/bindings/sound/rockchip-spdif.txt b/Documentation/devicetree/bindings/sound/rockchip-spdif.txt
+new file mode 100644
+index 0000000..2da8a09
+--- /dev/null
++++ b/Documentation/devicetree/bindings/sound/rockchip-spdif.txt
+@@ -0,0 +1,41 @@
++* Rockchip SPDIF transceiver
++
++The S/PDIF audio block is a stereo transceiver that allows the
++processor to receive and transmit digital audio via an coaxial cable or
++a fibre cable.
++
++Required properties:
++
++- compatible: should be one of the following:
++   - "rockchip,rk3066-spdif": for rk3066
++   - "rockchip,rk3188-spdif", "rockchip,rk3066-spdif": for rk3188
++   - "rockchip,rk3288-spdif", "rockchip,rk3066-spdif": for rk3288
++- reg: physical base address of the controller and length of memory mapped
++  region.
++- interrupts: should contain the SPDIF interrupt.
++- #address-cells: should be 1.
++- #size-cells: should be 0.
++- dmas: DMA specifiers for tx dma. See the DMA client binding,
++  Documentation/devicetree/bindings/dma/dma.txt
++- dma-names: should be "tx"
++- clocks: a list of phandle + clock-specifier pairs, one for each entry
++  in clock-names.
++- clock-names: should contain following:
++   - "spdif_hclk": clock for SPPIF controller
++   - "spdif_clk" : clock for SPDIF bus
++
++Example for the rk3188 SPDIF controller:
++
++spdif: spdif@0x1011e000 {
++	compatible = "rockchip,rk3188-spdif", "rockchip,rk3066-spdif";
++	reg = <0x1011e000 0x2000>;
++	interrupts = <GIC_SPI 32 IRQ_TYPE_LEVEL_HIGH>;
++	#address-cells = <1>;
++	#size-cells = <0>;
++	dmas = <&dmac1_s 8>;
++	dma-names = "tx";
++	clock-names = "spdif_hclk", "spdif_clk";
++	clocks = <&cru HCLK_SPDIF>, <&cru SCLK_SPDIF>;
++	status = "disabled";
++	#sound-dai-cells = <0>;
++};
 -- 
 2.5.0
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
