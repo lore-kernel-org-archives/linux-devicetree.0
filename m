@@ -1,65 +1,39 @@
-From: Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
-Subject: Re: [PATCH] irqchip: bcm2836: Use a CPU notifier enable IPIs.
-Date: Mon, 03 Aug 2015 16:23:09 -0700
-Message-ID: <87fv40lzxe.fsf@eliezer.anholt.net>
-References: <55B67C81.1010900@gmail.com> <1438027789-1637-1-git-send-email-eric@anholt.net> <alpine.DEB.2.11.1508021221370.3825@nanos>
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH v3] ARM: shmobile: silk: initial device tree
+Date: Tue, 4 Aug 2015 09:53:41 +0900
+Message-ID: <20150804005341.GB16257@verge.net.au>
+References: <201404250239.39150.sergei.shtylyov@cogentembedded.com>
+ <2360526.88foRQAOiM@wasted.cogentembedded.com>
+ <CAMuHMdWT=nzsFuM-vfe5GoAtDE-AtW4LAZoEnBGGVZm54-mAzg@mail.gmail.com>
+ <55BF8522.1010906@cogentembedded.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; boundary="=-=-=";
-	micalg=pgp-sha512; protocol="application/pgp-signature"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <alpine.DEB.2.11.1508021221370.3825@nanos>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Lee Jones <lee-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-sh-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <55BF8522.1010906@cogentembedded.com>
+Sender: linux-sh-owner@vger.kernel.org
+To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Cc: Geert Uytterhoeven <geert@linux-m68k.org>, Linux-sh list <linux-sh@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Magnus Damm <magnus.damm@gmail.com>, Russell King <linux@arm.linux.org.uk>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
---=-=-=
-Content-Type: text/plain
+On Mon, Aug 03, 2015 at 06:13:38PM +0300, Sergei Shtylyov wrote:
+> Hello.
+> 
+> On 08/03/2015 04:00 PM, Geert Uytterhoeven wrote:
+> 
+> >>--- /dev/null
+> >>+++ renesas/arch/arm/boot/dts/r8a7794-silk.dts
+> >>@@ -0,0 +1,51 @@
+> 
+> >>+/ {
+> >>+       model = "SILK";
+> >>+       compatible = "renesas,silk", "renesas,r8a7794";
+> 
+> >WARNING: DT compatible string "renesas,silk" appears un-documented --
+> >check ./Documentation/devicetree/bindings/
+> 
+> >Do you plan to update Documentation/devicetree/bindings/arm/shmobile.txt?
+> 
+>    No, I had no idea I should record the board names somewhere too...
 
-Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org> writes:
-
-> On Mon, 27 Jul 2015, Eric Anholt wrote:
->> +/* Unmasks the IPI on the CPU wen it's first brought online. */
->
-> when
->
->> +static int bcm2836_arm_irqchip_cpu_notify(struct notifier_block *nfb,
->> +					  unsigned long action, void *hcpu)
->> +{
->> +	unsigned int cpu = (unsigned long)hcpu;
->> +	unsigned int int_reg = LOCAL_MAILBOX_INT_CONTROL0;
->> +	unsigned int mailbox = 0;
->> +
->> +	if (action == CPU_STARTING || action == CPU_STARTING_FROZEN)
->> +		bcm2836_arm_irqchip_unmask_per_cpu_irq(int_reg, mailbox, cpu);
->
-> Shouldn't you mask the irq on CPU_DYING?
-
-I was just following what other drivers were doing.  Is CPU_DYING the
-only thing that needs masking?
-
---=-=-=
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBCgAGBQJVv/fdAAoJELXWKTbR/J7ot0gQAJVkpyhpccywQim/rVT8BW7y
-ytOoeQ4Q6PklD44HR4ceSNIK4RxR9qYTaQonIvhhyFPc9OI4j63qRsSuZyXc06aR
-VYCi0a9mNCAn99rfegyeT970bEeNBkUqahn34i4Dc6E9vpOi7UKzCfe2Q5R08R1v
-GaVmGY/GwGrXE5k6z+dh837TjfPs25IKYJqgidT/Cy9LjWrPRCN7XMcvhgaAJyBT
-FC0uK/myGXJQjN5SlXzMzQuHlrr5fLoyQJwezCLiurQgwjlXgh2Rek1eiYSil+wN
-vj2SNk9eKU54wDcYOxzJpnzhCtUMUg43/bADeufymY0PFFc1KevS9OrZMLfNBU8x
-cjIuXrS1DHa6MXSc0XZkfvaNzpa/0N2XdrebOidbOg+s3C92/PcU6L8RRr5BR0zY
-Q8x3tl6wNm9UDQvvzgw96nlM/3YRXiITz1ct09rQgFBJk318avJObLaBvzJwVMzd
-bJ+8LQrR6VOTsk4BT8Gz/at57ieRErB6d/+9GHQoyJa6Ib5fC6H5zi2v6h6ZsAkP
-ZI8XRfEtEIb26G1OvZc+P3+G4YYcu80vaYrPFVzQ03MRoBNl/SqCv8SVMKa/HMi4
-ODwd7JAqw17L0Tv3IHqhf1ngUXDqR7G5C3xPW2HxOl4oX4xkcbVyFYeJhllTV2+0
-RkDCD6VjFbxoDbDeWF2Z
-=bChi
------END PGP SIGNATURE-----
---=-=-=--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Sergei, please submit a parch as suggested by Geert.
