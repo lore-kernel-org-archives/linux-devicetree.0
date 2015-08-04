@@ -1,19 +1,45 @@
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH v4 00/16] ARM: shmobile: Add CPG/MSTP Clock Domain
-Date: Tue, 4 Aug 2015 22:48:28 +0900
-Message-ID: <20150804134824.GA10194@verge.net.au>
-References: <1438691297-29235-1-git-send-email-geert+renesas@glider.be>
+From: Liberman Igal <Igal.Liberman-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: RE: [v3,1/2] powerpc/mpc85xx: Create dts components for the FSL QorIQ
+ DPAA FMan
+Date: Tue, 4 Aug 2015 13:52:14 +0000
+Message-ID: <DM2PR03MB509851209BA3F1CB941E30CE6760@DM2PR03MB509.namprd03.prod.outlook.com>
+References: <1438584241-10460-1-git-send-email-igal.liberman@freescale.com>
+ <1438664426.2097.75.camel@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-sh-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1438691297-29235-1-git-send-email-geert+renesas@glider.be>
-Sender: linux-sh-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert+renesas@glider.be>
-Cc: Magnus Damm <magnus.damm@gmail.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Kevin Hilman <khilman@kernel.org>, Ulf Hansson <ulf.hansson@linaro.org>, linux-clk@vger.kernel.org, linux-pm@vger.kernel.org, linux-sh@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1438664426.2097.75.camel-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Madalin-Cristian Bucur <madalin.bucur-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Thanks Geert,
-
-I have tentatively queued this up in its own branch,
-cpg-mstp-clock-domain-for-v4.3.
+DQoNClJlZ2FyZHMsDQpJZ2FsIExpYmVybWFuDQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0t
+LS0NCj4gRnJvbTogV29vZCBTY290dC1CMDc0MjENCj4gU2VudDogVHVlc2RheSwgQXVndXN0IDA0
+LCAyMDE1IDg6MDAgQU0NCj4gVG86IExpYmVybWFuIElnYWwtQjMxOTUwIDxJZ2FsLkxpYmVybWFu
+QGZyZWVzY2FsZS5jb20+DQo+IENjOiBkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZzsgbGludXhw
+cGMtZGV2QGxpc3RzLm96bGFicy5vcmc7IEJ1Y3VyDQo+IE1hZGFsaW4tQ3Jpc3RpYW4tQjMyNzE2
+IDxtYWRhbGluLmJ1Y3VyQGZyZWVzY2FsZS5jb20+OyBsaW51eC0NCj4ga2VybmVsQHZnZXIua2Vy
+bmVsLm9yZw0KPiBTdWJqZWN0OiBSZTogW3YzLDEvMl0gcG93ZXJwYy9tcGM4NXh4OiBDcmVhdGUg
+ZHRzIGNvbXBvbmVudHMgZm9yIHRoZSBGU0wNCj4gUW9ySVEgRFBBQSBGTWFuDQo+IA0KPiBbUmVz
+ZW5kaW5nIGFmdGVyIGJvZ29maWx0ZXIgYWRqdXN0bWVudCBvbiB2Z2VyLmtlcm5lbC5vcmddDQo+
+IA0KPiBPbiBNb24sIEF1ZyAwMywgMjAxNSBhdCAwOTo0NDowMUFNICswMzAwLCBJZ2FsLkxpYmVy
+bWFuIHdyb3RlOg0KPiA+ICsgICAgIHhtZGlvMDogIG1kaW9AZjEwMDB7DQo+ID4gKyAgICAgICAg
+ICAgICAjYWRkcmVzcy1jZWxscyA9IDwxPjsNCj4gPiArICAgICAgICAgICAgICNzaXplLWNlbGxz
+ID0gPDA+Ow0KPiA+ICsgICAgICAgICAgICAgY29tcGF0aWJsZSA9ICJmc2wsZm1hbi14bWRpbyI7
+DQo+ID4gKyAgICAgICAgICAgICByZWcgPSA8MHhmMTAwMCAweDEwMDA+Ow0KPiA+ICsgICAgICAg
+ICAgICAgaW50ZXJydXB0cyA9IDwxMDEgMSAwIDA+Ow0KPiA+ICsgICAgIH07DQo+IA0KPiBXaHkg
+aXMgdGhpcyA8MTAxIDEgMCAwPiBhbmQgbm90IDwxMDEgMiAwIDA+PyAgSW50ZXJuYWwgaW50ZXJy
+dXB0cyBhcmUgYWN0aXZlLQ0KPiBoaWdoLg0KPiANCg0KT0ssIEknbGwgZml4IHRoaXMgaXNzdWUu
+IFRoYW5rcy4NCklnYWwuDQoNCj4gPiArICAgICBtZGlvMDogIG1kaW9AZTExMjB7DQo+ID4gKyAg
+ICAgICAgICAgICAjYWRkcmVzcy1jZWxscyA9IDwxPjsNCj4gPiArICAgICAgICAgICAgICNzaXpl
+LWNlbGxzID0gPDA+Ow0KPiA+ICsgICAgICAgICAgICAgY29tcGF0aWJsZSA9ICJmc2wsZm1hbi1t
+ZGlvIjsNCj4gPiArICAgICAgICAgICAgIHJlZyA9IDwweGUxMTIwIDB4ZWUwPjsNCj4gPiArICAg
+ICAgICAgICAgIGludGVycnVwdHMgPSA8MTAwIDEgMCAwPjsNCj4gDQo+IExpa2V3aXNlLg0KPiAN
+Cj4gLVNjb3R0DQo=
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
