@@ -1,38 +1,51 @@
-From: "Timo Sigurdsson" <public_timo.s-fWgRPtSzPNU3WX+qO2AYSQ@public.gmane.org>
-Subject: Re: [PATCH v2] ARM: dts: sunxi: Add regulators for
- LeMaker BananaPi
-Date: Tue,  4 Aug 2015 11:02:24 +0200 (CEST)
-Message-ID: <20150804090224.4B5676C83963@dd34104.kasserver.com>
-References: <1438532305-5884-1-git-send-email-public_timo.s@silentcreek.de><20150803094723.GD2564@lukather>
-Reply-To: public_timo.s-fWgRPtSzPNU3WX+qO2AYSQ@public.gmane.org
+From: Paul Bolle <pebolle-IWqWACnzNjzz+pZb47iToQ@public.gmane.org>
+Subject: Re: [RFC PATCH 2/3] mailbox: Hisilicon: add mailbox driver
+Date: Tue, 04 Aug 2015 11:17:39 +0200
+Message-ID: <1438679859.8734.35.camel@tiscali.nl>
+References: <1438564390-28111-1-git-send-email-leo.yan@linaro.org>
+	 <1438564390-28111-3-git-send-email-leo.yan@linaro.org>
+	 <1438677024.8734.24.camel@tiscali.nl> <20150804084930.GA27609@leoy-linaro>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBCSJLSE35MGBBIP7QGXAKGQEZQSKQDQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <20150803094723.GD2564@lukather>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <http://groups.google.com/group/linux-sunxi/subscribe>
-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20150804084930.GA27609@leoy-linaro>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Leo Yan <leo.yan-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Wei Xu <xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Bintian Wang <bintian.wang-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, Haojian Zhuang <haojian.zhuang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Guodong Xu <guodong.xu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Jian Zhang <zhangjian001-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Zhenwei Wang <Zhenwei.wang-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Haoju Mo <mohaoju-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Dan Zhao <dan.zhao-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, kongfei-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, Guangyue Zeng <zengguangyue-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Maxime,
+On di, 2015-08-04 at 16:49 +0800, Leo Yan wrote:
+> On Tue, Aug 04, 2015 at 10:30:24AM +0200, Paul Bolle wrote:
+> > On ma, 2015-08-03 at 09:13 +0800, Leo Yan wrote:
+> > > --- /dev/null
+> > > +++ b/drivers/mailbox/hisilicon/Kconfig
+> > 
+> > > +config HISI_MBOX
+> > > +	bool "Hisilicon's Mailbox"
+> > > +	depends on ARCH_HISI || OF
+> > 
+> > ARCH_HISI is available on either ARM64 or ARM. ARM64 selects OF. On ARM
+> > ARCH_HISI depends on ARCH_MULTIV7 which depends on ARCH_MULTIPLATFORM.
+> > That selects USE_OF which on its turn selects OF.
+> > 
+> > So, HISI_MBOX implies OF, correct?
+> 
+> Exactly, will simply use "depends on ARCH_HISI".
 
-Maxime Ripard schrieb am 03.08.2015 11:47:
-> What regulator provides the 3.3V regulator used in the rest of this DT
-> then (MMC, GMAC) ?
+That change would alter the dependencies. My remark was made just to
+make clear why I think CONFIG_OF will always be defined. But now I guess
+you actually meant
+	depends on ARCH_HISI && OF
 
-For GMAC, there is a reg_gmac_3v3 defined in sun7i-a20-bananapi.dts [1].
-MMC uses reg_vcc3v3 included from sunxi-common-regulators.dtsi. Am I
-missing something? Is this not sufficient?
-
+And that would, I think, indeed be equivalent to
+	depends on ARCH_HISI
 
 Thanks,
 
-Timo
 
-[1] https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git/tree/arch/arm/boot/dts/sun7i-a20-bananapi.dts?id=v4.2-rc5#n78
+Paul Bolle
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
