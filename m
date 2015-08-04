@@ -1,75 +1,50 @@
-From: Daniel Lezcano <daniel.lezcano@linaro.org>
-Subject: Re: [PATCH v4 1/7] clocksource: mips-gic: Enable the clock before
- using it
-Date: Tue, 04 Aug 2015 11:23:59 +0200
-Message-ID: <55C084AF.7060606@linaro.org>
-References: <1438005618-27003-1-git-send-email-govindraj.raja@imgtec.com> <1438005618-27003-2-git-send-email-govindraj.raja@imgtec.com>
+From: Paul Bolle <pebolle-IWqWACnzNjzz+pZb47iToQ@public.gmane.org>
+Subject: Re: [PATCH 2/3] iio: temperature: add max6675 thermocouple
+ converter driver
+Date: Tue, 04 Aug 2015 11:30:36 +0200
+Message-ID: <1438680636.8734.45.camel@tiscali.nl>
+References: <1438635410-3757-1-git-send-email-mporter@konsulko.com>
+	 <1438635410-3757-3-git-send-email-mporter@konsulko.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
-        format=flowed
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-mips-bounce@linux-mips.org>
-In-Reply-To: <1438005618-27003-2-git-send-email-govindraj.raja@imgtec.com>
-Sender: linux-mips-bounce@linux-mips.org
-Errors-to: linux-mips-bounce@linux-mips.org
-List-help: <mailto:ecartis@linux-mips.org?Subject=help>
-List-unsubscribe: <mailto:ecartis@linux-mips.org?subject=unsubscribe%20linux-mips>
-List-software: Ecartis version 1.0.0
-List-subscribe: <mailto:ecartis@linux-mips.org?subject=subscribe%20linux-mips>
-List-owner: <mailto:ralf@linux-mips.org>
-List-post: <mailto:linux-mips@linux-mips.org>
-List-archive: <http://www.linux-mips.org/archives/linux-mips/>
-To: Govindraj Raja <govindraj.raja@imgtec.com>, linux-kernel@vger.kernel.org, linux-mips@linux-mips.org, devicetree@vger.kernel.org
-Cc: Thomas Gleixner <tglx@linutronix.de>, Andrew Bresticker <abrestic@chromium.org>, James Hartley <James.Hartley@imgtec.com>, Damien Horsley <Damien.Horsley@imgtec.com>, James Hogan <James.Hogan@imgtec.com>, Ezequiel Garcia <ezequiel@vanguardiasur.com.ar>, Ezequiel Garcia <ezequiel.garcia@imgtec.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1438635410-3757-3-git-send-email-mporter-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Matt Porter <mporter-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
+Cc: Linux IIO List <linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Devicetree List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 07/27/2015 04:00 PM, Govindraj Raja wrote:
-> From: Ezequiel Garcia <ezequiel.garcia@imgtec.com>
->
-> For the clock to be used (e.g. get its rate through clk_get_rate)
-> it should be prepared and enabled first.
->
-> Also, while the clock is enabled the driver must hold a reference to =
-it,
-> so let's remove the call to clk_put.
->
-> Reviewed-by: Andrew Bresticker <abrestic@chromium.org>
-> Signed-off-by: Ezequiel Garcia <ezequiel.garcia@imgtec.com>
+On ma, 2015-08-03 at 16:56 -0400, Matt Porter wrote:
+> --- /dev/null
+> +++ b/drivers/iio/temperature/max6675.c
+> +static const struct spi_device_id max6675_spi_ids[] = {
+> +	{"max6675", 0},
+> +	{},
+> +};
+> +MODULE_DEVICE_TABLE(spi, max6675_spi_ids);
 
-Acked-by: Daniel Lezcano <daniel.lezcano@linaro.org>
+> +MODULE_ALIAS("spi:max6675");
 
-> ---
->   drivers/clocksource/mips-gic-timer.c | 7 ++++++-
->   1 file changed, 6 insertions(+), 1 deletion(-)
->
-> diff --git a/drivers/clocksource/mips-gic-timer.c b/drivers/clocksour=
-ce/mips-gic-timer.c
-> index b81ed1a..913585d 100644
-> --- a/drivers/clocksource/mips-gic-timer.c
-> +++ b/drivers/clocksource/mips-gic-timer.c
-> @@ -158,8 +158,13 @@ static void __init gic_clocksource_of_init(struc=
-t device_node *node)
->
->   	clk =3D of_clk_get(node, 0);
->   	if (!IS_ERR(clk)) {
-> +		if (clk_prepare_enable(clk) < 0) {
-> +			pr_err("GIC failed to enable clock\n");
-> +			clk_put(clk);
-> +			return;
-> +		}
-> +
->   		gic_frequency =3D clk_get_rate(clk);
-> -		clk_put(clk);
->   	} else if (of_property_read_u32(node, "clock-frequency",
->   					&gic_frequency)) {
->   		pr_err("GIC frequency not specified.\n");
->
+For the "spi" alias this is "belt and suspenders":
+    modinfo ./max6675.ko | grep alias
+    alias:          spi:max6675
+    alias:          acpi*:MXIM6675:*
+    alias:          of:N*T*Cmaxim,max6675*
+    alias:          spi:max6675
+
+I'd drop the MODULE_ALIAS().
+
+(Mark Brown made it quite clear I shouldn't nag people about the origin
+of the various strings used in these module aliases. So I won't. But if
+you'd volunteer to explain me where "max6675" might come from for the
+spi alias that would, at least, satisfy my curiosity.)
+
+Thanks,
 
 
---=20
-  <http://www.linaro.org/> Linaro.org =E2=94=82 Open source software fo=
-r ARM SoCs
-
-=46ollow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
+Paul Bolle
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
