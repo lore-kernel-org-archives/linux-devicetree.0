@@ -1,41 +1,111 @@
-From: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: Re: [PATCH 3/3] MIPS: ath79: Add the reset controller to the AR9132
- dtsi
-Date: Tue, 04 Aug 2015 10:47:57 +0200
-Message-ID: <1438678077.3793.25.camel@pengutronix.de>
-References: <1438622633-9407-1-git-send-email-albeu@free.fr>
-	 <1438622633-9407-4-git-send-email-albeu@free.fr>
-	 <20150803182336.GH2843@linux-mips.org>
+From: Leo Yan <leo.yan-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [RFC PATCH 2/3] mailbox: Hisilicon: add mailbox driver
+Date: Tue, 4 Aug 2015 16:49:30 +0800
+Message-ID: <20150804084930.GA27609@leoy-linaro>
+References: <1438564390-28111-1-git-send-email-leo.yan@linaro.org>
+ <1438564390-28111-3-git-send-email-leo.yan@linaro.org>
+ <1438677024.8734.24.camel@tiscali.nl>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20150803182336.GH2843-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1438677024.8734.24.camel-IWqWACnzNjzz+pZb47iToQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>
-Cc: Alban Bedel <albeu-GANU6spQydw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org
+To: Paul Bolle <pebolle-IWqWACnzNjzz+pZb47iToQ@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Wei Xu <xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Bintian Wang <bintian.wang-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, Haojian Zhuang <haojian.zhuang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Guodong Xu <guodong.xu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Jian Zhang <zhangjian001-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Zhenwei Wang <Zhenwei.wang-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Haoju Mo <mohaoju-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Dan Zhao <dan.zhao-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, kongfei-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, Guangyue Zeng <zengguangyue-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Am Montag, den 03.08.2015, 20:23 +0200 schrieb Ralf Baechle:
-> On Mon, Aug 03, 2015 at 07:23:53PM +0200, Alban Bedel wrote:
-> 
-> Acked-by: Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>t
-> 
-> Philipp,
-> 
-> Feel free to take this through the reset tree.  Or I can carry this in
-> the MIPS tree which is probably better for testing.  Just lemme know.
-> 
->   Ralf
+Hi Paul,
 
-How about I put this on a branch for you to pull? That way I can already
-resolve the (trivial) merge conflict in drivers/reset/Makefile
+On Tue, Aug 04, 2015 at 10:30:24AM +0200, Paul Bolle wrote:
+> (This RFC was part of this mornings catch of my crude mail filter. So,
+> for what it's worth, what follows are a few random comments for the few
+> things I'm able to spot.)
+> 
+> On ma, 2015-08-03 at 09:13 +0800, Leo Yan wrote:
+> > --- /dev/null
+> > +++ b/drivers/mailbox/hisilicon/Kconfig
+> 
+> > +config HISI_MBOX
+> > +	bool "Hisilicon's Mailbox"
+> > +	depends on ARCH_HISI || OF
+> 
+> ARCH_HISI is available on either ARM64 or ARM. ARM64 selects OF. On ARM
+> ARCH_HISI depends on ARCH_MULTIV7 which depends on ARCH_MULTIPLATFORM.
+> That selects USE_OF which on its turn selects OF.
+> 
+> So, HISI_MBOX implies OF, correct?
 
-    git://git.pengutronix.de/git/pza/linux.git reset/ath79
+Exactly, will simply use "depends on ARCH_HISI".
 
-regards
-Philipp
+> > +	help
+> > +	  Support for mailbox drivers on Hisilicon series of SoCs.
+> > +
+> > +config HI6220_MBOX
+> > +	tristate "Hi6220 Mailbox Controller"
+> > +	depends on HISI_MBOX
+> > +	help
+> > +	  An implementation of the hi6220 mailbox. It is used to send message
+> > +	  between application processors and MCU. Say Y here if you want to build
+> > +	  the Hi6220 mailbox controller driver.
+> 
+> > --- /dev/null
+> > +++ b/drivers/mailbox/hisilicon/common.c
+> 
+> > +int hisi_mbox_register(struct hisi_mbox_hw *mbox_hw)
+> > +{
+> > +	[...]
+> > +
+> > +	mbox->chan = devm_kzalloc(dev,
+> > +		mbox_hw->chan_num * sizeof(struct mbox_chan), GFP_KERNEL);
+> > +	if (!mbox)
+> 
+> 	if (!mbox->chan)
 
+Will fix.
+
+> > +		return -ENOMEM;
+> > +
+> > +	[...]
+> > +}
+> 
+> > --- /dev/null
+> > +++ b/drivers/mailbox/hisilicon/hi6220-mailbox.c
+> 
+> > +static struct platform_driver hi6220_mbox_driver = {
+> > +	.driver = {
+> > +		[...]
+> > +		.of_match_table = of_match_ptr(hi6220_mbox_of_match),
+> 
+> of_match_ptr(x) becomes NULL when CONFIG_OF is not defined. But I think
+> CONFIG_OF will always be defined, see above. So of_match_ptr() isn't per
+> se needed.
+
+Will fix.
+
+> > +	},
+> > +	[...]
+> > +};
+> 
+> > +static int __init hi6220_mbox_init(void)
+> > +{
+> > +	return platform_driver_register(&hi6220_mbox_driver);
+> > +}
+> > +module_init(hi6220_mbox_init);
+> > +
+> > +static void __exit hi6220_mbox_exit(void)
+> > +{
+> > +	platform_driver_unregister(&hi6220_mbox_driver);
+> > +}
+> > +module_exit(hi6220_mbox_exit);
+> 
+> This could be flattened into one line:
+>     module_platform_driver(hi6220_mbox_driver);
+
+Will refine. And thanks a lot for your review.
+
+Thanks,
+Leo Yan
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
