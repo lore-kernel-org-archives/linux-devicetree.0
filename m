@@ -1,70 +1,54 @@
-From: Daniel Lezcano <daniel.lezcano@linaro.org>
-Subject: Re: [PATCH v4 0/7] Clocksource changes for Pistachio CPUFreq.
-Date: Tue, 04 Aug 2015 11:48:35 +0200
-Message-ID: <55C08A73.60505@linaro.org>
-References: <1438005618-27003-1-git-send-email-govindraj.raja@imgtec.com> <20150728095128.GA23771@linux-mips.org>
+From: Leo Yan <leo.yan-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [RFC PATCH 2/3] mailbox: Hisilicon: add mailbox driver
+Date: Tue, 4 Aug 2015 17:56:26 +0800
+Message-ID: <20150804095626.GC27609@leoy-linaro>
+References: <1438564390-28111-1-git-send-email-leo.yan@linaro.org>
+ <1438564390-28111-3-git-send-email-leo.yan@linaro.org>
+ <1438677024.8734.24.camel@tiscali.nl>
+ <20150804084930.GA27609@leoy-linaro>
+ <1438679859.8734.35.camel@tiscali.nl>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
-	format=flowed
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20150728095128.GA23771@linux-mips.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Ralf Baechle <ralf@linux-mips.org>
-Cc: Govindraj Raja <govindraj.raja@imgtec.com>, linux-kernel@vger.kernel.org, linux-mips@linux-mips.org, devicetree@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>, Andrew Bresticker <abrestic@chromium.org>, James Hartley <James.Hartley@imgtec.com>, Damien Horsley <Damien.Horsley@imgtec.com>, James Hogan <James.Hogan@imgtec.com>, Ezequiel Garcia <ezequiel@vanguardiasur.com.ar>, Ezequiel Garcia <ezequiel.garcia@imgtec.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1438679859.8734.35.camel-IWqWACnzNjzz+pZb47iToQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Paul Bolle <pebolle-IWqWACnzNjzz+pZb47iToQ@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Wei Xu <xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Bintian Wang <bintian.wang-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, Haojian Zhuang <haojian.zhuang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Guodong Xu <guodong.xu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Jian Zhang <zhangjian001-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Zhenwei Wang <Zhenwei.wang-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Haoju Mo <mohaoju-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Dan Zhao <dan.zhao-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, kongfei-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, Guangyue Zeng <zengguangyue-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 07/28/2015 11:51 AM, Ralf Baechle wrote:
-> Daniel,
->
-> On Mon, Jul 27, 2015 at 03:00:11PM +0100, Govindraj Raja wrote:
->
->> From: Ezequiel Garcia <ezequiel.garcia@imgtec.com>
->>
->> The purpose of this patchset is to support CPUFreq on Pistachio SoC.
->> However, given Pistachio uses the MIPS GIC clocksource and clockeven=
-t drivers
->> (clocked from the CPU), adding CPUFreq support needs some work.
->>
->> This patchset changes the MIPS GIC clockevent driver to update the f=
-requency of
->> the per-cpu clockevents using a clock notifier.
->>
->> Then, we add a clocksource driver for IMG Pistachio SoC, based on th=
-e
->> general purpose timers. The SoC only provides four timers, so we can=
-'t
->> use them to implement the four clockevents and the clocksource.
->>
->> However, we can use one of these timers to provide a clocksource and=
- a
->> sched clock. Given the general purpose timers are clocked from the p=
-eripheral
->> system clock tree, they are not affected by CPU rate changes.
->>
->> Patches 1 to 3 are just style cleaning and preparation work.
->> Patch 4 adds the clockevent frequency update.
->> Patches 5 and 6 add the new clocksource driver.
->> Patch 7 introduces an option to enable the timer based clocksource o=
-n Pistachio.
->
-> if you're happy with this series feel free to add my ack to patch 7/7
-> which is the only one that touches arch/mips.
->
-> Alternatively I can carry this in the MIPS tree which would have tbe
-> benefit of better testing.
+On Tue, Aug 04, 2015 at 11:17:39AM +0200, Paul Bolle wrote:
+> On di, 2015-08-04 at 16:49 +0800, Leo Yan wrote:
+> > On Tue, Aug 04, 2015 at 10:30:24AM +0200, Paul Bolle wrote:
+> > > On ma, 2015-08-03 at 09:13 +0800, Leo Yan wrote:
+> > > > --- /dev/null
+> > > > +++ b/drivers/mailbox/hisilicon/Kconfig
+> > > 
+> > > > +config HISI_MBOX
+> > > > +	bool "Hisilicon's Mailbox"
+> > > > +	depends on ARCH_HISI || OF
+> > > 
+> > > ARCH_HISI is available on either ARM64 or ARM. ARM64 selects OF. On ARM
+> > > ARCH_HISI depends on ARCH_MULTIV7 which depends on ARCH_MULTIPLATFORM.
+> > > That selects USE_OF which on its turn selects OF.
+> > > 
+> > > So, HISI_MBOX implies OF, correct?
+> > 
+> > Exactly, will simply use "depends on ARCH_HISI".
+> 
+> That change would alter the dependencies. My remark was made just to
+> make clear why I think CONFIG_OF will always be defined. But now I guess
+> you actually meant
+> 	depends on ARCH_HISI && OF
 
-Ok, go ahead.
+Correct, shame for my wrong logic :)
 
-=46or the series 1-4: Acked-by: Daniel Lezcano <daniel.lezcano@linaro.o=
-rg>
+> And that would, I think, indeed be equivalent to
+> 	depends on ARCH_HISI
 
-
-
---=20
-  <http://www.linaro.org/> Linaro.org =E2=94=82 Open source software fo=
-r ARM SoCs
-
-=46ollow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
+Thanks,
+Leo Yan
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
