@@ -1,511 +1,361 @@
-From: Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
-Subject: [PATCH 3/3] ARM: dts: UniPhier: add ProXstream2 and PH1-LD6b SoC/board support
-Date: Tue,  4 Aug 2015 20:21:04 +0900
-Message-ID: <1438687264-26538-4-git-send-email-yamada.masahiro@socionext.com>
-References: <1438687264-26538-1-git-send-email-yamada.masahiro@socionext.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1438687264-26538-1-git-send-email-yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
-Cc: Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+From: Ezequiel Garcia <ezequiel@vanguardiasur.com.ar>
+Subject: Re: [PATCH v4 6/7] clocksource: Add Pistachio clocksource-only driver
+Date: Tue, 4 Aug 2015 08:37:04 -0300
+Message-ID: <CAAEAJfD1ZKCVJUv9w5Yq+hpY62pEHTbZ57t2XyUGBOgj6H8zqA@mail.gmail.com>
+References: <1438005755-27051-1-git-send-email-govindraj.raja@imgtec.com>
+        <1438005755-27051-2-git-send-email-govindraj.raja@imgtec.com>
+        <55C08425.503@linaro.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-mips-bounce@linux-mips.org>
+In-Reply-To: <55C08425.503@linaro.org>
+Sender: linux-mips-bounce@linux-mips.org
+Errors-to: linux-mips-bounce@linux-mips.org
+List-help: <mailto:ecartis@linux-mips.org?Subject=help>
+List-unsubscribe: <mailto:ecartis@linux-mips.org?subject=unsubscribe%20linux-mips>
+List-software: Ecartis version 1.0.0
+List-subscribe: <mailto:ecartis@linux-mips.org?subject=subscribe%20linux-mips>
+List-owner: <mailto:ralf@linux-mips.org>
+List-post: <mailto:linux-mips@linux-mips.org>
+List-archive: <http://www.linux-mips.org/archives/linux-mips/>
+To: Daniel Lezcano <daniel.lezcano@linaro.org>
+Cc: Govindraj Raja <govindraj.raja@imgtec.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-mips@linux-mips.org, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Andrew Bresticker <abrestic@chromium.org>, James Hartley <James.Hartley@imgtec.com>, Damien Horsley <Damien.Horsley@imgtec.com>, James Hogan <James.Hogan@imgtec.com>, Ezequiel Garcia <ezequiel.garcia@imgtec.com>
 List-Id: devicetree@vger.kernel.org
 
-Initial version of DTSI for ProXstream2 and PH1-LD6b and DTS for
-PH1-LD6b reference board.
+Hi Daniel,
 
-Signed-off-by: Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
----
+Thanks for the review!
 
- arch/arm/boot/dts/Makefile                  |   3 +-
- arch/arm/boot/dts/uniphier-ph1-ld6b-ref.dts | 105 +++++++++++
- arch/arm/boot/dts/uniphier-ph1-ld6b.dtsi    |  67 +++++++
- arch/arm/boot/dts/uniphier-proxstream2.dtsi | 273 ++++++++++++++++++++++++++++
- 4 files changed, 447 insertions(+), 1 deletion(-)
- create mode 100644 arch/arm/boot/dts/uniphier-ph1-ld6b-ref.dts
- create mode 100644 arch/arm/boot/dts/uniphier-ph1-ld6b.dtsi
- create mode 100644 arch/arm/boot/dts/uniphier-proxstream2.dtsi
+On 4 August 2015 at 06:21, Daniel Lezcano <daniel.lezcano@linaro.org> w=
+rote:
+> On 07/27/2015 04:02 PM, Govindraj Raja wrote:
+>>
+>> From: Ezequiel Garcia <ezequiel.garcia@imgtec.com>
+>>
+>> The Pistachio SoC provides four general purpose timers, and allow
+>> to implement a clocksource driver.
+>>
+>> This driver can be used as a replacement for the MIPS GIC and MIPS R=
+4K
+>> clocksources and sched clocks, which are clocked from the CPU clock.
+>>
+>> Given the general purpose timers are clocked from an independent clo=
+ck,
+>> this new clocksource driver will be useful to introduce CPUFreq supp=
+ort
+>> for Pistachio machines.
+>>
+>> Signed-off-by: Govindraj Raja <Govindraj.Raja@imgtec.com>
+>> Signed-off-by: Ezequiel Garcia <ezequiel.garcia@imgtec.com>
+>> ---
+>>   drivers/clocksource/Kconfig          |   4 +
+>>   drivers/clocksource/Makefile         |   1 +
+>>   drivers/clocksource/time-pistachio.c | 194
+>> +++++++++++++++++++++++++++++++++++
+>>   3 files changed, 199 insertions(+)
+>>   create mode 100644 drivers/clocksource/time-pistachio.c
+>>
+>> diff --git a/drivers/clocksource/Kconfig b/drivers/clocksource/Kconf=
+ig
+>> index 4e57730..74e002e 100644
+>> --- a/drivers/clocksource/Kconfig
+>> +++ b/drivers/clocksource/Kconfig
+>> @@ -111,6 +111,10 @@ config CLKSRC_LPC32XX
+>>         select CLKSRC_MMIO
+>>         select CLKSRC_OF
+>>
+>> +config CLKSRC_PISTACHIO
+>> +       bool
+>> +       select CLKSRC_OF
+>> +
+>>   config CLKSRC_STM32
+>>         bool "Clocksource for STM32 SoCs" if !ARCH_STM32
+>>         depends on OF && ARM && (ARCH_STM32 || COMPILE_TEST)
+>> diff --git a/drivers/clocksource/Makefile b/drivers/clocksource/Make=
+file
+>> index f228354..066337e 100644
+>> --- a/drivers/clocksource/Makefile
+>> +++ b/drivers/clocksource/Makefile
+>> @@ -44,6 +44,7 @@ obj-$(CONFIG_FSL_FTM_TIMER)   +=3D fsl_ftm_timer.o
+>>   obj-$(CONFIG_VF_PIT_TIMER)    +=3D vf_pit_timer.o
+>>   obj-$(CONFIG_CLKSRC_QCOM)     +=3D qcom-timer.o
+>>   obj-$(CONFIG_MTK_TIMER)               +=3D mtk_timer.o
+>> +obj-$(CONFIG_CLKSRC_PISTACHIO) +=3D time-pistachio.o
+>>
+>>   obj-$(CONFIG_ARM_ARCH_TIMER)          +=3D arm_arch_timer.o
+>>   obj-$(CONFIG_ARM_GLOBAL_TIMER)                +=3D arm_global_time=
+r.o
+>> diff --git a/drivers/clocksource/time-pistachio.c
+>> b/drivers/clocksource/time-pistachio.c
+>> new file mode 100644
+>> index 0000000..d461bd1
+>> --- /dev/null
+>> +++ b/drivers/clocksource/time-pistachio.c
+>> @@ -0,0 +1,194 @@
+>> +/*
+>> + * Pistachio clocksource based on general-purpose timers
+>> + *
+>> + * Copyright (C) 2015 Imagination Technologies
+>> + *
+>> + * This file is subject to the terms and conditions of the GNU Gene=
+ral
+>> Public
+>> + * License. See the file "COPYING" in the main directory of this ar=
+chive
+>> + * for more details.
+>> + */
+>> +
+>> +#define pr_fmt(fmt) "%s: " fmt, __func__
+>> +
+>> +#include <linux/clk.h>
+>> +#include <linux/clocksource.h>
+>> +#include <linux/clockchips.h>
+>> +#include <linux/delay.h>
+>> +#include <linux/err.h>
+>> +#include <linux/init.h>
+>> +#include <linux/spinlock.h>
+>> +#include <linux/mfd/syscon.h>
+>> +#include <linux/of.h>
+>> +#include <linux/of_address.h>
+>> +#include <linux/platform_device.h>
+>> +#include <linux/regmap.h>
+>> +#include <linux/sched_clock.h>
+>> +#include <linux/time.h>
+>> +
+>> +/* Top level reg */
+>> +#define CR_TIMER_CTRL_CFG              0x00
+>> +#define  TIMER_ME_GLOBAL               BIT(0)
+>
+>
+> extra space.
+>
+>> +#define CR_TIMER_REV                   0x10
+>> +
+>> +/* Timer specific registers */
+>> +#define TIMER_CFG                      0x20
+>> +#define  TIMER_ME_LOCAL                        BIT(0)
+>
+>
+> extra space.
+>
 
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index 246473a..6eb3f2f 100644
---- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -645,7 +645,8 @@ dtb-$(CONFIG_ARCH_UNIPHIER) += \
- 	uniphier-ph1-sld3-ref.dtb \
- 	uniphier-ph1-ld4-ref.dtb \
- 	uniphier-ph1-pro4-ref.dtb \
--	uniphier-ph1-sld8-ref.dtb
-+	uniphier-ph1-sld8-ref.dtb \
-+	uniphier-ph1-ld6b-ref.dtb
- dtb-$(CONFIG_ARCH_VERSATILE) += \
- 	versatile-ab.dtb \
- 	versatile-pb.dtb
-diff --git a/arch/arm/boot/dts/uniphier-ph1-ld6b-ref.dts b/arch/arm/boot/dts/uniphier-ph1-ld6b-ref.dts
-new file mode 100644
-index 0000000..33963ac
---- /dev/null
-+++ b/arch/arm/boot/dts/uniphier-ph1-ld6b-ref.dts
-@@ -0,0 +1,105 @@
-+/*
-+ * Device Tree Source for UniPhier PH1-LD6b Reference Board
-+ *
-+ * Copyright (C) 2015 Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
-+ *
-+ * This file is dual-licensed: you can use it either under the terms
-+ * of the GPL or the X11 license, at your option. Note that this dual
-+ * licensing only applies to this file, and not this project as a
-+ * whole.
-+ *
-+ *  a) This file is free software; you can redistribute it and/or
-+ *     modify it under the terms of the GNU General Public License as
-+ *     published by the Free Software Foundation; either version 2 of the
-+ *     License, or (at your option) any later version.
-+ *
-+ *     This file is distributed in the hope that it will be useful,
-+ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ *     GNU General Public License for more details.
-+ *
-+ * Or, alternatively,
-+ *
-+ *  b) Permission is hereby granted, free of charge, to any person
-+ *     obtaining a copy of this software and associated documentation
-+ *     files (the "Software"), to deal in the Software without
-+ *     restriction, including without limitation the rights to use,
-+ *     copy, modify, merge, publish, distribute, sublicense, and/or
-+ *     sell copies of the Software, and to permit persons to whom the
-+ *     Software is furnished to do so, subject to the following
-+ *     conditions:
-+ *
-+ *     The above copyright notice and this permission notice shall be
-+ *     included in all copies or substantial portions of the Software.
-+ *
-+ *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-+ *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
-+ *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-+ *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
-+ *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
-+ *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-+ *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-+ *     OTHER DEALINGS IN THE SOFTWARE.
-+ */
-+
-+/dts-v1/;
-+/include/ "uniphier-ph1-ld6b.dtsi"
-+/include/ "uniphier-ref-daughter.dtsi"
-+/include/ "uniphier-support-card.dtsi"
-+
-+/ {
-+	model = "UniPhier PH1-LD6b Reference Board";
-+	compatible = "socionext,ph1-ld6b-ref", "socionext,ph1-ld6b";
-+
-+	memory {
-+		device_type = "memory";
-+		reg = <0x80000000 0x80000000>;
-+	};
-+
-+	chosen {
-+		bootargs = "console=ttyS0,115200";
-+		stdout-path = &serial0;
-+	};
-+
-+	aliases {
-+		serial0 = &serial0;
-+		serial1 = &serial1;
-+		serial2 = &serial2;
-+		i2c0 = &i2c0;
-+		i2c1 = &i2c1;
-+		i2c2 = &i2c2;
-+		i2c3 = &i2c3;
-+		i2c4 = &i2c4;
-+		i2c5 = &i2c5;
-+		i2c6 = &i2c6;
-+	};
-+};
-+
-+&extbus {
-+	ranges = <0 0x00000000 0x0f000000 0x01000000
-+		  1 0x00000000 0x00000000 0x08000000>;
-+};
-+
-+&support_card {
-+	ranges = <0x00000000 1 0x03f00000 0x00100000>;
-+};
-+
-+&ethsc {
-+	interrupts = <0 50 4>;
-+};
-+
-+&serial0 {
-+	status = "okay";
-+};
-+
-+&serial1 {
-+	status = "okay";
-+};
-+
-+&serial2 {
-+	status = "okay";
-+};
-+
-+&i2c0 {
-+	status = "okay";
-+};
-diff --git a/arch/arm/boot/dts/uniphier-ph1-ld6b.dtsi b/arch/arm/boot/dts/uniphier-ph1-ld6b.dtsi
-new file mode 100644
-index 0000000..c6499ee
---- /dev/null
-+++ b/arch/arm/boot/dts/uniphier-ph1-ld6b.dtsi
-@@ -0,0 +1,67 @@
-+/*
-+ * Device Tree Source for UniPhier PH1-LD6b SoC
-+ *
-+ * Copyright (C) 2015 Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
-+ *
-+ * This file is dual-licensed: you can use it either under the terms
-+ * of the GPL or the X11 license, at your option. Note that this dual
-+ * licensing only applies to this file, and not this project as a
-+ * whole.
-+ *
-+ *  a) This file is free software; you can redistribute it and/or
-+ *     modify it under the terms of the GNU General Public License as
-+ *     published by the Free Software Foundation; either version 2 of the
-+ *     License, or (at your option) any later version.
-+ *
-+ *     This file is distributed in the hope that it will be useful,
-+ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ *     GNU General Public License for more details.
-+ *
-+ * Or, alternatively,
-+ *
-+ *  b) Permission is hereby granted, free of charge, to any person
-+ *     obtaining a copy of this software and associated documentation
-+ *     files (the "Software"), to deal in the Software without
-+ *     restriction, including without limitation the rights to use,
-+ *     copy, modify, merge, publish, distribute, sublicense, and/or
-+ *     sell copies of the Software, and to permit persons to whom the
-+ *     Software is furnished to do so, subject to the following
-+ *     conditions:
-+ *
-+ *     The above copyright notice and this permission notice shall be
-+ *     included in all copies or substantial portions of the Software.
-+ *
-+ *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-+ *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
-+ *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-+ *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
-+ *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
-+ *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-+ *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-+ *     OTHER DEALINGS IN THE SOFTWARE.
-+ */
-+
-+/*
-+ * PH1-LD6b consists of two silicon dies: D-chip and A-chip.
-+ * The D-chip (digital chip) is the same as the ProXstream2 die.
-+ * Reuse the ProXstream2 device tree with some properties overridden.
-+ */
-+/include/ "uniphier-proxstream2.dtsi"
-+
-+/ {
-+	compatible = "socionext,ph1-ld6b";
-+};
-+
-+/* UART3 unavilable: the pads are not wired to the package balls */
-+&serial3 {
-+	status = "disabled";
-+};
-+
-+/*
-+ * PH1-LD6b and ProXstream2 have completely different packages,
-+ * which makes the pinctrl driver unshareable.
-+ */
-+&pinctrl {
-+	compatible = "socionext,ph1-ld6b-pinctrl", "syscon";
-+};
-diff --git a/arch/arm/boot/dts/uniphier-proxstream2.dtsi b/arch/arm/boot/dts/uniphier-proxstream2.dtsi
-new file mode 100644
-index 0000000..ccf795a
---- /dev/null
-+++ b/arch/arm/boot/dts/uniphier-proxstream2.dtsi
-@@ -0,0 +1,273 @@
-+/*
-+ * Device Tree Source for UniPhier ProXstream2 SoC
-+ *
-+ * Copyright (C) 2015 Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
-+ *
-+ * This file is dual-licensed: you can use it either under the terms
-+ * of the GPL or the X11 license, at your option. Note that this dual
-+ * licensing only applies to this file, and not this project as a
-+ * whole.
-+ *
-+ *  a) This file is free software; you can redistribute it and/or
-+ *     modify it under the terms of the GNU General Public License as
-+ *     published by the Free Software Foundation; either version 2 of the
-+ *     License, or (at your option) any later version.
-+ *
-+ *     This file is distributed in the hope that it will be useful,
-+ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ *     GNU General Public License for more details.
-+ *
-+ * Or, alternatively,
-+ *
-+ *  b) Permission is hereby granted, free of charge, to any person
-+ *     obtaining a copy of this software and associated documentation
-+ *     files (the "Software"), to deal in the Software without
-+ *     restriction, including without limitation the rights to use,
-+ *     copy, modify, merge, publish, distribute, sublicense, and/or
-+ *     sell copies of the Software, and to permit persons to whom the
-+ *     Software is furnished to do so, subject to the following
-+ *     conditions:
-+ *
-+ *     The above copyright notice and this permission notice shall be
-+ *     included in all copies or substantial portions of the Software.
-+ *
-+ *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-+ *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
-+ *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-+ *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
-+ *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
-+ *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-+ *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-+ *     OTHER DEALINGS IN THE SOFTWARE.
-+ */
-+
-+/include/ "skeleton.dtsi"
-+
-+/ {
-+	compatible = "socionext,proxstream2";
-+
-+	cpus {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		enable-method = "socionext,uniphier-smp";
-+
-+		cpu@0 {
-+			device_type = "cpu";
-+			compatible = "arm,cortex-a9";
-+			reg = <0>;
-+		};
-+
-+		cpu@1 {
-+			device_type = "cpu";
-+			compatible = "arm,cortex-a9";
-+			reg = <1>;
-+		};
-+
-+		cpu@2 {
-+			device_type = "cpu";
-+			compatible = "arm,cortex-a9";
-+			reg = <2>;
-+		};
-+
-+		cpu@3 {
-+			device_type = "cpu";
-+			compatible = "arm,cortex-a9";
-+			reg = <3>;
-+		};
-+	};
-+
-+	clocks {
-+		arm_timer_clk: arm_timer_clk {
-+			#clock-cells = <0>;
-+			compatible = "fixed-clock";
-+			clock-frequency = <50000000>;
-+		};
-+
-+		uart_clk: uart_clk {
-+			#clock-cells = <0>;
-+			compatible = "fixed-clock";
-+			clock-frequency = <88900000>;
-+		};
-+
-+		i2c_clk: i2c_clk {
-+			#clock-cells = <0>;
-+			compatible = "fixed-clock";
-+			clock-frequency = <50000000>;
-+		};
-+	};
-+
-+	soc {
-+		compatible = "simple-bus";
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		ranges;
-+		interrupt-parent = <&intc>;
-+
-+		extbus: extbus {
-+			compatible = "simple-bus";
-+			#address-cells = <2>;
-+			#size-cells = <1>;
-+		};
-+
-+		serial0: serial@54006800 {
-+			compatible = "socionext,uniphier-uart";
-+			status = "disabled";
-+			reg = <0x54006800 0x40>;
-+			pinctrl-names = "default";
-+			pinctrl-0 = <&pinctrl_uart0>;
-+			interrupts = <0 33 4>;
-+			clocks = <&uart_clk>;
-+		};
-+
-+		serial1: serial@54006900 {
-+			compatible = "socionext,uniphier-uart";
-+			status = "disabled";
-+			reg = <0x54006900 0x40>;
-+			pinctrl-names = "default";
-+			pinctrl-0 = <&pinctrl_uart1>;
-+			interrupts = <0 35 4>;
-+			clocks = <&uart_clk>;
-+		};
-+
-+		serial2: serial@54006a00 {
-+			compatible = "socionext,uniphier-uart";
-+			status = "disabled";
-+			reg = <0x54006a00 0x40>;
-+			pinctrl-names = "default";
-+			pinctrl-0 = <&pinctrl_uart2>;
-+			interrupts = <0 37 4>;
-+			clocks = <&uart_clk>;
-+		};
-+
-+		serial3: serial@54006b00 {
-+			compatible = "socionext,uniphier-uart";
-+			status = "disabled";
-+			reg = <0x54006b00 0x40>;
-+			pinctrl-names = "default";
-+			pinctrl-0 = <&pinctrl_uart3>;
-+			interrupts = <0 177 4>;
-+			clocks = <&uart_clk>;
-+		};
-+
-+		i2c0: i2c@58780000 {
-+			compatible = "socionext,uniphier-fi2c";
-+			status = "disabled";
-+			reg = <0x58780000 0x80>;
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			pinctrl-names = "default";
-+			pinctrl-0 = <&pinctrl_i2c0>;
-+			interrupts = <0 41 4>;
-+			clocks = <&i2c_clk>;
-+			clock-frequency = <100000>;
-+		};
-+
-+		i2c1: i2c@58781000 {
-+			compatible = "socionext,uniphier-fi2c";
-+			status = "disabled";
-+			reg = <0x58781000 0x80>;
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			pinctrl-names = "default";
-+			pinctrl-0 = <&pinctrl_i2c1>;
-+			interrupts = <0 42 4>;
-+			clocks = <&i2c_clk>;
-+			clock-frequency = <100000>;
-+		};
-+
-+		i2c2: i2c@58782000 {
-+			compatible = "socionext,uniphier-fi2c";
-+			status = "disabled";
-+			reg = <0x58782000 0x80>;
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			pinctrl-names = "default";
-+			pinctrl-0 = <&pinctrl_i2c2>;
-+			interrupts = <0 43 4>;
-+			clocks = <&i2c_clk>;
-+			clock-frequency = <100000>;
-+		};
-+
-+		i2c3: i2c@58783000 {
-+			compatible = "socionext,uniphier-fi2c";
-+			status = "disabled";
-+			reg = <0x58783000 0x80>;
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			pinctrl-names = "default";
-+			pinctrl-0 = <&pinctrl_i2c3>;
-+			interrupts = <0 44 4>;
-+			clocks = <&i2c_clk>;
-+			clock-frequency = <100000>;
-+		};
-+
-+		/* chip-internal connection for DMD */
-+		i2c4: i2c@58784000 {
-+			compatible = "socionext,uniphier-fi2c";
-+			reg = <0x58784000 0x80>;
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			interrupts = <0 45 4>;
-+			clocks = <&i2c_clk>;
-+			clock-frequency = <400000>;
-+		};
-+
-+		/* chip-internal connection for STM */
-+		i2c5: i2c@58785000 {
-+			compatible = "socionext,uniphier-fi2c";
-+			reg = <0x58785000 0x80>;
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			interrupts = <0 25 4>;
-+			clocks = <&i2c_clk>;
-+			clock-frequency = <400000>;
-+		};
-+
-+		/* chip-internal connection for HDMI */
-+		i2c6: i2c@58786000 {
-+			compatible = "socionext,uniphier-fi2c";
-+			reg = <0x58786000 0x80>;
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			interrupts = <0 26 4>;
-+			clocks = <&i2c_clk>;
-+			clock-frequency = <400000>;
-+		};
-+
-+		system-bus-controller-misc@59800000 {
-+			compatible = "socionext,uniphier-system-bus-controller-misc",
-+				     "syscon";
-+			reg = <0x59800000 0x2000>;
-+		};
-+
-+		pinctrl: pinctrl@5f801000 {
-+			compatible = "socionext,proxstream2-pinctrl", "syscon";
-+			reg = <0x5f801000 0xe00>;
-+		};
-+
-+		timer@60000200 {
-+			compatible = "arm,cortex-a9-global-timer";
-+			reg = <0x60000200 0x20>;
-+			interrupts = <1 11 0x304>;
-+			clocks = <&arm_timer_clk>;
-+		};
-+
-+		timer@60000600 {
-+			compatible = "arm,cortex-a9-twd-timer";
-+			reg = <0x60000600 0x20>;
-+			interrupts = <1 13 0x304>;
-+			clocks = <&arm_timer_clk>;
-+		};
-+
-+		intc: interrupt-controller@60001000 {
-+			compatible = "arm,cortex-a9-gic";
-+			#interrupt-cells = <3>;
-+			interrupt-controller;
-+			reg = <0x60001000 0x1000>,
-+			      <0x60000100 0x100>;
-+		};
-+	};
-+};
-+
-+/include/ "uniphier-pinctrl.dtsi"
--- 
-1.9.1
+These are not extra spaces, but they are there
+to separate register definitions from bit definitions.
+Same thing is done on time-armada-370-xp.c.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>
+>> +#define TIMER_RELOAD_VALUE             0x24
+>> +#define TIMER_CURRENT_VALUE            0x28
+>> +#define TIMER_CURRENT_OVERFLOW_VALUE   0x2C
+>> +#define TIMER_IRQ_STATUS               0x30
+>> +#define TIMER_IRQ_CLEAR                        0x34
+>> +#define TIMER_IRQ_MASK                 0x38
+>> +
+>> +#define PERIP_TIMER_CONTROL            0x90
+>> +
+>> +/* Timer specific configuration Values */
+>> +#define RELOAD_VALUE   0xffffffff
+>> +
+>> +static void __iomem *timer_base;
+>> +static DEFINE_RAW_SPINLOCK(lock);
+>> +
+>> +static inline u32 gpt_readl(u32 offset, u32 gpt_id)
+>> +{
+>> +       return readl(timer_base + 0x20 * gpt_id + offset);
+>> +}
+>> +
+>> +static inline void gpt_writel(u32 value, u32 offset, u32 gpt_id)
+>> +{
+>> +       writel(value, timer_base + 0x20 * gpt_id + offset);
+>> +}
+>> +
+>> +static cycle_t pistachio_clocksource_read_cycles(struct clocksource=
+ *cs)
+>> +{
+>> +       u32 counter, overflw;
+>> +       unsigned long flags;
+>> +
+>> +       raw_spin_lock_irqsave(&lock, flags);
+>> +       overflw =3D gpt_readl(TIMER_CURRENT_OVERFLOW_VALUE, 0);
+>
+>
+> Why do you need to read 'overflw' here ? It is not used.
+>
+
+The counter value is only refreshed after the overflow value is read.
+And they must be read in strict order, hence the ugly raw spin lock.
+Without both of these, the CPU locks up completely when reading
+the counter.
+
+Maybe a comment explaining this would help.
+
+>
+>> +       counter =3D gpt_readl(TIMER_CURRENT_VALUE, 0);
+>> +       raw_spin_unlock_irqrestore(&lock, flags);
+>> +
+>> +       return ~(cycle_t)counter;
+>> +}
+>> +
+>> +static u64 notrace pistachio_read_sched_clock(void)
+>> +{
+>> +       return pistachio_clocksource_read_cycles(NULL);
+>> +}
+>> +
+>> +static void pistachio_clksrc_enable(int timeridx)
+>> +{
+>> +       u32 val;
+>> +
+>> +       /* Disable GPT local before loading reload value */
+>> +       val =3D gpt_readl(TIMER_CFG, timeridx);
+>> +       val &=3D ~TIMER_ME_LOCAL;
+>> +       gpt_writel(val, TIMER_CFG, timeridx);
+>> +
+>> +       gpt_writel(RELOAD_VALUE, TIMER_RELOAD_VALUE, timeridx);
+>> +
+>> +       val =3D gpt_readl(TIMER_CFG, timeridx);
+>> +       val |=3D TIMER_ME_LOCAL;
+>> +       gpt_writel(val, TIMER_CFG, timeridx);
+>> +}
+>> +
+>> +static void pistachio_clksrc_disable(int timeridx)
+>> +{
+>> +       u32 val;
+>> +
+>> +       /* Disable GPT local */
+>> +       val =3D gpt_readl(TIMER_CFG, timeridx);
+>> +       val &=3D ~TIMER_ME_LOCAL;
+>> +       gpt_writel(val, TIMER_CFG, timeridx);
+>> +}
+>
+>
+> Duplicate code with 'pistachio_clksrc_enable', please reuse this func=
+tion in
+> the enable one.
+>
+
+OK.
+
+>> +
+>> +static int pistachio_clocksource_enable(struct clocksource *cs)
+>> +{
+>> +       pistachio_clksrc_enable(0);
+>> +       return 0;
+>> +}
+>> +
+>> +static void pistachio_clocksource_disable(struct clocksource *cs)
+>> +{
+>> +       pistachio_clksrc_disable(0);
+>> +}
+>
+>
+> It will be better if you don't wrap these function but use container_=
+of to
+> retrieve the timer_base from the clocksource structure.
+>
+
+I'm not sure I understand what you mean.
+We are not using clocksource_mmio and there's no driver-specific
+structure.
+
+>
+>> +/* Desirable clock source for pistachio platform */
+>> +static struct clocksource pistachio_clocksource_gpt =3D {
+>> +       .name           =3D "gptimer",
+>> +       .rating         =3D 300,
+>> +       .enable         =3D pistachio_clocksource_enable,
+>> +       .disable        =3D pistachio_clocksource_disable,
+>> +       .read           =3D pistachio_clocksource_read_cycles,
+>> +       .mask           =3D CLOCKSOURCE_MASK(32),
+>> +       .flags          =3D CLOCK_SOURCE_IS_CONTINUOUS |
+>> +                         CLOCK_SOURCE_SUSPEND_NONSTOP,
+>> +};
+>> +
+>> +static void __init pistachio_clksrc_of_init(struct device_node *nod=
+e)
+>> +{
+>> +       struct clk *sys_clk, *fast_clk;
+>> +       struct regmap *periph_regs;
+>> +       unsigned long rate;
+>> +       int ret;
+>> +
+>> +       timer_base =3D of_iomap(node, 0);
+>> +       if (!timer_base) {
+>> +               pr_err("cannot iomap\n");
+>> +               return;
+>> +       }
+>> +
+>> +       periph_regs =3D syscon_regmap_lookup_by_phandle(node,
+>> "img,cr-periph");
+>> +       if (IS_ERR(periph_regs)) {
+>> +               pr_err("cannot get peripheral regmap (%lu)\n",
+>> +                      PTR_ERR(periph_regs));
+>> +               return;
+>> +       }
+>> +
+>> +       /* Switch to using the fast counter clock */
+>> +       ret =3D regmap_update_bits(periph_regs, PERIP_TIMER_CONTROL,
+>> +                                0xf, 0x0);
+>> +       if (ret)
+>> +               return;
+>> +
+>> +       sys_clk =3D of_clk_get_by_name(node, "sys");
+>> +       if (IS_ERR(sys_clk)) {
+>> +               pr_err("clock get failed (%lu)\n", PTR_ERR(sys_clk))=
+;
+>> +               return;
+>> +       }
+>> +
+>> +       fast_clk =3D of_clk_get_by_name(node, "fast");
+>> +       if (IS_ERR(fast_clk)) {
+>> +               pr_err("clock get failed (%lu)\n", PTR_ERR(fast_clk)=
+);
+>> +               return;
+>> +       }
+>> +
+>> +       ret =3D clk_prepare_enable(sys_clk);
+>> +       if (ret < 0) {
+>> +               pr_err("failed to enable clock (%d)\n", ret);
+>> +               return;
+>> +       }
+>> +
+>> +       ret =3D clk_prepare_enable(fast_clk);
+>> +       if (ret < 0) {
+>> +               pr_err("failed to enable clock (%d)\n", ret);
+>> +               clk_disable_unprepare(sys_clk);
+>> +               return;
+>> +       }
+>> +
+>> +       rate =3D clk_get_rate(fast_clk);
+>> +
+>> +       /* Disable irq's for clocksource usage */
+>> +       gpt_writel(0, TIMER_IRQ_MASK, 0);
+>> +       gpt_writel(0, TIMER_IRQ_MASK, 1);
+>> +       gpt_writel(0, TIMER_IRQ_MASK, 2);
+>> +       gpt_writel(0, TIMER_IRQ_MASK, 3);
+>> +
+>> +       /* Enable timer block */
+>> +       writel(TIMER_ME_GLOBAL, timer_base);
+>> +
+>> +       sched_clock_register(pistachio_read_sched_clock, 32, rate);
+>> +       clocksource_register_hz(&pistachio_clocksource_gpt, rate);
+>> +}
+>> +CLOCKSOURCE_OF_DECLARE(pistachio_gptimer, "img,pistachio-gptimer",
+>> +                      pistachio_clksrc_of_init);
+>>
+>
+>
+> --
+>  <http://www.linaro.org/> Linaro.org =E2=94=82 Open source software f=
+or ARM SoCs
+>
+> Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+> <http://twitter.com/#!/linaroorg> Twitter |
+> <http://www.linaro.org/linaro-blog/> Blog
+>
+
+
+
+--=20
+Ezequiel Garc=C3=ADa, VanguardiaSur
+www.vanguardiasur.com.ar
