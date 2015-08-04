@@ -1,38 +1,95 @@
-From: Scott Wood <scottwood@freescale.com>
-Subject: Re: [v3,1/2] powerpc/mpc85xx: Create dts components for the FSL
- QorIQ DPAA FMan
-Date: Mon, 3 Aug 2015 20:28:31 -0500
-Message-ID: <20150804012831.GA15131@home.buserror.net>
-References: <1438584241-10460-1-git-send-email-igal.liberman@freescale.com>
+From: Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: Re: [PATCH v2 06/10] usb: chipidea: add ahb burst configuration
+ interface
+Date: Tue, 4 Aug 2015 08:36:02 +0800
+Message-ID: <20150804003600.GA20208@shlinux2>
+References: <1438577238-10153-1-git-send-email-peter.chen@freescale.com>
+ <1438577238-10153-7-git-send-email-peter.chen@freescale.com>
+ <CAL_JsqJn16OvfL_Ggf1wSi2XkJkjDMrmuRit3q8eVY5bNp8oYw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+Content-Type: text/plain; charset="us-ascii"
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1438584241-10460-1-git-send-email-igal.liberman@freescale.com>
-List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
- <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev/>
-List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
-List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
- <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
-Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
-Sender: "Linuxppc-dev"
- <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
-To: "Igal.Liberman" <igal.liberman@freescale.com>
-Cc: devicetree@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org, madalin.bucur@freescale.com
+In-Reply-To: <CAL_JsqJn16OvfL_Ggf1wSi2XkJkjDMrmuRit3q8eVY5bNp8oYw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org" <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Li Jun <jun.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Linux USB List <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gTW9uLCBBdWcgMDMsIDIwMTUgYXQgMDk6NDQ6MDFBTSArMDMwMCwgSWdhbC5MaWJlcm1hbiB3
-cm90ZToKPiArCXhtZGlvMDogbWRpb0BmMTAwMCB7Cj4gKwkJI2FkZHJlc3MtY2VsbHMgPSA8MT47
-Cj4gKwkJI3NpemUtY2VsbHMgPSA8MD47Cj4gKwkJY29tcGF0aWJsZSA9ICJmc2wsZm1hbi14bWRp
-byI7Cj4gKwkJcmVnID0gPDB4ZjEwMDAgMHgxMDAwPjsKPiArCQlpbnRlcnJ1cHRzID0gPDEwMSAx
-IDAgMD47Cj4gKwl9OwoKV2h5IGlzIHRoaXMgPDEwMSAxIDAgMD4gYW5kIG5vdCA8MTAxIDIgMCAw
-Pj8gIEludGVybmFsIGludGVycnVwdHMgYXJlCmFjdGl2ZS1oaWdoLgoKPiArCW1kaW8wOiBtZGlv
-QGUxMTIwIHsKPiArCQkjYWRkcmVzcy1jZWxscyA9IDwxPjsKPiArCQkjc2l6ZS1jZWxscyA9IDww
-PjsKPiArCQljb21wYXRpYmxlID0gImZzbCxmbWFuLW1kaW8iOwo+ICsJCXJlZyA9IDwweGUxMTIw
-IDB4ZWUwPjsKPiArCQlpbnRlcnJ1cHRzID0gPDEwMCAxIDAgMD47CgpMaWtld2lzZS4KCi1TY290
-dApfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpMaW51eHBw
-Yy1kZXYgbWFpbGluZyBsaXN0CkxpbnV4cHBjLWRldkBsaXN0cy5vemxhYnMub3JnCmh0dHBzOi8v
-bGlzdHMub3psYWJzLm9yZy9saXN0aW5mby9saW51eHBwYy1kZXY=
+On Mon, Aug 03, 2015 at 09:04:27AM -0500, Rob Herring wrote:
+> On Sun, Aug 2, 2015 at 11:47 PM, Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org> wrote:
+> > The users can change it through dts or platform data if they
+> > want to change the default value.
+> >
+> > Signed-off-by: Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+> > ---
+> >  drivers/usb/chipidea/bits.h  |  3 +++
+> >  drivers/usb/chipidea/core.c  | 14 ++++++++++++++
+> >  include/linux/usb/chipidea.h |  2 ++
+> >  3 files changed, 19 insertions(+)
+> >
+> > diff --git a/drivers/usb/chipidea/bits.h b/drivers/usb/chipidea/bits.h
+> > index 831a8f6..462ad02 100644
+> > --- a/drivers/usb/chipidea/bits.h
+> > +++ b/drivers/usb/chipidea/bits.h
+> > @@ -25,6 +25,9 @@
+> >  #define VERSION                      (0xF << 25)
+> >  #define CIVERSION            (0x7 << 29)
+> >
+> > +/* SBUSCFG */
+> > +#define AHBBRST_MASK           0x7
+> > +
+> >  /* HCCPARAMS */
+> >  #define HCCPARAMS_LEN         BIT(17)
+> >
+> > diff --git a/drivers/usb/chipidea/core.c b/drivers/usb/chipidea/core.c
+> > index 38bd036..f60cbf6 100644
+> > --- a/drivers/usb/chipidea/core.c
+> > +++ b/drivers/usb/chipidea/core.c
+> > @@ -439,6 +439,9 @@ void ci_platform_configure(struct ci_hdrc *ci)
+> >
+> >         hw_write(ci, OP_USBCMD, 0xff0000, ci->platdata->itc_setting << 16);
+> >
+> > +       if (ci->platdata->flags & CI_HDRC_OVERRIDE_AHB_BURST)
+> > +               hw_write_id_reg(ci, ID_SBUSCFG, AHBBRST_MASK,
+> > +                       ci->platdata->ahb_burst_config);
+> >  }
+> >
+> >  /**
+> > @@ -647,6 +650,17 @@ static int ci_get_platdata(struct device *dev,
+> >                 }
+> >         }
+> >
+> > +       if (of_find_property(dev->of_node, "ahb-burst-config", NULL)) {
+> > +               ret = of_property_read_u32(dev->of_node, "ahb-burst-config",
+> > +                       &platdata->ahb_burst_config);
+> > +               if (ret) {
+> > +                       dev_err(dev,
+> > +                               "failed to get ahb-burst-config\n");
+> > +                       return ret;
+> > +               }
+> > +               platdata->flags |= CI_HDRC_OVERRIDE_AHB_BURST;
+> > +       }
+> > +
+> 
+> This can be simplified to:
+> 
+> ret = of_property_read_u32(dev->of_node, "ahb-burst-config",
+> &platdata->ahb_burst_config);
+> if (!ret)
+>   platdata->flags |= CI_HDRC_OVERRIDE_AHB_BURST;
+> 
+> The error condition can't really happen.
+> 
+> Rob
+
+Thanks, I will change others accordingly.
+
+-- 
+
+Best Regards,
+Peter Chen
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
