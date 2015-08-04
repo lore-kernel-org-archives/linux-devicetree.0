@@ -1,45 +1,85 @@
-From: Liberman Igal <Igal.Liberman-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: RE: [v3,1/2] powerpc/mpc85xx: Create dts components for the FSL QorIQ
- DPAA FMan
-Date: Tue, 4 Aug 2015 13:52:14 +0000
-Message-ID: <DM2PR03MB509851209BA3F1CB941E30CE6760@DM2PR03MB509.namprd03.prod.outlook.com>
-References: <1438584241-10460-1-git-send-email-igal.liberman@freescale.com>
- <1438664426.2097.75.camel@freescale.com>
+From: Scott Shu <scott.shu@mediatek.com>
+Subject: [PATCH v3 8/8] ARM: dts: mt6580: enable basic SMP bringup for MT6580
+Date: Tue, 4 Aug 2015 21:54:24 +0800
+Message-ID: <1438696464-59858-9-git-send-email-scott.shu@mediatek.com>
+References: <1438696464-59858-1-git-send-email-scott.shu@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1438664426.2097.75.camel-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Madalin-Cristian Bucur <madalin.bucur-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1438696464-59858-1-git-send-email-scott.shu@mediatek.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Matthias Brugger <matthias.bgg@gmail.com>, Sascha Hauer <s.hauer@pengutronix.de>, Mark Rutland <mark.rutland@arm.com>
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org, wsd_upstream@mediatek.com, loda.chou@mediatek.com, jades.shih@mediatek.com, Mars.Cheng@mediatek.com, scott.shu@gmail.com, Scott Shu <scott.shu@mediatek.com>
 List-Id: devicetree@vger.kernel.org
 
-DQoNClJlZ2FyZHMsDQpJZ2FsIExpYmVybWFuDQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0t
-LS0NCj4gRnJvbTogV29vZCBTY290dC1CMDc0MjENCj4gU2VudDogVHVlc2RheSwgQXVndXN0IDA0
-LCAyMDE1IDg6MDAgQU0NCj4gVG86IExpYmVybWFuIElnYWwtQjMxOTUwIDxJZ2FsLkxpYmVybWFu
-QGZyZWVzY2FsZS5jb20+DQo+IENjOiBkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZzsgbGludXhw
-cGMtZGV2QGxpc3RzLm96bGFicy5vcmc7IEJ1Y3VyDQo+IE1hZGFsaW4tQ3Jpc3RpYW4tQjMyNzE2
-IDxtYWRhbGluLmJ1Y3VyQGZyZWVzY2FsZS5jb20+OyBsaW51eC0NCj4ga2VybmVsQHZnZXIua2Vy
-bmVsLm9yZw0KPiBTdWJqZWN0OiBSZTogW3YzLDEvMl0gcG93ZXJwYy9tcGM4NXh4OiBDcmVhdGUg
-ZHRzIGNvbXBvbmVudHMgZm9yIHRoZSBGU0wNCj4gUW9ySVEgRFBBQSBGTWFuDQo+IA0KPiBbUmVz
-ZW5kaW5nIGFmdGVyIGJvZ29maWx0ZXIgYWRqdXN0bWVudCBvbiB2Z2VyLmtlcm5lbC5vcmddDQo+
-IA0KPiBPbiBNb24sIEF1ZyAwMywgMjAxNSBhdCAwOTo0NDowMUFNICswMzAwLCBJZ2FsLkxpYmVy
-bWFuIHdyb3RlOg0KPiA+ICsgICAgIHhtZGlvMDogIG1kaW9AZjEwMDB7DQo+ID4gKyAgICAgICAg
-ICAgICAjYWRkcmVzcy1jZWxscyA9IDwxPjsNCj4gPiArICAgICAgICAgICAgICNzaXplLWNlbGxz
-ID0gPDA+Ow0KPiA+ICsgICAgICAgICAgICAgY29tcGF0aWJsZSA9ICJmc2wsZm1hbi14bWRpbyI7
-DQo+ID4gKyAgICAgICAgICAgICByZWcgPSA8MHhmMTAwMCAweDEwMDA+Ow0KPiA+ICsgICAgICAg
-ICAgICAgaW50ZXJydXB0cyA9IDwxMDEgMSAwIDA+Ow0KPiA+ICsgICAgIH07DQo+IA0KPiBXaHkg
-aXMgdGhpcyA8MTAxIDEgMCAwPiBhbmQgbm90IDwxMDEgMiAwIDA+PyAgSW50ZXJuYWwgaW50ZXJy
-dXB0cyBhcmUgYWN0aXZlLQ0KPiBoaWdoLg0KPiANCg0KT0ssIEknbGwgZml4IHRoaXMgaXNzdWUu
-IFRoYW5rcy4NCklnYWwuDQoNCj4gPiArICAgICBtZGlvMDogIG1kaW9AZTExMjB7DQo+ID4gKyAg
-ICAgICAgICAgICAjYWRkcmVzcy1jZWxscyA9IDwxPjsNCj4gPiArICAgICAgICAgICAgICNzaXpl
-LWNlbGxzID0gPDA+Ow0KPiA+ICsgICAgICAgICAgICAgY29tcGF0aWJsZSA9ICJmc2wsZm1hbi1t
-ZGlvIjsNCj4gPiArICAgICAgICAgICAgIHJlZyA9IDwweGUxMTIwIDB4ZWUwPjsNCj4gPiArICAg
-ICAgICAgICAgIGludGVycnVwdHMgPSA8MTAwIDEgMCAwPjsNCj4gDQo+IExpa2V3aXNlLg0KPiAN
-Cj4gLVNjb3R0DQo=
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Add arch timer node to enable arch-timer support. MT6580 firmware
+doesn't correctly setup arch-timer frequency and CNTVOFF, add
+properties to workaround this.
+
+This set cpu enable-method to enable SMP.
+
+Signed-off-by: Scott Shu <scott.shu@mediatek.com>
+---
+ arch/arm/boot/dts/mt6580.dtsi |   20 ++++++++++++++++++++
+ 1 file changed, 20 insertions(+)
+
+diff --git a/arch/arm/boot/dts/mt6580.dtsi b/arch/arm/boot/dts/mt6580.dtsi
+index 40957d3..70531b2 100644
+--- a/arch/arm/boot/dts/mt6580.dtsi
++++ b/arch/arm/boot/dts/mt6580.dtsi
+@@ -25,26 +25,31 @@
+ 	cpus {
+ 		#address-cells = <1>;
+ 		#size-cells = <0>;
++		enable-method = "mediatek,mt6580-smp";
+ 
+ 		cpu@0 {
+ 			device_type = "cpu";
+ 			compatible = "arm,cortex-a7";
+ 			reg = <0x0>;
++			clock-frequency = <1700000000>;
+ 		};
+ 		cpu@1 {
+ 			device_type = "cpu";
+ 			compatible = "arm,cortex-a7";
+ 			reg = <0x1>;
++			clock-frequency = <1700000000>;
+ 		};
+ 		cpu@2 {
+ 			device_type = "cpu";
+ 			compatible = "arm,cortex-a7";
+ 			reg = <0x2>;
++			clock-frequency = <1700000000>;
+ 		};
+ 		cpu@3 {
+ 			device_type = "cpu";
+ 			compatible = "arm,cortex-a7";
+ 			reg = <0x3>;
++			clock-frequency = <1700000000>;
+ 		};
+ 
+ 	};
+@@ -67,6 +72,21 @@
+ 		#clock-cells = <0>;
+ 	};
+ 
++	timer {
++		compatible = "arm,armv7-timer";
++		interrupt-parent = <&gic>;
++		interrupts = <GIC_PPI 13 (GIC_CPU_MASK_SIMPLE(4) |
++					  IRQ_TYPE_LEVEL_LOW)>,
++				<GIC_PPI 14 (GIC_CPU_MASK_SIMPLE(4) |
++					  IRQ_TYPE_LEVEL_LOW)>,
++				<GIC_PPI 11 (GIC_CPU_MASK_SIMPLE(4) |
++					  IRQ_TYPE_LEVEL_LOW)>,
++				<GIC_PPI 10 (GIC_CPU_MASK_SIMPLE(4) |
++					  IRQ_TYPE_LEVEL_LOW)>;
++		clock-frequency = <13000000>;
++		arm,cpu-registers-not-fw-configured;
++	};
++
+ 	scpsys: scpsys@10006000 {
+ 		#power-domain-cells = <1>;
+ 		compatible = "mediatek,mt6580-scpsys";
+-- 
+1.7.9.5
