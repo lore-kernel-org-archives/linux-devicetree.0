@@ -1,78 +1,51 @@
-From: Kishon Vijay Abraham I <kishon@ti.com>
-Subject: [PATCH 06/10] ARM: dts: am4372: Use "syscon-phy-power" instead of
- "ctrl-module" in USB PHY node
-Date: Tue, 4 Aug 2015 21:00:29 +0530
-Message-ID: <1438702233-8027-7-git-send-email-kishon@ti.com>
-References: <1438702233-8027-1-git-send-email-kishon@ti.com>
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2 0/4] Add SPDIF support for rockchip
+Date: Tue, 4 Aug 2015 16:36:49 +0100
+Message-ID: <20150804153649.GP20873@sirena.org.uk>
+References: <1438687099-14282-1-git-send-email-sjoerd.simons@collabora.co.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1438702233-8027-1-git-send-email-kishon@ti.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: rogerq@ti.com, tony@atomide.com, t-kristo@ti.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Cc: nsekhar@ti.com, linux@arm.linux.org.uk, bcousson@baylibre.com, balbi@ti.com, kishon@ti.com
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="l8YbbWKfojDp10WV"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1438687099-14282-1-git-send-email-sjoerd.simons-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sjoerd Simons <sjoerd.simons-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>
+Cc: linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Jaroslav Kysela <perex-/Fr2/VpizcU@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Takashi Iwai <tiwai-IBi9RG/b67k@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Add "syscon-phy-power" property and remove the deprecated "ctrl-module"
-property from USB PHY device tree node.
 
-Since "am43xx_control_usb2phy1" and "am43xx_control_usb2phy2"
-devicetree nodes are no longer used, remove it.
+--l8YbbWKfojDp10WV
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
----
- arch/arm/boot/dts/am4372.dtsi |   16 ++--------------
- 1 file changed, 2 insertions(+), 14 deletions(-)
+On Tue, Aug 04, 2015 at 01:18:15PM +0200, Sjoerd Simons wrote:
 
-diff --git a/arch/arm/boot/dts/am4372.dtsi b/arch/arm/boot/dts/am4372.dtsi
-index ade28c79..24fa073 100644
---- a/arch/arm/boot/dts/am4372.dtsi
-+++ b/arch/arm/boot/dts/am4372.dtsi
-@@ -802,18 +802,6 @@
- 			status = "disabled";
- 		};
- 
--		am43xx_control_usb2phy1: control-phy@44e10620 {
--			compatible = "ti,control-phy-usb2-am437";
--			reg = <0x44e10620 0x4>;
--			reg-names = "power";
--		};
--
--		am43xx_control_usb2phy2: control-phy@0x44e10628 {
--			compatible = "ti,control-phy-usb2-am437";
--			reg = <0x44e10628 0x4>;
--			reg-names = "power";
--		};
--
- 		ocp2scp0: ocp2scp@483a8000 {
- 			compatible = "ti,am437x-ocp2scp", "ti,omap-ocp2scp";
- 			#address-cells = <1>;
-@@ -824,7 +812,7 @@
- 			usb2_phy1: phy@483a8000 {
- 				compatible = "ti,am437x-usb2";
- 				reg = <0x483a8000 0x8000>;
--				ctrl-module = <&am43xx_control_usb2phy1>;
-+				syscon-phy-power = <&scm_conf 0x620>;
- 				clocks = <&usb_phy0_always_on_clk32k>,
- 					 <&usb_otg_ss0_refclk960m>;
- 				clock-names = "wkupclk", "refclk";
-@@ -843,7 +831,7 @@
- 			usb2_phy2: phy@483e8000 {
- 				compatible = "ti,am437x-usb2";
- 				reg = <0x483e8000 0x8000>;
--				ctrl-module = <&am43xx_control_usb2phy2>;
-+				syscon-phy-power = <&scm_conf 0x628>;
- 				clocks = <&usb_phy1_always_on_clk32k>,
- 					 <&usb_otg_ss1_refclk960m>;
- 				clock-names = "wkupclk", "refclk";
--- 
-1.7.9.5
+> Sjoerd Simons (4):
+>   ASoC: dt-bindings: add rockchip tranceiver bindings
+>   ASoc: rockchip: Add rockchip SPDIF transceiver driver
+
+I only appear to have patch 2 (with the misspelt subject), not the
+binding documentation.
+
+--l8YbbWKfojDp10WV
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQEcBAEBCAAGBQJVwNwQAAoJECTWi3JdVIfQfaoH/17SAh7RM8hoWhSK01ctw/Cm
+JZe/RkPgTq//mSC5UzJUh42KHGGKRRhJa12MOfr1oLgPmVtKgJYlGRXET6nlUE6E
+4A7biasbmQMFqAsCzAYFp/IgvwtfGI0nc5aNxn6XPbY7ZTvXwQqdTziXiXnyVbX4
+YL2BINsO8vJxiEo8uVVCgIad3jgA4Pcqh7lkpWxl38fvTYrIuwUkzJjgg9/afFoO
+4LPjQJGfa3kn7dhcJ9qaLJrAAgjxnbZGA3MQQeBmLMYHm+lYl/q/WOGiJomfkvOq
+VoLyzOSVRHc3CO4bcFumBOSPfpzGWSZeHLxkRio73EDJRADrlHllskjSzg+SNwA=
+=GqMl
+-----END PGP SIGNATURE-----
+
+--l8YbbWKfojDp10WV--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
