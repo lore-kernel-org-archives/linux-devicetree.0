@@ -1,112 +1,57 @@
-From: Leo Yan <leo.yan-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [RFC PATCH 2/3] mailbox: Hisilicon: add mailbox driver
-Date: Tue, 4 Aug 2015 16:49:30 +0800
-Message-ID: <20150804084930.GA27609@leoy-linaro>
-References: <1438564390-28111-1-git-send-email-leo.yan@linaro.org>
- <1438564390-28111-3-git-send-email-leo.yan@linaro.org>
- <1438677024.8734.24.camel@tiscali.nl>
+From: "Timo Sigurdsson" <public_timo.s-fWgRPtSzPNU3WX+qO2AYSQ@public.gmane.org>
+Subject: Re: [PATCH] ARM: dts: sunxi: Raise minimum CPU voltage
+ for sun7i-a20 to a level all boards can supply
+Date: Tue,  4 Aug 2015 10:51:30 +0200 (CEST)
+Message-ID: <20150804085130.602FA6C83EF9@dd34104.kasserver.com>
+References: <1438543386-7253-1-git-send-email-public_timo.s@silentcreek.de> <CAGRGNgV6b9yt2HnB2x2Wyc05KEahoX-Y+mVhxsryztcfA36H1g@mail.gmail.com> <CAGb2v67o-=_cL2RWfXJ+3C86zfQ_1b5DYRi3_zwvwy6su6+gdw@mail.gmail.com> <CAGRGNgXH90m9h0DDejd5MTf8enduGFQ8dPKrRhmc8Z6y_PaC1w@mail.gmail.com> <20150803090352.621CC6C80865@dd34104.kasserver.com><20150803093420.GC2564@lukather>
+Reply-To: public_timo.s-fWgRPtSzPNU3WX+qO2AYSQ@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1438677024.8734.24.camel-IWqWACnzNjzz+pZb47iToQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Paul Bolle <pebolle-IWqWACnzNjzz+pZb47iToQ@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Wei Xu <xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Bintian Wang <bintian.wang-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, Haojian Zhuang <haojian.zhuang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Guodong Xu <guodong.xu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Jian Zhang <zhangjian001-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Zhenwei Wang <Zhenwei.wang-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Haoju Mo <mohaoju-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Dan Zhao <dan.zhao-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, kongfei-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, Guangyue Zeng <zengguangyue-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sunxi+bncBCSJLSE35MGBBE72QGXAKGQEYO7TP6I-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <20150803093420.GC2564@lukather>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <http://groups.google.com/group/linux-sunxi/subscribe>
+To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
+Cc: wens-jdAy2FN1RRM@public.gmane.org, julian.calaby-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, monnier-CRDzTM1onBSWkKpYnGOUKg@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Paul,
+Hi Maxime,
 
-On Tue, Aug 04, 2015 at 10:30:24AM +0200, Paul Bolle wrote:
-> (This RFC was part of this mornings catch of my crude mail filter. So,
-> for what it's worth, what follows are a few random comments for the few
-> things I'm able to spot.)
-> 
-> On ma, 2015-08-03 at 09:13 +0800, Leo Yan wrote:
-> > --- /dev/null
-> > +++ b/drivers/mailbox/hisilicon/Kconfig
-> 
-> > +config HISI_MBOX
-> > +	bool "Hisilicon's Mailbox"
-> > +	depends on ARCH_HISI || OF
-> 
-> ARCH_HISI is available on either ARM64 or ARM. ARM64 selects OF. On ARM
-> ARCH_HISI depends on ARCH_MULTIV7 which depends on ARCH_MULTIPLATFORM.
-> That selects USE_OF which on its turn selects OF.
-> 
-> So, HISI_MBOX implies OF, correct?
+Maxime Ripard schrieb am 03.08.2015 11:34:
 
-Exactly, will simply use "depends on ARCH_HISI".
+> On Mon, Aug 03, 2015 at 11:03:52AM +0200, Timo Sigurdsson wrote:
+>> Julian Calaby schrieb am 03.08.2015 06:22:
+>> > My only real objection here is are there boards that can go down to
+>> > 0.9v and if so, won't this change make them less power efficient in
+>> > the almost-idle case? And are those power savings enough to justify
+>> > not accepting this patch?
+>> 
+>> It will probably make those boards less power efficient, yes. On the
+>> other hand, boards that have their CPU regulator set to min. 1.0V might
+>> also draw more power because the lowest frequency is not available, 
+>> even though the savings due to frequency are likely to be lower than
+>> the savings due to voltage.
+> 
+> Guys, isn't this whole discussion a bit moot? We're not doing any kind
+> of power management but cpufreq, so maybe there's a lot more to do
+> before we actually can have these kind of arguments?
+> 
+> Plus this OPP has never been used anyway, so this patch is not going
+> to increase the power consumption either.
 
-> > +	help
-> > +	  Support for mailbox drivers on Hisilicon series of SoCs.
-> > +
-> > +config HI6220_MBOX
-> > +	tristate "Hi6220 Mailbox Controller"
-> > +	depends on HISI_MBOX
-> > +	help
-> > +	  An implementation of the hi6220 mailbox. It is used to send message
-> > +	  between application processors and MCU. Say Y here if you want to build
-> > +	  the Hi6220 mailbox controller driver.
-> 
-> > --- /dev/null
-> > +++ b/drivers/mailbox/hisilicon/common.c
-> 
-> > +int hisi_mbox_register(struct hisi_mbox_hw *mbox_hw)
-> > +{
-> > +	[...]
-> > +
-> > +	mbox->chan = devm_kzalloc(dev,
-> > +		mbox_hw->chan_num * sizeof(struct mbox_chan), GFP_KERNEL);
-> > +	if (!mbox)
-> 
-> 	if (!mbox->chan)
-
-Will fix.
-
-> > +		return -ENOMEM;
-> > +
-> > +	[...]
-> > +}
-> 
-> > --- /dev/null
-> > +++ b/drivers/mailbox/hisilicon/hi6220-mailbox.c
-> 
-> > +static struct platform_driver hi6220_mbox_driver = {
-> > +	.driver = {
-> > +		[...]
-> > +		.of_match_table = of_match_ptr(hi6220_mbox_of_match),
-> 
-> of_match_ptr(x) becomes NULL when CONFIG_OF is not defined. But I think
-> CONFIG_OF will always be defined, see above. So of_match_ptr() isn't per
-> se needed.
-
-Will fix.
-
-> > +	},
-> > +	[...]
-> > +};
-> 
-> > +static int __init hi6220_mbox_init(void)
-> > +{
-> > +	return platform_driver_register(&hi6220_mbox_driver);
-> > +}
-> > +module_init(hi6220_mbox_init);
-> > +
-> > +static void __exit hi6220_mbox_exit(void)
-> > +{
-> > +	platform_driver_unregister(&hi6220_mbox_driver);
-> > +}
-> > +module_exit(hi6220_mbox_exit);
-> 
-> This could be flattened into one line:
->     module_platform_driver(hi6220_mbox_driver);
-
-Will refine. And thanks a lot for your review.
+You are right. When I wrote that, I was under the impression that the
+Olinuxino Lime 2 board at least used this setting since it has has a cpu
+regulator defined to go as low as 0.7V. But now I checked again and see
+the regulator is not referenced in the cpu node, so I guess cpufreq
+doesn't use it. So, this discussion was really hypothetical and more
+importantly, as you mentioned, it's an out-of-spec opp that shouldn't
+be supported anyway.
 
 Thanks,
-Leo Yan
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+
+Timo
