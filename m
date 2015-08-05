@@ -1,87 +1,51 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH v4 00/16] ARM: shmobile: Add CPG/MSTP Clock Domain
-Date: Wed, 5 Aug 2015 08:58:29 +0200
-Message-ID: <CAMuHMdUFjgVWBc0hdm_L0Z0Os1OT8H4NzwQyQTGZQt8Bu7-9PQ@mail.gmail.com>
-References: <1438691297-29235-1-git-send-email-geert+renesas@glider.be>
-	<20150804134824.GA10194@verge.net.au>
-	<20150805005543.GC20726@verge.net.au>
+From: "Opensource [Steve Twiss]" <stwiss.opensource@diasemi.com>
+Subject: RE: [PATCH V3 3/3] rtc: da9063: Add DA9062 RTC capability to DA9063
+ RTC driver
+Date: Wed, 5 Aug 2015 07:24:03 +0000
+Message-ID: <6ED8E3B22081A4459DAC7699F3695FB7014B2606F8@SW-EX-MBX02.diasemi.com>
+References: <cover.1437474547.git.stwiss.opensource@diasemi.com>
+ <b79c0b5d1b96bd06ab81a2459c493e68ec6b1971.1437474547.git.stwiss.opensource@diasemi.com>
+ <20150805015519.GZ3486@piout.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <20150805005543.GC20726@verge.net.au>
-Sender: linux-sh-owner@vger.kernel.org
-To: Simon Horman <horms@verge.net.au>
-Cc: Geert Uytterhoeven <geert+renesas@glider.be>, Magnus Damm <magnus.damm@gmail.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Kevin Hilman <khilman@kernel.org>, Ulf Hansson <ulf.hansson@linaro.org>, linux-clk@vger.kernel.org, Linux PM list <linux-pm@vger.kernel.org>, Linux-sh list <linux-sh@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-input-owner@vger.kernel.org>
+In-Reply-To: <20150805015519.GZ3486@piout.net>
+Content-Language: en-US
+Sender: linux-input-owner@vger.kernel.org
+To: Alexandre Belloni <alexandre.belloni@free-electrons.com>
+Cc: Alessandro Zummo <a.zummo@towertech.it>, DEVICETREE <devicetree@vger.kernel.org>, LINUXINPUT <linux-input@vger.kernel.org>, LINUXKERNEL <linux-kernel@vger.kernel.org>, RTCLINUX <rtc-linux@googlegroups.com>, David Dajun Chen <david.chen@diasemi.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Lee Jones <lee.jones@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>, Samuel Ortiz <sameo@linux.intel.com>, Support Opensource <Support.Opensource@diasemi.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Simon,
+On 05 August 2015 02:55 Alexandre Belloni wrote:
 
-On Wed, Aug 5, 2015 at 2:55 AM, Simon Horman <horms@verge.net.au> wrote:
-> On Tue, Aug 04, 2015 at 10:48:28PM +0900, Simon Horman wrote:
->> I have tentatively queued this up in its own branch,
->> cpg-mstp-clock-domain-for-v4.3.
->
-> Where possible I prefer not to apply non-DTS/DTSI patches on top of
-> DTS/DTSI patches, I believe this is in keeping with how the ARM SoC
-> maintainers like things handled.  With this in mind I have shuffled things
-> around a little, the result is:
->
-> 1. The following are (still) queued up for v4.3 in their own
->    cpg-mstp-clock-domain-for-v4.3 branch:
->
->    clk: shmobile: Add CPG/MSTP Clock Domain support
->    clk: shmobile: r8a7778: Add CPG/MSTP Clock Domain support
->    clk: shmobile: r8a7779: Add CPG/MSTP Clock Domain support
->    clk: shmobile: rcar-gen2: Add CPG/MSTP Clock Domain support
->    clk: shmobile: rz: Add CPG/MSTP Clock Domain support
->    ARM: shmobile: r7s72100 dtsi: Add CPG/MSTP Clock Domain
->    ARM: shmobile: r8a7778 dtsi: Add CPG/MSTP Clock Domain
->    ARM: shmobile: r8a7779 dtsi: Add CPG/MSTP Clock Domain
->    ARM: shmobile: r8a7790 dtsi: Add CPG/MSTP Clock Domain
->    ARM: shmobile: r8a7791 dtsi: Add CPG/MSTP Clock Domain
->    ARM: shmobile: r8a7793 dtsi: Add CPG/MSTP Clock Domain
->    ARM: shmobile: r8a7794 dtsi: Add CPG/MSTP Clock Domain
+> Subject: Re: [PATCH V3 3/3] rtc: da9063: Add DA9062 RTC capability to DA9063 RTC driver
+> 
+> On 21/07/2015 at 11:29:07 +0100, S Twiss wrote :
+> > From: S Twiss <stwiss.opensource@diasemi.com>
+> >
+> > Add DA9062 RTC support into the existing DA9063 RTC driver component by
+> > using generic access tables for common register and bit mask definitions.
+> >
+> > The following change will add generic register and bit mask support to the
+> > DA9063 RTC. The changes are slightly complicated by requiring support for
+> > three register sets: DA9063-AD, DA9063-BB and DA9062-AA.
+> >
+> > The following alterations have been made to the DA9063 RTC:
+> >
+> > - Addition of a da9063_compatible_rtc_regmap structure to hold all generic
+> >   registers and bitmasks for this type of RTC component.
+> > - A re-write of struct da9063 to use pointers for regmap and compatible
+> >   registers/masks definitions
+> > - Addition of a of_device_id table for DA9063 and DA9062 defaults
+> > - Refactoring functions to use struct da9063_compatible_rtc accesses to
+> >   generic registers/masks instead of using defines from registers.h
+> > - Re-work of da9063_rtc_probe() to use of_match_node() and dev_get_regmap()
+> >   to provide initialisation of generic registers and masks and access to
+> >   regmap
+> >
+> > Signed-off-by: Steve Twiss <stwiss.opensource@diasemi.com>
+> >
+> Applied, thanks.
 
-OK.
-
-> 2. The following are now queued up for v4.3 in a separate
->    sh-drivers-for-v4.3 branch. That branch is on top of the
->    cpg-mstp-clock-domain-for-v4.3 branch and I intend to send it directly
->    to Linus if/when a v4.3-rc has been released with the patches
->    listed in 1. present.
->
->    drivers: sh: Disable legacy default PM Domain on emev2
->    drivers: sh: Disable PM runtime for multi-platform ARM with genpd
-
-OK
-
-> 3. I have deferred the remaining two patches, listed below, for v4.4.
->    they currently reside in cpg-mstp-clock-domain-for-v4.4. That
->    branch is based on the sh-drivers-for-v4.3 branch.
->
->    clk: shmobile: mstp: Consider "zb_clk" suitable for power management
->    ARM: shmobile: R-Mobile: Use CPG/MSTP Clock Domain attach/detach helpers
->
-> This means that the last two patches will disappear from next until
-> after v4.3-rc1 is released but they, along with all the other patches,
-> will be present in the renesas devel branch.
-
-OK.
-
-Note that as the last two depend on patch 1 only, you could e.g. queue
-them up in group 1, between the clk and dtsi patches.
-But it's up to you to reconsider.
-I'm happy as-is, as the last two patches are just a code duplication clean up.
-
-Thanks!
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+Thank you.
