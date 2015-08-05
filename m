@@ -1,53 +1,57 @@
-From: Shawn Lin <shawn.lin@rock-chips.com>
-Subject: Re: [RFC PATCH v3 3/5] arm: configs: remove CONFIG_MMC_DW_IDMAC
-Date: Wed, 5 Aug 2015 16:48:52 +0800
-Message-ID: <55C1CDF4.5070302@rock-chips.com>
-References: <1438762614-22154-1-git-send-email-shawn.lin@rock-chips.com>
- <1438762690-22286-1-git-send-email-shawn.lin@rock-chips.com>
- <C2D7FE5348E1B147BCA15975FBA23075665B111F@IN01WEMBXB.internal.synopsys.com>
+From: Wolfram Sang <wsa@the-dreams.de>
+Subject: Re: [PATCH-v5 1/5] Documentation: binding: add new property
+ 'disable_after_xfer' to i2c-pxa
+Date: Wed, 5 Aug 2015 10:49:18 +0200
+Message-ID: <20150805084917.GA1523@katana>
+References: <1437482466-16126-1-git-send-email-vaibhav.hiremath@linaro.org>
+ <1437482466-16126-2-git-send-email-vaibhav.hiremath@linaro.org>
+ <20150727140911.GB15004@beef>
+ <55C1AE71.3010700@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
-        format=flowed
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-mips-bounce@linux-mips.org>
-In-Reply-To: <C2D7FE5348E1B147BCA15975FBA23075665B111F@IN01WEMBXB.internal.synopsys.com>
-Sender: linux-mips-bounce@linux-mips.org
-Errors-to: linux-mips-bounce@linux-mips.org
-List-help: <mailto:ecartis@linux-mips.org?Subject=help>
-List-unsubscribe: <mailto:ecartis@linux-mips.org?subject=unsubscribe%20linux-mips>
-List-software: Ecartis version 1.0.0
-List-subscribe: <mailto:ecartis@linux-mips.org?subject=subscribe%20linux-mips>
-List-owner: <mailto:ralf@linux-mips.org>
-List-post: <mailto:linux-mips@linux-mips.org>
-List-archive: <http://www.linux-mips.org/archives/linux-mips/>
-To: Vineet Gupta <Vineet.Gupta1@synopsys.com>, Ulf Hansson <ulf.hansson@linaro.org>, Jaehoon Chung <jh80.chung@samsung.com>, Seungwon Jeon <tgih.jun@samsung.com>
-Cc: shawn.lin@rock-chips.com, "dianders@chromium.org" <dianders@chromium.org>, "linux-mips@linux-mips.org" <linux-mips@linux-mips.org>, Arnd Bergmann <arnd@arndb.de>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Alexey Brodkin <Alexey.Brodkin@synopsys.com>, Stefan Agner <stefan@agner.ch>, Zhou Wang <wangzhou.bry@gmail.com>, Kumar Gala <galak@codeaurora.org>, Alim Akhtar <alim.akhtar@samsung.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Wang Long <long.wanglong@huawei.com>, Rob Herring <robh+dt@kernel.org>, Chaotian Jing <chaotian.jing@mediatek.com>, Lukasz Majewski <l.majewski@samsung.com>, Jun Nie <jun.nie@linaro.org>, Catalin Marinas <catalin.marinas@arm.com>, Kevin Hao <haokexin@gmail.com>, Olof Johansson <olof@lixom.net>R
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="1yeeQ81UyVL57Vl7"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <55C1AE71.3010700@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Vaibhav Hiremath <vaibhav.hiremath@linaro.org>
+Cc: Matt Porter <mporter@konsulko.com>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-i2c@vger.kernel.org, robert.jarzmik@free.fr
 List-Id: devicetree@vger.kernel.org
 
-=E5=9C=A8 2015/8/5 16:34, Vineet Gupta =E5=86=99=E9=81=93:
-> On Wednesday 05 August 2015 01:52 PM, Shawn Lin wrote:
->> DesignWare MMC Controller's transfer mode should be decided
->> at runtime instead of compile-time. So we remove this config
->> option, and elaborate more in Documentation(synopsys-dw-mshc).
->>
->> Modify these files:
->> arch/arc/configs/axs101_defconfig
->> arch/arc/configs/axs103_defconfig
->> arch/arc/configs/axs103_smp_defconfig
-> While you remove the config option from ARC defconfigs, you fail to a=
-dd the
-> corresponding DT glue in ARC files (like you did for ARM). The pointe=
-r to DT is
-> contained in corresponding defconfig. Please fix that .
 
-Yes,  I will fix it ASAP.
-Thanks, Vineet.
-
-> -Vineet
->
->
->
+--1yeeQ81UyVL57Vl7
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
 
---=20
-Shawn Lin
+> Yeah, we could start i2c.txt, probably better to have separate new
+> patch all together.
+
+I will start such a file today as part of the i2c slave framework
+update which introduces flags to the reg property. Will post to the i2c
+list this week.
+
+
+--1yeeQ81UyVL57Vl7
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBAgAGBQJVwc4NAAoJEBQN5MwUoCm2AA8QAInpAv1D8eJ6jU5ManxOrAz3
+HZd4TMcA4xy9Jzshf5Gn1ZMLxVetPuy7opDEuGp8DjBZY1KLABUwrnPNAV7QDhkZ
+AyZp8y8JvRinZof7RbpJLRz7zpXkguvwNuaxKPvH3xC0B45eQ7o+CFism+94vmO2
+clnHsJgXCCDA6Isr4C1cPd9ljRyJRSqfaf0yot/WtSLDvBDW3wzJUvbJcuDld5P+
+XuywqifNCPjgb3TQJI8eKYMmzaJudzAUSOy0TuUVKpNcRFFsTezV0ff++TOQG19q
+Eycz6guizH08Zm9GrfnpvkotevSnawhUeVdlPbm8T2fhptda+7KepgxcSKl6O6lI
+j8MxTwYTsmDDUjBMyJA5CJgZcPXUy4js2JCQqqNiQZNotsZ7SRQPVfaVBD03we/8
+rbdbKTt/rn0rGt91oyiSAJ0D/PmFfset9WP0yJsY4EA3oV7mhkTcjlp/tszGVsXd
+QLkp9OhTkAT+GHTM3H1f6vvlSxqo/Uyadayvy0xP+puVaN4R5KUobmd7gI+Ia5e+
+p+rnkONi7B7jZgIX89LfTxVni/Vl3kOdhefuTqmf8DHSvUGQ/LpT3/Ci8MEr2FHR
+Ho6FrNEIe36rURL1rSYGYnYNO61fyOhiS3oTBh8ZZgidyQi3Huv9Rh+Jz227bBSl
+BAKav6JuUPbJqrlhVUYk
+=T6X0
+-----END PGP SIGNATURE-----
+
+--1yeeQ81UyVL57Vl7--
