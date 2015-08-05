@@ -1,71 +1,86 @@
-From: Sudeep Holla <sudeep.holla@arm.com>
-Subject: Re: [PATCH v4 1/6] ARM: shmobile: r8a7740 dtsi: Add L2 cache-controller
- node
-Date: Wed, 05 Aug 2015 10:34:12 +0100
-Message-ID: <55C1D894.8070302@arm.com>
-References: <1438765090-823-1-git-send-email-geert+renesas@glider.be> <1438765090-823-2-git-send-email-geert+renesas@glider.be>
+From: Shawn Lin <shawn.lin@rock-chips.com>
+Subject: Re: [RFC PATCH v3 5/5] ARM: dts: add supports-idmac property
+Date: Wed, 5 Aug 2015 17:25:47 +0800
+Message-ID: <55C1D69B.4060308@rock-chips.com>
+References: <1438762614-22154-1-git-send-email-shawn.lin@rock-chips.com>
+ <1438762730-22368-1-git-send-email-shawn.lin@rock-chips.com>
+ <1438764734.3504.9.camel@synopsys.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <1438765090-823-2-git-send-email-geert+renesas@glider.be>
-Sender: linux-sh-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert+renesas@glider.be>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>
-Cc: Sudeep Holla <sudeep.holla@arm.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-sh@vger.kernel.org" <linux-sh@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset=UTF-8;
+        format=flowed
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-mips-bounce@linux-mips.org>
+In-Reply-To: <1438764734.3504.9.camel@synopsys.com>
+Sender: linux-mips-bounce@linux-mips.org
+Errors-to: linux-mips-bounce@linux-mips.org
+List-help: <mailto:ecartis@linux-mips.org?Subject=help>
+List-unsubscribe: <mailto:ecartis@linux-mips.org?subject=unsubscribe%20linux-mips>
+List-software: Ecartis version 1.0.0
+List-subscribe: <mailto:ecartis@linux-mips.org?subject=subscribe%20linux-mips>
+List-owner: <mailto:ralf@linux-mips.org>
+List-post: <mailto:linux-mips@linux-mips.org>
+List-archive: <http://www.linux-mips.org/archives/linux-mips/>
+To: Alexey Brodkin <Alexey.Brodkin@synopsys.com>
+Cc: shawn.lin@rock-chips.com, "dianders@chromium.org" <dianders@chromium.org>, "wangzhou.bry@gmail.com" <wangzhou.bry@gmail.com>, "tomeu.vizoso@collabora.com" <tomeu.vizoso@collabora.com>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "javier.martinez@collabora.co.uk" <javier.martinez@collabora.co.uk>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-rockchip@lists.infradead.org" <linux-rockchip@lists.infradead.org>, "haokexin@gmail.com" <haokexin@gmail.com>, "stefan@agner.ch" <stefan@agner.ch>, "addy.ke@rock-chips.com" <addy.ke@rock-chips.com>, "galak@codeaurora.org" <galak@codeaurora.org>, "olof@lixom.net" <olof@lixom.net>, "long.wanglong@huawei.com" <long.wanglong@huawei.com>, "peter.griffin@linaro.org" <peter.griffin@linaro.org>, mark.rut
 List-Id: devicetree@vger.kernel.org
 
+=E5=9C=A8 2015/8/5 16:52, Alexey Brodkin =E5=86=99=E9=81=93:
+> Hi Shawn,
+>
+> On Wed, 2015-08-05 at 16:18 +0800, Shawn Lin wrote:
+>> DesignWare MMC Controller's transfer mode should be decided
+>> at runtime instead of compile-time. Add "supports-idmac" for
+>> all platforms that use internal dma mode to enable this feature
+>> at runtime.
+>>
+>> Signed-off-by: Shawn Lin <shawn.lin@rock-chips.com>
+>> ---
+>>
+>> Changes in v3: None
+>> Changes in v2: None
+>>
+>>   arch/arm/boot/dts/exynos3250-monk.dts              | 1 +
+>>   arch/arm/boot/dts/exynos3250-rinato.dts            | 1 +
+>>   arch/arm/boot/dts/exynos4412-odroid-common.dtsi    | 1 +
+>>   arch/arm/boot/dts/exynos4412-origen.dts            | 1 +
+>>   arch/arm/boot/dts/exynos4412-trats2.dts            | 1 +
+>>   arch/arm/boot/dts/exynos4x12.dtsi                  | 1 +
+>>   arch/arm/boot/dts/exynos5250-arndale.dts           | 2 ++
+>>   arch/arm/boot/dts/exynos5250-smdk5250.dts          | 2 ++
+>>   arch/arm/boot/dts/exynos5250-snow.dts              | 3 +++
+>>   arch/arm/boot/dts/exynos5250-spring.dts            | 2 ++
+>>   arch/arm/boot/dts/exynos5260-xyref5260.dts         | 2 ++
+>>   arch/arm/boot/dts/exynos5410-smdk5410.dts          | 2 ++
+>>   arch/arm/boot/dts/exynos5420-arndale-octa.dts      | 2 ++
+>>   arch/arm/boot/dts/exynos5420-peach-pit.dts         | 3 +++
+>>   arch/arm/boot/dts/exynos5420-smdk5420.dts          | 2 ++
+>>   arch/arm/boot/dts/exynos5422-odroidxu3-common.dtsi | 2 ++
+>>   arch/arm/boot/dts/exynos5800-peach-pi.dts          | 3 +++
+>>   arch/arm/boot/dts/hisi-x5hd2.dtsi                  | 2 ++
+>>   arch/arm/boot/dts/rk3288-evb.dtsi                  | 2 ++
+>>   arch/arm/boot/dts/rk3288-firefly.dtsi              | 3 +++
+>>   arch/arm/boot/dts/rk3288-popmetal.dts              | 2 ++
+>>   arch/arm64/boot/dts/exynos/exynos7-espresso.dts    | 2 ++
+>>   22 files changed, 42 insertions(+)
+> I'm wondering if you're going to care about other platforms
+> that use DW MMC?
+>
+> Just grep for "snps,dw-mshc", "altr,socfpga-dw-mshc",
+> "img,pistachio-dw-mshc" and you'll see more dt* files to
+> be updated.
+   Thanks,  Alexey.
+   Yes,  I missed some ARC dt*  files just as Vineet told me. It will b=
+e=20
+fixed in v4.
+   Btw, I cannot find "img,pistachio-dw-mshc" in 4.2.0-rc3. And no more=
+=20
+"dw-mshc" or "dwmmc"
+   is found.
+
+> -Alexey
+>
+>
 
 
-On 05/08/15 09:58, Geert Uytterhoeven wrote:
-> Add the missing L2 cache-controller node. This will allow migration to
-> the generic l2c OF initialization.
->
-> The L2 cache is an ARM L2C-310 (r3p1-150rel0), of size 256 KiB (32 KiB x
-> 8 ways).
->
-> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> ---
-> v4:
->    - Commit eeedcea69e927857 ("ARM: 8395/1: l2c: Add support for the
->      "arm,shared-override" property") is queued for 4.3 in arm/for-next,
->
-> v3:
->    - Add "arm,shared-override",
->
-> v2:
->    - Fix interrupt (should be 3 cells, not 1),
->    - Describe cache better.
-> ---
->   arch/arm/boot/dts/r8a7740.dtsi | 16 ++++++++++++++++
->   1 file changed, 16 insertions(+)
->
-> diff --git a/arch/arm/boot/dts/r8a7740.dtsi b/arch/arm/boot/dts/r8a7740.dtsi
-> index d84714468cce18df..ddef5b1c68fa06b3 100644
-> --- a/arch/arm/boot/dts/r8a7740.dtsi
-> +++ b/arch/arm/boot/dts/r8a7740.dtsi
-> @@ -37,6 +37,22 @@
->   		      <0xc2000000 0x1000>;
->   	};
->
-> +	L2: cache-controller {
-> +		compatible = "arm,pl310-cache";
-> +		reg = <0xf0100000 0x1000>;
-> +		interrupts = <0 84 IRQ_TYPE_LEVEL_HIGH>;
-> +		power-domains = <&pd_a3sm>;
-> +		arm,data-latency = <3 3 3>;
-> +		arm,tag-latency = <2 2 2>;
-> +		arm,shared-override;
-> +		cache-unified;
-> +		cache-level = <2>;
-> +		cache-size = <0x40000>;
-> +		cache-sets = <1024>;
-> +		cache-block-size = <32>;
-> +		cache-line-size = <32>;
-
-Any particular reason whey you need all this cache-* properties ? Is
-something broken on these SoCs ? We should be able to get most of these
-information from the SoC(reading some registers). It's good to avoid
-passing them via DT if they can be discovered from hardware.
-
-Regards,
-Sudeep
+--=20
+Shawn Lin
