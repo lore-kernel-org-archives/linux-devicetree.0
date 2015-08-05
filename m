@@ -1,111 +1,52 @@
-From: Matthias Brugger <matthias.bgg@gmail.com>
-Subject: Re: [PATCH] ARM64: dts: mt6795: enable basic SMP bringup for MT6795
-Date: Wed, 05 Aug 2015 19:24:56 +0200
-Message-ID: <3934554.inAhhRLsAY@ubix>
-References: <1438656457-60278-1-git-send-email-scott.shu@mediatek.com>
+From: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+Subject: Re: [PATCH 3/4] arm64: Juno: Add HDLCD support to the Juno boards.
+Date: Wed, 5 Aug 2015 18:53:03 +0100
+Message-ID: <20150805175303.GB7557@n2100.arm.linux.org.uk>
+References: <1438784892-27888-1-git-send-email-Liviu.Dudau@arm.com>
+ <1438784892-27888-4-git-send-email-Liviu.Dudau@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1438656457-60278-1-git-send-email-scott.shu@mediatek.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Scott Shu <scott.shu@mediatek.com>
-Cc: Mars Cheng <mars.cheng@mediatek.com>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org, wsd_upstream@mediatek.com, loda.chou@mediatek.com, jades.shih@mediatek.com, scott.shu@gmail.com
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1438784892-27888-4-git-send-email-Liviu.Dudau-5wv7dgnIgG8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Liviu Dudau <Liviu.Dudau-5wv7dgnIgG8@public.gmane.org>
+Cc: David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Jon Medhurst <tixy-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tuesday, August 04, 2015 10:47:37 AM Scott Shu wrote:
-> This patch adds support SMP on MediaTek MT6795 Cortex-A53 Octa-core SoC.
-
-applied to v4.2-next/arm64-2
-
-> 
-> The patch is based on v4.2-rc1 and following patch series:
-> (1) Mars Cheng's "Add mt6795 basic chip support" [1]
-> 
-> [1] https://lkml.org/lkml/2015/7/14/63
-
-Please this extra information below the "---" as this should not show up in 
-the commit message.
-
-Thanks,
-Matthias
-
-> 
-> Signed-off-by: Scott Shu <scott.shu@mediatek.com>
-> ---
->  arch/arm64/boot/dts/mediatek/mt6795.dtsi |   13 +++++++++++++
->  1 file changed, 13 insertions(+)
-> 
-> diff --git a/arch/arm64/boot/dts/mediatek/mt6795.dtsi
-> b/arch/arm64/boot/dts/mediatek/mt6795.dtsi index da200e7..c85659d 100644
-> --- a/arch/arm64/boot/dts/mediatek/mt6795.dtsi
-> +++ b/arch/arm64/boot/dts/mediatek/mt6795.dtsi
-> @@ -20,6 +20,11 @@
->  	#address-cells = <2>;
->  	#size-cells = <2>;
-> 
-> +	psci {
-> +		compatible = "arm,psci-0.2";
-> +		method = "smc";
-> +	};
+On Wed, Aug 05, 2015 at 03:28:11PM +0100, Liviu Dudau wrote:
+> +		hdmi-transmitter@71 {
+>  			compatible = "nxp,tda998x";
+>  			reg = <0x71>;
+> +			port {
+> +				tda998x_1_input: endpoint@0 {
+> +					remote-endpoint = <&hdlcd1_output>;
+> +				};
 > +
->  	cpus {
->  		#address-cells = <1>;
->  		#size-cells = <0>;
-> @@ -27,48 +32,56 @@
->  		cpu0: cpu@0 {
->  			device_type = "cpu";
->  			compatible = "arm,cortex-a53";
-> +			enable-method = "psci";
->  			reg = <0x000>;
->  		};
-> 
->  		cpu1: cpu@1 {
->  			device_type = "cpu";
->  			compatible = "arm,cortex-a53";
-> +			enable-method = "psci";
->  			reg = <0x001>;
->  		};
-> 
->  		cpu2: cpu@2 {
->  			device_type = "cpu";
->  			compatible = "arm,cortex-a53";
-> +			enable-method = "psci";
->  			reg = <0x002>;
->  		};
-> 
->  		cpu3: cpu@3 {
->  			device_type = "cpu";
->  			compatible = "arm,cortex-a53";
-> +			enable-method = "psci";
->  			reg = <0x003>;
->  		};
-> 
->  		cpu4: cpu@100 {
->  			device_type = "cpu";
->  			compatible = "arm,cortex-a53";
-> +			enable-method = "psci";
->  			reg = <0x100>;
->  		};
-> 
->  		cpu5: cpu@101 {
->  			device_type = "cpu";
->  			compatible = "arm,cortex-a53";
-> +			enable-method = "psci";
->  			reg = <0x101>;
->  		};
-> 
->  		cpu6: cpu@102 {
->  			device_type = "cpu";
->  			compatible = "arm,cortex-a53";
-> +			enable-method = "psci";
->  			reg = <0x102>;
->  		};
-> 
->  		cpu7: cpu@103 {
->  			device_type = "cpu";
->  			compatible = "arm,cortex-a53";
-> +			enable-method = "psci";
->  			reg = <0x103>;
->  		};
->  	};
+> +				tda998x_1_output: endpoint@1 {
+> +					remote-endpoint = <&hdmi1_connector_output>;
+> +				};
+> +			};
+
+This isn't compliant with the TDA998x binding, and is very likely to
+screw Jean's work on adding audio support.  See emails on lakml and
+Documentation/devicetree/bindings/drm/i2c/tda998x.txt (which looks
+like it needs updating to include the ports stuff.)
+
+Also, the whole question of representing connectors in a DRM model is
+yet to be established.  Yes, DT should describe the hardware, but we
+don't yet know _how_ to describe physical connectors with stuff
+implemented on top of DRM yet, and we have nothing that makes use of
+this.
+
+Also note that ePAPR requires a reg= property if you specify a
+unit-address (the bit after the @ sign) so the above is non-compliant
+with ePAPR as well.
+
+-- 
+FTTC broadband for 0.8mile line: currently at 10.5Mbps down 400kbps up
+according to speedtest.net.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
