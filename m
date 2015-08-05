@@ -1,82 +1,78 @@
-From: Sebastian Reichel <sre@kernel.org>
-Subject: Re: [PATCH v2 1/2] power: reset: at91: add sama5d3 reset function
-Date: Wed, 5 Aug 2015 20:04:19 +0200
-Message-ID: <20150805180419.GA11315@earth>
-References: <1437384726-24927-1-git-send-email-josh.wu@atmel.com>
- <20150720164241.GA5930@earth>
- <55B72EEA.5020600@atmel.com>
+From: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v3 0/5] Add SMP bringup support for mt65xx socs
+Date: Wed, 05 Aug 2015 20:44:11 +0200
+Message-ID: <4831607.pyCH8elj8i@ubix>
+References: <1436851111-2369-1-git-send-email-yingjoe.chen@mediatek.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="ZPt4rx8FFjLCG7dd"
-Return-path: <linux-pm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <55B72EEA.5020600@atmel.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Nicolas Ferre <nicolas.ferre@atmel.com>
-Cc: Josh Wu <josh.wu@atmel.com>, linux-arm-kernel@lists.infradead.org, Guenter Roeck <linux@roeck-us.net>, Kumar Gala <galak@codeaurora.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <robh+dt@kernel.org>, Ben Dooks <ben.dooks@codethink.co.uk>, Krzysztof Kozlowski <k.kozlowski.k@gmail.com>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Pawel Moll <pawel.moll@arm.com>, devicetree@vger.kernel.org, linux-pm@vger.kernel.org, Sudeep Holla <sudeep.holla@arm.com>, Wei Yongjun <yongjun_wei@trendmicro.com.cn>, Fabian Frederick <fabf@skynet.be>, linux-kernel@vger.kernel.org, Boris Brezillon <boris.brezillon@free-electrons.com>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, David Woodhouse <dwmw2@infradead.org>, Mark Rutland <mark.rutland@arm.com>, Maxime Ripard <maxime.ripard@free-electrons.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+In-Reply-To: <1436851111-2369-1-git-send-email-yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mediatek>,
+ <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-mediatek/>
+List-Post: <mailto:linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Help: <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mediatek>,
+ <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
+Sender: "Linux-mediatek" <linux-mediatek-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Errors-To: linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Yingjoe Chen <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+On Tuesday, July 14, 2015 01:18:26 PM Yingjoe Chen wrote:
+> This series add SMP brinup support for MediaTek SoCs. This is based
+> on v4.2-rc1 and Matthias' next branch (for dts parts).
+> 
+> There are similar but different SMP bringup up methods on MediaTek
+> mt65xx and mt81xx. On MT8135 & MT8127, system boots with a trustzone
+> firmware. Others, like MT6589, doesn't have trustzone, and run kernel
+> directly in secure world.
+> 
+> Patch 1 enable arch timer support.
+> Patch 2,3 add support for cpu enable-method "mediatek,mt6589-smp" and
+> "mediatek,mt81xx-tz-smp", which support Mediatek SMP bringup for non-TZ
+> and TZ platform.
+> Patch 4,5 finally enable SMP bringup for mt8135 and mt8127.
+> 
+> Changes in v3:
+> - The first 2 patches in v2 are merged in v4.2-rc1.
+> - Patch 3~4 in v2 are moved to another series [1]
+> - platsmp.c changes based on Stephen's suggestion
+> - Change cpu enable-method name to "mediatek,mt6589-smp"
+> 
+> Changes in v2:
+> - Fix boot issue for THUMB2 kernel.
+> - Not enable GPT_CLK_EVT when setup to fix GPT spurious interrupt issue
+> - Change platsmp.c according to Matthias' suggestion
+> http://lists.infradead.org/pipermail/linux-mediatek/2015-May/000714.html
+> 
+> v1:
+> http://lists.infradead.org/pipermail/linux-mediatek/2015-May/000528.html
+> 
+> [1]
+> http://lists.infradead.org/pipermail/linux-mediatek/2015-July/001544.html
+> 
+> Matthias Brugger (1):
+>   ARM: mediatek: enable gpt6 on boot up to make arch timer working
+> 
+> Yingjoe Chen (4):
+>   devicetree: bindings: add new SMP enable method Mediatek SoC
+>   ARM: mediatek: add smp bringup code
+>   ARM: dts: mt8135: enable basic SMP bringup for mt8135
+>   ARM: dts: mt8127: enable basic SMP bringup for mt8127
+> 
+>  Documentation/devicetree/bindings/arm/cpus.txt |   2 +
+>  arch/arm/boot/dts/mt8127.dtsi                  |  16 +++
+>  arch/arm/boot/dts/mt8135.dtsi                  |  16 +++
+>  arch/arm/mach-mediatek/Makefile                |   3 +
+>  arch/arm/mach-mediatek/mediatek.c              |  27 +++++
+>  arch/arm/mach-mediatek/platsmp.c               | 144
+> +++++++++++++++++++++++++ 6 files changed, 208 insertions(+)
+>  create mode 100644 arch/arm/mach-mediatek/platsmp.c
 
---ZPt4rx8FFjLCG7dd
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Applied to v4.2-next/soc-2 and v4.2-next/dts-2 
 
-Hi Nicolas,
-
-On Tue, Jul 28, 2015 at 09:27:38AM +0200, Nicolas Ferre wrote:
-> >> This patch introduces a new compatible string: "atmel,sama5d3-rstc" and
-> >> new reset function for sama5d3 and later chips.
-> >=20
-> > queued.
->=20
-> As my Device Tree changes depend on this modification,
-> we can synchronize in tree ways:
-
-Sorry for the delay.
-
-> 1/ you provide me a stable branch so that I can pull it before applying
-> my changes that can go through arm-soc.
->=20
-> 2/ you let me take the driver's modifications with me and the two
-> patches of the series would go through arm-soc.
->
-> 3/ you take the second patch of my series with my Acked-by tag and carry
-> both of them up to Linus' tree.
-
-I would be fine with all solutions, but 2/ would also require
-you handling another patch. I think your option 4/ is the best:
-
-> Okay, so to ease synchronization, I take this one with me through
-> arm-soc and add the old compatibility string as a fallback =3D> the
-> newer will be used when merged...
-
-FWIW:
-
-Acked-By: Sebastian Reichel <sre@kernel.org>
-
--- Sebastian
-
---ZPt4rx8FFjLCG7dd
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBCgAGBQJVwlAhAAoJENju1/PIO/qaOs4P/2gLQ11zJVW1MhESMMQUcrgM
-A9y4sZAElZAc/qhkFyZ4UDc1S8s5YdHCf+JE02Yyzk2VN45qSJqCWU+6jkfpNW1W
-vUPDm8m8XWqq+tXOS9CmlQURLtSNEFPpKfSvbnacMbtAwOLQVIt365W6IfRkd6Zv
-xSttHVOIvNKUdBIYK7xNNrtknkC/ZjPhUrxzrWfUOmxhZc6ReGoPMX1Hg4cew+cH
-MMwcNqQhFRdEVTE8wrd6MU3P/mDckO9olRiTvH7cSH8u3wDeCCwkArCDvikZ6OXD
-pxs8k86qHkzoNPNHRU3DqZ2LHtL2zsQhOlTw04aeM6UxgCHbQ4DiIdr7NC51RS30
-9yahtH87YkXg7p3vAAfmiWGpZzVkFnug0Qa/hxRPnKgg1HhINTuXp3Gw6PFERcD+
-5H5JwphiCXLZeWojUzCWDvkzpRq8WbGZylK6JZlu8F37HHQLuFEQCNABjTDI2MT+
-Xh3AgIIiEe0en3Yk4VaUUFWIgs1wiKcAL99R6aVOYVBXCasyPoP8Oqe6oo4ep4LX
-BhG4wYJRim+d9MzPuWCVzRWsLZhapMumudK3VTtKBaCYx4FLp/YO7SpyqJebr9GG
-oMwt/nIVx7ooi0YSj8yfsbzvpIsZdbxL/VExUhmMYVRsT5YiVKCUqQSjMGutGYI3
-oSgb/T7DtY967SFtFRbg
-=VIUg
------END PGP SIGNATURE-----
-
---ZPt4rx8FFjLCG7dd--
+Thanks,
+Matthias
