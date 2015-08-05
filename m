@@ -1,69 +1,46 @@
-From: Javier Martinez Canillas <javier@osg.samsung.com>
-Subject: Re: [PATCH 1/2] mfd: s2mps11: Add manual shutdown method for Odroid
- XU3
-Date: Wed, 5 Aug 2015 12:53:20 +0200
-Message-ID: <55C1EB20.3040400@osg.samsung.com>
-References: <1438605447-6836-1-git-send-email-k.kozlowski.k@gmail.com>
- <1438605447-6836-2-git-send-email-k.kozlowski.k@gmail.com>
+From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH 0/7] ARM: dts: MMC fixes for DRA7 based boards
+Date: Wed, 5 Aug 2015 03:54:00 -0700
+Message-ID: <20150805105400.GF16878@atomide.com>
+References: <1438244020-4244-1-git-send-email-kishon@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <1438605447-6836-2-git-send-email-k.kozlowski.k@gmail.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Krzysztof Kozlowski <k.kozlowski.k@gmail.com>, Sangbeom Kim <sbkim73@samsung.com>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, Lee Jones <lee.jones@linaro.org>, linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, Kukjin Kim <kgene@kernel.org>, linux-arm-kernel@lists.infradead.org
-Cc: Anand Moon <linux.amoon@gmail.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1438244020-4244-1-git-send-email-kishon-l0cyMroinI0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, nsekhar-l0cyMroinI0@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hello Krzysztof,
+* Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org> [150730 01:16]:
+> Miscellaneous fixes in dts files for MMC device tree nodes.
+> 
+> Did basic read/write test in J6, J6 Eco and Beagle-x15
+> 
+> Balaji T K (1):
+>   ARM: dts: dra7-evm: add evm_3v3_sd regulator
+> 
+> Kishon Vijay Abraham I (5):
+>   ARM: dts: dra72-evm: add evm_3v3_sd regulator
+>   ARM: dts: dra72-evm: Set max clock frequency of MMC1 and MMC2
+>   ARM: dts: am57xx-beagle-x15: mmc1: remove redundant pbias-supply
+>     property
+>   ARM: dts: dra7-evm: Fix spurious card insert/removal interrupt
+>   ARM: dts: dra72-evm: Fix spurious card insert/removal interrupt
+> 
+> Nishanth Menon (1):
+>   ARM: dts: dra7-evm: Add MMCSD card removal GPIO
+> 
+>  arch/arm/boot/dts/am57xx-beagle-x15.dts |    1 -
+>  arch/arm/boot/dts/dra7-evm.dts          |   18 +++++++++++++++++-
+>  arch/arm/boot/dts/dra72-evm.dts         |   16 ++++++++++++++--
+>  3 files changed, 31 insertions(+), 4 deletions(-)
 
-On 08/03/2015 02:37 PM, Krzysztof Kozlowski wrote:
-> On Odroid XU3 board (with S2MPS11 PMIC) the PWRHOLD bit in CTRL1
-> register must be manually set to 0 before initiating power off sequence.
-> 
-> One of usual power down methods for Exynos based devices looks like:
-> 1. PWRHOLD pin of PMIC is connected to PSHOLD of Exynos.
-> 2. Exynos holds up this pin during system operation.
-> 3. ACOKB pin of PMIC is pulled up to VBATT and optionally to pin in
->    other device.
-> 4. When PWRHOLD/PSHOLD goes low, the PMIC will turn off the power if
->    ACOKB goes high.
-> 
-> On Odroid XU3 family the difference is in (3) - the ACOKB is grounded.
-> This means that PMIC must manually set PWRHOLD field to low and then
-> wait for signal from Application Processor (the usual change in
-> PWRHOLD/PSHOLD pin will actually cut off the power).
->
+Thanks applying all these into omap-for-v4.3/dt.
 
-Is nice to finally have an explanation about why this is needed.
- 
-> The patch adds respective binding allowing Odroid XU3 device to be
-> powered off.
-> 
-> Signed-off-by: Krzysztof Kozlowski <k.kozlowski.k@gmail.com>
-> Reported-by: Anand Moon <linux.amoon@gmail.com>
-> 
-> ---
-> 
-> Patch is losely based on patch in Hardkernel repository [0] and previous
-> work of Anand Moon [1].
-> 
-> [0] https://github.com/hardkernel/linux/commit/6897e62ba328bd1c8c095d918101863250cd73e7
-> [1] http://www.spinics.net/lists/linux-samsung-soc/msg45959.html
-> ---
->  Documentation/devicetree/bindings/mfd/s2mps11.txt |  4 +++
->  drivers/mfd/sec-core.c                            | 31 +++++++++++++++++++++++
->  include/linux/mfd/samsung/core.h                  |  2 ++
->  include/linux/mfd/samsung/s2mps11.h               |  1 +
->  4 files changed, 38 insertions(+)
->
-
-The patch looks good to me.
-
-Reviewed-by: Javier Martinez Canillas <javier@osg.samsung.com>
-
-Best regards,
--- 
-Javier Martinez Canillas
-Open Source Group
-Samsung Research America
+Tony
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
