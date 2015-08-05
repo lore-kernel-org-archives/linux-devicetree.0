@@ -1,119 +1,76 @@
-From: Lothar =?UTF-8?B?V2HDn21hbm4=?= <LW-bxm8fMRDkQLDiMYJYoSAnRvVK+yQ3ZXh@public.gmane.org>
-Subject: Re: [PATCH v3 1/2] drivers: watchdog: add a driver to support
- SAMA5D4 watchdog timer
-Date: Wed, 5 Aug 2015 12:40:30 +0200
-Message-ID: <20150805124030.6e73b975@ipc1.ka-ro>
-References: <1438765043-11030-1-git-send-email-wenyou.yang@atmel.com>
-	<1438765043-11030-2-git-send-email-wenyou.yang@atmel.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH v4 1/6] ARM: shmobile: r8a7740 dtsi: Add L2
+ cache-controller node
+Date: Wed, 5 Aug 2015 12:44:10 +0200
+Message-ID: <CAMuHMdXdEV+41mH338bDbazzqOErDLQkBUAj2+uVX4Wupn1ABQ@mail.gmail.com>
+References: <1438765090-823-1-git-send-email-geert+renesas@glider.be>
+	<1438765090-823-2-git-send-email-geert+renesas@glider.be>
+	<55C1D894.8070302@arm.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1438765043-11030-2-git-send-email-wenyou.yang-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Wenyou Yang <wenyou.yang-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Cc: wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, sylvain.rochet-ETtyaVkrhkNWk0Htik3J/w@public.gmane.org, nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <55C1D894.8070302@arm.com>
+Sender: linux-sh-owner@vger.kernel.org
+To: Sudeep Holla <sudeep.holla@arm.com>
+Cc: Geert Uytterhoeven <geert+renesas@glider.be>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-sh@vger.kernel.org" <linux-sh@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Hi Sudeep,
 
-> From SAMA5D4, the watchdog timer is upgrated with a new feature,
-> which is describled as in the datasheet, "WDT_MR can be written
-> until a LOCKMR command is issued in WDT_CR".
-> That is to say, as long as the bootstrap and u-boot don't issue
-> a LOCKMR command, WDT_MR can be written more than once in the driver.
->=20
-> So the SAMA5D4 watchdog driver's implementation is different from
-> the at91sam9260 watchdog driver implemented in file at91sam9_wdt.c.
-> The user application open the device file to enable the watchdog time=
-r
-> hardware, and close to disable it, and set the watchdog timer timeout
-> by seting WDV and WDD fields of WDT_MR register, and ping the watchdo=
-g
-> by issuing WDRSTT command to WDT_CR register with hard-coded key.
->=20
-> Signed-off-by: Wenyou Yang <wenyou.yang-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-> ---
->  drivers/watchdog/Kconfig            |    9 ++
->  drivers/watchdog/Makefile           |    1 +
->  drivers/watchdog/at91_sama5d4_wdt.c |  279 +++++++++++++++++++++++++=
-++++++++++
->  drivers/watchdog/at91sam9_wdt.h     |    2 +
->  4 files changed, 291 insertions(+)
->  create mode 100644 drivers/watchdog/at91_sama5d4_wdt.c
->=20
-> diff --git a/drivers/watchdog/Kconfig b/drivers/watchdog/Kconfig
-> index e5e7c55..4ce8346 100644
-> --- a/drivers/watchdog/Kconfig
-> +++ b/drivers/watchdog/Kconfig
-> @@ -152,6 +152,15 @@ config ARM_SP805_WATCHDOG
->  	  ARM Primecell SP805 Watchdog timer. This will reboot your system =
-when
->  	  the timeout is reached.
-> =20
-> +config AT91_SAMA5D4_WATCHDOG
-> +	tristate "Atmel SAMA5D4 Watchdog Timer"
-> +	depends on ARCH_AT91
-> +	select WATCHDOG_CORE
-> +	help
-> +	  Atmel SAMA5D4 watchdog timer is embedded into SAMA5D4 chips.
-> +	  Its Watchdog Timer Mode Register can be written more than once.
-> +	  This will reboot your system when the timeout is reached.
-> +
->  config AT91RM9200_WATCHDOG
->  	tristate "AT91RM9200 watchdog"
->  	depends on SOC_AT91RM9200 && MFD_SYSCON
-> diff --git a/drivers/watchdog/Makefile b/drivers/watchdog/Makefile
-> index 5c19294..c57569c 100644
-> --- a/drivers/watchdog/Makefile
-> +++ b/drivers/watchdog/Makefile
-> @@ -30,6 +30,7 @@ obj-$(CONFIG_USBPCWATCHDOG) +=3D pcwd_usb.o
-> =20
->  # ARM Architecture
->  obj-$(CONFIG_ARM_SP805_WATCHDOG) +=3D sp805_wdt.o
-> +obj-$(CONFIG_AT91_SAMA5D4_WATCHDOG) +=3D at91_sama5d4_wdt.o
-consistency? Other AT91 entries don't have an '_' between 'AT91' and
-the remainder of the Kconfig name.
+On Wed, Aug 5, 2015 at 11:34 AM, Sudeep Holla <sudeep.holla@arm.com> wrote:
+> On 05/08/15 09:58, Geert Uytterhoeven wrote:
+>> Add the missing L2 cache-controller node. This will allow migration to
+>> the generic l2c OF initialization.
+>>
+>> The L2 cache is an ARM L2C-310 (r3p1-150rel0), of size 256 KiB (32 KiB x
+>> 8 ways).
+>>
+>> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
->  obj-$(CONFIG_AT91RM9200_WATCHDOG) +=3D at91rm9200_wdt.o
->  obj-$(CONFIG_AT91SAM9X_WATCHDOG) +=3D at91sam9_wdt.o
-[...]
-> +static irqreturn_t atmel_wdt_irq_handler(int irq, void *dev_id)
-> +{
-> +	struct atmel_wdt *wdt =3D platform_get_drvdata(dev_id);
-> +
-> +	if (wdt_read(wdt, AT91_WDT_SR)) {
-> +		pr_crit("Atmel Watchdog Software Reset\n");
-> +		emergency_restart();
-> +		pr_crit("Reboot didn't ?????\n");
+>> diff --git a/arch/arm/boot/dts/r8a7740.dtsi
+>> b/arch/arm/boot/dts/r8a7740.dtsi
+>> index d84714468cce18df..ddef5b1c68fa06b3 100644
+>> --- a/arch/arm/boot/dts/r8a7740.dtsi
+>> +++ b/arch/arm/boot/dts/r8a7740.dtsi
+>> @@ -37,6 +37,22 @@
+>>                       <0xc2000000 0x1000>;
+>>         };
+>>
+>> +       L2: cache-controller {
+>> +               compatible = "arm,pl310-cache";
+>> +               reg = <0xf0100000 0x1000>;
+>> +               interrupts = <0 84 IRQ_TYPE_LEVEL_HIGH>;
+>> +               power-domains = <&pd_a3sm>;
+>> +               arm,data-latency = <3 3 3>;
+>> +               arm,tag-latency = <2 2 2>;
+>> +               arm,shared-override;
+>> +               cache-unified;
+>> +               cache-level = <2>;
+>> +               cache-size = <0x40000>;
+>> +               cache-sets = <1024>;
+>> +               cache-block-size = <32>;
+>> +               cache-line-size = <32>;
 >
-Reboot didn't what? 'succeed' perhaps?
+>
+> Any particular reason whey you need all this cache-* properties ? Is
 
-> +static const struct of_device_id atmel_wdt_of_match[] =3D {
-> +	{ .compatible =3D "atmel,sama5d4-wdt", },
-> +	{ },
-The empty initializer must always be the last element of the array, so
-there is no point in having a trailing ',' (whose purpose is to
-facilitate adding more entries after the last one).
-Without the comma there will be a compile error if (e.g. due to a
-badly resolved merge conflict) an additional entry would be added after
-the stop marker. With the comma after the stop marker any trailing
-entries would silently be ignored.
+To describe the cache as good as possible.
 
+> something broken on these SoCs ? We should be able to get most of these
+> information from the SoC(reading some registers). It's good to avoid
+> passing them via DT if they can be discovered from hardware.
 
-Lothar Wa=C3=9Fmann
---=20
-___________________________________________________________
+So we have all these documented properties in
+Documentation/devicetree/bindings/arm/l2cc.txt, but they're not meant to
+be used?
 
-Ka-Ro electronics GmbH | Pascalstra=C3=9Fe 22 | D - 52076 Aachen
-Phone: +49 2408 1402-0 | Fax: +49 2408 1402-10
-Gesch=C3=A4ftsf=C3=BChrer: Matthias Kaussen
-Handelsregistereintrag: Amtsgericht Aachen, HRB 4996
+Gr{oetje,eeting}s,
 
-www.karo-electronics.de | info-AvR2QvxeiV7DiMYJYoSAnRvVK+yQ3ZXh@public.gmane.org
-___________________________________________________________
+                        Geert
+
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
