@@ -1,66 +1,57 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH v2 0/4] Add SPDIF support for rockchip
-Date: Wed, 5 Aug 2015 12:59:51 +0100
-Message-ID: <20150805115951.GK20873@sirena.org.uk>
-References: <1438687099-14282-1-git-send-email-sjoerd.simons@collabora.co.uk>
- <20150804153649.GP20873@sirena.org.uk>
- <1438756921.27576.4.camel@collabora.co.uk>
+From: Keerthy <a0393675-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH 3/8] rtc: omap: Add external clock enabling support
+Date: Wed, 5 Aug 2015 17:31:22 +0530
+Message-ID: <55C1FB12.1000208@ti.com>
+References: <1438771792-12604-1-git-send-email-j-keerthy@ti.com> <1438771792-12604-4-git-send-email-j-keerthy@ti.com> <20150805111316.GI16878@atomide.com> <20150805114119.GF3486@piout.net> <20150805114357.GG3486@piout.net>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="GNsO7fNsq+j2k5eo"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1438756921.27576.4.camel@collabora.co.uk>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Sjoerd Simons <sjoerd.simons@collabora.co.uk>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, Russell King <linux@arm.linux.org.uk>, Heiko Stuebner <heiko@sntech.de>, Pawel Moll <pawel.moll@arm.com>, Liam Girdwood <lgirdwood@gmail.com>, linux-kernel@vger.kernel.org, Ian Campbell <ijc+devicetree@hellion.org.uk>, Takashi Iwai <tiwai@suse.com>, Jaroslav Kysela <perex@perex.cz>, linux-rockchip@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20150805114357.GG3486-m++hUPXGwpdeoWH0uzbU5w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Cc: Keerthy <j-keerthy-l0cyMroinI0@public.gmane.org>, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org, johan-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, nm-l0cyMroinI0@public.gmane.org, paul-DWxLp4Yu+b8AvxtiuMwx3w@public.gmane.org, t-kristo-l0cyMroinI0@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
 
---GNsO7fNsq+j2k5eo
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
 
-On Wed, Aug 05, 2015 at 08:42:01AM +0200, Sjoerd Simons wrote:
-> On Tue, 2015-08-04 at 16:36 +0100, Mark Brown wrote:
+On Wednesday 05 August 2015 05:13 PM, Alexandre Belloni wrote:
+> On 05/08/2015 at 13:41:19 +0200, Alexandre Belloni wrote :
+>> Hi,
+>>
+>> On 05/08/2015 at 04:13:17 -0700, Tony Lindgren wrote :
+>>> * Keerthy <j-keerthy-l0cyMroinI0@public.gmane.org> [150805 03:53]:
+>>>> Based on the board property switch the source from internal
+>>>> to external clock. Switching to external source is needed for
+>>>> rtcwake to work in low power modes.
+>>>
+>>> I think this is better handled based on the compatible string
+>>> in the device driver rather than introducing a custom dts
+>>> property for it. You can just set the quirk flag in the driver
+>>> probe based on the compatible.
+>>>
+>>
+>> Why not use the clocks property? Then you can pass an external clock. If
+>> it is present you can even get its rate if this is needed at some point
+>> in the future. You could also disable it when going to suspend.
+>>
+>
+> Actually, that was already my suggestion back in april:
+> http://patchwork.ozlabs.org/patch/445631/
+>
+> (Please Cc: the rtc mailing list for RTC related patches so that they
+> get picked up by patchwork).
 
-> > I only appear to have patch 2 (with the misspelt subject), not the
-> > binding documentation.
+Hi Alexandre,
 
-> Applogies, Send that patch specifically to you now.
+This is a special one where in the enable bit is present in the rtc 
+register space and not in the prcm register space. Since there was a 
+concern on the external clock not being present i added a board dts flag.
 
-And I deleted it unread because it was just some random off list patch
-with no context.  :(
-
-> Seems get_maintainers.pl didn't include you in the list (nor the other
-> asoc maintainers in the list), I guess it might be good to add
-> Documentation/devicetree/bindings/sounds/ to the ASoC file list in
-> MAINTAINTERS ?
-
-Please follow the process covered in SubmittingPatches for making kernel
-changes, but note that there's generic sound drivers as well as ASoC
-ones.
-
-In general it is a very bad idea to rely on get_maintainers, it is prone
-to both false positives and missing relevant people.  It can be useful
-to look at but you need to think about what it's telling you.  In this
-case it should be fairly easy to tell that you ought to send the binding
-documentation along with the driver.
-
---GNsO7fNsq+j2k5eo
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQEcBAEBCAAGBQJVwfq2AAoJECTWi3JdVIfQ8koH+wU5IMgymFjXkLokOTSnxd4i
-SYCn6eMvkR+c9Co7q+fNh6OrAxOHRsBF3gW4Q+2096OHfVme9+lPgAy0Hu2vRVdo
-BAZ/+c8V2bCeH35S96pDqNuqdxhKA1IfnqEtlUZJP5l7x+wA6x24S9nYLz2lOw8/
-IdfO6diH13EaW5uBsonNDgC1+wES7kWIjzpuNyG/CNdbG6sYYvP+V4PG/Td7mr/H
-hihKQeP/iPTovfesv8a1MxIXI1SF7xekHdIv5o+HkniXcyyld7PzPYl9wYcfiHmJ
-5VjZWq9R7NyNfrQtkBjFzemsgrvpB/82NWQSmMUWMHA4XLbjMfNke1vLa1rYN0M=
-=hBn1
------END PGP SIGNATURE-----
-
---GNsO7fNsq+j2k5eo--
+Regards,
+Keerthy
+>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
