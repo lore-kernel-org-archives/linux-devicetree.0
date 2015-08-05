@@ -1,63 +1,47 @@
-From: Sanchayan Maity <maitysanchayan@gmail.com>
-Subject: [PATCH v3 2/3] input: Add DT binding documentation for Colibri VF50 touchscreen
-Date: Wed,  5 Aug 2015 14:25:50 +0530
-Message-ID: <02b69355beb87bd1087d9df76d82fa0aeb161d61.1438763030.git.maitysanchayan@gmail.com>
-References: <cover.1438763030.git.maitysanchayan@gmail.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <cover.1438763030.git.maitysanchayan@gmail.com>
-In-Reply-To: <cover.1438763030.git.maitysanchayan@gmail.com>
-References: <cover.1438763030.git.maitysanchayan@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: dmitry.torokhov@gmail.com, linux-input@vger.kernel.org, devicetree@vger.kernel.org
-Cc: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, shawn.guo@linaro.org, kernel@pengutronix.de, stefan@agner.ch, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Sanchayan Maity <maitysanchayan@gmail.com>
+From: Wenyou Yang <wenyou.yang-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH v3 0/2] add a new driver to support SAMA5D4 watchdog timer
+Date: Wed, 5 Aug 2015 16:57:20 +0800
+Message-ID: <1438765043-11030-1-git-send-email-wenyou.yang@atmel.com>
+Mime-Version: 1.0
+Content-Type: text/plain
+Return-path: <linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
+Cc: sylvain.rochet-ETtyaVkrhkNWk0Htik3J/w@public.gmane.org, nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org, boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, wenyou.yang-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This adds device tree binding documentation for the Colibri VF50
-touchscreen driver.
+Hello,
 
-Signed-off-by: Sanchayan Maity <maitysanchayan@gmail.com>
----
- .../bindings/input/touchscreen/colibri-vf50-ts.txt | 32 ++++++++++++++++++++++
- 1 file changed, 32 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/input/touchscreen/colibri-vf50-ts.txt
+Because the watchdog WDT_MR register can be written more than once,
+its work mechanism is different from the at91sam9260 watchdog driver.
+Open the device file to enable the watchdog hardware, close to disable it,
+and ping it from the user space directly to keep it alive.
 
-diff --git a/Documentation/devicetree/bindings/input/touchscreen/colibri-vf50-ts.txt b/Documentation/devicetree/bindings/input/touchscreen/colibri-vf50-ts.txt
-new file mode 100644
-index 0000000..3e0efac
---- /dev/null
-+++ b/Documentation/devicetree/bindings/input/touchscreen/colibri-vf50-ts.txt
-@@ -0,0 +1,32 @@
-+* Toradex Colibri VF50 Touchscreen driver
-+
-+Required Properties:
-+- compatible must be toradex,vf50-touchctrl
-+- io-channels: adc channels being used by the Colibri VF50 module
-+- xp-gpios: FET gate driver for input of X+
-+- xm-gpios: FET gate driver for input of X-
-+- yp-gpios: FET gate driver for input of Y+
-+- ym-gpios: FET gate driver for input of Y-
-+- pen-detect-gpios: GPIO for pen detect irq
-+- pinctrl-names: "idle", "default", "gpios"
-+- pinctrl-0: pinctrl node for idle state gpio pinmux
-+- pinctrl-1: pinctrl node for touch detection state pinmux
-+- pinctrl-2: pinctrl node for gpios functioning as FET gate drivers
-+
-+Example:
-+
-+	touchctrl: vf50_touchctrl {
-+		compatible = "toradex,vf50-touchctrl";
-+		io-channels = <&adc1 0>,<&adc0 0>,
-+				<&adc0 1>,<&adc1 2>;
-+		xp-gpios = <&gpio0 13 GPIO_ACTIVE_LOW>;
-+		xm-gpios = <&gpio2 29 GPIO_ACTIVE_HIGH>;
-+		yp-gpios = <&gpio0 12 GPIO_ACTIVE_LOW>;
-+		ym-gpios = <&gpio0 4 GPIO_ACTIVE_HIGH>;
-+		pen-detect-gpios = <&gpio0 8 GPIO_ACTIVE_HIGH>;
-+		pinctrl-names = "idle","default","gpios";
-+		pinctrl-0 = <&pinctrl_touchctrl_idle>;
-+		pinctrl-1 = <&pinctrl_touchctrl_default>;
-+		pinctrl-2 = <&pinctrl_touchctrl_gpios>;
-+		status = "disabled";
-+	};
+Thank for Guenter's review, the version 2.0 changes are listed as below.
+
+Changes from v2.0
+ 1./ Use a specific driver name, at91_sama5d4_wdt.c.
+ 2./ Remove '-' at the end of macro name and unnecessary check.
+ 3./ Use alphabetic order for include files.
+
+Wenyou Yang (2):
+  drivers: watchdog: add a driver to support SAMA5D4 watchdog timer
+  Documentation: dt: binding: atmel-sama5d4-wdt: for SAMA5D4 watchdog
+    driver
+
+ .../bindings/watchdog/atmel-sama5d4-wdt.txt        |   35 +++
+ drivers/watchdog/Kconfig                           |    9 +
+ drivers/watchdog/Makefile                          |    1 +
+ drivers/watchdog/at91_sama5d4_wdt.c                |  279 ++++++++++++++++++++
+ drivers/watchdog/at91sam9_wdt.h                    |    2 +
+ 5 files changed, 326 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/watchdog/atmel-sama5d4-wdt.txt
+ create mode 100644 drivers/watchdog/at91_sama5d4_wdt.c
+
 -- 
-2.5.0
+1.7.9.5
+
+--
+To unsubscribe from this list: send the line "unsubscribe linux-watchdog" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
