@@ -1,78 +1,298 @@
-From: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v3 0/5] Add SMP bringup support for mt65xx socs
-Date: Wed, 05 Aug 2015 20:44:11 +0200
-Message-ID: <4831607.pyCH8elj8i@ubix>
-References: <1436851111-2369-1-git-send-email-yingjoe.chen@mediatek.com>
+From: Dmitry Torokhov <dtor@chromium.org>
+Subject: [PATCH] Input: elants_i2c - wire up regulator support
+Date: Wed, 5 Aug 2015 11:53:57 -0700
+Message-ID: <20150805185357.GA31387@dtor-ws>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-In-Reply-To: <1436851111-2369-1-git-send-email-yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mediatek>,
- <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-mediatek/>
-List-Post: <mailto:linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mediatek>,
- <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "Linux-mediatek" <linux-mediatek-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: Yingjoe Chen <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-input-owner@vger.kernel.org>
+Content-Disposition: inline
+Sender: linux-input-owner@vger.kernel.org
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Benson Leung <bleung@chromium.org>, Duson Lin <dusonlin@emc.com.tw>, Scott Liu <scott.liu@emc.com.tw>, James Chen <james.chen@emc.com.tw>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-input@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tuesday, July 14, 2015 01:18:26 PM Yingjoe Chen wrote:
-> This series add SMP brinup support for MediaTek SoCs. This is based
-> on v4.2-rc1 and Matthias' next branch (for dts parts).
-> 
-> There are similar but different SMP bringup up methods on MediaTek
-> mt65xx and mt81xx. On MT8135 & MT8127, system boots with a trustzone
-> firmware. Others, like MT6589, doesn't have trustzone, and run kernel
-> directly in secure world.
-> 
-> Patch 1 enable arch timer support.
-> Patch 2,3 add support for cpu enable-method "mediatek,mt6589-smp" and
-> "mediatek,mt81xx-tz-smp", which support Mediatek SMP bringup for non-TZ
-> and TZ platform.
-> Patch 4,5 finally enable SMP bringup for mt8135 and mt8127.
-> 
-> Changes in v3:
-> - The first 2 patches in v2 are merged in v4.2-rc1.
-> - Patch 3~4 in v2 are moved to another series [1]
-> - platsmp.c changes based on Stephen's suggestion
-> - Change cpu enable-method name to "mediatek,mt6589-smp"
-> 
-> Changes in v2:
-> - Fix boot issue for THUMB2 kernel.
-> - Not enable GPT_CLK_EVT when setup to fix GPT spurious interrupt issue
-> - Change platsmp.c according to Matthias' suggestion
-> http://lists.infradead.org/pipermail/linux-mediatek/2015-May/000714.html
-> 
-> v1:
-> http://lists.infradead.org/pipermail/linux-mediatek/2015-May/000528.html
-> 
-> [1]
-> http://lists.infradead.org/pipermail/linux-mediatek/2015-July/001544.html
-> 
-> Matthias Brugger (1):
->   ARM: mediatek: enable gpt6 on boot up to make arch timer working
-> 
-> Yingjoe Chen (4):
->   devicetree: bindings: add new SMP enable method Mediatek SoC
->   ARM: mediatek: add smp bringup code
->   ARM: dts: mt8135: enable basic SMP bringup for mt8135
->   ARM: dts: mt8127: enable basic SMP bringup for mt8127
-> 
->  Documentation/devicetree/bindings/arm/cpus.txt |   2 +
->  arch/arm/boot/dts/mt8127.dtsi                  |  16 +++
->  arch/arm/boot/dts/mt8135.dtsi                  |  16 +++
->  arch/arm/mach-mediatek/Makefile                |   3 +
->  arch/arm/mach-mediatek/mediatek.c              |  27 +++++
->  arch/arm/mach-mediatek/platsmp.c               | 144
-> +++++++++++++++++++++++++ 6 files changed, 208 insertions(+)
->  create mode 100644 arch/arm/mach-mediatek/platsmp.c
+Elan touchscreen controllers use two power supplies, vcc33 and vccio,
+and we need to enable them before trying to access the device. On X86
+firmware usually does this, but on ARM it is usually left to the kernel.
 
-Applied to v4.2-next/soc-2 and v4.2-next/dts-2 
+Signed-off-by: Dmitry Torokhov <dtor@chromium.org>
+Reviewed-by: Benson Leung <bleung@chromium.org>
+Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+---
+ .../devicetree/bindings/input/elants_i2c.txt       |   3 +
+ drivers/input/touchscreen/elants_i2c.c             | 184 ++++++++++++++++++---
+ 2 files changed, 165 insertions(+), 22 deletions(-)
 
-Thanks,
-Matthias
+diff --git a/Documentation/devicetree/bindings/input/elants_i2c.txt b/Documentation/devicetree/bindings/input/elants_i2c.txt
+index a765232..8a71038 100644
+--- a/Documentation/devicetree/bindings/input/elants_i2c.txt
++++ b/Documentation/devicetree/bindings/input/elants_i2c.txt
+@@ -13,6 +13,9 @@ Optional properties:
+ - pinctrl-names: should be "default" (see pinctrl binding [1]).
+ - pinctrl-0: a phandle pointing to the pin settings for the device (see
+   pinctrl binding [1]).
++- reset-gpios: reset gpio the chip is connected to.
++- vcc33-supply: a phandle for the regulator supplying 3.3V power.
++- vccio-supply: a phandle for the regulator supplying IO power.
+ 
+ [0]: Documentation/devicetree/bindings/interrupt-controller/interrupts.txt
+ [1]: Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt
+diff --git a/drivers/input/touchscreen/elants_i2c.c b/drivers/input/touchscreen/elants_i2c.c
+index 42e43f1..1912265 100644
+--- a/drivers/input/touchscreen/elants_i2c.c
++++ b/drivers/input/touchscreen/elants_i2c.c
+@@ -38,6 +38,8 @@
+ #include <linux/input/mt.h>
+ #include <linux/acpi.h>
+ #include <linux/of.h>
++#include <linux/gpio/consumer.h>
++#include <linux/regulator/consumer.h>
+ #include <asm/unaligned.h>
+ 
+ /* Device, Driver information */
+@@ -102,6 +104,9 @@
+ /* calibration timeout definition */
+ #define ELAN_CALI_TIMEOUT_MSEC	10000
+ 
++#define ELAN_POWERON_DELAY_USEC	500
++#define ELAN_RESET_DELAY_MSEC	20
++
+ enum elants_state {
+ 	ELAN_STATE_NORMAL,
+ 	ELAN_WAIT_QUEUE_HEADER,
+@@ -118,6 +123,10 @@ struct elants_data {
+ 	struct i2c_client *client;
+ 	struct input_dev *input;
+ 
++	struct regulator *vcc33;
++	struct regulator *vccio;
++	struct gpio_desc *reset_gpio;
++
+ 	u16 fw_version;
+ 	u8 test_version;
+ 	u8 solution_version;
+@@ -141,6 +150,7 @@ struct elants_data {
+ 	u8 buf[MAX_PACKET_SIZE];
+ 
+ 	bool wake_irq_enabled;
++	bool keep_power_in_suspend;
+ };
+ 
+ static int elants_i2c_send(struct i2c_client *client,
+@@ -1058,6 +1068,67 @@ static void elants_i2c_remove_sysfs_group(void *_data)
+ 	sysfs_remove_group(&ts->client->dev.kobj, &elants_attribute_group);
+ }
+ 
++static int elants_i2c_power_on(struct elants_data *ts)
++{
++	int error;
++
++	/*
++	 * If we do not have reset gpio assume platform firmware
++	 * controls regulators and does power them on for us.
++	 */
++	if (IS_ERR_OR_NULL(ts->reset_gpio))
++		return 0;
++
++	gpiod_set_value_cansleep(ts->reset_gpio, 1);
++
++	error = regulator_enable(ts->vcc33);
++	if (error) {
++		dev_err(&ts->client->dev,
++			"failed to enable vcc33 regulator: %d\n",
++			error);
++		goto release_reset_gpio;
++	}
++
++	error = regulator_enable(ts->vccio);
++	if (error) {
++		dev_err(&ts->client->dev,
++			"failed to enable vccio regulator: %d\n",
++			error);
++		regulator_disable(ts->vcc33);
++		goto release_reset_gpio;
++	}
++
++	/*
++	 * We need to wait a bit after powering on controller before
++	 * we are allowed to release reset GPIO.
++	 */
++	udelay(ELAN_POWERON_DELAY_USEC);
++
++release_reset_gpio:
++	gpiod_set_value_cansleep(ts->reset_gpio, 0);
++	if (error)
++		return error;
++
++	msleep(ELAN_RESET_DELAY_MSEC);
++
++	return 0;
++}
++
++static void elants_i2c_power_off(void *_data)
++{
++	struct elants_data *ts = _data;
++
++	if (!IS_ERR_OR_NULL(ts->reset_gpio)) {
++		/*
++		 * Activate reset gpio to prevent leakage through the
++		 * pin once we shut off power to the controller.
++		 */
++		gpiod_set_value_cansleep(ts->reset_gpio, 1);
++		regulator_disable(ts->vccio);
++		regulator_disable(ts->vcc33);
++	}
++}
++
+ static int elants_i2c_probe(struct i2c_client *client,
+ 			    const struct i2c_device_id *id)
+ {
+@@ -1072,13 +1143,6 @@ static int elants_i2c_probe(struct i2c_client *client,
+ 		return -ENXIO;
+ 	}
+ 
+-	/* Make sure there is something at this address */
+-	if (i2c_smbus_xfer(client->adapter, client->addr, 0,
+-			I2C_SMBUS_READ, 0, I2C_SMBUS_BYTE, &dummy) < 0) {
+-		dev_err(&client->dev, "nothing at this address\n");
+-		return -ENXIO;
+-	}
+-
+ 	ts = devm_kzalloc(&client->dev, sizeof(struct elants_data), GFP_KERNEL);
+ 	if (!ts)
+ 		return -ENOMEM;
+@@ -1089,6 +1153,70 @@ static int elants_i2c_probe(struct i2c_client *client,
+ 	ts->client = client;
+ 	i2c_set_clientdata(client, ts);
+ 
++	ts->vcc33 = devm_regulator_get(&client->dev, "vcc33");
++	if (IS_ERR(ts->vcc33)) {
++		error = PTR_ERR(ts->vcc33);
++		if (error != -EPROBE_DEFER)
++			dev_err(&client->dev,
++				"Failed to get 'vcc33' regulator: %d\n",
++				error);
++		return error;
++	}
++
++	ts->vccio = devm_regulator_get(&client->dev, "vccio");
++	if (IS_ERR(ts->vccio)) {
++		error = PTR_ERR(ts->vccio);
++		if (error != -EPROBE_DEFER)
++			dev_err(&client->dev,
++				"Failed to get 'vccio' regulator: %d\n",
++				error);
++		return error;
++	}
++
++	ts->reset_gpio = devm_gpiod_get(&client->dev, "reset");
++	if (IS_ERR(ts->reset_gpio)) {
++		error = PTR_ERR(ts->reset_gpio);
++
++		if (error == -EPROBE_DEFER)
++			return error;
++
++		if (error != -ENOENT && error != -ENOSYS) {
++			dev_err(&client->dev,
++				"failed to get reset gpio: %d\n",
++				error);
++			return error;
++		}
++
++		ts->keep_power_in_suspend = true;
++	} else {
++		error = gpiod_direction_output(ts->reset_gpio, 0);
++		if (error) {
++			dev_err(&client->dev,
++				"failed to configure reset gpio as output: %d\n",
++				error);
++			return error;
++		}
++	}
++
++	error = elants_i2c_power_on(ts);
++	if (error)
++		return error;
++
++	error = devm_add_action(&client->dev, elants_i2c_power_off, ts);
++	if (error) {
++		dev_err(&client->dev,
++			"failed to install power off action: %d\n", error);
++		elants_i2c_power_off(ts);
++		return error;
++	}
++
++	/* Make sure there is something at this address */
++	if (i2c_smbus_xfer(client->adapter, client->addr, 0,
++			   I2C_SMBUS_READ, 0, I2C_SMBUS_BYTE, &dummy) < 0) {
++		dev_err(&client->dev, "nothing at this address\n");
++		return -ENXIO;
++	}
++
+ 	error = elants_i2c_initialize(ts);
+ 	if (error) {
+ 		dev_err(&client->dev, "failed to initialize: %d\n", error);
+@@ -1196,17 +1324,23 @@ static int __maybe_unused elants_i2c_suspend(struct device *dev)
+ 
+ 	disable_irq(client->irq);
+ 
+-	for (retry_cnt = 0; retry_cnt < MAX_RETRIES; retry_cnt++) {
+-		error = elants_i2c_send(client, set_sleep_cmd,
+-					sizeof(set_sleep_cmd));
+-		if (!error)
+-			break;
++	if (device_may_wakeup(dev) || ts->keep_power_in_suspend) {
++		for (retry_cnt = 0; retry_cnt < MAX_RETRIES; retry_cnt++) {
++			error = elants_i2c_send(client, set_sleep_cmd,
++						sizeof(set_sleep_cmd));
++			if (!error)
++				break;
+ 
+-		dev_err(&client->dev, "suspend command failed: %d\n", error);
+-	}
++			dev_err(&client->dev,
++				"suspend command failed: %d\n", error);
++		}
+ 
+-	if (device_may_wakeup(dev))
+-		ts->wake_irq_enabled = (enable_irq_wake(client->irq) == 0);
++		if (device_may_wakeup(dev))
++			ts->wake_irq_enabled =
++					(enable_irq_wake(client->irq) == 0);
++	} else {
++		elants_i2c_power_off(ts);
++	}
+ 
+ 	return 0;
+ }
+@@ -1222,13 +1356,19 @@ static int __maybe_unused elants_i2c_resume(struct device *dev)
+ 	if (device_may_wakeup(dev) && ts->wake_irq_enabled)
+ 		disable_irq_wake(client->irq);
+ 
+-	for (retry_cnt = 0; retry_cnt < MAX_RETRIES; retry_cnt++) {
+-		error = elants_i2c_send(client, set_active_cmd,
+-					sizeof(set_active_cmd));
+-		if (!error)
+-			break;
++	if (ts->keep_power_in_suspend) {
++		for (retry_cnt = 0; retry_cnt < MAX_RETRIES; retry_cnt++) {
++			error = elants_i2c_send(client, set_active_cmd,
++						sizeof(set_active_cmd));
++			if (!error)
++				break;
+ 
+-		dev_err(&client->dev, "resume command failed: %d\n", error);
++			dev_err(&client->dev,
++				"resume command failed: %d\n", error);
++		}
++	} else {
++		elants_i2c_power_on(ts);
++		elants_i2c_initialize(ts);
+ 	}
+ 
+ 	ts->state = ELAN_STATE_NORMAL;
+-- 
+2.5.0.rc2.392.g76e840b
+
+
+-- 
+Dmitry
