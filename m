@@ -1,30 +1,54 @@
-From: Sudeep Holla <sudeep.holla@arm.com>
-Subject: Re: [PATCH v6 0/8] ARM64: juno: add SCPI mailbox protocol, clock
- and CPUFreq support
-Date: Wed, 05 Aug 2015 10:59:27 +0100
-Message-ID: <55C1DE7F.5040002@arm.com>
-References: <1438364591-1144-1-git-send-email-sudeep.holla@arm.com>
+From: Tony Lindgren <tony@atomide.com>
+Subject: Re: [PATCH 0/4] omap: Fix broken pbias device creation
+Date: Wed, 5 Aug 2015 03:00:09 -0700
+Message-ID: <20150805100009.GY16878@atomide.com>
+References: <1437999401-3519-1-git-send-email-kishon@ti.com>
+ <55B89590.6000109@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1438364591-1144-1-git-send-email-sudeep.holla@arm.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: "arm@kernel.org" <arm@kernel.org>, Olof Johansson <olof@lixom.net>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Kevin Hilman <khilman@kernel.org>, Sudeep Holla <Sudeep.Holla@arm.com>, Liviu Dudau <Liviu.Dudau@arm.com>, Punit Agrawal <Punit.Agrawal@arm.com>, "Jon Medhurst (Tixy)" <tixy@linaro.org>, Lorenzo Pieralisi <Lorenzo.Pieralisi@arm.com>, Arnd Bergmann <arnd@arndb.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <55B89590.6000109@ti.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Grygorii Strashko <grygorii.strashko@ti.com>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, linux@arm.linux.org.uk, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, nsekhar@ti.com, linux-kernel@vger.kernel.org, Kishon Vijay Abraham I <kishon@ti.com>, t-kristo@ti.com, robh+dt@kernel.org, bcousson@baylibre.com, galak@codeaurora.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Olof,
+* Grygorii Strashko <grygorii.strashko@ti.com> [150729 02:01]:
+> On 07/27/2015 03:16 PM, Kishon Vijay Abraham I wrote:
+> >pbias device creation got broken once SCM cleanup got merged.
+> >This patch series re-enables device creation by adding
+> >"simple-bus" in the compatible property of the syscon
+> >dt node.
+> >
+> >validated this series in DRA72, OMAP4 PANDA and OMAP5 UEVM
+> >boards.
+> >
+> >Kishon Vijay Abraham I (4):
+> >   ARM: dts: omap24xx: Fix broken pbias device creation
+> >   ARM: dts: OMAP4: Fix broken pbias device creation
+> >   ARM: dts: OMAP5: Fix broken pbias device creation
+> >   ARM: dts: dra7: Fix broken pbias device creation
+> >
+> >  arch/arm/boot/dts/dra7.dtsi     |    2 +-
+> >  arch/arm/boot/dts/omap2430.dtsi |    3 ++-
+> >  arch/arm/boot/dts/omap4.dtsi    |    3 ++-
+> >  arch/arm/boot/dts/omap5.dtsi    |    3 ++-
+> >  4 files changed, 7 insertions(+), 4 deletions(-)
+> >
+> 
+> For dra7-evm:
+> Tested-by: Grygorii Strashko <grygorii.strashko@ti.com>
 
-On 31/07/15 18:43, Sudeep Holla wrote:
-> Hi ARM-SoC guys,
->
-> It has been on the list for a while and have got all the necessary
-> ACKs. Can you please pull this series for v4.3 ?
->
+Applying all into omap-for-v4.2fixes-v2 thanks.
 
-Can you pull this patch series directly from the mail or do you prefer
-pull-request ?
-
-Regards,
-Sudeep
+Tony
