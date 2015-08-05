@@ -1,84 +1,54 @@
-From: Lina Iyer <lina.iyer@linaro.org>
-Subject: [PATCH RFC 05/10] arm: dts: Add power domain device bindings for
- APQ8084
-Date: Wed,  5 Aug 2015 10:32:41 -0600
-Message-ID: <1438792366-2737-6-git-send-email-lina.iyer@linaro.org>
+From: Andy Gross <agross@codeaurora.org>
+Subject: Re: [PATCH RFC 06/10] drivers: qcom: Enable genpd on selecting
+ QCOM_PM
+Date: Wed, 5 Aug 2015 11:38:37 -0500
+Message-ID: <20150805163837.GB14198@qualcomm.com>
 References: <438731339-58317-1-git-send-email-lina.iyer@linaro.org>
  <1438792366-2737-1-git-send-email-lina.iyer@linaro.org>
+ <1438792366-2737-7-git-send-email-lina.iyer@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1438792366-2737-1-git-send-email-lina.iyer@linaro.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-pm@vger.kernel.org
-Cc: msivasub@codeaurora.org, robh@kernel.org, sboyd@codeaurora.org, Lina Iyer <lina.iyer@linaro.org>, agross@codeaurora.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-pm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1438792366-2737-7-git-send-email-lina.iyer@linaro.org>
+Sender: linux-pm-owner@vger.kernel.org
+To: Lina Iyer <lina.iyer@linaro.org>
+Cc: linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-pm@vger.kernel.org, msivasub@codeaurora.org, sboyd@codeaurora.org, robh@kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Define L2 SAW as the power domain provider and individual cpus are the
-power domain consumers.
+On Wed, Aug 05, 2015 at 10:32:42AM -0600, Lina Iyer wrote:
+> Enable PM_CPU_DOMAIN and its PM_GENERIC_DOMAINS dependenciesd to provide
+> cpu domain support for QCOM SoCs.
 
-Signed-off-by: Lina Iyer <lina.iyer@linaro.org>
----
- arch/arm/boot/dts/qcom-apq8084.dtsi | 8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
+Fix dependencies <sic>
 
-diff --git a/arch/arm/boot/dts/qcom-apq8084.dtsi b/arch/arm/boot/dts/qcom-apq8084.dtsi
-index 900ef1f..4a61f8d 100644
---- a/arch/arm/boot/dts/qcom-apq8084.dtsi
-+++ b/arch/arm/boot/dts/qcom-apq8084.dtsi
-@@ -23,6 +23,7 @@
- 			qcom,acc = <&acc0>;
- 			qcom,saw = <&saw0>;
- 			cpu-idle-states = <&CPU_SPC>;
-+			power-domains = <&saw_l2>;
- 		};
- 
- 		cpu@1 {
-@@ -34,6 +35,7 @@
- 			qcom,acc = <&acc1>;
- 			qcom,saw = <&saw1>;
- 			cpu-idle-states = <&CPU_SPC>;
-+			power-domains = <&saw_l2>;
- 		};
- 
- 		cpu@2 {
-@@ -45,6 +47,7 @@
- 			qcom,acc = <&acc2>;
- 			qcom,saw = <&saw2>;
- 			cpu-idle-states = <&CPU_SPC>;
-+			power-domains = <&saw_l2>;
- 		};
- 
- 		cpu@3 {
-@@ -56,6 +59,7 @@
- 			qcom,acc = <&acc3>;
- 			qcom,saw = <&saw3>;
- 			cpu-idle-states = <&CPU_SPC>;
-+			power-domains = <&saw_l2>;
- 		};
- 
- 		L2: l2-cache {
-@@ -183,9 +187,11 @@
- 		};
- 
- 		saw_l2: power-controller@f9012000 {
--			compatible = "qcom,apq8084-saw2-v2.1-l2", "qcom,saw2";
-+			compatible = "qcom,apq8084-saw2-v2.1-l2", "qcom,saw2",
-+					 "arm,pd";
- 			reg = <0xf9012000 0x1000>;
- 			regulator;
-+			#power-domain-cells = <0>;
- 		};
- 
- 		acc0: clock-controller@f9088000 {
+> 
+> Signed-off-by: Lina Iyer <lina.iyer@linaro.org>
+> ---
+>  drivers/soc/qcom/Kconfig | 4 ++++
+>  1 file changed, 4 insertions(+)
+> 
+> diff --git a/drivers/soc/qcom/Kconfig b/drivers/soc/qcom/Kconfig
+> index ba47b70..b6c2e5d 100644
+> --- a/drivers/soc/qcom/Kconfig
+> +++ b/drivers/soc/qcom/Kconfig
+> @@ -14,6 +14,10 @@ config QCOM_PM
+>  	bool "Qualcomm Power Management"
+>  	depends on ARCH_QCOM && !ARM64
+>  	select QCOM_SCM
+> +	select ARM_CPU_SUSPEND
+> +	select PM_GENERIC_DOMAINS
+> +	select PM_GENERIC_DOMAINS_SLEEP
+> +	select PM_GENERIC_DOMAINS_OF
+>  	help
+>  	  QCOM Platform specific power driver to manage cores and L2 low power
+>  	  modes. It interface with various system drivers to put the cores in
+> -- 
+> 2.1.4
+> 
+
 -- 
-2.1.4
+Qualcomm Innovation Center, Inc.
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
+
