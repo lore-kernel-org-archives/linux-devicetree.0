@@ -1,200 +1,63 @@
-From: Guenter Roeck <linux@roeck-us.net>
-Subject: Re: [PATCH v2 08/10] hwmon: Support registration of thermal zones
- for SCP temperature sensors
-Date: Tue, 04 Aug 2015 14:39:17 -0700
-Message-ID: <55C13105.9070509@roeck-us.net>
-References: <1438615378-14241-1-git-send-email-punit.agrawal@arm.com> <1438615378-14241-9-git-send-email-punit.agrawal@arm.com>
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH v4 00/16] ARM: shmobile: Add CPG/MSTP Clock Domain
+Date: Wed, 5 Aug 2015 09:55:44 +0900
+Message-ID: <20150805005543.GC20726@verge.net.au>
+References: <1438691297-29235-1-git-send-email-geert+renesas@glider.be>
+ <20150804134824.GA10194@verge.net.au>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <1438615378-14241-9-git-send-email-punit.agrawal@arm.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Punit Agrawal <punit.agrawal@arm.com>, linux-pm@vger.kernel.org
-Cc: lm-sensors@lm-sensors.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, liviu.dudau@arm.com, Jean Delvare <jdelvare@suse.de>, Eduardo Valentin <edubezval@gmail.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20150804134824.GA10194@verge.net.au>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Geert Uytterhoeven <geert+renesas@glider.be>
+Cc: Magnus Damm <magnus.damm@gmail.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Kevin Hilman <khilman@kernel.org>, Ulf Hansson <ulf.hansson@linaro.org>, linux-clk@vger.kernel.org, linux-pm@vger.kernel.org, linux-sh@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 08/03/2015 08:22 AM, Punit Agrawal wrote:
-> Add support to create thermal zones based on the temperature sensors
-> provided by the SCP. The thermal zones can be defined using the
-> thermal DT bindings and should refer to the SCP sensor id to select
-> the sensor.
->
-> Signed-off-by: Punit Agrawal <punit.agrawal@arm.com>
-> Cc: Jean Delvare <jdelvare@suse.de>
-> Cc: Guenter Roeck <linux@roeck-us.net>
-> Cc: Eduardo Valentin <edubezval@gmail.com>
+On Tue, Aug 04, 2015 at 10:48:28PM +0900, Simon Horman wrote:
+> Thanks Geert,
+> 
+> I have tentatively queued this up in its own branch,
+> cpg-mstp-clock-domain-for-v4.3.
 
-Hi,
+Where possible I prefer not to apply non-DTS/DTSI patches on top of
+DTS/DTSI patches, I believe this is in keeping with how the ARM SoC
+maintainers like things handled.  With this in mind I have shuffled things
+around a little, the result is:
 
-assuming you fix up the nitpicks below,
+1. The following are (still) queued up for v4.3 in their own
+   cpg-mstp-clock-domain-for-v4.3 branch:
 
-Acked-by: Guenter Roeck <linux@roeck-us.net>
+   clk: shmobile: Add CPG/MSTP Clock Domain support
+   clk: shmobile: r8a7778: Add CPG/MSTP Clock Domain support
+   clk: shmobile: r8a7779: Add CPG/MSTP Clock Domain support
+   clk: shmobile: rcar-gen2: Add CPG/MSTP Clock Domain support
+   clk: shmobile: rz: Add CPG/MSTP Clock Domain support
+   ARM: shmobile: r7s72100 dtsi: Add CPG/MSTP Clock Domain
+   ARM: shmobile: r8a7778 dtsi: Add CPG/MSTP Clock Domain
+   ARM: shmobile: r8a7779 dtsi: Add CPG/MSTP Clock Domain
+   ARM: shmobile: r8a7790 dtsi: Add CPG/MSTP Clock Domain
+   ARM: shmobile: r8a7791 dtsi: Add CPG/MSTP Clock Domain
+   ARM: shmobile: r8a7793 dtsi: Add CPG/MSTP Clock Domain
+   ARM: shmobile: r8a7794 dtsi: Add CPG/MSTP Clock Domain
 
-> ---
->   drivers/hwmon/scpi-hwmon.c | 103 ++++++++++++++++++++++++++++++++++++++++++++-
->   1 file changed, 102 insertions(+), 1 deletion(-)
->
-> diff --git a/drivers/hwmon/scpi-hwmon.c b/drivers/hwmon/scpi-hwmon.c
-> index 7e7e06b..d96a3e5 100644
-> --- a/drivers/hwmon/scpi-hwmon.c
-> +++ b/drivers/hwmon/scpi-hwmon.c
-> @@ -20,6 +20,7 @@
->   #include <linux/scpi_protocol.h>
->   #include <linux/slab.h>
->   #include <linux/sysfs.h>
-> +#include <linux/thermal.h>
->
->   struct sensor_data {
->   	struct scpi_sensor_info info;
-> @@ -29,14 +30,39 @@ struct sensor_data {
->   	char label[20];
->   };
->
-> +struct scpi_thermal_zone {
-> +	struct list_head list;
-> +	int sensor_id;
-> +	struct scpi_sensors *scpi_sensors;
-> +	struct thermal_zone_device *tzd;
-> +};
-> +
->   struct scpi_sensors {
->   	struct scpi_ops *scpi_ops;
->   	struct sensor_data *data;
-> +	struct list_head thermal_zones;
->   	struct attribute **attrs;
->   	struct attribute_group group;
->   	const struct attribute_group *groups[2];
->   };
->
-> +static int scpi_read_temp(void *dev, long *temp)
-> +{
-> +	struct scpi_thermal_zone *zone = dev;
-> +	struct scpi_sensors *scpi_sensors = zone->scpi_sensors;
-> +	struct scpi_ops *scpi_ops = scpi_sensors->scpi_ops;
-> +	struct sensor_data *sensor = &scpi_sensors->data[zone->sensor_id];
-> +	u32 value;
-> +	int ret;
-> +
-> +	ret = scpi_ops->sensor_get_value(sensor->info.sensor_id, &value);
-> +	if (ret)
-> +		return ret;
-> +
-> +	*temp = value;
-> +	return 0;
-> +}
-> +
->   /* hwmon callback functions */
->   static ssize_t
->   scpi_show_sensor(struct device *dev, struct device_attribute *attr, char *buf)
-> @@ -66,6 +92,24 @@ scpi_show_label(struct device *dev, struct device_attribute *attr, char *buf)
->   	return sprintf(buf, "%s\n", sensor->info.name);
->   }
->
-> +static void
-> +unregister_thermal_zones(struct platform_device *pdev,
-> +			 struct scpi_sensors *scpi_sensors)
-> +{
-> +	struct list_head *pos;
-> +
-> +	list_for_each(pos, &scpi_sensors->thermal_zones) {
-> +		struct scpi_thermal_zone *zone;
-> +
-> +		zone = list_entry(pos, struct scpi_thermal_zone, list);
-> +		thermal_zone_of_sensor_unregister(&pdev->dev, zone->tzd);
-> +	}
-> +}
-> +
-> +static struct thermal_zone_of_device_ops scpi_sensor_ops = {
-> +	.get_temp = scpi_read_temp,
-> +};
-> +
->   static int scpi_hwmon_probe(struct platform_device *pdev)
->   {
->   	u16 nr_sensors, i;
-> @@ -157,10 +201,66 @@ static int scpi_hwmon_probe(struct platform_device *pdev)
->   	scpi_sensors->group.attrs = scpi_sensors->attrs;
->   	scpi_sensors->groups[0] = &scpi_sensors->group;
->
-> +	platform_set_drvdata(pdev, scpi_sensors);
-> +
->   	hwdev = devm_hwmon_device_register_with_groups(dev,
->   			"scpi_sensors", scpi_sensors, scpi_sensors->groups);
->
-> -	return PTR_ERR_OR_ZERO(hwdev);
-> +	if (IS_ERR(hwdev))
-> +		return PTR_ERR(hwdev);
-> +
-> +	/*
-> +	 * Register the temperature sensors with the thermal framework
-> +	 * to allow their usage in setting up the thermal zones from
-> +	 * device tree.
-> +	 *
-> +	 * NOTE: Not all temperature sensors maybe used for thermal
-> +	 * control
-> +	 */
-> +	INIT_LIST_HEAD(&scpi_sensors->thermal_zones);
-> +	for (i = 0; i < nr_sensors; i++) {
-> +		struct sensor_data *sensor = &scpi_sensors->data[i];
-> +		struct scpi_thermal_zone *zone;
-> +
-> +		if (sensor->info.class != TEMPERATURE)
-> +			continue;
-> +
-> +		zone = devm_kzalloc(&pdev->dev, sizeof(*zone), GFP_KERNEL);
+2. The following are now queued up for v4.3 in a separate
+   sh-drivers-for-v4.3 branch. That branch is on top of the
+   cpg-mstp-clock-domain-for-v4.3 branch and I intend to send it directly
+   to Linus if/when a v4.3-rc has been released with the patches
+   listed in 1. present.
 
-			devm_kzalloc(dev, ...);
+   drivers: sh: Disable legacy default PM Domain on emev2
+   drivers: sh: Disable PM runtime for multi-platform ARM with genpd
 
-for consistency.
+3. I have deferred the remaining two patches, listed below, for v4.4.
+   they currently reside in cpg-mstp-clock-domain-for-v4.4. That
+   branch is based on the sh-drivers-for-v4.3 branch.
 
-> +		if (!zone) {
-> +			ret = -ENOMEM;
-> +			goto unregister_tzd;
-> +		}
-> +
-> +		zone->sensor_id = i;
-> +		zone->scpi_sensors = scpi_sensors;
-> +		zone->tzd = thermal_zone_of_sensor_register(dev, i, zone,
-> +							    &scpi_sensor_ops);
-> +		/*
-> +		 * The call to thermal_zone_of_sensor_register returns
-> +		 * an error for sensors that are not associated with
-> +		 * any thermal zones.
+   clk: shmobile: mstp: Consider "zb_clk" suitable for power management
+   ARM: shmobile: R-Mobile: Use CPG/MSTP Clock Domain attach/detach helpers
 
-... or if the thermal subsystem is not configured.
 
-> +		 */
-> +		if (IS_ERR(zone->tzd)) {
-> +			devm_kfree(dev, zone);
-> +			continue;
-> +		}
-> +		list_add(&zone->list, &scpi_sensors->thermal_zones);
-> +	}
-> +
-> +	return 0;
-> +
-> +unregister_tzd:
-> +	unregister_thermal_zones(pdev, scpi_sensors);
-> +	return ret;
-> +}
-> +
-> +static int scpi_hwmon_remove(struct platform_device *pdev)
-> +{
-> +	struct scpi_sensors *scpi_sensors = platform_get_drvdata(pdev);
-> +
-> +	unregister_thermal_zones(pdev, scpi_sensors);
-> +
-> +	return 0;
->   }
->
->   static const struct of_device_id scpi_of_match[] = {
-> @@ -175,6 +275,7 @@ static struct platform_driver scpi_hwmon_platdrv = {
->   		.of_match_table = scpi_of_match,
->   	},
->   	.probe		= scpi_hwmon_probe,
-> +	.remove		= scpi_hwmon_remove,
->   };
->   module_platform_driver(scpi_hwmon_platdrv);
->
->
-
+This means that the last two patches will disappear from next until
+after v4.3-rc1 is released but they, along with all the other patches,
+will be present in the renesas devel branch.
