@@ -1,48 +1,98 @@
-From: Alexandre Belloni <alexandre.belloni@free-electrons.com>
-Subject: Re: [PATCH V3 3/3] rtc: da9063: Add DA9062 RTC capability to DA9063
- RTC driver
-Date: Wed, 5 Aug 2015 03:55:19 +0200
-Message-ID: <20150805015519.GZ3486@piout.net>
-References: <cover.1437474547.git.stwiss.opensource@diasemi.com>
- <b79c0b5d1b96bd06ab81a2459c493e68ec6b1971.1437474547.git.stwiss.opensource@diasemi.com>
+From: Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: Re: [PATCH v2 06/10] usb: chipidea: add ahb burst configuration
+ interface
+Date: Wed, 5 Aug 2015 09:25:51 +0800
+Message-ID: <20150805012550.GG25143@shlinux2>
+References: <1438577238-10153-1-git-send-email-peter.chen@freescale.com>
+ <1438577238-10153-7-git-send-email-peter.chen@freescale.com>
+ <CAL_JsqJn16OvfL_Ggf1wSi2XkJkjDMrmuRit3q8eVY5bNp8oYw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <b79c0b5d1b96bd06ab81a2459c493e68ec6b1971.1437474547.git.stwiss.opensource@diasemi.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: S Twiss <stwiss.opensource@diasemi.com>
-Cc: Alessandro Zummo <a.zummo@towertech.it>, DEVICETREE <devicetree@vger.kernel.org>, LINUXINPUT <linux-input@vger.kernel.org>, LINUXKERNEL <linux-kernel@vger.kernel.org>, RTCLINUX <rtc-linux@googlegroups.com>, David Dajun Chen <david.chen@diasemi.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Lee Jones <lee.jones@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>, Samuel Ortiz <sameo@linux.intel.com>, Support Opensource <support.opensource@diasemi.com>
+In-Reply-To: <CAL_JsqJn16OvfL_Ggf1wSi2XkJkjDMrmuRit3q8eVY5bNp8oYw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org" <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Li Jun <jun.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Linux USB List <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 21/07/2015 at 11:29:07 +0100, S Twiss wrote :
-> From: S Twiss <stwiss.opensource@diasemi.com>
+On Mon, Aug 03, 2015 at 09:04:27AM -0500, Rob Herring wrote:
+> On Sun, Aug 2, 2015 at 11:47 PM, Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org> wrote:
+> > The users can change it through dts or platform data if they
+> > want to change the default value.
+> >
+> > Signed-off-by: Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+> > ---
+> >  drivers/usb/chipidea/bits.h  |  3 +++
+> >  drivers/usb/chipidea/core.c  | 14 ++++++++++++++
+> >  include/linux/usb/chipidea.h |  2 ++
+> >  3 files changed, 19 insertions(+)
+> >
+> > diff --git a/drivers/usb/chipidea/bits.h b/drivers/usb/chipidea/bits.h
+> > index 831a8f6..462ad02 100644
+> > --- a/drivers/usb/chipidea/bits.h
+> > +++ b/drivers/usb/chipidea/bits.h
+> > @@ -25,6 +25,9 @@
+> >  #define VERSION                      (0xF << 25)
+> >  #define CIVERSION            (0x7 << 29)
+> >
+> > +/* SBUSCFG */
+> > +#define AHBBRST_MASK           0x7
+> > +
+> >  /* HCCPARAMS */
+> >  #define HCCPARAMS_LEN         BIT(17)
+> >
+> > diff --git a/drivers/usb/chipidea/core.c b/drivers/usb/chipidea/core.c
+> > index 38bd036..f60cbf6 100644
+> > --- a/drivers/usb/chipidea/core.c
+> > +++ b/drivers/usb/chipidea/core.c
+> > @@ -439,6 +439,9 @@ void ci_platform_configure(struct ci_hdrc *ci)
+> >
+> >         hw_write(ci, OP_USBCMD, 0xff0000, ci->platdata->itc_setting << 16);
+> >
+> > +       if (ci->platdata->flags & CI_HDRC_OVERRIDE_AHB_BURST)
+> > +               hw_write_id_reg(ci, ID_SBUSCFG, AHBBRST_MASK,
+> > +                       ci->platdata->ahb_burst_config);
+> >  }
+> >
+> >  /**
+> > @@ -647,6 +650,17 @@ static int ci_get_platdata(struct device *dev,
+> >                 }
+> >         }
+> >
+> > +       if (of_find_property(dev->of_node, "ahb-burst-config", NULL)) {
+> > +               ret = of_property_read_u32(dev->of_node, "ahb-burst-config",
+> > +                       &platdata->ahb_burst_config);
+> > +               if (ret) {
+> > +                       dev_err(dev,
+> > +                               "failed to get ahb-burst-config\n");
+> > +                       return ret;
+> > +               }
+> > +               platdata->flags |= CI_HDRC_OVERRIDE_AHB_BURST;
+> > +       }
+> > +
 > 
-> Add DA9062 RTC support into the existing DA9063 RTC driver component by
-> using generic access tables for common register and bit mask definitions.
+> This can be simplified to:
 > 
-> The following change will add generic register and bit mask support to the
-> DA9063 RTC. The changes are slightly complicated by requiring support for
-> three register sets: DA9063-AD, DA9063-BB and DA9062-AA.
+> ret = of_property_read_u32(dev->of_node, "ahb-burst-config",
+> &platdata->ahb_burst_config);
+> if (!ret)
+>   platdata->flags |= CI_HDRC_OVERRIDE_AHB_BURST;
 > 
-> The following alterations have been made to the DA9063 RTC:
+> The error condition can't really happen.
 > 
-> - Addition of a da9063_compatible_rtc_regmap structure to hold all generic
->   registers and bitmasks for this type of RTC component.
-> - A re-write of struct da9063 to use pointers for regmap and compatible
->   registers/masks definitions
-> - Addition of a of_device_id table for DA9063 and DA9062 defaults
-> - Refactoring functions to use struct da9063_compatible_rtc accesses to
->   generic registers/masks instead of using defines from registers.h
-> - Re-work of da9063_rtc_probe() to use of_match_node() and dev_get_regmap()
->   to provide initialisation of generic registers and masks and access to
->   regmap
-> 
-> Signed-off-by: Steve Twiss <stwiss.opensource@diasemi.com>
-> 
-Applied, thanks.
+
+Why the error condition can't really happen? If the value of
+this property at dts is invalid, we would like return error.
+
+For non-exist property, it is normal case; for invalid property,
+we would like return error, and quit.
 
 -- 
-Alexandre Belloni, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
+
+Best Regards,
+Peter Chen
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
