@@ -1,51 +1,83 @@
-From: "Opensource [Steve Twiss]" <stwiss.opensource@diasemi.com>
-Subject: RE: [PATCH V3 3/3] rtc: da9063: Add DA9062 RTC capability to DA9063
- RTC driver
-Date: Wed, 5 Aug 2015 07:24:03 +0000
-Message-ID: <6ED8E3B22081A4459DAC7699F3695FB7014B2606F8@SW-EX-MBX02.diasemi.com>
-References: <cover.1437474547.git.stwiss.opensource@diasemi.com>
- <b79c0b5d1b96bd06ab81a2459c493e68ec6b1971.1437474547.git.stwiss.opensource@diasemi.com>
- <20150805015519.GZ3486@piout.net>
+From: Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Subject: Re: [PATCH v6 7/9] clk: mediatek: Add subsystem clocks of MT8173
+Date: Wed, 5 Aug 2015 15:26:29 +0800
+Message-ID: <CAGS+omDmgxO9jHaPRb1hXO7fMRE=CnH=WNP3DeMm1axBswK_Aw@mail.gmail.com>
+References: <1438676218-11310-1-git-send-email-jamesjj.liao@mediatek.com>
+ <1438676218-11310-8-git-send-email-jamesjj.liao@mediatek.com> <20150805064605.GZ18700@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-input-owner@vger.kernel.org>
-In-Reply-To: <20150805015519.GZ3486@piout.net>
-Content-Language: en-US
-Sender: linux-input-owner@vger.kernel.org
-To: Alexandre Belloni <alexandre.belloni@free-electrons.com>
-Cc: Alessandro Zummo <a.zummo@towertech.it>, DEVICETREE <devicetree@vger.kernel.org>, LINUXINPUT <linux-input@vger.kernel.org>, LINUXKERNEL <linux-kernel@vger.kernel.org>, RTCLINUX <rtc-linux@googlegroups.com>, David Dajun Chen <david.chen@diasemi.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Lee Jones <lee.jones@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>, Samuel Ortiz <sameo@linux.intel.com>, Support Opensource <Support.Opensource@diasemi.com>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20150805064605.GZ18700-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: James Liao <jamesjj.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mike Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Heiko Stubner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, "open list:OPEN FIRMWARE AND..." <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, srv_heupstream <srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Ricky Liang <jcliang-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 05 August 2015 02:55 Alexandre Belloni wrote:
+On Wed, Aug 5, 2015 at 2:46 PM, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org> wrote:
+> On Tue, Aug 04, 2015 at 04:16:56PM +0800, James Liao wrote:
+>> Most multimedia subsystem clocks will be accessed by multiple
+>> drivers, so it's a better way to manage these clocks in CCF.
+>> This patch adds clock support for MM, IMG, VDEC, VENC and VENC_LT
+>> subsystems.
+>>
+>> Signed-off-by: James Liao <jamesjj.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+>> ---
+>>  drivers/clk/mediatek/clk-mt8173.c      | 267 +++++++++++++++++++++++++++++++++
+>>  include/dt-bindings/clock/mt8173-clk.h |  97 +++++++++++-
+>>  2 files changed, 361 insertions(+), 3 deletions(-)
+>>
+>> diff --git a/drivers/clk/mediatek/clk-mt8173.c b/drivers/clk/mediatek/clk-mt8173.c
+>> index f37ace6..05335e5 100644
+>> --- a/drivers/clk/mediatek/clk-mt8173.c
+>> +++ b/drivers/clk/mediatek/clk-mt8173.c
+>> @@ -25,6 +25,10 @@ static DEFINE_SPINLOCK(mt8173_clk_lock);
+>>  static const struct mtk_fixed_clk fixed_clks[] __initconst = {
+>>       FIXED_CLK(CLK_TOP_CLKPH_MCK_O, "clkph_mck_o", "clk26m", 400 * MHZ),
+>>       FIXED_CLK(CLK_TOP_USB_SYSPLL_125M, "usb_syspll_125m", "clk26m", 125 * MHZ),
+>> +     FIXED_CLK(CLK_TOP_DSI0_DIG, "dsi0_dig", "clk26m", 130 * MHZ),
+>> +     FIXED_CLK(CLK_TOP_DSI1_DIG, "dsi1_dig", "clk26m", 130 * MHZ),
+>> +     FIXED_CLK(CLK_TOP_LVDS_PXL, "lvds_pxl", "lvdspll", 148.5 * MHZ),
+>> +     FIXED_CLK(CLK_TOP_LVDS_CTS, "lvds_cts", "lvdspll", 51.975 * MHZ),
+>
+> I would expect 51975 * KHZ here to avoid fractional numbers. Probably
+> gcc calculates that during compile time so this will work as expected,
+> still I'm not sure this is good style to use fractional numbers here.
 
-> Subject: Re: [PATCH V3 3/3] rtc: da9063: Add DA9062 RTC capability to DA9063 RTC driver
-> 
-> On 21/07/2015 at 11:29:07 +0100, S Twiss wrote :
-> > From: S Twiss <stwiss.opensource@diasemi.com>
-> >
-> > Add DA9062 RTC support into the existing DA9063 RTC driver component by
-> > using generic access tables for common register and bit mask definitions.
-> >
-> > The following change will add generic register and bit mask support to the
-> > DA9063 RTC. The changes are slightly complicated by requiring support for
-> > three register sets: DA9063-AD, DA9063-BB and DA9062-AA.
-> >
-> > The following alterations have been made to the DA9063 RTC:
-> >
-> > - Addition of a da9063_compatible_rtc_regmap structure to hold all generic
-> >   registers and bitmasks for this type of RTC component.
-> > - A re-write of struct da9063 to use pointers for regmap and compatible
-> >   registers/masks definitions
-> > - Addition of a of_device_id table for DA9063 and DA9062 defaults
-> > - Refactoring functions to use struct da9063_compatible_rtc accesses to
-> >   generic registers/masks instead of using defines from registers.h
-> > - Re-work of da9063_rtc_probe() to use of_match_node() and dev_get_regmap()
-> >   to provide initialisation of generic registers and masks and access to
-> >   regmap
-> >
-> > Signed-off-by: Steve Twiss <stwiss.opensource@diasemi.com>
-> >
-> Applied, thanks.
+I thought this looked a bit strange too, but for what its worth, these
+two evaluate correctly:
 
-Thank you.
+localhost ~ # cat /sys/kernel/debug/clk/clk_summary  | grep lvds
+    lvdspll                               0            0   149999878
+       0 0
+       lvds_pxl                           0            0   148500000
+       0 0
+       lvds_cts                           0            0    51975000
+       0 0
+
+>
+> Anyway, on my system lvdspll is running at 150MHz. Are you sure there is
+> a clock derived from this running at 148.5MHz? Is it really correct to
+> use a fixed clock here or should it rather be lvdspll directly?
+
+I agree it does look strange to have a 51.975 MHz and 148.5 MHz clocks
+with a 150 MHz PLL as their parent...  However, I'm not sure how much
+this matters?  I think the idea here was that these frequencies are
+best effort "nominal" clock values provided by Mediatek "designers".
+The important point is that for the hardware to generate these either
+of these clocks, lvdspll must be enabled.
+
+-Dan
+
+
+> Sascha
+>
+>
+> --
+> Pengutronix e.K.                           |                             |
+> Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+> Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+> Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
