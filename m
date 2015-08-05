@@ -1,50 +1,42 @@
-From: Kishon Vijay Abraham I <kishon@ti.com>
-Subject: Re: [PATCH 0/7] ARM: dts: MMC fixes for DRA7 based boards
-Date: Wed, 5 Aug 2015 20:36:25 +0530
-Message-ID: <55C22671.1060906@ti.com>
-References: <1438244020-4244-1-git-send-email-kishon@ti.com> <20150805105400.GF16878@atomide.com>
+From: Liviu Dudau <Liviu.Dudau@arm.com>
+Subject: [PATCH 4/4] MAINTAINERS: Add Liviu Dudau as maintainer for ARM HDLCD
+ driver.
+Date: Wed,  5 Aug 2015 15:28:12 +0100
+Message-ID: <1438784892-27888-5-git-send-email-Liviu.Dudau@arm.com>
+References: <1438784892-27888-1-git-send-email-Liviu.Dudau@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-mmc-owner@vger.kernel.org>
-In-Reply-To: <20150805105400.GF16878@atomide.com>
-Sender: linux-mmc-owner@vger.kernel.org
-To: Tony Lindgren <tony@atomide.com>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mmc@vger.kernel.org, bcousson@baylibre.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk, nsekhar@ti.com
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <1438784892-27888-1-git-send-email-Liviu.Dudau@arm.com>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: David Airlie <airlied@linux.ie>, dri-devel@lists.freedesktop.org, linux-arm-kernel@lists.infradead.org
+Cc: Mark Rutland <mark.rutland@arm.com>, Jon Medhurst <tixy@linaro.org>, Arnd Bergmann <arnd@arndb.de>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Catalin Marinas <catalin.marinas@arm.com>, Sudeep Holla <sudeep.holla@arm.com>, Will Deacon <will.deacon@arm.com>, linux-kernel@vger.kernel.org, Joe Perches <joe@perches.com>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Greg KH <gregkh@linuxfoundation.org>, Kumar Gala <galak@codeaurora.org>, Jiri Slaby <jslaby@suse.com>, Andrew Morton <akpm@linux-foundation.org>, Mauro Carvalho Chehab <mchehab@osg.samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-
-On Wednesday 05 August 2015 04:24 PM, Tony Lindgren wrote:
-> * Kishon Vijay Abraham I <kishon@ti.com> [150730 01:16]:
->> Miscellaneous fixes in dts files for MMC device tree nodes.
->>
->> Did basic read/write test in J6, J6 Eco and Beagle-x15
->>
->> Balaji T K (1):
->>   ARM: dts: dra7-evm: add evm_3v3_sd regulator
->>
->> Kishon Vijay Abraham I (5):
->>   ARM: dts: dra72-evm: add evm_3v3_sd regulator
->>   ARM: dts: dra72-evm: Set max clock frequency of MMC1 and MMC2
->>   ARM: dts: am57xx-beagle-x15: mmc1: remove redundant pbias-supply
->>     property
->>   ARM: dts: dra7-evm: Fix spurious card insert/removal interrupt
->>   ARM: dts: dra72-evm: Fix spurious card insert/removal interrupt
->>
->> Nishanth Menon (1):
->>   ARM: dts: dra7-evm: Add MMCSD card removal GPIO
->>
->>  arch/arm/boot/dts/am57xx-beagle-x15.dts |    1 -
->>  arch/arm/boot/dts/dra7-evm.dts          |   18 +++++++++++++++++-
->>  arch/arm/boot/dts/dra72-evm.dts         |   16 ++++++++++++++--
->>  3 files changed, 31 insertions(+), 4 deletions(-)
-> 
-> Thanks applying all these into omap-for-v4.3/dt.
-
-Thanks. Please take [1] one too.
-
-[1] -> https://lkml.org/lkml/2015/8/5/443
-
-Thanks
-Kishon
+VXBkYXRlIE1BSU5UQUlORVJTIGZpbGUgZm9yIEhETENEIGRyaXZlci4KCkNjOiBBbmRyZXcgTW9y
+dG9uIDxha3BtQGxpbnV4LWZvdW5kYXRpb24ub3JnPgpDYzogQXJuZCBCZXJnbWFubiA8YXJuZEBh
+cm5kYi5kZT4KQ2M6IE1hdXJvIENhcnZhbGhvIENoZWhhYiA8bWNoZWhhYkBvc2cuc2Ftc3VuZy5j
+b20+CkNjOiBHcmVnIEtIIDxncmVna2hAbGludXhmb3VuZGF0aW9uLm9yZz4KQ2M6IEpvZSBQZXJj
+aGVzIDxqb2VAcGVyY2hlcy5jb20+CkNjOiBKaXJpIFNsYWJ5IDxqc2xhYnlAc3VzZS5jb20+CgpT
+aWduZWQtb2ZmLWJ5OiBMaXZpdSBEdWRhdSA8TGl2aXUuRHVkYXVAYXJtLmNvbT4KLS0tCiBNQUlO
+VEFJTkVSUyB8IDYgKysrKysrCiAxIGZpbGUgY2hhbmdlZCwgNiBpbnNlcnRpb25zKCspCgpkaWZm
+IC0tZ2l0IGEvTUFJTlRBSU5FUlMgYi9NQUlOVEFJTkVSUwppbmRleCA0NDNkYzYyLi4wODQ4MThl
+IDEwMDY0NAotLS0gYS9NQUlOVEFJTkVSUworKysgYi9NQUlOVEFJTkVSUwpAQCAtNzkwLDYgKzc5
+MCwxMiBAQCBTOglNYWludGFpbmVkCiBGOglkcml2ZXJzL3ZpZGVvL2ZiZGV2L2FyY2ZiLmMKIEY6
+CWRyaXZlcnMvdmlkZW8vZmJkZXYvY29yZS9mYl9kZWZpby5jCiAKK0FSTSBIRExDRCBEUk0gRFJJ
+VkVSCitNOglMaXZpdSBEdWRhdSA8bGl2aXUuZHVkYXVAYXJtLmNvbT4KK1M6CU1haW50YWluZWQK
+K0Y6CWRyaXZlcnMvZ3B1L2RybS9hcm0vCitGOglEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmlu
+ZGluZ3MvYXJtL2FybSxoZGxjZC50eHQKKwogQVJNIE1GTSBBTkQgRkxPUFBZIERSSVZFUlMKIE06
+CUlhbiBNb2x0b24gPHNweXJvQGYycy5jb20+CiBTOglNYWludGFpbmVkCi0tIAoyLjQuNgoKX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1h
+aWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHA6Ly9saXN0cy5m
+cmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
