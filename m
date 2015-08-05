@@ -1,54 +1,224 @@
-From: Tony Lindgren <tony@atomide.com>
-Subject: Re: [PATCH 0/4] omap: Fix broken pbias device creation
-Date: Wed, 5 Aug 2015 03:00:09 -0700
-Message-ID: <20150805100009.GY16878@atomide.com>
-References: <1437999401-3519-1-git-send-email-kishon@ti.com>
- <55B89590.6000109@ti.com>
+From: Punit Agrawal <punit.agrawal-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH v2 08/10] hwmon: Support registration of thermal zones for SCP temperature sensors
+Date: Wed, 05 Aug 2015 11:17:25 +0100
+Message-ID: <9hhy4hqkpje.fsf@e105922-lin.cambridge.arm.com>
+References: <1438615378-14241-1-git-send-email-punit.agrawal@arm.com>
+	<1438615378-14241-9-git-send-email-punit.agrawal@arm.com>
+	<55C13105.9070509@roeck-us.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <55B89590.6000109@ti.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Grygorii Strashko <grygorii.strashko@ti.com>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, linux@arm.linux.org.uk, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, nsekhar@ti.com, linux-kernel@vger.kernel.org, Kishon Vijay Abraham I <kishon@ti.com>, t-kristo@ti.com, robh+dt@kernel.org, bcousson@baylibre.com, galak@codeaurora.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <55C13105.9070509-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org> (Guenter Roeck's message of "Tue,
+	04 Aug 2015 14:39:17 -0700")
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+Cc: linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, lm-sensors-GZX6beZjE8VD60Wz+7aTrA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, liviu.dudau-5wv7dgnIgG8@public.gmane.org, Jean Delvare <jdelvare-l3A5Bk7waGM@public.gmane.org>, Eduardo Valentin <edubezval-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-* Grygorii Strashko <grygorii.strashko@ti.com> [150729 02:01]:
-> On 07/27/2015 03:16 PM, Kishon Vijay Abraham I wrote:
-> >pbias device creation got broken once SCM cleanup got merged.
-> >This patch series re-enables device creation by adding
-> >"simple-bus" in the compatible property of the syscon
-> >dt node.
-> >
-> >validated this series in DRA72, OMAP4 PANDA and OMAP5 UEVM
-> >boards.
-> >
-> >Kishon Vijay Abraham I (4):
-> >   ARM: dts: omap24xx: Fix broken pbias device creation
-> >   ARM: dts: OMAP4: Fix broken pbias device creation
-> >   ARM: dts: OMAP5: Fix broken pbias device creation
-> >   ARM: dts: dra7: Fix broken pbias device creation
-> >
-> >  arch/arm/boot/dts/dra7.dtsi     |    2 +-
-> >  arch/arm/boot/dts/omap2430.dtsi |    3 ++-
-> >  arch/arm/boot/dts/omap4.dtsi    |    3 ++-
-> >  arch/arm/boot/dts/omap5.dtsi    |    3 ++-
-> >  4 files changed, 7 insertions(+), 4 deletions(-)
-> >
-> 
-> For dra7-evm:
-> Tested-by: Grygorii Strashko <grygorii.strashko@ti.com>
+Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org> writes:
 
-Applying all into omap-for-v4.2fixes-v2 thanks.
+> On 08/03/2015 08:22 AM, Punit Agrawal wrote:
+>> Add support to create thermal zones based on the temperature sensors
+>> provided by the SCP. The thermal zones can be defined using the
+>> thermal DT bindings and should refer to the SCP sensor id to select
+>> the sensor.
+>>
+>> Signed-off-by: Punit Agrawal <punit.agrawal-5wv7dgnIgG8@public.gmane.org>
+>> Cc: Jean Delvare <jdelvare-l3A5Bk7waGM@public.gmane.org>
+>> Cc: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+>> Cc: Eduardo Valentin <edubezval-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+>
+> Hi,
+>
+> assuming you fix up the nitpicks below,
+>
+> Acked-by: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+>
+>> ---
+>>   drivers/hwmon/scpi-hwmon.c | 103 ++++++++++++++++++++++++++++++++++++++++++++-
+>>   1 file changed, 102 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/drivers/hwmon/scpi-hwmon.c b/drivers/hwmon/scpi-hwmon.c
+>> index 7e7e06b..d96a3e5 100644
+>> --- a/drivers/hwmon/scpi-hwmon.c
+>> +++ b/drivers/hwmon/scpi-hwmon.c
+>> @@ -20,6 +20,7 @@
+>>   #include <linux/scpi_protocol.h>
+>>   #include <linux/slab.h>
+>>   #include <linux/sysfs.h>
+>> +#include <linux/thermal.h>
+>>
+>>   struct sensor_data {
+>>   	struct scpi_sensor_info info;
+>> @@ -29,14 +30,39 @@ struct sensor_data {
+>>   	char label[20];
+>>   };
+>>
+>> +struct scpi_thermal_zone {
+>> +	struct list_head list;
+>> +	int sensor_id;
+>> +	struct scpi_sensors *scpi_sensors;
+>> +	struct thermal_zone_device *tzd;
+>> +};
+>> +
+>>   struct scpi_sensors {
+>>   	struct scpi_ops *scpi_ops;
+>>   	struct sensor_data *data;
+>> +	struct list_head thermal_zones;
+>>   	struct attribute **attrs;
+>>   	struct attribute_group group;
+>>   	const struct attribute_group *groups[2];
+>>   };
+>>
+>> +static int scpi_read_temp(void *dev, long *temp)
+>> +{
+>> +	struct scpi_thermal_zone *zone = dev;
+>> +	struct scpi_sensors *scpi_sensors = zone->scpi_sensors;
+>> +	struct scpi_ops *scpi_ops = scpi_sensors->scpi_ops;
+>> +	struct sensor_data *sensor = &scpi_sensors->data[zone->sensor_id];
+>> +	u32 value;
+>> +	int ret;
+>> +
+>> +	ret = scpi_ops->sensor_get_value(sensor->info.sensor_id, &value);
+>> +	if (ret)
+>> +		return ret;
+>> +
+>> +	*temp = value;
+>> +	return 0;
+>> +}
+>> +
+>>   /* hwmon callback functions */
+>>   static ssize_t
+>>   scpi_show_sensor(struct device *dev, struct device_attribute *attr, char *buf)
+>> @@ -66,6 +92,24 @@ scpi_show_label(struct device *dev, struct device_attribute *attr, char *buf)
+>>   	return sprintf(buf, "%s\n", sensor->info.name);
+>>   }
+>>
+>> +static void
+>> +unregister_thermal_zones(struct platform_device *pdev,
+>> +			 struct scpi_sensors *scpi_sensors)
+>> +{
+>> +	struct list_head *pos;
+>> +
+>> +	list_for_each(pos, &scpi_sensors->thermal_zones) {
+>> +		struct scpi_thermal_zone *zone;
+>> +
+>> +		zone = list_entry(pos, struct scpi_thermal_zone, list);
+>> +		thermal_zone_of_sensor_unregister(&pdev->dev, zone->tzd);
+>> +	}
+>> +}
+>> +
+>> +static struct thermal_zone_of_device_ops scpi_sensor_ops = {
+>> +	.get_temp = scpi_read_temp,
+>> +};
+>> +
+>>   static int scpi_hwmon_probe(struct platform_device *pdev)
+>>   {
+>>   	u16 nr_sensors, i;
+>> @@ -157,10 +201,66 @@ static int scpi_hwmon_probe(struct platform_device *pdev)
+>>   	scpi_sensors->group.attrs = scpi_sensors->attrs;
+>>   	scpi_sensors->groups[0] = &scpi_sensors->group;
+>>
+>> +	platform_set_drvdata(pdev, scpi_sensors);
+>> +
+>>   	hwdev = devm_hwmon_device_register_with_groups(dev,
+>>   			"scpi_sensors", scpi_sensors, scpi_sensors->groups);
+>>
+>> -	return PTR_ERR_OR_ZERO(hwdev);
+>> +	if (IS_ERR(hwdev))
+>> +		return PTR_ERR(hwdev);
+>> +
+>> +	/*
+>> +	 * Register the temperature sensors with the thermal framework
+>> +	 * to allow their usage in setting up the thermal zones from
+>> +	 * device tree.
+>> +	 *
+>> +	 * NOTE: Not all temperature sensors maybe used for thermal
+>> +	 * control
+>> +	 */
+>> +	INIT_LIST_HEAD(&scpi_sensors->thermal_zones);
+>> +	for (i = 0; i < nr_sensors; i++) {
+>> +		struct sensor_data *sensor = &scpi_sensors->data[i];
+>> +		struct scpi_thermal_zone *zone;
+>> +
+>> +		if (sensor->info.class != TEMPERATURE)
+>> +			continue;
+>> +
+>> +		zone = devm_kzalloc(&pdev->dev, sizeof(*zone), GFP_KERNEL);
+>
+> 			devm_kzalloc(dev, ...);
+>
+> for consistency.
+>
 
-Tony
+Thought I'd fixed this up. Done now.
+
+>> +		if (!zone) {
+>> +			ret = -ENOMEM;
+>> +			goto unregister_tzd;
+>> +		}
+>> +
+>> +		zone->sensor_id = i;
+>> +		zone->scpi_sensors = scpi_sensors;
+>> +		zone->tzd = thermal_zone_of_sensor_register(dev, i, zone,
+>> +							    &scpi_sensor_ops);
+>> +		/*
+>> +		 * The call to thermal_zone_of_sensor_register returns
+>> +		 * an error for sensors that are not associated with
+>> +		 * any thermal zones.
+>
+> ... or if the thermal subsystem is not configured.
+>
+
+Updated the comment.
+
+Thanks for the ack.
+
+I'll send out an updated version once you respond to Patch 4.
+
+Thanks,
+Punit
+
+>> +		 */
+>> +		if (IS_ERR(zone->tzd)) {
+>> +			devm_kfree(dev, zone);
+>> +			continue;
+>> +		}
+>> +		list_add(&zone->list, &scpi_sensors->thermal_zones);
+>> +	}
+>> +
+>> +	return 0;
+>> +
+>> +unregister_tzd:
+>> +	unregister_thermal_zones(pdev, scpi_sensors);
+>> +	return ret;
+>> +}
+>> +
+>> +static int scpi_hwmon_remove(struct platform_device *pdev)
+>> +{
+>> +	struct scpi_sensors *scpi_sensors = platform_get_drvdata(pdev);
+>> +
+>> +	unregister_thermal_zones(pdev, scpi_sensors);
+>> +
+>> +	return 0;
+>>   }
+>>
+>>   static const struct of_device_id scpi_of_match[] = {
+>> @@ -175,6 +275,7 @@ static struct platform_driver scpi_hwmon_platdrv = {
+>>   		.of_match_table = scpi_of_match,
+>>   	},
+>>   	.probe		= scpi_hwmon_probe,
+>> +	.remove		= scpi_hwmon_remove,
+>>   };
+>>   module_platform_driver(scpi_hwmon_platdrv);
+>>
+>>
+>
+> --
+> To unsubscribe from this list: send the line "unsubscribe devicetree" in
+> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
