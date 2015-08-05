@@ -1,105 +1,71 @@
-From: Shawn Lin <shawn.lin@rock-chips.com>
-Subject: Re: [RFC PATCH v3 1/5] mmc: dw_mmc: Add external dma interface
- support
-Date: Wed, 5 Aug 2015 17:11:50 +0800
-Message-ID: <55C1D356.5030302@rock-chips.com>
-References: <1438762614-22154-1-git-send-email-shawn.lin@rock-chips.com>
- <1438762648-22202-1-git-send-email-shawn.lin@rock-chips.com>
- <8177347.dLpRuMxaEU@diego>
+From: Sudeep Holla <sudeep.holla@arm.com>
+Subject: Re: [PATCH v4 1/6] ARM: shmobile: r8a7740 dtsi: Add L2 cache-controller
+ node
+Date: Wed, 05 Aug 2015 10:34:12 +0100
+Message-ID: <55C1D894.8070302@arm.com>
+References: <1438765090-823-1-git-send-email-geert+renesas@glider.be> <1438765090-823-2-git-send-email-geert+renesas@glider.be>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
-        format=flowed
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-mips-bounce@linux-mips.org>
-In-Reply-To: <8177347.dLpRuMxaEU@diego>
-Sender: linux-mips-bounce@linux-mips.org
-Errors-to: linux-mips-bounce@linux-mips.org
-List-help: <mailto:ecartis@linux-mips.org?Subject=help>
-List-unsubscribe: <mailto:ecartis@linux-mips.org?subject=unsubscribe%20linux-mips>
-List-software: Ecartis version 1.0.0
-List-subscribe: <mailto:ecartis@linux-mips.org?subject=subscribe%20linux-mips>
-List-owner: <mailto:ralf@linux-mips.org>
-List-post: <mailto:linux-mips@linux-mips.org>
-List-archive: <http://www.linux-mips.org/archives/linux-mips/>
-To: =?UTF-8?Q?Heiko_St=c3=bcbner?= <heiko@sntech.de>
-Cc: shawn.lin@rock-chips.com, Ulf Hansson <ulf.hansson@linaro.org>, Jaehoon Chung <jh80.chung@samsung.com>, Seungwon Jeon <tgih.jun@samsung.com>, dianders@chromium.org, linux-mips@linux-mips.org, Arnd Bergmann <arnd@arndb.de>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Alexey Brodkin <abrodkin@synopsys.com>, Stefan Agner <stefan@agner.ch>, Zhou Wang <wangzhou.bry@gmail.com>, Kumar Gala <galak@codeaurora.org>, Alim Akhtar <alim.akhtar@samsung.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Wang Long <long.wanglong@huawei.com>, Rob Herring <robh+dt@kernel.org>, Chaotian Jing <chaotian.jing@mediatek.com>, Lukasz Majewski <l.majewski@samsung.com>, Jun Nie <jun.nie@linaro.org>, Catalin Marinas <catalin.marinas@arm.com>, Kevin Hao <haokexin@>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <1438765090-823-2-git-send-email-geert+renesas@glider.be>
+Sender: linux-sh-owner@vger.kernel.org
+To: Geert Uytterhoeven <geert+renesas@glider.be>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>
+Cc: Sudeep Holla <sudeep.holla@arm.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-sh@vger.kernel.org" <linux-sh@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-=E5=9C=A8 2015/8/5 16:49, Heiko St=C3=BCbner =E5=86=99=E9=81=93:
-> Am Mittwoch, 5. August 2015, 16:17:28 schrieb Shawn Lin:
->> DesignWare MMC Controller can supports two types of DMA
->> mode: external dma and internal dma. We get a RK312x platform
->> integrated dw_mmc and ARM pl330 dma controller. This patch add
->> edmac ops to support these platforms. I've tested it on RK312x
->> platform with edmac mode and RK3288 platform with idmac mode.
->>
->> Signed-off-by: Shawn Lin <shawn.lin@rock-chips.com>
->>
->> ---
-> [...]
->
->> diff --git a/include/linux/mmc/dw_mmc.h b/include/linux/mmc/dw_mmc.h
->> index 5be9767..6c1c7ea 100644
->> --- a/include/linux/mmc/dw_mmc.h
->> +++ b/include/linux/mmc/dw_mmc.h
->> @@ -16,6 +16,7 @@
->>
->>   #include <linux/scatterlist.h>
->>   #include <linux/mmc/core.h>
->> +#include <linux/dmaengine.h>
->>
->>   #define MAX_MCI_SLOTS	2
->>
->> @@ -40,6 +41,17 @@ enum {
->>
->>   struct mmc_data;
->>
->> +enum {
->> +	TRANS_MODE_PIO =3D 0,
->> +	TRANS_MODE_IDMAC,
->> +	TRANS_MODE_EDMAC
->> +};
->> +
->> +struct dw_mci_dma_slave {
->> +	struct dma_chan *ch;
->> +	enum dma_transfer_direction direction;
->> +};
->> +
->>   /**
->>    * struct dw_mci - MMC controller state shared between all slots
->>    * @lock: Spinlock protecting the queue and associated data.
->> @@ -147,17 +159,23 @@ struct dw_mci {
->>
->>   	/* DMA interface members*/
->>   	int			use_dma;
->> +	int			trans_mode;
-> you're introducing this new trans_mode, but we have "use_dma" already=
-=2E
->
-> So you could just define
->
-> enum {
-> 	TRANS_DMA_PIO =3D 0,
-> 	TRANS_DMA_IDMAC,
-> 	TRANS_DMA_EDMAC
-> };
->
-> and fill use_dma appropriately. "0" is meaning PIO already, which I a=
-lso did fix
-> up some days ago in "[PATCH] mmc: dw_mmc: fix pio mode when internal =
-dmac is
-> enabled" [0].
-    I  agree.  "trans_mode" is redundant here since it does the same=20
-work as "use_dma" to some degree.
-    Thanks.
->
-> Heiko
->
-> [0] https://lkml.org/lkml/2015/8/3/407
->
->
->
 
 
---=20
-Shawn Lin
+On 05/08/15 09:58, Geert Uytterhoeven wrote:
+> Add the missing L2 cache-controller node. This will allow migration to
+> the generic l2c OF initialization.
+>
+> The L2 cache is an ARM L2C-310 (r3p1-150rel0), of size 256 KiB (32 KiB x
+> 8 ways).
+>
+> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> ---
+> v4:
+>    - Commit eeedcea69e927857 ("ARM: 8395/1: l2c: Add support for the
+>      "arm,shared-override" property") is queued for 4.3 in arm/for-next,
+>
+> v3:
+>    - Add "arm,shared-override",
+>
+> v2:
+>    - Fix interrupt (should be 3 cells, not 1),
+>    - Describe cache better.
+> ---
+>   arch/arm/boot/dts/r8a7740.dtsi | 16 ++++++++++++++++
+>   1 file changed, 16 insertions(+)
+>
+> diff --git a/arch/arm/boot/dts/r8a7740.dtsi b/arch/arm/boot/dts/r8a7740.dtsi
+> index d84714468cce18df..ddef5b1c68fa06b3 100644
+> --- a/arch/arm/boot/dts/r8a7740.dtsi
+> +++ b/arch/arm/boot/dts/r8a7740.dtsi
+> @@ -37,6 +37,22 @@
+>   		      <0xc2000000 0x1000>;
+>   	};
+>
+> +	L2: cache-controller {
+> +		compatible = "arm,pl310-cache";
+> +		reg = <0xf0100000 0x1000>;
+> +		interrupts = <0 84 IRQ_TYPE_LEVEL_HIGH>;
+> +		power-domains = <&pd_a3sm>;
+> +		arm,data-latency = <3 3 3>;
+> +		arm,tag-latency = <2 2 2>;
+> +		arm,shared-override;
+> +		cache-unified;
+> +		cache-level = <2>;
+> +		cache-size = <0x40000>;
+> +		cache-sets = <1024>;
+> +		cache-block-size = <32>;
+> +		cache-line-size = <32>;
+
+Any particular reason whey you need all this cache-* properties ? Is
+something broken on these SoCs ? We should be able to get most of these
+information from the SoC(reading some registers). It's good to avoid
+passing them via DT if they can be discovered from hardware.
+
+Regards,
+Sudeep
