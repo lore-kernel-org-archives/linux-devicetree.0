@@ -1,76 +1,43 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH v4 1/6] ARM: shmobile: r8a7740 dtsi: Add L2
- cache-controller node
-Date: Wed, 5 Aug 2015 12:44:10 +0200
-Message-ID: <CAMuHMdXdEV+41mH338bDbazzqOErDLQkBUAj2+uVX4Wupn1ABQ@mail.gmail.com>
-References: <1438765090-823-1-git-send-email-geert+renesas@glider.be>
-	<1438765090-823-2-git-send-email-geert+renesas@glider.be>
-	<55C1D894.8070302@arm.com>
+From: Shubhrajyoti Datta <shubhrajyoti.datta-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH-v5 2/5] i2c: pxa: enable/disable i2c module across msg xfer
+Date: Wed, 5 Aug 2015 16:16:44 +0530
+Message-ID: <CAKfKVtGzDjgHzy70aa0d2W=ROMcxVzerg-qpuB9e4PaGKPpMTQ@mail.gmail.com>
+References: <1437482466-16126-1-git-send-email-vaibhav.hiremath@linaro.org>
+	<1437482466-16126-3-git-send-email-vaibhav.hiremath@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <55C1D894.8070302@arm.com>
-Sender: linux-sh-owner@vger.kernel.org
-To: Sudeep Holla <sudeep.holla@arm.com>
-Cc: Geert Uytterhoeven <geert+renesas@glider.be>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-sh@vger.kernel.org" <linux-sh@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1437482466-16126-3-git-send-email-vaibhav.hiremath-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Vaibhav Hiremath <vaibhav.hiremath-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, Yi Zhang <yizhang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robert.jarzmik-GANU6spQydw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Sudeep,
-
-On Wed, Aug 5, 2015 at 11:34 AM, Sudeep Holla <sudeep.holla@arm.com> wrote:
-> On 05/08/15 09:58, Geert Uytterhoeven wrote:
->> Add the missing L2 cache-controller node. This will allow migration to
->> the generic l2c OF initialization.
->>
->> The L2 cache is an ARM L2C-310 (r3p1-150rel0), of size 256 KiB (32 KiB x
->> 8 ways).
->>
->> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-
->> diff --git a/arch/arm/boot/dts/r8a7740.dtsi
->> b/arch/arm/boot/dts/r8a7740.dtsi
->> index d84714468cce18df..ddef5b1c68fa06b3 100644
->> --- a/arch/arm/boot/dts/r8a7740.dtsi
->> +++ b/arch/arm/boot/dts/r8a7740.dtsi
->> @@ -37,6 +37,22 @@
->>                       <0xc2000000 0x1000>;
->>         };
->>
->> +       L2: cache-controller {
->> +               compatible = "arm,pl310-cache";
->> +               reg = <0xf0100000 0x1000>;
->> +               interrupts = <0 84 IRQ_TYPE_LEVEL_HIGH>;
->> +               power-domains = <&pd_a3sm>;
->> +               arm,data-latency = <3 3 3>;
->> +               arm,tag-latency = <2 2 2>;
->> +               arm,shared-override;
->> +               cache-unified;
->> +               cache-level = <2>;
->> +               cache-size = <0x40000>;
->> +               cache-sets = <1024>;
->> +               cache-block-size = <32>;
->> +               cache-line-size = <32>;
+hi ,
+On Tue, Jul 21, 2015 at 6:11 PM, Vaibhav Hiremath
+<vaibhav.hiremath-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+> From: Yi Zhang <yizhang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
 >
+> Enable i2c module/unit before transmission and disable when it
+> finishes.
 >
-> Any particular reason whey you need all this cache-* properties ? Is
+> why?
+> It's because the i2c bus may be disturbed if the slave device,
+> typically a touch, powers on.
 
-To describe the cache as good as possible.
+Why should that be an issue?
+Is it an errata.
 
-> something broken on these SoCs ? We should be able to get most of these
-> information from the SoC(reading some registers). It's good to avoid
-> passing them via DT if they can be discovered from hardware.
+In which mode it is an issue slave / master or both?
 
-So we have all these documented properties in
-Documentation/devicetree/bindings/arm/l2cc.txt, but they're not meant to
-be used?
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+>
+> As we do not want to break slave mode support, this patch introduces
+> DT property to control disable of the I2C module after xfer in master
+> mode of operation.
+>
+> i2c-disable-after-xfer : If set, driver will disable I2C module after
+> msg xfer
+>
+> Signed-off-by: Yi Zhang <yizhang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
+> Signed-off-by: Vaibhav Hiremath <vaibhav.hiremath-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> ---
