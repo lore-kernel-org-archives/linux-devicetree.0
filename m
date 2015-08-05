@@ -1,122 +1,172 @@
 From: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-Subject: Re: [RFC PATCH v3 0/5]
-Date: Thu, 06 Aug 2015 08:45:05 +0900
-Message-ID: <55C2A001.2090506@samsung.com>
-References: <1438762614-22154-1-git-send-email-shawn.lin@rock-chips.com>
+Subject: Re: [PATCH-v2 2/2] regulator: 88pm800: Add support for configuration
+ of dual phase on BUCK1
+Date: Thu, 06 Aug 2015 08:58:56 +0900
+Message-ID: <55C2A340.6020809@samsung.com>
+References: <1437495782-15767-1-git-send-email-vaibhav.hiremath@linaro.org>
+ <1437495782-15767-3-git-send-email-vaibhav.hiremath@linaro.org>
+ <CAJKOXPcMd9VvfA48kaBa0BYeHAfHTu6MzAbQv0HuRy9wbgz0wg@mail.gmail.com>
+ <55C1CD47.3060400@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-mips-bounce@linux-mips.org>
-In-reply-to: <1438762614-22154-1-git-send-email-shawn.lin@rock-chips.com>
-Sender: linux-mips-bounce@linux-mips.org
-Errors-to: linux-mips-bounce@linux-mips.org
-List-help: <mailto:ecartis@linux-mips.org?Subject=help>
-List-unsubscribe: <mailto:ecartis@linux-mips.org?subject=unsubscribe%20linux-mips>
-List-software: Ecartis version 1.0.0
-List-subscribe: <mailto:ecartis@linux-mips.org?subject=subscribe%20linux-mips>
-List-owner: <mailto:ralf@linux-mips.org>
-List-post: <mailto:linux-mips@linux-mips.org>
-List-archive: <http://www.linux-mips.org/archives/linux-mips/>
-To: Shawn Lin <shawn.lin@rock-chips.com>, Ulf Hansson <ulf.hansson@linaro.org>, Jaehoon Chung <jh80.chung@samsung.com>, Seungwon Jeon <tgih.jun@samsung.com>
-Cc: dianders@chromium.org, linux-mips@linux-mips.org, Arnd Bergmann <arnd@arndb.de>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Alexey Brodkin <abrodkin@synopsys.com>, Stefan Agner <stefan@agner.ch>, Zhou Wang <wangzhou.bry@gmail.com>, Kumar Gala <galak@codeaurora.org>, Alim Akhtar <alim.akhtar@samsung.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Wang Long <long.wanglong@huawei.com>, Rob Herring <robh+dt@kernel.org>, Chaotian Jing <chaotian.jing@mediatek.com>, Lukasz Majewski <l.majewski@samsung.com>, Jun Nie <jun.nie@linaro.org>, Catalin Marinas <catalin.marinas@arm.com>, Kevin Hao <haokexin@gmail.com>, Olof Johansson <olof@lixom.net>, Ray Jui <rjui@broadcom.com>, Govindraj Raja <govindraj.raja@imgtec.com>, linux-samsung-so
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-reply-to: <55C1CD47.3060400@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Vaibhav Hiremath <vaibhav.hiremath@linaro.org>
+Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, robh+dt@kernel.org, broonie@kernel.org, lee.jones@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-On 05.08.2015 17:16, Shawn Lin wrote:
-> Synopsys DesignWare mobile storage host controller supports three
-> types of transfer mode: pio, internal dma and external dma. However,
-> dw_mmc can only supports pio and internal dma now. Thus some platforms
-> using dw-mshc integrated with generic dma can't work in dma mode. So we
-> submit this patch to achieve it.
-> 
-> And the config option, CONFIG_MMC_DW_IDMAC, was added by Will Newton
-> (commit:f95f3850) for the first version of dw_mmc and never be touched from
-> then. At that time dt-bindings hadn't been introduced into dw_mmc yet means
-> we should select CONFIG_MMC_DW_IDMAC to enable internal dma mode at compile
-> time. Nowadays, device-tree helps us to support a variety of boards with one
-> kernel. That's why we need to remove it and decide the transfer mode at runtime.
-> 
-> This RFC patch needs lots of ACKs. I know it's hard, but it does need someone
-> to make the running.
-> 
-> Patch does the following things:
-> - remove CONFIG_MMC_DW_IDMAC config option
-> - add bindings for idmac and edmac used by synopsys-dw-mshc
->   at runtime
-> - add edmac support for synopsys-dw-mshc
-> 
-> Patch is based on next of git://git.linaro.org/people/ulf.hansson/mmc
+On 05.08.2015 17:45, Vaibhav Hiremath wrote:
 > 
 > 
-> Changes in v3:
-> - choose transfer mode at runtime
-> - remove all CONFIG_MMC_DW_IDMAC config option
-> - add supports-idmac property for some platforms
+> On Thursday 23 July 2015 10:21 AM, Krzysztof Kozlowski wrote:
+>> 2015-07-22 1:23 GMT+09:00 Vaibhav Hiremath <vaibhav.hiremath@linaro.org>:
+>>> 88PM860 device supports dual phase mode on BUCK1 output.
+>>> In normal usecase, BUCK1A and BUCK1B operates independently with 3A
+>>> capacity. And they both can work as a dual phase providing 6A capacity.
+>>>
+>>> This patch updates the regulator driver to read the respective
+>>> DT property and enable dual-phase mode on BUCK1.
+>>>
+>>> Note that, this is init time (one time) initialization.
+>>>
 > 
-> Changes in v2:
-> - Fix typo of dev_info msg
-> - remove unused dmach from declaration of dw_mci_dma_slave
+> Sorry for delayed response, was on bed rest almost for week.
 > 
-> Shawn Lin (5):
->   mmc: dw_mmc: Add external dma interface support
->   Documentation: synopsys-dw-mshc: add bindings for idmac and edmac
->   arm: configs: remove CONFIG_MMC_DW_IDMAC
->   mips: configs: remove CONFIG_MMC_DW_IDMAC
->   ARM: dts: add supports-idmac property
+>>> Signed-off-by: Vaibhav Hiremath <vaibhav.hiremath@linaro.org>
+>>> ---
+>>>   drivers/regulator/88pm800.c | 31 +++++++++++++++++++++++++++++++
+>>>   include/linux/mfd/88pm80x.h |  3 +++
+>>>   2 files changed, 34 insertions(+)
+>>
+>> Don't you need to update the constraints also? I think the BUCK1
+>> regulator has fixed constraint of 3 A:
+>>    PM800_BUCK(buck1, BUCK1, BUCK_ENA, 0, 3000000, buck1_volt_range,
+>> 0x55),
+>> and now it can handle 6 A.
+>>
+> 
+> Actually, BUCK1A and BUCK1B both combined together provide 6A capacity.
+> And as discussed earlier, we need board change for this.
+> 
+> I am quite not sure.
 
-Please fix the title of cover letter.
+AFAIU the regulator driver creates one BUCK1 regulator with constraints
+3 A. However after your change the regulator will handle up to 6 A.
 
-You CC-ed a lot of people. Probably the whole output of git_maintainers
-which is not necessary. This means that your patches did not reach some
-of the mailing lists because of too many recipients. I received your
-patchset but I can't find it on any of the lists I subscribe.
+This means that constraints set by driver are wrong.
 
-Please CC only REAL maintainers, not committers.
+Additionally I can't find BUCK1A and BUCK1B regulators. Driver provides
+only BUCK1.
 
-Additionally if DTS changes do not have to be introduced atomically
-please split it per sub-architecture. Of course that applies only in
-case of bisectable patches. And the patchset should preserve
-bisectability and backward compatibility (mentioned earlier).
+> 
+> Should I read the property and update the constraint runtime during
+> probe?
+
+Driver should provide real constraints. Find the proper way to do this.
+
+The pm800_regulator_info[] array is not const so you can change it in
+whatever way you want (although it should be const for existing driver
+because regulator core accepts const and passing it to driver_data is
+not necessary).
 
 Best regards,
 Krzysztof
 
-
 > 
->  .../devicetree/bindings/mmc/synopsys-dw-mshc.txt   |  41 +++
->  arch/arc/configs/axs101_defconfig                  |   1 -
->  arch/arc/configs/axs103_defconfig                  |   1 -
->  arch/arc/configs/axs103_smp_defconfig              |   1 -
->  arch/arm/boot/dts/exynos3250-monk.dts              |   1 +
->  arch/arm/boot/dts/exynos3250-rinato.dts            |   1 +
->  arch/arm/boot/dts/exynos4412-odroid-common.dtsi    |   1 +
->  arch/arm/boot/dts/exynos4412-origen.dts            |   1 +
->  arch/arm/boot/dts/exynos4412-trats2.dts            |   1 +
->  arch/arm/boot/dts/exynos4x12.dtsi                  |   1 +
->  arch/arm/boot/dts/exynos5250-arndale.dts           |   2 +
->  arch/arm/boot/dts/exynos5250-smdk5250.dts          |   2 +
->  arch/arm/boot/dts/exynos5250-snow.dts              |   3 +
->  arch/arm/boot/dts/exynos5250-spring.dts            |   2 +
->  arch/arm/boot/dts/exynos5260-xyref5260.dts         |   2 +
->  arch/arm/boot/dts/exynos5410-smdk5410.dts          |   2 +
->  arch/arm/boot/dts/exynos5420-arndale-octa.dts      |   2 +
->  arch/arm/boot/dts/exynos5420-peach-pit.dts         |   3 +
->  arch/arm/boot/dts/exynos5420-smdk5420.dts          |   2 +
->  arch/arm/boot/dts/exynos5422-odroidxu3-common.dtsi |   2 +
->  arch/arm/boot/dts/exynos5800-peach-pi.dts          |   3 +
->  arch/arm/boot/dts/hisi-x5hd2.dtsi                  |   2 +
->  arch/arm/boot/dts/rk3288-evb.dtsi                  |   2 +
->  arch/arm/boot/dts/rk3288-firefly.dtsi              |   3 +
->  arch/arm/boot/dts/rk3288-popmetal.dts              |   2 +
->  arch/arm/configs/exynos_defconfig                  |   1 -
->  arch/arm/configs/hisi_defconfig                    |   1 -
->  arch/arm/configs/lpc18xx_defconfig                 |   1 -
->  arch/arm/configs/multi_v7_defconfig                |   1 -
->  arch/arm/configs/zx_defconfig                      |   1 -
->  arch/arm64/boot/dts/exynos/exynos7-espresso.dts    |   2 +
->  arch/mips/configs/pistachio_defconfig              |   1 -
->  drivers/mmc/host/Kconfig                           |  11 +-
->  drivers/mmc/host/dw_mmc-pltfm.c                    |   2 +
->  drivers/mmc/host/dw_mmc.c                          | 277 +++++++++++++++++----
->  include/linux/mmc/dw_mmc.h                         |  28 ++-
->  36 files changed, 338 insertions(+), 72 deletions(-)
+> 
+>>>
+>>> diff --git a/drivers/regulator/88pm800.c b/drivers/regulator/88pm800.c
+>>> index e846e4c..1bf2b35 100644
+>>> --- a/drivers/regulator/88pm800.c
+>>> +++ b/drivers/regulator/88pm800.c
+>>> @@ -267,6 +267,31 @@ static struct pm800_regulator_info
+>>> pm860_regulator_info[] = {
+>>>          PM800_LDO(ldo20, LDO20, LDO_ENA1_3, 3, 10000, ldo_volt_table2),
+>>>   };
+>>>
+>>> +static int pm800_regulator_init(struct platform_device *pdev)
+>>> +{
+>>> +       struct pm800_regulators *pm800_data =
+>>> platform_get_drvdata(pdev);
+>>> +       struct pm80x_chip *chip = pm800_data->chip;
+>>> +       int ret;
+>>
+>> 'ret' is used only in if statement below. I don't have strong feelings
+>> but can you move it there to limit its scope or always return 'ret'
+>> (after initializing to '0'). To me this would be more readable.
+>>
+> 
+> OK, will fix in V3.
+> 
+> I will wait to close on constraint discussion above.
+> 
+> Thanks,
+> Vaibhav
+> 
+>> Best regards,
+>> Krzysztof
+>>
+>>> +
+>>> +       /* Currently only supported on 88pm860 device */
+>>> +       if (chip->type != CHIP_PM860)
+>>> +               return 0;
+>>> +
+>>> +       if (of_property_read_bool(pdev->dev.of_node,
+>>> +                               "marvell,88pm860-buck1-dualphase-en")) {
+>>> +               ret = regmap_update_bits(chip->subchip->regmap_power,
+>>> +                                       PM860_BUCK1_MISC,
+>>> +                                       BUCK1_DUAL_PHASE_SEL,
+>>> +                                       BUCK1_DUAL_PHASE_SEL);
+>>> +               if (ret) {
+>>> +                       dev_err(chip->dev, "failed to set dual-pase
+>>> mode %d\n", ret);
+>>> +                       return ret;
+>>> +               }
+>>> +       }
+>>> +
+>>> +       return 0;
+>>> +}
+>>> +
+>>>   static int pm800_regulator_probe(struct platform_device *pdev)
+>>>   {
+>>>          struct pm80x_chip *chip = dev_get_drvdata(pdev->dev.parent);
+>>> @@ -336,6 +361,12 @@ static int pm800_regulator_probe(struct
+>>> platform_device *pdev)
+>>>                  }
+>>>          }
+>>>
+>>> +       ret = pm800_regulator_init(pdev);
+>>> +       if (ret) {
+>>> +               dev_err(&pdev->dev, "failed to init 88pm800 regulator
+>>> device\n");
+>>> +               return ret;
+>>> +       }
+>>> +
+>>>          return 0;
+>>>   }
+>>>
+>>> diff --git a/include/linux/mfd/88pm80x.h b/include/linux/mfd/88pm80x.h
+>>> index a92d173..05d9bad 100644
+>>> --- a/include/linux/mfd/88pm80x.h
+>>> +++ b/include/linux/mfd/88pm80x.h
+>>> @@ -295,6 +295,9 @@ enum {
+>>>   #define PM860_BUCK4_MISC2              (0x82)
+>>>   #define PM860_BUCK4_FULL_DRV           BIT(2)
+>>>
+>>> +#define PM860_BUCK1_MISC               (0x8E)
+>>> +#define BUCK1_DUAL_PHASE_SEL           BIT(2)
+>>> +
+>>>   struct pm80x_rtc_pdata {
+>>>          int             vrtc;
+>>>          int             rtc_wakeup;
+>>> -- 
+>>> 1.9.1
+>>>
+>>>
+>>> _______________________________________________
+>>> linux-arm-kernel mailing list
+>>> linux-arm-kernel@lists.infradead.org
+>>> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
 > 
