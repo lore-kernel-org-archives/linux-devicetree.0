@@ -1,36 +1,37 @@
-From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH 4/4] ARM: dts: AM4372: Add the wkup_m3_ipc node
-Date: Wed, 5 Aug 2015 03:31:55 -0700
-Message-ID: <20150805103155.GB16878@atomide.com>
-References: <1437167284-25659-1-git-send-email-d-gerlach@ti.com>
- <1437167284-25659-5-git-send-email-d-gerlach@ti.com>
+From: Haibo Chen <haibo.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: [PATCH v4 0/6] mmc: imx: a few fixes and new feature
+Date: Wed, 5 Aug 2015 18:38:36 +0800
+Message-ID: <1438771122-8601-1-git-send-email-haibo.chen@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1437167284-25659-5-git-send-email-d-gerlach-l0cyMroinI0@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Dave Gerlach <d-gerlach-l0cyMroinI0@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Santosh Shilimkar <ssantosh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Suman Anna <s-anna-l0cyMroinI0@public.gmane.org>, Keerthy <j-keerthy-l0cyMroinI0@public.gmane.org>
+To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, aisheng.dong-KZfg59tc24xl57MIdRCFDg@public.gmane.org
+Cc: haibo.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org, johan.derycke-ob4gmnvZ1/cAvxtiuMwx3w@public.gmane.org, mkl-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org, b29396-KZfg59tc24xl57MIdRCFDg@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-* Dave Gerlach <d-gerlach-l0cyMroinI0@public.gmane.org> [150717 14:10]:
-> From: Suman Anna <s-anna-l0cyMroinI0@public.gmane.org>
-> 
-> Add the Wakeup M3 IPC device node for the wkup_m3_ipc driver on
-> AM4372 SoC. This node uses the IPC registers, part of the Control
-> Module, and is therefore added as a child of the scm node.
+Changes for v4:
+-Call esdhc_set_strobe_dll() only when device clock is over 100MHz in HS400 mode.
+-Add detail description of tuning-step.
+-Change to default watermark level and burst length for all imx SoC, not only imx7d.
 
-Applying the last two patches in this series into omap-for-v4.3/dt
-thanks.
+Haibo Chen (6):
+  mmc: sdhci-esdhc-imx: add imx7d support and support HS400
+  mmc: sdhci-esdhc-imx: add tuning-step seting support
+  mmc: sdhci-esdhc-imx: add compatible string in bingding doc
+  ARM: dts: imx7d-sdb: add eMMC5.0 support
+  mmc: sdhci-esdhc-imx: change default watermark level and burst length
+  mmc: sdhci-esdhc-imx: set back the burst_length_enable bit to 1
 
-Probably the send-no-irq quirk you can do in the driver based
-on the compatible flag like I suggested in the related mailbox
-thread so not applying those until that's been discussed.
+ .../devicetree/bindings/mmc/fsl-imx-esdhc.txt      |   6 ++
+ arch/arm/boot/dts/imx7d-sdb.dts                    |  13 +++
+ drivers/mmc/host/sdhci-esdhc-imx.c                 | 109 ++++++++++++++++++++-
+ include/linux/platform_data/mmc-esdhc-imx.h        |   1 +
+ 4 files changed, 128 insertions(+), 1 deletion(-)
 
-Regards,
+-- 
+1.9.1
 
-Tony
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
