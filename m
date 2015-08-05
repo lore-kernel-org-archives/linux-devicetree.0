@@ -1,92 +1,111 @@
-From: Roger Quadros <rogerq@ti.com>
-Subject: Re: [PATCH 6/7] phy: omap-usb2: Add a new compatible string for USB2
- PHY2
-Date: Wed, 5 Aug 2015 11:25:57 +0300
-Message-ID: <55C1C895.8070305@ti.com>
-References: <1438701646-7876-1-git-send-email-kishon@ti.com> <1438701646-7876-7-git-send-email-kishon@ti.com> <55C1C803.4030905@ti.com>
+From: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+Subject: Re: [RFC PATCH v3 2/5] Documentation: synopsys-dw-mshc: add bindings
+ for idmac and edmac
+Date: Wed, 05 Aug 2015 17:27:21 +0900
+Message-ID: <55C1C8E9.1060808@samsung.com>
+References: <1438762614-22154-1-git-send-email-shawn.lin@rock-chips.com>
+ <1438762672-22243-1-git-send-email-shawn.lin@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
+Content-Type: text/plain; charset=windows-1252
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <55C1C803.4030905@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Kishon Vijay Abraham I <kishon@ti.com>, tony@atomide.com, t-kristo@ti.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org, linux-omap@vger.kernel.org
-Cc: balbi@ti.com, nsekhar@ti.com
+Return-path: <linux-mips-bounce@linux-mips.org>
+In-reply-to: <1438762672-22243-1-git-send-email-shawn.lin@rock-chips.com>
+Sender: linux-mips-bounce@linux-mips.org
+Errors-to: linux-mips-bounce@linux-mips.org
+List-help: <mailto:ecartis@linux-mips.org?Subject=help>
+List-unsubscribe: <mailto:ecartis@linux-mips.org?subject=unsubscribe%20linux-mips>
+List-software: Ecartis version 1.0.0
+List-subscribe: <mailto:ecartis@linux-mips.org?subject=subscribe%20linux-mips>
+List-owner: <mailto:ralf@linux-mips.org>
+List-post: <mailto:linux-mips@linux-mips.org>
+List-archive: <http://www.linux-mips.org/archives/linux-mips/>
+To: Shawn Lin <shawn.lin@rock-chips.com>, Ulf Hansson <ulf.hansson@linaro.org>, Jaehoon Chung <jh80.chung@samsung.com>, Seungwon Jeon <tgih.jun@samsung.com>
+Cc: dianders@chromium.org, linux-mips@linux-mips.org, Arnd Bergmann <arnd@arndb.de>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Alexey Brodkin <abrodkin@synopsys.com>, Stefan Agner <stefan@agner.ch>, Zhou Wang <wangzhou.bry@gmail.com>, Kumar Gala <galak@codeaurora.org>, Alim Akhtar <alim.akhtar@samsung.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Wang Long <long.wanglong@huawei.com>, Rob Herring <robh+dt@kernel.org>, Chaotian Jing <chaotian.jing@mediatek.com>, Lukasz Majewski <l.majewski@samsung.com>, Jun Nie <jun.nie@linaro.org>, Catalin Marinas <catalin.marinas@arm.com>, Kevin Hao <haokexin@gmail.com>, Olof Johansson <olof@lixom.net>, Ray Jui <rjui@broadcom.com>, Govindraj Raja <govindraj.raja@imgtec.com>, linux-samsung-so
 List-Id: devicetree@vger.kernel.org
 
-On 05/08/15 11:23, Roger Quadros wrote:
+On 05.08.2015 17:17, Shawn Lin wrote:
+> synopsys-dw-mshc supports three types of transfer mode. We add bindings
+> and description for how to use them at runtime. Without idmac and edmac
+> property, pio is the default transfer mode. Make sure that Idmac and emdac
+> should not be used simultaneously.
 > 
-> On 04/08/15 18:20, Kishon Vijay Abraham I wrote:
->> The USB2 PHY2 has a different register map compared to USB2 PHY1
->> to power on/off the PHY. In order to handle it, add a new
->> "compatible" string.
->>
->> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
->> ---
->>  Documentation/devicetree/bindings/phy/ti-phy.txt |    2 ++
->>  drivers/phy/phy-omap-usb2.c                      |    9 +++++++++
->>  2 files changed, 11 insertions(+)
->>
->> diff --git a/Documentation/devicetree/bindings/phy/ti-phy.txt b/Documentation/devicetree/bindings/phy/ti-phy.txt
->> index 49e5b0c..a061077 100644
->> --- a/Documentation/devicetree/bindings/phy/ti-phy.txt
->> +++ b/Documentation/devicetree/bindings/phy/ti-phy.txt
->> @@ -31,6 +31,8 @@ OMAP USB2 PHY
->>  
->>  Required properties:
->>   - compatible: Should be "ti,omap-usb2"
->> +	       Should be "ti,dra7x-usb2-phy2" for the 2nd instance of USB2 PHY
->> +	       in DRA7x
->>   - reg : Address and length of the register set for the device.
->>   - #phy-cells: determine the number of cells that should be given in the
->>     phandle while referencing this phy.
->> diff --git a/drivers/phy/phy-omap-usb2.c b/drivers/phy/phy-omap-usb2.c
->> index b5c266a..2f7220f 100644
->> --- a/drivers/phy/phy-omap-usb2.c
->> +++ b/drivers/phy/phy-omap-usb2.c
->> @@ -159,6 +159,11 @@ static const struct usb_phy_data dra7x_usb2_data = {
->>  	.flags = OMAP_USB2_CALIBRATE_FALSE_DISCONNECT,
->>  };
->>  
->> +static const struct usb_phy_data dra7x_usb2_phy2_data = {
->> +	.label = "dra7x_usb2_phy2",
->> +	.flags = OMAP_USB2_CALIBRATE_FALSE_DISCONNECT,
->> +};
->> +
->>  static const struct usb_phy_data am437x_usb2_data = {
->>  	.label = "am437x_usb2",
->>  	.flags =  0,
->> @@ -178,6 +183,10 @@ static const struct of_device_id omap_usb2_id_table[] = {
->>  		.data = &dra7x_usb2_data,
->>  	},
->>  	{
->> +		.compatible = "ti,dra7x-usb2-phy2",
->> +		.data = &dra7x_usb2_phy2_data,
+> Signed-off-by: Shawn Lin <shawn.lin@rock-chips.com>
+> ---
 > 
-> Why is this needed? You can reuse dra7x_usb2_data as is.
-
-OK. I see why we need it in the next patch.
-Probably both patches could be squashed.
-
-What does .label indicate?
-IMO the .label of both usb2 phys should be the same.
-i.e. "dra7x_usb2"
-
-cheers,
--roger
-
+> Changes in v3: None
+> Changes in v2: None
 > 
->> +	},
->> +	{
->>  		.compatible = "ti,am437x-usb2",
->>  		.data = &am437x_usb2_data,
->>  	},
->>
+>  .../devicetree/bindings/mmc/synopsys-dw-mshc.txt   | 41 ++++++++++++++++++++++
+>  1 file changed, 41 insertions(+)
 > 
-> cheers,
-> -roger
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> diff --git a/Documentation/devicetree/bindings/mmc/synopsys-dw-mshc.txt b/Documentation/devicetree/bindings/mmc/synopsys-dw-mshc.txt
+> index 346c609..30369cb 100644
+> --- a/Documentation/devicetree/bindings/mmc/synopsys-dw-mshc.txt
+> +++ b/Documentation/devicetree/bindings/mmc/synopsys-dw-mshc.txt
+> @@ -75,6 +75,25 @@ Optional properties:
+>  * vmmc-supply: The phandle to the regulator to use for vmmc.  If this is
+>    specified we'll defer probe until we can find this regulator.
+>  
+> +* supports-idmac: Enables support for internal DMAC block within the Synopsys
+> +  Designware Mobile Storage IP block. If supports-idmac property is present, then
+> +  we MUST NOT add supports-edmac property since we'd assume that dw-mshc IP is
+> +  integrated with only one type of dma master.
+> +
+> +* supports-edmac: Enables support for external DMAC block outside the Synopsys
+> +  Designware Mobile Storage IP block. If supports-edmac property is present, then
+> +  we MUST NOT add supports-idmac property since we'd assume that dw-mshc IP is
+> +  integrated with only one type of dma master.
+> +
+> +  (Without "supports-idmac" and "supports-edmac", use PIO as default transfer mode)
+
+Aren't you breaking here backward compatibility with existing DTB?
+
+Best regards,
+Krzysztof
+
+> +
+> +* dmas: List of DMA specifiers with the controller specific format as described
+> +  in the generic DMA client binding. This property should be combined with
+> +  supports-edmac. Refer to dma.txt for details.
+> +
+> +* dma-names: DMA request names. Must be "rx-tx". And This property should be
+> +  combined with supports-edmac. Refer to dma.txt for details.
+> +
+>  Aliases:
+>  
+>  - All the MSHC controller nodes should be represented in the aliases node using
+> @@ -95,6 +114,8 @@ board specific portions as listed below.
+>  		#size-cells = <0>;
+>  	};
+>  
+> +[board specific internal DMA resources]
+> +
+>  	dwmmc0@12200000 {
+>  		clock-frequency = <400000000>;
+>  		clock-freq-min-max = <400000 200000000>;
+> @@ -106,4 +127,24 @@ board specific portions as listed below.
+>  		bus-width = <8>;
+>  		cap-mmc-highspeed;
+>  		cap-sd-highspeed;
+> +		supports-idmac;
+>  	};
+> +
+> +[board specific generic DMA request binding]
+> +
+> +	dwmmc0@12200000 {
+> +		clock-frequency = <400000000>;
+> +		clock-freq-min-max = <400000 200000000>;
+> +		num-slots = <1>;
+> +		broken-cd;
+> +		fifo-depth = <0x80>;
+> +		card-detect-delay = <200>;
+> +		vmmc-supply = <&buck8>;
+> +		bus-width = <8>;
+> +		cap-mmc-highspeed;
+> +		cap-sd-highspeed;
+> +		supports-edmac;
+> +		dmas = <&pdma 12>;
+> +		dma-names = "rx-tx";
+> +	};
+> +
 > 
