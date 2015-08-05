@@ -1,52 +1,82 @@
-From: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
-Subject: Re: [PATCH 3/4] arm64: Juno: Add HDLCD support to the Juno boards.
-Date: Wed, 5 Aug 2015 18:53:03 +0100
-Message-ID: <20150805175303.GB7557@n2100.arm.linux.org.uk>
-References: <1438784892-27888-1-git-send-email-Liviu.Dudau@arm.com>
- <1438784892-27888-4-git-send-email-Liviu.Dudau@arm.com>
+From: Sebastian Reichel <sre@kernel.org>
+Subject: Re: [PATCH v2 1/2] power: reset: at91: add sama5d3 reset function
+Date: Wed, 5 Aug 2015 20:04:19 +0200
+Message-ID: <20150805180419.GA11315@earth>
+References: <1437384726-24927-1-git-send-email-josh.wu@atmel.com>
+ <20150720164241.GA5930@earth>
+ <55B72EEA.5020600@atmel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="ZPt4rx8FFjLCG7dd"
+Return-path: <linux-pm-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1438784892-27888-4-git-send-email-Liviu.Dudau-5wv7dgnIgG8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Liviu Dudau <Liviu.Dudau-5wv7dgnIgG8@public.gmane.org>
-Cc: David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Jon Medhurst <tixy-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
+In-Reply-To: <55B72EEA.5020600@atmel.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: Nicolas Ferre <nicolas.ferre@atmel.com>
+Cc: Josh Wu <josh.wu@atmel.com>, linux-arm-kernel@lists.infradead.org, Guenter Roeck <linux@roeck-us.net>, Kumar Gala <galak@codeaurora.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <robh+dt@kernel.org>, Ben Dooks <ben.dooks@codethink.co.uk>, Krzysztof Kozlowski <k.kozlowski.k@gmail.com>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Pawel Moll <pawel.moll@arm.com>, devicetree@vger.kernel.org, linux-pm@vger.kernel.org, Sudeep Holla <sudeep.holla@arm.com>, Wei Yongjun <yongjun_wei@trendmicro.com.cn>, Fabian Frederick <fabf@skynet.be>, linux-kernel@vger.kernel.org, Boris Brezillon <boris.brezillon@free-electrons.com>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, David Woodhouse <dwmw2@infradead.org>, Mark Rutland <mark.rutland@arm.com>, Maxime Ripard <maxime.ripard@free-electrons.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Aug 05, 2015 at 03:28:11PM +0100, Liviu Dudau wrote:
-> +		hdmi-transmitter@71 {
->  			compatible = "nxp,tda998x";
->  			reg = <0x71>;
-> +			port {
-> +				tda998x_1_input: endpoint@0 {
-> +					remote-endpoint = <&hdlcd1_output>;
-> +				};
-> +
-> +				tda998x_1_output: endpoint@1 {
-> +					remote-endpoint = <&hdmi1_connector_output>;
-> +				};
-> +			};
 
-This isn't compliant with the TDA998x binding, and is very likely to
-screw Jean's work on adding audio support.  See emails on lakml and
-Documentation/devicetree/bindings/drm/i2c/tda998x.txt (which looks
-like it needs updating to include the ports stuff.)
+--ZPt4rx8FFjLCG7dd
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Also, the whole question of representing connectors in a DRM model is
-yet to be established.  Yes, DT should describe the hardware, but we
-don't yet know _how_ to describe physical connectors with stuff
-implemented on top of DRM yet, and we have nothing that makes use of
-this.
+Hi Nicolas,
 
-Also note that ePAPR requires a reg= property if you specify a
-unit-address (the bit after the @ sign) so the above is non-compliant
-with ePAPR as well.
+On Tue, Jul 28, 2015 at 09:27:38AM +0200, Nicolas Ferre wrote:
+> >> This patch introduces a new compatible string: "atmel,sama5d3-rstc" and
+> >> new reset function for sama5d3 and later chips.
+> >=20
+> > queued.
+>=20
+> As my Device Tree changes depend on this modification,
+> we can synchronize in tree ways:
 
--- 
-FTTC broadband for 0.8mile line: currently at 10.5Mbps down 400kbps up
-according to speedtest.net.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Sorry for the delay.
+
+> 1/ you provide me a stable branch so that I can pull it before applying
+> my changes that can go through arm-soc.
+>=20
+> 2/ you let me take the driver's modifications with me and the two
+> patches of the series would go through arm-soc.
+>
+> 3/ you take the second patch of my series with my Acked-by tag and carry
+> both of them up to Linus' tree.
+
+I would be fine with all solutions, but 2/ would also require
+you handling another patch. I think your option 4/ is the best:
+
+> Okay, so to ease synchronization, I take this one with me through
+> arm-soc and add the old compatibility string as a fallback =3D> the
+> newer will be used when merged...
+
+FWIW:
+
+Acked-By: Sebastian Reichel <sre@kernel.org>
+
+-- Sebastian
+
+--ZPt4rx8FFjLCG7dd
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBCgAGBQJVwlAhAAoJENju1/PIO/qaOs4P/2gLQ11zJVW1MhESMMQUcrgM
+A9y4sZAElZAc/qhkFyZ4UDc1S8s5YdHCf+JE02Yyzk2VN45qSJqCWU+6jkfpNW1W
+vUPDm8m8XWqq+tXOS9CmlQURLtSNEFPpKfSvbnacMbtAwOLQVIt365W6IfRkd6Zv
+xSttHVOIvNKUdBIYK7xNNrtknkC/ZjPhUrxzrWfUOmxhZc6ReGoPMX1Hg4cew+cH
+MMwcNqQhFRdEVTE8wrd6MU3P/mDckO9olRiTvH7cSH8u3wDeCCwkArCDvikZ6OXD
+pxs8k86qHkzoNPNHRU3DqZ2LHtL2zsQhOlTw04aeM6UxgCHbQ4DiIdr7NC51RS30
+9yahtH87YkXg7p3vAAfmiWGpZzVkFnug0Qa/hxRPnKgg1HhINTuXp3Gw6PFERcD+
+5H5JwphiCXLZeWojUzCWDvkzpRq8WbGZylK6JZlu8F37HHQLuFEQCNABjTDI2MT+
+Xh3AgIIiEe0en3Yk4VaUUFWIgs1wiKcAL99R6aVOYVBXCasyPoP8Oqe6oo4ep4LX
+BhG4wYJRim+d9MzPuWCVzRWsLZhapMumudK3VTtKBaCYx4FLp/YO7SpyqJebr9GG
+oMwt/nIVx7ooi0YSj8yfsbzvpIsZdbxL/VExUhmMYVRsT5YiVKCUqQSjMGutGYI3
+oSgb/T7DtY967SFtFRbg
+=VIUg
+-----END PGP SIGNATURE-----
+
+--ZPt4rx8FFjLCG7dd--
