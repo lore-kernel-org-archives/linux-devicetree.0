@@ -1,143 +1,62 @@
-From: Madalin Bucur <madalin.bucur-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: [PATCH RFC 1/2] of: separate fixed link parsing from registration
-Date: Wed, 5 Aug 2015 17:42:24 +0300
-Message-ID: <1438785745-15517-2-git-send-email-madalin.bucur@freescale.com>
-References: <1438785745-15517-1-git-send-email-madalin.bucur@freescale.com>
-Reply-To: <madalin.bucur-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+From: Guenter Roeck <linux@roeck-us.net>
+Subject: Re: [PATCH v3] thermal: Fix thermal_zone_of_sensor_register to match
+ documentation
+Date: Wed, 05 Aug 2015 07:51:49 -0700
+Message-ID: <55C22305.2030403@roeck-us.net>
+References: <9hha8u7mi7a.fsf@e105922-lin.cambridge.arm.com> <1438768668-15225-1-git-send-email-punit.agrawal@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1438785745-15517-1-git-send-email-madalin.bucur-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Igal.Liberman-KZfg59tc24xl57MIdRCFDg@public.gmane.org, Madalin Bucur <madalin.bucur-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <1438768668-15225-1-git-send-email-punit.agrawal@arm.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: Punit Agrawal <punit.agrawal@arm.com>, linux-pm@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, liviu.dudau@arm.com, Eduardo Valentin <edubezval@gmail.com>, Zhang Rui <rui.zhang@intel.com>
 List-Id: devicetree@vger.kernel.org
 
-Some drivers may need to parse the fixed link values before registering
-the fixed link phy or access the status values. Separate the parsing from
-the actual registration and provide an export for the added parsing function.
+On 08/05/2015 02:57 AM, Punit Agrawal wrote:
+> thermal_zone_of_sensor_register is documented as returning a pointer
+> to either a valid thermal_zone_device on success, or a corresponding
+> ERR_PTR() value.
+>
+> In contrast, the function returns NULL when THERMAL_OF is configured
+> off. Fix this.
+>
+> Signed-off-by: Punit Agrawal <punit.agrawal@arm.com>
+> Cc: Guenter Roeck <linux@roeck-us.net>
+> Cc: Eduardo Valentin <edubezval@gmail.com>
+> Cc: Zhang Rui <rui.zhang@intel.com>
 
-Signed-off-by: Madalin Bucur <madalin.bucur-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
----
- drivers/of/of_mdio.c    | 52 +++++++++++++++++++++++++++++++------------------
- include/linux/of_mdio.h |  9 +++++++++
- 2 files changed, 42 insertions(+), 19 deletions(-)
+Acked-by: Guenter Roeck <linux@roeck-us.net>
 
-diff --git a/drivers/of/of_mdio.c b/drivers/of/of_mdio.c
-index fdc60db..b7e8288 100644
---- a/drivers/of/of_mdio.c
-+++ b/drivers/of/of_mdio.c
-@@ -284,43 +284,57 @@ bool of_phy_is_fixed_link(struct device_node *np)
- }
- EXPORT_SYMBOL(of_phy_is_fixed_link);
- 
--int of_phy_register_fixed_link(struct device_node *np)
-+int of_phy_parse_fixed_link(struct device_node *np,
-+			    struct fixed_phy_status *status)
- {
--	struct fixed_phy_status status = {};
- 	struct device_node *fixed_link_node;
- 	const __be32 *fixed_link_prop;
- 	int len;
--	struct phy_device *phy;
- 
- 	/* New binding */
- 	fixed_link_node = of_get_child_by_name(np, "fixed-link");
- 	if (fixed_link_node) {
--		status.link = 1;
--		status.duplex = of_property_read_bool(fixed_link_node,
--						      "full-duplex");
--		if (of_property_read_u32(fixed_link_node, "speed", &status.speed))
-+		status->link = 1;
-+		status->duplex = of_property_read_bool(fixed_link_node,
-+						       "full-duplex");
-+		if (of_property_read_u32(fixed_link_node, "speed",
-+					 &status->speed))
- 			return -EINVAL;
--		status.pause = of_property_read_bool(fixed_link_node, "pause");
--		status.asym_pause = of_property_read_bool(fixed_link_node,
--							  "asym-pause");
-+		status->pause = of_property_read_bool(fixed_link_node,
-+						      "pause");
-+		status->asym_pause = of_property_read_bool(fixed_link_node,
-+							   "asym-pause");
- 		of_node_put(fixed_link_node);
--		phy = fixed_phy_register(PHY_POLL, &status, np);
--		return IS_ERR(phy) ? PTR_ERR(phy) : 0;
-+
-+		return 0;
- 	}
- 
- 	/* Old binding */
- 	fixed_link_prop = of_get_property(np, "fixed-link", &len);
- 	if (fixed_link_prop && len == (5 * sizeof(__be32))) {
--		status.link = 1;
--		status.duplex = be32_to_cpu(fixed_link_prop[1]);
--		status.speed = be32_to_cpu(fixed_link_prop[2]);
--		status.pause = be32_to_cpu(fixed_link_prop[3]);
--		status.asym_pause = be32_to_cpu(fixed_link_prop[4]);
--		phy = fixed_phy_register(PHY_POLL, &status, np);
--		return IS_ERR(phy) ? PTR_ERR(phy) : 0;
-+		status->link = 1;
-+		status->duplex = be32_to_cpu(fixed_link_prop[1]);
-+		status->speed = be32_to_cpu(fixed_link_prop[2]);
-+		status->pause = be32_to_cpu(fixed_link_prop[3]);
-+		status->asym_pause = be32_to_cpu(fixed_link_prop[4]);
-+
-+		return 0;
- 	}
- 
- 	return -ENODEV;
- }
-+EXPORT_SYMBOL(of_phy_parse_fixed_link);
-+
-+int of_phy_register_fixed_link(struct device_node *np)
-+{
-+	struct phy_device *phy;
-+	struct fixed_phy_status status = {};
-+
-+	if (of_phy_parse_fixed_link(np, &status))
-+		return -ENODEV;
-+
-+	phy = fixed_phy_register(PHY_POLL, &status, np);
-+	return IS_ERR(phy) ? PTR_ERR(phy) : 0;
-+}
- EXPORT_SYMBOL(of_phy_register_fixed_link);
- #endif
-diff --git a/include/linux/of_mdio.h b/include/linux/of_mdio.h
-index 8f2237e..311b2cf 100644
---- a/include/linux/of_mdio.h
-+++ b/include/linux/of_mdio.h
-@@ -12,6 +12,8 @@
- #include <linux/phy.h>
- #include <linux/of.h>
- 
-+struct fixed_phy_status;
-+
- #ifdef CONFIG_OF
- extern int of_mdiobus_register(struct mii_bus *mdio, struct device_node *np);
- extern struct phy_device *of_phy_find_device(struct device_node *phy_np);
-@@ -70,9 +72,16 @@ static inline int of_mdio_parse_addr(struct device *dev,
- #endif /* CONFIG_OF */
- 
- #if defined(CONFIG_OF) && defined(CONFIG_FIXED_PHY)
-+extern int of_phy_parse_fixed_link(struct device_node *np,
-+				   struct fixed_phy_status *status);
- extern int of_phy_register_fixed_link(struct device_node *np);
- extern bool of_phy_is_fixed_link(struct device_node *np);
- #else
-+static inline int of_phy_parse_fixed_link(struct device_node *np,
-+					  struct fixed_phy_status *status)
-+{
-+	return -EINVAL;
-+}
- static inline int of_phy_register_fixed_link(struct device_node *np)
- {
- 	return -ENOSYS;
--- 
-1.7.11.7
+> ---
+> Hi Guenter,
+>
+> It was pointed out that ENOSYS is frowned upon for anything other than
+> indicating lack of support for a syscall. The rest of the functions in
+> the file use ENODEV. Updating thermal_zone_of_sensor_register to do
+> the same.
+>
+> Could you please re-ack if you're ok with this change?
+>
+> Thanks,
+> Punit
+>
+>   include/linux/thermal.h | 2 +-
+>   1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/include/linux/thermal.h b/include/linux/thermal.h
+> index 037e9df..f344e51 100644
+> --- a/include/linux/thermal.h
+> +++ b/include/linux/thermal.h
+> @@ -364,7 +364,7 @@ static inline struct thermal_zone_device *
+>   thermal_zone_of_sensor_register(struct device *dev, int id, void *data,
+>   				const struct thermal_zone_of_device_ops *ops)
+>   {
+> -	return NULL;
+> +	return ERR_PTR(-ENODEV);
+>   }
+>
+>   static inline
+>
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
