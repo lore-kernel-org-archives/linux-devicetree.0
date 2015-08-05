@@ -1,43 +1,49 @@
-From: Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH 3/8] rtc: omap: Add external clock enabling support
-Date: Wed, 5 Aug 2015 13:41:19 +0200
-Message-ID: <20150805114119.GF3486@piout.net>
-References: <1438771792-12604-1-git-send-email-j-keerthy@ti.com>
- <1438771792-12604-4-git-send-email-j-keerthy@ti.com>
- <20150805111316.GI16878@atomide.com>
+From: Matt Porter <mporter@konsulko.com>
+Subject: Re: [PATCH 0/3] MAX6675 IIO temperature driver
+Date: Wed, 5 Aug 2015 07:43:21 -0400
+Message-ID: <20150805114321.GA23173@beef>
+References: <1438635410-3757-1-git-send-email-mporter@konsulko.com>
+ <897A4C3B-DF7E-4AEE-A117-00CCB510F4DD@jic23.retrosnub.co.uk>
+ <20150804173417.GN15004@beef>
+ <CAEnQRZCh7+z9=rvP9znwggzF2-xOSrrD=LeuW9wHMXdt47WtSw@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20150805111316.GI16878-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Cc: Keerthy <j-keerthy-l0cyMroinI0@public.gmane.org>, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org, johan-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, nm-l0cyMroinI0@public.gmane.org, paul-DWxLp4Yu+b8AvxtiuMwx3w@public.gmane.org, t-kristo-l0cyMroinI0@public.gmane.org
+In-Reply-To: <CAEnQRZCh7+z9=rvP9znwggzF2-xOSrrD=LeuW9wHMXdt47WtSw@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Daniel Baluta <daniel.baluta@gmail.com>
+Cc: Jonathan Cameron <jic23@jic23.retrosnub.co.uk>, Linux IIO List <linux-iio@vger.kernel.org>, Devicetree List <devicetree@vger.kernel.org>, Jonathan Cameron <jic23@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-
-On 05/08/2015 at 04:13:17 -0700, Tony Lindgren wrote :
-> * Keerthy <j-keerthy-l0cyMroinI0@public.gmane.org> [150805 03:53]:
-> > Based on the board property switch the source from internal
-> > to external clock. Switching to external source is needed for
-> > rtcwake to work in low power modes.
+On Wed, Aug 05, 2015 at 11:33:25AM +0300, Daniel Baluta wrote:
+> On Tue, Aug 4, 2015 at 8:34 PM, Matt Porter <mporter@konsulko.com> wrote:
+> > On Tue, Aug 04, 2015 at 05:52:17PM +0100, Jonathan Cameron wrote:
+> >>
+> >>
+> >> On 3 August 2015 21:56:47 BST, Matt Porter <mporter@konsulko.com> wrote:
+> >> >This series adds a driver for the MAX6675 SPI thermocouple converter.
+> >> >The device supports temperature measurements via type-K thermocouples
+> >> >and implements cold-junction compensation within the part. The
+> >> >datasheet
+> >> >can be found at http://datasheets.maximintegrated.com/en/ds/MAX6675.pdf
+> >> For a device like this where perhaps it's position wrt iio/hwmon boundary is unclear
+> >> I want to see an argument for why IIO makes more sense in the cover letter + cc
+> >>  at least the hwmon MAINTAINERS if not the list...
+> >
+> > Will do. Just to summarize here, the typical use case for this type of
+> > thermocouple converter involves sample rates that are relatively high
+> > compared to what the hwmon interface can support. The upcoming hrtimer
+> > trigger will match up well with this to support fine-grained
+> > periodic samples. I'll add this in the v2 cover latter.
 > 
-> I think this is better handled based on the compatible string
-> in the device driver rather than introducing a custom dts
-> property for it. You can just set the quirk flag in the driver
-> probe based on the compatible.
+> Are we talking about this hrtimer trigger patches:
 > 
+> http://marc.info/?l=linux-iio&m=143109196107382&w=2
+> 
+> Right? I've been busy with some other things, but I hope to have a
+> final version by Sunday :).
 
-Why not use the clocks property? Then you can pass an external clock. If
-it is present you can even get its rate if this is needed at some point
-in the future. You could also disable it when going to suspend.
+That's it! Thanks. :)
 
--- 
-Alexandre Belloni, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-Matt
