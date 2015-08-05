@@ -1,42 +1,64 @@
-From: Liviu Dudau <Liviu.Dudau@arm.com>
-Subject: [PATCH 4/4] MAINTAINERS: Add Liviu Dudau as maintainer for ARM HDLCD
- driver.
-Date: Wed,  5 Aug 2015 15:28:12 +0100
-Message-ID: <1438784892-27888-5-git-send-email-Liviu.Dudau@arm.com>
-References: <1438784892-27888-1-git-send-email-Liviu.Dudau@arm.com>
+From: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH 1/8] ARM: dts: AM4372: Reorder the rtc compatible string
+Date: Wed, 5 Aug 2015 10:31:48 -0500
+Message-ID: <20150805153148.GB12328@saruman.tx.rr.com>
+References: <1438771792-12604-1-git-send-email-j-keerthy@ti.com>
+ <1438771792-12604-2-git-send-email-j-keerthy@ti.com>
+Reply-To: <balbi-l0cyMroinI0@public.gmane.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <1438784892-27888-1-git-send-email-Liviu.Dudau@arm.com>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: David Airlie <airlied@linux.ie>, dri-devel@lists.freedesktop.org, linux-arm-kernel@lists.infradead.org
-Cc: Mark Rutland <mark.rutland@arm.com>, Jon Medhurst <tixy@linaro.org>, Arnd Bergmann <arnd@arndb.de>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Catalin Marinas <catalin.marinas@arm.com>, Sudeep Holla <sudeep.holla@arm.com>, Will Deacon <will.deacon@arm.com>, linux-kernel@vger.kernel.org, Joe Perches <joe@perches.com>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Greg KH <gregkh@linuxfoundation.org>, Kumar Gala <galak@codeaurora.org>, Jiri Slaby <jslaby@suse.com>, Andrew Morton <akpm@linux-foundation.org>, Mauro Carvalho Chehab <mchehab@osg.samsung.com>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="ZoaI/ZTpAVc4A5k6"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1438771792-12604-2-git-send-email-j-keerthy-l0cyMroinI0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Keerthy <j-keerthy-l0cyMroinI0@public.gmane.org>
+Cc: linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org, johan-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, nm-l0cyMroinI0@public.gmane.org, paul-DWxLp4Yu+b8AvxtiuMwx3w@public.gmane.org, t-kristo-l0cyMroinI0@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-VXBkYXRlIE1BSU5UQUlORVJTIGZpbGUgZm9yIEhETENEIGRyaXZlci4KCkNjOiBBbmRyZXcgTW9y
-dG9uIDxha3BtQGxpbnV4LWZvdW5kYXRpb24ub3JnPgpDYzogQXJuZCBCZXJnbWFubiA8YXJuZEBh
-cm5kYi5kZT4KQ2M6IE1hdXJvIENhcnZhbGhvIENoZWhhYiA8bWNoZWhhYkBvc2cuc2Ftc3VuZy5j
-b20+CkNjOiBHcmVnIEtIIDxncmVna2hAbGludXhmb3VuZGF0aW9uLm9yZz4KQ2M6IEpvZSBQZXJj
-aGVzIDxqb2VAcGVyY2hlcy5jb20+CkNjOiBKaXJpIFNsYWJ5IDxqc2xhYnlAc3VzZS5jb20+CgpT
-aWduZWQtb2ZmLWJ5OiBMaXZpdSBEdWRhdSA8TGl2aXUuRHVkYXVAYXJtLmNvbT4KLS0tCiBNQUlO
-VEFJTkVSUyB8IDYgKysrKysrCiAxIGZpbGUgY2hhbmdlZCwgNiBpbnNlcnRpb25zKCspCgpkaWZm
-IC0tZ2l0IGEvTUFJTlRBSU5FUlMgYi9NQUlOVEFJTkVSUwppbmRleCA0NDNkYzYyLi4wODQ4MThl
-IDEwMDY0NAotLS0gYS9NQUlOVEFJTkVSUworKysgYi9NQUlOVEFJTkVSUwpAQCAtNzkwLDYgKzc5
-MCwxMiBAQCBTOglNYWludGFpbmVkCiBGOglkcml2ZXJzL3ZpZGVvL2ZiZGV2L2FyY2ZiLmMKIEY6
-CWRyaXZlcnMvdmlkZW8vZmJkZXYvY29yZS9mYl9kZWZpby5jCiAKK0FSTSBIRExDRCBEUk0gRFJJ
-VkVSCitNOglMaXZpdSBEdWRhdSA8bGl2aXUuZHVkYXVAYXJtLmNvbT4KK1M6CU1haW50YWluZWQK
-K0Y6CWRyaXZlcnMvZ3B1L2RybS9hcm0vCitGOglEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmlu
-ZGluZ3MvYXJtL2FybSxoZGxjZC50eHQKKwogQVJNIE1GTSBBTkQgRkxPUFBZIERSSVZFUlMKIE06
-CUlhbiBNb2x0b24gPHNweXJvQGYycy5jb20+CiBTOglNYWludGFpbmVkCi0tIAoyLjQuNgoKX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1h
-aWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHA6Ly9saXN0cy5m
-cmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
+--ZoaI/ZTpAVc4A5k6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Wed, Aug 05, 2015 at 04:19:45PM +0530, Keerthy wrote:
+> Compared to da830-rtc compatibility am3352-rtc is more compatible to
+> the one in am437x. Hence adding the am3352-rtc compatible to cover the
+> entire feature set.
+>=20
+> The ti,am4372-rtc has no Documentation and not used even in the driver
+> hence removing it.
+
+why don't you do the inverse ? Document am4372-rtc and make driver use
+it ?
+
+--=20
+balbi
+
+--ZoaI/ZTpAVc4A5k6
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBAgAGBQJVwixkAAoJEIaOsuA1yqREFnIP/0OAY66II01TnoWFH50xdN0D
+yeyDBOonE236MYbcuu396SYan3lelXABSvbPHtRJA7JMYk48Or8xkxaO+YkCEOJZ
+GD9Cj1b4GBftM+RehuBKMQjwaO6yIlzqPWa05CtbwsoHCUzOU6GLFHpxEksRl/Hz
+X+fRUSxFlyphkZM7118567jaqeGqelcxzj+bY+1hkNzvmVP93D+roBpl7Kywy+5i
+uPgoz2l4X6gNFxGQCW6sWvjbf3yasvVxZcPklHwi6KjxVqFiSXtxTYMH4E9OwT25
+vmLeGgUvCQ8pohYfdPOmoLqIWsfoCJS8v6jMJO4najhZHc2ya5LupxedYW7i/xXD
+ShV5K5iZE7VgX+VOMNXq2zbNneA+gTL56qha7A9gipHS6rA3KR0nYFyXdR0sgv9M
+H1rAuFvv5ML7T4g0n+ny1q5QWmAU09GJF3NN49CRqgNbCySgtQt1YPaDYl9hR3aO
+waJBM8aZchTtXRPGDqC0DpSek8+JrPoPjveCbzuz12/jnsng6xJUuk6CXvBSTabH
+rBtQEsyKDbuaRFQ4E1OrZ6b9gl2xWbIsi+f16h4lFbMYhxxTKD7R/SI57H4qzwpy
+t9D8vtj26qNHy7gr/rzVemwa6dyEUMKRDUI15mWMavPYgBIF62f409R8k8TOhYdf
+TPJt4Ye6CDgui61GLzrX
+=qvGZ
+-----END PGP SIGNATURE-----
+
+--ZoaI/ZTpAVc4A5k6--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
