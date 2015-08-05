@@ -1,76 +1,105 @@
-From: Vaibhav Hiremath <vaibhav.hiremath@linaro.org>
-Subject: Re: [PATCH 4/4] mfd: 88pm800: Add support for clk subdevice
-Date: Wed, 05 Aug 2015 14:37:50 +0530
-Message-ID: <55C1D266.5090804@linaro.org>
-References: <1437476823-3358-1-git-send-email-vaibhav.hiremath@linaro.org> <1437476823-3358-5-git-send-email-vaibhav.hiremath@linaro.org> <20150723155008.GS3436@x1>
+From: Shawn Lin <shawn.lin@rock-chips.com>
+Subject: Re: [RFC PATCH v3 1/5] mmc: dw_mmc: Add external dma interface
+ support
+Date: Wed, 5 Aug 2015 17:11:50 +0800
+Message-ID: <55C1D356.5030302@rock-chips.com>
+References: <1438762614-22154-1-git-send-email-shawn.lin@rock-chips.com>
+ <1438762648-22202-1-git-send-email-shawn.lin@rock-chips.com>
+ <8177347.dLpRuMxaEU@diego>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20150723155008.GS3436@x1>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Lee Jones <lee.jones@linaro.org>
-Cc: linux-arm-kernel@lists.infradead.org, robh+dt@kernel.org, yhanin@marvell.com, haojian.zhuang@marvell.com, zhouqiao@marvell.com, mturquette@baylibre.com, k.kozlowski@samsung.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8;
+        format=flowed
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-mips-bounce@linux-mips.org>
+In-Reply-To: <8177347.dLpRuMxaEU@diego>
+Sender: linux-mips-bounce@linux-mips.org
+Errors-to: linux-mips-bounce@linux-mips.org
+List-help: <mailto:ecartis@linux-mips.org?Subject=help>
+List-unsubscribe: <mailto:ecartis@linux-mips.org?subject=unsubscribe%20linux-mips>
+List-software: Ecartis version 1.0.0
+List-subscribe: <mailto:ecartis@linux-mips.org?subject=subscribe%20linux-mips>
+List-owner: <mailto:ralf@linux-mips.org>
+List-post: <mailto:linux-mips@linux-mips.org>
+List-archive: <http://www.linux-mips.org/archives/linux-mips/>
+To: =?UTF-8?Q?Heiko_St=c3=bcbner?= <heiko@sntech.de>
+Cc: shawn.lin@rock-chips.com, Ulf Hansson <ulf.hansson@linaro.org>, Jaehoon Chung <jh80.chung@samsung.com>, Seungwon Jeon <tgih.jun@samsung.com>, dianders@chromium.org, linux-mips@linux-mips.org, Arnd Bergmann <arnd@arndb.de>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Alexey Brodkin <abrodkin@synopsys.com>, Stefan Agner <stefan@agner.ch>, Zhou Wang <wangzhou.bry@gmail.com>, Kumar Gala <galak@codeaurora.org>, Alim Akhtar <alim.akhtar@samsung.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Wang Long <long.wanglong@huawei.com>, Rob Herring <robh+dt@kernel.org>, Chaotian Jing <chaotian.jing@mediatek.com>, Lukasz Majewski <l.majewski@samsung.com>, Jun Nie <jun.nie@linaro.org>, Catalin Marinas <catalin.marinas@arm.com>, Kevin Hao <haokexin@>
 List-Id: devicetree@vger.kernel.org
 
-
-
-On Thursday 23 July 2015 09:20 PM, Lee Jones wrote:
-> On Tue, 21 Jul 2015, Vaibhav Hiremath wrote:
->
->> This patch adds mfd_cell/clk-subdevice for 88PM800 MFD
->> (and family of devices).
+=E5=9C=A8 2015/8/5 16:49, Heiko St=C3=BCbner =E5=86=99=E9=81=93:
+> Am Mittwoch, 5. August 2015, 16:17:28 schrieb Shawn Lin:
+>> DesignWare MMC Controller can supports two types of DMA
+>> mode: external dma and internal dma. We get a RK312x platform
+>> integrated dw_mmc and ARM pl330 dma controller. This patch add
+>> edmac ops to support these platforms. I've tested it on RK312x
+>> platform with edmac mode and RK3288 platform with idmac mode.
 >>
->> Signed-off-by: Vaibhav Hiremath <vaibhav.hiremath@linaro.org>
+>> Signed-off-by: Shawn Lin <shawn.lin@rock-chips.com>
+>>
 >> ---
->>   drivers/mfd/88pm800.c | 25 +++++++++++++++++++++++++
->>   1 file changed, 25 insertions(+)
+> [...]
+>
+>> diff --git a/include/linux/mmc/dw_mmc.h b/include/linux/mmc/dw_mmc.h
+>> index 5be9767..6c1c7ea 100644
+>> --- a/include/linux/mmc/dw_mmc.h
+>> +++ b/include/linux/mmc/dw_mmc.h
+>> @@ -16,6 +16,7 @@
 >>
->> diff --git a/drivers/mfd/88pm800.c b/drivers/mfd/88pm800.c
->> index f104a32..9723eac 100644
->> --- a/drivers/mfd/88pm800.c
->> +++ b/drivers/mfd/88pm800.c
->> @@ -173,6 +173,14 @@ static const struct mfd_cell regulator_devs[] = {
->>   	},
->>   };
+>>   #include <linux/scatterlist.h>
+>>   #include <linux/mmc/core.h>
+>> +#include <linux/dmaengine.h>
 >>
->> +static struct mfd_cell clk_devs[] = {
->> +	{
->> +	 .name = "88pm80x-clk",
->> +	 .of_compatible = "marvell,88pm800-clk",
->> +	 .id = -1,
->> +	},
+>>   #define MAX_MCI_SLOTS	2
+>>
+>> @@ -40,6 +41,17 @@ enum {
+>>
+>>   struct mmc_data;
+>>
+>> +enum {
+>> +	TRANS_MODE_PIO =3D 0,
+>> +	TRANS_MODE_IDMAC,
+>> +	TRANS_MODE_EDMAC
 >> +};
+>> +
+>> +struct dw_mci_dma_slave {
+>> +	struct dma_chan *ch;
+>> +	enum dma_transfer_direction direction;
+>> +};
+>> +
+>>   /**
+>>    * struct dw_mci - MMC controller state shared between all slots
+>>    * @lock: Spinlock protecting the queue and associated data.
+>> @@ -147,17 +159,23 @@ struct dw_mci {
+>>
+>>   	/* DMA interface members*/
+>>   	int			use_dma;
+>> +	int			trans_mode;
+> you're introducing this new trans_mode, but we have "use_dma" already=
+=2E
 >
-> Why does each device in 88pm800.c have it's own mfd_cell?
+> So you could just define
+>
+> enum {
+> 	TRANS_DMA_PIO =3D 0,
+> 	TRANS_DMA_IDMAC,
+> 	TRANS_DMA_EDMAC
+> };
+>
+> and fill use_dma appropriately. "0" is meaning PIO already, which I a=
+lso did fix
+> up some days ago in "[PATCH] mmc: dw_mmc: fix pio mode when internal =
+dmac is
+> enabled" [0].
+    I  agree.  "trans_mode" is redundant here since it does the same=20
+work as "use_dma" to some degree.
+    Thanks.
+>
+> Heiko
+>
+> [0] https://lkml.org/lkml/2015/8/3/407
+>
+>
 >
 
-Probably, the author of the driver can comment on this. I have cc'ed
-all of them.
 
-But looking at the driver it looks like, except onkey and regulator all
-other devices need per-initialization. For example,
-
-in case of clock,
-
-static int device_clk_init(struct pm80x_chip *chip)
-{
-         if (chip->type == CHIP_PM800)
-                 clk_devs[0].name = "88pm800-clk";
-         else if (chip->type == CHIP_PM860)
-                 clk_devs[0].name = "88pm860-clk";
-
-         return mfd_add_devices(chip->dev, 0, &clk_devs[0],
-                               ARRAY_SIZE(clk_devs), NULL, 0, NULL);
-}
-
-
-
-> Take the opportunity to correct the tabbing in the remainder of the
-> file.  Make that fix-up patch 1 of this set.  Then fixup this patch.
->
-
-Ok, I will.
-
-Thanks,
-Vaibhav
+--=20
+Shawn Lin
