@@ -1,46 +1,56 @@
-From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH 0/7] ARM: dts: MMC fixes for DRA7 based boards
-Date: Wed, 5 Aug 2015 03:54:00 -0700
-Message-ID: <20150805105400.GF16878@atomide.com>
-References: <1438244020-4244-1-git-send-email-kishon@ti.com>
+From: Javier Martinez Canillas <javier@osg.samsung.com>
+Subject: Re: [PATCH 2/2] ARM: dts: Fix power off method on
+ exynos5422-odroidxu3
+Date: Wed, 5 Aug 2015 12:54:30 +0200
+Message-ID: <55C1EB66.4030706@osg.samsung.com>
+References: <1438605447-6836-1-git-send-email-k.kozlowski.k@gmail.com>
+ <1438605447-6836-3-git-send-email-k.kozlowski.k@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1438244020-4244-1-git-send-email-kishon-l0cyMroinI0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, nsekhar-l0cyMroinI0@public.gmane.org
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <1438605447-6836-3-git-send-email-k.kozlowski.k@gmail.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Krzysztof Kozlowski <k.kozlowski.k@gmail.com>, Sangbeom Kim <sbkim73@samsung.com>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, Lee Jones <lee.jones@linaro.org>, linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, Kukjin Kim <kgene@kernel.org>, linux-arm-kernel@lists.infradead.org
+Cc: Anand Moon <linux.amoon@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-* Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org> [150730 01:16]:
-> Miscellaneous fixes in dts files for MMC device tree nodes.
-> 
-> Did basic read/write test in J6, J6 Eco and Beagle-x15
-> 
-> Balaji T K (1):
->   ARM: dts: dra7-evm: add evm_3v3_sd regulator
-> 
-> Kishon Vijay Abraham I (5):
->   ARM: dts: dra72-evm: add evm_3v3_sd regulator
->   ARM: dts: dra72-evm: Set max clock frequency of MMC1 and MMC2
->   ARM: dts: am57xx-beagle-x15: mmc1: remove redundant pbias-supply
->     property
->   ARM: dts: dra7-evm: Fix spurious card insert/removal interrupt
->   ARM: dts: dra72-evm: Fix spurious card insert/removal interrupt
-> 
-> Nishanth Menon (1):
->   ARM: dts: dra7-evm: Add MMCSD card removal GPIO
-> 
->  arch/arm/boot/dts/am57xx-beagle-x15.dts |    1 -
->  arch/arm/boot/dts/dra7-evm.dts          |   18 +++++++++++++++++-
->  arch/arm/boot/dts/dra72-evm.dts         |   16 ++++++++++++++--
->  3 files changed, 31 insertions(+), 4 deletions(-)
+Hello Krzysztof,
 
-Thanks applying all these into omap-for-v4.3/dt.
+On 08/03/2015 02:37 PM, Krzysztof Kozlowski wrote:
+> The Odroid XU3 family boards have ACOKB pin of PMIC grounded, instead of
+> pulled up as usual. This means that PMIC must manually set PWRHOLD field
+> in its CTRL1 register to low before initiating power down.
+> 
+> This fixes Odroid XU3 powering off:
+> [   25.966053] reboot: Power down
+> [   25.967679] Power down.
+> [   26.070174] Power down failed, please power off system manually.
+> 
+> Signed-off-by: Krzysztof Kozlowski <k.kozlowski.k@gmail.com>
+> Reported-by: Anand Moon <linux.amoon@gmail.com>
+> ---
+>  arch/arm/boot/dts/exynos5422-odroidxu3-common.dtsi | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/arch/arm/boot/dts/exynos5422-odroidxu3-common.dtsi b/arch/arm/boot/dts/exynos5422-odroidxu3-common.dtsi
+> index 1565667e6f69..48cecc8cf26e 100644
+> --- a/arch/arm/boot/dts/exynos5422-odroidxu3-common.dtsi
+> +++ b/arch/arm/boot/dts/exynos5422-odroidxu3-common.dtsi
+> @@ -159,6 +159,7 @@
+>  		s2mps11,buck2-ramp-enable = <1>;
+>  		s2mps11,buck3-ramp-enable = <1>;
+>  		s2mps11,buck4-ramp-enable = <1>;
+> +		samsung,s2mps11-acokb-ground;
+>  
+>  		interrupt-parent = <&gpx0>;
+>  		interrupts = <4 IRQ_TYPE_EDGE_FALLING>;
+> 
 
-Tony
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Reviewed-by: Javier Martinez Canillas <javier@osg.samsung.com>
+
+Best regards,
+-- 
+Javier Martinez Canillas
+Open Source Group
+Samsung Research America
