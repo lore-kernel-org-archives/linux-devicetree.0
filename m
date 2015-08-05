@@ -1,54 +1,94 @@
-From: Michal Suchanek <hramrach@gmail.com>
-Subject: Re: [RFC PATCH 1/5] spi: introduce flag for memory mapped read
-Date: Wed, 5 Aug 2015 14:56:09 +0200
-Message-ID: <CAOMqctS9Y5FxpUCCJew6+cnjH5iTvbzkH3g-8yrXs4OuS2pSGA@mail.gmail.com>
-References: <1438072876-16338-1-git-send-email-vigneshr@ti.com>
- <1438072876-16338-2-git-send-email-vigneshr@ti.com> <20150731181745.GM20873@sirena.org.uk>
- <55BEF4AF.5090704@ti.com> <20150804155148.GR20873@sirena.org.uk>
- <55C0FD98.1090107@ti.com> <20150805115013.GJ20873@sirena.org.uk>
- <CAOMqctQXwcHyiWBwtugSDSE_k65qrNfrwnhjQMDJkLoJMmGzUw@mail.gmail.com> <20150805124412.GN20873@sirena.org.uk>
+From: Shawn Guo <shawnguo@kernel.org>
+Subject: Re: [PATCH v5 2/2] ARM: dts: add property for maximum ADC clock
+ frequencies
+Date: Wed, 5 Aug 2015 21:46:03 +0800
+Message-ID: <20150805134603.GN12927@tiger>
+References: <1432730872-14325-1-git-send-email-stefan@agner.ch>
+ <1432730872-14325-3-git-send-email-stefan@agner.ch>
+ <557477BE.5050108@kernel.org>
+ <f598169164aaacc28292d8ccc6afb32d@agner.ch>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20150805124412.GN20873@sirena.org.uk>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mark Brown <broonie@kernel.org>
-Cc: "R, Vignesh" <vigneshr@ti.com>, devicetree <devicetree@vger.kernel.org>, Brian Norris <computersforpeace@gmail.com>, Russell King <linux@arm.linux.org.uk>, Tony Lindgren <tony@atomide.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-spi <linux-spi@vger.kernel.org>, Huang Shijie <b32955@freescale.com>, MTD Maling List <linux-mtd@lists.infradead.org>, linux-omap@vger.kernel.org, David Woodhouse <dwmw2@infradead.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <f598169164aaacc28292d8ccc6afb32d@agner.ch>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Stefan Agner <stefan@agner.ch>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, lars@metafoo.de, B38611@freescale.com, pmeerw@pmeerw.net, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, linux-iio@vger.kernel.org, knaack.h@gmx.de, linux-kernel@vger.kernel.org, maitysanchayan@gmail.com, robh+dt@kernel.org, Jonathan Cameron <jic23@kernel.org>, kernel@pengutronix.de, galak@codeaurora.org, shawn.guo@linaro.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 5 August 2015 at 14:44, Mark Brown <broonie@kernel.org> wrote:
-> On Wed, Aug 05, 2015 at 02:40:01PM +0200, Michal Suchanek wrote:
->> On 5 August 2015 at 13:50, Mark Brown <broonie@kernel.org> wrote:
->
->> > As far as I can tell you want to set a per spi_message flag saying that
->> > the message is a flash read command?  If that's what this is trying to
->> > do then why do you need to set the flag at all?  If the message is in a
->> > clearly defined format and it's more efficient to use this mmap mode
->> > then surely the driver can just recognise that the format is approprate
->> > and switch into mmap mode without being explicitly told - I'm not clear
->> > what the flag adds here.
->
->> ehm, the read command is just one byte.
->
->> I don't think sending 03 or other random byte as the first byte of a
->> SPI transfer can be used as reliable detection that we are talking to
->> a SPI flash memory.
->
-> Why care - if something is physically in the same format as a flash read
-> command how would a device be able to tell that it wasn't actually a
-> flash read command?  The signals sent on the bus are going to be
-> identical anyway.
+On Mon, Aug 03, 2015 at 02:22:30PM +0200, Stefan Agner wrote:
+> Hi Shawn,
+> 
+> I guess this will go through your tree? Haven't seen it appear on imx/dt
+> so far...
 
-Not only must the command be the same but also the response must be tha same.
+Sorry.  I missed it.  Please use my kernel.org mailbox, which I'm using
+for kernel maintenance now.
 
-The flash chip responds by sending arbitrary amount of data. Given
-that transfer_one gets only the part that sends the read command and
-the part to do the actual read may or may not follow this is getting a
-bit hairy. Add in dummy bytes due to fast-read lag and page write
-wrap-around and you get something that you definitely do not want
-unless you are really sure that there is a flash memory on the other
-end of the wire.
+Applied, thanks.
 
-Thanks
+Shawn
 
-Michal
+> 
+> --
+> Stefan
+> 
+> On 2015-06-07 18:56, Jonathan Cameron wrote:
+> > On 27/05/15 13:47, Stefan Agner wrote:
+> >> The ADC clock frequency is limited depending on modes used. Add
+> >> device tree property which allow to set the mode used and the
+> >> maximum frequency ratings for the instance. These allows to
+> >> set the ADC clock to a frequency which is within specification
+> >> according to the actual mode used.
+> >>
+> >> Acked-by: Fugang Duan <B38611@freescale.com>
+> >> Signed-off-by: Stefan Agner <stefan@agner.ch>
+> > I'm happy to take this via IIO if people want me to, otherwise give
+> > it's connection to the previous patch that I just applied,
+> > 
+> > Acked-by: Jonathan Cameron <jic23@kernel.org>
+> > 
+> >> ---
+> >>  arch/arm/boot/dts/vfxxx.dtsi | 4 ++++
+> >>  1 file changed, 4 insertions(+)
+> >>
+> >> diff --git a/arch/arm/boot/dts/vfxxx.dtsi b/arch/arm/boot/dts/vfxxx.dtsi
+> >> index a29c7ce..c6609bd 100644
+> >> --- a/arch/arm/boot/dts/vfxxx.dtsi
+> >> +++ b/arch/arm/boot/dts/vfxxx.dtsi
+> >> @@ -189,6 +189,8 @@
+> >>  				clocks = <&clks VF610_CLK_ADC0>;
+> >>  				clock-names = "adc";
+> >>  				status = "disabled";
+> >> +				fsl,adck-max-frequency = <30000000>, <40000000>,
+> >> +							<20000000>;
+> >>  			};
+> >>
+> >>  			wdoga5: wdog@4003e000 {
+> >> @@ -387,6 +389,8 @@
+> >>  				clocks = <&clks VF610_CLK_ADC1>;
+> >>  				clock-names = "adc";
+> >>  				status = "disabled";
+> >> +				fsl,adck-max-frequency = <30000000>, <40000000>,
+> >> +							<20000000>;
+> >>  			};
+> >>
+> >>  			esdhc1: esdhc@400b2000 {
+> >>
+> 
+> 
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+> 
