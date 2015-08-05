@@ -1,93 +1,151 @@
-From: Russell King - ARM Linux <linux@arm.linux.org.uk>
-Subject: Re: [PATCH v3 0/5] Add SMP bringup support for mt65xx socs
-Date: Wed, 5 Aug 2015 23:31:15 +0100
-Message-ID: <20150805223115.GD7557@n2100.arm.linux.org.uk>
-References: <1436851111-2369-1-git-send-email-yingjoe.chen@mediatek.com>
- <4831607.pyCH8elj8i@ubix>
+From: Ariel D'Alessandro <ariel@vanguardiasur.com.ar>
+Subject: Re: [PATCH 2/2] DT: pwm: Add NXP LPC18xx PWM/SCT binding documentation
+Date: Wed, 05 Aug 2015 20:13:00 -0300
+Message-ID: <55C2987C.2000109@vanguardiasur.com.ar>
+References: <1437972345-16444-1-git-send-email-ariel@vanguardiasur.com.ar>	<1437972345-16444-3-git-send-email-ariel@vanguardiasur.com.ar>	<CAGhQ9Vyy+oUAWm0q2+NV0D9RVf5qyED8Tn54-cGzbDc-EZR4yw@mail.gmail.com>	<CAAEAJfApE8=cAue-bc5xPD_XAtV8qzur12C4okF-uLJ-__reBA@mail.gmail.com>	<CAGhQ9VwudkK=bo5Qk79O7fmdEEm1KEWxUhLO14ucCJ+FbhqQqw@mail.gmail.com>	<CAAEAJfA22JA0AWB1FCiDVYEy5BqasDror_Ejpd=b3s14BWpORw@mail.gmail.com>	<CAGhQ9VyCNrH_J6rP+L+6OkV-PCgemOzhznuFRg07YxPpLX_nig@mail.gmail.com> <CAAEAJfBjr2wxn-x1RiEj+ezoHA0aWNqCFfpYLM3RzhTrnHDyWw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <4831607.pyCH8elj8i@ubix>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Matthias Brugger <matthias.bgg@gmail.com>
-Cc: Yingjoe Chen <yingjoe.chen@mediatek.com>, devicetree@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, Stephen Boyd <sboyd@codeaurora.org>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-mediatek@lists.infradead.org, Sascha Hauer <kernel@pengutronix.de>, Olof Johansson <olof@lixom.net>, srv_heupstream@mediatek.com, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-pwm-owner@vger.kernel.org>
+In-Reply-To: <CAAEAJfBjr2wxn-x1RiEj+ezoHA0aWNqCFfpYLM3RzhTrnHDyWw@mail.gmail.com>
+Sender: linux-pwm-owner@vger.kernel.org
+To: Ezequiel Garcia <ezequiel@vanguardiasur.com.ar>, Joachim Eastwood <manabian@gmail.com>
+Cc: linux-pwm@vger.kernel.org, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Thierry Reding <thierry.reding@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Aug 05, 2015 at 08:44:11PM +0200, Matthias Brugger wrote:
-> On Tuesday, July 14, 2015 01:18:26 PM Yingjoe Chen wrote:
-> > This series add SMP brinup support for MediaTek SoCs. This is based
-> > on v4.2-rc1 and Matthias' next branch (for dts parts).
-> > 
-> > There are similar but different SMP bringup up methods on MediaTek
-> > mt65xx and mt81xx. On MT8135 & MT8127, system boots with a trustzone
-> > firmware. Others, like MT6589, doesn't have trustzone, and run kernel
-> > directly in secure world.
-> > 
-> > Patch 1 enable arch timer support.
-> > Patch 2,3 add support for cpu enable-method "mediatek,mt6589-smp" and
-> > "mediatek,mt81xx-tz-smp", which support Mediatek SMP bringup for non-TZ
-> > and TZ platform.
-> > Patch 4,5 finally enable SMP bringup for mt8135 and mt8127.
-> > 
-> > Changes in v3:
-> > - The first 2 patches in v2 are merged in v4.2-rc1.
-> > - Patch 3~4 in v2 are moved to another series [1]
-> > - platsmp.c changes based on Stephen's suggestion
-> > - Change cpu enable-method name to "mediatek,mt6589-smp"
-> > 
-> > Changes in v2:
-> > - Fix boot issue for THUMB2 kernel.
-> > - Not enable GPT_CLK_EVT when setup to fix GPT spurious interrupt issue
-> > - Change platsmp.c according to Matthias' suggestion
-> > http://lists.infradead.org/pipermail/linux-mediatek/2015-May/000714.html
-> > 
-> > v1:
-> > http://lists.infradead.org/pipermail/linux-mediatek/2015-May/000528.html
-> > 
-> > [1]
-> > http://lists.infradead.org/pipermail/linux-mediatek/2015-July/001544.html
-> > 
-> > Matthias Brugger (1):
-> >   ARM: mediatek: enable gpt6 on boot up to make arch timer working
-> > 
-> > Yingjoe Chen (4):
-> >   devicetree: bindings: add new SMP enable method Mediatek SoC
-> >   ARM: mediatek: add smp bringup code
-> >   ARM: dts: mt8135: enable basic SMP bringup for mt8135
-> >   ARM: dts: mt8127: enable basic SMP bringup for mt8127
-> > 
-> >  Documentation/devicetree/bindings/arm/cpus.txt |   2 +
-> >  arch/arm/boot/dts/mt8127.dtsi                  |  16 +++
-> >  arch/arm/boot/dts/mt8135.dtsi                  |  16 +++
-> >  arch/arm/mach-mediatek/Makefile                |   3 +
-> >  arch/arm/mach-mediatek/mediatek.c              |  27 +++++
-> >  arch/arm/mach-mediatek/platsmp.c               | 144
-> > +++++++++++++++++++++++++ 6 files changed, 208 insertions(+)
-> >  create mode 100644 arch/arm/mach-mediatek/platsmp.c
-> 
-> Applied to v4.2-next/soc-2 and v4.2-next/dts-2 
+Ezequiel, Joachim:
 
-I've just NAK'd one of the patches in this set; I don't tend to even see
-mediatek patches normally, as they all head into my junk mailfolder
-because mediatek's mail server setup is truely abysmal (it has broken
-reverse DNS - the DNS positively says that the mail server is not a
-legit owner of the name it claims to be.)
+El 31/07/15 a las 15:09, Ezequiel Garcia escibi=C3=B3:
+> Joachim,
+>=20
+> On 30 July 2015 at 20:30, Joachim  Eastwood <manabian@gmail.com> wrot=
+e:
+>> On 29 July 2015 at 15:47, Ezequiel Garcia <ezequiel@vanguardiasur.co=
+m.ar> wrote:
+>>> +devicetree guys
+>>>
+>>> On 28 July 2015 at 20:22, Joachim  Eastwood <manabian@gmail.com> wr=
+ote:
+>>>> On 29 July 2015 at 00:45, Ezequiel Garcia <ezequiel@vanguardiasur.=
+com.ar> wrote:
+>>>>> On 28 July 2015 at 19:37, Joachim  Eastwood <manabian@gmail.com> =
+wrote:
+>>>>>> On 27 July 2015 at 06:45, Ariel D'Alessandro <ariel@vanguardiasu=
+r.com.ar> wrote:
+>>>>>>> Add the devicetree binding document for NXP LPC18xx PWM/SCT.
+>>>>>>>
+>>>>>>> Signed-off-by: Ariel D'Alessandro <ariel@vanguardiasur.com.ar>
+>>>>>>> ---
+>>>>>>>  .../devicetree/bindings/pwm/lpc1850-pwm.txt          | 20 ++++=
+++++++++++++++++
+>>>>>>>  1 file changed, 20 insertions(+)
+>>>>>>>  create mode 100644 Documentation/devicetree/bindings/pwm/lpc18=
+50-pwm.txt
+>>>>>>>
+>>>>>>> diff --git a/Documentation/devicetree/bindings/pwm/lpc1850-pwm.=
+txt b/Documentation/devicetree/bindings/pwm/lpc1850-pwm.txt
+>>>>>>> new file mode 100644
+>>>>>>> index 0000000..3055429
+>>>>>>> --- /dev/null
+>>>>>>> +++ b/Documentation/devicetree/bindings/pwm/lpc1850-pwm.txt
+>>>>>>> @@ -0,0 +1,20 @@
+>>>>>>> +* NXP LPC18xx Pulse Width Modulator driver
+>>>>>>> +
+>>>>>>> +Required properties:
+>>>>>>> +  - compatible: Should be "nxp,lpc1850-pwm"
+>>>>>>> +  - reg: Should contain physical base address and length of pw=
+m registers.
+>>>>>>> +  - clocks: Must contain an entry for each entry in clock-name=
+s.
+>>>>>>> +    See ../clock/clock-bindings.txt for details.
+>>>>>>> +  - clock-names: Must include the following entries.
+>>>>>>> +    - pwm: PWM operating clock.
+>>>>>>> +  - #pwm-cells: Should be 3. See pwm.txt in this directory for=
+ the description
+>>>>>>> +    of the cells format.
+>>>>>>> +
+>>>>>>> +Example:
+>>>>>>> +  pwm: pwm@40000000 {
+>>>>>>> +    compatible =3D "nxp,lpc1850-pwm";
+>>>>>>
+>>>>>> I would prefer "nxp,lpc1850-sct" for a couple of reasons. SCT is=
+ the
+>>>>>> name of hardware block as described in the user manual and while=
+ PWM
+>>>>>> is the most obvious usage for this block on Linux, the hardware =
+is not
+>>>>>> limited to just doing that. So as a bit of future proofing if so=
+meone
+>>>>>> wants to use this block for more than PWM I would prefer SCT.
+>>>>>>
+>>>>>
+>>>>> Shouldn't we use something like "nxp,lpc1850-sct-pwm"?
+>>>>>
+>>>>> Sounds like the word PWM should be in the compatible as it descri=
+bes
+>>>>> not only the device, but the device used in a certain way.
+>>>>>
+>>>>> Otherwise, how would we use "nxp,lpc1850-sct" to distinguish a PW=
+M from
+>>>>> e.g. a clocksource/clockevents (we can also use SCT for that)?
+>>>>
+>>>> I not sure how to best handle dt bindings with such flexible hardw=
+are blocks.
+>>>>
+>>>> But are you suggestion to have multiple drivers for the same hw bl=
+ock?
+>>>> ie.: "nxp,lpc1850-sct-pwm" for PWM and for example
+>>>> "nxp,lpc1850-sct-clocksource" for clocksource and then use/enable =
+one
+>>>> or the other.
+>>>>
+>>>
+>>> Yup, I'm suggesting just that. If the hardware is capable, I can't =
+see
+>>> why we can't have different drivers for it.
+>>
+>> Well, I think it would be nice if we could have one driver per hw
+>> block. But then you need a way to select whether you want to use the
+>> counter in the SCT block for PWM or, for example, clocksource. Sort =
+of
+>> mode selection I guess.
+>>
+>> But then again if someone has some very custom and application
+>> specific usage for the SCT block that maybe better served by a
+>> standalone driver anyway.
+>>
+>=20
+> Technically speaking, I believe we can use "nxp,lpc1850-sct" to expos=
+e
+> both a PWM interface and a clocksource in a single driver. Not too
+> clean, though.
+>=20
+> Alternatively, we should be able to have a multifunction device (MFD)=
+ to mux
+> the SCT resources to be consumed by different kind of drivers.
+>=20
+> Given there's no counter API to feed SCT, and given we use the other
+> timer hw block to feed clocksource and clockevents for the LPC18/43xx=
+,
+> I think currently the simplest choice is to have "nxp,lpc1850-sct-pwm=
+"
+> describing this PWM SCT driver.
+>=20
+> If we later want to change completely the PWM SCT driver, we can do
+> that without any bindings change.
+>=20
+>> So for now I am fine with "nxp,lpc1850-sct-pwm". I shouldn't be too
+>> hard to change the bindings if we see other users of this block, I
+>> believe.
+>>
+>=20
+> Well, that would break DT backward compatibility, so it's not an idea=
+l.
+> Like I said, "nxp,lpc1850-sct-pwm" seems to be specific enough to
+> describe this driver.
+>=20
+> I'd like to know what Thierry thinks here.
+>=20
 
-The problem is that this patch series uses memblock_reserve() way after
-the memory has been transitioned out of memblock's control, so actually
-this has no effect.
-
-I've seen a number of patches doing this.  I'm not sure what's soo friggin
-hard for people to understand: memblock is about the EARLY stages of
-getting the system up and running.  Once the memory has been handed
-over to the kernel's memory management, memblock MUST NOT BE USED to
-reserve memory.
-
-There is one place, and one place only in the ARM kernel where
-memblock_reserve() is possible, and that's in the ->reserve machine
-callback.  NOWHERE ELSE is permissible.
-
--- 
-FTTC broadband for 0.8mile line: currently at 10.5Mbps down 400kbps up
-according to speedtest.net.
+OK then. Until we have a better idea, I'll set the compatible string to
+"nxp,lpc1850-sct-pwm".
