@@ -1,201 +1,96 @@
-From: Matthias Brugger <matthias.bgg@gmail.com>
-Subject: Re: [PATCH v3 5/8] ARM: mediatek: add smp bringup code for MT6580
-Date: Wed, 05 Aug 2015 18:47:03 +0200
-Message-ID: <1801910.hz53dYUgta@ubix>
-References: <1438696464-59858-1-git-send-email-scott.shu@mediatek.com> <1438696464-59858-6-git-send-email-scott.shu@mediatek.com>
+From: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH 1/8] ARM: dts: AM4372: Reorder the rtc compatible string
+Date: Wed, 5 Aug 2015 11:51:22 -0500
+Message-ID: <20150805165122.GH12328@saruman.tx.rr.com>
+References: <1438771792-12604-1-git-send-email-j-keerthy@ti.com>
+ <1438771792-12604-2-git-send-email-j-keerthy@ti.com>
+ <20150805153148.GB12328@saruman.tx.rr.com>
+ <55C230E9.9010309@ti.com>
+ <20150805161445.GF12328@saruman.tx.rr.com>
+ <55C23740.2080102@ti.com>
+Reply-To: <balbi-l0cyMroinI0@public.gmane.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1438696464-59858-6-git-send-email-scott.shu@mediatek.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Scott Shu <scott.shu@mediatek.com>
-Cc: Sascha Hauer <s.hauer@pengutronix.de>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org, wsd_upstream@mediatek.com, loda.chou@mediatek.com, jades.shih@mediatek.com, Mars.Cheng@mediatek.com, scott.shu@gmail.com
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="l06SQqiZYCi8rTKz"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <55C23740.2080102-l0cyMroinI0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Keerthy <a0393675-l0cyMroinI0@public.gmane.org>
+Cc: balbi-l0cyMroinI0@public.gmane.org, Keerthy <j-keerthy-l0cyMroinI0@public.gmane.org>, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org, johan-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, nm-l0cyMroinI0@public.gmane.org, paul-DWxLp4Yu+b8AvxtiuMwx3w@public.gmane.org, t-kristo-l0cyMroinI0@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tuesday, August 04, 2015 09:54:21 PM Scott Shu wrote:
-> Add support for cpu enable-method "mediatek,mt6580-smp" for booting
-> secondary CPUs on MT6580.
-> 
-> Signed-off-by: Scott Shu <scott.shu@mediatek.com>
-> ---
->  arch/arm/mach-mediatek/platsmp.c |  137
-> ++++++++++++++++++++++++++++++++++++++ 1 file changed, 137 insertions(+)
-> 
-> diff --git a/arch/arm/mach-mediatek/platsmp.c
-> b/arch/arm/mach-mediatek/platsmp.c index a5bc108..94f7865 100644
-> --- a/arch/arm/mach-mediatek/platsmp.c
-> +++ b/arch/arm/mach-mediatek/platsmp.c
-> @@ -21,10 +21,16 @@
->  #include <linux/of_address.h>
->  #include <linux/string.h>
->  #include <linux/threads.h>
-> +#include <linux/delay.h>
-> +#include <asm/cacheflush.h>
-> +
-> +#include <linux/soc/mediatek/scpsys.h>
-> 
->  #define MTK_MAX_CPU		8
->  #define MTK_SMP_REG_SIZE	0x1000
-> 
-> +static DEFINE_SPINLOCK(boot_lock);
-> +
->  struct mtk_smp_boot_info {
->  	unsigned long smp_base;
->  	unsigned int jump_reg;
-> @@ -56,6 +62,126 @@ static const struct of_device_id mtk_smp_boot_infos[]
-> __initconst = { static void __iomem *mtk_smp_base;
->  static const struct mtk_smp_boot_info *mtk_smp_info;
-> 
-> +#ifdef CONFIG_HOTPLUG_CPU
-> +static int mt6580_cpu_kill(unsigned cpu)
-> +{
-> +	int ret;
-> +
-> +	ret = spm_cpu_mtcmos_off(cpu, 1);
+--l06SQqiZYCi8rTKz
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-is this function ever called with wfi == 0?
+On Wed, Aug 05, 2015 at 09:48:08PM +0530, Keerthy wrote:
+>=20
+>=20
+> On Wednesday 05 August 2015 09:44 PM, Felipe Balbi wrote:
+> >On Wed, Aug 05, 2015 at 09:21:05PM +0530, Keerthy wrote:
+> >>Felipe,
+> >>
+> >>On Wednesday 05 August 2015 09:01 PM, Felipe Balbi wrote:
+> >>>On Wed, Aug 05, 2015 at 04:19:45PM +0530, Keerthy wrote:
+> >>>>Compared to da830-rtc compatibility am3352-rtc is more compatible to
+> >>>>the one in am437x. Hence adding the am3352-rtc compatible to cover the
+> >>>>entire feature set.
+> >>>>
+> >>>>The ti,am4372-rtc has no Documentation and not used even in the driver
+> >>>>hence removing it.
+> >>>
+> >>>why don't you do the inverse ? Document am4372-rtc and make driver use
+> >>>it ?
+> >>
+> >>am3352-rtc suffices for am4372 too. No need to add additional one for
+> >>am4372.
+> >
+> >Until we end up needing it, right ? :-)
+> >
+> >Besides, it's already used in a DTS. What happens if someone branched
+> >from that DTS and ships that in a product. RTC will just stop working
+> >for them. Sure, it wasn't documented, but that's a problem of commit
+> >73456012734b80442b33916406cfd13bf1b73acb (ARM: dts: AM4372: add few
+> >nodes) which, essentially, added that compatible flag without
+> >documenting it.
+> >
+> >BTW, this compatible has been in tree since August 2013, IMO it's unfar
+> >to drop it just like that. Documenting it would be a better approach.
+>=20
+> Okay. Can you point me to a file which is already accessing it in dts?
 
-> +	if (ret < 0)
-> +		return 0;
-> +
-> +	return 1;
-> +}
-> +
-> +static void mt6580_cpu_die(unsigned int cpu)
-> +{
-> +	for (;;)
-> +		cpu_do_idle();
-> +}
-> +#endif
-> +
-> +static void write_pen_release(int val)
-> +{
-> +	pen_release = val;
-> +	/* Make sure this is visible to other CPUs */
-> +	smp_wmb();
-> +	sync_cache_w(&pen_release);
-> +}
-> +
-> +/*
-> + * Refer common "pen" secondary release method
-> + */
-> +static int mt6580_boot_secondary(unsigned int cpu, struct task_struct
-> *idle) +{
-> +	unsigned long timeout;
-> +	int ret;
-> +
-> +	/*
-> +	 * Set synchronisation state between this boot processor
-> +	 * and the secondary one
-> +	 */
-> +	spin_lock(&boot_lock);
-> +
-> +	/*
-> +	 * The secondary processor is waiting to be released from
-> +	 * the holding pen - release it, then wait for it to flag
-> +	 * that it has been released by resetting pen_release.
-> +	 *
-> +	 * Note that "pen_release" is the hardware CPU ID, whereas
-> +	 * "cpu" is Linux's internal ID.
-> +	 */
-> +	write_pen_release(cpu);
-> +
-> +	/*
-> +	 * CPU power on control by SPM
-> +	 */
-> +	ret = spm_cpu_mtcmos_on(cpu);
-> +	if (ret < 0) {
-> +		spin_unlock(&boot_lock);
-> +		return -ENXIO;
-> +	}
-> +
-> +	timeout = jiffies + (1 * HZ);
-> +	while (time_before(jiffies, timeout)) {
-> +		/* Read barrier */
-> +		smp_rmb();
-> +
-> +		if (pen_release == -1)
-> +			break;
-> +
-> +		udelay(10);
-> +	}
-> +
-> +	/*
-> +	 * Now the secondary core is starting up let it run its
-> +	 * calibrations, then wait for it to finish
-> +	 */
-> +	spin_unlock(&boot_lock);
-> +
-> +	return (pen_release != -1 ? -ENXIO : 0);
-> +}
-> +
-> +static void mt6580_secondary_init(unsigned int cpu)
-> +{
-> +	/*
-> +	 * Let the primary processor know we're out of the
-> +	 * pen, then head off into the C entry point
-> +	 */
-> +	write_pen_release(-1);
-> +
-> +	/*
-> +	 * Synchronise with the boot thread.
-> +	 */
-> +	spin_lock(&boot_lock);
-> +	spin_unlock(&boot_lock);
-> +}
-> +
-> +#define MT6580_INFRACFG_AO	0x10001000
-> +#define SW_ROM_PD		BIT(31)
+Accessing what ? Also, once DTS reaches a major kernel release, it's
+deemed stable and should be supported. Are we dropping that ?
 
-Please put the defines on the beginning of the file.
-SW_ROM_PD bit is the same on other SoCs? I wasn't able to reveal that from the 
-data sheets. If this is MT6580 only, the define should be renamed.
+--=20
+balbi
 
-> +
-> +static void __init mt6580_smp_prepare_cpus(unsigned int max_cpus)
-> +{
-> +	static void __iomem *infracfg_ao_base;
-> +
-> +	infracfg_ao_base = ioremap(MT6580_INFRACFG_AO, 0x1000);
-> +	if (!infracfg_ao_base) {
-> +		pr_err("%s: Unable to map I/O memory\n", __func__);
-> +		return;
-> +	}
-> +
-> +	/* Enable bootrom power down mode */
-> +	writel_relaxed(readl(infracfg_ao_base + 0x804) | SW_ROM_PD,
-> +		       infracfg_ao_base + 0x804);
+--l06SQqiZYCi8rTKz
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
-Please use a define for the offset.
-I prefer to not cascade reads and writes but to use a temporary variable. But 
-if this is fine with the kernel coding style (I doubt, but I'm not sure) then 
-this is fine.
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
 
-> +
-> +	/* Write the address of slave startup into boot address
-> +	   register for bootrom power down mode */
-> +	writel_relaxed(virt_to_phys(secondary_startup_arm),
-> +		       infracfg_ao_base + 0x800);
-> +
-> +	iounmap(infracfg_ao_base);
-> +}
-> +
->  static int mtk_boot_secondary(unsigned int cpu, struct task_struct *idle)
->  {
->  	if (!mtk_smp_base)
-> @@ -142,3 +268,14 @@ static struct smp_operations mt6589_smp_ops __initdata
-> = { .smp_boot_secondary = mtk_boot_secondary,
->  };
->  CPU_METHOD_OF_DECLARE(mt6589_smp, "mediatek,mt6589-smp", &mt6589_smp_ops);
-> +
-> +static struct smp_operations mt6580_smp_ops __initdata = {
-> +	.smp_prepare_cpus = mt6580_smp_prepare_cpus,
-> +	.smp_secondary_init = mt6580_secondary_init,
-> +	.smp_boot_secondary = mt6580_boot_secondary,
-> +#ifdef CONFIG_HOTPLUG_CPU
-> +	.cpu_kill = mt6580_cpu_kill,
-> +	.cpu_die = mt6580_cpu_die,
-> +#endif
-> +};
-> +CPU_METHOD_OF_DECLARE(mt6580_smp, "mediatek,mt6580-smp", &mt6580_smp_ops);
+iQIcBAEBAgAGBQJVwj8KAAoJEIaOsuA1yqRE5FIP+weLVq3tCNu4L6sPDoe7yzyO
+D0izq54WF5anU+3Zj1DgTrEWsY3IQd4UegIXfYMAISzIuVww2KXwRYn/i67xp2lm
+FMII94eiCMKH8cdjOZ2SwUsmhYR9Cx8+vOUkrK6v2N37BjAdts82Q/nNSgyVmVIB
+p5LFy2Gu6xw0lH9wUKE23UzgtVOrKF+ieq90l2eXlKdc2BsxuEN8VcHz2+n9v3PZ
+fM7AoKYv/VF3O+SE6eXoSVHzOwZv+50mSXEXqy/vozWOEnwiwpFhuMeN6IEh9UHT
+oj8JFGVJK+6I4YLOseZ5fHQl8nzDGt4YB6IWNIDpwybmsJIIADln2/6KRwBVaOdS
+yUzvjKj9A7ZlX+4/fLmyBuSc/jgvMMnHq4LoJ8tC0fleOffGh+Zs3iB0rj9N+v8g
+Gm95aeJxC+2/94NygtNlU+r7RI5j3FrRlM2HJKnm3BBNYjy7v4v6hYbOaYHw317k
+bzgz/9GWhsJB45uow0nzcsOxH1nKqWKtAkjA/PalgIiaYg/fZUuCLau0zfQ1KUUw
+B6Hue1Qk2moC6ZgMuQJXsC7I1MASDmerspEQqFC0cJLslQSxD0mu+ZBEc+rwnAS6
+F4JgVpS4tIyDjc1FSiHTNugbGntEVzBLTDPZZLTj0e4l+I4S0Gooo9ey9sauwS/q
+jt/nJ1cK4upBveARA64R
+=jPWu
+-----END PGP SIGNATURE-----
+
+--l06SQqiZYCi8rTKz--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
