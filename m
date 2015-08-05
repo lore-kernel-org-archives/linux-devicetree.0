@@ -1,58 +1,60 @@
-From: Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH v4 5/6] ARM: shmobile: r8a7740: Migrate to generic l2c OF initialization
-Date: Wed,  5 Aug 2015 10:58:09 +0200
-Message-ID: <1438765090-823-6-git-send-email-geert+renesas@glider.be>
+From: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+Subject: [PATCH v4 6/6] ARM: shmobile: r8a7740: Remove mapping of L2 cache controller registers
+Date: Wed,  5 Aug 2015 10:58:10 +0200
+Message-ID: <1438765090-823-7-git-send-email-geert+renesas@glider.be>
 References: <1438765090-823-1-git-send-email-geert+renesas@glider.be>
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <1438765090-823-1-git-send-email-geert+renesas@glider.be>
-Sender: linux-sh-owner@vger.kernel.org
-To: Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>
-Cc: linux-arm-kernel@lists.infradead.org, linux-sh@vger.kernel.org, devicetree@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1438765090-823-1-git-send-email-geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Migrate the generic r8a7740 platform from calling l2x0_of_init() to the
-generic l2c OF initialization.
+Now all r8a7740-based platforms have been migrated to the generic l2c OF
+initialization, it's no longer needed to map the L2 cache controller
+registers from .map_io().
 
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Signed-off-by: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
 ---
 v4:
-  - This depends on commit eeedcea69e927857 ("ARM: 8395/1: l2c: Add
-    support for the "arm,shared-override" property"), which is queued
-    for 4.3 in arm/for-next,
+  - No changes,
 
 v3:
-  - Use 0/~0 now DT supports "arm,shared-override",
+  - No changes,
 
 v2:
-  - Keep only {,~}L2C_AUX_CTRL_SHARED_OVERRIDE.
+  - No changes.
 ---
- arch/arm/mach-shmobile/setup-r8a7740.c | 6 ++----
- 1 file changed, 2 insertions(+), 4 deletions(-)
+ arch/arm/mach-shmobile/setup-r8a7740.c | 12 ------------
+ 1 file changed, 12 deletions(-)
 
 diff --git a/arch/arm/mach-shmobile/setup-r8a7740.c b/arch/arm/mach-shmobile/setup-r8a7740.c
-index 0c8f80c5b04df34d..7b16c12e3f816f7f 100644
+index 7b16c12e3f816f7f..496569f9d578b863 100644
 --- a/arch/arm/mach-shmobile/setup-r8a7740.c
 +++ b/arch/arm/mach-shmobile/setup-r8a7740.c
-@@ -110,10 +110,6 @@ static void __init r8a7740_generic_init(void)
- {
- 	r8a7740_meram_workaround();
- 
+@@ -38,18 +38,6 @@ static struct map_desc r8a7740_io_desc[] __initdata = {
+ 		.length		= 160 << 20,
+ 		.type		= MT_DEVICE_NONSHARED
+ 	},
 -#ifdef CONFIG_CACHE_L2X0
--	/* Shared attribute override enable, 32K*8way */
--	l2x0_init(IOMEM(0xf0002000), 0x00400000, 0xc20f0fff);
+-	/*
+-	 * for l2x0_init()
+-	 * 0xf0100000-0xf0101000 -> 0xf0002000-0xf0003000
+-	 */
+-	{
+-		.virtual	= 0xf0002000,
+-		.pfn		= __phys_to_pfn(0xf0100000),
+-		.length		= PAGE_SIZE,
+-		.type		= MT_DEVICE_NONSHARED
+-	},
 -#endif
- 	of_platform_populate(NULL, of_default_bus_match_table, NULL, NULL);
- }
- 
-@@ -123,6 +119,8 @@ static const char *const r8a7740_boards_compat_dt[] __initconst = {
  };
  
- DT_MACHINE_START(R8A7740_DT, "Generic R8A7740 (Flattened Device Tree)")
-+	.l2c_aux_val	= 0,
-+	.l2c_aux_mask	= ~0,
- 	.map_io		= r8a7740_map_io,
- 	.init_early	= shmobile_init_delay,
- 	.init_irq	= r8a7740_init_irq_of,
+ static void __init r8a7740_map_io(void)
 -- 
 1.9.1
 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
