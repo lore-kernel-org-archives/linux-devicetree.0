@@ -1,57 +1,109 @@
-From: Andrew Morton <akpm@linux-foundation.org>
-Subject: Re: of: dynamic: resource: add WARN in release_resource for DT
- overlays
-Date: Wed, 5 Aug 2015 14:04:05 -0700
-Message-ID: <20150805140405.20ab09354f4123c561096eb8@linux-foundation.org>
-References: <[PATCH v3 0/7] Introducing (yet again) Device Tree Overlays>
-	<1438262237-30889-1-git-send-email-rabel@cit-ec.uni-bielefeld.de>
+From: Russell King - ARM Linux <linux@arm.linux.org.uk>
+Subject: Re: [PATCH 3/4] arm64: Juno: Add HDLCD support to the Juno boards.
+Date: Wed, 5 Aug 2015 22:48:54 +0100
+Message-ID: <20150805214854.GC7557@n2100.arm.linux.org.uk>
+References: <1438784892-27888-1-git-send-email-Liviu.Dudau@arm.com>
+ <1438784892-27888-4-git-send-email-Liviu.Dudau@arm.com>
+ <20150805175303.GB7557@n2100.arm.linux.org.uk>
+ <20150805190312.GA31066@e106497-lin.cambridge.arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1438262237-30889-1-git-send-email-rabel@cit-ec.uni-bielefeld.de>
+Content-Disposition: inline
+In-Reply-To: <20150805190312.GA31066@e106497-lin.cambridge.arm.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Robert ABEL <rabel@cit-ec.uni-bielefeld.de>
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+To: Liviu Dudau <Liviu.Dudau@arm.com>
+Cc: David Airlie <airlied@linux.ie>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Mark Rutland <Mark.Rutland@arm.com>, Jon Medhurst <tixy@linaro.org>, Arnd Bergmann <arnd@arndb.de>, Pawel Moll <Pawel.Moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Catalin Marinas <Catalin.Marinas@arm.com>, Sudeep Holla <Sudeep.Holla@arm.com>, Will Deacon <Will.Deacon@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, Olof Johansson <olof@lixom.net>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 30 Jul 2015 15:17:16 +0200 Robert ABEL <rabel@cit-ec.uni-bielefeld.de> wrote:
+On Wed, Aug 05, 2015 at 08:03:12PM +0100, Liviu Dudau wrote:
+> I have to confess that I am not entirely up to speed with the TDA19988
+> situation at the moment. Andrew Jackson was dealing with that and
+> working with Jean to get that in the upstream, but his contract has
+> ended and he has moved to other things.
 
-> 
-> This patch prevents a kernel OOPS when removing a DT overlay containing
-> nodes with reg properties. release_resources is called for these nodes.
-> However, the resource structs were never initialized, hence the kernel OOPS.
-> 
-> This is obviously a stopgap measure until a proper solution is coded, see [1].
-> 
-> 
-> [1]: https://lkml.org/lkml/2014/4/17/359
->
-> ...
->
-> --- a/kernel/resource.c
-> +++ b/kernel/resource.c
-> @@ -236,6 +236,13 @@ static int __release_resource(struct resource *old)
->  {
->  	struct resource *tmp, **p;
->  
-> +    /* devicetree overlays:
-> +     * of code doesn't initialize parent, child, sibling
-> +     * gracefully 'do the right thing' here
-> +     */
-> +	if (WARN(!old->parent, "%s: uninitialized resource %s\n", __FUNCTION__, old->name))
-> +		return 0;
-> +
->  	p = &old->parent->child;
->  	for (;;) {
->  		tmp = *p;
+Umm, I'm the maintainer for TDA998x:
 
-Can we please have a (much) better changelog for this?  Don't ask
-people to go off and trawl through lkml.org threads (especially as
-lkml.org seems to be down half the time).
+NXP TDA998X DRM DRIVER
+M:      Russell King <rmk+kernel@arm.linux.org.uk>
+S:      Supported
+F:      drivers/gpu/drm/i2c/tda998x_drv.c
+F:      include/drm/i2c/tda998x.h
 
-What precisely is causing the crash, what are the plans to fix it, why
-do we need a stopgap rather than fixing it properly, etc.
+It would be nice if people worked with the actual maintainers of things
+rather than random other people...
 
-Why not put the workaround at the offending call site (whereever that
-is?) rather than in the callee?
+> > Also, the whole question of representing connectors in a DRM model is
+> > yet to be established.  Yes, DT should describe the hardware, but we
+> > don't yet know _how_ to describe physical connectors with stuff
+> > implemented on top of DRM yet, and we have nothing that makes use of
+> > this.
+> 
+> Please help me understand the current situation: you have added
+> support for components that the video drivers can use and the bindings
+> for that are described in Documentation/devicetree/bindings/media/video-interfaces.txt.
+
+No.  I added the component helpers, which are entirely firmware agnostic.
+The media bindings were created by others, and through development done
+by Pengutronix, they were factored out of media into common DT code and
+re-used for the IMX DRM driver.  The binding document which describes
+that work is not the one you refer to above, but this one:
+
+Documentation/devicetree/bindings/graph.txt
+
+This started them as a basis for DRM drivers on ARM - but it's never been
+officially "adopted" as a method to describe DRM drivers - it's only what
+some drivers are using.  It ought to be nailed down as a way to ensure
+inter-operability between components though, but no one has really made
+that decision.
+
+> According to that document my patch should be compliant once I add the
+> reg= property. Is that something that cannot be used with tda998x driver
+> or is there any other reason why you think the patch is not compliant?
+
+Jean's proposal to add audio support to the TDA998x driver does it via
+this change to the binding spec:
+
++Optional nodes:
++
++  - port: up to three ports.
++       The ports are defined according to [1].
++
++    Video port.
++       There may be only one video port.
++       This one must contain the following property:
++
++       - port-type: must be "rgb"
++
++       and may contain the optional property:
++
++       - reg: 24 bits value which defines how the video controller
++               output is wired to the TDA998x input (video pins)
++               When absent, the default value is <0x230145>.
++
++    Audio ports.
++       There may be one or two audio ports.
++       These ones must contain the following properties:
++
++       - port-type: must be "i2s" or "spdif"
++
++       - reg: 8 bits value which defines how the audio controller
++               output is wired to the TDA998x input (audio pins)
++
++[1] Documentation/devicetree/bindings/graph.txt
+
+(That's not a particularly precise definition, but it's what we have at
+the moment.)
+
+> If you are referring to connecting an encoder with a HDMI connector, I
+> have tested that and it seems to work, although my situation is simple
+> because there are no options in my setup: one HDLCD connects to one
+> TDA19988 which connects to one HDMI output.
+
+Right now, the TDA998x will ignore the additional information, but that
+won't be the case with Jean's audio work (see the above binding
+information.)
+
+-- 
+FTTC broadband for 0.8mile line: currently at 10.5Mbps down 400kbps up
+according to speedtest.net.
