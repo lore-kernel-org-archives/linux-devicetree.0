@@ -1,298 +1,112 @@
-From: Dmitry Torokhov <dtor@chromium.org>
-Subject: [PATCH] Input: elants_i2c - wire up regulator support
-Date: Wed, 5 Aug 2015 11:53:57 -0700
-Message-ID: <20150805185357.GA31387@dtor-ws>
+From: Liviu Dudau <Liviu.Dudau-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH 3/4] arm64: Juno: Add HDLCD support to the Juno boards.
+Date: Wed, 5 Aug 2015 20:03:12 +0100
+Message-ID: <20150805190312.GA31066@e106497-lin.cambridge.arm.com>
+References: <1438784892-27888-1-git-send-email-Liviu.Dudau@arm.com>
+ <1438784892-27888-4-git-send-email-Liviu.Dudau@arm.com>
+ <20150805175303.GB7557@n2100.arm.linux.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-input-owner@vger.kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20150805175303.GB7557-l+eeeJia6m9vn6HldHNs0ANdhmdF6hFW@public.gmane.org>
 Content-Disposition: inline
-Sender: linux-input-owner@vger.kernel.org
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Benson Leung <bleung@chromium.org>, Duson Lin <dusonlin@emc.com.tw>, Scott Liu <scott.liu@emc.com.tw>, James Chen <james.chen@emc.com.tw>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-input@vger.kernel.org
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+Cc: David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, "dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org" <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, Jon Medhurst <tixy-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Catalin Marinas <Catalin.Marinas-5wv7dgnIgG8@public.gmane.org>, Sudeep Holla <Sudeep.Holla-5wv7dgnIgG8@public.gmane.org>, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Elan touchscreen controllers use two power supplies, vcc33 and vccio,
-and we need to enable them before trying to access the device. On X86
-firmware usually does this, but on ARM it is usually left to the kernel.
+On Wed, Aug 05, 2015 at 06:53:03PM +0100, Russell King - ARM Linux wrot=
+e:
+> On Wed, Aug 05, 2015 at 03:28:11PM +0100, Liviu Dudau wrote:
+> > +		hdmi-transmitter@71 {
+> >  			compatible =3D "nxp,tda998x";
+> >  			reg =3D <0x71>;
+> > +			port {
+> > +				tda998x_1_input: endpoint@0 {
+> > +					remote-endpoint =3D <&hdlcd1_output>;
+> > +				};
+> > +
+> > +				tda998x_1_output: endpoint@1 {
+> > +					remote-endpoint =3D <&hdmi1_connector_output>;
+> > +				};
+> > +			};
 
-Signed-off-by: Dmitry Torokhov <dtor@chromium.org>
-Reviewed-by: Benson Leung <bleung@chromium.org>
-Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
----
- .../devicetree/bindings/input/elants_i2c.txt       |   3 +
- drivers/input/touchscreen/elants_i2c.c             | 184 ++++++++++++++++++---
- 2 files changed, 165 insertions(+), 22 deletions(-)
+Hi Russell,
 
-diff --git a/Documentation/devicetree/bindings/input/elants_i2c.txt b/Documentation/devicetree/bindings/input/elants_i2c.txt
-index a765232..8a71038 100644
---- a/Documentation/devicetree/bindings/input/elants_i2c.txt
-+++ b/Documentation/devicetree/bindings/input/elants_i2c.txt
-@@ -13,6 +13,9 @@ Optional properties:
- - pinctrl-names: should be "default" (see pinctrl binding [1]).
- - pinctrl-0: a phandle pointing to the pin settings for the device (see
-   pinctrl binding [1]).
-+- reset-gpios: reset gpio the chip is connected to.
-+- vcc33-supply: a phandle for the regulator supplying 3.3V power.
-+- vccio-supply: a phandle for the regulator supplying IO power.
- 
- [0]: Documentation/devicetree/bindings/interrupt-controller/interrupts.txt
- [1]: Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt
-diff --git a/drivers/input/touchscreen/elants_i2c.c b/drivers/input/touchscreen/elants_i2c.c
-index 42e43f1..1912265 100644
---- a/drivers/input/touchscreen/elants_i2c.c
-+++ b/drivers/input/touchscreen/elants_i2c.c
-@@ -38,6 +38,8 @@
- #include <linux/input/mt.h>
- #include <linux/acpi.h>
- #include <linux/of.h>
-+#include <linux/gpio/consumer.h>
-+#include <linux/regulator/consumer.h>
- #include <asm/unaligned.h>
- 
- /* Device, Driver information */
-@@ -102,6 +104,9 @@
- /* calibration timeout definition */
- #define ELAN_CALI_TIMEOUT_MSEC	10000
- 
-+#define ELAN_POWERON_DELAY_USEC	500
-+#define ELAN_RESET_DELAY_MSEC	20
-+
- enum elants_state {
- 	ELAN_STATE_NORMAL,
- 	ELAN_WAIT_QUEUE_HEADER,
-@@ -118,6 +123,10 @@ struct elants_data {
- 	struct i2c_client *client;
- 	struct input_dev *input;
- 
-+	struct regulator *vcc33;
-+	struct regulator *vccio;
-+	struct gpio_desc *reset_gpio;
-+
- 	u16 fw_version;
- 	u8 test_version;
- 	u8 solution_version;
-@@ -141,6 +150,7 @@ struct elants_data {
- 	u8 buf[MAX_PACKET_SIZE];
- 
- 	bool wake_irq_enabled;
-+	bool keep_power_in_suspend;
- };
- 
- static int elants_i2c_send(struct i2c_client *client,
-@@ -1058,6 +1068,67 @@ static void elants_i2c_remove_sysfs_group(void *_data)
- 	sysfs_remove_group(&ts->client->dev.kobj, &elants_attribute_group);
- }
- 
-+static int elants_i2c_power_on(struct elants_data *ts)
-+{
-+	int error;
-+
-+	/*
-+	 * If we do not have reset gpio assume platform firmware
-+	 * controls regulators and does power them on for us.
-+	 */
-+	if (IS_ERR_OR_NULL(ts->reset_gpio))
-+		return 0;
-+
-+	gpiod_set_value_cansleep(ts->reset_gpio, 1);
-+
-+	error = regulator_enable(ts->vcc33);
-+	if (error) {
-+		dev_err(&ts->client->dev,
-+			"failed to enable vcc33 regulator: %d\n",
-+			error);
-+		goto release_reset_gpio;
-+	}
-+
-+	error = regulator_enable(ts->vccio);
-+	if (error) {
-+		dev_err(&ts->client->dev,
-+			"failed to enable vccio regulator: %d\n",
-+			error);
-+		regulator_disable(ts->vcc33);
-+		goto release_reset_gpio;
-+	}
-+
-+	/*
-+	 * We need to wait a bit after powering on controller before
-+	 * we are allowed to release reset GPIO.
-+	 */
-+	udelay(ELAN_POWERON_DELAY_USEC);
-+
-+release_reset_gpio:
-+	gpiod_set_value_cansleep(ts->reset_gpio, 0);
-+	if (error)
-+		return error;
-+
-+	msleep(ELAN_RESET_DELAY_MSEC);
-+
-+	return 0;
-+}
-+
-+static void elants_i2c_power_off(void *_data)
-+{
-+	struct elants_data *ts = _data;
-+
-+	if (!IS_ERR_OR_NULL(ts->reset_gpio)) {
-+		/*
-+		 * Activate reset gpio to prevent leakage through the
-+		 * pin once we shut off power to the controller.
-+		 */
-+		gpiod_set_value_cansleep(ts->reset_gpio, 1);
-+		regulator_disable(ts->vccio);
-+		regulator_disable(ts->vcc33);
-+	}
-+}
-+
- static int elants_i2c_probe(struct i2c_client *client,
- 			    const struct i2c_device_id *id)
- {
-@@ -1072,13 +1143,6 @@ static int elants_i2c_probe(struct i2c_client *client,
- 		return -ENXIO;
- 	}
- 
--	/* Make sure there is something at this address */
--	if (i2c_smbus_xfer(client->adapter, client->addr, 0,
--			I2C_SMBUS_READ, 0, I2C_SMBUS_BYTE, &dummy) < 0) {
--		dev_err(&client->dev, "nothing at this address\n");
--		return -ENXIO;
--	}
--
- 	ts = devm_kzalloc(&client->dev, sizeof(struct elants_data), GFP_KERNEL);
- 	if (!ts)
- 		return -ENOMEM;
-@@ -1089,6 +1153,70 @@ static int elants_i2c_probe(struct i2c_client *client,
- 	ts->client = client;
- 	i2c_set_clientdata(client, ts);
- 
-+	ts->vcc33 = devm_regulator_get(&client->dev, "vcc33");
-+	if (IS_ERR(ts->vcc33)) {
-+		error = PTR_ERR(ts->vcc33);
-+		if (error != -EPROBE_DEFER)
-+			dev_err(&client->dev,
-+				"Failed to get 'vcc33' regulator: %d\n",
-+				error);
-+		return error;
-+	}
-+
-+	ts->vccio = devm_regulator_get(&client->dev, "vccio");
-+	if (IS_ERR(ts->vccio)) {
-+		error = PTR_ERR(ts->vccio);
-+		if (error != -EPROBE_DEFER)
-+			dev_err(&client->dev,
-+				"Failed to get 'vccio' regulator: %d\n",
-+				error);
-+		return error;
-+	}
-+
-+	ts->reset_gpio = devm_gpiod_get(&client->dev, "reset");
-+	if (IS_ERR(ts->reset_gpio)) {
-+		error = PTR_ERR(ts->reset_gpio);
-+
-+		if (error == -EPROBE_DEFER)
-+			return error;
-+
-+		if (error != -ENOENT && error != -ENOSYS) {
-+			dev_err(&client->dev,
-+				"failed to get reset gpio: %d\n",
-+				error);
-+			return error;
-+		}
-+
-+		ts->keep_power_in_suspend = true;
-+	} else {
-+		error = gpiod_direction_output(ts->reset_gpio, 0);
-+		if (error) {
-+			dev_err(&client->dev,
-+				"failed to configure reset gpio as output: %d\n",
-+				error);
-+			return error;
-+		}
-+	}
-+
-+	error = elants_i2c_power_on(ts);
-+	if (error)
-+		return error;
-+
-+	error = devm_add_action(&client->dev, elants_i2c_power_off, ts);
-+	if (error) {
-+		dev_err(&client->dev,
-+			"failed to install power off action: %d\n", error);
-+		elants_i2c_power_off(ts);
-+		return error;
-+	}
-+
-+	/* Make sure there is something at this address */
-+	if (i2c_smbus_xfer(client->adapter, client->addr, 0,
-+			   I2C_SMBUS_READ, 0, I2C_SMBUS_BYTE, &dummy) < 0) {
-+		dev_err(&client->dev, "nothing at this address\n");
-+		return -ENXIO;
-+	}
-+
- 	error = elants_i2c_initialize(ts);
- 	if (error) {
- 		dev_err(&client->dev, "failed to initialize: %d\n", error);
-@@ -1196,17 +1324,23 @@ static int __maybe_unused elants_i2c_suspend(struct device *dev)
- 
- 	disable_irq(client->irq);
- 
--	for (retry_cnt = 0; retry_cnt < MAX_RETRIES; retry_cnt++) {
--		error = elants_i2c_send(client, set_sleep_cmd,
--					sizeof(set_sleep_cmd));
--		if (!error)
--			break;
-+	if (device_may_wakeup(dev) || ts->keep_power_in_suspend) {
-+		for (retry_cnt = 0; retry_cnt < MAX_RETRIES; retry_cnt++) {
-+			error = elants_i2c_send(client, set_sleep_cmd,
-+						sizeof(set_sleep_cmd));
-+			if (!error)
-+				break;
- 
--		dev_err(&client->dev, "suspend command failed: %d\n", error);
--	}
-+			dev_err(&client->dev,
-+				"suspend command failed: %d\n", error);
-+		}
- 
--	if (device_may_wakeup(dev))
--		ts->wake_irq_enabled = (enable_irq_wake(client->irq) == 0);
-+		if (device_may_wakeup(dev))
-+			ts->wake_irq_enabled =
-+					(enable_irq_wake(client->irq) == 0);
-+	} else {
-+		elants_i2c_power_off(ts);
-+	}
- 
- 	return 0;
- }
-@@ -1222,13 +1356,19 @@ static int __maybe_unused elants_i2c_resume(struct device *dev)
- 	if (device_may_wakeup(dev) && ts->wake_irq_enabled)
- 		disable_irq_wake(client->irq);
- 
--	for (retry_cnt = 0; retry_cnt < MAX_RETRIES; retry_cnt++) {
--		error = elants_i2c_send(client, set_active_cmd,
--					sizeof(set_active_cmd));
--		if (!error)
--			break;
-+	if (ts->keep_power_in_suspend) {
-+		for (retry_cnt = 0; retry_cnt < MAX_RETRIES; retry_cnt++) {
-+			error = elants_i2c_send(client, set_active_cmd,
-+						sizeof(set_active_cmd));
-+			if (!error)
-+				break;
- 
--		dev_err(&client->dev, "resume command failed: %d\n", error);
-+			dev_err(&client->dev,
-+				"resume command failed: %d\n", error);
-+		}
-+	} else {
-+		elants_i2c_power_on(ts);
-+		elants_i2c_initialize(ts);
- 	}
- 
- 	ts->state = ELAN_STATE_NORMAL;
--- 
-2.5.0.rc2.392.g76e840b
+Thanks for reviewing this, I will integrate your comments in the
+next revision.
 
+>=20
+> This isn't compliant with the TDA998x binding, and is very likely to
+> screw Jean's work on adding audio support.  See emails on lakml and
+> Documentation/devicetree/bindings/drm/i2c/tda998x.txt (which looks
+> like it needs updating to include the ports stuff.)
 
--- 
-Dmitry
+I have to confess that I am not entirely up to speed with the TDA19988
+situation at the moment. Andrew Jackson was dealing with that and
+working with Jean to get that in the upstream, but his contract has
+ended and he has moved to other things. While I did get through a
+(limited) set of patches that Jean has sent around, I'm a bit confused
+about the latest state of play. Is there an authoritative source from
+where I can grab the patches that are going to be in 4.3? Otherwise,
+as far as the current patchset base (4.2-rc2) is concerned, I am
+compliant with the bindings if you ignore the port subnode (see further
+below). I am happy to update the patchset to match what is going into
+mainline, but just reading the emails in the mailing list I'm not
+exactly sure on the sequencing of things here.
+
+>=20
+> Also, the whole question of representing connectors in a DRM model is
+> yet to be established.  Yes, DT should describe the hardware, but we
+> don't yet know _how_ to describe physical connectors with stuff
+> implemented on top of DRM yet, and we have nothing that makes use of
+> this.
+
+Please help me understand the current situation: you have added
+support for components that the video drivers can use and the bindings
+for that are described in Documentation/devicetree/bindings/media/video=
+-interfaces.txt.
+According to that document my patch should be compliant once I add the
+reg=3D property. Is that something that cannot be used with tda998x dri=
+ver
+or is there any other reason why you think the patch is not compliant?
+
+If you are referring to connecting an encoder with a HDMI connector, I
+have tested that and it seems to work, although my situation is simple
+because there are no options in my setup: one HDLCD connects to one TDA=
+19988
+which connects to one HDMI output.
+
+>=20
+> Also note that ePAPR requires a reg=3D property if you specify a
+> unit-address (the bit after the @ sign) so the above is non-compliant
+> with ePAPR as well.
+
+Thanks, I will add the reg property.
+
+Best regards,
+Liviu
+
+>=20
+> --=20
+> FTTC broadband for 0.8mile line: currently at 10.5Mbps down 400kbps u=
+p
+> according to speedtest.net.
+>=20
+
+--=20
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+| I would like to |
+| fix the world,  |
+| but they're not |
+| giving me the   |
+ \ source code!  /
+  ---------------
+    =C2=AF\_(=E3=83=84)_/=C2=AF
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
