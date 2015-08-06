@@ -1,1319 +1,654 @@
-From: Punnaiah Choudary Kalluri <punnaiah.choudary.kalluri@xilinx.com>
-Subject: [PATCH v4 2/2] dma: Add Xilinx zynqmp dma engine driver support
-Date: Thu, 6 Aug 2015 08:49:33 +0530
-Message-ID: <1438831173-8761-2-git-send-email-punnaia@xilinx.com>
-References: <1438831173-8761-1-git-send-email-punnaia@xilinx.com>
+From: Shawn Lin <shawn.lin@rock-chips.com>
+Subject: Re: [RFC PATCH v3 1/5] mmc: dw_mmc: Add external dma interface
+ support
+Date: Thu, 6 Aug 2015 11:35:29 +0800
+Message-ID: <55C2D601.4080203@rock-chips.com>
+References: <1438762614-22154-1-git-send-email-shawn.lin@rock-chips.com>
+ <1438762648-22202-1-git-send-email-shawn.lin@rock-chips.com>
+ <55C2C60F.4020900@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1438831173-8761-1-git-send-email-punnaia@xilinx.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, michal.simek@xilinx.com, vinod.koul@intel.com, dan.j.williams@intel.com
-Cc: dmaengine@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, kalluripunnaiahchoudary@gmail.com, kpc528@gmail.com, Punnaiah Choudary Kalluri <punnaia@xilinx.com>
+Content-Type: text/plain; charset=UTF-8;
+        format=flowed
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-mips-bounce@linux-mips.org>
+In-Reply-To: <55C2C60F.4020900@samsung.com>
+Sender: linux-mips-bounce@linux-mips.org
+Errors-to: linux-mips-bounce@linux-mips.org
+List-help: <mailto:ecartis@linux-mips.org?Subject=help>
+List-unsubscribe: <mailto:ecartis@linux-mips.org?subject=unsubscribe%20linux-mips>
+List-software: Ecartis version 1.0.0
+List-subscribe: <mailto:ecartis@linux-mips.org?subject=subscribe%20linux-mips>
+List-owner: <mailto:ralf@linux-mips.org>
+List-post: <mailto:linux-mips@linux-mips.org>
+List-archive: <http://www.linux-mips.org/archives/linux-mips/>
+To: Jaehoon Chung <jh80.chung@samsung.com>, Ulf Hansson <ulf.hansson@linaro.org>, Seungwon Jeon <tgih.jun@samsung.com>
+Cc: shawn.lin@rock-chips.com, dianders@chromium.org, linux-mips@linux-mips.org, Arnd Bergmann <arnd@arndb.de>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Alexey Brodkin <abrodkin@synopsys.com>, Stefan Agner <stefan@agner.ch>, Zhou Wang <wangzhou.bry@gmail.com>, Kumar Gala <galak@codeaurora.org>, Alim Akhtar <alim.akhtar@samsung.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Wang Long <long.wanglong@huawei.com>, Rob Herring <robh+dt@kernel.org>, Chaotian Jing <chaotian.jing@mediatek.com>, Lukasz Majewski <l.majewski@samsung.com>, Jun Nie <jun.nie@linaro.org>, Catalin Marinas <catalin.marinas@arm.com>, Kevin Hao <haokexin@gmail.com>, Olof Johansson <olof@lixom.net>, Ray Jui <rjui@broadcom.com>, Govindraj Raja <govindraj.raja@imgtec.com>
 List-Id: devicetree@vger.kernel.org
 
-Added the basic driver for zynqmp dma engine used in Zynq
-UltraScale+ MPSoC. The initial release of this driver supports
-only memory to memory transfers.
+=E5=9C=A8 2015/8/6 10:27, Jaehoon Chung =E5=86=99=E9=81=93:
+> Hi, Shawn.
+>
+> On 08/05/2015 05:17 PM, Shawn Lin wrote:
+>> DesignWare MMC Controller can supports two types of DMA
+>> mode: external dma and internal dma. We get a RK312x platform
+>> integrated dw_mmc and ARM pl330 dma controller. This patch add
+>> edmac ops to support these platforms. I've tested it on RK312x
+>> platform with edmac mode and RK3288 platform with idmac mode.
+> RK312X doesn't support the idamc? Just wondering...
 
-Signed-off-by: Punnaiah Choudary Kalluri <punnaia@xilinx.com>
----
-Changes in v4:
-- Modified the defines to start with ZYNQMP_DMA perfix
-- Changed the zynqmp_dma_alloc_chan_resources to return number of
-  allocated descriptors
-- Changed the zynqmp_dma_device variable name
-- Released the locks before calling user callback
-- freeup irq in zynqmp_dma_chan_remove function.
-Changes in v3:
-- Modified the zynqmp_dma_chan_is_idle function return type to bool
-Changes in v2:
-- Corrected the function header documentation
-- Framework expects bus-width value in bytes. so, fixed it
-- Removed magic numbers for bus-width
----
- drivers/dma/Kconfig             |    6 +
- drivers/dma/xilinx/Makefile     |    1 +
- drivers/dma/xilinx/zynqmp_dma.c | 1247 +++++++++++++++++++++++++++++++++++++++
- 3 files changed, 1254 insertions(+), 0 deletions(-)
- create mode 100644 drivers/dma/xilinx/zynqmp_dma.c
+   It does. And we have lots of platforms cannot support idmac...
 
-diff --git a/drivers/dma/Kconfig b/drivers/dma/Kconfig
-index 88d474b..e0bd309 100644
---- a/drivers/dma/Kconfig
-+++ b/drivers/dma/Kconfig
-@@ -425,6 +425,12 @@ config XILINX_VDMA
- 	  channels, Memory Mapped to Stream (MM2S) and Stream to
- 	  Memory Mapped (S2MM) for the data transfers.
- 
-+config XILINX_ZYNQMP_DMA
-+	tristate "Xilinx ZynqMP DMA Engine"
-+	select DMA_ENGINE
-+	help
-+	  Enable support for Xilinx ZynqMP DMA engine in Zynq UltraScale+ MPSoC.
-+
- config DMA_SUN6I
- 	tristate "Allwinner A31 SoCs DMA support"
- 	depends on MACH_SUN6I || MACH_SUN8I || COMPILE_TEST
-diff --git a/drivers/dma/xilinx/Makefile b/drivers/dma/xilinx/Makefile
-index 3c4e9f2..95469dc 100644
---- a/drivers/dma/xilinx/Makefile
-+++ b/drivers/dma/xilinx/Makefile
-@@ -1 +1,2 @@
- obj-$(CONFIG_XILINX_VDMA) += xilinx_vdma.o
-+obj-$(CONFIG_XILINX_ZYNQMP_DMA) += zynqmp_dma.o
-diff --git a/drivers/dma/xilinx/zynqmp_dma.c b/drivers/dma/xilinx/zynqmp_dma.c
-new file mode 100644
-index 0000000..93c51ac
---- /dev/null
-+++ b/drivers/dma/xilinx/zynqmp_dma.c
-@@ -0,0 +1,1247 @@
-+/*
-+ * DMA driver for Xilinx ZynqMP DMA Engine
-+ *
-+ * Copyright (C) 2015 Xilinx, Inc. All rights reserved.
-+ *
-+ * This program is free software: you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License as published by
-+ * the Free Software Foundation, either version 2 of the License, or
-+ * (at your option) any later version.
-+ */
-+
-+#include <linux/bitops.h>
-+#include <linux/dma-mapping.h>
-+#include <linux/dmaengine.h>
-+#include <linux/dmapool.h>
-+#include <linux/init.h>
-+#include <linux/interrupt.h>
-+#include <linux/io.h>
-+#include <linux/module.h>
-+#include <linux/of_address.h>
-+#include <linux/of_dma.h>
-+#include <linux/of_irq.h>
-+#include <linux/of_platform.h>
-+#include <linux/slab.h>
-+
-+#include "../dmaengine.h"
-+
-+/* Register Offsets */
-+#define ZYNQMP_DMA_ISR			0x100
-+#define ZYNQMP_DMA_IMR			0x104
-+#define ZYNQMP_DMA_IER			0x108
-+#define ZYNQMP_DMA_IDS			0x10C
-+#define ZYNQMP_DMA_CTRL0		0x110
-+#define ZYNQMP_DMA_CTRL1		0x114
-+#define ZYNQMP_DMA_STATUS		0x11C
-+#define ZYNQMP_DMA_DATA_ATTR		0x120
-+#define ZYNQMP_DMA_DSCR_ATTR		0x124
-+#define ZYNQMP_DMA_SRC_DSCR_WRD0	0x128
-+#define ZYNQMP_DMA_SRC_DSCR_WRD1	0x12C
-+#define ZYNQMP_DMA_SRC_DSCR_WRD2	0x130
-+#define ZYNQMP_DMA_SRC_DSCR_WRD3	0x134
-+#define ZYNQMP_DMA_DST_DSCR_WRD0	0x138
-+#define ZYNQMP_DMA_DST_DSCR_WRD1	0x13C
-+#define ZYNQMP_DMA_DST_DSCR_WRD2	0x140
-+#define ZYNQMP_DMA_DST_DSCR_WRD3	0x144
-+#define ZYNQMP_DMA_SRC_START_LSB	0x158
-+#define ZYNQMP_DMA_SRC_START_MSB	0x15C
-+#define ZYNQMP_DMA_DST_START_LSB	0x160
-+#define ZYNQMP_DMA_DST_START_MSB	0x164
-+#define ZYNQMP_DMA_TOTAL_BYTE		0x188
-+#define ZYNQMP_DMA_RATE_CTRL		0x18C
-+#define ZYNQMP_DMA_IRQ_SRC_ACCT		0x190
-+#define ZYNQMP_DMA_IRQ_DST_ACCT		0x194
-+#define ZYNQMP_DMA_CTRL2		0x200
-+
-+/* Interrupt registers bit field definitions */
-+#define ZYNQMP_DMA_DONE			BIT(10)
-+#define ZYNQMP_DMA_AXI_WR_DATA		BIT(9)
-+#define ZYNQMP_DMA_AXI_RD_DATA		BIT(8)
-+#define ZYNQMP_DMA_AXI_RD_DST_DSCR	BIT(7)
-+#define ZYNQMP_DMA_AXI_RD_SRC_DSCR	BIT(6)
-+#define ZYNQMP_DMA_IRQ_DST_ACCT_ERR	BIT(5)
-+#define ZYNQMP_DMA_IRQ_SRC_ACCT_ERR	BIT(4)
-+#define ZYNQMP_DMA_BYTE_CNT_OVRFL	BIT(3)
-+#define ZYNQMP_DMA_DST_DSCR_DONE	BIT(2)
-+#define ZYNQMP_DMA_INV_APB		BIT(0)
-+
-+/* Control 0 register bit field definitions */
-+#define ZYNQMP_DMA_OVR_FETCH		BIT(7)
-+#define ZYNQMP_DMA_POINT_TYPE_SG	BIT(6)
-+#define ZYNQMP_DMA_RATE_CTRL_EN		BIT(3)
-+
-+/* Control 1 register bit field definitions */
-+#define ZYNQMP_DMA_SRC_ISSUE		GENMASK(4, 0)
-+
-+/* Channel status register bit field definitions */
-+#define ZYNQMP_DMA_STATUS_BUSY		0x2
-+
-+/* Data Attribute register bit field definitions */
-+#define ZYNQMP_DMA_ARBURST		GENMASK(27, 26)
-+#define ZYNQMP_DMA_ARCACHE		GENMASK(25, 22)
-+#define ZYNQMP_DMA_ARCACHE_OFST		22
-+#define ZYNQMP_DMA_ARQOS		GENMASK(21, 18)
-+#define ZYNQMP_DMA_ARQOS_OFST		18
-+#define ZYNQMP_DMA_ARLEN		GENMASK(17, 14)
-+#define ZYNQMP_DMA_ARLEN_OFST		14
-+#define ZYNQMP_DMA_AWBURST		GENMASK(13, 12)
-+#define ZYNQMP_DMA_AWCACHE		GENMASK(11, 8)
-+#define ZYNQMP_DMA_AWCACHE_OFST		8
-+#define ZYNQMP_DMA_AWQOS		GENMASK(7, 4)
-+#define ZYNQMP_DMA_AWQOS_OFST		4
-+#define ZYNQMP_DMA_AWLEN		GENMASK(3, 0)
-+#define ZYNQMP_DMA_AWLEN_OFST		0
-+
-+/* Descriptor Attribute register bit field definitions */
-+#define ZYNQMP_DMA_AXCOHRNT		BIT(8)
-+#define ZYNQMP_DMA_AXCACHE		GENMASK(7, 4)
-+#define ZYNQMP_DMA_AXCACHE_OFST		4
-+#define ZYNQMP_DMA_AXQOS		GENMASK(3, 0)
-+#define ZYNQMP_DMA_AXQOS_OFST		0
-+
-+/* Control register 2 bit field definitions */
-+#define ZYNQMP_DMA_ENABLE		BIT(0)
-+
-+/* Buffer Descriptor definitions */
-+#define ZYNQMP_DMA_DESC_CTRL_STOP	0x10
-+#define ZYNQMP_DMA_DESC_CTRL_COMP_INT	0x4
-+#define ZYNQMP_DMA_DESC_CTRL_SIZE_256	0x2
-+#define ZYNQMP_DMA_DESC_CTRL_COHRNT	0x1
-+
-+/* Interrupt Mask specific definitions */
-+#define ZYNQMP_DMA_INT_ERR	(ZYNQMP_DMA_AXI_RD_DATA | \
-+				 ZYNQMP_DMA_AXI_WR_DATA | \
-+				 ZYNQMP_DMA_AXI_RD_DST_DSCR | \
-+				 ZYNQMP_DMA_AXI_RD_SRC_DSCR | \
-+				 ZYNQMP_DMA_INV_APB)
-+#define ZYNQMP_DMA_INT_OVRFL	(ZYNQMP_DMA_BYTE_CNT_OVRFL | \
-+				 ZYNQMP_DMA_IRQ_SRC_ACCT_ERR | \
-+				 ZYNQMP_DMA_IRQ_DST_ACCT_ERR)
-+#define ZYNQMP_DMA_INT_DONE	(ZYNQMP_DMA_DONE | ZYNQMP_DMA_DST_DSCR_DONE)
-+#define ZYNQMP_DMA_INT_EN_DEFAULT_MASK	(ZYNQMP_DMA_INT_DONE | \
-+					 ZYNQMP_DMA_INT_ERR | \
-+					 ZYNQMP_DMA_INT_OVRFL | \
-+					 ZYNQMP_DMA_DST_DSCR_DONE)
-+
-+/* Max number of descriptors per channel */
-+#define ZYNQMP_DMA_NUM_DESCS		32
-+
-+/* Max transfer size per descriptor */
-+#define ZYNQMP_DMA_MAX_TRANS_LEN	0x40000000
-+
-+/* Reset values for data attributes */
-+#define ZYNQMP_DMA_ARCACHE_RST_VAL	0x2
-+#define ZYNQMP_DMA_ARLEN_RST_VAL	0xF
-+#define ZYNQMP_DMA_AWCACHE_RST_VAL	0x2
-+#define ZYNQMP_DMA_AWLEN_RST_VAL	0xF
-+
-+#define ZYNQMP_DMA_SRC_ISSUE_RST_VAL	0x1F
-+
-+#define ZYNQMP_DMA_IDS_DEFAULT_MASK	0xFFF
-+
-+/* Bus width in bits */
-+#define ZYNQMP_DMA_BUS_WIDTH_64		64
-+#define ZYNQMP_DMA_BUS_WIDTH_128	128
-+
-+#define ZYNQMP_DMA_DESC_SIZE(chan)	(chan->desc_size)
-+
-+#define to_chan(chan)		container_of(chan, struct zynqmp_dma_chan, \
-+					     common)
-+#define tx_to_desc(tx)		container_of(tx, struct zynqmp_dma_desc_sw, \
-+					     async_tx)
-+
-+/**
-+ * struct zynqmp_dma_desc_ll - Hw linked list descriptor
-+ * @addr: Buffer address
-+ * @size: Size of the buffer
-+ * @ctrl: Control word
-+ * @nxtdscraddr: Next descriptor base address
-+ * @rsvd: Reserved field and for Hw internal use.
-+ */
-+struct zynqmp_dma_desc_ll {
-+	u64 addr;
-+	u32 size;
-+	u32 ctrl;
-+	u64 nxtdscraddr;
-+	u64 rsvd;
-+}; __aligned(64)
-+
-+/**
-+ * struct zynqmp_dma_chan - Driver specific DMA channel structure
-+ * @zdev: Driver specific device structure
-+ * @regs: Control registers offset
-+ * @lock: Descriptor operation lock
-+ * @pending_list: Descriptors waiting
-+ * @free_list: Descriptors free
-+ * @active_list: Descriptors active
-+ * @sw_desc_pool: SW descriptor pool
-+ * @done_list: Complete descriptors
-+ * @common: DMA common channel
-+ * @desc_pool_v: Statically allocated descriptor base
-+ * @desc_pool_p: Physical allocated descriptor base
-+ * @desc_free_cnt: Descriptor available count
-+ * @dev: The dma device
-+ * @irq: Channel IRQ
-+ * @has_sg: Support scatter gather transfers
-+ * @ovrfetch: Overfetch status
-+ * @ratectrl: Rate control value
-+ * @tasklet: Cleanup work after irq
-+ * @src_issue: Out standing transactions on source
-+ * @dst_issue: Out standing transactions on destination
-+ * @desc_size: Size of the low level descriptor
-+ * @err: Channel has errors
-+ * @bus_width: Bus width
-+ * @desc_axi_cohrnt: Descriptor axi coherent status
-+ * @desc_axi_cache: Descriptor axi cache attribute
-+ * @desc_axi_qos: Descriptor axi qos attribute
-+ * @src_axi_cohrnt: Source data axi coherent status
-+ * @src_axi_cache: Source data axi cache attribute
-+ * @src_axi_qos: Source data axi qos attribute
-+ * @dst_axi_cohrnt: Dest data axi coherent status
-+ * @dst_axi_cache: Dest data axi cache attribute
-+ * @dst_axi_qos: Dest data axi qos attribute
-+ * @src_burst_len: Source burst length
-+ * @dst_burst_len: Dest burst length
-+ */
-+struct zynqmp_dma_chan {
-+	struct zynqmp_dma_device *zdev;
-+	void __iomem *regs;
-+	spinlock_t lock;
-+	struct list_head pending_list;
-+	struct list_head free_list;
-+	struct list_head active_list;
-+	struct zynqmp_dma_desc_sw *sw_desc_pool;
-+	struct list_head done_list;
-+	struct dma_chan common;
-+	void *desc_pool_v;
-+	dma_addr_t desc_pool_p;
-+	u32 desc_free_cnt;
-+	struct device *dev;
-+	int irq;
-+	bool has_sg;
-+	bool ovrfetch;
-+	u32 ratectrl;
-+	struct tasklet_struct tasklet;
-+	u32 src_issue;
-+	u32 dst_issue;
-+	u32 desc_size;
-+	bool err;
-+	u32 bus_width;
-+	u32 desc_axi_cohrnt;
-+	u32 desc_axi_cache;
-+	u32 desc_axi_qos;
-+	u32 src_axi_cohrnt;
-+	u32 src_axi_cache;
-+	u32 src_axi_qos;
-+	u32 dst_axi_cohrnt;
-+	u32 dst_axi_cache;
-+	u32 dst_axi_qos;
-+	u32 src_burst_len;
-+	u32 dst_burst_len;
-+};
-+
-+/**
-+ * struct zynqmp_dma_desc_sw - Per Transaction structure
-+ * @src: Source address for simple mode dma
-+ * @dst: Destination address for simple mode dma
-+ * @len: Transfer length for simple mode dma
-+ * @node: Node in the channel descriptor list
-+ * @tx_list: List head for the current transfer
-+ * @async_tx: Async transaction descriptor
-+ * @src_v: Virtual address of the src descriptor
-+ * @src_p: Physical address of the src descriptor
-+ * @dst_v: Virtual address of the dst descriptor
-+ * @dst_p: Physical address of the dst descriptor
-+ */
-+struct zynqmp_dma_desc_sw {
-+	u64 src;
-+	u64 dst;
-+	u32 len;
-+	struct list_head node;
-+	struct list_head tx_list;
-+	struct dma_async_tx_descriptor async_tx;
-+	struct zynqmp_dma_desc_ll *src_v;
-+	dma_addr_t src_p;
-+	struct zynqmp_dma_desc_ll *dst_v;
-+	dma_addr_t dst_p;
-+};
-+
-+/**
-+ * struct zynqmp_dma_device - DMA device structure
-+ * @dev: Device Structure
-+ * @common: DMA device structure
-+ * @chan: Driver specific DMA channel
-+ */
-+struct zynqmp_dma_device {
-+	struct device *dev;
-+	struct dma_device common;
-+	struct zynqmp_dma_chan *chan;
-+};
-+
-+/**
-+ * zynqmp_dma_chan_is_idle - Provides the channel idle status
-+ * @chan: ZynqMP DMA DMA channel pointer
-+ *
-+ * Return: 'true' if the channel is idle otherwise 'false'
-+ */
-+static bool zynqmp_dma_chan_is_idle(struct zynqmp_dma_chan *chan)
-+{
-+	u32 regval;
-+
-+	regval = readl(chan->regs + ZYNQMP_DMA_STATUS);
-+	if (regval & ZYNQMP_DMA_STATUS_BUSY)
-+		return false;
-+
-+	return true;
-+}
-+
-+/**
-+ * zynqmp_dma_update_desc_to_ctrlr - Updates descriptor to the controller
-+ * @chan: ZynqMP DMA DMA channel pointer
-+ * @desc: Transaction descriptor pointer
-+ */
-+static void zynqmp_dma_update_desc_to_ctrlr(struct zynqmp_dma_chan *chan,
-+				      struct zynqmp_dma_desc_sw *desc)
-+{
-+	dma_addr_t addr;
-+
-+	addr = desc->src_p;
-+	writel(addr, chan->regs + ZYNQMP_DMA_SRC_START_LSB);
-+	writel(upper_32_bits(addr), chan->regs + ZYNQMP_DMA_SRC_START_MSB);
-+	addr = desc->dst_p;
-+	writel(addr, chan->regs + ZYNQMP_DMA_DST_START_LSB);
-+	writel(upper_32_bits(addr), chan->regs + ZYNQMP_DMA_DST_START_MSB);
-+}
-+
-+/**
-+ * zynqmp_dma_desc_config_eod - Mark the descriptor as end descriptor
-+ * @chan: ZynqMP DMA channel pointer
-+ * @desc: Hw descriptor pointer
-+ */
-+static void zynqmp_dma_desc_config_eod(struct zynqmp_dma_chan *chan, void *desc)
-+{
-+	struct zynqmp_dma_desc_ll *hw = (struct zynqmp_dma_desc_ll *)desc;
-+
-+	hw->ctrl |= ZYNQMP_DMA_DESC_CTRL_STOP;
-+	hw++;
-+	hw->ctrl |= ZYNQMP_DMA_DESC_CTRL_COMP_INT | ZYNQMP_DMA_DESC_CTRL_STOP;
-+}
-+
-+/**
-+ * zynqmp_dma_config_simple_desc - Configure the transfer parameters
-+ * @chan: ZynqMP DMA channel pointer
-+ * @src: Source buffer address
-+ * @dst: Destination buffer address
-+ * @len: Transfer length
-+ */
-+static void zynqmp_dma_config_simple_desc(struct zynqmp_dma_chan *chan,
-+					  dma_addr_t src, dma_addr_t dst,
-+					  size_t len)
-+{
-+	u32 val;
-+
-+	writel(src, chan->regs + ZYNQMP_DMA_SRC_DSCR_WRD0);
-+	writel(upper_32_bits(src), chan->regs + ZYNQMP_DMA_SRC_DSCR_WRD1);
-+	writel(len, chan->regs + ZYNQMP_DMA_SRC_DSCR_WRD2);
-+
-+	if (chan->src_axi_cohrnt)
-+		writel(ZYNQMP_DMA_DESC_CTRL_COHRNT,
-+			chan->regs + ZYNQMP_DMA_SRC_DSCR_WRD3);
-+	else
-+		writel(0, chan->regs + ZYNQMP_DMA_SRC_DSCR_WRD3);
-+
-+	writel(dst, chan->regs + ZYNQMP_DMA_DST_DSCR_WRD0);
-+	writel(upper_32_bits(dst), chan->regs + ZYNQMP_DMA_DST_DSCR_WRD1);
-+	writel(len, chan->regs + ZYNQMP_DMA_DST_DSCR_WRD2);
-+
-+	if (chan->dst_axi_cohrnt)
-+		val = ZYNQMP_DMA_DESC_CTRL_COHRNT |
-+			ZYNQMP_DMA_DESC_CTRL_COMP_INT;
-+	else
-+		val = ZYNQMP_DMA_DESC_CTRL_COMP_INT;
-+	writel(val, chan->regs + ZYNQMP_DMA_DST_DSCR_WRD3);
-+}
-+
-+/**
-+ * zynqmp_dma_config_sg_ll_desc - Configure the linked list descriptor
-+ * @chan: ZynqMP DMA channel pointer
-+ * @sdesc: Hw descriptor pointer
-+ * @src: Source buffer address
-+ * @dst: Destination buffer address
-+ * @len: Transfer length
-+ * @prev: Previous hw descriptor pointer
-+ */
-+static void zynqmp_dma_config_sg_ll_desc(struct zynqmp_dma_chan *chan,
-+				   struct zynqmp_dma_desc_ll *sdesc,
-+				   dma_addr_t src, dma_addr_t dst, size_t len,
-+				   struct zynqmp_dma_desc_ll *prev)
-+{
-+	struct zynqmp_dma_desc_ll *ddesc = sdesc + 1;
-+
-+	sdesc->size = ddesc->size = len;
-+	sdesc->addr = src;
-+	ddesc->addr = dst;
-+
-+	sdesc->ctrl = ddesc->ctrl = ZYNQMP_DMA_DESC_CTRL_SIZE_256;
-+	if (chan->src_axi_cohrnt)
-+		sdesc->ctrl |= ZYNQMP_DMA_DESC_CTRL_COHRNT;
-+	else
-+		ddesc->ctrl |= ZYNQMP_DMA_DESC_CTRL_COHRNT;
-+
-+	if (prev) {
-+		dma_addr_t addr = chan->desc_pool_p +
-+			((dma_addr_t)sdesc - (dma_addr_t)chan->desc_pool_v);
-+		ddesc = prev + 1;
-+		prev->nxtdscraddr = addr;
-+		ddesc->nxtdscraddr = addr + ZYNQMP_DMA_DESC_SIZE(chan);
-+	}
-+}
-+
-+/**
-+ * zynqmp_dma_init - Initialize the channel
-+ * @chan: ZynqMP DMA channel pointer
-+ */
-+static void zynqmp_dma_init(struct zynqmp_dma_chan *chan)
-+{
-+	u32 val;
-+
-+	writel(ZYNQMP_DMA_IDS_DEFAULT_MASK, chan->regs + ZYNQMP_DMA_IDS);
-+	val = readl(chan->regs + ZYNQMP_DMA_ISR);
-+	writel(val, chan->regs + ZYNQMP_DMA_ISR);
-+	writel(0x0, chan->regs + ZYNQMP_DMA_TOTAL_BYTE);
-+
-+	val = readl(chan->regs + ZYNQMP_DMA_CTRL1);
-+	if (chan->src_issue)
-+		val = (val & ~ZYNQMP_DMA_SRC_ISSUE) | chan->src_issue;
-+	writel(val, chan->regs + ZYNQMP_DMA_CTRL1);
-+
-+	val = 0;
-+	if (chan->ovrfetch)
-+		val |= ZYNQMP_DMA_OVR_FETCH;
-+	if (chan->has_sg)
-+		val |= ZYNQMP_DMA_POINT_TYPE_SG;
-+	if (chan->ratectrl) {
-+		val |= ZYNQMP_DMA_RATE_CTRL_EN;
-+		writel(chan->ratectrl, chan->regs + ZYNQMP_DMA_RATE_CTRL);
-+	}
-+	writel(val, chan->regs + ZYNQMP_DMA_CTRL0);
-+
-+	val = 0;
-+	if (chan->desc_axi_cohrnt)
-+		val |= ZYNQMP_DMA_AXCOHRNT;
-+	val |= chan->desc_axi_cache;
-+	val =  (val & ~ZYNQMP_DMA_AXCACHE) |
-+		(chan->desc_axi_cache << ZYNQMP_DMA_AXCACHE_OFST);
-+	val |= chan->desc_axi_qos;
-+	val =  (val & ~ZYNQMP_DMA_AXQOS) |
-+		(chan->desc_axi_qos << ZYNQMP_DMA_AXQOS_OFST);
-+	writel(val, chan->regs + ZYNQMP_DMA_DSCR_ATTR);
-+
-+	val = readl(chan->regs + ZYNQMP_DMA_DATA_ATTR);
-+	val = (val & ~ZYNQMP_DMA_ARCACHE) |
-+		(chan->src_axi_cache << ZYNQMP_DMA_ARCACHE_OFST);
-+	val = (val & ~ZYNQMP_DMA_AWCACHE) |
-+		(chan->dst_axi_cache << ZYNQMP_DMA_AWCACHE_OFST);
-+	val = (val & ~ZYNQMP_DMA_ARQOS) |
-+		(chan->src_axi_qos << ZYNQMP_DMA_ARQOS_OFST);
-+	val = (val & ~ZYNQMP_DMA_AWQOS) |
-+		(chan->dst_axi_qos << ZYNQMP_DMA_AWQOS_OFST);
-+	val = (val & ~ZYNQMP_DMA_ARLEN) |
-+		(chan->src_burst_len << ZYNQMP_DMA_ARLEN_OFST);
-+	val = (val & ~ZYNQMP_DMA_AWLEN) |
-+		(chan->dst_burst_len << ZYNQMP_DMA_AWLEN_OFST);
-+	writel(val, chan->regs + ZYNQMP_DMA_DATA_ATTR);
-+
-+	/* Clearing the interrupt account rgisters */
-+	val = readl(chan->regs + ZYNQMP_DMA_IRQ_SRC_ACCT);
-+	val = readl(chan->regs + ZYNQMP_DMA_IRQ_DST_ACCT);
-+}
-+
-+/**
-+ * zynqmp_dma_tx_submit - Submit DMA transaction
-+ * @tx: Async transaction descriptor pointer
-+ *
-+ * Return: cookie value
-+ */
-+static dma_cookie_t zynqmp_dma_tx_submit(struct dma_async_tx_descriptor *tx)
-+{
-+	struct zynqmp_dma_chan *chan = to_chan(tx->chan);
-+	struct zynqmp_dma_desc_sw *desc = NULL, *new;
-+	dma_cookie_t cookie;
-+
-+	new = tx_to_desc(tx);
-+	spin_lock_bh(&chan->lock);
-+	cookie = dma_cookie_assign(tx);
-+	if (!list_empty(&chan->pending_list) && chan->has_sg) {
-+		desc = list_last_entry(&chan->pending_list,
-+				     struct zynqmp_dma_desc_sw, node);
-+		if (!list_empty(&desc->tx_list))
-+			desc = list_last_entry(&desc->tx_list,
-+					       struct zynqmp_dma_desc_sw, node);
-+		desc->src_v->nxtdscraddr = new->src_p;
-+		desc->src_v->ctrl &= ~ZYNQMP_DMA_DESC_CTRL_STOP;
-+		desc->dst_v->nxtdscraddr = new->dst_p;
-+		desc->dst_v->ctrl &= ~ZYNQMP_DMA_DESC_CTRL_STOP;
-+	}
-+	list_add_tail(&new->node, &chan->pending_list);
-+	spin_unlock_bh(&chan->lock);
-+
-+	return cookie;
-+}
-+
-+/**
-+ * zynqmp_dma_get_descriptor - Get the sw descriptor from the pool
-+ * @chan: ZynqMP DMA channel pointer
-+ *
-+ * Return: The sw descriptor
-+ */
-+static struct zynqmp_dma_desc_sw *
-+zynqmp_dma_get_descriptor(struct zynqmp_dma_chan *chan)
-+{
-+	struct zynqmp_dma_desc_sw *desc;
-+
-+	spin_lock_bh(&chan->lock);
-+	desc = list_first_entry(&chan->free_list, struct zynqmp_dma_desc_sw,
-+				 node);
-+	list_del(&desc->node);
-+	spin_unlock_bh(&chan->lock);
-+
-+	INIT_LIST_HEAD(&desc->tx_list);
-+	/* Clear the src and dst descriptor memory */
-+	if (chan->has_sg) {
-+		memset((void *)desc->src_v, 0, ZYNQMP_DMA_DESC_SIZE(chan));
-+		memset((void *)desc->dst_v, 0, ZYNQMP_DMA_DESC_SIZE(chan));
-+	}
-+
-+	return desc;
-+}
-+
-+/**
-+ * zynqmp_dma_free_descriptor - Issue pending transactions
-+ * @chan: ZynqMP DMA channel pointer
-+ * @sdesc: Transaction descriptor pointer
-+ */
-+static void zynqmp_dma_free_descriptor(struct zynqmp_dma_chan *chan,
-+				 struct zynqmp_dma_desc_sw *sdesc)
-+{
-+	struct zynqmp_dma_desc_sw *child, *next;
-+
-+	chan->desc_free_cnt++;
-+	list_add_tail(&sdesc->node, &chan->free_list);
-+	list_for_each_entry_safe(child, next, &sdesc->tx_list, node) {
-+		chan->desc_free_cnt++;
-+		list_move_tail(&child->node, &chan->free_list);
-+	}
-+}
-+
-+/**
-+ * zynqmp_dma_free_desc_list - Free descriptors list
-+ * @chan: ZynqMP DMA channel pointer
-+ * @list: List to parse and delete the descriptor
-+ */
-+static void zynqmp_dma_free_desc_list(struct zynqmp_dma_chan *chan,
-+				      struct list_head *list)
-+{
-+	struct zynqmp_dma_desc_sw *desc, *next;
-+
-+	list_for_each_entry_safe(desc, next, list, node)
-+		zynqmp_dma_free_descriptor(chan, desc);
-+}
-+
-+/**
-+ * zynqmp_dma_alloc_chan_resources - Allocate channel resources
-+ * @dchan: DMA channel
-+ *
-+ * Return: Number of descriptors on success and failure value on error
-+ */
-+static int zynqmp_dma_alloc_chan_resources(struct dma_chan *dchan)
-+{
-+	struct zynqmp_dma_chan *chan = to_chan(dchan);
-+	struct zynqmp_dma_desc_sw *desc;
-+	int i;
-+
-+	chan->sw_desc_pool = kzalloc(sizeof(*desc) * ZYNQMP_DMA_NUM_DESCS,
-+				     GFP_KERNEL);
-+	if (!chan->sw_desc_pool)
-+		return -ENOMEM;
-+
-+	chan->desc_free_cnt = ZYNQMP_DMA_NUM_DESCS;
-+
-+	INIT_LIST_HEAD(&chan->free_list);
-+
-+	for (i = 0; i < ZYNQMP_DMA_NUM_DESCS; i++) {
-+		desc = chan->sw_desc_pool + i;
-+		dma_async_tx_descriptor_init(&desc->async_tx, &chan->common);
-+		desc->async_tx.tx_submit = zynqmp_dma_tx_submit;
-+		async_tx_ack(&desc->async_tx);
-+		list_add_tail(&desc->node, &chan->free_list);
-+	}
-+
-+	if (!chan->has_sg)
-+		return 0;
-+
-+	chan->desc_pool_v = dma_zalloc_coherent(chan->dev,
-+				(2 * chan->desc_size * ZYNQMP_DMA_NUM_DESCS),
-+				&chan->desc_pool_p, GFP_KERNEL);
-+	if (!chan->desc_pool_v)
-+		return -ENOMEM;
-+
-+	for (i = 0; i < ZYNQMP_DMA_NUM_DESCS; i++) {
-+		desc = chan->sw_desc_pool + i;
-+		desc->src_v = (struct zynqmp_dma_desc_ll *) (chan->desc_pool_v +
-+					(i * ZYNQMP_DMA_DESC_SIZE(chan) * 2));
-+		desc->dst_v = (struct zynqmp_dma_desc_ll *) (desc->src_v + 1);
-+		desc->src_p = chan->desc_pool_p +
-+				(i * ZYNQMP_DMA_DESC_SIZE(chan) * 2);
-+		desc->dst_p = desc->src_p + ZYNQMP_DMA_DESC_SIZE(chan);
-+	}
-+
-+	return ZYNQMP_DMA_NUM_DESCS;
-+}
-+
-+/**
-+ * zynqmp_dma_start - Start DMA channel
-+ * @chan: ZynqMP DMA channel pointer
-+ */
-+static void zynqmp_dma_start(struct zynqmp_dma_chan *chan)
-+{
-+	writel(ZYNQMP_DMA_INT_EN_DEFAULT_MASK, chan->regs + ZYNQMP_DMA_IER);
-+	writel(0, chan->regs + ZYNQMP_DMA_TOTAL_BYTE);
-+	writel(ZYNQMP_DMA_ENABLE, chan->regs + ZYNQMP_DMA_CTRL2);
-+}
-+
-+/**
-+ * zynqmp_dma_handle_ovfl_int - Process the overflow interrupt
-+ * @chan: ZynqMP DMA channel pointer
-+ * @status: Interrupt status value
-+ */
-+static void zynqmp_dma_handle_ovfl_int(struct zynqmp_dma_chan *chan, u32 status)
-+{
-+	u32 val;
-+
-+	if (status & ZYNQMP_DMA_BYTE_CNT_OVRFL) {
-+		val = readl(chan->regs + ZYNQMP_DMA_TOTAL_BYTE);
-+		writel(0, chan->regs + ZYNQMP_DMA_TOTAL_BYTE);
-+	}
-+	if (status & ZYNQMP_DMA_IRQ_DST_ACCT_ERR)
-+		val = readl(chan->regs + ZYNQMP_DMA_IRQ_DST_ACCT);
-+	if (status & ZYNQMP_DMA_IRQ_SRC_ACCT_ERR)
-+		val = readl(chan->regs + ZYNQMP_DMA_IRQ_SRC_ACCT);
-+}
-+
-+/**
-+ * zynqmp_dma_start_transfer - Initiate the new transfer
-+ * @chan: ZynqMP DMA channel pointer
-+ */
-+static void zynqmp_dma_start_transfer(struct zynqmp_dma_chan *chan)
-+{
-+	struct zynqmp_dma_desc_sw *desc;
-+
-+	if (!zynqmp_dma_chan_is_idle(chan))
-+		return;
-+
-+	desc = list_first_entry_or_null(&chan->pending_list,
-+					struct zynqmp_dma_desc_sw, node);
-+	if (!desc)
-+		return;
-+
-+	if (chan->has_sg)
-+		list_splice_tail_init(&chan->pending_list, &chan->active_list);
-+	else
-+		list_move_tail(&desc->node, &chan->active_list);
-+
-+	if (chan->has_sg)
-+		zynqmp_dma_update_desc_to_ctrlr(chan, desc);
-+	else
-+		zynqmp_dma_config_simple_desc(chan, desc->src, desc->dst,
-+					      desc->len);
-+	zynqmp_dma_start(chan);
-+}
-+
-+
-+/**
-+ * zynqmp_dma_chan_desc_cleanup - Cleanup the completed descriptors
-+ * @chan: ZynqMP DMA channel
-+ */
-+static void zynqmp_dma_chan_desc_cleanup(struct zynqmp_dma_chan *chan)
-+{
-+	struct zynqmp_dma_desc_sw *desc, *next;
-+
-+	list_for_each_entry_safe(desc, next, &chan->done_list, node) {
-+		dma_async_tx_callback callback;
-+		void *callback_param;
-+
-+		list_del(&desc->node);
-+
-+		callback = desc->async_tx.callback;
-+		callback_param = desc->async_tx.callback_param;
-+		if (callback) {
-+			if (in_interrupt())
-+				spin_unlock_bh(&chan->lock);
-+			else
-+				spin_unlock(&chan->lock);
-+
-+			callback(callback_param);
-+
-+			if (in_interrupt())
-+				spin_lock_bh(&chan->lock);
-+			else
-+				spin_lock(&chan->lock);
-+		}
-+
-+		/* Run any dependencies, then free the descriptor */
-+		dma_run_dependencies(&desc->async_tx);
-+		zynqmp_dma_free_descriptor(chan, desc);
-+	}
-+}
-+
-+/**
-+ * zynqmp_dma_complete_descriptor - Mark the active descriptor as complete
-+ * @chan: ZynqMP DMA channel pointer
-+ */
-+static void zynqmp_dma_complete_descriptor(struct zynqmp_dma_chan *chan)
-+{
-+	struct zynqmp_dma_desc_sw *desc;
-+
-+	desc = list_first_entry_or_null(&chan->active_list,
-+					struct zynqmp_dma_desc_sw, node);
-+	if (!desc)
-+		return;
-+	list_del(&desc->node);
-+	dma_cookie_complete(&desc->async_tx);
-+	list_add_tail(&desc->node, &chan->done_list);
-+}
-+
-+/**
-+ * zynqmp_dma_issue_pending - Issue pending transactions
-+ * @dchan: DMA channel pointer
-+ */
-+static void zynqmp_dma_issue_pending(struct dma_chan *dchan)
-+{
-+	struct zynqmp_dma_chan *chan = to_chan(dchan);
-+
-+	spin_lock_bh(&chan->lock);
-+	zynqmp_dma_start_transfer(chan);
-+	spin_unlock_bh(&chan->lock);
-+}
-+
-+/**
-+ * zynqmp_dma_free_chan_resources - Free channel resources
-+ * @dchan: DMA channel pointer
-+ */
-+static void zynqmp_dma_free_chan_resources(struct dma_chan *dchan)
-+{
-+	struct zynqmp_dma_chan *chan = to_chan(dchan);
-+
-+	spin_lock_bh(&chan->lock);
-+
-+	zynqmp_dma_free_desc_list(chan, &chan->active_list);
-+	zynqmp_dma_free_desc_list(chan, &chan->done_list);
-+	zynqmp_dma_free_desc_list(chan, &chan->pending_list);
-+
-+	spin_unlock_bh(&chan->lock);
-+	if (chan->has_sg)
-+		dma_free_coherent(chan->dev,
-+			(2 * ZYNQMP_DMA_DESC_SIZE(chan) * ZYNQMP_DMA_NUM_DESCS),
-+			chan->desc_pool_v, chan->desc_pool_p);
-+	kfree(chan->sw_desc_pool);
-+}
-+
-+/**
-+ * zynqmp_dma_tx_status - Get dma transaction status
-+ * @dchan: DMA channel pointer
-+ * @cookie: Transaction identifier
-+ * @txstate: Transaction state
-+ *
-+ * Return: DMA transaction status
-+ */
-+static enum dma_status zynqmp_dma_tx_status(struct dma_chan *dchan,
-+				      dma_cookie_t cookie,
-+				      struct dma_tx_state *txstate)
-+{
-+	return dma_cookie_status(dchan, cookie, txstate);
-+}
-+
-+/**
-+ * zynqmp_dma_reset - Reset the channel
-+ * @chan: ZynqMP DMA channel pointer
-+ */
-+static void zynqmp_dma_reset(struct zynqmp_dma_chan *chan)
-+{
-+	writel(ZYNQMP_DMA_IDS_DEFAULT_MASK, chan->regs + ZYNQMP_DMA_IDS);
-+
-+	zynqmp_dma_complete_descriptor(chan);
-+	zynqmp_dma_chan_desc_cleanup(chan);
-+
-+	zynqmp_dma_free_desc_list(chan, &chan->active_list);
-+	zynqmp_dma_free_desc_list(chan, &chan->done_list);
-+	zynqmp_dma_free_desc_list(chan, &chan->pending_list);
-+	zynqmp_dma_init(chan);
-+}
-+
-+/**
-+ * zynqmp_dma_irq_handler - ZynqMP DMA Interrupt handler
-+ * @irq: IRQ number
-+ * @data: Pointer to the ZynqMP DMA channel structure
-+ *
-+ * Return: IRQ_HANDLED/IRQ_NONE
-+ */
-+static irqreturn_t zynqmp_dma_irq_handler(int irq, void *data)
-+{
-+	struct zynqmp_dma_chan *chan = (struct zynqmp_dma_chan *)data;
-+	u32 isr, imr, status;
-+	irqreturn_t ret = IRQ_NONE;
-+
-+	isr = readl(chan->regs + ZYNQMP_DMA_ISR);
-+	imr = readl(chan->regs + ZYNQMP_DMA_IMR);
-+	status = isr & ~imr;
-+	writel(isr, chan->regs + ZYNQMP_DMA_ISR);
-+	if (status & ZYNQMP_DMA_INT_DONE) {
-+		writel(ZYNQMP_DMA_INT_DONE, chan->regs + ZYNQMP_DMA_IDS);
-+		tasklet_schedule(&chan->tasklet);
-+		ret = IRQ_HANDLED;
-+	}
-+
-+	if (status & ZYNQMP_DMA_INT_ERR) {
-+		chan->err = true;
-+		writel(ZYNQMP_DMA_INT_ERR, chan->regs + ZYNQMP_DMA_IDS);
-+		tasklet_schedule(&chan->tasklet);
-+		dev_err(chan->dev, "Channel %p has has errors\n", chan);
-+		ret = IRQ_HANDLED;
-+	}
-+
-+	if (status & ZYNQMP_DMA_INT_OVRFL) {
-+		writel(ZYNQMP_DMA_INT_OVRFL, chan->regs + ZYNQMP_DMA_IDS);
-+		zynqmp_dma_handle_ovfl_int(chan, status);
-+		dev_info(chan->dev, "Channel %p overflow interrupt\n", chan);
-+		ret = IRQ_HANDLED;
-+	}
-+
-+	return ret;
-+}
-+
-+/**
-+ * zynqmp_dma_do_tasklet - Schedule completion tasklet
-+ * @data: Pointer to the ZynqMP DMA channel structure
-+ */
-+static void zynqmp_dma_do_tasklet(unsigned long data)
-+{
-+	struct zynqmp_dma_chan *chan = (struct zynqmp_dma_chan *)data;
-+	u32 count;
-+
-+	spin_lock(&chan->lock);
-+
-+	if (chan->err) {
-+		zynqmp_dma_reset(chan);
-+		chan->err = false;
-+		goto unlock;
-+	}
-+
-+	if (zynqmp_dma_chan_is_idle(chan))
-+		zynqmp_dma_start_transfer(chan);
-+	else
-+		writel(ZYNQMP_DMA_INT_DONE, chan->regs + ZYNQMP_DMA_IER);
-+
-+	count = readl(chan->regs + ZYNQMP_DMA_IRQ_DST_ACCT);
-+	while (count) {
-+		zynqmp_dma_complete_descriptor(chan);
-+		zynqmp_dma_chan_desc_cleanup(chan);
-+		count--;
-+	}
-+
-+unlock:
-+	spin_unlock(&chan->lock);
-+}
-+
-+/**
-+ * zynqmp_dma_device_terminate_all - Aborts all transfers on a channel
-+ * @dchan: DMA channel pointer
-+ *
-+ * Return: Always '0'
-+ */
-+static int zynqmp_dma_device_terminate_all(struct dma_chan *dchan)
-+{
-+	struct zynqmp_dma_chan *chan = to_chan(dchan);
-+
-+	spin_lock_bh(&chan->lock);
-+	zynqmp_dma_reset(chan);
-+	spin_unlock_bh(&chan->lock);
-+
-+	return 0;
-+}
-+
-+/**
-+ * zynqmp_dma_prep_memcpy - prepare descriptors for memcpy transaction
-+ * @dchan: DMA channel
-+ * @dma_dst: Destination buffer address
-+ * @dma_src: Source buffer address
-+ * @len: Transfer length
-+ * @flags: transfer ack flags
-+ *
-+ * Return: Async transaction descriptor on success and NULL on failure
-+ */
-+static struct dma_async_tx_descriptor *zynqmp_dma_prep_memcpy(
-+				struct dma_chan *dchan, dma_addr_t dma_dst,
-+				dma_addr_t dma_src, size_t len, ulong flags)
-+{
-+	struct zynqmp_dma_chan *chan;
-+	struct zynqmp_dma_desc_sw *new, *first = NULL;
-+	void *desc = NULL, *prev = NULL;
-+	size_t copy;
-+	u32 desc_cnt;
-+
-+	chan = to_chan(dchan);
-+
-+	if ((len > ZYNQMP_DMA_MAX_TRANS_LEN) && !chan->has_sg)
-+		return NULL;
-+
-+	desc_cnt = DIV_ROUND_UP(len, ZYNQMP_DMA_MAX_TRANS_LEN);
-+
-+	spin_lock_bh(&chan->lock);
-+	if ((desc_cnt > chan->desc_free_cnt) && chan->has_sg) {
-+		spin_unlock_bh(&chan->lock);
-+		dev_dbg(chan->dev, "chan %p descs are not available\n", chan);
-+		return NULL;
-+	}
-+	chan->desc_free_cnt = chan->desc_free_cnt - desc_cnt;
-+	spin_unlock_bh(&chan->lock);
-+
-+	do {
-+		new = zynqmp_dma_get_descriptor(chan);
-+		copy = min_t(size_t, len, ZYNQMP_DMA_MAX_TRANS_LEN);
-+		if (chan->has_sg) {
-+			desc = (struct zynqmp_dma_desc_ll *)new->src_v;
-+			zynqmp_dma_config_sg_ll_desc(chan, desc, dma_src,
-+						     dma_dst, copy, prev);
-+		} else {
-+			new->src = dma_src;
-+			new->dst = dma_dst;
-+			new->len = len;
-+		}
-+
-+		prev = desc;
-+		len -= copy;
-+		dma_src += copy;
-+		dma_dst += copy;
-+		if (!first)
-+			first = new;
-+		else
-+			list_add_tail(&new->node, &first->tx_list);
-+	} while (len);
-+
-+	if (chan->has_sg)
-+		zynqmp_dma_desc_config_eod(chan, desc);
-+
-+	first->async_tx.flags = flags;
-+	return &first->async_tx;
-+}
-+
-+/**
-+ * zynqmp_dma_prep_slave_sg - prepare descriptors for a memory sg transaction
-+ * @dchan: DMA channel
-+ * @dst_sg: Destination scatter list
-+ * @dst_sg_len: Number of entries in destination scatter list
-+ * @src_sg: Source scatter list
-+ * @src_sg_len: Number of entries in source scatter list
-+ * @flags: transfer ack flags
-+ *
-+ * Return: Async transaction descriptor on success and NULL on failure
-+ */
-+static struct dma_async_tx_descriptor *zynqmp_dma_prep_sg(
-+			struct dma_chan *dchan, struct scatterlist *dst_sg,
-+			unsigned int dst_sg_len, struct scatterlist *src_sg,
-+			unsigned int src_sg_len, unsigned long flags)
-+{
-+	struct zynqmp_dma_desc_sw *new, *first = NULL;
-+	struct zynqmp_dma_chan *chan = to_chan(dchan);
-+	void *desc = NULL, *prev = NULL;
-+	size_t len, dst_avail, src_avail;
-+	dma_addr_t dma_dst, dma_src;
-+	u32 desc_cnt = 0, i;
-+	struct scatterlist *sg;
-+
-+	if (!chan->has_sg)
-+		return NULL;
-+
-+	for_each_sg(src_sg, sg, src_sg_len, i)
-+		desc_cnt += DIV_ROUND_UP(sg_dma_len(sg),
-+					 ZYNQMP_DMA_MAX_TRANS_LEN);
-+
-+	spin_lock_bh(&chan->lock);
-+	if (desc_cnt > chan->desc_free_cnt) {
-+		spin_unlock_bh(&chan->lock);
-+		dev_dbg(chan->dev, "chan %p descs are not available\n", chan);
-+		return NULL;
-+	}
-+	chan->desc_free_cnt = chan->desc_free_cnt - desc_cnt;
-+	spin_unlock_bh(&chan->lock);
-+
-+	dst_avail = sg_dma_len(dst_sg);
-+	src_avail = sg_dma_len(src_sg);
-+
-+	/* Run until we are out of scatterlist entries */
-+	while (true) {
-+		/* Allocate and populate the descriptor */
-+		new = zynqmp_dma_get_descriptor(chan);
-+		desc = (struct zynqmp_dma_desc_ll *)new->src_v;
-+		len = min_t(size_t, src_avail, dst_avail);
-+		len = min_t(size_t, len, ZYNQMP_DMA_MAX_TRANS_LEN);
-+		if (len == 0)
-+			goto fetch;
-+		dma_dst = sg_dma_address(dst_sg) + sg_dma_len(dst_sg) -
-+			dst_avail;
-+		dma_src = sg_dma_address(src_sg) + sg_dma_len(src_sg) -
-+			src_avail;
-+
-+		zynqmp_dma_config_sg_ll_desc(chan, desc, dma_src, dma_dst,
-+					     len, prev);
-+		prev = desc;
-+		dst_avail -= len;
-+		src_avail -= len;
-+
-+		if (!first)
-+			first = new;
-+		else
-+			list_add_tail(&new->node, &first->tx_list);
-+fetch:
-+		/* Fetch the next dst scatterlist entry */
-+		if (dst_avail == 0) {
-+			if (dst_sg_len == 0)
-+				break;
-+			dst_sg = sg_next(dst_sg);
-+			if (dst_sg == NULL)
-+				break;
-+			dst_sg_len--;
-+			dst_avail = sg_dma_len(dst_sg);
-+		}
-+		/* Fetch the next src scatterlist entry */
-+		if (src_avail == 0) {
-+			if (src_sg_len == 0)
-+				break;
-+			src_sg = sg_next(src_sg);
-+			if (src_sg == NULL)
-+				break;
-+			src_sg_len--;
-+			src_avail = sg_dma_len(src_sg);
-+		}
-+	}
-+
-+	zynqmp_dma_desc_config_eod(chan, desc);
-+	first->async_tx.flags = flags;
-+	return &first->async_tx;
-+}
-+
-+/**
-+ * zynqmp_dma_chan_remove - Channel remove function
-+ * @chan: ZynqMP DMA channel pointer
-+ */
-+static void zynqmp_dma_chan_remove(struct zynqmp_dma_chan *chan)
-+{
-+	if (!chan)
-+		return;
-+
-+	devm_free_irq(chan->zdev->dev, chan->irq, chan);
-+	tasklet_kill(&chan->tasklet);
-+	list_del(&chan->common.device_node);
-+}
-+
-+/**
-+ * zynqmp_dma_chan_probe - Per Channel Probing
-+ * @zdev: Driver specific device structure
-+ * @pdev: Pointer to the platform_device structure
-+ *
-+ * Return: '0' on success and failure value on error
-+ */
-+static int zynqmp_dma_chan_probe(struct zynqmp_dma_device *zdev,
-+			   struct platform_device *pdev)
-+{
-+	struct zynqmp_dma_chan *chan;
-+	struct resource *res;
-+	struct device_node *node = pdev->dev.of_node;
-+	int err;
-+
-+	chan = devm_kzalloc(zdev->dev, sizeof(*chan), GFP_KERNEL);
-+	if (!chan)
-+		return -ENOMEM;
-+	chan->dev = zdev->dev;
-+	chan->zdev = zdev;
-+
-+	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-+	chan->regs = devm_ioremap_resource(&pdev->dev, res);
-+	if (IS_ERR(chan->regs))
-+		return PTR_ERR(chan->regs);
-+
-+	chan->bus_width = ZYNQMP_DMA_BUS_WIDTH_64;
-+	chan->src_issue = ZYNQMP_DMA_SRC_ISSUE_RST_VAL;
-+	chan->dst_burst_len = ZYNQMP_DMA_AWLEN_RST_VAL;
-+	chan->src_burst_len = ZYNQMP_DMA_ARLEN_RST_VAL;
-+	chan->dst_axi_cache = ZYNQMP_DMA_AWCACHE_RST_VAL;
-+	chan->src_axi_cache = ZYNQMP_DMA_ARCACHE_RST_VAL;
-+	err = of_property_read_u32(node, "xlnx,bus-width", &chan->bus_width);
-+	if ((err < 0) && ((chan->bus_width != ZYNQMP_DMA_BUS_WIDTH_64) ||
-+			  (chan->bus_width != ZYNQMP_DMA_BUS_WIDTH_128))) {
-+		dev_err(zdev->dev, "invalid bus-width value");
-+		return err;
-+	}
-+	chan->has_sg = of_property_read_bool(node, "xlnx,include-sg");
-+	chan->ovrfetch = of_property_read_bool(node, "xlnx,overfetch");
-+	chan->desc_axi_cohrnt =
-+			of_property_read_bool(node, "xlnx,desc-axi-cohrnt");
-+	chan->src_axi_cohrnt =
-+			of_property_read_bool(node, "xlnx,src-axi-cohrnt");
-+	chan->dst_axi_cohrnt =
-+			of_property_read_bool(node, "xlnx,dst-axi-cohrnt");
-+
-+	of_property_read_u32(node, "xlnx,desc-axi-qos", &chan->desc_axi_qos);
-+	of_property_read_u32(node, "xlnx,desc-axi-cache",
-+			     &chan->desc_axi_cache);
-+	of_property_read_u32(node, "xlnx,src-axi-qos", &chan->src_axi_qos);
-+	of_property_read_u32(node, "xlnx,src-axi-cache", &chan->src_axi_cache);
-+	of_property_read_u32(node, "xlnx,dst-axi-qos", &chan->dst_axi_qos);
-+	of_property_read_u32(node, "xlnx,dst-axi-cache", &chan->dst_axi_cache);
-+	of_property_read_u32(node, "xlnx,src-burst-len", &chan->src_burst_len);
-+	of_property_read_u32(node, "xlnx,dst-burst-len", &chan->dst_burst_len);
-+	of_property_read_u32(node, "xlnx,ratectrl", &chan->ratectrl);
-+	of_property_read_u32(node, "xlnx,src-issue", &chan->src_issue);
-+
-+	zdev->chan = chan;
-+	tasklet_init(&chan->tasklet, zynqmp_dma_do_tasklet, (ulong)chan);
-+	spin_lock_init(&chan->lock);
-+	INIT_LIST_HEAD(&chan->active_list);
-+	INIT_LIST_HEAD(&chan->pending_list);
-+	INIT_LIST_HEAD(&chan->done_list);
-+	INIT_LIST_HEAD(&chan->free_list);
-+
-+	dma_cookie_init(&chan->common);
-+	chan->common.device = &zdev->common;
-+	list_add_tail(&chan->common.device_node, &zdev->common.channels);
-+
-+	zynqmp_dma_init(chan);
-+	chan->irq = platform_get_irq(pdev, 0);
-+	if (chan->irq < 0)
-+		return -ENXIO;
-+	err = devm_request_irq(&pdev->dev, chan->irq, zynqmp_dma_irq_handler, 0,
-+			       "zynqmp-dma", chan);
-+	if (err)
-+		return err;
-+
-+	chan->desc_size = sizeof(struct zynqmp_dma_desc_ll);
-+	return 0;
-+}
-+
-+/**
-+ * of_zynqmp_dma_xlate - Translation function
-+ * @dma_spec: Pointer to DMA specifier as found in the device tree
-+ * @ofdma: Pointer to DMA controller data
-+ *
-+ * Return: DMA channel pointer on success and NULL on error
-+ */
-+static struct dma_chan *of_zynqmp_dma_xlate(struct of_phandle_args *dma_spec,
-+					    struct of_dma *ofdma)
-+{
-+	struct zynqmp_dma_device *zdev = ofdma->of_dma_data;
-+
-+	return dma_get_slave_channel(&zdev->chan->common);
-+}
-+
-+/**
-+ * zynqmp_dma_probe - Driver probe function
-+ * @pdev: Pointer to the platform_device structure
-+ *
-+ * Return: '0' on success and failure value on error
-+ */
-+static int zynqmp_dma_probe(struct platform_device *pdev)
-+{
-+	struct zynqmp_dma_device *zdev;
-+	struct dma_device *p;
-+	int ret;
-+
-+	zdev = devm_kzalloc(&pdev->dev, sizeof(*zdev), GFP_KERNEL);
-+	if (!zdev)
-+		return -ENOMEM;
-+
-+	zdev->dev = &pdev->dev;
-+	INIT_LIST_HEAD(&zdev->common.channels);
-+
-+	dma_set_mask(&pdev->dev, DMA_BIT_MASK(44));
-+	dma_cap_set(DMA_SG, zdev->common.cap_mask);
-+	dma_cap_set(DMA_MEMCPY, zdev->common.cap_mask);
-+
-+	p = &zdev->common;
-+	p->device_prep_dma_sg = zynqmp_dma_prep_sg;
-+	p->device_prep_dma_memcpy = zynqmp_dma_prep_memcpy;
-+	p->device_terminate_all = zynqmp_dma_device_terminate_all;
-+	p->device_issue_pending = zynqmp_dma_issue_pending;
-+	p->device_alloc_chan_resources = zynqmp_dma_alloc_chan_resources;
-+	p->device_free_chan_resources = zynqmp_dma_free_chan_resources;
-+	p->device_tx_status = zynqmp_dma_tx_status;
-+	p->dev = &pdev->dev;
-+
-+	platform_set_drvdata(pdev, zdev);
-+
-+	ret = zynqmp_dma_chan_probe(zdev, pdev);
-+	if (ret) {
-+		dev_err(&pdev->dev, "Probing channel failed\n");
-+		goto free_chan_resources;
-+	}
-+
-+	p->dst_addr_widths = zdev->chan->bus_width / 8;
-+	p->src_addr_widths = zdev->chan->bus_width / 8;
-+
-+	dma_async_device_register(&zdev->common);
-+
-+	ret = of_dma_controller_register(pdev->dev.of_node,
-+					 of_zynqmp_dma_xlate, zdev);
-+	if (ret) {
-+		dev_err(&pdev->dev, "Unable to register DMA to DT\n");
-+		dma_async_device_unregister(&zdev->common);
-+		goto free_chan_resources;
-+	}
-+
-+	dev_info(&pdev->dev, "ZynqMP DMA driver Probe success\n");
-+
-+	return 0;
-+
-+free_chan_resources:
-+	zynqmp_dma_chan_remove(zdev->chan);
-+	return ret;
-+}
-+
-+/**
-+ * zynqmp_dma_remove - Driver remove function
-+ * @pdev: Pointer to the platform_device structure
-+ *
-+ * Return: Always '0'
-+ */
-+static int zynqmp_dma_remove(struct platform_device *pdev)
-+{
-+	struct zynqmp_dma_device *zdev = platform_get_drvdata(pdev);
-+
-+	of_dma_controller_free(pdev->dev.of_node);
-+	dma_async_device_unregister(&zdev->common);
-+
-+	zynqmp_dma_chan_remove(zdev->chan);
-+
-+	return 0;
-+}
-+
-+static const struct of_device_id zynqmp_dma_of_match[] = {
-+	{ .compatible = "xlnx,zynqmp-dma-1.0", },
-+	{}
-+};
-+MODULE_DEVICE_TABLE(of, zynqmp_dma_of_match);
-+
-+static struct platform_driver zynqmp_dma_driver = {
-+	.driver = {
-+		.name = "xilinx-zynqmp-dma",
-+		.of_match_table = zynqmp_dma_of_match,
-+	},
-+	.probe = zynqmp_dma_probe,
-+	.remove = zynqmp_dma_remove,
-+};
-+
-+module_platform_driver(zynqmp_dma_driver);
-+
-+MODULE_AUTHOR("Xilinx, Inc.");
-+MODULE_DESCRIPTION("Xilinx ZynqMP DMA driver");
-+MODULE_LICENSE("GPL");
--- 
-1.7.4
+>
+>> Signed-off-by: Shawn Lin <shawn.lin@rock-chips.com>
+>>
+>> ---
+>>
+>> Changes in v3:
+>> - choose transfer mode at runtime
+>> - remove all CONFIG_MMC_DW_IDMAC config option
+>> - add supports-idmac property for some platforms
+>>
+>> Changes in v2:
+>> - Fix typo of dev_info msg
+>> - remove unused dmach from declaration of dw_mci_dma_slave
+>>
+>>   drivers/mmc/host/Kconfig        |  11 +-
+>>   drivers/mmc/host/dw_mmc-pltfm.c |   2 +
+>>   drivers/mmc/host/dw_mmc.c       | 277 ++++++++++++++++++++++++++++=
++++++-------
+>>   include/linux/mmc/dw_mmc.h      |  28 +++-
+>>   4 files changed, 255 insertions(+), 63 deletions(-)
+>>
+>> diff --git a/drivers/mmc/host/Kconfig b/drivers/mmc/host/Kconfig
+>> index 6a0f9c7..a86c0eb 100644
+>> --- a/drivers/mmc/host/Kconfig
+>> +++ b/drivers/mmc/host/Kconfig
+>> @@ -607,15 +607,7 @@ config MMC_DW
+>>   	help
+>>   	  This selects support for the Synopsys DesignWare Mobile Storage=
+ IP
+>>   	  block, this provides host support for SD and MMC interfaces, in=
+ both
+>> -	  PIO and external DMA modes.
+>> -
+>> -config MMC_DW_IDMAC
+>> -	bool "Internal DMAC interface"
+>> -	depends on MMC_DW
+>> -	help
+>> -	  This selects support for the internal DMAC block within the Syno=
+psys
+>> -	  Designware Mobile Storage IP block. This disables the external D=
+MA
+>> -	  interface.
+>> +	  PIO, internal DMA mode and external DMA modes.
+>>  =20
+>>   config MMC_DW_PLTFM
+>>   	tristate "Synopsys Designware MCI Support as platform device"
+>> @@ -644,7 +636,6 @@ config MMC_DW_K3
+>>   	tristate "K3 specific extensions for Synopsys DW Memory Card Inte=
+rface"
+>>   	depends on MMC_DW
+>>   	select MMC_DW_PLTFM
+>> -	select MMC_DW_IDMAC
+>>   	help
+>>   	  This selects support for Hisilicon K3 SoC specific extensions t=
+o the
+>>   	  Synopsys DesignWare Memory Card Interface driver. Select this o=
+ption
+>> diff --git a/drivers/mmc/host/dw_mmc-pltfm.c b/drivers/mmc/host/dw_m=
+mc-pltfm.c
+>> index ec6dbcd..7e1d13b 100644
+>> --- a/drivers/mmc/host/dw_mmc-pltfm.c
+>> +++ b/drivers/mmc/host/dw_mmc-pltfm.c
+>> @@ -59,6 +59,8 @@ int dw_mci_pltfm_register(struct platform_device *=
+pdev,
+>>   	host->pdata =3D pdev->dev.platform_data;
+>>  =20
+>>   	regs =3D platform_get_resource(pdev, IORESOURCE_MEM, 0);
+>> +	/* Get registers' physical base address */
+>> +	host->phy_regs =3D (void *)(regs->start);
+>>   	host->regs =3D devm_ioremap_resource(&pdev->dev, regs);
+>>   	if (IS_ERR(host->regs))
+>>   		return PTR_ERR(host->regs);
+>> diff --git a/drivers/mmc/host/dw_mmc.c b/drivers/mmc/host/dw_mmc.c
+>> index 40e9d8e..9341879 100644
+>> --- a/drivers/mmc/host/dw_mmc.c
+>> +++ b/drivers/mmc/host/dw_mmc.c
+>> @@ -56,7 +56,7 @@
+>>   #define DW_MCI_FREQ_MAX	200000000	/* unit: HZ */
+>>   #define DW_MCI_FREQ_MIN	400000		/* unit: HZ */
+>>  =20
+>> -#ifdef CONFIG_MMC_DW_IDMAC
+>> +
+>>   #define IDMAC_INT_CLR		(SDMMC_IDMAC_INT_AI | SDMMC_IDMAC_INT_NI | =
+\
+>>   				 SDMMC_IDMAC_INT_CES | SDMMC_IDMAC_INT_DU | \
+>>   				 SDMMC_IDMAC_INT_FBE | SDMMC_IDMAC_INT_RI | \
+>> @@ -99,7 +99,6 @@ struct idmac_desc {
+>>  =20
+>>   	__le32		des3;	/* buffer 2 physical address */
+>>   };
+>> -#endif /* CONFIG_MMC_DW_IDMAC */
+>>  =20
+>>   static bool dw_mci_reset(struct dw_mci *host);
+>>   static bool dw_mci_ctrl_reset(struct dw_mci *host, u32 reset);
+>> @@ -403,7 +402,6 @@ static int dw_mci_get_dma_dir(struct mmc_data *d=
+ata)
+>>   		return DMA_FROM_DEVICE;
+>>   }
+>>  =20
+>> -#ifdef CONFIG_MMC_DW_IDMAC
+>>   static void dw_mci_dma_cleanup(struct dw_mci *host)
+>>   {
+>>   	struct mmc_data *data =3D host->data;
+>> @@ -441,8 +439,9 @@ static void dw_mci_idmac_stop_dma(struct dw_mci =
+*host)
+>>   	mci_writel(host, BMOD, temp);
+>>   }
+>>  =20
+>> -static void dw_mci_idmac_complete_dma(struct dw_mci *host)
+>> +static void dw_mci_idmac_complete_dma(void *arg)
+>>   {
+>> +	struct dw_mci *host =3D arg;
+>>   	struct mmc_data *data =3D host->data;
+>>  =20
+>>   	dev_vdbg(host->dev, "DMA complete\n");
+>> @@ -527,7 +526,7 @@ static void dw_mci_translate_sglist(struct dw_mc=
+i *host, struct mmc_data *data,
+>>   	wmb();
+>>   }
+>>  =20
+>> -static void dw_mci_idmac_start_dma(struct dw_mci *host, unsigned in=
+t sg_len)
+>> +static int dw_mci_idmac_start_dma(struct dw_mci *host, unsigned int=
+ sg_len)
+>>   {
+>>   	u32 temp;
+>>  =20
+>> @@ -551,6 +550,8 @@ static void dw_mci_idmac_start_dma(struct dw_mci=
+ *host, unsigned int sg_len)
+>>  =20
+>>   	/* Start it running */
+>>   	mci_writel(host, PLDMND, 1);
+>> +
+>> +	return 0;
+> void -> int? What do you want to do at here?
+    I just want to check wether  dma_ops->start () fail or not. If it=20
+does fail, use pio to submit this mrq.
+    It's meaningless  for idma but edmac may not be started for some re=
+asons
+    (dmaengine_slave_config or dmaengine_prep_slave_sg may return=20
+unsuccessful state)
+
+>
+>>   }
+>>  =20
+>>   static int dw_mci_idmac_init(struct dw_mci *host)
+>> @@ -632,7 +633,142 @@ static const struct dw_mci_dma_ops dw_mci_idma=
+c_ops =3D {
+>>   	.complete =3D dw_mci_idmac_complete_dma,
+>>   	.cleanup =3D dw_mci_dma_cleanup,
+>>   };
+>> -#endif /* CONFIG_MMC_DW_IDMAC */
+>> +
+>> +static void dw_mci_edmac_cleanup(struct dw_mci *host)
+>> +{
+>> +	struct mmc_data *data =3D host->data;
+>> +
+>> +	if (data && (!data->host_cookie))
+>> +		dma_unmap_sg(host->dev, data->sg,
+>> +			     data->sg_len, dw_mci_get_dma_dir(data));
+>> +}
+>> +
+> Can it reuse the dw_mci_dma_cleanup()?
+   yes, I will.
+
+>> +static void dw_mci_edmac_stop_dma(struct dw_mci *host)
+>> +{
+>> +	dmaengine_terminate_all(host->dms->ch);
+>> +}
+>> +
+>> +static void dw_mci_edmac_complete_dma(void *arg)
+>> +{
+>> +	struct dw_mci *host =3D arg;
+>> +	struct mmc_data *data =3D host->data;
+>> +
+>> +	dev_vdbg(host->dev, "DMA complete\n");
+>> +
+>> +	if (data && data->flags & MMC_DATA_READ)
+>> +		/* Invalidate cache after read */
+>> +		dma_sync_sg_for_cpu(mmc_dev(host->cur_slot->mmc), data->sg,
+>> +				    data->sg_len, DMA_FROM_DEVICE);
+>> +
+>> +	host->dma_ops->cleanup(host);
+>> +
+>> +	/*
+>> +	* If the card was removed, data will be NULL. No point in trying t=
+o
+>> +	* send the stop command or waiting for NBUSY in this case.
+>> +	*/
+>> +	if (data) {
+>> +		set_bit(EVENT_XFER_COMPLETE, &host->pending_events);
+>> +		tasklet_schedule(&host->tasklet);
+>> +	}
+>> +}
+> Ditto.
+>
+> we can reduce the code lines..
+   yes,  I will rename dw_mci_idmac_complete_dma to=20
+dw_mci_dmac_complete_dma,
+   and reuse it for idmac & edmac. BTW,  dma_sync_sg_for_cpu will be=20
+added for edmac only.
+   Fine? =EF=BC=9A)
+>
+>> +
+>> +static int dw_mci_edmac_start_dma(struct dw_mci *host,
+>> +					    unsigned int sg_len)
+>> +{
+>> +	struct dma_slave_config cfg;
+>> +	struct dma_async_tx_descriptor *desc =3D NULL;
+>> +	struct scatterlist *sgl =3D host->data->sg;
+>> +	const u32 mszs[] =3D {1, 4, 8, 16, 32, 64, 128, 256};
+>> +	u32 sg_elems =3D host->data->sg_len;
+> doesn't check whether data is present or not?
+   I don't think so.
+   dw_mci_submit_data will check it. It doesn't care dma mode, and will=
+=20
+call dma_ops->start() only.
+  That means idmac_start and edmac_start are safe.
+>> +	u32 fifoth_val;
+>> +	u32 fifo_offset =3D host->fifo_reg - host->regs;
+>> +	int ret =3D 0;
+>> +
+>> +	/* Set external dma config: burst size, burst width */
+>> +	cfg.dst_addr =3D (dma_addr_t)(host->phy_regs + fifo_offset);
+>> +	cfg.src_addr =3D cfg.dst_addr;
+>> +	cfg.dst_addr_width =3D DMA_SLAVE_BUSWIDTH_4_BYTES;
+>> +	cfg.src_addr_width =3D DMA_SLAVE_BUSWIDTH_4_BYTES;
+>> +
+>> +	/* Match burst msize with external dma config */
+>> +	fifoth_val =3D mci_readl(host, FIFOTH);
+>> +	cfg.dst_maxburst =3D mszs[(fifoth_val >> 28) & 0x7];
+>> +	cfg.src_maxburst =3D cfg.dst_maxburst;
+>> +
+>> +	if (host->data->flags & MMC_DATA_WRITE)
+>> +		cfg.direction =3D DMA_MEM_TO_DEV;
+>> +	else /* MMC_DATA_READ */
+>> +		cfg.direction =3D DMA_DEV_TO_MEM;
+>> +
+>> +	ret =3D dmaengine_slave_config(host->dms->ch, &cfg);
+>> +	if (ret) {
+>> +		dev_err(host->dev, "Failed to config edmac.\n");
+>> +		return -EBUSY;
+>> +	}
+>> +
+>> +	desc =3D dmaengine_prep_slave_sg(host->dms->ch, sgl,
+>> +				       sg_len, cfg.direction,
+>> +				       DMA_PREP_INTERRUPT | DMA_CTRL_ACK);
+>> +	if (!desc) {
+>> +		dev_err(host->dev, "Can't prepare slave sg.\n");
+>> +		return -EBUSY;
+>> +	}
+>> +
+>> +	/* Set dw_mci_edmac_complete_dma as callback */
+>> +	desc->callback =3D dw_mci_edmac_complete_dma;
+>> +	desc->callback_param =3D (void *)host;
+>> +	dmaengine_submit(desc);
+>> +
+>> +	/* Flush cache before write */
+>> +	if (host->data->flags & MMC_DATA_WRITE)
+>> +		dma_sync_sg_for_device(mmc_dev(host->cur_slot->mmc), sgl,
+>> +				       sg_elems, DMA_TO_DEVICE);
+>> +
+>> +	dma_async_issue_pending(host->dms->ch);
+>> +
+>> +	return 0;
+>> +}
+>> +
+>> +static int dw_mci_edmac_init(struct dw_mci *host)
+>> +{
+>> +	/* Request external dma channel */
+>> +	host->dms =3D kzalloc(sizeof(struct dw_mci_dma_slave), GFP_KERNEL)=
+;
+>> +	if (!host->dms)
+>> +		return -ENOMEM;
+>> +
+>> +	host->dms->ch =3D dma_request_slave_channel(host->dev, "rx-tx");
+>> +	if (!host->dms->ch) {
+>> +		dev_err(host->dev,
+>> +			"Failed to get external DMA channel %d\n",
+>> +			host->dms->ch->chan_id);
+>> +		kfree(host->dms);
+>> +		host->dms =3D NULL;
+>> +		return -ENXIO;
+>> +	}
+>> +
+>> +	return 0;
+>> +}
+>> +
+>> +static void dw_mci_edmac_exit(struct dw_mci *host)
+>> +{
+>> +	if (host->dms) {
+>> +		if (host->dms->ch) {
+>> +			dma_release_channel(host->dms->ch);
+>> +			host->dms->ch =3D NULL;
+>> +		}
+>> +		kfree(host->dms);
+>> +		host->dms =3D NULL;
+>> +	}
+>> +}
+>> +
+>> +static const struct dw_mci_dma_ops dw_mci_edmac_ops =3D {
+>> +	.init =3D dw_mci_edmac_init,
+>> +	.exit =3D dw_mci_edmac_exit,
+>> +	.start =3D dw_mci_edmac_start_dma,
+>> +	.stop =3D dw_mci_edmac_stop_dma,
+>> +	.complete =3D dw_mci_edmac_complete_dma,
+>> +	.cleanup =3D dw_mci_edmac_cleanup,
+>> +};
+>>  =20
+>>   static int dw_mci_pre_dma_transfer(struct dw_mci *host,
+>>   				   struct mmc_data *data,
+>> @@ -712,7 +848,6 @@ static void dw_mci_post_req(struct mmc_host *mmc=
+,
+>>  =20
+>>   static void dw_mci_adjust_fifoth(struct dw_mci *host, struct mmc_d=
+ata *data)
+>>   {
+>> -#ifdef CONFIG_MMC_DW_IDMAC
+>>   	unsigned int blksz =3D data->blksz;
+>>   	const u32 mszs[] =3D {1, 4, 8, 16, 32, 64, 128, 256};
+>>   	u32 fifo_width =3D 1 << host->data_shift;
+>> @@ -720,6 +855,9 @@ static void dw_mci_adjust_fifoth(struct dw_mci *=
+host, struct mmc_data *data)
+>>   	u32 msize =3D 0, rx_wmark =3D 1, tx_wmark, tx_wmark_invers;
+>>   	int idx =3D (sizeof(mszs) / sizeof(mszs[0])) - 1;
+>>  =20
+>> +	if (host->trans_mode =3D=3D TRANS_MODE_PIO)
+>> +		return;
+>> +
+> "trans_mode" refer to Heiko's comment.
+
+  Got it.
+>
+> Best Regards,
+> Jaehoon Chung
+>
+>>   	tx_wmark =3D (host->fifo_depth) / 2;
+>>   	tx_wmark_invers =3D host->fifo_depth - tx_wmark;
+>>  =20
+>> @@ -748,7 +886,6 @@ static void dw_mci_adjust_fifoth(struct dw_mci *=
+host, struct mmc_data *data)
+>>   done:
+>>   	fifoth_val =3D SDMMC_SET_FIFOTH(msize, rx_wmark, tx_wmark);
+>>   	mci_writel(host, FIFOTH, fifoth_val);
+>> -#endif
+>>   }
+>>  =20
+>>   static void dw_mci_ctrl_rd_thld(struct dw_mci *host, struct mmc_da=
+ta *data)
+>> @@ -835,7 +972,11 @@ static int dw_mci_submit_data_dma(struct dw_mci=
+ *host, struct mmc_data *data)
+>>   	mci_writel(host, INTMASK, temp);
+>>   	spin_unlock_irqrestore(&host->irq_lock, irqflags);
+>>  =20
+>> -	host->dma_ops->start(host, sg_len);
+>> +	if (host->dma_ops->start(host, sg_len)) {
+>> +		/* We can't do DMA */
+>> +		dev_err(host->dev, "%s: failed to start DMA.\n", __func__);
+>> +		return -ENODEV;
+>> +	}
+>>  =20
+>>   	return 0;
+>>   }
+>> @@ -2256,26 +2397,30 @@ static irqreturn_t dw_mci_interrupt(int irq,=
+ void *dev_id)
+>>  =20
+>>   	}
+>>  =20
+>> -#ifdef CONFIG_MMC_DW_IDMAC
+>> -	/* Handle DMA interrupts */
+>> -	if (host->dma_64bit_address =3D=3D 1) {
+>> -		pending =3D mci_readl(host, IDSTS64);
+>> -		if (pending & (SDMMC_IDMAC_INT_TI | SDMMC_IDMAC_INT_RI)) {
+>> -			mci_writel(host, IDSTS64, SDMMC_IDMAC_INT_TI |
+>> -							SDMMC_IDMAC_INT_RI);
+>> -			mci_writel(host, IDSTS64, SDMMC_IDMAC_INT_NI);
+>> -			host->dma_ops->complete(host);
+>> -		}
+>> -	} else {
+>> -		pending =3D mci_readl(host, IDSTS);
+>> -		if (pending & (SDMMC_IDMAC_INT_TI | SDMMC_IDMAC_INT_RI)) {
+>> -			mci_writel(host, IDSTS, SDMMC_IDMAC_INT_TI |
+>> -							SDMMC_IDMAC_INT_RI);
+>> -			mci_writel(host, IDSTS, SDMMC_IDMAC_INT_NI);
+>> -			host->dma_ops->complete(host);
+>> +	if ((host->trans_mode =3D=3D TRANS_MODE_IDMAC) && host->use_dma) {
+>> +		/* Handle DMA interrupts */
+>> +		if (host->dma_64bit_address =3D=3D 1) {
+>> +			pending =3D mci_readl(host, IDSTS64);
+>> +			if (pending & (SDMMC_IDMAC_INT_TI |
+>> +				       SDMMC_IDMAC_INT_RI)) {
+>> +				mci_writel(host, IDSTS64,
+>> +					   SDMMC_IDMAC_INT_TI |
+>> +					   SDMMC_IDMAC_INT_RI);
+>> +				mci_writel(host, IDSTS64, SDMMC_IDMAC_INT_NI);
+>> +				host->dma_ops->complete((void *)host);
+>> +			}
+>> +		} else {
+>> +			pending =3D mci_readl(host, IDSTS);
+>> +			if (pending & (SDMMC_IDMAC_INT_TI |
+>> +				       SDMMC_IDMAC_INT_RI)) {
+>> +				mci_writel(host, IDSTS,
+>> +					   SDMMC_IDMAC_INT_TI |
+>> +					   SDMMC_IDMAC_INT_RI);
+>> +				mci_writel(host, IDSTS, SDMMC_IDMAC_INT_NI);
+>> +				host->dma_ops->complete((void *)host);
+>> +			}
+>>   		}
+>>   	}
+>> -#endif
+>>  =20
+>>   	return IRQ_HANDLED;
+>>   }
+>> @@ -2391,19 +2536,29 @@ static int dw_mci_init_slot(struct dw_mci *h=
+ost, unsigned int id)
+>>   		mmc->max_seg_size =3D host->pdata->blk_settings->max_seg_size;
+>>   	} else {
+>>   		/* Useful defaults if platform data is unset. */
+>> -#ifdef CONFIG_MMC_DW_IDMAC
+>> -		mmc->max_segs =3D host->ring_size;
+>> -		mmc->max_blk_size =3D 65536;
+>> -		mmc->max_seg_size =3D 0x1000;
+>> -		mmc->max_req_size =3D mmc->max_seg_size * host->ring_size;
+>> -		mmc->max_blk_count =3D mmc->max_req_size / 512;
+>> -#else
+>> -		mmc->max_segs =3D 64;
+>> -		mmc->max_blk_size =3D 65536; /* BLKSIZ is 16 bits */
+>> -		mmc->max_blk_count =3D 512;
+>> -		mmc->max_req_size =3D mmc->max_blk_size * mmc->max_blk_count;
+>> -		mmc->max_seg_size =3D mmc->max_req_size;
+>> -#endif /* CONFIG_MMC_DW_IDMAC */
+>> +		if (host->trans_mode =3D=3D TRANS_MODE_IDMAC && host->use_dma) {
+>> +			mmc->max_segs =3D host->ring_size;
+>> +			mmc->max_blk_size =3D 65536;
+>> +			mmc->max_seg_size =3D 0x1000;
+>> +			mmc->max_req_size =3D mmc->max_seg_size * host->ring_size;
+>> +			mmc->max_blk_count =3D mmc->max_req_size / 512;
+>> +		} else if (host->trans_mode =3D=3D TRANS_MODE_EDMAC &&
+>> +			   host->use_dma) {
+>> +			mmc->max_segs =3D 64;
+>> +			mmc->max_blk_size =3D 65536;
+>> +			mmc->max_blk_count =3D 65535;
+>> +			mmc->max_req_size =3D
+>> +					mmc->max_blk_size * mmc->max_blk_count;
+>> +			mmc->max_seg_size =3D mmc->max_req_size;
+>> +		} else {
+>> +			/* TRANS_MODE_PIO */
+>> +			mmc->max_segs =3D 64;
+>> +			mmc->max_blk_size =3D 65536; /* BLKSIZ is 16 bits */
+>> +			mmc->max_blk_count =3D 512;
+>> +			mmc->max_req_size =3D
+>> +					mmc->max_blk_size * mmc->max_blk_count;
+>> +			mmc->max_seg_size =3D mmc->max_req_size;
+>> +		}
+>>   	}
+>>  =20
+>>   	if (dw_mci_get_cd(mmc))
+>> @@ -2437,6 +2592,11 @@ static void dw_mci_cleanup_slot(struct dw_mci=
+_slot *slot, unsigned int id)
+>>   static void dw_mci_init_dma(struct dw_mci *host)
+>>   {
+>>   	int addr_config;
+>> +
+>> +	/* Check tansfer mode */
+>> +	if (host->trans_mode =3D=3D TRANS_MODE_PIO)
+>> +		goto no_dma;
+>> +
+>>   	/* Check ADDR_CONFIG bit in HCON to find IDMAC address bus width =
+*/
+>>   	addr_config =3D (mci_readl(host, HCON) >> 27) & 0x01;
+>>  =20
+>> @@ -2462,10 +2622,14 @@ static void dw_mci_init_dma(struct dw_mci *h=
+ost)
+>>   	}
+>>  =20
+>>   	/* Determine which DMA interface to use */
+>> -#ifdef CONFIG_MMC_DW_IDMAC
+>> -	host->dma_ops =3D &dw_mci_idmac_ops;
+>> -	dev_info(host->dev, "Using internal DMA controller.\n");
+>> -#endif
+>> +	if (host->trans_mode =3D=3D TRANS_MODE_IDMAC) {
+>> +		host->dma_ops =3D &dw_mci_idmac_ops;
+>> +		dev_info(host->dev, "Using internal DMA controller.\n");
+>> +	} else {
+>> +		/* TRANS_MODE_EDMAC */
+>> +		host->dma_ops =3D &dw_mci_edmac_ops;
+>> +		dev_info(host->dev, "Using external DMA controller.\n");
+>> +	}
+>>  =20
+>>   	if (!host->dma_ops)
+>>   		goto no_dma;
+>> @@ -2570,10 +2734,9 @@ static bool dw_mci_reset(struct dw_mci *host)
+>>   		}
+>>   	}
+>>  =20
+>> -#if IS_ENABLED(CONFIG_MMC_DW_IDMAC)
+>> -	/* It is also recommended that we reset and reprogram idmac */
+>> -	dw_mci_idmac_reset(host);
+>> -#endif
+>> +	if (host->trans_mode =3D=3D TRANS_MODE_IDMAC)
+>> +		/* It is also recommended that we reset and reprogram idmac */
+>> +		dw_mci_idmac_reset(host);
+>>  =20
+>>   	ret =3D true;
+>>  =20
+>> @@ -2653,6 +2816,21 @@ static struct dw_mci_board *dw_mci_parse_dt(s=
+truct dw_mci *host)
+>>   	if (of_find_property(np, "supports-highspeed", NULL))
+>>   		pdata->caps |=3D MMC_CAP_SD_HIGHSPEED | MMC_CAP_MMC_HIGHSPEED;
+>>  =20
+>> +	if (of_find_property(np, "supports-idmac", NULL)) {
+>> +		host->trans_mode =3D TRANS_MODE_IDMAC;
+>> +		if (of_find_property(np, "supports-edmac", NULL)) {
+>> +			dev_err(dev, "can't configure idmac & edmac simultaneously\n");
+>> +			/* Force pio mode */
+>> +			host->trans_mode =3D TRANS_MODE_PIO;
+>> +		}
+>> +
+>> +	} else if (of_find_property(np, "supports-edmac", NULL)) {
+>> +		host->trans_mode =3D TRANS_MODE_EDMAC;
+>> +	} else {
+>> +		/* Default use pio */
+>> +		host->trans_mode =3D TRANS_MODE_PIO;
+>> +	}
+>> +
+>>   	return pdata;
+>>   }
+>>  =20
+>> @@ -2958,6 +3136,9 @@ EXPORT_SYMBOL(dw_mci_remove);
+>>    */
+>>   int dw_mci_suspend(struct dw_mci *host)
+>>   {
+>> +	if (host->use_dma && host->dma_ops->exit)
+>> +		host->dma_ops->exit(host);
+>> +
+>>   	return 0;
+>>   }
+>>   EXPORT_SYMBOL(dw_mci_suspend);
+>> diff --git a/include/linux/mmc/dw_mmc.h b/include/linux/mmc/dw_mmc.h
+>> index 5be9767..6c1c7ea 100644
+>> --- a/include/linux/mmc/dw_mmc.h
+>> +++ b/include/linux/mmc/dw_mmc.h
+>> @@ -16,6 +16,7 @@
+>>  =20
+>>   #include <linux/scatterlist.h>
+>>   #include <linux/mmc/core.h>
+>> +#include <linux/dmaengine.h>
+>>  =20
+>>   #define MAX_MCI_SLOTS	2
+>>  =20
+>> @@ -40,6 +41,17 @@ enum {
+>>  =20
+>>   struct mmc_data;
+>>  =20
+>> +enum {
+>> +	TRANS_MODE_PIO =3D 0,
+>> +	TRANS_MODE_IDMAC,
+>> +	TRANS_MODE_EDMAC
+>> +};
+>> +
+>> +struct dw_mci_dma_slave {
+>> +	struct dma_chan *ch;
+>> +	enum dma_transfer_direction direction;
+>> +};
+>> +
+>>   /**
+>>    * struct dw_mci - MMC controller state shared between all slots
+>>    * @lock: Spinlock protecting the queue and associated data.
+>> @@ -147,17 +159,23 @@ struct dw_mci {
+>>  =20
+>>   	/* DMA interface members*/
+>>   	int			use_dma;
+>> +	int			trans_mode;
+>>   	int			using_dma;
+>>   	int			dma_64bit_address;
+>>  =20
+>>   	dma_addr_t		sg_dma;
+>>   	void			*sg_cpu;
+>>   	const struct dw_mci_dma_ops	*dma_ops;
+>> -#ifdef CONFIG_MMC_DW_IDMAC
+>> +	/* For idmac */
+>>   	unsigned int		ring_size;
+>> -#else
+>> +
+>> +	/* For edmac */
+>> +	struct dw_mci_dma_slave *dms;
+>> +	/* Registers's physical base address */
+>> +	void                    *phy_regs;
+>> +
+>>   	struct dw_mci_dma_data	*dma_data;
+>> -#endif
+>> +
+>>   	u32			cmd_status;
+>>   	u32			data_status;
+>>   	u32			stop_cmdr;
+>> @@ -210,8 +228,8 @@ struct dw_mci {
+>>   struct dw_mci_dma_ops {
+>>   	/* DMA Ops */
+>>   	int (*init)(struct dw_mci *host);
+>> -	void (*start)(struct dw_mci *host, unsigned int sg_len);
+>> -	void (*complete)(struct dw_mci *host);
+>> +	int (*start)(struct dw_mci *host, unsigned int sg_len);
+>> +	void (*complete)(void *host);
+>>   	void (*stop)(struct dw_mci *host);
+>>   	void (*cleanup)(struct dw_mci *host);
+>>   	void (*exit)(struct dw_mci *host);
+>>
+>
+>
+>
+
+
+--=20
+Shawn Lin
