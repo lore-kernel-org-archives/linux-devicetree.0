@@ -1,79 +1,178 @@
-From: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
-Subject: Re: [RFC PATCH 1/5] spi: introduce flag for memory mapped read
-Date: Thu, 6 Aug 2015 11:22:25 +0100
-Message-ID: <20150806102225.GI7576@n2100.arm.linux.org.uk>
-References: <20150731181745.GM20873@sirena.org.uk>
- <55BEF4AF.5090704@ti.com>
- <20150804155148.GR20873@sirena.org.uk>
- <55C0FD98.1090107@ti.com>
- <20150805115013.GJ20873@sirena.org.uk>
- <CAOMqctQXwcHyiWBwtugSDSE_k65qrNfrwnhjQMDJkLoJMmGzUw@mail.gmail.com>
- <20150805124412.GN20873@sirena.org.uk>
- <CAOMqctS9Y5FxpUCCJew6+cnjH5iTvbzkH3g-8yrXs4OuS2pSGA@mail.gmail.com>
- <20150806090202.GO20873@sirena.org.uk>
- <CAOMqctQZRZ4zG_yYy=CeX3DX4NVNWN1COP4Q-2YvMun9xYOA7g@mail.gmail.com>
+From: "Yang, Wenyou" <Wenyou.Yang-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Subject: RE: [PATCH v5 1/2] drivers: watchdog: add a driver to support
+ SAMA5D4 watchdog timer
+Date: Thu, 6 Aug 2015 10:22:45 +0000
+Message-ID: <B256D81BAE5131468A838E5D7A243641C9F87788@penmbx01>
+References: <1438850055-30104-1-git-send-email-wenyou.yang@atmel.com>
+ <1438850055-30104-2-git-send-email-wenyou.yang@atmel.com>
+ <55C33013.6020002@roeck-us.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <CAOMqctQZRZ4zG_yYy=CeX3DX4NVNWN1COP4Q-2YvMun9xYOA7g-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Michal Suchanek <hramrach-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "R, Vignesh" <vigneshr-l0cyMroinI0@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-spi <linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Huang Shijie <b32955-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, MTD Maling List <linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain; charset="gb2312"
+Content-Transfer-Encoding: base64
+Return-path: <linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <55C33013.6020002-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+Content-Language: en-US
+Sender: linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, "wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org" <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "pawel.moll-5wv7dgnIgG8@public.gmane.org" <pawel.moll-5wv7dgnIgG8@public.gmane.org>, "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org" <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, "galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org" <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: "sylvain.rochet-ETtyaVkrhkNWk0Htik3J/w@public.gmane.org" <sylvain.rochet-ETtyaVkrhkNWk0Htik3J/w@public.gmane.org>, "Ferre, Nicolas" <Nicolas.FERRE-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, "boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org" <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Aug 06, 2015 at 12:01:37PM +0200, Michal Suchanek wrote:
-> Disclaimer: I am not familiar with the hardware for which this patch
-> adds support.
-> 
-> However, I am familiar m25p80.c and as I understand it the controller
-> is basically supposed to implement m25p80.c in hardware when this flag
-> is set.
-
-That, to me, sounds like what you have is:
-
----m25p80 specific interface--->SPI bus--->m25p80 device
-
-Where the m25p80 specific interface does not expose direct access to the
-SPI bus?
-
-If that's the case, then maybe you should consider whether using the SPI
-bus infrastructure is really the best way forward.  Would it make more
-sense instead to adopt a different software structure, something more
-high-level like:
-
-     +-------------------------------------------+
-     |          m25p80 high-level driver         |
-     +----------------------+--------------------+
-     |   SPI m25p80 driver  |                    |
-     +----------------------+                    |
-     |      SPI layer       |  Special driver    |
-     +----------------------+                    |
-     |    SPI bus driver    |                    |
-     +----------------------+--------------------+
-     |     SPI hardware     |  Special hardware  |
-     +----------------------+--------------------+
-
-Rather than what you seem to be trying to do, which seems to be:
-
-     +----------------------+
-     |   SPI m25p80 driver  |
-     +----------------------+
-     |      SPI layer       |
-     +----------------------+
-     |  Translation driver  |
-     +----------------------+
-     |   Special hardware   |
-     +----------------------+
-
-where this requires M25P80 specific hacks to be introduced into the SPI
-layer so that you can communicate additional information between the SPI
-M25P80 driver and the translation driver.
-
--- 
-FTTC broadband for 0.8mile line: currently at 10.5Mbps down 400kbps up
-according to speedtest.net.
+SGkgR3VlbnRlciwNCg0KPiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBHdWVu
+dGVyIFJvZWNrIFttYWlsdG86bGludXhAcm9lY2stdXMubmV0XQ0KPiBTZW50OiAyMDE1xOo41MI2
+yNUgMTg6MDANCj4gVG86IFlhbmcsIFdlbnlvdTsgd2ltQGlndWFuYS5iZTsgcm9iaCtkdEBrZXJu
+ZWwub3JnOyBwYXdlbC5tb2xsQGFybS5jb207DQo+IG1hcmsucnV0bGFuZEBhcm0uY29tOyBpamMr
+ZGV2aWNldHJlZUBoZWxsaW9uLm9yZy51azsgZ2FsYWtAY29kZWF1cm9yYS5vcmcNCj4gQ2M6IHN5
+bHZhaW4ucm9jaGV0QGZpbnNlY3VyLmNvbTsgRmVycmUsIE5pY29sYXM7IGJvcmlzLmJyZXppbGxv
+bkBmcmVlLQ0KPiBlbGVjdHJvbnMuY29tOyBkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZzsgbGlu
+dXgta2VybmVsQHZnZXIua2VybmVsLm9yZzsgbGludXgtDQo+IHdhdGNoZG9nQHZnZXIua2VybmVs
+Lm9yZzsgbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnDQo+IFN1YmplY3Q6IFJl
+OiBbUEFUQ0ggdjUgMS8yXSBkcml2ZXJzOiB3YXRjaGRvZzogYWRkIGEgZHJpdmVyIHRvIHN1cHBv
+cnQgU0FNQTVENA0KPiB3YXRjaGRvZyB0aW1lcg0KPiANCj4gSGksDQo+IA0KPiBPbiAwOC8wNi8y
+MDE1IDAxOjM0IEFNLCBXZW55b3UgWWFuZyB3cm90ZToNCj4gPj5Gcm9tIFNBTUE1RDQsIHRoZSB3
+YXRjaGRvZyB0aW1lciBpcyB1cGdyYXRlZCB3aXRoIGEgbmV3IGZlYXR1cmUsDQo+IA0KPiBXaGVy
+ZSBkb2VzIHRoZSBhZGRpdGlvbmFsICI+IiBjb21lIGZyb20gPw0KSSBkb24ndCBrbm93IHdoeSwg
+YnV0IGl0IGlzbid0IGluY2x1c2l2ZSBpbiBteSByZWNlaXZlZCBtYWlsLg0KDQo+IA0KPiA+IHdo
+aWNoIGlzIGRlc2NyaWJsZWQgYXMgaW4gdGhlIGRhdGFzaGVldCwgIldEVF9NUiBjYW4gYmUgd3Jp
+dHRlbiB1bnRpbA0KPiA+IGEgTE9DS01SIGNvbW1hbmQgaXMgaXNzdWVkIGluIFdEVF9DUiIuDQo+
+ID4gVGhhdCBpcyB0byBzYXksIGFzIGxvbmcgYXMgdGhlIGJvb3RzdHJhcCBhbmQgdS1ib290IGRv
+bid0IGlzc3VlIGENCj4gPiBMT0NLTVIgY29tbWFuZCwgV0RUX01SIGNhbiBiZSB3cml0dGVuIG1v
+cmUgdGhhbiBvbmNlIGluIHRoZSBkcml2ZXIuDQo+ID4NCj4gPiBTbyB0aGUgU0FNQTVENCB3YXRj
+aGRvZyBkcml2ZXIncyBpbXBsZW1lbnRhdGlvbiBpcyBkaWZmZXJlbnQgZnJvbSB0aGUNCj4gPiBh
+dDkxc2FtOTI2MCB3YXRjaGRvZyBkcml2ZXIgaW1wbGVtZW50ZWQgaW4gZmlsZSBhdDkxc2FtOV93
+ZHQuYy4NCj4gPiBUaGUgdXNlciBhcHBsaWNhdGlvbiBvcGVuIHRoZSBkZXZpY2UgZmlsZSB0byBl
+bmFibGUgdGhlIHdhdGNoZG9nIHRpbWVyDQo+ID4gaGFyZHdhcmUsIGFuZCBjbG9zZSB0byBkaXNh
+YmxlIGl0LCBhbmQgc2V0IHRoZSB3YXRjaGRvZyB0aW1lciB0aW1lb3V0DQo+ID4gYnkgc2V0aW5n
+IFdEViBhbmQgV0REIGZpZWxkcyBvZiBXRFRfTVIgcmVnaXN0ZXIsIGFuZCBwaW5nIHRoZSB3YXRj
+aGRvZw0KPiA+IGJ5IGlzc3VpbmcgV0RSU1RUIGNvbW1hbmQgdG8gV0RUX0NSIHJlZ2lzdGVyIHdp
+dGggaGFyZC1jb2RlZCBrZXkuDQo+ID4NCj4gPiBTaWduZWQtb2ZmLWJ5OiBXZW55b3UgWWFuZyA8
+d2VueW91LnlhbmdAYXRtZWwuY29tPg0KPiA+IC0tLQ0KPiA+ICAgZHJpdmVycy93YXRjaGRvZy9L
+Y29uZmlnICAgICAgICB8ICAgIDkgKysNCj4gPiAgIGRyaXZlcnMvd2F0Y2hkb2cvTWFrZWZpbGUg
+ICAgICAgfCAgICAxICsNCj4gPiAgIGRyaXZlcnMvd2F0Y2hkb2cvYXQ5MXNhbTlfd2R0LmggfCAg
+ICAyICsNCj4gPiAgIGRyaXZlcnMvd2F0Y2hkb2cvc2FtYTVkNF93ZHQuYyAgfCAgMjgwDQo+ICsr
+KysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKw0KPiA+ICAgNCBmaWxlcyBjaGFu
+Z2VkLCAyOTIgaW5zZXJ0aW9ucygrKQ0KPiA+ICAgY3JlYXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMv
+d2F0Y2hkb2cvc2FtYTVkNF93ZHQuYw0KPiA+DQo+ID4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvd2F0
+Y2hkb2cvS2NvbmZpZyBiL2RyaXZlcnMvd2F0Y2hkb2cvS2NvbmZpZyBpbmRleA0KPiA+IGU1ZTdj
+NTUuLjQ3YWQzOWEgMTAwNjQ0DQo+ID4gLS0tIGEvZHJpdmVycy93YXRjaGRvZy9LY29uZmlnDQo+
+ID4gKysrIGIvZHJpdmVycy93YXRjaGRvZy9LY29uZmlnDQo+ID4gQEAgLTE2Nyw2ICsxNjcsMTUg
+QEAgY29uZmlnIEFUOTFTQU05WF9XQVRDSERPRw0KPiA+ICAgCSAgV2F0Y2hkb2cgdGltZXIgZW1i
+ZWRkZWQgaW50byBBVDkxU0FNOVggYW5kIEFUOTFDQVA5IGNoaXBzLiBUaGlzDQo+IHdpbGwNCj4g
+PiAgIAkgIHJlYm9vdCB5b3VyIHN5c3RlbSB3aGVuIHRoZSB0aW1lb3V0IGlzIHJlYWNoZWQuDQo+
+ID4NCj4gPiArY29uZmlnIFNBTUE1RDRfV0FUQ0hET0cNCj4gPiArCXRyaXN0YXRlICJBdG1lbCBT
+QU1BNUQ0IFdhdGNoZG9nIFRpbWVyIg0KPiA+ICsJZGVwZW5kcyBvbiBBUkNIX0FUOTENCj4gPiAr
+CXNlbGVjdCBXQVRDSERPR19DT1JFDQo+ID4gKwloZWxwDQo+ID4gKwkgIEF0bWVsIFNBTUE1RDQg
+d2F0Y2hkb2cgdGltZXIgaXMgZW1iZWRkZWQgaW50byBTQU1BNUQ0IGNoaXBzLg0KPiA+ICsJICBJ
+dHMgV2F0Y2hkb2cgVGltZXIgTW9kZSBSZWdpc3RlciBjYW4gYmUgd3JpdHRlbiBtb3JlIHRoYW4g
+b25jZS4NCj4gPiArCSAgVGhpcyB3aWxsIHJlYm9vdCB5b3VyIHN5c3RlbSB3aGVuIHRoZSB0aW1l
+b3V0IGlzIHJlYWNoZWQuDQo+ID4gKw0KPiA+ICAgY29uZmlnIENBREVOQ0VfV0FUQ0hET0cNCj4g
+PiAgIAl0cmlzdGF0ZSAiQ2FkZW5jZSBXYXRjaGRvZyBUaW1lciINCj4gPiAgIAlzZWxlY3QgV0FU
+Q0hET0dfQ09SRQ0KPiA+IGRpZmYgLS1naXQgYS9kcml2ZXJzL3dhdGNoZG9nL01ha2VmaWxlIGIv
+ZHJpdmVycy93YXRjaGRvZy9NYWtlZmlsZQ0KPiA+IGluZGV4IDVjMTkyOTQuLmYyNGI4MjAgMTAw
+NjQ0DQo+ID4gLS0tIGEvZHJpdmVycy93YXRjaGRvZy9NYWtlZmlsZQ0KPiA+ICsrKyBiL2RyaXZl
+cnMvd2F0Y2hkb2cvTWFrZWZpbGUNCj4gPiBAQCAtNDEsNiArNDEsNyBAQCBvYmotJChDT05GSUdf
+SVhQNFhYX1dBVENIRE9HKSArPSBpeHA0eHhfd2R0Lm8NCj4gPiAgIG9iai0kKENPTkZJR19LUzg2
+OTVfV0FUQ0hET0cpICs9IGtzODY5NV93ZHQubw0KPiA+ICAgb2JqLSQoQ09ORklHX1MzQzI0MTBf
+V0FUQ0hET0cpICs9IHMzYzI0MTBfd2R0Lm8NCj4gPiAgIG9iai0kKENPTkZJR19TQTExMDBfV0FU
+Q0hET0cpICs9IHNhMTEwMF93ZHQubw0KPiA+ICtvYmotJChDT05GSUdfU0FNQTVENF9XQVRDSERP
+RykgKz0gc2FtYTVkNF93ZHQubw0KPiA+ICAgb2JqLSQoQ09ORklHX0RXX1dBVENIRE9HKSArPSBk
+d193ZHQubw0KPiA+ICAgb2JqLSQoQ09ORklHX0VQOTNYWF9XQVRDSERPRykgKz0gZXA5M3h4X3dk
+dC5vDQo+ID4gICBvYmotJChDT05GSUdfUE5YNDAwOF9XQVRDSERPRykgKz0gcG54NDAwOF93ZHQu
+byBkaWZmIC0tZ2l0DQo+ID4gYS9kcml2ZXJzL3dhdGNoZG9nL2F0OTFzYW05X3dkdC5oIGIvZHJp
+dmVycy93YXRjaGRvZy9hdDkxc2FtOV93ZHQuaA0KPiA+IGluZGV4IGM2ZmJiMmU2Li5iNzlhODNi
+IDEwMDY0NA0KPiA+IC0tLSBhL2RyaXZlcnMvd2F0Y2hkb2cvYXQ5MXNhbTlfd2R0LmgNCj4gPiAr
+KysgYi9kcml2ZXJzL3dhdGNoZG9nL2F0OTFzYW05X3dkdC5oDQo+ID4gQEAgLTIyLDExICsyMiwx
+MyBAQA0KPiA+DQo+ID4gICAjZGVmaW5lIEFUOTFfV0RUX01SCQkweDA0CQkJLyogV2F0Y2hkb2cN
+Cj4gTW9kZSBSZWdpc3RlciAqLw0KPiA+ICAgI2RlZmluZQkJQVQ5MV9XRFRfV0RWCQkoMHhmZmYg
+PDwgMCkJCS8qDQo+IENvdW50ZXIgVmFsdWUgKi8NCj4gPiArI2RlZmluZQkJCUFUOTFfV0RUX1NF
+VF9XRFYoeCkJKCh4KSAmDQo+IEFUOTFfV0RUX1dEVikNCj4gPiAgICNkZWZpbmUJCUFUOTFfV0RU
+X1dERklFTgkJKDEgICAgIDw8IDEyKQkJLyoNCj4gRmF1bHQgSW50ZXJydXB0IEVuYWJsZSAqLw0K
+PiA+ICAgI2RlZmluZQkJQVQ5MV9XRFRfV0RSU1RFTgkoMSAgICAgPDwgMTMpCQkvKg0KPiBSZXNl
+dCBQcm9jZXNzb3IgKi8NCj4gPiAgICNkZWZpbmUJCUFUOTFfV0RUX1dEUlBST0MJKDEgICAgIDw8
+IDE0KQkJLyoNCj4gVGltZXIgUmVzdGFydCAqLw0KPiA+ICAgI2RlZmluZQkJQVQ5MV9XRFRfV0RE
+SVMJCSgxICAgICA8PCAxNSkJCS8qDQo+IFdhdGNoZG9nIERpc2FibGUgKi8NCj4gPiAgICNkZWZp
+bmUJCUFUOTFfV0RUX1dERAkJKDB4ZmZmIDw8IDE2KQkJLyoNCj4gRGVsdGEgVmFsdWUgKi8NCj4g
+PiArI2RlZmluZQkJCUFUOTFfV0RUX1NFVF9XREQoeCkJKCgoeCkgPDwgMTYpICYNCj4gQVQ5MV9X
+RFRfV0REKQ0KPiA+ICAgI2RlZmluZQkJQVQ5MV9XRFRfV0REQkdITFQJKDEgICAgIDw8IDI4KQkJ
+LyoNCj4gRGVidWcgSGFsdCAqLw0KPiA+ICAgI2RlZmluZQkJQVQ5MV9XRFRfV0RJRExFSExUCSgx
+ICAgICA8PCAyOSkJCS8qDQo+IElkbGUgSGFsdCAqLw0KPiA+DQo+ID4gZGlmZiAtLWdpdCBhL2Ry
+aXZlcnMvd2F0Y2hkb2cvc2FtYTVkNF93ZHQuYw0KPiA+IGIvZHJpdmVycy93YXRjaGRvZy9zYW1h
+NWQ0X3dkdC5jIG5ldyBmaWxlIG1vZGUgMTAwNjQ0IGluZGV4DQo+ID4gMDAwMDAwMC4uYTQxMjIx
+NQ0KPiA+IC0tLSAvZGV2L251bGwNCj4gPiArKysgYi9kcml2ZXJzL3dhdGNoZG9nL3NhbWE1ZDRf
+d2R0LmMNCj4gPiBAQCAtMCwwICsxLDI4MCBAQA0KPiA+ICsvKg0KPiA+ICsgKiBEcml2ZXIgZm9y
+IEF0bWVsIFNBTUE1RDQgV2F0Y2hkb2cgVGltZXINCj4gPiArICoNCj4gPiArICogQ29weXJpZ2h0
+IChDKSAyMDE1IEF0bWVsIENvcnBvcmF0aW9uDQo+ID4gKyAqDQo+ID4gKyAqIExpY2Vuc2VkIHVu
+ZGVyIEdQTHYyLg0KPiA+ICsgKi8NCj4gPiArDQo+ID4gKyNpbmNsdWRlIDxsaW51eC9pbnRlcnJ1
+cHQuaD4NCj4gPiArI2luY2x1ZGUgPGxpbnV4L2lvLmg+DQo+ID4gKyNpbmNsdWRlIDxsaW51eC9r
+ZXJuZWwuaD4NCj4gPiArI2luY2x1ZGUgPGxpbnV4L21vZHVsZS5oPg0KPiA+ICsjaW5jbHVkZSA8
+bGludXgvb2YuaD4NCj4gPiArI2luY2x1ZGUgPGxpbnV4L29mX2lycS5oPg0KPiA+ICsjaW5jbHVk
+ZSA8bGludXgvcGxhdGZvcm1fZGV2aWNlLmg+DQo+ID4gKyNpbmNsdWRlIDxsaW51eC9yZWJvb3Qu
+aD4NCj4gPiArI2luY2x1ZGUgPGxpbnV4L3dhdGNoZG9nLmg+DQo+ID4gKw0KPiA+ICsjaW5jbHVk
+ZSAiYXQ5MXNhbTlfd2R0LmgiDQo+ID4gKw0KPiA+ICsvKiBtaW5pbXVtIGFuZCBtYXhpbXVtIHdh
+dGNoZG9nIHRpbWVvdXQsIGluIHNlY29uZHMgKi8NCj4gPiArI2RlZmluZSBNSU5fV0RUX1RJTUVP
+VVQJCTENCj4gPiArI2RlZmluZSBNQVhfV0RUX1RJTUVPVVQJCTE2DQo+ID4gKyNkZWZpbmUgV0RU
+X0RFRkFVTFRfVElNRU9VVAlNQVhfV0RUX1RJTUVPVVQNCj4gPiArDQo+ID4gKyNkZWZpbmUgV0RU
+X1NFQzJUSUNLUyhzKQkoKHMpID8gKCgocykgPDwgOCkgLSAxKSA6IDApDQo+ID4gKw0KPiA+ICtz
+dHJ1Y3Qgc2FtYTVkNF93ZHQgew0KPiA+ICsJc3RydWN0IHdhdGNoZG9nX2RldmljZQl3ZGQ7DQo+
+ID4gKwl2b2lkIF9faW9tZW0JCSpyZWdfYmFzZTsNCj4gPiArCXUzMgljb25maWc7DQo+ID4gK307
+DQo+ID4gKw0KPiA+ICtzdGF0aWMgaW50IHdkdF90aW1lb3V0ID0gV0RUX0RFRkFVTFRfVElNRU9V
+VDsgc3RhdGljIGJvb2wgbm93YXlvdXQgPQ0KPiA+ICtXQVRDSERPR19OT1dBWU9VVDsNCj4gPiAr
+DQo+ID4gK21vZHVsZV9wYXJhbSh3ZHRfdGltZW91dCwgaW50LCAwKTsNCj4gPiArTU9EVUxFX1BB
+Uk1fREVTQyh3ZHRfdGltZW91dCwNCj4gPiArCSJXYXRjaGRvZyB0aW1lb3V0IGluIHNlY29uZHMu
+IChkZWZhdWx0ID0gIg0KPiA+ICsJX19NT0RVTEVfU1RSSU5HKFdEVF9ERUZBVUxUX1RJTUVPVVQp
+ICIpIik7DQo+ID4gKw0KPiA+ICttb2R1bGVfcGFyYW0obm93YXlvdXQsIGJvb2wsIDApOw0KPiA+
+ICtNT0RVTEVfUEFSTV9ERVNDKG5vd2F5b3V0LA0KPiA+ICsJIldhdGNoZG9nIGNhbm5vdCBiZSBz
+dG9wcGVkIG9uY2Ugc3RhcnRlZCAoZGVmYXVsdD0iDQo+ID4gKwlfX01PRFVMRV9TVFJJTkcoV0FU
+Q0hET0dfTk9XQVlPVVQpICIpIik7DQo+ID4gKw0KPiA+ICsjZGVmaW5lIHdkdF9yZWFkKHdkdCwg
+ZmllbGQpIFwNCj4gPiArCXJlYWRsX3JlbGF4ZWQoKHdkdCktPnJlZ19iYXNlICsgKGZpZWxkKSkN
+Cj4gPiArDQo+ID4gKyNkZWZpbmUgd2R0X3dyaXRlKHd0ZCwgZmllbGQsIHZhbCkgXA0KPiA+ICsJ
+d3JpdGVsX3JlbGF4ZWQoKHZhbCksICh3ZHQpLT5yZWdfYmFzZSArIChmaWVsZCkpDQo+ID4gKw0K
+PiA+ICtzdGF0aWMgaW50IHNhbWE1ZDRfd2R0X3N0YXJ0KHN0cnVjdCB3YXRjaGRvZ19kZXZpY2Ug
+KndkZCkgew0KPiA+ICsJc3RydWN0IHNhbWE1ZDRfd2R0ICp3ZHQgPSB3YXRjaGRvZ19nZXRfZHJ2
+ZGF0YSh3ZGQpOw0KPiA+ICsJdTMyIHJlZzsNCj4gPiArDQo+ID4gKwlyZWcgPSB3ZHRfcmVhZCh3
+ZHQsIEFUOTFfV0RUX01SKTsNCj4gPiArCXJlZyAmPSB+QVQ5MV9XRFRfV0RESVM7DQo+ID4gKwl3
+ZHRfd3JpdGUod2R0LCBBVDkxX1dEVF9NUiwgcmVnKTsNCj4gPiArDQo+ID4gKwlyZXR1cm4gMDsN
+Cj4gPiArfQ0KPiA+ICsNCj4gPiArc3RhdGljIGludCBzYW1hNWQ0X3dkdF9zdG9wKHN0cnVjdCB3
+YXRjaGRvZ19kZXZpY2UgKndkZCkgew0KPiA+ICsJc3RydWN0IHNhbWE1ZDRfd2R0ICp3ZHQgPSB3
+YXRjaGRvZ19nZXRfZHJ2ZGF0YSh3ZGQpOw0KPiA+ICsJdTMyIHJlZzsNCj4gPiArDQo+ID4gKwly
+ZWcgPSB3ZHRfcmVhZCh3ZHQsIEFUOTFfV0RUX01SKTsNCj4gPiArCXJlZyB8PSBBVDkxX1dEVF9X
+RERJUzsNCj4gPiArCXdkdF93cml0ZSh3ZHQsIEFUOTFfV0RUX01SLCByZWcpOw0KPiA+ICsNCj4g
+PiArCXJldHVybiAwOw0KPiA+ICt9DQo+ID4gKw0KPiA+ICtzdGF0aWMgaW50IHNhbWE1ZDRfd2R0
+X3Bpbmcoc3RydWN0IHdhdGNoZG9nX2RldmljZSAqd2RkKSB7DQo+ID4gKwlzdHJ1Y3Qgc2FtYTVk
+NF93ZHQgKndkdCA9IHdhdGNoZG9nX2dldF9kcnZkYXRhKHdkZCk7DQo+ID4gKw0KPiA+ICsJd2R0
+X3dyaXRlKHdkdCwgQVQ5MV9XRFRfQ1IsIEFUOTFfV0RUX0tFWSB8DQo+IEFUOTFfV0RUX1dEUlNU
+VCk7DQo+ID4gKw0KPiA+ICsJcmV0dXJuIDA7DQo+ID4gK30NCj4gPiArDQo+ID4gK3N0YXRpYyBp
+bnQgc2FtYTVkNF93ZHRfc2V0X3RpbWVvdXQoc3RydWN0IHdhdGNoZG9nX2RldmljZSAqd2RkLA0K
+PiA+ICsJCQkJIHVuc2lnbmVkIGludCB0aW1lb3V0KQ0KPiA+ICt7DQo+ID4gKwlzdHJ1Y3Qgc2Ft
+YTVkNF93ZHQgKndkdCA9IHdhdGNoZG9nX2dldF9kcnZkYXRhKHdkZCk7DQo+ID4gKwl1MzIgdmFs
+dWUgPSBXRFRfU0VDMlRJQ0tTKHRpbWVvdXQpOw0KPiA+ICsJdTMyIHJlZzsNCj4gPiArDQo+ID4g
+KwlyZWcgPSB3ZHRfcmVhZCh3ZHQsIEFUOTFfV0RUX01SKTsNCj4gPiArCXJlZyAmPSB+QVQ5MV9X
+RFRfV0RWOw0KPiA+ICsJcmVnICY9IH5BVDkxX1dEVF9XREQ7DQo+ID4gKwlyZWcgfD0gQVQ5MV9X
+RFRfU0VUX1dEVih2YWx1ZSk7DQo+ID4gKwlyZWcgfD0gQVQ5MV9XRFRfU0VUX1dERCh2YWx1ZSk7
+DQo+ID4gKwl3ZHRfd3JpdGUod2R0LCBBVDkxX1dEVF9NUiwgcmVnKTsNCj4gPiArDQo+ID4gKwl3
+ZGQtPnRpbWVvdXQgPSB0aW1lb3V0Ow0KPiA+ICsNCj4gPiArCXJldHVybiAwOw0KPiA+ICt9DQo+
+ID4gKw0KPiA+ICtzdGF0aWMgY29uc3Qgc3RydWN0IHdhdGNoZG9nX2luZm8gc2FtYTVkNF93ZHRf
+aW5mbyA9IHsNCj4gPiArCS5vcHRpb25zID0gV0RJT0ZfU0VUVElNRU9VVCB8IFdESU9GX01BR0lD
+Q0xPU0UgfA0KPiBXRElPRl9LRUVQQUxJVkVQSU5HLA0KPiA+ICsJLmlkZW50aXR5ID0gIkF0bWVs
+IFNBTUE1RDQgV2F0Y2hkb2ciDQo+ID4gK307DQo+ID4gKw0KPiA+ICtzdGF0aWMgc3RydWN0IHdh
+dGNoZG9nX29wcyBzYW1hNWQ0X3dkdF9vcHMgPSB7DQo+ID4gKwkub3duZXIgPSBUSElTX01PRFVM
+RSwNCj4gPiArCS5zdGFydCA9IHNhbWE1ZDRfd2R0X3N0YXJ0LA0KPiA+ICsJLnN0b3AgPSBzYW1h
+NWQ0X3dkdF9zdG9wLA0KPiA+ICsJLnBpbmcgPSBzYW1hNWQ0X3dkdF9waW5nLA0KPiA+ICsJLnNl
+dF90aW1lb3V0ID0gc2FtYTVkNF93ZHRfc2V0X3RpbWVvdXQNCj4gDQo+IFlvdSBtYWRlIGFub3Ro
+ZXIgc2lsZW50IGNoYW5nZSBpbiB2NDogWW91IGRyb3BwZWQgdGhlIGNvbW1hIGhlcmUsIGFuZCBh
+Ym92ZQ0KPiBhZnRlciAuaWRlbnRpdHkuIE5vdywgd2hpbGUgaXQgbWFrZXMgc2Vuc2UgdG8gaGF2
+ZSBubyBjb21tYSBhZnRlciAieyB9IiwgaXQgZG9lcw0KPiBtYWtlIHNlbnNlIHRvIGhhdmUgdGhl
+IGNvbW1hIGhlcmUsIGJlY2F1c2UgaXQgYXZvaWRzIHVubmVjZXNzYXJ5IGNvbmZsaWN0cw0KPiBh
+bmQgYnVpbGQgZXJyb3JzIGxhdGVyIG9uIGlmIGEgbWVtYmVyIGlzIGFkZGVkIGF0IHRoZSBlbmQg
+b2YgdGhlIGxpc3QuIFBsZWFzZSBhZGQNCj4gdGhvc2UgY29tbWFzIGJhY2sgaW4uDQpJIHdpbGwg
+YWRkIHRob3NlIGNvbW1hcyBiYWNrIGluLg0KDQo+IA0KPiBBbHNvLCBwbGVhc2Ugc3RvcCBtYWtp
+bmcgc2lsZW50IGNoYW5nZXMgbGlrZSB0aGlzLiBZb3UgYXJlIG1ha2luZyBpdCByZWFsbHkgaGFy
+ZCB0bw0KPiByZXZpZXcgeW91ciBjb2RlIC0gbm93IEknbGwgaGF2ZSB0byBnbyB0aHJvdWdoIGl0
+IGxpbmUgYnkgbGluZSBhZ2FpbiBhbmQgY29tcGFyZSBpdA0KPiB3aXRoIHlvdXIgZWFybGllciBw
+YXRjaGVzIHRvIHNlZSBpZiB5b3UgbWFkZSBhbnkgb3RoZXIgdW5hbm5vdW5jZWQgY2hhbmdlcy4N
+ClNvcnJ5IGZvciBzaWxlbnQgY2hhbmdlcy4gDQpJIHdpbGwgZG91YmxlIGNoZWNrIGl0IG1vcmUg
+Y2FyZWZ1bCBiZWZvcmUgc3VibWl0dGluZyB0aGUgcGF0Y2guIA0KDQo+IA0KPiBUaGFua3MsDQo+
+IEd1ZW50ZXINCg0KQmVzdCBSZWdhcmRzLA0KV2VueW91IFlhbmcNCg==
 --
-To unsubscribe from this list: send the line "unsubscribe linux-spi" in
+To unsubscribe from this list: send the line "unsubscribe linux-watchdog" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
