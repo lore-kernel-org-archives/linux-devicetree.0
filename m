@@ -1,7 +1,7 @@
 From: Gavin Shan <gwshan@linux.vnet.ibm.com>
-Subject: [PATCH v6 39/42] drivers/of: Allow to specify root node in of_fdt_unflatten_tree()
-Date: Thu,  6 Aug 2015 14:11:44 +1000
-Message-ID: <1438834307-26960-40-git-send-email-gwshan@linux.vnet.ibm.com>
+Subject: [PATCH v6 29/42] powerpc/pci: Don't scan empty slot
+Date: Thu,  6 Aug 2015 14:11:34 +1000
+Message-ID: <1438834307-26960-30-git-send-email-gwshan@linux.vnet.ibm.com>
 References: <1438834307-26960-1-git-send-email-gwshan@linux.vnet.ibm.com>
 Return-path: <linux-pci-owner@vger.kernel.org>
 In-Reply-To: <1438834307-26960-1-git-send-email-gwshan@linux.vnet.ibm.com>
@@ -10,107 +10,32 @@ To: linuxppc-dev@lists.ozlabs.org
 Cc: linux-pci@vger.kernel.org, devicetree@vger.kernel.org, benh@kernel.crashing.org, mpe@ellerman.id.au, bhelgaas@google.com, grant.likely@linaro.org, robherring2@gmail.com, panto@antoniou-consulting.com, aik@ozlabs.ru, Gavin Shan <gwshan@linux.vnet.ibm.com>
 List-Id: devicetree@vger.kernel.org
 
-This introduces one more argument to of_fdt_unflatten_tree()
-to specify the root node for the FDT blob, which is going to be
-unflattened. In the result, the function can be used to unflatten
-FDT blob, which represents device sub-tree in PowerNV hotplug
-driver.
+In hotplug case, function pcibios_add_pci_devices() is called to
+rescan the specified PCI bus, which might not have any child devices.
+Access to the PCI bus's child device node will cause kernel crash
+without exception.
+
+This adds condition of skipping scanning PCI bus without child devices
+in order to avoid kernel crash.
 
 Signed-off-by: Gavin Shan <gwshan@linux.vnet.ibm.com>
 ---
- drivers/of/fdt.c       | 13 ++++++++-----
- drivers/of/unittest.c  |  2 +-
- include/linux/of_fdt.h |  1 +
- 3 files changed, 10 insertions(+), 6 deletions(-)
+ arch/powerpc/kernel/pci-hotplug.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
-index a18a2ce..074870a 100644
---- a/drivers/of/fdt.c
-+++ b/drivers/of/fdt.c
-@@ -388,10 +388,11 @@ static void *unflatten_dt_node(const void *blob,
- 			       struct device_node **nodepp,
- 			       bool dryrun)
- {
-+	unsigned long fpsize = dad ? strlen(of_node_full_name(dad)) : 0;
- 	int depth = 1;
- 
- 	return __unflatten_dt_node(blob, mem, poffset,
--				   dad, nodepp, 0,
-+				   dad, nodepp, fpsize,
- 				   dryrun, &depth);
- }
- 
-@@ -408,6 +409,7 @@ static void *unflatten_dt_node(const void *blob,
-  * for the resulting tree
-  */
- static void __unflatten_device_tree(const void *blob,
-+			     struct device_node *dad,
- 			     struct device_node **mynodes,
- 			     void * (*dt_alloc)(u64 size, u64 align))
- {
-@@ -435,7 +437,7 @@ static void __unflatten_device_tree(const void *blob,
- 	/* First pass, scan for size */
- 	start = 0;
- 	size = (unsigned long)unflatten_dt_node(blob, NULL, &start,
--						NULL, NULL, true);
-+						dad, NULL, true);
- 	size = ALIGN(size, 4);
- 
- 	pr_debug("  size is %lx, allocating...\n", size);
-@@ -450,7 +452,7 @@ static void __unflatten_device_tree(const void *blob,
- 
- 	/* Second pass, do actual unflattening */
- 	start = 0;
--	unflatten_dt_node(blob, mem, &start, NULL, mynodes, false);
-+	unflatten_dt_node(blob, mem, &start, dad, mynodes, false);
- 	if (be32_to_cpup(mem + size) != 0xdeadbeef)
- 		pr_warning("End of tree marker overwritten: %08x\n",
- 			   be32_to_cpup(mem + size));
-@@ -472,9 +474,10 @@ static void *kernel_tree_alloc(u64 size, u64 align)
-  * can be used.
-  */
- void of_fdt_unflatten_tree(const unsigned long *blob,
-+			struct device_node *dad,
- 			struct device_node **mynodes)
- {
--	__unflatten_device_tree(blob, mynodes, &kernel_tree_alloc);
-+	__unflatten_device_tree(blob, dad, mynodes, &kernel_tree_alloc);
- }
- EXPORT_SYMBOL_GPL(of_fdt_unflatten_tree);
- 
-@@ -1125,7 +1128,7 @@ bool __init early_init_dt_scan(void *params)
-  */
- void __init unflatten_device_tree(void)
- {
--	__unflatten_device_tree(initial_boot_params, &of_root,
-+	__unflatten_device_tree(initial_boot_params, NULL, &of_root,
- 				early_init_dt_alloc_memory_arch);
- 
- 	/* Get pointer to "/chosen" and "/aliases" nodes for use everywhere */
-diff --git a/drivers/of/unittest.c b/drivers/of/unittest.c
-index 1801634..2270830 100644
---- a/drivers/of/unittest.c
-+++ b/drivers/of/unittest.c
-@@ -907,7 +907,7 @@ static int __init unittest_data_add(void)
- 			"not running tests\n", __func__);
- 		return -ENOMEM;
- 	}
--	of_fdt_unflatten_tree(unittest_data, &unittest_data_node);
-+	of_fdt_unflatten_tree(unittest_data, NULL, &unittest_data_node);
- 	if (!unittest_data_node) {
- 		pr_warn("%s: No tree to attach; not running tests\n", __func__);
- 		return -ENODATA;
-diff --git a/include/linux/of_fdt.h b/include/linux/of_fdt.h
-index df9ef38..3644960 100644
---- a/include/linux/of_fdt.h
-+++ b/include/linux/of_fdt.h
-@@ -38,6 +38,7 @@ extern bool of_fdt_is_big_endian(const void *blob,
- extern int of_fdt_match(const void *blob, unsigned long node,
- 			const char *const *compat);
- extern void of_fdt_unflatten_tree(const unsigned long *blob,
-+			       struct device_node *dad,
- 			       struct device_node **mynodes);
- 
- /* TBD: Temporary export of fdt globals - remove when code fully merged */
+diff --git a/arch/powerpc/kernel/pci-hotplug.c b/arch/powerpc/kernel/pci-hotplug.c
+index 59c4361..c307d9a 100644
+--- a/arch/powerpc/kernel/pci-hotplug.c
++++ b/arch/powerpc/kernel/pci-hotplug.c
+@@ -92,7 +92,8 @@ void pcibios_add_pci_devices(struct pci_bus * bus)
+ 	if (mode == PCI_PROBE_DEVTREE) {
+ 		/* use ofdt-based probe */
+ 		of_rescan_bus(dn, bus);
+-	} else if (mode == PCI_PROBE_NORMAL) {
++	} else if (mode == PCI_PROBE_NORMAL &&
++		   dn->child && PCI_DN(dn->child)) {
+ 		/*
+ 		 * Use legacy probe. In the partial hotplug case, we
+ 		 * probably have grandchildren devices unplugged. So
 -- 
 2.1.0
