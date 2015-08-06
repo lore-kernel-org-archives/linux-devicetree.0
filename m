@@ -1,7 +1,7 @@
 From: Gavin Shan <gwshan@linux.vnet.ibm.com>
-Subject: [PATCH v6 26/42] powerpc/powernv: Simplify pnv_eeh_reset()
-Date: Thu,  6 Aug 2015 14:11:31 +1000
-Message-ID: <1438834307-26960-27-git-send-email-gwshan@linux.vnet.ibm.com>
+Subject: [PATCH v6 21/42] powerpc/powernv: Remove DMA32 list of PEs
+Date: Thu,  6 Aug 2015 14:11:26 +1000
+Message-ID: <1438834307-26960-22-git-send-email-gwshan@linux.vnet.ibm.com>
 References: <1438834307-26960-1-git-send-email-gwshan@linux.vnet.ibm.com>
 Return-path: <linux-pci-owner@vger.kernel.org>
 In-Reply-To: <1438834307-26960-1-git-send-email-gwshan@linux.vnet.ibm.com>
@@ -10,101 +10,82 @@ To: linuxppc-dev@lists.ozlabs.org
 Cc: linux-pci@vger.kernel.org, devicetree@vger.kernel.org, benh@kernel.crashing.org, mpe@ellerman.id.au, bhelgaas@google.com, grant.likely@linaro.org, robherring2@gmail.com, panto@antoniou-consulting.com, aik@ozlabs.ru, Gavin Shan <gwshan@linux.vnet.ibm.com>
 List-Id: devicetree@vger.kernel.org
 
-This simplifies pnv_eeh_reset() by avoiding the unnecessary nested
-"if" statement. No logicial changes introduced by this.
+Every PHB maintains a list of PEs based on their DMA32 weight. After
+patch "powerpc/powernv: Create PEs dynamically", the list is useless
+and it's safe to remove it.
 
 Signed-off-by: Gavin Shan <gwshan@linux.vnet.ibm.com>
 ---
- arch/powerpc/platforms/powernv/eeh-powernv.c | 65 +++++++++++++---------------
- 1 file changed, 31 insertions(+), 34 deletions(-)
+ arch/powerpc/platforms/powernv/pci-ioda.c | 18 ------------------
+ arch/powerpc/platforms/powernv/pci.h      |  6 ------
+ 2 files changed, 24 deletions(-)
 
-diff --git a/arch/powerpc/platforms/powernv/eeh-powernv.c b/arch/powerpc/platforms/powernv/eeh-powernv.c
-index 7be2ebf..95332e9 100644
---- a/arch/powerpc/platforms/powernv/eeh-powernv.c
-+++ b/arch/powerpc/platforms/powernv/eeh-powernv.c
-@@ -1086,7 +1086,9 @@ void pnv_pci_reset_secondary_bus(struct pci_dev *dev)
- static int pnv_eeh_reset(struct eeh_pe *pe, int option)
- {
- 	struct pci_controller *hose = pe->phb;
-+	struct pnv_phb *phb = hose->private_data;
- 	struct pci_bus *bus;
-+	int64_t rc;
- 	int ret;
- 
- 	/*
-@@ -1103,44 +1105,39 @@ static int pnv_eeh_reset(struct eeh_pe *pe, int option)
- 	 * reset. The side effect is that EEH core has to clear the frozen
- 	 * state explicitly after BAR restore.
- 	 */
--	if (pe->type & EEH_PE_PHB) {
--		ret = pnv_eeh_phb_reset(hose, option);
--	} else {
--		struct pnv_phb *phb;
--		s64 rc;
-+	if (pe->type & EEH_PE_PHB)
-+		return pnv_eeh_phb_reset(hose, option);
- 
--		/*
--		 * The frozen PE might be caused by PAPR error injection
--		 * registers, which are expected to be cleared after hitting
--		 * frozen PE as stated in the hardware spec. Unfortunately,
--		 * that's not true on P7IOC. So we have to clear it manually
--		 * to avoid recursive EEH errors during recovery.
--		 */
--		phb = hose->private_data;
--		if (phb->model == PNV_PHB_MODEL_P7IOC &&
--		    (option == EEH_RESET_HOT ||
--		    option == EEH_RESET_FUNDAMENTAL)) {
--			rc = opal_pci_reset(phb->opal_id,
--					    OPAL_RESET_PHB_ERROR,
--					    OPAL_ASSERT_RESET);
--			if (rc != OPAL_SUCCESS) {
--				pr_warn("%s: Failure %lld clearing "
--					"error injection registers\n",
--					__func__, rc);
--				return -EIO;
--			}
-+	/*
-+	 * The frozen PE might be caused by PAPR error injection
-+	 * registers, which are expected to be cleared after hitting
-+	 * frozen PE as stated in the hardware spec. Unfortunately,
-+	 * that's not true on P7IOC. So we have to clear it manually
-+	 * to avoid recursive EEH errors during recovery.
-+	 */
-+	phb = hose->private_data;
-+	if (phb->model == PNV_PHB_MODEL_P7IOC &&
-+	    (option == EEH_RESET_HOT ||
-+	    option == EEH_RESET_FUNDAMENTAL)) {
-+		rc = opal_pci_reset(phb->opal_id,
-+				    OPAL_RESET_PHB_ERROR,
-+				    OPAL_ASSERT_RESET);
-+		if (rc != OPAL_SUCCESS) {
-+			pr_warn("%s: Error %lld clearing errinjct registers\n",
-+				__func__, rc);
-+			return -EIO;
- 		}
--
--		bus = eeh_pe_bus_get(pe);
--		if (pe->type & EEH_PE_VF)
--			ret = pnv_eeh_vf_pe_reset(pe, option);
--		else if (pci_is_root_bus(bus) ||
--			pci_is_root_bus(bus->parent))
--			ret = pnv_eeh_root_reset(hose, option);
--		else
--			ret = pnv_eeh_bridge_reset(bus->self, option);
- 	}
- 
-+	bus = eeh_pe_bus_get(pe);
-+	if (pe->type & EEH_PE_VF)
-+		ret = pnv_eeh_vf_pe_reset(pe, option);
-+	else if (pci_is_root_bus(bus) ||
-+		 pci_is_root_bus(bus->parent))
-+		ret = pnv_eeh_root_reset(hose, option);
-+	else
-+		ret = pnv_eeh_bridge_reset(bus->self, option);
-+
- 	return ret;
+diff --git a/arch/powerpc/platforms/powernv/pci-ioda.c b/arch/powerpc/platforms/powernv/pci-ioda.c
+index 37847a3..84b771e 100644
+--- a/arch/powerpc/platforms/powernv/pci-ioda.c
++++ b/arch/powerpc/platforms/powernv/pci-ioda.c
+@@ -938,20 +938,6 @@ out:
+ 	return 0;
  }
  
+-static void pnv_ioda_link_pe_by_weight(struct pnv_phb *phb,
+-				       struct pnv_ioda_pe *pe)
+-{
+-	struct pnv_ioda_pe *lpe;
+-
+-	list_for_each_entry(lpe, &phb->ioda.pe_dma_list, dma_link) {
+-		if (lpe->dma32_weight < pe->dma32_weight) {
+-			list_add_tail(&pe->dma_link, &lpe->dma_link);
+-			return;
+-		}
+-	}
+-	list_add_tail(&pe->dma_link, &phb->ioda.pe_dma_list);
+-}
+-
+ static unsigned int pnv_ioda_dma_weight(struct pci_dev *dev)
+ {
+ 	struct pci_controller *hose = pci_bus_to_host(dev->bus);
+@@ -1169,9 +1155,6 @@ static struct pnv_ioda_pe *pnv_ioda_setup_bus_PE(struct pci_bus *bus, bool all)
+ 	/* Put PE to the list */
+ 	list_add_tail(&pe->list, &phb->ioda.pe_list);
+ 
+-	/* Link the PE */
+-	pnv_ioda_link_pe_by_weight(phb, pe);
+-
+ 	return pe;
+ }
+ 
+@@ -3313,7 +3296,6 @@ static void __init pnv_pci_init_ioda_phb(struct device_node *np,
+ 		phb->ioda.root_pe_idx = IODA_INVALID_PE;
+ 	}
+ 
+-	INIT_LIST_HEAD(&phb->ioda.pe_dma_list);
+ 	INIT_LIST_HEAD(&phb->ioda.pe_list);
+ 	mutex_init(&phb->ioda.pe_list_mutex);
+ 
+diff --git a/arch/powerpc/platforms/powernv/pci.h b/arch/powerpc/platforms/powernv/pci.h
+index a160491..f8e6022 100644
+--- a/arch/powerpc/platforms/powernv/pci.h
++++ b/arch/powerpc/platforms/powernv/pci.h
+@@ -83,7 +83,6 @@ struct pnv_ioda_pe {
+ 	struct list_head	slaves;
+ 
+ 	/* Link in list of PE#s */
+-	struct list_head	dma_link;
+ 	struct list_head	list;
+ };
+ 
+@@ -185,11 +184,6 @@ struct pnv_phb {
+ 			/* 32-bit TCE tables allocation */
+ 			unsigned long		dma32_segcount;
+ 
+-			/* Sorted list of used PE's, sorted at
+-			 * boot for resource allocation purposes
+-			 */
+-			struct list_head	pe_dma_list;
+-
+ 			/* TCE cache invalidate registers (physical and
+ 			 * remapped)
+ 			 */
 -- 
 2.1.0
