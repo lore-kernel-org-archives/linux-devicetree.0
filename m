@@ -1,147 +1,112 @@
-From: Rob Herring <robherring2@gmail.com>
-Subject: Re: [PATCH v6 38/42] drivers/of: Unflatten subordinate nodes after
- specified level
-Date: Thu, 6 Aug 2015 09:09:11 -0500
-Message-ID: <CAL_JsqJsfQjUiPFToyhkLYPbmxppb9BgWysgg46DrifFUqtQsw@mail.gmail.com>
-References: <1438834307-26960-1-git-send-email-gwshan@linux.vnet.ibm.com> <1438834307-26960-39-git-send-email-gwshan@linux.vnet.ibm.com>
+From: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH 1/8] ARM: dts: AM4372: Reorder the rtc compatible string
+Date: Thu, 6 Aug 2015 09:16:18 -0500
+Message-ID: <20150806141618.GA19110@saruman.tx.rr.com>
+References: <1438771792-12604-1-git-send-email-j-keerthy@ti.com>
+ <1438771792-12604-2-git-send-email-j-keerthy@ti.com>
+ <20150805153148.GB12328@saruman.tx.rr.com>
+ <55C230E9.9010309@ti.com>
+ <20150805161445.GF12328@saruman.tx.rr.com>
+ <55C23740.2080102@ti.com>
+ <20150805165122.GH12328@saruman.tx.rr.com>
+ <55C2B7A5.5000400@ti.com>
+Reply-To: <balbi-l0cyMroinI0@public.gmane.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <1438834307-26960-39-git-send-email-gwshan@linux.vnet.ibm.com>
-Sender: linux-pci-owner@vger.kernel.org
-To: Gavin Shan <gwshan@linux.vnet.ibm.com>
-Cc: linuxppc-dev <linuxppc-dev@lists.ozlabs.org>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Michael Ellerman <mpe@ellerman.id.au>, Bjorn Helgaas <bhelgaas@google.com>, Grant Likely <grant.likely@linaro.org>, Pantelis Antoniou <panto@antoniou-consulting.com>, aik@ozlabs.ru
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="qDbXVdCdHGoSgWSk"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <55C2B7A5.5000400-l0cyMroinI0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Keerthy <a0393675-l0cyMroinI0@public.gmane.org>
+Cc: balbi-l0cyMroinI0@public.gmane.org, Keerthy <j-keerthy-l0cyMroinI0@public.gmane.org>, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org, johan-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, nm-l0cyMroinI0@public.gmane.org, paul-DWxLp4Yu+b8AvxtiuMwx3w@public.gmane.org, t-kristo-l0cyMroinI0@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Aug 5, 2015 at 11:11 PM, Gavin Shan <gwshan@linux.vnet.ibm.com> wrote:
-> unflatten_dt_node() is called recursively to unflatten FDT nodes
-> with the assumption that FDT blob has only one root node, which
-> isn't true when the FDT blob represents device sub-tree. This
-> improves the function to supporting device sub-tree that have
-> multiple nodes in the first level:
->
->    * Rename original unflatten_dt_node() to __unflatten_dt_node().
->    * Wrapper unflatten_dt_node() calls __unflatten_dt_node() with
->      adjusted current node depth to 1 to avoid underflow.
->
-> Signed-off-by: Gavin Shan <gwshan@linux.vnet.ibm.com>
+--qDbXVdCdHGoSgWSk
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Acked-by: Rob Herring <robh@kernel.org>
+On Thu, Aug 06, 2015 at 06:55:57AM +0530, Keerthy wrote:
+>=20
+>=20
+> On Wednesday 05 August 2015 10:21 PM, Felipe Balbi wrote:
+> >On Wed, Aug 05, 2015 at 09:48:08PM +0530, Keerthy wrote:
+> >>
+> >>
+> >>On Wednesday 05 August 2015 09:44 PM, Felipe Balbi wrote:
+> >>>On Wed, Aug 05, 2015 at 09:21:05PM +0530, Keerthy wrote:
+> >>>>Felipe,
+> >>>>
+> >>>>On Wednesday 05 August 2015 09:01 PM, Felipe Balbi wrote:
+> >>>>>On Wed, Aug 05, 2015 at 04:19:45PM +0530, Keerthy wrote:
+> >>>>>>Compared to da830-rtc compatibility am3352-rtc is more compatible to
+> >>>>>>the one in am437x. Hence adding the am3352-rtc compatible to cover =
+the
+> >>>>>>entire feature set.
+> >>>>>>
+> >>>>>>The ti,am4372-rtc has no Documentation and not used even in the dri=
+ver
+> >>>>>>hence removing it.
+> >>>>>
+> >>>>>why don't you do the inverse ? Document am4372-rtc and make driver u=
+se
+> >>>>>it ?
+> >>>>
+> >>>>am3352-rtc suffices for am4372 too. No need to add additional one for
+> >>>>am4372.
+> >>>
+> >>>Until we end up needing it, right ? :-)
+> >>>
+> >>>Besides, it's already used in a DTS. What happens if someone branched
+> >>>from that DTS and ships that in a product. RTC will just stop working
+> >>>for them. Sure, it wasn't documented, but that's a problem of commit
+> >>>73456012734b80442b33916406cfd13bf1b73acb (ARM: dts: AM4372: add few
+> >>>nodes) which, essentially, added that compatible flag without
+> >>>documenting it.
+> >>>
+> >>>BTW, this compatible has been in tree since August 2013, IMO it's unfar
+> >>>to drop it just like that. Documenting it would be a better approach.
+> >>
+> >>Okay. Can you point me to a file which is already accessing it in dts?
+> >
+> >Accessing what ? Also, once DTS reaches a major kernel release, it's
+> >deemed stable and should be supported. Are we dropping that ?
+>=20
+> I meant getting used in any other dts files than the one i just dropped i=
+t.
 
-> ---
->  drivers/of/fdt.c | 53 ++++++++++++++++++++++++++++++++++++++++-------------
->  1 file changed, 40 insertions(+), 13 deletions(-)
->
-> diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
-> index 0749656..a18a2ce 100644
-> --- a/drivers/of/fdt.c
-> +++ b/drivers/of/fdt.c
-> @@ -161,7 +161,7 @@ static void *unflatten_dt_alloc(void **mem, unsigned long size,
->  }
->
->  /**
-> - * unflatten_dt_node - Alloc and populate a device_node from the flat tree
-> + * __unflatten_dt_node - Alloc and populate a device_node from the flat tree
->   * @blob: The parent device tree blob
->   * @mem: Memory chunk to use for allocating device nodes and properties
->   * @poffset: pointer to node in flat tree
-> @@ -171,20 +171,20 @@ static void *unflatten_dt_alloc(void **mem, unsigned long size,
->   * @dryrun: If true, do not allocate device nodes but still calculate needed
->   * memory size
->   */
-> -static void * unflatten_dt_node(const void *blob,
-> +static void *__unflatten_dt_node(const void *blob,
->                                 void *mem,
->                                 int *poffset,
->                                 struct device_node *dad,
->                                 struct device_node **nodepp,
->                                 unsigned long fpsize,
-> -                               bool dryrun)
-> +                               bool dryrun,
-> +                               int *depth)
->  {
->         const __be32 *p;
->         struct device_node *np;
->         struct property *pp, **prev_pp = NULL;
->         const char *pathp;
->         unsigned int l, allocl;
-> -       static int depth = 0;
->         int old_depth;
->         int offset;
->         int has_name = 0;
-> @@ -337,13 +337,25 @@ static void * unflatten_dt_node(const void *blob,
->                         np->type = "<NULL>";
->         }
->
-> -       old_depth = depth;
-> -       *poffset = fdt_next_node(blob, *poffset, &depth);
-> -       if (depth < 0)
-> -               depth = 0;
-> -       while (*poffset > 0 && depth > old_depth)
-> -               mem = unflatten_dt_node(blob, mem, poffset, np, NULL,
-> -                                       fpsize, dryrun);
-> +       /* Multiple nodes might be in the first depth level if
-> +        * the device tree is sub-tree. All nodes in current
-> +        * or deeper depth are unflattened after it returns.
-> +        */
-> +       old_depth = *depth;
-> +       *poffset = fdt_next_node(blob, *poffset, depth);
-> +       while (*poffset > 0) {
-> +               if (*depth < old_depth)
-> +                       break;
-> +
-> +               if (*depth == old_depth)
-> +                       mem = __unflatten_dt_node(blob, mem, poffset,
-> +                                                 dad, NULL, fpsize,
-> +                                                 dryrun, depth);
-> +               else if (*depth > old_depth)
-> +                       mem = __unflatten_dt_node(blob, mem, poffset,
-> +                                                 np, NULL, fpsize,
-> +                                                 dryrun, depth);
-> +       }
->
->         if (*poffset < 0 && *poffset != -FDT_ERR_NOTFOUND)
->                 pr_err("unflatten: error %d processing FDT\n", *poffset);
-> @@ -369,6 +381,20 @@ static void * unflatten_dt_node(const void *blob,
->         return mem;
->  }
->
-> +static void *unflatten_dt_node(const void *blob,
-> +                              void *mem,
-> +                              int *poffset,
-> +                              struct device_node *dad,
-> +                              struct device_node **nodepp,
-> +                              bool dryrun)
-> +{
-> +       int depth = 1;
-> +
-> +       return __unflatten_dt_node(blob, mem, poffset,
-> +                                  dad, nodepp, 0,
-> +                                  dryrun, &depth);
-> +}
-> +
->  /**
->   * __unflatten_device_tree - create tree of device_nodes from flat blob
->   *
-> @@ -408,7 +434,8 @@ static void __unflatten_device_tree(const void *blob,
->
->         /* First pass, scan for size */
->         start = 0;
-> -       size = (unsigned long)unflatten_dt_node(blob, NULL, &start, NULL, NULL, 0, true);
-> +       size = (unsigned long)unflatten_dt_node(blob, NULL, &start,
-> +                                               NULL, NULL, true);
->         size = ALIGN(size, 4);
->
->         pr_debug("  size is %lx, allocating...\n", size);
-> @@ -423,7 +450,7 @@ static void __unflatten_device_tree(const void *blob,
->
->         /* Second pass, do actual unflattening */
->         start = 0;
-> -       unflatten_dt_node(blob, mem, &start, NULL, mynodes, 0, false);
-> +       unflatten_dt_node(blob, mem, &start, NULL, mynodes, false);
->         if (be32_to_cpup(mem + size) != 0xdeadbeef)
->                 pr_warning("End of tree marker overwritten: %08x\n",
->                            be32_to_cpup(mem + size));
-> --
-> 2.1.0
->
+how can you ever know that for sure ? There are already quite a few
+third party platforms based on AM437x, how can you be sure those
+companies don't have their own DTS ?
+
+--=20
+balbi
+
+--qDbXVdCdHGoSgWSk
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBAgAGBQJVw2wyAAoJEIaOsuA1yqREs74P+wW7SmbiO49XlzI9VEHiKPH2
+UWg8VgzkLGk5WPJDIFAuSyxH0SfJykYoXZjJJevWauDT4tDnD4HeIxe4XqQTliTC
+jwTswJ4zJlJhPWSlUvi2BEEXNBYU0VNir5Xx+SZMSQIoiSRdlXT15yvzFz2dZl9n
+NPGmTJ8283sLsXT6B+VMCKplG9O7nODo7nPO0zOG3lD/lNwL/O1AeBp2pysxspGr
+0NMr4MiIN1LY8sedm59XuMXyzn8Xdq36GldN34UMhUF8aaIF5/6lMWBEKQiX3WbF
+nBV+7XvwZLoTbQVyAO6hVJFQDT9LzAvNZlYzmcKo+5sNvvFdjH5qGF08vBLxxTsE
+cfwcHuS1hhl+oBIoVkxdAc/qXSkxHkvC7R+1P909M/Rjirzowg18LDwnrm5Krh0W
+ckMttIM9YinWpHnHXv/znUQBhu9JG5QUDcmW3Zui/pekEWn5rN9YbWgvhUGbp5R6
+0Q+09O69YAnKQB9jyo7AUAB74D9n++rpnEzAAhRum6tYKi4bEzffWMEeE40dJLdt
+MfuD7gEeWamDLZj8MP+x2G4uRrWuM1D/klCrIieAgMXsVP+1+/knh+Zed31lXZaR
+AW0YzQKhsOvp8Gp5yz6T0H5NH+AuD4MRQIbLhH/WkkJ87x0e/f8iJPUX822+9ncn
+TBrFCUQ/OmFjZRcflVqX
+=Q7vR
+-----END PGP SIGNATURE-----
+
+--qDbXVdCdHGoSgWSk--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
