@@ -1,28 +1,40 @@
-From: Ralf Baechle <ralf@linux-mips.org>
-Subject: Re: [RFC PATCH v4 3/9] mips: pistachio_defconfig: remove
- CONFIG_MMC_DW_IDMAC
-Date: Thu, 6 Aug 2015 15:17:36 +0200
-Message-ID: <20150806131736.GE7055@linux-mips.org>
-References: <1438843469-23807-1-git-send-email-shawn.lin@rock-chips.com>
- <1438843515-23935-1-git-send-email-shawn.lin@rock-chips.com>
+From: Afzal Mohammed <afzal.mohd.ma-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 1/8] ARM: dts: AM4372: Reorder the rtc compatible string
+Date: Thu, 6 Aug 2015 19:03:06 +0530
+Message-ID: <20150806133306.GA5484@afzalpc>
+References: <1438771792-12604-1-git-send-email-j-keerthy@ti.com>
+ <1438771792-12604-2-git-send-email-j-keerthy@ti.com>
+ <20150805153148.GB12328@saruman.tx.rr.com>
+ <55C230E9.9010309@ti.com>
+ <20150805161445.GF12328@saruman.tx.rr.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-Received: from localhost.localdomain ([127.0.0.1]:37078 "EHLO linux-mips.org"
-        rhost-flags-OK-OK-OK-FAIL) by eddie.linux-mips.org with ESMTP
-        id S27012248AbbHFNSBTl72s (ORCPT <rfc822;devicetree@vger.kernel.org>
-        + 3 others); Thu, 6 Aug 2015 15:18:01 +0200
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1438843515-23935-1-git-send-email-shawn.lin@rock-chips.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Shawn Lin <shawn.lin@rock-chips.com>
-Cc: jh80.chung@samsung.com, ulf.hansson@linaro.org, heiko@sntech.de, dianders@chromium.org, Vineet.Gupta1@synopsys.com, Wei Xu <xuwei5@hisilicon.com>, Joachim Eastwood <manabian@gmail.com>, Alexey Brodkin <abrodkin@synopsys.com>, Kukjin Kim <kgene@kernel.org>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, Russell King <linux@arm.linux.org.uk>, Jun Nie <jun.nie@linaro.org>, Govindraj Raja <govindraj.raja@imgtec.com>, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-mips@linux-mips.org, linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org
+In-Reply-To: <20150805161445.GF12328-HgARHv6XitJaoMGHk7MhZQC/G2K4zDHf@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>
+Cc: Keerthy <a0393675-l0cyMroinI0@public.gmane.org>, Keerthy <j-keerthy-l0cyMroinI0@public.gmane.org>, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org, johan-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, nm-l0cyMroinI0@public.gmane.org, paul-DWxLp4Yu+b8AvxtiuMwx3w@public.gmane.org, t-kristo-l0cyMroinI0@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Aug 06, 2015 at 02:45:15PM +0800, Shawn Lin wrote:
+Hi,
 
->  arch/mips/configs/pistachio_defconfig | 1 -
+On Wed, Aug 05, 2015 at 11:14:45AM -0500, Felipe Balbi wrote:
 
-Acked-by: Ralf Baechle <ralf@linux-mips.org>
+> for them. Sure, it wasn't documented, but that's a problem of commit
+> 73456012734b80442b33916406cfd13bf1b73acb (ARM: dts: AM4372: add few
+> nodes) which, essentially, added that compatible flag without
+> documenting it.
 
-  Ralf
+It was required to be done that way that time, probably author didn't
+want to be loyal to the king than the king himself ;), see,
+
+1. http://lists.infradead.org/pipermail/linux-arm-kernel/2013-August/191206.html
+2. http://www.mail-archive.com/linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org/msg89473.html
+
+Regards
+Afzal
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
