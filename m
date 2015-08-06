@@ -1,402 +1,257 @@
 From: "Jingoo Han" <jingoohan1@gmail.com>
-Subject: Re: [PATCH v6] PCI: Store PCIe bus address in struct of_pci_range
-Date: Fri, 7 Aug 2015 00:06:17 +0900
-Message-ID: <000701d0d059$7810fb70$6832f250$@com>
-References: <1438010223-124422-1-git-send-email-gabriele.paoloni@huawei.com> <20150729172053.GE31170@google.com> <EE11001F9E5DDD47B7634E2F8A612F2E01D6F350@lhreml503-mbs> <CAL_JsqKs11-sXQTdBD+ZjbVYFWUHBARTW9q5MF1hCXUhZ+nWLQ@mail.gmail.com> <EE11001F9E5DDD47B7634E2F8A612F2E01D6F94A@lhreml503-mbs> <20150730161447.GG9640@google.com> <EE11001F9E5DDD47B7634E2F8A612F2E01D6FB3B@lhreml503-mbs> <20150730171445.GI9640@google.com> <EE11001F9E5DDD47B7634E2F8A612F2E01D6FC15@lhreml503-mbs> <CAL_Jsq+aQVakaZf4xo7sxnVyTmPR+HJ-9ByyS6OYJ0PHDYOwmg@mail.gmail.com> <EE11001F9E5DDD47B7634E2F8A612F2E01D70589@lhreml503-mbs> <55BB8CC6.1080203@ti.com> <CAL_JsqJqjiWVaKs-3ghQ1EBQzRRQ38GzkMV+FELPj53bSF-yXQ@mail.gmail.com> <EE11001F9E5DDD47B7634E2F8A612F2E01D712E7@lhreml503-mbs> <7F6386B4-D2F5-4840-AC72-F8C76CBC3B94@gmai
- l.com> <EE11001F9E5DDD47B7634E2F8A612F2E01D719D1@lhreml503-mbs> <EE11001F9E5DDD47B7634E2F8A612F2E01D72CFE@lhreml503-mbs>
+Subject: Re: [PATCH v2] backlight: pm8941-wled: Move PM8941 WLED driver to backlight
+Date: Fri, 7 Aug 2015 00:37:32 +0900
+Message-ID: <000101d0d05d$d668e940$833abbc0$@com>
+References: <1436990540-23354-1-git-send-email-bjorn.andersson@sonymobile.com>  <1437525889-24928-1-git-send-email-bjorn.andersson@sonymobile.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <EE11001F9E5DDD47B7634E2F8A612F2E01D72CFE@lhreml503-mbs>
+Content-Type: text/plain;
+	charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <1437525889-24928-1-git-send-email-bjorn.andersson@sonymobile.com>
 Content-Language: ko
-Sender: linux-pci-owner@vger.kernel.org
-To: "'Wangzhou (B)'" <wangzhou1@hisilicon.com>
-Cc: 'Gabriele Paoloni' <gabriele.paoloni@huawei.com>, 'Rob Herring' <robherring2@gmail.com>, 'Kishon Vijay Abraham I' <kishon@ti.com>, 'Bjorn Helgaas' <bhelgaas@google.com>, arnd@arndb.de, lorenzo.pieralisi@arm.com, robh+dt@kernel.org, james.morse@arm.com, Liviu.Dudau@arm.com, linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, 'Yuanzhichang' <yuanzhichang@hisilicon.com>, 'Zhudacai' <zhudacai@hisilicon.com>, 'zhangjukuo' <zhangjukuo@huawei.com>, 'qiuzhenfa' <qiuzhenfa@hisilicon.com>, "'Liguozhu (Kenneth)'" <liguozhu@hisilicon.com>, 'Pratyush Anand' <pratyush.anand@gmail.com>, 'Arnd Bergmann' <arnd@linaro.org>, 'Jingoo Han' <jingoohan1@gmail.com>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: 'Bjorn Andersson' <bjorn.andersson@sonymobile.com>
+Cc: 'Rob Herring' <robh+dt@kernel.org>, 'Pawel Moll' <pawel.moll@arm.com>, 'Mark Rutland' <mark.rutland@arm.com>, 'Ian Campbell' <ijc+devicetree@hellion.org.uk>, 'Kumar Gala' <galak@codeaurora.org>, 'Bryan Wu' <cooloney@gmail.com>, 'Richard Purdie' <rpurdie@rpsys.net>, 'Jacek Anaszewski' <j.anaszewski@samsung.com>, 'Lee Jones' <lee.jones@linaro.org>, 'Jean-Christophe Plagniol-Villard' <plagnioj@jcrosoft.com>, 'Tomi Valkeinen' <tomi.valkeinen@ti.com>, 'Rob Clark' <robdclark@gmail.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org, linux-fbdev@vger.kernel.org, linux-arm-msm@vger.kernel.org, 'Jingoo Han' <jingoohan1@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thursday, August 06, 2015 10:53 PM, Gabriele Paoloni wrote:
->=20
-> Hi all
->=20
-> This patch has now been moved in "[PATCH v6 1/6] PCI: designware: mov=
-e calculation of bus addresses to
-> DRA7xx"
+On Wednesday, July 22, 2015 9:45 AM, Bjorn Andersson wrote:
+> 
+> The Qualcomm PM8941 WLED block is used for backlight and should therefor
+> be in the backlight framework and not in the LED framework. This moves
+> the driver and adapts to the backlight api instead.
+> 
+> Acked-by: Jacek Anaszewski <j.anaszewski@samsung.com>
+> Tested-by: Rob Clark <robdclark@gmail.com>
+> Signed-off-by: Bjorn Andersson <bjorn.andersson@sonymobile.com>
 
-To Zhou Wang,
-
-Please send your patches to 'jingoohan1@gmail.com', instead of 'jg1.han=
-@samsung.com'.
-Even though, I have done mainline works for Samsung SoCs, Samsung does =
-not support me
-as a maintainer. So, please don't send your patches to my Samsung e-mai=
-l.
+Acked-by: Jingoo Han <jingoohan1@gmail.com>
 
 Best regards,
 Jingoo Han
 
->=20
-> commit "f4c55c5a3f7f (PCI: designware: Program ATU with untranslated =
-address)" has been reverted in
-> "[PATCH v6 3/6] PCI: designware: Add ARM64 support"
->=20
-> Gab
->=20
-> > -----Original Message-----
-> > From: linux-pci-owner@vger.kernel.org [mailto:linux-pci-
-> > owner@vger.kernel.org] On Behalf Of Gabriele Paoloni
-> > Sent: Tuesday, August 04, 2015 11:12 AM
-> > To: Jingoo Han
-> > Cc: Rob Herring; Kishon Vijay Abraham I; Bjorn Helgaas; arnd@arndb.=
-de;
-> > lorenzo.pieralisi@arm.com; Wangzhou (B); robh+dt@kernel.org;
-> > james.morse@arm.com; Liviu.Dudau@arm.com; linux-pci@vger.kernel.org=
-;
-> > linux-arm-kernel@lists.infradead.org; devicetree@vger.kernel.org;
-> > Yuanzhichang; Zhudacai; zhangjukuo; qiuzhenfa; Liguozhu (Kenneth);
-> > Pratyush Anand; Arnd Bergmann
-> > Subject: RE: [PATCH v6] PCI: Store PCIe bus address in struct
-> > of_pci_range
-> >
-> >
-> >
-> > > -----Original Message-----
-> > > From: Jingoo Han [mailto:jingoohan1@gmail.com]
-> > > Sent: Tuesday, August 04, 2015 5:20 AM
-> > > To: Gabriele Paoloni
-> > > Cc: Rob Herring; Kishon Vijay Abraham I; Bjorn Helgaas; arnd@arnd=
-b.de;
-> > > lorenzo.pieralisi@arm.com; Wangzhou (B); robh+dt@kernel.org;
-> > > james.morse@arm.com; Liviu.Dudau@arm.com; linux-pci@vger.kernel.o=
-rg;
-> > > linux-arm-kernel@lists.infradead.org; devicetree@vger.kernel.org;
-> > > Yuanzhichang; Zhudacai; zhangjukuo; qiuzhenfa; Liguozhu (Kenneth)=
-;
-> > > Pratyush Anand; Arnd Bergmann; jingoohan1@gmail.com
-> > > Subject: Re: [PATCH v6] PCI: Store PCIe bus address in struct
-> > > of_pci_range
-> > >
-> > > On 2015. 8. 3., at PM 8:18, Gabriele Paoloni
-> > > <gabriele.paoloni@huawei.com> wrote:
-> > > >
-> > > > Rob, Kishon what about the following solution?....
-> > > >
-> > > > ---
-> > > > drivers/pci/host/pci-dra7xx.c      | 12 ++++++++++++
-> > > > drivers/pci/host/pcie-designware.c |  9 +++------
-> > >
-> > > Hi Paoloni,
-> > >
-> > > OK, it looks good.
-> > > I want you to revert the following patch.
-> > >
-> > > commit "f4c55c5a3f7f (PCI: designware: Program ATU with untransla=
-ted
-> > > address)"
-> > >
-> > > Would you remove all '*_mode_base's?
-> >
-> > Hi Jingoo Han,
-> >
-> > If I reverted the commit, in order to get designware working, dra7
-> > should mask directly the CPU addresses stored in pp->cfg0_base,
-> > pp->cfg1_base, pp->mem_base and pp->io_base.
-> >
-> > The masking would happen at this point:
-> > http://lxr.free-electrons.com/source/drivers/pci/host/pcie-
-> > designware.c#L493
-> >
-> > Now:
-> > - I see that pp->cfg<0/1>_base are used in devm_ioremap before that
-> >   point and nowhere else, so they should be ok.
-> > - pp->mem_base is used in dw_pcie_setup_rc(); dw_pcie_setup_rc() is
-> > called
-> >   in dra7xx_pcie_host_init()...so here I should move the masking af=
-ter
-> >   dw_pcie_setup() retuned, but I think it should be ok
-> > - pp->io_base is used in pci_ioremap_io() in dw_pcie_setup(). Now
-> > currently
-> >   in designware this is called by pci_bios_init_hw(); this is after=
- the
-> >   masking....so here we would have a the wrong value passed
-> >
-> > Said that if you look at "[PATCH v5 2/5] PCI: designware: Add ARM64
-> > support",
-> > that is the patchset where this patch is needed, you can see that
-> > dw_pcie_setup() is removed and pp->io_base is used in
-> > pci_remap_iospace() before
-> > the masking would happen in dra7xx_pcie_host_init()...so for this
-> > patchset we
-> > should be good to revert the commit.
-> >
-> > I propose to add a new patch in the patchset "[PATCH v5 0/5] PCI: h=
-isi:
-> > Add PCIe
-> > host support for HiSilicon SoC Hip05" as the one I just posted in t=
-his
-> > thread (this would not revert the commit but just moves the masking=
- to
-> > dra7xx)
-> >
-> > I would revert the commit in "[PATCH v5 2/5] PCI: designware: Add A=
-RM64
-> > support"
-> > together with the rest of designware rework.
-> >
-> > So we would have always a working version of designware...
-> >
-> > Are you ok with this?
-> >
-> > >
-> > > Best regards,
-> > > Jingoo Han
-> > >
-> > > > 2 files changed, 15 insertions(+), 6 deletions(-)
-> > > >
-> > > > diff --git a/drivers/pci/host/pci-dra7xx.c b/drivers/pci/host/p=
-ci-
-> > > dra7xx.c
-> > > > index 80db09e..bb2635f 100644
-> > > > --- a/drivers/pci/host/pci-dra7xx.c
-> > > > +++ b/drivers/pci/host/pci-dra7xx.c
-> > > > @@ -61,6 +61,7 @@
-> > > >
-> > > > #define    PCIECTRL_DRA7XX_CONF_PHY_CS            0x010C
-> > > > #define    LINK_UP                        BIT(16)
-> > > > +#define CPU_TO_BUS_ADDR             0x0FFFFFFF
-> > > >
-> > > > struct dra7xx_pcie {
-> > > >    void __iomem        *base;
-> > > > @@ -138,6 +139,17 @@ static void
-> > dra7xx_pcie_enable_interrupts(struct
-> > > pcie_port *pp)
-> > > >
-> > > > static void dra7xx_pcie_host_init(struct pcie_port *pp)
-> > > > {
-> > > > +    if (pp->io_mod_base)
-> > > > +        pp->io_mod_base &=3D CPU_TO_BUS_ADDR;
-> > > > +
-> > > > +    if (pp->mem_mod_base)
-> > > > +        pp->mem_mod_base &=3D CPU_TO_BUS_ADDR;
-> > > > +
-> > > > +    if (pp->cfg0_mod_base) {
-> > > > +        pp->cfg0_mod_base &=3D CPU_TO_BUS_ADDR;
-> > > > +        pp->cfg1_mod_base &=3D CPU_TO_BUS_ADDR;
-> > > > +    }
-> > > > +
-> > > >    dw_pcie_setup_rc(pp);
-> > > >    dra7xx_pcie_establish_link(pp);
-> > > >    if (IS_ENABLED(CONFIG_PCI_MSI))
-> > > > diff --git a/drivers/pci/host/pcie-designware.c
-> > > b/drivers/pci/host/pcie-designware.c
-> > > > index 69486be..06c682b 100644
-> > > > --- a/drivers/pci/host/pcie-designware.c
-> > > > +++ b/drivers/pci/host/pcie-designware.c
-> > > > @@ -416,8 +416,7 @@ int dw_pcie_host_init(struct pcie_port *pp)
-> > > >            pp->io_base =3D range.cpu_addr;
-> > > >
-> > > >            /* Find the untranslated IO space address */
-> > > > -            pp->io_mod_base =3D of_read_number(parser.range -
-> > > > -                             parser.np + na, ns);
-> > > > +            pp->io_mod_base =3D range.cpu_addr;;
-> > > >        }
-> > > >        if (restype =3D=3D IORESOURCE_MEM) {
-> > > >            of_pci_range_to_resource(&range, np, &pp->mem);
-> > > > @@ -426,8 +425,7 @@ int dw_pcie_host_init(struct pcie_port *pp)
-> > > >            pp->mem_bus_addr =3D range.pci_addr;
-> > > >
-> > > >            /* Find the untranslated MEM space address */
-> > > > -            pp->mem_mod_base =3D of_read_number(parser.range -
-> > > > -                              parser.np + na, ns);
-> > > > +            pp->mem_mod_base =3D range.cpu_addr;
-> > > >        }
-> > > >        if (restype =3D=3D 0) {
-> > > >            of_pci_range_to_resource(&range, np, &pp->cfg);
-> > > > @@ -437,8 +435,7 @@ int dw_pcie_host_init(struct pcie_port *pp)
-> > > >            pp->cfg1_base =3D pp->cfg.start + pp->cfg0_size;
-> > > >
-> > > >            /* Find the untranslated configuration space address=
- */
-> > > > -            pp->cfg0_mod_base =3D of_read_number(parser.range =
--
-> > > > -                               parser.np + na, ns);
-> > > > +            pp->cfg0_mod_base =3D range.cpu_addr;
-> > > >            pp->cfg1_mod_base =3D pp->cfg0_mod_base +
-> > > >                        pp->cfg0_size;
-> > > >        }
-> > > > --
-> > > > 1.9.1
-> > > >
-> > > >
-> > > >> -----Original Message-----
-> > > >> From: linux-pci-owner@vger.kernel.org [mailto:linux-pci-
-> > > >> owner@vger.kernel.org] On Behalf Of Rob Herring
-> > > >> Sent: Friday, July 31, 2015 5:53 PM
-> > > >> To: Kishon Vijay Abraham I
-> > > >> Cc: Gabriele Paoloni; Bjorn Helgaas; arnd@arndb.de;
-> > > >> lorenzo.pieralisi@arm.com; Wangzhou (B); robh+dt@kernel.org;
-> > > >> james.morse@arm.com; Liviu.Dudau@arm.com; linux-
-> > pci@vger.kernel.org;
-> > > >> linux-arm-kernel@lists.infradead.org; devicetree@vger.kernel.o=
-rg;
-> > > >> Yuanzhichang; Zhudacai; zhangjukuo; qiuzhenfa; Liguozhu (Kenne=
-th);
-> > > >> Jingoo Han; Pratyush Anand; Arnd Bergmann
-> > > >> Subject: Re: [PATCH v6] PCI: Store PCIe bus address in struct
-> > > >> of_pci_range
-> > > >>
-> > > >> On Fri, Jul 31, 2015 at 9:57 AM, Kishon Vijay Abraham I
-> > > <kishon@ti.com>
-> > > >> wrote:
-> > > >>> +Arnd
-> > > >>>
-> > > >>> Hi,
-> > > >>>
-> > > >>>> On Friday 31 July 2015 07:55 PM, Gabriele Paoloni wrote:
-> > > >>>> [+cc Kishon]
-> > > >>>>
-> > > >>>>> -----Original Message-----
-> > > >>>>> From: linux-pci-owner@vger.kernel.org [mailto:linux-pci-
-> > > >>>>> owner@vger.kernel.org] On Behalf Of Rob Herring
-> > > >>>>> Sent: Thursday, July 30, 2015 9:42 PM
-> > > >>>>> To: Gabriele Paoloni
-> > > >>>>> Cc: Bjorn Helgaas; arnd@arndb.de; lorenzo.pieralisi@arm.com=
-;
-> > > >> Wangzhou
-> > > >>>>> (B); robh+dt@kernel.org; james.morse@arm.com;
-> > Liviu.Dudau@arm.com;
-> > > >>>>> linux-pci@vger.kernel.org; linux-arm-kernel@lists.infradead=
-=2Eorg;
-> > > >>>>> devicetree@vger.kernel.org; Yuanzhichang; Zhudacai; zhangju=
-kuo;
-> > > >>>>> qiuzhenfa; Liguozhu (Kenneth); Jingoo Han; Pratyush Anand
-> > > >>>>> Subject: Re: [PATCH v6] PCI: Store PCIe bus address in stru=
-ct
-> > > >>>>> of_pci_range
-> > > >>>>>
-> > > >>>>> On Thu, Jul 30, 2015 at 12:34 PM, Gabriele Paoloni
-> > > >>>>> <gabriele.paoloni@huawei.com> wrote:
-> > > >>>>>>> -----Original Message-----
-> > > >>>>>>> From: Bjorn Helgaas [mailto:bhelgaas@google.com]
-> > > >>>>>>> Sent: 30 July 2015 18:15
-> > > >>>>>>> On Thu, Jul 30, 2015 at 04:50:55PM +0000, Gabriele Paolon=
-i
-> > > wrote:
-> > > >>>>>>>>> -----Original Message-----
-> > > >>>>>>>>> From: linux-pci-owner@vger.kernel.org [mailto:linux-pci=
--
-> > > >>>>>>>>> owner@vger.kernel.org] On Behalf Of Bjorn Helgaas
-> > > >>>>>>>>> Sent: Thursday, July 30, 2015 5:15 PM
-> > > >>>>>>>>> On Thu, Jul 30, 2015 at 01:52:13PM +0000, Gabriele Paol=
-oni
-> > > >> wrote:
-> > > >>>>>
-> > > >>>>> [...]
-> > > >>>>>
-> > > >>>>>>>>>> I don=E2=80=99t think we should rely on [CPU] addresse=
-s...what if
-> > > the
-> > > >>>>>>>>> intermediate
-> > > >>>>>>>>>> translation layer changes the lower significant bits o=
-f
-> > the
-> > > >>>>> "bus
-> > > >>>>>>>>> address"
-> > > >>>>>>>>>> to translate into a cpu address?
-> > > >>>>>>>>>
-> > > >>>>>>>>> Is it really a possiblity that the lower bits could be
-> > > changed?
-> > > >>>>>>>>
-> > > >>>>>>>> I've checked all the current deignware users DTs except
-> > "pci-
-> > > >>>>>>> layerscape"
-> > > >>>>>>>> that I could not find:
-> > > >>>>>>>> spear1310.dtsi
-> > > >>>>>>>> spear1340.dtsi
-> > > >>>>>>>> dra7.dtsi
-> > > >>>>>>>> imx6qdl.dtsi
-> > > >>>>>>>> imx6sx.dtsi
-> > > >>>>>>>> keystone.dtsi
-> > > >>>>>>>> exynos5440.dtsi
-> > > >>>>>>>>
-> > > >>>>>>>> None of them modifies the lower bits. To be more precise=
- the
-> > > >> only
-> > > >>>>> guy
-> > > >>>>>>>> that provides another translation layer is "dra7.dtsi":
-> > > >>>>>>>> axi0
-> > > >>>>>>>> http://lxr.free-
-> > > >>>>> electrons.com/source/arch/arm/boot/dts/dra7.dtsi#L207
-> > > >>>>>>>>
-> > > >>>>>>>> axi1
-> > > >>>>>>>> http://lxr.free-
-> > > >>>>> electrons.com/source/arch/arm/boot/dts/dra7.dtsi#L241
-> > > >>>>>>>>
-> > > >>>>>>>> For this case masking the top 4bits (bits28 to 31) shoul=
-d
-> > make
-> > > >> the
-> > > >>>>> job.
-> > > >>>>>
-> > > >>>>> IMO, we should just fix this case. After further study, I d=
-on't
-> > > >> think
-> > > >>>>> this is a DW issue, but rather an SOC integration issue.
-> > > >>>>>
-> > > >>>>> I believe you can just fixup the address in the pp->ops-
-> > > >host_init
-> > > >> hook.
-> > > >>>>
-> > > >>>> Yes I guess that I could just assign pp->(*)_mod_base to the=
- CPU
-> > > >> address
-> > > >>>> in DW and mask it out in dra7xx_pcie_host_init()...
-> > > >>>>
-> > > >>>> Kishon, would you be ok with that?
-> > > >>>
-> > > >>> Initially I was using *base-mask* property from dt. Me and Ar=
-nd
-> > > >> (cc'ed) had
-> > > >>> this discussion [1] before we decided the current approach. I=
-t'll
-> > > be
-> > > >> good to
-> > > >>> check with Arnd too.
-> > > >>>
-> > > >>> [1] ->  http://lists.infradead.org/pipermail/linux-arm-
-> > kernel/2014-
-> > > >> May/253528.html
-> > > >>
-> > > >> The problem I have here is the use of ranges does not necessar=
-ily
-> > > mean
-> > > >> fewer address bits are available. It can be used just for
-> > > convenience
-> > > >> of not putting the full address into every node's reg property=
-=2E
-> > And
-> > > >> vice versa, there are probably plenty of cases where we have t=
-he
-> > > full
-> > > >> address in the nodes, but really only some of the address bits=
- are
-> > > >> decoded at the IP block. Whether the address bits are present =
-is
-> > > >> rarely cared about or known by s/w folks until you hit a probl=
-em
-> > > like
-> > > >> this. Given this is an isolated case ATM, I would fix it in an
-> > > >> isolated way. It does not affect the binding and could be chan=
-ged
-> > in
-> > > >> the kernel later if this becomes a common need.
-> > > >>
-> > > >> Rob
-> > > >> --
-> > > >> To unsubscribe from this list: send the line "unsubscribe linu=
-x-
-> > pci"
-> > > in
-> > > >> the body of a message to majordomo@vger.kernel.org
-> > > >> More majordomo info at  http://vger.kernel.org/majordomo-info.=
-html
+> ---
+>  .../backlight/pm8941-wled.txt}                     |  5 +-
+>  drivers/leds/Kconfig                               |  8 ---
+>  drivers/leds/Makefile                              |  1 -
+>  drivers/video/backlight/Kconfig                    |  7 +++
+>  drivers/video/backlight/Makefile                   |  1 +
+>  .../backlight/pm8941-wled.c}                       | 60 ++++++++++------------
+>  6 files changed, 35 insertions(+), 47 deletions(-)
+>  rename Documentation/devicetree/bindings/{leds/leds-pm8941-wled.txt => video/backlight/pm8941-
+> wled.txt} (84%)
+>  rename drivers/{leds/leds-pm8941-wled.c => video/backlight/pm8941-wled.c} (90%)
+> 
+> diff --git a/Documentation/devicetree/bindings/leds/leds-pm8941-wled.txt
+> b/Documentation/devicetree/bindings/video/backlight/pm8941-wled.txt
+> similarity index 84%
+> rename from Documentation/devicetree/bindings/leds/leds-pm8941-wled.txt
+> rename to Documentation/devicetree/bindings/video/backlight/pm8941-wled.txt
+> index a85a964d61f5..424f8444a6cd 100644
+> --- a/Documentation/devicetree/bindings/leds/leds-pm8941-wled.txt
+> +++ b/Documentation/devicetree/bindings/video/backlight/pm8941-wled.txt
+> @@ -5,10 +5,7 @@ Required properties:
+>  - reg: slave address
+> 
+>  Optional properties:
+> -- label: The label for this led
+> -  See Documentation/devicetree/bindings/leds/common.txt
+> -- linux,default-trigger: Default trigger assigned to the LED
+> -  See Documentation/devicetree/bindings/leds/common.txt
+> +- label: The name of the backlight device
+>  - qcom,cs-out: bool; enable current sink output
+>  - qcom,cabc: bool; enable content adaptive backlight control
+>  - qcom,ext-gen: bool; use externally generated modulator signal to dim
+> diff --git a/drivers/leds/Kconfig b/drivers/leds/Kconfig
+> index 9ad35f72ab4c..b8d4b965ca2a 100644
+> --- a/drivers/leds/Kconfig
+> +++ b/drivers/leds/Kconfig
+> @@ -578,14 +578,6 @@ config LEDS_VERSATILE
+>  	  This option enabled support for the LEDs on the ARM Versatile
+>  	  and RealView boards. Say Y to enabled these.
+> 
+> -config LEDS_PM8941_WLED
+> -	tristate "LED support for the Qualcomm PM8941 WLED block"
+> -	depends on LEDS_CLASS
+> -	select REGMAP
+> -	help
+> -	  This option enables support for the 'White' LED block
+> -	  on Qualcomm PM8941 PMICs.
+> -
+>  comment "LED Triggers"
+>  source "drivers/leds/trigger/Kconfig"
+> 
+> diff --git a/drivers/leds/Makefile b/drivers/leds/Makefile
+> index 8d6a24a2f513..abe96d960ebe 100644
+> --- a/drivers/leds/Makefile
+> +++ b/drivers/leds/Makefile
+> @@ -63,7 +63,6 @@ obj-$(CONFIG_LEDS_BLINKM)		+= leds-blinkm.o
+>  obj-$(CONFIG_LEDS_SYSCON)		+= leds-syscon.o
+>  obj-$(CONFIG_LEDS_VERSATILE)		+= leds-versatile.o
+>  obj-$(CONFIG_LEDS_MENF21BMC)		+= leds-menf21bmc.o
+> -obj-$(CONFIG_LEDS_PM8941_WLED)		+= leds-pm8941-wled.o
+>  obj-$(CONFIG_LEDS_KTD2692)		+= leds-ktd2692.o
+> 
+>  # LED SPI Drivers
+> diff --git a/drivers/video/backlight/Kconfig b/drivers/video/backlight/Kconfig
+> index 0505b796d743..5ffa4b4e26c0 100644
+> --- a/drivers/video/backlight/Kconfig
+> +++ b/drivers/video/backlight/Kconfig
+> @@ -299,6 +299,13 @@ config BACKLIGHT_TOSA
+>  	  If you have an Sharp SL-6000 Zaurus say Y to enable a driver
+>  	  for its backlight
+> 
+> +config BACKLIGHT_PM8941_WLED
+> +	tristate "Qualcomm PM8941 WLED Driver"
+> +	select REGMAP
+> +	help
+> +	  If you have the Qualcomm PM8941, say Y to enable a driver for the
+> +	  WLED block.
+> +
+>  config BACKLIGHT_SAHARA
+>  	tristate "Tabletkiosk Sahara Touch-iT Backlight Driver"
+>  	depends on X86
+> diff --git a/drivers/video/backlight/Makefile b/drivers/video/backlight/Makefile
+> index d67073f9d421..16ec534cff30 100644
+> --- a/drivers/video/backlight/Makefile
+> +++ b/drivers/video/backlight/Makefile
+> @@ -48,6 +48,7 @@ obj-$(CONFIG_BACKLIGHT_OMAP1)		+= omap1_bl.o
+>  obj-$(CONFIG_BACKLIGHT_OT200)		+= ot200_bl.o
+>  obj-$(CONFIG_BACKLIGHT_PANDORA)		+= pandora_bl.o
+>  obj-$(CONFIG_BACKLIGHT_PCF50633)	+= pcf50633-backlight.o
+> +obj-$(CONFIG_BACKLIGHT_PM8941_WLED)	+= pm8941-wled.o
+>  obj-$(CONFIG_BACKLIGHT_PWM)		+= pwm_bl.o
+>  obj-$(CONFIG_BACKLIGHT_SAHARA)		+= kb3886_bl.o
+>  obj-$(CONFIG_BACKLIGHT_SKY81452)	+= sky81452-backlight.o
+> diff --git a/drivers/leds/leds-pm8941-wled.c b/drivers/video/backlight/pm8941-wled.c
+> similarity index 90%
+> rename from drivers/leds/leds-pm8941-wled.c
+> rename to drivers/video/backlight/pm8941-wled.c
+> index bf64a593fbf1..c704c3236034 100644
+> --- a/drivers/leds/leds-pm8941-wled.c
+> +++ b/drivers/video/backlight/pm8941-wled.c
+> @@ -11,7 +11,7 @@
+>   */
+> 
+>  #include <linux/kernel.h>
+> -#include <linux/leds.h>
+> +#include <linux/backlight.h>
+>  #include <linux/module.h>
+>  #include <linux/of.h>
+>  #include <linux/of_device.h>
+> @@ -76,30 +76,29 @@ struct pm8941_wled_config {
+>  };
+> 
+>  struct pm8941_wled {
+> +	const char *name;
+>  	struct regmap *regmap;
+>  	u16 addr;
+> 
+> -	struct led_classdev cdev;
+> -
+>  	struct pm8941_wled_config cfg;
+>  };
+> 
+> -static int pm8941_wled_set(struct led_classdev *cdev,
+> -			   enum led_brightness value)
+> +static int pm8941_wled_update_status(struct backlight_device *bl)
+>  {
+> -	struct pm8941_wled *wled;
+> +	struct pm8941_wled *wled = bl_get_data(bl);
+> +	u16 val = bl->props.brightness;
+>  	u8 ctrl = 0;
+> -	u16 val;
+>  	int rc;
+>  	int i;
+> 
+> -	wled = container_of(cdev, struct pm8941_wled, cdev);
+> +	if (bl->props.power != FB_BLANK_UNBLANK ||
+> +	    bl->props.fb_blank != FB_BLANK_UNBLANK ||
+> +	    bl->props.state & BL_CORE_FBBLANK)
+> +		val = 0;
+> 
+> -	if (value != 0)
+> +	if (val != 0)
+>  		ctrl = PM8941_WLED_REG_MOD_EN_BIT;
+> 
+> -	val = value * PM8941_WLED_REG_VAL_MAX / LED_FULL;
+> -
+>  	rc = regmap_update_bits(wled->regmap,
+>  			wled->addr + PM8941_WLED_REG_MOD_EN,
+>  			PM8941_WLED_REG_MOD_EN_MASK, ctrl);
+> @@ -128,16 +127,6 @@ static int pm8941_wled_set(struct led_classdev *cdev,
+>  	return rc;
+>  }
+> 
+> -static void pm8941_wled_set_brightness(struct led_classdev *cdev,
+> -				       enum led_brightness value)
+> -{
+> -	if (pm8941_wled_set(cdev, value)) {
+> -		dev_err(cdev->dev, "Unable to set brightness\n");
+> -		return;
+> -	}
+> -	cdev->brightness = value;
+> -}
+> -
+>  static int pm8941_wled_setup(struct pm8941_wled *wled)
+>  {
+>  	int rc;
+> @@ -336,12 +325,9 @@ static int pm8941_wled_configure(struct pm8941_wled *wled, struct device *dev)
+>  	}
+>  	wled->addr = val;
+> 
+> -	rc = of_property_read_string(dev->of_node, "label", &wled->cdev.name);
+> +	rc = of_property_read_string(dev->of_node, "label", &wled->name);
+>  	if (rc)
+> -		wled->cdev.name = dev->of_node->name;
+> -
+> -	wled->cdev.default_trigger = of_get_property(dev->of_node,
+> -			"linux,default-trigger", NULL);
+> +		wled->name = dev->of_node->name;
+> 
+>  	*cfg = pm8941_wled_config_defaults;
+>  	for (i = 0; i < ARRAY_SIZE(u32_opts); ++i) {
+> @@ -377,8 +363,14 @@ static int pm8941_wled_configure(struct pm8941_wled *wled, struct device *dev)
+>  	return 0;
+>  }
+> 
+> +static const struct backlight_ops pm8941_wled_ops = {
+> +	.update_status = pm8941_wled_update_status,
+> +};
+> +
+>  static int pm8941_wled_probe(struct platform_device *pdev)
+>  {
+> +	struct backlight_properties props;
+> +	struct backlight_device *bl;
+>  	struct pm8941_wled *wled;
+>  	struct regmap *regmap;
+>  	int rc;
+> @@ -403,13 +395,14 @@ static int pm8941_wled_probe(struct platform_device *pdev)
+>  	if (rc)
+>  		return rc;
+> 
+> -	wled->cdev.brightness_set = pm8941_wled_set_brightness;
+> -
+> -	rc = devm_led_classdev_register(&pdev->dev, &wled->cdev);
+> -	if (rc)
+> -		return rc;
+> -
+> -	platform_set_drvdata(pdev, wled);
+> +	memset(&props, 0, sizeof(struct backlight_properties));
+> +	props.type = BACKLIGHT_RAW;
+> +	props.max_brightness = PM8941_WLED_REG_VAL_MAX;
+> +	bl = devm_backlight_device_register(&pdev->dev, wled->name,
+> +					    &pdev->dev, wled,
+> +					    &pm8941_wled_ops, &props);
+> +	if (IS_ERR(bl))
+> +		return PTR_ERR(bl);
+> 
+>  	return 0;
+>  };
+> @@ -432,4 +425,3 @@ module_platform_driver(pm8941_wled_driver);
+> 
+>  MODULE_DESCRIPTION("pm8941 wled driver");
+>  MODULE_LICENSE("GPL v2");
+> -MODULE_ALIAS("platform:pm8941-wled");
+> --
+> 1.8.2.2
