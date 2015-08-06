@@ -1,86 +1,191 @@
-From: Gavin Shan <gwshan-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
-Subject: [PATCH v6 12/42] powerpc/powernv: Increase PE# capacity
-Date: Thu,  6 Aug 2015 14:11:17 +1000
-Message-ID: <1438834307-26960-13-git-send-email-gwshan@linux.vnet.ibm.com>
+From: Gavin Shan <gwshan@linux.vnet.ibm.com>
+Subject: [PATCH v6 07/42] powerpc/powernv: Improve IO and M32 mapping
+Date: Thu,  6 Aug 2015 14:11:12 +1000
+Message-ID: <1438834307-26960-8-git-send-email-gwshan@linux.vnet.ibm.com>
 References: <1438834307-26960-1-git-send-email-gwshan@linux.vnet.ibm.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1438834307-26960-1-git-send-email-gwshan-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Cc: linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org, mpe-Gsx/Oe8HsFggBc27wqDAHg@public.gmane.org, bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, panto-wVdstyuyKrO8r51toPun2/C9HSW9iNxf@public.gmane.org, aik-sLpHqDYs0B2HXe+LvDLADg@public.gmane.org, Gavin Shan <gwshan-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <1438834307-26960-1-git-send-email-gwshan@linux.vnet.ibm.com>
+Sender: linux-pci-owner@vger.kernel.org
+To: linuxppc-dev@lists.ozlabs.org
+Cc: linux-pci@vger.kernel.org, devicetree@vger.kernel.org, benh@kernel.crashing.org, mpe@ellerman.id.au, bhelgaas@google.com, grant.likely@linaro.org, robherring2@gmail.com, panto@antoniou-consulting.com, aik@ozlabs.ru, Gavin Shan <gwshan@linux.vnet.ibm.com>
 List-Id: devicetree@vger.kernel.org
 
-Each PHB maintains an array helping to translate RID (Request
-ID) to PE# with the assumption that PE# takes 8 bits, indicating
-that we can't have more than 256 PEs. However, pci_dn->pe_number
-already had 4-bytes for the PE#.
+There're 3 windows (IO, M32 and M64) for PHB, root port and upstream
+port of the PCIE switch behind root port. In order to support PCI
+hotplug, we extend the start/end address of those 3 windows of root
+port or upstream port to the start/end address of the 3 PHB's windows.
+The current implementation, assigning IO or M32 segment based on the
+bridge's windows, isn't reliable.
 
-The patch extends the PE# capacity so that each of them will be
-4-bytes long. Then we can use IODA_INVALID_PE to check one entry
-in phb->pe_rmap[] is valid or not.
+The patch fixes above issue by calculating PE's consumed IO or M32
+segments from its contained devices, no PCI bridge windows involved
+if the PE doesn't contain all the subordinate PCI buses. Otherwise,
+the PCI bridge windows still contribute to PE's consumed IO or M32
+segments.
 
-Signed-off-by: Gavin Shan <gwshan-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
+Signed-off-by: Gavin Shan <gwshan@linux.vnet.ibm.com>
 ---
- arch/powerpc/platforms/powernv/pci-ioda.c | 8 ++++++--
- arch/powerpc/platforms/powernv/pci.h      | 7 +++----
- 2 files changed, 9 insertions(+), 6 deletions(-)
+ arch/powerpc/platforms/powernv/pci-ioda.c | 136 +++++++++++++++++-------------
+ 1 file changed, 79 insertions(+), 57 deletions(-)
 
 diff --git a/arch/powerpc/platforms/powernv/pci-ioda.c b/arch/powerpc/platforms/powernv/pci-ioda.c
-index 57ba8fd..3094c61 100644
+index 488a53e..713f4b4 100644
 --- a/arch/powerpc/platforms/powernv/pci-ioda.c
 +++ b/arch/powerpc/platforms/powernv/pci-ioda.c
-@@ -786,7 +786,7 @@ static int pnv_ioda_deconfigure_pe(struct pnv_phb *phb, struct pnv_ioda_pe *pe)
+@@ -2844,75 +2844,97 @@ static void pnv_pci_ioda_fixup_iov_resources(struct pci_dev *pdev)
+ }
+ #endif /* CONFIG_PCI_IOV */
  
- 	/* Clear the reverse map */
- 	for (rid = pe->rid; rid < rid_end; rid++)
--		phb->ioda.pe_rmap[rid] = 0;
-+		phb->ioda.pe_rmap[rid] = IODA_INVALID_PE;
+-/*
+- * This function is supposed to be called on basis of PE from top
+- * to bottom style. So the the I/O or MMIO segment assigned to
+- * parent PE could be overrided by its child PEs if necessary.
+- */
+-static void pnv_ioda_setup_pe_seg(struct pci_controller *hose,
+-				  struct pnv_ioda_pe *pe)
++static int pnv_ioda_setup_one_res(struct pci_controller *hose,
++				  struct pnv_ioda_pe *pe,
++				  struct resource *res)
+ {
+ 	struct pnv_phb *phb = hose->private_data;
+ 	struct pci_bus_region region;
+-	struct resource *res;
+-	int i, index;
+-	unsigned int segsize;
++	unsigned int index, segsize;
+ 	unsigned long *segmap, *pe_segmap;
+ 	uint16_t win;
+ 	int64_t rc;
  
- 	/* Release from all parents PELT-V */
- 	while (parent) {
-@@ -3134,7 +3134,7 @@ static void __init pnv_pci_init_ioda_phb(struct device_node *np,
- 	unsigned long size, pemap_off;
- 	const __be64 *prop64;
- 	const __be32 *prop32;
--	int len;
-+	int len, i;
- 	u64 phb_id;
- 	void *aux;
- 	long rc;
-@@ -3201,6 +3201,10 @@ static void __init pnv_pci_init_ioda_phb(struct device_node *np,
- 	if (prop32)
- 		phb->ioda.reserved_pe = be32_to_cpup(prop32);
+-	/*
+-	 * NOTE: We only care PCI bus based PE for now. For PCI
+-	 * device based PE, for example SRIOV sensitive VF should
+-	 * be figured out later.
+-	 */
+-	BUG_ON(!(pe->flags & (PNV_IODA_PE_BUS | PNV_IODA_PE_BUS_ALL)));
++	/* Check if we need map the resource */
++	if (!res->parent || !res->flags || res->start > res->end)
++		return 0;
  
-+	/* Invalidate RID to PE# mapping */
-+	for (i = 0; i < ARRAY_SIZE(phb->ioda.pe_rmap); ++i)
-+		phb->ioda.pe_rmap[i] = IODA_INVALID_PE;
+-	pci_bus_for_each_resource(pe->pbus, res, i) {
+-		if (!res || !res->flags ||
+-		    res->start > res->end)
+-			continue;
++	if (res->flags & IORESOURCE_IO) {
++		region.start = res->start - phb->ioda.io_pci_base;
++		region.end   = res->end - phb->ioda.io_pci_base;
++		segsize      = phb->ioda.io_segsize;
++		segmap       = phb->ioda.io_segmap;
++		pe_segmap    = pe->io_segmap;
++		win          = OPAL_IO_WINDOW_TYPE;
++	} else if ((res->flags & IORESOURCE_MEM) &&
++		   !pnv_pci_is_mem_pref_64(res->flags)) {
++		region.start = res->start -
++			       hose->mem_offset[0] -
++			       phb->ioda.m32_pci_base;
++		region.end   = res->end -
++			       hose->mem_offset[0] -
++			       phb->ioda.m32_pci_base;
++		segsize      = phb->ioda.m32_segsize;
++		segmap       = phb->ioda.m32_segmap;
++		pe_segmap    = pe->m32_segmap;
++		win          = OPAL_M32_WINDOW_TYPE;
++	} else {
++		return 0;
++	}
+ 
+-		if (res->flags & IORESOURCE_IO) {
+-			region.start = res->start - phb->ioda.io_pci_base;
+-			region.end   = res->end - phb->ioda.io_pci_base;
+-			segsize      = phb->ioda.io_segsize;
+-			segmap       = phb->ioda.io_segmap;
+-			pe_segmap    = pe->io_segmap;
+-			win          = OPAL_IO_WINDOW_TYPE;
+-		} else if ((res->flags & IORESOURCE_MEM) &&
+-			   !pnv_pci_is_mem_pref_64(res->flags)) {
+-			region.start = res->start -
+-				       hose->mem_offset[0] -
+-				       phb->ioda.m32_pci_base;
+-			region.end   = res->end -
+-				       hose->mem_offset[0] -
+-				       phb->ioda.m32_pci_base;
+-			segsize      = phb->ioda.m32_segsize;
+-			segmap       = phb->ioda.m32_segmap;
+-			pe_segmap    = pe->m32_segmap;
+-			win          = OPAL_M32_WINDOW_TYPE;
+-		} else {
+-			continue;
++	region.start = _ALIGN_DOWN(region.start, segsize);
++	region.end   = _ALIGN_UP(region.end, segsize);
++	index = region.start / segsize;
++	while (index < phb->ioda.total_pe &&
++	       region.start < region.end) {
++		rc = opal_pci_map_pe_mmio_window(phb->opal_id,
++				pe->pe_number, win, 0, index);
++		if (rc != OPAL_SUCCESS) {
++			pr_warn("%s: Error %lld mapping (%d) seg#%d to PHB#%d-PE#%d\n",
++				__func__, rc, win, index,
++				pe->phb->hose->global_number,
++				pe->pe_number);
++			return -EIO;
+ 		}
+ 
+-		index = region.start / phb->ioda.io_segsize;
+-		while (index < phb->ioda.total_pe &&
+-		       region.start <= region.end) {
+-			set_bit(index, segmap);
+-			set_bit(index, pe_segmap);
+-			rc = opal_pci_map_pe_mmio_window(phb->opal_id,
+-					pe->pe_number, win, 0, index);
+-			if (rc != OPAL_SUCCESS) {
+-				pr_warn("%s: Error %lld mapping (%d) seg#%d to PHB#%d-PE#%d\n",
+-					__func__, rc, win, index,
+-					pe->phb->hose->global_number,
+-					pe->pe_number);
+-				break;
+-			}
++		set_bit(index, segmap);
++		set_bit(index, pe_segmap);
++		region.start += segsize;
++		index++;
++	}
 +
- 	/* Parse 64-bit MMIO range */
- 	pnv_ioda_parse_m64_window(phb);
++	return 0;
++}
++
++static void pnv_ioda_setup_pe_seg(struct pci_controller *hose,
++				  struct pnv_ioda_pe *pe)
++{
++	struct pci_dev *pdev;
++	struct resource *res;
++	int i;
++
++	/* This function only works for bus dependent PE */
++	BUG_ON(!(pe->flags & (PNV_IODA_PE_BUS | PNV_IODA_PE_BUS_ALL)));
++
++	list_for_each_entry(pdev, &pe->pbus->devices, bus_list) {
++		for (i = 0; i <= PCI_ROM_RESOURCE; i++) {
++			res = &pdev->resource[i];
++			if (pnv_ioda_setup_one_res(hose, pe, res))
++				return;
++		}
++
++		/* If the PE contains all subordinate PCI buses, the
++		 * resources of the child bridges should be mapped
++		 * to the PE as well.
++		 */
++		if (!(pe->flags & PNV_IODA_PE_BUS_ALL) ||
++		    (pdev->class >> 8) != PCI_CLASS_BRIDGE_PCI)
++			continue;
  
-diff --git a/arch/powerpc/platforms/powernv/pci.h b/arch/powerpc/platforms/powernv/pci.h
-index 1dc9578..6f8568e 100644
---- a/arch/powerpc/platforms/powernv/pci.h
-+++ b/arch/powerpc/platforms/powernv/pci.h
-@@ -175,11 +175,10 @@ struct pnv_phb {
- 			struct list_head	pe_list;
- 			struct mutex            pe_list_mutex;
- 
--			/* Reverse map of PEs, will have to extend if
--			 * we are to support more than 256 PEs, indexed
--			 * bus { bus, devfn }
-+			/* Reverse map of PEs, indexed by
-+			 * { bus, devfn }
- 			 */
--			unsigned char		pe_rmap[0x10000];
-+			int			pe_rmap[0x10000];
- 
- 			/* 32-bit TCE tables allocation */
- 			unsigned long		dma32_segcount;
+-			region.start += segsize;
+-			index++;
++		for (i = 0; i <= PCI_BRIDGE_RESOURCE_NUM; i++) {
++			res = &pdev->resource[PCI_BRIDGE_RESOURCES + i];
++			if (pnv_ioda_setup_one_res(hose, pe, res))
++				return;
+ 		}
+ 	}
+ }
 -- 
 2.1.0
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
