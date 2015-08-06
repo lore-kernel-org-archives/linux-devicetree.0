@@ -1,7 +1,7 @@
 From: Gavin Shan <gwshan@linux.vnet.ibm.com>
-Subject: [PATCH v6 15/42] powerpc/powernv: PE oriented during configuration
-Date: Thu,  6 Aug 2015 14:11:20 +1000
-Message-ID: <1438834307-26960-16-git-send-email-gwshan@linux.vnet.ibm.com>
+Subject: [PATCH v6 39/42] drivers/of: Allow to specify root node in of_fdt_unflatten_tree()
+Date: Thu,  6 Aug 2015 14:11:44 +1000
+Message-ID: <1438834307-26960-40-git-send-email-gwshan@linux.vnet.ibm.com>
 References: <1438834307-26960-1-git-send-email-gwshan@linux.vnet.ibm.com>
 Return-path: <linux-pci-owner@vger.kernel.org>
 In-Reply-To: <1438834307-26960-1-git-send-email-gwshan@linux.vnet.ibm.com>
@@ -10,189 +10,107 @@ To: linuxppc-dev@lists.ozlabs.org
 Cc: linux-pci@vger.kernel.org, devicetree@vger.kernel.org, benh@kernel.crashing.org, mpe@ellerman.id.au, bhelgaas@google.com, grant.likely@linaro.org, robherring2@gmail.com, panto@antoniou-consulting.com, aik@ozlabs.ru, Gavin Shan <gwshan@linux.vnet.ibm.com>
 List-Id: devicetree@vger.kernel.org
 
-Several functions used to configure PE take pe_number to indentify
-PE instance. As the pe_number is included in PE instance after it
-is reserved or allocated. It's convienent for those functions to
-return PE instance which includes the required pe_number.
+This introduces one more argument to of_fdt_unflatten_tree()
+to specify the root node for the FDT blob, which is going to be
+unflattened. In the result, the function can be used to unflatten
+FDT blob, which represents device sub-tree in PowerNV hotplug
+driver.
 
 Signed-off-by: Gavin Shan <gwshan@linux.vnet.ibm.com>
 ---
- arch/powerpc/platforms/powernv/pci-ioda.c | 51 ++++++++++++++++---------------
- arch/powerpc/platforms/powernv/pci.h      |  2 +-
- 2 files changed, 27 insertions(+), 26 deletions(-)
+ drivers/of/fdt.c       | 13 ++++++++-----
+ drivers/of/unittest.c  |  2 +-
+ include/linux/of_fdt.h |  1 +
+ 3 files changed, 10 insertions(+), 6 deletions(-)
 
-diff --git a/arch/powerpc/platforms/powernv/pci-ioda.c b/arch/powerpc/platforms/powernv/pci-ioda.c
-index 3094c61..9f53682 100644
---- a/arch/powerpc/platforms/powernv/pci-ioda.c
-+++ b/arch/powerpc/platforms/powernv/pci-ioda.c
-@@ -132,12 +132,12 @@ static inline bool pnv_pci_is_mem_pref_64(unsigned long flags)
- 		(IORESOURCE_MEM_64 | IORESOURCE_PREFETCH));
- }
- 
--static void pnv_ioda_reserve_pe(struct pnv_phb *phb, int pe_no)
-+static struct pnv_ioda_pe *pnv_ioda_reserve_pe(struct pnv_phb *phb, int pe_no)
+diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
+index a18a2ce..074870a 100644
+--- a/drivers/of/fdt.c
++++ b/drivers/of/fdt.c
+@@ -388,10 +388,11 @@ static void *unflatten_dt_node(const void *blob,
+ 			       struct device_node **nodepp,
+ 			       bool dryrun)
  {
- 	if (!(pe_no >= 0 && pe_no < phb->ioda.total_pe)) {
- 		pr_warn("%s: Invalid PE %d on PHB#%x\n",
- 			__func__, pe_no, phb->hose->global_number);
--		return;
-+		return NULL;
- 	}
++	unsigned long fpsize = dad ? strlen(of_node_full_name(dad)) : 0;
+ 	int depth = 1;
  
- 	if (test_and_set_bit(pe_no, phb->ioda.pe_alloc))
-@@ -146,9 +146,11 @@ static void pnv_ioda_reserve_pe(struct pnv_phb *phb, int pe_no)
- 
- 	phb->ioda.pe_array[pe_no].phb = phb;
- 	phb->ioda.pe_array[pe_no].pe_number = pe_no;
-+
-+	return &phb->ioda.pe_array[pe_no];
+ 	return __unflatten_dt_node(blob, mem, poffset,
+-				   dad, nodepp, 0,
++				   dad, nodepp, fpsize,
+ 				   dryrun, &depth);
  }
  
--static int pnv_ioda_alloc_pe(struct pnv_phb *phb)
-+static struct pnv_ioda_pe *pnv_ioda_alloc_pe(struct pnv_phb *phb)
- {
- 	unsigned long pe;
- 
-@@ -156,12 +158,12 @@ static int pnv_ioda_alloc_pe(struct pnv_phb *phb)
- 		pe = find_next_zero_bit(phb->ioda.pe_alloc,
- 					phb->ioda.total_pe, 0);
- 		if (pe >= phb->ioda.total_pe)
--			return IODA_INVALID_PE;
-+			return NULL;
- 	} while(test_and_set_bit(pe, phb->ioda.pe_alloc));
- 
- 	phb->ioda.pe_array[pe].phb = phb;
- 	phb->ioda.pe_array[pe].pe_number = pe;
--	return pe;
-+	return &phb->ioda.pe_array[pe];
- }
- 
- static void pnv_ioda_free_pe(struct pnv_phb *phb, int pe)
-@@ -334,7 +336,7 @@ static void pnv_ioda_reserve_m64_pe(struct pci_bus *bus,
- 	}
- }
- 
--static int pnv_ioda_pick_m64_pe(struct pci_bus *bus, bool all)
-+static struct pnv_ioda_pe *pnv_ioda_pick_m64_pe(struct pci_bus *bus, bool all)
- {
- 	struct pci_controller *hose = pci_bus_to_host(bus);
- 	struct pnv_phb *phb = hose->private_data;
-@@ -344,7 +346,7 @@ static int pnv_ioda_pick_m64_pe(struct pci_bus *bus, bool all)
- 
- 	/* Root bus shouldn't use M64 */
- 	if (pci_is_root_bus(bus))
--		return IODA_INVALID_PE;
-+		return NULL;
- 
- 	/* Allocate bitmap */
- 	size = _ALIGN_UP(phb->ioda.total_pe / 8, sizeof(unsigned long));
-@@ -352,7 +354,7 @@ static int pnv_ioda_pick_m64_pe(struct pci_bus *bus, bool all)
- 	if (!pe_alloc) {
- 		pr_warn("%s: Out of memory !\n",
- 			__func__);
--		return IODA_INVALID_PE;
-+		return NULL;
- 	}
- 
- 	/* Figure out reserved PE numbers by the PE */
-@@ -365,7 +367,7 @@ static int pnv_ioda_pick_m64_pe(struct pci_bus *bus, bool all)
- 	 */
- 	if (bitmap_empty(pe_alloc, phb->ioda.total_pe)) {
- 		kfree(pe_alloc);
--		return IODA_INVALID_PE;
-+		return NULL;
- 	}
- 
- 	/*
-@@ -416,7 +418,7 @@ static int pnv_ioda_pick_m64_pe(struct pci_bus *bus, bool all)
- 	}
- 
- 	kfree(pe_alloc);
--	return master_pe->pe_number;
-+	return master_pe;
- }
- 
- static void __init pnv_ioda_parse_m64_window(struct pnv_phb *phb)
-@@ -1069,28 +1071,26 @@ static void pnv_ioda_setup_same_PE(struct pci_bus *bus, struct pnv_ioda_pe *pe)
-  * subordinate PCI devices and buses. The second type of PE is normally
-  * orgiriated by PCIe-to-PCI bridge or PLX switch downstream ports.
+@@ -408,6 +409,7 @@ static void *unflatten_dt_node(const void *blob,
+  * for the resulting tree
   */
--static void pnv_ioda_setup_bus_PE(struct pci_bus *bus, bool all)
-+static struct pnv_ioda_pe *pnv_ioda_setup_bus_PE(struct pci_bus *bus, bool all)
+ static void __unflatten_device_tree(const void *blob,
++			     struct device_node *dad,
+ 			     struct device_node **mynodes,
+ 			     void * (*dt_alloc)(u64 size, u64 align))
  {
- 	struct pci_controller *hose = pci_bus_to_host(bus);
- 	struct pnv_phb *phb = hose->private_data;
--	struct pnv_ioda_pe *pe;
--	int pe_num = IODA_INVALID_PE;
-+	struct pnv_ioda_pe *pe = NULL;
+@@ -435,7 +437,7 @@ static void __unflatten_device_tree(const void *blob,
+ 	/* First pass, scan for size */
+ 	start = 0;
+ 	size = (unsigned long)unflatten_dt_node(blob, NULL, &start,
+-						NULL, NULL, true);
++						dad, NULL, true);
+ 	size = ALIGN(size, 4);
  
- 	/* Check if PE is determined by M64 */
- 	if (phb->pick_m64_pe)
--		pe_num = phb->pick_m64_pe(bus, all);
-+		pe = phb->pick_m64_pe(bus, all);
+ 	pr_debug("  size is %lx, allocating...\n", size);
+@@ -450,7 +452,7 @@ static void __unflatten_device_tree(const void *blob,
  
- 	/* The PE number isn't pinned by M64 */
--	if (pe_num == IODA_INVALID_PE)
--		pe_num = pnv_ioda_alloc_pe(phb);
-+	if (!pe)
-+		pe = pnv_ioda_alloc_pe(phb);
- 
--	if (pe_num == IODA_INVALID_PE) {
--		pr_warning("%s: Not enough PE# available for PCI bus %04x:%02x\n",
-+	if (!pe) {
-+		pr_warning("%s: No enough PE# for PCI bus %04x:%02x\n",
- 			__func__, pci_domain_nr(bus), bus->number);
--		return;
-+		return NULL;
- 	}
- 
--	pe = &phb->ioda.pe_array[pe_num];
- 	pe->flags |= (all ? PNV_IODA_PE_BUS_ALL : PNV_IODA_PE_BUS);
- 	pe->pbus = bus;
- 	pe->pdev = NULL;
-@@ -1101,17 +1101,16 @@ static void pnv_ioda_setup_bus_PE(struct pci_bus *bus, bool all)
- 
- 	if (all)
- 		pe_info(pe, "Secondary bus %d..%d associated with PE#%d\n",
--			bus->busn_res.start, bus->busn_res.end, pe_num);
-+			bus->busn_res.start, bus->busn_res.end, pe->pe_number);
- 	else
- 		pe_info(pe, "Secondary bus %d associated with PE#%d\n",
--			bus->busn_res.start, pe_num);
-+			bus->busn_res.start, pe->pe_number);
- 
- 	if (pnv_ioda_configure_pe(phb, pe)) {
- 		/* XXX What do we do here ? */
--		if (pe_num)
--			pnv_ioda_free_pe(phb, pe_num);
-+		pnv_ioda_free_pe(phb, pe->pe_number);
- 		pe->pbus = NULL;
--		return;
-+		return NULL;
- 	}
- 
- 	/* Associate it with all child devices */
-@@ -1122,6 +1121,8 @@ static void pnv_ioda_setup_bus_PE(struct pci_bus *bus, bool all)
- 
- 	/* Link the PE */
- 	pnv_ioda_link_pe_by_weight(phb, pe);
-+
-+	return pe;
+ 	/* Second pass, do actual unflattening */
+ 	start = 0;
+-	unflatten_dt_node(blob, mem, &start, NULL, mynodes, false);
++	unflatten_dt_node(blob, mem, &start, dad, mynodes, false);
+ 	if (be32_to_cpup(mem + size) != 0xdeadbeef)
+ 		pr_warning("End of tree marker overwritten: %08x\n",
+ 			   be32_to_cpup(mem + size));
+@@ -472,9 +474,10 @@ static void *kernel_tree_alloc(u64 size, u64 align)
+  * can be used.
+  */
+ void of_fdt_unflatten_tree(const unsigned long *blob,
++			struct device_node *dad,
+ 			struct device_node **mynodes)
+ {
+-	__unflatten_device_tree(blob, mynodes, &kernel_tree_alloc);
++	__unflatten_device_tree(blob, dad, mynodes, &kernel_tree_alloc);
  }
+ EXPORT_SYMBOL_GPL(of_fdt_unflatten_tree);
  
- static void pnv_ioda_setup_PEs(struct pci_bus *bus)
-diff --git a/arch/powerpc/platforms/powernv/pci.h b/arch/powerpc/platforms/powernv/pci.h
-index 6f8568e..c0bc57f 100644
---- a/arch/powerpc/platforms/powernv/pci.h
-+++ b/arch/powerpc/platforms/powernv/pci.h
-@@ -121,7 +121,7 @@ struct pnv_phb {
- 	int (*init_m64)(struct pnv_phb *phb);
- 	void (*reserve_m64_pe)(struct pci_bus *bus,
- 			       unsigned long *pe_bitmap, bool all);
--	int (*pick_m64_pe)(struct pci_bus *bus, bool all);
-+	struct pnv_ioda_pe* (*pick_m64_pe)(struct pci_bus *bus, bool all);
- 	int (*get_pe_state)(struct pnv_phb *phb, int pe_no);
- 	void (*freeze_pe)(struct pnv_phb *phb, int pe_no);
- 	int (*unfreeze_pe)(struct pnv_phb *phb, int pe_no, int opt);
+@@ -1125,7 +1128,7 @@ bool __init early_init_dt_scan(void *params)
+  */
+ void __init unflatten_device_tree(void)
+ {
+-	__unflatten_device_tree(initial_boot_params, &of_root,
++	__unflatten_device_tree(initial_boot_params, NULL, &of_root,
+ 				early_init_dt_alloc_memory_arch);
+ 
+ 	/* Get pointer to "/chosen" and "/aliases" nodes for use everywhere */
+diff --git a/drivers/of/unittest.c b/drivers/of/unittest.c
+index 1801634..2270830 100644
+--- a/drivers/of/unittest.c
++++ b/drivers/of/unittest.c
+@@ -907,7 +907,7 @@ static int __init unittest_data_add(void)
+ 			"not running tests\n", __func__);
+ 		return -ENOMEM;
+ 	}
+-	of_fdt_unflatten_tree(unittest_data, &unittest_data_node);
++	of_fdt_unflatten_tree(unittest_data, NULL, &unittest_data_node);
+ 	if (!unittest_data_node) {
+ 		pr_warn("%s: No tree to attach; not running tests\n", __func__);
+ 		return -ENODATA;
+diff --git a/include/linux/of_fdt.h b/include/linux/of_fdt.h
+index df9ef38..3644960 100644
+--- a/include/linux/of_fdt.h
++++ b/include/linux/of_fdt.h
+@@ -38,6 +38,7 @@ extern bool of_fdt_is_big_endian(const void *blob,
+ extern int of_fdt_match(const void *blob, unsigned long node,
+ 			const char *const *compat);
+ extern void of_fdt_unflatten_tree(const unsigned long *blob,
++			       struct device_node *dad,
+ 			       struct device_node **mynodes);
+ 
+ /* TBD: Temporary export of fdt globals - remove when code fully merged */
 -- 
 2.1.0
