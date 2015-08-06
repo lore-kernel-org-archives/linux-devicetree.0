@@ -1,102 +1,97 @@
-From: Shawn Lin <shawn.lin@rock-chips.com>
-Subject: Re: [RFC PATCH v3 2/5] Documentation: synopsys-dw-mshc: add bindings
- for idmac and edmac
-Date: Thu, 6 Aug 2015 11:13:55 +0800
-Message-ID: <55C2D0F3.8000300@rock-chips.com>
-References: <1438762614-22154-1-git-send-email-shawn.lin@rock-chips.com>
- <1438762672-22243-1-git-send-email-shawn.lin@rock-chips.com>
- <CAD=FV=Wv1FLHGyK=yL_P-WbRZwnK2K-rMEaXHjsZf+4iHfucjw@mail.gmail.com>
- <55C2C453.3000005@samsung.com>
+From: Punnaiah Choudary Kalluri <punnaiah.choudary.kalluri@xilinx.com>
+Subject: [PATCH v4 1/2] Documentation: dt: Add Xilinx zynqmp dma device tree binding documentation
+Date: Thu, 6 Aug 2015 08:49:32 +0530
+Message-ID: <1438831173-8761-1-git-send-email-punnaia@xilinx.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8;
-        format=flowed
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-mips-bounce@linux-mips.org>
-In-Reply-To: <55C2C453.3000005@samsung.com>
-Sender: linux-mips-bounce@linux-mips.org
-Errors-to: linux-mips-bounce@linux-mips.org
-List-help: <mailto:ecartis@linux-mips.org?Subject=help>
-List-unsubscribe: <mailto:ecartis@linux-mips.org?subject=unsubscribe%20linux-mips>
-List-software: Ecartis version 1.0.0
-List-subscribe: <mailto:ecartis@linux-mips.org?subject=subscribe%20linux-mips>
-List-owner: <mailto:ralf@linux-mips.org>
-List-post: <mailto:linux-mips@linux-mips.org>
-List-archive: <http://www.linux-mips.org/archives/linux-mips/>
-To: Jaehoon Chung <jh80.chung@samsung.com>, Doug Anderson <dianders@chromium.org>
-Cc: shawn.lin@rock-chips.com, Ulf Hansson <ulf.hansson@linaro.org>, Seungwon Jeon <tgih.jun@samsung.com>, linux-mips@linux-mips.org, Arnd Bergmann <arnd@arndb.de>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Alexey Brodkin <abrodkin@synopsys.com>, Stefan Agner <stefan@agner.ch>, Zhou Wang <wangzhou.bry@gmail.com>, Kumar Gala <galak@codeaurora.org>, Alim Akhtar <alim.akhtar@samsung.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Wang Long <long.wanglong@huawei.com>, Rob Herring <robh+dt@kernel.org>, Chaotian Jing <chaotian.jing@mediatek.com>, Lukasz Majewski <l.majewski@samsung.com>, Jun Nie <jun.nie@linaro.org>, Catalin Marinas <catalin.marinas@arm.com>, Kevin Hao <haokexin@gmail.com>, Olof Johansson <olof@lixom.net>, Ray Jui <rjui@broa>
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, michal.simek@xilinx.com, vinod.koul@intel.com, dan.j.williams@intel.com
+Cc: dmaengine@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, kalluripunnaiahchoudary@gmail.com, kpc528@gmail.com, Punnaiah Choudary Kalluri <punnaia@xilinx.com>
 List-Id: devicetree@vger.kernel.org
 
-=E5=9C=A8 2015/8/6 10:20, Jaehoon Chung =E5=86=99=E9=81=93:
-> On 08/06/2015 11:16 AM, Doug Anderson wrote:
->> Shawn,
->>
->> On Wed, Aug 5, 2015 at 1:17 AM, Shawn Lin <shawn.lin@rock-chips.com>=
- wrote:
->>> synopsys-dw-mshc supports three types of transfer mode. We add bind=
-ings
->>> and description for how to use them at runtime. Without idmac and e=
-dmac
->>> property, pio is the default transfer mode. Make sure that Idmac an=
-d emdac
->>> should not be used simultaneously.
->> Can't you just read the HCON register?
->>
->> [17:16]: DMA_INTERFACE
->>   00: none
->>   01: DW_DMA
->>   10: GENERIC_DMA
->>   11: NON-DW-DMA
-> If read it and get the exactly information. I think we can use that i=
-nformation.
+Device-tree binding documentation for Xilinx zynqmp dma engine used in
+Zynq UltraScale+ MPSoC.
 
-  It's helpful really, but the description is ambiguous. =EF=BC=9A(
-  So I make a big big mistake when I read it for the firest time .
-  I was just wondering the "mismatch" value from HCON and my databook.
+Signed-off-by: Punnaiah Choudary Kalluri <punnaia@xilinx.com>
+---
+Changes in v4:
+- None
+Changes in v3:
+- None
+Changes in v2:
+- None
+---
+ .../devicetree/bindings/dma/xilinx/zynqmp_dma.txt  |   61 ++++++++++++++++++++
+ 1 files changed, 61 insertions(+), 0 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/dma/xilinx/zynqmp_dma.txt
 
-Here I get details from our ASIC team guy :
-
-// Name:         DMA_INTERFACE
-// Default:      None
-// Values:       None (0), DW-DMA (1), Generic-DMA (2), NON-DW-DMA (3)
-// Enabled:      INTERNAL_DMAC=3D=3D0
-//
-// Configures the type for DMA interface. In addition to AMBA host=20
-interface,
-//  the data FIFO can be accesses by the optional DMA interface. The DM=
-A=20
-type
-//  could be either DW-DMA, which provides hand shake signals to=20
-DW_ahb_dmac
-//  controller, or a generic DMA interface which provides a simpler
-//  request/acknowledgement protocol and dedicated DMA data-bus, or
-//  no DMA interface.
-`define DMA_INTERFACE 1
-
-   if we use idmac, DMA_INTERFACE should be "0", and we get 2b'00 from=20
-HCON[17:16]
-   if we use edmac, DMA_INTERFACE should be "1", "2" and we get 2b'01 ,=
-2b'10
-   from HCON[17:16] respectively .
-   But if only support PIO mode,   DMA_INTERFACE should be "3", and we=20
-get 2b'11 from
-   HCON[17:16].
-
-   So, "none" means IDMAC, "DW_DMA"/"GENERIC_DMA" refer to two types of=
-=20
-external dma and "NON-DW-DMA" means pio from databook . It's a little=20
-difficult to understand it.
-
-  This makes my work easy!
-
-  Thanks, Doug and Jeahoon.
-
-> Best Regards,
-> Jaehoon Chung
->
->
->
->
-
-
---=20
-Shawn Lin
+diff --git a/Documentation/devicetree/bindings/dma/xilinx/zynqmp_dma.txt b/Documentation/devicetree/bindings/dma/xilinx/zynqmp_dma.txt
+new file mode 100644
+index 0000000..e4f92b9
+--- /dev/null
++++ b/Documentation/devicetree/bindings/dma/xilinx/zynqmp_dma.txt
+@@ -0,0 +1,61 @@
++Xilinx ZynqMP DMA engine, it does support memory to memory transfers,
++memory to device and device to memory transfers. It also has flow
++control and rate control support for slave/peripheral dma access.
++
++Required properties:
++- compatible: Should be "xlnx,zynqmp-dma-1.0"
++- #dma-cells: Should be <1>, a single cell holding a line request number
++- reg: Memory map for module access
++- interrupt-parent: Interrupt controller the interrupt is routed through
++- interrupts: Should contain DMA channel interrupt
++- xlnx,bus-width: AXI buswidth in bits. Should contain 128 or 64
++
++Optional properties:
++- xlnx,include-sg: Indicates the controller to operate in simple or scatter
++		   gather dma mode
++- xlnx,ratectrl: Scheduling interval in terms of clock cycles for
++		 source AXI transaction
++- xlnx,overfetch: Tells whether the channel is allowed to over fetch the data
++- xlnx,src-issue: Number of AXI outstanding transactions on source side
++- xlnx,desc-axi-cohrnt: Tells whether the AXI transactions generated for the
++			descriptor read are marked Non-coherent
++- xlnx,src-axi-cohrnt: Tells whether the AXI transactions generated for the
++			source descriptor payload are marked Non-coherent
++- xlnx,dst-axi-cohrnt: Tells whether the AXI transactions generated for the
++			dst descriptor payload are marked Non-coherent
++- xlnx,desc-axi-qos: AXI QOS bits to be used for descriptor fetch
++- xlnx,src-axi-qos: AXI QOS bits to be used for data read
++- xlnx,dst-axi-qos: AXI QOS bits to be used for data write
++- xlnx,desc-axi-cache: AXI cache bits to be used for descriptor fetch.
++- xlnx,desc-axi-cache: AXI cache bits to be used for data read
++- xlnx,desc-axi-cache: AXI cache bits to be used for data write
++- xlnx,src-burst-len: AXI length for data read. Support only power of 2 values
++		      i.e 1,2,4,8 and 16
++- xlnx,dst-burst-len: AXI length for data write. Support only power of 2 values
++		      i.e 1,2,4,8 and 16
++
++Example:
++++++++++
++fpd_dma_chan1: dma@FD500000 {
++	compatible = "xlnx,zynqmp-dma-1.0";
++	reg = <0x0 0xFD500000 0x1000>;
++	#dma_cells = <1>;
++	interrupt-parent = <&gic>;
++	interrupts = <0 117 4>;
++	xlnx,bus-width = <128>;
++	xlnx,include-sg;
++	xlnx,overfetch;
++	xlnx,ratectrl = <0>;
++	xlnx,src-issue = <16>;
++	xlnx,desc-axi-cohrnt;
++	xlnx,src-axi-cohrnt;
++	xlnx,dst-axi-cohrnt;
++	xlnx,desc-axi-qos = <0>;
++	xlnx,desc-axi-cache = <0>;
++	xlnx,src-axi-qos = <0>;
++	xlnx,src-axi-cache = <2>;
++	xlnx,dst-axi-qos = <0>;
++	xlnx,dst-axi-cache = <2>;
++	xlnx,src-burst-len = <4>;
++	xlnx,dst-burst-len = <4>;
++};
+-- 
+1.7.4
