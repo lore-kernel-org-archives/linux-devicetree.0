@@ -1,143 +1,105 @@
-From: Jaehoon Chung <jh80.chung@samsung.com>
-Subject: Re: [RFC PATCH v3 0/5]
-Date: Thu, 06 Aug 2015 10:47:21 +0900
-Message-ID: <55C2BCA9.5080202@samsung.com>
-References: <1438762614-22154-1-git-send-email-shawn.lin@rock-chips.com>
- <55C2A001.2090506@samsung.com> <55C2AE1C.7080502@rock-chips.com>
+From: "Yang, Wenyou" <Wenyou.Yang@atmel.com>
+Subject: RE: [PATCH v3 1/2] drivers: watchdog: add a driver to support
+ SAMA5D4 watchdog timer
+Date: Thu, 6 Aug 2015 02:09:00 +0000
+Message-ID: <B256D81BAE5131468A838E5D7A243641C9F87310@penmbx01>
+References: <1438765043-11030-1-git-send-email-wenyou.yang@atmel.com>
+	<1438765043-11030-2-git-send-email-wenyou.yang@atmel.com>
+ <20150805124030.6e73b975@ipc1.ka-ro>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-mips-bounce@linux-mips.org>
-In-reply-to: <55C2AE1C.7080502@rock-chips.com>
-Sender: linux-mips-bounce@linux-mips.org
-Errors-to: linux-mips-bounce@linux-mips.org
-List-help: <mailto:ecartis@linux-mips.org?Subject=help>
-List-unsubscribe: <mailto:ecartis@linux-mips.org?subject=unsubscribe%20linux-mips>
-List-software: Ecartis version 1.0.0
-List-subscribe: <mailto:ecartis@linux-mips.org?subject=subscribe%20linux-mips>
-List-owner: <mailto:ralf@linux-mips.org>
-List-post: <mailto:linux-mips@linux-mips.org>
-List-archive: <http://www.linux-mips.org/archives/linux-mips/>
-To: Shawn Lin <shawn.lin@rock-chips.com>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, Ulf Hansson <ulf.hansson@linaro.org>, Seungwon Jeon <tgih.jun@samsung.com>
-Cc: dianders@chromium.org, linux-mips@linux-mips.org, Arnd Bergmann <arnd@arndb.de>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Alexey Brodkin <abrodkin@synopsys.com>, Stefan Agner <stefan@agner.ch>, Zhou Wang <wangzhou.bry@gmail.com>, Kumar Gala <galak@codeaurora.org>, Alim Akhtar <alim.akhtar@samsung.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Wang Long <long.wanglong@huawei.com>, Rob Herring <robh+dt@kernel.org>, Chaotian Jing <chaotian.jing@mediatek.com>, Lukasz Majewski <l.majewski@samsung.com>, Jun Nie <jun.nie@linaro.org>, Catalin Marinas <catalin.marinas@arm.com>, Kevin Hao <haokexin@gmail.com>, Olof Johansson <olof@lixom.net>, Ray Jui <rjui@broadcom.com>, Govindraj Raja <govindraj.raja@imgtec.com>, linux-samsung-so
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20150805124030.6e73b975@ipc1.ka-ro>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: =?utf-8?B?TG90aGFyIFdhw59tYW5u?= <LW@KARO-electronics.de>
+Cc: "wim@iguana.be" <wim@iguana.be>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "galak@codeaurora.org" <galak@codeaurora.org>, "boris.brezillon@free-electrons.com" <boris.brezillon@free-electrons.com>, "linux-watchdog@vger.kernel.org" <linux-watchdog@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "sylvain.rochet@finsecur.com" <sylvain.rochet@finsecur.com>, "Ferre, Nicolas" <Nicolas.FERRE@atmel.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-
-On 08/06/2015 09:45 AM, Shawn Lin wrote:
-> On 2015/8/6 7:45, Krzysztof Kozlowski wrote:
->> On 05.08.2015 17:16, Shawn Lin wrote:
->>> Synopsys DesignWare mobile storage host controller supports three
->>> types of transfer mode: pio, internal dma and external dma. However,
->>> dw_mmc can only supports pio and internal dma now. Thus some platforms
->>> using dw-mshc integrated with generic dma can't work in dma mode. So we
->>> submit this patch to achieve it.
->>>
->>> And the config option, CONFIG_MMC_DW_IDMAC, was added by Will Newton
->>> (commit:f95f3850) for the first version of dw_mmc and never be touched from
->>> then. At that time dt-bindings hadn't been introduced into dw_mmc yet means
->>> we should select CONFIG_MMC_DW_IDMAC to enable internal dma mode at compile
->>> time. Nowadays, device-tree helps us to support a variety of boards with one
->>> kernel. That's why we need to remove it and decide the transfer mode at runtime.
->>>
->>> This RFC patch needs lots of ACKs. I know it's hard, but it does need someone
->>> to make the running.
->>>
->>> Patch does the following things:
->>> - remove CONFIG_MMC_DW_IDMAC config option
->>> - add bindings for idmac and edmac used by synopsys-dw-mshc
->>>    at runtime
->>> - add edmac support for synopsys-dw-mshc
->>>
->>> Patch is based on next of git://git.linaro.org/people/ulf.hansson/mmc
->>>
->>>
->>> Changes in v3:
->>> - choose transfer mode at runtime
->>> - remove all CONFIG_MMC_DW_IDMAC config option
->>> - add supports-idmac property for some platforms
->>>
->>> Changes in v2:
->>> - Fix typo of dev_info msg
->>> - remove unused dmach from declaration of dw_mci_dma_slave
->>>
->>> Shawn Lin (5):
->>>    mmc: dw_mmc: Add external dma interface support
->>>    Documentation: synopsys-dw-mshc: add bindings for idmac and edmac
->>>    arm: configs: remove CONFIG_MMC_DW_IDMAC
->>>    mips: configs: remove CONFIG_MMC_DW_IDMAC
->>>    ARM: dts: add supports-idmac property
->> Please fix the title of cover letter.
->>
->> You CC-ed a lot of people. Probably the whole output of git_maintainers
->> which is not necessary. This means that your patches did not reach some
->> of the mailing lists because of too many recipients. I received your
->> patchset but I can't find it on any of the lists I subscribe.
->>
->> Please CC only REAL maintainers, not committers.
-> 
-> Right, not the whole output of "cc" by patchman automatically should be involved
-> in the  iteration of this patch. I will omit them from this loop  in v4.
-
-As Krzysztof mentioned, I can't read these patchset at mailing list.
-I will check these after resend..It's helpful to me for checking patches.
-
-Best Regards,
-Jaehoon Chung
-
-> 
->>
->> Additionally if DTS changes do not have to be introduced atomically
->> please split it per sub-architecture. Of course that applies only in
->> case of bisectable patches. And the patchset should preserve
->> bisectability and backward compatibility (mentioned earlier).
-> 
-> okay, it will be split for each sub-architecture.
-> Thanks, Krzysztof. It's helpful.
->> Best regards,
->> Krzysztof
->>
->>
->>>   .../devicetree/bindings/mmc/synopsys-dw-mshc.txt   |  41 +++
->>>   arch/arc/configs/axs101_defconfig                  |   1 -
->>>   arch/arc/configs/axs103_defconfig                  |   1 -
->>>   arch/arc/configs/axs103_smp_defconfig              |   1 -
->>>   arch/arm/boot/dts/exynos3250-monk.dts              |   1 +
->>>   arch/arm/boot/dts/exynos3250-rinato.dts            |   1 +
->>>   arch/arm/boot/dts/exynos4412-odroid-common.dtsi    |   1 +
->>>   arch/arm/boot/dts/exynos4412-origen.dts            |   1 +
->>>   arch/arm/boot/dts/exynos4412-trats2.dts            |   1 +
->>>   arch/arm/boot/dts/exynos4x12.dtsi                  |   1 +
->>>   arch/arm/boot/dts/exynos5250-arndale.dts           |   2 +
->>>   arch/arm/boot/dts/exynos5250-smdk5250.dts          |   2 +
->>>   arch/arm/boot/dts/exynos5250-snow.dts              |   3 +
->>>   arch/arm/boot/dts/exynos5250-spring.dts            |   2 +
->>>   arch/arm/boot/dts/exynos5260-xyref5260.dts         |   2 +
->>>   arch/arm/boot/dts/exynos5410-smdk5410.dts          |   2 +
->>>   arch/arm/boot/dts/exynos5420-arndale-octa.dts      |   2 +
->>>   arch/arm/boot/dts/exynos5420-peach-pit.dts         |   3 +
->>>   arch/arm/boot/dts/exynos5420-smdk5420.dts          |   2 +
->>>   arch/arm/boot/dts/exynos5422-odroidxu3-common.dtsi |   2 +
->>>   arch/arm/boot/dts/exynos5800-peach-pi.dts          |   3 +
->>>   arch/arm/boot/dts/hisi-x5hd2.dtsi                  |   2 +
->>>   arch/arm/boot/dts/rk3288-evb.dtsi                  |   2 +
->>>   arch/arm/boot/dts/rk3288-firefly.dtsi              |   3 +
->>>   arch/arm/boot/dts/rk3288-popmetal.dts              |   2 +
->>>   arch/arm/configs/exynos_defconfig                  |   1 -
->>>   arch/arm/configs/hisi_defconfig                    |   1 -
->>>   arch/arm/configs/lpc18xx_defconfig                 |   1 -
->>>   arch/arm/configs/multi_v7_defconfig                |   1 -
->>>   arch/arm/configs/zx_defconfig                      |   1 -
->>>   arch/arm64/boot/dts/exynos/exynos7-espresso.dts    |   2 +
->>>   arch/mips/configs/pistachio_defconfig              |   1 -
->>>   drivers/mmc/host/Kconfig                           |  11 +-
->>>   drivers/mmc/host/dw_mmc-pltfm.c                    |   2 +
->>>   drivers/mmc/host/dw_mmc.c                          | 277 +++++++++++++++++----
->>>   include/linux/mmc/dw_mmc.h                         |  28 ++-
->>>   36 files changed, 338 insertions(+), 72 deletions(-)
->>>
->>
->>
->>
-> 
-> 
+SGkgTG90aGFyLA0KDQpUaGFuayB5b3UgZm9yIHlvdXIgcmV2aWV3Lg0KDQo+IC0tLS0tT3JpZ2lu
+YWwgTWVzc2FnZS0tLS0tDQo+IEZyb206IExvdGhhciBXYcOfbWFubiBbbWFpbHRvOkxXQEtBUk8t
+ZWxlY3Ryb25pY3MuZGVdDQo+IFNlbnQ6IDIwMTXlubQ45pyINeaXpSAxODo0MQ0KPiBUbzogWWFu
+ZywgV2VueW91DQo+IENjOiB3aW1AaWd1YW5hLmJlOyByb2JoK2R0QGtlcm5lbC5vcmc7IHBhd2Vs
+Lm1vbGxAYXJtLmNvbTsNCj4gbWFyay5ydXRsYW5kQGFybS5jb207IGlqYytkZXZpY2V0cmVlQGhl
+bGxpb24ub3JnLnVrOyBnYWxha0Bjb2RlYXVyb3JhLm9yZzsNCj4gYm9yaXMuYnJlemlsbG9uQGZy
+ZWUtZWxlY3Ryb25zLmNvbTsgbGludXgtd2F0Y2hkb2dAdmdlci5rZXJuZWwub3JnOw0KPiBkZXZp
+Y2V0cmVlQHZnZXIua2VybmVsLm9yZzsgc3lsdmFpbi5yb2NoZXRAZmluc2VjdXIuY29tOyBGZXJy
+ZSwgTmljb2xhczsgbGludXgtDQo+IGtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc7IGxpbnV4LWFybS1r
+ZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZw0KPiBTdWJqZWN0OiBSZTogW1BBVENIIHYzIDEvMl0g
+ZHJpdmVyczogd2F0Y2hkb2c6IGFkZCBhIGRyaXZlciB0byBzdXBwb3J0IFNBTUE1RDQNCj4gd2F0
+Y2hkb2cgdGltZXINCj4gDQo+IEhpLA0KPiANCj4gPiBGcm9tIFNBTUE1RDQsIHRoZSB3YXRjaGRv
+ZyB0aW1lciBpcyB1cGdyYXRlZCB3aXRoIGEgbmV3IGZlYXR1cmUsIHdoaWNoDQo+ID4gaXMgZGVz
+Y3JpYmxlZCBhcyBpbiB0aGUgZGF0YXNoZWV0LCAiV0RUX01SIGNhbiBiZSB3cml0dGVuIHVudGls
+IGENCj4gPiBMT0NLTVIgY29tbWFuZCBpcyBpc3N1ZWQgaW4gV0RUX0NSIi4NCj4gPiBUaGF0IGlz
+IHRvIHNheSwgYXMgbG9uZyBhcyB0aGUgYm9vdHN0cmFwIGFuZCB1LWJvb3QgZG9uJ3QgaXNzdWUg
+YQ0KPiA+IExPQ0tNUiBjb21tYW5kLCBXRFRfTVIgY2FuIGJlIHdyaXR0ZW4gbW9yZSB0aGFuIG9u
+Y2UgaW4gdGhlIGRyaXZlci4NCj4gPg0KPiA+IFNvIHRoZSBTQU1BNUQ0IHdhdGNoZG9nIGRyaXZl
+cidzIGltcGxlbWVudGF0aW9uIGlzIGRpZmZlcmVudCBmcm9tIHRoZQ0KPiA+IGF0OTFzYW05MjYw
+IHdhdGNoZG9nIGRyaXZlciBpbXBsZW1lbnRlZCBpbiBmaWxlIGF0OTFzYW05X3dkdC5jLg0KPiA+
+IFRoZSB1c2VyIGFwcGxpY2F0aW9uIG9wZW4gdGhlIGRldmljZSBmaWxlIHRvIGVuYWJsZSB0aGUg
+d2F0Y2hkb2cgdGltZXINCj4gPiBoYXJkd2FyZSwgYW5kIGNsb3NlIHRvIGRpc2FibGUgaXQsIGFu
+ZCBzZXQgdGhlIHdhdGNoZG9nIHRpbWVyIHRpbWVvdXQNCj4gPiBieSBzZXRpbmcgV0RWIGFuZCBX
+REQgZmllbGRzIG9mIFdEVF9NUiByZWdpc3RlciwgYW5kIHBpbmcgdGhlIHdhdGNoZG9nDQo+ID4g
+YnkgaXNzdWluZyBXRFJTVFQgY29tbWFuZCB0byBXRFRfQ1IgcmVnaXN0ZXIgd2l0aCBoYXJkLWNv
+ZGVkIGtleS4NCj4gPg0KPiA+IFNpZ25lZC1vZmYtYnk6IFdlbnlvdSBZYW5nIDx3ZW55b3UueWFu
+Z0BhdG1lbC5jb20+DQo+ID4gLS0tDQo+ID4gIGRyaXZlcnMvd2F0Y2hkb2cvS2NvbmZpZyAgICAg
+ICAgICAgIHwgICAgOSArKw0KPiA+ICBkcml2ZXJzL3dhdGNoZG9nL01ha2VmaWxlICAgICAgICAg
+ICB8ICAgIDEgKw0KPiA+ICBkcml2ZXJzL3dhdGNoZG9nL2F0OTFfc2FtYTVkNF93ZHQuYyB8ICAy
+NzkNCj4gKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysNCj4gPiAgZHJpdmVycy93
+YXRjaGRvZy9hdDkxc2FtOV93ZHQuaCAgICAgfCAgICAyICsNCj4gPiAgNCBmaWxlcyBjaGFuZ2Vk
+LCAyOTEgaW5zZXJ0aW9ucygrKQ0KPiA+ICBjcmVhdGUgbW9kZSAxMDA2NDQgZHJpdmVycy93YXRj
+aGRvZy9hdDkxX3NhbWE1ZDRfd2R0LmMNCj4gPg0KPiA+IGRpZmYgLS1naXQgYS9kcml2ZXJzL3dh
+dGNoZG9nL0tjb25maWcgYi9kcml2ZXJzL3dhdGNoZG9nL0tjb25maWcgaW5kZXgNCj4gPiBlNWU3
+YzU1Li40Y2U4MzQ2IDEwMDY0NA0KPiA+IC0tLSBhL2RyaXZlcnMvd2F0Y2hkb2cvS2NvbmZpZw0K
+PiA+ICsrKyBiL2RyaXZlcnMvd2F0Y2hkb2cvS2NvbmZpZw0KPiA+IEBAIC0xNTIsNiArMTUyLDE1
+IEBAIGNvbmZpZyBBUk1fU1A4MDVfV0FUQ0hET0cNCj4gPiAgCSAgQVJNIFByaW1lY2VsbCBTUDgw
+NSBXYXRjaGRvZyB0aW1lci4gVGhpcyB3aWxsIHJlYm9vdCB5b3VyIHN5c3RlbQ0KPiB3aGVuDQo+
+ID4gIAkgIHRoZSB0aW1lb3V0IGlzIHJlYWNoZWQuDQo+ID4NCj4gPiArY29uZmlnIEFUOTFfU0FN
+QTVENF9XQVRDSERPRw0KPiA+ICsJdHJpc3RhdGUgIkF0bWVsIFNBTUE1RDQgV2F0Y2hkb2cgVGlt
+ZXIiDQo+ID4gKwlkZXBlbmRzIG9uIEFSQ0hfQVQ5MQ0KPiA+ICsJc2VsZWN0IFdBVENIRE9HX0NP
+UkUNCj4gPiArCWhlbHANCj4gPiArCSAgQXRtZWwgU0FNQTVENCB3YXRjaGRvZyB0aW1lciBpcyBl
+bWJlZGRlZCBpbnRvIFNBTUE1RDQgY2hpcHMuDQo+ID4gKwkgIEl0cyBXYXRjaGRvZyBUaW1lciBN
+b2RlIFJlZ2lzdGVyIGNhbiBiZSB3cml0dGVuIG1vcmUgdGhhbiBvbmNlLg0KPiA+ICsJICBUaGlz
+IHdpbGwgcmVib290IHlvdXIgc3lzdGVtIHdoZW4gdGhlIHRpbWVvdXQgaXMgcmVhY2hlZC4NCj4g
+PiArDQo+ID4gIGNvbmZpZyBBVDkxUk05MjAwX1dBVENIRE9HDQo+ID4gIAl0cmlzdGF0ZSAiQVQ5
+MVJNOTIwMCB3YXRjaGRvZyINCj4gPiAgCWRlcGVuZHMgb24gU09DX0FUOTFSTTkyMDAgJiYgTUZE
+X1NZU0NPTiBkaWZmIC0tZ2l0DQo+ID4gYS9kcml2ZXJzL3dhdGNoZG9nL01ha2VmaWxlIGIvZHJp
+dmVycy93YXRjaGRvZy9NYWtlZmlsZSBpbmRleA0KPiA+IDVjMTkyOTQuLmM1NzU2OWMgMTAwNjQ0
+DQo+ID4gLS0tIGEvZHJpdmVycy93YXRjaGRvZy9NYWtlZmlsZQ0KPiA+ICsrKyBiL2RyaXZlcnMv
+d2F0Y2hkb2cvTWFrZWZpbGUNCj4gPiBAQCAtMzAsNiArMzAsNyBAQCBvYmotJChDT05GSUdfVVNC
+UENXQVRDSERPRykgKz0gcGN3ZF91c2Iubw0KPiA+DQo+ID4gICMgQVJNIEFyY2hpdGVjdHVyZQ0K
+PiA+ICBvYmotJChDT05GSUdfQVJNX1NQODA1X1dBVENIRE9HKSArPSBzcDgwNV93ZHQubw0KPiA+
+ICtvYmotJChDT05GSUdfQVQ5MV9TQU1BNUQ0X1dBVENIRE9HKSArPSBhdDkxX3NhbWE1ZDRfd2R0
+Lm8NCj4gY29uc2lzdGVuY3k/IE90aGVyIEFUOTEgZW50cmllcyBkb24ndCBoYXZlIGFuICdfJyBi
+ZXR3ZWVuICdBVDkxJyBhbmQgdGhlDQo+IHJlbWFpbmRlciBvZiB0aGUgS2NvbmZpZyBuYW1lLg0K
+QWNjZXB0LCBSZW1vdmUgdGhlIHByZWZpeCBBVDkxXyAsIHVzZSB0aGUgY2hpcCBuYW1lIGRpcmVj
+dGx5LCBTQU1BNUQ0IGluIG5leHQgdmVyaXNvbi4NCg0KPiANCj4gPiAgb2JqLSQoQ09ORklHX0FU
+OTFSTTkyMDBfV0FUQ0hET0cpICs9IGF0OTFybTkyMDBfd2R0Lm92aSANCj4gPiAgb2JqLSQoQ09O
+RklHX0FUOTFTQU05WF9XQVRDSERPRykgKz0gYXQ5MXNhbTlfd2R0Lm8NCj4gWy4uLl0NCj4gPiAr
+c3RhdGljIGlycXJldHVybl90IGF0bWVsX3dkdF9pcnFfaGFuZGxlcihpbnQgaXJxLCB2b2lkICpk
+ZXZfaWQpIHsNCj4gPiArCXN0cnVjdCBhdG1lbF93ZHQgKndkdCA9IHBsYXRmb3JtX2dldF9kcnZk
+YXRhKGRldl9pZCk7DQo+ID4gKw0KPiA+ICsJaWYgKHdkdF9yZWFkKHdkdCwgQVQ5MV9XRFRfU1Ip
+KSB7DQo+ID4gKwkJcHJfY3JpdCgiQXRtZWwgV2F0Y2hkb2cgU29mdHdhcmUgUmVzZXRcbiIpOw0K
+PiA+ICsJCWVtZXJnZW5jeV9yZXN0YXJ0KCk7DQo+ID4gKwkJcHJfY3JpdCgiUmVib290IGRpZG4n
+dCA/Pz8/P1xuIik7DQo+ID4NCj4gUmVib290IGRpZG4ndCB3aGF0PyAnc3VjY2VlZCcgcGVyaGFw
+cz8NClJlcGxhY2UgaXQgd2l0aCAnc3VjY2VlZCcgaW4gbmV4dCB2ZXJzaW9uLiANCg0KPiANCj4g
+PiArc3RhdGljIGNvbnN0IHN0cnVjdCBvZl9kZXZpY2VfaWQgYXRtZWxfd2R0X29mX21hdGNoW10g
+PSB7DQo+ID4gKwl7IC5jb21wYXRpYmxlID0gImF0bWVsLHNhbWE1ZDQtd2R0IiwgfSwNCj4gPiAr
+CXsgfSwNCj4gVGhlIGVtcHR5IGluaXRpYWxpemVyIG11c3QgYWx3YXlzIGJlIHRoZSBsYXN0IGVs
+ZW1lbnQgb2YgdGhlIGFycmF5LCBzbyB0aGVyZSBpcyBubw0KPiBwb2ludCBpbiBoYXZpbmcgYSB0
+cmFpbGluZyAnLCcgKHdob3NlIHB1cnBvc2UgaXMgdG8gZmFjaWxpdGF0ZSBhZGRpbmcgbW9yZSBl
+bnRyaWVzIGFmdGVyDQo+IHRoZSBsYXN0IG9uZSkuDQo+IFdpdGhvdXQgdGhlIGNvbW1hIHRoZXJl
+IHdpbGwgYmUgYSBjb21waWxlIGVycm9yIGlmIChlLmcuIGR1ZSB0byBhIGJhZGx5IHJlc29sdmVk
+DQo+IG1lcmdlIGNvbmZsaWN0KSBhbiBhZGRpdGlvbmFsIGVudHJ5IHdvdWxkIGJlIGFkZGVkIGFm
+dGVyIHRoZSBzdG9wIG1hcmtlci4gV2l0aCB0aGUNCj4gY29tbWEgYWZ0ZXIgdGhlIHN0b3AgbWFy
+a2VyIGFueSB0cmFpbGluZyBlbnRyaWVzIHdvdWxkIHNpbGVudGx5IGJlIGlnbm9yZWQuDQpSZW1v
+dmUgdGhpcyBjb21tYSBpbiBuZXh0IHZlcnNpb24uDQoNCj4gDQo+IA0KPiBMb3RoYXIgV2HDn21h
+bm4NCj4gLS0NCj4gX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX18NCj4gDQo+IEthLVJvIGVsZWN0cm9uaWNzIEdtYkggfCBQYXNjYWxzdHJh
+w59lIDIyIHwgRCAtIDUyMDc2IEFhY2hlbg0KPiBQaG9uZTogKzQ5IDI0MDggMTQwMi0wIHwgRmF4
+OiArNDkgMjQwOCAxNDAyLTEwDQo+IEdlc2Now6RmdHNmw7xocmVyOiBNYXR0aGlhcyBLYXVzc2Vu
+DQo+IEhhbmRlbHNyZWdpc3RlcmVpbnRyYWc6IEFtdHNnZXJpY2h0IEFhY2hlbiwgSFJCIDQ5OTYN
+Cj4gDQo+IHd3dy5rYXJvLWVsZWN0cm9uaWNzLmRlIHwgaW5mb0BrYXJvLWVsZWN0cm9uaWNzLmRl
+DQo+IF9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fDQoNCkJlc3QgUmVnYXJkcywNCldlbnlvdSANCg==
