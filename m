@@ -1,63 +1,67 @@
-From: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH] ARM: dts: imx6ul: add RTC support
-Date: Thu, 6 Aug 2015 16:06:24 +0800
-Message-ID: <20150806080623.GD9847@tiger>
-References: <1438703698-2445-1-git-send-email-b20788@freescale.com>
+From: "Yang, Wenyou" <Wenyou.Yang-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Subject: RE: [PATCH v4 1/2] drivers: watchdog: add a driver to support
+ SAMA5D4 watchdog timer
+Date: Thu, 6 Aug 2015 08:18:52 +0000
+Message-ID: <B256D81BAE5131468A838E5D7A243641C9F875EB@penmbx01>
+References: <1438837170-4518-1-git-send-email-wenyou.yang@atmel.com>
+ <1438837170-4518-2-git-send-email-wenyou.yang@atmel.com>
+ <55C31547.2040207@roeck-us.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="gb2312"
+Content-Transfer-Encoding: base64
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1438703698-2445-1-git-send-email-b20788-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+In-Reply-To: <55C31547.2040207-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+Content-Language: en-US
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Anson Huang <b20788-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
+To: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, "wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org" <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "pawel.moll-5wv7dgnIgG8@public.gmane.org" <pawel.moll-5wv7dgnIgG8@public.gmane.org>, "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org" <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, "galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org" <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: "sylvain.rochet-ETtyaVkrhkNWk0Htik3J/w@public.gmane.org" <sylvain.rochet-ETtyaVkrhkNWk0Htik3J/w@public.gmane.org>, "Ferre, Nicolas" <Nicolas.FERRE-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, "boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org" <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Aug 04, 2015 at 11:54:58PM +0800, Anson Huang wrote:
-> Add RTC support for i.MX6UL.
-> 
-> Signed-off-by: Anson Huang <b20788-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-
-Applied with a minor change below.
-
-> ---
->  arch/arm/boot/dts/imx6ul.dtsi | 12 ++++++++++++
->  1 file changed, 12 insertions(+)
-> 
-> diff --git a/arch/arm/boot/dts/imx6ul.dtsi b/arch/arm/boot/dts/imx6ul.dtsi
-> index af865d3..b6c6c31 100644
-> --- a/arch/arm/boot/dts/imx6ul.dtsi
-> +++ b/arch/arm/boot/dts/imx6ul.dtsi
-> @@ -393,6 +393,18 @@
->  				fsl,anatop = <&anatop>;
->  			};
->  
-> +			snvs: snvs@020cc000 {
-> +				compatible = "fsl,sec-v4.0-mon", "syscon", "simple-mfd";
-> +				reg = <0x020cc000 0x4000>;
-> +
-> +				snvs_rtc: snvs-rtc-lp {
-> +					compatible = "fsl,sec-v4.0-mon-rtc-lp";
-> +					regmap = <&snvs>;
-> +					offset = <0x34>;
-> +					interrupts = <GIC_SPI 19 IRQ_TYPE_LEVEL_HIGH>, <GIC_SPI 20 IRQ_TYPE_LEVEL_HIGH>;
-
-I wrapped the line as below.
-
-	interrupts = <GIC_SPI 19 IRQ_TYPE_LEVEL_HIGH>,
-		     <GIC_SPI 20 IRQ_TYPE_LEVEL_HIGH>;
-
-Shawn
-
-> +				};
-> +			};
-> +
->  			epit1: epit@020d0000 {
->  				reg = <0x020d0000 0x4000>;
->  				interrupts = <GIC_SPI 56 IRQ_TYPE_LEVEL_HIGH>;
-> -- 
-> 1.9.1
-> 
+SGkgR3VlbnRlciwNCg0KVGhhbmsgeW91IGZvciB5b3VyIGNvcnJlY3QuDQoNCj4gLS0tLS1Pcmln
+aW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogR3VlbnRlciBSb2VjayBbbWFpbHRvOmxpbnV4QHJv
+ZWNrLXVzLm5ldF0NCj4gU2VudDogMjAxNcTqONTCNsjVIDE2OjA1DQo+IFRvOiBZYW5nLCBXZW55
+b3U7IHdpbUBpZ3VhbmEuYmU7IHJvYmgrZHRAa2VybmVsLm9yZzsgcGF3ZWwubW9sbEBhcm0uY29t
+Ow0KPiBtYXJrLnJ1dGxhbmRAYXJtLmNvbTsgaWpjK2RldmljZXRyZWVAaGVsbGlvbi5vcmcudWs7
+IGdhbGFrQGNvZGVhdXJvcmEub3JnDQo+IENjOiBzeWx2YWluLnJvY2hldEBmaW5zZWN1ci5jb207
+IEZlcnJlLCBOaWNvbGFzOyBib3Jpcy5icmV6aWxsb25AZnJlZS0NCj4gZWxlY3Ryb25zLmNvbTsg
+ZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5vcmc7IGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc7
+IGxpbnV4LQ0KPiB3YXRjaGRvZ0B2Z2VyLmtlcm5lbC5vcmc7IGxpbnV4LWFybS1rZXJuZWxAbGlz
+dHMuaW5mcmFkZWFkLm9yZw0KPiBTdWJqZWN0OiBSZTogW1BBVENIIHY0IDEvMl0gZHJpdmVyczog
+d2F0Y2hkb2c6IGFkZCBhIGRyaXZlciB0byBzdXBwb3J0IFNBTUE1RDQNCj4gd2F0Y2hkb2cgdGlt
+ZXINCj4gDQo+IE9uIDA4LzA1LzIwMTUgMDk6NTkgUE0sIFdlbnlvdSBZYW5nIHdyb3RlOg0KPiA+
+PkZyb20gU0FNQTVENCwgdGhlIHdhdGNoZG9nIHRpbWVyIGlzIHVwZ3JhdGVkIHdpdGggYSBuZXcg
+ZmVhdHVyZSwNCj4gPiB3aGljaCBpcyBkZXNjcmlibGVkIGFzIGluIHRoZSBkYXRhc2hlZXQsICJX
+RFRfTVIgY2FuIGJlIHdyaXR0ZW4gdW50aWwNCj4gPiBhIExPQ0tNUiBjb21tYW5kIGlzIGlzc3Vl
+ZCBpbiBXRFRfQ1IiLg0KPiA+IFRoYXQgaXMgdG8gc2F5LCBhcyBsb25nIGFzIHRoZSBib290c3Ry
+YXAgYW5kIHUtYm9vdCBkb24ndCBpc3N1ZSBhDQo+ID4gTE9DS01SIGNvbW1hbmQsIFdEVF9NUiBj
+YW4gYmUgd3JpdHRlbiBtb3JlIHRoYW4gb25jZSBpbiB0aGUgZHJpdmVyLg0KPiA+DQo+ID4gU28g
+dGhlIFNBTUE1RDQgd2F0Y2hkb2cgZHJpdmVyJ3MgaW1wbGVtZW50YXRpb24gaXMgZGlmZmVyZW50
+IGZyb20gdGhlDQo+ID4gYXQ5MXNhbTkyNjAgd2F0Y2hkb2cgZHJpdmVyIGltcGxlbWVudGVkIGlu
+IGZpbGUgYXQ5MXNhbTlfd2R0LmMuDQo+ID4gVGhlIHVzZXIgYXBwbGljYXRpb24gb3BlbiB0aGUg
+ZGV2aWNlIGZpbGUgdG8gZW5hYmxlIHRoZSB3YXRjaGRvZyB0aW1lcg0KPiA+IGhhcmR3YXJlLCBh
+bmQgY2xvc2UgdG8gZGlzYWJsZSBpdCwgYW5kIHNldCB0aGUgd2F0Y2hkb2cgdGltZXIgdGltZW91
+dA0KPiA+IGJ5IHNldGluZyBXRFYgYW5kIFdERCBmaWVsZHMgb2YgV0RUX01SIHJlZ2lzdGVyLCBh
+bmQgcGluZyB0aGUgd2F0Y2hkb2cNCj4gPiBieSBpc3N1aW5nIFdEUlNUVCBjb21tYW5kIHRvIFdE
+VF9DUiByZWdpc3RlciB3aXRoIGhhcmQtY29kZWQga2V5Lg0KPiA+DQo+ID4gU2lnbmVkLW9mZi1i
+eTogV2VueW91IFlhbmcgPHdlbnlvdS55YW5nQGF0bWVsLmNvbT4NCj4gPiAtLS0NCj4gWyAuLi4g
+XQ0KPiA+ICsNCj4gPiArLyogbWluaW11bSBhbmQgbWF4aW11bSB3YXRjaGRvZyB0aW1lb3V0LCBp
+biBzZWNvbmRzICovDQo+ID4gKyNkZWZpbmUJTUlOX1dEVF9USU1FT1VUCQkxDQo+ID4gKyNkZWZp
+bmUJTUFYX1dEVF9USU1FT1VUCQkxNg0KPiA+ICsjZGVmaW5lCVdEVF9ERUZBVUxUX1RJTUVPVVQJ
+TUFYX1dEVF9USU1FT1VUDQo+ID4gKw0KPiA+ICsjZGVmaW5lCVdEVF9TRUMyVElDS1MocykJKChz
+KSA/ICgoKHMpIDw8IDgpIC0gMSkgOiAwKQ0KPiA+ICsNCj4gDQo+IFdoeSBkaWQgeW91IHJlcGxh
+Y2UgdGhlIHNwYWNlcyBhZnRlciAjZGVmaW5lIHdpdGggdGFicyA/DQo+IEkgdW5kZXJzdGFuZCB0
+aGlzIGlzIGRvbmUgaW4gdGhlIGF0OTEuaCBmaWxlLCBidXQgdGhhdCBpcyBiYWQgZW5vdWdoLCBp
+dCBkb2Vzbid0IGFkZA0KPiBhbnkgdmFsdWUsIGFuZCBJIGRvbid0IHNlZSBhIHJlYXNvbiB0byBk
+byBpdCBoZXJlLg0KQWNjZXB0ZWQsIFVzaW5nIHNwYWNlcywgbm90IHRhYnMuDQoNCj4gDQo+ID4g
+Kw0KPiA+ICsJaWYgKCh3ZHQtPmNvbmZpZyAmIEFUOTFfV0RUX1dERklFTikgJiYgaXJxKSB7DQo+
+ID4gKwkJcmV0ID0gZGV2bV9yZXF1ZXN0X2lycSgmcGRldi0+ZGV2LCBpcnEsDQo+IHNhbWE1ZDRf
+d2R0X2lycV9oYW5kbGVyLA0KPiA+ICsJCQkJICAgICAgIDAsIHBkZXYtPm5hbWUsIHBkZXYpOw0K
+PiANCj4gSSBqdXN0IHJlYWxpemVkIC0gdGhpcyBpbnRlcnJ1cHQgaXMgcmVnaXN0ZXJlZCB3aXRo
+IGZsYWdzIHNldCB0byAwLCB3aGlsZSBpbiB0aGUgYXQ5MXNhbQ0KPiBkcml2ZXIgdGhlIGZsYWdz
+IGFyZSAiSVJRRl9TSEFSRUQgfCBJUlFGX0lSUVBPTEwgfCBJUlFGX05PX1NVU1BFTkQiLiBJcw0K
+PiB0aGlzIGRpZmZlcmVudCB3aXRoIHRoZSBuZXcgU09DID8NCk5vLCBpdCBpcyBzYW1lLiBJdCBp
+cyBteSBjYXJlbGVzc25lc3MuDQoNCj4gDQo+IFRoYW5rcywNCj4gR3VlbnRlcg0KDQoNCkJlc3Qg
+UmVnYXJkcywNCldlbnlvdSBZYW5nDQoNCg==
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
