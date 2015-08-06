@@ -1,7 +1,7 @@
 From: Gavin Shan <gwshan@linux.vnet.ibm.com>
-Subject: [PATCH v6 10/42] powerpc/powernv: pnv_ioda_setup_dma() configure one PE only
-Date: Thu,  6 Aug 2015 14:11:15 +1000
-Message-ID: <1438834307-26960-11-git-send-email-gwshan@linux.vnet.ibm.com>
+Subject: [PATCH v6 16/42] powerpc/powernv: Helper function pnv_ioda_init_pe()
+Date: Thu,  6 Aug 2015 14:11:21 +1000
+Message-ID: <1438834307-26960-17-git-send-email-gwshan@linux.vnet.ibm.com>
 References: <1438834307-26960-1-git-send-email-gwshan@linux.vnet.ibm.com>
 Return-path: <linux-pci-owner@vger.kernel.org>
 In-Reply-To: <1438834307-26960-1-git-send-email-gwshan@linux.vnet.ibm.com>
@@ -10,129 +10,60 @@ To: linuxppc-dev@lists.ozlabs.org
 Cc: linux-pci@vger.kernel.org, devicetree@vger.kernel.org, benh@kernel.crashing.org, mpe@ellerman.id.au, bhelgaas@google.com, grant.likely@linaro.org, robherring2@gmail.com, panto@antoniou-consulting.com, aik@ozlabs.ru, Gavin Shan <gwshan@linux.vnet.ibm.com>
 List-Id: devicetree@vger.kernel.org
 
-The original implementation of pnv_ioda_setup_dma() iterates the
-list of PEs and configures the DMA32 space for them one by one.
-The function was designed to be called during PHB fixup time.
-When configuring PE's DMA32 space in pcibios_setup_bridge(), in
-order to support PCI hotplug, we have to have the function PE
-oriented.
-
-This renames pnv_ioda_setup_dma() to pnv_ioda1_setup_dma() and
-adds one more argument "struct pnv_ioda_pe *pe" to it. The caller,
-pnv_pci_ioda_setup_DMA(), gets PE from the list and passes to it
-or pnv_pci_ioda2_setup_dma_pe(). The patch shouldn't cause behavioral
+The patch introduces helper function pnv_ioda_init_pe(), which
+initialize PE instance after reserving or allocating PE#, to
+simplify the code. The patch doesn't introduce behavioural
 changes.
 
 Signed-off-by: Gavin Shan <gwshan@linux.vnet.ibm.com>
 ---
- arch/powerpc/platforms/powernv/pci-ioda.c | 75 +++++++++++++++----------------
- 1 file changed, 36 insertions(+), 39 deletions(-)
+ arch/powerpc/platforms/powernv/pci-ioda.c | 20 +++++++++++++-------
+ 1 file changed, 13 insertions(+), 7 deletions(-)
 
 diff --git a/arch/powerpc/platforms/powernv/pci-ioda.c b/arch/powerpc/platforms/powernv/pci-ioda.c
-index 8456f37..cd22002 100644
+index 9f53682..9cccf2d5 100644
 --- a/arch/powerpc/platforms/powernv/pci-ioda.c
 +++ b/arch/powerpc/platforms/powernv/pci-ioda.c
-@@ -2443,52 +2443,29 @@ static void pnv_pci_ioda2_setup_dma_pe(struct pnv_phb *phb,
- 		pnv_ioda_setup_bus_dma(pe, pe->pbus);
+@@ -132,6 +132,17 @@ static inline bool pnv_pci_is_mem_pref_64(unsigned long flags)
+ 		(IORESOURCE_MEM_64 | IORESOURCE_PREFETCH));
  }
  
--static void pnv_ioda_setup_dma(struct pnv_phb *phb)
-+static unsigned int pnv_ioda1_setup_dma(struct pnv_phb *phb,
-+					struct pnv_ioda_pe *pe,
-+					unsigned int base)
- {
- 	struct pci_controller *hose = phb->hose;
--	struct pnv_ioda_pe *pe;
--	unsigned int dma_weight;
-+	unsigned int dma_weight, segs;
- 
- 	/* Calculate the PHB's DMA weight */
- 	dma_weight = pnv_ioda_phb_dma_weight(phb);
- 	pr_info("PCI%04x has %ld DMA32 segments, total weight %d\n",
- 		hose->global_number, phb->ioda.dma32_segcount, dma_weight);
- 
--	pnv_pci_ioda_setup_opal_tce_kill(phb);
--
--	/* Walk our PE list and configure their DMA segments, hand them
--	 * out one base segment plus any residual segments based on
--	 * weight
--	 */
--	list_for_each_entry(pe, &phb->ioda.pe_dma_list, dma_link) {
--		if (!pe->dma32_weight)
--			continue;
--
--		/*
--		 * For IODA2 compliant PHB3, we needn't care about the weight.
--		 * The all available 32-bits DMA space will be assigned to
--		 * the specific PE.
--		 */
--		if (phb->type == PNV_PHB_IODA1) {
--			unsigned int segs, base = 0;
--
--			if (pe->dma32_weight <
--			    dma_weight / phb->ioda.dma32_segcount)
--				segs = 1;
--			else
--				segs = (pe->dma32_weight *
--					phb->ioda.dma32_segcount) / dma_weight;
--
--			pe_info(pe, "DMA32 weight %d, assigned %d segments\n",
--				pe->dma32_weight, segs);
--			pnv_pci_ioda_setup_dma_pe(phb, pe, base, segs);
-+	if (pe->dma32_weight <
-+	    dma_weight / phb->ioda.dma32_segcount)
-+		segs = 1;
-+	else
-+		segs = (pe->dma32_weight *
-+			phb->ioda.dma32_segcount) / dma_weight;
-+	pe_info(pe, "DMA weight %d, assigned %d segments\n",
-+		pe->dma32_weight, segs);
-+	pnv_pci_ioda_setup_dma_pe(phb, pe, base, segs);
- 
--			base += segs;
--		} else {
--			pe_info(pe, "Assign DMA32 space\n");
--			pnv_pci_ioda2_setup_dma_pe(phb, pe);
--		}
--	}
-+	return segs;
- }
- 
- #ifdef CONFIG_PCI_MSI
-@@ -2955,12 +2932,32 @@ static void pnv_pci_ioda_setup_DMA(void)
- {
- 	struct pci_controller *hose, *tmp;
- 	struct pnv_phb *phb;
-+	struct pnv_ioda_pe *pe;
-+	unsigned int base;
- 
- 	list_for_each_entry_safe(hose, tmp, &hose_list, list_node) {
--		pnv_ioda_setup_dma(hose->private_data);
-+		phb = hose->private_data;
-+		pnv_pci_ioda_setup_opal_tce_kill(phb);
++static struct pnv_ioda_pe *pnv_ioda_init_pe(struct pnv_phb *phb, int pe_no)
++{
++	struct pnv_ioda_pe *pe = &phb->ioda.pe_array[pe_no];
 +
-+		base = 0;
-+		list_for_each_entry(pe, &phb->ioda.pe_dma_list, dma_link) {
-+			if (!pe->dma32_weight)
-+				continue;
++	pe->phb = phb;
++	pe->pe_number = pe_no;
++	INIT_LIST_HEAD(&pe->list);
 +
-+			switch (phb->type) {
-+			case PNV_PHB_IODA1:
-+				base += pnv_ioda1_setup_dma(phb, pe, base);
-+				break;
-+			case PNV_PHB_IODA2:
-+				pnv_pci_ioda2_setup_dma_pe(phb, pe);
-+				break;
-+			default:
-+				pr_warn("%s: No DMA for PHB type %d\n",
-+					__func__, phb->type);
-+			}
-+		}
++	return pe;
++}
++
+ static struct pnv_ioda_pe *pnv_ioda_reserve_pe(struct pnv_phb *phb, int pe_no)
+ {
+ 	if (!(pe_no >= 0 && pe_no < phb->ioda.total_pe)) {
+@@ -144,10 +155,7 @@ static struct pnv_ioda_pe *pnv_ioda_reserve_pe(struct pnv_phb *phb, int pe_no)
+ 		pr_debug("%s: PE %d was reserved on PHB#%x\n",
+ 			 __func__, pe_no, phb->hose->global_number);
  
- 		/* Mark the PHB initialization done */
--		phb = hose->private_data;
- 		phb->initialized = 1;
- 	}
+-	phb->ioda.pe_array[pe_no].phb = phb;
+-	phb->ioda.pe_array[pe_no].pe_number = pe_no;
+-
+-	return &phb->ioda.pe_array[pe_no];
++	return pnv_ioda_init_pe(phb, pe_no);
  }
+ 
+ static struct pnv_ioda_pe *pnv_ioda_alloc_pe(struct pnv_phb *phb)
+@@ -161,9 +169,7 @@ static struct pnv_ioda_pe *pnv_ioda_alloc_pe(struct pnv_phb *phb)
+ 			return NULL;
+ 	} while(test_and_set_bit(pe, phb->ioda.pe_alloc));
+ 
+-	phb->ioda.pe_array[pe].phb = phb;
+-	phb->ioda.pe_array[pe].pe_number = pe;
+-	return &phb->ioda.pe_array[pe];
++	return pnv_ioda_init_pe(phb, pe);
+ }
+ 
+ static void pnv_ioda_free_pe(struct pnv_phb *phb, int pe)
 -- 
 2.1.0
