@@ -1,7 +1,7 @@
 From: Gavin Shan <gwshan@linux.vnet.ibm.com>
-Subject: [PATCH v6 11/42] powerpc/powernv: Trace DMA32 segments consumed by PE
-Date: Thu,  6 Aug 2015 14:11:16 +1000
-Message-ID: <1438834307-26960-12-git-send-email-gwshan@linux.vnet.ibm.com>
+Subject: [PATCH v6 30/42] powerpc/pci: Move pcibios_find_pci_bus() around
+Date: Thu,  6 Aug 2015 14:11:35 +1000
+Message-ID: <1438834307-26960-31-git-send-email-gwshan@linux.vnet.ibm.com>
 References: <1438834307-26960-1-git-send-email-gwshan@linux.vnet.ibm.com>
 Return-path: <linux-pci-owner@vger.kernel.org>
 In-Reply-To: <1438834307-26960-1-git-send-email-gwshan@linux.vnet.ibm.com>
@@ -10,142 +10,161 @@ To: linuxppc-dev@lists.ozlabs.org
 Cc: linux-pci@vger.kernel.org, devicetree@vger.kernel.org, benh@kernel.crashing.org, mpe@ellerman.id.au, bhelgaas@google.com, grant.likely@linaro.org, robherring2@gmail.com, panto@antoniou-consulting.com, aik@ozlabs.ru, Gavin Shan <gwshan@linux.vnet.ibm.com>
 List-Id: devicetree@vger.kernel.org
 
-On P7IOC, the whole DMA32 space is divided evenly to 256MB segments.
-Each PE can consume one or multiple DMA32 segments. Current code
-doesn't trace the available DMA32 segments and those consumed by
-one particular PE. It's conflicting with PCI hotplug.
-
-The patch introduces one bitmap to PHB to trace the available
-DMA32 segments for allocation, more fields to "struct pnv_ioda_pe"
-to trace the consumed DMA32 segments by the PE, which is going to
-be released when the PE is destroyed at PCI unplugging time.
+This moves pcibios_find_pci_bus() to PowerPC kernel directory
+so that it can be reused by hotplug code for pSeries and PowerNV
+platform at the same time. Also, the function is renamed to
+of_node_to_pci_bus().
 
 Signed-off-by: Gavin Shan <gwshan@linux.vnet.ibm.com>
+Acked-by: Benjamin Herrenschmidt <benh@kernel.crashing.org>
 ---
- arch/powerpc/platforms/powernv/pci-ioda.c | 40 +++++++++++++++++++++++--------
- arch/powerpc/platforms/powernv/pci.h      |  4 +++-
- 2 files changed, 33 insertions(+), 11 deletions(-)
+ arch/powerpc/include/asm/pci-bridge.h      |  2 +-
+ arch/powerpc/kernel/pci-hotplug.c          | 30 ++++++++++++++++++++++++++++
+ arch/powerpc/platforms/pseries/pci_dlpar.c | 32 ------------------------------
+ drivers/pci/hotplug/rpadlpar_core.c        |  6 +++---
+ drivers/pci/hotplug/rpaphp_pci.c           |  2 +-
+ 5 files changed, 35 insertions(+), 37 deletions(-)
 
-diff --git a/arch/powerpc/platforms/powernv/pci-ioda.c b/arch/powerpc/platforms/powernv/pci-ioda.c
-index cd22002..57ba8fd 100644
---- a/arch/powerpc/platforms/powernv/pci-ioda.c
-+++ b/arch/powerpc/platforms/powernv/pci-ioda.c
-@@ -1946,6 +1946,7 @@ static void pnv_pci_ioda_setup_dma_pe(struct pnv_phb *phb,
+diff --git a/arch/powerpc/include/asm/pci-bridge.h b/arch/powerpc/include/asm/pci-bridge.h
+index 65357a9..84dee1e 100644
+--- a/arch/powerpc/include/asm/pci-bridge.h
++++ b/arch/powerpc/include/asm/pci-bridge.h
+@@ -259,7 +259,7 @@ static inline struct eeh_dev *pdn_to_eeh_dev(struct pci_dn *pdn)
+ #endif
  
- 	/* Grab a 32-bit TCE table */
- 	pe->dma32_seg = base;
-+	pe->dma32_segcount = segs;
- 	pe_info(pe, " Setting up 32-bit TCE table at %08x..%08x\n",
- 		(base << 28), ((base + segs) << 28) - 1);
+ /** Find the bus corresponding to the indicated device node */
+-extern struct pci_bus *pcibios_find_pci_bus(struct device_node *dn);
++extern struct pci_bus *of_node_to_pci_bus(struct device_node *dn);
  
-@@ -2006,8 +2007,13 @@ static void pnv_pci_ioda_setup_dma_pe(struct pnv_phb *phb,
- 	return;
-  fail:
- 	/* XXX Failure: Try to fallback to 64-bit only ? */
--	if (pe->dma32_seg >= 0)
-+	if (pe->dma32_seg >= 0) {
-+		bitmap_clear(phb->ioda.dma32_segmap,
-+			     pe->dma32_seg, pe->dma32_segcount);
- 		pe->dma32_seg = -1;
-+		pe->dma32_segcount = 0;
+ /** Remove all of the PCI devices under this bus */
+ extern void pcibios_remove_pci_devices(struct pci_bus *bus);
+diff --git a/arch/powerpc/kernel/pci-hotplug.c b/arch/powerpc/kernel/pci-hotplug.c
+index c307d9a..692beca 100644
+--- a/arch/powerpc/kernel/pci-hotplug.c
++++ b/arch/powerpc/kernel/pci-hotplug.c
+@@ -21,6 +21,36 @@
+ #include <asm/firmware.h>
+ #include <asm/eeh.h>
+ 
++static struct pci_bus *find_pci_bus(struct pci_bus *bus,
++				    struct device_node *dn)
++{
++	struct pci_bus *tmp, *child = NULL;
++	struct device_node *busdn;
++
++	busdn = pci_bus_to_OF_node(bus);
++	if (busdn == dn)
++		return bus;
++
++	list_for_each_entry(tmp, &bus->children, node) {
++		child = find_pci_bus(tmp, dn);
++		if (child)
++			break;
 +	}
 +
- 	if (tce_mem)
- 		__free_pages(tce_mem, get_order(TCE32_TABLE_SIZE * segs));
- 	if (tbl) {
-@@ -2443,12 +2449,11 @@ static void pnv_pci_ioda2_setup_dma_pe(struct pnv_phb *phb,
- 		pnv_ioda_setup_bus_dma(pe, pe->pbus);
- }
++	return child;
++}
++
++struct pci_bus *of_node_to_pci_bus(struct device_node *dn)
++{
++	struct pci_dn *pdn = dn->data;
++
++	if (!pdn  || !pdn->phb || !pdn->phb->bus)
++		return NULL;
++
++	return find_pci_bus(pdn->phb->bus, dn);
++}
++EXPORT_SYMBOL_GPL(of_node_to_pci_bus);
++
+ /**
+  * pcibios_release_device - release PCI device
+  * @dev: PCI device
+diff --git a/arch/powerpc/platforms/pseries/pci_dlpar.c b/arch/powerpc/platforms/pseries/pci_dlpar.c
+index 5d4a3df..906dbaa 100644
+--- a/arch/powerpc/platforms/pseries/pci_dlpar.c
++++ b/arch/powerpc/platforms/pseries/pci_dlpar.c
+@@ -34,38 +34,6 @@
  
--static unsigned int pnv_ioda1_setup_dma(struct pnv_phb *phb,
--					struct pnv_ioda_pe *pe,
--					unsigned int base)
-+static void pnv_ioda1_setup_dma(struct pnv_phb *phb,
-+					struct pnv_ioda_pe *pe)
- {
- 	struct pci_controller *hose = phb->hose;
--	unsigned int dma_weight, segs;
-+	unsigned int dma_weight, base, segs;
+ #include "pseries.h"
  
- 	/* Calculate the PHB's DMA weight */
- 	dma_weight = pnv_ioda_phb_dma_weight(phb);
-@@ -2461,11 +2466,28 @@ static unsigned int pnv_ioda1_setup_dma(struct pnv_phb *phb,
- 	else
- 		segs = (pe->dma32_weight *
- 			phb->ioda.dma32_segcount) / dma_weight;
-+
-+	/*
-+	 * Allocate DMA32 segments. We might not have enough
-+	 * resources available. However we expect at least one
-+	 * to be available.
-+	 */
-+	do {
-+		base = bitmap_find_next_zero_area(phb->ioda.dma32_segmap,
-+						  phb->ioda.dma32_segcount,
-+						  0, segs, 0);
-+		if (base < phb->ioda.dma32_segcount) {
-+			bitmap_set(phb->ioda.dma32_segmap, base, segs);
-+			break;
-+		}
-+	} while (--segs);
-+
-+	if (WARN_ON(!segs))
-+		return;
-+
- 	pe_info(pe, "DMA weight %d, assigned %d segments\n",
- 		pe->dma32_weight, segs);
- 	pnv_pci_ioda_setup_dma_pe(phb, pe, base, segs);
+-static struct pci_bus *
+-find_bus_among_children(struct pci_bus *bus,
+-                        struct device_node *dn)
+-{
+-	struct pci_bus *child = NULL;
+-	struct pci_bus *tmp;
+-	struct device_node *busdn;
 -
--	return segs;
- }
+-	busdn = pci_bus_to_OF_node(bus);
+-	if (busdn == dn)
+-		return bus;
+-
+-	list_for_each_entry(tmp, &bus->children, node) {
+-		child = find_bus_among_children(tmp, dn);
+-		if (child)
+-			break;
+-	};
+-	return child;
+-}
+-
+-struct pci_bus *
+-pcibios_find_pci_bus(struct device_node *dn)
+-{
+-	struct pci_dn *pdn = dn->data;
+-
+-	if (!pdn  || !pdn->phb || !pdn->phb->bus)
+-		return NULL;
+-
+-	return find_bus_among_children(pdn->phb->bus, dn);
+-}
+-EXPORT_SYMBOL_GPL(pcibios_find_pci_bus);
+-
+ struct pci_controller *init_phb_dynamic(struct device_node *dn)
+ {
+ 	struct pci_controller *phb;
+diff --git a/drivers/pci/hotplug/rpadlpar_core.c b/drivers/pci/hotplug/rpadlpar_core.c
+index e12bafd..f57a293 100644
+--- a/drivers/pci/hotplug/rpadlpar_core.c
++++ b/drivers/pci/hotplug/rpadlpar_core.c
+@@ -176,7 +176,7 @@ static int dlpar_add_pci_slot(char *drc_name, struct device_node *dn)
+ 	struct pci_dev *dev;
+ 	struct pci_controller *phb;
  
- #ifdef CONFIG_PCI_MSI
-@@ -2933,20 +2955,18 @@ static void pnv_pci_ioda_setup_DMA(void)
- 	struct pci_controller *hose, *tmp;
- 	struct pnv_phb *phb;
- 	struct pnv_ioda_pe *pe;
--	unsigned int base;
+-	if (pcibios_find_pci_bus(dn))
++	if (of_node_to_pci_bus(dn))
+ 		return -EINVAL;
  
- 	list_for_each_entry_safe(hose, tmp, &hose_list, list_node) {
- 		phb = hose->private_data;
- 		pnv_pci_ioda_setup_opal_tce_kill(phb);
+ 	/* Add pci bus */
+@@ -213,7 +213,7 @@ static int dlpar_remove_phb(char *drc_name, struct device_node *dn)
+ 	struct pci_dn *pdn;
+ 	int rc = 0;
  
--		base = 0;
- 		list_for_each_entry(pe, &phb->ioda.pe_dma_list, dma_link) {
- 			if (!pe->dma32_weight)
- 				continue;
+-	if (!pcibios_find_pci_bus(dn))
++	if (!of_node_to_pci_bus(dn))
+ 		return -EINVAL;
  
- 			switch (phb->type) {
- 			case PNV_PHB_IODA1:
--				base += pnv_ioda1_setup_dma(phb, pe, base);
-+				pnv_ioda1_setup_dma(phb, pe);
- 				break;
- 			case PNV_PHB_IODA2:
- 				pnv_pci_ioda2_setup_dma_pe(phb, pe);
-diff --git a/arch/powerpc/platforms/powernv/pci.h b/arch/powerpc/platforms/powernv/pci.h
-index 574fe43..1dc9578 100644
---- a/arch/powerpc/platforms/powernv/pci.h
-+++ b/arch/powerpc/platforms/powernv/pci.h
-@@ -65,6 +65,7 @@ struct pnv_ioda_pe {
+ 	/* If pci slot is hotpluggable, use hotplug to remove it */
+@@ -357,7 +357,7 @@ int dlpar_remove_pci_slot(char *drc_name, struct device_node *dn)
  
- 	/* "Base" iommu table, ie, 4K TCEs, 32-bit DMA */
- 	int			dma32_seg;
-+	int			dma32_segcount;
- 	struct iommu_table_group table_group;
+ 	pci_lock_rescan_remove();
  
- 	/* 64-bit TCE bypass region */
-@@ -153,10 +154,11 @@ struct pnv_phb {
- 			unsigned int		io_segsize;
- 			unsigned int		io_pci_base;
+-	bus = pcibios_find_pci_bus(dn);
++	bus = of_node_to_pci_bus(dn);
+ 	if (!bus) {
+ 		ret = -EINVAL;
+ 		goto out;
+diff --git a/drivers/pci/hotplug/rpaphp_pci.c b/drivers/pci/hotplug/rpaphp_pci.c
+index 9243f3e7..293bd86 100644
+--- a/drivers/pci/hotplug/rpaphp_pci.c
++++ b/drivers/pci/hotplug/rpaphp_pci.c
+@@ -93,7 +93,7 @@ int rpaphp_enable_slot(struct slot *slot)
+ 	if (rc)
+ 		return rc;
  
--			/* IO, M32, M64 segment maps */
-+			/* IO, M32, M64, DMA32 segment maps */
- 			unsigned long		io_segmap[8];
- 			unsigned long		m32_segmap[8];
- 			unsigned long		m64_segmap[8];
-+			unsigned long		dma32_segmap[8];
- 
- 			/* PE allocation */
- 			struct mutex		pe_alloc_mutex;
+-	bus = pcibios_find_pci_bus(slot->dn);
++	bus = of_node_to_pci_bus(slot->dn);
+ 	if (!bus) {
+ 		err("%s: no pci_bus for dn %s\n", __func__, slot->dn->full_name);
+ 		return -EINVAL;
 -- 
 2.1.0
