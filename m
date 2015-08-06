@@ -1,226 +1,142 @@
-From: Rob Herring <robherring2@gmail.com>
-Subject: Re: [PATCH v6 41/42] drivers/of: Export OF changeset functions
-Date: Thu, 6 Aug 2015 08:48:10 -0500
-Message-ID: <CAL_JsqK5NhRz4Pg3m=OJMHa5rxV9O5F74Ew-xGjyNgbW=SwDLg@mail.gmail.com>
-References: <1438834307-26960-1-git-send-email-gwshan@linux.vnet.ibm.com> <1438834307-26960-42-git-send-email-gwshan@linux.vnet.ibm.com>
+From: Russell King - ARM Linux <linux@arm.linux.org.uk>
+Subject: Re: [RFC PATCH 1/5] spi: introduce flag for memory mapped read
+Date: Thu, 6 Aug 2015 14:51:29 +0100
+Message-ID: <20150806135129.GJ7576@n2100.arm.linux.org.uk>
+References: <20150804155148.GR20873@sirena.org.uk>
+ <55C0FD98.1090107@ti.com>
+ <20150805115013.GJ20873@sirena.org.uk>
+ <CAOMqctQXwcHyiWBwtugSDSE_k65qrNfrwnhjQMDJkLoJMmGzUw@mail.gmail.com>
+ <20150805124412.GN20873@sirena.org.uk>
+ <CAOMqctS9Y5FxpUCCJew6+cnjH5iTvbzkH3g-8yrXs4OuS2pSGA@mail.gmail.com>
+ <20150806090202.GO20873@sirena.org.uk>
+ <CAOMqctQZRZ4zG_yYy=CeX3DX4NVNWN1COP4Q-2YvMun9xYOA7g@mail.gmail.com>
+ <20150806102225.GI7576@n2100.arm.linux.org.uk>
+ <55C35233.2000105@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <1438834307-26960-42-git-send-email-gwshan@linux.vnet.ibm.com>
-Sender: linux-pci-owner@vger.kernel.org
-To: Gavin Shan <gwshan@linux.vnet.ibm.com>
-Cc: linuxppc-dev <linuxppc-dev@lists.ozlabs.org>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Michael Ellerman <mpe@ellerman.id.au>, Bjorn Helgaas <bhelgaas@google.com>, Grant Likely <grant.likely@linaro.org>, Pantelis Antoniou <panto@antoniou-consulting.com>, aik@ozlabs.ru
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <55C35233.2000105@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Vignesh R <vigneshr@ti.com>
+Cc: Michal Suchanek <hramrach@gmail.com>, Mark Brown <broonie@kernel.org>, devicetree <devicetree@vger.kernel.org>, Brian Norris <computersforpeace@gmail.com>, Tony Lindgren <tony@atomide.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-spi <linux-spi@vger.kernel.org>, Huang Shijie <b32955@freescale.com>, MTD Maling List <linux-mtd@lists.infradead.org>, linux-omap@vger.kernel.org, David Woodhouse <dwmw2@infradead.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Aug 5, 2015 at 11:11 PM, Gavin Shan <gwshan@linux.vnet.ibm.com> wrote:
-> The PowerNV PCI hotplug driver is going to use the OF changeset
-> to manage the changed device sub-tree, which requires those OF
-> changeset functions are exported.
->
-> Signed-off-by: Gavin Shan <gwshan@linux.vnet.ibm.com>
-> ---
->  drivers/of/dynamic.c  | 65 ++++++++++++++++++++++++++++++++++++---------------
->  drivers/of/overlay.c  |  8 +++----
->  drivers/of/unittest.c |  4 ++--
->  include/linux/of.h    |  2 ++
->  4 files changed, 54 insertions(+), 25 deletions(-)
->
-> diff --git a/drivers/of/dynamic.c b/drivers/of/dynamic.c
-> index 53826b8..af65b5b 100644
-> --- a/drivers/of/dynamic.c
-> +++ b/drivers/of/dynamic.c
-> @@ -646,6 +646,7 @@ void of_changeset_init(struct of_changeset *ocs)
->         memset(ocs, 0, sizeof(*ocs));
->         INIT_LIST_HEAD(&ocs->entries);
->  }
-> +EXPORT_SYMBOL(of_changeset_init);
+On Thu, Aug 06, 2015 at 05:55:23PM +0530, Vignesh R wrote:
+> On the whole following are my requirements:
+> 1. to be able to communicate with non -flash SPI devices via config port
+> ( this functionality is supported by current driver, I dont want to
+> break it). Or pump any spi_message on to SPI bus directly.
+> 2. take advantage of memory mapped port in order to increase read
+> throughput( and use dma in future) when the slave is a m25p80 type flash.
+> 3. handle m25p80 as well as other slave on multiple chipselects.
+> 
+> I just need to know whether the user that requested the transfer is
+> m25p80 driver. If yes, ti-qspi driver can take advantage of memory
+> mapped interface, else just use config port to access SPI bus directly.
 
-We probably want these to be the _GPL variant.
+The problem with this approach is that it's an abomination.  It's adding
+a SPI-user specific hack which is detected by a specific driver.  That's
+really not sane - what happens when we have lots of these kinds of "I'm
+an X SPI-user" with drivers detecting that?  It's not maintainable in the
+long term.
 
->
->  /**
->   * of_changeset_destroy - Destroy a changeset
-> @@ -662,20 +663,9 @@ void of_changeset_destroy(struct of_changeset *ocs)
->         list_for_each_entry_safe_reverse(ce, cen, &ocs->entries, node)
->                 __of_changeset_entry_destroy(ce);
->  }
-> +EXPORT_SYMBOL(of_changeset_destroy);
->
-> -/**
-> - * of_changeset_apply - Applies a changeset
-> - *
-> - * @ocs:       changeset pointer
-> - *
-> - * Applies a changeset to the live tree.
-> - * Any side-effects of live tree state changes are applied here on
-> - * sucess, like creation/destruction of devices and side-effects
-> - * like creation of sysfs properties and directories.
-> - * Returns 0 on success, a negative error value in case of an error.
-> - * On error the partially applied effects are reverted.
-> - */
-> -int of_changeset_apply(struct of_changeset *ocs)
-> +int __of_changeset_apply(struct of_changeset *ocs)
->  {
->         struct of_changeset_entry *ce;
->         int ret;
-> @@ -704,17 +694,30 @@ int of_changeset_apply(struct of_changeset *ocs)
->  }
->
->  /**
-> - * of_changeset_revert - Reverts an applied changeset
-> + * of_changeset_apply - Applies a changeset
->   *
->   * @ocs:       changeset pointer
->   *
-> - * Reverts a changeset returning the state of the tree to what it
-> - * was before the application.
-> - * Any side-effects like creation/destruction of devices and
-> - * removal of sysfs properties and directories are applied.
-> + * Applies a changeset to the live tree.
-> + * Any side-effects of live tree state changes are applied here on
-> + * sucess, like creation/destruction of devices and side-effects
+Yes, your requirements _today_ seem simple and easy, but you're only
+thinking about today, not tomorrow when you've moved on and someone else
+has to maintain the mess left behind (or delete it from mainline because
+they're sick of dealing with a hack.)
 
-s/sucess/success/
+> The spi_message that is received in transfer_one_message() is too
+> generic to imply the slave device that is on the other side of the wire.
+> IMO, the read command does not imply that the slave is m25p80 flash
+> (besides the read opcodes vary across vendors of m25p80 and across modes).
 
-> + * like creation of sysfs properties and directories.
->   * Returns 0 on success, a negative error value in case of an error.
-> + * On error the partially applied effects are reverted.
->   */
-> -int of_changeset_revert(struct of_changeset *ocs)
-> +int of_changeset_apply(struct of_changeset *ocs)
-> +{
-> +       int ret;
-> +
-> +       mutex_lock(&of_mutex);
-> +       ret = __of_changeset_apply(ocs);
-> +       mutex_unlock(&of_mutex);
-> +
-> +       return ret;
-> +}
-> +EXPORT_SYMBOL(of_changeset_apply);
-> +
-> +int __of_changeset_revert(struct of_changeset *ocs)
->  {
->         struct of_changeset_entry *ce;
->         int ret;
-> @@ -742,6 +745,29 @@ int of_changeset_revert(struct of_changeset *ocs)
->  }
->
->  /**
-> + * of_changeset_revert - Reverts an applied changeset
-> + *
-> + * @ocs:       changeset pointer
-> + *
-> + * Reverts a changeset returning the state of the tree to what it
-> + * was before the application.
-> + * Any side-effects like creation/destruction of devices and
-> + * removal of sysfs properties and directories are applied.
-> + * Returns 0 on success, a negative error value in case of an error.
-> + */
-> +int of_changeset_revert(struct of_changeset *ocs)
-> +{
-> +       int ret;
-> +
-> +       mutex_lock(&of_mutex);
-> +       ret = __of_changeset_revert(ocs);
-> +       mutex_unlock(&of_mutex);
-> +
-> +       return ret;
-> +}
-> +EXPORT_SYMBOL(of_changeset_revert);
-> +
-> +/**
->   * of_changeset_action - Perform a changeset action
->   *
->   * @ocs:       changeset pointer
-> @@ -779,3 +805,4 @@ int of_changeset_action(struct of_changeset *ocs, unsigned long action,
->         list_add_tail(&ce->node, &ocs->entries);
->         return 0;
->  }
-> +EXPORT_SYMBOL(of_changeset_action);
-> diff --git a/drivers/of/overlay.c b/drivers/of/overlay.c
-> index 24e025f..804ea33 100644
-> --- a/drivers/of/overlay.c
-> +++ b/drivers/of/overlay.c
-> @@ -378,9 +378,9 @@ int of_overlay_create(struct device_node *tree)
->         }
->
->         /* apply the changeset */
-> -       err = of_changeset_apply(&ov->cset);
-> +       err = __of_changeset_apply(&ov->cset);
->         if (err) {
-> -               pr_err("%s: of_changeset_apply() failed for tree@%s\n",
-> +               pr_err("%s: __of_changeset_apply() failed for tree@%s\n",
->                                 __func__, tree->full_name);
->                 goto err_revert_overlay;
->         }
-> @@ -508,7 +508,7 @@ int of_overlay_destroy(int id)
->
->
->         list_del(&ov->node);
-> -       of_changeset_revert(&ov->cset);
-> +       __of_changeset_revert(&ov->cset);
->         of_free_overlay_info(ov);
->         idr_remove(&ov_idr, id);
->         of_changeset_destroy(&ov->cset);
-> @@ -539,7 +539,7 @@ int of_overlay_destroy_all(void)
->         /* the tail of list is guaranteed to be safe to remove */
->         list_for_each_entry_safe_reverse(ov, ovn, &ov_list, node) {
->                 list_del(&ov->node);
-> -               of_changeset_revert(&ov->cset);
-> +               __of_changeset_revert(&ov->cset);
->                 of_free_overlay_info(ov);
->                 idr_remove(&ov_idr, ov->id);
->                 kfree(ov);
-> diff --git a/drivers/of/unittest.c b/drivers/of/unittest.c
-> index 2270830..06eb3e5 100644
-> --- a/drivers/of/unittest.c
-> +++ b/drivers/of/unittest.c
-> @@ -527,7 +527,7 @@ static void __init of_unittest_changeset(void)
->         unittest(!of_changeset_update_property(&chgset, parent, ppupdate), "fail update prop\n");
->         unittest(!of_changeset_remove_property(&chgset, parent, ppremove), "fail remove prop\n");
->         mutex_lock(&of_mutex);
-> -       unittest(!of_changeset_apply(&chgset), "apply failed\n");
-> +       unittest(!__of_changeset_apply(&chgset), "apply failed\n");
+I can see both sides of the argument.
 
-You can just remove the mutex here.
+Mark is saying: if the SPI driver detects that the message to be transmitted
+is a read command followed by the appropriate number of dummy bytes, and
+then the data being read _and_ it's using quad-mode access, and the hardware
+generates _exactly_ that in hardware using the memory mapped mode, there is
+no reason _not_ to use the hardware to achieve that SPI transaction.  The
+bus activity will be identical to what happens when the SPI controller is
+used manually to achieve that bus sequence.
 
->         mutex_unlock(&of_mutex);
->
->         /* Make sure node names are constructed correctly */
-> @@ -536,7 +536,7 @@ static void __init of_unittest_changeset(void)
->         of_node_put(np);
->
->         mutex_lock(&of_mutex);
-> -       unittest(!of_changeset_revert(&chgset), "revert failed\n");
-> +       unittest(!__of_changeset_revert(&chgset), "revert failed\n");
+You're saying: but the documentation says you can't use it for anything
+except m25p80.  If you look at 24.5.4.1.2, it tells you what the SFI
+generates on the bus, which is:
 
-And here.
+1. CS active
+2. Read command byte sent
+3. 1-4 address bytes sent
+4. 0-3 dummy bytes sent
+5. data bytes read from bus
+6. CS inactive
 
->         mutex_unlock(&of_mutex);
->
->         of_changeset_destroy(&chgset);
-> diff --git a/include/linux/of.h b/include/linux/of.h
-> index edc068d..5c030e1 100644
-> --- a/include/linux/of.h
-> +++ b/include/linux/of.h
-> @@ -1001,7 +1001,9 @@ extern int of_reconfig_get_state_change(unsigned long action,
->
->  extern void of_changeset_init(struct of_changeset *ocs);
->  extern void of_changeset_destroy(struct of_changeset *ocs);
-> +extern int __of_changeset_apply(struct of_changeset *ocs);
->  extern int of_changeset_apply(struct of_changeset *ocs);
-> +extern int __of_changeset_revert(struct of_changeset *ocs);
+So, Mark's point is "if we can detect a transaction which fits _that_
+bus activity, there's no reason not to use this acceleration for the
+transaction."
 
-These should go in of_private.h.
+What you're failing to counter with is: we don't have enough information
+in the SPI driver to know how many dummy bytes there are between the
+address bytes and the data read from the bus.
 
->  extern int of_changeset_revert(struct of_changeset *ocs);
->  extern int of_changeset_action(struct of_changeset *ocs,
->                 unsigned long action, struct device_node *np,
-> --
-> 2.1.0
->
-> --
-> To unsubscribe from this list: send the line "unsubscribe devicetree" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+The M25P80 driver just appends additional bytes to the message to
+achieve this:
+
+        struct m25p *flash = nor->priv;
+        unsigned int dummy = nor->read_dummy;
+
+        /* convert the dummy cycles to the number of bytes */
+        dummy /= 8;
+
+        flash->command[0] = nor->read_opcode;
+        m25p_addr2cmd(nor, from, flash->command);
+
+        t[0].tx_buf = flash->command;
+        t[0].len = m25p_cmdsz(nor) + dummy;
+        spi_message_add_tail(&t[0], &m);
+
+The reason that the number of dummy bytes can't be detected is because
+it's all hidden in the first transaction as the total number of bytes to
+be transmitted - and the dummy bytes are uninitialised, so you can't
+make any assumptions what value they are.  There is no way for the SPI
+driver to know whether these dummy bytes are dummy bytes or whether they
+have an effect on the targetted device.
+
+I think that comprehensively rules out Mark's idea with the SPI core as
+it stands today: there is no way for the SPI driver to reliably detect
+a message like a SFI read command by parsing the SPI transmitted message
+prior to sending it as we can never be sure whether there are dummy bytes
+to be transmitted.
+
+What may make more sense from the SPI point of view is to communicate to
+all SPI drivers how many dummy bytes are to be transferred.  I'm not fully
+up on SPI, but maybe something like this:
+
+	t[0].tx_buf = flash->command;
+	t[0].len = m25p_cmdsz(nor);
+	spi_message_add_tail(&t[0], &m);
+	t[1].tx_buf = dummy_buffer;
+	t[1].len = dummy;
+	t[1].dummy = 1;
+	spi_message_add_tail(&t[1], &m);
+
+This way, we're describing the transfer to the SPI core, and explicitly
+indicating that there are some dummy bytes.  The SPI driver can then
+tell that these are dummy bytes, and if the SPI message consists of:
+
+- transmit 2 to 5 bytes where the first byte is a recognised read command
+- transmit 0 to 3 dummy bytes
+- read some bytes
+
+then it can make use of the SFI mode to accelerate the operation.
+
+This would not be a hack to the SPI code: we're describing to the SPI
+code what we want to achieve in terms of the activity on the bus, and
+providing that level of description then allows the SPI driver to make
+informed decisions on whether it can handle the transfer using some
+non-standard feature.
+
+-- 
+FTTC broadband for 0.8mile line: currently at 10.5Mbps down 400kbps up
+according to speedtest.net.
