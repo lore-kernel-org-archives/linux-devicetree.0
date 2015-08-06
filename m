@@ -1,62 +1,499 @@
 From: Masahiro Yamada <yamada.masahiro@socionext.com>
-Subject: [PATCH v2 0/4] Device Tree updates of UniPhier SoCs for Linux 4.3
-Date: Thu,  6 Aug 2015 19:37:44 +0900
-Message-ID: <1438857468-9740-1-git-send-email-yamada.masahiro@socionext.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+Subject: [PATCH v2 1/4] ARM: dts: UniPhier: add I2C controller device nodes
+Date: Thu,  6 Aug 2015 19:37:45 +0900
+Message-ID: <1438857468-9740-2-git-send-email-yamada.masahiro@socionext.com>
+References: <1438857468-9740-1-git-send-email-yamada.masahiro@socionext.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1438857468-9740-1-git-send-email-yamada.masahiro@socionext.com>
+Sender: linux-kernel-owner@vger.kernel.org
 To: arm@kernel.org
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Russell King <linux@arm.linux.org.uk>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-kernel@vger.kernel.org, Masahiro Yamada <yamada.masahiro@socionext.com>, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, linux-arm-kernel@lists.infradead.org
+Cc: Masahiro Yamada <yamada.masahiro@socionext.com>, Russell King <linux@arm.linux.org.uk>, devicetree@vger.kernel.org, Kumar Gala <galak@codeaurora.org>, linux-kernel@vger.kernel.org, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Olof and Arnd,
+Add I2C controller device nodes for PH1-sLD3, PH1-LD4, PH1-sLD8
+(FIFO-less I2C) and PH1-Pro4 (FIFO-builtin I2C).
 
-Here are a little more updates for device trees for UniPhier SoCs.
+Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+---
+ arch/arm/boot/dts/uniphier-ph1-ld4-ref.dts  |  8 +++
+ arch/arm/boot/dts/uniphier-ph1-ld4.dtsi     | 58 ++++++++++++++++++++
+ arch/arm/boot/dts/uniphier-ph1-pro4-ref.dts | 10 ++++
+ arch/arm/boot/dts/uniphier-ph1-pro4.dtsi    | 82 +++++++++++++++++++++++++++++
+ arch/arm/boot/dts/uniphier-ph1-sld3-ref.dts |  9 ++++
+ arch/arm/boot/dts/uniphier-ph1-sld3.dtsi    | 61 +++++++++++++++++++++
+ arch/arm/boot/dts/uniphier-ph1-sld8-ref.dts |  8 +++
+ arch/arm/boot/dts/uniphier-ph1-sld8.dtsi    | 58 ++++++++++++++++++++
+ arch/arm/boot/dts/uniphier-pinctrl.dtsi     | 20 +++++++
+ 9 files changed, 314 insertions(+)
 
-Please consider applying this series to your ARM-SOC tree.
-
-Thanks!
-
-Changes in v2:
-  - insert 2/4 to fix build error
-
-Masahiro Yamada (4):
-  ARM: dts: UniPhier: add I2C controller device nodes
-  ARM: dts: UniPhier: add reference daughter board
-  ARM: dts: UniPhier: add PH1-Pro5 SoC support
-  ARM: dts: UniPhier: add ProXstream2 and PH1-LD6b SoC/board support
-
- arch/arm/boot/dts/Makefile                   |   3 +-
- arch/arm/boot/dts/uniphier-ph1-ld4-ref.dts   |   9 +
- arch/arm/boot/dts/uniphier-ph1-ld4.dtsi      |  58 ++++++
- arch/arm/boot/dts/uniphier-ph1-ld6b-ref.dts  | 105 +++++++++++
- arch/arm/boot/dts/uniphier-ph1-ld6b.dtsi     |  67 +++++++
- arch/arm/boot/dts/uniphier-ph1-pro4-ref.dts  |  11 ++
- arch/arm/boot/dts/uniphier-ph1-pro4.dtsi     |  82 ++++++++
- arch/arm/boot/dts/uniphier-ph1-pro5.dtsi     | 252 +++++++++++++++++++++++++
- arch/arm/boot/dts/uniphier-ph1-sld3-ref.dts  |  10 +
- arch/arm/boot/dts/uniphier-ph1-sld3.dtsi     |  61 ++++++
- arch/arm/boot/dts/uniphier-ph1-sld8-ref.dts  |   9 +
- arch/arm/boot/dts/uniphier-ph1-sld8.dtsi     |  58 ++++++
- arch/arm/boot/dts/uniphier-pinctrl.dtsi      |  20 ++
- arch/arm/boot/dts/uniphier-proxstream2.dtsi  | 273 +++++++++++++++++++++++++++
- arch/arm/boot/dts/uniphier-ref-daughter.dtsi |  50 +++++
- 15 files changed, 1067 insertions(+), 1 deletion(-)
- create mode 100644 arch/arm/boot/dts/uniphier-ph1-ld6b-ref.dts
- create mode 100644 arch/arm/boot/dts/uniphier-ph1-ld6b.dtsi
- create mode 100644 arch/arm/boot/dts/uniphier-ph1-pro5.dtsi
- create mode 100644 arch/arm/boot/dts/uniphier-proxstream2.dtsi
- create mode 100644 arch/arm/boot/dts/uniphier-ref-daughter.dtsi
-
+diff --git a/arch/arm/boot/dts/uniphier-ph1-ld4-ref.dts b/arch/arm/boot/dts/uniphier-ph1-ld4-ref.dts
+index 7ac053d..5d24c57 100644
+--- a/arch/arm/boot/dts/uniphier-ph1-ld4-ref.dts
++++ b/arch/arm/boot/dts/uniphier-ph1-ld4-ref.dts
+@@ -65,6 +65,10 @@
+ 		serial1 = &serial1;
+ 		serial2 = &serial2;
+ 		serial3 = &serial3;
++		i2c0 = &i2c0;
++		i2c1 = &i2c1;
++		i2c2 = &i2c2;
++		i2c3 = &i2c3;
+ 	};
+ };
+ 
+@@ -93,6 +97,10 @@
+ 	status = "okay";
+ };
+ 
++&i2c0 {
++	status = "okay";
++};
++
+ &usb0 {
+ 	status = "okay";
+ };
+diff --git a/arch/arm/boot/dts/uniphier-ph1-ld4.dtsi b/arch/arm/boot/dts/uniphier-ph1-ld4.dtsi
+index 4add90b..a6a185f 100644
+--- a/arch/arm/boot/dts/uniphier-ph1-ld4.dtsi
++++ b/arch/arm/boot/dts/uniphier-ph1-ld4.dtsi
+@@ -70,6 +70,12 @@
+ 			compatible = "fixed-clock";
+ 			clock-frequency = <36864000>;
+ 		};
++
++		iobus_clk: iobus_clk {
++			#clock-cells = <0>;
++			compatible = "fixed-clock";
++			clock-frequency = <100000000>;
++		};
+ 	};
+ 
+ 	soc {
+@@ -129,6 +135,58 @@
+ 			fifo-size = <64>;
+ 		};
+ 
++		i2c0: i2c@58400000 {
++			compatible = "socionext,uniphier-i2c";
++			status = "disabled";
++			reg = <0x58400000 0x40>;
++			#address-cells = <1>;
++			#size-cells = <0>;
++			pinctrl-names = "default";
++			pinctrl-0 = <&pinctrl_i2c0>;
++			interrupts = <0 41 1>;
++			clocks = <&iobus_clk>;
++			clock-frequency = <100000>;
++		};
++
++		i2c1: i2c@58480000 {
++			compatible = "socionext,uniphier-i2c";
++			status = "disabled";
++			reg = <0x58480000 0x40>;
++			#address-cells = <1>;
++			#size-cells = <0>;
++			pinctrl-names = "default";
++			pinctrl-0 = <&pinctrl_i2c1>;
++			interrupts = <0 42 1>;
++			clocks = <&iobus_clk>;
++			clock-frequency = <100000>;
++		};
++
++		/* chip-internal connection for DMD */
++		i2c2: i2c@58500000 {
++			compatible = "socionext,uniphier-i2c";
++			reg = <0x58500000 0x40>;
++			#address-cells = <1>;
++			#size-cells = <0>;
++			pinctrl-names = "default";
++			pinctrl-0 = <&pinctrl_i2c2>;
++			interrupts = <0 43 1>;
++			clocks = <&iobus_clk>;
++			clock-frequency = <400000>;
++		};
++
++		i2c3: i2c@58580000 {
++			compatible = "socionext,uniphier-i2c";
++			status = "disabled";
++			reg = <0x58580000 0x40>;
++			#address-cells = <1>;
++			#size-cells = <0>;
++			pinctrl-names = "default";
++			pinctrl-0 = <&pinctrl_i2c3>;
++			interrupts = <0 44 1>;
++			clocks = <&iobus_clk>;
++			clock-frequency = <100000>;
++		};
++
+ 		system-bus-controller-misc@59800000 {
+ 			compatible = "socionext,uniphier-system-bus-controller-misc",
+ 				     "syscon";
+diff --git a/arch/arm/boot/dts/uniphier-ph1-pro4-ref.dts b/arch/arm/boot/dts/uniphier-ph1-pro4-ref.dts
+index b669d32..26c18ac 100644
+--- a/arch/arm/boot/dts/uniphier-ph1-pro4-ref.dts
++++ b/arch/arm/boot/dts/uniphier-ph1-pro4-ref.dts
+@@ -65,6 +65,12 @@
+ 		serial1 = &serial1;
+ 		serial2 = &serial2;
+ 		serial3 = &serial3;
++		i2c0 = &i2c0;
++		i2c1 = &i2c1;
++		i2c2 = &i2c2;
++		i2c3 = &i2c3;
++		i2c5 = &i2c5;
++		i2c6 = &i2c6;
+ 	};
+ };
+ 
+@@ -93,6 +99,10 @@
+ 	status = "okay";
+ };
+ 
++&i2c0 {
++	status = "okay";
++};
++
+ &usb2 {
+ 	status = "okay";
+ };
+diff --git a/arch/arm/boot/dts/uniphier-ph1-pro4.dtsi b/arch/arm/boot/dts/uniphier-ph1-pro4.dtsi
+index d0ca4c8..e8bbc45 100644
+--- a/arch/arm/boot/dts/uniphier-ph1-pro4.dtsi
++++ b/arch/arm/boot/dts/uniphier-ph1-pro4.dtsi
+@@ -77,6 +77,12 @@
+ 			compatible = "fixed-clock";
+ 			clock-frequency = <73728000>;
+ 		};
++
++		i2c_clk: i2c_clk {
++			#clock-cells = <0>;
++			compatible = "fixed-clock";
++			clock-frequency = <50000000>;
++		};
+ 	};
+ 
+ 	soc {
+@@ -136,6 +142,82 @@
+ 			fifo-size = <64>;
+ 		};
+ 
++		i2c0: i2c@58780000 {
++			compatible = "socionext,uniphier-fi2c";
++			status = "disabled";
++			reg = <0x58780000 0x80>;
++			#address-cells = <1>;
++			#size-cells = <0>;
++			pinctrl-names = "default";
++			pinctrl-0 = <&pinctrl_i2c0>;
++			interrupts = <0 41 4>;
++			clocks = <&i2c_clk>;
++			clock-frequency = <100000>;
++		};
++
++		i2c1: i2c@58781000 {
++			compatible = "socionext,uniphier-fi2c";
++			status = "disabled";
++			reg = <0x58781000 0x80>;
++			#address-cells = <1>;
++			#size-cells = <0>;
++			pinctrl-names = "default";
++			pinctrl-0 = <&pinctrl_i2c1>;
++			interrupts = <0 42 4>;
++			clocks = <&i2c_clk>;
++			clock-frequency = <100000>;
++		};
++
++		i2c2: i2c@58782000 {
++			compatible = "socionext,uniphier-fi2c";
++			status = "disabled";
++			reg = <0x58782000 0x80>;
++			#address-cells = <1>;
++			#size-cells = <0>;
++			pinctrl-names = "default";
++			pinctrl-0 = <&pinctrl_i2c2>;
++			interrupts = <0 43 4>;
++			clocks = <&i2c_clk>;
++			clock-frequency = <100000>;
++		};
++
++		i2c3: i2c@58783000 {
++			compatible = "socionext,uniphier-fi2c";
++			status = "disabled";
++			reg = <0x58783000 0x80>;
++			#address-cells = <1>;
++			#size-cells = <0>;
++			pinctrl-names = "default";
++			pinctrl-0 = <&pinctrl_i2c3>;
++			interrupts = <0 44 4>;
++			clocks = <&i2c_clk>;
++			clock-frequency = <100000>;
++		};
++
++		/* i2c4 does not exist */
++
++		/* chip-internal connection for DMD */
++		i2c5: i2c@58785000 {
++			compatible = "socionext,uniphier-fi2c";
++			reg = <0x58785000 0x80>;
++			#address-cells = <1>;
++			#size-cells = <0>;
++			interrupts = <0 25 4>;
++			clocks = <&i2c_clk>;
++			clock-frequency = <400000>;
++		};
++
++		/* chip-internal connection for HDMI */
++		i2c6: i2c@58786000 {
++			compatible = "socionext,uniphier-fi2c";
++			reg = <0x58786000 0x80>;
++			#address-cells = <1>;
++			#size-cells = <0>;
++			interrupts = <0 26 4>;
++			clocks = <&i2c_clk>;
++			clock-frequency = <400000>;
++		};
++
+ 		system-bus-controller-misc@59800000 {
+ 			compatible = "socionext,uniphier-system-bus-controller-misc",
+ 				     "syscon";
+diff --git a/arch/arm/boot/dts/uniphier-ph1-sld3-ref.dts b/arch/arm/boot/dts/uniphier-ph1-sld3-ref.dts
+index 48f7361..cb6e9aa 100644
+--- a/arch/arm/boot/dts/uniphier-ph1-sld3-ref.dts
++++ b/arch/arm/boot/dts/uniphier-ph1-sld3-ref.dts
+@@ -65,6 +65,11 @@
+ 		serial0 = &serial0;
+ 		serial1 = &serial1;
+ 		serial2 = &serial2;
++		i2c0 = &i2c0;
++		i2c1 = &i2c1;
++		i2c2 = &i2c2;
++		i2c3 = &i2c3;
++		i2c4 = &i2c4;
+ 	};
+ };
+ 
+@@ -93,6 +98,10 @@
+ 	status = "okay";
+ };
+ 
++&i2c0 {
++	status = "okay";
++};
++
+ &usb0 {
+ 	status = "okay";
+ };
+diff --git a/arch/arm/boot/dts/uniphier-ph1-sld3.dtsi b/arch/arm/boot/dts/uniphier-ph1-sld3.dtsi
+index db74457..3cc90cd 100644
+--- a/arch/arm/boot/dts/uniphier-ph1-sld3.dtsi
++++ b/arch/arm/boot/dts/uniphier-ph1-sld3.dtsi
+@@ -77,6 +77,12 @@
+ 			compatible = "fixed-clock";
+ 			clock-frequency = <36864000>;
+ 		};
++
++		iobus_clk: iobus_clk {
++			#clock-cells = <0>;
++			compatible = "fixed-clock";
++			clock-frequency = <100000000>;
++		};
+ 	};
+ 
+ 	soc {
+@@ -141,6 +147,61 @@
+ 			fifo-size = <64>;
+ 		};
+ 
++		i2c0: i2c@58400000 {
++			compatible = "socionext,uniphier-i2c";
++			status = "disabled";
++			reg = <0x58400000 0x40>;
++			#address-cells = <1>;
++			#size-cells = <0>;
++			interrupts = <0 41 1>;
++			clocks = <&iobus_clk>;
++			clock-frequency = <100000>;
++		};
++
++		i2c1: i2c@58480000 {
++			compatible = "socionext,uniphier-i2c";
++			status = "disabled";
++			reg = <0x58480000 0x40>;
++			#address-cells = <1>;
++			#size-cells = <0>;
++			interrupts = <0 42 1>;
++			clocks = <&iobus_clk>;
++			clock-frequency = <100000>;
++		};
++
++		i2c2: i2c@58500000 {
++			compatible = "socionext,uniphier-i2c";
++			status = "disabled";
++			reg = <0x58500000 0x40>;
++			#address-cells = <1>;
++			#size-cells = <0>;
++			interrupts = <0 43 1>;
++			clocks = <&iobus_clk>;
++			clock-frequency = <100000>;
++		};
++
++		i2c3: i2c@58580000 {
++			compatible = "socionext,uniphier-i2c";
++			status = "disabled";
++			reg = <0x58580000 0x40>;
++			#address-cells = <1>;
++			#size-cells = <0>;
++			interrupts = <0 44 1>;
++			clocks = <&iobus_clk>;
++			clock-frequency = <100000>;
++		};
++
++		/* chip-internal connection for DMD */
++		i2c4: i2c@58600000 {
++			compatible = "socionext,uniphier-i2c";
++			reg = <0x58600000 0x40>;
++			#address-cells = <1>;
++			#size-cells = <0>;
++			interrupts = <0 45 1>;
++			clocks = <&iobus_clk>;
++			clock-frequency = <400000>;
++		};
++
+ 		system-bus-controller-misc@59800000 {
+ 			compatible = "socionext,uniphier-system-bus-controller-misc",
+ 				     "syscon";
+diff --git a/arch/arm/boot/dts/uniphier-ph1-sld8-ref.dts b/arch/arm/boot/dts/uniphier-ph1-sld8-ref.dts
+index 9b5992a..a40a0fb 100644
+--- a/arch/arm/boot/dts/uniphier-ph1-sld8-ref.dts
++++ b/arch/arm/boot/dts/uniphier-ph1-sld8-ref.dts
+@@ -65,6 +65,10 @@
+ 		serial1 = &serial1;
+ 		serial2 = &serial2;
+ 		serial3 = &serial3;
++		i2c0 = &i2c0;
++		i2c1 = &i2c1;
++		i2c2 = &i2c2;
++		i2c3 = &i2c3;
+ 	};
+ };
+ 
+@@ -93,6 +97,10 @@
+ 	status = "okay";
+ };
+ 
++&i2c0 {
++	status = "okay";
++};
++
+ &usb0 {
+ 	status = "okay";
+ };
+diff --git a/arch/arm/boot/dts/uniphier-ph1-sld8.dtsi b/arch/arm/boot/dts/uniphier-ph1-sld8.dtsi
+index 3ead910..58067df 100644
+--- a/arch/arm/boot/dts/uniphier-ph1-sld8.dtsi
++++ b/arch/arm/boot/dts/uniphier-ph1-sld8.dtsi
+@@ -70,6 +70,12 @@
+ 			compatible = "fixed-clock";
+ 			clock-frequency = <80000000>;
+ 		};
++
++		iobus_clk: iobus_clk {
++			#clock-cells = <0>;
++			compatible = "fixed-clock";
++			clock-frequency = <100000000>;
++		};
+ 	};
+ 
+ 	soc {
+@@ -129,6 +135,58 @@
+ 			fifo-size = <64>;
+ 		};
+ 
++		i2c0: i2c@58400000 {
++			compatible = "socionext,uniphier-i2c";
++			status = "disabled";
++			reg = <0x58400000 0x40>;
++			#address-cells = <1>;
++			#size-cells = <0>;
++			pinctrl-names = "default";
++			pinctrl-0 = <&pinctrl_i2c0>;
++			interrupts = <0 41 1>;
++			clocks = <&iobus_clk>;
++			clock-frequency = <100000>;
++		};
++
++		i2c1: i2c@58480000 {
++			compatible = "socionext,uniphier-i2c";
++			status = "disabled";
++			reg = <0x58480000 0x40>;
++			#address-cells = <1>;
++			#size-cells = <0>;
++			pinctrl-names = "default";
++			pinctrl-0 = <&pinctrl_i2c1>;
++			interrupts = <0 42 1>;
++			clocks = <&iobus_clk>;
++			clock-frequency = <100000>;
++		};
++
++		/* chip-internal connection for DMD */
++		i2c2: i2c@58500000 {
++			compatible = "socionext,uniphier-i2c";
++			reg = <0x58500000 0x40>;
++			#address-cells = <1>;
++			#size-cells = <0>;
++			pinctrl-names = "default";
++			pinctrl-0 = <&pinctrl_i2c2>;
++			interrupts = <0 43 1>;
++			clocks = <&iobus_clk>;
++			clock-frequency = <400000>;
++		};
++
++		i2c3: i2c@58580000 {
++			compatible = "socionext,uniphier-i2c";
++			status = "disabled";
++			reg = <0x58580000 0x40>;
++			#address-cells = <1>;
++			#size-cells = <0>;
++			pinctrl-names = "default";
++			pinctrl-0 = <&pinctrl_i2c3>;
++			interrupts = <0 44 1>;
++			clocks = <&iobus_clk>;
++			clock-frequency = <100000>;
++		};
++
+ 		system-bus-controller-misc@59800000 {
+ 			compatible = "socionext,uniphier-system-bus-controller-misc",
+ 				     "syscon";
+diff --git a/arch/arm/boot/dts/uniphier-pinctrl.dtsi b/arch/arm/boot/dts/uniphier-pinctrl.dtsi
+index 1b5b4fe..f67445f 100644
+--- a/arch/arm/boot/dts/uniphier-pinctrl.dtsi
++++ b/arch/arm/boot/dts/uniphier-pinctrl.dtsi
+@@ -43,6 +43,26 @@
+  */
+ 
+ &pinctrl {
++	pinctrl_i2c0: i2c0_grp {
++		groups = "i2c0";
++		function = "i2c0";
++	};
++
++	pinctrl_i2c1: i2c1_grp {
++		groups = "i2c1";
++		function = "i2c1";
++	};
++
++	pinctrl_i2c2: i2c2_grp {
++		groups = "i2c2";
++		function = "i2c2";
++	};
++
++	pinctrl_i2c3: i2c3_grp {
++		groups = "i2c3";
++		function = "i2c3";
++	};
++
+ 	pinctrl_uart0: uart0_grp {
+ 		groups = "uart0";
+ 		function = "uart0";
 -- 
 1.9.1
