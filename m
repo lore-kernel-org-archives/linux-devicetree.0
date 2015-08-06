@@ -1,40 +1,83 @@
-From: Afzal Mohammed <afzal.mohd.ma-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 1/8] ARM: dts: AM4372: Reorder the rtc compatible string
-Date: Thu, 6 Aug 2015 19:03:06 +0530
-Message-ID: <20150806133306.GA5484@afzalpc>
-References: <1438771792-12604-1-git-send-email-j-keerthy@ti.com>
- <1438771792-12604-2-git-send-email-j-keerthy@ti.com>
- <20150805153148.GB12328@saruman.tx.rr.com>
- <55C230E9.9010309@ti.com>
- <20150805161445.GF12328@saruman.tx.rr.com>
+From: Tomeu Vizoso <tomeu.vizoso@collabora.com>
+Subject: Re: [PATCH v2 2/3] pinctrl: tegra: Only set the gpio range if needed
+Date: Thu, 6 Aug 2015 15:40:32 +0200
+Message-ID: <CAAObsKBk54ZAhGVmpONeBtX1AJv0woq7sp3cCGZ1FeDtTst_DA@mail.gmail.com>
+References: <1436862596-27730-1-git-send-email-tomeu.vizoso@collabora.com> <1436862596-27730-3-git-send-email-tomeu.vizoso@collabora.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20150805161445.GF12328-HgARHv6XitJaoMGHk7MhZQC/G2K4zDHf@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>
-Cc: Keerthy <a0393675-l0cyMroinI0@public.gmane.org>, Keerthy <j-keerthy-l0cyMroinI0@public.gmane.org>, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org, johan-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, nm-l0cyMroinI0@public.gmane.org, paul-DWxLp4Yu+b8AvxtiuMwx3w@public.gmane.org, t-kristo-l0cyMroinI0@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1436862596-27730-3-git-send-email-tomeu.vizoso@collabora.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Cc: linux-gpio@vger.kernel.org, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>, Tomeu Vizoso <tomeu.vizoso@collabora.com>, Thierry Reding <thierry.reding@gmail.com>, Linus Walleij <linus.walleij@linaro.org>, Stephen Warren <swarren@wwwdotorg.org>, Alexandre Courbot <gnurou@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+On 14 July 2015 at 10:29, Tomeu Vizoso <tomeu.vizoso@collabora.com> wrote:
+> If the gpio DT node has the gpio-ranges property, the range will be
+> added by the gpio core and doesn't need to be added by the pinctrl
+> driver.
+>
+> By having the gpio-ranges property, we have an explicit dependency from
+> the gpio node to the pinctrl node and we can stop using the deprecated
+> pinctrl_add_gpio_range() function.
+>
+> Signed-off-by: Tomeu Vizoso <tomeu.vizoso@collabora.com>
+> Acked-by: Stephen Warren <swarren@nvidia.com>
 
-On Wed, Aug 05, 2015 at 11:14:45AM -0500, Felipe Balbi wrote:
+Hi Linus,
 
-> for them. Sure, it wasn't documented, but that's a problem of commit
-> 73456012734b80442b33916406cfd13bf1b73acb (ARM: dts: AM4372: add few
-> nodes) which, essentially, added that compatible flag without
-> documenting it.
+do you mind if this goes through the Tegra tree? It would be best if
+it went together with 3/3 ("ARM: tegra: Add gpio-ranges property"), to
+avoid duplicated GPIO ranges.
 
-It was required to be done that way that time, probably author didn't
-want to be loyal to the king than the king himself ;), see,
+Thanks,
 
-1. http://lists.infradead.org/pipermail/linux-arm-kernel/2013-August/191206.html
-2. http://www.mail-archive.com/linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org/msg89473.html
+Tomeu
 
-Regards
-Afzal
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> ---
+>
+> Changes in v2: None
+>
+>  drivers/pinctrl/pinctrl-tegra.c | 19 ++++++++++++++++++-
+>  1 file changed, 18 insertions(+), 1 deletion(-)
+>
+> diff --git a/drivers/pinctrl/pinctrl-tegra.c b/drivers/pinctrl/pinctrl-tegra.c
+> index 0f982b829be1..0fd7fd2b0f72 100644
+> --- a/drivers/pinctrl/pinctrl-tegra.c
+> +++ b/drivers/pinctrl/pinctrl-tegra.c
+> @@ -624,6 +624,22 @@ static struct pinctrl_desc tegra_pinctrl_desc = {
+>         .owner = THIS_MODULE,
+>  };
+>
+> +static bool gpio_node_has_range(void)
+> +{
+> +       struct device_node *np;
+> +       bool has_prop = false;
+> +
+> +       np = of_find_compatible_node(NULL, NULL, "nvidia,tegra30-gpio");
+> +       if (!np)
+> +               return has_prop;
+> +
+> +       has_prop = of_find_property(np, "gpio-ranges", NULL);
+> +
+> +       of_node_put(np);
+> +
+> +       return has_prop;
+> +}
+> +
+>  int tegra_pinctrl_probe(struct platform_device *pdev,
+>                         const struct tegra_pinctrl_soc_data *soc_data)
+>  {
+> @@ -708,7 +724,8 @@ int tegra_pinctrl_probe(struct platform_device *pdev,
+>                 return PTR_ERR(pmx->pctl);
+>         }
+>
+> -       pinctrl_add_gpio_range(pmx->pctl, &tegra_pinctrl_gpio_range);
+> +       if (!gpio_node_has_range())
+> +               pinctrl_add_gpio_range(pmx->pctl, &tegra_pinctrl_gpio_range);
+>
+>         platform_set_drvdata(pdev, pmx);
+>
+> --
+> 2.4.3
+>
