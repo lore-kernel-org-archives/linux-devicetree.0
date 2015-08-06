@@ -1,81 +1,100 @@
-From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH 2/3] Docs: dt: Add PCI MSI map bindings
-Date: Thu, 6 Aug 2015 19:14:53 +0100
-Message-ID: <20150806181453.GD6437@leverpostej>
-References: <1437670365-20704-1-git-send-email-mark.rutland@arm.com>
-	<1437670365-20704-3-git-send-email-mark.rutland@arm.com>
-	<CALRxmdA32xiSX7DDKAJPLR8=bh_9j-6MN124u4KjYGRT8bAKNg@mail.gmail.com>
-	<CY1PR0301MB07486794749E499F71BDFCD287750@CY1PR0301MB0748.namprd03.prod.outlook.com>
+From: Michal Suchanek <hramrach-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [RFC PATCH 1/5] spi: introduce flag for memory mapped read
+Date: Thu, 6 Aug 2015 20:20:02 +0200
+Message-ID: <CAOMqctTisUv4YcSSojKadotX5XAB4Ro0bxT4Wn9tRP=Jyc0iqw@mail.gmail.com>
+References: <20150804155148.GR20873@sirena.org.uk> <55C0FD98.1090107@ti.com>
+ <20150805115013.GJ20873@sirena.org.uk> <CAOMqctQXwcHyiWBwtugSDSE_k65qrNfrwnhjQMDJkLoJMmGzUw@mail.gmail.com>
+ <20150805124412.GN20873@sirena.org.uk> <CAOMqctS9Y5FxpUCCJew6+cnjH5iTvbzkH3g-8yrXs4OuS2pSGA@mail.gmail.com>
+ <20150806090202.GO20873@sirena.org.uk> <CAOMqctQZRZ4zG_yYy=CeX3DX4NVNWN1COP4Q-2YvMun9xYOA7g@mail.gmail.com>
+ <20150806102225.GI7576@n2100.arm.linux.org.uk> <55C35233.2000105@ti.com>
+ <20150806135129.GJ7576@n2100.arm.linux.org.uk> <CAMuHMdWWDwZ=ziGQXFCnOX8pErXpsEi533J73_Hh=sEqq4hR6Q@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <CY1PR0301MB07486794749E499F71BDFCD287750-YrwGdl+PljkyhdUd3pz1uJwN6zqB+hSMnBOFsp37pqbUKgpGm//BTAC/G2K4zDHf@public.gmane.org>
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: Stuart Yoder <stuart.yoder-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Marc Zyngier <Marc.Zyngier-5wv7dgnIgG8@public.gmane.org>, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>
-Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Lorenzo Pieralisi <Lorenzo.Pieralisi-5wv7dgnIgG8@public.gmane.org>, "arnd-r2nGTMty4D4@public.gmane.org" <arnd-r2nGTMty4D4@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "ddaney-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org" <ddaney-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>, "iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org" <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, "tirumalesh.chalamarla-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org" <tirumalesh.chalamarla-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>, "laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org" <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, "thunder.leizhen-hv44wF8Li93QT0dZR+AlfA@public.gmane.org" <thunder.leizhen-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, "treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org" <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "majun258-hv44wF8Li93QT0dZR+AlfA@public.gmane.org" <majun258-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAMuHMdWWDwZ=ziGQXFCnOX8pErXpsEi533J73_Hh=sEqq4hR6Q-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
+Cc: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Vignesh R <vigneshr-l0cyMroinI0@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-spi <linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Huang Shijie <b32955-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, MTD Maling List <linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-[...]
+On 6 August 2015 at 18:14, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org> wrote:
+> On Thu, Aug 6, 2015 at 3:51 PM, Russell King - ARM Linux
+> <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org> wrote:
+>> On Thu, Aug 06, 2015 at 05:55:23PM +0530, Vignesh R wrote:
+>>> On the whole following are my requirements:
+>>> 1. to be able to communicate with non -flash SPI devices via config port
+>>> ( this functionality is supported by current driver, I dont want to
+>>> break it). Or pump any spi_message on to SPI bus directly.
+>>> 2. take advantage of memory mapped port in order to increase read
+>>> throughput( and use dma in future) when the slave is a m25p80 type flash.
+>>> 3. handle m25p80 as well as other slave on multiple chipselects.
+>>>
+>>> I just need to know whether the user that requested the transfer is
+>>> m25p80 driver. If yes, ti-qspi driver can take advantage of memory
+>>> mapped interface, else just use config port to access SPI bus directly.
+>>
+>> The problem with this approach is that it's an abomination.  It's adding
+>> a SPI-user specific hack which is detected by a specific driver.  That's
+>> really not sane - what happens when we have lots of these kinds of "I'm
+>> an X SPI-user" with drivers detecting that?  It's not maintainable in the
+>> long term.
+>>
+>> Yes, your requirements _today_ seem simple and easy, but you're only
+>> thinking about today, not tomorrow when you've moved on and someone else
+>> has to maintain the mess left behind (or delete it from mainline because
+>> they're sick of dealing with a hack.)
+>>
+>>> The spi_message that is received in transfer_one_message() is too
+>>> generic to imply the slave device that is on the other side of the wire.
+>>> IMO, the read command does not imply that the slave is m25p80 flash
+>>> (besides the read opcodes vary across vendors of m25p80 and across modes).
+>>
+>> I can see both sides of the argument.
+>>
+>> Mark is saying: if the SPI driver detects that the message to be transmitted
+>> is a read command followed by the appropriate number of dummy bytes, and
+>> then the data being read _and_ it's using quad-mode access, and the hardware
+>> generates _exactly_ that in hardware using the memory mapped mode, there is
+>> no reason _not_ to use the hardware to achieve that SPI transaction.  The
+>> bus activity will be identical to what happens when the SPI controller is
+>> used manually to achieve that bus sequence.
+>>
+>> You're saying: but the documentation says you can't use it for anything
+>> except m25p80.  If you look at 24.5.4.1.2, it tells you what the SFI
+>> generates on the bus, which is:
+>>
+>> 1. CS active
+>> 2. Read command byte sent
+>> 3. 1-4 address bytes sent
+>> 4. 0-3 dummy bytes sent
+>> 5. data bytes read from bus
+>> 6. CS inactive
+>>
+>> So, Mark's point is "if we can detect a transaction which fits _that_
+>> bus activity, there's no reason not to use this acceleration for the
+>> transaction."
+>>
+>> What you're failing to counter with is: we don't have enough information
+>> in the SPI driver to know how many dummy bytes there are between the
+>> address bytes and the data read from the bus.
+>
+> Irrespective of the dummy bytes.
+> What if the spi device is not a FLASH ROM, but some other device,
+> which receives a data packet that accidentally looks like an m25p80 READ
+> command?
+>
 
-> > +PCI root complex
-> > +================
-> > +
-> > +Optional properties
-> > +-------------------
-> > +
-> > +- msi-map: Maps a Requester ID to an MSI controller and associated
-> > +  msi-specifier data. The property is an arbitrary number of tuples of
-> > +  (rid-base,msi-controller,msi-base,length), where:
-> > +
-> > +  * rid-base is a single cell describing the first RID matched by the entry.
-> > +
-> > +  * msi-controller is a single phandle to an MSI controller
-> > +
-> > +  * msi-base is an msi-specifier describing the msi-specifier produced for the
-> > +    first RID matched by the entry.
-> > +
-> > +  * length is a single cell describing how many consecutive RIDs are matched
-> > +    following the rid-base.
-> > +
-> > +  Any RID r in the interval [rid-base, rid-base + length) is associated with
-> > +  the listed msi-controller, with the msi-specifier (r - rid-base + msi-base).
-> > +
-> > +- msi-map-mask: A mask to be applied to each Requester ID prior to being mapped
-> > +  to an msi-specifier per the msi-map property.
-> 
-> Can we extend the msi-map-mask definition to say:  "A mask value of 0x0 is valid
-> and indicates that no RIDs are _currently_ mapped to any msi-specifier."
+Presumably the driver would interpret some random part of the message
+as address and map the reply in your address space at that address
+from the flash mmap base.
 
-That would break a valid case of the mask being all zeroes.
+If you happen to overflow the flash memory mmap space the behaviour
+will probably not be well defined.
 
-Consider the case that all RIDs get mapped to a single msi-specifier;
-the obvious way to write that is:
+Thanks
 
-msi-map-mask = <0x0000>;
-msi-map = <0x0000 &msi (msi-specifier) 1>;
-
-In this case all RIDS are always mapped to the single msi-specifier.
-
-> We have an SoC with a programmable hardware table in the PCI controller that maps
-> requester ID to stream ID, so the overall msi-map (and iommu-map) definition fit
-> into that scheme.  But, we would like to be able make the RID->stream-ID mapping
-> decision _lazily_, in Linux, based on actual usage of PCI devices.
-
-Dynamically programming the mapping is at odds to this binding. I don't
-see how that can fit.
-
-Why can the RID->SID mapping not be statically configured prior to
-entering the OS?
-
-Thanks,
-Mark.
+Michal
+--
+To unsubscribe from this list: send the line "unsubscribe linux-spi" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
