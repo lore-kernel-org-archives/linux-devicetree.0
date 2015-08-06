@@ -1,84 +1,55 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [RFC PATCH 1/5] spi: introduce flag for memory mapped read
-Date: Thu, 6 Aug 2015 10:02:02 +0100
-Message-ID: <20150806090202.GO20873@sirena.org.uk>
-References: <1438072876-16338-1-git-send-email-vigneshr@ti.com>
- <1438072876-16338-2-git-send-email-vigneshr@ti.com>
- <20150731181745.GM20873@sirena.org.uk>
- <55BEF4AF.5090704@ti.com>
- <20150804155148.GR20873@sirena.org.uk>
- <55C0FD98.1090107@ti.com>
- <20150805115013.GJ20873@sirena.org.uk>
- <CAOMqctQXwcHyiWBwtugSDSE_k65qrNfrwnhjQMDJkLoJMmGzUw@mail.gmail.com>
- <20150805124412.GN20873@sirena.org.uk>
- <CAOMqctS9Y5FxpUCCJew6+cnjH5iTvbzkH3g-8yrXs4OuS2pSGA@mail.gmail.com>
+From: Govindraj Raja <Govindraj.Raja@imgtec.com>
+Subject: RE: [RFC PATCH v4 3/9] mips: pistachio_defconfig: remove
+ CONFIG_MMC_DW_IDMAC
+Date: Thu, 6 Aug 2015 09:05:52 +0000
+Message-ID: <4BF5E8683E87FC4DA89822A5A3EB60CB6F2001@hhmail02.hh.imgtec.org>
+References: <1438843469-23807-1-git-send-email-shawn.lin@rock-chips.com>
+ <1438843515-23935-1-git-send-email-shawn.lin@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="kVEG7nX9o2Fku/dg"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAOMqctS9Y5FxpUCCJew6+cnjH5iTvbzkH3g-8yrXs4OuS2pSGA@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Michal Suchanek <hramrach@gmail.com>
-Cc: "R, Vignesh" <vigneshr@ti.com>, devicetree <devicetree@vger.kernel.org>, Brian Norris <computersforpeace@gmail.com>, Russell King <linux@arm.linux.org.uk>, Tony Lindgren <tony@atomide.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-spi <linux-spi@vger.kernel.org>, Huang Shijie <b32955@freescale.com>, MTD Maling List <linux-mtd@lists.infradead.org>, linux-omap@vger.kernel.org, David Woodhouse <dwmw2@infradead.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <1438843515-23935-1-git-send-email-shawn.lin@rock-chips.com>
+Content-Language: en-AU
+Sender: linux-mmc-owner@vger.kernel.org
+To: Shawn Lin <shawn.lin@rock-chips.com>, "jh80.chung@samsung.com" <jh80.chung@samsung.com>, "ulf.hansson@linaro.org" <ulf.hansson@linaro.org>
+Cc: "heiko@sntech.de" <heiko@sntech.de>, "dianders@chromium.org" <dianders@chromium.org>, "Vineet.Gupta1@synopsys.com" <Vineet.Gupta1@synopsys.com>, Wei Xu <xuwei5@hisilicon.com>, Joachim Eastwood <manabian@gmail.com>, Alexey Brodkin <abrodkin@synopsys.com>, Kukjin Kim <kgene@kernel.org>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, Russell King <linux@arm.linux.org.uk>, Jun Nie <jun.nie@linaro.org>, Ralf Baechle <ralf@linux-mips.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, "linux-mips@linux-mips.org" <linux-mips@linux-mips.org>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-rockchip@lists.infradead.org" <linux-rockchip@lists.infradead.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
 
---kVEG7nX9o2Fku/dg
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
 
-On Wed, Aug 05, 2015 at 02:56:09PM +0200, Michal Suchanek wrote:
-> On 5 August 2015 at 14:44, Mark Brown <broonie@kernel.org> wrote:
-> > On Wed, Aug 05, 2015 at 02:40:01PM +0200, Michal Suchanek wrote:
+> -----Original Message-----
+> From: Shawn Lin [mailto:shawn.lin@rock-chips.com]
+> Sent: 06 August 2015 07:45 AM
+> To: jh80.chung@samsung.com; ulf.hansson@linaro.org
+> Cc: heiko@sntech.de; dianders@chromium.org; Vineet.Gupta1@synopsys.com;
+> Wei Xu; Joachim Eastwood; Alexey Brodkin; Kukjin Kim; Krzysztof Kozlowski;
+> Russell King; Jun Nie; Ralf Baechle; Govindraj Raja; linux-arm-
+> kernel@lists.infradead.org; linux-samsung-soc@vger.kernel.org; linux-
+> mips@linux-mips.org; linux-mmc@vger.kernel.org; linux-
+> kernel@vger.kernel.org; linux-rockchip@lists.infradead.org;
+> devicetree@vger.kernel.org; Shawn Lin
+> Subject: [RFC PATCH v4 3/9] mips: pistachio_defconfig: remove
+> CONFIG_MMC_DW_IDMAC
+> 
+> DesignWare MMC Controller's transfer mode should be decided at runtime
+> instead of compile-time. So we remove this config option and read dw_mmc's
+> register to select DMA master.
+> 
+> Signed-off-by: Shawn Lin <shawn.lin@rock-chips.com>
+> ---
+> 
+> Changes in v4: None
+> Changes in v3: None
+> Changes in v2: None
+> 
+>  arch/mips/configs/pistachio_defconfig | 1 -
+>  1 file changed, 1 deletion(-)
 
-> >> I don't think sending 03 or other random byte as the first byte of a
-> >> SPI transfer can be used as reliable detection that we are talking to
-> >> a SPI flash memory.
+Acked-by: Govindraj Raja <govindraj.raja@imgtec.com>
 
-> > Why care - if something is physically in the same format as a flash read
-> > command how would a device be able to tell that it wasn't actually a
-> > flash read command?  The signals sent on the bus are going to be
-> > identical anyway.
+--
+Thanks,
+Govindraj.R
 
-> Not only must the command be the same but also the response must be tha same.
 
-What difference would that make?  The caller is sending a single SPI
-operation and this is a user visible thing...
-
-> The flash chip responds by sending arbitrary amount of data. Given
-> that transfer_one gets only the part that sends the read command and
-> the part to do the actual read may or may not follow this is getting a
-> bit hairy. Add in dummy bytes due to fast-read lag and page write
-> wrap-around and you get something that you definitely do not want
-> unless you are really sure that there is a flash memory on the other
-> end of the wire.
-
-So if you're doing this you may have a good reason to implement
-transfer_one_message() instead.  Or perhaps implement it in the core and
-provide operations to do the map and unmap.  And of course if this sort
-of requirement exists that's an obvious thing that must be documented
-in the interfaces but isn't.
-
-We need a lot more thought about the interface here, the lack of any
-explanation of what the interface is supposed to be and the fact that
-all questions about it are being answered in terms of describing the
-specific system are both a bit worrying.
-
---kVEG7nX9o2Fku/dg
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQEcBAEBCAAGBQJVwyKGAAoJECTWi3JdVIfQiYUH/0VIEkVZqyLsAeTxJFMAWxLp
-c7/RgUO0oBGWWp8OJrAT+IRDVgEJ7Nu5nSNtKch8jwSwtsIi1QeGYIcFUFsbEA8V
-fzGkMtp2/hnABtD2qciCc2r5AkJdB1rcbrFMqyVes8dbW3Otq9z9fu8K12x59FJr
-2y2X6o5pqdrQPL6vH0GmUodWs28Rc0t5qsWbiXPm08k5TF27hEOF2O/0EKBNsDjS
-JIiVrqdybHfKjEF8nZCadt/MUlClpG3j/PCZlu9XFs1yKMFALIbbwfgQ1kF8N/Sh
-XVVhR02v16wmIecRjiPt7S23RhPspqkRiX6KtEJMNug0Rhs3w+5+T2c+tvQL1IE=
-=S1cX
------END PGP SIGNATURE-----
-
---kVEG7nX9o2Fku/dg--
