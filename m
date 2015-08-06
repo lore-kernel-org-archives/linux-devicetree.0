@@ -1,7 +1,7 @@
 From: Gavin Shan <gwshan@linux.vnet.ibm.com>
-Subject: [PATCH v6 41/42] drivers/of: Export OF changeset functions
-Date: Thu,  6 Aug 2015 14:11:46 +1000
-Message-ID: <1438834307-26960-42-git-send-email-gwshan@linux.vnet.ibm.com>
+Subject: [PATCH v6 38/42] drivers/of: Unflatten subordinate nodes after specified level
+Date: Thu,  6 Aug 2015 14:11:43 +1000
+Message-ID: <1438834307-26960-39-git-send-email-gwshan@linux.vnet.ibm.com>
 References: <1438834307-26960-1-git-send-email-gwshan@linux.vnet.ibm.com>
 Return-path: <linux-pci-owner@vger.kernel.org>
 In-Reply-To: <1438834307-26960-1-git-send-email-gwshan@linux.vnet.ibm.com>
@@ -10,194 +10,130 @@ To: linuxppc-dev@lists.ozlabs.org
 Cc: linux-pci@vger.kernel.org, devicetree@vger.kernel.org, benh@kernel.crashing.org, mpe@ellerman.id.au, bhelgaas@google.com, grant.likely@linaro.org, robherring2@gmail.com, panto@antoniou-consulting.com, aik@ozlabs.ru, Gavin Shan <gwshan@linux.vnet.ibm.com>
 List-Id: devicetree@vger.kernel.org
 
-The PowerNV PCI hotplug driver is going to use the OF changeset
-to manage the changed device sub-tree, which requires those OF
-changeset functions are exported.
+unflatten_dt_node() is called recursively to unflatten FDT nodes
+with the assumption that FDT blob has only one root node, which
+isn't true when the FDT blob represents device sub-tree. This
+improves the function to supporting device sub-tree that have
+multiple nodes in the first level:
+
+   * Rename original unflatten_dt_node() to __unflatten_dt_node().
+   * Wrapper unflatten_dt_node() calls __unflatten_dt_node() with
+     adjusted current node depth to 1 to avoid underflow.
 
 Signed-off-by: Gavin Shan <gwshan@linux.vnet.ibm.com>
 ---
- drivers/of/dynamic.c  | 65 ++++++++++++++++++++++++++++++++++++---------------
- drivers/of/overlay.c  |  8 +++----
- drivers/of/unittest.c |  4 ++--
- include/linux/of.h    |  2 ++
- 4 files changed, 54 insertions(+), 25 deletions(-)
+ drivers/of/fdt.c | 53 ++++++++++++++++++++++++++++++++++++++++-------------
+ 1 file changed, 40 insertions(+), 13 deletions(-)
 
-diff --git a/drivers/of/dynamic.c b/drivers/of/dynamic.c
-index 53826b8..af65b5b 100644
---- a/drivers/of/dynamic.c
-+++ b/drivers/of/dynamic.c
-@@ -646,6 +646,7 @@ void of_changeset_init(struct of_changeset *ocs)
- 	memset(ocs, 0, sizeof(*ocs));
- 	INIT_LIST_HEAD(&ocs->entries);
- }
-+EXPORT_SYMBOL(of_changeset_init);
- 
- /**
-  * of_changeset_destroy - Destroy a changeset
-@@ -662,20 +663,9 @@ void of_changeset_destroy(struct of_changeset *ocs)
- 	list_for_each_entry_safe_reverse(ce, cen, &ocs->entries, node)
- 		__of_changeset_entry_destroy(ce);
- }
-+EXPORT_SYMBOL(of_changeset_destroy);
- 
--/**
-- * of_changeset_apply - Applies a changeset
-- *
-- * @ocs:	changeset pointer
-- *
-- * Applies a changeset to the live tree.
-- * Any side-effects of live tree state changes are applied here on
-- * sucess, like creation/destruction of devices and side-effects
-- * like creation of sysfs properties and directories.
-- * Returns 0 on success, a negative error value in case of an error.
-- * On error the partially applied effects are reverted.
-- */
--int of_changeset_apply(struct of_changeset *ocs)
-+int __of_changeset_apply(struct of_changeset *ocs)
- {
- 	struct of_changeset_entry *ce;
- 	int ret;
-@@ -704,17 +694,30 @@ int of_changeset_apply(struct of_changeset *ocs)
+diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
+index 0749656..a18a2ce 100644
+--- a/drivers/of/fdt.c
++++ b/drivers/of/fdt.c
+@@ -161,7 +161,7 @@ static void *unflatten_dt_alloc(void **mem, unsigned long size,
  }
  
  /**
-- * of_changeset_revert - Reverts an applied changeset
-+ * of_changeset_apply - Applies a changeset
-  *
-  * @ocs:	changeset pointer
-  *
-- * Reverts a changeset returning the state of the tree to what it
-- * was before the application.
-- * Any side-effects like creation/destruction of devices and
-- * removal of sysfs properties and directories are applied.
-+ * Applies a changeset to the live tree.
-+ * Any side-effects of live tree state changes are applied here on
-+ * sucess, like creation/destruction of devices and side-effects
-+ * like creation of sysfs properties and directories.
-  * Returns 0 on success, a negative error value in case of an error.
-+ * On error the partially applied effects are reverted.
+- * unflatten_dt_node - Alloc and populate a device_node from the flat tree
++ * __unflatten_dt_node - Alloc and populate a device_node from the flat tree
+  * @blob: The parent device tree blob
+  * @mem: Memory chunk to use for allocating device nodes and properties
+  * @poffset: pointer to node in flat tree
+@@ -171,20 +171,20 @@ static void *unflatten_dt_alloc(void **mem, unsigned long size,
+  * @dryrun: If true, do not allocate device nodes but still calculate needed
+  * memory size
   */
--int of_changeset_revert(struct of_changeset *ocs)
-+int of_changeset_apply(struct of_changeset *ocs)
-+{
-+	int ret;
-+
-+	mutex_lock(&of_mutex);
-+	ret = __of_changeset_apply(ocs);
-+	mutex_unlock(&of_mutex);
-+
-+	return ret;
-+}
-+EXPORT_SYMBOL(of_changeset_apply);
-+
-+int __of_changeset_revert(struct of_changeset *ocs)
+-static void * unflatten_dt_node(const void *blob,
++static void *__unflatten_dt_node(const void *blob,
+ 				void *mem,
+ 				int *poffset,
+ 				struct device_node *dad,
+ 				struct device_node **nodepp,
+ 				unsigned long fpsize,
+-				bool dryrun)
++				bool dryrun,
++				int *depth)
  {
- 	struct of_changeset_entry *ce;
- 	int ret;
-@@ -742,6 +745,29 @@ int of_changeset_revert(struct of_changeset *ocs)
+ 	const __be32 *p;
+ 	struct device_node *np;
+ 	struct property *pp, **prev_pp = NULL;
+ 	const char *pathp;
+ 	unsigned int l, allocl;
+-	static int depth = 0;
+ 	int old_depth;
+ 	int offset;
+ 	int has_name = 0;
+@@ -337,13 +337,25 @@ static void * unflatten_dt_node(const void *blob,
+ 			np->type = "<NULL>";
+ 	}
+ 
+-	old_depth = depth;
+-	*poffset = fdt_next_node(blob, *poffset, &depth);
+-	if (depth < 0)
+-		depth = 0;
+-	while (*poffset > 0 && depth > old_depth)
+-		mem = unflatten_dt_node(blob, mem, poffset, np, NULL,
+-					fpsize, dryrun);
++	/* Multiple nodes might be in the first depth level if
++	 * the device tree is sub-tree. All nodes in current
++	 * or deeper depth are unflattened after it returns.
++	 */
++	old_depth = *depth;
++	*poffset = fdt_next_node(blob, *poffset, depth);
++	while (*poffset > 0) {
++		if (*depth < old_depth)
++			break;
++
++		if (*depth == old_depth)
++			mem = __unflatten_dt_node(blob, mem, poffset,
++						  dad, NULL, fpsize,
++						  dryrun, depth);
++		else if (*depth > old_depth)
++			mem = __unflatten_dt_node(blob, mem, poffset,
++						  np, NULL, fpsize,
++						  dryrun, depth);
++	}
+ 
+ 	if (*poffset < 0 && *poffset != -FDT_ERR_NOTFOUND)
+ 		pr_err("unflatten: error %d processing FDT\n", *poffset);
+@@ -369,6 +381,20 @@ static void * unflatten_dt_node(const void *blob,
+ 	return mem;
  }
  
- /**
-+ * of_changeset_revert - Reverts an applied changeset
-+ *
-+ * @ocs:	changeset pointer
-+ *
-+ * Reverts a changeset returning the state of the tree to what it
-+ * was before the application.
-+ * Any side-effects like creation/destruction of devices and
-+ * removal of sysfs properties and directories are applied.
-+ * Returns 0 on success, a negative error value in case of an error.
-+ */
-+int of_changeset_revert(struct of_changeset *ocs)
++static void *unflatten_dt_node(const void *blob,
++			       void *mem,
++			       int *poffset,
++			       struct device_node *dad,
++			       struct device_node **nodepp,
++			       bool dryrun)
 +{
-+	int ret;
++	int depth = 1;
 +
-+	mutex_lock(&of_mutex);
-+	ret = __of_changeset_revert(ocs);
-+	mutex_unlock(&of_mutex);
-+
-+	return ret;
++	return __unflatten_dt_node(blob, mem, poffset,
++				   dad, nodepp, 0,
++				   dryrun, &depth);
 +}
-+EXPORT_SYMBOL(of_changeset_revert);
 +
-+/**
-  * of_changeset_action - Perform a changeset action
+ /**
+  * __unflatten_device_tree - create tree of device_nodes from flat blob
   *
-  * @ocs:	changeset pointer
-@@ -779,3 +805,4 @@ int of_changeset_action(struct of_changeset *ocs, unsigned long action,
- 	list_add_tail(&ce->node, &ocs->entries);
- 	return 0;
- }
-+EXPORT_SYMBOL(of_changeset_action);
-diff --git a/drivers/of/overlay.c b/drivers/of/overlay.c
-index 24e025f..804ea33 100644
---- a/drivers/of/overlay.c
-+++ b/drivers/of/overlay.c
-@@ -378,9 +378,9 @@ int of_overlay_create(struct device_node *tree)
- 	}
+@@ -408,7 +434,8 @@ static void __unflatten_device_tree(const void *blob,
  
- 	/* apply the changeset */
--	err = of_changeset_apply(&ov->cset);
-+	err = __of_changeset_apply(&ov->cset);
- 	if (err) {
--		pr_err("%s: of_changeset_apply() failed for tree@%s\n",
-+		pr_err("%s: __of_changeset_apply() failed for tree@%s\n",
- 				__func__, tree->full_name);
- 		goto err_revert_overlay;
- 	}
-@@ -508,7 +508,7 @@ int of_overlay_destroy(int id)
+ 	/* First pass, scan for size */
+ 	start = 0;
+-	size = (unsigned long)unflatten_dt_node(blob, NULL, &start, NULL, NULL, 0, true);
++	size = (unsigned long)unflatten_dt_node(blob, NULL, &start,
++						NULL, NULL, true);
+ 	size = ALIGN(size, 4);
  
+ 	pr_debug("  size is %lx, allocating...\n", size);
+@@ -423,7 +450,7 @@ static void __unflatten_device_tree(const void *blob,
  
- 	list_del(&ov->node);
--	of_changeset_revert(&ov->cset);
-+	__of_changeset_revert(&ov->cset);
- 	of_free_overlay_info(ov);
- 	idr_remove(&ov_idr, id);
- 	of_changeset_destroy(&ov->cset);
-@@ -539,7 +539,7 @@ int of_overlay_destroy_all(void)
- 	/* the tail of list is guaranteed to be safe to remove */
- 	list_for_each_entry_safe_reverse(ov, ovn, &ov_list, node) {
- 		list_del(&ov->node);
--		of_changeset_revert(&ov->cset);
-+		__of_changeset_revert(&ov->cset);
- 		of_free_overlay_info(ov);
- 		idr_remove(&ov_idr, ov->id);
- 		kfree(ov);
-diff --git a/drivers/of/unittest.c b/drivers/of/unittest.c
-index 2270830..06eb3e5 100644
---- a/drivers/of/unittest.c
-+++ b/drivers/of/unittest.c
-@@ -527,7 +527,7 @@ static void __init of_unittest_changeset(void)
- 	unittest(!of_changeset_update_property(&chgset, parent, ppupdate), "fail update prop\n");
- 	unittest(!of_changeset_remove_property(&chgset, parent, ppremove), "fail remove prop\n");
- 	mutex_lock(&of_mutex);
--	unittest(!of_changeset_apply(&chgset), "apply failed\n");
-+	unittest(!__of_changeset_apply(&chgset), "apply failed\n");
- 	mutex_unlock(&of_mutex);
- 
- 	/* Make sure node names are constructed correctly */
-@@ -536,7 +536,7 @@ static void __init of_unittest_changeset(void)
- 	of_node_put(np);
- 
- 	mutex_lock(&of_mutex);
--	unittest(!of_changeset_revert(&chgset), "revert failed\n");
-+	unittest(!__of_changeset_revert(&chgset), "revert failed\n");
- 	mutex_unlock(&of_mutex);
- 
- 	of_changeset_destroy(&chgset);
-diff --git a/include/linux/of.h b/include/linux/of.h
-index edc068d..5c030e1 100644
---- a/include/linux/of.h
-+++ b/include/linux/of.h
-@@ -1001,7 +1001,9 @@ extern int of_reconfig_get_state_change(unsigned long action,
- 
- extern void of_changeset_init(struct of_changeset *ocs);
- extern void of_changeset_destroy(struct of_changeset *ocs);
-+extern int __of_changeset_apply(struct of_changeset *ocs);
- extern int of_changeset_apply(struct of_changeset *ocs);
-+extern int __of_changeset_revert(struct of_changeset *ocs);
- extern int of_changeset_revert(struct of_changeset *ocs);
- extern int of_changeset_action(struct of_changeset *ocs,
- 		unsigned long action, struct device_node *np,
+ 	/* Second pass, do actual unflattening */
+ 	start = 0;
+-	unflatten_dt_node(blob, mem, &start, NULL, mynodes, 0, false);
++	unflatten_dt_node(blob, mem, &start, NULL, mynodes, false);
+ 	if (be32_to_cpup(mem + size) != 0xdeadbeef)
+ 		pr_warning("End of tree marker overwritten: %08x\n",
+ 			   be32_to_cpup(mem + size));
 -- 
 2.1.0
