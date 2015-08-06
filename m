@@ -1,100 +1,221 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [RFC PATCH 1/5] spi: introduce flag for memory mapped read
-Date: Thu, 6 Aug 2015 19:20:29 +0100
-Message-ID: <20150806182029.GD20873@sirena.org.uk>
-References: <20150804155148.GR20873@sirena.org.uk>
- <55C0FD98.1090107@ti.com>
- <20150805115013.GJ20873@sirena.org.uk>
- <CAOMqctQXwcHyiWBwtugSDSE_k65qrNfrwnhjQMDJkLoJMmGzUw@mail.gmail.com>
- <20150805124412.GN20873@sirena.org.uk>
- <CAOMqctS9Y5FxpUCCJew6+cnjH5iTvbzkH3g-8yrXs4OuS2pSGA@mail.gmail.com>
- <20150806090202.GO20873@sirena.org.uk>
- <CAOMqctQZRZ4zG_yYy=CeX3DX4NVNWN1COP4Q-2YvMun9xYOA7g@mail.gmail.com>
- <20150806102225.GI7576@n2100.arm.linux.org.uk>
- <55C35233.2000105@ti.com>
+From: Sagar Dharia <sdharia@codeaurora.org>
+Subject: Re: [PATCH V3 2/6] of/slimbus: OF helper for SLIMbus
+Date: Thu, 6 Aug 2015 13:10:54 -0600
+Message-ID: <55C3B13E.3050108@codeaurora.org>
+References: <1438585190-11894-1-git-send-email-sdharia@codeaurora.org>
+ <1438585190-11894-3-git-send-email-sdharia@codeaurora.org>
+ <CAL_JsqLDzLXR5aC__YhCUzGzVcVYcv_H7QS6zG0vezQPST_Y2Q@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="/WOH3aHYQbLswZnX"
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <55C35233.2000105@ti.com>
+In-Reply-To: <CAL_JsqLDzLXR5aC__YhCUzGzVcVYcv_H7QS6zG0vezQPST_Y2Q@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Vignesh R <vigneshr@ti.com>
-Cc: Russell King - ARM Linux <linux@arm.linux.org.uk>, Michal Suchanek <hramrach@gmail.com>, devicetree <devicetree@vger.kernel.org>, Brian Norris <computersforpeace@gmail.com>, Tony Lindgren <tony@atomide.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-spi <linux-spi@vger.kernel.org>, Huang Shijie <b32955@freescale.com>, MTD Maling List <linux-mtd@lists.infradead.org>, linux-omap@vger.kernel.org, David Woodhouse <dwmw2@infradead.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+To: Rob Herring <robherring2@gmail.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, bp@suse.de, poeschel@lemonage.de, Thierry Reding <treding@nvidia.com>, Mark Brown <broonie@kernel.org>, gong.chen@linux.intel.com, andreas.noever@gmail.com, Alan Cox <alan@linux.intel.com>, Mathieu Poirier <mathieu.poirier@linaro.org>, daniel@ffwll.ch, oded.gabbay@amd.com, jkosina@suse.cz, sharon.dvir1@mail.huji.ac.il, Joe Perches <joe@perches.com>, David Miller <davem@davemloft.net>, James Hogan <james.hogan@imgtec.com>, michael.opdenacker@free-electrons.com, Daniel Thompson <daniel.thompson@linaro.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, kheitke@aud
 List-Id: devicetree@vger.kernel.org
 
+Hello Rob,
+On 8/3/2015 10:13 AM, Rob Herring wrote:
+> On Mon, Aug 3, 2015 at 1:59 AM, Sagar Dharia <sdharia@codeaurora.org> wrote:
+>> OF helper routine scans the SLIMbus DeviceTree, allocates resources,
+>> and creates slim_devices according to the hierarchy.
+>>
+>> Signed-off-by: Sagar Dharia <sdharia@codeaurora.org>
+>> ---
+>>   Documentation/devicetree/bindings/slimbus/bus.txt | 46 ++++++++++++++
+>>   drivers/slimbus/slim-core.c                       | 75 +++++++++++++++++++++++
+>>   2 files changed, 121 insertions(+)
+>>   create mode 100644 Documentation/devicetree/bindings/slimbus/bus.txt
+>>
+>> diff --git a/Documentation/devicetree/bindings/slimbus/bus.txt b/Documentation/devicetree/bindings/slimbus/bus.txt
+>> new file mode 100644
+>> index 0000000..a79ed7a
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/slimbus/bus.txt
+>> @@ -0,0 +1,46 @@
+>> +SLIM(Serial Low Power Interchip Media Bus) bus
+>> +
+>> +SLIMbus is a 2-wire bus, and is used to communicate with peripheral
+>> +components like audio-codec.
+>> +
+>> +Controller is a normal device using binding for whatever bus it is
+>> +on (e.g. platform bus).
+>> +Required property for SLIMbus controller node:
+>> +- compatible   - name of SLIMbus controller following generic names
+>> +               recommended practice.
+>> +- #address-cells - should be 6 (number of cells required to define
+>> +               enumeration address of the device on SLIMbus)
+>> +- #size-cells  - should be 0
+>> +
+>> +No other properties are required in the SLIMbus controller bus node.
+>> +
+>> +Child nodes:
+>> +Every SLIMbus controller node can contain zero or more child nodes
+>> +representing slave devices on the bus. Every SLIMbus slave device is
+>> +uniquely determined by the 6 byte enumeration address.
+>> +
+>> +Required property for SLIMbus child node:
+>> +- reg          - 6 byte enumeration address of the slave
+> 6 cell... I don't think it is a big deal to use 6 words to store 6
+> bytes, but is there some reason not to pack the address into 2 cells?
+Since the device-enumeration address has 4 logical components, I will 
+split this in 4 cells if that's okay.
+>
+>> +
+>> +Optional:
+>> +- compatible   - Slave devices can use compatible field to have a name.
+>> +               If this field is missing, name of the device will be
+>> +               determined using slave's enumeration address.
+>> +               (e.g. in the example below, slave's name will be:
+>> +               0x217:0x60:0x1:0x0)
+> Are devices discoverable and uniquely identifiable? This would be
+> something like a VID/PID which can be read in a generic way. It looks
+> like the address contains this info, but can you discover the
+> addresses of devices on the bus? If not compatible should not be
+> optional.
+Yes, as Mark pointed out in another thread, it's enumerable but more 
+likely to need the compatible field for binding to make the device 
+functional.
+I will word this accordingly.
+>
+>> +
+>> +SLIMbus example for Qualcomm's slimbus manager compoent:
+> typo.
+>
+>> +
+>> +       slim@28080000 {
+>> +               compatible = "qcom,slim-msm";
+>> +               reg = <0x28080000 0x2000>,
+>> +               reg-names = "slimbus_physical";
+> Pretty pointless to have names with a single element.
+I missed 1 more name typically used by the controller in this example. 
+Will update that.
+>
+>> +               interrupts = <0 33 0>;
+>> +               interrupt-names = "slimbus_irq";
+>> +               clocks = <&lcc SLIMBUS_SRC>, <&lcc AUDIO_SLIMBUS_CLK>;
+>> +               clock-names = "iface_clk", "core_clk";
+>> +
+>> +               slim_codec_slave {
+> You should have unit address here. Probably with "." in between fields
+> of the address that have defined meaning. So that may be something
+> like "0217.0060.01.00" based on what you do with the address bytes
+> below.
+Yes, that's a good idea and will go well when unit address and reg will 
+have same 4 fields.
 
---/WOH3aHYQbLswZnX
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Thanks for the review-
+Sagar
+>
+>> +                       reg = <00 01 60 00 17 02>;
+>> +               };
+>> +       };
+>> diff --git a/drivers/slimbus/slim-core.c b/drivers/slimbus/slim-core.c
+>> index ee80c1b..d3fa28b 100644
+>> --- a/drivers/slimbus/slim-core.c
+>> +++ b/drivers/slimbus/slim-core.c
+>> @@ -18,6 +18,7 @@
+>>   #include <linux/idr.h>
+>>   #include <linux/pm_runtime.h>
+>>   #include <linux/slimbus.h>
+>> +#include <linux/of.h>
+>>
+>>   static DEFINE_MUTEX(slim_lock);
+>>   static DEFINE_IDR(ctrl_idr);
+>> @@ -289,6 +290,79 @@ static LIST_HEAD(board_list);
+>>   static LIST_HEAD(slim_ctrl_list);
+>>   static DEFINE_MUTEX(board_lock);
+>>
+>> +#if IS_ENABLED(CONFIG_OF)
+>> +/* OF helpers for SLIMbus */
+>> +static void of_register_slim_devices(struct slim_controller *ctrl)
+>> +{
+>> +       struct device_node *node;
+>> +       struct slim_boardinfo *temp, *binfo = NULL;
+>> +       int n = 0;
+>> +
+>> +       if (!ctrl->dev.of_node)
+>> +               return;
+>> +
+>> +       for_each_child_of_node(ctrl->dev.of_node, node) {
+>> +               int ret;
+>> +               u32 ea[6];
+>> +               struct slim_device *slim;
+>> +               char *name;
+>> +
+>> +               ret = of_property_read_u32_array(node, "reg", ea, 6);
+>> +               if (ret) {
+>> +                       dev_err(&ctrl->dev, "of_slim: E-addr err:%d\n", ret);
+>> +                       continue;
+>> +               }
+>> +               name = kcalloc(SLIMBUS_NAME_SIZE, sizeof(char), GFP_KERNEL);
+>> +               if (!name)
+>> +                       goto of_slim_err;
+>> +
+>> +               slim = kzalloc(sizeof(struct slim_device), GFP_KERNEL);
+>> +               if (!slim) {
+>> +                       kfree(name);
+>> +                       goto of_slim_err;
+>> +               }
+>> +               slim->e_addr.manf_id = (u16)((ea[5] << 8) | ea[4]);
+>> +               slim->e_addr.prod_code = (u16)((ea[3] << 8) | ea[2]);
+>> +               slim->e_addr.dev_index = (u8)ea[1];
+>> +               slim->e_addr.instance = (u8)ea[0];
+>> +
+>> +               ret = of_modalias_node(node, name, SLIMBUS_NAME_SIZE);
+>> +               if (ret < 0) {
+>> +                       /* use device address for name, if not specified */
+>> +                       snprintf(name, SLIMBUS_NAME_SIZE, "0x%x:0x%x:0x%x:0x%x",
+>> +                                slim->e_addr.manf_id, slim->e_addr.prod_code,
+>> +                                slim->e_addr.dev_index, slim->e_addr.instance);
+>> +               }
+>> +
+>> +               temp = krealloc(binfo, (n + 1) * sizeof(struct slim_boardinfo),
+>> +                                       GFP_KERNEL);
+>> +               if (!temp) {
+>> +                       kfree(name);
+>> +                       kfree(slim);
+>> +                       goto of_slim_err;
+>> +               }
+>> +               binfo = temp;
+>> +               slim->dev.of_node = of_node_get(node);
+>> +               slim->name = name;
+>> +               binfo[n].bus_num = ctrl->nr;
+>> +               binfo[n].slim_slave = slim;
+>> +               n++;
+>> +       }
+>> +       slim_register_board_info(binfo, n);
+>> +       return;
+>> +
+>> +of_slim_err:
+>> +       n--;
+>> +       while (n >= 0) {
+>> +               kfree(binfo[n].slim_slave->name);
+>> +               kfree(binfo[n].slim_slave);
+>> +       }
+>> +       kfree(binfo);
+>> +}
+>> +#else
+>> +static void of_register_slim_devices(struct slim_controller *ctrl) { }
+>> +#endif
+>> +
+>>   /* If controller is not present, only add to boards list */
+>>   static void slim_match_ctrl_to_boardinfo(struct slim_controller *ctrl,
+>>                                           struct slim_boardinfo *bi)
+>> @@ -338,6 +412,7 @@ static void slim_ctrl_add_boarddevs(struct slim_controller *ctrl)
+>>   {
+>>          struct sbi_boardinfo *bi;
+>>
+>> +       of_register_slim_devices(ctrl);
+>>          mutex_lock(&board_lock);
+>>          list_add_tail(&ctrl->list, &slim_ctrl_list);
+>>          list_for_each_entry(bi, &board_list, list)
+>> --
+>> 1.8.2.1
+>>
 
-On Thu, Aug 06, 2015 at 05:55:23PM +0530, Vignesh R wrote:
 
-> 1.Write to flash config register via config port to switch to QUAD MODE
-> (or any mode that flash supports).
-> 2. Populate QSPI_SPI_SETUP_REGx with flash read command, number of
-> address bytes to use and dummy bytes required.
-
-These things being constant for a given flash?
-
-> 3. Switch to memory mapped port by writing to QSPI_SPI_SWITCH_REG.
-> 4. Now, its possible to perform read from 0x5C000000 to 0x5FFFFFFF using
-> memcpy. The qspi controller hardware will communicate over SPI bus and
-> get the data. This data is directly sent to RAM via SoC's interconnect.
-
-Presumably if it's done via memcpy() it won't go direct to RAM but
-rather be bounced through the CPU which is a bit interesting for
-performance (it might help, but it does mean that there's a core stalled
-waiting for the flash which might not be the best use of resources if
-there's other things it can be getting on with).  With DMA it'd be a
-direct to memory transfer though.
-
-> Advantages of memory mapped port are: improved read performance,
-> MEM_TO_MEM DMA support can be added (ti-qspi hardware as such does not
-> provide DMA events).
-
-DMA would definitely help here.
-
-> I just need to know whether the user that requested the transfer is
-> m25p80 driver. If yes, ti-qspi driver can take advantage of memory
-> mapped interface, else just use config port to access SPI bus directly.
-
-You don't *really* care if it's that specific user so much as that it's
-that particular pattern.
-
-> Writing separate driver based on spi-nor framework to interface with
-> m25p80 is not an option because, I would lose the ability to interface
-> with non-flash devices.
-
-You could, however, expose an explicit flash mapping interface for this
-functionality.  That does seem like it's going to be an awful lot easier=20
-and help with keeping things like DMA support out of the driver and in
-the core (which would be useful if there's other controllers with the
-same functionality, I seem to recall that there are).
-
-> The spi_message that is received in transfer_one_message() is too
-> generic to imply the slave device that is on the other side of the wire.
-> IMO, the read command does not imply that the slave is m25p80 flash
-> (besides the read opcodes vary across vendors of m25p80 and across modes).
-
-Again, it doesn't matter if it's actually a read command only that it's
-got a compatible format on the bus.
-
---/WOH3aHYQbLswZnX
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQEcBAEBCAAGBQJVw6VsAAoJECTWi3JdVIfQo5kH/jhi48J/GzyKzpi6siPcw1Zf
-9XvGK+lnjE0cifv7vsMLqlSe5q+MHcBGFo0v2HJ3sGsNX2nROE7soj8TiLroee22
-k6GYn0+k/5pNHEQ3eGjkOElD/GCmGGkSQkRkuvJDjj2gfsaQ2Qs2uH5jl6bkTdgM
-9rNYnFJf/tVf1Ct4mQpjXuDJqX22+NZmE5HpWt7nnmZz/+WrUAqFuQfSaSoG7AVD
-HCHBYHrj13/p5L5XfcMsTX+jHqsfuMVCJRhGtyfOOmzD/ftZczg8XNmp3KBRg3vd
-k6/sGgTqhcV7uJDqlCxbhc/6nWddP9LuPG7CeadvSxNz+DXoh992m9BnKikv0UE=
-=lR6+
------END PGP SIGNATURE-----
-
---/WOH3aHYQbLswZnX--
+-- 
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+hosted by The Linux Foundation
