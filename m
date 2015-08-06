@@ -1,105 +1,48 @@
-From: "Yang, Wenyou" <Wenyou.Yang@atmel.com>
-Subject: RE: [PATCH v3 1/2] drivers: watchdog: add a driver to support
- SAMA5D4 watchdog timer
-Date: Thu, 6 Aug 2015 02:09:00 +0000
-Message-ID: <B256D81BAE5131468A838E5D7A243641C9F87310@penmbx01>
-References: <1438765043-11030-1-git-send-email-wenyou.yang@atmel.com>
-	<1438765043-11030-2-git-send-email-wenyou.yang@atmel.com>
- <20150805124030.6e73b975@ipc1.ka-ro>
+From: Keerthy <a0393675-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH 3/8] rtc: omap: Add external clock enabling support
+Date: Thu, 6 Aug 2015 07:39:52 +0530
+Message-ID: <55C2C1F0.9040102@ti.com>
+References: <1438771792-12604-1-git-send-email-j-keerthy@ti.com> <1438771792-12604-4-git-send-email-j-keerthy@ti.com> <20150805111316.GI16878@atomide.com> <20150805114119.GF3486@piout.net> <20150805114357.GG3486@piout.net> <55C1FB12.1000208@ti.com> <20150805123550.GH3486@piout.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20150805124030.6e73b975@ipc1.ka-ro>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: =?utf-8?B?TG90aGFyIFdhw59tYW5u?= <LW@KARO-electronics.de>
-Cc: "wim@iguana.be" <wim@iguana.be>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "galak@codeaurora.org" <galak@codeaurora.org>, "boris.brezillon@free-electrons.com" <boris.brezillon@free-electrons.com>, "linux-watchdog@vger.kernel.org" <linux-watchdog@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "sylvain.rochet@finsecur.com" <sylvain.rochet@finsecur.com>, "Ferre, Nicolas" <Nicolas.FERRE@atmel.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20150805123550.GH3486-m++hUPXGwpdeoWH0uzbU5w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Keerthy <j-keerthy-l0cyMroinI0@public.gmane.org>, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org, johan-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, nm-l0cyMroinI0@public.gmane.org, paul-DWxLp4Yu+b8AvxtiuMwx3w@public.gmane.org, t-kristo-l0cyMroinI0@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-SGkgTG90aGFyLA0KDQpUaGFuayB5b3UgZm9yIHlvdXIgcmV2aWV3Lg0KDQo+IC0tLS0tT3JpZ2lu
-YWwgTWVzc2FnZS0tLS0tDQo+IEZyb206IExvdGhhciBXYcOfbWFubiBbbWFpbHRvOkxXQEtBUk8t
-ZWxlY3Ryb25pY3MuZGVdDQo+IFNlbnQ6IDIwMTXlubQ45pyINeaXpSAxODo0MQ0KPiBUbzogWWFu
-ZywgV2VueW91DQo+IENjOiB3aW1AaWd1YW5hLmJlOyByb2JoK2R0QGtlcm5lbC5vcmc7IHBhd2Vs
-Lm1vbGxAYXJtLmNvbTsNCj4gbWFyay5ydXRsYW5kQGFybS5jb207IGlqYytkZXZpY2V0cmVlQGhl
-bGxpb24ub3JnLnVrOyBnYWxha0Bjb2RlYXVyb3JhLm9yZzsNCj4gYm9yaXMuYnJlemlsbG9uQGZy
-ZWUtZWxlY3Ryb25zLmNvbTsgbGludXgtd2F0Y2hkb2dAdmdlci5rZXJuZWwub3JnOw0KPiBkZXZp
-Y2V0cmVlQHZnZXIua2VybmVsLm9yZzsgc3lsdmFpbi5yb2NoZXRAZmluc2VjdXIuY29tOyBGZXJy
-ZSwgTmljb2xhczsgbGludXgtDQo+IGtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc7IGxpbnV4LWFybS1r
-ZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZw0KPiBTdWJqZWN0OiBSZTogW1BBVENIIHYzIDEvMl0g
-ZHJpdmVyczogd2F0Y2hkb2c6IGFkZCBhIGRyaXZlciB0byBzdXBwb3J0IFNBTUE1RDQNCj4gd2F0
-Y2hkb2cgdGltZXINCj4gDQo+IEhpLA0KPiANCj4gPiBGcm9tIFNBTUE1RDQsIHRoZSB3YXRjaGRv
-ZyB0aW1lciBpcyB1cGdyYXRlZCB3aXRoIGEgbmV3IGZlYXR1cmUsIHdoaWNoDQo+ID4gaXMgZGVz
-Y3JpYmxlZCBhcyBpbiB0aGUgZGF0YXNoZWV0LCAiV0RUX01SIGNhbiBiZSB3cml0dGVuIHVudGls
-IGENCj4gPiBMT0NLTVIgY29tbWFuZCBpcyBpc3N1ZWQgaW4gV0RUX0NSIi4NCj4gPiBUaGF0IGlz
-IHRvIHNheSwgYXMgbG9uZyBhcyB0aGUgYm9vdHN0cmFwIGFuZCB1LWJvb3QgZG9uJ3QgaXNzdWUg
-YQ0KPiA+IExPQ0tNUiBjb21tYW5kLCBXRFRfTVIgY2FuIGJlIHdyaXR0ZW4gbW9yZSB0aGFuIG9u
-Y2UgaW4gdGhlIGRyaXZlci4NCj4gPg0KPiA+IFNvIHRoZSBTQU1BNUQ0IHdhdGNoZG9nIGRyaXZl
-cidzIGltcGxlbWVudGF0aW9uIGlzIGRpZmZlcmVudCBmcm9tIHRoZQ0KPiA+IGF0OTFzYW05MjYw
-IHdhdGNoZG9nIGRyaXZlciBpbXBsZW1lbnRlZCBpbiBmaWxlIGF0OTFzYW05X3dkdC5jLg0KPiA+
-IFRoZSB1c2VyIGFwcGxpY2F0aW9uIG9wZW4gdGhlIGRldmljZSBmaWxlIHRvIGVuYWJsZSB0aGUg
-d2F0Y2hkb2cgdGltZXINCj4gPiBoYXJkd2FyZSwgYW5kIGNsb3NlIHRvIGRpc2FibGUgaXQsIGFu
-ZCBzZXQgdGhlIHdhdGNoZG9nIHRpbWVyIHRpbWVvdXQNCj4gPiBieSBzZXRpbmcgV0RWIGFuZCBX
-REQgZmllbGRzIG9mIFdEVF9NUiByZWdpc3RlciwgYW5kIHBpbmcgdGhlIHdhdGNoZG9nDQo+ID4g
-YnkgaXNzdWluZyBXRFJTVFQgY29tbWFuZCB0byBXRFRfQ1IgcmVnaXN0ZXIgd2l0aCBoYXJkLWNv
-ZGVkIGtleS4NCj4gPg0KPiA+IFNpZ25lZC1vZmYtYnk6IFdlbnlvdSBZYW5nIDx3ZW55b3UueWFu
-Z0BhdG1lbC5jb20+DQo+ID4gLS0tDQo+ID4gIGRyaXZlcnMvd2F0Y2hkb2cvS2NvbmZpZyAgICAg
-ICAgICAgIHwgICAgOSArKw0KPiA+ICBkcml2ZXJzL3dhdGNoZG9nL01ha2VmaWxlICAgICAgICAg
-ICB8ICAgIDEgKw0KPiA+ICBkcml2ZXJzL3dhdGNoZG9nL2F0OTFfc2FtYTVkNF93ZHQuYyB8ICAy
-NzkNCj4gKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysNCj4gPiAgZHJpdmVycy93
-YXRjaGRvZy9hdDkxc2FtOV93ZHQuaCAgICAgfCAgICAyICsNCj4gPiAgNCBmaWxlcyBjaGFuZ2Vk
-LCAyOTEgaW5zZXJ0aW9ucygrKQ0KPiA+ICBjcmVhdGUgbW9kZSAxMDA2NDQgZHJpdmVycy93YXRj
-aGRvZy9hdDkxX3NhbWE1ZDRfd2R0LmMNCj4gPg0KPiA+IGRpZmYgLS1naXQgYS9kcml2ZXJzL3dh
-dGNoZG9nL0tjb25maWcgYi9kcml2ZXJzL3dhdGNoZG9nL0tjb25maWcgaW5kZXgNCj4gPiBlNWU3
-YzU1Li40Y2U4MzQ2IDEwMDY0NA0KPiA+IC0tLSBhL2RyaXZlcnMvd2F0Y2hkb2cvS2NvbmZpZw0K
-PiA+ICsrKyBiL2RyaXZlcnMvd2F0Y2hkb2cvS2NvbmZpZw0KPiA+IEBAIC0xNTIsNiArMTUyLDE1
-IEBAIGNvbmZpZyBBUk1fU1A4MDVfV0FUQ0hET0cNCj4gPiAgCSAgQVJNIFByaW1lY2VsbCBTUDgw
-NSBXYXRjaGRvZyB0aW1lci4gVGhpcyB3aWxsIHJlYm9vdCB5b3VyIHN5c3RlbQ0KPiB3aGVuDQo+
-ID4gIAkgIHRoZSB0aW1lb3V0IGlzIHJlYWNoZWQuDQo+ID4NCj4gPiArY29uZmlnIEFUOTFfU0FN
-QTVENF9XQVRDSERPRw0KPiA+ICsJdHJpc3RhdGUgIkF0bWVsIFNBTUE1RDQgV2F0Y2hkb2cgVGlt
-ZXIiDQo+ID4gKwlkZXBlbmRzIG9uIEFSQ0hfQVQ5MQ0KPiA+ICsJc2VsZWN0IFdBVENIRE9HX0NP
-UkUNCj4gPiArCWhlbHANCj4gPiArCSAgQXRtZWwgU0FNQTVENCB3YXRjaGRvZyB0aW1lciBpcyBl
-bWJlZGRlZCBpbnRvIFNBTUE1RDQgY2hpcHMuDQo+ID4gKwkgIEl0cyBXYXRjaGRvZyBUaW1lciBN
-b2RlIFJlZ2lzdGVyIGNhbiBiZSB3cml0dGVuIG1vcmUgdGhhbiBvbmNlLg0KPiA+ICsJICBUaGlz
-IHdpbGwgcmVib290IHlvdXIgc3lzdGVtIHdoZW4gdGhlIHRpbWVvdXQgaXMgcmVhY2hlZC4NCj4g
-PiArDQo+ID4gIGNvbmZpZyBBVDkxUk05MjAwX1dBVENIRE9HDQo+ID4gIAl0cmlzdGF0ZSAiQVQ5
-MVJNOTIwMCB3YXRjaGRvZyINCj4gPiAgCWRlcGVuZHMgb24gU09DX0FUOTFSTTkyMDAgJiYgTUZE
-X1NZU0NPTiBkaWZmIC0tZ2l0DQo+ID4gYS9kcml2ZXJzL3dhdGNoZG9nL01ha2VmaWxlIGIvZHJp
-dmVycy93YXRjaGRvZy9NYWtlZmlsZSBpbmRleA0KPiA+IDVjMTkyOTQuLmM1NzU2OWMgMTAwNjQ0
-DQo+ID4gLS0tIGEvZHJpdmVycy93YXRjaGRvZy9NYWtlZmlsZQ0KPiA+ICsrKyBiL2RyaXZlcnMv
-d2F0Y2hkb2cvTWFrZWZpbGUNCj4gPiBAQCAtMzAsNiArMzAsNyBAQCBvYmotJChDT05GSUdfVVNC
-UENXQVRDSERPRykgKz0gcGN3ZF91c2Iubw0KPiA+DQo+ID4gICMgQVJNIEFyY2hpdGVjdHVyZQ0K
-PiA+ICBvYmotJChDT05GSUdfQVJNX1NQODA1X1dBVENIRE9HKSArPSBzcDgwNV93ZHQubw0KPiA+
-ICtvYmotJChDT05GSUdfQVQ5MV9TQU1BNUQ0X1dBVENIRE9HKSArPSBhdDkxX3NhbWE1ZDRfd2R0
-Lm8NCj4gY29uc2lzdGVuY3k/IE90aGVyIEFUOTEgZW50cmllcyBkb24ndCBoYXZlIGFuICdfJyBi
-ZXR3ZWVuICdBVDkxJyBhbmQgdGhlDQo+IHJlbWFpbmRlciBvZiB0aGUgS2NvbmZpZyBuYW1lLg0K
-QWNjZXB0LCBSZW1vdmUgdGhlIHByZWZpeCBBVDkxXyAsIHVzZSB0aGUgY2hpcCBuYW1lIGRpcmVj
-dGx5LCBTQU1BNUQ0IGluIG5leHQgdmVyaXNvbi4NCg0KPiANCj4gPiAgb2JqLSQoQ09ORklHX0FU
-OTFSTTkyMDBfV0FUQ0hET0cpICs9IGF0OTFybTkyMDBfd2R0Lm92aSANCj4gPiAgb2JqLSQoQ09O
-RklHX0FUOTFTQU05WF9XQVRDSERPRykgKz0gYXQ5MXNhbTlfd2R0Lm8NCj4gWy4uLl0NCj4gPiAr
-c3RhdGljIGlycXJldHVybl90IGF0bWVsX3dkdF9pcnFfaGFuZGxlcihpbnQgaXJxLCB2b2lkICpk
-ZXZfaWQpIHsNCj4gPiArCXN0cnVjdCBhdG1lbF93ZHQgKndkdCA9IHBsYXRmb3JtX2dldF9kcnZk
-YXRhKGRldl9pZCk7DQo+ID4gKw0KPiA+ICsJaWYgKHdkdF9yZWFkKHdkdCwgQVQ5MV9XRFRfU1Ip
-KSB7DQo+ID4gKwkJcHJfY3JpdCgiQXRtZWwgV2F0Y2hkb2cgU29mdHdhcmUgUmVzZXRcbiIpOw0K
-PiA+ICsJCWVtZXJnZW5jeV9yZXN0YXJ0KCk7DQo+ID4gKwkJcHJfY3JpdCgiUmVib290IGRpZG4n
-dCA/Pz8/P1xuIik7DQo+ID4NCj4gUmVib290IGRpZG4ndCB3aGF0PyAnc3VjY2VlZCcgcGVyaGFw
-cz8NClJlcGxhY2UgaXQgd2l0aCAnc3VjY2VlZCcgaW4gbmV4dCB2ZXJzaW9uLiANCg0KPiANCj4g
-PiArc3RhdGljIGNvbnN0IHN0cnVjdCBvZl9kZXZpY2VfaWQgYXRtZWxfd2R0X29mX21hdGNoW10g
-PSB7DQo+ID4gKwl7IC5jb21wYXRpYmxlID0gImF0bWVsLHNhbWE1ZDQtd2R0IiwgfSwNCj4gPiAr
-CXsgfSwNCj4gVGhlIGVtcHR5IGluaXRpYWxpemVyIG11c3QgYWx3YXlzIGJlIHRoZSBsYXN0IGVs
-ZW1lbnQgb2YgdGhlIGFycmF5LCBzbyB0aGVyZSBpcyBubw0KPiBwb2ludCBpbiBoYXZpbmcgYSB0
-cmFpbGluZyAnLCcgKHdob3NlIHB1cnBvc2UgaXMgdG8gZmFjaWxpdGF0ZSBhZGRpbmcgbW9yZSBl
-bnRyaWVzIGFmdGVyDQo+IHRoZSBsYXN0IG9uZSkuDQo+IFdpdGhvdXQgdGhlIGNvbW1hIHRoZXJl
-IHdpbGwgYmUgYSBjb21waWxlIGVycm9yIGlmIChlLmcuIGR1ZSB0byBhIGJhZGx5IHJlc29sdmVk
-DQo+IG1lcmdlIGNvbmZsaWN0KSBhbiBhZGRpdGlvbmFsIGVudHJ5IHdvdWxkIGJlIGFkZGVkIGFm
-dGVyIHRoZSBzdG9wIG1hcmtlci4gV2l0aCB0aGUNCj4gY29tbWEgYWZ0ZXIgdGhlIHN0b3AgbWFy
-a2VyIGFueSB0cmFpbGluZyBlbnRyaWVzIHdvdWxkIHNpbGVudGx5IGJlIGlnbm9yZWQuDQpSZW1v
-dmUgdGhpcyBjb21tYSBpbiBuZXh0IHZlcnNpb24uDQoNCj4gDQo+IA0KPiBMb3RoYXIgV2HDn21h
-bm4NCj4gLS0NCj4gX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX18NCj4gDQo+IEthLVJvIGVsZWN0cm9uaWNzIEdtYkggfCBQYXNjYWxzdHJh
-w59lIDIyIHwgRCAtIDUyMDc2IEFhY2hlbg0KPiBQaG9uZTogKzQ5IDI0MDggMTQwMi0wIHwgRmF4
-OiArNDkgMjQwOCAxNDAyLTEwDQo+IEdlc2Now6RmdHNmw7xocmVyOiBNYXR0aGlhcyBLYXVzc2Vu
-DQo+IEhhbmRlbHNyZWdpc3RlcmVpbnRyYWc6IEFtdHNnZXJpY2h0IEFhY2hlbiwgSFJCIDQ5OTYN
-Cj4gDQo+IHd3dy5rYXJvLWVsZWN0cm9uaWNzLmRlIHwgaW5mb0BrYXJvLWVsZWN0cm9uaWNzLmRl
-DQo+IF9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fDQoNCkJlc3QgUmVnYXJkcywNCldlbnlvdSANCg==
+
+
+On Wednesday 05 August 2015 06:05 PM, Alexandre Belloni wrote:
+> On 05/08/2015 at 17:31:22 +0530, Keerthy wrote :
+>> This is a special one where in the enable bit is present in the rtc register
+>> space and not in the prcm register space. Since there was a concern on the
+>> external clock not being present i added a board dts flag.
+>>
+>
+> So you mean this external clock is coming internally from the SoC?
+
+No what i meant is external clock is coming from Oscillator OSC1 
+@32.768KHz but the controlling bits are part of rtc register space.
+
+TRM: http://www.ti.com/lit/ug/spruhl7c/spruhl7c.pdf
+
+Section: 19.4.3.2 Clock Source Page 2836
+
+Also register details:
+19.4.5.19 RTCSS_OSC_REG Register (offset = 54h) [reset = 10h]
+
+Page 2865.
+
+Regards,
+Keerthy
+
+>
+> Do you have a link to the datasheet?
+>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
