@@ -1,28 +1,39 @@
-From: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH] ARM: dts: imx6ul: enable GPC as extended interrupt
- controller
-Date: Thu, 6 Aug 2015 16:01:59 +0800
-Message-ID: <20150806080159.GC9847@tiger>
-References: <1438621932-29738-1-git-send-email-b20788@freescale.com>
+From: Zhou Wang <wangzhou1@hisilicon.com>
+Subject: [PATCH v6 6/6] MAINTAINERS: Add pcie-hisi maintainer
+Date: Thu, 6 Aug 2015 16:09:19 +0800
+Message-ID: <1438848559-232109-7-git-send-email-wangzhou1@hisilicon.com>
+References: <1438848559-232109-1-git-send-email-wangzhou1@hisilicon.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1438621932-29738-1-git-send-email-b20788-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Anson Huang <b20788-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
+Content-Type: text/plain
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <1438848559-232109-1-git-send-email-wangzhou1@hisilicon.com>
+Sender: linux-pci-owner@vger.kernel.org
+To: Bjorn Helgaas <bhelgaas@google.com>, Jingoo Han <jg1.han@samsung.com>, Pratyush Anand <pratyush.anand@gmail.com>, Arnd Bergmann <arnd@arndb.de>, linux@arm.linux.org.uk, thomas.petazzoni@free-electrons.com, gabriele.paoloni@huawei.com, lorenzo.pieralisi@arm.com, James Morse <james.morse@arm.com>, Liviu.Dudau@arm.com, Jason Cooper <jason@lakedaemon.net>, robh@kernel.org
+Cc: linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, yuanzhichang@hisilicon.com, zhudacai@hisilicon.com, zhangjukuo@huawei.com, qiuzhenfa@hisilicon.com, liudongdong3@huawei.com, qiujiang@huawei.com, kangfenglong@huawei.com, xuwei5@hisilicon.com, liguozhu@hisilicon.com, Zhou Wang <wangzhou1@hisilicon.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Aug 04, 2015 at 01:12:12AM +0800, Anson Huang wrote:
-> Enable GPC as extended interrupt controller of
-> GIC, as GPC needs to manage wakeup source for
-> low power modes.
-> 
-> Signed-off-by: Anson Huang <b20788-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Signed-off-by: Zhou Wang <wangzhou1@hisilicon.com>
+---
+ MAINTAINERS | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-Applied, thanks.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 8133cef..7cd8e47 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -7854,6 +7854,13 @@ S:	Maintained
+ F:	Documentation/devicetree/bindings/pci/xgene-pci-msi.txt
+ F:	drivers/pci/host/pci-xgene-msi.c
+ 
++PCIE DRIVER FOR HISILICON
++M:	Zhou Wang <wangzhou1@hisilicon.com>
++L:	linux-pci@vger.kernel.org
++S:	Maintained
++F:	Documentation/devicetree/bindings/pci/hisilicon-pcie.txt
++F:	drivers/pci/host/pcie-hisi.c
++
+ PCMCIA SUBSYSTEM
+ P:	Linux PCMCIA Team
+ L:	linux-pcmcia@lists.infradead.org
+-- 
+1.9.1
