@@ -1,348 +1,354 @@
-From: Gavin Shan <gwshan-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
-Subject: [PATCH v6 34/42] powerpc/pci: Delay creating pci_dn
-Date: Thu,  6 Aug 2015 14:11:39 +1000
-Message-ID: <1438834307-26960-35-git-send-email-gwshan@linux.vnet.ibm.com>
+From: Gavin Shan <gwshan@linux.vnet.ibm.com>
+Subject: [PATCH v6 20/42] powerpc/powernv: Create PEs dynamically
+Date: Thu,  6 Aug 2015 14:11:25 +1000
+Message-ID: <1438834307-26960-21-git-send-email-gwshan@linux.vnet.ibm.com>
 References: <1438834307-26960-1-git-send-email-gwshan@linux.vnet.ibm.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1438834307-26960-1-git-send-email-gwshan-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Cc: linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org, mpe-Gsx/Oe8HsFggBc27wqDAHg@public.gmane.org, bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, panto-wVdstyuyKrO8r51toPun2/C9HSW9iNxf@public.gmane.org, aik-sLpHqDYs0B2HXe+LvDLADg@public.gmane.org, Gavin Shan <gwshan-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <1438834307-26960-1-git-send-email-gwshan@linux.vnet.ibm.com>
+Sender: linux-pci-owner@vger.kernel.org
+To: linuxppc-dev@lists.ozlabs.org
+Cc: linux-pci@vger.kernel.org, devicetree@vger.kernel.org, benh@kernel.crashing.org, mpe@ellerman.id.au, bhelgaas@google.com, grant.likely@linaro.org, robherring2@gmail.com, panto@antoniou-consulting.com, aik@ozlabs.ru, Gavin Shan <gwshan@linux.vnet.ibm.com>
 List-Id: devicetree@vger.kernel.org
 
-The pci_dn instances are allocated from memblock or bootmem when
-creating PCI controller (hoses) in setup_arch(). The PCI hotplug,
-which will be supported by proceeding patches, will release PCI
-device nodes and their corresponding pci_dn on unplugging event.
-The pci_dn instance memory chunks alloed from memblock or bootmem
-are hard to reused after being released.
+Currently, the PEs and their associated resources are assigned
+in ppc_md.pcibios_fixup() except those consumed by SRIOV VFs.
+The function is called for once after PCI probing and resources
+assignment is finished which isn't hotplug friendly.
 
-This delays creating pci_dn using core_initcall() so that they can
-be allocated from slab. In turn, the memory chunks for them can be
-reused after being released without problem. Since the pci_dn and
-eeh_dev has same life cycle, the eeh_dev is created when pci_dn is
-populated. We needn't create eeh_dev with another initcall. The
-time to create PHB PEs is delayed a bit from core_initcall() to
-core_initcall_sync().
+The patch creates PEs dynamically by ppc_md.pcibios_setup_bridge(),
+which is called on the event during system bootup and PCI hotplug:
+updating PCI bridge's windows after resource assignment/reassignment
+are finished. For partial hotplug case, where not all PCI devices
+belonging to the PE are unplugged and plugged again, we just need
+unbinding/binding the affected PCI devices with the corresponding
+PE without creating new one.
 
-Signed-off-by: Gavin Shan <gwshan-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
+Besides, it might require additional resources (e.g. M32) to the
+windows of the PCI bridge when unplugging current adapter, and
+insert a different adapter if there is one PCI slot, which is
+assumed behind root port, or the downstream bridge of the PCIE
+switch behind root port. The parent bridge of the newly plugged
+adapter would reject the request to add more resources, leading
+to hotplug failure. For the issue, the patch extends the windows
+of root port, or the upstream port of the PCIe switch behind root
+port to PHB's windows when ppc_md.pcibios_setup_bridge() is called.
+
+There is no upstream bridge for root bus, so we have to fix it up
+before any PE is created because the root bus PE is the ancestor
+to anyone else.
+
+Signed-off-by: Gavin Shan <gwshan@linux.vnet.ibm.com>
 ---
- arch/powerpc/include/asm/eeh.h         |  2 +-
- arch/powerpc/include/asm/ppc-pci.h     |  1 -
- arch/powerpc/kernel/eeh_dev.c          | 19 ++++------------
- arch/powerpc/kernel/pci_dn.c           | 20 +++++++++++++++--
- arch/powerpc/platforms/maple/pci.c     | 34 ++++++++++++++++++-----------
- arch/powerpc/platforms/pasemi/pci.c    |  3 ---
- arch/powerpc/platforms/powermac/pci.c  | 40 ++++++++++++++++++++--------------
- arch/powerpc/platforms/powernv/pci.c   |  3 ---
- arch/powerpc/platforms/pseries/setup.c |  7 +-----
- 9 files changed, 69 insertions(+), 60 deletions(-)
+ arch/powerpc/platforms/powernv/pci-ioda.c | 226 ++++++++++++++++++------------
+ arch/powerpc/platforms/powernv/pci.h      |   1 +
+ 2 files changed, 137 insertions(+), 90 deletions(-)
 
-diff --git a/arch/powerpc/include/asm/eeh.h b/arch/powerpc/include/asm/eeh.h
-index ea1f13c4..19b6050 100644
---- a/arch/powerpc/include/asm/eeh.h
-+++ b/arch/powerpc/include/asm/eeh.h
-@@ -272,7 +272,7 @@ void eeh_pe_restore_bars(struct eeh_pe *pe);
- const char *eeh_pe_loc_get(struct eeh_pe *pe);
- struct pci_bus *eeh_pe_bus_get(struct eeh_pe *pe);
- 
--void *eeh_dev_init(struct pci_dn *pdn, void *data);
-+struct eeh_dev *eeh_dev_init(struct pci_dn *pdn, struct pci_controller *phb);
- void eeh_dev_phb_init_dynamic(struct pci_controller *phb);
- int eeh_init(void);
- int __init eeh_ops_register(struct eeh_ops *ops);
-diff --git a/arch/powerpc/include/asm/ppc-pci.h b/arch/powerpc/include/asm/ppc-pci.h
-index ca0c5bf..916775d 100644
---- a/arch/powerpc/include/asm/ppc-pci.h
-+++ b/arch/powerpc/include/asm/ppc-pci.h
-@@ -40,7 +40,6 @@ void *traverse_pci_dn(struct pci_dn *root,
- 		      void *(*fn)(struct pci_dn *, void *),
- 		      void *data);
- 
--extern void pci_devs_phb_init(void);
- extern void pci_devs_phb_init_dynamic(struct pci_controller *phb);
- 
- /* From rtas_pci.h */
-diff --git a/arch/powerpc/kernel/eeh_dev.c b/arch/powerpc/kernel/eeh_dev.c
-index aabba94..7a135c1 100644
---- a/arch/powerpc/kernel/eeh_dev.c
-+++ b/arch/powerpc/kernel/eeh_dev.c
-@@ -44,14 +44,13 @@
- /**
-  * eeh_dev_init - Create EEH device according to OF node
-  * @pdn: PCI device node
-- * @data: PHB
-+ * @phb: PCI controller
-  *
-  * It will create EEH device according to the given OF node. The function
-  * might be called by PCI emunation, DR, PHB hotplug.
-  */
--void *eeh_dev_init(struct pci_dn *pdn, void *data)
-+struct eeh_dev *eeh_dev_init(struct pci_dn *pdn, struct pci_controller *phb)
- {
--	struct pci_controller *phb = data;
- 	struct eeh_dev *edev;
- 
- 	/* Allocate EEH device */
-@@ -68,7 +67,7 @@ void *eeh_dev_init(struct pci_dn *pdn, void *data)
- 	edev->phb = phb;
- 	INIT_LIST_HEAD(&edev->list);
- 
--	return NULL;
-+	return edev;
- }
- 
- /**
-@@ -80,16 +79,8 @@ void *eeh_dev_init(struct pci_dn *pdn, void *data)
-  */
- void eeh_dev_phb_init_dynamic(struct pci_controller *phb)
- {
--	struct pci_dn *root = phb->pci_data;
--
- 	/* EEH PE for PHB */
- 	eeh_phb_pe_create(phb);
--
--	/* EEH device for PHB */
--	eeh_dev_init(root, phb);
--
--	/* EEH devices for children OF nodes */
--	traverse_pci_dn(root, eeh_dev_init, phb);
- }
- 
- /**
-@@ -105,9 +96,7 @@ static int __init eeh_dev_phb_init(void)
- 	list_for_each_entry_safe(phb, tmp, &hose_list, list_node)
- 		eeh_dev_phb_init_dynamic(phb);
- 
--	pr_info("EEH: devices created\n");
--
- 	return 0;
- }
- 
--core_initcall(eeh_dev_phb_init);
-+core_initcall_sync(eeh_dev_phb_init);
-diff --git a/arch/powerpc/kernel/pci_dn.c b/arch/powerpc/kernel/pci_dn.c
-index f0ddde7..53a11e9 100644
---- a/arch/powerpc/kernel/pci_dn.c
-+++ b/arch/powerpc/kernel/pci_dn.c
-@@ -290,8 +290,11 @@ void *update_dn_pci_info(struct device_node *dn, void *data)
- 	const __be32 *regs;
- 	struct device_node *parent;
- 	struct pci_dn *pdn;
-+#ifdef CONFIG_EEH
-+	struct eeh_dev *edev;
-+#endif
- 
--	pdn = zalloc_maybe_bootmem(sizeof(*pdn), GFP_KERNEL);
-+	pdn = kzalloc(sizeof(*pdn), GFP_KERNEL);
- 	if (pdn == NULL)
- 		return NULL;
- 	dn->data = pdn;
-@@ -320,6 +323,15 @@ void *update_dn_pci_info(struct device_node *dn, void *data)
- 	/* Extended config space */
- 	pdn->pci_ext_config_space = (type && of_read_number(type, 1) == 1);
- 
-+	/* Initialize EEH device */
-+#ifdef CONFIG_EEH
-+	edev = eeh_dev_init(pdn, phb);
-+	if (!edev) {
-+		kfree(pdn);
+diff --git a/arch/powerpc/platforms/powernv/pci-ioda.c b/arch/powerpc/platforms/powernv/pci-ioda.c
+index 8aa6ab8..37847a3 100644
+--- a/arch/powerpc/platforms/powernv/pci-ioda.c
++++ b/arch/powerpc/platforms/powernv/pci-ioda.c
+@@ -1083,6 +1083,13 @@ static void pnv_ioda_setup_same_PE(struct pci_bus *bus, struct pnv_ioda_pe *pe)
+ 				pci_name(dev));
+ 			continue;
+ 		}
++
++		/* The PCI device might be not detached from the
++		 * PE in partial hotplug case.
++		 */
++		if (pdn->pe_number != IODA_INVALID_PE)
++			continue;
++
+ 		pdn->pe_number = pe->pe_number;
+ 		pe->dma32_weight += pnv_ioda_dma_weight(dev);
+ 		if ((pe->flags & PNV_IODA_PE_BUS_ALL) && dev->subordinate)
+@@ -1101,9 +1108,27 @@ static struct pnv_ioda_pe *pnv_ioda_setup_bus_PE(struct pci_bus *bus, bool all)
+ 	struct pci_controller *hose = pci_bus_to_host(bus);
+ 	struct pnv_phb *phb = hose->private_data;
+ 	struct pnv_ioda_pe *pe = NULL;
++	int pe_num;
++
++	/* For partial hotplug case, the PE instance hasn't been destroyed
++	 * yet. We shouldn't allocated a new one and assign resources to
++	 * it. The existing PE instance should be reused, but we should
++	 * associate the devices to the PE.
++	 */
++	pe_num = phb->ioda.pe_rmap[bus->number << 8];
++	if (pe_num != IODA_INVALID_PE) {
++		pe = &phb->ioda.pe_array[pe_num];
++		pnv_ioda_setup_same_PE(bus, pe);
 +		return NULL;
 +	}
-+#endif
 +
- 	/* Attach to parent node */
- 	INIT_LIST_HEAD(&pdn->child_list);
- 	INIT_LIST_HEAD(&pdn->list);
-@@ -465,15 +477,19 @@ void pci_devs_phb_init_dynamic(struct pci_controller *phb)
-  * pci device found underneath.  This routine runs once,
-  * early in the boot sequence.
-  */
--void __init pci_devs_phb_init(void)
-+static int __init pci_devs_phb_init(void)
- {
- 	struct pci_controller *phb, *tmp;
++	/* PE number for root bus should have been reserved */
++	if (pci_is_root_bus(bus) &&
++	    phb->ioda.root_pe_idx != IODA_INVALID_PE)
++		pe = &phb->ioda.pe_array[phb->ioda.root_pe_idx];
  
- 	/* This must be done first so the device nodes have valid pci info! */
- 	list_for_each_entry_safe(phb, tmp, &hose_list, list_node)
- 		pci_devs_phb_init_dynamic(phb);
-+
-+	return 0;
+ 	/* Check if PE is determined by M64 */
+-	if (phb->pick_m64_pe)
++	if (!pe && phb->pick_m64_pe)
+ 		pe = phb->pick_m64_pe(bus, all);
+ 
+ 	/* The PE number isn't pinned by M64 */
+@@ -1150,46 +1175,6 @@ static struct pnv_ioda_pe *pnv_ioda_setup_bus_PE(struct pci_bus *bus, bool all)
+ 	return pe;
  }
  
-+core_initcall(pci_devs_phb_init);
-+
- static void pci_dev_pdn_setup(struct pci_dev *pdev)
- {
- 	struct pci_dn *pdn;
-diff --git a/arch/powerpc/platforms/maple/pci.c b/arch/powerpc/platforms/maple/pci.c
-index a923230..a2f89e6 100644
---- a/arch/powerpc/platforms/maple/pci.c
-+++ b/arch/powerpc/platforms/maple/pci.c
-@@ -568,6 +568,26 @@ void maple_pci_irq_fixup(struct pci_dev *dev)
- 	DBG(" <- maple_pci_irq_fixup\n");
- }
- 
-+static int maple_pci_root_bridge_prepare(struct pci_host_bridge *bridge)
-+{
-+	struct pci_controller *hose = pci_bus_to_host(bridge->bus);
-+	struct device_node *np, *child;
-+
-+	if (hose != u3_agp)
-+		return 0;
-+
-+	/* Fixup the PCI<->OF mapping for U3 AGP due to bus renumbering. We
-+	 * assume there is no P2P bridge on the AGP bus, which should be a
-+	 * safe assumptions hopefully.
-+	 */
-+	np = hose->dn;
-+	PCI_DN(np)->busno = 0xf0;
-+	for_each_child_of_node(np, child)
-+		PCI_DN(child)->busno = 0xf0;
-+
-+	return 0;
-+}
-+
- void __init maple_pci_init(void)
- {
- 	struct device_node *np, *root;
-@@ -605,19 +625,7 @@ void __init maple_pci_init(void)
- 	if (ht && maple_add_bridge(ht) != 0)
- 		of_node_put(ht);
- 
--	/* Setup the linkage between OF nodes and PHBs */ 
--	pci_devs_phb_init();
+-static void pnv_ioda_setup_PEs(struct pci_bus *bus)
+-{
+-	struct pci_dev *dev;
 -
--	/* Fixup the PCI<->OF mapping for U3 AGP due to bus renumbering. We
--	 * assume there is no P2P bridge on the AGP bus, which should be a
--	 * safe assumptions hopefully.
--	 */
--	if (u3_agp) {
--		struct device_node *np = u3_agp->dn;
--		PCI_DN(np)->busno = 0xf0;
--		for (np = np->child; np; np = np->sibling)
--			PCI_DN(np)->busno = 0xf0;
--	}
-+	ppc_md.pcibios_root_bridge_prepare = maple_pci_root_bridge_prepare;
- 
- 	/* Tell pci.c to not change any resource allocations.  */
- 	pci_add_flags(PCI_PROBE_ONLY);
-diff --git a/arch/powerpc/platforms/pasemi/pci.c b/arch/powerpc/platforms/pasemi/pci.c
-index f3a68a0..10c4e8f 100644
---- a/arch/powerpc/platforms/pasemi/pci.c
-+++ b/arch/powerpc/platforms/pasemi/pci.c
-@@ -229,9 +229,6 @@ void __init pas_pci_init(void)
- 			of_node_get(np);
- 
- 	of_node_put(root);
+-	pnv_ioda_setup_bus_PE(bus, false);
 -
--	/* Setup the linkage between OF nodes and PHBs */
--	pci_devs_phb_init();
- }
- 
- void __iomem *pasemi_pci_getcfgaddr(struct pci_dev *dev, int offset)
-diff --git a/arch/powerpc/platforms/powermac/pci.c b/arch/powerpc/platforms/powermac/pci.c
-index 59ab16f..20d7bde 100644
---- a/arch/powerpc/platforms/powermac/pci.c
-+++ b/arch/powerpc/platforms/powermac/pci.c
-@@ -878,6 +878,29 @@ void pmac_pci_irq_fixup(struct pci_dev *dev)
- #endif /* CONFIG_PPC32 */
- }
- 
-+#ifdef CONFIG_PPC64
-+static int pmac_pci_root_bridge_prepare(struct pci_hot_bridge *bridge)
-+{
-+	struct pci_controller *hose = pci_bus_to_host(bridge->bus);
-+	struct device_node *np, *child;
-+
-+	if (hose != u3_agp)
-+		return 0;
-+
-+	/* Fixup the PCI<->OF mapping for U3 AGP due to bus renumbering. We
-+	 * assume there is no P2P bridge on the AGP bus, which should be a
-+	 * safe assumptions for now. We should do something better in the
-+	 * future though
-+	 */
-+	np = hose->dn;
-+	PCI_DN(np)->busno = 0xf0;
-+	for_each_child_of_node(np, child)
-+		PCI_DN(child)->busno = 0xf0;
-+
-+	return 0;
-+}
-+#endif /* CONFIG_PPC64 */
-+
- void __init pmac_pci_init(void)
- {
- 	struct device_node *np, *root;
-@@ -914,22 +937,7 @@ void __init pmac_pci_init(void)
- 	if (ht && pmac_add_bridge(ht) != 0)
- 		of_node_put(ht);
- 
--	/* Setup the linkage between OF nodes and PHBs */
--	pci_devs_phb_init();
--
--	/* Fixup the PCI<->OF mapping for U3 AGP due to bus renumbering. We
--	 * assume there is no P2P bridge on the AGP bus, which should be a
--	 * safe assumptions for now. We should do something better in the
--	 * future though
--	 */
--	if (u3_agp) {
--		struct device_node *np = u3_agp->dn;
--		PCI_DN(np)->busno = 0xf0;
--		for (np = np->child; np; np = np->sibling)
--			PCI_DN(np)->busno = 0xf0;
--	}
--	/* pmac_check_ht_link(); */
--
-+	ppc_md.pcibios_root_bridge_prepare = pmac_pci_root_bridge_prepare;
- #else /* CONFIG_PPC64 */
- 	init_p2pbridge();
- 	init_second_ohare();
-diff --git a/arch/powerpc/platforms/powernv/pci.c b/arch/powerpc/platforms/powernv/pci.c
-index 5982110..b13186d 100644
---- a/arch/powerpc/platforms/powernv/pci.c
-+++ b/arch/powerpc/platforms/powernv/pci.c
-@@ -935,9 +935,6 @@ void __init pnv_pci_init(void)
- 	for_each_compatible_node(np, NULL, "ibm,ioda2-phb")
- 		pnv_pci_init_ioda2_phb(np);
- 
--	/* Setup the linkage between OF nodes and PHBs */
--	pci_devs_phb_init();
--
- 	/* Configure IOMMU DMA hooks */
- 	set_pci_dma_ops(&dma_iommu_ops);
- }
-diff --git a/arch/powerpc/platforms/pseries/setup.c b/arch/powerpc/platforms/pseries/setup.c
-index df6a704..92974aa 100644
---- a/arch/powerpc/platforms/pseries/setup.c
-+++ b/arch/powerpc/platforms/pseries/setup.c
-@@ -261,12 +261,8 @@ static int pci_dn_reconfig_notifier(struct notifier_block *nb, unsigned long act
- 	switch (action) {
- 	case OF_RECONFIG_ATTACH_NODE:
- 		pci = np->parent->data;
--		if (pci) {
-+		if (pci)
- 			update_dn_pci_info(np, pci->phb);
--
--			/* Create EEH device for the OF node */
--			eeh_dev_init(PCI_DN(np), pci->phb);
+-	list_for_each_entry(dev, &bus->devices, bus_list) {
+-		if (dev->subordinate) {
+-			if (pci_pcie_type(dev) == PCI_EXP_TYPE_PCI_BRIDGE)
+-				pnv_ioda_setup_bus_PE(dev->subordinate, true);
+-			else
+-				pnv_ioda_setup_PEs(dev->subordinate);
 -		}
- 		break;
- 	default:
- 		err = NOTIFY_DONE;
-@@ -482,7 +478,6 @@ static void __init find_and_init_phbs(void)
+-	}
+-}
+-
+-/*
+- * Configure PEs so that the downstream PCI buses and devices
+- * could have their associated PE#. Unfortunately, we didn't
+- * figure out the way to identify the PLX bridge yet. So we
+- * simply put the PCI bus and the subordinate behind the root
+- * port to PE# here. The game rule here is expected to be changed
+- * as soon as we can detected PLX bridge correctly.
+- */
+-static void pnv_pci_ioda_setup_PEs(void)
+-{
+-	struct pci_controller *hose, *tmp;
+-	struct pnv_phb *phb;
+-
+-	list_for_each_entry_safe(hose, tmp, &hose_list, list_node) {
+-		phb = hose->private_data;
+-
+-		/* M64 layout might affect PE allocation */
+-		if (phb->reserve_m64_pe)
+-			phb->reserve_m64_pe(hose->bus, NULL, true);
+-
+-		pnv_ioda_setup_PEs(hose->bus);
+-	}
+-}
+-
+ #ifdef CONFIG_PCI_IOV
+ static int pnv_pci_vf_release_m64(struct pci_dev *pdev)
+ {
+@@ -2962,52 +2947,6 @@ static void pnv_ioda_setup_pe_seg(struct pci_controller *hose,
  	}
+ }
  
- 	of_node_put(root);
--	pci_devs_phb_init();
+-static void pnv_pci_ioda_setup_seg(void)
+-{
+-	struct pci_controller *tmp, *hose;
+-	struct pnv_phb *phb;
+-	struct pnv_ioda_pe *pe;
+-
+-	list_for_each_entry_safe(hose, tmp, &hose_list, list_node) {
+-		phb = hose->private_data;
+-		list_for_each_entry(pe, &phb->ioda.pe_list, list) {
+-			pnv_ioda_setup_pe_seg(hose, pe);
+-		}
+-	}
+-}
+-
+-static void pnv_pci_ioda_setup_DMA(void)
+-{
+-	struct pci_controller *hose, *tmp;
+-	struct pnv_phb *phb;
+-	struct pnv_ioda_pe *pe;
+-
+-	list_for_each_entry_safe(hose, tmp, &hose_list, list_node) {
+-		phb = hose->private_data;
+-		pnv_pci_ioda_setup_opal_tce_kill(phb);
+-
+-		list_for_each_entry(pe, &phb->ioda.pe_dma_list, dma_link) {
+-			if (!pe->dma32_weight)
+-				continue;
+-
+-			switch (phb->type) {
+-			case PNV_PHB_IODA1:
+-				pnv_ioda1_setup_dma(phb, pe);
+-				break;
+-			case PNV_PHB_IODA2:
+-				pnv_pci_ioda2_setup_dma_pe(phb, pe);
+-				break;
+-			default:
+-				pr_warn("%s: No DMA for PHB type %d\n",
+-					__func__, phb->type);
+-			}
+-		}
+-
+-		/* Mark the PHB initialization done */
+-		phb->initialized = 1;
+-	}
+-}
+-
+ static void pnv_pci_ioda_create_dbgfs(void)
+ {
+ #ifdef CONFIG_DEBUG_FS
+@@ -3029,9 +2968,8 @@ static void pnv_pci_ioda_create_dbgfs(void)
  
- 	/*
- 	 * PCI_PROBE_ONLY and PCI_REASSIGN_ALL_BUS can be set via properties
+ static void pnv_pci_ioda_fixup(void)
+ {
+-	pnv_pci_ioda_setup_PEs();
+-	pnv_pci_ioda_setup_seg();
+-	pnv_pci_ioda_setup_DMA();
++	struct pci_controller *hose, *tmp;
++	struct pnv_phb *phb;
+ 
+ 	pnv_pci_ioda_create_dbgfs();
+ 
+@@ -3039,6 +2977,12 @@ static void pnv_pci_ioda_fixup(void)
+ 	eeh_init();
+ 	eeh_addr_cache_build();
+ #endif
++
++	/* Notify initialization of PHB done */
++	list_for_each_entry_safe(hose, tmp, &hose_list, list_node) {
++		phb = hose->private_data;
++		phb->initialized = 1;
++	}
+ }
+ 
+ /*
+@@ -3082,6 +3026,105 @@ static resource_size_t pnv_pci_window_alignment(struct pci_bus *bus,
+ 	return phb->ioda.io_segsize;
+ }
+ 
++/*
++ * We are updating root port or the upstream bridge behind the
++ * root port with PHB's windows in order to accommodate the
++ * changes on required resources during PCI (slot) hotplug,
++ * which is connected to either root port or the downstream
++ * ports of PCIe switch behind the root port.
++ */
++static void pnv_pci_fixup_bridge_resources(struct pci_bus *bus,
++					   unsigned long type)
++{
++	struct pci_controller *hose = pci_bus_to_host(bus);
++	struct pnv_phb *phb = hose->private_data;
++	struct pci_dev *bridge = bus->self;
++	struct resource *r, *w;
++	int i;
++
++	/* Check if we need apply fixup to the bridge's windows */
++	if (!pci_is_root_bus(bridge->bus) &&
++	    !pci_is_root_bus(bridge->bus->self->bus))
++		return;
++
++	/* Fixup the resoureces */
++	for (i = 0; i < PCI_BRIDGE_RESOURCE_NUM; i++) {
++		r = &bridge->resource[PCI_BRIDGE_RESOURCES + i];
++		if (!r->flags || !r->parent)
++			continue;
++
++		w = NULL;
++		if (r->flags & type & IORESOURCE_IO)
++			w = &hose->io_resource;
++		else if (pnv_pci_is_mem_pref_64(r->flags) &&
++			 (type & IORESOURCE_PREFETCH) &&
++			 phb->ioda.m64_segsize)
++			w = &hose->mem_resources[1];
++		else if (r->flags & type & IORESOURCE_MEM)
++			w = &hose->mem_resources[0];
++
++		r->start = w->start;
++		r->end = w->end;
++	}
++}
++
++static void pnv_pci_setup_bridge(struct pci_bus *bus,
++				 unsigned long type)
++{
++	struct pci_controller *hose = pci_bus_to_host(bus);
++	struct pnv_phb *phb = hose->private_data;
++	struct pci_dev *bridge = bus->self;
++	struct pnv_ioda_pe *pe;
++	bool all = (pci_pcie_type(bridge) == PCI_EXP_TYPE_PCI_BRIDGE);
++
++	/* The root bus (ancestor PE) should be finalized
++	 * before anyone else
++	 */
++	if (!phb->ioda.root_pe_is_populated) {
++		pe = pnv_ioda_setup_bus_PE(phb->hose->bus, false);
++		if (pe && phb->ioda.root_pe_idx == IODA_INVALID_PE)
++			phb->ioda.root_pe_idx = pe->pe_number;
++			phb->ioda.root_pe_is_populated = true;
++		}
++
++	/* Extend bridge's windows if necessary */
++	pnv_pci_fixup_bridge_resources(bus, type);
++
++	/* Don't assign PE to bus which doesn't have any
++	 * subordinate PCI devices.
++	 */
++	if (list_empty(&bus->devices))
++		return;
++
++	/* Reserve PEs for M64 resource */
++	if (phb->reserve_m64_pe)
++		phb->reserve_m64_pe(bus, NULL, all);
++
++	/* Assign PE. We might run here because of partial hotplug.
++	 * For the case, we just pick up the existing PE and should
++	 * not allocate resources again.
++	 */
++	pe = pnv_ioda_setup_bus_PE(bus, all);
++	if (!pe)
++		return;
++
++	/* Setup MMIO mapping */
++	pnv_ioda_setup_pe_seg(hose, pe);
++
++	/* Setup DMA */
++	switch (phb->type) {
++	case PNV_PHB_IODA1:
++		pnv_ioda1_setup_dma(phb, pe);
++		break;
++	case PNV_PHB_IODA2:
++		pnv_pci_ioda2_setup_dma_pe(phb, pe);
++		break;
++	default:
++		pr_warn("%s: No DMA for PHB type %d\n",
++			__func__, phb->type);
++	}
++}
++
+ #ifdef CONFIG_PCI_IOV
+ static resource_size_t pnv_pci_iov_resource_alignment(struct pci_dev *pdev,
+ 						      int resno)
+@@ -3147,6 +3190,7 @@ static const struct pci_controller_ops pnv_pci_ioda_controller_ops = {
+ #endif
+        .enable_device_hook = pnv_pci_enable_device_hook,
+        .window_alignment = pnv_pci_window_alignment,
++	.setup_bridge = pnv_pci_setup_bridge,
+        .reset_secondary_bus = pnv_pci_reset_secondary_bus,
+        .dma_set_mask = pnv_pci_ioda_dma_set_mask,
+        .shutdown = pnv_pci_ioda_shutdown,
+@@ -3218,6 +3262,8 @@ static void __init pnv_pci_init_ioda_phb(struct device_node *np,
+ 	if (phb->regs == NULL)
+ 		pr_err("  Failed to map registers !\n");
+ 
++	pnv_pci_ioda_setup_opal_tce_kill(phb);
++
+ 	/* Initialize more IODA stuff */
+ 	phb->ioda.total_pe_num = 1;
+ 	prop32 = of_get_property(np, "ibm,opal-num-pes", NULL);
+diff --git a/arch/powerpc/platforms/powernv/pci.h b/arch/powerpc/platforms/powernv/pci.h
+index e93a489..a160491 100644
+--- a/arch/powerpc/platforms/powernv/pci.h
++++ b/arch/powerpc/platforms/powernv/pci.h
+@@ -136,6 +136,7 @@ struct pnv_phb {
+ 			/* Global bridge info */
+ 			unsigned int		total_pe_num;
+ 			unsigned int		root_pe_idx;
++			bool			root_pe_is_populated;
+ 			unsigned int		reserved_pe_idx;
+ 
+ 			/* 32-bit MMIO window */
 -- 
 2.1.0
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
