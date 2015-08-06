@@ -1,111 +1,102 @@
-From: Liviu Dudau <Liviu.Dudau@arm.com>
-Subject: Re: [PATCH 3/4] arm64: Juno: Add HDLCD support to the Juno boards.
-Date: Thu, 6 Aug 2015 11:16:37 +0100
-Message-ID: <20150806101637.GI20890@e106497-lin.cambridge.arm.com>
-References: <1438784892-27888-1-git-send-email-Liviu.Dudau@arm.com>
- <1438784892-27888-4-git-send-email-Liviu.Dudau@arm.com>
- <20150805175303.GB7557@n2100.arm.linux.org.uk>
- <20150805190312.GA31066@e106497-lin.cambridge.arm.com>
- <20150805214854.GC7557@n2100.arm.linux.org.uk>
+From: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: Re: [PATCH v6 7/9] clk: mediatek: Add subsystem clocks of MT8173
+Date: Thu, 6 Aug 2015 12:20:59 +0200
+Message-ID: <20150806102059.GQ18700@pengutronix.de>
+References: <1438676218-11310-1-git-send-email-jamesjj.liao@mediatek.com>
+ <1438676218-11310-8-git-send-email-jamesjj.liao@mediatek.com>
+ <20150805064605.GZ18700@pengutronix.de>
+ <1438849431.27884.9.camel@mtksdaap41>
+ <20150806085354.GN18700@pengutronix.de>
+ <1438851644.27884.21.camel@mtksdaap41>
+ <CAGS+omAAYZyZJ4+eSdu2jmwThvHg1YpVoehui_cqNp4A5fURWg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20150805214854.GC7557@n2100.arm.linux.org.uk>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Russell King - ARM Linux <linux@arm.linux.org.uk>
-Cc: Mark Rutland <Mark.Rutland@arm.com>, Jon Medhurst <tixy@linaro.org>, Pawel Moll <Pawel.Moll@arm.com>, Arnd Bergmann <arnd@arndb.de>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Catalin Marinas <Catalin.Marinas@arm.com>, Kumar Gala <galak@codeaurora.org>, Will Deacon <Will.Deacon@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Sudeep Holla <Sudeep.Holla@arm.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+In-Reply-To: <CAGS+omAAYZyZJ4+eSdu2jmwThvHg1YpVoehui_cqNp4A5fURWg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Cc: James Liao <jamesjj.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, "open list:OPEN FIRMWARE AND..." <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Heiko Stubner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, srv_heupstream <srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Mike Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Ricky Liang <jcliang-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gV2VkLCBBdWcgMDUsIDIwMTUgYXQgMTA6NDg6NTRQTSArMDEwMCwgUnVzc2VsbCBLaW5nIC0g
-QVJNIExpbnV4IHdyb3RlOgo+IE9uIFdlZCwgQXVnIDA1LCAyMDE1IGF0IDA4OjAzOjEyUE0gKzAx
-MDAsIExpdml1IER1ZGF1IHdyb3RlOgo+ID4gSSBoYXZlIHRvIGNvbmZlc3MgdGhhdCBJIGFtIG5v
-dCBlbnRpcmVseSB1cCB0byBzcGVlZCB3aXRoIHRoZSBUREExOTk4OAo+ID4gc2l0dWF0aW9uIGF0
-IHRoZSBtb21lbnQuIEFuZHJldyBKYWNrc29uIHdhcyBkZWFsaW5nIHdpdGggdGhhdCBhbmQKPiA+
-IHdvcmtpbmcgd2l0aCBKZWFuIHRvIGdldCB0aGF0IGluIHRoZSB1cHN0cmVhbSwgYnV0IGhpcyBj
-b250cmFjdCBoYXMKPiA+IGVuZGVkIGFuZCBoZSBoYXMgbW92ZWQgdG8gb3RoZXIgdGhpbmdzLgo+
-IAo+IFVtbSwgSSdtIHRoZSBtYWludGFpbmVyIGZvciBUREE5OTh4Ogo+IAo+IE5YUCBUREE5OThY
-IERSTSBEUklWRVIKPiBNOiAgICAgIFJ1c3NlbGwgS2luZyA8cm1rK2tlcm5lbEBhcm0ubGludXgu
-b3JnLnVrPgo+IFM6ICAgICAgU3VwcG9ydGVkCj4gRjogICAgICBkcml2ZXJzL2dwdS9kcm0vaTJj
-L3RkYTk5OHhfZHJ2LmMKPiBGOiAgICAgIGluY2x1ZGUvZHJtL2kyYy90ZGE5OTh4LmgKPiAKPiBJ
-dCB3b3VsZCBiZSBuaWNlIGlmIHBlb3BsZSB3b3JrZWQgd2l0aCB0aGUgYWN0dWFsIG1haW50YWlu
-ZXJzIG9mIHRoaW5ncwo+IHJhdGhlciB0aGFuIHJhbmRvbSBvdGhlciBwZW9wbGUuLi4KClNvcnJ5
-LCBpdCB3YXMgbXkgbWlzdGFrZSwgSSBoYXZlIGJsaW5kbHkgZm9sbG93ZWQgdGhlIGdldF9tYWlu
-dGFpbmVycy5wbApnZW5lcmF0ZWQgbGlzdCBvZiBlbWFpbCByYXRoZXIgdGhhbiBlbmdhZ2UgbXkg
-YnJhaW4gYW5kIHJlYWxpc2UgdGhhdCBwYXJ0Cm9mIHRoZSBwYXRjaCBhbHNvIGFmZmVjdHMgVERB
-MTk5ODggZHJpdmVyLgoKPiAKPiA+ID4gQWxzbywgdGhlIHdob2xlIHF1ZXN0aW9uIG9mIHJlcHJl
-c2VudGluZyBjb25uZWN0b3JzIGluIGEgRFJNIG1vZGVsIGlzCj4gPiA+IHlldCB0byBiZSBlc3Rh
-Ymxpc2hlZC4gIFllcywgRFQgc2hvdWxkIGRlc2NyaWJlIHRoZSBoYXJkd2FyZSwgYnV0IHdlCj4g
-PiA+IGRvbid0IHlldCBrbm93IF9ob3dfIHRvIGRlc2NyaWJlIHBoeXNpY2FsIGNvbm5lY3RvcnMg
-d2l0aCBzdHVmZgo+ID4gPiBpbXBsZW1lbnRlZCBvbiB0b3Agb2YgRFJNIHlldCwgYW5kIHdlIGhh
-dmUgbm90aGluZyB0aGF0IG1ha2VzIHVzZSBvZgo+ID4gPiB0aGlzLgo+ID4gCj4gPiBQbGVhc2Ug
-aGVscCBtZSB1bmRlcnN0YW5kIHRoZSBjdXJyZW50IHNpdHVhdGlvbjogeW91IGhhdmUgYWRkZWQK
-PiA+IHN1cHBvcnQgZm9yIGNvbXBvbmVudHMgdGhhdCB0aGUgdmlkZW8gZHJpdmVycyBjYW4gdXNl
-IGFuZCB0aGUgYmluZGluZ3MKPiA+IGZvciB0aGF0IGFyZSBkZXNjcmliZWQgaW4gRG9jdW1lbnRh
-dGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL21lZGlhL3ZpZGVvLWludGVyZmFjZXMudHh0Lgo+IAo+
-IE5vLiAgSSBhZGRlZCB0aGUgY29tcG9uZW50IGhlbHBlcnMsIHdoaWNoIGFyZSBlbnRpcmVseSBm
-aXJtd2FyZSBhZ25vc3RpYy4KPiBUaGUgbWVkaWEgYmluZGluZ3Mgd2VyZSBjcmVhdGVkIGJ5IG90
-aGVycywgYW5kIHRocm91Z2ggZGV2ZWxvcG1lbnQgZG9uZQo+IGJ5IFBlbmd1dHJvbml4LCB0aGV5
-IHdlcmUgZmFjdG9yZWQgb3V0IG9mIG1lZGlhIGludG8gY29tbW9uIERUIGNvZGUgYW5kCj4gcmUt
-dXNlZCBmb3IgdGhlIElNWCBEUk0gZHJpdmVyLiAgVGhlIGJpbmRpbmcgZG9jdW1lbnQgd2hpY2gg
-ZGVzY3JpYmVzCj4gdGhhdCB3b3JrIGlzIG5vdCB0aGUgb25lIHlvdSByZWZlciB0byBhYm92ZSwg
-YnV0IHRoaXMgb25lOgo+IAo+IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9ncmFw
-aC50eHQKPiAKPiBUaGlzIHN0YXJ0ZWQgdGhlbSBhcyBhIGJhc2lzIGZvciBEUk0gZHJpdmVycyBv
-biBBUk0gLSBidXQgaXQncyBuZXZlciBiZWVuCj4gb2ZmaWNpYWxseSAiYWRvcHRlZCIgYXMgYSBt
-ZXRob2QgdG8gZGVzY3JpYmUgRFJNIGRyaXZlcnMgLSBpdCdzIG9ubHkgd2hhdAo+IHNvbWUgZHJp
-dmVycyBhcmUgdXNpbmcuICBJdCBvdWdodCB0byBiZSBuYWlsZWQgZG93biBhcyBhIHdheSB0byBl
-bnN1cmUKPiBpbnRlci1vcGVyYWJpbGl0eSBiZXR3ZWVuIGNvbXBvbmVudHMgdGhvdWdoLCBidXQg
-bm8gb25lIGhhcyByZWFsbHkgbWFkZQo+IHRoYXQgZGVjaXNpb24uCgpPSywgSSdtIGludGVyZXN0
-ZWQgb24gd2hvbSBkbyBJIG5lZWQgdG8gdGFsayB0byBpbiBvcmRlciBmb3IgdGhlIG9mZmljaWFs
-CiJhZG9wdGlvbiIgdG8gaGFwcGVuIGhlcmUuIAoKPiAKPiA+IEFjY29yZGluZyB0byB0aGF0IGRv
-Y3VtZW50IG15IHBhdGNoIHNob3VsZCBiZSBjb21wbGlhbnQgb25jZSBJIGFkZCB0aGUKPiA+IHJl
-Zz0gcHJvcGVydHkuIElzIHRoYXQgc29tZXRoaW5nIHRoYXQgY2Fubm90IGJlIHVzZWQgd2l0aCB0
-ZGE5OTh4IGRyaXZlcgo+ID4gb3IgaXMgdGhlcmUgYW55IG90aGVyIHJlYXNvbiB3aHkgeW91IHRo
-aW5rIHRoZSBwYXRjaCBpcyBub3QgY29tcGxpYW50Pwo+IAo+IEplYW4ncyBwcm9wb3NhbCB0byBh
-ZGQgYXVkaW8gc3VwcG9ydCB0byB0aGUgVERBOTk4eCBkcml2ZXIgZG9lcyBpdCB2aWEKPiB0aGlz
-IGNoYW5nZSB0byB0aGUgYmluZGluZyBzcGVjOgo+IAo+ICtPcHRpb25hbCBub2RlczoKPiArCj4g
-KyAgLSBwb3J0OiB1cCB0byB0aHJlZSBwb3J0cy4KPiArICAgICAgIFRoZSBwb3J0cyBhcmUgZGVm
-aW5lZCBhY2NvcmRpbmcgdG8gWzFdLgo+ICsKPiArICAgIFZpZGVvIHBvcnQuCj4gKyAgICAgICBU
-aGVyZSBtYXkgYmUgb25seSBvbmUgdmlkZW8gcG9ydC4KPiArICAgICAgIFRoaXMgb25lIG11c3Qg
-Y29udGFpbiB0aGUgZm9sbG93aW5nIHByb3BlcnR5Ogo+ICsKPiArICAgICAgIC0gcG9ydC10eXBl
-OiBtdXN0IGJlICJyZ2IiCj4gKwo+ICsgICAgICAgYW5kIG1heSBjb250YWluIHRoZSBvcHRpb25h
-bCBwcm9wZXJ0eToKPiArCj4gKyAgICAgICAtIHJlZzogMjQgYml0cyB2YWx1ZSB3aGljaCBkZWZp
-bmVzIGhvdyB0aGUgdmlkZW8gY29udHJvbGxlcgo+ICsgICAgICAgICAgICAgICBvdXRwdXQgaXMg
-d2lyZWQgdG8gdGhlIFREQTk5OHggaW5wdXQgKHZpZGVvIHBpbnMpCj4gKyAgICAgICAgICAgICAg
-IFdoZW4gYWJzZW50LCB0aGUgZGVmYXVsdCB2YWx1ZSBpcyA8MHgyMzAxNDU+Lgo+ICsKPiArICAg
-IEF1ZGlvIHBvcnRzLgo+ICsgICAgICAgVGhlcmUgbWF5IGJlIG9uZSBvciB0d28gYXVkaW8gcG9y
-dHMuCj4gKyAgICAgICBUaGVzZSBvbmVzIG11c3QgY29udGFpbiB0aGUgZm9sbG93aW5nIHByb3Bl
-cnRpZXM6Cj4gKwo+ICsgICAgICAgLSBwb3J0LXR5cGU6IG11c3QgYmUgImkycyIgb3IgInNwZGlm
-Igo+ICsKPiArICAgICAgIC0gcmVnOiA4IGJpdHMgdmFsdWUgd2hpY2ggZGVmaW5lcyBob3cgdGhl
-IGF1ZGlvIGNvbnRyb2xsZXIKPiArICAgICAgICAgICAgICAgb3V0cHV0IGlzIHdpcmVkIHRvIHRo
-ZSBUREE5OTh4IGlucHV0IChhdWRpbyBwaW5zKQo+ICsKPiArWzFdIERvY3VtZW50YXRpb24vZGV2
-aWNldHJlZS9iaW5kaW5ncy9ncmFwaC50eHQKPiAKPiAoVGhhdCdzIG5vdCBhIHBhcnRpY3VsYXJs
-eSBwcmVjaXNlIGRlZmluaXRpb24sIGJ1dCBpdCdzIHdoYXQgd2UgaGF2ZSBhdAo+IHRoZSBtb21l
-bnQuKQo+IAo+ID4gSWYgeW91IGFyZSByZWZlcnJpbmcgdG8gY29ubmVjdGluZyBhbiBlbmNvZGVy
-IHdpdGggYSBIRE1JIGNvbm5lY3RvciwgSQo+ID4gaGF2ZSB0ZXN0ZWQgdGhhdCBhbmQgaXQgc2Vl
-bXMgdG8gd29yaywgYWx0aG91Z2ggbXkgc2l0dWF0aW9uIGlzIHNpbXBsZQo+ID4gYmVjYXVzZSB0
-aGVyZSBhcmUgbm8gb3B0aW9ucyBpbiBteSBzZXR1cDogb25lIEhETENEIGNvbm5lY3RzIHRvIG9u
-ZQo+ID4gVERBMTk5ODggd2hpY2ggY29ubmVjdHMgdG8gb25lIEhETUkgb3V0cHV0Lgo+IAo+IFJp
-Z2h0IG5vdywgdGhlIFREQTk5OHggd2lsbCBpZ25vcmUgdGhlIGFkZGl0aW9uYWwgaW5mb3JtYXRp
-b24sIGJ1dCB0aGF0Cj4gd29uJ3QgYmUgdGhlIGNhc2Ugd2l0aCBKZWFuJ3MgYXVkaW8gd29yayAo
-c2VlIHRoZSBhYm92ZSBiaW5kaW5nCj4gaW5mb3JtYXRpb24uKQoKWWVzLCBJIGhhdmUgc2VlbiB0
-aGF0IHBhdGNoc2V0LiBJIHdpbGwgYXBwbHkgaXQgdG8gbXkgdHJlZSBhbmQgc2VuZCBhbgp1cGRh
-dGVkIHZlcnNpb24gd2l0aCB0aGUgcG9ydC10eXBlIHByb3BlcnR5IHdoZW4gSSBzZW5kIHYyLgoK
-QmVzdCByZWdhcmRzLApMaXZpdQoKPiAKPiAtLSAKPiBGVFRDIGJyb2FkYmFuZCBmb3IgMC44bWls
-ZSBsaW5lOiBjdXJyZW50bHkgYXQgMTAuNU1icHMgZG93biA0MDBrYnBzIHVwCj4gYWNjb3JkaW5n
-IHRvIHNwZWVkdGVzdC5uZXQuCj4gCgotLSAKPT09PT09PT09PT09PT09PT09PT0KfCBJIHdvdWxk
-IGxpa2UgdG8gfAp8IGZpeCB0aGUgd29ybGQsICB8CnwgYnV0IHRoZXkncmUgbm90IHwKfCBnaXZp
-bmcgbWUgdGhlICAgfAogXCBzb3VyY2UgY29kZSEgIC8KICAtLS0tLS0tLS0tLS0tLS0KICAgIMKv
-XF8o44OEKV8vwq8KCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9y
-ZwpodHRwOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVs
-Cg==
+On Thu, Aug 06, 2015 at 05:13:21PM +0800, Daniel Kurtz wrote:
+> On Thu, Aug 6, 2015 at 5:00 PM, James Liao <jamesjj.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org> wrote:
+> > Hi Sascha,
+> >
+> > On Thu, 2015-08-06 at 10:53 +0200, Sascha Hauer wrote:
+> >> On Thu, Aug 06, 2015 at 04:23:51PM +0800, James Liao wrote:
+> >> > On Wed, 2015-08-05 at 08:46 +0200, Sascha Hauer wrote:
+> >> > > On Tue, Aug 04, 2015 at 04:16:56PM +0800, James Liao wrote:
+> >> > > >  static const struct mtk_fixed_clk fixed_clks[] __initconst = {
+> >> > > >         FIXED_CLK(CLK_TOP_CLKPH_MCK_O, "clkph_mck_o", "clk26m", 400 * MHZ),
+> >> > > >         FIXED_CLK(CLK_TOP_USB_SYSPLL_125M, "usb_syspll_125m", "clk26m", 125 * MHZ),
+> >> > > > +       FIXED_CLK(CLK_TOP_DSI0_DIG, "dsi0_dig", "clk26m", 130 * MHZ),
+> >> > > > +       FIXED_CLK(CLK_TOP_DSI1_DIG, "dsi1_dig", "clk26m", 130 * MHZ),
+> >> > > > +       FIXED_CLK(CLK_TOP_LVDS_PXL, "lvds_pxl", "lvdspll", 148.5 * MHZ),
+> >> > > > +       FIXED_CLK(CLK_TOP_LVDS_CTS, "lvds_cts", "lvdspll", 51.975 * MHZ),
+> >> > >
+> >> > > I would expect 51975 * KHZ here to avoid fractional numbers. Probably
+> >> > > gcc calculates that during compile time so this will work as expected,
+> >> > > still I'm not sure this is good style to use fractional numbers here.
+> >> >
+> >> > As I know all constants will be calculated in compile time, so there
+> >> > should be no difference between 51.975 * MHZ and 51975 * KHz.
+> >> >
+> >> > > Anyway, on my system lvdspll is running at 150MHz. Are you sure there is
+> >> > > a clock derived from this running at 148.5MHz? Is it really correct to
+> >> > > use a fixed clock here or should it rather be lvdspll directly?
+> >> >
+> >> > Here is the clock hierarchy between lvdspll and lvds_pxl:
+> >> >
+> >> >             --------       AD_VPLL_DPIX_CK  --------   lvds_pxl  -----
+> >> >            |        |--------------------->|        |---------->|
+> >> >            |        |                      | cksys  |           |
+> >> > LVDSPLL -->| LVDSTX |                      | buffer |           | MMSYS
+> >> >            |        | AD_LVDSTX_CLKDIG_CTS | test   |  lvds_cts |
+> >> >            |        |--------------------->|        |---------->|
+> >> >             --------                        --------             -----
+> >> >
+> >> > Some clocks and blocks are not modeled into CCF. But we prefer to enable
+> >> > lvdspll before enabling lvds_pxl. So I modeled lvds_pxl (and lvds_cts)
+> >> > as a fixed-rate clock with a source from lvdspll.
+> >> >
+> >> > The frequency of these fixed-rate clocks (such as 148.5 MHz) are typical
+> >> > rate. In fact, we don't care about the actual rate of these clocks. We
+> >> > just care about the enable / disable sequence of them.
+> >>
+> >> Please either use the real rate or 0 (along with a explaining why). Using
+> >> a frequency with four to five significant digits makes me think that the
+> >> actual rate is very important.
+> >
+> > Oops, your suggestion is much different from Daniel's.
+> >
+> > Daniel, could you help to comment about how we model these clocks?
+> 
+> First of all, for clocks where the rate doesn't matter, it doesn't
+> matters to what rate we set the clock.
+> 
+> As for the color of our shed, "the designer says these are the typical
+> rates" sounds good enough to me for a "real rate", so I prefer using
+> the rates in James' patch.
+> 
+> If not sure what Sascha's concern is, but if he insists on 0, I'm fine
+> with that too.
+
+I only find it confusing. I'd expect either the correct rate or an
+obviously dummy rate. Whatever we choose a comment explaining the
+background would really help here. Otherwise we won't know later
+whether this 148.5 MHz rate was introduced because a) The consumers
+depend on this rate being reported, b) It really is the correct rate or
+c) we don't care about the rate.
+
+Sascha
+
+-- 
+Pengutronix e.K.                           |                             |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
