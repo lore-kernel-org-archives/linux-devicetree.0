@@ -1,40 +1,56 @@
-From: Gavin Shan <gwshan-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
-Subject: [PATCH v6 37/42] powerpc/powernv: Select OF_DYNAMIC
-Date: Thu,  6 Aug 2015 14:11:42 +1000
-Message-ID: <1438834307-26960-38-git-send-email-gwshan@linux.vnet.ibm.com>
+From: Gavin Shan <gwshan@linux.vnet.ibm.com>
+Subject: [PATCH v6 14/42] powerpc/pci: Override pcibios_setup_bridge()
+Date: Thu,  6 Aug 2015 14:11:19 +1000
+Message-ID: <1438834307-26960-15-git-send-email-gwshan@linux.vnet.ibm.com>
 References: <1438834307-26960-1-git-send-email-gwshan@linux.vnet.ibm.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1438834307-26960-1-git-send-email-gwshan-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Cc: linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org, mpe-Gsx/Oe8HsFggBc27wqDAHg@public.gmane.org, bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, panto-wVdstyuyKrO8r51toPun2/C9HSW9iNxf@public.gmane.org, aik-sLpHqDYs0B2HXe+LvDLADg@public.gmane.org, Gavin Shan <gwshan-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <1438834307-26960-1-git-send-email-gwshan@linux.vnet.ibm.com>
+Sender: linux-pci-owner@vger.kernel.org
+To: linuxppc-dev@lists.ozlabs.org
+Cc: linux-pci@vger.kernel.org, devicetree@vger.kernel.org, benh@kernel.crashing.org, mpe@ellerman.id.au, bhelgaas@google.com, grant.likely@linaro.org, robherring2@gmail.com, panto@antoniou-consulting.com, aik@ozlabs.ru, Gavin Shan <gwshan@linux.vnet.ibm.com>
 List-Id: devicetree@vger.kernel.org
 
-The device tree nodes will be changed dynamically on PCI hotplug
-events on PowerNV platform. This enables CONFIG_OF_DYNAMIC on
-PowerNV platform to support that.
+The patch overrides pcibios_setup_bridge(), called to update PCI
+bridge windows at completion of PCI resource assignment, to assign
+PE and setup various (resource) mapping in next patch.
 
-Signed-off-by: Gavin Shan <gwshan-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
+Signed-off-by: Gavin Shan <gwshan@linux.vnet.ibm.com>
 ---
- arch/powerpc/platforms/powernv/Kconfig | 1 +
- 1 file changed, 1 insertion(+)
+ arch/powerpc/include/asm/pci-bridge.h | 2 ++
+ arch/powerpc/kernel/pci-common.c      | 8 ++++++++
+ 2 files changed, 10 insertions(+)
 
-diff --git a/arch/powerpc/platforms/powernv/Kconfig b/arch/powerpc/platforms/powernv/Kconfig
-index 604190c..e7b1ad7 100644
---- a/arch/powerpc/platforms/powernv/Kconfig
-+++ b/arch/powerpc/platforms/powernv/Kconfig
-@@ -18,6 +18,7 @@ config PPC_POWERNV
- 	select CPU_FREQ_GOV_ONDEMAND
- 	select CPU_FREQ_GOV_CONSERVATIVE
- 	select PPC_DOORBELL
-+	select OF_DYNAMIC
- 	default y
+diff --git a/arch/powerpc/include/asm/pci-bridge.h b/arch/powerpc/include/asm/pci-bridge.h
+index d627abf..65357a9 100644
+--- a/arch/powerpc/include/asm/pci-bridge.h
++++ b/arch/powerpc/include/asm/pci-bridge.h
+@@ -34,6 +34,8 @@ struct pci_controller_ops {
+ 	/* Called during PCI resource reassignment */
+ 	resource_size_t (*window_alignment)(struct pci_bus *bus,
+ 					    unsigned long type);
++	void		(*setup_bridge)(struct pci_bus *bus,
++					unsigned long type);
+ 	void		(*reset_secondary_bus)(struct pci_dev *dev);
  
- config OPAL_PRD
+ #ifdef CONFIG_PCI_MSI
+diff --git a/arch/powerpc/kernel/pci-common.c b/arch/powerpc/kernel/pci-common.c
+index b9de34d..9c88dcd1 100644
+--- a/arch/powerpc/kernel/pci-common.c
++++ b/arch/powerpc/kernel/pci-common.c
+@@ -123,6 +123,14 @@ resource_size_t pcibios_window_alignment(struct pci_bus *bus,
+ 	return 1;
+ }
+ 
++void pcibios_setup_bridge(struct pci_bus *bus, unsigned long type)
++{
++	struct pci_controller *hose = pci_bus_to_host(bus);
++
++	if (hose->controller_ops.setup_bridge)
++		hose->controller_ops.setup_bridge(bus, type);
++}
++
+ void pcibios_reset_secondary_bus(struct pci_dev *dev)
+ {
+ 	struct pci_controller *phb = pci_bus_to_host(dev->bus);
 -- 
 2.1.0
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
