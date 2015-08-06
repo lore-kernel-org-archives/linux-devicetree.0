@@ -1,132 +1,71 @@
-From: Shunqian Zheng <shunqian.zheng@gmail.com>
-Subject: Re: [PATCH v2 0/3] Add the efuse driver on rockchip platform
-Date: Thu, 06 Aug 2015 09:10:00 +0800
-Message-ID: <55C2B3E8.2070000@gmail.com>
-References: <1434439665-27781-1-git-send-email-wxt@rock-chips.com> <557FE3EA.4000306@i2se.com> <557FEAB2.1040101@linaro.org> <557FF50C.10809@rock-chips.com> <55800070.5030509@linaro.org> <55826D9D.2060106@i2se.com> <5582816B.5020208@linaro.org> <55BB3F92.9030701@gmail.com> <55C0E42E.3060509@linaro.org>
-Reply-To: shunqian.zheng@gmail.com
+From: Keerthy <a0393675-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH 1/8] ARM: dts: AM4372: Reorder the rtc compatible string
+Date: Thu, 6 Aug 2015 06:55:57 +0530
+Message-ID: <55C2B7A5.5000400@ti.com>
+References: <1438771792-12604-1-git-send-email-j-keerthy@ti.com> <1438771792-12604-2-git-send-email-j-keerthy@ti.com> <20150805153148.GB12328@saruman.tx.rr.com> <55C230E9.9010309@ti.com> <20150805161445.GF12328@saruman.tx.rr.com> <55C23740.2080102@ti.com> <20150805165122.GH12328@saruman.tx.rr.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8;
-	format=flowed
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <55C0E42E.3060509@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, Stefan Wahren <stefan.wahren@i2se.com>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, linux@arm.linux.org.uk, heiko@sntech.de, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, linus.walleij@linaro.org, linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org, robh+dt@kernel.org, galak@codeaurora.org, matthias.bgg@gmail.com, Maxime Ripard <maxime.ripard@free-electrons.com>, jay.xu@rock-chips.com, linux-arm-kernel@lists.infradead.org, Caesar Wang <wxt@rock-chips.com>
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20150805165122.GH12328-HgARHv6XitJaoMGHk7MhZQC/G2K4zDHf@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: balbi-l0cyMroinI0@public.gmane.org
+Cc: Keerthy <j-keerthy-l0cyMroinI0@public.gmane.org>, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org, johan-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, nm-l0cyMroinI0@public.gmane.org, paul-DWxLp4Yu+b8AvxtiuMwx3w@public.gmane.org, t-kristo-l0cyMroinI0@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
 
 
-On 2015=E5=B9=B408=E6=9C=8805=E6=97=A5 00:11, Srinivas Kandagatla wrote=
-:
-> Hi Shunqian,
->
-> Sorry for delay in reply, I was on Holidays..
->
-> Thanks for testing.
->
-> On 31/07/15 10:27, Shunqian Zheng wrote:
+On Wednesday 05 August 2015 10:21 PM, Felipe Balbi wrote:
+> On Wed, Aug 05, 2015 at 09:48:08PM +0530, Keerthy wrote:
 >>
->> 1. Without the following diff, `hexdump
->> /sys/bus/nvmem/devices/rockchip-efuse0/nvmem` is wrong with "INVALID
->> ARGUMENT":
 >>
->> +++ b/drivers/nvmem/core.c
->> @@ -67,7 +67,7 @@ static ssize_t bin_attr_nvmem_read(struct file *fi=
-lp,
->> struct kobject *kobj,
->>          int rc;
+>> On Wednesday 05 August 2015 09:44 PM, Felipe Balbi wrote:
+>>> On Wed, Aug 05, 2015 at 09:21:05PM +0530, Keerthy wrote:
+>>>> Felipe,
+>>>>
+>>>> On Wednesday 05 August 2015 09:01 PM, Felipe Balbi wrote:
+>>>>> On Wed, Aug 05, 2015 at 04:19:45PM +0530, Keerthy wrote:
+>>>>>> Compared to da830-rtc compatibility am3352-rtc is more compatible to
+>>>>>> the one in am437x. Hence adding the am3352-rtc compatible to cover the
+>>>>>> entire feature set.
+>>>>>>
+>>>>>> The ti,am4372-rtc has no Documentation and not used even in the driver
+>>>>>> hence removing it.
+>>>>>
+>>>>> why don't you do the inverse ? Document am4372-rtc and make driver use
+>>>>> it ?
+>>>>
+>>>> am3352-rtc suffices for am4372 too. No need to add additional one for
+>>>> am4372.
+>>>
+>>> Until we end up needing it, right ? :-)
+>>>
+>>> Besides, it's already used in a DTS. What happens if someone branched
+>> >from that DTS and ships that in a product. RTC will just stop working
+>>> for them. Sure, it wasn't documented, but that's a problem of commit
+>>> 73456012734b80442b33916406cfd13bf1b73acb (ARM: dts: AM4372: add few
+>>> nodes) which, essentially, added that compatible flag without
+>>> documenting it.
+>>>
+>>> BTW, this compatible has been in tree since August 2013, IMO it's unfar
+>>> to drop it just like that. Documenting it would be a better approach.
 >>
->>          /* Stop the user from reading */
->> -       if (pos > nvmem->size)
->> +       if (pos > nvmem->size - 1)
->>                  return 0;
+>> Okay. Can you point me to a file which is already accessing it in dts?
 >
-> Yes, this should have been something like this
-> -       if (pos > nvmem->size)
-> +       if (pos >=3D nvmem->size)
->                 return 0;
->
-> We can send a fix on top of v9 once its merged.
->
->>
->>          if (pos + count > nvmem->size)
->>
->> RK3288-efuse has  32 x 8bit regs, in dts "reg =3D <0xffb40000 0x20>;=
-"
->> Here is the message dump from nvmem_device:
->> [    2.158314] nvmem:
->> [    2.158314]           name (null)
->> [    2.158314]           stride 1
->> [    2.158314]           word_size 1
->> [    2.158314]           ncells 0
->> [    2.158314]           id 0
->> [    2.158314]           users 0
->> [    2.158314]           size 32
->> [    2.158314]           read_only 0
->>
->> Do you think there is a leak or I'm messing up ?
->>
->> 2. About the read operation, eFuse data can be read during device
->> probe() and cached, OR,
->>      read from eFuse when needed every time. I prefer the second one=
- but
->> then, the clock of eFuse may be
->>      gated. So before/after reading I have to enable/disable clk lik=
-e :
->>            devm_clk_get(dev, "hclk_efuse256");
->>      The trouble is I can't find a way to get the "dev" hander in :
->>            static int rockchip_efuse_read(void *context, const void
->> *reg, size_t reg_size, void *val, size_t val_size)
->>      I am appreciated if you can give some advice.
->
->
-> May be you should use regmap_init_mmio_clk() instead of=20
-> regmap_init_mmio() it will take care of clks.
-Thank you for you reply.
-Although the regmap_init_mmio_clk() and it's series interface deal with=
-=20
-the clks, but
-MMIO uses its own regmap_bus{}, while the eFuse of RK3X need special=20
-read/write
-callback functions.
+> Accessing what ? Also, once DTS reaches a major kernel release, it's
+> deemed stable and should be supported. Are we dropping that ?
 
-I still can't find a good way to resolve this. Can you help?
+I meant getting used in any other dts files than the one i just dropped 
+it. I checked the driver for rtc-omap and the compatibles are 
+ti,am3352-rtc, ti,da830-rtc. So instead of appending it i dropped it as 
+it was unused before. Tony i guess has already pulled in this patch. So 
+i will let Tony comment on this. If the am4372-rtc compatible needs to 
+be there i can add more documentation and append am3352-rtc.
 
-Shunqian
+Regards,
+Keerthy
 >
->>      Or, do you think it's reasonable to add hooks before/after read=
- in
->> nvmem/core.c like :
->>            +       before_read(dev, ...);
->>                     rc =3D regmap_raw_read(nvmem->regmap, pos, buf,=20
->> count);
->>            +       after_read(dev, ...);
->>
->
->
->> 3. In the /sys/bus/nvmem/devices/rockchip-efuse0/, there are files:
->>           /sys/devices/platform/ffb40000.efuse/rockchip-efuse0 # ls
->>           nvmem      of_node    power      subsystem  uevent
->>      Do you have a plan to add the nvmem consumers to /sys/ in nvmem
->> framework?
-> yes, Am waiting for the framework to be merged, I have plans to add=20
-> this feature.
->
->>      For example,  in dts defined the "cpu_leakage":
->>          efuse: efuse@ffb40000 {
->>                  compatible =3D "rockchip,rk3x-efuse";
->>                  reg =3D <0xffb40000 0x20>;
->>                  #address-cells =3D <1>;
->>                  #size-cells =3D <1>;
->>                  clocks =3D <&cru PCLK_EFUSE256>;
->>                  clock-names =3D "pclk_efuse_256";
->>
->>                  cpu_leakage: cpu_leakage {
->>                          reg =3D <0x17 0x1>;
->>                  };
->>          };
->>     Then nvmem exposes the "cpu_leakage" file in /sys which can be
->> read/write.
->
-> --srini
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
