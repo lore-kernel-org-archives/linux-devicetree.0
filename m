@@ -1,170 +1,102 @@
-From: Scott Shu <scott.shu@mediatek.com>
-Subject: Re: [PATCH v3 3/8] soc: Mediatek: Add SCPSYS CPU power domain driver
-Date: Thu, 6 Aug 2015 10:59:02 +0800
-Message-ID: <1438829942.9435.24.camel@mtkswgap22>
-References: <1438696464-59858-1-git-send-email-scott.shu@mediatek.com>
-	 <1438696464-59858-4-git-send-email-scott.shu@mediatek.com>
-	 <20150805085034.GG18700@pengutronix.de>
+From: Shawn Lin <shawn.lin@rock-chips.com>
+Subject: Re: [RFC PATCH v3 2/5] Documentation: synopsys-dw-mshc: add bindings
+ for idmac and edmac
+Date: Thu, 6 Aug 2015 11:13:55 +0800
+Message-ID: <55C2D0F3.8000300@rock-chips.com>
+References: <1438762614-22154-1-git-send-email-shawn.lin@rock-chips.com>
+ <1438762672-22243-1-git-send-email-shawn.lin@rock-chips.com>
+ <CAD=FV=Wv1FLHGyK=yL_P-WbRZwnK2K-rMEaXHjsZf+4iHfucjw@mail.gmail.com>
+ <55C2C453.3000005@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20150805085034.GG18700@pengutronix.de>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Sascha Hauer <s.hauer@pengutronix.de>
-Cc: Matthias Brugger <matthias.bgg@gmail.com>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org, wsd_upstream@mediatek.com, loda.chou@mediatek.com, jades.shih@mediatek.com, Mars.Cheng@mediatek.com, scott.shu@gmail.com
+Content-Type: text/plain; charset=utf-8;
+        format=flowed
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-mips-bounce@linux-mips.org>
+In-Reply-To: <55C2C453.3000005@samsung.com>
+Sender: linux-mips-bounce@linux-mips.org
+Errors-to: linux-mips-bounce@linux-mips.org
+List-help: <mailto:ecartis@linux-mips.org?Subject=help>
+List-unsubscribe: <mailto:ecartis@linux-mips.org?subject=unsubscribe%20linux-mips>
+List-software: Ecartis version 1.0.0
+List-subscribe: <mailto:ecartis@linux-mips.org?subject=subscribe%20linux-mips>
+List-owner: <mailto:ralf@linux-mips.org>
+List-post: <mailto:linux-mips@linux-mips.org>
+List-archive: <http://www.linux-mips.org/archives/linux-mips/>
+To: Jaehoon Chung <jh80.chung@samsung.com>, Doug Anderson <dianders@chromium.org>
+Cc: shawn.lin@rock-chips.com, Ulf Hansson <ulf.hansson@linaro.org>, Seungwon Jeon <tgih.jun@samsung.com>, linux-mips@linux-mips.org, Arnd Bergmann <arnd@arndb.de>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Alexey Brodkin <abrodkin@synopsys.com>, Stefan Agner <stefan@agner.ch>, Zhou Wang <wangzhou.bry@gmail.com>, Kumar Gala <galak@codeaurora.org>, Alim Akhtar <alim.akhtar@samsung.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Wang Long <long.wanglong@huawei.com>, Rob Herring <robh+dt@kernel.org>, Chaotian Jing <chaotian.jing@mediatek.com>, Lukasz Majewski <l.majewski@samsung.com>, Jun Nie <jun.nie@linaro.org>, Catalin Marinas <catalin.marinas@arm.com>, Kevin Hao <haokexin@gmail.com>, Olof Johansson <olof@lixom.net>, Ray Jui <rjui@broa>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 2015-08-05 at 10:50 +0200, Sascha Hauer wrote:
-> On Tue, Aug 04, 2015 at 09:54:19PM +0800, Scott Shu wrote:
-> > This adds a CPU power domain driver for the Mediatek SCPSYS unit on
-> > MT6580.
-> > 
-> > Signed-off-by: Scott Shu <scott.shu@mediatek.com>
-> > ---
-> >  drivers/soc/mediatek/mtk-scpsys.c   |  250 +++++++++++++++++++++++++++++++++++
-> >  include/linux/soc/mediatek/scpsys.h |    9 ++
-> >  2 files changed, 259 insertions(+)
-> >  create mode 100644 include/linux/soc/mediatek/scpsys.h
-> > 
-> > diff --git a/drivers/soc/mediatek/mtk-scpsys.c b/drivers/soc/mediatek/mtk-scpsys.c
-> > index 43a79ed..ca0f2dd 100644
-> > --- a/drivers/soc/mediatek/mtk-scpsys.c
-> > +++ b/drivers/soc/mediatek/mtk-scpsys.c
-> > @@ -15,18 +15,30 @@
-> >  #include <linux/io.h>
-> >  #include <linux/kernel.h>
-> >  #include <linux/mfd/syscon.h>
-> > +#include <linux/of.h>
-> >  #include <linux/of_device.h>
-> > +#include <linux/of_address.h>
-> >  #include <linux/platform_device.h>
-> >  #include <linux/pm_domain.h>
-> >  #include <linux/regmap.h>
-> >  #include <linux/soc/mediatek/infracfg.h>
-> > +#include <linux/soc/mediatek/scpsys.h>
-> >  #include <dt-bindings/power/mt8173-power.h>
-> >  
-> > +#define SPM_POWERON_CONFIG_SET		0x0000
-> > +#define SPM_CA7_CPU0_PWR_CON		0x0200
-> >  #define SPM_VDE_PWR_CON			0x0210
-> >  #define SPM_MFG_PWR_CON			0x0214
-> > +#define SPM_CA7_CPU1_PWR_CON		0x0218
-> > +#define SPM_CA7_CPU2_PWR_CON		0x021c
-> > +#define SPM_CA7_CPU3_PWR_CON		0x0220
-> >  #define SPM_VEN_PWR_CON			0x0230
-> >  #define SPM_ISP_PWR_CON			0x0238
-> >  #define SPM_DIS_PWR_CON			0x023c
-> > +#define SPM_CA7_CPU0_L1_PDN		0x025c
-> > +#define SPM_CA7_CPU1_L1_PDN		0x0264
-> > +#define SPM_CA7_CPU2_L1_PDN		0x026c
-> > +#define SPM_CA7_CPU3_L1_PDN		0x0274
-> >  #define SPM_VEN2_PWR_CON		0x0298
-> >  #define SPM_AUDIO_PWR_CON		0x029c
-> >  #define SPM_MFG_2D_PWR_CON		0x02c0
-> > @@ -34,12 +46,20 @@
-> >  #define SPM_USB_PWR_CON			0x02cc
-> >  #define SPM_PWR_STATUS			0x060c
-> >  #define SPM_PWR_STATUS_2ND		0x0610
-> > +#define SPM_SLEEP_TIMER_STA		0x0720
-> >  
-> > +/* bit definition in SPM_CA7_CPUx_PWR_CON */
-> >  #define PWR_RST_B_BIT			BIT(0)
-> >  #define PWR_ISO_BIT			BIT(1)
-> >  #define PWR_ON_BIT			BIT(2)
-> >  #define PWR_ON_2ND_BIT			BIT(3)
-> >  #define PWR_CLK_DIS_BIT			BIT(4)
-> > +#define SRAM_CKISO_BIT			BIT(5)
-> > +#define SRAM_ISOINT_B_BIT		BIT(6)
-> > +
-> > +/* bit definition in SPM_CA7_CPUx_L1_PDN */
-> > +#define L1_PDN				BIT(0)
-> > +#define L1_PDN_ACK			BIT(8)
-> >  
-> >  #define PWR_STATUS_DISP			BIT(3)
-> >  #define PWR_STATUS_MFG			BIT(4)
-> > @@ -52,6 +72,28 @@
-> >  #define PWR_STATUS_AUDIO		BIT(24)
-> >  #define PWR_STATUS_USB			BIT(25)
-> >  
-> > +#define MT6580_MAX_CPUS			4
-> > +
-> > +#ifdef CONFIG_SMP
-> > +static DEFINE_SPINLOCK(spm_cpu_lock);
-> > +
-> > +static void __iomem *spm_cpu_base;
-> > +
-> > +static const u32 spm_cpu_pwr_con[MT6580_MAX_CPUS] = {
-> > +	SPM_CA7_CPU0_PWR_CON,
-> > +	SPM_CA7_CPU1_PWR_CON,
-> > +	SPM_CA7_CPU2_PWR_CON,
-> > +	SPM_CA7_CPU3_PWR_CON,
-> > +};
-> > +
-> > +static const u32 spm_cpu_l1_pdn[MT6580_MAX_CPUS] = {
-> > +	SPM_CA7_CPU0_L1_PDN,
-> > +	SPM_CA7_CPU1_L1_PDN,
-> > +	SPM_CA7_CPU2_L1_PDN,
-> > +	SPM_CA7_CPU3_L1_PDN,
-> > +};
-> > +#endif
-> > +
-> >  enum clk_id {
-> >  	MT8173_CLK_MM,
-> >  	MT8173_CLK_MFG,
-> > @@ -485,3 +527,211 @@ static struct platform_driver scpsys_drv = {
-> >  };
-> >  
-> >  module_platform_driver_probe(scpsys_drv, scpsys_probe);
-> > +
-> > +#define SPM_REGWR_EN		BIT(0)
-> > +#define SPM_PROJECT_CODE	0x0B16
-> > +
-> > +#ifdef CONFIG_SMP
-> > +int spm_cpu_mtcmos_on(int cpu)
-> 
-> The idea was that the code that the current driver has in
-> scpsys_power_on/scpsys_power_off is shared with this function. If we
-> don't do this then it indeed doesn't make much sense to put it into the
-> same file.
-> 
-> From what I see we would need to change the prototype to something like
-> 
-> static int __scpsys_power_on(struct scp_domain_data *)
-> 
-> (maybe with some additional base addresses and stuff)
-> 
-> struct scp_domain_data would additionally need sram_isoint_b and sram_ckiso
-> members.
-> 
-> Sascha
-> 
-Hi Sascha,
-   The CPU power sequence is quite different with the others, as
-described below.
+=E5=9C=A8 2015/8/6 10:20, Jaehoon Chung =E5=86=99=E9=81=93:
+> On 08/06/2015 11:16 AM, Doug Anderson wrote:
+>> Shawn,
+>>
+>> On Wed, Aug 5, 2015 at 1:17 AM, Shawn Lin <shawn.lin@rock-chips.com>=
+ wrote:
+>>> synopsys-dw-mshc supports three types of transfer mode. We add bind=
+ings
+>>> and description for how to use them at runtime. Without idmac and e=
+dmac
+>>> property, pio is the default transfer mode. Make sure that Idmac an=
+d emdac
+>>> should not be used simultaneously.
+>> Can't you just read the HCON register?
+>>
+>> [17:16]: DMA_INTERFACE
+>>   00: none
+>>   01: DW_DMA
+>>   10: GENERIC_DMA
+>>   11: NON-DW-DMA
+> If read it and get the exactly information. I think we can use that i=
+nformation.
 
-* Non-CPU
-   1) Set PWR_ON_BIT, PWR_ON_2ND_BIT
-   2) Wait PWR_ACK
-   3) Clear PWR_CLK_DIS_BIT
-   4) Clear PWR_ISO_BIT
-   5) Set PWR_RST_B_BIT
-   6) Clear SRAM_PDN
-   7) Wait SRAM_PDN_ACK
-* CPU
-   1) Set PWR_ON_BIT, PWR_ON_2ND_BIT
-   2) Wait PWR_ACK
-   3) Clear PWR_ISO_BIT
-   4) Clear L1_PDN to power on L1
-   5) Wait L1_PDN_ACK
-   6) Set SRAM_ISOINT_B
-   7) Clear SRAM_CKISO
-   8) Clear PWR_CLK_DIS
-   9) Set PWR_RST_B
-For multi-cluster SoC, the cluster power sequence is also different.
+  It's helpful really, but the description is ambiguous. =EF=BC=9A(
+  So I make a big big mistake when I read it for the firest time .
+  I was just wondering the "mismatch" value from HCON and my databook.
 
-Please think if this is a good idea if we integrate the CPU support into
-the scpsys_power_on()? Based on the readability and compatible
-considerations, we provide this patch. 
-Thanks
-Scott
+Here I get details from our ASIC team guy :
+
+// Name:         DMA_INTERFACE
+// Default:      None
+// Values:       None (0), DW-DMA (1), Generic-DMA (2), NON-DW-DMA (3)
+// Enabled:      INTERNAL_DMAC=3D=3D0
+//
+// Configures the type for DMA interface. In addition to AMBA host=20
+interface,
+//  the data FIFO can be accesses by the optional DMA interface. The DM=
+A=20
+type
+//  could be either DW-DMA, which provides hand shake signals to=20
+DW_ahb_dmac
+//  controller, or a generic DMA interface which provides a simpler
+//  request/acknowledgement protocol and dedicated DMA data-bus, or
+//  no DMA interface.
+`define DMA_INTERFACE 1
+
+   if we use idmac, DMA_INTERFACE should be "0", and we get 2b'00 from=20
+HCON[17:16]
+   if we use edmac, DMA_INTERFACE should be "1", "2" and we get 2b'01 ,=
+2b'10
+   from HCON[17:16] respectively .
+   But if only support PIO mode,   DMA_INTERFACE should be "3", and we=20
+get 2b'11 from
+   HCON[17:16].
+
+   So, "none" means IDMAC, "DW_DMA"/"GENERIC_DMA" refer to two types of=
+=20
+external dma and "NON-DW-DMA" means pio from databook . It's a little=20
+difficult to understand it.
+
+  This makes my work easy!
+
+  Thanks, Doug and Jeahoon.
+
+> Best Regards,
+> Jaehoon Chung
+>
+>
+>
+>
+
+
+--=20
+Shawn Lin
