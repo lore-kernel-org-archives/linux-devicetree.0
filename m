@@ -1,58 +1,51 @@
-From: Anson Huang <Anson.Huang-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: Re: [PATCH] ARM: dts: imx6sx: correct property name for wakeup
- source
-Date: Thu, 6 Aug 2015 16:00:46 +0800
-Message-ID: <20150806080042.GA31138@shlinux1.ap.freescale.net>
-References: <1438783075-15133-1-git-send-email-b20788@freescale.com>
- <20150806074134.GA9847@tiger>
+From: James Liao <jamesjj.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH v6 5/9] clk: mediatek: Fix rate and dependency of MT8173
+ clocks
+Date: Thu, 6 Aug 2015 16:35:32 +0800
+Message-ID: <1438850132.27884.17.camel@mtksdaap41>
+References: <1438676218-11310-1-git-send-email-jamesjj.liao@mediatek.com>
+	 <1438676218-11310-6-git-send-email-jamesjj.liao@mediatek.com>
+	 <20150805065341.GA18700@pengutronix.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20150806074134.GA9847@tiger>
+In-Reply-To: <20150805065341.GA18700-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Anson Huang <b20788-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mike Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Heiko Stubner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Ricky Liang <jcliang-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Aug 06, 2015 at 03:41:34PM +0800, Shawn Guo wrote:
-> On Wed, Aug 05, 2015 at 09:57:55PM +0800, Anson Huang wrote:
-> > Commit(def56bb input: snvs_pwrkey: use "wakeup-source"
-> > as deivce tree property name) replaces the property name
-> > of "wakeup" with "wakeup-source", update this change
-> > in i.MX6SX dtsi accordingly.
-> > 
-> > Signed-off-by: Anson Huang <b20788-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-> 
-> For arch/arm/ patches, please remember to copy linux-arm-kernel.
-> 
-> Applied, thanks.
-> 
+Hi Sascha,
 
-Got it, will copy linux-arm-kernel next time, thanks.
+On Wed, 2015-08-05 at 08:53 +0200, Sascha Hauer wrote:
+> On Tue, Aug 04, 2015 at 04:16:54PM +0800, James Liao wrote:
+> > -static const struct mtk_fixed_factor root_clk_alias[] __initconst = {
+> > -	FACTOR(CLK_TOP_CLKPH_MCK_O, "clkph_mck_o", "clk_null", 1, 1),
+> > -	FACTOR(CLK_TOP_USB_SYSPLL_125M, "usb_syspll_125m", "clk_null", 1, 1),
+> > -	FACTOR(CLK_TOP_HDMITX_DIG_CTS, "hdmitx_dig_cts", "clk_null", 1, 1),
+> > +static const struct mtk_fixed_clk fixed_clks[] __initconst = {
+> > +	FIXED_CLK(CLK_TOP_CLKPH_MCK_O, "clkph_mck_o", "clk26m", 400 * MHZ),
+> > +	FIXED_CLK(CLK_TOP_USB_SYSPLL_125M, "usb_syspll_125m", "clk26m", 125 * MHZ),
+> 
+> Hm, it seems you hide PLLs in fixed factor clock. Are you sure that
+> there is a PLL in the system generating 125MHz from 26MHz which is in no
+> way configurable? Or is this really some clock derived from the syspll
+> as the clock name suggests?
 
-Anson.
+According to the datasheet from our clock designer, usb_syspll_125m is
+the output clock of an analog macro which is named SSUSB_PHY, and its
+input clock is AD_CLK26M_CK.
 
-> > ---
-> >  arch/arm/boot/dts/imx6sx.dtsi | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > 
-> > diff --git a/arch/arm/boot/dts/imx6sx.dtsi b/arch/arm/boot/dts/imx6sx.dtsi
-> > index e391d63..dc7eaae 100644
-> > --- a/arch/arm/boot/dts/imx6sx.dtsi
-> > +++ b/arch/arm/boot/dts/imx6sx.dtsi
-> > @@ -686,7 +686,7 @@
-> >  					regmap = <&snvs>;
-> >  					interrupts = <GIC_SPI 4 IRQ_TYPE_LEVEL_HIGH>;
-> >  					linux,keycode = <KEY_POWER>;
-> > -					wakeup;
-> > +					wakeup-source;
-> >  				};
-> >  			};
-> >  
-> > -- 
-> > 1.9.1
-> > 
+SSUSB_PHY is not the same as general PLLs such as MAINPLL. So I don't
+treat it as a configurable PLL but a fixed clock with the typical rate
+125 MHz.
+
+
+Best regards,
+
+James
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
