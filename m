@@ -1,93 +1,76 @@
-From: Alexander Couzens <lynxis@fe80.eu>
-Subject: [PATCH 2/2] MIPS: ath79: add irq chip ar7240-misc-intc
-Date: Thu,  6 Aug 2015 12:43:25 +0200
-Message-ID: <1438857805-18443-2-git-send-email-lynxis@fe80.eu>
-References: <1438857805-18443-1-git-send-email-lynxis@fe80.eu>
-Return-path: <linux-mips-bounce@linux-mips.org>
-In-Reply-To: <1438857805-18443-1-git-send-email-lynxis@fe80.eu>
-Sender: linux-mips-bounce@linux-mips.org
-Errors-to: linux-mips-bounce@linux-mips.org
-List-help: <mailto:ecartis@linux-mips.org?Subject=help>
-List-unsubscribe: <mailto:ecartis@linux-mips.org?subject=unsubscribe%20linux-mips>
-List-software: Ecartis version 1.0.0
-List-subscribe: <mailto:ecartis@linux-mips.org?subject=subscribe%20linux-mips>
-List-owner: <mailto:ralf@linux-mips.org>
-List-post: <mailto:linux-mips@linux-mips.org>
-List-archive: <http://www.linux-mips.org/archives/linux-mips/>
-To: linux-mips@linux-mips.org
-Cc: Ralf Baechle <ralf@linux-mips.org>, Alban Bedel <albeu@free.fr>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org, Alexander Couzens <lynxis@fe80.eu>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [RFC PATCH 1/5] spi: introduce flag for memory mapped read
+Date: Thu, 6 Aug 2015 12:00:18 +0100
+Message-ID: <20150806110018.GS20873@sirena.org.uk>
+References: <55BEF4AF.5090704@ti.com>
+ <20150804155148.GR20873@sirena.org.uk>
+ <55C0FD98.1090107@ti.com>
+ <20150805115013.GJ20873@sirena.org.uk>
+ <CAOMqctQXwcHyiWBwtugSDSE_k65qrNfrwnhjQMDJkLoJMmGzUw@mail.gmail.com>
+ <20150805124412.GN20873@sirena.org.uk>
+ <CAOMqctS9Y5FxpUCCJew6+cnjH5iTvbzkH3g-8yrXs4OuS2pSGA@mail.gmail.com>
+ <20150806090202.GO20873@sirena.org.uk>
+ <CAOMqctQZRZ4zG_yYy=CeX3DX4NVNWN1COP4Q-2YvMun9xYOA7g@mail.gmail.com>
+ <20150806102225.GI7576@n2100.arm.linux.org.uk>
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="4dezoEM3dweX1vMa"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20150806102225.GI7576@n2100.arm.linux.org.uk>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Russell King - ARM Linux <linux@arm.linux.org.uk>
+Cc: Michal Suchanek <hramrach@gmail.com>, "R, Vignesh" <vigneshr@ti.com>, devicetree <devicetree@vger.kernel.org>, Brian Norris <computersforpeace@gmail.com>, Tony Lindgren <tony@atomide.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-spi <linux-spi@vger.kernel.org>, Huang Shijie <b32955@freescale.com>, MTD Maling List <linux-mtd@lists.infradead.org>, linux-omap@vger.kernel.org, David Woodhouse <dwmw2@infradead.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-The ar7240 misc irq chip use ack handler instead of ack_mask handler.
-All new ath79 SoCs use the ar7240 misc irq chip
 
-Signed-off-by: Alexander Couzens <lynxis@fe80.eu>
----
- .../interrupt-controller/qca,ath79-misc-intc.txt       | 18 +++++++++++++++++-
- arch/mips/ath79/irq.c                                  |  9 +++++++++
- 2 files changed, 26 insertions(+), 1 deletion(-)
+--4dezoEM3dweX1vMa
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-diff --git a/Documentation/devicetree/bindings/interrupt-controller/qca,ath79-misc-intc.txt b/Documentation/devicetree/bindings/interrupt-controller/qca,ath79-misc-intc.txt
-index 391717a..56ccaf3 100644
---- a/Documentation/devicetree/bindings/interrupt-controller/qca,ath79-misc-intc.txt
-+++ b/Documentation/devicetree/bindings/interrupt-controller/qca,ath79-misc-intc.txt
-@@ -4,7 +4,7 @@ The MISC interrupt controller is a secondary controller for lower priority
- interrupt.
- 
- Required Properties:
--- compatible: has to be "qca,<soctype>-cpu-intc", "qca,ar7100-misc-intc"
-+- compatible: has to be "qca,<soctype>-cpu-intc", "qca,ar{7100,7240}-misc-intc"
-   as fallback
- - reg: Base address and size of the controllers memory area
- - interrupt-parent: phandle of the parent interrupt controller.
-@@ -13,6 +13,9 @@ Required Properties:
- - #interrupt-cells : Specifies the number of cells needed to encode interrupt
- 		     source, should be 1
- 
-+Compatible fallback depends on the SoC. Use ar7100 for ar71xx and ar913x,
-+use ar7240 for all other SoCs.
-+
- Please refer to interrupts.txt in this directory for details of the common
- Interrupt Controllers bindings used by client devices.
- 
-@@ -28,3 +31,16 @@ Example:
- 		interrupt-controller;
- 		#interrupt-cells = <1>;
- 	};
-+
-+Another example:
-+
-+	interrupt-controller@18060010 {
-+		compatible = "qca,ar9331-misc-intc", qca,ar7240-misc-intc";
-+		reg = <0x18060010 0x4>;
-+
-+		interrupt-parent = <&cpuintc>;
-+		interrupts = <6>;
-+
-+		interrupt-controller;
-+		#interrupt-cells = <1>;
-+	};
-diff --git a/arch/mips/ath79/irq.c b/arch/mips/ath79/irq.c
-index dc76fa1..bcb2fb32 100644
---- a/arch/mips/ath79/irq.c
-+++ b/arch/mips/ath79/irq.c
-@@ -315,8 +315,17 @@ static int __init ar7100_misc_intc_of_init(
- 	return ath79_misc_intc_of_init(node, parent);
- }
- 
-+static int __init ar7240_misc_intc_of_init(
-+	struct device_node *node, struct device_node *parent)
-+{
-+	ath79_misc_irq_chip.irq_ack = ar724x_misc_irq_ack;
-+	return ath79_misc_intc_of_init(node, parent);
-+}
-+
- IRQCHIP_DECLARE(ar7100_misc_intc, "qca,ar7100-misc-intc",
- 		ar7100_misc_intc_of_init);
-+IRQCHIP_DECLARE(ar7240_misc_intc, "qca,ar7240-misc-intc",
-+		ar7240_misc_intc_of_init);
- 
- static int __init ar79_cpu_intc_of_init(
- 	struct device_node *node, struct device_node *parent)
--- 
-2.4.0
+On Thu, Aug 06, 2015 at 11:22:25AM +0100, Russell King - ARM Linux wrote:
+
+> If that's the case, then maybe you should consider whether using the SPI
+> bus infrastructure is really the best way forward.  Would it make more
+> sense instead to adopt a different software structure, something more
+> high-level like:
+
+>      +-------------------------------------------+
+>      |          m25p80 high-level driver         |
+>      +----------------------+--------------------+
+>      |   SPI m25p80 driver  |                    |
+>      +----------------------+                    |
+>      |      SPI layer       |  Special driver    |
+>      +----------------------+                    |
+>      |    SPI bus driver    |                    |
+>      +----------------------+--------------------+
+>      |     SPI hardware     |  Special hardware  |
+>      +----------------------+--------------------+
+
+Yes, that's what's been talked about before - for some of these devices
+they're sufficiently flash specialist that we just don't bother exposing
+a SPI interface at all though AIUI they could be persuaded to do it.  It
+isn't entirely clear that we want exactly that split, if the devices are
+reasonable SPI controllers we will want to handle the case where they
+have flash and non-flash devices on the same bus.  For that there is
+going to be some generalisable work possible for managing switching
+between memory mapped and SPI modes where those are mutually exclusive,
+especially if the switch between them isn't free.
+
+--4dezoEM3dweX1vMa
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQEcBAEBCAAGBQJVwz5CAAoJECTWi3JdVIfQ6VAH/114XYi5VzW0D8sB+8ukrq/A
+bkJ/eHqojBMErmudkznI8zyirx0/R9p6sv3v8bz70HnNtQbBGNfUBX7o+fxaWnH2
+tyXMxr1f51ZwKuZqJKritN/HZ1nN4N1JFgkfeYQm+KK+DoOVNj+AQAAhCrm2zvwi
+CrmTBcgupZYme/sRSm9kwf9lXcxUr3VFXoeHiHik4FN3Mbt7YxDvyxqz6H+fkEFn
+6UWXSuEdg2O/SJ4x7MHH/GFehqCSwyHPzXwhbt+/oOR/r61xg/99VA4z3kWsImp+
+yZBkUPWdS5ZR4a3HzswVt39/t7/utQ02GG4GL4gO5z4brnMN2hgmCI9v/v6Jja8=
+=JvaZ
+-----END PGP SIGNATURE-----
+
+--4dezoEM3dweX1vMa--
