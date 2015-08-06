@@ -1,75 +1,111 @@
-From: Sascha Hauer <s.hauer@pengutronix.de>
-Subject: Re: [PATCH v3 3/8] soc: Mediatek: Add SCPSYS CPU power domain driver
-Date: Thu, 6 Aug 2015 12:03:11 +0200
-Message-ID: <20150806100311.GP18700@pengutronix.de>
-References: <1438696464-59858-1-git-send-email-scott.shu@mediatek.com>
- <1438696464-59858-4-git-send-email-scott.shu@mediatek.com>
- <20150805085034.GG18700@pengutronix.de>
- <1438829942.9435.24.camel@mtkswgap22>
+From: Liviu Dudau <Liviu.Dudau@arm.com>
+Subject: Re: [PATCH 3/4] arm64: Juno: Add HDLCD support to the Juno boards.
+Date: Thu, 6 Aug 2015 11:16:37 +0100
+Message-ID: <20150806101637.GI20890@e106497-lin.cambridge.arm.com>
+References: <1438784892-27888-1-git-send-email-Liviu.Dudau@arm.com>
+ <1438784892-27888-4-git-send-email-Liviu.Dudau@arm.com>
+ <20150805175303.GB7557@n2100.arm.linux.org.uk>
+ <20150805190312.GA31066@e106497-lin.cambridge.arm.com>
+ <20150805214854.GC7557@n2100.arm.linux.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20150805214854.GC7557@n2100.arm.linux.org.uk>
 Content-Disposition: inline
-In-Reply-To: <1438829942.9435.24.camel@mtkswgap22>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Scott Shu <scott.shu@mediatek.com>
-Cc: Matthias Brugger <matthias.bgg@gmail.com>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org, wsd_upstream@mediatek.com, loda.chou@mediatek.com, jades.shih@mediatek.com, Mars.Cheng@mediatek.com, scott.shu@gmail.com, djkurtz@chromium.org
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Russell King - ARM Linux <linux@arm.linux.org.uk>
+Cc: Mark Rutland <Mark.Rutland@arm.com>, Jon Medhurst <tixy@linaro.org>, Pawel Moll <Pawel.Moll@arm.com>, Arnd Bergmann <arnd@arndb.de>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Catalin Marinas <Catalin.Marinas@arm.com>, Kumar Gala <galak@codeaurora.org>, Will Deacon <Will.Deacon@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Sudeep Holla <Sudeep.Holla@arm.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Aug 06, 2015 at 10:59:02AM +0800, Scott Shu wrote:
-> On Wed, 2015-08-05 at 10:50 +0200, Sascha Hauer wrote:
-> > don't do this then it indeed doesn't make much sense to put it into the
-> > same file.
-> > 
-> > From what I see we would need to change the prototype to something like
-> > 
-> > static int __scpsys_power_on(struct scp_domain_data *)
-> > 
-> > (maybe with some additional base addresses and stuff)
-> > 
-> > struct scp_domain_data would additionally need sram_isoint_b and sram_ckiso
-> > members.
-> > 
-> > Sascha
-> > 
-> Hi Sascha,
->    The CPU power sequence is quite different with the others, as
-> described below.
-> 
-> * Non-CPU
->    1) Set PWR_ON_BIT, PWR_ON_2ND_BIT
->    2) Wait PWR_ACK
->    3) Clear PWR_CLK_DIS_BIT
->    4) Clear PWR_ISO_BIT
->    5) Set PWR_RST_B_BIT
->    6) Clear SRAM_PDN
->    7) Wait SRAM_PDN_ACK
-> * CPU
->    1) Set PWR_ON_BIT, PWR_ON_2ND_BIT
->    2) Wait PWR_ACK
->    3) Clear PWR_ISO_BIT
->    4) Clear L1_PDN to power on L1
->    5) Wait L1_PDN_ACK
->    6) Set SRAM_ISOINT_B
->    7) Clear SRAM_CKISO
->    8) Clear PWR_CLK_DIS
->    9) Set PWR_RST_B
-> For multi-cluster SoC, the cluster power sequence is also different.
-> 
-> Please think if this is a good idea if we integrate the CPU support into
-> the scpsys_power_on()? Based on the readability and compatible
-> considerations, we provide this patch.
-
-Maybe it's best if you go back to the v1 layout and put your scpsys code
-to arch/arm/mach-mediatek/. While I think it's possible to share some
-more code I am not sure anymore if this buys us something. We'll know in
-the future.
-
-Sascha
-
-
--- 
-Pengutronix e.K.                           |                             |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+T24gV2VkLCBBdWcgMDUsIDIwMTUgYXQgMTA6NDg6NTRQTSArMDEwMCwgUnVzc2VsbCBLaW5nIC0g
+QVJNIExpbnV4IHdyb3RlOgo+IE9uIFdlZCwgQXVnIDA1LCAyMDE1IGF0IDA4OjAzOjEyUE0gKzAx
+MDAsIExpdml1IER1ZGF1IHdyb3RlOgo+ID4gSSBoYXZlIHRvIGNvbmZlc3MgdGhhdCBJIGFtIG5v
+dCBlbnRpcmVseSB1cCB0byBzcGVlZCB3aXRoIHRoZSBUREExOTk4OAo+ID4gc2l0dWF0aW9uIGF0
+IHRoZSBtb21lbnQuIEFuZHJldyBKYWNrc29uIHdhcyBkZWFsaW5nIHdpdGggdGhhdCBhbmQKPiA+
+IHdvcmtpbmcgd2l0aCBKZWFuIHRvIGdldCB0aGF0IGluIHRoZSB1cHN0cmVhbSwgYnV0IGhpcyBj
+b250cmFjdCBoYXMKPiA+IGVuZGVkIGFuZCBoZSBoYXMgbW92ZWQgdG8gb3RoZXIgdGhpbmdzLgo+
+IAo+IFVtbSwgSSdtIHRoZSBtYWludGFpbmVyIGZvciBUREE5OTh4Ogo+IAo+IE5YUCBUREE5OThY
+IERSTSBEUklWRVIKPiBNOiAgICAgIFJ1c3NlbGwgS2luZyA8cm1rK2tlcm5lbEBhcm0ubGludXgu
+b3JnLnVrPgo+IFM6ICAgICAgU3VwcG9ydGVkCj4gRjogICAgICBkcml2ZXJzL2dwdS9kcm0vaTJj
+L3RkYTk5OHhfZHJ2LmMKPiBGOiAgICAgIGluY2x1ZGUvZHJtL2kyYy90ZGE5OTh4LmgKPiAKPiBJ
+dCB3b3VsZCBiZSBuaWNlIGlmIHBlb3BsZSB3b3JrZWQgd2l0aCB0aGUgYWN0dWFsIG1haW50YWlu
+ZXJzIG9mIHRoaW5ncwo+IHJhdGhlciB0aGFuIHJhbmRvbSBvdGhlciBwZW9wbGUuLi4KClNvcnJ5
+LCBpdCB3YXMgbXkgbWlzdGFrZSwgSSBoYXZlIGJsaW5kbHkgZm9sbG93ZWQgdGhlIGdldF9tYWlu
+dGFpbmVycy5wbApnZW5lcmF0ZWQgbGlzdCBvZiBlbWFpbCByYXRoZXIgdGhhbiBlbmdhZ2UgbXkg
+YnJhaW4gYW5kIHJlYWxpc2UgdGhhdCBwYXJ0Cm9mIHRoZSBwYXRjaCBhbHNvIGFmZmVjdHMgVERB
+MTk5ODggZHJpdmVyLgoKPiAKPiA+ID4gQWxzbywgdGhlIHdob2xlIHF1ZXN0aW9uIG9mIHJlcHJl
+c2VudGluZyBjb25uZWN0b3JzIGluIGEgRFJNIG1vZGVsIGlzCj4gPiA+IHlldCB0byBiZSBlc3Rh
+Ymxpc2hlZC4gIFllcywgRFQgc2hvdWxkIGRlc2NyaWJlIHRoZSBoYXJkd2FyZSwgYnV0IHdlCj4g
+PiA+IGRvbid0IHlldCBrbm93IF9ob3dfIHRvIGRlc2NyaWJlIHBoeXNpY2FsIGNvbm5lY3RvcnMg
+d2l0aCBzdHVmZgo+ID4gPiBpbXBsZW1lbnRlZCBvbiB0b3Agb2YgRFJNIHlldCwgYW5kIHdlIGhh
+dmUgbm90aGluZyB0aGF0IG1ha2VzIHVzZSBvZgo+ID4gPiB0aGlzLgo+ID4gCj4gPiBQbGVhc2Ug
+aGVscCBtZSB1bmRlcnN0YW5kIHRoZSBjdXJyZW50IHNpdHVhdGlvbjogeW91IGhhdmUgYWRkZWQK
+PiA+IHN1cHBvcnQgZm9yIGNvbXBvbmVudHMgdGhhdCB0aGUgdmlkZW8gZHJpdmVycyBjYW4gdXNl
+IGFuZCB0aGUgYmluZGluZ3MKPiA+IGZvciB0aGF0IGFyZSBkZXNjcmliZWQgaW4gRG9jdW1lbnRh
+dGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL21lZGlhL3ZpZGVvLWludGVyZmFjZXMudHh0Lgo+IAo+
+IE5vLiAgSSBhZGRlZCB0aGUgY29tcG9uZW50IGhlbHBlcnMsIHdoaWNoIGFyZSBlbnRpcmVseSBm
+aXJtd2FyZSBhZ25vc3RpYy4KPiBUaGUgbWVkaWEgYmluZGluZ3Mgd2VyZSBjcmVhdGVkIGJ5IG90
+aGVycywgYW5kIHRocm91Z2ggZGV2ZWxvcG1lbnQgZG9uZQo+IGJ5IFBlbmd1dHJvbml4LCB0aGV5
+IHdlcmUgZmFjdG9yZWQgb3V0IG9mIG1lZGlhIGludG8gY29tbW9uIERUIGNvZGUgYW5kCj4gcmUt
+dXNlZCBmb3IgdGhlIElNWCBEUk0gZHJpdmVyLiAgVGhlIGJpbmRpbmcgZG9jdW1lbnQgd2hpY2gg
+ZGVzY3JpYmVzCj4gdGhhdCB3b3JrIGlzIG5vdCB0aGUgb25lIHlvdSByZWZlciB0byBhYm92ZSwg
+YnV0IHRoaXMgb25lOgo+IAo+IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9ncmFw
+aC50eHQKPiAKPiBUaGlzIHN0YXJ0ZWQgdGhlbSBhcyBhIGJhc2lzIGZvciBEUk0gZHJpdmVycyBv
+biBBUk0gLSBidXQgaXQncyBuZXZlciBiZWVuCj4gb2ZmaWNpYWxseSAiYWRvcHRlZCIgYXMgYSBt
+ZXRob2QgdG8gZGVzY3JpYmUgRFJNIGRyaXZlcnMgLSBpdCdzIG9ubHkgd2hhdAo+IHNvbWUgZHJp
+dmVycyBhcmUgdXNpbmcuICBJdCBvdWdodCB0byBiZSBuYWlsZWQgZG93biBhcyBhIHdheSB0byBl
+bnN1cmUKPiBpbnRlci1vcGVyYWJpbGl0eSBiZXR3ZWVuIGNvbXBvbmVudHMgdGhvdWdoLCBidXQg
+bm8gb25lIGhhcyByZWFsbHkgbWFkZQo+IHRoYXQgZGVjaXNpb24uCgpPSywgSSdtIGludGVyZXN0
+ZWQgb24gd2hvbSBkbyBJIG5lZWQgdG8gdGFsayB0byBpbiBvcmRlciBmb3IgdGhlIG9mZmljaWFs
+CiJhZG9wdGlvbiIgdG8gaGFwcGVuIGhlcmUuIAoKPiAKPiA+IEFjY29yZGluZyB0byB0aGF0IGRv
+Y3VtZW50IG15IHBhdGNoIHNob3VsZCBiZSBjb21wbGlhbnQgb25jZSBJIGFkZCB0aGUKPiA+IHJl
+Zz0gcHJvcGVydHkuIElzIHRoYXQgc29tZXRoaW5nIHRoYXQgY2Fubm90IGJlIHVzZWQgd2l0aCB0
+ZGE5OTh4IGRyaXZlcgo+ID4gb3IgaXMgdGhlcmUgYW55IG90aGVyIHJlYXNvbiB3aHkgeW91IHRo
+aW5rIHRoZSBwYXRjaCBpcyBub3QgY29tcGxpYW50Pwo+IAo+IEplYW4ncyBwcm9wb3NhbCB0byBh
+ZGQgYXVkaW8gc3VwcG9ydCB0byB0aGUgVERBOTk4eCBkcml2ZXIgZG9lcyBpdCB2aWEKPiB0aGlz
+IGNoYW5nZSB0byB0aGUgYmluZGluZyBzcGVjOgo+IAo+ICtPcHRpb25hbCBub2RlczoKPiArCj4g
+KyAgLSBwb3J0OiB1cCB0byB0aHJlZSBwb3J0cy4KPiArICAgICAgIFRoZSBwb3J0cyBhcmUgZGVm
+aW5lZCBhY2NvcmRpbmcgdG8gWzFdLgo+ICsKPiArICAgIFZpZGVvIHBvcnQuCj4gKyAgICAgICBU
+aGVyZSBtYXkgYmUgb25seSBvbmUgdmlkZW8gcG9ydC4KPiArICAgICAgIFRoaXMgb25lIG11c3Qg
+Y29udGFpbiB0aGUgZm9sbG93aW5nIHByb3BlcnR5Ogo+ICsKPiArICAgICAgIC0gcG9ydC10eXBl
+OiBtdXN0IGJlICJyZ2IiCj4gKwo+ICsgICAgICAgYW5kIG1heSBjb250YWluIHRoZSBvcHRpb25h
+bCBwcm9wZXJ0eToKPiArCj4gKyAgICAgICAtIHJlZzogMjQgYml0cyB2YWx1ZSB3aGljaCBkZWZp
+bmVzIGhvdyB0aGUgdmlkZW8gY29udHJvbGxlcgo+ICsgICAgICAgICAgICAgICBvdXRwdXQgaXMg
+d2lyZWQgdG8gdGhlIFREQTk5OHggaW5wdXQgKHZpZGVvIHBpbnMpCj4gKyAgICAgICAgICAgICAg
+IFdoZW4gYWJzZW50LCB0aGUgZGVmYXVsdCB2YWx1ZSBpcyA8MHgyMzAxNDU+Lgo+ICsKPiArICAg
+IEF1ZGlvIHBvcnRzLgo+ICsgICAgICAgVGhlcmUgbWF5IGJlIG9uZSBvciB0d28gYXVkaW8gcG9y
+dHMuCj4gKyAgICAgICBUaGVzZSBvbmVzIG11c3QgY29udGFpbiB0aGUgZm9sbG93aW5nIHByb3Bl
+cnRpZXM6Cj4gKwo+ICsgICAgICAgLSBwb3J0LXR5cGU6IG11c3QgYmUgImkycyIgb3IgInNwZGlm
+Igo+ICsKPiArICAgICAgIC0gcmVnOiA4IGJpdHMgdmFsdWUgd2hpY2ggZGVmaW5lcyBob3cgdGhl
+IGF1ZGlvIGNvbnRyb2xsZXIKPiArICAgICAgICAgICAgICAgb3V0cHV0IGlzIHdpcmVkIHRvIHRo
+ZSBUREE5OTh4IGlucHV0IChhdWRpbyBwaW5zKQo+ICsKPiArWzFdIERvY3VtZW50YXRpb24vZGV2
+aWNldHJlZS9iaW5kaW5ncy9ncmFwaC50eHQKPiAKPiAoVGhhdCdzIG5vdCBhIHBhcnRpY3VsYXJs
+eSBwcmVjaXNlIGRlZmluaXRpb24sIGJ1dCBpdCdzIHdoYXQgd2UgaGF2ZSBhdAo+IHRoZSBtb21l
+bnQuKQo+IAo+ID4gSWYgeW91IGFyZSByZWZlcnJpbmcgdG8gY29ubmVjdGluZyBhbiBlbmNvZGVy
+IHdpdGggYSBIRE1JIGNvbm5lY3RvciwgSQo+ID4gaGF2ZSB0ZXN0ZWQgdGhhdCBhbmQgaXQgc2Vl
+bXMgdG8gd29yaywgYWx0aG91Z2ggbXkgc2l0dWF0aW9uIGlzIHNpbXBsZQo+ID4gYmVjYXVzZSB0
+aGVyZSBhcmUgbm8gb3B0aW9ucyBpbiBteSBzZXR1cDogb25lIEhETENEIGNvbm5lY3RzIHRvIG9u
+ZQo+ID4gVERBMTk5ODggd2hpY2ggY29ubmVjdHMgdG8gb25lIEhETUkgb3V0cHV0Lgo+IAo+IFJp
+Z2h0IG5vdywgdGhlIFREQTk5OHggd2lsbCBpZ25vcmUgdGhlIGFkZGl0aW9uYWwgaW5mb3JtYXRp
+b24sIGJ1dCB0aGF0Cj4gd29uJ3QgYmUgdGhlIGNhc2Ugd2l0aCBKZWFuJ3MgYXVkaW8gd29yayAo
+c2VlIHRoZSBhYm92ZSBiaW5kaW5nCj4gaW5mb3JtYXRpb24uKQoKWWVzLCBJIGhhdmUgc2VlbiB0
+aGF0IHBhdGNoc2V0LiBJIHdpbGwgYXBwbHkgaXQgdG8gbXkgdHJlZSBhbmQgc2VuZCBhbgp1cGRh
+dGVkIHZlcnNpb24gd2l0aCB0aGUgcG9ydC10eXBlIHByb3BlcnR5IHdoZW4gSSBzZW5kIHYyLgoK
+QmVzdCByZWdhcmRzLApMaXZpdQoKPiAKPiAtLSAKPiBGVFRDIGJyb2FkYmFuZCBmb3IgMC44bWls
+ZSBsaW5lOiBjdXJyZW50bHkgYXQgMTAuNU1icHMgZG93biA0MDBrYnBzIHVwCj4gYWNjb3JkaW5n
+IHRvIHNwZWVkdGVzdC5uZXQuCj4gCgotLSAKPT09PT09PT09PT09PT09PT09PT0KfCBJIHdvdWxk
+IGxpa2UgdG8gfAp8IGZpeCB0aGUgd29ybGQsICB8CnwgYnV0IHRoZXkncmUgbm90IHwKfCBnaXZp
+bmcgbWUgdGhlICAgfAogXCBzb3VyY2UgY29kZSEgIC8KICAtLS0tLS0tLS0tLS0tLS0KICAgIMKv
+XF8o44OEKV8vwq8KCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9y
+ZwpodHRwOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVs
+Cg==
