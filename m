@@ -1,70 +1,93 @@
-From: Keerthy <a0393675-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH 1/8] ARM: dts: AM4372: Reorder the rtc compatible string
-Date: Thu, 6 Aug 2015 06:55:57 +0530
-Message-ID: <55C2B7A5.5000400@ti.com>
-References: <1438771792-12604-1-git-send-email-j-keerthy@ti.com> <1438771792-12604-2-git-send-email-j-keerthy@ti.com> <20150805153148.GB12328@saruman.tx.rr.com> <55C230E9.9010309@ti.com> <20150805161445.GF12328@saruman.tx.rr.com> <55C23740.2080102@ti.com> <20150805165122.GH12328@saruman.tx.rr.com>
+From: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Subject: Re: [PATCH v1 4/7] ARM: dts: apq8064: Add MDP support
+Date: Wed, 05 Aug 2015 18:27:29 -0700
+Message-ID: <55C2B801.1030806@codeaurora.org>
+References: <1438087956-17307-1-git-send-email-srinivas.kandagatla@linaro.org> <1438088049-17479-1-git-send-email-srinivas.kandagatla@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20150805165122.GH12328-HgARHv6XitJaoMGHk7MhZQC/G2K4zDHf@public.gmane.org>
+In-Reply-To: <1438088049-17479-1-git-send-email-srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: balbi-l0cyMroinI0@public.gmane.org
-Cc: Keerthy <j-keerthy-l0cyMroinI0@public.gmane.org>, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org, johan-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, nm-l0cyMroinI0@public.gmane.org, paul-DWxLp4Yu+b8AvxtiuMwx3w@public.gmane.org, t-kristo-l0cyMroinI0@public.gmane.org
+To: Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: agross-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Clark <robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+On 07/28/2015 05:54 AM, Srinivas Kandagatla wrote:
+> @@ -618,5 +633,77 @@
+>   			compatible = "qcom,tcsr-apq8064", "syscon";
+>   			reg = <0x1a400000 0x100>;
+>   		};
+> +
+> +		hdmi: qcom,hdmi-tx@4a00000 {
+> +			compatible = "qcom,hdmi-tx-8960";
+> +			reg-names = "core_physical";
+> +			reg = <0x04a00000 0x1000>;
+> +			interrupts = <GIC_SPI 79 0>;
+> +			clock-names =
+> +			    "core_clk",
+> +			    "master_iface_clk",
+> +			    "slave_iface_clk";
+> +			clocks =
+> +			    <&mmcc HDMI_APP_CLK>,
+> +			    <&mmcc HDMI_M_AHB_CLK>,
+> +			    <&mmcc HDMI_S_AHB_CLK>;
+> +			qcom,hdmi-tx-ddc-clk = <&tlmm_pinmux 70 GPIO_ACTIVE_HIGH>;
+> +			qcom,hdmi-tx-ddc-data = <&tlmm_pinmux 71 GPIO_ACTIVE_HIGH>;
+> +			qcom,hdmi-tx-hpd = <&tlmm_pinmux 72 GPIO_ACTIVE_HIGH>;
 
+These should use standard "-gpios" syntax. Please fix the binding/driver.
 
-On Wednesday 05 August 2015 10:21 PM, Felipe Balbi wrote:
-> On Wed, Aug 05, 2015 at 09:48:08PM +0530, Keerthy wrote:
->>
->>
->> On Wednesday 05 August 2015 09:44 PM, Felipe Balbi wrote:
->>> On Wed, Aug 05, 2015 at 09:21:05PM +0530, Keerthy wrote:
->>>> Felipe,
->>>>
->>>> On Wednesday 05 August 2015 09:01 PM, Felipe Balbi wrote:
->>>>> On Wed, Aug 05, 2015 at 04:19:45PM +0530, Keerthy wrote:
->>>>>> Compared to da830-rtc compatibility am3352-rtc is more compatible to
->>>>>> the one in am437x. Hence adding the am3352-rtc compatible to cover the
->>>>>> entire feature set.
->>>>>>
->>>>>> The ti,am4372-rtc has no Documentation and not used even in the driver
->>>>>> hence removing it.
->>>>>
->>>>> why don't you do the inverse ? Document am4372-rtc and make driver use
->>>>> it ?
->>>>
->>>> am3352-rtc suffices for am4372 too. No need to add additional one for
->>>> am4372.
->>>
->>> Until we end up needing it, right ? :-)
->>>
->>> Besides, it's already used in a DTS. What happens if someone branched
->> >from that DTS and ships that in a product. RTC will just stop working
->>> for them. Sure, it wasn't documented, but that's a problem of commit
->>> 73456012734b80442b33916406cfd13bf1b73acb (ARM: dts: AM4372: add few
->>> nodes) which, essentially, added that compatible flag without
->>> documenting it.
->>>
->>> BTW, this compatible has been in tree since August 2013, IMO it's unfar
->>> to drop it just like that. Documenting it would be a better approach.
->>
->> Okay. Can you point me to a file which is already accessing it in dts?
->
-> Accessing what ? Also, once DTS reaches a major kernel release, it's
-> deemed stable and should be supported. Are we dropping that ?
+> +			pinctrl-names = "default";
+> +			pinctrl-0 = <&hdmi_pinctrl>;
+> +		};
+> +
+> +		gpu: qcom,adreno-3xx@4300000 {
+> +			compatible = "qcom,adreno-3xx";
+> +			reg = <0x04300000 0x20000>;
+> +			reg-names = "kgsl_3d0_reg_memory";
+> +			interrupts = <GIC_SPI 80 0>;
+> +			interrupt-names = "kgsl_3d0_irq";
+> +			clock-names =
+> +			    "core_clk",
+> +			    "iface_clk",
+> +			    "mem_clk",
+> +			    "mem_iface_clk";
 
-I meant getting used in any other dts files than the one i just dropped 
-it. I checked the driver for rtc-omap and the compatibles are 
-ti,am3352-rtc, ti,da830-rtc. So instead of appending it i dropped it as 
-it was unused before. Tony i guess has already pulled in this patch. So 
-i will let Tony comment on this. If the am4372-rtc compatible needs to 
-be there i can add more documentation and append am3352-rtc.
+Please drop "_clk" and fix driver code as we've done for all other drivers.
 
-Regards,
-Keerthy
->
+> +			clocks =
+> +			    <&mmcc GFX3D_CLK>,
+> +			    <&mmcc GFX3D_AHB_CLK>,
+> +			    <&mmcc GFX3D_AXI_CLK>,
+> +			    <&mmcc MMSS_IMEM_AHB_CLK>;
+> +			qcom,chipid = <0x03020002>;
+> +			qcom,gpu-pwrlevels {
+> +				compatible = "qcom,gpu-pwrlevels";
+> +				qcom,gpu-pwrlevel@0 {
+> +					qcom,gpu-freq = <450000000>;
+> +				};
+> +				qcom,gpu-pwrlevel@1 {
+> +					qcom,gpu-freq = <27000000>;
+> +				};
+> +			};
+
+These should be OPPs. I see in the cover-letter we're asking to ignore 
+this part of the binding. When is the binding and driver going to be 
+fixed? The dts has been out of tree for quite some time and I assume 
+work has been progressing on the driver even without this dts being in 
+mainline so it doesn't make sense how pushing half-baked dts upstream is 
+going to help. In fact, it's going to make things worse if someone 
+complains that we're not maintaining backwards compatibility and then 
+have to hack up driver code to work both ways. At which point there's 
+practically zero incentive to change anything in the binding or driver. 
+It's better to fix the driver now and avoid these sorts of problems 
+entirely.
+
+-- 
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
