@@ -1,330 +1,171 @@
 From: Eric Anholt <eric@anholt.net>
-Subject: [PATCH v4 4/4] irqchip: Add bcm2836 interrupt controller for Raspberry Pi 2.
-Date: Thu,  6 Aug 2015 16:00:33 -0700
-Message-ID: <1438902033-31477-5-git-send-email-eric@anholt.net>
+Subject: [PATCH v4 2/4] irqchip: bcm2835: Add support for being used as a
+ second level controller.
+Date: Thu,  6 Aug 2015 16:00:31 -0700
+Message-ID: <1438902033-31477-3-git-send-email-eric@anholt.net>
 References: <1438902033-31477-1-git-send-email-eric@anholt.net>
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 In-Reply-To: <1438902033-31477-1-git-send-email-eric@anholt.net>
-Sender: linux-kernel-owner@vger.kernel.org
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: linux-arm-kernel@lists.infradead.org
-Cc: linux-rpi-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Stephen Warren <swarren@wwwdotorg.org>, Lee Jones <lee@kernel.org>, devicetree@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Eric Anholt <eric@anholt.net>, Andrea Merello <andrea.merello@gmail.com>
+Cc: devicetree@vger.kernel.org, Jason Cooper <jason@lakedaemon.net>, Stephen Warren <swarren@wwwdotorg.org>, Lee Jones <lee@kernel.org>, linux-kernel@vger.kernel.org, Eric Anholt <eric@anholt.net>, linux-rpi-kernel@lists.infradead.org, Thomas Gleixner <tglx@linutronix.de>
 List-Id: devicetree@vger.kernel.org
 
-This interrupt controller is the new root interrupt controller with
-the timer, PMU events, and IPIs, and the bcm2835's interrupt
-controller is chained off of it to handle the peripherals.
-
-I wrote the interrupt chip support, while Andrea Merello wrote the IPI
-code.
+The BCM2836 (Raspberry Pi 2) uses two levels of interrupt handling
+with the CPU-local interrupts being the root, so we need to register
+ours as chained off of the CPU's local interrupt.
 
 Signed-off-by: Eric Anholt <eric@anholt.net>
-Signed-off-by: Andrea Merello <andrea.merello@gmail.com>
 Acked-by: Stephen Warren <swarren@wwwdotorg.org>
 ---
 
-v2: Rename functions/globals to bcm2836_arm_local.  Treat per-cpu
-    interrupts as per-cpu in mask/unmask.  Add comments about how
-    registers work.
-v3: Drop debug printfs from PMU interrupt masking.
-v4: Use cpu notifiers to unmask IPIs only when Linux wants the CPU up.
+v3: Use a separate compatible value to indicate that the parent
+    interrupt controller irq is required (Requested by Stephen Warren)
 
- drivers/irqchip/Makefile      |   1 +
- drivers/irqchip/irq-bcm2836.c | 275 ++++++++++++++++++++++++++++++++++++++++++
- 2 files changed, 276 insertions(+)
- create mode 100644 drivers/irqchip/irq-bcm2836.c
+ .../brcm,bcm2835-armctrl-ic.txt                    | 25 ++++++++++++-
+ drivers/irqchip/irq-bcm2835.c                      | 43 ++++++++++++++++++++--
+ 2 files changed, 64 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/irqchip/Makefile b/drivers/irqchip/Makefile
-index b8d4e96..9727681 100644
---- a/drivers/irqchip/Makefile
-+++ b/drivers/irqchip/Makefile
-@@ -1,6 +1,7 @@
- obj-$(CONFIG_IRQCHIP)			+= irqchip.o
+diff --git a/Documentation/devicetree/bindings/interrupt-controller/brcm,bcm2835-armctrl-ic.txt b/Documentation/devicetree/bindings/interrupt-controller/brcm,bcm2835-armctrl-ic.txt
+index 7da578d..2d6c8bb 100644
+--- a/Documentation/devicetree/bindings/interrupt-controller/brcm,bcm2835-armctrl-ic.txt
++++ b/Documentation/devicetree/bindings/interrupt-controller/brcm,bcm2835-armctrl-ic.txt
+@@ -5,9 +5,14 @@ The BCM2835 contains a custom top-level interrupt controller, which supports
+ controller, or the HW block containing it, is referred to occasionally
+ as "armctrl" in the SoC documentation, hence naming of this binding.
  
- obj-$(CONFIG_ARCH_BCM2835)		+= irq-bcm2835.o
-+obj-$(CONFIG_ARCH_BCM2835)		+= irq-bcm2836.o
- obj-$(CONFIG_ARCH_EXYNOS)		+= exynos-combiner.o
- obj-$(CONFIG_ARCH_HIP04)		+= irq-hip04.o
- obj-$(CONFIG_ARCH_MMP)			+= irq-mmp.o
-diff --git a/drivers/irqchip/irq-bcm2836.c b/drivers/irqchip/irq-bcm2836.c
-new file mode 100644
-index 0000000..052bd83
---- /dev/null
-+++ b/drivers/irqchip/irq-bcm2836.c
-@@ -0,0 +1,275 @@
-+/*
-+ * Root interrupt controller for the BCM2836 (Raspberry Pi 2).
-+ *
-+ * Copyright 2015 Broadcom
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License as published by
-+ * the Free Software Foundation; either version 2 of the License, or
-+ * (at your option) any later version.
-+ *
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
-+ */
++The BCM2836 contains the same interrupt controller with the same
++interrupts, but the per-CPU interrupt controller is the root, and an
++interrupt there indicates that the ARMCTRL has an interrupt to handle.
 +
-+#include <linux/cpu.h>
-+#include <linux/of_address.h>
-+#include <linux/of_irq.h>
-+#include <linux/irqchip.h>
-+#include <linux/irqdomain.h>
-+#include <asm/exception.h>
+ Required properties:
+ 
+-- compatible : should be "brcm,bcm2835-armctrl-ic"
++- compatible : should be "brcm,bcm2835-armctrl-ic" or
++                 "brcm,bcm2836-armctrl-ic"
+ - reg : Specifies base physical address and size of the registers.
+ - interrupt-controller : Identifies the node as an interrupt controller
+ - #interrupt-cells : Specifies the number of cells needed to encode an
+@@ -20,6 +25,12 @@ Required properties:
+   The 2nd cell contains the interrupt number within the bank. Valid values
+   are 0..7 for bank 0, and 0..31 for bank 1.
+ 
++Additional required properties for brcm,bcm2836-armctrl-ic:
++- interrupt-parent : Specifies the parent interrupt controller when this
++  controller is the second level.
++- interrupts : Specifies the interrupt on the parent for this interrupt
++  controller to handle.
 +
-+/*
-+ * The low 2 bits identify the CPU that the GPU IRQ goes to, and the
-+ * next 2 bits identify the CPU that the GPU FIQ goes to.
-+ */
-+#define LOCAL_GPU_ROUTING		0x00c
-+/* When setting bits 0-3, enables PMU interrupts on that CPU. */
-+#define LOCAL_PM_ROUTING_SET		0x010
-+/* When setting bits 0-3, disables PMU interrupts on that CPU. */
-+#define LOCAL_PM_ROUTING_CLR		0x014
-+/*
-+ * The low 4 bits of this are the CPU's timer IRQ enables, and the
-+ * next 4 bits are the CPU's timer FIQ enables (which override the IRQ
-+ * bits).
-+ */
-+#define LOCAL_TIMER_INT_CONTROL0	0x040
-+/*
-+ * The low 4 bits of this are the CPU's per-mailbox IRQ enables, and
-+ * the next 4 bits are the CPU's per-mailbox FIQ enables (which
-+ * override the IRQ bits).
-+ */
-+#define LOCAL_MAILBOX_INT_CONTROL0	0x050
-+/*
-+ * The CPU's interrupt status register.  Bits are defined by the the
-+ * LOCAL_IRQ_* bits below.
-+ */
-+#define LOCAL_IRQ_PENDING0		0x060
-+/* Same status bits as above, but for FIQ. */
-+#define LOCAL_FIQ_PENDING0		0x070
-+/*
-+ * Mailbox0 write-to-set bits.  There are 16 mailboxes, 4 per CPU, and
-+ * these bits are organized by mailbox number and then CPU number.  We
-+ * use mailbox 0 for IPIs.  The mailbox's interrupt is raised while
-+ * any bit is set.
-+ */
-+#define LOCAL_MAILBOX0_SET0		0x080
-+/* Mailbox0 write-to-clear bits. */
-+#define LOCAL_MAILBOX0_CLR0		0x0c0
+ The interrupt sources are as follows:
+ 
+ Bank 0:
+@@ -102,9 +113,21 @@ Bank 2:
+ 
+ Example:
+ 
++/* BCM2835, first level */
+ intc: interrupt-controller {
+ 	compatible = "brcm,bcm2835-armctrl-ic";
+ 	reg = <0x7e00b200 0x200>;
+ 	interrupt-controller;
+ 	#interrupt-cells = <2>;
+ };
 +
-+#define LOCAL_IRQ_CNTPSIRQ	0
-+#define LOCAL_IRQ_CNTPNSIRQ	1
-+#define LOCAL_IRQ_CNTHPIRQ	2
-+#define LOCAL_IRQ_CNTVIRQ	3
-+#define LOCAL_IRQ_MAILBOX0	4
-+#define LOCAL_IRQ_MAILBOX1	5
-+#define LOCAL_IRQ_MAILBOX2	6
-+#define LOCAL_IRQ_MAILBOX3	7
-+#define LOCAL_IRQ_GPU_FAST	8
-+#define LOCAL_IRQ_PMU_FAST	9
-+#define LAST_IRQ		LOCAL_IRQ_PMU_FAST
++/* BCM2836, second level */
++intc: interrupt-controller {
++	compatible = "brcm,bcm2836-armctrl-ic";
++	reg = <0x7e00b200 0x200>;
++	interrupt-controller;
++	#interrupt-cells = <2>;
 +
-+struct bcm2836_arm_irqchip_intc {
-+	struct irq_domain *domain;
-+	void __iomem *base;
++	interrupt-parent = <&local_intc>;
++	interrupts = <8>;
 +};
+diff --git a/drivers/irqchip/irq-bcm2835.c b/drivers/irqchip/irq-bcm2835.c
+index 382450a..f968d3f 100644
+--- a/drivers/irqchip/irq-bcm2835.c
++++ b/drivers/irqchip/irq-bcm2835.c
+@@ -97,6 +97,7 @@ struct armctrl_ic {
+ static struct armctrl_ic intc __read_mostly;
+ static void __exception_irq_entry bcm2835_handle_irq(
+ 	struct pt_regs *regs);
++static void bcm2836_chained_handle_irq(unsigned int irq, struct irq_desc *desc);
+ 
+ static void armctrl_mask_irq(struct irq_data *d)
+ {
+@@ -140,7 +141,8 @@ static const struct irq_domain_ops armctrl_ops = {
+ };
+ 
+ static int __init armctrl_of_init(struct device_node *node,
+-	struct device_node *parent)
++				  struct device_node *parent,
++				  bool is_2836)
+ {
+ 	void __iomem *base;
+ 	int irq, b, i;
+@@ -169,10 +171,34 @@ static int __init armctrl_of_init(struct device_node *node,
+ 		}
+ 	}
+ 
+-	set_handle_irq(bcm2835_handle_irq);
++	if (is_2836) {
++		int parent_irq = irq_of_parse_and_map(node, 0);
 +
-+static struct bcm2836_arm_irqchip_intc intc  __read_mostly;
-+
-+static void bcm2836_arm_irqchip_mask_per_cpu_irq(unsigned int reg_offset,
-+						 unsigned int bit,
-+						 int cpu)
-+{
-+	void __iomem *reg = intc.base + reg_offset + 4 * cpu;
-+
-+	writel(readl(reg) & ~BIT(bit), reg);
-+}
-+
-+static void bcm2836_arm_irqchip_unmask_per_cpu_irq(unsigned int reg_offset,
-+						   unsigned int bit,
-+						 int cpu)
-+{
-+	void __iomem *reg = intc.base + reg_offset + 4 * cpu;
-+
-+	writel(readl(reg) | BIT(bit), reg);
-+}
-+
-+static void bcm2836_arm_irqchip_mask_timer_irq(struct irq_data *d)
-+{
-+	bcm2836_arm_irqchip_mask_per_cpu_irq(LOCAL_TIMER_INT_CONTROL0,
-+					     d->hwirq - LOCAL_IRQ_CNTPSIRQ,
-+					     smp_processor_id());
-+}
-+
-+static void bcm2836_arm_irqchip_unmask_timer_irq(struct irq_data *d)
-+{
-+	bcm2836_arm_irqchip_unmask_per_cpu_irq(LOCAL_TIMER_INT_CONTROL0,
-+					       d->hwirq - LOCAL_IRQ_CNTPSIRQ,
-+					       smp_processor_id());
-+}
-+
-+static struct irq_chip bcm2836_arm_irqchip_timer = {
-+	.name = "bcm2836-timer",
-+	.irq_mask = bcm2836_arm_irqchip_mask_timer_irq,
-+	.irq_unmask = bcm2836_arm_irqchip_unmask_timer_irq
-+};
-+
-+static void bcm2836_arm_irqchip_mask_pmu_irq(struct irq_data *d)
-+{
-+	writel(1 << smp_processor_id(), intc.base + LOCAL_PM_ROUTING_CLR);
-+}
-+
-+static void bcm2836_arm_irqchip_unmask_pmu_irq(struct irq_data *d)
-+{
-+	writel(1 << smp_processor_id(), intc.base + LOCAL_PM_ROUTING_SET);
-+}
-+
-+static struct irq_chip bcm2836_arm_irqchip_pmu = {
-+	.name = "bcm2836-pmu",
-+	.irq_mask = bcm2836_arm_irqchip_mask_pmu_irq,
-+	.irq_unmask = bcm2836_arm_irqchip_unmask_pmu_irq
-+};
-+
-+static void bcm2836_arm_irqchip_mask_gpu_irq(struct irq_data *d)
-+{
-+}
-+
-+static void bcm2836_arm_irqchip_unmask_gpu_irq(struct irq_data *d)
-+{
-+}
-+
-+static struct irq_chip bcm2836_arm_irqchip_gpu = {
-+	.name = "bcm2836-gpu",
-+	.irq_mask = bcm2836_arm_irqchip_mask_gpu_irq,
-+	.irq_unmask = bcm2836_arm_irqchip_unmask_gpu_irq
-+};
-+
-+static void bcm2836_arm_irqchip_register_irq(int hwirq, struct irq_chip *chip)
-+{
-+	int irq = irq_create_mapping(intc.domain, hwirq);
-+
-+	irq_set_percpu_devid(irq);
-+	irq_set_chip_and_handler(irq, chip, handle_percpu_devid_irq);
-+	irq_set_status_flags(irq, IRQ_NOAUTOEN);
-+}
-+
-+static void __exception_irq_entry bcm2836_arm_irqchip_handle_irq(
-+	struct pt_regs *regs)
-+{
-+	int cpu = smp_processor_id();
-+	u32 stat;
-+
-+	stat = readl_relaxed(intc.base + LOCAL_IRQ_PENDING0 + 4 * cpu);
-+	if (stat & 0x10) {
-+#ifdef CONFIG_SMP
-+		void __iomem *mailbox0 = (intc.base +
-+					  LOCAL_MAILBOX0_CLR0 + 16 * cpu);
-+		u32 mbox_val = readl(mailbox0);
-+		u32 ipi = ffs(mbox_val) - 1;
-+
-+		writel(1 << ipi, mailbox0);
-+		handle_IPI(ipi, regs);
-+#endif
++		if (!parent_irq) {
++			panic("%s: unable to get parent interrupt.\n",
++			      node->full_name);
++		}
++		irq_set_chained_handler(parent_irq, bcm2836_chained_handle_irq);
 +	} else {
-+		u32 hwirq = ffs(stat) - 1;
-+
-+		handle_IRQ(irq_linear_revmap(intc.domain, hwirq), regs);
-+	}
-+}
-+
-+#ifdef CONFIG_SMP
-+static void bcm2836_arm_irqchip_send_ipi(const struct cpumask *mask,
-+					 unsigned int ipi)
-+{
-+	int cpu;
-+	void __iomem *mailbox0_base = intc.base + LOCAL_MAILBOX0_SET0;
-+
-+	/*
-+	 * Ensure that stores to normal memory are visible to the
-+	 * other CPUs before issuing the IPI.
-+	 */
-+	dsb();
-+
-+	for_each_cpu(cpu, mask)	{
-+		writel(1 << ipi, mailbox0_base + 16 * cpu);
-+	}
-+}
-+
-+/* Unmasks the IPI on the CPU when it's online. */
-+static int bcm2836_arm_irqchip_cpu_notify(struct notifier_block *nfb,
-+					  unsigned long action, void *hcpu)
-+{
-+	unsigned int cpu = (unsigned long)hcpu;
-+	unsigned int int_reg = LOCAL_MAILBOX_INT_CONTROL0;
-+	unsigned int mailbox = 0;
-+
-+	if (action == CPU_STARTING || action == CPU_STARTING_FROZEN)
-+		bcm2836_arm_irqchip_unmask_per_cpu_irq(int_reg, mailbox, cpu);
-+	else if (action == CPU_DYING)
-+		bcm2836_arm_irqchip_mask_per_cpu_irq(int_reg, mailbox, cpu);
-+
-+	return NOTIFY_OK;
-+}
-+
-+static struct notifier_block bcm2836_arm_irqchip_cpu_notifier = {
-+	.notifier_call = bcm2836_arm_irqchip_cpu_notify,
-+	.priority = 100,
-+};
-+#endif
-+
-+static const struct irq_domain_ops bcm2836_arm_irqchip_intc_ops = {
-+	.xlate = irq_domain_xlate_onecell
-+};
-+
-+static void
-+bcm2836_arm_irqchip_smp_init(void)
-+{
-+#ifdef CONFIG_SMP
-+	/* Unmask IPIs to the boot CPU. */
-+	bcm2836_arm_irqchip_cpu_notify(&bcm2836_arm_irqchip_cpu_notifier,
-+				       CPU_STARTING,
-+				       (void *)smp_processor_id());
-+	register_cpu_notifier(&bcm2836_arm_irqchip_cpu_notifier);
-+
-+	set_smp_cross_call(bcm2836_arm_irqchip_send_ipi);
-+#endif
-+}
-+
-+static int __init bcm2836_arm_irqchip_l1_intc_of_init(struct device_node *node,
-+						      struct device_node *parent)
-+{
-+	intc.base = of_iomap(node, 0);
-+	if (!intc.base) {
-+		panic("%s: unable to map local interrupt registers\n",
-+			node->full_name);
++		set_handle_irq(bcm2835_handle_irq);
 +	}
 +
-+	intc.domain = irq_domain_add_linear(node, LAST_IRQ + 1,
-+					    &bcm2836_arm_irqchip_intc_ops,
-+					    NULL);
-+	if (!intc.domain)
-+		panic("%s: unable to create IRQ domain\n", node->full_name);
-+
-+	bcm2836_arm_irqchip_register_irq(LOCAL_IRQ_CNTPSIRQ,
-+					 &bcm2836_arm_irqchip_timer);
-+	bcm2836_arm_irqchip_register_irq(LOCAL_IRQ_CNTPNSIRQ,
-+					 &bcm2836_arm_irqchip_timer);
-+	bcm2836_arm_irqchip_register_irq(LOCAL_IRQ_CNTHPIRQ,
-+					 &bcm2836_arm_irqchip_timer);
-+	bcm2836_arm_irqchip_register_irq(LOCAL_IRQ_CNTVIRQ,
-+					 &bcm2836_arm_irqchip_timer);
-+	bcm2836_arm_irqchip_register_irq(LOCAL_IRQ_GPU_FAST,
-+					 &bcm2836_arm_irqchip_gpu);
-+	bcm2836_arm_irqchip_register_irq(LOCAL_IRQ_PMU_FAST,
-+					 &bcm2836_arm_irqchip_pmu);
-+
-+	bcm2836_arm_irqchip_smp_init();
-+
-+	set_handle_irq(bcm2836_arm_irqchip_handle_irq);
-+	return 0;
+ 	return 0;
+ }
+ 
++static int __init bcm2835_armctrl_of_init(struct device_node *node,
++					  struct device_node *parent)
++{
++	return armctrl_of_init(node, parent, false);
 +}
 +
-+IRQCHIP_DECLARE(bcm2836_arm_irqchip_l1_intc, "brcm,bcm2836-l1-intc",
-+		bcm2836_arm_irqchip_l1_intc_of_init);
++static int __init bcm2836_armctrl_of_init(struct device_node *node,
++					  struct device_node *parent)
++{
++	return armctrl_of_init(node, parent, true);
++}
++
++
+ /*
+  * Handle each interrupt across the entire interrupt controller.  This reads the
+  * status register before handling each interrupt, which is necessary given that
+@@ -220,4 +246,15 @@ static void __exception_irq_entry bcm2835_handle_irq(
+ 		handle_IRQ(irq_linear_revmap(intc.domain, hwirq), regs);
+ }
+ 
+-IRQCHIP_DECLARE(bcm2835_armctrl_ic, "brcm,bcm2835-armctrl-ic", armctrl_of_init);
++static void bcm2836_chained_handle_irq(unsigned int irq, struct irq_desc *desc)
++{
++	u32 hwirq;
++
++	while ((hwirq = get_next_armctrl_hwirq()) != ~0)
++		generic_handle_irq(irq_linear_revmap(intc.domain, hwirq));
++}
++
++IRQCHIP_DECLARE(bcm2835_armctrl_ic, "brcm,bcm2835-armctrl-ic",
++		bcm2835_armctrl_of_init);
++IRQCHIP_DECLARE(bcm2836_armctrl_ic, "brcm,bcm2836-armctrl-ic",
++		bcm2836_armctrl_of_init);
 -- 
 2.1.4
