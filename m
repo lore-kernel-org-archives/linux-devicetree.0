@@ -1,80 +1,136 @@
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH v4 0/6] ARM: shmobile: r8a7740/sh73a0 DT Cache Handling
-Date: Thu, 6 Aug 2015 09:35:12 +0900
-Message-ID: <20150806003511.GB17231@verge.net.au>
-References: <1438765090-823-1-git-send-email-geert+renesas@glider.be>
+From: Shawn Lin <shawn.lin@rock-chips.com>
+Subject: Re: [RFC PATCH v3 0/5]
+Date: Thu, 6 Aug 2015 08:45:16 +0800
+Message-ID: <55C2AE1C.7080502@rock-chips.com>
+References: <1438762614-22154-1-git-send-email-shawn.lin@rock-chips.com>
+ <55C2A001.2090506@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-sh-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1438765090-823-1-git-send-email-geert+renesas@glider.be>
-Sender: linux-sh-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert+renesas@glider.be>
-Cc: Magnus Damm <magnus.damm@gmail.com>, linux-arm-kernel@lists.infradead.org, linux-sh@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-mips-bounce@linux-mips.org>
+In-Reply-To: <55C2A001.2090506@samsung.com>
+Sender: linux-mips-bounce@linux-mips.org
+Errors-to: linux-mips-bounce@linux-mips.org
+List-help: <mailto:ecartis@linux-mips.org?Subject=help>
+List-unsubscribe: <mailto:ecartis@linux-mips.org?subject=unsubscribe%20linux-mips>
+List-software: Ecartis version 1.0.0
+List-subscribe: <mailto:ecartis@linux-mips.org?subject=subscribe%20linux-mips>
+List-owner: <mailto:ralf@linux-mips.org>
+List-post: <mailto:linux-mips@linux-mips.org>
+List-archive: <http://www.linux-mips.org/archives/linux-mips/>
+To: Krzysztof Kozlowski <k.kozlowski@samsung.com>, Ulf Hansson <ulf.hansson@linaro.org>, Jaehoon Chung <jh80.chung@samsung.com>, Seungwon Jeon <tgih.jun@samsung.com>
+Cc: shawn.lin@rock-chips.com, dianders@chromium.org, linux-mips@linux-mips.org, Arnd Bergmann <arnd@arndb.de>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Alexey Brodkin <abrodkin@synopsys.com>, Stefan Agner <stefan@agner.ch>, Zhou Wang <wangzhou.bry@gmail.com>, Kumar Gala <galak@codeaurora.org>, Alim Akhtar <alim.akhtar@samsung.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Wang Long <long.wanglong@huawei.com>, Rob Herring <robh+dt@kernel.org>, Chaotian Jing <chaotian.jing@mediatek.com>, Lukasz Majewski <l.majewski@samsung.com>, Jun Nie <jun.nie@linaro.org>, Catalin Marinas <catalin.marinas@arm.com>, Kevin Hao <haokexin@gmail.com>, Olof Johansson <olof@lixom.net>, Ray Jui <rjui@broadcom.com>, Govindraj Raja <govindraj.raja@imgtec.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Geert,
+On 2015/8/6 7:45, Krzysztof Kozlowski wrote:
+> On 05.08.2015 17:16, Shawn Lin wrote:
+>> Synopsys DesignWare mobile storage host controller supports three
+>> types of transfer mode: pio, internal dma and external dma. However,
+>> dw_mmc can only supports pio and internal dma now. Thus some platforms
+>> using dw-mshc integrated with generic dma can't work in dma mode. So we
+>> submit this patch to achieve it.
+>>
+>> And the config option, CONFIG_MMC_DW_IDMAC, was added by Will Newton
+>> (commit:f95f3850) for the first version of dw_mmc and never be touched from
+>> then. At that time dt-bindings hadn't been introduced into dw_mmc yet means
+>> we should select CONFIG_MMC_DW_IDMAC to enable internal dma mode at compile
+>> time. Nowadays, device-tree helps us to support a variety of boards with one
+>> kernel. That's why we need to remove it and decide the transfer mode at runtime.
+>>
+>> This RFC patch needs lots of ACKs. I know it's hard, but it does need someone
+>> to make the running.
+>>
+>> Patch does the following things:
+>> - remove CONFIG_MMC_DW_IDMAC config option
+>> - add bindings for idmac and edmac used by synopsys-dw-mshc
+>>    at runtime
+>> - add edmac support for synopsys-dw-mshc
+>>
+>> Patch is based on next of git://git.linaro.org/people/ulf.hansson/mmc
+>>
+>>
+>> Changes in v3:
+>> - choose transfer mode at runtime
+>> - remove all CONFIG_MMC_DW_IDMAC config option
+>> - add supports-idmac property for some platforms
+>>
+>> Changes in v2:
+>> - Fix typo of dev_info msg
+>> - remove unused dmach from declaration of dw_mci_dma_slave
+>>
+>> Shawn Lin (5):
+>>    mmc: dw_mmc: Add external dma interface support
+>>    Documentation: synopsys-dw-mshc: add bindings for idmac and edmac
+>>    arm: configs: remove CONFIG_MMC_DW_IDMAC
+>>    mips: configs: remove CONFIG_MMC_DW_IDMAC
+>>    ARM: dts: add supports-idmac property
+> Please fix the title of cover letter.
+>
+> You CC-ed a lot of people. Probably the whole output of git_maintainers
+> which is not necessary. This means that your patches did not reach some
+> of the mailing lists because of too many recipients. I received your
+> patchset but I can't find it on any of the lists I subscribe.
+>
+> Please CC only REAL maintainers, not committers.
 
-On Wed, Aug 05, 2015 at 10:58:04AM +0200, Geert Uytterhoeven wrote:
-> 	Hi Simon, Magnus,
-> 
-> This patch series add L1 and L2 cache descriptions to DT for r8a7740 and
-> sh73a0, and migrates the shmobile DT-based generic r8a7740 and
-> armadillo legacy platforms from calling l2x0_of_init() to the generic
-> l2c OF initialization.
-> 
-> Note that the conversion to the generic l2c OF initialization is not
-> done yet for sh73a0, as this initializes the L2 cache earlier, breaking
-> the (fragile) sh73a0 secondary CPU bringup code.
-> 
-> Also note that this conversion should be done on r8a7778, and r8a7779,
-> too.
-> 
-> Changes compared to v3 ("[PATCH v3 0/6] ARM: l2c / shmobile: r8a7740 : Shared
-> Override",
-> http://lists.infradead.org/pipermail/linux-arm-kernel/2015-May/340636.html):
->   - "l2c: Add support for the "arm,shared-override" property" was split
->     off into an independent patch, and is now queued for v4.3 in
->     arm/for-next,
->   - Dropped armadillo legacy migration, as it no longer exists,
->   - Added sh73a0 L1 and L2 DT cache description.
-> 
-> Changes compared to v2 ("[PATCH v2 0/5] ARM: shmobile: r8a7740/armadillo:
-> Migrate to generic l2c OF",
-> http://www.spinics.net/lists/devicetree/msg68176.html):
->   - Add DT support for Shared Override,
->   - Setting Shared Override is done only if CMA is not available (as
->     Russell claims it's not needed if CMA is available),
->   - Use 0/~0 in machine_desc.l2c_aux_{val,mask}, as DT now supports
->     "arm,shared-override".
-> 
-> Changes compared to v1:
->   - Fix interrupt reference in DT,
->   - Describe L2 better in DT,
->   - Keep only {,~}L2C_AUX_CTRL_SHARED_OVERRIDE in
->     machine_desc.l2c_aux_{val,mask}, as there's no DT property for
->     this.
->   - Add L1 cache to DT.
-> 
-> Dependencies:
->   - This series applies to renesas-devel-20150805-v4.2-rc5,
->   - Patch 2 depends on patch 1,
->   - Patch 4 depends on patch 2,
->   - Patch 5 depends on patch 1 and on "ARM: 8395/1: l2c: Add support for
->     the "arm,shared-override" property" in arm/for-next,
->   - Patch 6 depends on patch 5.
-> 
-> Given C code patches depending on DT patches in the same branch are
-> frowned upon, I think it would be best if patch 1 (and patch 3, if
-> anyone thinks we may fix the secondary CPU bringup issue during the next
-> 3 months) are queued for v4.3. The other patches can be queued for
-> 2016^H^H^H^Hv4.4.
+Right, not the whole output of "cc" by patchman automatically should be 
+involved
+in the  iteration of this patch. I will omit them from this loop  in v4.
 
-Sorry for surprising you with that merge-order requirement.
+>
+> Additionally if DTS changes do not have to be introduced atomically
+> please split it per sub-architecture. Of course that applies only in
+> case of bisectable patches. And the patchset should preserve
+> bisectability and backward compatibility (mentioned earlier).
 
-Unfortunately I am not comfortable with taking patch 1 for v4.3 because:
-1. Its now very late in the cycle
-2. There now seems to be some discussion around it.
+okay, it will be split for each sub-architecture.
+Thanks, Krzysztof. It's helpful.
+> Best regards,
+> Krzysztof
+>
+>
+>>   .../devicetree/bindings/mmc/synopsys-dw-mshc.txt   |  41 +++
+>>   arch/arc/configs/axs101_defconfig                  |   1 -
+>>   arch/arc/configs/axs103_defconfig                  |   1 -
+>>   arch/arc/configs/axs103_smp_defconfig              |   1 -
+>>   arch/arm/boot/dts/exynos3250-monk.dts              |   1 +
+>>   arch/arm/boot/dts/exynos3250-rinato.dts            |   1 +
+>>   arch/arm/boot/dts/exynos4412-odroid-common.dtsi    |   1 +
+>>   arch/arm/boot/dts/exynos4412-origen.dts            |   1 +
+>>   arch/arm/boot/dts/exynos4412-trats2.dts            |   1 +
+>>   arch/arm/boot/dts/exynos4x12.dtsi                  |   1 +
+>>   arch/arm/boot/dts/exynos5250-arndale.dts           |   2 +
+>>   arch/arm/boot/dts/exynos5250-smdk5250.dts          |   2 +
+>>   arch/arm/boot/dts/exynos5250-snow.dts              |   3 +
+>>   arch/arm/boot/dts/exynos5250-spring.dts            |   2 +
+>>   arch/arm/boot/dts/exynos5260-xyref5260.dts         |   2 +
+>>   arch/arm/boot/dts/exynos5410-smdk5410.dts          |   2 +
+>>   arch/arm/boot/dts/exynos5420-arndale-octa.dts      |   2 +
+>>   arch/arm/boot/dts/exynos5420-peach-pit.dts         |   3 +
+>>   arch/arm/boot/dts/exynos5420-smdk5420.dts          |   2 +
+>>   arch/arm/boot/dts/exynos5422-odroidxu3-common.dtsi |   2 +
+>>   arch/arm/boot/dts/exynos5800-peach-pi.dts          |   3 +
+>>   arch/arm/boot/dts/hisi-x5hd2.dtsi                  |   2 +
+>>   arch/arm/boot/dts/rk3288-evb.dtsi                  |   2 +
+>>   arch/arm/boot/dts/rk3288-firefly.dtsi              |   3 +
+>>   arch/arm/boot/dts/rk3288-popmetal.dts              |   2 +
+>>   arch/arm/configs/exynos_defconfig                  |   1 -
+>>   arch/arm/configs/hisi_defconfig                    |   1 -
+>>   arch/arm/configs/lpc18xx_defconfig                 |   1 -
+>>   arch/arm/configs/multi_v7_defconfig                |   1 -
+>>   arch/arm/configs/zx_defconfig                      |   1 -
+>>   arch/arm64/boot/dts/exynos/exynos7-espresso.dts    |   2 +
+>>   arch/mips/configs/pistachio_defconfig              |   1 -
+>>   drivers/mmc/host/Kconfig                           |  11 +-
+>>   drivers/mmc/host/dw_mmc-pltfm.c                    |   2 +
+>>   drivers/mmc/host/dw_mmc.c                          | 277 +++++++++++++++++----
+>>   include/linux/mmc/dw_mmc.h                         |  28 ++-
+>>   36 files changed, 338 insertions(+), 72 deletions(-)
+>>
+>
+>
+>
 
-I think I am happy to take the other patches for v4.4, now. But perhaps
-I should wait for the discussion around patch 1 to conclude first?
+
+-- 
+Shawn Lin
