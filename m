@@ -1,7 +1,7 @@
 From: Gavin Shan <gwshan@linux.vnet.ibm.com>
-Subject: [PATCH v6 38/42] drivers/of: Unflatten subordinate nodes after specified level
-Date: Thu,  6 Aug 2015 14:11:43 +1000
-Message-ID: <1438834307-26960-39-git-send-email-gwshan@linux.vnet.ibm.com>
+Subject: [PATCH v6 10/42] powerpc/powernv: pnv_ioda_setup_dma() configure one PE only
+Date: Thu,  6 Aug 2015 14:11:15 +1000
+Message-ID: <1438834307-26960-11-git-send-email-gwshan@linux.vnet.ibm.com>
 References: <1438834307-26960-1-git-send-email-gwshan@linux.vnet.ibm.com>
 Return-path: <linux-pci-owner@vger.kernel.org>
 In-Reply-To: <1438834307-26960-1-git-send-email-gwshan@linux.vnet.ibm.com>
@@ -10,130 +10,129 @@ To: linuxppc-dev@lists.ozlabs.org
 Cc: linux-pci@vger.kernel.org, devicetree@vger.kernel.org, benh@kernel.crashing.org, mpe@ellerman.id.au, bhelgaas@google.com, grant.likely@linaro.org, robherring2@gmail.com, panto@antoniou-consulting.com, aik@ozlabs.ru, Gavin Shan <gwshan@linux.vnet.ibm.com>
 List-Id: devicetree@vger.kernel.org
 
-unflatten_dt_node() is called recursively to unflatten FDT nodes
-with the assumption that FDT blob has only one root node, which
-isn't true when the FDT blob represents device sub-tree. This
-improves the function to supporting device sub-tree that have
-multiple nodes in the first level:
+The original implementation of pnv_ioda_setup_dma() iterates the
+list of PEs and configures the DMA32 space for them one by one.
+The function was designed to be called during PHB fixup time.
+When configuring PE's DMA32 space in pcibios_setup_bridge(), in
+order to support PCI hotplug, we have to have the function PE
+oriented.
 
-   * Rename original unflatten_dt_node() to __unflatten_dt_node().
-   * Wrapper unflatten_dt_node() calls __unflatten_dt_node() with
-     adjusted current node depth to 1 to avoid underflow.
+This renames pnv_ioda_setup_dma() to pnv_ioda1_setup_dma() and
+adds one more argument "struct pnv_ioda_pe *pe" to it. The caller,
+pnv_pci_ioda_setup_DMA(), gets PE from the list and passes to it
+or pnv_pci_ioda2_setup_dma_pe(). The patch shouldn't cause behavioral
+changes.
 
 Signed-off-by: Gavin Shan <gwshan@linux.vnet.ibm.com>
 ---
- drivers/of/fdt.c | 53 ++++++++++++++++++++++++++++++++++++++++-------------
- 1 file changed, 40 insertions(+), 13 deletions(-)
+ arch/powerpc/platforms/powernv/pci-ioda.c | 75 +++++++++++++++----------------
+ 1 file changed, 36 insertions(+), 39 deletions(-)
 
-diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
-index 0749656..a18a2ce 100644
---- a/drivers/of/fdt.c
-+++ b/drivers/of/fdt.c
-@@ -161,7 +161,7 @@ static void *unflatten_dt_alloc(void **mem, unsigned long size,
+diff --git a/arch/powerpc/platforms/powernv/pci-ioda.c b/arch/powerpc/platforms/powernv/pci-ioda.c
+index 8456f37..cd22002 100644
+--- a/arch/powerpc/platforms/powernv/pci-ioda.c
++++ b/arch/powerpc/platforms/powernv/pci-ioda.c
+@@ -2443,52 +2443,29 @@ static void pnv_pci_ioda2_setup_dma_pe(struct pnv_phb *phb,
+ 		pnv_ioda_setup_bus_dma(pe, pe->pbus);
  }
  
- /**
-- * unflatten_dt_node - Alloc and populate a device_node from the flat tree
-+ * __unflatten_dt_node - Alloc and populate a device_node from the flat tree
-  * @blob: The parent device tree blob
-  * @mem: Memory chunk to use for allocating device nodes and properties
-  * @poffset: pointer to node in flat tree
-@@ -171,20 +171,20 @@ static void *unflatten_dt_alloc(void **mem, unsigned long size,
-  * @dryrun: If true, do not allocate device nodes but still calculate needed
-  * memory size
-  */
--static void * unflatten_dt_node(const void *blob,
-+static void *__unflatten_dt_node(const void *blob,
- 				void *mem,
- 				int *poffset,
- 				struct device_node *dad,
- 				struct device_node **nodepp,
- 				unsigned long fpsize,
--				bool dryrun)
-+				bool dryrun,
-+				int *depth)
+-static void pnv_ioda_setup_dma(struct pnv_phb *phb)
++static unsigned int pnv_ioda1_setup_dma(struct pnv_phb *phb,
++					struct pnv_ioda_pe *pe,
++					unsigned int base)
  {
- 	const __be32 *p;
- 	struct device_node *np;
- 	struct property *pp, **prev_pp = NULL;
- 	const char *pathp;
- 	unsigned int l, allocl;
--	static int depth = 0;
- 	int old_depth;
- 	int offset;
- 	int has_name = 0;
-@@ -337,13 +337,25 @@ static void * unflatten_dt_node(const void *blob,
- 			np->type = "<NULL>";
- 	}
+ 	struct pci_controller *hose = phb->hose;
+-	struct pnv_ioda_pe *pe;
+-	unsigned int dma_weight;
++	unsigned int dma_weight, segs;
  
--	old_depth = depth;
--	*poffset = fdt_next_node(blob, *poffset, &depth);
--	if (depth < 0)
--		depth = 0;
--	while (*poffset > 0 && depth > old_depth)
--		mem = unflatten_dt_node(blob, mem, poffset, np, NULL,
--					fpsize, dryrun);
-+	/* Multiple nodes might be in the first depth level if
-+	 * the device tree is sub-tree. All nodes in current
-+	 * or deeper depth are unflattened after it returns.
-+	 */
-+	old_depth = *depth;
-+	*poffset = fdt_next_node(blob, *poffset, depth);
-+	while (*poffset > 0) {
-+		if (*depth < old_depth)
-+			break;
-+
-+		if (*depth == old_depth)
-+			mem = __unflatten_dt_node(blob, mem, poffset,
-+						  dad, NULL, fpsize,
-+						  dryrun, depth);
-+		else if (*depth > old_depth)
-+			mem = __unflatten_dt_node(blob, mem, poffset,
-+						  np, NULL, fpsize,
-+						  dryrun, depth);
-+	}
+ 	/* Calculate the PHB's DMA weight */
+ 	dma_weight = pnv_ioda_phb_dma_weight(phb);
+ 	pr_info("PCI%04x has %ld DMA32 segments, total weight %d\n",
+ 		hose->global_number, phb->ioda.dma32_segcount, dma_weight);
  
- 	if (*poffset < 0 && *poffset != -FDT_ERR_NOTFOUND)
- 		pr_err("unflatten: error %d processing FDT\n", *poffset);
-@@ -369,6 +381,20 @@ static void * unflatten_dt_node(const void *blob,
- 	return mem;
+-	pnv_pci_ioda_setup_opal_tce_kill(phb);
+-
+-	/* Walk our PE list and configure their DMA segments, hand them
+-	 * out one base segment plus any residual segments based on
+-	 * weight
+-	 */
+-	list_for_each_entry(pe, &phb->ioda.pe_dma_list, dma_link) {
+-		if (!pe->dma32_weight)
+-			continue;
+-
+-		/*
+-		 * For IODA2 compliant PHB3, we needn't care about the weight.
+-		 * The all available 32-bits DMA space will be assigned to
+-		 * the specific PE.
+-		 */
+-		if (phb->type == PNV_PHB_IODA1) {
+-			unsigned int segs, base = 0;
+-
+-			if (pe->dma32_weight <
+-			    dma_weight / phb->ioda.dma32_segcount)
+-				segs = 1;
+-			else
+-				segs = (pe->dma32_weight *
+-					phb->ioda.dma32_segcount) / dma_weight;
+-
+-			pe_info(pe, "DMA32 weight %d, assigned %d segments\n",
+-				pe->dma32_weight, segs);
+-			pnv_pci_ioda_setup_dma_pe(phb, pe, base, segs);
++	if (pe->dma32_weight <
++	    dma_weight / phb->ioda.dma32_segcount)
++		segs = 1;
++	else
++		segs = (pe->dma32_weight *
++			phb->ioda.dma32_segcount) / dma_weight;
++	pe_info(pe, "DMA weight %d, assigned %d segments\n",
++		pe->dma32_weight, segs);
++	pnv_pci_ioda_setup_dma_pe(phb, pe, base, segs);
+ 
+-			base += segs;
+-		} else {
+-			pe_info(pe, "Assign DMA32 space\n");
+-			pnv_pci_ioda2_setup_dma_pe(phb, pe);
+-		}
+-	}
++	return segs;
  }
  
-+static void *unflatten_dt_node(const void *blob,
-+			       void *mem,
-+			       int *poffset,
-+			       struct device_node *dad,
-+			       struct device_node **nodepp,
-+			       bool dryrun)
-+{
-+	int depth = 1;
+ #ifdef CONFIG_PCI_MSI
+@@ -2955,12 +2932,32 @@ static void pnv_pci_ioda_setup_DMA(void)
+ {
+ 	struct pci_controller *hose, *tmp;
+ 	struct pnv_phb *phb;
++	struct pnv_ioda_pe *pe;
++	unsigned int base;
+ 
+ 	list_for_each_entry_safe(hose, tmp, &hose_list, list_node) {
+-		pnv_ioda_setup_dma(hose->private_data);
++		phb = hose->private_data;
++		pnv_pci_ioda_setup_opal_tce_kill(phb);
 +
-+	return __unflatten_dt_node(blob, mem, poffset,
-+				   dad, nodepp, 0,
-+				   dryrun, &depth);
-+}
++		base = 0;
++		list_for_each_entry(pe, &phb->ioda.pe_dma_list, dma_link) {
++			if (!pe->dma32_weight)
++				continue;
 +
- /**
-  * __unflatten_device_tree - create tree of device_nodes from flat blob
-  *
-@@ -408,7 +434,8 @@ static void __unflatten_device_tree(const void *blob,
++			switch (phb->type) {
++			case PNV_PHB_IODA1:
++				base += pnv_ioda1_setup_dma(phb, pe, base);
++				break;
++			case PNV_PHB_IODA2:
++				pnv_pci_ioda2_setup_dma_pe(phb, pe);
++				break;
++			default:
++				pr_warn("%s: No DMA for PHB type %d\n",
++					__func__, phb->type);
++			}
++		}
  
- 	/* First pass, scan for size */
- 	start = 0;
--	size = (unsigned long)unflatten_dt_node(blob, NULL, &start, NULL, NULL, 0, true);
-+	size = (unsigned long)unflatten_dt_node(blob, NULL, &start,
-+						NULL, NULL, true);
- 	size = ALIGN(size, 4);
- 
- 	pr_debug("  size is %lx, allocating...\n", size);
-@@ -423,7 +450,7 @@ static void __unflatten_device_tree(const void *blob,
- 
- 	/* Second pass, do actual unflattening */
- 	start = 0;
--	unflatten_dt_node(blob, mem, &start, NULL, mynodes, 0, false);
-+	unflatten_dt_node(blob, mem, &start, NULL, mynodes, false);
- 	if (be32_to_cpup(mem + size) != 0xdeadbeef)
- 		pr_warning("End of tree marker overwritten: %08x\n",
- 			   be32_to_cpup(mem + size));
+ 		/* Mark the PHB initialization done */
+-		phb = hose->private_data;
+ 		phb->initialized = 1;
+ 	}
+ }
 -- 
 2.1.0
