@@ -1,50 +1,52 @@
-From: James Liao <jamesjj.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH v6 5/9] clk: mediatek: Fix rate and dependency of MT8173
- clocks
-Date: Thu, 6 Aug 2015 16:35:32 +0800
-Message-ID: <1438850132.27884.17.camel@mtksdaap41>
-References: <1438676218-11310-1-git-send-email-jamesjj.liao@mediatek.com>
-	 <1438676218-11310-6-git-send-email-jamesjj.liao@mediatek.com>
-	 <20150805065341.GA18700@pengutronix.de>
+From: Wenyou Yang <wenyou.yang-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH v5 0/2] add a new driver to support SAMA5D4 watchdog timer
+Date: Thu, 6 Aug 2015 16:34:13 +0800
+Message-ID: <1438850055-30104-1-git-send-email-wenyou.yang@atmel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20150805065341.GA18700-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mike Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Heiko Stubner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Ricky Liang <jcliang-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
+Cc: sylvain.rochet-ETtyaVkrhkNWk0Htik3J/w@public.gmane.org, nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org, boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, wenyou.yang-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Sascha,
+Hello,
 
-On Wed, 2015-08-05 at 08:53 +0200, Sascha Hauer wrote:
-> On Tue, Aug 04, 2015 at 04:16:54PM +0800, James Liao wrote:
-> > -static const struct mtk_fixed_factor root_clk_alias[] __initconst = {
-> > -	FACTOR(CLK_TOP_CLKPH_MCK_O, "clkph_mck_o", "clk_null", 1, 1),
-> > -	FACTOR(CLK_TOP_USB_SYSPLL_125M, "usb_syspll_125m", "clk_null", 1, 1),
-> > -	FACTOR(CLK_TOP_HDMITX_DIG_CTS, "hdmitx_dig_cts", "clk_null", 1, 1),
-> > +static const struct mtk_fixed_clk fixed_clks[] __initconst = {
-> > +	FIXED_CLK(CLK_TOP_CLKPH_MCK_O, "clkph_mck_o", "clk26m", 400 * MHZ),
-> > +	FIXED_CLK(CLK_TOP_USB_SYSPLL_125M, "usb_syspll_125m", "clk26m", 125 * MHZ),
-> 
-> Hm, it seems you hide PLLs in fixed factor clock. Are you sure that
-> there is a PLL in the system generating 125MHz from 26MHz which is in no
-> way configurable? Or is this really some clock derived from the syspll
-> as the clock name suggests?
+Because the watchdog WDT_MR register can be written more than once,
+its work mechanism is different from the at91sam9260 watchdog driver.
+Open the device file to enable the watchdog hardware, close to disable it,
+and ping it from the user space directly to keep it alive.
 
-According to the datasheet from our clock designer, usb_syspll_125m is
-the output clock of an analog macro which is named SSUSB_PHY, and its
-input clock is AD_CLK26M_CK.
+Changes from v4.0
+ 1./ Fix interrupt register function flags argument.
+ 2./ Replace the tabs after #define with spaces.
 
-SSUSB_PHY is not the same as general PLLs such as MAINPLL. So I don't
-treat it as a configurable PLL but a fixed clock with the typical rate
-125 MHz.
+Changes from v3.0
+ 1./ Change the driver name to 'sama5d4_wdt' for more acceptable.
+ 2./ Change the prefix of function name and struct name
+     from 'atmel_' to 'sama5d4_', and others.
 
+Changes from v2.0
+ 1./ Use a specific driver name, at91_sama5d4_wdt.c.
+ 2./ Remove '-' at the end of macro name and unnecessary check.
+ 3./ Use alphabetic order for include files.
 
-Best regards,
+Wenyou Yang (2):
+  drivers: watchdog: add a driver to support SAMA5D4 watchdog timer
+  Documentation: dt: binding: atmel-sama5d4-wdt: for SAMA5D4 watchdog
+    driver
 
-James
+ .../bindings/watchdog/atmel-sama5d4-wdt.txt        |   35 +++
+ drivers/watchdog/Kconfig                           |    9 +
+ drivers/watchdog/Makefile                          |    1 +
+ drivers/watchdog/at91sam9_wdt.h                    |    2 +
+ drivers/watchdog/sama5d4_wdt.c                     |  280 ++++++++++++++++++++
+ 5 files changed, 327 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/watchdog/atmel-sama5d4-wdt.txt
+ create mode 100644 drivers/watchdog/sama5d4_wdt.c
+
+-- 
+1.7.9.5
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
