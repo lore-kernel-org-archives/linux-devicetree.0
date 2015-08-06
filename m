@@ -1,185 +1,191 @@
-From: Gavin Shan <gwshan@linux.vnet.ibm.com>
-Subject: [PATCH v6 35/42] powerpc/pci: Export traverse_pci_device_nodes()
-Date: Thu,  6 Aug 2015 14:11:40 +1000
-Message-ID: <1438834307-26960-36-git-send-email-gwshan@linux.vnet.ibm.com>
+From: Gavin Shan <gwshan-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
+Subject: [PATCH v6 33/42] powerpc/powernv: Functions to get/reset PCI slot status
+Date: Thu,  6 Aug 2015 14:11:38 +1000
+Message-ID: <1438834307-26960-34-git-send-email-gwshan@linux.vnet.ibm.com>
 References: <1438834307-26960-1-git-send-email-gwshan@linux.vnet.ibm.com>
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <1438834307-26960-1-git-send-email-gwshan@linux.vnet.ibm.com>
-Sender: linux-pci-owner@vger.kernel.org
-To: linuxppc-dev@lists.ozlabs.org
-Cc: linux-pci@vger.kernel.org, devicetree@vger.kernel.org, benh@kernel.crashing.org, mpe@ellerman.id.au, bhelgaas@google.com, grant.likely@linaro.org, robherring2@gmail.com, panto@antoniou-consulting.com, aik@ozlabs.ru, Gavin Shan <gwshan@linux.vnet.ibm.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1438834307-26960-1-git-send-email-gwshan-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Cc: linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org, mpe-Gsx/Oe8HsFggBc27wqDAHg@public.gmane.org, bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, panto-wVdstyuyKrO8r51toPun2/C9HSW9iNxf@public.gmane.org, aik-sLpHqDYs0B2HXe+LvDLADg@public.gmane.org, Gavin Shan <gwshan-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Previously we wouldn't remove pdn because PCI hotplug isn't
-supported. update_dn_pci_info() is called at system booting
-time to create pdn for PCI device nodes. However, it's going
-to be changed later because of PCI hotplug.
+The patch exports 4 functions, which base on corresponding OPAL
+APIs to get or set PCI slot status. Those functions are going to
+be used by PCI hotplug module in subsequent patches:
 
-This converts update_dn_pci_info() to add_pci_device_node_info(),
-traverse_pci_devices() to traverse_pci_device_nodes(). This also
-adds remove_pci_device_node_info() which will be used in subsequent
-patch at the moment of unplugging PCI devices. All those functions
-are exported for PowerNV hotplug driver to use.
+   pnv_pci_get_device_tree()      opal_get_device_tree()
+   pnv_pci_get_presence_status()  opal_pci_get_presence_status()
+   pnv_pci_get_power_status()     opal_pci_get_power_status()
+   pnv_pci_set_power_status()     opal_pci_set_power_status()
 
-Signed-off-by: Gavin Shan <gwshan@linux.vnet.ibm.com>
+Besides, the patch also exports pnv_pci_hotplug_notifier_{register,
+unregister}() to allow registration and unregistration of PCI hotplug
+notifier, which will be used to receive PCI hotplug message from skiboot
+firmware.
+
+Signed-off-by: Gavin Shan <gwshan-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
 ---
- arch/powerpc/include/asm/pci-bridge.h  |  4 ++-
- arch/powerpc/include/asm/ppc-pci.h     |  8 ++++--
- arch/powerpc/kernel/pci_dn.c           | 51 +++++++++++++++++++++++++++++-----
- arch/powerpc/platforms/pseries/setup.c |  2 +-
- 4 files changed, 53 insertions(+), 12 deletions(-)
+ arch/powerpc/include/asm/opal-api.h            |  8 +++-
+ arch/powerpc/include/asm/opal.h                |  5 ++
+ arch/powerpc/include/asm/pnv-pci.h             |  7 +++
+ arch/powerpc/platforms/powernv/opal-wrappers.S |  4 ++
+ arch/powerpc/platforms/powernv/pci.c           | 66 ++++++++++++++++++++++++++
+ 5 files changed, 89 insertions(+), 1 deletion(-)
 
-diff --git a/arch/powerpc/include/asm/pci-bridge.h b/arch/powerpc/include/asm/pci-bridge.h
-index 787a879..010eb54 100644
---- a/arch/powerpc/include/asm/pci-bridge.h
-+++ b/arch/powerpc/include/asm/pci-bridge.h
-@@ -237,7 +237,9 @@ extern struct pci_dn *pci_get_pdn_by_devfn(struct pci_bus *bus,
- extern struct pci_dn *pci_get_pdn(struct pci_dev *pdev);
- extern struct pci_dn *add_dev_pci_data(struct pci_dev *pdev);
- extern void remove_dev_pci_data(struct pci_dev *pdev);
--extern void *update_dn_pci_info(struct device_node *dn, void *data);
-+extern void *add_pci_device_node_info(struct device_node *dn,
-+				      struct pci_controller *phb);
-+extern void remove_pci_device_node_info(struct device_node *np);
+diff --git a/arch/powerpc/include/asm/opal-api.h b/arch/powerpc/include/asm/opal-api.h
+index 442995b..33c67ee 100644
+--- a/arch/powerpc/include/asm/opal-api.h
++++ b/arch/powerpc/include/asm/opal-api.h
+@@ -154,7 +154,11 @@
+ #define OPAL_FLASH_WRITE			111
+ #define OPAL_FLASH_ERASE			112
+ #define OPAL_PRD_MSG				113
+-#define OPAL_LAST				113
++#define OPAL_GET_DEVICE_TREE			117
++#define OPAL_PCI_GET_PRESENCE_STATUS		118
++#define OPAL_PCI_GET_POWER_STATUS		119
++#define OPAL_PCI_SET_POWER_STATUS		120
++#define OPAL_LAST				120
  
- static inline int pci_device_from_OF_node(struct device_node *np,
- 					  u8 *bus, u8 *devfn)
-diff --git a/arch/powerpc/include/asm/ppc-pci.h b/arch/powerpc/include/asm/ppc-pci.h
-index 916775d..c87ed42 100644
---- a/arch/powerpc/include/asm/ppc-pci.h
-+++ b/arch/powerpc/include/asm/ppc-pci.h
-@@ -33,9 +33,11 @@ extern struct pci_dev *isa_bridge_pcidev;	/* may be NULL if no ISA bus */
- struct device_node;
- struct pci_dn;
+ /* Device tree flags */
  
--typedef void *(*traverse_func)(struct device_node *me, void *data);
--void *traverse_pci_devices(struct device_node *start, traverse_func pre,
--		void *data);
-+typedef void *(*traverse_func)(struct device_node *me,
-+			       struct pci_controller *phb);
-+void *traverse_pci_device_nodes(struct device_node *start,
-+				traverse_func pre,
-+				struct pci_controller *phb);
- void *traverse_pci_dn(struct pci_dn *root,
- 		      void *(*fn)(struct pci_dn *, void *),
- 		      void *data);
-diff --git a/arch/powerpc/kernel/pci_dn.c b/arch/powerpc/kernel/pci_dn.c
-index 53a11e9..3a38a55 100644
---- a/arch/powerpc/kernel/pci_dn.c
-+++ b/arch/powerpc/kernel/pci_dn.c
-@@ -283,9 +283,9 @@ void remove_dev_pci_data(struct pci_dev *pdev)
-  * Traverse_func that inits the PCI fields of the device node.
-  * NOTE: this *must* be done before read/write config to the device.
-  */
--void *update_dn_pci_info(struct device_node *dn, void *data)
-+void *add_pci_device_node_info(struct device_node *dn,
-+			       struct pci_controller *phb)
- {
--	struct pci_controller *phb = data;
- 	const __be32 *type = of_get_property(dn, "ibm,pci-config-space-type", NULL);
- 	const __be32 *regs;
- 	struct device_node *parent;
-@@ -342,6 +342,42 @@ void *update_dn_pci_info(struct device_node *dn, void *data)
+@@ -361,6 +365,8 @@ enum opal_msg_type {
+ 	OPAL_MSG_HMI_EVT,
+ 	OPAL_MSG_DPO,
+ 	OPAL_MSG_PRD,
++	OPAL_MSG_OCC,
++	OPAL_MSG_PCI_HOTPLUG,
+ 	OPAL_MSG_TYPE_MAX,
+ };
  
- 	return NULL;
- }
-+EXPORT_SYMBOL(add_pci_device_node_info);
+diff --git a/arch/powerpc/include/asm/opal.h b/arch/powerpc/include/asm/opal.h
+index bbb3aa6..53b8528 100644
+--- a/arch/powerpc/include/asm/opal.h
++++ b/arch/powerpc/include/asm/opal.h
+@@ -203,6 +203,11 @@ int64_t opal_flash_write(uint64_t id, uint64_t offset, uint64_t buf,
+ 		uint64_t size, uint64_t token);
+ int64_t opal_flash_erase(uint64_t id, uint64_t offset, uint64_t size,
+ 		uint64_t token);
++int64_t opal_get_device_tree(uint32_t phandle, uint64_t buf, uint64_t len);
++int64_t opal_pci_get_presence_status(uint64_t id, uint8_t *status);
++int64_t opal_pci_get_power_status(uint64_t id, uint8_t *status);
++int64_t opal_pci_set_power_status(uint64_t id, uint8_t status);
 +
-+/**
-+ * remove_pci_device_node_info - Remove pci_dn from PCI device node
-+ * @dn: PCI device node
-+ *
-+ * Remove pci_dn from PCI device node. The pci_dn is also removed
-+ * from the child list of the parent pci_dn.
-+ */
-+void remove_pci_device_node_info(struct device_node *np)
+ 
+ /* Internal functions */
+ extern int early_init_dt_scan_opal(unsigned long node, const char *uname,
+diff --git a/arch/powerpc/include/asm/pnv-pci.h b/arch/powerpc/include/asm/pnv-pci.h
+index 6f77f71..7efa87f 100644
+--- a/arch/powerpc/include/asm/pnv-pci.h
++++ b/arch/powerpc/include/asm/pnv-pci.h
+@@ -13,6 +13,13 @@
+ #include <linux/pci.h>
+ #include <misc/cxl-base.h>
+ 
++extern int pnv_pci_get_device_tree(uint32_t phandle, void *buf, uint64_t len);
++extern int pnv_pci_get_presence_status(uint64_t id, uint8_t *status);
++extern int pnv_pci_get_power_status(uint64_t id, uint8_t *status);
++extern int pnv_pci_set_power_status(uint64_t id, uint8_t status);
++extern int pnv_pci_hotplug_notifier_register(struct notifier_block *nb);
++extern int pnv_pci_hotplug_notifier_unregister(struct notifier_block *nb);
++
+ int pnv_phb_to_cxl_mode(struct pci_dev *dev, uint64_t mode);
+ int pnv_cxl_ioda_msi_setup(struct pci_dev *dev, unsigned int hwirq,
+ 			   unsigned int virq);
+diff --git a/arch/powerpc/platforms/powernv/opal-wrappers.S b/arch/powerpc/platforms/powernv/opal-wrappers.S
+index 88e4333..804f8cc 100644
+--- a/arch/powerpc/platforms/powernv/opal-wrappers.S
++++ b/arch/powerpc/platforms/powernv/opal-wrappers.S
+@@ -298,3 +298,7 @@ OPAL_CALL(opal_flash_read,			OPAL_FLASH_READ);
+ OPAL_CALL(opal_flash_write,			OPAL_FLASH_WRITE);
+ OPAL_CALL(opal_flash_erase,			OPAL_FLASH_ERASE);
+ OPAL_CALL(opal_prd_msg,				OPAL_PRD_MSG);
++OPAL_CALL(opal_get_device_tree,			OPAL_GET_DEVICE_TREE);
++OPAL_CALL(opal_pci_get_presence_status,		OPAL_PCI_GET_PRESENCE_STATUS);
++OPAL_CALL(opal_pci_get_power_status,		OPAL_PCI_GET_POWER_STATUS);
++OPAL_CALL(opal_pci_set_power_status,		OPAL_PCI_SET_POWER_STATUS);
+diff --git a/arch/powerpc/platforms/powernv/pci.c b/arch/powerpc/platforms/powernv/pci.c
+index 801e3e8..5982110 100644
+--- a/arch/powerpc/platforms/powernv/pci.c
++++ b/arch/powerpc/platforms/powernv/pci.c
+@@ -65,6 +65,72 @@ int pnv_pci_poll(uint64_t id, int64_t rval, uint8_t *pval)
+ 	return rval ? -EIO : 0;
+ }
+ 
++int pnv_pci_get_device_tree(uint32_t phandle, void *buf, uint64_t len)
 +{
-+	struct pci_dn *pdn = np ? PCI_DN(np) : NULL;
-+#ifdef CONFIG_EEH
-+	struct eeh_dev *edev = pdn_to_eeh_dev(pdn);
-+#endif
++	int64_t rc;
 +
-+	if (!pdn)
-+		return;
++	if (!opal_check_token(OPAL_GET_DEVICE_TREE))
++		return -ENXIO;
 +
-+#ifdef CONFIG_EEH
-+	if (edev) {
-+		pdn->edev = NULL;
-+		kfree(edev);
-+	}
-+#endif
++	rc = opal_get_device_tree(phandle, (uint64_t)buf, len);
++	if (rc != OPAL_SUCCESS)
++		return -EIO;
 +
-+	BUG_ON(!list_empty(&pdn->child_list));
-+	list_del(&pdn->list);
-+	if (pdn->parent)
-+		of_node_put(pdn->parent->node);
-+
-+	np->data = NULL;
-+	kfree(pdn);
++	return 0;
 +}
-+EXPORT_SYMBOL(remove_pci_device_node_info);
++EXPORT_SYMBOL_GPL(pnv_pci_get_device_tree);
 +
- 
- /*
-  * Traverse a device tree stopping each PCI device in the tree.
-@@ -361,8 +397,8 @@ void *update_dn_pci_info(struct device_node *dn, void *data)
-  * one of these nodes we also assume its siblings are non-pci for
-  * performance.
-  */
--void *traverse_pci_devices(struct device_node *start, traverse_func pre,
--		void *data)
-+void *traverse_pci_device_nodes(struct device_node *start, traverse_func pre,
-+				struct pci_controller *phb)
++int pnv_pci_get_presence_status(uint64_t id, uint8_t *status)
++{
++	int64_t rc;
++
++	if (!opal_check_token(OPAL_PCI_GET_PRESENCE_STATUS))
++		return -ENXIO;
++
++	rc = opal_pci_get_presence_status(id, status);
++	if (rc != OPAL_SUCCESS)
++		return -EIO;
++
++	return 0;
++}
++EXPORT_SYMBOL_GPL(pnv_pci_get_presence_status);
++
++int pnv_pci_get_power_status(uint64_t id, uint8_t *status)
++{
++	int64_t rc;
++
++	if (!opal_check_token(OPAL_PCI_GET_POWER_STATUS))
++		return -ENXIO;
++
++	rc = opal_pci_get_power_status(id, status);
++	return pnv_pci_poll(id, rc, status);
++}
++EXPORT_SYMBOL_GPL(pnv_pci_get_power_status);
++
++int pnv_pci_set_power_status(uint64_t id, uint8_t status)
++{
++	int64_t rc;
++
++	if (!opal_check_token(OPAL_PCI_SET_POWER_STATUS))
++		return -ENXIO;
++
++	rc = opal_pci_set_power_status(id, status);
++	return pnv_pci_poll(id, rc, NULL);
++}
++EXPORT_SYMBOL_GPL(pnv_pci_set_power_status);
++
++int pnv_pci_hotplug_notifier_register(struct notifier_block *nb)
++{
++	return opal_message_notifier_register(OPAL_MSG_PCI_HOTPLUG, nb);
++}
++EXPORT_SYMBOL_GPL(pnv_pci_hotplug_notifier_register);
++
++int pnv_pci_hotplug_notifier_unregister(struct notifier_block *nb)
++{
++	return opal_message_notifier_unregister(OPAL_MSG_PCI_HOTPLUG, nb);
++}
++EXPORT_SYMBOL_GPL(pnv_pci_hotplug_notifier_unregister);
++
+ #ifdef CONFIG_PCI_MSI
+ int pnv_setup_msi_irqs(struct pci_dev *pdev, int nvec, int type)
  {
- 	struct device_node *dn, *nextdn;
- 	void *ret;
-@@ -377,7 +413,7 @@ void *traverse_pci_devices(struct device_node *start, traverse_func pre,
- 		if (classp)
- 			class = of_read_number(classp, 1);
- 
--		if (pre && ((ret = pre(dn, data)) != NULL))
-+		if (pre && ((ret = pre(dn, phb)) != NULL))
- 			return ret;
- 
- 		/* If we are a PCI bridge, go down */
-@@ -400,6 +436,7 @@ void *traverse_pci_devices(struct device_node *start, traverse_func pre,
- 	}
- 	return NULL;
- }
-+EXPORT_SYMBOL(traverse_pci_device_nodes);
- 
- static struct pci_dn *pci_dn_next_one(struct pci_dn *root,
- 				      struct pci_dn *pdn)
-@@ -455,7 +492,7 @@ void pci_devs_phb_init_dynamic(struct pci_controller *phb)
- 	struct pci_dn *pdn;
- 
- 	/* PHB nodes themselves must not match */
--	update_dn_pci_info(dn, phb);
-+	add_pci_device_node_info(dn, phb);
- 	pdn = dn->data;
- 	if (pdn) {
- 		pdn->devfn = pdn->busno = -1;
-@@ -465,7 +502,7 @@ void pci_devs_phb_init_dynamic(struct pci_controller *phb)
- 	}
- 
- 	/* Update dn->phb ptrs for new phb and children devices */
--	traverse_pci_devices(dn, update_dn_pci_info, phb);
-+	traverse_pci_device_nodes(dn, add_pci_device_node_info, phb);
- }
- 
- /** 
-diff --git a/arch/powerpc/platforms/pseries/setup.c b/arch/powerpc/platforms/pseries/setup.c
-index 92974aa..ed8c894 100644
---- a/arch/powerpc/platforms/pseries/setup.c
-+++ b/arch/powerpc/platforms/pseries/setup.c
-@@ -262,7 +262,7 @@ static int pci_dn_reconfig_notifier(struct notifier_block *nb, unsigned long act
- 	case OF_RECONFIG_ATTACH_NODE:
- 		pci = np->parent->data;
- 		if (pci)
--			update_dn_pci_info(np, pci->phb);
-+			add_pci_device_node_info(np, pci->phb);
- 		break;
- 	default:
- 		err = NOTIFY_DONE;
 -- 
 2.1.0
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
