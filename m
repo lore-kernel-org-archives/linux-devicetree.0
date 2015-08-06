@@ -1,221 +1,78 @@
-From: Sagar Dharia <sdharia@codeaurora.org>
-Subject: Re: [PATCH V3 2/6] of/slimbus: OF helper for SLIMbus
-Date: Thu, 6 Aug 2015 13:10:54 -0600
-Message-ID: <55C3B13E.3050108@codeaurora.org>
-References: <1438585190-11894-1-git-send-email-sdharia@codeaurora.org>
- <1438585190-11894-3-git-send-email-sdharia@codeaurora.org>
- <CAL_JsqLDzLXR5aC__YhCUzGzVcVYcv_H7QS6zG0vezQPST_Y2Q@mail.gmail.com>
+From: Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 1/3] nvmem: Add i.MX6 OCOTP device tree binding documentation
+Date: Thu, 06 Aug 2015 20:34:07 +0100
+Message-ID: <55C3B6AF.4050107@linaro.org>
+References: <1438693342-605-1-git-send-email-p.zabel@pengutronix.de>	 <55C38752.3040406@linaro.org> <1438878835.3223.14.camel@pengutronix.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAL_JsqLDzLXR5aC__YhCUzGzVcVYcv_H7QS6zG0vezQPST_Y2Q@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robherring2@gmail.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, bp@suse.de, poeschel@lemonage.de, Thierry Reding <treding@nvidia.com>, Mark Brown <broonie@kernel.org>, gong.chen@linux.intel.com, andreas.noever@gmail.com, Alan Cox <alan@linux.intel.com>, Mathieu Poirier <mathieu.poirier@linaro.org>, daniel@ffwll.ch, oded.gabbay@amd.com, jkosina@suse.cz, sharon.dvir1@mail.huji.ac.il, Joe Perches <joe@perches.com>, David Miller <davem@davemloft.net>, James Hogan <james.hogan@imgtec.com>, michael.opdenacker@free-electrons.com, Daniel Thompson <daniel.thompson@linaro.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, kheitke@aud
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1438878835.3223.14.camel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hello Rob,
-On 8/3/2015 10:13 AM, Rob Herring wrote:
-> On Mon, Aug 3, 2015 at 1:59 AM, Sagar Dharia <sdharia@codeaurora.org> wrote:
->> OF helper routine scans the SLIMbus DeviceTree, allocates resources,
->> and creates slim_devices according to the hierarchy.
->>
->> Signed-off-by: Sagar Dharia <sdharia@codeaurora.org>
->> ---
->>   Documentation/devicetree/bindings/slimbus/bus.txt | 46 ++++++++++++++
->>   drivers/slimbus/slim-core.c                       | 75 +++++++++++++++++++++++
->>   2 files changed, 121 insertions(+)
->>   create mode 100644 Documentation/devicetree/bindings/slimbus/bus.txt
->>
->> diff --git a/Documentation/devicetree/bindings/slimbus/bus.txt b/Documentation/devicetree/bindings/slimbus/bus.txt
->> new file mode 100644
->> index 0000000..a79ed7a
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/slimbus/bus.txt
->> @@ -0,0 +1,46 @@
->> +SLIM(Serial Low Power Interchip Media Bus) bus
->> +
->> +SLIMbus is a 2-wire bus, and is used to communicate with peripheral
->> +components like audio-codec.
->> +
->> +Controller is a normal device using binding for whatever bus it is
->> +on (e.g. platform bus).
->> +Required property for SLIMbus controller node:
->> +- compatible   - name of SLIMbus controller following generic names
->> +               recommended practice.
->> +- #address-cells - should be 6 (number of cells required to define
->> +               enumeration address of the device on SLIMbus)
->> +- #size-cells  - should be 0
->> +
->> +No other properties are required in the SLIMbus controller bus node.
->> +
->> +Child nodes:
->> +Every SLIMbus controller node can contain zero or more child nodes
->> +representing slave devices on the bus. Every SLIMbus slave device is
->> +uniquely determined by the 6 byte enumeration address.
->> +
->> +Required property for SLIMbus child node:
->> +- reg          - 6 byte enumeration address of the slave
-> 6 cell... I don't think it is a big deal to use 6 words to store 6
-> bytes, but is there some reason not to pack the address into 2 cells?
-Since the device-enumeration address has 4 logical components, I will 
-split this in 4 cells if that's okay.
->
->> +
->> +Optional:
->> +- compatible   - Slave devices can use compatible field to have a name.
->> +               If this field is missing, name of the device will be
->> +               determined using slave's enumeration address.
->> +               (e.g. in the example below, slave's name will be:
->> +               0x217:0x60:0x1:0x0)
-> Are devices discoverable and uniquely identifiable? This would be
-> something like a VID/PID which can be read in a generic way. It looks
-> like the address contains this info, but can you discover the
-> addresses of devices on the bus? If not compatible should not be
-> optional.
-Yes, as Mark pointed out in another thread, it's enumerable but more 
-likely to need the compatible field for binding to make the device 
-functional.
-I will word this accordingly.
->
->> +
->> +SLIMbus example for Qualcomm's slimbus manager compoent:
-> typo.
->
->> +
->> +       slim@28080000 {
->> +               compatible = "qcom,slim-msm";
->> +               reg = <0x28080000 0x2000>,
->> +               reg-names = "slimbus_physical";
-> Pretty pointless to have names with a single element.
-I missed 1 more name typically used by the controller in this example. 
-Will update that.
->
->> +               interrupts = <0 33 0>;
->> +               interrupt-names = "slimbus_irq";
->> +               clocks = <&lcc SLIMBUS_SRC>, <&lcc AUDIO_SLIMBUS_CLK>;
->> +               clock-names = "iface_clk", "core_clk";
->> +
->> +               slim_codec_slave {
-> You should have unit address here. Probably with "." in between fields
-> of the address that have defined meaning. So that may be something
-> like "0217.0060.01.00" based on what you do with the address bytes
-> below.
-Yes, that's a good idea and will go well when unit address and reg will 
-have same 4 fields.
-
-Thanks for the review-
-Sagar
->
->> +                       reg = <00 01 60 00 17 02>;
->> +               };
->> +       };
->> diff --git a/drivers/slimbus/slim-core.c b/drivers/slimbus/slim-core.c
->> index ee80c1b..d3fa28b 100644
->> --- a/drivers/slimbus/slim-core.c
->> +++ b/drivers/slimbus/slim-core.c
->> @@ -18,6 +18,7 @@
->>   #include <linux/idr.h>
->>   #include <linux/pm_runtime.h>
->>   #include <linux/slimbus.h>
->> +#include <linux/of.h>
->>
->>   static DEFINE_MUTEX(slim_lock);
->>   static DEFINE_IDR(ctrl_idr);
->> @@ -289,6 +290,79 @@ static LIST_HEAD(board_list);
->>   static LIST_HEAD(slim_ctrl_list);
->>   static DEFINE_MUTEX(board_lock);
->>
->> +#if IS_ENABLED(CONFIG_OF)
->> +/* OF helpers for SLIMbus */
->> +static void of_register_slim_devices(struct slim_controller *ctrl)
->> +{
->> +       struct device_node *node;
->> +       struct slim_boardinfo *temp, *binfo = NULL;
->> +       int n = 0;
->> +
->> +       if (!ctrl->dev.of_node)
->> +               return;
->> +
->> +       for_each_child_of_node(ctrl->dev.of_node, node) {
->> +               int ret;
->> +               u32 ea[6];
->> +               struct slim_device *slim;
->> +               char *name;
->> +
->> +               ret = of_property_read_u32_array(node, "reg", ea, 6);
->> +               if (ret) {
->> +                       dev_err(&ctrl->dev, "of_slim: E-addr err:%d\n", ret);
->> +                       continue;
->> +               }
->> +               name = kcalloc(SLIMBUS_NAME_SIZE, sizeof(char), GFP_KERNEL);
->> +               if (!name)
->> +                       goto of_slim_err;
->> +
->> +               slim = kzalloc(sizeof(struct slim_device), GFP_KERNEL);
->> +               if (!slim) {
->> +                       kfree(name);
->> +                       goto of_slim_err;
->> +               }
->> +               slim->e_addr.manf_id = (u16)((ea[5] << 8) | ea[4]);
->> +               slim->e_addr.prod_code = (u16)((ea[3] << 8) | ea[2]);
->> +               slim->e_addr.dev_index = (u8)ea[1];
->> +               slim->e_addr.instance = (u8)ea[0];
->> +
->> +               ret = of_modalias_node(node, name, SLIMBUS_NAME_SIZE);
->> +               if (ret < 0) {
->> +                       /* use device address for name, if not specified */
->> +                       snprintf(name, SLIMBUS_NAME_SIZE, "0x%x:0x%x:0x%x:0x%x",
->> +                                slim->e_addr.manf_id, slim->e_addr.prod_code,
->> +                                slim->e_addr.dev_index, slim->e_addr.instance);
->> +               }
->> +
->> +               temp = krealloc(binfo, (n + 1) * sizeof(struct slim_boardinfo),
->> +                                       GFP_KERNEL);
->> +               if (!temp) {
->> +                       kfree(name);
->> +                       kfree(slim);
->> +                       goto of_slim_err;
->> +               }
->> +               binfo = temp;
->> +               slim->dev.of_node = of_node_get(node);
->> +               slim->name = name;
->> +               binfo[n].bus_num = ctrl->nr;
->> +               binfo[n].slim_slave = slim;
->> +               n++;
->> +       }
->> +       slim_register_board_info(binfo, n);
->> +       return;
->> +
->> +of_slim_err:
->> +       n--;
->> +       while (n >= 0) {
->> +               kfree(binfo[n].slim_slave->name);
->> +               kfree(binfo[n].slim_slave);
->> +       }
->> +       kfree(binfo);
->> +}
->> +#else
->> +static void of_register_slim_devices(struct slim_controller *ctrl) { }
->> +#endif
->> +
->>   /* If controller is not present, only add to boards list */
->>   static void slim_match_ctrl_to_boardinfo(struct slim_controller *ctrl,
->>                                           struct slim_boardinfo *bi)
->> @@ -338,6 +412,7 @@ static void slim_ctrl_add_boarddevs(struct slim_controller *ctrl)
->>   {
->>          struct sbi_boardinfo *bi;
->>
->> +       of_register_slim_devices(ctrl);
->>          mutex_lock(&board_lock);
->>          list_add_tail(&ctrl->list, &slim_ctrl_list);
->>          list_for_each_entry(bi, &board_list, list)
->> --
->> 1.8.2.1
->>
 
 
--- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-hosted by The Linux Foundation
+On 06/08/15 17:33, Philipp Zabel wrote:
+> Am Donnerstag, den 06.08.2015, 17:12 +0100 schrieb Srinivas Kandagatla:
+>>
+>> On 04/08/15 14:02, Philipp Zabel wrote:
+>>> This patch documents the i.MX6 OCOTP device tree binding.
+>>>
+>>> Signed-off-by: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+>>> ---
+>>>    .../devicetree/bindings/nvmem/imx-ocotp.txt          | 20 ++++++++++++++++++++
+>>>    1 file changed, 20 insertions(+)
+>>>    create mode 100644 Documentation/devicetree/bindings/nvmem/imx-ocotp.txt
+>>>
+>>> diff --git a/Documentation/devicetree/bindings/nvmem/imx-ocotp.txt b/Documentation/devicetree/bindings/nvmem/imx-ocotp.txt
+>>> new file mode 100644
+>>> index 0000000..7d9a3fc
+>>> --- /dev/null
+>>> +++ b/Documentation/devicetree/bindings/nvmem/imx-ocotp.txt
+>>> @@ -0,0 +1,20 @@
+>>> +Freescale i.MX6 On-Chip OTP Controller (OCOTP) device tree bindings
+>>> +
+>>> +This binding represents the on-chip eFuse OTP controller found on
+>>> +i.MX6Q/D, i.MX6DL/S, i.MX6SL, and i.MX6SX SoCs.
+>>> +
+>>> +Required properties:
+>>> +- compatible: should be one of
+>>> +	"fsl,imx6q-ocotp" (i.MX6Q/D/DL/S),
+>>> +        "fsl,imx6sl-ocotp" (i.MX6SL), or
+>>> +	"fsl,imx6sx-ocotp" (i.MX6SX), followed by "syscon".
+>>> +- reg: Should contain the register base and length.
+>>> +- clocks: Should contain a phandle pointing to the gated peripheral clock.
+>>> +
+>>> +Example:
+>>> +
+>>> +	ocotp: ocotp@021bc000 {
+>>> +		compatible = "fsl,imx6q-ocotp", "syscon";
+>> Do you still need syscon?
+>
+> Currently the imx_tempmon driver still accesses ocotp via syscon. I'd
+> like to change that and drop "syscon" after the nvmem framework lands in
+> mainline.
+
+Makes sense.
+
+>
+>>> +		reg = <0x021bc000 0x4000>;
+>> Can't we just have a register range specific to the OTP device?
+>
+> In the i.MX device trees it is common to specify the register range from
+> the memory map. In any case, we have to support old device trees where
+> this is already set.
+ok.
+
+--srini
+>
+> regards
+> Philipp
+>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
