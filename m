@@ -1,103 +1,238 @@
-From: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
-Subject: Re: [RFC PATCH 1/5] spi: introduce flag for memory mapped read
-Date: Thu, 6 Aug 2015 18:14:00 +0200
-Message-ID: <CAMuHMdWWDwZ=ziGQXFCnOX8pErXpsEi533J73_Hh=sEqq4hR6Q@mail.gmail.com>
-References: <20150804155148.GR20873@sirena.org.uk>
-	<55C0FD98.1090107@ti.com>
-	<20150805115013.GJ20873@sirena.org.uk>
-	<CAOMqctQXwcHyiWBwtugSDSE_k65qrNfrwnhjQMDJkLoJMmGzUw@mail.gmail.com>
-	<20150805124412.GN20873@sirena.org.uk>
-	<CAOMqctS9Y5FxpUCCJew6+cnjH5iTvbzkH3g-8yrXs4OuS2pSGA@mail.gmail.com>
-	<20150806090202.GO20873@sirena.org.uk>
-	<CAOMqctQZRZ4zG_yYy=CeX3DX4NVNWN1COP4Q-2YvMun9xYOA7g@mail.gmail.com>
-	<20150806102225.GI7576@n2100.arm.linux.org.uk>
-	<55C35233.2000105@ti.com>
-	<20150806135129.GJ7576@n2100.arm.linux.org.uk>
+From: Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 2/3] nvmem: imx-ocotp: Add i.MX6 OCOTP driver
+Date: Thu, 06 Aug 2015 17:20:17 +0100
+Message-ID: <55C38941.9090709@linaro.org>
+References: <1438693342-605-1-git-send-email-p.zabel@pengutronix.de> <1438693342-605-2-git-send-email-p.zabel@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20150806135129.GJ7576-l+eeeJia6m9vn6HldHNs0ANdhmdF6hFW@public.gmane.org>
-Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
-Cc: Vignesh R <vigneshr-l0cyMroinI0@public.gmane.org>, Michal Suchanek <hramrach-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-spi <linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Huang Shijie <b32955-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, MTD Maling List <linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1438693342-605-2-git-send-email-p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Aug 6, 2015 at 3:51 PM, Russell King - ARM Linux
-<linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org> wrote:
-> On Thu, Aug 06, 2015 at 05:55:23PM +0530, Vignesh R wrote:
->> On the whole following are my requirements:
->> 1. to be able to communicate with non -flash SPI devices via config port
->> ( this functionality is supported by current driver, I dont want to
->> break it). Or pump any spi_message on to SPI bus directly.
->> 2. take advantage of memory mapped port in order to increase read
->> throughput( and use dma in future) when the slave is a m25p80 type flash.
->> 3. handle m25p80 as well as other slave on multiple chipselects.
->>
->> I just need to know whether the user that requested the transfer is
->> m25p80 driver. If yes, ti-qspi driver can take advantage of memory
->> mapped interface, else just use config port to access SPI bus directly.
->
-> The problem with this approach is that it's an abomination.  It's adding
-> a SPI-user specific hack which is detected by a specific driver.  That's
-> really not sane - what happens when we have lots of these kinds of "I'm
-> an X SPI-user" with drivers detecting that?  It's not maintainable in the
-> long term.
->
-> Yes, your requirements _today_ seem simple and easy, but you're only
-> thinking about today, not tomorrow when you've moved on and someone else
-> has to maintain the mess left behind (or delete it from mainline because
-> they're sick of dealing with a hack.)
->
->> The spi_message that is received in transfer_one_message() is too
->> generic to imply the slave device that is on the other side of the wire.
->> IMO, the read command does not imply that the slave is m25p80 flash
->> (besides the read opcodes vary across vendors of m25p80 and across modes).
->
-> I can see both sides of the argument.
->
-> Mark is saying: if the SPI driver detects that the message to be transmitted
-> is a read command followed by the appropriate number of dummy bytes, and
-> then the data being read _and_ it's using quad-mode access, and the hardware
-> generates _exactly_ that in hardware using the memory mapped mode, there is
-> no reason _not_ to use the hardware to achieve that SPI transaction.  The
-> bus activity will be identical to what happens when the SPI controller is
-> used manually to achieve that bus sequence.
->
-> You're saying: but the documentation says you can't use it for anything
-> except m25p80.  If you look at 24.5.4.1.2, it tells you what the SFI
-> generates on the bus, which is:
->
-> 1. CS active
-> 2. Read command byte sent
-> 3. 1-4 address bytes sent
-> 4. 0-3 dummy bytes sent
-> 5. data bytes read from bus
-> 6. CS inactive
->
-> So, Mark's point is "if we can detect a transaction which fits _that_
-> bus activity, there's no reason not to use this acceleration for the
-> transaction."
->
-> What you're failing to counter with is: we don't have enough information
-> in the SPI driver to know how many dummy bytes there are between the
-> address bytes and the data read from the bus.
+Few Nits..
 
-Irrespective of the dummy bytes.
-What if the spi device is not a FLASH ROM, but some other device,
-which receives a data packet that accidentally looks like an m25p80 READ
-command?
+On 04/08/15 14:02, Philipp Zabel wrote:
+> This driver handles the i.MX On-Chip OTP Controller found in
+> i.MX6Q/D, i.MX6S/DL, i.MX6SL, and i.MX6SX SoCs. Currently it
+> just returns the values stored in the shadow registers.
+>
+> Signed-off-by: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+> ---
+> This patch is based on the v9 "Add simple NVMEM Framework via regmap"
+> series which can be found here: https://lkml.org/lkml/2015/7/27/342
+> ---
+>   drivers/nvmem/Kconfig     |  11 ++++
+>   drivers/nvmem/Makefile    |   2 +
+>   drivers/nvmem/imx-ocotp.c | 155 ++++++++++++++++++++++++++++++++++++++++++++++
+>   3 files changed, 168 insertions(+)
+>   create mode 100644 drivers/nvmem/imx-ocotp.c
+>
+> diff --git a/drivers/nvmem/Kconfig b/drivers/nvmem/Kconfig
+> index 8db2978..0b33014 100644
+> --- a/drivers/nvmem/Kconfig
+> +++ b/drivers/nvmem/Kconfig
+> @@ -36,4 +36,15 @@ config NVMEM_SUNXI_SID
+>   	  This driver can also be built as a module. If so, the module
+>   	  will be called nvmem_sunxi_sid.
+>
+> +config NVMEM_IMX_OCOTP
+> +	tristate "i.MX6 On-Chip OTP Controller support"
+> +	depends on SOC_IMX6
+> +	help
+> +	  This is a driver for the On-Chip OTP Controller (OCOTP) available on
+> +	  i.MX6 SoCs, providing access to 4 Kbits of one-time programmable
+> +	  eFuses.
+> +
+> +	  This driver can also be built as a module. If so, the module
+> +	  will be called nvmem-imx-ocotp.
+> +
+>   endif
+> diff --git a/drivers/nvmem/Makefile b/drivers/nvmem/Makefile
+> index 4328b93..b512d77 100644
+> --- a/drivers/nvmem/Makefile
+> +++ b/drivers/nvmem/Makefile
+> @@ -10,3 +10,5 @@ obj-$(CONFIG_QCOM_QFPROM)	+= nvmem_qfprom.o
+>   nvmem_qfprom-y			:= qfprom.o
+>   obj-$(CONFIG_NVMEM_SUNXI_SID)	+= nvmem_sunxi_sid.o
+>   nvmem_sunxi_sid-y		:= sunxi_sid.o
+> +obj-$(CONFIG_NVMEM_IMX_OCOTP)	+= nvmem-imx-ocotp.o
+> +nvmem-imx-ocotp-y		:= imx-ocotp.o
+> diff --git a/drivers/nvmem/imx-ocotp.c b/drivers/nvmem/imx-ocotp.c
+> new file mode 100644
+> index 0000000..e918967
+> --- /dev/null
+> +++ b/drivers/nvmem/imx-ocotp.c
+> @@ -0,0 +1,155 @@
+> +/*
+> + * i.MX6 OCOTP fusebox driver
+> + *
+> + * Copyright (c) 2015 Pengutronix, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+> + *
+> + * Based on the barebox ocotp driver,
+> + * Copyright (c) 2010 Baruch Siach <baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org>,
+> + *	Orex Computed Radiography
+> + *
+> + * This program is free software; you can redistribute it and/or modify
+> + * it under the terms of the GNU General Public License version 2
+> + * as published by the Free Software Foundation.
+> + *
+> + * http://www.opensource.org/licenses/gpl-license.html
+> + * http://www.gnu.org/copyleft/gpl.html
+> + */
+> +
+> +#include <linux/clk.h>
+May be you can drop this?
 
-Gr{oetje,eeting}s,
+BTW, who is taking care of the gated peripheral clock controlled for 
+this driver?
 
-                        Geert
 
+> +#include <linux/device.h>
+> +#include <linux/io.h>
+> +#include <linux/module.h>
+> +#include <linux/nvmem-provider.h>
+> +#include <linux/of.h>
+> +#include <linux/of_device.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/regmap.h>
+> +#include <linux/slab.h>
+> +
+> +struct ocotp_priv {
+> +	struct device *dev;
+> +	void __iomem *base;
+> +	unsigned int nregs;
+> +};
+> +
+> +static int imx_ocotp_read(void *context, const void *reg, size_t reg_size,
+> +			  void *val, size_t val_size)
+> +{
+> +	struct ocotp_priv *priv = context;
+> +	unsigned int offset = *(u32 *)reg;
+> +	unsigned int count;
+> +	int i;
+> +	u32 index;
+> +
+> +	index = offset >> 2;
+> +	count = val_size >> 2;
+> +
+> +	if (count > (priv->nregs - index))
+> +		count = priv->nregs - index;
+> +
+> +	for (i = index; i < (index + count); i++) {
+> +		*(u32 *)val = readl(priv->base + 0x400 + i * 0x10);
+> +		val += 4;
+> +	}
+> +
+> +	return (i - index) * 4;
+> +}
+> +
+> +static int imx_ocotp_write(void *context, const void *data, size_t count)
+> +{
+> +	/* Not implemented */
+> +	return 0;
+> +}
+> +
+> +static struct regmap_bus imx_ocotp_bus = {
+> +	.read = imx_ocotp_read,
+> +	.write = imx_ocotp_write,
+> +	.reg_format_endian_default = REGMAP_ENDIAN_NATIVE,
+> +	.val_format_endian_default = REGMAP_ENDIAN_NATIVE,
+> +};
+> +
+> +static bool imx_ocotp_writeable_reg(struct device *dev, unsigned int reg)
+> +{
+> +	return false;
+> +}
+> +
+> +static struct regmap_config imx_ocotp_regmap_config = {
+> +	.reg_bits = 32,
+> +	.val_bits = 32,
+> +	.reg_stride = 4,
+> +	.writeable_reg = imx_ocotp_writeable_reg,
+> +	.name = "imx-ocotp",
+> +};
+> +
+> +static struct nvmem_config imx_ocotp_nvmem_config = {
+> +	.name = "imx-ocotp",
+> +	.read_only = true,
+> +	.owner = THIS_MODULE,
+> +};
+> +
+> +static const struct of_device_id imx_ocotp_dt_ids[] = {
+> +	{ .compatible = "fsl,imx6q-ocotp",  (void *)128 },
+> +	{ .compatible = "fsl,imx6sl-ocotp", (void *)32 },
+> +	{ .compatible = "fsl,imx6sx-ocotp", (void *)128 },
+> +	{ },
+> +};
+> +MODULE_DEVICE_TABLE(of, imx_ocotp_dt_ids);
+> +
+> +static int imx_ocotp_probe(struct platform_device *pdev)
+> +{
+> +	const struct of_device_id *of_id;
+> +	struct device *dev = &pdev->dev;
+> +	struct resource *res;
+> +	struct regmap *regmap;
+> +	struct ocotp_priv *priv;
+> +	struct nvmem_device *nvmem;
+> +
+> +	priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
+> +	if (!priv)
+> +		return -ENOMEM;
+> +
+> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> +	priv->base = devm_ioremap_resource(dev, res);
+> +	if (IS_ERR(priv->base))
+> +		return PTR_ERR(priv->base);
+> +
+> +	of_id = of_match_device(imx_ocotp_dt_ids, dev);
+> +	priv->nregs = (unsigned int)of_id->data;
+> +	imx_ocotp_regmap_config.max_register = 4 * priv->nregs - 4;
+> +
+> +	regmap = devm_regmap_init(dev, &imx_ocotp_bus, priv,
+> +				  &imx_ocotp_regmap_config);
+> +	if (IS_ERR(regmap)) {
+> +		dev_err(dev, "regmap init failed\n");
+> +		return PTR_ERR(regmap);
+> +	}
+> +	imx_ocotp_nvmem_config.dev = dev;
+> +	nvmem = nvmem_register(&imx_ocotp_nvmem_config);
+> +	if (IS_ERR(nvmem))
+> +		return PTR_ERR(nvmem);
+> +
+> +	platform_set_drvdata(pdev, nvmem);
+> +
+> +	return 0;
+> +}
+> +
+> +static int imx_ocotp_remove(struct platform_device *pdev)
+> +{
+> +	struct nvmem_device *nvmem = platform_get_drvdata(pdev);
+> +
+> +	return nvmem_unregister(nvmem);
+> +}
+> +
+> +static struct platform_driver imx_ocotp_driver = {
+> +	.probe	= imx_ocotp_probe,
+> +	.remove	= imx_ocotp_remove,
+> +	.driver = {
+> +		.name	= "imx_ocotp",
+> +		.of_match_table = imx_ocotp_dt_ids,
+> +	},
+> +};
+> +module_platform_driver(imx_ocotp_driver);
+> +
+> +MODULE_AUTHOR("Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>");
+> +MODULE_DESCRIPTION("i.MX6 OCOTP fuse box driver");
+> +MODULE_LICENSE("GPL");
+
+GPL v2 ?
+
+>
 --
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
---
-To unsubscribe from this list: send the line "unsubscribe linux-spi" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
