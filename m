@@ -1,97 +1,83 @@
-From: Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: [PATCH v3 06/10] usb: chipidea: add ahb burst configuration interface
-Date: Fri, 7 Aug 2015 15:15:43 +0800
-Message-ID: <1438931747-25209-7-git-send-email-peter.chen@freescale.com>
-References: <1438931747-25209-1-git-send-email-peter.chen@freescale.com>
+From: Roger Quadros <rogerq@ti.com>
+Subject: Re: [PATCH 6/7] phy: omap-usb2: Add a new compatible string for USB2
+ PHY2
+Date: Fri, 7 Aug 2015 11:27:20 +0300
+Message-ID: <55C46BE8.9060804@ti.com>
+References: <1438701646-7876-1-git-send-email-kishon@ti.com> <1438701646-7876-7-git-send-email-kishon@ti.com> <55C1C803.4030905@ti.com> <55C1C895.8070305@ti.com> <55C21B35.7010901@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1438931747-25209-1-git-send-email-peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, jun.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <55C21B35.7010901@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Kishon Vijay Abraham I <kishon@ti.com>, tony@atomide.com, t-kristo@ti.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org, linux-omap@vger.kernel.org
+Cc: balbi@ti.com, nsekhar@ti.com
 List-Id: devicetree@vger.kernel.org
 
-The users can change it through dts or platform data if they
-want to change the default value.
+On 05/08/15 17:18, Kishon Vijay Abraham I wrote:
+> Hi Roger,
+> 
+> On Wednesday 05 August 2015 01:55 PM, Roger Quadros wrote:
+>> On 05/08/15 11:23, Roger Quadros wrote:
+>>>
+>>> On 04/08/15 18:20, Kishon Vijay Abraham I wrote:
+>>>> The USB2 PHY2 has a different register map compared to USB2 PHY1
+>>>> to power on/off the PHY. In order to handle it, add a new
+>>>> "compatible" string.
+>>>>
+>>>> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+>>>> ---
+>>>>  Documentation/devicetree/bindings/phy/ti-phy.txt |    2 ++
+>>>>  drivers/phy/phy-omap-usb2.c                      |    9 +++++++++
+>>>>  2 files changed, 11 insertions(+)
+>>>>
+>>>> diff --git a/Documentation/devicetree/bindings/phy/ti-phy.txt b/Documentation/devicetree/bindings/phy/ti-phy.txt
+>>>> index 49e5b0c..a061077 100644
+>>>> --- a/Documentation/devicetree/bindings/phy/ti-phy.txt
+>>>> +++ b/Documentation/devicetree/bindings/phy/ti-phy.txt
+>>>> @@ -31,6 +31,8 @@ OMAP USB2 PHY
+>>>>  
+>>>>  Required properties:
+>>>>   - compatible: Should be "ti,omap-usb2"
+>>>> +	       Should be "ti,dra7x-usb2-phy2" for the 2nd instance of USB2 PHY
+>>>> +	       in DRA7x
+>>>>   - reg : Address and length of the register set for the device.
+>>>>   - #phy-cells: determine the number of cells that should be given in the
+>>>>     phandle while referencing this phy.
+>>>> diff --git a/drivers/phy/phy-omap-usb2.c b/drivers/phy/phy-omap-usb2.c
+>>>> index b5c266a..2f7220f 100644
+>>>> --- a/drivers/phy/phy-omap-usb2.c
+>>>> +++ b/drivers/phy/phy-omap-usb2.c
+>>>> @@ -159,6 +159,11 @@ static const struct usb_phy_data dra7x_usb2_data = {
+>>>>  	.flags = OMAP_USB2_CALIBRATE_FALSE_DISCONNECT,
+>>>>  };
+>>>>  
+>>>> +static const struct usb_phy_data dra7x_usb2_phy2_data = {
+>>>> +	.label = "dra7x_usb2_phy2",
+>>>> +	.flags = OMAP_USB2_CALIBRATE_FALSE_DISCONNECT,
+>>>> +};
+>>>> +
+>>>>  static const struct usb_phy_data am437x_usb2_data = {
+>>>>  	.label = "am437x_usb2",
+>>>>  	.flags =  0,
+>>>> @@ -178,6 +183,10 @@ static const struct of_device_id omap_usb2_id_table[] = {
+>>>>  		.data = &dra7x_usb2_data,
+>>>>  	},
+>>>>  	{
+>>>> +		.compatible = "ti,dra7x-usb2-phy2",
+>>>> +		.data = &dra7x_usb2_phy2_data,
+>>>
+>>> Why is this needed? You can reuse dra7x_usb2_data as is.
+>>
+>> OK. I see why we need it in the next patch.
+>> Probably both patches could be squashed.
+>>
+>> What does .label indicate?
+> 
+> it's actually used only in usb_add_phy() (drivers/usb/phy/phy.c). I don't think
+> it's actually important unless you strongly feel so.
 
-Signed-off-by: Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
----
- drivers/usb/chipidea/bits.h  |  3 +++
- drivers/usb/chipidea/core.c  | 14 ++++++++++++++
- include/linux/usb/chipidea.h |  2 ++
- 3 files changed, 19 insertions(+)
+I leave it to you then :).
 
-diff --git a/drivers/usb/chipidea/bits.h b/drivers/usb/chipidea/bits.h
-index 831a8f6..462ad02 100644
---- a/drivers/usb/chipidea/bits.h
-+++ b/drivers/usb/chipidea/bits.h
-@@ -25,6 +25,9 @@
- #define VERSION		      (0xF << 25)
- #define CIVERSION	      (0x7 << 29)
- 
-+/* SBUSCFG */
-+#define AHBBRST_MASK		0x7
-+
- /* HCCPARAMS */
- #define HCCPARAMS_LEN         BIT(17)
- 
-diff --git a/drivers/usb/chipidea/core.c b/drivers/usb/chipidea/core.c
-index 97f937f..bde49f3 100644
---- a/drivers/usb/chipidea/core.c
-+++ b/drivers/usb/chipidea/core.c
-@@ -438,6 +438,9 @@ void ci_platform_configure(struct ci_hdrc *ci)
- 
- 	hw_write(ci, OP_USBCMD, 0xff0000, ci->platdata->itc_setting << 16);
- 
-+	if (ci->platdata->flags & CI_HDRC_OVERRIDE_AHB_BURST)
-+		hw_write_id_reg(ci, ID_SBUSCFG, AHBBRST_MASK,
-+			ci->platdata->ahb_burst_config);
- }
- 
- /**
-@@ -646,6 +649,17 @@ static int ci_get_platdata(struct device *dev,
- 		}
- 	}
- 
-+	if (of_find_property(dev->of_node, "ahb-burst-config", NULL)) {
-+		ret = of_property_read_u32(dev->of_node, "ahb-burst-config",
-+			&platdata->ahb_burst_config);
-+		if (ret) {
-+			dev_err(dev,
-+				"failed to get ahb-burst-config\n");
-+			return ret;
-+		}
-+		platdata->flags |= CI_HDRC_OVERRIDE_AHB_BURST;
-+	}
-+
- 	return 0;
- }
- 
-diff --git a/include/linux/usb/chipidea.h b/include/linux/usb/chipidea.h
-index 034f7e1..fe3c8eb 100644
---- a/include/linux/usb/chipidea.h
-+++ b/include/linux/usb/chipidea.h
-@@ -33,6 +33,7 @@ struct ci_hdrc_platform_data {
- #define CI_HDRC_FORCE_FULLSPEED		BIT(6)
- #define CI_HDRC_TURN_VBUS_EARLY_ON	BIT(7)
- #define CI_HDRC_SET_NON_ZERO_TTHA	BIT(8)
-+#define CI_HDRC_OVERRIDE_AHB_BURST	BIT(9)
- 	enum usb_dr_mode	dr_mode;
- #define CI_HDRC_CONTROLLER_RESET_EVENT		0
- #define CI_HDRC_CONTROLLER_STOPPED_EVENT	1
-@@ -42,6 +43,7 @@ struct ci_hdrc_platform_data {
- 	bool			tpl_support;
- 	/* interrupt threshold setting */
- 	u32			itc_setting;
-+	u32			ahb_burst_config;
- };
- 
- /* Default offset of capability registers */
--- 
-1.9.1
-
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+cheers,
+-roger
