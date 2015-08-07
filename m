@@ -1,54 +1,34 @@
-From: Vladimir Barinov <vladimir.barinov@cogentembedded.com>
-Subject: Re: [PATCH v3 5/7] iio: Support triggered events
-Date: Fri, 07 Aug 2015 19:10:32 +0300
-Message-ID: <55C4D878.1010605@cogentembedded.com>
-References: <1438174469-19054-1-git-send-email-vladimir.barinov@cogentembedded.com> <1438174648-19296-1-git-send-email-vladimir.barinov@cogentembedded.com> <55C4B66C.1020609@metafoo.de>
+From: Kevin Hilman <khilman@kernel.org>
+Subject: Re: [PATCH v9 0/9] Add simple NVMEM Framework via regmap.
+Date: Fri, 07 Aug 2015 09:13:35 -0700
+Message-ID: <7hwpx7vzyo.fsf@deeprootsystems.com>
+References: <1437995567-11203-1-git-send-email-srinivas.kandagatla@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <55C4B66C.1020609@metafoo.de>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Lars-Peter Clausen <lars@metafoo.de>, Jonathan Cameron <jic23@kernel.org>
-Cc: Hartmut Knaack <knaack.h@gmx.de>, Peter Meerwald <pmeerw@pmeerw.net>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, cory.tusar@pid1solutions.com
+Content-Type: text/plain
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <1437995567-11203-1-git-send-email-srinivas.kandagatla@linaro.org>
+	(Srinivas Kandagatla's message of "Mon, 27 Jul 2015 12:12:47 +0100")
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Cc: linux-arm-kernel@lists.infradead.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <robh+dt@kernel.org>, Mark Brown <broonie@kernel.org>, s.hauer@pengutronix.de, linux-api@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, arnd@arndb.de, sboyd@codeaurora.org, pantelis.antoniou@konsulko.com, mporter@konsulko.com, stefan.wahren@i2se.com, wxt@rock-chips.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Lars,
+Srinivas Kandagatla <srinivas.kandagatla@linaro.org> writes:
 
-On 07.08.2015 16:45, Lars-Peter Clausen wrote:
-> Hi,
+> This patchset adds a new simple NVMEM framework to kernel, and it is tested
+> with various drivers like "QCOM thermal sensors", "QCOM cpr driver",
+> "begal bone cape manager" and few more on the way.
 >
-> On 07/29/2015 02:57 PM, Vladimir Barinov wrote:
->> Support triggered events.
->>
->> This is useful for chips that don't have their own interrupt sources.
->> It allows to use generic/standalone iio triggers for those drivers.
->>
-> Thanks for the patch. Can you describe in more detail how
-> INDIO_EVENT_TRIGGERED differs from the INDIO_BUFFER_TRIGGERED. By just
-> looking at the source code I don't understand quite why it is necessary.
-This is needed for the case when iio buffer is not used and used only 
-iio event.
-
-The difference to INDIO_BUFFER_TRIGGERED is that for triggered buffer 
-the trigger poll function is attached (using 
-iio_trigger_attach_poll_func) only in
-industrialio-buffer.c using number of steps/conditions starting by 
-issuing 1 to buffer/enable sysfs path.
-
-For chips that do not use iio buffer but use only iio events the 
-iio_trigger_attach_poll_func never called.
-
-In case of using INDIO_BUFFER_TRIGGERED the poll func is 
-attached/detached via industrialio-buffer.c
-In case of using INDIO_EVENT_TRIGGERED the poll func is 
-attached/detached via industrialio-trigger.c during set/change the 
-current trigger.
-
-Regards,
-Vladimir
-
+> Can you please consider this as 4.3 material, AFAIK there are more than 3 drivers
+> depending on this framework which are wating since last 2 merge windows.
 >
-> Thanks,
-> - Lars
->
+> Should these patches go via ARM-SOC tree or via Greg's tree?
+
+With Greg's ack, we can take this through the arm-soc tree (unless Greg
+wants to queue it, which is fine also.)
+
+Can you collect the final Tested-by's and prepare a pull request?
+
+Thanks,
+
+Kevin
