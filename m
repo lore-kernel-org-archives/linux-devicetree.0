@@ -1,34 +1,39 @@
-From: Scott Shu <scott.shu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH v3 5/8] ARM: mediatek: add smp bringup code for MT6580
-Date: Fri, 7 Aug 2015 10:28:14 +0800
-Message-ID: <1438914494.1900.38.camel@mtkswgap22>
-References: <1438696464-59858-1-git-send-email-scott.shu@mediatek.com>
-	 <1438696464-59858-6-git-send-email-scott.shu@mediatek.com>
-	 <20150805094429.GU7557@n2100.arm.linux.org.uk>
+From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH 1/8] ARM: dts: AM4372: Reorder the rtc compatible string
+Date: Thu, 6 Aug 2015 19:47:01 -0700
+Message-ID: <20150807024701.GG4215@atomide.com>
+References: <1438771792-12604-1-git-send-email-j-keerthy@ti.com>
+ <1438771792-12604-2-git-send-email-j-keerthy@ti.com>
+ <20150805153148.GB12328@saruman.tx.rr.com>
+ <55C230E9.9010309@ti.com>
+ <20150805161445.GF12328@saruman.tx.rr.com>
+ <55C23740.2080102@ti.com>
+ <20150805165122.GH12328@saruman.tx.rr.com>
+ <55C2B7A5.5000400@ti.com>
+ <20150806141618.GA19110@saruman.tx.rr.com>
+ <55C38FCC.1040306@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20150805094429.GU7557-l+eeeJia6m9vn6HldHNs0ANdhmdF6hFW@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <55C38FCC.1040306-l0cyMroinI0@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
-Cc: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, wsd_upstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, scott.shu-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, loda.chou-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, jades.shih-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Mars.Cheng-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Keerthy <a0393675-l0cyMroinI0@public.gmane.org>
+Cc: balbi-l0cyMroinI0@public.gmane.org, Keerthy <j-keerthy-l0cyMroinI0@public.gmane.org>, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org, johan-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, nm-l0cyMroinI0@public.gmane.org, paul-DWxLp4Yu+b8AvxtiuMwx3w@public.gmane.org, t-kristo-l0cyMroinI0@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 2015-08-05 at 10:44 +0100, Russell King - ARM Linux wrote:
-> On Tue, Aug 04, 2015 at 09:54:21PM +0800, Scott Shu wrote:
-> > Add support for cpu enable-method "mediatek,mt6580-smp" for booting
-> > secondary CPUs on MT6580.
+* Keerthy <a0393675-l0cyMroinI0@public.gmane.org> [150806 09:51]:
 > 
-> If you have CPU power domain support, and you power up and power down the
-> CPUs, why do you need the boot_lock and pen_release stuff?  Isn't keeping
-> the power off on a CPU sufficient to prevent it entering the kernel?
-> 
-Thanks Russell. Yes, the system works well after removing boot_lock and
-pen_release. Will be fixed in next version. 
+> Shall i re-do this patch without removing am4372-rtc? If you can drop this i
+> can re-do without removing the original am4372 compatible.
 
-Scott
+OK please send a patch reverting the compatible change against the
+current omap-for-v4.3/dt-v2 branch. Please also describe why that's
+needed :)
 
+Regards,
+
+Tony
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
