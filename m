@@ -1,7 +1,7 @@
 From: Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: [PATCH v3 08/10] Doc: usb: ci-hdrc-usb2: add tx(rx)-burst-config-dword for binding doc
-Date: Fri, 7 Aug 2015 15:15:45 +0800
-Message-ID: <1438931747-25209-9-git-send-email-peter.chen@freescale.com>
+Subject: [PATCH v3 09/10] ARM: imx6: change default burst size for USB
+Date: Fri, 7 Aug 2015 15:15:46 +0800
+Message-ID: <1438931747-25209-10-git-send-email-peter.chen@freescale.com>
 References: <1438931747-25209-1-git-send-email-peter.chen@freescale.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -12,40 +12,119 @@ To: shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yR
 Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, jun.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-It is used to override the default setting for burst size, changing
-burst size takes effect only when the SBUSCFG.AHBBRST = 0.
+It can improve the USB performance when choosing larger
+burst size at some systems (bus size is larger), there is
+no side effect if this burst size is larger than bus size.
 
 Signed-off-by: Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 ---
- Documentation/devicetree/bindings/usb/ci-hdrc-usb2.txt | 10 ++++++++++
- 1 file changed, 10 insertions(+)
+ arch/arm/boot/dts/imx6qdl.dtsi | 8 ++++++++
+ arch/arm/boot/dts/imx6sl.dtsi  | 6 ++++++
+ arch/arm/boot/dts/imx6sx.dtsi  | 6 ++++++
+ 3 files changed, 20 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/usb/ci-hdrc-usb2.txt b/Documentation/devicetree/bindings/usb/ci-hdrc-usb2.txt
-index d52a747..d71ef07 100644
---- a/Documentation/devicetree/bindings/usb/ci-hdrc-usb2.txt
-+++ b/Documentation/devicetree/bindings/usb/ci-hdrc-usb2.txt
-@@ -37,6 +37,14 @@ Optional properties:
-   property is used to change AHB burst configuration, check the chipidea
-   spec for meaning of each value. If this property is not existed, it
-   will use the reset value.
-+- tx-burst-size-dword: it is vendor dependent, the tx burst size in dword
-+  (4 bytes), This register represents the maximum length of a the burst
-+  in 32-bit words while moving data from system memory to the USB
-+  bus, changing this value takes effect only the SBUSCFG.AHBBRST is 0.
-+- rx-burst-size-dword: it is vendor dependent, the rx burst size in dword
-+  (4 bytes), This register represents the maximum length of a the burst
-+  in 32-bit words while moving data from the USB bus to system memory,
-+  changing this value takes effect only the SBUSCFG.AHBBRST is 0.
+diff --git a/arch/arm/boot/dts/imx6qdl.dtsi b/arch/arm/boot/dts/imx6qdl.dtsi
+index 42d62b0..b9f2e3a 100644
+--- a/arch/arm/boot/dts/imx6qdl.dtsi
++++ b/arch/arm/boot/dts/imx6qdl.dtsi
+@@ -854,6 +854,8 @@
+ 				fsl,usbphy = <&usbphy1>;
+ 				fsl,usbmisc = <&usbmisc 0>;
+ 				ahb-burst-config = <0x0>;
++				tx-burst-size-dword = <0x10>;
++				rx-burst-size-dword = <0x10>;
+ 				status = "disabled";
+ 			};
  
- Example:
+@@ -866,6 +868,8 @@
+ 				fsl,usbmisc = <&usbmisc 1>;
+ 				dr_mode = "host";
+ 				ahb-burst-config = <0x0>;
++				tx-burst-size-dword = <0x10>;
++				rx-burst-size-dword = <0x10>;
+ 				status = "disabled";
+ 			};
  
-@@ -51,4 +59,6 @@ Example:
- 		gadget-itc-setting = <0x4>; /* 4 micro-frames */
- 		 /* Incremental burst of unspecified length */
- 		ahb-burst-config = <0x0>;
-+		tx-burst-size-dword = <0x10>; /* 64 bytes */
-+		rx-burst-size-dword = <0x10>;
- 	};
+@@ -877,6 +881,8 @@
+ 				fsl,usbmisc = <&usbmisc 2>;
+ 				dr_mode = "host";
+ 				ahb-burst-config = <0x0>;
++				tx-burst-size-dword = <0x10>;
++				rx-burst-size-dword = <0x10>;
+ 				status = "disabled";
+ 			};
+ 
+@@ -888,6 +894,8 @@
+ 				fsl,usbmisc = <&usbmisc 3>;
+ 				dr_mode = "host";
+ 				ahb-burst-config = <0x0>;
++				tx-burst-size-dword = <0x10>;
++				rx-burst-size-dword = <0x10>;
+ 				status = "disabled";
+ 			};
+ 
+diff --git a/arch/arm/boot/dts/imx6sl.dtsi b/arch/arm/boot/dts/imx6sl.dtsi
+index 066fac9..627549f 100644
+--- a/arch/arm/boot/dts/imx6sl.dtsi
++++ b/arch/arm/boot/dts/imx6sl.dtsi
+@@ -689,6 +689,8 @@
+ 				fsl,usbphy = <&usbphy1>;
+ 				fsl,usbmisc = <&usbmisc 0>;
+ 				ahb-burst-config = <0x0>;
++				tx-burst-size-dword = <0x10>;
++				rx-burst-size-dword = <0x10>;
+ 				status = "disabled";
+ 			};
+ 
+@@ -700,6 +702,8 @@
+ 				fsl,usbphy = <&usbphy2>;
+ 				fsl,usbmisc = <&usbmisc 1>;
+ 				ahb-burst-config = <0x0>;
++				tx-burst-size-dword = <0x10>;
++				rx-burst-size-dword = <0x10>;
+ 				status = "disabled";
+ 			};
+ 
+@@ -711,6 +715,8 @@
+ 				fsl,usbmisc = <&usbmisc 2>;
+ 				dr_mode = "host";
+ 				ahb-burst-config = <0x0>;
++				tx-burst-size-dword = <0x10>;
++				rx-burst-size-dword = <0x10>;
+ 				status = "disabled";
+ 			};
+ 
+diff --git a/arch/arm/boot/dts/imx6sx.dtsi b/arch/arm/boot/dts/imx6sx.dtsi
+index 3656a1d..6844e9e 100644
+--- a/arch/arm/boot/dts/imx6sx.dtsi
++++ b/arch/arm/boot/dts/imx6sx.dtsi
+@@ -747,6 +747,8 @@
+ 				fsl,usbmisc = <&usbmisc 0>;
+ 				fsl,anatop = <&anatop>;
+ 				ahb-burst-config = <0x0>;
++				tx-burst-size-dword = <0x10>;
++				rx-burst-size-dword = <0x10>;
+ 				status = "disabled";
+ 			};
+ 
+@@ -758,6 +760,8 @@
+ 				fsl,usbphy = <&usbphy2>;
+ 				fsl,usbmisc = <&usbmisc 1>;
+ 				ahb-burst-config = <0x0>;
++				tx-burst-size-dword = <0x10>;
++				rx-burst-size-dword = <0x10>;
+ 				status = "disabled";
+ 			};
+ 
+@@ -771,6 +775,8 @@
+ 				fsl,anatop = <&anatop>;
+ 				dr_mode = "host";
+ 				ahb-burst-config = <0x0>;
++				tx-burst-size-dword = <0x10>;
++				rx-burst-size-dword = <0x10>;
+ 				status = "disabled";
+ 			};
+ 
 -- 
 1.9.1
 
