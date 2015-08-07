@@ -1,56 +1,62 @@
-From: Ley Foon Tan <lftan@altera.com>
-Subject: [PATCH v3 5/5] MAINTAINERS: Add Altera PCIe and MSI drivers maintainer
-Date: Fri, 7 Aug 2015 15:43:02 +0800
-Message-ID: <1438933382-2936-6-git-send-email-lftan@altera.com>
-References: <1438933382-2936-1-git-send-email-lftan@altera.com>
+From: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: Re: [PATCH 2/3] nvmem: imx-ocotp: Add i.MX6 OCOTP driver
+Date: Fri, 07 Aug 2015 09:46:37 +0200
+Message-ID: <1438933597.3638.5.camel@pengutronix.de>
+References: <1438693342-605-1-git-send-email-p.zabel@pengutronix.de>
+		 <1438693342-605-2-git-send-email-p.zabel@pengutronix.de>
+		 <55C38941.9090709@linaro.org> <1438878490.3223.10.camel@pengutronix.de>
+	 <55C3B74F.5010501@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <1438933382-2936-1-git-send-email-lftan@altera.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Bjorn Helgaas <bhelgaas@google.com>, Russell King <linux@arm.linux.org.uk>, Marc Zyngier <marc.zyngier@arm.com>
-Cc: Arnd Bergmann <arnd@arndb.de>, Dinh Nguyen <dinguyen@opensource.altera.com>, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, Ley Foon Tan <lftan@altera.com>, lftan.linux@gmail.com, Rob Herring <robh+dt@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <55C3B74F.5010501-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Ley Foon Tan <lftan@altera.com>
----
- MAINTAINERS | 16 ++++++++++++++++
- 1 file changed, 16 insertions(+)
+Am Donnerstag, den 06.08.2015, 20:36 +0100 schrieb Srinivas Kandagatla:
+> Hi Philipp,
+> 
+> Could you add Greg KH in the CC, for next merge window, we can request 
+> Greg to take this driver via his tree.
+> 
+> Once the comments are fixed you can add my
+> 
+> Acked-by: Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> 
+> On 06/08/15 17:28, Philipp Zabel wrote:
+> > Hi Srinivas,
+> >
+> > Am Donnerstag, den 06.08.2015, 17:20 +0100 schrieb Srinivas Kandagatla:
+> >> Few Nits..
+> >>
+> >> On 04/08/15 14:02, Philipp Zabel wrote:
+> >>> +#include <linux/clk.h>
+> >> May be you can drop this?
+> >
+> > Yes, that's a left-over and can be removed.
+> >
+> >> BTW, who is taking care of the gated peripheral clock controlled for
+> >> this driver?
+> >
+> > Nobody. I had initially copied the code that actually senses the fuses,
+> > but since this happens during power-on reset anyway (all values are
+> > stored in shadow registers), I didn't see the point and dropped it for
+> > now.
+> > The shadow registers are clocked directly by the ungated ipg_root clock.
+> 
+> So, are you planning to drop the clocks property from the bindings too?
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index fd60784..32f5287 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -7759,6 +7759,14 @@ F:	include/linux/pci*
- F:	arch/x86/pci/
- F:	arch/x86/kernel/quirks.c
- 
-+PCI DRIVER FOR ALTERA PCIE IP
-+M:	Ley Foon Tan <lftan@altera.com>
-+L:	rfi@lists.rocketboards.org (moderated for non-subscribers)
-+L:	linux-pci@vger.kernel.org
-+S:	Supported
-+F:	Documentation/devicetree/bindings/pci/altera-pcie.txt
-+F:	drivers/pci/host/pcie-altera.c
-+
- PCI DRIVER FOR ARM VERSATILE PLATFORM
- M:	Rob Herring <robh@kernel.org>
- L:	linux-pci@vger.kernel.org
-@@ -7860,6 +7868,14 @@ L:	linux-pci@vger.kernel.org
- S:	Maintained
- F:	drivers/pci/host/*spear*
- 
-+PCI MSI DRIVER FOR ALTERA MSI IP
-+M:	Ley Foon Tan <lftan@altera.com>
-+L:	rfi@lists.rocketboards.org (moderated for non-subscribers)
-+L:	linux-pci@vger.kernel.org
-+S:	Supported
-+F:	Documentation/devicetree/bindings/pci/altera-pcie-msi.txt
-+F:	drivers/pci/host/pcie-altera-msi.c
-+
- PCI MSI DRIVER FOR APPLIEDMICRO XGENE
- M:	Duc Dang <dhdang@apm.com>
- L:	linux-pci@vger.kernel.org
--- 
-1.8.2.1
+The gated clock input exists and is needed for the full functionality of
+the device (writing and re-sensing fuses). It should be in the device
+tree even if the linux driver doesn't implement writing.
 
+regards
+Philipp
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
