@@ -1,59 +1,173 @@
-From: Yingjoe Chen <yingjoe.chen@mediatek.com>
-Subject: Re: [PATCH v3 0/5] Add SMP bringup support for mt65xx socs
-Date: Fri, 7 Aug 2015 18:50:18 +0800
-Message-ID: <1438944618.14580.5.camel@mtksdaap41>
-References: <1436851111-2369-1-git-send-email-yingjoe.chen@mediatek.com>
-	 <4831607.pyCH8elj8i@ubix> <20150805223115.GD7557@n2100.arm.linux.org.uk>
+From: chunfeng yun <chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH v4 2/5] dt-bindings: Add a binding for Mediatek xHCI
+ host controller
+Date: Fri, 7 Aug 2015 19:17:19 +0800
+Message-ID: <1438946239.26208.23.camel@mhfsdcap03>
+References: <1438347836-29060-1-git-send-email-chunfeng.yun@mediatek.com>
+	 <1438347836-29060-3-git-send-email-chunfeng.yun@mediatek.com>
+	 <20150731134556.GC25118@leverpostej>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20150805223115.GD7557@n2100.arm.linux.org.uk>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Russell King - ARM Linux <linux@arm.linux.org.uk>
-Cc: Matthias Brugger <matthias.bgg@gmail.com>, devicetree@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, Stephen Boyd <sboyd@codeaurora.org>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-mediatek@lists.infradead.org, Sascha Hauer <kernel@pengutronix.de>, Olof Johansson <olof@lixom.net>, srv_heupstream@mediatek.com, linux-arm-kernel@lists.infradead.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20150731134556.GC25118@leverpostej>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: Mathias Nyman <mathias.nyman-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>, "linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, John Crispin <blogic-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>, Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 2015-08-05 at 23:31 +0100, Russell King - ARM Linux wrote:
-> On Wed, Aug 05, 2015 at 08:44:11PM +0200, Matthias Brugger wrote:
-> > On Tuesday, July 14, 2015 01:18:26 PM Yingjoe Chen wrote:
-> > > This series add SMP brinup support for MediaTek SoCs. This is based
-> > > on v4.2-rc1 and Matthias' next branch (for dts parts).
-<...>
+hi,
 
-> > Applied to v4.2-next/soc-2 and v4.2-next/dts-2 
+On Fri, 2015-07-31 at 14:45 +0100, Mark Rutland wrote:
+> Hi,
 > 
-> I've just NAK'd one of the patches in this set; I don't tend to even see
-> mediatek patches normally, as they all head into my junk mailfolder
-> because mediatek's mail server setup is truely abysmal (it has broken
-> reverse DNS - the DNS positively says that the mail server is not a
-> legit owner of the name it claims to be.)
-
-Hi Russell,
-
-Hope you see this.
-
-Thanks for your review. I already pass this information to our IT, hope
-they can resolve this soon.
-
-
-> The problem is that this patch series uses memblock_reserve() way after
-> the memory has been transitioned out of memblock's control, so actually
-> this has no effect.
+> Sorry for my late reply to a prior version of this series, but I still
+> have concerns with some of the properties.
 > 
-> I've seen a number of patches doing this.  I'm not sure what's soo friggin
-> hard for people to understand: memblock is about the EARLY stages of
-> getting the system up and running.  Once the memory has been handed
-> over to the kernel's memory management, memblock MUST NOT BE USED to
-> reserve memory.
+> I'll repeat those below.
 > 
-> There is one place, and one place only in the ARM kernel where
-> memblock_reserve() is possible, and that's in the ->reserve machine
-> callback.  NOWHERE ELSE is permissible.
+> On Fri, Jul 31, 2015 at 02:03:53PM +0100, Chunfeng Yun wrote:
+> > add a DT binding documentation of xHCI host controller for the
+> > MT8173 SoC from Mediatek.
+> > 
+> > Signed-off-by: Chunfeng Yun <chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+> > ---
+> >  .../devicetree/bindings/usb/mt8173-xhci.txt        | 51 ++++++++++++++++++++++
+> >  1 file changed, 51 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/usb/mt8173-xhci.txt
+> > 
+> > diff --git a/Documentation/devicetree/bindings/usb/mt8173-xhci.txt b/Documentation/devicetree/bindings/usb/mt8173-xhci.txt
+> > new file mode 100644
+> > index 0000000..364be5a
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/usb/mt8173-xhci.txt
+> > @@ -0,0 +1,51 @@
+> > +MT65XX xhci
+> > +
+> > +The device node for Mediatek SOC usb3.0 host controller
+> > +
+> > +Required properties:
+> > + - compatible : Supports "mediatek,mt8173-xhci"
+> 
+> s/Supports/should contain/
+> 
+done
+> > + - reg : Specifies physical base address and size of the registers,
+> > +	the first one for MAC, the second for IPPC
+> > + - interrupts : Interrupt mode, number and trigger mode
+> 
+> Just specify what this logically corresponds to; the format of the
+> interrupts proeprty depends on the interrupt controller.
+> 
+done
+> > + - power-domains : To enable usb's mtcmos
+> 
+> Please describe what this contains. I assume you exped a single power
+> domain to be described, covering the whole xHCI controller?
+> 
+> > + - vusb33-supply : Regulator of usb avdd3.3v
+> > + - clocks : Must support all clocks that xhci needs
+> 
+> - clocks: a list of phandle + clock-specifier pairs, one for each entry
+>   in clock-names.
+> 
+> > + - clock-names : Should be "sys_mac" for sys and mac clocks, and
+> > +	"wakeup_deb_p0", "wakeup_deb_p1" for wakeup debounce control
+> > +	clocks
+> 
+> This would be better as a list, e.g.
+> 
+> - clock-names: should contain:
+>   * "sys_mac" <description here if necessary>
+>   * "wakeup_deb_p0" <description here if necessary>
+>   * "wakeup_deb_p1" <description here if necessary>
+> 
+done
+> Is sys_mac a single clock input line? Or is it jsut the case that a
+> single line feeds two inputs currently? if the latter they should be
+> separate entries.
+> 
+It is a single clock for usb MAC, already rename it
+
+> > + - phys : List of PHY specifiers (used by generic PHY framework).
+> 
+> The bracketed part should go. The bidnigns should know nothing of Linux
+> internals.
+> 
+remove it
+> > + - phy-names : Must be "usb-phy0", "usb-phy1",.., "usb-phyN", based on
+> > +	the number of PHYs as specified in @phys property.
+> 
+> This is useless.
+> 
+> You either don't need names, and can acquire the phys by index, or you
+> need names which correspond to those on the data sheet for the xHCI
+> controller.
+> 
+Ok, re-write the phy driver, and here also make use of the new format.
+
+> > + - mediatek,usb-wakeup : To access usb wakeup control register
+> 
+> Please describe what this points to (I guess it's a syscon)/
+> 
+> > + - mediatek,wakeup-src : 1: Ip sleep wakeup mode; 2: line state wakeup
+> > +	mode; others means don't enable wakeup source of usb
+> 
+> This sounds like a runtime decision.
+> 
+No, the driver do not know whether to enable wakeup function or not and
+also don't know enable which one, except tell it. 
+And it will set different registers of @mediatek,usb-wakeup to enable
+the selected wakeup mode when system enter suspend.
+
+> _why_ do you think this needs to be in the DT?
+> 
+> > + - mediatek,u2port-num : The number should not greater than the number
+> > +	of phys
+> 
+> This is useless. Either this is implied by the entries in the phys
+> property, or it should be a runtime decision.
+> 
+Yes, it can be calculated from @phys, already remove it.
+
+Thanks a lot for your suggestion
+ 
+> Thanks,
+> Mark.
+> 
+> > +
+> > +Optional properties:
+> > + - vbus-supply : Reference to the VBUS regulator;
+> > +
+> > +Example:
+> > +usb: usb@11270000 {
+> > +	compatible = "mediatek,mt8173-xhci";
+> > +	reg = <0 0x11270000 0 0x4000>,
+> > +	      <0 0x11280000 0 0x0800>;
+> > +	interrupts = <GIC_SPI 115 IRQ_TYPE_LEVEL_LOW>;
+> > +	power-domains = <&scpsys MT8173_POWER_DOMAIN_USB>;
+> > +	clocks = <&topckgen CLK_TOP_USB30_SEL>,
+> > +		 <&pericfg CLK_PERI_USB0>,
+> > +		 <&pericfg CLK_PERI_USB1>;
+> > +	clock-names = "sys_mac",
+> > +		      "wakeup_deb_p0",
+> > +		      "wakeup_deb_p1";
+> > +	phys = <&u3phy 0>, <&u3phy 1>;
+> > +	phy-names = "usb-phy0", "usb-phy1";
+> > +	vusb33-supply = <&mt6397_vusb_reg>;
+> > +	vbus-supply = <&usb_p1_vbus>;
+> > +	usb3-lpm-capable;
+> > +	mediatek,usb-wakeup = <&pericfg>;
+> > +	mediatek,wakeup-src = <1>;
+> > +	mediatek,u2port-num = <2>;
+> > +	status = "okay";
+> > +};
+> > -- 
+> > 1.8.1.1.dirty
+> > 
 
 
-It seems we can write memory-reserve node in device tree to do this as
-well. Do you prefer us to reserve memblock in reserve callback or using
-device tree?
-
-Joe.C
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
