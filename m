@@ -1,133 +1,195 @@
-From: Chen Bough <Haibo.Chen@freescale.com>
-Subject: RE: [PATCH v4 2/6] mmc: sdhci-esdhc-imx: add tuning-step seting
- support
-Date: Fri, 7 Aug 2015 10:04:56 +0000
-Message-ID: <BY1PR03MB138864BA52567E75F56808329A730@BY1PR03MB1388.namprd03.prod.outlook.com>
-References: <1438771122-8601-1-git-send-email-haibo.chen@freescale.com>
- <1438771122-8601-3-git-send-email-haibo.chen@freescale.com>
- <20150807074019.GB6935@shlinux1.ap.freescale.net>
+From: Daniel Lezcano <daniel.lezcano@linaro.org>
+Subject: Re: [PATCH v5 6/7] clocksource: Add Pistachio clocksource-only driver
+Date: Fri, 07 Aug 2015 12:28:17 +0200
+Message-ID: <55C48841.3050902@linaro.org>
+References: <1438860138-31718-1-git-send-email-govindraj.raja@imgtec.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20150807074019.GB6935@shlinux1.ap.freescale.net>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, Fabio Estevam <Fabio.Estevam@freescale.com>, "ulf.hansson@linaro.org" <ulf.hansson@linaro.org>, "linux@arm.linux.org.uk" <linux@arm.linux.org.uk>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "Dong A.S." <Aisheng.Dong@freescale.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mkl@pengutronix.de" <mkl@pengutronix.de>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "galak@codeaurora.org" <galak@codeaurora.org>, "johan.derycke@barco.com" <johan.derycke@barco.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset=UTF-8;
+	format=flowed
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1438860138-31718-1-git-send-email-govindraj.raja@imgtec.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Govindraj Raja <govindraj.raja@imgtec.com>, linux-kernel@vger.kernel.org, linux-mips@linux-mips.org, devicetree@vger.kernel.org
+Cc: Thomas Gleixner <tglx@linutronix.de>, Andrew Bresticker <abrestic@chromium.org>, James Hartley <James.Hartley@imgtec.com>, Damien Horsley <Damien.Horsley@imgtec.com>, James Hogan <James.Hogan@imgtec.com>, Ezequiel Garcia <ezequiel@vanguardiasur.com.ar>, Ezequiel Garcia <ezequiel.garcia@imgtec.com>
 List-Id: devicetree@vger.kernel.org
 
+On 08/06/2015 01:22 PM, Govindraj Raja wrote:
+> From: Ezequiel Garcia <ezequiel.garcia@imgtec.com>
+>
+> The Pistachio SoC provides four general purpose timers, and allow
+> to implement a clocksource driver.
+>
+> This driver can be used as a replacement for the MIPS GIC and MIPS R4=
+K
+> clocksources and sched clocks, which are clocked from the CPU clock.
+>
+> Given the general purpose timers are clocked from an independent cloc=
+k,
+> this new clocksource driver will be useful to introduce CPUFreq suppo=
+rt
+> for Pistachio machines.
+>
+> Signed-off-by: Ezequiel Garcia <ezequiel.garcia@imgtec.com>
+> Signed-off-by: Govindraj Raja <govindraj.raja@imgtec.com>
+> ---
+>
+> changes from v4
+> ----------------
+> Fixes comments from Daniel as dicussed in below thread:
+> http://patchwork.linux-mips.org/patch/10784/
+>
+>
+>   drivers/clocksource/Kconfig          |   5 +
+>   drivers/clocksource/Makefile         |   1 +
+>   drivers/clocksource/time-pistachio.c | 216 ++++++++++++++++++++++++=
++++++++++++
+>   3 files changed, 222 insertions(+)
+>   create mode 100644 drivers/clocksource/time-pistachio.c
+>
+> diff --git a/drivers/clocksource/Kconfig b/drivers/clocksource/Kconfi=
+g
+
+[ ... ]
+
+> index 4e57730..e642825 100644
+> --- a/drivers/clocksource/Kconfig
+> +++ b/drivers/clocksource/Kconfig
+> @@ -111,6 +111,11 @@ config CLKSRC_LPC32XX
+>   	select CLKSRC_MMIO
+>   	select CLKSRC_OF
+>
+> +config CLKSRC_PISTACHIO
+> +	bool
+> +	default y if MACH_PISTACHIO
+
+You don't need to add this condition.
+
+> +	select CLKSRC_OF
+
+[ ... ]
+
+> +
+> +struct pistachio_clocksource pcs_gpt;
+
+static.
+
+> +#define to_pistachio_clocksource(cs)	\
+> +	container_of(cs, struct pistachio_clocksource, cs)
+> +
+> +static inline u32 gpt_readl(void __iomem *base, u32 offset, u32 gpt_=
+id)
+> +{
+> +	return readl(base + 0x20 * gpt_id + offset);
+
+Are you sure of the address computation ? I guess it is correct but jus=
+t=20
+wanted you to double check.
+
+> +}
+> +
+> +static inline void gpt_writel(void __iomem *base, u32 value, u32 off=
+set,
+> +		u32 gpt_id)
+> +{
+> +	writel(value, base + 0x20 * gpt_id + offset);
+> +}
+> +
+> +static cycle_t pistachio_clocksource_read_cycles(struct clocksource =
+*cs)
+> +{
+> +	struct pistachio_clocksource *pcs =3D to_pistachio_clocksource(cs);
+> +	u32 counter, overflw;
+> +	unsigned long flags;
+> +
+> +	/* The counter value is only refreshed after the overflow value is =
+read.
+> +	 * And they must be read in strict order, hence raw spin lock added=
+=2E
+> +	 */
+
+nit: extra carriage return and comment format:
+
+	/*
+	 * blabla
+	 */
+
+> +	raw_spin_lock_irqsave(&pcs->lock, flags);
+> +	overflw =3D gpt_readl(pcs->base, TIMER_CURRENT_OVERFLOW_VALUE, 0);
+> +	counter =3D gpt_readl(pcs->base, TIMER_CURRENT_VALUE, 0);
+> +	raw_spin_unlock_irqrestore(&pcs->lock, flags);
+> +
+> +	return ~(cycle_t)counter;
+> +}
+> +
+> +static u64 notrace pistachio_read_sched_clock(void)
+> +{
+> +	return pistachio_clocksource_read_cycles(&pcs_gpt.cs);
+
+Can you double check the u32 cast to cycle_t returning a u64 from this=20
+function ?
+
+> +}
+> +
+> +static void pistachio_clksrc_set_mode(struct clocksource *cs, int ti=
+meridx,
+> +			int enable)
+> +{
+> +	struct pistachio_clocksource *pcs =3D to_pistachio_clocksource(cs);
+> +	u32 val;
+> +
+> +	val =3D gpt_readl(pcs->base, TIMER_CFG, timeridx);
+> +	if (enable)
+> +		val |=3D TIMER_ME_LOCAL;
+> +	else
+> +		val &=3D ~TIMER_ME_LOCAL;
+> +
+> +	gpt_writel(pcs->base, val, TIMER_CFG, timeridx);
+> +}
+> +
+> +static void pistachio_clksrc_enable(struct clocksource *cs, int time=
+ridx)
+> +{
+> +	struct pistachio_clocksource *pcs =3D to_pistachio_clocksource(cs);
+> +
+> +	/* Disable GPT local before loading reload value */
+> +	pistachio_clksrc_set_mode(cs, timeridx, false);
+> +	gpt_writel(pcs->base, RELOAD_VALUE, TIMER_RELOAD_VALUE, timeridx);
+> +	pistachio_clksrc_set_mode(cs, timeridx, true);
+> +}
+> +
+> +static void pistachio_clksrc_disable(struct clocksource *cs, int tim=
+eridx)
+> +{
+> +	/* Disable GPT local */
+> +	pistachio_clksrc_set_mode(cs, timeridx, false);
+> +}
+> +
+> +static int pistachio_clocksource_enable(struct clocksource *cs)
+> +{
+> +	pistachio_clksrc_enable(cs, 0);
+> +	return 0;
+> +}
+> +
+> +static void pistachio_clocksource_disable(struct clocksource *cs)
+> +{
+> +	pistachio_clksrc_disable(cs, 0);
+> +}
+> +
+> +/* Desirable clock source for pistachio platform */
+> +struct pistachio_clocksource pcs_gpt =3D {
+
+static.
+
+Thanks !
+
+   -- Daniel
 
 
-> -----Original Message-----
-> From: Dong Aisheng [mailto:aisheng.dong@freescale.com]
-> Sent: Friday, August 07, 2015 3:40 PM
-> To: Chen Haibo-B51421
-> Cc: robh+dt@kernel.org; pawel.moll@arm.com; mark.rutland@arm.com;
-> ijc+devicetree@hellion.org.uk; galak@codeaurora.org; shawnguo@kernel.org;
-> kernel@pengutronix.de; linux@arm.linux.org.uk; ulf.hansson@linaro.org;
-> johan.derycke@barco.com; mkl@pengutronix.de; Estevam Fabio-R49496; Dong
-> Aisheng-B29396; devicetree@vger.kernel.org; linux-kernel@vger.kernel.org;
-> linux-arm-kernel@lists.infradead.org; linux-mmc@vger.kernel.org
-> Subject: Re: [PATCH v4 2/6] mmc: sdhci-esdhc-imx: add tuning-step seting
-> support
-> 
-> On Wed, Aug 05, 2015 at 06:38:38PM +0800, Haibo Chen wrote:
-> > tuning-step is the delay cell steps in tuning procedure. The default
-> > value of tuning-step is 1. Some boards or cards need another value to
-> > pass the tuning procedure. For example, imx7d-sdb board need the
-> > tuning-step value as 2, otherwise it can't pass the tuning procedure.
-> >
-> > So this patch add the tuning-step setting in driver, so that user can
-> > set the tuning-step value in dts.
-> >
-> > Signed-off-by: Haibo Chen <haibo.chen@freescale.com>
-> > ---
-> >  drivers/mmc/host/sdhci-esdhc-imx.c          | 9 +++++++++
-> >  include/linux/platform_data/mmc-esdhc-imx.h | 1 +
-> >  2 files changed, 10 insertions(+)
-> >
-> > diff --git a/drivers/mmc/host/sdhci-esdhc-imx.c
-> > b/drivers/mmc/host/sdhci-esdhc-imx.c
-> > index 48f009c..803d24f 100644
-> > --- a/drivers/mmc/host/sdhci-esdhc-imx.c
-> > +++ b/drivers/mmc/host/sdhci-esdhc-imx.c
-> > @@ -75,6 +75,7 @@
-> >  #define ESDHC_STD_TUNING_EN		(1 << 24)
-> >  /* NOTE: the minimum valid tuning start tap for mx6sl is 1 */
-> >  #define ESDHC_TUNING_START_TAP		0x1
-> > +#define ESDHC_TUNING_STEP_SHIFT		16
-> >
-> >  /* pinctrl state */
-> >  #define ESDHC_PINCTRL_STATE_100MHZ	"state_100mhz"
-> > @@ -474,6 +475,7 @@ static void esdhc_writew_le(struct sdhci_host *host,
-> u16 val, int reg)
-> >  		} else if (imx_data->socdata->flags & ESDHC_FLAG_STD_TUNING)
-> {
-> >  			u32 v = readl(host->ioaddr + SDHCI_ACMD12_ERR);
-> >  			u32 m = readl(host->ioaddr + ESDHC_MIX_CTRL);
-> > +			u32 tuning_ctrl;
-> >  			if (val & SDHCI_CTRL_TUNED_CLK) {
-> >  				v |= ESDHC_MIX_CTRL_SMPCLK_SEL;
-> >  			} else {
-> > @@ -484,6 +486,11 @@ static void esdhc_writew_le(struct sdhci_host
-> *host, u16 val, int reg)
-> >  			if (val & SDHCI_CTRL_EXEC_TUNING) {
-> >  				v |= ESDHC_MIX_CTRL_EXE_TUNE;
-> >  				m |= ESDHC_MIX_CTRL_FBCLK_SEL;
-> > +				tuning_ctrl = readl(host->ioaddr +
-> ESDHC_TUNING_CTRL);
-> > +				tuning_ctrl |= ESDHC_STD_TUNING_EN |
-> ESDHC_TUNING_START_TAP;
-> > +				if (imx_data->boarddata.tuning_step)
-> > +					tuning_ctrl |= imx_data-
-> >boarddata.tuning_step << ESDHC_TUNING_STEP_SHIFT;
-> > +					writel(tuning_ctrl, host->ioaddr +
-> ESDHC_TUNING_CTRL);
-> 
-> Is there a code indent issue here?
-> Otherwise, the patch looks good to me.
-> 
-> Regards
-> Dong Aisheng
+--=20
+  <http://www.linaro.org/> Linaro.org =E2=94=82 Open source software fo=
+r ARM SoCs
 
-[haibo] I check this, the code indent is okay.
-
-> 
-> >  			} else {
-> >  				v &= ~ESDHC_MIX_CTRL_EXE_TUNE;
-> >  			}
-> > @@ -964,6 +971,8 @@ sdhci_esdhc_imx_probe_dt(struct platform_device
-> *pdev,
-> >  	if (gpio_is_valid(boarddata->wp_gpio))
-> >  		boarddata->wp_type = ESDHC_WP_GPIO;
-> >
-> > +	of_property_read_u32(np, "fsl,tuning-step",
-> > +&boarddata->tuning_step);
-> > +
-> >  	if (of_find_property(np, "no-1-8-v", NULL))
-> >  		boarddata->support_vsel = false;
-> >  	else
-> > diff --git a/include/linux/platform_data/mmc-esdhc-imx.h
-> > b/include/linux/platform_data/mmc-esdhc-imx.h
-> > index e1571ef..95ccab3 100644
-> > --- a/include/linux/platform_data/mmc-esdhc-imx.h
-> > +++ b/include/linux/platform_data/mmc-esdhc-imx.h
-> > @@ -45,5 +45,6 @@ struct esdhc_platform_data {
-> >  	int max_bus_width;
-> >  	bool support_vsel;
-> >  	unsigned int delay_line;
-> > +	unsigned int tuning_step;       /* The delay cell steps in tuning
-> procedure */
-> >  };
-> >  #endif /* __ASM_ARCH_IMX_ESDHC_H */
-> > --
-> > 1.9.1
-> >
+=46ollow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
