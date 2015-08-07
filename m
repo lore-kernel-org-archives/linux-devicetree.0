@@ -1,66 +1,115 @@
-From: Scott Shu <scott.shu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH v3 5/8] ARM: mediatek: add smp bringup code for MT6580
-Date: Fri, 7 Aug 2015 09:59:45 +0800
-Message-ID: <1438912785.1900.33.camel@mtkswgap22>
-References: <1438696464-59858-1-git-send-email-scott.shu@mediatek.com>
-	 <1438696464-59858-6-git-send-email-scott.shu@mediatek.com>
-	 <1801910.hz53dYUgta@ubix> <20150806061918.GK18700@pengutronix.de>
+From: James Liao <jamesjj.liao@mediatek.com>
+Subject: Re: [PATCH v6 7/9] clk: mediatek: Add subsystem clocks of MT8173
+Date: Fri, 7 Aug 2015 10:20:18 +0800
+Message-ID: <1438914018.29334.6.camel@mtksdaap41>
+References: <1438676218-11310-1-git-send-email-jamesjj.liao@mediatek.com>
+	 <1438676218-11310-8-git-send-email-jamesjj.liao@mediatek.com>
+	 <20150805064605.GZ18700@pengutronix.de>
+	 <1438849431.27884.9.camel@mtksdaap41>
+	 <20150806085354.GN18700@pengutronix.de>
+	 <1438851644.27884.21.camel@mtksdaap41>
+	 <CAGS+omAAYZyZJ4+eSdu2jmwThvHg1YpVoehui_cqNp4A5fURWg@mail.gmail.com>
+	 <20150806102059.GQ18700@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20150806061918.GK18700-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, wsd_upstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, loda.chou-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, jades.shih-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Mars.Cheng-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, scott.shu-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20150806102059.GQ18700@pengutronix.de>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Sascha Hauer <s.hauer@pengutronix.de>, Daniel Kurtz <djkurtz@chromium.org>
+Cc: "open list:OPEN FIRMWARE AND..." <devicetree@vger.kernel.org>, Heiko Stubner <heiko@sntech.de>, srv_heupstream <srv_heupstream@mediatek.com>, Mike Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Ricky Liang <jcliang@chromium.org>, Rob Herring <robh+dt@kernel.org>, linux-mediatek@lists.infradead.org, Sascha Hauer <kernel@pengutronix.de>, Matthias Brugger <matthias.bgg@gmail.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 2015-08-06 at 08:19 +0200, Sascha Hauer wrote:
-> On Wed, Aug 05, 2015 at 06:47:03PM +0200, Matthias Brugger wrote:
-> > On Tuesday, August 04, 2015 09:54:21 PM Scott Shu wrote:
-> > > Add support for cpu enable-method "mediatek,mt6580-smp" for booting
-> > > secondary CPUs on MT6580.
-> > > 
-> > > Signed-off-by: Scott Shu <scott.shu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-> > > ---
-> > >  arch/arm/mach-mediatek/platsmp.c |  137
-> > > ++++++++++++++++++++++++++++++++++++++ 1 file changed, 137 insertions(+)
-> > > +
-> > > +static void __init mt6580_smp_prepare_cpus(unsigned int max_cpus)
-> > > +{
-> > > +	static void __iomem *infracfg_ao_base;
-> > > +
-> > > +	infracfg_ao_base = ioremap(MT6580_INFRACFG_AO, 0x1000);
-> > > +	if (!infracfg_ao_base) {
-> > > +		pr_err("%s: Unable to map I/O memory\n", __func__);
-> > > +		return;
-> > > +	}
-> > > +
-> > > +	/* Enable bootrom power down mode */
-> > > +	writel_relaxed(readl(infracfg_ao_base + 0x804) | SW_ROM_PD,
-> > > +		       infracfg_ao_base + 0x804);
+Hi Sascha,
+
+On Thu, 2015-08-06 at 12:20 +0200, Sascha Hauer wrote:
+> On Thu, Aug 06, 2015 at 05:13:21PM +0800, Daniel Kurtz wrote:
+> > On Thu, Aug 6, 2015 at 5:00 PM, James Liao <jamesjj.liao@mediatek.com> wrote:
+> > > Hi Sascha,
+> > >
+> > > On Thu, 2015-08-06 at 10:53 +0200, Sascha Hauer wrote:
+> > >> On Thu, Aug 06, 2015 at 04:23:51PM +0800, James Liao wrote:
+> > >> > On Wed, 2015-08-05 at 08:46 +0200, Sascha Hauer wrote:
+> > >> > > On Tue, Aug 04, 2015 at 04:16:56PM +0800, James Liao wrote:
+> > >> > > >  static const struct mtk_fixed_clk fixed_clks[] __initconst = {
+> > >> > > >         FIXED_CLK(CLK_TOP_CLKPH_MCK_O, "clkph_mck_o", "clk26m", 400 * MHZ),
+> > >> > > >         FIXED_CLK(CLK_TOP_USB_SYSPLL_125M, "usb_syspll_125m", "clk26m", 125 * MHZ),
+> > >> > > > +       FIXED_CLK(CLK_TOP_DSI0_DIG, "dsi0_dig", "clk26m", 130 * MHZ),
+> > >> > > > +       FIXED_CLK(CLK_TOP_DSI1_DIG, "dsi1_dig", "clk26m", 130 * MHZ),
+> > >> > > > +       FIXED_CLK(CLK_TOP_LVDS_PXL, "lvds_pxl", "lvdspll", 148.5 * MHZ),
+> > >> > > > +       FIXED_CLK(CLK_TOP_LVDS_CTS, "lvds_cts", "lvdspll", 51.975 * MHZ),
+> > >> > >
+> > >> > > I would expect 51975 * KHZ here to avoid fractional numbers. Probably
+> > >> > > gcc calculates that during compile time so this will work as expected,
+> > >> > > still I'm not sure this is good style to use fractional numbers here.
+> > >> >
+> > >> > As I know all constants will be calculated in compile time, so there
+> > >> > should be no difference between 51.975 * MHZ and 51975 * KHz.
+> > >> >
+> > >> > > Anyway, on my system lvdspll is running at 150MHz. Are you sure there is
+> > >> > > a clock derived from this running at 148.5MHz? Is it really correct to
+> > >> > > use a fixed clock here or should it rather be lvdspll directly?
+> > >> >
+> > >> > Here is the clock hierarchy between lvdspll and lvds_pxl:
+> > >> >
+> > >> >             --------       AD_VPLL_DPIX_CK  --------   lvds_pxl  -----
+> > >> >            |        |--------------------->|        |---------->|
+> > >> >            |        |                      | cksys  |           |
+> > >> > LVDSPLL -->| LVDSTX |                      | buffer |           | MMSYS
+> > >> >            |        | AD_LVDSTX_CLKDIG_CTS | test   |  lvds_cts |
+> > >> >            |        |--------------------->|        |---------->|
+> > >> >             --------                        --------             -----
+> > >> >
+> > >> > Some clocks and blocks are not modeled into CCF. But we prefer to enable
+> > >> > lvdspll before enabling lvds_pxl. So I modeled lvds_pxl (and lvds_cts)
+> > >> > as a fixed-rate clock with a source from lvdspll.
+> > >> >
+> > >> > The frequency of these fixed-rate clocks (such as 148.5 MHz) are typical
+> > >> > rate. In fact, we don't care about the actual rate of these clocks. We
+> > >> > just care about the enable / disable sequence of them.
+> > >>
+> > >> Please either use the real rate or 0 (along with a explaining why). Using
+> > >> a frequency with four to five significant digits makes me think that the
+> > >> actual rate is very important.
+> > >
+> > > Oops, your suggestion is much different from Daniel's.
+> > >
+> > > Daniel, could you help to comment about how we model these clocks?
 > > 
-> > Please use a define for the offset.
-> > I prefer to not cascade reads and writes but to use a temporary variable. But 
-> > if this is fine with the kernel coding style (I doubt, but I'm not sure) then 
-> > this is fine.
+> > First of all, for clocks where the rate doesn't matter, it doesn't
+> > matters to what rate we set the clock.
+> > 
+> > As for the color of our shed, "the designer says these are the typical
+> > rates" sounds good enough to me for a "real rate", so I prefer using
+> > the rates in James' patch.
+> > 
+> > If not sure what Sascha's concern is, but if he insists on 0, I'm fine
+> > with that too.
 > 
-> For what it's worth I also prefer
-> 
-> 	val = readl(infracfg_ao_base + 0x804);
-> 	val |= SW_ROM_PD:
-> 	writel_relaxed(val, infracfg_ao_base + 0x804);
-> 
-> I find this better readable. I don't think though that there's common
-> agreement that this style is better.
-> 
-> Sascha
-> 
-Fixed in next version. Thanks.
+> I only find it confusing. I'd expect either the correct rate or an
+> obviously dummy rate. Whatever we choose a comment explaining the
+> background would really help here. Otherwise we won't know later
+> whether this 148.5 MHz rate was introduced because a) The consumers
+> depend on this rate being reported, b) It really is the correct rate or
+> c) we don't care about the rate.
 
-Scott
+So the proper setting should be:
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+clk_name,          parent,    rate
+-------------------------------------
+"clkph_mck_o",     "clk26m",  0
+"usb_syspll_125m", "clk26m",  125 * MHZ
+"dsi0_dig",        "clk26m",  0
+"dsi1_dig",        "clk26m",  0
+"lvds_pxl",        "lvdspll", 0
+"lvds_cts",        "lvdspll", 0
+
+usb_syspll_125m will keep in 125 MHz event in different products.Others
+may be changed by DRAM or display settings.
+
+Daniel, do you think it's OK to model these clocks like above?
+
+
+Best regards,
+
+James
