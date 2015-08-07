@@ -1,72 +1,108 @@
-From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 0/4] UART slave device support - version 4
-Date: Fri, 7 Aug 2015 15:01:47 +0200
-Message-ID: <CACRpkdZf2AM_7Od1kVcBxokK5CJfhnsfZ_oNSF5w7rmZmcenCg@mail.gmail.com>
-References: <20150511013540.5709.93626.stgit@notabene.brown>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH v3 2/4] ASoC: rockchip: Add rockchip SPDIF transceiver
+ driver
+Date: Fri, 7 Aug 2015 14:03:11 +0100
+Message-ID: <20150807130311.GW20873@sirena.org.uk>
+References: <1438947854-3743-1-git-send-email-sjoerd.simons@collabora.co.uk>
+ <1438947854-3743-3-git-send-email-sjoerd.simons@collabora.co.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20150511013540.5709.93626.stgit-wvvUuzkyo1EYVZTmpyfIwg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: NeilBrown <neil-+NVA1uvv1dVBDLzU/O5InQ@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, One Thousand Gnomes <gnomes-qBU/x9rampVanCEyBjwyrvXRex20P6io@public.gmane.org>, Peter Hurley <peter-WaGBZJeGNqdsbIuE7sb01tBPR1lH4CV8@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Jiri Slaby <jslaby-AlSwsSmVLrQ@public.gmane.org>, GTA04 owners <gta04-owner-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="Bs30vi9tNOOGUgTv"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1438947854-3743-3-git-send-email-sjoerd.simons@collabora.co.uk>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Sjoerd Simons <sjoerd.simons@collabora.co.uk>
+Cc: linux-rockchip@lists.infradead.org, Jaroslav Kysela <perex@perex.cz>, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, Heiko Stuebner <heiko@sntech.de>, linux-kernel@vger.kernel.org, Kumar Gala <galak@codeaurora.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Takashi Iwai <tiwai@suse.com>, Liam Girdwood <lgirdwood@gmail.com>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@arm.linux.org.uk>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Neil,
 
-first, this is a *VERY* interesting and much needed patch series,
-I intend to look closer at it, and if possible test it with some
-(heh) board file device. Would be happy of you put me on CC for these.
+--Bs30vi9tNOOGUgTv
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-On Mon, May 11, 2015 at 3:56 AM, NeilBrown <neil-+NVA1uvv1dVBDLzU/O5InQ@public.gmane.org> wrote:
+On Fri, Aug 07, 2015 at 01:44:12PM +0200, Sjoerd Simons wrote:
 
->  When a device is connected to a UART via RS-232 (or similar), there
->  is a DTR line that can be used for power management, and other "modem
->  control" lines.
->
->  On an embedded board, it is very likely that there is no "DTR", and
->  any power management need to be done using some completely separate
->  mechanism.
->
->  So these "slaves" are really just for devices permanently attached to
->  UARTs without a full "RS-232" (or similar) connection.  The driver
->  does all the extra control beyond Tx/Rx.
+> Changes in v2:
+> - Remove platform: module alias as it was unused
 
-What is usually happening (and I have seen it in a few places) is that
-the SoC has *one* fully featured RS232 with CTS/RTS and even
-DTS,DCD,RI and other esoterica, which is intended to be connected to a
-host serial port or so, for example if this SoC is to act as a modem
-or a fax machine, or if it is to drive one.
+Ugh, I see Paul Bolle replied to one of your earlier patches :/  Please
+just ignore him, he doesn't understand that we don't require machine
+definitions to be in tree.  A platform: module alias is useful for any
+platform device.
 
-Then they often have a few more UART blocks, usually identical, which
-only have RxD+TxD available, so they are "just" UARTs.
+> +static inline struct rk_spdif_dev *to_info(struct snd_soc_dai *dai)
+> +{
+> +	return snd_soc_dai_get_drvdata(dai);
+> +}
 
-To complicate things further, you may wonder what happened with
-the CTS/RTS (etc) signals from the other blocks. Usually they are there
-in the silicon but just routed to dead ends.
+I'm not sure this is adding much to the two users but whatever.
 
-To complicate it even further, usually all these pins are placed under
-pin control multiplexing, so in an actual electronic design, the
-system will mux out CTS/RTS (etc) from the fully featured RS232
-blocks and only use them as UARTs anyways.
+> +static int rk_spdif_snd_txctrl(struct rk_spdif_dev *spdif, int on)
+> +{
+> +	int ret;
+> +
+> +	if (on) {
+> +		ret = regmap_update_bits(spdif->regmap, SPDIF_DMACR,
+> +				   SPDIF_DMACR_TDE_ENABLE,
+> +				   SPDIF_DMACR_TDE_ENABLE);
+> +
+> +		if (ret != 0)
+> +			goto bail;
+> +
+> +		ret = regmap_update_bits(spdif->regmap, SPDIF_XFER,
+> +				   SPDIF_XFER_TXS_START,
+> +				   SPDIF_XFER_TXS_START);
 
-Then there are those who created real simple RxD/TxD-only UARTs
-("yeah lets dump this RS232 legacy crap" / "yeah yeah")
-and then realized they want to drive modems ("oh crap, it seemed
-like a good idea at the time"). Then they usually take
-two GPIO pins for CTS/RTS and drive them as GPIOs using
-software and you have a cheap 4-line modem line. This is what
-drivers/tty/serial/serial_mctrl_gpio.c is for if you wondered.
+This function has no common code, just two branches in an if/else that
+share nothing and is called from a single location.  Why not just inline
+this into the trigger function?
 
-> I've tested this set and it seems to work ... except that something
->  is sadly broken with bluetooth support in 4.1-rc1 so I've only really
->  tested the GPS driver.  I guess it is time to rebase to -rc3.
+> +	/* Set clock and calculate divider */
+> +	clk_set_rate(spdif->mclk, mclk);
 
-You have a hardware taget I see. Which one?
+We should check the return value of clk_set_rate().
 
-Yours,
-Linus Walleij
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> +	spdif->hclk = devm_clk_get(&pdev->dev, "spdif_hclk");
+> +	if (IS_ERR(spdif->hclk)) {
+> +		dev_err(&pdev->dev, "Can't retrieve rk_spdif bus clock\n");
+> +		return PTR_ERR(spdif->hclk);
+> +	}
+> +	ret = clk_prepare_enable(spdif->hclk);
+> +	if (ret) {
+> +		dev_err(spdif->dev, "hclock enable failed %d\n", ret);
+> +		return ret;
+> +	}
+
+I notice that we don't manage the hclk over suspend/resume - should we
+perhaps be using regmap_init_mmio_clk() together with runtime PM to
+manage it?
+
+> +	pm_runtime_enable(&pdev->dev);
+> +	if (!pm_runtime_enabled(&pdev->dev)) {
+> +		ret = rk_spdif_runtime_resume(&pdev->dev);
+> +		if (ret)
+> +			goto err_pm_disable;
+> +	}
+
+The normal pattern with this is to start the device powered up then idle
+it - this does mean we need to bounce the power on but fitting in with
+the common pattern is good and it's less conditional code.
+
+--Bs30vi9tNOOGUgTv
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQEcBAEBCAAGBQJVxKyOAAoJECTWi3JdVIfQYDwH/1MZCsii1Xu5GxqDnwIXtiAr
+Z3jWqULkOy6OCwfInHTc+Gv6llbQeHiSMnSRhdzCHkme6vsYmlMPDl38CmP4TWud
+tXtjfHPlrMg4ZUVFIAWpjKrPjfw6tLsKWrU/MP+gTSp5PZhoW4Z3YlhVs9RsEdqt
+0XKXxe1S+Wcgj2UXhWSsVND+VyP1UQ2fJETvpgFvN4X+AgwYyozHHXmowl3g4Dcl
+OqNd/vgqYkyk+WyU3I2sGlhczWwSFRwc/MtlqGt9snWsD/qK5PGSLPn43fg948ta
+Q5VQUWu6MqmvaNOPjDXm/7LIlqUnaj2yMdW3FpBo8fJlWvFHTM8BG74EzwC7Upw=
+=EQZc
+-----END PGP SIGNATURE-----
+
+--Bs30vi9tNOOGUgTv--
