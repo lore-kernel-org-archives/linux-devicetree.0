@@ -1,171 +1,282 @@
-From: Eric Anholt <eric@anholt.net>
-Subject: [PATCH v4 2/4] irqchip: bcm2835: Add support for being used as a
- second level controller.
-Date: Thu,  6 Aug 2015 16:00:31 -0700
-Message-ID: <1438902033-31477-3-git-send-email-eric@anholt.net>
-References: <1438902033-31477-1-git-send-email-eric@anholt.net>
+From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Subject: Re: [PATCH] Input: elants_i2c - wire up regulator support
+Date: Thu, 6 Aug 2015 17:24:39 -0700
+Message-ID: <CAKdAkRSJEGkndOe5OFbcG3Mo77HtvysbPL6uYS+gcAFQKdS=Kg@mail.gmail.com>
+References: <20150805185357.GA31387@dtor-ws>
+	<005d01d0d016$072f9080$158eb180$@emc.com.tw>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1438902033-31477-1-git-send-email-eric@anholt.net>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: linux-arm-kernel@lists.infradead.org
-Cc: devicetree@vger.kernel.org, Jason Cooper <jason@lakedaemon.net>, Stephen Warren <swarren@wwwdotorg.org>, Lee Jones <lee@kernel.org>, linux-kernel@vger.kernel.org, Eric Anholt <eric@anholt.net>, linux-rpi-kernel@lists.infradead.org, Thomas Gleixner <tglx@linutronix.de>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-input-owner@vger.kernel.org>
+In-Reply-To: <005d01d0d016$072f9080$158eb180$@emc.com.tw>
+Sender: linux-input-owner@vger.kernel.org
+To: =?UTF-8?B?RUxBTiDlionlmInpp78=?= <scott.liu@emc.com.tw>
+Cc: Dmitry Torokhov <dtor@chromium.org>, "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Benson Leung <bleung@chromium.org>, Duson Lin <dusonlin@emc.com.tw>, James Chen <james.chen@emc.com.tw>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, lkml <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-The BCM2836 (Raspberry Pi 2) uses two levels of interrupt handling
-with the CPU-local interrupts being the root, so we need to register
-ours as chained off of the CPU's local interrupt.
+Hi Scott,
 
-Signed-off-by: Eric Anholt <eric@anholt.net>
-Acked-by: Stephen Warren <swarren@wwwdotorg.org>
----
+On Thu, Aug 6, 2015 at 12:03 AM, ELAN =E5=8A=89=E5=98=89=E9=A7=BF <scot=
+t.liu@emc.com.tw> wrote:
+> Hi Dmitry
+>
+>         I am curious about how reset gpio works and I think the reset=
+ gpio
+> at low level after elants_i2c_power_on(),
+>         So that the controller won't response anyway, please see belo=
+w my
+> question and correct me if I am wrong.
+>
+>> -----Original Message-----
+>> From: Dmitry Torokhov [mailto:dtor@chromium.org]
+>> Sent: Thursday, August 06, 2015 2:54 AM
+>> To: linux-input@vger.kernel.org
+>> Cc: Rob Herring; Mark Rutland; Benson Leung; Duson Lin; Scott Liu; J=
+ames
+>> Chen; devicetree@vger.kernel.org; linux-kernel@vger.kernel.org;
+>> linux-input@vger.kernel.org
+>> Subject: [PATCH] Input: elants_i2c - wire up regulator support
+>>
+>> Elan touchscreen controllers use two power supplies, vcc33 and vccio=
+, and
+>> we need to enable them before trying to access the device. On X86 fi=
+rmware
+>> usually does this, but on ARM it is usually left to the kernel.
+>>
+>> Signed-off-by: Dmitry Torokhov <dtor@chromium.org>
+>> Reviewed-by: Benson Leung <bleung@chromium.org>
+>> Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+>> ---
+>>  .../devicetree/bindings/input/elants_i2c.txt       |   3 +
+>>  drivers/input/touchscreen/elants_i2c.c             | 184
+>> ++++++++++++++++++---
+>>  2 files changed, 165 insertions(+), 22 deletions(-)
+>>
+>> diff --git a/Documentation/devicetree/bindings/input/elants_i2c.txt
+>> b/Documentation/devicetree/bindings/input/elants_i2c.txt
+>> index a765232..8a71038 100644
+>> --- a/Documentation/devicetree/bindings/input/elants_i2c.txt
+>> +++ b/Documentation/devicetree/bindings/input/elants_i2c.txt
+>> @@ -13,6 +13,9 @@ Optional properties:
+>>  - pinctrl-names: should be "default" (see pinctrl binding [1]).
+>>  - pinctrl-0: a phandle pointing to the pin settings for the device =
+(see
+>>    pinctrl binding [1]).
+>> +- reset-gpios: reset gpio the chip is connected to.
+>> +- vcc33-supply: a phandle for the regulator supplying 3.3V power.
+>> +- vccio-supply: a phandle for the regulator supplying IO power.
+>>
+>>  [0]:
+> Documentation/devicetree/bindings/interrupt-controller/interrupts.txt
+>>  [1]: Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt
+>> diff --git a/drivers/input/touchscreen/elants_i2c.c
+>> b/drivers/input/touchscreen/elants_i2c.c
+>> index 42e43f1..1912265 100644
+>> --- a/drivers/input/touchscreen/elants_i2c.c
+>> +++ b/drivers/input/touchscreen/elants_i2c.c
+>> @@ -38,6 +38,8 @@
+>>  #include <linux/input/mt.h>
+>>  #include <linux/acpi.h>
+>>  #include <linux/of.h>
+>> +#include <linux/gpio/consumer.h>
+>> +#include <linux/regulator/consumer.h>
+>>  #include <asm/unaligned.h>
+>>
+>>  /* Device, Driver information */
+>> @@ -102,6 +104,9 @@
+>>  /* calibration timeout definition */
+>>  #define ELAN_CALI_TIMEOUT_MSEC       10000
+>>
+>> +#define ELAN_POWERON_DELAY_USEC      500
+>> +#define ELAN_RESET_DELAY_MSEC        20
+>> +
+>>  enum elants_state {
+>>       ELAN_STATE_NORMAL,
+>>       ELAN_WAIT_QUEUE_HEADER,
+>> @@ -118,6 +123,10 @@ struct elants_data {
+>>       struct i2c_client *client;
+>>       struct input_dev *input;
+>>
+>> +     struct regulator *vcc33;
+>> +     struct regulator *vccio;
+>> +     struct gpio_desc *reset_gpio;
+>> +
+>>       u16 fw_version;
+>>       u8 test_version;
+>>       u8 solution_version;
+>> @@ -141,6 +150,7 @@ struct elants_data {
+>>       u8 buf[MAX_PACKET_SIZE];
+>>
+>>       bool wake_irq_enabled;
+>> +     bool keep_power_in_suspend;
+>>  };
+>>
+>>  static int elants_i2c_send(struct i2c_client *client, @@ -1058,6 +1=
+068,67
+>> @@ static void elants_i2c_remove_sysfs_group(void *_data)
+>>       sysfs_remove_group(&ts->client->dev.kobj,
+>> &elants_attribute_group);  }
+>>
+>> +static int elants_i2c_power_on(struct elants_data *ts) {
+>> +     int error;
+>> +
+>> +     /*
+>> +      * If we do not have reset gpio assume platform firmware
+>> +      * controls regulators and does power them on for us.
+>> +      */
+>> +     if (IS_ERR_OR_NULL(ts->reset_gpio))
+>> +             return 0;
+>> +
+>> +     gpiod_set_value_cansleep(ts->reset_gpio, 1);
+>> +
+>> +     error =3D regulator_enable(ts->vcc33);
+>> +     if (error) {
+>> +             dev_err(&ts->client->dev,
+>> +                     "failed to enable vcc33 regulator: %d\n",
+>> +                     error);
+>> +             goto release_reset_gpio;
+>> +     }
+>> +
+>> +     error =3D regulator_enable(ts->vccio);
+>> +     if (error) {
+>> +             dev_err(&ts->client->dev,
+>> +                     "failed to enable vccio regulator: %d\n",
+>> +                     error);
+>> +             regulator_disable(ts->vcc33);
+>> +             goto release_reset_gpio;
+>> +     }
+>> +
+>> +     /*
+>> +      * We need to wait a bit after powering on controller before
+>> +      * we are allowed to release reset GPIO.
+>> +      */
+>> +     udelay(ELAN_POWERON_DELAY_USEC);
+>> +
+>> +release_reset_gpio:
+>> +     gpiod_set_value_cansleep(ts->reset_gpio, 0);
+>> +     if (error)
+>> +             return error;
+>> +
+>> +     msleep(ELAN_RESET_DELAY_MSEC);
+>> +
+>> +     return 0;
+>> +}
+>> +
+>> +static void elants_i2c_power_off(void *_data) {
+>> +     struct elants_data *ts =3D _data;
+>> +
+>> +     if (!IS_ERR_OR_NULL(ts->reset_gpio)) {
+>> +             /*
+>> +              * Activate reset gpio to prevent leakage through the
+>> +              * pin once we shut off power to the controller.
+>> +              */
+>> +             gpiod_set_value_cansleep(ts->reset_gpio, 1);
+>> +             regulator_disable(ts->vccio);
+>> +             regulator_disable(ts->vcc33);
+>> +     }
+>> +}
+>> +
+>>  static int elants_i2c_probe(struct i2c_client *client,
+>>                           const struct i2c_device_id *id)
+>>  {
+>> @@ -1072,13 +1143,6 @@ static int elants_i2c_probe(struct i2c_client
+>> *client,
+>>               return -ENXIO;
+>>       }
+>>
+>> -     /* Make sure there is something at this address */
+>> -     if (i2c_smbus_xfer(client->adapter, client->addr, 0,
+>> -                     I2C_SMBUS_READ, 0, I2C_SMBUS_BYTE, &dummy) < 0=
+) {
+>> -             dev_err(&client->dev, "nothing at this address\n");
+>> -             return -ENXIO;
+>> -     }
+>> -
+>>       ts =3D devm_kzalloc(&client->dev, sizeof(struct elants_data),
+>> GFP_KERNEL);
+>>       if (!ts)
+>>               return -ENOMEM;
+>> @@ -1089,6 +1153,70 @@ static int elants_i2c_probe(struct i2c_client
+>> *client,
+>>       ts->client =3D client;
+>>       i2c_set_clientdata(client, ts);
+>>
+>> +     ts->vcc33 =3D devm_regulator_get(&client->dev, "vcc33");
+>> +     if (IS_ERR(ts->vcc33)) {
+>> +             error =3D PTR_ERR(ts->vcc33);
+>> +             if (error !=3D -EPROBE_DEFER)
+>> +                     dev_err(&client->dev,
+>> +                             "Failed to get 'vcc33' regulator: %d\n=
+",
+>> +                             error);
+>> +             return error;
+>> +     }
+>> +
+>> +     ts->vccio =3D devm_regulator_get(&client->dev, "vccio");
+>> +     if (IS_ERR(ts->vccio)) {
+>> +             error =3D PTR_ERR(ts->vccio);
+>> +             if (error !=3D -EPROBE_DEFER)
+>> +                     dev_err(&client->dev,
+>> +                             "Failed to get 'vccio' regulator: %d\n=
+",
+>> +                             error);
+>> +             return error;
+>> +     }
+>> +
+>> +     ts->reset_gpio =3D devm_gpiod_get(&client->dev, "reset");
+>> +     if (IS_ERR(ts->reset_gpio)) {
+>> +             error =3D PTR_ERR(ts->reset_gpio);
+>> +
+>> +             if (error =3D=3D -EPROBE_DEFER)
+>> +                     return error;
+>> +
+>> +             if (error !=3D -ENOENT && error !=3D -ENOSYS) {
+>> +                     dev_err(&client->dev,
+>> +                             "failed to get reset gpio: %d\n",
+>> +                             error);
+>> +                     return error;
+>> +             }
+>> +
+>> +             ts->keep_power_in_suspend =3D true;
+>> +     } else {
+>> +             error =3D gpiod_direction_output(ts->reset_gpio, 0);
+>
+>         Does it mean to reset our controller? (reset gpio pull low).
 
-v3: Use a separate compatible value to indicate that the parent
-    interrupt controller irq is required (Requested by Stephen Warren)
+No, gpiod takes into account the declared polarity of the GPIO signal
+and we declare the reset GPIOs as "active low" in DTS. So here we
+configure GPIO for output and make it inactive (which translates to
+HIGH).
 
- .../brcm,bcm2835-armctrl-ic.txt                    | 25 ++++++++++++-
- drivers/irqchip/irq-bcm2835.c                      | 43 ++++++++++++++++++++--
- 2 files changed, 64 insertions(+), 4 deletions(-)
+>
+>> +             if (error) {
+>> +                     dev_err(&client->dev,
+>> +                             "failed to configure reset gpio as out=
+put:
+> %d\n",
+>> +                             error);
+>> +                     return error;
+>> +             }
+>> +     }
+>> +
+>> +     error =3D elants_i2c_power_on(ts);
+>
+>         If reset gpio is at low, controller won't response initialize=
+ flow.
+>         I am curious that does reset pin be at low level after
+> elants_i2c_power_on(ts)?
 
-diff --git a/Documentation/devicetree/bindings/interrupt-controller/brcm,bcm2835-armctrl-ic.txt b/Documentation/devicetree/bindings/interrupt-controller/brcm,bcm2835-armctrl-ic.txt
-index 7da578d..2d6c8bb 100644
---- a/Documentation/devicetree/bindings/interrupt-controller/brcm,bcm2835-armctrl-ic.txt
-+++ b/Documentation/devicetree/bindings/interrupt-controller/brcm,bcm2835-armctrl-ic.txt
-@@ -5,9 +5,14 @@ The BCM2835 contains a custom top-level interrupt controller, which supports
- controller, or the HW block containing it, is referred to occasionally
- as "armctrl" in the SoC documentation, hence naming of this binding.
- 
-+The BCM2836 contains the same interrupt controller with the same
-+interrupts, but the per-CPU interrupt controller is the root, and an
-+interrupt there indicates that the ARMCTRL has an interrupt to handle.
-+
- Required properties:
- 
--- compatible : should be "brcm,bcm2835-armctrl-ic"
-+- compatible : should be "brcm,bcm2835-armctrl-ic" or
-+                 "brcm,bcm2836-armctrl-ic"
- - reg : Specifies base physical address and size of the registers.
- - interrupt-controller : Identifies the node as an interrupt controller
- - #interrupt-cells : Specifies the number of cells needed to encode an
-@@ -20,6 +25,12 @@ Required properties:
-   The 2nd cell contains the interrupt number within the bank. Valid values
-   are 0..7 for bank 0, and 0..31 for bank 1.
- 
-+Additional required properties for brcm,bcm2836-armctrl-ic:
-+- interrupt-parent : Specifies the parent interrupt controller when this
-+  controller is the second level.
-+- interrupts : Specifies the interrupt on the parent for this interrupt
-+  controller to handle.
-+
- The interrupt sources are as follows:
- 
- Bank 0:
-@@ -102,9 +113,21 @@ Bank 2:
- 
- Example:
- 
-+/* BCM2835, first level */
- intc: interrupt-controller {
- 	compatible = "brcm,bcm2835-armctrl-ic";
- 	reg = <0x7e00b200 0x200>;
- 	interrupt-controller;
- 	#interrupt-cells = <2>;
- };
-+
-+/* BCM2836, second level */
-+intc: interrupt-controller {
-+	compatible = "brcm,bcm2836-armctrl-ic";
-+	reg = <0x7e00b200 0x200>;
-+	interrupt-controller;
-+	#interrupt-cells = <2>;
-+
-+	interrupt-parent = <&local_intc>;
-+	interrupts = <8>;
-+};
-diff --git a/drivers/irqchip/irq-bcm2835.c b/drivers/irqchip/irq-bcm2835.c
-index 382450a..f968d3f 100644
---- a/drivers/irqchip/irq-bcm2835.c
-+++ b/drivers/irqchip/irq-bcm2835.c
-@@ -97,6 +97,7 @@ struct armctrl_ic {
- static struct armctrl_ic intc __read_mostly;
- static void __exception_irq_entry bcm2835_handle_irq(
- 	struct pt_regs *regs);
-+static void bcm2836_chained_handle_irq(unsigned int irq, struct irq_desc *desc);
- 
- static void armctrl_mask_irq(struct irq_data *d)
- {
-@@ -140,7 +141,8 @@ static const struct irq_domain_ops armctrl_ops = {
- };
- 
- static int __init armctrl_of_init(struct device_node *node,
--	struct device_node *parent)
-+				  struct device_node *parent,
-+				  bool is_2836)
- {
- 	void __iomem *base;
- 	int irq, b, i;
-@@ -169,10 +171,34 @@ static int __init armctrl_of_init(struct device_node *node,
- 		}
- 	}
- 
--	set_handle_irq(bcm2835_handle_irq);
-+	if (is_2836) {
-+		int parent_irq = irq_of_parse_and_map(node, 0);
-+
-+		if (!parent_irq) {
-+			panic("%s: unable to get parent interrupt.\n",
-+			      node->full_name);
-+		}
-+		irq_set_chained_handler(parent_irq, bcm2836_chained_handle_irq);
-+	} else {
-+		set_handle_irq(bcm2835_handle_irq);
-+	}
-+
- 	return 0;
- }
- 
-+static int __init bcm2835_armctrl_of_init(struct device_node *node,
-+					  struct device_node *parent)
-+{
-+	return armctrl_of_init(node, parent, false);
-+}
-+
-+static int __init bcm2836_armctrl_of_init(struct device_node *node,
-+					  struct device_node *parent)
-+{
-+	return armctrl_of_init(node, parent, true);
-+}
-+
-+
- /*
-  * Handle each interrupt across the entire interrupt controller.  This reads the
-  * status register before handling each interrupt, which is necessary given that
-@@ -220,4 +246,15 @@ static void __exception_irq_entry bcm2835_handle_irq(
- 		handle_IRQ(irq_linear_revmap(intc.domain, hwirq), regs);
- }
- 
--IRQCHIP_DECLARE(bcm2835_armctrl_ic, "brcm,bcm2835-armctrl-ic", armctrl_of_init);
-+static void bcm2836_chained_handle_irq(unsigned int irq, struct irq_desc *desc)
-+{
-+	u32 hwirq;
-+
-+	while ((hwirq = get_next_armctrl_hwirq()) != ~0)
-+		generic_handle_irq(irq_linear_revmap(intc.domain, hwirq));
-+}
-+
-+IRQCHIP_DECLARE(bcm2835_armctrl_ic, "brcm,bcm2835-armctrl-ic",
-+		bcm2835_armctrl_of_init);
-+IRQCHIP_DECLARE(bcm2836_armctrl_ic, "brcm,bcm2836-armctrl-ic",
-+		bcm2836_armctrl_of_init);
--- 
-2.1.4
+The reset gpio will be "inactive", or logical 0. Given that we expect
+these gpios be declared as GPIO_ACTIVE_LOW this translates to line
+going HIGH->LOW->HIGH in elants_i2c_power_on() and stay HIGH while the
+driver is bound to the device.
+
+Thanks.
+
+--=20
+Dmitry
+--
+To unsubscribe from this list: send the line "unsubscribe linux-input" =
+in
+the body of a message to majordomo@vger.kernel.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
