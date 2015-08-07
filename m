@@ -1,55 +1,53 @@
-From: Rob Herring <robherring2@gmail.com>
-Subject: Re: [PATCH v3 06/18] regulator: core: Probe regulators on demand
-Date: Fri, 7 Aug 2015 08:58:30 -0500
-Message-ID: <CAL_JsqJf-ZeAhJjkd-6sPH12xL3FX9pOyTBMYHsvS8PnOkAXDQ@mail.gmail.com>
-References: <1438870315-18689-1-git-send-email-tomeu.vizoso@collabora.com>
- <1438870315-18689-7-git-send-email-tomeu.vizoso@collabora.com> <20150807120906.GR20873@sirena.org.uk>
+From: Kishon Vijay Abraham I <kishon@ti.com>
+Subject: Re: [PATCH 0/4] omap: Fix broken pbias device creation
+Date: Fri, 7 Aug 2015 19:55:43 +0530
+Message-ID: <55C4BFE7.2070302@ti.com>
+References: <1437999401-3519-1-git-send-email-kishon@ti.com>	<55B89590.6000109@ti.com>	<20150805100009.GY16878@atomide.com> <CALeDE9OBjESdkXhkAEVj1L-XKJ1yoFg8rkHvcJ_Uj_RXOC-yUQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-acpi-owner@vger.kernel.org>
-In-Reply-To: <20150807120906.GR20873@sirena.org.uk>
-Sender: linux-acpi-owner@vger.kernel.org
-To: Mark Brown <broonie@kernel.org>
-Cc: Tomeu Vizoso <tomeu.vizoso@collabora.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Stephen Warren <swarren@wwwdotorg.org>, Javier Martinez Canillas <javier@osg.samsung.com>, Thierry Reding <thierry.reding@gmail.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linus Walleij <linus.walleij@linaro.org>, "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CALeDE9OBjESdkXhkAEVj1L-XKJ1yoFg8rkHvcJ_Uj_RXOC-yUQ@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Peter Robinson <pbrobinson@gmail.com>, Tony Lindgren <tony@atomide.com>
+Cc: Grygorii Strashko <grygorii.strashko@ti.com>, mark.rutland@arm.com, devicetree@vger.kernel.org, linux@arm.linux.org.uk, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, nsekhar@ti.com, linux-kernel@vger.kernel.org, t-kristo@ti.com, robh+dt@kernel.org, bcousson@baylibre.com, galak@codeaurora.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Aug 7, 2015 at 7:09 AM, Mark Brown <broonie@kernel.org> wrote:
-> On Thu, Aug 06, 2015 at 04:11:43PM +0200, Tomeu Vizoso wrote:
->
->> When looking up a regulator through its OF node, probe it if it hasn't
->> already.
+Hi Peter,
+
+On Friday 07 August 2015 05:18 PM, Peter Robinson wrote:
+> On Wed, Aug 5, 2015 at 11:00 AM, Tony Lindgren <tony@atomide.com> wrote:
+>> * Grygorii Strashko <grygorii.strashko@ti.com> [150729 02:01]:
+>>> On 07/27/2015 03:16 PM, Kishon Vijay Abraham I wrote:
+>>>> pbias device creation got broken once SCM cleanup got merged.
+>>>> This patch series re-enables device creation by adding
+>>>> "simple-bus" in the compatible property of the syscon
+>>>> dt node.
+>>>>
+>>>> validated this series in DRA72, OMAP4 PANDA and OMAP5 UEVM
+>>>> boards.
+>>>>
+>>>> Kishon Vijay Abraham I (4):
+>>>>   ARM: dts: omap24xx: Fix broken pbias device creation
+>>>>   ARM: dts: OMAP4: Fix broken pbias device creation
+>>>>   ARM: dts: OMAP5: Fix broken pbias device creation
+>>>>   ARM: dts: dra7: Fix broken pbias device creation
+>>>>
+>>>>  arch/arm/boot/dts/dra7.dtsi     |    2 +-
+>>>>  arch/arm/boot/dts/omap2430.dtsi |    3 ++-
+>>>>  arch/arm/boot/dts/omap4.dtsi    |    3 ++-
+>>>>  arch/arm/boot/dts/omap5.dtsi    |    3 ++-
+>>>>  4 files changed, 7 insertions(+), 4 deletions(-)
+>>>>
+>>>
+>>> For dra7-evm:
+>>> Tested-by: Grygorii Strashko <grygorii.strashko@ti.com>
 >>
->> The goal is to reduce deferred probes to a minimum, as it makes it very
->> cumbersome to find out why a device failed to probe, and can introduce
->> very big delays in when a critical device is probed.
->
-> Still the same problem as we had before with this stuff, why is this DT
-> only?
+>> Applying all into omap-for-v4.2fixes-v2 thanks.
+> 
+> Do we need the same for am33xx.dtsi too given commit e3bc5358e097 ?
 
-The last version was more generic, but it was obvious that doing that
-was pointless with current code structure. You have a call sequence
-like either:
+PBIAS is not present in am33xx.
 
-generic get -> DT specific get -> generic poke  -> DT specific poke
-
-or
-
-generic get -> DT specific get -> DT specific poke
-
-v2 did the former and this version does the latter. However, for some
-reason with regulators this is not all contained within
-of_get_regulator.
-
->
->>  #include <linux/regulator/consumer.h>
->> @@ -1336,6 +1337,7 @@ static struct regulator_dev *regulator_dev_lookup(struct device *dev,
->>       if (dev && dev->of_node) {
->>               node = of_get_regulator(dev, supply);
->>               if (node) {
->> +                     of_platform_probe(node);
->
-> And why the assumption that this is a platform device?
-
-Agreed on this point.
-
-Rob
+Thanks
+Kishon
