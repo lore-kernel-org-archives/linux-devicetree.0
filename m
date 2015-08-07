@@ -1,56 +1,92 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v3 1/4] ASoC: dt-bindings: add rockchip tranceiver
- bindings
-Date: Fri, 7 Aug 2015 14:05:40 +0100
-Message-ID: <20150807130540.GX20873@sirena.org.uk>
-References: <1438947854-3743-1-git-send-email-sjoerd.simons@collabora.co.uk>
- <1438947854-3743-2-git-send-email-sjoerd.simons@collabora.co.uk>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="0X5fYEMtRnv/h11Z"
+From: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Subject: [PATCH v3 00/11] arm: rpi: Enable USB and Ethernet driver model Raspberry Pi
+Date: Fri,  7 Aug 2015 07:42:20 -0600
+Message-ID: <1438954951-13329-1-git-send-email-sjg@chromium.org>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1438947854-3743-2-git-send-email-sjoerd.simons-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sjoerd Simons <sjoerd.simons-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>
-Cc: linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Jaroslav Kysela <perex-/Fr2/VpizcU@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Takashi Iwai <tiwai-IBi9RG/b67k@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: U-Boot Mailing List <u-boot-0aAXYlwwYIKGBzrmiIFOJg@public.gmane.org>
+Cc: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Joe Hershberger <joe.hershberger-acOepvfBmUk@public.gmane.org>, Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>, Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Marek Vasut <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Pavel Herrmann <morpheus.ibis-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Vikas Manocha <vikas.manocha-qxv4g6HH51o@public.gmane.org>, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, Albert Aribaud <albert.u.boot-LhW3hqR2+23R7s880joybQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+Raspberry Pi uses a DWC2 USB controller and a SMSC USB Ethernet adaptor.
+Driver model support for these was recently merged.
 
---0X5fYEMtRnv/h11Z
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+This series does the following:
+- Move Raspberry Pi to use device tree control (u-boot-dtb.bin instead of
+     u-boot.bin)
+- Remove GPIO platform data (now uses device tree)
+- Remove serial platform data (now uses device tree)
+- Enable CONFIG_DM_ETH and CONFIG_DM_USB on Raspberry Pi
 
-On Fri, Aug 07, 2015 at 01:44:11PM +0200, Sjoerd Simons wrote:
+With Ethernet active the device list looks something like this:
 
-> +- compatible: should be one of the following:
-> +   - "rockchip,rk3066-spdif": for rk3066
-> +   - "rockchip,rk3188-spdif", "rockchip,rk3066-spdif": for rk3188
-> +   - "rockchip,rk3288-spdif", "rockchip,rk3066-spdif": for rk3288
+U-Boot> dm tree
+ Class       Probed   Name
+----------------------------------------
+ root        [ + ]    root_driver
+ simple_bus  [ + ]    |-- soc
+ gpio        [   ]    |   |-- gpio@7e200000
+ serial      [ + ]    |   |-- uart@7e201000
+ usb         [ + ]    |   `-- usb@7e980000
+ usb_hub     [ + ]    |       `-- usb_hub
+ usb_hub     [ + ]    |           `-- usb_hub
+ eth         [ + ]    |               `-- smsc95xx_eth
+ simple_bus  [   ]    `-- clocks
 
-The binding claims that we support these three compatibles but the
-driver only supports rockchip,rk3066-spdif.  It's better to list all the
-compatibles in the binding even if they all boil down to the same thing
-since it's less error prone when we do start adding device specific
-code - people are less likely to forget to handle some variant properly.
+Changes in v3:
+- Drop applied patches from series
+- Drop patch to introduce usbethaddr for driver model
+- Rename binding file to pl01x.txt
 
---0X5fYEMtRnv/h11Z
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+Changes in v2:
+- Add support for Raspberry Pi 2
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
+Simon Glass (11):
+  dm: serial: Update binding for PL01x serial UART
+  arm: rpi: Define CONFIG_TFTP_TSIZE to show tftp size info
+  arm: rpi: Bring in kernel device tree files
+  arm: rpi: Device tree modifications for U-Boot
+  arm: rpi: Add device tree files for Raspberry Pi 2
+  arm: rpi: Enable device tree control for Rasberry Pi
+  arm: rpi: Enable device tree control for Rasberry Pi 2
+  arm: rpi: Drop the UART console platform data
+  arm: rpi: Drop the GPIO platform data
+  arm: rpi: Move to driver model for USB
+  arm: rpi: Use driver model for Ethernet
 
-iQEcBAEBCAAGBQJVxK0kAAoJECTWi3JdVIfQbGwH/ROkvDXXCTWZyu+uNNKmWVPB
-2+aRpnINWRd/i/fwTCTmkmHRSc4caLE875lqvmIPKq63F2HGTtTAEkea975iZfB2
-C5tINY7nkTaviS2jiQKLVUu4lS4hO9vKCOsdbQx+jJCNfMxUCxdd1Vv6Ysvkrqb+
-jxNATguB1XHPhFPU+e18mZACxyRBx3vUV04vWr4dP6vag1UfeR/7sBxvl1gqHzLg
-M+5gFV56NPrHwuH6CfwqrujW5OQo/hndyBYeoisdeh0dg/bbAODNSMTk86TrsaYf
-mIuI5wAg9Bokji25SrrNr4JitMWND0M4ZPQZE5t+3DrcrsKX9dmKSnUF5K53Z7Q=
-=l4PE
------END PGP SIGNATURE-----
+ arch/arm/dts/Makefile                             |   3 +
+ arch/arm/dts/bcm2835-rpi-b.dts                    |  24 ++++
+ arch/arm/dts/bcm2835.dtsi                         |  35 +++++
+ arch/arm/dts/bcm2836-rpi-2-b.dts                  |  30 +++++
+ arch/arm/dts/bcm2836.dtsi                         |  42 ++++++
+ arch/arm/dts/bcm283x-common.dtsi                  | 157 ++++++++++++++++++++++
+ arch/arm/dts/bcm283x-rpi.dtsi                     |  49 +++++++
+ arch/arm/dts/stv0991.dts                          |   2 +-
+ arch/arm/mach-bcm283x/include/mach/gpio.h         |   5 -
+ board/raspberrypi/rpi/rpi.c                       |  24 ----
+ configs/rpi_2_defconfig                           |   6 +
+ configs/rpi_defconfig                             |   6 +
+ doc/device-tree-bindings/arm/bcm/brcm,bcm2835.txt |   8 ++
+ doc/device-tree-bindings/arm/bcm/brcm,bcm2836.txt |  10 ++
+ doc/device-tree-bindings/serial/pl01x.txt         |  55 +++++++-
+ drivers/gpio/bcm2835_gpio.c                       |  20 +++
+ drivers/serial/serial_pl01x.c                     |   6 +-
+ include/configs/rpi-common.h                      |   6 +-
+ include/dt-bindings/pinctrl/bcm2835.h             |  27 ++++
+ 19 files changed, 474 insertions(+), 41 deletions(-)
+ create mode 100644 arch/arm/dts/bcm2835-rpi-b.dts
+ create mode 100644 arch/arm/dts/bcm2835.dtsi
+ create mode 100644 arch/arm/dts/bcm2836-rpi-2-b.dts
+ create mode 100644 arch/arm/dts/bcm2836.dtsi
+ create mode 100644 arch/arm/dts/bcm283x-common.dtsi
+ create mode 100644 arch/arm/dts/bcm283x-rpi.dtsi
+ create mode 100644 doc/device-tree-bindings/arm/bcm/brcm,bcm2835.txt
+ create mode 100644 doc/device-tree-bindings/arm/bcm/brcm,bcm2836.txt
+ create mode 100644 include/dt-bindings/pinctrl/bcm2835.h
 
---0X5fYEMtRnv/h11Z--
+-- 
+2.5.0.rc2.392.g76e840b
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
