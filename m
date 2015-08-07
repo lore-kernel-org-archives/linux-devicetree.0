@@ -1,145 +1,238 @@
-From: Rob Clark <robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v1 4/7] ARM: dts: apq8064: Add MDP support
-Date: Thu, 6 Aug 2015 21:19:31 -0400
-Message-ID: <CAF6AEGtFM-_boOYsnzp5DXSSATFkBiJ5Bj=PVTXy=-ZzXi1x5Q@mail.gmail.com>
-References: <1438087956-17307-1-git-send-email-srinivas.kandagatla@linaro.org>
-	<1438088049-17479-1-git-send-email-srinivas.kandagatla@linaro.org>
-	<55C2B801.1030806@codeaurora.org>
+From: Gavin Shan <gwshan@linux.vnet.ibm.com>
+Subject: Re: [PATCH v6 41/42] drivers/of: Export OF changeset functions
+Date: Fri, 7 Aug 2015 11:43:50 +1000
+Message-ID: <20150807014350.GA23647@gwshan>
+References: <1438834307-26960-1-git-send-email-gwshan@linux.vnet.ibm.com>
+ <1438834307-26960-42-git-send-email-gwshan@linux.vnet.ibm.com>
+ <CAL_JsqK5NhRz4Pg3m=OJMHa5rxV9O5F74Ew-xGjyNgbW=SwDLg@mail.gmail.com>
+Reply-To: Gavin Shan <gwshan@linux.vnet.ibm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <55C2B801.1030806-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Andy Gross <agross-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-arm-msm <linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-pci-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAL_JsqK5NhRz4Pg3m=OJMHa5rxV9O5F74Ew-xGjyNgbW=SwDLg@mail.gmail.com>
+Sender: linux-pci-owner@vger.kernel.org
+To: Rob Herring <robherring2@gmail.com>
+Cc: Gavin Shan <gwshan@linux.vnet.ibm.com>, linuxppc-dev <linuxppc-dev@lists.ozlabs.org>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Michael Ellerman <mpe@ellerman.id.au>, Bjorn Helgaas <bhelgaas@google.com>, Grant Likely <grant.likely@linaro.org>, Pantelis Antoniou <panto@antoniou-consulting.com>, aik@ozlabs.ru
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Aug 5, 2015 at 9:27 PM, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org> wrote:
-> On 07/28/2015 05:54 AM, Srinivas Kandagatla wrote:
+On Thu, Aug 06, 2015 at 08:48:10AM -0500, Rob Herring wrote:
+>On Wed, Aug 5, 2015 at 11:11 PM, Gavin Shan <gwshan@linux.vnet.ibm.com> wrote:
+
+Thanks, Rob. All your comments will be covered in next revision.
+
+Thanks,
+Gavin
+
+>> The PowerNV PCI hotplug driver is going to use the OF changeset
+>> to manage the changed device sub-tree, which requires those OF
+>> changeset functions are exported.
 >>
->> @@ -618,5 +633,77 @@
->>                         compatible = "qcom,tcsr-apq8064", "syscon";
->>                         reg = <0x1a400000 0x100>;
->>                 };
+>> Signed-off-by: Gavin Shan <gwshan@linux.vnet.ibm.com>
+>> ---
+>>  drivers/of/dynamic.c  | 65 ++++++++++++++++++++++++++++++++++++---------------
+>>  drivers/of/overlay.c  |  8 +++----
+>>  drivers/of/unittest.c |  4 ++--
+>>  include/linux/of.h    |  2 ++
+>>  4 files changed, 54 insertions(+), 25 deletions(-)
+>>
+>> diff --git a/drivers/of/dynamic.c b/drivers/of/dynamic.c
+>> index 53826b8..af65b5b 100644
+>> --- a/drivers/of/dynamic.c
+>> +++ b/drivers/of/dynamic.c
+>> @@ -646,6 +646,7 @@ void of_changeset_init(struct of_changeset *ocs)
+>>         memset(ocs, 0, sizeof(*ocs));
+>>         INIT_LIST_HEAD(&ocs->entries);
+>>  }
+>> +EXPORT_SYMBOL(of_changeset_init);
+>
+>We probably want these to be the _GPL variant.
+>
+>>
+>>  /**
+>>   * of_changeset_destroy - Destroy a changeset
+>> @@ -662,20 +663,9 @@ void of_changeset_destroy(struct of_changeset *ocs)
+>>         list_for_each_entry_safe_reverse(ce, cen, &ocs->entries, node)
+>>                 __of_changeset_entry_destroy(ce);
+>>  }
+>> +EXPORT_SYMBOL(of_changeset_destroy);
+>>
+>> -/**
+>> - * of_changeset_apply - Applies a changeset
+>> - *
+>> - * @ocs:       changeset pointer
+>> - *
+>> - * Applies a changeset to the live tree.
+>> - * Any side-effects of live tree state changes are applied here on
+>> - * sucess, like creation/destruction of devices and side-effects
+>> - * like creation of sysfs properties and directories.
+>> - * Returns 0 on success, a negative error value in case of an error.
+>> - * On error the partially applied effects are reverted.
+>> - */
+>> -int of_changeset_apply(struct of_changeset *ocs)
+>> +int __of_changeset_apply(struct of_changeset *ocs)
+>>  {
+>>         struct of_changeset_entry *ce;
+>>         int ret;
+>> @@ -704,17 +694,30 @@ int of_changeset_apply(struct of_changeset *ocs)
+>>  }
+>>
+>>  /**
+>> - * of_changeset_revert - Reverts an applied changeset
+>> + * of_changeset_apply - Applies a changeset
+>>   *
+>>   * @ocs:       changeset pointer
+>>   *
+>> - * Reverts a changeset returning the state of the tree to what it
+>> - * was before the application.
+>> - * Any side-effects like creation/destruction of devices and
+>> - * removal of sysfs properties and directories are applied.
+>> + * Applies a changeset to the live tree.
+>> + * Any side-effects of live tree state changes are applied here on
+>> + * sucess, like creation/destruction of devices and side-effects
+>
+>s/sucess/success/
+>
+>> + * like creation of sysfs properties and directories.
+>>   * Returns 0 on success, a negative error value in case of an error.
+>> + * On error the partially applied effects are reverted.
+>>   */
+>> -int of_changeset_revert(struct of_changeset *ocs)
+>> +int of_changeset_apply(struct of_changeset *ocs)
+>> +{
+>> +       int ret;
 >> +
->> +               hdmi: qcom,hdmi-tx@4a00000 {
->> +                       compatible = "qcom,hdmi-tx-8960";
->> +                       reg-names = "core_physical";
->> +                       reg = <0x04a00000 0x1000>;
->> +                       interrupts = <GIC_SPI 79 0>;
->> +                       clock-names =
->> +                           "core_clk",
->> +                           "master_iface_clk",
->> +                           "slave_iface_clk";
->> +                       clocks =
->> +                           <&mmcc HDMI_APP_CLK>,
->> +                           <&mmcc HDMI_M_AHB_CLK>,
->> +                           <&mmcc HDMI_S_AHB_CLK>;
->> +                       qcom,hdmi-tx-ddc-clk = <&tlmm_pinmux 70
->> GPIO_ACTIVE_HIGH>;
->> +                       qcom,hdmi-tx-ddc-data = <&tlmm_pinmux 71
->> GPIO_ACTIVE_HIGH>;
->> +                       qcom,hdmi-tx-hpd = <&tlmm_pinmux 72
->> GPIO_ACTIVE_HIGH>;
->
->
-> These should use standard "-gpios" syntax. Please fix the binding/driver.
-
-With this, and a couple of the other bindings, I'd chosen to follow to
-follow the downstream bindings simply because I still need to use
-downstream kernel on a handful of devices (for example, I have no a4xx
-device which runs anything close to an upstream kernel, yet still
-quite a lot of work to do in userspace/mesa there)..  this might be a
-scenario that other kernel dev's in other subsystems aren't really
-familiar with, but when it comes to gpu's, really only 10% or less of
-the driver is in the kernel.  There is a massive sh**-ton of
-complexity in terms of cmdstream building in userspace.
-
-But if the change to do things upstream is not too intrusive I'd be
-willing to carry the 'revert' patch as a downstream patch on top of
-upstream.. or if we could reasonably support both bindings, that is
-also an option.  Mostly I just haven't had time to look into it, since
-unlike other drivers, when it comes to gpu stuff, the kernel is only
-the tip of the (inverted) iceberg..
-
->> +                       pinctrl-names = "default";
->> +                       pinctrl-0 = <&hdmi_pinctrl>;
->> +               };
+>> +       mutex_lock(&of_mutex);
+>> +       ret = __of_changeset_apply(ocs);
+>> +       mutex_unlock(&of_mutex);
 >> +
->> +               gpu: qcom,adreno-3xx@4300000 {
->> +                       compatible = "qcom,adreno-3xx";
->> +                       reg = <0x04300000 0x20000>;
->> +                       reg-names = "kgsl_3d0_reg_memory";
->> +                       interrupts = <GIC_SPI 80 0>;
->> +                       interrupt-names = "kgsl_3d0_irq";
->> +                       clock-names =
->> +                           "core_clk",
->> +                           "iface_clk",
->> +                           "mem_clk",
->> +                           "mem_iface_clk";
+>> +       return ret;
+>> +}
+>> +EXPORT_SYMBOL(of_changeset_apply);
+>> +
+>> +int __of_changeset_revert(struct of_changeset *ocs)
+>>  {
+>>         struct of_changeset_entry *ce;
+>>         int ret;
+>> @@ -742,6 +745,29 @@ int of_changeset_revert(struct of_changeset *ocs)
+>>  }
+>>
+>>  /**
+>> + * of_changeset_revert - Reverts an applied changeset
+>> + *
+>> + * @ocs:       changeset pointer
+>> + *
+>> + * Reverts a changeset returning the state of the tree to what it
+>> + * was before the application.
+>> + * Any side-effects like creation/destruction of devices and
+>> + * removal of sysfs properties and directories are applied.
+>> + * Returns 0 on success, a negative error value in case of an error.
+>> + */
+>> +int of_changeset_revert(struct of_changeset *ocs)
+>> +{
+>> +       int ret;
+>> +
+>> +       mutex_lock(&of_mutex);
+>> +       ret = __of_changeset_revert(ocs);
+>> +       mutex_unlock(&of_mutex);
+>> +
+>> +       return ret;
+>> +}
+>> +EXPORT_SYMBOL(of_changeset_revert);
+>> +
+>> +/**
+>>   * of_changeset_action - Perform a changeset action
+>>   *
+>>   * @ocs:       changeset pointer
+>> @@ -779,3 +805,4 @@ int of_changeset_action(struct of_changeset *ocs, unsigned long action,
+>>         list_add_tail(&ce->node, &ocs->entries);
+>>         return 0;
+>>  }
+>> +EXPORT_SYMBOL(of_changeset_action);
+>> diff --git a/drivers/of/overlay.c b/drivers/of/overlay.c
+>> index 24e025f..804ea33 100644
+>> --- a/drivers/of/overlay.c
+>> +++ b/drivers/of/overlay.c
+>> @@ -378,9 +378,9 @@ int of_overlay_create(struct device_node *tree)
+>>         }
+>>
+>>         /* apply the changeset */
+>> -       err = of_changeset_apply(&ov->cset);
+>> +       err = __of_changeset_apply(&ov->cset);
+>>         if (err) {
+>> -               pr_err("%s: of_changeset_apply() failed for tree@%s\n",
+>> +               pr_err("%s: __of_changeset_apply() failed for tree@%s\n",
+>>                                 __func__, tree->full_name);
+>>                 goto err_revert_overlay;
+>>         }
+>> @@ -508,7 +508,7 @@ int of_overlay_destroy(int id)
+>>
+>>
+>>         list_del(&ov->node);
+>> -       of_changeset_revert(&ov->cset);
+>> +       __of_changeset_revert(&ov->cset);
+>>         of_free_overlay_info(ov);
+>>         idr_remove(&ov_idr, id);
+>>         of_changeset_destroy(&ov->cset);
+>> @@ -539,7 +539,7 @@ int of_overlay_destroy_all(void)
+>>         /* the tail of list is guaranteed to be safe to remove */
+>>         list_for_each_entry_safe_reverse(ov, ovn, &ov_list, node) {
+>>                 list_del(&ov->node);
+>> -               of_changeset_revert(&ov->cset);
+>> +               __of_changeset_revert(&ov->cset);
+>>                 of_free_overlay_info(ov);
+>>                 idr_remove(&ov_idr, ov->id);
+>>                 kfree(ov);
+>> diff --git a/drivers/of/unittest.c b/drivers/of/unittest.c
+>> index 2270830..06eb3e5 100644
+>> --- a/drivers/of/unittest.c
+>> +++ b/drivers/of/unittest.c
+>> @@ -527,7 +527,7 @@ static void __init of_unittest_changeset(void)
+>>         unittest(!of_changeset_update_property(&chgset, parent, ppupdate), "fail update prop\n");
+>>         unittest(!of_changeset_remove_property(&chgset, parent, ppremove), "fail remove prop\n");
+>>         mutex_lock(&of_mutex);
+>> -       unittest(!of_changeset_apply(&chgset), "apply failed\n");
+>> +       unittest(!__of_changeset_apply(&chgset), "apply failed\n");
 >
+>You can just remove the mutex here.
 >
-> Please drop "_clk" and fix driver code as we've done for all other drivers.
+>>         mutex_unlock(&of_mutex);
+>>
+>>         /* Make sure node names are constructed correctly */
+>> @@ -536,7 +536,7 @@ static void __init of_unittest_changeset(void)
+>>         of_node_put(np);
+>>
+>>         mutex_lock(&of_mutex);
+>> -       unittest(!of_changeset_revert(&chgset), "revert failed\n");
+>> +       unittest(!__of_changeset_revert(&chgset), "revert failed\n");
 >
->> +                       clocks =
->> +                           <&mmcc GFX3D_CLK>,
->> +                           <&mmcc GFX3D_AHB_CLK>,
->> +                           <&mmcc GFX3D_AXI_CLK>,
->> +                           <&mmcc MMSS_IMEM_AHB_CLK>;
->> +                       qcom,chipid = <0x03020002>;
->> +                       qcom,gpu-pwrlevels {
->> +                               compatible = "qcom,gpu-pwrlevels";
->> +                               qcom,gpu-pwrlevel@0 {
->> +                                       qcom,gpu-freq = <450000000>;
->> +                               };
->> +                               qcom,gpu-pwrlevel@1 {
->> +                                       qcom,gpu-freq = <27000000>;
->> +                               };
->> +                       };
+>And here.
 >
+>>         mutex_unlock(&of_mutex);
+>>
+>>         of_changeset_destroy(&chgset);
+>> diff --git a/include/linux/of.h b/include/linux/of.h
+>> index edc068d..5c030e1 100644
+>> --- a/include/linux/of.h
+>> +++ b/include/linux/of.h
+>> @@ -1001,7 +1001,9 @@ extern int of_reconfig_get_state_change(unsigned long action,
+>>
+>>  extern void of_changeset_init(struct of_changeset *ocs);
+>>  extern void of_changeset_destroy(struct of_changeset *ocs);
+>> +extern int __of_changeset_apply(struct of_changeset *ocs);
+>>  extern int of_changeset_apply(struct of_changeset *ocs);
+>> +extern int __of_changeset_revert(struct of_changeset *ocs);
 >
-> These should be OPPs. I see in the cover-letter we're asking to ignore this
-> part of the binding. When is the binding and driver going to be fixed? The
-> dts has been out of tree for quite some time and I assume work has been
-> progressing on the driver even without this dts being in mainline so it
-> doesn't make sense how pushing half-baked dts upstream is going to help. In
-> fact, it's going to make things worse if someone complains that we're not
-> maintaining backwards compatibility and then have to hack up driver code to
-> work both ways. At which point there's practically zero incentive to change
-> anything in the binding or driver. It's better to fix the driver now and
-> avoid these sorts of problems entirely.
-
-again, it is a bit awkward thanks to having to deal with downstream
-kernels while upstream catches up..
-
-It does seem interesting to move to cpufreq for managing the gpu
-speed, and maybe doing something more clever than all-or-nothing freq
-scaling..  but yet again something where I really haven't had time to
-investigate beyond "yeah, that seems like a good idea"..
-
-It would be *really* nice if we had some mechanism to mark bindings
-that we are not ready yet to call ABI, since on one hand we have an
-upstream gpu driver and corresponding userspace to actually have some
-interesting some interesting (ie. not just buildroot and serial
-console) stuff running on an upstream kernel on actual devices.  And
-that is a nice situation that I wouldn't have even thought possible a
-few years ago.  But otoh, I agree that we shouldn't call these
-bindings final abi.
-
-Anyways, patches welcome.. bonus points if they are not too intrusive
-to revert (for the downstream kernels I have to deal with) or if they
-continue to support the downstream bindings (for now, until I don't
-have to care about downstream kernels)..
-
-BR,
--R
-
-
-> --
-> Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-> a Linux Foundation Collaborative Project
+>These should go in of_private.h.
 >
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>>  extern int of_changeset_revert(struct of_changeset *ocs);
+>>  extern int of_changeset_action(struct of_changeset *ocs,
+>>                 unsigned long action, struct device_node *np,
+>> --
+>> 2.1.0
+>>
+>> --
+>> To unsubscribe from this list: send the line "unsubscribe devicetree" in
+>> the body of a message to majordomo@vger.kernel.org
+>> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>
