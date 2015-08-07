@@ -1,389 +1,145 @@
-From: Florian Fainelli <f.fainelli@gmail.com>
-Subject: [PATCH 2/2] pwm: Add Broadcom BCM7038 PWM controller support
-Date: Thu,  6 Aug 2015 17:55:58 -0700
-Message-ID: <1438908959-1578-3-git-send-email-f.fainelli@gmail.com>
-References: <1438908959-1578-1-git-send-email-f.fainelli@gmail.com>
-Return-path: <linux-pwm-owner@vger.kernel.org>
-In-Reply-To: <1438908959-1578-1-git-send-email-f.fainelli@gmail.com>
-Sender: linux-pwm-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org
-Cc: bcm-kernel-feedback-list@broadcom.com, Florian Fainelli <f.fainelli@gmail.com>, Thierry Reding <thierry.reding@gmail.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "open list:PWM SUBSYSTEM" <linux-pwm@vger.kernel.org>, "open list:OPEN FIRMWARE AND..." <devicetree@vger.kernel.org>
+From: Rob Clark <robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v1 4/7] ARM: dts: apq8064: Add MDP support
+Date: Thu, 6 Aug 2015 21:19:31 -0400
+Message-ID: <CAF6AEGtFM-_boOYsnzp5DXSSATFkBiJ5Bj=PVTXy=-ZzXi1x5Q@mail.gmail.com>
+References: <1438087956-17307-1-git-send-email-srinivas.kandagatla@linaro.org>
+	<1438088049-17479-1-git-send-email-srinivas.kandagatla@linaro.org>
+	<55C2B801.1030806@codeaurora.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <55C2B801.1030806-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Andy Gross <agross-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-arm-msm <linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Add support for the BCM7038-style PWM controller found in all BCM7xxx STB SoCs.
-This controller has a hardcoded 2 channels per controller, and cascades a
-variable frequency generator on top of a fixed frequency generator which offers
-a range of a 148ns period all the way to ~622ms periods.
+On Wed, Aug 5, 2015 at 9:27 PM, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org> wrote:
+> On 07/28/2015 05:54 AM, Srinivas Kandagatla wrote:
+>>
+>> @@ -618,5 +633,77 @@
+>>                         compatible = "qcom,tcsr-apq8064", "syscon";
+>>                         reg = <0x1a400000 0x100>;
+>>                 };
+>> +
+>> +               hdmi: qcom,hdmi-tx@4a00000 {
+>> +                       compatible = "qcom,hdmi-tx-8960";
+>> +                       reg-names = "core_physical";
+>> +                       reg = <0x04a00000 0x1000>;
+>> +                       interrupts = <GIC_SPI 79 0>;
+>> +                       clock-names =
+>> +                           "core_clk",
+>> +                           "master_iface_clk",
+>> +                           "slave_iface_clk";
+>> +                       clocks =
+>> +                           <&mmcc HDMI_APP_CLK>,
+>> +                           <&mmcc HDMI_M_AHB_CLK>,
+>> +                           <&mmcc HDMI_S_AHB_CLK>;
+>> +                       qcom,hdmi-tx-ddc-clk = <&tlmm_pinmux 70
+>> GPIO_ACTIVE_HIGH>;
+>> +                       qcom,hdmi-tx-ddc-data = <&tlmm_pinmux 71
+>> GPIO_ACTIVE_HIGH>;
+>> +                       qcom,hdmi-tx-hpd = <&tlmm_pinmux 72
+>> GPIO_ACTIVE_HIGH>;
+>
+>
+> These should use standard "-gpios" syntax. Please fix the binding/driver.
 
-Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
----
- drivers/pwm/Kconfig       |  10 ++
- drivers/pwm/Makefile      |   1 +
- drivers/pwm/pwm-brcmstb.c | 323 ++++++++++++++++++++++++++++++++++++++++++++++
- 3 files changed, 334 insertions(+)
- create mode 100644 drivers/pwm/pwm-brcmstb.c
+With this, and a couple of the other bindings, I'd chosen to follow to
+follow the downstream bindings simply because I still need to use
+downstream kernel on a handful of devices (for example, I have no a4xx
+device which runs anything close to an upstream kernel, yet still
+quite a lot of work to do in userspace/mesa there)..  this might be a
+scenario that other kernel dev's in other subsystems aren't really
+familiar with, but when it comes to gpu's, really only 10% or less of
+the driver is in the kernel.  There is a massive sh**-ton of
+complexity in terms of cmdstream building in userspace.
 
-diff --git a/drivers/pwm/Kconfig b/drivers/pwm/Kconfig
-index b1541f40fd8d..28f95cca70ce 100644
---- a/drivers/pwm/Kconfig
-+++ b/drivers/pwm/Kconfig
-@@ -111,6 +111,16 @@ config PWM_CLPS711X
- 	  To compile this driver as a module, choose M here: the module
- 	  will be called pwm-clps711x.
- 
-+config PWM_BRCMSTB
-+	tristate "Broadcom STB PWM support"
-+	depends on ARCH_BRCMSTB
-+	help
-+	  Generic PWM framework driver for the Broadcom Set-top-Box
-+	  SoCs (BCM7xxx).
-+
-+	  To compile this driver as a module, choose M Here: the module
-+	  will be called pwm-brcmstb.c.
-+
- config PWM_EP93XX
- 	tristate "Cirrus Logic EP93xx PWM support"
- 	depends on ARCH_EP93XX
-diff --git a/drivers/pwm/Makefile b/drivers/pwm/Makefile
-index ec50eb5b5a8f..dc7b1b82d47e 100644
---- a/drivers/pwm/Makefile
-+++ b/drivers/pwm/Makefile
-@@ -7,6 +7,7 @@ obj-$(CONFIG_PWM_ATMEL_TCB)	+= pwm-atmel-tcb.o
- obj-$(CONFIG_PWM_BCM_KONA)	+= pwm-bcm-kona.o
- obj-$(CONFIG_PWM_BCM2835)	+= pwm-bcm2835.o
- obj-$(CONFIG_PWM_BFIN)		+= pwm-bfin.o
-+obj-$(CONFIG_PWM_BRCMSTB)	+= pwm-brcmstb.o
- obj-$(CONFIG_PWM_CLPS711X)	+= pwm-clps711x.o
- obj-$(CONFIG_PWM_EP93XX)	+= pwm-ep93xx.o
- obj-$(CONFIG_PWM_FSL_FTM)	+= pwm-fsl-ftm.o
-diff --git a/drivers/pwm/pwm-brcmstb.c b/drivers/pwm/pwm-brcmstb.c
-new file mode 100644
-index 000000000000..0c5cf5cbcf74
---- /dev/null
-+++ b/drivers/pwm/pwm-brcmstb.c
-@@ -0,0 +1,323 @@
-+/*
-+ * Broadcom BCM7038 PWM driver
-+ *
-+ * Copyright (C) 2015 Broadcom Corporation
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License as published by
-+ * the Free Software Foundation; either version 2 of the License, or
-+ * (at your option) any later version.
-+ *
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
-+ */
-+
-+#define pr_fmt(fmt)	KBUILD_MODNAME ": " fmt
-+
-+#include <linux/init.h>
-+#include <linux/module.h>
-+#include <linux/kernel.h>
-+#include <linux/platform_device.h>
-+#include <linux/export.h>
-+#include <linux/clk.h>
-+#include <linux/pwm.h>
-+#include <linux/io.h>
-+#include <linux/of.h>
-+
-+/* The block has a hardcoded number of 2 channels per controller */
-+#define NUM_PWM_CHAN		2
-+
-+/* This block is the "UPG" clock domain which is hardcoded a 27Mhz */
-+#define PWM_DEFAULT_FREQ	27000000
-+
-+#define PWM_CTRL		0x00
-+#define  CTRL_START		BIT(0)
-+#define  CTRL_OEB		BIT(1)
-+#define  CTRL_FORCE_HIGH	BIT(2)
-+#define  CTRL_OPENDRAIN		BIT(3)
-+#define  CTRL_CHAN_OFFS		4
-+
-+#define PWM_CTRL2		0x04
-+#define  CTRL2_OUT_SELECT	BIT(0)
-+
-+#define PWM_CWORD_MSB		0x08
-+#define PWM_CWORD_LSB		0x0C
-+
-+#define PWM_CH_SIZE		0x8
-+
-+/* Number of bits for the CWORD value */
-+#define CWORD_BIT_SIZE		16
-+
-+/* Maximum control word value allowed when variable-frequency PWM is used as a
-+ * clock for the constant-frequency PMW.
-+ */
-+#define CONST_VAR_F_MAX		32768
-+#define CONST_VAR_F_MIN		1
-+
-+#define PWM_ON			0x18
-+#define  PWM_ON_MIN		1
-+#define PWM_PERIOD		0x1C
-+#define  PWM_PERIOD_MIN		0
-+
-+#define PWM_ON_PERIOD_MAX	0xff
-+
-+struct brcmstb_pwm_dev {
-+	struct platform_device *pdev;
-+	void __iomem *base;
-+	struct clk *clk;
-+	unsigned long rate;
-+	struct pwm_chip chip;
-+};
-+
-+static inline u32 pwm_readl(struct brcmstb_pwm_dev *p, u32 off)
-+{
-+	if (IS_ENABLED(CONFIG_MIPS) && IS_ENABLED(CONFIG_CPU_BIG_ENDIAN))
-+		return __raw_readl(p->base + off);
-+	else
-+		return readl_relaxed(p->base + off);
-+}
-+
-+static inline void pwm_writel(struct brcmstb_pwm_dev *p, u32 val, u32 off)
-+{
-+	if (IS_ENABLED(CONFIG_MIPS) && IS_ENABLED(CONFIG_CPU_BIG_ENDIAN))
-+		__raw_writel(val, p->base + off);
-+	else
-+		writel_relaxed(val, p->base + off);
-+}
-+
-+static inline struct brcmstb_pwm_dev *to_brcmstb_pwm(struct pwm_chip *ch)
-+{
-+	return container_of(ch, struct brcmstb_pwm_dev, chip);
-+}
-+
-+/* Fv is derived from the variable frequency output. The variable frequency
-+ * output is configured using this formula:
-+ *
-+ * W = cword, if cword < 2 ^ 15 else 16-bit 2's complement of cword
-+ *
-+ * Fv = W x 2 ^ -16 x 27Mhz (reference clock)
-+ *
-+ * The period is: (period + 1) / Fv and "on" time is on / (period + 1)
-+ *
-+ * The PWM core framework specifies that the "duty_ns" parameter is in fact the
-+ * "on" time, so this translates directly into our HW programming here.
-+ */
-+static int brcmstb_pwm_config(struct pwm_chip *chip, struct pwm_device *pwm,
-+			      int duty_ns, int period_ns)
-+{
-+	struct brcmstb_pwm_dev *b = to_brcmstb_pwm(chip);
-+	unsigned long pc, dc, cword = CONST_VAR_F_MAX;
-+	unsigned int ch = pwm->hwpwm;
-+	bool done = false;
-+	u64 val, rate, div;
-+	u32 reg;
-+
-+	/* If asking for a duty_ns equal to period_ns, we need to substract
-+	 * the period value by 1 to make it shorter than the "on" time and
-+	 * produce a flat 100% duty cycle signal, and max out the "on" time
-+	 */
-+	if (duty_ns == period_ns) {
-+		dc = PWM_ON_PERIOD_MAX;
-+		pc = PWM_ON_PERIOD_MAX - 1;
-+		done = true;
-+	}
-+
-+	while (!done) {
-+		/* Calculate the base rate from base frequency and current
-+		 * cword
-+		 */
-+		div = NSEC_PER_SEC;
-+		rate = (b->rate * (u64)cword);
-+		rate = div64_u64(rate, 1 << CWORD_BIT_SIZE);
-+
-+		val = period_ns * rate;
-+		pc = div64_u64(val, div);
-+
-+		val = (duty_ns + 1) * rate;
-+		dc = div64_u64(val, div);
-+
-+		/* We can be called with separate duty and period updates,
-+		 * so do not reject dc == 0 right away
-+		 */
-+		if (pc == PWM_PERIOD_MIN ||
-+		   (dc < PWM_ON_MIN && duty_ns))
-+			return -EINVAL;
-+
-+		/* We converged on a calculation */
-+		if (pc <= PWM_ON_PERIOD_MAX && dc <= PWM_ON_PERIOD_MAX)
-+			break;
-+
-+		/* The cword needs to be a power of 2 for the variable
-+		 * frequency generator to output a 50% duty cycle variable
-+		 * frequency which is used as input clock to the fixed
-+		 * frequency generator.
-+		 */
-+		cword >>= 1;
-+
-+		/* Desired periods are too large, we do not have a divider
-+		 * for them
-+		 */
-+		if (cword < CONST_VAR_F_MIN)
-+			return -EINVAL;
-+	}
-+
-+	/* Configure the defined "cword" value to have the variable frequency
-+	 * generator output a base frequency for the constant frequency
-+	 * generator to derive from.
-+	 */
-+	pwm_writel(b, cword >> 8, PWM_CWORD_MSB + ch * PWM_CH_SIZE);
-+	pwm_writel(b, cword & 0xff, PWM_CWORD_LSB + ch * PWM_CH_SIZE);
-+
-+	/* Select constant frequency signal output */
-+	reg = pwm_readl(b, PWM_CTRL2);
-+	reg |= (CTRL2_OUT_SELECT << (ch * CTRL_CHAN_OFFS));
-+	pwm_writel(b, reg, PWM_CTRL2);
-+
-+	/* Configure on and period value */
-+	pwm_writel(b, pc, PWM_PERIOD + ch * PWM_CH_SIZE);
-+	pwm_writel(b, dc, PWM_ON + ch * PWM_CH_SIZE);
-+
-+	return 0;
-+}
-+
-+static inline void brcmstb_pwm_enable_set(struct brcmstb_pwm_dev *b,
-+					  unsigned int ch, bool enable)
-+{
-+	unsigned int ofs = ch * CTRL_CHAN_OFFS;
-+	u32 reg;
-+
-+	reg = pwm_readl(b, PWM_CTRL);
-+	if (enable) {
-+		reg &= ~(CTRL_OEB << ofs);
-+		reg |= ((CTRL_START | CTRL_OPENDRAIN) << ofs);
-+	} else {
-+		reg &= ~((CTRL_START | CTRL_OPENDRAIN) << ofs);
-+		reg |= (CTRL_OEB << ofs);
-+	}
-+	pwm_writel(b, reg, PWM_CTRL);
-+}
-+
-+static int brcmstb_pwm_enable(struct pwm_chip *chip, struct pwm_device *pwm)
-+{
-+	struct brcmstb_pwm_dev *b = to_brcmstb_pwm(chip);
-+
-+	brcmstb_pwm_enable_set(b, pwm->hwpwm, true);
-+
-+	return 0;
-+}
-+
-+static void brcmstb_pwm_disable(struct pwm_chip *chip, struct pwm_device *pwm)
-+{
-+	struct brcmstb_pwm_dev *b = to_brcmstb_pwm(chip);
-+
-+	brcmstb_pwm_enable_set(b, pwm->hwpwm, false);
-+}
-+
-+static const struct pwm_ops brcmstb_pwm_ops = {
-+	.config		= brcmstb_pwm_config,
-+	.enable		= brcmstb_pwm_enable,
-+	.disable	= brcmstb_pwm_disable,
-+	.owner		= THIS_MODULE,
-+};
-+
-+static const struct of_device_id brcmstb_pwm_of_match[] = {
-+	{ .compatible = "brcm,bcm7038-pwm", .data = (void *)PWM_DEFAULT_FREQ },
-+	{ .compatible = "brcm,brcmstb-pwm", .data = (void *)PWM_DEFAULT_FREQ },
-+	{ /* sentinel */ }
-+};
-+
-+static int brcmstb_pwm_probe(struct platform_device *pdev)
-+{
-+	struct device_node *dn = pdev->dev.of_node;
-+	const struct of_device_id *of_id;
-+	struct brcmstb_pwm_dev *p;
-+	struct resource *r;
-+	int ret;
-+
-+	p = devm_kzalloc(&pdev->dev, sizeof(*p), GFP_KERNEL);
-+	if (!p)
-+		return -ENOMEM;
-+
-+	of_id = of_match_node(brcmstb_pwm_of_match, dn);
-+
-+	/* Try to grab the clock and its rate, if not available, default
-+	 * to the base 27Mhz clock domain this block comes from.
-+	 */
-+	p->clk = devm_clk_get(&pdev->dev, NULL);
-+	if (IS_ERR(p->clk)) {
-+		p->clk = NULL;
-+		p->rate = (unsigned long)of_id->data;
-+	} else {
-+		clk_prepare_enable(p->clk);
-+		p->rate = clk_get_rate(p->clk);
-+	}
-+
-+	platform_set_drvdata(pdev, p);
-+
-+	p->pdev = pdev;
-+	p->chip.dev = &pdev->dev;
-+	p->chip.ops = &brcmstb_pwm_ops;
-+	/* Dynamically assign a PWM base */
-+	p->chip.base = -1;
-+	/* Static number of PWM channels for this controller */
-+	p->chip.npwm = NUM_PWM_CHAN;
-+	p->chip.of_xlate = of_pwm_xlate_with_flags;
-+	p->chip.of_pwm_n_cells = 2;
-+	p->chip.can_sleep = true;
-+
-+	r = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-+	p->base = devm_request_and_ioremap(&pdev->dev, r);
-+	if (!p->base)
-+		return -ENOMEM;
-+
-+	ret = pwmchip_add(&p->chip);
-+	if (ret)
-+		dev_err(&pdev->dev, "failed to add PWM chip %d\n", ret);
-+	else
-+		dev_info(&pdev->dev, "PWM driver %d channels\n", p->chip.npwm);
-+
-+	return ret;
-+}
-+
-+static int brcmstb_pwm_remove(struct platform_device *pdev)
-+{
-+	struct brcmstb_pwm_dev *p = platform_get_drvdata(pdev);
-+
-+	clk_disable_unprepare(p->clk);
-+
-+	return pwmchip_remove(&p->chip);
-+}
-+
-+#ifdef CONFIG_PM_SLEEP
-+static int brcmstb_pwm_suspend(struct device *d)
-+{
-+	return 0;
-+}
-+
-+static int brcmstb_pwm_resume(struct device *d)
-+{
-+	return 0;
-+}
-+#endif
-+
-+static SIMPLE_DEV_PM_OPS(brcmstb_pwm_pm_ops,
-+			 brcmstb_pwm_suspend, brcmstb_pwm_resume);
-+
-+static struct platform_driver brcmstb_pwm_driver = {
-+	.probe	= brcmstb_pwm_probe,
-+	.remove	= brcmstb_pwm_remove,
-+	.driver	= {
-+		.name	= "pwm-brcmstb",
-+		.owner	= THIS_MODULE,
-+		.of_match_table = brcmstb_pwm_of_match,
-+		.pm	= &brcmstb_pwm_pm_ops,
-+	},
-+};
-+module_platform_driver(brcmstb_pwm_driver);
-+
-+MODULE_AUTHOR("Broadcom Corporation");
-+MODULE_DESCRIPTION("Broadcom STB PWM driver");
-+MODULE_ALIAS("platform:pwm-brcmstb");
-+MODULE_LICENSE("GPL");
--- 
-2.1.0
+But if the change to do things upstream is not too intrusive I'd be
+willing to carry the 'revert' patch as a downstream patch on top of
+upstream.. or if we could reasonably support both bindings, that is
+also an option.  Mostly I just haven't had time to look into it, since
+unlike other drivers, when it comes to gpu stuff, the kernel is only
+the tip of the (inverted) iceberg..
+
+>> +                       pinctrl-names = "default";
+>> +                       pinctrl-0 = <&hdmi_pinctrl>;
+>> +               };
+>> +
+>> +               gpu: qcom,adreno-3xx@4300000 {
+>> +                       compatible = "qcom,adreno-3xx";
+>> +                       reg = <0x04300000 0x20000>;
+>> +                       reg-names = "kgsl_3d0_reg_memory";
+>> +                       interrupts = <GIC_SPI 80 0>;
+>> +                       interrupt-names = "kgsl_3d0_irq";
+>> +                       clock-names =
+>> +                           "core_clk",
+>> +                           "iface_clk",
+>> +                           "mem_clk",
+>> +                           "mem_iface_clk";
+>
+>
+> Please drop "_clk" and fix driver code as we've done for all other drivers.
+>
+>> +                       clocks =
+>> +                           <&mmcc GFX3D_CLK>,
+>> +                           <&mmcc GFX3D_AHB_CLK>,
+>> +                           <&mmcc GFX3D_AXI_CLK>,
+>> +                           <&mmcc MMSS_IMEM_AHB_CLK>;
+>> +                       qcom,chipid = <0x03020002>;
+>> +                       qcom,gpu-pwrlevels {
+>> +                               compatible = "qcom,gpu-pwrlevels";
+>> +                               qcom,gpu-pwrlevel@0 {
+>> +                                       qcom,gpu-freq = <450000000>;
+>> +                               };
+>> +                               qcom,gpu-pwrlevel@1 {
+>> +                                       qcom,gpu-freq = <27000000>;
+>> +                               };
+>> +                       };
+>
+>
+> These should be OPPs. I see in the cover-letter we're asking to ignore this
+> part of the binding. When is the binding and driver going to be fixed? The
+> dts has been out of tree for quite some time and I assume work has been
+> progressing on the driver even without this dts being in mainline so it
+> doesn't make sense how pushing half-baked dts upstream is going to help. In
+> fact, it's going to make things worse if someone complains that we're not
+> maintaining backwards compatibility and then have to hack up driver code to
+> work both ways. At which point there's practically zero incentive to change
+> anything in the binding or driver. It's better to fix the driver now and
+> avoid these sorts of problems entirely.
+
+again, it is a bit awkward thanks to having to deal with downstream
+kernels while upstream catches up..
+
+It does seem interesting to move to cpufreq for managing the gpu
+speed, and maybe doing something more clever than all-or-nothing freq
+scaling..  but yet again something where I really haven't had time to
+investigate beyond "yeah, that seems like a good idea"..
+
+It would be *really* nice if we had some mechanism to mark bindings
+that we are not ready yet to call ABI, since on one hand we have an
+upstream gpu driver and corresponding userspace to actually have some
+interesting some interesting (ie. not just buildroot and serial
+console) stuff running on an upstream kernel on actual devices.  And
+that is a nice situation that I wouldn't have even thought possible a
+few years ago.  But otoh, I agree that we shouldn't call these
+bindings final abi.
+
+Anyways, patches welcome.. bonus points if they are not too intrusive
+to revert (for the downstream kernels I have to deal with) or if they
+continue to support the downstream bindings (for now, until I don't
+have to care about downstream kernels)..
+
+BR,
+-R
+
+
+> --
+> Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+> a Linux Foundation Collaborative Project
+>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
