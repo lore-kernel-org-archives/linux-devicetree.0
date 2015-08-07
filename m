@@ -1,49 +1,48 @@
-From: Kevin Hilman <khilman@kernel.org>
-Subject: Re: [PATCH v9 0/9] Add simple NVMEM Framework via regmap.
-Date: Fri, 7 Aug 2015 09:30:06 -0700
-Message-ID: <CAMAWPa_=1oTziNz-oorXV70AZ2S3JbVu4rhK_nX_=wYwjr2a3g@mail.gmail.com>
-References: <1437995567-11203-1-git-send-email-srinivas.kandagatla@linaro.org>
-	<7hwpx7vzyo.fsf@deeprootsystems.com>
-	<55C4DA42.909@linaro.org>
+From: Grygorii Strashko <grygorii.strashko@ti.com>
+Subject: Re: [PATCH v3 01/18] platform: delay OF device-driver matches until
+ late_initcall
+Date: Fri, 7 Aug 2015 20:06:31 +0300
+Message-ID: <55C4E597.1010701@ti.com>
+References: <1438870315-18689-1-git-send-email-tomeu.vizoso@collabora.com> <1438870315-18689-2-git-send-email-tomeu.vizoso@collabora.com> <CAL_Jsq+GLMZe-f6qEi=7i1YrrWc6k99RpGkOyCd5KkYDiyt0QA@mail.gmail.com> <CAAObsKBapFqzr+4YEXJfcJWMd+tkaBqYbGiFTntHStAP=+P-_Q@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <55C4DA42.909@linaro.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Cc: Kevin Hilman <khilman@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <robh+dt@kernel.org>, Mark Brown <broonie@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, linux-api@vger.kernel.org, lkml <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>, "sboyd@codeaurora.org" <sboyd@codeaurora.org>, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, mporter@konsulko.com, Stefan Wahren <stefan.wahren@i2se.com>, Caesar Wang <wxt@rock-chips.com>
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAAObsKBapFqzr+4YEXJfcJWMd+tkaBqYbGiFTntHStAP=+P-_Q@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Tomeu Vizoso <tomeu.vizoso@collabora.com>, Rob Herring <robherring2@gmail.com>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>, Stephen Warren <swarren@wwwdotorg.org>, Linus Walleij <linus.walleij@linaro.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Javier Martinez Canillas <javier@osg.samsung.com>, Mark Brown <broonie@kernel.org>, Thierry Reding <thierry.reding@gmail.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Aug 7, 2015 at 9:18 AM, Srinivas Kandagatla
-<srinivas.kandagatla@linaro.org> wrote:
-> Thanks Kevin,
->
-> On 07/08/15 17:13, Kevin Hilman wrote:
->>
->> Srinivas Kandagatla <srinivas.kandagatla@linaro.org> writes:
->>
->>> This patchset adds a new simple NVMEM framework to kernel, and it is
->>> tested
->>> with various drivers like "QCOM thermal sensors", "QCOM cpr driver",
->>> "begal bone cape manager" and few more on the way.
+On 08/07/2015 10:11 AM, Tomeu Vizoso wrote:
+> On 6 August 2015 at 22:19, Rob Herring <robherring2@gmail.com> wrote:
+>> On Thu, Aug 6, 2015 at 9:11 AM, Tomeu Vizoso <tomeu.vizoso@collabora.com> wrote:
+>>> Delay matches of platform devices with OF nodes until late_initcall,
+>>> when we are sure that all built-in drivers have been registered already.
+>>> This is needed to prevent deferred probes because of some drivers not
+>>> having registered yet.
 >>>
->>> Can you please consider this as 4.3 material, AFAIK there are more than 3
->>> drivers
->>> depending on this framework which are wating since last 2 merge windows.
+>>> The reason why only platform devices are delayed is that some other
+>>> devices are expected to be probed earlier than late_initcall, for
+>>> example, the system PNP driver needs to probe its devices in
+>>> fs_initcall.
 >>>
->>> Should these patches go via ARM-SOC tree or via Greg's tree?
+>>> Additionally, only platform devices with OF nodes are delayed because
+>>> some machines may depend on oter platform devices being registered at
+>>> specific times.
 >>
->>
->> With Greg's ack, we can take this through the arm-soc tree (unless Greg
->> wants to queue it, which is fine also.)
->>
->
-> Greg already merged these patches yesterday on to
-> git://git.kernel.org/pub/scm/linux/kernel/git/gregkh/char-misc.git
-> in the char-misc-next branch.
+>> How do we know that these probes occur before the unused clocks and
+>> regulators are turned off? Just getting lucky (as is deferred probe)?
+>> Can we do this one level earlier so we have a level left to do things
+>> after probe.
+> 
+> Those are already late_initcall_sync so I guess we're fine.
 
-Ah, great.  I missed that (still catching up on post-vacation mail backlog.)
+I wouldn't be so sure :(
+FYI:
+http://git.ti.com/ti-linux-kernel/ti-linux-kernel/commit/763d643bbfc0f445c6685c541fcae3c370e4314a
 
-Thanks,
 
-Kevin
+-- 
+regards,
+-grygorii
