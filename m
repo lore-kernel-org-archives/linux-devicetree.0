@@ -1,114 +1,59 @@
-From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH] thermal: of: Introduce governor selection in dts
-Date: Fri, 7 Aug 2015 11:31:21 +0100
-Message-ID: <20150807103121.GC7646@leverpostej>
-References: <CAM2ehZYXsqCoS9ygXNfPHxt9-b5cFxH_ovrgjvM-BfDO6REcUg@mail.gmail.com>
+From: Yingjoe Chen <yingjoe.chen@mediatek.com>
+Subject: Re: [PATCH v3 0/5] Add SMP bringup support for mt65xx socs
+Date: Fri, 7 Aug 2015 18:50:18 +0800
+Message-ID: <1438944618.14580.5.camel@mtksdaap41>
+References: <1436851111-2369-1-git-send-email-yingjoe.chen@mediatek.com>
+	 <4831607.pyCH8elj8i@ubix> <20150805223115.GD7557@n2100.arm.linux.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <CAM2ehZYXsqCoS9ygXNfPHxt9-b5cFxH_ovrgjvM-BfDO6REcUg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Chung-Yih Wang =?utf-8?B?KOeOi+W0h+aHvyk=?= <cywang-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Cc: "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Zhang Rui <rui.zhang-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Eduardo Valentin <edubezval-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20150805223115.GD7557@n2100.arm.linux.org.uk>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Russell King - ARM Linux <linux@arm.linux.org.uk>
+Cc: Matthias Brugger <matthias.bgg@gmail.com>, devicetree@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, Stephen Boyd <sboyd@codeaurora.org>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-mediatek@lists.infradead.org, Sascha Hauer <kernel@pengutronix.de>, Olof Johansson <olof@lixom.net>, srv_heupstream@mediatek.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Aug 07, 2015 at 08:09:39AM +0100, Chung-Yih Wang (=E7=8E=8B=E5=B4=
-=87=E6=87=BF) wrote:
-> As there could be more thermal zones on a system and
-> more variety in thermal governors provided in kernel,
-> this patch provides flexibility of governor selection
-> for a thermal zone declared in device tree.
->=20
-> Change-Id: Ie4a75d762709cbbe9f1806dae325d13f71982e78
-> Signed-off-by: Chung-yih Wang <cywang-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-> ---
->  Documentation/devicetree/bindings/thermal/thermal.txt |  9 +++++++++
->  drivers/thermal/of-thermal.c                          | 10 +++++++++=
-+
->  2 files changed, 19 insertions(+)
->=20
-> diff --git a/Documentation/devicetree/bindings/thermal/thermal.txt
-> b/Documentation/devicetree/bindings/thermal/thermal.txt
-> index 8a49362..30a5d41 100644
-> --- a/Documentation/devicetree/bindings/thermal/thermal.txt
-> +++ b/Documentation/devicetree/bindings/thermal/thermal.txt
-> @@ -174,6 +174,13 @@ Optional property:
->                         2000mW, while on a 10'' tablet is around
->                         4500mW.
->=20
-> +- thermal-governor-name:       The name of governor used to control =
-the
-> +                               thermal zone instead of the default o=
-ne
-> +                               specified in kernel config. For refer=
-ence, if
-> +                               default governor is step_wise, one co=
-uld
-> +                               select power_allocator for cpu_therma=
-l zone
-> +                               in dts.
+On Wed, 2015-08-05 at 23:31 +0100, Russell King - ARM Linux wrote:
+> On Wed, Aug 05, 2015 at 08:44:11PM +0200, Matthias Brugger wrote:
+> > On Tuesday, July 14, 2015 01:18:26 PM Yingjoe Chen wrote:
+> > > This series add SMP brinup support for MediaTek SoCs. This is based
+> > > on v4.2-rc1 and Matthias' next branch (for dts parts).
+<...>
+
+> > Applied to v4.2-next/soc-2 and v4.2-next/dts-2 
+> 
+> I've just NAK'd one of the patches in this set; I don't tend to even see
+> mediatek patches normally, as they all head into my junk mailfolder
+> because mediatek's mail server setup is truely abysmal (it has broken
+> reverse DNS - the DNS positively says that the mail server is not a
+> legit owner of the name it claims to be.)
+
+Hi Russell,
+
+Hope you see this.
+
+Thanks for your review. I already pass this information to our IT, hope
+they can resolve this soon.
 
 
-This is not a hardware or system property, but rather a Linux
-implementation detail.
+> The problem is that this patch series uses memblock_reserve() way after
+> the memory has been transitioned out of memblock's control, so actually
+> this has no effect.
+> 
+> I've seen a number of patches doing this.  I'm not sure what's soo friggin
+> hard for people to understand: memblock is about the EARLY stages of
+> getting the system up and running.  Once the memory has been handed
+> over to the kernel's memory management, memblock MUST NOT BE USED to
+> reserve memory.
+> 
+> There is one place, and one place only in the ARM kernel where
+> memblock_reserve() is possible, and that's in the ->reserve machine
+> callback.  NOWHERE ELSE is permissible.
 
-This really shouldn't go in the DT.
 
-Mark.
+It seems we can write memory-reserve node in device tree to do this as
+well. Do you prefer us to reserve memblock in reserve callback or using
+device tree?
 
-> +
->  Note: The delay properties are bound to the maximum dT/dt (temperatu=
-re
->  derivative over time) in two situations for a thermal zone:
->  (i)  - when passive cooling is activated (polling-delay-passive); an=
-d
-> @@ -555,6 +562,8 @@ thermal-zones {
->=20
->                 sustainable-power =3D <2500>;
->=20
-> +               thermal-governor-name =3D "power_allocator";
-> +
->                 trips {
->                         /* Trips are based on resulting linear equati=
-on */
->                         cpu_trip: cpu-trip {
-> diff --git a/drivers/thermal/of-thermal.c b/drivers/thermal/of-therma=
-l.c
-> index b295b2b..45570ac 100644
-> --- a/drivers/thermal/of-thermal.c
-> +++ b/drivers/thermal/of-thermal.c
-> @@ -882,6 +882,7 @@ int __init of_parse_thermal_zones(void)
->         }
->=20
->         for_each_child_of_node(np, child) {
-> +               const char *governor_name;
->                 struct thermal_zone_device *zone;
->                 struct thermal_zone_params *tzp;
->                 int i, mask =3D 0;
-> @@ -909,6 +910,15 @@ int __init of_parse_thermal_zones(void)
->                         goto exit_free;
->                 }
->=20
-> +               /* Select a preferred governor if declared */
-> +               if (!of_property_read_string(child,
-> +                                            "thermal-governor-name",
-> +                                            &governor_name)) {
-> +                       strncpy(tzp->governor_name,
-> +                               governor_name,
-> +                               sizeof(tzp->governor_name) - 1);
-> +               }
-> +
->                 /* No hwmon because there might be hwmon drivers regi=
-stering */
->                 tzp->no_hwmon =3D true;
->=20
-> --
-> 2.1.2
->=20
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Joe.C
