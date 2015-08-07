@@ -1,53 +1,33 @@
-From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH 2/3] ARM: dts: sun6i: Turn on gmac on Colombus
-Date: Fri,  7 Aug 2015 17:22:34 +0200
-Message-ID: <1438960955-6551-2-git-send-email-hdegoede@redhat.com>
-References: <1438960955-6551-1-git-send-email-hdegoede@redhat.com>
-Reply-To: hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org
+From: Guenter Roeck <linux@roeck-us.net>
+Subject: Re: [PATCH v6 1/2] drivers: watchdog: add a driver to support SAMA5D4
+ watchdog timer
+Date: Fri, 07 Aug 2015 08:25:31 -0700
+Message-ID: <55C4CDEB.9020505@roeck-us.net>
+References: <1438856146-2459-1-git-send-email-wenyou.yang@atmel.com> <1438856206-2503-1-git-send-email-wenyou.yang@atmel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBDRZXY4CYYORBQE2SOXAKGQEHW6ZWCQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <1438960955-6551-1-git-send-email-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <http://groups.google.com/group/linux-sunxi/subscribe>
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1438856206-2503-1-git-send-email-wenyou.yang@atmel.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Wenyou Yang <wenyou.yang@atmel.com>, wim@iguana.be, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org
+Cc: sylvain.rochet@finsecur.com, nicolas.ferre@atmel.com, boris.brezillon@free-electrons.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-watchdog@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-We've everything we need to support the gmac on Colombus, turn it on.
+On 08/06/2015 03:16 AM, Wenyou Yang wrote:
+>>From SAMA5D4, the watchdog timer is upgrated with a new feature,
+> which is describled as in the datasheet, "WDT_MR can be written
+> until a LOCKMR command is issued in WDT_CR".
+> That is to say, as long as the bootstrap and u-boot don't issue
+> a LOCKMR command, WDT_MR can be written more than once in the driver.
+>
+> So the SAMA5D4 watchdog driver's implementation is different from
+> the at91sam9260 watchdog driver implemented in file at91sam9_wdt.c.
+> The user application open the device file to enable the watchdog timer
+> hardware, and close to disable it, and set the watchdog timer timeout
+> by seting WDV and WDD fields of WDT_MR register, and ping the watchdog
+> by issuing WDRSTT command to WDT_CR register with hard-coded key.
+>
+> Signed-off-by: Wenyou Yang <wenyou.yang@atmel.com>
 
-Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
----
- arch/arm/boot/dts/sun6i-a31-colombus.dts | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
-
-diff --git a/arch/arm/boot/dts/sun6i-a31-colombus.dts b/arch/arm/boot/dts/sun6i-a31-colombus.dts
-index 0cf9926..0d0b6f2 100644
---- a/arch/arm/boot/dts/sun6i-a31-colombus.dts
-+++ b/arch/arm/boot/dts/sun6i-a31-colombus.dts
-@@ -66,6 +66,18 @@
- 	status = "okay";
- };
- 
-+&gmac {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&gmac_pins_rgmii_a>;
-+	phy = <&phy1>;
-+	phy-mode = "rgmii";
-+	status = "okay";
-+
-+	phy1: ethernet-phy@1 {
-+		reg = <1>;
-+	};
-+};
-+
- &i2c0 {
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&i2c0_pins_a>;
--- 
-2.4.3
+Reviewed-by: Guenter Roeck <linux@roeck-us.net>
