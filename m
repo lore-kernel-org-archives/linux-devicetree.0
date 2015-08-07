@@ -1,23 +1,23 @@
-From: Zhou Wang <wangzhou1-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
+From: Zhou Wang <wangzhou1@hisilicon.com>
 Subject: Re: [PATCH v6 1/6] PCI: designware: move calculation of bus addresses
  to DRA7xx
-Date: Fri, 7 Aug 2015 14:03:57 +0800
-Message-ID: <55C44A4D.8070300@hisilicon.com>
+Date: Fri, 7 Aug 2015 14:04:48 +0800
+Message-ID: <55C44A80.20308@hisilicon.com>
 References: <1438848559-232109-1-git-send-email-wangzhou1@hisilicon.com> <1438848559-232109-2-git-send-email-wangzhou1@hisilicon.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="ISO-8859-1"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1438848559-232109-2-git-send-email-wangzhou1-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Zhou Wang <wangzhou1-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
-Cc: Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Jingoo Han <jg1.han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Pratyush Anand <pratyush.anand-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, gabriele.paoloni-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org, James Morse <james.morse-5wv7dgnIgG8@public.gmane.org>, Liviu.Dudau-5wv7dgnIgG8@public.gmane.org, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, yuanzhichang-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, zhudacai-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, zhangjukuo-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, qiuzhenfa-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, liudongdong3-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, qiujiang-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, kangfenglong-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, liguozhu-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, Jingoo Han <jingoohan1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <1438848559-232109-2-git-send-email-wangzhou1@hisilicon.com>
+Sender: linux-pci-owner@vger.kernel.org
+To: Zhou Wang <wangzhou1@hisilicon.com>
+Cc: Bjorn Helgaas <bhelgaas@google.com>, Jingoo Han <jg1.han@samsung.com>, Pratyush Anand <pratyush.anand@gmail.com>, Arnd Bergmann <arnd@arndb.de>, linux@arm.linux.org.uk, thomas.petazzoni@free-electrons.com, gabriele.paoloni@huawei.com, lorenzo.pieralisi@arm.com, James Morse <james.morse@arm.com>, Liviu.Dudau@arm.com, Jason Cooper <jason@lakedaemon.net>, robh@kernel.org, linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, yuanzhichang@hisilicon.com, zhudacai@hisilicon.com, zhangjukuo@huawei.com, qiuzhenfa@hisilicon.com, liudongdong3@huawei.com, qiujiang@huawei.com, kangfenglong@huawei.com, xuwei5@hisilicon.com, liguozhu@hisilicon.com, Jingoo Han <jingoohan1@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-[+cc jingoohan1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org]
+[+cc jingoohan1@gmail.com]
 
 On 2015/8/6 16:09, Zhou Wang wrote:
-> From: gabriele paoloni <gabriele.paoloni-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+> From: gabriele paoloni <gabriele.paoloni@huawei.com>
 > 
 > Commit f4c55c5a3f7f "PCI: designware: Program ATU with untranslated
 > address" added the calculation of PCI BUS addresses in designware,
@@ -28,8 +28,8 @@ On 2015/8/6 16:09, Zhou Wang wrote:
 > driver and is needed to allow the rework of designware to use
 > the new DT parsing API.
 > 
-> Signed-off-by: Gabriele Paoloni <gabriele.paoloni-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
-> Signed-off-by: Zhou Wang <wangzhou1-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
+> Signed-off-by: Gabriele Paoloni <gabriele.paoloni@huawei.com>
+> Signed-off-by: Zhou Wang <wangzhou1@hisilicon.com>
 > ---
 >  drivers/pci/host/pci-dra7xx.c      | 13 +++++++++++++
 >  drivers/pci/host/pcie-designware.c | 15 ++++-----------
@@ -117,9 +117,3 @@ On 2015/8/6 16:09, Zhou Wang wrote:
 >  					    pp->cfg0_size;
 >  		}
 > 
-
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
