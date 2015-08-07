@@ -1,96 +1,108 @@
-From: Matthias Brugger <matthias.bgg@gmail.com>
-Subject: Re: [PATCH v3 0/5] Add SMP bringup support for mt65xx socs
-Date: Fri, 07 Aug 2015 19:13:05 +0200
-Message-ID: <1582995.hxLqnb2lXW@ubix>
-References: <1436851111-2369-1-git-send-email-yingjoe.chen@mediatek.com> <4831607.pyCH8elj8i@ubix> <20150805223115.GD7557@n2100.arm.linux.org.uk>
+From: Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [PATCH 2/2] net, thunder, bgx: Add support for ACPI binding.
+Date: Fri, 7 Aug 2015 18:53:53 +0100
+Message-ID: <20150807175353.GA31122@leverpostej>
+References: <1438907590-29649-1-git-send-email-ddaney.cavm@gmail.com>
+ <1438907590-29649-3-git-send-email-ddaney.cavm@gmail.com>
+ <20150807140106.GE7646@leverpostej>
+ <55C4ECC6.7050908@caviumnetworks.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20150805223115.GD7557@n2100.arm.linux.org.uk>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Russell King - ARM Linux <linux@arm.linux.org.uk>
-Cc: Yingjoe Chen <yingjoe.chen@mediatek.com>, devicetree@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, Stephen Boyd <sboyd@codeaurora.org>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-mediatek@lists.infradead.org, Sascha Hauer <kernel@pengutronix.de>, Olof Johansson <olof@lixom.net>, srv_heupstream@mediatek.com, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-acpi-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <55C4ECC6.7050908@caviumnetworks.com>
+Sender: linux-acpi-owner@vger.kernel.org
+To: David Daney <ddaney@caviumnetworks.com>
+Cc: David Daney <ddaney.cavm@gmail.com>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "rob.herring@linaro.org" <rob.herring@linaro.org>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, "David S. Miller" <davem@davemloft.net>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-mips@linux-mips.org" <linux-mips@linux-mips.org>, David Daney <david.daney@cavium.com>, Tomasz Nowicki <tomasz.nowicki@linaro.org>, Robert Richter <rrichter@cavium.com>, "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>, Sunil Goutham <sgoutham@cavium.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wednesday, August 05, 2015 11:31:15 PM Russell King - ARM Linux wrote:
-> On Wed, Aug 05, 2015 at 08:44:11PM +0200, Matthias Brugger wrote:
-> > On Tuesday, July 14, 2015 01:18:26 PM Yingjoe Chen wrote:
-> > > This series add SMP brinup support for MediaTek SoCs. This is based
-> > > on v4.2-rc1 and Matthias' next branch (for dts parts).
-> > > 
-> > > There are similar but different SMP bringup up methods on MediaTek
-> > > mt65xx and mt81xx. On MT8135 & MT8127, system boots with a trustzone
-> > > firmware. Others, like MT6589, doesn't have trustzone, and run kernel
-> > > directly in secure world.
-> > > 
-> > > Patch 1 enable arch timer support.
-> > > Patch 2,3 add support for cpu enable-method "mediatek,mt6589-smp" and
-> > > "mediatek,mt81xx-tz-smp", which support Mediatek SMP bringup for non-TZ
-> > > and TZ platform.
-> > > Patch 4,5 finally enable SMP bringup for mt8135 and mt8127.
-> > > 
-> > > Changes in v3:
-> > > - The first 2 patches in v2 are merged in v4.2-rc1.
-> > > - Patch 3~4 in v2 are moved to another series [1]
-> > > - platsmp.c changes based on Stephen's suggestion
-> > > - Change cpu enable-method name to "mediatek,mt6589-smp"
-> > > 
-> > > Changes in v2:
-> > > - Fix boot issue for THUMB2 kernel.
-> > > - Not enable GPT_CLK_EVT when setup to fix GPT spurious interrupt issue
-> > > - Change platsmp.c according to Matthias' suggestion
-> > > http://lists.infradead.org/pipermail/linux-mediatek/2015-May/000714.html
-> > > 
-> > > v1:
-> > > http://lists.infradead.org/pipermail/linux-mediatek/2015-May/000528.html
-> > > 
-> > > [1]
-> > > http://lists.infradead.org/pipermail/linux-mediatek/2015-July/001544.htm
-> > > l
-> > > 
-> > > Matthias Brugger (1):
-> > >   ARM: mediatek: enable gpt6 on boot up to make arch timer working
-> > > 
-> > > Yingjoe Chen (4):
-> > >   devicetree: bindings: add new SMP enable method Mediatek SoC
-> > >   ARM: mediatek: add smp bringup code
-> > >   ARM: dts: mt8135: enable basic SMP bringup for mt8135
-> > >   ARM: dts: mt8127: enable basic SMP bringup for mt8127
-> > >  
-> > >  Documentation/devicetree/bindings/arm/cpus.txt |   2 +
-> > >  arch/arm/boot/dts/mt8127.dtsi                  |  16 +++
-> > >  arch/arm/boot/dts/mt8135.dtsi                  |  16 +++
-> > >  arch/arm/mach-mediatek/Makefile                |   3 +
-> > >  arch/arm/mach-mediatek/mediatek.c              |  27 +++++
-> > >  arch/arm/mach-mediatek/platsmp.c               | 144
-> > > 
-> > > +++++++++++++++++++++++++ 6 files changed, 208 insertions(+)
-> > > 
-> > >  create mode 100644 arch/arm/mach-mediatek/platsmp.c
-> > 
-> > Applied to v4.2-next/soc-2 and v4.2-next/dts-2
-> 
-> I've just NAK'd one of the patches in this set; I don't tend to even see
-> mediatek patches normally, as they all head into my junk mailfolder
-> because mediatek's mail server setup is truely abysmal (it has broken
-> reverse DNS - the DNS positively says that the mail server is not a
-> legit owner of the name it claims to be.)
-> 
-> The problem is that this patch series uses memblock_reserve() way after
-> the memory has been transitioned out of memblock's control, so actually
-> this has no effect.
-> 
-> I've seen a number of patches doing this.  I'm not sure what's soo friggin
-> hard for people to understand: memblock is about the EARLY stages of
-> getting the system up and running.  Once the memory has been handed
-> over to the kernel's memory management, memblock MUST NOT BE USED to
-> reserve memory.
-> 
-> There is one place, and one place only in the ARM kernel where
-> memblock_reserve() is possible, and that's in the ->reserve machine
-> callback.  NOWHERE ELSE is permissible.
+[Correcting the devicetree list address, which I typo'd in my original
+reply]
 
-OK, I just dropped the patches. Thanks for reviewing this.
+[resending to _really_ correct the address, apologies for the spam]
 
-Matthias
+> >> +static const char * const addr_propnames[] = {
+> >> +	"mac-address",
+> >> +	"local-mac-address",
+> >> +	"address",
+> >> +};
+> >
+> > If these are going to be generally necessary, then we should get them
+> > adopted as standardised _DSD properties (ideally just one of them).
+> 
+> As far as I can tell, and please correct me if I am wrong, ACPI-6.0 
+> doesn't contemplate MAC addresses.
+> 
+> Today we are using "mac-address", which is an Integer containing the MAC 
+> address in its lowest order 48 bits in Little-Endian byte order.
+> 
+> The hardware and ACPI tables are here today, and we would like to 
+> support it.  If some future ACPI specification specifies a standard way 
+> to do this, we will probably adapt the code to do this in a standard manner.
+> 
+> 
+> >
+> > [...]
+> >
+> >> +static acpi_status bgx_acpi_register_phy(acpi_handle handle,
+> >> +					 u32 lvl, void *context, void **rv)
+> >> +{
+> >> +	struct acpi_reference_args args;
+> >> +	const union acpi_object *prop;
+> >> +	struct bgx *bgx = context;
+> >> +	struct acpi_device *adev;
+> >> +	struct device *phy_dev;
+> >> +	u32 phy_id;
+> >> +
+> >> +	if (acpi_bus_get_device(handle, &adev))
+> >> +		goto out;
+> >> +
+> >> +	SET_NETDEV_DEV(&bgx->lmac[bgx->lmac_count].netdev, &bgx->pdev->dev);
+> >> +
+> >> +	acpi_get_mac_address(adev, bgx->lmac[bgx->lmac_count].mac);
+> >> +
+> >> +	bgx->lmac[bgx->lmac_count].lmacid = bgx->lmac_count;
+> >> +
+> >> +	if (acpi_dev_get_property_reference(adev, "phy-handle", 0, &args))
+> >> +		goto out;
+> >> +
+> >> +	if (acpi_dev_get_property(args.adev, "phy-channel", ACPI_TYPE_INTEGER, &prop))
+> >> +		goto out;
+> >
+> > Likewise for any inter-device properties, so that we can actually handle
+> > them in a generic fashion, and avoid / learn from the mistakes we've
+> > already handled with DT.
+> 
+> This is the fallacy of the ACPI is superior to DT argument.  The 
+> specification of PHY topology and MAC addresses is well standardized in 
+> DT, there is no question about what the proper way to specify it is. 
+> Under ACPI, it is the Wild West, there is no specification, so each 
+> system design is forced to invent something, and everybody comes up with 
+> an incompatible implementation.
+
+Indeed.
+
+If ACPI is going to handle it, it should handle it properly. I really
+don't see the point in bodging properties together in a less standard
+manner than DT, especially for inter-device relationships.
+
+Doing so is painful for _everyone_, and it's extremely unlikely that
+other ACPI-aware OSs will actually support these custom descriptions,
+making this Linux-specific, and breaking the rationale for using ACPI in
+the first place -- a standard that says "just do non-standard stuff" is
+not a usable standard.
+
+For intra-device properties, we should standardise what we can, but
+vendor-specific stuff is ok -- this can be self-contained within a
+driver.
+
+For inter-device relationships ACPI _must_ gain a better model of
+componentised devices. It's simply unworkable otherwise, and as you
+point out it's fallacious to say that because ACPI is being used that
+something is magically industry standard, portable, etc.
+
+This is not your problem in particular; the entire handling of _DSD so
+far is a joke IMO.
+
+Thanks,
+Mark.
