@@ -1,306 +1,1350 @@
-From: =?UTF-8?B?RUxBTiDlionlmInpp78=?= <scott.liu@emc.com.tw>
-Subject: RE: [PATCH] Input: elants_i2c - wire up regulator support
-Date: Fri, 7 Aug 2015 11:51:49 +0800
-Message-ID: <000801d0d0c4$68e85b50$3ab911f0$@emc.com.tw>
-References: <20150805185357.GA31387@dtor-ws>	<005d01d0d016$072f9080$158eb180$@emc.com.tw> <CAKdAkRSJEGkndOe5OFbcG3Mo77HtvysbPL6uYS+gcAFQKdS=Kg@mail.gmail.com>
+From: Matt Ranostay <mranostay-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v4 2/2] iio: light: add APDS9960 ALS + promixity driver
+Date: Thu, 6 Aug 2015 21:42:31 -0700
+Message-ID: <CAKzfze82zvZEu1+UPe2fP+b_CA+0T02tct7Ri1+rqbirm2kzmg@mail.gmail.com>
+References: <1437364821-7580-1-git-send-email-mranostay@gmail.com>
+	<55BE4224.2090202@kernel.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAKdAkRSJEGkndOe5OFbcG3Mo77HtvysbPL6uYS+gcAFQKdS=Kg@mail.gmail.com>
-Content-Language: zh-tw
-Sender: linux-kernel-owner@vger.kernel.org
-To: 'Dmitry Torokhov' <dmitry.torokhov@gmail.com>
-Cc: 'Dmitry Torokhov' <dtor@chromium.org>, linux-input@vger.kernel.org, 'Rob Herring' <robh+dt@kernel.org>, 'Mark Rutland' <mark.rutland@arm.com>, 'Benson Leung' <bleung@chromium.org>, 'Duson Lin' <dusonlin@emc.com.tw>, 'James Chen' <james.chen@emc.com.tw>, devicetree@vger.kernel.org, 'lkml' <linux-kernel@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <55BE4224.2090202-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: "linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, =?UTF-8?B?TWFyZWsgVmHFoXV0?= <marex-ynQEQJNshbs@public.gmane.org>, Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Peter Meerwald <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Dmitry,
-	Thanks for your explanation, I understand.
-=09
-	Reviewed-by: Scott Liu <scott.liu@emc.com.tw>
+On Sun, Aug 2, 2015 at 9:15 AM, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
+> On 20/07/15 05:00, Matt Ranostay wrote:
+>> APDS9960 is a combination of ALS, proximity, and gesture sensors.
+>>
+>> This patch adds support for these functions along with gain control,
+>> integration time, and event thresholds.
+>>
+>> Signed-off-by: Matt Ranostay <mranostay-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> Hi Matt,
+>
+> I'm afraid with fresh eyes after a break I've picked up on a few more
+> bits and bobs. See inline.
+>
+> The big one I completely missed before was the way the trigger is being
+> used in here.
+>
+> You have a single 'gesture event' triggering a multiple element buffer fill
+> (to all intents and purposes this is a hardware buffer be it an odd one -
+> note that there is no predicatablity of when the data will arive etc so
+> some of the usual hardware buffer complexity doesn't really make sense here).
+>
+> T trigger is not a per sample trigger as typically provided.
+> There is no actual obligation to use a trigger to fill a buffer when it
+> doesn't make much sense (as is the case here).
+> Hence drop it.  Just have the interrupt thread handler directly fill
+> the buffer and don't register a trigger.
 
-Best Regards,
+Ok do scan_elements still needs to be set for the channels if not used
+by  a triggered buffer? I would guess so.
+
+>
+> Otherwise, mostly looks fine, just a couple of white space cleanups.
+>
+> As it's a somewhat unusual driver I would like a second opinion on it
+> so could you cc the reviewers from MAINTAINERS as well as me.
+>
+> Thanks and sorry again that I missed this issue until so many revisions
+> in!
+> Jonathan
+>> ---
+>>  .../ABI/testing/sysfs-bus-iio-light-apds9960       |    7 +
+>>  drivers/iio/light/Kconfig                          |   13 +
+>>  drivers/iio/light/Makefile                         |    1 +
+>>  drivers/iio/light/apds9960.c                       | 1188 ++++++++++++++++++++
+>>  4 files changed, 1209 insertions(+)
+>>  create mode 100644 Documentation/ABI/testing/sysfs-bus-iio-light-apds9960
+>>  create mode 100644 drivers/iio/light/apds9960.c
+>>
+>> diff --git a/Documentation/ABI/testing/sysfs-bus-iio-light-apds9960 b/Documentation/ABI/testing/sysfs-bus-iio-light-apds9960
+>> new file mode 100644
+>> index 0000000..8c86f21
+>> --- /dev/null
+>> +++ b/Documentation/ABI/testing/sysfs-bus-iio-light-apds9960
+>> @@ -0,0 +1,7 @@
+>> +What:                /sys/bus/iio/devices/triggerX/name = "apds9960-gestureX"
+>> +KernelVersion:       4.2
+>> +Contact:     Matt Ranostay <mranostay-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+>> +Description:
+>> +             The APDS9960 kernel module provides a trigger which enables
+>> +             the gesture engine that pushes motion data to the buffer when
+>> +             it becomes available.
+>> diff --git a/drivers/iio/light/Kconfig b/drivers/iio/light/Kconfig
+>> index b37e18d..13195b0 100644
+>> --- a/drivers/iio/light/Kconfig
+>> +++ b/drivers/iio/light/Kconfig
+>> @@ -50,6 +50,19 @@ config APDS9300
+>>        To compile this driver as a module, choose M here: the
+>>        module will be called apds9300.
+>>
+>> +config APDS9960
+>> +     tristate "Avago APDS9960 gesture/RGB/ALS/proximity sensor"
+>> +     select REGMAP_I2C
+>> +     select IIO_BUFFER
+>> +     select IIO_TRIGGERED_BUFFER
+>> +     depends on I2C
+>> +     help
+>> +       Say Y here to build I2C interface support for the Avago
+>> +       APDS9960 gesture/RGB/ALS/proximity sensor.
+>> +
+>> +       To compile this driver as a module, choose M here: the
+>> +       module will be called apds9960
+>> +
+>>  config BH1750
+>>       tristate "ROHM BH1750 ambient light sensor"
+>>       depends on I2C
+>> diff --git a/drivers/iio/light/Makefile b/drivers/iio/light/Makefile
+>> index adf9723..852a7c9 100644
+>> --- a/drivers/iio/light/Makefile
+>> +++ b/drivers/iio/light/Makefile
+>> @@ -7,6 +7,7 @@ obj-$(CONFIG_ACPI_ALS)                += acpi-als.o
+>>  obj-$(CONFIG_ADJD_S311)              += adjd_s311.o
+>>  obj-$(CONFIG_AL3320A)                += al3320a.o
+>>  obj-$(CONFIG_APDS9300)               += apds9300.o
+>> +obj-$(CONFIG_APDS9960)               += apds9960.o
+>>  obj-$(CONFIG_BH1750)         += bh1750.o
+>>  obj-$(CONFIG_CM32181)                += cm32181.o
+>>  obj-$(CONFIG_CM3232)         += cm3232.o
+>> diff --git a/drivers/iio/light/apds9960.c b/drivers/iio/light/apds9960.c
+>> new file mode 100644
+>> index 0000000..4d3b56c
+>> --- /dev/null
+>> +++ b/drivers/iio/light/apds9960.c
+>> @@ -0,0 +1,1188 @@
+>> +/*
+>> + * apds9960.c - Support for Avago APDS9960 gesture/RGB/ALS/proximity sensor
+>> + *
+>> + * Copyright (C) 2015 Matt Ranostay <mranostay-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+>> + *
+>> + * This program is free software; you can redistribute it and/or modify
+>> + * it under the terms of the GNU General Public License as published by
+>> + * the Free Software Foundation; either version 2 of the License, or
+>> + * (at your option) any later version.
+>> + *
+>> + * This program is distributed in the hope that it will be useful,
+>> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
+>> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+>> + * GNU General Public License for more details.
+>> + *
+>> + * TODO: gesture + proximity calib offsets
+>> + */
+>> +
+>> +#include <linux/module.h>
+>> +#include <linux/init.h>
+>> +#include <linux/interrupt.h>
+>> +#include <linux/delay.h>
+>> +#include <linux/mutex.h>
+>> +#include <linux/err.h>
+>> +#include <linux/irq.h>
+>> +#include <linux/irq_work.h>
+>> +#include <linux/gpio.h>
+>> +#include <linux/i2c.h>
+>> +#include <linux/pm_runtime.h>
+>> +#include <linux/regmap.h>
+>> +#include <linux/iio/iio.h>
+>> +#include <linux/iio/buffer.h>
+>> +#include <linux/iio/events.h>
+>> +#include <linux/iio/sysfs.h>
+>> +#include <linux/iio/trigger.h>
+>> +#include <linux/iio/trigger_consumer.h>
+>> +#include <linux/iio/triggered_buffer.h>
+>> +#include <linux/of_gpio.h>
+>> +
+>> +#define APDS9960_REGMAP_NAME "apds9960_regmap"
+>> +#define APDS9960_DRV_NAME    "apds9960"
+>> +
+>> +#define APDS9960_REG_RAM_START       0x00
+>> +#define APDS9960_REG_RAM_END 0x7f
+>> +
+>> +#define APDS9960_REG_ENABLE  0x80
+>> +#define APDS9960_REG_ATIME   0x81
+>> +#define APDS9960_REG_WTIME   0x83
+>> +
+>> +#define APDS9960_REG_AILTL   0x84
+>> +#define APDS9960_REG_AILTH   0x85
+>> +#define APDS9960_REG_AIHTL   0x86
+>> +#define APDS9960_REG_AIHTH   0x87
+>> +
+>> +#define APDS9960_REG_PILT    0x89
+>> +#define APDS9960_REG_PIHT    0x8b
+>> +#define APDS9960_REG_PERS    0x8c
+>> +
+>> +#define APDS9960_REG_CONFIG_1        0x8d
+>> +#define APDS9960_REG_PPULSE  0x8e
+>> +
+>> +#define APDS9960_REG_CONTROL 0x8f
+>> +#define APDS9960_REG_CONTROL_AGAIN_MASK              0x03
+>> +#define APDS9960_REG_CONTROL_PGAIN_MASK              0x0c
+>> +#define APDS9960_REG_CONTROL_AGAIN_MASK_SHIFT        0
+>> +#define APDS9960_REG_CONTROL_PGAIN_MASK_SHIFT        2
+>> +
+>> +#define APDS9960_REG_CONFIG_2        0x90
+>> +#define APDS9960_REG_CONFIG_2_GGAIN_MASK     0x60
+>> +#define APDS9960_REG_CONFIG_2_GGAIN_MASK_SHIFT       5
+>> +
+>> +#define APDS9960_REG_ID              0x92
+>> +
+>> +#define APDS9960_REG_STATUS  0x93
+>> +#define APDS9960_REG_STATUS_PS_INT   BIT(5)
+>> +#define APDS9960_REG_STATUS_ALS_INT  BIT(4)
+>> +#define APDS9960_REG_STATUS_GINT     BIT(2)
+>> +
+>> +#define APDS9960_REG_PDATA   0x9c
+>> +#define APDS9960_REG_POFFSET_UR      0x9d
+>> +#define APDS9960_REG_POFFSET_DL 0x9e
+>> +#define APDS9960_REG_CONFIG_3        0x9f
+>> +
+>> +#define APDS9960_REG_GPENTH  0xa0
+>> +#define APDS9960_REG_GEXTH   0xa1
+>> +
+>> +#define APDS9960_REG_GCONF_1 0xa2
+>> +#define APDS9960_REG_GCONF_1_GFIFO_THRES_MASK                0xc0
+>> +#define APDS9960_REG_GCONF_1_GFIFO_THRES_MASK_SHIFT  6
+>> +
+>> +#define APDS9960_REG_GCONF_2 0xa3
+>> +#define APDS9960_REG_GOFFSET_U       0xa4
+>> +#define APDS9960_REG_GOFFSET_D       0xa5
+>> +#define APDS9960_REG_GPULSE  0xa6
+>> +#define APDS9960_REG_GOFFSET_L       0xa7
+>> +#define APDS9960_REG_GOFFSET_R       0xa9
+>> +#define APDS9960_REG_GCONF_3 0xaa
+>> +
+>> +#define APDS9960_REG_GCONF_4 0xab
+>> +#define APDS9960_REG_GFLVL   0xae
+>> +#define APDS9960_REG_GSTATUS 0xaf
+>> +
+>> +#define APDS9960_REG_IFORCE  0xe4
+>> +#define APDS9960_REG_PICLEAR 0xe5
+>> +#define APDS9960_REG_CICLEAR 0xe6
+>> +#define APDS9960_REG_AICLEAR 0xe7
+>> +
+>> +#define APDS9960_DEFAULT_PERS        0x33
+>> +#define APDS9960_DEFAULT_GPENTH      0x50
+>> +#define APDS9960_DEFAULT_GEXTH       0x40
+>> +
+>> +#define APDS9960_MAX_PXS_THRES_VAL   255
+>> +#define APDS9960_MAX_ALS_THRES_VAL   0xffff
+>> +#define APDS9960_MAX_INT_TIME_IN_US  1000000
+>> +
+>> +enum apds9960_als_channel_idx {
+>> +     IDX_ALS_CLEAR, IDX_ALS_RED, IDX_ALS_GREEN, IDX_ALS_BLUE,
+>> +};
+>> +
+>> +#define APDS9960_REG_ALS_BASE        0x94
+>> +#define APDS9960_REG_ALS_CHANNEL(_colour) \
+>> +     (APDS9960_REG_ALS_BASE + (IDX_ALS_##_colour * 2))
+>> +
+>> +enum apds9960_gesture_channel_idx {
+>> +     IDX_DIR_UP, IDX_DIR_DOWN, IDX_DIR_LEFT, IDX_DIR_RIGHT,
+>> +};
+>> +
+>> +#define APDS9960_REG_GFIFO_BASE      0xfc
+>> +#define APDS9960_REG_GFIFO_DIR(_dir) \
+>> +     (APDS9960_REG_GFIFO_BASE + IDX_DIR_##_dir)
+>> +
+>> +struct apds9960_data {
+>> +     struct i2c_client *client;
+>> +     struct iio_trigger *trig;
+>> +     struct iio_dev *indio_dev;
+>> +     struct irq_work work;
+>> +     struct mutex lock;
+>> +
+>> +     /* regmap fields */
+>> +     struct regmap *regmap;
+>> +     struct regmap_field *reg_int_als;
+>> +     struct regmap_field *reg_int_ges;
+>> +     struct regmap_field *reg_int_pxs;
+>> +
+>> +     struct regmap_field *reg_enable_als;
+>> +     struct regmap_field *reg_enable_ges;
+>> +     struct regmap_field *reg_enable_pxs;
+>> +
+>> +     /* state */
+>> +     int als_int;
+>> +     int pxs_int;
+>> +     int gesture_mode_running;
+>> +
+>> +     /* gain values */
+>> +     int als_gain;
+>> +     int pxs_gain;
+>> +
+>> +     /* integration time value in us */
+>> +     int als_adc_int_us;
+>> +
+>> +     /* gesture buffer */
+>> +     u8 buffer[16]; /* 4 8-bit channels + 64-bit timestamp */
+>> +};
+>> +
+>> +static const struct reg_default apds9960_reg_defaults[] = {
+>> +     /* Default ALS integration time = 2.48ms */
+>> +     { APDS9960_REG_ATIME, 0xff },
+>> +};
+>> +
+>> +static const struct regmap_range apds9960_volatile_ranges[] = {
+>> +     regmap_reg_range(APDS9960_REG_STATUS,
+>> +                             APDS9960_REG_PDATA),
+>> +     regmap_reg_range(APDS9960_REG_GFLVL,
+>> +                             APDS9960_REG_GSTATUS),
+>> +     regmap_reg_range(APDS9960_REG_GFIFO_DIR(UP),
+>> +                             APDS9960_REG_GFIFO_DIR(RIGHT)),
+>> +     regmap_reg_range(APDS9960_REG_IFORCE,
+>> +                             APDS9960_REG_AICLEAR),
+>> +};
+>> +
+>> +static const struct regmap_access_table apds9960_volatile_table = {
+>> +     .yes_ranges     = apds9960_volatile_ranges,
+>> +     .n_yes_ranges   = ARRAY_SIZE(apds9960_volatile_ranges),
+>> +};
+>> +
+>> +static const struct regmap_range apds9960_precious_ranges[] = {
+>> +     regmap_reg_range(APDS9960_REG_RAM_START, APDS9960_REG_RAM_END),
+>> +};
+>> +
+>> +static const struct regmap_access_table apds9960_precious_table = {
+>> +     .yes_ranges     = apds9960_precious_ranges,
+>> +     .n_yes_ranges   = ARRAY_SIZE(apds9960_precious_ranges),
+>> +};
+>> +
+>> +static const struct regmap_range apds9960_readable_ranges[] = {
+>> +     regmap_reg_range(APDS9960_REG_ENABLE,
+>> +                             APDS9960_REG_GSTATUS),
+>> +     regmap_reg_range(APDS9960_REG_GFIFO_DIR(UP),
+>> +                             APDS9960_REG_GFIFO_DIR(RIGHT)),
+>> +};
+>> +
+>> +static const struct regmap_access_table apds9960_readable_table = {
+>> +     .yes_ranges     = apds9960_readable_ranges,
+>> +     .n_yes_ranges   = ARRAY_SIZE(apds9960_readable_ranges),
+>> +};
+>> +
+>> +static const struct regmap_range apds9960_writeable_ranges[] = {
+>> +     regmap_reg_range(APDS9960_REG_ENABLE, APDS9960_REG_CONFIG_2),
+>> +     regmap_reg_range(APDS9960_REG_POFFSET_UR, APDS9960_REG_GCONF_4),
+>> +     regmap_reg_range(APDS9960_REG_IFORCE, APDS9960_REG_AICLEAR),
+>> +};
+>> +
+>> +static const struct regmap_access_table apds9960_writeable_table = {
+>> +     .yes_ranges     = apds9960_writeable_ranges,
+>> +     .n_yes_ranges   = ARRAY_SIZE(apds9960_writeable_ranges),
+>> +};
+>> +
+>> +static const struct regmap_config apds9960_regmap_config = {
+>> +     .name = APDS9960_REGMAP_NAME,
+>> +     .reg_bits = 8,
+>> +     .val_bits = 8,
+>> +     .use_single_rw = 1,
+>> +
+>> +     .volatile_table = &apds9960_volatile_table,
+>> +     .precious_table = &apds9960_precious_table,
+>> +     .rd_table = &apds9960_readable_table,
+>> +     .wr_table = &apds9960_writeable_table,
+>> +
+>> +     .reg_defaults = apds9960_reg_defaults,
+>> +     .num_reg_defaults = ARRAY_SIZE(apds9960_reg_defaults),
+>> +     .max_register = APDS9960_REG_GFIFO_DIR(RIGHT),
+>> +     .cache_type = REGCACHE_RBTREE,
+>> +};
+>> +
+>> +static const struct iio_event_spec apds9960_pxs_event_spec[] = {
+>> +     {
+>> +             .type = IIO_EV_TYPE_THRESH,
+>> +             .dir = IIO_EV_DIR_RISING,
+>> +             .mask_separate = BIT(IIO_EV_INFO_VALUE) |
+>> +                     BIT(IIO_EV_INFO_ENABLE),
+>> +     },
+>> +     {
+>> +             .type = IIO_EV_TYPE_THRESH,
+>> +             .dir = IIO_EV_DIR_FALLING,
+>> +             .mask_separate = BIT(IIO_EV_INFO_VALUE) |
+>> +                     BIT(IIO_EV_INFO_ENABLE),
+>> +     },
+>> +};
+>> +
+>> +static const struct iio_event_spec apds9960_als_event_spec[] = {
+>> +     {
+>> +             .type = IIO_EV_TYPE_THRESH,
+>> +             .dir = IIO_EV_DIR_RISING,
+>> +             .mask_separate = BIT(IIO_EV_INFO_VALUE) |
+>> +                     BIT(IIO_EV_INFO_ENABLE),
+>> +     },
+>> +     {
+>> +             .type = IIO_EV_TYPE_THRESH,
+>> +             .dir = IIO_EV_DIR_FALLING,
+>> +             .mask_separate = BIT(IIO_EV_INFO_VALUE) |
+>> +                     BIT(IIO_EV_INFO_ENABLE),
+>> +     },
+>> +};
+>> +
+>> +#define APDS9960_GESTURE_CHANNEL(_dir, _si) { \
+>> +     .type = IIO_PROXIMITY, \
+>> +     .channel = _si + 1, \
+>> +     .scan_index = _si, \
+>> +     .indexed = 1, \
+>> +     .scan_type = { \
+>> +             .sign = 'u', \
+>> +             .realbits = 8, \
+>> +             .storagebits = 8, \
+>> +     }, \
+>> +}
+>> +
+>> +#define APDS9960_INTENSITY_CHANNEL(_colour) { \
+>> +     .type = IIO_INTENSITY, \
+>> +     .info_mask_separate = BIT(IIO_CHAN_INFO_RAW), \
+>> +     .info_mask_shared_by_type = BIT(IIO_CHAN_INFO_SCALE) | \
+>> +                     BIT(IIO_CHAN_INFO_INT_TIME), \
+>> +     .channel2 = IIO_MOD_LIGHT_##_colour, \
+>> +     .address = APDS9960_REG_ALS_CHANNEL(_colour), \
+>> +     .modified = 1, \
+>> +     .scan_index = -1, \
+>> +}
+>> +
+>> +static const unsigned long apds9960_scan_masks[] = {0xf, 0};
+>> +
+>> +static const struct iio_chan_spec apds9960_channels[] = {
+>> +     {
+>> +             .type = IIO_PROXIMITY,
+>> +             .address = APDS9960_REG_PDATA,
+>> +             .info_mask_separate = BIT(IIO_CHAN_INFO_RAW),
+>> +             .info_mask_shared_by_type = BIT(IIO_CHAN_INFO_SCALE),
+>> +             .channel = 0,
+>> +             .indexed = 0,
+>> +             .scan_index = -1,
+>> +
+>> +             .event_spec = apds9960_pxs_event_spec,
+>> +             .num_event_specs = ARRAY_SIZE(apds9960_pxs_event_spec),
+>> +     },
+>> +     /* Gesture Sensor */
+>> +     APDS9960_GESTURE_CHANNEL(UP, 0),
+>> +     APDS9960_GESTURE_CHANNEL(DOWN, 1),
+>> +     APDS9960_GESTURE_CHANNEL(LEFT, 2),
+>> +     APDS9960_GESTURE_CHANNEL(RIGHT, 3),
+>> +     IIO_CHAN_SOFT_TIMESTAMP(4),
+>> +     /* ALS */
+>> +     {
+>> +             .type = IIO_INTENSITY,
+>> +             .info_mask_separate = BIT(IIO_CHAN_INFO_RAW),
+>> +             .info_mask_shared_by_type = BIT(IIO_CHAN_INFO_SCALE) |
+>> +                     BIT(IIO_CHAN_INFO_INT_TIME),
+>> +             .channel2 = IIO_MOD_LIGHT_CLEAR,
+>> +             .address = APDS9960_REG_ALS_CHANNEL(CLEAR),
+>> +             .modified = 1,
+>> +             .scan_index = -1,
+>> +
+>> +             .event_spec = apds9960_als_event_spec,
+>> +             .num_event_specs = ARRAY_SIZE(apds9960_als_event_spec),
+>> +     },
+>> +     /* RGB Sensor */
+>> +     APDS9960_INTENSITY_CHANNEL(RED),
+>> +     APDS9960_INTENSITY_CHANNEL(GREEN),
+>> +     APDS9960_INTENSITY_CHANNEL(BLUE),
+>> +};
+>> +
+>> +/* integration time in us */
+>> +static const int apds9960_int_time[][2] =
+>> +     { {28000, 246}, {100000, 219}, {200000, 182}, {700000, 0} };
+>> +
+>> +/* gain mapping */
+>> +static const int apds9960_pxs_gain_map[] = {1, 2, 4, 8};
+>> +static const int apds9960_als_gain_map[] = {1, 4, 16, 64};
+>> +
+>> +static IIO_CONST_ATTR(proximity_scale_available, "1 2 4 8");
+>> +static IIO_CONST_ATTR(intensity_scale_available, "1 4 16 64");
+>> +static IIO_CONST_ATTR_INT_TIME_AVAIL("0.028 0.1 0.2 0.7");
+>> +
+>> +static struct attribute *apds9960_attributes[] = {
+>> +     &iio_const_attr_proximity_scale_available.dev_attr.attr,
+>> +     &iio_const_attr_intensity_scale_available.dev_attr.attr,
+>> +     &iio_const_attr_integration_time_available.dev_attr.attr,
+>> +     NULL,
+>> +};
+>> +
+>> +static struct attribute_group apds9960_attribute_group = {
+>> +     .attrs = apds9960_attributes,
+>> +};
+>> +
+>> +static const struct reg_field apds9960_reg_field_int_als =
+>> +                             REG_FIELD(APDS9960_REG_ENABLE, 4, 4);
+>> +
+>> +static const struct reg_field apds9960_reg_field_int_ges =
+>> +                             REG_FIELD(APDS9960_REG_GCONF_4, 1, 1);
+>> +
+>> +static const struct reg_field apds9960_reg_field_int_pxs =
+>> +                             REG_FIELD(APDS9960_REG_ENABLE, 5, 5);
+>> +
+>> +static const struct reg_field apds9960_reg_field_enable_als =
+>> +                             REG_FIELD(APDS9960_REG_ENABLE, 1, 1);
+>> +
+>> +static const struct reg_field apds9960_reg_field_enable_ges =
+>> +                             REG_FIELD(APDS9960_REG_ENABLE, 6, 6);
+>> +
+>> +static const struct reg_field apds9960_reg_field_enable_pxs =
+>> +                             REG_FIELD(APDS9960_REG_ENABLE, 2, 2);
+>> +
+>> +static int apds9960_set_it_time(struct apds9960_data *data, int val2)
+>> +{
+>> +     int ret = -EINVAL;
+>> +     int idx;
+>> +
+>> +     for (idx = 0; idx < ARRAY_SIZE(apds9960_int_time); idx++) {
+>> +             if (apds9960_int_time[idx][0] == val2) {
+>> +                     mutex_lock(&data->lock);
+>> +                     ret = regmap_write(data->regmap, APDS9960_REG_ATIME,
+>> +                                              apds9960_int_time[idx][1]);
+>> +                     if (!ret)
+>> +                             data->als_adc_int_us = val2;
+>> +                     mutex_unlock(&data->lock);
+>> +                     break;
+>> +             }
+>> +     }
+>> +
+>> +     return ret;
+>> +}
+>> +
+>> +static int apds9960_set_pxs_gain(struct apds9960_data *data, int val)
+>> +{
+>> +     int ret = -EINVAL;
+>> +     int idx;
+>> +
+>> +     for (idx = 0; idx < ARRAY_SIZE(apds9960_pxs_gain_map); idx++) {
+>> +             if (apds9960_pxs_gain_map[idx] == val) {
+>> +                     /* pxs + gesture gains are mirrored */
+>> +                     mutex_lock(&data->lock);
+>> +                     ret = regmap_update_bits(data->regmap,
+>> +                             APDS9960_REG_CONTROL,
+>> +                             APDS9960_REG_CONTROL_PGAIN_MASK,
+>> +                             idx << APDS9960_REG_CONTROL_PGAIN_MASK_SHIFT);
+>> +                     if (ret) {
+>> +                             mutex_unlock(&data->lock);
+>> +                             break;
+>> +                     }
+>> +
+>> +                     ret = regmap_update_bits(data->regmap,
+>> +                             APDS9960_REG_CONFIG_2,
+>> +                             APDS9960_REG_CONFIG_2_GGAIN_MASK,
+>> +                             idx << APDS9960_REG_CONFIG_2_GGAIN_MASK_SHIFT);
+>> +                     if (!ret)
+>> +                             data->pxs_gain = idx;
+>> +                     mutex_unlock(&data->lock);
+>> +                     break;
+>> +             }
+>> +     }
+>> +
+>> +     return ret;
+>> +}
+>> +
+>> +static int apds9960_set_als_gain(struct apds9960_data *data, int val)
+>> +{
+>> +     int ret = -EINVAL;
+>> +     int idx;
+>> +
+>> +     for (idx = 0; idx < ARRAY_SIZE(apds9960_als_gain_map); idx++) {
+>> +             if (apds9960_als_gain_map[idx] == val) {
+>> +                     mutex_lock(&data->lock);
+>> +                     ret = regmap_update_bits(data->regmap,
+>> +                                     APDS9960_REG_CONTROL,
+>> +                                     APDS9960_REG_CONTROL_AGAIN_MASK, idx);
+>> +                     if (!ret)
+>> +                             data->als_gain = idx;
+>> +                     mutex_unlock(&data->lock);
+>> +                     break;
+>> +             }
+>> +     }
+>> +
+>> +     return ret;
+>> +}
+>> +
+>> +#ifdef CONFIG_PM
+>> +static int apds9960_set_power_state(struct apds9960_data *data, bool on)
+>> +{
+>> +     struct device *dev = &data->client->dev;
+>> +     int ret = 0;
+>> +
+>> +     mutex_lock(&data->lock);
+>> +
+>> +     if (on) {
+>> +             int suspended;
+>> +
+>> +             suspended = pm_runtime_suspended(dev);
+>> +             ret = pm_runtime_get_sync(dev);
+>> +
+>> +             /* Allow one integration cycle before allowing a reading */
+>> +             if (suspended)
+>> +                     usleep_range(data->als_adc_int_us,
+>> +                                  APDS9960_MAX_INT_TIME_IN_US);
+>> +     } else {
+>> +             ret = pm_runtime_put_autosuspend(dev);
+>> +     }
+>> +
+>> +     mutex_unlock(&data->lock);
+>> +
+>> +     return ret;
+>> +}
+>> +#else
+>> +static int apds9960_set_power_state(struct apds9960_data *data, bool on)
+>> +{
+>> +     return 0;
+>> +}
+>> +#endif
+>> +
+>> +static int apds9960_read_raw(struct iio_dev *indio_dev,
+>> +                          struct iio_chan_spec const *chan,
+>> +                          int *val, int *val2, long mask)
+>> +{
+>> +     struct apds9960_data *data = iio_priv(indio_dev);
+>> +     u16 buf;
+>> +     int ret = -EINVAL;
+>> +
+>> +     if (data->gesture_mode_running)
+>> +             return -EBUSY;
+>> +
+>> +     switch (mask) {
+>> +     case IIO_CHAN_INFO_RAW:
+>> +             apds9960_set_power_state(data, true);
+>> +             switch (chan->type) {
+>> +             case IIO_PROXIMITY:
+>> +                     ret = regmap_read(data->regmap, chan->address, val);
+>> +                     if (!ret)
+>> +                             ret = IIO_VAL_INT;
+>> +                     break;
+>> +             case IIO_INTENSITY:
+>> +                     ret = regmap_bulk_read(data->regmap, chan->address,
+>> +                                            &buf, 2);
+>> +                     if (!ret)
+>> +                             ret = IIO_VAL_INT;
+>> +                     *val = le16_to_cpu(buf);
+>> +                     break;
+>> +             default:
+>> +                     ret = -EINVAL;
+>> +             }
+>> +             apds9960_set_power_state(data, false);
+>> +             break;
+>> +     case IIO_CHAN_INFO_INT_TIME:
+>> +             /* RGB + ALS sensors only have integration time */
+>> +             mutex_lock(&data->lock);
+>> +             switch (chan->type) {
+>> +             case IIO_INTENSITY:
+>> +                     *val = 0;
+>> +                     *val2 = data->als_adc_int_us;
+>> +                     ret = IIO_VAL_INT_PLUS_MICRO;
+>> +                     break;
+>> +             default:
+>> +                     ret = -EINVAL;
+>> +             }
+>> +             mutex_unlock(&data->lock);
+>> +             break;
+>> +     case IIO_CHAN_INFO_SCALE:
+>> +             mutex_lock(&data->lock);
+>> +             switch (chan->type) {
+>> +             case IIO_PROXIMITY:
+>> +                     *val = apds9960_pxs_gain_map[data->pxs_gain];
+>> +                     ret = IIO_VAL_INT;
+>> +                     break;
+>> +             case IIO_INTENSITY:
+>> +                     *val = apds9960_als_gain_map[data->als_gain];
+>> +                     ret = IIO_VAL_INT;
+>> +                     break;
+>> +             default:
+>> +                     ret = -EINVAL;
+>> +             }
+>> +             mutex_unlock(&data->lock);
+>> +             break;
+>> +     }
+>> +
+>> +     return ret;
+>> +};
+>> +
+>> +static int apds9960_write_raw(struct iio_dev *indio_dev,
+>> +                          struct iio_chan_spec const *chan,
+>> +                          int val, int val2, long mask)
+>> +{
+>> +     struct apds9960_data *data = iio_priv(indio_dev);
+>> +
+>> +     switch (mask) {
+>> +     case IIO_CHAN_INFO_INT_TIME:
+>> +             /* RGB + ALS sensors only have int time */
+>> +             switch (chan->type) {
+>> +             case IIO_INTENSITY:
+>> +                     if (val != 0)
+>> +                             return -EINVAL;
+>> +                     return apds9960_set_it_time(data, val2);
+>> +             default:
+>> +                     return -EINVAL;
+>> +             }
+>> +     case IIO_CHAN_INFO_SCALE:
+>> +             if (val2 != 0)
+>> +                     return -EINVAL;
+>> +             switch (chan->type) {
+>> +             case IIO_PROXIMITY:
+>> +                     return apds9960_set_pxs_gain(data, val);
+>> +             case IIO_INTENSITY:
+>> +                     return apds9960_set_als_gain(data, val);
+>> +             default:
+>> +                     return -EINVAL;
+>> +             }
+>> +     default:
+>> +             return -EINVAL;
+>> +     };
+>> +
+>> +     return 0;
+>> +}
+>> +
+>> +static inline int apds9960_get_thres_reg(const struct iio_chan_spec *chan,
+>> +                                      enum iio_event_direction dir,
+>> +                                      u8 *reg)
+>> +{
+>> +     switch (dir) {
+>> +     case IIO_EV_DIR_RISING:
+>> +             switch (chan->type) {
+>> +             case IIO_PROXIMITY:
+>> +                     *reg = APDS9960_REG_PIHT;
+>> +                     break;
+>> +             case IIO_INTENSITY:
+>> +                     *reg = APDS9960_REG_AIHTL;
+>> +                     break;
+>> +             default:
+>> +                     return -EINVAL;
+>> +             }
+>> +             break;
+>> +     case IIO_EV_DIR_FALLING:
+>> +             switch (chan->type) {
+>> +             case IIO_PROXIMITY:
+>> +                     *reg = APDS9960_REG_PILT;
+>> +                     break;
+>> +             case IIO_INTENSITY:
+>> +                     *reg = APDS9960_REG_AILTL;
+>> +                     break;
+>> +             default:
+>> +                     return -EINVAL;
+>> +             }
+>> +             break;
+>> +     default:
+>> +             return -EINVAL;
+>> +     }
+>> +
+>> +     return 0;
+>> +}
+>> +
+>> +static int apds9960_read_event(struct iio_dev *indio_dev,
+>> +                            const struct iio_chan_spec *chan,
+>> +                            enum iio_event_type type,
+>> +                            enum iio_event_direction dir,
+>> +                            enum iio_event_info info,
+>> +                            int *val, int *val2)
+>> +{
+>> +     u8 reg;
+>> +     u16 buf;
+>> +     int ret = 0;
+>> +     struct apds9960_data *data = iio_priv(indio_dev);
+>> +
+>> +     if (info != IIO_EV_INFO_VALUE)
+>> +             return -EINVAL;
+>> +
+>> +     ret = apds9960_get_thres_reg(chan, dir, &reg);
+>> +     if (ret < 0)
+>> +             return ret;
+>> +
+>> +     if (chan->type == IIO_PROXIMITY) {
+>> +             ret = regmap_read(data->regmap, reg, val);
+>> +             if (ret < 0)
+>> +                     return ret;
+>> +     } else if (chan->type == IIO_INTENSITY) {
+>> +             ret = regmap_bulk_read(data->regmap, reg, &buf, 2);
+>> +             if (ret < 0)
+>> +                     return ret;
+>> +             *val = le16_to_cpu(buf);
+>> +     } else
+>> +             return -EINVAL;
+>> +
+>> +     *val2 = 0;
+>> +
+>> +     return IIO_VAL_INT;
+>> +}
+>> +
+>> +static int apds9960_write_event(struct iio_dev *indio_dev,
+>> +                             const struct iio_chan_spec *chan,
+>> +                             enum iio_event_type type,
+>> +                             enum iio_event_direction dir,
+>> +                             enum iio_event_info info,
+>> +                             int val, int val2)
+>> +{
+>> +     u8 reg;
+>> +     u16 buf;
+>> +     int ret = 0;
+>> +     struct apds9960_data *data = iio_priv(indio_dev);
+>> +
+>> +     if (info != IIO_EV_INFO_VALUE)
+>> +             return -EINVAL;
+>> +
+>> +     ret = apds9960_get_thres_reg(chan, dir, &reg);
+>> +     if (ret < 0)
+>> +             return ret;
+>> +
+>> +     if (chan->type == IIO_PROXIMITY) {
+>> +             if (val < 0 || val > APDS9960_MAX_PXS_THRES_VAL)
+>> +                     return -EINVAL;
+>> +             ret = regmap_write(data->regmap, reg, val);
+>> +             if (ret < 0)
+>> +                     return ret;
+>> +     } else if (chan->type == IIO_INTENSITY) {
+>> +             if (val < 0 || val > APDS9960_MAX_ALS_THRES_VAL)
+>> +                     return -EINVAL;
+>> +             buf = cpu_to_le16(val);
+>> +             ret = regmap_bulk_write(data->regmap, reg, &buf, 2);
+>> +             if (ret < 0)
+>> +                     return ret;
+>> +     } else
+>> +             return -EINVAL;
+>> +
+>> +     return 0;
+>> +}
+>> +
+>> +static int apds9960_read_event_config(struct iio_dev *indio_dev,
+>> +                                   const struct iio_chan_spec *chan,
+>> +                                   enum iio_event_type type,
+>> +                                   enum iio_event_direction dir)
+>> +{
+>> +     struct apds9960_data *data = iio_priv(indio_dev);
+>> +
+>> +     switch (chan->type) {
+>> +     case IIO_PROXIMITY:
+>> +             return data->pxs_int;
+>> +     case IIO_INTENSITY:
+>> +             return data->als_int;
+>> +     default:
+>> +             return -EINVAL;
+>> +     }
+>> +
+>> +     return 0;
+>> +}
+>> +
+>> +static int apds9960_write_event_config(struct iio_dev *indio_dev,
+>> +                                    const struct iio_chan_spec *chan,
+>> +                                    enum iio_event_type type,
+>> +                                    enum iio_event_direction dir,
+>> +                                    int state)
+>> +{
+>> +     struct apds9960_data *data = iio_priv(indio_dev);
+>> +     int ret;
+>> +
+>> +     state = !!state;
+>> +
+>> +     switch (chan->type) {
+>> +     case IIO_PROXIMITY:
+>> +             if (data->pxs_int == state)
+>> +                     return -EINVAL;
+>> +
+>> +             ret = regmap_field_write(data->reg_int_pxs, state);
+>> +             if (ret)
+>> +                     return ret;
+>> +             data->pxs_int = state;
+>> +             apds9960_set_power_state(data, state);
+>> +             break;
+>> +     case IIO_INTENSITY:
+>> +             if (data->als_int == state)
+>> +                     return -EINVAL;
+>> +
+>> +             ret = regmap_field_write(data->reg_int_als, state);
+>> +             if (ret)
+>> +                     return ret;
+>> +             data->als_int = state;
+>> +             apds9960_set_power_state(data, state);
+>> +             break;
+>> +     default:
+>> +             return -EINVAL;
+>> +     }
+>> +
+>> +     return 0;
+>> +}
+>> +
+>> +static const struct iio_info apds9960_info = {
+>> +     .driver_module = THIS_MODULE,
+>> +     .attrs = &apds9960_attribute_group,
+>> +     .read_raw = apds9960_read_raw,
+>> +     .write_raw = apds9960_write_raw,
+>> +     .read_event_value = apds9960_read_event,
+>> +     .write_event_value = apds9960_write_event,
+>> +     .read_event_config = apds9960_read_event_config,
+>> +     .write_event_config = apds9960_write_event_config,
+>> +
+> Drop this blank line.
+>> +};
+>> +
+>> +static irqreturn_t apds9960_interrupt_handler(int irq, void *private)
+>> +{
+>> +     struct iio_dev *indio_dev = private;
+>> +     struct apds9960_data *data = iio_priv(indio_dev);
+>> +     int ret, status;
+>> +
+>> +     ret = regmap_read(data->regmap, APDS9960_REG_STATUS, &status);
+>> +     if (ret < 0) {
+>> +             dev_err(&data->client->dev, "irq status reg read failed\n");
+>> +             return IRQ_HANDLED;
+>> +     }
+>> +
+>> +     if ((status & APDS9960_REG_STATUS_ALS_INT) && data->als_int) {
+>> +             iio_push_event(indio_dev,
+>> +                            IIO_UNMOD_EVENT_CODE(IIO_INTENSITY, 0,
+>> +                                                 IIO_EV_TYPE_THRESH,
+>> +                                                 IIO_EV_DIR_EITHER),
+>> +                            iio_get_time_ns());
+>> +             regmap_write(data->regmap, APDS9960_REG_CICLEAR, 1);
+>> +     }
+>> +
+>> +     if ((status & APDS9960_REG_STATUS_PS_INT) && data->pxs_int) {
+>> +             iio_push_event(indio_dev,
+>> +                            IIO_UNMOD_EVENT_CODE(IIO_PROXIMITY, 0,
+>> +                                                 IIO_EV_TYPE_THRESH,
+>> +                                                 IIO_EV_DIR_EITHER),
+>> +                            iio_get_time_ns());
+>> +             regmap_write(data->regmap, APDS9960_REG_PICLEAR, 1);
+>> +     }
+>> +
+>> +     if (status & APDS9960_REG_STATUS_GINT)
+> See below for fuller explanation, but just do your buffer filling directly
+> here and kill of the trigger.
+>> +             irq_work_queue(&data->work);
+>> +
+>> +     return IRQ_HANDLED;
+>> +}
+>> +
+>> +static inline int apds9660_fifo_is_empty(struct apds9960_data *data)
+>> +{
+>> +     int cnt;
+>> +     int ret;
+>> +
+>> +     ret = regmap_read(data->regmap, APDS9960_REG_GFLVL, &cnt);
+>> +     if (ret)
+>> +             return ret;
+>> +
+>> +     return cnt;
+>> +}
+>> +
+>> +static void apds9960_iio_trigger_work(struct irq_work *work)
+>> +{
+>> +     struct apds9960_data *data =
+>> +                     container_of(work, struct apds9960_data, work);
+>> +
+>> +     iio_trigger_poll(data->trig);
+> Hmm. I hadn't figured out how this was working before. Sorry about that!
+>
+> You have a single trigger here resulting in a pile of samples being
+> captured below.  The trigger infrastructure is a per sample thing.
+> In cases like this exposing the trigger to other drivers is of no particular
+> use as we can't really grab synchronized data.  Hence we tend to do these
+> without a trigger.
+>
+> The result is this can get a bit simplier. Skip the irq_work and just
+> have the below buffer filling code directly in the irq thread handler.
+>> +}
+
+Okay will do.
+
+>> +
+>> +static irqreturn_t apds9960_trigger_handler(int irq, void *private)
+>> +{
+>> +     struct iio_poll_func *pf = private;
+>> +     struct iio_dev *indio_dev = pf->indio_dev;
+>> +     struct apds9960_data *data = iio_priv(indio_dev);
+>> +     int ret, cnt = 0;
+>> +
+>> +     mutex_lock(&data->lock);
+>> +     data->gesture_mode_running = 1;
+>> +
+>> +     while (cnt-- || (cnt = apds9660_fifo_is_empty(data) > 0)) {
+>> +             ret = regmap_bulk_read(data->regmap, APDS9960_REG_GFIFO_BASE,
+>> +                                   &data->buffer, 4);
+>> +
+>> +             if (ret)
+>> +                     goto err_read;
+>> +
+>> +             iio_push_to_buffers_with_timestamp(indio_dev, data->buffer,
+>> +                                                iio_get_time_ns());
+>> +     }
+>> +
+>> +err_read:
+>> +     data->gesture_mode_running = 0;
+>> +     mutex_unlock(&data->lock);
+>> +     iio_trigger_notify_done(indio_dev->trig);
+>> +
+>> +     return IRQ_HANDLED;
+>> +}
+>> +
+>> +static const struct iio_trigger_ops iio_interrupt_trigger_ops = {
+>> +     .owner = THIS_MODULE,
+>> +};
+>> +
+>> +static int apds9960_set_powermode(struct apds9960_data *data, bool state)
+>> +{
+>> +     return regmap_update_bits(data->regmap, APDS9960_REG_ENABLE, 0, state);
+>> +}
+>> +
+>> +static int apds9960_buffer_preenable(struct iio_dev *indio_dev)
+>> +{
+>> +     struct apds9960_data *data = iio_priv(indio_dev);
+>> +     int ret;
+>> +
+>> +     ret = regmap_field_write(data->reg_int_ges, 1);
+>> +     if (ret)
+>> +             return ret;
+>> +
+>> +     ret = regmap_field_write(data->reg_enable_ges, 1);
+>> +     if (ret)
+>> +             return ret;
+>> +
+>> +     pm_runtime_get_sync(&data->client->dev);
+> Powering up the device can occur in either pre or post enable.
+> Usually done in pre because it can never break polled reads...
+>> +
+>> +     return 0;
+>> +}
+>> +
+>> +static int apds9960_buffer_postdisable(struct iio_dev *indio_dev)
+>> +{
+>> +     struct apds9960_data *data = iio_priv(indio_dev);
+>> +     int ret;
+>> +
+>> +     ret = regmap_field_write(data->reg_enable_ges, 0);
+>> +     if (ret)
+>> +             return ret;
+>> +
+>> +     ret = regmap_field_write(data->reg_int_ges, 0);
+>> +     if (ret)
+>> +             return ret;
+>
+> It actually makes less difference than it used to (after Lars
+> cleaned up some race conditions) but I'd argue
+> that enabling / disabling the unit should be when the mode
+> is set to buffered rather than outside it.
+>
+> i.e. These changes should be in the postenable / predisable callbacks.
+>
+> The original purpose of this dance was to ensure that if the state
+> was queried elsewhere in the driver it would never give an answer
+> that could lead to attempts to access the device when buffered
+> mode was on.
+>
+> If you got this particular arrangement from another driver, let
+> me know as it's more than possible that I for one have been failing
+> to pick up on this sort of usage and a cleanup sweep is needed!
+>> +
+>> +     pm_runtime_put_autosuspend(&data->client->dev);
+>> +
+>> +     return 0;
+>> +}
+>> +
+>> +static const struct iio_buffer_setup_ops apds9960_buffer_setup_ops = {
+>> +     .preenable = apds9960_buffer_preenable,
+>> +     .postenable = iio_triggered_buffer_postenable,
+>> +     .predisable = iio_triggered_buffer_predisable,
+>> +     .postdisable = apds9960_buffer_postdisable,
+>> +};
+>> +
+>> +static int apds9960_regfield_init(struct apds9960_data *data)
+>> +{
+>> +     struct device *dev = &data->client->dev;
+>> +     struct regmap *regmap = data->regmap;
+>> +
+>> +     data->reg_int_als = devm_regmap_field_alloc(dev, regmap,
+>> +                                             apds9960_reg_field_int_als);
+>> +     if (IS_ERR(data->reg_int_als)) {
+>> +             dev_err(dev, "INT ALS reg field init failed\n");
+>> +             return PTR_ERR(data->reg_int_als);
+>> +     }
+>> +
+>> +     data->reg_int_ges = devm_regmap_field_alloc(dev, regmap,
+>> +                                             apds9960_reg_field_int_ges);
+>> +     if (IS_ERR(data->reg_int_ges)) {
+>> +             dev_err(dev, "INT gesture reg field init failed\n");
+>> +             return PTR_ERR(data->reg_int_ges);
+>> +     }
+>> +
+>> +     data->reg_int_pxs = devm_regmap_field_alloc(dev, regmap,
+>> +                                             apds9960_reg_field_int_pxs);
+>> +     if (IS_ERR(data->reg_int_pxs)) {
+>> +             dev_err(dev, "INT pxs reg field init failed\n");
+>> +             return PTR_ERR(data->reg_int_pxs);
+>> +     }
+>> +
+>> +     data->reg_enable_als = devm_regmap_field_alloc(dev, regmap,
+>> +                                             apds9960_reg_field_enable_als);
+>> +     if (IS_ERR(data->reg_enable_als)) {
+>> +             dev_err(dev, "Enable ALS reg field init failed\n");
+>> +             return PTR_ERR(data->reg_enable_als);
+>> +     }
+>> +
+>> +     data->reg_enable_ges = devm_regmap_field_alloc(dev, regmap,
+>> +                                             apds9960_reg_field_enable_ges);
+>> +     if (IS_ERR(data->reg_enable_ges)) {
+>> +             dev_err(dev, "Enable gesture reg field init failed\n");
+>> +             return PTR_ERR(data->reg_enable_ges);
+>> +     }
+>> +
+>> +     data->reg_enable_pxs = devm_regmap_field_alloc(dev, regmap,
+>> +                                             apds9960_reg_field_enable_pxs);
+>> +     if (IS_ERR(data->reg_enable_pxs)) {
+>> +             dev_err(dev, "Enable PXS reg field init failed\n");
+>> +             return PTR_ERR(data->reg_enable_pxs);
+>> +     }
+>> +
+>> +     return 0;
+>> +}
+>> +
+>> +static int apds9960_chip_init(struct apds9960_data *data)
+>> +{
+>> +     int ret;
+>> +
+>> +     /* Default IT for ALS of 28 ms */
+>> +     ret = apds9960_set_it_time(data, 28000);
+>> +     if (ret)
+>> +             return ret;
+>> +
+>> +     /* Ensure gesture interrupt is OFF */
+>> +     ret = regmap_field_write(data->reg_int_ges, 0);
+>> +     if (ret)
+>> +             return ret;
+>> +
+>> +     /* Disable gesture sensor, since polling is useless from user-space */
+>> +     ret = regmap_field_write(data->reg_enable_ges, 0);
+>> +     if (ret)
+>> +             return ret;
+>> +
+>> +     /* Ensure proximity interrupt is OFF */
+>> +     ret = regmap_field_write(data->reg_int_pxs, 0);
+>> +     if (ret)
+>> +             return ret;
+>> +
+>> +     /* Enable proximity sensor for polling */
+>> +     ret = regmap_field_write(data->reg_enable_pxs, 1);
+>> +     if (ret)
+>> +             return ret;
+>> +
+>> +     /* Ensure ALS interrupt is OFF */
+>> +     ret = regmap_field_write(data->reg_int_als, 0);
+>> +     if (ret)
+>> +             return ret;
+>> +
+>> +     /* Enable ALS sensor for polling */
+>> +     ret = regmap_field_write(data->reg_enable_als, 1);
+>> +     if (ret)
+>> +             return ret;
+>> +     /*
+>> +      * When enabled trigger and interrupt after 3 readings
+>> +      * outside threshold for ALS + PXS
+>> +      */
+>> +     ret = regmap_write(data->regmap, APDS9960_REG_PERS,
+>> +                        APDS9960_DEFAULT_PERS);
+>> +     if (ret)
+>> +             return ret;
+>> +
+>> +     /*
+>> +      * Wait for 4 event outside gesture threshold to prevent interrupt
+>> +      * flooding.
+>> +      */
+>> +     ret = regmap_update_bits(data->regmap, APDS9960_REG_GCONF_1,
+>> +                     APDS9960_REG_GCONF_1_GFIFO_THRES_MASK,
+>> +                     BIT(0) << APDS9960_REG_GCONF_1_GFIFO_THRES_MASK_SHIFT);
+>> +     if (ret)
+>> +             return ret;
+>> +
+>> +     /*
+>> +      * Default ENTER and EXIT thresholds for the GESTURE engine.
+>> +      */
+> Single line comment syntax preferred.
+
+Got it .
+>
+>> +     ret = regmap_write(data->regmap, APDS9960_REG_GPENTH,
+>> +                        APDS9960_DEFAULT_GPENTH);
+>> +     if (ret)
+>> +             return ret;
+>> +
+>> +     ret = regmap_write(data->regmap, APDS9960_REG_GEXTH,
+>> +                        APDS9960_DEFAULT_GEXTH);
+>> +     if (ret)
+>> +             return ret;
+>> +
+>> +     ret = apds9960_set_powermode(data, 1);
+>> +     if (ret)
+>> +             return ret;
+>> +
+>> +     return 0;
+>> +}
+>> +
+>> +static int apds9960_probe(struct i2c_client *client,
+>> +                       const struct i2c_device_id *id)
+>> +{
+>> +     struct apds9960_data *data;
+>> +     struct iio_dev *indio_dev;
+>> +     struct iio_trigger *trig;
+>> +     int ret;
+>> +
+>> +     indio_dev = devm_iio_device_alloc(&client->dev, sizeof(*data));
+>> +     if (!indio_dev)
+>> +             return -ENOMEM;
+>> +
+>> +     indio_dev->info = &apds9960_info;
+>> +     indio_dev->name = APDS9960_DRV_NAME;
+>> +     indio_dev->channels = apds9960_channels;
+>> +     indio_dev->num_channels = ARRAY_SIZE(apds9960_channels);
+>> +     indio_dev->available_scan_masks = apds9960_scan_masks;
+>> +     indio_dev->modes = INDIO_DIRECT_MODE;
+>> +
+>> +     trig = devm_iio_trigger_alloc(&client->dev, "%s-gesture%d",
+>> +                                   indio_dev->name, indio_dev->id);
+>> +     if (!trig)
+>> +             return -ENOMEM;
+>> +
+>> +     data = iio_priv(indio_dev);
+>> +     i2c_set_clientdata(client, indio_dev);
+>> +
+>> +     data->regmap = devm_regmap_init_i2c(client, &apds9960_regmap_config);
+>> +     if (IS_ERR(data->regmap)) {
+>> +             dev_err(&client->dev, "regmap initialization failed.\n");
+>> +             return PTR_ERR(data->regmap);
+>> +     }
+>> +
+>> +     data->client = client;
+>> +     data->trig = trig;
+>> +     data->indio_dev = indio_dev;
+>> +     trig->dev.parent = indio_dev->dev.parent;
+>> +     trig->ops = &iio_interrupt_trigger_ops;
+>> +
+>> +     mutex_init(&data->lock);
+>> +     init_irq_work(&data->work, apds9960_iio_trigger_work);
+>> +
+>> +     iio_trigger_set_drvdata(trig, indio_dev);
+>> +
+>> +     ret = pm_runtime_set_active(&client->dev);
+>> +     if (ret)
+>> +             return ret;
+>> +
+>> +     pm_runtime_enable(&client->dev);
+>> +     pm_runtime_set_autosuspend_delay(&client->dev, 5000);
+>> +     pm_runtime_use_autosuspend(&client->dev);
+>> +
+>> +     apds9960_set_power_state(data, true);
+>> +
+>> +     ret = iio_trigger_register(trig);
+>> +     if (ret) {
+>> +             dev_err(&client->dev, "failed to register trigger\n");
+>> +             return ret;
+>> +     }
+>> +
+>> +     ret = iio_triggered_buffer_setup(indio_dev, NULL,
+>> +                                      apds9960_trigger_handler,
+>> +                                      &apds9960_buffer_setup_ops);
+>> +     if (ret)
+>> +             goto error_unreg_trigger;
+>> +
+>> +     ret = apds9960_regfield_init(data);
+>> +     if (ret)
+>> +             goto error_unreg_buffer;
+>> +
+>> +     ret = apds9960_chip_init(data);
+>> +     if (ret)
+>> +             goto error_unreg_buffer;
+>> +
+>> +     if (client->irq < 0) {
+>> +             dev_err(&client->dev, "no valid irq defined\n");
+>> +             ret = -EINVAL;
+>> +             goto error_unreg_buffer;
+>> +     }
+>> +     ret = devm_request_threaded_irq(&client->dev, client->irq,
+>> +                                     NULL, apds9960_interrupt_handler,
+>> +                                     IRQF_TRIGGER_FALLING | IRQF_ONESHOT,
+>> +                                     "apds9960_event",
+>> +                                     indio_dev);
+>> +     if (ret) {
+>> +             dev_err(&client->dev, "request irq (%d) failed\n", client->irq);
+>> +             goto error_unreg_buffer;
+>> +     }
+>> +
+>> +     ret = iio_device_register(indio_dev);
+>> +     if (ret)
+>> +             goto error_unreg_buffer;
+>> +
+>> +     apds9960_set_power_state(data, false);
+>> +
+>> +     return 0;
+>> +
+>> +error_unreg_buffer:
+>> +     iio_triggered_buffer_cleanup(indio_dev);
+>> +
+>> +error_unreg_trigger:
+>> +     iio_trigger_unregister(data->trig);
+>> +     apds9960_set_power_state(data, false);
+>> +
+>> +     return ret;
+>> +}
+>> +
+>> +static int apds9960_remove(struct i2c_client *client)
+>> +{
+>> +     struct iio_dev *indio_dev = i2c_get_clientdata(client);
+>> +     struct apds9960_data *data = iio_priv(indio_dev);
+>> +
+>> +     iio_device_unregister(indio_dev);
+>> +     iio_triggered_buffer_cleanup(indio_dev);
+>> +     iio_trigger_unregister(data->trig);
+>> +
+>> +     pm_runtime_disable(&client->dev);
+>> +     pm_runtime_set_suspended(&client->dev);
+>> +     apds9960_set_powermode(data, 0);
+>> +
+>> +     return 0;
+>> +}
+>> +
+>> +#ifdef CONFIG_PM
+>> +static int apds9960_runtime_suspend(struct device *dev)
+>> +{
+>> +     struct apds9960_data *data =
+>> +                     iio_priv(i2c_get_clientdata(to_i2c_client(dev)));
+>> +
+>> +     return apds9960_set_powermode(data, 0);
+>> +}
+>> +
+>> +static int apds9960_runtime_resume(struct device *dev)
+>> +{
+>> +     struct apds9960_data *data =
+>> +                     iio_priv(i2c_get_clientdata(to_i2c_client(dev)));
+>> +
+>> +     return apds9960_set_powermode(data, 1);
+>> +}
+>> +#endif
+>> +
+>> +static const struct dev_pm_ops apds9960_pm_ops = {
+>> +     SET_RUNTIME_PM_OPS(apds9960_runtime_suspend,
+>> +                        apds9960_runtime_resume, NULL)
+>> +};
+>> +
+>> +static const struct i2c_device_id apds9960_id[] = {
+>> +     { "apds9960", 0 },
+>> +     {}
+>> +};
+>> +MODULE_DEVICE_TABLE(i2c, apds9960_id);
+>> +
+>> +static struct i2c_driver apds9960_driver = {
+>> +     .driver = {
+>> +             .name   = APDS9960_DRV_NAME,
+>> +             .pm     = &apds9960_pm_ops,
+>> +             .owner = THIS_MODULE,
+>> +     },
+>> +     .probe          = apds9960_probe,
+>> +     .remove         = apds9960_remove,
+>> +     .id_table       = apds9960_id,
+>> +};
+>> +module_i2c_driver(apds9960_driver);
+>> +
+>> +MODULE_AUTHOR("Matt Ranostay <mranostay-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>");
+>> +MODULE_DESCRIPTION("ADPS9960 Gesture/RGB/ALS/Proximity sensor");
+>> +MODULE_LICENSE("GPL");
+>>
+>
 --
-Scott
-
-
-> -----Original Message-----
-> From: Dmitry Torokhov [mailto:dmitry.torokhov@gmail.com]
-> Sent: Friday, August 07, 2015 8:25 AM
-> To: ELAN =E5=8A=89=E5=98=89=E9=A7=BF
-> Cc: Dmitry Torokhov; linux-input@vger.kernel.org; Rob Herring; Mark R=
-utland;
-> Benson Leung; Duson Lin; James Chen; devicetree@vger.kernel.org; lkml
-> Subject: Re: [PATCH] Input: elants_i2c - wire up regulator support
->=20
-> Hi Scott,
->=20
-> On Thu, Aug 6, 2015 at 12:03 AM, ELAN =E5=8A=89=E5=98=89=E9=A7=BF <sc=
-ott.liu@emc.com.tw>
-> wrote:
-> > Hi Dmitry
-> >
-> >         I am curious about how reset gpio works and I think the res=
-et
-> > gpio at low level after elants_i2c_power_on(),
-> >         So that the controller won't response anyway, please see be=
-low
-> > my question and correct me if I am wrong.
-> >
-> >> -----Original Message-----
-> >> From: Dmitry Torokhov [mailto:dtor@chromium.org]
-> >> Sent: Thursday, August 06, 2015 2:54 AM
-> >> To: linux-input@vger.kernel.org
-> >> Cc: Rob Herring; Mark Rutland; Benson Leung; Duson Lin; Scott Liu;
-> >> James Chen; devicetree@vger.kernel.org; linux-kernel@vger.kernel.o=
-rg;
-> >> linux-input@vger.kernel.org
-> >> Subject: [PATCH] Input: elants_i2c - wire up regulator support
-> >>
-> >> Elan touchscreen controllers use two power supplies, vcc33 and vcc=
-io,
-> >> and we need to enable them before trying to access the device. On =
-X86
-> >> firmware usually does this, but on ARM it is usually left to the k=
-ernel.
-> >>
-> >> Signed-off-by: Dmitry Torokhov <dtor@chromium.org>
-> >> Reviewed-by: Benson Leung <bleung@chromium.org>
-> >> Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-> >> ---
-> >>  .../devicetree/bindings/input/elants_i2c.txt       |   3 +
-> >>  drivers/input/touchscreen/elants_i2c.c             | 184
-> >> ++++++++++++++++++---
-> >>  2 files changed, 165 insertions(+), 22 deletions(-)
-> >>
-> >> diff --git a/Documentation/devicetree/bindings/input/elants_i2c.tx=
-t
-> >> b/Documentation/devicetree/bindings/input/elants_i2c.txt
-> >> index a765232..8a71038 100644
-> >> --- a/Documentation/devicetree/bindings/input/elants_i2c.txt
-> >> +++ b/Documentation/devicetree/bindings/input/elants_i2c.txt
-> >> @@ -13,6 +13,9 @@ Optional properties:
-> >>  - pinctrl-names: should be "default" (see pinctrl binding [1]).
-> >>  - pinctrl-0: a phandle pointing to the pin settings for the devic=
-e (see
-> >>    pinctrl binding [1]).
-> >> +- reset-gpios: reset gpio the chip is connected to.
-> >> +- vcc33-supply: a phandle for the regulator supplying 3.3V power.
-> >> +- vccio-supply: a phandle for the regulator supplying IO power.
-> >>
-> >>  [0]:
-> > Documentation/devicetree/bindings/interrupt-controller/interrupts.t=
-xt
-> >>  [1]: Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.t=
-xt
-> >> diff --git a/drivers/input/touchscreen/elants_i2c.c
-> >> b/drivers/input/touchscreen/elants_i2c.c
-> >> index 42e43f1..1912265 100644
-> >> --- a/drivers/input/touchscreen/elants_i2c.c
-> >> +++ b/drivers/input/touchscreen/elants_i2c.c
-> >> @@ -38,6 +38,8 @@
-> >>  #include <linux/input/mt.h>
-> >>  #include <linux/acpi.h>
-> >>  #include <linux/of.h>
-> >> +#include <linux/gpio/consumer.h>
-> >> +#include <linux/regulator/consumer.h>
-> >>  #include <asm/unaligned.h>
-> >>
-> >>  /* Device, Driver information */
-> >> @@ -102,6 +104,9 @@
-> >>  /* calibration timeout definition */
-> >>  #define ELAN_CALI_TIMEOUT_MSEC       10000
-> >>
-> >> +#define ELAN_POWERON_DELAY_USEC      500
-> >> +#define ELAN_RESET_DELAY_MSEC        20
-> >> +
-> >>  enum elants_state {
-> >>       ELAN_STATE_NORMAL,
-> >>       ELAN_WAIT_QUEUE_HEADER,
-> >> @@ -118,6 +123,10 @@ struct elants_data {
-> >>       struct i2c_client *client;
-> >>       struct input_dev *input;
-> >>
-> >> +     struct regulator *vcc33;
-> >> +     struct regulator *vccio;
-> >> +     struct gpio_desc *reset_gpio;
-> >> +
-> >>       u16 fw_version;
-> >>       u8 test_version;
-> >>       u8 solution_version;
-> >> @@ -141,6 +150,7 @@ struct elants_data {
-> >>       u8 buf[MAX_PACKET_SIZE];
-> >>
-> >>       bool wake_irq_enabled;
-> >> +     bool keep_power_in_suspend;
-> >>  };
-> >>
-> >>  static int elants_i2c_send(struct i2c_client *client, @@ -1058,6
-> >> +1068,67 @@ static void elants_i2c_remove_sysfs_group(void *_data)
-> >>       sysfs_remove_group(&ts->client->dev.kobj,
-> >> &elants_attribute_group);  }
-> >>
-> >> +static int elants_i2c_power_on(struct elants_data *ts) {
-> >> +     int error;
-> >> +
-> >> +     /*
-> >> +      * If we do not have reset gpio assume platform firmware
-> >> +      * controls regulators and does power them on for us.
-> >> +      */
-> >> +     if (IS_ERR_OR_NULL(ts->reset_gpio))
-> >> +             return 0;
-> >> +
-> >> +     gpiod_set_value_cansleep(ts->reset_gpio, 1);
-> >> +
-> >> +     error =3D regulator_enable(ts->vcc33);
-> >> +     if (error) {
-> >> +             dev_err(&ts->client->dev,
-> >> +                     "failed to enable vcc33 regulator: %d\n",
-> >> +                     error);
-> >> +             goto release_reset_gpio;
-> >> +     }
-> >> +
-> >> +     error =3D regulator_enable(ts->vccio);
-> >> +     if (error) {
-> >> +             dev_err(&ts->client->dev,
-> >> +                     "failed to enable vccio regulator: %d\n",
-> >> +                     error);
-> >> +             regulator_disable(ts->vcc33);
-> >> +             goto release_reset_gpio;
-> >> +     }
-> >> +
-> >> +     /*
-> >> +      * We need to wait a bit after powering on controller before
-> >> +      * we are allowed to release reset GPIO.
-> >> +      */
-> >> +     udelay(ELAN_POWERON_DELAY_USEC);
-> >> +
-> >> +release_reset_gpio:
-> >> +     gpiod_set_value_cansleep(ts->reset_gpio, 0);
-> >> +     if (error)
-> >> +             return error;
-> >> +
-> >> +     msleep(ELAN_RESET_DELAY_MSEC);
-> >> +
-> >> +     return 0;
-> >> +}
-> >> +
-> >> +static void elants_i2c_power_off(void *_data) {
-> >> +     struct elants_data *ts =3D _data;
-> >> +
-> >> +     if (!IS_ERR_OR_NULL(ts->reset_gpio)) {
-> >> +             /*
-> >> +              * Activate reset gpio to prevent leakage through th=
-e
-> >> +              * pin once we shut off power to the controller.
-> >> +              */
-> >> +             gpiod_set_value_cansleep(ts->reset_gpio, 1);
-> >> +             regulator_disable(ts->vccio);
-> >> +             regulator_disable(ts->vcc33);
-> >> +     }
-> >> +}
-> >> +
-> >>  static int elants_i2c_probe(struct i2c_client *client,
-> >>                           const struct i2c_device_id *id)  { @@
-> >> -1072,13 +1143,6 @@ static int elants_i2c_probe(struct i2c_client
-> >> *client,
-> >>               return -ENXIO;
-> >>       }
-> >>
-> >> -     /* Make sure there is something at this address */
-> >> -     if (i2c_smbus_xfer(client->adapter, client->addr, 0,
-> >> -                     I2C_SMBUS_READ, 0, I2C_SMBUS_BYTE,
-> &dummy) < 0) {
-> >> -             dev_err(&client->dev, "nothing at this address\n");
-> >> -             return -ENXIO;
-> >> -     }
-> >> -
-> >>       ts =3D devm_kzalloc(&client->dev, sizeof(struct elants_data)=
-,
-> >> GFP_KERNEL);
-> >>       if (!ts)
-> >>               return -ENOMEM;
-> >> @@ -1089,6 +1153,70 @@ static int elants_i2c_probe(struct i2c_clie=
-nt
-> >> *client,
-> >>       ts->client =3D client;
-> >>       i2c_set_clientdata(client, ts);
-> >>
-> >> +     ts->vcc33 =3D devm_regulator_get(&client->dev, "vcc33");
-> >> +     if (IS_ERR(ts->vcc33)) {
-> >> +             error =3D PTR_ERR(ts->vcc33);
-> >> +             if (error !=3D -EPROBE_DEFER)
-> >> +                     dev_err(&client->dev,
-> >> +                             "Failed to get 'vcc33' regulator:
-> %d\n",
-> >> +                             error);
-> >> +             return error;
-> >> +     }
-> >> +
-> >> +     ts->vccio =3D devm_regulator_get(&client->dev, "vccio");
-> >> +     if (IS_ERR(ts->vccio)) {
-> >> +             error =3D PTR_ERR(ts->vccio);
-> >> +             if (error !=3D -EPROBE_DEFER)
-> >> +                     dev_err(&client->dev,
-> >> +                             "Failed to get 'vccio' regulator:
-> %d\n",
-> >> +                             error);
-> >> +             return error;
-> >> +     }
-> >> +
-> >> +     ts->reset_gpio =3D devm_gpiod_get(&client->dev, "reset");
-> >> +     if (IS_ERR(ts->reset_gpio)) {
-> >> +             error =3D PTR_ERR(ts->reset_gpio);
-> >> +
-> >> +             if (error =3D=3D -EPROBE_DEFER)
-> >> +                     return error;
-> >> +
-> >> +             if (error !=3D -ENOENT && error !=3D -ENOSYS) {
-> >> +                     dev_err(&client->dev,
-> >> +                             "failed to get reset gpio: %d\n",
-> >> +                             error);
-> >> +                     return error;
-> >> +             }
-> >> +
-> >> +             ts->keep_power_in_suspend =3D true;
-> >> +     } else {
-> >> +             error =3D gpiod_direction_output(ts->reset_gpio, 0);
-> >
-> >         Does it mean to reset our controller? (reset gpio pull low)=
-=2E
->=20
-> No, gpiod takes into account the declared polarity of the GPIO signal=
- and we
-> declare the reset GPIOs as "active low" in DTS. So here we configure =
-GPIO for
-> output and make it inactive (which translates to HIGH).
->=20
-> >
-> >> +             if (error) {
-> >> +                     dev_err(&client->dev,
-> >> +                             "failed to configure reset gpio as
-> output:
-> > %d\n",
-> >> +                             error);
-> >> +                     return error;
-> >> +             }
-> >> +     }
-> >> +
-> >> +     error =3D elants_i2c_power_on(ts);
-> >
-> >         If reset gpio is at low, controller won't response initiali=
-ze flow.
-> >         I am curious that does reset pin be at low level after
-> > elants_i2c_power_on(ts)?
->=20
-> The reset gpio will be "inactive", or logical 0. Given that we expect=
- these
-> gpios be declared as GPIO_ACTIVE_LOW this translates to line going
-> HIGH->LOW->HIGH in elants_i2c_power_on() and stay HIGH while the driv=
-er
-> is bound to the device.
->=20
-> Thanks.
->=20
-> --
-> Dmitry
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
