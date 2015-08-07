@@ -1,302 +1,130 @@
-From: Govindraj Raja <govindraj.raja-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH v6 6/7] clocksource: Add Pistachio clocksource-only driver
-Date: Fri, 7 Aug 2015 16:39:31 +0100
-Message-ID: <1438961971-17555-1-git-send-email-govindraj.raja@imgtec.com>
+From: Joachim Eastwood <manabian@gmail.com>
+Subject: Re: [PATCH 2/2] DT: pwm: Add NXP LPC18xx PWM/SCT binding documentation
+Date: Fri, 7 Aug 2015 17:44:01 +0200
+Message-ID: <CAGhQ9VyGYro=PZgj7cu+vP3QCZapL8cxYX-Zxp4+ZS9AtxznFw@mail.gmail.com>
+References: <1437972345-16444-1-git-send-email-ariel@vanguardiasur.com.ar>
+	<1437972345-16444-3-git-send-email-ariel@vanguardiasur.com.ar>
+	<CAGhQ9Vyy+oUAWm0q2+NV0D9RVf5qyED8Tn54-cGzbDc-EZR4yw@mail.gmail.com>
+	<CAAEAJfApE8=cAue-bc5xPD_XAtV8qzur12C4okF-uLJ-__reBA@mail.gmail.com>
+	<CAGhQ9VwudkK=bo5Qk79O7fmdEEm1KEWxUhLO14ucCJ+FbhqQqw@mail.gmail.com>
+	<CAAEAJfA22JA0AWB1FCiDVYEy5BqasDror_Ejpd=b3s14BWpORw@mail.gmail.com>
+	<CAGhQ9VyCNrH_J6rP+L+6OkV-PCgemOzhznuFRg07YxPpLX_nig@mail.gmail.com>
+	<CAAEAJfBjr2wxn-x1RiEj+ezoHA0aWNqCFfpYLM3RzhTrnHDyWw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, James Hartley <James.Hartley-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, Govindraj Raja <Govindraj.Raja-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, Damien Horsley <Damien.Horsley-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, James Hogan <James.Hogan-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, Ezequiel Garcia <ezequiel-30ULvvUtt6G51wMPkGsGjgyUoB5FGQPZ@public.gmane.org>, Ezequiel Garcia <ezequiel.garcia-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, Govindraj Raja <govindraj.raja-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-pwm-owner@vger.kernel.org>
+In-Reply-To: <CAAEAJfBjr2wxn-x1RiEj+ezoHA0aWNqCFfpYLM3RzhTrnHDyWw@mail.gmail.com>
+Sender: linux-pwm-owner@vger.kernel.org
+To: Ezequiel Garcia <ezequiel@vanguardiasur.com.ar>
+Cc: Ariel D'Alessandro <ariel@vanguardiasur.com.ar>, linux-pwm@vger.kernel.org, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Thierry Reding <thierry.reding@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Ezequiel Garcia <ezequiel.garcia-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+On 31 July 2015 at 20:09, Ezequiel Garcia <ezequiel@vanguardiasur.com.ar> wrote:
+> Joachim,
+>
+> On 30 July 2015 at 20:30, Joachim  Eastwood <manabian@gmail.com> wrote:
+>> On 29 July 2015 at 15:47, Ezequiel Garcia <ezequiel@vanguardiasur.com.ar> wrote:
+>>> +devicetree guys
+>>>
+>>> On 28 July 2015 at 20:22, Joachim  Eastwood <manabian@gmail.com> wrote:
+>>>> On 29 July 2015 at 00:45, Ezequiel Garcia <ezequiel@vanguardiasur.com.ar> wrote:
+>>>>> On 28 July 2015 at 19:37, Joachim  Eastwood <manabian@gmail.com> wrote:
+>>>>>> On 27 July 2015 at 06:45, Ariel D'Alessandro <ariel@vanguardiasur.com.ar> wrote:
+>>>>>>> Add the devicetree binding document for NXP LPC18xx PWM/SCT.
+>>>>>>>
+>>>>>>> Signed-off-by: Ariel D'Alessandro <ariel@vanguardiasur.com.ar>
+>>>>>>> ---
+>>>>>>>  .../devicetree/bindings/pwm/lpc1850-pwm.txt          | 20 ++++++++++++++++++++
+>>>>>>>  1 file changed, 20 insertions(+)
+>>>>>>>  create mode 100644 Documentation/devicetree/bindings/pwm/lpc1850-pwm.txt
+>>>>>>>
+>>>>>>> diff --git a/Documentation/devicetree/bindings/pwm/lpc1850-pwm.txt b/Documentation/devicetree/bindings/pwm/lpc1850-pwm.txt
+>>>>>>> new file mode 100644
+>>>>>>> index 0000000..3055429
+>>>>>>> --- /dev/null
+>>>>>>> +++ b/Documentation/devicetree/bindings/pwm/lpc1850-pwm.txt
+>>>>>>> @@ -0,0 +1,20 @@
+>>>>>>> +* NXP LPC18xx Pulse Width Modulator driver
+>>>>>>> +
+>>>>>>> +Required properties:
+>>>>>>> +  - compatible: Should be "nxp,lpc1850-pwm"
+>>>>>>> +  - reg: Should contain physical base address and length of pwm registers.
+>>>>>>> +  - clocks: Must contain an entry for each entry in clock-names.
+>>>>>>> +    See ../clock/clock-bindings.txt for details.
+>>>>>>> +  - clock-names: Must include the following entries.
+>>>>>>> +    - pwm: PWM operating clock.
+>>>>>>> +  - #pwm-cells: Should be 3. See pwm.txt in this directory for the description
+>>>>>>> +    of the cells format.
+>>>>>>> +
+>>>>>>> +Example:
+>>>>>>> +  pwm: pwm@40000000 {
+>>>>>>> +    compatible = "nxp,lpc1850-pwm";
+>>>>>>
+>>>>>> I would prefer "nxp,lpc1850-sct" for a couple of reasons. SCT is the
+>>>>>> name of hardware block as described in the user manual and while PWM
+>>>>>> is the most obvious usage for this block on Linux, the hardware is not
+>>>>>> limited to just doing that. So as a bit of future proofing if someone
+>>>>>> wants to use this block for more than PWM I would prefer SCT.
+>>>>>>
+>>>>>
+>>>>> Shouldn't we use something like "nxp,lpc1850-sct-pwm"?
+>>>>>
+>>>>> Sounds like the word PWM should be in the compatible as it describes
+>>>>> not only the device, but the device used in a certain way.
+>>>>>
+>>>>> Otherwise, how would we use "nxp,lpc1850-sct" to distinguish a PWM from
+>>>>> e.g. a clocksource/clockevents (we can also use SCT for that)?
+>>>>
+>>>> I not sure how to best handle dt bindings with such flexible hardware blocks.
+>>>>
+>>>> But are you suggestion to have multiple drivers for the same hw block?
+>>>> ie.: "nxp,lpc1850-sct-pwm" for PWM and for example
+>>>> "nxp,lpc1850-sct-clocksource" for clocksource and then use/enable one
+>>>> or the other.
+>>>>
+>>>
+>>> Yup, I'm suggesting just that. If the hardware is capable, I can't see
+>>> why we can't have different drivers for it.
+>>
+>> Well, I think it would be nice if we could have one driver per hw
+>> block. But then you need a way to select whether you want to use the
+>> counter in the SCT block for PWM or, for example, clocksource. Sort of
+>> mode selection I guess.
+>>
+>> But then again if someone has some very custom and application
+>> specific usage for the SCT block that maybe better served by a
+>> standalone driver anyway.
+>>
+>
+> Technically speaking, I believe we can use "nxp,lpc1850-sct" to expose
+> both a PWM interface and a clocksource in a single driver. Not too
+> clean, though.
 
-The Pistachio SoC provides four general purpose timers, and allow
-to implement a clocksource driver.
+Well, I don't think that is unclean way of doing it. But it's up to
+the different subsystem maintainers if they want users outside their
+normal directory as we would, for example, end of with a clocksource
+under the pwm dir.
 
-This driver can be used as a replacement for the MIPS GIC and MIPS R4K
-clocksources and sched clocks, which are clocked from the CPU clock.
+> Alternatively, we should be able to have a multifunction device (MFD) to mux
+> the SCT resources to be consumed by different kind of drivers.
 
-Given the general purpose timers are clocked from an independent clock,
-this new clocksource driver will be useful to introduce CPUFreq support
-for Pistachio machines.
+That is an other way of doing it.
 
-Signed-off-by: Ezequiel Garcia <ezequiel.garcia-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
-Signed-off-by: Govindraj Raja <govindraj.raja-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
----
+But you would still need to a way to chose between either PWM or
+clocksource since the SCT has a limited number of counters. (SCT can
+be configured to have either two 16-bit timers or one 32-bit)
 
-changes from v5
-----------------
-Fixes comments from Daniel as dicussed in below thread:
-http://patchwork.linux-mips.org/patch/10886/
+> Given there's no counter API to feed SCT, and given we use the other
+> timer hw block to feed clocksource and clockevents for the LPC18/43xx,
+> I think currently the simplest choice is to have "nxp,lpc1850-sct-pwm"
+> describing this PWM SCT driver.
+>
+> If we later want to change completely the PWM SCT driver, we can do
+> that without any bindings change.
 
-changes from v4
-----------------
-Fixes comments from Daniel as dicussed in below thread:
-http://patchwork.linux-mips.org/patch/10784/
+Agreed. Let's keep it simple now and deal with it again if another
+user for the SCT block turns up.
 
 
- drivers/clocksource/Kconfig          |   4 +
- drivers/clocksource/Makefile         |   1 +
- drivers/clocksource/time-pistachio.c | 217 +++++++++++++++++++++++++++++++++++
- 3 files changed, 222 insertions(+)
- create mode 100644 drivers/clocksource/time-pistachio.c
-
-diff --git a/drivers/clocksource/Kconfig b/drivers/clocksource/Kconfig
-index 4e57730..74e002e 100644
---- a/drivers/clocksource/Kconfig
-+++ b/drivers/clocksource/Kconfig
-@@ -111,6 +111,10 @@ config CLKSRC_LPC32XX
- 	select CLKSRC_MMIO
- 	select CLKSRC_OF
- 
-+config CLKSRC_PISTACHIO
-+	bool
-+	select CLKSRC_OF
-+
- config CLKSRC_STM32
- 	bool "Clocksource for STM32 SoCs" if !ARCH_STM32
- 	depends on OF && ARM && (ARCH_STM32 || COMPILE_TEST)
-diff --git a/drivers/clocksource/Makefile b/drivers/clocksource/Makefile
-index f228354..066337e 100644
---- a/drivers/clocksource/Makefile
-+++ b/drivers/clocksource/Makefile
-@@ -44,6 +44,7 @@ obj-$(CONFIG_FSL_FTM_TIMER)	+= fsl_ftm_timer.o
- obj-$(CONFIG_VF_PIT_TIMER)	+= vf_pit_timer.o
- obj-$(CONFIG_CLKSRC_QCOM)	+= qcom-timer.o
- obj-$(CONFIG_MTK_TIMER)		+= mtk_timer.o
-+obj-$(CONFIG_CLKSRC_PISTACHIO)	+= time-pistachio.o
- 
- obj-$(CONFIG_ARM_ARCH_TIMER)		+= arm_arch_timer.o
- obj-$(CONFIG_ARM_GLOBAL_TIMER)		+= arm_global_timer.o
-diff --git a/drivers/clocksource/time-pistachio.c b/drivers/clocksource/time-pistachio.c
-new file mode 100644
-index 0000000..18d4266
---- /dev/null
-+++ b/drivers/clocksource/time-pistachio.c
-@@ -0,0 +1,217 @@
-+/*
-+ * Pistachio clocksource based on general-purpose timers
-+ *
-+ * Copyright (C) 2015 Imagination Technologies
-+ *
-+ * This file is subject to the terms and conditions of the GNU General Public
-+ * License. See the file "COPYING" in the main directory of this archive
-+ * for more details.
-+ */
-+
-+#define pr_fmt(fmt) "%s: " fmt, __func__
-+
-+#include <linux/clk.h>
-+#include <linux/clocksource.h>
-+#include <linux/clockchips.h>
-+#include <linux/delay.h>
-+#include <linux/err.h>
-+#include <linux/init.h>
-+#include <linux/spinlock.h>
-+#include <linux/mfd/syscon.h>
-+#include <linux/of.h>
-+#include <linux/of_address.h>
-+#include <linux/platform_device.h>
-+#include <linux/regmap.h>
-+#include <linux/sched_clock.h>
-+#include <linux/time.h>
-+
-+/* Top level reg */
-+#define CR_TIMER_CTRL_CFG		0x00
-+#define TIMER_ME_GLOBAL			BIT(0)
-+#define CR_TIMER_REV			0x10
-+
-+/* Timer specific registers */
-+#define TIMER_CFG			0x20
-+#define TIMER_ME_LOCAL			BIT(0)
-+#define TIMER_RELOAD_VALUE		0x24
-+#define TIMER_CURRENT_VALUE		0x28
-+#define TIMER_CURRENT_OVERFLOW_VALUE	0x2C
-+#define TIMER_IRQ_STATUS		0x30
-+#define TIMER_IRQ_CLEAR			0x34
-+#define TIMER_IRQ_MASK			0x38
-+
-+#define PERIP_TIMER_CONTROL		0x90
-+
-+/* Timer specific configuration Values */
-+#define RELOAD_VALUE			0xffffffff
-+
-+struct pistachio_clocksource {
-+	void __iomem *base;
-+	raw_spinlock_t lock;
-+	struct clocksource cs;
-+};
-+
-+static struct pistachio_clocksource pcs_gpt;
-+
-+#define to_pistachio_clocksource(cs)	\
-+	container_of(cs, struct pistachio_clocksource, cs)
-+
-+static inline u32 gpt_readl(void __iomem *base, u32 offset, u32 gpt_id)
-+{
-+	return readl(base + 0x20 * gpt_id + offset);
-+}
-+
-+static inline void gpt_writel(void __iomem *base, u32 value, u32 offset,
-+		u32 gpt_id)
-+{
-+	writel(value, base + 0x20 * gpt_id + offset);
-+}
-+
-+static cycle_t pistachio_clocksource_read_cycles(struct clocksource *cs)
-+{
-+	struct pistachio_clocksource *pcs = to_pistachio_clocksource(cs);
-+	u32 counter, overflw;
-+	unsigned long flags;
-+
-+	/*
-+	 * The counter value is only refreshed after the overflow value is read.
-+	 * And they must be read in strict order, hence raw spin lock added.
-+	 */
-+
-+	raw_spin_lock_irqsave(&pcs->lock, flags);
-+	overflw = gpt_readl(pcs->base, TIMER_CURRENT_OVERFLOW_VALUE, 0);
-+	counter = gpt_readl(pcs->base, TIMER_CURRENT_VALUE, 0);
-+	raw_spin_unlock_irqrestore(&pcs->lock, flags);
-+
-+	return ~(cycle_t)counter;
-+}
-+
-+static u64 notrace pistachio_read_sched_clock(void)
-+{
-+	return pistachio_clocksource_read_cycles(&pcs_gpt.cs);
-+}
-+
-+static void pistachio_clksrc_set_mode(struct clocksource *cs, int timeridx,
-+			int enable)
-+{
-+	struct pistachio_clocksource *pcs = to_pistachio_clocksource(cs);
-+	u32 val;
-+
-+	val = gpt_readl(pcs->base, TIMER_CFG, timeridx);
-+	if (enable)
-+		val |= TIMER_ME_LOCAL;
-+	else
-+		val &= ~TIMER_ME_LOCAL;
-+
-+	gpt_writel(pcs->base, val, TIMER_CFG, timeridx);
-+}
-+
-+static void pistachio_clksrc_enable(struct clocksource *cs, int timeridx)
-+{
-+	struct pistachio_clocksource *pcs = to_pistachio_clocksource(cs);
-+
-+	/* Disable GPT local before loading reload value */
-+	pistachio_clksrc_set_mode(cs, timeridx, false);
-+	gpt_writel(pcs->base, RELOAD_VALUE, TIMER_RELOAD_VALUE, timeridx);
-+	pistachio_clksrc_set_mode(cs, timeridx, true);
-+}
-+
-+static void pistachio_clksrc_disable(struct clocksource *cs, int timeridx)
-+{
-+	/* Disable GPT local */
-+	pistachio_clksrc_set_mode(cs, timeridx, false);
-+}
-+
-+static int pistachio_clocksource_enable(struct clocksource *cs)
-+{
-+	pistachio_clksrc_enable(cs, 0);
-+	return 0;
-+}
-+
-+static void pistachio_clocksource_disable(struct clocksource *cs)
-+{
-+	pistachio_clksrc_disable(cs, 0);
-+}
-+
-+/* Desirable clock source for pistachio platform */
-+static struct pistachio_clocksource pcs_gpt = {
-+	.cs =	{
-+		.name		= "gptimer",
-+		.rating		= 300,
-+		.enable		= pistachio_clocksource_enable,
-+		.disable	= pistachio_clocksource_disable,
-+		.read		= pistachio_clocksource_read_cycles,
-+		.mask		= CLOCKSOURCE_MASK(32),
-+		.flags		= CLOCK_SOURCE_IS_CONTINUOUS |
-+				  CLOCK_SOURCE_SUSPEND_NONSTOP,
-+		},
-+};
-+
-+static void __init pistachio_clksrc_of_init(struct device_node *node)
-+{
-+	struct clk *sys_clk, *fast_clk;
-+	struct regmap *periph_regs;
-+	unsigned long rate;
-+	int ret;
-+
-+	pcs_gpt.base = of_iomap(node, 0);
-+	if (!pcs_gpt.base) {
-+		pr_err("cannot iomap\n");
-+		return;
-+	}
-+
-+	periph_regs = syscon_regmap_lookup_by_phandle(node, "img,cr-periph");
-+	if (IS_ERR(periph_regs)) {
-+		pr_err("cannot get peripheral regmap (%lu)\n",
-+		       PTR_ERR(periph_regs));
-+		return;
-+	}
-+
-+	/* Switch to using the fast counter clock */
-+	ret = regmap_update_bits(periph_regs, PERIP_TIMER_CONTROL,
-+				 0xf, 0x0);
-+	if (ret)
-+		return;
-+
-+	sys_clk = of_clk_get_by_name(node, "sys");
-+	if (IS_ERR(sys_clk)) {
-+		pr_err("clock get failed (%lu)\n", PTR_ERR(sys_clk));
-+		return;
-+	}
-+
-+	fast_clk = of_clk_get_by_name(node, "fast");
-+	if (IS_ERR(fast_clk)) {
-+		pr_err("clock get failed (%lu)\n", PTR_ERR(fast_clk));
-+		return;
-+	}
-+
-+	ret = clk_prepare_enable(sys_clk);
-+	if (ret < 0) {
-+		pr_err("failed to enable clock (%d)\n", ret);
-+		return;
-+	}
-+
-+	ret = clk_prepare_enable(fast_clk);
-+	if (ret < 0) {
-+		pr_err("failed to enable clock (%d)\n", ret);
-+		clk_disable_unprepare(sys_clk);
-+		return;
-+	}
-+
-+	rate = clk_get_rate(fast_clk);
-+
-+	/* Disable irq's for clocksource usage */
-+	gpt_writel(&pcs_gpt.base, 0, TIMER_IRQ_MASK, 0);
-+	gpt_writel(&pcs_gpt.base, 0, TIMER_IRQ_MASK, 1);
-+	gpt_writel(&pcs_gpt.base, 0, TIMER_IRQ_MASK, 2);
-+	gpt_writel(&pcs_gpt.base, 0, TIMER_IRQ_MASK, 3);
-+
-+	/* Enable timer block */
-+	writel(TIMER_ME_GLOBAL, pcs_gpt.base);
-+
-+	raw_spin_lock_init(&pcs_gpt.lock);
-+	sched_clock_register(pistachio_read_sched_clock, 32, rate);
-+	clocksource_register_hz(&pcs_gpt.cs, rate);
-+}
-+CLOCKSOURCE_OF_DECLARE(pistachio_gptimer, "img,pistachio-gptimer",
-+		       pistachio_clksrc_of_init);
--- 
-1.9.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+regards,
+Joachim Eastwood
