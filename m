@@ -1,108 +1,120 @@
-From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH 2/2] net, thunder, bgx: Add support for ACPI binding.
-Date: Fri, 7 Aug 2015 18:53:53 +0100
-Message-ID: <20150807175353.GA31122@leverpostej>
-References: <1438907590-29649-1-git-send-email-ddaney.cavm@gmail.com>
- <1438907590-29649-3-git-send-email-ddaney.cavm@gmail.com>
- <20150807140106.GE7646@leverpostej>
- <55C4ECC6.7050908@caviumnetworks.com>
+From: Joachim Eastwood <manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [RFC PATCH v4 1/9] mmc: dw_mmc: Add external dma interface support
+Date: Fri, 7 Aug 2015 23:32:05 +0200
+Message-ID: <CAGhQ9VxUYvgGD=K3J3cQ0CNpCC-RfGE9cxhBHnTeAU2CmWkiKA@mail.gmail.com>
+References: <1438843469-23807-1-git-send-email-shawn.lin@rock-chips.com>
+	<1438843491-23853-1-git-send-email-shawn.lin@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-acpi-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <55C4ECC6.7050908@caviumnetworks.com>
-Sender: linux-acpi-owner@vger.kernel.org
-To: David Daney <ddaney@caviumnetworks.com>
-Cc: David Daney <ddaney.cavm@gmail.com>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "rob.herring@linaro.org" <rob.herring@linaro.org>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, "David S. Miller" <davem@davemloft.net>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-mips@linux-mips.org" <linux-mips@linux-mips.org>, David Daney <david.daney@cavium.com>, Tomasz Nowicki <tomasz.nowicki@linaro.org>, Robert Richter <rrichter@cavium.com>, "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>, Sunil Goutham <sgoutham@cavium.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1438843491-23853-1-git-send-email-shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Cc: jh80.chung-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Vineet.Gupta1-HKixBCOQz3hWk0Htik3J/w@public.gmane.org, Wei Xu <xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Alexey Brodkin <abrodkin-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, Kukjin Kim <kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Jun Nie <jun.nie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, Govindraj Raja <govindraj.raja-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-[Correcting the devicetree list address, which I typo'd in my original
-reply]
+Hi Shawn,
 
-[resending to _really_ correct the address, apologies for the spam]
+On 6 August 2015 at 08:44, Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org> wrote:
+> DesignWare MMC Controller can supports two types of DMA
+> mode: external dma and internal dma. We get a RK312x platform
+> integrated dw_mmc and ARM pl330 dma controller. This patch add
+> edmac ops to support these platforms. I've tested it on RK312x
+> platform with edmac mode and RK3288 platform with idmac mode.
+>
+> Signed-off-by: Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 
-> >> +static const char * const addr_propnames[] = {
-> >> +	"mac-address",
-> >> +	"local-mac-address",
-> >> +	"address",
-> >> +};
-> >
-> > If these are going to be generally necessary, then we should get them
-> > adopted as standardised _DSD properties (ideally just one of them).
-> 
-> As far as I can tell, and please correct me if I am wrong, ACPI-6.0 
-> doesn't contemplate MAC addresses.
-> 
-> Today we are using "mac-address", which is an Integer containing the MAC 
-> address in its lowest order 48 bits in Little-Endian byte order.
-> 
-> The hardware and ACPI tables are here today, and we would like to 
-> support it.  If some future ACPI specification specifies a standard way 
-> to do this, we will probably adapt the code to do this in a standard manner.
-> 
-> 
-> >
-> > [...]
-> >
-> >> +static acpi_status bgx_acpi_register_phy(acpi_handle handle,
-> >> +					 u32 lvl, void *context, void **rv)
-> >> +{
-> >> +	struct acpi_reference_args args;
-> >> +	const union acpi_object *prop;
-> >> +	struct bgx *bgx = context;
-> >> +	struct acpi_device *adev;
-> >> +	struct device *phy_dev;
-> >> +	u32 phy_id;
-> >> +
-> >> +	if (acpi_bus_get_device(handle, &adev))
-> >> +		goto out;
-> >> +
-> >> +	SET_NETDEV_DEV(&bgx->lmac[bgx->lmac_count].netdev, &bgx->pdev->dev);
-> >> +
-> >> +	acpi_get_mac_address(adev, bgx->lmac[bgx->lmac_count].mac);
-> >> +
-> >> +	bgx->lmac[bgx->lmac_count].lmacid = bgx->lmac_count;
-> >> +
-> >> +	if (acpi_dev_get_property_reference(adev, "phy-handle", 0, &args))
-> >> +		goto out;
-> >> +
-> >> +	if (acpi_dev_get_property(args.adev, "phy-channel", ACPI_TYPE_INTEGER, &prop))
-> >> +		goto out;
-> >
-> > Likewise for any inter-device properties, so that we can actually handle
-> > them in a generic fashion, and avoid / learn from the mistakes we've
-> > already handled with DT.
-> 
-> This is the fallacy of the ACPI is superior to DT argument.  The 
-> specification of PHY topology and MAC addresses is well standardized in 
-> DT, there is no question about what the proper way to specify it is. 
-> Under ACPI, it is the Wild West, there is no specification, so each 
-> system design is forced to invent something, and everybody comes up with 
-> an incompatible implementation.
+> @@ -2256,26 +2373,30 @@ static irqreturn_t dw_mci_interrupt(int irq, void *dev_id)
+>
+>         }
+>
+> -#ifdef CONFIG_MMC_DW_IDMAC
+> -       /* Handle DMA interrupts */
+> -       if (host->dma_64bit_address == 1) {
+> -               pending = mci_readl(host, IDSTS64);
+> -               if (pending & (SDMMC_IDMAC_INT_TI | SDMMC_IDMAC_INT_RI)) {
+> -                       mci_writel(host, IDSTS64, SDMMC_IDMAC_INT_TI |
+> -                                                       SDMMC_IDMAC_INT_RI);
+> -                       mci_writel(host, IDSTS64, SDMMC_IDMAC_INT_NI);
+> -                       host->dma_ops->complete(host);
+> -               }
+> -       } else {
+> -               pending = mci_readl(host, IDSTS);
+> -               if (pending & (SDMMC_IDMAC_INT_TI | SDMMC_IDMAC_INT_RI)) {
+> -                       mci_writel(host, IDSTS, SDMMC_IDMAC_INT_TI |
+> -                                                       SDMMC_IDMAC_INT_RI);
+> -                       mci_writel(host, IDSTS, SDMMC_IDMAC_INT_NI);
+> -                       host->dma_ops->complete(host);
+> +       if (host->use_dma == TRANS_MODE_IDMAC) {
 
-Indeed.
+Doing:
+if (host->use_dma != TRANS_MODE_IDMAC)
+    return IRQ_HANDLED;
 
-If ACPI is going to handle it, it should handle it properly. I really
-don't see the point in bodging properties together in a less standard
-manner than DT, especially for inter-device relationships.
+Could save you the extra level of identation you add below.
 
-Doing so is painful for _everyone_, and it's extremely unlikely that
-other ACPI-aware OSs will actually support these custom descriptions,
-making this Linux-specific, and breaking the rationale for using ACPI in
-the first place -- a standard that says "just do non-standard stuff" is
-not a usable standard.
+> +               /* Handle DMA interrupts */
+> +               if (host->dma_64bit_address == 1) {
+> +                       pending = mci_readl(host, IDSTS64);
+> +                       if (pending & (SDMMC_IDMAC_INT_TI |
+> +                                      SDMMC_IDMAC_INT_RI)) {
+> +                               mci_writel(host, IDSTS64,
+> +                                          SDMMC_IDMAC_INT_TI |
+> +                                          SDMMC_IDMAC_INT_RI);
+> +                               mci_writel(host, IDSTS64, SDMMC_IDMAC_INT_NI);
+> +                               host->dma_ops->complete((void *)host);
+> +                       }
+> +               } else {
+> +                       pending = mci_readl(host, IDSTS);
+> +                       if (pending & (SDMMC_IDMAC_INT_TI |
+> +                                      SDMMC_IDMAC_INT_RI)) {
+> +                               mci_writel(host, IDSTS,
+> +                                          SDMMC_IDMAC_INT_TI |
+> +                                          SDMMC_IDMAC_INT_RI);
+> +                               mci_writel(host, IDSTS, SDMMC_IDMAC_INT_NI);
+> +                               host->dma_ops->complete((void *)host);
+> +                       }
+>                 }
+>         }
+> -#endif
+>
+>         return IRQ_HANDLED;
+>  }
 
-For intra-device properties, we should standardise what we can, but
-vendor-specific stuff is ok -- this can be self-contained within a
-driver.
 
-For inter-device relationships ACPI _must_ gain a better model of
-componentised devices. It's simply unworkable otherwise, and as you
-point out it's fallacious to say that because ACPI is being used that
-something is magically industry standard, portable, etc.
+> @@ -2437,6 +2567,21 @@ static void dw_mci_cleanup_slot(struct dw_mci_slot *slot, unsigned int id)
+>  static void dw_mci_init_dma(struct dw_mci *host)
+>  {
+>         int addr_config;
+> +       int trans_mode;
+> +       struct device *dev = host->dev;
+> +       struct device_node *np = dev->of_node;
+> +
+> +       /* Check tansfer mode */
+> +       trans_mode = (mci_readl(host, HCON) >> 16) & 0x3;
 
-This is not your problem in particular; the entire handling of _DSD so
-far is a joke IMO.
+I think it would be nice if you could add some defines for 16 and 0x03
+or add a macro like SDMMC_GET_FCNT() that is in dw_mmc.h.
 
-Thanks,
-Mark.
+> +       if (trans_mode == 0) {
+> +               trans_mode = TRANS_MODE_IDMAC;
+> +       } else if (trans_mode == 1 || trans_mode == 2) {
+> +               trans_mode = TRANS_MODE_EDMAC;
+> +       } else {
+> +               trans_mode = TRANS_MODE_PIO;
+> +               goto no_dma;
+> +       }
+> +
+>         /* Check ADDR_CONFIG bit in HCON to find IDMAC address bus width */
+>         addr_config = (mci_readl(host, HCON) >> 27) & 0x01;
+
+I'll try to get this patch tested on my lpc18xx platform soon.
+btw, the HCON reg on lpc18xx reads as 0x00e42cc1 (address 0x40004070).
+
+
+regard,
+Joachim Eastwood
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
