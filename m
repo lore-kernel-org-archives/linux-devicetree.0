@@ -1,83 +1,52 @@
-From: =?UTF-8?B?Q2h1bmctWWloIFdhbmcgKOeOi+W0h+aHvyk=?=
-	<cywang@chromium.org>
-Subject: [PATCH] thermal: of: Introduce governor selection in dts
-Date: Fri, 7 Aug 2015 15:09:39 +0800
-Message-ID: <CAM2ehZYXsqCoS9ygXNfPHxt9-b5cFxH_ovrgjvM-BfDO6REcUg@mail.gmail.com>
+From: Tomeu Vizoso <tomeu.vizoso-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
+Subject: Re: [PATCH v3 01/18] platform: delay OF device-driver matches until late_initcall
+Date: Fri, 7 Aug 2015 09:11:23 +0200
+Message-ID: <CAAObsKBapFqzr+4YEXJfcJWMd+tkaBqYbGiFTntHStAP=+P-_Q@mail.gmail.com>
+References: <1438870315-18689-1-git-send-email-tomeu.vizoso@collabora.com>
+ <1438870315-18689-2-git-send-email-tomeu.vizoso@collabora.com> <CAL_Jsq+GLMZe-f6qEi=7i1YrrWc6k99RpGkOyCd5KkYDiyt0QA@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-pm-owner@vger.kernel.org>
-Sender: linux-pm-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org
-Cc: Zhang Rui <rui.zhang@intel.com>, Eduardo Valentin <edubezval@gmail.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, Chung-yih Wang <cywang@chromium.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAL_Jsq+GLMZe-f6qEi=7i1YrrWc6k99RpGkOyCd5KkYDiyt0QA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Javier Martinez Canillas <javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "Rafael J. Wysocki" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-acpi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-acpi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-As there could be more thermal zones on a system and
-more variety in thermal governors provided in kernel,
-this patch provides flexibility of governor selection
-for a thermal zone declared in device tree.
+On 6 August 2015 at 22:19, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> On Thu, Aug 6, 2015 at 9:11 AM, Tomeu Vizoso <tomeu.vizoso-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org> wrote:
+>> Delay matches of platform devices with OF nodes until late_initcall,
+>> when we are sure that all built-in drivers have been registered already.
+>> This is needed to prevent deferred probes because of some drivers not
+>> having registered yet.
+>>
+>> The reason why only platform devices are delayed is that some other
+>> devices are expected to be probed earlier than late_initcall, for
+>> example, the system PNP driver needs to probe its devices in
+>> fs_initcall.
+>>
+>> Additionally, only platform devices with OF nodes are delayed because
+>> some machines may depend on oter platform devices being registered at
+>> specific times.
+>
+> How do we know that these probes occur before the unused clocks and
+> regulators are turned off? Just getting lucky (as is deferred probe)?
+> Can we do this one level earlier so we have a level left to do things
+> after probe.
 
-Change-Id: Ie4a75d762709cbbe9f1806dae325d13f71982e78
-Signed-off-by: Chung-yih Wang <cywang@chromium.org>
----
- Documentation/devicetree/bindings/thermal/thermal.txt |  9 +++++++++
- drivers/thermal/of-thermal.c                          | 10 ++++++++++
- 2 files changed, 19 insertions(+)
+Those are already late_initcall_sync so I guess we're fine.
 
-diff --git a/Documentation/devicetree/bindings/thermal/thermal.txt
-b/Documentation/devicetree/bindings/thermal/thermal.txt
-index 8a49362..30a5d41 100644
---- a/Documentation/devicetree/bindings/thermal/thermal.txt
-+++ b/Documentation/devicetree/bindings/thermal/thermal.txt
-@@ -174,6 +174,13 @@ Optional property:
-                        2000mW, while on a 10'' tablet is around
-                        4500mW.
+Thanks,
 
-+- thermal-governor-name:       The name of governor used to control the
-+                               thermal zone instead of the default one
-+                               specified in kernel config. For reference, if
-+                               default governor is step_wise, one could
-+                               select power_allocator for cpu_thermal zone
-+                               in dts.
-+
- Note: The delay properties are bound to the maximum dT/dt (temperature
- derivative over time) in two situations for a thermal zone:
- (i)  - when passive cooling is activated (polling-delay-passive); and
-@@ -555,6 +562,8 @@ thermal-zones {
+Tomeu
 
-                sustainable-power = <2500>;
-
-+               thermal-governor-name = "power_allocator";
-+
-                trips {
-                        /* Trips are based on resulting linear equation */
-                        cpu_trip: cpu-trip {
-diff --git a/drivers/thermal/of-thermal.c b/drivers/thermal/of-thermal.c
-index b295b2b..45570ac 100644
---- a/drivers/thermal/of-thermal.c
-+++ b/drivers/thermal/of-thermal.c
-@@ -882,6 +882,7 @@ int __init of_parse_thermal_zones(void)
-        }
-
-        for_each_child_of_node(np, child) {
-+               const char *governor_name;
-                struct thermal_zone_device *zone;
-                struct thermal_zone_params *tzp;
-                int i, mask = 0;
-@@ -909,6 +910,15 @@ int __init of_parse_thermal_zones(void)
-                        goto exit_free;
-                }
-
-+               /* Select a preferred governor if declared */
-+               if (!of_property_read_string(child,
-+                                            "thermal-governor-name",
-+                                            &governor_name)) {
-+                       strncpy(tzp->governor_name,
-+                               governor_name,
-+                               sizeof(tzp->governor_name) - 1);
-+               }
-+
-                /* No hwmon because there might be hwmon drivers registering */
-                tzp->no_hwmon = true;
-
+> Rob
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-kernel" in
+> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> Please read the FAQ at  http://www.tux.org/lkml/
 --
-2.1.2
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
