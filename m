@@ -1,8 +1,8 @@
 From: Zhou Wang <wangzhou1@hisilicon.com>
 Subject: Re: [PATCH v6 0/6] PCI: hisi: Add PCIe host support for HiSilicon
  SoC Hip05
-Date: Fri, 7 Aug 2015 14:01:19 +0800
-Message-ID: <55C449AF.3030303@hisilicon.com>
+Date: Fri, 7 Aug 2015 14:02:53 +0800
+Message-ID: <55C44A0D.4060809@hisilicon.com>
 References: <1438848559-232109-1-git-send-email-wangzhou1@hisilicon.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="ISO-8859-1"
@@ -11,7 +11,7 @@ Return-path: <linux-pci-owner@vger.kernel.org>
 In-Reply-To: <1438848559-232109-1-git-send-email-wangzhou1@hisilicon.com>
 Sender: linux-pci-owner@vger.kernel.org
 To: Zhou Wang <wangzhou1@hisilicon.com>
-Cc: Bjorn Helgaas <bhelgaas@google.com>, Jingoo Han <jg1.han@samsung.com>, Pratyush Anand <pratyush.anand@gmail.com>, Arnd Bergmann <arnd@arndb.de>, linux@arm.linux.org.uk, thomas.petazzoni@free-electrons.com, gabriele.paoloni@huawei.com, lorenzo.pieralisi@arm.com, James Morse <james.morse@arm.com>, Liviu.Dudau@arm.com, Jason Cooper <jason@lakedaemon.net>, robh@kernel.org, linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, yuanzhichang@hisilicon.com, zhudacai@hisilicon.com, zhangjukuo@huawei.com, qiuzhenfa@hisilicon.com, liudongdong3@huawei.com, qiujiang@huawei.com, kangfenglong@huawei.com, xuwei5@hisilicon.com, liguozhu@hisilicon.com
+Cc: Bjorn Helgaas <bhelgaas@google.com>, Jingoo Han <jg1.han@samsung.com>, Pratyush Anand <pratyush.anand@gmail.com>, Arnd Bergmann <arnd@arndb.de>, linux@arm.linux.org.uk, thomas.petazzoni@free-electrons.com, gabriele.paoloni@huawei.com, lorenzo.pieralisi@arm.com, James Morse <james.morse@arm.com>, Liviu.Dudau@arm.com, Jason Cooper <jason@lakedaemon.net>, robh@kernel.org, linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, yuanzhichang@hisilicon.com, zhudacai@hisilicon.com, zhangjukuo@huawei.com, qiuzhenfa@hisilicon.com, liudongdong3@huawei.com, qiujiang@huawei.com, kangfenglong@huawei.com, xuwei5@hisilicon.com, liguozhu@hisilicon.com, Jingoo Han <jingoohan1@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
 [+cc jingoohan1@gmail.com]
