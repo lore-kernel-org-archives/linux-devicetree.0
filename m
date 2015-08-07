@@ -1,120 +1,209 @@
-From: Govindraj Raja <Govindraj.Raja-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
-Subject: RE: [PATCH v5 6/7] clocksource: Add Pistachio clocksource-only
- driver
-Date: Fri, 7 Aug 2015 15:14:38 +0000
-Message-ID: <4BF5E8683E87FC4DA89822A5A3EB60CB6F25D2@hhmail02.hh.imgtec.org>
-References: <1438860138-31718-1-git-send-email-govindraj.raja@imgtec.com>
- <55C48841.3050902@linaro.org>
+From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Subject: [PATCH 1/3] ARM: dts: sun5i: Add support for the
+ Auxtek-T003 HDMI stick
+Date: Fri,  7 Aug 2015 17:22:33 +0200
+Message-ID: <1438960955-6551-1-git-send-email-hdegoede@redhat.com>
+Reply-To: hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <55C48841.3050902-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Content-Language: en-AU
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org" <linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Cc: Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, James Hartley <James.Hartley-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, Damien Horsley <Damien.Horsley-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, James Hogan <James.Hogan-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, Ezequiel Garcia <ezequiel-30ULvvUtt6G51wMPkGsGjgyUoB5FGQPZ@public.gmane.org>, Ezequiel Garcia <Ezequiel.Garcia-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sunxi+bncBDRZXY4CYYORBP42SOXAKGQECKI5FVI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <http://groups.google.com/group/linux-sunxi/subscribe>
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-SGkgRGFuaWVsLA0KDQo+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+IEZyb206IERhbmll
-bCBMZXpjYW5vIFttYWlsdG86ZGFuaWVsLmxlemNhbm9AbGluYXJvLm9yZ10NCj4gU2VudDogMDcg
-QXVndXN0IDIwMTUgMTE6MjggQU0NCj4gVG86IEdvdmluZHJhaiBSYWphOyBsaW51eC1rZXJuZWxA
-dmdlci5rZXJuZWwub3JnOyBsaW51eC1taXBzQGxpbnV4LW1pcHMub3JnOw0KPiBkZXZpY2V0cmVl
-QHZnZXIua2VybmVsLm9yZw0KPiBDYzogVGhvbWFzIEdsZWl4bmVyOyBBbmRyZXcgQnJlc3RpY2tl
-cjsgSmFtZXMgSGFydGxleTsgRGFtaWVuIEhvcnNsZXk7IEphbWVzDQo+IEhvZ2FuOyBFemVxdWll
-bCBHYXJjaWE7IEV6ZXF1aWVsIEdhcmNpYQ0KPiBTdWJqZWN0OiBSZTogW1BBVENIIHY1IDYvN10g
-Y2xvY2tzb3VyY2U6IEFkZCBQaXN0YWNoaW8gY2xvY2tzb3VyY2Utb25seSBkcml2ZXINCj4gDQo+
-IE9uIDA4LzA2LzIwMTUgMDE6MjIgUE0sIEdvdmluZHJhaiBSYWphIHdyb3RlOg0KPiA+IEZyb206
-IEV6ZXF1aWVsIEdhcmNpYSA8ZXplcXVpZWwuZ2FyY2lhQGltZ3RlYy5jb20+DQo+ID4NCj4gPiBU
-aGUgUGlzdGFjaGlvIFNvQyBwcm92aWRlcyBmb3VyIGdlbmVyYWwgcHVycG9zZSB0aW1lcnMsIGFu
-ZCBhbGxvdyB0bw0KPiA+IGltcGxlbWVudCBhIGNsb2Nrc291cmNlIGRyaXZlci4NCj4gPg0KPiA+
-IFRoaXMgZHJpdmVyIGNhbiBiZSB1c2VkIGFzIGEgcmVwbGFjZW1lbnQgZm9yIHRoZSBNSVBTIEdJ
-QyBhbmQgTUlQUyBSNEsNCj4gPiBjbG9ja3NvdXJjZXMgYW5kIHNjaGVkIGNsb2Nrcywgd2hpY2gg
-YXJlIGNsb2NrZWQgZnJvbSB0aGUgQ1BVIGNsb2NrLg0KPiA+DQo+ID4gR2l2ZW4gdGhlIGdlbmVy
-YWwgcHVycG9zZSB0aW1lcnMgYXJlIGNsb2NrZWQgZnJvbSBhbiBpbmRlcGVuZGVudA0KPiA+IGNs
-b2NrLCB0aGlzIG5ldyBjbG9ja3NvdXJjZSBkcml2ZXIgd2lsbCBiZSB1c2VmdWwgdG8gaW50cm9k
-dWNlIENQVUZyZXENCj4gPiBzdXBwb3J0IGZvciBQaXN0YWNoaW8gbWFjaGluZXMuDQo+ID4NCj4g
-PiBTaWduZWQtb2ZmLWJ5OiBFemVxdWllbCBHYXJjaWEgPGV6ZXF1aWVsLmdhcmNpYUBpbWd0ZWMu
-Y29tPg0KPiA+IFNpZ25lZC1vZmYtYnk6IEdvdmluZHJhaiBSYWphIDxnb3ZpbmRyYWoucmFqYUBp
-bWd0ZWMuY29tPg0KPiA+IC0tLQ0KPiA+DQo+ID4gY2hhbmdlcyBmcm9tIHY0DQo+ID4gLS0tLS0t
-LS0tLS0tLS0tLQ0KPiA+IEZpeGVzIGNvbW1lbnRzIGZyb20gRGFuaWVsIGFzIGRpY3Vzc2VkIGlu
-IGJlbG93IHRocmVhZDoNCj4gPiBodHRwOi8vcGF0Y2h3b3JrLmxpbnV4LW1pcHMub3JnL3BhdGNo
-LzEwNzg0Lw0KPiA+DQo+ID4NCj4gPiAgIGRyaXZlcnMvY2xvY2tzb3VyY2UvS2NvbmZpZyAgICAg
-ICAgICB8ICAgNSArDQo+ID4gICBkcml2ZXJzL2Nsb2Nrc291cmNlL01ha2VmaWxlICAgICAgICAg
-fCAgIDEgKw0KPiA+ICAgZHJpdmVycy9jbG9ja3NvdXJjZS90aW1lLXBpc3RhY2hpby5jIHwgMjE2
-DQo+ICsrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrDQo+ID4gICAzIGZpbGVzIGNo
-YW5nZWQsIDIyMiBpbnNlcnRpb25zKCspDQo+ID4gICBjcmVhdGUgbW9kZSAxMDA2NDQgZHJpdmVy
-cy9jbG9ja3NvdXJjZS90aW1lLXBpc3RhY2hpby5jDQo+ID4NCj4gPiBkaWZmIC0tZ2l0IGEvZHJp
-dmVycy9jbG9ja3NvdXJjZS9LY29uZmlnIGIvZHJpdmVycy9jbG9ja3NvdXJjZS9LY29uZmlnDQo+
-IA0KPiBbIC4uLiBdDQo+IA0KPiA+IGluZGV4IDRlNTc3MzAuLmU2NDI4MjUgMTAwNjQ0DQo+ID4g
-LS0tIGEvZHJpdmVycy9jbG9ja3NvdXJjZS9LY29uZmlnDQo+ID4gKysrIGIvZHJpdmVycy9jbG9j
-a3NvdXJjZS9LY29uZmlnDQo+ID4gQEAgLTExMSw2ICsxMTEsMTEgQEAgY29uZmlnIENMS1NSQ19M
-UEMzMlhYDQo+ID4gICAJc2VsZWN0IENMS1NSQ19NTUlPDQo+ID4gICAJc2VsZWN0IENMS1NSQ19P
-Rg0KPiA+DQo+ID4gK2NvbmZpZyBDTEtTUkNfUElTVEFDSElPDQo+ID4gKwlib29sDQo+ID4gKwlk
-ZWZhdWx0IHkgaWYgTUFDSF9QSVNUQUNISU8NCj4gDQo+IFlvdSBkb24ndCBuZWVkIHRvIGFkZCB0
-aGlzIGNvbmRpdGlvbi4NCg0KT2sgZmluZS4gV2lsbCByZW1vdmUgaXQuDQoNCj4gDQo+ID4gKwlz
-ZWxlY3QgQ0xLU1JDX09GDQo+IA0KPiBbIC4uLiBdDQo+IA0KPiA+ICsNCj4gPiArc3RydWN0IHBp
-c3RhY2hpb19jbG9ja3NvdXJjZSBwY3NfZ3B0Ow0KPiANCj4gc3RhdGljLg0KPiANCg0KT2suDQoN
-Cj4gPiArI2RlZmluZSB0b19waXN0YWNoaW9fY2xvY2tzb3VyY2UoY3MpCVwNCj4gPiArCWNvbnRh
-aW5lcl9vZihjcywgc3RydWN0IHBpc3RhY2hpb19jbG9ja3NvdXJjZSwgY3MpDQo+ID4gKw0KPiA+
-ICtzdGF0aWMgaW5saW5lIHUzMiBncHRfcmVhZGwodm9pZCBfX2lvbWVtICpiYXNlLCB1MzIgb2Zm
-c2V0LCB1MzINCj4gPiArZ3B0X2lkKSB7DQo+ID4gKwlyZXR1cm4gcmVhZGwoYmFzZSArIDB4MjAg
-KiBncHRfaWQgKyBvZmZzZXQpOw0KPiANCj4gQXJlIHlvdSBzdXJlIG9mIHRoZSBhZGRyZXNzIGNv
-bXB1dGF0aW9uID8gSSBndWVzcyBpdCBpcyBjb3JyZWN0IGJ1dCBqdXN0IHdhbnRlZA0KPiB5b3Ug
-dG8gZG91YmxlIGNoZWNrLg0KPiANCg0KWWVzLCB0ZXN0ZWQgaXQgb24gUGlzdGFjaGlvIGJyaW5n
-IHVwIGJvYXJkLg0KDQo+ID4gK30NCj4gPiArDQo+ID4gK3N0YXRpYyBpbmxpbmUgdm9pZCBncHRf
-d3JpdGVsKHZvaWQgX19pb21lbSAqYmFzZSwgdTMyIHZhbHVlLCB1MzIgb2Zmc2V0LA0KPiA+ICsJ
-CXUzMiBncHRfaWQpDQo+ID4gK3sNCj4gPiArCXdyaXRlbCh2YWx1ZSwgYmFzZSArIDB4MjAgKiBn
-cHRfaWQgKyBvZmZzZXQpOyB9DQo+ID4gKw0KPiA+ICtzdGF0aWMgY3ljbGVfdCBwaXN0YWNoaW9f
-Y2xvY2tzb3VyY2VfcmVhZF9jeWNsZXMoc3RydWN0IGNsb2Nrc291cmNlDQo+ID4gKypjcykgew0K
-PiA+ICsJc3RydWN0IHBpc3RhY2hpb19jbG9ja3NvdXJjZSAqcGNzID0gdG9fcGlzdGFjaGlvX2Ns
-b2Nrc291cmNlKGNzKTsNCj4gPiArCXUzMiBjb3VudGVyLCBvdmVyZmx3Ow0KPiA+ICsJdW5zaWdu
-ZWQgbG9uZyBmbGFnczsNCj4gPiArDQo+ID4gKwkvKiBUaGUgY291bnRlciB2YWx1ZSBpcyBvbmx5
-IHJlZnJlc2hlZCBhZnRlciB0aGUgb3ZlcmZsb3cgdmFsdWUgaXMgcmVhZC4NCj4gPiArCSAqIEFu
-ZCB0aGV5IG11c3QgYmUgcmVhZCBpbiBzdHJpY3Qgb3JkZXIsIGhlbmNlIHJhdyBzcGluIGxvY2sg
-YWRkZWQuDQo+ID4gKwkgKi8NCj4gDQo+IG5pdDogZXh0cmEgY2FycmlhZ2UgcmV0dXJuIGFuZCBj
-b21tZW50IGZvcm1hdDoNCj4gDQo+IAkvKg0KPiAJICogYmxhYmxhDQo+IAkgKi8NCj4gDQoNCk9r
-Lg0KDQo+ID4gKwlyYXdfc3Bpbl9sb2NrX2lycXNhdmUoJnBjcy0+bG9jaywgZmxhZ3MpOw0KPiA+
-ICsJb3ZlcmZsdyA9IGdwdF9yZWFkbChwY3MtPmJhc2UsIFRJTUVSX0NVUlJFTlRfT1ZFUkZMT1df
-VkFMVUUsDQo+IDApOw0KPiA+ICsJY291bnRlciA9IGdwdF9yZWFkbChwY3MtPmJhc2UsIFRJTUVS
-X0NVUlJFTlRfVkFMVUUsIDApOw0KPiA+ICsJcmF3X3NwaW5fdW5sb2NrX2lycXJlc3RvcmUoJnBj
-cy0+bG9jaywgZmxhZ3MpOw0KPiA+ICsNCj4gPiArCXJldHVybiB+KGN5Y2xlX3QpY291bnRlcjsN
-Cj4gPiArfQ0KPiA+ICsNCj4gPiArc3RhdGljIHU2NCBub3RyYWNlIHBpc3RhY2hpb19yZWFkX3Nj
-aGVkX2Nsb2NrKHZvaWQpIHsNCj4gPiArCXJldHVybiBwaXN0YWNoaW9fY2xvY2tzb3VyY2VfcmVh
-ZF9jeWNsZXMoJnBjc19ncHQuY3MpOw0KPiANCj4gQ2FuIHlvdSBkb3VibGUgY2hlY2sgdGhlIHUz
-MiBjYXN0IHRvIGN5Y2xlX3QgcmV0dXJuaW5nIGEgdTY0IGZyb20gdGhpcyBmdW5jdGlvbiA/DQo+
-IA0KDQpTb3JyeSBJIGRpZG4ndCBnZXQgeW91IG92ZXIgdGhpcyBjb21tZW50Lg0KDQpBRkFJVSwN
-Cg0KZnJvbSBpbmNsdWRlL2xpbnV4L3R5cGVzLmgNClsuLl0NCg0KLyogY2xvY2tzb3VyY2UgY3lj
-bGUgYmFzZSB0eXBlICovDQp0eXBlZGVmIHU2NCBjeWNsZV90Ow0KDQpbLi5dDQoNCkRpZCB5b3Ug
-bWVhbiB0byBjaGVjayB0aGlzPw0KDQo+ID4gK30NCj4gPiArDQo+ID4gK3N0YXRpYyB2b2lkIHBp
-c3RhY2hpb19jbGtzcmNfc2V0X21vZGUoc3RydWN0IGNsb2Nrc291cmNlICpjcywgaW50IHRpbWVy
-aWR4LA0KPiA+ICsJCQlpbnQgZW5hYmxlKQ0KPiA+ICt7DQo+ID4gKwlzdHJ1Y3QgcGlzdGFjaGlv
-X2Nsb2Nrc291cmNlICpwY3MgPSB0b19waXN0YWNoaW9fY2xvY2tzb3VyY2UoY3MpOw0KPiA+ICsJ
-dTMyIHZhbDsNCj4gPiArDQo+ID4gKwl2YWwgPSBncHRfcmVhZGwocGNzLT5iYXNlLCBUSU1FUl9D
-RkcsIHRpbWVyaWR4KTsNCj4gPiArCWlmIChlbmFibGUpDQo+ID4gKwkJdmFsIHw9IFRJTUVSX01F
-X0xPQ0FMOw0KPiA+ICsJZWxzZQ0KPiA+ICsJCXZhbCAmPSB+VElNRVJfTUVfTE9DQUw7DQo+ID4g
-Kw0KPiA+ICsJZ3B0X3dyaXRlbChwY3MtPmJhc2UsIHZhbCwgVElNRVJfQ0ZHLCB0aW1lcmlkeCk7
-IH0NCj4gPiArDQo+ID4gK3N0YXRpYyB2b2lkIHBpc3RhY2hpb19jbGtzcmNfZW5hYmxlKHN0cnVj
-dCBjbG9ja3NvdXJjZSAqY3MsIGludA0KPiA+ICt0aW1lcmlkeCkgew0KPiA+ICsJc3RydWN0IHBp
-c3RhY2hpb19jbG9ja3NvdXJjZSAqcGNzID0gdG9fcGlzdGFjaGlvX2Nsb2Nrc291cmNlKGNzKTsN
-Cj4gPiArDQo+ID4gKwkvKiBEaXNhYmxlIEdQVCBsb2NhbCBiZWZvcmUgbG9hZGluZyByZWxvYWQg
-dmFsdWUgKi8NCj4gPiArCXBpc3RhY2hpb19jbGtzcmNfc2V0X21vZGUoY3MsIHRpbWVyaWR4LCBm
-YWxzZSk7DQo+ID4gKwlncHRfd3JpdGVsKHBjcy0+YmFzZSwgUkVMT0FEX1ZBTFVFLCBUSU1FUl9S
-RUxPQURfVkFMVUUsDQo+IHRpbWVyaWR4KTsNCj4gPiArCXBpc3RhY2hpb19jbGtzcmNfc2V0X21v
-ZGUoY3MsIHRpbWVyaWR4LCB0cnVlKTsgfQ0KPiA+ICsNCj4gPiArc3RhdGljIHZvaWQgcGlzdGFj
-aGlvX2Nsa3NyY19kaXNhYmxlKHN0cnVjdCBjbG9ja3NvdXJjZSAqY3MsIGludA0KPiA+ICt0aW1l
-cmlkeCkgew0KPiA+ICsJLyogRGlzYWJsZSBHUFQgbG9jYWwgKi8NCj4gPiArCXBpc3RhY2hpb19j
-bGtzcmNfc2V0X21vZGUoY3MsIHRpbWVyaWR4LCBmYWxzZSk7IH0NCj4gPiArDQo+ID4gK3N0YXRp
-YyBpbnQgcGlzdGFjaGlvX2Nsb2Nrc291cmNlX2VuYWJsZShzdHJ1Y3QgY2xvY2tzb3VyY2UgKmNz
-KSB7DQo+ID4gKwlwaXN0YWNoaW9fY2xrc3JjX2VuYWJsZShjcywgMCk7DQo+ID4gKwlyZXR1cm4g
-MDsNCj4gPiArfQ0KPiA+ICsNCj4gPiArc3RhdGljIHZvaWQgcGlzdGFjaGlvX2Nsb2Nrc291cmNl
-X2Rpc2FibGUoc3RydWN0IGNsb2Nrc291cmNlICpjcykgew0KPiA+ICsJcGlzdGFjaGlvX2Nsa3Ny
-Y19kaXNhYmxlKGNzLCAwKTsNCj4gPiArfQ0KPiA+ICsNCj4gPiArLyogRGVzaXJhYmxlIGNsb2Nr
-IHNvdXJjZSBmb3IgcGlzdGFjaGlvIHBsYXRmb3JtICovIHN0cnVjdA0KPiA+ICtwaXN0YWNoaW9f
-Y2xvY2tzb3VyY2UgcGNzX2dwdCA9IHsNCj4gDQo+IHN0YXRpYy4NCg0KT2suDQoNClBvc3Rpbmcg
-djYgYWRkcmVzc2luZyB0aGVzZSBjb21tZW50cy4NCg0KLS0NClRoYW5rcy4NCkdvdmluZHJhai5S
-DQo=
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+The Auxtek-T003 HDMI stick is an A10s based HDMI stick with USB wifi,
+and composite video out support.
+
+Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+---
+ arch/arm/boot/dts/Makefile                   |   1 +
+ arch/arm/boot/dts/sun5i-a10s-auxtek-t003.dts | 159 +++++++++++++++++++++++++++
+ 2 files changed, 160 insertions(+)
+ create mode 100644 arch/arm/boot/dts/sun5i-a10s-auxtek-t003.dts
+
+diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+index 151a413..95daf91 100644
+--- a/arch/arm/boot/dts/Makefile
++++ b/arch/arm/boot/dts/Makefile
+@@ -563,6 +563,7 @@ dtb-$(CONFIG_MACH_SUN4I) += \
+ 	sun4i-a10-olinuxino-lime.dtb \
+ 	sun4i-a10-pcduino.dtb
+ dtb-$(CONFIG_MACH_SUN5I) += \
++	sun5i-a10s-auxtek-t003.dtb \
+ 	sun5i-a10s-auxtek-t004.dtb \
+ 	sun5i-a10s-mk802.dtb \
+ 	sun5i-a10s-olinuxino-micro.dtb \
+diff --git a/arch/arm/boot/dts/sun5i-a10s-auxtek-t003.dts b/arch/arm/boot/dts/sun5i-a10s-auxtek-t003.dts
+new file mode 100644
+index 0000000..d4ad021
+--- /dev/null
++++ b/arch/arm/boot/dts/sun5i-a10s-auxtek-t003.dts
+@@ -0,0 +1,159 @@
++/*
++ * Copyright 2015 Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
++ *
++ * This file is dual-licensed: you can use it either under the terms
++ * of the GPL or the X11 license, at your option. Note that this dual
++ * licensing only applies to this file, and not this project as a
++ * whole.
++ *
++ *  a) This file is free software; you can redistribute it and/or
++ *     modify it under the terms of the GNU General Public License as
++ *     published by the Free Software Foundation; either version 2 of the
++ *     License, or (at your option) any later version.
++ *
++ *     This file is distributed in the hope that it will be useful,
++ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
++ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ *     GNU General Public License for more details.
++ *
++ * Or, alternatively,
++ *
++ *  b) Permission is hereby granted, free of charge, to any person
++ *     obtaining a copy of this software and associated documentation
++ *     files (the "Software"), to deal in the Software without
++ *     restriction, including without limitation the rights to use,
++ *     copy, modify, merge, publish, distribute, sublicense, and/or
++ *     sell copies of the Software, and to permit persons to whom the
++ *     Software is furnished to do so, subject to the following
++ *     conditions:
++ *
++ *     The above copyright notice and this permission notice shall be
++ *     included in all copies or substantial portions of the Software.
++ *
++ *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
++ *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
++ *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
++ *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
++ *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
++ *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
++ *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
++ *     OTHER DEALINGS IN THE SOFTWARE.
++ */
++
++/dts-v1/;
++#include "sun5i-a10s.dtsi"
++#include "sunxi-common-regulators.dtsi"
++#include <dt-bindings/gpio/gpio.h>
++#include <dt-bindings/pinctrl/sun4i-a10.h>
++
++/ {
++	model = "Auxtek t003 A10s hdmi tv-stick";
++	compatible = "allwinner,auxtek-t003", "allwinner,sun5i-a10s";
++
++	aliases {
++		serial0 = &uart0;
++	};
++
++	chosen {
++		stdout-path = "serial0:115200n8";
++	};
++
++	leds {
++		compatible = "gpio-leds";
++		pinctrl-names = "default";
++		pinctrl-0 = <&led_pins_t003>;
++
++		red {
++			label = "t003-tv-dongle:red:usr";
++			gpios = <&pio 1 2 GPIO_ACTIVE_HIGH>; /* PB2 */
++			default-state = "on";
++		};
++	};
++};
++
++&ehci0 {
++	status = "okay";
++};
++
++&i2c0 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&i2c0_pins_a>;
++	status = "okay";
++
++	axp152: pmic@30 {
++		compatible = "x-powers,axp152";
++		reg = <0x30>;
++		interrupts = <0>;
++		interrupt-controller;
++		#interrupt-cells = <1>;
++	};
++};
++
++&mmc0 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&mmc0_pins_a>, <&mmc0_cd_pin_t003>;
++	vmmc-supply = <&reg_vcc3v3>;
++	bus-width = <4>;
++	cd-gpios = <&pio 6 1 GPIO_ACTIVE_HIGH>; /* PG1 */
++	cd-inverted;
++	status = "okay";
++};
++
++&ohci0 {
++	status = "okay";
++};
++
++&otg_sram {
++	status = "okay";
++};
++
++&pio {
++	mmc0_cd_pin_t003: mmc0_cd_pin@0 {
++		allwinner,pins = "PG1";
++		allwinner,function = "gpio_in";
++		allwinner,drive = <SUN4I_PINCTRL_10_MA>;
++		allwinner,pull = <SUN4I_PINCTRL_PULL_UP>;
++	};
++
++	led_pins_t003: led_pins@0 {
++		allwinner,pins = "PB2";
++		allwinner,function = "gpio_out";
++		allwinner,drive = <SUN4I_PINCTRL_20_MA>;
++		allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
++	};
++};
++
++&reg_usb0_vbus {
++	gpio = <&pio 6 13 GPIO_ACTIVE_HIGH>; /* PG13 */
++	status = "okay";
++};
++
++&reg_usb1_vbus {
++	gpio = <&pio 1 10 GPIO_ACTIVE_HIGH>; /* PB10 */
++	status = "okay";
++};
++
++&uart0 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&uart0_pins_a>;
++	status = "okay";
++};
++
++&usb0_vbus_pin_a {
++	allwinner,pins = "PG13";
++};
++
++&usb1_vbus_pin_a {
++	allwinner,pins = "PB10";
++};
++
++&usb_otg {
++	dr_mode = "host";
++	status = "okay";
++};
++
++&usbphy {
++	usb0_vbus-supply = <&reg_usb0_vbus>;
++	usb1_vbus-supply = <&reg_usb1_vbus>;
++	status = "okay";
++};
+-- 
+2.4.3
