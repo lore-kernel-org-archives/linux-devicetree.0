@@ -1,66 +1,30 @@
-From: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v5 0/8] iio: mma8452: improve driver and support more
- chips
-Date: Sat, 8 Aug 2015 17:42:26 +0100
-Message-ID: <55C63172.3090503@kernel.org>
-References: <1438006095-26920-1-git-send-email-martink@posteo.de>
+From: Jonathan Cameron <jic23@kernel.org>
+Subject: Re: [PATCH v3 4/7] iio: trigger: Add periodic polling to SYSFS
+ trigger
+Date: Sat, 8 Aug 2015 18:26:47 +0100
+Message-ID: <55C63BD7.3040401@kernel.org>
+References: <1438174469-19054-1-git-send-email-vladimir.barinov@cogentembedded.com>
+ <1438174642-19258-1-git-send-email-vladimir.barinov@cogentembedded.com>
+ <55C4B5CB.9060400@metafoo.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=windows-1252
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1438006095-26920-1-git-send-email-martink-1KBjaw7Xf1+zQB+pC5nmwQ@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Martin Kepplinger <martink-1KBjaw7Xf1+zQB+pC5nmwQ@public.gmane.org>, knaack.h-Mmb7MZpHnFY@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org, mfuzzey-mB3Nsq4MPf1BDgjK7y7TUQ@public.gmane.org, roberta.dobrescu-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, christoph.muellner-SN7IsUiht6C/RdPyistoZJqQE7yCjDx5@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <55C4B5CB.9060400@metafoo.de>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Lars-Peter Clausen <lars@metafoo.de>, Vladimir Barinov <vladimir.barinov@cogentembedded.com>
+Cc: Hartmut Knaack <knaack.h@gmx.de>, Peter Meerwald <pmeerw@pmeerw.net>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, cory.tusar@pid1solutions.com, Daniel Baluta <daniel.baluta@intel.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Martin,
-
-Sorry to say this has crossed with a cleanup set from Hartmut.
-I'm afraid I applied his first.  This will all need rebasing.
-
-There weren't any fundamental changes in Hartmut's series, but
-I'd feel nervous to try and apply yours on top without hardware to
-sanity check I hadn't messed it up.
+On 07/08/15 14:42, Lars-Peter Clausen wrote:
+> On 07/29/2015 02:57 PM, Vladimir Barinov wrote:
+>> Add periodic polling functionality to SYSFS trigger
+> 
+> Daniel's hrtimer trigger should be used for this instead of modifying the
+> sysfs trigger timer. See https://lkml.org/lkml/2015/5/8/367
+> 
+> He said he'll send out a new version shortly.
+Agreed.  I'd like to keep these two trigger types separate as they
+conceptually are quite different things.
 
 Jonathan
-
-On 27/07/15 15:08, Martin Kepplinger wrote:
-> Before I go away for holidays, this is version 5 of the mma8452 driver
-> improvements. This version removes the unnessasary DRIVER_NAME define and
-> improves the DT property "use_int2" to be extendible for any future additions
-> to the driver.
-> 
-> This is based on today's -next.
-> 
-> 
-> These changes add support for motion interrupts and 3 more accelerometer
-> chips, two of which use them because they don't support the until now
-> included transient interrupt sources:
-> 
-> MMA8453Q, MMA8652FC and MMA8653FC; datasheets are in the commit messages.
-> The driver and module name remains the same, seperating it from the device
-> names it now supports.
-> 
-> On top of this, there are minor documentation additions, and more notably,
-> it allows to use the driver, no matter how the interrupt pins are wired
-> on your board.
-> 
-> Please review and test if you can. For MMA8452Q, nothing should have
-> changed.
-> 
-> revision history
-> ----------------
-> v5   DRIVER_NAME define removed; more flexible DT property
-> v4   cleanup; one bugfix patch removed from series; DT people added
-> v3   adds one patch to allow all possible pin wirings; adds more email
-> recipients
-> v2   splits the work into a series of smaller pieces
-> v1   initial post
-> 
-> 
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-iio" in
-> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
-> 
