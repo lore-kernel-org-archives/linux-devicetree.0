@@ -1,7 +1,7 @@
 From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: [PATCH v2 0/2] Add R8A7794 GPIO DT support
-Date: Sun, 09 Aug 2015 01:06:40 +0300
-Message-ID: <1458933.B2H9sbD3e6@wasted.cogentembedded.com>
+Subject: [PATCH v3 0/2] Add R8A7794 GPIO DT support
+Date: Sun, 09 Aug 2015 01:06:55 +0300
+Message-ID: <2265315.MpjeDzrVz2@wasted.cogentembedded.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7Bit
@@ -21,4 +21,3 @@ for the R8A7794 SoC.
 [2/2] ARM: shmobile: r8a7794: add GPIO DT support
 
 WBR, Sergei
-
