@@ -1,152 +1,121 @@
-From: Michael Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v12 17/21] h8300: clock driver
-Date: Fri, 07 Aug 2015 17:43:49 -0700
-Message-ID: <20150808004349.2416.18161@quantum>
-References: <1431325600-12333-1-git-send-email-ysato@users.sourceforge.jp>
- <1431325600-12333-18-git-send-email-ysato@users.sourceforge.jp>
+From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Subject: Re: ARM: dts: sunxi: Regulators at common board layouts
+Date: Sat, 8 Aug 2015 13:28:39 +0800
+Message-ID: <CAGb2v64PgX9aiBBYRXcBjchzqfEovFXdDMkHhooPnGF9AAfL+A@mail.gmail.com>
+References: <55B9F245.2000300@whiteboxes.ch>
+Reply-To: wens-jdAy2FN1RRM@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1431325600-12333-18-git-send-email-ysato-Rn4VEauK+AKRv+LV9MX5uooqe+aC9MnS@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arch-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Yoshinori Sato <ysato-Rn4VEauK+AKRv+LV9MX5uooqe+aC9MnS@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sunxi+bncBCMILY6JWQBBBHVHS2XAKGQE5FBOJMA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <55B9F245.2000300-5kYpVdmHfHqXeEprG8ioHw@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <http://groups.google.com/group/linux-sunxi/subscribe>
+To: Mikhail Yakshin <greycat-5kYpVdmHfHqXeEprG8ioHw@public.gmane.org>
+Cc: linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello Sato-san,
+Hi,
 
-Unfortunately this patch did not Cc myself, Stephen Boyd or the
-linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org mailing list. As such Stephen and I did not
-have a chance to review it. Even more unfortunate was that it was ninja
-merged by maintainers without our ack. :-/
+On Thu, Jul 30, 2015 at 5:45 PM, Mikhail Yakshin <greycat-5kYpVdmHfHqXeEprG8ioHw@public.gmane.org> wrote:
+> Hi,
+>
+> I've been analyzing various boards based on Allwinner A20 CPU and
+> X-Powers AXP209 PMU (to make a proper configuration for our board,
+> Whitebox Labs Watermelon).
+>
+> There are some things very common and some things pretty different on
+> various boards.
+>
+> Namely, there's agreement on that DCDC2 and DCDC3 and used for CPU
+> voltages (VDD-CPU and (VDD-SYS=VDD-INT)+VDD-DLL respectively) on all
+> boards I've analyzed (Olimex boards, Cubieboard / Cubietruck, BananaPi,
+> PCDuino, Watermelon, etc) and probably it should be kept this way.
+>
+> However, what puzzles me the most so far is LDO1 regulator. According to
+> [AXP209 datasheet, p. 13, p. 23][1] and all the boards I've
+> investigated, it's used exclusively for powering VDD-RTC input of A20
+> CPU that supports internal CPU's RTC. LDO1 gets very special status in
+> AXP209 - basically, it's as close to "always on" (even on backup
+> battery) as possible the purpose of timekeeping.
+>
+> According to the same spec, LDO1 allows 2 distinct voltage choices: 1.3V
+> and 3.3V. However, according to the [A20 datasheet][2], VDD-RTC (pin K8)
+> has absolute minimum and maximum voltage ratings of 3.0V. I'm not sure
+> how is it supposed to work together, given that X-Powers AXP209 and
+> Allwinner A20 is basically produced by different branches the same
+> company and are meant to be totally compatible.
 
-Quoting Yoshinori Sato (2015-05-10 23:26:36)
-> Signed-off-by: Yoshinori Sato <ysato-Rn4VEauK+AKRv+LV9MX5uooqe+aC9MnS@public.gmane.org>
-> ---
->  .../bindings/clock/renesas,h8300-div-clock.txt     |  24 ++++
->  .../bindings/clock/renesas,h8s2678-pll-clock.txt   |  23 ++++
->  drivers/clk/Makefile                               |   1 +
->  drivers/clk/h8300/Makefile                         |   2 +
->  drivers/clk/h8300/clk-div.c                        |  53 ++++++++
->  drivers/clk/h8300/clk-h8s2678.c                    | 147 +++++++++++=
-++++++++++
->  6 files changed, 250 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/clock/renesas,h=
-8300-div-clock.txt
->  create mode 100644 Documentation/devicetree/bindings/clock/renesas,h=
-8s2678-pll-clock.txt
->  create mode 100644 drivers/clk/h8300/Makefile
->  create mode 100644 drivers/clk/h8300/clk-div.c
->  create mode 100644 drivers/clk/h8300/clk-h8s2678.c
->=20
-> diff --git a/Documentation/devicetree/bindings/clock/renesas,h8300-di=
-v-clock.txt b/Documentation/devicetree/bindings/clock/renesas,h8300-div=
--clock.txt
-> new file mode 100644
-> index 0000000..36c2b52
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/clock/renesas,h8300-div-clock=
-=2Etxt
-> @@ -0,0 +1,24 @@
-> +* Renesas H8/300 divider clock
-> +
-> +Required Properties:
-> +
-> +  - compatible: Must be "renesas,sh73a0-h8300-div-clock"
-> +
-> +  - clocks: Reference to the parent clocks ("extal1" and "extal2")
-> +
-> +  - #clock-cells: Must be 1
-> +
-> +  - reg: Base address and length of the divide rate selector
-> +
-> +  - renesas,width: bit width of selector
-> +
-> +Example
-> +-------
-> +
-> +               cclk: cclk {
-> +                       compatible =3D "renesas,h8300-div-clock";
-> +                       clocks =3D <&xclk>;
-> +                       #clock-cells =3D <0>;
-> +                       reg =3D <0xfee01b 2>;
-> +                       renesas,width =3D <2>;
-> +               };
+Get an updated datasheet. Mine (v1.5 20150510) recommends VDD-RTC to
+be 1.2 V ~ 1.4 V, and nominally at 1.3 V.
 
-I could not find any info on this clock in the H8S/2678 reference
-manual[0]. Could you point me to the right documentation?
+Also, my AXP209 datasheet (v1.0 Chinese) says LDO1SET grounded means
+LDO1 is set to 1.3 V.
 
-> diff --git a/Documentation/devicetree/bindings/clock/renesas,h8s2678-=
-pll-clock.txt b/Documentation/devicetree/bindings/clock/renesas,h8s2678=
--pll-clock.txt
-> new file mode 100644
-> index 0000000..500cdadb
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/clock/renesas,h8s2678-pll-clo=
-ck.txt
-> @@ -0,0 +1,23 @@
-> +Renesas H8S2678 PLL clock
-> +
-> +This device is Clock multiplyer
-> +
-> +Required Properties:
-> +
-> +  - compatible: Must be "renesas,h8s2678-pll-clock"
-> +
-> +  - clocks: Reference to the parent clocks
-> +
-> +  - #clock-cells: Must be 0
-> +
-> +  - reg: Two rate selector (Multiply / Divide) register address
-> +
-> +Example
-> +-------
-> +
-> +               pllclk: pllclk {
-> +                       compatible =3D "renesas,h8s2678-pll-clock";
-> +                       clocks =3D <&xclk>;
-> +                       #clock-cells =3D <0>;
-> +                       reg =3D <0xfee03b 2>, <0xfee045 2>;
-> +               };
+> What's even more weird, is that all configurations I've encountered so
+> far (i.e. FEX configurations for 3.4 sunxi kernel and DTS for modern
+> mainline kernels) use hard locked 1.3V setting for LDO1. For example,
+> kernel 3.4:
+>
+> /sys/devices/platform/sunxi-i2c.0/i2c-0/0-0034/axp20-regulator.21/regulator/regulator.1/
+> name    axp20_ldo1
+> microvolts      1300000
+> min_microvolts  1300000
+> max_microvolts  1300000
+>
+> and similar construction in mainline DTSes:
+>
+>     vdd_rtc: ldo1 {
+>             regulator-min-microvolt = <1300000>;
+>             regulator-max-microvolt = <1300000>;
+>             regulator-always-on;
+>     };
+>
+> or in axp209.dtsi:
+>
+>     reg_ldo1: ldo1 {
+>             /* LDO1 is a fixed output regulator */
+>             regulator-always-on;
+>             regulator-min-microvolt = <1300000>;
+>             regulator-max-microvolt = <1300000>;
+>             regulator-name = "ldo1";
+>     };
+>
+> If we'll take a look at default power-on setup for AXP209 in the
+> datasheet (page 24), we'll see that it's determined by LDO1SET pin. If
+> it's connected to GND, then LDO1 will start with 1.3V, if it's connected
+> to VINT, then it would be 3.3V.
+>
+> I've analyzed all the schematics I found in public:
+>
+> * Older Olimex schematics (Lime rev C, Lime rev D, Lime2 rev B) state
+> that LDO1 line is "3V3/30mA". LDO1SET is grounded.
+> * Newer Olimex schematics (Lime2 rev C) call that "1V3/30mA". LDO1SET is
+> grounded.
+> * All Bananapi and Cubieboard schematics look very similar and seem to
+> be originating from the same source (reference Allwinner design?) and do
+> not hint any voltages. LDO1SET is grounded.
+>
+> Can someone explain to me how does it work / supposed to work?
 
-Is there really only one clock output? According to figure 21.1 there i=
-s
-the "System clock to =CF=86 pin" output and the "Internal clock to peri=
-pheral
-modules" output.
+See above.
 
-I am wondering if clock-cells should be 1 instead of zero and support
-both of these output signals?
+ChenYu
 
-As a nitpick, I think it would have been better to name the node "cpg"
-as it is listed in Section 21. pllclk is only one of the two registers
-that make up the cpg. Something like:
-
-	cpg: clock-controller@fee03b
-
-If you do decide to have clock-cells greater than zero, you might find
-the following threads helpful. They describe how to craft a
-clock-controller style binding:
-
-http://lkml.kernel.org/r/<20150411001231.18916.93186@quantum>
-
-http://lkml.kernel.org/r/<20150724034229.642.88156@quantum>
-
-As an additional thought, it looks like the module stop registers are
-mixed in with the clock registers. When you decide to write a reset
-driver for these platforms you might want to re-use this existing dt
-binding description and put the reset code into your clock provider
-driver. Grep for reset.h in the drivers/clk/ directory for some
-examples.
-
-[0] http://documentation.renesas.com/doc/products/mpumcu/rej09b0283_267=
-8hm.pdf
-
-Regards,
-Mike
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> [1]: http://linux-sunxi.org/images/8/89/AXP209_Datasheet_v1.0en.pdf
+> [2]:
+> https://github.com/OLIMEX/OLINUXINO/raw/master/HARDWARE/A20-PDFs/A20%20Datasheet%20v1.0%2020130227.pdf
+>
+> --
+> WBR, Mikhail Yakshin
+>
+>
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+>
