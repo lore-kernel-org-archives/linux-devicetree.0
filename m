@@ -1,60 +1,152 @@
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Subject: Re: [PATCH 2/2] net, thunder, bgx: Add support for ACPI binding.
-Date: Sat, 8 Aug 2015 02:28:38 +0200
-Message-ID: <CAJZ5v0iNqRsrpwzWY5o97R1S+Dr-CzRPg3Cymt1q4v5gvABCQA@mail.gmail.com>
-References: <1438907590-29649-1-git-send-email-ddaney.cavm@gmail.com>
-	<1438907590-29649-3-git-send-email-ddaney.cavm@gmail.com>
-	<20150807140106.GE7646@leverpostej>
-	<55C4ECC6.7050908@caviumnetworks.com>
-	<20150807175127.GB12013@leverpostej>
-	<CAJZ5v0gc=bo3ayO7aWq19Hh_205YC52wqXGbbM5vxR1atXm+oA@mail.gmail.com>
-	<55C5494D.5010903@caviumnetworks.com>
+From: Michael Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v12 17/21] h8300: clock driver
+Date: Fri, 07 Aug 2015 17:43:49 -0700
+Message-ID: <20150808004349.2416.18161@quantum>
+References: <1431325600-12333-1-git-send-email-ysato@users.sourceforge.jp>
+ <1431325600-12333-18-git-send-email-ysato@users.sourceforge.jp>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-acpi-owner@vger.kernel.org>
-In-Reply-To: <55C5494D.5010903@caviumnetworks.com>
-Sender: linux-acpi-owner@vger.kernel.org
-To: David Daney <ddaney@caviumnetworks.com>
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>, Mark Rutland <mark.rutland@arm.com>, David Daney <ddaney.cavm@gmail.com>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "rob.herring@linaro.org" <rob.herring@linaro.org>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, "David S. Miller" <davem@davemloft.net>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-mips@linux-mips.org" <linux-mips@linux-mips.org>, David Daney <david.daney@cavium.com>, Tomasz Nowicki <tomasz.nowicki@linaro.org>, Robert Richter <rrichter@cavium.com>, "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>, Sunil Goutham <sgoutham@cavium.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1431325600-12333-18-git-send-email-ysato-Rn4VEauK+AKRv+LV9MX5uooqe+aC9MnS@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arch-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Yoshinori Sato <ysato-Rn4VEauK+AKRv+LV9MX5uooqe+aC9MnS@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi David,
+Hello Sato-san,
 
-On Sat, Aug 8, 2015 at 2:11 AM, David Daney <ddaney@caviumnetworks.com> wrote:
-> On 08/07/2015 05:05 PM, Rafael J. Wysocki wrote:
+Unfortunately this patch did not Cc myself, Stephen Boyd or the
+linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org mailing list. As such Stephen and I did not
+have a chance to review it. Even more unfortunate was that it was ninja
+merged by maintainers without our ack. :-/
 
-[cut]
+Quoting Yoshinori Sato (2015-05-10 23:26:36)
+> Signed-off-by: Yoshinori Sato <ysato-Rn4VEauK+AKRv+LV9MX5uooqe+aC9MnS@public.gmane.org>
+> ---
+>  .../bindings/clock/renesas,h8300-div-clock.txt     |  24 ++++
+>  .../bindings/clock/renesas,h8s2678-pll-clock.txt   |  23 ++++
+>  drivers/clk/Makefile                               |   1 +
+>  drivers/clk/h8300/Makefile                         |   2 +
+>  drivers/clk/h8300/clk-div.c                        |  53 ++++++++
+>  drivers/clk/h8300/clk-h8s2678.c                    | 147 +++++++++++=
+++++++++++
+>  6 files changed, 250 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/clock/renesas,h=
+8300-div-clock.txt
+>  create mode 100644 Documentation/devicetree/bindings/clock/renesas,h=
+8s2678-pll-clock.txt
+>  create mode 100644 drivers/clk/h8300/Makefile
+>  create mode 100644 drivers/clk/h8300/clk-div.c
+>  create mode 100644 drivers/clk/h8300/clk-h8s2678.c
+>=20
+> diff --git a/Documentation/devicetree/bindings/clock/renesas,h8300-di=
+v-clock.txt b/Documentation/devicetree/bindings/clock/renesas,h8300-div=
+-clock.txt
+> new file mode 100644
+> index 0000000..36c2b52
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/clock/renesas,h8300-div-clock=
+=2Etxt
+> @@ -0,0 +1,24 @@
+> +* Renesas H8/300 divider clock
+> +
+> +Required Properties:
+> +
+> +  - compatible: Must be "renesas,sh73a0-h8300-div-clock"
+> +
+> +  - clocks: Reference to the parent clocks ("extal1" and "extal2")
+> +
+> +  - #clock-cells: Must be 1
+> +
+> +  - reg: Base address and length of the divide rate selector
+> +
+> +  - renesas,width: bit width of selector
+> +
+> +Example
+> +-------
+> +
+> +               cclk: cclk {
+> +                       compatible =3D "renesas,h8300-div-clock";
+> +                       clocks =3D <&xclk>;
+> +                       #clock-cells =3D <0>;
+> +                       reg =3D <0xfee01b 2>;
+> +                       renesas,width =3D <2>;
+> +               };
 
->>
->> It is actually useful to people as far as I can say.
->>
->> Also, if somebody is going to use properties with ACPI, why whould
->> they use a different set of properties with DT?
->>
->> Wouldn't it be more reasonable to use the same set in both cases?
->
->
-> Yes, but there is still quite a bit of leeway to screw things up.
+I could not find any info on this clock in the H8S/2678 reference
+manual[0]. Could you point me to the right documentation?
 
-That I have to agree with, unfortunately.
+> diff --git a/Documentation/devicetree/bindings/clock/renesas,h8s2678-=
+pll-clock.txt b/Documentation/devicetree/bindings/clock/renesas,h8s2678=
+-pll-clock.txt
+> new file mode 100644
+> index 0000000..500cdadb
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/clock/renesas,h8s2678-pll-clo=
+ck.txt
+> @@ -0,0 +1,23 @@
+> +Renesas H8S2678 PLL clock
+> +
+> +This device is Clock multiplyer
+> +
+> +Required Properties:
+> +
+> +  - compatible: Must be "renesas,h8s2678-pll-clock"
+> +
+> +  - clocks: Reference to the parent clocks
+> +
+> +  - #clock-cells: Must be 0
+> +
+> +  - reg: Two rate selector (Multiply / Divide) register address
+> +
+> +Example
+> +-------
+> +
+> +               pllclk: pllclk {
+> +                       compatible =3D "renesas,h8s2678-pll-clock";
+> +                       clocks =3D <&xclk>;
+> +                       #clock-cells =3D <0>;
+> +                       reg =3D <0xfee03b 2>, <0xfee045 2>;
+> +               };
 
-On the other hand, this is a fairly new concept and we need to gain
-some experience with it to be able to come up with best practices and
-so on.  Cases like yours are really helpful here.
+Is there really only one clock output? According to figure 21.1 there i=
+s
+the "System clock to =CF=86 pin" output and the "Internal clock to peri=
+pheral
+modules" output.
 
-> FWIW:  http://www.uefi.org/sites/default/files/resources/nic-request-v2.pdf
->
-> This actually seems to have been adopted by the UEFI people as a
-> "Standard", I am not sure where a record of this is kept though.
+I am wondering if clock-cells should be 1 instead of zero and support
+both of these output signals?
 
-Work on this is in progress, but far from completion.  Essentially,
-what's needed is more pressure from vendors who want to use properties
-in their firmware.
+As a nitpick, I think it would have been better to name the node "cpg"
+as it is listed in Section 21. pllclk is only one of the two registers
+that make up the cpg. Something like:
 
-> So, we are changing our firmware to use this standard (which is quite
-> similar the the DT with respect to MAC addresses).
+	cpg: clock-controller@fee03b
 
-Cool. :-)
+If you do decide to have clock-cells greater than zero, you might find
+the following threads helpful. They describe how to craft a
+clock-controller style binding:
 
-Thanks,
-Rafael
+http://lkml.kernel.org/r/<20150411001231.18916.93186@quantum>
+
+http://lkml.kernel.org/r/<20150724034229.642.88156@quantum>
+
+As an additional thought, it looks like the module stop registers are
+mixed in with the clock registers. When you decide to write a reset
+driver for these platforms you might want to re-use this existing dt
+binding description and put the reset code into your clock provider
+driver. Grep for reset.h in the drivers/clk/ directory for some
+examples.
+
+[0] http://documentation.renesas.com/doc/products/mpumcu/rej09b0283_267=
+8hm.pdf
+
+Regards,
+Mike
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
