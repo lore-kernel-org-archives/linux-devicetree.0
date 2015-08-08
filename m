@@ -1,77 +1,63 @@
-From: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v3 0/7] iio: adc: hi8435: Add Holt HI-8435 threshold
- detector
-Date: Sat, 8 Aug 2015 18:28:22 +0100
-Message-ID: <55C63C36.3050605@kernel.org>
-References: <1438174469-19054-1-git-send-email-vladimir.barinov@cogentembedded.com>
+From: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 0/2] of: fsl/fman: reuse the fixed node parsing code
+Date: Sat, 08 Aug 2015 10:32:43 -0700
+Message-ID: <55C63D3B.5020005@gmail.com>
+References: <1438785745-15517-1-git-send-email-madalin.bucur@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1438174469-19054-1-git-send-email-vladimir.barinov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Vladimir Barinov <vladimir.barinov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
-Cc: Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Peter Meerwald <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, cory.tusar-J6Z/VSE8EyIAspv4Qr0y0gC/G2K4zDHf@public.gmane.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1438785745-15517-1-git-send-email-madalin.bucur-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: madalin.bucur-KZfg59tc24xl57MIdRCFDg@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Igal.Liberman-KZfg59tc24xl57MIdRCFDg@public.gmane.org, Stas Sergeev <stsp-Rn4VEauK+AKRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 29/07/15 13:54, Vladimir Barinov wrote:
-> Hello,
-> 
-> This adds the folowing:
-> - Holt threshold detector driver for HI-8435 chip
-> - Add Holt vendor prefix
-> - Document HI-8435 DT bindings
-> - Add periodic polling functionality to SYSFS trigger
-> - Support triggered events
-> - Add ABI documentation for debounce_time
-> - Fix typos in sysfs-bus-iio file
-> 
-> PDF file can be found here:
-> http://www.holtic.com/products/3081-hi-8435.aspx
-> 
-> Vladimir Barinov (7):
-> [1/7] iio: adc: hi8435: Holt HI-8435 threshold detector
-> [2/7] dt: Add vendor prefix 'holt'
-> [3/7] dt: Document Holt HI-8435 bindings
-> [4/7] iio: trigger: Add periodic polling to SYSFS trigger
-> [5/7] iio: Support triggered events
-> [6/7] iio: Add ABI documentation for debounce_time
-> [7/7] iio: Fix typos in ABI documentation
-Please order your patch set so that it may be bisected.
-That is, if we apply each patch in the order presented, there
-should never be a point at which we cannot build the code.
+CC'ing Stas,
 
-The driver in patch 1 uses elements from later in the series.
+Le 08/05/15 07:42, Madalin Bucur a =C3=A9crit :
+> The FMan MAC configuration code needs the speed and duplex informatio=
+n
+> for fixed-link interfaces that is parsed now by the of function
+> of_phy_register_fixed_link(). This parses the fixed-link parameters b=
+ut
+> does not expose to the caller neither the phy_device pointer nor the
+> status struct where it loads the fixed-link params. By extracting the
+> fixed-link parsing code from of_phy_register_fixed_link() into a
+> separate function the parsed values are made available without changi=
+ng
+> the existing API. This change also removes a small redundancy in the
+> previous code calling fixed_phy_register().
 
-Jonathan
-> 
-> ---
-> This patchset is against the 'kernel/git/torvalds/linux.git' repo.
-> 
->  Documentation/ABI/testing/sysfs-bus-iio               |   16 
->  Documentation/ABI/testing/sysfs-bus-iio-adc-hi8435    |   61 +
->  Documentation/ABI/testing/sysfs-bus-iio-trigger-sysfs |   11 
->  Documentation/devicetree/bindings/iio/adc/hi8435.txt  |   25 
->  Documentation/devicetree/bindings/vendor-prefixes.txt |    1 
->  drivers/iio/Kconfig                                   |    6 
->  drivers/iio/Makefile                                  |    1 
->  drivers/iio/adc/Kconfig                               |   11 
->  drivers/iio/adc/Makefile                              |    1 
->  drivers/iio/adc/hi8435.c                              |  659 ++++++++++++++++++
->  drivers/iio/industrialio-core.c                       |    4 
->  drivers/iio/industrialio-trigger.c                    |   12 
->  drivers/iio/industrialio-triggered-event.c            |   68 +
->  drivers/iio/trigger/iio-trig-sysfs.c                  |   58 +
->  include/linux/iio/iio.h                               |    1 
->  include/linux/iio/triggered_event.h                   |   11 
->  16 files changed, 939 insertions(+), 7 deletions(-)
->  create mode 100644 Documentation/ABI/testing/sysfs-bus-iio-adc-hi8435
->  create mode 100644 Documentation/devicetree/bindings/iio/adc/hi8435.txt
->  create mode 100644 drivers/iio/adc/hi8435.c
->  create mode 100644 drivers/iio/industrialio-triggered-event.c
->  create mode 100644 include/linux/iio/triggered_event.h
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-iio" in
-> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
-> 
+I will look into this shortly, sorry for the delay.
+
+>=20
+> The FMan patch relies on the latest FMan driver v4 submission by Igal=
+ Liberman:
+> https://patchwork.ozlabs.org/project/netdev/list/?submitter=3DIgal.Li=
+berman&state=3D*&q=3Dv4
+>=20
+> Madalin Bucur (2):
+>   of: separate fixed link parsing from registration
+>   fsl_fman: use fixed_phy_status for MEMAC
+>=20
+>  .../ethernet/freescale/fman/flib/fsl_fman_memac.h  |  6 ++-
+>  drivers/net/ethernet/freescale/fman/inc/mac.h      |  2 +-
+>  drivers/net/ethernet/freescale/fman/mac/fm_memac.c | 42 ++++++++++++=
+-----
+>  drivers/net/ethernet/freescale/fman/mac/fm_memac.h |  3 +-
+>  drivers/net/ethernet/freescale/fman/mac/mac.c      | 18 ++++++--
+>  drivers/of/of_mdio.c                               | 52 ++++++++++++=
+++--------
+>  include/linux/of_mdio.h                            |  9 ++++
+>  7 files changed, 94 insertions(+), 38 deletions(-)
+>=20
+
+
+--=20
+=46lorian
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
