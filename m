@@ -1,121 +1,65 @@
-From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: Re: ARM: dts: sunxi: Regulators at common board layouts
-Date: Sat, 8 Aug 2015 13:28:39 +0800
-Message-ID: <CAGb2v64PgX9aiBBYRXcBjchzqfEovFXdDMkHhooPnGF9AAfL+A@mail.gmail.com>
-References: <55B9F245.2000300@whiteboxes.ch>
-Reply-To: wens-jdAy2FN1RRM@public.gmane.org
+From: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 0/3] MAX6675 IIO temperature driver
+Date: Sat, 8 Aug 2015 12:36:24 +0100
+Message-ID: <55C5E9B8.5030404@kernel.org>
+References: <1438635410-3757-1-git-send-email-mporter@konsulko.com>
+ <897A4C3B-DF7E-4AEE-A117-00CCB510F4DD@jic23.retrosnub.co.uk>
+ <20150804173417.GN15004@beef>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBCMILY6JWQBBBHVHS2XAKGQE5FBOJMA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <55B9F245.2000300-5kYpVdmHfHqXeEprG8ioHw@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <http://groups.google.com/group/linux-sunxi/subscribe>
-To: Mikhail Yakshin <greycat-5kYpVdmHfHqXeEprG8ioHw@public.gmane.org>
-Cc: linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20150804173417.GN15004@beef>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Matt Porter <mporter-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Jonathan Cameron <jic23-tko9wxEg+fIOOJlXag/Snyp2UmYkHbXO@public.gmane.org>
+Cc: Linux IIO List <linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Devicetree List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+On 04/08/15 18:34, Matt Porter wrote:
+> On Tue, Aug 04, 2015 at 05:52:17PM +0100, Jonathan Cameron wrote:
+>>
+>>
+>> On 3 August 2015 21:56:47 BST, Matt Porter <mporter-OWPKS81ov/FWk0Htik3J/w@public.gmane.org> wrote:
+>>> This series adds a driver for the MAX6675 SPI thermocouple converter.
+>>> The device supports temperature measurements via type-K thermocouples
+>>> and implements cold-junction compensation within the part. The
+>>> datasheet
+>>> can be found at http://datasheets.maximintegrated.com/en/ds/MAX6675.pdf
+>> For a device like this where perhaps it's position wrt iio/hwmon boundary is unclear
+>> I want to see an argument for why IIO makes more sense in the cover letter + cc
+>>  at least the hwmon MAINTAINERS if not the list...
+> 
+> Will do. Just to summarize here, the typical use case for this type of
+> thermocouple converter involves sample rates that are relatively high
+> compared to what the hwmon interface can support. The upcoming hrtimer
+> trigger will match up well with this to support fine-grained
+> periodic samples. I'll add this in the v2 cover latter.
+Fair enough - will want a least an OK from Jean / Guenter that they accept
+this reasoning before I take the driver though.  Best to avoid stepping
+one peoples toes!
+> 
+> -Matt
+> 
+>>> Matt Porter (3):
+>>>  iio: temperature: add max6675 dt binding
+>>>  iio: temperature: add max6675 thermocouple converter driver
+>>>  MAINTAINERS: add max6675 driver
+>>>
+>>> .../bindings/iio/temperature/max6675.txt           |  19 +++
+>>> MAINTAINERS                                        |   7 +
+>>> drivers/iio/temperature/Kconfig                    |  11 ++
+>>> drivers/iio/temperature/Makefile                   |   1 +
+>>> drivers/iio/temperature/max6675.c                  | 155
+>>> +++++++++++++++++++++
+>>> 5 files changed, 193 insertions(+)
+>>> create mode 100644
+>>> Documentation/devicetree/bindings/iio/temperature/max6675.txt
+>>> create mode 100644 drivers/iio/temperature/max6675.c
+>>
+>> -- 
+>> Sent from my Android device with K-9 Mail. Please excuse my brevity.
 
-On Thu, Jul 30, 2015 at 5:45 PM, Mikhail Yakshin <greycat-5kYpVdmHfHqXeEprG8ioHw@public.gmane.org> wrote:
-> Hi,
->
-> I've been analyzing various boards based on Allwinner A20 CPU and
-> X-Powers AXP209 PMU (to make a proper configuration for our board,
-> Whitebox Labs Watermelon).
->
-> There are some things very common and some things pretty different on
-> various boards.
->
-> Namely, there's agreement on that DCDC2 and DCDC3 and used for CPU
-> voltages (VDD-CPU and (VDD-SYS=VDD-INT)+VDD-DLL respectively) on all
-> boards I've analyzed (Olimex boards, Cubieboard / Cubietruck, BananaPi,
-> PCDuino, Watermelon, etc) and probably it should be kept this way.
->
-> However, what puzzles me the most so far is LDO1 regulator. According to
-> [AXP209 datasheet, p. 13, p. 23][1] and all the boards I've
-> investigated, it's used exclusively for powering VDD-RTC input of A20
-> CPU that supports internal CPU's RTC. LDO1 gets very special status in
-> AXP209 - basically, it's as close to "always on" (even on backup
-> battery) as possible the purpose of timekeeping.
->
-> According to the same spec, LDO1 allows 2 distinct voltage choices: 1.3V
-> and 3.3V. However, according to the [A20 datasheet][2], VDD-RTC (pin K8)
-> has absolute minimum and maximum voltage ratings of 3.0V. I'm not sure
-> how is it supposed to work together, given that X-Powers AXP209 and
-> Allwinner A20 is basically produced by different branches the same
-> company and are meant to be totally compatible.
-
-Get an updated datasheet. Mine (v1.5 20150510) recommends VDD-RTC to
-be 1.2 V ~ 1.4 V, and nominally at 1.3 V.
-
-Also, my AXP209 datasheet (v1.0 Chinese) says LDO1SET grounded means
-LDO1 is set to 1.3 V.
-
-> What's even more weird, is that all configurations I've encountered so
-> far (i.e. FEX configurations for 3.4 sunxi kernel and DTS for modern
-> mainline kernels) use hard locked 1.3V setting for LDO1. For example,
-> kernel 3.4:
->
-> /sys/devices/platform/sunxi-i2c.0/i2c-0/0-0034/axp20-regulator.21/regulator/regulator.1/
-> name    axp20_ldo1
-> microvolts      1300000
-> min_microvolts  1300000
-> max_microvolts  1300000
->
-> and similar construction in mainline DTSes:
->
->     vdd_rtc: ldo1 {
->             regulator-min-microvolt = <1300000>;
->             regulator-max-microvolt = <1300000>;
->             regulator-always-on;
->     };
->
-> or in axp209.dtsi:
->
->     reg_ldo1: ldo1 {
->             /* LDO1 is a fixed output regulator */
->             regulator-always-on;
->             regulator-min-microvolt = <1300000>;
->             regulator-max-microvolt = <1300000>;
->             regulator-name = "ldo1";
->     };
->
-> If we'll take a look at default power-on setup for AXP209 in the
-> datasheet (page 24), we'll see that it's determined by LDO1SET pin. If
-> it's connected to GND, then LDO1 will start with 1.3V, if it's connected
-> to VINT, then it would be 3.3V.
->
-> I've analyzed all the schematics I found in public:
->
-> * Older Olimex schematics (Lime rev C, Lime rev D, Lime2 rev B) state
-> that LDO1 line is "3V3/30mA". LDO1SET is grounded.
-> * Newer Olimex schematics (Lime2 rev C) call that "1V3/30mA". LDO1SET is
-> grounded.
-> * All Bananapi and Cubieboard schematics look very similar and seem to
-> be originating from the same source (reference Allwinner design?) and do
-> not hint any voltages. LDO1SET is grounded.
->
-> Can someone explain to me how does it work / supposed to work?
-
-See above.
-
-ChenYu
-
-> [1]: http://linux-sunxi.org/images/8/89/AXP209_Datasheet_v1.0en.pdf
-> [2]:
-> https://github.com/OLIMEX/OLINUXINO/raw/master/HARDWARE/A20-PDFs/A20%20Datasheet%20v1.0%2020130227.pdf
->
-> --
-> WBR, Mikhail Yakshin
->
->
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
->
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
