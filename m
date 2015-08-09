@@ -1,83 +1,38 @@
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: [PATCH 2/2] ARM: shmobile: silk: add QSPI DT support
-Date: Sun, 09 Aug 2015 01:27:14 +0300
-Message-ID: <1768974.jEFIAaInqd@wasted.cogentembedded.com>
-References: <1898263.zrOs5SAUTS@wasted.cogentembedded.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <1898263.zrOs5SAUTS@wasted.cogentembedded.com>
-Sender: linux-sh-owner@vger.kernel.org
-To: horms@verge.net.au, linux-sh@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org
-Cc: magnus.damm@gmail.com, linux@arm.linux.org.uk, linux-arm-kernel@lists.infradead.org
+From: Matt Ranostay <mranostay-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH v6 0/2] iio: light: add support for APDS9960 sensor
+Date: Sun,  9 Aug 2015 00:20:03 -0700
+Message-ID: <1439104805-8428-1-git-send-email-mranostay@gmail.com>
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, knaack.h-Mmb7MZpHnFY@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org
+Cc: linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Matt Ranostay <mranostay-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Define the SILK board dependent part of the QSPI device node.
-Add device nodes  for Spansion  S25FL512S SPI flash and MTD partitions on it.
+This patchset adds support for the APDS9960 ALS + proximity + gesture
+sensor.
 
-Based on the original patch by Vladimir Barinov
-<vladimir.barinov@cogentembedded.com>.
+Included support for the various adjustable settings and controls:
+ * Falling and rising ALS + proximity thresholds events
+ * Gain controls
+ * ALS time integration
 
-Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Changes from v5:
+* Removed triggered buffer since it is un-needed
+* Using KFIFO buffers to send gesture data
 
----
- arch/arm/boot/dts/r8a7794-silk.dts |   40 +++++++++++++++++++++++++++++++++++++
- 1 file changed, 40 insertions(+)
+Matt Ranostay (2):
+  iio: light: DT binding docs for APDS9960 driver
+  iio: light: add APDS9960 ALS + promixity driver
 
-Index: renesas/arch/arm/boot/dts/r8a7794-silk.dts
-===================================================================
---- renesas.orig/arch/arm/boot/dts/r8a7794-silk.dts
-+++ renesas/arch/arm/boot/dts/r8a7794-silk.dts
-@@ -65,6 +65,11 @@
- 		renesas,groups = "mmc_data8", "mmc_ctrl";
- 		renesas,function = "mmc";
- 	};
-+
-+	qspi_pins: spi0 {
-+		renesas,groups = "qspi_ctrl", "qspi_data4";
-+		renesas,function = "qspi";
-+	};
- };
- 
- &scif2 {
-@@ -100,3 +105,38 @@
- 	non-removable;
- 	status = "okay";
- };
-+
-+&qspi {
-+	pinctrl-0 = <&qspi_pins>;
-+	pinctrl-names = "default";
-+
-+	status = "okay";
-+
-+	flash@0 {
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		compatible = "spansion,s25fl512s";
-+		reg = <0>;
-+		spi-max-frequency = <30000000>;
-+		spi-tx-bus-width = <4>;
-+		spi-rx-bus-width = <4>;
-+		m25p,fast-read;
-+		spi-cpol;
-+		spi-cpha;
-+
-+		partition@0 {
-+			label = "loader";
-+			reg = <0x00000000 0x00040000>;
-+			read-only;
-+		};
-+		partition@40000 {
-+			label = "user";
-+			reg = <0x00040000 0x00400000>;
-+			read-only;
-+		};
-+		partition@440000 {
-+			label = "flash";
-+			reg = <0x00440000 0x03bc0000>;
-+		};
-+	};
-+};
+ .../ABI/testing/sysfs-bus-iio-light-apds9960       |    7 +
+ .../devicetree/bindings/iio/light/apds9960.txt     |   22 +
+ drivers/iio/light/Kconfig                          |   13 +
+ drivers/iio/light/Makefile                         |    1 +
+ drivers/iio/light/apds9960.c                       | 1138 ++++++++++++++++++++
+ 5 files changed, 1181 insertions(+)
+ create mode 100644 Documentation/ABI/testing/sysfs-bus-iio-light-apds9960
+ create mode 100644 Documentation/devicetree/bindings/iio/light/apds9960.txt
+ create mode 100644 drivers/iio/light/apds9960.c
 
+-- 
+1.9.1
