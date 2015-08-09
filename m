@@ -1,39 +1,26 @@
-From: Vaibhav Hiremath <vaibhav.hiremath@linaro.org>
-Subject: Re: [PATCH-v5 5/5] i2c: pxa: Add ILCR (tLow & tHigh) configuration
- support
-Date: Sun, 09 Aug 2015 22:23:30 +0530
-Message-ID: <55C7858A.5080308@linaro.org>
-References: <1437482466-16126-1-git-send-email-vaibhav.hiremath@linaro.org>	<1437482466-16126-6-git-send-email-vaibhav.hiremath@linaro.org>	<55C1CE8E.9000601@linaro.org> <87bnegk632.fsf@belgarion.home>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
+From: Olliver Schinagl <oliver@schinagl.nl>
+Subject: [PATCH] ARM: dts: sunxi enable otg port on the sun7i-a20-olinuxino-lime2
+Date: Sun,  9 Aug 2015 20:22:57 +0200
+Message-ID: <1439144578-7890-1-git-send-email-oliver@schinagl.nl>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <87bnegk632.fsf@belgarion.home>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Robert Jarzmik <robert.jarzmik@free.fr>
-Cc: linux-arm-kernel@lists.infradead.org, linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, wsa@the-dreams.de, "Jett.Zhou" <jtzhou@marvell.com>, Yi Zhang <yizhang@marvell.com>
+To: Maxime Ripard <maxime.ripard@free-electrons.com>
+Cc: Olliver Schinagl <oliver+list@schinagl.nl>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, galak@codeaurora.org, Russell King <linux@arm.linux.org.uk>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Olliver Schinagl <o.schinagl@ultimaker.com>, Olliver Schinagl <oliver@schinagl.nl>
 List-Id: devicetree@vger.kernel.org
 
+From: Olliver Schinagl <o.schinagl@ultimaker.com>
 
+This patch enables the recently introduced OTG support for the OLinuXino Lime2.
+Tested with a keyboard and some USB mass-storage flash-drives and various
+hotplug.
 
-On Sunday 09 August 2015 05:48 PM, Robert Jarzmik wrote:
-> Vaibhav Hiremath <vaibhav.hiremath@linaro.org> writes:
->
->> Robert,
->>
->> It would be helpful if you can test this patch-series and confirm that
->> it now fixes the NULL pointer deference issue.
-> Tested, it works on pxa27x in master mode, in non-DT mode.
->
-> For all non-DT patches, you can add my :
-> Tested-by: Robert Jarzmik <robert.jarzmik@free.fr>
->
+Signed-off-by: Olliver Schinagl <oliver@schinagl.nl>
 
-Thanks Robert,
+Olliver Schinagl (1):
+  ARM: dts: sunxi: enable otg port on the sun7i-a20-olinuxino-lime2
 
-Wolfram,
-Request you to please take a look at this series.
-We can have discussion on DT properties as well.
+ arch/arm/boot/dts/sun7i-a20-olinuxino-lime2.dts | 41 +++++++++++++++++++++++++
+ 1 file changed, 41 insertions(+)
 
-Thanks,
-Vaibhav
+-- 
+2.1.4
