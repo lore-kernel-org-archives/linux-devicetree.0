@@ -1,55 +1,53 @@
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: Re: [PATCH 2/2] ARM: shmobile: silk: add QSPI DT support
-Date: Mon, 10 Aug 2015 21:18:24 +0300
-Message-ID: <55C8EAF0.7060600@cogentembedded.com>
-References: <1898263.zrOs5SAUTS@wasted.cogentembedded.com>
- <1768974.jEFIAaInqd@wasted.cogentembedded.com>
- <CAMuHMdXQJ4Hju477Ys0ujXCNdUjWOa6AuKGzLPc3YFJc_eLz+g@mail.gmail.com>
+From: Alban <albeu-GANU6spQydw@public.gmane.org>
+Subject: Re: [PATCH 2/2] MIPS: ath79: add irq chip ar7240-misc-intc
+Date: Mon, 10 Aug 2015 20:22:01 +0200
+Message-ID: <20150810202201.5e813285@tock>
+References: <1438857805-18443-1-git-send-email-lynxis@fe80.eu>
+	<1438857805-18443-2-git-send-email-lynxis@fe80.eu>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <CAMuHMdXQJ4Hju477Ys0ujXCNdUjWOa6AuKGzLPc3YFJc_eLz+g@mail.gmail.com>
-Sender: linux-sh-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Simon Horman <horms@verge.net.au>, Linux-sh list <linux-sh@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Magnus Damm <magnus.damm@gmail.com>, Russell King <linux@arm.linux.org.uk>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1438857805-18443-2-git-send-email-lynxis-qyMx1GtpvWw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Alexander Couzens <lynxis-qyMx1GtpvWw@public.gmane.org>
+Cc: Aban Bedel <albeu-GANU6spQydw@public.gmane.org>, linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hello.
+On Thu,  6 Aug 2015 12:43:25 +0200
+Alexander Couzens <lynxis-qyMx1GtpvWw@public.gmane.org> wrote:
 
-On 08/10/2015 05:38 PM, Geert Uytterhoeven wrote:
+> The ar7240 misc irq chip use ack handler instead of ack_mask handler.
+> All new ath79 SoCs use the ar7240 misc irq chip
 
->> Define the SILK board dependent part of the QSPI device node.
->> Add device nodes  for Spansion  S25FL512S SPI flash and MTD partitions on it.
-
->> Based on the original patch by Vladimir Barinov
->> <vladimir.barinov@cogentembedded.com>.
-
->> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-
->> --- renesas.orig/arch/arm/boot/dts/r8a7794-silk.dts
->> +++ renesas/arch/arm/boot/dts/r8a7794-silk.dts
->
->> +&qspi {
->> +       pinctrl-0 = <&qspi_pins>;
->> +       pinctrl-names = "default";
->> +
->> +       status = "okay";
->> +
->> +       flash@0 {
->> +               #address-cells = <1>;
->> +               #size-cells = <1>;
->> +               compatible = "spansion,s25fl512s";
-
-> Please add the "jedec,spi-nor" fallback.
-
-    Hm, spi-nor.c alone can't control this device, it's rather m25p80.c that's 
-the real driver. So if a fallback needs to be added indeed it should be 
-"st,m25p80" I think...
+except the ar913x family according to the later documentation.
 
 [...]
 
-> Gr{oetje,eeting}s,
+> --- a/arch/mips/ath79/irq.c
+> +++ b/arch/mips/ath79/irq.c
+> @@ -315,8 +315,17 @@ static int __init ar7100_misc_intc_of_init(
+>  	return ath79_misc_intc_of_init(node, parent);
+>  }
+>  
+> +static int __init ar7240_misc_intc_of_init(
+> +	struct device_node *node, struct device_node *parent)
+> +{
+> +	ath79_misc_irq_chip.irq_ack = ar724x_misc_irq_ack;
+> +	return ath79_misc_intc_of_init(node, parent);
+> +}
+> +
+>  IRQCHIP_DECLARE(ar7100_misc_intc, "qca,ar7100-misc-intc",
+>  		ar7100_misc_intc_of_init);
+> +IRQCHIP_DECLARE(ar7240_misc_intc, "qca,ar7240-misc-intc",
+> +		ar7240_misc_intc_of_init);
 
-MBR, Sergei
+It would be better to keep the same formatting as the surrounding code.
+Could you keep the IRQCHIP_DECLARE() together with the init function
+and remove the extra blank line?
 
+Alban
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
