@@ -1,79 +1,85 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH 1/2] ARM: shmobile: r8a7794: add QSPI DT support
-Date: Mon, 10 Aug 2015 16:35:32 +0200
-Message-ID: <CAMuHMdX3F4ecR=BjgUrrEA3P4xpu-Yt_r3qM6SgUdFrYm7h1Rw@mail.gmail.com>
+From: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
+Subject: Re: [PATCH 2/2] ARM: shmobile: silk: add QSPI DT support
+Date: Mon, 10 Aug 2015 16:38:46 +0200
+Message-ID: <CAMuHMdXQJ4Hju477Ys0ujXCNdUjWOa6AuKGzLPc3YFJc_eLz+g@mail.gmail.com>
 References: <1898263.zrOs5SAUTS@wasted.cogentembedded.com>
-	<5339616.vfIYf6AeR8@wasted.cogentembedded.com>
+	<1768974.jEFIAaInqd@wasted.cogentembedded.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <5339616.vfIYf6AeR8@wasted.cogentembedded.com>
-Sender: linux-sh-owner@vger.kernel.org
-To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Cc: Simon Horman <horms@verge.net.au>, Linux-sh list <linux-sh@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Magnus Damm <magnus.damm@gmail.com>, Russell King <linux@arm.linux.org.uk>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1768974.jEFIAaInqd-gHKXc3Y1Z8zGSmamagVegGFoWSdPRAKMAL8bYrjMMd8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+Cc: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Linux-sh list <linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Aug 9, 2015 at 12:26 AM, Sergei Shtylyov
-<sergei.shtylyov@cogentembedded.com> wrote:
-> Define the generic R8A7794 part of the QSPI device node.
->
-> Based on original patch by Hisashi Nakamura <hisashi.nakamura.ak@renesas.com>.
->
-> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Hi Sergei,
 
-Acked-by: Geert Uytterhoeven <geert+renesas@glider.be>
+On Sun, Aug 9, 2015 at 12:27 AM, Sergei Shtylyov
+<sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org> wrote:
+> Define the SILK board dependent part of the QSPI device node.
+> Add device nodes  for Spansion  S25FL512S SPI flash and MTD partitions on it.
+>
+> Based on the original patch by Vladimir Barinov
+> <vladimir.barinov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>.
+>
+> Signed-off-by: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
 
- arch/arm/boot/dts/r8a7794.dtsi |   18 ++++++++++++++++++
->  1 file changed, 18 insertions(+)
->
-> Index: renesas/arch/arm/boot/dts/r8a7794.dtsi
-> ===================================================================
-> --- renesas.orig/arch/arm/boot/dts/r8a7794.dtsi
-> +++ renesas/arch/arm/boot/dts/r8a7794.dtsi
-> @@ -19,6 +19,10 @@
->         #address-cells = <2>;
->         #size-cells = <2>;
->
-> +       aliases {
-> +               spi0 = &qspi;
-> +       };
+> --- renesas.orig/arch/arm/boot/dts/r8a7794-silk.dts
+> +++ renesas/arch/arm/boot/dts/r8a7794-silk.dts
+
+> +&qspi {
+> +       pinctrl-0 = <&qspi_pins>;
+> +       pinctrl-names = "default";
 > +
->         cpus {
->                 #address-cells = <1>;
->                 #size-cells = <0>;
-> @@ -537,6 +541,20 @@
->                 status = "disabled";
->         };
->
-> +       qspi: spi@e6b10000 {
-> +               compatible = "renesas,qspi-r8a7794", "renesas,qspi";
-> +               reg = <0 0xe6b10000 0 0x2c>;
-> +               interrupts = <0 184 IRQ_TYPE_LEVEL_HIGH>;
-> +               clocks = <&mstp9_clks R8A7794_CLK_QSPI_MOD>;
-> +               power-domains = <&cpg_clocks>;
-
-For consistency with the other nodes, I'd add "power-domains" below the
-DMA-related properties.
-
-> +               dmas = <&dmac0 0x17>, <&dmac0 0x18>;
-> +               dma-names = "tx", "rx";
-> +               num-cs = <1>;
+> +       status = "okay";
+> +
+> +       flash@0 {
 > +               #address-cells = <1>;
-> +               #size-cells = <0>;
-> +               status = "disabled";
-> +       };
-> +
->         clocks {
->                 #address-cells = <2>;
->                 #size-cells = <2>;
+> +               #size-cells = <1>;
+> +               compatible = "spansion,s25fl512s";
+
+Please add the "jedec,spi-nor" fallback.
+
+> +               reg = <0>;
+> +               spi-max-frequency = <30000000>;
+> +               spi-tx-bus-width = <4>;
+> +               spi-rx-bus-width = <4>;
+> +               m25p,fast-read;
+
+Please keep all "spi-*" properties together.
+
+> +               spi-cpol;
+> +               spi-cpha;
+
+> +               partition@0 {
+> +                       label = "loader";
+> +                       reg = <0x00000000 0x00040000>;
+> +                       read-only;
+> +               };
+> +               partition@40000 {
+> +                       label = "user";
+> +                       reg = <0x00040000 0x00400000>;
+> +                       read-only;
+> +               };
+> +               partition@440000 {
+> +                       label = "flash";
+> +                       reg = <0x00440000 0x03bc0000>;
+> +               };
+
+The above part I cannot verify, so I have to trust you.
 
 Gr{oetje,eeting}s,
 
                         Geert
 
 --
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
 
 In personal conversations with technical people, I call myself a hacker. But
 when I'm talking to journalists I just say "programmer" or something like that.
                                 -- Linus Torvalds
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
