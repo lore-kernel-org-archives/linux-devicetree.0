@@ -1,87 +1,101 @@
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: [PATCH v2 2/2] ARM: shmobile: silk: add QSPI DT support
-Date: Tue, 11 Aug 2015 01:00:35 +0300
-Message-ID: <7036752.0LCvRcbC9K@wasted.cogentembedded.com>
-References: <4187771.Fb49GBKgyg@wasted.cogentembedded.com>
+From: Rob Herring <robherring2@gmail.com>
+Subject: Re: [PATCH RFC 1/5] drm/msm/hdmi: deprecate non standard gpio properties.
+Date: Mon, 10 Aug 2015 17:07:57 -0500
+Message-ID: <CAL_JsqK6=bmbU-OD7L-Xzg6C+AtNFZZJq-LK3UWXE0rza7-gwA@mail.gmail.com>
+References: <1439207923-30812-1-git-send-email-srinivas.kandagatla@linaro.org>
+ <1439207962-30860-1-git-send-email-srinivas.kandagatla@linaro.org> <20150810124510.GC1262@ulmo.nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <4187771.Fb49GBKgyg@wasted.cogentembedded.com>
-Sender: linux-sh-owner@vger.kernel.org
-To: horms@verge.net.au, linux-sh@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org
-Cc: magnus.damm@gmail.com, linux@arm.linux.org.uk, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <20150810124510.GC1262@ulmo.nvidia.com>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Thierry Reding <thierry.reding@gmail.com>
+Cc: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, dri-devel <dri-devel@lists.freedesktop.org>, Rob Clark <robdclark@gmail.com>, David Airlie <airlied@linux.ie>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Define the SILK board dependent part of the QSPI device node.
-Add device nodes  for Spansion  S25FL512S SPI flash and MTD partitions on it.
+On Mon, Aug 10, 2015 at 7:45 AM, Thierry Reding
+<thierry.reding@gmail.com> wrote:
+> On Mon, Aug 10, 2015 at 12:59:22PM +0100, Srinivas Kandagatla wrote:
+>> This patch updates the bindings to discourage the usage of non standard
+>> gpio properites, this will help in projects focused on upstreaming.
+>
+> That last part is an odd comment to make in the commit message of a
+> patch submitted upstream...
+>
+>> These deprecated properties are still supported but will be remove over
+>> the time.
+>
+> You can't ever remove them because you can't ever be sure that people
+> won't be using an old DTB.
 
-Based on the original patch by Vladimir Barinov
-<vladimir.barinov@cogentembedded.com>.
+It is only an ABI if anyone notices...
 
-Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+>
+>>
+>> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+>> ---
+>>  Documentation/devicetree/bindings/drm/msm/hdmi.txt | 22 +++++++++++++++++-----
+>>  1 file changed, 17 insertions(+), 5 deletions(-)
+>>
+>> diff --git a/Documentation/devicetree/bindings/drm/msm/hdmi.txt b/Documentation/devicetree/bindings/drm/msm/hdmi.txt
+>> index c43aa53..acba581 100644
+>> --- a/Documentation/devicetree/bindings/drm/msm/hdmi.txt
+>> +++ b/Documentation/devicetree/bindings/drm/msm/hdmi.txt
+>> @@ -11,15 +11,27 @@ Required properties:
+>>  - interrupts: The interrupt signal from the hdmi block.
+>>  - clocks: device clocks
+>>    See ../clocks/clock-bindings.txt for details.
+>> -- qcom,hdmi-tx-ddc-clk-gpio: ddc clk pin
+>> -- qcom,hdmi-tx-ddc-data-gpio: ddc data pin
+>> -- qcom,hdmi-tx-hpd-gpio: hpd pin
+>> +- qcom,hdmi-tx-ddc-clk-gpios: ddc clk pin
+>> +- qcom,hdmi-tx-ddc-data-gpios: ddc data pin
 
----
-Changes in version 2:
-- added fallback value to the SPI flash's "compatible" property;
-- grouped all SPI-related properties together in the SPI flash node.
+The driver doesn't appear to do anything other than set these gpios
+high. Presumably you would ultimately do a bit-bang i2c bus for these?
+At that point, aren't you going to want to use the i2c-gpio binding?
 
- arch/arm/boot/dts/r8a7794-silk.dts |   40 +++++++++++++++++++++++++++++++++++++
- 1 file changed, 40 insertions(+)
+I think this binding has bigger issues like why is it not using the
+hdmi-connector binding which has a standard "hpd-gpios" property
+already. I can't really single out this binding though. There's a lot
+of crap when it comes to DRM related bindings.
 
-Index: renesas/arch/arm/boot/dts/r8a7794-silk.dts
-===================================================================
---- renesas.orig/arch/arm/boot/dts/r8a7794-silk.dts
-+++ renesas/arch/arm/boot/dts/r8a7794-silk.dts
-@@ -65,6 +65,11 @@
- 		renesas,groups = "mmc_data8", "mmc_ctrl";
- 		renesas,function = "mmc";
- 	};
-+
-+	qspi_pins: spi0 {
-+		renesas,groups = "qspi_ctrl", "qspi_data4";
-+		renesas,function = "qspi";
-+	};
- };
- 
- &scif2 {
-@@ -100,3 +105,38 @@
- 	non-removable;
- 	status = "okay";
- };
-+
-+&qspi {
-+	pinctrl-0 = <&qspi_pins>;
-+	pinctrl-names = "default";
-+
-+	status = "okay";
-+
-+	flash@0 {
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		compatible = "spansion,s25fl512s", "jedec,spi-nor";
-+		reg = <0>;
-+		spi-max-frequency = <30000000>;
-+		spi-tx-bus-width = <4>;
-+		spi-rx-bus-width = <4>;
-+		spi-cpol;
-+		spi-cpha;
-+		m25p,fast-read;
-+
-+		partition@0 {
-+			label = "loader";
-+			reg = <0x00000000 0x00040000>;
-+			read-only;
-+		};
-+		partition@40000 {
-+			label = "user";
-+			reg = <0x00040000 0x00400000>;
-+			read-only;
-+		};
-+		partition@440000 {
-+			label = "flash";
-+			reg = <0x00440000 0x03bc0000>;
-+		};
-+	};
-+};
+>> +- qcom,hdmi-tx-hpd-gpios: hpd pin
+>>  - core-vdda-supply: phandle to supply regulator
+>>  - hdmi-mux-supply: phandle to mux regulator
+>>
+>> +- qcom,hdmi-tx-ddc-clk-gpio: (deprecated) use
+>> +     "qcom,hdmi-tx-ddc-clk-gpios" instead
+>> +- qcom,hdmi-tx-ddc-data-gpio: (deprecated) use
+>> +     "qcom,hdmi-tx-ddc-data-gpios" instead
+>> +- qcom,hdmi-tx-hpd-gpio: (deprecated) use
+>> +     "qcom,hdmi-tx-hpd-gpios" instead
+>> +
+>>  Optional properties:
+>> -- qcom,hdmi-tx-mux-en-gpio: hdmi mux enable pin
+>> -- qcom,hdmi-tx-mux-sel-gpio: hdmi mux select pin
+>> +- qcom,hdmi-tx-mux-en-gpios: hdmi mux enable pin
+>> +- qcom,hdmi-tx-mux-sel-gpios: hdmi mux select pin
+>> +
+>> +- qcom,hdmi-tx-mux-en-gpio: (deprecated) use "qcom,hdmi-tx-mux-en-gpios"
+>> +     instead
+>> +- qcom,hdmi-tx-mux-sel-gpio: (deprecated) use "qcom,hdmi-tx-mux-sel-gpio"
+>> +     instead
+>>  - pinctrl-names: the pin control state names; should contain "default"
+>>  - pinctrl-0: the default pinctrl state (active)
+>>  - pinctrl-1: the "sleep" pinctrl state
+>
+> I don't see much use in listing that these properties are deprecated. We
+> already have code to catch the deprecated names, so having them in the
+> binding will at best be distracting.
+>
+> Anyway, I don't know if there's been any advice on this from the device
+> tree bindings maintainers, so adding devicetree@vger.kernel.org for
+> visibility.
 
+If they need to be maintained, then marking them deprecated is
+perfectly fine IMO. Also, if the maintainers of platforms using this
+are okay with it, you can just switch it. Given there are no in tree
+dts files using this, it can be argued that there is no ABI.
+
+Rob
