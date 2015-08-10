@@ -1,54 +1,58 @@
-From: Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v2 2/6] mailbox: dt-bindings: Add shared [driver <=>
- device tree] defines
-Date: Mon, 10 Aug 2015 12:28:17 +0530
-Message-ID: <CABb+yY2asjH-c+VJXvG+RK0=2p=P4Y21pznNP0riaKMWLxYZog@mail.gmail.com>
-References: <1437990272-23111-1-git-send-email-lee.jones@linaro.org>
-	<1437990272-23111-3-git-send-email-lee.jones@linaro.org>
+From: Jassi Brar <jassisinghbrar@gmail.com>
+Subject: Re: [RFC PATCH 0/3] mailbox: hisilicon: add mailbox driver
+Date: Mon, 10 Aug 2015 12:32:05 +0530
+Message-ID: <CABb+yY1HTGNi4gZABNhXjpA57DPZx-tv=6+m4JLyx4wPHfovyA@mail.gmail.com>
+References: <1438564390-28111-1-git-send-email-leo.yan@linaro.org>
+	<CABb+yY0-RQ80q92EBsuBoYpjxW5zR=nXr+j3zCXw3wKkCf33OQ@mail.gmail.com>
+	<20150805231743.GB6880@leoy-linaro>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1437990272-23111-3-git-send-email-lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, kernel-F5mvAk5X5gdBDgjK7y7TUQ@public.gmane.org, Devicetree List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20150805231743.GB6880@leoy-linaro>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Leo Yan <leo.yan@linaro.org>
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Wei Xu <xuwei5@hisilicon.com>, Bintian Wang <bintian.wang@huawei.com>, Haojian Zhuang <haojian.zhuang@linaro.org>, Devicetree List <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Guodong Xu <guodong.xu@linaro.org>, Jian Zhang <zhangjian001@hisilicon.com>, Zhenwei Wang <Zhenwei.wang@hisilicon.com>, Haoju Mo <mohaoju@hisilicon.com>, Dan Zhao <dan.zhao@hisilicon.com>, kongfei@hisilicon.com, Guangyue Zeng <zengguangyue@hisilicon.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jul 27, 2015 at 3:14 PM, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
-> This header is currently only used for defines pertaining to data
-> direction i.e. Rx, Tx or Loopback.
+On Thu, Aug 6, 2015 at 4:47 AM, Leo Yan <leo.yan@linaro.org> wrote:
+> Hi Jassi,
 >
-> Signed-off-by: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> ---
->  include/dt-bindings/mailbox/mailbox.h | 14 ++++++++++++++
->  1 file changed, 14 insertions(+)
->  create mode 100644 include/dt-bindings/mailbox/mailbox.h
+> Thanks for review.
 >
-> diff --git a/include/dt-bindings/mailbox/mailbox.h b/include/dt-bindings/mailbox/mailbox.h
-> new file mode 100644
-> index 0000000..82e929a
-> --- /dev/null
-> +++ b/include/dt-bindings/mailbox/mailbox.h
-> @@ -0,0 +1,14 @@
-> +/*
-> + * This program is free software; you can redistribute it and/or modify
-> + * it under the terms of the GNU General Public License version 2 as
-> + * published by the Free Software Foundation.
-> + */
-> +
-> +#ifndef __MAILBOX_CONTROLLER_DT_BINDINGS_H
-> +#define __MAILBOX_CONTROLLER_DT_BINDINGS_H
-> +
-> +#define MBOX_TX                0x1
-> +#define MBOX_RX                0x2
-> +#define MBOX_LOOPBACK  (MBOX_RX | MBOX_TX)
-> +
-Not sure I understand 'loopback'.  Does it mean h/w has some
-'loopback' mode for testing purposes? Or it simply means the
-controller can send as well as receive messages?
+> On Wed, Aug 05, 2015 at 04:22:01PM +0530, Jassi Brar wrote:
+>> On Mon, Aug 3, 2015 at 6:43 AM, Leo Yan <leo.yan@linaro.org> wrote:
+>
+> [...]
+>
+>> > For easily extending for Hisilicon series SoCs (SoCs may have difference
+>> > for register's definition with each other), so firstly implement common
+>> > mailbox driver; this common mailbox driver provides three mainly
+>> > functionality:
+>> >
+>> >  - help register channels into framework;
+>> >  - hook low level callback functions for register's operations;
+>> >  - Enhance rx channel's message queue, which is based on the code in
+>> >    drivers/mailbox/omap-mailbox.c.
+>> >
+>> Not cool.
+>>  Please don't reinvent the wheel by having platform specific
+>> implementation of the mailbox api. Which vendor doesn't plan to roll
+>> out new SoCs, and hence variations of mailbox controllers?  The OMAP
+>> stack predates the common api, and was actually supposed to be
+>> converted over eventually. Please implement just the
+>> drivers/mailbox/hi6220-mailbox.c (preferably by the name of the
+>> mailbox controller, if any)
+>
+> Understood. Here i have one question, the rx channel's message queue is
+> looks like a common mechanism and can be added into framework file
+> mailbox.c, then Soc driver file can _ONLY_ focus on register level's
+> operations. If so, the common driver in this patch also is unnecessary.
+>
+Yes, that's what I say, no 'common' driver for a platform.
 
-Thanks.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> Do you suggest to use upper method to rework patches? Or just think
+> it's okay to implement rx channel's message queue in hi6220-mailbox.c?
+>
+The code in drivers/mailbox/ should only manage the controller
+(registers and interrupts). Everything else (queues, shmem etc) should
+be in platform specific client driver(s).
