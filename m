@@ -1,218 +1,120 @@
-From: Alexey Kardashevskiy <aik@ozlabs.ru>
-Subject: Re: [PATCH v6 08/42] powerpc/powernv: Calculate PHB's DMA weight
- dynamically
-Date: Mon, 10 Aug 2015 17:48:24 +1000
-Message-ID: <55C85748.4080308@ozlabs.ru>
-References: <1438834307-26960-1-git-send-email-gwshan@linux.vnet.ibm.com>
- <1438834307-26960-9-git-send-email-gwshan@linux.vnet.ibm.com>
+From: =?UTF-8?B?Q2h1bmctWWloIFdhbmcgKOeOi+W0h+aHvyk=?=
+	<cywang@google.com>
+Subject: Re: [PATCH] thermal: of: Introduce governor selection in dts
+Date: Mon, 10 Aug 2015 16:00:49 +0800
+Message-ID: <CAM2ehZYy3SNKhXvF0XyQsoPFab2JqrVq3wLKadPVxBsVG3E7jw@mail.gmail.com>
+References: <CAM2ehZYXsqCoS9ygXNfPHxt9-b5cFxH_ovrgjvM-BfDO6REcUg@mail.gmail.com>
+ <20150807103121.GC7646@leverpostej>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=koi8-r; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <1438834307-26960-9-git-send-email-gwshan@linux.vnet.ibm.com>
-Sender: linux-pci-owner@vger.kernel.org
-To: Gavin Shan <gwshan@linux.vnet.ibm.com>, linuxppc-dev@lists.ozlabs.org
-Cc: linux-pci@vger.kernel.org, devicetree@vger.kernel.org, benh@kernel.crashing.org, mpe@ellerman.id.au, bhelgaas@google.com, grant.likely@linaro.org, robherring2@gmail.com, panto@antoniou-consulting.com
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20150807103121.GC7646@leverpostej>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Mark Rutland <mark.rutland@arm.com>, javi.merino@arm.com
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Zhang Rui <rui.zhang@intel.com>, Eduardo Valentin <edubezval@gmail.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <Pawel.Moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 08/06/2015 02:11 PM, Gavin Shan wrote:
-> For P7IOC, the whole available DMA32 space, which is below the
-> MEM32 space, is divided evenly into 256MB segments. The number
-> of continuous segments assigned to one particular PE depends on
-> the PE's DMA weight that is calculated based on the type of each
-> PCI devices contained in the PE, and PHB's DMA weight which is
-> accumulative DMA weight of PEs contained in the PHB. It means
-> that the PHB's DMA weight calculation depends on existing PEs,
-> which works perfectly now, but not hotplug friendly. As the
-> whole available DMA32 space can be assigned to one PE on PHB3,
-> so we don't have the issue on PHB3.
->
-> The patch calculates PHB's DMA weight based on the PCI devices
-> contained in the PHB dynamically so that it's hotplug friendly.
+This patch was originally introduced when we made power_allocator the
+default governor where we had issues in binding a thermal zone w/o
+parameters to. Then we came out this facility for binding a specific
+governor to a thermal zone in dts instead of the default governor.
+Javi seems like this idea much.
 
-It does not look like the patch changed anything about when to calculate 
-weights, it was and is pnv_ioda_setup_dma().
-
-What the patch seems to be doing is changing weights by multiplying them by 
-phb->ioda.tce32_count but it is unclear why you do this.
-
-
+On Fri, Aug 7, 2015 at 6:31 PM, Mark Rutland <mark.rutland@arm.com> wro=
+te:
+> On Fri, Aug 07, 2015 at 08:09:39AM +0100, Chung-Yih Wang (=E7=8E=8B=E5=
+=B4=87=E6=87=BF) wrote:
+>> As there could be more thermal zones on a system and
+>> more variety in thermal governors provided in kernel,
+>> this patch provides flexibility of governor selection
+>> for a thermal zone declared in device tree.
+>>
+>> Change-Id: Ie4a75d762709cbbe9f1806dae325d13f71982e78
+>> Signed-off-by: Chung-yih Wang <cywang@chromium.org>
+>> ---
+>>  Documentation/devicetree/bindings/thermal/thermal.txt |  9 ++++++++=
++
+>>  drivers/thermal/of-thermal.c                          | 10 ++++++++=
+++
+>>  2 files changed, 19 insertions(+)
+>>
+>> diff --git a/Documentation/devicetree/bindings/thermal/thermal.txt
+>> b/Documentation/devicetree/bindings/thermal/thermal.txt
+>> index 8a49362..30a5d41 100644
+>> --- a/Documentation/devicetree/bindings/thermal/thermal.txt
+>> +++ b/Documentation/devicetree/bindings/thermal/thermal.txt
+>> @@ -174,6 +174,13 @@ Optional property:
+>>                         2000mW, while on a 10'' tablet is around
+>>                         4500mW.
+>>
+>> +- thermal-governor-name:       The name of governor used to control=
+ the
+>> +                               thermal zone instead of the default =
+one
+>> +                               specified in kernel config. For refe=
+rence, if
+>> +                               default governor is step_wise, one c=
+ould
+>> +                               select power_allocator for cpu_therm=
+al zone
+>> +                               in dts.
 >
-> Signed-off-by: Gavin Shan <gwshan@linux.vnet.ibm.com>
-> ---
->   arch/powerpc/platforms/powernv/pci-ioda.c | 88 +++++++++++++++----------------
->   arch/powerpc/platforms/powernv/pci.h      |  6 ---
->   2 files changed, 43 insertions(+), 51 deletions(-)
 >
-> diff --git a/arch/powerpc/platforms/powernv/pci-ioda.c b/arch/powerpc/platforms/powernv/pci-ioda.c
-> index 713f4b4..7342cfd 100644
-> --- a/arch/powerpc/platforms/powernv/pci-ioda.c
-> +++ b/arch/powerpc/platforms/powernv/pci-ioda.c
-> @@ -927,6 +927,9 @@ static void pnv_ioda_link_pe_by_weight(struct pnv_phb *phb,
+> This is not a hardware or system property, but rather a Linux
+> implementation detail.
 >
->   static unsigned int pnv_ioda_dma_weight(struct pci_dev *dev)
->   {
-> +	struct pci_controller *hose = pci_bus_to_host(dev->bus);
-> +	struct pnv_phb *phb = hose->private_data;
-> +
->   	/* This is quite simplistic. The "base" weight of a device
->   	 * is 10. 0 means no DMA is to be accounted for it.
->   	 */
-> @@ -939,14 +942,34 @@ static unsigned int pnv_ioda_dma_weight(struct pci_dev *dev)
->   	if (dev->class == PCI_CLASS_SERIAL_USB_UHCI ||
->   	    dev->class == PCI_CLASS_SERIAL_USB_OHCI ||
->   	    dev->class == PCI_CLASS_SERIAL_USB_EHCI)
-> -		return 3;
-> +		return 3 * phb->ioda.tce32_count;
+> This really shouldn't go in the DT.
 >
->   	/* Increase the weight of RAID (includes Obsidian) */
->   	if ((dev->class >> 8) == PCI_CLASS_STORAGE_RAID)
-> -		return 15;
-> +		return 15 * phb->ioda.tce32_count;
+> Mark.
 >
->   	/* Default */
-> -	return 10;
-> +	return 10 * phb->ioda.tce32_count;
-> +}
-> +
-> +static int __pnv_ioda_phb_dma_weight(struct pci_dev *pdev, void *data)
-> +{
-> +	unsigned int *dma_weight = data;
-> +
-> +	*dma_weight += pnv_ioda_dma_weight(pdev);
-> +	return 0;
-> +}
-> +
-> +static unsigned int pnv_ioda_phb_dma_weight(struct pnv_phb *phb)
-> +{
-> +	unsigned int dma_weight = 0;
-> +
-> +	if (!phb->hose->bus)
-> +		return 0;
-> +
-> +	pci_walk_bus(phb->hose->bus,
-> +		     __pnv_ioda_phb_dma_weight, &dma_weight);
-> +	return dma_weight;
->   }
->
->   #ifdef CONFIG_PCI_IOV
-> @@ -1097,14 +1120,6 @@ static void pnv_ioda_setup_bus_PE(struct pci_bus *bus, bool all)
->   	/* Put PE to the list */
->   	list_add_tail(&pe->list, &phb->ioda.pe_list);
->
-> -	/* Account for one DMA PE if at least one DMA capable device exist
-> -	 * below the bridge
-> -	 */
-> -	if (pe->dma_weight != 0) {
-> -		phb->ioda.dma_weight += pe->dma_weight;
-> -		phb->ioda.dma_pe_count++;
-> -	}
-> -
->   	/* Link the PE */
->   	pnv_ioda_link_pe_by_weight(phb, pe);
->   }
-> @@ -2431,24 +2446,13 @@ static void pnv_pci_ioda2_setup_dma_pe(struct pnv_phb *phb,
->   static void pnv_ioda_setup_dma(struct pnv_phb *phb)
->   {
->   	struct pci_controller *hose = phb->hose;
-> -	unsigned int residual, remaining, segs, tw, base;
->   	struct pnv_ioda_pe *pe;
-> +	unsigned int dma_weight;
->
-> -	/* If we have more PE# than segments available, hand out one
-> -	 * per PE until we run out and let the rest fail. If not,
-> -	 * then we assign at least one segment per PE, plus more based
-> -	 * on the amount of devices under that PE
-> -	 */
-> -	if (phb->ioda.dma_pe_count > phb->ioda.tce32_count)
-> -		residual = 0;
-> -	else
-> -		residual = phb->ioda.tce32_count -
-> -			phb->ioda.dma_pe_count;
-> -
-> -	pr_info("PCI: Domain %04x has %ld available 32-bit DMA segments\n",
-> -		hose->global_number, phb->ioda.tce32_count);
-> -	pr_info("PCI: %d PE# for a total weight of %d\n",
-> -		phb->ioda.dma_pe_count, phb->ioda.dma_weight);
-> +	/* Calculate the PHB's DMA weight */
-> +	dma_weight = pnv_ioda_phb_dma_weight(phb);
-> +	pr_info("PCI%04x has %ld DMA32 segments, total weight %d\n",
-> +		hose->global_number, phb->ioda.tce32_count, dma_weight);
->
->   	pnv_pci_ioda_setup_opal_tce_kill(phb);
->
-> @@ -2456,22 +2460,9 @@ static void pnv_ioda_setup_dma(struct pnv_phb *phb)
->   	 * out one base segment plus any residual segments based on
->   	 * weight
->   	 */
-> -	remaining = phb->ioda.tce32_count;
-> -	tw = phb->ioda.dma_weight;
-> -	base = 0;
->   	list_for_each_entry(pe, &phb->ioda.pe_dma_list, dma_link) {
->   		if (!pe->dma_weight)
->   			continue;
-> -		if (!remaining) {
-> -			pe_warn(pe, "No DMA32 resources available\n");
-> -			continue;
-> -		}
-> -		segs = 1;
-> -		if (residual) {
-> -			segs += ((pe->dma_weight * residual)  + (tw / 2)) / tw;
-> -			if (segs > remaining)
-> -				segs = remaining;
-> -		}
->
->   		/*
->   		 * For IODA2 compliant PHB3, we needn't care about the weight.
-> @@ -2479,17 +2470,24 @@ static void pnv_ioda_setup_dma(struct pnv_phb *phb)
->   		 * the specific PE.
->   		 */
->   		if (phb->type == PNV_PHB_IODA1) {
-> -			pe_info(pe, "DMA weight %d, assigned %d DMA32 segments\n",
-> +			unsigned int segs, base = 0;
-> +
-> +			if (pe->dma_weight <
-> +			    dma_weight / phb->ioda.tce32_count)
-> +				segs = 1;
-> +			else
-> +				segs = (pe->dma_weight *
-> +					phb->ioda.tce32_count) / dma_weight;
-> +
-> +			pe_info(pe, "DMA32 weight %d, assigned %d segments\n",
->   				pe->dma_weight, segs);
->   			pnv_pci_ioda_setup_dma_pe(phb, pe, base, segs);
-> +
-> +			base += segs;
->   		} else {
->   			pe_info(pe, "Assign DMA32 space\n");
-> -			segs = 0;
->   			pnv_pci_ioda2_setup_dma_pe(phb, pe);
->   		}
-> -
-> -		remaining -= segs;
-> -		base += segs;
->   	}
->   }
->
-> diff --git a/arch/powerpc/platforms/powernv/pci.h b/arch/powerpc/platforms/powernv/pci.h
-> index 08a4e57..addd3f7 100644
-> --- a/arch/powerpc/platforms/powernv/pci.h
-> +++ b/arch/powerpc/platforms/powernv/pci.h
-> @@ -183,12 +183,6 @@ struct pnv_phb {
->   			/* 32-bit TCE tables allocation */
->   			unsigned long		tce32_count;
->
-> -			/* Total "weight" for the sake of DMA resources
-> -			 * allocation
-> -			 */
-> -			unsigned int		dma_weight;
-> -			unsigned int		dma_pe_count;
-> -
->   			/* Sorted list of used PE's, sorted at
->   			 * boot for resource allocation purposes
->   			 */
->
-
-
--- 
-Alexey
+>> +
+>>  Note: The delay properties are bound to the maximum dT/dt (temperat=
+ure
+>>  derivative over time) in two situations for a thermal zone:
+>>  (i)  - when passive cooling is activated (polling-delay-passive); a=
+nd
+>> @@ -555,6 +562,8 @@ thermal-zones {
+>>
+>>                 sustainable-power =3D <2500>;
+>>
+>> +               thermal-governor-name =3D "power_allocator";
+>> +
+>>                 trips {
+>>                         /* Trips are based on resulting linear equat=
+ion */
+>>                         cpu_trip: cpu-trip {
+>> diff --git a/drivers/thermal/of-thermal.c b/drivers/thermal/of-therm=
+al.c
+>> index b295b2b..45570ac 100644
+>> --- a/drivers/thermal/of-thermal.c
+>> +++ b/drivers/thermal/of-thermal.c
+>> @@ -882,6 +882,7 @@ int __init of_parse_thermal_zones(void)
+>>         }
+>>
+>>         for_each_child_of_node(np, child) {
+>> +               const char *governor_name;
+>>                 struct thermal_zone_device *zone;
+>>                 struct thermal_zone_params *tzp;
+>>                 int i, mask =3D 0;
+>> @@ -909,6 +910,15 @@ int __init of_parse_thermal_zones(void)
+>>                         goto exit_free;
+>>                 }
+>>
+>> +               /* Select a preferred governor if declared */
+>> +               if (!of_property_read_string(child,
+>> +                                            "thermal-governor-name"=
+,
+>> +                                            &governor_name)) {
+>> +                       strncpy(tzp->governor_name,
+>> +                               governor_name,
+>> +                               sizeof(tzp->governor_name) - 1);
+>> +               }
+>> +
+>>                 /* No hwmon because there might be hwmon drivers reg=
+istering */
+>>                 tzp->no_hwmon =3D true;
+>>
+>> --
+>> 2.1.2
+>>
