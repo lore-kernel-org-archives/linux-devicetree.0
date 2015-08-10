@@ -1,96 +1,30 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH v4 6/6] mfd: da9150: Use DEFINE_RES_IRQ_NAMED() help
- macro for IRQ resource
-Date: Mon, 10 Aug 2015 14:58:36 +0100
-Message-ID: <20150810135836.GM3249@x1>
-References: <cover.1438692348.git.Adam.Thomson.Opensource@diasemi.com>
- <ab8e02c022c8b90d4b65bf13e2f2c402e54f2cf5.1438692348.git.Adam.Thomson.Opensource@diasemi.com>
+From: Alexey Kardashevskiy <aik@ozlabs.ru>
+Subject: Re: [PATCH v6 17/42] powerpc/powernv: Rename PE# fields in PHB
+Date: Tue, 11 Aug 2015 00:21:16 +1000
+Message-ID: <55C8B35C.4040501@ozlabs.ru>
+References: <1438834307-26960-1-git-send-email-gwshan@linux.vnet.ibm.com>
+ <1438834307-26960-18-git-send-email-gwshan@linux.vnet.ibm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-pm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <ab8e02c022c8b90d4b65bf13e2f2c402e54f2cf5.1438692348.git.Adam.Thomson.Opensource@diasemi.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Adam Thomson <Adam.Thomson.Opensource@diasemi.com>
-Cc: Samuel Ortiz <sameo@linux.intel.com>, Sebastian Reichel <sre@kernel.org>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, David Woodhouse <dwmw2@infradead.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Support Opensource <support.opensource@diasemi.com>
+Content-Type: text/plain; charset=koi8-r; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <1438834307-26960-18-git-send-email-gwshan@linux.vnet.ibm.com>
+Sender: linux-pci-owner@vger.kernel.org
+To: Gavin Shan <gwshan@linux.vnet.ibm.com>, linuxppc-dev@lists.ozlabs.org
+Cc: linux-pci@vger.kernel.org, devicetree@vger.kernel.org, benh@kernel.crashing.org, mpe@ellerman.id.au, bhelgaas@google.com, grant.likely@linaro.org, robherring2@gmail.com, panto@antoniou-consulting.com
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 04 Aug 2015, Adam Thomson wrote:
+On 08/06/2015 02:11 PM, Gavin Shan wrote:
+> This renames the fields related to PE# in "struct pnv_phb" for
+> better reflecting of their usages as Alexey suggested. It doesn't
+> introduce behavioural changes.
+>
+> Signed-off-by: Gavin Shan <gwshan@linux.vnet.ibm.com>
 
-> Signed-off-by: Adam Thomson <Adam.Thomson.Opensource@diasemi.com>
-> ---
->=20
-> Changes in v4:
->  - N/A
->=20
-> Changes in v3:
->  - Initial version.
->=20
-> Changes in v2:
->  - N/A
->=20
->  drivers/mfd/da9150-core.c | 35 +++++------------------------------
->  1 file changed, 5 insertions(+), 30 deletions(-)
 
-Perhaps a Suggested-by for this and the relative paths patch wouldn't
-go amiss, but it's not a show stopper.
+Makes sense to move this to the beginning of the patchset as patches prior 
+this are changing the same lines as this patch changes.
 
-Acked-by: Lee Jones <lee.jones@linaro.org>
 
-> diff --git a/drivers/mfd/da9150-core.c b/drivers/mfd/da9150-core.c
-> index 85ca4b5..195fdcf 100644
-> --- a/drivers/mfd/da9150-core.c
-> +++ b/drivers/mfd/da9150-core.c
-> @@ -355,39 +355,14 @@ static const struct regmap_irq_chip da9150_regm=
-ap_irq_chip =3D {
->  };
->=20
->  static struct resource da9150_gpadc_resources[] =3D {
-> -	{
-> -		.name =3D "GPADC",
-> -		.start =3D DA9150_IRQ_GPADC,
-> -		.end =3D DA9150_IRQ_GPADC,
-> -		.flags =3D IORESOURCE_IRQ,
-> -	},
-> +	DEFINE_RES_IRQ_NAMED(DA9150_IRQ_GPADC, "GPADC"),
->  };
->=20
->  static struct resource da9150_charger_resources[] =3D {
-> -	{
-> -		.name =3D "CHG_STATUS",
-> -		.start =3D DA9150_IRQ_CHG,
-> -		.end =3D DA9150_IRQ_CHG,
-> -		.flags =3D IORESOURCE_IRQ,
-> -	},
-> -	{
-> -		.name =3D "CHG_TJUNC",
-> -		.start =3D DA9150_IRQ_TJUNC,
-> -		.end =3D DA9150_IRQ_TJUNC,
-> -		.flags =3D IORESOURCE_IRQ,
-> -	},
-> -	{
-> -		.name =3D "CHG_VFAULT",
-> -		.start =3D DA9150_IRQ_VFAULT,
-> -		.end =3D DA9150_IRQ_VFAULT,
-> -		.flags =3D IORESOURCE_IRQ,
-> -	},
-> -	{
-> -		.name =3D "CHG_VBUS",
-> -		.start =3D DA9150_IRQ_VBUS,
-> -		.end =3D DA9150_IRQ_VBUS,
-> -		.flags =3D IORESOURCE_IRQ,
-> -	},
-> +	DEFINE_RES_IRQ_NAMED(DA9150_IRQ_CHG, "CHG_STATUS"),
-> +	DEFINE_RES_IRQ_NAMED(DA9150_IRQ_TJUNC, "CHG_TJUNC"),
-> +	DEFINE_RES_IRQ_NAMED(DA9150_IRQ_VFAULT, "CHG_VFAULT"),
-> +	DEFINE_RES_IRQ_NAMED(DA9150_IRQ_VBUS, "CHG_VBUS"),
->  };
->=20
->  static struct resource da9150_fg_resources[] =3D {
-
---=20
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-=46ollow Linaro: Facebook | Twitter | Blog
+-- 
+Alexey
