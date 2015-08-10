@@ -1,139 +1,123 @@
-From: Thierry Reding <thierry.reding@gmail.com>
-Subject: Re: [PATCH RFC 1/5] drm/msm/hdmi: deprecate non standard gpio
- properties.
-Date: Mon, 10 Aug 2015 14:45:12 +0200
-Message-ID: <20150810124510.GC1262@ulmo.nvidia.com>
-References: <1439207923-30812-1-git-send-email-srinivas.kandagatla@linaro.org>
- <1439207962-30860-1-git-send-email-srinivas.kandagatla@linaro.org>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH v4 2/2] dt: power: st: Provide bindings for ST's OPPs
+Date: Mon, 10 Aug 2015 14:22:47 +0100
+Message-ID: <20150810132247.GH3249@x1>
+References: <1438010430-5802-1-git-send-email-lee.jones@linaro.org>
+ <1438010430-5802-2-git-send-email-lee.jones@linaro.org>
+ <20150728022936.GB1229@linux>
+ <20150728225510.GB3159@codeaurora.org>
+ <20150729081403.GH2284@x1>
+ <20150729221526.GE3159@codeaurora.org>
+ <20150730084634.GD9319@x1>
+ <CAL_JsqKQLQ15qSt95zBZykzzPhcUrtZzhk29a76n+r_3719AiA@mail.gmail.com>
+ <20150731163715.GV3159@codeaurora.org>
+ <20150803034642.GV899@linux>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============1128633726=="
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <1439207962-30860-1-git-send-email-srinivas.kandagatla@linaro.org>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Cc: devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Rob Herring <robh+dt@kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-pm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20150803034642.GV899@linux>
+Sender: linux-pm-owner@vger.kernel.org
+To: Viresh Kumar <viresh.kumar@linaro.org>
+Cc: Stephen Boyd <sboyd@codeaurora.org>, Rob Herring <robherring2@gmail.com>, Nishanth Menon <nm@ti.com>, kernel@stlinux.com, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, Rafael Wysocki <rjw@rjwysocki.net>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Sebastian Reichel <sre@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Arnd Bergmann <arnd.bergmann@linaro.org>, Ajit Pal Singh <ajitpal.singh@st.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
+On Mon, 03 Aug 2015, Viresh Kumar wrote:
 
---===============1128633726==
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="CPaaJmjEtnx7DmsZ"
-Content-Disposition: inline
-
-
---CPaaJmjEtnx7DmsZ
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Mon, Aug 10, 2015 at 12:59:22PM +0100, Srinivas Kandagatla wrote:
-> This patch updates the bindings to discourage the usage of non standard
-> gpio properites, this will help in projects focused on upstreaming.
-
-That last part is an odd comment to make in the commit message of a
-patch submitted upstream...
-
-> These deprecated properties are still supported but will be remove over
-> the time.
-
-You can't ever remove them because you can't ever be sure that people
-won't be using an old DTB.
-
+> On 31-07-15, 09:37, Stephen Boyd wrote:
+> > For qcom platforms, the frequency is almost always constant.
+> > There may be some tables where we have a couple higher
+> > frequencies than others because the speed bin is different.
+> > Otherwise the voltage/current is changing based on the silicon
+> > characteristics. So the biggest duplication is the frequency
+> > property.
+> >=20
+> > As far as I know there isn't any algorithm to generate the
+> > voltage values. It's all hand tuned tables based on the silicon
+> > characterization, so we're left to store these tables in DT and
+> > pick the right one at runtime. With regards to the table
+> > explosion, on qcom platforms we haven't worried that we have ~40
+> > tables, but I'm not opposed to expressing it in a smaller set of
+> > nodes, tables, etc. if that's what's desired.
+> >=20
+> > Do we need vendor specific properties for that though? Or do we
+> > need some sort of extended frequency/voltage properties that are
+> > arrays of values that we can index into based on some silicon
+> > characteristics? I like the name based approach because it's
+> > simple. Use this OPP table because it's called
+> > x-y-z-characteristics and be done. Cramming the tables into less
+> > lines may save us some typing and dtb space, but I'm not sure
+> > what else it does.
 >=20
-> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-> ---
->  Documentation/devicetree/bindings/drm/msm/hdmi.txt | 22 ++++++++++++++++=
-+-----
->  1 file changed, 17 insertions(+), 5 deletions(-)
+> What about something like this:
 >=20
-> diff --git a/Documentation/devicetree/bindings/drm/msm/hdmi.txt b/Documen=
-tation/devicetree/bindings/drm/msm/hdmi.txt
-> index c43aa53..acba581 100644
-> --- a/Documentation/devicetree/bindings/drm/msm/hdmi.txt
-> +++ b/Documentation/devicetree/bindings/drm/msm/hdmi.txt
-> @@ -11,15 +11,27 @@ Required properties:
->  - interrupts: The interrupt signal from the hdmi block.
->  - clocks: device clocks
->    See ../clocks/clock-bindings.txt for details.
-> -- qcom,hdmi-tx-ddc-clk-gpio: ddc clk pin
-> -- qcom,hdmi-tx-ddc-data-gpio: ddc data pin
-> -- qcom,hdmi-tx-hpd-gpio: hpd pin
-> +- qcom,hdmi-tx-ddc-clk-gpios: ddc clk pin
-> +- qcom,hdmi-tx-ddc-data-gpios: ddc data pin
-> +- qcom,hdmi-tx-hpd-gpios: hpd pin
->  - core-vdda-supply: phandle to supply regulator
->  - hdmi-mux-supply: phandle to mux regulator
+> diff --git a/Documentation/devicetree/bindings/opp/opp.txt b/Document=
+ation/devicetree/bindings/opp/opp.txt
+> index 0cb44dc21f97..bad7a8299b9c 100644
+> --- a/Documentation/devicetree/bindings/opp/opp.txt
+> +++ b/Documentation/devicetree/bindings/opp/opp.txt
+> @@ -74,6 +74,8 @@ This describes the OPPs belonging to a device. This=
+ node can have following
+>    reference an OPP.
 > =20
-> +- qcom,hdmi-tx-ddc-clk-gpio: (deprecated) use
-> +	"qcom,hdmi-tx-ddc-clk-gpios" instead
-> +- qcom,hdmi-tx-ddc-data-gpio: (deprecated) use
-> +	"qcom,hdmi-tx-ddc-data-gpios" instead
-> +- qcom,hdmi-tx-hpd-gpio: (deprecated) use
-> +	"qcom,hdmi-tx-hpd-gpios" instead
-> +
 >  Optional properties:
-> -- qcom,hdmi-tx-mux-en-gpio: hdmi mux enable pin
-> -- qcom,hdmi-tx-mux-sel-gpio: hdmi mux select pin
-> +- qcom,hdmi-tx-mux-en-gpios: hdmi mux enable pin
-> +- qcom,hdmi-tx-mux-sel-gpios: hdmi mux select pin
+> +- opp-cuts: One or more strings, describing the versions of hardware=
+ the OPPs
+> +  can support.
+
+This isn't very generic.
+
+I'm guessing some vendors my have quite a few ways to differentiate
+between board versions/revisions/cuts etc.
+
+How about another array where a vendor can choose to identify a piece
+of hardware however they see fit.
+
+Example 1 (simple version):
+
+/* Version 1 */
+opp-version =3D <1>;
+
+Example 2 (using the kernel's versioning):
+
+/* 2.6.32-rc1 */
+opp-version =3D <2 6 32 1>;
+
+Example 3 (using ST's versioning):
+
+/* Major 2, Minor 0, Cut 2, All substrates */
+opp-version =3D <2 0 2 0xff>;
+
+Qcom (or anyone else wanting to use names to identify their revisions)
+can continue to use their node name method, as it doesn't break any
+convention.
+
+>  - opp-shared: Indicates that device nodes using this OPP Table Node'=
+s phandle
+>    switch their DVFS state together, i.e. they share clock/voltage/cu=
+rrent lines.
+>    Missing property means devices have independent clock/voltage/curr=
+ent lines,
+> @@ -100,6 +102,9 @@ properties.
+>    Entries for multiple regulators must be present in the same order =
+as
+>    regulators are specified in device's DT node.
+> =20
+> +  If used with 'opp-cuts', then the number of entries present here m=
+ust match
+> +  the number of strings present in 'opp-cuts'.
 > +
-> +- qcom,hdmi-tx-mux-en-gpio: (deprecated) use "qcom,hdmi-tx-mux-en-gpios"
-> +	instead
-> +- qcom,hdmi-tx-mux-sel-gpio: (deprecated) use "qcom,hdmi-tx-mux-sel-gpio"
-> +	instead
->  - pinctrl-names: the pin control state names; should contain "default"
->  - pinctrl-0: the default pinctrl state (active)
->  - pinctrl-1: the "sleep" pinctrl state
+>  - opp-microamp: The maximum current drawn by the device in microampe=
+res
+>    considering system specific parameters (such as transients, proces=
+s, aging,
+>    maximum operating temperature range etc.) as necessary. This may b=
+e used to
+>=20
 
-I don't see much use in listing that these properties are deprecated. We
-already have code to catch the deprecated names, so having them in the
-binding will at best be distracting.
-
-Anyway, I don't know if there's been any advice on this from the device
-tree bindings maintainers, so adding devicetree@vger.kernel.org for
-visibility.
-
-Thierry
-
---CPaaJmjEtnx7DmsZ
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQIcBAABCAAGBQJVyJzWAAoJEN0jrNd/PrOhfQYP/RJSxc5vZG+yNNYIrlMBbayw
-PdTlIgy+LcWEfGvUD92PuHXxHQY9d2QiHCInVHgkrSGzhSNblCKtGy7Z/Jfm05Jn
-QTTtGQdeoN6LbLihKFSeT8AAUKeZyDSxk1yvj4w4N4s6JKxo72eMxyxRYeWdBdJU
-akjbjUxIl+UxurE94JwzLLXlVnO7+2MSFZ78/OQWaItxYG85MObmLwiNwxhAgasK
-NAzIjHRqsEiEIc599DfkJs+uGIVrC4cysne4w6sSfckF9539v8TSVTWzw242t62C
-yfGtKYkrt7202sZdZO1w67l/P5HHXI1R0qqrPLolsWJnSjByFFyyIc8f+r/pBHH4
-Y2bKFYmhF+fWgHZ4KMuTIDG5O4rAO/TCWQJoRQtpQbFP/qnQOfsPaFLDQGE37K0n
-M5JXgGNcLEGyV1huN5dWAJ2L4yAlFpYlwUr7FZPetfXiCIL100uVMKIMj5qNESGk
-Tmsorbtpy+cqQM5reAt2242EVL4aMdVIIH7rmupoIdtQnV0L6zyU5uvu0HJtRA2E
-LHInqFcQxxw8/IYh1xp80weLrcuAoIroGKTJoYkVkWjiFNv61rBFHrY/W8RkNvC4
-ft8nbR+ufnbd7DRhJDy8EBmAIEXvIxrtePG5mG8VUAZ5K5mbgawak+PiNCoQ5QAg
-GbjOQ+AFlKcRF16DKs2E
-=tkdq
------END PGP SIGNATURE-----
-
---CPaaJmjEtnx7DmsZ--
-
---===============1128633726==
-Content-Type: text/plain; charset="utf-8"
-MIME-Version: 1.0
-Content-Transfer-Encoding: base64
-Content-Disposition: inline
-
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVs
-IG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHA6Ly9saXN0
-cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
-
---===============1128633726==--
+--=20
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org =E2=94=82 Open source software for ARM SoCs
+=46ollow Linaro: Facebook | Twitter | Blog
