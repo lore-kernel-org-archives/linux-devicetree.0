@@ -1,108 +1,42 @@
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: [PATCH v2] ARM: shmobile: silk: add SDHI1 DT support
-Date: Tue, 11 Aug 2015 01:44:03 +0300
-Message-ID: <2757472.iuyUyRzJ3z@wasted.cogentembedded.com>
-References: <10037494.4LD4T2QGPX@wasted.cogentembedded.com>
+From: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
+Subject: Re: [PATCH v3 2/2] ARM: shmobile: r8a7794: add GPIO DT support
+Date: Tue, 11 Aug 2015 08:20:58 +0900
+Message-ID: <20150810232054.GA9484@verge.net.au>
+References: <2265315.MpjeDzrVz2@wasted.cogentembedded.com>
+ <10288801.ZnYt2TD47O@wasted.cogentembedded.com>
+ <CAMuHMdVj4_h8LX=XuWSyhGpSZ2BPxuWe_oJQYTRPFfYbuidm4g@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <10037494.4LD4T2QGPX@wasted.cogentembedded.com>
-Sender: linux-sh-owner@vger.kernel.org
-To: horms@verge.net.au, linux-sh@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org
-Cc: magnus.damm@gmail.com, linux@arm.linux.org.uk, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <CAMuHMdVj4_h8LX=XuWSyhGpSZ2BPxuWe_oJQYTRPFfYbuidm4g-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
+Cc: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>, Linux-sh list <linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Define the SILK board dependent part of the SDHI1 (connected to micro-SD slot)
-device nodes along with the necessary voltage regulators.
+On Mon, Aug 10, 2015 at 03:23:54PM +0200, Geert Uytterhoeven wrote:
+> Hi Sergei,
+> 
+> On Sun, Aug 9, 2015 at 12:09 AM, Sergei Shtylyov
+> <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org> wrote:
+> > Describe GPIO[0-6] controllers in the R8A7794 device tree.
+> >
+> > Based on original patch by Hisashi Nakamura <hisashi.nakamura.ak-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>.
+> >
+> > Signed-off-by: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+> > Acked-by: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+> >
+> > ---
+> > Changes in version 3:
+> > - added "power-domains" property to the GPIO device nodes.
+> 
+> Thanks, unwithdrawing my ack ;-)
+> 
+> Acked-by: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
 
-Based on the original patch by Vladimir Barinov
-<vladimir.barinov@cogentembedded.com>.
-
-Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-
----
-This patch is against 'renesas-devel-20150810-v4.2-rc6' tag of Simon Horman's
-'renesas.git' repo plus the R8A7794/SILK QSPI patches just re-posted. It needs
-the R8A7794 GPIO patches in order to compile.
-
-Changes in version 2:
-- removed not working SDHI0 stuff, renamed the patch;
-- replaced SDHI1's "wp-gpios" property with "disable-wp".
-
- arch/arm/boot/dts/r8a7794-silk.dts |   40 +++++++++++++++++++++++++++++++++++++
- 1 file changed, 40 insertions(+)
-
-Index: renesas/arch/arm/boot/dts/r8a7794-silk.dts
-===================================================================
---- renesas.orig/arch/arm/boot/dts/r8a7794-silk.dts
-+++ renesas/arch/arm/boot/dts/r8a7794-silk.dts
-@@ -12,6 +12,7 @@
- 
- /dts-v1/;
- #include "r8a7794.dtsi"
-+#include <dt-bindings/gpio/gpio.h>
- 
- / {
- 	model = "SILK";
-@@ -39,6 +40,29 @@
- 		regulator-boot-on;
- 		regulator-always-on;
- 	};
-+	vcc_sdhi1: regulator@3 {
-+		compatible = "regulator-fixed";
-+
-+		regulator-name = "SDHI1 Vcc";
-+		regulator-min-microvolt = <3300000>;
-+		regulator-max-microvolt = <3300000>;
-+
-+		gpio = <&gpio4 26 GPIO_ACTIVE_HIGH>;
-+		enable-active-high;
-+	};
-+
-+	vccq_sdhi1: regulator@4 {
-+		compatible = "regulator-gpio";
-+
-+		regulator-name = "SDHI1 VccQ";
-+		regulator-min-microvolt = <1800000>;
-+		regulator-max-microvolt = <3300000>;
-+
-+		gpios = <&gpio4 29 GPIO_ACTIVE_HIGH>;
-+		gpios-states = <1>;
-+		states = <3300000 1
-+			  1800000 0>;
-+	};
- };
- 
- &extal_clk {
-@@ -66,6 +90,11 @@
- 		renesas,function = "mmc";
- 	};
- 
-+	sdhi1_pins: sd1 {
-+		renesas,groups = "sdhi1_data4", "sdhi1_ctrl";
-+		renesas,function = "sdhi1";
-+	};
-+
- 	qspi_pins: spi0 {
- 		renesas,groups = "qspi_ctrl", "qspi_data4";
- 		renesas,function = "qspi";
-@@ -106,6 +135,17 @@
- 	status = "okay";
- };
- 
-+&sdhi1 {
-+	pinctrl-0 = <&sdhi1_pins>;
-+	pinctrl-names = "default";
-+
-+	vmmc-supply = <&vcc_sdhi1>;
-+	vqmmc-supply = <&vccq_sdhi1>;
-+	cd-gpios = <&gpio6 14 GPIO_ACTIVE_LOW>;
-+	disable-wp;
-+	status = "okay";
-+};
-+
- &qspi {
- 	pinctrl-0 = <&qspi_pins>;
- 	pinctrl-names = "default";
-
+Thanks, I have queued these up for v4.4.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
