@@ -1,90 +1,139 @@
-From: Stefan Wahren <stefan.wahren@i2se.com>
-Subject: Re: [PATCH v9 0/9] Add simple NVMEM Framework via regmap.
-Date: Mon, 10 Aug 2015 13:24:38 +0200 (CEST)
-Message-ID: <997560650.82109.1439205878609.JavaMail.open-xchange@oxbsltgw00.schlund.de>
-References: <1437995567-11203-1-git-send-email-srinivas.kandagatla@linaro.org> <1438693367.3793.29.camel@pengutronix.de> <20150809151916.GF14271@lunn.ch> <55C87EEF.6020609@linaro.org>
-Reply-To: Stefan Wahren <stefan.wahren@i2se.com>
+From: Thierry Reding <thierry.reding@gmail.com>
+Subject: Re: [PATCH RFC 1/5] drm/msm/hdmi: deprecate non standard gpio
+ properties.
+Date: Mon, 10 Aug 2015 14:45:12 +0200
+Message-ID: <20150810124510.GC1262@ulmo.nvidia.com>
+References: <1439207923-30812-1-git-send-email-srinivas.kandagatla@linaro.org>
+ <1439207962-30860-1-git-send-email-srinivas.kandagatla@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <55C87EEF.6020609@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, Andrew Lunn <andrew@lunn.ch>
-Cc: wxt@rock-chips.com, linux-api@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, sboyd@codeaurora.org, arnd@arndb.de, linux-arm-kernel@lists.infradead.org, khilman@kernel.org, s.hauer@pengutronix.de, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, mporter@konsulko.com, pantelis.antoniou@konsulko.com, devicetree@vger.kernel.org, Mark Brown <broonie@kernel.org>, maitysanchayan@gmail.com, p.zabel@pengutronix.de
+Content-Type: multipart/mixed; boundary="===============1128633726=="
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <1439207962-30860-1-git-send-email-srinivas.kandagatla@linaro.org>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Cc: devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Rob Herring <robh+dt@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Srinivas,
-hi Andrew,
 
-[add Sanchayan and Philipp]
+--===============1128633726==
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="CPaaJmjEtnx7DmsZ"
+Content-Disposition: inline
 
-> Srinivas Kandagatla <srinivas.kandagatla@linaro.org> hat am 10. August 2015 um
-> 12:37 geschrieben:
->
->
-> Hi Andrew,
->
-> On 09/08/15 16:19, Andrew Lunn wrote:
-> > Hi Srinivas
-> >
-> > The AT24 eeprom driver contains the comment:
-> >
-> > /*
-> > * Export the EEPROM bytes through sysfs, since that's convenient.
-> > * By default, only root should see the data (maybe passwords etc)
-> > */
-> >
-> > and as you would expect from this:
-> >
-> > # ls -l
-> > ./devices/platform/soc/soc:aips-bus@40000000/40066000.i2c/i2c-0/0-0050/eeprom
-> > -rw------- 1 root root 512 Aug 9 10:16
-> > ./devices/platform/soc/soc:aips-bus@40000000/40066000.i2c/i2c-0/0-0050/eeprom
-> >
-> > The AT25 and the MAX6875 driver are the same.
-> >
-> > However nvmem has different defaults:
-> >
-> > # ls -l
-> > ./devices/platform/soc/soc:aips-bus@40000000/40066000.i2c/i2c-0/0-0050/0-00500/nvmem
-> > -rw-r--r-- 1 root root 0 Aug 9 10:16
-> > ./devices/platform/soc/soc:aips-bus@40000000/40066000.i2c/i2c-0/0-0050/0-00500/nvmem
-> >
-> Yes, nvmem by default sets the read permission for everyone S_IRUGO.
-> Which was the most common use case.
 
-i can only speak for mxs-ocotp, but root-only access is sufficient.
+--CPaaJmjEtnx7DmsZ
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
->
-> > Has this been considered and discussed?
-> Thanks for bringing this up, No, we did not discuss this explicitly, but
-> it should not be an issue to accommodate this. Provider still have
-> flexibility to configure such things.
+On Mon, Aug 10, 2015 at 12:59:22PM +0100, Srinivas Kandagatla wrote:
+> This patch updates the bindings to discourage the usage of non standard
+> gpio properites, this will help in projects focused on upstreaming.
 
-IMHO it would better the default settings of the framework would be compatible
-and same restrictive as the eeprom drivers.
+That last part is an odd comment to make in the commit message of a
+patch submitted upstream...
 
-In case a provider needs more privileges, it should be his job.
+> These deprecated properties are still supported but will be remove over
+> the time.
 
->
-> As a first patchset we wanted to keep the framework simple and add
-> features as we move on.
+You can't ever remove them because you can't ever be sure that people
+won't be using an old DTB.
 
-That's true, but it's an ABI too. So changing default settings soon is better.
+>=20
+> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+> ---
+>  Documentation/devicetree/bindings/drm/msm/hdmi.txt | 22 ++++++++++++++++=
++-----
+>  1 file changed, 17 insertions(+), 5 deletions(-)
+>=20
+> diff --git a/Documentation/devicetree/bindings/drm/msm/hdmi.txt b/Documen=
+tation/devicetree/bindings/drm/msm/hdmi.txt
+> index c43aa53..acba581 100644
+> --- a/Documentation/devicetree/bindings/drm/msm/hdmi.txt
+> +++ b/Documentation/devicetree/bindings/drm/msm/hdmi.txt
+> @@ -11,15 +11,27 @@ Required properties:
+>  - interrupts: The interrupt signal from the hdmi block.
+>  - clocks: device clocks
+>    See ../clocks/clock-bindings.txt for details.
+> -- qcom,hdmi-tx-ddc-clk-gpio: ddc clk pin
+> -- qcom,hdmi-tx-ddc-data-gpio: ddc data pin
+> -- qcom,hdmi-tx-hpd-gpio: hpd pin
+> +- qcom,hdmi-tx-ddc-clk-gpios: ddc clk pin
+> +- qcom,hdmi-tx-ddc-data-gpios: ddc data pin
+> +- qcom,hdmi-tx-hpd-gpios: hpd pin
+>  - core-vdda-supply: phandle to supply regulator
+>  - hdmi-mux-supply: phandle to mux regulator
+> =20
+> +- qcom,hdmi-tx-ddc-clk-gpio: (deprecated) use
+> +	"qcom,hdmi-tx-ddc-clk-gpios" instead
+> +- qcom,hdmi-tx-ddc-data-gpio: (deprecated) use
+> +	"qcom,hdmi-tx-ddc-data-gpios" instead
+> +- qcom,hdmi-tx-hpd-gpio: (deprecated) use
+> +	"qcom,hdmi-tx-hpd-gpios" instead
+> +
+>  Optional properties:
+> -- qcom,hdmi-tx-mux-en-gpio: hdmi mux enable pin
+> -- qcom,hdmi-tx-mux-sel-gpio: hdmi mux select pin
+> +- qcom,hdmi-tx-mux-en-gpios: hdmi mux enable pin
+> +- qcom,hdmi-tx-mux-sel-gpios: hdmi mux select pin
+> +
+> +- qcom,hdmi-tx-mux-en-gpio: (deprecated) use "qcom,hdmi-tx-mux-en-gpios"
+> +	instead
+> +- qcom,hdmi-tx-mux-sel-gpio: (deprecated) use "qcom,hdmi-tx-mux-sel-gpio"
+> +	instead
+>  - pinctrl-names: the pin control state names; should contain "default"
+>  - pinctrl-0: the default pinctrl state (active)
+>  - pinctrl-1: the "sleep" pinctrl state
 
-Regards
-Stefan
+I don't see much use in listing that these properties are deprecated. We
+already have code to catch the deprecated names, so having them in the
+binding will at best be distracting.
 
->
-> Thanks,
-> srini
-> >
-> > Thanks
-> > Andrew
-> >
->
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+Anyway, I don't know if there's been any advice on this from the device
+tree bindings maintainers, so adding devicetree@vger.kernel.org for
+visibility.
+
+Thierry
+
+--CPaaJmjEtnx7DmsZ
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQIcBAABCAAGBQJVyJzWAAoJEN0jrNd/PrOhfQYP/RJSxc5vZG+yNNYIrlMBbayw
+PdTlIgy+LcWEfGvUD92PuHXxHQY9d2QiHCInVHgkrSGzhSNblCKtGy7Z/Jfm05Jn
+QTTtGQdeoN6LbLihKFSeT8AAUKeZyDSxk1yvj4w4N4s6JKxo72eMxyxRYeWdBdJU
+akjbjUxIl+UxurE94JwzLLXlVnO7+2MSFZ78/OQWaItxYG85MObmLwiNwxhAgasK
+NAzIjHRqsEiEIc599DfkJs+uGIVrC4cysne4w6sSfckF9539v8TSVTWzw242t62C
+yfGtKYkrt7202sZdZO1w67l/P5HHXI1R0qqrPLolsWJnSjByFFyyIc8f+r/pBHH4
+Y2bKFYmhF+fWgHZ4KMuTIDG5O4rAO/TCWQJoRQtpQbFP/qnQOfsPaFLDQGE37K0n
+M5JXgGNcLEGyV1huN5dWAJ2L4yAlFpYlwUr7FZPetfXiCIL100uVMKIMj5qNESGk
+Tmsorbtpy+cqQM5reAt2242EVL4aMdVIIH7rmupoIdtQnV0L6zyU5uvu0HJtRA2E
+LHInqFcQxxw8/IYh1xp80weLrcuAoIroGKTJoYkVkWjiFNv61rBFHrY/W8RkNvC4
+ft8nbR+ufnbd7DRhJDy8EBmAIEXvIxrtePG5mG8VUAZ5K5mbgawak+PiNCoQ5QAg
+GbjOQ+AFlKcRF16DKs2E
+=tkdq
+-----END PGP SIGNATURE-----
+
+--CPaaJmjEtnx7DmsZ--
+
+--===============1128633726==
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: base64
+Content-Disposition: inline
+
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVs
+IG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHA6Ly9saXN0
+cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
+
+--===============1128633726==--
