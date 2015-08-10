@@ -1,47 +1,55 @@
-From: Alban <albeu-GANU6spQydw@public.gmane.org>
-Subject: Re: [PATCH 1/2] MIPS: ath79: set irq ACK handler for
- ar7100-misc-intc irq chip
-Date: Mon, 10 Aug 2015 20:11:14 +0200
-Message-ID: <20150810201114.468748de@tock>
-References: <1438857805-18443-1-git-send-email-lynxis@fe80.eu>
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: Re: [PATCH 2/2] ARM: shmobile: silk: add QSPI DT support
+Date: Mon, 10 Aug 2015 21:18:24 +0300
+Message-ID: <55C8EAF0.7060600@cogentembedded.com>
+References: <1898263.zrOs5SAUTS@wasted.cogentembedded.com>
+ <1768974.jEFIAaInqd@wasted.cogentembedded.com>
+ <CAMuHMdXQJ4Hju477Ys0ujXCNdUjWOa6AuKGzLPc3YFJc_eLz+g@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=windows-1252; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1438857805-18443-1-git-send-email-lynxis-qyMx1GtpvWw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Alexander Couzens <lynxis-qyMx1GtpvWw@public.gmane.org>
-Cc: Aban Bedel <albeu-GANU6spQydw@public.gmane.org>, linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <CAMuHMdXQJ4Hju477Ys0ujXCNdUjWOa6AuKGzLPc3YFJc_eLz+g@mail.gmail.com>
+Sender: linux-sh-owner@vger.kernel.org
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Simon Horman <horms@verge.net.au>, Linux-sh list <linux-sh@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Magnus Damm <magnus.damm@gmail.com>, Russell King <linux@arm.linux.org.uk>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu,  6 Aug 2015 12:43:24 +0200
-Alexander Couzens <lynxis-qyMx1GtpvWw@public.gmane.org> wrote:
+Hello.
 
-A log message would be nice. IMHO it should mention that the ACK
-callbacks have been missed when introducing OF support.
+On 08/10/2015 05:38 PM, Geert Uytterhoeven wrote:
 
-> Signed-off-by: Alexander Couzens <lynxis-qyMx1GtpvWw@public.gmane.org>
-> ---
->  arch/mips/ath79/irq.c | 13 ++++++++++---
->  1 file changed, 10 insertions(+), 3 deletions(-)
-> 
-> diff --git a/arch/mips/ath79/irq.c b/arch/mips/ath79/irq.c
-> index afb0096..dc76fa1 100644
-> --- a/arch/mips/ath79/irq.c
-> +++ b/arch/mips/ath79/irq.c
-> @@ -303,13 +303,20 @@ static int __init ath79_misc_intc_of_init(
->  	__raw_writel(0, base + AR71XX_RESET_REG_MISC_INT_ENABLE);
->  	__raw_writel(0, base + AR71XX_RESET_REG_MISC_INT_STATUS);
->  
-> -
+>> Define the SILK board dependent part of the QSPI device node.
+>> Add device nodes  for Spansion  S25FL512S SPI flash and MTD partitions on it.
 
-I would prefer to see this in another patch.
+>> Based on the original patch by Vladimir Barinov
+>> <vladimir.barinov@cogentembedded.com>.
 
+>> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+
+>> --- renesas.orig/arch/arm/boot/dts/r8a7794-silk.dts
+>> +++ renesas/arch/arm/boot/dts/r8a7794-silk.dts
+>
+>> +&qspi {
+>> +       pinctrl-0 = <&qspi_pins>;
+>> +       pinctrl-names = "default";
+>> +
+>> +       status = "okay";
+>> +
+>> +       flash@0 {
+>> +               #address-cells = <1>;
+>> +               #size-cells = <1>;
+>> +               compatible = "spansion,s25fl512s";
+
+> Please add the "jedec,spi-nor" fallback.
+
+    Hm, spi-nor.c alone can't control this device, it's rather m25p80.c that's 
+the real driver. So if a fallback needs to be added indeed it should be 
+"st,m25p80" I think...
 
 [...]
 
-Alban
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> Gr{oetje,eeting}s,
+
+MBR, Sergei
+
