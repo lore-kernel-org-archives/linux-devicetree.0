@@ -1,65 +1,167 @@
-From: Keerthy <j-keerthy-l0cyMroinI0@public.gmane.org>
-Subject: [PATCH v2 5/6] ARM: AM43XX: HWMOD: Add rtc hwmod
-Date: Mon, 10 Aug 2015 14:58:25 +0530
-Message-ID: <1439198906-31189-6-git-send-email-j-keerthy@ti.com>
-References: <1439198906-31189-1-git-send-email-j-keerthy@ti.com>
+From: Alexey Kardashevskiy <aik@ozlabs.ru>
+Subject: Re: [PATCH v6 10/42] powerpc/powernv: pnv_ioda_setup_dma() configure
+ one PE only
+Date: Mon, 10 Aug 2015 19:31:11 +1000
+Message-ID: <55C86F5F.70603@ozlabs.ru>
+References: <1438834307-26960-1-git-send-email-gwshan@linux.vnet.ibm.com>
+ <1438834307-26960-11-git-send-email-gwshan@linux.vnet.ibm.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1439198906-31189-1-git-send-email-j-keerthy-l0cyMroinI0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org
-Cc: galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, paul-DWxLp4Yu+b8AvxtiuMwx3w@public.gmane.org, alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org, johan-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, grygorii.strashko-l0cyMroinI0@public.gmane.org, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, nm-l0cyMroinI0@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, t-kristo-l0cyMroinI0@public.gmane.org, j-keerthy-l0cyMroinI0@public.gmane.org
+Content-Type: text/plain; charset=koi8-r; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <1438834307-26960-11-git-send-email-gwshan@linux.vnet.ibm.com>
+Sender: linux-pci-owner@vger.kernel.org
+To: Gavin Shan <gwshan@linux.vnet.ibm.com>, linuxppc-dev@lists.ozlabs.org
+Cc: linux-pci@vger.kernel.org, devicetree@vger.kernel.org, benh@kernel.crashing.org, mpe@ellerman.id.au, bhelgaas@google.com, grant.likely@linaro.org, robherring2@gmail.com, panto@antoniou-consulting.com
 List-Id: devicetree@vger.kernel.org
 
-The patch adds rtc hwmod. This is present on gp and sk evm and not on
-epos evm. Hence adding it selectively using a seprate list.
+On 08/06/2015 02:11 PM, Gavin Shan wrote:
+> The original implementation of pnv_ioda_setup_dma() iterates the
+> list of PEs and configures the DMA32 space for them one by one.
+> The function was designed to be called during PHB fixup time.
+> When configuring PE's DMA32 space in pcibios_setup_bridge(), in
+> order to support PCI hotplug, we have to have the function PE
+> oriented.
+>
+> This renames pnv_ioda_setup_dma() to pnv_ioda1_setup_dma() and
+> adds one more argument "struct pnv_ioda_pe *pe" to it. The caller,
+> pnv_pci_ioda_setup_DMA(), gets PE from the list and passes to it
+> or pnv_pci_ioda2_setup_dma_pe(). The patch shouldn't cause behavioral
+> changes.
+>
+> Signed-off-by: Gavin Shan <gwshan@linux.vnet.ibm.com>
+> ---
+>   arch/powerpc/platforms/powernv/pci-ioda.c | 75 +++++++++++++++----------------
+>   1 file changed, 36 insertions(+), 39 deletions(-)
+>
+> diff --git a/arch/powerpc/platforms/powernv/pci-ioda.c b/arch/powerpc/platforms/powernv/pci-ioda.c
+> index 8456f37..cd22002 100644
+> --- a/arch/powerpc/platforms/powernv/pci-ioda.c
+> +++ b/arch/powerpc/platforms/powernv/pci-ioda.c
+> @@ -2443,52 +2443,29 @@ static void pnv_pci_ioda2_setup_dma_pe(struct pnv_phb *phb,
+>   		pnv_ioda_setup_bus_dma(pe, pe->pbus);
+>   }
+>
+> -static void pnv_ioda_setup_dma(struct pnv_phb *phb)
+> +static unsigned int pnv_ioda1_setup_dma(struct pnv_phb *phb,
+> +					struct pnv_ioda_pe *pe,
+> +					unsigned int base)
+>   {
+>   	struct pci_controller *hose = phb->hose;
+> -	struct pnv_ioda_pe *pe;
+> -	unsigned int dma_weight;
+> +	unsigned int dma_weight, segs;
+>
+>   	/* Calculate the PHB's DMA weight */
+>   	dma_weight = pnv_ioda_phb_dma_weight(phb);
+>   	pr_info("PCI%04x has %ld DMA32 segments, total weight %d\n",
+>   		hose->global_number, phb->ioda.dma32_segcount, dma_weight);
+>
+> -	pnv_pci_ioda_setup_opal_tce_kill(phb);
+> -
+> -	/* Walk our PE list and configure their DMA segments, hand them
+> -	 * out one base segment plus any residual segments based on
+> -	 * weight
+> -	 */
+> -	list_for_each_entry(pe, &phb->ioda.pe_dma_list, dma_link) {
+> -		if (!pe->dma32_weight)
+> -			continue;
+> -
+> -		/*
+> -		 * For IODA2 compliant PHB3, we needn't care about the weight.
+> -		 * The all available 32-bits DMA space will be assigned to
+> -		 * the specific PE.
+> -		 */
+> -		if (phb->type == PNV_PHB_IODA1) {
+> -			unsigned int segs, base = 0;
+> -
+> -			if (pe->dma32_weight <
+> -			    dma_weight / phb->ioda.dma32_segcount)
+> -				segs = 1;
+> -			else
+> -				segs = (pe->dma32_weight *
+> -					phb->ioda.dma32_segcount) / dma_weight;
+> -
+> -			pe_info(pe, "DMA32 weight %d, assigned %d segments\n",
+> -				pe->dma32_weight, segs);
+> -			pnv_pci_ioda_setup_dma_pe(phb, pe, base, segs);
+> +	if (pe->dma32_weight <
+> +	    dma_weight / phb->ioda.dma32_segcount)
 
-Signed-off-by: Keerthy <j-keerthy-l0cyMroinI0@public.gmane.org>
----
- arch/arm/mach-omap2/omap_hwmod_43xx_data.c | 16 ++++++++++++++--
- 1 file changed, 14 insertions(+), 2 deletions(-)
+Can be one line now.
 
-diff --git a/arch/arm/mach-omap2/omap_hwmod_43xx_data.c b/arch/arm/mach-omap2/omap_hwmod_43xx_data.c
-index 215d5ef..a0850b9 100644
---- a/arch/arm/mach-omap2/omap_hwmod_43xx_data.c
-+++ b/arch/arm/mach-omap2/omap_hwmod_43xx_data.c
-@@ -21,7 +21,7 @@
- #include "prcm43xx.h"
- #include "omap_hwmod_common_data.h"
- #include "hdq1w.h"
--
-+#include "soc.h"
- 
- /* IP blocks */
- static struct omap_hwmod am43xx_emif_hwmod = {
-@@ -1020,9 +1020,21 @@ static struct omap_hwmod_ocp_if *am43xx_hwmod_ocp_ifs[] __initdata = {
- 	NULL,
- };
- 
-+static struct omap_hwmod_ocp_if *am43xx_rtc_hwmod_ocp_ifs[] __initdata = {
-+	&am33xx_l4_wkup__rtc,
-+	NULL,
-+};
-+
- int __init am43xx_hwmod_init(void)
- {
-+	int ret;
-+
- 	omap_hwmod_am43xx_reg();
- 	omap_hwmod_init();
--	return omap_hwmod_register_links(am43xx_hwmod_ocp_ifs);
-+	ret = omap_hwmod_register_links(am43xx_hwmod_ocp_ifs);
-+
-+	if (!soc_is_am438x())
-+		ret = omap_hwmod_register_links(am43xx_rtc_hwmod_ocp_ifs);
-+
-+	return ret;
- }
+
+> +		segs = 1;
+> +	else
+> +		segs = (pe->dma32_weight *
+> +			phb->ioda.dma32_segcount) / dma_weight;
+> +	pe_info(pe, "DMA weight %d, assigned %d segments\n",
+> +		pe->dma32_weight, segs);
+> +	pnv_pci_ioda_setup_dma_pe(phb, pe, base, segs);
+
+
+Why not to merge pnv_ioda1_setup_dma() to pnv_pci_ioda_setup_dma_pe()?
+
+
+>
+> -			base += segs;
+> -		} else {
+> -			pe_info(pe, "Assign DMA32 space\n");
+> -			pnv_pci_ioda2_setup_dma_pe(phb, pe);
+> -		}
+> -	}
+> +	return segs;
+>   }
+>
+>   #ifdef CONFIG_PCI_MSI
+> @@ -2955,12 +2932,32 @@ static void pnv_pci_ioda_setup_DMA(void)
+>   {
+>   	struct pci_controller *hose, *tmp;
+>   	struct pnv_phb *phb;
+> +	struct pnv_ioda_pe *pe;
+> +	unsigned int base;
+>
+>   	list_for_each_entry_safe(hose, tmp, &hose_list, list_node) {
+> -		pnv_ioda_setup_dma(hose->private_data);
+> +		phb = hose->private_data;
+> +		pnv_pci_ioda_setup_opal_tce_kill(phb);
+> +
+> +		base = 0;
+> +		list_for_each_entry(pe, &phb->ioda.pe_dma_list, dma_link) {
+> +			if (!pe->dma32_weight)
+> +				continue;
+> +
+> +			switch (phb->type) {
+> +			case PNV_PHB_IODA1:
+> +				base += pnv_ioda1_setup_dma(phb, pe, base);
+
+
+This @base handling seems never be tested between 8..11 as "[PATCH v6 
+11/42] powerpc/powernv: Trace DMA32 segments consumed by PE"
+removes it and I suspect you only tested the final version. Which is ok for 
+the final result but not ok for bisectability.
+
+Looks like 8/42, 9/42, 10/42, 11/42 need to be rearranged or merged to 
+remove this multiple @base touching.
+
+
+> +				break;
+> +			case PNV_PHB_IODA2:
+> +				pnv_pci_ioda2_setup_dma_pe(phb, pe);
+> +				break;
+> +			default:
+> +				pr_warn("%s: No DMA for PHB type %d\n",
+> +					__func__, phb->type);
+> +			}
+> +		}
+>
+>   		/* Mark the PHB initialization done */
+> -		phb = hose->private_data;
+>   		phb->initialized = 1;
+>   	}
+>   }
+>
+
+
 -- 
-1.9.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Alexey
