@@ -1,39 +1,57 @@
-From: "Franklin S Cooper Jr." <fcooper-l0cyMroinI0@public.gmane.org>
-Subject: Re: [RESEND][PATCH 3/4] ARM: davinci: Set proper SPI prescale limit
- value
-Date: Mon, 10 Aug 2015 18:47:25 -0500
-Message-ID: <55C9380D.1060802@ti.com>
-References: <1437568344-18889-1-git-send-email-fcooper@ti.com> <1437568344-18889-4-git-send-email-fcooper@ti.com> <55B22681.3060000@ti.com>
+From: Gavin Shan <gwshan@linux.vnet.ibm.com>
+Subject: Re: [PATCH v6 00/42] powerpc/powernv: PCI hotplug suppport
+Date: Mon, 10 Aug 2015 17:17:22 +1000
+Message-ID: <20150810071722.GA19068@gwshan>
+References: <1438834307-26960-1-git-send-email-gwshan@linux.vnet.ibm.com>
+ <55C83F34.9040306@ozlabs.ru>
+Reply-To: Gavin Shan <gwshan@linux.vnet.ibm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <55B22681.3060000-l0cyMroinI0@public.gmane.org>
-Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, khilman-1D3HCaltpLuhEniVeURVKkEOCMrvLtNR@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-arm-kernel-xBCQruHUn5ppWr+L1FloEB2eb7JE58TQ@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, ssantosh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-pci-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <55C83F34.9040306@ozlabs.ru>
+Sender: linux-pci-owner@vger.kernel.org
+To: Alexey Kardashevskiy <aik@ozlabs.ru>
+Cc: Gavin Shan <gwshan@linux.vnet.ibm.com>, linuxppc-dev@lists.ozlabs.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, benh@kernel.crashing.org, mpe@ellerman.id.au, bhelgaas@google.com, grant.likely@linaro.org, robherring2@gmail.com, panto@antoniou-consulting.com
 List-Id: devicetree@vger.kernel.org
 
-
-
-On 07/24/2015 06:50 AM, Sekhar Nori wrote:
-> On Wednesday 22 July 2015 06:02 PM, Franklin S Cooper Jr wrote:
->> SPI Davinci driver has been updated to allow SOCs to specify their minimum
->> prescale value. Update the various SOCs board files that use this driver with
->> their proper prescaler limit.
->>
->> Signed-off-by: Franklin S Cooper Jr <fcooper-l0cyMroinI0@public.gmane.org>
-> Acked-by: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>
+On Mon, Aug 10, 2015 at 04:05:40PM +1000, Alexey Kardashevskiy wrote:
+>On 08/06/2015 02:11 PM, Gavin Shan wrote:
+>>The series of patches intend to support PCI slot for PowerPC PowerNV platform,
+>>which is running on top of skiboot firmware. The patchset requires corresponding
+>>changes from skiboot firmware, which is sent to skiboot@lists.ozlabs.org
+>>for review. The PCI slots are exposed by skiboot with device node properties,
+>>and kernel utilizes those properties to populated PCI slots accordingly.
 >
-> in case Mark is okay to take it through his tree. It does not clash with
-> anything else I have for mach-davinci.
 >
-> Thanks,
-> Sekhar
+>This does not apply on top of any actual trees I have - torvalds/master,
+>powerpc/master, powerpc/next.
 >
-ping. Patches 1 and 2 have already been pulled into Mark's spi tree and are currently in in linux-next.
+>The problem patches are (at least):
+>powerpc/powernv: Enable M64 on P7IOC
+>powerpc/powernv: Release PEs dynamically
+>
+>What did you base them on (sha1)? It is always worth mentioning.
+>
 
---
-To unsubscribe from this list: send the line "unsubscribe linux-spi" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+The patchset bases on powerpc/next + below patches that will be merged
+prior to this patchset, I think. I tried to avoid conflicts as much as
+I can do:
+
+e14f70b powerpc/powernv: compound PE for VFs				<<< EEH Support for VF - END
+42f59ac powerpc/eeh: Support error recovery for VF PE
+9c1c221 powerpc/powernv: Support PCI config restore for VFs
+8ac2231 powerpc/powernv: Support EEH reset for VF PE
+a636ce5 powerpc/eeh: Create PE for VFs
+a4e56fc powerpc/powernv: EEH device for VF
+2f02884 powerpc/eeh: Cache only BARs, not windows or IOV BARs
+1888e95 powerpc/pci: Remove VFs prior to PF
+0dab41d powerpc/pci: Cache VF index in pci_dn
+fdc2d8a PCI: Add pcibios_bus_add_device() weak function
+2bcc609 PCI/IOV: Rename and export virtfn_add/virtfn_remove		<<< EEH Support for VF - START
+efde611 powerpc/eeh: Disable automatically blocked PCI config
+
+All above patches can be found from linux-ppc mail archive.
+
+Thanks,
+Gavin
