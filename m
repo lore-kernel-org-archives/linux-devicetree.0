@@ -1,92 +1,124 @@
-From: Bjorn Andersson <bjorn.andersson@sonymobile.com>
-Subject: Re: [PATCH RFC 1/5] drm/msm/hdmi: deprecate non standard gpio
- properties.
-Date: Mon, 10 Aug 2015 15:27:54 -0700
-Message-ID: <20150810222754.GM6519@usrtlx11787.corpusers.net>
-References: <1439207923-30812-1-git-send-email-srinivas.kandagatla@linaro.org>
- <1439207962-30860-1-git-send-email-srinivas.kandagatla@linaro.org>
- <20150810124510.GC1262@ulmo.nvidia.com>
- <CAL_JsqK6=bmbU-OD7L-Xzg6C+AtNFZZJq-LK3UWXE0rza7-gwA@mail.gmail.com>
+From: Frank Rowand <frowand.list@gmail.com>
+Subject: Re: [PATCH v6 39/42] drivers/of: Allow to specify root node in of_fdt_unflatten_tree()
+Date: Mon, 10 Aug 2015 15:42:13 -0700
+Message-ID: <55C928C5.2080305@gmail.com>
+References: <1438834307-26960-1-git-send-email-gwshan@linux.vnet.ibm.com> <1438834307-26960-40-git-send-email-gwshan@linux.vnet.ibm.com>
+Reply-To: frowand.list@gmail.com
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAL_JsqK6=bmbU-OD7L-Xzg6C+AtNFZZJq-LK3UWXE0rza7-gwA@mail.gmail.com>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Rob Herring <robherring2@gmail.com>
-Cc: Thierry Reding <thierry.reding@gmail.com>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, dri-devel <dri-devel@lists.freedesktop.org>, Rob Clark <robdclark@gmail.com>, David Airlie <airlied@linux.ie>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <1438834307-26960-40-git-send-email-gwshan@linux.vnet.ibm.com>
+Sender: linux-pci-owner@vger.kernel.org
+To: Gavin Shan <gwshan@linux.vnet.ibm.com>
+Cc: linuxppc-dev@lists.ozlabs.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, benh@kernel.crashing.org, mpe@ellerman.id.au, bhelgaas@google.com, grant.likely@linaro.org, robherring2@gmail.com, panto@antoniou-consulting.com, aik@ozlabs.ru
 List-Id: devicetree@vger.kernel.org
 
-On Mon 10 Aug 15:07 PDT 2015, Rob Herring wrote:
-
-[..]
-> >> -- qcom,hdmi-tx-ddc-clk-gpio: ddc clk pin
-> >> -- qcom,hdmi-tx-ddc-data-gpio: ddc data pin
-> >> -- qcom,hdmi-tx-hpd-gpio: hpd pin
-> >> +- qcom,hdmi-tx-ddc-clk-gpios: ddc clk pin
-> >> +- qcom,hdmi-tx-ddc-data-gpios: ddc data pin
+On 8/5/2015 9:11 PM, Gavin Shan wrote:
+> This introduces one more argument to of_fdt_unflatten_tree()
+> to specify the root node for the FDT blob, which is going to be
+> unflattened. In the result, the function can be used to unflatten
+> FDT blob, which represents device sub-tree in PowerNV hotplug
+> driver.
 > 
-> The driver doesn't appear to do anything other than set these gpios
-> high. Presumably you would ultimately do a bit-bang i2c bus for these?
-> At that point, aren't you going to want to use the i2c-gpio binding?
+> Signed-off-by: Gavin Shan <gwshan@linux.vnet.ibm.com>
+> ---
+>  drivers/of/fdt.c       | 13 ++++++++-----
+>  drivers/of/unittest.c  |  2 +-
+>  include/linux/of_fdt.h |  1 +
+>  3 files changed, 10 insertions(+), 6 deletions(-)
 > 
-> I think this binding has bigger issues like why is it not using the
-> hdmi-connector binding which has a standard "hpd-gpios" property
-> already. I can't really single out this binding though. There's a lot
-> of crap when it comes to DRM related bindings.
+> diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
+> index a18a2ce..074870a 100644
+> --- a/drivers/of/fdt.c
+> +++ b/drivers/of/fdt.c
+> @@ -388,10 +388,11 @@ static void *unflatten_dt_node(const void *blob,
+>  			       struct device_node **nodepp,
+>  			       bool dryrun)
+>  {
+> +	unsigned long fpsize = dad ? strlen(of_node_full_name(dad)) : 0;
+>  	int depth = 1;
+>  
+>  	return __unflatten_dt_node(blob, mem, poffset,
+> -				   dad, nodepp, 0,
+> +				   dad, nodepp, fpsize,
+>  				   dryrun, &depth);
+>  }
+>  
+> @@ -408,6 +409,7 @@ static void *unflatten_dt_node(const void *blob,
+>   * for the resulting tree
+>   */
+>  static void __unflatten_device_tree(const void *blob,
+> +			     struct device_node *dad,
+>  			     struct device_node **mynodes,
+>  			     void * (*dt_alloc)(u64 size, u64 align))
+>  {
+
+Please add @dad to the documentation header for the function.
+
+
+> @@ -435,7 +437,7 @@ static void __unflatten_device_tree(const void *blob,
+>  	/* First pass, scan for size */
+>  	start = 0;
+>  	size = (unsigned long)unflatten_dt_node(blob, NULL, &start,
+> -						NULL, NULL, true);
+> +						dad, NULL, true);
+>  	size = ALIGN(size, 4);
+>  
+>  	pr_debug("  size is %lx, allocating...\n", size);
+> @@ -450,7 +452,7 @@ static void __unflatten_device_tree(const void *blob,
+>  
+>  	/* Second pass, do actual unflattening */
+>  	start = 0;
+> -	unflatten_dt_node(blob, mem, &start, NULL, mynodes, false);
+> +	unflatten_dt_node(blob, mem, &start, dad, mynodes, false);
+>  	if (be32_to_cpup(mem + size) != 0xdeadbeef)
+>  		pr_warning("End of tree marker overwritten: %08x\n",
+>  			   be32_to_cpup(mem + size));
+> @@ -472,9 +474,10 @@ static void *kernel_tree_alloc(u64 size, u64 align)
+>   * can be used.
+>   */
+>  void of_fdt_unflatten_tree(const unsigned long *blob,
+> +			struct device_node *dad,
+>  			struct device_node **mynodes)
+>  {
+> -	__unflatten_device_tree(blob, mynodes, &kernel_tree_alloc);
+> +	__unflatten_device_tree(blob, dad, mynodes, &kernel_tree_alloc);
+>  }
+>  EXPORT_SYMBOL_GPL(of_fdt_unflatten_tree);
+>  
+> @@ -1125,7 +1128,7 @@ bool __init early_init_dt_scan(void *params)
+>   */
+>  void __init unflatten_device_tree(void)
+>  {
+> -	__unflatten_device_tree(initial_boot_params, &of_root,
+> +	__unflatten_device_tree(initial_boot_params, NULL, &of_root,
+>  				early_init_dt_alloc_memory_arch);
+>  
+>  	/* Get pointer to "/chosen" and "/aliases" nodes for use everywhere */
+> diff --git a/drivers/of/unittest.c b/drivers/of/unittest.c
+> index 1801634..2270830 100644
+> --- a/drivers/of/unittest.c
+> +++ b/drivers/of/unittest.c
+> @@ -907,7 +907,7 @@ static int __init unittest_data_add(void)
+>  			"not running tests\n", __func__);
+>  		return -ENOMEM;
+>  	}
+> -	of_fdt_unflatten_tree(unittest_data, &unittest_data_node);
+> +	of_fdt_unflatten_tree(unittest_data, NULL, &unittest_data_node);
+>  	if (!unittest_data_node) {
+>  		pr_warn("%s: No tree to attach; not running tests\n", __func__);
+>  		return -ENODATA;
+> diff --git a/include/linux/of_fdt.h b/include/linux/of_fdt.h
+> index df9ef38..3644960 100644
+> --- a/include/linux/of_fdt.h
+> +++ b/include/linux/of_fdt.h
+> @@ -38,6 +38,7 @@ extern bool of_fdt_is_big_endian(const void *blob,
+>  extern int of_fdt_match(const void *blob, unsigned long node,
+>  			const char *const *compat);
+>  extern void of_fdt_unflatten_tree(const unsigned long *blob,
+> +			       struct device_node *dad,
+>  			       struct device_node **mynodes);
+>  
+>  /* TBD: Temporary export of fdt globals - remove when code fully merged */
 > 
-
-Shouldn't these pins just be muxed to the hdmi block in pinctl?
-
-I know Rob had something wrt the detect pin (hdp), but the others should
-never be gpios(?) Isn't this just a reminder of the codeaurora tree
-gpio_requesting all pins "just to be safe"?
-
-> >> +- qcom,hdmi-tx-hpd-gpios: hpd pin
-> >>  - core-vdda-supply: phandle to supply regulator
-> >>  - hdmi-mux-supply: phandle to mux regulator
-> >>
-> >> +- qcom,hdmi-tx-ddc-clk-gpio: (deprecated) use
-> >> +     "qcom,hdmi-tx-ddc-clk-gpios" instead
-> >> +- qcom,hdmi-tx-ddc-data-gpio: (deprecated) use
-> >> +     "qcom,hdmi-tx-ddc-data-gpios" instead
-> >> +- qcom,hdmi-tx-hpd-gpio: (deprecated) use
-> >> +     "qcom,hdmi-tx-hpd-gpios" instead
-> >> +
-> >>  Optional properties:
-> >> -- qcom,hdmi-tx-mux-en-gpio: hdmi mux enable pin
-> >> -- qcom,hdmi-tx-mux-sel-gpio: hdmi mux select pin
-> >> +- qcom,hdmi-tx-mux-en-gpios: hdmi mux enable pin
-> >> +- qcom,hdmi-tx-mux-sel-gpios: hdmi mux select pin
-> >> +
-> >> +- qcom,hdmi-tx-mux-en-gpio: (deprecated) use "qcom,hdmi-tx-mux-en-gpios"
-> >> +     instead
-> >> +- qcom,hdmi-tx-mux-sel-gpio: (deprecated) use "qcom,hdmi-tx-mux-sel-gpio"
-> >> +     instead
-> >>  - pinctrl-names: the pin control state names; should contain "default"
-> >>  - pinctrl-0: the default pinctrl state (active)
-> >>  - pinctrl-1: the "sleep" pinctrl state
-> >
-> > I don't see much use in listing that these properties are deprecated. We
-> > already have code to catch the deprecated names, so having them in the
-> > binding will at best be distracting.
-> >
-> > Anyway, I don't know if there's been any advice on this from the device
-> > tree bindings maintainers, so adding devicetree@vger.kernel.org for
-> > visibility.
-> 
-> If they need to be maintained, then marking them deprecated is
-> perfectly fine IMO. Also, if the maintainers of platforms using this
-> are okay with it, you can just switch it. Given there are no in tree
-> dts files using this, it can be argued that there is no ABI.
-> 
-
-Part of some dev trees floating around no-one should have used these. So
-I think we should just document the proper ones and have the drivers
-support Rob's old properties until he's comfortable dropping them.
-
-That way we have a documented way forward and Rob can run his backports
-of this code without forking it.
-
-Regards,
-Bjorn
