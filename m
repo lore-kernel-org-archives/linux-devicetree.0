@@ -1,157 +1,247 @@
-From: Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCHv7 2/2] mailbox: Adding driver for Xilinx LogiCORE IP mailbox.
-Date: Mon, 10 Aug 2015 13:35:29 +0530
-Message-ID: <CABb+yY3tpepdO=s9nb9kAE241sYVTTXB-ci_4ihuthHTekedNg@mail.gmail.com>
-References: <1436922022-17564-1-git-send-email-moritz.fischer@ettus.com>
-	<1436922022-17564-3-git-send-email-moritz.fischer@ettus.com>
+From: Alexey Kardashevskiy <aik@ozlabs.ru>
+Subject: Re: [PATCH v6 09/42] powerpc/powernv: DMA32 cleanup
+Date: Mon, 10 Aug 2015 18:07:27 +1000
+Message-ID: <55C85BBF.4070802@ozlabs.ru>
+References: <1438834307-26960-1-git-send-email-gwshan@linux.vnet.ibm.com>
+ <1438834307-26960-10-git-send-email-gwshan@linux.vnet.ibm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1436922022-17564-3-git-send-email-moritz.fischer-+aYTwkv1SeIAvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Moritz Fischer <moritz.fischer-+aYTwkv1SeIAvxtiuMwx3w@public.gmane.org>
-Cc: Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org" <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, =?UTF-8?Q?S=C3=B6ren_Brinkmann?= <soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, mchehab-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, joe-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org, jingoohan1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Devicetree List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain; charset=koi8-r; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <1438834307-26960-10-git-send-email-gwshan@linux.vnet.ibm.com>
+Sender: linux-pci-owner@vger.kernel.org
+To: Gavin Shan <gwshan@linux.vnet.ibm.com>, linuxppc-dev@lists.ozlabs.org
+Cc: linux-pci@vger.kernel.org, devicetree@vger.kernel.org, benh@kernel.crashing.org, mpe@ellerman.id.au, bhelgaas@google.com, grant.likely@linaro.org, robherring2@gmail.com, panto@antoniou-consulting.com
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jul 15, 2015 at 6:30 AM, Moritz Fischer
-<moritz.fischer-+aYTwkv1SeIAvxtiuMwx3w@public.gmane.org> wrote:
-
-> +
-> +static void xilinx_mbox_rx_data(struct mbox_chan *chan)
-> +{
-> +       struct xilinx_mbox *mbox = mbox_chan_to_xilinx_mbox(chan);
-> +       u32 data;
-> +
-> +       if (xilinx_mbox_pending(mbox)) {
-> +               data = readl_relaxed(mbox->mbox_base + MAILBOX_REG_RDDATA);
-> +               mbox_chan_received_data(chan, (void *)data);
+On 08/06/2015 02:11 PM, Gavin Shan wrote:
+> The patch cleans up DMA32 in pci-ioda.c. It shouldn't introduce
+> behavioural changes:
 >
-If RDDATA is a FIFO, then above seems wrong - you are assuming
-messages are always going to be exactly 32-bits for every protocol.
-Ideally you should empty the fifo fully, at least when RX has an
-interrupt.
+>     * Rename various fields in "struct pnv_phb" and "struct pnv_ioda_pe"
+>       as 32-bits DMA should be related to "DMA", not "TCE".
 
-> +
-> +static int xilinx_mbox_irq_send_data(struct mbox_chan *chan, void *data)
-> +{
-> +       struct xilinx_mbox *mbox = mbox_chan_to_xilinx_mbox(chan);
-> +       u32 *udata = data;
-> +
-> +       if (xilinx_mbox_full(mbox))
-> +               return -EBUSY;
+s/dma_weight/dma32_weight/ is ok (does not add much though_ but the rest is 
+not. The "tce32_" fields are still TCEs (translation entries) while DMA is 
+a process initiated by a device which does not know about how exactly DMA 
+addresses are translated later. Since we are on the host side and we 
+actually manage TCE tables here, I suggest keeping the "tce32_" prefix for 
+TCE tables and memory they use.
+
+>     * Removed struct pnv_ioda_pe::tce32_segcount.
+
+That's confusing - I had to walk through patches to find out where you 
+stopped using it. It would be simpler if you put this particular change to
+
+[PATCH v6 02/42] powerpc/powernv: Drop pnv_ioda_setup_dev_PE()
+
+where you remove dead code.
+
+
 >
-This check is redundant. last_tx_done already makes sure this is always true.
-
-> +       /* enable interrupt before send */
-> +       xilinx_mbox_tx_intmask(mbox, true);
-> +
-> +       writel_relaxed(*udata, mbox->mbox_base + MAILBOX_REG_WRDATA);
-> +
->From status EMPTY and FULL, it seems WRDATA is a FIFO. So here also
-you should expect messages to be <= fifo depth. And not assume exactly
-32bit messages always.
-
-> +
-> +static bool xilinx_mbox_last_tx_done(struct mbox_chan *chan)
-> +{
-> +       struct xilinx_mbox *mbox = mbox_chan_to_xilinx_mbox(chan);
-> +
-> +       /* return false if mailbox is full */
-> +       return !xilinx_mbox_full(mbox);
+> Signed-off-by: Gavin Shan <gwshan@linux.vnet.ibm.com>
+> ---
+>   arch/powerpc/platforms/powernv/pci-ioda.c | 48 +++++++++++++++----------------
+>   arch/powerpc/platforms/powernv/pci.h      |  7 ++---
+>   2 files changed, 27 insertions(+), 28 deletions(-)
 >
-Instead of FULL, I think it should check for stricter EMPTY status ...
-mbox api submits only 1 message at a time.
-
-> +
-> +static bool xilinx_mbox_peek_data(struct mbox_chan *chan)
-> +{
-> +       struct xilinx_mbox *mbox = mbox_chan_to_xilinx_mbox(chan);
-> +
-> +       return xilinx_mbox_pending(mbox);
-> +}
-> +
-> +static void xilinx_mbox_irq_shutdown(struct mbox_chan *chan)
-> +{
-> +       struct xilinx_mbox *mbox = mbox_chan_to_xilinx_mbox(chan);
-> +
-> +       /* mask all interrupts */
-> +       writel_relaxed(0, mbox->mbox_base + MAILBOX_REG_IE);
-> +
-> +       clk_disable_unprepare(mbox->clk);
-> +
-> +       free_irq(mbox->irq, chan);
-> +}
-> +
-> +static void xilinx_mbox_poll_shutdown(struct mbox_chan *chan)
-> +{
-> +       struct xilinx_mbox *mbox = mbox_chan_to_xilinx_mbox(chan);
-> +
-> +       del_timer_sync(&mbox->rxpoll_timer);
-> +
-> +       clk_disable_unprepare(mbox->clk);
-> +}
-> +
-> +static const struct mbox_chan_ops xilinx_mbox_irq_ops = {
-> +       .send_data = xilinx_mbox_irq_send_data,
-> +       .startup = xilinx_mbox_irq_startup,
-> +       .shutdown = xilinx_mbox_irq_shutdown,
-> +       .last_tx_done = xilinx_mbox_last_tx_done,
-> +       .peek_data = xilinx_mbox_peek_data,
-> +};
-> +
-> +static const struct mbox_chan_ops xilinx_mbox_poll_ops = {
-> +       .send_data = xilinx_mbox_poll_send_data,
-> +       .startup = xilinx_mbox_poll_startup,
-> +       .shutdown = xilinx_mbox_poll_shutdown,
-> +       .last_tx_done = xilinx_mbox_last_tx_done,
-> +       .peek_data = xilinx_mbox_peek_data,
-> +};
-> +
-> +static int xilinx_mbox_probe(struct platform_device *pdev)
-> +{
-> +       struct xilinx_mbox *mbox;
-> +       struct resource *regs;
-> +       int ret;
-> +
-> +       mbox = devm_kzalloc(&pdev->dev, sizeof(*mbox), GFP_KERNEL);
-> +       if (!mbox)
-> +               return -ENOMEM;
-> +
-> +       /* get clk and enable */
-> +       mbox->clk = devm_clk_get(&pdev->dev, "mbox");
-> +       if (IS_ERR(mbox->clk)) {
-> +               dev_err(&pdev->dev, "Couldn't get clk.\n");
-> +               return PTR_ERR(mbox->clk);
-> +       }
-> +
-> +       regs = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> +
-> +       mbox->mbox_base = devm_ioremap_resource(&pdev->dev, regs);
-> +       if (IS_ERR(mbox->mbox_base))
-> +               return PTR_ERR(mbox->mbox_base);
-> +
-> +       mbox->irq = platform_get_irq(pdev, 0);
-> +       /* if irq is present, we can use it, otherwise, poll */
-> +       if (mbox->irq > 0) {
-> +               mbox->controller.txdone_irq = true;
-> +               mbox->controller.ops = &xilinx_mbox_irq_ops;
-> +       } else {
-> +               dev_info(&pdev->dev, "IRQ not found, fallback to polling.\n");
-> +               mbox->controller.txdone_poll = true;
-> +               mbox->controller.txpoll_period = MBOX_POLLING_MS;
-> +               mbox->controller.ops = &xilinx_mbox_poll_ops;
-> +
-> +               setup_timer(&mbox->rxpoll_timer, xilinx_mbox_poll_rx,
-> +                           (unsigned long)&mbox->chan);
+> diff --git a/arch/powerpc/platforms/powernv/pci-ioda.c b/arch/powerpc/platforms/powernv/pci-ioda.c
+> index 7342cfd..8456f37 100644
+> --- a/arch/powerpc/platforms/powernv/pci-ioda.c
+> +++ b/arch/powerpc/platforms/powernv/pci-ioda.c
+> @@ -917,7 +917,7 @@ static void pnv_ioda_link_pe_by_weight(struct pnv_phb *phb,
+>   	struct pnv_ioda_pe *lpe;
 >
-I believe there is indeed some platform that doesn't have RX-Interrupt?
- If no, please remove this.
- If yes, you may want to get some hint from platform about the size of
-messages and do mbox_chan_received_data() only upon reading those many
-bytes.
+>   	list_for_each_entry(lpe, &phb->ioda.pe_dma_list, dma_link) {
+> -		if (lpe->dma_weight < pe->dma_weight) {
+> +		if (lpe->dma32_weight < pe->dma32_weight) {
+>   			list_add_tail(&pe->dma_link, &lpe->dma_link);
+>   			return;
+>   		}
+> @@ -942,14 +942,14 @@ static unsigned int pnv_ioda_dma_weight(struct pci_dev *dev)
+>   	if (dev->class == PCI_CLASS_SERIAL_USB_UHCI ||
+>   	    dev->class == PCI_CLASS_SERIAL_USB_OHCI ||
+>   	    dev->class == PCI_CLASS_SERIAL_USB_EHCI)
+> -		return 3 * phb->ioda.tce32_count;
+> +		return 3 * phb->ioda.dma32_segcount;
+>
+>   	/* Increase the weight of RAID (includes Obsidian) */
+>   	if ((dev->class >> 8) == PCI_CLASS_STORAGE_RAID)
+> -		return 15 * phb->ioda.tce32_count;
+> +		return 15 * phb->ioda.dma32_segcount;
+>
+>   	/* Default */
+> -	return 10 * phb->ioda.tce32_count;
+> +	return 10 * phb->ioda.dma32_segcount;
+>   }
+>
+>   static int __pnv_ioda_phb_dma_weight(struct pci_dev *pdev, void *data)
+> @@ -1057,7 +1057,7 @@ static void pnv_ioda_setup_same_PE(struct pci_bus *bus, struct pnv_ioda_pe *pe)
+>   			continue;
+>   		}
+>   		pdn->pe_number = pe->pe_number;
+> -		pe->dma_weight += pnv_ioda_dma_weight(dev);
+> +		pe->dma32_weight += pnv_ioda_dma_weight(dev);
+>   		if ((pe->flags & PNV_IODA_PE_BUS_ALL) && dev->subordinate)
+>   			pnv_ioda_setup_same_PE(dev->subordinate, pe);
+>   	}
+> @@ -1094,10 +1094,10 @@ static void pnv_ioda_setup_bus_PE(struct pci_bus *bus, bool all)
+>   	pe->flags |= (all ? PNV_IODA_PE_BUS_ALL : PNV_IODA_PE_BUS);
+>   	pe->pbus = bus;
+>   	pe->pdev = NULL;
+> -	pe->tce32_seg = -1;
+> +	pe->dma32_seg = -1;
+>   	pe->mve_number = -1;
+>   	pe->rid = bus->busn_res.start << 8;
+> -	pe->dma_weight = 0;
+> +	pe->dma32_weight = 0;
+>
+>   	if (all)
+>   		pe_info(pe, "Secondary bus %d..%d associated with PE#%d\n",
+> @@ -1460,7 +1460,7 @@ static void pnv_ioda_setup_vf_PE(struct pci_dev *pdev, u16 num_vfs)
+>   		pe->flags = PNV_IODA_PE_VF;
+>   		pe->pbus = NULL;
+>   		pe->parent_dev = pdev;
+> -		pe->tce32_seg = -1;
+> +		pe->dma32_seg = -1;
+>   		pe->mve_number = -1;
+>   		pe->rid = (pci_iov_virtfn_bus(pdev, vf_index) << 8) |
+>   			   pci_iov_virtfn_devfn(pdev, vf_index);
+> @@ -1936,7 +1936,7 @@ static void pnv_pci_ioda_setup_dma_pe(struct pnv_phb *phb,
+>   	/* XXX FIXME: Allocate multi-level tables on PHB3 */
+>
+>   	/* We shouldn't already have a 32-bit DMA associated */
+> -	if (WARN_ON(pe->tce32_seg >= 0))
+> +	if (WARN_ON(pe->dma32_seg >= 0))
+>   		return;
+>
+>   	tbl = pnv_pci_table_alloc(phb->hose->node);
+> @@ -1945,7 +1945,7 @@ static void pnv_pci_ioda_setup_dma_pe(struct pnv_phb *phb,
+>   	pnv_pci_link_table_and_group(phb->hose->node, 0, tbl, &pe->table_group);
+>
+>   	/* Grab a 32-bit TCE table */
+> -	pe->tce32_seg = base;
+> +	pe->dma32_seg = base;
+>   	pe_info(pe, " Setting up 32-bit TCE table at %08x..%08x\n",
+>   		(base << 28), ((base + segs) << 28) - 1);
+>
+> @@ -2006,8 +2006,8 @@ static void pnv_pci_ioda_setup_dma_pe(struct pnv_phb *phb,
+>   	return;
+>    fail:
+>   	/* XXX Failure: Try to fallback to 64-bit only ? */
+> -	if (pe->tce32_seg >= 0)
+> -		pe->tce32_seg = -1;
+> +	if (pe->dma32_seg >= 0)
+> +		pe->dma32_seg = -1;
+>   	if (tce_mem)
+>   		__free_pages(tce_mem, get_order(TCE32_TABLE_SIZE * segs));
+>   	if (tbl) {
+> @@ -2405,7 +2405,7 @@ static void pnv_pci_ioda2_setup_dma_pe(struct pnv_phb *phb,
+>   	int64_t rc;
+>
+>   	/* We shouldn't already have a 32-bit DMA associated */
+> -	if (WARN_ON(pe->tce32_seg >= 0))
+> +	if (WARN_ON(pe->dma32_seg >= 0))
+>   		return;
+>
+>   	/* TVE #1 is selected by PCI address bit 59 */
+> @@ -2415,7 +2415,7 @@ static void pnv_pci_ioda2_setup_dma_pe(struct pnv_phb *phb,
+>   			pe->pe_number);
+>
+>   	/* The PE will reserve all possible 32-bits space */
+> -	pe->tce32_seg = 0;
+> +	pe->dma32_seg = 0;
+>   	pe_info(pe, "Setting up 32-bit TCE table at 0..%08x\n",
+>   		phb->ioda.m32_pci_base);
+>
+> @@ -2432,8 +2432,8 @@ static void pnv_pci_ioda2_setup_dma_pe(struct pnv_phb *phb,
+>
+>   	rc = pnv_pci_ioda2_setup_default_config(pe);
+>   	if (rc) {
+> -		if (pe->tce32_seg >= 0)
+> -			pe->tce32_seg = -1;
+> +		if (pe->dma32_seg >= 0)
+> +			pe->dma32_seg = -1;
+>   		return;
+>   	}
+>
+> @@ -2452,7 +2452,7 @@ static void pnv_ioda_setup_dma(struct pnv_phb *phb)
+>   	/* Calculate the PHB's DMA weight */
+>   	dma_weight = pnv_ioda_phb_dma_weight(phb);
+>   	pr_info("PCI%04x has %ld DMA32 segments, total weight %d\n",
+> -		hose->global_number, phb->ioda.tce32_count, dma_weight);
+> +		hose->global_number, phb->ioda.dma32_segcount, dma_weight);
+>
+>   	pnv_pci_ioda_setup_opal_tce_kill(phb);
+>
+> @@ -2461,7 +2461,7 @@ static void pnv_ioda_setup_dma(struct pnv_phb *phb)
+>   	 * weight
+>   	 */
+>   	list_for_each_entry(pe, &phb->ioda.pe_dma_list, dma_link) {
+> -		if (!pe->dma_weight)
+> +		if (!pe->dma32_weight)
+>   			continue;
+>
+>   		/*
+> @@ -2472,15 +2472,15 @@ static void pnv_ioda_setup_dma(struct pnv_phb *phb)
+>   		if (phb->type == PNV_PHB_IODA1) {
+>   			unsigned int segs, base = 0;
+>
+> -			if (pe->dma_weight <
+> -			    dma_weight / phb->ioda.tce32_count)
+> +			if (pe->dma32_weight <
+> +			    dma_weight / phb->ioda.dma32_segcount)
+>   				segs = 1;
+>   			else
+> -				segs = (pe->dma_weight *
+> -					phb->ioda.tce32_count) / dma_weight;
+> +				segs = (pe->dma32_weight *
+> +					phb->ioda.dma32_segcount) / dma_weight;
+>
+>   			pe_info(pe, "DMA32 weight %d, assigned %d segments\n",
+> -				pe->dma_weight, segs);
+> +				pe->dma32_weight, segs);
+>   			pnv_pci_ioda_setup_dma_pe(phb, pe, base, segs);
+>
+>   			base += segs;
+> @@ -3211,7 +3211,7 @@ static void __init pnv_pci_init_ioda_phb(struct device_node *np,
+>   	mutex_init(&phb->ioda.pe_list_mutex);
+>
+>   	/* Calculate how many 32-bit TCE segments we have */
+> -	phb->ioda.tce32_count = phb->ioda.m32_pci_base >> 28;
+> +	phb->ioda.dma32_segcount = phb->ioda.m32_pci_base >> 28;
+>
+>   #if 0 /* We should really do that ... */
+>   	rc = opal_pci_set_phb_mem_window(opal->phb_id,
+> diff --git a/arch/powerpc/platforms/powernv/pci.h b/arch/powerpc/platforms/powernv/pci.h
+> index addd3f7..574fe43 100644
+> --- a/arch/powerpc/platforms/powernv/pci.h
+> +++ b/arch/powerpc/platforms/powernv/pci.h
+> @@ -61,11 +61,10 @@ struct pnv_ioda_pe {
+>   	/* "Weight" assigned to the PE for the sake of DMA resource
+>   	 * allocations
+>   	 */
+> -	unsigned int		dma_weight;
+> +	unsigned int		dma32_weight;
+>
+>   	/* "Base" iommu table, ie, 4K TCEs, 32-bit DMA */
+> -	int			tce32_seg;
+> -	int			tce32_segcount;
+> +	int			dma32_seg;
+>   	struct iommu_table_group table_group;
+>
+>   	/* 64-bit TCE bypass region */
+> @@ -181,7 +180,7 @@ struct pnv_phb {
+>   			unsigned char		pe_rmap[0x10000];
+>
+>   			/* 32-bit TCE tables allocation */
+> -			unsigned long		tce32_count;
+> +			unsigned long		dma32_segcount;
+>
+>   			/* Sorted list of used PE's, sorted at
+>   			 * boot for resource allocation purposes
+>
 
-Cheers.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+
+-- 
+Alexey
