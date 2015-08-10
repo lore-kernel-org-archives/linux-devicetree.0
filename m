@@ -1,83 +1,47 @@
-From: Bjorn Andersson <bjorn.andersson-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>
-Subject: [PATCH v2] backlight: pm8941-wled: Add default-brightness property
-Date: Mon, 10 Aug 2015 13:13:51 -0700
-Message-ID: <1439237631-11243-1-git-send-email-bjorn.andersson@sonymobile.com>
+From: Loc Ho <lho-qTEPVZfXA3Y@public.gmane.org>
+Subject: Re: [PATCH v2 0/3] edac: Add L3/SoC support to the APM X-Gene SoC
+ EDAC driver
+Date: Mon, 10 Aug 2015 13:15:49 -0700
+Message-ID: <CAPw-ZT=9Eq0yc7tzqJAdCvsQTgRkMmGzNOSXgawBTY0gAijr4Q@mail.gmail.com>
+References: <1437808063-17592-1-git-send-email-lho@apm.com>
+	<CALdTtnv7P5d0Y6wyKe1SOqXedNhQxMsFZY=m-rxK3zouLcFv-Q@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CALdTtnv7P5d0Y6wyKe1SOqXedNhQxMsFZY=m-rxK3zouLcFv-Q-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Jingoo Han <jingoohan1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>
-Cc: Rob Clark <robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Dann Frazier <dann.frazier-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>
+Cc: Doug Thompson <dougthompson-aS9lmoZGLiVWk0Htik3J/w@public.gmane.org>, Borislav Petkov <bp-Gina5bIWoIWzQB+pC5nmwQ@public.gmane.org>, Mauro Carvalho Chehab <mchehab-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Jon Masters <jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, patches <patches-qTEPVZfXA3Y@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-edac-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Default the brightness to 2048 and add possibility to override this in
-device tree.
+Hi Dann,
 
-Suggested-by: Rob Clark <robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Signed-off-by: Bjorn Andersson <bjorn.andersson-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>
----
+>> v2:
+>> * Update binding documentation accordingly
+>> * Change all single bit defines to BIT(x)
+>> * Add support for L3 version 1 and 2 HW's
+>> * Change to use debug file system for error injection
+>> * In L3/SoC instance add function, allocate EDAC context after all
+>>   initalization successed
+>> * Support raw or detail info for SoC EDAC error reporting
+>>
+>> v1:
+>> * Add L3/SoC support to the APM X-Gene SoC EDAC driver
+>
+> Loc,
+>   I tested 4.2-rc5 on a Mustang board with one DIMM, and it hangs (RCU
+> stall) in xgene_edac_mc_irq_ctl() on modprobe. Same board with 2 DIMMs
+> boots fine. (U-boot 1.15.12).
 
-After going back and forth on this one I decided that the best unit of this
-property (which could become a common backlight property) would be to use
-"units of brightness". The value will either come from the boot loader picking
-a value in some way or from a user finding a good value by tweaking sysfs -
-both which will be in "units of brightness".
+I just removed one of the two 16GB DIMM... with 4.2.0-rc1 and some
+code clean up in EDAC driver, it boots just fine... I don't believe
+the code clean up would affect it. Do you have the dump log?
 
- Documentation/devicetree/bindings/video/backlight/pm8941-wled.txt | 2 ++
- drivers/video/backlight/pm8941-wled.c                             | 8 ++++++++
- 2 files changed, 10 insertions(+)
+[root@dhcp-10-76-213-247 ~]# uname -a
+Linux dhcp-10-76-213-247 4.2.0-rc1+ #33 SMP PREEMPT Mon Aug 10
+13:23:03 MDT 2015 aarch64 GNU/Linux
 
-diff --git a/Documentation/devicetree/bindings/video/backlight/pm8941-wled.txt b/Documentation/devicetree/bindings/video/backlight/pm8941-wled.txt
-index 424f8444a6cd..e5b294dafc58 100644
---- a/Documentation/devicetree/bindings/video/backlight/pm8941-wled.txt
-+++ b/Documentation/devicetree/bindings/video/backlight/pm8941-wled.txt
-@@ -5,6 +5,8 @@ Required properties:
- - reg: slave address
- 
- Optional properties:
-+- default-brightness: brightness value on boot, value from: 0-4095
-+	default: 2048
- - label: The name of the backlight device
- - qcom,cs-out: bool; enable current sink output
- - qcom,cabc: bool; enable content adaptive backlight control
-diff --git a/drivers/video/backlight/pm8941-wled.c b/drivers/video/backlight/pm8941-wled.c
-index c704c3236034..e1298147bcbb 100644
---- a/drivers/video/backlight/pm8941-wled.c
-+++ b/drivers/video/backlight/pm8941-wled.c
-@@ -17,6 +17,9 @@
- #include <linux/of_device.h>
- #include <linux/regmap.h>
- 
-+/* From DT binding */
-+#define PM8941_WLED_DEFAULT_BRIGHTNESS		2048
-+
- #define PM8941_WLED_REG_VAL_BASE		0x40
- #define  PM8941_WLED_REG_VAL_MAX		0xFFF
- 
-@@ -373,6 +376,7 @@ static int pm8941_wled_probe(struct platform_device *pdev)
- 	struct backlight_device *bl;
- 	struct pm8941_wled *wled;
- 	struct regmap *regmap;
-+	u32 val;
- 	int rc;
- 
- 	regmap = dev_get_regmap(pdev->dev.parent, NULL);
-@@ -395,8 +399,12 @@ static int pm8941_wled_probe(struct platform_device *pdev)
- 	if (rc)
- 		return rc;
- 
-+	val = PM8941_WLED_DEFAULT_BRIGHTNESS;
-+	of_property_read_u32(pdev->dev.of_node, "default-brightness", &val);
-+
- 	memset(&props, 0, sizeof(struct backlight_properties));
- 	props.type = BACKLIGHT_RAW;
-+	props.brightness = val;
- 	props.max_brightness = PM8941_WLED_REG_VAL_MAX;
- 	bl = devm_backlight_device_register(&pdev->dev, wled->name,
- 					    &pdev->dev, wled,
--- 
-1.8.2.2
-
+-Loc
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
