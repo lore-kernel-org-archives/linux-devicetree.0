@@ -1,56 +1,235 @@
-From: Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v9 0/9] Add simple NVMEM Framework via regmap.
-Date: Mon, 10 Aug 2015 11:37:35 +0100
-Message-ID: <55C87EEF.6020609@linaro.org>
-References: <1437995567-11203-1-git-send-email-srinivas.kandagatla@linaro.org> <1438693367.3793.29.camel@pengutronix.de> <20150809151916.GF14271@lunn.ch>
+From: Ley Foon Tan <lftan@altera.com>
+Subject: Re: [PATCH v3 3/5] pci: altera: Add Altera PCIe MSI driver
+Date: Mon, 10 Aug 2015 19:00:44 +0800
+Message-ID: <CAFiDJ58QQzDVBE1-0vvyYHv03R_PVs9Nk3t_0wcJAdozBSLz7Q@mail.gmail.com>
+References: <1438933382-2936-1-git-send-email-lftan@altera.com>
+	<1438933382-2936-4-git-send-email-lftan@altera.com>
+	<55C4C448.4020102@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-api-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20150809151916.GF14271-g2DYL2Zd6BY@public.gmane.org>
-Sender: linux-api-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
-Cc: stefan.wahren-eS4NqCHxEME@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mporter-OWPKS81ov/FWk0Htik3J/w@public.gmane.org, pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-api-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <55C4C448.4020102@arm.com>
+Sender: linux-pci-owner@vger.kernel.org
+To: Marc Zyngier <marc.zyngier@arm.com>
+Cc: Bjorn Helgaas <bhelgaas@google.com>, Russell King <linux@arm.linux.org.uk>, Arnd Bergmann <arnd@arndb.de>, Dinh Nguyen <dinguyen@opensource.altera.com>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Andrew,
+On Fri, Aug 7, 2015 at 10:44 PM, Marc Zyngier <marc.zyngier@arm.com> wrote:
+> On 07/08/15 08:43, Ley Foon Tan wrote:
+>> This patch adds Altera PCIe MSI driver. This soft IP supports configurable
+>> number of vectors, which is a dts parameter.
+>>
+>> Signed-off-by: Ley Foon Tan <lftan@altera.com>
+>> ---
+>>  drivers/pci/host/Kconfig           |   8 +
+>>  drivers/pci/host/Makefile          |   1 +
+>>  drivers/pci/host/pcie-altera-msi.c | 309 +++++++++++++++++++++++++++++++++++++
+>>  3 files changed, 318 insertions(+)
+>>  create mode 100644 drivers/pci/host/pcie-altera-msi.c
+>>
+<snip>
+>> +static int altera_irq_domain_alloc(struct irq_domain *domain, unsigned int virq,
+>> +                                  unsigned int nr_irqs, void *args)
+>> +{
+>> +       struct altera_msi *msi = domain->host_data;
+>> +       unsigned long bit;
+>> +       u32 mask;
+>> +
+>
+> As you cannot support multi-MSI, it would be good to have a
+> WARN_ON(nr_irqs != 1) here. Just in case...
+Noted.
 
-On 09/08/15 16:19, Andrew Lunn wrote:
-> Hi Srinivas
 >
-> The AT24 eeprom driver contains the comment:
+>> +       mutex_lock(&msi->lock);
+>> +
+>> +       bit = find_first_zero_bit(msi->used, msi->num_of_vectors);
+>> +       if (bit >= msi->num_of_vectors)
+>> +               return -ENOSPC;
+>> +
+>> +       set_bit(bit, msi->used);
+>> +
+>> +       mutex_unlock(&msi->lock);
+>> +
+>> +       irq_domain_set_info(domain, virq, bit, &altera_msi_bottom_irq_chip,
+>> +                           domain->host_data, handle_simple_irq,
+>> +                           NULL, NULL);
+>> +       set_irq_flags(virq, IRQF_VALID);
+>> +
+>> +       mask = msi_readl(msi, MSI_INTMASK);
+>> +       mask |= 1 << bit;
+>> +       msi_writel(msi, mask, MSI_INTMASK);
+>> +
+>> +       return 0;
+>> +}
+>> +
+>> +static void altera_irq_domain_free(struct irq_domain *domain,
+>> +                                  unsigned int virq, unsigned int nr_irqs)
+>> +{
+>> +       struct irq_data *d = irq_domain_get_irq_data(domain, virq);
+>> +       struct altera_msi *msi = irq_data_get_irq_chip_data(d);
+>> +       u32 mask;
+>> +
+>> +       mutex_lock(&msi->lock);
+>> +
+>> +       if (!test_bit(d->hwirq, msi->used)) {
+>> +               dev_err(&msi->pdev->dev, "trying to free unused MSI#%lu\n",
+>> +                       d->hwirq);
+>> +       } else {
+>> +               __clear_bit(d->hwirq, msi->used);
+>> +               mask = msi_readl(msi, MSI_INTMASK);
+>> +               mask &= ~(1 << d->hwirq);
+>> +               msi_writel(msi, mask, MSI_INTMASK);
+>> +       }
+>> +
+>> +       mutex_unlock(&msi->lock);
+>> +}
+>> +
+>> +static const struct irq_domain_ops msi_domain_ops = {
+>> +       .alloc  = altera_irq_domain_alloc,
+>> +       .free   = altera_irq_domain_free,
+>> +};
+>> +
+>> +static int altera_allocate_domains(struct altera_msi *msi)
+>> +{
+>> +       msi->inner_domain = irq_domain_add_linear(NULL, msi->num_of_vectors,
+>> +                                            &msi_domain_ops, msi);
+>> +       if (!msi->inner_domain) {
+>> +               dev_err(&msi->pdev->dev, "failed to create IRQ domain\n");
+>> +               return -ENOMEM;
+>> +       }
+>> +
+>> +       msi->msi_domain = pci_msi_create_irq_domain(msi->pdev->dev.of_node,
+>> +                               &altera_msi_domain_info, msi->inner_domain);
+>> +       if (!msi->msi_domain) {
+>> +               dev_err(&msi->pdev->dev, "failed to create MSI domain\n");
+>> +               irq_domain_remove(msi->inner_domain);
+>> +               return -ENOMEM;
+>> +       }
+>> +
+>> +       return 0;
+>> +}
+>> +
+>> +static void altera_free_domains(struct altera_msi *msi)
+>> +{
+>> +       irq_domain_remove(msi->msi_domain);
+>> +       irq_domain_remove(msi->inner_domain);
+>> +}
+>> +
+>> +static int altera_msi_remove(struct platform_device *pdev)
+>> +{
+>> +       struct altera_msi *msi = platform_get_drvdata(pdev);
+>> +
+>> +       msi_writel(msi, 0, MSI_INTMASK);
+>> +       irq_set_chained_handler(msi->irq, NULL);
+>> +       irq_set_handler_data(msi->irq, NULL);
+>> +
+>> +       altera_free_domains(msi);
+>> +
+>> +       platform_set_drvdata(pdev, NULL);
+>> +       return 0;
+>> +}
+>> +
+>> +static int altera_msi_probe(struct platform_device *pdev)
+>> +{
+>> +       struct altera_msi *msi;
+>> +       struct device_node *np = pdev->dev.of_node;
+>> +       struct resource *res;
+>> +       int ret;
+>> +
+>> +       msi = devm_kzalloc(&pdev->dev, sizeof(struct altera_msi),
+>> +                          GFP_KERNEL);
+>> +       if (!msi)
+>> +               return -ENOMEM;
+>> +
+>> +       mutex_init(&msi->lock);
+>> +       msi->pdev = pdev;
+>> +
+>> +       res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "csr");
 >
->          /*
->           * Export the EEPROM bytes through sysfs, since that's convenient.
->           * By default, only root should see the data (maybe passwords etc)
->           */
+> Error checking here.
+Noted.
 >
-> and as you would expect from this:
+>> +       msi->csr_base = devm_ioremap_resource(&pdev->dev, res);
+>> +       if (IS_ERR(msi->csr_base)) {
+>> +               dev_err(&pdev->dev, "get csr resource failed\n");
+>> +               return PTR_ERR(msi->csr_base);
+>> +       }
+>> +
+>> +       res = platform_get_resource_byname(pdev, IORESOURCE_MEM,
+>> +                                          "vector_slave");
 >
-> # ls -l ./devices/platform/soc/soc:aips-bus@40000000/40066000.i2c/i2c-0/0-0050/eeprom
-> -rw------- 1 root root 512 Aug  9 10:16 ./devices/platform/soc/soc:aips-bus@40000000/40066000.i2c/i2c-0/0-0050/eeprom
+> And here.
+Noted.
 >
-> The AT25 and the MAX6875 driver are the same.
+>> +       msi->vector_base = devm_ioremap_resource(&pdev->dev, res);
+>> +       if (IS_ERR(msi->vector_base)) {
+>> +               dev_err(&pdev->dev, "get vector slave resource failed\n");
+>> +               return PTR_ERR(msi->vector_base);
+>> +       }
+>> +
+>> +       msi->vector_phy = res->start;
+>> +
+>> +       if (of_property_read_u32(np, "num-vectors", &msi->num_of_vectors)) {
+>> +               dev_err(&pdev->dev, "failed to parse the number of vectors\n");
+>> +               return -EINVAL;
+>> +       }
+>> +
+>> +       ret = altera_allocate_domains(msi);
+>> +       if (ret)
+>> +               return ret;
+>> +
+>> +       msi->irq = platform_get_irq(pdev, 0);
+>> +       if (msi->irq <= 0) {
+>> +               dev_err(&pdev->dev, "failed to map IRQ: %d\n", msi->irq);
+>> +               ret = -ENODEV;
+>> +               goto err;
+>> +       }
+>> +
+>> +       irq_set_chained_handler_and_data(msi->irq, altera_msi_isr, msi);
+>> +       platform_set_drvdata(pdev, msi);
+>> +
+>> +       return 0;
+>> +
+>> +err:
+>> +       altera_msi_remove(pdev);
+>> +       return ret;
+>> +}
+>> +
+>> +static const struct of_device_id altera_msi_of_match[] = {
+>> +       { .compatible = "altr,msi-1.0", NULL },
+>> +       { },
+>> +};
+>> +
+>> +static struct platform_driver altera_msi_driver = {
+>> +       .driver = {
+>> +               .name = "altera-msi",
+>> +               .of_match_table = altera_msi_of_match,
+>> +       },
+>> +       .probe = altera_msi_probe,
+>> +       .remove = altera_msi_remove,
+>> +};
+>> +
+>> +static int __init altera_msi_init(void)
+>> +{
+>> +       return platform_driver_register(&altera_msi_driver);
+>> +}
+>> +
+>> +subsys_initcall(altera_msi_init);
+>> +
+>> +MODULE_AUTHOR("Ley Foon Tan <lftan@altera.com>");
+>> +MODULE_DESCRIPTION("Altera PCIe MSI support");
+>> +MODULE_LICENSE("GPL v2");
+>> --
+>> 1.8.2.1
+>>
 >
-> However nvmem has different defaults:
->
-> # ls -l ./devices/platform/soc/soc:aips-bus@40000000/40066000.i2c/i2c-0/0-0050/0-00500/nvmem
-> -rw-r--r-- 1 root root 0 Aug  9 10:16 ./devices/platform/soc/soc:aips-bus@40000000/40066000.i2c/i2c-0/0-0050/0-00500/nvmem
->
-Yes, nvmem by default sets the read permission for everyone S_IRUGO. 
-Which was the most common use case.
+> Apart from the couple of nits above, this is starting to look good too.
+> And as for the PCIe driver, you need to get the DT maintainers to review
+> that part.
+Okay, added DT maintainers to CC list.
 
-> Has this been considered and discussed?
-Thanks for bringing this up, No, we did not discuss this explicitly, but 
-it should not be an issue to accommodate this. Provider still have 
-flexibility to configure such things.
+Thanks for reviewing.
 
-As a first patchset we wanted to keep the framework simple and add 
-features as we move on.
-
-Thanks,
-srini
->
-> Thanks
->      Andrew
->
+Regards
+Ley Foon
