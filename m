@@ -1,58 +1,71 @@
-From: Haibo Chen <haibo.chen@freescale.com>
-Subject: [PATCH v5 3/6] mmc: sdhci-esdhc-imx: add compatible string in
- bingding doc
-Date: Mon, 10 Aug 2015 16:18:05 +0800
-Message-ID: <1439194688-18335-4-git-send-email-haibo.chen@freescale.com>
-References: <1439194688-18335-1-git-send-email-haibo.chen@freescale.com>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH v2 2/6] mailbox: dt-bindings: Add shared [driver <=>
+ device tree] defines
+Date: Mon, 10 Aug 2015 09:24:45 +0100
+Message-ID: <20150810082445.GA3249@x1>
+References: <1437990272-23111-1-git-send-email-lee.jones@linaro.org>
+ <1437990272-23111-3-git-send-email-lee.jones@linaro.org>
+ <CABb+yY2asjH-c+VJXvG+RK0=2p=P4Y21pznNP0riaKMWLxYZog@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1439194688-18335-1-git-send-email-haibo.chen@freescale.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, shawnguo@kernel.org, kernel@pengutronix.de, linux@arm.linux.org.uk, ulf.hansson@linaro.org, aisheng.dong@freescale.com
-Cc: fabio.estevam@freescale.com, devicetree@vger.kernel.org, haibo.chen@freescale.com, linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org, mkl@pengutronix.de, johan.derycke@barco.com, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CABb+yY2asjH-c+VJXvG+RK0=2p=P4Y21pznNP0riaKMWLxYZog@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Jassi Brar <jassisinghbrar@gmail.com>
+Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, kernel@stlinux.com, Devicetree List <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Add a required property "fsl,imx7d-usdhc" in binding doc.
-Add an optional property "fsl,tuning-step" in binding doc.
+On Mon, 10 Aug 2015, Jassi Brar wrote:
+> On Mon, Jul 27, 2015 at 3:14 PM, Lee Jones <lee.jones@linaro.org> wro=
+te:
+> > This header is currently only used for defines pertaining to data
+> > direction i.e. Rx, Tx or Loopback.
+> >
+> > Signed-off-by: Lee Jones <lee.jones@linaro.org>
+> > ---
+> >  include/dt-bindings/mailbox/mailbox.h | 14 ++++++++++++++
+> >  1 file changed, 14 insertions(+)
+> >  create mode 100644 include/dt-bindings/mailbox/mailbox.h
+> >
+> > diff --git a/include/dt-bindings/mailbox/mailbox.h b/include/dt-bin=
+dings/mailbox/mailbox.h
+> > new file mode 100644
+> > index 0000000..82e929a
+> > --- /dev/null
+> > +++ b/include/dt-bindings/mailbox/mailbox.h
+> > @@ -0,0 +1,14 @@
+> > +/*
+> > + * This program is free software; you can redistribute it and/or m=
+odify
+> > + * it under the terms of the GNU General Public License version 2 =
+as
+> > + * published by the Free Software Foundation.
+> > + */
+> > +
+> > +#ifndef __MAILBOX_CONTROLLER_DT_BINDINGS_H
+> > +#define __MAILBOX_CONTROLLER_DT_BINDINGS_H
+> > +
+> > +#define MBOX_TX                0x1
+> > +#define MBOX_RX                0x2
+> > +#define MBOX_LOOPBACK  (MBOX_RX | MBOX_TX)
+> > +
+> Not sure I understand 'loopback'.  Does it mean h/w has some
+> 'loopback' mode for testing purposes? Or it simply means the
+> controller can send as well as receive messages?
 
-Signed-off-by: Haibo Chen <haibo.chen@freescale.com>
----
- Documentation/devicetree/bindings/mmc/fsl-imx-esdhc.txt | 6 ++++++
- 1 file changed, 6 insertions(+)
+'loopback' allows firmware to conduct some early function tests.
+However, channels are simplex, so we provide protection against
+multiple allocation of single channel.  By allocating a LOOPBACK
+channel we over-ride this protection and allow a single channel to be
+allocated twice, once for Rx and the other for Tx.
 
-diff --git a/Documentation/devicetree/bindings/mmc/fsl-imx-esdhc.txt b/Documentation/devicetree/bindings/mmc/fsl-imx-esdhc.txt
-index 211e778..dca56d6 100644
---- a/Documentation/devicetree/bindings/mmc/fsl-imx-esdhc.txt
-+++ b/Documentation/devicetree/bindings/mmc/fsl-imx-esdhc.txt
-@@ -15,6 +15,7 @@ Required properties:
- 	       "fsl,imx6q-usdhc"
- 	       "fsl,imx6sl-usdhc"
- 	       "fsl,imx6sx-usdhc"
-+	       "fsl,imx7d-usdhc"
- 
- Optional properties:
- - fsl,wp-controller : Indicate to use controller internal write protection
-@@ -27,6 +28,11 @@ Optional properties:
-   transparent level shifters on the outputs of the controller. Two cells are
-   required, first cell specifies minimum slot voltage (mV), second cell
-   specifies maximum slot voltage (mV). Several ranges could be specified.
-+- fsl,tuning-step: Specify the increasing delay cell steps in tuning procedure.
-+  The uSDHC use one delay cell as default increasing step to do tuning process.
-+  This property allows user to change the tuning step to more than one delay
-+  cells which is useful for some special boards or cards when the default
-+  tuning step can't find the proper delay window within limited tuning retries.
- 
- Examples:
- 
--- 
-1.9.1
+This mode was born out of a _real_ use-case.  Some of ST's firmware
+running on products actually uses the loopback feature.
+
+--=20
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org =E2=94=82 Open source software for ARM SoCs
+=46ollow Linaro: Facebook | Twitter | Blog
