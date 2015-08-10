@@ -1,120 +1,157 @@
-From: =?UTF-8?B?Q2h1bmctWWloIFdhbmcgKOeOi+W0h+aHvyk=?=
-	<cywang@google.com>
-Subject: Re: [PATCH] thermal: of: Introduce governor selection in dts
-Date: Mon, 10 Aug 2015 16:00:49 +0800
-Message-ID: <CAM2ehZYy3SNKhXvF0XyQsoPFab2JqrVq3wLKadPVxBsVG3E7jw@mail.gmail.com>
-References: <CAM2ehZYXsqCoS9ygXNfPHxt9-b5cFxH_ovrgjvM-BfDO6REcUg@mail.gmail.com>
- <20150807103121.GC7646@leverpostej>
+From: Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCHv7 2/2] mailbox: Adding driver for Xilinx LogiCORE IP mailbox.
+Date: Mon, 10 Aug 2015 13:35:29 +0530
+Message-ID: <CABb+yY3tpepdO=s9nb9kAE241sYVTTXB-ci_4ihuthHTekedNg@mail.gmail.com>
+References: <1436922022-17564-1-git-send-email-moritz.fischer@ettus.com>
+	<1436922022-17564-3-git-send-email-moritz.fischer@ettus.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20150807103121.GC7646@leverpostej>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mark Rutland <mark.rutland@arm.com>, javi.merino@arm.com
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Zhang Rui <rui.zhang@intel.com>, Eduardo Valentin <edubezval@gmail.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <Pawel.Moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1436922022-17564-3-git-send-email-moritz.fischer-+aYTwkv1SeIAvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Moritz Fischer <moritz.fischer-+aYTwkv1SeIAvxtiuMwx3w@public.gmane.org>
+Cc: Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org" <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, =?UTF-8?Q?S=C3=B6ren_Brinkmann?= <soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, mchehab-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, joe-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org, jingoohan1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Devicetree List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch was originally introduced when we made power_allocator the
-default governor where we had issues in binding a thermal zone w/o
-parameters to. Then we came out this facility for binding a specific
-governor to a thermal zone in dts instead of the default governor.
-Javi seems like this idea much.
+On Wed, Jul 15, 2015 at 6:30 AM, Moritz Fischer
+<moritz.fischer-+aYTwkv1SeIAvxtiuMwx3w@public.gmane.org> wrote:
 
-On Fri, Aug 7, 2015 at 6:31 PM, Mark Rutland <mark.rutland@arm.com> wro=
-te:
-> On Fri, Aug 07, 2015 at 08:09:39AM +0100, Chung-Yih Wang (=E7=8E=8B=E5=
-=B4=87=E6=87=BF) wrote:
->> As there could be more thermal zones on a system and
->> more variety in thermal governors provided in kernel,
->> this patch provides flexibility of governor selection
->> for a thermal zone declared in device tree.
->>
->> Change-Id: Ie4a75d762709cbbe9f1806dae325d13f71982e78
->> Signed-off-by: Chung-yih Wang <cywang@chromium.org>
->> ---
->>  Documentation/devicetree/bindings/thermal/thermal.txt |  9 ++++++++=
-+
->>  drivers/thermal/of-thermal.c                          | 10 ++++++++=
-++
->>  2 files changed, 19 insertions(+)
->>
->> diff --git a/Documentation/devicetree/bindings/thermal/thermal.txt
->> b/Documentation/devicetree/bindings/thermal/thermal.txt
->> index 8a49362..30a5d41 100644
->> --- a/Documentation/devicetree/bindings/thermal/thermal.txt
->> +++ b/Documentation/devicetree/bindings/thermal/thermal.txt
->> @@ -174,6 +174,13 @@ Optional property:
->>                         2000mW, while on a 10'' tablet is around
->>                         4500mW.
->>
->> +- thermal-governor-name:       The name of governor used to control=
- the
->> +                               thermal zone instead of the default =
-one
->> +                               specified in kernel config. For refe=
-rence, if
->> +                               default governor is step_wise, one c=
-ould
->> +                               select power_allocator for cpu_therm=
-al zone
->> +                               in dts.
+> +
+> +static void xilinx_mbox_rx_data(struct mbox_chan *chan)
+> +{
+> +       struct xilinx_mbox *mbox = mbox_chan_to_xilinx_mbox(chan);
+> +       u32 data;
+> +
+> +       if (xilinx_mbox_pending(mbox)) {
+> +               data = readl_relaxed(mbox->mbox_base + MAILBOX_REG_RDDATA);
+> +               mbox_chan_received_data(chan, (void *)data);
 >
+If RDDATA is a FIFO, then above seems wrong - you are assuming
+messages are always going to be exactly 32-bits for every protocol.
+Ideally you should empty the fifo fully, at least when RX has an
+interrupt.
+
+> +
+> +static int xilinx_mbox_irq_send_data(struct mbox_chan *chan, void *data)
+> +{
+> +       struct xilinx_mbox *mbox = mbox_chan_to_xilinx_mbox(chan);
+> +       u32 *udata = data;
+> +
+> +       if (xilinx_mbox_full(mbox))
+> +               return -EBUSY;
 >
-> This is not a hardware or system property, but rather a Linux
-> implementation detail.
+This check is redundant. last_tx_done already makes sure this is always true.
+
+> +       /* enable interrupt before send */
+> +       xilinx_mbox_tx_intmask(mbox, true);
+> +
+> +       writel_relaxed(*udata, mbox->mbox_base + MAILBOX_REG_WRDATA);
+> +
+>From status EMPTY and FULL, it seems WRDATA is a FIFO. So here also
+you should expect messages to be <= fifo depth. And not assume exactly
+32bit messages always.
+
+> +
+> +static bool xilinx_mbox_last_tx_done(struct mbox_chan *chan)
+> +{
+> +       struct xilinx_mbox *mbox = mbox_chan_to_xilinx_mbox(chan);
+> +
+> +       /* return false if mailbox is full */
+> +       return !xilinx_mbox_full(mbox);
 >
-> This really shouldn't go in the DT.
+Instead of FULL, I think it should check for stricter EMPTY status ...
+mbox api submits only 1 message at a time.
+
+> +
+> +static bool xilinx_mbox_peek_data(struct mbox_chan *chan)
+> +{
+> +       struct xilinx_mbox *mbox = mbox_chan_to_xilinx_mbox(chan);
+> +
+> +       return xilinx_mbox_pending(mbox);
+> +}
+> +
+> +static void xilinx_mbox_irq_shutdown(struct mbox_chan *chan)
+> +{
+> +       struct xilinx_mbox *mbox = mbox_chan_to_xilinx_mbox(chan);
+> +
+> +       /* mask all interrupts */
+> +       writel_relaxed(0, mbox->mbox_base + MAILBOX_REG_IE);
+> +
+> +       clk_disable_unprepare(mbox->clk);
+> +
+> +       free_irq(mbox->irq, chan);
+> +}
+> +
+> +static void xilinx_mbox_poll_shutdown(struct mbox_chan *chan)
+> +{
+> +       struct xilinx_mbox *mbox = mbox_chan_to_xilinx_mbox(chan);
+> +
+> +       del_timer_sync(&mbox->rxpoll_timer);
+> +
+> +       clk_disable_unprepare(mbox->clk);
+> +}
+> +
+> +static const struct mbox_chan_ops xilinx_mbox_irq_ops = {
+> +       .send_data = xilinx_mbox_irq_send_data,
+> +       .startup = xilinx_mbox_irq_startup,
+> +       .shutdown = xilinx_mbox_irq_shutdown,
+> +       .last_tx_done = xilinx_mbox_last_tx_done,
+> +       .peek_data = xilinx_mbox_peek_data,
+> +};
+> +
+> +static const struct mbox_chan_ops xilinx_mbox_poll_ops = {
+> +       .send_data = xilinx_mbox_poll_send_data,
+> +       .startup = xilinx_mbox_poll_startup,
+> +       .shutdown = xilinx_mbox_poll_shutdown,
+> +       .last_tx_done = xilinx_mbox_last_tx_done,
+> +       .peek_data = xilinx_mbox_peek_data,
+> +};
+> +
+> +static int xilinx_mbox_probe(struct platform_device *pdev)
+> +{
+> +       struct xilinx_mbox *mbox;
+> +       struct resource *regs;
+> +       int ret;
+> +
+> +       mbox = devm_kzalloc(&pdev->dev, sizeof(*mbox), GFP_KERNEL);
+> +       if (!mbox)
+> +               return -ENOMEM;
+> +
+> +       /* get clk and enable */
+> +       mbox->clk = devm_clk_get(&pdev->dev, "mbox");
+> +       if (IS_ERR(mbox->clk)) {
+> +               dev_err(&pdev->dev, "Couldn't get clk.\n");
+> +               return PTR_ERR(mbox->clk);
+> +       }
+> +
+> +       regs = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> +
+> +       mbox->mbox_base = devm_ioremap_resource(&pdev->dev, regs);
+> +       if (IS_ERR(mbox->mbox_base))
+> +               return PTR_ERR(mbox->mbox_base);
+> +
+> +       mbox->irq = platform_get_irq(pdev, 0);
+> +       /* if irq is present, we can use it, otherwise, poll */
+> +       if (mbox->irq > 0) {
+> +               mbox->controller.txdone_irq = true;
+> +               mbox->controller.ops = &xilinx_mbox_irq_ops;
+> +       } else {
+> +               dev_info(&pdev->dev, "IRQ not found, fallback to polling.\n");
+> +               mbox->controller.txdone_poll = true;
+> +               mbox->controller.txpoll_period = MBOX_POLLING_MS;
+> +               mbox->controller.ops = &xilinx_mbox_poll_ops;
+> +
+> +               setup_timer(&mbox->rxpoll_timer, xilinx_mbox_poll_rx,
+> +                           (unsigned long)&mbox->chan);
 >
-> Mark.
->
->> +
->>  Note: The delay properties are bound to the maximum dT/dt (temperat=
-ure
->>  derivative over time) in two situations for a thermal zone:
->>  (i)  - when passive cooling is activated (polling-delay-passive); a=
-nd
->> @@ -555,6 +562,8 @@ thermal-zones {
->>
->>                 sustainable-power =3D <2500>;
->>
->> +               thermal-governor-name =3D "power_allocator";
->> +
->>                 trips {
->>                         /* Trips are based on resulting linear equat=
-ion */
->>                         cpu_trip: cpu-trip {
->> diff --git a/drivers/thermal/of-thermal.c b/drivers/thermal/of-therm=
-al.c
->> index b295b2b..45570ac 100644
->> --- a/drivers/thermal/of-thermal.c
->> +++ b/drivers/thermal/of-thermal.c
->> @@ -882,6 +882,7 @@ int __init of_parse_thermal_zones(void)
->>         }
->>
->>         for_each_child_of_node(np, child) {
->> +               const char *governor_name;
->>                 struct thermal_zone_device *zone;
->>                 struct thermal_zone_params *tzp;
->>                 int i, mask =3D 0;
->> @@ -909,6 +910,15 @@ int __init of_parse_thermal_zones(void)
->>                         goto exit_free;
->>                 }
->>
->> +               /* Select a preferred governor if declared */
->> +               if (!of_property_read_string(child,
->> +                                            "thermal-governor-name"=
-,
->> +                                            &governor_name)) {
->> +                       strncpy(tzp->governor_name,
->> +                               governor_name,
->> +                               sizeof(tzp->governor_name) - 1);
->> +               }
->> +
->>                 /* No hwmon because there might be hwmon drivers reg=
-istering */
->>                 tzp->no_hwmon =3D true;
->>
->> --
->> 2.1.2
->>
+I believe there is indeed some platform that doesn't have RX-Interrupt?
+ If no, please remove this.
+ If yes, you may want to get some hint from platform about the size of
+messages and do mbox_chan_received_data() only upon reading those many
+bytes.
+
+Cheers.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
