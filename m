@@ -1,125 +1,90 @@
-From: Ley Foon Tan <lftan.linux@gmail.com>
-Subject: Re: [PATCH v3 4/5] Documentation: dt-bindings: pci: altera pcie
- device tree binding
-Date: Mon, 10 Aug 2015 19:03:57 +0800
-Message-ID: <CAFiDJ58b62Q7CnoU1+h2dSf7xBPAhjaY5kaeeOrxRVRZ84WJxw@mail.gmail.com>
-References: <1438933382-2936-1-git-send-email-lftan@altera.com>
-	<1438933382-2936-5-git-send-email-lftan@altera.com>
+From: Stefan Wahren <stefan.wahren@i2se.com>
+Subject: Re: [PATCH v9 0/9] Add simple NVMEM Framework via regmap.
+Date: Mon, 10 Aug 2015 13:24:38 +0200 (CEST)
+Message-ID: <997560650.82109.1439205878609.JavaMail.open-xchange@oxbsltgw00.schlund.de>
+References: <1437995567-11203-1-git-send-email-srinivas.kandagatla@linaro.org> <1438693367.3793.29.camel@pengutronix.de> <20150809151916.GF14271@lunn.ch> <55C87EEF.6020609@linaro.org>
+Reply-To: Stefan Wahren <stefan.wahren@i2se.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <1438933382-2936-5-git-send-email-lftan@altera.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Bjorn Helgaas <bhelgaas@google.com>, Russell King <linux@arm.linux.org.uk>, Marc Zyngier <marc.zyngier@arm.com>
-Cc: Arnd Bergmann <arnd@arndb.de>, Dinh Nguyen <dinguyen@opensource.altera.com>, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Ley Foon Tan <lftan@altera.com>, Ley Foon Tan <lftan.linux@gmail.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <55C87EEF.6020609@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, Andrew Lunn <andrew@lunn.ch>
+Cc: wxt@rock-chips.com, linux-api@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, sboyd@codeaurora.org, arnd@arndb.de, linux-arm-kernel@lists.infradead.org, khilman@kernel.org, s.hauer@pengutronix.de, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, mporter@konsulko.com, pantelis.antoniou@konsulko.com, devicetree@vger.kernel.org, Mark Brown <broonie@kernel.org>, maitysanchayan@gmail.com, p.zabel@pengutronix.de
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Aug 7, 2015 at 3:43 PM, Ley Foon Tan <lftan@altera.com> wrote:
-> This patch adds the bindings for Altera PCIe host controller driver and
-> Altera PCIe MSI driver.
->
-> Signed-off-by: Ley Foon Tan <lftan@altera.com>
-> ---
->  .../devicetree/bindings/pci/altera-pcie-msi.txt    | 27 ++++++++++++
->  .../devicetree/bindings/pci/altera-pcie.txt        | 49 ++++++++++++++++++++++
->  2 files changed, 76 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/pci/altera-pcie-msi.txt
->  create mode 100644 Documentation/devicetree/bindings/pci/altera-pcie.txt
->
-> diff --git a/Documentation/devicetree/bindings/pci/altera-pcie-msi.txt b/Documentation/devicetree/bindings/pci/altera-pcie-msi.txt
-> new file mode 100644
-> index 0000000..7f330c9
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/pci/altera-pcie-msi.txt
-> @@ -0,0 +1,27 @@
-> +* Altera PCIe MSI controller
-> +
-> +Required properties:
-> +- compatible:  should contain "altr,msi-1.0"
-> +- reg:         specifies the physical base address of the controller and
-> +               the length of the memory mapped region.
-> +- reg-names:   Must include the following entries:
-> +               "csr": CSR registers
-> +               "vector_slave": vectors region
-> +-interrupts:   specifies the interrupt source of the parent interrupt
-> +               controller. The format of the interrupt specifier depends on the
-> +               parent interrupt controller.
-> +- num-vectors: Number of vectors, range 1 to 32.
-> +- msi-controller:      indicates that this is MSI controller node
-> +
-> +
-> +Example
-> +msi0: msi@0xFF200000 {
-> +       compatible = "altr,msi-1.0";
-> +       reg = <0xFF200000 0x00000010
-> +               0xFF200010 0x00000080>;
-> +       reg-names = "csr", "vector_slave";
-> +       interrupt-parent = <&hps_0_arm_gic_0>;
-> +       interrupts = <0 42 4>;
-> +       msi-controller = <1>;
-> +       num-vectors = <32>;
-> +};
-> diff --git a/Documentation/devicetree/bindings/pci/altera-pcie.txt b/Documentation/devicetree/bindings/pci/altera-pcie.txt
-> new file mode 100644
-> index 0000000..729193d
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/pci/altera-pcie.txt
-> @@ -0,0 +1,49 @@
-> +* Altera PCIe controller
-> +
-> +Required properties:
-> +- compatible : should contain "altr,pcie-root-port-1.0"
-> +- reg:         A list of physical base address and length for TXS and CRA.
-> +- reg-names:   Must include the following entries:
-> +               "Txs": TXS region
-> +               "Cra": Control register access region
-> +-interrupts:   specifies the interrupt source of the parent interrupt controller.
-> +               The format of the interrupt specifier depends on the parent interrupt
-> +               controller.
-> +- device_type: must be "pci"
-> +- #address-cells:      set to <3>
-> +- #size-cells: set to <2>
-> +- #interrupt-cells:    set to <1>
-> +- ranges:              Describes the translation of addresses for root ports and standard
-> +               PCI regions.
-> +- interrupt-map-mask and interrupt-map: standard PCI properties
-> +       to define the mapping of the PCIe interface to interrupt
-> +       numbers.
-> +
-> +Optional properties:
-> +- msi-parent:  Link to the hardware entity that serves as the MSI controller for this PCIe
-> +               controller.
-> +- bus-range:   PCI bus numbers covered
-> +
-> +Example
-> +       pcie_0: pcie@0xc00000000 {
-> +               compatible = "altr,pcie-root-port-1.0";
-> +               reg = <0xc0000000 0x20000000>,
-> +                       <0xff220000 0x00004000>;
-> +               reg-names = "Txs", "Cra";
-> +               interrupt-parent = <&hps_0_arm_gic_0>;
-> +               interrupts = <0 40 4>;
-> +               interrupt-controller;
-> +               #interrupt-cells = <1>;
-> +               bus-range = <0x0 0xFF>;
-> +               device_type = "pci";
-> +               msi-parent = <&msi_to_gic_gen_0>;
-> +               #address-cells = <3>;
-> +               #size-cells = <2>;
-> +               interrupt-map-mask = <0 0 0 7>;
-> +               interrupt-map = <0 0 0 1 &pcie_0 1>,
-> +                                   <0 0 0 2 &pcie_0 2>,
-> +                                   <0 0 0 3 &pcie_0 3>,
-> +                                   <0 0 0 4 &pcie_0 4>;
-> +               ranges = <0x82000000 0x00000000 0x00000000 0xc0000000 0x00000000 0x10000000
-> +                           0x82000000 0x00000000 0x10000000 0xd0000000 0x00000000 0x10000000>;
-> +       };
-> --
+Hi Srinivas,
+hi Andrew,
 
-Added DT maintainers to CC list. Please help to review if anything
-need to be changed.
+[add Sanchayan and Philipp]
 
-Thanks.
+> Srinivas Kandagatla <srinivas.kandagatla@linaro.org> hat am 10. August 2015 um
+> 12:37 geschrieben:
+>
+>
+> Hi Andrew,
+>
+> On 09/08/15 16:19, Andrew Lunn wrote:
+> > Hi Srinivas
+> >
+> > The AT24 eeprom driver contains the comment:
+> >
+> > /*
+> > * Export the EEPROM bytes through sysfs, since that's convenient.
+> > * By default, only root should see the data (maybe passwords etc)
+> > */
+> >
+> > and as you would expect from this:
+> >
+> > # ls -l
+> > ./devices/platform/soc/soc:aips-bus@40000000/40066000.i2c/i2c-0/0-0050/eeprom
+> > -rw------- 1 root root 512 Aug 9 10:16
+> > ./devices/platform/soc/soc:aips-bus@40000000/40066000.i2c/i2c-0/0-0050/eeprom
+> >
+> > The AT25 and the MAX6875 driver are the same.
+> >
+> > However nvmem has different defaults:
+> >
+> > # ls -l
+> > ./devices/platform/soc/soc:aips-bus@40000000/40066000.i2c/i2c-0/0-0050/0-00500/nvmem
+> > -rw-r--r-- 1 root root 0 Aug 9 10:16
+> > ./devices/platform/soc/soc:aips-bus@40000000/40066000.i2c/i2c-0/0-0050/0-00500/nvmem
+> >
+> Yes, nvmem by default sets the read permission for everyone S_IRUGO.
+> Which was the most common use case.
+
+i can only speak for mxs-ocotp, but root-only access is sufficient.
+
+>
+> > Has this been considered and discussed?
+> Thanks for bringing this up, No, we did not discuss this explicitly, but
+> it should not be an issue to accommodate this. Provider still have
+> flexibility to configure such things.
+
+IMHO it would better the default settings of the framework would be compatible
+and same restrictive as the eeprom drivers.
+
+In case a provider needs more privileges, it should be his job.
+
+>
+> As a first patchset we wanted to keep the framework simple and add
+> features as we move on.
+
+That's true, but it's an ABI too. So changing default settings soon is better.
 
 Regards
-Ley Foon
+Stefan
+
+>
+> Thanks,
+> srini
+> >
+> > Thanks
+> > Andrew
+> >
+>
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
