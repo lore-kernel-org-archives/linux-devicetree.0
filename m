@@ -1,57 +1,56 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH v3 01/18] platform: delay OF device-driver matches until
- late_initcall
-Date: Mon, 10 Aug 2015 11:25:15 +0100
-Message-ID: <20150810102515.GA1965@sirena.org.uk>
-References: <1438870315-18689-1-git-send-email-tomeu.vizoso@collabora.com>
- <1438870315-18689-2-git-send-email-tomeu.vizoso@collabora.com>
- <CAL_Jsq+GLMZe-f6qEi=7i1YrrWc6k99RpGkOyCd5KkYDiyt0QA@mail.gmail.com>
- <CAAObsKBapFqzr+4YEXJfcJWMd+tkaBqYbGiFTntHStAP=+P-_Q@mail.gmail.com>
- <55C4E597.1010701@ti.com>
- <CAAObsKDJsuhuQfLbxq27Mtm1T_Auz7Gohp8PDyK7rNNDyaGhcg@mail.gmail.com>
+From: Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v9 0/9] Add simple NVMEM Framework via regmap.
+Date: Mon, 10 Aug 2015 11:37:35 +0100
+Message-ID: <55C87EEF.6020609@linaro.org>
+References: <1437995567-11203-1-git-send-email-srinivas.kandagatla@linaro.org> <1438693367.3793.29.camel@pengutronix.de> <20150809151916.GF14271@lunn.ch>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="FCuugMFkClbJLl1L"
-Return-path: <linux-acpi-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAAObsKDJsuhuQfLbxq27Mtm1T_Auz7Gohp8PDyK7rNNDyaGhcg@mail.gmail.com>
-Sender: linux-acpi-owner@vger.kernel.org
-To: Tomeu Vizoso <tomeu.vizoso@collabora.com>
-Cc: Grygorii Strashko <grygorii.strashko@ti.com>, Rob Herring <robherring2@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>, Stephen Warren <swarren@wwwdotorg.org>, Javier Martinez Canillas <javier@osg.samsung.com>, Linus Walleij <linus.walleij@linaro.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Thierry Reding <thierry.reding@gmail.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-api-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20150809151916.GF14271-g2DYL2Zd6BY@public.gmane.org>
+Sender: linux-api-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
+Cc: stefan.wahren-eS4NqCHxEME@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mporter-OWPKS81ov/FWk0Htik3J/w@public.gmane.org, pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-api-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+Hi Andrew,
 
---FCuugMFkClbJLl1L
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+On 09/08/15 16:19, Andrew Lunn wrote:
+> Hi Srinivas
+>
+> The AT24 eeprom driver contains the comment:
+>
+>          /*
+>           * Export the EEPROM bytes through sysfs, since that's convenient.
+>           * By default, only root should see the data (maybe passwords etc)
+>           */
+>
+> and as you would expect from this:
+>
+> # ls -l ./devices/platform/soc/soc:aips-bus@40000000/40066000.i2c/i2c-0/0-0050/eeprom
+> -rw------- 1 root root 512 Aug  9 10:16 ./devices/platform/soc/soc:aips-bus@40000000/40066000.i2c/i2c-0/0-0050/eeprom
+>
+> The AT25 and the MAX6875 driver are the same.
+>
+> However nvmem has different defaults:
+>
+> # ls -l ./devices/platform/soc/soc:aips-bus@40000000/40066000.i2c/i2c-0/0-0050/0-00500/nvmem
+> -rw-r--r-- 1 root root 0 Aug  9 10:16 ./devices/platform/soc/soc:aips-bus@40000000/40066000.i2c/i2c-0/0-0050/0-00500/nvmem
+>
+Yes, nvmem by default sets the read permission for everyone S_IRUGO. 
+Which was the most common use case.
 
-On Sun, Aug 09, 2015 at 03:03:14PM +0200, Tomeu Vizoso wrote:
+> Has this been considered and discussed?
+Thanks for bringing this up, No, we did not discuss this explicitly, but 
+it should not be an issue to accommodate this. Provider still have 
+flexibility to configure such things.
 
-> There was some recent thread about how the disabling of unused clocks
-> and regulators isn't really safe because after late_initcall_sync more
-> drivers can be registered from modules. Furthermore, there's async
-> device probes.
+As a first patchset we wanted to keep the framework simple and add 
+features as we move on.
 
-What recent thread and why would that be unsafe?  Any driver using a
-clock or regulator ought to be making sure that the clock or regulator
-is enabled before it tries to use it.  The worst that should happen is
-that something gets the power bounced during boot which isn't the end of
-the world.
-
---FCuugMFkClbJLl1L
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQEcBAEBCAAGBQJVyHwIAAoJECTWi3JdVIfQQ2kH/2CXryctZQKKgrOBprylvRft
-nvGYcjSHlDneB5K1SXy3M8Rwl+Yf2W6lc1D0pUnr2HJwa/VIvR7U93lKlK1YkEkL
-E8GCOVGRey1sXKS+opZHI9m1bDsJQHr+H+RhcseHnm2I/uK5xLj3fJ8NgWI+ZVP+
-7NfgAvMD0hNkKYaaOxAoo/yWKd1uk1FQaosaxkswzZ0YqzG5v1g2LtouG1zKN63z
-xjn7LFy2A5TGVjPJC+JWrA+L76mdYvtxueWnLwFJM5S+ke2dK4FX42YuQ8JsOJCi
-IFzNEhlhjEGrwh1unTIKTBKim58+ypq62qgG0Elf4XSMpYX7hRlnR+aNTsN/Oq4=
-=LVVD
------END PGP SIGNATURE-----
-
---FCuugMFkClbJLl1L--
+Thanks,
+srini
+>
+> Thanks
+>      Andrew
+>
