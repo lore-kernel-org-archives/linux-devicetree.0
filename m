@@ -1,85 +1,73 @@
-From: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
-Subject: Re: [PATCH 2/2] ARM: shmobile: silk: add QSPI DT support
-Date: Mon, 10 Aug 2015 16:38:46 +0200
-Message-ID: <CAMuHMdXQJ4Hju477Ys0ujXCNdUjWOa6AuKGzLPc3YFJc_eLz+g@mail.gmail.com>
-References: <1898263.zrOs5SAUTS@wasted.cogentembedded.com>
-	<1768974.jEFIAaInqd@wasted.cogentembedded.com>
+From: Alexey Kardashevskiy <aik@ozlabs.ru>
+Subject: Re: [PATCH v6 18/42] powerpc/powernv: Allocate PE# in deasending
+ order
+Date: Tue, 11 Aug 2015 00:39:02 +1000
+Message-ID: <55C8B786.1050702@ozlabs.ru>
+References: <1438834307-26960-1-git-send-email-gwshan@linux.vnet.ibm.com>
+ <1438834307-26960-19-git-send-email-gwshan@linux.vnet.ibm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1768974.jEFIAaInqd-gHKXc3Y1Z8zGSmamagVegGFoWSdPRAKMAL8bYrjMMd8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
-Cc: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Linux-sh list <linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain; charset=koi8-r; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <1438834307-26960-19-git-send-email-gwshan@linux.vnet.ibm.com>
+Sender: linux-pci-owner@vger.kernel.org
+To: Gavin Shan <gwshan@linux.vnet.ibm.com>, linuxppc-dev@lists.ozlabs.org
+Cc: linux-pci@vger.kernel.org, devicetree@vger.kernel.org, benh@kernel.crashing.org, mpe@ellerman.id.au, bhelgaas@google.com, grant.likely@linaro.org, robherring2@gmail.com, panto@antoniou-consulting.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Sergei,
+On 08/06/2015 02:11 PM, Gavin Shan wrote:
+> The available PE#, represented by a bitmap in the PHB, is allocated
+> in ascending order.
 
-On Sun, Aug 9, 2015 at 12:27 AM, Sergei Shtylyov
-<sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org> wrote:
-> Define the SILK board dependent part of the QSPI device node.
-> Add device nodes  for Spansion  S25FL512S SPI flash and MTD partitions on it.
+Available PE# is available exactly because it is not allocated ;)
+
+> It conflicts with the fact that M64 segments are
+> assigned in same order. In order to avoid the conflict, the patch
+> allocates PE# in descending order.
+
+What kind of conflict?
+
+
 >
-> Based on the original patch by Vladimir Barinov
-> <vladimir.barinov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>.
+> Signed-off-by: Gavin Shan <gwshan@linux.vnet.ibm.com>
+> ---
+>   arch/powerpc/platforms/powernv/pci-ioda.c | 11 ++++++++---
+>   1 file changed, 8 insertions(+), 3 deletions(-)
 >
-> Signed-off-by: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
-
-> --- renesas.orig/arch/arm/boot/dts/r8a7794-silk.dts
-> +++ renesas/arch/arm/boot/dts/r8a7794-silk.dts
-
-> +&qspi {
-> +       pinctrl-0 = <&qspi_pins>;
-> +       pinctrl-names = "default";
+> diff --git a/arch/powerpc/platforms/powernv/pci-ioda.c b/arch/powerpc/platforms/powernv/pci-ioda.c
+> index 56b058c..1c950e8 100644
+> --- a/arch/powerpc/platforms/powernv/pci-ioda.c
+> +++ b/arch/powerpc/platforms/powernv/pci-ioda.c
+> @@ -161,13 +161,18 @@ static struct pnv_ioda_pe *pnv_ioda_reserve_pe(struct pnv_phb *phb, int pe_no)
+>   static struct pnv_ioda_pe *pnv_ioda_alloc_pe(struct pnv_phb *phb)
+>   {
+>   	unsigned long pe;
+> +	unsigned long limit = phb->ioda.total_pe_num - 1;
+>
+>   	do {
+>   		pe = find_next_zero_bit(phb->ioda.pe_alloc,
+> -					phb->ioda.total_pe_num, 0);
+> -		if (pe >= phb->ioda.total_pe_num)
+> +					phb->ioda.total_pe_num, limit);
+> +		if (pe < phb->ioda.total_pe_num &&
+> +		    !test_and_set_bit(pe, phb->ioda.pe_alloc))
+> +			break;
 > +
-> +       status = "okay";
-> +
-> +       flash@0 {
-> +               #address-cells = <1>;
-> +               #size-cells = <1>;
-> +               compatible = "spansion,s25fl512s";
+> +		if (--limit >= phb->ioda.total_pe_num)
+>   			return NULL;
+> -	} while(test_and_set_bit(pe, phb->ioda.pe_alloc));
+> +	} while (1);
 
-Please add the "jedec,spi-nor" fallback.
 
-> +               reg = <0>;
-> +               spi-max-frequency = <30000000>;
-> +               spi-tx-bus-width = <4>;
-> +               spi-rx-bus-width = <4>;
-> +               m25p,fast-read;
+Usually, if it is "while(1)", then it is "while(1){}" rather than 
+"do{}while(1)" :)
 
-Please keep all "spi-*" properties together.
 
-> +               spi-cpol;
-> +               spi-cpha;
+>
+>   	return pnv_ioda_init_pe(phb, pe);
+>   }
+>
 
-> +               partition@0 {
-> +                       label = "loader";
-> +                       reg = <0x00000000 0x00040000>;
-> +                       read-only;
-> +               };
-> +               partition@40000 {
-> +                       label = "user";
-> +                       reg = <0x00040000 0x00400000>;
-> +                       read-only;
-> +               };
-> +               partition@440000 {
-> +                       label = "flash";
-> +                       reg = <0x00440000 0x03bc0000>;
-> +               };
 
-The above part I cannot verify, so I have to trust you.
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+Alexey
