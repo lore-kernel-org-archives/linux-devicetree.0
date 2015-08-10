@@ -1,51 +1,84 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH 2/2] ARM: shmobile: silk: add QSPI DT support
-Date: Mon, 10 Aug 2015 20:52:03 +0200
-Message-ID: <CAMuHMdVAjsDJ+fFJnG4WAydCgvW=iRDcyXp9R6xBfn3EHU-tbQ@mail.gmail.com>
-References: <1898263.zrOs5SAUTS@wasted.cogentembedded.com>
-	<1768974.jEFIAaInqd@wasted.cogentembedded.com>
-	<CAMuHMdXQJ4Hju477Ys0ujXCNdUjWOa6AuKGzLPc3YFJc_eLz+g@mail.gmail.com>
-	<55C8EAF0.7060600@cogentembedded.com>
+From: Bjorn Andersson <bjorn.andersson-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>
+Subject: [PATCH v2] backlight: pm8941-wled: Add default-brightness property
+Date: Mon, 10 Aug 2015 13:13:51 -0700
+Message-ID: <1439237631-11243-1-git-send-email-bjorn.andersson@sonymobile.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <55C8EAF0.7060600@cogentembedded.com>
-Sender: linux-sh-owner@vger.kernel.org
-To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Cc: Simon Horman <horms@verge.net.au>, Linux-sh list <linux-sh@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Magnus Damm <magnus.damm@gmail.com>, Russell King <linux@arm.linux.org.uk>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Jingoo Han <jingoohan1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>
+Cc: Rob Clark <robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Sergei,
+Default the brightness to 2048 and add possibility to override this in
+device tree.
 
-On Mon, Aug 10, 2015 at 8:18 PM, Sergei Shtylyov
-<sergei.shtylyov@cogentembedded.com> wrote:
-> On 08/10/2015 05:38 PM, Geert Uytterhoeven wrote:
->>> +&qspi {
->>> +       pinctrl-0 = <&qspi_pins>;
->>> +       pinctrl-names = "default";
->>> +
->>> +       status = "okay";
->>> +
->>> +       flash@0 {
->>> +               #address-cells = <1>;
->>> +               #size-cells = <1>;
->>> +               compatible = "spansion,s25fl512s";
->
->> Please add the "jedec,spi-nor" fallback.
->
->    Hm, spi-nor.c alone can't control this device, it's rather m25p80.c
-> that's the real driver. So if a fallback needs to be added indeed it should
-> be "st,m25p80" I think...
+Suggested-by: Rob Clark <robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Signed-off-by: Bjorn Andersson <bjorn.andersson-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>
+---
 
-Please have a look at Documentation/devicetree/bindings/mtd/jedec,spi-nor.txt.
+After going back and forth on this one I decided that the best unit of this
+property (which could become a common backlight property) would be to use
+"units of brightness". The value will either come from the boot loader picking
+a value in some way or from a user finding a good value by tweaking sysfs -
+both which will be in "units of brightness".
 
-Gr{oetje,eeting}s,
+ Documentation/devicetree/bindings/video/backlight/pm8941-wled.txt | 2 ++
+ drivers/video/backlight/pm8941-wled.c                             | 8 ++++++++
+ 2 files changed, 10 insertions(+)
 
-                        Geert
+diff --git a/Documentation/devicetree/bindings/video/backlight/pm8941-wled.txt b/Documentation/devicetree/bindings/video/backlight/pm8941-wled.txt
+index 424f8444a6cd..e5b294dafc58 100644
+--- a/Documentation/devicetree/bindings/video/backlight/pm8941-wled.txt
++++ b/Documentation/devicetree/bindings/video/backlight/pm8941-wled.txt
+@@ -5,6 +5,8 @@ Required properties:
+ - reg: slave address
+ 
+ Optional properties:
++- default-brightness: brightness value on boot, value from: 0-4095
++	default: 2048
+ - label: The name of the backlight device
+ - qcom,cs-out: bool; enable current sink output
+ - qcom,cabc: bool; enable content adaptive backlight control
+diff --git a/drivers/video/backlight/pm8941-wled.c b/drivers/video/backlight/pm8941-wled.c
+index c704c3236034..e1298147bcbb 100644
+--- a/drivers/video/backlight/pm8941-wled.c
++++ b/drivers/video/backlight/pm8941-wled.c
+@@ -17,6 +17,9 @@
+ #include <linux/of_device.h>
+ #include <linux/regmap.h>
+ 
++/* From DT binding */
++#define PM8941_WLED_DEFAULT_BRIGHTNESS		2048
++
+ #define PM8941_WLED_REG_VAL_BASE		0x40
+ #define  PM8941_WLED_REG_VAL_MAX		0xFFF
+ 
+@@ -373,6 +376,7 @@ static int pm8941_wled_probe(struct platform_device *pdev)
+ 	struct backlight_device *bl;
+ 	struct pm8941_wled *wled;
+ 	struct regmap *regmap;
++	u32 val;
+ 	int rc;
+ 
+ 	regmap = dev_get_regmap(pdev->dev.parent, NULL);
+@@ -395,8 +399,12 @@ static int pm8941_wled_probe(struct platform_device *pdev)
+ 	if (rc)
+ 		return rc;
+ 
++	val = PM8941_WLED_DEFAULT_BRIGHTNESS;
++	of_property_read_u32(pdev->dev.of_node, "default-brightness", &val);
++
+ 	memset(&props, 0, sizeof(struct backlight_properties));
+ 	props.type = BACKLIGHT_RAW;
++	props.brightness = val;
+ 	props.max_brightness = PM8941_WLED_REG_VAL_MAX;
+ 	bl = devm_backlight_device_register(&pdev->dev, wled->name,
+ 					    &pdev->dev, wled,
+-- 
+1.8.2.2
 
 --
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
