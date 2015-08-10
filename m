@@ -1,72 +1,247 @@
-From: Dong Aisheng <aisheng.dong@freescale.com>
-Subject: Re: [PATCH v5 3/6] mmc: sdhci-esdhc-imx: add compatible string in
- bingding doc
-Date: Mon, 10 Aug 2015 16:29:06 +0800
-Message-ID: <20150810082905.GC15036@shlinux1.ap.freescale.net>
-References: <1439194688-18335-1-git-send-email-haibo.chen@freescale.com>
- <1439194688-18335-4-git-send-email-haibo.chen@freescale.com>
+From: Olliver Schinagl <oliver-dxLnbx3+1qmEVqv0pETR8A@public.gmane.org>
+Subject: Re: [PATCH] ARM: dts: sunxi: enable otg port on the sun7i-a20-olinuxino-lime2
+Date: Mon, 10 Aug 2015 10:43:37 +0200
+Message-ID: <55C86439.4000005@schinagl.nl>
+References: <1439146968-9039-1-git-send-email-oliver@schinagl.nl> <1439146968-9039-2-git-send-email-oliver@schinagl.nl> <55C7DCA1.2090204@gmail.com>
+Reply-To: oliver-dxLnbx3+1qmEVqv0pETR8A@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <1439194688-18335-4-git-send-email-haibo.chen@freescale.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Haibo Chen <haibo.chen@freescale.com>
-Cc: mark.rutland@arm.com, fabio.estevam@freescale.com, ulf.hansson@linaro.org, linux@arm.linux.org.uk, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, robh+dt@kernel.org, mkl@pengutronix.de, kernel@pengutronix.de, galak@codeaurora.org, johan.derycke@barco.com, shawnguo@kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Return-path: <linux-sunxi+bncBDC2JNWXZAJBBQWIUGXAKGQEDQWRFCQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <55C7DCA1.2090204-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <http://groups.google.com/group/linux-sunxi/subscribe>
+To: Iain Paton <ipaton0-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Olliver Schinagl <oliver+list-dxLnbx3+1qmEVqv0pETR8A@public.gmane.org>, dev-3kdeTeqwOZ9EV1b7eY7vFQ@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Olliver Schinagl <o.schinagl-U3FVU11NWA554TAoqtyWWQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Aug 10, 2015 at 04:18:05PM +0800, Haibo Chen wrote:
-> Add a required property "fsl,imx7d-usdhc" in binding doc.
-> Add an optional property "fsl,tuning-step" in binding doc.
-> 
-> Signed-off-by: Haibo Chen <haibo.chen@freescale.com>
+Yeah I just noticed as well that for some reason i've sent a merged patch :(
 
-You missed my former comments.
+I all ready fixed it locally this morning and will re-send the patches. 
+I wonder what I did though ..
 
-The patch title is too generous.
-Better to change to something like:
-mmc: sdhci-esdhc-imx: add imx7d support in bingding doc
+Sorry again,
 
-Regards
-Dong Aisheng
+Olliver
 
-> ---
->  Documentation/devicetree/bindings/mmc/fsl-imx-esdhc.txt | 6 ++++++
->  1 file changed, 6 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/mmc/fsl-imx-esdhc.txt b/Documentation/devicetree/bindings/mmc/fsl-imx-esdhc.txt
-> index 211e778..dca56d6 100644
-> --- a/Documentation/devicetree/bindings/mmc/fsl-imx-esdhc.txt
-> +++ b/Documentation/devicetree/bindings/mmc/fsl-imx-esdhc.txt
-> @@ -15,6 +15,7 @@ Required properties:
->  	       "fsl,imx6q-usdhc"
->  	       "fsl,imx6sl-usdhc"
->  	       "fsl,imx6sx-usdhc"
-> +	       "fsl,imx7d-usdhc"
->  
->  Optional properties:
->  - fsl,wp-controller : Indicate to use controller internal write protection
-> @@ -27,6 +28,11 @@ Optional properties:
->    transparent level shifters on the outputs of the controller. Two cells are
->    required, first cell specifies minimum slot voltage (mV), second cell
->    specifies maximum slot voltage (mV). Several ranges could be specified.
-> +- fsl,tuning-step: Specify the increasing delay cell steps in tuning procedure.
-> +  The uSDHC use one delay cell as default increasing step to do tuning process.
-> +  This property allows user to change the tuning step to more than one delay
-> +  cells which is useful for some special boards or cards when the default
-> +  tuning step can't find the proper delay window within limited tuning retries.
->  
->  Examples:
->  
-> -- 
-> 1.9.1
-> 
+On 10-08-15 01:05, Iain Paton wrote:
+> NAK. This does much more than enabling the otg port.
+>
+> Neither wholesale re-writing the regulator node or hooking up the
+> dcdc2 regulator to the operating points definition is required in order
+> to enable the otg port.
+>
+> At the very least you need to split your patches and describe them
+> properly rather than trying to get additional changes that are likely
+> to cause further discussion through unnoticed using a misleading
+> subject.
+>
+> Rgds,
+> Iain
+>   
+> On 09/08/15 20:02, Olliver Schinagl wrote:
+>> From: Olliver Schinagl <o.schinagl-U3FVU11NWA554TAoqtyWWQ@public.gmane.org>
+>>
+>> This patch enables the musb-otg USB controller on the Lime2. The Lime2
+>> differs from the Lime1 series in pins used for usb0 power.
+>>
+>> Tested on a OlinuXino Lime2-4GB.
+>>
+>> Signed-off-by: Olliver Schinagl <oliver-dxLnbx3+1qmEVqv0pETR8A@public.gmane.org>
+>> ---
+>>   arch/arm/boot/dts/sun7i-a20-olinuxino-lime2.dts | 131 ++++++++++++++----------
+>>   1 file changed, 75 insertions(+), 56 deletions(-)
+>>
+>> diff --git a/arch/arm/boot/dts/sun7i-a20-olinuxino-lime2.dts b/arch/arm/boot/dts/sun7i-a20-olinuxino-lime2.dts
+>> index 22cd052..efd9ebb 100644
+>> --- a/arch/arm/boot/dts/sun7i-a20-olinuxino-lime2.dts
+>> +++ b/arch/arm/boot/dts/sun7i-a20-olinuxino-lime2.dts
+>> @@ -71,14 +71,6 @@
+>>   			default-state = "on";
+>>   		};
+>>   	};
+>> -
+>> -	reg_axp_ipsout: axp_ipsout {
+>> -		compatible = "regulator-fixed";
+>> -		regulator-name = "axp-ipsout";
+>> -		regulator-min-microvolt = <5000000>;
+>> -		regulator-max-microvolt = <5000000>;
+>> -		regulator-always-on;
+>> -	};
+>>   };
+>>   
+>>   &ahci {
+>> @@ -86,6 +78,10 @@
+>>   	status = "okay";
+>>   };
+>>   
+>> +&cpu0 {
+>> +	cpu-supply = <&reg_dcdc2>;
+>> +};
+>> +
+>>   &ehci0 {
+>>   	status = "okay";
+>>   };
+>> @@ -112,57 +108,9 @@
+>>   	status = "okay";
+>>   
+>>   	axp209: pmic@34 {
+>> -		compatible = "x-powers,axp209";
+>>   		reg = <0x34>;
+>>   		interrupt-parent = <&nmi_intc>;
+>>   		interrupts = <0 IRQ_TYPE_LEVEL_LOW>;
+>> -
+>> -		interrupt-controller;
+>> -		#interrupt-cells = <1>;
+>> -
+>> -		acin-supply = <&reg_axp_ipsout>;
+>> -		vin2-supply = <&reg_axp_ipsout>;
+>> -		vin3-supply = <&reg_axp_ipsout>;
+>> -		ldo24in-supply = <&reg_axp_ipsout>;
+>> -		ldo3in-supply = <&reg_axp_ipsout>;
+>> -
+>> -		regulators {
+>> -			vdd_rtc: ldo1 {
+>> -				regulator-min-microvolt = <1300000>;
+>> -				regulator-max-microvolt = <1300000>;
+>> -				regulator-always-on;
+>> -			};
+>> -
+>> -			avcc: ldo2 {
+>> -				regulator-min-microvolt = <1800000>;
+>> -				regulator-max-microvolt = <3300000>;
+>> -				regulator-always-on;
+>> -			};
+>> -
+>> -			vcc_csi0: ldo3 {
+>> -				regulator-min-microvolt = <700000>;
+>> -				regulator-max-microvolt = <3500000>;
+>> -				regulator-always-on;
+>> -			};
+>> -
+>> -			vcc_csi1: ldo4 {
+>> -				regulator-min-microvolt = <1250000>;
+>> -				regulator-max-microvolt = <3300000>;
+>> -				regulator-always-on;
+>> -			};
+>> -
+>> -			vdd_cpu: dcdc2 {
+>> -				regulator-min-microvolt = <700000>;
+>> -				regulator-max-microvolt = <2275000>;
+>> -				regulator-always-on;
+>> -			};
+>> -
+>> -			vdd_int: dcdc3 {
+>> -				regulator-min-microvolt = <700000>;
+>> -				regulator-max-microvolt = <3500000>;
+>> -				regulator-always-on;
+>> -			};
+>> -		};
+>>   	};
+>>   };
+>>   
+>> @@ -196,6 +144,10 @@
+>>   	status = "okay";
+>>   };
+>>   
+>> +&otg_sram {
+>> +	status = "okay";
+>> +};
+>> +
+>>   &pio {
+>>   	ahci_pwr_pin_olinuxinolime: ahci_pwr_pin@1 {
+>>   		allwinner,pins = "PC3";
+>> @@ -210,6 +162,27 @@
+>>   		allwinner,drive = <SUN4I_PINCTRL_20_MA>;
+>>   		allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
+>>   	};
+>> +
+>> +	usb0_id_detect_pin: usb0_id_detect_pin@0 {
+>> +		allwinner,pins = "PH4";
+>> +		allwinner,function = "gpio_in";
+>> +		allwinner,drive = <SUN4I_PINCTRL_10_MA>;
+>> +		allwinner,pull = <SUN4I_PINCTRL_PULL_UP>;
+>> +	};
+>> +
+>> +	usb0_vbus_detect_pin: usb0_vbus_detect_pin@0 {
+>> +		allwinner,pins = "PH5";
+>> +		allwinner,function = "gpio_in";
+>> +		allwinner,drive = <SUN4I_PINCTRL_10_MA>;
+>> +		allwinner,pull = <SUN4I_PINCTRL_PULL_DOWN>;
+>> +	};
+>> +
+>> +	usb0_vbus_pin_lime2: usb0_vbus_pin@0 {
+>> +		allwinner,pins = "PC17";
+>> +		allwinner,function = "gpio_out";
+>> +		allwinner,drive = <SUN4I_PINCTRL_10_MA>;
+>> +		allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
+>> +	};
+>>   };
+>>   
+>>   &reg_ahci_5v {
+>> @@ -218,6 +191,42 @@
+>>   	status = "okay";
+>>   };
+>>   
+>> +#include "axp209.dtsi"
+>> +
+>> +&reg_dcdc2 {
+>> +	regulator-always-on;
+>> +	regulator-min-microvolt = <1000000>;
+>> +	regulator-max-microvolt = <1450000>;
+>> +	regulator-name = "vdd-cpu";
+>> +};
+>> +
+>> +&reg_dcdc3 {
+>> +	regulator-always-on;
+>> +	regulator-min-microvolt = <1000000>;
+>> +	regulator-max-microvolt = <1400000>;
+>> +	regulator-name = "vdd-int-dll";
+>> +};
+>> +
+>> +&reg_ldo1 {
+>> +	regulator-always-on;
+>> +	regulator-min-microvolt = <1300000>;
+>> +	regulator-max-microvolt = <1300000>;
+>> +	regulator-name = "vdd-rtc";
+>> +};
+>> +
+>> +&reg_ldo2 {
+>> +	regulator-always-on;
+>> +	regulator-min-microvolt = <3000000>;
+>> +	regulator-max-microvolt = <3000000>;
+>> +	regulator-name = "avcc";
+>> +};
+>> +
+>> +&reg_usb0_vbus {
+>> +	pinctrl-0 = <&usb0_vbus_pin_lime2>;
+>> +	gpio = <&pio 2 17 GPIO_ACTIVE_HIGH>;
+>> +	status = "okay";
+>> +};
+>> +
+>>   &reg_usb1_vbus {
+>>   	status = "okay";
+>>   };
+>> @@ -232,7 +241,17 @@
+>>   	status = "okay";
+>>   };
+>>   
+>> +&usb_otg {
+>> +	dr_mode = "otg";
+>> +	status = "okay";
+>> +};
+>> +
+>>   &usbphy {
+>> +	pinctrl-names = "default";
+>> +	pinctrl-0 = <&usb0_id_detect_pin>, <&usb0_vbus_detect_pin>;
+>> +	usb0_id_det-gpio = <&pio 7 4 GPIO_ACTIVE_HIGH>; /* PH4 */
+>> +	usb0_vbus_det-gpio = <&pio 7 5 GPIO_ACTIVE_HIGH>; /* PH5 */
+>> +	usb0_vbus-supply = <&reg_usb0_vbus>;
+>>   	usb1_vbus-supply = <&reg_usb1_vbus>;
+>>   	usb2_vbus-supply = <&reg_usb2_vbus>;
+>>   	status = "okay";
+>>
