@@ -1,233 +1,198 @@
 From: Ley Foon Tan <lftan@altera.com>
-Subject: Re: [PATCH v3 3/5] pci: altera: Add Altera PCIe MSI driver
-Date: Mon, 10 Aug 2015 19:00:44 +0800
-Message-ID: <CAFiDJ58QQzDVBE1-0vvyYHv03R_PVs9Nk3t_0wcJAdozBSLz7Q@mail.gmail.com>
+Subject: Re: [PATCH v3 2/5] pci:host: Add Altera PCIe host controller driver
+Date: Mon, 10 Aug 2015 19:02:08 +0800
+Message-ID: <CAFiDJ5-3MTjMQDgXH4Om_-S8d0MTLPeg2V7pQQhzPCow0E9jeQ@mail.gmail.com>
 References: <1438933382-2936-1-git-send-email-lftan@altera.com>
-	<1438933382-2936-4-git-send-email-lftan@altera.com>
-	<55C4C448.4020102@arm.com>
+	<1438933382-2936-3-git-send-email-lftan@altera.com>
+	<55C4C1E2.7080205@arm.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <55C4C448.4020102@arm.com>
-Sender: linux-pci-owner@vger.kernel.org
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <55C4C1E2.7080205@arm.com>
+Sender: linux-doc-owner@vger.kernel.org
 To: Marc Zyngier <marc.zyngier@arm.com>
 Cc: Bjorn Helgaas <bhelgaas@google.com>, Russell King <linux@arm.linux.org.uk>, Arnd Bergmann <arnd@arndb.de>, Dinh Nguyen <dinguyen@opensource.altera.com>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Aug 7, 2015 at 10:44 PM, Marc Zyngier <marc.zyngier@arm.com> wrote:
-> On 07/08/15 08:43, Ley Foon Tan wrote:
->> This patch adds Altera PCIe MSI driver. This soft IP supports configurable
->> number of vectors, which is a dts parameter.
+On Fri, Aug 7, 2015 at 10:34 PM, Marc Zyngier <marc.zyngier@arm.com> wrote:
+> On 07/08/15 08:42, Ley Foon Tan wrote:
+>> This patch adds the Altera PCIe host controller driver.
 >>
 >> Signed-off-by: Ley Foon Tan <lftan@altera.com>
 >> ---
->>  drivers/pci/host/Kconfig           |   8 +
->>  drivers/pci/host/Makefile          |   1 +
->>  drivers/pci/host/pcie-altera-msi.c | 309 +++++++++++++++++++++++++++++++++++++
->>  3 files changed, 318 insertions(+)
->>  create mode 100644 drivers/pci/host/pcie-altera-msi.c
->>
+>>  drivers/pci/host/Kconfig       |   7 +
+>>  drivers/pci/host/Makefile      |   1 +
+>>  drivers/pci/host/pcie-altera.c | 532 +++++++++++++++++++++++++++++++++++++++++
+>>  3 files changed, 540 insertions(+)
+>>  create mode 100644 drivers/pci/host/pcie-altera.c
+
 <snip>
->> +static int altera_irq_domain_alloc(struct irq_domain *domain, unsigned int virq,
->> +                                  unsigned int nr_irqs, void *args)
+
+>> +static int tlp_read_packet(struct altera_pcie *pcie, u32 *value)
 >> +{
->> +       struct altera_msi *msi = domain->host_data;
->> +       unsigned long bit;
->> +       u32 mask;
+>> +       u8 loop;
+>> +       struct tlp_rp_regpair_t tlp_rp_regdata;
 >> +
+>> +       for (loop = TLP_LOOP; loop > 0; loop--) {
 >
-> As you cannot support multi-MSI, it would be good to have a
-> WARN_ON(nr_irqs != 1) here. Just in case...
-Noted.
+> I'd prefer to see the more common idiom:
+>
+>         for (loop = 0; loop < TLP_LOOP; loop++) {
+Okay, will change this.
+
+>> +               tlp_read_rx(pcie, &tlp_rp_regdata);
+>> +               if (tlp_rp_regdata.ctrl & RP_RXCPL_EOP) {
+>> +                       if (value)
+>> +                               *value = tlp_rp_regdata.reg0;
+>> +                       return PCIBIOS_SUCCESSFUL;
+>> +               }
+>
+> Don't you need some form of relaxation here? A delay of some sort?
+> Repeatedly polling the HW is usually not helping it to recover...
+Yes, will add udelay here.
+
+<snip>
+
+>> +static int altera_pcie_init_irq_domain(struct altera_pcie *pcie)
+>> +{
+>> +       struct device *dev = &pcie->pdev->dev;
+>> +       struct device_node *node = dev->of_node;
+>> +
+>> +       /* Setup INTx */
+>> +       pcie->irq_domain = irq_domain_add_linear(node, INTX_NUM,
+>> +                                       &intx_domain_ops, pcie);
+>> +       if (!pcie->irq_domain) {
+>> +               dev_err(dev, "Failed to get a INTx IRQ domain\n");
+>> +               return PTR_ERR(pcie->irq_domain);
+>
+> Err, no. irq_domain_add returns NULL on error, so PTR_ERR(NULL) is still
+> going to be zero.
+
+Change to return -ENOMEM.
 
 >
->> +       mutex_lock(&msi->lock);
->> +
->> +       bit = find_first_zero_bit(msi->used, msi->num_of_vectors);
->> +       if (bit >= msi->num_of_vectors)
->> +               return -ENOSPC;
->> +
->> +       set_bit(bit, msi->used);
->> +
->> +       mutex_unlock(&msi->lock);
->> +
->> +       irq_domain_set_info(domain, virq, bit, &altera_msi_bottom_irq_chip,
->> +                           domain->host_data, handle_simple_irq,
->> +                           NULL, NULL);
->> +       set_irq_flags(virq, IRQF_VALID);
->> +
->> +       mask = msi_readl(msi, MSI_INTMASK);
->> +       mask |= 1 << bit;
->> +       msi_writel(msi, mask, MSI_INTMASK);
->> +
->> +       return 0;
->> +}
->> +
->> +static void altera_irq_domain_free(struct irq_domain *domain,
->> +                                  unsigned int virq, unsigned int nr_irqs)
->> +{
->> +       struct irq_data *d = irq_domain_get_irq_data(domain, virq);
->> +       struct altera_msi *msi = irq_data_get_irq_chip_data(d);
->> +       u32 mask;
->> +
->> +       mutex_lock(&msi->lock);
->> +
->> +       if (!test_bit(d->hwirq, msi->used)) {
->> +               dev_err(&msi->pdev->dev, "trying to free unused MSI#%lu\n",
->> +                       d->hwirq);
->> +       } else {
->> +               __clear_bit(d->hwirq, msi->used);
->> +               mask = msi_readl(msi, MSI_INTMASK);
->> +               mask &= ~(1 << d->hwirq);
->> +               msi_writel(msi, mask, MSI_INTMASK);
->> +       }
->> +
->> +       mutex_unlock(&msi->lock);
->> +}
->> +
->> +static const struct irq_domain_ops msi_domain_ops = {
->> +       .alloc  = altera_irq_domain_alloc,
->> +       .free   = altera_irq_domain_free,
->> +};
->> +
->> +static int altera_allocate_domains(struct altera_msi *msi)
->> +{
->> +       msi->inner_domain = irq_domain_add_linear(NULL, msi->num_of_vectors,
->> +                                            &msi_domain_ops, msi);
->> +       if (!msi->inner_domain) {
->> +               dev_err(&msi->pdev->dev, "failed to create IRQ domain\n");
->> +               return -ENOMEM;
->> +       }
->> +
->> +       msi->msi_domain = pci_msi_create_irq_domain(msi->pdev->dev.of_node,
->> +                               &altera_msi_domain_info, msi->inner_domain);
->> +       if (!msi->msi_domain) {
->> +               dev_err(&msi->pdev->dev, "failed to create MSI domain\n");
->> +               irq_domain_remove(msi->inner_domain);
->> +               return -ENOMEM;
 >> +       }
 >> +
 >> +       return 0;
 >> +}
 >> +
->> +static void altera_free_domains(struct altera_msi *msi)
+>> +static int altera_pcie_parse_dt(struct altera_pcie *pcie)
 >> +{
->> +       irq_domain_remove(msi->msi_domain);
->> +       irq_domain_remove(msi->inner_domain);
+>> +       struct resource *cra;
+>> +       struct platform_device *pdev = pcie->pdev;
+>> +
+>> +       cra = platform_get_resource_byname(pdev, IORESOURCE_MEM, "Cra");
+>
+> Probably worth checking that this hasn't failed.
+Noted. Will add error checking.
+>
+>> +       pcie->cra_base = devm_ioremap_resource(&pdev->dev, cra);
+>> +       if (IS_ERR(pcie->cra_base)) {
+>> +               dev_err(&pdev->dev, "get Cra resource failed\n");
+>> +               return PTR_ERR(pcie->cra_base);
+>> +       }
+>> +
+>> +       /* setup IRQ */
+>> +       pcie->irq = platform_get_irq(pdev, 0);
+>> +       if (pcie->irq <= 0) {
+>> +               dev_err(&pdev->dev, "failed to get IRQ: %d\n", pcie->irq);
+>> +               return -EINVAL;
+>> +       }
+>> +
+>> +       irq_set_chained_handler_and_data(pcie->irq, altera_pcie_isr, pcie);
+>> +
+>> +       return 0;
 >> +}
 >> +
->> +static int altera_msi_remove(struct platform_device *pdev)
+>> +static int altera_pcie_probe(struct platform_device *pdev)
 >> +{
->> +       struct altera_msi *msi = platform_get_drvdata(pdev);
+>> +       struct altera_pcie *pcie;
+>> +       struct pci_bus *bus;
+>> +       int ret;
 >> +
->> +       msi_writel(msi, 0, MSI_INTMASK);
->> +       irq_set_chained_handler(msi->irq, NULL);
->> +       irq_set_handler_data(msi->irq, NULL);
+>> +       pcie = devm_kzalloc(&pdev->dev, sizeof(*pcie), GFP_KERNEL);
+>> +       if (!pcie)
+>> +               return -ENOMEM;
 >> +
->> +       altera_free_domains(msi);
+>> +       pcie->pdev = pdev;
 >> +
+>> +       ret = altera_pcie_parse_dt(pcie);
+>> +       if (ret) {
+>> +               dev_err(&pdev->dev, "Parsing DT failed\n");
+>> +               return ret;
+>> +       }
+>> +
+>> +       INIT_LIST_HEAD(&pcie->resources);
+>> +
+>> +       ret = altera_pcie_parse_request_of_pci_ranges(pcie);
+>> +       if (ret) {
+>> +               dev_err(&pdev->dev, "Failed add resources\n");
+>> +               return ret;
+>> +       }
+>> +
+>> +       ret = altera_pcie_init_irq_domain(pcie);
+>> +       if (ret) {
+>> +               dev_err(&pdev->dev, "Failed creating IRQ Domain\n");
+>> +               return ret;
+>> +       }
+>> +
+>> +       pcie->root_bus_nr = 0;
+>> +
+>> +       /* clear all interrupts */
+>> +       cra_writel(pcie, P2A_INT_STS_ALL, P2A_INT_STATUS);
+>> +       /* enable all interrupts */
+>> +       cra_writel(pcie, P2A_INT_ENA_ALL, P2A_INT_ENABLE);
+>> +
+>> +       bus = pci_scan_root_bus(&pdev->dev, pcie->root_bus_nr, &altera_pcie_ops,
+>> +                               pcie, &pcie->resources);
+>> +       if (!bus)
+>> +               return -ENOMEM;
+>> +
+>> +       pci_fixup_irqs(pci_common_swizzle, of_irq_parse_and_map_pci);
+>> +       pci_assign_unassigned_bus_resources(bus);
+>> +       pci_bus_add_devices(bus);
+>> +
+>> +       platform_set_drvdata(pdev, pcie);
+>> +       return ret;
+>> +}
+>> +
+>> +static int __exit altera_pcie_remove(struct platform_device *pdev)
+>> +{
+>> +       struct altera_pcie *pcie = platform_get_drvdata(pdev);
+>> +
+>> +       altera_pcie_free_irq_domain(pcie);
 >> +       platform_set_drvdata(pdev, NULL);
 >> +       return 0;
 >> +}
 >> +
->> +static int altera_msi_probe(struct platform_device *pdev)
->> +{
->> +       struct altera_msi *msi;
->> +       struct device_node *np = pdev->dev.of_node;
->> +       struct resource *res;
->> +       int ret;
->> +
->> +       msi = devm_kzalloc(&pdev->dev, sizeof(struct altera_msi),
->> +                          GFP_KERNEL);
->> +       if (!msi)
->> +               return -ENOMEM;
->> +
->> +       mutex_init(&msi->lock);
->> +       msi->pdev = pdev;
->> +
->> +       res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "csr");
->
-> Error checking here.
-Noted.
->
->> +       msi->csr_base = devm_ioremap_resource(&pdev->dev, res);
->> +       if (IS_ERR(msi->csr_base)) {
->> +               dev_err(&pdev->dev, "get csr resource failed\n");
->> +               return PTR_ERR(msi->csr_base);
->> +       }
->> +
->> +       res = platform_get_resource_byname(pdev, IORESOURCE_MEM,
->> +                                          "vector_slave");
->
-> And here.
-Noted.
->
->> +       msi->vector_base = devm_ioremap_resource(&pdev->dev, res);
->> +       if (IS_ERR(msi->vector_base)) {
->> +               dev_err(&pdev->dev, "get vector slave resource failed\n");
->> +               return PTR_ERR(msi->vector_base);
->> +       }
->> +
->> +       msi->vector_phy = res->start;
->> +
->> +       if (of_property_read_u32(np, "num-vectors", &msi->num_of_vectors)) {
->> +               dev_err(&pdev->dev, "failed to parse the number of vectors\n");
->> +               return -EINVAL;
->> +       }
->> +
->> +       ret = altera_allocate_domains(msi);
->> +       if (ret)
->> +               return ret;
->> +
->> +       msi->irq = platform_get_irq(pdev, 0);
->> +       if (msi->irq <= 0) {
->> +               dev_err(&pdev->dev, "failed to map IRQ: %d\n", msi->irq);
->> +               ret = -ENODEV;
->> +               goto err;
->> +       }
->> +
->> +       irq_set_chained_handler_and_data(msi->irq, altera_msi_isr, msi);
->> +       platform_set_drvdata(pdev, msi);
->> +
->> +       return 0;
->> +
->> +err:
->> +       altera_msi_remove(pdev);
->> +       return ret;
->> +}
->> +
->> +static const struct of_device_id altera_msi_of_match[] = {
->> +       { .compatible = "altr,msi-1.0", NULL },
->> +       { },
+>> +static const struct of_device_id altera_pcie_of_match[] = {
+>> +       { .compatible = "altr,pcie-root-port-1.0", },
+>> +       {},
 >> +};
+>> +MODULE_DEVICE_TABLE(of, altera_pcie_of_match);
 >> +
->> +static struct platform_driver altera_msi_driver = {
+>> +static struct platform_driver altera_pcie_driver = {
+>> +       .probe          = altera_pcie_probe,
+>> +       .remove         = altera_pcie_remove,
 >> +       .driver = {
->> +               .name = "altera-msi",
->> +               .of_match_table = altera_msi_of_match,
+>> +               .name   = "altera-pcie",
+>> +               .of_match_table = altera_pcie_of_match,
 >> +       },
->> +       .probe = altera_msi_probe,
->> +       .remove = altera_msi_remove,
 >> +};
 >> +
->> +static int __init altera_msi_init(void)
->> +{
->> +       return platform_driver_register(&altera_msi_driver);
->> +}
->> +
->> +subsys_initcall(altera_msi_init);
+>> +module_platform_driver(altera_pcie_driver);
 >> +
 >> +MODULE_AUTHOR("Ley Foon Tan <lftan@altera.com>");
->> +MODULE_DESCRIPTION("Altera PCIe MSI support");
+>> +MODULE_DESCRIPTION("Altera PCIe host controller driver");
 >> +MODULE_LICENSE("GPL v2");
 >> --
 >> 1.8.2.1
 >>
 >
-> Apart from the couple of nits above, this is starting to look good too.
-> And as for the PCIe driver, you need to get the DT maintainers to review
-> that part.
-Okay, added DT maintainers to CC list.
+> This is starting to look better. You should get someone to review the DT
+> parts though.
+I have CC-ed DT maintainers. Hope someone can help to review.
+
 
 Thanks for reviewing.
 
