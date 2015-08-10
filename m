@@ -1,58 +1,205 @@
-From: Jassi Brar <jassisinghbrar@gmail.com>
-Subject: Re: [RFC PATCH 0/3] mailbox: hisilicon: add mailbox driver
-Date: Mon, 10 Aug 2015 12:32:05 +0530
-Message-ID: <CABb+yY1HTGNi4gZABNhXjpA57DPZx-tv=6+m4JLyx4wPHfovyA@mail.gmail.com>
-References: <1438564390-28111-1-git-send-email-leo.yan@linaro.org>
-	<CABb+yY0-RQ80q92EBsuBoYpjxW5zR=nXr+j3zCXw3wKkCf33OQ@mail.gmail.com>
-	<20150805231743.GB6880@leoy-linaro>
+From: Alexey Kardashevskiy <aik@ozlabs.ru>
+Subject: Re: [PATCH v6 05/42] powerpc/powernv: Track IO/M32/M64 segments from
+ PE
+Date: Mon, 10 Aug 2015 17:16:40 +1000
+Message-ID: <55C84FD8.302@ozlabs.ru>
+References: <1438834307-26960-1-git-send-email-gwshan@linux.vnet.ibm.com>
+ <1438834307-26960-6-git-send-email-gwshan@linux.vnet.ibm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20150805231743.GB6880@leoy-linaro>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Leo Yan <leo.yan@linaro.org>
-Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Wei Xu <xuwei5@hisilicon.com>, Bintian Wang <bintian.wang@huawei.com>, Haojian Zhuang <haojian.zhuang@linaro.org>, Devicetree List <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Guodong Xu <guodong.xu@linaro.org>, Jian Zhang <zhangjian001@hisilicon.com>, Zhenwei Wang <Zhenwei.wang@hisilicon.com>, Haoju Mo <mohaoju@hisilicon.com>, Dan Zhao <dan.zhao@hisilicon.com>, kongfei@hisilicon.com, Guangyue Zeng <zengguangyue@hisilicon.com>
+Content-Type: text/plain; charset=koi8-r; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <1438834307-26960-6-git-send-email-gwshan@linux.vnet.ibm.com>
+Sender: linux-pci-owner@vger.kernel.org
+To: Gavin Shan <gwshan@linux.vnet.ibm.com>, linuxppc-dev@lists.ozlabs.org
+Cc: linux-pci@vger.kernel.org, devicetree@vger.kernel.org, benh@kernel.crashing.org, mpe@ellerman.id.au, bhelgaas@google.com, grant.likely@linaro.org, robherring2@gmail.com, panto@antoniou-consulting.com
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Aug 6, 2015 at 4:47 AM, Leo Yan <leo.yan@linaro.org> wrote:
-> Hi Jassi,
->
-> Thanks for review.
->
-> On Wed, Aug 05, 2015 at 04:22:01PM +0530, Jassi Brar wrote:
->> On Mon, Aug 3, 2015 at 6:43 AM, Leo Yan <leo.yan@linaro.org> wrote:
->
-> [...]
->
->> > For easily extending for Hisilicon series SoCs (SoCs may have difference
->> > for register's definition with each other), so firstly implement common
->> > mailbox driver; this common mailbox driver provides three mainly
->> > functionality:
->> >
->> >  - help register channels into framework;
->> >  - hook low level callback functions for register's operations;
->> >  - Enhance rx channel's message queue, which is based on the code in
->> >    drivers/mailbox/omap-mailbox.c.
->> >
->> Not cool.
->>  Please don't reinvent the wheel by having platform specific
->> implementation of the mailbox api. Which vendor doesn't plan to roll
->> out new SoCs, and hence variations of mailbox controllers?  The OMAP
->> stack predates the common api, and was actually supposed to be
->> converted over eventually. Please implement just the
->> drivers/mailbox/hi6220-mailbox.c (preferably by the name of the
->> mailbox controller, if any)
->
-> Understood. Here i have one question, the rx channel's message queue is
-> looks like a common mechanism and can be added into framework file
-> mailbox.c, then Soc driver file can _ONLY_ focus on register level's
-> operations. If so, the common driver in this patch also is unnecessary.
->
-Yes, that's what I say, no 'common' driver for a platform.
+On 08/06/2015 02:11 PM, Gavin Shan wrote:
+> The patch is adding 6 bitmaps, three to PE and three to PHB, to track
 
-> Do you suggest to use upper method to rework patches? Or just think
-> it's okay to implement rx channel's message queue in hi6220-mailbox.c?
+The patch is also removing 2 arrays (io_segmap and m32_segmap), what is 
+that all about? Also, there was no m64_segmap, now there is, needs an 
+explanation may be.
+
+
+> the consumed by one particular PE, which can be released once the PE
+> is destroyed during PCI unplugging time. Also, we're using fixed
+> quantity of bits to trace the used IO, M32 and M64 segments by PEs
+> in one particular PHB.
 >
-The code in drivers/mailbox/ should only manage the controller
-(registers and interrupts). Everything else (queues, shmem etc) should
-be in platform specific client driver(s).
+
+Out of curiosity - have you considered having just 3 arrays, in PHB, 
+storing PE numbers, and ditching PE's arrays? Does PE itself need to know 
+what PEs it is using? Not sure about this master/slave PEs though.
+
+It would be easier to read patches if this one was right before
+[PATCH v6 23/42] powerpc/powernv: Release PEs dynamically
+
+
+
+> Signed-off-by: Gavin Shan <gwshan@linux.vnet.ibm.com>
+> ---
+>   arch/powerpc/platforms/powernv/pci-ioda.c | 29 +++++++++++++++--------------
+>   arch/powerpc/platforms/powernv/pci.h      | 18 ++++++++++++++----
+>   2 files changed, 29 insertions(+), 18 deletions(-)
+>
+> diff --git a/arch/powerpc/platforms/powernv/pci-ioda.c b/arch/powerpc/platforms/powernv/pci-ioda.c
+> index e4ac703..78b49a1 100644
+> --- a/arch/powerpc/platforms/powernv/pci-ioda.c
+> +++ b/arch/powerpc/platforms/powernv/pci-ioda.c
+> @@ -388,6 +388,12 @@ static int pnv_ioda_pick_m64_pe(struct pci_bus *bus, bool all)
+>   			list_add_tail(&pe->list, &master_pe->slaves);
+>   		}
+>
+> +		/* M64 segments consumed by slave PEs are tracked
+> +		 * by master PE
+> +		 */
+> +		set_bit(pe->pe_number, master_pe->m64_segmap);
+> +		set_bit(pe->pe_number, phb->ioda.m64_segmap);
+> +
+>   		/* P7IOC supports M64DT, which helps mapping M64 segment
+>   		 * to one particular PE#. However, PHB3 has fixed mapping
+>   		 * between M64 segment and PE#. In order to have same logic
+> @@ -2871,9 +2877,11 @@ static void pnv_ioda_setup_pe_seg(struct pci_controller *hose,
+>
+>   			while (index < phb->ioda.total_pe &&
+>   			       region.start <= region.end) {
+> -				phb->ioda.io_segmap[index] = pe->pe_number;
+> +				set_bit(index, pe->io_segmap);
+> +				set_bit(index, phb->ioda.io_segmap);
+>   				rc = opal_pci_map_pe_mmio_window(phb->opal_id,
+> -					pe->pe_number, OPAL_IO_WINDOW_TYPE, 0, index);
+> +					pe->pe_number, OPAL_IO_WINDOW_TYPE,
+> +					0, index);
+
+Unrelated change.
+
+
+>   				if (rc != OPAL_SUCCESS) {
+>   					pr_err("%s: OPAL error %d when mapping IO "
+>   					       "segment #%d to PE#%d\n",
+> @@ -2896,9 +2904,11 @@ static void pnv_ioda_setup_pe_seg(struct pci_controller *hose,
+>
+>   			while (index < phb->ioda.total_pe &&
+>   			       region.start <= region.end) {
+> -				phb->ioda.m32_segmap[index] = pe->pe_number;
+> +				set_bit(index, pe->m32_segmap);
+> +				set_bit(index, phb->ioda.m32_segmap);
+>   				rc = opal_pci_map_pe_mmio_window(phb->opal_id,
+> -					pe->pe_number, OPAL_M32_WINDOW_TYPE, 0, index);
+> +					pe->pe_number, OPAL_M32_WINDOW_TYPE,
+> +					0, index);
+
+Unrelated change.
+
+
+>   				if (rc != OPAL_SUCCESS) {
+>   					pr_err("%s: OPAL error %d when mapping M32 "
+>   					       "segment#%d to PE#%d",
+> @@ -3090,7 +3100,7 @@ static void __init pnv_pci_init_ioda_phb(struct device_node *np,
+>   {
+>   	struct pci_controller *hose;
+>   	struct pnv_phb *phb;
+> -	unsigned long size, m32map_off, pemap_off, iomap_off = 0;
+> +	unsigned long size, pemap_off;
+>   	const __be64 *prop64;
+>   	const __be32 *prop32;
+>   	int len;
+> @@ -3175,19 +3185,10 @@ static void __init pnv_pci_init_ioda_phb(struct device_node *np,
+>
+>   	/* Allocate aux data & arrays. We don't have IO ports on PHB3 */
+
+
+This comment came with if(IODA1) below, since you are removing the 
+condition below, makes sense to remove the comment as well or move it where 
+people will look for it (arch/powerpc/platforms/powernv/pci.h ?)
+
+
+>   	size = _ALIGN_UP(phb->ioda.total_pe / 8, sizeof(unsigned long));
+> -	m32map_off = size;
+> -	size += phb->ioda.total_pe * sizeof(phb->ioda.m32_segmap[0]);
+> -	if (phb->type == PNV_PHB_IODA1) {
+> -		iomap_off = size;
+> -		size += phb->ioda.total_pe * sizeof(phb->ioda.io_segmap[0]);
+> -	}
+>   	pemap_off = size;
+>   	size += phb->ioda.total_pe * sizeof(struct pnv_ioda_pe);
+>   	aux = memblock_virt_alloc(size, 0);
+
+
+After adding static arrays to PE and PHB, do you still need this "aux"?
+
+
+>   	phb->ioda.pe_alloc = aux;
+> -	phb->ioda.m32_segmap = aux + m32map_off;
+> -	if (phb->type == PNV_PHB_IODA1)
+> -		phb->ioda.io_segmap = aux + iomap_off;
+>   	phb->ioda.pe_array = aux + pemap_off;
+>   	set_bit(phb->ioda.reserved_pe, phb->ioda.pe_alloc);
+>
+> diff --git a/arch/powerpc/platforms/powernv/pci.h b/arch/powerpc/platforms/powernv/pci.h
+> index 62239b1..08a4e57 100644
+> --- a/arch/powerpc/platforms/powernv/pci.h
+> +++ b/arch/powerpc/platforms/powernv/pci.h
+> @@ -49,6 +49,15 @@ struct pnv_ioda_pe {
+>   	/* PE number */
+>   	unsigned int		pe_number;
+>
+> +	/* IO/M32/M64 segments consumed by the PE. Each PE can
+> +	 * have one M64 segment at most, but M64 segments consumed
+> +	 * by slave PEs will be contributed to the master PE. One
+> +	 * PE can own multiple IO and M32 segments.
+
+
+A PE can have multiple IO and M32 segments but just one M64 segment? Is 
+this correct for IODA1 or IODA2 or both? Is this a limitation of this 
+implementation or it comes from P7IOC/PHB3 hardware?
+
+
+> +	 */
+> +	unsigned long		io_segmap[8];
+> +	unsigned long		m32_segmap[8];
+> +	unsigned long		m64_segmap[8];
+
+Magic constant "8", 64bit*8 = 512 PEs - where did this come from?
+
+Anyway,
+
+#define PNV_IODA_MAX_PE_NUM	512
+
+unsigned long io_segmap[PNV_IODA_MAX_PE_NUM/BITS_PER_LONG]
+
+
+
+
+> +
+>   	/* "Weight" assigned to the PE for the sake of DMA resource
+>   	 * allocations
+>   	 */
+> @@ -145,15 +154,16 @@ struct pnv_phb {
+>   			unsigned int		io_segsize;
+>   			unsigned int		io_pci_base;
+>
+> +			/* IO, M32, M64 segment maps */
+> +			unsigned long		io_segmap[8];
+> +			unsigned long		m32_segmap[8];
+> +			unsigned long		m64_segmap[8];
+> +
+>   			/* PE allocation */
+>   			struct mutex		pe_alloc_mutex;
+>   			unsigned long		*pe_alloc;
+>   			struct pnv_ioda_pe	*pe_array;
+>
+> -			/* M32 & IO segment maps */
+> -			unsigned int		*m32_segmap;
+> -			unsigned int		*io_segmap;
+> -
+>   			/* IRQ chip */
+>   			int			irq_chip_init;
+>   			struct irq_chip		irq_chip;
+>
+
+
+-- 
+Alexey
