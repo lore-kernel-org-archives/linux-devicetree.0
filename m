@@ -1,48 +1,483 @@
-From: Loc Ho <lho-qTEPVZfXA3Y@public.gmane.org>
-Subject: Re: [PATCH v2 0/3] edac: Add L3/SoC support to the APM X-Gene SoC
- EDAC driver
-Date: Mon, 10 Aug 2015 13:15:49 -0700
-Message-ID: <CAPw-ZT=9Eq0yc7tzqJAdCvsQTgRkMmGzNOSXgawBTY0gAijr4Q@mail.gmail.com>
-References: <1437808063-17592-1-git-send-email-lho@apm.com>
-	<CALdTtnv7P5d0Y6wyKe1SOqXedNhQxMsFZY=m-rxK3zouLcFv-Q@mail.gmail.com>
+From: <dinguyen@opensource.altera.com>
+Subject: [PATCH] arm64: dts: Add base stratix 10 dtsi
+Date: Mon, 10 Aug 2015 16:09:18 -0500
+Message-ID: <1439240958-4713-1-git-send-email-dinguyen@opensource.altera.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CALdTtnv7P5d0Y6wyKe1SOqXedNhQxMsFZY=m-rxK3zouLcFv-Q-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Dann Frazier <dann.frazier-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>
-Cc: Doug Thompson <dougthompson-aS9lmoZGLiVWk0Htik3J/w@public.gmane.org>, Borislav Petkov <bp-Gina5bIWoIWzQB+pC5nmwQ@public.gmane.org>, Mauro Carvalho Chehab <mchehab-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Jon Masters <jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, patches <patches-qTEPVZfXA3Y@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-edac-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: robh+dt@kernel.org, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, mark.rutland@arm.com, pawel.moll@arm.com, catalin.marinas@arm.com, will.deacon@arm.com
+Cc: dinh.linux@gmail.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Dinh Nguyen <dinguyen@opensource.altera.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Dann,
+From: Dinh Nguyen <dinguyen@opensource.altera.com>
 
->> v2:
->> * Update binding documentation accordingly
->> * Change all single bit defines to BIT(x)
->> * Add support for L3 version 1 and 2 HW's
->> * Change to use debug file system for error injection
->> * In L3/SoC instance add function, allocate EDAC context after all
->>   initalization successed
->> * Support raw or detail info for SoC EDAC error reporting
->>
->> v1:
->> * Add L3/SoC support to the APM X-Gene SoC EDAC driver
->
-> Loc,
->   I tested 4.2-rc5 on a Mustang board with one DIMM, and it hangs (RCU
-> stall) in xgene_edac_mc_irq_ctl() on modprobe. Same board with 2 DIMMs
-> boots fine. (U-boot 1.15.12).
+Add the base DTS for Altera's SoCFPGA Stratix 10 platform.
 
-I just removed one of the two 16GB DIMM... with 4.2.0-rc1 and some
-code clean up in EDAC driver, it boots just fine... I don't believe
-the code clean up would affect it. Do you have the dump log?
+Signed-off-by: Dinh Nguyen <dinguyen@opensource.altera.com>
+---
+ arch/arm64/Kconfig                                 |   5 +
+ arch/arm64/boot/dts/Makefile                       |   1 +
+ arch/arm64/boot/dts/altera/Makefile                |   5 +
+ arch/arm64/boot/dts/altera/socfpga_stratix10.dtsi  | 354 +++++++++++++++++++++
+ .../boot/dts/altera/socfpga_stratix10_socdk.dts    |  38 +++
+ arch/arm64/configs/defconfig                       |   1 +
+ 6 files changed, 404 insertions(+)
+ create mode 100644 arch/arm64/boot/dts/altera/Makefile
+ create mode 100644 arch/arm64/boot/dts/altera/socfpga_stratix10.dtsi
+ create mode 100644 arch/arm64/boot/dts/altera/socfpga_stratix10_socdk.dts
 
-[root@dhcp-10-76-213-247 ~]# uname -a
-Linux dhcp-10-76-213-247 4.2.0-rc1+ #33 SMP PREEMPT Mon Aug 10
-13:23:03 MDT 2015 aarch64 GNU/Linux
-
--Loc
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
+index 318175f..0f8ab2b 100644
+--- a/arch/arm64/Kconfig
++++ b/arch/arm64/Kconfig
+@@ -207,6 +207,11 @@ config ARCH_SEATTLE
+ 	help
+ 	  This enables support for AMD Seattle SOC Family
+ 
++config ARCH_STRATIX10
++	bool "Altera's Stratix 10 SoCFPGA Family"
++	help
++	  This enables support for Altera's Stratix 10 SoCFPGA Family
++
+ config ARCH_TEGRA
+ 	bool "NVIDIA Tegra SoC Family"
+ 	select ARCH_HAS_RESET_CONTROLLER
+diff --git a/arch/arm64/boot/dts/Makefile b/arch/arm64/boot/dts/Makefile
+index 38913be..7fb421a 100644
+--- a/arch/arm64/boot/dts/Makefile
++++ b/arch/arm64/boot/dts/Makefile
+@@ -1,3 +1,4 @@
++dts-dirs += altera
+ dts-dirs += amd
+ dts-dirs += apm
+ dts-dirs += arm
+diff --git a/arch/arm64/boot/dts/altera/Makefile b/arch/arm64/boot/dts/altera/Makefile
+new file mode 100644
+index 0000000..d7a6416
+--- /dev/null
++++ b/arch/arm64/boot/dts/altera/Makefile
+@@ -0,0 +1,5 @@
++dtb-$(CONFIG_ARCH_STRATIX10) += socfpga_stratix10_socdk.dtb
++
++always		:= $(dtb-y)
++subdir-y	:= $(dts-dirs)
++clean-files	:= *.dtb
+diff --git a/arch/arm64/boot/dts/altera/socfpga_stratix10.dtsi b/arch/arm64/boot/dts/altera/socfpga_stratix10.dtsi
+new file mode 100644
+index 0000000..34f6dc3
+--- /dev/null
++++ b/arch/arm64/boot/dts/altera/socfpga_stratix10.dtsi
+@@ -0,0 +1,354 @@
++/*
++ * Copyright Altera Corporation (C) 2015. All rights reserved.
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms and conditions of the GNU General Public License,
++ * version 2, as published by the Free Software Foundation.
++ *
++ * This program is distributed in the hope it will be useful, but WITHOUT
++ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
++ * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
++ * more details.
++ *
++ * You should have received a copy of the GNU General Public License along with
++ * this program.  If not, see <http://www.gnu.org/licenses/>.
++ */
++
++/dts-v1/;
++
++/ {
++	compatible = "altr,socfpga-stratix10";
++	#address-cells = <1>;
++	#size-cells = <1>;
++
++	cpus {
++		#address-cells = <1>;
++		#size-cells = <0>;
++
++		cpu@0 {
++			compatible = "arm,cortex-a53", "arm,armv8";
++			device_type = "cpu";
++			enable-method = "psci";
++			reg = <0x0>;
++		};
++
++		cpu@1 {
++			compatible = "arm,cortex-a53", "arm,armv8";
++			device_type = "cpu";
++			enable-method = "psci";
++			reg = <0x1>;
++		};
++
++		cpu@2 {
++			compatible = "arm,cortex-a53", "arm,armv8";
++			device_type = "cpu";
++			enable-method = "psci";
++			reg = <0x2>;
++		};
++
++		cpu@3 {
++			compatible = "arm,cortex-a53", "arm,armv8";
++			device_type = "cpu";
++			enable-method = "psci";
++			reg = <0x3>;
++		};
++	};
++
++	pmu {
++		compatible = "arm,armv8-pmuv3";
++		interrupts = <0 120 8>,
++			     <0 121 8>,
++			     <0 122 8>,
++			     <0 123 8>;
++	};
++
++	psci {
++		compatible = "arm,psci-0.2";
++		method = "smc";
++	};
++
++	intc: intc@ffff8000 {
++		compatible = "arm,gic-400", "arm,cortex-a15-gic";
++		#interrupt-cells = <3>;
++		interrupt-controller;
++		reg = <0x0 0xffff9000 0x1000>,
++		      <0x0 0xffffa000 0x2000>,
++		      <0x0 0xffffc000 0x1000>,
++		      <0x0 0xffffd000 0x1000>;
++	};
++
++	soc {
++		#address-cells = <1>;
++		#size-cells = <1>;
++		compatible = "simple-bus";
++		device_type = "soc";
++		interrupt-parent = <&intc>;
++		ranges;
++
++		clkmgr@ffd1000 {
++			compatible = "altr,clk-mgr";
++			reg = <0xffd10000 0x1000>;
++		};
++
++		gmac0: ethernet@ff800000 {
++			compatible = "altr,socfpga-stmmac", "snps,dwmac-3.74a", "snps,dwmac";
++			reg = <0xff800000 0x2000>;
++			interrupts = <0 90 4>;
++			interrupt-names = "macirq";
++			mac-address = [00 00 00 00 00 00];
++			status = "disabled";
++		};
++
++		gmac1: ethernet@ff802000 {
++			compatible = "altr,socfpga-stmmac", "snps,dwmac-3.74a", "snps,dwmac";
++			reg = <0xff802000 0x2000>;
++			interrupts = <0 91 4>;
++			interrupt-names = "macirq";
++			mac-address = [00 00 00 00 00 00];
++			status = "disabled";
++		};
++
++		gmac2: ethernet@ff804000 {
++			compatible = "altr,socfpga-stmmac", "snps,dwmac-3.74a", "snps,dwmac";
++			reg = <0xff804000 0x2000>;
++			interrupts = <0 92 4>;
++			interrupt-names = "macirq";
++			mac-address = [00 00 00 00 00 00];
++			status = "disabled";
++		};
++
++		gpio0: gpio@ffc03200 {
++			#address-cells = <1>;
++			#size-cells = <0>;
++			compatible = "snps,dw-apb-gpio";
++			reg = <0xffc03200 0x100>;
++			status = "disabled";
++
++			porta: gpio-controller@0 {
++				compatible = "snps,dw-apb-gpio-port";
++				gpio-controller;
++				#gpio-cells = <2>;
++				snps,nr-gpios = <24>;
++				reg = <0>;
++				interrupt-controller;
++				#interrupt-cells = <2>;
++				interrupts = <0 110 4>;
++			};
++		};
++
++		gpio1: gpio@ffc03300 {
++			#address-cells = <1>;
++			#size-cells = <0>;
++			compatible = "snps,dw-apb-gpio";
++			reg = <0xffc03300 0x100>;
++			status = "disabled";
++
++			portb: gpio-controller@0 {
++				compatible = "snps,dw-apb-gpio-port";
++				gpio-controller;
++				#gpio-cells = <2>;
++				snps,nr-gpios = <24>;
++				reg = <0>;
++				interrupt-controller;
++				#interrupt-cells = <2>;
++				interrupts = <0 110 4>;
++			};
++		};
++
++		i2c0: i2c@ffc02800 {
++			#address-cells = <1>;
++			#size-cells = <0>;
++			compatible = "snps,designware-i2c";
++			reg = <0xffc02800 0x100>;
++			interrupts = <0 103 4>;
++			status = "disabled";
++		};
++
++		i2c1: i2c@ffc02900 {
++			#address-cells = <1>;
++			#size-cells = <0>;
++			compatible = "snps,designware-i2c";
++			reg = <0xffc02900 0x100>;
++			interrupts = <0 104 4>;
++			status = "disabled";
++		};
++
++		i2c2: i2c@ffc02a00 {
++			#address-cells = <1>;
++			#size-cells = <0>;
++			compatible = "snps,designware-i2c";
++			reg = <0xffc02a00 0x100>;
++			interrupts = <0 105 4>;
++			status = "disabled";
++		};
++
++		i2c3: i2c@ffc02b00 {
++			#address-cells = <1>;
++			#size-cells = <0>;
++			compatible = "snps,designware-i2c";
++			reg = <0xffc02b00 0x100>;
++			interrupts = <0 106 4>;
++			status = "disabled";
++		};
++
++		i2c4: i2c@ffc02c00 {
++			#address-cells = <1>;
++			#size-cells = <0>;
++			compatible = "snps,designware-i2c";
++			reg = <0xffc02c00 0x100>;
++			interrupts = <0 107 4>;
++			status = "disabled";
++		};
++
++		mmc: dwmmc0@ff808000 {
++			#address-cells = <1>;
++			#size-cells = <0>;
++			compatible = "altr,socfpga-dw-mshc";
++			reg = <0xff808000 0x1000>;
++			interrupts = <0 96 4>;
++			fifo-depth = <0x400>;
++			status = "disabled";
++		};
++
++		ocram: sram@ffe00000 {
++			compatible = "mmio-sram";
++			reg = <0xffe00000 0x100000>;
++		};
++
++		rst: rstmgr@ffd11000 {
++			#reset-cells = <1>;
++			compatible = "altr,rst-mgr";
++			reg = <0xffd11000 0x1000>;
++		};
++
++		spi0: spi@ffda4000 {
++			compatible = "snps,dw-apb-ssi";
++			#address-cells = <1>;
++			#size-cells = <0>;
++			reg = <0xffda4000 0x1000>;
++			interrupts = <0 101 4>;
++			num-chipselect = <4>;
++			bus-num = <0>;
++			status = "disabled";
++		};
++
++		spi1: spi@ffda5000 {
++			compatible = "snps,dw-apb-ssi";
++			#address-cells = <1>;
++			#size-cells = <0>;
++			reg = <0xffda5000 0x1000>;
++			interrupts = <0 102 4>;
++			num-chipselect = <4>;
++			bus-num = <0>;
++			status = "disabled";
++		};
++
++		sysmgr: sysmgr@ffd12000 {
++			compatible = "altr,sys-mgr", "syscon";
++			reg = <0xffd12000 0x1000>;
++		};
++
++		/* Local timer */
++		timer {
++			compatible = "arm,armv8-timer";
++			interrupts = <1 13 0xf01>,
++				     <1 14 0xf01>,
++				     <1 11 0xf01>,
++				     <1 10 0xf01>;
++		};
++
++		timer0: timer0@ffc03000 {
++			compatible = "snps,dw-apb-timer";
++			interrupts = <0 113 4>;
++			reg = <0xffc03000 0x100>;
++		};
++
++		timer1: timer1@ffc03100 {
++			compatible = "snps,dw-apb-timer";
++			interrupts = <0 114 4>;
++			reg = <0xffc03100 0x100>;
++		};
++
++		timer2: timer2@ffd00000 {
++			compatible = "snps,dw-apb-timer";
++			interrupts = <0 115 4>;
++			reg = <0xffd00000 0x100>;
++		};
++
++		timer3: timer3@ffd00100 {
++			compatible = "snps,dw-apb-timer";
++			interrupts = <0 116 4>;
++			reg = <0xffd00100 0x100>;
++		};
++
++		uart0: serial0@ffc02000 {
++			compatible = "snps,dw-apb-uart";
++			reg = <0xffc02000 0x100>;
++			interrupts = <0 108 4>;
++			reg-shift = <2>;
++			reg-io-width = <4>;
++			status = "disabled";
++		};
++
++		uart1: serial1@ffc02100 {
++			compatible = "snps,dw-apb-uart";
++			reg = <0xffc02100 0x100>;
++			interrupts = <0 109 4>;
++			reg-shift = <2>;
++			reg-io-width = <4>;
++			status = "disabled";
++		};
++
++		usbphy0: usbphy@0 {
++			#phy-cells = <0>;
++			compatible = "usb-nop-xceiv";
++			status = "okay";
++		};
++
++		usb0: usb@ffb00000 {
++			compatible = "snps,dwc2";
++			reg = <0xffb00000 0x40000>;
++			interrupts = <0 93 4>;
++			phys = <&usbphy0>;
++			phy-names = "usb2-phy";
++			status = "disabled";
++		};
++
++		usb1: usb@ffb40000 {
++			compatible = "snps,dwc2";
++			reg = <0xffb40000 0x40000>;
++			interrupts = <0 94 4>;
++			phys = <&usbphy0>;
++			phy-names = "usb2-phy";
++			status = "disabled";
++		};
++
++		watchdog0: watchdog@ffd00200 {
++			compatible = "snps,dw-wdt";
++			reg = <0xffd00200 0x100>;
++			interrupts = <0 117 4>;
++			status = "disabled";
++		};
++
++		watchdog1: watchdog@ffd00300 {
++			compatible = "snps,dw-wdt";
++			reg = <0xffd00300 0x100>;
++			interrupts = <0 118 4>;
++			status = "disabled";
++		};
++
++		watchdog2: watchdog@ffd00400 {
++			compatible = "snps,dw-wdt";
++			reg = <0xffd00400 0x100>;
++			interrupts = <0 125 4>;
++			status = "disabled";
++		};
++
++		watchdog3: watchdog@ffd00500 {
++			compatible = "snps,dw-wdt";
++			reg = <0xffd00500 0x100>;
++			interrupts = <0 126 4>;
++			status = "disabled";
++		};
++	};
++};
+diff --git a/arch/arm64/boot/dts/altera/socfpga_stratix10_socdk.dts b/arch/arm64/boot/dts/altera/socfpga_stratix10_socdk.dts
+new file mode 100644
+index 0000000..8b162ef
+--- /dev/null
++++ b/arch/arm64/boot/dts/altera/socfpga_stratix10_socdk.dts
+@@ -0,0 +1,38 @@
++/*
++ * Copyright Altera Corporation (C) 2015. All rights reserved.
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms and conditions of the GNU General Public License,
++ * version 2, as published by the Free Software Foundation.
++ *
++ * This program is distributed in the hope it will be useful, but WITHOUT
++ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
++ * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
++ * more details.
++ *
++ * You should have received a copy of the GNU General Public License along with
++ * this program.  If not, see <http://www.gnu.org/licenses/>.
++ */
++
++/include/ "socfpga_stratix10.dtsi"
++
++/ {
++	model = "SoCFPGA Stratix 10 SoCDK";
++
++	aliases {
++		serial0 = &uart0;
++	};
++
++	chosen {
++		stdout-path = "serial0:115200n8";
++	};
++
++	memory {
++		device_type = "memory";
++		reg = <0x0 0x40000000>;
++	};
++};
++
++&uart0 {
++	status = "okay";
++};
+diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
+index 4e17e7e..ad3b636 100644
+--- a/arch/arm64/configs/defconfig
++++ b/arch/arm64/configs/defconfig
+@@ -36,6 +36,7 @@ CONFIG_ARCH_FSL_LS2085A=y
+ CONFIG_ARCH_HISI=y
+ CONFIG_ARCH_MEDIATEK=y
+ CONFIG_ARCH_SEATTLE=y
++CONFIG_ARCH_STRATIX10=y
+ CONFIG_ARCH_TEGRA=y
+ CONFIG_ARCH_TEGRA_132_SOC=y
+ CONFIG_ARCH_QCOM=y
+-- 
+2.4.5
