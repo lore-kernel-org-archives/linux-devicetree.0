@@ -1,237 +1,37 @@
-From: Iain Paton <ipaton0-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [linux-sunxi] [PATCH] ARM: dts: sunxi: enable otg port on the
- sun7i-a20-olinuxino-lime2
-Date: Mon, 10 Aug 2015 00:05:05 +0100
-Message-ID: <55C7DCA1.2090204@gmail.com>
-References: <1439146968-9039-1-git-send-email-oliver@schinagl.nl> <1439146968-9039-2-git-send-email-oliver@schinagl.nl>
+From: Alexey Kardashevskiy <aik@ozlabs.ru>
+Subject: Re: [PATCH v6 00/42] powerpc/powernv: PCI hotplug suppport
+Date: Mon, 10 Aug 2015 16:05:40 +1000
+Message-ID: <55C83F34.9040306@ozlabs.ru>
+References: <1438834307-26960-1-git-send-email-gwshan@linux.vnet.ibm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=koi8-r; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1439146968-9039-2-git-send-email-oliver-dxLnbx3+1qmEVqv0pETR8A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: oliver-dxLnbx3+1qmEVqv0pETR8A@public.gmane.org
-Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Olliver Schinagl <oliver+list-dxLnbx3+1qmEVqv0pETR8A@public.gmane.org>, dev-3kdeTeqwOZ9EV1b7eY7vFQ@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Olliver Schinagl <o.schinagl-U3FVU11NWA554TAoqtyWWQ@public.gmane.org>
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <1438834307-26960-1-git-send-email-gwshan@linux.vnet.ibm.com>
+Sender: linux-pci-owner@vger.kernel.org
+To: Gavin Shan <gwshan@linux.vnet.ibm.com>, linuxppc-dev@lists.ozlabs.org
+Cc: linux-pci@vger.kernel.org, devicetree@vger.kernel.org, benh@kernel.crashing.org, mpe@ellerman.id.au, bhelgaas@google.com, grant.likely@linaro.org, robherring2@gmail.com, panto@antoniou-consulting.com
 List-Id: devicetree@vger.kernel.org
 
-NAK. This does much more than enabling the otg port.
+On 08/06/2015 02:11 PM, Gavin Shan wrote:
+> The series of patches intend to support PCI slot for PowerPC PowerNV platform,
+> which is running on top of skiboot firmware. The patchset requires corresponding
+> changes from skiboot firmware, which is sent to skiboot@lists.ozlabs.org
+> for review. The PCI slots are exposed by skiboot with device node properties,
+> and kernel utilizes those properties to populated PCI slots accordingly.
 
-Neither wholesale re-writing the regulator node or hooking up the 
-dcdc2 regulator to the operating points definition is required in order 
-to enable the otg port.  
 
-At the very least you need to split your patches and describe them 
-properly rather than trying to get additional changes that are likely 
-to cause further discussion through unnoticed using a misleading 
-subject.
+This does not apply on top of any actual trees I have - torvalds/master, 
+powerpc/master, powerpc/next.
 
-Rgds,
-Iain
- 
-On 09/08/15 20:02, Olliver Schinagl wrote:
-> From: Olliver Schinagl <o.schinagl-U3FVU11NWA554TAoqtyWWQ@public.gmane.org>
-> 
-> This patch enables the musb-otg USB controller on the Lime2. The Lime2
-> differs from the Lime1 series in pins used for usb0 power.
-> 
-> Tested on a OlinuXino Lime2-4GB.
-> 
-> Signed-off-by: Olliver Schinagl <oliver-dxLnbx3+1qmEVqv0pETR8A@public.gmane.org>
-> ---
->  arch/arm/boot/dts/sun7i-a20-olinuxino-lime2.dts | 131 ++++++++++++++----------
->  1 file changed, 75 insertions(+), 56 deletions(-)
-> 
-> diff --git a/arch/arm/boot/dts/sun7i-a20-olinuxino-lime2.dts b/arch/arm/boot/dts/sun7i-a20-olinuxino-lime2.dts
-> index 22cd052..efd9ebb 100644
-> --- a/arch/arm/boot/dts/sun7i-a20-olinuxino-lime2.dts
-> +++ b/arch/arm/boot/dts/sun7i-a20-olinuxino-lime2.dts
-> @@ -71,14 +71,6 @@
->  			default-state = "on";
->  		};
->  	};
-> -
-> -	reg_axp_ipsout: axp_ipsout {
-> -		compatible = "regulator-fixed";
-> -		regulator-name = "axp-ipsout";
-> -		regulator-min-microvolt = <5000000>;
-> -		regulator-max-microvolt = <5000000>;
-> -		regulator-always-on;
-> -	};
->  };
->  
->  &ahci {
-> @@ -86,6 +78,10 @@
->  	status = "okay";
->  };
->  
-> +&cpu0 {
-> +	cpu-supply = <&reg_dcdc2>;
-> +};
-> +
->  &ehci0 {
->  	status = "okay";
->  };
-> @@ -112,57 +108,9 @@
->  	status = "okay";
->  
->  	axp209: pmic@34 {
-> -		compatible = "x-powers,axp209";
->  		reg = <0x34>;
->  		interrupt-parent = <&nmi_intc>;
->  		interrupts = <0 IRQ_TYPE_LEVEL_LOW>;
-> -
-> -		interrupt-controller;
-> -		#interrupt-cells = <1>;
-> -
-> -		acin-supply = <&reg_axp_ipsout>;
-> -		vin2-supply = <&reg_axp_ipsout>;
-> -		vin3-supply = <&reg_axp_ipsout>;
-> -		ldo24in-supply = <&reg_axp_ipsout>;
-> -		ldo3in-supply = <&reg_axp_ipsout>;
-> -
-> -		regulators {
-> -			vdd_rtc: ldo1 {
-> -				regulator-min-microvolt = <1300000>;
-> -				regulator-max-microvolt = <1300000>;
-> -				regulator-always-on;
-> -			};
-> -
-> -			avcc: ldo2 {
-> -				regulator-min-microvolt = <1800000>;
-> -				regulator-max-microvolt = <3300000>;
-> -				regulator-always-on;
-> -			};
-> -
-> -			vcc_csi0: ldo3 {
-> -				regulator-min-microvolt = <700000>;
-> -				regulator-max-microvolt = <3500000>;
-> -				regulator-always-on;
-> -			};
-> -
-> -			vcc_csi1: ldo4 {
-> -				regulator-min-microvolt = <1250000>;
-> -				regulator-max-microvolt = <3300000>;
-> -				regulator-always-on;
-> -			};
-> -
-> -			vdd_cpu: dcdc2 {
-> -				regulator-min-microvolt = <700000>;
-> -				regulator-max-microvolt = <2275000>;
-> -				regulator-always-on;
-> -			};
-> -
-> -			vdd_int: dcdc3 {
-> -				regulator-min-microvolt = <700000>;
-> -				regulator-max-microvolt = <3500000>;
-> -				regulator-always-on;
-> -			};
-> -		};
->  	};
->  };
->  
-> @@ -196,6 +144,10 @@
->  	status = "okay";
->  };
->  
-> +&otg_sram {
-> +	status = "okay";
-> +};
-> +
->  &pio {
->  	ahci_pwr_pin_olinuxinolime: ahci_pwr_pin@1 {
->  		allwinner,pins = "PC3";
-> @@ -210,6 +162,27 @@
->  		allwinner,drive = <SUN4I_PINCTRL_20_MA>;
->  		allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
->  	};
-> +
-> +	usb0_id_detect_pin: usb0_id_detect_pin@0 {
-> +		allwinner,pins = "PH4";
-> +		allwinner,function = "gpio_in";
-> +		allwinner,drive = <SUN4I_PINCTRL_10_MA>;
-> +		allwinner,pull = <SUN4I_PINCTRL_PULL_UP>;
-> +	};
-> +
-> +	usb0_vbus_detect_pin: usb0_vbus_detect_pin@0 {
-> +		allwinner,pins = "PH5";
-> +		allwinner,function = "gpio_in";
-> +		allwinner,drive = <SUN4I_PINCTRL_10_MA>;
-> +		allwinner,pull = <SUN4I_PINCTRL_PULL_DOWN>;
-> +	};
-> +
-> +	usb0_vbus_pin_lime2: usb0_vbus_pin@0 {
-> +		allwinner,pins = "PC17";
-> +		allwinner,function = "gpio_out";
-> +		allwinner,drive = <SUN4I_PINCTRL_10_MA>;
-> +		allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
-> +	};
->  };
->  
->  &reg_ahci_5v {
-> @@ -218,6 +191,42 @@
->  	status = "okay";
->  };
->  
-> +#include "axp209.dtsi"
-> +
-> +&reg_dcdc2 {
-> +	regulator-always-on;
-> +	regulator-min-microvolt = <1000000>;
-> +	regulator-max-microvolt = <1450000>;
-> +	regulator-name = "vdd-cpu";
-> +};
-> +
-> +&reg_dcdc3 {
-> +	regulator-always-on;
-> +	regulator-min-microvolt = <1000000>;
-> +	regulator-max-microvolt = <1400000>;
-> +	regulator-name = "vdd-int-dll";
-> +};
-> +
-> +&reg_ldo1 {
-> +	regulator-always-on;
-> +	regulator-min-microvolt = <1300000>;
-> +	regulator-max-microvolt = <1300000>;
-> +	regulator-name = "vdd-rtc";
-> +};
-> +
-> +&reg_ldo2 {
-> +	regulator-always-on;
-> +	regulator-min-microvolt = <3000000>;
-> +	regulator-max-microvolt = <3000000>;
-> +	regulator-name = "avcc";
-> +};
-> +
-> +&reg_usb0_vbus {
-> +	pinctrl-0 = <&usb0_vbus_pin_lime2>;
-> +	gpio = <&pio 2 17 GPIO_ACTIVE_HIGH>;
-> +	status = "okay";
-> +};
-> +
->  &reg_usb1_vbus {
->  	status = "okay";
->  };
-> @@ -232,7 +241,17 @@
->  	status = "okay";
->  };
->  
-> +&usb_otg {
-> +	dr_mode = "otg";
-> +	status = "okay";
-> +};
-> +
->  &usbphy {
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&usb0_id_detect_pin>, <&usb0_vbus_detect_pin>;
-> +	usb0_id_det-gpio = <&pio 7 4 GPIO_ACTIVE_HIGH>; /* PH4 */
-> +	usb0_vbus_det-gpio = <&pio 7 5 GPIO_ACTIVE_HIGH>; /* PH5 */
-> +	usb0_vbus-supply = <&reg_usb0_vbus>;
->  	usb1_vbus-supply = <&reg_usb1_vbus>;
->  	usb2_vbus-supply = <&reg_usb2_vbus>;
->  	status = "okay";
-> 
+The problem patches are (at least):
+powerpc/powernv: Enable M64 on P7IOC
+powerpc/powernv: Release PEs dynamically
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+What did you base them on (sha1)? It is always worth mentioning.
+
+
+
+
+-- 
+Alexey
