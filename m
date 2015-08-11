@@ -1,93 +1,67 @@
-From: Ian Campbell <ian.campbell@citrix.com>
-Subject: Re: [PATCH v4] dtb: Create a common home for cross-architecture
- dtsi files.
-Date: Tue, 11 Aug 2015 09:47:14 +0100
-Message-ID: <1439282834.9747.189.camel@citrix.com>
-References: <1438617993-1012-1-git-send-email-ian.campbell@citrix.com>
-	 <CAK7LNARyEbnOWTis0Nx9zwTcwH_s3GZKg2XYG3+zLnf=FhhctA@mail.gmail.com>
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [RESEND][PATCH 3/4] ARM: davinci: Set proper SPI prescale limit
+ value
+Date: Tue, 11 Aug 2015 10:03:42 +0100
+Message-ID: <20150811090342.GG10748@sirena.org.uk>
+References: <1437568344-18889-1-git-send-email-fcooper@ti.com>
+ <1437568344-18889-4-git-send-email-fcooper@ti.com>
+ <55B22681.3060000@ti.com>
+ <55C9380D.1060802@ti.com>
+ <55C99D0D.9050605@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kbuild-owner@vger.kernel.org>
-In-Reply-To: <CAK7LNARyEbnOWTis0Nx9zwTcwH_s3GZKg2XYG3+zLnf=FhhctA@mail.gmail.com>
-Sender: linux-kbuild-owner@vger.kernel.org
-To: Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Kumar Gala <galak@codeaurora.org>, Liviu Dudau <liviu.dudau@arm.com>, Sudeep Holla <sudeep.holla@arm.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Russell King <linux@arm.linux.org.uk>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Kristina Martsenko <kristina.martsenko@arm.com>, Kevin Hilman <khilman@linaro.org>, devicetree@vger.kernel.org, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="8bBEDOJVaa9YlTAt"
+Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <55C99D0D.9050605-l0cyMroinI0@public.gmane.org>
+Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>
+Cc: "Franklin S Cooper Jr." <fcooper-l0cyMroinI0@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, khilman-1D3HCaltpLuhEniVeURVKkEOCMrvLtNR@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-arm-kernel-xBCQruHUn5ppWr+L1FloEB2eb7JE58TQ@public.gmane.org, ssantosh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 2015-08-11 at 13:00 +0900, Masahiro Yamada wrote:
-> Hi
-> 
-> 2015-08-04 1:06 GMT+09:00 Ian Campbell <ian.campbell@citrix.com>:
-> > Commit 9ccd608070b6 ("arm64: dts: add device tree for ARM SMM-A53x2 on
-> > LogicTile Express 20MG") added a new dts file to arch/arm64 which
-> > included "../../../../arm/boot/dts/vexpress-v2m-rs1.dtsi", i.e. a
-> > .dtsi supplied by arch/arm.
-> > 
-> > Unfortunately this causes some issues for the split device tree
-> > repository[0], since things get moved around there. In that context
-> > the new .dts ends up at src/arm64/arm/vexpress-v2f-1xv7-ca53x2.dts
-> > while the include is at src/arm/vexpress-v2m-rs1.dtsi.
-> > 
-> > The sharing of the .dtsi is legitimate since the baseboard is the same
-> > for various vexpress systems whatever processor they use.
-> > 
-> > Rather than using ../../ tricks to pickup .dtsi files from another
-> > arch this patch creates a new directory kernel/dts as a home for such
-> > cross-arch .dtsi files and arranges for it to be in the include path
-> > for both dtc and cpp. The dtsi file itself is moved into a vendor
-> > subdir in this case "arm" (the vendor, not the ARCH=).
-> 
-> 
-> Question:
-> If this patch is applied, which directory will be created in
-> device-tree-rebasing?
-> src/kernel/, src/common/, or something else?
-> Either will do, of course.
 
-Below is the patch against the device-tree-rebasing.git, I went (pretty
-much arbitrarily) with common at the top level.
+--8bBEDOJVaa9YlTAt
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-commit 0524b00e5bd7b98a2a9ef85c1f5f2a8d93bcbeb6
-Author: Ian Campbell <ian.campbell@citrix.com>
-Date:   Tue Jul 21 17:27:13 2015 +0100
+On Tue, Aug 11, 2015 at 12:28:21PM +0530, Sekhar Nori wrote:
+> On Tuesday 11 August 2015 05:17 AM, Franklin S Cooper Jr. wrote:
 
-    Handle new kernel/dts subtree.
-    
-    Rewrite its contents to common/ and include in the CPP and DTC include
-    paths.
-    
-    Signed-off-by: Ian Campbell <ian.campbell@citrix.com>
+> > ping. Patches 1 and 2 have already been pulled into Mark's spi tree and are currently in in linux-next.
 
-diff --git a/Makefile b/Makefile
-index 5e8930c..b57107d 100644
---- a/Makefile
-+++ b/Makefile
-@@ -114,12 +114,13 @@ dtc-tmp = $(subst $(comma),_,$(dot-target).dts.tmp)
- 
- dtc_cpp_flags  = -Wp,-MD,$(depfile).pre.tmp -nostdinc	\
-                  -Iinclude -I$(src) -Itestcase-data	\
-+                 -Icommon				\
-                  -undef -D__DTS__
- 
- quiet_cmd_dtc = DTC     $@
- cmd_dtc = $(CPP) $(dtc_cpp_flags) -x assembler-with-cpp -o $(dtc-tmp) $< ; \
-         $(DTC) -O dtb -o $@ -b 0 \
--                -i $(src) $(DTC_FLAGS) \
-+                -i $(src) -i common $(DTC_FLAGS) \
-                 -d $(depfile).dtc.tmp $(dtc-tmp) ; \
-         cat $(depfile).pre.tmp $(depfile).dtc.tmp > $(depfile)
- 
-diff --git a/scripts/rewrite-paths.sed b/scripts/rewrite-paths.sed
-index b73fbce..5269769 100644
---- a/scripts/rewrite-paths.sed
-+++ b/scripts/rewrite-paths.sed
-@@ -33,6 +33,7 @@ s,\tarch/\([^/]*\)/boot/dts/\(.*\.h\)$,\tsrc/\1/\2,gp
- # Also rewrite the DTS include paths for dtc+cpp support
- s,\tarch/\([^/]*\)/include/dts/,\tsrc/\1/include/,gp
- s,\tinclude/dt-bindings/,\tinclude/dt-bindings/,gp
-+s,\tkernel/dts/,\tcommon/,gp
- 
- # Rewrite the bindings subdirectory
- s,\tDocumentation/devicetree/bindings/,\tBindings/,gp
+> Mark, can you apply this patch to your tree as well? Thats the preferred
+> route for me.
 
+> If thats not an option for you, can you confirm that the topic/davinci
+> branch of your spi tree is an immutable commit I can base my pull
+> request to ARM-SoC on?
+
+Why would there be any interdependency between the the two trees, that
+would be very unusual?  Adding a new value to DT doesn't need the kernel
+to understand it and the driver should be compatible with existing DTs.
+If there *is* some dependency that suggests the driver update has
+problems...
+
+In any case I don't have a copy of the patch any more.
+
+--8bBEDOJVaa9YlTAt
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQEcBAEBCAAGBQJVybpiAAoJECTWi3JdVIfQy6AH/jsTpJkwNzit/4E5DwA8iphc
+whdCT3aK5x02MdbMKwNmbG9X672Yq/fVpjYvF20hS+nVzz/8R1Qbi+93pf+M4zli
+XdcfaRjShlhitnT2J3CoZR+T476lVlkP+txXar/Ew2j0YzHHo02ZolazjNcOM1Yt
+xxUd7dk6GzqGoaoXZnAx+i7s34aWCRDjyXvy/MCMdLV8V10fapSJwc8OhzFn9pol
+Vlf7A655jQ+rlnIny/Ln9tGFga6MB7/mTBxGfELGMHNaySCm3RiC6ighkE2OpVU8
+1xeEFl748xRkdfQfzfE0a+V+AfdskCDxjOPYXrE5ZZyhKe19I1SzYlI+mbbBNJA=
+=Qba/
+-----END PGP SIGNATURE-----
+
+--8bBEDOJVaa9YlTAt--
+--
+To unsubscribe from this list: send the line "unsubscribe linux-spi" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
