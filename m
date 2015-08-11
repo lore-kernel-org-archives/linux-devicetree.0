@@ -1,46 +1,47 @@
-From: Bjorn Helgaas <bhelgaas@google.com>
-Subject: Re: [PATCH 0/2] pci: am57xx-evm: Fix PCIe card enumeration issue
-Date: Tue, 11 Aug 2015 16:02:10 -0500
-Message-ID: <20150811210210.GK13982@google.com>
-References: <1438090750-11604-1-git-send-email-kishon@ti.com>
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: [PATCH v2] DT: mmc: sh_mmcif: fix "compatible" property text
+Date: Wed, 12 Aug 2015 01:37:28 +0300
+Message-ID: <1643858.nkRxsQo3O3@wasted.cogentembedded.com>
+References: <201404250239.39150.sergei.shtylyov@cogentembedded.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-pci-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1438090750-11604-1-git-send-email-kishon@ti.com>
-Sender: linux-pci-owner@vger.kernel.org
-To: Kishon Vijay Abraham I <kishon@ti.com>
-Cc: linux-omap@vger.kernel.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, tony@atomide.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, bcousson@baylibre.com, linux@arm.linux.org.uk, nsekhar@ti.com
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <201404250239.39150.sergei.shtylyov@cogentembedded.com>
+Sender: linux-sh-owner@vger.kernel.org
+To: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org, ulf.hansson@linaro.org, linux-mmc@vger.kernel.org
+Cc: linux-sh@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jul 28, 2015 at 07:09:08PM +0530, Kishon Vijay Abraham I wrote:
-> This series fixes PCIe card enumeration issue in am57xx-evm.
-> 
-> In the case of am57xx-evm, the PERST# line is connected to a gpio line
-> and this has to be driven low in order to perform a fundamental reset
-> of the card. If the gpio line is driven high, there is no way the card
-> can come out of reset.
-> 
-> Add support in the pcie-dra7xx driver to make gpio drive PERST# line.
-> 
-> The PERST# line can be used to perform reset not during the power on
-> sequence too (warm reset) but we are not adding support for this as the
-> PCIe express base sepcification doesn't explain how to perform warm
-> reset
-> 
-> "In some cases, it may be possible for the Fundamental Reset mechanism
-> to be triggered by hardware without the removal and re-application of
-> power to the component. This is called a warm reset. This document does
-> not specify a means for generating a warm reset."
-> 
-> Kishon Vijay Abraham I (2):
->   pci: host: pci-dra7xx: Add support to make gpio drive PERST# line
->   ARM: dts: am57xx-evm: Add 'gpios' property with gpio2_8
-> 
->  Documentation/devicetree/bindings/pci/ti-pci.txt |    3 +++
->  arch/arm/boot/dts/am57xx-beagle-x15.dts          |    5 +++++
->  arch/arm/boot/dts/dra7.dtsi                      |    2 +-
->  drivers/pci/host/pci-dra7xx.c                    |   24 ++++++++++++++++++++--
->  4 files changed, 31 insertions(+), 3 deletions(-)
+The "compatible" property text contradicts even the example given in the MMCIF
+binding document itself;  moreover, the Renesas MMCIF driver only matches on
+the generic "compatible" string and doesn't look for the SoC specific strings
+at all. Thus describe "renesas,sh-mmcif" as a fallback value.
 
-Applied with Tony's ack (for patch 2) to pci/host-dra7xx for v4.3, thanks!
+Fixes: b4c27763d749 ("mmc: sh_mmcif: Document DT bindings")
+Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+
+---
+The patch is against Ulf Hansson's 'mmc.git' repo's 'fixes' and 'next' branches.
+
+Changes in version 2:
+- kept the SoC specific "compatible" property values mandatory and made the
+  generic string a fallback.
+
+ Documentation/devicetree/bindings/mmc/renesas,mmcif.txt |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+Index: mmc/Documentation/devicetree/bindings/mmc/renesas,mmcif.txt
+===================================================================
+--- mmc.orig/Documentation/devicetree/bindings/mmc/renesas,mmcif.txt
++++ mmc/Documentation/devicetree/bindings/mmc/renesas,mmcif.txt
+@@ -10,7 +10,7 @@ Required properties:
+ 	- "renesas,mmcif-r8a7740" for the MMCIF found in r8a7740 SoCs
+ 	- "renesas,mmcif-r8a7790" for the MMCIF found in r8a7790 SoCs
+ 	- "renesas,mmcif-r8a7791" for the MMCIF found in r8a7791 SoCs
+-	- "renesas,sh-mmcif" for the generic MMCIF
++  followed by "renesas,sh-mmcif".
+ 
+ - clocks: reference to the functional clock
+ 
+
