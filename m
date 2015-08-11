@@ -1,134 +1,65 @@
-From: Gavin Shan <gwshan@linux.vnet.ibm.com>
-Subject: Re: [PATCH v6 39/42] drivers/of: Allow to specify root node in
- of_fdt_unflatten_tree()
-Date: Tue, 11 Aug 2015 10:52:43 +1000
-Message-ID: <20150811005243.GB20729@gwshan>
-References: <1438834307-26960-1-git-send-email-gwshan@linux.vnet.ibm.com>
- <1438834307-26960-40-git-send-email-gwshan@linux.vnet.ibm.com>
- <55C928C5.2080305@gmail.com>
-Reply-To: Gavin Shan <gwshan@linux.vnet.ibm.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-pci-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <55C928C5.2080305@gmail.com>
-Sender: linux-pci-owner@vger.kernel.org
-To: Frank Rowand <frowand.list@gmail.com>
-Cc: Gavin Shan <gwshan@linux.vnet.ibm.com>, linuxppc-dev@lists.ozlabs.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, benh@kernel.crashing.org, mpe@ellerman.id.au, bhelgaas@google.com, grant.likely@linaro.org, robherring2@gmail.com, panto@antoniou-consulting.com, aik@ozlabs.ru
+From: Shawn Lin <shawn.lin@rock-chips.com>
+Subject: [PATCH] mmc: sdhci-of-arasan: Add the support for sdhci-5.1
+Date: Tue, 11 Aug 2015 09:14:56 +0800
+Message-ID: <1439255696-3263-1-git-send-email-shawn.lin@rock-chips.com>
+Return-path: <linux-mips-bounce@linux-mips.org>
+Sender: linux-mips-bounce@linux-mips.org
+Errors-to: linux-mips-bounce@linux-mips.org
+List-help: <mailto:ecartis@linux-mips.org?Subject=help>
+List-unsubscribe: <mailto:ecartis@linux-mips.org?subject=unsubscribe%20linux-mips>
+List-software: Ecartis version 1.0.0
+List-subscribe: <mailto:ecartis@linux-mips.org?subject=subscribe%20linux-mips>
+List-owner: <mailto:ralf@linux-mips.org>
+List-post: <mailto:linux-mips@linux-mips.org>
+List-archive: <http://www.linux-mips.org/archives/linux-mips/>
+To: jh80.chung@samsung.com, ulf.hansson@linaro.org
+Cc: heiko@sntech.de, dianders@chromium.org, Vineet.Gupta1@synopsys.com, Wei Xu <xuwei5@hisilicon.com>, Joachim Eastwood <manabian@gmail.com>, Alexey Brodkin <abrodkin@synopsys.com>, Kukjin Kim <kgene@kernel.org>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, Russell King <linux@arm.linux.org.uk>, Jun Nie <jun.nie@linaro.org>, Arnd Bergmann <arnd@arndb.de>, Zhou Wang <wangzhou1@hisilicon.com>, Ralf Baechle <ralf@linux-mips.org>, Govindraj Raja <govindraj.raja@imgtec.com>, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-mips@linux-mips.org, linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org, Shawn Lin <shawn.lin@rock-chips.com>, Rob Herring <robh+dt@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Aug 10, 2015 at 03:42:13PM -0700, Frank Rowand wrote:
->On 8/5/2015 9:11 PM, Gavin Shan wrote:
->> This introduces one more argument to of_fdt_unflatten_tree()
->> to specify the root node for the FDT blob, which is going to be
->> unflattened. In the result, the function can be used to unflatten
->> FDT blob, which represents device sub-tree in PowerNV hotplug
->> driver.
->> 
->> Signed-off-by: Gavin Shan <gwshan@linux.vnet.ibm.com>
->> ---
->>  drivers/of/fdt.c       | 13 ++++++++-----
->>  drivers/of/unittest.c  |  2 +-
->>  include/linux/of_fdt.h |  1 +
->>  3 files changed, 10 insertions(+), 6 deletions(-)
->> 
->> diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
->> index a18a2ce..074870a 100644
->> --- a/drivers/of/fdt.c
->> +++ b/drivers/of/fdt.c
->> @@ -388,10 +388,11 @@ static void *unflatten_dt_node(const void *blob,
->>  			       struct device_node **nodepp,
->>  			       bool dryrun)
->>  {
->> +	unsigned long fpsize = dad ? strlen(of_node_full_name(dad)) : 0;
->>  	int depth = 1;
->>  
->>  	return __unflatten_dt_node(blob, mem, poffset,
->> -				   dad, nodepp, 0,
->> +				   dad, nodepp, fpsize,
->>  				   dryrun, &depth);
->>  }
->>  
->> @@ -408,6 +409,7 @@ static void *unflatten_dt_node(const void *blob,
->>   * for the resulting tree
->>   */
->>  static void __unflatten_device_tree(const void *blob,
->> +			     struct device_node *dad,
->>  			     struct device_node **mynodes,
->>  			     void * (*dt_alloc)(u64 size, u64 align))
->>  {
->
->Please add @dad to the documentation header for the function.
->
+This patch adds the quirks and compatible string in sdhci-of-arasan.c
+to support sdhci-arasan5.1 version of controller.
 
-Yes, it will be included in next revision.
+Signed-off-by: Shawn Lin <shawn.lin@rock-chips.com>
+---
 
+ Documentation/devicetree/bindings/mmc/arasan,sdhci.txt | 2 +-
+ drivers/mmc/host/sdhci-of-arasan.c                     | 4 ++++
+ 2 files changed, 5 insertions(+), 1 deletion(-)
 
->> @@ -435,7 +437,7 @@ static void __unflatten_device_tree(const void *blob,
->>  	/* First pass, scan for size */
->>  	start = 0;
->>  	size = (unsigned long)unflatten_dt_node(blob, NULL, &start,
->> -						NULL, NULL, true);
->> +						dad, NULL, true);
->>  	size = ALIGN(size, 4);
->>  
->>  	pr_debug("  size is %lx, allocating...\n", size);
->> @@ -450,7 +452,7 @@ static void __unflatten_device_tree(const void *blob,
->>  
->>  	/* Second pass, do actual unflattening */
->>  	start = 0;
->> -	unflatten_dt_node(blob, mem, &start, NULL, mynodes, false);
->> +	unflatten_dt_node(blob, mem, &start, dad, mynodes, false);
->>  	if (be32_to_cpup(mem + size) != 0xdeadbeef)
->>  		pr_warning("End of tree marker overwritten: %08x\n",
->>  			   be32_to_cpup(mem + size));
->> @@ -472,9 +474,10 @@ static void *kernel_tree_alloc(u64 size, u64 align)
->>   * can be used.
->>   */
->>  void of_fdt_unflatten_tree(const unsigned long *blob,
->> +			struct device_node *dad,
->>  			struct device_node **mynodes)
->>  {
->> -	__unflatten_device_tree(blob, mynodes, &kernel_tree_alloc);
->> +	__unflatten_device_tree(blob, dad, mynodes, &kernel_tree_alloc);
->>  }
->>  EXPORT_SYMBOL_GPL(of_fdt_unflatten_tree);
->>  
->> @@ -1125,7 +1128,7 @@ bool __init early_init_dt_scan(void *params)
->>   */
->>  void __init unflatten_device_tree(void)
->>  {
->> -	__unflatten_device_tree(initial_boot_params, &of_root,
->> +	__unflatten_device_tree(initial_boot_params, NULL, &of_root,
->>  				early_init_dt_alloc_memory_arch);
->>  
->>  	/* Get pointer to "/chosen" and "/aliases" nodes for use everywhere */
->> diff --git a/drivers/of/unittest.c b/drivers/of/unittest.c
->> index 1801634..2270830 100644
->> --- a/drivers/of/unittest.c
->> +++ b/drivers/of/unittest.c
->> @@ -907,7 +907,7 @@ static int __init unittest_data_add(void)
->>  			"not running tests\n", __func__);
->>  		return -ENOMEM;
->>  	}
->> -	of_fdt_unflatten_tree(unittest_data, &unittest_data_node);
->> +	of_fdt_unflatten_tree(unittest_data, NULL, &unittest_data_node);
->>  	if (!unittest_data_node) {
->>  		pr_warn("%s: No tree to attach; not running tests\n", __func__);
->>  		return -ENODATA;
->> diff --git a/include/linux/of_fdt.h b/include/linux/of_fdt.h
->> index df9ef38..3644960 100644
->> --- a/include/linux/of_fdt.h
->> +++ b/include/linux/of_fdt.h
->> @@ -38,6 +38,7 @@ extern bool of_fdt_is_big_endian(const void *blob,
->>  extern int of_fdt_match(const void *blob, unsigned long node,
->>  			const char *const *compat);
->>  extern void of_fdt_unflatten_tree(const unsigned long *blob,
->> +			       struct device_node *dad,
->>  			       struct device_node **mynodes);
->>  
->>  /* TBD: Temporary export of fdt globals - remove when code fully merged */
->> 
-
-Thanks,
-Gavin
+diff --git a/Documentation/devicetree/bindings/mmc/arasan,sdhci.txt b/Documentation/devicetree/bindings/mmc/arasan,sdhci.txt
+index 7e94903..da541c3 100644
+--- a/Documentation/devicetree/bindings/mmc/arasan,sdhci.txt
++++ b/Documentation/devicetree/bindings/mmc/arasan,sdhci.txt
+@@ -9,7 +9,7 @@ Device Tree Bindings for the Arasan SDHCI Controller
+ 
+ Required Properties:
+   - compatible: Compatibility string. Must be 'arasan,sdhci-8.9a' or
+-                'arasan,sdhci-4.9a'
++                'arasan,sdhci-4.9a' or 'arasan,sdhci-5.1'
+   - reg: From mmc bindings: Register location and length.
+   - clocks: From clock bindings: Handles to clock inputs.
+   - clock-names: From clock bindings: Tuple including "clk_xin" and "clk_ahb"
+diff --git a/drivers/mmc/host/sdhci-of-arasan.c b/drivers/mmc/host/sdhci-of-arasan.c
+index ef5a7d2..c9012f5 100644
+--- a/drivers/mmc/host/sdhci-of-arasan.c
++++ b/drivers/mmc/host/sdhci-of-arasan.c
+@@ -175,6 +175,9 @@ static int sdhci_arasan_probe(struct platform_device *pdev)
+ 	if (of_device_is_compatible(pdev->dev.of_node, "arasan,sdhci-4.9a")) {
+ 		host->quirks |= SDHCI_QUIRK_NO_HISPD_BIT;
+ 		host->quirks2 |= SDHCI_QUIRK2_HOST_NO_CMD23;
++	} else if (of_device_is_compatible(pdev->dev.of_node,
++					   "arasan,sdhci-5.1")) {
++		host->quirks |= SDHCI_QUIRK_CAP_CLOCK_BASE_BROKEN;
+ 	}
+ 
+ 	sdhci_get_of_property(pdev);
+@@ -217,6 +220,7 @@ static int sdhci_arasan_remove(struct platform_device *pdev)
+ 
+ static const struct of_device_id sdhci_arasan_of_match[] = {
+ 	{ .compatible = "arasan,sdhci-8.9a" },
++	{ .compatible = "arasan,sdhci-5.1" },
+ 	{ .compatible = "arasan,sdhci-4.9a" },
+ 	{ }
+ };
+-- 
+2.3.7
