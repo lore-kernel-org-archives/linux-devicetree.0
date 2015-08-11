@@ -1,55 +1,50 @@
-From: Shawn Lin <shawn.lin@rock-chips.com>
-Subject: [RFC PATCH v1] mmc: sdhci-of-arasan: Add the support for sdhci-5.1
-Date: Tue, 11 Aug 2015 15:46:30 +0800
-Message-ID: <1439279190-9556-1-git-send-email-shawn.lin@rock-chips.com>
+From: Yunzhi Li <lyz@rock-chips.com>
+Subject: [PATCH v1 3/3] ARM: dts: rockchip: add dwc2 ahb reset property for rk3288
+Date: Tue, 11 Aug 2015 15:56:27 +0800
+Message-ID: <1439279787-26674-3-git-send-email-lyz@rock-chips.com>
+References: <1439279787-26674-1-git-send-email-lyz@rock-chips.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1439279787-26674-1-git-send-email-lyz@rock-chips.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Michal Simek <michal.simek@xilinx.com>, soren.brinkmann@xilinx.com
-Cc: Ulf Hansson <ulf.hansson@linaro.org>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Shawn Lin <shawn.lin@rock-chips.com>
+To: jwerner@chromium.org, dianders@chromium.org
+Cc: huangtao@rock-chips.com, cf@rock-chips.com, hl@rock-chips.com, wulf@rock-chips.com, gregory.herrero@intel.com, linux-rockchip@lists.infradead.org, Yunzhi Li <lyz@rock-chips.com>, Heiko Stuebner <heiko@sntech.de>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-This patch adds the compatible string in sdhci-of-arasan.c to
-support sdhci-arasan5.1 version of controller. No documented
-controller IP version is found in the TRM, so we use ths version
-of command queueing engine integrated into this controller by arasan
-to specify our controller.
+This patch adds dwc2 reset property for rk3288 dwc2 usb
+controller to fix FIFO setting bug
 
-Signed-off-by: Shawn Lin <shawn.lin@rock-chips.com>
+Signed-off-by: Yunzhi Li <lyz@rock-chips.com>
 
 ---
 
-Changes in v1:
-- Remove redundant SDHCI_QUIRK_CAP_CLOCK_BASE_BROKEN for "arasan, sdhci-5.1" since
-  SDHCI will check "host->max_clk == 0" and let driver get it from host->ops->get_max_clock.
+ arch/arm/boot/dts/rk3288.dtsi | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
- Documentation/devicetree/bindings/mmc/arasan,sdhci.txt | 2 +-
- drivers/mmc/host/sdhci-of-arasan.c                     | 1 +
- 2 files changed, 2 insertions(+), 1 deletion(-)
-
-diff --git a/Documentation/devicetree/bindings/mmc/arasan,sdhci.txt b/Documentation/devicetree/bindings/mmc/arasan,sdhci.txt
-index 7e94903..da541c3 100644
---- a/Documentation/devicetree/bindings/mmc/arasan,sdhci.txt
-+++ b/Documentation/devicetree/bindings/mmc/arasan,sdhci.txt
-@@ -9,7 +9,7 @@ Device Tree Bindings for the Arasan SDHCI Controller
+diff --git a/arch/arm/boot/dts/rk3288.dtsi b/arch/arm/boot/dts/rk3288.dtsi
+index 22316d0..440aa42 100644
+--- a/arch/arm/boot/dts/rk3288.dtsi
++++ b/arch/arm/boot/dts/rk3288.dtsi
+@@ -473,6 +473,10 @@
+ 		dr_mode = "host";
+ 		phys = <&usbphy2>;
+ 		phy-names = "usb2-phy";
++		resets = <&cru SRST_USBHOST1_AHB>,
++			 <&cru SRST_USBHOST1_PHY>,
++			 <&cru SRST_USBHOST1_CON>;
++		reset-names = "ahb", "phy", "con";
+ 		status = "disabled";
+ 	};
  
- Required Properties:
-   - compatible: Compatibility string. Must be 'arasan,sdhci-8.9a' or
--                'arasan,sdhci-4.9a'
-+                'arasan,sdhci-4.9a' or 'arasan,sdhci-5.1'
-   - reg: From mmc bindings: Register location and length.
-   - clocks: From clock bindings: Handles to clock inputs.
-   - clock-names: From clock bindings: Tuple including "clk_xin" and "clk_ahb"
-diff --git a/drivers/mmc/host/sdhci-of-arasan.c b/drivers/mmc/host/sdhci-of-arasan.c
-index ef5a7d2..75379cb 100644
---- a/drivers/mmc/host/sdhci-of-arasan.c
-+++ b/drivers/mmc/host/sdhci-of-arasan.c
-@@ -217,6 +217,7 @@ static int sdhci_arasan_remove(struct platform_device *pdev)
+@@ -490,6 +494,10 @@
+ 		g-use-dma;
+ 		phys = <&usbphy0>;
+ 		phy-names = "usb2-phy";
++		resets = <&cru SRST_USBOTG_AHB>,
++			 <&cru SRST_USBOTG_PHY>,
++			 <&cru SRST_USBOTG_CON>;
++		reset-names = "ahb", "phy", "con";
+ 		status = "disabled";
+ 	};
  
- static const struct of_device_id sdhci_arasan_of_match[] = {
- 	{ .compatible = "arasan,sdhci-8.9a" },
-+	{ .compatible = "arasan,sdhci-5.1" },
- 	{ .compatible = "arasan,sdhci-4.9a" },
- 	{ }
- };
 -- 
-2.3.7
+2.0.0
