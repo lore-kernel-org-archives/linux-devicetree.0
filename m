@@ -1,91 +1,110 @@
-From: Haibo Chen <haibo.chen@freescale.com>
-Subject: [PATCH v6 2/6] mmc: sdhci-esdhc-imx: add tuning-step setting support
-Date: Tue, 11 Aug 2015 19:38:27 +0800
-Message-ID: <1439293111-21077-3-git-send-email-haibo.chen@freescale.com>
-References: <1439293111-21077-1-git-send-email-haibo.chen@freescale.com>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH v3 3/4] mfd: Add DT binding for Maxim MAX77802 IC
+Date: Tue, 11 Aug 2015 12:47:36 +0100
+Message-ID: <20150811114736.GB18282@x1>
+References: <1438252327-28427-1-git-send-email-javier@osg.samsung.com>
+ <1438252327-28427-4-git-send-email-javier@osg.samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1439293111-21077-1-git-send-email-haibo.chen@freescale.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, shawnguo@kernel.org, kernel@pengutronix.de, linux@arm.linux.org.uk, ulf.hansson@linaro.org, aisheng.dong@freescale.com
-Cc: fabio.estevam@freescale.com, devicetree@vger.kernel.org, haibo.chen@freescale.com, linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org, mkl@pengutronix.de, johan.derycke@barco.com, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1438252327-28427-4-git-send-email-javier@osg.samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Javier Martinez Canillas <javier@osg.samsung.com>
+Cc: devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, Mark Brown <broonie@kernel.org>, linux-kernel@vger.kernel.org, Krzysztof Kozlowski <k.kozlowski@samsung.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-tuning-step is the delay cell steps in tuning procedure. The default value
-of tuning-step is 1. Some boards or cards need another value to pass the
-tuning procedure. For example, imx7d-sdb board need the tuning-step value
-as 2, otherwise it can't pass the tuning procedure.
+On Thu, 30 Jul 2015, Javier Martinez Canillas wrote:
 
-So this patch add the tuning-step setting in driver, so that user can set
-the tuning-step value in dts.
+> The MAX77802 is a chip that contains regulators, 2 32kHz clocks,
+> a RTC and an I2C interface to program the individual components.
+>=20
+> The are already DT bindings for the regulators and clocks and
+> these reference to a bindings/mfd/max77802.txt file, that didn't
+> exist, for the details about the PMIC.
+>=20
+> Signed-off-by: Javier Martinez Canillas <javier@osg.samsung.com>
+> Reviewed-by: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+>=20
+> ---
+>=20
+> Changes in v3:
+> - Add Krzysztof Kozlowski Reviewed-by tag to patch #3.
+> - Capitalise all acronyms. Suggested by Lee Jones.
+> - Use relative path to refer other bindings. Suggested by Lee Jones.
+> - Use IRQ_TYPE_NONE instead of 0 in example. Suggested by Lee Jones.
+>=20
+> Changes in v2:
+> - Use the correct "maxim,max77802" compatible string.
+>   Suggested by Krzysztof Kozlowski
+> - Use a pmic generic node name for the max77802 node example.
+>   Suggested by Sergei Shtylyov.
+>=20
+>  Documentation/devicetree/bindings/mfd/max77802.txt | 26 ++++++++++++=
+++++++++++
+>  1 file changed, 26 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/mfd/max77802.tx=
+t
+>=20
+> diff --git a/Documentation/devicetree/bindings/mfd/max77802.txt b/Doc=
+umentation/devicetree/bindings/mfd/max77802.txt
+> new file mode 100644
+> index 000000000000..911ec5fcaefd
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/mfd/max77802.txt
+> @@ -0,0 +1,26 @@
+> +Maxim MAX77802 multi-function device
+> +
+> +The Maxim MAX77802 is a Power Management IC (PMIC) that contains 10 =
+high
+> +efficiency Buck regulators, 32 Low-DropOut (LDO) regulators used to =
+power
+> +up application processors and peripherals, a 2-channel 32kHz clock o=
+utputs,
+> +a Real-Time-Clock (RTC) and a I2C interface to program the individua=
+l
+> +regulators, clocks outputs and the RTC.
+> +
+> +Binding for the built-in 32k clock generator block is defined separa=
+tely
+> +in the ../clk/maxim,max77802.txt file and binding for the regulators
+> +is defined in the ../regulator/max77802.txt file.
 
-Signed-off-by: Haibo Chen <haibo.chen@freescale.com>
----
- drivers/mmc/host/sdhci-esdhc-imx.c          | 9 +++++++++
- include/linux/platform_data/mmc-esdhc-imx.h | 1 +
- 2 files changed, 10 insertions(+)
+  "Bindings for the built-in 32k clock generator block and
+   regulators are defined in ../clk/maxim,max77802.txt and
+   ../regulator/max77802.txt respectively."
 
-diff --git a/drivers/mmc/host/sdhci-esdhc-imx.c b/drivers/mmc/host/sdhci-esdhc-imx.c
-index b8b7e88..298551d 100644
---- a/drivers/mmc/host/sdhci-esdhc-imx.c
-+++ b/drivers/mmc/host/sdhci-esdhc-imx.c
-@@ -75,6 +75,7 @@
- #define ESDHC_STD_TUNING_EN		(1 << 24)
- /* NOTE: the minimum valid tuning start tap for mx6sl is 1 */
- #define ESDHC_TUNING_START_TAP		0x1
-+#define ESDHC_TUNING_STEP_SHIFT		16
- 
- /* pinctrl state */
- #define ESDHC_PINCTRL_STATE_100MHZ	"state_100mhz"
-@@ -474,6 +475,7 @@ static void esdhc_writew_le(struct sdhci_host *host, u16 val, int reg)
- 		} else if (imx_data->socdata->flags & ESDHC_FLAG_STD_TUNING) {
- 			u32 v = readl(host->ioaddr + SDHCI_ACMD12_ERR);
- 			u32 m = readl(host->ioaddr + ESDHC_MIX_CTRL);
-+			u32 tuning_ctrl;
- 			if (val & SDHCI_CTRL_TUNED_CLK) {
- 				v |= ESDHC_MIX_CTRL_SMPCLK_SEL;
- 			} else {
-@@ -484,6 +486,11 @@ static void esdhc_writew_le(struct sdhci_host *host, u16 val, int reg)
- 			if (val & SDHCI_CTRL_EXEC_TUNING) {
- 				v |= ESDHC_MIX_CTRL_EXE_TUNE;
- 				m |= ESDHC_MIX_CTRL_FBCLK_SEL;
-+				tuning_ctrl = readl(host->ioaddr + ESDHC_TUNING_CTRL);
-+				tuning_ctrl |= ESDHC_STD_TUNING_EN | ESDHC_TUNING_START_TAP;
-+				if (imx_data->boarddata.tuning_step)
-+					tuning_ctrl |= imx_data->boarddata.tuning_step << ESDHC_TUNING_STEP_SHIFT;
-+					writel(tuning_ctrl, host->ioaddr + ESDHC_TUNING_CTRL);
- 			} else {
- 				v &= ~ESDHC_MIX_CTRL_EXE_TUNE;
- 			}
-@@ -963,6 +970,8 @@ sdhci_esdhc_imx_probe_dt(struct platform_device *pdev,
- 	if (gpio_is_valid(boarddata->wp_gpio))
- 		boarddata->wp_type = ESDHC_WP_GPIO;
- 
-+	of_property_read_u32(np, "fsl,tuning-step", &boarddata->tuning_step);
-+
- 	if (of_find_property(np, "no-1-8-v", NULL))
- 		boarddata->support_vsel = false;
- 	else
-diff --git a/include/linux/platform_data/mmc-esdhc-imx.h b/include/linux/platform_data/mmc-esdhc-imx.h
-index e1571ef..95ccab3 100644
---- a/include/linux/platform_data/mmc-esdhc-imx.h
-+++ b/include/linux/platform_data/mmc-esdhc-imx.h
-@@ -45,5 +45,6 @@ struct esdhc_platform_data {
- 	int max_bus_width;
- 	bool support_vsel;
- 	unsigned int delay_line;
-+	unsigned int tuning_step;       /* The delay cell steps in tuning procedure */
- };
- #endif /* __ASM_ARCH_IMX_ESDHC_H */
--- 
-1.9.1
+> +Required properties:
+> +- compatible : Must be "maxim,max77802";
+
+';' ?
+
+> +- reg : Specifies the I2C slave address of PMIC block.
+> +- interrupts : This I2C device has an IRQ line connected to the main=
+ SoC.
+> +- interrupt-parent : The parent interrupt controller.
+
+I always find this easier on the eye when you:
+
+Required properties:
+- compatible		: Must be "maxim,max77802"
+- reg			: Specifies the I2C slave address of PMIC block.
+- interrupts		: This I2C device has an IRQ line connected to the main S=
+oC.
+- interrupt-parent	: The parent interrupt controller.
+
+> +Example:
+> +
+> +	max77802: pmic@09 {
+> +		compatible =3D "maxim,max77802";
+> +		interrupt-parent =3D <&intc>;
+> +		interrupts =3D <26 IRQ_TYPE_NONE>;
+> +		reg =3D <0x09>;
+> +	};
+
+--=20
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org =E2=94=82 Open source software for ARM SoCs
+=46ollow Linaro: Facebook | Twitter | Blog
