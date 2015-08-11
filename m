@@ -1,92 +1,112 @@
-From: NeilBrown <neil@brown.name>
-Subject: Re: [PATCH 0/4] UART slave device support - version 4
-Date: Wed, 12 Aug 2015 09:20:59 +1000
-Message-ID: <20150812092059.361e09bc@home.neil.brown.name>
-References: <20150511013540.5709.93626.stgit@notabene.brown>
-	<CACRpkdZf2AM_7Od1kVcBxokK5CJfhnsfZ_oNSF5w7rmZmcenCg@mail.gmail.com>
+From: Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH 3/3] clk: add bindings for the Ux500 clocks
+Date: Tue, 11 Aug 2015 16:39:05 -0700
+Message-ID: <20150811233905.31346.32970@quantum>
+References: <1438262400-29213-1-git-send-email-linus.walleij@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CACRpkdZf2AM_7Od1kVcBxokK5CJfhnsfZ_oNSF5w7rmZmcenCg@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, One Thousand Gnomes <gnomes@lxorguk.ukuu.org.uk>, Peter Hurley <peter@hurleysoftware.com>, Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Sebastian Reichel <sre@kernel.org>, Rob Herring <robherring2@gmail.com>, Pavel Machek <pavel@ucw.cz>, Grant Likely <grant.likely@linaro.org>, Jiri Slaby <jslaby@suse.cz>, GTA04 owners <gta04-owner@goldelico.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8BIT
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1438262400-29213-1-git-send-email-linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 7 Aug 2015 15:01:47 +0200 Linus Walleij
-<linus.walleij@linaro.org> wrote:
+Quoting Linus Walleij (2015-07-30 06:20:00)
+> These Ux500 clocks have been around for years and were never
+> properly documented. Add the proper binding documentation.
+> 
+> Cc: Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> Signed-off-by: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 
-> Hi Neil,
-> 
-> first, this is a *VERY* interesting and much needed patch series,
-> I intend to look closer at it, and if possible test it with some
-> (heh) board file device. Would be happy of you put me on CC for these.
-> 
-> On Mon, May 11, 2015 at 3:56 AM, NeilBrown <neil@brown.name> wrote:
-> 
-> >  When a device is connected to a UART via RS-232 (or similar), there
-> >  is a DTR line that can be used for power management, and other "modem
-> >  control" lines.
-> >
-> >  On an embedded board, it is very likely that there is no "DTR", and
-> >  any power management need to be done using some completely separate
-> >  mechanism.
-> >
-> >  So these "slaves" are really just for devices permanently attached to
-> >  UARTs without a full "RS-232" (or similar) connection.  The driver
-> >  does all the extra control beyond Tx/Rx.
-> 
-> What is usually happening (and I have seen it in a few places) is that
-> the SoC has *one* fully featured RS232 with CTS/RTS and even
-> DTS,DCD,RI and other esoterica, which is intended to be connected to a
-> host serial port or so, for example if this SoC is to act as a modem
-> or a fax machine, or if it is to drive one.
-> 
-> Then they often have a few more UART blocks, usually identical, which
-> only have RxD+TxD available, so they are "just" UARTs.
-> 
-> To complicate things further, you may wonder what happened with
-> the CTS/RTS (etc) signals from the other blocks. Usually they are there
-> in the silicon but just routed to dead ends.
-> 
-> To complicate it even further, usually all these pins are placed under
-> pin control multiplexing, so in an actual electronic design, the
-> system will mux out CTS/RTS (etc) from the fully featured RS232
-> blocks and only use them as UARTs anyways.
-> 
-> Then there are those who created real simple RxD/TxD-only UARTs
-> ("yeah lets dump this RS232 legacy crap" / "yeah yeah")
-> and then realized they want to drive modems ("oh crap, it seemed
-> like a good idea at the time"). Then they usually take
-> two GPIO pins for CTS/RTS and drive them as GPIOs using
-> software and you have a cheap 4-line modem line. This is what
-> drivers/tty/serial/serial_mctrl_gpio.c is for if you wondered.
-> 
-> > I've tested this set and it seems to work ... except that something
-> >  is sadly broken with bluetooth support in 4.1-rc1 so I've only really
-> >  tested the GPS driver.  I guess it is time to rebase to -rc3.
-> 
-> You have a hardware taget I see. Which one?
+This type of binding description isn't preferred but I guess we've been
+supporting it all this time:
 
-GTA04 (www.gta04.org - openmoko successor).
+Acked-by: Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
 
-3 uarts on OMAP3 are wired: one as RS-232 for console, one to bluetooth
-half of a wifi/bluetooth module, and one to a GPS.
-
-For the GPS, I just want to power on/off when the TTY is opened/closed,
-but the power-on sequence is non-trivial as both "turn on" and
-"turn-off' toggle the same line, so I need to be able to detect current
-state.
-
-For the bluetooth, the power is a (shared) regulator.  As well as
-power-on when the TTY is opened, I'd like regulator to be turned of
-when I "hciconfig down" - even though the TTY is still open.
-I did a patch a while ago which hooked in to hci_uart_{open,close} to
-make this work, but it isn't a really good patch.
-
-It would be nice to hide the TTY from user-space in the bluetooth case,
-and have the "hciattach" happen in the kernel, but I think hciattach
-does extra initialisation...
-
-NeilBrown
+> ---
+> Ulf/Mike: please ACK this patch so I can take it through
+> ARM SoC.
+> ---
+>  Documentation/devicetree/bindings/clock/ux500.txt | 64 +++++++++++++++++++++++
+>  1 file changed, 64 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/clock/ux500.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/clock/ux500.txt b/Documentation/devicetree/bindings/clock/ux500.txt
+> new file mode 100644
+> index 000000000000..e52bd4b72348
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/clock/ux500.txt
+> @@ -0,0 +1,64 @@
+> +Clock bindings for ST-Ericsson Ux500 clocks
+> +
+> +Required properties :
+> +- compatible : shall contain only one of the following:
+> +  "stericsson,u8500-clks"
+> +  "stericsson,u8540-clks"
+> +  "stericsson,u9540-clks"
+> +- reg : shall contain base register location and length for
+> +  CLKRST1, 2, 3, 5, and 6 in an array. Note the absence of
+> +  CLKRST4, which does not exist.
+> +
+> +Required subnodes:
+> +- prcmu-clock: a subnode with one clock cell for PRCMU (power,
+> +  reset, control unit) clocks. The cell indicates which PRCMU
+> +  clock in the prcmu-clock node the consumer wants to use.
+> +- prcc-periph-clock: a subnode with two clock cells for
+> +  PRCC (programmable reset- and clock controller) peripheral clocks.
+> +  The first cell indicates which PRCC block the consumer
+> +  wants to use, possible values are 1, 2, 3, 5, 6. The second
+> +  cell indicates which clock inside the PRCC block it wants,
+> +  possible values are 0 thru 31.
+> +- prcc-kernel-clock: a subnode with two clock cells for
+> +  PRCC (programmable reset- and clock controller) kernel clocks
+> +  The first cell indicates which PRCC block the consumer
+> +  wants to use, possible values are 1, 2, 3, 5, 6. The second
+> +  cell indicates which clock inside the PRCC block it wants,
+> +  possible values are 0 thru 31.
+> +- rtc32k-clock: a subnode with zero clock cells for the 32kHz
+> +  RTC clock.
+> +- smp-twd-clock: a subnode for the ARM SMP Timer Watchdog cluster
+> +  with zero clock cells.
+> +
+> +Example:
+> +
+> +clocks {
+> +       compatible = "stericsson,u8500-clks";
+> +       /*
+> +        * Registers for the CLKRST block on peripheral
+> +        * groups 1, 2, 3, 5, 6,
+> +        */
+> +       reg = <0x8012f000 0x1000>, <0x8011f000 0x1000>,
+> +           <0x8000f000 0x1000>, <0xa03ff000 0x1000>,
+> +           <0xa03cf000 0x1000>;
+> +
+> +       prcmu_clk: prcmu-clock {
+> +               #clock-cells = <1>;
+> +       };
+> +
+> +       prcc_pclk: prcc-periph-clock {
+> +               #clock-cells = <2>;
+> +       };
+> +
+> +       prcc_kclk: prcc-kernel-clock {
+> +               #clock-cells = <2>;
+> +       };
+> +
+> +       rtc_clk: rtc32k-clock {
+> +               #clock-cells = <0>;
+> +       };
+> +
+> +       smp_twd_clk: smp-twd-clock {
+> +               #clock-cells = <0>;
+> +       };
+> +};
+> -- 
+> 2.4.3
+> 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
