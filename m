@@ -1,196 +1,459 @@
-From: Alexey Kardashevskiy <aik@ozlabs.ru>
-Subject: Re: [PATCH v6 10/42] powerpc/powernv: pnv_ioda_setup_dma() configure
- one PE only
-Date: Tue, 11 Aug 2015 12:39:02 +1000
-Message-ID: <55C96046.90102@ozlabs.ru>
-References: <1438834307-26960-1-git-send-email-gwshan@linux.vnet.ibm.com>
- <1438834307-26960-11-git-send-email-gwshan@linux.vnet.ibm.com>
- <55C86F5F.70603@ozlabs.ru> <20150811002949.GA16482@gwshan>
+From: Jisheng Zhang <jszhang@marvell.com>
+Subject: Re: [PATCH] arm64: dts: Add base stratix 10 dtsi
+Date: Tue, 11 Aug 2015 10:39:02 +0800
+Message-ID: <20150811103902.38cbcb6d@xhacker>
+References: <1439240958-4713-1-git-send-email-dinguyen@opensource.altera.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=koi8-r; format=flowed
+Content-Type: text/plain; charset="US-ASCII"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <20150811002949.GA16482@gwshan>
-Sender: linux-pci-owner@vger.kernel.org
-To: Gavin Shan <gwshan@linux.vnet.ibm.com>
-Cc: linuxppc-dev@lists.ozlabs.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, benh@kernel.crashing.org, mpe@ellerman.id.au, bhelgaas@google.com, grant.likely@linaro.org, robherring2@gmail.com, panto@antoniou-consulting.com
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1439240958-4713-1-git-send-email-dinguyen@opensource.altera.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: dinguyen@opensource.altera.com
+Cc: robh+dt@kernel.org, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, mark.rutland@arm.com, pawel.moll@arm.com, catalin.marinas@arm.com, will.deacon@arm.com, devicetree@vger.kernel.org, dinh.linux@gmail.com, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 08/11/2015 10:29 AM, Gavin Shan wrote:
-> On Mon, Aug 10, 2015 at 07:31:11PM +1000, Alexey Kardashevskiy wrote:
->> On 08/06/2015 02:11 PM, Gavin Shan wrote:
->>> The original implementation of pnv_ioda_setup_dma() iterates the
->>> list of PEs and configures the DMA32 space for them one by one.
->>> The function was designed to be called during PHB fixup time.
->>> When configuring PE's DMA32 space in pcibios_setup_bridge(), in
->>> order to support PCI hotplug, we have to have the function PE
->>> oriented.
->>>
->>> This renames pnv_ioda_setup_dma() to pnv_ioda1_setup_dma() and
->>> adds one more argument "struct pnv_ioda_pe *pe" to it. The caller,
->>> pnv_pci_ioda_setup_DMA(), gets PE from the list and passes to it
->>> or pnv_pci_ioda2_setup_dma_pe(). The patch shouldn't cause behavioral
->>> changes.
->>>
->>> Signed-off-by: Gavin Shan <gwshan@linux.vnet.ibm.com>
->>> ---
->>>   arch/powerpc/platforms/powernv/pci-ioda.c | 75 +++++++++++++++----------------
->>>   1 file changed, 36 insertions(+), 39 deletions(-)
->>>
->>> diff --git a/arch/powerpc/platforms/powernv/pci-ioda.c b/arch/powerpc/platforms/powernv/pci-ioda.c
->>> index 8456f37..cd22002 100644
->>> --- a/arch/powerpc/platforms/powernv/pci-ioda.c
->>> +++ b/arch/powerpc/platforms/powernv/pci-ioda.c
->>> @@ -2443,52 +2443,29 @@ static void pnv_pci_ioda2_setup_dma_pe(struct pnv_phb *phb,
->>>   		pnv_ioda_setup_bus_dma(pe, pe->pbus);
->>>   }
->>>
->>> -static void pnv_ioda_setup_dma(struct pnv_phb *phb)
->>> +static unsigned int pnv_ioda1_setup_dma(struct pnv_phb *phb,
->>> +					struct pnv_ioda_pe *pe,
->>> +					unsigned int base)
->>>   {
->>>   	struct pci_controller *hose = phb->hose;
->>> -	struct pnv_ioda_pe *pe;
->>> -	unsigned int dma_weight;
->>> +	unsigned int dma_weight, segs;
->>>
->>>   	/* Calculate the PHB's DMA weight */
->>>   	dma_weight = pnv_ioda_phb_dma_weight(phb);
->>>   	pr_info("PCI%04x has %ld DMA32 segments, total weight %d\n",
->>>   		hose->global_number, phb->ioda.dma32_segcount, dma_weight);
->>>
->>> -	pnv_pci_ioda_setup_opal_tce_kill(phb);
->>> -
->>> -	/* Walk our PE list and configure their DMA segments, hand them
->>> -	 * out one base segment plus any residual segments based on
->>> -	 * weight
->>> -	 */
->>> -	list_for_each_entry(pe, &phb->ioda.pe_dma_list, dma_link) {
->>> -		if (!pe->dma32_weight)
->>> -			continue;
->>> -
->>> -		/*
->>> -		 * For IODA2 compliant PHB3, we needn't care about the weight.
->>> -		 * The all available 32-bits DMA space will be assigned to
->>> -		 * the specific PE.
->>> -		 */
->>> -		if (phb->type == PNV_PHB_IODA1) {
->>> -			unsigned int segs, base = 0;
->>> -
->>> -			if (pe->dma32_weight <
->>> -			    dma_weight / phb->ioda.dma32_segcount)
->>> -				segs = 1;
->>> -			else
->>> -				segs = (pe->dma32_weight *
->>> -					phb->ioda.dma32_segcount) / dma_weight;
->>> -
->>> -			pe_info(pe, "DMA32 weight %d, assigned %d segments\n",
->>> -				pe->dma32_weight, segs);
->>> -			pnv_pci_ioda_setup_dma_pe(phb, pe, base, segs);
->>> +	if (pe->dma32_weight <
->>> +	    dma_weight / phb->ioda.dma32_segcount)
->>
->> Can be one line now.
->>
->
-> Indeed.
->
->>> +		segs = 1;
->>> +	else
->>> +		segs = (pe->dma32_weight *
->>> +			phb->ioda.dma32_segcount) / dma_weight;
->>> +	pe_info(pe, "DMA weight %d, assigned %d segments\n",
->>> +		pe->dma32_weight, segs);
->>> +	pnv_pci_ioda_setup_dma_pe(phb, pe, base, segs);
->>
->>
->> Why not to merge pnv_ioda1_setup_dma() to pnv_pci_ioda_setup_dma_pe()?
->>
->
-> There're two reasons:
-> - They're separate logically. One is calculating number of DMA32 segments required.
->    Another one is allocate TCE32 tables and configure devices with them.
-> - In PCI hotplug path, I need pnv_ioda1_setup_dma() which has "pe" as parameter.
+On Mon, 10 Aug 2015 16:09:18 -0500
+<dinguyen@opensource.altera.com> wrote:
 
+> From: Dinh Nguyen <dinguyen@opensource.altera.com>
+> 
+> Add the base DTS for Altera's SoCFPGA Stratix 10 platform.
+> 
+> Signed-off-by: Dinh Nguyen <dinguyen@opensource.altera.com>
+> ---
+>  arch/arm64/Kconfig                                 |   5 +
+>  arch/arm64/boot/dts/Makefile                       |   1 +
+>  arch/arm64/boot/dts/altera/Makefile                |   5 +
+>  arch/arm64/boot/dts/altera/socfpga_stratix10.dtsi  | 354 +++++++++++++++++++++
+>  .../boot/dts/altera/socfpga_stratix10_socdk.dts    |  38 +++
+>  arch/arm64/configs/defconfig                       |   1 +
+>  6 files changed, 404 insertions(+)
+>  create mode 100644 arch/arm64/boot/dts/altera/Makefile
+>  create mode 100644 arch/arm64/boot/dts/altera/socfpga_stratix10.dtsi
+>  create mode 100644 arch/arm64/boot/dts/altera/socfpga_stratix10_socdk.dts
+> 
+> diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
+> index 318175f..0f8ab2b 100644
+> --- a/arch/arm64/Kconfig
+> +++ b/arch/arm64/Kconfig
+> @@ -207,6 +207,11 @@ config ARCH_SEATTLE
+>  	help
+>  	  This enables support for AMD Seattle SOC Family
+>  
+> +config ARCH_STRATIX10
+> +	bool "Altera's Stratix 10 SoCFPGA Family"
+> +	help
+> +	  This enables support for Altera's Stratix 10 SoCFPGA Family
+> +
+>  config ARCH_TEGRA
+>  	bool "NVIDIA Tegra SoC Family"
+>  	select ARCH_HAS_RESET_CONTROLLER
+> diff --git a/arch/arm64/boot/dts/Makefile b/arch/arm64/boot/dts/Makefile
+> index 38913be..7fb421a 100644
+> --- a/arch/arm64/boot/dts/Makefile
+> +++ b/arch/arm64/boot/dts/Makefile
+> @@ -1,3 +1,4 @@
+> +dts-dirs += altera
+>  dts-dirs += amd
+>  dts-dirs += apm
+>  dts-dirs += arm
+> diff --git a/arch/arm64/boot/dts/altera/Makefile b/arch/arm64/boot/dts/altera/Makefile
+> new file mode 100644
+> index 0000000..d7a6416
+> --- /dev/null
+> +++ b/arch/arm64/boot/dts/altera/Makefile
+> @@ -0,0 +1,5 @@
+> +dtb-$(CONFIG_ARCH_STRATIX10) += socfpga_stratix10_socdk.dtb
+> +
+> +always		:= $(dtb-y)
+> +subdir-y	:= $(dts-dirs)
+> +clean-files	:= *.dtb
+> diff --git a/arch/arm64/boot/dts/altera/socfpga_stratix10.dtsi b/arch/arm64/boot/dts/altera/socfpga_stratix10.dtsi
+> new file mode 100644
+> index 0000000..34f6dc3
+> --- /dev/null
+> +++ b/arch/arm64/boot/dts/altera/socfpga_stratix10.dtsi
+> @@ -0,0 +1,354 @@
+> +/*
+> + * Copyright Altera Corporation (C) 2015. All rights reserved.
+> + *
+> + * This program is free software; you can redistribute it and/or modify
+> + * it under the terms and conditions of the GNU General Public License,
+> + * version 2, as published by the Free Software Foundation.
+> + *
+> + * This program is distributed in the hope it will be useful, but WITHOUT
+> + * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+> + * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
+> + * more details.
+> + *
+> + * You should have received a copy of the GNU General Public License along with
+> + * this program.  If not, see <http://www.gnu.org/licenses/>.
+> + */
+> +
+> +/dts-v1/;
+> +
+> +/ {
+> +	compatible = "altr,socfpga-stratix10";
+> +	#address-cells = <1>;
+> +	#size-cells = <1>;
+> +
+[...]
+> +
+> +	pmu {
+> +		compatible = "arm,armv8-pmuv3";
+> +		interrupts = <0 120 8>,
+> +			     <0 121 8>,
+> +			     <0 122 8>,
+> +			     <0 123 8>;
 
-And hotplug path does not care about dma weight why?
+it's better to add interrupt-affinity according to Sudeep's suggestions.
 
-
->
->>>
->>> -			base += segs;
->>> -		} else {
->>> -			pe_info(pe, "Assign DMA32 space\n");
->>> -			pnv_pci_ioda2_setup_dma_pe(phb, pe);
->>> -		}
->>> -	}
->>> +	return segs;
->>>   }
->>>
->>>   #ifdef CONFIG_PCI_MSI
->>> @@ -2955,12 +2932,32 @@ static void pnv_pci_ioda_setup_DMA(void)
->>>   {
->>>   	struct pci_controller *hose, *tmp;
->>>   	struct pnv_phb *phb;
->>> +	struct pnv_ioda_pe *pe;
->>> +	unsigned int base;
->>>
->>>   	list_for_each_entry_safe(hose, tmp, &hose_list, list_node) {
->>> -		pnv_ioda_setup_dma(hose->private_data);
->>> +		phb = hose->private_data;
->>> +		pnv_pci_ioda_setup_opal_tce_kill(phb);
->>> +
->>> +		base = 0;
->>> +		list_for_each_entry(pe, &phb->ioda.pe_dma_list, dma_link) {
->>> +			if (!pe->dma32_weight)
->>> +				continue;
->>> +
->>> +			switch (phb->type) {
->>> +			case PNV_PHB_IODA1:
->>> +				base += pnv_ioda1_setup_dma(phb, pe, base);
->>
->>
->> This @base handling seems never be tested between 8..11 as "[PATCH v6 11/42]
->> powerpc/powernv: Trace DMA32 segments consumed by PE"
->> removes it and I suspect you only tested the final version. Which is ok for
->> the final result but not ok for bisectability.
->>
->> Looks like 8/42, 9/42, 10/42, 11/42 need to be rearranged or merged to remove
->> this multiple @base touching.
->>
->
-> Why ?
-
-You are touching this @base from 8/42 to 11/12 and in between it is very 
-broken, you only get it fixed (by removing) in 11/42. Read my comment for 
-8/42. After every single patch in any patchset the functionality should not 
-break but it does in this patchset.
-
-
->
->>
->>> +				break;
->>> +			case PNV_PHB_IODA2:
->>> +				pnv_pci_ioda2_setup_dma_pe(phb, pe);
->>> +				break;
->>> +			default:
->>> +				pr_warn("%s: No DMA for PHB type %d\n",
->>> +					__func__, phb->type);
->>> +			}
->>> +		}
->>>
->>>   		/* Mark the PHB initialization done */
->>> -		phb = hose->private_data;
->>>   		phb->initialized = 1;
->>>   	}
->>>   }
->>>
->
-> Thanks,
-> Gavin
->
-
-
--- 
-Alexey
+> +	};
+> +
+> +	psci {
+> +		compatible = "arm,psci-0.2";
+> +		method = "smc";
+> +	};
+> +
+> +	intc: intc@ffff8000 {
+> +		compatible = "arm,gic-400", "arm,cortex-a15-gic";
+> +		#interrupt-cells = <3>;
+> +		interrupt-controller;
+> +		reg = <0x0 0xffff9000 0x1000>,
+> +		      <0x0 0xffffa000 0x2000>,
+> +		      <0x0 0xffffc000 0x1000>,
+> +		      <0x0 0xffffd000 0x1000>;
+> +	};
+> +
+> +	soc {
+> +		#address-cells = <1>;
+> +		#size-cells = <1>;
+> +		compatible = "simple-bus";
+> +		device_type = "soc";
+> +		interrupt-parent = <&intc>;
+> +		ranges;
+> +
+> +		clkmgr@ffd1000 {
+> +			compatible = "altr,clk-mgr";
+> +			reg = <0xffd10000 0x1000>;
+> +		};
+> +
+> +		gmac0: ethernet@ff800000 {
+> +			compatible = "altr,socfpga-stmmac", "snps,dwmac-3.74a", "snps,dwmac";
+> +			reg = <0xff800000 0x2000>;
+> +			interrupts = <0 90 4>;
+> +			interrupt-names = "macirq";
+> +			mac-address = [00 00 00 00 00 00];
+> +			status = "disabled";
+> +		};
+> +
+> +		gmac1: ethernet@ff802000 {
+> +			compatible = "altr,socfpga-stmmac", "snps,dwmac-3.74a", "snps,dwmac";
+> +			reg = <0xff802000 0x2000>;
+> +			interrupts = <0 91 4>;
+> +			interrupt-names = "macirq";
+> +			mac-address = [00 00 00 00 00 00];
+> +			status = "disabled";
+> +		};
+> +
+> +		gmac2: ethernet@ff804000 {
+> +			compatible = "altr,socfpga-stmmac", "snps,dwmac-3.74a", "snps,dwmac";
+> +			reg = <0xff804000 0x2000>;
+> +			interrupts = <0 92 4>;
+> +			interrupt-names = "macirq";
+> +			mac-address = [00 00 00 00 00 00];
+> +			status = "disabled";
+> +		};
+> +
+> +		gpio0: gpio@ffc03200 {
+> +			#address-cells = <1>;
+> +			#size-cells = <0>;
+> +			compatible = "snps,dw-apb-gpio";
+> +			reg = <0xffc03200 0x100>;
+> +			status = "disabled";
+> +
+> +			porta: gpio-controller@0 {
+> +				compatible = "snps,dw-apb-gpio-port";
+> +				gpio-controller;
+> +				#gpio-cells = <2>;
+> +				snps,nr-gpios = <24>;
+> +				reg = <0>;
+> +				interrupt-controller;
+> +				#interrupt-cells = <2>;
+> +				interrupts = <0 110 4>;
+> +			};
+> +		};
+> +
+> +		gpio1: gpio@ffc03300 {
+> +			#address-cells = <1>;
+> +			#size-cells = <0>;
+> +			compatible = "snps,dw-apb-gpio";
+> +			reg = <0xffc03300 0x100>;
+> +			status = "disabled";
+> +
+> +			portb: gpio-controller@0 {
+> +				compatible = "snps,dw-apb-gpio-port";
+> +				gpio-controller;
+> +				#gpio-cells = <2>;
+> +				snps,nr-gpios = <24>;
+> +				reg = <0>;
+> +				interrupt-controller;
+> +				#interrupt-cells = <2>;
+> +				interrupts = <0 110 4>;
+> +			};
+> +		};
+> +
+> +		i2c0: i2c@ffc02800 {
+> +			#address-cells = <1>;
+> +			#size-cells = <0>;
+> +			compatible = "snps,designware-i2c";
+> +			reg = <0xffc02800 0x100>;
+> +			interrupts = <0 103 4>;
+> +			status = "disabled";
+> +		};
+> +
+> +		i2c1: i2c@ffc02900 {
+> +			#address-cells = <1>;
+> +			#size-cells = <0>;
+> +			compatible = "snps,designware-i2c";
+> +			reg = <0xffc02900 0x100>;
+> +			interrupts = <0 104 4>;
+> +			status = "disabled";
+> +		};
+> +
+> +		i2c2: i2c@ffc02a00 {
+> +			#address-cells = <1>;
+> +			#size-cells = <0>;
+> +			compatible = "snps,designware-i2c";
+> +			reg = <0xffc02a00 0x100>;
+> +			interrupts = <0 105 4>;
+> +			status = "disabled";
+> +		};
+> +
+> +		i2c3: i2c@ffc02b00 {
+> +			#address-cells = <1>;
+> +			#size-cells = <0>;
+> +			compatible = "snps,designware-i2c";
+> +			reg = <0xffc02b00 0x100>;
+> +			interrupts = <0 106 4>;
+> +			status = "disabled";
+> +		};
+> +
+> +		i2c4: i2c@ffc02c00 {
+> +			#address-cells = <1>;
+> +			#size-cells = <0>;
+> +			compatible = "snps,designware-i2c";
+> +			reg = <0xffc02c00 0x100>;
+> +			interrupts = <0 107 4>;
+> +			status = "disabled";
+> +		};
+> +
+> +		mmc: dwmmc0@ff808000 {
+> +			#address-cells = <1>;
+> +			#size-cells = <0>;
+> +			compatible = "altr,socfpga-dw-mshc";
+> +			reg = <0xff808000 0x1000>;
+> +			interrupts = <0 96 4>;
+> +			fifo-depth = <0x400>;
+> +			status = "disabled";
+> +		};
+> +
+> +		ocram: sram@ffe00000 {
+> +			compatible = "mmio-sram";
+> +			reg = <0xffe00000 0x100000>;
+> +		};
+> +
+> +		rst: rstmgr@ffd11000 {
+> +			#reset-cells = <1>;
+> +			compatible = "altr,rst-mgr";
+> +			reg = <0xffd11000 0x1000>;
+> +		};
+> +
+> +		spi0: spi@ffda4000 {
+> +			compatible = "snps,dw-apb-ssi";
+> +			#address-cells = <1>;
+> +			#size-cells = <0>;
+> +			reg = <0xffda4000 0x1000>;
+> +			interrupts = <0 101 4>;
+> +			num-chipselect = <4>;
+> +			bus-num = <0>;
+> +			status = "disabled";
+> +		};
+> +
+> +		spi1: spi@ffda5000 {
+> +			compatible = "snps,dw-apb-ssi";
+> +			#address-cells = <1>;
+> +			#size-cells = <0>;
+> +			reg = <0xffda5000 0x1000>;
+> +			interrupts = <0 102 4>;
+> +			num-chipselect = <4>;
+> +			bus-num = <0>;
+> +			status = "disabled";
+> +		};
+> +
+> +		sysmgr: sysmgr@ffd12000 {
+> +			compatible = "altr,sys-mgr", "syscon";
+> +			reg = <0xffd12000 0x1000>;
+> +		};
+> +
+> +		/* Local timer */
+> +		timer {
+> +			compatible = "arm,armv8-timer";
+> +			interrupts = <1 13 0xf01>,
+> +				     <1 14 0xf01>,
+> +				     <1 11 0xf01>,
+> +				     <1 10 0xf01>;
+> +		};
+> +
+> +		timer0: timer0@ffc03000 {
+> +			compatible = "snps,dw-apb-timer";
+> +			interrupts = <0 113 4>;
+> +			reg = <0xffc03000 0x100>;
+> +		};
+> +
+> +		timer1: timer1@ffc03100 {
+> +			compatible = "snps,dw-apb-timer";
+> +			interrupts = <0 114 4>;
+> +			reg = <0xffc03100 0x100>;
+> +		};
+> +
+> +		timer2: timer2@ffd00000 {
+> +			compatible = "snps,dw-apb-timer";
+> +			interrupts = <0 115 4>;
+> +			reg = <0xffd00000 0x100>;
+> +		};
+> +
+> +		timer3: timer3@ffd00100 {
+> +			compatible = "snps,dw-apb-timer";
+> +			interrupts = <0 116 4>;
+> +			reg = <0xffd00100 0x100>;
+> +		};
+> +
+> +		uart0: serial0@ffc02000 {
+> +			compatible = "snps,dw-apb-uart";
+> +			reg = <0xffc02000 0x100>;
+> +			interrupts = <0 108 4>;
+> +			reg-shift = <2>;
+> +			reg-io-width = <4>;
+> +			status = "disabled";
+> +		};
+> +
+> +		uart1: serial1@ffc02100 {
+> +			compatible = "snps,dw-apb-uart";
+> +			reg = <0xffc02100 0x100>;
+> +			interrupts = <0 109 4>;
+> +			reg-shift = <2>;
+> +			reg-io-width = <4>;
+> +			status = "disabled";
+> +		};
+> +
+> +		usbphy0: usbphy@0 {
+> +			#phy-cells = <0>;
+> +			compatible = "usb-nop-xceiv";
+> +			status = "okay";
+> +		};
+> +
+> +		usb0: usb@ffb00000 {
+> +			compatible = "snps,dwc2";
+> +			reg = <0xffb00000 0x40000>;
+> +			interrupts = <0 93 4>;
+> +			phys = <&usbphy0>;
+> +			phy-names = "usb2-phy";
+> +			status = "disabled";
+> +		};
+> +
+> +		usb1: usb@ffb40000 {
+> +			compatible = "snps,dwc2";
+> +			reg = <0xffb40000 0x40000>;
+> +			interrupts = <0 94 4>;
+> +			phys = <&usbphy0>;
+> +			phy-names = "usb2-phy";
+> +			status = "disabled";
+> +		};
+> +
+> +		watchdog0: watchdog@ffd00200 {
+> +			compatible = "snps,dw-wdt";
+> +			reg = <0xffd00200 0x100>;
+> +			interrupts = <0 117 4>;
+> +			status = "disabled";
+> +		};
+> +
+> +		watchdog1: watchdog@ffd00300 {
+> +			compatible = "snps,dw-wdt";
+> +			reg = <0xffd00300 0x100>;
+> +			interrupts = <0 118 4>;
+> +			status = "disabled";
+> +		};
+> +
+> +		watchdog2: watchdog@ffd00400 {
+> +			compatible = "snps,dw-wdt";
+> +			reg = <0xffd00400 0x100>;
+> +			interrupts = <0 125 4>;
+> +			status = "disabled";
+> +		};
+> +
+> +		watchdog3: watchdog@ffd00500 {
+> +			compatible = "snps,dw-wdt";
+> +			reg = <0xffd00500 0x100>;
+> +			interrupts = <0 126 4>;
+> +			status = "disabled";
+> +		};
+> +	};
+> +};
+> diff --git a/arch/arm64/boot/dts/altera/socfpga_stratix10_socdk.dts b/arch/arm64/boot/dts/altera/socfpga_stratix10_socdk.dts
+> new file mode 100644
+> index 0000000..8b162ef
+> --- /dev/null
+> +++ b/arch/arm64/boot/dts/altera/socfpga_stratix10_socdk.dts
+> @@ -0,0 +1,38 @@
+> +/*
+> + * Copyright Altera Corporation (C) 2015. All rights reserved.
+> + *
+> + * This program is free software; you can redistribute it and/or modify
+> + * it under the terms and conditions of the GNU General Public License,
+> + * version 2, as published by the Free Software Foundation.
+> + *
+> + * This program is distributed in the hope it will be useful, but WITHOUT
+> + * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+> + * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
+> + * more details.
+> + *
+> + * You should have received a copy of the GNU General Public License along with
+> + * this program.  If not, see <http://www.gnu.org/licenses/>.
+> + */
+> +
+> +/include/ "socfpga_stratix10.dtsi"
+> +
+> +/ {
+> +	model = "SoCFPGA Stratix 10 SoCDK";
+> +
+> +	aliases {
+> +		serial0 = &uart0;
+> +	};
+> +
+> +	chosen {
+> +		stdout-path = "serial0:115200n8";
+> +	};
+> +
+> +	memory {
+> +		device_type = "memory";
+> +		reg = <0x0 0x40000000>;
+> +	};
+> +};
+> +
+> +&uart0 {
+> +	status = "okay";
+> +};
+> diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
+> index 4e17e7e..ad3b636 100644
+> --- a/arch/arm64/configs/defconfig
+> +++ b/arch/arm64/configs/defconfig
+> @@ -36,6 +36,7 @@ CONFIG_ARCH_FSL_LS2085A=y
+>  CONFIG_ARCH_HISI=y
+>  CONFIG_ARCH_MEDIATEK=y
+>  CONFIG_ARCH_SEATTLE=y
+> +CONFIG_ARCH_STRATIX10=y
+>  CONFIG_ARCH_TEGRA=y
+>  CONFIG_ARCH_TEGRA_132_SOC=y
+>  CONFIG_ARCH_QCOM=y
