@@ -1,44 +1,101 @@
-From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Subject: Re: [PATCH v3 01/11] dm: serial: Update binding for PL01x serial
- UART
-Date: Mon, 10 Aug 2015 22:24:11 -0600
-Message-ID: <55C978EB.8090104@wwwdotorg.org>
-References: <1438954951-13329-1-git-send-email-sjg@chromium.org> <1438954951-13329-2-git-send-email-sjg@chromium.org> <55C972BA.5050706@wwwdotorg.org> <CAPnjgZ2XdOPGMfAPHGy4c7vuc+exrirXkZ5DF+wHKGmAPg8ZjA@mail.gmail.com>
+From: Daniel Kurtz <djkurtz@chromium.org>
+Subject: Re: [PATCH v7 0/9] Fixes and new clocks support for Mediatek MT8173
+Date: Tue, 11 Aug 2015 12:43:25 +0800
+Message-ID: <CAGS+omCya_0djzoVGhJchmaTtzo2z+JdnJHDjLipNMsZKV=MLQ@mail.gmail.com>
+References: <1439200228-318-1-git-send-email-jamesjj.liao@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAPnjgZ2XdOPGMfAPHGy4c7vuc+exrirXkZ5DF+wHKGmAPg8ZjA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Cc: U-Boot Mailing List <u-boot-0aAXYlwwYIKGBzrmiIFOJg@public.gmane.org>, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Joe Hershberger <joe.hershberger-acOepvfBmUk@public.gmane.org>, Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>, Devicetree Discuss <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Marek Vasut <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Pavel Herrmann <morpheus.ibis-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Vikas Manocha <vikas.manocha-qxv4g6HH51o@public.gmane.org>, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1439200228-318-1-git-send-email-jamesjj.liao@mediatek.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: James Liao <jamesjj.liao@mediatek.com>
+Cc: Matthias Brugger <matthias.bgg@gmail.com>, Mike Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Heiko Stubner <heiko@sntech.de>, srv_heupstream <srv_heupstream@mediatek.com>, Ricky Liang <jcliang@chromium.org>, Rob Herring <robh+dt@kernel.org>, Sascha Hauer <kernel@pengutronix.de>, "open list:OPEN FIRMWARE AND..." <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-mediatek@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 08/10/2015 10:11 PM, Simon Glass wrote:
-> HI Stephen,
-> 
-> On 10 August 2015 at 21:57, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org> wrote:
->> On 08/07/2015 07:42 AM, Simon Glass wrote:
->>> This binding differs from that of Linux. Update it and change existing
->>> users.
->>
->> Is that meant to imply that this patch fixes the copy of the binding doc
->> in U-Boot so it does match the kernel's copy?
->>
->>> Changes in v3:
->>> - Rename binding file to pl01x.txt
->>
->> The file is named pl011.txt in the kernel. Shouldn't U-Boot's copy be
->> named the same?
-> 
-> In the previous discussion a reviewed asked for this change, since it
-> covers both drivers.
+Hi James,
 
-I think it's more important to match the DT docs in the Linux kernel
-since they are a shared resource, and should eventually be split off
-into a separate project at some point, forking from whatever Linux has
-at that time.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+On Mon, Aug 10, 2015 at 5:50 PM, James Liao <jamesjj.liao@mediatek.com> wrote:
+> This patchset is based on 4.2-rc2 and [1], and contains minor fixes and
+> subsystem clocks support for Mediatek MT8173.
+>
+> The previous reviews can be found in [2].
+>
+> changes since v6:
+> - Use DUMMY_RATE (0) instead of typical rate for clocks that we don't care
+>   and not controlled in CCF.
+
+For the whole series:
+Reviewed-by: Daniel Kurtz <djkurtz@chromium.org>
+
+>
+> changes since v5:
+> - Rebase to 4.2-rc2.
+> - Patch "Fix enabling of critical clocks" had been included in 4.2-rc2,
+>   so it need not be included in this patchset.
+>
+> changes since v4:
+> - Add a separated patch to remove unused dpi_ck.
+> - Add separated patches to fix clk/mediatek in release 4.2-rc1.
+> - Add __init* for initialization data and functions.
+> - Rename dummy_clk with oscillator in DT.
+> - Remove mtk_clk_register_apmixed_ex(), call mtk_clk_register_ref2usb_tx()
+>   directly to register USB clock.
+>
+> changes since v3:
+> - Remove clk_null dependency from root clocks.
+> - Use fixed-rate clocks with typical rate to replace clk_null.
+> - Separate ref2usb_tx implementation to clk-apmixed.c
+> - Use clock-controller as the name of clock providers.
+>
+> changes since v2:
+> - Rebase to 4.2-rc1.
+> - Add device tree nodes for subsystem clocks.
+> - Fine tune comments of patches.
+> - Add __init, __initconst and const to init data and functions.
+> - Removed unused code from init functions of subsystem clocks.
+>
+> changes since v1:
+> - Add CA7PLL and CA15PLL as critical clocks.
+> - Use the same register descriptor for imgsys, vensys and vencltsys.
+> - Generalize apmixedsys special clocks registration.
+>
+> [1] https://patchwork.kernel.org/patch/6446341/
+> [2] https://lkml.org/lkml/2015/8/4/111
+>
+> James Liao (9):
+>   clk: mediatek: Removed unused dpi_ck clock from MT8173
+>   clk: mediatek: Remove unused code from MT8173.
+>   clk: mediatek: Add __initdata and __init for data and functions
+>   clk: mediatek: Add fixed clocks support for Mediatek SoC.
+>   clk: mediatek: Fix rate and dependency of MT8173 clocks
+>   dt-bindings: ARM: Mediatek: Document devicetree bindings for clock
+>     controllers
+>   clk: mediatek: Add subsystem clocks of MT8173
+>   clk: mediatek: Add USB clock support in MT8173 APMIXEDSYS
+>   arm64: dts: mt8173: Add subsystem clock controller device nodes
+>
+>  .../bindings/arm/mediatek/mediatek,imgsys.txt      |  22 ++
+>  .../bindings/arm/mediatek/mediatek,mmsys.txt       |  22 ++
+>  .../bindings/arm/mediatek/mediatek,vdecsys.txt     |  22 ++
+>  .../bindings/arm/mediatek/mediatek,vencltsys.txt   |  22 ++
+>  .../bindings/arm/mediatek/mediatek,vencsys.txt     |  22 ++
+>  arch/arm64/boot/dts/mediatek/mt8173.dtsi           |  37 +++
+>  drivers/clk/mediatek/Makefile                      |   2 +-
+>  drivers/clk/mediatek/clk-apmixed.c                 | 107 +++++++
+>  drivers/clk/mediatek/clk-gate.c                    |   2 +-
+>  drivers/clk/mediatek/clk-mt8173.c                  | 342 ++++++++++++++++++++-
+>  drivers/clk/mediatek/clk-mtk.c                     |  36 ++-
+>  drivers/clk/mediatek/clk-mtk.h                     |  24 +-
+>  drivers/clk/mediatek/clk-pll.c                     |   7 +-
+>  include/dt-bindings/clock/mt8173-clk.h             | 101 +++++-
+>  14 files changed, 735 insertions(+), 33 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/arm/mediatek/mediatek,imgsys.txt
+>  create mode 100644 Documentation/devicetree/bindings/arm/mediatek/mediatek,mmsys.txt
+>  create mode 100644 Documentation/devicetree/bindings/arm/mediatek/mediatek,vdecsys.txt
+>  create mode 100644 Documentation/devicetree/bindings/arm/mediatek/mediatek,vencltsys.txt
+>  create mode 100644 Documentation/devicetree/bindings/arm/mediatek/mediatek,vencsys.txt
+>  create mode 100644 drivers/clk/mediatek/clk-apmixed.c
+>
+> --
+> 1.8.1.1.dirty
+>
