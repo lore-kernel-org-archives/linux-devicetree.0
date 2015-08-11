@@ -1,45 +1,55 @@
-From: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
-Subject: [PATCH] of/configfs: Use %zu to format size_t
-Date: Tue, 11 Aug 2015 14:44:28 +0200
-Message-ID: <1439297068-28709-1-git-send-email-geert+renesas@glider.be>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+From: Tony Lindgren <tony@atomide.com>
+Subject: Re: [PATCH v2 00/22] memory: omap-gpmc: mtd: nand: Support GPMC NAND
+ on non-OMAP platforms
+Date: Tue, 11 Aug 2015 05:48:29 -0700
+Message-ID: <20150811124829.GM4215@atomide.com>
+References: <1438938752-31010-1-git-send-email-rogerq@ti.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1438938752-31010-1-git-send-email-rogerq@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Roger Quadros <rogerq@ti.com>
+Cc: dwmw2@infradead.org, computersforpeace@gmail.com, ezequiel@vanguardiasur.com.ar, javier@dowhile0.org, fcooper@ti.com, nsekhar@ti.com, linux-mtd@lists.infradead.org, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 64-bit:
+* Roger Quadros <rogerq@ti.com> [150807 02:15]:
+> Hi,
+> 
+> We do a couple of things in this series which result in
+> cleaner device tree implementation, faster perfomance and
+> multi-platform support. As an added bonus we get new GPI/Interrupt pins
+> for use in the system.
+> 
+> - Establish a custom interface between NAND and GPMC driver. This is
+> needed because all of the NAND registers sit in the GPMC register space.
+> Some bits like NAND IRQ are even shared with GPMC.
+> 
+> - Remove NAND IRQ handling from omap-gpmc driver, share the GPMC IRQ
+> with the omap2-nand driver and handle NAND IRQ events in the NAND driver.
+> This causes performance increase when using prefetch-irq mode.
+> 30% increase in read, 17% increase in write in prefetch-irq mode.
+> 
+> - Clean up device tree support so that omap-gpmc IP and the omap2 NAND
+> driver can be used on non-OMAP platforms. e.g. Keystone.
+> 
+> - Implement GPIOCHIP + IRQCHIP for the GPMC WAITPINS. SoCs can contain
+> 2 to 4 of these and most of them would be unused otherwise. It also
+> allows a cleaner implementation of NAND Ready pin status for the NAND driver.
+> 
+> - Implement GPIOlib based NAND ready pin checking for OMAP NAND driver.
 
-    drivers/of/configfs.c: In function 'cfs_overlay_item_dtbo_read':
-    drivers/of/configfs.c:168:2: warning: format '%u' expects argument of type 'unsigned int', but argument 4 has type 'size_t' [-Wformat=]
-      pr_debug("%s: buf=%p max_count=%u\n", __func__,
-      ^
-
-Signed-off-by: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
----
-This is against "OF: DT-Overlay configfs interface (v4)", but it should
-apply to "OF: DT-Overlay configfs interface (v5)", too.
----
- drivers/of/configfs.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/of/configfs.c b/drivers/of/configfs.c
-index 056191e238eb2772..7fd29d9dfdd1934b 100644
---- a/drivers/of/configfs.c
-+++ b/drivers/of/configfs.c
-@@ -165,7 +165,7 @@ static struct configfs_attribute *cfs_overlay_attrs[] = {
- ssize_t cfs_overlay_item_dtbo_read(struct cfs_overlay_item *overlay,
- 		void *buf, size_t max_count)
- {
--	pr_debug("%s: buf=%p max_count=%u\n", __func__,
-+	pr_debug("%s: buf=%p max_count=%zu\n", __func__,
- 			buf, max_count);
+Nice job :) Using GPIOCHIP + IRQCHIP allows us to make the GPMC
+using drivers pretty much generic eventually.
  
- 	if (overlay->dtbo == NULL)
--- 
-1.9.1
+> NOTE: I've only adapted dra7.dtsi and dra7x-evms for this series.
+> I will adapt all other boards when the series is in a shape to be accepted.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+OK. Yeah let's make sure no regressions are caused by this.. We also
+still have the omap3 legacy booting around, have you checked that it
+keeps on working?
+
+Regards,
+
+Tony
