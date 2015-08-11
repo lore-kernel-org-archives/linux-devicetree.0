@@ -1,48 +1,121 @@
-From: Benjamin Gaignard <benjamin.gaignard-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: [PATCH] enable HQVDP for stih410 platform
-Date: Tue, 11 Aug 2015 17:12:44 +0200
-Message-ID: <1439305964-15641-1-git-send-email-benjamin.gaignard@linaro.org>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, maxime.coquelin-qxv4g6HH51o@public.gmane.org, vincent.abriou-qxv4g6HH51o@public.gmane.org
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH v4 2/2] dt: power: st: Provide bindings for ST's OPPs
+Date: Tue, 11 Aug 2015 16:17:36 +0100
+Message-ID: <20150811151736.GO18282@x1>
+References: <20150731163715.GV3159@codeaurora.org>
+ <20150803034642.GV899@linux>
+ <20150810132247.GH3249@x1>
+ <20150811080023.GB5509@linux>
+ <20150811093039.GA18282@x1>
+ <20150811100941.GG5509@linux>
+ <20150811115425.GE18282@x1>
+ <20150811120124.GH5509@linux>
+ <20150811132756.GG18282@x1>
+ <20150811142812.GJ5509@linux>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-pm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20150811142812.GJ5509@linux>
+Sender: linux-pm-owner@vger.kernel.org
+To: Viresh Kumar <viresh.kumar@linaro.org>
+Cc: Stephen Boyd <sboyd@codeaurora.org>, Rob Herring <robherring2@gmail.com>, Nishanth Menon <nm@ti.com>, kernel@stlinux.com, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, Rafael Wysocki <rjw@rjwysocki.net>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Sebastian Reichel <sre@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Arnd Bergmann <arnd.bergmann@linaro.org>, Ajit Pal Singh <ajitpal.singh@st.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Vincent Abriou <vincent.abriou-qxv4g6HH51o@public.gmane.org>
+On Tue, 11 Aug 2015, Viresh Kumar wrote:
+> On 11-08-15, 14:27, Lee Jones wrote:
+> > Okay, so what you're saying is that you've already made the decisio=
+n
+> > to create a separate node for every OPP permutation,
+>=20
+> Absolutely not.
+>=20
+> > despite the fact
+> > that I've told you this could lead to more nodes than anyone would
+> > care to successfully write or maintain?
+>=20
+> I have enough fear of yours and then I have to see you in another
+> month as well. I wouldn't dare to disobey your command SIR :)
 
-Add HQVDP in stih410 devicetree to enable it.
-HQVDP bindings have been describe in
-Documentation/devicetree/bindings/gpu/st,stih4xx.txt file.
+=46unny guy! ;)
 
-Signed-off-by: Vincent Abriou <vincent.abriou-qxv4g6HH51o@public.gmane.org>
----
- arch/arm/boot/dts/stih410.dtsi | 10 ++++++++++
- 1 file changed, 10 insertions(+)
+> > Perhaps an example might help explain the issue.
+> >=20
+> > Using the current driver, we need to place the following in DT and =
+the
+> > driver does the rest:
+> >=20
+> > opp-list {
+> > 	opp1 {
+> > 		opp-hz =3D <1500000000>;
+> > 		st,avs =3D <1200 1200 1200 1200 1170 1140 1100 1070>;
+> > 		st,substrate =3D <0xff>;
+> > 		st,cuts =3D <0xff>;
+> > 	};
+> > 	opp0 {
+> > 		opp-hz =3D <1200000000>;
+> > 		st,avs =3D <1110 1150 1100 1080 1040 1020 980 930>;
+> > 		st,substrate =3D <0xff>;
+> > 		st,cuts =3D <0x2>;
+> > 	};
+> > };
+>=20
+> Nothing is fixed as of now but this is what I am thinking of:
+>=20
+> 	cpu0_opp_table: opp_table0 {
+> 		compatible =3D "operating-points-v2";
+>                 opp-cuts =3D "10", "3c", "f0";
+> 		supply-names =3D "vcc0", "vcc1", "vcc2";
+> 		opp-shared;
+>=20
+> 		opp00 {
+> 			opp-hz =3D /bits/ 64 <1000000000>;
+> 			clock-latency-ns =3D <300000>;
+> 			opp-microvolt-10 =3D <970000>;
+> 			opp-microvolt-3c =3D <950000>;
+> 			opp-microvolt-f0 =3D <930000>;
+> 		};
+>=20
+> 		/* OR */
+>=20
+> 		opp00 {
+> 			opp-hz =3D /bits/ 64 <1000000000>;
+> 			clock-latency-ns =3D <300000>;
+>                         opp-microvolt =3D <970000>, <950000>, <930000=
+>;
+> 		};
+>         };
+>=20
+> And then the platform code needs to tell OPP layer:
+> "Use OPPs for cut f0 for device X", and OPP layer will store that
+> somewhere.
+>=20
+> And then it will only initialize OPPs after matching this string with
+> the values.
+>=20
+> Out of the earlier two options, I may prefer the first one. As we wil=
+l
+> be soon adding support for multiple regulators, and a single regulato=
+r
+> can have min/max/target values.. So, a single list will become too
+> long.
 
-diff --git a/arch/arm/boot/dts/stih410.dtsi b/arch/arm/boot/dts/stih410.dtsi
-index 6620bba..33cc933 100644
---- a/arch/arm/boot/dts/stih410.dtsi
-+++ b/arch/arm/boot/dts/stih410.dtsi
-@@ -163,6 +163,16 @@
- 				st,vtg = <&vtg_main>, <&vtg_aux>;
- 			};
- 
-+			sti-hqvdp@9c000000 {
-+				compatible = "st,stih407-hqvdp";
-+				reg = <0x9C00000 0x100000>;
-+				clock-names = "hqvdp", "pix_main";
-+				clocks = <&clk_s_c0_flexgen CLK_MAIN_DISP>, <&clk_s_d2_flexgen CLK_PIX_MAIN_DISP>;
-+				reset-names = "hqvdp";
-+				resets = <&softreset STIH407_HDQVDP_SOFTRESET>;
-+				st,vtg = <&vtg_main>;
-+			};
-+
- 			sti-tvout@8d08000 {
- 				compatible = "st,stih407-tvout";
- 				reg = <0x8d08000 0x1000>;
--- 
-1.9.1
+This would work if we only had a single variable to contend with, but
+what I showed you in my previous example is that we have 3 variables
+to consider; cut (version), pcode and substrate.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Using the two (simple) examples I provided, how would your suggestion
+look in our case?
+
+> But, something like this should be generic enough to capture most of
+> the cases.
+>=20
+> @Stephen/Rob ??
+>=20
+
+--=20
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org =E2=94=82 Open source software for ARM SoCs
+=46ollow Linaro: Facebook | Twitter | Blog
