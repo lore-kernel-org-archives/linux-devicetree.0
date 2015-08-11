@@ -1,42 +1,37 @@
-From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH v2 3/6] ARM: AM43xx: Introduce a separate soc_is function
- for am438x series of SoCs
-Date: Tue, 11 Aug 2015 05:55:15 -0700
-Message-ID: <20150811125515.GN4215@atomide.com>
-References: <1439198906-31189-1-git-send-email-j-keerthy@ti.com>
- <1439198906-31189-4-git-send-email-j-keerthy@ti.com>
+From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v3 01/11] dm: serial: Update binding for PL01x serial UART
+Date: Tue, 11 Aug 2015 15:00:13 +0200
+Message-ID: <CACRpkdZa2O1MqCVT8q2P0u0ciXK+6HFbQQGXB_-chimg=FbzQg@mail.gmail.com>
+References: <1438954951-13329-1-git-send-email-sjg@chromium.org>
+	<1438954951-13329-2-git-send-email-sjg@chromium.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1439198906-31189-4-git-send-email-j-keerthy-l0cyMroinI0@public.gmane.org>
+In-Reply-To: <1438954951-13329-2-git-send-email-sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Keerthy <j-keerthy-l0cyMroinI0@public.gmane.org>
-Cc: linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, paul-DWxLp4Yu+b8AvxtiuMwx3w@public.gmane.org, alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org, johan-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, grygorii.strashko-l0cyMroinI0@public.gmane.org, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, nm-l0cyMroinI0@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, t-kristo-l0cyMroinI0@public.gmane.org
+To: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: U-Boot Mailing List <u-boot-0aAXYlwwYIKGBzrmiIFOJg@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Joe Hershberger <joe.hershberger-acOepvfBmUk@public.gmane.org>, Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Marek Vasut <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Pavel Herrmann <morpheus.ibis-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Vikas Manocha <vikas.manocha-qxv4g6HH51o@public.gmane.org>, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-* Keerthy <j-keerthy-l0cyMroinI0@public.gmane.org> [150810 02:31]:
-> @@ -371,8 +372,10 @@ IS_OMAP_TYPE(3430, 0x3430)
->  #ifdef	CONFIG_SOC_AM43XX
->  # undef soc_is_am43xx
->  # undef soc_is_am437x
-> -# define soc_is_am43xx()		is_am43xx()
-> -# define soc_is_am437x()		is_am437x()
-> +# undef soc_is_am438x
-> +# define soc_is_am43xx()		of_machine_is_compatible("ti,am43")
-> +# define soc_is_am437x()		of_machine_is_compatible("ti,am4372")
-> +# define soc_is_am438x()		of_machine_is_compatible("ti,am438x")
->  #endif
+On Fri, Aug 7, 2015 at 3:42 PM, Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org> wrote:
 
-Hmm didn't I already comment on this change? I don't want to do it
-for one SoC. Please add the SoC detection the old way for am43xx,
-then do another series that changes all the DT only SoCs to use
-of_machine_is_compatible() after it's been properly tested so now
-regressions are caused for the early init code.
+> This binding differs from that of Linux. Update it and change existing
+> users.
+>
+> Signed-off-by: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+(...)
+>  doc/device-tree-bindings/serial/pl01x.txt | 55 ++++++++++++++++++++++++++++---
 
-Regards,
+So why does U-Boot have its own copy of any bindings at all?
 
-Tony
+This is forking the ontology of who gets to define bindings I fear.
+It's a bit like have two bibles both claiming to be the word of god.
+(OK maybe a hyperbolic statement, but you see what I mean.)
+
+Can't we just have the bindings in the Linux kernel tree please?
+
+Yours,
+Linus Walleij
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
