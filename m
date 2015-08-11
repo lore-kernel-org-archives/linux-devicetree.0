@@ -1,459 +1,130 @@
-From: Jisheng Zhang <jszhang@marvell.com>
-Subject: Re: [PATCH] arm64: dts: Add base stratix 10 dtsi
-Date: Tue, 11 Aug 2015 10:39:02 +0800
-Message-ID: <20150811103902.38cbcb6d@xhacker>
-References: <1439240958-4713-1-git-send-email-dinguyen@opensource.altera.com>
+From: Alexey Kardashevskiy <aik@ozlabs.ru>
+Subject: Re: [PATCH v6 12/42] powerpc/powernv: Increase PE# capacity
+Date: Tue, 11 Aug 2015 12:47:25 +1000
+Message-ID: <55C9623D.6070409@ozlabs.ru>
+References: <1438834307-26960-1-git-send-email-gwshan@linux.vnet.ibm.com>
+ <1438834307-26960-13-git-send-email-gwshan@linux.vnet.ibm.com>
+ <55C8747E.9090908@ozlabs.ru> <20150811003804.GA18283@gwshan>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
+Content-Type: text/plain; charset=koi8-r; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1439240958-4713-1-git-send-email-dinguyen@opensource.altera.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: dinguyen@opensource.altera.com
-Cc: robh+dt@kernel.org, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, mark.rutland@arm.com, pawel.moll@arm.com, catalin.marinas@arm.com, will.deacon@arm.com, devicetree@vger.kernel.org, dinh.linux@gmail.com, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <20150811003804.GA18283@gwshan>
+Sender: linux-pci-owner@vger.kernel.org
+To: Gavin Shan <gwshan@linux.vnet.ibm.com>
+Cc: linuxppc-dev@lists.ozlabs.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, benh@kernel.crashing.org, mpe@ellerman.id.au, bhelgaas@google.com, grant.likely@linaro.org, robherring2@gmail.com, panto@antoniou-consulting.com
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 10 Aug 2015 16:09:18 -0500
-<dinguyen@opensource.altera.com> wrote:
+On 08/11/2015 10:38 AM, Gavin Shan wrote:
+> On Mon, Aug 10, 2015 at 07:53:02PM +1000, Alexey Kardashevskiy wrote:
+>> On 08/06/2015 02:11 PM, Gavin Shan wrote:
+>>> Each PHB maintains an array helping to translate RID (Request
+>>> ID) to PE# with the assumption that PE# takes 8 bits, indicating
+>>> that we can't have more than 256 PEs. However, pci_dn->pe_number
+>>> already had 4-bytes for the PE#.
+>>>
+>>> The patch extends the PE# capacity so that each of them will be
+>>> 4-bytes long. Then we can use IODA_INVALID_PE to check one entry
+>>> in phb->pe_rmap[] is valid or not.
+>>>
+>>> Signed-off-by: Gavin Shan <gwshan@linux.vnet.ibm.com>
+>>> ---
+>>>   arch/powerpc/platforms/powernv/pci-ioda.c | 8 ++++++--
+>>>   arch/powerpc/platforms/powernv/pci.h      | 7 +++----
+>>>   2 files changed, 9 insertions(+), 6 deletions(-)
+>>>
+>>> diff --git a/arch/powerpc/platforms/powernv/pci-ioda.c b/arch/powerpc/platforms/powernv/pci-ioda.c
+>>> index 57ba8fd..3094c61 100644
+>>> --- a/arch/powerpc/platforms/powernv/pci-ioda.c
+>>> +++ b/arch/powerpc/platforms/powernv/pci-ioda.c
+>>> @@ -786,7 +786,7 @@ static int pnv_ioda_deconfigure_pe(struct pnv_phb *phb, struct pnv_ioda_pe *pe)
+>>>
+>>>   	/* Clear the reverse map */
+>>>   	for (rid = pe->rid; rid < rid_end; rid++)
+>>> -		phb->ioda.pe_rmap[rid] = 0;
+>>> +		phb->ioda.pe_rmap[rid] = IODA_INVALID_PE;
+>>>
+>>>   	/* Release from all parents PELT-V */
+>>>   	while (parent) {
+>>> @@ -3134,7 +3134,7 @@ static void __init pnv_pci_init_ioda_phb(struct device_node *np,
+>>>   	unsigned long size, pemap_off;
+>>>   	const __be64 *prop64;
+>>>   	const __be32 *prop32;
+>>> -	int len;
+>>> +	int len, i;
+>>>   	u64 phb_id;
+>>>   	void *aux;
+>>>   	long rc;
+>>> @@ -3201,6 +3201,10 @@ static void __init pnv_pci_init_ioda_phb(struct device_node *np,
+>>>   	if (prop32)
+>>>   		phb->ioda.reserved_pe = be32_to_cpup(prop32);
+>>>
+>>> +	/* Invalidate RID to PE# mapping */
+>>> +	for (i = 0; i < ARRAY_SIZE(phb->ioda.pe_rmap); ++i)
+>>> +		phb->ioda.pe_rmap[i] = IODA_INVALID_PE;
+>>> +
+>>>   	/* Parse 64-bit MMIO range */
+>>>   	pnv_ioda_parse_m64_window(phb);
+>>>
+>>> diff --git a/arch/powerpc/platforms/powernv/pci.h b/arch/powerpc/platforms/powernv/pci.h
+>>> index 1dc9578..6f8568e 100644
+>>> --- a/arch/powerpc/platforms/powernv/pci.h
+>>> +++ b/arch/powerpc/platforms/powernv/pci.h
+>>> @@ -175,11 +175,10 @@ struct pnv_phb {
+>>>   			struct list_head	pe_list;
+>>>   			struct mutex            pe_list_mutex;
+>>>
+>>> -			/* Reverse map of PEs, will have to extend if
+>>> -			 * we are to support more than 256 PEs, indexed
+>>> -			 * bus { bus, devfn }
+>>> +			/* Reverse map of PEs, indexed by
+>>> +			 * { bus, devfn }
+>>>   			 */
+>>> -			unsigned char		pe_rmap[0x10000];
+>>> +			int			pe_rmap[0x10000];
+>>
+>>
+>> 256k seems to be waste when only tiny fraction of it will ever be used. Using
+>> include/linux/hashtable.h makes sense here, and if you use a hashtable, you
+>> won't have to initialize anything with IODA_INVALID_PE.
+>>
+>
+> I'm not sure if I follow your idea completely. With hash table to trace
+> RID mapping here, won't more memory needed if all PCI buse numbers (0
+> to 255) are all valid? It means hash table doesn't have advantage in
+> memory consumption.
 
-> From: Dinh Nguyen <dinguyen@opensource.altera.com>
-> 
-> Add the base DTS for Altera's SoCFPGA Stratix 10 platform.
-> 
-> Signed-off-by: Dinh Nguyen <dinguyen@opensource.altera.com>
-> ---
->  arch/arm64/Kconfig                                 |   5 +
->  arch/arm64/boot/dts/Makefile                       |   1 +
->  arch/arm64/boot/dts/altera/Makefile                |   5 +
->  arch/arm64/boot/dts/altera/socfpga_stratix10.dtsi  | 354 +++++++++++++++++++++
->  .../boot/dts/altera/socfpga_stratix10_socdk.dts    |  38 +++
->  arch/arm64/configs/defconfig                       |   1 +
->  6 files changed, 404 insertions(+)
->  create mode 100644 arch/arm64/boot/dts/altera/Makefile
->  create mode 100644 arch/arm64/boot/dts/altera/socfpga_stratix10.dtsi
->  create mode 100644 arch/arm64/boot/dts/altera/socfpga_stratix10_socdk.dts
-> 
-> diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
-> index 318175f..0f8ab2b 100644
-> --- a/arch/arm64/Kconfig
-> +++ b/arch/arm64/Kconfig
-> @@ -207,6 +207,11 @@ config ARCH_SEATTLE
->  	help
->  	  This enables support for AMD Seattle SOC Family
->  
-> +config ARCH_STRATIX10
-> +	bool "Altera's Stratix 10 SoCFPGA Family"
-> +	help
-> +	  This enables support for Altera's Stratix 10 SoCFPGA Family
-> +
->  config ARCH_TEGRA
->  	bool "NVIDIA Tegra SoC Family"
->  	select ARCH_HAS_RESET_CONTROLLER
-> diff --git a/arch/arm64/boot/dts/Makefile b/arch/arm64/boot/dts/Makefile
-> index 38913be..7fb421a 100644
-> --- a/arch/arm64/boot/dts/Makefile
-> +++ b/arch/arm64/boot/dts/Makefile
-> @@ -1,3 +1,4 @@
-> +dts-dirs += altera
->  dts-dirs += amd
->  dts-dirs += apm
->  dts-dirs += arm
-> diff --git a/arch/arm64/boot/dts/altera/Makefile b/arch/arm64/boot/dts/altera/Makefile
-> new file mode 100644
-> index 0000000..d7a6416
-> --- /dev/null
-> +++ b/arch/arm64/boot/dts/altera/Makefile
-> @@ -0,0 +1,5 @@
-> +dtb-$(CONFIG_ARCH_STRATIX10) += socfpga_stratix10_socdk.dtb
-> +
-> +always		:= $(dtb-y)
-> +subdir-y	:= $(dts-dirs)
-> +clean-files	:= *.dtb
-> diff --git a/arch/arm64/boot/dts/altera/socfpga_stratix10.dtsi b/arch/arm64/boot/dts/altera/socfpga_stratix10.dtsi
-> new file mode 100644
-> index 0000000..34f6dc3
-> --- /dev/null
-> +++ b/arch/arm64/boot/dts/altera/socfpga_stratix10.dtsi
-> @@ -0,0 +1,354 @@
-> +/*
-> + * Copyright Altera Corporation (C) 2015. All rights reserved.
-> + *
-> + * This program is free software; you can redistribute it and/or modify
-> + * it under the terms and conditions of the GNU General Public License,
-> + * version 2, as published by the Free Software Foundation.
-> + *
-> + * This program is distributed in the hope it will be useful, but WITHOUT
-> + * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-> + * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
-> + * more details.
-> + *
-> + * You should have received a copy of the GNU General Public License along with
-> + * this program.  If not, see <http://www.gnu.org/licenses/>.
-> + */
-> +
-> +/dts-v1/;
-> +
-> +/ {
-> +	compatible = "altr,socfpga-stratix10";
-> +	#address-cells = <1>;
-> +	#size-cells = <1>;
-> +
-[...]
-> +
-> +	pmu {
-> +		compatible = "arm,armv8-pmuv3";
-> +		interrupts = <0 120 8>,
-> +			     <0 121 8>,
-> +			     <0 122 8>,
-> +			     <0 123 8>;
+You need 3 bytes - one for a bus and two for devfn - which makes it a 
+perfect 32bit has key and you only store existing devices in a hash so you 
+do not waste memory.
 
-it's better to add interrupt-affinity according to Sudeep's suggestions.
 
-> +	};
-> +
-> +	psci {
-> +		compatible = "arm,psci-0.2";
-> +		method = "smc";
-> +	};
-> +
-> +	intc: intc@ffff8000 {
-> +		compatible = "arm,gic-400", "arm,cortex-a15-gic";
-> +		#interrupt-cells = <3>;
-> +		interrupt-controller;
-> +		reg = <0x0 0xffff9000 0x1000>,
-> +		      <0x0 0xffffa000 0x2000>,
-> +		      <0x0 0xffffc000 0x1000>,
-> +		      <0x0 0xffffd000 0x1000>;
-> +	};
-> +
-> +	soc {
-> +		#address-cells = <1>;
-> +		#size-cells = <1>;
-> +		compatible = "simple-bus";
-> +		device_type = "soc";
-> +		interrupt-parent = <&intc>;
-> +		ranges;
-> +
-> +		clkmgr@ffd1000 {
-> +			compatible = "altr,clk-mgr";
-> +			reg = <0xffd10000 0x1000>;
-> +		};
-> +
-> +		gmac0: ethernet@ff800000 {
-> +			compatible = "altr,socfpga-stmmac", "snps,dwmac-3.74a", "snps,dwmac";
-> +			reg = <0xff800000 0x2000>;
-> +			interrupts = <0 90 4>;
-> +			interrupt-names = "macirq";
-> +			mac-address = [00 00 00 00 00 00];
-> +			status = "disabled";
-> +		};
-> +
-> +		gmac1: ethernet@ff802000 {
-> +			compatible = "altr,socfpga-stmmac", "snps,dwmac-3.74a", "snps,dwmac";
-> +			reg = <0xff802000 0x2000>;
-> +			interrupts = <0 91 4>;
-> +			interrupt-names = "macirq";
-> +			mac-address = [00 00 00 00 00 00];
-> +			status = "disabled";
-> +		};
-> +
-> +		gmac2: ethernet@ff804000 {
-> +			compatible = "altr,socfpga-stmmac", "snps,dwmac-3.74a", "snps,dwmac";
-> +			reg = <0xff804000 0x2000>;
-> +			interrupts = <0 92 4>;
-> +			interrupt-names = "macirq";
-> +			mac-address = [00 00 00 00 00 00];
-> +			status = "disabled";
-> +		};
-> +
-> +		gpio0: gpio@ffc03200 {
-> +			#address-cells = <1>;
-> +			#size-cells = <0>;
-> +			compatible = "snps,dw-apb-gpio";
-> +			reg = <0xffc03200 0x100>;
-> +			status = "disabled";
-> +
-> +			porta: gpio-controller@0 {
-> +				compatible = "snps,dw-apb-gpio-port";
-> +				gpio-controller;
-> +				#gpio-cells = <2>;
-> +				snps,nr-gpios = <24>;
-> +				reg = <0>;
-> +				interrupt-controller;
-> +				#interrupt-cells = <2>;
-> +				interrupts = <0 110 4>;
-> +			};
-> +		};
-> +
-> +		gpio1: gpio@ffc03300 {
-> +			#address-cells = <1>;
-> +			#size-cells = <0>;
-> +			compatible = "snps,dw-apb-gpio";
-> +			reg = <0xffc03300 0x100>;
-> +			status = "disabled";
-> +
-> +			portb: gpio-controller@0 {
-> +				compatible = "snps,dw-apb-gpio-port";
-> +				gpio-controller;
-> +				#gpio-cells = <2>;
-> +				snps,nr-gpios = <24>;
-> +				reg = <0>;
-> +				interrupt-controller;
-> +				#interrupt-cells = <2>;
-> +				interrupts = <0 110 4>;
-> +			};
-> +		};
-> +
-> +		i2c0: i2c@ffc02800 {
-> +			#address-cells = <1>;
-> +			#size-cells = <0>;
-> +			compatible = "snps,designware-i2c";
-> +			reg = <0xffc02800 0x100>;
-> +			interrupts = <0 103 4>;
-> +			status = "disabled";
-> +		};
-> +
-> +		i2c1: i2c@ffc02900 {
-> +			#address-cells = <1>;
-> +			#size-cells = <0>;
-> +			compatible = "snps,designware-i2c";
-> +			reg = <0xffc02900 0x100>;
-> +			interrupts = <0 104 4>;
-> +			status = "disabled";
-> +		};
-> +
-> +		i2c2: i2c@ffc02a00 {
-> +			#address-cells = <1>;
-> +			#size-cells = <0>;
-> +			compatible = "snps,designware-i2c";
-> +			reg = <0xffc02a00 0x100>;
-> +			interrupts = <0 105 4>;
-> +			status = "disabled";
-> +		};
-> +
-> +		i2c3: i2c@ffc02b00 {
-> +			#address-cells = <1>;
-> +			#size-cells = <0>;
-> +			compatible = "snps,designware-i2c";
-> +			reg = <0xffc02b00 0x100>;
-> +			interrupts = <0 106 4>;
-> +			status = "disabled";
-> +		};
-> +
-> +		i2c4: i2c@ffc02c00 {
-> +			#address-cells = <1>;
-> +			#size-cells = <0>;
-> +			compatible = "snps,designware-i2c";
-> +			reg = <0xffc02c00 0x100>;
-> +			interrupts = <0 107 4>;
-> +			status = "disabled";
-> +		};
-> +
-> +		mmc: dwmmc0@ff808000 {
-> +			#address-cells = <1>;
-> +			#size-cells = <0>;
-> +			compatible = "altr,socfpga-dw-mshc";
-> +			reg = <0xff808000 0x1000>;
-> +			interrupts = <0 96 4>;
-> +			fifo-depth = <0x400>;
-> +			status = "disabled";
-> +		};
-> +
-> +		ocram: sram@ffe00000 {
-> +			compatible = "mmio-sram";
-> +			reg = <0xffe00000 0x100000>;
-> +		};
-> +
-> +		rst: rstmgr@ffd11000 {
-> +			#reset-cells = <1>;
-> +			compatible = "altr,rst-mgr";
-> +			reg = <0xffd11000 0x1000>;
-> +		};
-> +
-> +		spi0: spi@ffda4000 {
-> +			compatible = "snps,dw-apb-ssi";
-> +			#address-cells = <1>;
-> +			#size-cells = <0>;
-> +			reg = <0xffda4000 0x1000>;
-> +			interrupts = <0 101 4>;
-> +			num-chipselect = <4>;
-> +			bus-num = <0>;
-> +			status = "disabled";
-> +		};
-> +
-> +		spi1: spi@ffda5000 {
-> +			compatible = "snps,dw-apb-ssi";
-> +			#address-cells = <1>;
-> +			#size-cells = <0>;
-> +			reg = <0xffda5000 0x1000>;
-> +			interrupts = <0 102 4>;
-> +			num-chipselect = <4>;
-> +			bus-num = <0>;
-> +			status = "disabled";
-> +		};
-> +
-> +		sysmgr: sysmgr@ffd12000 {
-> +			compatible = "altr,sys-mgr", "syscon";
-> +			reg = <0xffd12000 0x1000>;
-> +		};
-> +
-> +		/* Local timer */
-> +		timer {
-> +			compatible = "arm,armv8-timer";
-> +			interrupts = <1 13 0xf01>,
-> +				     <1 14 0xf01>,
-> +				     <1 11 0xf01>,
-> +				     <1 10 0xf01>;
-> +		};
-> +
-> +		timer0: timer0@ffc03000 {
-> +			compatible = "snps,dw-apb-timer";
-> +			interrupts = <0 113 4>;
-> +			reg = <0xffc03000 0x100>;
-> +		};
-> +
-> +		timer1: timer1@ffc03100 {
-> +			compatible = "snps,dw-apb-timer";
-> +			interrupts = <0 114 4>;
-> +			reg = <0xffc03100 0x100>;
-> +		};
-> +
-> +		timer2: timer2@ffd00000 {
-> +			compatible = "snps,dw-apb-timer";
-> +			interrupts = <0 115 4>;
-> +			reg = <0xffd00000 0x100>;
-> +		};
-> +
-> +		timer3: timer3@ffd00100 {
-> +			compatible = "snps,dw-apb-timer";
-> +			interrupts = <0 116 4>;
-> +			reg = <0xffd00100 0x100>;
-> +		};
-> +
-> +		uart0: serial0@ffc02000 {
-> +			compatible = "snps,dw-apb-uart";
-> +			reg = <0xffc02000 0x100>;
-> +			interrupts = <0 108 4>;
-> +			reg-shift = <2>;
-> +			reg-io-width = <4>;
-> +			status = "disabled";
-> +		};
-> +
-> +		uart1: serial1@ffc02100 {
-> +			compatible = "snps,dw-apb-uart";
-> +			reg = <0xffc02100 0x100>;
-> +			interrupts = <0 109 4>;
-> +			reg-shift = <2>;
-> +			reg-io-width = <4>;
-> +			status = "disabled";
-> +		};
-> +
-> +		usbphy0: usbphy@0 {
-> +			#phy-cells = <0>;
-> +			compatible = "usb-nop-xceiv";
-> +			status = "okay";
-> +		};
-> +
-> +		usb0: usb@ffb00000 {
-> +			compatible = "snps,dwc2";
-> +			reg = <0xffb00000 0x40000>;
-> +			interrupts = <0 93 4>;
-> +			phys = <&usbphy0>;
-> +			phy-names = "usb2-phy";
-> +			status = "disabled";
-> +		};
-> +
-> +		usb1: usb@ffb40000 {
-> +			compatible = "snps,dwc2";
-> +			reg = <0xffb40000 0x40000>;
-> +			interrupts = <0 94 4>;
-> +			phys = <&usbphy0>;
-> +			phy-names = "usb2-phy";
-> +			status = "disabled";
-> +		};
-> +
-> +		watchdog0: watchdog@ffd00200 {
-> +			compatible = "snps,dw-wdt";
-> +			reg = <0xffd00200 0x100>;
-> +			interrupts = <0 117 4>;
-> +			status = "disabled";
-> +		};
-> +
-> +		watchdog1: watchdog@ffd00300 {
-> +			compatible = "snps,dw-wdt";
-> +			reg = <0xffd00300 0x100>;
-> +			interrupts = <0 118 4>;
-> +			status = "disabled";
-> +		};
-> +
-> +		watchdog2: watchdog@ffd00400 {
-> +			compatible = "snps,dw-wdt";
-> +			reg = <0xffd00400 0x100>;
-> +			interrupts = <0 125 4>;
-> +			status = "disabled";
-> +		};
-> +
-> +		watchdog3: watchdog@ffd00500 {
-> +			compatible = "snps,dw-wdt";
-> +			reg = <0xffd00500 0x100>;
-> +			interrupts = <0 126 4>;
-> +			status = "disabled";
-> +		};
-> +	};
-> +};
-> diff --git a/arch/arm64/boot/dts/altera/socfpga_stratix10_socdk.dts b/arch/arm64/boot/dts/altera/socfpga_stratix10_socdk.dts
-> new file mode 100644
-> index 0000000..8b162ef
-> --- /dev/null
-> +++ b/arch/arm64/boot/dts/altera/socfpga_stratix10_socdk.dts
-> @@ -0,0 +1,38 @@
-> +/*
-> + * Copyright Altera Corporation (C) 2015. All rights reserved.
-> + *
-> + * This program is free software; you can redistribute it and/or modify
-> + * it under the terms and conditions of the GNU General Public License,
-> + * version 2, as published by the Free Software Foundation.
-> + *
-> + * This program is distributed in the hope it will be useful, but WITHOUT
-> + * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-> + * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
-> + * more details.
-> + *
-> + * You should have received a copy of the GNU General Public License along with
-> + * this program.  If not, see <http://www.gnu.org/licenses/>.
-> + */
-> +
-> +/include/ "socfpga_stratix10.dtsi"
-> +
-> +/ {
-> +	model = "SoCFPGA Stratix 10 SoCDK";
-> +
-> +	aliases {
-> +		serial0 = &uart0;
-> +	};
-> +
-> +	chosen {
-> +		stdout-path = "serial0:115200n8";
-> +	};
-> +
-> +	memory {
-> +		device_type = "memory";
-> +		reg = <0x0 0x40000000>;
-> +	};
-> +};
-> +
-> +&uart0 {
-> +	status = "okay";
-> +};
-> diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
-> index 4e17e7e..ad3b636 100644
-> --- a/arch/arm64/configs/defconfig
-> +++ b/arch/arm64/configs/defconfig
-> @@ -36,6 +36,7 @@ CONFIG_ARCH_FSL_LS2085A=y
->  CONFIG_ARCH_HISI=y
->  CONFIG_ARCH_MEDIATEK=y
->  CONFIG_ARCH_SEATTLE=y
-> +CONFIG_ARCH_STRATIX10=y
->  CONFIG_ARCH_TEGRA=y
->  CONFIG_ARCH_TEGRA_132_SOC=y
->  CONFIG_ARCH_QCOM=y
+> On the other hand, searching in hash table buckets
+> have to iterate list of conflicting items (keys), which is slow comparing
+> to what we have.
+
+How often do you expect this code to execute? Is not it setup-type and 
+hotplug only? Unless it is thousands times per second, it is not an issue here.
+
+
+> Actually, I like the idea, using array to map RID to PE#,
+> which was implemented by Ben.
+
+Where?
+
+
+
+>
+>>
+>>>
+>>>   			/* 32-bit TCE tables allocation */
+>>>   			unsigned long		dma32_segcount;
+>>>
+>
+> Thanks,
+> Gavin
+>
+
+
+-- 
+Alexey
