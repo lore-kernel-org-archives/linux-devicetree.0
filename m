@@ -1,121 +1,54 @@
-From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v4 2/2] mfd: axp20x: Add a cell for the usb
- power_supply part of the axp20x PMICs
-Date: Tue, 11 Aug 2015 15:18:11 +0100
-Message-ID: <20150811141811.GM18282@x1>
-References: <1439049521-30766-1-git-send-email-hdegoede@redhat.com>
- <1439049521-30766-2-git-send-email-hdegoede@redhat.com>
-Reply-To: lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-sunxi+bncBDA7X7F2WUEBBKMIVCXAKGQEDTJHSLA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1439049521-30766-2-git-send-email-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <http://groups.google.com/group/linux-sunxi/subscribe>
-To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Cc: Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Bruno =?iso-8859-1?Q?Pr=E9mont?= <bonbons-ud5FBsm0p/xEiooADzr8i9i2O/JbrIOy@public.gmane.org>, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Subject: [PATCH] arm: rpi: Device tree modifications for U-Boot
+Date: Tue, 11 Aug 2015 08:25:53 -0600
+Message-ID: <1439303153-12171-1-git-send-email-sjg@chromium.org>
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Lee Jones <lee-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sat, 08 Aug 2015, Hans de Goede wrote:
+This updates the device tree from the kernel version to something suitable
+for U-Boot:
 
-> Add a cell for the usb power_supply part of the axp20x PMICs.
->=20
-> Note that this cell is only for the usb power_supply part and not the
-> ac-power / battery-charger / rtc-backup-bat-charger bits.
->=20
-> Depending on the board each of those must be enabled / disabled separatel=
-y
-> in devicetree as most boards do not use all 4. So in dt each one needs it=
-s
-> own child-node of the axp20x node. Another reason for using separate chil=
-d
-> nodes for each is so that other devicetree nodes can have a power-supply
-> property with a phandle referencing a node representing a single
-> power-supply.
->=20
-> The decision to use a separate devicetree node for each is reflected on
-> the kernel side by each getting its own mfd-cell / platform_device and
-> platform-driver.
->=20
-> Note this commit also makes some whitespace changes to the intialization
-> of existing cells in axp20x_cells, these are pure whitespace changes,
-> functionally nothing changes.
->=20
-> Cc: Bruno Pr=C3=A9mont <bonbons-ud5FBsm0p/xEiooADzr8i9i2O/JbrIOy@public.gmane.org>
-> Signed-off-by: Bruno Pr=C3=A9mont <bonbons-ud5FBsm0p/xEiooADzr8i9i2O/JbrIOy@public.gmane.org>
-> Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-> Acked-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-> Acked-by: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> ---
-> Changes in v2:
-> -Use DEFINE_RES_IRQ_NAMED
-> -Change indentation of axp20x_cells initializers to avoid line wrapping
-> Changes in v3:
-> -Improve commit message
-> -Add Bruno's S-o-b
-> ---
->  drivers/mfd/axp20x.c | 20 ++++++++++++++++----
->  1 file changed, 16 insertions(+), 4 deletions(-)
+- Add stdout-path alias for console
+- Mark the /soc node to be available pre-relocation so that the early
+serial console works (we need the 'ranges' property to be available)
 
-Applied, thanks.
+Signed-off-by: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+---
 
-> diff --git a/drivers/mfd/axp20x.c b/drivers/mfd/axp20x.c
-> index d9f2f96..3f576b7 100644
-> --- a/drivers/mfd/axp20x.c
-> +++ b/drivers/mfd/axp20x.c
-> @@ -140,6 +140,13 @@ static struct resource axp20x_pek_resources[] =3D {
->  	},
->  };
-> =20
-> +static struct resource axp20x_usb_power_supply_resources[] =3D {
-> +	DEFINE_RES_IRQ_NAMED(AXP20X_IRQ_VBUS_PLUGIN, "VBUS_PLUGIN"),
-> +	DEFINE_RES_IRQ_NAMED(AXP20X_IRQ_VBUS_REMOVAL, "VBUS_REMOVAL"),
-> +	DEFINE_RES_IRQ_NAMED(AXP20X_IRQ_VBUS_VALID, "VBUS_VALID"),
-> +	DEFINE_RES_IRQ_NAMED(AXP20X_IRQ_VBUS_NOT_VALID, "VBUS_NOT_VALID"),
-> +};
-> +
->  static struct resource axp22x_pek_resources[] =3D {
->  	{
->  		.name   =3D "PEK_DBR",
-> @@ -432,11 +439,16 @@ static const struct regmap_irq_chip axp288_regmap_i=
-rq_chip =3D {
-> =20
->  static struct mfd_cell axp20x_cells[] =3D {
->  	{
-> -		.name			=3D "axp20x-pek",
-> -		.num_resources		=3D ARRAY_SIZE(axp20x_pek_resources),
-> -		.resources		=3D axp20x_pek_resources,
-> +		.name		=3D "axp20x-pek",
-> +		.num_resources	=3D ARRAY_SIZE(axp20x_pek_resources),
-> +		.resources	=3D axp20x_pek_resources,
->  	}, {
-> -		.name			=3D "axp20x-regulator",
-> +		.name		=3D "axp20x-regulator",
-> +	}, {
-> +		.name		=3D "axp20x-usb-power-supply",
-> +		.of_compatible	=3D "x-powers,axp202-usb-power-supply",
-> +		.num_resources	=3D ARRAY_SIZE(axp20x_usb_power_supply_resources),
-> +		.resources	=3D axp20x_usb_power_supply_resources,
->  	},
->  };
-> =20
+ arch/arm/boot/dts/bcm2835.dtsi | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
---=20
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
-
---=20
-You received this message because you are subscribed to the Google Groups "=
-linux-sunxi" group.
-To unsubscribe from this group and stop receiving emails from it, send an e=
-mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-For more options, visit https://groups.google.com/d/optout.
+diff --git a/arch/arm/boot/dts/bcm2835.dtsi b/arch/arm/boot/dts/bcm2835.dtsi
+index 301c73f..bd6bff6 100644
+--- a/arch/arm/boot/dts/bcm2835.dtsi
++++ b/arch/arm/boot/dts/bcm2835.dtsi
+@@ -8,6 +8,7 @@
+ 
+ 	chosen {
+ 		bootargs = "earlyprintk console=ttyAMA0";
++		stdout-path = &uart;
+ 	};
+ 
+ 	soc {
+@@ -16,6 +17,7 @@
+ 		#size-cells = <1>;
+ 		ranges = <0x7e000000 0x20000000 0x02000000>;
+ 		dma-ranges = <0x40000000 0x00000000 0x20000000>;
++		u-boot,dm-pre-reloc;
+ 
+ 		timer@7e003000 {
+ 			compatible = "brcm,bcm2835-system-timer";
+@@ -92,7 +94,7 @@
+ 			#interrupt-cells = <2>;
+ 		};
+ 
+-		uart@7e201000 {
++		uart: uart@7e201000 {
+ 			compatible = "brcm,bcm2835-pl011", "arm,pl011", "arm,primecell";
+ 			reg = <0x7e201000 0x1000>;
+ 			interrupts = <2 25>;
+-- 
+2.5.0.rc2.392.g76e840b
