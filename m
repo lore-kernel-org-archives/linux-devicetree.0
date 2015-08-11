@@ -1,116 +1,72 @@
-From: Chanwoo Choi <cw00.choi@samsung.com>
-Subject: [PATCH 1/4] clk: samsung: exynos3250: Add UART2 clock
-Date: Tue, 11 Aug 2015 12:46:21 +0900
-Message-ID: <1439264784-30322-2-git-send-email-cw00.choi@samsung.com>
-References: <1439264784-30322-1-git-send-email-cw00.choi@samsung.com>
+From: Stephen Warren <swarren@wwwdotorg.org>
+Subject: Re: [PATCH v3 01/11] dm: serial: Update binding for PL01x
+ serial UART
+Date: Mon, 10 Aug 2015 21:57:46 -0600
+Message-ID: <55C972BA.5050706@wwwdotorg.org>
+References: <1438954951-13329-1-git-send-email-sjg@chromium.org>
+ <1438954951-13329-2-git-send-email-sjg@chromium.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-reply-to: <1439264784-30322-1-git-send-email-cw00.choi@samsung.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: s.nawrocki@samsung.com, tomasz.figa@gmail.com, kgene@kernel.org, k.kozlowski@samsung.com
-Cc: devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, mturquette@baylibre.com, sboyd@codeaurora.org, linux-kernel@vger.kernel.org, cw00.choi@samsung.com, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Return-path: <u-boot-bounces@lists.denx.de>
+In-Reply-To: <1438954951-13329-2-git-send-email-sjg@chromium.org>
+List-Unsubscribe: <http://lists.denx.de/mailman/options/u-boot>,
+ <mailto:u-boot-request@lists.denx.de?subject=unsubscribe>
+List-Archive: <http://lists.denx.de/pipermail/u-boot/>
+List-Post: <mailto:u-boot@lists.denx.de>
+List-Help: <mailto:u-boot-request@lists.denx.de?subject=help>
+List-Subscribe: <http://lists.denx.de/mailman/listinfo/u-boot>,
+ <mailto:u-boot-request@lists.denx.de?subject=subscribe>
+Errors-To: u-boot-bounces@lists.denx.de
+Sender: "U-Boot" <u-boot-bounces@lists.denx.de>
+To: Simon Glass <sjg@chromium.org>
+Cc: devicetree@vger.kernel.org, Stephen Warren <swarren@nvidia.com>, Arnd Bergmann <arnd@arndb.de>, U-Boot Mailing List <u-boot@lists.denx.de>, Joe Hershberger <joe.hershberger@ni.com>, Geert Uytterhoeven <geert@linux-m68k.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch add the UART2 clocks (mux, divider, gate) of Exynos3250 SoC.
+On 08/07/2015 07:42 AM, Simon Glass wrote:
+> This binding differs from that of Linux. Update it and change existing
+> users.
 
-Cc: Sylwester Nawrocki <s.nawrocki@samsung.com>
-Cc: Tomasz Figa <tomasz.figa@gmail.com>
-Signed-off-by: Chanwoo Choi <cw00.choi@samsung.com>
----
- drivers/clk/samsung/clk-exynos3250.c   | 6 ++++++
- include/dt-bindings/clock/exynos3250.h | 6 +++++-
- 2 files changed, 11 insertions(+), 1 deletion(-)
+Is that meant to imply that this patch fixes the copy of the binding doc
+in U-Boot so it does match the kernel's copy?
 
-diff --git a/drivers/clk/samsung/clk-exynos3250.c b/drivers/clk/samsung/clk-exynos3250.c
-index 538de66a759e..2105863a3ace 100644
---- a/drivers/clk/samsung/clk-exynos3250.c
-+++ b/drivers/clk/samsung/clk-exynos3250.c
-@@ -307,6 +307,7 @@ static struct samsung_mux_clock mux_clks[] __initdata = {
- 	MUX(CLK_MOUT_MMC0, "mout_mmc0", group_sclk_p, SRC_FSYS, 0, 4),
- 
- 	/* SRC_PERIL0 */
-+	MUX(CLK_MOUT_UART2, "mout_uart2", group_sclk_p, SRC_PERIL0, 8, 4),
- 	MUX(CLK_MOUT_UART1, "mout_uart1", group_sclk_p, SRC_PERIL0, 4, 4),
- 	MUX(CLK_MOUT_UART0, "mout_uart0", group_sclk_p, SRC_PERIL0, 0, 4),
- 
-@@ -389,6 +390,7 @@ static struct samsung_div_clock div_clks[] __initdata = {
- 	DIV(CLK_DIV_MMC0, "div_mmc0", "mout_mmc0", DIV_FSYS1, 0, 4),
- 
- 	/* DIV_PERIL0 */
-+	DIV(CLK_DIV_UART2, "div_uart2", "mout_uart2", DIV_PERIL0, 8, 4),
- 	DIV(CLK_DIV_UART1, "div_uart1", "mout_uart1", DIV_PERIL0, 4, 4),
- 	DIV(CLK_DIV_UART0, "div_uart0", "mout_uart0", DIV_PERIL0, 0, 4),
- 
-@@ -551,6 +553,9 @@ static struct samsung_gate_clock gate_clks[] __initdata = {
- 		GATE_SCLK_PERIL, 7, CLK_SET_RATE_PARENT, 0),
- 	GATE(CLK_SCLK_SPI0, "sclk_spi0", "div_spi0_pre",
- 		GATE_SCLK_PERIL, 6, CLK_SET_RATE_PARENT, 0),
-+
-+	GATE(CLK_SCLK_UART2, "sclk_uart2", "div_uart2",
-+		GATE_SCLK_PERIL, 2, CLK_SET_RATE_PARENT, 0),
- 	GATE(CLK_SCLK_UART1, "sclk_uart1", "div_uart1",
- 		GATE_SCLK_PERIL, 1, CLK_SET_RATE_PARENT, 0),
- 	GATE(CLK_SCLK_UART0, "sclk_uart0", "div_uart0",
-@@ -648,6 +653,7 @@ static struct samsung_gate_clock gate_clks[] __initdata = {
- 	GATE(CLK_I2C2, "i2c2", "div_aclk_100", GATE_IP_PERIL, 8, 0, 0),
- 	GATE(CLK_I2C1, "i2c1", "div_aclk_100", GATE_IP_PERIL, 7, 0, 0),
- 	GATE(CLK_I2C0, "i2c0", "div_aclk_100", GATE_IP_PERIL, 6, 0, 0),
-+	GATE(CLK_UART2, "uart2", "div_aclk_100", GATE_IP_PERIL, 2, 0, 0),
- 	GATE(CLK_UART1, "uart1", "div_aclk_100", GATE_IP_PERIL, 1, 0, 0),
- 	GATE(CLK_UART0, "uart0", "div_aclk_100", GATE_IP_PERIL, 0, 0, 0),
- };
-diff --git a/include/dt-bindings/clock/exynos3250.h b/include/dt-bindings/clock/exynos3250.h
-index aab088d30199..89a7d97b002c 100644
---- a/include/dt-bindings/clock/exynos3250.h
-+++ b/include/dt-bindings/clock/exynos3250.h
-@@ -78,6 +78,7 @@
- #define CLK_MOUT_CORE			58
- #define CLK_MOUT_APLL			59
- #define CLK_MOUT_ACLK_266_SUB		60
-+#define CLK_MOUT_UART2			61
- 
- /* Dividers */
- #define CLK_DIV_GPL			64
-@@ -126,6 +127,7 @@
- #define CLK_DIV_CORE			107
- #define CLK_DIV_HPM			108
- #define CLK_DIV_COPY			109
-+#define CLK_DIV_UART2			110
- 
- /* Gates */
- #define CLK_ASYNC_G3D			128
-@@ -222,6 +224,7 @@
- #define CLK_BLOCK_MFC			219
- #define CLK_BLOCK_CAM			220
- #define CLK_SMIES			221
-+#define CLK_UART2			222
- 
- /* Special clocks */
- #define CLK_SCLK_JPEG			224
-@@ -248,12 +251,13 @@
- #define CLK_SCLK_SPI0			245
- #define CLK_SCLK_UART1			246
- #define CLK_SCLK_UART0			247
-+#define CLK_SCLK_UART2			248
- 
- /*
-  * Total number of clocks of main CMU.
-  * NOTE: Must be equal to last clock ID increased by one.
-  */
--#define CLK_NR_CLKS			248
-+#define CLK_NR_CLKS			249
- 
- /*
-  * CMU DMC
--- 
-1.8.5.5
+> Changes in v3:
+> - Rename binding file to pl01x.txt
+
+The file is named pl011.txt in the kernel. Shouldn't U-Boot's copy be
+named the same?
+
+
+> diff --git a/arch/arm/dts/stv0991.dts b/arch/arm/dts/stv0991.dts
+
+>  	uart0: serial@0x80406000 {
+>  		compatible = "arm,pl011", "arm,primecell";
+>  		reg = <0x80406000 0x1000>;
+> -		clock = <2700000>;
+> +		clock-frequency = <2700000>;
+
+I don't see either "clock" or "clock-frequency" mentioned in the Linux
+binding doc.
+
+> diff --git a/doc/device-tree-bindings/serial/pl01x.txt b/doc/device-tree-bindings/serial/pl01x.txt
+
+>  Required properties:
+> -- compatible: must be "arm,primecell", "arm,pl011" or "arm,pl010"
+> +- compatible: must be "arm,primecell", "arm,pl011"
+
+It'd be worth mentioning which version of Linux this binding doc came
+from; that text has changed in linux-next since v4.1 which is what I
+assume you're importing.
+
+> diff --git a/drivers/serial/serial_pl01x.c b/drivers/serial/serial_pl01x.c
+
+> @@ -365,13 +365,15 @@ static int pl01x_serial_ofdata_to_platdata(struct udevice *dev)
+>  	struct pl01x_serial_platdata *plat = dev_get_platdata(dev);
+>  	fdt_addr_t addr;
+>  
+> -	addr = fdtdec_get_addr(gd->fdt_blob, dev->of_offset, "reg");
+> +	addr = dev_get_addr(dev);
+>  	if (addr == FDT_ADDR_T_NONE)
+>  		return -EINVAL;
+
+That looks like an unrelated change.
