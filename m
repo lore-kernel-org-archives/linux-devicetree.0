@@ -1,88 +1,134 @@
 From: Gavin Shan <gwshan@linux.vnet.ibm.com>
-Subject: Re: [PATCH v6 40/42] drivers/of: Return allocated memory chunk from
+Subject: Re: [PATCH v6 39/42] drivers/of: Allow to specify root node in
  of_fdt_unflatten_tree()
-Date: Tue, 11 Aug 2015 10:52:02 +1000
-Message-ID: <20150811005202.GA20729@gwshan>
+Date: Tue, 11 Aug 2015 10:52:43 +1000
+Message-ID: <20150811005243.GB20729@gwshan>
 References: <1438834307-26960-1-git-send-email-gwshan@linux.vnet.ibm.com>
- <1438834307-26960-41-git-send-email-gwshan@linux.vnet.ibm.com>
- <55C928D8.3040200@gmail.com>
+ <1438834307-26960-40-git-send-email-gwshan@linux.vnet.ibm.com>
+ <55C928C5.2080305@gmail.com>
 Reply-To: Gavin Shan <gwshan@linux.vnet.ibm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-pci-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <55C928D8.3040200@gmail.com>
-List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
- <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev/>
-List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
-List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
- <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
-Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
-Sender: "Linuxppc-dev"
- <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+In-Reply-To: <55C928C5.2080305@gmail.com>
+Sender: linux-pci-owner@vger.kernel.org
 To: Frank Rowand <frowand.list@gmail.com>
-Cc: devicetree@vger.kernel.org, aik@ozlabs.ru, panto@antoniou-consulting.com, Gavin Shan <gwshan@linux.vnet.ibm.com>, grant.likely@linaro.org, robherring2@gmail.com, linux-pci@vger.kernel.org, bhelgaas@google.com, linuxppc-dev@lists.ozlabs.org
+Cc: Gavin Shan <gwshan@linux.vnet.ibm.com>, linuxppc-dev@lists.ozlabs.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, benh@kernel.crashing.org, mpe@ellerman.id.au, bhelgaas@google.com, grant.likely@linaro.org, robherring2@gmail.com, panto@antoniou-consulting.com, aik@ozlabs.ru
 List-Id: devicetree@vger.kernel.org
 
-T24gTW9uLCBBdWcgMTAsIDIwMTUgYXQgMDM6NDI6MzJQTSAtMDcwMCwgRnJhbmsgUm93YW5kIHdy
-b3RlOgo+T24gOC81LzIwMTUgOToxMSBQTSwgR2F2aW4gU2hhbiB3cm90ZToKCkZyYW5rLCB0aGFu
-a3MgZm9yIHlvdXIgY29tbWVudHMuIEFsbCBvZiB0aGVtIHdpbGwgYmUgaW5jbHVkZWQKaW4gbmV4
-dCByZXZpc2lvbi4KClRoYW5rcywKR2F2aW4KCj4+IFRoaXMgY2hhbmdlcyBvZl9mZHRfdW5mbGF0
-dGVuX3RyZWUoKSBzbyB0aGF0IGl0IHJldHVybnMgdGhlIGFsbG9jYXRlZAo+PiBtZW1vcnkgY2h1
-bmsgZm9yIHVuZmxhdHRlbmVkIGRldmljZS10cmVlLCB3aGljaCBjYW4gYmUgcmVsZWFzZWQgb25j
-ZQo+PiBpdCdzIG9ic29sZXRlZC4KPj4gCj4+IFNpZ25lZC1vZmYtYnk6IEdhdmluIFNoYW4gPGd3
-c2hhbkBsaW51eC52bmV0LmlibS5jb20+Cj4+IC0tLQo+PiAgZHJpdmVycy9vZi9mZHQuYyAgICAg
-ICB8IDExICsrKysrKy0tLS0tCj4+ICBpbmNsdWRlL2xpbnV4L29mX2ZkdC5oIHwgIDIgKy0KPj4g
-IDIgZmlsZXMgY2hhbmdlZCwgNyBpbnNlcnRpb25zKCspLCA2IGRlbGV0aW9ucygtKQo+PiAKPj4g
-ZGlmZiAtLWdpdCBhL2RyaXZlcnMvb2YvZmR0LmMgYi9kcml2ZXJzL29mL2ZkdC5jCj4+IGluZGV4
-IDA3NDg3MGEuLjhlMWJhN2UgMTAwNjQ0Cj4+IC0tLSBhL2RyaXZlcnMvb2YvZmR0LmMKPj4gKysr
-IGIvZHJpdmVycy9vZi9mZHQuYwo+PiBAQCAtNDA4LDcgKzQwOCw3IEBAIHN0YXRpYyB2b2lkICp1
-bmZsYXR0ZW5fZHRfbm9kZShjb25zdCB2b2lkICpibG9iLAo+PiAgICogQGR0X2FsbG9jOiBBbiBh
-bGxvY2F0b3IgdGhhdCBwcm92aWRlcyBhIHZpcnR1YWwgYWRkcmVzcyB0byBtZW1vcnkKPj4gICAq
-IGZvciB0aGUgcmVzdWx0aW5nIHRyZWUKPj4gICAqLwo+PiAtc3RhdGljIHZvaWQgX191bmZsYXR0
-ZW5fZGV2aWNlX3RyZWUoY29uc3Qgdm9pZCAqYmxvYiwKPj4gK3N0YXRpYyB2b2lkICpfX3VuZmxh
-dHRlbl9kZXZpY2VfdHJlZShjb25zdCB2b2lkICpibG9iLAo+PiAgCQkJICAgICBzdHJ1Y3QgZGV2
-aWNlX25vZGUgKmRhZCwKPj4gIAkJCSAgICAgc3RydWN0IGRldmljZV9ub2RlICoqbXlub2RlcywK
-Pj4gIAkJCSAgICAgdm9pZCAqICgqZHRfYWxsb2MpKHU2NCBzaXplLCB1NjQgYWxpZ24pKQo+Cj5Q
-bGVhc2UgYWRkIGEgZGVzY3JpcHRpb24gb2YgdGhlIHJldHVybiB2YWx1ZSB0byB0aGUgZG9jdW1l
-bnRhdGlvbiBoZWFkZXIuCj4KPgo+PiBAQCAtNDIxLDcgKzQyMSw3IEBAIHN0YXRpYyB2b2lkIF9f
-dW5mbGF0dGVuX2RldmljZV90cmVlKGNvbnN0IHZvaWQgKmJsb2IsCj4+ICAKPj4gIAlpZiAoIWJs
-b2IpIHsKPj4gIAkJcHJfZGVidWcoIk5vIGRldmljZSB0cmVlIHBvaW50ZXJcbiIpOwo+PiAtCQly
-ZXR1cm47Cj4+ICsJCXJldHVybiBOVUxMOwo+PiAgCX0KPj4gIAo+PiAgCXByX2RlYnVnKCJVbmZs
-YXR0ZW5pbmcgZGV2aWNlIHRyZWU6XG4iKTsKPj4gQEAgLTQzMSw3ICs0MzEsNyBAQCBzdGF0aWMg
-dm9pZCBfX3VuZmxhdHRlbl9kZXZpY2VfdHJlZShjb25zdCB2b2lkICpibG9iLAo+PiAgCj4+ICAJ
-aWYgKGZkdF9jaGVja19oZWFkZXIoYmxvYikpIHsKPj4gIAkJcHJfZXJyKCJJbnZhbGlkIGRldmlj
-ZSB0cmVlIGJsb2IgaGVhZGVyXG4iKTsKPj4gLQkJcmV0dXJuOwo+PiArCQlyZXR1cm4gTlVMTDsK
-Pj4gIAl9Cj4+ICAKPj4gIAkvKiBGaXJzdCBwYXNzLCBzY2FuIGZvciBzaXplICovCj4+IEBAIC00
-NTgsNiArNDU4LDcgQEAgc3RhdGljIHZvaWQgX191bmZsYXR0ZW5fZGV2aWNlX3RyZWUoY29uc3Qg
-dm9pZCAqYmxvYiwKPj4gIAkJCSAgIGJlMzJfdG9fY3B1cChtZW0gKyBzaXplKSk7Cj4+ICAKPj4g
-IAlwcl9kZWJ1ZygiIDwtIHVuZmxhdHRlbl9kZXZpY2VfdHJlZSgpXG4iKTsKPj4gKwlyZXR1cm4g
-bWVtOwo+PiAgfQo+PiAgCj4+ICBzdGF0aWMgdm9pZCAqa2VybmVsX3RyZWVfYWxsb2ModTY0IHNp
-emUsIHU2NCBhbGlnbikKPj4gQEAgLTQ3MywxMSArNDc0LDExIEBAIHN0YXRpYyB2b2lkICprZXJu
-ZWxfdHJlZV9hbGxvYyh1NjQgc2l6ZSwgdTY0IGFsaWduKQo+PiAgICogcG9pbnRlcnMgb2YgdGhl
-IG5vZGVzIHNvIHRoZSBub3JtYWwgZGV2aWNlLXRyZWUgd2Fsa2luZyBmdW5jdGlvbnMKPj4gICAq
-IGNhbiBiZSB1c2VkLgo+PiAgICovCj4+IC12b2lkIG9mX2ZkdF91bmZsYXR0ZW5fdHJlZShjb25z
-dCB1bnNpZ25lZCBsb25nICpibG9iLAo+PiArdm9pZCAqb2ZfZmR0X3VuZmxhdHRlbl90cmVlKGNv
-bnN0IHVuc2lnbmVkIGxvbmcgKmJsb2IsCj4KPlBsZWFzZSBhZGQgYSBkZXNjcmlwdGlvbiBvZiB0
-aGUgcmV0dXJuIHZhbHVlIHRvIHRoZSBkb2N1bWVudGF0aW9uIGhlYWRlci4KPgo+Cj4+ICAJCQlz
-dHJ1Y3QgZGV2aWNlX25vZGUgKmRhZCwKPj4gIAkJCXN0cnVjdCBkZXZpY2Vfbm9kZSAqKm15bm9k
-ZXMpCj4+ICB7Cj4+IC0JX191bmZsYXR0ZW5fZGV2aWNlX3RyZWUoYmxvYiwgZGFkLCBteW5vZGVz
-LCAma2VybmVsX3RyZWVfYWxsb2MpOwo+PiArCXJldHVybiBfX3VuZmxhdHRlbl9kZXZpY2VfdHJl
-ZShibG9iLCBkYWQsIG15bm9kZXMsICZrZXJuZWxfdHJlZV9hbGxvYyk7Cj4+ICB9Cj4+ICBFWFBP
-UlRfU1lNQk9MX0dQTChvZl9mZHRfdW5mbGF0dGVuX3RyZWUpOwo+PiAgCj4+IGRpZmYgLS1naXQg
-YS9pbmNsdWRlL2xpbnV4L29mX2ZkdC5oIGIvaW5jbHVkZS9saW51eC9vZl9mZHQuaAo+PiBpbmRl
-eCAzNjQ0OTYwLi4wMGRiMjc5IDEwMDY0NAo+PiAtLS0gYS9pbmNsdWRlL2xpbnV4L29mX2ZkdC5o
-Cj4+ICsrKyBiL2luY2x1ZGUvbGludXgvb2ZfZmR0LmgKPj4gQEAgLTM3LDcgKzM3LDcgQEAgZXh0
-ZXJuIGJvb2wgb2ZfZmR0X2lzX2JpZ19lbmRpYW4oY29uc3Qgdm9pZCAqYmxvYiwKPj4gIAkJCQkg
-dW5zaWduZWQgbG9uZyBub2RlKTsKPj4gIGV4dGVybiBpbnQgb2ZfZmR0X21hdGNoKGNvbnN0IHZv
-aWQgKmJsb2IsIHVuc2lnbmVkIGxvbmcgbm9kZSwKPj4gIAkJCWNvbnN0IGNoYXIgKmNvbnN0ICpj
-b21wYXQpOwo+PiAtZXh0ZXJuIHZvaWQgb2ZfZmR0X3VuZmxhdHRlbl90cmVlKGNvbnN0IHVuc2ln
-bmVkIGxvbmcgKmJsb2IsCj4+ICtleHRlcm4gdm9pZCAqb2ZfZmR0X3VuZmxhdHRlbl90cmVlKGNv
-bnN0IHVuc2lnbmVkIGxvbmcgKmJsb2IsCj4+ICAJCQkgICAgICAgc3RydWN0IGRldmljZV9ub2Rl
-ICpkYWQsCj4+ICAJCQkgICAgICAgc3RydWN0IGRldmljZV9ub2RlICoqbXlub2Rlcyk7Cj4+ICAK
-Pj4gCj4KCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCkxp
-bnV4cHBjLWRldiBtYWlsaW5nIGxpc3QKTGludXhwcGMtZGV2QGxpc3RzLm96bGFicy5vcmcKaHR0
-cHM6Ly9saXN0cy5vemxhYnMub3JnL2xpc3RpbmZvL2xpbnV4cHBjLWRldg==
+On Mon, Aug 10, 2015 at 03:42:13PM -0700, Frank Rowand wrote:
+>On 8/5/2015 9:11 PM, Gavin Shan wrote:
+>> This introduces one more argument to of_fdt_unflatten_tree()
+>> to specify the root node for the FDT blob, which is going to be
+>> unflattened. In the result, the function can be used to unflatten
+>> FDT blob, which represents device sub-tree in PowerNV hotplug
+>> driver.
+>> 
+>> Signed-off-by: Gavin Shan <gwshan@linux.vnet.ibm.com>
+>> ---
+>>  drivers/of/fdt.c       | 13 ++++++++-----
+>>  drivers/of/unittest.c  |  2 +-
+>>  include/linux/of_fdt.h |  1 +
+>>  3 files changed, 10 insertions(+), 6 deletions(-)
+>> 
+>> diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
+>> index a18a2ce..074870a 100644
+>> --- a/drivers/of/fdt.c
+>> +++ b/drivers/of/fdt.c
+>> @@ -388,10 +388,11 @@ static void *unflatten_dt_node(const void *blob,
+>>  			       struct device_node **nodepp,
+>>  			       bool dryrun)
+>>  {
+>> +	unsigned long fpsize = dad ? strlen(of_node_full_name(dad)) : 0;
+>>  	int depth = 1;
+>>  
+>>  	return __unflatten_dt_node(blob, mem, poffset,
+>> -				   dad, nodepp, 0,
+>> +				   dad, nodepp, fpsize,
+>>  				   dryrun, &depth);
+>>  }
+>>  
+>> @@ -408,6 +409,7 @@ static void *unflatten_dt_node(const void *blob,
+>>   * for the resulting tree
+>>   */
+>>  static void __unflatten_device_tree(const void *blob,
+>> +			     struct device_node *dad,
+>>  			     struct device_node **mynodes,
+>>  			     void * (*dt_alloc)(u64 size, u64 align))
+>>  {
+>
+>Please add @dad to the documentation header for the function.
+>
+
+Yes, it will be included in next revision.
+
+
+>> @@ -435,7 +437,7 @@ static void __unflatten_device_tree(const void *blob,
+>>  	/* First pass, scan for size */
+>>  	start = 0;
+>>  	size = (unsigned long)unflatten_dt_node(blob, NULL, &start,
+>> -						NULL, NULL, true);
+>> +						dad, NULL, true);
+>>  	size = ALIGN(size, 4);
+>>  
+>>  	pr_debug("  size is %lx, allocating...\n", size);
+>> @@ -450,7 +452,7 @@ static void __unflatten_device_tree(const void *blob,
+>>  
+>>  	/* Second pass, do actual unflattening */
+>>  	start = 0;
+>> -	unflatten_dt_node(blob, mem, &start, NULL, mynodes, false);
+>> +	unflatten_dt_node(blob, mem, &start, dad, mynodes, false);
+>>  	if (be32_to_cpup(mem + size) != 0xdeadbeef)
+>>  		pr_warning("End of tree marker overwritten: %08x\n",
+>>  			   be32_to_cpup(mem + size));
+>> @@ -472,9 +474,10 @@ static void *kernel_tree_alloc(u64 size, u64 align)
+>>   * can be used.
+>>   */
+>>  void of_fdt_unflatten_tree(const unsigned long *blob,
+>> +			struct device_node *dad,
+>>  			struct device_node **mynodes)
+>>  {
+>> -	__unflatten_device_tree(blob, mynodes, &kernel_tree_alloc);
+>> +	__unflatten_device_tree(blob, dad, mynodes, &kernel_tree_alloc);
+>>  }
+>>  EXPORT_SYMBOL_GPL(of_fdt_unflatten_tree);
+>>  
+>> @@ -1125,7 +1128,7 @@ bool __init early_init_dt_scan(void *params)
+>>   */
+>>  void __init unflatten_device_tree(void)
+>>  {
+>> -	__unflatten_device_tree(initial_boot_params, &of_root,
+>> +	__unflatten_device_tree(initial_boot_params, NULL, &of_root,
+>>  				early_init_dt_alloc_memory_arch);
+>>  
+>>  	/* Get pointer to "/chosen" and "/aliases" nodes for use everywhere */
+>> diff --git a/drivers/of/unittest.c b/drivers/of/unittest.c
+>> index 1801634..2270830 100644
+>> --- a/drivers/of/unittest.c
+>> +++ b/drivers/of/unittest.c
+>> @@ -907,7 +907,7 @@ static int __init unittest_data_add(void)
+>>  			"not running tests\n", __func__);
+>>  		return -ENOMEM;
+>>  	}
+>> -	of_fdt_unflatten_tree(unittest_data, &unittest_data_node);
+>> +	of_fdt_unflatten_tree(unittest_data, NULL, &unittest_data_node);
+>>  	if (!unittest_data_node) {
+>>  		pr_warn("%s: No tree to attach; not running tests\n", __func__);
+>>  		return -ENODATA;
+>> diff --git a/include/linux/of_fdt.h b/include/linux/of_fdt.h
+>> index df9ef38..3644960 100644
+>> --- a/include/linux/of_fdt.h
+>> +++ b/include/linux/of_fdt.h
+>> @@ -38,6 +38,7 @@ extern bool of_fdt_is_big_endian(const void *blob,
+>>  extern int of_fdt_match(const void *blob, unsigned long node,
+>>  			const char *const *compat);
+>>  extern void of_fdt_unflatten_tree(const unsigned long *blob,
+>> +			       struct device_node *dad,
+>>  			       struct device_node **mynodes);
+>>  
+>>  /* TBD: Temporary export of fdt globals - remove when code fully merged */
+>> 
+
+Thanks,
+Gavin
