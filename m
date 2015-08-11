@@ -1,68 +1,118 @@
-From: Madalin-Cristian Bucur <madalin.bucur@freescale.com>
-Subject: RE: [PATCH 0/2] of: fsl/fman: reuse the fixed node parsing code
-Date: Tue, 11 Aug 2015 16:33:52 +0000
-Message-ID: <BL2PR03MB545D4E18DE41AE01AFC37D6E67F0@BL2PR03MB545.namprd03.prod.outlook.com>
+From: Stas Sergeev <stsp@list.ru>
+Subject: Re: [PATCH 0/2] of: fsl/fman: reuse the fixed node parsing code
+Date: Tue, 11 Aug 2015 19:58:48 +0300
+Message-ID: <55CA29C8.5000707@list.ru>
 References: <1438785745-15517-1-git-send-email-madalin.bucur@freescale.com>
  <55C63D3B.5020005@gmail.com> <55CA1C14.3000202@list.ru>
+ <BL2PR03MB545D4E18DE41AE01AFC37D6E67F0@BL2PR03MB545.namprd03.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=utf-8;
+	format=flowed
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <55CA1C14.3000202@list.ru>
-Content-Language: en-US
+In-Reply-To: <BL2PR03MB545D4E18DE41AE01AFC37D6E67F0@BL2PR03MB545.namprd03.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Stas Sergeev <stsp@list.ru>, Florian Fainelli <f.fainelli@gmail.com>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>
+To: Madalin-Cristian Bucur <madalin.bucur@freescale.com>, Florian Fainelli <f.fainelli@gmail.com>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>
 Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Liberman Igal <Igal.Liberman@freescale.com>, Stas Sergeev <stsp@users.sourceforge.net>, "joakim.tjernlund@transmode.se" <joakim.tjernlund@transmode.se>, Shaohui Xie <Shaohui.Xie@freescale.com>
 List-Id: devicetree@vger.kernel.org
 
-KyBKb2FraW0sIFNoYW9odWkNCg0KPiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9t
-OiBTdGFzIFNlcmdlZXYgW21haWx0bzpzdHNwQGxpc3QucnVdDQo+IA0KPiAwOC4wOC4yMDE1IDIw
-OjMyLCBGbG9yaWFuIEZhaW5lbGxpINC/0LjRiNC10YI6DQo+ID4gQ0MnaW5nIFN0YXMsDQo+IEhp
-Lg0KPiANCj4gPiBMZSAwOC8wNS8xNSAwNzo0MiwgTWFkYWxpbiBCdWN1ciBhIMOpY3JpdCA6DQo+
-ID4+IFRoZSBGTWFuIE1BQyBjb25maWd1cmF0aW9uIGNvZGUgbmVlZHMgdGhlIHNwZWVkIGFuZCBk
-dXBsZXgNCj4gaW5mb3JtYXRpb24NCj4gPj4gZm9yIGZpeGVkLWxpbmsgaW50ZXJmYWNlcyB0aGF0
-IGlzIHBhcnNlZCBub3cgYnkgdGhlIG9mIGZ1bmN0aW9uDQo+ID4+IG9mX3BoeV9yZWdpc3Rlcl9m
-aXhlZF9saW5rKCkuIFRoaXMgcGFyc2VzIHRoZSBmaXhlZC1saW5rIHBhcmFtZXRlcnMgYnV0DQo+
-ID4+IGRvZXMgbm90IGV4cG9zZSB0byB0aGUgY2FsbGVyIG5laXRoZXIgdGhlIHBoeV9kZXZpY2Ug
-cG9pbnRlciBub3IgdGhlDQo+ID4+IHN0YXR1cyBzdHJ1Y3Qgd2hlcmUgaXQgbG9hZHMgdGhlIGZp
-eGVkLWxpbmsgcGFyYW1zLg0KPiBJIGhhdmUgb25seSBiYXJlbHkgdG91Y2hlZCB0aGF0IGNvZGUs
-IGJ1dCBJTU8gYm90aCB0aGluZ3MNCj4gYXJlIGJ5IGRlc2lnbi4gVGhlcmUgYXJlIHNvbWUgQVBJ
-IGRlZmljaWVuY2llcywgYW5kIHNvLCBtYW55DQo+IGRyaXZlcnMgc3RpbGwgdXNlIG9mX3BoeV9m
-aW5kX2RldmljZSgpIHRvIGNpcmN1bXZlbnQgdGhlIGVuY2Fwc3VsYXRpb24NCj4gYW5kIGdldCB0
-aGUgcGh5X2RldmljZSBwb2ludGVyLCBidXQgdGhpcyBpcyB1bmxpa2VseSBhIGdvb2QgdGhpbmcN
-Cj4gdG8gZG8uIEkgZXZlbiBwcm9wb3NlZCBzb21lIEFQSSBleHRlbnNpb25zLCBidXQgdGhlcmUg
-d2FzIG5vDQo+IGludGVyZXN0Lg0KPiANCj4gPj4gICBCeSBleHRyYWN0aW5nIHRoZQ0KPiA+PiBm
-aXhlZC1saW5rIHBhcnNpbmcgY29kZSBmcm9tIG9mX3BoeV9yZWdpc3Rlcl9maXhlZF9saW5rKCkg
-aW50byBhDQo+ID4+IHNlcGFyYXRlIGZ1bmN0aW9uIHRoZSBwYXJzZWQgdmFsdWVzIGFyZSBtYWRl
-IGF2YWlsYWJsZSB3aXRob3V0IGNoYW5naW5nDQo+ID4+IHRoZSBleGlzdGluZyBBUEkuIFRoaXMg
-Y2hhbmdlIGFsc28gcmVtb3ZlcyBhIHNtYWxsIHJlZHVuZGFuY3kgaW4gdGhlDQo+ID4+IHByZXZp
-b3VzIGNvZGUgY2FsbGluZyBmaXhlZF9waHlfcmVnaXN0ZXIoKS4NCj4gVG9kYXksIHRoZSBmaXhl
-ZF9saW5rIGlzIG5vdCBhbHdheXMgZml4ZWQuDQo+IFNlZSBmb3IgZXhhbXBsZSB0aGlzIHBhdGNo
-IChhbHJlYWR5IG1haW5saW5lZCk6DQo+IGh0dHBzOi8vbGttbC5vcmcvbGttbC8yMDE1LzcvMjAv
-NzExDQo+IG9mX3BoeV9pc19maXhlZF9saW5rKCkgcmV0dXJucyAndHJ1ZScgaWYgeW91IGhhdmUN
-Cj4gbWFuYWdlZD0iaW4tYmFuZC1zdGF0dXMiLCBhbmQgc28gdGhlIFNHTUlJIGluLWJhbmQgc3Rh
-dHVzDQo+IGNhbiB1cGRhdGUgZml4ZWQtbGluayBwYXJhbXMuDQo+IA0KPiBTbyBteSBxdWVzdGlv
-biBpczogd2h5IGRvIHlvdSBldmVuIG5lZWQgdG8ga25vdyB3aGV0aGVyDQo+IHRoZSBsaW5rIGlz
-IGZpeGVkIG9yIG5vdD8gSUlSQyB5b3UgY2FuIGNoZWNrIHRoZSBwaHlfZGV2aWNlDQo+IHBvaW50
-ZXIgaW4gdGhlIGFkanVzdF9saW5rIGNhbGxiYWNrIG9mIG9mX3BoeV9jb25uZWN0KCkgdG8gZ2V0
-DQo+IHRoZSBjdXJyZW50IGxpbmsgc3RhdHVzIHZhbHVlcy4gV2h5IGlzIHRoaXMgbm90IGVub3Vn
-aCBmb3IgeW91cg0KPiB0YXNrPyBNYXliZSB0aGUgcGF0Y2ggZGVzY3JpcHRpb24gc2hvdWxkIGJl
-IHVwZGF0ZWQgdG8gaW5jbHVkZQ0KPiB3aHkgdGhlIGN1cnJlbnQgdGVjaG5pcXVlIGlzIGJhZCwg
-d2hhdCBpcyBhY3R1YWxseSBmaXhlZCBieSB0aGUNCj4gY2hhbmdlLg0KPiBJIHRoaW5rIHVzaW5n
-IHRoZSBmaXhlZC1saW5rIERUIHZhbHVlcyBkaXJlY3RseSBpcyBub3Qgc29tZXRoaW5nDQo+IHRv
-IGJlIGRvbmUuIFRoZSBlbmNhcHN1bGF0aW9uIGlzIHRoZXJlIGZvciBhIHJlYXNvbiwgc28gbWF5
-YmUNCj4gaW5zdGVhZCB3ZSBjYW4gc2VlIHdoYXQgQVBJIGFkZGl0aW9ucyBkbyB3ZSBuZWVkIHRv
-IGF2b2lkIHRoZQ0KPiBjdXJyZW50IGxpbWl0YXRpb25zIHRoYXQgZm9yY2UgcGVvcGxlIHRvIHVz
-ZSBvZl9waHlfZmluZF9kZXZpY2UoKQ0KPiBhbmQgb3RoZXIgd29yay1hcm91bmRzLg0KDQpJIG5l
-ZWQgdG8gYmUgYWJsZSB0byBkZXRlcm1pbmUgdGhlIGltcG9zZWQgc3BlZWQgYW5kIGR1cGxleCBm
-b3IgZml4ZWQgbGluaw0KZXh0ZXJuYWwgUEhZcyBiZWNhdXNlIEkgbmVlZCB0byBjb25maWd1cmUg
-dGhlIGludGVybmFsIFBIWSB3aXRoIG1hdGNoaW5nDQp2YWx1ZXMuIElmIEkgZG8gbm90IHNldCB0
-aGUgc2FtZSBzcGVlZCwgZ2l2ZW4gdGhlIGZhY3QgdGhhdCBBTiBuZWVkcyB0byBiZSBvZmYsDQp0
-aGVyZSB3aWxsIGJlIG5vIGxpbmsgYW5kIG5vIGFkanVzdCBsaW5rIHRvIGZpeCB0aGluZ3MgbGF0
-ZXIgKGFuZCB0aGUgaW50ZXJuYWwgUEhZIGlzDQpub3QgdXBkYXRlZCBieSBhZGp1c3QgbGluayBh
-bnl3YXkpLiBJIGRvIG5vdCBoYXZlIGFjY2VzcyBhdCB0aGUgcGh5IHBvaW50ZXIgYXQNCnRoZSB0
-aW1lIEkgbmVlZCB0aGUgc3BlZWQgYW5kIGR1cGxleCwgdG8gcmV0cmlldmUgdGhlIGRlZmF1bHRz
-IGZyb20gdGhlcmUgYW5kDQpJJ3ZlIHRyaWVkIHRvIG1ha2UgdGhlIHNtYWxsZXN0IGNoYW5nZXMg
-dGhhdCBhbGxvdyBtZSB0byByZXRyaWV2ZSB0aG9zZSB3aXRob3V0DQptb2RpZnlpbmcgZXhpc3Rp
-bmcgQVBJLg0KV2h5IGlzIGl0IGltcG9ydGFudCB0byBoaWRlIHRoZSBkZWZhdWx0IHZhbHVlcyBm
-cm9tIHRoZSBNQUMgZHJpdmVyPw0KDQpUaGFuayB5b3UsDQpNYWRhbGluDQo=
+11.08.2015 19:33, Madalin-Cristian Bucur =D0=BF=D0=B8=D1=88=D0=B5=D1=82=
+:
+> + Joakim, Shaohui
+>
+>> -----Original Message-----
+>> From: Stas Sergeev [mailto:stsp@list.ru]
+>>
+>> 08.08.2015 20:32, Florian Fainelli =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+>>> CC'ing Stas,
+>> Hi.
+>>
+>>> Le 08/05/15 07:42, Madalin Bucur a =C3=A9crit :
+>>>> The FMan MAC configuration code needs the speed and duplex
+>> information
+>>>> for fixed-link interfaces that is parsed now by the of function
+>>>> of_phy_register_fixed_link(). This parses the fixed-link parameter=
+s but
+>>>> does not expose to the caller neither the phy_device pointer nor t=
+he
+>>>> status struct where it loads the fixed-link params.
+>> I have only barely touched that code, but IMO both things
+>> are by design. There are some API deficiencies, and so, many
+>> drivers still use of_phy_find_device() to circumvent the encapsulati=
+on
+>> and get the phy_device pointer, but this is unlikely a good thing
+>> to do. I even proposed some API extensions, but there was no
+>> interest.
+>>
+>>>>    By extracting the
+>>>> fixed-link parsing code from of_phy_register_fixed_link() into a
+>>>> separate function the parsed values are made available without cha=
+nging
+>>>> the existing API. This change also removes a small redundancy in t=
+he
+>>>> previous code calling fixed_phy_register().
+>> Today, the fixed_link is not always fixed.
+>> See for example this patch (already mainlined):
+>> https://lkml.org/lkml/2015/7/20/711
+>> of_phy_is_fixed_link() returns 'true' if you have
+>> managed=3D"in-band-status", and so the SGMII in-band status
+>> can update fixed-link params.
+>>
+>> So my question is: why do you even need to know whether
+>> the link is fixed or not? IIRC you can check the phy_device
+>> pointer in the adjust_link callback of of_phy_connect() to get
+>> the current link status values. Why is this not enough for your
+>> task? Maybe the patch description should be updated to include
+>> why the current technique is bad, what is actually fixed by the
+>> change.
+>> I think using the fixed-link DT values directly is not something
+>> to be done. The encapsulation is there for a reason, so maybe
+>> instead we can see what API additions do we need to avoid the
+>> current limitations that force people to use of_phy_find_device()
+>> and other work-arounds.
+> I need to be able to determine the imposed speed and duplex for fixed=
+ link
+> external PHYs because I need to configure the internal PHY with match=
+ing
+> values. If I do not set the same speed, given the fact that AN needs =
+to be off,
+> there will be no link and no adjust link to fix things later (and the=
+ internal PHY is
+> not updated by adjust link anyway). I do not have access at the phy p=
+ointer at
+> the time I need the speed and duplex, to retrieve the defaults from t=
+here and
+> I've tried to make the smallest changes that allow me to retrieve tho=
+se without
+> modifying existing API.
+> Why is it important to hide the default values from the MAC driver?
+My worry is that the fixed values are not really fixed, and
+therefore are not always useful to access directly. It is likely
+not a problem for your use-case, as, as you say, the AN is
+disabled, but this is probably not the best to do in general.
+And also you do:
+---
+
+-		err =3D of_phy_register_fixed_link(mac_node);
+-		if (err)
++		struct phy_device *phy;
++
++		mac_dev->fixed_link =3D kzalloc(sizeof(*mac_dev->fixed_link),
++					      GFP_KERNEL);
++		if (of_phy_parse_fixed_link(mac_node, mac_dev->fixed_link))
++			goto _return_dev_set_drvdata;
++
++		phy =3D fixed_phy_register(PHY_POLL, mac_dev->fixed_link,
++					 mac_node);
+
+---
+
+which means you really want to circumvent the current OF
+api quite a lot, without saying why in the patch description.
+As such, it may be difficult to review. Could you please write
+a more complete description to the patch?
+
+As to your problem: would it be possible to set speed & duplex
+after you do of_phy_connect()? It returns the phy_device
+pointer, and perhaps you can look into phydev->speed and
+phydev->duplex at that point?
