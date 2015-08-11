@@ -1,255 +1,103 @@
-From: Gavin Shan <gwshan@linux.vnet.ibm.com>
-Subject: Re: [PATCH v6 09/42] powerpc/powernv: DMA32 cleanup
-Date: Tue, 11 Aug 2015 10:19:45 +1000
-Message-ID: <20150811001945.GA15577@gwshan>
-References: <1438834307-26960-1-git-send-email-gwshan@linux.vnet.ibm.com>
- <1438834307-26960-10-git-send-email-gwshan@linux.vnet.ibm.com>
- <55C85BBF.4070802@ozlabs.ru>
-Reply-To: Gavin Shan <gwshan@linux.vnet.ibm.com>
+From: Rob Clark <robdclark@gmail.com>
+Subject: Re: [PATCH RFC 1/5] drm/msm/hdmi: deprecate non standard gpio
+ properties.
+Date: Mon, 10 Aug 2015 20:25:22 -0400
+Message-ID: <CAF6AEGtoUOSBsvf3civ=3hWAL-jPzwg_98=VJYxgFLrVGCF0PQ@mail.gmail.com>
+References: <1439207923-30812-1-git-send-email-srinivas.kandagatla@linaro.org>
+ <1439207962-30860-1-git-send-email-srinivas.kandagatla@linaro.org>
+ <20150810124510.GC1262@ulmo.nvidia.com>
+ <CAL_JsqK6=bmbU-OD7L-Xzg6C+AtNFZZJq-LK3UWXE0rza7-gwA@mail.gmail.com>
+ <20150810222754.GM6519@usrtlx11787.corpusers.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-pci-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <55C85BBF.4070802@ozlabs.ru>
-Sender: linux-pci-owner@vger.kernel.org
-To: Alexey Kardashevskiy <aik@ozlabs.ru>
-Cc: Gavin Shan <gwshan@linux.vnet.ibm.com>, linuxppc-dev@lists.ozlabs.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, benh@kernel.crashing.org, mpe@ellerman.id.au, bhelgaas@google.com, grant.likely@linaro.org, robherring2@gmail.com, panto@antoniou-consulting.com
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20150810222754.GM6519@usrtlx11787.corpusers.net>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Bjorn Andersson <bjorn.andersson@sonymobile.com>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, dri-devel <dri-devel@lists.freedesktop.org>, Rob Herring <robh+dt@kernel.org>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, Rob Herring <robherring2@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Aug 10, 2015 at 06:07:27PM +1000, Alexey Kardashevskiy wrote:
->On 08/06/2015 02:11 PM, Gavin Shan wrote:
->>The patch cleans up DMA32 in pci-ioda.c. It shouldn't introduce
->>behavioural changes:
->>
->>    * Rename various fields in "struct pnv_phb" and "struct pnv_ioda_pe"
->>      as 32-bits DMA should be related to "DMA", not "TCE".
->
->s/dma_weight/dma32_weight/ is ok (does not add much though_ but the rest is
->not. The "tce32_" fields are still TCEs (translation entries) while DMA is a
->process initiated by a device which does not know about how exactly DMA
->addresses are translated later. Since we are on the host side and we actually
->manage TCE tables here, I suggest keeping the "tce32_" prefix for TCE tables
->and memory they use.
->
-
-Ok. Will change accordingly.
-
->>    * Removed struct pnv_ioda_pe::tce32_segcount.
->
->That's confusing - I had to walk through patches to find out where you
->stopped using it. It would be simpler if you put this particular change to
->
->[PATCH v6 02/42] powerpc/powernv: Drop pnv_ioda_setup_dev_PE()
->
->where you remove dead code.
->
-
-I'll try to reorder the patch...
-
->
->>
->>Signed-off-by: Gavin Shan <gwshan@linux.vnet.ibm.com>
->>---
->>  arch/powerpc/platforms/powernv/pci-ioda.c | 48 +++++++++++++++----------------
->>  arch/powerpc/platforms/powernv/pci.h      |  7 ++---
->>  2 files changed, 27 insertions(+), 28 deletions(-)
->>
->>diff --git a/arch/powerpc/platforms/powernv/pci-ioda.c b/arch/powerpc/platforms/powernv/pci-ioda.c
->>index 7342cfd..8456f37 100644
->>--- a/arch/powerpc/platforms/powernv/pci-ioda.c
->>+++ b/arch/powerpc/platforms/powernv/pci-ioda.c
->>@@ -917,7 +917,7 @@ static void pnv_ioda_link_pe_by_weight(struct pnv_phb *phb,
->>  	struct pnv_ioda_pe *lpe;
->>
->>  	list_for_each_entry(lpe, &phb->ioda.pe_dma_list, dma_link) {
->>-		if (lpe->dma_weight < pe->dma_weight) {
->>+		if (lpe->dma32_weight < pe->dma32_weight) {
->>  			list_add_tail(&pe->dma_link, &lpe->dma_link);
->>  			return;
->>  		}
->>@@ -942,14 +942,14 @@ static unsigned int pnv_ioda_dma_weight(struct pci_dev *dev)
->>  	if (dev->class == PCI_CLASS_SERIAL_USB_UHCI ||
->>  	    dev->class == PCI_CLASS_SERIAL_USB_OHCI ||
->>  	    dev->class == PCI_CLASS_SERIAL_USB_EHCI)
->>-		return 3 * phb->ioda.tce32_count;
->>+		return 3 * phb->ioda.dma32_segcount;
->>
->>  	/* Increase the weight of RAID (includes Obsidian) */
->>  	if ((dev->class >> 8) == PCI_CLASS_STORAGE_RAID)
->>-		return 15 * phb->ioda.tce32_count;
->>+		return 15 * phb->ioda.dma32_segcount;
->>
->>  	/* Default */
->>-	return 10 * phb->ioda.tce32_count;
->>+	return 10 * phb->ioda.dma32_segcount;
->>  }
->>
->>  static int __pnv_ioda_phb_dma_weight(struct pci_dev *pdev, void *data)
->>@@ -1057,7 +1057,7 @@ static void pnv_ioda_setup_same_PE(struct pci_bus *bus, struct pnv_ioda_pe *pe)
->>  			continue;
->>  		}
->>  		pdn->pe_number = pe->pe_number;
->>-		pe->dma_weight += pnv_ioda_dma_weight(dev);
->>+		pe->dma32_weight += pnv_ioda_dma_weight(dev);
->>  		if ((pe->flags & PNV_IODA_PE_BUS_ALL) && dev->subordinate)
->>  			pnv_ioda_setup_same_PE(dev->subordinate, pe);
->>  	}
->>@@ -1094,10 +1094,10 @@ static void pnv_ioda_setup_bus_PE(struct pci_bus *bus, bool all)
->>  	pe->flags |= (all ? PNV_IODA_PE_BUS_ALL : PNV_IODA_PE_BUS);
->>  	pe->pbus = bus;
->>  	pe->pdev = NULL;
->>-	pe->tce32_seg = -1;
->>+	pe->dma32_seg = -1;
->>  	pe->mve_number = -1;
->>  	pe->rid = bus->busn_res.start << 8;
->>-	pe->dma_weight = 0;
->>+	pe->dma32_weight = 0;
->>
->>  	if (all)
->>  		pe_info(pe, "Secondary bus %d..%d associated with PE#%d\n",
->>@@ -1460,7 +1460,7 @@ static void pnv_ioda_setup_vf_PE(struct pci_dev *pdev, u16 num_vfs)
->>  		pe->flags = PNV_IODA_PE_VF;
->>  		pe->pbus = NULL;
->>  		pe->parent_dev = pdev;
->>-		pe->tce32_seg = -1;
->>+		pe->dma32_seg = -1;
->>  		pe->mve_number = -1;
->>  		pe->rid = (pci_iov_virtfn_bus(pdev, vf_index) << 8) |
->>  			   pci_iov_virtfn_devfn(pdev, vf_index);
->>@@ -1936,7 +1936,7 @@ static void pnv_pci_ioda_setup_dma_pe(struct pnv_phb *phb,
->>  	/* XXX FIXME: Allocate multi-level tables on PHB3 */
->>
->>  	/* We shouldn't already have a 32-bit DMA associated */
->>-	if (WARN_ON(pe->tce32_seg >= 0))
->>+	if (WARN_ON(pe->dma32_seg >= 0))
->>  		return;
->>
->>  	tbl = pnv_pci_table_alloc(phb->hose->node);
->>@@ -1945,7 +1945,7 @@ static void pnv_pci_ioda_setup_dma_pe(struct pnv_phb *phb,
->>  	pnv_pci_link_table_and_group(phb->hose->node, 0, tbl, &pe->table_group);
->>
->>  	/* Grab a 32-bit TCE table */
->>-	pe->tce32_seg = base;
->>+	pe->dma32_seg = base;
->>  	pe_info(pe, " Setting up 32-bit TCE table at %08x..%08x\n",
->>  		(base << 28), ((base + segs) << 28) - 1);
->>
->>@@ -2006,8 +2006,8 @@ static void pnv_pci_ioda_setup_dma_pe(struct pnv_phb *phb,
->>  	return;
->>   fail:
->>  	/* XXX Failure: Try to fallback to 64-bit only ? */
->>-	if (pe->tce32_seg >= 0)
->>-		pe->tce32_seg = -1;
->>+	if (pe->dma32_seg >= 0)
->>+		pe->dma32_seg = -1;
->>  	if (tce_mem)
->>  		__free_pages(tce_mem, get_order(TCE32_TABLE_SIZE * segs));
->>  	if (tbl) {
->>@@ -2405,7 +2405,7 @@ static void pnv_pci_ioda2_setup_dma_pe(struct pnv_phb *phb,
->>  	int64_t rc;
->>
->>  	/* We shouldn't already have a 32-bit DMA associated */
->>-	if (WARN_ON(pe->tce32_seg >= 0))
->>+	if (WARN_ON(pe->dma32_seg >= 0))
->>  		return;
->>
->>  	/* TVE #1 is selected by PCI address bit 59 */
->>@@ -2415,7 +2415,7 @@ static void pnv_pci_ioda2_setup_dma_pe(struct pnv_phb *phb,
->>  			pe->pe_number);
->>
->>  	/* The PE will reserve all possible 32-bits space */
->>-	pe->tce32_seg = 0;
->>+	pe->dma32_seg = 0;
->>  	pe_info(pe, "Setting up 32-bit TCE table at 0..%08x\n",
->>  		phb->ioda.m32_pci_base);
->>
->>@@ -2432,8 +2432,8 @@ static void pnv_pci_ioda2_setup_dma_pe(struct pnv_phb *phb,
->>
->>  	rc = pnv_pci_ioda2_setup_default_config(pe);
->>  	if (rc) {
->>-		if (pe->tce32_seg >= 0)
->>-			pe->tce32_seg = -1;
->>+		if (pe->dma32_seg >= 0)
->>+			pe->dma32_seg = -1;
->>  		return;
->>  	}
->>
->>@@ -2452,7 +2452,7 @@ static void pnv_ioda_setup_dma(struct pnv_phb *phb)
->>  	/* Calculate the PHB's DMA weight */
->>  	dma_weight = pnv_ioda_phb_dma_weight(phb);
->>  	pr_info("PCI%04x has %ld DMA32 segments, total weight %d\n",
->>-		hose->global_number, phb->ioda.tce32_count, dma_weight);
->>+		hose->global_number, phb->ioda.dma32_segcount, dma_weight);
->>
->>  	pnv_pci_ioda_setup_opal_tce_kill(phb);
->>
->>@@ -2461,7 +2461,7 @@ static void pnv_ioda_setup_dma(struct pnv_phb *phb)
->>  	 * weight
->>  	 */
->>  	list_for_each_entry(pe, &phb->ioda.pe_dma_list, dma_link) {
->>-		if (!pe->dma_weight)
->>+		if (!pe->dma32_weight)
->>  			continue;
->>
->>  		/*
->>@@ -2472,15 +2472,15 @@ static void pnv_ioda_setup_dma(struct pnv_phb *phb)
->>  		if (phb->type == PNV_PHB_IODA1) {
->>  			unsigned int segs, base = 0;
->>
->>-			if (pe->dma_weight <
->>-			    dma_weight / phb->ioda.tce32_count)
->>+			if (pe->dma32_weight <
->>+			    dma_weight / phb->ioda.dma32_segcount)
->>  				segs = 1;
->>  			else
->>-				segs = (pe->dma_weight *
->>-					phb->ioda.tce32_count) / dma_weight;
->>+				segs = (pe->dma32_weight *
->>+					phb->ioda.dma32_segcount) / dma_weight;
->>
->>  			pe_info(pe, "DMA32 weight %d, assigned %d segments\n",
->>-				pe->dma_weight, segs);
->>+				pe->dma32_weight, segs);
->>  			pnv_pci_ioda_setup_dma_pe(phb, pe, base, segs);
->>
->>  			base += segs;
->>@@ -3211,7 +3211,7 @@ static void __init pnv_pci_init_ioda_phb(struct device_node *np,
->>  	mutex_init(&phb->ioda.pe_list_mutex);
->>
->>  	/* Calculate how many 32-bit TCE segments we have */
->>-	phb->ioda.tce32_count = phb->ioda.m32_pci_base >> 28;
->>+	phb->ioda.dma32_segcount = phb->ioda.m32_pci_base >> 28;
->>
->>  #if 0 /* We should really do that ... */
->>  	rc = opal_pci_set_phb_mem_window(opal->phb_id,
->>diff --git a/arch/powerpc/platforms/powernv/pci.h b/arch/powerpc/platforms/powernv/pci.h
->>index addd3f7..574fe43 100644
->>--- a/arch/powerpc/platforms/powernv/pci.h
->>+++ b/arch/powerpc/platforms/powernv/pci.h
->>@@ -61,11 +61,10 @@ struct pnv_ioda_pe {
->>  	/* "Weight" assigned to the PE for the sake of DMA resource
->>  	 * allocations
->>  	 */
->>-	unsigned int		dma_weight;
->>+	unsigned int		dma32_weight;
->>
->>  	/* "Base" iommu table, ie, 4K TCEs, 32-bit DMA */
->>-	int			tce32_seg;
->>-	int			tce32_segcount;
->>+	int			dma32_seg;
->>  	struct iommu_table_group table_group;
->>
->>  	/* 64-bit TCE bypass region */
->>@@ -181,7 +180,7 @@ struct pnv_phb {
->>  			unsigned char		pe_rmap[0x10000];
->>
->>  			/* 32-bit TCE tables allocation */
->>-			unsigned long		tce32_count;
->>+			unsigned long		dma32_segcount;
->>
->>  			/* Sorted list of used PE's, sorted at
->>  			 * boot for resource allocation purposes
->>
-
-Thanks,
-Gavin
+T24gTW9uLCBBdWcgMTAsIDIwMTUgYXQgNjoyNyBQTSwgQmpvcm4gQW5kZXJzc29uCjxiam9ybi5h
+bmRlcnNzb25Ac29ueW1vYmlsZS5jb20+IHdyb3RlOgo+IE9uIE1vbiAxMCBBdWcgMTU6MDcgUERU
+IDIwMTUsIFJvYiBIZXJyaW5nIHdyb3RlOgo+Cj4gWy4uXQo+PiA+PiAtLSBxY29tLGhkbWktdHgt
+ZGRjLWNsay1ncGlvOiBkZGMgY2xrIHBpbgo+PiA+PiAtLSBxY29tLGhkbWktdHgtZGRjLWRhdGEt
+Z3BpbzogZGRjIGRhdGEgcGluCj4+ID4+IC0tIHFjb20saGRtaS10eC1ocGQtZ3BpbzogaHBkIHBp
+bgo+PiA+PiArLSBxY29tLGhkbWktdHgtZGRjLWNsay1ncGlvczogZGRjIGNsayBwaW4KPj4gPj4g
+Ky0gcWNvbSxoZG1pLXR4LWRkYy1kYXRhLWdwaW9zOiBkZGMgZGF0YSBwaW4KPj4KPj4gVGhlIGRy
+aXZlciBkb2Vzbid0IGFwcGVhciB0byBkbyBhbnl0aGluZyBvdGhlciB0aGFuIHNldCB0aGVzZSBn
+cGlvcwo+PiBoaWdoLiBQcmVzdW1hYmx5IHlvdSB3b3VsZCB1bHRpbWF0ZWx5IGRvIGEgYml0LWJh
+bmcgaTJjIGJ1cyBmb3IgdGhlc2U/Cj4+IEF0IHRoYXQgcG9pbnQsIGFyZW4ndCB5b3UgZ29pbmcg
+dG8gd2FudCB0byB1c2UgdGhlIGkyYy1ncGlvIGJpbmRpbmc/Cj4+Cj4+IEkgdGhpbmsgdGhpcyBi
+aW5kaW5nIGhhcyBiaWdnZXIgaXNzdWVzIGxpa2Ugd2h5IGlzIGl0IG5vdCB1c2luZyB0aGUKPj4g
+aGRtaS1jb25uZWN0b3IgYmluZGluZyB3aGljaCBoYXMgYSBzdGFuZGFyZCAiaHBkLWdwaW9zIiBw
+cm9wZXJ0eQo+PiBhbHJlYWR5LiBJIGNhbid0IHJlYWxseSBzaW5nbGUgb3V0IHRoaXMgYmluZGlu
+ZyB0aG91Z2guIFRoZXJlJ3MgYSBsb3QKPj4gb2YgY3JhcCB3aGVuIGl0IGNvbWVzIHRvIERSTSBy
+ZWxhdGVkIGJpbmRpbmdzLgo+Pgo+Cj4gU2hvdWxkbid0IHRoZXNlIHBpbnMganVzdCBiZSBtdXhl
+ZCB0byB0aGUgaGRtaSBibG9jayBpbiBwaW5jdGw/Cj4KPiBJIGtub3cgUm9iIGhhZCBzb21ldGhp
+bmcgd3J0IHRoZSBkZXRlY3QgcGluIChoZHApLCBidXQgdGhlIG90aGVycyBzaG91bGQKPiBuZXZl
+ciBiZSBncGlvcyg/KSBJc24ndCB0aGlzIGp1c3QgYSByZW1pbmRlciBvZiB0aGUgY29kZWF1cm9y
+YSB0cmVlCj4gZ3Bpb19yZXF1ZXN0aW5nIGFsbCBwaW5zICJqdXN0IHRvIGJlIHNhZmUiPwoKeWVh
+aCwgb3RoZXIgdGhhbiBoZHAgcGluIChzaW5jZSB0aGUgZGVib3VuY2UgbG9naWMgaW4gaGRtaSBi
+bG9jawpkb2Vzbid0IHNlZW0gdG8gYmUgYnVsbGV0cHJvb2YpLCBvdGhlcnMgd2Ugb25seSByZXF1
+ZXN0Li4gcmVzdCBpcwplY2hvJ3Mgb2YgY29kZWF1cm9yYS4uCgpzb21lIG9mIGl0IGlzIHByb2Jh
+Ymx5IG5vdCBuZWVkZWQgdXBzdHJlYW0uLiBhbmQgSSdtIG9rIHcvIGp1c3Qgbm90CmRvY3VtZW50
+aW5nIHRoYXQgaW4gdGhlIGJpbmRpbmdzIGRvYywgb3IgZG9jdW1lbnRpbmcgYXMgInVuc3VwcG9y
+dGVkCmFuZCBnb2luZyB0byBnbyBhd2F5IHNvIGRvbid0IHVzZSIsIG9yIHdoYXRldmVyIG1ha2Vz
+IHRoZSBtb3N0IHNlbnNlLi4KYnV0IHdvdWxkIGxpa2UgdG8ga2VlcCB0aGUgZHJpdmVyIGNvZGUg
+YWxpdmUgZm9yIHRoZSB0aW1lIGJlaW5nLCBzaW5jZQppdCBpcyBlYXNpZXIgZm9yIG1lIHRvIG1h
+aW50YWluIGEgYml0IG9mIGNydWZ0IG9yIGRlYWQgY29kZSBpbiB0aGUKdXBzdHJlYW0gZHJpdmVy
+LCB0aGFuIGRlYWxpbmcgd2l0aCBpdCBvbiB0aGUgYmFja3BvcnQgKGFuZCBJJ20KaW5ldml0YWJs
+eSB0aGUgb25lIHdobyBoYXMgdG8gZG8gYm90aCkKCihHb29kIG5ld3MgaXMgdGhhdCBzcmluaSBt
+ZW50aW9uZWQgaGUgd2FzIHdvcmtpbmcgb24gYXVkaW8gZm9yCjgwNjQvaWZjNjQxMCB1cHN0cmVh
+bSwgc28gaXQgYXQgbGVhc3Qgc2VlbXMgbGlrZSB0aGVyZSBpcyBhbiBlbmQgaW4Kc2lnaHQgZm9y
+IGJhY2twb3J0cyB0byAzLjQgZGV2aWNlIGtlcm5lbC4uICAzLjEwIHN0dWZmLCBJIHRoaW5rIHdl
+J2xsCmhhdmUgdG8gbGl2ZSB3aXRoIGEgYml0IGxvbmdlci4uKQoKQlIsCi1SCgoKPj4gPj4gKy0g
+cWNvbSxoZG1pLXR4LWhwZC1ncGlvczogaHBkIHBpbgo+PiA+PiAgLSBjb3JlLXZkZGEtc3VwcGx5
+OiBwaGFuZGxlIHRvIHN1cHBseSByZWd1bGF0b3IKPj4gPj4gIC0gaGRtaS1tdXgtc3VwcGx5OiBw
+aGFuZGxlIHRvIG11eCByZWd1bGF0b3IKPj4gPj4KPj4gPj4gKy0gcWNvbSxoZG1pLXR4LWRkYy1j
+bGstZ3BpbzogKGRlcHJlY2F0ZWQpIHVzZQo+PiA+PiArICAgICAicWNvbSxoZG1pLXR4LWRkYy1j
+bGstZ3Bpb3MiIGluc3RlYWQKPj4gPj4gKy0gcWNvbSxoZG1pLXR4LWRkYy1kYXRhLWdwaW86IChk
+ZXByZWNhdGVkKSB1c2UKPj4gPj4gKyAgICAgInFjb20saGRtaS10eC1kZGMtZGF0YS1ncGlvcyIg
+aW5zdGVhZAo+PiA+PiArLSBxY29tLGhkbWktdHgtaHBkLWdwaW86IChkZXByZWNhdGVkKSB1c2UK
+Pj4gPj4gKyAgICAgInFjb20saGRtaS10eC1ocGQtZ3Bpb3MiIGluc3RlYWQKPj4gPj4gKwo+PiA+
+PiAgT3B0aW9uYWwgcHJvcGVydGllczoKPj4gPj4gLS0gcWNvbSxoZG1pLXR4LW11eC1lbi1ncGlv
+OiBoZG1pIG11eCBlbmFibGUgcGluCj4+ID4+IC0tIHFjb20saGRtaS10eC1tdXgtc2VsLWdwaW86
+IGhkbWkgbXV4IHNlbGVjdCBwaW4KPj4gPj4gKy0gcWNvbSxoZG1pLXR4LW11eC1lbi1ncGlvczog
+aGRtaSBtdXggZW5hYmxlIHBpbgo+PiA+PiArLSBxY29tLGhkbWktdHgtbXV4LXNlbC1ncGlvczog
+aGRtaSBtdXggc2VsZWN0IHBpbgo+PiA+PiArCj4+ID4+ICstIHFjb20saGRtaS10eC1tdXgtZW4t
+Z3BpbzogKGRlcHJlY2F0ZWQpIHVzZSAicWNvbSxoZG1pLXR4LW11eC1lbi1ncGlvcyIKPj4gPj4g
+KyAgICAgaW5zdGVhZAo+PiA+PiArLSBxY29tLGhkbWktdHgtbXV4LXNlbC1ncGlvOiAoZGVwcmVj
+YXRlZCkgdXNlICJxY29tLGhkbWktdHgtbXV4LXNlbC1ncGlvIgo+PiA+PiArICAgICBpbnN0ZWFk
+Cj4+ID4+ICAtIHBpbmN0cmwtbmFtZXM6IHRoZSBwaW4gY29udHJvbCBzdGF0ZSBuYW1lczsgc2hv
+dWxkIGNvbnRhaW4gImRlZmF1bHQiCj4+ID4+ICAtIHBpbmN0cmwtMDogdGhlIGRlZmF1bHQgcGlu
+Y3RybCBzdGF0ZSAoYWN0aXZlKQo+PiA+PiAgLSBwaW5jdHJsLTE6IHRoZSAic2xlZXAiIHBpbmN0
+cmwgc3RhdGUKPj4gPgo+PiA+IEkgZG9uJ3Qgc2VlIG11Y2ggdXNlIGluIGxpc3RpbmcgdGhhdCB0
+aGVzZSBwcm9wZXJ0aWVzIGFyZSBkZXByZWNhdGVkLiBXZQo+PiA+IGFscmVhZHkgaGF2ZSBjb2Rl
+IHRvIGNhdGNoIHRoZSBkZXByZWNhdGVkIG5hbWVzLCBzbyBoYXZpbmcgdGhlbSBpbiB0aGUKPj4g
+PiBiaW5kaW5nIHdpbGwgYXQgYmVzdCBiZSBkaXN0cmFjdGluZy4KPj4gPgo+PiA+IEFueXdheSwg
+SSBkb24ndCBrbm93IGlmIHRoZXJlJ3MgYmVlbiBhbnkgYWR2aWNlIG9uIHRoaXMgZnJvbSB0aGUg
+ZGV2aWNlCj4+ID4gdHJlZSBiaW5kaW5ncyBtYWludGFpbmVycywgc28gYWRkaW5nIGRldmljZXRy
+ZWVAdmdlci5rZXJuZWwub3JnIGZvcgo+PiA+IHZpc2liaWxpdHkuCj4+Cj4+IElmIHRoZXkgbmVl
+ZCB0byBiZSBtYWludGFpbmVkLCB0aGVuIG1hcmtpbmcgdGhlbSBkZXByZWNhdGVkIGlzCj4+IHBl
+cmZlY3RseSBmaW5lIElNTy4gQWxzbywgaWYgdGhlIG1haW50YWluZXJzIG9mIHBsYXRmb3JtcyB1
+c2luZyB0aGlzCj4+IGFyZSBva2F5IHdpdGggaXQsIHlvdSBjYW4ganVzdCBzd2l0Y2ggaXQuIEdp
+dmVuIHRoZXJlIGFyZSBubyBpbiB0cmVlCj4+IGR0cyBmaWxlcyB1c2luZyB0aGlzLCBpdCBjYW4g
+YmUgYXJndWVkIHRoYXQgdGhlcmUgaXMgbm8gQUJJLgo+Pgo+Cj4gUGFydCBvZiBzb21lIGRldiB0
+cmVlcyBmbG9hdGluZyBhcm91bmQgbm8tb25lIHNob3VsZCBoYXZlIHVzZWQgdGhlc2UuIFNvCj4g
+SSB0aGluayB3ZSBzaG91bGQganVzdCBkb2N1bWVudCB0aGUgcHJvcGVyIG9uZXMgYW5kIGhhdmUg
+dGhlIGRyaXZlcnMKPiBzdXBwb3J0IFJvYidzIG9sZCBwcm9wZXJ0aWVzIHVudGlsIGhlJ3MgY29t
+Zm9ydGFibGUgZHJvcHBpbmcgdGhlbS4KPgo+IFRoYXQgd2F5IHdlIGhhdmUgYSBkb2N1bWVudGVk
+IHdheSBmb3J3YXJkIGFuZCBSb2IgY2FuIHJ1biBoaXMgYmFja3BvcnRzCj4gb2YgdGhpcyBjb2Rl
+IHdpdGhvdXQgZm9ya2luZyBpdC4KPgo+IFJlZ2FyZHMsCj4gQmpvcm4KX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApk
+cmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHA6Ly9saXN0cy5mcmVlZGVza3RvcC5v
+cmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
