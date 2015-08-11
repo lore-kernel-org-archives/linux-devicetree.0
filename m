@@ -1,37 +1,50 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH v2 2/2] ARM: shmobile: silk: add QSPI DT support
-Date: Tue, 11 Aug 2015 08:59:08 +0200
-Message-ID: <CAMuHMdVVGCFheo+Eng2ET8_CJcaUrkXmubrZTDw0CyZ8_s7OHg@mail.gmail.com>
-References: <4187771.Fb49GBKgyg@wasted.cogentembedded.com>
-	<7036752.0LCvRcbC9K@wasted.cogentembedded.com>
+From: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>
+Subject: Re: [RESEND][PATCH 3/4] ARM: davinci: Set proper SPI prescale limit
+ value
+Date: Tue, 11 Aug 2015 12:28:21 +0530
+Message-ID: <55C99D0D.9050605@ti.com>
+References: <1437568344-18889-1-git-send-email-fcooper@ti.com> <1437568344-18889-4-git-send-email-fcooper@ti.com> <55B22681.3060000@ti.com> <55C9380D.1060802@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <7036752.0LCvRcbC9K@wasted.cogentembedded.com>
-Sender: linux-sh-owner@vger.kernel.org
-To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Cc: Simon Horman <horms@verge.net.au>, Linux-sh list <linux-sh@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Magnus Damm <magnus.damm@gmail.com>, Russell King <linux@arm.linux.org.uk>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <55C9380D.1060802-l0cyMroinI0@public.gmane.org>
+Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Cc: "Franklin S Cooper Jr." <fcooper-l0cyMroinI0@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, khilman-1D3HCaltpLuhEniVeURVKkEOCMrvLtNR@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-arm-kernel-xBCQruHUn5ppWr+L1FloEB2eb7JE58TQ@public.gmane.org, ssantosh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Aug 11, 2015 at 12:00 AM, Sergei Shtylyov
-<sergei.shtylyov@cogentembedded.com> wrote:
-> Define the SILK board dependent part of the QSPI device node.
-> Add device nodes  for Spansion  S25FL512S SPI flash and MTD partitions on it.
->
-> Based on the original patch by Vladimir Barinov
-> <vladimir.barinov@cogentembedded.com>.
->
-> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+On Tuesday 11 August 2015 05:17 AM, Franklin S Cooper Jr. wrote:
+> 
+> 
+> On 07/24/2015 06:50 AM, Sekhar Nori wrote:
+>> On Wednesday 22 July 2015 06:02 PM, Franklin S Cooper Jr wrote:
+>>> SPI Davinci driver has been updated to allow SOCs to specify their minimum
+>>> prescale value. Update the various SOCs board files that use this driver with
+>>> their proper prescaler limit.
+>>>
+>>> Signed-off-by: Franklin S Cooper Jr <fcooper-l0cyMroinI0@public.gmane.org>
+>> Acked-by: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>
+>>
+>> in case Mark is okay to take it through his tree. It does not clash with
+>> anything else I have for mach-davinci.
+>>
+>> Thanks,
+>> Sekhar
+>>
+> ping. Patches 1 and 2 have already been pulled into Mark's spi tree and are currently in in linux-next.
 
-Acked-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Mark, can you apply this patch to your tree as well? Thats the preferred
+route for me.
 
-Gr{oetje,eeting}s,
+If thats not an option for you, can you confirm that the topic/davinci
+branch of your spi tree is an immutable commit I can base my pull
+request to ARM-SoC on?
 
-                        Geert
+Thanks,
+Sekhar
 
 --
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+To unsubscribe from this list: send the line "unsubscribe linux-spi" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
