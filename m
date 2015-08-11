@@ -1,37 +1,55 @@
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: Re: [PATCH v2 1/2] ARM: shmobile: r8a7794: add QSPI DT support
-Date: Tue, 11 Aug 2015 23:16:31 +0300
-Message-ID: <55CA581F.60407@cogentembedded.com>
-References: <4187771.Fb49GBKgyg@wasted.cogentembedded.com>
- <1540672.y3DTbtssP8@wasted.cogentembedded.com>
- <CAMuHMdVG3R3ThQWPM-tDHTcJZfFB+j3cFhdBNoH4=ZN7ENrXRg@mail.gmail.com>
+From: Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH 1/2] clk: add lpc18xx creg clk driver
+Date: Tue, 11 Aug 2015 13:41:27 -0700
+Message-ID: <20150811204127.31346.16729@quantum>
+References: <1436651307-24098-1-git-send-email-manabian@gmail.com>
+ <1436651307-24098-2-git-send-email-manabian@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <CAMuHMdVG3R3ThQWPM-tDHTcJZfFB+j3cFhdBNoH4=ZN7ENrXRg@mail.gmail.com>
-Sender: linux-sh-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Simon Horman <horms@verge.net.au>, Linux-sh list <linux-sh@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Magnus Damm <magnus.damm@gmail.com>, Russell King <linux@arm.linux.org.uk>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8BIT
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1436651307-24098-2-git-send-email-manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Joachim Eastwood <manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hello.
+Hi Joachim,
 
-On 08/11/2015 09:58 AM, Geert Uytterhoeven wrote:
+Quoting Joachim Eastwood (2015-07-11 14:48:26)
+> +static void __init lpc18xx_creg_clk_init(struct device_node *np)
+> +{
+> +       const char *clk_32khz_parent;
+> +       struct regmap *syscon;
+> +
+> +       syscon = syscon_node_to_regmap(np->parent);
+> +       if (IS_ERR(syscon)) {
+> +               pr_err("%s: syscon lookup failed\n", __func__);
+> +               return;
+> +       }
+> +
+> +       clk_32khz_parent = of_clk_get_parent_name(np, 0);
+> +
+> +       clk_creg[CREG_CLK_32KHZ] =
+> +               clk_register_creg_clk(&clk_creg_clocks[CREG_CLK_32KHZ],
+> +                                     &clk_32khz_parent, syscon);
+> +
+> +       clk_creg[CREG_CLK_1KHZ] =
+> +               clk_register_creg_clk(&clk_creg_clocks[CREG_CLK_1KHZ],
+> +                                     &clk_creg_clocks[CREG_CLK_32KHZ].name,
+> +                                     syscon);
+> +
+> +       of_clk_add_provider(np, of_clk_src_onecell_get, &clk_base_data);
+> +}
+> +CLK_OF_DECLARE(lpc18xx_creg_clk, "nxp,lpc1850-creg-clk", lpc18xx_creg_clk_init);
 
->> Define the generic R8A7794 part of the QSPI device node.
->>
->> Based on original patch by Hisashi Nakamura <hisashi.nakamura.ak@renesas.com>.
->>
->> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
->
-> Acked-by: Geert Uytterhoeven <geert+renesas@glider.be>
+I'll ask the same question that Stephen asked in your CCU/CGU driver
+series: is it necessary to use CLK_OF_DECLARE here or can you use the
+platform device model?
 
-    Sorry, forgot to add your ACK when re-posting. Thank you!
-
-> Gr{oetje,eeting}s,
->
->                          Geert
-
-MBR, Sergei
-
+Thanks,
+Mike
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
