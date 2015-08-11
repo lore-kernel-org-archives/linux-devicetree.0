@@ -1,50 +1,46 @@
-From: Loc Ho <lho-qTEPVZfXA3Y@public.gmane.org>
-Subject: [PATCH v3 4/4] arm64: Add L3/SoC DT subnodes to the APM X-Gene SoC EDAC node
-Date: Tue, 11 Aug 2015 14:47:57 -0600
-Message-ID: <1439326077-25507-5-git-send-email-lho@apm.com>
-References: <1439326077-25507-1-git-send-email-lho@apm.com>
- <1439326077-25507-2-git-send-email-lho@apm.com>
- <1439326077-25507-3-git-send-email-lho@apm.com>
- <1439326077-25507-4-git-send-email-lho@apm.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1439326077-25507-4-git-send-email-lho-qTEPVZfXA3Y@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: dougthompson-aS9lmoZGLiVWk0Htik3J/w@public.gmane.org, bp-Gina5bIWoIWzQB+pC5nmwQ@public.gmane.org, mchehab-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, linux-edac-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, patches-qTEPVZfXA3Y@public.gmane.org, Loc Ho <lho-qTEPVZfXA3Y@public.gmane.org>
+From: Bjorn Helgaas <bhelgaas@google.com>
+Subject: Re: [PATCH 0/2] pci: am57xx-evm: Fix PCIe card enumeration issue
+Date: Tue, 11 Aug 2015 16:02:10 -0500
+Message-ID: <20150811210210.GK13982@google.com>
+References: <1438090750-11604-1-git-send-email-kishon@ti.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-pci-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1438090750-11604-1-git-send-email-kishon@ti.com>
+Sender: linux-pci-owner@vger.kernel.org
+To: Kishon Vijay Abraham I <kishon@ti.com>
+Cc: linux-omap@vger.kernel.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, tony@atomide.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, bcousson@baylibre.com, linux@arm.linux.org.uk, nsekhar@ti.com
 List-Id: devicetree@vger.kernel.org
 
-This patch adds L3/SoC DT subnodes to the APM X-Gene SoC EDAC node.
+On Tue, Jul 28, 2015 at 07:09:08PM +0530, Kishon Vijay Abraham I wrote:
+> This series fixes PCIe card enumeration issue in am57xx-evm.
+> 
+> In the case of am57xx-evm, the PERST# line is connected to a gpio line
+> and this has to be driven low in order to perform a fundamental reset
+> of the card. If the gpio line is driven high, there is no way the card
+> can come out of reset.
+> 
+> Add support in the pcie-dra7xx driver to make gpio drive PERST# line.
+> 
+> The PERST# line can be used to perform reset not during the power on
+> sequence too (warm reset) but we are not adding support for this as the
+> PCIe express base sepcification doesn't explain how to perform warm
+> reset
+> 
+> "In some cases, it may be possible for the Fundamental Reset mechanism
+> to be triggered by hardware without the removal and re-application of
+> power to the component. This is called a warm reset. This document does
+> not specify a means for generating a warm reset."
+> 
+> Kishon Vijay Abraham I (2):
+>   pci: host: pci-dra7xx: Add support to make gpio drive PERST# line
+>   ARM: dts: am57xx-evm: Add 'gpios' property with gpio2_8
+> 
+>  Documentation/devicetree/bindings/pci/ti-pci.txt |    3 +++
+>  arch/arm/boot/dts/am57xx-beagle-x15.dts          |    5 +++++
+>  arch/arm/boot/dts/dra7.dtsi                      |    2 +-
+>  drivers/pci/host/pci-dra7xx.c                    |   24 ++++++++++++++++++++--
+>  4 files changed, 31 insertions(+), 3 deletions(-)
 
-Signed-off-by: Loc Ho <lho-qTEPVZfXA3Y@public.gmane.org>
----
- arch/arm64/boot/dts/apm/apm-storm.dtsi |   10 ++++++++++
- 1 files changed, 10 insertions(+), 0 deletions(-)
-
-diff --git a/arch/arm64/boot/dts/apm/apm-storm.dtsi b/arch/arm64/boot/dts/apm/apm-storm.dtsi
-index 58093ed..8ab6b0e 100644
---- a/arch/arm64/boot/dts/apm/apm-storm.dtsi
-+++ b/arch/arm64/boot/dts/apm/apm-storm.dtsi
-@@ -477,6 +477,16 @@
- 				reg = <0x0 0x7c600000 0x0 0x200000>;
- 				pmd-controller = <3>;
- 			};
-+
-+			edacl3@7e600000 {
-+				compatible = "apm,xgene-edac-l3";
-+				reg = <0x0 0x7e600000 0x0 0x1000>;
-+			};
-+
-+			edacsoc@7e930000 {
-+				compatible = "apm,xgene-edac-soc-v1";
-+				reg = <0x0 0x7e930000 0x0 0x1000>;
-+			};
- 		};
- 
- 		pcie0: pcie@1f2b0000 {
--- 
-1.7.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Applied with Tony's ack (for patch 2) to pci/host-dra7xx for v4.3, thanks!
