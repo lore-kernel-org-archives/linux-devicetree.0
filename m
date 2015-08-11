@@ -1,38 +1,35 @@
-From: Chen-Yu Tsai <wens@csie.org>
-Subject: [PATCH 1/3] crypto: sunxi-ss: Document optional reset control bindings
-Date: Tue, 11 Aug 2015 13:32:55 +0800
-Message-ID: <1439271177-26523-2-git-send-email-wens@csie.org>
-References: <1439271177-26523-1-git-send-email-wens@csie.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1439271177-26523-1-git-send-email-wens@csie.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Corentin Labbe <clabbe.montjoie@gmail.com>, Herbert Xu <herbert@gondor.apana.org.au>, Maxime Ripard <maxime.ripard@free-electrons.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>
-Cc: Chen-Yu Tsai <wens@csie.org>, linux-crypto@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH v2 1/2] ARM: shmobile: r8a7794: add QSPI DT support
+Date: Tue, 11 Aug 2015 08:58:15 +0200
+Message-ID: <CAMuHMdVG3R3ThQWPM-tDHTcJZfFB+j3cFhdBNoH4=ZN7ENrXRg@mail.gmail.com>
+References: <4187771.Fb49GBKgyg@wasted.cogentembedded.com>
+	<1540672.y3DTbtssP8@wasted.cogentembedded.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <1540672.y3DTbtssP8@wasted.cogentembedded.com>
+Sender: linux-sh-owner@vger.kernel.org
+To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Cc: Simon Horman <horms@verge.net.au>, Linux-sh list <linux-sh@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Magnus Damm <magnus.damm@gmail.com>, Russell King <linux@arm.linux.org.uk>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Later Allwinner SoCs split out the reset controls for individual modules
-out of the clock gate controls. The "Security System" crypto engine is
-no different.
+On Mon, Aug 10, 2015 at 11:59 PM, Sergei Shtylyov
+<sergei.shtylyov@cogentembedded.com> wrote:
+> Define the generic R8A7794 part of the QSPI device node.
+>
+> Based on original patch by Hisashi Nakamura <hisashi.nakamura.ak@renesas.com>.
+>
+> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
 
-Signed-off-by: Chen-Yu Tsai <wens@csie.org>
----
- Documentation/devicetree/bindings/crypto/sun4i-ss.txt | 4 ++++
- 1 file changed, 4 insertions(+)
+Acked-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
-diff --git a/Documentation/devicetree/bindings/crypto/sun4i-ss.txt b/Documentation/devicetree/bindings/crypto/sun4i-ss.txt
-index 1e02d177fea6..5d38e9b7033f 100644
---- a/Documentation/devicetree/bindings/crypto/sun4i-ss.txt
-+++ b/Documentation/devicetree/bindings/crypto/sun4i-ss.txt
-@@ -9,6 +9,10 @@ Required properties:
- 	* "ahb" : AHB gating clock
- 	* "mod" : SS controller clock
- 
-+Optional properties:
-+ - resets : phandle + reset specifier pair
-+ - reset-names : must contain "ahb"
-+
- Example:
- 	crypto: crypto-engine@01c15000 {
- 		compatible = "allwinner,sun4i-a10-crypto";
--- 
-2.5.0
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
