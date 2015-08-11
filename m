@@ -1,71 +1,170 @@
-From: Charles Keepax <ckeepax-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
-Subject: [PATCH RESEND 5/5] mfd: arizona: Update DT doc for new mic detection bindings
-Date: Tue, 11 Aug 2015 09:14:04 +0100
-Message-ID: <1439280844-9808-5-git-send-email-ckeepax@opensource.wolfsonmicro.com>
+From: Charles Keepax <ckeepax@opensource.wolfsonmicro.com>
+Subject: [PATCH RESEND 2/5] extcon: arizona: Add support for new ADC value headphone detect
+Date: Tue, 11 Aug 2015 09:14:01 +0100
+Message-ID: <1439280844-9808-2-git-send-email-ckeepax@opensource.wolfsonmicro.com>
 References: <1439280844-9808-1-git-send-email-ckeepax@opensource.wolfsonmicro.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1439280844-9808-1-git-send-email-ckeepax-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org
-Cc: patches-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, myungjoo.ham-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1439280844-9808-1-git-send-email-ckeepax@opensource.wolfsonmicro.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: lee.jones@linaro.org, cw00.choi@samsung.com
+Cc: patches@opensource.wolfsonmicro.com, devicetree@vger.kernel.org, myungjoo.ham@samsung.com, sameo@linux.intel.com, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Charles Keepax <ckeepax-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
----
- Documentation/devicetree/bindings/mfd/arizona.txt |   21 +++++++++++++++++++++
- include/dt-bindings/mfd/arizona.h                 |    5 +++++
- 2 files changed, 26 insertions(+), 0 deletions(-)
+Newer devices give users the option to make the 3/4 pole jack
+determination using a software comparison rather than a hardware one.
+This patch adds support for this functionality.
 
-diff --git a/Documentation/devicetree/bindings/mfd/arizona.txt b/Documentation/devicetree/bindings/mfd/arizona.txt
-index a8fee60..b98a11b 100644
---- a/Documentation/devicetree/bindings/mfd/arizona.txt
-+++ b/Documentation/devicetree/bindings/mfd/arizona.txt
-@@ -73,6 +73,27 @@ Optional properties:
-     If this node is not mentioned or if the value is unknown, then
-     headphone detection mode is set to HPDETL.
+Signed-off-by: Charles Keepax <ckeepax@opensource.wolfsonmicro.com>
+---
+ drivers/extcon/extcon-arizona.c |   67 +++++++++++++++++++++++++++++++++++---
+ 1 files changed, 61 insertions(+), 6 deletions(-)
+
+diff --git a/drivers/extcon/extcon-arizona.c b/drivers/extcon/extcon-arizona.c
+index 4b9f09c..f372156 100644
+--- a/drivers/extcon/extcon-arizona.c
++++ b/drivers/extcon/extcon-arizona.c
+@@ -48,6 +48,10 @@
+ #define HPDET_DEBOUNCE 500
+ #define DEFAULT_MICD_TIMEOUT 2000
  
-+  - wlf,micd-software-compare : Use a software comparison to determine mic
-+    presence
-+  - wlf,micd-detect-debounce : Additional software microphone detection
-+    debounce specified in milliseconds.
-+  - wlf,micd-pol-gpio : GPIO specifier for the GPIO controlling the headset
-+    polarity if one exists.
-+  - wlf,micd-bias-start-time : Time allowed for MICBIAS to startup prior to
-+    performing microphone detection, specified as per the ARIZONA_MICD_TIME_XXX
-+    defines.
-+  - wlf,micd-rate : Delay between successive microphone detection measurements,
-+    specified as per the ARIZONA_MICD_TIME_XXX defines.
-+  - wlf,micd-dbtime : Microphone detection hardware debounces specified as the
-+    number of measurements to take, valid values being 2 and 4.
-+  - wlf,micd-timeout : Timeout for microphone detection, specified in
-+    milliseconds.
-+  - wlf,micd-force-micbias : Force MICBIAS continuously on during microphone
-+    detection.
++#define QUICK_HEADPHONE_MAX_OHM 3
++#define MICROPHONE_MIN_OHM      1257
++#define MICROPHONE_MAX_OHM      30000
 +
-+  - wlf,gpsw : Settings for the general purpose switch, set as one of the
-+    ARIZONA_GPSW_XXX defines.
-+
-   - DCVDD-supply, MICVDD-supply : Power supplies, only need to be specified if
-     they are being externally supplied. As covered in
-     Documentation/devicetree/bindings/regulator/regulator.txt
-diff --git a/include/dt-bindings/mfd/arizona.h b/include/dt-bindings/mfd/arizona.h
-index c40f665..dedf46f 100644
---- a/include/dt-bindings/mfd/arizona.h
-+++ b/include/dt-bindings/mfd/arizona.h
-@@ -110,4 +110,9 @@
- #define ARIZONA_ACCDET_MODE_HPM 4
- #define ARIZONA_ACCDET_MODE_ADC 7
+ #define MICD_DBTIME_TWO_READINGS 2
+ #define MICD_DBTIME_FOUR_READINGS 4
  
-+#define ARIZONA_GPSW_OPEN           0
-+#define ARIZONA_GPSW_CLOSED         1
-+#define ARIZONA_GPSW_CLAMP_ENABLED  2
-+#define ARIZONA_GPSW_CLAMP_DISABLED 3
+@@ -117,12 +121,15 @@ static const struct arizona_micd_range micd_default_ranges[] = {
+ 	{ .max = 430, .key = BTN_5 },
+ };
+ 
++/* The number of levels in arizona_micd_levels valid for button thresholds */
++#define ARIZONA_NUM_MICD_BUTTON_LEVELS 64
 +
- #endif
+ static const int arizona_micd_levels[] = {
+ 	3, 6, 8, 11, 13, 16, 18, 21, 23, 26, 28, 31, 34, 36, 39, 41, 44, 46,
+ 	49, 52, 54, 57, 60, 62, 65, 67, 70, 73, 75, 78, 81, 83, 89, 94, 100,
+ 	105, 111, 116, 122, 127, 139, 150, 161, 173, 186, 196, 209, 220, 245,
+ 	270, 295, 321, 348, 375, 402, 430, 489, 550, 614, 681, 752, 903, 1071,
+-	1257,
++	1257, 30000,
+ };
+ 
+ static const unsigned int arizona_cable[] = {
+@@ -270,6 +277,7 @@ static void arizona_start_mic(struct arizona_extcon_info *info)
+ 	struct arizona *arizona = info->arizona;
+ 	bool change;
+ 	int ret;
++	unsigned int mode;
+ 
+ 	/* Microphone detection can't use idle mode */
+ 	pm_runtime_get(info->dev);
+@@ -295,9 +303,14 @@ static void arizona_start_mic(struct arizona_extcon_info *info)
+ 		regmap_write(arizona->regmap, 0x80, 0x0);
+ 	}
+ 
++	if (info->detecting && arizona->pdata.micd_software_compare)
++		mode = ARIZONA_ACCDET_MODE_ADC;
++	else
++		mode = ARIZONA_ACCDET_MODE_MIC;
++
+ 	regmap_update_bits(arizona->regmap,
+ 			   ARIZONA_ACCESSORY_DETECT_MODE_1,
+-			   ARIZONA_ACCDET_MODE_MASK, ARIZONA_ACCDET_MODE_MIC);
++			   ARIZONA_ACCDET_MODE_MASK, mode);
+ 
+ 	arizona_extcon_pulse_micbias(info);
+ 
+@@ -804,6 +817,37 @@ static void arizona_micd_detect(struct work_struct *work)
+ 		return;
+ 	}
+ 
++	if (info->detecting && arizona->pdata.micd_software_compare) {
++		/* Must disable MICD before we read the ADCVAL */
++		regmap_update_bits(arizona->regmap, ARIZONA_MIC_DETECT_1,
++				   ARIZONA_MICD_ENA, 0);
++		ret = regmap_read(arizona->regmap, ARIZONA_MIC_DETECT_4, &val);
++		if (ret != 0) {
++			dev_err(arizona->dev,
++				"Failed to read MICDET_ADCVAL: %d\n",
++				ret);
++			mutex_unlock(&info->lock);
++			return;
++		}
++
++		dev_dbg(arizona->dev, "MICDET_ADCVAL: %x\n", val);
++
++		val &= ARIZONA_MICDET_ADCVAL_MASK;
++		if (val < ARRAY_SIZE(arizona_micd_levels))
++			val = arizona_micd_levels[val];
++		else
++			val = INT_MAX;
++
++		if (val <= QUICK_HEADPHONE_MAX_OHM)
++			val = ARIZONA_MICD_STS | ARIZONA_MICD_LVL_0;
++		else if (val <= MICROPHONE_MIN_OHM)
++			val = ARIZONA_MICD_STS | ARIZONA_MICD_LVL_1;
++		else if (val <= MICROPHONE_MAX_OHM)
++			val = ARIZONA_MICD_STS | ARIZONA_MICD_LVL_8;
++		else
++			val = ARIZONA_MICD_LVL_8;
++	}
++
+ 	for (i = 0; i < 10 && !(val & MICD_LVL_0_TO_8); i++) {
+ 		ret = regmap_read(arizona->regmap, ARIZONA_MIC_DETECT_3, &val);
+ 		if (ret != 0) {
+@@ -932,10 +976,17 @@ static void arizona_micd_detect(struct work_struct *work)
+ 	}
+ 
+ handled:
+-	if (info->detecting)
++	if (info->detecting) {
++		if (arizona->pdata.micd_software_compare)
++			regmap_update_bits(arizona->regmap,
++					   ARIZONA_MIC_DETECT_1,
++					   ARIZONA_MICD_ENA,
++					   ARIZONA_MICD_ENA);
++
+ 		queue_delayed_work(system_power_efficient_wq,
+ 				   &info->micd_timeout_work,
+ 				   msecs_to_jiffies(info->micd_timeout));
++	}
+ 
+ 	pm_runtime_mark_last_busy(info->dev);
+ 	mutex_unlock(&info->lock);
+@@ -1162,6 +1213,9 @@ static int arizona_extcon_device_get_pdata(struct arizona *arizona)
+ 	pdata->micd_force_micbias = device_property_read_bool(arizona->dev,
+ 						"wlf,micd-force-micbias");
+ 
++	pdata->micd_software_compare = device_property_read_bool(arizona->dev,
++						"wlf,micd-software-compare");
++
+ 	return 0;
+ }
+ 
+@@ -1335,7 +1389,8 @@ static int arizona_extcon_probe(struct platform_device *pdev)
+ 		break;
+ 	}
+ 
+-	BUILD_BUG_ON(ARRAY_SIZE(arizona_micd_levels) != 0x40);
++	BUILD_BUG_ON(ARRAY_SIZE(arizona_micd_levels) <
++		     ARIZONA_NUM_MICD_BUTTON_LEVELS);
+ 
+ 	if (arizona->pdata.num_micd_ranges) {
+ 		info->micd_ranges = pdata->micd_ranges;
+@@ -1368,11 +1423,11 @@ static int arizona_extcon_probe(struct platform_device *pdev)
+ 
+ 	/* Set up all the buttons the user specified */
+ 	for (i = 0; i < info->num_micd_ranges; i++) {
+-		for (j = 0; j < ARRAY_SIZE(arizona_micd_levels); j++)
++		for (j = 0; j < ARIZONA_NUM_MICD_BUTTON_LEVELS; j++)
+ 			if (arizona_micd_levels[j] >= info->micd_ranges[i].max)
+ 				break;
+ 
+-		if (j == ARRAY_SIZE(arizona_micd_levels)) {
++		if (j == ARIZONA_NUM_MICD_BUTTON_LEVELS) {
+ 			dev_err(arizona->dev, "Unsupported MICD level %d\n",
+ 				info->micd_ranges[i].max);
+ 			ret = -EINVAL;
 -- 
 1.7.2.5
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
