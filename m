@@ -1,53 +1,207 @@
-From: Tomeu Vizoso <tomeu.vizoso@collabora.com>
-Subject: Re: [PATCH v3 02/18] of/platform: add of_platform_probe
-Date: Tue, 11 Aug 2015 11:37:38 +0200
-Message-ID: <CAAObsKCrakupiZMQ9AoiWo6fDYT6Cfi_khdssUS6pv61zYS1Zg@mail.gmail.com>
-References: <1438870315-18689-1-git-send-email-tomeu.vizoso@collabora.com>
- <1438870315-18689-3-git-send-email-tomeu.vizoso@collabora.com> <20150807121913.GS20873@sirena.org.uk>
+From: Ian Campbell <ian.campbell@citrix.com>
+Subject: Re: [PATCH v5] dtb: Create a common home for cross-architecture
+ dtsi files.
+Date: Tue, 11 Aug 2015 11:07:26 +0100
+Message-ID: <1439287646.9747.212.camel@citrix.com>
+References: <1438618000-1091-1-git-send-email-ian.campbell@citrix.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-acpi-owner@vger.kernel.org>
-In-Reply-To: <20150807121913.GS20873@sirena.org.uk>
-Sender: linux-acpi-owner@vger.kernel.org
-To: Mark Brown <broonie@kernel.org>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Stephen Warren <swarren@wwwdotorg.org>, Javier Martinez Canillas <javier@osg.samsung.com>, Thierry Reding <thierry.reding@gmail.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linus Walleij <linus.walleij@linaro.org>, linux-acpi@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kbuild-owner@vger.kernel.org>
+In-Reply-To: <1438618000-1091-1-git-send-email-ian.campbell@citrix.com>
+Sender: linux-kbuild-owner@vger.kernel.org
+To: linux-kernel@vger.kernel.org
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Kumar Gala <galak@codeaurora.org>, Liviu Dudau <liviu.dudau@arm.com>, Sudeep Holla <sudeep.holla@arm.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Russell King <linux@arm.linux.org.uk>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Kristina Martsenko <kristina.martsenko@arm.com>, Kevin Hilman <khilman@linaro.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kbuild@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 7 August 2015 at 14:19, Mark Brown <broonie@kernel.org> wrote:
-> On Thu, Aug 06, 2015 at 04:11:39PM +0200, Tomeu Vizoso wrote:
->
->> Walks the OF tree up and finds the closest ancestor that has a platform
->> device associated with it, probing it if isn't bound to a driver yet.
->
->> The above should ensure that the dependency represented by the passed OF
->> node is available, because probing a platform device should cause its
->> descendants to be probed as well.
->
-> This sounds like it's going to break in the case where we have MFDs that
-> represent their functions in DT (not a pattern I'm a fan of but it's a
-> thing people do).  We'll walk back to the platform device for the MFD
-> function, try to probe it and then give up.  Perhaps that's good enough
-> anyway but it's not clear to me why we don't just try every parent we
-> find?
+On Mon, 2015-08-03 at 17:06 +0100, Ian Campbell wrote:
+> Commit 9ccd608070b6 ("arm64: dts: add device tree for ARM SMM-A53x2 on
+> LogicTile Express 20MG") added a new dts file to arch/arm64 which
+> included "../../../../arm/boot/dts/vexpress-v2m-rs1.dtsi", i.e. a
+> .dtsi supplied by arch/arm.
+> 
+> Unfortunately this causes some issues for the split device tree
+> repository[0], since things get moved around there. In that context
+> the new .dts ends up at src/arm64/arm/vexpress-v2f-1xv7-ca53x2.dts
+> while the include is at src/arm/vexpress-v2m-rs1.dtsi.
 
-Agreed. In the attempt at probing dependencies before a device is
-probed, I considered that a device's parent is also a dependency and
-that worked well. From what I saw, few devices will defer their probe
-if their parent hasn't been probed yet, assuming that it will have
-probed already. But with simple-mfd and simple-bus that shouldn't be
-relied upon as things will break if their parents defer their probe.
-With async probing enabled this failure scenario becomes more
-probable.
+Hi Grant,
 
-> I'm also not a fan of the fact that the interface here is explicitly
-> saying that we want to probe a platform device, that's an implementation
-> detail that callers shouldn't need to know about.  From the point of
-> view of the callers what they're trying to do is kick any dependencies
-> into being instantiated, the fact that we currently try to accomplish it
-> with platform devices isn't something they care about.
+Do you think there is any chance of getting this into 4.2-rc$NEXT or shall
+we wait until 4.3? I'm assuming this should go via the DT tree, but maybe
+it should go via an ARM tree?
 
-Agreed.
+Ian.
 
-Thanks,
-
-Tomeu
+> 
+> The sharing of the .dtsi is legitimate since the baseboard is the same
+> for various vexpress systems whatever processor they use.
+> 
+> Rather than using ../../ tricks to pickup .dtsi files from another
+> arch this patch creates a new directory kernel/dts as a home for such
+> cross-arch .dtsi files and arranges for it to be in the include path
+> for both dtc and cpp. The dtsi file itself is moved into a vendor
+> subdir in this case "arm" (the vendor, not the ARCH=).
+> 
+> [0] https://git.kernel.org/cgit/linux/kernel/git/devicetree/devicetree
+> -rebasing.git/
+> 
+> Signed-off-by: Ian Campbell <ian.campbell@citrix.com>
+> Cc: Rob Herring <robh+dt@kernel.org>
+> Cc: Pawel Moll <pawel.moll@arm.com>
+> Cc: Mark Rutland <mark.rutland@arm.com>
+> Cc: Kumar Gala <galak@codeaurora.org>
+> Cc: Liviu Dudau <liviu.dudau@arm.com>
+> Cc: Sudeep Holla <sudeep.holla@arm.com>
+> Cc: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+> Cc: Russell King <linux@arm.linux.org.uk>
+> Cc: Catalin Marinas <catalin.marinas@arm.com>
+> Cc: Will Deacon <will.deacon@arm.com>
+> Cc: Kristina Martsenko <kristina.martsenko@arm.com>
+> Cc: Kevin Hilman <khilman@linaro.org>
+> Cc: devicetree@vger.kernel.org
+> Cc: linux-kernel@vger.kernel.org
+> Cc: linux-arm-kernel@lists.infradead.org
+> Cc: linux-kbuild@vger.kernel.org
+> Acked-by: Mark Rutland <mark.rutland@arm.com>
+> Acked-by: Rob Herring <robh@kernel.org>
+> Acked-by: Liviu Dudau <Liviu.Dudau@arm.com>
+> Reviewed-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+> ---
+> v2: Move to include/dt-dtsi and introduce a per-vendor subdirectory.
+> 
+> v3: Move to kernel/dts.
+>     Include new directory in DTC include path as well as cpp path, and
+>     therefore switch back to /include/.
+>     Update MAINTAINERS
+> 
+> v4: Change path in changelog too.
+>     Add ()s to title of 9ccd608070b6.
+> 
+> v5: Remove stale reference to switching from /include/ to #include.
+> ---
+>  Documentation/devicetree/bindings/arm/vexpress.txt          | 2 +-
+>  MAINTAINERS                                                 | 1 +
+>  arch/arm/boot/dts/vexpress-v2p-ca15-tc1.dts                 | 2 +-
+>  arch/arm/boot/dts/vexpress-v2p-ca15_a7.dts                  | 2 +-
+>  arch/arm/boot/dts/vexpress-v2p-ca5s.dts                     | 2 +-
+>  arch/arm64/boot/dts/arm/vexpress-v2f-1xv7-ca53x2.dts        | 2 +-
+>  {arch/arm/boot/dts => kernel/dts/arm}/vexpress-v2m-rs1.dtsi | 0
+>  scripts/Makefile.lib                                        | 3 ++-
+>  8 files changed, 8 insertions(+), 6 deletions(-)
+>  rename {arch/arm/boot/dts => kernel/dts/arm}/vexpress-v2m-rs1.dtsi 
+> (100%)
+> 
+> diff --git a/Documentation/devicetree/bindings/arm/vexpress.txt 
+> b/Documentation/devicetree/bindings/arm/vexpress.txt
+> index 39844cd..b6031d9 100644
+> --- a/Documentation/devicetree/bindings/arm/vexpress.txt
+> +++ b/Documentation/devicetree/bindings/arm/vexpress.txt
+> @@ -223,7 +223,7 @@ Example of a VE tile description (simplified)
+>  		/* Active high IRQ 0 is connected to GIC's SPI0 */
+>  		interrupt-map = <0 0 0 &gic 0 0 4>;
+>  
+> -		/include/ "vexpress-v2m-rs1.dtsi"
+> +		/include/ "arm/vexpress-v2m-rs1.dtsi"
+>  	};
+>  };
+>  
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index a226416..1941078 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -7537,6 +7537,7 @@ S:	Maintained
+>  F:	Documentation/devicetree/
+>  F:	arch/*/boot/dts/
+>  F:	include/dt-bindings/
+> +F:	kernel/dts/
+>  
+>  OPEN FIRMWARE AND DEVICE TREE OVERLAYS
+>  M:	Pantelis Antoniou <pantelis.antoniou@konsulko.com>
+> diff --git a/arch/arm/boot/dts/vexpress-v2p-ca15-tc1.dts 
+> b/arch/arm/boot/dts/vexpress-v2p-ca15-tc1.dts
+> index 9420053..b144092 100644
+> --- a/arch/arm/boot/dts/vexpress-v2p-ca15-tc1.dts
+> +++ b/arch/arm/boot/dts/vexpress-v2p-ca15-tc1.dts
+> @@ -278,6 +278,6 @@
+>  				<0 0 41 &gic 0 41 4>,
+>  				<0 0 42 &gic 0 42 4>;
+>  
+> -		/include/ "vexpress-v2m-rs1.dtsi"
+> +		/include/ "arm/vexpress-v2m-rs1.dtsi"
+>  	};
+>  };
+> diff --git a/arch/arm/boot/dts/vexpress-v2p-ca15_a7.dts 
+> b/arch/arm/boot/dts/vexpress-v2p-ca15_a7.dts
+> index 17f63f7..350f402 100644
+> --- a/arch/arm/boot/dts/vexpress-v2p-ca15_a7.dts
+> +++ b/arch/arm/boot/dts/vexpress-v2p-ca15_a7.dts
+> @@ -636,6 +636,6 @@
+>  				<0 0 41 &gic 0 41 4>,
+>  				<0 0 42 &gic 0 42 4>;
+>  
+> -		/include/ "vexpress-v2m-rs1.dtsi"
+> +		/include/ "arm/vexpress-v2m-rs1.dtsi"
+>  	};
+>  };
+> diff --git a/arch/arm/boot/dts/vexpress-v2p-ca5s.dts 
+> b/arch/arm/boot/dts/vexpress-v2p-ca5s.dts
+> index d2709b7..585ced0 100644
+> --- a/arch/arm/boot/dts/vexpress-v2p-ca5s.dts
+> +++ b/arch/arm/boot/dts/vexpress-v2p-ca5s.dts
+> @@ -248,6 +248,6 @@
+>  				<0 0 41 &gic 0 41 4>,
+>  				<0 0 42 &gic 0 42 4>;
+>  
+> -		/include/ "vexpress-v2m-rs1.dtsi"
+> +		/include/ "arm/vexpress-v2m-rs1.dtsi"
+>  	};
+>  };
+> diff --git a/arch/arm64/boot/dts/arm/vexpress-v2f-1xv7-ca53x2.dts 
+> b/arch/arm64/boot/dts/arm/vexpress-v2f-1xv7-ca53x2.dts
+> index 5b1d018..c044804 100644
+> --- a/arch/arm64/boot/dts/arm/vexpress-v2f-1xv7-ca53x2.dts
+> +++ b/arch/arm64/boot/dts/arm/vexpress-v2f-1xv7-ca53x2.dts
+> @@ -186,6 +186,6 @@
+>  				<0 0 41 &gic GIC_SPI 41 
+> IRQ_TYPE_LEVEL_HIGH>,
+>  				<0 0 42 &gic GIC_SPI 42 
+> IRQ_TYPE_LEVEL_HIGH>;
+>  
+> -		/include/ "../../../../arm/boot/dts/vexpress-v2m
+> -rs1.dtsi"
+> +		/include/ "arm/vexpress-v2m-rs1.dtsi"
+>  	};
+>  };
+> diff --git a/arch/arm/boot/dts/vexpress-v2m-rs1.dtsi 
+> b/kernel/dts/arm/vexpress-v2m-rs1.dtsi
+> similarity index 100%
+> rename from arch/arm/boot/dts/vexpress-v2m-rs1.dtsi
+> rename to kernel/dts/arm/vexpress-v2m-rs1.dtsi
+> diff --git a/scripts/Makefile.lib b/scripts/Makefile.lib
+> index 79e8661..b4d9fb6 100644
+> --- a/scripts/Makefile.lib
+> +++ b/scripts/Makefile.lib
+> @@ -163,6 +163,7 @@ dtc_cpp_flags  = -Wp,-MD,$(depfile).pre.tmp -nostdinc
+>                     \
+>  		 -I$(srctree)/arch/$(SRCARCH)/boot/dts                  
+>  \
+>  		 -I$(srctree)/arch/$(SRCARCH)/boot/dts/include          
+>  \
+>  		 -I$(srctree)/drivers/of/testcase-data                  
+>  \
+> +		 -I$(srctree)/kernel/dts                                
+>  \
+>  		 -undef -D__DTS__
+>  
+>  # Finds the multi-part object the current object will be linked into
+> @@ -285,7 +286,7 @@ quiet_cmd_dtc = DTC     $@
+>  cmd_dtc = mkdir -p $(dir ${dtc-tmp}) ; \
+>  	$(CPP) $(dtc_cpp_flags) -x assembler-with-cpp -o $(dtc-tmp) $< ; 
+> \
+>  	$(objtree)/scripts/dtc/dtc -O dtb -o $@ -b 0 \
+> -		-i $(dir $<) $(DTC_FLAGS) \
+> +		-i $(dir $<) -i $(srctree)/kernel/dts $(DTC_FLAGS) \
+>  		-d $(depfile).dtc.tmp $(dtc-tmp) ; \
+>  	cat $(depfile).pre.tmp $(depfile).dtc.tmp > $(depfile)
+>  
