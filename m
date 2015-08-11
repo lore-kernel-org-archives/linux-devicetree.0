@@ -1,54 +1,101 @@
-From: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Subject: [PATCH] arm: rpi: Device tree modifications for U-Boot
-Date: Tue, 11 Aug 2015 08:25:53 -0600
-Message-ID: <1439303153-12171-1-git-send-email-sjg@chromium.org>
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Lee Jones <lee-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+From: Viresh Kumar <viresh.kumar@linaro.org>
+Subject: Re: [PATCH v4 2/2] dt: power: st: Provide bindings for ST's OPPs
+Date: Tue, 11 Aug 2015 19:58:12 +0530
+Message-ID: <20150811142812.GJ5509@linux>
+References: <CAL_JsqKQLQ15qSt95zBZykzzPhcUrtZzhk29a76n+r_3719AiA@mail.gmail.com>
+ <20150731163715.GV3159@codeaurora.org>
+ <20150803034642.GV899@linux>
+ <20150810132247.GH3249@x1>
+ <20150811080023.GB5509@linux>
+ <20150811093039.GA18282@x1>
+ <20150811100941.GG5509@linux>
+ <20150811115425.GE18282@x1>
+ <20150811120124.GH5509@linux>
+ <20150811132756.GG18282@x1>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20150811132756.GG18282@x1>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Lee Jones <lee.jones@linaro.org>
+Cc: Stephen Boyd <sboyd@codeaurora.org>, Rob Herring <robherring2@gmail.com>, Nishanth Menon <nm@ti.com>, kernel@stlinux.com, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, Rafael Wysocki <rjw@rjwysocki.net>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Sebastian Reichel <sre@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Arnd Bergmann <arnd.bergmann@linaro.org>, Ajit Pal Singh <ajitpal.singh@st.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-This updates the device tree from the kernel version to something suitable
-for U-Boot:
+On 11-08-15, 14:27, Lee Jones wrote:
+> Okay, so what you're saying is that you've already made the decision
+> to create a separate node for every OPP permutation,
 
-- Add stdout-path alias for console
-- Mark the /soc node to be available pre-relocation so that the early
-serial console works (we need the 'ranges' property to be available)
+Absolutely not.
 
-Signed-off-by: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
----
+> despite the fact
+> that I've told you this could lead to more nodes than anyone would
+> care to successfully write or maintain?
 
- arch/arm/boot/dts/bcm2835.dtsi | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+I have enough fear of yours and then I have to see you in another
+month as well. I wouldn't dare to disobey your command SIR :)
 
-diff --git a/arch/arm/boot/dts/bcm2835.dtsi b/arch/arm/boot/dts/bcm2835.dtsi
-index 301c73f..bd6bff6 100644
---- a/arch/arm/boot/dts/bcm2835.dtsi
-+++ b/arch/arm/boot/dts/bcm2835.dtsi
-@@ -8,6 +8,7 @@
- 
- 	chosen {
- 		bootargs = "earlyprintk console=ttyAMA0";
-+		stdout-path = &uart;
- 	};
- 
- 	soc {
-@@ -16,6 +17,7 @@
- 		#size-cells = <1>;
- 		ranges = <0x7e000000 0x20000000 0x02000000>;
- 		dma-ranges = <0x40000000 0x00000000 0x20000000>;
-+		u-boot,dm-pre-reloc;
- 
- 		timer@7e003000 {
- 			compatible = "brcm,bcm2835-system-timer";
-@@ -92,7 +94,7 @@
- 			#interrupt-cells = <2>;
- 		};
- 
--		uart@7e201000 {
-+		uart: uart@7e201000 {
- 			compatible = "brcm,bcm2835-pl011", "arm,pl011", "arm,primecell";
- 			reg = <0x7e201000 0x1000>;
- 			interrupts = <2 25>;
+> Perhaps an example might help explain the issue.
+> 
+> Using the current driver, we need to place the following in DT and the
+> driver does the rest:
+> 
+> opp-list {
+> 	opp1 {
+> 		opp-hz = <1500000000>;
+> 		st,avs = <1200 1200 1200 1200 1170 1140 1100 1070>;
+> 		st,substrate = <0xff>;
+> 		st,cuts = <0xff>;
+> 	};
+> 	opp0 {
+> 		opp-hz = <1200000000>;
+> 		st,avs = <1110 1150 1100 1080 1040 1020 980 930>;
+> 		st,substrate = <0xff>;
+> 		st,cuts = <0x2>;
+> 	};
+> };
+
+Nothing is fixed as of now but this is what I am thinking of:
+
+	cpu0_opp_table: opp_table0 {
+		compatible = "operating-points-v2";
+                opp-cuts = "10", "3c", "f0";
+		supply-names = "vcc0", "vcc1", "vcc2";
+		opp-shared;
+
+		opp00 {
+			opp-hz = /bits/ 64 <1000000000>;
+			clock-latency-ns = <300000>;
+			opp-microvolt-10 = <970000>;
+			opp-microvolt-3c = <950000>;
+			opp-microvolt-f0 = <930000>;
+		};
+
+		/* OR */
+
+		opp00 {
+			opp-hz = /bits/ 64 <1000000000>;
+			clock-latency-ns = <300000>;
+                        opp-microvolt = <970000>, <950000>, <930000>;
+		};
+        };
+
+And then the platform code needs to tell OPP layer:
+"Use OPPs for cut f0 for device X", and OPP layer will store that
+somewhere.
+
+And then it will only initialize OPPs after matching this string with
+the values.
+
+Out of the earlier two options, I may prefer the first one. As we will
+be soon adding support for multiple regulators, and a single regulator
+can have min/max/target values.. So, a single list will become too
+long.
+
+But, something like this should be generic enough to capture most of
+the cases.
+
+@Stephen/Rob ??
+
 -- 
-2.5.0.rc2.392.g76e840b
+viresh
