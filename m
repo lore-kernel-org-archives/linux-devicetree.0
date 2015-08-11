@@ -1,126 +1,93 @@
-From: Charles Keepax <ckeepax@opensource.wolfsonmicro.com>
-Subject: [PATCH RESEND 1/5] mfd: arizona: Add registers for ADC microphone detection
-Date: Tue, 11 Aug 2015 09:14:00 +0100
-Message-ID: <1439280844-9808-1-git-send-email-ckeepax@opensource.wolfsonmicro.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: lee.jones@linaro.org, cw00.choi@samsung.com
-Cc: patches@opensource.wolfsonmicro.com, devicetree@vger.kernel.org, myungjoo.ham@samsung.com, sameo@linux.intel.com, linux-kernel@vger.kernel.org
+From: Ian Campbell <ian.campbell@citrix.com>
+Subject: Re: [PATCH v4] dtb: Create a common home for cross-architecture
+ dtsi files.
+Date: Tue, 11 Aug 2015 09:47:14 +0100
+Message-ID: <1439282834.9747.189.camel@citrix.com>
+References: <1438617993-1012-1-git-send-email-ian.campbell@citrix.com>
+	 <CAK7LNARyEbnOWTis0Nx9zwTcwH_s3GZKg2XYG3+zLnf=FhhctA@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kbuild-owner@vger.kernel.org>
+In-Reply-To: <CAK7LNARyEbnOWTis0Nx9zwTcwH_s3GZKg2XYG3+zLnf=FhhctA@mail.gmail.com>
+Sender: linux-kbuild-owner@vger.kernel.org
+To: Masahiro Yamada <yamada.masahiro@socionext.com>
+Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Kumar Gala <galak@codeaurora.org>, Liviu Dudau <liviu.dudau@arm.com>, Sudeep Holla <sudeep.holla@arm.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Russell King <linux@arm.linux.org.uk>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Kristina Martsenko <kristina.martsenko@arm.com>, Kevin Hilman <khilman@linaro.org>, devicetree@vger.kernel.org, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-The newer devices support using a software comparison to determine
-whether a 3/4 pole jack is present. Add the registers necessary for
-this.
+On Tue, 2015-08-11 at 13:00 +0900, Masahiro Yamada wrote:
+> Hi
+> 
+> 2015-08-04 1:06 GMT+09:00 Ian Campbell <ian.campbell@citrix.com>:
+> > Commit 9ccd608070b6 ("arm64: dts: add device tree for ARM SMM-A53x2 on
+> > LogicTile Express 20MG") added a new dts file to arch/arm64 which
+> > included "../../../../arm/boot/dts/vexpress-v2m-rs1.dtsi", i.e. a
+> > .dtsi supplied by arch/arm.
+> > 
+> > Unfortunately this causes some issues for the split device tree
+> > repository[0], since things get moved around there. In that context
+> > the new .dts ends up at src/arm64/arm/vexpress-v2f-1xv7-ca53x2.dts
+> > while the include is at src/arm/vexpress-v2m-rs1.dtsi.
+> > 
+> > The sharing of the .dtsi is legitimate since the baseboard is the same
+> > for various vexpress systems whatever processor they use.
+> > 
+> > Rather than using ../../ tricks to pickup .dtsi files from another
+> > arch this patch creates a new directory kernel/dts as a home for such
+> > cross-arch .dtsi files and arranges for it to be in the include path
+> > for both dtc and cpp. The dtsi file itself is moved into a vendor
+> > subdir in this case "arm" (the vendor, not the ARCH=).
+> 
+> 
+> Question:
+> If this patch is applied, which directory will be created in
+> device-tree-rebasing?
+> src/kernel/, src/common/, or something else?
+> Either will do, of course.
 
-Signed-off-by: Charles Keepax <ckeepax@opensource.wolfsonmicro.com>
----
+Below is the patch against the device-tree-rebasing.git, I went (pretty
+much arbitrarily) with common at the top level.
 
-Hi,
+commit 0524b00e5bd7b98a2a9ef85c1f5f2a8d93bcbeb6
+Author: Ian Campbell <ian.campbell@citrix.com>
+Date:   Tue Jul 21 17:27:13 2015 +0100
 
-The first two MFD patches and the two extcon patches need to
-go through together as there are build dependencies. However
-the last documentation update can be treated seperately.
+    Handle new kernel/dts subtree.
+    
+    Rewrite its contents to common/ and include in the CPP and DTC include
+    paths.
+    
+    Signed-off-by: Ian Campbell <ian.campbell@citrix.com>
 
-The patches are based of the extcon/extcon-next tree because
-that is where most of the changes are but let me know if an
-MFD based version would be preferred.
-
-Thanks,
-Charles
-
- drivers/mfd/wm5110-tables.c           |    2 ++
- include/dt-bindings/mfd/arizona.h     |    2 ++
- include/linux/mfd/arizona/pdata.h     |    3 +++
- include/linux/mfd/arizona/registers.h |   17 ++++++++++++++---
- 4 files changed, 21 insertions(+), 3 deletions(-)
-
-diff --git a/drivers/mfd/wm5110-tables.c b/drivers/mfd/wm5110-tables.c
-index 12cad94..dd27872 100644
---- a/drivers/mfd/wm5110-tables.c
-+++ b/drivers/mfd/wm5110-tables.c
-@@ -1807,6 +1807,7 @@ static bool wm5110_readable_register(struct device *dev, unsigned int reg)
- 	case ARIZONA_MIC_DETECT_1:
- 	case ARIZONA_MIC_DETECT_2:
- 	case ARIZONA_MIC_DETECT_3:
-+	case ARIZONA_MIC_DETECT_4:
- 	case ARIZONA_MIC_DETECT_LEVEL_1:
- 	case ARIZONA_MIC_DETECT_LEVEL_2:
- 	case ARIZONA_MIC_DETECT_LEVEL_3:
-@@ -2843,6 +2844,7 @@ static bool wm5110_volatile_register(struct device *dev, unsigned int reg)
- 	case ARIZONA_ASYNC_SAMPLE_RATE_1_STATUS:
- 	case ARIZONA_ASYNC_SAMPLE_RATE_2_STATUS:
- 	case ARIZONA_MIC_DETECT_3:
-+	case ARIZONA_MIC_DETECT_4:
- 	case ARIZONA_HP_CTRL_1L:
- 	case ARIZONA_HP_CTRL_1R:
- 	case ARIZONA_HEADPHONE_DETECT_2:
-diff --git a/include/dt-bindings/mfd/arizona.h b/include/dt-bindings/mfd/arizona.h
-index 7b2000c..c40f665 100644
---- a/include/dt-bindings/mfd/arizona.h
-+++ b/include/dt-bindings/mfd/arizona.h
-@@ -107,5 +107,7 @@
- #define ARIZONA_ACCDET_MODE_MIC 0
- #define ARIZONA_ACCDET_MODE_HPL 1
- #define ARIZONA_ACCDET_MODE_HPR 2
-+#define ARIZONA_ACCDET_MODE_HPM 4
-+#define ARIZONA_ACCDET_MODE_ADC 7
+diff --git a/Makefile b/Makefile
+index 5e8930c..b57107d 100644
+--- a/Makefile
++++ b/Makefile
+@@ -114,12 +114,13 @@ dtc-tmp = $(subst $(comma),_,$(dot-target).dts.tmp)
  
- #endif
-diff --git a/include/linux/mfd/arizona/pdata.h b/include/linux/mfd/arizona/pdata.h
-index 43db4fa..f030a32 100644
---- a/include/linux/mfd/arizona/pdata.h
-+++ b/include/linux/mfd/arizona/pdata.h
-@@ -124,6 +124,9 @@ struct arizona_pdata {
- 	/** Channel to use for headphone detection */
- 	unsigned int hpdet_channel;
+ dtc_cpp_flags  = -Wp,-MD,$(depfile).pre.tmp -nostdinc	\
+                  -Iinclude -I$(src) -Itestcase-data	\
++                 -Icommon				\
+                  -undef -D__DTS__
  
-+	/** Use software comparison to determine mic presence */
-+	bool micd_software_compare;
-+
- 	/** Extra debounce timeout used during initial mic detection (ms) */
- 	int micd_detect_debounce;
+ quiet_cmd_dtc = DTC     $@
+ cmd_dtc = $(CPP) $(dtc_cpp_flags) -x assembler-with-cpp -o $(dtc-tmp) $< ; \
+         $(DTC) -O dtb -o $@ -b 0 \
+-                -i $(src) $(DTC_FLAGS) \
++                -i $(src) -i common $(DTC_FLAGS) \
+                 -d $(depfile).dtc.tmp $(dtc-tmp) ; \
+         cat $(depfile).pre.tmp $(depfile).dtc.tmp > $(depfile)
  
-diff --git a/include/linux/mfd/arizona/registers.h b/include/linux/mfd/arizona/registers.h
-index 3499d36..3f3bb2b 100644
---- a/include/linux/mfd/arizona/registers.h
-+++ b/include/linux/mfd/arizona/registers.h
-@@ -139,6 +139,7 @@
- #define ARIZONA_MIC_DETECT_LEVEL_2		 0x2A7
- #define ARIZONA_MIC_DETECT_LEVEL_3		 0x2A8
- #define ARIZONA_MIC_DETECT_LEVEL_4		 0x2A9
-+#define ARIZONA_MIC_DETECT_4                     0x2AB
- #define ARIZONA_MIC_NOISE_MIX_CONTROL_1          0x2C3
- #define ARIZONA_ISOLATION_CONTROL                0x2CB
- #define ARIZONA_JACK_DETECT_ANALOGUE             0x2D3
-@@ -2301,9 +2302,9 @@
- #define ARIZONA_ACCDET_SRC_MASK                  0x2000  /* ACCDET_SRC */
- #define ARIZONA_ACCDET_SRC_SHIFT                     13  /* ACCDET_SRC */
- #define ARIZONA_ACCDET_SRC_WIDTH                      1  /* ACCDET_SRC */
--#define ARIZONA_ACCDET_MODE_MASK                 0x0003  /* ACCDET_MODE - [1:0] */
--#define ARIZONA_ACCDET_MODE_SHIFT                     0  /* ACCDET_MODE - [1:0] */
--#define ARIZONA_ACCDET_MODE_WIDTH                     2  /* ACCDET_MODE - [1:0] */
-+#define ARIZONA_ACCDET_MODE_MASK                 0x0007  /* ACCDET_MODE - [2:0] */
-+#define ARIZONA_ACCDET_MODE_SHIFT                     0  /* ACCDET_MODE - [2:0] */
-+#define ARIZONA_ACCDET_MODE_WIDTH                     3  /* ACCDET_MODE - [2:0] */
+diff --git a/scripts/rewrite-paths.sed b/scripts/rewrite-paths.sed
+index b73fbce..5269769 100644
+--- a/scripts/rewrite-paths.sed
++++ b/scripts/rewrite-paths.sed
+@@ -33,6 +33,7 @@ s,\tarch/\([^/]*\)/boot/dts/\(.*\.h\)$,\tsrc/\1/\2,gp
+ # Also rewrite the DTS include paths for dtc+cpp support
+ s,\tarch/\([^/]*\)/include/dts/,\tsrc/\1/include/,gp
+ s,\tinclude/dt-bindings/,\tinclude/dt-bindings/,gp
++s,\tkernel/dts/,\tcommon/,gp
  
- /*
-  * R667 (0x29B) - Headphone Detect 1
-@@ -2413,6 +2414,16 @@
- #define ARIZONA_MICD_STS_WIDTH                        1  /* MICD_STS */
- 
- /*
-+ * R683 (0x2AB) - Mic Detect 4
-+ */
-+#define ARIZONA_MICDET_ADCVAL_DIFF_MASK          0xFF00  /* MICDET_ADCVAL_DIFF - [15:8] */
-+#define ARIZONA_MICDET_ADCVAL_DIFF_SHIFT              8  /* MICDET_ADCVAL_DIFF - [15:8] */
-+#define ARIZONA_MICDET_ADCVAL_DIFF_WIDTH              8  /* MICDET_ADCVAL_DIFF - [15:8] */
-+#define ARIZONA_MICDET_ADCVAL_MASK               0x007F  /* MICDET_ADCVAL - [15:8] */
-+#define ARIZONA_MICDET_ADCVAL_SHIFT                   0  /* MICDET_ADCVAL - [15:8] */
-+#define ARIZONA_MICDET_ADCVAL_WIDTH                   7  /* MICDET_ADCVAL - [15:8] */
-+
-+/*
-  * R707 (0x2C3) - Mic noise mix control 1
-  */
- #define ARIZONA_MICMUTE_RATE_MASK                0x7800  /* MICMUTE_RATE - [14:11] */
--- 
-1.7.2.5
+ # Rewrite the bindings subdirectory
+ s,\tDocumentation/devicetree/bindings/,\tBindings/,gp
+
