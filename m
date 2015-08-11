@@ -1,44 +1,50 @@
-From: Sudeep Holla <sudeep.holla@arm.com>
-Subject: Re: [PATCH] thermal: of: Introduce governor selection in dts
-Date: Tue, 11 Aug 2015 10:07:31 +0100
-Message-ID: <55C9BB53.1090001@arm.com>
-References: <CAM2ehZYXsqCoS9ygXNfPHxt9-b5cFxH_ovrgjvM-BfDO6REcUg@mail.gmail.com> <20150807103121.GC7646@leverpostej> <CAM2ehZYy3SNKhXvF0XyQsoPFab2JqrVq3wLKadPVxBsVG3E7jw@mail.gmail.com> <20150810174723.GC2747@e104805>
+From: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>
+Subject: Re: [RESEND][PATCH 3/4] ARM: davinci: Set proper SPI prescale limit
+ value
+Date: Tue, 11 Aug 2015 14:54:33 +0530
+Message-ID: <55C9BF51.5080401@ti.com>
+References: <1437568344-18889-1-git-send-email-fcooper@ti.com> <1437568344-18889-4-git-send-email-fcooper@ti.com> <55B22681.3060000@ti.com> <55C9380D.1060802@ti.com> <55C99D0D.9050605@ti.com> <20150811090342.GG10748@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8;
-	format=flowed
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20150810174723.GC2747@e104805>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Javi Merino <javi.merino@arm.com>, =?UTF-8?B?IkNodW5nLVlpaCBXYW5nICjnjos=?= =?UTF-8?B?5bSH5oe/KSI=?= <cywang@google.com>, Zhang Rui <rui.zhang@intel.com>, Eduardo Valentin <edubezval@gmail.com>
-Cc: Sudeep Holla <sudeep.holla@arm.com>, Mark Rutland <Mark.Rutland@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <Pawel.Moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20150811090342.GG10748-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
+Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: "Franklin S Cooper Jr." <fcooper-l0cyMroinI0@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, khilman-1D3HCaltpLuhEniVeURVKkEOCMrvLtNR@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-arm-kernel-xBCQruHUn5ppWr+L1FloEB2eb7JE58TQ@public.gmane.org, ssantosh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+On Tuesday 11 August 2015 02:33 PM, Mark Brown wrote:
+> On Tue, Aug 11, 2015 at 12:28:21PM +0530, Sekhar Nori wrote:
+>> On Tuesday 11 August 2015 05:17 AM, Franklin S Cooper Jr. wrote:
+> 
+>>> ping. Patches 1 and 2 have already been pulled into Mark's spi tree and are currently in in linux-next.
+> 
+>> Mark, can you apply this patch to your tree as well? Thats the preferred
+>> route for me.
+> 
+>> If thats not an option for you, can you confirm that the topic/davinci
+>> branch of your spi tree is an immutable commit I can base my pull
+>> request to ARM-SoC on?
+> 
+> Why would there be any interdependency between the the two trees, that
+> would be very unusual?  Adding a new value to DT doesn't need the kernel
+> to understand it and the driver should be compatible with existing DTs.
+> If there *is* some dependency that suggests the driver update has
+> problems...
 
+The dependency is because of platform data. Patch 2/4 adds a new
+platform data member 'prescaler_limit' which this patch populates for
+DaVinci devices using legacy booting.
 
-On 10/08/15 18:47, Javi Merino wrote:
-> On Mon, Aug 10, 2015 at 09:00:49AM +0100, Chung-Yih Wang (=E7=8E=8B=E5=
-=B4=87=E6=87=BF) wrote:
->> This patch was originally introduced when we made power_allocator th=
-e
->> default governor where we had issues in binding a thermal zone w/o
->> parameters to. Then we came out this facility for binding a specific
->> governor to a thermal zone in dts instead of the default governor.
->> Javi seems like this idea much.
->
-> While I can understand why this is not suitable for devicetree, we
-> should have a way in the kernel to configure different governors for
-> different thermal zones defined in device tree.  Thermal zones define=
-d
-> from platform code can choose the thermal governor when they are
-> registered.
->
-> If this information can't go in device tree, where can we put it? As
-> an additional parameter to thermal_zone_of_sensor_register()?
->
+> In any case I don't have a copy of the patch any more.
 
-Why can't it be via sysfs allowing users to select their choice of
-governor ? (like cpuidle/freq or even devfreq I assume)
+I can resend this patch to you with my ack included.
 
-Regards,
-Sudeep
+Thanks,
+Sekhar
+
+--
+To unsubscribe from this list: send the line "unsubscribe linux-spi" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
