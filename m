@@ -1,85 +1,88 @@
 From: Gavin Shan <gwshan@linux.vnet.ibm.com>
-Subject: Re: [PATCH v6 18/42] powerpc/powernv: Allocate PE# in deasending
- order
-Date: Tue, 11 Aug 2015 10:43:39 +1000
-Message-ID: <20150811004339.GC18981@gwshan>
+Subject: Re: [PATCH v6 40/42] drivers/of: Return allocated memory chunk from
+ of_fdt_unflatten_tree()
+Date: Tue, 11 Aug 2015 10:52:02 +1000
+Message-ID: <20150811005202.GA20729@gwshan>
 References: <1438834307-26960-1-git-send-email-gwshan@linux.vnet.ibm.com>
- <1438834307-26960-19-git-send-email-gwshan@linux.vnet.ibm.com>
- <55C8B786.1050702@ozlabs.ru>
+ <1438834307-26960-41-git-send-email-gwshan@linux.vnet.ibm.com>
+ <55C928D8.3040200@gmail.com>
 Reply-To: Gavin Shan <gwshan@linux.vnet.ibm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-pci-owner@vger.kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
 Content-Disposition: inline
-In-Reply-To: <55C8B786.1050702@ozlabs.ru>
-Sender: linux-pci-owner@vger.kernel.org
-To: Alexey Kardashevskiy <aik@ozlabs.ru>
-Cc: Gavin Shan <gwshan@linux.vnet.ibm.com>, linuxppc-dev@lists.ozlabs.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, benh@kernel.crashing.org, mpe@ellerman.id.au, bhelgaas@google.com, grant.likely@linaro.org, robherring2@gmail.com, panto@antoniou-consulting.com
+In-Reply-To: <55C928D8.3040200@gmail.com>
+List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
+ <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev/>
+List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
+List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
+ <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
+Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
+Sender: "Linuxppc-dev"
+ <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+To: Frank Rowand <frowand.list@gmail.com>
+Cc: devicetree@vger.kernel.org, aik@ozlabs.ru, panto@antoniou-consulting.com, Gavin Shan <gwshan@linux.vnet.ibm.com>, grant.likely@linaro.org, robherring2@gmail.com, linux-pci@vger.kernel.org, bhelgaas@google.com, linuxppc-dev@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Aug 11, 2015 at 12:39:02AM +1000, Alexey Kardashevskiy wrote:
->On 08/06/2015 02:11 PM, Gavin Shan wrote:
->>The available PE#, represented by a bitmap in the PHB, is allocated
->>in ascending order.
->
->Available PE# is available exactly because it is not allocated ;)
->
-
-Yeah, will correct it.
-
->>It conflicts with the fact that M64 segments are
->>assigned in same order. In order to avoid the conflict, the patch
->>allocates PE# in descending order.
->
->What kind of conflict?
->
-
-On PHB3, the M64 segment is assigned to one PE whose PE number is
-determined. M64 segment are allocated in ascending order. It's why
-I would like to allocate PE# in deascending order.
-
->>
->>Signed-off-by: Gavin Shan <gwshan@linux.vnet.ibm.com>
->>---
->>  arch/powerpc/platforms/powernv/pci-ioda.c | 11 ++++++++---
->>  1 file changed, 8 insertions(+), 3 deletions(-)
->>
->>diff --git a/arch/powerpc/platforms/powernv/pci-ioda.c b/arch/powerpc/platforms/powernv/pci-ioda.c
->>index 56b058c..1c950e8 100644
->>--- a/arch/powerpc/platforms/powernv/pci-ioda.c
->>+++ b/arch/powerpc/platforms/powernv/pci-ioda.c
->>@@ -161,13 +161,18 @@ static struct pnv_ioda_pe *pnv_ioda_reserve_pe(struct pnv_phb *phb, int pe_no)
->>  static struct pnv_ioda_pe *pnv_ioda_alloc_pe(struct pnv_phb *phb)
->>  {
->>  	unsigned long pe;
->>+	unsigned long limit = phb->ioda.total_pe_num - 1;
->>
->>  	do {
->>  		pe = find_next_zero_bit(phb->ioda.pe_alloc,
->>-					phb->ioda.total_pe_num, 0);
->>-		if (pe >= phb->ioda.total_pe_num)
->>+					phb->ioda.total_pe_num, limit);
->>+		if (pe < phb->ioda.total_pe_num &&
->>+		    !test_and_set_bit(pe, phb->ioda.pe_alloc))
->>+			break;
->>+
->>+		if (--limit >= phb->ioda.total_pe_num)
->>  			return NULL;
->>-	} while(test_and_set_bit(pe, phb->ioda.pe_alloc));
->>+	} while (1);
->
->
->Usually, if it is "while(1)", then it is "while(1){}" rather than
->"do{}while(1)" :)
-
-Agree, will change it.
-
->
->
->>
->>  	return pnv_ioda_init_pe(phb, pe);
->>  }
->>
-
-Thanks,
-Gavin
+T24gTW9uLCBBdWcgMTAsIDIwMTUgYXQgMDM6NDI6MzJQTSAtMDcwMCwgRnJhbmsgUm93YW5kIHdy
+b3RlOgo+T24gOC81LzIwMTUgOToxMSBQTSwgR2F2aW4gU2hhbiB3cm90ZToKCkZyYW5rLCB0aGFu
+a3MgZm9yIHlvdXIgY29tbWVudHMuIEFsbCBvZiB0aGVtIHdpbGwgYmUgaW5jbHVkZWQKaW4gbmV4
+dCByZXZpc2lvbi4KClRoYW5rcywKR2F2aW4KCj4+IFRoaXMgY2hhbmdlcyBvZl9mZHRfdW5mbGF0
+dGVuX3RyZWUoKSBzbyB0aGF0IGl0IHJldHVybnMgdGhlIGFsbG9jYXRlZAo+PiBtZW1vcnkgY2h1
+bmsgZm9yIHVuZmxhdHRlbmVkIGRldmljZS10cmVlLCB3aGljaCBjYW4gYmUgcmVsZWFzZWQgb25j
+ZQo+PiBpdCdzIG9ic29sZXRlZC4KPj4gCj4+IFNpZ25lZC1vZmYtYnk6IEdhdmluIFNoYW4gPGd3
+c2hhbkBsaW51eC52bmV0LmlibS5jb20+Cj4+IC0tLQo+PiAgZHJpdmVycy9vZi9mZHQuYyAgICAg
+ICB8IDExICsrKysrKy0tLS0tCj4+ICBpbmNsdWRlL2xpbnV4L29mX2ZkdC5oIHwgIDIgKy0KPj4g
+IDIgZmlsZXMgY2hhbmdlZCwgNyBpbnNlcnRpb25zKCspLCA2IGRlbGV0aW9ucygtKQo+PiAKPj4g
+ZGlmZiAtLWdpdCBhL2RyaXZlcnMvb2YvZmR0LmMgYi9kcml2ZXJzL29mL2ZkdC5jCj4+IGluZGV4
+IDA3NDg3MGEuLjhlMWJhN2UgMTAwNjQ0Cj4+IC0tLSBhL2RyaXZlcnMvb2YvZmR0LmMKPj4gKysr
+IGIvZHJpdmVycy9vZi9mZHQuYwo+PiBAQCAtNDA4LDcgKzQwOCw3IEBAIHN0YXRpYyB2b2lkICp1
+bmZsYXR0ZW5fZHRfbm9kZShjb25zdCB2b2lkICpibG9iLAo+PiAgICogQGR0X2FsbG9jOiBBbiBh
+bGxvY2F0b3IgdGhhdCBwcm92aWRlcyBhIHZpcnR1YWwgYWRkcmVzcyB0byBtZW1vcnkKPj4gICAq
+IGZvciB0aGUgcmVzdWx0aW5nIHRyZWUKPj4gICAqLwo+PiAtc3RhdGljIHZvaWQgX191bmZsYXR0
+ZW5fZGV2aWNlX3RyZWUoY29uc3Qgdm9pZCAqYmxvYiwKPj4gK3N0YXRpYyB2b2lkICpfX3VuZmxh
+dHRlbl9kZXZpY2VfdHJlZShjb25zdCB2b2lkICpibG9iLAo+PiAgCQkJICAgICBzdHJ1Y3QgZGV2
+aWNlX25vZGUgKmRhZCwKPj4gIAkJCSAgICAgc3RydWN0IGRldmljZV9ub2RlICoqbXlub2RlcywK
+Pj4gIAkJCSAgICAgdm9pZCAqICgqZHRfYWxsb2MpKHU2NCBzaXplLCB1NjQgYWxpZ24pKQo+Cj5Q
+bGVhc2UgYWRkIGEgZGVzY3JpcHRpb24gb2YgdGhlIHJldHVybiB2YWx1ZSB0byB0aGUgZG9jdW1l
+bnRhdGlvbiBoZWFkZXIuCj4KPgo+PiBAQCAtNDIxLDcgKzQyMSw3IEBAIHN0YXRpYyB2b2lkIF9f
+dW5mbGF0dGVuX2RldmljZV90cmVlKGNvbnN0IHZvaWQgKmJsb2IsCj4+ICAKPj4gIAlpZiAoIWJs
+b2IpIHsKPj4gIAkJcHJfZGVidWcoIk5vIGRldmljZSB0cmVlIHBvaW50ZXJcbiIpOwo+PiAtCQly
+ZXR1cm47Cj4+ICsJCXJldHVybiBOVUxMOwo+PiAgCX0KPj4gIAo+PiAgCXByX2RlYnVnKCJVbmZs
+YXR0ZW5pbmcgZGV2aWNlIHRyZWU6XG4iKTsKPj4gQEAgLTQzMSw3ICs0MzEsNyBAQCBzdGF0aWMg
+dm9pZCBfX3VuZmxhdHRlbl9kZXZpY2VfdHJlZShjb25zdCB2b2lkICpibG9iLAo+PiAgCj4+ICAJ
+aWYgKGZkdF9jaGVja19oZWFkZXIoYmxvYikpIHsKPj4gIAkJcHJfZXJyKCJJbnZhbGlkIGRldmlj
+ZSB0cmVlIGJsb2IgaGVhZGVyXG4iKTsKPj4gLQkJcmV0dXJuOwo+PiArCQlyZXR1cm4gTlVMTDsK
+Pj4gIAl9Cj4+ICAKPj4gIAkvKiBGaXJzdCBwYXNzLCBzY2FuIGZvciBzaXplICovCj4+IEBAIC00
+NTgsNiArNDU4LDcgQEAgc3RhdGljIHZvaWQgX191bmZsYXR0ZW5fZGV2aWNlX3RyZWUoY29uc3Qg
+dm9pZCAqYmxvYiwKPj4gIAkJCSAgIGJlMzJfdG9fY3B1cChtZW0gKyBzaXplKSk7Cj4+ICAKPj4g
+IAlwcl9kZWJ1ZygiIDwtIHVuZmxhdHRlbl9kZXZpY2VfdHJlZSgpXG4iKTsKPj4gKwlyZXR1cm4g
+bWVtOwo+PiAgfQo+PiAgCj4+ICBzdGF0aWMgdm9pZCAqa2VybmVsX3RyZWVfYWxsb2ModTY0IHNp
+emUsIHU2NCBhbGlnbikKPj4gQEAgLTQ3MywxMSArNDc0LDExIEBAIHN0YXRpYyB2b2lkICprZXJu
+ZWxfdHJlZV9hbGxvYyh1NjQgc2l6ZSwgdTY0IGFsaWduKQo+PiAgICogcG9pbnRlcnMgb2YgdGhl
+IG5vZGVzIHNvIHRoZSBub3JtYWwgZGV2aWNlLXRyZWUgd2Fsa2luZyBmdW5jdGlvbnMKPj4gICAq
+IGNhbiBiZSB1c2VkLgo+PiAgICovCj4+IC12b2lkIG9mX2ZkdF91bmZsYXR0ZW5fdHJlZShjb25z
+dCB1bnNpZ25lZCBsb25nICpibG9iLAo+PiArdm9pZCAqb2ZfZmR0X3VuZmxhdHRlbl90cmVlKGNv
+bnN0IHVuc2lnbmVkIGxvbmcgKmJsb2IsCj4KPlBsZWFzZSBhZGQgYSBkZXNjcmlwdGlvbiBvZiB0
+aGUgcmV0dXJuIHZhbHVlIHRvIHRoZSBkb2N1bWVudGF0aW9uIGhlYWRlci4KPgo+Cj4+ICAJCQlz
+dHJ1Y3QgZGV2aWNlX25vZGUgKmRhZCwKPj4gIAkJCXN0cnVjdCBkZXZpY2Vfbm9kZSAqKm15bm9k
+ZXMpCj4+ICB7Cj4+IC0JX191bmZsYXR0ZW5fZGV2aWNlX3RyZWUoYmxvYiwgZGFkLCBteW5vZGVz
+LCAma2VybmVsX3RyZWVfYWxsb2MpOwo+PiArCXJldHVybiBfX3VuZmxhdHRlbl9kZXZpY2VfdHJl
+ZShibG9iLCBkYWQsIG15bm9kZXMsICZrZXJuZWxfdHJlZV9hbGxvYyk7Cj4+ICB9Cj4+ICBFWFBP
+UlRfU1lNQk9MX0dQTChvZl9mZHRfdW5mbGF0dGVuX3RyZWUpOwo+PiAgCj4+IGRpZmYgLS1naXQg
+YS9pbmNsdWRlL2xpbnV4L29mX2ZkdC5oIGIvaW5jbHVkZS9saW51eC9vZl9mZHQuaAo+PiBpbmRl
+eCAzNjQ0OTYwLi4wMGRiMjc5IDEwMDY0NAo+PiAtLS0gYS9pbmNsdWRlL2xpbnV4L29mX2ZkdC5o
+Cj4+ICsrKyBiL2luY2x1ZGUvbGludXgvb2ZfZmR0LmgKPj4gQEAgLTM3LDcgKzM3LDcgQEAgZXh0
+ZXJuIGJvb2wgb2ZfZmR0X2lzX2JpZ19lbmRpYW4oY29uc3Qgdm9pZCAqYmxvYiwKPj4gIAkJCQkg
+dW5zaWduZWQgbG9uZyBub2RlKTsKPj4gIGV4dGVybiBpbnQgb2ZfZmR0X21hdGNoKGNvbnN0IHZv
+aWQgKmJsb2IsIHVuc2lnbmVkIGxvbmcgbm9kZSwKPj4gIAkJCWNvbnN0IGNoYXIgKmNvbnN0ICpj
+b21wYXQpOwo+PiAtZXh0ZXJuIHZvaWQgb2ZfZmR0X3VuZmxhdHRlbl90cmVlKGNvbnN0IHVuc2ln
+bmVkIGxvbmcgKmJsb2IsCj4+ICtleHRlcm4gdm9pZCAqb2ZfZmR0X3VuZmxhdHRlbl90cmVlKGNv
+bnN0IHVuc2lnbmVkIGxvbmcgKmJsb2IsCj4+ICAJCQkgICAgICAgc3RydWN0IGRldmljZV9ub2Rl
+ICpkYWQsCj4+ICAJCQkgICAgICAgc3RydWN0IGRldmljZV9ub2RlICoqbXlub2Rlcyk7Cj4+ICAK
+Pj4gCj4KCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCkxp
+bnV4cHBjLWRldiBtYWlsaW5nIGxpc3QKTGludXhwcGMtZGV2QGxpc3RzLm96bGFicy5vcmcKaHR0
+cHM6Ly9saXN0cy5vemxhYnMub3JnL2xpc3RpbmZvL2xpbnV4cHBjLWRldg==
