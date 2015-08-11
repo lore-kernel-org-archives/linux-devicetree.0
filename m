@@ -1,118 +1,187 @@
-From: Stas Sergeev <stsp@list.ru>
-Subject: Re: [PATCH 0/2] of: fsl/fman: reuse the fixed node parsing code
-Date: Tue, 11 Aug 2015 19:58:48 +0300
-Message-ID: <55CA29C8.5000707@list.ru>
-References: <1438785745-15517-1-git-send-email-madalin.bucur@freescale.com>
- <55C63D3B.5020005@gmail.com> <55CA1C14.3000202@list.ru>
- <BL2PR03MB545D4E18DE41AE01AFC37D6E67F0@BL2PR03MB545.namprd03.prod.outlook.com>
+From: Jonathan Cameron <jic23@jic23.retrosnub.co.uk>
+Subject: Re: [PATCH v3 1/7] iio: adc: hi8435: Holt HI-8435 threshold detector
+Date: Tue, 11 Aug 2015 18:01:02 +0100
+Message-ID: <A0C078FC-E1C5-42D1-A384-51F202E6BBFF@jic23.retrosnub.co.uk>
+References: <1438174469-19054-1-git-send-email-vladimir.barinov@cogentembedded.com> <1438174617-19143-1-git-send-email-vladimir.barinov@cogentembedded.com> <55C642C1.4070105@kernel.org> <55C9E8B4.2090605@metafoo.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8;
-	format=flowed
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain;
+ charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <BL2PR03MB545D4E18DE41AE01AFC37D6E67F0@BL2PR03MB545.namprd03.prod.outlook.com>
+In-Reply-To: <55C9E8B4.2090605@metafoo.de>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Madalin-Cristian Bucur <madalin.bucur@freescale.com>, Florian Fainelli <f.fainelli@gmail.com>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Liberman Igal <Igal.Liberman@freescale.com>, Stas Sergeev <stsp@users.sourceforge.net>, "joakim.tjernlund@transmode.se" <joakim.tjernlund@transmode.se>, Shaohui Xie <Shaohui.Xie@freescale.com>
+To: Lars-Peter Clausen <lars@metafoo.de>, Jonathan Cameron <jic23@kernel.org>, Vladimir Barinov <vladimir.barinov@cogentembedded.com>
+Cc: Hartmut Knaack <knaack.h@gmx.de>, Peter Meerwald <pmeerw@pmeerw.net>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, cory.tusar@pid1solutions.com
 List-Id: devicetree@vger.kernel.org
 
-11.08.2015 19:33, Madalin-Cristian Bucur =D0=BF=D0=B8=D1=88=D0=B5=D1=82=
-:
-> + Joakim, Shaohui
+
+
+On 11 August 2015 13:21:08 BST, Lars-Peter Clausen <lars@metafoo.de> wrote:
+>On 08/08/2015 07:56 PM, Jonathan Cameron wrote:
+>> On 29/07/15 13:56, Vladimir Barinov wrote:
+>>> Add Holt threshold detector driver for HI-8435 chip
+>>>
+>>> Signed-off-by: Vladimir Barinov
+><vladimir.barinov@cogentembedded.com>
+>> Because it usually reads better that way, I review from the bottom.
+>> Might make more sense if you read the comments that way around ;)
+>> 
+>> I'm going to guess that the typical usecase for this device is in
+>realtime
+>> systems where polling gives a nice predictable timing (hence the lack
+>of any
+>> interrupt support).  These typically operate as 'scanning' devices
+>> (e.g. you update all state at approximately the same time, by reading
+>> one input after another in some predefined order).
+>> 
+>> Does the use of events actually map well to this use case?  You are
+>taking
+>> something that (other than the results being a bit different) is
+>basically
+>> a digital I/O interface and mapping it (sort of) to an interrupt chip
+>> when it isn't nothing of the sort.
+>> 
+>> I'd like more opinions on this, but my gut reaction is that we would
+>> be better making the normal buffered infrastructure handle this data
+>> properly rather than pushing it through the events intrastructure.
+>> 
+>> Your solution is neat and tidy in someways but feels like it is
+>mashing
+>> data into a particular format.
+>> 
+>> To add to the complexity we could have debounce logic.  If we mapped
+>to a
+>> fill the buffer with a scan mode, how would we handle this?
+>> My guess is that it would simply delay transistions.  Perhaps we even
+>> support reading both the value right now and the debounced value if
+>that
+>> is possible?
+>> 
+>> However, here the debounce is all software.  To my mind, move this
+>into
+>> userspace entirely. We aren't dealing with big data here so it's
+>hardly
+>> going to be particularly challenging.
+>> 
+>> So my gut feeling is definitely we need to make the buffer
+>infrastructure
+>> handle 1 bit values (in groups) then push this data out that way.
+>> 
+>> Still I would like other opinions on this!
 >
->> -----Original Message-----
->> From: Stas Sergeev [mailto:stsp@list.ru]
->>
->> 08.08.2015 20:32, Florian Fainelli =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
->>> CC'ing Stas,
->> Hi.
->>
->>> Le 08/05/15 07:42, Madalin Bucur a =C3=A9crit :
->>>> The FMan MAC configuration code needs the speed and duplex
->> information
->>>> for fixed-link interfaces that is parsed now by the of function
->>>> of_phy_register_fixed_link(). This parses the fixed-link parameter=
-s but
->>>> does not expose to the caller neither the phy_device pointer nor t=
-he
->>>> status struct where it loads the fixed-link params.
->> I have only barely touched that code, but IMO both things
->> are by design. There are some API deficiencies, and so, many
->> drivers still use of_phy_find_device() to circumvent the encapsulati=
-on
->> and get the phy_device pointer, but this is unlikely a good thing
->> to do. I even proposed some API extensions, but there was no
->> interest.
->>
->>>>    By extracting the
->>>> fixed-link parsing code from of_phy_register_fixed_link() into a
->>>> separate function the parsed values are made available without cha=
-nging
->>>> the existing API. This change also removes a small redundancy in t=
-he
->>>> previous code calling fixed_phy_register().
->> Today, the fixed_link is not always fixed.
->> See for example this patch (already mainlined):
->> https://lkml.org/lkml/2015/7/20/711
->> of_phy_is_fixed_link() returns 'true' if you have
->> managed=3D"in-band-status", and so the SGMII in-band status
->> can update fixed-link params.
->>
->> So my question is: why do you even need to know whether
->> the link is fixed or not? IIRC you can check the phy_device
->> pointer in the adjust_link callback of of_phy_connect() to get
->> the current link status values. Why is this not enough for your
->> task? Maybe the patch description should be updated to include
->> why the current technique is bad, what is actually fixed by the
->> change.
->> I think using the fixed-link DT values directly is not something
->> to be done. The encapsulation is there for a reason, so maybe
->> instead we can see what API additions do we need to avoid the
->> current limitations that force people to use of_phy_find_device()
->> and other work-arounds.
-> I need to be able to determine the imposed speed and duplex for fixed=
- link
-> external PHYs because I need to configure the internal PHY with match=
-ing
-> values. If I do not set the same speed, given the fact that AN needs =
-to be off,
-> there will be no link and no adjust link to fix things later (and the=
- internal PHY is
-> not updated by adjust link anyway). I do not have access at the phy p=
-ointer at
-> the time I need the speed and duplex, to retrieve the defaults from t=
-here and
-> I've tried to make the smallest changes that allow me to retrieve tho=
-se without
-> modifying existing API.
-> Why is it important to hide the default values from the MAC driver?
-My worry is that the fixed values are not really fixed, and
-therefore are not always useful to access directly. It is likely
-not a problem for your use-case, as, as you say, the AN is
-disabled, but this is probably not the best to do in general.
-And also you do:
----
+>Having thought about this a bit having support for event triggers seems
+>like
+>a nice addition to me. When you think about it it is not too different
+>from
+>buffer triggers. Some devices are able to generate their own trigger
+>events
+>using a IRQ, others might need a software controlled trigger. You could
+>argue that the same is true for events. Having support for software
+>based
+>event triggers e.g. allows support for devices which have events and
+>have an
+>IRQ, but where the IRQ is simply not connected.
+>
+>Whether it makes sense for this device is a different question though I
+>guess.
+>
+>Since this is a threshold detector events seem to be the right approach
+>to
+>me. You could have similar hardware which actually generates IRQs, so
+>you'd
+>have the same interface. Additionally if we expects changes only to
+>occur at
+>a much lower rate than the polling rate only sending something to
+>userspace
+>when it changes keeps the amount of data to transfer lower. On the
+>other
+>hand if changes happen a lot using the event based approach would
+>certainly
+>create a higher load. And another thing to consider is that some
+>applications might be interested in getting the raw data. So in
+>conclusion,
+>I don't know ;). Both approaches seem sensible enough to me.
 
--		err =3D of_phy_register_fixed_link(mac_node);
--		if (err)
-+		struct phy_device *phy;
-+
-+		mac_dev->fixed_link =3D kzalloc(sizeof(*mac_dev->fixed_link),
-+					      GFP_KERNEL);
-+		if (of_phy_parse_fixed_link(mac_node, mac_dev->fixed_link))
-+			goto _return_dev_set_drvdata;
-+
-+		phy =3D fixed_phy_register(PHY_POLL, mac_dev->fixed_link,
-+					 mac_node);
+I am coming around to the view that events make some sense in this case.
 
----
+Definitely also want 1 bit channel support in IIO though.
+>
+>[...]
+>>> static void hi8435_debounce_work(struct work_struct *work)
+>>> +{
+>>> +	struct hi8435_priv *priv = container_of(work, struct hi8435_priv,
+>>> +						work.work);
+>>> +	struct iio_dev *idev = spi_get_drvdata(priv->spi);
+>>> +	u32 val;
+>>> +	int ret;
+>>> +
+>>> +	ret = hi8435_readl(priv, HI8435_SO31_0_REG, &val);
+>>> +	if (ret < 0)
+>>> +		return;
+>>> +
+>>> +	if (val == priv->debounce_val)
+>>> +		hi8435_iio_push_event(idev, val);
+>>> +	else
+>>> +		dev_warn(&priv->spi->dev, "filtered by software debounce");
+>> Definitely not.  Warning every time a standard event occurs?  Not
+>> a good idea.  Use the debug stuff if you want a way of knowing this
+>> happened, then it will silent under normal use.
+>> 
+>>> +}
+>>> +
+>>> +static irqreturn_t hi8435_trigger_handler(int irq, void *private)
+>>> +{
+>>> +	struct iio_poll_func *pf = private;
+>>> +	struct iio_dev *idev = pf->indio_dev;
+>>> +	struct hi8435_priv *priv = iio_priv(idev);
+>>> +	u32 val;
+>>> +	int ret;
+>>> +
+>>> +	ret = hi8435_readl(priv, HI8435_SO31_0_REG, &val);
+>>> +	if (ret < 0)
+>>> +		goto err_read;
+>>> +
+>>> +	if (priv->debounce_interval) {
+>>> +		priv->debounce_val = val;
+>>> +		schedule_delayed_work(&priv->work,
+>>> +				msecs_to_jiffies(priv->debounce_interval));
+>> This is another element that makes me doubt that the event interface
+>> is the way to do this.  I'd much rather we pushed the debouncing out
+>> to userspace where cleverer things can be done (and more adaptive
+>things).
+>> Here to keep the event flow low you have to do it in the kernel.
+>
+>Yes, debouncing should probably not be done in kernel space and the
+>debounce
+>interval should not be a devicetree property.
+>
+>> 
+>>> +	} else {
+>>> +		hi8435_iio_push_event(idev, val);
+>>> +	}
+>>> +
+>>> +err_read:
+>>> +	iio_trigger_notify_done(idev->trig);
+>>> +
+>>> +	return IRQ_HANDLED;
+>>> +}
+>>> +
+>>> +static void hi8435_parse_dt(struct hi8435_priv *priv)
+>>> +{
+>>> +	struct device_node *np = priv->spi->dev.of_node;
+>>> +	int ret;
+>>> +
+>>> +	ret = of_get_named_gpio(np, "holt,reset-gpios", 0);
+>>> +	priv->reset_gpio = ret < 0 ? 0 : ret;
+>> Silly question, but can gpio0 exist on a board?  I suspect you
+>> may need an additional variable to hold that this request failed
+>> rather than using the magic value of 0.
+>
+>It can, but new stuff should just use the GPIO descriptor API where
+>NULL can
+>be used to indicate a invalid GPIO.
+>
+>- Lars
 
-which means you really want to circumvent the current OF
-api quite a lot, without saying why in the patch description.
-As such, it may be difficult to review. Could you please write
-a more complete description to the patch?
-
-As to your problem: would it be possible to set speed & duplex
-after you do of_phy_connect()? It returns the phy_device
-pointer, and perhaps you can look into phydev->speed and
-phydev->duplex at that point?
+-- 
+Sent from my Android device with K-9 Mail. Please excuse my brevity.
