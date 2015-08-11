@@ -1,66 +1,53 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH v4 2/2] dt: power: st: Provide bindings for ST's OPPs
-Date: Tue, 11 Aug 2015 10:30:39 +0100
-Message-ID: <20150811093039.GA18282@x1>
-References: <20150728022936.GB1229@linux>
- <20150728225510.GB3159@codeaurora.org>
- <20150729081403.GH2284@x1>
- <20150729221526.GE3159@codeaurora.org>
- <20150730084634.GD9319@x1>
- <CAL_JsqKQLQ15qSt95zBZykzzPhcUrtZzhk29a76n+r_3719AiA@mail.gmail.com>
- <20150731163715.GV3159@codeaurora.org>
- <20150803034642.GV899@linux>
- <20150810132247.GH3249@x1>
- <20150811080023.GB5509@linux>
+From: Tomeu Vizoso <tomeu.vizoso@collabora.com>
+Subject: Re: [PATCH v3 02/18] of/platform: add of_platform_probe
+Date: Tue, 11 Aug 2015 11:37:38 +0200
+Message-ID: <CAAObsKCrakupiZMQ9AoiWo6fDYT6Cfi_khdssUS6pv61zYS1Zg@mail.gmail.com>
+References: <1438870315-18689-1-git-send-email-tomeu.vizoso@collabora.com>
+ <1438870315-18689-3-git-send-email-tomeu.vizoso@collabora.com> <20150807121913.GS20873@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-pm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20150811080023.GB5509@linux>
-Sender: linux-pm-owner@vger.kernel.org
-To: Viresh Kumar <viresh.kumar@linaro.org>
-Cc: Stephen Boyd <sboyd@codeaurora.org>, Rob Herring <robherring2@gmail.com>, Nishanth Menon <nm@ti.com>, kernel@stlinux.com, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, Rafael Wysocki <rjw@rjwysocki.net>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Sebastian Reichel <sre@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Arnd Bergmann <arnd.bergmann@linaro.org>, Ajit Pal Singh <ajitpal.singh@st.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-acpi-owner@vger.kernel.org>
+In-Reply-To: <20150807121913.GS20873@sirena.org.uk>
+Sender: linux-acpi-owner@vger.kernel.org
+To: Mark Brown <broonie@kernel.org>
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Stephen Warren <swarren@wwwdotorg.org>, Javier Martinez Canillas <javier@osg.samsung.com>, Thierry Reding <thierry.reding@gmail.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linus Walleij <linus.walleij@linaro.org>, linux-acpi@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 11 Aug 2015, Viresh Kumar wrote:
+On 7 August 2015 at 14:19, Mark Brown <broonie@kernel.org> wrote:
+> On Thu, Aug 06, 2015 at 04:11:39PM +0200, Tomeu Vizoso wrote:
+>
+>> Walks the OF tree up and finds the closest ancestor that has a platform
+>> device associated with it, probing it if isn't bound to a driver yet.
+>
+>> The above should ensure that the dependency represented by the passed OF
+>> node is available, because probing a platform device should cause its
+>> descendants to be probed as well.
+>
+> This sounds like it's going to break in the case where we have MFDs that
+> represent their functions in DT (not a pattern I'm a fan of but it's a
+> thing people do).  We'll walk back to the platform device for the MFD
+> function, try to probe it and then give up.  Perhaps that's good enough
+> anyway but it's not clear to me why we don't just try every parent we
+> find?
 
-> On 10-08-15, 14:22, Lee Jones wrote:
-> > >  Optional properties:
-> > > +- opp-cuts: One or more strings, describing the versions of hard=
-ware the OPPs
-> > > +  can support.
-> >=20
-> > This isn't very generic.
-> >=20
-> > I'm guessing some vendors my have quite a few ways to differentiate
-> > between board versions/revisions/cuts etc.
-> >=20
-> > How about another array where a vendor can choose to identify a pie=
-ce
-> > of hardware however they see fit.
-> >=20
-> > Example 1 (simple version):
-> >=20
-> > /* Version 1 */
-> > opp-version =3D <1>;
-> >=20
-> > Example 2 (using the kernel's versioning):
-> >=20
-> > /* 2.6.32-rc1 */
-> > opp-version =3D <2 6 32 1>;
-> >=20
-> > Example 3 (using ST's versioning):
-> >=20
-> > /* Major 2, Minor 0, Cut 2, All substrates */
-> > opp-version =3D <2 0 2 0xff>;
->=20
-> But how will we parse this with generic code ?
+Agreed. In the attempt at probing dependencies before a device is
+probed, I considered that a device's parent is also a dependency and
+that worked well. From what I saw, few devices will defer their probe
+if their parent hasn't been probed yet, assuming that it will have
+probed already. But with simple-mfd and simple-bus that shouldn't be
+relied upon as things will break if their parents defer their probe.
+With async probing enabled this failure scenario becomes more
+probable.
 
-Why would you want to?
+> I'm also not a fan of the fact that the interface here is explicitly
+> saying that we want to probe a platform device, that's an implementation
+> detail that callers shouldn't need to know about.  From the point of
+> view of the callers what they're trying to do is kick any dependencies
+> into being instantiated, the fact that we currently try to accomplish it
+> with platform devices isn't something they care about.
 
---=20
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-=46ollow Linaro: Facebook | Twitter | Blog
+Agreed.
+
+Thanks,
+
+Tomeu
