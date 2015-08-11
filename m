@@ -1,101 +1,78 @@
-From: Michael Welling <mwelling@ieee.org>
-Subject: [PATCH] input: ti_am335x_tsc: Add open delay parameter
-Date: Tue, 11 Aug 2015 13:45:05 -0500
-Message-ID: <1439318705-18601-1-git-send-email-mwelling@ieee.org>
-Return-path: <linux-input-owner@vger.kernel.org>
-Sender: linux-input-owner@vger.kernel.org
-To: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-input@vger.kernel.org, Vignesh R <vigneshr@ti.com>, Jonathan Cameron <jic23@kernel.org>, Brad Griffis <bgriffis@ti.com>, Wolfram Sang <wsa@the-dreams.de>
-Cc: Michael Welling <mwelling@ieee.org>
+From: Lucas Stach <dev-8ppwABl0HbeELgA04lAiVw@public.gmane.org>
+Subject: Re: [PATCH] arm: rpi: Device tree modifications for U-Boot
+Date: Tue, 11 Aug 2015 21:38:38 +0200
+Message-ID: <1439321918.2214.6.camel@lynxeye.de>
+References: <1439303153-12171-1-git-send-email-sjg@chromium.org>
+	 <1439312701.2451.3.camel@lynxeye.de> <55CA3113.1010601@wwwdotorg.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <55CA3113.1010601-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Cc: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Lee Jones <lee-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Adds a device tree parameter to set the open delay on the touchscreen
-conversion steps. Increasing this parameter helps the touch accuracy on
-some screens.
+Am Dienstag, den 11.08.2015, 11:29 -0600 schrieb Stephen Warren:
+> On 08/11/2015 11:05 AM, Lucas Stach wrote:
+> > Hi Simon,
+> >
+> > why did you send this to the Tegra ML?
+> 
+> At my request, so that the DT changes could be reviewed by the kernel DT 
+> reviewers and added to the copy of the DT files in the kernel source 
+> tree if approved.
+> 
+This doesn't really answer the question why it was sent to the Tegra
+list if it is an RPi change, but that's just a side note.
 
-Signed-off-by: Michael Welling <mwelling@ieee.org>
----
- .../bindings/input/touchscreen/ti-tsc-adc.txt          |  5 +++++
- drivers/input/touchscreen/ti_am335x_tsc.c              | 18 ++++++++++++++----
- 2 files changed, 19 insertions(+), 4 deletions(-)
+> My assertion is that DT content should be independent of SW stack. Or 
+> put another way, all SW stacks should use the same DT content. As such, 
+> if these properties are needed by U-Boot, and contained in the copy of 
+> the DT files in the U-Boot source tree, they should also be present in 
+> the copy of the DT files in the kernel source tree, so the two do not 
+> become out of sync.
+> 
+I agree with that overall goal to have a common DT base between
+different software stacks. After all I lobbied for keeping the Tegra
+pinctrl setting in the DT even though Linux doesn't use them any more.
 
-diff --git a/Documentation/devicetree/bindings/input/touchscreen/ti-tsc-adc.txt b/Documentation/devicetree/bindings/input/touchscreen/ti-tsc-adc.txt
-index b1163bf..cb11fda 100644
---- a/Documentation/devicetree/bindings/input/touchscreen/ti-tsc-adc.txt
-+++ b/Documentation/devicetree/bindings/input/touchscreen/ti-tsc-adc.txt
-@@ -41,6 +41,11 @@ Optional properties:
- 			 charge step, so this does in fact function as a
- 			 hardware knob for adjusting the amount of "settling
- 			 time".
-+	ti,open-delay: Open delay applied to all touchscreen conversion steps.
-+			The value corresponds to the number of ADC clock
-+			cycles to wait after applying the step configuration
-+			registers and before sending the start of ADC
-+			conversion. Maximum value is 0x3FFFF.
- 
- - child "adc"
- 	ti,chan-step-opendelay: List of open delays for each channel of
-diff --git a/drivers/input/touchscreen/ti_am335x_tsc.c b/drivers/input/touchscreen/ti_am335x_tsc.c
-index 191a1b8..37a9729 100644
---- a/drivers/input/touchscreen/ti_am335x_tsc.c
-+++ b/drivers/input/touchscreen/ti_am335x_tsc.c
-@@ -54,6 +54,7 @@ struct titsc {
- 	u32			inp_xp, inp_xn, inp_yp, inp_yn;
- 	u32			step_mask;
- 	u32			charge_delay;
-+	u32			open_delay;
- };
- 
- static unsigned int titsc_readl(struct titsc *ts, unsigned int reg)
-@@ -148,7 +149,7 @@ static void titsc_step_config(struct titsc *ts_dev)
- 	end_step = first_step + tsc_steps;
- 	for (i = end_step - ts_dev->coordinate_readouts; i < end_step; i++) {
- 		titsc_writel(ts_dev, REG_STEPCONFIG(i), config);
--		titsc_writel(ts_dev, REG_STEPDELAY(i), STEPCONFIG_OPENDLY);
-+		titsc_writel(ts_dev, REG_STEPDELAY(i), ts_dev->open_delay);
- 	}
- 
- 	config = 0;
-@@ -172,7 +173,7 @@ static void titsc_step_config(struct titsc *ts_dev)
- 	end_step = first_step + ts_dev->coordinate_readouts;
- 	for (i = first_step; i < end_step; i++) {
- 		titsc_writel(ts_dev, REG_STEPCONFIG(i), config);
--		titsc_writel(ts_dev, REG_STEPDELAY(i), STEPCONFIG_OPENDLY);
-+		titsc_writel(ts_dev, REG_STEPDELAY(i), ts_dev->open_delay);
- 	}
- 
- 	/* Make CHARGECONFIG same as IDLECONFIG */
-@@ -188,13 +189,13 @@ static void titsc_step_config(struct titsc *ts_dev)
- 			STEPCONFIG_INP(ts_dev->inp_xp);
- 	titsc_writel(ts_dev, REG_STEPCONFIG(end_step), config);
- 	titsc_writel(ts_dev, REG_STEPDELAY(end_step),
--			STEPCONFIG_OPENDLY);
-+			ts_dev->open_delay);
- 
- 	end_step++;
- 	config |= STEPCONFIG_INP(ts_dev->inp_yn);
- 	titsc_writel(ts_dev, REG_STEPCONFIG(end_step), config);
- 	titsc_writel(ts_dev, REG_STEPDELAY(end_step),
--			STEPCONFIG_OPENDLY);
-+			ts_dev->open_delay);
- 
- 	/* The steps end ... end - readouts * 2 + 2 and bit 0 for TS_Charge */
- 	stepenable = 1;
-@@ -392,6 +393,15 @@ static int titsc_parse_dt(struct platform_device *pdev,
- 		dev_warn(&pdev->dev, "ti,charge-delay not specified\n");
- 	}
- 
-+	err = of_property_read_u32(node, "ti,open-delay",
-+				   &ts_dev->open_delay);
-+	/*
-+	 * If ti,open-delay value is not specified, then use
-+	 * STEPCONFIG_OPENDLY as the default value.
-+	 */
-+	if (err < 0)
-+		ts_dev->open_delay = STEPCONFIG_OPENDLY;
-+
- 	return of_property_read_u32_array(node, "ti,wire-config",
- 			ts_dev->config_inp, ARRAY_SIZE(ts_dev->config_inp));
- }
--- 
-2.1.4
+For my question below I honestly want an answer as to why U-Boot needs
+those DT changes and why it can't work with the current DT contents.
+It's really just the same question we also have to answer for each and
+every DT addition that we do for Linux.
 
+Regards,
+Lucas
+
+> > Am Dienstag, den 11.08.2015, 08:25 -0600 schrieb Simon Glass:
+> >> This updates the device tree from the kernel version to something suitable
+> >> for U-Boot:
+> >>
+> >> - Add stdout-path alias for console
+> >> - Mark the /soc node to be available pre-relocation so that the early
+> >> serial console works (we need the 'ranges' property to be available)
+> 
+> >> diff --git a/arch/arm/boot/dts/bcm2835.dtsi b/arch/arm/boot/dts/bcm2835.dtsi
+> >> index 301c73f..bd6bff6 100644
+> >> --- a/arch/arm/boot/dts/bcm2835.dtsi
+> >> +++ b/arch/arm/boot/dts/bcm2835.dtsi
+> >> @@ -8,6 +8,7 @@
+> >>
+> >>   	chosen {
+> >>   		bootargs = "earlyprintk console=ttyAMA0";
+> >> +		stdout-path = &uart;
+> >>   	};
+> >>
+> >>   	soc {
+> >> @@ -16,6 +17,7 @@
+> >>   		#size-cells = <1>;
+> >>   		ranges = <0x7e000000 0x20000000 0x02000000>;
+> >>   		dma-ranges = <0x40000000 0x00000000 0x20000000>;
+> >> +		u-boot,dm-pre-reloc;
+> >
+> > Why do you need this and why should upstream carry your favourite
+> > bootloaders configuration? This is in no way hardware description.
+> 
+> 
