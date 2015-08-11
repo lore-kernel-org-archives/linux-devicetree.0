@@ -1,149 +1,79 @@
-From: Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>
-Subject: Re: [PATCH v3 1/7] iio: adc: hi8435: Holt HI-8435 threshold detector
-Date: Tue, 11 Aug 2015 14:21:08 +0200
-Message-ID: <55C9E8B4.2090605@metafoo.de>
-References: <1438174469-19054-1-git-send-email-vladimir.barinov@cogentembedded.com> <1438174617-19143-1-git-send-email-vladimir.barinov@cogentembedded.com> <55C642C1.4070105@kernel.org>
+From: Daniel Kurtz <djkurtz@chromium.org>
+Subject: Re: [PATCH v5 3/3] arm64: dts: Add spi bus dts
+Date: Tue, 11 Aug 2015 20:37:36 +0800
+Message-ID: <CAGS+omA0dabyGkCB2JYORn1CjXvgMs_3x7nqSOOJKMg4HRhCSg@mail.gmail.com>
+References: <1438931991-17044-1-git-send-email-leilk.liu@mediatek.com> <1438931991-17044-4-git-send-email-leilk.liu@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <55C642C1.4070105-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Vladimir Barinov <vladimir.barinov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
-Cc: Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Peter Meerwald <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, cory.tusar-J6Z/VSE8EyIAspv4Qr0y0gC/G2K4zDHf@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1438931991-17044-4-git-send-email-leilk.liu@mediatek.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Leilk Liu <leilk.liu@mediatek.com>
+Cc: Mark Brown <broonie@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, Sascha Hauer <s.hauer@pengutronix.de>, "open list:OPEN FIRMWARE AND..." <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, linux-spi@vger.kernel.org, linux-mediatek@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 08/08/2015 07:56 PM, Jonathan Cameron wrote:
-> On 29/07/15 13:56, Vladimir Barinov wrote:
->> Add Holt threshold detector driver for HI-8435 chip
->>
->> Signed-off-by: Vladimir Barinov <vladimir.barinov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
-> Because it usually reads better that way, I review from the bottom.
-> Might make more sense if you read the comments that way around ;)
-> 
-> I'm going to guess that the typical usecase for this device is in realtime
-> systems where polling gives a nice predictable timing (hence the lack of any
-> interrupt support).  These typically operate as 'scanning' devices
-> (e.g. you update all state at approximately the same time, by reading
-> one input after another in some predefined order).
-> 
-> Does the use of events actually map well to this use case?  You are taking
-> something that (other than the results being a bit different) is basically
-> a digital I/O interface and mapping it (sort of) to an interrupt chip
-> when it isn't nothing of the sort.
-> 
-> I'd like more opinions on this, but my gut reaction is that we would
-> be better making the normal buffered infrastructure handle this data
-> properly rather than pushing it through the events intrastructure.
-> 
-> Your solution is neat and tidy in someways but feels like it is mashing
-> data into a particular format.
-> 
-> To add to the complexity we could have debounce logic.  If we mapped to a
-> fill the buffer with a scan mode, how would we handle this?
-> My guess is that it would simply delay transistions.  Perhaps we even
-> support reading both the value right now and the debounced value if that
-> is possible?
-> 
-> However, here the debounce is all software.  To my mind, move this into
-> userspace entirely. We aren't dealing with big data here so it's hardly
-> going to be particularly challenging.
-> 
-> So my gut feeling is definitely we need to make the buffer infrastructure
-> handle 1 bit values (in groups) then push this data out that way.
-> 
-> Still I would like other opinions on this!
+On Fri, Aug 7, 2015 at 3:19 PM, Leilk Liu <leilk.liu@mediatek.com> wrote:
+> This patch adds MT8173 spi bus controllers into device tree.
+>
+> Signed-off-by: Leilk Liu <leilk.liu@mediatek.com>
+> ---
+> Change in this patch:
+> 1. "pad-select" is a vendor property, so change it to "mediatek,pad-select".
+> 2. modify the property of clocks and clock-names.
+> ---
+>  arch/arm64/boot/dts/mediatek/mt8173.dtsi | 23 +++++++++++++++++++++++
+>  1 file changed, 23 insertions(+)
+>
+> diff --git a/arch/arm64/boot/dts/mediatek/mt8173.dtsi b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
+> index d18ee42..066bd6a 100644
+> --- a/arch/arm64/boot/dts/mediatek/mt8173.dtsi
+> +++ b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
+> @@ -220,6 +220,15 @@
+>                                         bias-disable;
+>                                 };
+>                         };
+> +
+> +                       spi_pins_a: spi0 {
+> +                               pins_spi {
+> +                                       pinmux = <MT8173_PIN_69_SPI_CK__FUNC_SPI_CK_0_>,
+> +                                               <MT8173_PIN_70_SPI_MI__FUNC_SPI_MI_0_>,
+> +                                               <MT8173_PIN_71_SPI_MO__FUNC_SPI_MO_0_>,
+> +                                               <MT8173_PIN_72_SPI_CS__FUNC_SPI_CS_0_>;
+> +                               };
+> +                       };
+>                 };
+>
+>                 scpsys: scpsys@10006000 {
+> @@ -365,6 +374,20 @@
+>                         status = "disabled";
+>                 };
+>
+> +               spi: spi@1100a000 {
+> +                       compatible = "mediatek,mt8173-spi";
+> +                       #address-cells = <1>;
+> +                       #size-cells = <0>;
+> +                       reg = <0 0x1100a000 0 0x1000>;
+> +                       interrupts = <GIC_SPI 110 IRQ_TYPE_LEVEL_LOW>;
+> +                       clocks = <&topckgen CLK_TOP_SPI_SEL>, <&topckgen CLK_TOP_SYSPLL3_D2>;
+> +                       clock-names = "spi-clk", "parent-clk";
+> +                       pinctrl-names = "default";
+> +                       pinctrl-0 = <&spi_pins_a>;
+> +                       mediatek,pad-select = <0>;
 
-Having thought about this a bit having support for event triggers seems like
-a nice addition to me. When you think about it it is not too different from
-buffer triggers. Some devices are able to generate their own trigger events
-using a IRQ, others might need a software controlled trigger. You could
-argue that the same is true for events. Having support for software based
-event triggers e.g. allows support for devices which have events and have an
-IRQ, but where the IRQ is simply not connected.
+The pinctl and pad-select fields are board specific.
+Please move to mt8173-evb.dtsi, along with status = "okay";
 
-Whether it makes sense for this device is a different question though I guess.
-
-Since this is a threshold detector events seem to be the right approach to
-me. You could have similar hardware which actually generates IRQs, so you'd
-have the same interface. Additionally if we expects changes only to occur at
-a much lower rate than the polling rate only sending something to userspace
-when it changes keeps the amount of data to transfer lower. On the other
-hand if changes happen a lot using the event based approach would certainly
-create a higher load. And another thing to consider is that some
-applications might be interested in getting the raw data. So in conclusion,
-I don't know ;). Both approaches seem sensible enough to me.
-
-[...]
->> static void hi8435_debounce_work(struct work_struct *work)
->> +{
->> +	struct hi8435_priv *priv = container_of(work, struct hi8435_priv,
->> +						work.work);
->> +	struct iio_dev *idev = spi_get_drvdata(priv->spi);
->> +	u32 val;
->> +	int ret;
->> +
->> +	ret = hi8435_readl(priv, HI8435_SO31_0_REG, &val);
->> +	if (ret < 0)
->> +		return;
->> +
->> +	if (val == priv->debounce_val)
->> +		hi8435_iio_push_event(idev, val);
->> +	else
->> +		dev_warn(&priv->spi->dev, "filtered by software debounce");
-> Definitely not.  Warning every time a standard event occurs?  Not
-> a good idea.  Use the debug stuff if you want a way of knowing this
-> happened, then it will silent under normal use.
-> 
->> +}
->> +
->> +static irqreturn_t hi8435_trigger_handler(int irq, void *private)
->> +{
->> +	struct iio_poll_func *pf = private;
->> +	struct iio_dev *idev = pf->indio_dev;
->> +	struct hi8435_priv *priv = iio_priv(idev);
->> +	u32 val;
->> +	int ret;
->> +
->> +	ret = hi8435_readl(priv, HI8435_SO31_0_REG, &val);
->> +	if (ret < 0)
->> +		goto err_read;
->> +
->> +	if (priv->debounce_interval) {
->> +		priv->debounce_val = val;
->> +		schedule_delayed_work(&priv->work,
->> +				msecs_to_jiffies(priv->debounce_interval));
-> This is another element that makes me doubt that the event interface
-> is the way to do this.  I'd much rather we pushed the debouncing out
-> to userspace where cleverer things can be done (and more adaptive things).
-> Here to keep the event flow low you have to do it in the kernel.
-
-Yes, debouncing should probably not be done in kernel space and the debounce
-interval should not be a devicetree property.
-
-> 
->> +	} else {
->> +		hi8435_iio_push_event(idev, val);
->> +	}
->> +
->> +err_read:
->> +	iio_trigger_notify_done(idev->trig);
->> +
->> +	return IRQ_HANDLED;
->> +}
->> +
->> +static void hi8435_parse_dt(struct hi8435_priv *priv)
->> +{
->> +	struct device_node *np = priv->spi->dev.of_node;
->> +	int ret;
->> +
->> +	ret = of_get_named_gpio(np, "holt,reset-gpios", 0);
->> +	priv->reset_gpio = ret < 0 ? 0 : ret;
-> Silly question, but can gpio0 exist on a board?  I suspect you
-> may need an additional variable to hold that this request failed
-> rather than using the magic value of 0.
-
-It can, but new stuff should just use the GPIO descriptor API where NULL can
-be used to indicate a invalid GPIO.
-
-- Lars
+> +                       status = "disabled";
+> +               };
+> +
+>                 i2c3: i2c3@11010000 {
+>                         compatible = "mediatek,mt8173-i2c";
+>                         reg = <0 0x11010000 0 0x70>,
+> --
+> 1.8.1.1.dirty
+>
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-kernel" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> Please read the FAQ at  http://www.tux.org/lkml/
