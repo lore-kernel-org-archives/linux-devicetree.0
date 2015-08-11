@@ -1,92 +1,64 @@
-From: Michael Turquette <mturquette@linaro.org>
-Subject: Re: [RFC PATCH 0/8] clk: qoriq: Move chip-specific knowledge into driver
-Date: Tue, 11 Aug 2015 11:25:35 -0700
-Message-ID: <20150811182535.31346.52965@quantum>
-References: <1434682158-7243-1-git-send-email-scottwood@freescale.com>
+From: Loc Ho <lho-qTEPVZfXA3Y@public.gmane.org>
+Subject: Re: [PATCH v2 0/3] edac: Add L3/SoC support to the APM X-Gene SoC
+ EDAC driver
+Date: Tue, 11 Aug 2015 11:43:24 -0700
+Message-ID: <CAPw-ZTkMR3Kx=dhaZ0BZWMUU027f4X7STTSZV6JA0ne0W3-JPQ@mail.gmail.com>
+References: <1437808063-17592-1-git-send-email-lho@apm.com>
+	<CALdTtnv7P5d0Y6wyKe1SOqXedNhQxMsFZY=m-rxK3zouLcFv-Q@mail.gmail.com>
+	<CAPw-ZT=9Eq0yc7tzqJAdCvsQTgRkMmGzNOSXgawBTY0gAijr4Q@mail.gmail.com>
+	<CALdTtnsfQ1GsZqCN470hdvsJtr_Fi5BU2L1xfAo4cqb=S9yfqA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <1434682158-7243-1-git-send-email-scottwood@freescale.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Tang Yuantian <Yuantian.Tang@freescale.com>
-Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>, Liberman Igal-B31950 <Igal.Liberman@freescale.com>, Bucur Madalin-Cristian-B32716 <madalin.bucur@freescale.com>, linux-clk@vger.kernel.org, linux-pm@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Scott Wood <scottwood@freescale.com>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CALdTtnsfQ1GsZqCN470hdvsJtr_Fi5BU2L1xfAo4cqb=S9yfqA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Dann Frazier <dann.frazier-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>
+Cc: Doug Thompson <dougthompson-aS9lmoZGLiVWk0Htik3J/w@public.gmane.org>, Borislav Petkov <bp-Gina5bIWoIWzQB+pC5nmwQ@public.gmane.org>, Mauro Carvalho Chehab <mchehab-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Jon Masters <jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, patches <patches-qTEPVZfXA3Y@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-edac-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Scott,
+Hi Dann,
 
-Quoting Scott Wood (2015-06-18 19:49:10)
-> The existing device tree bindings are error-prone and inflexible. 
-> Correct the mistake by moving the knowledge into the driver, which
-> has more flexibility in describing the quirks of each chip.  This leaves
-> the device tree to its proper role of identifying a programming interface
-> rather than describing its individual registers.
+On Tue, Aug 11, 2015 at 7:36 AM, Dann Frazier
+<dann.frazier-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org> wrote:
+> On Mon, Aug 10, 2015 at 2:15 PM, Loc Ho <lho-qTEPVZfXA3Y@public.gmane.org> wrote:
+>> Hi Dann,
+>>
+>>>> v2:
+>>>> * Update binding documentation accordingly
+>>>> * Change all single bit defines to BIT(x)
+>>>> * Add support for L3 version 1 and 2 HW's
+>>>> * Change to use debug file system for error injection
+>>>> * In L3/SoC instance add function, allocate EDAC context after all
+>>>>   initalization successed
+>>>> * Support raw or detail info for SoC EDAC error reporting
+>>>>
+>>>> v1:
+>>>> * Add L3/SoC support to the APM X-Gene SoC EDAC driver
+>>>
+>>> Loc,
+>>>   I tested 4.2-rc5 on a Mustang board with one DIMM, and it hangs (RCU
+>>> stall) in xgene_edac_mc_irq_ctl() on modprobe. Same board with 2 DIMMs
+>>> boots fine. (U-boot 1.15.12).
+>>
+>> I just removed one of the two 16GB DIMM... with 4.2.0-rc1 and some
+>> code clean up in EDAC driver, it boots just fine... I don't believe
+>> the code clean up would affect it. Do you have the dump log?
+>>
+>> [root@dhcp-10-76-213-247 ~]# uname -a
+>> Linux dhcp-10-76-213-247 4.2.0-rc1+ #33 SMP PREEMPT Mon Aug 10
+>> 13:23:03 MDT 2015 aarch64 GNU/Linux
+>
+> Sure:
+>   http://paste.ubuntu.com/12055821/
+> I've reproduced this on two machines. In both cases, we removed the
+> DIMM furthest from the CPU (in case that matters).
 
-Sorry for not responding to this one sooner. Fell through the cracks.
+This is an un-supported configuration. In the latest FW, the FW will
+flag this and won't boot. Please remove the DIMM closest to the CPU.
+FYI... I will be posting another version soon.
 
-All of the changes to drives/clk/clk-qoriq.c look great to me. I assume
-you need to keep all of these patches together and want to the take
-through the freescale tree? If so feel free to add,
-
-Acked-by: Michael Turquette <mturquette@baylibre.com>
-
-Regards,
-Mike
-
-> 
-> For more detail, see the commit message of patch 4.
-> 
-> Scott Wood (8):
->   ARM: dts: ls1021a: Fix clockgen node
->   cpufreq: qoriq: Don't look at clock implementation details
->   powerpc/fsl: Move fsl_guts.h out of arch/powerpc
->   clk: qoriq: Move chip-specific knowledge into driver
->   clk: qoriq: Redirect legacy clock nodes to new clocks
->   cpufreq: qoriq: Remove frequency masking and minimum
->   clk: qoriq: Expose OF clocks directly from the clockgen node
->   powerpc/fsl: Use new clockgen binding
-> 
->  .../devicetree/bindings/clock/qoriq-clock.txt      |   57 +-
->  arch/arm/boot/dts/ls1021a.dtsi                     |    3 +
->  arch/powerpc/boot/dts/fsl/b4420si-pre.dtsi         |    4 +-
->  arch/powerpc/boot/dts/fsl/b4860si-pre.dtsi         |    8 +-
->  arch/powerpc/boot/dts/fsl/b4si-post.dtsi           |   15 -
->  arch/powerpc/boot/dts/fsl/p2041si-post.dtsi        |   18 -
->  arch/powerpc/boot/dts/fsl/p2041si-pre.dtsi         |    8 +-
->  arch/powerpc/boot/dts/fsl/p3041si-post.dtsi        |   18 -
->  arch/powerpc/boot/dts/fsl/p3041si-pre.dtsi         |    8 +-
->  arch/powerpc/boot/dts/fsl/p4080si-post.dtsi        |   70 --
->  arch/powerpc/boot/dts/fsl/p4080si-pre.dtsi         |   16 +-
->  arch/powerpc/boot/dts/fsl/p5020si-pre.dtsi         |    4 +-
->  arch/powerpc/boot/dts/fsl/p5040si-post.dtsi        |   18 -
->  arch/powerpc/boot/dts/fsl/p5040si-pre.dtsi         |    8 +-
->  arch/powerpc/boot/dts/fsl/qoriq-clockgen1.dtsi     |   50 +-
->  arch/powerpc/boot/dts/fsl/qoriq-clockgen2.dtsi     |   33 +-
->  arch/powerpc/boot/dts/fsl/t1023si-post.dtsi        |   16 -
->  arch/powerpc/boot/dts/fsl/t102xsi-pre.dtsi         |    4 +-
->  arch/powerpc/boot/dts/fsl/t1040si-post.dtsi        |   44 -
->  arch/powerpc/boot/dts/fsl/t104xsi-pre.dtsi         |    8 +-
->  arch/powerpc/boot/dts/fsl/t2081si-post.dtsi        |   22 -
->  arch/powerpc/boot/dts/fsl/t208xsi-pre.dtsi         |    8 +-
->  arch/powerpc/boot/dts/fsl/t4240si-post.dtsi        |   61 -
->  arch/powerpc/boot/dts/fsl/t4240si-pre.dtsi         |   24 +-
->  arch/powerpc/platforms/85xx/mpc85xx_mds.c          |    2 +-
->  arch/powerpc/platforms/85xx/mpc85xx_rdb.c          |    2 +-
->  arch/powerpc/platforms/85xx/p1022_ds.c             |    2 +-
->  arch/powerpc/platforms/85xx/p1022_rdk.c            |    2 +-
->  arch/powerpc/platforms/85xx/smp.c                  |    2 +-
->  arch/powerpc/platforms/85xx/twr_p102x.c            |    2 +-
->  arch/powerpc/platforms/86xx/mpc8610_hpcd.c         |    2 +-
->  drivers/clk/clk-qoriq.c                            | 1191 ++++++++++++++++----
->  drivers/cpufreq/qoriq-cpufreq.c                    |  139 +--
->  drivers/iommu/fsl_pamu.c                           |    2 +-
->  .../asm/fsl_guts.h => include/linux/fsl/guts.h     |    6 +-
->  sound/soc/fsl/mpc8610_hpcd.c                       |    2 +-
->  sound/soc/fsl/p1022_ds.c                           |    2 +-
->  sound/soc/fsl/p1022_rdk.c                          |    2 +-
->  38 files changed, 1107 insertions(+), 776 deletions(-)
->  rename arch/powerpc/include/asm/fsl_guts.h => include/linux/fsl/guts.h (98%)
-> 
-> -- 
-> 2.1.4
-> 
+-Loc
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
