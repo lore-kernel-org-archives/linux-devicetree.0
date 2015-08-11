@@ -1,204 +1,119 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH v4 2/2] dt: power: st: Provide bindings for ST's OPPs
-Date: Tue, 11 Aug 2015 14:27:57 +0100
-Message-ID: <20150811132756.GG18282@x1>
-References: <20150730084634.GD9319@x1>
- <CAL_JsqKQLQ15qSt95zBZykzzPhcUrtZzhk29a76n+r_3719AiA@mail.gmail.com>
- <20150731163715.GV3159@codeaurora.org>
- <20150803034642.GV899@linux>
- <20150810132247.GH3249@x1>
- <20150811080023.GB5509@linux>
- <20150811093039.GA18282@x1>
- <20150811100941.GG5509@linux>
- <20150811115425.GE18282@x1>
- <20150811120124.GH5509@linux>
+From: Dinh Nguyen <dinguyen@opensource.altera.com>
+Subject: Re: [PATCH] arm64: dts: Add base stratix 10 dtsi
+Date: Tue, 11 Aug 2015 08:32:36 -0500
+Message-ID: <55C9F974.90102@opensource.altera.com>
+References: <1439240958-4713-1-git-send-email-dinguyen@opensource.altera.com>
+ <20150811103902.38cbcb6d@xhacker>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20150811120124.GH5509@linux>
+In-Reply-To: <20150811103902.38cbcb6d@xhacker>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Viresh Kumar <viresh.kumar@linaro.org>
-Cc: Stephen Boyd <sboyd@codeaurora.org>, Rob Herring <robherring2@gmail.com>, Nishanth Menon <nm@ti.com>, kernel@stlinux.com, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, Rafael Wysocki <rjw@rjwysocki.net>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Sebastian Reichel <sre@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Arnd Bergmann <arnd.bergmann@linaro.org>, Ajit Pal Singh <ajitpal.singh@st.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+To: Jisheng Zhang <jszhang@marvell.com>
+Cc: robh+dt@kernel.org, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, mark.rutland@arm.com, pawel.moll@arm.com, catalin.marinas@arm.com, will.deacon@arm.com, devicetree@vger.kernel.org, dinh.linux@gmail.com, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 11 Aug 2015, Viresh Kumar wrote:
-> On 11-08-15, 12:54, Lee Jones wrote:
-> > The framework does not need to parse this information.  It is used
-> > solely by the platform driver, whose job it is to decide which OPPs
-> > are appropriate for the running platform.
->=20
-> The OPP layer needs to parse OPP nodes in DT. But for doing that it
-> needs to know which OPPs to pick from the table as, in cases like
-> yours or qcom, not all OPPs might be available.
->=20
-> One of the ways to do that is:
-> - the platform reads its efuses (or whatever) and encodes the
->   information into a string.
-> - This string should match with the strings present (somewhere) in th=
-e
->   OPP table. That location can be like what I proposed few mails back=
-=2E
-> - Then the *generic* OPP code can parse only those OPP nodes which
->   match with that string.
->=20
-> This way, we can avoid pushing the platform code to parse OPP tables.
+Hi Jisheng,
 
-Okay, so what you're saying is that you've already made the decision
-to create a separate node for every OPP permutation, despite the fact
-that I've told you this could lead to more nodes than anyone would
-care to successfully write or maintain?
+On 8/10/15 9:39 PM, Jisheng Zhang wrote:
+> On Mon, 10 Aug 2015 16:09:18 -0500
+> <dinguyen@opensource.altera.com> wrote:
+> 
+>> From: Dinh Nguyen <dinguyen@opensource.altera.com>
+>>
+>> Add the base DTS for Altera's SoCFPGA Stratix 10 platform.
+>>
+>> Signed-off-by: Dinh Nguyen <dinguyen@opensource.altera.com>
+>> ---
+>>  arch/arm64/Kconfig                                 |   5 +
+>>  arch/arm64/boot/dts/Makefile                       |   1 +
+>>  arch/arm64/boot/dts/altera/Makefile                |   5 +
+>>  arch/arm64/boot/dts/altera/socfpga_stratix10.dtsi  | 354 +++++++++++++++++++++
+>>  .../boot/dts/altera/socfpga_stratix10_socdk.dts    |  38 +++
+>>  arch/arm64/configs/defconfig                       |   1 +
+>>  6 files changed, 404 insertions(+)
+>>  create mode 100644 arch/arm64/boot/dts/altera/Makefile
+>>  create mode 100644 arch/arm64/boot/dts/altera/socfpga_stratix10.dtsi
+>>  create mode 100644 arch/arm64/boot/dts/altera/socfpga_stratix10_socdk.dts
+>>
+>> diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
+>> index 318175f..0f8ab2b 100644
+>> --- a/arch/arm64/Kconfig
+>> +++ b/arch/arm64/Kconfig
+>> @@ -207,6 +207,11 @@ config ARCH_SEATTLE
+>>  	help
+>>  	  This enables support for AMD Seattle SOC Family
+>>  
+>> +config ARCH_STRATIX10
+>> +	bool "Altera's Stratix 10 SoCFPGA Family"
+>> +	help
+>> +	  This enables support for Altera's Stratix 10 SoCFPGA Family
+>> +
+>>  config ARCH_TEGRA
+>>  	bool "NVIDIA Tegra SoC Family"
+>>  	select ARCH_HAS_RESET_CONTROLLER
+>> diff --git a/arch/arm64/boot/dts/Makefile b/arch/arm64/boot/dts/Makefile
+>> index 38913be..7fb421a 100644
+>> --- a/arch/arm64/boot/dts/Makefile
+>> +++ b/arch/arm64/boot/dts/Makefile
+>> @@ -1,3 +1,4 @@
+>> +dts-dirs += altera
+>>  dts-dirs += amd
+>>  dts-dirs += apm
+>>  dts-dirs += arm
+>> diff --git a/arch/arm64/boot/dts/altera/Makefile b/arch/arm64/boot/dts/altera/Makefile
+>> new file mode 100644
+>> index 0000000..d7a6416
+>> --- /dev/null
+>> +++ b/arch/arm64/boot/dts/altera/Makefile
+>> @@ -0,0 +1,5 @@
+>> +dtb-$(CONFIG_ARCH_STRATIX10) += socfpga_stratix10_socdk.dtb
+>> +
+>> +always		:= $(dtb-y)
+>> +subdir-y	:= $(dts-dirs)
+>> +clean-files	:= *.dtb
+>> diff --git a/arch/arm64/boot/dts/altera/socfpga_stratix10.dtsi b/arch/arm64/boot/dts/altera/socfpga_stratix10.dtsi
+>> new file mode 100644
+>> index 0000000..34f6dc3
+>> --- /dev/null
+>> +++ b/arch/arm64/boot/dts/altera/socfpga_stratix10.dtsi
+>> @@ -0,0 +1,354 @@
+>> +/*
+>> + * Copyright Altera Corporation (C) 2015. All rights reserved.
+>> + *
+>> + * This program is free software; you can redistribute it and/or modify
+>> + * it under the terms and conditions of the GNU General Public License,
+>> + * version 2, as published by the Free Software Foundation.
+>> + *
+>> + * This program is distributed in the hope it will be useful, but WITHOUT
+>> + * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+>> + * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
+>> + * more details.
+>> + *
+>> + * You should have received a copy of the GNU General Public License along with
+>> + * this program.  If not, see <http://www.gnu.org/licenses/>.
+>> + */
+>> +
+>> +/dts-v1/;
+>> +
+>> +/ {
+>> +	compatible = "altr,socfpga-stratix10";
+>> +	#address-cells = <1>;
+>> +	#size-cells = <1>;
+>> +
+> [...]
+>> +
+>> +	pmu {
+>> +		compatible = "arm,armv8-pmuv3";
+>> +		interrupts = <0 120 8>,
+>> +			     <0 121 8>,
+>> +			     <0 122 8>,
+>> +			     <0 123 8>;
+> 
+> it's better to add interrupt-affinity according to Sudeep's suggestions.
+> 
 
-Perhaps an example might help explain the issue.
+Ok, will update in V2. Thanks for reviewing.
 
-Using the current driver, we need to place the following in DT and the
-driver does the rest:
-
-opp-list {
-	opp1 {
-		opp-hz =3D <1500000000>;
-		st,avs =3D <1200 1200 1200 1200 1170 1140 1100 1070>;
-		st,substrate =3D <0xff>;
-		st,cuts =3D <0xff>;
-	};
-	opp0 {
-		opp-hz =3D <1200000000>;
-		st,avs =3D <1110 1150 1100 1080 1040 1020 980 930>;
-		st,substrate =3D <0xff>;
-		st,cuts =3D <0x2>;
-	};
-};
-
-However, what you're suggesting, even for this very simple example
-(imagine what this would look like with 5 or more frequencies where
-two or more of them were only appropriate to run on particular
-variants) requires this to be broken out to:
-
-opp-list {
-	pcode0-cut2-allsubstrates {
-		opp0 {
-			opp-hz =3D <1200000000>;
-			opp-microvolt =3D <1110000>;
-		};
-	};
-
-	pcode0-allcuts-allsubstrates {
-		opp0 {
-			opp-hz =3D <1500000000>;
-			opp-microvolt =3D <1200000>;
-		};
-	};
-
-	pcode1-cut2-allsubstrates {
-		opp0 {
-			opp-hz =3D <1200000000>;
-			opp-microvolt =3D <1150000>;
-		};
-	};
-
-	pcode1-allcuts-allsubstrates {
-		opp0 {
-			opp-hz =3D <1500000000>;
-			opp-microvolt =3D <1200000>;
-		};
-	};
-
-	pcode2-cut2-allsubstrates {
-		opp0 {
-			opp-hz =3D <1200000000>;
-			opp-microvolt =3D <1100000>;
-		};
-	};
-
-	pcode2-allcuts-allsubstrates {
-		opp0 {
-			opp-hz =3D <1500000000>;
-			opp-microvolt =3D <1200000>;
-		};
-	};
-
-	pcode3-cut2-allsubstrates {
-		opp0 {
-			opp-hz =3D <1200000000>;
-			opp-microvolt =3D <1080000>;
-		};
-	};
-
-	pcode3-allcuts-allsubstrates {
-		opp0 {
-			opp-hz =3D <1500000000>;
-			opp-microvolt =3D <1200000>;
-		};
-	};
-
-	pcode4-cut2-allsubstrates {
-		opp0 {
-			opp-hz =3D <1200000000>;
-			opp-microvolt =3D <1040000>;
-		};
-
-	pcode4-allcuts-allsubstrates {
-		opp0 {
-			opp-hz =3D <1500000000>;
-			opp-microvolt =3D <1170000>;
-		};
-	};
-
-	pcode5-cut2-allsubstrates {
-		opp0 {
-			opp-hz =3D <1200000000>;
-			opp-microvolt =3D <1020000>;
-		};
-	};
-
-	pcode5-allcuts-allsubstrates {
-		opp0 {
-			opp-hz =3D <1500000000>;
-			opp-microvolt =3D <1140000>;
-		};
-	};
-
-	pcode6-cut2-allsubstrates {
-		opp0 {
-			opp-hz =3D <1200000000>;
-			opp-microvolt =3D <980000>;
-		};
-	};
-
-	pcode6-allcuts-allsubstrates {
-		opp0 {
-			opp-hz =3D <1500000000>;
-			opp-microvolt =3D <1100000>;
-		};
-	};
-
-	pcode7-cut2-allsubstrates {
-		opp0 {
-			opp-hz =3D <1200000000>;
-			opp-microvolt =3D <930000>;
-		};
-	};
-
-	pcode7-allcuts-allsubstrates {
-		opp0 {
-			opp-hz =3D <1500000000>;
-			opp-microvolt =3D <1070000>;
-		};
-	};
-};
-
-
-These will soon multiply once you start providing more complex
-examples.  And how do you plan on handling this in the framework?  Can
-the driver submit more than one variations of the string?  In the
-current example the driver would need to submit four strings to
-provide all acceptable variations; "pcodeX-cutY-substrateZ",
-"pcodeX-allcuts-substrateZ", "pcodeX-cutY-allsubstrates" and
-"pcodeX-allcuts-allsubstrates"
-
---=20
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-=46ollow Linaro: Facebook | Twitter | Blog
+Dinh
