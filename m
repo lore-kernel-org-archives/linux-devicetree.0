@@ -1,52 +1,40 @@
-From: Olof Johansson <olof@lixom.net>
-Subject: Re: [PATCH 3/3] ARM: dts: UniPhier: add ProXstream2 and PH1-LD6b
- SoC/board support
-Date: Tue, 11 Aug 2015 15:07:39 +0200
-Message-ID: <20150811130739.GD30181@localhost>
-References: <1438687264-26538-1-git-send-email-yamada.masahiro@socionext.com>
- <1438687264-26538-4-git-send-email-yamada.masahiro@socionext.com>
+From: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
+Subject: Re: [PATCH v2 0/4] Device Tree updates of UniPhier SoCs for Linux 4.3
+Date: Tue, 11 Aug 2015 15:20:49 +0200
+Message-ID: <20150811132049.GK30181@localhost>
+References: <1438857468-9740-1-git-send-email-yamada.masahiro@socionext.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1438687264-26538-4-git-send-email-yamada.masahiro@socionext.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc: arm@kernel.org, Russell King <linux@arm.linux.org.uk>, devicetree@vger.kernel.org, Kumar Gala <galak@codeaurora.org>, linux-kernel@vger.kernel.org, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, linux-arm-kernel@lists.infradead.org
+In-Reply-To: <1438857468-9740-1-git-send-email-yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
+Cc: arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
+
+On Thu, Aug 06, 2015 at 07:37:44PM +0900, Masahiro Yamada wrote:
+> Hi Olof and Arnd,
+> 
+> Here are a little more updates for device trees for UniPhier SoCs.
+> 
+> Please consider applying this series to your ARM-SOC tree.
+> 
+> Thanks!
 
 Hi,
 
-On Tue, Aug 04, 2015 at 08:21:04PM +0900, Masahiro Yamada wrote:
-> Initial version of DTSI for ProXstream2 and PH1-LD6b and DTS for
-> PH1-LD6b reference board.
-> 
-> Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
-> ---
-> 
->  arch/arm/boot/dts/Makefile                  |   3 +-
->  arch/arm/boot/dts/uniphier-ph1-ld6b-ref.dts | 105 +++++++++++
->  arch/arm/boot/dts/uniphier-ph1-ld6b.dtsi    |  67 +++++++
->  arch/arm/boot/dts/uniphier-proxstream2.dtsi | 273 ++++++++++++++++++++++++++++
->  4 files changed, 447 insertions(+), 1 deletion(-)
->  create mode 100644 arch/arm/boot/dts/uniphier-ph1-ld6b-ref.dts
->  create mode 100644 arch/arm/boot/dts/uniphier-ph1-ld6b.dtsi
->  create mode 100644 arch/arm/boot/dts/uniphier-proxstream2.dtsi
-> 
-> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-> index 246473a..6eb3f2f 100644
-> --- a/arch/arm/boot/dts/Makefile
-> +++ b/arch/arm/boot/dts/Makefile
-> @@ -645,7 +645,8 @@ dtb-$(CONFIG_ARCH_UNIPHIER) += \
->  	uniphier-ph1-sld3-ref.dtb \
->  	uniphier-ph1-ld4-ref.dtb \
->  	uniphier-ph1-pro4-ref.dtb \
-> -	uniphier-ph1-sld8-ref.dtb
-> +	uniphier-ph1-sld8-ref.dtb \
-> +	uniphier-ph1-ld6b-ref.dtb
+Please always comment on when the previous when you respin. I didn't
+see this thread until after I had applied v1.
 
-Please always add entries here sorted, don't just append. I've fixed it
-up for you this time.
+I've taken 2/4 directly now, since it's the only difference.
+
+
+Thanks!
 
 
 -Olof
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
