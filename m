@@ -1,87 +1,48 @@
-From: Joerg Roedel <joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v4 4/6] memory: mediatek: Add SMI driver
-Date: Tue, 11 Aug 2015 16:56:33 +0200
-Message-ID: <20150811145633.GE14980@8bytes.org>
-References: <1438597279-2937-1-git-send-email-yong.wu@mediatek.com>
-	<1438597279-2937-5-git-send-email-yong.wu@mediatek.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1438597279-2937-5-git-send-email-yong.wu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: Yong Wu <yong.wu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, youhua.li-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, k.zhang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, Tomasz Figa <tfiga-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, pebolle-IWqWACnzNjzz+pZb47iToQ@public.gmane.org, frederic.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, Daniel Kurtz <djkurtz-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Sasha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+From: Benjamin Gaignard <benjamin.gaignard-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: [PATCH] enable HQVDP for stih410 platform
+Date: Tue, 11 Aug 2015 17:12:44 +0200
+Message-ID: <1439305964-15641-1-git-send-email-benjamin.gaignard@linaro.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, maxime.coquelin-qxv4g6HH51o@public.gmane.org, vincent.abriou-qxv4g6HH51o@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Aug 03, 2015 at 06:21:17PM +0800, Yong Wu wrote:
-> +static int mtk_smi_common_get(struct device *smidev)
-> +{
-> +	struct mtk_smi_common *smipriv = dev_get_drvdata(smidev);
-> +	int ret;
-> +
-> +	ret = pm_runtime_get_sync(smidev);
-> +	if (ret < 0)
-> +		return ret;
-> +
-> +	ret = clk_prepare_enable(smipriv->clk_apb);
-> +	if (ret) {
-> +		dev_err(smidev, "Failed to enable the apb clock\n");
-> +		goto err_put_pm;
-> +	}
-> +	ret = clk_prepare_enable(smipriv->clk_smi);
-> +	if (ret) {
-> +		dev_err(smidev, "Failed to enable the smi clock\n");
-> +		goto err_disable_apb;
-> +	}
-> +	return ret;
-> +
-> +err_disable_apb:
-> +	clk_disable_unprepare(smipriv->clk_apb);
-> +err_put_pm:
-> +	pm_runtime_put(smidev);
-> +	return ret;
-> +}
+From: Vincent Abriou <vincent.abriou-qxv4g6HH51o@public.gmane.org>
 
-[...]
+Add HQVDP in stih410 devicetree to enable it.
+HQVDP bindings have been describe in
+Documentation/devicetree/bindings/gpu/st,stih4xx.txt file.
 
-> +int mtk_smi_larb_get(struct device *larbdev)
-> +{
-> +	struct mtk_smi_larb *larbpriv = dev_get_drvdata(larbdev);
-> +	struct mtk_larb_mmu *mmucfg = larbdev->archdata.iommu;
-> +	int ret;
-> +
-> +	ret = mtk_smi_common_get(larbpriv->smi);
-> +	if (ret)
-> +		return ret;
-> +
-> +	ret = pm_runtime_get_sync(larbdev);
-> +	if (ret < 0)
-> +		goto err_put_smicommon;
-> +
-> +	ret = clk_prepare_enable(larbpriv->clk_apb);
-> +	if (ret) {
-> +		dev_err(larbdev, "Failed to enable the apb clock\n");
-> +		goto err_put_pm;
-> +	}
-> +
-> +	ret = clk_prepare_enable(larbpriv->clk_smi);
-> +	if (ret) {
-> +		dev_err(larbdev, "Failed to enable the smi clock\n");
-> +		goto err_disable_apb;
-> +	}
+Signed-off-by: Vincent Abriou <vincent.abriou-qxv4g6HH51o@public.gmane.org>
+---
+ arch/arm/boot/dts/stih410.dtsi | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
-The clock enablement looks similar to the function above, maybe move it
-to a helper function?
+diff --git a/arch/arm/boot/dts/stih410.dtsi b/arch/arm/boot/dts/stih410.dtsi
+index 6620bba..33cc933 100644
+--- a/arch/arm/boot/dts/stih410.dtsi
++++ b/arch/arm/boot/dts/stih410.dtsi
+@@ -163,6 +163,16 @@
+ 				st,vtg = <&vtg_main>, <&vtg_aux>;
+ 			};
+ 
++			sti-hqvdp@9c000000 {
++				compatible = "st,stih407-hqvdp";
++				reg = <0x9C00000 0x100000>;
++				clock-names = "hqvdp", "pix_main";
++				clocks = <&clk_s_c0_flexgen CLK_MAIN_DISP>, <&clk_s_d2_flexgen CLK_PIX_MAIN_DISP>;
++				reset-names = "hqvdp";
++				resets = <&softreset STIH407_HDQVDP_SOFTRESET>;
++				st,vtg = <&vtg_main>;
++			};
++
+ 			sti-tvout@8d08000 {
+ 				compatible = "st,stih407-tvout";
+ 				reg = <0x8d08000 0x1000>;
+-- 
+1.9.1
 
-
-	Joerg
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
