@@ -1,95 +1,70 @@
-From: Shengjiu Wang <shengjiu.wang@freescale.com>
-Subject: [PATCH V1 2/3] ARM: imx6sl: Add SPDIF_GCLK clock in clock tree
-Date: Tue, 11 Aug 2015 17:26:53 +0800
-Message-ID: <22e9a375a152703a52895af8d2596f6f58b93249.1439284957.git.shengjiu.wang@freescale.com>
-References: <cover.1439284957.git.shengjiu.wang@freescale.com>
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [RESEND][PATCH 3/4] ARM: davinci: Set proper SPI prescale limit
+ value
+Date: Tue, 11 Aug 2015 10:28:10 +0100
+Message-ID: <20150811092810.GK10748@sirena.org.uk>
+References: <1437568344-18889-1-git-send-email-fcooper@ti.com>
+ <1437568344-18889-4-git-send-email-fcooper@ti.com>
+ <55B22681.3060000@ti.com>
+ <55C9380D.1060802@ti.com>
+ <55C99D0D.9050605@ti.com>
+ <20150811090342.GG10748@sirena.org.uk>
+ <55C9BF51.5080401@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <cover.1439284957.git.shengjiu.wang@freescale.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: shawnguo@kernel.org, kernel@pengutronix.de, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk, mturquette@baylibre.com, sboyd@codeaurora.org
-Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="yiup30KVCQiHUZFC"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <55C9BF51.5080401-l0cyMroinI0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>
+Cc: "Franklin S Cooper Jr." <fcooper-l0cyMroinI0@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, khilman-1D3HCaltpLuhEniVeURVKkEOCMrvLtNR@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-arm-kernel-xBCQruHUn5ppWr+L1FloEB2eb7JE58TQ@public.gmane.org, ssantosh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-As spdif driver will register SPDIF clock to regmap, regmap will do
-clk_prepare in init function, so SPDIF clock is prepared in probe, then its
-root clock (pll clock) is prepared also, which cause the arm can't enter
-low power mode.
-Add SPDIF_GCLK in clock tree which share same gate bits with SPDIF clock.
-Its root clock is ipg clock, and register it to regmap, then the issue can
-be fixed.
 
-Signed-off-by: Shengjiu Wang <shengjiu.wang@freescale.com>
----
- arch/arm/boot/dts/imx6sl.dtsi            | 16 ++++++++++++++++
- drivers/clk/imx/clk-imx6sl.c             |  4 +++-
- include/dt-bindings/clock/imx6sl-clock.h |  3 ++-
- 3 files changed, 21 insertions(+), 2 deletions(-)
+--yiup30KVCQiHUZFC
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-diff --git a/arch/arm/boot/dts/imx6sl.dtsi b/arch/arm/boot/dts/imx6sl.dtsi
-index 320a27f..c247756 100644
---- a/arch/arm/boot/dts/imx6sl.dtsi
-+++ b/arch/arm/boot/dts/imx6sl.dtsi
-@@ -135,8 +135,24 @@
- 				ranges;
- 
- 				spdif: spdif@02004000 {
-+					compatible = "fsl,imx6sl-spdif",
-+						"fsl,imx35-spdif";
- 					reg = <0x02004000 0x4000>;
- 					interrupts = <0 52 IRQ_TYPE_LEVEL_HIGH>;
-+					dmas = <&sdma 14 18 0>,
-+						<&sdma 15 18 0>;
-+					dma-names = "rx", "tx";
-+					clocks = <&clks IMX6SL_CLK_SPDIF_GCLK>, <&clks IMX6SL_CLK_OSC>,
-+						 <&clks IMX6SL_CLK_SPDIF>, <&clks IMX6SL_CLK_DUMMY>,
-+						 <&clks IMX6SL_CLK_DUMMY>, <&clks IMX6SL_CLK_DUMMY>,
-+						 <&clks IMX6SL_CLK_IPG>, <&clks IMX6SL_CLK_DUMMY>,
-+						 <&clks IMX6SL_CLK_DUMMY>, <&clks IMX6SL_CLK_SPBA>;
-+					clock-names = "core", "rxtx0",
-+						"rxtx1", "rxtx2",
-+						"rxtx3", "rxtx4",
-+						"rxtx5", "rxtx6",
-+						"rxtx7", "dma";
-+					status = "disabled";
- 				};
- 
- 				ecspi1: ecspi@02008000 {
-diff --git a/drivers/clk/imx/clk-imx6sl.c b/drivers/clk/imx/clk-imx6sl.c
-index a0d4cf2..a73cedd 100644
---- a/drivers/clk/imx/clk-imx6sl.c
-+++ b/drivers/clk/imx/clk-imx6sl.c
-@@ -97,6 +97,7 @@ static struct clk_div_table video_div_table[] = {
- static unsigned int share_count_ssi1;
- static unsigned int share_count_ssi2;
- static unsigned int share_count_ssi3;
-+static unsigned int share_count_spdif;
- 
- static struct clk *clks[IMX6SL_CLK_END];
- static struct clk_onecell_data clk_data;
-@@ -391,7 +392,8 @@ static void __init imx6sl_clocks_init(struct device_node *ccm_node)
- 	clks[IMX6SL_CLK_PWM4]         = imx_clk_gate2("pwm4",         "perclk",            base + 0x78, 22);
- 	clks[IMX6SL_CLK_SDMA]         = imx_clk_gate2("sdma",         "ipg",               base + 0x7c, 6);
- 	clks[IMX6SL_CLK_SPBA]         = imx_clk_gate2("spba",         "ipg",               base + 0x7c, 12);
--	clks[IMX6SL_CLK_SPDIF]        = imx_clk_gate2("spdif",        "spdif0_podf",       base + 0x7c, 14);
-+	clks[IMX6SL_CLK_SPDIF]        = imx_clk_gate2_shared("spdif",     "spdif0_podf",   base + 0x7c, 14, &share_count_spdif);
-+	clks[IMX6SL_CLK_SPDIF_GCLK]   = imx_clk_gate2_shared("spdif_gclk",  "ipg",         base + 0x7c, 14, &share_count_spdif);
- 	clks[IMX6SL_CLK_SSI1_IPG]     = imx_clk_gate2_shared("ssi1_ipg",     "ipg",        base + 0x7c, 18, &share_count_ssi1);
- 	clks[IMX6SL_CLK_SSI2_IPG]     = imx_clk_gate2_shared("ssi2_ipg",     "ipg",        base + 0x7c, 20, &share_count_ssi2);
- 	clks[IMX6SL_CLK_SSI3_IPG]     = imx_clk_gate2_shared("ssi3_ipg",     "ipg",        base + 0x7c, 22, &share_count_ssi3);
-diff --git a/include/dt-bindings/clock/imx6sl-clock.h b/include/dt-bindings/clock/imx6sl-clock.h
-index 9ce4e42..e14573e 100644
---- a/include/dt-bindings/clock/imx6sl-clock.h
-+++ b/include/dt-bindings/clock/imx6sl-clock.h
-@@ -174,6 +174,7 @@
- #define IMX6SL_CLK_SSI1_IPG		161
- #define IMX6SL_CLK_SSI2_IPG		162
- #define IMX6SL_CLK_SSI3_IPG		163
--#define IMX6SL_CLK_END			164
-+#define IMX6SL_CLK_SPDIF_GCLK		164
-+#define IMX6SL_CLK_END			165
- 
- #endif /* __DT_BINDINGS_CLOCK_IMX6SL_H */
--- 
-1.9.1
+On Tue, Aug 11, 2015 at 02:54:33PM +0530, Sekhar Nori wrote:
+> On Tuesday 11 August 2015 02:33 PM, Mark Brown wrote:
+
+> > Why would there be any interdependency between the the two trees, that
+> > would be very unusual?  Adding a new value to DT doesn't need the kernel
+> > to understand it and the driver should be compatible with existing DTs.
+> > If there *is* some dependency that suggests the driver update has
+> > problems...
+
+> The dependency is because of platform data. Patch 2/4 adds a new
+> platform data member 'prescaler_limit' which this patch populates for
+> DaVinci devices using legacy booting.
+
+Ugh, you still have legacy platforms :(
+
+> > In any case I don't have a copy of the patch any more.
+
+> I can resend this patch to you with my ack included.
+
+I guess.
+
+--yiup30KVCQiHUZFC
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQEcBAEBCAAGBQJVycApAAoJECTWi3JdVIfQ3o4H/3YuAb0iEJR30hpZ56CmKIAQ
+aWZ7Ofleq+ybLK5kohRmiADlvjApfKxq3WuuFUD+F+1sEBApev8/OqjWQKN0qDB8
+95+d/3vOOlaDpbwWoGkRbc8gvKU/Qi1MCfzquzxrxwA87AADHpzjGax0wYzsnX6n
+hDzS+c+OylFwBhnCclPl1Dhr/8zR3sUXHvXE1Y1N9rCa6W37qHWxBuZc+eWu5Oxt
+cmpDhk5E1jYFRvgbxx0w1eC1IWM48ps0tGGuKLSYYokydyCM12xlEex02kbWzM3H
+982vmGTJ8l/xbGC/skqAKyEHsYnj54bMMHSb2f49GwgkXDsXOSEzqLlCppk2oLU=
+=T6Em
+-----END PGP SIGNATURE-----
+
+--yiup30KVCQiHUZFC--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
