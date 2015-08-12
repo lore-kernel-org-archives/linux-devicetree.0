@@ -1,84 +1,42 @@
-From: Stephen Boyd <sboyd@codeaurora.org>
-Subject: Re: [PATCH 3/5] iommu/msm: Add support for generic master bindings
-Date: Wed, 12 Aug 2015 12:11:57 -0700
-Message-ID: <55CB9A7D.7080206@codeaurora.org>
-References: <1439390869-6347-1-git-send-email-sricharan@codeaurora.org> <1439390869-6347-4-git-send-email-sricharan@codeaurora.org>
+From: Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v2 2/6] rtc: omap: Add external clock enabling support
+Date: Wed, 12 Aug 2015 22:16:36 +0200
+Message-ID: <20150812201636.GJ3411@piout.net>
+References: <1439198906-31189-1-git-send-email-j-keerthy@ti.com>
+ <1439198906-31189-3-git-send-email-j-keerthy@ti.com>
+ <alpine.DEB.2.02.1508121422020.7154@utopia.booyaka.com>
+ <55CB99C2.7010007@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <1439390869-6347-4-git-send-email-sricharan@codeaurora.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Sricharan R <sricharan@codeaurora.org>
-Cc: linux-arm-kernel@lists.infradead.org, iommu@lists.linux-foundation.org, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, robin.murphy@arm.com, robdclark@gmail.com, joro@8bytes.org, srinivas.kandagatla@linaro.org, laurent.pinchart@ideasonboard.com, Will.Deacon@arm.com, stepanm@codeaurora.org, treding@nvidia.com
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <55CB99C2.7010007-l0cyMroinI0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Keerthy <a0393675-l0cyMroinI0@public.gmane.org>
+Cc: Paul Walmsley <paul-DWxLp4Yu+b8AvxtiuMwx3w@public.gmane.org>, Keerthy <j-keerthy-l0cyMroinI0@public.gmane.org>, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org, johan-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, grygorii.strashko-l0cyMroinI0@public.gmane.org, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, nm-l0cyMroinI0@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, t-kristo-l0cyMroinI0@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 08/12/2015 07:47 AM, Sricharan R wrote:
-> @@ -702,6 +703,44 @@ static void print_ctx_regs(void __iomem *base, int ctx)
->   	       GET_PRRR(base, ctx), GET_NMRR(base, ctx));
->   }
->   
-> +static void insert_iommu_master(struct device *dev,
-> +				struct msm_iommu_dev *iommu,
-> +				struct of_phandle_args *spec)
-> +{
-> +	struct msm_iommu_ctx_dev *master;
-> +	int sid;
-> +
-> +	master = kzalloc(sizeof(*master), GFP_KERNEL);
+Hi,
 
-This is called with irqs disabled, but it's not GFP_ATOMIC. Please test 
-with DEBUG_ATOMIC_SLEEP=y.
+On 13/08/2015 at 00:38:50 +0530, Keerthy wrote :
+> The intent here is to switch to a higher precision clock which is the
+> internal clock when available.
+> 
+> Alexandre,
+> 
+> Is dynamic switching preferred over sticking  to external clock always if
+> present?
+> 
 
-> +	master->of_node = dev->of_node;
-> +	list_add(&master->list, &iommu->ctx_list);
-> +
-> +	for (sid = 0; sid < spec->args_count; sid++)
-> +		master->mids[sid] = spec->args[sid];
-> +
-> +	master->num_mids = spec->args_count;
-> +}
-> +
-> +static int qcom_iommu_of_xlate(struct device *dev,
-> +			       struct of_phandle_args *spec)
-> +{
-> +	struct msm_iommu_dev *iommu;
-> +	unsigned long flags;
-> +
-> +	spin_lock_irqsave(&msm_iommu_lock, flags);
-> +	list_for_each_entry(iommu, &qcom_iommu_devices, dev_node) {
-> +		if (iommu->dev->of_node == spec->np)
-> +			break;
-> +	}
-
-The braces are unnecessary here.
-
-> +
-> +	if (!iommu || (iommu->dev->of_node != spec->np))
-
-Please remove extraneous parentheses.
-
-> +		return -ENODEV;
-> +
-> +	insert_iommu_master(dev, iommu, spec);
-> +	spin_unlock_irqrestore(&msm_iommu_lock, flags);
-> +
-> +	return 0;
-> +}
-> +
->   irqreturn_t msm_iommu_fault_handler(int irq, void *dev_id)
->   {
->   	struct msm_iommu_dev *iommu = dev_id;
-> @@ -737,7 +776,7 @@ fail:
->   	return 0;
->   }
->   
-> -static const struct iommu_ops msm_iommu_ops = {
-> +static struct iommu_ops msm_iommu_ops = {
-
-Is there a reason why we can't make of_iommu_set_ops() take a const ops 
-pointer?
+I'd say that I don't really care. I'd say the best would be to make a
+decision based on clock-accuracy but maybe that is an information you
+don't have yet. Anyway, this could be added at a later date.
 
 -- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project
+Alexandre Belloni, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
