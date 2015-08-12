@@ -1,143 +1,268 @@
 From: Gavin Shan <gwshan@linux.vnet.ibm.com>
-Subject: Re: [PATCH v6 05/42] powerpc/powernv: Track IO/M32/M64 segments from
- PE
-Date: Thu, 13 Aug 2015 09:34:46 +1000
-Message-ID: <20150812233445.GA4240@gwshan>
+Subject: Re: [PATCH v6 07/42] powerpc/powernv: Improve IO and M32 mapping
+Date: Thu, 13 Aug 2015 09:42:20 +1000
+Message-ID: <20150812234220.GB4240@gwshan>
 References: <1438834307-26960-1-git-send-email-gwshan@linux.vnet.ibm.com>
- <1438834307-26960-6-git-send-email-gwshan@linux.vnet.ibm.com>
- <55C84FD8.302@ozlabs.ru>
- <20150811000342.GB10753@gwshan>
- <55C95CAE.1090908@ozlabs.ru>
- <20150812104502.GB7690@gwshan>
- <55CB2865.4090402@ozlabs.ru>
- <20150812112019.GA14309@gwshan>
- <55CB42BD.3070809@ozlabs.ru>
+ <1438834307-26960-8-git-send-email-gwshan@linux.vnet.ibm.com>
+ <55C85558.2050300@ozlabs.ru>
+ <20150811001259.GC10753@gwshan>
+ <55C95EAD.5070603@ozlabs.ru>
 Reply-To: Gavin Shan <gwshan@linux.vnet.ibm.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-pci-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <55CB42BD.3070809@ozlabs.ru>
+In-Reply-To: <55C95EAD.5070603@ozlabs.ru>
 Sender: linux-pci-owner@vger.kernel.org
 To: Alexey Kardashevskiy <aik@ozlabs.ru>
 Cc: Gavin Shan <gwshan@linux.vnet.ibm.com>, linuxppc-dev@lists.ozlabs.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, benh@kernel.crashing.org, mpe@ellerman.id.au, bhelgaas@google.com, grant.likely@linaro.org, robherring2@gmail.com, panto@antoniou-consulting.com
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Aug 12, 2015 at 10:57:33PM +1000, Alexey Kardashevskiy wrote:
->On 08/12/2015 09:20 PM, Gavin Shan wrote:
->>On Wed, Aug 12, 2015 at 09:05:09PM +1000, Alexey Kardashevskiy wrote:
->>>On 08/12/2015 08:45 PM, Gavin Shan wrote:
->>>>On Tue, Aug 11, 2015 at 12:23:42PM +1000, Alexey Kardashevskiy wrote:
->>>>>On 08/11/2015 10:03 AM, Gavin Shan wrote:
->>>>>>On Mon, Aug 10, 2015 at 05:16:40PM +1000, Alexey Kardashevskiy wrote:
->>>>>>>On 08/06/2015 02:11 PM, Gavin Shan wrote:
->>>>>>>>The patch is adding 6 bitmaps, three to PE and three to PHB, to track
->>>>>>>
->>>>>>>The patch is also removing 2 arrays (io_segmap and m32_segmap), what is that
->>>>>>>all about? Also, there was no m64_segmap, now there is, needs an explanation
->>>>>>>may be.
->>>>>>>
->>>>>>
->>>>>>Originally, the bitmaps (io_segmap and m32_segmap) are allocated dynamically.
->>>>>>Now, they have fixed sizes - 512 bits.
->>>>>>
->>>>>>The subject "powerpc/powernv: Track IO/M32/M64 segments from PE" indicates
->>>>>>why m64_segmap is added.
->>>>>
->>>>>
->>>>>But before this patch, you somehow managed to keep it working without a map
->>>>>for M64, by the same time you needed map for IO and M32. It seems you are
->>>>>making things consistent in this patch but it also feels like you do not have
->>>>>to do so as M64 did not need a map before and I cannot see why it needs one
->>>>>now.
->>>>>
+On Tue, Aug 11, 2015 at 12:32:13PM +1000, Alexey Kardashevskiy wrote:
+>On 08/11/2015 10:12 AM, Gavin Shan wrote:
+>>On Mon, Aug 10, 2015 at 05:40:08PM +1000, Alexey Kardashevskiy wrote:
+>>>On 08/06/2015 02:11 PM, Gavin Shan wrote:
+>>>>There're 3 windows (IO, M32 and M64) for PHB, root port and upstream
+>>>
+>>>These are actually IO, non-prefetchable and prefetchable windows which happen
+>>>to be IO, 32bit and 64bit windows but this has nothing to do with the M32/M64
+>>>BAR registers in P7IOC/PHB3, do I understand this correctly?
+>>>
+>>
+>>In pci-ioda.c, we have below definiations that are defined when
+>>developing the code, not from any specification:
+>>
+>>IO  - resources with IO property
+>>M32 - 32-bits or non-prefetchable resources
+>>M64 - 64-bits and prefetchable resources
+>
+>
+>This what I am saying - it is incorrect and confusing. M32/M64 are PHB3
+>register names and associated windows (with "M" in the beginning) but not
+>device resources.
+>
+
+I don't see how it's incorrect and confusing. M32/M64 are not PHB3
+register names. Also, device resource is either IO, 32-bits prefetchable,
+memory, 32-bits non-prefetchable memory, 64-bits non-prefetchable memory,
+64-bits prefetchable memory. They match with IO, M32, M64.
+
+
+>>>>port of the PCIE switch behind root port. In order to support PCI
+>>>>hotplug, we extend the start/end address of those 3 windows of root
+>>>>port or upstream port to the start/end address of the 3 PHB's windows.
+>>>>The current implementation, assigning IO or M32 segment based on the
+>>>>bridge's windows, isn't reliable.
 >>>>
->>>>The M64 map is used by [PATCH v6 23/42] powerpc/powernv: Release PEs dynamically
->>>>where the M64 segments consumed by one particular PE will be released.
+>>>>The patch fixes above issue by calculating PE's consumed IO or M32
+>>>>segments from its contained devices, no PCI bridge windows involved
+>>>>if the PE doesn't contain all the subordinate PCI buses.
 >>>
->>>
->>>Then add it where it is really started being used. It is really hard to
->>>review a patch which is actually spread between patches. Do not count that
->>>reviewers will just trust you.
+>>>Please, rephrase it. How can PCI bridges be involved in PE consumption?
 >>>
 >>
->>Ok. I'll try.
+>>Ok. Will add something like below:
 >>
+>>if the PE, corresponding to the PCI bus, doesn't contain all the subordinate
+>>PCI buses.
+>
+>
+>No, my question was about "PCI bridge windows involved" - what do you do to
+>the windows if PE does not own all child buses?
+>
+
+All of it is about the original implementation: When the PE doesn't include
+all child buses, the resource consumed by the PE is: resources assigned to
+current PCI bus and then exclude the resources assigned to the child buses.
+Note that PCI bridge windows are actually PCI bus's resource.
+
 >>>
->>>>>>>
->>>>>>>>the consumed by one particular PE, which can be released once the PE
->>>>>>>>is destroyed during PCI unplugging time. Also, we're using fixed
->>>>>>>>quantity of bits to trace the used IO, M32 and M64 segments by PEs
->>>>>>>>in one particular PHB.
->>>>>>>>
->>>>>>>
->>>>>>>Out of curiosity - have you considered having just 3 arrays, in PHB, storing
->>>>>>>PE numbers, and ditching PE's arrays? Does PE itself need to know what PEs it
->>>>>>>is using? Not sure about this master/slave PEs though.
->>>>>>>
->>>>>>
->>>>>>I don't follow your suggestion. Can you rephrase and explain it a bit more?
->>>>>
->>>>>
->>>>>Please explains in what situations you need same map in both PHB and PE and
->>>>>how you are going to use them. For example, pe::m64_segmap and
->>>>>phb::m64_segmap.
->>>>>
->>>>>I believe you need to know what segment is used by what PE and that's it and
->>>>>having 2 bitmaps is overcomplicated hard to follow. Is there anything else
->>>>>what I am missing?
->>>>>
+>>>>Otherwise,
+>>>>the PCI bridge windows still contribute to PE's consumed IO or M32
+>>>>segments.
+>>>
+>>>PCI bridge windows themselves consume PEs? Is that correct?
+>>>
+>>
+>>PCI bridge windows consume IO, M32, M64 segments, not PEs.
+>
+>Ah, right.
+>
+>
 >>>>
->>>>The situation is same to all (IO, M32 and M64) segment maps. Taking m64_segmap
->>>>as an example, it will be used when creating or destroying the PE who consumes
->>>>M64 segments. phb::m64_segmap is recording the M64 segment usage in PHB's domain.
->>>>It's used to check same M64 segment won't be used for towice. pe::m64_segmap tracks
->>>>the M64 segments consumed by the PE.
+>>>>Signed-off-by: Gavin Shan <gwshan@linux.vnet.ibm.com>
+>>>>---
+>>>>  arch/powerpc/platforms/powernv/pci-ioda.c | 136 +++++++++++++++++-------------
+>>>>  1 file changed, 79 insertions(+), 57 deletions(-)
+>>>>
+>>>>diff --git a/arch/powerpc/platforms/powernv/pci-ioda.c b/arch/powerpc/platforms/powernv/pci-ioda.c
+>>>>index 488a53e..713f4b4 100644
+>>>>--- a/arch/powerpc/platforms/powernv/pci-ioda.c
+>>>>+++ b/arch/powerpc/platforms/powernv/pci-ioda.c
+>>>>@@ -2844,75 +2844,97 @@ static void pnv_pci_ioda_fixup_iov_resources(struct pci_dev *pdev)
+>>>>  }
+>>>>  #endif /* CONFIG_PCI_IOV */
+>>>>
+>>>>-/*
+>>>>- * This function is supposed to be called on basis of PE from top
+>>>>- * to bottom style. So the the I/O or MMIO segment assigned to
+>>>>- * parent PE could be overrided by its child PEs if necessary.
+>>>>- */
+>>>>-static void pnv_ioda_setup_pe_seg(struct pci_controller *hose,
+>>>>-				  struct pnv_ioda_pe *pe)
+>>>>+static int pnv_ioda_setup_one_res(struct pci_controller *hose,
+>>>>+				  struct pnv_ioda_pe *pe,
+>>>>+				  struct resource *res)
+>>>>  {
+>>>>  	struct pnv_phb *phb = hose->private_data;
+>>>>  	struct pci_bus_region region;
+>>>>-	struct resource *res;
+>>>>-	int i, index;
+>>>>-	unsigned int segsize;
+>>>>+	unsigned int index, segsize;
+>>>>  	unsigned long *segmap, *pe_segmap;
+>>>>  	uint16_t win;
+>>>>  	int64_t rc;
+>>>>
+>>>>-	/*
+>>>>-	 * NOTE: We only care PCI bus based PE for now. For PCI
+>>>>-	 * device based PE, for example SRIOV sensitive VF should
+>>>>-	 * be figured out later.
+>>>>-	 */
+>>>>-	BUG_ON(!(pe->flags & (PNV_IODA_PE_BUS | PNV_IODA_PE_BUS_ALL)));
+>>>>+	/* Check if we need map the resource */
+>>>>+	if (!res->parent || !res->flags || res->start > res->end)
 >>>
->>>
->>>You could have a single map in PHB, key would be a segment number and value
->>>would be PE number. No need to have a map in PE. At all. No need to
->>>initialize bitmaps, etc.
+>>>res->start >= res->end ?
 >>>
 >>
->>So it would be arrays for various segmant maps if I understood your suggestion
->>as below. Please confirm:
+>>No, res->start == res->end is valid.
 >>
->>#define PNV_IODA_MAX_SEG_NUM	512
+>>>
+>>>>+		return 0;
+>>>>
+>>>>-	pci_bus_for_each_resource(pe->pbus, res, i) {
+>>>>-		if (!res || !res->flags ||
+>>>>-		    res->start > res->end)
+>>>>-			continue;
+>>>>+	if (res->flags & IORESOURCE_IO) {
+>>>>+		region.start = res->start - phb->ioda.io_pci_base;
+>>>>+		region.end   = res->end - phb->ioda.io_pci_base;
+>>>>+		segsize      = phb->ioda.io_segsize;
+>>>>+		segmap       = phb->ioda.io_segmap;
+>>>>+		pe_segmap    = pe->io_segmap;
+>>>>+		win          = OPAL_IO_WINDOW_TYPE;
+>>>>+	} else if ((res->flags & IORESOURCE_MEM) &&
+>>>>+		   !pnv_pci_is_mem_pref_64(res->flags)) {
+>>>>+		region.start = res->start -
+>>>>+			       hose->mem_offset[0] -
+>>>>+			       phb->ioda.m32_pci_base;
+>>>>+		region.end   = res->end -
+>>>>+			       hose->mem_offset[0] -
+>>>>+			       phb->ioda.m32_pci_base;
+>>>>+		segsize      = phb->ioda.m32_segsize;
+>>>>+		segmap       = phb->ioda.m32_segmap;
+>>>>+		pe_segmap    = pe->m32_segmap;
+>>>>+		win          = OPAL_M32_WINDOW_TYPE;
+>>>>+	} else {
+>>>>+		return 0;
+>>>>+	}
+>>>>
+>>>>-		if (res->flags & IORESOURCE_IO) {
+>>>>-			region.start = res->start - phb->ioda.io_pci_base;
+>>>>-			region.end   = res->end - phb->ioda.io_pci_base;
+>>>>-			segsize      = phb->ioda.io_segsize;
+>>>>-			segmap       = phb->ioda.io_segmap;
+>>>>-			pe_segmap    = pe->io_segmap;
+>>>>-			win          = OPAL_IO_WINDOW_TYPE;
+>>>>-		} else if ((res->flags & IORESOURCE_MEM) &&
+>>>>-			   !pnv_pci_is_mem_pref_64(res->flags)) {
+>>>>-			region.start = res->start -
+>>>>-				       hose->mem_offset[0] -
+>>>>-				       phb->ioda.m32_pci_base;
+>>>>-			region.end   = res->end -
+>>>>-				       hose->mem_offset[0] -
+>>>>-				       phb->ioda.m32_pci_base;
+>>>>-			segsize      = phb->ioda.m32_segsize;
+>>>>-			segmap       = phb->ioda.m32_segmap;
+>>>>-			pe_segmap    = pe->m32_segmap;
+>>>>-			win          = OPAL_M32_WINDOW_TYPE;
+>>>>-		} else {
+>>>>-			continue;
+>>>>+	region.start = _ALIGN_DOWN(region.start, segsize);
+>>>>+	region.end   = _ALIGN_UP(region.end, segsize);
+>>>>+	index = region.start / segsize;
+>>>>+	while (index < phb->ioda.total_pe &&
+>>>>+	       region.start < region.end) {
+>>>>+		rc = opal_pci_map_pe_mmio_window(phb->opal_id,
+>>>>+				pe->pe_number, win, 0, index);
+>>>>+		if (rc != OPAL_SUCCESS) {
+>>>>+			pr_warn("%s: Error %lld mapping (%d) seg#%d to PHB#%d-PE#%d\n",
+>>>>+				__func__, rc, win, index,
+>>>>+				pe->phb->hose->global_number,
+>>>>+				pe->pe_number);
+>>>>+			return -EIO;
+>>>>  		}
+>>>>
+>>>>-		index = region.start / phb->ioda.io_segsize;
+>>>>-		while (index < phb->ioda.total_pe &&
+>>>>-		       region.start <= region.end) {
+>>>>-			set_bit(index, segmap);
+>>>>-			set_bit(index, pe_segmap);
+>>>>-			rc = opal_pci_map_pe_mmio_window(phb->opal_id,
+>>>>-					pe->pe_number, win, 0, index);
+>>>>-			if (rc != OPAL_SUCCESS) {
+>>>>-				pr_warn("%s: Error %lld mapping (%d) seg#%d to PHB#%d-PE#%d\n",
+>>>>-					__func__, rc, win, index,
+>>>>-					pe->phb->hose->global_number,
+>>>>-					pe->pe_number);
+>>>>-				break;
+>>>>-			}
+>>>>+		set_bit(index, segmap);
+>>>>+		set_bit(index, pe_segmap);
+>>>>+		region.start += segsize;
+>>>>+		index++;
+>>>>+	}
+>>>>+
+>>>>+	return 0;
+>>>>+}
+>>>>+
+>>>>+static void pnv_ioda_setup_pe_seg(struct pci_controller *hose,
+>>>>+				  struct pnv_ioda_pe *pe)
+>>>>+{
+>>>>+	struct pci_dev *pdev;
+>>>>+	struct resource *res;
+>>>>+	int i;
+>>>>+
+>>>>+	/* This function only works for bus dependent PE */
+>>>>+	BUG_ON(!(pe->flags & (PNV_IODA_PE_BUS | PNV_IODA_PE_BUS_ALL)));
+>>>>+
+>>>>+	list_for_each_entry(pdev, &pe->pbus->devices, bus_list) {
+>>>>+		for (i = 0; i <= PCI_ROM_RESOURCE; i++) {
+>>>>+			res = &pdev->resource[i];
+>>>>+			if (pnv_ioda_setup_one_res(hose, pe, res))
+>>>>+				return;
+>>>>+		}
+>>>>+
+>>>>+		/* If the PE contains all subordinate PCI buses, the
+>>>>+		 * resources of the child bridges should be mapped
+>>>>+		 * to the PE as well.
+>>>>+		 */
+>>>>+		if (!(pe->flags & PNV_IODA_PE_BUS_ALL) ||
+>>>>+		    (pdev->class >> 8) != PCI_CLASS_BRIDGE_PCI)
+>>>>+			continue;
+>>>>
+>>>>-			region.start += segsize;
+>>>>-			index++;
+>>>>+		for (i = 0; i <= PCI_BRIDGE_RESOURCE_NUM; i++) {
+>>>>+			res = &pdev->resource[PCI_BRIDGE_RESOURCES + i];
+>>>>+			if (pnv_ioda_setup_one_res(hose, pe, res))
+>>>>+				return;
+>>>>  		}
+>>>>  	}
+>>>>  }
+>>>>
 >>
->>	int struct pnv_phb::io_segmap[PNV_IODA_MAX_SEG_NUM];
->>			    m32_segmap[PNV_IODA_MAX_SEG_NUM];
->>			    m64_segmap[PNV_IODA_MAX_SEG_NUM];
->>- Initially, they are initialize to IODA_INVALID_PE;
->>- When one segment is assigned to one PE, the corresponding entry
->>   of the array is set to PE number.
->>- When one segment is relased, the corresponding entry of the array
->>   is set to IODA_INVALID_PE;
->
->
->No, not arrays, I meant DEFINE_HASHTABLE(), hash_add(), etc from
->include/linux/hashtable.h.
->
->http://kernelnewbies.org/FAQ/Hashtables is a good place to start :)
->
-
-Are you sure it needs hashtable to represent the simple data struct?
-I really don't understand the benefits, could you provide more details
-about the benefits?
-
-With hashtable, every bucket will include multiple items with conflicting
-hash key, each of which would be represented by data struct as below. The
-data struct uses 24 bytes memory and not efficient enough from this aspect.
-When one more segment consued, instance of "struct pnv_ioda_segment" is
-allocated and put into the conflicting list of the target bucket. At later
-point, the instance is removed from the list and released when the segment
-is detached from the PE. It's more complex than it should be.
-
-struct pnv_ioda_segment {
-	int               pe_number;
-	int               seg_number;
-	struct hlist_node node;
-};
 
 Thanks,
 Gavin
