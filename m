@@ -1,42 +1,60 @@
-From: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: Re: [PATCH v4 0/4] clk: hisilicon: support stub clock
-Date: Tue, 11 Aug 2015 17:38:17 -0700
-Message-ID: <20150812003817.GI26614@codeaurora.org>
-References: <1438673249-6051-1-git-send-email-leo.yan@linaro.org>
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH v2] DT: mmc: sh_mmcif: fix "compatible" property text
+Date: Wed, 12 Aug 2015 09:56:28 +0900
+Message-ID: <20150812005628.GE15957@verge.net.au>
+References: <201404250239.39150.sergei.shtylyov@cogentembedded.com>
+ <1643858.nkRxsQo3O3@wasted.cogentembedded.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-mmc-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1438673249-6051-1-git-send-email-leo.yan-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Leo Yan <leo.yan-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Wei Xu <xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Haojian Zhuang <haojian.zhuang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Bintian Wang <bintian.wang-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Guodong Xu <guodong.xu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Jian Zhang <zhangjian001-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Zhenwei Wang <Zhenwei.wang-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Haoju Mo <mohaoju-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Dan Zhao <dan.zhao-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, sunzhaosheng-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, victor.lixin-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org
+In-Reply-To: <1643858.nkRxsQo3O3@wasted.cogentembedded.com>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Cc: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org, ulf.hansson@linaro.org, linux-mmc@vger.kernel.org, linux-sh@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 08/04, Leo Yan wrote:
-> This series adds support for hisilicon stub clock driver. On hi6220,
-> the bootloader needs load the firmware image and set info for OPPs;
-> after run into kernel, the stub clock driver is used to communicate
-> w/t firmware for cpu dynamic frequency scaling.
-> 
-> In patch series v1/v2, the stub clock driver simply writes request in
-> sram and send ipc to firmware; For patch series v3, the firmware has
-> been upgraded to use mailbox, so stub clock driver will call standard
-> mailbox APIs to request mailbox channel and send message to firmware.
-> 
-> Patch 4 adds stub clock node into dts and it references mailbox with
-> phandle, so patch 4 will depend on mailbox driver's patch series [1].
-> These patches have been tested on 96board hikey and is used by cpufreq
-> driver.
+Hi Sergei,
 
-The To: list is everyone, so I'm not sure who is supposed to
-apply these patches. I'd like to take patches 1, 2, and 3 through
-the clk tree though.
+On Wed, Aug 12, 2015 at 01:37:28AM +0300, Sergei Shtylyov wrote:
+> The "compatible" property text contradicts even the example given in the MMCIF
+> binding document itself;  moreover, the Renesas MMCIF driver only matches on
+> the generic "compatible" string and doesn't look for the SoC specific strings
+> at all. Thus describe "renesas,sh-mmcif" as a fallback value.
+> 
+> Fixes: b4c27763d749 ("mmc: sh_mmcif: Document DT bindings")
+> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
 
--- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+I don't believe this file is the appropriate place to describe
+best-practice for the ordering of compatible strings which must surely be
+documented elsewhere.
+
+> ---
+> The patch is against Ulf Hansson's 'mmc.git' repo's 'fixes' and 'next' branches.
+> 
+> Changes in version 2:
+> - kept the SoC specific "compatible" property values mandatory and made the
+>   generic string a fallback.
+> 
+>  Documentation/devicetree/bindings/mmc/renesas,mmcif.txt |    2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> Index: mmc/Documentation/devicetree/bindings/mmc/renesas,mmcif.txt
+> ===================================================================
+> --- mmc.orig/Documentation/devicetree/bindings/mmc/renesas,mmcif.txt
+> +++ mmc/Documentation/devicetree/bindings/mmc/renesas,mmcif.txt
+> @@ -10,7 +10,7 @@ Required properties:
+>  	- "renesas,mmcif-r8a7740" for the MMCIF found in r8a7740 SoCs
+>  	- "renesas,mmcif-r8a7790" for the MMCIF found in r8a7790 SoCs
+>  	- "renesas,mmcif-r8a7791" for the MMCIF found in r8a7791 SoCs
+> -	- "renesas,sh-mmcif" for the generic MMCIF
+> +  followed by "renesas,sh-mmcif".
+>  
+>  - clocks: reference to the functional clock
+>  
+> 
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-sh" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 
