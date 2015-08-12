@@ -1,174 +1,97 @@
-From: Liviu Dudau <Liviu.Dudau-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH v2 10/10] arm64: dts: Create SoC thermal zone for Juno
-Date: Wed, 12 Aug 2015 16:55:00 +0100
-Message-ID: <20150812155500.GW20890@e106497-lin.cambridge.arm.com>
-References: <1438615378-14241-1-git-send-email-punit.agrawal@arm.com>
- <1438615378-14241-11-git-send-email-punit.agrawal@arm.com>
+From: Stas Sergeev <stsp-cmBhpYW9OiY@public.gmane.org>
+Subject: Re: [PATCH 0/2] of: fsl/fman: reuse the fixed node parsing code
+Date: Wed, 12 Aug 2015 19:03:01 +0300
+Message-ID: <55CB6E35.4020808@list.ru>
+References: <1438785745-15517-1-git-send-email-madalin.bucur@freescale.com>
+ <55C63D3B.5020005@gmail.com> <55CA1C14.3000202@list.ru>
+ <BL2PR03MB545D4E18DE41AE01AFC37D6E67F0@BL2PR03MB545.namprd03.prod.outlook.com>
+ <55CA29C8.5000707@list.ru>
+ <BL2PR03MB545929237EF33BA13089EC1E67E0@BL2PR03MB545.namprd03.prod.outlook.com>
+ <55CB50F1.7050308@list.ru>
+ <BL2PR03MB5458B9D2402DE68E9B9014AE67E0@BL2PR03MB545.namprd03.prod.outlook.com>
+ <55CB61BC.1050209@list.ru>
+ <BL2PR03MB545A213D584384018CCB30CE67E0@BL2PR03MB545.namprd03.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=utf-8;
+	format=flowed
 Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1438615378-14241-11-git-send-email-punit.agrawal-5wv7dgnIgG8@public.gmane.org>
-Content-Disposition: inline
+In-Reply-To: <BL2PR03MB545A213D584384018CCB30CE67E0-AZ66ij2kwaa1tTsckATbNOO6mTEJWrR4XA4E9RH9d+qIuWR1G4zioA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Punit Agrawal <punit.agrawal-5wv7dgnIgG8@public.gmane.org>
-Cc: "linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "lm-sensors-GZX6beZjE8VD60Wz+7aTrA@public.gmane.org" <lm-sensors-GZX6beZjE8VD60Wz+7aTrA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, Sudeep Holla <Sudeep.Holla-5wv7dgnIgG8@public.gmane.org>
+To: Madalin-Cristian Bucur <madalin.bucur-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Liberman Igal <Igal.Liberman-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Stas Sergeev <stsp-Rn4VEauK+AKRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>, "joakim.tjernlund-SNLAxHN9vbcOP4wsBPIw7w@public.gmane.org" <joakim.tjernlund-SNLAxHN9vbcOP4wsBPIw7w@public.gmane.org>, Shaohui Xie <Shaohui.Xie-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Aug 03, 2015 at 04:22:58PM +0100, Punit Agrawal wrote:
-> Setup a thermal zone driven by the SoC temperature sensor on Juno
-> r0. Create passive trip points and bind them to cpufreq cooling
-> devices that support the power extensions.
+12.08.2015 18:27, Madalin-Cristian Bucur =D0=BF=D0=B8=D1=88=D0=B5=D1=82=
+:
+>>> Then I could call only of_* functions but the end result would be t=
+he same
+>>> and  of_phy_register_fixed_phy() would not justify its existence th=
+at much...
+>> You didn't say you wanted to obsolete the of_phy_register_fixed_phy(=
+).
+>> Since it is there (and even changed by me in a way your
+>> patch will likely clash), IMHO it would be better if it is used,
+>> rather than copy/pasted into the driver.
+> Please note I was referring to a fictional new function that would em=
+bed the call to
+> fixed_phy_register(). I was not talking about some existing API, just=
+ about a new
+> of_call  named of_phy_register_fixed_phy()  that would in the end be =
+called by
+> of_phy_register_fixed_link() and by some drivers that want to get in =
+the middle
+> of things and get a hold on status.
+Hmm, and for exactly unknown reason in your pseudocode
+of_phy_register_fixed_phy() doesn't take status as an argument. :)
+So I didn't see its point.
+If you fix your pseudo-code, you'll add the status argument,
+because it is needed for fixed_phy_register() anyway.
+After that, the drivers that want to provide the status, will
+just use it rather than to call fixed_phy_register() directly.
+And with my changes it really have even more merits to exist.
 
-Hi Punit,
+> Maybe the fact we're reviewing two patches in one thread is what make=
+s the
+> discussion less than optimal.
+I guess the bugs in the pseudo-code made me to miss its point.
 
->=20
-> Signed-off-by: Punit Agrawal <punit.agrawal-5wv7dgnIgG8@public.gmane.org>
-> Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-> Cc: Liviu Dudau <liviu.dudau-5wv7dgnIgG8@public.gmane.org>
-> Cc: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
-> ---
->  arch/arm64/boot/dts/arm/juno.dts | 50 ++++++++++++++++++++++++++++++=
-++++++++++
->  1 file changed, 50 insertions(+)
->=20
-> diff --git a/arch/arm64/boot/dts/arm/juno.dts b/arch/arm64/boot/dts/a=
-rm/juno.dts
-> index d2e67f3..664961c 100644
-> --- a/arch/arm64/boot/dts/arm/juno.dts
-> +++ b/arch/arm64/boot/dts/arm/juno.dts
-> @@ -9,6 +9,7 @@
->  /dts-v1/;
-> =20
->  #include <dt-bindings/interrupt-controller/arm-gic.h>
-> +#include <dt-bindings/thermal/thermal.h>
-> =20
->  / {
->  	model =3D "ARM Juno development board (r0)";
-> @@ -90,6 +91,8 @@
->  			next-level-cache =3D <&A57_L2>;
->  			clocks =3D <&scpi_dvfs 0>;
->  			cpu-idle-states =3D <&CPU_SLEEP_0 &CLUSTER_SLEEP_0>;
-> +			#cooling-cells =3D <2>;
-> +			dynamic-power-coefficient =3D <530>;
+>>> The getter for status you suggest would be fine, but not sure how o=
+ne
+>>> would retrieve
+>>> it from the mac_node unless we change of_phy_register_fixed_link() =
+to
+>>> return the
+>>> pointer to phy (and all the drivers that use it...).
+>> If you look for instance to mvneta.c, you'll find the following:
+>> ---
+>> err =3D of_phy_register_fixed_link(dn);
+>> /* In the case of a fixed PHY, the DT node associated
+>>    * to the PHY is the Ethernet MAC DT node.
+>>    */
+>>    phy_node =3D of_node_get(dn);
+>> ...
+>> phy =3D of_phy_find_device(dn);
+>> ---
+>>
+>> So the answer is: just use the same mac_node for both.
+> I understand, I'll use this approach although is suboptimal imho to
+Exactly!
+But at least this way is used in many currently existing
+drivers, while getting the fixed-link parameters directly from
+DT - is a new way of circumventing the existing API.
+So I'd vote for the currently existing hacks, and in fact
+I already tried to start a discussion about getting rid of the
+need for of_phy_find_device(), but it didn't go.
 
-The Documentation/devicetree/bindings/thermal/thermal.txt document desc=
-ribes two additional
-required properties, cooling-min-state and cooling-max-state which are =
-missing here.
-
->  		};
-> =20
->  		A57_1: cpu@1 {
-> @@ -100,6 +103,8 @@
->  			next-level-cache =3D <&A57_L2>;
->  			clocks =3D <&scpi_dvfs 0>;
->  			cpu-idle-states =3D <&CPU_SLEEP_0 &CLUSTER_SLEEP_0>;
-> +			#cooling-cells =3D <2>;
-> +			dynamic-power-coefficient =3D <530>;
->  		};
-> =20
->  		A53_0: cpu@100 {
-> @@ -110,6 +115,8 @@
->  			next-level-cache =3D <&A53_L2>;
->  			clocks =3D <&scpi_dvfs 1>;
->  			cpu-idle-states =3D <&CPU_SLEEP_0 &CLUSTER_SLEEP_0>;
-> +			#cooling-cells =3D <2>;
-> +			dynamic-power-coefficient =3D <140>;
->  		};
-> =20
->  		A53_1: cpu@101 {
-> @@ -120,6 +127,8 @@
->  			next-level-cache =3D <&A53_L2>;
->  			clocks =3D <&scpi_dvfs 1>;
->  			cpu-idle-states =3D <&CPU_SLEEP_0 &CLUSTER_SLEEP_0>;
-> +			#cooling-cells =3D <2>;
-> +			dynamic-power-coefficient =3D <140>;
->  		};
-> =20
->  		A53_2: cpu@102 {
-> @@ -130,6 +139,8 @@
->  			next-level-cache =3D <&A53_L2>;
->  			clocks =3D <&scpi_dvfs 1>;
->  			cpu-idle-states =3D <&CPU_SLEEP_0 &CLUSTER_SLEEP_0>;
-> +			#cooling-cells =3D <2>;
-> +			dynamic-power-coefficient =3D <140>;
->  		};
-> =20
->  		A53_3: cpu@103 {
-> @@ -140,6 +151,8 @@
->  			next-level-cache =3D <&A53_L2>;
->  			clocks =3D <&scpi_dvfs 1>;
->  			cpu-idle-states =3D <&CPU_SLEEP_0 &CLUSTER_SLEEP_0>;
-> +			#cooling-cells =3D <2>;
-> +			dynamic-power-coefficient =3D <140>;
->  		};
-> =20
->  		A57_L2: l2-cache0 {
-> @@ -167,5 +180,42 @@
->  				     <&A53_3>;
->  	};
-> =20
-> +	thermal-zones {
-> +		soc_thermal {
-> +			polling-delay =3D <1000>;
-> +			polling-delay-passive =3D <100>;
-> +			sustainable-power =3D <2500>;
-> +
-> +			thermal-sensors =3D <&scpi_sensors0 3>;
-> +
-> +			trips {
-> +				threshold: trip-point@0 {
-
-You also need a reg=3D property if you have the @index thing.
-
-Best regards,
-Liviu
-
-> +					temperature =3D <55000>;
-> +					hysteresis =3D <1000>;
-> +					type =3D "passive";
-> +				};
-> +				target: trip-point@1 {
-> +					temperature =3D <65000>;
-> +					hysteresis =3D <1000>;
-> +					type =3D "passive";
-> +				};
-> +			};
-> +
-> +			cooling-maps {
-> +				map0 {
-> +					trip =3D <&target>;
-> +					cooling-device =3D <&A53_0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
-> +					contribution =3D <2048>;
-> +				};
-> +				map1 {
-> +					trip =3D <&target>;
-> +					cooling-device =3D <&A57_0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
-> +					contribution =3D <1024>;
-> +				};
-> +
-> +			};
-> +		};
-> +	};
-> +
->  	#include "juno-base.dtsi"
->  };
-> --=20
-> 2.1.4
->=20
-
---=20
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-| I would like to |
-| fix the world,  |
-| but they're not |
-| giving me the   |
- \ source code!  /
-  ---------------
-    =C2=AF\_(=E3=83=84)_/=C2=AF
-
+> scan the device tree again to get a phy pointer that you need just
+> to get some of info that was parsed in a call you just made.
+Maybe (just maybe) of_phy_register_fixed_link() could
+return the phy_device pointer. At least it will solve your
+problem very cheaply. But I am sure such API additions
+require a separate discussion, can't be done in a context
+of discussing a small fix. If you have some free time, feel
+free to raise such a discussion with API extension proposals.
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" i=
 n
