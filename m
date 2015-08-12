@@ -1,37 +1,84 @@
-From: Mugunthan V N <mugunthanvnm@ti.com>
-Subject: [net-next PATCH 2/3] ARM: dts: dra7: update cpsw compatible
-Date: Wed, 12 Aug 2015 15:22:54 +0530
-Message-ID: <1439373175-8650-3-git-send-email-mugunthanvnm@ti.com>
-References: <1439373175-8650-1-git-send-email-mugunthanvnm@ti.com>
+From: Borislav Petkov <bp-Gina5bIWoIWzQB+pC5nmwQ@public.gmane.org>
+Subject: Re: [PATCH v3 1/4] edac: Add an function to retrieve the EDAC
+ debugfs node
+Date: Wed, 12 Aug 2015 12:12:19 +0200
+Message-ID: <20150812101219.GC14011@nazgul.tnic>
+References: <1439326077-25507-1-git-send-email-lho@apm.com>
+ <1439326077-25507-2-git-send-email-lho@apm.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <1439373175-8650-1-git-send-email-mugunthanvnm@ti.com>
-Sender: netdev-owner@vger.kernel.org
-To: netdev@vger.kernel.org
-Cc: devicetree@vger.kernel.org, linux-omap@vger.kernel.org, "David S . Miller" <davem@davemloft.net>, Tony Lindgren <tony@atomide.com>, alex.aring@gmail.com, Mugunthan V N <mugunthanvnm@ti.com>
+Content-Type: text/plain; charset=utf-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1439326077-25507-2-git-send-email-lho-qTEPVZfXA3Y@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Loc Ho <lho-qTEPVZfXA3Y@public.gmane.org>
+Cc: dougthompson-aS9lmoZGLiVWk0Htik3J/w@public.gmane.org, mchehab-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, linux-edac-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, patches-qTEPVZfXA3Y@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-CPSW driver has been updated with compatibles for enabling errata
-workarounds. So updating cpsw compatibles.
+On Tue, Aug 11, 2015 at 02:47:54PM -0600, Loc Ho wrote:
+> This patch adds an function to retrieve the EDAC debugfs node. This allows
+> EDAC driver to create debugfs node under the EDAC debugfs node.
+> 
+> Signed-off-by: Loc Ho <lho-qTEPVZfXA3Y@public.gmane.org>
+> ---
+>  drivers/edac/edac_core.h     |    1 +
+>  drivers/edac/edac_mc_sysfs.c |   10 ++++++++++
+>  2 files changed, 11 insertions(+), 0 deletions(-)
+> 
+> diff --git a/drivers/edac/edac_core.h b/drivers/edac/edac_core.h
+> index ad42587..6771e64 100644
+> --- a/drivers/edac/edac_core.h
+> +++ b/drivers/edac/edac_core.h
+> @@ -511,5 +511,6 @@ extern void edac_pci_remove_sysfs(struct edac_pci_ctl_info *pci);
+>   * edac misc APIs
+>   */
+>  extern char *edac_op_state_to_string(int op_state);
+> +extern struct dentry *edac_get_debugfs(void);
+>  
+>  #endif				/* _EDAC_CORE_H_ */
+> diff --git a/drivers/edac/edac_mc_sysfs.c b/drivers/edac/edac_mc_sysfs.c
+> index 33df7d9..b76afe0 100644
+> --- a/drivers/edac/edac_mc_sysfs.c
+> +++ b/drivers/edac/edac_mc_sysfs.c
+> @@ -959,6 +959,16 @@ nomem:
+>  	debugfs_remove(mci->debugfs);
+>  	return -ENOMEM;
+>  }
+> +
+> +struct dentry *edac_get_debugfs(void)
+> +{
+> +	return edac_debugfs;
+> +}
 
-Signed-off-by: Mugunthan V N <mugunthanvnm@ti.com>
----
- arch/arm/boot/dts/dra7.dtsi | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+EXPORT_SYMBOL_GPL() if it is going to be used by modules.
 
-diff --git a/arch/arm/boot/dts/dra7.dtsi b/arch/arm/boot/dts/dra7.dtsi
-index 8f1e25b..b4fdd10 100644
---- a/arch/arm/boot/dts/dra7.dtsi
-+++ b/arch/arm/boot/dts/dra7.dtsi
-@@ -1398,7 +1398,7 @@
- 		};
- 
- 		mac: ethernet@4a100000 {
--			compatible = "ti,cpsw";
-+			compatible = "ti,dra7-cpsw","ti,cpsw";
- 			ti,hwmods = "gmac";
- 			clocks = <&dpll_gmac_ck>, <&gmac_gmii_ref_clk_div>;
- 			clock-names = "fck", "cpts";
+> +#else
+> +struct dentry *edac_get_debugfs(void)
+
+static inline struct ...
+
+> +{
+> +	return NULL;
+> +}
+>  #endif
+>  
+>  /*
+> -- 
+> 1.7.1
+> 
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-edac" in
+> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 
+
 -- 
-2.5.0.234.gefc8a62
+Regards/Gruss,
+    Boris.
+
+ECO tip #101: Trim your mails when you reply.
+--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
