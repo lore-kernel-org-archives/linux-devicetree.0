@@ -1,91 +1,64 @@
-From: Yong Wu <yong.wu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH v4 5/6] iommu/mediatek: Add mt8173 IOMMU driver
-Date: Wed, 12 Aug 2015 20:28:08 +0800
-Message-ID: <1439382488.7382.23.camel@mhfsdcap03>
-References: <1438597279-2937-1-git-send-email-yong.wu@mediatek.com>
-	<1438597279-2937-6-git-send-email-yong.wu@mediatek.com>
-	<20150811153947.GF14980@8bytes.org>
+From: Daniel Lezcano <daniel.lezcano@linaro.org>
+Subject: Re: [PATCH 0/5] add GPT timer support for mt8173
+Date: Wed, 12 Aug 2015 14:32:11 +0200
+Message-ID: <55CB3CCB.6020607@linaro.org>
+References: <1436779969-18610-1-git-send-email-yingjoe.chen@mediatek.com> <CAGS+omAeYhXDpBueG-F_gYBccqeaejN9k5bRKC78aDLfvHfnBA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-In-Reply-To: <20150811153947.GF14980-zLv9SwRftAIdnm+yROfE0A@public.gmane.org>
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: Joerg Roedel <joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, youhua.li-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, k.zhang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, Tomasz Figa <tfiga-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, pebolle-IWqWACnzNjzz+pZb47iToQ@public.gmane.org, frederic.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, Daniel Kurtz <djkurtz-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Sasha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Content-Type: text/plain; charset=utf-8;
+	format=flowed
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAGS+omAeYhXDpBueG-F_gYBccqeaejN9k5bRKC78aDLfvHfnBA@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Daniel Kurtz <djkurtz@chromium.org>, Yingjoe Chen <yingjoe.chen@mediatek.com>, Stephen Boyd <sboyd@codeaurora.org>, Matthias Brugger <matthias.bgg@gmail.com>
+Cc: James Liao <jamesjj.liao@mediatek.com>, Michael Turquette <mturquette@baylibre.com>, Thomas Gleixner <tglx@linutronix.de>, Russell King <linux@arm.linux.org.uk>, "open list:OPEN FIRMWARE AND..." <devicetree@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>, Catalin Marinas <catalin.marinas@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, linux-mediatek@lists.infradead.org, Sascha Hauer <kernel@pengutronix.de>, Olof Johansson <olof@lixom.net>, srv_heupstream <srv_heupstream@mediatek.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, linux-clk@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-T24gVHVlLCAyMDE1LTA4LTExIGF0IDE3OjM5ICswMjAwLCBKb2VyZyBSb2VkZWwgd3JvdGU6Cj4g
-T24gTW9uLCBBdWcgMDMsIDIwMTUgYXQgMDY6MjE6MThQTSArMDgwMCwgWW9uZyBXdSB3cm90ZToK
-PiA+ICsvKgo+ID4gKyAqIFRoZXJlIGlzIG9ubHkgb25lIGlvbW11IGRvbWFpbiBjYWxsZWQgdGhl
-IG00dSBkb21haW4gdGhhdAo+ID4gKyAqIGFsbCBNdWx0aW1lZGlhIG1vZHVsZXMgc2hhcmUuCj4g
-PiArICovCj4gPiArc3RhdGljIHN0cnVjdCBtdGtfaW9tbXVfZG9tYWluCSptNHVkb207Cj4gCj4g
-V2hhdCBpcyB0aGUgcmVhc29uIHlvdSBvbmx5IGltcGxlbWVudCBvbmUgZG9tYWluPyBDYW4ndCB0
-aGUgSU9NTVUKPiBpc29sYXRlIGRpZmZlcmVudCBkZXZpY2VzIGZyb20gZWFjaCBvdGhlcj8KSGkg
-Sm9lcmcsCgogIFRoYW5rcyBmb3IgeW91ciByZXZpZXcuCiAgRnJvbSB5b3VyIGNvbW1lbnQsIHlv
-dSBtYXkgY2FyZSB0aGF0IHdlIHVzZSBvbmx5IG9uZSBkb21haW4uCgogIE91ciBIVyBpcyBjYWxs
-ZWQgbTR1KE11bHRpTWVkaWEgTWVtb3J5IE1hbmFnZW1lbnQgVW5pdCkgd2hpY2gKaGVscCBhbGwg
-dGhlIG11bHRpbWVkaWEgaGFyZHdhcmUgYWNjZXNzIHRoZSBkcmFtLCBpbmNsdWRlIGRpc3BsYXks
-dmlkZW8KZGVjb2RlLHZpZGVvIGVuY29kZSxjYW1lcmEsbWRwLGV0Yy4gQW5kIHRoZSBtNHUgaGFz
-IG9ubHkgb25lIHBhZ2V0YWJsZS4KKEFjdHVhbGx5IHRoZXJlIGlzIHR3byBwYWdldGFibGVzIGlu
-IG00dSwgb25lIGlzIHRoZSBub3JtYWwgcGFnZXRhYmxlLAp0aGUgb3RoZXIgaXMgc2VjdXJpdHkg
-cGFnZXRhYmxlLiBDdXJyZW50bHkgV2UgZG9uJ3QgaW1wbGVtZW50IHRoZQpzZWN1cml0eSBvbmUs
-IHNvIHRoZXJlIGlzIG9ubHkgb25lIHBhZ2V0YWJsZSBoZXJlLikKVGhhdCBpcyB0byBzYXkgYWxs
-IHRoZSBtdWx0aW1lZGlhIGRldmljZXMgYXJlIGluIHRoZSBtNHUgZG9tYWluIGFuZApzaGFyZSB0
-aGUgbTR14oCZcyBwYWdldGFibGUuCgpTbyBXZSBoYXZlIG9ubHkgb25lIGRvbWFpbiBoZXJlLi4K
-Cj4gPiArc3RhdGljIHN0cnVjdCBpb21tdV9kb21haW4gKm10a19pb21tdV9kb21haW5fYWxsb2Mo
-dW5zaWduZWQgdHlwZSkKPiA+ICt7Cj4gPiArCXN0cnVjdCBtdGtfaW9tbXVfZG9tYWluICpwcml2
-Owo+ID4gKwo+ID4gKwlpZiAodHlwZSAhPSBJT01NVV9ET01BSU5fVU5NQU5BR0VEICYmIHR5cGUg
-IT0gSU9NTVVfRE9NQUlOX0RNQSkKPiA+ICsJCXJldHVybiBOVUxMOwo+ID4gKwo+ID4gKwlpZiAo
-bTR1ZG9tKS8qIFRoZSBtNHUgZG9tYWluIGV4aXN0LiAqLwo+ID4gKwkJcmV0dXJuICZtNHVkb20t
-PmRvbWFpbjsKPiAKPiBUaGlzIGlzIG5vdCBnb2luZyB0byB3b3JrLiBJZiB5b3UgYWx3YXlzIHJl
-dHVybiB0aGUgc2FtZSBkb21haW4gdGhlCj4gaW9tbXUgY29yZSBtaWdodCByZS1pbml0aWFsaXpl
-IGRvbWFpbiBzdGF0ZSAoYW5kIG92ZXJ3cml0ZSBjaGFuZ2VkCj4gc3RhdGUpLiBBdCB0aGUgbW9t
-ZW50IHRoaXMgaXMgb25seSB0aGUgZG9tYWluLXR5cGUgd2hpY2ggd2lsbCBjaGFuZ2UKPiBldmVy
-eSB0aW1lIHRoaXMgZnVuY3Rpb24gaXMgY2FsbGVkLCBidXQgdGhlcmUgbWlnaHQgYmUgbW9yZS4K
-CkluIG91ciB2M1sxXSwgIEkgZGlkbid0IHJldHVybiB0aGUgc2FtZSBkb21haW4sIFRoZW4gSSBo
-YXZlIHRvIHRyaWNrIGluCmF0dGFjaF9kZXZpY2UgbGlrZSBiZWxvdzoKLy89PT09PT09PT09PT0K
-c3RhdGljIGludCBtdGtfaW9tbXVfYXR0YWNoX2RldmljZShzdHJ1Y3QgaW9tbXVfZG9tYWluICpk
-b21haW4sCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBzdHJ1Y3QgZGV2aWNlICpk
-ZXYpCnsKICAgICAgICBzdHJ1Y3QgZGV2aWNlICppbXVkZXYgPSB4eHh4OwogICAgICAgIC8qCiAg
-ICAgICAgICogUmVzZXJ2ZSBvbmUgaW9tbXUgZG9tYWluIGFzIHRoZSBtNHUgZG9tYWluIHdoaWNo
-CiAgICAgICAgICogYWxsIE11bHRpbWVkaWEgbW9kdWxlcyBzaGFyZSBhbmQgZnJlZSB0aGUgb3Ro
-ZXJzLgogICAgICAgICAqLwogICAgICAgIGlmICghaW11ZGV2LT5hcmNoZGF0YS5pb21tdSkKICAg
-ICAgICAgICAgICAgaW11ZGV2LT5hcmNoZGF0YS5pb21tdSA9IHByaXY7CiAgICAgICAgZWxzZSBp
-ZiAoaW11ZGV2LT5hcmNoZGF0YS5pb21tdSAhPSBwcml2KQogICAgICAgICAgICAgICBpb21tdV9k
-b21haW5fZnJlZShkb21haW4pOwogICAgICAgIHh4eHgKfQovLz09PT09PT09PT09PT09CkluIHRo
-aXMgdmVyc2lvbiwgSSB1c2VkIGEgZ2xvYmFsIHZhcmlhYmxlIHRvIHJlY29yZCB0aGUgbTR1IGRv
-bWFpbiB0aGVuCkkgY2FuIGRlbGV0ZSB0aGVzZSBjb2RlIGFuZCBtYWtlIGl0IHNpbXBsZS4KClRo
-ZW4gaG93IHNob3VsZCBJIGRvIGluIG91ciBjYXNlPyAuCklmIHdlIGNhbid0IHJldHVybiB0aGUg
-c2FtZSBkb21haW4gaGVyZSwgV2UgaGF2ZSB0byBhZGQgc29tZSBjb2RlIGxpa2UKYWJvdmUgaW4g
-dGhlIGF0dGFjaF9kZXZpY2UuCgpbMV06aHR0cDovL2xpc3RzLmxpbnV4Zm91bmRhdGlvbi5vcmcv
-cGlwZXJtYWlsL2lvbW11LzIwMTUtSnVseS8wMTM2MzEuaHRtbAogCj4gCj4gPiArc3RhdGljIGlu
-dCBtdGtfaW9tbXVfYWRkX2RldmljZShzdHJ1Y3QgZGV2aWNlICpkZXYpCj4gPiArewo+ID4gKwlz
-dHJ1Y3QgaW9tbXVfZ3JvdXAgKmdyb3VwOwo+ID4gKwlpbnQgcmV0Owo+ID4gKwo+ID4gKwlpZiAo
-IWRldi0+YXJjaGRhdGEuaW9tbXUpIC8qIE5vdCBhIGlvbW11IGNsaWVudCBkZXZpY2UgKi8KPiA+
-ICsJCXJldHVybiAtRU5PREVWOwo+ID4gKwo+ID4gKwlncm91cCA9IGlvbW11X2dyb3VwX2dldChk
-ZXYpOwo+ID4gKwlpZiAoIWdyb3VwKSB7Cj4gPiArCQlncm91cCA9IGlvbW11X2dyb3VwX2FsbG9j
-KCk7Cj4gPiArCQlpZiAoSVNfRVJSKGdyb3VwKSkgewo+ID4gKwkJCWRldl9lcnIoZGV2LCAiRmFp
-bGVkIHRvIGFsbG9jYXRlIElPTU1VIGdyb3VwXG4iKTsKPiA+ICsJCQlyZXR1cm4gUFRSX0VSUihn
-cm91cCk7Cj4gPiArCQl9Cj4gPiArCX0KPiA+ICsKPiA+ICsJcmV0ID0gaW9tbXVfZ3JvdXBfYWRk
-X2RldmljZShncm91cCwgZGV2KTsKPiA+ICsJaWYgKHJldCkgewo+ID4gKwkJZGV2X2VycihkZXYs
-ICJGYWlsZWQgdG8gYWRkIElPTU1VIGdyb3VwXG4iKTsKPiA+ICsJCWdvdG8gZXJyX2dyb3VwX3B1
-dDsKPiA+ICsJfQo+ID4gKwo+ID4gKwlyZXQgPSBpb21tdV9hdHRhY2hfZ3JvdXAoJm00dWRvbS0+
-ZG9tYWluLCBncm91cCk7Cj4gPiArCWlmIChyZXQpCj4gPiArCQlkZXZfZXJyKGRldiwgIkZhaWxl
-ZCB0byBhdHRhY2ggSU9NTVUgZ3JvdXBcbiIpOwo+ID4gKwo+ID4gK2Vycl9ncm91cF9wdXQ6Cj4g
-PiArCWlvbW11X2dyb3VwX3B1dChncm91cCk7Cj4gPiArCXJldHVybiByZXQ7Cj4gPiArfQo+IAo+
-IFB1dHRpbmcgZXZlcnkgZGV2aWNlIGludG8gaXRzIG93biBncm91cCBpbmRpY2F0ZXMgdGhhdCB0
-aGUgSU9NTVUgY2FuCj4gaXNvbGF0ZSBiZXR3ZWVuIHNpbmdsZSBkZXZpY2VzIG9uIHRoZSBidXMs
-IHdoaWNoIG1ha2VzIGl0IGV2ZW4gbW9yZQo+IHF1ZXN0aW9uYWJsZSB0aGF0IHlvdSBvbmx5IGFs
-bG93IG9uZSBkb21haW4gZm9yIHRoZSB3aG9sZSBkcml2ZXIuCj4gCj4gCj4gCUpvZXJnCj4gCgoK
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KaW9tbXUgbWFp
-bGluZyBsaXN0CmlvbW11QGxpc3RzLmxpbnV4LWZvdW5kYXRpb24ub3JnCmh0dHBzOi8vbGlzdHMu
-bGludXhmb3VuZGF0aW9uLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2lvbW11
+On 08/11/2015 05:54 PM, Daniel Kurtz wrote:
+> On Mon, Jul 13, 2015 at 5:32 PM, Yingjoe Chen <yingjoe.chen@mediatek.=
+com> wrote:
+>> This series add GPT timer support for mt8173. This is based on v4.2-=
+rc1
+>> and Matthias' next branch (for dts parts).
+>>
+>> The first 2 patches comes from 'Add SMP bringup support for mt65xx s=
+ocs'
+>> series [1]. I decide to move these 2 patches to this series, since i=
+t
+>> is more relevent here. They are changed based on Matthias' and Danie=
+l's
+>> comments.
+>>
+>> [1] http://lists.infradead.org/pipermail/linux-mediatek/2015-May/000=
+714.html
+>>
+>> Daniel Kurtz (1):
+>>    arm64: dts: mt8173: add timer node
+>>
+>> Yingjoe Chen (4):
+>>    clocksource: mediatek: do not enable GPT_CLK_EVT when setup
+>>    clocksource: mediatek: Use GPT as sched clock source
+>>    arm64: mediatek: enable MTK_TIMER
+>>    clk: mediatek: add 13mhz clock for MT8173
+>
+> Was this mediatek clocksource patch set get forgotten again?
+
+Yep. Sounds like it felt at the wrong moment.
+
+> All 5 patches have have been reviewed, and I think the ones that need
+> it have been Ack'ed by Matthias and/or Stephen.
+> What is the plan for merging them?
+
+So if I am not wrong we have two patches I can take in my tree as a=20
+couple of fixes (1 and 2), right ?
+
+
+
+
+--=20
+  <http://www.linaro.org/> Linaro.org =E2=94=82 Open source software fo=
+r ARM SoCs
+
+=46ollow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
