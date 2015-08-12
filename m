@@ -1,59 +1,31 @@
-From: Wei Xu <xuwei5@hisilicon.com>
-Subject: Re: [PATCH v4 0/4] clk: hisilicon: support stub clock
-Date: Wed, 12 Aug 2015 10:20:13 +0100
-Message-ID: <55CB0FCD.7050303@hisilicon.com>
-References: <1438673249-6051-1-git-send-email-leo.yan@linaro.org> <20150812003817.GI26614@codeaurora.org> <20150812014954.GA6215@leoy-linaro>
+From: Mugunthan V N <mugunthanvnm@ti.com>
+Subject: [net-next PATCH 0/3] Add AM335x PG1.0 CPSW errata workaround
+Date: Wed, 12 Aug 2015 15:22:52 +0530
+Message-ID: <1439373175-8650-1-git-send-email-mugunthanvnm@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20150812014954.GA6215@leoy-linaro>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Leo Yan <leo.yan@linaro.org>, Stephen Boyd <sboyd@codeaurora.org>
-Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Michael Turquette <mturquette@baylibre.com>, Haojian Zhuang <haojian.zhuang@linaro.org>, Bintian Wang <bintian.wang@huawei.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org, Guodong Xu <guodong.xu@linaro.org>, Jian Zhang <zhangjian001@hisilicon.com>, Zhenwei Wang <Zhenwei.wang@hisilicon.com>, Haoju Mo <mohaoju@hisilicon.com>, Dan Zhao <dan.zhao@hisilicon.com>, sunzhaosheng@hisilicon.com, victor.lixin@hisilicon.com
+Content-Type: text/plain
+Return-path: <netdev-owner@vger.kernel.org>
+Sender: netdev-owner@vger.kernel.org
+To: netdev@vger.kernel.org
+Cc: devicetree@vger.kernel.org, linux-omap@vger.kernel.org, "David S . Miller" <davem@davemloft.net>, Tony Lindgren <tony@atomide.com>, alex.aring@gmail.com, Mugunthan V N <mugunthanvnm@ti.com>
 List-Id: devicetree@vger.kernel.org
 
+With commit 870915feabdc ("drivers: net: cpsw: remove
+disable_irq/enable_irq as irq can be masked from cpsw itself"),
+CPSW on AM335x beagle bone white is broken as there is a errata
+for AM335x PG1.0. This patch series implements the workaround by
+disabling the interrupts from ARM IRQ controller for AM335x SoC
+in addition to the masking of interrupts in CPSW.
 
+Mugunthan V N (3):
+  drivers: net: cpsw: add am335x errata workarround for interrutps
+  ARM: dts: dra7: update cpsw compatible
+  ARM: dts: am33xx: update cpsw compatible
 
-On 8/12/2015 2:49 AM, Leo Yan wrote:
-> Hi Stephen,
-> 
-> On Tue, Aug 11, 2015 at 05:38:17PM -0700, Stephen Boyd wrote:
->> On 08/04, Leo Yan wrote:
->>> This series adds support for hisilicon stub clock driver. On hi6220,
->>> the bootloader needs load the firmware image and set info for OPPs;
->>> after run into kernel, the stub clock driver is used to communicate
->>> w/t firmware for cpu dynamic frequency scaling.
->>>
->>> In patch series v1/v2, the stub clock driver simply writes request in
->>> sram and send ipc to firmware; For patch series v3, the firmware has
->>> been upgraded to use mailbox, so stub clock driver will call standard
->>> mailbox APIs to request mailbox channel and send message to firmware.
->>>
->>> Patch 4 adds stub clock node into dts and it references mailbox with
->>> phandle, so patch 4 will depend on mailbox driver's patch series [1].
->>> These patches have been tested on 96board hikey and is used by cpufreq
->>> driver.
->>
->> The To: list is everyone, so I'm not sure who is supposed to
->> apply these patches. I'd like to take patches 1, 2, and 3 through
->> the clk tree though.
-> 
-> Thanks, you could take first three patches. For patch 4, i will
-> re-send it after mailbox driver's patches have been merged.
+ arch/arm/boot/dts/am33xx.dtsi  |  2 +-
+ arch/arm/boot/dts/dra7.dtsi    |  2 +-
+ drivers/net/ethernet/ti/cpsw.c | 83 +++++++++++++++++++++++++++++++++++++++---
+ 3 files changed, 79 insertions(+), 8 deletions(-)
 
-Hi Leo,
-
-> Wei Xu, is this okay for you?
-
-OK :)
-
-Best Regards,
-Wei
-
-> 
-> Thanks,
-> Leo Yan
-> 
-> .
-> 
+-- 
+2.5.0.234.gefc8a62
