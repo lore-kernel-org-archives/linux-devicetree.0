@@ -1,98 +1,42 @@
-From: Madalin-Cristian Bucur <madalin.bucur@freescale.com>
-Subject: RE: [PATCH 0/2] of: fsl/fman: reuse the fixed node parsing code
-Date: Wed, 12 Aug 2015 15:27:47 +0000
-Message-ID: <BL2PR03MB545A213D584384018CCB30CE67E0@BL2PR03MB545.namprd03.prod.outlook.com>
-References: <1438785745-15517-1-git-send-email-madalin.bucur@freescale.com>
- <55C63D3B.5020005@gmail.com> <55CA1C14.3000202@list.ru>
- <BL2PR03MB545D4E18DE41AE01AFC37D6E67F0@BL2PR03MB545.namprd03.prod.outlook.com>
- <55CA29C8.5000707@list.ru>
- <BL2PR03MB545929237EF33BA13089EC1E67E0@BL2PR03MB545.namprd03.prod.outlook.com>
- <55CB50F1.7050308@list.ru>
- <BL2PR03MB5458B9D2402DE68E9B9014AE67E0@BL2PR03MB545.namprd03.prod.outlook.com>
- <55CB61BC.1050209@list.ru>
+From: Pratyush Anand <pratyush.anand-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v6 1/6] PCI: designware: move calculation of bus addresses
+ to DRA7xx
+Date: Wed, 12 Aug 2015 21:10:20 +0530
+Message-ID: <CAHM4w1muj4+OBcsDQ9ePjV77t+iPh7TYY8h5MF66GjD=2ktRew@mail.gmail.com>
+References: <1438848559-232109-1-git-send-email-wangzhou1@hisilicon.com>
+	<1438848559-232109-2-git-send-email-wangzhou1@hisilicon.com>
+	<55C44A80.20308@hisilicon.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <55CB61BC.1050209@list.ru>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Stas Sergeev <stsp@list.ru>, Florian Fainelli <f.fainelli@gmail.com>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Liberman Igal <Igal.Liberman@freescale.com>, Stas Sergeev <stsp@users.sourceforge.net>, "joakim.tjernlund@transmode.se" <joakim.tjernlund@transmode.se>, Shaohui Xie <Shaohui.Xie@freescale.com>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <55C44A80.20308-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Zhou Wang <wangzhou1-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
+Cc: Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Jingoo Han <jg1.han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Gabriele Paoloni <gabriele.paoloni-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org, James Morse <james.morse-5wv7dgnIgG8@public.gmane.org>, Liviu Dudau <Liviu.Dudau-5wv7dgnIgG8@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, "linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Zhichang Yuan <yuanzhichang-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, zhudacai-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, Zhang Jukuo <zhangjukuo-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, qiuzhenfa-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, liudongdong3-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, qiujiang-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, kangfenglong-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, Liguozhu <liguozhu-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Jingoo Han <jing>
 List-Id: devicetree@vger.kernel.org
 
-PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBTdGFzIFNlcmdlZXYgW21haWx0
-bzpzdHNwQGxpc3QucnVdDQoNCjxzbmlwPg0KPiBCdXQgaGF2ZSB5b3UgbG9va2VkIGludG8gdGhl
-IHBhdGNoIEkgcG9pbnRlZCBwcmV2aW91c2x5Pw0KPiBodHRwczovL2xrbWwub3JnL2xrbWwvMjAx
-NS83LzIwLzcxMQ0KPiBZb3UgY29kZSB3aWxsIGxpa2VseSBjbGFzaCB3aXRoIGl0IGJlY2F1c2Ug
-bXkgcGF0Y2ggZXh0ZW5kcw0KPiBvZl9waHlfcmVnaXN0ZXJfZml4ZWRfbGluaygpLg0KPiANCg0K
-SSBhZG1pbiBJIGZhaWxlZCB0byBncmFzcCB0aGUgZGV0YWlscyBvZiB5b3VyIGNoYW5nZSAtIHRo
-ZSBsYWNrIG9mIGFtcGxlIGNvbnRleHQNCkxpbmVzIG1ha2VzIGl0IGEgYml0IGRpZmZpY3VsdC4g
-SSdtIHN1cmUgeW91ciBjaGFuZ2UgY291bGQgYmUgbWVyZ2VkIHRoZW4gdGhlDQpvZiBwYXJzaW5n
-IGNvdWxkIGJlIHNlcGFyYXRlZCBmcm9tIHRoZSBhY3R1YWwgZml4ZWRfcGh5X3JlZ2lzdGVyKCkg
-Y2FsbCBpZiBhbnlvbmUNCmNhcmVzIGFib3V0IHRoYXQuDQoNCj4gPiBUaGVuIEkgY291bGQgY2Fs
-bCBvbmx5IG9mXyogZnVuY3Rpb25zIGJ1dCB0aGUgZW5kIHJlc3VsdCB3b3VsZCBiZSB0aGUgc2Ft
-ZQ0KPiA+IGFuZCAgb2ZfcGh5X3JlZ2lzdGVyX2ZpeGVkX3BoeSgpIHdvdWxkIG5vdCBqdXN0aWZ5
-IGl0cyBleGlzdGVuY2UgdGhhdCBtdWNoLi4uDQo+IFlvdSBkaWRuJ3Qgc2F5IHlvdSB3YW50ZWQg
-dG8gb2Jzb2xldGUgdGhlIG9mX3BoeV9yZWdpc3Rlcl9maXhlZF9waHkoKS4NCj4gU2luY2UgaXQg
-aXMgdGhlcmUgKGFuZCBldmVuIGNoYW5nZWQgYnkgbWUgaW4gYSB3YXkgeW91cg0KPiBwYXRjaCB3
-aWxsIGxpa2VseSBjbGFzaCksIElNSE8gaXQgd291bGQgYmUgYmV0dGVyIGlmIGl0IGlzIHVzZWQs
-DQo+IHJhdGhlciB0aGFuIGNvcHkvcGFzdGVkIGludG8gdGhlIGRyaXZlci4NCg0KUGxlYXNlIG5v
-dGUgSSB3YXMgcmVmZXJyaW5nIHRvIGEgZmljdGlvbmFsIG5ldyBmdW5jdGlvbiB0aGF0IHdvdWxk
-IGVtYmVkIHRoZSBjYWxsIHRvIA0KZml4ZWRfcGh5X3JlZ2lzdGVyKCkuIEkgd2FzIG5vdCB0YWxr
-aW5nIGFib3V0IHNvbWUgZXhpc3RpbmcgQVBJLCBqdXN0IGFib3V0IGEgbmV3IA0Kb2ZfY2FsbCAg
-bmFtZWQgb2ZfcGh5X3JlZ2lzdGVyX2ZpeGVkX3BoeSgpICB0aGF0IHdvdWxkIGluIHRoZSBlbmQg
-YmUgY2FsbGVkIGJ5DQpvZl9waHlfcmVnaXN0ZXJfZml4ZWRfbGluaygpIGFuZCBieSBzb21lIGRy
-aXZlcnMgdGhhdCB3YW50IHRvIGdldCBpbiB0aGUgbWlkZGxlDQpvZiB0aGluZ3MgYW5kIGdldCBh
-IGhvbGQgb24gc3RhdHVzLg0KDQpNYXliZSB0aGUgZmFjdCB3ZSdyZSByZXZpZXdpbmcgdHdvIHBh
-dGNoZXMgaW4gb25lIHRocmVhZCBpcyB3aGF0IG1ha2VzIHRoZQ0KZGlzY3Vzc2lvbiBsZXNzIHRo
-YW4gb3B0aW1hbC4NCg0KPiA+IFRoZSBnZXR0ZXIgZm9yIHN0YXR1cyB5b3Ugc3VnZ2VzdCB3b3Vs
-ZCBiZSBmaW5lLCBidXQgbm90IHN1cmUgaG93IG9uZQ0KPiA+IHdvdWxkIHJldHJpZXZlDQo+ID4g
-aXQgZnJvbSB0aGUgbWFjX25vZGUgdW5sZXNzIHdlIGNoYW5nZSBvZl9waHlfcmVnaXN0ZXJfZml4
-ZWRfbGluaygpIHRvDQo+ID4gcmV0dXJuIHRoZQ0KPiA+IHBvaW50ZXIgdG8gcGh5IChhbmQgYWxs
-IHRoZSBkcml2ZXJzIHRoYXQgdXNlIGl0Li4uKS4NCj4gSWYgeW91IGxvb2sgZm9yIGluc3RhbmNl
-IHRvIG12bmV0YS5jLCB5b3UnbGwgZmluZCB0aGUgZm9sbG93aW5nOg0KPiAtLS0NCj4gZXJyID0g
-b2ZfcGh5X3JlZ2lzdGVyX2ZpeGVkX2xpbmsoZG4pOw0KPiAvKiBJbiB0aGUgY2FzZSBvZiBhIGZp
-eGVkIFBIWSwgdGhlIERUIG5vZGUgYXNzb2NpYXRlZA0KPiAgICogdG8gdGhlIFBIWSBpcyB0aGUg
-RXRoZXJuZXQgTUFDIERUIG5vZGUuDQo+ICAgKi8NCj4gICBwaHlfbm9kZSA9IG9mX25vZGVfZ2V0
-KGRuKTsNCj4gLi4uDQo+IHBoeSA9IG9mX3BoeV9maW5kX2RldmljZShkbik7DQo+IC0tLQ0KPiAN
-Cj4gU28gdGhlIGFuc3dlciBpczoganVzdCB1c2UgdGhlIHNhbWUgbWFjX25vZGUgZm9yIGJvdGgu
-DQoNCkkgdW5kZXJzdGFuZCwgSSdsbCB1c2UgdGhpcyBhcHByb2FjaCBhbHRob3VnaCBpcyBzdWJv
-cHRpbWFsIGltaG8gdG8NCnNjYW4gdGhlIGRldmljZSB0cmVlIGFnYWluIHRvIGdldCBhIHBoeSBw
-b2ludGVyIHRoYXQgeW91IG5lZWQganVzdA0KdG8gZ2V0IHNvbWUgb2YgaW5mbyB0aGF0IHdhcyBw
-YXJzZWQgaW4gYSBjYWxsIHlvdSBqdXN0IG1hZGUuDQoNCj4gPj4gQWxzbyBJIG1lYW50IHRoZSBk
-ZXNjcmlwdGlvbiBzaG91bGQgaGF2ZSBiZWVuIGluIHRoZSBwYXRjaCwNCj4gPj4gbm90IGluIHRo
-ZSBlLW1haWwuIDopIFlvdSBvbmx5IHdyb3RlIF93aGF0XyB0aGUgcGF0Y2ggZG9lcw0KPiA+PiAo
-d2hpY2ggaXMgb2YgY291cnNlIG9idmlvdXMgZnJvbSB0aGUgY29kZSBpdHNlbGYpLCBidXQgbm90
-DQo+ID4+IF93aHlfIGFuZCBfd2hhdCB3YXMgZml4ZWRfICh3aGF0IGRpZG4ndCB3b3JrKS4NCj4g
-Pj4NCj4gPiBJZiB5b3UgcmVmZXIgdG8gdGhlIGZpcnN0LCBzZXBhcmF0aW9uIHBhdGNoLCBJIHRo
-b3VnaHQgdGhlIGRlc2NyaXB0aW9uIHdhcw0KPiBlbm91Z2g6DQo+ID4NCj4gPiAgICAgIG9mOiBz
-ZXBhcmF0ZSBmaXhlZCBsaW5rIHBhcnNpbmcgZnJvbSByZWdpc3RyYXRpb24NCj4gPg0KPiA+ICAg
-ICAgU29tZSBkcml2ZXJzIG1heSBuZWVkDQo+ICJtYXkgbmVlZCI/IEkgZG9uJ3QgdW5kZXJzdGFu
-ZC4NCj4gSWYgaXQgaXMgYSBmaXgsIHRoZW4gdGhleSBfZG8gbmVlZF8sIGFuZCBpbiB0aGlzIGNh
-c2UgaXQgc2hvdWxkDQo+IGJlIHNwZWNpZmllZCB3aGF0IHdhcyBicm9rZW4gYW5kIHdoYXQgaXMg
-Zml4ZWQuDQo+IElmIGl0IGlzIGp1c3QgYSBjbGVhbi11cCwgdGhlbiAibWF5IG5lZWQiIG1heSBz
-dWZmaWNlLCBidXQgaXQNCj4gd2FzIG5vdCBtZW50aW9uZWQgaXQgaXMgYSBjbGVhbi11cC4gU28g
-SSBzdGlsbCBkb24ndCBrbm93IHdoYXQNCj4gdGhpcyBwYXRjaCBpcyBhbGwgYWJvdXQuDQo+ICJT
-b21lIGRyaXZlcnMiIC0gd2hpY2ggb25lcz8gVGhlIG9uZXMgdGhhdCBhcmUgbGltaXRlZCB0bw0K
-PiB0aGUgcHVyZWx5IGZpeGVkIGxpbmtzLCBhbmQgbmV2ZXIgc3VwcG9ydCBBTiBvciBNRElPPw0K
-PiBPciBzb21lIG90aGVyIGRyaXZlcnMgdG9vPw0KPiBTbyByZWFsbHksIHRoZSBkZXNjcmlwdGlv
-biBzb3VuZHMgdmVyeSBjcnlwdGljIHRvIG1lLg0KDQpNaW5lLCB3aGVuIHRoZXJlIGlzIGEgZml4
-ZWQgbGluayBub2RlLCBtYXliZSBvdGhlcnMuIFdoZW4gdGhlcmUgaXNuJ3QgYW55DQpmaXhlZCBs
-aW5rIG5vZGUsIHRoZSBpbnRlcm5hbCBQSFkgY29uZmlnIGRlZmF1bHRzIHRvIDFHIGZ1bGwgZHVw
-bGV4IEFOIGVuYWJsZWQNCmFuZCBhZGp1c3QgbGluayB0YWtlcyBjYXJlIG9mIHRoaW5ncy4NCg0K
-PiANCj4gPiAgIHRvIHBhcnNlIHRoZSBmaXhlZCBsaW5rIHZhbHVlcyBiZWZvcmUgcmVnaXN0ZXJp
-bmcNCj4gPiAgICAgIHRoZSBmaXhlZCBsaW5rIHBoeS4gU2VwYXJhdGUgdGhlIHBhcnNpbmcgZnJv
-bSB0aGUgYWN0dWFsIHJlZ2lzdHJhdGlvbg0KPiA+ICAgICAgYW5kIHByb3ZpZGUgYW4gZXhwb3J0
-IGZvciB0aGUgYWRkZWQgcGFyc2luZyBmdW5jdGlvbi4NCj4gPg0KPiA+ICAgICAgU2lnbmVkLW9m
-Zi1ieTogTWFkYWxpbiBCdWN1ciA8bWFkYWxpbi5idWN1ckBmcmVlc2NhbGUuY29tPg0KPiA+DQo+
-ID4gRm9yIHRoaXMgb25lIGl0IHdhcyBhIGJpdCBicmllZiwgSSBhZG1pdCAtIHRoZSBsb25nZXIg
-dmVyc2lvbiB3b3VsZCBiZSB0aGF0DQo+IGJlZm9yZSBpdA0KPiA+IHdlIHdlcmUgbm90IHVzaW5n
-IGZyb20gZml4ZWQgbGluayBhbnl0aGluZyBlbHNlIGJ1dCB0aGUgZmFjdCB0aGUgbGluayB3YXMN
-Cj4gZml4ZWQNCj4gPiAoaWdub3JlZCBhY3R1YWwgc3BlZWQsIGR1cGxleCB2YWx1ZXMgdGhlcmUp
-DQo+IEFuZCB3aGF0IGRpZG4ndCB3b3JrIGFzIHRoZSByZXN1bHQ/DQo+IA0KPiA+ICAgYW5kIHRo
-aXMgcGF0Y2ggdHJpZXMgdG8gZml4IHRoYXQuDQo+IFdoYXQgc3RhcnRlZCB0byB3b3JrIGFmdGVy
-IHRoYXQgcGF0Y2ggdGhhdCBkaWRuJ3Qgd2l0aG91dCBpdD8NCg0KMTBNIGhhbGYgZHVwbGV4IGZv
-ciBpbnN0YW5jZQ0KDQpJJ2QgY2xvc2UgdGhpcyB0aHJlYWQgZm9yIG5vdyBhbmQgdXNlIGluIG15
-IGRyaXZlciBvZl9waHlfZmluZF9kZXZpY2UobWFjX25vZGUpLg0KDQpUaGFuayB5b3UsDQpNYWRh
-bGluDQo=
+On Fri, Aug 7, 2015 at 11:34 AM, Zhou Wang <wangzhou1-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org> wrote:
+> [+cc jingoohan1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org]
+>
+> On 2015/8/6 16:09, Zhou Wang wrote:
+>> From: gabriele paoloni <gabriele.paoloni-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+>>
+>> Commit f4c55c5a3f7f "PCI: designware: Program ATU with untranslated
+>> address" added the calculation of PCI BUS addresses in designware,
+>> storing them in new fields added in "struct pcie_port". This
+>> calculation is done for every designware user even if is only
+>> applicable to DRA7xx.
+>> This patch moves the calculation of the bus addresses to the DRA7xx
+>> driver and is needed to allow the rework of designware to use
+>> the new DT parsing API.
+>>
+>> Signed-off-by: Gabriele Paoloni <gabriele.paoloni-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+>> Signed-off-by: Zhou Wang <wangzhou1-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
+
+
+Looks fine to me
+Acked-by: Pratyush Anand <pratyush.anand-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
