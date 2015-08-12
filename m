@@ -1,57 +1,62 @@
-From: Jonas Gorski <jogo@openwrt.org>
-Subject: Re: [PATCH] spi: Mediatek: fix endian warnings
-Date: Wed, 12 Aug 2015 16:45:25 +0200
-Message-ID: <CAOiHx=mrDhxkMd5WVTpayyyxXHUDRTELubErynN3qd-v5qpCfw@mail.gmail.com>
-References: <1439289789-29026-1-git-send-email-leilk.liu@mediatek.com>
+From: Sricharan R <sricharan-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Subject: [PATCH 0/5] iommu/msm: Add DT adaptation and generic bindings support
+Date: Wed, 12 Aug 2015 20:17:44 +0530
+Message-ID: <1439390869-6347-1-git-send-email-sricharan@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1439289789-29026-1-git-send-email-leilk.liu@mediatek.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Leilk Liu <leilk.liu@mediatek.com>
-Cc: Mark Brown <broonie@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, Sascha Hauer <s.hauer@pengutronix.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, linux-spi@vger.kernel.org, linux-mediatek@lists.infradead.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robin.murphy-5wv7dgnIgG8@public.gmane.org, robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org, srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, Will.Deacon-5wv7dgnIgG8@public.gmane.org, stepanm-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org
+Cc: sricharan-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+The msm_iommu.c driver currently works based on platform data. A single master
+device can be connected to more than one iommu and multiple contexts in each
+of the iommu. This association between master and iommus was represented
+from platform data using parent/child devices. The master drivers were
+responsible for attaching all of the iommus/context to a domain. Now the
+platform data support is removed and DT support is added. The master/iommus
+are added through generic iommu bindings.
 
-On Tue, Aug 11, 2015 at 12:43 PM, Leilk Liu <leilk.liu@mediatek.com> wrote:
-> This patch fixes endian warnings detected by sparse:
-> - sparse: incorrect type in argument 1 (different base types)
->           expected unsigned int [unsigned] val
->           got restricted __le32 [usertype] <noident>
-> - sparse: incorrect type in argument 1 (different base types)
->           expected unsigned int [unsigned] val
->           got restricted __le32 [usertype] <noident>
+This is essentially rework of the patch posted earlier by
+Rob Clark <robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>. This series folds the changes
+in to the existing driver with the addition of generic bindings.
 
-This doesn't "fix" the warning, it only hides the warning and leaves
-the actual issue unfixed.
+        http://www.spinics.net/lists/linux-arm-msm/msg10077.html
 
->
-> Signed-off-by: Leilk Liu <leilk.liu@mediatek.com>
-> ---
->  drivers/spi/spi-mt65xx.c | 6 ++++--
->  1 file changed, 4 insertions(+), 2 deletions(-)
->
-> diff --git a/drivers/spi/spi-mt65xx.c b/drivers/spi/spi-mt65xx.c
-> index 4676b01..ae645fa 100644
-> --- a/drivers/spi/spi-mt65xx.c
-> +++ b/drivers/spi/spi-mt65xx.c
-> @@ -359,9 +359,11 @@ static void mtk_spi_setup_dma_addr(struct spi_master *master,
->         struct mtk_spi *mdata = spi_master_get_devdata(master);
->
->         if (mdata->tx_sgl)
-> -               writel(cpu_to_le32(xfer->tx_dma), mdata->base + SPI_TX_SRC_REG);
-> +               writel((__force u32)cpu_to_le32(xfer->tx_dma),
-> +                      mdata->base + SPI_TX_SRC_REG);
->         if (mdata->rx_sgl)
-> -               writel(cpu_to_le32(xfer->rx_dma), mdata->base + SPI_RX_DST_REG);
-> +               writel((__force u32)cpu_to_le32(xfer->rx_dma),
-> +                      mdata->base + SPI_RX_DST_REG);
+This series is based on the IOMMU probe deferral series from
+Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
 
-The issue here is that writel already does a cpu_to_le32 conversion,
-so the extra cpu_to_le32 calls are actually bogus and need to be
-removed. Else it will do a double conversion on big endian systems,
-resulting in the data being written in big endian.
+        https://lkml.org/lkml/2015/5/14/786
 
+Tested this series on ifc6410 board.
 
-Jonas
+Sricharan R (5):
+  iommu/msm: Add DT adaptation
+  iommu/msm: Move the contents from msm_iommu_dev.c to msm_iommu.c
+  iommu/msm: Add support for generic master bindings
+  iommu/msm: Set cacheability attributes without tex remap
+  iommu/msm: Remove driver BROKEN
+
+ .../devicetree/bindings/iommu/msm,iommu-v0.txt     |  59 +++
+ drivers/iommu/Kconfig                              |   1 -
+ drivers/iommu/Makefile                             |   2 +-
+ drivers/iommu/msm_iommu.c                          | 508 ++++++++++++++-------
+ drivers/iommu/msm_iommu.h                          |  73 ++-
+ drivers/iommu/msm_iommu_dev.c                      | 392 ----------------
+ drivers/iommu/msm_iommu_hw-8xxx.h                  |  10 +-
+ 7 files changed, 432 insertions(+), 613 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/iommu/msm,iommu-v0.txt
+ delete mode 100644 drivers/iommu/msm_iommu_dev.c
+
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
