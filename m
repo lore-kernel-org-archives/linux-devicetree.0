@@ -1,209 +1,126 @@
-From: Loc Ho <lho-qTEPVZfXA3Y@public.gmane.org>
-Subject: Re: [PATCH v3 3/4] edac: Add L3/SoC EDAC support to the APM X-Gene
- SoC EDAC driver
-Date: Wed, 12 Aug 2015 10:50:52 -0700
-Message-ID: <CAPw-ZTkRytHUsUsDmTkfzzTYbcZnmTVRMkzNzg_9ZpdQH76rZw@mail.gmail.com>
-References: <1439326077-25507-1-git-send-email-lho@apm.com>
-	<1439326077-25507-2-git-send-email-lho@apm.com>
-	<1439326077-25507-3-git-send-email-lho@apm.com>
-	<1439326077-25507-4-git-send-email-lho@apm.com>
-	<20150812105121.GE14011@nazgul.tnic>
+From: Michael Welling <mwelling@ieee.org>
+Subject: Re: [PATCH] input: ti_am335x_tsc: Add open delay parameter
+Date: Wed, 12 Aug 2015 13:44:22 -0500
+Message-ID: <20150812184420.GA2442@deathstar>
+References: <1439318705-18601-1-git-send-email-mwelling@ieee.org>
+ <55CAE71C.4060505@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20150812105121.GE14011-K5JNixvcfoxupOikMc4+xw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Borislav Petkov <bp-Gina5bIWoIWzQB+pC5nmwQ@public.gmane.org>
-Cc: Doug Thompson <dougthompson-aS9lmoZGLiVWk0Htik3J/w@public.gmane.org>, Mauro Carvalho Chehab <mchehab-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, linux-edac-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Jon Masters <jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, "patches-qTEPVZfXA3Y@public.gmane.org" <patches-qTEPVZfXA3Y@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-input-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <55CAE71C.4060505@ti.com>
+Sender: linux-input-owner@vger.kernel.org
+To: Vignesh R <vigneshr@ti.com>
+Cc: Michael Welling <mwelling@ieee.org>, Wolfram Sang <wsa@the-dreams.de>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-input@vger.kernel.org, Jonathan Cameron <jic23@kernel.org>, Brad Griffis <bgriffis@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Borislav,
+On Wed, Aug 12, 2015 at 11:56:36AM +0530, Vignesh R wrote:
+> Hi Michael,
+> 
+> + Dmitry
+> 
+> On 08/12/2015 12:15 AM, Michael Welling wrote:
+> > Adds a device tree parameter to set the open delay on the touchscreen
+> > conversion steps. Increasing this parameter helps the touch accuracy on
+> > some screens.
+> > 
+> > Signed-off-by: Michael Welling <mwelling@ieee.org>
+> > ---
+> >  .../bindings/input/touchscreen/ti-tsc-adc.txt          |  5 +++++
+> >  drivers/input/touchscreen/ti_am335x_tsc.c              | 18 ++++++++++++++----
+> >  2 files changed, 19 insertions(+), 4 deletions(-)
+> > 
+> > diff --git a/Documentation/devicetree/bindings/input/touchscreen/ti-tsc-adc.txt b/Documentation/devicetree/bindings/input/touchscreen/ti-tsc-adc.txt
+> > index b1163bf..cb11fda 100644
+> > --- a/Documentation/devicetree/bindings/input/touchscreen/ti-tsc-adc.txt
+> > +++ b/Documentation/devicetree/bindings/input/touchscreen/ti-tsc-adc.txt
+> > @@ -41,6 +41,11 @@ Optional properties:
+> >  			 charge step, so this does in fact function as a
+> >  			 hardware knob for adjusting the amount of "settling
+> >  			 time".
+> > +	ti,open-delay: Open delay applied to all touchscreen conversion steps.
+> > +			The value corresponds to the number of ADC clock
+> > +			cycles to wait after applying the step configuration
+> > +			registers and before sending the start of ADC
+> > +			conversion. Maximum value is 0x3FFFF.
+> >  
+> 
+> Since open-delay is per step, is it not better to allow specifying
+> open-delay per step like ti,chan-step-opendelay of adc? This will help
+> control open-delay for all the four wires.
 
->> ---
->>  drivers/edac/xgene_edac.c |  827 ++++++++++++++++++++++++++++++++++++++++++++-
->>  1 files changed, 815 insertions(+), 12 deletions(-)
->>
->> diff --git a/drivers/edac/xgene_edac.c b/drivers/edac/xgene_edac.c
->> index ba06904..d5e33bf 100644
->> --- a/drivers/edac/xgene_edac.c
->> +++ b/drivers/edac/xgene_edac.c
->> @@ -66,6 +66,8 @@ struct xgene_edac {
->>
->>       struct list_head        mcus;
->>       struct list_head        pmds;
->> +     struct list_head        l3s;
->> +     struct list_head        socs;
->>
->>       struct mutex            mc_lock;
->>       int                     mc_active_mask;
->> @@ -877,8 +879,8 @@ static const struct file_operations xgene_edac_pmd_debug_inject_fops[] = {
->>       { }
->>  };
->>
->> -static void xgene_edac_pmd_create_debugfs_nodes(
->> -     struct edac_device_ctl_info *edac_dev)
->> +static void
->> +xgene_edac_pmd_create_debugfs_nodes(struct edac_device_ctl_info *edac_dev)
->>  {
->>       struct xgene_edac_pmd_ctx *ctx = edac_dev->pvt_info;
->>       struct dentry *edac_debugfs;
->> @@ -887,10 +889,6 @@ static void xgene_edac_pmd_create_debugfs_nodes(
->>       if (!IS_ENABLED(CONFIG_EDAC_DEBUG))
->>               return;
->>
->> -     /*
->> -      * Todo: Switch to common EDAC debug file system for edac device
->> -      *       when available.
->> -      */
->>       if (!ctx->edac->dfs) {
->>               ctx->edac->dfs = debugfs_create_dir(edac_dev->dev->kobj.name,
->>                                                   NULL);
->
-> Why is this removing only the comment and not the debugfs_create_dir()
-> and the rest of the gunk?
+Do you see any reason why you would want a different delay for each step of
+the conversion on the same touchscreen?
 
-I intentional left this code as is so that the driver will still works
-with older version of the EDAC code. Since you don't want this, I will
-get rip of this.
+The user would need to know the number of steps what each of the steps do.
 
->
-> xgene_edac_l3_create_debugfs_nodes() does call debugfs_create_dir()
-> creating a top-level edac debugfs node too. Why?
-
-Each subnode will create an folder under the edac debug fs. It is no
-different than the EDAC MC debug file system. You will see:
-
-/sys/kernel/debug/edac/mc0, ..
-/sys/kernel/debug/edac/mc2
-/sys/kernel/debug/edac/pmd0, ...
-/sys/kernel/debug/edac/pmd3
-/sys/kernel/debug/edac/l3c4
-
->
-> Please go through the previous comments I had and make sure you've
-> incorporated them all. I'm not wasting time reviewing half-baked stuff.
-
-As for your comments from previous v2 email:
-
->> +static void xgene_edac_l3_hw_init(struct edac_device_ctl_info *edac_dev,
->> +                               bool enable)
->
->arg alignment. It should be
->
->function name(arg1, arg2,
->              arg3, arg4,
->              arg5...
->
-> Check your other functions too.
-
-[Loc Ho]
-I looked over the entire v3 driver and they are all aligned correct.
-
->> +static void xgene_edac_l3_create_debugfs_nodes(
->> +     struct edac_device_ctl_info *edac_dev)
->
->This "(" brace at the end looks ugly. Simply leave it on the same line,
->even if if it is longer than 80-cols.
->
->You can do:
->
->static void xgene_edac_l3_create_debugfs_nodes(struct edac_device_ctl_info *edac_dev)
->{
->
->or:
->
->static void
->xgene_edac_l3_create_debugfs_nodes(struct edac_device_ctl_info *edac_dev)
->{
->
->which is more readable.
-
-[Loc Ho]
-I looked over the entire v3 driver and they are all aligned correct.
-
->> +     /*
->> +      * Todo: Switch to common EDAC debug file system for edac device
->> +      *       when available.
->> +      */
->
->What is that?
-
-[Loc Ho]
-This one was change in v3.
-
->> +
->> +     if (edac_op_state == EDAC_OPSTATE_POLL)
->> +             edac_dev->edac_check = xgene_edac_l3_check;
->
->So depending on what SoC elements you detect, the last one's check
->function will win?
->
->If xgene_edac loads on multiple SoC elements, you need a global xgene
->check function for which l3, soc, mc, etc register...
-
-[Loc Ho]
-I already commented on this one. It is per subnode type.
-
->> +     dev_info(edac->dev, "X-Gene EDAC L3 registered\n");
->> +     return 0;
->> +
->> +err1:
->> +     edac_device_free_ctl_info(edac_dev);
->> +err:
->
->Those labels need to be better named.
-
-[Loc Ho]
-I looked over the entire v3 driver and they are with proper naming.
-
->> +             if (reg & (DED_ERR_MASK | MDED_ERR_MASK))
->> +                     edac_device_handle_ue(edac_dev, 0, 0,
->> +                                           edac_dev->ctl_name);
->> +     }
->
->You can flip the logic in that function:
->
->        if (!reg)
->
->and use goto labels and thus save an indentation level. Which looks like
->you could use it.
-
-[Loc Ho]
-
-I had already reversed the logic for the L3 and SoC. Are you asking
-for the MC/PMD (earlier posting)? The MC/PMD routine isn't that big.
-Functions in general fit in an screen of 80 column?
-
->> +static const char * const *xgene_edac_soc_mem_data(
->> +     struct xgene_edac_dev_ctx *ctx)
->> +{
->> +     switch (ctx->version) {
->> +     case 1:
->> +             return soc_mem_err_v1;
->> +     default:
->> +             return NULL;
->> +     }
->> +}
->
->That's one badly formatted function used only once. Just move the logic
->there and kill it.
-
-[Loc Ho]
-I already killed this function.
-
->> +     list_for_each_entry(node, &ctx->socs, next) {
->> +             xgene_edac_soc_check(node->edac_dev);
->> +     }
->
->Loops with single statements don't need {}
-
-[Loc Ho]
-I already got rip of un-necessary { }
-
-So, is there something that I am missing?
-
--Loc
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 
+> >  - child "adc"
+> >  	ti,chan-step-opendelay: List of open delays for each channel of
+> > diff --git a/drivers/input/touchscreen/ti_am335x_tsc.c b/drivers/input/touchscreen/ti_am335x_tsc.c
+> > index 191a1b8..37a9729 100644
+> > --- a/drivers/input/touchscreen/ti_am335x_tsc.c
+> > +++ b/drivers/input/touchscreen/ti_am335x_tsc.c
+> > @@ -54,6 +54,7 @@ struct titsc {
+> >  	u32			inp_xp, inp_xn, inp_yp, inp_yn;
+> >  	u32			step_mask;
+> >  	u32			charge_delay;
+> > +	u32			open_delay;
+> >  };
+> >  
+> >  static unsigned int titsc_readl(struct titsc *ts, unsigned int reg)
+> > @@ -148,7 +149,7 @@ static void titsc_step_config(struct titsc *ts_dev)
+> >  	end_step = first_step + tsc_steps;
+> >  	for (i = end_step - ts_dev->coordinate_readouts; i < end_step; i++) {
+> >  		titsc_writel(ts_dev, REG_STEPCONFIG(i), config);
+> > -		titsc_writel(ts_dev, REG_STEPDELAY(i), STEPCONFIG_OPENDLY);
+> > +		titsc_writel(ts_dev, REG_STEPDELAY(i), ts_dev->open_delay);
+> >  	}
+> >  
+> >  	config = 0;
+> > @@ -172,7 +173,7 @@ static void titsc_step_config(struct titsc *ts_dev)
+> >  	end_step = first_step + ts_dev->coordinate_readouts;
+> >  	for (i = first_step; i < end_step; i++) {
+> >  		titsc_writel(ts_dev, REG_STEPCONFIG(i), config);
+> > -		titsc_writel(ts_dev, REG_STEPDELAY(i), STEPCONFIG_OPENDLY);
+> > +		titsc_writel(ts_dev, REG_STEPDELAY(i), ts_dev->open_delay);
+> >  	}
+> >  
+> >  	/* Make CHARGECONFIG same as IDLECONFIG */
+> > @@ -188,13 +189,13 @@ static void titsc_step_config(struct titsc *ts_dev)
+> >  			STEPCONFIG_INP(ts_dev->inp_xp);
+> >  	titsc_writel(ts_dev, REG_STEPCONFIG(end_step), config);
+> >  	titsc_writel(ts_dev, REG_STEPDELAY(end_step),
+> > -			STEPCONFIG_OPENDLY);
+> > +			ts_dev->open_delay);
+> >  
+> >  	end_step++;
+> >  	config |= STEPCONFIG_INP(ts_dev->inp_yn);
+> >  	titsc_writel(ts_dev, REG_STEPCONFIG(end_step), config);
+> >  	titsc_writel(ts_dev, REG_STEPDELAY(end_step),
+> > -			STEPCONFIG_OPENDLY);
+> > +			ts_dev->open_delay);
+> >  
+> >  	/* The steps end ... end - readouts * 2 + 2 and bit 0 for TS_Charge */
+> >  	stepenable = 1;
+> > @@ -392,6 +393,15 @@ static int titsc_parse_dt(struct platform_device *pdev,
+> >  		dev_warn(&pdev->dev, "ti,charge-delay not specified\n");
+> >  	}
+> >  
+> > +	err = of_property_read_u32(node, "ti,open-delay",
+> > +				   &ts_dev->open_delay);
+> > +	/*
+> > +	 * If ti,open-delay value is not specified, then use
+> > +	 * STEPCONFIG_OPENDLY as the default value.
+> > +	 */
+> > +	if (err < 0)
+> > +		ts_dev->open_delay = STEPCONFIG_OPENDLY;
+> > +
+> >  	return of_property_read_u32_array(node, "ti,wire-config",
+> >  			ts_dev->config_inp, ARRAY_SIZE(ts_dev->config_inp));
+> >  }
+> > 
+> 
+> -- 
+> Regards
+> Vignesh
