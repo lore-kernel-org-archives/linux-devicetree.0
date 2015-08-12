@@ -1,27 +1,88 @@
-From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH] ARM: dts: AM4372: Add the am4372-rtc compatible string
-Date: Wed, 12 Aug 2015 01:49:50 -0700
-Message-ID: <20150812084949.GV4215@atomide.com>
-References: <1438924039-4913-1-git-send-email-j-keerthy@ti.com>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH v2 2/6] mailbox: dt-bindings: Add shared [driver <=>
+ device tree] defines
+Date: Wed, 12 Aug 2015 09:53:09 +0100
+Message-ID: <20150812085309.GB18282@x1>
+References: <1437990272-23111-1-git-send-email-lee.jones@linaro.org>
+ <1437990272-23111-3-git-send-email-lee.jones@linaro.org>
+ <CABb+yY2asjH-c+VJXvG+RK0=2p=P4Y21pznNP0riaKMWLxYZog@mail.gmail.com>
+ <20150810082445.GA3249@x1>
+ <CABb+yY3jUKXXJys32bHY1u+dbdsix71Xq_H1Lrkkt27vZzmf7w@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1438924039-4913-1-git-send-email-j-keerthy-l0cyMroinI0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Keerthy <j-keerthy-l0cyMroinI0@public.gmane.org>
-Cc: balbi-l0cyMroinI0@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, t-kristo-l0cyMroinI0@public.gmane.org
+In-Reply-To: <CABb+yY3jUKXXJys32bHY1u+dbdsix71Xq_H1Lrkkt27vZzmf7w@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Jassi Brar <jassisinghbrar@gmail.com>
+Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, kernel@stlinux.com, Devicetree List <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-* Keerthy <j-keerthy-l0cyMroinI0@public.gmane.org> [150806 22:10]:
-> am4372-rtc string was already part of dts, introduced to identify
-> the rtc specific to am4372 family of SoCs. It was removed in one of the
-> previous patches. Adding back the same with appropriate documentation.
+On Mon, 10 Aug 2015, Jassi Brar wrote:
 
-Applying into omap-for-v4.3/dt-v2 thanks.
+> On Mon, Aug 10, 2015 at 1:54 PM, Lee Jones <lee.jones@linaro.org> wro=
+te:
+> > On Mon, 10 Aug 2015, Jassi Brar wrote:
+> >> On Mon, Jul 27, 2015 at 3:14 PM, Lee Jones <lee.jones@linaro.org> =
+wrote:
+> >> > This header is currently only used for defines pertaining to dat=
+a
+> >> > direction i.e. Rx, Tx or Loopback.
+> >> >
+> >> > Signed-off-by: Lee Jones <lee.jones@linaro.org>
+> >> > ---
+> >> >  include/dt-bindings/mailbox/mailbox.h | 14 ++++++++++++++
+> >> >  1 file changed, 14 insertions(+)
+> >> >  create mode 100644 include/dt-bindings/mailbox/mailbox.h
+> >> >
+> >> > diff --git a/include/dt-bindings/mailbox/mailbox.h b/include/dt-=
+bindings/mailbox/mailbox.h
+> >> > new file mode 100644
+> >> > index 0000000..82e929a
+> >> > --- /dev/null
+> >> > +++ b/include/dt-bindings/mailbox/mailbox.h
+> >> > @@ -0,0 +1,14 @@
+> >> > +/*
+> >> > + * This program is free software; you can redistribute it and/o=
+r modify
+> >> > + * it under the terms of the GNU General Public License version=
+ 2 as
+> >> > + * published by the Free Software Foundation.
+> >> > + */
+> >> > +
+> >> > +#ifndef __MAILBOX_CONTROLLER_DT_BINDINGS_H
+> >> > +#define __MAILBOX_CONTROLLER_DT_BINDINGS_H
+> >> > +
+> >> > +#define MBOX_TX                0x1
+> >> > +#define MBOX_RX                0x2
+> >> > +#define MBOX_LOOPBACK  (MBOX_RX | MBOX_TX)
+> >> > +
+> >> Not sure I understand 'loopback'.  Does it mean h/w has some
+> >> 'loopback' mode for testing purposes? Or it simply means the
+> >> controller can send as well as receive messages?
+> >
+> > 'loopback' allows firmware to conduct some early function tests.
+> > However, channels are simplex, so we provide protection against
+> > multiple allocation of single channel.  By allocating a LOOPBACK
+> > channel we over-ride this protection and allow a single channel to =
+be
+> > allocated twice, once for Rx and the other for Tx.
+> >
+> So basically hardware is half-duplex, not simplex. I think maybe you
+> should simply allow for RX and TX always. It should work. Just
+> handover any received data before send_data (reflecting the h/w
+> limitation). That way you don't need any such special flag.
 
-Tony
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Unfortunately no, that's not correct.  Only Mailbox 0 is half-duplex.
+The others are simplex (Rx only).  Ideally I'd like to keep the
+LOOPBACK flag, as it's easier to figure out if what someone is
+attempting to do is actually valid.  It is only ever used for
+'loopback' testing anyway, so it's a perfectly reasonable
+description of the channel configuration.
+
+--=20
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org =E2=94=82 Open source software for ARM SoCs
+=46ollow Linaro: Facebook | Twitter | Blog
