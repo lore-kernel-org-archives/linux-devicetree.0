@@ -1,111 +1,41 @@
-From: Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH 3/3] clk: add bindings for the Ux500 clocks
-Date: Tue, 11 Aug 2015 16:39:05 -0700
-Message-ID: <20150811233905.31346.32970@quantum>
-References: <1438262400-29213-1-git-send-email-linus.walleij@linaro.org>
+From: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Subject: Re: [PATCH v4 0/4] clk: hisilicon: support stub clock
+Date: Tue, 11 Aug 2015 17:38:17 -0700
+Message-ID: <20150812003817.GI26614@codeaurora.org>
+References: <1438673249-6051-1-git-send-email-leo.yan@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1438262400-29213-1-git-send-email-linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1438673249-6051-1-git-send-email-leo.yan-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+To: Leo Yan <leo.yan-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Wei Xu <xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Haojian Zhuang <haojian.zhuang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Bintian Wang <bintian.wang-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Guodong Xu <guodong.xu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Jian Zhang <zhangjian001-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Zhenwei Wang <Zhenwei.wang-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Haoju Mo <mohaoju-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Dan Zhao <dan.zhao-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, sunzhaosheng-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, victor.lixin-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Quoting Linus Walleij (2015-07-30 06:20:00)
-> These Ux500 clocks have been around for years and were never
-> properly documented. Add the proper binding documentation.
+On 08/04, Leo Yan wrote:
+> This series adds support for hisilicon stub clock driver. On hi6220,
+> the bootloader needs load the firmware image and set info for OPPs;
+> after run into kernel, the stub clock driver is used to communicate
+> w/t firmware for cpu dynamic frequency scaling.
 > 
-> Cc: Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> Signed-off-by: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-
-This type of binding description isn't preferred but I guess we've been
-supporting it all this time:
-
-Acked-by: Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-
-> ---
-> Ulf/Mike: please ACK this patch so I can take it through
-> ARM SoC.
-> ---
->  Documentation/devicetree/bindings/clock/ux500.txt | 64 +++++++++++++++++++++++
->  1 file changed, 64 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/clock/ux500.txt
+> In patch series v1/v2, the stub clock driver simply writes request in
+> sram and send ipc to firmware; For patch series v3, the firmware has
+> been upgraded to use mailbox, so stub clock driver will call standard
+> mailbox APIs to request mailbox channel and send message to firmware.
 > 
-> diff --git a/Documentation/devicetree/bindings/clock/ux500.txt b/Documentation/devicetree/bindings/clock/ux500.txt
-> new file mode 100644
-> index 000000000000..e52bd4b72348
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/clock/ux500.txt
-> @@ -0,0 +1,64 @@
-> +Clock bindings for ST-Ericsson Ux500 clocks
-> +
-> +Required properties :
-> +- compatible : shall contain only one of the following:
-> +  "stericsson,u8500-clks"
-> +  "stericsson,u8540-clks"
-> +  "stericsson,u9540-clks"
-> +- reg : shall contain base register location and length for
-> +  CLKRST1, 2, 3, 5, and 6 in an array. Note the absence of
-> +  CLKRST4, which does not exist.
-> +
-> +Required subnodes:
-> +- prcmu-clock: a subnode with one clock cell for PRCMU (power,
-> +  reset, control unit) clocks. The cell indicates which PRCMU
-> +  clock in the prcmu-clock node the consumer wants to use.
-> +- prcc-periph-clock: a subnode with two clock cells for
-> +  PRCC (programmable reset- and clock controller) peripheral clocks.
-> +  The first cell indicates which PRCC block the consumer
-> +  wants to use, possible values are 1, 2, 3, 5, 6. The second
-> +  cell indicates which clock inside the PRCC block it wants,
-> +  possible values are 0 thru 31.
-> +- prcc-kernel-clock: a subnode with two clock cells for
-> +  PRCC (programmable reset- and clock controller) kernel clocks
-> +  The first cell indicates which PRCC block the consumer
-> +  wants to use, possible values are 1, 2, 3, 5, 6. The second
-> +  cell indicates which clock inside the PRCC block it wants,
-> +  possible values are 0 thru 31.
-> +- rtc32k-clock: a subnode with zero clock cells for the 32kHz
-> +  RTC clock.
-> +- smp-twd-clock: a subnode for the ARM SMP Timer Watchdog cluster
-> +  with zero clock cells.
-> +
-> +Example:
-> +
-> +clocks {
-> +       compatible = "stericsson,u8500-clks";
-> +       /*
-> +        * Registers for the CLKRST block on peripheral
-> +        * groups 1, 2, 3, 5, 6,
-> +        */
-> +       reg = <0x8012f000 0x1000>, <0x8011f000 0x1000>,
-> +           <0x8000f000 0x1000>, <0xa03ff000 0x1000>,
-> +           <0xa03cf000 0x1000>;
-> +
-> +       prcmu_clk: prcmu-clock {
-> +               #clock-cells = <1>;
-> +       };
-> +
-> +       prcc_pclk: prcc-periph-clock {
-> +               #clock-cells = <2>;
-> +       };
-> +
-> +       prcc_kclk: prcc-kernel-clock {
-> +               #clock-cells = <2>;
-> +       };
-> +
-> +       rtc_clk: rtc32k-clock {
-> +               #clock-cells = <0>;
-> +       };
-> +
-> +       smp_twd_clk: smp-twd-clock {
-> +               #clock-cells = <0>;
-> +       };
-> +};
-> -- 
-> 2.4.3
-> 
+> Patch 4 adds stub clock node into dts and it references mailbox with
+> phandle, so patch 4 will depend on mailbox driver's patch series [1].
+> These patches have been tested on 96board hikey and is used by cpufreq
+> driver.
+
+The To: list is everyone, so I'm not sure who is supposed to
+apply these patches. I'd like to take patches 1, 2, and 3 through
+the clk tree though.
+
+-- 
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
