@@ -1,72 +1,87 @@
-From: Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
-Subject: Re: [PATCH 3/3] ARM: dts: UniPhier: add ProXstream2 and PH1-LD6b
- SoC/board support
-Date: Wed, 12 Aug 2015 22:14:18 +0900
-Message-ID: <CAK7LNAQ+6tQ9Ci6LKsAB7kLj0o60Hizo2gOokDH9qW=FnO0gEA@mail.gmail.com>
-References: <1438687264-26538-1-git-send-email-yamada.masahiro@socionext.com>
-	<1438687264-26538-4-git-send-email-yamada.masahiro@socionext.com>
-	<20150811130739.GD30181@localhost>
+From: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Subject: Re: [PATCH] arm: rpi: Device tree modifications for U-Boot
+Date: Wed, 12 Aug 2015 07:21:32 -0600
+Message-ID: <CAPnjgZ3ztXnkxZJvitiXiKMzq5+x46hbv0PW4HcF7yGgsXUV+Q@mail.gmail.com>
+References: <1439303153-12171-1-git-send-email-sjg@chromium.org> <1439312701.2451.3.camel@lynxeye.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20150811130739.GD30181@localhost>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1439312701.2451.3.camel-8ppwABl0HbeELgA04lAiVw@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Lucas Stach <dev-8ppwABl0HbeELgA04lAiVw@public.gmane.org>
+Cc: "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, lak <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Lee Jones <lee-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Devicetree Discuss <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, lk <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Olof,
+Hi Lucas,
 
-
-2015-08-11 22:07 GMT+09:00 Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>:
-> Hi,
+On 11 August 2015 at 11:05, Lucas Stach <dev-8ppwABl0HbeELgA04lAiVw@public.gmane.org> wrote:
+> Hi Simon,
 >
-> On Tue, Aug 04, 2015 at 08:21:04PM +0900, Masahiro Yamada wrote:
->> Initial version of DTSI for ProXstream2 and PH1-LD6b and DTS for
->> PH1-LD6b reference board.
+> why did you send this to the Tegra ML?
+>
+> Am Dienstag, den 11.08.2015, 08:25 -0600 schrieb Simon Glass:
+>> This updates the device tree from the kernel version to something suitable
+>> for U-Boot:
 >>
->> Signed-off-by: Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
+>> - Add stdout-path alias for console
+>> - Mark the /soc node to be available pre-relocation so that the early
+>> serial console works (we need the 'ranges' property to be available)
+>>
+>> Signed-off-by: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
 >> ---
 >>
->>  arch/arm/boot/dts/Makefile                  |   3 +-
->>  arch/arm/boot/dts/uniphier-ph1-ld6b-ref.dts | 105 +++++++++++
->>  arch/arm/boot/dts/uniphier-ph1-ld6b.dtsi    |  67 +++++++
->>  arch/arm/boot/dts/uniphier-proxstream2.dtsi | 273 ++++++++++++++++++++++++++++
->>  4 files changed, 447 insertions(+), 1 deletion(-)
->>  create mode 100644 arch/arm/boot/dts/uniphier-ph1-ld6b-ref.dts
->>  create mode 100644 arch/arm/boot/dts/uniphier-ph1-ld6b.dtsi
->>  create mode 100644 arch/arm/boot/dts/uniphier-proxstream2.dtsi
+>>  arch/arm/boot/dts/bcm2835.dtsi | 4 +++-
+>>  1 file changed, 3 insertions(+), 1 deletion(-)
 >>
->> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
->> index 246473a..6eb3f2f 100644
->> --- a/arch/arm/boot/dts/Makefile
->> +++ b/arch/arm/boot/dts/Makefile
->> @@ -645,7 +645,8 @@ dtb-$(CONFIG_ARCH_UNIPHIER) += \
->>       uniphier-ph1-sld3-ref.dtb \
->>       uniphier-ph1-ld4-ref.dtb \
->>       uniphier-ph1-pro4-ref.dtb \
->> -     uniphier-ph1-sld8-ref.dtb
->> +     uniphier-ph1-sld8-ref.dtb \
->> +     uniphier-ph1-ld6b-ref.dtb
+>> diff --git a/arch/arm/boot/dts/bcm2835.dtsi b/arch/arm/boot/dts/bcm2835.dtsi
+>> index 301c73f..bd6bff6 100644
+>> --- a/arch/arm/boot/dts/bcm2835.dtsi
+>> +++ b/arch/arm/boot/dts/bcm2835.dtsi
+>> @@ -8,6 +8,7 @@
+>>
+>>       chosen {
+>>               bootargs = "earlyprintk console=ttyAMA0";
+>> +             stdout-path = &uart;
+>>       };
+>>
+>>       soc {
+>> @@ -16,6 +17,7 @@
+>>               #size-cells = <1>;
+>>               ranges = <0x7e000000 0x20000000 0x02000000>;
+>>               dma-ranges = <0x40000000 0x00000000 0x20000000>;
+>> +             u-boot,dm-pre-reloc;
 >
-> Please always add entries here sorted, don't just append. I've fixed it
-> up for you this time.
->
->
+> Why do you need this and why should upstream carry your favourite
+> bootloaders configuration? This is in no way hardware description.
 
-Please do not do that (without my ack).
+I'm not sure how much you know about U-Boot, so let me know if you
+need more info.
 
-It was already sorted from old SoC to new SoC.
+U-Boot normally starts up by setting up its serial UART and displaying
+a banner message. At this stage typically only a few devices are
+initialised (e.g. maybe just the UART). It then relocates itself to
+the top of memory and starts up all the devices. It throws away any
+previous devices that it set up before relocation and starts again.
 
-Sorting chronologically (in other words, in the order of chip ID)
-makes more sense than sorting alphabetically.
+U-Boot uses a thing called driver model (dm) which handles driver
+binding and probing. Driver model has the device tree and would
+normally scan through it and create devices for everything it finds.
 
+Before relocation we don't need every device. Also the CPU is often
+running slowly, perhaps without the cache enabled. SDRAM may not be
+available yet so space is short. We want to avoid starting up things
+that will not be used.
 
+So this property indicates that the device is needed before relocation
+and should be set up by driver model. We need it to avoid a very slow
+and memory-hungry startup.
 
--- 
-Best Regards
-Masahiro Yamada
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+As to why upstream should accept it, my understanding of upstream is
+that people can send patches to it and in fact are encouraged to do
+so, to avoid misunderstandings and duplication. The device tree files
+are stored in Linux so any binding or source file changes should end
+up there. Otherwise the files tend to diverge and we end up with
+multiple bindings and multiple versions of the same source file.
+
+Regards,
+Simon
