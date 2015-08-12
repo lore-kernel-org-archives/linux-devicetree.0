@@ -1,92 +1,155 @@
-From: Jassi Brar <jassisinghbrar@gmail.com>
-Subject: Re: [PATCH v2 2/6] mailbox: dt-bindings: Add shared [driver <=>
- device tree] defines
-Date: Wed, 12 Aug 2015 15:46:06 +0530
-Message-ID: <CABb+yY3LdX1Lk7jfPbdXr4Zw=zKGJ=TsRRhB5a4CeYHOsjb90A@mail.gmail.com>
-References: <1437990272-23111-1-git-send-email-lee.jones@linaro.org>
-	<1437990272-23111-3-git-send-email-lee.jones@linaro.org>
-	<CABb+yY2asjH-c+VJXvG+RK0=2p=P4Y21pznNP0riaKMWLxYZog@mail.gmail.com>
-	<20150810082445.GA3249@x1>
-	<CABb+yY3jUKXXJys32bHY1u+dbdsix71Xq_H1Lrkkt27vZzmf7w@mail.gmail.com>
-	<20150812085309.GB18282@x1>
+From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH v4 2/2] mfd: axp20x: Add a cell for the usb
+ power_supply part of the axp20x PMICs
+Date: Wed, 12 Aug 2015 12:20:15 +0200
+Message-ID: <55CB1DDF.7000201@redhat.com>
+References: <1439049521-30766-1-git-send-email-hdegoede@redhat.com>
+ <1439049521-30766-2-git-send-email-hdegoede@redhat.com>
+ <20150811141811.GM18282@x1> <55CB05AD.1030707@redhat.com>
+ <20150812092900.GC18282@x1>
+Reply-To: hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20150812085309.GB18282@x1>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Lee Jones <lee.jones@linaro.org>
-Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, kernel@stlinux.com, Devicetree List <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-sunxi+bncBDRZXY4CYYORBZF3VSXAKGQECWBIBAA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <20150812092900.GC18282@x1>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <http://groups.google.com/group/linux-sunxi/subscribe>
+To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, =?UTF-8?Q?Bruno_Pr=c3=a9mont?= <bonbons-ud5FBsm0p/xEiooADzr8i9i2O/JbrIOy@public.gmane.org>, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Aug 12, 2015 at 2:23 PM, Lee Jones <lee.jones@linaro.org> wrote:
-> On Mon, 10 Aug 2015, Jassi Brar wrote:
->
->> On Mon, Aug 10, 2015 at 1:54 PM, Lee Jones <lee.jones@linaro.org> wrote:
->> > On Mon, 10 Aug 2015, Jassi Brar wrote:
->> >> On Mon, Jul 27, 2015 at 3:14 PM, Lee Jones <lee.jones@linaro.org> wrote:
->> >> > This header is currently only used for defines pertaining to data
->> >> > direction i.e. Rx, Tx or Loopback.
->> >> >
->> >> > Signed-off-by: Lee Jones <lee.jones@linaro.org>
->> >> > ---
->> >> >  include/dt-bindings/mailbox/mailbox.h | 14 ++++++++++++++
->> >> >  1 file changed, 14 insertions(+)
->> >> >  create mode 100644 include/dt-bindings/mailbox/mailbox.h
->> >> >
->> >> > diff --git a/include/dt-bindings/mailbox/mailbox.h b/include/dt-bindings/mailbox/mailbox.h
->> >> > new file mode 100644
->> >> > index 0000000..82e929a
->> >> > --- /dev/null
->> >> > +++ b/include/dt-bindings/mailbox/mailbox.h
->> >> > @@ -0,0 +1,14 @@
->> >> > +/*
->> >> > + * This program is free software; you can redistribute it and/or modify
->> >> > + * it under the terms of the GNU General Public License version 2 as
->> >> > + * published by the Free Software Foundation.
->> >> > + */
->> >> > +
->> >> > +#ifndef __MAILBOX_CONTROLLER_DT_BINDINGS_H
->> >> > +#define __MAILBOX_CONTROLLER_DT_BINDINGS_H
->> >> > +
->> >> > +#define MBOX_TX                0x1
->> >> > +#define MBOX_RX                0x2
->> >> > +#define MBOX_LOOPBACK  (MBOX_RX | MBOX_TX)
->> >> > +
->> >> Not sure I understand 'loopback'.  Does it mean h/w has some
->> >> 'loopback' mode for testing purposes? Or it simply means the
->> >> controller can send as well as receive messages?
->> >
->> > 'loopback' allows firmware to conduct some early function tests.
->> > However, channels are simplex, so we provide protection against
->> > multiple allocation of single channel.  By allocating a LOOPBACK
->> > channel we over-ride this protection and allow a single channel to be
->> > allocated twice, once for Rx and the other for Tx.
->> >
->> So basically hardware is half-duplex, not simplex. I think maybe you
->> should simply allow for RX and TX always. It should work. Just
->> handover any received data before send_data (reflecting the h/w
->> limitation). That way you don't need any such special flag.
->
-> Unfortunately no, that's not correct.  Only Mailbox 0 is half-duplex.
-> The others are simplex (Rx only).
->
-Assuming that is indeed the case (though code and comments suggest
-otherwise), it is still not a matter of choice for clients to 'make' a
-channel RX or TX or RXTX. That is the property/constraint of the
-controller and the controller driver should simply check for channel
-ID to be zero in send_data() and return error if its non-zero.
+Hi,
 
->  Ideally I'd like to keep the
-> LOOPBACK flag, as it's easier to figure out if what someone is
-> attempting to do is actually valid.
+On 12-08-15 11:29, Lee Jones wrote:
+> On Wed, 12 Aug 2015, Hans de Goede wrote:
 >
-I am not for such paranoia. Provider drivers is not the place to check
-for valid user data.
-The controller driver should simply reject send_data() request on any
-mailbox > 0 while the consumer driver should scream for attention
-because that's where the problem is.
+>> Hi,
+>>
+>> On 11-08-15 16:18, Lee Jones wrote:
+>>> On Sat, 08 Aug 2015, Hans de Goede wrote:
+>>>
+>>>> Add a cell for the usb power_supply part of the axp20x PMICs.
+>>>>
+>>>> Note that this cell is only for the usb power_supply part and not the
+>>>> ac-power / battery-charger / rtc-backup-bat-charger bits.
+>>>>
+>>>> Depending on the board each of those must be enabled / disabled separa=
+tely
+>>>> in devicetree as most boards do not use all 4. So in dt each one needs=
+ its
+>>>> own child-node of the axp20x node. Another reason for using separate c=
+hild
+>>>> nodes for each is so that other devicetree nodes can have a power-supp=
+ly
+>>>> property with a phandle referencing a node representing a single
+>>>> power-supply.
+>>>>
+>>>> The decision to use a separate devicetree node for each is reflected o=
+n
+>>>> the kernel side by each getting its own mfd-cell / platform_device and
+>>>> platform-driver.
+>>>>
+>>>> Note this commit also makes some whitespace changes to the intializati=
+on
+>>>> of existing cells in axp20x_cells, these are pure whitespace changes,
+>>>> functionally nothing changes.
+>>>>
+>>>> Cc: Bruno Pr=C3=A9mont <bonbons-ud5FBsm0p/xEiooADzr8i9i2O/JbrIOy@public.gmane.org>
+>>>> Signed-off-by: Bruno Pr=C3=A9mont <bonbons-ud5FBsm0p/xEiooADzr8i9i2O/JbrIOy@public.gmane.org>
+>>>> Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+>>>> Acked-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+>>>> Acked-by: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+>>>> ---
+>>>> Changes in v2:
+>>>> -Use DEFINE_RES_IRQ_NAMED
+>>>> -Change indentation of axp20x_cells initializers to avoid line wrappin=
+g
+>>>> Changes in v3:
+>>>> -Improve commit message
+>>>> -Add Bruno's S-o-b
+>>>> ---
+>>>>   drivers/mfd/axp20x.c | 20 ++++++++++++++++----
+>>>>   1 file changed, 16 insertions(+), 4 deletions(-)
+>>>
+>>> Applied, thanks.
+>>
+>> Great, but I'm not seeing this in:
+>>
+>> https://git.kernel.org/cgit/linux/kernel/git/lee/mfd.git/log/?h=3Dfor-mf=
+d-next
+>
+> Well it does usually take me a day or two push my local branch out,
+> however in this case I had actually dropped a ball somewhere.  I've
+> been through my backlog of 'applied' patches and these two are the
+> only ones I failed to pick.  I have now, re-picked, re-applied and
+> pushed the branch out.  Let me know if something is still not right.
 
-Please note, what I suggest will only make the code simpler while not
-breaking anything.
+Looks good now, thanks.
 
-Thanks.
+> Sorry for the inconvenience.
+
+No problem, thanks for all the great work you are doing on maintaining
+the mfd subsys.
+
+Regards,
+
+Hans
+
+
+>
+>>>> diff --git a/drivers/mfd/axp20x.c b/drivers/mfd/axp20x.c
+>>>> index d9f2f96..3f576b7 100644
+>>>> --- a/drivers/mfd/axp20x.c
+>>>> +++ b/drivers/mfd/axp20x.c
+>>>> @@ -140,6 +140,13 @@ static struct resource axp20x_pek_resources[] =3D=
+ {
+>>>>   	},
+>>>>   };
+>>>>
+>>>> +static struct resource axp20x_usb_power_supply_resources[] =3D {
+>>>> +	DEFINE_RES_IRQ_NAMED(AXP20X_IRQ_VBUS_PLUGIN, "VBUS_PLUGIN"),
+>>>> +	DEFINE_RES_IRQ_NAMED(AXP20X_IRQ_VBUS_REMOVAL, "VBUS_REMOVAL"),
+>>>> +	DEFINE_RES_IRQ_NAMED(AXP20X_IRQ_VBUS_VALID, "VBUS_VALID"),
+>>>> +	DEFINE_RES_IRQ_NAMED(AXP20X_IRQ_VBUS_NOT_VALID, "VBUS_NOT_VALID"),
+>>>> +};
+>>>> +
+>>>>   static struct resource axp22x_pek_resources[] =3D {
+>>>>   	{
+>>>>   		.name   =3D "PEK_DBR",
+>>>> @@ -432,11 +439,16 @@ static const struct regmap_irq_chip axp288_regma=
+p_irq_chip =3D {
+>>>>
+>>>>   static struct mfd_cell axp20x_cells[] =3D {
+>>>>   	{
+>>>> -		.name			=3D "axp20x-pek",
+>>>> -		.num_resources		=3D ARRAY_SIZE(axp20x_pek_resources),
+>>>> -		.resources		=3D axp20x_pek_resources,
+>>>> +		.name		=3D "axp20x-pek",
+>>>> +		.num_resources	=3D ARRAY_SIZE(axp20x_pek_resources),
+>>>> +		.resources	=3D axp20x_pek_resources,
+>>>>   	}, {
+>>>> -		.name			=3D "axp20x-regulator",
+>>>> +		.name		=3D "axp20x-regulator",
+>>>> +	}, {
+>>>> +		.name		=3D "axp20x-usb-power-supply",
+>>>> +		.of_compatible	=3D "x-powers,axp202-usb-power-supply",
+>>>> +		.num_resources	=3D ARRAY_SIZE(axp20x_usb_power_supply_resources),
+>>>> +		.resources	=3D axp20x_usb_power_supply_resources,
+>>>>   	},
+>>>>   };
+>>>>
+>>>
+>
+
+--=20
+You received this message because you are subscribed to the Google Groups "=
+linux-sunxi" group.
+To unsubscribe from this group and stop receiving emails from it, send an e=
+mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+For more options, visit https://groups.google.com/d/optout.
