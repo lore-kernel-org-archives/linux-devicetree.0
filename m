@@ -1,231 +1,52 @@
-From: Gavin Shan <gwshan@linux.vnet.ibm.com>
-Subject: Re: [PATCH v6 08/42] powerpc/powernv: Calculate PHB's DMA weight
- dynamically
-Date: Thu, 13 Aug 2015 09:57:26 +1000
-Message-ID: <20150812235726.GA5009@gwshan>
-References: <1438834307-26960-1-git-send-email-gwshan@linux.vnet.ibm.com>
- <1438834307-26960-9-git-send-email-gwshan@linux.vnet.ibm.com>
- <55C86D08.4070003@ozlabs.ru>
-Reply-To: Gavin Shan <gwshan@linux.vnet.ibm.com>
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH v2] DT: mmc: sh_mmcif: document R8A779[34] support
+Date: Thu, 13 Aug 2015 08:59:36 +0900
+Message-ID: <20150812235935.GB5221@verge.net.au>
+References: <201404250239.39150.sergei.shtylyov@cogentembedded.com>
+ <28226759.dUa3lFkaxJ@wasted.cogentembedded.com>
+ <20150812005901.GF15957@verge.net.au>
+ <55CB220A.5040209@cogentembedded.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-pci-owner@vger.kernel.org>
+Return-path: <linux-sh-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <55C86D08.4070003@ozlabs.ru>
-Sender: linux-pci-owner@vger.kernel.org
-To: Alexey Kardashevskiy <aik@ozlabs.ru>
-Cc: Gavin Shan <gwshan@linux.vnet.ibm.com>, linuxppc-dev@lists.ozlabs.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, benh@kernel.crashing.org, mpe@ellerman.id.au, bhelgaas@google.com, grant.likely@linaro.org, robherring2@gmail.com, panto@antoniou-consulting.com
+In-Reply-To: <55CB220A.5040209@cogentembedded.com>
+Sender: linux-sh-owner@vger.kernel.org
+To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Cc: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org, ulf.hansson@linaro.org, linux-mmc@vger.kernel.org, linux-sh@vger.kernel.org, Ulrich Hecht <ulrich.hecht+renesas@gmail.com>, Geert Uytterhoeven <geert+renesas@glider.be>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Aug 10, 2015 at 07:21:12PM +1000, Alexey Kardashevskiy wrote:
->On 08/06/2015 02:11 PM, Gavin Shan wrote:
->>For P7IOC, the whole available DMA32 space, which is below the
->>MEM32 space, is divided evenly into 256MB segments. The number
->>of continuous segments assigned to one particular PE depends on
->>the PE's DMA weight that is calculated based on the type of each
->>PCI devices contained in the PE, and PHB's DMA weight which is
->>accumulative DMA weight of PEs contained in the PHB. It means
->>that the PHB's DMA weight calculation depends on existing PEs,
->>which works perfectly now, but not hotplug friendly. As the
->>whole available DMA32 space can be assigned to one PE on PHB3,
->>so we don't have the issue on PHB3.
->>
->>The patch calculates PHB's DMA weight based on the PCI devices
->>contained in the PHB dynamically so that it's hotplug friendly.
->>
->>Signed-off-by: Gavin Shan <gwshan@linux.vnet.ibm.com>
->>---
->>  arch/powerpc/platforms/powernv/pci-ioda.c | 88 +++++++++++++++----------------
->>  arch/powerpc/platforms/powernv/pci.h      |  6 ---
->>  2 files changed, 43 insertions(+), 51 deletions(-)
->>
->>diff --git a/arch/powerpc/platforms/powernv/pci-ioda.c b/arch/powerpc/platforms/powernv/pci-ioda.c
->>index 713f4b4..7342cfd 100644
->>--- a/arch/powerpc/platforms/powernv/pci-ioda.c
->>+++ b/arch/powerpc/platforms/powernv/pci-ioda.c
->>@@ -927,6 +927,9 @@ static void pnv_ioda_link_pe_by_weight(struct pnv_phb *phb,
->>
->>  static unsigned int pnv_ioda_dma_weight(struct pci_dev *dev)
->>  {
->>+	struct pci_controller *hose = pci_bus_to_host(dev->bus);
->>+	struct pnv_phb *phb = hose->private_data;
->>+
->>  	/* This is quite simplistic. The "base" weight of a device
->>  	 * is 10. 0 means no DMA is to be accounted for it.
->>  	 */
->>@@ -939,14 +942,34 @@ static unsigned int pnv_ioda_dma_weight(struct pci_dev *dev)
->>  	if (dev->class == PCI_CLASS_SERIAL_USB_UHCI ||
->>  	    dev->class == PCI_CLASS_SERIAL_USB_OHCI ||
->>  	    dev->class == PCI_CLASS_SERIAL_USB_EHCI)
->>-		return 3;
->>+		return 3 * phb->ioda.tce32_count;
->>
->>  	/* Increase the weight of RAID (includes Obsidian) */
->>  	if ((dev->class >> 8) == PCI_CLASS_STORAGE_RAID)
->>-		return 15;
->>+		return 15 * phb->ioda.tce32_count;
->>
->>  	/* Default */
->>-	return 10;
->>+	return 10 * phb->ioda.tce32_count;
->>+}
->>+
->>+static int __pnv_ioda_phb_dma_weight(struct pci_dev *pdev, void *data)
->>+{
->>+	unsigned int *dma_weight = data;
->>+
->>+	*dma_weight += pnv_ioda_dma_weight(pdev);
->>+	return 0;
->>+}
->>+
->>+static unsigned int pnv_ioda_phb_dma_weight(struct pnv_phb *phb)
->>+{
->>+	unsigned int dma_weight = 0;
->>+
->>+	if (!phb->hose->bus)
->>+		return 0;
->>+
->>+	pci_walk_bus(phb->hose->bus,
->>+		     __pnv_ioda_phb_dma_weight, &dma_weight);
->>+	return dma_weight;
->>  }
->>
->>  #ifdef CONFIG_PCI_IOV
->>@@ -1097,14 +1120,6 @@ static void pnv_ioda_setup_bus_PE(struct pci_bus *bus, bool all)
->>  	/* Put PE to the list */
->>  	list_add_tail(&pe->list, &phb->ioda.pe_list);
->>
->>-	/* Account for one DMA PE if at least one DMA capable device exist
->>-	 * below the bridge
->>-	 */
->>-	if (pe->dma_weight != 0) {
->>-		phb->ioda.dma_weight += pe->dma_weight;
->>-		phb->ioda.dma_pe_count++;
->>-	}
->>-
->>  	/* Link the PE */
->>  	pnv_ioda_link_pe_by_weight(phb, pe);
->>  }
->>@@ -2431,24 +2446,13 @@ static void pnv_pci_ioda2_setup_dma_pe(struct pnv_phb *phb,
->>  static void pnv_ioda_setup_dma(struct pnv_phb *phb)
->>  {
->>  	struct pci_controller *hose = phb->hose;
->>-	unsigned int residual, remaining, segs, tw, base;
->>  	struct pnv_ioda_pe *pe;
->>+	unsigned int dma_weight;
->>
->>-	/* If we have more PE# than segments available, hand out one
->>-	 * per PE until we run out and let the rest fail. If not,
->>-	 * then we assign at least one segment per PE, plus more based
->>-	 * on the amount of devices under that PE
->>-	 */
->>-	if (phb->ioda.dma_pe_count > phb->ioda.tce32_count)
->>-		residual = 0;
->>-	else
->>-		residual = phb->ioda.tce32_count -
->>-			phb->ioda.dma_pe_count;
->>-
->>-	pr_info("PCI: Domain %04x has %ld available 32-bit DMA segments\n",
->>-		hose->global_number, phb->ioda.tce32_count);
->>-	pr_info("PCI: %d PE# for a total weight of %d\n",
->>-		phb->ioda.dma_pe_count, phb->ioda.dma_weight);
->>+	/* Calculate the PHB's DMA weight */
->>+	dma_weight = pnv_ioda_phb_dma_weight(phb);
->>+	pr_info("PCI%04x has %ld DMA32 segments, total weight %d\n",
->>+		hose->global_number, phb->ioda.tce32_count, dma_weight);
->>
->>  	pnv_pci_ioda_setup_opal_tce_kill(phb);
->>
->>@@ -2456,22 +2460,9 @@ static void pnv_ioda_setup_dma(struct pnv_phb *phb)
->>  	 * out one base segment plus any residual segments based on
->>  	 * weight
->>  	 */
->>-	remaining = phb->ioda.tce32_count;
->>-	tw = phb->ioda.dma_weight;
->>-	base = 0;
->>  	list_for_each_entry(pe, &phb->ioda.pe_dma_list, dma_link) {
->>  		if (!pe->dma_weight)
->>  			continue;
->>-		if (!remaining) {
->>-			pe_warn(pe, "No DMA32 resources available\n");
->>-			continue;
->>-		}
->>-		segs = 1;
->>-		if (residual) {
->>-			segs += ((pe->dma_weight * residual)  + (tw / 2)) / tw;
->>-			if (segs > remaining)
->>-				segs = remaining;
->>-		}
->>
->>  		/*
->>  		 * For IODA2 compliant PHB3, we needn't care about the weight.
->>@@ -2479,17 +2470,24 @@ static void pnv_ioda_setup_dma(struct pnv_phb *phb)
->>  		 * the specific PE.
->>  		 */
->>  		if (phb->type == PNV_PHB_IODA1) {
->>-			pe_info(pe, "DMA weight %d, assigned %d DMA32 segments\n",
->>+			unsigned int segs, base = 0;
->>+
->>+			if (pe->dma_weight <
->>+			    dma_weight / phb->ioda.tce32_count)
->>+				segs = 1;
->>+			else
->>+				segs = (pe->dma_weight *
->>+					phb->ioda.tce32_count) / dma_weight;
->>+
->>+			pe_info(pe, "DMA32 weight %d, assigned %d segments\n",
->>  				pe->dma_weight, segs);
->>  			pnv_pci_ioda_setup_dma_pe(phb, pe, base, segs);
->>+
->>+			base += segs;
->
->
->This is not right. @base here is a local variable in the scope,
->pnv_pci_ioda_setup_dma_pe() will always be called with base==0.
->
->
->Sorry for commenting the same patch twice.
->
+[CC: Ulrich, Geert]
 
-That's ok to comment for twice on same patch. But I don't see
-how it's wrong. The function (pnv_ioda_setup_dma()) is called
-as below and it iterate all PEs in the PHB's DMA32 list. That
-means the function is affects PHB, not every PE yet. It's out
-of problem with "base=0".
+On Wed, Aug 12, 2015 at 01:38:02PM +0300, Sergei Shtylyov wrote:
+> Hello.
+> 
+> On 8/12/2015 3:59 AM, Simon Horman wrote:
+> 
+> >>Renesas R8A7794 SoC also has the MMCIF controller...
+> 
+> >>Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+> 
+> >This new compat string looks good to me.
+> 
+> >Acked-by: Simon Horman <horms+renesas@verge.net.au>
+> 
+>    Thank you. I've messed up the subject, so need to re-post.
+> 
+> >>---
+> >>The patch is against Ulf Hansson's 'mmc.git'  repo's 'next' branch plus the
+> >>patch I posted earlier today...
+> >>
+> >>Changes in version 2:
+> >>- deferred R8A7793 support to the patch posted earlier by Ulrich Hecht;
+> 
+> >Perhaps it would be best to co-ordinate the R8A7793 and R8A7794
+> >changes to avoid tedious conflicts.
+> 
+>    I thought about taking out Ulrich's binding patch and re-posting it
+>    along with this one but finally decided not to ruin his series. Do you
+>    mean that I should have posted his patch along with mine?
 
-pnv_pci_ioda_fixup
-  pnv_pci_ioda_setup_DMA
-    pnv_ioda_setup_dma
->
->>  		} else {
->>  			pe_info(pe, "Assign DMA32 space\n");
->>-			segs = 0;
->>  			pnv_pci_ioda2_setup_dma_pe(phb, pe);
->>  		}
->>-
->>-		remaining -= segs;
->>-		base += segs;
->>  	}
->>  }
->>
->>diff --git a/arch/powerpc/platforms/powernv/pci.h b/arch/powerpc/platforms/powernv/pci.h
->>index 08a4e57..addd3f7 100644
->>--- a/arch/powerpc/platforms/powernv/pci.h
->>+++ b/arch/powerpc/platforms/powernv/pci.h
->>@@ -183,12 +183,6 @@ struct pnv_phb {
->>  			/* 32-bit TCE tables allocation */
->>  			unsigned long		tce32_count;
->>
->>-			/* Total "weight" for the sake of DMA resources
->>-			 * allocation
->>-			 */
->>-			unsigned int		dma_weight;
->>-			unsigned int		dma_pe_count;
->>-
->>  			/* Sorted list of used PE's, sorted at
->>  			 * boot for resource allocation purposes
->>  			 */
->>
-
-Thanks,
-Gavin
+I mean we sould talk about this to come up with a plan that makes things
+easy for the maintainer to pick up the compat strings for the R8A7793 and
+R8A7794.
