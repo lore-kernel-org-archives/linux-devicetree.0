@@ -1,104 +1,138 @@
-From: Vignesh R <vigneshr-l0cyMroinI0@public.gmane.org>
-Subject: Re: [RFC PATCH 1/5] spi: introduce flag for memory mapped read
-Date: Wed, 12 Aug 2015 14:57:03 +0530
-Message-ID: <55CB1167.7010804@ti.com>
-References: <20150805115013.GJ20873@sirena.org.uk> <CAOMqctQXwcHyiWBwtugSDSE_k65qrNfrwnhjQMDJkLoJMmGzUw@mail.gmail.com> <20150805124412.GN20873@sirena.org.uk> <CAOMqctS9Y5FxpUCCJew6+cnjH5iTvbzkH3g-8yrXs4OuS2pSGA@mail.gmail.com> <20150806090202.GO20873@sirena.org.uk> <CAOMqctQZRZ4zG_yYy=CeX3DX4NVNWN1COP4Q-2YvMun9xYOA7g@mail.gmail.com> <20150806102225.GI7576@n2100.arm.linux.org.uk> <55C35233.2000105@ti.com> <20150806135129.GJ7576@n2100.arm.linux.org.uk> <CAMuHMdWWDwZ=ziGQXFCnOX8pErXpsEi533J73_Hh=sEqq4hR6Q@mail.gmail.com> <20150806213340.GK7576@n2100.arm.linux.org.uk> <55C46B84.3010304@sperl.org> <CAOMqctScUybdoZPgqH185qzDxB=TyutDMARextHx0XwC7L3Xmw@mail.gmail.com>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH v4 2/2] mfd: axp20x: Add a cell for the usb power_supply
+ part of the axp20x PMICs
+Date: Wed, 12 Aug 2015 10:29:00 +0100
+Message-ID: <20150812092900.GC18282@x1>
+References: <1439049521-30766-1-git-send-email-hdegoede@redhat.com>
+ <1439049521-30766-2-git-send-email-hdegoede@redhat.com>
+ <20150811141811.GM18282@x1>
+ <55CB05AD.1030707@redhat.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAOMqctScUybdoZPgqH185qzDxB=TyutDMARextHx0XwC7L3Xmw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Michal Suchanek <hramrach-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Martin Sperl <martin-d5rIkyn9cnPYtjvyW6yDsg@public.gmane.org>
-Cc: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-spi <linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, MTD Maling List <linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-pm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <55CB05AD.1030707@redhat.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: Hans de Goede <hdegoede@redhat.com>
+Cc: Sebastian Reichel <sre@kernel.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, Bruno =?iso-8859-1?Q?Pr=E9mont?= <bonbons@linux-vserver.org>, linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree <devicetree@vger.kernel.org>, linux-sunxi@googlegroups.com
 List-Id: devicetree@vger.kernel.org
 
+On Wed, 12 Aug 2015, Hans de Goede wrote:
 
+> Hi,
+>=20
+> On 11-08-15 16:18, Lee Jones wrote:
+> >On Sat, 08 Aug 2015, Hans de Goede wrote:
+> >
+> >>Add a cell for the usb power_supply part of the axp20x PMICs.
+> >>
+> >>Note that this cell is only for the usb power_supply part and not t=
+he
+> >>ac-power / battery-charger / rtc-backup-bat-charger bits.
+> >>
+> >>Depending on the board each of those must be enabled / disabled sep=
+arately
+> >>in devicetree as most boards do not use all 4. So in dt each one ne=
+eds its
+> >>own child-node of the axp20x node. Another reason for using separat=
+e child
+> >>nodes for each is so that other devicetree nodes can have a power-s=
+upply
+> >>property with a phandle referencing a node representing a single
+> >>power-supply.
+> >>
+> >>The decision to use a separate devicetree node for each is reflecte=
+d on
+> >>the kernel side by each getting its own mfd-cell / platform_device =
+and
+> >>platform-driver.
+> >>
+> >>Note this commit also makes some whitespace changes to the intializ=
+ation
+> >>of existing cells in axp20x_cells, these are pure whitespace change=
+s,
+> >>functionally nothing changes.
+> >>
+> >>Cc: Bruno Pr=C3=A9mont <bonbons@linux-vserver.org>
+> >>Signed-off-by: Bruno Pr=C3=A9mont <bonbons@linux-vserver.org>
+> >>Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+> >>Acked-by: Maxime Ripard <maxime.ripard@free-electrons.com>
+> >>Acked-by: Lee Jones <lee.jones@linaro.org>
+> >>---
+> >>Changes in v2:
+> >>-Use DEFINE_RES_IRQ_NAMED
+> >>-Change indentation of axp20x_cells initializers to avoid line wrap=
+ping
+> >>Changes in v3:
+> >>-Improve commit message
+> >>-Add Bruno's S-o-b
+> >>---
+> >>  drivers/mfd/axp20x.c | 20 ++++++++++++++++----
+> >>  1 file changed, 16 insertions(+), 4 deletions(-)
+> >
+> >Applied, thanks.
+>=20
+> Great, but I'm not seeing this in:
+>=20
+> https://git.kernel.org/cgit/linux/kernel/git/lee/mfd.git/log/?h=3Dfor=
+-mfd-next
 
-On 08/07/2015 03:46 PM, Michal Suchanek wrote:
-[snip]
-> On 7 August 2015 at 10:35, Vignesh R <vigneshr-l0cyMroinI0@public.gmane.org> wrote:
->>
->>
->> On 08/07/2015 01:08 PM, Michal Suchanek wrote:
->>
->>> Now since the description is clearer it's obvious that ti-qspi cannot
->>> work fully mmapped as fsl-qspi does because the setup has to be done
->>> over normal spi access and using non-m25p80 devices on the same bus is
->>> a requirement.
->>>
->>> The place where it is known if a transfer can use the mmap access is m25p80.c
->>>
->>> So my suggestion is
->>>
->>>  - add a new method for spi master that gets the read opcode, dummy
->>> length, address, address length, buffer, buffer length and performs
->>> read from the flash memory in a hardware-specific way
->>>
->>> - add a check in m25p80.c that the master supports this feature and if
->>> so use it (eg check that the method is non-null)
->>>
->>> Presumably if some new SPI controllers with similar feature are
->>> supported in the future they can use the same inteface because you
->>> pass on everything the m25p80 read knows.
->>>
->>
->> Ok... Do you mean something like this?
->>
->> I will take m25p80 as example but can be expanded for any flash.
->>
->> In include/linux/mtd.h:
->>         struct spi_mtd_config_info {
->>                 struct spi_device       *spi;
->>                 u32                     page_size;
->>                 u8                      addr_width;
->>                 u8                      erase_opcode;
->>                 u8                      read_opcode;
->>                 u8                      read_dummy;
->>                 u8                      program_opcode;
->>                 enum read_mode          flash_read;
->>
->>         } /* subset of struct spi_nor */
->>
-> 
-> I would just pass these as separate arguments to the function but whatver.
-> 
->> In m25p80.c:
->>
->>         static int m25p80_read(struct spi_nor *nor, loff_t from,
->>                                 size_t len, size_t *retlen,
->>                                 u_char *buf)
->>         {
->>                 struct spi_mtd_config_info info;
->>                 struct spi_device *spi;
->>
->>                 if (spi->master->spi_mtd_mmap_read) {
->>                   /* Populate spi_mtd_config_info */
->>                   spi->master->spi_mtd_mmap_read(&info, from, len,
->>                                                  retlen, buf);
->>                 }
->>                 else {
->>                 /* no mtd specific acceleration supported try normal
->>                  * SPI way of communicating with flash
->>                  * continue with current code
->>                  * set up spi_message and call spi_sync()
->>                  */
->>         }
->>
->>       }
->>
->> In spi-ti-qspi.c:
->> Implement spi_mtd_mmap_read while holding master->bus_lock mutex.
->>
-> 
+Well it does usually take me a day or two push my local branch out,
+however in this case I had actually dropped a ball somewhere.  I've
+been through my backlog of 'applied' patches and these two are the
+only ones I failed to pick.  I have now, re-picked, re-applied and
+pushed the branch out.  Let me know if something is still not right.
 
-I will re-submit patches based on the above idea, if there are no
-further comments..
+Sorry for the inconvenience.
 
--- 
-Thanks
-Vignesh
---
-To unsubscribe from this list: send the line "unsubscribe linux-spi" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> >>diff --git a/drivers/mfd/axp20x.c b/drivers/mfd/axp20x.c
+> >>index d9f2f96..3f576b7 100644
+> >>--- a/drivers/mfd/axp20x.c
+> >>+++ b/drivers/mfd/axp20x.c
+> >>@@ -140,6 +140,13 @@ static struct resource axp20x_pek_resources[] =
+=3D {
+> >>  	},
+> >>  };
+> >>
+> >>+static struct resource axp20x_usb_power_supply_resources[] =3D {
+> >>+	DEFINE_RES_IRQ_NAMED(AXP20X_IRQ_VBUS_PLUGIN, "VBUS_PLUGIN"),
+> >>+	DEFINE_RES_IRQ_NAMED(AXP20X_IRQ_VBUS_REMOVAL, "VBUS_REMOVAL"),
+> >>+	DEFINE_RES_IRQ_NAMED(AXP20X_IRQ_VBUS_VALID, "VBUS_VALID"),
+> >>+	DEFINE_RES_IRQ_NAMED(AXP20X_IRQ_VBUS_NOT_VALID, "VBUS_NOT_VALID")=
+,
+> >>+};
+> >>+
+> >>  static struct resource axp22x_pek_resources[] =3D {
+> >>  	{
+> >>  		.name   =3D "PEK_DBR",
+> >>@@ -432,11 +439,16 @@ static const struct regmap_irq_chip axp288_re=
+gmap_irq_chip =3D {
+> >>
+> >>  static struct mfd_cell axp20x_cells[] =3D {
+> >>  	{
+> >>-		.name			=3D "axp20x-pek",
+> >>-		.num_resources		=3D ARRAY_SIZE(axp20x_pek_resources),
+> >>-		.resources		=3D axp20x_pek_resources,
+> >>+		.name		=3D "axp20x-pek",
+> >>+		.num_resources	=3D ARRAY_SIZE(axp20x_pek_resources),
+> >>+		.resources	=3D axp20x_pek_resources,
+> >>  	}, {
+> >>-		.name			=3D "axp20x-regulator",
+> >>+		.name		=3D "axp20x-regulator",
+> >>+	}, {
+> >>+		.name		=3D "axp20x-usb-power-supply",
+> >>+		.of_compatible	=3D "x-powers,axp202-usb-power-supply",
+> >>+		.num_resources	=3D ARRAY_SIZE(axp20x_usb_power_supply_resources)=
+,
+> >>+		.resources	=3D axp20x_usb_power_supply_resources,
+> >>  	},
+> >>  };
+> >>
+> >
+
+--=20
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org =E2=94=82 Open source software for ARM SoCs
+=46ollow Linaro: Facebook | Twitter | Blog
