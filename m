@@ -1,214 +1,119 @@
-From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH V4 1/3] mfd: arizona: factor out DCVDD isolation control
-Date: Wed, 12 Aug 2015 15:42:57 +0100
-Message-ID: <20150812144257.GH18282@x1>
-References: <1439380692-7848-1-git-send-email-rf@opensource.wolfsonmicro.com>
- <1439380692-7848-2-git-send-email-rf@opensource.wolfsonmicro.com>
+From: Madalin-Cristian Bucur <madalin.bucur@freescale.com>
+Subject: RE: [PATCH 0/2] of: fsl/fman: reuse the fixed node parsing code
+Date: Wed, 12 Aug 2015 14:43:38 +0000
+Message-ID: <BL2PR03MB5458B9D2402DE68E9B9014AE67E0@BL2PR03MB545.namprd03.prod.outlook.com>
+References: <1438785745-15517-1-git-send-email-madalin.bucur@freescale.com>
+ <55C63D3B.5020005@gmail.com> <55CA1C14.3000202@list.ru>
+ <BL2PR03MB545D4E18DE41AE01AFC37D6E67F0@BL2PR03MB545.namprd03.prod.outlook.com>
+ <55CA29C8.5000707@list.ru>
+ <BL2PR03MB545929237EF33BA13089EC1E67E0@BL2PR03MB545.namprd03.prod.outlook.com>
+ <55CB50F1.7050308@list.ru>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1439380692-7848-2-git-send-email-rf-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Richard Fitzgerald <rf-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
-Cc: sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, patches-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <55CB50F1.7050308@list.ru>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Stas Sergeev <stsp@list.ru>, Florian Fainelli <f.fainelli@gmail.com>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Liberman Igal <Igal.Liberman@freescale.com>, Stas Sergeev <stsp@users.sourceforge.net>, "joakim.tjernlund@transmode.se" <joakim.tjernlund@transmode.se>, Shaohui Xie <Shaohui.Xie@freescale.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 12 Aug 2015, Richard Fitzgerald wrote:
-
-> Currently DCVDD isolation is enabled and disabled for
-> runtime_suspend and runtime_resume. Future codecs will not
-> have the isolation control so to prepare for these codecs
-> this patch factors out the isolation control allowing it to
-> be called as needed in the existing codec-specific switch cases.
->=20
-> Signed-off-by: Richard Fitzgerald <rf-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
-> ---
->  drivers/mfd/arizona-core.c | 108 ++++++++++++++++++++++++++---------=
-----------
->  1 file changed, 62 insertions(+), 46 deletions(-)
-
-=46or my own reference:
-  Acked-by: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-
-> diff --git a/drivers/mfd/arizona-core.c b/drivers/mfd/arizona-core.c
-> index bc814b0..33f3db4 100644
-> --- a/drivers/mfd/arizona-core.c
-> +++ b/drivers/mfd/arizona-core.c
-> @@ -462,6 +462,33 @@ static int wm5102_clear_write_sequencer(struct a=
-rizona *arizona)
->  }
-> =20
->  #ifdef CONFIG_PM
-> +static int arizona_isolate_dcvdd(struct arizona *arizona)
-> +{
-> +	int ret;
-> +
-> +	ret =3D regmap_update_bits(arizona->regmap,
-> +				 ARIZONA_ISOLATION_CONTROL,
-> +				 ARIZONA_ISOLATE_DCVDD1,
-> +				 ARIZONA_ISOLATE_DCVDD1);
-> +	if (ret !=3D 0)
-> +		dev_err(arizona->dev, "Failed to isolate DCVDD: %d\n", ret);
-> +
-> +	return ret;
-> +}
-> +
-> +static int arizona_connect_dcvdd(struct arizona *arizona)
-> +{
-> +	int ret;
-> +
-> +	ret =3D regmap_update_bits(arizona->regmap,
-> +				 ARIZONA_ISOLATION_CONTROL,
-> +				 ARIZONA_ISOLATE_DCVDD1, 0);
-> +	if (ret !=3D 0)
-> +		dev_err(arizona->dev, "Failed to connect DCVDD: %d\n", ret);
-> +
-> +	return ret;
-> +}
-> +
->  static int arizona_runtime_resume(struct device *dev)
->  {
->  	struct arizona *arizona =3D dev_get_drvdata(dev);
-> @@ -501,14 +528,9 @@ static int arizona_runtime_resume(struct device =
-*dev)
->  	switch (arizona->type) {
->  	case WM5102:
->  		if (arizona->external_dcvdd) {
-> -			ret =3D regmap_update_bits(arizona->regmap,
-> -						 ARIZONA_ISOLATION_CONTROL,
-> -						 ARIZONA_ISOLATE_DCVDD1, 0);
-> -			if (ret !=3D 0) {
-> -				dev_err(arizona->dev,
-> -					"Failed to connect DCVDD: %d\n", ret);
-> +			ret =3D arizona_connect_dcvdd(arizona);
-> +			if (ret !=3D 0)
->  				goto err;
-> -			}
->  		}
-> =20
->  		ret =3D wm5102_patch(arizona);
-> @@ -533,14 +555,9 @@ static int arizona_runtime_resume(struct device =
-*dev)
->  			goto err;
-> =20
->  		if (arizona->external_dcvdd) {
-> -			ret =3D regmap_update_bits(arizona->regmap,
-> -						 ARIZONA_ISOLATION_CONTROL,
-> -						 ARIZONA_ISOLATE_DCVDD1, 0);
-> -			if (ret) {
-> -				dev_err(arizona->dev,
-> -					"Failed to connect DCVDD: %d\n", ret);
-> +			ret =3D arizona_connect_dcvdd(arizona);
-> +			if (ret !=3D 0)
->  				goto err;
-> -			}
->  		} else {
->  			/*
->  			 * As this is only called for the internal regulator
-> @@ -572,14 +589,9 @@ static int arizona_runtime_resume(struct device =
-*dev)
->  		}
-> =20
->  		if (arizona->external_dcvdd) {
-> -			ret =3D regmap_update_bits(arizona->regmap,
-> -						 ARIZONA_ISOLATION_CONTROL,
-> -						 ARIZONA_ISOLATE_DCVDD1, 0);
-> -			if (ret !=3D 0) {
-> -				dev_err(arizona->dev,
-> -					"Failed to connect DCVDD: %d\n", ret);
-> +			ret =3D arizona_connect_dcvdd(arizona);
-> +			if (ret !=3D 0)
->  				goto err;
-> -			}
->  		}
->  		break;
->  	}
-> @@ -612,37 +624,36 @@ static int arizona_runtime_suspend(struct devic=
-e *dev)
->  		return ret;
->  	}
-> =20
-> -	if (arizona->external_dcvdd) {
-> -		ret =3D regmap_update_bits(arizona->regmap,
-> -					 ARIZONA_ISOLATION_CONTROL,
-> -					 ARIZONA_ISOLATE_DCVDD1,
-> -					 ARIZONA_ISOLATE_DCVDD1);
-> -		if (ret !=3D 0) {
-> -			dev_err(arizona->dev, "Failed to isolate DCVDD: %d\n",
-> -				ret);
-> -			return ret;
-> -		}
-> -	}
-> -
->  	switch (arizona->type) {
->  	case WM5110:
->  	case WM8280:
-> -		if (arizona->external_dcvdd)
-> -			break;
-> -
-> -		/*
-> -		 * As this is only called for the internal regulator
-> -		 * (where we know voltage ranges available) it is ok
-> -		 * to request an exact range.
-> -		 */
-> -		ret =3D regulator_set_voltage(arizona->dcvdd, 1175000, 1175000);
-> -		if (ret < 0) {
-> -			dev_err(arizona->dev,
-> -				"Failed to set suspend voltage: %d\n", ret);
-> -			return ret;
-> +		if (arizona->external_dcvdd) {
-> +			ret =3D arizona_isolate_dcvdd(arizona);
-> +			if (ret !=3D 0)
-> +				return ret;
-> +		} else {
-> +			/*
-> +			 * As this is only called for the internal regulator
-> +			 * (where we know voltage ranges available) it is ok
-> +			 * to request an exact range.
-> +			 */
-> +			ret =3D regulator_set_voltage(arizona->dcvdd,
-> +						    1175000, 1175000);
-> +			if (ret < 0) {
-> +				dev_err(arizona->dev,
-> +					"Failed to set suspend voltage: %d\n",
-> +					ret);
-> +				return ret;
-> +			}
->  		}
->  		break;
->  	case WM5102:
-> +		if (arizona->external_dcvdd) {
-> +			ret =3D arizona_isolate_dcvdd(arizona);
-> +			if (ret !=3D 0)
-> +				return ret;
-> +		}
-> +
->  		if (!(val & ARIZONA_JD1_ENA)) {
->  			ret =3D regmap_write(arizona->regmap,
->  					   ARIZONA_WRITE_SEQUENCER_CTRL_3, 0x0);
-> @@ -655,6 +666,11 @@ static int arizona_runtime_suspend(struct device=
- *dev)
->  		}
->  		break;
->  	default:
-> +		if (arizona->external_dcvdd) {
-> +			ret =3D arizona_isolate_dcvdd(arizona);
-> +			if (ret !=3D 0)
-> +				return ret;
-> +		}
->  		break;
->  	}
-> =20
-
---=20
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-=46ollow Linaro: Facebook | Twitter | Blog
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBTdGFzIFNlcmdlZXYgW21haWx0
+bzpzdHNwQGxpc3QucnVdDQo+DQo+IDEyLjA4LjIwMTUgMTY6MjYsIE1hZGFsaW4tQ3Jpc3RpYW4g
+QnVjdXIg0L/QuNGI0LXRgjoNCj4gPj4+IEkndmUgdHJpZWQgdG8gbWFrZSB0aGUgc21hbGxlc3Qg
+Y2hhbmdlcyB0aGF0IGFsbG93IG1lIHRvIHJldHJpZXZlIHRob3NlDQo+ID4+PiB3aXRob3V0IG1v
+ZGlmeWluZyBleGlzdGluZyBBUEkuDQo+ID4+PiBXaHkgaXMgaXQgaW1wb3J0YW50IHRvIGhpZGUg
+dGhlIGRlZmF1bHQgdmFsdWVzIGZyb20gdGhlIE1BQyBkcml2ZXI/DQo+ID4+IE15IHdvcnJ5IGlz
+IHRoYXQgdGhlIGZpeGVkIHZhbHVlcyBhcmUgbm90IHJlYWxseSBmaXhlZCwgYW5kDQo+ID4+IHRo
+ZXJlZm9yZSBhcmUgbm90IGFsd2F5cyB1c2VmdWwgdG8gYWNjZXNzIGRpcmVjdGx5LiBJdCBpcyBs
+aWtlbHkNCj4gPj4gbm90IGEgcHJvYmxlbSBmb3IgeW91ciB1c2UtY2FzZSwgYXMsIGFzIHlvdSBz
+YXksIHRoZSBBTiBpcw0KPiA+PiBkaXNhYmxlZCwgYnV0IHRoaXMgaXMgcHJvYmFibHkgbm90IHRo
+ZSBiZXN0IHRvIGRvIGluIGdlbmVyYWwuDQo+ID4gWWVzLCBub3QgYSBwcm9ibGVtIGluIG15IGNh
+c2UuDQo+ID4NCj4gPj4gQW5kIGFsc28geW91IGRvOg0KPiA+PiAtLS0NCj4gPj4NCj4gPj4gLQkJ
+ZXJyID0gb2ZfcGh5X3JlZ2lzdGVyX2ZpeGVkX2xpbmsobWFjX25vZGUpOw0KPiA+PiAtCQlpZiAo
+ZXJyKQ0KPiA+PiArCQlzdHJ1Y3QgcGh5X2RldmljZSAqcGh5Ow0KPiA+PiArDQo+ID4+ICsJCW1h
+Y19kZXYtPmZpeGVkX2xpbmsgPSBremFsbG9jKHNpemVvZigqbWFjX2Rldi0NCj4gPj4+IGZpeGVk
+X2xpbmspLA0KPiA+PiArCQkJCQkgICAgICBHRlBfS0VSTkVMKTsNCj4gPj4gKwkJaWYgKG9mX3Bo
+eV9wYXJzZV9maXhlZF9saW5rKG1hY19ub2RlLCBtYWNfZGV2LQ0KPiA+Pj4gZml4ZWRfbGluaykp
+DQo+ID4+ICsJCQlnb3RvIF9yZXR1cm5fZGV2X3NldF9kcnZkYXRhOw0KPiA+PiArDQo+ID4+ICsJ
+CXBoeSA9IGZpeGVkX3BoeV9yZWdpc3RlcihQSFlfUE9MTCwgbWFjX2Rldi0+Zml4ZWRfbGluaywN
+Cj4gPj4gKwkJCQkJIG1hY19ub2RlKTsNCj4gPj4NCj4gPj4gLS0tDQo+ID4+DQo+ID4+IHdoaWNo
+IG1lYW5zIHlvdSByZWFsbHkgd2FudCB0byBjaXJjdW12ZW50IHRoZSBjdXJyZW50IE9GDQo+ID4+
+IGFwaSBxdWl0ZSBhIGxvdCwgd2l0aG91dCBzYXlpbmcgd2h5IGluIHRoZSBwYXRjaCBkZXNjcmlw
+dGlvbi4NCj4gPiBJIGNpcmN1bXZlbnQgdGhlIEFQSSBiZWNhdXNlIEkgZGluIG5vdCB3YW50IHRv
+IGNoYW5nZSBleGlzdGluZyBBUEkuDQo+ID4gSWYgSSBjb3VsZCBnZXQgYSByZWZlcmVuY2UgdG8g
+dGhlIHN0YXR1cyBzdHJ1Y3Qgd2l0aG91dCBjaGFuZ2luZyBhbnkgY29kZQ0KPiA+IG9yIHdpdGhv
+dXQgYmVpbmcgcmVxdWlyZWQgdG8gY2FsbCBieSBteXNlbGYgZml4ZWRfcGh5X3JlZ2lzdGVyKCks
+IEkNCj4gPiB3b3VsZCBvZiBkb25lIHRoYXQuIEdpdmVuIHRoZSBleGlzdGluZyBjb2RlIGluDQo+
+IG9mX3BoeV9yZWdpc3Rlcl9maXhlZF9saW5rKCksDQo+ID4gdGhpcyB3YXMgbXkgb25seSBvcHRp
+b24uIEkgY291bGQgaGF2ZSBicm9rZW4gb2ZfcGh5X3JlZ2lzdGVyX2ZpeGVkX2xpbmsoKQ0KPiA+
+IGluIHR3byBmdW5jdGlvbnM6DQo+ID4NCj4gPiBvZl9waHlfcGFyc2VfZml4ZWRfbGluaygpIGFu
+ZCBvZl9waHlfcmVnaXN0ZXJfZml4ZWRfbGluaygpLCB0aGUgbGF0dGVyDQo+IGRvaW5nIG9ubHkN
+Cj4gPiB0aGUgY2FsbCB0byBmaXhlZF9waHlfcmVnaXN0ZXIoKQ0KPiA+DQo+ID4gdGhhdCB3b3Vs
+ZCBhbGxvdyB0byBrZWVwIG9mX3BoeV9yZWdpc3Rlcl9maXhlZF9saW5rKCkgYXMgaXQgaXMsIGJy
+b2tlbiBpbg0KPiB0d28gc3RhZ2VzOg0KPiA+DQo+ID4gLSBwYXJzaW5nDQo+ID4gLSByZWdpc3Rl
+cmluZw0KPiA+DQo+ID4gdGhhbiBjYW4gYmUgdXNlZCBieSBvdGhlciBkcml2ZXJzIGluIG9yZGVy
+IHRvIGdldCB0aGUgc3RhdHVzIGJ1dCBJIHRoaW5rIGl0J3MNCj4gb3ZlcmtpbGwuDQo+IFdoYXQg
+SSByZWZlcnJlZCB0byBhcyAiY2lyY3VtdmVudGluZyBhbiBBUEkiIGlzIHRoYXQgeW91IGRvDQo+
+IHBoeSA9IGZpeGVkX3BoeV9yZWdpc3RlcihQSFlfUE9MTCwgbWFjX2Rldi0+Zml4ZWRfbGluaywg
+KyBtYWNfbm9kZSk7DQo+IGJ5IGhhbmRzLCBpbnN0ZWFkIG9mIGxldHRpbmcgdGhlIG9mX3BoeV9y
+ZWdpc3Rlcl9maXhlZF9saW5rKCkgZG9pbmcgc28uDQo+IA0KPiBIb3cgYWJvdXQgYSBzbWFsbGVy
+IGNpcmN1bXZlbnRpb24sIGxpa2UgdGhpcyBmb3IgaW5zdGFuY2U6DQo+IC0tLQ0KPiBlcnIgPSBv
+Zl9waHlfcmVnaXN0ZXJfZml4ZWRfbGluayhtYWNfbm9kZSk7DQo+IHBoeSA9IG9mX3BoeV9maW5k
+X2RldmljZShkbik7DQo+IHN0YXR1cyA9IGZpeGVkX3BoeV9nZXRfbGlua19zdGF0dXMocGh5KTsg
+ICAgLy8gbm8gc3VjaCBmdW5jLCB0byBiZSBjb2RlZCB1cA0KPiAtLS0NCj4gDQo+IE9yIGV2ZW4g
+bGlrZSB0aGlzOg0KPiAtLS0NCj4gZXJyID0gb2ZfcGh5X3JlZ2lzdGVyX2ZpeGVkX2xpbmsobWFj
+X25vZGUpOw0KPiBwaHkgPSBvZl9waHlfZmluZF9kZXZpY2UoZG4pOw0KPiBzZXRfc3BlZWRfYW5k
+X2R1cGxleChwaHktPnNwZWVkLCBwaHktPmR1cGxleCk7ICAgIC8vIG5vdCBzdXJlIGlmIHRoZXNl
+DQo+IHZhbHVlcyBhcmUgYXZhaWxhYmxlIHRoYXQgZWFybHkNCj4gLS0tDQoNCkFmdGVyIG15IHBh
+dGNoLCBhbGwgdGhhdCBvZl9waHlfcmVnaXN0ZXJfZml4ZWRfbGluaygpIGRvZXMgaXMgdG8gY2Fs
+bA0KdGhlIG5ldyBwYXJzaW5nIGZ1bmN0aW9uIEkgaW50cm9kdWNlZCB0aGVuIHJlZ2lzdGVyIHRo
+ZSBmaXhlZCBQSFkuDQpJIGNvdWxkIGhhdmUgZG9uZSB0aGlzIChwc2V1ZG9jb2RlKToNCg0KLSBh
+ZGQgb2ZfcGh5X3BhcnNlX2ZpeGVkX2xpbmsoKSBhcyBzZWVuIGluIHRoZSBwYXRjaA0KLSBhZGQg
+b2ZfcGh5X3JlZ2lzdGVyX2ZpeGVkX3BoeSgpIHRoYXQganVzdCBjYWxscyBmaXhlZF9waHlfcmVn
+aXN0ZXIoKToNCg0KaW50IG9mX3BoeV9yZWdpc3Rlcl9maXhlZF9waHkobm9kZSkNCnsNCglwaHkg
+PSBmaXhlZF9waHlfcmVnaXN0ZXIoUEhZX1BPTEwsIG1hY19kZXYtPmZpeGVkX2xpbmssDQoJCQkJ
+ICAgICBtYWNfbm9kZSk7DQoJcmV0dXJuICghcGh5KTsNCn0NCg0KLSBjaGFuZ2Ugb2ZfcGh5X3Jl
+Z2lzdGVyX2ZpeGVkX2xpbmsoKSB0byBjb250YWluIG9ubHkgdGhpczoNCg0KaW50IG9mX3BoeV9y
+ZWdpc3Rlcl9maXhlZF9saW5rKG5vZGUpDQp7DQoJb2ZfcGh5X3BhcnNlX2ZpeGVkX2xpbmsobm9k
+ZSwgJnN0YXR1cyk7DQoNCglyZXR1cm4gb2ZfcGh5X3JlZ2lzdGVyX2ZpeGVkX3BoeShub2RlKTsN
+Cn0NCg0KVGhlbiBJIGNvdWxkIGNhbGwgb25seSBvZl8qIGZ1bmN0aW9ucyBidXQgdGhlIGVuZCBy
+ZXN1bHQgd291bGQgYmUgdGhlIHNhbWUgYW5kDQpvZl9waHlfcmVnaXN0ZXJfZml4ZWRfcGh5KCkg
+d291bGQgbm90IGp1c3RpZnkgaXRzIGV4aXN0ZW5jZSB0aGF0IG11Y2guLi4NCg0KVGhlIGdldHRl
+ciBmb3Igc3RhdHVzIHlvdSBzdWdnZXN0IHdvdWxkIGJlIGZpbmUsIGJ1dCBub3Qgc3VyZSBob3cg
+b25lIHdvdWxkIHJldHJpZXZlDQppdCBmcm9tIHRoZSBtYWNfbm9kZSB1bmxlc3Mgd2UgY2hhbmdl
+IG9mX3BoeV9yZWdpc3Rlcl9maXhlZF9saW5rKCkgdG8gcmV0dXJuIHRoZQ0KcG9pbnRlciB0byBw
+aHkgKGFuZCBhbGwgdGhlIGRyaXZlcnMgdGhhdCB1c2UgaXQuLi4pLg0KDQo+IA0KPiBBbHNvIEkg
+bWVhbnQgdGhlIGRlc2NyaXB0aW9uIHNob3VsZCBoYXZlIGJlZW4gaW4gdGhlIHBhdGNoLA0KPiBu
+b3QgaW4gdGhlIGUtbWFpbC4gOikgWW91IG9ubHkgd3JvdGUgX3doYXRfIHRoZSBwYXRjaCBkb2Vz
+DQo+ICh3aGljaCBpcyBvZiBjb3Vyc2Ugb2J2aW91cyBmcm9tIHRoZSBjb2RlIGl0c2VsZiksIGJ1
+dCBub3QNCj4gX3doeV8gYW5kIF93aGF0IHdhcyBmaXhlZF8gKHdoYXQgZGlkbid0IHdvcmspLg0K
+PiANCg0KDQpJZiB5b3UgcmVmZXIgdG8gdGhlIGZpcnN0LCBzZXBhcmF0aW9uIHBhdGNoLCBJIHRo
+b3VnaHQgdGhlIGRlc2NyaXB0aW9uIHdhcyBlbm91Z2g6DQoNCiAgICBvZjogc2VwYXJhdGUgZml4
+ZWQgbGluayBwYXJzaW5nIGZyb20gcmVnaXN0cmF0aW9uDQogICAgDQogICAgU29tZSBkcml2ZXJz
+IG1heSBuZWVkIHRvIHBhcnNlIHRoZSBmaXhlZCBsaW5rIHZhbHVlcyBiZWZvcmUgcmVnaXN0ZXJp
+bmcNCiAgICB0aGUgZml4ZWQgbGluayBwaHkuIFNlcGFyYXRlIHRoZSBwYXJzaW5nIGZyb20gdGhl
+IGFjdHVhbCByZWdpc3RyYXRpb24NCiAgICBhbmQgcHJvdmlkZSBhbiBleHBvcnQgZm9yIHRoZSBh
+ZGRlZCBwYXJzaW5nIGZ1bmN0aW9uLg0KICAgIA0KICAgIFNpZ25lZC1vZmYtYnk6IE1hZGFsaW4g
+QnVjdXIgPG1hZGFsaW4uYnVjdXJAZnJlZXNjYWxlLmNvbT4NCg0KRm9yIHRoaXMgb25lIGl0IHdh
+cyBhIGJpdCBicmllZiwgSSBhZG1pdCAtIHRoZSBsb25nZXIgdmVyc2lvbiB3b3VsZCBiZSB0aGF0
+IGJlZm9yZSBpdA0Kd2Ugd2VyZSBub3QgdXNpbmcgZnJvbSBmaXhlZCBsaW5rIGFueXRoaW5nIGVs
+c2UgYnV0IHRoZSBmYWN0IHRoZSBsaW5rIHdhcyBmaXhlZA0KKGlnbm9yZWQgYWN0dWFsIHNwZWVk
+LCBkdXBsZXggdmFsdWVzIHRoZXJlKSBhbmQgdGhpcyBwYXRjaCB0cmllcyB0byBmaXggdGhhdC4N
+CkluIHRoZSBlbmQgdGhpcyBwYXRjaCB3aWxsIGJlIHNxdWFzaGVkIGluIGEgbmV3IEZNYW4gcGF0
+Y2ggc2V0LCBsZXQgbWUgdXNlIHRoYXQgYXMNCmFuIGV4Y3VzZSBmb3IgdGhlIGJyaWVmIGNvbW1p
+dCBsb2cgOikNCg0KPHNuaXA+DQoNCj4gPiAgIFlvdSBhcmUgY29uY2VybmVkIGFib3V0IHBlb3Bs
+ZQ0KPiA+IGFidXNpbmcgdGhpcyBBUEkgdG8gcmVhZCBmaXhlZCBsaW5rIHN0YXR1cyB3aGVuIHRo
+ZSBsaW5rIGlzIG5vdCByZWFsbHkgZml4ZWQsIEknbQ0KPiBjb25jZXJuZWQNCj4gPiBhYm91dCBk
+ZWNsYXJpbmcgdGhlIGxpbmsgYXMgZml4ZWQtbGluayB3aGVuIGl0J3Mgbm90LiBNYXliZSB0aGUN
+Cj4gbmFtaW5nL2JpbmRpbmcgbmVlZHMgdG8gYmUNCj4gPiByZXZpc2VkIHRvIGNvdmVyIHRoZSBj
+YXNlIHdoZW4gYWxsIGlzIGZpeGVkIGJ1dCB0aGUgbGluay4NCj4gWWVzLCBuYW1pbmcgaXMgdGhl
+IHByb2JsZW0uIGZpeGVkLWxpbmsgaXMganVzdCBhIGJhZCBuYW1lLg0KPiBTZWUgaG93IGl0IGlz
+IGRlZmluZWQ6DQo+IC0tLQ0KPiBTb21lIEV0aGVybmV0IE1BQ3MgaGF2ZSBhICJmaXhlZCBsaW5r
+IiwgYW5kIGFyZSBub3QgY29ubmVjdGVkIHRvIGENCj4gbm9ybWFsIE1ESU8tbWFuYWdlZCBQSFkg
+ZGV2aWNlLg0KPiAtLS0NCj4gVG8gbWUgdGhpcyBtZWFucyBhbnkgbm9uLU1ESU8gUEhZIGNvbm5l
+Y3Rpb24sIGJ1dA0KPiB1bmZvcnR1bmF0ZWx5IHRoZSBuYW1lICJmaXhlZC1saW5rIiBzdWdnZXN0
+cyBhIGJpdCBtb3JlDQo+IHRoYW4gYWR2ZXJ0aXNlZC4gOigNCg0KWWVzLCBtYXliZSB0aGUgbmV3
+IGJpbmRpbmcgY291bGQgYmUgdXBkYXRlZCB0byBsb2FkIHNlbWFudGljYWxseSB0aGUgcHJlc2Vu
+Y2UNCm9yIGFic2VuY2Ugb2YgY2VydGFpbiBwYXJhbWV0ZXJzIHN1Y2ggYXMgbGluay4NCg==
