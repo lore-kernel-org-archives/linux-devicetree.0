@@ -1,188 +1,49 @@
-From: Richard Fitzgerald <rf@opensource.wolfsonmicro.com>
-Subject: [PATCH V4 1/3] mfd: arizona: factor out DCVDD isolation control
-Date: Wed, 12 Aug 2015 12:58:10 +0100
-Message-ID: <1439380692-7848-2-git-send-email-rf@opensource.wolfsonmicro.com>
-References: <1439380692-7848-1-git-send-email-rf@opensource.wolfsonmicro.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1439380692-7848-1-git-send-email-rf@opensource.wolfsonmicro.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: lee.jones@linaro.org
-Cc: sameo@linux.intel.com, patches@opensource.wolfsonmicro.com, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+From: Hans de Goede <hdegoede@redhat.com>
+Subject: Re: [PATCH v3 4/4] power: Add an axp20x-usb-power driver
+Date: Wed, 12 Aug 2015 14:22:00 +0200
+Message-ID: <55CB3A68.5080001@redhat.com>
+References: <1435316357-26606-1-git-send-email-hdegoede@redhat.com>
+ <1435316357-26606-4-git-send-email-hdegoede@redhat.com>
+ <20150724151020.GH27569@earth>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=windows-1252;
+	format=flowed
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <20150724151020.GH27569@earth>
+Sender: linux-pm-owner@vger.kernel.org
+To: Sebastian Reichel <sre@kernel.org>
+Cc: Lee Jones <lee.jones@linaro.org>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, David Woodhouse <dwmw2@infradead.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, =?UTF-8?Q?Bruno_Pr=c3=a9mont?= <bonbons@linux-vserver.org>, linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree <devicetree@vger.kernel.org>, linux-sunxi@googlegroups.com, Chen-Yu Tsai <wens@csie.org>
 List-Id: devicetree@vger.kernel.org
 
-Currently DCVDD isolation is enabled and disabled for
-runtime_suspend and runtime_resume. Future codecs will not
-have the isolation control so to prepare for these codecs
-this patch factors out the isolation control allowing it to
-be called as needed in the existing codec-specific switch cases.
+Hi Sebastian,
 
-Signed-off-by: Richard Fitzgerald <rf@opensource.wolfsonmicro.com>
----
- drivers/mfd/arizona-core.c | 108 ++++++++++++++++++++++++++-------------------
- 1 file changed, 62 insertions(+), 46 deletions(-)
+On 24-07-15 17:10, Sebastian Reichel wrote:
+> Hi,
+>
+> On Fri, Jun 26, 2015 at 12:59:17PM +0200, Hans de Goede wrote:
+>> This adds a driver for the usb power_supply bits of the axp20x PMICs=
+=2E
+>>
+>> I initially started writing my own driver, before coming aware of
+>> Bruno Pr=E9mont's excellent earlier RFC with a driver for this.
+>>
+>> My driver was lacking CURRENT_MAX and VOLTAGE_MIN support Bruno's
+>> drvier has, so I've copied the code for those from his driver.
+>>
+>> Note that the AC-power-supply and battery charger bits will need sep=
+arate
+>> drivers. Each one needs its own devictree child-node so that other
+>> devicetree nodes can reference the right power-supply, and thus each=
+ one
+>> will get its own mfd-cell / platform_device and platform-driver.
+>
+> Once the other comments have been taken care of, the driver looks ok
+> to me.
 
-diff --git a/drivers/mfd/arizona-core.c b/drivers/mfd/arizona-core.c
-index bc814b0..33f3db4 100644
---- a/drivers/mfd/arizona-core.c
-+++ b/drivers/mfd/arizona-core.c
-@@ -462,6 +462,33 @@ static int wm5102_clear_write_sequencer(struct arizona *arizona)
- }
- 
- #ifdef CONFIG_PM
-+static int arizona_isolate_dcvdd(struct arizona *arizona)
-+{
-+	int ret;
-+
-+	ret = regmap_update_bits(arizona->regmap,
-+				 ARIZONA_ISOLATION_CONTROL,
-+				 ARIZONA_ISOLATE_DCVDD1,
-+				 ARIZONA_ISOLATE_DCVDD1);
-+	if (ret != 0)
-+		dev_err(arizona->dev, "Failed to isolate DCVDD: %d\n", ret);
-+
-+	return ret;
-+}
-+
-+static int arizona_connect_dcvdd(struct arizona *arizona)
-+{
-+	int ret;
-+
-+	ret = regmap_update_bits(arizona->regmap,
-+				 ARIZONA_ISOLATION_CONTROL,
-+				 ARIZONA_ISOLATE_DCVDD1, 0);
-+	if (ret != 0)
-+		dev_err(arizona->dev, "Failed to connect DCVDD: %d\n", ret);
-+
-+	return ret;
-+}
-+
- static int arizona_runtime_resume(struct device *dev)
- {
- 	struct arizona *arizona = dev_get_drvdata(dev);
-@@ -501,14 +528,9 @@ static int arizona_runtime_resume(struct device *dev)
- 	switch (arizona->type) {
- 	case WM5102:
- 		if (arizona->external_dcvdd) {
--			ret = regmap_update_bits(arizona->regmap,
--						 ARIZONA_ISOLATION_CONTROL,
--						 ARIZONA_ISOLATE_DCVDD1, 0);
--			if (ret != 0) {
--				dev_err(arizona->dev,
--					"Failed to connect DCVDD: %d\n", ret);
-+			ret = arizona_connect_dcvdd(arizona);
-+			if (ret != 0)
- 				goto err;
--			}
- 		}
- 
- 		ret = wm5102_patch(arizona);
-@@ -533,14 +555,9 @@ static int arizona_runtime_resume(struct device *dev)
- 			goto err;
- 
- 		if (arizona->external_dcvdd) {
--			ret = regmap_update_bits(arizona->regmap,
--						 ARIZONA_ISOLATION_CONTROL,
--						 ARIZONA_ISOLATE_DCVDD1, 0);
--			if (ret) {
--				dev_err(arizona->dev,
--					"Failed to connect DCVDD: %d\n", ret);
-+			ret = arizona_connect_dcvdd(arizona);
-+			if (ret != 0)
- 				goto err;
--			}
- 		} else {
- 			/*
- 			 * As this is only called for the internal regulator
-@@ -572,14 +589,9 @@ static int arizona_runtime_resume(struct device *dev)
- 		}
- 
- 		if (arizona->external_dcvdd) {
--			ret = regmap_update_bits(arizona->regmap,
--						 ARIZONA_ISOLATION_CONTROL,
--						 ARIZONA_ISOLATE_DCVDD1, 0);
--			if (ret != 0) {
--				dev_err(arizona->dev,
--					"Failed to connect DCVDD: %d\n", ret);
-+			ret = arizona_connect_dcvdd(arizona);
-+			if (ret != 0)
- 				goto err;
--			}
- 		}
- 		break;
- 	}
-@@ -612,37 +624,36 @@ static int arizona_runtime_suspend(struct device *dev)
- 		return ret;
- 	}
- 
--	if (arizona->external_dcvdd) {
--		ret = regmap_update_bits(arizona->regmap,
--					 ARIZONA_ISOLATION_CONTROL,
--					 ARIZONA_ISOLATE_DCVDD1,
--					 ARIZONA_ISOLATE_DCVDD1);
--		if (ret != 0) {
--			dev_err(arizona->dev, "Failed to isolate DCVDD: %d\n",
--				ret);
--			return ret;
--		}
--	}
--
- 	switch (arizona->type) {
- 	case WM5110:
- 	case WM8280:
--		if (arizona->external_dcvdd)
--			break;
--
--		/*
--		 * As this is only called for the internal regulator
--		 * (where we know voltage ranges available) it is ok
--		 * to request an exact range.
--		 */
--		ret = regulator_set_voltage(arizona->dcvdd, 1175000, 1175000);
--		if (ret < 0) {
--			dev_err(arizona->dev,
--				"Failed to set suspend voltage: %d\n", ret);
--			return ret;
-+		if (arizona->external_dcvdd) {
-+			ret = arizona_isolate_dcvdd(arizona);
-+			if (ret != 0)
-+				return ret;
-+		} else {
-+			/*
-+			 * As this is only called for the internal regulator
-+			 * (where we know voltage ranges available) it is ok
-+			 * to request an exact range.
-+			 */
-+			ret = regulator_set_voltage(arizona->dcvdd,
-+						    1175000, 1175000);
-+			if (ret < 0) {
-+				dev_err(arizona->dev,
-+					"Failed to set suspend voltage: %d\n",
-+					ret);
-+				return ret;
-+			}
- 		}
- 		break;
- 	case WM5102:
-+		if (arizona->external_dcvdd) {
-+			ret = arizona_isolate_dcvdd(arizona);
-+			if (ret != 0)
-+				return ret;
-+		}
-+
- 		if (!(val & ARIZONA_JD1_ENA)) {
- 			ret = regmap_write(arizona->regmap,
- 					   ARIZONA_WRITE_SEQUENCER_CTRL_3, 0x0);
-@@ -655,6 +666,11 @@ static int arizona_runtime_suspend(struct device *dev)
- 		}
- 		break;
- 	default:
-+		if (arizona->external_dcvdd) {
-+			ret = arizona_isolate_dcvdd(arizona);
-+			if (ret != 0)
-+				return ret;
-+		}
- 		break;
- 	}
- 
--- 
-1.9.1
+I send out a v4 taking care of the other comments a while back, any
+news on this? Anything I need todo from my side to get things moving?
+
+Thanks & Regards,
+
+Hans
