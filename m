@@ -1,49 +1,91 @@
-From: Hans de Goede <hdegoede@redhat.com>
-Subject: Re: [PATCH v3 4/4] power: Add an axp20x-usb-power driver
-Date: Wed, 12 Aug 2015 14:22:00 +0200
-Message-ID: <55CB3A68.5080001@redhat.com>
-References: <1435316357-26606-1-git-send-email-hdegoede@redhat.com>
- <1435316357-26606-4-git-send-email-hdegoede@redhat.com>
- <20150724151020.GH27569@earth>
+From: Yong Wu <yong.wu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH v4 5/6] iommu/mediatek: Add mt8173 IOMMU driver
+Date: Wed, 12 Aug 2015 20:28:08 +0800
+Message-ID: <1439382488.7382.23.camel@mhfsdcap03>
+References: <1438597279-2937-1-git-send-email-yong.wu@mediatek.com>
+	<1438597279-2937-6-git-send-email-yong.wu@mediatek.com>
+	<20150811153947.GF14980@8bytes.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252;
-	format=flowed
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <20150724151020.GH27569@earth>
-Sender: linux-pm-owner@vger.kernel.org
-To: Sebastian Reichel <sre@kernel.org>
-Cc: Lee Jones <lee.jones@linaro.org>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, David Woodhouse <dwmw2@infradead.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, =?UTF-8?Q?Bruno_Pr=c3=a9mont?= <bonbons@linux-vserver.org>, linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree <devicetree@vger.kernel.org>, linux-sunxi@googlegroups.com, Chen-Yu Tsai <wens@csie.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+In-Reply-To: <20150811153947.GF14980-zLv9SwRftAIdnm+yROfE0A@public.gmane.org>
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: Joerg Roedel <joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, youhua.li-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, k.zhang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, Tomasz Figa <tfiga-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, pebolle-IWqWACnzNjzz+pZb47iToQ@public.gmane.org, frederic.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, Daniel Kurtz <djkurtz-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Sasha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Sebastian,
-
-On 24-07-15 17:10, Sebastian Reichel wrote:
-> Hi,
->
-> On Fri, Jun 26, 2015 at 12:59:17PM +0200, Hans de Goede wrote:
->> This adds a driver for the usb power_supply bits of the axp20x PMICs=
-=2E
->>
->> I initially started writing my own driver, before coming aware of
->> Bruno Pr=E9mont's excellent earlier RFC with a driver for this.
->>
->> My driver was lacking CURRENT_MAX and VOLTAGE_MIN support Bruno's
->> drvier has, so I've copied the code for those from his driver.
->>
->> Note that the AC-power-supply and battery charger bits will need sep=
-arate
->> drivers. Each one needs its own devictree child-node so that other
->> devicetree nodes can reference the right power-supply, and thus each=
- one
->> will get its own mfd-cell / platform_device and platform-driver.
->
-> Once the other comments have been taken care of, the driver looks ok
-> to me.
-
-I send out a v4 taking care of the other comments a while back, any
-news on this? Anything I need todo from my side to get things moving?
-
-Thanks & Regards,
-
-Hans
+T24gVHVlLCAyMDE1LTA4LTExIGF0IDE3OjM5ICswMjAwLCBKb2VyZyBSb2VkZWwgd3JvdGU6Cj4g
+T24gTW9uLCBBdWcgMDMsIDIwMTUgYXQgMDY6MjE6MThQTSArMDgwMCwgWW9uZyBXdSB3cm90ZToK
+PiA+ICsvKgo+ID4gKyAqIFRoZXJlIGlzIG9ubHkgb25lIGlvbW11IGRvbWFpbiBjYWxsZWQgdGhl
+IG00dSBkb21haW4gdGhhdAo+ID4gKyAqIGFsbCBNdWx0aW1lZGlhIG1vZHVsZXMgc2hhcmUuCj4g
+PiArICovCj4gPiArc3RhdGljIHN0cnVjdCBtdGtfaW9tbXVfZG9tYWluCSptNHVkb207Cj4gCj4g
+V2hhdCBpcyB0aGUgcmVhc29uIHlvdSBvbmx5IGltcGxlbWVudCBvbmUgZG9tYWluPyBDYW4ndCB0
+aGUgSU9NTVUKPiBpc29sYXRlIGRpZmZlcmVudCBkZXZpY2VzIGZyb20gZWFjaCBvdGhlcj8KSGkg
+Sm9lcmcsCgogIFRoYW5rcyBmb3IgeW91ciByZXZpZXcuCiAgRnJvbSB5b3VyIGNvbW1lbnQsIHlv
+dSBtYXkgY2FyZSB0aGF0IHdlIHVzZSBvbmx5IG9uZSBkb21haW4uCgogIE91ciBIVyBpcyBjYWxs
+ZWQgbTR1KE11bHRpTWVkaWEgTWVtb3J5IE1hbmFnZW1lbnQgVW5pdCkgd2hpY2gKaGVscCBhbGwg
+dGhlIG11bHRpbWVkaWEgaGFyZHdhcmUgYWNjZXNzIHRoZSBkcmFtLCBpbmNsdWRlIGRpc3BsYXks
+dmlkZW8KZGVjb2RlLHZpZGVvIGVuY29kZSxjYW1lcmEsbWRwLGV0Yy4gQW5kIHRoZSBtNHUgaGFz
+IG9ubHkgb25lIHBhZ2V0YWJsZS4KKEFjdHVhbGx5IHRoZXJlIGlzIHR3byBwYWdldGFibGVzIGlu
+IG00dSwgb25lIGlzIHRoZSBub3JtYWwgcGFnZXRhYmxlLAp0aGUgb3RoZXIgaXMgc2VjdXJpdHkg
+cGFnZXRhYmxlLiBDdXJyZW50bHkgV2UgZG9uJ3QgaW1wbGVtZW50IHRoZQpzZWN1cml0eSBvbmUs
+IHNvIHRoZXJlIGlzIG9ubHkgb25lIHBhZ2V0YWJsZSBoZXJlLikKVGhhdCBpcyB0byBzYXkgYWxs
+IHRoZSBtdWx0aW1lZGlhIGRldmljZXMgYXJlIGluIHRoZSBtNHUgZG9tYWluIGFuZApzaGFyZSB0
+aGUgbTR14oCZcyBwYWdldGFibGUuCgpTbyBXZSBoYXZlIG9ubHkgb25lIGRvbWFpbiBoZXJlLi4K
+Cj4gPiArc3RhdGljIHN0cnVjdCBpb21tdV9kb21haW4gKm10a19pb21tdV9kb21haW5fYWxsb2Mo
+dW5zaWduZWQgdHlwZSkKPiA+ICt7Cj4gPiArCXN0cnVjdCBtdGtfaW9tbXVfZG9tYWluICpwcml2
+Owo+ID4gKwo+ID4gKwlpZiAodHlwZSAhPSBJT01NVV9ET01BSU5fVU5NQU5BR0VEICYmIHR5cGUg
+IT0gSU9NTVVfRE9NQUlOX0RNQSkKPiA+ICsJCXJldHVybiBOVUxMOwo+ID4gKwo+ID4gKwlpZiAo
+bTR1ZG9tKS8qIFRoZSBtNHUgZG9tYWluIGV4aXN0LiAqLwo+ID4gKwkJcmV0dXJuICZtNHVkb20t
+PmRvbWFpbjsKPiAKPiBUaGlzIGlzIG5vdCBnb2luZyB0byB3b3JrLiBJZiB5b3UgYWx3YXlzIHJl
+dHVybiB0aGUgc2FtZSBkb21haW4gdGhlCj4gaW9tbXUgY29yZSBtaWdodCByZS1pbml0aWFsaXpl
+IGRvbWFpbiBzdGF0ZSAoYW5kIG92ZXJ3cml0ZSBjaGFuZ2VkCj4gc3RhdGUpLiBBdCB0aGUgbW9t
+ZW50IHRoaXMgaXMgb25seSB0aGUgZG9tYWluLXR5cGUgd2hpY2ggd2lsbCBjaGFuZ2UKPiBldmVy
+eSB0aW1lIHRoaXMgZnVuY3Rpb24gaXMgY2FsbGVkLCBidXQgdGhlcmUgbWlnaHQgYmUgbW9yZS4K
+CkluIG91ciB2M1sxXSwgIEkgZGlkbid0IHJldHVybiB0aGUgc2FtZSBkb21haW4sIFRoZW4gSSBo
+YXZlIHRvIHRyaWNrIGluCmF0dGFjaF9kZXZpY2UgbGlrZSBiZWxvdzoKLy89PT09PT09PT09PT0K
+c3RhdGljIGludCBtdGtfaW9tbXVfYXR0YWNoX2RldmljZShzdHJ1Y3QgaW9tbXVfZG9tYWluICpk
+b21haW4sCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBzdHJ1Y3QgZGV2aWNlICpk
+ZXYpCnsKICAgICAgICBzdHJ1Y3QgZGV2aWNlICppbXVkZXYgPSB4eHh4OwogICAgICAgIC8qCiAg
+ICAgICAgICogUmVzZXJ2ZSBvbmUgaW9tbXUgZG9tYWluIGFzIHRoZSBtNHUgZG9tYWluIHdoaWNo
+CiAgICAgICAgICogYWxsIE11bHRpbWVkaWEgbW9kdWxlcyBzaGFyZSBhbmQgZnJlZSB0aGUgb3Ro
+ZXJzLgogICAgICAgICAqLwogICAgICAgIGlmICghaW11ZGV2LT5hcmNoZGF0YS5pb21tdSkKICAg
+ICAgICAgICAgICAgaW11ZGV2LT5hcmNoZGF0YS5pb21tdSA9IHByaXY7CiAgICAgICAgZWxzZSBp
+ZiAoaW11ZGV2LT5hcmNoZGF0YS5pb21tdSAhPSBwcml2KQogICAgICAgICAgICAgICBpb21tdV9k
+b21haW5fZnJlZShkb21haW4pOwogICAgICAgIHh4eHgKfQovLz09PT09PT09PT09PT09CkluIHRo
+aXMgdmVyc2lvbiwgSSB1c2VkIGEgZ2xvYmFsIHZhcmlhYmxlIHRvIHJlY29yZCB0aGUgbTR1IGRv
+bWFpbiB0aGVuCkkgY2FuIGRlbGV0ZSB0aGVzZSBjb2RlIGFuZCBtYWtlIGl0IHNpbXBsZS4KClRo
+ZW4gaG93IHNob3VsZCBJIGRvIGluIG91ciBjYXNlPyAuCklmIHdlIGNhbid0IHJldHVybiB0aGUg
+c2FtZSBkb21haW4gaGVyZSwgV2UgaGF2ZSB0byBhZGQgc29tZSBjb2RlIGxpa2UKYWJvdmUgaW4g
+dGhlIGF0dGFjaF9kZXZpY2UuCgpbMV06aHR0cDovL2xpc3RzLmxpbnV4Zm91bmRhdGlvbi5vcmcv
+cGlwZXJtYWlsL2lvbW11LzIwMTUtSnVseS8wMTM2MzEuaHRtbAogCj4gCj4gPiArc3RhdGljIGlu
+dCBtdGtfaW9tbXVfYWRkX2RldmljZShzdHJ1Y3QgZGV2aWNlICpkZXYpCj4gPiArewo+ID4gKwlz
+dHJ1Y3QgaW9tbXVfZ3JvdXAgKmdyb3VwOwo+ID4gKwlpbnQgcmV0Owo+ID4gKwo+ID4gKwlpZiAo
+IWRldi0+YXJjaGRhdGEuaW9tbXUpIC8qIE5vdCBhIGlvbW11IGNsaWVudCBkZXZpY2UgKi8KPiA+
+ICsJCXJldHVybiAtRU5PREVWOwo+ID4gKwo+ID4gKwlncm91cCA9IGlvbW11X2dyb3VwX2dldChk
+ZXYpOwo+ID4gKwlpZiAoIWdyb3VwKSB7Cj4gPiArCQlncm91cCA9IGlvbW11X2dyb3VwX2FsbG9j
+KCk7Cj4gPiArCQlpZiAoSVNfRVJSKGdyb3VwKSkgewo+ID4gKwkJCWRldl9lcnIoZGV2LCAiRmFp
+bGVkIHRvIGFsbG9jYXRlIElPTU1VIGdyb3VwXG4iKTsKPiA+ICsJCQlyZXR1cm4gUFRSX0VSUihn
+cm91cCk7Cj4gPiArCQl9Cj4gPiArCX0KPiA+ICsKPiA+ICsJcmV0ID0gaW9tbXVfZ3JvdXBfYWRk
+X2RldmljZShncm91cCwgZGV2KTsKPiA+ICsJaWYgKHJldCkgewo+ID4gKwkJZGV2X2VycihkZXYs
+ICJGYWlsZWQgdG8gYWRkIElPTU1VIGdyb3VwXG4iKTsKPiA+ICsJCWdvdG8gZXJyX2dyb3VwX3B1
+dDsKPiA+ICsJfQo+ID4gKwo+ID4gKwlyZXQgPSBpb21tdV9hdHRhY2hfZ3JvdXAoJm00dWRvbS0+
+ZG9tYWluLCBncm91cCk7Cj4gPiArCWlmIChyZXQpCj4gPiArCQlkZXZfZXJyKGRldiwgIkZhaWxl
+ZCB0byBhdHRhY2ggSU9NTVUgZ3JvdXBcbiIpOwo+ID4gKwo+ID4gK2Vycl9ncm91cF9wdXQ6Cj4g
+PiArCWlvbW11X2dyb3VwX3B1dChncm91cCk7Cj4gPiArCXJldHVybiByZXQ7Cj4gPiArfQo+IAo+
+IFB1dHRpbmcgZXZlcnkgZGV2aWNlIGludG8gaXRzIG93biBncm91cCBpbmRpY2F0ZXMgdGhhdCB0
+aGUgSU9NTVUgY2FuCj4gaXNvbGF0ZSBiZXR3ZWVuIHNpbmdsZSBkZXZpY2VzIG9uIHRoZSBidXMs
+IHdoaWNoIG1ha2VzIGl0IGV2ZW4gbW9yZQo+IHF1ZXN0aW9uYWJsZSB0aGF0IHlvdSBvbmx5IGFs
+bG93IG9uZSBkb21haW4gZm9yIHRoZSB3aG9sZSBkcml2ZXIuCj4gCj4gCj4gCUpvZXJnCj4gCgoK
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KaW9tbXUgbWFp
+bGluZyBsaXN0CmlvbW11QGxpc3RzLmxpbnV4LWZvdW5kYXRpb24ub3JnCmh0dHBzOi8vbGlzdHMu
+bGludXhmb3VuZGF0aW9uLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2lvbW11
