@@ -1,7 +1,7 @@
-From: Stas Sergeev <stsp@list.ru>
-Subject: Re: [PATCH 0/2] of: fsl/fman: reuse the fixed node parsing code
-Date: Wed, 12 Aug 2015 18:09:48 +0300
-Message-ID: <55CB61BC.1050209@list.ru>
+From: Madalin-Cristian Bucur <madalin.bucur@freescale.com>
+Subject: RE: [PATCH 0/2] of: fsl/fman: reuse the fixed node parsing code
+Date: Wed, 12 Aug 2015 15:27:47 +0000
+Message-ID: <BL2PR03MB545A213D584384018CCB30CE67E0@BL2PR03MB545.namprd03.prod.outlook.com>
 References: <1438785745-15517-1-git-send-email-madalin.bucur@freescale.com>
  <55C63D3B.5020005@gmail.com> <55CA1C14.3000202@list.ru>
  <BL2PR03MB545D4E18DE41AE01AFC37D6E67F0@BL2PR03MB545.namprd03.prod.outlook.com>
@@ -9,192 +9,90 @@ References: <1438785745-15517-1-git-send-email-madalin.bucur@freescale.com>
  <BL2PR03MB545929237EF33BA13089EC1E67E0@BL2PR03MB545.namprd03.prod.outlook.com>
  <55CB50F1.7050308@list.ru>
  <BL2PR03MB5458B9D2402DE68E9B9014AE67E0@BL2PR03MB545.namprd03.prod.outlook.com>
+ <55CB61BC.1050209@list.ru>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8;
-	format=flowed
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <BL2PR03MB5458B9D2402DE68E9B9014AE67E0@BL2PR03MB545.namprd03.prod.outlook.com>
+In-Reply-To: <55CB61BC.1050209@list.ru>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Madalin-Cristian Bucur <madalin.bucur@freescale.com>, Florian Fainelli <f.fainelli@gmail.com>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>
+To: Stas Sergeev <stsp@list.ru>, Florian Fainelli <f.fainelli@gmail.com>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>
 Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Liberman Igal <Igal.Liberman@freescale.com>, Stas Sergeev <stsp@users.sourceforge.net>, "joakim.tjernlund@transmode.se" <joakim.tjernlund@transmode.se>, Shaohui Xie <Shaohui.Xie@freescale.com>
 List-Id: devicetree@vger.kernel.org
 
-12.08.2015 17:43, Madalin-Cristian Bucur =D0=BF=D0=B8=D1=88=D0=B5=D1=82=
-:
->> -----Original Message-----
->> From: Stas Sergeev [mailto:stsp@list.ru]
->>
->> 12.08.2015 16:26, Madalin-Cristian Bucur =D0=BF=D0=B8=D1=88=D0=B5=D1=
-=82:
->>>>> I've tried to make the smallest changes that allow me to retrieve=
- those
->>>>> without modifying existing API.
->>>>> Why is it important to hide the default values from the MAC drive=
-r?
->>>> My worry is that the fixed values are not really fixed, and
->>>> therefore are not always useful to access directly. It is likely
->>>> not a problem for your use-case, as, as you say, the AN is
->>>> disabled, but this is probably not the best to do in general.
->>> Yes, not a problem in my case.
->>>
->>>> And also you do:
->>>> ---
->>>>
->>>> -		err =3D of_phy_register_fixed_link(mac_node);
->>>> -		if (err)
->>>> +		struct phy_device *phy;
->>>> +
->>>> +		mac_dev->fixed_link =3D kzalloc(sizeof(*mac_dev-
->>>>> fixed_link),
->>>> +					      GFP_KERNEL);
->>>> +		if (of_phy_parse_fixed_link(mac_node, mac_dev-
->>>>> fixed_link))
->>>> +			goto _return_dev_set_drvdata;
->>>> +
->>>> +		phy =3D fixed_phy_register(PHY_POLL, mac_dev->fixed_link,
->>>> +					 mac_node);
->>>>
->>>> ---
->>>>
->>>> which means you really want to circumvent the current OF
->>>> api quite a lot, without saying why in the patch description.
->>> I circumvent the API because I din not want to change existing API.
->>> If I could get a reference to the status struct without changing an=
-y code
->>> or without being required to call by myself fixed_phy_register(), I
->>> would of done that. Given the existing code in
->> of_phy_register_fixed_link(),
->>> this was my only option. I could have broken of_phy_register_fixed_=
-link()
->>> in two functions:
->>>
->>> of_phy_parse_fixed_link() and of_phy_register_fixed_link(), the lat=
-ter
->> doing only
->>> the call to fixed_phy_register()
->>>
->>> that would allow to keep of_phy_register_fixed_link() as it is, bro=
-ken in
->> two stages:
->>> - parsing
->>> - registering
->>>
->>> than can be used by other drivers in order to get the status but I =
-think it's
->> overkill.
->> What I referred to as "circumventing an API" is that you do
->> phy =3D fixed_phy_register(PHY_POLL, mac_dev->fixed_link, + mac_node=
-);
->> by hands, instead of letting the of_phy_register_fixed_link() doing =
-so.
->>
->> How about a smaller circumvention, like this for instance:
->> ---
->> err =3D of_phy_register_fixed_link(mac_node);
->> phy =3D of_phy_find_device(dn);
->> status =3D fixed_phy_get_link_status(phy);    // no such func, to be=
- coded up
->> ---
->>
->> Or even like this:
->> ---
->> err =3D of_phy_register_fixed_link(mac_node);
->> phy =3D of_phy_find_device(dn);
->> set_speed_and_duplex(phy->speed, phy->duplex);    // not sure if the=
-se
->> values are available that early
->> ---
-> After my patch, all that of_phy_register_fixed_link() does is to call
-> the new parsing function I introduced then register the fixed PHY.
-> I could have done this (pseudocode):
->
-> - add of_phy_parse_fixed_link() as seen in the patch
-> - add of_phy_register_fixed_phy() that just calls fixed_phy_register(=
-):
->
-> int of_phy_register_fixed_phy(node)
-> {
-> 	phy =3D fixed_phy_register(PHY_POLL, mac_dev->fixed_link,
-> 				     mac_node);
-> 	return (!phy);
-> }
->
-> - change of_phy_register_fixed_link() to contain only this:
->
-> int of_phy_register_fixed_link(node)
-> {
-> 	of_phy_parse_fixed_link(node, &status);
->
-> 	return of_phy_register_fixed_phy(node);
-> }
-But have you looked into the patch I pointed previously?
-https://lkml.org/lkml/2015/7/20/711
-You code will likely clash with it because my patch extends
-of_phy_register_fixed_link().
-
-> Then I could call only of_* functions but the end result would be the=
- same and
-> of_phy_register_fixed_phy() would not justify its existence that much=
-=2E..
-You didn't say you wanted to obsolete the of_phy_register_fixed_phy().
-Since it is there (and even changed by me in a way your
-patch will likely clash), IMHO it would be better if it is used,
-rather than copy/pasted into the driver.
-
-> The getter for status you suggest would be fine, but not sure how one=
- would retrieve
-> it from the mac_node unless we change of_phy_register_fixed_link() to=
- return the
-> pointer to phy (and all the drivers that use it...).
-If you look for instance to mvneta.c, you'll find the following:
----
-err =3D of_phy_register_fixed_link(dn);
-/* In the case of a fixed PHY, the DT node associated
-  * to the PHY is the Ethernet MAC DT node.
-  */
-  phy_node =3D of_node_get(dn);
-=2E..
-phy =3D of_phy_find_device(dn);
----
-
-So the answer is: just use the same mac_node for both.
-
->> Also I meant the description should have been in the patch,
->> not in the e-mail. :) You only wrote _what_ the patch does
->> (which is of course obvious from the code itself), but not
->> _why_ and _what was fixed_ (what didn't work).
->>
-> If you refer to the first, separation patch, I thought the descriptio=
-n was enough:
->
->      of: separate fixed link parsing from registration
->     =20
->      Some drivers may need
-"may need"? I don't understand.
-If it is a fix, then they _do need_, and in this case it should
-be specified what was broken and what is fixed.
-If it is just a clean-up, then "may need" may suffice, but it
-was not mentioned it is a clean-up. So I still don't know what
-this patch is all about.
-"Some drivers" - which ones? The ones that are limited to
-the purely fixed links, and never support AN or MDIO?
-Or some other drivers too?
-So really, the description sounds very cryptic to me.
-
->   to parse the fixed link values before registering
->      the fixed link phy. Separate the parsing from the actual registr=
-ation
->      and provide an export for the added parsing function.
->     =20
->      Signed-off-by: Madalin Bucur <madalin.bucur@freescale.com>
->
-> For this one it was a bit brief, I admit - the longer version would b=
-e that before it
-> we were not using from fixed link anything else but the fact the link=
- was fixed
-> (ignored actual speed, duplex values there)
-And what didn't work as the result?
-
->   and this patch tries to fix that.
-What started to work after that patch that didn't without it?
+PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBTdGFzIFNlcmdlZXYgW21haWx0
+bzpzdHNwQGxpc3QucnVdDQoNCjxzbmlwPg0KPiBCdXQgaGF2ZSB5b3UgbG9va2VkIGludG8gdGhl
+IHBhdGNoIEkgcG9pbnRlZCBwcmV2aW91c2x5Pw0KPiBodHRwczovL2xrbWwub3JnL2xrbWwvMjAx
+NS83LzIwLzcxMQ0KPiBZb3UgY29kZSB3aWxsIGxpa2VseSBjbGFzaCB3aXRoIGl0IGJlY2F1c2Ug
+bXkgcGF0Y2ggZXh0ZW5kcw0KPiBvZl9waHlfcmVnaXN0ZXJfZml4ZWRfbGluaygpLg0KPiANCg0K
+SSBhZG1pbiBJIGZhaWxlZCB0byBncmFzcCB0aGUgZGV0YWlscyBvZiB5b3VyIGNoYW5nZSAtIHRo
+ZSBsYWNrIG9mIGFtcGxlIGNvbnRleHQNCkxpbmVzIG1ha2VzIGl0IGEgYml0IGRpZmZpY3VsdC4g
+SSdtIHN1cmUgeW91ciBjaGFuZ2UgY291bGQgYmUgbWVyZ2VkIHRoZW4gdGhlDQpvZiBwYXJzaW5n
+IGNvdWxkIGJlIHNlcGFyYXRlZCBmcm9tIHRoZSBhY3R1YWwgZml4ZWRfcGh5X3JlZ2lzdGVyKCkg
+Y2FsbCBpZiBhbnlvbmUNCmNhcmVzIGFib3V0IHRoYXQuDQoNCj4gPiBUaGVuIEkgY291bGQgY2Fs
+bCBvbmx5IG9mXyogZnVuY3Rpb25zIGJ1dCB0aGUgZW5kIHJlc3VsdCB3b3VsZCBiZSB0aGUgc2Ft
+ZQ0KPiA+IGFuZCAgb2ZfcGh5X3JlZ2lzdGVyX2ZpeGVkX3BoeSgpIHdvdWxkIG5vdCBqdXN0aWZ5
+IGl0cyBleGlzdGVuY2UgdGhhdCBtdWNoLi4uDQo+IFlvdSBkaWRuJ3Qgc2F5IHlvdSB3YW50ZWQg
+dG8gb2Jzb2xldGUgdGhlIG9mX3BoeV9yZWdpc3Rlcl9maXhlZF9waHkoKS4NCj4gU2luY2UgaXQg
+aXMgdGhlcmUgKGFuZCBldmVuIGNoYW5nZWQgYnkgbWUgaW4gYSB3YXkgeW91cg0KPiBwYXRjaCB3
+aWxsIGxpa2VseSBjbGFzaCksIElNSE8gaXQgd291bGQgYmUgYmV0dGVyIGlmIGl0IGlzIHVzZWQs
+DQo+IHJhdGhlciB0aGFuIGNvcHkvcGFzdGVkIGludG8gdGhlIGRyaXZlci4NCg0KUGxlYXNlIG5v
+dGUgSSB3YXMgcmVmZXJyaW5nIHRvIGEgZmljdGlvbmFsIG5ldyBmdW5jdGlvbiB0aGF0IHdvdWxk
+IGVtYmVkIHRoZSBjYWxsIHRvIA0KZml4ZWRfcGh5X3JlZ2lzdGVyKCkuIEkgd2FzIG5vdCB0YWxr
+aW5nIGFib3V0IHNvbWUgZXhpc3RpbmcgQVBJLCBqdXN0IGFib3V0IGEgbmV3IA0Kb2ZfY2FsbCAg
+bmFtZWQgb2ZfcGh5X3JlZ2lzdGVyX2ZpeGVkX3BoeSgpICB0aGF0IHdvdWxkIGluIHRoZSBlbmQg
+YmUgY2FsbGVkIGJ5DQpvZl9waHlfcmVnaXN0ZXJfZml4ZWRfbGluaygpIGFuZCBieSBzb21lIGRy
+aXZlcnMgdGhhdCB3YW50IHRvIGdldCBpbiB0aGUgbWlkZGxlDQpvZiB0aGluZ3MgYW5kIGdldCBh
+IGhvbGQgb24gc3RhdHVzLg0KDQpNYXliZSB0aGUgZmFjdCB3ZSdyZSByZXZpZXdpbmcgdHdvIHBh
+dGNoZXMgaW4gb25lIHRocmVhZCBpcyB3aGF0IG1ha2VzIHRoZQ0KZGlzY3Vzc2lvbiBsZXNzIHRo
+YW4gb3B0aW1hbC4NCg0KPiA+IFRoZSBnZXR0ZXIgZm9yIHN0YXR1cyB5b3Ugc3VnZ2VzdCB3b3Vs
+ZCBiZSBmaW5lLCBidXQgbm90IHN1cmUgaG93IG9uZQ0KPiA+IHdvdWxkIHJldHJpZXZlDQo+ID4g
+aXQgZnJvbSB0aGUgbWFjX25vZGUgdW5sZXNzIHdlIGNoYW5nZSBvZl9waHlfcmVnaXN0ZXJfZml4
+ZWRfbGluaygpIHRvDQo+ID4gcmV0dXJuIHRoZQ0KPiA+IHBvaW50ZXIgdG8gcGh5IChhbmQgYWxs
+IHRoZSBkcml2ZXJzIHRoYXQgdXNlIGl0Li4uKS4NCj4gSWYgeW91IGxvb2sgZm9yIGluc3RhbmNl
+IHRvIG12bmV0YS5jLCB5b3UnbGwgZmluZCB0aGUgZm9sbG93aW5nOg0KPiAtLS0NCj4gZXJyID0g
+b2ZfcGh5X3JlZ2lzdGVyX2ZpeGVkX2xpbmsoZG4pOw0KPiAvKiBJbiB0aGUgY2FzZSBvZiBhIGZp
+eGVkIFBIWSwgdGhlIERUIG5vZGUgYXNzb2NpYXRlZA0KPiAgICogdG8gdGhlIFBIWSBpcyB0aGUg
+RXRoZXJuZXQgTUFDIERUIG5vZGUuDQo+ICAgKi8NCj4gICBwaHlfbm9kZSA9IG9mX25vZGVfZ2V0
+KGRuKTsNCj4gLi4uDQo+IHBoeSA9IG9mX3BoeV9maW5kX2RldmljZShkbik7DQo+IC0tLQ0KPiAN
+Cj4gU28gdGhlIGFuc3dlciBpczoganVzdCB1c2UgdGhlIHNhbWUgbWFjX25vZGUgZm9yIGJvdGgu
+DQoNCkkgdW5kZXJzdGFuZCwgSSdsbCB1c2UgdGhpcyBhcHByb2FjaCBhbHRob3VnaCBpcyBzdWJv
+cHRpbWFsIGltaG8gdG8NCnNjYW4gdGhlIGRldmljZSB0cmVlIGFnYWluIHRvIGdldCBhIHBoeSBw
+b2ludGVyIHRoYXQgeW91IG5lZWQganVzdA0KdG8gZ2V0IHNvbWUgb2YgaW5mbyB0aGF0IHdhcyBw
+YXJzZWQgaW4gYSBjYWxsIHlvdSBqdXN0IG1hZGUuDQoNCj4gPj4gQWxzbyBJIG1lYW50IHRoZSBk
+ZXNjcmlwdGlvbiBzaG91bGQgaGF2ZSBiZWVuIGluIHRoZSBwYXRjaCwNCj4gPj4gbm90IGluIHRo
+ZSBlLW1haWwuIDopIFlvdSBvbmx5IHdyb3RlIF93aGF0XyB0aGUgcGF0Y2ggZG9lcw0KPiA+PiAo
+d2hpY2ggaXMgb2YgY291cnNlIG9idmlvdXMgZnJvbSB0aGUgY29kZSBpdHNlbGYpLCBidXQgbm90
+DQo+ID4+IF93aHlfIGFuZCBfd2hhdCB3YXMgZml4ZWRfICh3aGF0IGRpZG4ndCB3b3JrKS4NCj4g
+Pj4NCj4gPiBJZiB5b3UgcmVmZXIgdG8gdGhlIGZpcnN0LCBzZXBhcmF0aW9uIHBhdGNoLCBJIHRo
+b3VnaHQgdGhlIGRlc2NyaXB0aW9uIHdhcw0KPiBlbm91Z2g6DQo+ID4NCj4gPiAgICAgIG9mOiBz
+ZXBhcmF0ZSBmaXhlZCBsaW5rIHBhcnNpbmcgZnJvbSByZWdpc3RyYXRpb24NCj4gPg0KPiA+ICAg
+ICAgU29tZSBkcml2ZXJzIG1heSBuZWVkDQo+ICJtYXkgbmVlZCI/IEkgZG9uJ3QgdW5kZXJzdGFu
+ZC4NCj4gSWYgaXQgaXMgYSBmaXgsIHRoZW4gdGhleSBfZG8gbmVlZF8sIGFuZCBpbiB0aGlzIGNh
+c2UgaXQgc2hvdWxkDQo+IGJlIHNwZWNpZmllZCB3aGF0IHdhcyBicm9rZW4gYW5kIHdoYXQgaXMg
+Zml4ZWQuDQo+IElmIGl0IGlzIGp1c3QgYSBjbGVhbi11cCwgdGhlbiAibWF5IG5lZWQiIG1heSBz
+dWZmaWNlLCBidXQgaXQNCj4gd2FzIG5vdCBtZW50aW9uZWQgaXQgaXMgYSBjbGVhbi11cC4gU28g
+SSBzdGlsbCBkb24ndCBrbm93IHdoYXQNCj4gdGhpcyBwYXRjaCBpcyBhbGwgYWJvdXQuDQo+ICJT
+b21lIGRyaXZlcnMiIC0gd2hpY2ggb25lcz8gVGhlIG9uZXMgdGhhdCBhcmUgbGltaXRlZCB0bw0K
+PiB0aGUgcHVyZWx5IGZpeGVkIGxpbmtzLCBhbmQgbmV2ZXIgc3VwcG9ydCBBTiBvciBNRElPPw0K
+PiBPciBzb21lIG90aGVyIGRyaXZlcnMgdG9vPw0KPiBTbyByZWFsbHksIHRoZSBkZXNjcmlwdGlv
+biBzb3VuZHMgdmVyeSBjcnlwdGljIHRvIG1lLg0KDQpNaW5lLCB3aGVuIHRoZXJlIGlzIGEgZml4
+ZWQgbGluayBub2RlLCBtYXliZSBvdGhlcnMuIFdoZW4gdGhlcmUgaXNuJ3QgYW55DQpmaXhlZCBs
+aW5rIG5vZGUsIHRoZSBpbnRlcm5hbCBQSFkgY29uZmlnIGRlZmF1bHRzIHRvIDFHIGZ1bGwgZHVw
+bGV4IEFOIGVuYWJsZWQNCmFuZCBhZGp1c3QgbGluayB0YWtlcyBjYXJlIG9mIHRoaW5ncy4NCg0K
+PiANCj4gPiAgIHRvIHBhcnNlIHRoZSBmaXhlZCBsaW5rIHZhbHVlcyBiZWZvcmUgcmVnaXN0ZXJp
+bmcNCj4gPiAgICAgIHRoZSBmaXhlZCBsaW5rIHBoeS4gU2VwYXJhdGUgdGhlIHBhcnNpbmcgZnJv
+bSB0aGUgYWN0dWFsIHJlZ2lzdHJhdGlvbg0KPiA+ICAgICAgYW5kIHByb3ZpZGUgYW4gZXhwb3J0
+IGZvciB0aGUgYWRkZWQgcGFyc2luZyBmdW5jdGlvbi4NCj4gPg0KPiA+ICAgICAgU2lnbmVkLW9m
+Zi1ieTogTWFkYWxpbiBCdWN1ciA8bWFkYWxpbi5idWN1ckBmcmVlc2NhbGUuY29tPg0KPiA+DQo+
+ID4gRm9yIHRoaXMgb25lIGl0IHdhcyBhIGJpdCBicmllZiwgSSBhZG1pdCAtIHRoZSBsb25nZXIg
+dmVyc2lvbiB3b3VsZCBiZSB0aGF0DQo+IGJlZm9yZSBpdA0KPiA+IHdlIHdlcmUgbm90IHVzaW5n
+IGZyb20gZml4ZWQgbGluayBhbnl0aGluZyBlbHNlIGJ1dCB0aGUgZmFjdCB0aGUgbGluayB3YXMN
+Cj4gZml4ZWQNCj4gPiAoaWdub3JlZCBhY3R1YWwgc3BlZWQsIGR1cGxleCB2YWx1ZXMgdGhlcmUp
+DQo+IEFuZCB3aGF0IGRpZG4ndCB3b3JrIGFzIHRoZSByZXN1bHQ/DQo+IA0KPiA+ICAgYW5kIHRo
+aXMgcGF0Y2ggdHJpZXMgdG8gZml4IHRoYXQuDQo+IFdoYXQgc3RhcnRlZCB0byB3b3JrIGFmdGVy
+IHRoYXQgcGF0Y2ggdGhhdCBkaWRuJ3Qgd2l0aG91dCBpdD8NCg0KMTBNIGhhbGYgZHVwbGV4IGZv
+ciBpbnN0YW5jZQ0KDQpJJ2QgY2xvc2UgdGhpcyB0aHJlYWQgZm9yIG5vdyBhbmQgdXNlIGluIG15
+IGRyaXZlciBvZl9waHlfZmluZF9kZXZpY2UobWFjX25vZGUpLg0KDQpUaGFuayB5b3UsDQpNYWRh
+bGluDQo=
