@@ -1,84 +1,120 @@
-From: Yong Wu <yong.wu@mediatek.com>
-Subject: Re: [PATCH v4 4/6] memory: mediatek: Add SMI driver
-Date: Wed, 12 Aug 2015 20:39:34 +0800
-Message-ID: <1439383174.7382.24.camel@mhfsdcap03>
-References: <1438597279-2937-1-git-send-email-yong.wu@mediatek.com>
-	 <1438597279-2937-5-git-send-email-yong.wu@mediatek.com>
-	 <20150811145633.GE14980@8bytes.org>
+From: Alexey Kardashevskiy <aik@ozlabs.ru>
+Subject: Re: [PATCH v6 05/42] powerpc/powernv: Track IO/M32/M64 segments from
+ PE
+Date: Wed, 12 Aug 2015 22:57:33 +1000
+Message-ID: <55CB42BD.3070809@ozlabs.ru>
+References: <1438834307-26960-1-git-send-email-gwshan@linux.vnet.ibm.com>
+ <1438834307-26960-6-git-send-email-gwshan@linux.vnet.ibm.com>
+ <55C84FD8.302@ozlabs.ru> <20150811000342.GB10753@gwshan>
+ <55C95CAE.1090908@ozlabs.ru> <20150812104502.GB7690@gwshan>
+ <55CB2865.4090402@ozlabs.ru> <20150812112019.GA14309@gwshan>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=koi8-r; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20150811145633.GE14980@8bytes.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Joerg Roedel <joro@8bytes.org>
-Cc: Thierry Reding <treding@nvidia.com>, Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, Robin Murphy <robin.murphy@arm.com>, Will Deacon <will.deacon@arm.com>, Daniel Kurtz <djkurtz@google.com>, Tomasz Figa <tfiga@google.com>, Lucas Stach <l.stach@pengutronix.de>, Rob Herring <robh+dt@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, linux-mediatek@lists.infradead.org, Sasha Hauer <kernel@pengutronix.de>, srv_heupstream@mediatek.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, iommu@lists.linux-foundation.org, pebolle@tiscali.nl, arnd@arndb.de, mitchelh@codeaurora.org, youhua.li@mediatek.com, k.zhang@mediatek.com, frederic.chen@mediatek.com
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <20150812112019.GA14309@gwshan>
+Sender: linux-pci-owner@vger.kernel.org
+To: Gavin Shan <gwshan@linux.vnet.ibm.com>
+Cc: linuxppc-dev@lists.ozlabs.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, benh@kernel.crashing.org, mpe@ellerman.id.au, bhelgaas@google.com, grant.likely@linaro.org, robherring2@gmail.com, panto@antoniou-consulting.com
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 2015-08-11 at 16:56 +0200, Joerg Roedel wrote:
-> On Mon, Aug 03, 2015 at 06:21:17PM +0800, Yong Wu wrote:
-> > +static int mtk_smi_common_get(struct device *smidev)
-> > +{
-> > +	struct mtk_smi_common *smipriv = dev_get_drvdata(smidev);
-> > +	int ret;
-> > +
-> > +	ret = pm_runtime_get_sync(smidev);
-> > +	if (ret < 0)
-> > +		return ret;
-> > +
-> > +	ret = clk_prepare_enable(smipriv->clk_apb);
-> > +	if (ret) {
-> > +		dev_err(smidev, "Failed to enable the apb clock\n");
-> > +		goto err_put_pm;
-> > +	}
-> > +	ret = clk_prepare_enable(smipriv->clk_smi);
-> > +	if (ret) {
-> > +		dev_err(smidev, "Failed to enable the smi clock\n");
-> > +		goto err_disable_apb;
-> > +	}
-> > +	return ret;
-> > +
-> > +err_disable_apb:
-> > +	clk_disable_unprepare(smipriv->clk_apb);
-> > +err_put_pm:
-> > +	pm_runtime_put(smidev);
-> > +	return ret;
-> > +}
-> 
-> [...]
-> 
-> > +int mtk_smi_larb_get(struct device *larbdev)
-> > +{
-> > +	struct mtk_smi_larb *larbpriv = dev_get_drvdata(larbdev);
-> > +	struct mtk_larb_mmu *mmucfg = larbdev->archdata.iommu;
-> > +	int ret;
-> > +
-> > +	ret = mtk_smi_common_get(larbpriv->smi);
-> > +	if (ret)
-> > +		return ret;
-> > +
-> > +	ret = pm_runtime_get_sync(larbdev);
-> > +	if (ret < 0)
-> > +		goto err_put_smicommon;
-> > +
-> > +	ret = clk_prepare_enable(larbpriv->clk_apb);
-> > +	if (ret) {
-> > +		dev_err(larbdev, "Failed to enable the apb clock\n");
-> > +		goto err_put_pm;
-> > +	}
-> > +
-> > +	ret = clk_prepare_enable(larbpriv->clk_smi);
-> > +	if (ret) {
-> > +		dev_err(larbdev, "Failed to enable the smi clock\n");
-> > +		goto err_disable_apb;
-> > +	}
-> 
-> The clock enablement looks similar to the function above, maybe move it
-> to a helper function?
+On 08/12/2015 09:20 PM, Gavin Shan wrote:
+> On Wed, Aug 12, 2015 at 09:05:09PM +1000, Alexey Kardashevskiy wrote:
+>> On 08/12/2015 08:45 PM, Gavin Shan wrote:
+>>> On Tue, Aug 11, 2015 at 12:23:42PM +1000, Alexey Kardashevskiy wrote:
+>>>> On 08/11/2015 10:03 AM, Gavin Shan wrote:
+>>>>> On Mon, Aug 10, 2015 at 05:16:40PM +1000, Alexey Kardashevskiy wrote:
+>>>>>> On 08/06/2015 02:11 PM, Gavin Shan wrote:
+>>>>>>> The patch is adding 6 bitmaps, three to PE and three to PHB, to track
+>>>>>>
+>>>>>> The patch is also removing 2 arrays (io_segmap and m32_segmap), what is that
+>>>>>> all about? Also, there was no m64_segmap, now there is, needs an explanation
+>>>>>> may be.
+>>>>>>
+>>>>>
+>>>>> Originally, the bitmaps (io_segmap and m32_segmap) are allocated dynamically.
+>>>>> Now, they have fixed sizes - 512 bits.
+>>>>>
+>>>>> The subject "powerpc/powernv: Track IO/M32/M64 segments from PE" indicates
+>>>>> why m64_segmap is added.
+>>>>
+>>>>
+>>>> But before this patch, you somehow managed to keep it working without a map
+>>>> for M64, by the same time you needed map for IO and M32. It seems you are
+>>>> making things consistent in this patch but it also feels like you do not have
+>>>> to do so as M64 did not need a map before and I cannot see why it needs one
+>>>> now.
+>>>>
+>>>
+>>> The M64 map is used by [PATCH v6 23/42] powerpc/powernv: Release PEs dynamically
+>>> where the M64 segments consumed by one particular PE will be released.
+>>
+>>
+>> Then add it where it is really started being used. It is really hard to
+>> review a patch which is actually spread between patches. Do not count that
+>> reviewers will just trust you.
+>>
+>
+> Ok. I'll try.
+>
+>>
+>>>>>>
+>>>>>>> the consumed by one particular PE, which can be released once the PE
+>>>>>>> is destroyed during PCI unplugging time. Also, we're using fixed
+>>>>>>> quantity of bits to trace the used IO, M32 and M64 segments by PEs
+>>>>>>> in one particular PHB.
+>>>>>>>
+>>>>>>
+>>>>>> Out of curiosity - have you considered having just 3 arrays, in PHB, storing
+>>>>>> PE numbers, and ditching PE's arrays? Does PE itself need to know what PEs it
+>>>>>> is using? Not sure about this master/slave PEs though.
+>>>>>>
+>>>>>
+>>>>> I don't follow your suggestion. Can you rephrase and explain it a bit more?
+>>>>
+>>>>
+>>>> Please explains in what situations you need same map in both PHB and PE and
+>>>> how you are going to use them. For example, pe::m64_segmap and
+>>>> phb::m64_segmap.
+>>>>
+>>>> I believe you need to know what segment is used by what PE and that's it and
+>>>> having 2 bitmaps is overcomplicated hard to follow. Is there anything else
+>>>> what I am missing?
+>>>>
+>>>
+>>> The situation is same to all (IO, M32 and M64) segment maps. Taking m64_segmap
+>>> as an example, it will be used when creating or destroying the PE who consumes
+>>> M64 segments. phb::m64_segmap is recording the M64 segment usage in PHB's domain.
+>>> It's used to check same M64 segment won't be used for towice. pe::m64_segmap tracks
+>>> the M64 segments consumed by the PE.
+>>
+>>
+>> You could have a single map in PHB, key would be a segment number and value
+>> would be PE number. No need to have a map in PE. At all. No need to
+>> initialize bitmaps, etc.
+>>
+>
+> So it would be arrays for various segmant maps if I understood your suggestion
+> as below. Please confirm:
+>
+> #define PNV_IODA_MAX_SEG_NUM	512
+>
+> 	int struct pnv_phb::io_segmap[PNV_IODA_MAX_SEG_NUM];
+> 			    m32_segmap[PNV_IODA_MAX_SEG_NUM];
+> 			    m64_segmap[PNV_IODA_MAX_SEG_NUM];
+> - Initially, they are initialize to IODA_INVALID_PE;
+> - When one segment is assigned to one PE, the corresponding entry
+>    of the array is set to PE number.
+> - When one segment is relased, the corresponding entry of the array
+>    is set to IODA_INVALID_PE;
 
-Thanks. I will improve it in next version.
 
-> 
-> 
-> 	Joerg
-> 
+No, not arrays, I meant DEFINE_HASHTABLE(), hash_add(), etc from 
+include/linux/hashtable.h.
+
+http://kernelnewbies.org/FAQ/Hashtables is a good place to start :)
+
+
+
+-- 
+Alexey
