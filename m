@@ -1,148 +1,72 @@
-From: Caesar Wang <wxt@rock-chips.com>
-Subject: [PATCH v16 4/4] ARM: dts: add the support power-domain node on RK3288 SoCs
-Date: Wed, 12 Aug 2015 12:42:32 +0800
-Message-ID: <1439354552-20098-5-git-send-email-wxt@rock-chips.com>
-References: <1439354552-20098-1-git-send-email-wxt@rock-chips.com>
+From: Michal Simek <michal.simek@xilinx.com>
+Subject: Re: [RFC PATCH v1] mmc: sdhci-of-arasan: Add the support for
+ sdhci-5.1
+Date: Wed, 12 Aug 2015 07:07:37 +0200
+Message-ID: <55CAD499.5070701@xilinx.com>
+References: <1439279190-9556-1-git-send-email-shawn.lin@rock-chips.com>
+ <55CA0C6F.7000002@xilinx.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1439354552-20098-1-git-send-email-wxt@rock-chips.com>
+In-Reply-To: <55CA0C6F.7000002@xilinx.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: ulf.hansson@linaro.org, khilman@linaro.org, heiko@sntech.de
-Cc: linux-kernel@vger.kernel.org, dmitry.torokhov@gmail.com, tomasz.figa@gmail.com, dianders@chromium.org, linux-rockchip@lists.infradead.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, wxt@rock-chips.com, "jinkun.hong" <jinkun.hong@rock-chips.com>
+To: Shawn Lin <shawn.lin@rock-chips.com>, Michal Simek <michal.simek@xilinx.com>, soren.brinkmann@xilinx.com
+Cc: Ulf Hansson <ulf.hansson@linaro.org>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-We can add more domains node in the future.
-This patch add the needed clocks into power-controller.
-As the discuess about all the device clocks being listed in
-the power-domains itself.
++linux-mmc
 
-There are several reasons as follows:
-
-Firstly, the clocks need be turned off to save power when
-the system enter the suspend state. So we need to enumerate
-the clocks in the dts. In order to power domain can turn on and off.
-
-Secondly, the reset-circuit should reset be synchronous on RK3288,
-then sync revoked. So we need to enable clocks of all devices.
-In other words, we have to enable the clocks before you operate them
-if all the device clocks are included in someone domians.
-
-Someone wish was to get the clocks by reading the clocks from the
-device nodes, We can do that but we can solve the above issues.
-
-Anyway, the best ideas we can fix it in the future SoCs.
-
-Signed-off-by: jinkun.hong <jinkun.hong@rock-chips.com>
-Signed-off-by: Caesar Wang <wxt@rock-chips.com>
-
----
-
-Changes in v16:
-- Manually copy the problem in patch v15.
-- rebase the description.
-Series-changes: 15
-- As Tomasz remarked previously the dts should represent the hardware
-  and the power-domains are part of the pmu.
-Series-changes: 12
-- Remove essential clocks from rk3288 PD_VIO domain, Some clocks are
-  essential for the system health and should not be turned down.
-  However there is no owner for them so if they listed as belonging to power
-  domain we'll try toggling them up and down during power domain transition.
-  As a result we either fail to suspend or resume the system.
-Series-changes: 10
-- fix missing the #include <dt-bindings/power-domain/rk3288.h>.
-- remove the notes.
-Series-changes: 9
-- add decription for power-doamin node.
-Series-changes: 8
-- DTS go back to v2.
-Series-changes: 3
-- Decomposition power-controller, changed to multiple controller
-  (gpu-power-controller, hevc-power-controller).
-Series-changes: 2
-- make pd_vio clocks all one entry per line and alphabetize.
-- power: power-controller move back to pinctrl: pinctrl.
-
- arch/arm/boot/dts/rk3288.dtsi | 60 ++++++++++++++++++++++++++++++++++++++++++-
- 1 file changed, 59 insertions(+), 1 deletion(-)
-
-diff --git a/arch/arm/boot/dts/rk3288.dtsi b/arch/arm/boot/dts/rk3288.dtsi
-index 22316d0..161931d 100644
---- a/arch/arm/boot/dts/rk3288.dtsi
-+++ b/arch/arm/boot/dts/rk3288.dtsi
-@@ -44,6 +44,7 @@
- #include <dt-bindings/pinctrl/rockchip.h>
- #include <dt-bindings/clock/rk3288-cru.h>
- #include <dt-bindings/thermal/thermal.h>
-+#include <dt-bindings/power-domain/rk3288.h>
- #include "skeleton.dtsi"
- 
- / {
-@@ -590,8 +591,65 @@
- 	};
- 
- 	pmu: power-management@ff730000 {
--		compatible = "rockchip,rk3288-pmu", "syscon";
-+		compatible = "rockchip,rk3288-pmu", "syscon", "simple-mfd";
- 		reg = <0xff730000 0x100>;
-+
-+		power: power-controller {
-+			compatible = "rockchip,rk3288-power-controller";
-+			#power-domain-cells = <1>;
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+
-+			pd_gpu {
-+				reg = <RK3288_PD_GPU>;
-+				clocks = <&cru ACLK_GPU>;
-+			};
-+
-+			pd_hevc {
-+				reg = <RK3288_PD_HEVC>;
-+				clocks = <&cru ACLK_HEVC>,
-+					 <&cru SCLK_HEVC_CABAC>,
-+					 <&cru SCLK_HEVC_CORE>,
-+					 <&cru HCLK_HEVC>;
-+			};
-+
-+			pd_vio {
-+				reg = <RK3288_PD_VIO>;
-+				clocks = <&cru ACLK_IEP>,
-+					 <&cru ACLK_ISP>,
-+					 <&cru ACLK_RGA>,
-+					 <&cru ACLK_VIP>,
-+					 <&cru ACLK_VOP0>,
-+					 <&cru ACLK_VOP1>,
-+					 <&cru DCLK_VOP0>,
-+					 <&cru DCLK_VOP1>,
-+					 <&cru HCLK_IEP>,
-+					 <&cru HCLK_ISP>,
-+					 <&cru HCLK_RGA>,
-+					 <&cru HCLK_VIP>,
-+					 <&cru HCLK_VOP0>,
-+					 <&cru HCLK_VOP1>,
-+					 <&cru PCLK_EDP_CTRL>,
-+					 <&cru PCLK_HDMI_CTRL>,
-+					 <&cru PCLK_LVDS_PHY>,
-+					 <&cru PCLK_MIPI_CSI>,
-+					 <&cru PCLK_MIPI_DSI0>,
-+					 <&cru PCLK_MIPI_DSI1>,
-+					 <&cru SCLK_EDP_24M>,
-+					 <&cru SCLK_EDP>,
-+					 <&cru SCLK_HDMI_CEC>,
-+					 <&cru SCLK_HDMI_HDCP>,
-+					 <&cru SCLK_ISP_JPE>,
-+					 <&cru SCLK_ISP>,
-+					 <&cru SCLK_RGA>;
-+			};
-+
-+			pd_video {
-+				reg = <RK3288_PD_VIDEO>;
-+				clocks = <&cru ACLK_VCODEC>,
-+					 <&cru HCLK_VCODEC>;
-+			};
-+		};
- 	};
- 
- 	sgrf: syscon@ff740000 {
--- 
-1.9.1
+On 08/11/2015 04:53 PM, Michal Simek wrote:
+> On 08/11/2015 09:46 AM, Shawn Lin wrote:
+>> This patch adds the compatible string in sdhci-of-arasan.c to
+>> support sdhci-arasan5.1 version of controller. No documented
+>> controller IP version is found in the TRM, so we use ths version
+>> of command queueing engine integrated into this controller by arasan
+>> to specify our controller.
+>>
+>> Signed-off-by: Shawn Lin <shawn.lin@rock-chips.com>
+>>
+>> ---
+>>
+>> Changes in v1:
+>> - Remove redundant SDHCI_QUIRK_CAP_CLOCK_BASE_BROKEN for "arasan, sdhci-5.1" since
+>>   SDHCI will check "host->max_clk == 0" and let driver get it from host->ops->get_max_clock.
+>>
+>>  Documentation/devicetree/bindings/mmc/arasan,sdhci.txt | 2 +-
+>>  drivers/mmc/host/sdhci-of-arasan.c                     | 1 +
+>>  2 files changed, 2 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/Documentation/devicetree/bindings/mmc/arasan,sdhci.txt b/Documentation/devicetree/bindings/mmc/arasan,sdhci.txt
+>> index 7e94903..da541c3 100644
+>> --- a/Documentation/devicetree/bindings/mmc/arasan,sdhci.txt
+>> +++ b/Documentation/devicetree/bindings/mmc/arasan,sdhci.txt
+>> @@ -9,7 +9,7 @@ Device Tree Bindings for the Arasan SDHCI Controller
+>>  
+>>  Required Properties:
+>>    - compatible: Compatibility string. Must be 'arasan,sdhci-8.9a' or
+>> -                'arasan,sdhci-4.9a'
+>> +                'arasan,sdhci-4.9a' or 'arasan,sdhci-5.1'
+>>    - reg: From mmc bindings: Register location and length.
+>>    - clocks: From clock bindings: Handles to clock inputs.
+>>    - clock-names: From clock bindings: Tuple including "clk_xin" and "clk_ahb"
+>> diff --git a/drivers/mmc/host/sdhci-of-arasan.c b/drivers/mmc/host/sdhci-of-arasan.c
+>> index ef5a7d2..75379cb 100644
+>> --- a/drivers/mmc/host/sdhci-of-arasan.c
+>> +++ b/drivers/mmc/host/sdhci-of-arasan.c
+>> @@ -217,6 +217,7 @@ static int sdhci_arasan_remove(struct platform_device *pdev)
+>>  
+>>  static const struct of_device_id sdhci_arasan_of_match[] = {
+>>  	{ .compatible = "arasan,sdhci-8.9a" },
+>> +	{ .compatible = "arasan,sdhci-5.1" },
+>>  	{ .compatible = "arasan,sdhci-4.9a" },
+>>  	{ }
+>>  };
+>>
+> 
+> Acked-by: Michal Simek <michal.simek@xilinx.com>
+> 
+> Thanks,
+> Michal
+> 
+> 
