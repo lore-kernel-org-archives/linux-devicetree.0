@@ -1,42 +1,36 @@
-From: Pratyush Anand <pratyush.anand-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v6 1/6] PCI: designware: move calculation of bus addresses
- to DRA7xx
-Date: Wed, 12 Aug 2015 21:10:20 +0530
-Message-ID: <CAHM4w1muj4+OBcsDQ9ePjV77t+iPh7TYY8h5MF66GjD=2ktRew@mail.gmail.com>
+From: Pratyush Anand <pratyush.anand@gmail.com>
+Subject: Re: [PATCH v6 2/6] ARM/PCI: remove align_resource in pci_sys_data
+Date: Wed, 12 Aug 2015 21:12:01 +0530
+Message-ID: <CAHM4w1=s_3A8L+XXyLCoxUphOed13CzShUiWwkK7vv8XJCBgjg@mail.gmail.com>
 References: <1438848559-232109-1-git-send-email-wangzhou1@hisilicon.com>
-	<1438848559-232109-2-git-send-email-wangzhou1@hisilicon.com>
-	<55C44A80.20308@hisilicon.com>
+	<1438848559-232109-3-git-send-email-wangzhou1@hisilicon.com>
+	<55C44AF2.8040807@hisilicon.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <55C44A80.20308-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Zhou Wang <wangzhou1-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
-Cc: Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Jingoo Han <jg1.han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Gabriele Paoloni <gabriele.paoloni-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org, James Morse <james.morse-5wv7dgnIgG8@public.gmane.org>, Liviu Dudau <Liviu.Dudau-5wv7dgnIgG8@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, "linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Zhichang Yuan <yuanzhichang-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, zhudacai-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, Zhang Jukuo <zhangjukuo-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, qiuzhenfa-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, liudongdong3-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, qiujiang-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, kangfenglong-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, Liguozhu <liguozhu-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Jingoo Han <jing>
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <55C44AF2.8040807@hisilicon.com>
+Sender: linux-pci-owner@vger.kernel.org
+To: Zhou Wang <wangzhou1@hisilicon.com>
+Cc: Bjorn Helgaas <bhelgaas@google.com>, Jingoo Han <jg1.han@samsung.com>, Arnd Bergmann <arnd@arndb.de>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Gabriele Paoloni <gabriele.paoloni@huawei.com>, lorenzo.pieralisi@arm.com, James Morse <james.morse@arm.com>, Liviu Dudau <Liviu.Dudau@arm.com>, Jason Cooper <jason@lakedaemon.net>, robh@kernel.org, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Zhichang Yuan <yuanzhichang@hisilicon.com>, zhudacai@hisilicon.com, Zhang Jukuo <zhangjukuo@huawei.com>, qiuzhenfa@hisilicon.com, liudongdong3@huawei.com, qiujiang@huawei.com, kangfenglong@huawei.com, xuwei5@hisilicon.com, Liguozhu <liguozhu@hisilicon.com>, Jingoo Han <jing>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Aug 7, 2015 at 11:34 AM, Zhou Wang <wangzhou1-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org> wrote:
-> [+cc jingoohan1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org]
+On Fri, Aug 7, 2015 at 11:36 AM, Zhou Wang <wangzhou1@hisilicon.com> wrote:
+> [+cc jingoohan1@gmail.com]
 >
 > On 2015/8/6 16:09, Zhou Wang wrote:
->> From: gabriele paoloni <gabriele.paoloni-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+>> From: gabriele paoloni <gabriele.paoloni@huawei.com>
 >>
->> Commit f4c55c5a3f7f "PCI: designware: Program ATU with untranslated
->> address" added the calculation of PCI BUS addresses in designware,
->> storing them in new fields added in "struct pcie_port". This
->> calculation is done for every designware user even if is only
->> applicable to DRA7xx.
->> This patch moves the calculation of the bus addresses to the DRA7xx
->> driver and is needed to allow the rework of designware to use
->> the new DT parsing API.
+>> This patch is needed in order to unify the PCIe designware framework for ARM and
+>> ARM64 architectures. In the PCIe designware unification process we are calling
+>> pci_create_root_bus() passing a "sysdata" parameter that is the same for both
+>> ARM and ARM64 and is of type "struct pcie_port*". In the ARM case this will
+>> cause a problem with the function pcibios_align_resource(); in fact this will
+>> cast "dev->sysdata" to "struct pci_sys_data*", whereas designware had passed a
+>> "struct pcie_port*" pointer.
 >>
->> Signed-off-by: Gabriele Paoloni <gabriele.paoloni-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
->> Signed-off-by: Zhou Wang <wangzhou1-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
+>> This patch solves the issue by removing "align_resource" from "pci_sys_data"
+>> struct and defining a static global function pointer in "bios32.c"
+>>
+>> Signed-off-by: Gabriele Paoloni <gabriele.paoloni@huawei.com>
 
-
-Looks fine to me
-Acked-by: Pratyush Anand <pratyush.anand-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Acked-by: Pratyush Anand <pratyush.anand@gmail.com>
