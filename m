@@ -1,87 +1,87 @@
-From: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Subject: Re: [PATCH] arm: rpi: Device tree modifications for U-Boot
-Date: Wed, 12 Aug 2015 07:21:32 -0600
-Message-ID: <CAPnjgZ3ztXnkxZJvitiXiKMzq5+x46hbv0PW4HcF7yGgsXUV+Q@mail.gmail.com>
-References: <1439303153-12171-1-git-send-email-sjg@chromium.org> <1439312701.2451.3.camel@lynxeye.de>
+From: Madalin-Cristian Bucur <madalin.bucur@freescale.com>
+Subject: RE: [PATCH 0/2] of: fsl/fman: reuse the fixed node parsing code
+Date: Wed, 12 Aug 2015 13:26:09 +0000
+Message-ID: <BL2PR03MB545929237EF33BA13089EC1E67E0@BL2PR03MB545.namprd03.prod.outlook.com>
+References: <1438785745-15517-1-git-send-email-madalin.bucur@freescale.com>
+ <55C63D3B.5020005@gmail.com> <55CA1C14.3000202@list.ru>
+ <BL2PR03MB545D4E18DE41AE01AFC37D6E67F0@BL2PR03MB545.namprd03.prod.outlook.com>
+ <55CA29C8.5000707@list.ru>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1439312701.2451.3.camel-8ppwABl0HbeELgA04lAiVw@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Lucas Stach <dev-8ppwABl0HbeELgA04lAiVw@public.gmane.org>
-Cc: "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, lak <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Lee Jones <lee-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Devicetree Discuss <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, lk <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <55CA29C8.5000707@list.ru>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Stas Sergeev <stsp@list.ru>, Florian Fainelli <f.fainelli@gmail.com>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Liberman Igal <Igal.Liberman@freescale.com>, Stas Sergeev <stsp@users.sourceforge.net>, "joakim.tjernlund@transmode.se" <joakim.tjernlund@transmode.se>, Shaohui Xie <Shaohui.Xie@freescale.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Lucas,
-
-On 11 August 2015 at 11:05, Lucas Stach <dev-8ppwABl0HbeELgA04lAiVw@public.gmane.org> wrote:
-> Hi Simon,
->
-> why did you send this to the Tegra ML?
->
-> Am Dienstag, den 11.08.2015, 08:25 -0600 schrieb Simon Glass:
->> This updates the device tree from the kernel version to something suitable
->> for U-Boot:
->>
->> - Add stdout-path alias for console
->> - Mark the /soc node to be available pre-relocation so that the early
->> serial console works (we need the 'ranges' property to be available)
->>
->> Signed-off-by: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
->> ---
->>
->>  arch/arm/boot/dts/bcm2835.dtsi | 4 +++-
->>  1 file changed, 3 insertions(+), 1 deletion(-)
->>
->> diff --git a/arch/arm/boot/dts/bcm2835.dtsi b/arch/arm/boot/dts/bcm2835.dtsi
->> index 301c73f..bd6bff6 100644
->> --- a/arch/arm/boot/dts/bcm2835.dtsi
->> +++ b/arch/arm/boot/dts/bcm2835.dtsi
->> @@ -8,6 +8,7 @@
->>
->>       chosen {
->>               bootargs = "earlyprintk console=ttyAMA0";
->> +             stdout-path = &uart;
->>       };
->>
->>       soc {
->> @@ -16,6 +17,7 @@
->>               #size-cells = <1>;
->>               ranges = <0x7e000000 0x20000000 0x02000000>;
->>               dma-ranges = <0x40000000 0x00000000 0x20000000>;
->> +             u-boot,dm-pre-reloc;
->
-> Why do you need this and why should upstream carry your favourite
-> bootloaders configuration? This is in no way hardware description.
-
-I'm not sure how much you know about U-Boot, so let me know if you
-need more info.
-
-U-Boot normally starts up by setting up its serial UART and displaying
-a banner message. At this stage typically only a few devices are
-initialised (e.g. maybe just the UART). It then relocates itself to
-the top of memory and starts up all the devices. It throws away any
-previous devices that it set up before relocation and starts again.
-
-U-Boot uses a thing called driver model (dm) which handles driver
-binding and probing. Driver model has the device tree and would
-normally scan through it and create devices for everything it finds.
-
-Before relocation we don't need every device. Also the CPU is often
-running slowly, perhaps without the cache enabled. SDRAM may not be
-available yet so space is short. We want to avoid starting up things
-that will not be used.
-
-So this property indicates that the device is needed before relocation
-and should be set up by driver model. We need it to avoid a very slow
-and memory-hungry startup.
-
-As to why upstream should accept it, my understanding of upstream is
-that people can send patches to it and in fact are encouraged to do
-so, to avoid misunderstandings and duplication. The device tree files
-are stored in Linux so any binding or source file changes should end
-up there. Otherwise the files tend to diverge and we end up with
-multiple bindings and multiple versions of the same source file.
-
-Regards,
-Simon
+PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBTdGFzIFNlcmdlZXYgW21haWx0
+bzpzdHNwQGxpc3QucnVdDQo+IA0KPiAxMS4wOC4yMDE1IDE5OjMzLCBNYWRhbGluLUNyaXN0aWFu
+IEJ1Y3VyINC/0LjRiNC10YI6DQo+ID4gKyBKb2FraW0sIFNoYW9odWkNCj4gPg0KPiA+PiAtLS0t
+LU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiA+PiBGcm9tOiBTdGFzIFNlcmdlZXYgW21haWx0bzpz
+dHNwQGxpc3QucnVdDQo+ID4+DQo+ID4+IDA4LjA4LjIwMTUgMjA6MzIsIEZsb3JpYW4gRmFpbmVs
+bGkg0L/QuNGI0LXRgjoNCj4gPj4+IENDJ2luZyBTdGFzLA0KPiA+PiBIaS4NCj4gPj4NCj4gPj4+
+IExlIDA4LzA1LzE1IDA3OjQyLCBNYWRhbGluIEJ1Y3VyIGEgw6ljcml0IDoNCj4gPj4+PiBUaGUg
+Rk1hbiBNQUMgY29uZmlndXJhdGlvbiBjb2RlIG5lZWRzIHRoZSBzcGVlZCBhbmQgZHVwbGV4DQo+
+ID4+IGluZm9ybWF0aW9uDQo+ID4+Pj4gZm9yIGZpeGVkLWxpbmsgaW50ZXJmYWNlcyB0aGF0IGlz
+IHBhcnNlZCBub3cgYnkgdGhlIG9mIGZ1bmN0aW9uDQo+ID4+Pj4gb2ZfcGh5X3JlZ2lzdGVyX2Zp
+eGVkX2xpbmsoKS4gVGhpcyBwYXJzZXMgdGhlIGZpeGVkLWxpbmsgcGFyYW1ldGVycyBidXQNCj4g
+Pj4+PiBkb2VzIG5vdCBleHBvc2UgdG8gdGhlIGNhbGxlciBuZWl0aGVyIHRoZSBwaHlfZGV2aWNl
+IHBvaW50ZXIgbm9yIHRoZQ0KPiA+Pj4+IHN0YXR1cyBzdHJ1Y3Qgd2hlcmUgaXQgbG9hZHMgdGhl
+IGZpeGVkLWxpbmsgcGFyYW1zLg0KPHNuaXA+DQoNCj4gPiBJJ3ZlIHRyaWVkIHRvIG1ha2UgdGhl
+IHNtYWxsZXN0IGNoYW5nZXMgdGhhdCBhbGxvdyBtZSB0byByZXRyaWV2ZSB0aG9zZQ0KPiA+IHdp
+dGhvdXQgbW9kaWZ5aW5nIGV4aXN0aW5nIEFQSS4NCj4gPiBXaHkgaXMgaXQgaW1wb3J0YW50IHRv
+IGhpZGUgdGhlIGRlZmF1bHQgdmFsdWVzIGZyb20gdGhlIE1BQyBkcml2ZXI/DQo+IE15IHdvcnJ5
+IGlzIHRoYXQgdGhlIGZpeGVkIHZhbHVlcyBhcmUgbm90IHJlYWxseSBmaXhlZCwgYW5kDQo+IHRo
+ZXJlZm9yZSBhcmUgbm90IGFsd2F5cyB1c2VmdWwgdG8gYWNjZXNzIGRpcmVjdGx5LiBJdCBpcyBs
+aWtlbHkNCj4gbm90IGEgcHJvYmxlbSBmb3IgeW91ciB1c2UtY2FzZSwgYXMsIGFzIHlvdSBzYXks
+IHRoZSBBTiBpcw0KPiBkaXNhYmxlZCwgYnV0IHRoaXMgaXMgcHJvYmFibHkgbm90IHRoZSBiZXN0
+IHRvIGRvIGluIGdlbmVyYWwuDQoNClllcywgbm90IGEgcHJvYmxlbSBpbiBteSBjYXNlLg0KDQo+
+IEFuZCBhbHNvIHlvdSBkbzoNCj4gLS0tDQo+IA0KPiAtCQllcnIgPSBvZl9waHlfcmVnaXN0ZXJf
+Zml4ZWRfbGluayhtYWNfbm9kZSk7DQo+IC0JCWlmIChlcnIpDQo+ICsJCXN0cnVjdCBwaHlfZGV2
+aWNlICpwaHk7DQo+ICsNCj4gKwkJbWFjX2Rldi0+Zml4ZWRfbGluayA9IGt6YWxsb2Moc2l6ZW9m
+KCptYWNfZGV2LQ0KPiA+Zml4ZWRfbGluayksDQo+ICsJCQkJCSAgICAgIEdGUF9LRVJORUwpOw0K
+PiArCQlpZiAob2ZfcGh5X3BhcnNlX2ZpeGVkX2xpbmsobWFjX25vZGUsIG1hY19kZXYtDQo+ID5m
+aXhlZF9saW5rKSkNCj4gKwkJCWdvdG8gX3JldHVybl9kZXZfc2V0X2RydmRhdGE7DQo+ICsNCj4g
+KwkJcGh5ID0gZml4ZWRfcGh5X3JlZ2lzdGVyKFBIWV9QT0xMLCBtYWNfZGV2LT5maXhlZF9saW5r
+LA0KPiArCQkJCQkgbWFjX25vZGUpOw0KPiANCj4gLS0tDQo+IA0KPiB3aGljaCBtZWFucyB5b3Ug
+cmVhbGx5IHdhbnQgdG8gY2lyY3VtdmVudCB0aGUgY3VycmVudCBPRg0KPiBhcGkgcXVpdGUgYSBs
+b3QsIHdpdGhvdXQgc2F5aW5nIHdoeSBpbiB0aGUgcGF0Y2ggZGVzY3JpcHRpb24uDQoNCkkgY2ly
+Y3VtdmVudCB0aGUgQVBJIGJlY2F1c2UgSSBkaW4gbm90IHdhbnQgdG8gY2hhbmdlIGV4aXN0aW5n
+IEFQSS4NCklmIEkgY291bGQgZ2V0IGEgcmVmZXJlbmNlIHRvIHRoZSBzdGF0dXMgc3RydWN0IHdp
+dGhvdXQgY2hhbmdpbmcgYW55IGNvZGUgDQpvciB3aXRob3V0IGJlaW5nIHJlcXVpcmVkIHRvIGNh
+bGwgYnkgbXlzZWxmIGZpeGVkX3BoeV9yZWdpc3RlcigpLCBJDQp3b3VsZCBvZiBkb25lIHRoYXQu
+IEdpdmVuIHRoZSBleGlzdGluZyBjb2RlIGluIG9mX3BoeV9yZWdpc3Rlcl9maXhlZF9saW5rKCks
+DQp0aGlzIHdhcyBteSBvbmx5IG9wdGlvbi4gSSBjb3VsZCBoYXZlIGJyb2tlbiBvZl9waHlfcmVn
+aXN0ZXJfZml4ZWRfbGluaygpDQppbiB0d28gZnVuY3Rpb25zOg0KDQpvZl9waHlfcGFyc2VfZml4
+ZWRfbGluaygpIGFuZCBvZl9waHlfcmVnaXN0ZXJfZml4ZWRfbGluaygpLCB0aGUgbGF0dGVyIGRv
+aW5nIG9ubHkNCnRoZSBjYWxsIHRvIGZpeGVkX3BoeV9yZWdpc3RlcigpDQoNCnRoYXQgd291bGQg
+YWxsb3cgdG8ga2VlcCBvZl9waHlfcmVnaXN0ZXJfZml4ZWRfbGluaygpIGFzIGl0IGlzLCBicm9r
+ZW4gaW4gdHdvIHN0YWdlczoNCg0KLSBwYXJzaW5nDQotIHJlZ2lzdGVyaW5nDQoNCnRoYW4gY2Fu
+IGJlIHVzZWQgYnkgb3RoZXIgZHJpdmVycyBpbiBvcmRlciB0byBnZXQgdGhlIHN0YXR1cyBidXQg
+SSB0aGluayBpdCdzIG92ZXJraWxsLg0KDQo+IEFzIHN1Y2gsIGl0IG1heSBiZSBkaWZmaWN1bHQg
+dG8gcmV2aWV3LiBDb3VsZCB5b3UgcGxlYXNlIHdyaXRlDQo+IGEgbW9yZSBjb21wbGV0ZSBkZXNj
+cmlwdGlvbiB0byB0aGUgcGF0Y2g/DQoNClRvIGJldHRlciB1bmRlcnN0YW5kIHRoaXMgcGF0Y2gs
+IHRoaW5rIG9mIGl0IGFzIGp1c3QgYSByZWZhY3RvcmluZyBvZiB0aGUNCm9mX3BoeV9yZWdpc3Rl
+cl9maXhlZF9saW5rKCkgdGhhdCBkb2VzIHR3byB0aGluZ3MgaW5zaWRlOg0KDQotIHBhcnNpbmcg
+b2YgZml4ZWQgbGluayBub2RlICgyIGJpbmRpbmdzIHN1cHBvcnRlZCkNCi0gcmVnaXN0ZXIgcGh5
+IGJ5IGNhbGxpbmcgZml4ZWRfcGh5X3JlZ2lzdGVyKCkgaW4gdGhlIHNhbWUgd2F5LCBpbiB0aGUg
+c2FtZSBjb2RlYmFzZQ0KDQpJJ3ZlIGV4dHJhY3RlZCB0aGUgcGFyc2luZyBpbiBhIHNlcGFyYXRl
+IGZ1bmN0aW9uICggZm9sbG93aW5nIHRoZSAib25lIGZ1bmN0aW9uIHNob3VsZA0KZG8gb25lIHRo
+aW5nIiBydWxlKS4NCg0KVGhlbiBJJ3ZlIGV4cG9ydGVkIHRoaXMgZnVuY3Rpb24gdG8gbWFrZSBz
+dGF0dXMgYXZhaWxhYmxlIHRvIGNhbGxlcnMuDQoNCj4gQXMgdG8geW91ciBwcm9ibGVtOiB3b3Vs
+ZCBpdCBiZSBwb3NzaWJsZSB0byBzZXQgc3BlZWQgJiBkdXBsZXgNCj4gYWZ0ZXIgeW91IGRvIG9m
+X3BoeV9jb25uZWN0KCk/IEl0IHJldHVybnMgdGhlIHBoeV9kZXZpY2UNCj4gcG9pbnRlciwgYW5k
+IHBlcmhhcHMgeW91IGNhbiBsb29rIGludG8gcGh5ZGV2LT5zcGVlZCBhbmQNCj4gcGh5ZGV2LT5k
+dXBsZXggYXQgdGhhdCBwb2ludD8NCg0KSXQgd291bGQgYmUgcG9zc2libGUgYnV0IHVuLW5hdHVy
+YWwgYXMgSSdkIGhhdmUgcHJvYmluZyBpbmZvcm1hdGlvbiBvbmx5IGF2YWlsYWJsZSBhdA0KcnVu
+dGltZS4gVGhhdCB3b3VsZCBqdXN0IGNvbXBsaWNhdGUgbWF0dGVycyBmb3IgbXkgcGFydGljdWxh
+ciBjYXNlIGFucyBJIHN1c3BlY3QgdGhlcmUNCndpbGwgYmUgb3RoZXIgZHJpdmVycyB0aGF0IGdl
+dCBpbnRvIHRoaXMgc2l0dWF0aW9uLiBZb3UgYXJlIGNvbmNlcm5lZCBhYm91dCBwZW9wbGUNCmFi
+dXNpbmcgdGhpcyBBUEkgdG8gcmVhZCBmaXhlZCBsaW5rIHN0YXR1cyB3aGVuIHRoZSBsaW5rIGlz
+IG5vdCByZWFsbHkgZml4ZWQsIEknbSBjb25jZXJuZWQNCmFib3V0IGRlY2xhcmluZyB0aGUgbGlu
+ayBhcyBmaXhlZC1saW5rIHdoZW4gaXQncyBub3QuIE1heWJlIHRoZSBuYW1pbmcvYmluZGluZyBu
+ZWVkcyB0byBiZQ0KcmV2aXNlZCB0byBjb3ZlciB0aGUgY2FzZSB3aGVuIGFsbCBpcyBmaXhlZCBi
+dXQgdGhlIGxpbmsuDQoNCg==
