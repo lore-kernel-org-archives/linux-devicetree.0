@@ -1,42 +1,42 @@
-From: Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v2 2/6] rtc: omap: Add external clock enabling support
-Date: Wed, 12 Aug 2015 22:16:36 +0200
-Message-ID: <20150812201636.GJ3411@piout.net>
-References: <1439198906-31189-1-git-send-email-j-keerthy@ti.com>
- <1439198906-31189-3-git-send-email-j-keerthy@ti.com>
- <alpine.DEB.2.02.1508121422020.7154@utopia.booyaka.com>
- <55CB99C2.7010007@ti.com>
+From: Ralf Baechle <ralf@linux-mips.org>
+Subject: Re: [RFC PATCH v4 3/9] mips: pistachio_defconfig: remove
+ CONFIG_MMC_DW_IDMAC
+Date: Thu, 13 Aug 2015 00:05:00 +0200
+Message-ID: <20150812220500.GD11636@linux-mips.org>
+References: <1438843469-23807-1-git-send-email-shawn.lin@rock-chips.com>
+ <1438843515-23935-1-git-send-email-shawn.lin@rock-chips.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Received: from localhost.localdomain ([127.0.0.1]:45725 "EHLO linux-mips.org"
+        rhost-flags-OK-OK-OK-FAIL) by eddie.linux-mips.org with ESMTP
+        id S27013218AbbHLWFRlIIZI (ORCPT <rfc822;devicetree@vger.kernel.org>
+        + 3 others); Thu, 13 Aug 2015 00:05:17 +0200
 Content-Disposition: inline
-In-Reply-To: <55CB99C2.7010007-l0cyMroinI0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Keerthy <a0393675-l0cyMroinI0@public.gmane.org>
-Cc: Paul Walmsley <paul-DWxLp4Yu+b8AvxtiuMwx3w@public.gmane.org>, Keerthy <j-keerthy-l0cyMroinI0@public.gmane.org>, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org, johan-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, grygorii.strashko-l0cyMroinI0@public.gmane.org, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, nm-l0cyMroinI0@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, t-kristo-l0cyMroinI0@public.gmane.org
+In-Reply-To: <1438843515-23935-1-git-send-email-shawn.lin@rock-chips.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Shawn Lin <shawn.lin@rock-chips.com>
+Cc: jh80.chung@samsung.com, ulf.hansson@linaro.org, heiko@sntech.de, dianders@chromium.org, Vineet.Gupta1@synopsys.com, Wei Xu <xuwei5@hisilicon.com>, Joachim Eastwood <manabian@gmail.com>, Alexey Brodkin <abrodkin@synopsys.com>, Kukjin Kim <kgene@kernel.org>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, Russell King <linux@arm.linux.org.uk>, Jun Nie <jun.nie@linaro.org>, Govindraj Raja <govindraj.raja@imgtec.com>, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-mips@linux-mips.org, linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+On Thu, Aug 06, 2015 at 02:45:15PM +0800, Shawn Lin wrote:
 
-On 13/08/2015 at 00:38:50 +0530, Keerthy wrote :
-> The intent here is to switch to a higher precision clock which is the
-> internal clock when available.
+> DesignWare MMC Controller's transfer mode should be decided
+> at runtime instead of compile-time. So we remove this config
+> option and read dw_mmc's register to select DMA master.
 > 
-> Alexandre,
+> Signed-off-by: Shawn Lin <shawn.lin@rock-chips.com>
+> ---
 > 
-> Is dynamic switching preferred over sticking  to external clock always if
-> present?
+> Changes in v4: None
+> Changes in v3: None
+> Changes in v2: None
 > 
+>  arch/mips/configs/pistachio_defconfig | 1 -
 
-I'd say that I don't really care. I'd say the best would be to make a
-decision based on clock-accuracy but maybe that is an information you
-don't have yet. Anyway, this could be added at a later date.
+Acked-by: Ralf Baechle <ralf@linux-mips.org>
 
--- 
-Alexandre Belloni, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Please feel free to merge this patch with the remainder
+of the series.
+
+  Ralf
