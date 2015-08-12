@@ -1,72 +1,47 @@
-From: Michal Simek <michal.simek@xilinx.com>
-Subject: Re: [RFC PATCH v1] mmc: sdhci-of-arasan: Add the support for
- sdhci-5.1
-Date: Wed, 12 Aug 2015 07:07:37 +0200
-Message-ID: <55CAD499.5070701@xilinx.com>
-References: <1439279190-9556-1-git-send-email-shawn.lin@rock-chips.com>
- <55CA0C6F.7000002@xilinx.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <55CA0C6F.7000002@xilinx.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Shawn Lin <shawn.lin@rock-chips.com>, Michal Simek <michal.simek@xilinx.com>, soren.brinkmann@xilinx.com
-Cc: Ulf Hansson <ulf.hansson@linaro.org>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>
+From: Matt Ranostay <mranostay-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH 1/2] devicetree: add PulsedLight vendor + device docs
+Date: Tue, 11 Aug 2015 23:01:15 -0700
+Message-ID: <1439359276-19028-2-git-send-email-mranostay@gmail.com>
+References: <1439359276-19028-1-git-send-email-mranostay@gmail.com>
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1439359276-19028-1-git-send-email-mranostay-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Cc: linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Matt Ranostay <mranostay-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-+linux-mmc
+Add pulsedlight vendor to vendor-prefixes.txt, and LIDAR device
+documentation to trivial-devices.txt
 
-On 08/11/2015 04:53 PM, Michal Simek wrote:
-> On 08/11/2015 09:46 AM, Shawn Lin wrote:
->> This patch adds the compatible string in sdhci-of-arasan.c to
->> support sdhci-arasan5.1 version of controller. No documented
->> controller IP version is found in the TRM, so we use ths version
->> of command queueing engine integrated into this controller by arasan
->> to specify our controller.
->>
->> Signed-off-by: Shawn Lin <shawn.lin@rock-chips.com>
->>
->> ---
->>
->> Changes in v1:
->> - Remove redundant SDHCI_QUIRK_CAP_CLOCK_BASE_BROKEN for "arasan, sdhci-5.1" since
->>   SDHCI will check "host->max_clk == 0" and let driver get it from host->ops->get_max_clock.
->>
->>  Documentation/devicetree/bindings/mmc/arasan,sdhci.txt | 2 +-
->>  drivers/mmc/host/sdhci-of-arasan.c                     | 1 +
->>  2 files changed, 2 insertions(+), 1 deletion(-)
->>
->> diff --git a/Documentation/devicetree/bindings/mmc/arasan,sdhci.txt b/Documentation/devicetree/bindings/mmc/arasan,sdhci.txt
->> index 7e94903..da541c3 100644
->> --- a/Documentation/devicetree/bindings/mmc/arasan,sdhci.txt
->> +++ b/Documentation/devicetree/bindings/mmc/arasan,sdhci.txt
->> @@ -9,7 +9,7 @@ Device Tree Bindings for the Arasan SDHCI Controller
->>  
->>  Required Properties:
->>    - compatible: Compatibility string. Must be 'arasan,sdhci-8.9a' or
->> -                'arasan,sdhci-4.9a'
->> +                'arasan,sdhci-4.9a' or 'arasan,sdhci-5.1'
->>    - reg: From mmc bindings: Register location and length.
->>    - clocks: From clock bindings: Handles to clock inputs.
->>    - clock-names: From clock bindings: Tuple including "clk_xin" and "clk_ahb"
->> diff --git a/drivers/mmc/host/sdhci-of-arasan.c b/drivers/mmc/host/sdhci-of-arasan.c
->> index ef5a7d2..75379cb 100644
->> --- a/drivers/mmc/host/sdhci-of-arasan.c
->> +++ b/drivers/mmc/host/sdhci-of-arasan.c
->> @@ -217,6 +217,7 @@ static int sdhci_arasan_remove(struct platform_device *pdev)
->>  
->>  static const struct of_device_id sdhci_arasan_of_match[] = {
->>  	{ .compatible = "arasan,sdhci-8.9a" },
->> +	{ .compatible = "arasan,sdhci-5.1" },
->>  	{ .compatible = "arasan,sdhci-4.9a" },
->>  	{ }
->>  };
->>
-> 
-> Acked-by: Michal Simek <michal.simek@xilinx.com>
-> 
-> Thanks,
-> Michal
-> 
-> 
+Signed-off-by: Matt Ranostay <mranostay-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+---
+ Documentation/devicetree/bindings/i2c/trivial-devices.txt | 1 +
+ Documentation/devicetree/bindings/vendor-prefixes.txt     | 1 +
+ 2 files changed, 2 insertions(+)
+
+diff --git a/Documentation/devicetree/bindings/i2c/trivial-devices.txt b/Documentation/devicetree/bindings/i2c/trivial-devices.txt
+index d77d412..cecd315 100644
+--- a/Documentation/devicetree/bindings/i2c/trivial-devices.txt
++++ b/Documentation/devicetree/bindings/i2c/trivial-devices.txt
+@@ -80,6 +80,7 @@ oki,ml86v7667		OKI ML86V7667 video decoder
+ ovti,ov5642		OV5642: Color CMOS QSXGA (5-megapixel) Image Sensor with OmniBSI and Embedded TrueFocus
+ pericom,pt7c4338	Real-time Clock Module
+ plx,pex8648		48-Lane, 12-Port PCI Express Gen 2 (5.0 GT/s) Switch
++pulsedlight,lidar-lite-v2	Pulsedlight LIDAR range-finding sensor
+ ramtron,24c64		i2c serial eeprom  (24cxx)
+ ricoh,r2025sd		I2C bus SERIAL INTERFACE REAL-TIME CLOCK IC
+ ricoh,r2221tl		I2C bus SERIAL INTERFACE REAL-TIME CLOCK IC
+diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
+index 6284568..0f318c3 100644
+--- a/Documentation/devicetree/bindings/vendor-prefixes.txt
++++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
+@@ -164,6 +164,7 @@ phytec	PHYTEC Messtechnik GmbH
+ picochip	Picochip Ltd
+ plathome	Plat'Home Co., Ltd.
+ pixcir  PIXCIR MICROELECTRONICS Co., Ltd
++pulsedlight	PulsedLight, Inc
+ powervr	PowerVR (deprecated, use img)
+ qca	Qualcomm Atheros, Inc.
+ qcom	Qualcomm Technologies, Inc
+-- 
+1.9.1
