@@ -1,409 +1,138 @@
-From: Matt Ranostay <mranostay-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v4 2/2] iio: proximity: add support for PulsedLight LIDAR
-Date: Tue, 11 Aug 2015 21:24:45 -0700
-Message-ID: <CAKzfze9zL2DXsKF2Rwhz5_he1=pZe_EdvMFhC=junsBC+N57eg@mail.gmail.com>
-References: <1438749676-28781-1-git-send-email-mranostay@gmail.com>
-	<1438749676-28781-3-git-send-email-mranostay@gmail.com>
-	<55C61AA5.10105@kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <55C61AA5.10105-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: =?UTF-8?B?TWFyZWsgVmHFoXV0?= <marex-ynQEQJNshbs@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Vladimir Barinov <vladimir.barinov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>, "linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+From: Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Subject: [PATCH v16 0/4] ARM: rk3288: Add PM Domain support
+Date: Wed, 12 Aug 2015 12:42:28 +0800
+Message-ID: <1439354552-20098-1-git-send-email-wxt@rock-chips.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, khilman-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Aug 8, 2015 at 8:05 AM, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
-> On 05/08/15 05:41, Matt Ranostay wrote:
->> Add support for the PulsedLight LIDAR rangefinder sensor which allows
->> high speed (over 300Hz) distance measurements using Barker Coding within
->> 40 meter range.
->>
->> Support only tested on the "blue label" rev 2, but may work using low
->> sample frequencies on the original version.
->>
->> Signed-off-by: Matt Ranostay <mranostay-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> Couple of bits inline.  Only one that really matters is I suspect
-> that simply calling it lidar (and naming the file lidar.c) is going
-> to give us problems if they or someone else produces a similar lidar
-> device in future.
->
-> Perhaps file name as pulsedlight-lidar-lite-v2.c
-> and name as lidar-lite-v2 for device tree etc.
+Add power domain drivers based on generic power domain for
+Rockchip platform, and support RK3288 SoCs.
 
-Got it. Pretty 80% the v1 will suck at anything over 10 Hz... however
-the v2 I have running at 120Hz with high correlation settings possible
-(default) which is required for a 3d scan of a room/artifact :).
+Verified on url =
+https://chromium.googlesource.com/chromiumos/third_party/kernel/+/v3.14
+localhost / # cat /sys/kernel/debug/pm_genpd/pm_genpd_summary
+    domain                      status         slaves
+    /device                      runtime        status
+               ----------------------------------------------------------------------
+    pd_video                        off
+    /devices/ff9a0800.iommu                     suspended
+    /devices/ff9a0000.video-codec               suspended
+    pd_vio                          on
+    /devices/ff930300.iommu                     suspended
+    /devices/ff940300.iommu                     suspended
+    /devices/ff930000.vop                       suspended
+    /devices/ff940000.vop                       suspended
+    /devices/ff980000.hdmi                      unsupported
+    /devices/rockchip-edp                       unsupported
+    pd_hevc                         off
+    pd_gpu                          off
+    /devices/ffa30000.gpu                       suspended
 
->
-> Otherwise, nice little driver for a nice looking bit of kit.
->
-> Thanks,
->
-> Jonathan
->> ---
->>  drivers/iio/proximity/Kconfig  |  12 ++
->>  drivers/iio/proximity/Makefile |   1 +
->>  drivers/iio/proximity/lidar.c  | 294 +++++++++++++++++++++++++++++++++++++++++
->>  3 files changed, 307 insertions(+)
->>  create mode 100644 drivers/iio/proximity/lidar.c
->>
->> diff --git a/drivers/iio/proximity/Kconfig b/drivers/iio/proximity/Kconfig
->> index 41a8d8f..e64fc5b 100644
->> --- a/drivers/iio/proximity/Kconfig
->> +++ b/drivers/iio/proximity/Kconfig
->> @@ -20,6 +20,18 @@ endmenu
->>
->>  menu "Proximity sensors"
->>
->> +config LIDAR
->> +     tristate "PulsedLight LIDAR sensor"
->> +     select IIO_BUFFER
->> +     select IIO_TRIGGERED_BUFFER
->> +     depends on I2C
->> +     help
->> +       Say Y to build a driver for PulsedLight LIDAR range finding
->> +       sensor.
->> +
->> +       To compile this driver as a module, choose M here: the
->> +       module will be called lidar.
->> +
->>  config SX9500
->>       tristate "SX9500 Semtech proximity sensor"
->>       select IIO_BUFFER
->> diff --git a/drivers/iio/proximity/Makefile b/drivers/iio/proximity/Makefile
->> index 9818dc5..36a95f3 100644
->> --- a/drivers/iio/proximity/Makefile
->> +++ b/drivers/iio/proximity/Makefile
->> @@ -4,4 +4,5 @@
->>
->>  # When adding new entries keep the list in alphabetical order
->>  obj-$(CONFIG_AS3935)         += as3935.o
->> +obj-$(CONFIG_LIDAR)          += lidar.o
->>  obj-$(CONFIG_SX9500)         += sx9500.o
->> diff --git a/drivers/iio/proximity/lidar.c b/drivers/iio/proximity/lidar.c
->> new file mode 100644
->> index 0000000..fdec9a2
->> --- /dev/null
->> +++ b/drivers/iio/proximity/lidar.c
->> @@ -0,0 +1,294 @@
->> +/*
->> + * lidar.c - Support for PulsedLight LIDAR range finding sensor
->> + *
->> + * Copyright (C) 2015 Matt Ranostay <mranostay-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->> + *
->> + * This program is free software; you can redistribute it and/or modify
->> + * it under the terms of the GNU General Public License as published by
->> + * the Free Software Foundation; either version 2 of the License, or
->> + * (at your option) any later version.
->> + *
->> + * This program is distributed in the hope that it will be useful,
->> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
->> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
->> + * GNU General Public License for more details.
->> + *
->> + * TODO: runtime pm, interrupt mode, and signal strength reporting
->> + *
->> + */
->> +
->> +#include <linux/err.h>
->> +#include <linux/init.h>
->> +#include <linux/i2c.h>
->> +#include <linux/delay.h>
->> +#include <linux/mutex.h>
->> +#include <linux/module.h>
->> +#include <linux/iio/iio.h>
->> +#include <linux/iio/sysfs.h>
->> +#include <linux/iio/buffer.h>
->> +#include <linux/iio/trigger.h>
->> +#include <linux/iio/triggered_buffer.h>
->> +#include <linux/iio/trigger_consumer.h>
->> +
->> +#define LIDAR_REG_CONTROL            0x00
->> +#define LIDAR_REG_CONTROL_ACQUIRE    BIT(2)
->> +
->> +#define LIDAR_REG_STATUS             0x01
->> +#define LIDAR_REG_STATUS_INVALID     BIT(3)
->> +#define LIDAR_REG_STATUS_READY               BIT(0)
->> +
->> +#define LIDAR_REG_DATA_HBYTE 0x0f
->> +#define LIDAR_REG_DATA_LBYTE 0x10
->> +
->> +#define LIDAR_DRV_NAME "lidar"
->> +
->> +struct lidar_data {
->> +     struct mutex lock;
->> +     struct iio_dev *indio_dev;
->> +     struct i2c_client *client;
->> +
->> +     u16 buffer[8]; /* 2 byte distance + 8 byte timestamp */
->> +};
->> +
->> +static const struct iio_chan_spec lidar_channels[] = {
->> +     {
->> +             .type = IIO_DISTANCE,
->> +             .info_mask_separate =
->> +                     BIT(IIO_CHAN_INFO_RAW) | BIT(IIO_CHAN_INFO_SCALE),
->> +             .scan_index = 0,
->> +             .scan_type = {
->> +                     .sign = 'u',
->> +                     .realbits = 16,
->> +                     .storagebits = 16,
->> +             },
->> +     },
->> +     IIO_CHAN_SOFT_TIMESTAMP(1),
->> +};
->> +
->> +static int lidar_read_byte(struct lidar_data *data, int reg)
->> +{
->> +     struct i2c_client *client = data->client;
->> +     int ret;
->> +
->> +     ret = i2c_smbus_write_byte(client, reg);
->> +     if (ret < 0) {
->> +             dev_err(&client->dev, "cannot write addr value");
->> +             return ret;
->> +     }
->> +
->> +     ret = i2c_smbus_read_byte(client);
->> +     if (ret < 0) {
->> +             dev_err(&client->dev, "cannot read data value");
->> +             return ret;
-> Drop this return ret as otherwise various static checkers
-> will moan at me (falling through gives the same result)
+The following is the easy example.
 
-Ok seems pedantic but meh, will drop  :)
+vopb: vop@ff930000 {
+    compatible = "rockchip,rk3288-vop";
+    ...
+    iommus = <&vopb_mmu>;
+    power-domains = <&power RK3288_PD_VIO>;
+    status = "disabled";
+    ...
+};
 
->> +     }
->> +
->> +     return ret;
->> +}
->> +
->> +static inline int lidar_write_control(struct lidar_data *data, int val)
->> +{
->> +     return i2c_smbus_write_byte_data(data->client, LIDAR_REG_CONTROL, val);
->> +}
->> +
->> +static int lidar_read_measurement(struct lidar_data *data, u16 *reg)
->> +{
->> +     int ret;
->> +     int val;
->> +
->> +     /*
->> +      * Device needs a STOP condition between address write, and data read
->> +      * so in turn i2c_smbus_read_byte_data cannot be used
-> Good documentation of this.  However, I'd move it to inside the read_byte
-> function above rather than here.
->> +      */
->> +
->> +     ret = lidar_read_byte(data, LIDAR_REG_DATA_HBYTE);
->> +     if (ret < 0)
->> +             return ret;
->> +     val = ret << 8;
->> +
->> +     ret = lidar_read_byte(data, LIDAR_REG_DATA_LBYTE);
->> +     if (ret < 0)
->> +             return ret;
->> +
->> +     val |= ret;
->> +     *reg = val;
->> +
->> +     return 0;
->> +}
->> +
->> +static int lidar_get_measurement(struct lidar_data *data, u16 *reg)
->> +{
->> +     struct i2c_client *client = data->client;
->> +     int tries = 10;
->> +     int ret;
->> +
->> +     /* start sample */
->> +     ret = lidar_write_control(data, LIDAR_REG_CONTROL_ACQUIRE);
->> +     if (ret < 0) {
->> +             dev_err(&client->dev, "cannot send start measurement command");
->> +             return ret;
->> +     }
->> +
->> +     while (tries--) {
->> +             usleep_range(1000, 2000);
->> +
->> +             ret = lidar_read_byte(data, LIDAR_REG_STATUS);
->> +             if (ret < 0)
->> +                     break;
->> +
->> +             /* return 0 since laser is likely pointed out of range */
->> +             if (ret & LIDAR_REG_STATUS_INVALID) {
->> +                     *reg = 0;
->> +                     ret = 0;
->> +                     break;
->> +             }
->> +
->> +             /* sample ready to read */
->> +             if (!(ret & LIDAR_REG_STATUS_READY)) {
->> +                     ret = lidar_read_measurement(data, reg);
->> +                     break;
->> +             }
->> +             ret = -EIO;
->> +     }
->> +
->> +     return ret;
->> +}
->> +
->> +static int lidar_read_raw(struct iio_dev *indio_dev,
->> +                       struct iio_chan_spec const *chan,
->> +                       int *val, int *val2, long mask)
->> +{
->> +     struct lidar_data *data = iio_priv(indio_dev);
->> +     int ret = -EINVAL;
->> +
->> +     mutex_lock(&data->lock);
->> +
->> +     if (iio_buffer_enabled(indio_dev) && mask == IIO_CHAN_INFO_RAW) {
->> +             ret = -EBUSY;
->> +             goto error_busy;
->> +     }
->> +
->> +     switch (mask) {
->> +     case IIO_CHAN_INFO_RAW: {
->> +             u16 reg;
->> +
->> +             ret = lidar_get_measurement(data, &reg);
->> +             if (!ret) {
->> +                     *val = reg;
->> +                     ret = IIO_VAL_INT;
->> +             }
->> +             break;
->> +     }
->> +     case IIO_CHAN_INFO_SCALE:
->> +             *val = 0;
->> +             *val2 = 10000;
->> +             ret = IIO_VAL_INT_PLUS_MICRO;
->> +             break;
->> +     }
->> +
->> +error_busy:
->> +     mutex_unlock(&data->lock);
->> +
->> +     return ret;
->> +}
->> +
->> +static irqreturn_t lidar_trigger_handler(int irq, void *private)
->> +{
->> +     struct iio_poll_func *pf = private;
->> +     struct iio_dev *indio_dev = pf->indio_dev;
->> +     struct lidar_data *data = iio_priv(indio_dev);
->> +     int ret;
->> +
->> +     ret = lidar_get_measurement(data, &data->buffer[0]);
-> data->buffer should be the same pointer unless I'm going crazy (always
-> a posibility)
-Yeah it would be.. this is an artifact when I didn't have the buffer
-size aligned correctly. Will fix.
+vopb_mmu: iommu@ff930300 {
+    compatible = "rockchip,iommu";
+    ...
+    interrupt-names = "vopb_mmu";
+    power-domains = <&power RK3288_PD_VIO>;
+    #iommu-cells = <0>;
+    status = "disabled";
+    ...
+};
 
->> +     if (!ret) {
->> +             iio_push_to_buffers_with_timestamp(indio_dev, data->buffer,
->> +                                                iio_get_time_ns());
->> +     } else {
->> +             dev_err(&data->client->dev, "cannot read LIDAR measurement");
->> +     }
->> +
->> +     iio_trigger_notify_done(indio_dev->trig);
->> +
->> +     return IRQ_HANDLED;
->> +}
->> +
->> +static const struct iio_info lidar_info = {
->> +     .driver_module = THIS_MODULE,
->> +     .read_raw = lidar_read_raw,
->> +};
->> +
->> +static int lidar_probe(struct i2c_client *client,
->> +                    const struct i2c_device_id *id)
->> +{
->> +     struct lidar_data *data;
->> +     struct iio_dev *indio_dev;
->> +     int ret;
->> +
->> +     indio_dev = devm_iio_device_alloc(&client->dev, sizeof(*data));
->> +     if (!indio_dev)
->> +             return -ENOMEM;
->> +
->> +     indio_dev->info = &lidar_info;
->> +     indio_dev->name = LIDAR_DRV_NAME;
->> +     indio_dev->channels = lidar_channels;
->> +     indio_dev->num_channels = ARRAY_SIZE(lidar_channels);
->> +     indio_dev->modes = INDIO_DIRECT_MODE;
->> +
->> +     data = iio_priv(indio_dev);
->> +     i2c_set_clientdata(client, indio_dev);
->> +
->> +     data->client = client;
->> +     data->indio_dev = indio_dev;
->> +     mutex_init(&data->lock);
->> +
->> +     ret = iio_triggered_buffer_setup(indio_dev, NULL,
->> +                                      lidar_trigger_handler, NULL);
->> +     if (ret)
->> +             return ret;
->> +
->> +     ret = iio_device_register(indio_dev);
->> +     if (ret)
->> +             goto error_unreg_buffer;
->> +
->> +     return 0;
->> +
->> +error_unreg_buffer:
->> +     iio_triggered_buffer_cleanup(indio_dev);
->> +
->> +     return ret;
->> +}
->> +
->> +static int lidar_remove(struct i2c_client *client)
->> +{
->> +     struct iio_dev *indio_dev = i2c_get_clientdata(client);
->> +
->> +     iio_device_unregister(indio_dev);
->> +     iio_triggered_buffer_cleanup(indio_dev);
->> +
->> +     return 0;
->> +}
->> +
->> +static const struct i2c_device_id lidar_id[] = {
->> +     {"lidar", 0},
->> +     { },
->> +};
->> +MODULE_DEVICE_TABLE(i2c, lidar_id);
->> +
->> +static const struct of_device_id lidar_dt_ids[] = {
->> +     { .compatible = "pulsedlight,lidar" },
->
-> Not a more descriptive name?  Website suggests
-> things like
-> lidar-lite-v2
->
-> I just worry they'll come out with a completely incompatible
-> interface to some new unit that is also a lidar and we'll be
-> forever confused!
+vopl: vop@ff940000 {
+    compatible = "rockchip,rk3288-vop";
+    reg = <0xff940000 0x19c>;
+    ...
+    iommus = <&vopl_mmu>;
+    power-domains = <&power RK3288_PD_VIO>;
+    status = "disabled";
+    ...
+};
 
-Good point noted.
->
->> +     { }
->> +};
->> +
->> +static struct i2c_driver lidar_driver = {
->> +     .driver = {
->> +             .name   = LIDAR_DRV_NAME,
->> +             .of_match_table = of_match_ptr(lidar_dt_ids),
->> +     },
->> +     .probe          = lidar_probe,
->> +     .remove         = lidar_remove,
->> +     .id_table       = lidar_id,
->> +};
->> +module_i2c_driver(lidar_driver);
->> +
->> +MODULE_AUTHOR("Matt Ranostay <mranostay-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>");
->> +MODULE_DESCRIPTION("PulsedLight LIDAR sensor");
->> +MODULE_LICENSE("GPL");
->>
->
+vopl_mmu: iommu@ff940300 {
+    compatible = "rockchip,iommu";
+    ...
+    interrupt-names = "vopl_mmu";
+    power-domains = <&power RK3288_PD_VIO>;
+    #iommu-cells = <0>;
+    status = "disabled";
+};
+
+Others, we can verify this driver for the EDP.
+We can apply the following these patchs.
+
+6967631 New          [v2,1/8] drm: exynos/dp: fix code style
+6967741 New          [v2,2/8] drm: exynos/dp: convert to drm bridge mode
+6967801 New          [v2,3/8] drm: bridge: analogix_dp: split exynos dp driver to bridge dir
+6967791 New          [v2,4/8] drm: rockchip/dp: add rockchip platform dp driver
+6968031 New          [v2,5/8] drm: bridge/analogix_dp: add platform device type support
+6968141 New          [v2,6/8] drm: bridge: analogix_dp: add some rk3288 special registers setting
+6967941 New          [v2,7/8] drm: bridge: analogix_dp: try force hpd after plug in lookup failed
+6967971 New          [v2,8/8] drm: bridge/analogix_dp: expand the delay time for hpd detect
+
+There is a recent addition from Linus Walleij,
+called simple-mfd [a] that is supposed to get added real early for kernel 4.2
+
+[a]:
+https://git.kernel.org/cgit/linux/kernel/git/linusw/linux-integrator.git/commit/?h=simple-mfd&id=fcf294c020ff7ee4e3b1e96159e4dc7a17ad59d1
+
+Here is my branch, Tested by chromeos-3.14 and next-kernel.
+
+2b82899 ARM: dts: add RK3288 power-domain node
+69d0b5b soc: rockchip: power-domain: support power domain driver for
+RK3288 SoCs
+66f8758 ARM: power-domain: rockchip: add all the domain type on RK3288
+SoCs
+c5f12a3 dt-bindings: add document of Rockchip power domain
+7a834ba Merge branch 'for-linus' of
+git://git.kernel.org/pub/scm/linux/kernel/git/jikos/hid
+0be0171 HID: wacom: Report correct device resolution when using the
+wireless adapater
+2b9bea0 Merge tag 'mfd-fixes-4.2' of
+git://git.kernel.org/pub/scm/linux/kernel/git/lee/mfd
+016a9f5 Merge tag 'ntb-4.2-rc7' of git://github.com/jonmason/ntb
+a3ca013 Merge branch 'for-linus' of
+git://git.kernel.org/pub/scm/linux/kernel/git/viro/vfs
+......
+
+Caesar Wang (4):
+  dt-bindings: add document of Rockchip power domain
+  ARM: power-domain: rockchip: add all the domain type on RK3288 SoCs
+  soc: rockchip: power-domain: Add power domain driver
+  ARM: dts: add the support power-domain node on RK3288 SoCs
+
+ .../bindings/soc/rockchip/power_domain.txt         |  46 ++
+ arch/arm/boot/dts/rk3288.dtsi                      |  60 ++-
+ drivers/soc/Kconfig                                |   1 +
+ drivers/soc/Makefile                               |   1 +
+ drivers/soc/rockchip/Kconfig                       |  13 +
+ drivers/soc/rockchip/Makefile                      |   4 +
+ drivers/soc/rockchip/pm_domains.c                  | 485 +++++++++++++++++++++
+ include/dt-bindings/power-domain/rk3288.h          |  31 ++
+ 8 files changed, 640 insertions(+), 1 deletion(-)
+ create mode 100644 Documentation/devicetree/bindings/soc/rockchip/power_domain.txt
+ create mode 100644 drivers/soc/rockchip/Kconfig
+ create mode 100644 drivers/soc/rockchip/Makefile
+ create mode 100644 drivers/soc/rockchip/pm_domains.c
+ create mode 100644 include/dt-bindings/power-domain/rk3288.h
+
+-- 
+1.9.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
