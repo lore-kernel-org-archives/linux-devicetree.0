@@ -1,87 +1,46 @@
-From: Madalin-Cristian Bucur <madalin.bucur@freescale.com>
-Subject: RE: [PATCH 0/2] of: fsl/fman: reuse the fixed node parsing code
-Date: Wed, 12 Aug 2015 13:26:09 +0000
-Message-ID: <BL2PR03MB545929237EF33BA13089EC1E67E0@BL2PR03MB545.namprd03.prod.outlook.com>
-References: <1438785745-15517-1-git-send-email-madalin.bucur@freescale.com>
- <55C63D3B.5020005@gmail.com> <55CA1C14.3000202@list.ru>
- <BL2PR03MB545D4E18DE41AE01AFC37D6E67F0@BL2PR03MB545.namprd03.prod.outlook.com>
- <55CA29C8.5000707@list.ru>
+From: Masahiro Yamada <yamada.masahiro@socionext.com>
+Subject: Re: [PATCH v2 0/4] Device Tree updates of UniPhier SoCs for Linux 4.3
+Date: Wed, 12 Aug 2015 22:39:47 +0900
+Message-ID: <CAK7LNAS_Tx=-it9LFg1K7i-URu1Dx_2xnHPkgM1KJkBFb9q4ig@mail.gmail.com>
+References: <1438857468-9740-1-git-send-email-yamada.masahiro@socionext.com>
+	<20150811132049.GK30181@localhost>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=UTF-8
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <55CA29C8.5000707@list.ru>
-Content-Language: en-US
+In-Reply-To: <20150811132049.GK30181@localhost>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Stas Sergeev <stsp@list.ru>, Florian Fainelli <f.fainelli@gmail.com>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Liberman Igal <Igal.Liberman@freescale.com>, Stas Sergeev <stsp@users.sourceforge.net>, "joakim.tjernlund@transmode.se" <joakim.tjernlund@transmode.se>, Shaohui Xie <Shaohui.Xie@freescale.com>
+To: Olof Johansson <olof@lixom.net>
+Cc: arm@kernel.org, Russell King <linux@arm.linux.org.uk>, devicetree@vger.kernel.org, Kumar Gala <galak@codeaurora.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBTdGFzIFNlcmdlZXYgW21haWx0
-bzpzdHNwQGxpc3QucnVdDQo+IA0KPiAxMS4wOC4yMDE1IDE5OjMzLCBNYWRhbGluLUNyaXN0aWFu
-IEJ1Y3VyINC/0LjRiNC10YI6DQo+ID4gKyBKb2FraW0sIFNoYW9odWkNCj4gPg0KPiA+PiAtLS0t
-LU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiA+PiBGcm9tOiBTdGFzIFNlcmdlZXYgW21haWx0bzpz
-dHNwQGxpc3QucnVdDQo+ID4+DQo+ID4+IDA4LjA4LjIwMTUgMjA6MzIsIEZsb3JpYW4gRmFpbmVs
-bGkg0L/QuNGI0LXRgjoNCj4gPj4+IENDJ2luZyBTdGFzLA0KPiA+PiBIaS4NCj4gPj4NCj4gPj4+
-IExlIDA4LzA1LzE1IDA3OjQyLCBNYWRhbGluIEJ1Y3VyIGEgw6ljcml0IDoNCj4gPj4+PiBUaGUg
-Rk1hbiBNQUMgY29uZmlndXJhdGlvbiBjb2RlIG5lZWRzIHRoZSBzcGVlZCBhbmQgZHVwbGV4DQo+
-ID4+IGluZm9ybWF0aW9uDQo+ID4+Pj4gZm9yIGZpeGVkLWxpbmsgaW50ZXJmYWNlcyB0aGF0IGlz
-IHBhcnNlZCBub3cgYnkgdGhlIG9mIGZ1bmN0aW9uDQo+ID4+Pj4gb2ZfcGh5X3JlZ2lzdGVyX2Zp
-eGVkX2xpbmsoKS4gVGhpcyBwYXJzZXMgdGhlIGZpeGVkLWxpbmsgcGFyYW1ldGVycyBidXQNCj4g
-Pj4+PiBkb2VzIG5vdCBleHBvc2UgdG8gdGhlIGNhbGxlciBuZWl0aGVyIHRoZSBwaHlfZGV2aWNl
-IHBvaW50ZXIgbm9yIHRoZQ0KPiA+Pj4+IHN0YXR1cyBzdHJ1Y3Qgd2hlcmUgaXQgbG9hZHMgdGhl
-IGZpeGVkLWxpbmsgcGFyYW1zLg0KPHNuaXA+DQoNCj4gPiBJJ3ZlIHRyaWVkIHRvIG1ha2UgdGhl
-IHNtYWxsZXN0IGNoYW5nZXMgdGhhdCBhbGxvdyBtZSB0byByZXRyaWV2ZSB0aG9zZQ0KPiA+IHdp
-dGhvdXQgbW9kaWZ5aW5nIGV4aXN0aW5nIEFQSS4NCj4gPiBXaHkgaXMgaXQgaW1wb3J0YW50IHRv
-IGhpZGUgdGhlIGRlZmF1bHQgdmFsdWVzIGZyb20gdGhlIE1BQyBkcml2ZXI/DQo+IE15IHdvcnJ5
-IGlzIHRoYXQgdGhlIGZpeGVkIHZhbHVlcyBhcmUgbm90IHJlYWxseSBmaXhlZCwgYW5kDQo+IHRo
-ZXJlZm9yZSBhcmUgbm90IGFsd2F5cyB1c2VmdWwgdG8gYWNjZXNzIGRpcmVjdGx5LiBJdCBpcyBs
-aWtlbHkNCj4gbm90IGEgcHJvYmxlbSBmb3IgeW91ciB1c2UtY2FzZSwgYXMsIGFzIHlvdSBzYXks
-IHRoZSBBTiBpcw0KPiBkaXNhYmxlZCwgYnV0IHRoaXMgaXMgcHJvYmFibHkgbm90IHRoZSBiZXN0
-IHRvIGRvIGluIGdlbmVyYWwuDQoNClllcywgbm90IGEgcHJvYmxlbSBpbiBteSBjYXNlLg0KDQo+
-IEFuZCBhbHNvIHlvdSBkbzoNCj4gLS0tDQo+IA0KPiAtCQllcnIgPSBvZl9waHlfcmVnaXN0ZXJf
-Zml4ZWRfbGluayhtYWNfbm9kZSk7DQo+IC0JCWlmIChlcnIpDQo+ICsJCXN0cnVjdCBwaHlfZGV2
-aWNlICpwaHk7DQo+ICsNCj4gKwkJbWFjX2Rldi0+Zml4ZWRfbGluayA9IGt6YWxsb2Moc2l6ZW9m
-KCptYWNfZGV2LQ0KPiA+Zml4ZWRfbGluayksDQo+ICsJCQkJCSAgICAgIEdGUF9LRVJORUwpOw0K
-PiArCQlpZiAob2ZfcGh5X3BhcnNlX2ZpeGVkX2xpbmsobWFjX25vZGUsIG1hY19kZXYtDQo+ID5m
-aXhlZF9saW5rKSkNCj4gKwkJCWdvdG8gX3JldHVybl9kZXZfc2V0X2RydmRhdGE7DQo+ICsNCj4g
-KwkJcGh5ID0gZml4ZWRfcGh5X3JlZ2lzdGVyKFBIWV9QT0xMLCBtYWNfZGV2LT5maXhlZF9saW5r
-LA0KPiArCQkJCQkgbWFjX25vZGUpOw0KPiANCj4gLS0tDQo+IA0KPiB3aGljaCBtZWFucyB5b3Ug
-cmVhbGx5IHdhbnQgdG8gY2lyY3VtdmVudCB0aGUgY3VycmVudCBPRg0KPiBhcGkgcXVpdGUgYSBs
-b3QsIHdpdGhvdXQgc2F5aW5nIHdoeSBpbiB0aGUgcGF0Y2ggZGVzY3JpcHRpb24uDQoNCkkgY2ly
-Y3VtdmVudCB0aGUgQVBJIGJlY2F1c2UgSSBkaW4gbm90IHdhbnQgdG8gY2hhbmdlIGV4aXN0aW5n
-IEFQSS4NCklmIEkgY291bGQgZ2V0IGEgcmVmZXJlbmNlIHRvIHRoZSBzdGF0dXMgc3RydWN0IHdp
-dGhvdXQgY2hhbmdpbmcgYW55IGNvZGUgDQpvciB3aXRob3V0IGJlaW5nIHJlcXVpcmVkIHRvIGNh
-bGwgYnkgbXlzZWxmIGZpeGVkX3BoeV9yZWdpc3RlcigpLCBJDQp3b3VsZCBvZiBkb25lIHRoYXQu
-IEdpdmVuIHRoZSBleGlzdGluZyBjb2RlIGluIG9mX3BoeV9yZWdpc3Rlcl9maXhlZF9saW5rKCks
-DQp0aGlzIHdhcyBteSBvbmx5IG9wdGlvbi4gSSBjb3VsZCBoYXZlIGJyb2tlbiBvZl9waHlfcmVn
-aXN0ZXJfZml4ZWRfbGluaygpDQppbiB0d28gZnVuY3Rpb25zOg0KDQpvZl9waHlfcGFyc2VfZml4
-ZWRfbGluaygpIGFuZCBvZl9waHlfcmVnaXN0ZXJfZml4ZWRfbGluaygpLCB0aGUgbGF0dGVyIGRv
-aW5nIG9ubHkNCnRoZSBjYWxsIHRvIGZpeGVkX3BoeV9yZWdpc3RlcigpDQoNCnRoYXQgd291bGQg
-YWxsb3cgdG8ga2VlcCBvZl9waHlfcmVnaXN0ZXJfZml4ZWRfbGluaygpIGFzIGl0IGlzLCBicm9r
-ZW4gaW4gdHdvIHN0YWdlczoNCg0KLSBwYXJzaW5nDQotIHJlZ2lzdGVyaW5nDQoNCnRoYW4gY2Fu
-IGJlIHVzZWQgYnkgb3RoZXIgZHJpdmVycyBpbiBvcmRlciB0byBnZXQgdGhlIHN0YXR1cyBidXQg
-SSB0aGluayBpdCdzIG92ZXJraWxsLg0KDQo+IEFzIHN1Y2gsIGl0IG1heSBiZSBkaWZmaWN1bHQg
-dG8gcmV2aWV3LiBDb3VsZCB5b3UgcGxlYXNlIHdyaXRlDQo+IGEgbW9yZSBjb21wbGV0ZSBkZXNj
-cmlwdGlvbiB0byB0aGUgcGF0Y2g/DQoNClRvIGJldHRlciB1bmRlcnN0YW5kIHRoaXMgcGF0Y2gs
-IHRoaW5rIG9mIGl0IGFzIGp1c3QgYSByZWZhY3RvcmluZyBvZiB0aGUNCm9mX3BoeV9yZWdpc3Rl
-cl9maXhlZF9saW5rKCkgdGhhdCBkb2VzIHR3byB0aGluZ3MgaW5zaWRlOg0KDQotIHBhcnNpbmcg
-b2YgZml4ZWQgbGluayBub2RlICgyIGJpbmRpbmdzIHN1cHBvcnRlZCkNCi0gcmVnaXN0ZXIgcGh5
-IGJ5IGNhbGxpbmcgZml4ZWRfcGh5X3JlZ2lzdGVyKCkgaW4gdGhlIHNhbWUgd2F5LCBpbiB0aGUg
-c2FtZSBjb2RlYmFzZQ0KDQpJJ3ZlIGV4dHJhY3RlZCB0aGUgcGFyc2luZyBpbiBhIHNlcGFyYXRl
-IGZ1bmN0aW9uICggZm9sbG93aW5nIHRoZSAib25lIGZ1bmN0aW9uIHNob3VsZA0KZG8gb25lIHRo
-aW5nIiBydWxlKS4NCg0KVGhlbiBJJ3ZlIGV4cG9ydGVkIHRoaXMgZnVuY3Rpb24gdG8gbWFrZSBz
-dGF0dXMgYXZhaWxhYmxlIHRvIGNhbGxlcnMuDQoNCj4gQXMgdG8geW91ciBwcm9ibGVtOiB3b3Vs
-ZCBpdCBiZSBwb3NzaWJsZSB0byBzZXQgc3BlZWQgJiBkdXBsZXgNCj4gYWZ0ZXIgeW91IGRvIG9m
-X3BoeV9jb25uZWN0KCk/IEl0IHJldHVybnMgdGhlIHBoeV9kZXZpY2UNCj4gcG9pbnRlciwgYW5k
-IHBlcmhhcHMgeW91IGNhbiBsb29rIGludG8gcGh5ZGV2LT5zcGVlZCBhbmQNCj4gcGh5ZGV2LT5k
-dXBsZXggYXQgdGhhdCBwb2ludD8NCg0KSXQgd291bGQgYmUgcG9zc2libGUgYnV0IHVuLW5hdHVy
-YWwgYXMgSSdkIGhhdmUgcHJvYmluZyBpbmZvcm1hdGlvbiBvbmx5IGF2YWlsYWJsZSBhdA0KcnVu
-dGltZS4gVGhhdCB3b3VsZCBqdXN0IGNvbXBsaWNhdGUgbWF0dGVycyBmb3IgbXkgcGFydGljdWxh
-ciBjYXNlIGFucyBJIHN1c3BlY3QgdGhlcmUNCndpbGwgYmUgb3RoZXIgZHJpdmVycyB0aGF0IGdl
-dCBpbnRvIHRoaXMgc2l0dWF0aW9uLiBZb3UgYXJlIGNvbmNlcm5lZCBhYm91dCBwZW9wbGUNCmFi
-dXNpbmcgdGhpcyBBUEkgdG8gcmVhZCBmaXhlZCBsaW5rIHN0YXR1cyB3aGVuIHRoZSBsaW5rIGlz
-IG5vdCByZWFsbHkgZml4ZWQsIEknbSBjb25jZXJuZWQNCmFib3V0IGRlY2xhcmluZyB0aGUgbGlu
-ayBhcyBmaXhlZC1saW5rIHdoZW4gaXQncyBub3QuIE1heWJlIHRoZSBuYW1pbmcvYmluZGluZyBu
-ZWVkcyB0byBiZQ0KcmV2aXNlZCB0byBjb3ZlciB0aGUgY2FzZSB3aGVuIGFsbCBpcyBmaXhlZCBi
-dXQgdGhlIGxpbmsuDQoNCg==
+2015-08-11 22:20 GMT+09:00 Olof Johansson <olof@lixom.net>:
+> On Thu, Aug 06, 2015 at 07:37:44PM +0900, Masahiro Yamada wrote:
+>> Hi Olof and Arnd,
+>>
+>> Here are a little more updates for device trees for UniPhier SoCs.
+>>
+>> Please consider applying this series to your ARM-SOC tree.
+>>
+>> Thanks!
+>
+> Hi,
+>
+> Please always comment on when the previous when you respin. I didn't
+> see this thread until after I had applied v1.
+>
+> I've taken 2/4 directly now, since it's the only difference.
+
+
+Instead, build fails between commit a5e921b4771 and 63ef577d9
+because 2/4 is a pre-requisite patch for 3/4 and /4/4.
+
+
+Maybe I should have sent a pull-request instead of patches.
+
+
+
+
+
+-- 
+Best Regards
+Masahiro Yamada
