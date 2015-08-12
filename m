@@ -1,50 +1,73 @@
-From: Leo Yan <leo.yan-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v4 0/4] clk: hisilicon: support stub clock
-Date: Wed, 12 Aug 2015 09:49:54 +0800
-Message-ID: <20150812014954.GA6215@leoy-linaro>
-References: <1438673249-6051-1-git-send-email-leo.yan@linaro.org>
- <20150812003817.GI26614@codeaurora.org>
+From: Dongsheng Wang <dongsheng.wang@freescale.com>
+Subject: [PATCH v3 1/2] Documentation: DT: FTM: add FTM0 be used as alarm timer
+Date: Wed, 12 Aug 2015 12:01:00 +0800
+Message-ID: <1439352061-14656-1-git-send-email-dongsheng.wang@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20150812003817.GI26614-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Wei Xu <xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Haojian Zhuang <haojian.zhuang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Bintian Wang <bintian.wang-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Guodong Xu <guodong.xu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Jian Zhang <zhangjian001-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Zhenwei Wang <Zhenwei.wang-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Haoju Mo <mohaoju-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Dan Zhao <dan.zhao-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, sunzhaosheng-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, victor.lixin-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: shawn.guo@linaro.org
+Cc: devicetree@vger.kernel.org, Wang Dongsheng <dongsheng.wang@freescale.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, alison.wang@freescale.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Stephen,
+From: Wang Dongsheng <dongsheng.wang@freescale.com>
 
-On Tue, Aug 11, 2015 at 05:38:17PM -0700, Stephen Boyd wrote:
-> On 08/04, Leo Yan wrote:
-> > This series adds support for hisilicon stub clock driver. On hi6220,
-> > the bootloader needs load the firmware image and set info for OPPs;
-> > after run into kernel, the stub clock driver is used to communicate
-> > w/t firmware for cpu dynamic frequency scaling.
-> > 
-> > In patch series v1/v2, the stub clock driver simply writes request in
-> > sram and send ipc to firmware; For patch series v3, the firmware has
-> > been upgraded to use mailbox, so stub clock driver will call standard
-> > mailbox APIs to request mailbox channel and send message to firmware.
-> > 
-> > Patch 4 adds stub clock node into dts and it references mailbox with
-> > phandle, so patch 4 will depend on mailbox driver's patch series [1].
-> > These patches have been tested on 96board hikey and is used by cpufreq
-> > driver.
-> 
-> The To: list is everyone, so I'm not sure who is supposed to
-> apply these patches. I'd like to take patches 1, 2, and 3 through
-> the clk tree though.
+In freescale layerscape platform there is only FTM0 can be used as
+alarm timer to wake up system. So add FTM0 description for devicetree
+document.
 
-Thanks, you could take first three patches. For patch 4, i will
-re-send it after mailbox driver's patches have been merged.
+Signed-off-by: Wang Dongsheng <dongsheng.wang@freescale.com>
+---
+V3:
+Include this patch in V3.
 
-Wei Xu, is this okay for you?
-
-Thanks,
-Leo Yan
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/Documentation/devicetree/bindings/timer/fsl,ftm-timer.txt b/Documentation/devicetree/bindings/timer/fsl,ftm-timer.txt
+index aa8c402..380a0b3d 100644
+--- a/Documentation/devicetree/bindings/timer/fsl,ftm-timer.txt
++++ b/Documentation/devicetree/bindings/timer/fsl,ftm-timer.txt
+@@ -1,5 +1,7 @@
+ Freescale FlexTimer Module (FTM) Timer
+ 
++* Default FTM Timer
++
+ Required properties:
+ 
+ - compatible : should be "fsl,ftm-timer"
+@@ -29,3 +31,26 @@ ftm: ftm@400b8000 {
+ 		<&clks VF610_CLK_FTM3_EXT_FIX_EN>;
+ 	big-endian;
+ };
++
++* FTM Alarm Timer
++  The default FTM device contains eight FlexTimer modules. FlexTimer1 is in
++  on-domain(power is not switched off in deep sleep mode). Other seven FlexTimer
++  modules(flextimer2/3/4/5/6/7/8) are in off-domain (power is switched off in
++  deep sleep mode).
++
++Required properties:
++
++- compatible : should be "fsl,ftm-alarm".
++- reg : should contain base address and length of FTM timer 0 register.
++- interrupts : Should contain FTM 0 interrupt.
++- big-endian: One boolean property, the big endian mode will be in use if it is
++  present, or the little endian mode will be in use for all the device registers.
++
++Example:
++ftm0: ftm0@29d0000 {
++	compatible = "fsl,ftm-alarm";
++	reg = <0x0 0x29d0000 0x0 0x10000>;
++	interrupts = <GIC_SPI 118 IRQ_TYPE_LEVEL_HIGH>;
++	big-endian;
++	status = "disabled";
++};
+-- 
+2.1.0.27.g96db324
