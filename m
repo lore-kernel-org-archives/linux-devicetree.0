@@ -1,268 +1,78 @@
-From: Gavin Shan <gwshan@linux.vnet.ibm.com>
-Subject: Re: [PATCH v6 07/42] powerpc/powernv: Improve IO and M32 mapping
-Date: Thu, 13 Aug 2015 09:42:20 +1000
-Message-ID: <20150812234220.GB4240@gwshan>
-References: <1438834307-26960-1-git-send-email-gwshan@linux.vnet.ibm.com>
- <1438834307-26960-8-git-send-email-gwshan@linux.vnet.ibm.com>
- <55C85558.2050300@ozlabs.ru>
- <20150811001259.GC10753@gwshan>
- <55C95EAD.5070603@ozlabs.ru>
-Reply-To: Gavin Shan <gwshan@linux.vnet.ibm.com>
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH v2] DT: mmc: sh_mmcif: fix "compatible" property text
+Date: Thu, 13 Aug 2015 08:58:31 +0900
+Message-ID: <20150812235828.GA5221@verge.net.au>
+References: <201404250239.39150.sergei.shtylyov@cogentembedded.com>
+ <1643858.nkRxsQo3O3@wasted.cogentembedded.com>
+ <20150812005628.GE15957@verge.net.au>
+ <55CB22E4.5040904@cogentembedded.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-pci-owner@vger.kernel.org>
+Return-path: <linux-sh-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <55C95EAD.5070603@ozlabs.ru>
-Sender: linux-pci-owner@vger.kernel.org
-To: Alexey Kardashevskiy <aik@ozlabs.ru>
-Cc: Gavin Shan <gwshan@linux.vnet.ibm.com>, linuxppc-dev@lists.ozlabs.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, benh@kernel.crashing.org, mpe@ellerman.id.au, bhelgaas@google.com, grant.likely@linaro.org, robherring2@gmail.com, panto@antoniou-consulting.com
+In-Reply-To: <55CB22E4.5040904@cogentembedded.com>
+Sender: linux-sh-owner@vger.kernel.org
+To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Cc: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org, ulf.hansson@linaro.org, linux-mmc@vger.kernel.org, linux-sh@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Aug 11, 2015 at 12:32:13PM +1000, Alexey Kardashevskiy wrote:
->On 08/11/2015 10:12 AM, Gavin Shan wrote:
->>On Mon, Aug 10, 2015 at 05:40:08PM +1000, Alexey Kardashevskiy wrote:
->>>On 08/06/2015 02:11 PM, Gavin Shan wrote:
->>>>There're 3 windows (IO, M32 and M64) for PHB, root port and upstream
->>>
->>>These are actually IO, non-prefetchable and prefetchable windows which happen
->>>to be IO, 32bit and 64bit windows but this has nothing to do with the M32/M64
->>>BAR registers in P7IOC/PHB3, do I understand this correctly?
->>>
->>
->>In pci-ioda.c, we have below definiations that are defined when
->>developing the code, not from any specification:
->>
->>IO  - resources with IO property
->>M32 - 32-bits or non-prefetchable resources
->>M64 - 64-bits and prefetchable resources
->
->
->This what I am saying - it is incorrect and confusing. M32/M64 are PHB3
->register names and associated windows (with "M" in the beginning) but not
->device resources.
->
+On Wed, Aug 12, 2015 at 01:41:40PM +0300, Sergei Shtylyov wrote:
+> On 8/12/2015 3:56 AM, Simon Horman wrote:
+> 
+> >>The "compatible" property text contradicts even the example given in the MMCIF
+> >>binding document itself;  moreover, the Renesas MMCIF driver only matches on
+> >>the generic "compatible" string and doesn't look for the SoC specific strings
+> >>at all. Thus describe "renesas,sh-mmcif" as a fallback value.
+> 
+> >>Fixes: b4c27763d749 ("mmc: sh_mmcif: Document DT bindings")
+> >>Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+> 
+> >I don't believe this file is the appropriate place to describe
+> >best-practice for the ordering of compatible strings which must surely be
+> >documented elsewhere.
+> 
+>    Where? I have no idea what you mean...
+>    And let me reiterate: this text is *wrong* and needs to be fixed anyway.
 
-I don't see how it's incorrect and confusing. M32/M64 are not PHB3
-register names. Also, device resource is either IO, 32-bits prefetchable,
-memory, 32-bits non-prefetchable memory, 64-bits non-prefetchable memory,
-64-bits prefetchable memory. They match with IO, M32, M64.
+The document lists the acceptable compat strings for the driver.
+Some are currently implemented by the driver. Some are not.
+This provides a mechanism for enhancing the driver while maintaining
+compatibility with existing DT blobs.
 
+The document does not describe the way to order the compat strings, which I
+believe is a more generic issue as many drivers have more and less specific
+compat strings to describe hardware which is compatible with each other. To
+some extent I believe it is up to the user, that is the person writing DT
+files, to understand what the hardware they are dealing with is compatible
+with. And to some extent I believe the ordering is a best-practice that
+ought to be described in a high-level document if it is not already.
 
->>>>port of the PCIE switch behind root port. In order to support PCI
->>>>hotplug, we extend the start/end address of those 3 windows of root
->>>>port or upstream port to the start/end address of the 3 PHB's windows.
->>>>The current implementation, assigning IO or M32 segment based on the
->>>>bridge's windows, isn't reliable.
->>>>
->>>>The patch fixes above issue by calculating PE's consumed IO or M32
->>>>segments from its contained devices, no PCI bridge windows involved
->>>>if the PE doesn't contain all the subordinate PCI buses.
->>>
->>>Please, rephrase it. How can PCI bridges be involved in PE consumption?
->>>
->>
->>Ok. Will add something like below:
->>
->>if the PE, corresponding to the PCI bus, doesn't contain all the subordinate
->>PCI buses.
->
->
->No, my question was about "PCI bridge windows involved" - what do you do to
->the windows if PE does not own all child buses?
->
+Your proposed update assumes that all past and future hardware handled by
+current and future versions of the driver will be compatible with
+"renesas,sh-mmcif". How can you possibly know that is true?
 
-All of it is about the original implementation: When the PE doesn't include
-all child buses, the resource consumed by the PE is: resources assigned to
-current PCI bus and then exclude the resources assigned to the child buses.
-Note that PCI bridge windows are actually PCI bus's resource.
-
->>>
->>>>Otherwise,
->>>>the PCI bridge windows still contribute to PE's consumed IO or M32
->>>>segments.
->>>
->>>PCI bridge windows themselves consume PEs? Is that correct?
->>>
->>
->>PCI bridge windows consume IO, M32, M64 segments, not PEs.
->
->Ah, right.
->
->
->>>>
->>>>Signed-off-by: Gavin Shan <gwshan@linux.vnet.ibm.com>
->>>>---
->>>>  arch/powerpc/platforms/powernv/pci-ioda.c | 136 +++++++++++++++++-------------
->>>>  1 file changed, 79 insertions(+), 57 deletions(-)
->>>>
->>>>diff --git a/arch/powerpc/platforms/powernv/pci-ioda.c b/arch/powerpc/platforms/powernv/pci-ioda.c
->>>>index 488a53e..713f4b4 100644
->>>>--- a/arch/powerpc/platforms/powernv/pci-ioda.c
->>>>+++ b/arch/powerpc/platforms/powernv/pci-ioda.c
->>>>@@ -2844,75 +2844,97 @@ static void pnv_pci_ioda_fixup_iov_resources(struct pci_dev *pdev)
->>>>  }
->>>>  #endif /* CONFIG_PCI_IOV */
->>>>
->>>>-/*
->>>>- * This function is supposed to be called on basis of PE from top
->>>>- * to bottom style. So the the I/O or MMIO segment assigned to
->>>>- * parent PE could be overrided by its child PEs if necessary.
->>>>- */
->>>>-static void pnv_ioda_setup_pe_seg(struct pci_controller *hose,
->>>>-				  struct pnv_ioda_pe *pe)
->>>>+static int pnv_ioda_setup_one_res(struct pci_controller *hose,
->>>>+				  struct pnv_ioda_pe *pe,
->>>>+				  struct resource *res)
->>>>  {
->>>>  	struct pnv_phb *phb = hose->private_data;
->>>>  	struct pci_bus_region region;
->>>>-	struct resource *res;
->>>>-	int i, index;
->>>>-	unsigned int segsize;
->>>>+	unsigned int index, segsize;
->>>>  	unsigned long *segmap, *pe_segmap;
->>>>  	uint16_t win;
->>>>  	int64_t rc;
->>>>
->>>>-	/*
->>>>-	 * NOTE: We only care PCI bus based PE for now. For PCI
->>>>-	 * device based PE, for example SRIOV sensitive VF should
->>>>-	 * be figured out later.
->>>>-	 */
->>>>-	BUG_ON(!(pe->flags & (PNV_IODA_PE_BUS | PNV_IODA_PE_BUS_ALL)));
->>>>+	/* Check if we need map the resource */
->>>>+	if (!res->parent || !res->flags || res->start > res->end)
->>>
->>>res->start >= res->end ?
->>>
->>
->>No, res->start == res->end is valid.
->>
->>>
->>>>+		return 0;
->>>>
->>>>-	pci_bus_for_each_resource(pe->pbus, res, i) {
->>>>-		if (!res || !res->flags ||
->>>>-		    res->start > res->end)
->>>>-			continue;
->>>>+	if (res->flags & IORESOURCE_IO) {
->>>>+		region.start = res->start - phb->ioda.io_pci_base;
->>>>+		region.end   = res->end - phb->ioda.io_pci_base;
->>>>+		segsize      = phb->ioda.io_segsize;
->>>>+		segmap       = phb->ioda.io_segmap;
->>>>+		pe_segmap    = pe->io_segmap;
->>>>+		win          = OPAL_IO_WINDOW_TYPE;
->>>>+	} else if ((res->flags & IORESOURCE_MEM) &&
->>>>+		   !pnv_pci_is_mem_pref_64(res->flags)) {
->>>>+		region.start = res->start -
->>>>+			       hose->mem_offset[0] -
->>>>+			       phb->ioda.m32_pci_base;
->>>>+		region.end   = res->end -
->>>>+			       hose->mem_offset[0] -
->>>>+			       phb->ioda.m32_pci_base;
->>>>+		segsize      = phb->ioda.m32_segsize;
->>>>+		segmap       = phb->ioda.m32_segmap;
->>>>+		pe_segmap    = pe->m32_segmap;
->>>>+		win          = OPAL_M32_WINDOW_TYPE;
->>>>+	} else {
->>>>+		return 0;
->>>>+	}
->>>>
->>>>-		if (res->flags & IORESOURCE_IO) {
->>>>-			region.start = res->start - phb->ioda.io_pci_base;
->>>>-			region.end   = res->end - phb->ioda.io_pci_base;
->>>>-			segsize      = phb->ioda.io_segsize;
->>>>-			segmap       = phb->ioda.io_segmap;
->>>>-			pe_segmap    = pe->io_segmap;
->>>>-			win          = OPAL_IO_WINDOW_TYPE;
->>>>-		} else if ((res->flags & IORESOURCE_MEM) &&
->>>>-			   !pnv_pci_is_mem_pref_64(res->flags)) {
->>>>-			region.start = res->start -
->>>>-				       hose->mem_offset[0] -
->>>>-				       phb->ioda.m32_pci_base;
->>>>-			region.end   = res->end -
->>>>-				       hose->mem_offset[0] -
->>>>-				       phb->ioda.m32_pci_base;
->>>>-			segsize      = phb->ioda.m32_segsize;
->>>>-			segmap       = phb->ioda.m32_segmap;
->>>>-			pe_segmap    = pe->m32_segmap;
->>>>-			win          = OPAL_M32_WINDOW_TYPE;
->>>>-		} else {
->>>>-			continue;
->>>>+	region.start = _ALIGN_DOWN(region.start, segsize);
->>>>+	region.end   = _ALIGN_UP(region.end, segsize);
->>>>+	index = region.start / segsize;
->>>>+	while (index < phb->ioda.total_pe &&
->>>>+	       region.start < region.end) {
->>>>+		rc = opal_pci_map_pe_mmio_window(phb->opal_id,
->>>>+				pe->pe_number, win, 0, index);
->>>>+		if (rc != OPAL_SUCCESS) {
->>>>+			pr_warn("%s: Error %lld mapping (%d) seg#%d to PHB#%d-PE#%d\n",
->>>>+				__func__, rc, win, index,
->>>>+				pe->phb->hose->global_number,
->>>>+				pe->pe_number);
->>>>+			return -EIO;
->>>>  		}
->>>>
->>>>-		index = region.start / phb->ioda.io_segsize;
->>>>-		while (index < phb->ioda.total_pe &&
->>>>-		       region.start <= region.end) {
->>>>-			set_bit(index, segmap);
->>>>-			set_bit(index, pe_segmap);
->>>>-			rc = opal_pci_map_pe_mmio_window(phb->opal_id,
->>>>-					pe->pe_number, win, 0, index);
->>>>-			if (rc != OPAL_SUCCESS) {
->>>>-				pr_warn("%s: Error %lld mapping (%d) seg#%d to PHB#%d-PE#%d\n",
->>>>-					__func__, rc, win, index,
->>>>-					pe->phb->hose->global_number,
->>>>-					pe->pe_number);
->>>>-				break;
->>>>-			}
->>>>+		set_bit(index, segmap);
->>>>+		set_bit(index, pe_segmap);
->>>>+		region.start += segsize;
->>>>+		index++;
->>>>+	}
->>>>+
->>>>+	return 0;
->>>>+}
->>>>+
->>>>+static void pnv_ioda_setup_pe_seg(struct pci_controller *hose,
->>>>+				  struct pnv_ioda_pe *pe)
->>>>+{
->>>>+	struct pci_dev *pdev;
->>>>+	struct resource *res;
->>>>+	int i;
->>>>+
->>>>+	/* This function only works for bus dependent PE */
->>>>+	BUG_ON(!(pe->flags & (PNV_IODA_PE_BUS | PNV_IODA_PE_BUS_ALL)));
->>>>+
->>>>+	list_for_each_entry(pdev, &pe->pbus->devices, bus_list) {
->>>>+		for (i = 0; i <= PCI_ROM_RESOURCE; i++) {
->>>>+			res = &pdev->resource[i];
->>>>+			if (pnv_ioda_setup_one_res(hose, pe, res))
->>>>+				return;
->>>>+		}
->>>>+
->>>>+		/* If the PE contains all subordinate PCI buses, the
->>>>+		 * resources of the child bridges should be mapped
->>>>+		 * to the PE as well.
->>>>+		 */
->>>>+		if (!(pe->flags & PNV_IODA_PE_BUS_ALL) ||
->>>>+		    (pdev->class >> 8) != PCI_CLASS_BRIDGE_PCI)
->>>>+			continue;
->>>>
->>>>-			region.start += segsize;
->>>>-			index++;
->>>>+		for (i = 0; i <= PCI_BRIDGE_RESOURCE_NUM; i++) {
->>>>+			res = &pdev->resource[PCI_BRIDGE_RESOURCES + i];
->>>>+			if (pnv_ioda_setup_one_res(hose, pe, res))
->>>>+				return;
->>>>  		}
->>>>  	}
->>>>  }
->>>>
->>
-
-Thanks,
-Gavin
+> >>---
+> >>The patch is against Ulf Hansson's 'mmc.git' repo's 'fixes' and 'next' branches.
+> >>
+> >>Changes in version 2:
+> >>- kept the SoC specific "compatible" property values mandatory and made the
+> >>   generic string a fallback.
+> >>
+> >>  Documentation/devicetree/bindings/mmc/renesas,mmcif.txt |    2 +-
+> >>  1 file changed, 1 insertion(+), 1 deletion(-)
+> >>
+> >>Index: mmc/Documentation/devicetree/bindings/mmc/renesas,mmcif.txt
+> >>===================================================================
+> >>--- mmc.orig/Documentation/devicetree/bindings/mmc/renesas,mmcif.txt
+> >>+++ mmc/Documentation/devicetree/bindings/mmc/renesas,mmcif.txt
+> >>@@ -10,7 +10,7 @@ Required properties:
+> >>  	- "renesas,mmcif-r8a7740" for the MMCIF found in r8a7740 SoCs
+> >>  	- "renesas,mmcif-r8a7790" for the MMCIF found in r8a7790 SoCs
+> >>  	- "renesas,mmcif-r8a7791" for the MMCIF found in r8a7791 SoCs
+> >>-	- "renesas,sh-mmcif" for the generic MMCIF
+> >>+  followed by "renesas,sh-mmcif".
+> >>
+> >>  - clocks: reference to the functional clock
+> 
+> MBR, Sergei
+> 
