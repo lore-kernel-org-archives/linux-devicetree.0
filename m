@@ -1,36 +1,118 @@
-From: Alexis Ballier <aballier@gentoo.org>
-Subject: [PATCH] ARM: dts: exynos4412-odroidu3: Enable SPI1.
-Date: Wed, 12 Aug 2015 13:27:51 +0200
-Message-ID: <1439378871-28117-1-git-send-email-aballier@gentoo.org>
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: linux-samsung-soc@vger.kernel.org
-Cc: Alexis Ballier <aballier@gentoo.org>, linux-arm-kernel@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Kukjin Kim <kgene@kernel.org>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+From: Richard Fitzgerald <rf@opensource.wolfsonmicro.com>
+Subject: [PATCH V4 2/3] mfd: arizona: factor out checking of jack detection state
+Date: Wed, 12 Aug 2015 12:58:11 +0100
+Message-ID: <1439380692-7848-3-git-send-email-rf@opensource.wolfsonmicro.com>
+References: <1439380692-7848-1-git-send-email-rf@opensource.wolfsonmicro.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1439380692-7848-1-git-send-email-rf@opensource.wolfsonmicro.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: lee.jones@linaro.org
+Cc: sameo@linux.intel.com, patches@opensource.wolfsonmicro.com, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-SPI1 is available on IO Port #2 (as depicted on their website) in
-PCB Revision 0.5 of Hardkernel Odroid U3 board.
-The shield connects a 256KiB spi-nor flash on that bus.
+Currently runtime_suspend will fully power off the codec if
+the jack detection is not enabled. Not all future codecs will
+have jack detection so to prepare for these codecs this patch
+factors out the check so that it be called as needed in the
+existing codec-specific switch cases.
 
-Signed-off-by: Alexis Ballier <aballier@gentoo.org>
+Signed-off-by: Richard Fitzgerald <rf@opensource.wolfsonmicro.com>
 ---
- arch/arm/boot/dts/exynos4412-odroidu3.dts | 7 +++++++
- 1 file changed, 7 insertions(+)
+ drivers/mfd/arizona-core.c | 41 ++++++++++++++++++++++++++++++++---------
+ 1 file changed, 32 insertions(+), 9 deletions(-)
 
-diff --git a/arch/arm/boot/dts/exynos4412-odroidu3.dts b/arch/arm/boot/dts/exynos4412-odroidu3.dts
-index 44684e5..37698e4 100644
---- a/arch/arm/boot/dts/exynos4412-odroidu3.dts
-+++ b/arch/arm/boot/dts/exynos4412-odroidu3.dts
-@@ -61,3 +61,10 @@
- 		"Speakers", "SPKL",
- 		"Speakers", "SPKR";
- };
+diff --git a/drivers/mfd/arizona-core.c b/drivers/mfd/arizona-core.c
+index 33f3db4..43ca30b 100644
+--- a/drivers/mfd/arizona-core.c
++++ b/drivers/mfd/arizona-core.c
+@@ -489,6 +489,23 @@ static int arizona_connect_dcvdd(struct arizona *arizona)
+ 	return ret;
+ }
+ 
++static int arizona_is_jack_det_active(struct arizona *arizona)
++{
++	unsigned int val;
++	int ret;
 +
-+&spi_1 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&spi1_bus>;
-+	cs-gpios = <&gpb 5 0>;
-+	status = "okay";
-+};
++	ret = regmap_read(arizona->regmap, ARIZONA_JACK_DETECT_ANALOGUE, &val);
++	if (ret) {
++		dev_err(arizona->dev,
++			"Failed to check jack det status: %d\n", ret);
++		return ret;
++	} else if (val & ARIZONA_JD1_ENA) {
++		return 1;
++	} else {
++		return 0;
++	}
++}
++
+ static int arizona_runtime_resume(struct device *dev)
+ {
+ 	struct arizona *arizona = dev_get_drvdata(dev);
+@@ -613,20 +630,18 @@ err:
+ static int arizona_runtime_suspend(struct device *dev)
+ {
+ 	struct arizona *arizona = dev_get_drvdata(dev);
+-	unsigned int val;
++	unsigned int jd_active = 0;
+ 	int ret;
+ 
+ 	dev_dbg(arizona->dev, "Entering AoD mode\n");
+ 
+-	ret = regmap_read(arizona->regmap, ARIZONA_JACK_DETECT_ANALOGUE, &val);
+-	if (ret) {
+-		dev_err(dev, "Failed to check jack det status: %d\n", ret);
+-		return ret;
+-	}
+-
+ 	switch (arizona->type) {
+ 	case WM5110:
+ 	case WM8280:
++		jd_active = arizona_is_jack_det_active(arizona);
++		if (jd_active < 0)
++			return jd_active;
++
+ 		if (arizona->external_dcvdd) {
+ 			ret = arizona_isolate_dcvdd(arizona);
+ 			if (ret != 0)
+@@ -648,13 +663,17 @@ static int arizona_runtime_suspend(struct device *dev)
+ 		}
+ 		break;
+ 	case WM5102:
++		jd_active = arizona_is_jack_det_active(arizona);
++		if (jd_active < 0)
++			return jd_active;
++
+ 		if (arizona->external_dcvdd) {
+ 			ret = arizona_isolate_dcvdd(arizona);
+ 			if (ret != 0)
+ 				return ret;
+ 		}
+ 
+-		if (!(val & ARIZONA_JD1_ENA)) {
++		if (!jd_active) {
+ 			ret = regmap_write(arizona->regmap,
+ 					   ARIZONA_WRITE_SEQUENCER_CTRL_3, 0x0);
+ 			if (ret) {
+@@ -666,6 +685,10 @@ static int arizona_runtime_suspend(struct device *dev)
+ 		}
+ 		break;
+ 	default:
++		jd_active = arizona_is_jack_det_active(arizona);
++		if (jd_active < 0)
++			return jd_active;
++
+ 		if (arizona->external_dcvdd) {
+ 			ret = arizona_isolate_dcvdd(arizona);
+ 			if (ret != 0)
+@@ -679,7 +702,7 @@ static int arizona_runtime_suspend(struct device *dev)
+ 	regulator_disable(arizona->dcvdd);
+ 
+ 	/* Allow us to completely power down if no jack detection */
+-	if (!(val & ARIZONA_JD1_ENA)) {
++	if (!jd_active) {
+ 		dev_dbg(arizona->dev, "Fully powering off\n");
+ 
+ 		arizona->has_fully_powered_off = true;
 -- 
-2.5.0
+1.9.1
