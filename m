@@ -1,138 +1,59 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH v4 2/2] mfd: axp20x: Add a cell for the usb power_supply
- part of the axp20x PMICs
-Date: Wed, 12 Aug 2015 10:29:00 +0100
-Message-ID: <20150812092900.GC18282@x1>
-References: <1439049521-30766-1-git-send-email-hdegoede@redhat.com>
- <1439049521-30766-2-git-send-email-hdegoede@redhat.com>
- <20150811141811.GM18282@x1>
- <55CB05AD.1030707@redhat.com>
+From: Wei Xu <xuwei5@hisilicon.com>
+Subject: Re: [PATCH v4 0/4] clk: hisilicon: support stub clock
+Date: Wed, 12 Aug 2015 10:20:13 +0100
+Message-ID: <55CB0FCD.7050303@hisilicon.com>
+References: <1438673249-6051-1-git-send-email-leo.yan@linaro.org> <20150812003817.GI26614@codeaurora.org> <20150812014954.GA6215@leoy-linaro>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-pm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <55CB05AD.1030707@redhat.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Hans de Goede <hdegoede@redhat.com>
-Cc: Sebastian Reichel <sre@kernel.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, Bruno =?iso-8859-1?Q?Pr=E9mont?= <bonbons@linux-vserver.org>, linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree <devicetree@vger.kernel.org>, linux-sunxi@googlegroups.com
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20150812014954.GA6215@leoy-linaro>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Leo Yan <leo.yan@linaro.org>, Stephen Boyd <sboyd@codeaurora.org>
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Michael Turquette <mturquette@baylibre.com>, Haojian Zhuang <haojian.zhuang@linaro.org>, Bintian Wang <bintian.wang@huawei.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org, Guodong Xu <guodong.xu@linaro.org>, Jian Zhang <zhangjian001@hisilicon.com>, Zhenwei Wang <Zhenwei.wang@hisilicon.com>, Haoju Mo <mohaoju@hisilicon.com>, Dan Zhao <dan.zhao@hisilicon.com>, sunzhaosheng@hisilicon.com, victor.lixin@hisilicon.com
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 12 Aug 2015, Hans de Goede wrote:
 
-> Hi,
->=20
-> On 11-08-15 16:18, Lee Jones wrote:
-> >On Sat, 08 Aug 2015, Hans de Goede wrote:
-> >
-> >>Add a cell for the usb power_supply part of the axp20x PMICs.
-> >>
-> >>Note that this cell is only for the usb power_supply part and not t=
-he
-> >>ac-power / battery-charger / rtc-backup-bat-charger bits.
-> >>
-> >>Depending on the board each of those must be enabled / disabled sep=
-arately
-> >>in devicetree as most boards do not use all 4. So in dt each one ne=
-eds its
-> >>own child-node of the axp20x node. Another reason for using separat=
-e child
-> >>nodes for each is so that other devicetree nodes can have a power-s=
-upply
-> >>property with a phandle referencing a node representing a single
-> >>power-supply.
-> >>
-> >>The decision to use a separate devicetree node for each is reflecte=
-d on
-> >>the kernel side by each getting its own mfd-cell / platform_device =
-and
-> >>platform-driver.
-> >>
-> >>Note this commit also makes some whitespace changes to the intializ=
-ation
-> >>of existing cells in axp20x_cells, these are pure whitespace change=
-s,
-> >>functionally nothing changes.
-> >>
-> >>Cc: Bruno Pr=C3=A9mont <bonbons@linux-vserver.org>
-> >>Signed-off-by: Bruno Pr=C3=A9mont <bonbons@linux-vserver.org>
-> >>Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-> >>Acked-by: Maxime Ripard <maxime.ripard@free-electrons.com>
-> >>Acked-by: Lee Jones <lee.jones@linaro.org>
-> >>---
-> >>Changes in v2:
-> >>-Use DEFINE_RES_IRQ_NAMED
-> >>-Change indentation of axp20x_cells initializers to avoid line wrap=
-ping
-> >>Changes in v3:
-> >>-Improve commit message
-> >>-Add Bruno's S-o-b
-> >>---
-> >>  drivers/mfd/axp20x.c | 20 ++++++++++++++++----
-> >>  1 file changed, 16 insertions(+), 4 deletions(-)
-> >
-> >Applied, thanks.
->=20
-> Great, but I'm not seeing this in:
->=20
-> https://git.kernel.org/cgit/linux/kernel/git/lee/mfd.git/log/?h=3Dfor=
--mfd-next
 
-Well it does usually take me a day or two push my local branch out,
-however in this case I had actually dropped a ball somewhere.  I've
-been through my backlog of 'applied' patches and these two are the
-only ones I failed to pick.  I have now, re-picked, re-applied and
-pushed the branch out.  Let me know if something is still not right.
+On 8/12/2015 2:49 AM, Leo Yan wrote:
+> Hi Stephen,
+> 
+> On Tue, Aug 11, 2015 at 05:38:17PM -0700, Stephen Boyd wrote:
+>> On 08/04, Leo Yan wrote:
+>>> This series adds support for hisilicon stub clock driver. On hi6220,
+>>> the bootloader needs load the firmware image and set info for OPPs;
+>>> after run into kernel, the stub clock driver is used to communicate
+>>> w/t firmware for cpu dynamic frequency scaling.
+>>>
+>>> In patch series v1/v2, the stub clock driver simply writes request in
+>>> sram and send ipc to firmware; For patch series v3, the firmware has
+>>> been upgraded to use mailbox, so stub clock driver will call standard
+>>> mailbox APIs to request mailbox channel and send message to firmware.
+>>>
+>>> Patch 4 adds stub clock node into dts and it references mailbox with
+>>> phandle, so patch 4 will depend on mailbox driver's patch series [1].
+>>> These patches have been tested on 96board hikey and is used by cpufreq
+>>> driver.
+>>
+>> The To: list is everyone, so I'm not sure who is supposed to
+>> apply these patches. I'd like to take patches 1, 2, and 3 through
+>> the clk tree though.
+> 
+> Thanks, you could take first three patches. For patch 4, i will
+> re-send it after mailbox driver's patches have been merged.
 
-Sorry for the inconvenience.
+Hi Leo,
 
-> >>diff --git a/drivers/mfd/axp20x.c b/drivers/mfd/axp20x.c
-> >>index d9f2f96..3f576b7 100644
-> >>--- a/drivers/mfd/axp20x.c
-> >>+++ b/drivers/mfd/axp20x.c
-> >>@@ -140,6 +140,13 @@ static struct resource axp20x_pek_resources[] =
-=3D {
-> >>  	},
-> >>  };
-> >>
-> >>+static struct resource axp20x_usb_power_supply_resources[] =3D {
-> >>+	DEFINE_RES_IRQ_NAMED(AXP20X_IRQ_VBUS_PLUGIN, "VBUS_PLUGIN"),
-> >>+	DEFINE_RES_IRQ_NAMED(AXP20X_IRQ_VBUS_REMOVAL, "VBUS_REMOVAL"),
-> >>+	DEFINE_RES_IRQ_NAMED(AXP20X_IRQ_VBUS_VALID, "VBUS_VALID"),
-> >>+	DEFINE_RES_IRQ_NAMED(AXP20X_IRQ_VBUS_NOT_VALID, "VBUS_NOT_VALID")=
-,
-> >>+};
-> >>+
-> >>  static struct resource axp22x_pek_resources[] =3D {
-> >>  	{
-> >>  		.name   =3D "PEK_DBR",
-> >>@@ -432,11 +439,16 @@ static const struct regmap_irq_chip axp288_re=
-gmap_irq_chip =3D {
-> >>
-> >>  static struct mfd_cell axp20x_cells[] =3D {
-> >>  	{
-> >>-		.name			=3D "axp20x-pek",
-> >>-		.num_resources		=3D ARRAY_SIZE(axp20x_pek_resources),
-> >>-		.resources		=3D axp20x_pek_resources,
-> >>+		.name		=3D "axp20x-pek",
-> >>+		.num_resources	=3D ARRAY_SIZE(axp20x_pek_resources),
-> >>+		.resources	=3D axp20x_pek_resources,
-> >>  	}, {
-> >>-		.name			=3D "axp20x-regulator",
-> >>+		.name		=3D "axp20x-regulator",
-> >>+	}, {
-> >>+		.name		=3D "axp20x-usb-power-supply",
-> >>+		.of_compatible	=3D "x-powers,axp202-usb-power-supply",
-> >>+		.num_resources	=3D ARRAY_SIZE(axp20x_usb_power_supply_resources)=
-,
-> >>+		.resources	=3D axp20x_usb_power_supply_resources,
-> >>  	},
-> >>  };
-> >>
-> >
+> Wei Xu, is this okay for you?
 
---=20
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-=46ollow Linaro: Facebook | Twitter | Blog
+OK :)
+
+Best Regards,
+Wei
+
+> 
+> Thanks,
+> Leo Yan
+> 
+> .
+> 
