@@ -1,78 +1,231 @@
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH v2] DT: mmc: sh_mmcif: fix "compatible" property text
-Date: Thu, 13 Aug 2015 08:58:31 +0900
-Message-ID: <20150812235828.GA5221@verge.net.au>
-References: <201404250239.39150.sergei.shtylyov@cogentembedded.com>
- <1643858.nkRxsQo3O3@wasted.cogentembedded.com>
- <20150812005628.GE15957@verge.net.au>
- <55CB22E4.5040904@cogentembedded.com>
+From: Gavin Shan <gwshan@linux.vnet.ibm.com>
+Subject: Re: [PATCH v6 08/42] powerpc/powernv: Calculate PHB's DMA weight
+ dynamically
+Date: Thu, 13 Aug 2015 09:57:26 +1000
+Message-ID: <20150812235726.GA5009@gwshan>
+References: <1438834307-26960-1-git-send-email-gwshan@linux.vnet.ibm.com>
+ <1438834307-26960-9-git-send-email-gwshan@linux.vnet.ibm.com>
+ <55C86D08.4070003@ozlabs.ru>
+Reply-To: Gavin Shan <gwshan@linux.vnet.ibm.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-sh-owner@vger.kernel.org>
+Return-path: <linux-pci-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <55CB22E4.5040904@cogentembedded.com>
-Sender: linux-sh-owner@vger.kernel.org
-To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Cc: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org, ulf.hansson@linaro.org, linux-mmc@vger.kernel.org, linux-sh@vger.kernel.org
+In-Reply-To: <55C86D08.4070003@ozlabs.ru>
+Sender: linux-pci-owner@vger.kernel.org
+To: Alexey Kardashevskiy <aik@ozlabs.ru>
+Cc: Gavin Shan <gwshan@linux.vnet.ibm.com>, linuxppc-dev@lists.ozlabs.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, benh@kernel.crashing.org, mpe@ellerman.id.au, bhelgaas@google.com, grant.likely@linaro.org, robherring2@gmail.com, panto@antoniou-consulting.com
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Aug 12, 2015 at 01:41:40PM +0300, Sergei Shtylyov wrote:
-> On 8/12/2015 3:56 AM, Simon Horman wrote:
-> 
-> >>The "compatible" property text contradicts even the example given in the MMCIF
-> >>binding document itself;  moreover, the Renesas MMCIF driver only matches on
-> >>the generic "compatible" string and doesn't look for the SoC specific strings
-> >>at all. Thus describe "renesas,sh-mmcif" as a fallback value.
-> 
-> >>Fixes: b4c27763d749 ("mmc: sh_mmcif: Document DT bindings")
-> >>Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-> 
-> >I don't believe this file is the appropriate place to describe
-> >best-practice for the ordering of compatible strings which must surely be
-> >documented elsewhere.
-> 
->    Where? I have no idea what you mean...
->    And let me reiterate: this text is *wrong* and needs to be fixed anyway.
+On Mon, Aug 10, 2015 at 07:21:12PM +1000, Alexey Kardashevskiy wrote:
+>On 08/06/2015 02:11 PM, Gavin Shan wrote:
+>>For P7IOC, the whole available DMA32 space, which is below the
+>>MEM32 space, is divided evenly into 256MB segments. The number
+>>of continuous segments assigned to one particular PE depends on
+>>the PE's DMA weight that is calculated based on the type of each
+>>PCI devices contained in the PE, and PHB's DMA weight which is
+>>accumulative DMA weight of PEs contained in the PHB. It means
+>>that the PHB's DMA weight calculation depends on existing PEs,
+>>which works perfectly now, but not hotplug friendly. As the
+>>whole available DMA32 space can be assigned to one PE on PHB3,
+>>so we don't have the issue on PHB3.
+>>
+>>The patch calculates PHB's DMA weight based on the PCI devices
+>>contained in the PHB dynamically so that it's hotplug friendly.
+>>
+>>Signed-off-by: Gavin Shan <gwshan@linux.vnet.ibm.com>
+>>---
+>>  arch/powerpc/platforms/powernv/pci-ioda.c | 88 +++++++++++++++----------------
+>>  arch/powerpc/platforms/powernv/pci.h      |  6 ---
+>>  2 files changed, 43 insertions(+), 51 deletions(-)
+>>
+>>diff --git a/arch/powerpc/platforms/powernv/pci-ioda.c b/arch/powerpc/platforms/powernv/pci-ioda.c
+>>index 713f4b4..7342cfd 100644
+>>--- a/arch/powerpc/platforms/powernv/pci-ioda.c
+>>+++ b/arch/powerpc/platforms/powernv/pci-ioda.c
+>>@@ -927,6 +927,9 @@ static void pnv_ioda_link_pe_by_weight(struct pnv_phb *phb,
+>>
+>>  static unsigned int pnv_ioda_dma_weight(struct pci_dev *dev)
+>>  {
+>>+	struct pci_controller *hose = pci_bus_to_host(dev->bus);
+>>+	struct pnv_phb *phb = hose->private_data;
+>>+
+>>  	/* This is quite simplistic. The "base" weight of a device
+>>  	 * is 10. 0 means no DMA is to be accounted for it.
+>>  	 */
+>>@@ -939,14 +942,34 @@ static unsigned int pnv_ioda_dma_weight(struct pci_dev *dev)
+>>  	if (dev->class == PCI_CLASS_SERIAL_USB_UHCI ||
+>>  	    dev->class == PCI_CLASS_SERIAL_USB_OHCI ||
+>>  	    dev->class == PCI_CLASS_SERIAL_USB_EHCI)
+>>-		return 3;
+>>+		return 3 * phb->ioda.tce32_count;
+>>
+>>  	/* Increase the weight of RAID (includes Obsidian) */
+>>  	if ((dev->class >> 8) == PCI_CLASS_STORAGE_RAID)
+>>-		return 15;
+>>+		return 15 * phb->ioda.tce32_count;
+>>
+>>  	/* Default */
+>>-	return 10;
+>>+	return 10 * phb->ioda.tce32_count;
+>>+}
+>>+
+>>+static int __pnv_ioda_phb_dma_weight(struct pci_dev *pdev, void *data)
+>>+{
+>>+	unsigned int *dma_weight = data;
+>>+
+>>+	*dma_weight += pnv_ioda_dma_weight(pdev);
+>>+	return 0;
+>>+}
+>>+
+>>+static unsigned int pnv_ioda_phb_dma_weight(struct pnv_phb *phb)
+>>+{
+>>+	unsigned int dma_weight = 0;
+>>+
+>>+	if (!phb->hose->bus)
+>>+		return 0;
+>>+
+>>+	pci_walk_bus(phb->hose->bus,
+>>+		     __pnv_ioda_phb_dma_weight, &dma_weight);
+>>+	return dma_weight;
+>>  }
+>>
+>>  #ifdef CONFIG_PCI_IOV
+>>@@ -1097,14 +1120,6 @@ static void pnv_ioda_setup_bus_PE(struct pci_bus *bus, bool all)
+>>  	/* Put PE to the list */
+>>  	list_add_tail(&pe->list, &phb->ioda.pe_list);
+>>
+>>-	/* Account for one DMA PE if at least one DMA capable device exist
+>>-	 * below the bridge
+>>-	 */
+>>-	if (pe->dma_weight != 0) {
+>>-		phb->ioda.dma_weight += pe->dma_weight;
+>>-		phb->ioda.dma_pe_count++;
+>>-	}
+>>-
+>>  	/* Link the PE */
+>>  	pnv_ioda_link_pe_by_weight(phb, pe);
+>>  }
+>>@@ -2431,24 +2446,13 @@ static void pnv_pci_ioda2_setup_dma_pe(struct pnv_phb *phb,
+>>  static void pnv_ioda_setup_dma(struct pnv_phb *phb)
+>>  {
+>>  	struct pci_controller *hose = phb->hose;
+>>-	unsigned int residual, remaining, segs, tw, base;
+>>  	struct pnv_ioda_pe *pe;
+>>+	unsigned int dma_weight;
+>>
+>>-	/* If we have more PE# than segments available, hand out one
+>>-	 * per PE until we run out and let the rest fail. If not,
+>>-	 * then we assign at least one segment per PE, plus more based
+>>-	 * on the amount of devices under that PE
+>>-	 */
+>>-	if (phb->ioda.dma_pe_count > phb->ioda.tce32_count)
+>>-		residual = 0;
+>>-	else
+>>-		residual = phb->ioda.tce32_count -
+>>-			phb->ioda.dma_pe_count;
+>>-
+>>-	pr_info("PCI: Domain %04x has %ld available 32-bit DMA segments\n",
+>>-		hose->global_number, phb->ioda.tce32_count);
+>>-	pr_info("PCI: %d PE# for a total weight of %d\n",
+>>-		phb->ioda.dma_pe_count, phb->ioda.dma_weight);
+>>+	/* Calculate the PHB's DMA weight */
+>>+	dma_weight = pnv_ioda_phb_dma_weight(phb);
+>>+	pr_info("PCI%04x has %ld DMA32 segments, total weight %d\n",
+>>+		hose->global_number, phb->ioda.tce32_count, dma_weight);
+>>
+>>  	pnv_pci_ioda_setup_opal_tce_kill(phb);
+>>
+>>@@ -2456,22 +2460,9 @@ static void pnv_ioda_setup_dma(struct pnv_phb *phb)
+>>  	 * out one base segment plus any residual segments based on
+>>  	 * weight
+>>  	 */
+>>-	remaining = phb->ioda.tce32_count;
+>>-	tw = phb->ioda.dma_weight;
+>>-	base = 0;
+>>  	list_for_each_entry(pe, &phb->ioda.pe_dma_list, dma_link) {
+>>  		if (!pe->dma_weight)
+>>  			continue;
+>>-		if (!remaining) {
+>>-			pe_warn(pe, "No DMA32 resources available\n");
+>>-			continue;
+>>-		}
+>>-		segs = 1;
+>>-		if (residual) {
+>>-			segs += ((pe->dma_weight * residual)  + (tw / 2)) / tw;
+>>-			if (segs > remaining)
+>>-				segs = remaining;
+>>-		}
+>>
+>>  		/*
+>>  		 * For IODA2 compliant PHB3, we needn't care about the weight.
+>>@@ -2479,17 +2470,24 @@ static void pnv_ioda_setup_dma(struct pnv_phb *phb)
+>>  		 * the specific PE.
+>>  		 */
+>>  		if (phb->type == PNV_PHB_IODA1) {
+>>-			pe_info(pe, "DMA weight %d, assigned %d DMA32 segments\n",
+>>+			unsigned int segs, base = 0;
+>>+
+>>+			if (pe->dma_weight <
+>>+			    dma_weight / phb->ioda.tce32_count)
+>>+				segs = 1;
+>>+			else
+>>+				segs = (pe->dma_weight *
+>>+					phb->ioda.tce32_count) / dma_weight;
+>>+
+>>+			pe_info(pe, "DMA32 weight %d, assigned %d segments\n",
+>>  				pe->dma_weight, segs);
+>>  			pnv_pci_ioda_setup_dma_pe(phb, pe, base, segs);
+>>+
+>>+			base += segs;
+>
+>
+>This is not right. @base here is a local variable in the scope,
+>pnv_pci_ioda_setup_dma_pe() will always be called with base==0.
+>
+>
+>Sorry for commenting the same patch twice.
+>
 
-The document lists the acceptable compat strings for the driver.
-Some are currently implemented by the driver. Some are not.
-This provides a mechanism for enhancing the driver while maintaining
-compatibility with existing DT blobs.
+That's ok to comment for twice on same patch. But I don't see
+how it's wrong. The function (pnv_ioda_setup_dma()) is called
+as below and it iterate all PEs in the PHB's DMA32 list. That
+means the function is affects PHB, not every PE yet. It's out
+of problem with "base=0".
 
-The document does not describe the way to order the compat strings, which I
-believe is a more generic issue as many drivers have more and less specific
-compat strings to describe hardware which is compatible with each other. To
-some extent I believe it is up to the user, that is the person writing DT
-files, to understand what the hardware they are dealing with is compatible
-with. And to some extent I believe the ordering is a best-practice that
-ought to be described in a high-level document if it is not already.
+pnv_pci_ioda_fixup
+  pnv_pci_ioda_setup_DMA
+    pnv_ioda_setup_dma
+>
+>>  		} else {
+>>  			pe_info(pe, "Assign DMA32 space\n");
+>>-			segs = 0;
+>>  			pnv_pci_ioda2_setup_dma_pe(phb, pe);
+>>  		}
+>>-
+>>-		remaining -= segs;
+>>-		base += segs;
+>>  	}
+>>  }
+>>
+>>diff --git a/arch/powerpc/platforms/powernv/pci.h b/arch/powerpc/platforms/powernv/pci.h
+>>index 08a4e57..addd3f7 100644
+>>--- a/arch/powerpc/platforms/powernv/pci.h
+>>+++ b/arch/powerpc/platforms/powernv/pci.h
+>>@@ -183,12 +183,6 @@ struct pnv_phb {
+>>  			/* 32-bit TCE tables allocation */
+>>  			unsigned long		tce32_count;
+>>
+>>-			/* Total "weight" for the sake of DMA resources
+>>-			 * allocation
+>>-			 */
+>>-			unsigned int		dma_weight;
+>>-			unsigned int		dma_pe_count;
+>>-
+>>  			/* Sorted list of used PE's, sorted at
+>>  			 * boot for resource allocation purposes
+>>  			 */
+>>
 
-Your proposed update assumes that all past and future hardware handled by
-current and future versions of the driver will be compatible with
-"renesas,sh-mmcif". How can you possibly know that is true?
-
-> >>---
-> >>The patch is against Ulf Hansson's 'mmc.git' repo's 'fixes' and 'next' branches.
-> >>
-> >>Changes in version 2:
-> >>- kept the SoC specific "compatible" property values mandatory and made the
-> >>   generic string a fallback.
-> >>
-> >>  Documentation/devicetree/bindings/mmc/renesas,mmcif.txt |    2 +-
-> >>  1 file changed, 1 insertion(+), 1 deletion(-)
-> >>
-> >>Index: mmc/Documentation/devicetree/bindings/mmc/renesas,mmcif.txt
-> >>===================================================================
-> >>--- mmc.orig/Documentation/devicetree/bindings/mmc/renesas,mmcif.txt
-> >>+++ mmc/Documentation/devicetree/bindings/mmc/renesas,mmcif.txt
-> >>@@ -10,7 +10,7 @@ Required properties:
-> >>  	- "renesas,mmcif-r8a7740" for the MMCIF found in r8a7740 SoCs
-> >>  	- "renesas,mmcif-r8a7790" for the MMCIF found in r8a7790 SoCs
-> >>  	- "renesas,mmcif-r8a7791" for the MMCIF found in r8a7791 SoCs
-> >>-	- "renesas,sh-mmcif" for the generic MMCIF
-> >>+  followed by "renesas,sh-mmcif".
-> >>
-> >>  - clocks: reference to the functional clock
-> 
-> MBR, Sergei
-> 
+Thanks,
+Gavin
