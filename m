@@ -1,734 +1,205 @@
-From: Moritz Fischer <moritz.fischer-+aYTwkv1SeIAvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v10 4/8] fpga manager: add driver for socfpga fpga manager
-Date: Thu, 13 Aug 2015 13:50:30 -0700
-Message-ID: <CAAtXAHeC-UFksiiNOi6O45yoMFV=YpfBRAF6LAqd3+gmrf39_A@mail.gmail.com>
-References: <1439487452-23977-1-git-send-email-atull@opensource.altera.com>
-	<1439487452-23977-6-git-send-email-atull@opensource.altera.com>
+From: Daniel Vetter <daniel@ffwll.ch>
+Subject: Re: [PATCH 3/7] drm/vc4: Add KMS support for Raspberry Pi.
+Date: Thu, 13 Aug 2015 23:17:55 +0200
+Message-ID: <20150813211755.GE17734@phenom.ffwll.local>
+References: <1439427380-2436-1-git-send-email-eric@anholt.net>
+ <1439427380-2436-4-git-send-email-eric@anholt.net>
+ <20150813075141.GX17734@phenom.ffwll.local>
+ <87d1yqq5po.fsf@eliezer.anholt.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1439487452-23977-6-git-send-email-atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Alan Tull <atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
-Cc: Greg KH <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>, hpa-YMNOUZJC4hwAvxtiuMwx3w@public.gmane.org, Michal Simek <monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org>, Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, rdunlap-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, iws-lulEs6mt1IksTUYHLfqkUA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, pavel-ynQEQJNshbs@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Philip Balister <philip-6RQC9ztksjxg9hUCZPvPmw@public.gmane.org>, rubini-kaDoWcXyVrEAvxtiuMwx3w@public.gmane.org, s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org, kyle.teske-acOepvfBmUk@public.gmane.org, Nicolas Pitre <nico-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, balbi-l0cyMroinI0@public.gmane.org, m.chehab-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, David Brown <davidb-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org, cesarb-PWySMVKUnqmsTnJN9+BGXg@public.gmane.org, sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Content-Disposition: inline
+In-Reply-To: <87d1yqq5po.fsf@eliezer.anholt.net>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Eric Anholt <eric@anholt.net>
+Cc: devicetree@vger.kernel.org, Stephen Warren <swarren@wwwdotorg.org>, Lee Jones <lee@kernel.org>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-rpi-kernel@lists.infradead.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Acked-by: Moritz Fischer <moritz.fischer-+aYTwkv1SeIAvxtiuMwx3w@public.gmane.org>
-
-On Thu, Aug 13, 2015 at 10:37 AM,  <atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org> wrote:
-> From: Alan Tull <atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
->
-> Add driver to fpga manager framework to allow configuration
-> of FPGA in Altera SoCFPGA parts.
->
-> Signed-off-by: Alan Tull <atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
-> Acked-by: Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-> ---
-> v2: fpga_manager struct now contains struct device
->     fpga_manager_register parameters now take device
->
-> v3: skip a version to align versions
->
-> v4: move to drivers/staging
->
-> v5: fix array_size.cocci warnings
->     fix platform_no_drv_owner.cocci warnings
->     Remove .owner = THIS_MODULE
->     include asm/irq.h
->     clean up list of includes
->     use altera_fpga_reset for ops
->     use enum fpga_mgr_states or u32 as needed
->     use devm_request_irq
->     check irq <= 0 instead of == NO_IRQ
->     Use ARRAY_SIZE
->     rename altera -> socfpga
->     static const socfpga_fpga_ops
->     header moved to linux/fpga/ folder
->     remove ifdef'ed code
->     use platform_get_resource and platform_get_irq
->     move .probe and .remove lines adjacent
->     use module_platform_driver
->     use __maybe_unused
->     only need to 'if (IS_ENABLED(CONFIG_REGULATOR))' in one fn
->     fix "unsigned 'mode' is never < 0"
->
-> v6: return error for (unused) default of case statement
->
-> v7: PTR_ERR should access the value just tested by IS_ERR
->
-> v8: change compatible string to be more chip specific
->
-> v9: update copyright year
->     remove suspend/resume support and regulators
->     use updated fn names for register/unregister
->     use updated params for write_init
->     check for partial reconfiguration request
->
-> v10: make tristate in Kconfig
->      clean up include
->      add flags param to write_complete()
->      move do drivers/fpga
-> ---
->  drivers/fpga/Kconfig   |   10 +
->  drivers/fpga/Makefile  |    1 +
->  drivers/fpga/socfpga.c |  616 ++++++++++++++++++++++++++++++++++++++++++++++++
->  3 files changed, 627 insertions(+)
->  create mode 100644 drivers/fpga/socfpga.c
->
-> diff --git a/drivers/fpga/Kconfig b/drivers/fpga/Kconfig
-> index f1f1f6d..dfc1f1e 100644
-> --- a/drivers/fpga/Kconfig
-> +++ b/drivers/fpga/Kconfig
-> @@ -11,4 +11,14 @@ config FPGA
->           kernel.  The FPGA framework adds a FPGA manager class and FPGA
->           manager drivers.
->
-> +if FPGA
-> +
-> +config FPGA_MGR_SOCFPGA
-> +       tristate "Altera SOCFPGA FPGA Manager"
-> +       depends on ARCH_SOCFPGA
-> +       help
-> +         FPGA manager driver support for Altera SOCFPGA.
-> +
-> +endif # FPGA
-> +
->  endmenu
-> diff --git a/drivers/fpga/Makefile b/drivers/fpga/Makefile
-> index 3313c52..ba6c5c5 100644
-> --- a/drivers/fpga/Makefile
-> +++ b/drivers/fpga/Makefile
-> @@ -6,3 +6,4 @@
->  obj-$(CONFIG_FPGA)                     += fpga-mgr.o
->
->  # FPGA Manager Drivers
-> +obj-$(CONFIG_FPGA_MGR_SOCFPGA)         += socfpga.o
-> diff --git a/drivers/fpga/socfpga.c b/drivers/fpga/socfpga.c
-> new file mode 100644
-> index 0000000..706b80d
-> --- /dev/null
-> +++ b/drivers/fpga/socfpga.c
-> @@ -0,0 +1,616 @@
-> +/*
-> + * FPGA Manager Driver for Altera SOCFPGA
-> + *
-> + *  Copyright (C) 2013-2015 Altera Corporation
-> + *
-> + * This program is free software; you can redistribute it and/or modify it
-> + * under the terms and conditions of the GNU General Public License,
-> + * version 2, as published by the Free Software Foundation.
-> + *
-> + * This program is distributed in the hope it will be useful, but WITHOUT
-> + * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-> + * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
-> + * more details.
-> + *
-> + * You should have received a copy of the GNU General Public License along with
-> + * this program.  If not, see <http://www.gnu.org/licenses/>.
-> + */
-> +#include <linux/completion.h>
-> +#include <linux/delay.h>
-> +#include <linux/fpga/fpga-mgr.h>
-> +#include <linux/interrupt.h>
-> +#include <linux/io.h>
-> +#include <linux/module.h>
-> +#include <linux/of_address.h>
-> +#include <linux/of_irq.h>
-> +#include <linux/pm.h>
-> +
-> +/* Register offsets */
-> +#define SOCFPGA_FPGMGR_STAT_OFST                               0x0
-> +#define SOCFPGA_FPGMGR_CTL_OFST                                        0x4
-> +#define SOCFPGA_FPGMGR_DCLKCNT_OFST                            0x8
-> +#define SOCFPGA_FPGMGR_DCLKSTAT_OFST                           0xc
-> +#define SOCFPGA_FPGMGR_GPIO_INTEN_OFST                         0x830
-> +#define SOCFPGA_FPGMGR_GPIO_INTMSK_OFST                                0x834
-> +#define SOCFPGA_FPGMGR_GPIO_INTTYPE_LEVEL_OFST                 0x838
-> +#define SOCFPGA_FPGMGR_GPIO_INT_POL_OFST                       0x83c
-> +#define SOCFPGA_FPGMGR_GPIO_INTSTAT_OFST                       0x840
-> +#define SOCFPGA_FPGMGR_GPIO_RAW_INTSTAT_OFST                   0x844
-> +#define SOCFPGA_FPGMGR_GPIO_PORTA_EOI_OFST                     0x84c
-> +#define SOCFPGA_FPGMGR_GPIO_EXT_PORTA_OFST                     0x850
-> +
-> +/* Register bit defines */
-> +/* SOCFPGA_FPGMGR_STAT register mode field values */
-> +#define SOCFPGA_FPGMGR_STAT_POWER_UP                           0x0 /*ramping*/
-> +#define SOCFPGA_FPGMGR_STAT_RESET                              0x1
-> +#define SOCFPGA_FPGMGR_STAT_CFG                                        0x2
-> +#define SOCFPGA_FPGMGR_STAT_INIT                               0x3
-> +#define SOCFPGA_FPGMGR_STAT_USER_MODE                          0x4
-> +#define SOCFPGA_FPGMGR_STAT_UNKNOWN                            0x5
-> +#define SOCFPGA_FPGMGR_STAT_STATE_MASK                         0x7
-> +/* This is a flag value that doesn't really happen in this register field */
-> +#define SOCFPGA_FPGMGR_STAT_POWER_OFF                          0x0
-> +
-> +#define MSEL_PP16_FAST_NOAES_NODC                              0x0
-> +#define MSEL_PP16_FAST_AES_NODC                                        0x1
-> +#define MSEL_PP16_FAST_AESOPT_DC                               0x2
-> +#define MSEL_PP16_SLOW_NOAES_NODC                              0x4
-> +#define MSEL_PP16_SLOW_AES_NODC                                        0x5
-> +#define MSEL_PP16_SLOW_AESOPT_DC                               0x6
-> +#define MSEL_PP32_FAST_NOAES_NODC                              0x8
-> +#define MSEL_PP32_FAST_AES_NODC                                        0x9
-> +#define MSEL_PP32_FAST_AESOPT_DC                               0xa
-> +#define MSEL_PP32_SLOW_NOAES_NODC                              0xc
-> +#define MSEL_PP32_SLOW_AES_NODC                                        0xd
-> +#define MSEL_PP32_SLOW_AESOPT_DC                               0xe
-> +#define SOCFPGA_FPGMGR_STAT_MSEL_MASK                          0x000000f8
-> +#define SOCFPGA_FPGMGR_STAT_MSEL_SHIFT                         3
-> +
-> +/* SOCFPGA_FPGMGR_CTL register */
-> +#define SOCFPGA_FPGMGR_CTL_EN                                  0x00000001
-> +#define SOCFPGA_FPGMGR_CTL_NCE                                 0x00000002
-> +#define SOCFPGA_FPGMGR_CTL_NCFGPULL                            0x00000004
-> +
-> +#define CDRATIO_X1                                             0x00000000
-> +#define CDRATIO_X2                                             0x00000040
-> +#define CDRATIO_X4                                             0x00000080
-> +#define CDRATIO_X8                                             0x000000c0
-> +#define SOCFPGA_FPGMGR_CTL_CDRATIO_MASK                                0x000000c0
-> +
-> +#define SOCFPGA_FPGMGR_CTL_AXICFGEN                            0x00000100
-> +
-> +#define CFGWDTH_16                                             0x00000000
-> +#define CFGWDTH_32                                             0x00000200
-> +#define SOCFPGA_FPGMGR_CTL_CFGWDTH_MASK                                0x00000200
-> +
-> +/* SOCFPGA_FPGMGR_DCLKSTAT register */
-> +#define SOCFPGA_FPGMGR_DCLKSTAT_DCNTDONE_E_DONE                        0x1
-> +
-> +/* SOCFPGA_FPGMGR_GPIO_* registers share the same bit positions */
-> +#define SOCFPGA_FPGMGR_MON_NSTATUS                             0x0001
-> +#define SOCFPGA_FPGMGR_MON_CONF_DONE                           0x0002
-> +#define SOCFPGA_FPGMGR_MON_INIT_DONE                           0x0004
-> +#define SOCFPGA_FPGMGR_MON_CRC_ERROR                           0x0008
-> +#define SOCFPGA_FPGMGR_MON_CVP_CONF_DONE                       0x0010
-> +#define SOCFPGA_FPGMGR_MON_PR_READY                            0x0020
-> +#define SOCFPGA_FPGMGR_MON_PR_ERROR                            0x0040
-> +#define SOCFPGA_FPGMGR_MON_PR_DONE                             0x0080
-> +#define SOCFPGA_FPGMGR_MON_NCONFIG_PIN                         0x0100
-> +#define SOCFPGA_FPGMGR_MON_NSTATUS_PIN                         0x0200
-> +#define SOCFPGA_FPGMGR_MON_CONF_DONE_PIN                       0x0400
-> +#define SOCFPGA_FPGMGR_MON_FPGA_POWER_ON                       0x0800
-> +#define SOCFPGA_FPGMGR_MON_STATUS_MASK                         0x0fff
-> +
-> +#define SOCFPGA_FPGMGR_NUM_SUPPLIES 3
-> +#define SOCFPGA_RESUME_TIMEOUT 3
-> +
-> +/* In power-up order. Reverse for power-down. */
-> +static const char *supply_names[SOCFPGA_FPGMGR_NUM_SUPPLIES] __maybe_unused = {
-> +       "FPGA-1.5V",
-> +       "FPGA-1.1V",
-> +       "FPGA-2.5V",
-> +};
-> +
-> +struct socfpga_fpga_priv {
-> +       void __iomem *fpga_base_addr;
-> +       void __iomem *fpga_data_addr;
-> +       struct completion status_complete;
-> +       int irq;
-> +};
-> +
-> +struct cfgmgr_mode {
-> +       /* Values to set in the CTRL register */
-> +       u32 ctrl;
-> +
-> +       /* flag that this table entry is a valid mode */
-> +       bool valid;
-> +};
-> +
-> +/* For SOCFPGA_FPGMGR_STAT_MSEL field */
-> +static struct cfgmgr_mode cfgmgr_modes[] = {
-> +       [MSEL_PP16_FAST_NOAES_NODC] = { CFGWDTH_16 | CDRATIO_X1, 1 },
-> +       [MSEL_PP16_FAST_AES_NODC] =   { CFGWDTH_16 | CDRATIO_X2, 1 },
-> +       [MSEL_PP16_FAST_AESOPT_DC] =  { CFGWDTH_16 | CDRATIO_X4, 1 },
-> +       [MSEL_PP16_SLOW_NOAES_NODC] = { CFGWDTH_16 | CDRATIO_X1, 1 },
-> +       [MSEL_PP16_SLOW_AES_NODC] =   { CFGWDTH_16 | CDRATIO_X2, 1 },
-> +       [MSEL_PP16_SLOW_AESOPT_DC] =  { CFGWDTH_16 | CDRATIO_X4, 1 },
-> +       [MSEL_PP32_FAST_NOAES_NODC] = { CFGWDTH_32 | CDRATIO_X1, 1 },
-> +       [MSEL_PP32_FAST_AES_NODC] =   { CFGWDTH_32 | CDRATIO_X4, 1 },
-> +       [MSEL_PP32_FAST_AESOPT_DC] =  { CFGWDTH_32 | CDRATIO_X8, 1 },
-> +       [MSEL_PP32_SLOW_NOAES_NODC] = { CFGWDTH_32 | CDRATIO_X1, 1 },
-> +       [MSEL_PP32_SLOW_AES_NODC] =   { CFGWDTH_32 | CDRATIO_X4, 1 },
-> +       [MSEL_PP32_SLOW_AESOPT_DC] =  { CFGWDTH_32 | CDRATIO_X8, 1 },
-> +};
-> +
-> +static u32 socfpga_fpga_readl(struct socfpga_fpga_priv *priv, u32 reg_offset)
-> +{
-> +       return readl(priv->fpga_base_addr + reg_offset);
-> +}
-> +
-> +static void socfpga_fpga_writel(struct socfpga_fpga_priv *priv, u32 reg_offset,
-> +                               u32 value)
-> +{
-> +       writel(value, priv->fpga_base_addr + reg_offset);
-> +}
-> +
-> +static u32 socfpga_fpga_raw_readl(struct socfpga_fpga_priv *priv,
-> +                                 u32 reg_offset)
-> +{
-> +       return __raw_readl(priv->fpga_base_addr + reg_offset);
-> +}
-> +
-> +static void socfpga_fpga_raw_writel(struct socfpga_fpga_priv *priv,
-> +                                   u32 reg_offset, u32 value)
-> +{
-> +       __raw_writel(value, priv->fpga_base_addr + reg_offset);
-> +}
-> +
-> +static void socfpga_fpga_data_writel(struct socfpga_fpga_priv *priv, u32 value)
-> +{
-> +       writel(value, priv->fpga_data_addr);
-> +}
-> +
-> +static inline void socfpga_fpga_set_bitsl(struct socfpga_fpga_priv *priv,
-> +                                         u32 offset, u32 bits)
-> +{
-> +       u32 val;
-> +
-> +       val = socfpga_fpga_readl(priv, offset);
-> +       val |= bits;
-> +       socfpga_fpga_writel(priv, offset, val);
-> +}
-> +
-> +static inline void socfpga_fpga_clr_bitsl(struct socfpga_fpga_priv *priv,
-> +                                         u32 offset, u32 bits)
-> +{
-> +       u32 val;
-> +
-> +       val = socfpga_fpga_readl(priv, offset);
-> +       val &= ~bits;
-> +       socfpga_fpga_writel(priv, offset, val);
-> +}
-> +
-> +static u32 socfpga_fpga_mon_status_get(struct socfpga_fpga_priv *priv)
-> +{
-> +       return socfpga_fpga_readl(priv, SOCFPGA_FPGMGR_GPIO_EXT_PORTA_OFST) &
-> +               SOCFPGA_FPGMGR_MON_STATUS_MASK;
-> +}
-> +
-> +static u32 socfpga_fpga_state_get(struct socfpga_fpga_priv *priv)
-> +{
-> +       u32 status = socfpga_fpga_mon_status_get(priv);
-> +
-> +       if ((status & SOCFPGA_FPGMGR_MON_FPGA_POWER_ON) == 0)
-> +               return SOCFPGA_FPGMGR_STAT_POWER_OFF;
-> +
-> +       return socfpga_fpga_readl(priv, SOCFPGA_FPGMGR_STAT_OFST) &
-> +               SOCFPGA_FPGMGR_STAT_STATE_MASK;
-> +}
-> +
-> +static void socfpga_fpga_clear_done_status(struct socfpga_fpga_priv *priv)
-> +{
-> +       socfpga_fpga_writel(priv, SOCFPGA_FPGMGR_DCLKSTAT_OFST,
-> +                           SOCFPGA_FPGMGR_DCLKSTAT_DCNTDONE_E_DONE);
-> +}
-> +
-> +/*
-> + * Set the DCLKCNT, wait for DCLKSTAT to report the count completed, and clear
-> + * the complete status.
-> + */
-> +static int socfpga_fpga_dclk_set_and_wait_clear(struct socfpga_fpga_priv *priv,
-> +                                               u32 count)
-> +{
-> +       int timeout = 2;
-> +       u32 done;
-> +
-> +       /* Clear any existing DONE status. */
-> +       if (socfpga_fpga_readl(priv, SOCFPGA_FPGMGR_DCLKSTAT_OFST))
-> +               socfpga_fpga_clear_done_status(priv);
-> +
-> +       /* Issue the DCLK count. */
-> +       socfpga_fpga_writel(priv, SOCFPGA_FPGMGR_DCLKCNT_OFST, count);
-> +
-> +       /* Poll DCLKSTAT to see if it completed in the timeout period. */
-> +       do {
-> +               done = socfpga_fpga_readl(priv, SOCFPGA_FPGMGR_DCLKSTAT_OFST);
-> +               if (done == SOCFPGA_FPGMGR_DCLKSTAT_DCNTDONE_E_DONE) {
-> +                       socfpga_fpga_clear_done_status(priv);
-> +                       return 0;
-> +               }
-> +               udelay(1);
-> +       } while (timeout--);
-> +
-> +       return -ETIMEDOUT;
-> +}
-> +
-> +static int socfpga_fpga_wait_for_state(struct socfpga_fpga_priv *priv,
-> +                                      u32 state)
-> +{
-> +       int timeout = 2;
-> +
-> +       /*
-> +        * HW doesn't support an interrupt for changes in state, so poll to see
-> +        * if it matches the requested state within the timeout period.
-> +        */
-> +       do {
-> +               if ((socfpga_fpga_state_get(priv) & state) != 0)
-> +                       return 0;
-> +               msleep(20);
-> +       } while (timeout--);
-> +
-> +       return -ETIMEDOUT;
-> +}
-> +
-> +static void socfpga_fpga_enable_irqs(struct socfpga_fpga_priv *priv, u32 irqs)
-> +{
-> +       /* set irqs to level sensitive */
-> +       socfpga_fpga_writel(priv, SOCFPGA_FPGMGR_GPIO_INTTYPE_LEVEL_OFST, 0);
-> +
-> +       /* set interrupt polarity */
-> +       socfpga_fpga_writel(priv, SOCFPGA_FPGMGR_GPIO_INT_POL_OFST, irqs);
-> +
-> +       /* clear irqs */
-> +       socfpga_fpga_writel(priv, SOCFPGA_FPGMGR_GPIO_PORTA_EOI_OFST, irqs);
-> +
-> +       /* unmask interrupts */
-> +       socfpga_fpga_writel(priv, SOCFPGA_FPGMGR_GPIO_INTMSK_OFST, 0);
-> +
-> +       /* enable interrupts */
-> +       socfpga_fpga_writel(priv, SOCFPGA_FPGMGR_GPIO_INTEN_OFST, irqs);
-> +}
-> +
-> +static void socfpga_fpga_disable_irqs(struct socfpga_fpga_priv *priv)
-> +{
-> +       socfpga_fpga_writel(priv, SOCFPGA_FPGMGR_GPIO_INTEN_OFST, 0);
-> +}
-> +
-> +static irqreturn_t socfpga_fpga_isr(int irq, void *dev_id)
-> +{
-> +       struct socfpga_fpga_priv *priv = dev_id;
-> +       u32 irqs, st;
-> +       bool conf_done, nstatus;
-> +
-> +       /* clear irqs */
-> +       irqs = socfpga_fpga_raw_readl(priv, SOCFPGA_FPGMGR_GPIO_INTSTAT_OFST);
-> +
-> +       socfpga_fpga_raw_writel(priv, SOCFPGA_FPGMGR_GPIO_PORTA_EOI_OFST, irqs);
-> +
-> +       st = socfpga_fpga_raw_readl(priv, SOCFPGA_FPGMGR_GPIO_EXT_PORTA_OFST);
-> +       conf_done = (st & SOCFPGA_FPGMGR_MON_CONF_DONE) != 0;
-> +       nstatus = (st & SOCFPGA_FPGMGR_MON_NSTATUS) != 0;
-> +
-> +       /* success */
-> +       if (conf_done && nstatus) {
-> +               /* disable irqs */
-> +               socfpga_fpga_raw_writel(priv,
-> +                                       SOCFPGA_FPGMGR_GPIO_INTEN_OFST, 0);
-> +               complete(&priv->status_complete);
-> +       }
-> +
-> +       return IRQ_HANDLED;
-> +}
-> +
-> +static int socfpga_fpga_wait_for_config_done(struct socfpga_fpga_priv *priv)
-> +{
-> +       int timeout, ret = 0;
-> +
-> +       socfpga_fpga_disable_irqs(priv);
-> +       init_completion(&priv->status_complete);
-> +       socfpga_fpga_enable_irqs(priv, SOCFPGA_FPGMGR_MON_CONF_DONE);
-> +
-> +       timeout = wait_for_completion_interruptible_timeout(
-> +                                               &priv->status_complete,
-> +                                               msecs_to_jiffies(10));
-> +       if (timeout == 0)
-> +               ret = -ETIMEDOUT;
-> +
-> +       socfpga_fpga_disable_irqs(priv);
-> +       return ret;
-> +}
-> +
-> +static int socfpga_fpga_cfg_mode_get(struct socfpga_fpga_priv *priv)
-> +{
-> +       u32 msel;
-> +
-> +       msel = socfpga_fpga_readl(priv, SOCFPGA_FPGMGR_STAT_OFST);
-> +       msel &= SOCFPGA_FPGMGR_STAT_MSEL_MASK;
-> +       msel >>= SOCFPGA_FPGMGR_STAT_MSEL_SHIFT;
-> +
-> +       /* Check that this MSEL setting is supported */
-> +       if ((msel >= ARRAY_SIZE(cfgmgr_modes)) || !cfgmgr_modes[msel].valid)
-> +               return -EINVAL;
-> +
-> +       return msel;
-> +}
-> +
-> +static int socfpga_fpga_cfg_mode_set(struct socfpga_fpga_priv *priv)
-> +{
-> +       u32 ctrl_reg;
-> +       int mode;
-> +
-> +       /* get value from MSEL pins */
-> +       mode = socfpga_fpga_cfg_mode_get(priv);
-> +       if (mode < 0)
-> +               return mode;
-> +
-> +       /* Adjust CTRL for the CDRATIO */
-> +       ctrl_reg = socfpga_fpga_readl(priv, SOCFPGA_FPGMGR_CTL_OFST);
-> +       ctrl_reg &= ~SOCFPGA_FPGMGR_CTL_CDRATIO_MASK;
-> +       ctrl_reg &= ~SOCFPGA_FPGMGR_CTL_CFGWDTH_MASK;
-> +       ctrl_reg |= cfgmgr_modes[mode].ctrl;
-> +
-> +       /* Set NCE to 0. */
-> +       ctrl_reg &= ~SOCFPGA_FPGMGR_CTL_NCE;
-> +       socfpga_fpga_writel(priv, SOCFPGA_FPGMGR_CTL_OFST, ctrl_reg);
-> +
-> +       return 0;
-> +}
-> +
-> +static int socfpga_fpga_reset(struct fpga_manager *mgr)
-> +{
-> +       struct socfpga_fpga_priv *priv = mgr->priv;
-> +       u32 ctrl_reg, status;
-> +       int ret;
-> +
-> +       /*
-> +        * Step 1:
-> +        *  - Set CTRL.CFGWDTH, CTRL.CDRATIO to match cfg mode
-> +        *  - Set CTRL.NCE to 0
-> +        */
-> +       ret = socfpga_fpga_cfg_mode_set(priv);
-> +       if (ret)
-> +               return ret;
-> +
-> +       /* Step 2: Set CTRL.EN to 1 */
-> +       socfpga_fpga_set_bitsl(priv, SOCFPGA_FPGMGR_CTL_OFST,
-> +                              SOCFPGA_FPGMGR_CTL_EN);
-> +
-> +       /* Step 3: Set CTRL.NCONFIGPULL to 1 to put FPGA in reset */
-> +       ctrl_reg = socfpga_fpga_readl(priv, SOCFPGA_FPGMGR_CTL_OFST);
-> +       ctrl_reg |= SOCFPGA_FPGMGR_CTL_NCFGPULL;
-> +       socfpga_fpga_writel(priv, SOCFPGA_FPGMGR_CTL_OFST, ctrl_reg);
-> +
-> +       /* Step 4: Wait for STATUS.MODE to report FPGA is in reset phase */
-> +       status = socfpga_fpga_wait_for_state(priv, SOCFPGA_FPGMGR_STAT_RESET);
-> +
-> +       /* Step 5: Set CONTROL.NCONFIGPULL to 0 to release FPGA from reset */
-> +       ctrl_reg &= ~SOCFPGA_FPGMGR_CTL_NCFGPULL;
-> +       socfpga_fpga_writel(priv, SOCFPGA_FPGMGR_CTL_OFST, ctrl_reg);
-> +
-> +       /* Timeout waiting for reset */
-> +       if (status)
-> +               return -ETIMEDOUT;
-> +
-> +       return 0;
-> +}
-> +
-> +/*
-> + * Prepare the FPGA to receive the configuration data.
-> + */
-> +static int socfpga_fpga_ops_configure_init(struct fpga_manager *mgr, u32 flags,
-> +                                          const char *buf, size_t count)
-> +{
-> +       struct socfpga_fpga_priv *priv = mgr->priv;
-> +       int ret;
-> +
-> +       if (flags & FPGA_MGR_PARTIAL_RECONFIG) {
-> +               dev_err(&mgr->dev, "Partial reconfiguration not supported.\n");
-> +               return -EINVAL;
-> +       }
-> +       /* Steps 1 - 5: Reset the FPGA */
-> +       ret = socfpga_fpga_reset(mgr);
-> +       if (ret)
-> +               return ret;
-> +
-> +       /* Step 6: Wait for FPGA to enter configuration phase */
-> +       if (socfpga_fpga_wait_for_state(priv, SOCFPGA_FPGMGR_STAT_CFG))
-> +               return -ETIMEDOUT;
-> +
-> +       /* Step 7: Clear nSTATUS interrupt */
-> +       socfpga_fpga_writel(priv, SOCFPGA_FPGMGR_GPIO_PORTA_EOI_OFST,
-> +                           SOCFPGA_FPGMGR_MON_NSTATUS);
-> +
-> +       /* Step 8: Set CTRL.AXICFGEN to 1 to enable transfer of config data */
-> +       socfpga_fpga_set_bitsl(priv, SOCFPGA_FPGMGR_CTL_OFST,
-> +                              SOCFPGA_FPGMGR_CTL_AXICFGEN);
-> +
-> +       return 0;
-> +}
-> +
-> +/*
-> + * Step 9: write data to the FPGA data register
-> + */
-> +static int socfpga_fpga_ops_configure_write(struct fpga_manager *mgr,
-> +                                           const char *buf, size_t count)
-> +{
-> +       struct socfpga_fpga_priv *priv = mgr->priv;
-> +       u32 *buffer_32 = (u32 *)buf;
-> +       size_t i = 0;
-> +
-> +       if (count <= 0)
-> +               return -EINVAL;
-> +
-> +       /* Write out the complete 32-bit chunks. */
-> +       while (count >= sizeof(u32)) {
-> +               socfpga_fpga_data_writel(priv, buffer_32[i++]);
-> +               count -= sizeof(u32);
-> +       }
-> +
-> +       /* Write out remaining non 32-bit chunks. */
-> +       switch (count) {
-> +       case 3:
-> +               socfpga_fpga_data_writel(priv, buffer_32[i++] & 0x00ffffff);
-> +               break;
-> +       case 2:
-> +               socfpga_fpga_data_writel(priv, buffer_32[i++] & 0x0000ffff);
-> +               break;
-> +       case 1:
-> +               socfpga_fpga_data_writel(priv, buffer_32[i++] & 0x000000ff);
-> +               break;
-> +       case 0:
-> +               break;
-> +       default:
-> +               /* This will never happen. */
-> +               return -EFAULT;
-> +       }
-> +
-> +       return 0;
-> +}
-> +
-> +static int socfpga_fpga_ops_configure_complete(struct fpga_manager *mgr,
-> +                                              u32 flags)
-> +{
-> +       struct socfpga_fpga_priv *priv = mgr->priv;
-> +       u32 status;
-> +
-> +       /*
-> +        * Step 10:
-> +        *  - Observe CONF_DONE and nSTATUS (active low)
-> +        *  - if CONF_DONE = 1 and nSTATUS = 1, configuration was successful
-> +        *  - if CONF_DONE = 0 and nSTATUS = 0, configuration failed
-> +        */
-> +       status = socfpga_fpga_wait_for_config_done(priv);
-> +       if (status)
-> +               return status;
-> +
-> +       /* Step 11: Clear CTRL.AXICFGEN to disable transfer of config data */
-> +       socfpga_fpga_clr_bitsl(priv, SOCFPGA_FPGMGR_CTL_OFST,
-> +                              SOCFPGA_FPGMGR_CTL_AXICFGEN);
-> +
-> +       /*
-> +        * Step 12:
-> +        *  - Write 4 to DCLKCNT
-> +        *  - Wait for STATUS.DCNTDONE = 1
-> +        *  - Clear W1C bit in STATUS.DCNTDONE
-> +        */
-> +       if (socfpga_fpga_dclk_set_and_wait_clear(priv, 4))
-> +               return -ETIMEDOUT;
-> +
-> +       /* Step 13: Wait for STATUS.MODE to report USER MODE */
-> +       if (socfpga_fpga_wait_for_state(priv, SOCFPGA_FPGMGR_STAT_USER_MODE))
-> +               return -ETIMEDOUT;
-> +
-> +       /* Step 14: Set CTRL.EN to 0 */
-> +       socfpga_fpga_clr_bitsl(priv, SOCFPGA_FPGMGR_CTL_OFST,
-> +                              SOCFPGA_FPGMGR_CTL_EN);
-> +
-> +       return 0;
-> +}
-> +
-> +/* Translate state register values to FPGA framework state */
-> +static const enum fpga_mgr_states socfpga_state_to_framework_state[] = {
-> +       [SOCFPGA_FPGMGR_STAT_POWER_OFF] = FPGA_MGR_STATE_POWER_OFF,
-> +       [SOCFPGA_FPGMGR_STAT_RESET] = FPGA_MGR_STATE_RESET,
-> +       [SOCFPGA_FPGMGR_STAT_CFG] = FPGA_MGR_STATE_WRITE_INIT,
-> +       [SOCFPGA_FPGMGR_STAT_INIT] = FPGA_MGR_STATE_WRITE_INIT,
-> +       [SOCFPGA_FPGMGR_STAT_USER_MODE] = FPGA_MGR_STATE_OPERATING,
-> +       [SOCFPGA_FPGMGR_STAT_UNKNOWN] = FPGA_MGR_STATE_UNKNOWN,
-> +};
-> +
-> +static enum fpga_mgr_states socfpga_fpga_ops_state(struct fpga_manager *mgr)
-> +{
-> +       struct socfpga_fpga_priv *priv = mgr->priv;
-> +       enum fpga_mgr_states ret;
-> +       u32 state;
-> +
-> +       state = socfpga_fpga_state_get(priv);
-> +
-> +       if (state < ARRAY_SIZE(socfpga_state_to_framework_state))
-> +               ret = socfpga_state_to_framework_state[state];
-> +       else
-> +               ret = FPGA_MGR_STATE_UNKNOWN;
-> +
-> +       return ret;
-> +}
-> +
-> +static const struct fpga_manager_ops socfpga_fpga_ops = {
-> +       .state = socfpga_fpga_ops_state,
-> +       .write_init = socfpga_fpga_ops_configure_init,
-> +       .write = socfpga_fpga_ops_configure_write,
-> +       .write_complete = socfpga_fpga_ops_configure_complete,
-> +};
-> +
-> +static int socfpga_fpga_probe(struct platform_device *pdev)
-> +{
-> +       struct device *dev = &pdev->dev;
-> +       struct socfpga_fpga_priv *priv;
-> +       struct resource *res;
-> +       int ret;
-> +
-> +       priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
-> +       if (!priv)
-> +               return -ENOMEM;
-> +
-> +       res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> +       priv->fpga_base_addr = devm_ioremap_resource(dev, res);
-> +       if (IS_ERR(priv->fpga_base_addr))
-> +               return PTR_ERR(priv->fpga_base_addr);
-> +
-> +       res = platform_get_resource(pdev, IORESOURCE_MEM, 1);
-> +       priv->fpga_data_addr = devm_ioremap_resource(dev, res);
-> +       if (IS_ERR(priv->fpga_data_addr))
-> +               return PTR_ERR(priv->fpga_data_addr);
-> +
-> +       priv->irq = platform_get_irq(pdev, 0);
-> +       if (priv->irq < 0)
-> +               return priv->irq;
-> +
-> +       ret = devm_request_irq(dev, priv->irq, socfpga_fpga_isr, 0,
-> +                              dev_name(dev), priv);
-> +       if (IS_ERR_VALUE(ret))
-> +               return ret;
-> +
-> +       return fpga_mgr_register(dev, "Altera SOCFPGA FPGA Manager",
-> +                                &socfpga_fpga_ops, priv);
-> +}
-> +
-> +static int socfpga_fpga_remove(struct platform_device *pdev)
-> +{
-> +       fpga_mgr_unregister(&pdev->dev);
-> +
-> +       return 0;
-> +}
-> +
-> +#ifdef CONFIG_OF
-> +static const struct of_device_id socfpga_fpga_of_match[] = {
-> +       { .compatible = "altr,socfpga-fpga-mgr", },
-> +       {},
-> +};
-> +
-> +MODULE_DEVICE_TABLE(of, socfpga_fpga_of_match);
-> +#endif
-> +
-> +static struct platform_driver socfpga_fpga_driver = {
-> +       .probe = socfpga_fpga_probe,
-> +       .remove = socfpga_fpga_remove,
-> +       .driver = {
-> +               .name   = "socfpga_fpga_manager",
-> +               .of_match_table = of_match_ptr(socfpga_fpga_of_match),
-> +       },
-> +};
-> +
-> +module_platform_driver(socfpga_fpga_driver);
-> +
-> +MODULE_AUTHOR("Alan Tull <atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>");
-> +MODULE_DESCRIPTION("Altera SOCFPGA FPGA Manager");
-> +MODULE_LICENSE("GPL v2");
-> --
-> 1.7.9.5
->
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+T24gVGh1LCBBdWcgMTMsIDIwMTUgYXQgMDE6NDQ6MDNQTSAtMDcwMCwgRXJpYyBBbmhvbHQgd3Jv
+dGU6Cj4gRGFuaWVsIFZldHRlciA8ZGFuaWVsQGZmd2xsLmNoPiB3cml0ZXM6Cj4gCj4gPiBPbiBX
+ZWQsIEF1ZyAxMiwgMjAxNSBhdCAwNTo1NjoxNlBNIC0wNzAwLCBFcmljIEFuaG9sdCB3cm90ZToK
+PiA+PiBUaGlzIGlzIHRoZSBzdGFydCBvZiBhIGZ1bGwgVkM0IGRyaXZlci4gIFJpZ2h0IG5vdyB0
+aGlzIGp1c3Qgc3VwcG9ydHMKPiA+PiBjb25maWd1cmluZyB0aGUgZGlzcGxheSB1c2luZyBhIHBy
+ZS1leGlzdGluZyB2aWRlbyBtb2RlIChiZWNhdXNlCj4gPj4gY2hhbmdpbmcgdGhlIHBpeGVsIGNs
+b2NrIGlzbid0IGF2YWlsYWJsZSB5ZXQsIGFuZCBkb2Vzbid0IHdvcmsgd2hlbiBpdAo+ID4+IGlz
+KS4gIEhvd2V2ZXIsIHRoaXMgaXMgZW5vdWdoIGZvciBmYmNvbiBhbmQgYnJpbmdpbmcgdXAgWCB1
+c2luZwo+ID4+IHhmODYtdmlkZW8tbW9kZXNldHRpbmcuCj4gPj4gCj4gPj4gU2lnbmVkLW9mZi1i
+eTogRXJpYyBBbmhvbHQgPGVyaWNAYW5ob2x0Lm5ldD4KPiA+PiAtLS0KPiA+PiAgZHJpdmVycy9n
+cHUvZHJtL0tjb25maWcgICAgICAgICAgIHwgICAyICsKPiA+PiAgZHJpdmVycy9ncHUvZHJtL01h
+a2VmaWxlICAgICAgICAgIHwgICAxICsKPiA+PiAgZHJpdmVycy9ncHUvZHJtL3ZjNC9LY29uZmln
+ICAgICAgIHwgIDE0ICsKPiA+PiAgZHJpdmVycy9ncHUvZHJtL3ZjNC9NYWtlZmlsZSAgICAgIHwg
+IDE4ICsrCj4gPj4gIGRyaXZlcnMvZ3B1L2RybS92YzQvdmM0X2JvLmMgICAgICB8ICA1NCArKysr
+Cj4gPj4gIGRyaXZlcnMvZ3B1L2RybS92YzQvdmM0X2NydGMuYyAgICB8IDU4MyArKysrKysrKysr
+KysrKysrKysrKysrKysrKysrKysrKysrCj4gPj4gIGRyaXZlcnMvZ3B1L2RybS92YzQvdmM0X2Rl
+YnVnZnMuYyB8ICAzOCArKysKPiA+PiAgZHJpdmVycy9ncHUvZHJtL3ZjNC92YzRfZHJ2LmMgICAg
+IHwgMjQ5ICsrKysrKysrKysrKysrKwo+ID4+ICBkcml2ZXJzL2dwdS9kcm0vdmM0L3ZjNF9kcnYu
+aCAgICAgfCAxMjMgKysrKysrKwo+ID4+ICBkcml2ZXJzL2dwdS9kcm0vdmM0L3ZjNF9oZG1pLmMg
+ICAgfCA2NTEgKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysKPiA+PiAgZHJp
+dmVycy9ncHUvZHJtL3ZjNC92YzRfaHZzLmMgICAgIHwgMTcyICsrKysrKysrKysKPiA+PiAgZHJp
+dmVycy9ncHUvZHJtL3ZjNC92YzRfa21zLmMgICAgIHwgIDg0ICsrKysrCj4gPj4gIGRyaXZlcnMv
+Z3B1L2RybS92YzQvdmM0X3BsYW5lLmMgICB8IDMyMCArKysrKysrKysrKysrKysrKysrCj4gPj4g
+IGRyaXZlcnMvZ3B1L2RybS92YzQvdmM0X3JlZ3MuaCAgICB8IDU2MiArKysrKysrKysrKysrKysr
+KysrKysrKysrKysrKysrKwo+ID4+ICAxNCBmaWxlcyBjaGFuZ2VkLCAyODcxIGluc2VydGlvbnMo
+KykKPiA+PiAgY3JlYXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMvZ3B1L2RybS92YzQvS2NvbmZpZwo+
+ID4+ICBjcmVhdGUgbW9kZSAxMDA2NDQgZHJpdmVycy9ncHUvZHJtL3ZjNC9NYWtlZmlsZQo+ID4+
+ICBjcmVhdGUgbW9kZSAxMDA2NDQgZHJpdmVycy9ncHUvZHJtL3ZjNC92YzRfYm8uYwo+ID4+ICBj
+cmVhdGUgbW9kZSAxMDA2NDQgZHJpdmVycy9ncHUvZHJtL3ZjNC92YzRfY3J0Yy5jCj4gPj4gIGNy
+ZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL2dwdS9kcm0vdmM0L3ZjNF9kZWJ1Z2ZzLmMKPiA+PiAg
+Y3JlYXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMvZ3B1L2RybS92YzQvdmM0X2Rydi5jCj4gPj4gIGNy
+ZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL2dwdS9kcm0vdmM0L3ZjNF9kcnYuaAo+ID4+ICBjcmVh
+dGUgbW9kZSAxMDA2NDQgZHJpdmVycy9ncHUvZHJtL3ZjNC92YzRfaGRtaS5jCj4gPj4gIGNyZWF0
+ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL2dwdS9kcm0vdmM0L3ZjNF9odnMuYwo+ID4+ICBjcmVhdGUg
+bW9kZSAxMDA2NDQgZHJpdmVycy9ncHUvZHJtL3ZjNC92YzRfa21zLmMKPiA+PiAgY3JlYXRlIG1v
+ZGUgMTAwNjQ0IGRyaXZlcnMvZ3B1L2RybS92YzQvdmM0X3BsYW5lLmMKPiA+PiAgY3JlYXRlIG1v
+ZGUgMTAwNjQ0IGRyaXZlcnMvZ3B1L2RybS92YzQvdmM0X3JlZ3MuaAo+ID4KPiA+IE1hZGUgYSBx
+dWljayBwYXNzIGFuZCBmb3VuZCBhIGZldyB0aGluZ3MgdG8gdXBkYXRlIHRvIGxhdGVzdCBkcm0K
+PiA+IGRldmVsb3BtZW50cy4gT2YgY291cnNlIGRpZG4ndCBsb29rIGF0IHRoZSBoYXJkd2FyZSBk
+ZXRhaWxzIHNpbmNlIG5vIGNsdWUsCj4gPiBidXQgbG9va3MgcmVhbGx5IG5pY2Ugb3ZlcmFsbC4K
+PiAKPiBJZiB5b3UgaGF2ZSBhbnl0aGluZyBhYm91dCB0aGUgaGFyZHdhcmUgdGhhdCB5b3Ugd2Vy
+ZSBjdXJpb3VzIGFib3V0LCBJJ2QKPiBiZSBpbnRlcmVzdGVkIGluIHRyeWluZyB0byBleHBsYWlu
+IHRoZW0gaW4gdGhlIGNvbW1lbnRzIHRvIHRoZSBleHRlbnQKPiB0aGF0IEkgY2FuLiAgSXQncyB1
+bmZvcnR1bmF0ZSB0aGF0IHdlIGhhdmVuJ3Qgc2hpcHBlZCBkb2NzIGZvciB0aGUKPiBkaXNwbGF5
+IHNpZGUgb2YgdGhpbmdzLCBidXQgaGFkIHRvIGRvIGEgbG90IG9mIHJlYWRpbmcgb2YgdGhlIHZl
+cmlsb2cKPiBqdXN0IHRvIGdldCB0aGlzIGZhciwgYW55d2F5LgoKVGhlIG9ubHkgdGhpbmcgSSBz
+cG90dGVkIGlzIHRoYXQgeW91IHJpZ2h0IG5vdyBvbmx5IHJlZ2lzdGVyIGEgcHJpbWFyeSBhbmQK
+Y3Vyc29yIHBsYW5lLiBJIGd1ZXNzIHRoZSBwbGFuIHdlIG9uY2UgZGlzY3Vzc2VkIGFib3V0IGV4
+cG9zaW5nIHBpbGVzIG9mCnBsYW5lcyBmb3IgLW1vZGVzZXR0aW5nIGFjY2VsIGlzbid0IHRoZXJl
+IHlldD8KCkJ1dCBvdGhlcndpc2UgSSByZWFsbHkgZGlkbid0IGdvIGludG8gdGhlIGhhcmR3YXJl
+IGRldGFpbHMuCgo+ID4+IGRpZmYgLS1naXQgYS9kcml2ZXJzL2dwdS9kcm0vS2NvbmZpZyBiL2Ry
+aXZlcnMvZ3B1L2RybS9LY29uZmlnCj4gPj4gaW5kZXggYzQ2Y2EzMS4uMTczMGE3NiAxMDA2NDQK
+PiA+PiAtLS0gYS9kcml2ZXJzL2dwdS9kcm0vS2NvbmZpZwo+ID4+ICsrKyBiL2RyaXZlcnMvZ3B1
+L2RybS9LY29uZmlnCj4gPj4gQEAgLTI0MCwzICsyNDAsNSBAQCBzb3VyY2UgImRyaXZlcnMvZ3B1
+L2RybS9zdGkvS2NvbmZpZyIKPiA+PiAgc291cmNlICJkcml2ZXJzL2dwdS9kcm0vYW1kL2FtZGtm
+ZC9LY29uZmlnIgo+ID4+ICAKPiA+PiAgc291cmNlICJkcml2ZXJzL2dwdS9kcm0vaW14L0tjb25m
+aWciCj4gPj4gKwo+ID4+ICtzb3VyY2UgImRyaXZlcnMvZ3B1L2RybS92YzQvS2NvbmZpZyIKPiA+
+PiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9ncHUvZHJtL01ha2VmaWxlIGIvZHJpdmVycy9ncHUvZHJt
+L01ha2VmaWxlCj4gPj4gaW5kZXggNTcxM2QwNS4uYjk5MWFjNSAxMDA2NDQKPiA+PiAtLS0gYS9k
+cml2ZXJzL2dwdS9kcm0vTWFrZWZpbGUKPiA+PiArKysgYi9kcml2ZXJzL2dwdS9kcm0vTWFrZWZp
+bGUKPiA+PiBAQCAtNDIsNiArNDIsNyBAQCBvYmotJChDT05GSUdfRFJNX01HQSkJKz0gbWdhLwo+
+ID4+ICBvYmotJChDT05GSUdfRFJNX0k4MTApCSs9IGk4MTAvCj4gPj4gIG9iai0kKENPTkZJR19E
+Uk1fSTkxNSkgICs9IGk5MTUvCj4gPj4gIG9iai0kKENPTkZJR19EUk1fTUdBRzIwMCkgKz0gbWdh
+ZzIwMC8KPiA+PiArb2JqLSQoQ09ORklHX0RSTV9WQzQpICArPSB2YzQvCj4gPj4gIG9iai0kKENP
+TkZJR19EUk1fQ0lSUlVTX1FFTVUpICs9IGNpcnJ1cy8KPiA+PiAgb2JqLSQoQ09ORklHX0RSTV9T
+SVMpICAgKz0gc2lzLwo+ID4+ICBvYmotJChDT05GSUdfRFJNX1NBVkFHRSkrPSBzYXZhZ2UvCj4g
+Pj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvZ3B1L2RybS92YzQvS2NvbmZpZyBiL2RyaXZlcnMvZ3B1
+L2RybS92YzQvS2NvbmZpZwo+ID4+IG5ldyBmaWxlIG1vZGUgMTAwNjQ0Cj4gPj4gaW5kZXggMDAw
+MDAwMC4uMTMwY2M5NAo+ID4+IC0tLSAvZGV2L251bGwKPiA+PiArKysgYi9kcml2ZXJzL2dwdS9k
+cm0vdmM0L0tjb25maWcKPiA+PiBAQCAtMCwwICsxLDE0IEBACj4gPj4gK2NvbmZpZyBEUk1fVkM0
+Cj4gPj4gKwl0cmlzdGF0ZSAiQnJvYWRjb20gVkM0IEdyYXBoaWNzIgo+ID4+ICsJZGVwZW5kcyBv
+biBBUkNIX0JDTTI4MzUKPiA+PiArCWRlcGVuZHMgb24gRFJNCj4gPj4gKwlzZWxlY3QgRFJNX0tN
+U19IRUxQRVIKPiA+PiArCXNlbGVjdCBEUk1fS01TX0ZCX0hFTFBFUgo+ID4+ICsJc2VsZWN0IERS
+TV9LTVNfQ01BX0hFTFBFUgo+ID4KPiA+IGRybS1taXNjL2xpbnV4LW5leHQgYWxyZWFkeSBoYXMg
+QXJjaGl0J3MgcGF0Y2hlcyB0byBlbmFibGUvZGlzYWJsZSBmYmRldgo+ID4gaW4gdGhlIGNvcmUg
+Y29kZSwgc28geW91IGRvbid0IG5lZWQgdG8gYm90aGVyIGFib3V0IHRoZXNlIHNlbGVjdHMgaGVy
+ZSBhbnkKPiA+IG1vcmUsIGl0J2xsIG5vLW9wIG91dCBpZiBkcm0gZmJkZXYgZW11bGF0aW9uIGlz
+bid0IGVuYWJsZWQuIFNpbmNlIHlvdSdyZQo+ID4gcmV1c2luZyBjbWEgZmJkZXYgaGVscGVycyBJ
+IGRvbid0IHRoaW5rIHRoZXJlJ3MgYW55IG5lZWQgZm9yIG90aGVyIGNoYW5nZXMKPiA+IGJlY2F1
+c2Ugb2YgdGhpcy4KPiAKPiBJdCBzb3VuZHMgbGlrZSBJIHNob3VsZCByZWJhc2Ugb24gdGhhdCwg
+dGhlbj8KClllYWggcHJvYmFibHkgc2ltcGxlc3QuIEkgbWFkZSBhIHB1bGwgcmVxdWVzdCBmb3Ig
+ZHJtLW1pc2MgYW5kIGEgdGFnIGFuZApjYydlZCB5b3Ugb24gaXQgc28geW91IGhhdmUgYSBiYXNl
+bGluZS4KCj4gPj4gKwloZWxwCj4gPj4gKwkgIENob29zZSB0aGlzIG9wdGlvbiBpZiB5b3UgaGF2
+ZSBhIHN5c3RlbSB0aGF0IGhhcyBhIEJyb2FkY29tCj4gPj4gKwkgIFZDNCBHUFUsIHN1Y2ggYXMg
+dGhlIFJhc3BiZXJyeSBQaSBvciBvdGhlciBCQ00yNzA4L0JDTTI4MzUuCj4gPj4gKwo+ID4+ICsJ
+ICBUaGlzIGRyaXZlciByZXF1aXJlcyB0aGF0ICJhdm9pZF93YXJuaW5ncz0yIiBiZSBwcmVzZW50
+IGluCj4gPj4gKwkgIHRoZSBjb25maWcudHh0IGZvciB0aGUgZmlybXdhcmUsIHRvIGtlZXAgaXQg
+ZnJvbSBzbWFzaGluZwo+ID4+ICsJICBvdXIgZGlzcGxheSBzZXR1cC4KPiA+PiBkaWZmIC0tZ2l0
+IGEvZHJpdmVycy9ncHUvZHJtL3ZjNC9NYWtlZmlsZSBiL2RyaXZlcnMvZ3B1L2RybS92YzQvTWFr
+ZWZpbGUKPiA+PiBuZXcgZmlsZSBtb2RlIDEwMDY0NAo+ID4+IGluZGV4IDAwMDAwMDAuLjRhYTA3
+Y2EKPiA+PiAtLS0gL2Rldi9udWxsCj4gPj4gKysrIGIvZHJpdmVycy9ncHUvZHJtL3ZjNC9NYWtl
+ZmlsZQo+ID4+IEBAIC0wLDAgKzEsMTggQEAKPiA+PiArY2NmbGFncy15IDo9IC1JaW5jbHVkZS9k
+cm0KPiA+PiArCj4gPj4gKyMgUGxlYXNlIGtlZXAgdGhlc2UgYnVpbGQgbGlzdHMgc29ydGVkIQo+
+ID4+ICsKPiA+PiArIyBjb3JlIGRyaXZlciBjb2RlCj4gPj4gK3ZjNC15IDo9IFwKPiA+PiArCXZj
+NF9iby5vIFwKPiA+PiArCXZjNF9jcnRjLm8gXAo+ID4+ICsJdmM0X2Rydi5vIFwKPiA+PiArCXZj
+NF9rbXMubyBcCj4gPj4gKwl2YzRfaGRtaS5vIFwKPiA+PiArCXZjNF9odnMubyBcCj4gPj4gKwl2
+YzRfcGxhbmUubyBcCj4gPj4gKwkkKCkKPiA+PiArCj4gPj4gK3ZjNC0kKENPTkZJR19ERUJVR19G
+UykgKz0gdmM0X2RlYnVnZnMubwo+ID4+ICsKPiA+PiArb2JqLSQoQ09ORklHX0RSTV9WQzQpICAr
+PSB2YzQubwo+ID4+IGRpZmYgLS1naXQgYS9kcml2ZXJzL2dwdS9kcm0vdmM0L3ZjNF9iby5jIGIv
+ZHJpdmVycy9ncHUvZHJtL3ZjNC92YzRfYm8uYwo+ID4+IG5ldyBmaWxlIG1vZGUgMTAwNjQ0Cj4g
+Pj4gaW5kZXggMDAwMDAwMC4uZmVlOGNhYwo+ID4+IC0tLSAvZGV2L251bGwKPiA+PiArKysgYi9k
+cml2ZXJzL2dwdS9kcm0vdmM0L3ZjNF9iby5jCj4gPj4gQEAgLTAsMCArMSw1NCBAQAo+ID4+ICsv
+Kgo+ID4+ICsgKiAgQ29weXJpZ2h0IMKpIDIwMTUgQnJvYWRjb20KPiA+PiArICoKPiA+PiArICog
+VGhpcyBwcm9ncmFtIGlzIGZyZWUgc29mdHdhcmU7IHlvdSBjYW4gcmVkaXN0cmlidXRlIGl0IGFu
+ZC9vciBtb2RpZnkKPiA+PiArICogaXQgdW5kZXIgdGhlIHRlcm1zIG9mIHRoZSBHTlUgR2VuZXJh
+bCBQdWJsaWMgTGljZW5zZSB2ZXJzaW9uIDIgYXMKPiA+PiArICogcHVibGlzaGVkIGJ5IHRoZSBG
+cmVlIFNvZnR3YXJlIEZvdW5kYXRpb24uCj4gPj4gKyAqLwo+ID4+ICsKPiA+PiArLyogRE9DOiBW
+QzQgR0VNIEJPIG1hbmFnZW1lbnQgc3VwcG9ydC4KPiA+PiArICoKPiA+PiArICogVGhlIFZDNCBH
+UFUgYXJjaGl0ZWN0dXJlIChib3RoIHNjYW5vdXQgYW5kIHJlbmRlcmluZykgaGFzIGRpcmVjdAo+
+ID4+ICsgKiBhY2Nlc3MgdG8gc3lzdGVtIG1lbW9yeSB3aXRoIG5vIE1NVSBpbiBiZXR3ZWVuLiAg
+VG8gc3VwcG9ydCBpdCwgd2UKPiA+PiArICogdXNlIHRoZSBHRU0gQ01BIGhlbHBlciBmdW5jdGlv
+bnMgdG8gYWxsb2NhdGUgY29udGlndW91cyByYW5nZXMgb2YKPiA+PiArICogcGh5c2ljYWwgbWVt
+b3J5IGZvciBvdXIgQk9zLgo+ID4+ICsgKi8KPiA+Cj4gPiBTaW5jZSB5b3UncmUgZG9pbmcga2Vy
+bmVsZG9jIGNvbnNpZGVyZWQgcHVsbGluZyBpdCBhbGwgaW50byBhIG5ldyB2YzQKPiA+IHNlY3Rp
+b24gaW4gdGhlIGRybSBkb2Nib29rIHRlbXBsYXRlPwo+IAo+IEkgaGFkbid0IGZvdW5kIHRoZSBk
+b2Nib29rIHRlbXBsYXRlLiAgSW50ZXJlc3RpbmcuICBJJ2xsIHRyeSB0byBjb29rIHVwCj4gc29t
+ZSBnZW5lcmFsIHZjNCBkb2NzIGZvciB0aGF0LiAgSSB0aGluayB0aGF0IGNvdWxkIGJlIGEgc2Vw
+YXJhdGUKPiBjb21taXQsIHRob3VnaD8KClN1cmUuIFJlYWxseSBqdXN0IGZvciB5b3Vyc2VsZiBh
+bmQgb3RoZXIgcGVvcGxlIGhhY2tpbmcgb24gdGhpcy4gYnR3CnRoZXJlJ3Mgc29tZSB3b3JrIGlu
+dGVsIHNwb25zb3JzIGZyb20gY29sbGFib3JhIHRvIGltcHJvdmUga2VybmVsZG9jCmNvbW1lbnRz
+IHdpdGggYXV0b21hdGVkIGh5cGVybGlua2luZywgbWFya2Rvd24gYW5kIGEgZmV3IG90aGVyIHRo
+aW5ncy4gQnV0CnVuZm9ydHVuYXRlbHkgbm90IHlldCBtZXJnZWQuCgo+ID4+ICsKPiA+PiArI2lu
+Y2x1ZGUgInZjNF9kcnYuaCIKPiA+PiArCj4gPj4gK3N0cnVjdCB2YzRfYm8gKnZjNF9ib19jcmVh
+dGUoc3RydWN0IGRybV9kZXZpY2UgKmRldiwgc2l6ZV90IHNpemUpCj4gPj4gK3sKPiA+PiArCXN0
+cnVjdCBkcm1fZ2VtX2NtYV9vYmplY3QgKmNtYV9vYmo7Cj4gPj4gKwo+ID4+ICsJY21hX29iaiA9
+IGRybV9nZW1fY21hX2NyZWF0ZShkZXYsIHNpemUpOwo+ID4+ICsJaWYgKElTX0VSUihjbWFfb2Jq
+KSkKPiA+PiArCQlyZXR1cm4gTlVMTDsKPiA+PiArCWVsc2UKPiA+PiArCQlyZXR1cm4gdG9fdmM0
+X2JvKCZjbWFfb2JqLT5iYXNlKTsKPiA+PiArfQo+ID4+ICsKPiA+PiAraW50IHZjNF9kdW1iX2Ny
+ZWF0ZShzdHJ1Y3QgZHJtX2ZpbGUgKmZpbGVfcHJpdiwKPiA+PiArCQkgICAgc3RydWN0IGRybV9k
+ZXZpY2UgKmRldiwKPiA+PiArCQkgICAgc3RydWN0IGRybV9tb2RlX2NyZWF0ZV9kdW1iICphcmdz
+KQo+ID4+ICt7Cj4gPj4gKwlpbnQgbWluX3BpdGNoID0gRElWX1JPVU5EX1VQKGFyZ3MtPndpZHRo
+ICogYXJncy0+YnBwLCA4KTsKPiA+PiArCXN0cnVjdCB2YzRfYm8gKmJvID0gTlVMTDsKPiA+PiAr
+CWludCByZXQ7Cj4gPj4gKwo+ID4+ICsJaWYgKGFyZ3MtPnBpdGNoIDwgbWluX3BpdGNoKQo+ID4+
+ICsJCWFyZ3MtPnBpdGNoID0gbWluX3BpdGNoOwo+ID4+ICsKPiA+PiArCWlmIChhcmdzLT5zaXpl
+IDwgYXJncy0+cGl0Y2ggKiBhcmdzLT5oZWlnaHQpCj4gPj4gKwkJYXJncy0+c2l6ZSA9IGFyZ3Mt
+PnBpdGNoICogYXJncy0+aGVpZ2h0Owo+ID4+ICsKPiA+PiArCW11dGV4X2xvY2soJmRldi0+c3Ry
+dWN0X211dGV4KTsKPiA+PiArCWJvID0gdmM0X2JvX2NyZWF0ZShkZXYsIHJvdW5kdXAoYXJncy0+
+c2l6ZSwgUEFHRV9TSVpFKSk7Cj4gPj4gKwltdXRleF91bmxvY2soJmRldi0+c3RydWN0X211dGV4
+KTsKPiA+Cj4gPiBJJ20gb24gYSBzdHJ1Y3RfbXV0ZXggY3J1c2FkZSAodHJ5aW5nIHRvIGdldCBy
+aWQgb2YgaXQgaW4gY29yZSBhbmQgYWxsb3cKPiA+IGRyaXZlcnMgdG8gbGl2ZSB3aXRob3V0IGl0
+KS4gT24gYSBxdWljayBsb29rIHRoZXJlIGRvZXNuJ3Qgc2VlbSB0byBiZQo+ID4gYW55dGhpbmcg
+dGhhdCBuZWVkcyBzdHJ1Y3RfbXV0ZXggaGVyZSwgc28gcGxlYXNlIGp1c3QgcmVtb3ZlIGl0LiBJ
+ZiB0aGVyZQo+ID4gaXMgaW5kZWVkIHNvbWV0aGluZyB2YzQtaW50ZXJuYWwgeW91IHdhbnQgdG8g
+cHJvdGVjdCwgcGxlYXNlIHVzZSB5b3VyIG93bgo+ID4gZHJpdmVyLWludGVybmFsIG11dGV4IChl
+LmcuIGZvciBkcm1fbW0gb3IgY29tbWFuZCBzdWJtaXNzaW9uIG9yIHdoYXRldmVyKS4KPiA+Cj4g
+PiBidHcgdGhlIGxhc3QgYml0IGluIHRoZSBkcm0gY29yZSBmb3IgbW9kZXJuIGRyaXZlcnMgdGhh
+dCBuZWVkcwo+ID4gc3RydWN0X211dGV4IGlzIG1tYXBfb2Zmc2V0IGdlbSBvYmplY3QgbG9va3Vw
+LiBJIHBsYW4gdG8gcmVwbGFjZSB0aGF0IHdpdGgKPiA+IGtyZWZfZ2V0X3VubGVzc196ZXJvIHRy
+aWNrZXJ5LCB3aGljaCB3b3VsZCBtYWtlIHRoZSBjb3JlIGFuZCBhIGxvdCBvZgo+ID4gZHJpdmVy
+cyBzdHJ1Y3RfbXV0ZXggZnJlZSBhbmQgc28gcmVsZWdhdGUgaXQgbW9zdGx5IHRvIGEgbGVnYWN5
+IHJvbGUgKGFuZAo+ID4gY2FuIGJlIGZvcmdvdHRlbikuCj4gCj4gU3RydWN0IG11dGV4IGlzIGhl
+cmUgYmVjYXVzZSB0aGlzIGNvZGUgaXMgZnJvbSB0aGUgVjNEIHNlcmllcywgd2l0aCB0aGUKPiBp
+bi1rZXJuZWwgQk8gY2FjaGUgcmlwcGVkIG91dCAoaXQgdHVybnMgb3V0IHRoYXQgdGhlIENNQSBh
+bGxvY2F0b3IgaXMKPiBzbG93LCBhbmQgeW91IGNhbid0IGp1c3QgdXNlcnNwYWNlIGNhY2hlIHNp
+bmNlIHdlIGhhdmUgdG8gZG8gYWxsb2NhdGlvbnMKPiB3aXRoaW4gdGhlIGtlcm5lbCB0byB0aGUg
+dHVuZSBvZiBhIGNvdXBsZSBwZXIgZHJhdyBhbmQgdGhhdCdzIHRvbyBtdWNoKS4KPiAKPiBJJ2xs
+IHB1bGwgdGhlIG11dGV4IGNhbGxzIG91dCBmb3Igbm93IHVudGlsIHRoZSBjYWNoZSBzdHVmZiBp
+cwo+IHN1Ym1pdHRlZC4KClllYWggSSBzdXNwZWN0ZWQgdGhhdCdzIGZvciBsYXRlci4gSWYgZmVh
+c2libGUgaXQnZCBiZSBncmVhdCBpZiB5b3UgY291bGQKcmVhcmNodGVjdCBpdCB0byB1c2UgYSBk
+cml2ZXItcHJpdmF0ZSBsb2NrLCBqdXN0IHRvIG5vdCBncm93IGFub3RoZXIgcGxhY2UKdXNpbmcg
+aXQuCgo+ID4+ICtzdGF0aWMgYm9vbCB2YzRfY3J0Y19tb2RlX2ZpeHVwKHN0cnVjdCBkcm1fY3J0
+YyAqY3J0YywKPiA+PiArCQkJCWNvbnN0IHN0cnVjdCBkcm1fZGlzcGxheV9tb2RlICptb2RlLAo+
+ID4+ICsJCQkJc3RydWN0IGRybV9kaXNwbGF5X21vZGUgKmFkanVzdGVkX21vZGUpCj4gPj4gK3sK
+PiA+PiArCXJldHVybiB0cnVlOwo+ID4+ICt9Cj4gPgo+ID4gbW9kZV9maXh1cCBvbiBjcnRjcyBp
+cyBvcHRpb25hbCBzaW5jZSA4NDBiZmU5NTMzODRhIGFuZCBJIGp1c3QgbWVyZ2VkIGEKPiA+IHBh
+dGNoIHRvIG1ha2UgaXQgb3B0aW9uYWwgZm9yIGVuY29kZXJzIHRvbyAod2hlbiB1c2luZyBhdG9t
+aWMgaGVscGVycwo+ID4gd2hpY2ggeW91IGRvKS4gWW91IGNhbiByZW1vdmUgdGhlbSBib3RoLgo+
+IAo+IEdyZWF0ISAgSXQgZmVsdCBsaWtlIHRoZXJlIHdhcyBhICpsb3QqIG9mIGJvaWxlcnBsYXRl
+IHdoZW4gSSB3YXMgZmlyc3QKPiB3cml0aW5nIHRoaXMgc3R1ZmYsIGFuZCB0aGluZ3MgYXJlIHdh
+eSBiZXR0ZXIgdGhhbiB0aGV5IHVzZWQgdG8gYmUuCgpKdXN0IG5vdGljZWQgdGhhdCBjcnRjLT5h
+dG9taWNfYmVnaW4gaXMgb3B0aW9uYWwgdG9vLiBidHcgaWYgeW91IHNwb3QKYm9pbGVycGxhdGUg
+c29tZXdoZXJlIGVsc2UgcGxlYXNlIHJhaXNlIGl0IG9uIGlyYywgdGhlcmUncyBzdGlsbCBhIGxv
+dCBvZgpyb29tIGZvciBpbXByb3ZlbWVudCBmb3IgYXRvbWljIGhlbHBlcnMuCi1EYW5pZWwKLS0g
+CkRhbmllbCBWZXR0ZXIKU29mdHdhcmUgRW5naW5lZXIsIEludGVsIENvcnBvcmF0aW9uCmh0dHA6
+Ly9ibG9nLmZmd2xsLmNoCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9w
+Lm9yZwpodHRwOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRl
+dmVsCg==
