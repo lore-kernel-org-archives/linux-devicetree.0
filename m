@@ -1,45 +1,85 @@
-From: Dong Aisheng <aisheng.dong@freescale.com>
-Subject: Re: [PATCH v6 0/6] mmc: imx: a few fixes and new feature
-Date: Thu, 13 Aug 2015 16:58:56 +0800
-Message-ID: <20150813085854.GA19166@shlinux1.ap.freescale.net>
-References: <1439293111-21077-1-git-send-email-haibo.chen@freescale.com>
+From: Olof Johansson <olof@lixom.net>
+Subject: Re: [PATCH 3/3] ARM: dts: UniPhier: add ProXstream2 and PH1-LD6b
+ SoC/board support
+Date: Thu, 13 Aug 2015 11:09:39 +0200
+Message-ID: <CAOesGMhhSKr6Nn7YEjoB9V_5-yhwzn_fKZ7FSU3U-2XYT5mJrQ@mail.gmail.com>
+References: <1438687264-26538-1-git-send-email-yamada.masahiro@socionext.com>
+	<1438687264-26538-4-git-send-email-yamada.masahiro@socionext.com>
+	<20150811130739.GD30181@localhost>
+	<CAK7LNAQ+6tQ9Ci6LKsAB7kLj0o60Hizo2gOokDH9qW=FnO0gEA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Return-path: <linux-mmc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1439293111-21077-1-git-send-email-haibo.chen@freescale.com>
-Sender: linux-mmc-owner@vger.kernel.org
-To: Haibo Chen <haibo.chen@freescale.com>
-Cc: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, shawnguo@kernel.org, kernel@pengutronix.de, linux@arm.linux.org.uk, ulf.hansson@linaro.org, johan.derycke@barco.com, mkl@pengutronix.de, fabio.estevam@freescale.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mmc@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAK7LNAQ+6tQ9Ci6LKsAB7kLj0o60Hizo2gOokDH9qW=FnO0gEA@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Masahiro Yamada <yamada.masahiro@socionext.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Russell King <linux@arm.linux.org.uk>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, "arm@kernel.org" <arm@kernel.org>, Kumar Gala <galak@codeaurora.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Aug 11, 2015 at 07:38:25PM +0800, Haibo Chen wrote:
-> Changes for v6:
-> -remove duplicate code in esdhc_set_uhs_signaling().
-> -fix a typo for patch-2.
-> -make commit log of patch-3 more specific.
-> 
-> Haibo Chen (6):
->   mmc: sdhci-esdhc-imx: add imx7d support and support HS400
->   mmc: sdhci-esdhc-imx: add tuning-step setting support
->   mmc: sdhci-esdhc-imx: add imx7d support in bingding doc
->   ARM: dts: imx7d-sdb: add eMMC5.0 support
->   mmc: sdhci-esdhc-imx: set back the burst_length_enable bit to 1
->   mmc: sdhci-esdhc-imx: change default watermark level and burst length
-> 
->  .../devicetree/bindings/mmc/fsl-imx-esdhc.txt      |   6 ++
->  arch/arm/boot/dts/imx7d-sdb.dts                    |  13 +++
->  drivers/mmc/host/sdhci-esdhc-imx.c                 | 114 ++++++++++++++++++++-
->  include/linux/platform_data/mmc-esdhc-imx.h        |   1 +
->  4 files changed, 130 insertions(+), 4 deletions(-)
-> 
-> -- 
-> 1.9.1
-> 
+On Wed, Aug 12, 2015 at 3:14 PM, Masahiro Yamada
+<yamada.masahiro@socionext.com> wrote:
+> Hi Olof,
+>
+>
+> 2015-08-11 22:07 GMT+09:00 Olof Johansson <olof@lixom.net>:
+>> Hi,
+>>
+>> On Tue, Aug 04, 2015 at 08:21:04PM +0900, Masahiro Yamada wrote:
+>>> Initial version of DTSI for ProXstream2 and PH1-LD6b and DTS for
+>>> PH1-LD6b reference board.
+>>>
+>>> Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+>>> ---
+>>>
+>>>  arch/arm/boot/dts/Makefile                  |   3 +-
+>>>  arch/arm/boot/dts/uniphier-ph1-ld6b-ref.dts | 105 +++++++++++
+>>>  arch/arm/boot/dts/uniphier-ph1-ld6b.dtsi    |  67 +++++++
+>>>  arch/arm/boot/dts/uniphier-proxstream2.dtsi | 273 ++++++++++++++++++++++++++++
+>>>  4 files changed, 447 insertions(+), 1 deletion(-)
+>>>  create mode 100644 arch/arm/boot/dts/uniphier-ph1-ld6b-ref.dts
+>>>  create mode 100644 arch/arm/boot/dts/uniphier-ph1-ld6b.dtsi
+>>>  create mode 100644 arch/arm/boot/dts/uniphier-proxstream2.dtsi
+>>>
+>>> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+>>> index 246473a..6eb3f2f 100644
+>>> --- a/arch/arm/boot/dts/Makefile
+>>> +++ b/arch/arm/boot/dts/Makefile
+>>> @@ -645,7 +645,8 @@ dtb-$(CONFIG_ARCH_UNIPHIER) += \
+>>>       uniphier-ph1-sld3-ref.dtb \
+>>>       uniphier-ph1-ld4-ref.dtb \
+>>>       uniphier-ph1-pro4-ref.dtb \
+>>> -     uniphier-ph1-sld8-ref.dtb
+>>> +     uniphier-ph1-sld8-ref.dtb \
+>>> +     uniphier-ph1-ld6b-ref.dtb
+>>
+>> Please always add entries here sorted, don't just append. I've fixed it
+>> up for you this time.
+>>
+>>
+>
+> Please do not do that (without my ack).
 
-The patch set looks good to me.
+I'm not going to go get your ack for something as trivial as this. We
+do make sure subplatform maintainers are in the loop and get to review
+code that touches their platform, but in this case this was a shared
+makefile and there were no functional changes.
 
-Acked-by: Dong Aisheng <aisheng.dong@freescale.com>
+> It was already sorted from old SoC to new SoC.
+>
+> Sorting chronologically (in other words, in the order of chip ID)
+> makes more sense than sorting alphabetically.
 
-Regards
-Dong Aisheng
+No, it doesn't. All entries in these files should be sorted
+alphabetically. Sometimes we miss out on it, but it's the goal.
+
+If you sort chronologically it's impossible for anyone but people
+intimately familiar with UniPhier's product history to add any new
+entries in the right location. Also, since it's likely that newer
+chips will be introduced over time, new entries are likely to just be
+appends instead of inserted at more varied locations in the files.
+
+Append-only additions are more likely to have add/add conflicts, which
+is why we're preferring alphabetical sort order in the first place.
+
+
+-Olof
