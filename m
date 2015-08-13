@@ -1,13 +1,11 @@
 From: Eric Anholt <eric@anholt.net>
-Subject: [PATCH 5/7] drm/vc4: Allow vblank to be disabled
-Date: Wed, 12 Aug 2015 17:56:18 -0700
-Message-ID: <1439427380-2436-6-git-send-email-eric@anholt.net>
-References: <1439427380-2436-1-git-send-email-eric@anholt.net>
+Subject: Raspberry Pi KMS-only driver
+Date: Wed, 12 Aug 2015 17:56:13 -0700
+Message-ID: <1439427380-2436-1-git-send-email-eric@anholt.net>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: base64
 Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <1439427380-2436-1-git-send-email-eric@anholt.net>
 List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
  <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
 List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
@@ -18,21 +16,23 @@ List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
 Errors-To: dri-devel-bounces@lists.freedesktop.org
 Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
 To: dri-devel@lists.freedesktop.org
-Cc: devicetree@vger.kernel.org, Derek Foreman <derekf@osg.samsung.com>, Stephen Warren <swarren@wwwdotorg.org>, Lee Jones <lee@kernel.org>, linux-kernel@vger.kernel.org, linux-rpi-kernel@lists.infradead.org, linux-arm-kernel@lists.infradead.org
+Cc: devicetree@vger.kernel.org, Stephen Warren <swarren@wwwdotorg.org>, Lee Jones <lee@kernel.org>, linux-kernel@vger.kernel.org, linux-rpi-kernel@lists.infradead.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-RnJvbTogRGVyZWsgRm9yZW1hbiA8ZGVyZWtmQG9zZy5zYW1zdW5nLmNvbT4KClNpZ25lZC1vZmYt
-Ynk6IERlcmVrIEZvcmVtYW4gPGRlcmVrZkBvc2cuc2Ftc3VuZy5jb20+ClNpZ25lZC1vZmYtYnk6
-IEVyaWMgQW5ob2x0IDxlcmljQGFuaG9sdC5uZXQ+Ci0tLQogZHJpdmVycy9ncHUvZHJtL3ZjNC92
-YzRfa21zLmMgfCAyICsrCiAxIGZpbGUgY2hhbmdlZCwgMiBpbnNlcnRpb25zKCspCgpkaWZmIC0t
-Z2l0IGEvZHJpdmVycy9ncHUvZHJtL3ZjNC92YzRfa21zLmMgYi9kcml2ZXJzL2dwdS9kcm0vdmM0
-L3ZjNF9rbXMuYwppbmRleCBhMzQ0MzlmLi5mODgxY2Q0IDEwMDY0NAotLS0gYS9kcml2ZXJzL2dw
-dS9kcm0vdmM0L3ZjNF9rbXMuYworKysgYi9kcml2ZXJzL2dwdS9kcm0vdmM0L3ZjNF9rbXMuYwpA
-QCAtNzcsNiArNzcsOCBAQCBpbnQgdmM0X2ttc19sb2FkKHN0cnVjdCBkcm1fZGV2aWNlICpkZXYp
-CiAJZGV2LT5tb2RlX2NvbmZpZy5mdW5jcyA9ICZ2YzRfbW9kZV9mdW5jczsKIAlkZXYtPm1vZGVf
-Y29uZmlnLnByZWZlcnJlZF9kZXB0aCA9IDI0OwogCisJZGV2LT52YmxhbmtfZGlzYWJsZV9hbGxv
-d2VkID0gdHJ1ZTsKKwogCXJldCA9IHZjNF9pbml0X21vZGVzZXRfb2JqZWN0cyhkZXYpOwogCWlm
-IChyZXQpCiAJCWdvdG8gZmFpbDsKLS0gCjIuMS40CgpfX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBs
-aXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cDovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFu
-L2xpc3RpbmZvL2RyaS1kZXZlbAo=
+SGVyZSdzIHRoZSBmaXJzdCBwYXRjaCBzZXJpZXMgZm9yIGdyYXBoaWNzIG9uIHRoZSBSYXNwYmVy
+cnkgUGkuICBJdApicmluZ3MgdXAgZmJjb24gb24gS01TLCBhbmQgdGhlIHhmODYtdmlkZW8tbW9k
+ZXNldHRpbmcgZHJpdmVyIHJ1bnMgc28KeW91IGNhbiBkbyBYIHdpdGggbm8gZnVydGhlciB1c2Vy
+c3BhY2UgZHJpdmVycy4KClJpZ2h0IG5vdyB0aGlzIHNlcmllcyBkb2Vzbid0IHN1cHBvcnQgY2hh
+bmdpbmcgdmlkZW8gbW9kZXMgYXdheSBmcm9tCnRoZSBmaXJtd2FyZSBib290IHNldHVwLCBiZWNh
+dXNlIHdoZW4gSSBzZXQgdGhlIHBpeGVsIGNsb2NrIHVzaW5nIHRoZQpycGktZHQtY2xvY2tzIHNl
+cmllcyBJIGVuZCB1cCB3aXRoIGEgYmxhY2sgZGlzcGxheS4gZXZlbiBvbiBuby1vcAptb2Rlc2V0
+cy4KCkkndmUgZHJvcHBlZCBhbGwgb2YgdGhlIDNEIGJpdHMgZnJvbSB0aGlzIHNlcmllcywgdG8g
+c2ltcGxpZnkgdGhpcwpyZXZpZXcgc3RhZ2UuICBTZWUgdmM0LWttcy12M2QtcnBpMiBmb3IgYSBz
+ZXJpZXMgdGhhdCB3b3JrcyB3aXRoIHRoZQpjdXJyZW50IE1lc2EgZHJpdmVyLCBiYXNlZCBvbiBk
+b3duc3RyZWFtIDI3MDkuICBJIHNxdWFzaGVkIGFsbCBvZiBteQptZXNzeSBLTVMgc2VyaWVzIGRv
+d24sIGJ1dCBrZXB0IERlcmVrJ3MgcGF0Y2hlcyBzZXBhcmF0ZSB0byBtYWtlIHN1cmUKaGUgZ2V0
+cyBjcmVkaXQuCgpUaGlzIGNvZGUgY2FuIGFsc28gYmUgZm91bmQgYXQ6CgpodHRwczovL2dpdGh1
+Yi5jb20vYW5ob2x0L2xpbnV4L3RyZWUvdmM0LWttcy1zcXVhc2gKCl9fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJp
+LWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3Jn
+L21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
