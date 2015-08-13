@@ -1,65 +1,47 @@
-From: Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: [RFC] net: stmmac: socfpga: dt binding
-Date: Thu, 13 Aug 2015 21:41:05 +0200
-Message-ID: <20150813194105.GC9841@pengutronix.de>
+From: Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>
+Subject: Re: [PATCH v2] mtd: part: add generic parsing of linux,part-probe
+Date: Thu, 13 Aug 2015 22:09:36 +0200
+Message-ID: <55CCF980.7080703@hauke-m.de>
+References: <1432492714-12598-1-git-send-email-hauke@hauke-m.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 8bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
+In-Reply-To: <1432492714-12598-1-git-send-email-hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Dinh Nguyen <dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>
+To: computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Cc: linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, jogo-p3rKhJxN3npAfugRpC6u6w@public.gmane.org, mathieu-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi!
+On 05/24/2015 08:38 PM, Hauke Mehrtens wrote:
+> This moves the linux,part-probe device tree parsing code from
+> physmap_of.c to mtdpart.c. Now all drivers can use this feature by just
+> providing a reference to their device tree node in struct
+> mtd_part_parser_data.
+> 
+> Signed-off-by: Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>
+> ---
+> 
+> changes since
+> v1:
+>  * add documentation for linux,part-probe
+>  * fix spacing
+>  * add documentation for of_get_probes()
+> 
+>  Documentation/devicetree/bindings/mtd/nand.txt | 16 ++++++++++
+>  drivers/mtd/maps/physmap_of.c                  | 40 +-----------------------
+>  drivers/mtd/mtdpart.c                          | 43 ++++++++++++++++++++++++++
+>  3 files changed, 60 insertions(+), 39 deletions(-)
+> 
+I just want to bring this up again.
 
-I'm in the middle of getting the IEEE1588/PTP features of the GMAC up and
-running. The problem I have is with the current binding however.
+@Brian do you still have any problem with this patch? Should I use a
+different approach and if so which? I think we agreed on that it is bad
+when the flash chip driver decides which parser to use and it is not
+possible to change it other that changing the code, but this is the
+current situation with most drivers.
 
-The documentation says:
-
-Example:
-
-gmac0: ethernet@ff700000 {
-	compatible = "altr,socfpga-stmmac", "snps,dwmac-3.70a", "snps,dwmac";
-	altr,sysmgr-syscon = <&sysmgr 0x60 0>;
-	status = "disabled";
-	reg = <0xff700000 0x2000>;
-	interrupts = <0 115 4>;
-	interrupt-names = "macirq";
-	mac-address = [00 00 00 00 00 00];/* Filled in by U-Boot */
-	clocks = <&emac_0_clk>;
-	clock-names = "stmmaceth";
-};
-
-The problem is with the "altr,sysmgr-syscon" property. It was invented,
-because the Arria10 and the Arria5/CycloneV have different register
-offsets and shifts. This information is however not enough to describe all
-properties of the hardware, but more of a crutch IMHO.
-The shifts are for the PHYSEL bits. Of course now I need some
-different shifts AND I need to access an additional register with different
-shifts on Arria10 and CycloneV in the sysmgr.
-
-So, the standard way of handling this is with a new compatible for each
-type and getting rid of the register offset and shift in the property,
-I guess. And test the DT and print a deprecation warning if the property
-is still there.
-
-Do you see any other/better way of fixing this?
-
-As a side note: Is it reasonable to use the "clk_ptp_ref" property of the
-stmmac to decide if the PTP features should be enabled or not?
-As the hardware needs to be configured to use this clock, I think the
-presence of this property is a good enough indicator.
-
-Regards,
-Steffen
-
--- 
-Pengutronix e.K.                           |                             |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+Hauke
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
