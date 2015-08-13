@@ -1,170 +1,55 @@
-From: Gavin Shan <gwshan@linux.vnet.ibm.com>
-Subject: Re: [PATCH v6 11/42] powerpc/powernv: Trace DMA32 segments consumed
- by PE
-Date: Thu, 13 Aug 2015 10:02:31 +1000
-Message-ID: <20150813000231.GC5009@gwshan>
-References: <1438834307-26960-1-git-send-email-gwshan@linux.vnet.ibm.com>
- <1438834307-26960-12-git-send-email-gwshan@linux.vnet.ibm.com>
- <55C87254.3020204@ozlabs.ru>
-Reply-To: Gavin Shan <gwshan@linux.vnet.ibm.com>
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH v2] ARM: shmobile: kzm9g dts: Use adxl345-specific
+ compatible property
+Date: Thu, 13 Aug 2015 09:05:38 +0900
+Message-ID: <20150813000537.GD5221@verge.net.au>
+References: <1436180132-26190-1-git-send-email-geert+renesas@glider.be>
+ <15966074.zDS67FO48r@avalon>
+ <20150707002621.GD13326@verge.net.au>
+ <9389528.5qtaECVqX7@avalon>
+ <20150708005148.GA28100@verge.net.au>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-pci-owner@vger.kernel.org>
+Return-path: <linux-input-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <55C87254.3020204@ozlabs.ru>
-Sender: linux-pci-owner@vger.kernel.org
-To: Alexey Kardashevskiy <aik@ozlabs.ru>
-Cc: Gavin Shan <gwshan@linux.vnet.ibm.com>, linuxppc-dev@lists.ozlabs.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, benh@kernel.crashing.org, mpe@ellerman.id.au, bhelgaas@google.com, grant.likely@linaro.org, robherring2@gmail.com, panto@antoniou-consulting.com
+In-Reply-To: <20150708005148.GA28100@verge.net.au>
+Sender: linux-input-owner@vger.kernel.org
+To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: Geert Uytterhoeven <geert+renesas@glider.be>, linux-sh@vger.kernel.org, Magnus Damm <magnus.damm@gmail.com>, linux-arm-kernel@lists.infradead.org, linux-input@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Aug 10, 2015 at 07:43:48PM +1000, Alexey Kardashevskiy wrote:
->On 08/06/2015 02:11 PM, Gavin Shan wrote:
->>On P7IOC, the whole DMA32 space is divided evenly to 256MB segments.
->>Each PE can consume one or multiple DMA32 segments. Current code
->>doesn't trace the available DMA32 segments and those consumed by
->>one particular PE. It's conflicting with PCI hotplug.
->>
->>The patch introduces one bitmap to PHB to trace the available
->>DMA32 segments for allocation, more fields to "struct pnv_ioda_pe"
->>to trace the consumed DMA32 segments by the PE, which is going to
->>be released when the PE is destroyed at PCI unplugging time.
->>
->>Signed-off-by: Gavin Shan <gwshan@linux.vnet.ibm.com>
->>---
->>  arch/powerpc/platforms/powernv/pci-ioda.c | 40 +++++++++++++++++++++++--------
->>  arch/powerpc/platforms/powernv/pci.h      |  4 +++-
->>  2 files changed, 33 insertions(+), 11 deletions(-)
->>
->>diff --git a/arch/powerpc/platforms/powernv/pci-ioda.c b/arch/powerpc/platforms/powernv/pci-ioda.c
->>index cd22002..57ba8fd 100644
->>--- a/arch/powerpc/platforms/powernv/pci-ioda.c
->>+++ b/arch/powerpc/platforms/powernv/pci-ioda.c
->>@@ -1946,6 +1946,7 @@ static void pnv_pci_ioda_setup_dma_pe(struct pnv_phb *phb,
->>
->>  	/* Grab a 32-bit TCE table */
->>  	pe->dma32_seg = base;
->>+	pe->dma32_segcount = segs;
->>  	pe_info(pe, " Setting up 32-bit TCE table at %08x..%08x\n",
->>  		(base << 28), ((base + segs) << 28) - 1);
->>
->>@@ -2006,8 +2007,13 @@ static void pnv_pci_ioda_setup_dma_pe(struct pnv_phb *phb,
->>  	return;
->>   fail:
->>  	/* XXX Failure: Try to fallback to 64-bit only ? */
->>-	if (pe->dma32_seg >= 0)
->>+	if (pe->dma32_seg >= 0) {
->>+		bitmap_clear(phb->ioda.dma32_segmap,
->>+			     pe->dma32_seg, pe->dma32_segcount);
->>  		pe->dma32_seg = -1;
->>+		pe->dma32_segcount = 0;
->>+	}
->>+
->>  	if (tce_mem)
->>  		__free_pages(tce_mem, get_order(TCE32_TABLE_SIZE * segs));
->>  	if (tbl) {
->>@@ -2443,12 +2449,11 @@ static void pnv_pci_ioda2_setup_dma_pe(struct pnv_phb *phb,
->>  		pnv_ioda_setup_bus_dma(pe, pe->pbus);
->>  }
->>
->>-static unsigned int pnv_ioda1_setup_dma(struct pnv_phb *phb,
->>-					struct pnv_ioda_pe *pe,
->>-					unsigned int base)
->>+static void pnv_ioda1_setup_dma(struct pnv_phb *phb,
->>+					struct pnv_ioda_pe *pe)
->>  {
->>  	struct pci_controller *hose = phb->hose;
->>-	unsigned int dma_weight, segs;
->>+	unsigned int dma_weight, base, segs;
->>
->>  	/* Calculate the PHB's DMA weight */
->>  	dma_weight = pnv_ioda_phb_dma_weight(phb);
->>@@ -2461,11 +2466,28 @@ static unsigned int pnv_ioda1_setup_dma(struct pnv_phb *phb,
->>  	else
->>  		segs = (pe->dma32_weight *
->>  			phb->ioda.dma32_segcount) / dma_weight;
->>+
->>+	/*
->>+	 * Allocate DMA32 segments. We might not have enough
->>+	 * resources available. However we expect at least one
->>+	 * to be available.
->>+	 */
->>+	do {
->>+		base = bitmap_find_next_zero_area(phb->ioda.dma32_segmap,
->>+						  phb->ioda.dma32_segcount,
->>+						  0, segs, 0);
->>+		if (base < phb->ioda.dma32_segcount) {
->>+			bitmap_set(phb->ioda.dma32_segmap, base, segs);
->>+			break;
->>+		}
->>+	} while (--segs);
->
->
->If segs==0 before entering the loop, the loop will execute 0xfffffffe times.
->Make it for(;segs;--segs){ }.
->
+On Wed, Jul 08, 2015 at 09:51:49AM +0900, Simon Horman wrote:
+> On Tue, Jul 07, 2015 at 09:56:29AM +0300, Laurent Pinchart wrote:
+> > Hi Simon,
+> > 
+> > On Tuesday 07 July 2015 09:26:21 Simon Horman wrote:
+> > > On Mon, Jul 06, 2015 at 04:29:33PM +0300, Laurent Pinchart wrote:
+> > > > On Monday 06 July 2015 12:55:32 Geert Uytterhoeven wrote:
+> > > > > Replace the deprecated generic "adi,adxl34x" compatible value by the
+> > > > > adxl345-specific "adi,adxl345" value, cfr. commit e465bf6fc55d5ce2 ("DT:
+> > > > > i2c: Deprecate adi,adxl34x compatible string").
+> > > > > 
+> > > > > Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> > > > 
+> > > > Acked-by: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
+> > > > 
+> > > > > ---
+> > > > > Depends on commit 3a38958d2477b718 ("Input: adxl34x - add OF match
+> > > > > support"), which is in v4.2-rc1.
+> > > > > 
+> > > > > This is v2 of "ARM: shmobile: kzm9g dts: Add adxl345-specific compatible
+> > > > > property".
+> > > 
+> > > It appears to me that this will cause a regression when booting old kernels
+> > > with new dts blobs. For that reason think we should consider v1
+> > > of this change coupled with a schedule to remove use of the deprecated
+> > > compat string.
+> > 
+> > That's the forward compatibility that Geert mentioned, is that really an 
+> > issue, especially on this board ?
+> 
+> I think it would be best to provide backwards compatibility unless there
+> is a compelling reason not to.
 
-"segs" is always equal to or bigger than 1 when entering the loop.
-
->>+
->>+	if (WARN_ON(!segs))
->>+		return;
->>+
->>  	pe_info(pe, "DMA weight %d, assigned %d segments\n",
->>  		pe->dma32_weight, segs);
->>  	pnv_pci_ioda_setup_dma_pe(phb, pe, base, segs);
->>-
->>-	return segs;
->>  }
->>
->>  #ifdef CONFIG_PCI_MSI
->>@@ -2933,20 +2955,18 @@ static void pnv_pci_ioda_setup_DMA(void)
->>  	struct pci_controller *hose, *tmp;
->>  	struct pnv_phb *phb;
->>  	struct pnv_ioda_pe *pe;
->>-	unsigned int base;
->>
->>  	list_for_each_entry_safe(hose, tmp, &hose_list, list_node) {
->>  		phb = hose->private_data;
->>  		pnv_pci_ioda_setup_opal_tce_kill(phb);
->>
->>-		base = 0;
->>  		list_for_each_entry(pe, &phb->ioda.pe_dma_list, dma_link) {
->>  			if (!pe->dma32_weight)
->>  				continue;
->>
->>  			switch (phb->type) {
->>  			case PNV_PHB_IODA1:
->>-				base += pnv_ioda1_setup_dma(phb, pe, base);
->>+				pnv_ioda1_setup_dma(phb, pe);
->>  				break;
->>  			case PNV_PHB_IODA2:
->>  				pnv_pci_ioda2_setup_dma_pe(phb, pe);
->>diff --git a/arch/powerpc/platforms/powernv/pci.h b/arch/powerpc/platforms/powernv/pci.h
->>index 574fe43..1dc9578 100644
->>--- a/arch/powerpc/platforms/powernv/pci.h
->>+++ b/arch/powerpc/platforms/powernv/pci.h
->>@@ -65,6 +65,7 @@ struct pnv_ioda_pe {
->>
->>  	/* "Base" iommu table, ie, 4K TCEs, 32-bit DMA */
->>  	int			dma32_seg;
->>+	int			dma32_segcount;
->>  	struct iommu_table_group table_group;
->>
->>  	/* 64-bit TCE bypass region */
->>@@ -153,10 +154,11 @@ struct pnv_phb {
->>  			unsigned int		io_segsize;
->>  			unsigned int		io_pci_base;
->>
->>-			/* IO, M32, M64 segment maps */
->>+			/* IO, M32, M64, DMA32 segment maps */
->>  			unsigned long		io_segmap[8];
->>  			unsigned long		m32_segmap[8];
->>  			unsigned long		m64_segmap[8];
->>+			unsigned long		dma32_segmap[8];
->>
->>  			/* PE allocation */
->>  			struct mutex		pe_alloc_mutex;
->>
-
-Thanks,
-Gavin
+I would like to revisit this discussion with a view to getting some version
+of this patch queued up (yes I know I pushed back on it earlier in this thread).
