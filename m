@@ -1,38 +1,45 @@
-From: Roger Quadros <rogerq@ti.com>
-Subject: Re: [PATCH v2 00/22] memory: omap-gpmc: mtd: nand: Support GPMC NAND
- on non-OMAP platforms
-Date: Thu, 13 Aug 2015 15:00:01 +0300
-Message-ID: <55CC86C1.8000107@ti.com>
-References: <1438938752-31010-1-git-send-email-rogerq@ti.com> <20150811124829.GM4215@atomide.com> <55CC43B1.4020409@ti.com> <20150813083616.GZ4215@atomide.com>
+From: Leilk Liu <leilk.liu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Subject: [PATCH] spi: Mediatek: fixup cpu_to_le32 incorrect usage
+Date: Thu, 13 Aug 2015 20:06:41 +0800
+Message-ID: <1439467601-10209-1-git-send-email-leilk.liu@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20150813083616.GZ4215@atomide.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Tony Lindgren <tony@atomide.com>
-Cc: dwmw2@infradead.org, computersforpeace@gmail.com, ezequiel@vanguardiasur.com.ar, javier@dowhile0.org, fcooper@ti.com, nsekhar@ti.com, linux-mtd@lists.infradead.org, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Leilk Liu <leilk.liu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 13/08/15 11:36, Tony Lindgren wrote:
-> * Roger Quadros <rogerq@ti.com> [150813 00:17]:
->> On 11/08/15 15:48, Tony Lindgren wrote:
->>>
->>> OK. Yeah let's make sure no regressions are caused by this.. We also
->>> still have the omap3 legacy booting around, have you checked that it
->>> keeps on working?
->>
->> I don't have any omap3 board with legacy support with me. I have omap3-beagle
->> but looks like legacy boot is dropped for it already.
->>
->> I'll try to revert the patch that drops beagle support and test it on that one.
-> 
-> OK yeah that should work just fine.
-> 
+writel() already does a cpu_to_le32 conversion, so
+remove cpu_to_le32().
 
-Just verified that with the change in patch 6 it works on omap3-beagle legacy boot.
-I have fixed some checkpatch issues in this series as well. Will post a v3
-after you have gone one pass over this series.
+Signed-off-by: Leilk Liu <leilk.liu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+---
+ drivers/spi/spi-mt65xx.c | 6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
 
-cheers,
--roger
+diff --git a/drivers/spi/spi-mt65xx.c b/drivers/spi/spi-mt65xx.c
+index ae645fa..519f50c 100644
+--- a/drivers/spi/spi-mt65xx.c
++++ b/drivers/spi/spi-mt65xx.c
+@@ -359,11 +359,9 @@ static void mtk_spi_setup_dma_addr(struct spi_master *master,
+ 	struct mtk_spi *mdata = spi_master_get_devdata(master);
+ 
+ 	if (mdata->tx_sgl)
+-		writel((__force u32)cpu_to_le32(xfer->tx_dma),
+-		       mdata->base + SPI_TX_SRC_REG);
++		writel(xfer->tx_dma, mdata->base + SPI_TX_SRC_REG);
+ 	if (mdata->rx_sgl)
+-		writel((__force u32)cpu_to_le32(xfer->rx_dma),
+-		       mdata->base + SPI_RX_DST_REG);
++		writel(xfer->rx_dma, mdata->base + SPI_RX_DST_REG);
+ }
+ 
+ static int mtk_spi_fifo_transfer(struct spi_master *master,
+-- 
+1.8.1.1.dirty
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
