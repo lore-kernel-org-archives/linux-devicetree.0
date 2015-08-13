@@ -1,76 +1,85 @@
-From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v3 01/11] dm: serial: Update binding for PL01x serial UART
-Date: Thu, 13 Aug 2015 17:24:49 -0500
-Message-ID: <CAL_JsqL2bn5Dop1oNsHNx6zgAohAfCS99BA4EiU16aG_c5AjsA@mail.gmail.com>
-References: <1438954951-13329-1-git-send-email-sjg@chromium.org>
- <1438954951-13329-2-git-send-email-sjg@chromium.org> <CACRpkdZa2O1MqCVT8q2P0u0ciXK+6HFbQQGXB_-chimg=FbzQg@mail.gmail.com>
- <CAPnjgZ3V1KS7POEhsvj63OSB29MUtyaZGBoFR8JGPnaN=-fXVw@mail.gmail.com>
+From: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v2] ARM: shmobile: silk: add SDHI1 DT support
+Date: Fri, 14 Aug 2015 01:47:12 +0300
+Message-ID: <55CD1E70.6050103@cogentembedded.com>
+References: <10037494.4LD4T2QGPX@wasted.cogentembedded.com>
+ <2757472.iuyUyRzJ3z@wasted.cogentembedded.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAPnjgZ3V1KS7POEhsvj63OSB29MUtyaZGBoFR8JGPnaN=-fXVw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <2757472.iuyUyRzJ3z-gHKXc3Y1Z8zGSmamagVegGFoWSdPRAKMAL8bYrjMMd8@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Cc: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, U-Boot Mailing List <u-boot-0aAXYlwwYIKGBzrmiIFOJg@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Joe Hershberger <joe.hershberger-acOepvfBmUk@public.gmane.org>, Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Marek Vasut <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Pavel Herrmann <morpheus.ibis-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Vikas Manocha <vikas.manocha-qxv4g6HH51o@public.gmane.org>, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
+To: horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org, linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Aug 13, 2015 at 10:59 AM, Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org> wrote:
-> Hi Linus,
+Hello.
+
+On 08/11/2015 01:44 AM, Sergei Shtylyov wrote:
+
+> Define the SILK board dependent part of the SDHI1 (connected to micro-SD slot)
+> device nodes along with the necessary voltage regulators.
 >
-> On 11 August 2015 at 07:00, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
->> On Fri, Aug 7, 2015 at 3:42 PM, Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org> wrote:
->>
->>> This binding differs from that of Linux. Update it and change existing
->>> users.
->>>
->>> Signed-off-by: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
->> (...)
->>>  doc/device-tree-bindings/serial/pl01x.txt | 55 ++++++++++++++++++++++++++++---
->>
->> So why does U-Boot have its own copy of any bindings at all?
->>
->> This is forking the ontology of who gets to define bindings I fear.
->> It's a bit like have two bibles both claiming to be the word of god.
->> (OK maybe a hyperbolic statement, but you see what I mean.)
->>
->> Can't we just have the bindings in the Linux kernel tree please?
-
-Yes, please!
-
-> Is there any plan to move them out of Linux and put them in a separate place?
-
-There is a tree generated from the kernel tree which is only bindings
-and dts files[1]. The path in for changes though is still thru the
-kernel.
-
-Actually splitting it out to an independent repo will require someone
-stepping up to do that. Perhaps as an intermediate step, we could take
-patches against the generated tree, apply path fixups, and merge thru
-the kernel tree.
-
-> We should make an effort to sync the device tree files with Linux periodically.
+> Based on the original patch by Vladimir Barinov
+> <vladimir.barinov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>.
 >
-> I quite like having the bindings in U-Boot since it makes people think
-> about what they are adding. Are you worried that the bindings in
-> U-Boot might evolve separately? Certainly there has been some of that.
+> Signed-off-by: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+>
+> ---
+> This patch is against 'renesas-devel-20150810-v4.2-rc6' tag of Simon Horman's
+> 'renesas.git' repo plus the R8A7794/SILK QSPI patches just re-posted. It needs
+> the R8A7794 GPIO patches in order to compile.
+>
+> Changes in version 2:
+> - removed not working SDHI0 stuff, renamed the patch;
+> - replaced SDHI1's "wp-gpios" property with "disable-wp".
+>
+>   arch/arm/boot/dts/r8a7794-silk.dts |   40 +++++++++++++++++++++++++++++++++++++
+>   1 file changed, 40 insertions(+)
+>
+> Index: renesas/arch/arm/boot/dts/r8a7794-silk.dts
+> ===================================================================
+> --- renesas.orig/arch/arm/boot/dts/r8a7794-silk.dts
+> +++ renesas/arch/arm/boot/dts/r8a7794-silk.dts
+[...]
+> @@ -39,6 +40,29 @@
+>   		regulator-boot-on;
+>   		regulator-always-on;
+>   	};
 
-Certainly, having driver binding related changes decoupled from
-binding documentation makes things harder to review.
+    Oops, need a newline here. I'll repost.
 
-> However I recently sent a series to add a few things for Raspberry Pi
-> ("arm: rpi: Device tree modifications for U-Boot") and I don't yet see
-> a willingness to add what some see as 'U-Boot things' to the binding.
-> How do we address that?
+> +	vcc_sdhi1: regulator@3 {
+> +		compatible = "regulator-fixed";
+> +
+> +		regulator-name = "SDHI1 Vcc";
+> +		regulator-min-microvolt = <3300000>;
+> +		regulator-max-microvolt = <3300000>;
+> +
+> +		gpio = <&gpio4 26 GPIO_ACTIVE_HIGH>;
+> +		enable-active-high;
+> +	};
+> +
+> +	vccq_sdhi1: regulator@4 {
+> +		compatible = "regulator-gpio";
+> +
+> +		regulator-name = "SDHI1 VccQ";
+> +		regulator-min-microvolt = <1800000>;
+> +		regulator-max-microvolt = <3300000>;
+> +
+> +		gpios = <&gpio4 29 GPIO_ACTIVE_HIGH>;
+> +		gpios-states = <1>;
+> +		states = <3300000 1
+> +			  1800000 0>;
+> +	};
+>   };
+>
+>   &extal_clk {
+[...]
 
-I went and looked at it. I don't have a big problem with "u-boot,?" in
-principle, but like any linux,? property they are a red flag and get
-extra scrutiny. You didn't explain what the binding was for, so I've
-got no idea on the one in question.
+MBR, Sergei
 
-Rob
-
-
-[1] http://git.kernel.org/cgit/linux/kernel/git/devicetree/devicetree-rebasing.git
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
