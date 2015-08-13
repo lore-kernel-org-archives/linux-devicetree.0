@@ -1,48 +1,176 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH v2 5/6] mailbox: Add generic mechanism for testing
- Mailbox Controllers
-Date: Thu, 13 Aug 2015 15:26:14 +0100
-Message-ID: <20150813142614.GH8782@x1>
-References: <20150813091914.GB8782@x1>
- <CABb+yY0cgbtM68-E_Xqgh5O6GRLXESYTLa5WcAwUBoVL3ufrxA@mail.gmail.com>
- <20150813102335.GC8782@x1>
- <CABb+yY3z7p97eOhncQ2i+g6yoYGfDgSN9BDPKmiDaVLa3oPocA@mail.gmail.com>
- <20150813110008.GD8782@x1>
- <CABb+yY34i=VUnswUE21vgeQYAGOS=7uwvdnTAFFgYkTV0CFk=w@mail.gmail.com>
- <20150813114005.GF8782@x1>
- <CABb+yY2OH16mgOwi=yH_eEHQN2Ck2x5xtVk-p-8Un9gGmcACdw@mail.gmail.com>
- <20150813130736.GG8782@x1>
- <CABb+yY2N6=oTrwni0tw1WffLv-udtBWh9LJR43EMVqYf+i2xUg@mail.gmail.com>
+From: Punit Agrawal <punit.agrawal@arm.com>
+Subject: Re: [PATCH v2 10/10] arm64: dts: Create SoC thermal zone for Juno
+Date: Thu, 13 Aug 2015 15:28:45 +0100
+Message-ID: <9hh1tf7i7oi.fsf@e105922-lin.cambridge.arm.com>
+References: <1438615378-14241-1-git-send-email-punit.agrawal@arm.com>
+	<1438615378-14241-11-git-send-email-punit.agrawal@arm.com>
+	<20150812155500.GW20890@e106497-lin.cambridge.arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CABb+yY2N6=oTrwni0tw1WffLv-udtBWh9LJR43EMVqYf+i2xUg@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Jassi Brar <jassisinghbrar@gmail.com>
-Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, kernel@stlinux.com, Devicetree List <devicetree@vger.kernel.org>
+Content-Type: text/plain
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <20150812155500.GW20890@e106497-lin.cambridge.arm.com> (Liviu
+	Dudau's message of "Wed, 12 Aug 2015 16:55:00 +0100")
+Sender: linux-pm-owner@vger.kernel.org
+To: Liviu Dudau <Liviu.Dudau@arm.com>
+Cc: "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "lm-sensors@lm-sensors.org" <lm-sensors@lm-sensors.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <Mark.Rutland@arm.com>, Sudeep Holla <Sudeep.Holla@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 13 Aug 2015, Jassi Brar wrote:
+Hi Liviu,
 
-> On Thu, Aug 13, 2015 at 6:37 PM, Lee Jones <lee.jones@linaro.org> wro=
-te:
-> >
-> > Now just agree with me that mbox_request_chan() should fail on requ=
-est
-> > of a known bad configuration request and I can code all this up and
-> > re-submit. :D
-> >
-> You make me look like a jerk :(   My problem is not with validation a=
-s
-> such. I see problem in the way you implement that makes validation
-> necessary. I'll explain step-by-step in the driver post.
+Thanks for having a look.
 
-That wasn't the intention, don't be so sensitive. ;)
+Liviu Dudau <Liviu.Dudau@arm.com> writes:
 
---=20
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-=46ollow Linaro: Facebook | Twitter | Blog
+> On Mon, Aug 03, 2015 at 04:22:58PM +0100, Punit Agrawal wrote:
+>> Setup a thermal zone driven by the SoC temperature sensor on Juno
+>> r0. Create passive trip points and bind them to cpufreq cooling
+>> devices that support the power extensions.
+>
+> Hi Punit,
+>
+>> 
+>> Signed-off-by: Punit Agrawal <punit.agrawal@arm.com>
+>> Cc: Rob Herring <robh+dt@kernel.org>
+>> Cc: Mark Rutland <mark.rutland@arm.com>
+>> Cc: Liviu Dudau <liviu.dudau@arm.com>
+>> Cc: Sudeep Holla <sudeep.holla@arm.com>
+>> ---
+>>  arch/arm64/boot/dts/arm/juno.dts | 50 ++++++++++++++++++++++++++++++++++++++++
+>>  1 file changed, 50 insertions(+)
+>> 
+>> diff --git a/arch/arm64/boot/dts/arm/juno.dts b/arch/arm64/boot/dts/arm/juno.dts
+>> index d2e67f3..664961c 100644
+>> --- a/arch/arm64/boot/dts/arm/juno.dts
+>> +++ b/arch/arm64/boot/dts/arm/juno.dts
+>> @@ -9,6 +9,7 @@
+>>  /dts-v1/;
+>>  
+>>  #include <dt-bindings/interrupt-controller/arm-gic.h>
+>> +#include <dt-bindings/thermal/thermal.h>
+>>  
+>>  / {
+>>  	model = "ARM Juno development board (r0)";
+>> @@ -90,6 +91,8 @@
+>>  			next-level-cache = <&A57_L2>;
+>>  			clocks = <&scpi_dvfs 0>;
+>>  			cpu-idle-states = <&CPU_SLEEP_0 &CLUSTER_SLEEP_0>;
+>> +			#cooling-cells = <2>;
+>> +			dynamic-power-coefficient = <530>;
+>
+> The Documentation/devicetree/bindings/thermal/thermal.txt document describes two additional
+> required properties, cooling-min-state and cooling-max-state which are missing here.
+>
+
+The bindings do suggest that the cooling-*-state are required but I
+couldn't find any code making use of this property.
+
+I'll send a patch with the next version making those properties
+optional.
+
+>>  		};
+>>  
+>>  		A57_1: cpu@1 {
+>> @@ -100,6 +103,8 @@
+>>  			next-level-cache = <&A57_L2>;
+>>  			clocks = <&scpi_dvfs 0>;
+>>  			cpu-idle-states = <&CPU_SLEEP_0 &CLUSTER_SLEEP_0>;
+>> +			#cooling-cells = <2>;
+>> +			dynamic-power-coefficient = <530>;
+>>  		};
+>>  
+>>  		A53_0: cpu@100 {
+>> @@ -110,6 +115,8 @@
+>>  			next-level-cache = <&A53_L2>;
+>>  			clocks = <&scpi_dvfs 1>;
+>>  			cpu-idle-states = <&CPU_SLEEP_0 &CLUSTER_SLEEP_0>;
+>> +			#cooling-cells = <2>;
+>> +			dynamic-power-coefficient = <140>;
+>>  		};
+>>  
+>>  		A53_1: cpu@101 {
+>> @@ -120,6 +127,8 @@
+>>  			next-level-cache = <&A53_L2>;
+>>  			clocks = <&scpi_dvfs 1>;
+>>  			cpu-idle-states = <&CPU_SLEEP_0 &CLUSTER_SLEEP_0>;
+>> +			#cooling-cells = <2>;
+>> +			dynamic-power-coefficient = <140>;
+>>  		};
+>>  
+>>  		A53_2: cpu@102 {
+>> @@ -130,6 +139,8 @@
+>>  			next-level-cache = <&A53_L2>;
+>>  			clocks = <&scpi_dvfs 1>;
+>>  			cpu-idle-states = <&CPU_SLEEP_0 &CLUSTER_SLEEP_0>;
+>> +			#cooling-cells = <2>;
+>> +			dynamic-power-coefficient = <140>;
+>>  		};
+>>  
+>>  		A53_3: cpu@103 {
+>> @@ -140,6 +151,8 @@
+>>  			next-level-cache = <&A53_L2>;
+>>  			clocks = <&scpi_dvfs 1>;
+>>  			cpu-idle-states = <&CPU_SLEEP_0 &CLUSTER_SLEEP_0>;
+>> +			#cooling-cells = <2>;
+>> +			dynamic-power-coefficient = <140>;
+>>  		};
+>>  
+>>  		A57_L2: l2-cache0 {
+>> @@ -167,5 +180,42 @@
+>>  				     <&A53_3>;
+>>  	};
+>>  
+>> +	thermal-zones {
+>> +		soc_thermal {
+>> +			polling-delay = <1000>;
+>> +			polling-delay-passive = <100>;
+>> +			sustainable-power = <2500>;
+>> +
+>> +			thermal-sensors = <&scpi_sensors0 3>;
+>> +
+>> +			trips {
+>> +				threshold: trip-point@0 {
+>
+> You also need a reg= property if you have the @index thing.
+>
+
+Having looked at the examples, I don't need to have the @index for the
+trip points. I'll update in the next version.
+
+Thanks,
+Punit
+
+> Best regards,
+> Liviu
+>
+>> +					temperature = <55000>;
+>> +					hysteresis = <1000>;
+>> +					type = "passive";
+>> +				};
+>> +				target: trip-point@1 {
+>> +					temperature = <65000>;
+>> +					hysteresis = <1000>;
+>> +					type = "passive";
+>> +				};
+>> +			};
+>> +
+>> +			cooling-maps {
+>> +				map0 {
+>> +					trip = <&target>;
+>> +					cooling-device = <&A53_0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
+>> +					contribution = <2048>;
+>> +				};
+>> +				map1 {
+>> +					trip = <&target>;
+>> +					cooling-device = <&A57_0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
+>> +					contribution = <1024>;
+>> +				};
+>> +
+>> +			};
+>> +		};
+>> +	};
+>> +
+>>  	#include "juno-base.dtsi"
+>>  };
+>> -- 
+>> 2.1.4
+>> 
