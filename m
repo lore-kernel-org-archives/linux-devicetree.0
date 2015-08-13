@@ -1,42 +1,69 @@
-From: Paul Walmsley <paul-DWxLp4Yu+b8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v2 2/6] rtc: omap: Add external clock enabling support
-Date: Thu, 13 Aug 2015 20:17:23 +0000 (UTC)
-Message-ID: <alpine.DEB.2.02.1508131822510.1009@utopia.booyaka.com>
-References: <1439198906-31189-1-git-send-email-j-keerthy@ti.com> <1439198906-31189-3-git-send-email-j-keerthy@ti.com> <alpine.DEB.2.02.1508121422020.7154@utopia.booyaka.com> <55CB99C2.7010007@ti.com> <20150812201636.GJ3411@piout.net>
+From: Joachim Eastwood <manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 1/2] clk: add lpc18xx creg clk driver
+Date: Thu, 13 Aug 2015 22:43:11 +0200
+Message-ID: <CAGhQ9VwZaM_iWTkQYVTuTiyb6gCG2y6s8WFVySCHt7YHE1qbcA@mail.gmail.com>
+References: <1436651307-24098-1-git-send-email-manabian@gmail.com>
+	<1436651307-24098-2-git-send-email-manabian@gmail.com>
+	<20150811204127.31346.16729@quantum>
 Mime-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
+Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20150812201636.GJ3411-m++hUPXGwpdeoWH0uzbU5w@public.gmane.org>
+In-Reply-To: <20150811204127.31346.16729@quantum>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Keerthy <a0393675-l0cyMroinI0@public.gmane.org>, Keerthy <j-keerthy-l0cyMroinI0@public.gmane.org>
-Cc: tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org, johan-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, grygorii.strashko-l0cyMroinI0@public.gmane.org, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, nm-l0cyMroinI0@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, t-kristo-l0cyMroinI0@public.gmane.org
+To: Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Cc: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi guys
+On 11 August 2015 at 22:41, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org> wrote:
+> Hi Joachim,
+>
+> Quoting Joachim Eastwood (2015-07-11 14:48:26)
+>> +static void __init lpc18xx_creg_clk_init(struct device_node *np)
+>> +{
+>> +       const char *clk_32khz_parent;
+>> +       struct regmap *syscon;
+>> +
+>> +       syscon = syscon_node_to_regmap(np->parent);
+>> +       if (IS_ERR(syscon)) {
+>> +               pr_err("%s: syscon lookup failed\n", __func__);
+>> +               return;
+>> +       }
+>> +
+>> +       clk_32khz_parent = of_clk_get_parent_name(np, 0);
+>> +
+>> +       clk_creg[CREG_CLK_32KHZ] =
+>> +               clk_register_creg_clk(&clk_creg_clocks[CREG_CLK_32KHZ],
+>> +                                     &clk_32khz_parent, syscon);
+>> +
+>> +       clk_creg[CREG_CLK_1KHZ] =
+>> +               clk_register_creg_clk(&clk_creg_clocks[CREG_CLK_1KHZ],
+>> +                                     &clk_creg_clocks[CREG_CLK_32KHZ].name,
+>> +                                     syscon);
+>> +
+>> +       of_clk_add_provider(np, of_clk_src_onecell_get, &clk_base_data);
+>> +}
+>> +CLK_OF_DECLARE(lpc18xx_creg_clk, "nxp,lpc1850-creg-clk", lpc18xx_creg_clk_init);
+>
+> I'll ask the same question that Stephen asked in your CCU/CGU driver
+> series: is it necessary to use CLK_OF_DECLARE here or can you use the
+> platform device model?
 
-On Wed, 12 Aug 2015, Alexandre Belloni wrote:
+The 32 kHz clock from the CREG block is a clock parent to the CGU
+block so it's possible that it will required early. This is all
+depends on how the boot loader initially configures the CGU.
 
-> On 13/08/2015 at 00:38:50 +0530, Keerthy wrote :
-> > The intent here is to switch to a higher precision clock which is the
-> > internal clock when available.
-> > 
-> > Alexandre,
-> > 
-> > Is dynamic switching preferred over sticking  to external clock always if
-> > present?
-> 
-> I'd say that I don't really care. I'd say the best would be to make a
-> decision based on clock-accuracy but maybe that is an information you
-> don't have yet. Anyway, this could be added at a later date.
-
-Either the clock mux logic is glitchless, in which case the RTC is likely 
-to lose at least 31 microseconds per switch; or it's not glitchless, in 
-which case it's unsafe to switch the RTC clock source while the clock 
-isn't gated.  Keerthy, before submitting this patch for merging, I'd 
-suggest consulting your hardware folks to figure out which case it is.
+Currently in the DTS for lpc18xx cgu it has:
+clocks = <&xtal>, <&xtal32>, <...>;
+xtal32 is just a temporary placeholder until the CREG clock is in place.
 
 
-- Paul
+Note that while it's possible to use the 32k clock together with PLL0
+to generate the main CPU bus clock I doubt it will be common
+configuration. It is however fully possible to do.
+
+
+regards,
+Joachim Eastwood
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
