@@ -1,50 +1,69 @@
-From: Russell King - ARM Linux <linux@arm.linux.org.uk>
-Subject: Re: [PATCH 3/7] drm/vc4: Add KMS support for Raspberry Pi.
-Date: Thu, 13 Aug 2015 22:29:36 +0100
-Message-ID: <20150813212936.GT7557@n2100.arm.linux.org.uk>
-References: <1439427380-2436-1-git-send-email-eric@anholt.net>
- <1439427380-2436-4-git-send-email-eric@anholt.net>
- <20150813075141.GX17734@phenom.ffwll.local>
- <87d1yqq5po.fsf@eliezer.anholt.net>
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Subject: Re: [PATCH v2] ARM: shmobile: kzm9g dts: Use adxl345-specific compatible property
+Date: Fri, 14 Aug 2015 00:31:09 +0300
+Message-ID: <10744920.2768uXkYtL@avalon>
+References: <1436180132-26190-1-git-send-email-geert+renesas@glider.be> <20150813000537.GD5221@verge.net.au> <CAMuHMdV0fqjJSjmYqP0uFa0x5ydc1iztu4za1Ufu7OMdhC29Ug@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-Content-Disposition: inline
-In-Reply-To: <87d1yqq5po.fsf@eliezer.anholt.net>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Eric Anholt <eric@anholt.net>
-Cc: devicetree@vger.kernel.org, Stephen Warren <swarren@wwwdotorg.org>, Lee Jones <lee@kernel.org>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-rpi-kernel@lists.infradead.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <CAMuHMdV0fqjJSjmYqP0uFa0x5ydc1iztu4za1Ufu7OMdhC29Ug@mail.gmail.com>
+Sender: linux-sh-owner@vger.kernel.org
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Simon Horman <horms@verge.net.au>, Geert Uytterhoeven <geert+renesas@glider.be>, Linux-sh list <linux-sh@vger.kernel.org>, Magnus Damm <magnus.damm@gmail.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gVGh1LCBBdWcgMTMsIDIwMTUgYXQgMDE6NDQ6MDNQTSAtMDcwMCwgRXJpYyBBbmhvbHQgd3Jv
-dGU6Cj4gU3RydWN0IG11dGV4IGlzIGhlcmUgYmVjYXVzZSB0aGlzIGNvZGUgaXMgZnJvbSB0aGUg
-VjNEIHNlcmllcywgd2l0aCB0aGUKPiBpbi1rZXJuZWwgQk8gY2FjaGUgcmlwcGVkIG91dCAoaXQg
-dHVybnMgb3V0IHRoYXQgdGhlIENNQSBhbGxvY2F0b3IgaXMKPiBzbG93LCBhbmQgeW91IGNhbid0
-IGp1c3QgdXNlcnNwYWNlIGNhY2hlIHNpbmNlIHdlIGhhdmUgdG8gZG8gYWxsb2NhdGlvbnMKPiB3
-aXRoaW4gdGhlIGtlcm5lbCB0byB0aGUgdHVuZSBvZiBhIGNvdXBsZSBwZXIgZHJhdyBhbmQgdGhh
-dCdzIHRvbyBtdWNoKS4KClRoZSBDTUEgYWxsb2NhdG9yIGlzIGZhc3QgdW50aWwgeW91IGhhdmUg
-cGlubmVkIHBhZ2VzIGluIGl0cyByZWdpb24sCndoZXJlIGl0IGJlY29tZXMgX3ZlcnlfIHNsb3cg
-dG8gZG8gYWxsb2NhdGlvbnMsIHNvbWV0aW1lcyBnZXR0aW5nIHVwCnRvIHRoZSBvcmRlciBvZiBz
-ZWNvbmRzLgoKVGhlIG1haW4gY3VscHJldCBvZiB0aGlzIGFyZSBHRlBfSElHSFVTRVJfTU9WQUJM
-RSBhbGxvY2F0aW9ucyB3aGljaAp0aGVuIHBpbiB0aGUgcGFnZS4gIEl0IGRvZXNuJ3QgdGFrZSBt
-YW55IG9mIHRob3NlIHRvIG1ha2UgQ01BIHJlYWxseQppbmVmZmljaWVudC4KClRoZSBwcm9ibGVt
-IGlzIHRoYXQgQ01BIGRvZXNuJ3QgZ2V0IGFueSBpbmZvcm1hdGlvbiBiYWNrIGZyb20gdGhlCmlu
-dGVybmFsIHBhZ2UgbWlncmF0aW9uIGFib3V0IHdoaWNoIHBhZ2VzIGNvdWxkbid0IGJlIG1vdmVk
-LCBzbyBpdApkdW1ibHkganVzdCB0cmllcyBpbmNyZW1lbnRpbmcgdGhlIGFsbG9jYXRpb24gYnkg
-b25lIHBhZ2UgKHN1YmplY3QKdG8gYWxpZ25tZW50IGNvbnN0cmFpbnRzKSBhbmQgcmV0cnlpbmcg
-YWdhaW4gLSByZXBlYXRpbmcgb3ZlciB0aGUKZW50aXJlIENNQSByZWdpb24uICBUaGUgYmlnZ2Vy
-IHRoZSByZWdpb24sIHRoZSBtb3JlIHRpbWUgdGhpcyB0YWtlcy4KCi0tIApGVFRDIGJyb2FkYmFu
-ZCBmb3IgMC44bWlsZSBsaW5lOiBjdXJyZW50bHkgYXQgMTAuNU1icHMgZG93biA0MDBrYnBzIHVw
-CmFjY29yZGluZyB0byBzcGVlZHRlc3QubmV0LgpfX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0
-cy5mcmVlZGVza3RvcC5vcmcKaHR0cDovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xp
-c3RpbmZvL2RyaS1kZXZlbAo=
+On Thursday 13 August 2015 11:26:32 Geert Uytterhoeven wrote:
+> On Thu, Aug 13, 2015 at 2:05 AM, Simon Horman <horms@verge.net.au> wrote:
+> > On Wed, Jul 08, 2015 at 09:51:49AM +0900, Simon Horman wrote:
+> >> On Tue, Jul 07, 2015 at 09:56:29AM +0300, Laurent Pinchart wrote:
+> >>> On Tuesday 07 July 2015 09:26:21 Simon Horman wrote:
+> >>>> On Mon, Jul 06, 2015 at 04:29:33PM +0300, Laurent Pinchart wrote:
+> >>>>> On Monday 06 July 2015 12:55:32 Geert Uytterhoeven wrote:
+> >>>>>> Replace the deprecated generic "adi,adxl34x" compatible value by
+> >>>>>> the adxl345-specific "adi,adxl345" value, cfr. commit
+> >>>>>> e465bf6fc55d5ce2 ("DT:
+> >>>>>> i2c: Deprecate adi,adxl34x compatible string").
+> >>>>>> 
+> >>>>>> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> >>>>> 
+> >>>>> Acked-by: Laurent Pinchart
+> >>>>> <laurent.pinchart+renesas@ideasonboard.com>
+> >>>>> 
+> >>>>>> ---
+> >>>>>> Depends on commit 3a38958d2477b718 ("Input: adxl34x - add OF
+> >>>>>> match support"), which is in v4.2-rc1.
+> >>>>>> 
+> >>>>>> This is v2 of "ARM: shmobile: kzm9g dts: Add adxl345-specific
+> >>>>>> compatible property".
+> >>>> 
+> >>>> It appears to me that this will cause a regression when booting old
+> >>>> kernels with new dts blobs. For that reason think we should consider
+> >>>> v1 of this change coupled with a schedule to remove use of the
+> >>>> deprecated compat string.
+> >>> 
+> >>> That's the forward compatibility that Geert mentioned, is that really
+> >>> an issue, especially on this board ?
+> >> 
+> >> I think it would be best to provide backwards compatibility unless there
+> >> is a compelling reason not to.
+> > 
+> > I would like to revisit this discussion with a view to getting some
+> > version of this patch queued up (yes I know I pushed back on it earlier in
+> > this thread).
+>
+> I'm fine with applying v1.
+
+And I'm quite unsurprisingly not, as I've asked for a v2.
+
+The "adi,adxl34x" compatible string is deprecated. That means we still support 
+it in the driver for device trees that haven't been updated, but it shouldn't 
+be used forward by new device trees. That's why the device tree sources 
+contained in the kernel shouldn't use it, especially given that they often 
+serve as references for device trees shipped out of tree.
+
+-- 
+Regards,
+
+Laurent Pinchart
+
