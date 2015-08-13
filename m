@@ -1,119 +1,45 @@
-From: "Sricharan" <sricharan-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: RE: [PATCH 3/5] iommu/msm: Add support for generic master bindings
-Date: Thu, 13 Aug 2015 13:39:15 +0530
-Message-ID: <000801d0d59f$5d017f80$17047e80$@codeaurora.org>
-References: <1439390869-6347-1-git-send-email-sricharan@codeaurora.org>
-	<1439390869-6347-4-git-send-email-sricharan@codeaurora.org>
-	<55CB9A7D.7080206@codeaurora.org>
+From: Borislav Petkov <bp-Gina5bIWoIWzQB+pC5nmwQ@public.gmane.org>
+Subject: Re: [PATCH v3 1/4] edac: Add an function to retrieve the EDAC
+ debugfs node
+Date: Thu, 13 Aug 2015 10:15:37 +0200
+Message-ID: <20150813081537.GB20004@nazgul.tnic>
+References: <1439326077-25507-1-git-send-email-lho@apm.com>
+ <1439326077-25507-2-git-send-email-lho@apm.com>
+ <20150812101219.GC14011@nazgul.tnic>
+ <20150812104954.GD14011@nazgul.tnic>
+ <CAPw-ZT=AFtyLt4CNGBzLZcdPr-ekJpQxKA4Y_AiDzqKfhF1-=w@mail.gmail.com>
+ <CAPw-ZTkfAxqG6HQHU3WomrqRwXa+jyTWCg=ns1HKC323ds1yug@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-In-Reply-To: <55CB9A7D.7080206-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Content-Language: en-us
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: 'Stephen Boyd' <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Will.Deacon-5wv7dgnIgG8@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, stepanm-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
+Content-Type: text/plain; charset=utf-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <CAPw-ZTkfAxqG6HQHU3WomrqRwXa+jyTWCg=ns1HKC323ds1yug-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Loc Ho <lho-qTEPVZfXA3Y@public.gmane.org>
+Cc: Doug Thompson <dougthompson-aS9lmoZGLiVWk0Htik3J/w@public.gmane.org>, Mauro Carvalho Chehab <mchehab-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, linux-edac-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Jon Masters <jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, "patches-qTEPVZfXA3Y@public.gmane.org" <patches-qTEPVZfXA3Y@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Stephen,
+On Wed, Aug 12, 2015 at 09:30:58PM -0700, Loc Ho wrote:
+> Okay... The 'inline' helps with the compiler warning. If I move all to
+> header file with 'static inline' and wrapper around CONFIG_EDAC_DEBUG,
+> don't I need to export and declare the variable 'edac_debugfs'? Are
+> you okay with export this variable?
 
-> -----Original Message-----
-> From: Stephen Boyd [mailto:sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org]
-> Sent: Thursday, August 13, 2015 12:42 AM
-> To: Sricharan R
-> Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org;
-iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org;
-> devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org;
-> robin.murphy-5wv7dgnIgG8@public.gmane.org; robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org; joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org;
-> srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org; laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org;
-> Will.Deacon-5wv7dgnIgG8@public.gmane.org; stepanm-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org; treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org
-> Subject: Re: [PATCH 3/5] iommu/msm: Add support for generic master
-> bindings
-> 
-> On 08/12/2015 07:47 AM, Sricharan R wrote:
-> > @@ -702,6 +703,44 @@ static void print_ctx_regs(void __iomem *base,
-> int ctx)
-> >   	       GET_PRRR(base, ctx), GET_NMRR(base, ctx));
-> >   }
-> >
-> > +static void insert_iommu_master(struct device *dev,
-> > +				struct msm_iommu_dev *iommu,
-> > +				struct of_phandle_args *spec)
-> > +{
-> > +	struct msm_iommu_ctx_dev *master;
-> > +	int sid;
-> > +
-> > +	master = kzalloc(sizeof(*master), GFP_KERNEL);
-> 
-> This is called with irqs disabled, but it's not GFP_ATOMIC. Please test
-with
-> DEBUG_ATOMIC_SLEEP=y.
+You need to make edac_debugfs extern in the header and define it in
+edac_mc_sysfs.c.
 
-    Ok. I will have to adjust the locking here. It should be granular only
-for the list manipulation.
-> 
-> > +	master->of_node = dev->of_node;
-> > +	list_add(&master->list, &iommu->ctx_list);
-> > +
-> > +	for (sid = 0; sid < spec->args_count; sid++)
-> > +		master->mids[sid] = spec->args[sid];
-> > +
-> > +	master->num_mids = spec->args_count; }
-> > +
-> > +static int qcom_iommu_of_xlate(struct device *dev,
-> > +			       struct of_phandle_args *spec) {
-> > +	struct msm_iommu_dev *iommu;
-> > +	unsigned long flags;
-> > +
-> > +	spin_lock_irqsave(&msm_iommu_lock, flags);
-> > +	list_for_each_entry(iommu, &qcom_iommu_devices, dev_node) {
-> > +		if (iommu->dev->of_node == spec->np)
-> > +			break;
-> > +	}
-> 
-> The braces are unnecessary here.
- Ok, will remove this.
-> 
-> > +
-> > +	if (!iommu || (iommu->dev->of_node != spec->np))
-> 
-> Please remove extraneous parentheses.
-> 
- Ok.
+But that's ok because edac_core.h will be included only by EDAC drivers
+and they're supposed to see edac_debugfs anyway...
 
-> > +		return -ENODEV;
-> > +
-> > +	insert_iommu_master(dev, iommu, spec);
-> > +	spin_unlock_irqrestore(&msm_iommu_lock, flags);
-> > +
-> > +	return 0;
-> > +}
-> > +
-> >   irqreturn_t msm_iommu_fault_handler(int irq, void *dev_id)
-> >   {
-> >   	struct msm_iommu_dev *iommu = dev_id; @@ -737,7 +776,7 @@
-> fail:
-> >   	return 0;
-> >   }
-> >
-> > -static const struct iommu_ops msm_iommu_ops = {
-> > +static struct iommu_ops msm_iommu_ops = {
-> 
-> Is there a reason why we can't make of_iommu_set_ops() take a const ops
-> pointer?
-> 
-  Hmm right. of_iommu_set_ops is the one that needs change. I will add a
-separate
-  patch to correct that.
+Thanks.
 
-Regards,
- Sricharan
+-- 
+Regards/Gruss,
+    Boris.
+
+ECO tip #101: Trim your mails when you reply.
+--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
