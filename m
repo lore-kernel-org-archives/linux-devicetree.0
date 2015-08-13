@@ -1,57 +1,111 @@
-From: Wei Xu <xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
-Subject: Re: [RFC PATCH v4 6/9] arm: hisi_defconfig: remove CONFIG_MMC_DW_IDMAC
-Date: Thu, 13 Aug 2015 11:18:10 +0100
-Message-ID: <55CC6EE2.4070308@hisilicon.com>
-References: <1438843469-23807-1-git-send-email-shawn.lin@rock-chips.com> <1438843553-24058-1-git-send-email-shawn.lin@rock-chips.com>
+From: Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v2 5/6] mailbox: Add generic mechanism for testing Mailbox Controllers
+Date: Thu, 13 Aug 2015 16:11:38 +0530
+Message-ID: <CABb+yY3z7p97eOhncQ2i+g6yoYGfDgSN9BDPKmiDaVLa3oPocA@mail.gmail.com>
+References: <1437990272-23111-1-git-send-email-lee.jones@linaro.org>
+	<1437990272-23111-6-git-send-email-lee.jones@linaro.org>
+	<CABb+yY20nQbiEEZeRvWTMUsJ2qgwRn8CrWvnFDSB-b1dgVaAuw@mail.gmail.com>
+	<20150812102328.GD18282@x1>
+	<CABb+yY0A74Vy3-KOvj0URU_4zb2FAC7Yp3gmEwnFaBrD0mzt0w@mail.gmail.com>
+	<20150813091914.GB8782@x1>
+	<CABb+yY0cgbtM68-E_Xqgh5O6GRLXESYTLa5WcAwUBoVL3ufrxA@mail.gmail.com>
+	<20150813102335.GC8782@x1>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1438843553-24058-1-git-send-email-shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+In-Reply-To: <20150813102335.GC8782@x1>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, jh80.chung-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
-Cc: heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, Vineet.Gupta1-HKixBCOQz3hWk0Htik3J/w@public.gmane.org, Joachim Eastwood <manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexey Brodkin <abrodkin-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, Kukjin Kim <kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Jun Nie <jun.nie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, Govindraj Raja <govindraj.raja-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Yanhaifeng <yanhaifeng-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Linuxarm <linuxarm-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, kernel-F5mvAk5X5gdBDgjK7y7TUQ@public.gmane.org, Devicetree List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+On Thu, Aug 13, 2015 at 3:53 PM, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+> On Thu, 13 Aug 2015, Jassi Brar wrote:
+>
+>> On Thu, Aug 13, 2015 at 2:49 PM, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+>> > On Thu, 13 Aug 2015, Jassi Brar wrote:
+>>
+>> >> >> > +
+>> >> >> > +static void mbox_test_prepare_message(struct mbox_client *client, void *message)
+>> >> >> > +{
+>> >> >> > +       struct mbox_test_device *tdev = dev_get_drvdata(client->dev);
+>> >> >> > +
+>> >> >> > +       if (tdev->mmio)
+>> >> >> > +               memcpy(tdev->mmio, message, MBOX_MAX_MSG_LEN);
+>> >> >> >
+>> >> >> This is unlikely to work. Those platforms that need to send a 2 part
+>> >> >> message, they do :
+>> >> >> (a) Signal/Command/Target code via some controller register (via
+>> >> >> mbox_send_message).
+>> >> >> (b) Setup the payload in Shared-Memory (via tx_prepare).
+>> >> >>
+>> >> >> This test driver assumes both are the same. I think you have to
+>> >> >> declare something like
+>> >> >
+>> >> > This driver assumes that the framework will call client->tx_prepare()
+>> >> > first, which satisfies (b).  It then assumes controller->send_data()
+>> >> > will be invoked, which will send the platform specific
+>> >> > signal/command/target code, which then satisfies (a).
+>> >> >
+>> >> Yeah, but what would be that code? Who provides that?
+>> >>
+>> >> > In what way does it assume they are the same?
+>> >> >
+>> >> notice the 'message' pointer in
+>> >> mbox_send_message(tdev->tx_channel, message);
+>> >>     and
+>> >> memcpy(tdev->mmio, message, MBOX_MAX_MSG_LEN);
+>> >>
+>> >> >> struct mbox_test_message { /* same for TX and RX */
+>> >> >>           unsigned sig_len;
+>> >> >>           void *signal;               /* rx/tx via mailbox api */
+>> >> >>           unsigned pl_len;
+>> >> >>           void *payload;           /* rx/tx via shared-memory */
+>> >> >> };
+>> >> >
+>> >> > How do you think this should be set and use these?
+>> >> >
+>> >> The userspace would want to specify the command code (32bits or not)
+>> >> that would be passed via the fifo/register of the controller. So we
+>> >> need signal[]
+>> >>
+>> >> The data to be passed via share-memory could be provided by userspace
+>> >> via the payload[] array.
+>> >
+>> > Okay, so would the solution be two userspace files 'signal' and
+>> > 'message', so in the case of a client specified signal we can write it
+>> > into there first.
+>> >
+>> > echo 255  > signal
+>> > echo test > message
+>> >
+>> > ... or in the case where no signal is required, or the controller
+>> > driver taking care of it, we just don't write anything to signal?
+>> >
+>> file_operations.write() should parse signal and message, coming from
+>> userspace, into a local structure before routing them via
+>> mbox_send_message and tx_prepare respectively.
+>
+> Okay.  So before I code this up we should agree on syntax.
+>
+> How would you like to represent the break between signal and message?
+> Obviously ' ' would be a bad idea, as some clients may want to send
+> messages with white space contained.  How about '\t' or '\n'?
+>
+Yeah, I am not a fan of markers and flags either.
 
+Maybe we should share with userspace
+  struct mbox_test_message { /* same for TX and RX */
+           unsigned sig_len;
+           void __user *signal;        /* rx/tx via mailbox api */
+           unsigned pl_len;
+           void __user *payload;    /* rx/tx via shared-memory */
+  };
 
-On 8/6/2015 7:45 AM, Shawn Lin wrote:
-> DesignWare MMC Controller's transfer mode should be decided
-> at runtime instead of compile-time. So we remove this config
-> option and read dw_mmc's register to select DMA master.
-> 
-> Signed-off-by: Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-
-Acked-by: Wei Xu <xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
-
-> ---
-> 
-> Changes in v4: None
-> Changes in v3: None
-> Changes in v2: None
-> 
->  arch/arm/configs/hisi_defconfig | 1 -
->  1 file changed, 1 deletion(-)
-> 
-> diff --git a/arch/arm/configs/hisi_defconfig b/arch/arm/configs/hisi_defconfig
-> index 5997dbc..b2e340b 100644
-> --- a/arch/arm/configs/hisi_defconfig
-> +++ b/arch/arm/configs/hisi_defconfig
-> @@ -69,7 +69,6 @@ CONFIG_NOP_USB_XCEIV=y
->  CONFIG_MMC=y
->  CONFIG_RTC_CLASS=y
->  CONFIG_MMC_DW=y
-> -CONFIG_MMC_DW_IDMAC=y
->  CONFIG_MMC_DW_PLTFM=y
->  CONFIG_RTC_DRV_PL031=y
->  CONFIG_DMADEVICES=y
-> 
-
-Thanks!
-
-Best Regards,
-Wei
-
+First copy_from_user the structure of length sizof(struct
+mbox_test_message) and then copy_from_user length sig_len and pl_len
+from signal[] and payload[] respectively (usually ioctls would carry
+such data).
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
