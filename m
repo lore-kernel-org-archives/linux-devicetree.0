@@ -1,52 +1,77 @@
-From: Mathieu Olivari <mathieu@codeaurora.org>
-Subject: [PATCH 2/3] ARM: qcom: add SMEM device node to IPQ806x dts
-Date: Thu, 13 Aug 2015 14:33:39 -0700
-Message-ID: <1439501620-24073-3-git-send-email-mathieu@codeaurora.org>
-References: <1439501620-24073-1-git-send-email-mathieu@codeaurora.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1439501620-24073-1-git-send-email-mathieu@codeaurora.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk, dwmw2@infradead.org, computersforpeace@gmail.com, agross@codeaurora.org, sboyd@codeaurora.org, bjorn.andersson@sonymobile.com
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org, Mathieu Olivari <mathieu@codeaurora.org>
+From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v3 01/11] dm: serial: Update binding for PL01x serial UART
+Date: Thu, 13 Aug 2015 17:24:49 -0500
+Message-ID: <CAL_JsqL2bn5Dop1oNsHNx6zgAohAfCS99BA4EiU16aG_c5AjsA@mail.gmail.com>
+References: <1438954951-13329-1-git-send-email-sjg@chromium.org>
+ <1438954951-13329-2-git-send-email-sjg@chromium.org> <CACRpkdZa2O1MqCVT8q2P0u0ciXK+6HFbQQGXB_-chimg=FbzQg@mail.gmail.com>
+ <CAPnjgZ3V1KS7POEhsvj63OSB29MUtyaZGBoFR8JGPnaN=-fXVw@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAPnjgZ3V1KS7POEhsvj63OSB29MUtyaZGBoFR8JGPnaN=-fXVw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Cc: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, U-Boot Mailing List <u-boot-0aAXYlwwYIKGBzrmiIFOJg@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Joe Hershberger <joe.hershberger-acOepvfBmUk@public.gmane.org>, Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Marek Vasut <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Pavel Herrmann <morpheus.ibis-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Vikas Manocha <vikas.manocha-qxv4g6HH51o@public.gmane.org>, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-SMEM is used on IPQ806x to store various board related information such
-as boot device and flash partition layout. We'll declare it as a device
-so we can make use of it thanks to the new SMEM soc driver.
+On Thu, Aug 13, 2015 at 10:59 AM, Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org> wrote:
+> Hi Linus,
+>
+> On 11 August 2015 at 07:00, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+>> On Fri, Aug 7, 2015 at 3:42 PM, Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org> wrote:
+>>
+>>> This binding differs from that of Linux. Update it and change existing
+>>> users.
+>>>
+>>> Signed-off-by: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+>> (...)
+>>>  doc/device-tree-bindings/serial/pl01x.txt | 55 ++++++++++++++++++++++++++++---
+>>
+>> So why does U-Boot have its own copy of any bindings at all?
+>>
+>> This is forking the ontology of who gets to define bindings I fear.
+>> It's a bit like have two bibles both claiming to be the word of god.
+>> (OK maybe a hyperbolic statement, but you see what I mean.)
+>>
+>> Can't we just have the bindings in the Linux kernel tree please?
 
-Signed-off-by: Mathieu Olivari <mathieu@codeaurora.org>
----
- arch/arm/boot/dts/qcom-ipq8064.dtsi | 11 ++++++++++-
- 1 file changed, 10 insertions(+), 1 deletion(-)
+Yes, please!
 
-diff --git a/arch/arm/boot/dts/qcom-ipq8064.dtsi b/arch/arm/boot/dts/qcom-ipq8064.dtsi
-index ea7b959..9ee9780 100644
---- a/arch/arm/boot/dts/qcom-ipq8064.dtsi
-+++ b/arch/arm/boot/dts/qcom-ipq8064.dtsi
-@@ -55,7 +55,7 @@
- 			no-map;
- 		};
- 
--		smem@41000000 {
-+		smem: smem@41000000 {
- 			reg = <0x41000000 0x200000>;
- 			no-map;
- 		};
-@@ -79,6 +79,15 @@
- 
- 			#hwlock-cells = <1>;
- 		};
-+
-+		smem {
-+			compatible = "qcom,smem";
-+
-+			memory-region = <&smem>;
-+			reg = <0x41000000 0x4000>;
-+
-+			hwlocks = <&sfpb_mutex 3>;
-+		};
- 	};
- 
- 	soc: soc {
--- 
-2.1.4
+> Is there any plan to move them out of Linux and put them in a separate place?
+
+There is a tree generated from the kernel tree which is only bindings
+and dts files[1]. The path in for changes though is still thru the
+kernel.
+
+Actually splitting it out to an independent repo will require someone
+stepping up to do that. Perhaps as an intermediate step, we could take
+patches against the generated tree, apply path fixups, and merge thru
+the kernel tree.
+
+> We should make an effort to sync the device tree files with Linux periodically.
+>
+> I quite like having the bindings in U-Boot since it makes people think
+> about what they are adding. Are you worried that the bindings in
+> U-Boot might evolve separately? Certainly there has been some of that.
+
+Certainly, having driver binding related changes decoupled from
+binding documentation makes things harder to review.
+
+> However I recently sent a series to add a few things for Raspberry Pi
+> ("arm: rpi: Device tree modifications for U-Boot") and I don't yet see
+> a willingness to add what some see as 'U-Boot things' to the binding.
+> How do we address that?
+
+I went and looked at it. I don't have a big problem with "u-boot,?" in
+principle, but like any linux,? property they are a red flag and get
+extra scrutiny. You didn't explain what the binding was for, so I've
+got no idea on the one in question.
+
+Rob
+
+
+[1] http://git.kernel.org/cgit/linux/kernel/git/devicetree/devicetree-rebasing.git
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
