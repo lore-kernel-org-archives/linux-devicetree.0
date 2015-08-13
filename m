@@ -1,45 +1,120 @@
-From: Borislav Petkov <bp-Gina5bIWoIWzQB+pC5nmwQ@public.gmane.org>
-Subject: Re: [PATCH v3 1/4] edac: Add an function to retrieve the EDAC
- debugfs node
-Date: Thu, 13 Aug 2015 10:15:37 +0200
-Message-ID: <20150813081537.GB20004@nazgul.tnic>
-References: <1439326077-25507-1-git-send-email-lho@apm.com>
- <1439326077-25507-2-git-send-email-lho@apm.com>
- <20150812101219.GC14011@nazgul.tnic>
- <20150812104954.GD14011@nazgul.tnic>
- <CAPw-ZT=AFtyLt4CNGBzLZcdPr-ekJpQxKA4Y_AiDzqKfhF1-=w@mail.gmail.com>
- <CAPw-ZTkfAxqG6HQHU3WomrqRwXa+jyTWCg=ns1HKC323ds1yug@mail.gmail.com>
+From: Daniel Lezcano <daniel.lezcano@linaro.org>
+Subject: Re: [PATCH v2 1/5] clocksource: mediatek: do not enable GPT_CLK_EVT
+ when setup
+Date: Thu, 13 Aug 2015 10:35:16 +0200
+Message-ID: <55CC56C4.8080201@linaro.org>
+References: <CAGS+omD8k_Cfxv3bYyjmjtLbiavo-WmJPn0Z-CBhN_nnv65Tag@mail.gmail.com> <1437552878-3684-1-git-send-email-yingjoe.chen@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <CAPw-ZTkfAxqG6HQHU3WomrqRwXa+jyTWCg=ns1HKC323ds1yug-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Loc Ho <lho-qTEPVZfXA3Y@public.gmane.org>
-Cc: Doug Thompson <dougthompson-aS9lmoZGLiVWk0Htik3J/w@public.gmane.org>, Mauro Carvalho Chehab <mchehab-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, linux-edac-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Jon Masters <jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, "patches-qTEPVZfXA3Y@public.gmane.org" <patches-qTEPVZfXA3Y@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8;
+	format=flowed
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1437552878-3684-1-git-send-email-yingjoe.chen@mediatek.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Yingjoe Chen <yingjoe.chen@mediatek.com>, Daniel Kurtz <djkurtz@chromium.org>, Stephen Boyd <sboyd@codeaurora.org>, Thomas Gleixner <tglx@linutronix.de>
+Cc: James Liao <jamesjj.liao@mediatek.com>, Russell King <linux@arm.linux.org.uk>, srv_heupstream <srv_heupstream@mediatek.com>, Arnd Bergmann <arnd@arndb.de>, "open list:OPEN FIRMWARE AND..." <devicetree@vger.kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, Michael Turquette <mturquette@baylibre.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Olof Johansson <olof@lixom.net>, Rob Herring <robh+dt@kernel.org>, linux-mediatek@lists.infradead.org, Sascha Hauer <kernel@pengutronix.de>, Matthias Brugger <matthias.bgg@gmail.com>, linux-clk@vger.kernel.org, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Aug 12, 2015 at 09:30:58PM -0700, Loc Ho wrote:
-> Okay... The 'inline' helps with the compiler warning. If I move all to
-> header file with 'static inline' and wrapper around CONFIG_EDAC_DEBUG,
-> don't I need to export and declare the variable 'edac_debugfs'? Are
-> you okay with export this variable?
+On 07/22/2015 10:14 AM, Yingjoe Chen wrote:
+> Spurious mtk timer interrupt is noticed at boot and cause kernel
+> crash. It seems if GPT is enabled, it will latch irq status even
+> when its IRQ is disabled. When irq is enabled afterward, we see
+> spurious interrupt.
+> Change init flow to only enable GPT_CLK_SRC at mtk_timer_init.
+>
+> Acked-by: Matthias Brugger <matthias.bgg@gmail.com>
+> Reviewed-by: Daniel Kurtz <djkurtz@chromium.org>
+> Signed-off-by: Yingjoe Chen <yingjoe.chen@mediatek.com>
+> ---
+>
+> Update to my patch [1], added __init as Daniel suggest. This is the
+> only patch that need to change in that series, so I only sent this on=
+e.
+>
+> http://lists.infradead.org/pipermail/linux-mediatek/2015-July/001545.=
+html
+>
+>   drivers/clocksource/mtk_timer.c | 16 ++++++++++------
+>   1 file changed, 10 insertions(+), 6 deletions(-)
+>
+> diff --git a/drivers/clocksource/mtk_timer.c b/drivers/clocksource/mt=
+k_timer.c
+> index 68ab423..2ba5b66 100644
+> --- a/drivers/clocksource/mtk_timer.c
+> +++ b/drivers/clocksource/mtk_timer.c
+> @@ -156,9 +156,11 @@ static void mtk_timer_global_reset(struct mtk_cl=
+ock_event_device *evt)
+>   	writel(0x3f, evt->gpt_base + GPT_IRQ_ACK_REG);
+>   }
+>
+> -static void
+> -mtk_timer_setup(struct mtk_clock_event_device *evt, u8 timer, u8 opt=
+ion)
+> +static void __init mtk_timer_setup(struct mtk_clock_event_device *ev=
+t,
+> +				   u8 timer, u8 option, bool enable)
+>   {
+> +	u32 val;
+> +
+>   	writel(TIMER_CTRL_CLEAR | TIMER_CTRL_DISABLE,
+>   		evt->gpt_base + TIMER_CTRL_REG(timer));
+>
+> @@ -167,8 +169,10 @@ mtk_timer_setup(struct mtk_clock_event_device *e=
+vt, u8 timer, u8 option)
+>
+>   	writel(0x0, evt->gpt_base + TIMER_CMP_REG(timer));
+>
+> -	writel(TIMER_CTRL_OP(option) | TIMER_CTRL_ENABLE,
+> -			evt->gpt_base + TIMER_CTRL_REG(timer));
+> +	val =3D TIMER_CTRL_OP(option);
+> +	if (enable)
+> +		val |=3D TIMER_CTRL_ENABLE;
+> +	writel(val, evt->gpt_base + TIMER_CTRL_REG(timer));
 
-You need to make edac_debugfs extern in the header and define it in
-edac_mc_sysfs.c.
+Instead of the 'enable' new option, I prefer a test with 'timer' with a=
+=20
+comment:
 
-But that's ok because edac_core.h will be included only by EDAC drivers
-and they're supposed to see edac_debugfs anyway...
+	/*
+	 * the timer hw is broken in that way ... bla bla, so we only
+	 * enable the clocksource ...
+	 */
+	if (timer =3D=3D GPT_CLK_SRC)
+		val |=3D TIMER_CTRL_ENABLE;
 
-Thanks.
+That said, can you have a look at commit 1096be08 ?
+"clockevents: sun5i: Fix setup_irq init sequence"
 
--- 
-Regards/Gruss,
-    Boris.
+first and check if moving the interrupt request after the=20
+clockevents_config_and_register could fix your issue.
 
-ECO tip #101: Trim your mails when you reply.
---
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>   }
+>
+>   static void mtk_timer_enable_irq(struct mtk_clock_event_device *evt=
+, u8 timer)
+> @@ -235,12 +239,12 @@ static void __init mtk_timer_init(struct device=
+_node *node)
+>   	evt->ticks_per_jiffy =3D DIV_ROUND_UP(rate, HZ);
+>
+>   	/* Configure clock source */
+> -	mtk_timer_setup(evt, GPT_CLK_SRC, TIMER_CTRL_OP_FREERUN);
+> +	mtk_timer_setup(evt, GPT_CLK_SRC, TIMER_CTRL_OP_FREERUN, true);
+>   	clocksource_mmio_init(evt->gpt_base + TIMER_CNT_REG(GPT_CLK_SRC),
+>   			node->name, rate, 300, 32, clocksource_mmio_readl_up);
+>
+>   	/* Configure clock event */
+> -	mtk_timer_setup(evt, GPT_CLK_EVT, TIMER_CTRL_OP_REPEAT);
+> +	mtk_timer_setup(evt, GPT_CLK_EVT, TIMER_CTRL_OP_REPEAT, false);
+>   	clockevents_config_and_register(&evt->dev, rate, 0x3,
+>   					0xffffffff);
+
+
+
+
+--=20
+  <http://www.linaro.org/> Linaro.org =E2=94=82 Open source software fo=
+r ARM SoCs
+
+=46ollow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
