@@ -1,54 +1,50 @@
-From: "Sricharan" <sricharan@codeaurora.org>
-Subject: RE: [PATCH 4/5] iommu/msm: Set cacheability attributes without tex remap
-Date: Thu, 13 Aug 2015 12:07:59 +0530
-Message-ID: <000201d0d592$9ce1a740$d6a4f5c0$@codeaurora.org>
-References: <1439390869-6347-1-git-send-email-sricharan@codeaurora.org> <1439390869-6347-5-git-send-email-sricharan@codeaurora.org> <20150812145346.GH23540@arm.com>
+From: Tero Kristo <t-kristo-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH v2 5/6] ARM: AM43XX: HWMOD: Add rtc hwmod
+Date: Thu, 13 Aug 2015 09:39:10 +0300
+Message-ID: <55CC3B8E.2090802@ti.com>
+References: <1439198906-31189-1-git-send-email-j-keerthy@ti.com> <1439198906-31189-6-git-send-email-j-keerthy@ti.com> <alpine.DEB.2.02.1508121434190.7154@utopia.booyaka.com>
 Mime-Version: 1.0
-Content-Type: text/plain;
-	charset="us-ascii"
+Content-Type: text/plain; charset="windows-1252"; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <20150812145346.GH23540@arm.com>
-Content-Language: en-us
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: 'Will Deacon' <will.deacon@arm.com>
-Cc: devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, joro@8bytes.org, robdclark@gmail.com, iommu@lists.linux-foundation.org, srinivas.kandagatla@linaro.org, laurent.pinchart@ideasonboard.com, treding@nvidia.com, 'Robin Murphy' <Robin.Murphy@arm.com>, linux-arm-kernel@lists.infradead.org, stepanm@codeaurora.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <alpine.DEB.2.02.1508121434190.7154-rwI8Ez+7Ko+d5PgPZx9QOdBPR1lH4CV8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Paul Walmsley <paul-DWxLp4Yu+b8AvxtiuMwx3w@public.gmane.org>, Keerthy <j-keerthy-l0cyMroinI0@public.gmane.org>
+Cc: tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org, johan-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, grygorii.strashko-l0cyMroinI0@public.gmane.org, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, nm-l0cyMroinI0@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Will,
+On 08/12/2015 05:39 PM, Paul Walmsley wrote:
+> On Mon, 10 Aug 2015, Keerthy wrote:
+>
+>> The patch adds rtc hwmod. This is present on gp and sk evm and not on
+>> epos evm. Hence adding it selectively using a seprate list.
+>>
+>> Signed-off-by: Keerthy <j-keerthy-l0cyMroinI0@public.gmane.org>
+>
+> So just to confirm, the RTC IP block has been physically removed or
+> permanently disabled on these new AM438x chips?  So the registers are no
+> longer accessible by the MPU?
+>
+> Is there a TRM available for these chips?
 
-> -----Original Message-----
-> From: linux-arm-kernel [mailto:linux-arm-kernel-
-> bounces@lists.infradead.org] On Behalf Of Will Deacon
-> Sent: Wednesday, August 12, 2015 8:24 PM
-> To: Sricharan R
-> Cc: devicetree@vger.kernel.org; linux-arm-msm@vger.kernel.org;
-> joro@8bytes.org; robdclark@gmail.com; iommu@lists.linux-foundation.org;
-> srinivas.kandagatla@linaro.org; laurent.pinchart@ideasonboard.com;
-> treding@nvidia.com; Robin Murphy; linux-arm-kernel@lists.infradead.org;
-> stepanm@codeaurora.org
-> Subject: Re: [PATCH 4/5] iommu/msm: Set cacheability attributes without
-tex
-> remap
-> 
-> On Wed, Aug 12, 2015 at 03:47:48PM +0100, Sricharan R wrote:
-> > The cacheablity attributes are set when IOMMU_CACHE property is true.
-> > So cachebility is set as either noncached (normal) or cached (normal
-> > WBWA) directly and avoid setting using tex remap.
-> 
-> Does this IOMMU support the ARMv7 short descriptor format? If so, would it
-> work with Yong's patch here:
-> 
->   http://lists.infradead.org/pipermail/linux-arm-kernel/2015-
-> August/361615.html
-> 
-> I've not gotten around to reviewing the latest version yet, but having
-other
-> IOMMUs consolidate on one set of page table code would be a good thing.
+No public TRM available, as the SoC mostly contains secure environment 
+support on them.
 
-     Yes, this is ARMv7 short descriptor complaint. I will rebase the next
-one the
-     above. That should reduce more code in this driver. Thanks.
+The RTC module is physically present on the SoC, but it is permanently 
+disabled. A secure RTC is used instead on these devices, where needed.
 
-Regards,
-  Sricharan
+-Tero
+
+>
+>
+> - Paul
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-omap" in
+> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
