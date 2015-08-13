@@ -1,95 +1,111 @@
-From: Stuart Yoder <b08248@gmail.com>
-Subject: Re: [PATCH v3 1/2] Documentation: DT: FTM: add FTM0 be used as alarm timer
-Date: Thu, 13 Aug 2015 11:23:11 -0500
-Message-ID: <CALRxmdDGgYh+_cOPB43gyuZwu_zo+wE0qHh8nWJTjiQN__hZ3w@mail.gmail.com>
-References: <1439352061-14656-1-git-send-email-dongsheng.wang@freescale.com>
+From: <atull@opensource.altera.com>
+Subject: [PATCH v10 0/8] FPGA Manager Framework and Simple FPGA Bus
+Date: Thu, 13 Aug 2015 12:37:24 -0500
+Message-ID: <1439487452-23977-2-git-send-email-atull@opensource.altera.com>
+References: <1439487452-23977-1-git-send-email-atull@opensource.altera.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1439352061-14656-1-git-send-email-dongsheng.wang@freescale.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Dongsheng Wang <dongsheng.wang@freescale.com>
-Cc: shawn.guo@linaro.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, alison.wang@freescale.com
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
+In-Reply-To: <1439487452-23977-1-git-send-email-atull@opensource.altera.com>
+List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
+List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
+List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
+List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
+List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
+Errors-To: driverdev-devel-bounces@linuxdriverproject.org
+Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
+To: gregkh@linuxfoundation.org, jgunthorpe@obsidianresearch.com, hpa@zytor.com, monstr@monstr.eu, michal.simek@xilinx.com, rdunlap@infradead.org
+Cc: mark.rutland@arm.com, linux-doc@vger.kernel.org, rubini@gnudd.com, pantelis.antoniou@konsulko.com, s.trumtrar@pengutronix.de, devel@driverdev.osuosl.org, sameo@linux.intel.com, nico@linaro.org, ijc+devicetree@hellion.org.uk, kyle.teske@ni.com, grant.likely@linaro.org, davidb@codeaurora.org, linus.walleij@linaro.org, cesarb@cesarb.net, devicetree@vger.kernel.org, jason@lakedaemon.net, pawel.moll@arm.com, iws@ovro.caltech.edu, Alan Tull <atull@opensource.altera.com>, broonie@kernel.org, philip@balister.org, Petr Cvek <petr.cvek@tul.cz>, dinguyen@opensource.altera.com, pavel@denx.de, linux-kernel@vger.kernel.org, balbi@ti.com, delicious.quinoa@gmail.com, robh+dt@kernel.org, rob@landley.net, galak@codeaurora.org, akpm@linux-foundation.org, davem@davemloft.net, m.chehab@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Aug 11, 2015 at 11:01 PM, Dongsheng Wang
-<dongsheng.wang@freescale.com> wrote:
-> From: Wang Dongsheng <dongsheng.wang@freescale.com>
->
-> In freescale layerscape platform there is only FTM0 can be used as
-> alarm timer to wake up system. So add FTM0 description for devicetree
-> document.
+From: Alan Tull <atull@opensource.altera.com>
 
-Suggestion:
+This patchset adds two chunks plus documentation:
+ * fpga manager core: exports API functions that write an image to a FPGA
+ * DT Overlay support: simple-fpga-bus to handle FPGA from a DT overlay
 
-In the Freescale Layerscape platform a flextimer module can be used
-as an alarm timer to wake up the system.  Define a binding for this
-alarm.
+The fpga manager core is mature enough to be in the regular kernel.
 
-> Signed-off-by: Wang Dongsheng <dongsheng.wang@freescale.com>
-> ---
-> V3:
-> Include this patch in V3.
->
-> diff --git a/Documentation/devicetree/bindings/timer/fsl,ftm-timer.txt b/Documentation/devicetree/bindings/timer/fsl,ftm-timer.txt
-> index aa8c402..380a0b3d 100644
-> --- a/Documentation/devicetree/bindings/timer/fsl,ftm-timer.txt
-> +++ b/Documentation/devicetree/bindings/timer/fsl,ftm-timer.txt
-> @@ -1,5 +1,7 @@
->  Freescale FlexTimer Module (FTM) Timer
->
-> +* Default FTM Timer
-> +
->  Required properties:
->
->  - compatible : should be "fsl,ftm-timer"
-> @@ -29,3 +31,26 @@ ftm: ftm@400b8000 {
->                 <&clks VF610_CLK_FTM3_EXT_FIX_EN>;
->         big-endian;
->  };
-> +
-> +* FTM Alarm Timer
-> +  The default FTM device contains eight FlexTimer modules. FlexTimer1 is in
-> +  on-domain(power is not switched off in deep sleep mode). Other seven FlexTimer
-> +  modules(flextimer2/3/4/5/6/7/8) are in off-domain (power is switched off in
-> +  deep sleep mode).
+simple-fpga-bus is proposed for staging.
 
-Suggestion:
+Changes from v9:
+ * Move fpga manager core to drivers/fpga
+ * Move simple-fpga-bus to staging/simple-fpga-bus
+ * add TODO
+ * Improvements in fpga_manager_get/put (call module_try_get)
+ * Add flags parameter to .write_complete ops as requested
+ * Documentation improvements
+ * Other minor cleanup
 
-  This binding describes a Flextimer (FTM) instance that can be used as an alarm
-  to wake up a system in deep sleep.  The flextimer module with alarm
-  support is in a power domain that remains awake when the SoC is in
-  deep sleep mode.
+More info:
 
-(don't use flextimer1 in the binding...for all you know in the next SoC it
-will be flextimer7 that has this capability)
+The core's API is minimal to start with: only 6 functions.  This gives a
+manufacturer-agnostic interface for programming FPGA's such that higher
+level interfaces (such as DT Overlays) can be shared.
 
-> +Required properties:
-> +
-> +- compatible : should be "fsl,ftm-alarm".
-> +- reg : should contain base address and length of FTM timer 0 register.
+The DT Overlays support exists for the usage where the FPGA will contain
+some "hardware" that will need drivers.  Where that use model is not
+appealing, the core API can be used to add a different interface.
 
-  "should contain the address and size of the FTM alarm module registers"
+The bindings for the socpfga fpga manager already are upstreamed as
+1b4e119 Alan Tull : doc: add bindings document for altera fpga manager
 
-(don't use the number 0)
+The core FPGA manager support is standalone.  The DT Overlays support
+is dependent on Pantelis's dtc overlay patches from
+https://github.com/pantoniou/dtc.git
+and his DT overlays configfs interface patches and fixes from
+https://github.com/pantoniou/linux-beagle-track-mainline
 
-> +- interrupts : Should contain FTM 0 interrupt.
+efb0c04 Pantelis Antoniou : gcl: Fix resource linking
+85e785e Pantelis Antoniou : ARM: DT: Enable symbols when CONFIG_OF_OVERLAY is used
+af0321f Pantelis Antoniou : OF: DT-Overlay configfs interface (v5)
+4c1c675 Pantelis Antoniou : configfs: Implement binary attributes (v4)
 
-   "describes the FTM alarm interrupt"
 
-> +- big-endian: One boolean property, the big endian mode will be in use if it is
-> +  present, or the little endian mode will be in use for all the device registers.
-> +
-> +Example:
-> +ftm0: ftm0@29d0000 {
-> +       compatible = "fsl,ftm-alarm";
-> +       reg = <0x0 0x29d0000 0x0 0x10000>;
-> +       interrupts = <GIC_SPI 118 IRQ_TYPE_LEVEL_HIGH>;
-> +       big-endian;
-> +       status = "disabled";
-> +};
+Alan Tull (8):
+  usage documentation for FPGA manager core
+  fpga manager: add sysfs interface document
+  add fpga manager core
+  fpga manager: add driver for socfpga fpga manager
+  staging: usage documentation for simple fpga bus
+  staging: add bindings document for simple fpga bus
+  staging: simple-fpga-bus: add TODO document
+  staging: add simple-fpga-bus
 
-Drop the number 0 from the names in your example.
+ Documentation/ABI/testing/sysfs-class-fpga-manager |   37 ++
+ Documentation/fpga/fpga-mgr.txt                    |  171 ++++++
+ drivers/Kconfig                                    |    2 +
+ drivers/Makefile                                   |    1 +
+ drivers/fpga/Kconfig                               |   24 +
+ drivers/fpga/Makefile                              |    9 +
+ drivers/fpga/fpga-mgr.c                            |  381 ++++++++++++
+ drivers/fpga/socfpga.c                             |  616 ++++++++++++++++++++
+ drivers/staging/Kconfig                            |    2 +
+ drivers/staging/Makefile                           |    1 +
+ .../Documentation/bindings/simple-fpga-bus.txt     |   83 +++
+ .../Documentation/simple-fpga-bus.txt              |   58 ++
+ drivers/staging/simple-fpga-bus/Kconfig            |   14 +
+ drivers/staging/simple-fpga-bus/Makefile           |    5 +
+ drivers/staging/simple-fpga-bus/TODO               |   13 +
+ drivers/staging/simple-fpga-bus/simple-fpga-bus.c  |  330 +++++++++++
+ include/linux/fpga/fpga-mgr.h                      |  127 ++++
+ 17 files changed, 1874 insertions(+)
+ create mode 100644 Documentation/ABI/testing/sysfs-class-fpga-manager
+ create mode 100644 Documentation/fpga/fpga-mgr.txt
+ create mode 100644 drivers/fpga/Kconfig
+ create mode 100644 drivers/fpga/Makefile
+ create mode 100644 drivers/fpga/fpga-mgr.c
+ create mode 100644 drivers/fpga/socfpga.c
+ create mode 100644 drivers/staging/simple-fpga-bus/Documentation/bindings/simple-fpga-bus.txt
+ create mode 100644 drivers/staging/simple-fpga-bus/Documentation/simple-fpga-bus.txt
+ create mode 100644 drivers/staging/simple-fpga-bus/Kconfig
+ create mode 100644 drivers/staging/simple-fpga-bus/Makefile
+ create mode 100644 drivers/staging/simple-fpga-bus/TODO
+ create mode 100644 drivers/staging/simple-fpga-bus/simple-fpga-bus.c
+ create mode 100644 include/linux/fpga/fpga-mgr.h
 
-Thanks,
-Stuart
+-- 
+1.7.9.5
