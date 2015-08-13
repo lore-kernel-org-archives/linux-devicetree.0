@@ -1,85 +1,377 @@
-From: Olof Johansson <olof@lixom.net>
-Subject: Re: [PATCH 3/3] ARM: dts: UniPhier: add ProXstream2 and PH1-LD6b
- SoC/board support
-Date: Thu, 13 Aug 2015 11:09:39 +0200
-Message-ID: <CAOesGMhhSKr6Nn7YEjoB9V_5-yhwzn_fKZ7FSU3U-2XYT5mJrQ@mail.gmail.com>
-References: <1438687264-26538-1-git-send-email-yamada.masahiro@socionext.com>
-	<1438687264-26538-4-git-send-email-yamada.masahiro@socionext.com>
-	<20150811130739.GD30181@localhost>
-	<CAK7LNAQ+6tQ9Ci6LKsAB7kLj0o60Hizo2gOokDH9qW=FnO0gEA@mail.gmail.com>
+From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2 5/6] mailbox: Add generic mechanism for testing
+ Mailbox Controllers
+Date: Thu, 13 Aug 2015 10:19:14 +0100
+Message-ID: <20150813091914.GB8782@x1>
+References: <1437990272-23111-1-git-send-email-lee.jones@linaro.org>
+ <1437990272-23111-6-git-send-email-lee.jones@linaro.org>
+ <CABb+yY20nQbiEEZeRvWTMUsJ2qgwRn8CrWvnFDSB-b1dgVaAuw@mail.gmail.com>
+ <20150812102328.GD18282@x1>
+ <CABb+yY0A74Vy3-KOvj0URU_4zb2FAC7Yp3gmEwnFaBrD0mzt0w@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAK7LNAQ+6tQ9Ci6LKsAB7kLj0o60Hizo2gOokDH9qW=FnO0gEA@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Russell King <linux@arm.linux.org.uk>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, "arm@kernel.org" <arm@kernel.org>, Kumar Gala <galak@codeaurora.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <CABb+yY0A74Vy3-KOvj0URU_4zb2FAC7Yp3gmEwnFaBrD0mzt0w-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, kernel-F5mvAk5X5gdBDgjK7y7TUQ@public.gmane.org, Devicetree List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Aug 12, 2015 at 3:14 PM, Masahiro Yamada
-<yamada.masahiro@socionext.com> wrote:
-> Hi Olof,
->
->
-> 2015-08-11 22:07 GMT+09:00 Olof Johansson <olof@lixom.net>:
->> Hi,
->>
->> On Tue, Aug 04, 2015 at 08:21:04PM +0900, Masahiro Yamada wrote:
->>> Initial version of DTSI for ProXstream2 and PH1-LD6b and DTS for
->>> PH1-LD6b reference board.
->>>
->>> Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
->>> ---
->>>
->>>  arch/arm/boot/dts/Makefile                  |   3 +-
->>>  arch/arm/boot/dts/uniphier-ph1-ld6b-ref.dts | 105 +++++++++++
->>>  arch/arm/boot/dts/uniphier-ph1-ld6b.dtsi    |  67 +++++++
->>>  arch/arm/boot/dts/uniphier-proxstream2.dtsi | 273 ++++++++++++++++++++++++++++
->>>  4 files changed, 447 insertions(+), 1 deletion(-)
->>>  create mode 100644 arch/arm/boot/dts/uniphier-ph1-ld6b-ref.dts
->>>  create mode 100644 arch/arm/boot/dts/uniphier-ph1-ld6b.dtsi
->>>  create mode 100644 arch/arm/boot/dts/uniphier-proxstream2.dtsi
->>>
->>> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
->>> index 246473a..6eb3f2f 100644
->>> --- a/arch/arm/boot/dts/Makefile
->>> +++ b/arch/arm/boot/dts/Makefile
->>> @@ -645,7 +645,8 @@ dtb-$(CONFIG_ARCH_UNIPHIER) += \
->>>       uniphier-ph1-sld3-ref.dtb \
->>>       uniphier-ph1-ld4-ref.dtb \
->>>       uniphier-ph1-pro4-ref.dtb \
->>> -     uniphier-ph1-sld8-ref.dtb
->>> +     uniphier-ph1-sld8-ref.dtb \
->>> +     uniphier-ph1-ld6b-ref.dtb
->>
->> Please always add entries here sorted, don't just append. I've fixed it
->> up for you this time.
->>
->>
->
-> Please do not do that (without my ack).
+On Thu, 13 Aug 2015, Jassi Brar wrote:
 
-I'm not going to go get your ack for something as trivial as this. We
-do make sure subplatform maintainers are in the loop and get to review
-code that touches their platform, but in this case this was a shared
-makefile and there were no functional changes.
+> On Wed, Aug 12, 2015 at 3:53 PM, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wro=
+te:
+> > On Mon, 10 Aug 2015, Jassi Brar wrote:
+> >
+> >> On Mon, Jul 27, 2015 at 3:14 PM, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> =
+wrote:
+> >> > This particular Client implementation uses shared memory in orde=
+r
+> >> > to pass messages between Mailbox users; however, it can be easil=
+y
+> >> > hacked to support any type of Controller.
+> >> >
+> >> > Signed-off-by: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> >> > ---
+> >> >  drivers/mailbox/Kconfig        |   7 ++
+> >> >  drivers/mailbox/Makefile       |   2 +
+> >> >  drivers/mailbox/mailbox-test.c | 210 ++++++++++++++++++++++++++=
++++++++++++++++
+> >> >  3 files changed, 219 insertions(+)
+> >> >  create mode 100644 drivers/mailbox/mailbox-test.c
+> >> >
+> >> > diff --git a/drivers/mailbox/Kconfig b/drivers/mailbox/Kconfig
+> >> > index 2cc4c39..7720bde 100644
+> >> > --- a/drivers/mailbox/Kconfig
+> >> > +++ b/drivers/mailbox/Kconfig
+> >> > @@ -77,4 +77,11 @@ config STI_MBOX
+> >> >           Mailbox implementation for STMicroelectonics family ch=
+ips with
+> >> >           hardware for interprocessor communication.
+> >> >
+> >> > +config MAILBOX_TEST
+> >> > +       tristate "Mailbox Test Client"
+> >> > +       depends on OF
+> >> > +       help
+> >> > +         Test client to help with testing new Controller driver
+> >> > +         implementations.
+> >> > +
+> >> >  endif
+> >> > diff --git a/drivers/mailbox/Makefile b/drivers/mailbox/Makefile
+> >> > index 7cb4766..92435ef 100644
+> >> > --- a/drivers/mailbox/Makefile
+> >> > +++ b/drivers/mailbox/Makefile
+> >> > @@ -2,6 +2,8 @@
+> >> >
+> >> >  obj-$(CONFIG_MAILBOX)          +=3D mailbox.o
+> >> >
+> >> > +obj-$(CONFIG_MAILBOX_TEST)     +=3D mailbox-test.o
+> >> > +
+> >> >  obj-$(CONFIG_ARM_MHU)  +=3D arm_mhu.o
+> >> >
+> >> >  obj-$(CONFIG_PL320_MBOX)       +=3D pl320-ipc.o
+> >> > diff --git a/drivers/mailbox/mailbox-test.c b/drivers/mailbox/ma=
+ilbox-test.c
+> >> > new file mode 100644
+> >> > index 0000000..10bfe3a
+> >> > --- /dev/null
+> >> > +++ b/drivers/mailbox/mailbox-test.c
+> >> > @@ -0,0 +1,210 @@
+> >> > +/*
+> >> > + * Copyright (C) 2015 ST Microelectronics
+> >> > + *
+> >> > + * Author: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> >> > + *
+> >> > + * This program is free software; you can redistribute it and/o=
+r modify
+> >> > + * it under the terms of the GNU General Public License as publ=
+ished by
+> >> > + * the Free Software Foundation; either version 2 of the Licens=
+e, or
+> >> > + * (at your option) any later version.
+> >> > + */
+> >> > +
+> >> > +#include <linux/debugfs.h>
+> >> > +#include <linux/err.h>
+> >> > +#include <linux/kernel.h>
+> >> > +#include <linux/mailbox_client.h>
+> >> > +#include <linux/module.h>
+> >> > +#include <linux/of.h>
+> >> > +#include <linux/platform_device.h>
+> >> > +#include <linux/slab.h>
+> >> > +#include <linux/uaccess.h>
+> >> > +
+> >> > +#define MBOX_MAX_MSG_LEN 128
+> >> > +
+> >> > +static struct dentry *root_debugfs_dir;
+> >> > +
+> >> > +struct mbox_test_device {
+> >> > +       struct device           *dev;
+> >> > +       struct mbox_chan        *tx_channel;
+> >> > +       struct mbox_chan        *rx_channel;
+> >> > +       void __iomem            *mmio;
+> >> > +
+> >> > +};
+> >> > +
+> >> > +static ssize_t mbox_test_write(struct file *filp,
+> >> > +                              const char __user *userbuf,
+> >> > +                              size_t count, loff_t *ppos)
+> >> > +{
+> >> > +       struct mbox_test_device *tdev =3D filp->private_data;
+> >> > +       char *message;
+> >> > +       int ret;
+> >> > +
+> >> > +       if (count > MBOX_MAX_MSG_LEN) {
+> >> > +               dev_err(tdev->dev,
+> >> > +                       "Message length %d greater than max allo=
+wed %d\n",
+> >> > +                       count, MBOX_MAX_MSG_LEN);
+> >> > +               return -EINVAL;
+> >> > +       }
+> >> > +
+> >> > +       message =3D kzalloc(count, GFP_KERNEL);
+> >> > +       if (!message)
+> >> > +               return -ENOMEM;
+> >> > +
+> >> > +       ret =3D copy_from_user(message, userbuf, count);
+> >> > +       if (ret)
+> >> > +               return -EFAULT;
+> >> > +
+> >> > +       print_hex_dump(KERN_ERR, "Client: Sending: ", DUMP_PREFI=
+X_ADDRESS,
+> >> > +                      16, 1, message, 16, true);
+> >> > +
+> >> > +       ret =3D mbox_send_message(tdev->tx_channel, message);
+> >> > +       if (ret < 0)
+> >> > +               dev_err(tdev->dev, "Failed to send message via m=
+ailbox\n");
+> >> > +
+> >> > +       kfree(message);
+> >> > +
+> >> > +       return ret < 0 ? ret : count;
+> >> > +}
+> >> > +
+> >> > +static const struct file_operations mbox_test_ops =3D {
+> >> > +       .write  =3D mbox_test_write,
+> >> > +       .open   =3D simple_open,
+> >> > +       .llseek =3D generic_file_llseek,
+> >> > +};
+> >> > +
+> >> > +static int mbox_test_add_debugfs(struct platform_device *pdev,
+> >> > +                                struct mbox_test_device *tdev)
+> >> > +{
+> >> > +       if (!debugfs_initialized())
+> >> > +               return 0;
+> >> > +
+> >> > +       root_debugfs_dir =3D debugfs_create_dir("mailbox", NULL)=
+;
+> >> > +       if (!root_debugfs_dir) {
+> >> > +               dev_err(&pdev->dev, "Failed to create Mailbox de=
+bugfs\n");
+> >> > +               return -EINVAL;
+> >> > +       }
+> >> > +
+> >> > +       debugfs_create_file("send-message", 0200, root_debugfs_d=
+ir,
+> >> > +                           tdev, &mbox_test_ops);
+> >> > +
+> >> > +       return 0;
+> >> > +}
+> >> > +
+> >> > +static void mbox_test_receive_message(struct mbox_client *clien=
+t, void *message)
+> >> > +{
+> >> > +       struct mbox_test_device *tdev =3D dev_get_drvdata(client=
+->dev);
+> >> > +
+> >> > +       if (!tdev->mmio) {
+> >> > +               dev_info(tdev->dev, "Client: Recived something [=
+read mmio]\n");
+> >> > +               return;
+> >> > +       }
+> >> > +
+> >> > +       print_hex_dump(KERN_ERR, "Client: from co-proc: ", DUMP_=
+PREFIX_ADDRESS,
+> >> > +                      16, 1, tdev->mmio, MBOX_MAX_MSG_LEN, true=
+);
+> >> > +}
+> >> > +
+> >> > +static void mbox_test_prepare_message(struct mbox_client *clien=
+t, void *message)
+> >> > +{
+> >> > +       struct mbox_test_device *tdev =3D dev_get_drvdata(client=
+->dev);
+> >> > +
+> >> > +       if (tdev->mmio)
+> >> > +               memcpy(tdev->mmio, message, MBOX_MAX_MSG_LEN);
+> >> >
+> >> This is unlikely to work. Those platforms that need to send a 2 pa=
+rt
+> >> message, they do :
+> >> (a) Signal/Command/Target code via some controller register (via
+> >> mbox_send_message).
+> >> (b) Setup the payload in Shared-Memory (via tx_prepare).
+> >>
+> >> This test driver assumes both are the same. I think you have to
+> >> declare something like
+> >
+> > This driver assumes that the framework will call client->tx_prepare=
+()
+> > first, which satisfies (b).  It then assumes controller->send_data(=
+)
+> > will be invoked, which will send the platform specific
+> > signal/command/target code, which then satisfies (a).
+> >
+> Yeah, but what would be that code? Who provides that?
+>=20
+> > In what way does it assume they are the same?
+> >
+> notice the 'message' pointer in
+> mbox_send_message(tdev->tx_channel, message);
+>     and
+> memcpy(tdev->mmio, message, MBOX_MAX_MSG_LEN);
+>=20
+> >> struct mbox_test_message { /* same for TX and RX */
+> >>           unsigned sig_len;
+> >>           void *signal;               /* rx/tx via mailbox api */
+> >>           unsigned pl_len;
+> >>           void *payload;           /* rx/tx via shared-memory */
+> >> };
+> >
+> > How do you think this should be set and use these?
+> >
+> The userspace would want to specify the command code (32bits or not)
+> that would be passed via the fifo/register of the controller. So we
+> need signal[]
+>=20
+> The data to be passed via share-memory could be provided by userspace
+> via the payload[] array.
 
-> It was already sorted from old SoC to new SoC.
->
-> Sorting chronologically (in other words, in the order of chip ID)
-> makes more sense than sorting alphabetically.
+Okay, so would the solution be two userspace files 'signal' and
+'message', so in the case of a client specified signal we can write it
+into there first.
 
-No, it doesn't. All entries in these files should be sorted
-alphabetically. Sometimes we miss out on it, but it's the goal.
+echo 255  > signal
+echo test > message
 
-If you sort chronologically it's impossible for anyone but people
-intimately familiar with UniPhier's product history to add any new
-entries in the right location. Also, since it's likely that newer
-chips will be introduced over time, new entries are likely to just be
-appends instead of inserted at more varied locations in the files.
+=2E.. or in the case where no signal is required, or the controller
+driver taking care of it, we just don't write anything to signal?
 
-Append-only additions are more likely to have add/add conflicts, which
-is why we're preferring alphabetical sort order in the first place.
+Just for clarification, in the case where a signal is required, do
+clients usually pass that through mbox_send_message() too?
 
+  mbox_send_message(tdev->tx_channel, signal);
+  mbox_send_message(tdev->tx_channel, message);
 
--Olof
+=2E.. or vice versa.
+
+> >> > +static void mbox_test_message_sent(struct mbox_client *client,
+> >> > +                                  void *message, int r)
+> >> > +{
+> >> > +       if (r)
+> >> > +               dev_warn(client->dev,
+> >> > +                        "Client: Message could not be sent: %d\=
+n", r);
+> >> > +       else
+> >> > +               dev_info(client->dev,
+> >> > +                        "Client: Message sent\n");
+> >> > +}
+> >> > +
+> >> > +static struct mbox_chan *
+> >> > +mbox_test_request_channel(struct platform_device *pdev, const c=
+har *name)
+> >> > +{
+> >> > +       struct mbox_client *client;
+> >> > +
+> >> > +       client =3D devm_kzalloc(&pdev->dev, sizeof(*client), GFP=
+_KERNEL);
+> >> > +       if (!client)
+> >> > +               return ERR_PTR(-ENOMEM);
+> >> > +
+> >> > +       client->dev             =3D &pdev->dev;
+> >> > +       client->rx_callback     =3D mbox_test_receive_message;
+> >> > +       client->tx_prepare      =3D mbox_test_prepare_message;
+> >> > +       client->tx_done         =3D mbox_test_message_sent;
+> >> > +       client->tx_block        =3D true;
+> >> > +       client->knows_txdone    =3D false;
+> >> > +       client->tx_tout         =3D 500;
+> >> > +
+> >> > +       return mbox_request_channel_byname(client, name);
+> >> > +}
+> >> > +
+> >> > +static int mbox_test_probe(struct platform_device *pdev)
+> >> > +{
+> >> > +       struct mbox_test_device *tdev;
+> >> > +       struct resource *res;
+> >> > +       int ret;
+> >> > +
+> >> > +       tdev =3D devm_kzalloc(&pdev->dev, sizeof(*tdev), GFP_KER=
+NEL);
+> >> > +       if (!tdev)
+> >> > +               return -ENOMEM;
+> >> > +
+> >> > +       /* It's okay for MMIO to be NULL */
+> >> > +       res =3D platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> >> > +       tdev->mmio =3D devm_ioremap_resource(&pdev->dev, res);
+> >> > +       if (IS_ERR(tdev->mmio))
+> >> > +               tdev->mmio =3D NULL;
+> >> > +
+> >> > +       tdev->tx_channel =3D mbox_test_request_channel(pdev, "tx=
+");
+> >> > +       if (IS_ERR(tdev->tx_channel))
+> >> > +               return PTR_ERR(tdev->tx_channel);
+> >> > +
+> >> > +       tdev->rx_channel =3D mbox_test_request_channel(pdev, "rx=
+");
+> >> > +       if (IS_ERR(tdev->rx_channel))
+> >> > +               return PTR_ERR(tdev->rx_channel);
+> >> > +
+> >> Should it really fail on TX or RX only clients?
+> >
+> > Good question.  Probably not, but I guess we'd need a flag for that=
+=2E
+> >
+> Just assume 1 channel. You can't make it receive if the controller
+> can't do rx, so the userspace will simply block on read requests. And
+> you can't make the controller send, if it can't. So any write attempt
+> will simply return with an error.
+>  And we are going to need very platform specific knowledge to execute
+> the tests. It's not like some loop enumerating all possible
+> combinations of parameters that the api must pass... so we are good.
+
+I'm guessing most tests will be some kind of send-reply test, so we'd
+need two channels for that.  I can make it so the driver does not fail
+if 'tx' or 'rx' is missing, but will fail if both are.
+
+Bare in mind that this test driver isn't designed to cover all of the
+corner cases, but more designed as a helpful boiler plate where it
+will tick some use-case boxes, but is clear enough to be hacked around
+by other vendors who have different requirements.
+
+With regards to you comments on userspace; I suggest that whoever is
+testing the controller will know it and will not attempt to check for
+a reply from a controller (or co-proc) which is write-only.
+
+> >> It takes write from userspace but shouldn't it also provide data
+> >> received to the userspace?
+> >
+> > Currently we only print the returning message.  If you want me to p=
+ut
+> > it in a userspace file too, that's not an issue.
+> >
+> Ideally we should support 'read' just like write.
+
+Sure, I can do that.
+
+--=20
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org =E2=94=82 Open source software for ARM SoCs
+=46ollow Linaro: Facebook | Twitter | Blog
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
