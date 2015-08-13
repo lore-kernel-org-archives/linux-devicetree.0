@@ -1,119 +1,53 @@
-From: Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v2 3/6] mailbox: Add support for ST's Mailbox IP
-Date: Thu, 13 Aug 2015 21:10:59 +0530
-Message-ID: <CABb+yY3NTHLx2N-sUABjxQW=MUCntdUg1d8kjvjH0dkb4n9EgA@mail.gmail.com>
-References: <1437990272-23111-1-git-send-email-lee.jones@linaro.org>
-	<1437990272-23111-4-git-send-email-lee.jones@linaro.org>
+From: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Subject: Re: [PATCH v3 01/11] dm: serial: Update binding for PL01x serial UART
+Date: Thu, 13 Aug 2015 09:59:52 -0600
+Message-ID: <CAPnjgZ3V1KS7POEhsvj63OSB29MUtyaZGBoFR8JGPnaN=-fXVw@mail.gmail.com>
+References: <1438954951-13329-1-git-send-email-sjg@chromium.org>
+ <1438954951-13329-2-git-send-email-sjg@chromium.org> <CACRpkdZa2O1MqCVT8q2P0u0ciXK+6HFbQQGXB_-chimg=FbzQg@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1437990272-23111-4-git-send-email-lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+In-Reply-To: <CACRpkdZa2O1MqCVT8q2P0u0ciXK+6HFbQQGXB_-chimg=FbzQg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, kernel-F5mvAk5X5gdBDgjK7y7TUQ@public.gmane.org, Devicetree List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, U-Boot Mailing List <u-boot-0aAXYlwwYIKGBzrmiIFOJg@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Joe Hershberger <joe.hershberger-acOepvfBmUk@public.gmane.org>, Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Marek Vasut <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Pavel Herrmann <morpheus.ibis-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Vikas Manocha <vikas.manocha-qxv4g6HH51o@public.gmane.org>, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jul 27, 2015 at 3:14 PM, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+Hi Linus,
 
-> +
-> +static bool sti_mbox_tx_is_ready(struct mbox_chan *chan)
-> +{
-> +       struct sti_channel *chan_info = chan->con_priv;
-> +       struct sti_mbox_device *mdev = chan_info->mdev;
-> +       unsigned int instance = chan_info->instance;
-> +       unsigned int channel = chan_info->channel;
-> +       void __iomem *base = MBOX_BASE(mdev, instance);
-> +
-> +       if (!(chan_info->direction & MBOX_TX))
-> +               return false;
+On 11 August 2015 at 07:00, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+> On Fri, Aug 7, 2015 at 3:42 PM, Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org> wrote:
 >
-Here the 'direction' is gotten via DT node of the client i.e, you
-expect consumer drivers to tell the provider what its limitations are?
-
-IMO if some physical channel can't do TX then that should be either
-hardcoded inside the controller driver or learnt via DT node of the
-_controller_.
-
-
-> +static struct mbox_chan *sti_mbox_xlate(struct mbox_controller *mbox,
-> +                                       const struct of_phandle_args *spec)
-> +{
-> +       struct sti_mbox_device *mdev = dev_get_drvdata(mbox->dev);
-> +       struct sti_mbox_pdata *pdata = dev_get_platdata(mdev->dev);
-> +       struct sti_channel *chan_info;
-> +       struct mbox_chan *chan = NULL;
-> +       unsigned int instance  = spec->args[0];
-> +       unsigned int channel   = spec->args[1];
-> +       unsigned int direction = spec->args[2];
-> +       int i;
-> +
-> +       /* Bounds checking */
-> +       if (instance >= pdata->num_inst || channel  >= pdata->num_chan) {
-> +               dev_err(mbox->dev,
-> +                       "Invalid channel requested instance: %d channel: %d\n",
-> +                       instance, channel);
-> +               return NULL;
-return ERR_PTR(-EINVAL)
-
-> +       }
-> +
-> +       for (i = 0; i < mbox->num_chans; i++) {
-> +               chan_info = mbox->chans[i].con_priv;
-> +
-> +               /* Is requested channel free? */
-> +               if (direction != MBOX_LOOPBACK &&
+>> This binding differs from that of Linux. Update it and change existing
+>> users.
+>>
+>> Signed-off-by: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+> (...)
+>>  doc/device-tree-bindings/serial/pl01x.txt | 55 ++++++++++++++++++++++++++++---
 >
-Consider this example when 2 clients ask for same physical channel but
-in different modes.
-           mboxes = <&mboxA 0 1 MBOX_TX>;
-           mboxes = <&mboxA 0 1 MBOX_LOOPBACK>;
+> So why does U-Boot have its own copy of any bindings at all?
+>
+> This is forking the ontology of who gets to define bindings I fear.
+> It's a bit like have two bibles both claiming to be the word of god.
+> (OK maybe a hyperbolic statement, but you see what I mean.)
+>
+> Can't we just have the bindings in the Linux kernel tree please?
 
-You happily assign 2 virtual channels backed by one physical channel
-{mboxA, 0, 1}. The 2 clients think they can freely do startup(),
-shutdown() and send_data() on the channels. But obviously we are
-screwed with races like
-   client1.startup()
-    -> client2.startup()
-        -> client2.send_data()
-            -> client2.shutdown()
-                -> client1.send_data()  XXXX
+Is there any plan to move them out of Linux and put them in a separate place?
 
- Now you can shove in some more checks to 'fix' the race OR you can
-simply expose only physical channels. Practically no client would ever
-ask it to do what it can't, and for the hypothetical possibility that
-some does, just return error.
+We should make an effort to sync the device tree files with Linux periodically.
 
-> +                   chan_info &&
-> +                   mbox->dev == chan_info->mdev->dev &&
-> +                   instance == chan_info->instance &&
-> +                   channel == chan_info->channel) {
-> +                       dev_err(mbox->dev, "Channel in use\n");
-> +                       return NULL;
-return ERR_PTR(-EBUSY)
+I quite like having the bindings in U-Boot since it makes people think
+about what they are adding. Are you worried that the bindings in
+U-Boot might evolve separately? Certainly there has been some of that.
 
-> +               }
-> +
-> +               /*
-> +                * Find the first free slot, then continue checking
-> +                * to see if requested channel is in use
-> +                */
-> +               if (!chan && !chan_info)
-> +                       chan = &mbox->chans[i];
-> +       }
-> +
-> +       if (!chan) {
-> +               dev_err(mbox->dev, "No free channels left\n");
-> +               return NULL;
-return ERR_PTR(-EBUSY)
+However I recently sent a series to add a few things for Raspberry Pi
+("arm: rpi: Device tree modifications for U-Boot") and I don't yet see
+a willingness to add what some see as 'U-Boot things' to the binding.
+How do we address that?
 
-> +       }
-> +
-> +       chan_info = devm_kzalloc(mbox->dev, sizeof(*chan_info), GFP_KERNEL);
-> +       if (!chan_info)
-> +               return NULL;
-return ERR_PTR(-ENOMEM)
-
-Thanks.
+Regards,
+Simon
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
