@@ -1,48 +1,45 @@
-From: Alexis Ballier <aballier@gentoo.org>
-Subject: [PATCH v2] ARM: dts: exynos4412-odroidu3: Enable SPI1.
-Date: Thu, 13 Aug 2015 11:06:53 +0200
-Message-ID: <1439456813-4918-1-git-send-email-aballier@gentoo.org>
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: linux-samsung-soc@vger.kernel.org
-Cc: Alexis Ballier <aballier@gentoo.org>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Krzysztof Kozlowski <k.kozlowski@samsung.com>, Kukjin Kim <kgene@kernel.org>, Russell King <linux@arm.linux.org.uk>, Kumar Gala <galak@codeaurora.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>
+From: Dong Aisheng <aisheng.dong@freescale.com>
+Subject: Re: [PATCH v6 0/6] mmc: imx: a few fixes and new feature
+Date: Thu, 13 Aug 2015 16:58:56 +0800
+Message-ID: <20150813085854.GA19166@shlinux1.ap.freescale.net>
+References: <1439293111-21077-1-git-send-email-haibo.chen@freescale.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Return-path: <linux-mmc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1439293111-21077-1-git-send-email-haibo.chen@freescale.com>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Haibo Chen <haibo.chen@freescale.com>
+Cc: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, shawnguo@kernel.org, kernel@pengutronix.de, linux@arm.linux.org.uk, ulf.hansson@linaro.org, johan.derycke@barco.com, mkl@pengutronix.de, fabio.estevam@freescale.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mmc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-SPI1 is available on IO Port #2 (as depicted on their website) in
-PCB Revision 0.5 of Hardkernel Odroid U3 board.
-The shield connects a 256KiB spi-nor flash on that bus.
+On Tue, Aug 11, 2015 at 07:38:25PM +0800, Haibo Chen wrote:
+> Changes for v6:
+> -remove duplicate code in esdhc_set_uhs_signaling().
+> -fix a typo for patch-2.
+> -make commit log of patch-3 more specific.
+> 
+> Haibo Chen (6):
+>   mmc: sdhci-esdhc-imx: add imx7d support and support HS400
+>   mmc: sdhci-esdhc-imx: add tuning-step setting support
+>   mmc: sdhci-esdhc-imx: add imx7d support in bingding doc
+>   ARM: dts: imx7d-sdb: add eMMC5.0 support
+>   mmc: sdhci-esdhc-imx: set back the burst_length_enable bit to 1
+>   mmc: sdhci-esdhc-imx: change default watermark level and burst length
+> 
+>  .../devicetree/bindings/mmc/fsl-imx-esdhc.txt      |   6 ++
+>  arch/arm/boot/dts/imx7d-sdb.dts                    |  13 +++
+>  drivers/mmc/host/sdhci-esdhc-imx.c                 | 114 ++++++++++++++++++++-
+>  include/linux/platform_data/mmc-esdhc-imx.h        |   1 +
+>  4 files changed, 130 insertions(+), 4 deletions(-)
+> 
+> -- 
+> 1.9.1
+> 
 
-Signed-off-by: Alexis Ballier <aballier@gentoo.org>
+The patch set looks good to me.
 
----
+Acked-by: Dong Aisheng <aisheng.dong@freescale.com>
 
-Changes in v2: Use GPIO_ACTIVE_HIGH (Krzysztof Kozlowski)
-
- arch/arm/boot/dts/exynos4412-odroidu3.dts | 8 ++++++++
- 1 file changed, 8 insertions(+)
-
-diff --git a/arch/arm/boot/dts/exynos4412-odroidu3.dts b/arch/arm/boot/dts/exynos4412-odroidu3.dts
-index 44684e5..8632f35 100644
---- a/arch/arm/boot/dts/exynos4412-odroidu3.dts
-+++ b/arch/arm/boot/dts/exynos4412-odroidu3.dts
-@@ -13,6 +13,7 @@
- 
- /dts-v1/;
- #include "exynos4412-odroid-common.dtsi"
-+#include <dt-bindings/gpio/gpio.h>
- 
- / {
- 	model = "Hardkernel ODROID-U3 board based on Exynos4412";
-@@ -61,3 +62,10 @@
- 		"Speakers", "SPKL",
- 		"Speakers", "SPKR";
- };
-+
-+&spi_1 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&spi1_bus>;
-+	cs-gpios = <&gpb 5 GPIO_ACTIVE_HIGH>;
-+	status = "okay";
-+};
--- 
-2.5.0
+Regards
+Dong Aisheng
