@@ -1,130 +1,127 @@
-From: <atull@opensource.altera.com>
-Subject: [PATCH v10 6/8] staging: add bindings document for simple fpga bus
-Date: Thu, 13 Aug 2015 12:37:30 -0500
-Message-ID: <1439487452-23977-8-git-send-email-atull@opensource.altera.com>
-References: <1439487452-23977-1-git-send-email-atull@opensource.altera.com>
+From: Tom Rini <trini@konsulko.com>
+Subject: Re: [PATCH v3 01/11] dm: serial: Update binding for PL01x
+ serial UART
+Date: Thu, 13 Aug 2015 14:13:46 -0400
+Message-ID: <20150813181346.GS25532@bill-the-cat>
+References: <1438954951-13329-1-git-send-email-sjg@chromium.org>
+ <1438954951-13329-2-git-send-email-sjg@chromium.org>
+ <CACRpkdZa2O1MqCVT8q2P0u0ciXK+6HFbQQGXB_-chimg=FbzQg@mail.gmail.com>
+ <CAPnjgZ3V1KS7POEhsvj63OSB29MUtyaZGBoFR8JGPnaN=-fXVw@mail.gmail.com>
+ <55CCBFB2.7050301@wwwdotorg.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
-In-Reply-To: <1439487452-23977-1-git-send-email-atull@opensource.altera.com>
-List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
-List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
-List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
-List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
-List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
-Errors-To: driverdev-devel-bounces@linuxdriverproject.org
-Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
-To: gregkh@linuxfoundation.org, jgunthorpe@obsidianresearch.com, hpa@zytor.com, monstr@monstr.eu, michal.simek@xilinx.com, rdunlap@infradead.org
-Cc: mark.rutland@arm.com, linux-doc@vger.kernel.org, rubini@gnudd.com, pantelis.antoniou@konsulko.com, s.trumtrar@pengutronix.de, devel@driverdev.osuosl.org, sameo@linux.intel.com, nico@linaro.org, ijc+devicetree@hellion.org.uk, kyle.teske@ni.com, grant.likely@linaro.org, davidb@codeaurora.org, linus.walleij@linaro.org, cesarb@cesarb.net, devicetree@vger.kernel.org, jason@lakedaemon.net, pawel.moll@arm.com, iws@ovro.caltech.edu, Alan Tull <atull@opensource.altera.com>, broonie@kernel.org, philip@balister.org, Petr Cvek <petr.cvek@tul.cz>, dinguyen@opensource.altera.com, pavel@denx.de, linux-kernel@vger.kernel.org, balbi@ti.com, delicious.quinoa@gmail.com, robh+dt@kernel.org, rob@landley.net, galak@codeaurora.org, akpm@linux-foundation.org, davem@davemloft.net, m.chehab@samsung.com
+Content-Type: multipart/mixed; boundary="===============0779600303=="
+Return-path: <u-boot-bounces@lists.denx.de>
+In-Reply-To: <55CCBFB2.7050301@wwwdotorg.org>
+List-Unsubscribe: <http://lists.denx.de/mailman/options/u-boot>,
+ <mailto:u-boot-request@lists.denx.de?subject=unsubscribe>
+List-Archive: <http://lists.denx.de/pipermail/u-boot/>
+List-Post: <mailto:u-boot@lists.denx.de>
+List-Help: <mailto:u-boot-request@lists.denx.de?subject=help>
+List-Subscribe: <http://lists.denx.de/mailman/listinfo/u-boot>,
+ <mailto:u-boot-request@lists.denx.de?subject=subscribe>
+Errors-To: u-boot-bounces@lists.denx.de
+Sender: "U-Boot" <u-boot-bounces@lists.denx.de>
+To: Stephen Warren <swarren@wwwdotorg.org>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Stephen Warren <swarren@nvidia.com>, Arnd Bergmann <arnd@arndb.de>, U-Boot Mailing List <u-boot@lists.denx.de>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Joe Hershberger <joe.hershberger@ni.com>, Rob Herring <robh+dt@kernel.org>, Geert Uytterhoeven <geert@linux-m68k.org>, Grant Likely <grant.likely@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Alan Tull <atull@opensource.altera.com>
 
-New bindings document for simple fpga bus.
+--===============0779600303==
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="dBjx7dyGPdVN2luf"
+Content-Disposition: inline
 
-Signed-off-by: Alan Tull <atull@opensource.altera.com>
----
-v9:  initial version added to this patchset
 
-v10: s/fpga/FPGA/g
-     replace DT overlay example with slightly more complicated example
-     move to staging/simple-fpga-bus
----
- .../Documentation/bindings/simple-fpga-bus.txt     |   83 ++++++++++++++++++++
- 1 file changed, 83 insertions(+)
- create mode 100644 drivers/staging/simple-fpga-bus/Documentation/bindings/simple-fpga-bus.txt
+--dBjx7dyGPdVN2luf
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/drivers/staging/simple-fpga-bus/Documentation/bindings/simple-fpga-bus.txt b/drivers/staging/simple-fpga-bus/Documentation/bindings/simple-fpga-bus.txt
-new file mode 100644
-index 0000000..5a55fb2
---- /dev/null
-+++ b/drivers/staging/simple-fpga-bus/Documentation/bindings/simple-fpga-bus.txt
-@@ -0,0 +1,83 @@
-+Simple FPGA Bus
-+===============
-+
-+A Simple FPGA Bus is a bus that handles configuring an FPGA and its bridges
-+before populating the devices below its node.  All this happens when a device
-+tree overlay is added to the live tree.  This document describes that device
-+tree overlay.
-+
-+Required properties:
-+- compatible : should contain "simple-fpga-bus"
-+- #address-cells, #size-cells, ranges: must be present to handle address space
-+  mapping for children.
-+
-+Optional properties:
-+- fpga-mgr : should contain a phandle to a FPGA manager.
-+- fpga-firmware : should contain the name of a FPGA image file located on the
-+  firmware search path.
-+- partial-reconfig : boolean property should be defined if partial
-+  reconfiguration is to be done.
-+- resets : should contain a list of resets that the bus will assert before
-+  programming the FPGA and then deassert after the FPGA has been programmed
-+  i.e. FPGA bridges.
-+- reset-names : should contain a list of the names of the resets.
-+
-+Example:
-+
-+/dts-v1/;
-+/plugin/;
-+/ {
-+	fragment@0 {
-+		target-path="/soc";
-+		__overlay__ {
-+			#address-cells = <1>;
-+	                #size-cells = <1>;
-+
-+			bridge@0xff200000 {
-+				compatible = "simple-fpga-bus";
-+				reg = <0xc0000000 0x20000000>,
-+				      <0xff200000 0x00200000>;
-+				reg-names = "axi_h2f", "axi_h2f_lw";
-+
-+				#address-cells = <0x2>;
-+				#size-cells = <0x1>;
-+
-+				ranges = <0x00000000 0x00000000 0xc0000000 0x00010000>,
-+					 <0x00000001 0x00020000 0xff220000 0x00000008>,
-+					 <0x00000001 0x00010040 0xff210040 0x00000020>;
-+
-+				clocks = <0x2 0x2>;
-+				clock-names = "h2f_lw_axi_clock", "f2h_sdram0_clock";
-+
-+				fpga-mgr = <&hps_0_fpgamgr>;
-+				fpga-firmware = "soc_system.rbf";
-+
-+				resets = <&hps_fpgabridge0 0>, <&hps_fpgabridge1 0>, <&hps_fpgabridge2 0>;
-+				reset-names = "hps2fpga", "lwhps2fpga", "fpga2hps";
-+
-+				onchip_memory2_0: memory@0x000000000 {
-+					device_type = "memory";
-+					compatible = "ALTR,onchipmem-15.1";
-+					reg = <0x00000000 0x00000000 0x00010000>;
-+				};
-+
-+				jtag_uart: serial@0x100020000 {
-+					compatible = "altr,juart-15.1", "altr,juart-1.0";
-+					reg = <0x00000001 0x00020000 0x00000008>;
-+					interrupt-parent = <&intc>;
-+					interrupts = <0 42 4>;
-+				};
-+
-+				led_pio: gpio@0x100010040 {
-+					compatible = "altr,pio-15.1", "altr,pio-1.0";
-+					reg = <0x00000001 0x00010040 0x00000020>;
-+					altr,gpio-bank-width = <4>;
-+					resetvalue = <0>;
-+					#gpio-cells = <2>;
-+					gpio-controller;
-+				};
-+			};
-+		};
-+	};
-+};
-+
--- 
-1.7.9.5
+On Thu, Aug 13, 2015 at 10:02:58AM -0600, Stephen Warren wrote:
+> On 08/13/2015 09:59 AM, Simon Glass wrote:
+> >Hi Linus,
+> >
+> >On 11 August 2015 at 07:00, Linus Walleij <linus.walleij@linaro.org> wro=
+te:
+> >>On Fri, Aug 7, 2015 at 3:42 PM, Simon Glass <sjg@chromium.org> wrote:
+> >>
+> >>>This binding differs from that of Linux. Update it and change existing
+> >>>users.
+> >>>
+> >>>Signed-off-by: Simon Glass <sjg@chromium.org>
+> >>(...)
+> >>>  doc/device-tree-bindings/serial/pl01x.txt | 55 +++++++++++++++++++++=
++++++++---
+> >>
+> >>So why does U-Boot have its own copy of any bindings at all?
+> >>
+> >>This is forking the ontology of who gets to define bindings I fear.
+> >>It's a bit like have two bibles both claiming to be the word of god.
+> >>(OK maybe a hyperbolic statement, but you see what I mean.)
+> >>
+> >>Can't we just have the bindings in the Linux kernel tree please?
+> >
+> >Is there any plan to move them out of Linux and put them in a separate p=
+lace?
+> >
+> >We should make an effort to sync the device tree files with Linux period=
+ically.
+> >
+> >I quite like having the bindings in U-Boot since it makes people think
+> >about what they are adding. Are you worried that the bindings in
+> >U-Boot might evolve separately? Certainly there has been some of that.
+> >
+> >However I recently sent a series to add a few things for Raspberry Pi
+> >("arm: rpi: Device tree modifications for U-Boot") and I don't yet see
+> >a willingness to add what some see as 'U-Boot things' to the binding.
+> >How do we address that?
+>=20
+> DT isn't supposed to contain "U-Boot things", but "an OS-agnostic
+> description of the hardware". So, I imagine the solution is not to
+> attempt to do that:-)
+
+This always makes me ask if the FreeBSD folks or VxWorks folks have
+adopted the "Linux" bindings or if the DT files continue to be
+"OS-agnostic" and "only functional with Linux".  It was a while ago last
+I looked but it made my head hurt a little doing a quick translation for
+an SoC that I was familiar with.
+
+--=20
+Tom
+
+--dBjx7dyGPdVN2luf
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.11 (GNU/Linux)
+
+iQIcBAEBAgAGBQJVzN5ZAAoJEIRElH1W1v7NENgP/0Mgq0vI4su9mV3ittPDTY0O
+z8bIM3wF6Q1YB7dSxJLfffxJhQ7NsucBiRahRKFQcBJDm/fIGYUIerp5spGvIW5i
+rw5SvvddUvmv7xx172cK5hA3M10WE4EpmqtOgOTHFbXorJkFC8u5bMjvKoBoYEPx
+QNain+2R9ShBZFZtMn6+qmhsR2hIRwgpkHpKCDrHfZ3I0mk+Saew4MrIqtV5kGDa
+vMvwC2t2EOKzH85NS0XE2np9PKKlXPboIql+dUqRgUDcayAY+yADhKQWpcmuYNVA
+MHoI1453rqocCdfCCGqirdCrx/zXl0tcf3FUsXVvWyOYha2sAtIKwNriWHP7Uuba
+THBvGhoZHfhV5XZD6Tt/+fb6dZHI57oZAScFQpPE12p8BJ2xZ2oDxk0unUZWMdP1
+DTMxgNpQoW3Hs2aqbKvPIFBceLmyV6KZolrdes/B0hfAl4VspwT0hExC4AApDg1F
+AG3MMTzgXd3z4o1scSseEwGkL0U1B9+DVIOY9brZPe2nDISokeL/xuiRB3DiDpXi
+ScBKglftmr3ilq9lCAa5FHgCp238/BzioxqXo7szxvjDkonXQNCR948/hVJAt3iG
+NlymXxrRJ89Uq+C7Vd5GVuFQHCTGTkVsp6BYmQAFXuKEDFpZdNyV+mBywZAejrNl
+C2pQe/TIFqY2j2jYEAad
+=gtf9
+-----END PGP SIGNATURE-----
+
+--dBjx7dyGPdVN2luf--
+
+--===============0779600303==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+U-Boot mailing list
+U-Boot@lists.denx.de
+http://lists.denx.de/mailman/listinfo/u-boot
+
+--===============0779600303==--
