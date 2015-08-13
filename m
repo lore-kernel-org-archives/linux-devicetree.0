@@ -1,86 +1,96 @@
-From: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v2] ARM: shmobile: silk: add SDHI1 DT support
-Date: Fri, 14 Aug 2015 01:47:12 +0300
-Message-ID: <55CD1E70.6050103@cogentembedded.com>
-References: <10037494.4LD4T2QGPX@wasted.cogentembedded.com>
- <2757472.iuyUyRzJ3z@wasted.cogentembedded.com>
+From: Eric Anholt <eric@anholt.net>
+Subject: Re: [PATCH 3/7] drm/vc4: Add KMS support for Raspberry Pi.
+Date: Thu, 13 Aug 2015 16:03:00 -0700
+Message-ID: <87zj1uiyfv.fsf@eliezer.anholt.net>
+References: <1439427380-2436-1-git-send-email-eric@anholt.net>
+ <1439427380-2436-4-git-send-email-eric@anholt.net>
+ <20150813075141.GX17734@phenom.ffwll.local>
+ <87d1yqq5po.fsf@eliezer.anholt.net>
+ <20150813212936.GT7557@n2100.arm.linux.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <2757472.iuyUyRzJ3z-gHKXc3Y1Z8zGSmamagVegGFoWSdPRAKMAL8bYrjMMd8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org, linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: multipart/mixed; boundary="===============0949860586=="
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20150813212936.GT7557@n2100.arm.linux.org.uk>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Russell King - ARM Linux <linux@arm.linux.org.uk>
+Cc: devicetree@vger.kernel.org, Stephen Warren <swarren@wwwdotorg.org>, Lee Jones <lee@kernel.org>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-rpi-kernel@lists.infradead.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hello.
+--===============0949860586==
+Content-Type: multipart/signed; boundary="=-=-=";
+	micalg=pgp-sha512; protocol="application/pgp-signature"
 
-On 08/11/2015 01:44 AM, Sergei Shtylyov wrote:
+--=-=-=
+Content-Type: text/plain
 
-> Define the SILK board dependent part of the SDHI1 (connected to micro-SD slot)
-> device nodes along with the necessary voltage regulators.
->
-> Based on the original patch by Vladimir Barinov
-> <vladimir.barinov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>.
->
-> Signed-off-by: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
->
-> ---
-> This patch is against 'renesas-devel-20150810-v4.2-rc6' tag of Simon Horman's
-> 'renesas.git' repo plus the R8A7794/SILK QSPI patches just re-posted. It needs
-> the R8A7794 GPIO patches in order to compile.
->
-> Changes in version 2:
-> - removed not working SDHI0 stuff, renamed the patch;
-> - replaced SDHI1's "wp-gpios" property with "disable-wp".
->
->   arch/arm/boot/dts/r8a7794-silk.dts |   40 +++++++++++++++++++++++++++++++++++++
->   1 file changed, 40 insertions(+)
->
-> Index: renesas/arch/arm/boot/dts/r8a7794-silk.dts
-> ===================================================================
-> --- renesas.orig/arch/arm/boot/dts/r8a7794-silk.dts
-> +++ renesas/arch/arm/boot/dts/r8a7794-silk.dts
-[...]
-> @@ -39,6 +40,29 @@
->   		regulator-boot-on;
->   		regulator-always-on;
->   	};
+Russell King - ARM Linux <linux@arm.linux.org.uk> writes:
 
-    Oops, need a newline here. I'll repost.
-
-> +	vcc_sdhi1: regulator@3 {
-> +		compatible = "regulator-fixed";
-> +
-> +		regulator-name = "SDHI1 Vcc";
-> +		regulator-min-microvolt = <3300000>;
-> +		regulator-max-microvolt = <3300000>;
-> +
-> +		gpio = <&gpio4 26 GPIO_ACTIVE_HIGH>;
-> +		enable-active-high;
-> +	};
-> +
-> +	vccq_sdhi1: regulator@4 {
-> +		compatible = "regulator-gpio";
-> +
-> +		regulator-name = "SDHI1 VccQ";
-> +		regulator-min-microvolt = <1800000>;
-> +		regulator-max-microvolt = <3300000>;
-> +
-> +		gpios = <&gpio4 29 GPIO_ACTIVE_HIGH>;
-> +		gpios-states = <1>;
-> +		states = <3300000 1
-> +			  1800000 0>;
-> +	};
->   };
+> On Thu, Aug 13, 2015 at 01:44:03PM -0700, Eric Anholt wrote:
+>> Struct mutex is here because this code is from the V3D series, with the
+>> in-kernel BO cache ripped out (it turns out that the CMA allocator is
+>> slow, and you can't just userspace cache since we have to do allocations
+>> within the kernel to the tune of a couple per draw and that's too much).
 >
->   &extal_clk {
-[...]
+> The CMA allocator is fast until you have pinned pages in its region,
+> where it becomes _very_ slow to do allocations, sometimes getting up
+> to the order of seconds.
+>
+> The main culpret of this are GFP_HIGHUSER_MOVABLE allocations which
+> then pin the page.  It doesn't take many of those to make CMA really
+> inefficient.
+>
+> The problem is that CMA doesn't get any information back from the
+> internal page migration about which pages couldn't be moved, so it
+> dumbly just tries incrementing the allocation by one page (subject
+> to alignment constraints) and retrying again - repeating over the
+> entire CMA region.  The bigger the region, the more time this takes.
 
-MBR, Sergei
+Ouch.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Since I can workaround the allocation cost, the main problem I have
+right now is that I've got a set of small allocations for 3D that all
+need to have the same high 4 bits of paddr, because someone cleverly
+packed some address bits in a GPU-managed structure.  Any
+recommendations for ways to handle this with CMA?
+
+--=-=-=
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBCgAGBQJVzSIkAAoJELXWKTbR/J7oo14P/iw6hUN33ZedoR9xlCYGSB+p
+LluH9tIIKGRc01eO4oCDl6wIJM+Qrw9LOGXkLMSFxo0Qr98tXqVd6Klfmr7BFFqv
+tqIGRDf3U5tIBftpXGOCT97SXQhVEcuQTJrSq+pEkPKVhBRjtMXgz5laMKB1sFew
+9/4SUoJbrrTyOtPoGAFgRPE3DxJkUzCzRgIes1j0Q75mWnuYaQIb37YKPElwDID4
+A1cv+isxEB5QHIFPG0hY31scSrPIjRm/eYcuqL320vEVj3JTxTNIxP9UDOTQAseK
+i/V3FdNgJJf45xcEIUwkcUNM7aR20Wut3fDsJ8qg9/IcuUVqLatWsJZrchekzag/
+iDxJd/Ypzf4tSA41zWkw1USxErv5y8N1qvf8O8wWQ9IeuzflNe1L7uBqtUlN00Ie
+oTjmYbtQvdxQH80j+9Tokiilafq85hQFf/kENjgHRDTEG0BKbdcHlfBRDywhGAjp
+j/qo7yfHznFlSPtyxeC5+G1zcduTp2OFjfGRYDqvOKO3aGlnzYSks79lMOtrAuLw
+F0sBnoA0c4e2wrfFl7teZF5mD6/ePVkGLNOEGfjVWpgV3JgMFLba7yzM6Q+MAINC
+mKJ25pv2MfsFm7VG6jNoVv8xcbEuqCOZbelnkNsFvXCx7S7e+YpFacl375ugHYLq
+iosc8rvdKHcn6Sg/7bw2
+=cPq5
+-----END PGP SIGNATURE-----
+--=-=-=--
+
+--===============0949860586==
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: base64
+Content-Disposition: inline
+
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVs
+IG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHA6Ly9saXN0
+cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
+
+--===============0949860586==--
