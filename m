@@ -1,57 +1,95 @@
-From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Subject: Re: [PATCH v3 01/11] dm: serial: Update binding for PL01x serial
- UART
-Date: Thu, 13 Aug 2015 10:02:58 -0600
-Message-ID: <55CCBFB2.7050301@wwwdotorg.org>
-References: <1438954951-13329-1-git-send-email-sjg@chromium.org> <1438954951-13329-2-git-send-email-sjg@chromium.org> <CACRpkdZa2O1MqCVT8q2P0u0ciXK+6HFbQQGXB_-chimg=FbzQg@mail.gmail.com> <CAPnjgZ3V1KS7POEhsvj63OSB29MUtyaZGBoFR8JGPnaN=-fXVw@mail.gmail.com>
+From: Stuart Yoder <b08248@gmail.com>
+Subject: Re: [PATCH v3 1/2] Documentation: DT: FTM: add FTM0 be used as alarm timer
+Date: Thu, 13 Aug 2015 11:23:11 -0500
+Message-ID: <CALRxmdDGgYh+_cOPB43gyuZwu_zo+wE0qHh8nWJTjiQN__hZ3w@mail.gmail.com>
+References: <1439352061-14656-1-git-send-email-dongsheng.wang@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAPnjgZ3V1KS7POEhsvj63OSB29MUtyaZGBoFR8JGPnaN=-fXVw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, U-Boot Mailing List <u-boot-0aAXYlwwYIKGBzrmiIFOJg@public.gmane.org>, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Joe Hershberger <joe.hershberger-acOepvfBmUk@public.gmane.org>, Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Marek Vasut <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Pavel Herrmann <morpheus.ibis-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Vikas Manocha <vikas.manocha-qxv4g6HH51o@public.gmane.org>, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1439352061-14656-1-git-send-email-dongsheng.wang@freescale.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Dongsheng Wang <dongsheng.wang@freescale.com>
+Cc: shawn.guo@linaro.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, alison.wang@freescale.com
 List-Id: devicetree@vger.kernel.org
 
-On 08/13/2015 09:59 AM, Simon Glass wrote:
-> Hi Linus,
+On Tue, Aug 11, 2015 at 11:01 PM, Dongsheng Wang
+<dongsheng.wang@freescale.com> wrote:
+> From: Wang Dongsheng <dongsheng.wang@freescale.com>
 >
-> On 11 August 2015 at 07:00, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
->> On Fri, Aug 7, 2015 at 3:42 PM, Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org> wrote:
->>
->>> This binding differs from that of Linux. Update it and change existing
->>> users.
->>>
->>> Signed-off-by: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
->> (...)
->>>   doc/device-tree-bindings/serial/pl01x.txt | 55 ++++++++++++++++++++++++++++---
->>
->> So why does U-Boot have its own copy of any bindings at all?
->>
->> This is forking the ontology of who gets to define bindings I fear.
->> It's a bit like have two bibles both claiming to be the word of god.
->> (OK maybe a hyperbolic statement, but you see what I mean.)
->>
->> Can't we just have the bindings in the Linux kernel tree please?
->
-> Is there any plan to move them out of Linux and put them in a separate place?
->
-> We should make an effort to sync the device tree files with Linux periodically.
->
-> I quite like having the bindings in U-Boot since it makes people think
-> about what they are adding. Are you worried that the bindings in
-> U-Boot might evolve separately? Certainly there has been some of that.
->
-> However I recently sent a series to add a few things for Raspberry Pi
-> ("arm: rpi: Device tree modifications for U-Boot") and I don't yet see
-> a willingness to add what some see as 'U-Boot things' to the binding.
-> How do we address that?
+> In freescale layerscape platform there is only FTM0 can be used as
+> alarm timer to wake up system. So add FTM0 description for devicetree
+> document.
 
-DT isn't supposed to contain "U-Boot things", but "an OS-agnostic 
-description of the hardware". So, I imagine the solution is not to 
-attempt to do that:-)
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Suggestion:
+
+In the Freescale Layerscape platform a flextimer module can be used
+as an alarm timer to wake up the system.  Define a binding for this
+alarm.
+
+> Signed-off-by: Wang Dongsheng <dongsheng.wang@freescale.com>
+> ---
+> V3:
+> Include this patch in V3.
+>
+> diff --git a/Documentation/devicetree/bindings/timer/fsl,ftm-timer.txt b/Documentation/devicetree/bindings/timer/fsl,ftm-timer.txt
+> index aa8c402..380a0b3d 100644
+> --- a/Documentation/devicetree/bindings/timer/fsl,ftm-timer.txt
+> +++ b/Documentation/devicetree/bindings/timer/fsl,ftm-timer.txt
+> @@ -1,5 +1,7 @@
+>  Freescale FlexTimer Module (FTM) Timer
+>
+> +* Default FTM Timer
+> +
+>  Required properties:
+>
+>  - compatible : should be "fsl,ftm-timer"
+> @@ -29,3 +31,26 @@ ftm: ftm@400b8000 {
+>                 <&clks VF610_CLK_FTM3_EXT_FIX_EN>;
+>         big-endian;
+>  };
+> +
+> +* FTM Alarm Timer
+> +  The default FTM device contains eight FlexTimer modules. FlexTimer1 is in
+> +  on-domain(power is not switched off in deep sleep mode). Other seven FlexTimer
+> +  modules(flextimer2/3/4/5/6/7/8) are in off-domain (power is switched off in
+> +  deep sleep mode).
+
+Suggestion:
+
+  This binding describes a Flextimer (FTM) instance that can be used as an alarm
+  to wake up a system in deep sleep.  The flextimer module with alarm
+  support is in a power domain that remains awake when the SoC is in
+  deep sleep mode.
+
+(don't use flextimer1 in the binding...for all you know in the next SoC it
+will be flextimer7 that has this capability)
+
+> +Required properties:
+> +
+> +- compatible : should be "fsl,ftm-alarm".
+> +- reg : should contain base address and length of FTM timer 0 register.
+
+  "should contain the address and size of the FTM alarm module registers"
+
+(don't use the number 0)
+
+> +- interrupts : Should contain FTM 0 interrupt.
+
+   "describes the FTM alarm interrupt"
+
+> +- big-endian: One boolean property, the big endian mode will be in use if it is
+> +  present, or the little endian mode will be in use for all the device registers.
+> +
+> +Example:
+> +ftm0: ftm0@29d0000 {
+> +       compatible = "fsl,ftm-alarm";
+> +       reg = <0x0 0x29d0000 0x0 0x10000>;
+> +       interrupts = <GIC_SPI 118 IRQ_TYPE_LEVEL_HIGH>;
+> +       big-endian;
+> +       status = "disabled";
+> +};
+
+Drop the number 0 from the names in your example.
+
+Thanks,
+Stuart
