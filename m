@@ -1,105 +1,35 @@
-From: Gavin Shan <gwshan@linux.vnet.ibm.com>
-Subject: Re: [PATCH v6 18/42] powerpc/powernv: Allocate PE# in deasending
- order
-Date: Thu, 13 Aug 2015 10:28:46 +1000
-Message-ID: <20150813002846.GA5978@gwshan>
-References: <1438834307-26960-1-git-send-email-gwshan@linux.vnet.ibm.com>
- <1438834307-26960-19-git-send-email-gwshan@linux.vnet.ibm.com>
- <55C8B786.1050702@ozlabs.ru>
- <20150811004339.GC18981@gwshan>
- <55C962F9.2080105@ozlabs.ru>
-Reply-To: Gavin Shan <gwshan@linux.vnet.ibm.com>
+From: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+Subject: Re: [PATCH RESEND v6 3/3] ARM: dts: Add properties to use pwm-fan
+ device as a cooling device in Odroid U3
+Date: Thu, 13 Aug 2015 09:35:40 +0900
+Message-ID: <55CBE65C.4010504@samsung.com>
+References: <1425470624-25793-1-git-send-email-l.majewski@samsung.com>
+ <1439298922-17898-1-git-send-email-l.majewski@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-pci-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <55C962F9.2080105@ozlabs.ru>
-Sender: linux-pci-owner@vger.kernel.org
-To: Alexey Kardashevskiy <aik@ozlabs.ru>
-Cc: Gavin Shan <gwshan@linux.vnet.ibm.com>, linuxppc-dev@lists.ozlabs.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, benh@kernel.crashing.org, mpe@ellerman.id.au, bhelgaas@google.com, grant.likely@linaro.org, robherring2@gmail.com, panto@antoniou-consulting.com
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-reply-to: <1439298922-17898-1-git-send-email-l.majewski@samsung.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: Lukasz Majewski <l.majewski@samsung.com>, Eduardo Valentin <edubezval@gmail.com>, Kukjin Kim <kgene.kim@samsung.com>, Kukjin Kim <kgene@kernel.org>
+Cc: Linux PM list <linux-pm@vger.kernel.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, devicetree@vger.kernel.org, Lukasz Majewski <l.majewski@majess.pl>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Aug 11, 2015 at 12:50:33PM +1000, Alexey Kardashevskiy wrote:
->On 08/11/2015 10:43 AM, Gavin Shan wrote:
->>On Tue, Aug 11, 2015 at 12:39:02AM +1000, Alexey Kardashevskiy wrote:
->>>On 08/06/2015 02:11 PM, Gavin Shan wrote:
->>>>The available PE#, represented by a bitmap in the PHB, is allocated
->>>>in ascending order.
->>>
->>>Available PE# is available exactly because it is not allocated ;)
->>>
->>
->>Yeah, will correct it.
->>
->>>>It conflicts with the fact that M64 segments are
->>>>assigned in same order. In order to avoid the conflict, the patch
->>>>allocates PE# in descending order.
->>>
->>>What kind of conflict?
->>>
->>
->>On PHB3, the M64 segment is assigned to one PE whose PE number is
->>determined. M64 segment are allocated in ascending order. It's why
->>I would like to allocate PE# in deascending order.
->
->
->From previous lessons, I thought M64 segment number is PE# number as well :-/
->Seems this is not the case, so what does store this seg#<->PE# mapping in PHB?
->
+On 11.08.2015 22:15, Lukasz Majewski wrote:
+> With those bindings it is possible to use pwm-fan device available in
+> Odroid U3 as a cooling device.
+> 
+> Signed-off-by: Lukasz Majewski <l.majewski@samsung.com>
+> Acked-by: Eduardo Valentin <edubezval@gmail.com>
+> ---
+>  arch/arm/boot/dts/exynos4412-odroidu3.dts | 33 ++++++++++++++++++++++++++++++-
+>  1 file changed, 32 insertions(+), 1 deletion(-)
 
-Your understanding is somewhat correct. Let me explain for more here. Taking
-PHB3 as an example: it has 16 M64 BARs. The last BAR (15th) is running in
-share mode. When one segment from this BAR is assigned to one PE, the PE number
-is determined and that's equal to the segment number. However, it's still possible
-one PE has multiple segments. We have "master" and "slave" PEs for the later case.
+Looks sensible.
 
-If any one left BARs (0 to 14) is running in single mode and assigned to one particular
-PE. the PE number can be confiugred.
+Reviewed-by: Krzysztof Kozlowski <k.kozlowski@samsung.com>
 
->>
->>>>
->>>>Signed-off-by: Gavin Shan <gwshan@linux.vnet.ibm.com>
->>>>---
->>>>  arch/powerpc/platforms/powernv/pci-ioda.c | 11 ++++++++---
->>>>  1 file changed, 8 insertions(+), 3 deletions(-)
->>>>
->>>>diff --git a/arch/powerpc/platforms/powernv/pci-ioda.c b/arch/powerpc/platforms/powernv/pci-ioda.c
->>>>index 56b058c..1c950e8 100644
->>>>--- a/arch/powerpc/platforms/powernv/pci-ioda.c
->>>>+++ b/arch/powerpc/platforms/powernv/pci-ioda.c
->>>>@@ -161,13 +161,18 @@ static struct pnv_ioda_pe *pnv_ioda_reserve_pe(struct pnv_phb *phb, int pe_no)
->>>>  static struct pnv_ioda_pe *pnv_ioda_alloc_pe(struct pnv_phb *phb)
->>>>  {
->>>>  	unsigned long pe;
->>>>+	unsigned long limit = phb->ioda.total_pe_num - 1;
->>>>
->>>>  	do {
->>>>  		pe = find_next_zero_bit(phb->ioda.pe_alloc,
->>>>-					phb->ioda.total_pe_num, 0);
->>>>-		if (pe >= phb->ioda.total_pe_num)
->>>>+					phb->ioda.total_pe_num, limit);
->>>>+		if (pe < phb->ioda.total_pe_num &&
->>>>+		    !test_and_set_bit(pe, phb->ioda.pe_alloc))
->>>>+			break;
->>>>+
->>>>+		if (--limit >= phb->ioda.total_pe_num)
->>>>  			return NULL;
->>>>-	} while(test_and_set_bit(pe, phb->ioda.pe_alloc));
->>>>+	} while (1);
->>>
->>>
->>>Usually, if it is "while(1)", then it is "while(1){}" rather than
->>>"do{}while(1)" :)
->>
->>Agree, will change it.
->>
->>>
->>>
->>>>
->>>>  	return pnv_ioda_init_pe(phb, pe);
->>>>  }
->>>>
->>
+Best regards,
+Krzysztof
 
-Thanks,
-Gavin
+
