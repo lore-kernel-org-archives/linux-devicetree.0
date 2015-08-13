@@ -1,110 +1,79 @@
-From: Rameshwar Sahu <rsahu-qTEPVZfXA3Y@public.gmane.org>
-Subject: Re: [PATCH] dmaengine: xgene-dma: Add ACPI support for X-Gene DMA
- engine driver
-Date: Thu, 13 Aug 2015 12:48:28 +0530
-Message-ID: <CAFd313zR468nZN+CZZ+efr9eKoY4N72jQ8+cF=iH+vkZEZ=7Xg@mail.gmail.com>
-References: <1437484479-2822-1-git-send-email-rsahu@apm.com>
+From: Roger Quadros <rogerq@ti.com>
+Subject: Re: [PATCH v2 06/22] mtd: nand: omap2: Switch to using GPMC-NAND
+ ops for writebuffer empty check
+Date: Thu, 13 Aug 2015 10:18:36 +0300
+Message-ID: <55CC44CC.4060707@ti.com>
+References: <1438938752-31010-1-git-send-email-rogerq@ti.com> <1438938752-31010-7-git-send-email-rogerq@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1437484479-2822-1-git-send-email-rsahu-qTEPVZfXA3Y@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org
-Cc: dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, patches-qTEPVZfXA3Y@public.gmane.org, Rameshwar Prasad Sahu <rsahu-qTEPVZfXA3Y@public.gmane.org>
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1438938752-31010-7-git-send-email-rogerq@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: tony@atomide.com
+Cc: dwmw2@infradead.org, computersforpeace@gmail.com, ezequiel@vanguardiasur.com.ar, javier@dowhile0.org, fcooper@ti.com, nsekhar@ti.com, linux-mtd@lists.infradead.org, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Vinod,
 
-On Tue, Jul 21, 2015 at 6:44 PM, Rameshwar Prasad Sahu <rsahu-qTEPVZfXA3Y@public.gmane.org> wrote:
-> This patch adds ACPI support for the APM X-Gene DMA engine driver.
->
-> Signed-off-by: Rameshwar Prasad Sahu <rsahu-qTEPVZfXA3Y@public.gmane.org>
+
+On 07/08/15 12:12, Roger Quadros wrote:
+> Instead of accessing the gpmc_status register directly start
+> using the gpmc_nand_ops->nand_writebuffer_empty() helper
+> to check write buffer empty status.
+> 
+> Signed-off-by: Roger Quadros <rogerq@ti.com>
 > ---
->  drivers/dma/xgene-dma.c | 28 +++++++++++++++++++++-------
->  1 file changed, 21 insertions(+), 7 deletions(-)
->
-> diff --git a/drivers/dma/xgene-dma.c b/drivers/dma/xgene-dma.c
-> index dff22ab..d0a148d 100644
-> --- a/drivers/dma/xgene-dma.c
-> +++ b/drivers/dma/xgene-dma.c
-> @@ -21,6 +21,7 @@
->   * NOTE: PM support is currently not available.
->   */
->
-> +#include <linux/acpi.h>
->  #include <linux/clk.h>
->  #include <linux/delay.h>
->  #include <linux/dma-mapping.h>
-> @@ -1944,16 +1945,18 @@ static int xgene_dma_probe(struct platform_device *pdev)
->                 return ret;
->
->         pdma->clk = devm_clk_get(&pdev->dev, NULL);
-> -       if (IS_ERR(pdma->clk)) {
-> +       if (IS_ERR(pdma->clk) && !ACPI_COMPANION(&pdev->dev)) {
->                 dev_err(&pdev->dev, "Failed to get clk\n");
->                 return PTR_ERR(pdma->clk);
->         }
->
->         /* Enable clk before accessing registers */
-> -       ret = clk_prepare_enable(pdma->clk);
-> -       if (ret) {
-> -               dev_err(&pdev->dev, "Failed to enable clk %d\n", ret);
-> -               return ret;
-> +       if (!IS_ERR(pdma->clk)) {
-> +               ret = clk_prepare_enable(pdma->clk);
-> +               if (ret) {
-> +                       dev_err(&pdev->dev, "Failed to enable clk %d\n", ret);
-> +                       return ret;
-> +               }
->         }
->
->         /* Remove DMA RAM out of shutdown */
-> @@ -1998,7 +2001,8 @@ err_request_irq:
->
->  err_dma_mask:
->  err_clk_enable:
-> -       clk_disable_unprepare(pdma->clk);
-> +       if (!IS_ERR(pdma->clk))
-> +               clk_disable_unprepare(pdma->clk);
->
->         return ret;
->  }
-> @@ -2022,11 +2026,20 @@ static int xgene_dma_remove(struct platform_device *pdev)
->                 xgene_dma_delete_chan_rings(chan);
->         }
->
-> -       clk_disable_unprepare(pdma->clk);
-> +       if (!IS_ERR(pdma->clk))
-> +               clk_disable_unprepare(pdma->clk);
->
->         return 0;
->  }
->
-> +#ifdef CONFIG_ACPI
-> +static const struct acpi_device_id xgene_dma_acpi_match_ptr[] = {
-> +       {"APMC0D43", 0},
-> +       {},
-> +};
-> +MODULE_DEVICE_TABLE(acpi, xgene_dma_acpi_match_ptr);
-> +#endif
-> +
->  static const struct of_device_id xgene_dma_of_match_ptr[] = {
->         {.compatible = "apm,xgene-storm-dma",},
->         {},
-> @@ -2039,6 +2052,7 @@ static struct platform_driver xgene_dma_driver = {
->         .driver = {
->                 .name = "X-Gene-DMA",
->                 .of_match_table = xgene_dma_of_match_ptr,
-> +               .acpi_match_table = ACPI_PTR(xgene_dma_acpi_match_ptr),
->         },
->  };
->
-> --
-> 1.8.2.1
+>  drivers/mtd/nand/omap2.c | 12 ++----------
+>  1 file changed, 2 insertions(+), 10 deletions(-)
+> 
+> diff --git a/drivers/mtd/nand/omap2.c b/drivers/mtd/nand/omap2.c
+> index f214fe2..5c2f6df 100644
+> --- a/drivers/mtd/nand/omap2.c
+> +++ b/drivers/mtd/nand/omap2.c
+> @@ -289,15 +289,11 @@ static void omap_write_buf8(struct mtd_info *mtd, const u_char *buf, int len)
+>  	struct omap_nand_info *info = container_of(mtd,
+>  						struct omap_nand_info, mtd);
+>  	u_char *p = (u_char *)buf;
+> -	u32	status = 0;
+>  
+>  	while (len--) {
+>  		iowrite8(*p++, info->nand.IO_ADDR_W);
+>  		/* wait until buffer is available for write */
+> -		do {
+> -			status = readl(info->reg.gpmc_status) &
+> -					STATUS_BUFF_EMPTY;
+> -		} while (!status);
+> +		while (info->ops->nand_writebuffer_empty());
 
+This should be
+		while (!info->ops->nand_writebuffer_empty());
 
-Any Comments on the above patch ??
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>  	}
+>  }
+>  
+> @@ -325,17 +321,13 @@ static void omap_write_buf16(struct mtd_info *mtd, const u_char * buf, int len)
+>  	struct omap_nand_info *info = container_of(mtd,
+>  						struct omap_nand_info, mtd);
+>  	u16 *p = (u16 *) buf;
+> -	u32	status = 0;
+>  	/* FIXME try bursts of writesw() or DMA ... */
+>  	len >>= 1;
+>  
+>  	while (len--) {
+>  		iowrite16(*p++, info->nand.IO_ADDR_W);
+>  		/* wait until buffer is available for write */
+> -		do {
+> -			status = readl(info->reg.gpmc_status) &
+> -					STATUS_BUFF_EMPTY;
+> -		} while (!status);
+> +		while (info->ops->nand_writebuffer_empty());
+
+here as well.
+
+>  	}
+>  }
+>  
+> 
+
+cheers,
+-roger
