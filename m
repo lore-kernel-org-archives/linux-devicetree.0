@@ -1,57 +1,158 @@
-From: Gary Bisson <gary.bisson@boundarydevices.com>
-Subject: Re: [PATCH v3 2/2] drm/panel: Add display timing for Okaya
- RS800480T-7X0GP
-Date: Thu, 13 Aug 2015 14:41:56 +0200
-Message-ID: <CAAMH-ysbNC4J5ApPO7auFYvnGeX3gfRf_DnV3NvzsD8YKNHy8g@mail.gmail.com>
-References: <1432827466-8104-1-git-send-email-gary.bisson@boundarydevices.com>
- <1433954663-31444-1-git-send-email-gary.bisson@boundarydevices.com>
- <1433954663-31444-3-git-send-email-gary.bisson@boundarydevices.com>
- <20150813123238.GE11095@ulmo>
+From: Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v2 5/6] mailbox: Add generic mechanism for testing Mailbox Controllers
+Date: Thu, 13 Aug 2015 18:17:18 +0530
+Message-ID: <CABb+yY2OH16mgOwi=yH_eEHQN2Ck2x5xtVk-p-8Un9gGmcACdw@mail.gmail.com>
+References: <1437990272-23111-6-git-send-email-lee.jones@linaro.org>
+	<CABb+yY20nQbiEEZeRvWTMUsJ2qgwRn8CrWvnFDSB-b1dgVaAuw@mail.gmail.com>
+	<20150812102328.GD18282@x1>
+	<CABb+yY0A74Vy3-KOvj0URU_4zb2FAC7Yp3gmEwnFaBrD0mzt0w@mail.gmail.com>
+	<20150813091914.GB8782@x1>
+	<CABb+yY0cgbtM68-E_Xqgh5O6GRLXESYTLa5WcAwUBoVL3ufrxA@mail.gmail.com>
+	<20150813102335.GC8782@x1>
+	<CABb+yY3z7p97eOhncQ2i+g6yoYGfDgSN9BDPKmiDaVLa3oPocA@mail.gmail.com>
+	<20150813110008.GD8782@x1>
+	<CABb+yY34i=VUnswUE21vgeQYAGOS=7uwvdnTAFFgYkTV0CFk=w@mail.gmail.com>
+	<20150813114005.GF8782@x1>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20150813123238.GE11095@ulmo>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Thierry Reding <thierry.reding@gmail.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Eric Nelson <eric.nelson@boundarydevices.com>, DRI mailing list <dri-devel@lists.freedesktop.org>, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20150813114005.GF8782@x1>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, kernel-F5mvAk5X5gdBDgjK7y7TUQ@public.gmane.org, Devicetree List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-SGkgVGhpZXJyeSwKCk9uIFRodSwgQXVnIDEzLCAyMDE1IGF0IDI6MzIgUE0sIFRoaWVycnkgUmVk
-aW5nCjx0aGllcnJ5LnJlZGluZ0BnbWFpbC5jb20+IHdyb3RlOgo+IE9uIFdlZCwgSnVuIDEwLCAy
-MDE1IGF0IDA2OjQ0OjIzUE0gKzAyMDAsIEdhcnkgQmlzc29uIHdyb3RlOgo+PiBBZGQgc3VwcG9y
-dCBmb3IgdGhlIE9rYXlhIFJTODAwNDgwVC03WDBHUCB0byB0aGUgRFJNIHNpbXBsZSBwYW5lbAo+
-PiBkcml2ZXIuCj4+Cj4+IFRoZSBSUzgwMDQ4MFQtN1gwR1AgaXMgYSBXVkdBICg4MDB4NDgwKSBw
-YW5lbCB3aXRoIGFuIDE4LWJpdCBwYXJhbGxlbAo+PiBMQ0QgaW50ZXJmYWNlLiBJdCBzdXBwb3J0
-cyBwaXhlbCBjbG9ja3MgaW4gdGhlIHJhbmdlIG9mIDMwLTQwIE1Iei4KPj4KPj4gVGhpcyBwYW5l
-bCBkZXRhaWxzIGNhbiBiZSBmb3VuZCBhdDoKPj4gaHR0cDovL2JvdW5kYXJ5ZGV2aWNlcy5jb20v
-cHJvZHVjdC83LTgwMHg0ODAtZGlzcGxheS8KPj4KPj4gU2lnbmVkLW9mZi1ieTogR2FyeSBCaXNz
-b24gPGdhcnkuYmlzc29uQGJvdW5kYXJ5ZGV2aWNlcy5jb20+Cj4+IC0tLQo+PiAgLi4uL2JpbmRp
-bmdzL3BhbmVsL29rYXlhLHJzODAwNDgwdF83eDBncC50eHQgICAgICAgfCAgNyArKysrKwo+PiAg
-ZHJpdmVycy9ncHUvZHJtL3BhbmVsL3BhbmVsLXNpbXBsZS5jICAgICAgICAgICAgICAgfCAzMyAr
-KysrKysrKysrKysrKysrKysrKysrCj4+ICAyIGZpbGVzIGNoYW5nZWQsIDQwIGluc2VydGlvbnMo
-KykKPj4gIGNyZWF0ZSBtb2RlIDEwMDY0NCBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGlu
-Z3MvcGFuZWwvb2theWEscnM4MDA0ODB0Xzd4MGdwLnR4dAo+Pgo+PiBkaWZmIC0tZ2l0IGEvRG9j
-dW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3BhbmVsL29rYXlhLHJzODAwNDgwdF83eDBn
-cC50eHQgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvcGFuZWwvb2theWEscnM4
-MDA0ODB0Xzd4MGdwLnR4dAo+PiBuZXcgZmlsZSBtb2RlIDEwMDY0NAo+PiBpbmRleCAwMDAwMDAw
-Li5mN2M3MjlkCj4+IC0tLSAvZGV2L251bGwKPj4gKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0
-cmVlL2JpbmRpbmdzL3BhbmVsL29rYXlhLHJzODAwNDgwdF83eDBncC50eHQKPj4gQEAgLTAsMCAr
-MSw3IEBACj4+ICtPS0FZQSBFbGVjdHJpYyBBbWVyaWNhLCBJbmMuIFJTODAwNDgwVC03WDBHUCA3
-IiBXVkdBIExDRCBwYW5lbAo+PiArCj4+ICtSZXF1aXJlZCBwcm9wZXJ0aWVzOgo+PiArLSBjb21w
-YXRpYmxlOiBzaG91bGQgYmUgIm9rYXlhLHJzODAwNDgwdF83eDBncCIKPgo+IFVuZGVyc2NvcmVz
-IGFyZSBub3QgdHlwaWNhbGx5IHVzZWQgaW4gY29tcGF0aWJsZSBzdHJpbmdzLCBzbyBJJ3ZlCj4g
-Y2hhbmdlZCB0aGlzIHRvICJva2F5YSxyczgwMDQ4MHQtN3gwZ3AiLgoKVGhhbmtzISBJJ2xsIG1h
-a2Ugc3VyZSBub3QgdG8gdXNlIHVuZGVyc2NvcmVzIGZvciBzdWNoIG5hbWVzIGluIHRoZSBmdXR1
-cmUuCgpSZWdhcmRzLApHYXJ5Cl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNr
-dG9wLm9yZwpodHRwOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJp
-LWRldmVsCg==
+On Thu, Aug 13, 2015 at 5:10 PM, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+> On Thu, 13 Aug 2015, Jassi Brar wrote:
+>
+>> On Thu, Aug 13, 2015 at 4:30 PM, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+>> > On Thu, 13 Aug 2015, Jassi Brar wrote:
+>> >
+>> >> On Thu, Aug 13, 2015 at 3:53 PM, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+>> >> > On Thu, 13 Aug 2015, Jassi Brar wrote:
+>> >> >
+>> >> >> On Thu, Aug 13, 2015 at 2:49 PM, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+>> >> >> > On Thu, 13 Aug 2015, Jassi Brar wrote:
+>> >> >>
+>> >> >> >> >> > +
+>> >> >> >> >> > +static void mbox_test_prepare_message(struct mbox_client *client, void *message)
+>> >> >> >> >> > +{
+>> >> >> >> >> > +       struct mbox_test_device *tdev = dev_get_drvdata(client->dev);
+>> >> >> >> >> > +
+>> >> >> >> >> > +       if (tdev->mmio)
+>> >> >> >> >> > +               memcpy(tdev->mmio, message, MBOX_MAX_MSG_LEN);
+>> >> >> >> >> >
+>> >> >> >> >> This is unlikely to work. Those platforms that need to send a 2 part
+>> >> >> >> >> message, they do :
+>> >> >> >> >> (a) Signal/Command/Target code via some controller register (via
+>> >> >> >> >> mbox_send_message).
+>> >> >> >> >> (b) Setup the payload in Shared-Memory (via tx_prepare).
+>> >> >> >> >>
+>> >> >> >> >> This test driver assumes both are the same. I think you have to
+>> >> >> >> >> declare something like
+>> >> >> >> >
+>> >> >> >> > This driver assumes that the framework will call client->tx_prepare()
+>> >> >> >> > first, which satisfies (b).  It then assumes controller->send_data()
+>> >> >> >> > will be invoked, which will send the platform specific
+>> >> >> >> > signal/command/target code, which then satisfies (a).
+>> >> >> >> >
+>> >> >> >> Yeah, but what would be that code? Who provides that?
+>> >> >> >>
+>> >> >> >> > In what way does it assume they are the same?
+>> >> >> >> >
+>> >> >> >> notice the 'message' pointer in
+>> >> >> >> mbox_send_message(tdev->tx_channel, message);
+>> >> >> >>     and
+>> >> >> >> memcpy(tdev->mmio, message, MBOX_MAX_MSG_LEN);
+>> >> >> >>
+>> >> >> >> >> struct mbox_test_message { /* same for TX and RX */
+>> >> >> >> >>           unsigned sig_len;
+>> >> >> >> >>           void *signal;               /* rx/tx via mailbox api */
+>> >> >> >> >>           unsigned pl_len;
+>> >> >> >> >>           void *payload;           /* rx/tx via shared-memory */
+>> >> >> >> >> };
+>> >> >> >> >
+>> >> >> >> > How do you think this should be set and use these?
+>> >> >> >> >
+>> >> >> >> The userspace would want to specify the command code (32bits or not)
+>> >> >> >> that would be passed via the fifo/register of the controller. So we
+>> >> >> >> need signal[]
+>> >> >> >>
+>> >> >> >> The data to be passed via share-memory could be provided by userspace
+>> >> >> >> via the payload[] array.
+>> >> >> >
+>> >> >> > Okay, so would the solution be two userspace files 'signal' and
+>> >> >> > 'message', so in the case of a client specified signal we can write it
+>> >> >> > into there first.
+>> >> >> >
+>> >> >> > echo 255  > signal
+>> >> >> > echo test > message
+>> >> >> >
+>> >> >> > ... or in the case where no signal is required, or the controller
+>> >> >> > driver taking care of it, we just don't write anything to signal?
+>> >> >> >
+>> >> >> file_operations.write() should parse signal and message, coming from
+>> >> >> userspace, into a local structure before routing them via
+>> >> >> mbox_send_message and tx_prepare respectively.
+>> >> >
+>> >> > Okay.  So before I code this up we should agree on syntax.
+>> >> >
+>> >> > How would you like to represent the break between signal and message?
+>> >> > Obviously ' ' would be a bad idea, as some clients may want to send
+>> >> > messages with white space contained.  How about '\t' or '\n'?
+>> >> >
+>> >> Yeah, I am not a fan of markers and flags either.
+>> >>
+>> >> Maybe we should share with userspace
+>> >>   struct mbox_test_message { /* same for TX and RX */
+>> >>            unsigned sig_len;
+>> >>            void __user *signal;        /* rx/tx via mailbox api */
+>> >>            unsigned pl_len;
+>> >>            void __user *payload;    /* rx/tx via shared-memory */
+>> >>   };
+>> >>
+>> >> First copy_from_user the structure of length sizof(struct
+>> >> mbox_test_message) and then copy_from_user length sig_len and pl_len
+>> >> from signal[] and payload[] respectively (usually ioctls would carry
+>> >> such data).
+>> >
+>> > Simplicity and ease of use should be the goals here.  Testers should
+>> > not have to write applications to use this driver.  Can we come up
+>> > with a simple/effective method that uses SYSFS/DEBUGFS please?
+>> >
+>> > The easiest way I can think of which avoids markers/separators AND the
+>> > requirement for users to have to write applications is to have two
+>> > files, 'signal' and 'message' as mentioned before.  Once both are
+>> > populated I can get this driver to draft the message appropriately and
+>> > fire it off.
+>> >
+>> And then write to more files for RX data? ... which should also be in
+>> the form of 'signal' and 'message'.
+>>
+>> BTW like for spi there is a stock application in
+>> Documentation/spi/spidev_test.c we could do the same?
+>
+> Coming from personal experience, testing drivers with (even stock)
+> applications is much more painful that simply writing/reading
+> (cat/echo) to a file in SYSFS/DEBUGFS.  Particularly if people are
+> using initramfs or thelike.  If it is possible to use SYSFS/DEBUGFS,
+> which it is in this case, then I believe that's the route we could go
+> down.
+>
+Well, where could sysfs/debugfs not be used? :)  Anyways I am ok if
+prefer debugfs.
+
+> In answer to your question; we only need those two files.  The reply
+> can be placed back into 'message' and can be read from there.
+>
+Testing shouldn't be restricted to 'send command and receive reply'.
+What if Linux only listens to broadcasts from the remote? Who knows
+someone might want to (ab)use this test client to implement userspace
+handler of remote commands?
+So please see RX to be independent of TX.
+
+Thanks.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
