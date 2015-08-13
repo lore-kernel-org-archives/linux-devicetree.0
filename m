@@ -1,261 +1,58 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH v2 5/6] mailbox: Add generic mechanism for testing
- Mailbox Controllers
-Date: Thu, 13 Aug 2015 11:23:35 +0100
-Message-ID: <20150813102335.GC8782@x1>
-References: <1437990272-23111-1-git-send-email-lee.jones@linaro.org>
- <1437990272-23111-6-git-send-email-lee.jones@linaro.org>
- <CABb+yY20nQbiEEZeRvWTMUsJ2qgwRn8CrWvnFDSB-b1dgVaAuw@mail.gmail.com>
- <20150812102328.GD18282@x1>
- <CABb+yY0A74Vy3-KOvj0URU_4zb2FAC7Yp3gmEwnFaBrD0mzt0w@mail.gmail.com>
- <20150813091914.GB8782@x1>
- <CABb+yY0cgbtM68-E_Xqgh5O6GRLXESYTLa5WcAwUBoVL3ufrxA@mail.gmail.com>
+From: Wei Xu <xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
+Subject: Re: [RFC PATCH v4 6/9] arm: hisi_defconfig: remove CONFIG_MMC_DW_IDMAC
+Date: Thu, 13 Aug 2015 11:18:10 +0100
+Message-ID: <55CC6EE2.4070308@hisilicon.com>
+References: <1438843469-23807-1-git-send-email-shawn.lin@rock-chips.com> <1438843553-24058-1-git-send-email-shawn.lin@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CABb+yY0cgbtM68-E_Xqgh5O6GRLXESYTLa5WcAwUBoVL3ufrxA@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Jassi Brar <jassisinghbrar@gmail.com>
-Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, kernel@stlinux.com, Devicetree List <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1438843553-24058-1-git-send-email-shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, jh80.chung-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+Cc: heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, Vineet.Gupta1-HKixBCOQz3hWk0Htik3J/w@public.gmane.org, Joachim Eastwood <manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexey Brodkin <abrodkin-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, Kukjin Kim <kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Jun Nie <jun.nie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, Govindraj Raja <govindraj.raja-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Yanhaifeng <yanhaifeng-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Linuxarm <linuxarm-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 13 Aug 2015, Jassi Brar wrote:
 
-> On Thu, Aug 13, 2015 at 2:49 PM, Lee Jones <lee.jones@linaro.org> wro=
-te:
-> > On Thu, 13 Aug 2015, Jassi Brar wrote:
->=20
-> >> >> > +
-> >> >> > +static void mbox_test_prepare_message(struct mbox_client *cl=
-ient, void *message)
-> >> >> > +{
-> >> >> > +       struct mbox_test_device *tdev =3D dev_get_drvdata(cli=
-ent->dev);
-> >> >> > +
-> >> >> > +       if (tdev->mmio)
-> >> >> > +               memcpy(tdev->mmio, message, MBOX_MAX_MSG_LEN)=
-;
-> >> >> >
-> >> >> This is unlikely to work. Those platforms that need to send a 2=
- part
-> >> >> message, they do :
-> >> >> (a) Signal/Command/Target code via some controller register (vi=
-a
-> >> >> mbox_send_message).
-> >> >> (b) Setup the payload in Shared-Memory (via tx_prepare).
-> >> >>
-> >> >> This test driver assumes both are the same. I think you have to
-> >> >> declare something like
-> >> >
-> >> > This driver assumes that the framework will call client->tx_prep=
-are()
-> >> > first, which satisfies (b).  It then assumes controller->send_da=
-ta()
-> >> > will be invoked, which will send the platform specific
-> >> > signal/command/target code, which then satisfies (a).
-> >> >
-> >> Yeah, but what would be that code? Who provides that?
-> >>
-> >> > In what way does it assume they are the same?
-> >> >
-> >> notice the 'message' pointer in
-> >> mbox_send_message(tdev->tx_channel, message);
-> >>     and
-> >> memcpy(tdev->mmio, message, MBOX_MAX_MSG_LEN);
-> >>
-> >> >> struct mbox_test_message { /* same for TX and RX */
-> >> >>           unsigned sig_len;
-> >> >>           void *signal;               /* rx/tx via mailbox api =
-*/
-> >> >>           unsigned pl_len;
-> >> >>           void *payload;           /* rx/tx via shared-memory *=
-/
-> >> >> };
-> >> >
-> >> > How do you think this should be set and use these?
-> >> >
-> >> The userspace would want to specify the command code (32bits or no=
-t)
-> >> that would be passed via the fifo/register of the controller. So w=
-e
-> >> need signal[]
-> >>
-> >> The data to be passed via share-memory could be provided by usersp=
-ace
-> >> via the payload[] array.
-> >
-> > Okay, so would the solution be two userspace files 'signal' and
-> > 'message', so in the case of a client specified signal we can write=
- it
-> > into there first.
-> >
-> > echo 255  > signal
-> > echo test > message
-> >
-> > ... or in the case where no signal is required, or the controller
-> > driver taking care of it, we just don't write anything to signal?
-> >
-> file_operations.write() should parse signal and message, coming from
-> userspace, into a local structure before routing them via
-> mbox_send_message and tx_prepare respectively.
 
-Okay.  So before I code this up we should agree on syntax.
+On 8/6/2015 7:45 AM, Shawn Lin wrote:
+> DesignWare MMC Controller's transfer mode should be decided
+> at runtime instead of compile-time. So we remove this config
+> option and read dw_mmc's register to select DMA master.
+> 
+> Signed-off-by: Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 
-How would you like to represent the break between signal and message?
-Obviously ' ' would be a bad idea, as some clients may want to send
-messages with white space contained.  How about '\t' or '\n'?
+Acked-by: Wei Xu <xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
 
-> > Just for clarification, in the case where a signal is required, do
-> > clients usually pass that through mbox_send_message() too?
-> >
-> >   mbox_send_message(tdev->tx_channel, signal);
-> >   mbox_send_message(tdev->tx_channel, message);
-> >
-> No. Command/Signal code is passed via mbox_send_message(signal). The
-> payload is passed via Shared-Memory during tx_prepare(message)
+> ---
+> 
+> Changes in v4: None
+> Changes in v3: None
+> Changes in v2: None
+> 
+>  arch/arm/configs/hisi_defconfig | 1 -
+>  1 file changed, 1 deletion(-)
+> 
+> diff --git a/arch/arm/configs/hisi_defconfig b/arch/arm/configs/hisi_defconfig
+> index 5997dbc..b2e340b 100644
+> --- a/arch/arm/configs/hisi_defconfig
+> +++ b/arch/arm/configs/hisi_defconfig
+> @@ -69,7 +69,6 @@ CONFIG_NOP_USB_XCEIV=y
+>  CONFIG_MMC=y
+>  CONFIG_RTC_CLASS=y
+>  CONFIG_MMC_DW=y
+> -CONFIG_MMC_DW_IDMAC=y
+>  CONFIG_MMC_DW_PLTFM=y
+>  CONFIG_RTC_DRV_PL031=y
+>  CONFIG_DMADEVICES=y
+> 
 
-Okay, I see.  Thanks for the clarification.
+Thanks!
 
-> >> >> > +static void mbox_test_message_sent(struct mbox_client *clien=
-t,
-> >> >> > +                                  void *message, int r)
-> >> >> > +{
-> >> >> > +       if (r)
-> >> >> > +               dev_warn(client->dev,
-> >> >> > +                        "Client: Message could not be sent: =
-%d\n", r);
-> >> >> > +       else
-> >> >> > +               dev_info(client->dev,
-> >> >> > +                        "Client: Message sent\n");
-> >> >> > +}
-> >> >> > +
-> >> >> > +static struct mbox_chan *
-> >> >> > +mbox_test_request_channel(struct platform_device *pdev, cons=
-t char *name)
-> >> >> > +{
-> >> >> > +       struct mbox_client *client;
-> >> >> > +
-> >> >> > +       client =3D devm_kzalloc(&pdev->dev, sizeof(*client), =
-GFP_KERNEL);
-> >> >> > +       if (!client)
-> >> >> > +               return ERR_PTR(-ENOMEM);
-> >> >> > +
-> >> >> > +       client->dev             =3D &pdev->dev;
-> >> >> > +       client->rx_callback     =3D mbox_test_receive_message=
-;
-> >> >> > +       client->tx_prepare      =3D mbox_test_prepare_message=
-;
-> >> >> > +       client->tx_done         =3D mbox_test_message_sent;
-> >> >> > +       client->tx_block        =3D true;
-> >> >> > +       client->knows_txdone    =3D false;
-> >> >> > +       client->tx_tout         =3D 500;
-> >> >> > +
-> >> >> > +       return mbox_request_channel_byname(client, name);
-> >> >> > +}
-> >> >> > +
-> >> >> > +static int mbox_test_probe(struct platform_device *pdev)
-> >> >> > +{
-> >> >> > +       struct mbox_test_device *tdev;
-> >> >> > +       struct resource *res;
-> >> >> > +       int ret;
-> >> >> > +
-> >> >> > +       tdev =3D devm_kzalloc(&pdev->dev, sizeof(*tdev), GFP_=
-KERNEL);
-> >> >> > +       if (!tdev)
-> >> >> > +               return -ENOMEM;
-> >> >> > +
-> >> >> > +       /* It's okay for MMIO to be NULL */
-> >> >> > +       res =3D platform_get_resource(pdev, IORESOURCE_MEM, 0=
-);
-> >> >> > +       tdev->mmio =3D devm_ioremap_resource(&pdev->dev, res)=
-;
-> >> >> > +       if (IS_ERR(tdev->mmio))
-> >> >> > +               tdev->mmio =3D NULL;
-> >> >> > +
-> >> >> > +       tdev->tx_channel =3D mbox_test_request_channel(pdev, =
-"tx");
-> >> >> > +       if (IS_ERR(tdev->tx_channel))
-> >> >> > +               return PTR_ERR(tdev->tx_channel);
-> >> >> > +
-> >> >> > +       tdev->rx_channel =3D mbox_test_request_channel(pdev, =
-"rx");
-> >> >> > +       if (IS_ERR(tdev->rx_channel))
-> >> >> > +               return PTR_ERR(tdev->rx_channel);
-> >> >> > +
-> >> >> Should it really fail on TX or RX only clients?
-> >> >
-> >> > Good question.  Probably not, but I guess we'd need a flag for t=
-hat.
-> >> >
-> >> Just assume 1 channel. You can't make it receive if the controller
-> >> can't do rx, so the userspace will simply block on read requests. =
-And
-> >> you can't make the controller send, if it can't. So any write atte=
-mpt
-> >> will simply return with an error.
-> >>  And we are going to need very platform specific knowledge to exec=
-ute
-> >> the tests. It's not like some loop enumerating all possible
-> >> combinations of parameters that the api must pass... so we are goo=
-d.
-> >
-> > I'm guessing most tests will be some kind of send-reply test, so we=
-'d
-> > need two channels for that.  I can make it so the driver does not f=
-ail
-> > if 'tx' or 'rx' is missing, but will fail if both are.
-> >
-> I have seen more channels to be rx+tx, than rx/tx only. And for latte=
-r
-> case the user should run 2 test threads, one each for RX and TX.
+Best Regards,
+Wei
 
-Okay, makes sense to me.
-
-> > Bare in mind that this test driver isn't designed to cover all of t=
-he
-> > corner cases, but more designed as a helpful boiler plate where it
-> > will tick some use-case boxes, but is clear enough to be hacked aro=
-und
-> > by other vendors who have different requirements.
-> >
-> > With regards to you comments on userspace; I suggest that whoever i=
-s
-> > testing the controller will know it and will not attempt to check f=
-or
-> > a reply from a controller (or co-proc) which is write-only.
-> >
-> That's actually my point :)
-> When the userspace already has all that platform specific knowledge,
-> why check for 'valid' usage in controller driver? Simply reject any
-> request that the controller isn't capable of (which is practically
-> never supposed to happen).
-
-This conversation doesn't really belong in this thread; but seeing as
-you bought it up ...
-
-I absolutely and fundamentally disagree that the controller shouldn't
-do error checking during mbox_request_channel(). It is
-mbox_request_channel() that should fail on a known bad configuration,
-rather than pass back a known rotten apple and wait for that it to be
-eaten (appreciate I've gone a little overboard with the analogies)
-before flagging it up.  And for what purpose?  To make the controller
-driver a little simpler?  I do hope that you do see sense on this one
-and allow me to keep the error checking in the driver!
-
-If you have a reply to this, please do so one the driver thread, so
-it's easier to follow.
-
-Secondly, a reply more akin to this thread.  The guys using _this_
-driver are more likely to be Controller authors.  These are the chaps
-I was speaking about that are going to know the platform specifics of
-the controller.  The error checking in mbox_request_channel() is
-designed for 'client' authors, who are more likely to be requesting
-invalid configurations.
-
---=20
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-=46ollow Linaro: Facebook | Twitter | Blog
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
