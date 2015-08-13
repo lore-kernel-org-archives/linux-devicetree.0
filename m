@@ -1,318 +1,734 @@
-From: Eric Anholt <eric@anholt.net>
-Subject: Re: [PATCH 3/7] drm/vc4: Add KMS support for Raspberry Pi.
-Date: Thu, 13 Aug 2015 13:44:03 -0700
-Message-ID: <87d1yqq5po.fsf@eliezer.anholt.net>
-References: <1439427380-2436-1-git-send-email-eric@anholt.net>
- <1439427380-2436-4-git-send-email-eric@anholt.net>
- <20150813075141.GX17734@phenom.ffwll.local>
+From: Moritz Fischer <moritz.fischer-+aYTwkv1SeIAvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v10 4/8] fpga manager: add driver for socfpga fpga manager
+Date: Thu, 13 Aug 2015 13:50:30 -0700
+Message-ID: <CAAtXAHeC-UFksiiNOi6O45yoMFV=YpfBRAF6LAqd3+gmrf39_A@mail.gmail.com>
+References: <1439487452-23977-1-git-send-email-atull@opensource.altera.com>
+	<1439487452-23977-6-git-send-email-atull@opensource.altera.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============0846670786=="
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20150813075141.GX17734@phenom.ffwll.local>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Daniel Vetter <daniel@ffwll.ch>
-Cc: devicetree@vger.kernel.org, Stephen Warren <swarren@wwwdotorg.org>, Lee Jones <lee@kernel.org>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-rpi-kernel@lists.infradead.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1439487452-23977-6-git-send-email-atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Alan Tull <atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
+Cc: Greg KH <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>, hpa-YMNOUZJC4hwAvxtiuMwx3w@public.gmane.org, Michal Simek <monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org>, Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, rdunlap-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, iws-lulEs6mt1IksTUYHLfqkUA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, pavel-ynQEQJNshbs@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Philip Balister <philip-6RQC9ztksjxg9hUCZPvPmw@public.gmane.org>, rubini-kaDoWcXyVrEAvxtiuMwx3w@public.gmane.org, s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org, kyle.teske-acOepvfBmUk@public.gmane.org, Nicolas Pitre <nico-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, balbi-l0cyMroinI0@public.gmane.org, m.chehab-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, David Brown <davidb-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org, cesarb-PWySMVKUnqmsTnJN9+BGXg@public.gmane.org, sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland
 List-Id: devicetree@vger.kernel.org
 
---===============0846670786==
-Content-Type: multipart/signed; boundary="=-=-=";
-	micalg=pgp-sha512; protocol="application/pgp-signature"
+Acked-by: Moritz Fischer <moritz.fischer-+aYTwkv1SeIAvxtiuMwx3w@public.gmane.org>
 
---=-=-=
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-
-Daniel Vetter <daniel@ffwll.ch> writes:
-
-> On Wed, Aug 12, 2015 at 05:56:16PM -0700, Eric Anholt wrote:
->> This is the start of a full VC4 driver.  Right now this just supports
->> configuring the display using a pre-existing video mode (because
->> changing the pixel clock isn't available yet, and doesn't work when it
->> is).  However, this is enough for fbcon and bringing up X using
->> xf86-video-modesetting.
->>=20
->> Signed-off-by: Eric Anholt <eric@anholt.net>
->> ---
->>  drivers/gpu/drm/Kconfig           |   2 +
->>  drivers/gpu/drm/Makefile          |   1 +
->>  drivers/gpu/drm/vc4/Kconfig       |  14 +
->>  drivers/gpu/drm/vc4/Makefile      |  18 ++
->>  drivers/gpu/drm/vc4/vc4_bo.c      |  54 ++++
->>  drivers/gpu/drm/vc4/vc4_crtc.c    | 583 +++++++++++++++++++++++++++++++=
-+++
->>  drivers/gpu/drm/vc4/vc4_debugfs.c |  38 +++
->>  drivers/gpu/drm/vc4/vc4_drv.c     | 249 +++++++++++++++
->>  drivers/gpu/drm/vc4/vc4_drv.h     | 123 +++++++
->>  drivers/gpu/drm/vc4/vc4_hdmi.c    | 651 +++++++++++++++++++++++++++++++=
-+++++++
->>  drivers/gpu/drm/vc4/vc4_hvs.c     | 172 ++++++++++
->>  drivers/gpu/drm/vc4/vc4_kms.c     |  84 +++++
->>  drivers/gpu/drm/vc4/vc4_plane.c   | 320 +++++++++++++++++++
->>  drivers/gpu/drm/vc4/vc4_regs.h    | 562 ++++++++++++++++++++++++++++++++
->>  14 files changed, 2871 insertions(+)
->>  create mode 100644 drivers/gpu/drm/vc4/Kconfig
->>  create mode 100644 drivers/gpu/drm/vc4/Makefile
->>  create mode 100644 drivers/gpu/drm/vc4/vc4_bo.c
->>  create mode 100644 drivers/gpu/drm/vc4/vc4_crtc.c
->>  create mode 100644 drivers/gpu/drm/vc4/vc4_debugfs.c
->>  create mode 100644 drivers/gpu/drm/vc4/vc4_drv.c
->>  create mode 100644 drivers/gpu/drm/vc4/vc4_drv.h
->>  create mode 100644 drivers/gpu/drm/vc4/vc4_hdmi.c
->>  create mode 100644 drivers/gpu/drm/vc4/vc4_hvs.c
->>  create mode 100644 drivers/gpu/drm/vc4/vc4_kms.c
->>  create mode 100644 drivers/gpu/drm/vc4/vc4_plane.c
->>  create mode 100644 drivers/gpu/drm/vc4/vc4_regs.h
+On Thu, Aug 13, 2015 at 10:37 AM,  <atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org> wrote:
+> From: Alan Tull <atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
 >
-> Made a quick pass and found a few things to update to latest drm
-> developments. Of course didn't look at the hardware details since no clue,
-> but looks really nice overall.
-> -Daniel
-
-If you have anything about the hardware that you were curious about, I'd
-be interested in trying to explain them in the comments to the extent
-that I can.  It's unfortunate that we haven't shipped docs for the
-display side of things, but had to do a lot of reading of the verilog
-just to get this far, anyway.
-
->> diff --git a/drivers/gpu/drm/Kconfig b/drivers/gpu/drm/Kconfig
->> index c46ca31..1730a76 100644
->> --- a/drivers/gpu/drm/Kconfig
->> +++ b/drivers/gpu/drm/Kconfig
->> @@ -240,3 +240,5 @@ source "drivers/gpu/drm/sti/Kconfig"
->>  source "drivers/gpu/drm/amd/amdkfd/Kconfig"
->>=20=20
->>  source "drivers/gpu/drm/imx/Kconfig"
->> +
->> +source "drivers/gpu/drm/vc4/Kconfig"
->> diff --git a/drivers/gpu/drm/Makefile b/drivers/gpu/drm/Makefile
->> index 5713d05..b991ac5 100644
->> --- a/drivers/gpu/drm/Makefile
->> +++ b/drivers/gpu/drm/Makefile
->> @@ -42,6 +42,7 @@ obj-$(CONFIG_DRM_MGA)	+=3D mga/
->>  obj-$(CONFIG_DRM_I810)	+=3D i810/
->>  obj-$(CONFIG_DRM_I915)  +=3D i915/
->>  obj-$(CONFIG_DRM_MGAG200) +=3D mgag200/
->> +obj-$(CONFIG_DRM_VC4)  +=3D vc4/
->>  obj-$(CONFIG_DRM_CIRRUS_QEMU) +=3D cirrus/
->>  obj-$(CONFIG_DRM_SIS)   +=3D sis/
->>  obj-$(CONFIG_DRM_SAVAGE)+=3D savage/
->> diff --git a/drivers/gpu/drm/vc4/Kconfig b/drivers/gpu/drm/vc4/Kconfig
->> new file mode 100644
->> index 0000000..130cc94
->> --- /dev/null
->> +++ b/drivers/gpu/drm/vc4/Kconfig
->> @@ -0,0 +1,14 @@
->> +config DRM_VC4
->> +	tristate "Broadcom VC4 Graphics"
->> +	depends on ARCH_BCM2835
->> +	depends on DRM
->> +	select DRM_KMS_HELPER
->> +	select DRM_KMS_FB_HELPER
->> +	select DRM_KMS_CMA_HELPER
+> Add driver to fpga manager framework to allow configuration
+> of FPGA in Altera SoCFPGA parts.
 >
-> drm-misc/linux-next already has Archit's patches to enable/disable fbdev
-> in the core code, so you don't need to bother about these selects here any
-> more, it'll no-op out if drm fbdev emulation isn't enabled. Since you're
-> reusing cma fbdev helpers I don't think there's any need for other changes
-> because of this.
-
-It sounds like I should rebase on that, then?
-
->> +	help
->> +	  Choose this option if you have a system that has a Broadcom
->> +	  VC4 GPU, such as the Raspberry Pi or other BCM2708/BCM2835.
->> +
->> +	  This driver requires that "avoid_warnings=3D2" be present in
->> +	  the config.txt for the firmware, to keep it from smashing
->> +	  our display setup.
->> diff --git a/drivers/gpu/drm/vc4/Makefile b/drivers/gpu/drm/vc4/Makefile
->> new file mode 100644
->> index 0000000..4aa07ca
->> --- /dev/null
->> +++ b/drivers/gpu/drm/vc4/Makefile
->> @@ -0,0 +1,18 @@
->> +ccflags-y :=3D -Iinclude/drm
->> +
->> +# Please keep these build lists sorted!
->> +
->> +# core driver code
->> +vc4-y :=3D \
->> +	vc4_bo.o \
->> +	vc4_crtc.o \
->> +	vc4_drv.o \
->> +	vc4_kms.o \
->> +	vc4_hdmi.o \
->> +	vc4_hvs.o \
->> +	vc4_plane.o \
->> +	$()
->> +
->> +vc4-$(CONFIG_DEBUG_FS) +=3D vc4_debugfs.o
->> +
->> +obj-$(CONFIG_DRM_VC4)  +=3D vc4.o
->> diff --git a/drivers/gpu/drm/vc4/vc4_bo.c b/drivers/gpu/drm/vc4/vc4_bo.c
->> new file mode 100644
->> index 0000000..fee8cac
->> --- /dev/null
->> +++ b/drivers/gpu/drm/vc4/vc4_bo.c
->> @@ -0,0 +1,54 @@
->> +/*
->> + *  Copyright =C2=A9 2015 Broadcom
->> + *
->> + * This program is free software; you can redistribute it and/or modify
->> + * it under the terms of the GNU General Public License version 2 as
->> + * published by the Free Software Foundation.
->> + */
->> +
->> +/* DOC: VC4 GEM BO management support.
->> + *
->> + * The VC4 GPU architecture (both scanout and rendering) has direct
->> + * access to system memory with no MMU in between.  To support it, we
->> + * use the GEM CMA helper functions to allocate contiguous ranges of
->> + * physical memory for our BOs.
->> + */
+> Signed-off-by: Alan Tull <atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
+> Acked-by: Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+> ---
+> v2: fpga_manager struct now contains struct device
+>     fpga_manager_register parameters now take device
 >
-> Since you're doing kerneldoc considered pulling it all into a new vc4
-> section in the drm docbook template?
-
-I hadn't found the docbook template.  Interesting.  I'll try to cook up
-some general vc4 docs for that.  I think that could be a separate
-commit, though?
-
->> +
->> +#include "vc4_drv.h"
->> +
->> +struct vc4_bo *vc4_bo_create(struct drm_device *dev, size_t size)
->> +{
->> +	struct drm_gem_cma_object *cma_obj;
->> +
->> +	cma_obj =3D drm_gem_cma_create(dev, size);
->> +	if (IS_ERR(cma_obj))
->> +		return NULL;
->> +	else
->> +		return to_vc4_bo(&cma_obj->base);
->> +}
->> +
->> +int vc4_dumb_create(struct drm_file *file_priv,
->> +		    struct drm_device *dev,
->> +		    struct drm_mode_create_dumb *args)
->> +{
->> +	int min_pitch =3D DIV_ROUND_UP(args->width * args->bpp, 8);
->> +	struct vc4_bo *bo =3D NULL;
->> +	int ret;
->> +
->> +	if (args->pitch < min_pitch)
->> +		args->pitch =3D min_pitch;
->> +
->> +	if (args->size < args->pitch * args->height)
->> +		args->size =3D args->pitch * args->height;
->> +
->> +	mutex_lock(&dev->struct_mutex);
->> +	bo =3D vc4_bo_create(dev, roundup(args->size, PAGE_SIZE));
->> +	mutex_unlock(&dev->struct_mutex);
+> v3: skip a version to align versions
 >
-> I'm on a struct_mutex crusade (trying to get rid of it in core and allow
-> drivers to live without it). On a quick look there doesn't seem to be
-> anything that needs struct_mutex here, so please just remove it. If there
-> is indeed something vc4-internal you want to protect, please use your own
-> driver-internal mutex (e.g. for drm_mm or command submission or whatever).
+> v4: move to drivers/staging
 >
-> btw the last bit in the drm core for modern drivers that needs
-> struct_mutex is mmap_offset gem object lookup. I plan to replace that with
-> kref_get_unless_zero trickery, which would make the core and a lot of
-> drivers struct_mutex free and so relegate it mostly to a legacy role (and
-> can be forgotten).
-
-Struct mutex is here because this code is from the V3D series, with the
-in-kernel BO cache ripped out (it turns out that the CMA allocator is
-slow, and you can't just userspace cache since we have to do allocations
-within the kernel to the tune of a couple per draw and that's too much).
-
-I'll pull the mutex calls out for now until the cache stuff is
-submitted.
-
->> +static bool vc4_crtc_mode_fixup(struct drm_crtc *crtc,
->> +				const struct drm_display_mode *mode,
->> +				struct drm_display_mode *adjusted_mode)
->> +{
->> +	return true;
->> +}
+> v5: fix array_size.cocci warnings
+>     fix platform_no_drv_owner.cocci warnings
+>     Remove .owner = THIS_MODULE
+>     include asm/irq.h
+>     clean up list of includes
+>     use altera_fpga_reset for ops
+>     use enum fpga_mgr_states or u32 as needed
+>     use devm_request_irq
+>     check irq <= 0 instead of == NO_IRQ
+>     Use ARRAY_SIZE
+>     rename altera -> socfpga
+>     static const socfpga_fpga_ops
+>     header moved to linux/fpga/ folder
+>     remove ifdef'ed code
+>     use platform_get_resource and platform_get_irq
+>     move .probe and .remove lines adjacent
+>     use module_platform_driver
+>     use __maybe_unused
+>     only need to 'if (IS_ENABLED(CONFIG_REGULATOR))' in one fn
+>     fix "unsigned 'mode' is never < 0"
 >
-> mode_fixup on crtcs is optional since 840bfe953384a and I just merged a
-> patch to make it optional for encoders too (when using atomic helpers
-> which you do). You can remove them both.
-
-Great!  It felt like there was a *lot* of boilerplate when I was first
-writing this stuff, and things are way better than they used to be.
-
->> +static int vc4_drm_load(struct drm_device *dev, unsigned long flags)
->> +{
->> +	struct vc4_dev *vc4;
->> +	int ret;
->> +
->> +	vc4 =3D devm_kzalloc(dev->dev, sizeof(*vc4), GFP_KERNEL);
->> +	if (!vc4)
->> +		return -ENOMEM;
->> +
->> +	dev_set_drvdata(dev->dev, dev);
->> +	vc4->dev =3D dev;
->> +	dev->dev_private =3D vc4;
->> +
->> +	drm_mode_config_init(dev);
->> +
->> +	ret =3D component_bind_all(dev->dev, dev);
->> +	if (ret)
->> +		return ret;
->> +
->> +	vc4_kms_load(dev);
->> +
->> +	return 0;
->> +}
+> v6: return error for (unused) default of case statement
 >
-> ->load has backwards init ordering (we register public interfaces before
-> calling it, yay) because backwards compat. Hence deprecated, please use
-> drm_dev_alloc(); ... driver init including drm_dev_set_unique();
-> drm_dev_register(); instead and drop ->load.
-
-Will do.
-
---=-=-=
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBCgAGBQJVzQGUAAoJELXWKTbR/J7ojOEP/0/7h0tv8tyHDWe4tyDrNvax
-/oedU6OgxAd8u5uuU2JJ9OFEF8TN8o9Z9ncBJRfM7qrYFb0rElJGAJKLQ4ZFJ/z7
-QZHbfc5ECUf1Yfhm3ASOw15vKKEE2+8NFd/7pdlbaSUqVQ03TAH3YjZFISLzYg6i
-bVY0paEET7rXntF9Sql/9N2XShFVf1z/a4iPNNRJBKweTjSMEMxdyD0dOpIFCJT/
-8Cpt0dH8eyBtkDVbIEVtKr6mmUH+k3jYHHEY92GKi8caeXQozWKRy382LneC0hdA
-fZgIdefqVk6ZqsTcukjIpGQiX4o87xYfRUGohv2t1e+0YE1N8dwhapdh0SPX7kdF
-cwYsLAsCEwxMBrKHshxz77AcKIus5dTRj6SKUQQatqQlhrN5yUFTO+9Hr2ranR9m
-wFadWQykKt/OMUhiozMj1+nbNx5ANHTvsuzDJ1c/K0CwutMQwkGD11YJ6AYzsA1n
-wNcaEIaiIKC4n/fpDVK3P2o5iu+fesKQj5mAG0Pf0gLR1S8KQXuBrVcs1+14lsm0
-e3hqVSjFcfq5QbhZkPhI7wdtctgOn0owGbuAEbQ9qIRmK2fr8PuJSuIZSMyCC8i4
-7Bhj+ZGbNqyYASiMGYqmZ+B2v1aKOQ5lVsWBvaqISUARLIubVpPoTuX0OFn6gwRf
-AN8dWnJA+U5IIxgG89CI
-=UKfA
------END PGP SIGNATURE-----
---=-=-=--
-
---===============0846670786==
-Content-Type: text/plain; charset="utf-8"
-MIME-Version: 1.0
-Content-Transfer-Encoding: base64
-Content-Disposition: inline
-
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVs
-IG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHA6Ly9saXN0
-cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
-
---===============0846670786==--
+> v7: PTR_ERR should access the value just tested by IS_ERR
+>
+> v8: change compatible string to be more chip specific
+>
+> v9: update copyright year
+>     remove suspend/resume support and regulators
+>     use updated fn names for register/unregister
+>     use updated params for write_init
+>     check for partial reconfiguration request
+>
+> v10: make tristate in Kconfig
+>      clean up include
+>      add flags param to write_complete()
+>      move do drivers/fpga
+> ---
+>  drivers/fpga/Kconfig   |   10 +
+>  drivers/fpga/Makefile  |    1 +
+>  drivers/fpga/socfpga.c |  616 ++++++++++++++++++++++++++++++++++++++++++++++++
+>  3 files changed, 627 insertions(+)
+>  create mode 100644 drivers/fpga/socfpga.c
+>
+> diff --git a/drivers/fpga/Kconfig b/drivers/fpga/Kconfig
+> index f1f1f6d..dfc1f1e 100644
+> --- a/drivers/fpga/Kconfig
+> +++ b/drivers/fpga/Kconfig
+> @@ -11,4 +11,14 @@ config FPGA
+>           kernel.  The FPGA framework adds a FPGA manager class and FPGA
+>           manager drivers.
+>
+> +if FPGA
+> +
+> +config FPGA_MGR_SOCFPGA
+> +       tristate "Altera SOCFPGA FPGA Manager"
+> +       depends on ARCH_SOCFPGA
+> +       help
+> +         FPGA manager driver support for Altera SOCFPGA.
+> +
+> +endif # FPGA
+> +
+>  endmenu
+> diff --git a/drivers/fpga/Makefile b/drivers/fpga/Makefile
+> index 3313c52..ba6c5c5 100644
+> --- a/drivers/fpga/Makefile
+> +++ b/drivers/fpga/Makefile
+> @@ -6,3 +6,4 @@
+>  obj-$(CONFIG_FPGA)                     += fpga-mgr.o
+>
+>  # FPGA Manager Drivers
+> +obj-$(CONFIG_FPGA_MGR_SOCFPGA)         += socfpga.o
+> diff --git a/drivers/fpga/socfpga.c b/drivers/fpga/socfpga.c
+> new file mode 100644
+> index 0000000..706b80d
+> --- /dev/null
+> +++ b/drivers/fpga/socfpga.c
+> @@ -0,0 +1,616 @@
+> +/*
+> + * FPGA Manager Driver for Altera SOCFPGA
+> + *
+> + *  Copyright (C) 2013-2015 Altera Corporation
+> + *
+> + * This program is free software; you can redistribute it and/or modify it
+> + * under the terms and conditions of the GNU General Public License,
+> + * version 2, as published by the Free Software Foundation.
+> + *
+> + * This program is distributed in the hope it will be useful, but WITHOUT
+> + * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+> + * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
+> + * more details.
+> + *
+> + * You should have received a copy of the GNU General Public License along with
+> + * this program.  If not, see <http://www.gnu.org/licenses/>.
+> + */
+> +#include <linux/completion.h>
+> +#include <linux/delay.h>
+> +#include <linux/fpga/fpga-mgr.h>
+> +#include <linux/interrupt.h>
+> +#include <linux/io.h>
+> +#include <linux/module.h>
+> +#include <linux/of_address.h>
+> +#include <linux/of_irq.h>
+> +#include <linux/pm.h>
+> +
+> +/* Register offsets */
+> +#define SOCFPGA_FPGMGR_STAT_OFST                               0x0
+> +#define SOCFPGA_FPGMGR_CTL_OFST                                        0x4
+> +#define SOCFPGA_FPGMGR_DCLKCNT_OFST                            0x8
+> +#define SOCFPGA_FPGMGR_DCLKSTAT_OFST                           0xc
+> +#define SOCFPGA_FPGMGR_GPIO_INTEN_OFST                         0x830
+> +#define SOCFPGA_FPGMGR_GPIO_INTMSK_OFST                                0x834
+> +#define SOCFPGA_FPGMGR_GPIO_INTTYPE_LEVEL_OFST                 0x838
+> +#define SOCFPGA_FPGMGR_GPIO_INT_POL_OFST                       0x83c
+> +#define SOCFPGA_FPGMGR_GPIO_INTSTAT_OFST                       0x840
+> +#define SOCFPGA_FPGMGR_GPIO_RAW_INTSTAT_OFST                   0x844
+> +#define SOCFPGA_FPGMGR_GPIO_PORTA_EOI_OFST                     0x84c
+> +#define SOCFPGA_FPGMGR_GPIO_EXT_PORTA_OFST                     0x850
+> +
+> +/* Register bit defines */
+> +/* SOCFPGA_FPGMGR_STAT register mode field values */
+> +#define SOCFPGA_FPGMGR_STAT_POWER_UP                           0x0 /*ramping*/
+> +#define SOCFPGA_FPGMGR_STAT_RESET                              0x1
+> +#define SOCFPGA_FPGMGR_STAT_CFG                                        0x2
+> +#define SOCFPGA_FPGMGR_STAT_INIT                               0x3
+> +#define SOCFPGA_FPGMGR_STAT_USER_MODE                          0x4
+> +#define SOCFPGA_FPGMGR_STAT_UNKNOWN                            0x5
+> +#define SOCFPGA_FPGMGR_STAT_STATE_MASK                         0x7
+> +/* This is a flag value that doesn't really happen in this register field */
+> +#define SOCFPGA_FPGMGR_STAT_POWER_OFF                          0x0
+> +
+> +#define MSEL_PP16_FAST_NOAES_NODC                              0x0
+> +#define MSEL_PP16_FAST_AES_NODC                                        0x1
+> +#define MSEL_PP16_FAST_AESOPT_DC                               0x2
+> +#define MSEL_PP16_SLOW_NOAES_NODC                              0x4
+> +#define MSEL_PP16_SLOW_AES_NODC                                        0x5
+> +#define MSEL_PP16_SLOW_AESOPT_DC                               0x6
+> +#define MSEL_PP32_FAST_NOAES_NODC                              0x8
+> +#define MSEL_PP32_FAST_AES_NODC                                        0x9
+> +#define MSEL_PP32_FAST_AESOPT_DC                               0xa
+> +#define MSEL_PP32_SLOW_NOAES_NODC                              0xc
+> +#define MSEL_PP32_SLOW_AES_NODC                                        0xd
+> +#define MSEL_PP32_SLOW_AESOPT_DC                               0xe
+> +#define SOCFPGA_FPGMGR_STAT_MSEL_MASK                          0x000000f8
+> +#define SOCFPGA_FPGMGR_STAT_MSEL_SHIFT                         3
+> +
+> +/* SOCFPGA_FPGMGR_CTL register */
+> +#define SOCFPGA_FPGMGR_CTL_EN                                  0x00000001
+> +#define SOCFPGA_FPGMGR_CTL_NCE                                 0x00000002
+> +#define SOCFPGA_FPGMGR_CTL_NCFGPULL                            0x00000004
+> +
+> +#define CDRATIO_X1                                             0x00000000
+> +#define CDRATIO_X2                                             0x00000040
+> +#define CDRATIO_X4                                             0x00000080
+> +#define CDRATIO_X8                                             0x000000c0
+> +#define SOCFPGA_FPGMGR_CTL_CDRATIO_MASK                                0x000000c0
+> +
+> +#define SOCFPGA_FPGMGR_CTL_AXICFGEN                            0x00000100
+> +
+> +#define CFGWDTH_16                                             0x00000000
+> +#define CFGWDTH_32                                             0x00000200
+> +#define SOCFPGA_FPGMGR_CTL_CFGWDTH_MASK                                0x00000200
+> +
+> +/* SOCFPGA_FPGMGR_DCLKSTAT register */
+> +#define SOCFPGA_FPGMGR_DCLKSTAT_DCNTDONE_E_DONE                        0x1
+> +
+> +/* SOCFPGA_FPGMGR_GPIO_* registers share the same bit positions */
+> +#define SOCFPGA_FPGMGR_MON_NSTATUS                             0x0001
+> +#define SOCFPGA_FPGMGR_MON_CONF_DONE                           0x0002
+> +#define SOCFPGA_FPGMGR_MON_INIT_DONE                           0x0004
+> +#define SOCFPGA_FPGMGR_MON_CRC_ERROR                           0x0008
+> +#define SOCFPGA_FPGMGR_MON_CVP_CONF_DONE                       0x0010
+> +#define SOCFPGA_FPGMGR_MON_PR_READY                            0x0020
+> +#define SOCFPGA_FPGMGR_MON_PR_ERROR                            0x0040
+> +#define SOCFPGA_FPGMGR_MON_PR_DONE                             0x0080
+> +#define SOCFPGA_FPGMGR_MON_NCONFIG_PIN                         0x0100
+> +#define SOCFPGA_FPGMGR_MON_NSTATUS_PIN                         0x0200
+> +#define SOCFPGA_FPGMGR_MON_CONF_DONE_PIN                       0x0400
+> +#define SOCFPGA_FPGMGR_MON_FPGA_POWER_ON                       0x0800
+> +#define SOCFPGA_FPGMGR_MON_STATUS_MASK                         0x0fff
+> +
+> +#define SOCFPGA_FPGMGR_NUM_SUPPLIES 3
+> +#define SOCFPGA_RESUME_TIMEOUT 3
+> +
+> +/* In power-up order. Reverse for power-down. */
+> +static const char *supply_names[SOCFPGA_FPGMGR_NUM_SUPPLIES] __maybe_unused = {
+> +       "FPGA-1.5V",
+> +       "FPGA-1.1V",
+> +       "FPGA-2.5V",
+> +};
+> +
+> +struct socfpga_fpga_priv {
+> +       void __iomem *fpga_base_addr;
+> +       void __iomem *fpga_data_addr;
+> +       struct completion status_complete;
+> +       int irq;
+> +};
+> +
+> +struct cfgmgr_mode {
+> +       /* Values to set in the CTRL register */
+> +       u32 ctrl;
+> +
+> +       /* flag that this table entry is a valid mode */
+> +       bool valid;
+> +};
+> +
+> +/* For SOCFPGA_FPGMGR_STAT_MSEL field */
+> +static struct cfgmgr_mode cfgmgr_modes[] = {
+> +       [MSEL_PP16_FAST_NOAES_NODC] = { CFGWDTH_16 | CDRATIO_X1, 1 },
+> +       [MSEL_PP16_FAST_AES_NODC] =   { CFGWDTH_16 | CDRATIO_X2, 1 },
+> +       [MSEL_PP16_FAST_AESOPT_DC] =  { CFGWDTH_16 | CDRATIO_X4, 1 },
+> +       [MSEL_PP16_SLOW_NOAES_NODC] = { CFGWDTH_16 | CDRATIO_X1, 1 },
+> +       [MSEL_PP16_SLOW_AES_NODC] =   { CFGWDTH_16 | CDRATIO_X2, 1 },
+> +       [MSEL_PP16_SLOW_AESOPT_DC] =  { CFGWDTH_16 | CDRATIO_X4, 1 },
+> +       [MSEL_PP32_FAST_NOAES_NODC] = { CFGWDTH_32 | CDRATIO_X1, 1 },
+> +       [MSEL_PP32_FAST_AES_NODC] =   { CFGWDTH_32 | CDRATIO_X4, 1 },
+> +       [MSEL_PP32_FAST_AESOPT_DC] =  { CFGWDTH_32 | CDRATIO_X8, 1 },
+> +       [MSEL_PP32_SLOW_NOAES_NODC] = { CFGWDTH_32 | CDRATIO_X1, 1 },
+> +       [MSEL_PP32_SLOW_AES_NODC] =   { CFGWDTH_32 | CDRATIO_X4, 1 },
+> +       [MSEL_PP32_SLOW_AESOPT_DC] =  { CFGWDTH_32 | CDRATIO_X8, 1 },
+> +};
+> +
+> +static u32 socfpga_fpga_readl(struct socfpga_fpga_priv *priv, u32 reg_offset)
+> +{
+> +       return readl(priv->fpga_base_addr + reg_offset);
+> +}
+> +
+> +static void socfpga_fpga_writel(struct socfpga_fpga_priv *priv, u32 reg_offset,
+> +                               u32 value)
+> +{
+> +       writel(value, priv->fpga_base_addr + reg_offset);
+> +}
+> +
+> +static u32 socfpga_fpga_raw_readl(struct socfpga_fpga_priv *priv,
+> +                                 u32 reg_offset)
+> +{
+> +       return __raw_readl(priv->fpga_base_addr + reg_offset);
+> +}
+> +
+> +static void socfpga_fpga_raw_writel(struct socfpga_fpga_priv *priv,
+> +                                   u32 reg_offset, u32 value)
+> +{
+> +       __raw_writel(value, priv->fpga_base_addr + reg_offset);
+> +}
+> +
+> +static void socfpga_fpga_data_writel(struct socfpga_fpga_priv *priv, u32 value)
+> +{
+> +       writel(value, priv->fpga_data_addr);
+> +}
+> +
+> +static inline void socfpga_fpga_set_bitsl(struct socfpga_fpga_priv *priv,
+> +                                         u32 offset, u32 bits)
+> +{
+> +       u32 val;
+> +
+> +       val = socfpga_fpga_readl(priv, offset);
+> +       val |= bits;
+> +       socfpga_fpga_writel(priv, offset, val);
+> +}
+> +
+> +static inline void socfpga_fpga_clr_bitsl(struct socfpga_fpga_priv *priv,
+> +                                         u32 offset, u32 bits)
+> +{
+> +       u32 val;
+> +
+> +       val = socfpga_fpga_readl(priv, offset);
+> +       val &= ~bits;
+> +       socfpga_fpga_writel(priv, offset, val);
+> +}
+> +
+> +static u32 socfpga_fpga_mon_status_get(struct socfpga_fpga_priv *priv)
+> +{
+> +       return socfpga_fpga_readl(priv, SOCFPGA_FPGMGR_GPIO_EXT_PORTA_OFST) &
+> +               SOCFPGA_FPGMGR_MON_STATUS_MASK;
+> +}
+> +
+> +static u32 socfpga_fpga_state_get(struct socfpga_fpga_priv *priv)
+> +{
+> +       u32 status = socfpga_fpga_mon_status_get(priv);
+> +
+> +       if ((status & SOCFPGA_FPGMGR_MON_FPGA_POWER_ON) == 0)
+> +               return SOCFPGA_FPGMGR_STAT_POWER_OFF;
+> +
+> +       return socfpga_fpga_readl(priv, SOCFPGA_FPGMGR_STAT_OFST) &
+> +               SOCFPGA_FPGMGR_STAT_STATE_MASK;
+> +}
+> +
+> +static void socfpga_fpga_clear_done_status(struct socfpga_fpga_priv *priv)
+> +{
+> +       socfpga_fpga_writel(priv, SOCFPGA_FPGMGR_DCLKSTAT_OFST,
+> +                           SOCFPGA_FPGMGR_DCLKSTAT_DCNTDONE_E_DONE);
+> +}
+> +
+> +/*
+> + * Set the DCLKCNT, wait for DCLKSTAT to report the count completed, and clear
+> + * the complete status.
+> + */
+> +static int socfpga_fpga_dclk_set_and_wait_clear(struct socfpga_fpga_priv *priv,
+> +                                               u32 count)
+> +{
+> +       int timeout = 2;
+> +       u32 done;
+> +
+> +       /* Clear any existing DONE status. */
+> +       if (socfpga_fpga_readl(priv, SOCFPGA_FPGMGR_DCLKSTAT_OFST))
+> +               socfpga_fpga_clear_done_status(priv);
+> +
+> +       /* Issue the DCLK count. */
+> +       socfpga_fpga_writel(priv, SOCFPGA_FPGMGR_DCLKCNT_OFST, count);
+> +
+> +       /* Poll DCLKSTAT to see if it completed in the timeout period. */
+> +       do {
+> +               done = socfpga_fpga_readl(priv, SOCFPGA_FPGMGR_DCLKSTAT_OFST);
+> +               if (done == SOCFPGA_FPGMGR_DCLKSTAT_DCNTDONE_E_DONE) {
+> +                       socfpga_fpga_clear_done_status(priv);
+> +                       return 0;
+> +               }
+> +               udelay(1);
+> +       } while (timeout--);
+> +
+> +       return -ETIMEDOUT;
+> +}
+> +
+> +static int socfpga_fpga_wait_for_state(struct socfpga_fpga_priv *priv,
+> +                                      u32 state)
+> +{
+> +       int timeout = 2;
+> +
+> +       /*
+> +        * HW doesn't support an interrupt for changes in state, so poll to see
+> +        * if it matches the requested state within the timeout period.
+> +        */
+> +       do {
+> +               if ((socfpga_fpga_state_get(priv) & state) != 0)
+> +                       return 0;
+> +               msleep(20);
+> +       } while (timeout--);
+> +
+> +       return -ETIMEDOUT;
+> +}
+> +
+> +static void socfpga_fpga_enable_irqs(struct socfpga_fpga_priv *priv, u32 irqs)
+> +{
+> +       /* set irqs to level sensitive */
+> +       socfpga_fpga_writel(priv, SOCFPGA_FPGMGR_GPIO_INTTYPE_LEVEL_OFST, 0);
+> +
+> +       /* set interrupt polarity */
+> +       socfpga_fpga_writel(priv, SOCFPGA_FPGMGR_GPIO_INT_POL_OFST, irqs);
+> +
+> +       /* clear irqs */
+> +       socfpga_fpga_writel(priv, SOCFPGA_FPGMGR_GPIO_PORTA_EOI_OFST, irqs);
+> +
+> +       /* unmask interrupts */
+> +       socfpga_fpga_writel(priv, SOCFPGA_FPGMGR_GPIO_INTMSK_OFST, 0);
+> +
+> +       /* enable interrupts */
+> +       socfpga_fpga_writel(priv, SOCFPGA_FPGMGR_GPIO_INTEN_OFST, irqs);
+> +}
+> +
+> +static void socfpga_fpga_disable_irqs(struct socfpga_fpga_priv *priv)
+> +{
+> +       socfpga_fpga_writel(priv, SOCFPGA_FPGMGR_GPIO_INTEN_OFST, 0);
+> +}
+> +
+> +static irqreturn_t socfpga_fpga_isr(int irq, void *dev_id)
+> +{
+> +       struct socfpga_fpga_priv *priv = dev_id;
+> +       u32 irqs, st;
+> +       bool conf_done, nstatus;
+> +
+> +       /* clear irqs */
+> +       irqs = socfpga_fpga_raw_readl(priv, SOCFPGA_FPGMGR_GPIO_INTSTAT_OFST);
+> +
+> +       socfpga_fpga_raw_writel(priv, SOCFPGA_FPGMGR_GPIO_PORTA_EOI_OFST, irqs);
+> +
+> +       st = socfpga_fpga_raw_readl(priv, SOCFPGA_FPGMGR_GPIO_EXT_PORTA_OFST);
+> +       conf_done = (st & SOCFPGA_FPGMGR_MON_CONF_DONE) != 0;
+> +       nstatus = (st & SOCFPGA_FPGMGR_MON_NSTATUS) != 0;
+> +
+> +       /* success */
+> +       if (conf_done && nstatus) {
+> +               /* disable irqs */
+> +               socfpga_fpga_raw_writel(priv,
+> +                                       SOCFPGA_FPGMGR_GPIO_INTEN_OFST, 0);
+> +               complete(&priv->status_complete);
+> +       }
+> +
+> +       return IRQ_HANDLED;
+> +}
+> +
+> +static int socfpga_fpga_wait_for_config_done(struct socfpga_fpga_priv *priv)
+> +{
+> +       int timeout, ret = 0;
+> +
+> +       socfpga_fpga_disable_irqs(priv);
+> +       init_completion(&priv->status_complete);
+> +       socfpga_fpga_enable_irqs(priv, SOCFPGA_FPGMGR_MON_CONF_DONE);
+> +
+> +       timeout = wait_for_completion_interruptible_timeout(
+> +                                               &priv->status_complete,
+> +                                               msecs_to_jiffies(10));
+> +       if (timeout == 0)
+> +               ret = -ETIMEDOUT;
+> +
+> +       socfpga_fpga_disable_irqs(priv);
+> +       return ret;
+> +}
+> +
+> +static int socfpga_fpga_cfg_mode_get(struct socfpga_fpga_priv *priv)
+> +{
+> +       u32 msel;
+> +
+> +       msel = socfpga_fpga_readl(priv, SOCFPGA_FPGMGR_STAT_OFST);
+> +       msel &= SOCFPGA_FPGMGR_STAT_MSEL_MASK;
+> +       msel >>= SOCFPGA_FPGMGR_STAT_MSEL_SHIFT;
+> +
+> +       /* Check that this MSEL setting is supported */
+> +       if ((msel >= ARRAY_SIZE(cfgmgr_modes)) || !cfgmgr_modes[msel].valid)
+> +               return -EINVAL;
+> +
+> +       return msel;
+> +}
+> +
+> +static int socfpga_fpga_cfg_mode_set(struct socfpga_fpga_priv *priv)
+> +{
+> +       u32 ctrl_reg;
+> +       int mode;
+> +
+> +       /* get value from MSEL pins */
+> +       mode = socfpga_fpga_cfg_mode_get(priv);
+> +       if (mode < 0)
+> +               return mode;
+> +
+> +       /* Adjust CTRL for the CDRATIO */
+> +       ctrl_reg = socfpga_fpga_readl(priv, SOCFPGA_FPGMGR_CTL_OFST);
+> +       ctrl_reg &= ~SOCFPGA_FPGMGR_CTL_CDRATIO_MASK;
+> +       ctrl_reg &= ~SOCFPGA_FPGMGR_CTL_CFGWDTH_MASK;
+> +       ctrl_reg |= cfgmgr_modes[mode].ctrl;
+> +
+> +       /* Set NCE to 0. */
+> +       ctrl_reg &= ~SOCFPGA_FPGMGR_CTL_NCE;
+> +       socfpga_fpga_writel(priv, SOCFPGA_FPGMGR_CTL_OFST, ctrl_reg);
+> +
+> +       return 0;
+> +}
+> +
+> +static int socfpga_fpga_reset(struct fpga_manager *mgr)
+> +{
+> +       struct socfpga_fpga_priv *priv = mgr->priv;
+> +       u32 ctrl_reg, status;
+> +       int ret;
+> +
+> +       /*
+> +        * Step 1:
+> +        *  - Set CTRL.CFGWDTH, CTRL.CDRATIO to match cfg mode
+> +        *  - Set CTRL.NCE to 0
+> +        */
+> +       ret = socfpga_fpga_cfg_mode_set(priv);
+> +       if (ret)
+> +               return ret;
+> +
+> +       /* Step 2: Set CTRL.EN to 1 */
+> +       socfpga_fpga_set_bitsl(priv, SOCFPGA_FPGMGR_CTL_OFST,
+> +                              SOCFPGA_FPGMGR_CTL_EN);
+> +
+> +       /* Step 3: Set CTRL.NCONFIGPULL to 1 to put FPGA in reset */
+> +       ctrl_reg = socfpga_fpga_readl(priv, SOCFPGA_FPGMGR_CTL_OFST);
+> +       ctrl_reg |= SOCFPGA_FPGMGR_CTL_NCFGPULL;
+> +       socfpga_fpga_writel(priv, SOCFPGA_FPGMGR_CTL_OFST, ctrl_reg);
+> +
+> +       /* Step 4: Wait for STATUS.MODE to report FPGA is in reset phase */
+> +       status = socfpga_fpga_wait_for_state(priv, SOCFPGA_FPGMGR_STAT_RESET);
+> +
+> +       /* Step 5: Set CONTROL.NCONFIGPULL to 0 to release FPGA from reset */
+> +       ctrl_reg &= ~SOCFPGA_FPGMGR_CTL_NCFGPULL;
+> +       socfpga_fpga_writel(priv, SOCFPGA_FPGMGR_CTL_OFST, ctrl_reg);
+> +
+> +       /* Timeout waiting for reset */
+> +       if (status)
+> +               return -ETIMEDOUT;
+> +
+> +       return 0;
+> +}
+> +
+> +/*
+> + * Prepare the FPGA to receive the configuration data.
+> + */
+> +static int socfpga_fpga_ops_configure_init(struct fpga_manager *mgr, u32 flags,
+> +                                          const char *buf, size_t count)
+> +{
+> +       struct socfpga_fpga_priv *priv = mgr->priv;
+> +       int ret;
+> +
+> +       if (flags & FPGA_MGR_PARTIAL_RECONFIG) {
+> +               dev_err(&mgr->dev, "Partial reconfiguration not supported.\n");
+> +               return -EINVAL;
+> +       }
+> +       /* Steps 1 - 5: Reset the FPGA */
+> +       ret = socfpga_fpga_reset(mgr);
+> +       if (ret)
+> +               return ret;
+> +
+> +       /* Step 6: Wait for FPGA to enter configuration phase */
+> +       if (socfpga_fpga_wait_for_state(priv, SOCFPGA_FPGMGR_STAT_CFG))
+> +               return -ETIMEDOUT;
+> +
+> +       /* Step 7: Clear nSTATUS interrupt */
+> +       socfpga_fpga_writel(priv, SOCFPGA_FPGMGR_GPIO_PORTA_EOI_OFST,
+> +                           SOCFPGA_FPGMGR_MON_NSTATUS);
+> +
+> +       /* Step 8: Set CTRL.AXICFGEN to 1 to enable transfer of config data */
+> +       socfpga_fpga_set_bitsl(priv, SOCFPGA_FPGMGR_CTL_OFST,
+> +                              SOCFPGA_FPGMGR_CTL_AXICFGEN);
+> +
+> +       return 0;
+> +}
+> +
+> +/*
+> + * Step 9: write data to the FPGA data register
+> + */
+> +static int socfpga_fpga_ops_configure_write(struct fpga_manager *mgr,
+> +                                           const char *buf, size_t count)
+> +{
+> +       struct socfpga_fpga_priv *priv = mgr->priv;
+> +       u32 *buffer_32 = (u32 *)buf;
+> +       size_t i = 0;
+> +
+> +       if (count <= 0)
+> +               return -EINVAL;
+> +
+> +       /* Write out the complete 32-bit chunks. */
+> +       while (count >= sizeof(u32)) {
+> +               socfpga_fpga_data_writel(priv, buffer_32[i++]);
+> +               count -= sizeof(u32);
+> +       }
+> +
+> +       /* Write out remaining non 32-bit chunks. */
+> +       switch (count) {
+> +       case 3:
+> +               socfpga_fpga_data_writel(priv, buffer_32[i++] & 0x00ffffff);
+> +               break;
+> +       case 2:
+> +               socfpga_fpga_data_writel(priv, buffer_32[i++] & 0x0000ffff);
+> +               break;
+> +       case 1:
+> +               socfpga_fpga_data_writel(priv, buffer_32[i++] & 0x000000ff);
+> +               break;
+> +       case 0:
+> +               break;
+> +       default:
+> +               /* This will never happen. */
+> +               return -EFAULT;
+> +       }
+> +
+> +       return 0;
+> +}
+> +
+> +static int socfpga_fpga_ops_configure_complete(struct fpga_manager *mgr,
+> +                                              u32 flags)
+> +{
+> +       struct socfpga_fpga_priv *priv = mgr->priv;
+> +       u32 status;
+> +
+> +       /*
+> +        * Step 10:
+> +        *  - Observe CONF_DONE and nSTATUS (active low)
+> +        *  - if CONF_DONE = 1 and nSTATUS = 1, configuration was successful
+> +        *  - if CONF_DONE = 0 and nSTATUS = 0, configuration failed
+> +        */
+> +       status = socfpga_fpga_wait_for_config_done(priv);
+> +       if (status)
+> +               return status;
+> +
+> +       /* Step 11: Clear CTRL.AXICFGEN to disable transfer of config data */
+> +       socfpga_fpga_clr_bitsl(priv, SOCFPGA_FPGMGR_CTL_OFST,
+> +                              SOCFPGA_FPGMGR_CTL_AXICFGEN);
+> +
+> +       /*
+> +        * Step 12:
+> +        *  - Write 4 to DCLKCNT
+> +        *  - Wait for STATUS.DCNTDONE = 1
+> +        *  - Clear W1C bit in STATUS.DCNTDONE
+> +        */
+> +       if (socfpga_fpga_dclk_set_and_wait_clear(priv, 4))
+> +               return -ETIMEDOUT;
+> +
+> +       /* Step 13: Wait for STATUS.MODE to report USER MODE */
+> +       if (socfpga_fpga_wait_for_state(priv, SOCFPGA_FPGMGR_STAT_USER_MODE))
+> +               return -ETIMEDOUT;
+> +
+> +       /* Step 14: Set CTRL.EN to 0 */
+> +       socfpga_fpga_clr_bitsl(priv, SOCFPGA_FPGMGR_CTL_OFST,
+> +                              SOCFPGA_FPGMGR_CTL_EN);
+> +
+> +       return 0;
+> +}
+> +
+> +/* Translate state register values to FPGA framework state */
+> +static const enum fpga_mgr_states socfpga_state_to_framework_state[] = {
+> +       [SOCFPGA_FPGMGR_STAT_POWER_OFF] = FPGA_MGR_STATE_POWER_OFF,
+> +       [SOCFPGA_FPGMGR_STAT_RESET] = FPGA_MGR_STATE_RESET,
+> +       [SOCFPGA_FPGMGR_STAT_CFG] = FPGA_MGR_STATE_WRITE_INIT,
+> +       [SOCFPGA_FPGMGR_STAT_INIT] = FPGA_MGR_STATE_WRITE_INIT,
+> +       [SOCFPGA_FPGMGR_STAT_USER_MODE] = FPGA_MGR_STATE_OPERATING,
+> +       [SOCFPGA_FPGMGR_STAT_UNKNOWN] = FPGA_MGR_STATE_UNKNOWN,
+> +};
+> +
+> +static enum fpga_mgr_states socfpga_fpga_ops_state(struct fpga_manager *mgr)
+> +{
+> +       struct socfpga_fpga_priv *priv = mgr->priv;
+> +       enum fpga_mgr_states ret;
+> +       u32 state;
+> +
+> +       state = socfpga_fpga_state_get(priv);
+> +
+> +       if (state < ARRAY_SIZE(socfpga_state_to_framework_state))
+> +               ret = socfpga_state_to_framework_state[state];
+> +       else
+> +               ret = FPGA_MGR_STATE_UNKNOWN;
+> +
+> +       return ret;
+> +}
+> +
+> +static const struct fpga_manager_ops socfpga_fpga_ops = {
+> +       .state = socfpga_fpga_ops_state,
+> +       .write_init = socfpga_fpga_ops_configure_init,
+> +       .write = socfpga_fpga_ops_configure_write,
+> +       .write_complete = socfpga_fpga_ops_configure_complete,
+> +};
+> +
+> +static int socfpga_fpga_probe(struct platform_device *pdev)
+> +{
+> +       struct device *dev = &pdev->dev;
+> +       struct socfpga_fpga_priv *priv;
+> +       struct resource *res;
+> +       int ret;
+> +
+> +       priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
+> +       if (!priv)
+> +               return -ENOMEM;
+> +
+> +       res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> +       priv->fpga_base_addr = devm_ioremap_resource(dev, res);
+> +       if (IS_ERR(priv->fpga_base_addr))
+> +               return PTR_ERR(priv->fpga_base_addr);
+> +
+> +       res = platform_get_resource(pdev, IORESOURCE_MEM, 1);
+> +       priv->fpga_data_addr = devm_ioremap_resource(dev, res);
+> +       if (IS_ERR(priv->fpga_data_addr))
+> +               return PTR_ERR(priv->fpga_data_addr);
+> +
+> +       priv->irq = platform_get_irq(pdev, 0);
+> +       if (priv->irq < 0)
+> +               return priv->irq;
+> +
+> +       ret = devm_request_irq(dev, priv->irq, socfpga_fpga_isr, 0,
+> +                              dev_name(dev), priv);
+> +       if (IS_ERR_VALUE(ret))
+> +               return ret;
+> +
+> +       return fpga_mgr_register(dev, "Altera SOCFPGA FPGA Manager",
+> +                                &socfpga_fpga_ops, priv);
+> +}
+> +
+> +static int socfpga_fpga_remove(struct platform_device *pdev)
+> +{
+> +       fpga_mgr_unregister(&pdev->dev);
+> +
+> +       return 0;
+> +}
+> +
+> +#ifdef CONFIG_OF
+> +static const struct of_device_id socfpga_fpga_of_match[] = {
+> +       { .compatible = "altr,socfpga-fpga-mgr", },
+> +       {},
+> +};
+> +
+> +MODULE_DEVICE_TABLE(of, socfpga_fpga_of_match);
+> +#endif
+> +
+> +static struct platform_driver socfpga_fpga_driver = {
+> +       .probe = socfpga_fpga_probe,
+> +       .remove = socfpga_fpga_remove,
+> +       .driver = {
+> +               .name   = "socfpga_fpga_manager",
+> +               .of_match_table = of_match_ptr(socfpga_fpga_of_match),
+> +       },
+> +};
+> +
+> +module_platform_driver(socfpga_fpga_driver);
+> +
+> +MODULE_AUTHOR("Alan Tull <atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>");
+> +MODULE_DESCRIPTION("Altera SOCFPGA FPGA Manager");
+> +MODULE_LICENSE("GPL v2");
+> --
+> 1.7.9.5
+>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
