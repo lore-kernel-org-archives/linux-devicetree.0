@@ -1,46 +1,73 @@
-From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v4 1/4] dt-bindings: brcmstb-gpio: document properties for wakeup
-Date: Thu, 13 Aug 2015 11:04:13 +0200
-Message-ID: <CACRpkdaZj=vt_nPOxh+PCH6n1i8MkzcoicYwUGAMFyP_MPg_yg@mail.gmail.com>
-References: <1438391865-7862-1-git-send-email-gregory.0xf0@gmail.com>
-	<1438391865-7862-2-git-send-email-gregory.0xf0@gmail.com>
+From: Keerthy <a0393675-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH v2 3/6] ARM: AM43xx: Introduce a separate soc_is function
+ for am438x series of SoCs
+Date: Thu, 13 Aug 2015 14:34:52 +0530
+Message-ID: <55CC5DB4.7040704@ti.com>
+References: <1439198906-31189-1-git-send-email-j-keerthy@ti.com> <1439198906-31189-4-git-send-email-j-keerthy@ti.com> <20150811125515.GN4215@atomide.com> <55CA36D2.3080509@ti.com> <20150812083718.GS4215@atomide.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1438391865-7862-2-git-send-email-gregory.0xf0-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+In-Reply-To: <20150812083718.GS4215-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Gregory Fong <gregory.0xf0-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, bcm-kernel-feedback-list <bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+To: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Cc: Keerthy <j-keerthy-l0cyMroinI0@public.gmane.org>, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, paul-DWxLp4Yu+b8AvxtiuMwx3w@public.gmane.org, alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org, johan-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, grygorii.strashko-l0cyMroinI0@public.gmane.org, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, nm-l0cyMroinI0@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, t-kristo-l0cyMroinI0@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Aug 1, 2015 at 3:17 AM, Gregory Fong <gregory.0xf0-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
 
-> Some brcmstb GPIO controllers can be used to wake from suspend, so use
-> the de facto standard property 'wakeup-source' to mark the nodes of
-> controllers with that capability.
->
-> Also document interrupts-extended, which will be used for wakeup
-> handling because the interrupt parent for the wake IRQ is different
-> from the regular IRQ.
->
-> While we're at it, a few more fixes: We don't actually use the
-> "interrupt-names" property, so remove it from the listed optional
-> properties and from the examples.  And since we're modifying the
-> examples, also follow Brian's suggestions to:
-> - change #gpio-cells, #interrupt-cells, and brcm,gpio-bank-widths from
->   hex to dec
-> - use phandles
->
-> Reviewed-by: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> Acked-by: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> Signed-off-by: Gregory Fong <gregory.0xf0-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> ---
-> v4: no changes from v3
 
-I've already applied this, no action.
+On Wednesday 12 August 2015 02:07 PM, Tony Lindgren wrote:
+> * Keerthy <a0393675-l0cyMroinI0@public.gmane.org> [150811 10:57]:
+>>
+>>
+>> On Tuesday 11 August 2015 06:25 PM, Tony Lindgren wrote:
+>>> * Keerthy <j-keerthy-l0cyMroinI0@public.gmane.org> [150810 02:31]:
+>>>> @@ -371,8 +372,10 @@ IS_OMAP_TYPE(3430, 0x3430)
+>>>>   #ifdef	CONFIG_SOC_AM43XX
+>>>>   # undef soc_is_am43xx
+>>>>   # undef soc_is_am437x
+>>>> -# define soc_is_am43xx()		is_am43xx()
+>>>> -# define soc_is_am437x()		is_am437x()
+>>>> +# undef soc_is_am438x
+>>>> +# define soc_is_am43xx()		of_machine_is_compatible("ti,am43")
+>>>> +# define soc_is_am437x()		of_machine_is_compatible("ti,am4372")
+>>>> +# define soc_is_am438x()		of_machine_is_compatible("ti,am438x")
+>>>>   #endif
+>>>
+>>> Hmm didn't I already comment on this change? I don't want to do it
+>>> for one SoC. Please add the SoC detection the old way for am43xx,
+>>> then do another series that changes all the DT only SoCs to use
+>>> of_machine_is_compatible() after it's been properly tested so now
+>>> regressions are caused for the early init code.
+>>
+>> Okay. I misinterpreted your earlier comment. Thanks for clarifying.
+>> I will re-do.
+>
+> Actually, can you please do the following patches first while at it:
+>
+> 1.  Change dra7 SoC detection to intialize soc_name and soc_rev
+>      registers based on the of_machine_is_compatible so we don't
+>      do pointless string comparisons with the current code
 
-Yours,
-Linus Walleij
+Tony,
+
+just another confirmation. So the intent here is to directly do
+of_machine_is_compatible checks instead if soc_is_dra* and try to remove 
+soc_is calls from mach-omap2 code right?
+
+-Keerthy
+>
+> 2. Add am437x detection the same way
+>
+> 3. Change all the existing DT only SoCs to do the same (this
+>     can be done in a separate series)
+>
+> That should allow us to drop most of the SoC detection code.
+>
+> Regards,
+>
+> Tony
+>
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
