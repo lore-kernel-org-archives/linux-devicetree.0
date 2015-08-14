@@ -1,252 +1,63 @@
-From: Ganapatrao Kulkarni <gkulkarni@caviumnetworks.com>
-Subject: [PATCH v5 2/4] Documentation: arm64/arm: dt bindings for numa.
-Date: Fri, 14 Aug 2015 22:09:32 +0530
-Message-ID: <1439570374-4079-3-git-send-email-gkulkarni@caviumnetworks.com>
-References: <1439570374-4079-1-git-send-email-gkulkarni@caviumnetworks.com>
+From: Mathieu Olivari <mathieu@codeaurora.org>
+Subject: Re: [PATCH 1/3] ARM: qcom: add SFPB nodes to IPQ806x dts
+Date: Fri, 14 Aug 2015 10:25:37 -0700
+Message-ID: <20150814172536.GA7516@codeaurora.org>
+References: <1439501620-24073-1-git-send-email-mathieu@codeaurora.org>
+ <1439501620-24073-2-git-send-email-mathieu@codeaurora.org>
+ <55CD25B6.6050901@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1439570374-4079-1-git-send-email-gkulkarni@caviumnetworks.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Will.Deacon@arm.com, catalin.marinas@arm.com, grant.likely@linaro.org, leif.lindholm@linaro.org, rfranz@cavium.com, ard.biesheuvel@linaro.org, msalter@redhat.com, robh+dt@kernel.org, steve.capper@linaro.org, hanjun.guo@linaro.org, al.stone@linaro.org, arnd@arndb.de, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org
-Cc: gpkulkarni@gmail.com
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <55CD25B6.6050901@codeaurora.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Stephen Boyd <sboyd@codeaurora.org>
+Cc: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk, dwmw2@infradead.org, computersforpeace@gmail.com, agross@codeaurora.org, bjorn.andersson@sonymobile.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-DT bindings for numa map for memory, cores and IOs using
-arm,associativity device node property.
-
-Signed-off-by: Ganapatrao Kulkarni <gkulkarni@caviumnetworks.com>
----
- Documentation/devicetree/bindings/arm/numa.txt | 212 +++++++++++++++++++++++++
- 1 file changed, 212 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/arm/numa.txt
-
-diff --git a/Documentation/devicetree/bindings/arm/numa.txt b/Documentation/devicetree/bindings/arm/numa.txt
-new file mode 100644
-index 0000000..dc3ef86
---- /dev/null
-+++ b/Documentation/devicetree/bindings/arm/numa.txt
-@@ -0,0 +1,212 @@
-+==============================================================================
-+NUMA binding description.
-+==============================================================================
-+
-+==============================================================================
-+1 - Introduction
-+==============================================================================
-+
-+Systems employing a Non Uniform Memory Access (NUMA) architecture contain
-+collections of hardware resources including processors, memory, and I/O buses,
-+that comprise what is commonly known as a NUMA node.
-+Processor accesses to memory within the local NUMA node is generally faster
-+than processor accesses to memory outside of the local NUMA node.
-+DT defines interfaces that allow the platform to convey NUMA node
-+topology information to OS.
-+
-+==============================================================================
-+2 - arm,associativity
-+==============================================================================
-+The mapping is done using arm,associativity device property.
-+this property needs to be present in every device node which needs to to be
-+mapped to numa nodes.
-+
-+arm,associativity property is set of 32-bit integers which defines level of
-+topology and boundary in the system at which a significant difference in
-+performance can be measured between cross-device accesses within
-+a single location and those spanning multiple locations.
-+The first cell always contains the broadest subdivision within the system,
-+while the last cell enumerates the individual devices, such as an SMT thread
-+of a CPU, or a bus bridge within an SoC".
-+
-+ex:
-+	/* board 0, socket 0, cluster 0, core 0  thread 0 */
-+	arm,associativity = <0 0 0 0 0>;
-+
-+==============================================================================
-+3 - arm,associativity-reference-points
-+==============================================================================
-+This property is a set of 32-bit integers, each representing an index into
-+the arm,associativity nodes. The first integer is the most significant
-+NUMA boundary and the following are progressively less significant boundaries.
-+There can be more than one level of NUMA.
-+
-+Ex:
-+	arm,associativity-reference-points = <0 1>;
-+	The board Id(index 0) used first to calculate the associativity (node
-+	distance), then follows the  socket id(index 1).
-+
-+	arm,associativity-reference-points = <1 0>;
-+	The socket Id(index 1) used first to calculate the associativity,
-+	then follows the board id(index 0).
-+
-+	arm,associativity-reference-points = <0>;
-+	Only the board Id(index 0) used to calculate the associativity.
-+
-+	arm,associativity-reference-points = <1>;
-+	Only socket Id(index 1) used to calculate the associativity.
-+
-+==============================================================================
-+4 - Example dts
-+==============================================================================
-+
-+Example: 2 Node system consists of 2 boards and each board having one socket
-+and 8 core in each socket.
-+
-+	arm,associativity-reference-points = <0>;
-+
-+	memory@00c00000 {
-+		device_type = "memory";
-+		reg = <0x0 0x00c00000 0x0 0x80000000>;
-+		/* board 0, socket 0, no specific core */
-+		arm,associativity = <0 0 0xffff>;
-+	};
-+
-+	memory@10000000000 {
-+		device_type = "memory";
-+		reg = <0x100 0x00000000 0x0 0x80000000>;
-+		/* board 1, socket 0, no specific core */
-+		arm,associativity = <1 0 0xffff>;
-+	};
-+
-+	cpus {
-+		#address-cells = <2>;
-+		#size-cells = <0>;
-+
-+		cpu@000 {
-+			device_type = "cpu";
-+			compatible =  "arm,armv8";
-+			reg = <0x0 0x000>;
-+			enable-method = "psci";
-+			/* board 0, socket 0, core 0*/
-+			arm,associativity = <0 0 0>;
-+		};
-+		cpu@001 {
-+			device_type = "cpu";
-+			compatible =  "arm,armv8";
-+			reg = <0x0 0x001>;
-+			enable-method = "psci";
-+			arm,associativity = <0 0 1>;
-+		};
-+		cpu@002 {
-+			device_type = "cpu";
-+			compatible =  "arm,armv8";
-+			reg = <0x0 0x002>;
-+			enable-method = "psci";
-+			arm,associativity = <0 0 2>;
-+		};
-+		cpu@003 {
-+			device_type = "cpu";
-+			compatible =  "arm,armv8";
-+			reg = <0x0 0x003>;
-+			enable-method = "psci";
-+			arm,associativity = <0 0 3>;
-+		};
-+		cpu@004 {
-+			device_type = "cpu";
-+			compatible =  "arm,armv8";
-+			reg = <0x0 0x004>;
-+			enable-method = "psci";
-+			arm,associativity = <0 0 4>;
-+		};
-+		cpu@005 {
-+			device_type = "cpu";
-+			compatible =  "arm,armv8";
-+			reg = <0x0 0x005>;
-+			enable-method = "psci";
-+			arm,associativity = <0 0 5>;
-+		};
-+		cpu@006 {
-+			device_type = "cpu";
-+			compatible =  "arm,armv8";
-+			reg = <0x0 0x006>;
-+			enable-method = "psci";
-+			arm,associativity = <0 0 6>;
-+		};
-+		cpu@007 {
-+			device_type = "cpu";
-+			compatible =  "arm,armv8";
-+			reg = <0x0 0x007>;
-+			enable-method = "psci";
-+			arm,associativity = <0 0 7>;
-+		};
-+		cpu@008 {
-+			device_type = "cpu";
-+			compatible =  "arm,armv8";
-+			reg = <0x0 0x008>;
-+			enable-method = "psci";
-+			/* board 1, socket 0, core 0*/
-+			arm,associativity = <1 0 0>;
-+		};
-+		cpu@009 {
-+			device_type = "cpu";
-+			compatible =  "arm,armv8";
-+			reg = <0x0 0x009>;
-+			enable-method = "psci";
-+			arm,associativity = <1 0 1>;
-+		};
-+		cpu@00a {
-+			device_type = "cpu";
-+			compatible =  "arm,armv8";
-+			reg = <0x0 0x00a>;
-+			enable-method = "psci";
-+			arm,associativity = <0 0 2>;
-+		};
-+		cpu@00b {
-+			device_type = "cpu";
-+			compatible =  "arm,armv8";
-+			reg = <0x0 0x00b>;
-+			enable-method = "psci";
-+			arm,associativity = <1 0 3>;
-+		};
-+		cpu@00c {
-+			device_type = "cpu";
-+			compatible =  "arm,armv8";
-+			reg = <0x0 0x00c>;
-+			enable-method = "psci";
-+			arm,associativity = <1 0 4>;
-+		};
-+		cpu@00d {
-+			device_type = "cpu";
-+			compatible =  "arm,armv8";
-+			reg = <0x0 0x00d>;
-+			enable-method = "psci";
-+			arm,associativity = <1 0 5>;
-+		};
-+		cpu@00e {
-+			device_type = "cpu";
-+			compatible =  "arm,armv8";
-+			reg = <0x0 0x00e>;
-+			enable-method = "psci";
-+			arm,associativity = <1 0 6>;
-+		};
-+		cpu@00f {
-+			device_type = "cpu";
-+			compatible =  "arm,armv8";
-+			reg = <0x0 0x00f>;
-+			enable-method = "psci";
-+			arm,associativity = <1 0 7>;
-+		};
-+	};
-+
-+	pcie0: pcie0@0x8480,00000000 {
-+		compatible = "arm,armv8";
-+		device_type = "pci";
-+		bus-range = <0 255>;
-+		#size-cells = <2>;
-+		#address-cells = <3>;
-+		reg = <0x8480 0x00000000 0 0x10000000>;  /* Configuration space */
-+		ranges = <0x03000000 0x8010 0x00000000 0x8010 0x00000000 0x70 0x00000000>; /* mem ranges */
-+		/* board 0, socket 0, pci bus 0*/
-+		arm,associativity = <0 0 0>;
-+        };
--- 
-1.8.1.4
+On Thu, Aug 13, 2015 at 04:18:14PM -0700, Stephen Boyd wrote:
+> On 08/13/2015 02:33 PM, Mathieu Olivari wrote:
+> >Add one new node to the ipq806x.dtsi file to declare & register the
+> >hardware spinlock devices. This mechanism is required to be used by
+> >other drivers such as SMEM.
+> >
+> >Signed-off-by: Mathieu Olivari <mathieu@codeaurora.org>
+> >---
+> >  arch/arm/boot/dts/qcom-ipq8064.dtsi | 12 ++++++++++++
+> >  1 file changed, 12 insertions(+)
+> >
+> >diff --git a/arch/arm/boot/dts/qcom-ipq8064.dtsi b/arch/arm/boot/dts/qcom-ipq8064.dtsi
+> >index 9f727d8..ea7b959 100644
+> >--- a/arch/arm/boot/dts/qcom-ipq8064.dtsi
+> >+++ b/arch/arm/boot/dts/qcom-ipq8064.dtsi
+> >@@ -67,6 +67,18 @@
+> >  			clock-frequency = <32768>;
+> >  			#clock-cells = <0>;
+> >  		};
+> >+
+> >+		sfpb_mutex_block: syscon@01200600 {
+> 
+> I think you can drop the leading 0 here. Also this should be moved into the
+> soc node.
+> 
+> >+			compatible = "syscon";
+> >+			reg = <0x01200600 0x100>;
+> >+		};
+> >+
+> >+		sfpb_mutex: sfpb-mutex {
+> >+			compatible = "qcom,sfpb-mutex";
+> >+			syscon = <&sfpb_mutex_block 4 4>;
+> >+
+> >+			#hwlock-cells = <1>;
+> >+		};
+> 
+> And this node should be moved to the root /.
+> >  	};
+> >  	soc: soc {
+Right; I'll repost a patch to address both of these.
+> 
+> 
+> -- 
+> Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+> a Linux Foundation Collaborative Project
+> 
