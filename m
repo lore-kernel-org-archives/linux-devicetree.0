@@ -1,50 +1,42 @@
-From: Wang Dongsheng <Dongsheng.Wang-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: RE: [PATCH v2 1/2] powerpc/85xx: Add binding for SCFG
-Date: Fri, 14 Aug 2015 03:12:46 +0000
-Message-ID: <SN1PR0301MB1616786D76054512E281806D9D7C0@SN1PR0301MB1616.namprd03.prod.outlook.com>
-References: <1439364555-1996-1-git-send-email-dongsheng.wang@freescale.com>
-	 <1439393253.4099.87.camel@freescale.com>
-	 <SN1PR0301MB161609299A2EEBB92AB232869D7D0@SN1PR0301MB1616.namprd03.prod.outlook.com>
- <1439489923.4099.93.camel@freescale.com>
+From: Dongsheng Wang <dongsheng.wang-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: [PATCH v2 2/2] powerpc/mpc85xx:Add SCFG device tree support of T104x
+Date: Fri, 14 Aug 2015 11:12:10 +0800
+Message-ID: <1439521930-28191-2-git-send-email-dongsheng.wang@freescale.com>
+References: <1439521930-28191-1-git-send-email-dongsheng.wang@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1439489923.4099.93.camel-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Content-Language: en-US
+In-Reply-To: <1439521930-28191-1-git-send-email-dongsheng.wang-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Cc: Priyanka Jain <Priyanka.Jain-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org" <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org
+Cc: Priyanka.Jain-KZfg59tc24xl57MIdRCFDg@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Wang Dongsheng <dongsheng.wang-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-T0ssIFRoYW5rcy4NCg0KUmVnYXJkcywNCi1Eb25nc2hlbmcNCg0KPiAtLS0tLU9yaWdpbmFsIE1l
-c3NhZ2UtLS0tLQ0KPiBGcm9tOiBXb29kIFNjb3R0LUIwNzQyMQ0KPiBTZW50OiBGcmlkYXksIEF1
-Z3VzdCAxNCwgMjAxNSAyOjE5IEFNDQo+IFRvOiBXYW5nIERvbmdzaGVuZy1CNDA1MzQNCj4gQ2M6
-IEphaW4gUHJpeWFua2EtQjMyMTY3OyBpamMrZGV2aWNldHJlZUBoZWxsaW9uLm9yZy51azsgcm9i
-aCtkdEBrZXJuZWwub3JnOw0KPiBkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZw0KPiBTdWJqZWN0
-OiBSZTogW1BBVENIIHYyIDEvMl0gcG93ZXJwYy84NXh4OiBBZGQgYmluZGluZyBmb3IgU0NGRw0K
-PiANCj4gT24gV2VkLCAyMDE1LTA4LTEyIGF0IDIwOjU1IC0wNTAwLCBXYW5nIERvbmdzaGVuZy1C
-NDA1MzQgd3JvdGU6DQo+ID4NCj4gPiA+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+ID4g
-PiBGcm9tOiBXb29kIFNjb3R0LUIwNzQyMQ0KPiA+ID4gU2VudDogV2VkbmVzZGF5LCBBdWd1c3Qg
-MTIsIDIwMTUgMTE6MjggUE0NCj4gPiA+IFRvOiBXYW5nIERvbmdzaGVuZy1CNDA1MzQNCj4gPiA+
-IENjOiBKYWluIFByaXlhbmthLUIzMjE2NzsgaWpjK2RldmljZXRyZWVAaGVsbGlvbi5vcmcudWs7
-DQo+ID4gPiByb2JoK2R0QGtlcm5lbC5vcmc7DQo+ID4gPiBkZXZpY2V0cmVlQHZnZXIua2VybmVs
-Lm9yZw0KPiA+ID4gU3ViamVjdDogUmU6IFtQQVRDSCB2MiAxLzJdIHBvd2VycGMvODV4eDogQWRk
-IGJpbmRpbmcgZm9yIFNDRkcNCj4gPiA+DQo+ID4gPiBPbiBXZWQsIDIwMTUtMDgtMTIgYXQgMTU6
-MjkgKzA4MDAsIERvbmdzaGVuZyBXYW5nIHdyb3RlOg0KPiA+ID4gPiBGcm9tOiBXYW5nIERvbmdz
-aGVuZyA8ZG9uZ3NoZW5nLndhbmdAZnJlZXNjYWxlLmNvbT4NCj4gPiA+ID4NCj4gPiA+ID4gU0NG
-RyBwcm92aWRlcyBTb0Mgc3BlY2lmaWMgY29uZmlndXJhdGlvbiBhbmQgc3RhdHVzIHJlZ2lzdGVy
-cyBmb3INCj4gPiA+ID4gdGhlIGNoaXAuIEFkZCB0aGlzIGZvciBwb3dlcnBjIHBsYXRmb3JtLg0K
-PiA+ID4gPg0KPiA+ID4gPiBTaWduZWQtb2ZmLWJ5OiBXYW5nIERvbmdzaGVuZyA8ZG9uZ3NoZW5n
-LndhbmdAZnJlZXNjYWxlLmNvbT4NCj4gPiA+ID4gLS0tDQo+ID4gPiA+ICpWMioNCj4gPiA+ID4g
-LSBSZW1vdmUgc2NmZyBkZXNjcmlwdGlvbiBpbiBib2FyZC50eHQgYW5kIGNyZWF0ZSBzY2ZnLnR4
-dCBmb3Igc2NmZy4NCj4gPiA+ID4gLSBDaGFuZ2UgImZzbCw8Ym9hcmQ+LXNjZmciIHRvICJmc2ws
-PGNoaXA+LXNjZmciDQo+ID4gPg0KPiA+ID4gSWYgeW91IHdhbnQgbWUgdG8gYXBwbHkgdGhlc2Ug
-cGF0Y2hlcyB0aGV5IG5lZWQgdG8gYmUgc2VudCB0bw0KPiA+ID4gbGludXhwcGMtIGRldkBsaXN0
-cy5vemxhYnMub3JnLg0KPiA+DQo+ID4gTmVlZCBJIHJlc2VuZCB0aGlzIHBhdGNoIHRvIFBQQyBt
-YWlsbGlzdCBvciByZXBseSB0aGUgb3JpZ2luYWwgK1BQQw0KPiA+IG1haWxsaXN0Pw0KPiANCj4g
-UmVzZW5kIGl0IHNvIHRoYXQgaXQgc2hvd3MgdXAgaW4gUGF0Y2h3b3JrLg0KPiANCj4gLVNjb3R0
-DQoNCg==
+From: Wang Dongsheng <dongsheng.wang-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+
+Signed-off-by: Wang Dongsheng <dongsheng.wang-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+---
+*V2*
+No changes.
+diff --git a/arch/powerpc/boot/dts/fsl/t1040si-post.dtsi b/arch/powerpc/boot/dts/fsl/t1040si-post.dtsi
+index 9e9f7e2..9770d02 100644
+--- a/arch/powerpc/boot/dts/fsl/t1040si-post.dtsi
++++ b/arch/powerpc/boot/dts/fsl/t1040si-post.dtsi
+@@ -484,6 +484,11 @@
+ 		reg	   = <0xea000 0x4000>;
+ 	};
+ 
++	scfg: global-utilities@fc000 {
++		compatible = "fsl,t1040-scfg";
++		reg = <0xfc000 0x1000>;
++	};
++
+ /include/ "elo3-dma-0.dtsi"
+ /include/ "elo3-dma-1.dtsi"
+ /include/ "qoriq-espi-0.dtsi"
+-- 
+2.1.0.27.g96db324
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
