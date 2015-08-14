@@ -1,104 +1,105 @@
-From: Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v2 3/6] mailbox: Add support for ST's Mailbox IP
-Date: Fri, 14 Aug 2015 13:09:13 +0530
-Message-ID: <CABb+yY07A=jWvDgbPMpDdT=WPhwSzLumMGiJSB4NddTA4z7Hww@mail.gmail.com>
-References: <1437990272-23111-1-git-send-email-lee.jones@linaro.org>
-	<1437990272-23111-4-git-send-email-lee.jones@linaro.org>
-	<CABb+yY3NTHLx2N-sUABjxQW=MUCntdUg1d8kjvjH0dkb4n9EgA@mail.gmail.com>
-	<20150814063343.GI8782@x1>
+From: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
+Subject: Re: [U-Boot] [PATCH v3 01/11] dm: serial: Update binding for PL01x
+ serial UART
+Date: Fri, 14 Aug 2015 09:43:22 +0200
+Message-ID: <CAMuHMdX81zTEgnsNru8wa=q=6UEAby9cbGJcVMXgyqoqgQSK1A@mail.gmail.com>
+References: <1438954951-13329-1-git-send-email-sjg@chromium.org>
+	<1438954951-13329-2-git-send-email-sjg@chromium.org>
+	<CACRpkdZa2O1MqCVT8q2P0u0ciXK+6HFbQQGXB_-chimg=FbzQg@mail.gmail.com>
+	<CAPnjgZ3V1KS7POEhsvj63OSB29MUtyaZGBoFR8JGPnaN=-fXVw@mail.gmail.com>
+	<55CCBFB2.7050301@wwwdotorg.org>
+	<20150813181346.GS25532@bill-the-cat>
+	<1439492679.242.35.camel@freebsd.org>
+	<55CCF20C.9000104@wwwdotorg.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20150814063343.GI8782@x1>
+In-Reply-To: <55CCF20C.9000104-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, kernel-F5mvAk5X5gdBDgjK7y7TUQ@public.gmane.org, Devicetree List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Cc: Ian Lepore <ian-h+KGxgPPiopAfugRpC6u6w@public.gmane.org>, Tom Rini <trini-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, U-Boot Mailing List <u-boot-0aAXYlwwYIKGBzrmiIFOJg@public.gmane.org>, Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, Joe Hershberger <joe.hershberger-acOepvfBmUk@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Aug 14, 2015 at 12:03 PM, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
-> On Thu, 13 Aug 2015, Jassi Brar wrote:
->> On Mon, Jul 27, 2015 at 3:14 PM, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+On Thu, Aug 13, 2015 at 9:37 PM, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org> wrote:
+> On 08/13/2015 01:04 PM, Ian Lepore wrote:
+>> As the FreeBSD person who got our first SoC (imx6, only partially
+>> supported) converted to use the Linux DT files rather than our own
+>> homebrew mess we started with, I would say that my opinion of the
+>> existing DT information is that it is an extension of Linux device
+>> drivers written in a different language.
 >>
->> > +
->> > +static bool sti_mbox_tx_is_ready(struct mbox_chan *chan)
->> > +{
->> > +       struct sti_channel *chan_info = chan->con_priv;
->> > +       struct sti_mbox_device *mdev = chan_info->mdev;
->> > +       unsigned int instance = chan_info->instance;
->> > +       unsigned int channel = chan_info->channel;
->> > +       void __iomem *base = MBOX_BASE(mdev, instance);
->> > +
->> > +       if (!(chan_info->direction & MBOX_TX))
->> > +               return false;
->> >
->> Here the 'direction' is gotten via DT node of the client i.e, you
->> expect consumer drivers to tell the provider what its limitations are?
+>> The information available is in no way independent of the Linux device
+>> drivers, it is exactly the information those drivers need.  It is often
+>> not the information needed in another OS with independently written
+>> drivers.  And especially it is not ordered and structured in a way that
+>> works well with the device enumeration and instantiation models used by
+>> another OS.
 >>
->> IMO if some physical channel can't do TX then that should be either
->> hardcoded inside the controller driver or learnt via DT node of the
->> _controller_.
->
-> That's a fair point.
-.
+>> A great case in point would be i2c eeproms.  What a perfect opportunity
+>> DT would be to describe everything about the eeprom parts (total
+>> capacity, page read/write size, whether the page address bits extend
+>> into the bus-slave address bits, etc).  It seems to me that anything
+                                    ^^^
+This is the important "etc" below.
 
->  I need to create a new property similar to the
-> already existing 'read-only'.  I guess 'tx-only' is equivalent.
->
-Just to be clear, if you must have such a property it should come from
-the _controller_ node.
-
-However at one point you said,  "Only the A9 (Mbox 0) can Rx."
-  Which sounds like the 'simplex' constraint is not coming from the
-mailbox controller but from the remote endpoints that don't RX+TX
-except for one of them. That makes more sense than a controller with
-differently capable physical channels. If that is indeed the
-situation, then the controller is actually 'duplex' and there should
-be no tx-only/rx-only property anywhere. Everything automatically
-falls into place because client drivers are written for specific
-targets and, unless you write some code, there can be no TX call to a
-remote that doesn't listen.
-
->> > +
->> > +       for (i = 0; i < mbox->num_chans; i++) {
->> > +               chan_info = mbox->chans[i].con_priv;
->> > +
->> > +               /* Is requested channel free? */
->> > +               if (direction != MBOX_LOOPBACK &&
->> >
->> Consider this example when 2 clients ask for same physical channel but
->> in different modes.
->>            mboxes = <&mboxA 0 1 MBOX_TX>;
->>            mboxes = <&mboxA 0 1 MBOX_LOOPBACK>;
+>> claiming to be an independent description of the hardware would have to
+>> include such things.  Instead, all the bindings define is the compatible
+>> string.  That's crazy.  Why?  Well, when I went and looked at the Linux
+>> eeprom drivers it became clear why:  that's all they need to know,
+>> because everything else is hard-coded in tables in the driver source.
 >>
->> You happily assign 2 virtual channels backed by one physical channel
->> {mboxA, 0, 1}. The 2 clients think they can freely do startup(),
->> shutdown() and send_data() on the channels. But obviously we are
->> screwed with races like
->>    client1.startup()
->>     -> client2.startup()
->>         -> client2.send_data()
->>             -> client2.shutdown()
->>                 -> client1.send_data()  XXXX
+>> So if I want to write a FreeBSD i2c eeprom driver that uses DT data,
+>> what are my choices?  I have exactly one:  make my driver essentially a
+>> clone of the Linux driver, with all the same data hard-coded in source.
+>>
+>> All in all, it's not impossible for another OS to work with the DT
+>> information that begins its life in Linux, but it's not really easy.
 >
-> Good catch and a fair point.  As you say, it's unlikely to happen, but
-> I would like to prevent it in any case.
+> In fairness, that's got nothing to do with Linux, but it's a general
+> decision re: the level of detail to put into DT. There's always a discussion
+> about which level of detail to represent in DT when new bindings are
+> created.
 >
-No, such races are a practical problem. We must own them.
+> The type of an I2C device completely defines all of its properties; the
+> model name/... is enough to fully describe its behaviour. That's a good
+> reason to put just that information into DT, to avoid redundancy.
+>
+> In some cases, bindings have tended towards placing just the compatible
+> value into the DT (e.g. your example). This does require drivers to be able
+> to look up that information from the compatible value.
+>
+> That case tends to be more common since what's really important about DT is
+> cleanly representing the resource interactions between devices; let the
+> drivers know all the details of the device's internals, and let DT describe
+> any point where the device/driver has to interact with the system or other
+> devices/drivers around it.
 
-I was talking about problems that arise because someone wrote bad
-DT... those are not 'practical' problems because there are too many
-ways to screw up with bad DT properties that if we try to check for
-them we'll go insane.
+Exactly.
 
->>  Now you can shove in some more checks to 'fix' the race OR you can
->> simply expose only physical channels.
->
-> We can't expose all of the channels.  There are too many and would
-> take up too much *unused* memory.
->
-I am aware of that. I said expose _only_ physical channels, not _all_ :)
+The important part in your i2c eeprom example is the "etc".
+Suppose you use a generic compatible value, and lots of properties to
+describe the device.
 
-Cheers!
+Over time, when adding support for new devices with new features, you will
+add new properties. No problem, you can assume default values if a property
+is missing.
+One day, when adding new features, you will discover a slight difference in
+behavior between two different i2c eeproms that were described the same before.
+Oops.
+
+P.S. I'd ike to point people to my presentation "Engaging Device Trees" at
+     ELC2014 (http://elinux.org/File:Engaging_Device_Trees_0.pdf).
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
