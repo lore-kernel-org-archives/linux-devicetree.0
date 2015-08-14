@@ -1,47 +1,36 @@
-From: Christophe Ricard <christophe.ricard-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH 07/11] nfc: st-nci: Free data with irrelevant NDLC PCB_SYNC value
-Date: Fri, 14 Aug 2015 22:33:36 +0200
-Message-ID: <1439584420-5446-8-git-send-email-christophe-h.ricard@st.com>
+From: Christophe Ricard <christophe.ricard@gmail.com>
+Subject: [PATCH 06/11] nfc: st-nci: Remove data from ack_pending_q when receiving a NDLC PCB_SYNC_ACK
+Date: Fri, 14 Aug 2015 22:33:35 +0200
+Message-ID: <1439584420-5446-7-git-send-email-christophe-h.ricard@st.com>
 References: <1439584420-5446-1-git-send-email-christophe-h.ricard@st.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1439584420-5446-1-git-send-email-christophe-h.ricard-qxv4g6HH51o@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org
-Cc: linux-nfc-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org, christophe-h.ricard-qxv4g6HH51o@public.gmane.org, christophe.ricard-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, stable-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <stable-owner@vger.kernel.org>
+In-Reply-To: <1439584420-5446-1-git-send-email-christophe-h.ricard@st.com>
+Sender: stable-owner@vger.kernel.org
+To: sameo@linux.intel.com
+Cc: linux-nfc@lists.01.org, christophe-h.ricard@st.com, christophe.ricard@gmail.com, devicetree@vger.kernel.org, stable@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-PCB_SYNC different than PCB_TYPE_SUPERVISOR or PCB_TYPE_DATAFRAME should
-be discarded.
+When receiving a NDLC PCB_SYNC_ACK the pending data was never removed from
+ack_pending_q and cleared.
 
-Irrelevant data may be forwarded up to the ndlc state machine by phys like
-spi to prevent missing potential data during "write" transaction.
-
-Cc: stable-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Signed-off-by: Christophe Ricard <christophe-h.ricard-qxv4g6HH51o@public.gmane.org>
+Cc: stable@vger.kernel.org
+Signed-off-by: Christophe Ricard <christophe-h.ricard@st.com>
 ---
- drivers/nfc/st-nci/ndlc.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/nfc/st-nci/ndlc.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
 diff --git a/drivers/nfc/st-nci/ndlc.c b/drivers/nfc/st-nci/ndlc.c
-index bb08b16..4f51649 100644
+index 56c6a4c..bb08b16 100644
 --- a/drivers/nfc/st-nci/ndlc.c
 +++ b/drivers/nfc/st-nci/ndlc.c
-@@ -198,8 +198,10 @@ static void llt_ndlc_rcv_queue(struct llt_ndlc *ndlc)
- 				kfree_skb(skb);
- 				break;
- 			}
--		} else {
-+		} else if ((pcb & PCB_TYPE_MASK) == PCB_TYPE_DATAFRAME) {
- 			nci_recv_frame(ndlc->ndev, skb);
-+		} else {
-+			kfree_skb(skb);
- 		}
- 	}
- }
+@@ -171,6 +171,8 @@ static void llt_ndlc_rcv_queue(struct llt_ndlc *ndlc)
+ 		if ((pcb & PCB_TYPE_MASK) == PCB_TYPE_SUPERVISOR) {
+ 			switch (pcb & PCB_SYNC_MASK) {
+ 			case PCB_SYNC_ACK:
++				skb = skb_dequeue(&ndlc->ack_pending_q);
++				kfree_skb(skb);
+ 				del_timer_sync(&ndlc->t1_timer);
+ 				del_timer_sync(&ndlc->t2_timer);
+ 				ndlc->t2_active = false;
 -- 
 2.1.4
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
