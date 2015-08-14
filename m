@@ -1,99 +1,39 @@
-From: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>
-Subject: Re: [PATCH V7 2/2] mtd: spi-nor: Add driver for Cadence Quad SPI Flash Controller.
-Date: Fri, 14 Aug 2015 05:32:34 +0200
-Message-ID: <201508140532.34935.marex@denx.de>
-References: <1439522892-7524-1-git-send-email-marex@denx.de> <1439522892-7524-2-git-send-email-marex@denx.de>
+From: Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Subject: Re: [PATCH v7 0/9] Fixes and new clocks support for Mediatek MT8173
+Date: Fri, 14 Aug 2015 12:01:06 +0800
+Message-ID: <CAGS+omAj=BZXYXChJwC2Heq+2KVEV2EoRrhiQhtXZRHGaZ9tEw@mail.gmail.com>
+References: <1439200228-318-1-git-send-email-jamesjj.liao@mediatek.com> <CAGS+omCya_0djzoVGhJchmaTtzo2z+JdnJHDjLipNMsZKV=MLQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: Text/Plain;
-  charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1439522892-7524-2-git-send-email-marex-ynQEQJNshbs@public.gmane.org>
+In-Reply-To: <CAGS+omCya_0djzoVGhJchmaTtzo2z+JdnJHDjLipNMsZKV=MLQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: Graham Moore <grmoore-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>, Alan Tull <atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Dinh Nguyen <dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>, Vikas MANOCHA <vikas.manocha-qxv4g6HH51o@public.gmane.org>, Yves Vandervennet <yvanderv-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: James Liao <jamesjj.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Cc: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mike Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Heiko Stubner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, srv_heupstream <srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Ricky Liang <jcliang-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "open list:OPEN FIRMWARE AND..." <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Friday, August 14, 2015 at 05:28:12 AM, Marek Vasut wrote:
-> From: Graham Moore <grmoore-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
-> 
-> Add support for the Cadence QSPI controller. This controller is
-> present in the Altera SoCFPGA SoCs and this driver has been tested
-> on the Cyclone V SoC.
-> 
-> Signed-off-by: Graham Moore <grmoore-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
-> Signed-off-by: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>
-> Cc: Alan Tull <atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
-> Cc: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> Cc: David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>
-> Cc: Dinh Nguyen <dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
-> Cc: Graham Moore <grmoore-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
-> Cc: Vikas MANOCHA <vikas.manocha-qxv4g6HH51o@public.gmane.org>
-> Cc: Yves Vandervennet <yvanderv-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
-> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+On Tue, Aug 11, 2015 at 12:43 PM, Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org> wrote:
+> Hi James,
+>
+> On Mon, Aug 10, 2015 at 5:50 PM, James Liao <jamesjj.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org> wrote:
+>> This patchset is based on 4.2-rc2 and [1], and contains minor fixes and
+>> subsystem clocks support for Mediatek MT8173.
+>>
+>> The previous reviews can be found in [2].
+>>
+>> changes since v6:
+>> - Use DUMMY_RATE (0) instead of typical rate for clocks that we don't care
+>>   and not controlled in CCF.
+>
+> For the whole series:
+> Reviewed-by: Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
 
-[...]
+Hi Sascha,
 
-> +	/* Get flash device data */
-> +	for_each_available_child_of_node(dev->of_node, np) {
-> +		unsigned int cs;
-> +		struct cqspi_flash_pdata *f_pdata;
-> +
-> +		if (of_property_read_u32(np, "reg", &cs)) {
-> +			dev_err(dev, "couldn't determine chip select\n");
-> +			return -ENXIO;
-> +		}
-> +
-> +		if (cs >= CQSPI_MAX_CHIPSELECT) {
-> +			dev_err(dev, "chip select %d out of range\n", cs);
-> +			return -ENXIO;
-> +		}
-> +
-> +		f_pdata = &cqspi->f_pdata[cs];
-> +		f_pdata->cqspi = cqspi;
-> +		f_pdata->cs = cs;
-> +
-> +		ret = cqspi_of_get_flash_pdata(pdev, f_pdata, np);
-> +		if (ret)
-> +			goto probe_failed;
-> +
-> +		nor = &f_pdata->nor;
-> +		mtd = &f_pdata->mtd;
-> +
-> +		nor->mtd = mtd;
-> +		nor->dev = dev;
-> +		nor->priv = f_pdata;
-> +		mtd->priv = nor;
-> +
-> +		nor->read_reg = cqspi_read_reg;
-> +		nor->write_reg = cqspi_write_reg;
-> +		nor->read = cqspi_read;
-> +		nor->write = cqspi_write;
-> +		nor->erase = cqspi_erase;
-> +		nor->set_protocol = cqspi_set_protocol;
-> +
-> +		nor->prepare = cqspi_prep;
-> +
+Are you happy with these patches now?
 
---->8---
-
-> +		/*
-> +		 * Here is a 'nasty hack' from Marek Vasut to pick
-> +		 * up OF properties from flash device subnode.
-> +		 */
-> +		nor->dev->of_node = np;
-> +
-> +		ret = spi_nor_scan(nor, NULL, SPI_NOR_QUAD);
-> +		if (ret)
-> +			goto probe_failed;
-
-The only bizzare thing is this stuff above ^ . If I want to pass for example 
-"m25p,fast-read" to the SPI NOR connected to this controller, I have to set
-up the nor->dev->of_node, otherwise the of_node would point to the controller.
-I am positive this is wrong, but I'm not quite sure how to repair this.
-Brian, can you please comment on this one bit ?
-
-[...]
+Thanks,
+-Dan
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
