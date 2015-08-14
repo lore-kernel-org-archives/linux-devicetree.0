@@ -1,7 +1,7 @@
 From: Gary Bisson <gary.bisson-Q5RJGjKts06CY9SHAMCTRUEOCMrvLtNR@public.gmane.org>
-Subject: [PATCH v3 1/2] ARM: dts: imx6qdl-nitrogen6x: add Okaya LCD panel
-Date: Fri, 14 Aug 2015 14:51:06 +0200
-Message-ID: <1439556667-3424-2-git-send-email-gary.bisson@boundarydevices.com>
+Subject: [PATCH v3 2/2] ARM: dts: imx6qdl-sabrelite: add Okaya LCD panel
+Date: Fri, 14 Aug 2015 14:51:07 +0200
+Message-ID: <1439556667-3424-3-git-send-email-gary.bisson@boundarydevices.com>
 References: <1432314867-30888-1-git-send-email-gary.bisson@boundarydevices.com>
  <1439556667-3424-1-git-send-email-gary.bisson@boundarydevices.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
@@ -11,22 +11,22 @@ To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 Cc: shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Gary Bisson <gary.bisson-Q5RJGjKts06CY9SHAMCTRUEOCMrvLtNR@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch adds support for the 7" LCD display available for Nitrogen6x:
+This patch adds support for the 7" LCD display available for Sabrelite:
 http://boundarydevices.com/product/7-800x480-display/
 
 Also add label to backlight_lcd and connect it to the panel.
 
 Signed-off-by: Gary Bisson <gary.bisson-Q5RJGjKts06CY9SHAMCTRUEOCMrvLtNR@public.gmane.org>
 ---
- arch/arm/boot/dts/imx6qdl-nitrogen6x.dtsi | 76 ++++++++++++++++++++++++++++++-
+ arch/arm/boot/dts/imx6qdl-sabrelite.dtsi | 76 +++++++++++++++++++++++++++++++-
  1 file changed, 75 insertions(+), 1 deletion(-)
 
-diff --git a/arch/arm/boot/dts/imx6qdl-nitrogen6x.dtsi b/arch/arm/boot/dts/imx6qdl-nitrogen6x.dtsi
-index 340bc8e..ad16dce 100644
---- a/arch/arm/boot/dts/imx6qdl-nitrogen6x.dtsi
-+++ b/arch/arm/boot/dts/imx6qdl-nitrogen6x.dtsi
-@@ -124,7 +124,7 @@
- 		mux-ext-port = <3>;
+diff --git a/arch/arm/boot/dts/imx6qdl-sabrelite.dtsi b/arch/arm/boot/dts/imx6qdl-sabrelite.dtsi
+index ce4c731..6adbcdd 100644
+--- a/arch/arm/boot/dts/imx6qdl-sabrelite.dtsi
++++ b/arch/arm/boot/dts/imx6qdl-sabrelite.dtsi
+@@ -123,7 +123,7 @@
+ 		mux-ext-port = <4>;
  	};
  
 -	backlight_lcd {
@@ -34,7 +34,7 @@ index 340bc8e..ad16dce 100644
  		compatible = "pwm-backlight";
  		pwms = <&pwm1 0 5000000>;
  		brightness-levels = <0 4 8 16 32 64 128 255>;
-@@ -142,6 +142,43 @@
+@@ -141,6 +141,43 @@
  		status = "okay";
  	};
  
@@ -78,7 +78,7 @@ index 340bc8e..ad16dce 100644
  	panel {
  		compatible = "hannstar,hsd100pxn1";
  		backlight = <&backlight_lvds>;
-@@ -354,6 +391,39 @@
+@@ -348,6 +385,39 @@
  			>;
  		};
  
@@ -118,7 +118,7 @@ index 340bc8e..ad16dce 100644
  		pinctrl_pwm1: pwm1grp {
  			fsl,pins = <
  				MX6QDL_PAD_SD1_DAT3__PWM1_OUT 0x1b0b1
-@@ -421,6 +491,10 @@
+@@ -416,6 +486,10 @@
  	};
  };
  
