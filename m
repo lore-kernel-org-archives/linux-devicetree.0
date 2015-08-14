@@ -1,65 +1,252 @@
-From: Hongtao Wu <wuht06@gmail.com>
-Subject: [RFC PATCH v3 0/3] Add MMC host driver for Spreadtrum SoC
-Date: Sat, 15 Aug 2015 00:55:50 +0800
-Message-ID: <1439571353-30165-1-git-send-email-wuht06@gmail.com>
-References: <y>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <y>
-Sender: linux-kernel-owner@vger.kernel.org
-To: ulf.hansson@linaro.org, linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org, catalin.marinas@arm.com, will.deacon@arm.com, linux-arm-kernel@lists.infradead.org, shawn.lin@rock-chips.com
-Cc: Orson.Zhai@spreadtrum.com, Chunyan.Zhang@spreadtrum.com, Jason.Wu@spreadtrum.com
+From: Ganapatrao Kulkarni <gkulkarni@caviumnetworks.com>
+Subject: [PATCH v5 2/4] Documentation: arm64/arm: dt bindings for numa.
+Date: Fri, 14 Aug 2015 22:09:32 +0530
+Message-ID: <1439570374-4079-3-git-send-email-gkulkarni@caviumnetworks.com>
+References: <1439570374-4079-1-git-send-email-gkulkarni@caviumnetworks.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1439570374-4079-1-git-send-email-gkulkarni@caviumnetworks.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Will.Deacon@arm.com, catalin.marinas@arm.com, grant.likely@linaro.org, leif.lindholm@linaro.org, rfranz@cavium.com, ard.biesheuvel@linaro.org, msalter@redhat.com, robh+dt@kernel.org, steve.capper@linaro.org, hanjun.guo@linaro.org, al.stone@linaro.org, arnd@arndb.de, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org
+Cc: gpkulkarni@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-This patch adds MMC host driver for Spreadtrum SoC.
-The following coding style may be not meet kernel coding style.
-I am not sure this kind of coding style is better or worse.
-1) A macro that represent some bits of a register is added a prefix "__",
-    for example:
-    #define SDHOST_16_HOST_CTRL_2   0x3E
-    #define __TIMING_MODE_SDR12     0x0000
-    #define __TIMING_MODE_SDR25     0x0001
-    #define __TIMING_MODE_SDR50     0x0002
-    I think it is more useful to distinguish a register from a bit of this
-    register.
-2) A function in order to operate a register is also added a prefix "_".
-    If the functions(A) call other function(B), we added a prefix "__" before B,
-    for example:
-    static inline void _sdhost_enable_int(struct sdhost_host *host, u32 mask)
-    {
-        __local_writel(mask, host, SDHOST_32_INT_ST_EN);
-        __local_writel(mask, host, SDHOST_32_INT_SIG_EN);
-    }
-    I think this make the relationship of the function call more explicit.
+DT bindings for numa map for memory, cores and IOs using
+arm,associativity device node property.
 
-Changes in v3:
-- add Spreadtrum MMC DT bindings.
-- add MMC nodes in Spreadtrum DT files
-- release resources when there is an error or removing MMC host driver.
+Signed-off-by: Ganapatrao Kulkarni <gkulkarni@caviumnetworks.com>
+---
+ Documentation/devicetree/bindings/arm/numa.txt | 212 +++++++++++++++++++++++++
+ 1 file changed, 212 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/arm/numa.txt
 
-Changes in v2:
-- delete some redundant mdelay()
-- add error handling in some functions.
-
-Billows Wu(HongtaoWu) (3):
-  mmc: sprd: add MMC host driver for Spreadtrum SoC
-  Documentation: add Spreadtrum MMC DT bindings.
-  DT: add MMC nodes in Spreadtrum DT files.
-
- Documentation/devicetree/bindings/mmc/sprd-mmc.txt |   46 +
- arch/arm64/boot/dts/sprd/sc9836-openphone.dts      |   24 +
- arch/arm64/boot/dts/sprd/sharkl64.dtsi             |   44 +
- drivers/mmc/host/Kconfig                           |    6 +
- drivers/mmc/host/Makefile                          |    1 +
- drivers/mmc/host/sprd_sdhost.c                     | 1202 ++++++++++++++++++++
- drivers/mmc/host/sprd_sdhost.h                     |  615 ++++++++++
- drivers/mmc/host/sprd_sdhost_debugfs.c             |  212 ++++
- drivers/mmc/host/sprd_sdhost_debugfs.h             |   27 +
- 9 files changed, 2177 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/mmc/sprd-mmc.txt
- create mode 100644 drivers/mmc/host/sprd_sdhost.c
- create mode 100644 drivers/mmc/host/sprd_sdhost.h
- create mode 100644 drivers/mmc/host/sprd_sdhost_debugfs.c
- create mode 100644 drivers/mmc/host/sprd_sdhost_debugfs.h
-
---
-1.7.9.5
+diff --git a/Documentation/devicetree/bindings/arm/numa.txt b/Documentation/devicetree/bindings/arm/numa.txt
+new file mode 100644
+index 0000000..dc3ef86
+--- /dev/null
++++ b/Documentation/devicetree/bindings/arm/numa.txt
+@@ -0,0 +1,212 @@
++==============================================================================
++NUMA binding description.
++==============================================================================
++
++==============================================================================
++1 - Introduction
++==============================================================================
++
++Systems employing a Non Uniform Memory Access (NUMA) architecture contain
++collections of hardware resources including processors, memory, and I/O buses,
++that comprise what is commonly known as a NUMA node.
++Processor accesses to memory within the local NUMA node is generally faster
++than processor accesses to memory outside of the local NUMA node.
++DT defines interfaces that allow the platform to convey NUMA node
++topology information to OS.
++
++==============================================================================
++2 - arm,associativity
++==============================================================================
++The mapping is done using arm,associativity device property.
++this property needs to be present in every device node which needs to to be
++mapped to numa nodes.
++
++arm,associativity property is set of 32-bit integers which defines level of
++topology and boundary in the system at which a significant difference in
++performance can be measured between cross-device accesses within
++a single location and those spanning multiple locations.
++The first cell always contains the broadest subdivision within the system,
++while the last cell enumerates the individual devices, such as an SMT thread
++of a CPU, or a bus bridge within an SoC".
++
++ex:
++	/* board 0, socket 0, cluster 0, core 0  thread 0 */
++	arm,associativity = <0 0 0 0 0>;
++
++==============================================================================
++3 - arm,associativity-reference-points
++==============================================================================
++This property is a set of 32-bit integers, each representing an index into
++the arm,associativity nodes. The first integer is the most significant
++NUMA boundary and the following are progressively less significant boundaries.
++There can be more than one level of NUMA.
++
++Ex:
++	arm,associativity-reference-points = <0 1>;
++	The board Id(index 0) used first to calculate the associativity (node
++	distance), then follows the  socket id(index 1).
++
++	arm,associativity-reference-points = <1 0>;
++	The socket Id(index 1) used first to calculate the associativity,
++	then follows the board id(index 0).
++
++	arm,associativity-reference-points = <0>;
++	Only the board Id(index 0) used to calculate the associativity.
++
++	arm,associativity-reference-points = <1>;
++	Only socket Id(index 1) used to calculate the associativity.
++
++==============================================================================
++4 - Example dts
++==============================================================================
++
++Example: 2 Node system consists of 2 boards and each board having one socket
++and 8 core in each socket.
++
++	arm,associativity-reference-points = <0>;
++
++	memory@00c00000 {
++		device_type = "memory";
++		reg = <0x0 0x00c00000 0x0 0x80000000>;
++		/* board 0, socket 0, no specific core */
++		arm,associativity = <0 0 0xffff>;
++	};
++
++	memory@10000000000 {
++		device_type = "memory";
++		reg = <0x100 0x00000000 0x0 0x80000000>;
++		/* board 1, socket 0, no specific core */
++		arm,associativity = <1 0 0xffff>;
++	};
++
++	cpus {
++		#address-cells = <2>;
++		#size-cells = <0>;
++
++		cpu@000 {
++			device_type = "cpu";
++			compatible =  "arm,armv8";
++			reg = <0x0 0x000>;
++			enable-method = "psci";
++			/* board 0, socket 0, core 0*/
++			arm,associativity = <0 0 0>;
++		};
++		cpu@001 {
++			device_type = "cpu";
++			compatible =  "arm,armv8";
++			reg = <0x0 0x001>;
++			enable-method = "psci";
++			arm,associativity = <0 0 1>;
++		};
++		cpu@002 {
++			device_type = "cpu";
++			compatible =  "arm,armv8";
++			reg = <0x0 0x002>;
++			enable-method = "psci";
++			arm,associativity = <0 0 2>;
++		};
++		cpu@003 {
++			device_type = "cpu";
++			compatible =  "arm,armv8";
++			reg = <0x0 0x003>;
++			enable-method = "psci";
++			arm,associativity = <0 0 3>;
++		};
++		cpu@004 {
++			device_type = "cpu";
++			compatible =  "arm,armv8";
++			reg = <0x0 0x004>;
++			enable-method = "psci";
++			arm,associativity = <0 0 4>;
++		};
++		cpu@005 {
++			device_type = "cpu";
++			compatible =  "arm,armv8";
++			reg = <0x0 0x005>;
++			enable-method = "psci";
++			arm,associativity = <0 0 5>;
++		};
++		cpu@006 {
++			device_type = "cpu";
++			compatible =  "arm,armv8";
++			reg = <0x0 0x006>;
++			enable-method = "psci";
++			arm,associativity = <0 0 6>;
++		};
++		cpu@007 {
++			device_type = "cpu";
++			compatible =  "arm,armv8";
++			reg = <0x0 0x007>;
++			enable-method = "psci";
++			arm,associativity = <0 0 7>;
++		};
++		cpu@008 {
++			device_type = "cpu";
++			compatible =  "arm,armv8";
++			reg = <0x0 0x008>;
++			enable-method = "psci";
++			/* board 1, socket 0, core 0*/
++			arm,associativity = <1 0 0>;
++		};
++		cpu@009 {
++			device_type = "cpu";
++			compatible =  "arm,armv8";
++			reg = <0x0 0x009>;
++			enable-method = "psci";
++			arm,associativity = <1 0 1>;
++		};
++		cpu@00a {
++			device_type = "cpu";
++			compatible =  "arm,armv8";
++			reg = <0x0 0x00a>;
++			enable-method = "psci";
++			arm,associativity = <0 0 2>;
++		};
++		cpu@00b {
++			device_type = "cpu";
++			compatible =  "arm,armv8";
++			reg = <0x0 0x00b>;
++			enable-method = "psci";
++			arm,associativity = <1 0 3>;
++		};
++		cpu@00c {
++			device_type = "cpu";
++			compatible =  "arm,armv8";
++			reg = <0x0 0x00c>;
++			enable-method = "psci";
++			arm,associativity = <1 0 4>;
++		};
++		cpu@00d {
++			device_type = "cpu";
++			compatible =  "arm,armv8";
++			reg = <0x0 0x00d>;
++			enable-method = "psci";
++			arm,associativity = <1 0 5>;
++		};
++		cpu@00e {
++			device_type = "cpu";
++			compatible =  "arm,armv8";
++			reg = <0x0 0x00e>;
++			enable-method = "psci";
++			arm,associativity = <1 0 6>;
++		};
++		cpu@00f {
++			device_type = "cpu";
++			compatible =  "arm,armv8";
++			reg = <0x0 0x00f>;
++			enable-method = "psci";
++			arm,associativity = <1 0 7>;
++		};
++	};
++
++	pcie0: pcie0@0x8480,00000000 {
++		compatible = "arm,armv8";
++		device_type = "pci";
++		bus-range = <0 255>;
++		#size-cells = <2>;
++		#address-cells = <3>;
++		reg = <0x8480 0x00000000 0 0x10000000>;  /* Configuration space */
++		ranges = <0x03000000 0x8010 0x00000000 0x8010 0x00000000 0x70 0x00000000>; /* mem ranges */
++		/* board 0, socket 0, pci bus 0*/
++		arm,associativity = <0 0 0>;
++        };
+-- 
+1.8.1.4
