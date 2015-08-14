@@ -1,58 +1,40 @@
 From: Rob Herring <robherring2@gmail.com>
-Subject: Re: [PATCH v2 1/4] of/pci: Add of_pci_check_probe_only to parse "linux,pci-probe-only"
-Date: Fri, 14 Aug 2015 16:08:10 -0500
-Message-ID: <CAL_JsqL7VPB6nc-zRYm_73ZSgYVq_+a6sW_XZZ_LRaUXf4jTng@mail.gmail.com>
-References: <1439569159-10051-1-git-send-email-marc.zyngier@arm.com> <1439569159-10051-2-git-send-email-marc.zyngier@arm.com>
+Subject: Re: [PATCH v5] dtb: Create a common home for cross-architecture dtsi files.
+Date: Fri, 14 Aug 2015 16:21:51 -0500
+Message-ID: <CAL_JsqKv2aOEM-U7JNZnaHomA6HFBSFhSLZ-zhp7c20s6gQBaQ@mail.gmail.com>
+References: <1438618000-1091-1-git-send-email-ian.campbell@citrix.com> <1439287646.9747.212.camel@citrix.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <1439569159-10051-2-git-send-email-marc.zyngier@arm.com>
-Sender: linux-pci-owner@vger.kernel.org
-To: Marc Zyngier <marc.zyngier@arm.com>
-Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>, Paul Mackerras <paulus@samba.org>, Michael Ellerman <mpe@ellerman.id.au>, Will Deacon <will.deacon@arm.com>, Bjorn Helgaas <bhelgaas@google.com>, Suravee Suthikulpanit <Suravee.Suthikulpanit@amd.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, Alexander Graf <agraf@suse.de>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, linuxppc-dev <linuxppc-dev@lists.ozlabs.org>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Return-path: <linux-kbuild-owner@vger.kernel.org>
+In-Reply-To: <1439287646.9747.212.camel@citrix.com>
+Sender: linux-kbuild-owner@vger.kernel.org
+To: Ian Campbell <ian.campbell@citrix.com>, "arm@kernel.org" <arm@kernel.org>
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Kumar Gala <galak@codeaurora.org>, Liviu Dudau <liviu.dudau@arm.com>, Sudeep Holla <sudeep.holla@arm.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Russell King <linux@arm.linux.org.uk>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Kristina Martsenko <kristina.martsenko@arm.com>, Kevin Hilman <khilman@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Aug 14, 2015 at 11:19 AM, Marc Zyngier <marc.zyngier@arm.com> wrote:
-> Both pci-host-generic and Pseries parse the "linux,pci-probe-only"
-> to engage the PCI_PROBE_ONLY mode, and both have a subtle bug that
-> can be triggered if the property has no parameter.
++arm-soc
 
-Humm, I bet we could break a lot of machines if we fixed the core code
-to properly make pp->value NULL when there is no value.
+On Tue, Aug 11, 2015 at 5:07 AM, Ian Campbell <ian.campbell@citrix.com> wrote:
+> On Mon, 2015-08-03 at 17:06 +0100, Ian Campbell wrote:
+>> Commit 9ccd608070b6 ("arm64: dts: add device tree for ARM SMM-A53x2 on
+>> LogicTile Express 20MG") added a new dts file to arch/arm64 which
+>> included "../../../../arm/boot/dts/vexpress-v2m-rs1.dtsi", i.e. a
+>> .dtsi supplied by arch/arm.
+>>
+>> Unfortunately this causes some issues for the split device tree
+>> repository[0], since things get moved around there. In that context
+>> the new .dts ends up at src/arm64/arm/vexpress-v2f-1xv7-ca53x2.dts
+>> while the include is at src/arm/vexpress-v2m-rs1.dtsi.
+>
+> Hi Grant,
+>
+> Do you think there is any chance of getting this into 4.2-rc$NEXT or shall
+> we wait until 4.3? I'm assuming this should go via the DT tree, but maybe
+> it should go via an ARM tree?
 
-> Provide a generic implementation that can be used by both.
->
-> Signed-off-by: Marc Zyngier <marc.zyngier@arm.com>
-> ---
->  drivers/of/of_pci.c    | 30 ++++++++++++++++++++++++++++++
->  include/linux/of_pci.h |  3 +++
->  2 files changed, 33 insertions(+)
->
-> diff --git a/drivers/of/of_pci.c b/drivers/of/of_pci.c
-> index 5751dc5..a4e29ff 100644
-> --- a/drivers/of/of_pci.c
-> +++ b/drivers/of/of_pci.c
-> @@ -118,6 +118,36 @@ int of_get_pci_domain_nr(struct device_node *node)
->  EXPORT_SYMBOL_GPL(of_get_pci_domain_nr);
->
->  /**
-> + * of_pci_check_probe_only - Setup probe only mode if linux,pci-probe-only
-> + *                           is present and valid
-> + *
-> + * @node: device tree node that may contain the property (usually "chosen")
-> + *
-> + */
-> +void of_pci_check_probe_only(struct device_node *node)
-> +{
-> +       const int *prop;
-> +       int len;
-> +
-> +       if (!node)
-> +               return;
-> +
-> +       prop = of_get_property(node, "linux,pci-probe-only", &len);
-
-It is preferred to use of_property_read_u32 to avoid just these types
-of problems.
+I was assuming this would go thru the arm-soc tree which is why I
+acked it. It is getting a bit late for 4.2 at this point, but I guess
+the standalone tree remains broken for these platforms until this is
+done. Probably not such a big deal in grand scheme of things.
 
 Rob
