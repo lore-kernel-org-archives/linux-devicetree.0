@@ -1,375 +1,106 @@
-From: Alexey Kardashevskiy <aik@ozlabs.ru>
-Subject: Re: [PATCH v6 20/42] powerpc/powernv: Create PEs dynamically
-Date: Fri, 14 Aug 2015 23:52:44 +1000
-Message-ID: <55CDF2AC.2090908@ozlabs.ru>
-References: <1438834307-26960-1-git-send-email-gwshan@linux.vnet.ibm.com>
- <1438834307-26960-21-git-send-email-gwshan@linux.vnet.ibm.com>
+From: Lina Iyer <lina.iyer-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH RFC 08/10] hwspinlock: qcom: Lock #7 is special lock,
+ uses dynamic proc_id
+Date: Fri, 14 Aug 2015 08:12:22 -0600
+Message-ID: <20150814141222.GC86880@linaro.org>
+References: <438731339-58317-1-git-send-email-lina.iyer@linaro.org>
+ <1438792366-2737-1-git-send-email-lina.iyer@linaro.org>
+ <1438792366-2737-9-git-send-email-lina.iyer@linaro.org>
+ <20150813043036.GJ13472@usrtlx11787.corpusers.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=koi8-r; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <1438834307-26960-21-git-send-email-gwshan@linux.vnet.ibm.com>
-Sender: linux-pci-owner@vger.kernel.org
-To: Gavin Shan <gwshan@linux.vnet.ibm.com>, linuxppc-dev@lists.ozlabs.org
-Cc: linux-pci@vger.kernel.org, devicetree@vger.kernel.org, benh@kernel.crashing.org, mpe@ellerman.id.au, bhelgaas@google.com, grant.likely@linaro.org, robherring2@gmail.com, panto@antoniou-consulting.com
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20150813043036.GJ13472-P9SbAA3LsXe39TS3lRcy0mP6iJigPa5YXqFh9Ls21Oc@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Bjorn Andersson <bjorn.andersson-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>
+Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "agross-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org" <agross-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "msivasub-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org" <msivasub-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org" <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Jeffrey Hugo <jhugo-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 08/06/2015 02:11 PM, Gavin Shan wrote:
-> Currently, the PEs and their associated resources are assigned
-> in ppc_md.pcibios_fixup() except those consumed by SRIOV VFs.
-> The function is called for once after PCI probing and resources
-> assignment is finished which isn't hotplug friendly.
+On Wed, Aug 12 2015 at 22:30 -0600, Bjorn Andersson wrote:
+>On Wed 05 Aug 09:32 PDT 2015, Lina Iyer wrote:
 >
-> The patch creates PEs dynamically by ppc_md.pcibios_setup_bridge(),
-> which is called on the event during system bootup and PCI hotplug:
-> updating PCI bridge's windows after resource assignment/reassignment
-> are finished. For partial hotplug case, where not all PCI devices
-> belonging to the PE are unplugged and plugged again, we just need
-> unbinding/binding the affected PCI devices with the corresponding
-> PE without creating new one.
+>> Hwspinlocks are widely used between processors in an SoC, and also
+>> between elevation levels within in the same processor.  QCOM SoC's use
+>> hwspinlock to serialize entry into a low power mode when the context
+>> switches from Linux to secure monitor.
+>>
+>> Lock #7 has been assigned for this purpose. In order to differentiate
+>> between one cpu core holding a lock while another cpu is contending for
+>> the same lock, the proc id written into the lock is (128 + cpu id). This
+>> makes it unique value among the cpu cores and therefore when a core
+>> locks the hwspinlock, other cores would wait for the lock to be released
+>> since they would have a different proc id.  This value is specific for
+>> the lock #7 only.
+>>
 >
-> Besides, it might require additional resources (e.g. M32) to the
-> windows of the PCI bridge when unplugging current adapter, and
-> insert a different adapter if there is one PCI slot, which is
-> assumed behind root port, or the downstream bridge of the PCIE
-> switch behind root port. The parent bridge of the newly plugged
-> adapter would reject the request to add more resources, leading
-> to hotplug failure. For the issue, the patch extends the windows
-> of root port, or the upstream port of the PCIe switch behind root
-> port to PHB's windows when ppc_md.pcibios_setup_bridge() is called.
+>As I was thinking about this, I came to the conclusion that my argument
+>that it's system configuration and not a property of the block that lock
+>#7 is special is actually biting myself.
 >
-> There is no upstream bridge for root bus, so we have to fix it up
-> before any PE is created because the root bus PE is the ancestor
-> to anyone else.
+>Just as #7 is system configuration, so is the fact that 1 is the lock
+>value for all other locks.
 >
-> Signed-off-by: Gavin Shan <gwshan@linux.vnet.ibm.com>
-> ---
->   arch/powerpc/platforms/powernv/pci-ioda.c | 226 ++++++++++++++++++------------
->   arch/powerpc/platforms/powernv/pci.h      |   1 +
->   2 files changed, 137 insertions(+), 90 deletions(-)
+>I've been meaning to answer you, but I haven't come to a good conclusion
+>in this matter. I think that both of these properties should be possible
+>to express in DT, but I don't know how.
 >
-> diff --git a/arch/powerpc/platforms/powernv/pci-ioda.c b/arch/powerpc/platforms/powernv/pci-ioda.c
-> index 8aa6ab8..37847a3 100644
-> --- a/arch/powerpc/platforms/powernv/pci-ioda.c
-> +++ b/arch/powerpc/platforms/powernv/pci-ioda.c
-> @@ -1083,6 +1083,13 @@ static void pnv_ioda_setup_same_PE(struct pci_bus *bus, struct pnv_ioda_pe *pe)
->   				pci_name(dev));
->   			continue;
->   		}
-> +
-> +		/* The PCI device might be not detached from the
-> +		 * PE in partial hotplug case.
-> +		 */
-> +		if (pdn->pe_number != IODA_INVALID_PE)
-> +			continue;
-> +
->   		pdn->pe_number = pe->pe_number;
->   		pe->dma32_weight += pnv_ioda_dma_weight(dev);
->   		if ((pe->flags & PNV_IODA_PE_BUS_ALL) && dev->subordinate)
-> @@ -1101,9 +1108,27 @@ static struct pnv_ioda_pe *pnv_ioda_setup_bus_PE(struct pci_bus *bus, bool all)
->   	struct pci_controller *hose = pci_bus_to_host(bus);
->   	struct pnv_phb *phb = hose->private_data;
->   	struct pnv_ioda_pe *pe = NULL;
-> +	int pe_num;
-> +
-> +	/* For partial hotplug case, the PE instance hasn't been destroyed
-> +	 * yet. We shouldn't allocated a new one and assign resources to
-> +	 * it. The existing PE instance should be reused, but we should
-> +	 * associate the devices to the PE.
-> +	 */
-> +	pe_num = phb->ioda.pe_rmap[bus->number << 8];
-> +	if (pe_num != IODA_INVALID_PE) {
-> +		pe = &phb->ioda.pe_array[pe_num];
-> +		pnv_ioda_setup_same_PE(bus, pe);
-> +		return NULL;
-> +	}
-> +
-> +	/* PE number for root bus should have been reserved */
-> +	if (pci_is_root_bus(bus) &&
-> +	    phb->ioda.root_pe_idx != IODA_INVALID_PE)
-> +		pe = &phb->ioda.pe_array[phb->ioda.root_pe_idx];
->
->   	/* Check if PE is determined by M64 */
-> -	if (phb->pick_m64_pe)
-> +	if (!pe && phb->pick_m64_pe)
+I thought about that. These are s/w imposed behavior. As a far as the
+h/w is concerned, you could just write a non-zero value and the lock is
+considered acquired. So placing that in DT may not be appropriate.
 
-
-else if (phb->pick_m64_pe)
-
-
-
->   		pe = phb->pick_m64_pe(bus, all);
 >
->   	/* The PE number isn't pinned by M64 */
-> @@ -1150,46 +1175,6 @@ static struct pnv_ioda_pe *pnv_ioda_setup_bus_PE(struct pci_bus *bus, bool all)
->   	return pe;
->   }
+>Perhaps we should just list each lock that we expose as a subnode in DT
+>with a property to indicate the lock value - with the possibility of
+>indicating cpu_id.
 >
-> -static void pnv_ioda_setup_PEs(struct pci_bus *bus)
-> -{
-> -	struct pci_dev *dev;
-> -
-> -	pnv_ioda_setup_bus_PE(bus, false);
-> -
-> -	list_for_each_entry(dev, &bus->devices, bus_list) {
-> -		if (dev->subordinate) {
-> -			if (pci_pcie_type(dev) == PCI_EXP_TYPE_PCI_BRIDGE)
-> -				pnv_ioda_setup_bus_PE(dev->subordinate, true);
-> -			else
-> -				pnv_ioda_setup_PEs(dev->subordinate);
-> -		}
-> -	}
-> -}
-> -
-> -/*
-> - * Configure PEs so that the downstream PCI buses and devices
-> - * could have their associated PE#. Unfortunately, we didn't
-> - * figure out the way to identify the PLX bridge yet. So we
-> - * simply put the PCI bus and the subordinate behind the root
-> - * port to PE# here. The game rule here is expected to be changed
-> - * as soon as we can detected PLX bridge correctly.
-> - */
-> -static void pnv_pci_ioda_setup_PEs(void)
-> -{
-> -	struct pci_controller *hose, *tmp;
-> -	struct pnv_phb *phb;
-> -
-> -	list_for_each_entry_safe(hose, tmp, &hose_list, list_node) {
-> -		phb = hose->private_data;
-> -
-> -		/* M64 layout might affect PE allocation */
-> -		if (phb->reserve_m64_pe)
-> -			phb->reserve_m64_pe(hose->bus, NULL, true);
-> -
-> -		pnv_ioda_setup_PEs(hose->bus);
-> -	}
-> -}
-> -
->   #ifdef CONFIG_PCI_IOV
->   static int pnv_pci_vf_release_m64(struct pci_dev *pdev)
->   {
-> @@ -2962,52 +2947,6 @@ static void pnv_ioda_setup_pe_seg(struct pci_controller *hose,
->   	}
->   }
+>Something like:
 >
-> -static void pnv_pci_ioda_setup_seg(void)
-> -{
-> -	struct pci_controller *tmp, *hose;
-> -	struct pnv_phb *phb;
-> -	struct pnv_ioda_pe *pe;
-> -
-> -	list_for_each_entry_safe(hose, tmp, &hose_list, list_node) {
-> -		phb = hose->private_data;
-> -		list_for_each_entry(pe, &phb->ioda.pe_list, list) {
-> -			pnv_ioda_setup_pe_seg(hose, pe);
-> -		}
-> -	}
-> -}
-> -
-> -static void pnv_pci_ioda_setup_DMA(void)
-> -{
-> -	struct pci_controller *hose, *tmp;
-> -	struct pnv_phb *phb;
-> -	struct pnv_ioda_pe *pe;
-> -
-> -	list_for_each_entry_safe(hose, tmp, &hose_list, list_node) {
-> -		phb = hose->private_data;
-> -		pnv_pci_ioda_setup_opal_tce_kill(phb);
-> -
-> -		list_for_each_entry(pe, &phb->ioda.pe_dma_list, dma_link) {
-> -			if (!pe->dma32_weight)
-> -				continue;
-> -
-> -			switch (phb->type) {
-> -			case PNV_PHB_IODA1:
-> -				pnv_ioda1_setup_dma(phb, pe);
-> -				break;
-> -			case PNV_PHB_IODA2:
-> -				pnv_pci_ioda2_setup_dma_pe(phb, pe);
-> -				break;
-> -			default:
-> -				pr_warn("%s: No DMA for PHB type %d\n",
-> -					__func__, phb->type);
-> -			}
-> -		}
-> -
-> -		/* Mark the PHB initialization done */
-> -		phb->initialized = 1;
-> -	}
-> -}
-> -
->   static void pnv_pci_ioda_create_dbgfs(void)
->   {
->   #ifdef CONFIG_DEBUG_FS
-> @@ -3029,9 +2968,8 @@ static void pnv_pci_ioda_create_dbgfs(void)
+>tcsr-mutex {
+>	compatible = "qcom,tcsr-mutex";
+>	syscon = <&tcsr_mutex_block 0 0x80>;
 >
->   static void pnv_pci_ioda_fixup(void)
->   {
-> -	pnv_pci_ioda_setup_PEs();
-> -	pnv_pci_ioda_setup_seg();
-> -	pnv_pci_ioda_setup_DMA();
-> +	struct pci_controller *hose, *tmp;
-> +	struct pnv_phb *phb;
+>	#hwlock-cells = <1>;
+>	#address-cells = <1>;
+>	#size-cells = <0>;
 >
->   	pnv_pci_ioda_create_dbgfs();
+>	smem-lock@3 {
+>		reg = <3>;
+>		qcom,lock-value = <1>;
+>	};
 >
-> @@ -3039,6 +2977,12 @@ static void pnv_pci_ioda_fixup(void)
->   	eeh_init();
->   	eeh_addr_cache_build();
->   #endif
-> +
-> +	/* Notify initialization of PHB done */
-> +	list_for_each_entry_safe(hose, tmp, &hose_list, list_node) {
-> +		phb = hose->private_data;
-> +		phb->initialized = 1;
-> +	}
->   }
+>	scm-lock@7 {
+>		reg = <7>;
+>		qcom,lock-value-from-cpu-id;
+>		qcom,lock-raw;
+>	};
+>};
 >
->   /*
-> @@ -3082,6 +3026,105 @@ static resource_size_t pnv_pci_window_alignment(struct pci_bus *bus,
->   	return phb->ioda.io_segsize;
->   }
+>As we don't reference most of these locks anyways I don't think this
+>would still be reasonable. And if reg is an array it's quite compact.
 >
-> +/*
-> + * We are updating root port or the upstream bridge behind the
-> + * root port with PHB's windows in order to accommodate the
-> + * changes on required resources during PCI (slot) hotplug,
-> + * which is connected to either root port or the downstream
-> + * ports of PCIe switch behind the root port.
-> + */
-> +static void pnv_pci_fixup_bridge_resources(struct pci_bus *bus,
-> +					   unsigned long type)
-> +{
-> +	struct pci_controller *hose = pci_bus_to_host(bus);
-> +	struct pnv_phb *phb = hose->private_data;
-> +	struct pci_dev *bridge = bus->self;
-> +	struct resource *r, *w;
-> +	int i;
-> +
-> +	/* Check if we need apply fixup to the bridge's windows */
-> +	if (!pci_is_root_bus(bridge->bus) &&
-> +	    !pci_is_root_bus(bridge->bus->self->bus))
-> +		return;
-> +
-> +	/* Fixup the resoureces */
-> +	for (i = 0; i < PCI_BRIDGE_RESOURCE_NUM; i++) {
-> +		r = &bridge->resource[PCI_BRIDGE_RESOURCES + i];
-> +		if (!r->flags || !r->parent)
-> +			continue;
-> +
-> +		w = NULL;
-> +		if (r->flags & type & IORESOURCE_IO)
-> +			w = &hose->io_resource;
-> +		else if (pnv_pci_is_mem_pref_64(r->flags) &&
-> +			 (type & IORESOURCE_PREFETCH) &&
-> +			 phb->ioda.m64_segsize)
-> +			w = &hose->mem_resources[1];
-> +		else if (r->flags & type & IORESOURCE_MEM)
-> +			w = &hose->mem_resources[0];
-> +
-> +		r->start = w->start;
-> +		r->end = w->end;
-> +	}
-> +}
-> +
-> +static void pnv_pci_setup_bridge(struct pci_bus *bus,
-> +				 unsigned long type)
-> +{
-> +	struct pci_controller *hose = pci_bus_to_host(bus);
-> +	struct pnv_phb *phb = hose->private_data;
-> +	struct pci_dev *bridge = bus->self;
-> +	struct pnv_ioda_pe *pe;
-> +	bool all = (pci_pcie_type(bridge) == PCI_EXP_TYPE_PCI_BRIDGE);
-> +
-> +	/* The root bus (ancestor PE) should be finalized
-> +	 * before anyone else
-> +	 */
-> +	if (!phb->ioda.root_pe_is_populated) {
-> +		pe = pnv_ioda_setup_bus_PE(phb->hose->bus, false);
-> +		if (pe && phb->ioda.root_pe_idx == IODA_INVALID_PE)
-> +			phb->ioda.root_pe_idx = pe->pe_number;
-> +			phb->ioda.root_pe_is_populated = true;
-> +		}
+But, looking at the DT, its not evident what lock-value-from-cpu-id,
+would mean.  It is an implementation detail of Linux (as a result of
+firmware). May be better to just hide it in the hwspinlock driver.
 
+I am not sure about lock-raw, but I would think its not QCOM specific.
+Imagine the case, when hwspinlock framework does not s/w spinlock around
+the hwspinlock, we wouldnt have this property. The reason why we
+spinlock around the hwspinlock is because we dont have a good way to
+generate a unique value for the hwspinlock, so multiple threads
+acquiring the same locks could safely be assured that they have acquired
+the lock. While convenient and probably more effecient to just have s/w
+spinlocks around the hwspinlock, the problem here is it is mandated
+across all locks.
 
-This "}" should be 1 tab left. Of you lost one "{" after if() and its 
-counterpart.
+To me it seems OK to explicity call out lock #7 as unique entity in the
+bank that is compatible with a raw hwspinlock in the DT. But the value
+that lock #7 uses is an implementation detail and should rest wth the
+drivers.
 
-
-
-> +
-> +	/* Extend bridge's windows if necessary */
-> +	pnv_pci_fixup_bridge_resources(bus, type);
-> +
-> +	/* Don't assign PE to bus which doesn't have any
-> +	 * subordinate PCI devices.
-> +	 */
-> +	if (list_empty(&bus->devices))
-> +		return;
-> +
-> +	/* Reserve PEs for M64 resource */
-> +	if (phb->reserve_m64_pe)
-> +		phb->reserve_m64_pe(bus, NULL, all);
-> +
-> +	/* Assign PE. We might run here because of partial hotplug.
-> +	 * For the case, we just pick up the existing PE and should
-> +	 * not allocate resources again.
-> +	 */
-> +	pe = pnv_ioda_setup_bus_PE(bus, all);
-> +	if (!pe)
-> +		return;
-> +
-> +	/* Setup MMIO mapping */
-> +	pnv_ioda_setup_pe_seg(hose, pe);
-> +
-> +	/* Setup DMA */
-> +	switch (phb->type) {
-> +	case PNV_PHB_IODA1:
-> +		pnv_ioda1_setup_dma(phb, pe);
-> +		break;
-> +	case PNV_PHB_IODA2:
-> +		pnv_pci_ioda2_setup_dma_pe(phb, pe);
-> +		break;
-> +	default:
-> +		pr_warn("%s: No DMA for PHB type %d\n",
-> +			__func__, phb->type);
-> +	}
-> +}
-> +
->   #ifdef CONFIG_PCI_IOV
->   static resource_size_t pnv_pci_iov_resource_alignment(struct pci_dev *pdev,
->   						      int resno)
-> @@ -3147,6 +3190,7 @@ static const struct pci_controller_ops pnv_pci_ioda_controller_ops = {
->   #endif
->          .enable_device_hook = pnv_pci_enable_device_hook,
->          .window_alignment = pnv_pci_window_alignment,
-> +	.setup_bridge = pnv_pci_setup_bridge,
->          .reset_secondary_bus = pnv_pci_reset_secondary_bus,
->          .dma_set_mask = pnv_pci_ioda_dma_set_mask,
->          .shutdown = pnv_pci_ioda_shutdown,
-> @@ -3218,6 +3262,8 @@ static void __init pnv_pci_init_ioda_phb(struct device_node *np,
->   	if (phb->regs == NULL)
->   		pr_err("  Failed to map registers !\n");
->
-> +	pnv_pci_ioda_setup_opal_tce_kill(phb);
-> +
->   	/* Initialize more IODA stuff */
->   	phb->ioda.total_pe_num = 1;
->   	prop32 = of_get_property(np, "ibm,opal-num-pes", NULL);
-> diff --git a/arch/powerpc/platforms/powernv/pci.h b/arch/powerpc/platforms/powernv/pci.h
-> index e93a489..a160491 100644
-> --- a/arch/powerpc/platforms/powernv/pci.h
-> +++ b/arch/powerpc/platforms/powernv/pci.h
-> @@ -136,6 +136,7 @@ struct pnv_phb {
->   			/* Global bridge info */
->   			unsigned int		total_pe_num;
->   			unsigned int		root_pe_idx;
-> +			bool			root_pe_is_populated;
->   			unsigned int		reserved_pe_idx;
->
->   			/* 32-bit MMIO window */
->
-
-
--- 
-Alexey
+Thanks,
+Lina
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
