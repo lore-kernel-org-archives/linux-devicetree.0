@@ -1,41 +1,65 @@
-From: Shawn Lin <shawn.lin@rock-chips.com>
-Subject: [RFC PATCH v5 9/9] arm: zx_defconfig: remove CONFIG_MMC_DW_IDMAC
-Date: Fri, 14 Aug 2015 16:36:45 +0800
-Message-ID: <1439541405-30477-1-git-send-email-shawn.lin@rock-chips.com>
-References: <1439541232-30100-1-git-send-email-shawn.lin@rock-chips.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1439541232-30100-1-git-send-email-shawn.lin@rock-chips.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: jh80.chung@samsung.com, ulf.hansson@linaro.org
-Cc: Vineet.Gupta1@synopsys.com, Wei Xu <xuwei5@hisilicon.com>, Joachim Eastwood <manabian@gmail.com>, Alexey Brodkin <abrodkin@synopsys.com>, Kukjin Kim <kgene@kernel.org>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, Russell King <linux@arm.linux.org.uk>, Zhangfei Gao <zhangfei.gao@linaro.org>, Jun Nie <jun.nie@linaro.org>, Ralf Baechle <ralf@linux-mips.org>, Govindraj Raja <govindraj.raja@imgtec.com>, Arnd Bergmann <arnd@arndb.de>, heiko@sntech.de, dianders@chromium.org, linux-samsung-soc@vger.kernel.org, linux-mips@linux-mips.org, linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Shawn Lin <shawn.lin@rock-chips.com>
+From: Benjamin Gaignard <benjamin.gaignard-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH] enable HQVDP for stih410 platform
+Date: Fri, 14 Aug 2015 10:50:21 +0200
+Message-ID: <CA+M3ks4PGmyS6ZdrYy708VhvC6f4wNye-i1fMm1oxRDD5mEckw@mail.gmail.com>
+References: <1439305964-15641-1-git-send-email-benjamin.gaignard@linaro.org>
+	<55CDA81C.6040307@st.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <55CDA81C.6040307-qxv4g6HH51o@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Maxime Coquelin <maxime.coquelin-qxv4g6HH51o@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, Vincent Abriou <vincent.abriou-qxv4g6HH51o@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-DesignWare MMC Controller's transfer mode should be decided
-at runtime instead of compile-time. So we remove this config
-option and read dw_mmc's register to select DMA master.
+It is fine for me,
 
-Signed-off-by: Shawn Lin <shawn.lin@rock-chips.com>
----
+Thanks,
+Benjamin
 
-Changes in v5: None
-Changes in v4: None
-Changes in v3: None
-Changes in v2: None
+2015-08-14 10:34 GMT+02:00 Maxime Coquelin <maxime.coquelin-qxv4g6HH51o@public.gmane.org>:
+> Hi Benjamin,
+>
+>     The title needs to be appended with "ARM: dts:".
+>
+>     If you agree, I can fix this when applying it.
+>
+>
+> On 08/11/2015 05:12 PM, Benjamin Gaignard wrote:
+>>
+>> From: Vincent Abriou <vincent.abriou-qxv4g6HH51o@public.gmane.org>
+>>
+>> Add HQVDP in stih410 devicetree to enable it.
+>> HQVDP bindings have been describe in
+>> Documentation/devicetree/bindings/gpu/st,stih4xx.txt file.
+>>
+>> Signed-off-by: Vincent Abriou <vincent.abriou-qxv4g6HH51o@public.gmane.org>
+>
+> You need also your sign-off here. I will add it too.
+>>
+>> ---
+>>   arch/arm/boot/dts/stih410.dtsi | 10 ++++++++++
+>>   1 file changed, 10 insertions(+)
+>>
+>>
+>
+> Regards,
+> Maxime
 
- arch/arm/configs/zx_defconfig | 1 -
- 1 file changed, 1 deletion(-)
 
-diff --git a/arch/arm/configs/zx_defconfig b/arch/arm/configs/zx_defconfig
-index b200bb0..ab683fb 100644
---- a/arch/arm/configs/zx_defconfig
-+++ b/arch/arm/configs/zx_defconfig
-@@ -83,7 +83,6 @@ CONFIG_MMC=y
- CONFIG_MMC_UNSAFE_RESUME=y
- CONFIG_MMC_BLOCK_MINORS=16
- CONFIG_MMC_DW=y
--CONFIG_MMC_DW_IDMAC=y
- CONFIG_EXT2_FS=y
- CONFIG_EXT4_FS=y
- CONFIG_EXT4_FS_POSIX_ACL=y
--- 
-2.3.7
+
+--=20
+Benjamin Gaignard
+
+Graphic Working Group
+
+Linaro.org =E2=94=82 Open source software for ARM SoCs
+
+=46ollow Linaro: Facebook | Twitter | Blog
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
