@@ -1,41 +1,43 @@
-From: Christophe Ricard <christophe.ricard-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH 10/11] nfc: st-nci: Remove pr_err in llt_ndlc_rcv_queue when ndlc header is unknown
-Date: Fri, 14 Aug 2015 22:33:39 +0200
-Message-ID: <1439584420-5446-11-git-send-email-christophe-h.ricard@st.com>
-References: <1439584420-5446-1-git-send-email-christophe-h.ricard@st.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1439584420-5446-1-git-send-email-christophe-h.ricard-qxv4g6HH51o@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org
-Cc: linux-nfc-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org, christophe-h.ricard-qxv4g6HH51o@public.gmane.org, christophe.ricard-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH 1/5] net: add Hisilicon Network Subsystem support (config and documents)
+Date: Fri, 14 Aug 2015 22:49:50 +0200
+Message-ID: <1536926.jEJjsM70Lj@wuerfel>
+References: <1439548222-231611-1-git-send-email-liguozhu@hisilicon.com> <1439548222-231611-2-git-send-email-liguozhu@hisilicon.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1439548222-231611-2-git-send-email-liguozhu@hisilicon.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Kenneth Lee <liguozhu@hisilicon.com>
+Cc: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, catalin.marinas@arm.com, will.deacon@arm.com, Yisen.Zhuang@huawei.com, davem@davemloft.net, paul.gortmaker@windriver.com, dingtianhong@huawei.com, zhangfei.gao@linaro.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, netdev@vger.kernel.org, linuxarm@huawei.com, salil.mehta@huawei.com, huangdaode@hisilicon.com, Kenneth Lee <liguozhu@huawei.com>
 List-Id: devicetree@vger.kernel.org
 
-spi phy needs to use ndlc_recv at every spi transaction causing "unknown
-packet control byte" error message each time the header is 00.
+On Friday 14 August 2015 18:30:18 Kenneth Lee wrote:
+> diff --git a/Documentation/devicetree/bindings/net/hisilicon-hns-nic.txt b/Documentation/devicetree/bindings/net/hisilicon-hns-nic.txt
+> new file mode 100644
+> index 0000000..5ab6969
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/net/hisilicon-hns-nic.txt
+> @@ -0,0 +1,14 @@
+> +Hisilicon Network Subsystem NIC controller
+> +
+> +Required properties:
+> +- compatible: hisilicon,hns-nic
+> +- ae-name: accelerator name who provide this interface
+> +- ae-opts: options (string) to the accelerator. e.g. the index interface
+> +
+> +Example:
+> +
+> +       ethernet@0{
+> +               compatible = "hisilicon,hns-nic";
+> +               ae-name = "soc0-n4";
+> +               ae-opts = "0";
+> +       };
+> 
 
-Make this silent.
+These properties look very unconventional. What are the valid strings
+for ae-name and ae-opts? It looks like the latter is just a number,
+so why not use an integer property?
 
-Signed-off-by: Christophe Ricard <christophe-h.ricard-qxv4g6HH51o@public.gmane.org>
----
- drivers/nfc/st-nci/ndlc.c | 1 -
- 1 file changed, 1 deletion(-)
-
-diff --git a/drivers/nfc/st-nci/ndlc.c b/drivers/nfc/st-nci/ndlc.c
-index 4f51649..d2cf84e 100644
---- a/drivers/nfc/st-nci/ndlc.c
-+++ b/drivers/nfc/st-nci/ndlc.c
-@@ -194,7 +194,6 @@ static void llt_ndlc_rcv_queue(struct llt_ndlc *ndlc)
- 					  msecs_to_jiffies(NDLC_TIMER_T1_WAIT));
- 				break;
- 			default:
--				pr_err("UNKNOWN Packet Control Byte=%d\n", pcb);
- 				kfree_skb(skb);
- 				break;
- 			}
--- 
-2.1.4
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+	Arnd
