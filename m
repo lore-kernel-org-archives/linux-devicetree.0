@@ -1,65 +1,82 @@
-From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Subject: Re: [PATCH 0/5] iommu/msm: Add DT adaptation and generic bindings
- support
-Date: Fri, 14 Aug 2015 10:30:35 +0100
-Message-ID: <55CDB53B.9000605@linaro.org>
-References: <1439390869-6347-1-git-send-email-sricharan@codeaurora.org>
+From: Jyri Sarha <jsarha@ti.com>
+Subject: [PATCH RFC v3 0/7] Implement generic ASoC HDMI codec
+	and use it in tda998x
+Date: Fri, 14 Aug 2015 12:30:38 +0300
+Message-ID: <cover.1439542916.git.jsarha@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <1439390869-6347-1-git-send-email-sricharan@codeaurora.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Sricharan R <sricharan@codeaurora.org>, linux-arm-kernel@lists.infradead.org, iommu@lists.linux-foundation.org, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, robin.murphy@arm.com, robdclark@gmail.com, joro@8bytes.org, laurent.pinchart@ideasonboard.com, Will.Deacon@arm.com, stepanm@codeaurora.org, treding@nvidia.com
+Return-path: <alsa-devel-bounces@alsa-project.org>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: dri-devel@lists.freedesktop.org, airlied@linux.ie, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, bcousson@baylibre.com, alsa-devel@alsa-project.org
+Cc: peter.ujfalusi@ti.com, moinejf@free.fr, tony@atomide.com, broonie@kernel.org, Jyri Sarha <jsarha@ti.com>, liam.r.girdwood@linux.intel.com, tomi.valkeinen@ti.com, rmk+kernel@arm.linux.org.uk
 List-Id: devicetree@vger.kernel.org
 
-Hi Sricharan,
+This is my third RFC patch series on the subject. This time also the
+tda998x driver patches are a serious attempt to come up with an
+initial implementation for HDMI audio ASoC support.
 
-thanks for the patches,
+Russell's "drm/edid: add function to help find SADs" is here just to
+produce a working patch-set on top of mainline. It should be getting in
+trough drm-next at some point.
 
-On 12/08/15 15:47, Sricharan R wrote:
-> The msm_iommu.c driver currently works based on platform data. A single master
-> device can be connected to more than one iommu and multiple contexts in each
-> of the iommu. This association between master and iommus was represented
-> from platform data using parent/child devices. The master drivers were
-> responsible for attaching all of the iommus/context to a domain. Now the
-> platform data support is removed and DT support is added. The master/iommus
-> are added through generic iommu bindings.
->
-> This is essentially rework of the patch posted earlier by
-> Rob Clark <robdclark@gmail.com>. This series folds the changes
-> in to the existing driver with the addition of generic bindings.
->
->          http://www.spinics.net/lists/linux-arm-msm/msg10077.html
->
-> This series is based on the IOMMU probe deferral series from
-> Laurent Pinchart <laurent.pinchart@ideasonboard.com>
->
->          https://lkml.org/lkml/2015/5/14/786
->
-> Tested this series on ifc6410 board.
->
-I tested this series on IFC6410 with both HDMI and LVDS Panel with 
-openbox desktop. It works.. :-)
+The binding for tda998x is taken from Jean Francois' patch series[1] on
+the same subject. The implementation of the of-node parsing has some
+minor changes from my self.
 
-Tested-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Here is what I think at least could or should still be done, but non of
+that stuff does not sounds critical right now.
+ 
+Missing from tda998x driver side
+- hdmi_codec_ops audio_startup() implementation for audio abort support
+- multi channel audio support (I would need specs and preferably some
+  HW to test for this).
 
---srini
-> Sricharan R (5):
->    iommu/msm: Add DT adaptation
->    iommu/msm: Move the contents from msm_iommu_dev.c to msm_iommu.c
->    iommu/msm: Add support for generic master bindings
->    iommu/msm: Set cacheability attributes without tex remap
->    iommu/msm: Remove driver BROKEN
->
->   .../devicetree/bindings/iommu/msm,iommu-v0.txt     |  59 +++
->   drivers/iommu/Kconfig                              |   1 -
->   drivers/iommu/Makefile                             |   2 +-
->   drivers/iommu/msm_iommu.c                          | 508 ++++++++++++++-------
->   drivers/iommu/msm_iommu.h                          |  73 ++-
->   drivers/iommu/msm_iommu_dev.c                      | 392 ----------------
->   drivers/iommu/msm_iommu_hw-8xxx.h                  |  10 +-
->   7 files changed, 432 insertions(+), 613 deletions(-)
->   create mode 100644 Documentation/devicetree/bindings/iommu/msm,iommu-v0.txt
->   delete mode 100644 drivers/iommu/msm_iommu_dev.c
->
+Missing from ASoC side generic implementation:
+- channel_allocation handling is completely left for the video side driver,
+  see if ASoC side could help in any way
+- snd_soc_jack functionality to handle hdmi cable plug/unplug events
+
+[1] http://mailman.alsa-project.org/pipermail/alsa-devel/2015-July/095596.html
+
+Best regards,
+Jyri
+
+Jean-Francois Moine (1):
+  drm/i2c: tda998x: Add support of a DT graph of ports
+
+Jyri Sarha (5):
+  ASoC: hdmi: Remove obsolete dummy HDMI codec
+  ASoC: hdmi-codec: Add hdmi-codec for external HDMI-encoders
+  drm/i2c: tda998x: Remove include/sound/tda998x.h and fix graph parsing
+  drm/i2c: tda998x: Register ASoC HDMI codec for audio functionality
+  ARM: dts: am335x-boneblack: Add HDMI audio support
+
+Russell King - ARM Linux (1):
+  drm/edid: add function to help find SADs, DO NOT MERGE
+
+ .../devicetree/bindings/drm/i2c/tda998x.txt        |  51 +++
+ arch/arm/boot/dts/am335x-boneblack.dts             |  90 +++-
+ drivers/gpu/drm/i2c/Kconfig                        |   1 +
+ drivers/gpu/drm/i2c/tda998x_drv.c                  | 336 +++++++++++++--
+ include/drm/drm_edid.h                             |  19 +
+ include/sound/hdmi-codec.h                         |  99 +++++
+ sound/soc/codecs/Kconfig                           |   3 +-
+ sound/soc/codecs/Makefile                          |   4 +-
+ sound/soc/codecs/hdmi-codec.c                      | 467 +++++++++++++++++++++
+ sound/soc/codecs/hdmi.c                            | 109 -----
+ 10 files changed, 1026 insertions(+), 153 deletions(-)
+ create mode 100644 include/sound/hdmi-codec.h
+ create mode 100644 sound/soc/codecs/hdmi-codec.c
+ delete mode 100644 sound/soc/codecs/hdmi.c
+
+-- 
+1.9.1
