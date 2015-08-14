@@ -1,7 +1,7 @@
 From: Christophe Ricard <christophe.ricard@gmail.com>
-Subject: [PATCH 06/11] nfc: st-nci: Remove data from ack_pending_q when receiving a NDLC PCB_SYNC_ACK
-Date: Fri, 14 Aug 2015 22:33:35 +0200
-Message-ID: <1439584420-5446-7-git-send-email-christophe-h.ricard@st.com>
+Subject: [PATCH 02/11] nfc: st-nci: Fix typo when changing from st21nfcb to st-nci
+Date: Fri, 14 Aug 2015 22:33:31 +0200
+Message-ID: <1439584420-5446-3-git-send-email-christophe-h.ricard@st.com>
 References: <1439584420-5446-1-git-send-email-christophe-h.ricard@st.com>
 Return-path: <stable-owner@vger.kernel.org>
 In-Reply-To: <1439584420-5446-1-git-send-email-christophe-h.ricard@st.com>
@@ -10,27 +10,76 @@ To: sameo@linux.intel.com
 Cc: linux-nfc@lists.01.org, christophe-h.ricard@st.com, christophe.ricard@gmail.com, devicetree@vger.kernel.org, stable@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-When receiving a NDLC PCB_SYNC_ACK the pending data was never removed from
-ack_pending_q and cleared.
+Replace ST21NFCB with ST_NCI or st21nfcb with st_nci as it was forgotten
+in commit "nfc: st-nci: Rename st21nfcb to st-nci"
+ed06aeefdac348cfb91a3db5fe1067e3202afd70
 
 Cc: stable@vger.kernel.org
 Signed-off-by: Christophe Ricard <christophe-h.ricard@st.com>
 ---
- drivers/nfc/st-nci/ndlc.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/nfc/st-nci/i2c.c | 18 +++++++++---------
+ 1 file changed, 9 insertions(+), 9 deletions(-)
 
-diff --git a/drivers/nfc/st-nci/ndlc.c b/drivers/nfc/st-nci/ndlc.c
-index 56c6a4c..bb08b16 100644
---- a/drivers/nfc/st-nci/ndlc.c
-+++ b/drivers/nfc/st-nci/ndlc.c
-@@ -171,6 +171,8 @@ static void llt_ndlc_rcv_queue(struct llt_ndlc *ndlc)
- 		if ((pcb & PCB_TYPE_MASK) == PCB_TYPE_SUPERVISOR) {
- 			switch (pcb & PCB_SYNC_MASK) {
- 			case PCB_SYNC_ACK:
-+				skb = skb_dequeue(&ndlc->ack_pending_q);
-+				kfree_skb(skb);
- 				del_timer_sync(&ndlc->t1_timer);
- 				del_timer_sync(&ndlc->t2_timer);
- 				ndlc->t2_active = false;
+diff --git a/drivers/nfc/st-nci/i2c.c b/drivers/nfc/st-nci/i2c.c
+index b2a467c..a15144d 100644
+--- a/drivers/nfc/st-nci/i2c.c
++++ b/drivers/nfc/st-nci/i2c.c
+@@ -29,11 +29,11 @@
+ 
+ #include "ndlc.h"
+ 
+-#define DRIVER_DESC "NCI NFC driver for ST21NFCB"
++#define DRIVER_DESC "NCI NFC driver for ST_NCI"
+ 
+ /* ndlc header */
+-#define ST21NFCB_FRAME_HEADROOM	1
+-#define ST21NFCB_FRAME_TAILROOM 0
++#define ST_NCI_FRAME_HEADROOM	1
++#define ST_NCI_FRAME_TAILROOM 0
+ 
+ #define ST_NCI_I2C_MIN_SIZE 4   /* PCB(1) + NCI Packet header(3) */
+ #define ST_NCI_I2C_MAX_SIZE 250 /* req 4.2.1 */
+@@ -118,14 +118,14 @@ static int st_nci_i2c_write(void *phy_id, struct sk_buff *skb)
+ /*
+  * Reads an ndlc frame and returns it in a newly allocated sk_buff.
+  * returns:
+- * frame size : if received frame is complete (find ST21NFCB_SOF_EOF at
++ * frame size : if received frame is complete (find ST_NCI_SOF_EOF at
+  * end of read)
+- * -EAGAIN : if received frame is incomplete (not find ST21NFCB_SOF_EOF
++ * -EAGAIN : if received frame is incomplete (not find ST_NCI_SOF_EOF
+  * at end of read)
+  * -EREMOTEIO : i2c read error (fatal)
+  * -EBADMSG : frame was incorrect and discarded
+  * (value returned from st_nci_i2c_repack)
+- * -EIO : if no ST21NFCB_SOF_EOF is found after reaching
++ * -EIO : if no ST_NCI_SOF_EOF is found after reaching
+  * the read length end sequence
+  */
+ static int st_nci_i2c_read(struct st_nci_i2c_phy *phy,
+@@ -179,7 +179,7 @@ static int st_nci_i2c_read(struct st_nci_i2c_phy *phy,
+ /*
+  * Reads an ndlc frame from the chip.
+  *
+- * On ST21NFCB, IRQ goes in idle state when read starts.
++ * On ST_NCI, IRQ goes in idle state when read starts.
+  */
+ static irqreturn_t st_nci_irq_thread_fn(int irq, void *phy_id)
+ {
+@@ -325,12 +325,12 @@ static int st_nci_i2c_probe(struct i2c_client *client,
+ 		}
+ 	} else {
+ 		nfc_err(&client->dev,
+-			"st21nfcb platform resources not available\n");
++			"st_nci platform resources not available\n");
+ 		return -ENODEV;
+ 	}
+ 
+ 	r = ndlc_probe(phy, &i2c_phy_ops, &client->dev,
+-			ST21NFCB_FRAME_HEADROOM, ST21NFCB_FRAME_TAILROOM,
++			ST_NCI_FRAME_HEADROOM, ST_NCI_FRAME_TAILROOM,
+ 			&phy->ndlc);
+ 	if (r < 0) {
+ 		nfc_err(&client->dev, "Unable to register ndlc layer\n");
 -- 
 2.1.4
