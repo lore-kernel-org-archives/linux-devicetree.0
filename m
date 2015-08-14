@@ -1,77 +1,73 @@
-From: Marc Zyngier <marc.zyngier@arm.com>
-Subject: [PATCH v2 3/4] powerpc: PCI: Fix lookup of linux,
- pci-probe-only property
-Date: Fri, 14 Aug 2015 17:19:18 +0100
-Message-ID: <1439569159-10051-4-git-send-email-marc.zyngier@arm.com>
+From: Bjorn Helgaas <bhelgaas@google.com>
+Subject: Re: [PATCH v2 2/4] PCI: pci-host-generic: Fix lookup of
+ linux,pci-probe-only property
+Date: Fri, 14 Aug 2015 11:40:51 -0500
+Message-ID: <20150814164051.GF26431@google.com>
 References: <1439569159-10051-1-git-send-email-marc.zyngier@arm.com>
+ <1439569159-10051-3-git-send-email-marc.zyngier@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1439569159-10051-1-git-send-email-marc.zyngier@arm.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Benjamin Herrenschmidt <benh@kernel.crashing.org>, Paul Mackerras <paulus@samba.org>, Michael Ellerman <mpe@ellerman.id.au>, Will Deacon <will.deacon@arm.com>, Bjorn Helgaas <bhelgaas@google.com>, Suravee Suthikulpanit <Suravee.Suthikulpanit@amd.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>
-Cc: devicetree@vger.kernel.org, linux-pci@vger.kernel.org, Alexander Graf <agraf@suse.de>, linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-pci-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1439569159-10051-3-git-send-email-marc.zyngier@arm.com>
+Sender: linux-pci-owner@vger.kernel.org
+To: Marc Zyngier <marc.zyngier@arm.com>
+Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>, Paul Mackerras <paulus@samba.org>, Michael Ellerman <mpe@ellerman.id.au>, Will Deacon <will.deacon@arm.com>, Suravee Suthikulpanit <Suravee.Suthikulpanit@amd.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, Alexander Graf <agraf@suse.de>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linuxppc-dev@lists.ozlabs.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-When find_and_init_phbs() looks for the probe-only property, it seems
-to trust the firmware to be correctly written, and assumes that there
-is a parameter to the property.
+On Fri, Aug 14, 2015 at 05:19:17PM +0100, Marc Zyngier wrote:
+> When pci-host-generic looks for the probe-only property, it seems
+> to trust the DT to be correctly written, and assumes that there
+> is a parameter to the property.
+> 
+> Unfortunately, this is not always the case, and some firmware expose
+> this property naked. The driver ends up making a decision based on
+> whatever the property pointer points to, which is likely to be junk.
+> 
+> Switch to the common of_pci.c implementation that doesn't suffer
+> from this problem.
+> 
+> Signed-off-by: Marc Zyngier <marc.zyngier@arm.com>
+> ---
+>  drivers/pci/host/pci-host-generic.c | 9 +--------
+>  1 file changed, 1 insertion(+), 8 deletions(-)
+> 
+> diff --git a/drivers/pci/host/pci-host-generic.c b/drivers/pci/host/pci-host-generic.c
+> index 265dd25..545ff4e 100644
+> --- a/drivers/pci/host/pci-host-generic.c
+> +++ b/drivers/pci/host/pci-host-generic.c
+> @@ -210,7 +210,6 @@ static int gen_pci_probe(struct platform_device *pdev)
+>  	int err;
+>  	const char *type;
+>  	const struct of_device_id *of_id;
+> -	const int *prop;
+>  	struct device *dev = &pdev->dev;
+>  	struct device_node *np = dev->of_node;
+>  	struct gen_pci *pci = devm_kzalloc(dev, sizeof(*pci), GFP_KERNEL);
+> @@ -225,13 +224,7 @@ static int gen_pci_probe(struct platform_device *pdev)
+>  		return -EINVAL;
+>  	}
+>  
+> -	prop = of_get_property(of_chosen, "linux,pci-probe-only", NULL);
+> -	if (prop) {
+> -		if (*prop)
+> -			pci_add_flags(PCI_PROBE_ONLY);
+> -		else
+> -			pci_clear_flags(PCI_PROBE_ONLY);
+> -	}
+> +	of_pci_check_probe_only(of_chosen);
 
-It is conceivable that the firmware could not be that perfect, and it
-could expose this property naked (at least one arm64 platform seems to
-exhibit this exact behaviour). The setup code the ends up making
-a decision based on whatever the property pointer points to, which
-is likely to be junk.
+Do we need support for pci-probe-only in pci-host-generic at all?
+You're removing the use in amd-overdrive.dts, and there are no other
+DTs in the kernel tree that mention it.
 
-Instead, switch to the common of_pci.c implementation that doesn't
-suffer from this problem and ignore the property if the firmware
-couldn't make up its mind.
+If we can live without it, that would be nice.  It seems like a relic from
+days when we couldn't reliably assign resources.  (I'm not saying we can do
+that reliably even today, but I'd rather make it reliable than turn it
+off.)
 
-Signed-off-by: Marc Zyngier <marc.zyngier@arm.com>
----
- arch/powerpc/platforms/pseries/setup.c | 14 ++------------
- 1 file changed, 2 insertions(+), 12 deletions(-)
-
-diff --git a/arch/powerpc/platforms/pseries/setup.c b/arch/powerpc/platforms/pseries/setup.c
-index df6a704..8434953 100644
---- a/arch/powerpc/platforms/pseries/setup.c
-+++ b/arch/powerpc/platforms/pseries/setup.c
-@@ -40,6 +40,7 @@
- #include <linux/seq_file.h>
- #include <linux/root_dev.h>
- #include <linux/of.h>
-+#include <linux/of_pci.h>
- #include <linux/kexec.h>
- 
- #include <asm/mmu.h>
-@@ -488,18 +489,7 @@ static void __init find_and_init_phbs(void)
- 	 * PCI_PROBE_ONLY and PCI_REASSIGN_ALL_BUS can be set via properties
- 	 * in chosen.
- 	 */
--	if (of_chosen) {
--		const int *prop;
--
--		prop = of_get_property(of_chosen,
--				"linux,pci-probe-only", NULL);
--		if (prop) {
--			if (*prop)
--				pci_add_flags(PCI_PROBE_ONLY);
--			else
--				pci_clear_flags(PCI_PROBE_ONLY);
--		}
--	}
-+	of_pci_check_probe_only(of_chosen);
- }
- 
- static void __init pSeries_setup_arch(void)
--- 
-2.1.4
+>  	of_id = of_match_node(gen_pci_of_match, np);
+>  	pci->cfg.ops = of_id->data;
+> -- 
+> 2.1.4
+> 
