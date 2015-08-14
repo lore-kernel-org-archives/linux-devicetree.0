@@ -1,39 +1,82 @@
-From: Gabriele Paoloni <gabriele.paoloni-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
-Subject: RE: [PATCH v6 3/6] PCI: designware: Add ARM64 support
-Date: Fri, 14 Aug 2015 14:55:07 +0000
-Message-ID: <EE11001F9E5DDD47B7634E2F8A612F2E01D7BC19@lhreml503-mbs>
-References: <1438848559-232109-1-git-send-email-wangzhou1@hisilicon.com>
- <1438848559-232109-4-git-send-email-wangzhou1@hisilicon.com>
- <55C44B18.4010103@hisilicon.com> <55CDFFC0.40604@arm.com>
+From: Dinh Nguyen <dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
+Subject: Re: [RFC] net: stmmac: socfpga: dt binding
+Date: Fri, 14 Aug 2015 10:40:28 -0500
+Message-ID: <55CE0BEC.9050002@opensource.altera.com>
+References: <20150813194105.GC9841@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="Windows-1252"
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <55CDFFC0.40604-5wv7dgnIgG8@public.gmane.org>
-Content-Language: en-US
+In-Reply-To: <20150813194105.GC9841-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: James Morse <james.morse-5wv7dgnIgG8@public.gmane.org>, "Wangzhou (B)" <wangzhou1-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
-Cc: Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Jingoo Han <jg1.han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Pratyush Anand <pratyush.anand-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, "linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org" <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, "thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org" <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Lorenzo Pieralisi <Lorenzo.Pieralisi-5wv7dgnIgG8@public.gmane.org>, Liviu Dudau <Liviu.Dudau-5wv7dgnIgG8@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, "robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Yuanzhichang <yuanzhichang-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Zhudacai <zhudacai-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, zhangjukuo <zhangjukuo-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, qiuzhenfa <qiuzhenfa-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, "liudongdong (C)" <liudongdong3-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, qiujiang <qiujiang-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, Kangfenglong <kangfen>
+To: Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+On 08/13/2015 02:41 PM, Steffen Trumtrar wrote:
+> Hi!
 > 
-> I've tested this whole series on an ARM32 PCIe board:'Freescale i.MX6
-> Quad
-> SABRE Lite Board' with an Intel wireless card on v4.2-rc6.
+> I'm in the middle of getting the IEEE1588/PTP features of the GMAC up and
+> running. The problem I have is with the current binding however.
 > 
-> I can rescan the bus, load firmware, list nearby APs, and even get MSIs
-> coming from the card.
+> The documentation says:
 > 
-> Tested-By: James Morse <james.morse-5wv7dgnIgG8@public.gmane.org>
+> Example:
 > 
+> gmac0: ethernet@ff700000 {
+> 	compatible = "altr,socfpga-stmmac", "snps,dwmac-3.70a", "snps,dwmac";
+> 	altr,sysmgr-syscon = <&sysmgr 0x60 0>;
+> 	status = "disabled";
+> 	reg = <0xff700000 0x2000>;
+> 	interrupts = <0 115 4>;
+> 	interrupt-names = "macirq";
+> 	mac-address = [00 00 00 00 00 00];/* Filled in by U-Boot */
+> 	clocks = <&emac_0_clk>;
+> 	clock-names = "stmmaceth";
+> };
 > 
-> Thanks,
-> 
-> James
+> The problem is with the "altr,sysmgr-syscon" property. It was invented,
+> because the Arria10 and the Arria5/CycloneV have different register
 
-Many Thanks for this James!
+"altr,sysmgr-syscon" was invented before Arria10 was in the picture. It
+was invented as a way to reach out and toggle registers that had a
+direct impact to the ethernet IP, but was located in a separate IP block.
 
-Gab
+>From the documentation:
+
+"- altr,sysmgr-syscon : Should be the phandle to the system manager node
+that encompasses the glue register, the register offset, and the
+register shift."
+
+So "altr,sysmgr-syscon" is a pretty generic property that toggles the
+system manager. At the time, I was only using it for the PHYSEL bits and
+did not consider the PTP clock select offsets.
+
+> offsets and shifts. This information is however not enough to describe all
+> properties of the hardware, but more of a crutch IMHO.
+> The shifts are for the PHYSEL bits. Of course now I need some
+> different shifts AND I need to access an additional register with different
+> shifts on Arria10 and CycloneV in the sysmgr.
+> 
+> So, the standard way of handling this is with a new compatible for each
+> type and getting rid of the register offset and shift in the property,
+> I guess. And test the DT and print a deprecation warning if the property
+> is still there.
+> 
+> Do you see any other/better way of fixing this?
+> 
+> As a side note: Is it reasonable to use the "clk_ptp_ref" property of the
+> stmmac to decide if the PTP features should be enabled or not?
+> As the hardware needs to be configured to use this clock, I think the
+> presence of this property is a good enough indicator.
+> 
+
+I think what you're trying to do is reach the PTP clock select bits that
+are located in the system manager, right? Should this be done through
+the clock manager instead of stmmac driver?
+
+Dinh
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
