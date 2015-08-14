@@ -1,83 +1,59 @@
-From: Dinh Nguyen <dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
-Subject: Re: [RFC] net: stmmac: socfpga: dt binding
-Date: Fri, 14 Aug 2015 10:40:28 -0500
-Message-ID: <55CE0BEC.9050002@opensource.altera.com>
-References: <20150813194105.GC9841@pengutronix.de>
+From: atull <atull@opensource.altera.com>
+Subject: Re: [PATCH v10 3/8] add fpga manager core
+Date: Fri, 14 Aug 2015 10:46:58 -0500
+Message-ID: <alpine.DEB.2.02.1508141026280.661@linuxheads99>
+References: <1439487452-23977-1-git-send-email-atull@opensource.altera.com>
+ <1439487452-23977-5-git-send-email-atull@opensource.altera.com>
+ <CAAtXAHc=+nzcDQ-=-gkj=BfpjCeMu-nu5yW6bZPhB3w1=_Ek7g@mail.gmail.com>
+ <alpine.DEB.2.02.1508140925560.1866@linuxheads99>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20150813194105.GC9841-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>
+Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
+In-Reply-To: <alpine.DEB.2.02.1508140925560.1866@linuxheads99>
+List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
+List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
+List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
+List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
+List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
+Errors-To: driverdev-devel-bounces@linuxdriverproject.org
+Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
+To: Moritz Fischer <moritz.fischer@ettus.com>
+Cc: mark.rutland@arm.com, linux-doc@vger.kernel.org, rubini@gnudd.com, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, hpa@zytor.com, yvanderv@altera.com, s.trumtrar@pengutronix.de, devel@driverdev.osuosl.org, sameo@linux.intel.com, Nicolas Pitre <nico@linaro.org>, ijc+devicetree@hellion.org.uk, Michal Simek <michal.simek@xilinx.com>, kyle.teske@ni.com, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, Grant Likely <grant.likely@linaro.org>, David Brown <davidb@codeaurora.org>, Linus Walleij <linus.walleij@linaro.org>, cesarb@cesarb.net, devicetree@vger.kernel.org, jason@lakedaemon.net, pawel.moll@arm.com, iws@ovro.caltech.edu, Kumar Gala <galak@codeaurora.org>, broonie@kernel.org, Philip Balister <philip@balister.org>, Petr Cvek <petr.cvek@tul.cz>, dinguyen@opensource.altera.com, Michal Simek <monstr@monstr.eu>, Greg KH <gregkh@linuxfoundation.org>, linux-kernel@vger.ke
 List-Id: devicetree@vger.kernel.org
 
-On 08/13/2015 02:41 PM, Steffen Trumtrar wrote:
-> Hi!
-> 
-> I'm in the middle of getting the IEEE1588/PTP features of the GMAC up and
-> running. The problem I have is with the current binding however.
-> 
-> The documentation says:
-> 
-> Example:
-> 
-> gmac0: ethernet@ff700000 {
-> 	compatible = "altr,socfpga-stmmac", "snps,dwmac-3.70a", "snps,dwmac";
-> 	altr,sysmgr-syscon = <&sysmgr 0x60 0>;
-> 	status = "disabled";
-> 	reg = <0xff700000 0x2000>;
-> 	interrupts = <0 115 4>;
-> 	interrupt-names = "macirq";
-> 	mac-address = [00 00 00 00 00 00];/* Filled in by U-Boot */
-> 	clocks = <&emac_0_clk>;
-> 	clock-names = "stmmaceth";
-> };
-> 
-> The problem is with the "altr,sysmgr-syscon" property. It was invented,
-> because the Arria10 and the Arria5/CycloneV have different register
+On Fri, 14 Aug 2015, atull wrote:
 
-"altr,sysmgr-syscon" was invented before Arria10 was in the picture. It
-was invented as a way to reach out and toggle registers that had a
-direct impact to the ethernet IP, but was located in a separate IP block.
-
->From the documentation:
-
-"- altr,sysmgr-syscon : Should be the phandle to the system manager node
-that encompasses the glue register, the register offset, and the
-register shift."
-
-So "altr,sysmgr-syscon" is a pretty generic property that toggles the
-system manager. At the time, I was only using it for the PHYSEL bits and
-did not consider the PTP clock select offsets.
-
-> offsets and shifts. This information is however not enough to describe all
-> properties of the hardware, but more of a crutch IMHO.
-> The shifts are for the PHYSEL bits. Of course now I need some
-> different shifts AND I need to access an additional register with different
-> shifts on Arria10 and CycloneV in the sysmgr.
+> On Fri, 14 Aug 2015, Moritz Fischer wrote:
 > 
-> So, the standard way of handling this is with a new compatible for each
-> type and getting rid of the register offset and shift in the property,
-> I guess. And test the DT and print a deprecation warning if the property
-> is still there.
+> > Hi Alan,
+> > 
+> > I've updated my Zynq driver (it can be found in an older version
+> > against your v8 in the Xilinx tree, too)
+> > 
+> > https://github.com/mfischer/linux/tree/alan-fpga-mgr-v10
 > 
-> Do you see any other/better way of fixing this?
-> 
-> As a side note: Is it reasonable to use the "clk_ptp_ref" property of the
-> stmmac to decide if the PTP features should be enabled or not?
-> As the hardware needs to be configured to use this clock, I think the
-> presence of this property is a good enough indicator.
+> Since we are both already using this and have been for a while now, I hope it
+> can go up into the mainstream instead of continuing to exist only in Altera
+> and Xilinx's git trees.
 > 
 
-I think what you're trying to do is reach the PTP clock select bits that
-are located in the system manager, right? Should this be done through
-the clock manager instead of stmmac driver?
+Hi Moritz,
 
-Dinh
+I fetched your git tree and took a look at your low level driver.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+I had a some feedback.  write_complete() is a blocking call, waiting for the
+FPGA to go into operating state and timing out (ETIMEDOUT) if necessary.  The
+fpga-mgr.c framework is assuming that when write_complete exits with status 0,
+that means that the FPGA is in operating state.  That's why it's proper for us
+to add "mgr->state = FPGA_MGR_STATE_OPERATING" after write_complete returns
+success as you noted.  My suggestion is that your write_complete() should check
+status in this way.  Whatever error codes it returns will get propagated.
+
+Also, I'm wondering how the simple-fpga-bus stuff looks to you now that you've
+had it for a little while.
+
+Thank,
+Alan
