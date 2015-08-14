@@ -1,127 +1,102 @@
-From: Wang Dongsheng <Dongsheng.Wang@freescale.com>
-Subject: RE: [PATCH v3 1/2] Documentation: DT: FTM: add FTM0 be used as alarm
- timer
-Date: Fri, 14 Aug 2015 03:24:35 +0000
-Message-ID: <SN1PR0301MB16165DCFD09CEB424A91F79F9D7C0@SN1PR0301MB1616.namprd03.prod.outlook.com>
-References: <1439352061-14656-1-git-send-email-dongsheng.wang@freescale.com>
- <CALRxmdDGgYh+_cOPB43gyuZwu_zo+wE0qHh8nWJTjiQN__hZ3w@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <CALRxmdDGgYh+_cOPB43gyuZwu_zo+wE0qHh8nWJTjiQN__hZ3w@mail.gmail.com>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Stuart Yoder <b08248@gmail.com>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "shawn.guo@linaro.org" <shawn.guo@linaro.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Huan Wang <alison.wang@freescale.com>
+From: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>
+Subject: [PATCH V7 1/2] mtd: spi-nor: Bindings for Cadence Quad SPI Flash Controller driver.
+Date: Fri, 14 Aug 2015 05:28:11 +0200
+Message-ID: <1439522892-7524-1-git-send-email-marex@denx.de>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: Graham Moore <grmoore-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>, Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>, Alan Tull <atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Dinh Nguyen <dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>, Vikas MANOCHA <vikas.manocha-qxv4g6HH51o@public.gmane.org>, Yves Vandervennet <yvanderv-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Thank Yoder,
+From: Graham Moore <grmoore-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
 
-Fix them in next version.
+Add binding document for the Cadence QSPI controller.
 
-Regards,
--Dongsheng
+Signed-off-by: Graham Moore <grmoore-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
+Signed-off-by: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>
+Cc: Alan Tull <atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
+Cc: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>
+Cc: Dinh Nguyen <dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
+Cc: Graham Moore <grmoore-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
+Cc: Vikas MANOCHA <vikas.manocha-qxv4g6HH51o@public.gmane.org>
+Cc: Yves Vandervennet <yvanderv-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+---
+ .../devicetree/bindings/mtd/cadence_quadspi.txt    | 50 ++++++++++++++++++++++
+ 1 file changed, 50 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/mtd/cadence_quadspi.txt
 
-> -----Original Message-----
-> From: Stuart Yoder [mailto:b08248@gmail.com]
-> Sent: Friday, August 14, 2015 12:23 AM
-> To: Wang Dongsheng-B40534
-> Cc: shawn.guo@linaro.org; devicetree@vger.kernel.org; linux-
-> kernel@vger.kernel.org; linux-arm-kernel@lists.infradead.org; Wang Huan-B18965
-> Subject: Re: [PATCH v3 1/2] Documentation: DT: FTM: add FTM0 be used as alarm
-> timer
-> 
-> On Tue, Aug 11, 2015 at 11:01 PM, Dongsheng Wang
-> <dongsheng.wang@freescale.com> wrote:
-> > From: Wang Dongsheng <dongsheng.wang@freescale.com>
-> >
-> > In freescale layerscape platform there is only FTM0 can be used as
-> > alarm timer to wake up system. So add FTM0 description for devicetree
-> > document.
-> 
-> Suggestion:
-> 
-> In the Freescale Layerscape platform a flextimer module can be used
-> as an alarm timer to wake up the system.  Define a binding for this
-> alarm.
-> 
-> > Signed-off-by: Wang Dongsheng <dongsheng.wang@freescale.com>
-> > ---
-> > V3:
-> > Include this patch in V3.
-> >
-> > diff --git a/Documentation/devicetree/bindings/timer/fsl,ftm-timer.txt
-> b/Documentation/devicetree/bindings/timer/fsl,ftm-timer.txt
-> > index aa8c402..380a0b3d 100644
-> > --- a/Documentation/devicetree/bindings/timer/fsl,ftm-timer.txt
-> > +++ b/Documentation/devicetree/bindings/timer/fsl,ftm-timer.txt
-> > @@ -1,5 +1,7 @@
-> >  Freescale FlexTimer Module (FTM) Timer
-> >
-> > +* Default FTM Timer
-> > +
-> >  Required properties:
-> >
-> >  - compatible : should be "fsl,ftm-timer"
-> > @@ -29,3 +31,26 @@ ftm: ftm@400b8000 {
-> >                 <&clks VF610_CLK_FTM3_EXT_FIX_EN>;
-> >         big-endian;
-> >  };
-> > +
-> > +* FTM Alarm Timer
-> > +  The default FTM device contains eight FlexTimer modules. FlexTimer1 is in
-> > +  on-domain(power is not switched off in deep sleep mode). Other seven
-> FlexTimer
-> > +  modules(flextimer2/3/4/5/6/7/8) are in off-domain (power is switched off in
-> > +  deep sleep mode).
-> 
-> Suggestion:
-> 
->   This binding describes a Flextimer (FTM) instance that can be used as an alarm
->   to wake up a system in deep sleep.  The flextimer module with alarm
->   support is in a power domain that remains awake when the SoC is in
->   deep sleep mode.
-> 
-> (don't use flextimer1 in the binding...for all you know in the next SoC it
-> will be flextimer7 that has this capability)
-> 
-> > +Required properties:
-> > +
-> > +- compatible : should be "fsl,ftm-alarm".
-> > +- reg : should contain base address and length of FTM timer 0 register.
-> 
->   "should contain the address and size of the FTM alarm module registers"
-> 
-> (don't use the number 0)
-> 
-> > +- interrupts : Should contain FTM 0 interrupt.
-> 
->    "describes the FTM alarm interrupt"
-> 
-> > +- big-endian: One boolean property, the big endian mode will be in use if it
-> is
-> > +  present, or the little endian mode will be in use for all the device
-> registers.
-> > +
-> > +Example:
-> > +ftm0: ftm0@29d0000 {
-> > +       compatible = "fsl,ftm-alarm";
-> > +       reg = <0x0 0x29d0000 0x0 0x10000>;
-> > +       interrupts = <GIC_SPI 118 IRQ_TYPE_LEVEL_HIGH>;
-> > +       big-endian;
-> > +       status = "disabled";
-> > +};
-> 
-> Drop the number 0 from the names in your example.
-> 
-> Thanks,
-> Stuart
+V2: Add cdns prefix to driver-specific bindings.
+V3: Use existing property "is-decoded-cs" instead of creating a
+    duplicate, "ext-decoder". Timing parameters are in nanoseconds,
+    not master reference clocks. Remove bus-num completely.
+V4: Add new properties fifo-width and trigger-address
+V7: - Prefix all of the Cadence-specific properties with cdns prefix,
+      those are in particular "cdns,is-decoded-cs", "cdns,fifo-depth",
+      "cdns,fifo-width", "cdns,trigger-address".
+    - Drop bogus properties which were not used and were incorrect.
+
+diff --git a/Documentation/devicetree/bindings/mtd/cadence_quadspi.txt b/Documentation/devicetree/bindings/mtd/cadence_quadspi.txt
+new file mode 100644
+index 0000000..ebaf1fd
+--- /dev/null
++++ b/Documentation/devicetree/bindings/mtd/cadence_quadspi.txt
+@@ -0,0 +1,50 @@
++* Cadence Quad SPI controller
++
++Required properties:
++- compatible : Should be "cdns,qspi-nor".
++- reg : Contains two entries, each of which is a tuple consisting of a
++	physical address and length.  The first entry is the address and
++	length of the controller register set.  The second entry is the
++	address and length of the QSPI Controller data area.
++- interrupts : Unit interrupt specifier for the controller interrupt.
++- clocks : phandle to the Quad SPI clock.
++- cdns,fifo-depth : Size of the data FIFO in words.
++- cdns,fifo-width: Bus width of the data FIFO in bytes.
++- cdns,trigger-address : 32-bit indirect AHB trigger address.
++
++Optional properties:
++- cdns,is-decoded-cs : Flag to indicate whether decoder is used or not.
++
++Optional subnodes:
++Subnodes of the Cadence Quad SPI controller are spi slave nodes with additional
++custom properties:
++- cdns,read-delay : Delay for read capture logic, in clock cycles
++- cdns,tshsl-ns : Delay in nanoseconds for the length that the master mode chip select outputs are de-asserted between transactions.
++- cdns,tsd2d-ns : Delay in nanoseconds between one chip select being de-activated and the activation of another.
++- cdns,tchsh-ns : Delay in nanoseconds between last bit of current transaction and deasserting the device chip select (qspi_n_ss_out).
++- cdns,tslch-ns : Delay in nanoseconds between setting qspi_n_ss_out low and first bit transfer.
++
++Example:
++
++	qspi: spi@ff705000 {
++		compatible = "cdns,qspi-nor";
++		#address-cells = <1>;
++		#size-cells = <0>;
++		reg = <0xff705000 0x1000>,
++		      <0xffa00000 0x1000>;
++		interrupts = <0 151 4>;
++		clocks = <&qspi_clk>;
++		cdns,is-decoded-cs;
++		cdns,fifo-depth = <128>;
++		cdns,fifo-width = <4>;
++		cdns,trigger-address = <0x00000000>;
++
++		flash0: n25q00@0 {
++			...
++			cdns,read-delay = <4>;
++			cdns,tshsl-ns = <50>;
++			cdns,tsd2d-ns = <50>;
++			cdns,tchsh-ns = <4>;
++			cdns,tslch-ns = <4>;
++		};
++	};
+-- 
+2.1.4
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
