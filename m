@@ -1,308 +1,131 @@
-From: Grygorii Strashko <grygorii.strashko@ti.com>
-Subject: Re: [PATCH v3 01/18] platform: delay OF device-driver matches until
- late_initcall
-Date: Fri, 14 Aug 2015 22:09:56 +0300
-Message-ID: <55CE3D04.8000607@ti.com>
-References: <1438870315-18689-1-git-send-email-tomeu.vizoso@collabora.com> <1438870315-18689-2-git-send-email-tomeu.vizoso@collabora.com> <CAL_Jsq+GLMZe-f6qEi=7i1YrrWc6k99RpGkOyCd5KkYDiyt0QA@mail.gmail.com> <CAAObsKBapFqzr+4YEXJfcJWMd+tkaBqYbGiFTntHStAP=+P-_Q@mail.gmail.com> <55C4E597.1010701@ti.com> <CAAObsKDJsuhuQfLbxq27Mtm1T_Auz7Gohp8PDyK7rNNDyaGhcg@mail.gmail.com>
-Mime-Version: 1.0
+From: Pantelis Antoniou <panto@antoniou-consulting.com>
+Subject: Re: [PATCH v3 01/11] dm: serial: Update binding for PL01x
+	serial UART
+Date: Fri, 14 Aug 2015 22:32:20 +0300
+Message-ID: <5DE63FE6-A4CF-4B84-ABAC-2AAD0C377747@antoniou-consulting.com>
+References: <1438954951-13329-1-git-send-email-sjg@chromium.org>
+ <1438954951-13329-2-git-send-email-sjg@chromium.org>
+ <CACRpkdZa2O1MqCVT8q2P0u0ciXK+6HFbQQGXB_-chimg=FbzQg@mail.gmail.com>
+ <CAPnjgZ3V1KS7POEhsvj63OSB29MUtyaZGBoFR8JGPnaN=-fXVw@mail.gmail.com>
+ <55CCBFB2.7050301@wwwdotorg.org> <20150813181346.GS25532@bill-the-cat>
+ <1439492679.242.35.camel@freebsd.org>
+Mime-Version: 1.0 (Mac OS X Mail 8.2 \(2102\))
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-acpi-owner@vger.kernel.org>
-In-Reply-To: <CAAObsKDJsuhuQfLbxq27Mtm1T_Auz7Gohp8PDyK7rNNDyaGhcg@mail.gmail.com>
-Sender: linux-acpi-owner@vger.kernel.org
-To: Tomeu Vizoso <tomeu.vizoso@collabora.com>
-Cc: Rob Herring <robherring2@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>, Stephen Warren <swarren@wwwdotorg.org>, Javier Martinez Canillas <javier@osg.samsung.com>, Linus Walleij <linus.walleij@linaro.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Thierry Reding <thierry.reding@gmail.com>, Mark Brown <broonie@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Transfer-Encoding: base64
+Return-path: <u-boot-bounces@lists.denx.de>
+In-Reply-To: <1439492679.242.35.camel@freebsd.org>
+List-Unsubscribe: <http://lists.denx.de/mailman/options/u-boot>,
+ <mailto:u-boot-request@lists.denx.de?subject=unsubscribe>
+List-Archive: <http://lists.denx.de/pipermail/u-boot/>
+List-Post: <mailto:u-boot@lists.denx.de>
+List-Help: <mailto:u-boot-request@lists.denx.de?subject=help>
+List-Subscribe: <http://lists.denx.de/mailman/listinfo/u-boot>,
+ <mailto:u-boot-request@lists.denx.de?subject=subscribe>
+Errors-To: u-boot-bounces@lists.denx.de
+Sender: "U-Boot" <u-boot-bounces@lists.denx.de>
+To: Ian Lepore <ian@freebsd.org>
+Cc: Tom Rini <trini@konsulko.com>, Stephen Warren <swarren@nvidia.com>, Arnd Bergmann <arnd@arndb.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Joe Hershberger <joe.hershberger@ni.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, U-Boot Mailing List <u-boot@lists.denx.de>, Rob Herring <robh+dt@kernel.org>, Geert Uytterhoeven <geert@linux-m68k.org>, Grant Likely <grant.likely@linaro.org>, Matt Porter <mporter@konsulko.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Tomeu,
-
-On 08/09/2015 04:03 PM, Tomeu Vizoso wrote:
-> On 7 August 2015 at 19:06, Grygorii Strashko <grygorii.strashko@ti.com> wrote:
->> On 08/07/2015 10:11 AM, Tomeu Vizoso wrote:
->>> On 6 August 2015 at 22:19, Rob Herring <robherring2@gmail.com> wrote:
->>>> On Thu, Aug 6, 2015 at 9:11 AM, Tomeu Vizoso <tomeu.vizoso@collabora.com> wrote:
->>>>> Delay matches of platform devices with OF nodes until late_initcall,
->>>>> when we are sure that all built-in drivers have been registered already.
->>>>> This is needed to prevent deferred probes because of some drivers not
->>>>> having registered yet.
->>>>>
->>>>> The reason why only platform devices are delayed is that some other
->>>>> devices are expected to be probed earlier than late_initcall, for
->>>>> example, the system PNP driver needs to probe its devices in
->>>>> fs_initcall.
->>>>>
->>>>> Additionally, only platform devices with OF nodes are delayed because
->>>>> some machines may depend on oter platform devices being registered at
->>>>> specific times.
->>>>
->>>> How do we know that these probes occur before the unused clocks and
->>>> regulators are turned off? Just getting lucky (as is deferred probe)?
->>>> Can we do this one level earlier so we have a level left to do things
->>>> after probe.
->>>
->>> Those are already late_initcall_sync so I guess we're fine.
->>
->> I wouldn't be so sure :(
->> FYI:
->> http://git.ti.com/ti-linux-kernel/ti-linux-kernel/commit/763d643bbfc0f445c6685c541fcae3c370e4314a
-
-I'm very sorry for delayed reply.
-
-First of all, I'd like to say that proposition to move drivers probing/matching 
-one layer early (device_initcall_sync) is reasonable 
-(and I've already mentioned the same here https://lkml.org/lkml/2015/6/3/979).
-
-> 
-> If I understand the situation correctly, this is one more instance of
-> starting to do some work at some point and hoping that something else
-> that started before has already finished happening. If that's the
-> case, how does this series make that worst?
-
-You going to increase pressure on the late boot stages without taking
-into account that there could be platforms which perfectly works
-just using init_calls. And the fact that drivers will be not probed at
-expected time could be very surprising for them.
-
-Or, there should be an option to disable this functionality.
-
-> 
-> During this development I have found many hacks intended to put some
-> order, even if not enough care was taken to make sure that the order
-> was guaranteed. In general I would recommend for moving code into
-> proper drivers and have them to defer the probe of their devices if
-> some dependency isn't fulfilled at that moment.
-
-Unfortunately, not everything can be moved to drivers or it could be
-just unreasonable. 
-
-> 
-> Once that's done and we have a safe and reliable boot, we can avoid
-> those deferred probes by fulfilling the dependency on-demand as this
-> series shows.
-> 
-> There was some recent thread about how the disabling of unused clocks
-> and regulators isn't really safe because after late_initcall_sync more
-> drivers can be registered from modules. Furthermore, there's async
-> device probes.
-
-Clocks and regulators are safe, problems may happen first of all with 
-platform's specific initcalls.
-
-
-Just take a look how many late_initcalls defined now in Kernel
-(grep -w -RI  "late_initcall" ./*) and everything which belongs
-to  /arch/* will be called before your probe_delayed_matches_initcall().
-The sequence of late_initcalls in /drivers/* is defined by
-/drivers/Makefile. 
-
-#
-./arch/um/kernel/process.c:late_initcall(make_proc_sysemu);
-./arch/um/drivers/umcast_kern.c:late_initcall(register_umcast);
-./arch/um/drivers/stdio_console.c:late_initcall(stdio_init);
-./arch/um/drivers/pcap_kern.c:late_initcall(register_pcap);
-./arch/um/drivers/ssl.c:late_initcall(ssl_init);
-./arch/um/drivers/slip_kern.c:late_initcall(register_slip);
-./arch/um/drivers/vde_kern.c:late_initcall(register_vde);
-./arch/um/drivers/mconsole_kern.c:late_initcall(mc_add_console);
-./arch/um/drivers/ubd_kern.c:late_initcall(ubd_init);
-./arch/um/drivers/slirp_kern.c:late_initcall(register_slirp);
-./arch/um/drivers/daemon_kern.c:late_initcall(register_daemon);
-./arch/um/os-Linux/drivers/tuntap_kern.c:late_initcall(register_tuntap);
-./arch/um/os-Linux/drivers/ethertap_kern.c:late_initcall(register_ethertap);
-./arch/arm/kernel/pj4-cp0.c:late_initcall(pj4_cp0_init);
-./arch/arm/kernel/setup.c:late_initcall(init_machine_late);
-./arch/arm/kernel/xscale-cp0.c:late_initcall(xscale_cp0_init);
-./arch/arm/kernel/swp_emulate.c:late_initcall(swp_emulation_init);
-./arch/arm/kernel/thumbee.c:late_initcall(thumbee_init);
-./arch/arm/kernel/traps.c:late_initcall(arm_mrc_hook_init);
-./arch/arm/mach-mmp/pm-pxa910.c:late_initcall(pxa910_pm_init);
-./arch/arm/mach-mmp/pm-mmp2.c:late_initcall(mmp2_pm_init);
-./arch/arm/common/bL_switcher.c:late_initcall(bL_switcher_init);
-./arch/arm/mach-pxa/sharpsl_pm.c:late_initcall(sharpsl_pm_init);
-./arch/arm/kvm/coproc_a15.c:late_initcall(coproc_a15_init);
-./arch/arm/kvm/coproc_a7.c:late_initcall(coproc_a7_init);
-./arch/arm/mach-omap1/clock.c:late_initcall(clk_disable_unused);
-./arch/arm/mach-omap1/clock.c:late_initcall(omap_clk_enable_autoidle_all);
-./arch/arm/mach-omap1/clock.c:late_initcall(clk_debugfs_init);
-./arch/arm/xen/enlighten.c:late_initcall(xen_pm_init);
-./arch/arm/probes/kprobes/test-core.c:late_initcall(run_all_tests);
-./arch/arm/mach-mvebu/pm-board.c:late_initcall(mvebu_armada_xp_gp_pm_init);
-./arch/unicore32/kernel/fpu-ucf64.c:late_initcall(ucf64_init);
-./arch/avr32/mm/tlb.c:late_initcall(proctlb_init);
-./arch/sh/kernel/cpu/sh4a/smp-shx3.c:late_initcall(register_shx3_cpu_notifier);
-./arch/sh/kernel/cpu/shmobile/pm.c:late_initcall(sh_pm_init);
-./arch/sh/boards/mach-hp6xx/pm.c:late_initcall(hp6x0_pm_init);
-./arch/xtensa/platforms/iss/console.c:late_initcall(rs_init);
-./arch/frv/kernel/setup.c:late_initcall(setup_arch_serial);
-./arch/powerpc/kernel/machine_kexec.c:late_initcall(kexec_setup);
-./arch/powerpc/kernel/machine_kexec_64.c:late_initcall(export_htab_values);
-./arch/powerpc/kernel/setup-common.c:late_initcall(check_cache_coherency);
-./arch/powerpc/kernel/iommu.c:late_initcall(fail_iommu_debugfs);
-./arch/powerpc/lib/code-patching.c:late_initcall(test_code_patching);
-./arch/powerpc/lib/feature-fixups.c:late_initcall(test_feature_fixups);
-./arch/powerpc/sysdev/ppc4xx_cpm.c:late_initcall(cpm_init);
-./arch/powerpc/sysdev/dart_iommu.c:late_initcall(iommu_init_late_dart);
-./arch/powerpc/sysdev/msi_bitmap.c:late_initcall(msi_bitmap_selftest);
-./arch/tile/kernel/hardwall.c:late_initcall(dev_hardwall_init);
-./arch/tile/kernel/smpboot.c:late_initcall(reset_init_affinity);
-./arch/arm64/kernel/fpsimd.c:late_initcall(fpsimd_init);
-./arch/arm64/kernel/armv8_deprecated.c:late_initcall(armv8_deprecated_init);
-./arch/arm64/kvm/sys_regs_generic_v8.c:late_initcall(sys_reg_genericv8_init);
-./arch/m68k/kernel/early_printk.c:late_initcall(unregister_early_console);
-./arch/sparc/kernel/leon_pmc.c:late_initcall(leon_pmc_install);
-./arch/sparc/kernel/sstate.c:late_initcall(sstate_running);
-./arch/metag/kernel/setup.c:late_initcall(init_machine_late);
-./arch/x86/kernel/tboot.c:late_initcall(tboot_late_init);
-./arch/x86/kernel/cpu/mcheck/mce-severity.c:late_initcall(severities_debugfs_init);
-./arch/x86/kernel/cpu/mcheck/mce_amd.c:late_initcall(threshold_init_device);
-./arch/x86/kernel/cpu/mcheck/mce.c:late_initcall(mcheck_debugfs_init);
-./arch/x86/kernel/mpparse.c:late_initcall(update_mp_table);
-./arch/x86/kernel/apic/x2apic_uv_x.c:late_initcall(uv_init_heartbeat);
-./arch/x86/kernel/apic/apic.c:late_initcall(lapic_insert_resource);
-./arch/x86/kernel/apic/vector.c:late_initcall(print_ICs);
-./arch/x86/kernel/apic/probe_32.c:late_initcall(print_ipi_mode);
-./arch/x86/kernel/acpi/boot.c:late_initcall(hpet_insert_resource);
-./arch/x86/crypto/aesni-intel_glue.c:late_initcall(aesni_init);
-./arch/x86/mm/tlb.c:late_initcall(create_tlb_single_page_flush_ceiling);
-./arch/x86/mm/pat.c:late_initcall(pat_memtype_list_init);
-./arch/x86/platform/intel-mid/device_libs/platform_gpio_keys.c:late_initcall(pb_keys_init);
-./arch/x86/pci/mmconfig-shared.c:late_initcall(pci_mmcfg_late_insert_resources);
-./arch/arc/kernel/setup.c:late_initcall(init_late_machine);
-./arch/mips/alchemy/devboards/pm.c:late_initcall(pm_init);
-./arch/mips/loongson64/common/mem.c:late_initcall(find_vga_mem_init);
-./arch/mips/txx9/generic/setup_tx4927.c:late_initcall(tx4927_late_init);
-./arch/mips/txx9/generic/setup_tx4939.c:late_initcall(tx4939_late_init);
-./arch/mips/txx9/generic/setup_tx4938.c:late_initcall(tx4938_late_init);
-./arch/mips/cavium-octeon/setup.c:late_initcall(octeon_no_pci_release);
-./arch/mips/cavium-octeon/flash_setup.c:late_initcall(octeon_flash_init);
-./arch/mips/cavium-octeon/smp.c:late_initcall(register_cavium_notifier);
-./arch/mips/mti-malta/malta-pm.c:late_initcall(malta_pm_setup);
-./arch/mips/jz4740/pm.c:late_initcall(jz4740_pm_init);
-./arch/mips/sgi-ip27/ip27-timer.c:late_initcall(sgi_ip27_rtc_devinit);
-./arch/blackfin/kernel/cplbinfo.c:late_initcall(cplbinfo_init);
-./arch/blackfin/kernel/bfin_dma.c:late_initcall(proc_dma_init);
-./arch/blackfin/kernel/nmi.c:late_initcall(init_nmi_wdt_syscore);
-./arch/blackfin/mach-bf609/pm.c:late_initcall(bf609_init_pm);
-./arch/blackfin/mm/sram-alloc.c:late_initcall(sram_proc_init);
-./arch/blackfin/mm/isram-driver.c:late_initcall(isram_test_init);
-./block/blk-core.c:late_initcall(fail_make_request_debugfs);
-./block/blk-timeout.c:late_initcall(fail_io_timeout_debugfs);
-./crypto/async_tx/raid6test.c:late_initcall(raid6_test);
-./drivers/clk/clk.c:late_initcall(clk_debug_init);
-./drivers/mtd/ubi/build.c:late_initcall(ubi_init);
-./drivers/mtd/devices/block2mtd.c:late_initcall(block2mtd_init);
-./drivers/devfreq/exynos/exynos5_bus.c:late_initcall(exynos5_busfreq_int_init);
-./drivers/devfreq/exynos/exynos4_bus.c:late_initcall(exynos4_busfreq_init);
-./drivers/gpu/drm/omapdrm/omap_drv.c:late_initcall(omap_drm_init);
-./drivers/gpu/drm/gma500/psb_drv.c:late_initcall(psb_init);
-./drivers/video/logo/logo.c:late_initcall(fb_logo_late_init);
-./drivers/of/fdt.c:late_initcall(of_fdt_raw_init);
-./drivers/base/dd.c:late_initcall(deferred_probe_initcall);
-./drivers/base/power/trace.c:late_initcall(late_resume_init);
-./drivers/base/power/domain.c:late_initcall(genpd_poweroff_unused);
-./drivers/base/power/domain.c:late_initcall(pm_genpd_debug_init);
-./drivers/mfd/wl1273-core.c:late_initcall(wl1273_core_init);
-./drivers/cpufreq/speedstep-centrino.c:late_initcall(centrino_init);
-./drivers/cpufreq/amd_freq_sensitivity.c:late_initcall(amd_freq_sensitivity_init);
-./drivers/cpufreq/sfi-cpufreq.c:late_initcall(sfi_cpufreq_init);
-./drivers/cpufreq/powernow-k8.c:late_initcall(powernowk8_init);
-./drivers/cpufreq/acpi-cpufreq.c:late_initcall(acpi_cpufreq_init);
-./drivers/cpufreq/ia64-acpi-cpufreq.c:late_initcall(acpi_cpufreq_init);
-./drivers/cpufreq/p4-clockmod.c:late_initcall(cpufreq_p4_init);
-./drivers/cpufreq/pcc-cpufreq.c:late_initcall(pcc_cpufreq_init);
-./drivers/cpufreq/powernow-k7.c:late_initcall(powernow_init);
-./drivers/cpufreq/longhaul.c:late_initcall(longhaul_init);
-./drivers/cpufreq/s3c24xx-cpufreq-debugfs.c:late_initcall(s3c_freq_debugfs_init);
-./drivers/cpufreq/at32ap-cpufreq.c:late_initcall(at32_cpufreq_init);
-./drivers/cpufreq/s3c24xx-cpufreq.c:late_initcall(s3c_cpufreq_initcall);
-./drivers/sh/clk/core.c:late_initcall(clk_late_init);
-./drivers/sh/intc/userimask.c:late_initcall(userimask_sysdev_init);
-./drivers/net/netconsole.c:late_initcall(init_netconsole);
-./drivers/net/vxlan.c:late_initcall(vxlan_init_module);
-./drivers/net/geneve.c:late_initcall(geneve_init_module);
-./drivers/net/ethernet/ti/davinci_emac.c:late_initcall(davinci_emac_init);
-./drivers/net/ethernet/ti/cpsw.c:late_initcall(cpsw_init);
-./drivers/net/rionet.c:late_initcall(rionet_init);
-./drivers/gpio/gpio-tegra.c:late_initcall(tegra_gpio_debuginit);
-./drivers/block/hd.c:late_initcall(hd_init);
-./drivers/thermal/db8500_cpufreq_cooling.c:late_initcall(db8500_cpufreq_cooling_init);
-./drivers/staging/android/sync_debug.c:late_initcall(sync_debugfs_init);
-./drivers/staging/wilc1000/linux_wlan.c:late_initcall(init_wilc_driver);
-./drivers/iommu/dmar.c:late_initcall(dmar_free_unused_resources);
-./drivers/watchdog/ie6xx_wdt.c:late_initcall(ie6xx_wdt_init);
-./drivers/watchdog/intel_scu_watchdog.c:late_initcall(intel_scu_watchdog_init);
-./drivers/tty/serial/mpsc.c:late_initcall(mpsc_late_console_init);
-./drivers/media/platform/omap/omap_vout.c:late_initcall(omap_vout_init);
-./drivers/media/pci/cx25821/cx25821-alsa.c:late_initcall(cx25821_alsa_init);
-./drivers/media/pci/saa7134/saa7134-alsa.c:late_initcall(saa7134_alsa_init);
-./drivers/dma/dmatest.c:late_initcall(dmatest_init);
-./drivers/rapidio/rio-scan.c:late_initcall(rio_basic_attach);
-./drivers/xen/xenbus/xenbus_probe_frontend.c:late_initcall(boot_wait_for_devices);
-./drivers/platform/x86/dell-laptop.c:late_initcall(dell_init);
-./drivers/firmware/memmap.c:late_initcall(firmware_memmap_init);
-./drivers/firmware/edd.c:late_initcall(edd_init);
-./drivers/firmware/efi/reboot.c:late_initcall(efi_shutdown_init);
-./drivers/input/keyboard/gpio_keys.c:late_initcall(gpio_keys_init);
-./drivers/pci/pci.c:late_initcall(pci_resource_alignment_sysfs_init);
-./drivers/pci/pci-sysfs.c:late_initcall(pci_sysfs_init);
-./drivers/macintosh/via-pmu-led.c:late_initcall(via_pmu_led_init);
-./drivers/macintosh/via-pmu-event.c:late_initcall(via_pmu_event_init);
-./drivers/ide/sgiioc4.c:late_initcall(ioc4_ide_init); /* Call only after IDE init is done */
-./drivers/ide/ide-cs.c:late_initcall(init_ide_cs);
-./drivers/rtc/Kconfig:	  The driver for this RTC device must be loaded before late_initcall
-./drivers/rtc/hctosys.c:late_initcall(rtc_hctosys);
-./drivers/irqchip/irq-vic.c:late_initcall(vic_pm_init);
-./drivers/power/avs/smartreflex.c:late_initcall(sr_init);
-./drivers/power/charger-manager.c:late_initcall(charger_manager_init);
-./fs/btrfs/super.c:late_initcall(init_btrfs_fs);
-./fs/afs/main.c:late_initcall(afs_init);	/* must be called after net/ to create socket */
-./fs/ubifs/super.c:late_initcall(ubifs_init);
-./kernel/sched/core.c:late_initcall(sched_init_debug);
-./kernel/time/timekeeping_debug.c:late_initcall(tk_debug_sleep_time_init);
-./kernel/taskstats.c:late_initcall(taskstats_init);
-./kernel/printk/printk.c:late_initcall(printk_late_init);
-./kernel/bpf/arraymap.c:late_initcall(register_array_map);
-./kernel/bpf/arraymap.c:late_initcall(register_prog_array_map);
-./kernel/bpf/hashtab.c:late_initcall(register_htab_map);
-./kernel/trace/trace_events.c:late_initcall(event_trace_self_tests_init);
-./kernel/trace/bpf_trace.c:late_initcall(register_kprobe_prog_ops);
-./kernel/trace/trace.c:late_initcall(clear_boot_tracer);
-./kernel/trace/trace_kprobe.c:late_initcall(kprobe_trace_self_tests_init);
-./kernel/trace/trace_events_filter.c:late_initcall(ftrace_test_event_filter);
-./kernel/trace/trace_kdb.c:late_initcall(kdb_ftrace_register);
-./kernel/trace/ring_buffer.c:late_initcall(test_ringbuffer);
-./kernel/kprobes.c:late_initcall(debugfs_kprobe_init);
-./kernel/rcu/update.c:late_initcall(rcu_verify_early_boot_tests);
-./kernel/panic.c:late_initcall(init_oops_id);
-./kernel/system_keyring.c:late_initcall(load_system_certificate_list);
-./kernel/power/qos.c:late_initcall(pm_qos_power_init);
-./kernel/power/Kconfig:	  late_initcall.
-./kernel/power/main.c:late_initcall(pm_debugfs_init);
-./kernel/power/suspend_test.c:late_initcall(test_suspend);
-./lib/list_sort.c:late_initcall(list_sort_test);
-./lib/random32.c:late_initcall(prandom_reseed);
-./mm/kmemleak.c:late_initcall(kmemleak_late_init);
-./mm/failslab.c:late_initcall(failslab_debugfs_init);
-./mm/memory.c:late_initcall(fault_around_debugfs);
-./mm/early_ioremap.c:late_initcall(check_early_ioremap_leak);
-./mm/cma_debug.c:late_initcall(cma_debugfs_init);
-./mm/page_owner.c:late_initcall(pageowner_init)
-./mm/page_alloc.c:late_initcall(fail_page_alloc_debugfs);
-./mm/swapfile.c:late_initcall(max_swapfiles_check);
-./mm/zswap.c:late_initcall(init_zswap);
-./net/ipv4/ipconfig.c:late_initcall(ip_auto_config);
-./net/ipv4/tcp_cong.c:late_initcall(tcp_congestion_default);
-./net/core/filter.c:late_initcall(register_sk_filter_ops);
-./net/bluetooth/selftest.c:late_initcall(bt_selftest_init);
-./security/integrity/evm/evm_main.c:late_initcall(init_evm);
-./security/integrity/ima/ima_main.c:late_initcall(init_ima);	/* Start IMA after the TPM is available */
-./security/apparmor/crypto.c:late_initcall(init_profile_hash);
-./security/keys/trusted.c:late_initcall(init_trusted);
-./security/keys/encrypted-keys/encrypted.c:late_initcall(init_encrypted);
-./security/keys/process_keys.c:late_initcall(init_root_keyring);
-./sound/soc/fsl/p1022_rdk.c:late_initcall(p1022_rdk_init);
-./sound/soc/fsl/phycore-ac97.c:late_initcall(imx_phycore_init);
-
--- 
-regards,
--grygorii
+SGkgSWFuLAoKPiBPbiBBdWcgMTMsIDIwMTUsIGF0IDIyOjA0ICwgSWFuIExlcG9yZSA8aWFuQGZy
+ZWVic2Qub3JnPiB3cm90ZToKPiAKPiBPbiBUaHUsIDIwMTUtMDgtMTMgYXQgMTQ6MTMgLTA0MDAs
+IFRvbSBSaW5pIHdyb3RlOgo+PiBPbiBUaHUsIEF1ZyAxMywgMjAxNSBhdCAxMDowMjo1OEFNIC0w
+NjAwLCBTdGVwaGVuIFdhcnJlbiB3cm90ZToKPj4+IE9uIDA4LzEzLzIwMTUgMDk6NTkgQU0sIFNp
+bW9uIEdsYXNzIHdyb3RlOgo+Pj4+IEhpIExpbnVzLAo+Pj4+IAo+Pj4+IE9uIDExIEF1Z3VzdCAy
+MDE1IGF0IDA3OjAwLCBMaW51cyBXYWxsZWlqIDxsaW51cy53YWxsZWlqQGxpbmFyby5vcmc+IHdy
+b3RlOgo+Pj4+PiBPbiBGcmksIEF1ZyA3LCAyMDE1IGF0IDM6NDIgUE0sIFNpbW9uIEdsYXNzIDxz
+amdAY2hyb21pdW0ub3JnPiB3cm90ZToKPj4+Pj4gCj4+Pj4+PiBUaGlzIGJpbmRpbmcgZGlmZmVy
+cyBmcm9tIHRoYXQgb2YgTGludXguIFVwZGF0ZSBpdCBhbmQgY2hhbmdlIGV4aXN0aW5nCj4+Pj4+
+PiB1c2Vycy4KPj4+Pj4+IAo+Pj4+Pj4gU2lnbmVkLW9mZi1ieTogU2ltb24gR2xhc3MgPHNqZ0Bj
+aHJvbWl1bS5vcmc+Cj4+Pj4+ICguLi4pCj4+Pj4+PiBkb2MvZGV2aWNlLXRyZWUtYmluZGluZ3Mv
+c2VyaWFsL3BsMDF4LnR4dCB8IDU1ICsrKysrKysrKysrKysrKysrKysrKysrKysrKystLS0KPj4+
+Pj4gCj4+Pj4+IFNvIHdoeSBkb2VzIFUtQm9vdCBoYXZlIGl0cyBvd24gY29weSBvZiBhbnkgYmlu
+ZGluZ3MgYXQgYWxsPwo+Pj4+PiAKPj4+Pj4gVGhpcyBpcyBmb3JraW5nIHRoZSBvbnRvbG9neSBv
+ZiB3aG8gZ2V0cyB0byBkZWZpbmUgYmluZGluZ3MgSSBmZWFyLgo+Pj4+PiBJdCdzIGEgYml0IGxp
+a2UgaGF2ZSB0d28gYmlibGVzIGJvdGggY2xhaW1pbmcgdG8gYmUgdGhlIHdvcmQgb2YgZ29kLgo+
+Pj4+PiAoT0sgbWF5YmUgYSBoeXBlcmJvbGljIHN0YXRlbWVudCwgYnV0IHlvdSBzZWUgd2hhdCBJ
+IG1lYW4uKQo+Pj4+PiAKPj4+Pj4gQ2FuJ3Qgd2UganVzdCBoYXZlIHRoZSBiaW5kaW5ncyBpbiB0
+aGUgTGludXgga2VybmVsIHRyZWUgcGxlYXNlPwo+Pj4+IAo+Pj4+IElzIHRoZXJlIGFueSBwbGFu
+IHRvIG1vdmUgdGhlbSBvdXQgb2YgTGludXggYW5kIHB1dCB0aGVtIGluIGEgc2VwYXJhdGUgcGxh
+Y2U/Cj4+Pj4gCj4+Pj4gV2Ugc2hvdWxkIG1ha2UgYW4gZWZmb3J0IHRvIHN5bmMgdGhlIGRldmlj
+ZSB0cmVlIGZpbGVzIHdpdGggTGludXggcGVyaW9kaWNhbGx5Lgo+Pj4+IAo+Pj4+IEkgcXVpdGUg
+bGlrZSBoYXZpbmcgdGhlIGJpbmRpbmdzIGluIFUtQm9vdCBzaW5jZSBpdCBtYWtlcyBwZW9wbGUg
+dGhpbmsKPj4+PiBhYm91dCB3aGF0IHRoZXkgYXJlIGFkZGluZy4gQXJlIHlvdSB3b3JyaWVkIHRo
+YXQgdGhlIGJpbmRpbmdzIGluCj4+Pj4gVS1Cb290IG1pZ2h0IGV2b2x2ZSBzZXBhcmF0ZWx5PyBD
+ZXJ0YWlubHkgdGhlcmUgaGFzIGJlZW4gc29tZSBvZiB0aGF0Lgo+Pj4+IAo+Pj4+IEhvd2V2ZXIg
+SSByZWNlbnRseSBzZW50IGEgc2VyaWVzIHRvIGFkZCBhIGZldyB0aGluZ3MgZm9yIFJhc3BiZXJy
+eSBQaQo+Pj4+ICgiYXJtOiBycGk6IERldmljZSB0cmVlIG1vZGlmaWNhdGlvbnMgZm9yIFUtQm9v
+dCIpIGFuZCBJIGRvbid0IHlldCBzZWUKPj4+PiBhIHdpbGxpbmduZXNzIHRvIGFkZCB3aGF0IHNv
+bWUgc2VlIGFzICdVLUJvb3QgdGhpbmdzJyB0byB0aGUgYmluZGluZy4KPj4+PiBIb3cgZG8gd2Ug
+YWRkcmVzcyB0aGF0Pwo+Pj4gCj4+PiBEVCBpc24ndCBzdXBwb3NlZCB0byBjb250YWluICJVLUJv
+b3QgdGhpbmdzIiwgYnV0ICJhbiBPUy1hZ25vc3RpYwo+Pj4gZGVzY3JpcHRpb24gb2YgdGhlIGhh
+cmR3YXJlIi4gU28sIEkgaW1hZ2luZSB0aGUgc29sdXRpb24gaXMgbm90IHRvCj4+PiBhdHRlbXB0
+IHRvIGRvIHRoYXQ6LSkKPj4gCj4+IFRoaXMgYWx3YXlzIG1ha2VzIG1lIGFzayBpZiB0aGUgRnJl
+ZUJTRCBmb2xrcyBvciBWeFdvcmtzIGZvbGtzIGhhdmUKPj4gYWRvcHRlZCB0aGUgIkxpbnV4IiBi
+aW5kaW5ncyBvciBpZiB0aGUgRFQgZmlsZXMgY29udGludWUgdG8gYmUKPj4gIk9TLWFnbm9zdGlj
+IiBhbmQgIm9ubHkgZnVuY3Rpb25hbCB3aXRoIExpbnV4Ii4gIEl0IHdhcyBhIHdoaWxlIGFnbyBs
+YXN0Cj4+IEkgbG9va2VkIGJ1dCBpdCBtYWRlIG15IGhlYWQgaHVydCBhIGxpdHRsZSBkb2luZyBh
+IHF1aWNrIHRyYW5zbGF0aW9uIGZvcgo+PiBhbiBTb0MgdGhhdCBJIHdhcyBmYW1pbGlhciB3aXRo
+Lgo+PiAKPiAKPiBBcyB0aGUgRnJlZUJTRCBwZXJzb24gd2hvIGdvdCBvdXIgZmlyc3QgU29DIChp
+bXg2LCBvbmx5IHBhcnRpYWxseQo+IHN1cHBvcnRlZCkgY29udmVydGVkIHRvIHVzZSB0aGUgTGlu
+dXggRFQgZmlsZXMgcmF0aGVyIHRoYW4gb3VyIG93bgo+IGhvbWVicmV3IG1lc3Mgd2Ugc3RhcnRl
+ZCB3aXRoLCBJIHdvdWxkIHNheSB0aGF0IG15IG9waW5pb24gb2YgdGhlCj4gZXhpc3RpbmcgRFQg
+aW5mb3JtYXRpb24gaXMgdGhhdCBpdCBpcyBhbiBleHRlbnNpb24gb2YgTGludXggZGV2aWNlCj4g
+ZHJpdmVycyB3cml0dGVuIGluIGEgZGlmZmVyZW50IGxhbmd1YWdlLgo+IAo+IFRoZSBpbmZvcm1h
+dGlvbiBhdmFpbGFibGUgaXMgaW4gbm8gd2F5IGluZGVwZW5kZW50IG9mIHRoZSBMaW51eCBkZXZp
+Y2UKPiBkcml2ZXJzLCBpdCBpcyBleGFjdGx5IHRoZSBpbmZvcm1hdGlvbiB0aG9zZSBkcml2ZXJz
+IG5lZWQuICBJdCBpcyBvZnRlbgo+IG5vdCB0aGUgaW5mb3JtYXRpb24gbmVlZGVkIGluIGFub3Ro
+ZXIgT1Mgd2l0aCBpbmRlcGVuZGVudGx5IHdyaXR0ZW4KPiBkcml2ZXJzLiAgQW5kIGVzcGVjaWFs
+bHkgaXQgaXMgbm90IG9yZGVyZWQgYW5kIHN0cnVjdHVyZWQgaW4gYSB3YXkgdGhhdAo+IHdvcmtz
+IHdlbGwgd2l0aCB0aGUgZGV2aWNlIGVudW1lcmF0aW9uIGFuZCBpbnN0YW50aWF0aW9uIG1vZGVs
+cyB1c2VkIGJ5Cj4gYW5vdGhlciBPUy4KPiAKCkFzIG9uZSB0aGF0IGhhZCB0byBzdWZmZXIgdW5k
+ZXIgYW4gYWx0ZXJuYXRpdmUgT1PigJlzIGRlZmluaXRpb24gb2Ygd2hhdCBEVAppcywgYW5kIGhv
+dyBiaW5kaW5ncyB3b3JrIChWeFdvcmtzKSBJIHdvdWxkIGxpa2UgdG8gaGF2ZSBzb21lIGNvbmNy
+ZXRlCmV4YW1wbGUgYWJvdXQgYW55IGNhc2VzIGxpa2UgdGhhdC4KCkluIG15IGV4cGVyaWVuY2Ug
+dGhlIG1pc21hdGNoIG1heSBjb21lIGZyb20gZXhhY3RseSB0d28gdGhpbmdzOgoKMSkgRnJvbSB0
+aGUgbGFjayBvZiBpbnZvbHZlbWVudCBpbiB0aGUgRFQgcHJvY2VzcyB0aGF04oCZcyBnb2luZyBv
+biBkZXZpY2V0cmVlLgpUcnVlLCB0aGVyZeKAmXMgYSB2ZXJ5IGJpZyBMaW51eCBiaWFzIGJ1dCB0
+aGUgbWFpbnRhaW5lcnMgYXJlIHJlYXNvbmFibGUKYW5kIHRoZXkgYXJlIG9wZW4gb24gYW55IGtp
+bmQgb2YgY29sbGFib3JhdGlvbiBpbiB0aGF0IGFyZWEuCgoyKSBGcm9tIHRoZSBjb21wbGV0ZWx5
+IGhhbGYtYXNzZWQgd2F5IHRoYXQgaW50ZXJuYWxseSBEVCBoYXMgYmVlbiBpbXBsZW1lbnRlZApp
+biBvdGhlciBPU2VzIGJlc2lkZXMgTGludXguIEkgYW0gc3RpbGwgc2NhcmVkIGJ5IHRoZSBWeFdv
+cmtzIHN0dWZmLCBidXQKdGhpbmdzIGFyZSBub3QgbXVjaCBiZXR0ZXIgaW4gdS1ib290IGVpdGhl
+ci4gWW91IGp1c3QgY2Fu4oCZdCBzbGFwIGluCmxpYmZkdCBpbiB0aGVyZSBhbmQgZXhwZWN0IGFs
+bCB0aGUgbW9kZXJuIGJpbmRpbmdzIHRvIHdvcmsgKGxpa2UgY2xvY2sgdHJlZSwKcGlubXV4aW5n
+LCBldGMuKSBJIHdvdWxkIGhvcGUgd2XigJlsbCBnZXQgdGhpbmdzIGJldHRlciBpbiB1LWJvb3Qg
+YW5kIEkgd291bGQKY2VydGFpbmx5IGxpa2UgdG8gY29vcmRpbmF0ZSB3aXRoIEZyZWVCU0Qgb3Ig
+d2hvZXZlciB0byBnZXQgc29tZXRoaW5nCmRvbmUgd2l0aCBhIHJlYXNvbmFibGUgQVBJIChhbmQg
+bGljZW5zZSkgdGhhdCBhbnlvbmUgY2FuIHVzZS4KCkR1ZSB0byB0aGlzLCBEVCBiaW5kaW5ncyBl
+bmQgdXAgT1Mgc3BlY2lmaWMgd2hpY2ggaXMgcmF0aGVyIGluc2FuZSBpZiB5b3UKdGhpbmsgYWJv
+dXQgaXQuCgo+IEEgZ3JlYXQgY2FzZSBpbiBwb2ludCB3b3VsZCBiZSBpMmMgZWVwcm9tcy4gIFdo
+YXQgYSBwZXJmZWN0IG9wcG9ydHVuaXR5Cj4gRFQgd291bGQgYmUgdG8gZGVzY3JpYmUgZXZlcnl0
+aGluZyBhYm91dCB0aGUgZWVwcm9tIHBhcnRzICh0b3RhbAo+IGNhcGFjaXR5LCBwYWdlIHJlYWQv
+d3JpdGUgc2l6ZSwgd2hldGhlciB0aGUgcGFnZSBhZGRyZXNzIGJpdHMgZXh0ZW5kCj4gaW50byB0
+aGUgYnVzLXNsYXZlIGFkZHJlc3MgYml0cywgZXRjKS4gIEl0IHNlZW1zIHRvIG1lIHRoYXQgYW55
+dGhpbmcKPiBjbGFpbWluZyB0byBiZSBhbiBpbmRlcGVuZGVudCBkZXNjcmlwdGlvbiBvZiB0aGUg
+aGFyZHdhcmUgd291bGQgaGF2ZSB0bwo+IGluY2x1ZGUgc3VjaCB0aGluZ3MuICBJbnN0ZWFkLCBh
+bGwgdGhlIGJpbmRpbmdzIGRlZmluZSBpcyB0aGUgY29tcGF0aWJsZQo+IHN0cmluZy4gIFRoYXQn
+cyBjcmF6eS4gIFdoeT8gIFdlbGwsIHdoZW4gSSB3ZW50IGFuZCBsb29rZWQgYXQgdGhlIExpbnV4
+Cj4gZWVwcm9tIGRyaXZlcnMgaXQgYmVjYW1lIGNsZWFyIHdoeTogIHRoYXQncyBhbGwgdGhleSBu
+ZWVkIHRvIGtub3csCj4gYmVjYXVzZSBldmVyeXRoaW5nIGVsc2UgaXMgaGFyZC1jb2RlZCBpbiB0
+YWJsZXMgaW4gdGhlIGRyaXZlciBzb3VyY2UuCj4gCj4gU28gaWYgSSB3YW50IHRvIHdyaXRlIGEg
+RnJlZUJTRCBpMmMgZWVwcm9tIGRyaXZlciB0aGF0IHVzZXMgRFQgZGF0YSwKPiB3aGF0IGFyZSBt
+eSBjaG9pY2VzPyAgSSBoYXZlIGV4YWN0bHkgb25lOiAgbWFrZSBteSBkcml2ZXIgZXNzZW50aWFs
+bHkgYQo+IGNsb25lIG9mIHRoZSBMaW51eCBkcml2ZXIsIHdpdGggYWxsIHRoZSBzYW1lIGRhdGEg
+aGFyZC1jb2RlZCBpbiBzb3VyY2UuCj4gCgpJIHdvdWxkIGxpa2UgdG8gcG9pbnQgb3V0IHRoYXQg
+cGlja2luZyBpMmMgZWVwcm9tcyBhcyBhbiBleGFtcGxlIGlzCnJhdGhlciBkaXNpbmdlbnVvdXMu
+IGkyYyBlZXByb21zIHVudGlsIHJlY2VudGx5IHdlcmUgaW4gdGhlIGxhbmQgb2YKZHJpdmVycy9t
+aXNjIHdoZXJlIGFsbCB0aGUgb2RkYmFsbHMgYXJlIGxvY2F0ZWQuCgpJ4oCZbSB2ZXJ5IGhhcHB5
+IHRvIHBvaW50IG91dCB0aGF0IExpbnV4IGRvZXMgbm93IGhhdmUgKGluIC1uZXh0KSBhbiAKRUVQ
+Uk9NIChudm1lbSkgZnJhbWV3b3JrIHRoYXQgX2lzXyBzYW5lLgoKaHR0cDovL3d3dy5nb3NzYW1l
+ci10aHJlYWRzLmNvbS9saXN0cy9saW51eC9rZXJuZWwvMjIyNDA1Mz9wYWdlPWxhc3QKCkkgZXZl
+biBoYXZlIHBvcnRlZCB0aGUgdWJpcXVpdG91cyBhdDI0IGRyaXZlciB0byBpdCBhbmQgSeKAmW0g
+aGFwcHkKdG8gcmVwb3J0IHRoYXQgaXQgaXMgcGFpbmxlc3MgcG9ydC4KCmh0dHBzOi8vZ2l0aHVi
+LmNvbS9wYW50b25pb3UvbGludXgtYmVhZ2xlLXRyYWNrLW1haW5saW5lL2NvbW1pdC9lMDI4ODBm
+YjY4Mjk1Y2I2MWRiNzFjOTQ4MDBiMDRjMTY1NmIxMGJhCiAKPiBBbGwgaW4gYWxsLCBpdCdzIG5v
+dCBpbXBvc3NpYmxlIGZvciBhbm90aGVyIE9TIHRvIHdvcmsgd2l0aCB0aGUgRFQKPiBpbmZvcm1h
+dGlvbiB0aGF0IGJlZ2lucyBpdHMgbGlmZSBpbiBMaW51eCwgYnV0IGl0J3Mgbm90IHJlYWxseSBl
+YXN5Lgo+IAoKV2h5IG5vdCBtYWtlIGl0IGVhc2llciB0aGVuPwoKPiAtLSBJYW4KPiAKPiAKClJl
+Z2FyZHMKCuKAlCBQYW50ZWxpcwoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX18KVS1Cb290IG1haWxpbmcgbGlzdApVLUJvb3RAbGlzdHMuZGVueC5kZQpodHRw
+Oi8vbGlzdHMuZGVueC5kZS9tYWlsbWFuL2xpc3RpbmZvL3UtYm9vdAo=
