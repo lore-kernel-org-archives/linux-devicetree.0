@@ -1,40 +1,70 @@
-From: Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Subject: Re: [PATCH v7 0/9] Fixes and new clocks support for Mediatek MT8173
-Date: Fri, 14 Aug 2015 12:01:06 +0800
-Message-ID: <CAGS+omAj=BZXYXChJwC2Heq+2KVEV2EoRrhiQhtXZRHGaZ9tEw@mail.gmail.com>
-References: <1439200228-318-1-git-send-email-jamesjj.liao@mediatek.com> <CAGS+omCya_0djzoVGhJchmaTtzo2z+JdnJHDjLipNMsZKV=MLQ@mail.gmail.com>
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH v2] ARM: shmobile: kzm9g dts: Use adxl345-specific
+ compatible property
+Date: Fri, 14 Aug 2015 13:54:16 +0900
+Message-ID: <20150814045414.GA7739@verge.net.au>
+References: <1436180132-26190-1-git-send-email-geert+renesas@glider.be>
+ <20150813000537.GD5221@verge.net.au>
+ <CAMuHMdV0fqjJSjmYqP0uFa0x5ydc1iztu4za1Ufu7OMdhC29Ug@mail.gmail.com>
+ <10744920.2768uXkYtL@avalon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAGS+omCya_0djzoVGhJchmaTtzo2z+JdnJHDjLipNMsZKV=MLQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: James Liao <jamesjj.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Cc: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mike Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Heiko Stubner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, srv_heupstream <srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Ricky Liang <jcliang-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "open list:OPEN FIRMWARE AND..." <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-input-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <10744920.2768uXkYtL@avalon>
+Sender: linux-input-owner@vger.kernel.org
+To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: Geert Uytterhoeven <geert@linux-m68k.org>, Geert Uytterhoeven <geert+renesas@glider.be>, Linux-sh list <linux-sh@vger.kernel.org>, Magnus Damm <magnus.damm@gmail.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Aug 11, 2015 at 12:43 PM, Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org> wrote:
-> Hi James,
->
-> On Mon, Aug 10, 2015 at 5:50 PM, James Liao <jamesjj.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org> wrote:
->> This patchset is based on 4.2-rc2 and [1], and contains minor fixes and
->> subsystem clocks support for Mediatek MT8173.
->>
->> The previous reviews can be found in [2].
->>
->> changes since v6:
->> - Use DUMMY_RATE (0) instead of typical rate for clocks that we don't care
->>   and not controlled in CCF.
->
-> For the whole series:
-> Reviewed-by: Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+On Fri, Aug 14, 2015 at 12:31:09AM +0300, Laurent Pinchart wrote:
+> On Thursday 13 August 2015 11:26:32 Geert Uytterhoeven wrote:
+> > On Thu, Aug 13, 2015 at 2:05 AM, Simon Horman <horms@verge.net.au> wrote:
+> > > On Wed, Jul 08, 2015 at 09:51:49AM +0900, Simon Horman wrote:
+> > >> On Tue, Jul 07, 2015 at 09:56:29AM +0300, Laurent Pinchart wrote:
+> > >>> On Tuesday 07 July 2015 09:26:21 Simon Horman wrote:
+> > >>>> On Mon, Jul 06, 2015 at 04:29:33PM +0300, Laurent Pinchart wrote:
+> > >>>>> On Monday 06 July 2015 12:55:32 Geert Uytterhoeven wrote:
+> > >>>>>> Replace the deprecated generic "adi,adxl34x" compatible value by
+> > >>>>>> the adxl345-specific "adi,adxl345" value, cfr. commit
+> > >>>>>> e465bf6fc55d5ce2 ("DT:
+> > >>>>>> i2c: Deprecate adi,adxl34x compatible string").
+> > >>>>>> 
+> > >>>>>> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> > >>>>> 
+> > >>>>> Acked-by: Laurent Pinchart
+> > >>>>> <laurent.pinchart+renesas@ideasonboard.com>
+> > >>>>> 
+> > >>>>>> ---
+> > >>>>>> Depends on commit 3a38958d2477b718 ("Input: adxl34x - add OF
+> > >>>>>> match support"), which is in v4.2-rc1.
+> > >>>>>> 
+> > >>>>>> This is v2 of "ARM: shmobile: kzm9g dts: Add adxl345-specific
+> > >>>>>> compatible property".
+> > >>>> 
+> > >>>> It appears to me that this will cause a regression when booting old
+> > >>>> kernels with new dts blobs. For that reason think we should consider
+> > >>>> v1 of this change coupled with a schedule to remove use of the
+> > >>>> deprecated compat string.
+> > >>> 
+> > >>> That's the forward compatibility that Geert mentioned, is that really
+> > >>> an issue, especially on this board ?
+> > >> 
+> > >> I think it would be best to provide backwards compatibility unless there
+> > >> is a compelling reason not to.
+> > > 
+> > > I would like to revisit this discussion with a view to getting some
+> > > version of this patch queued up (yes I know I pushed back on it earlier in
+> > > this thread).
+> >
+> > I'm fine with applying v1.
+> 
+> And I'm quite unsurprisingly not, as I've asked for a v2.
+> 
+> The "adi,adxl34x" compatible string is deprecated. That means we still support 
+> it in the driver for device trees that haven't been updated, but it shouldn't 
+> be used forward by new device trees. That's why the device tree sources 
+> contained in the kernel shouldn't use it, especially given that they often 
+> serve as references for device trees shipped out of tree.
 
-Hi Sascha,
-
-Are you happy with these patches now?
-
-Thanks,
--Dan
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Thanks, I see your point now. I have queued up v2.
