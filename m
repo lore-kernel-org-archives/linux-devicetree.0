@@ -1,105 +1,91 @@
-From: Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: Re: [PATCH v3 08/10] Doc: usb: ci-hdrc-usb2: add
- tx(rx)-burst-config-dword for binding doc
-Date: Fri, 14 Aug 2015 12:02:37 +0200
-Message-ID: <1439546557.13210.52.camel@pengutronix.de>
-References: <1438931747-25209-1-git-send-email-peter.chen@freescale.com>
-	 <1438931747-25209-9-git-send-email-peter.chen@freescale.com>
-	 <1439541450.13210.31.camel@pengutronix.de>
-	 <20150814084050.GE11072@shlinux2>
+From: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+Subject: Re: [PATCH RFC v3 6/7] drm/i2c: tda998x: Register ASoC HDMI codec
+ for audio functionality
+Date: Fri, 14 Aug 2015 11:06:16 +0100
+Message-ID: <20150814100616.GH7576@n2100.arm.linux.org.uk>
+References: <cover.1439542916.git.jsarha@ti.com>
+ <1e8e3215caa932dab68de8576aee81f5e1008163.1439542916.git.jsarha@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20150814084050.GE11072@shlinux2>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Cc: shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, jun.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1e8e3215caa932dab68de8576aee81f5e1008163.1439542916.git.jsarha-l0cyMroinI0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jyri Sarha <jsarha-l0cyMroinI0@public.gmane.org>
+Cc: dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, airlied-cv59FeDIM0c@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, liam.r.girdwood-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, peter.ujfalusi-l0cyMroinI0@public.gmane.org, tomi.valkeinen-l0cyMroinI0@public.gmane.org, moinejf-GANU6spQydw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Am Freitag, den 14.08.2015, 16:40 +0800 schrieb Peter Chen:
-> On Fri, Aug 14, 2015 at 10:37:30AM +0200, Lucas Stach wrote:
-> > Am Freitag, den 07.08.2015, 15:15 +0800 schrieb Peter Chen:
-> > > It is used to override the default setting for burst size, changing
-> > > burst size takes effect only when the SBUSCFG.AHBBRST = 0.
-> > > 
-> > > Signed-off-by: Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-> > > ---
-> > >  Documentation/devicetree/bindings/usb/ci-hdrc-usb2.txt | 10 ++++++++++
-> > >  1 file changed, 10 insertions(+)
-> > > 
-> > > diff --git a/Documentation/devicetree/bindings/usb/ci-hdrc-usb2.txt b/Documentation/devicetree/bindings/usb/ci-hdrc-usb2.txt
-> > > index d52a747..d71ef07 100644
-> > > --- a/Documentation/devicetree/bindings/usb/ci-hdrc-usb2.txt
-> > > +++ b/Documentation/devicetree/bindings/usb/ci-hdrc-usb2.txt
-> > > @@ -37,6 +37,14 @@ Optional properties:
-> > >    property is used to change AHB burst configuration, check the chipidea
-> > >    spec for meaning of each value. If this property is not existed, it
-> > >    will use the reset value.
-> > > +- tx-burst-size-dword: it is vendor dependent, the tx burst size in dword
-> > > +  (4 bytes), This register represents the maximum length of a the burst
-> > > +  in 32-bit words while moving data from system memory to the USB
-> > > +  bus, changing this value takes effect only the SBUSCFG.AHBBRST is 0.
-> > 
-> > The last bits about SBUSCFG.AHBBRST don't make any sense in the DT
-> > binding. The DT writer doesn't know about the SBUSCFG.AHBBRST value and
-> > should not care either.
-> > If someone sets the burst size to something
-> > non-standard in the DT, the driver should make sure to enable to
-> > necessary bits to make this setting take effect.
-> 
-> The SBUSCFG.AHBBRST property description is just above this one,
-> and the user should read the spec for changing these system
-> configuration parameters.
-> 
-This is not clear from the description. This should read something like
-"The value of this property will only take effect if property
-ahb-burst-config is set to 0."
+On Fri, Aug 14, 2015 at 12:30:44PM +0300, Jyri Sarha wrote:
+> +static int tda998x_write_aif(struct tda998x_priv *priv,
+> +			     struct hdmi_audio_infoframe *cea)
+> +{
+> +	uint8_t buf[HDMI_INFOFRAME_SIZE(AUDIO)];
+> +	int len;
+> +
+> +	len = hdmi_audio_infoframe_pack(cea, buf, sizeof(buf));
+> +	if (len < 0) {
+> +		dev_err(&priv->hdmi->dev,
+> +			"Failed to pack audio infoframe: %d\n", len);
+> +		return len;
+> +	}
+> +
+> +	/* Write the audio information packet */
+> +	tda998x_write_if(priv, DIP_IF_FLAGS_IF4, REG_IF4_HB0, buf, len);
+> +	return 0;
+> +}
+> +
 
-The DT binding should be coherent and understandable without reading the
-DW USB spec and/or the code. Please take some care about this.
+I have such a function already queued up, but I can't push it out at the
+moment because of too many conflicts across all my DRM work.  I'm waiting
+for after 4.3-rc1 before publishing anything from or accepting anything
+else into DRM branches.
 
-> This requirement is from the spec, and the code logic makes sure
-> the burst size changes only when SBUSCFG.AHBBRST is 0, since the
-> hardware will only change burst size if SBUSCFG.AHBBRST is 0.
-> 
-> > 
-> > Also both those descriptions are missing a description to what value the
-> > burst sizes will be set if the DT properties are not found. If it's
-> > implementation defined spell this out in the doc.
-> 
-> It is optional property, if without this property, it will use the
-> default value.
-> 
-Then specify this in the binding. Again, the binding is a spec that one
-should be able to understand without reading the code.
+>  static void
+>  tda998x_write_avi(struct tda998x_priv *priv, struct drm_display_mode *mode)
+>  {
+> @@ -670,19 +691,24 @@ static void tda998x_audio_mute(struct tda998x_priv *priv, bool on)
+>  	}
+>  }
+>  
+> -static void
+> +static int
+>  tda998x_configure_audio(struct tda998x_priv *priv,
+> -		struct drm_display_mode *mode, struct tda998x_encoder_params *p)
+> +			int mode_clock,
+> +			int ena_ap,
+> +			int dai_format,
+> +			int sample_width,
+> +			int sample_rate,
+> +			const u8 *status)
 
-"If this property is missing the reset defaults of the hardware
-implementation will be used."
+I don't think this is an improvement.
 
-> > 
-> > Are there really cases where it makes sense to set RX and TX burst sizes
-> > to different values?
-> 
-> Yes, the default burst size is the same for all SoCs, but the bus
-> burst size may be larger for some SoCs.
-> 
-This question wasn't meant to dispute the RX/TX burst size
-configuration, but I'm questioning if it really makes sense to set them
-to different values. Do we really need 2 properties for this, or is 1
-enough?
+> +static int tda998x_audio_get_eld(struct device *dev, uint8_t *buf, size_t len)
+> +{
+> +	struct tda998x_priv *priv = dev_get_drvdata(dev);
+> +	struct drm_mode_config *config = &priv->encoder->dev->mode_config;
+> +	struct drm_connector *connector;
+> +	int ret = -ENODEV;
+> +
+> +	mutex_lock(&config.mutex);
+> +	list_for_each_entry(connector, &config->connector_list, head) {
+> +		if (priv->encoder == connector->encoder) {
+> +			memcpy(buf, connector->eld, 
+> +			       min(sizeof(connector->eld), len));
+> +			ret = 0;
+> +		}
+> +	}
+> +	mutex_unlock(&config.mutex);
 
-Do you see any use case where someone would like to do something like:
-tx-burst-size-dword = <0x8>;
-rx-burst-size-dword = <0x10>;
+Obviously untested.  Should be config->mutex.
 
-Regards,
-Lucas
+But in any case, when I kill the DRM slave encoder code in here, this
+becomes unnecessary.
+
 -- 
-Pengutronix e.K.             | Lucas Stach                 |
-Industrial Linux Solutions   | http://www.pengutronix.de/  |
-
+FTTC broadband for 0.8mile line: currently at 10.5Mbps down 400kbps up
+according to speedtest.net.
 --
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
