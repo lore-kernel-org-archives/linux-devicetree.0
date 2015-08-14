@@ -1,51 +1,72 @@
-From: James Morse <james.morse@arm.com>
-Subject: Re: [PATCH v6 3/6] PCI: designware: Add ARM64 support
-Date: Fri, 14 Aug 2015 15:48:32 +0100
-Message-ID: <55CDFFC0.40604@arm.com>
-References: <1438848559-232109-1-git-send-email-wangzhou1@hisilicon.com> <1438848559-232109-4-git-send-email-wangzhou1@hisilicon.com> <55C44B18.4010103@hisilicon.com>
+From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH 2/6] ARM: dts: sun7i: Enable i2c bus 1 and 2 on the Wits
+ A20 Pro DKT
+Date: Fri, 14 Aug 2015 16:50:57 +0200
+Message-ID: <55CE0051.4010403@redhat.com>
+References: <1439563477-12295-1-git-send-email-hdegoede@redhat.com>
+ <1439563477-12295-3-git-send-email-hdegoede@redhat.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
+Content-Type: text/plain; charset=windows-1252; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <55C44B18.4010103@hisilicon.com>
-Sender: linux-pci-owner@vger.kernel.org
-To: Zhou Wang <wangzhou1@hisilicon.com>
-Cc: Bjorn Helgaas <bhelgaas@google.com>, Jingoo Han <jg1.han@samsung.com>, Pratyush Anand <pratyush.anand@gmail.com>, Arnd Bergmann <arnd@arndb.de>, "linux@arm.linux.org.uk" <linux@arm.linux.org.uk>, "thomas.petazzoni@free-electrons.com" <thomas.petazzoni@free-electrons.com>, "gabriele.paoloni@huawei.com" <gabriele.paoloni@huawei.com>, Lorenzo Pieralisi <Lorenzo.Pieralisi@arm.com>, Liviu Dudau <Liviu.Dudau@arm.com>, Jason Cooper <jason@lakedaemon.net>, "robh@kernel.org" <robh@kernel.org>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "yuanzhichang@hisilicon.com" <yuanzhichang@hisilicon.com>, "zhudacai@hisilicon.com" <zhudacai@hisilicon.com>, "zhangjukuo@huawei.com" <zhangjukuo@huawei.com>, "qiuzhenfa@hisilicon.com" <qiuz>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1439563477-12295-3-git-send-email-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Jelle van der Waa <jelle-oJJ1AqDjjO4@public.gmane.org>, Ralph Willekes <benadski-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 07/08/15 07:07, Zhou Wang wrote:
-> On 2015/8/6 16:09, Zhou Wang wrote:
->> This patch tries to unify ARM32 and ARM64 PCIe in designware driver. Delete
->> function dw_pcie_setup, dw_pcie_scan_bus, dw_pcie_map_irq and struct hw_pci,
->> move related operations to dw_pcie_host_init.
->>
->> In past, we use:
->> pci_common_init_dev
->>       -> pcibios_init_hw
->>               -> hw->scan (dw_pcie_scan_bus)
->> to pass 0 to root_bus_nr in struct pcie_port. This patch set pp->root_bus_nr = 0
->> in each PCIe host driver which is based on pcie-designware.
->>
->> This patch also try to use of_pci_get_host_bridge_resources for ARM32 and ARM64
->> according to the suggestion for Gabriele[1]
->>
->> Finally this patch reverts commit f4c55c5a3f7f "PCI: designware: Program ATU
->> with untranslated address" based on 1/6 in this series. we delete *_mod_base in
->> pcie-designware. This was discussed in [2]
->>
->> I have compiled the driver with multi_v7_defconfig. However, I don't have
->> ARM32 PCIe related board to do test. It will be appreciated if someone could
->> help to test it.
+Hi Maxime,
 
-I've tested this whole series on an ARM32 PCIe board:'Freescale i.MX6 Quad
-SABRE Lite Board' with an Intel wireless card on v4.2-rc6.
+On 14-08-15 16:44, Hans de Goede wrote:
+> Enable i2c bus 1 and 2 on the Wits A20 Pro DKT, these are used for
+> the touchscreen resp. the accelerometer.
+>
+> Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 
-I can rescan the bus, load firmware, list nearby APs, and even get MSIs
-coming from the card.
+Erm, please skip this one it depends on another patch
+(which adds the sun7i-a20-wits-pro-a20-dkt.dts), which
+I've not submitted yet as it depends on the axp
+usb-power-supply driver.
 
-Tested-By: James Morse <james.morse@arm.com>
+So as said please skip this one, I've squashed it into
+the patch adding the dts file, which I will submit
+later.
+
+Regards,
+
+Hans
 
 
-Thanks,
 
-James
+> ---
+>   arch/arm/boot/dts/sun7i-a20-wits-pro-a20-dkt.dts | 12 ++++++++++++
+>   1 file changed, 12 insertions(+)
+>
+> diff --git a/arch/arm/boot/dts/sun7i-a20-wits-pro-a20-dkt.dts b/arch/arm/boot/dts/sun7i-a20-wits-pro-a20-dkt.dts
+> index da47608..85b500d 100644
+> --- a/arch/arm/boot/dts/sun7i-a20-wits-pro-a20-dkt.dts
+> +++ b/arch/arm/boot/dts/sun7i-a20-wits-pro-a20-dkt.dts
+> @@ -92,6 +92,18 @@
+>   	};
+>   };
+>
+> +&i2c1 {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&i2c1_pins_a>;
+> +	status = "okay";
+> +};
+> +
+> +&i2c2 {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&i2c2_pins_a>;
+> +	status = "okay";
+> +};
+> +
+>   #include "axp209.dtsi"
+>
+>   &mmc0 {
+>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
