@@ -1,85 +1,77 @@
-From: Christophe Ricard <christophe.ricard@gmail.com>
-Subject: [PATCH 02/11] nfc: st-nci: Fix typo when changing from st21nfcb to st-nci
-Date: Fri, 14 Aug 2015 22:33:31 +0200
-Message-ID: <1439584420-5446-3-git-send-email-christophe-h.ricard@st.com>
+From: Christophe Ricard <christophe.ricard-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH 05/11] NFC: st-nci: fix use of uninitialized variables in error path
+Date: Fri, 14 Aug 2015 22:33:34 +0200
+Message-ID: <1439584420-5446-6-git-send-email-christophe-h.ricard@st.com>
 References: <1439584420-5446-1-git-send-email-christophe-h.ricard@st.com>
-Return-path: <stable-owner@vger.kernel.org>
-In-Reply-To: <1439584420-5446-1-git-send-email-christophe-h.ricard@st.com>
-Sender: stable-owner@vger.kernel.org
-To: sameo@linux.intel.com
-Cc: linux-nfc@lists.01.org, christophe-h.ricard@st.com, christophe.ricard@gmail.com, devicetree@vger.kernel.org, stable@vger.kernel.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1439584420-5446-1-git-send-email-christophe-h.ricard-qxv4g6HH51o@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org
+Cc: linux-nfc-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org, christophe-h.ricard-qxv4g6HH51o@public.gmane.org, christophe.ricard-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, stable-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Nicolas Iooss <nicolas.iooss_linux-oWGTIYur0i8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Replace ST21NFCB with ST_NCI or st21nfcb with st_nci as it was forgotten
-in commit "nfc: st-nci: Rename st21nfcb to st-nci"
-ed06aeefdac348cfb91a3db5fe1067e3202afd70
+st_nci_hci_load_session() calls kfree_skb() on unitialized variables
+skb_pipe_info and skb_pipe_list if the call to nci_hci_connect_gate()
+failed.  Reword the error path to not use these variables when they are
+not initialized.  While at it, there seemed to be a memory leak because
+skb_pipe_info was only freed once, after the for-loop, even though
+several ones were created by nci_hci_send_cmd.
 
-Cc: stable@vger.kernel.org
-Signed-off-by: Christophe Ricard <christophe-h.ricard@st.com>
+Cc: stable-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Acked-by: Christophe Ricard <christophe-h.ricard-qxv4g6HH51o@public.gmane.org>
+Signed-off-by: Nicolas Iooss <nicolas.iooss_linux-oWGTIYur0i8@public.gmane.org>
 ---
- drivers/nfc/st-nci/i2c.c | 18 +++++++++---------
- 1 file changed, 9 insertions(+), 9 deletions(-)
+ drivers/nfc/st-nci/st-nci_se.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/nfc/st-nci/i2c.c b/drivers/nfc/st-nci/i2c.c
-index b2a467c..a15144d 100644
---- a/drivers/nfc/st-nci/i2c.c
-+++ b/drivers/nfc/st-nci/i2c.c
-@@ -29,11 +29,11 @@
+diff --git a/drivers/nfc/st-nci/st-nci_se.c b/drivers/nfc/st-nci/st-nci_se.c
+index 97addfa..c742ef6 100644
+--- a/drivers/nfc/st-nci/st-nci_se.c
++++ b/drivers/nfc/st-nci/st-nci_se.c
+@@ -189,14 +189,14 @@ int st_nci_hci_load_session(struct nci_dev *ndev)
+ 				ST_NCI_DEVICE_MGNT_GATE,
+ 				ST_NCI_DEVICE_MGNT_PIPE);
+ 	if (r < 0)
+-		goto free_info;
++		return r;
  
- #include "ndlc.h"
+ 	/* Get pipe list */
+ 	r = nci_hci_send_cmd(ndev, ST_NCI_DEVICE_MGNT_GATE,
+ 			ST_NCI_DM_GETINFO, pipe_list, sizeof(pipe_list),
+ 			&skb_pipe_list);
+ 	if (r < 0)
+-		goto free_info;
++		return r;
  
--#define DRIVER_DESC "NCI NFC driver for ST21NFCB"
-+#define DRIVER_DESC "NCI NFC driver for ST_NCI"
- 
- /* ndlc header */
--#define ST21NFCB_FRAME_HEADROOM	1
--#define ST21NFCB_FRAME_TAILROOM 0
-+#define ST_NCI_FRAME_HEADROOM	1
-+#define ST_NCI_FRAME_TAILROOM 0
- 
- #define ST_NCI_I2C_MIN_SIZE 4   /* PCB(1) + NCI Packet header(3) */
- #define ST_NCI_I2C_MAX_SIZE 250 /* req 4.2.1 */
-@@ -118,14 +118,14 @@ static int st_nci_i2c_write(void *phy_id, struct sk_buff *skb)
- /*
-  * Reads an ndlc frame and returns it in a newly allocated sk_buff.
-  * returns:
-- * frame size : if received frame is complete (find ST21NFCB_SOF_EOF at
-+ * frame size : if received frame is complete (find ST_NCI_SOF_EOF at
-  * end of read)
-- * -EAGAIN : if received frame is incomplete (not find ST21NFCB_SOF_EOF
-+ * -EAGAIN : if received frame is incomplete (not find ST_NCI_SOF_EOF
-  * at end of read)
-  * -EREMOTEIO : i2c read error (fatal)
-  * -EBADMSG : frame was incorrect and discarded
-  * (value returned from st_nci_i2c_repack)
-- * -EIO : if no ST21NFCB_SOF_EOF is found after reaching
-+ * -EIO : if no ST_NCI_SOF_EOF is found after reaching
-  * the read length end sequence
-  */
- static int st_nci_i2c_read(struct st_nci_i2c_phy *phy,
-@@ -179,7 +179,7 @@ static int st_nci_i2c_read(struct st_nci_i2c_phy *phy,
- /*
-  * Reads an ndlc frame from the chip.
-  *
-- * On ST21NFCB, IRQ goes in idle state when read starts.
-+ * On ST_NCI, IRQ goes in idle state when read starts.
-  */
- static irqreturn_t st_nci_irq_thread_fn(int irq, void *phy_id)
- {
-@@ -325,12 +325,12 @@ static int st_nci_i2c_probe(struct i2c_client *client,
+ 	/* Complete the existing gate_pipe table */
+ 	for (i = 0; i < skb_pipe_list->len; i++) {
+@@ -222,6 +222,7 @@ int st_nci_hci_load_session(struct nci_dev *ndev)
+ 		    dm_pipe_info->src_host_id != ST_NCI_ESE_HOST_ID) {
+ 			pr_err("Unexpected apdu_reader pipe on host %x\n",
+ 			       dm_pipe_info->src_host_id);
++			kfree_skb(skb_pipe_info);
+ 			continue;
  		}
- 	} else {
- 		nfc_err(&client->dev,
--			"st21nfcb platform resources not available\n");
-+			"st_nci platform resources not available\n");
- 		return -ENODEV;
+ 
+@@ -241,13 +242,12 @@ int st_nci_hci_load_session(struct nci_dev *ndev)
+ 			ndev->hci_dev->pipes[st_nci_gates[j].pipe].host =
+ 						dm_pipe_info->src_host_id;
+ 		}
++		kfree_skb(skb_pipe_info);
  	}
  
- 	r = ndlc_probe(phy, &i2c_phy_ops, &client->dev,
--			ST21NFCB_FRAME_HEADROOM, ST21NFCB_FRAME_TAILROOM,
-+			ST_NCI_FRAME_HEADROOM, ST_NCI_FRAME_TAILROOM,
- 			&phy->ndlc);
- 	if (r < 0) {
- 		nfc_err(&client->dev, "Unable to register ndlc layer\n");
+ 	memcpy(ndev->hci_dev->init_data.gates, st_nci_gates,
+ 	       sizeof(st_nci_gates));
+ 
+-free_info:
+-	kfree_skb(skb_pipe_info);
+ 	kfree_skb(skb_pipe_list);
+ 	return r;
+ }
 -- 
 2.1.4
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
