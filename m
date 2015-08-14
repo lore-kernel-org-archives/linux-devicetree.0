@@ -1,45 +1,47 @@
-From: Christophe Ricard <christophe.ricard@gmail.com>
-Subject: [PATCH 03/11] nfc: st-nci: Fix non accurate comment for st_nci_i2c_read
-Date: Fri, 14 Aug 2015 22:33:32 +0200
-Message-ID: <1439584420-5446-4-git-send-email-christophe-h.ricard@st.com>
+From: Christophe Ricard <christophe.ricard-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH 07/11] nfc: st-nci: Free data with irrelevant NDLC PCB_SYNC value
+Date: Fri, 14 Aug 2015 22:33:36 +0200
+Message-ID: <1439584420-5446-8-git-send-email-christophe-h.ricard@st.com>
 References: <1439584420-5446-1-git-send-email-christophe-h.ricard@st.com>
-Return-path: <stable-owner@vger.kernel.org>
-In-Reply-To: <1439584420-5446-1-git-send-email-christophe-h.ricard@st.com>
-Sender: stable-owner@vger.kernel.org
-To: sameo@linux.intel.com
-Cc: linux-nfc@lists.01.org, christophe-h.ricard@st.com, christophe.ricard@gmail.com, devicetree@vger.kernel.org, stable@vger.kernel.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1439584420-5446-1-git-send-email-christophe-h.ricard-qxv4g6HH51o@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org
+Cc: linux-nfc-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org, christophe-h.ricard-qxv4g6HH51o@public.gmane.org, christophe.ricard-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, stable-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Due to a copy and paste error st_nci_i2c_read still contain st21nfca header
-comment.
+PCB_SYNC different than PCB_TYPE_SUPERVISOR or PCB_TYPE_DATAFRAME should
+be discarded.
 
-Cc: stable@vger.kernel.org
-Signed-off-by: Christophe Ricard <christophe-h.ricard@st.com>
+Irrelevant data may be forwarded up to the ndlc state machine by phys like
+spi to prevent missing potential data during "write" transaction.
+
+Cc: stable-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Signed-off-by: Christophe Ricard <christophe-h.ricard-qxv4g6HH51o@public.gmane.org>
 ---
- drivers/nfc/st-nci/i2c.c | 9 ++-------
- 1 file changed, 2 insertions(+), 7 deletions(-)
+ drivers/nfc/st-nci/ndlc.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/nfc/st-nci/i2c.c b/drivers/nfc/st-nci/i2c.c
-index a15144d..707ed2e 100644
---- a/drivers/nfc/st-nci/i2c.c
-+++ b/drivers/nfc/st-nci/i2c.c
-@@ -118,15 +118,10 @@ static int st_nci_i2c_write(void *phy_id, struct sk_buff *skb)
- /*
-  * Reads an ndlc frame and returns it in a newly allocated sk_buff.
-  * returns:
-- * frame size : if received frame is complete (find ST_NCI_SOF_EOF at
-- * end of read)
-- * -EAGAIN : if received frame is incomplete (not find ST_NCI_SOF_EOF
-- * at end of read)
-+ * 0 : if received frame is complete
-  * -EREMOTEIO : i2c read error (fatal)
-  * -EBADMSG : frame was incorrect and discarded
-- * (value returned from st_nci_i2c_repack)
-- * -EIO : if no ST_NCI_SOF_EOF is found after reaching
-- * the read length end sequence
-+ * -ENOMEM : cannot allocate skb, frame dropped
-  */
- static int st_nci_i2c_read(struct st_nci_i2c_phy *phy,
- 				 struct sk_buff **skb)
+diff --git a/drivers/nfc/st-nci/ndlc.c b/drivers/nfc/st-nci/ndlc.c
+index bb08b16..4f51649 100644
+--- a/drivers/nfc/st-nci/ndlc.c
++++ b/drivers/nfc/st-nci/ndlc.c
+@@ -198,8 +198,10 @@ static void llt_ndlc_rcv_queue(struct llt_ndlc *ndlc)
+ 				kfree_skb(skb);
+ 				break;
+ 			}
+-		} else {
++		} else if ((pcb & PCB_TYPE_MASK) == PCB_TYPE_DATAFRAME) {
+ 			nci_recv_frame(ndlc->ndev, skb);
++		} else {
++			kfree_skb(skb);
+ 		}
+ 	}
+ }
 -- 
 2.1.4
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
