@@ -1,131 +1,99 @@
-From: Pantelis Antoniou <panto@antoniou-consulting.com>
-Subject: Re: [PATCH v3 01/11] dm: serial: Update binding for PL01x
-	serial UART
-Date: Fri, 14 Aug 2015 22:32:20 +0300
-Message-ID: <5DE63FE6-A4CF-4B84-ABAC-2AAD0C377747@antoniou-consulting.com>
-References: <1438954951-13329-1-git-send-email-sjg@chromium.org>
- <1438954951-13329-2-git-send-email-sjg@chromium.org>
- <CACRpkdZa2O1MqCVT8q2P0u0ciXK+6HFbQQGXB_-chimg=FbzQg@mail.gmail.com>
- <CAPnjgZ3V1KS7POEhsvj63OSB29MUtyaZGBoFR8JGPnaN=-fXVw@mail.gmail.com>
- <55CCBFB2.7050301@wwwdotorg.org> <20150813181346.GS25532@bill-the-cat>
- <1439492679.242.35.camel@freebsd.org>
-Mime-Version: 1.0 (Mac OS X Mail 8.2 \(2102\))
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <u-boot-bounces@lists.denx.de>
-In-Reply-To: <1439492679.242.35.camel@freebsd.org>
-List-Unsubscribe: <http://lists.denx.de/mailman/options/u-boot>,
- <mailto:u-boot-request@lists.denx.de?subject=unsubscribe>
-List-Archive: <http://lists.denx.de/pipermail/u-boot/>
-List-Post: <mailto:u-boot@lists.denx.de>
-List-Help: <mailto:u-boot-request@lists.denx.de?subject=help>
-List-Subscribe: <http://lists.denx.de/mailman/listinfo/u-boot>,
- <mailto:u-boot-request@lists.denx.de?subject=subscribe>
-Errors-To: u-boot-bounces@lists.denx.de
-Sender: "U-Boot" <u-boot-bounces@lists.denx.de>
-To: Ian Lepore <ian@freebsd.org>
-Cc: Tom Rini <trini@konsulko.com>, Stephen Warren <swarren@nvidia.com>, Arnd Bergmann <arnd@arndb.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Joe Hershberger <joe.hershberger@ni.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, U-Boot Mailing List <u-boot@lists.denx.de>, Rob Herring <robh+dt@kernel.org>, Geert Uytterhoeven <geert@linux-m68k.org>, Grant Likely <grant.likely@linaro.org>, Matt Porter <mporter@konsulko.com>
+From: Bjorn Helgaas <bhelgaas@google.com>
+Subject: Re: [PATCH v2 2/4] PCI: pci-host-generic: Fix lookup of
+ linux,pci-probe-only property
+Date: Fri, 14 Aug 2015 15:26:21 -0500
+Message-ID: <CAErSpo5abs2Qj25Bs+JVg87ve346f_RVz7jhNwqdv856+WvXQA@mail.gmail.com>
+References: <1439569159-10051-1-git-send-email-marc.zyngier@arm.com>
+ <1439569159-10051-3-git-send-email-marc.zyngier@arm.com>
+ <20150814164051.GF26431@google.com>
+ <20150814164324.GC22809@arm.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20150814164324.GC22809@arm.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Will Deacon <will.deacon@arm.com>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Lorenzo Pieralisi <Lorenzo.Pieralisi@arm.com>, Marc Zyngier <Marc.Zyngier@arm.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "agraf@suse.de" <agraf@suse.de>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Paul Mackerras <paulus@samba.org>, "suravee.suthikulpanit@amd.com" <suravee.suthikulpanit@amd.com>, Michael Ellerman <mpe@ellerman.id.au>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-SGkgSWFuLAoKPiBPbiBBdWcgMTMsIDIwMTUsIGF0IDIyOjA0ICwgSWFuIExlcG9yZSA8aWFuQGZy
-ZWVic2Qub3JnPiB3cm90ZToKPiAKPiBPbiBUaHUsIDIwMTUtMDgtMTMgYXQgMTQ6MTMgLTA0MDAs
-IFRvbSBSaW5pIHdyb3RlOgo+PiBPbiBUaHUsIEF1ZyAxMywgMjAxNSBhdCAxMDowMjo1OEFNIC0w
-NjAwLCBTdGVwaGVuIFdhcnJlbiB3cm90ZToKPj4+IE9uIDA4LzEzLzIwMTUgMDk6NTkgQU0sIFNp
-bW9uIEdsYXNzIHdyb3RlOgo+Pj4+IEhpIExpbnVzLAo+Pj4+IAo+Pj4+IE9uIDExIEF1Z3VzdCAy
-MDE1IGF0IDA3OjAwLCBMaW51cyBXYWxsZWlqIDxsaW51cy53YWxsZWlqQGxpbmFyby5vcmc+IHdy
-b3RlOgo+Pj4+PiBPbiBGcmksIEF1ZyA3LCAyMDE1IGF0IDM6NDIgUE0sIFNpbW9uIEdsYXNzIDxz
-amdAY2hyb21pdW0ub3JnPiB3cm90ZToKPj4+Pj4gCj4+Pj4+PiBUaGlzIGJpbmRpbmcgZGlmZmVy
-cyBmcm9tIHRoYXQgb2YgTGludXguIFVwZGF0ZSBpdCBhbmQgY2hhbmdlIGV4aXN0aW5nCj4+Pj4+
-PiB1c2Vycy4KPj4+Pj4+IAo+Pj4+Pj4gU2lnbmVkLW9mZi1ieTogU2ltb24gR2xhc3MgPHNqZ0Bj
-aHJvbWl1bS5vcmc+Cj4+Pj4+ICguLi4pCj4+Pj4+PiBkb2MvZGV2aWNlLXRyZWUtYmluZGluZ3Mv
-c2VyaWFsL3BsMDF4LnR4dCB8IDU1ICsrKysrKysrKysrKysrKysrKysrKysrKysrKystLS0KPj4+
-Pj4gCj4+Pj4+IFNvIHdoeSBkb2VzIFUtQm9vdCBoYXZlIGl0cyBvd24gY29weSBvZiBhbnkgYmlu
-ZGluZ3MgYXQgYWxsPwo+Pj4+PiAKPj4+Pj4gVGhpcyBpcyBmb3JraW5nIHRoZSBvbnRvbG9neSBv
-ZiB3aG8gZ2V0cyB0byBkZWZpbmUgYmluZGluZ3MgSSBmZWFyLgo+Pj4+PiBJdCdzIGEgYml0IGxp
-a2UgaGF2ZSB0d28gYmlibGVzIGJvdGggY2xhaW1pbmcgdG8gYmUgdGhlIHdvcmQgb2YgZ29kLgo+
-Pj4+PiAoT0sgbWF5YmUgYSBoeXBlcmJvbGljIHN0YXRlbWVudCwgYnV0IHlvdSBzZWUgd2hhdCBJ
-IG1lYW4uKQo+Pj4+PiAKPj4+Pj4gQ2FuJ3Qgd2UganVzdCBoYXZlIHRoZSBiaW5kaW5ncyBpbiB0
-aGUgTGludXgga2VybmVsIHRyZWUgcGxlYXNlPwo+Pj4+IAo+Pj4+IElzIHRoZXJlIGFueSBwbGFu
-IHRvIG1vdmUgdGhlbSBvdXQgb2YgTGludXggYW5kIHB1dCB0aGVtIGluIGEgc2VwYXJhdGUgcGxh
-Y2U/Cj4+Pj4gCj4+Pj4gV2Ugc2hvdWxkIG1ha2UgYW4gZWZmb3J0IHRvIHN5bmMgdGhlIGRldmlj
-ZSB0cmVlIGZpbGVzIHdpdGggTGludXggcGVyaW9kaWNhbGx5Lgo+Pj4+IAo+Pj4+IEkgcXVpdGUg
-bGlrZSBoYXZpbmcgdGhlIGJpbmRpbmdzIGluIFUtQm9vdCBzaW5jZSBpdCBtYWtlcyBwZW9wbGUg
-dGhpbmsKPj4+PiBhYm91dCB3aGF0IHRoZXkgYXJlIGFkZGluZy4gQXJlIHlvdSB3b3JyaWVkIHRo
-YXQgdGhlIGJpbmRpbmdzIGluCj4+Pj4gVS1Cb290IG1pZ2h0IGV2b2x2ZSBzZXBhcmF0ZWx5PyBD
-ZXJ0YWlubHkgdGhlcmUgaGFzIGJlZW4gc29tZSBvZiB0aGF0Lgo+Pj4+IAo+Pj4+IEhvd2V2ZXIg
-SSByZWNlbnRseSBzZW50IGEgc2VyaWVzIHRvIGFkZCBhIGZldyB0aGluZ3MgZm9yIFJhc3BiZXJy
-eSBQaQo+Pj4+ICgiYXJtOiBycGk6IERldmljZSB0cmVlIG1vZGlmaWNhdGlvbnMgZm9yIFUtQm9v
-dCIpIGFuZCBJIGRvbid0IHlldCBzZWUKPj4+PiBhIHdpbGxpbmduZXNzIHRvIGFkZCB3aGF0IHNv
-bWUgc2VlIGFzICdVLUJvb3QgdGhpbmdzJyB0byB0aGUgYmluZGluZy4KPj4+PiBIb3cgZG8gd2Ug
-YWRkcmVzcyB0aGF0Pwo+Pj4gCj4+PiBEVCBpc24ndCBzdXBwb3NlZCB0byBjb250YWluICJVLUJv
-b3QgdGhpbmdzIiwgYnV0ICJhbiBPUy1hZ25vc3RpYwo+Pj4gZGVzY3JpcHRpb24gb2YgdGhlIGhh
-cmR3YXJlIi4gU28sIEkgaW1hZ2luZSB0aGUgc29sdXRpb24gaXMgbm90IHRvCj4+PiBhdHRlbXB0
-IHRvIGRvIHRoYXQ6LSkKPj4gCj4+IFRoaXMgYWx3YXlzIG1ha2VzIG1lIGFzayBpZiB0aGUgRnJl
-ZUJTRCBmb2xrcyBvciBWeFdvcmtzIGZvbGtzIGhhdmUKPj4gYWRvcHRlZCB0aGUgIkxpbnV4IiBi
-aW5kaW5ncyBvciBpZiB0aGUgRFQgZmlsZXMgY29udGludWUgdG8gYmUKPj4gIk9TLWFnbm9zdGlj
-IiBhbmQgIm9ubHkgZnVuY3Rpb25hbCB3aXRoIExpbnV4Ii4gIEl0IHdhcyBhIHdoaWxlIGFnbyBs
-YXN0Cj4+IEkgbG9va2VkIGJ1dCBpdCBtYWRlIG15IGhlYWQgaHVydCBhIGxpdHRsZSBkb2luZyBh
-IHF1aWNrIHRyYW5zbGF0aW9uIGZvcgo+PiBhbiBTb0MgdGhhdCBJIHdhcyBmYW1pbGlhciB3aXRo
-Lgo+PiAKPiAKPiBBcyB0aGUgRnJlZUJTRCBwZXJzb24gd2hvIGdvdCBvdXIgZmlyc3QgU29DIChp
-bXg2LCBvbmx5IHBhcnRpYWxseQo+IHN1cHBvcnRlZCkgY29udmVydGVkIHRvIHVzZSB0aGUgTGlu
-dXggRFQgZmlsZXMgcmF0aGVyIHRoYW4gb3VyIG93bgo+IGhvbWVicmV3IG1lc3Mgd2Ugc3RhcnRl
-ZCB3aXRoLCBJIHdvdWxkIHNheSB0aGF0IG15IG9waW5pb24gb2YgdGhlCj4gZXhpc3RpbmcgRFQg
-aW5mb3JtYXRpb24gaXMgdGhhdCBpdCBpcyBhbiBleHRlbnNpb24gb2YgTGludXggZGV2aWNlCj4g
-ZHJpdmVycyB3cml0dGVuIGluIGEgZGlmZmVyZW50IGxhbmd1YWdlLgo+IAo+IFRoZSBpbmZvcm1h
-dGlvbiBhdmFpbGFibGUgaXMgaW4gbm8gd2F5IGluZGVwZW5kZW50IG9mIHRoZSBMaW51eCBkZXZp
-Y2UKPiBkcml2ZXJzLCBpdCBpcyBleGFjdGx5IHRoZSBpbmZvcm1hdGlvbiB0aG9zZSBkcml2ZXJz
-IG5lZWQuICBJdCBpcyBvZnRlbgo+IG5vdCB0aGUgaW5mb3JtYXRpb24gbmVlZGVkIGluIGFub3Ro
-ZXIgT1Mgd2l0aCBpbmRlcGVuZGVudGx5IHdyaXR0ZW4KPiBkcml2ZXJzLiAgQW5kIGVzcGVjaWFs
-bHkgaXQgaXMgbm90IG9yZGVyZWQgYW5kIHN0cnVjdHVyZWQgaW4gYSB3YXkgdGhhdAo+IHdvcmtz
-IHdlbGwgd2l0aCB0aGUgZGV2aWNlIGVudW1lcmF0aW9uIGFuZCBpbnN0YW50aWF0aW9uIG1vZGVs
-cyB1c2VkIGJ5Cj4gYW5vdGhlciBPUy4KPiAKCkFzIG9uZSB0aGF0IGhhZCB0byBzdWZmZXIgdW5k
-ZXIgYW4gYWx0ZXJuYXRpdmUgT1PigJlzIGRlZmluaXRpb24gb2Ygd2hhdCBEVAppcywgYW5kIGhv
-dyBiaW5kaW5ncyB3b3JrIChWeFdvcmtzKSBJIHdvdWxkIGxpa2UgdG8gaGF2ZSBzb21lIGNvbmNy
-ZXRlCmV4YW1wbGUgYWJvdXQgYW55IGNhc2VzIGxpa2UgdGhhdC4KCkluIG15IGV4cGVyaWVuY2Ug
-dGhlIG1pc21hdGNoIG1heSBjb21lIGZyb20gZXhhY3RseSB0d28gdGhpbmdzOgoKMSkgRnJvbSB0
-aGUgbGFjayBvZiBpbnZvbHZlbWVudCBpbiB0aGUgRFQgcHJvY2VzcyB0aGF04oCZcyBnb2luZyBv
-biBkZXZpY2V0cmVlLgpUcnVlLCB0aGVyZeKAmXMgYSB2ZXJ5IGJpZyBMaW51eCBiaWFzIGJ1dCB0
-aGUgbWFpbnRhaW5lcnMgYXJlIHJlYXNvbmFibGUKYW5kIHRoZXkgYXJlIG9wZW4gb24gYW55IGtp
-bmQgb2YgY29sbGFib3JhdGlvbiBpbiB0aGF0IGFyZWEuCgoyKSBGcm9tIHRoZSBjb21wbGV0ZWx5
-IGhhbGYtYXNzZWQgd2F5IHRoYXQgaW50ZXJuYWxseSBEVCBoYXMgYmVlbiBpbXBsZW1lbnRlZApp
-biBvdGhlciBPU2VzIGJlc2lkZXMgTGludXguIEkgYW0gc3RpbGwgc2NhcmVkIGJ5IHRoZSBWeFdv
-cmtzIHN0dWZmLCBidXQKdGhpbmdzIGFyZSBub3QgbXVjaCBiZXR0ZXIgaW4gdS1ib290IGVpdGhl
-ci4gWW91IGp1c3QgY2Fu4oCZdCBzbGFwIGluCmxpYmZkdCBpbiB0aGVyZSBhbmQgZXhwZWN0IGFs
-bCB0aGUgbW9kZXJuIGJpbmRpbmdzIHRvIHdvcmsgKGxpa2UgY2xvY2sgdHJlZSwKcGlubXV4aW5n
-LCBldGMuKSBJIHdvdWxkIGhvcGUgd2XigJlsbCBnZXQgdGhpbmdzIGJldHRlciBpbiB1LWJvb3Qg
-YW5kIEkgd291bGQKY2VydGFpbmx5IGxpa2UgdG8gY29vcmRpbmF0ZSB3aXRoIEZyZWVCU0Qgb3Ig
-d2hvZXZlciB0byBnZXQgc29tZXRoaW5nCmRvbmUgd2l0aCBhIHJlYXNvbmFibGUgQVBJIChhbmQg
-bGljZW5zZSkgdGhhdCBhbnlvbmUgY2FuIHVzZS4KCkR1ZSB0byB0aGlzLCBEVCBiaW5kaW5ncyBl
-bmQgdXAgT1Mgc3BlY2lmaWMgd2hpY2ggaXMgcmF0aGVyIGluc2FuZSBpZiB5b3UKdGhpbmsgYWJv
-dXQgaXQuCgo+IEEgZ3JlYXQgY2FzZSBpbiBwb2ludCB3b3VsZCBiZSBpMmMgZWVwcm9tcy4gIFdo
-YXQgYSBwZXJmZWN0IG9wcG9ydHVuaXR5Cj4gRFQgd291bGQgYmUgdG8gZGVzY3JpYmUgZXZlcnl0
-aGluZyBhYm91dCB0aGUgZWVwcm9tIHBhcnRzICh0b3RhbAo+IGNhcGFjaXR5LCBwYWdlIHJlYWQv
-d3JpdGUgc2l6ZSwgd2hldGhlciB0aGUgcGFnZSBhZGRyZXNzIGJpdHMgZXh0ZW5kCj4gaW50byB0
-aGUgYnVzLXNsYXZlIGFkZHJlc3MgYml0cywgZXRjKS4gIEl0IHNlZW1zIHRvIG1lIHRoYXQgYW55
-dGhpbmcKPiBjbGFpbWluZyB0byBiZSBhbiBpbmRlcGVuZGVudCBkZXNjcmlwdGlvbiBvZiB0aGUg
-aGFyZHdhcmUgd291bGQgaGF2ZSB0bwo+IGluY2x1ZGUgc3VjaCB0aGluZ3MuICBJbnN0ZWFkLCBh
-bGwgdGhlIGJpbmRpbmdzIGRlZmluZSBpcyB0aGUgY29tcGF0aWJsZQo+IHN0cmluZy4gIFRoYXQn
-cyBjcmF6eS4gIFdoeT8gIFdlbGwsIHdoZW4gSSB3ZW50IGFuZCBsb29rZWQgYXQgdGhlIExpbnV4
-Cj4gZWVwcm9tIGRyaXZlcnMgaXQgYmVjYW1lIGNsZWFyIHdoeTogIHRoYXQncyBhbGwgdGhleSBu
-ZWVkIHRvIGtub3csCj4gYmVjYXVzZSBldmVyeXRoaW5nIGVsc2UgaXMgaGFyZC1jb2RlZCBpbiB0
-YWJsZXMgaW4gdGhlIGRyaXZlciBzb3VyY2UuCj4gCj4gU28gaWYgSSB3YW50IHRvIHdyaXRlIGEg
-RnJlZUJTRCBpMmMgZWVwcm9tIGRyaXZlciB0aGF0IHVzZXMgRFQgZGF0YSwKPiB3aGF0IGFyZSBt
-eSBjaG9pY2VzPyAgSSBoYXZlIGV4YWN0bHkgb25lOiAgbWFrZSBteSBkcml2ZXIgZXNzZW50aWFs
-bHkgYQo+IGNsb25lIG9mIHRoZSBMaW51eCBkcml2ZXIsIHdpdGggYWxsIHRoZSBzYW1lIGRhdGEg
-aGFyZC1jb2RlZCBpbiBzb3VyY2UuCj4gCgpJIHdvdWxkIGxpa2UgdG8gcG9pbnQgb3V0IHRoYXQg
-cGlja2luZyBpMmMgZWVwcm9tcyBhcyBhbiBleGFtcGxlIGlzCnJhdGhlciBkaXNpbmdlbnVvdXMu
-IGkyYyBlZXByb21zIHVudGlsIHJlY2VudGx5IHdlcmUgaW4gdGhlIGxhbmQgb2YKZHJpdmVycy9t
-aXNjIHdoZXJlIGFsbCB0aGUgb2RkYmFsbHMgYXJlIGxvY2F0ZWQuCgpJ4oCZbSB2ZXJ5IGhhcHB5
-IHRvIHBvaW50IG91dCB0aGF0IExpbnV4IGRvZXMgbm93IGhhdmUgKGluIC1uZXh0KSBhbiAKRUVQ
-Uk9NIChudm1lbSkgZnJhbWV3b3JrIHRoYXQgX2lzXyBzYW5lLgoKaHR0cDovL3d3dy5nb3NzYW1l
-ci10aHJlYWRzLmNvbS9saXN0cy9saW51eC9rZXJuZWwvMjIyNDA1Mz9wYWdlPWxhc3QKCkkgZXZl
-biBoYXZlIHBvcnRlZCB0aGUgdWJpcXVpdG91cyBhdDI0IGRyaXZlciB0byBpdCBhbmQgSeKAmW0g
-aGFwcHkKdG8gcmVwb3J0IHRoYXQgaXQgaXMgcGFpbmxlc3MgcG9ydC4KCmh0dHBzOi8vZ2l0aHVi
-LmNvbS9wYW50b25pb3UvbGludXgtYmVhZ2xlLXRyYWNrLW1haW5saW5lL2NvbW1pdC9lMDI4ODBm
-YjY4Mjk1Y2I2MWRiNzFjOTQ4MDBiMDRjMTY1NmIxMGJhCiAKPiBBbGwgaW4gYWxsLCBpdCdzIG5v
-dCBpbXBvc3NpYmxlIGZvciBhbm90aGVyIE9TIHRvIHdvcmsgd2l0aCB0aGUgRFQKPiBpbmZvcm1h
-dGlvbiB0aGF0IGJlZ2lucyBpdHMgbGlmZSBpbiBMaW51eCwgYnV0IGl0J3Mgbm90IHJlYWxseSBl
-YXN5Lgo+IAoKV2h5IG5vdCBtYWtlIGl0IGVhc2llciB0aGVuPwoKPiAtLSBJYW4KPiAKPiAKClJl
-Z2FyZHMKCuKAlCBQYW50ZWxpcwoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX18KVS1Cb290IG1haWxpbmcgbGlzdApVLUJvb3RAbGlzdHMuZGVueC5kZQpodHRw
-Oi8vbGlzdHMuZGVueC5kZS9tYWlsbWFuL2xpc3RpbmZvL3UtYm9vdAo=
+On Fri, Aug 14, 2015 at 11:43 AM, Will Deacon <will.deacon@arm.com> wrote:
+> On Fri, Aug 14, 2015 at 05:40:51PM +0100, Bjorn Helgaas wrote:
+>> On Fri, Aug 14, 2015 at 05:19:17PM +0100, Marc Zyngier wrote:
+>> > When pci-host-generic looks for the probe-only property, it seems
+>> > to trust the DT to be correctly written, and assumes that there
+>> > is a parameter to the property.
+>> >
+>> > Unfortunately, this is not always the case, and some firmware expose
+>> > this property naked. The driver ends up making a decision based on
+>> > whatever the property pointer points to, which is likely to be junk.
+>> >
+>> > Switch to the common of_pci.c implementation that doesn't suffer
+>> > from this problem.
+>> >
+>> > Signed-off-by: Marc Zyngier <marc.zyngier@arm.com>
+>> > ---
+>> >  drivers/pci/host/pci-host-generic.c | 9 +--------
+>> >  1 file changed, 1 insertion(+), 8 deletions(-)
+>> >
+>> > diff --git a/drivers/pci/host/pci-host-generic.c b/drivers/pci/host/pci-host-generic.c
+>> > index 265dd25..545ff4e 100644
+>> > --- a/drivers/pci/host/pci-host-generic.c
+>> > +++ b/drivers/pci/host/pci-host-generic.c
+>> > @@ -210,7 +210,6 @@ static int gen_pci_probe(struct platform_device *pdev)
+>> >     int err;
+>> >     const char *type;
+>> >     const struct of_device_id *of_id;
+>> > -   const int *prop;
+>> >     struct device *dev = &pdev->dev;
+>> >     struct device_node *np = dev->of_node;
+>> >     struct gen_pci *pci = devm_kzalloc(dev, sizeof(*pci), GFP_KERNEL);
+>> > @@ -225,13 +224,7 @@ static int gen_pci_probe(struct platform_device *pdev)
+>> >             return -EINVAL;
+>> >     }
+>> >
+>> > -   prop = of_get_property(of_chosen, "linux,pci-probe-only", NULL);
+>> > -   if (prop) {
+>> > -           if (*prop)
+>> > -                   pci_add_flags(PCI_PROBE_ONLY);
+>> > -           else
+>> > -                   pci_clear_flags(PCI_PROBE_ONLY);
+>> > -   }
+>> > +   of_pci_check_probe_only(of_chosen);
+>>
+>> Do we need support for pci-probe-only in pci-host-generic at all?
+>> You're removing the use in amd-overdrive.dts, and there are no other
+>> DTs in the kernel tree that mention it.
+>>
+>> If we can live without it, that would be nice.  It seems like a relic from
+>> days when we couldn't reliably assign resources.  (I'm not saying we can do
+>> that reliably even today, but I'd rather make it reliable than turn it
+>> off.)
+>
+> Kvmtool certainly uses it (and generates its own DT, hence why you don't
+> see it in mainline). Not sure about qemu, though.
+
+Do you know why kvmtool wants probe-only?  Would something break if we
+didn't support probe-only?  I guess we'd be looking for a case where
+Linux assigns resources and that assignment doesn't work with kvmtool?
+
+"pci-probe-only" doesn't appear in qemu
+(git://git.qemu-project.org/qemu.git).  (I guess Alexander confirmed
+that later.)
+
+Alexander wrote:
+> QEMU definitely doesn't do proble-only.
+> Is this driver used on real PPC machines too?
+
+I think you're asking about pci-host-generic.c, and the answer is
+"no," because pci-host-generic.c currently depends on CONFIG_ARM.
+
+Bjorn
