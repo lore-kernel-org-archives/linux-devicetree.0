@@ -1,106 +1,42 @@
-From: Punit Agrawal <punit.agrawal-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH v2 10/10] arm64: dts: Create SoC thermal zone for Juno
-Date: Fri, 14 Aug 2015 13:44:31 +0100
-Message-ID: <9hhlhdeghu8.fsf@e105922-lin.cambridge.arm.com>
-References: <1438615378-14241-1-git-send-email-punit.agrawal@arm.com>
-	<1438615378-14241-11-git-send-email-punit.agrawal@arm.com>
-	<20150812155500.GW20890@e106497-lin.cambridge.arm.com>
-	<9hh1tf7i7oi.fsf@e105922-lin.cambridge.arm.com>
-	<9hhsi7mgi44.fsf@e105922-lin.cambridge.arm.com>
-Mime-Version: 1.0
-Content-Type: text/plain
+From: Gary Bisson <gary.bisson-Q5RJGjKts06CY9SHAMCTRUEOCMrvLtNR@public.gmane.org>
+Subject: [PATCH v3 0/2] ARM: dts: add Okaya LCD display for Nitrogen and Sabrelite
+Date: Fri, 14 Aug 2015 14:51:05 +0200
+Message-ID: <1439556667-3424-1-git-send-email-gary.bisson@boundarydevices.com>
+References: <1432314867-30888-1-git-send-email-gary.bisson@boundarydevices.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <9hhsi7mgi44.fsf-Z9gB6HwUD+TZROr8t4l/smS4ubULX0JqMm0uRHvK7Nw@public.gmane.org> (Punit Agrawal's
-	message of "Fri, 14 Aug 2015 13:38:35 +0100")
+In-Reply-To: <1432314867-30888-1-git-send-email-gary.bisson-Q5RJGjKts06CY9SHAMCTRUEOCMrvLtNR@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Eduardo Valentin <edubezval-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Zhang Rui <rui.zhang-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Liviu Dudau <Liviu.Dudau-5wv7dgnIgG8@public.gmane.org>, "linux-pm@vger.kernel.org" <linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "lm-sensors@lm-sensors.org" <lm-sensors-GZX6beZjE8VD60Wz+7aTrA@public.gmane.org>, "linux-kernel@vger.kernel.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree@vger.kernel.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, Sudeep Holla <Sudeep.Holla-5wv7dgnIgG8@public.gmane.org>
+To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Gary Bisson <gary.bisson-Q5RJGjKts06CY9SHAMCTRUEOCMrvLtNR@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Apologies for the duplicate, I accidentally Hit send before I finished
-the reply.
+This series adds the Okaya 7" LCD support as a simple panel for both Nitrogen
+and Sabrelite.
 
-Punit Agrawal <punit.agrawal-5wv7dgnIgG8@public.gmane.org> writes:
+This v3 updates the series as the compatible name has been changed from
+"okaya,rs800480t_7x0gp" to "okaya,rs800480t-7x0gp" when the drm patch has been
+merged into linux-next branch.
+http://git.kernel.org/cgit/linux/kernel/git/next/linux-next.git/commit/?id=ec9000c
 
-> [ adding Eduardo, Rui for their take on OF-thermal bindings ]
->
-> Punit Agrawal <punit.agrawal-5wv7dgnIgG8@public.gmane.org> writes:
->
->> Hi Liviu,
->>
->> Thanks for having a look.
->>
->> Liviu Dudau <Liviu.Dudau-5wv7dgnIgG8@public.gmane.org> writes:
->>
->>> On Mon, Aug 03, 2015 at 04:22:58PM +0100, Punit Agrawal wrote:
->>>> Setup a thermal zone driven by the SoC temperature sensor on Juno
->>>> r0. Create passive trip points and bind them to cpufreq cooling
->>>> devices that support the power extensions.
->>>
->>> Hi Punit,
->>>
->>>> 
->>>> Signed-off-by: Punit Agrawal <punit.agrawal-5wv7dgnIgG8@public.gmane.org>
->>>> Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
->>>> Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
->>>> Cc: Liviu Dudau <liviu.dudau-5wv7dgnIgG8@public.gmane.org>
->>>> Cc: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
->>>> ---
->>>>  arch/arm64/boot/dts/arm/juno.dts | 50 ++++++++++++++++++++++++++++++++++++++++
->>>>  1 file changed, 50 insertions(+)
->>>> 
->>>> diff --git a/arch/arm64/boot/dts/arm/juno.dts b/arch/arm64/boot/dts/arm/juno.dts
->>>> index d2e67f3..664961c 100644
->>>> --- a/arch/arm64/boot/dts/arm/juno.dts
->>>> +++ b/arch/arm64/boot/dts/arm/juno.dts
->>>> @@ -9,6 +9,7 @@
->>>>  /dts-v1/;
->>>>  
->>>>  #include <dt-bindings/interrupt-controller/arm-gic.h>
->>>> +#include <dt-bindings/thermal/thermal.h>
->>>>  
->>>>  / {
->>>>  	model = "ARM Juno development board (r0)";
->>>> @@ -90,6 +91,8 @@
->>>>  			next-level-cache = <&A57_L2>;
->>>>  			clocks = <&scpi_dvfs 0>;
->>>>  			cpu-idle-states = <&CPU_SLEEP_0 &CLUSTER_SLEEP_0>;
->>>> +			#cooling-cells = <2>;
->>>> +			dynamic-power-coefficient = <530>;
->>>
->>> The Documentation/devicetree/bindings/thermal/thermal.txt document describes two additional
->>> required properties, cooling-min-state and cooling-max-state which are missing here.
->>>
->>
->> The bindings do suggest that the cooling-*-state are required but I
->> couldn't find any code making use of this property.
->>
->> I'll send a patch with the next version making those properties
->> optional.
->>
->
-> On second thoughts...
->
-> The question about cooling-*-state has come up in another thread as
-> well [0]. I'll re-iterate the question for the thermal maintainers to
-> clarify.
->
-> The cooling-{max,min}-state properties are marked mandatory in the
-> bindings but aren't used in the code anywhere. Can we drop those
-> properties from the binding documentation? Or at the least, make them optional?
->
+Also note that Philipp Zabel's patch that enables the parallel-display driver
+to work with a simple panel has been merged.
+http://git.kernel.org/cgit/linux/kernel/git/stable/linux-stable.git/commit/?id=553a59f
 
-Let me know your preferred approach. I can include a fix in the next version.
+A U-Boot script to configure the displays based on detection of the
+touch controller is available for reference here:
+https://github.com/boundarydevices/u-boot-imx6/blob/staging/board/boundary/nitrogen6x/6x_bootscript-mainline.txt
 
-[0] http://thread.gmane.org/gmane.linux.ports.ppc.embedded/84512/focus=63339
+Gary Bisson (2):
+  ARM: dts: imx6qdl-nitrogen6x: add Okaya LCD panel
+  ARM: dts: imx6qdl-sabrelite: add Okaya LCD panel
 
-> [...]
->
->
->> --
->> To unsubscribe from this list: send the line "unsubscribe linux-pm" in
->> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
->> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+ arch/arm/boot/dts/imx6qdl-nitrogen6x.dtsi | 76 ++++++++++++++++++++++++++++++-
+ arch/arm/boot/dts/imx6qdl-sabrelite.dtsi  | 76 ++++++++++++++++++++++++++++++-
+ 2 files changed, 150 insertions(+), 2 deletions(-)
+
+-- 
+2.4.6
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
