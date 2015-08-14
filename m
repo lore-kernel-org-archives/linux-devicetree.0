@@ -1,44 +1,92 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH v4 2/4] gpio: brcmstb: Add interrupt and wakeup source support
-Date: Fri, 14 Aug 2015 14:36:53 +0200
-Message-ID: <CACRpkdaTES0EtbTBUGJLfFC4-fg91Fef1CBLh5tor9SpMCo1og@mail.gmail.com>
-References: <1438391865-7862-1-git-send-email-gregory.0xf0@gmail.com>
-	<1438391865-7862-3-git-send-email-gregory.0xf0@gmail.com>
-	<CACRpkdaz3k_N1qS5M_jmprPz8fHXeLtTke_YT8i2gaehmme+OQ@mail.gmail.com>
-	<CADtm3G7NQqDKwGujZUA9CUJ15+e8fLg0Kupbn2CMc0MeK9DbMw@mail.gmail.com>
+From: Punit Agrawal <punit.agrawal@arm.com>
+Subject: Re: [PATCH v2 10/10] arm64: dts: Create SoC thermal zone for Juno
+Date: Fri, 14 Aug 2015 13:38:35 +0100
+Message-ID: <9hhsi7mgi44.fsf@e105922-lin.cambridge.arm.com>
+References: <1438615378-14241-1-git-send-email-punit.agrawal@arm.com>
+	<1438615378-14241-11-git-send-email-punit.agrawal@arm.com>
+	<20150812155500.GW20890@e106497-lin.cambridge.arm.com>
+	<9hh1tf7i7oi.fsf@e105922-lin.cambridge.arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <CADtm3G7NQqDKwGujZUA9CUJ15+e8fLg0Kupbn2CMc0MeK9DbMw@mail.gmail.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Gregory Fong <gregory.0xf0@gmail.com>
-Cc: Alexandre Courbot <gnurou@gmail.com>, bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>, Brian Norris <computersforpeace@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Florian Fainelli <f.fainelli@gmail.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>, Russell King <linux@arm.linux.org.uk>
+Content-Type: text/plain
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <9hh1tf7i7oi.fsf@e105922-lin.cambridge.arm.com> (Punit Agrawal's
+	message of "Thu, 13 Aug 2015 15:28:45 +0100")
+Sender: linux-pm-owner@vger.kernel.org
+To: Eduardo Valentin <edubezval@gmail.com>
+Cc: Zhang Rui <rui.zhang@intel.com>, Liviu Dudau <Liviu.Dudau@arm.com>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "lm-sensors@lm-sensors.org" <lm-sensors@lm-sensors.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <Mark.Rutland@arm.com>, Sudeep Holla <Sudeep.Holla@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Aug 14, 2015 at 1:49 AM, Gregory Fong <gregory.0xf0@gmail.com> wrote:
-> On Thu, Aug 13, 2015 at 4:11 AM, Linus Walleij <linus.walleij@linaro.org> wrote:
->> On Sat, Aug 1, 2015 at 3:17 AM, Gregory Fong <gregory.0xf0@gmail.com> wrote:
+[ adding Eduardo, Rui for their take on OF-thermal bindings ]
 
->> This patch does not apply cleanly because the version in my
->> tree has INIT_LIST_HEAD(&priv->bank_list);
->> before the sanity check.
+Punit Agrawal <punit.agrawal@arm.com> writes:
+
+> Hi Liviu,
+>
+> Thanks for having a look.
+>
+> Liviu Dudau <Liviu.Dudau@arm.com> writes:
+>
+>> On Mon, Aug 03, 2015 at 04:22:58PM +0100, Punit Agrawal wrote:
+>>> Setup a thermal zone driven by the SoC temperature sensor on Juno
+>>> r0. Create passive trip points and bind them to cpufreq cooling
+>>> devices that support the power extensions.
 >>
->> I applied it manually, but check that things are working right.
+>> Hi Punit,
+>>
+>>> 
+>>> Signed-off-by: Punit Agrawal <punit.agrawal@arm.com>
+>>> Cc: Rob Herring <robh+dt@kernel.org>
+>>> Cc: Mark Rutland <mark.rutland@arm.com>
+>>> Cc: Liviu Dudau <liviu.dudau@arm.com>
+>>> Cc: Sudeep Holla <sudeep.holla@arm.com>
+>>> ---
+>>>  arch/arm64/boot/dts/arm/juno.dts | 50 ++++++++++++++++++++++++++++++++++++++++
+>>>  1 file changed, 50 insertions(+)
+>>> 
+>>> diff --git a/arch/arm64/boot/dts/arm/juno.dts b/arch/arm64/boot/dts/arm/juno.dts
+>>> index d2e67f3..664961c 100644
+>>> --- a/arch/arm64/boot/dts/arm/juno.dts
+>>> +++ b/arch/arm64/boot/dts/arm/juno.dts
+>>> @@ -9,6 +9,7 @@
+>>>  /dts-v1/;
+>>>  
+>>>  #include <dt-bindings/interrupt-controller/arm-gic.h>
+>>> +#include <dt-bindings/thermal/thermal.h>
+>>>  
+>>>  / {
+>>>  	model = "ARM Juno development board (r0)";
+>>> @@ -90,6 +91,8 @@
+>>>  			next-level-cache = <&A57_L2>;
+>>>  			clocks = <&scpi_dvfs 0>;
+>>>  			cpu-idle-states = <&CPU_SLEEP_0 &CLUSTER_SLEEP_0>;
+>>> +			#cooling-cells = <2>;
+>>> +			dynamic-power-coefficient = <530>;
+>>
+>> The Documentation/devicetree/bindings/thermal/thermal.txt document describes two additional
+>> required properties, cooling-min-state and cooling-max-state which are missing here.
+>>
 >
-> Your tree seems to be missing
+> The bindings do suggest that the cooling-*-state are required but I
+> couldn't find any code making use of this property.
 >
-> commit 2252607d327d5219a6331b50e6ec266d56402be0
-> Author: Gregory Fong <gregory.0xf0@gmail.com>
-> Date:   Wed Jun 17 18:00:40 2015 -0700
+> I'll send a patch with the next version making those properties
+> optional.
 >
->     gpio: brcmstb: fix null ptr dereference in driver remove
->
-> which you had pulled in and sent for 4.2-rc1.  It should apply cleanly
-> on top of that.
 
-Yes sorry, my bad.
+On second thoughts...
 
-I merged in v4.2-rc4 and now it looks better.
+The question about cooling-*-state has come up in another thread as
+well [0]. I'll re-iterate the question for the thermal maintainers to
+clarify.
 
-Yours,
-Linus Walleij
+The cooling-{max,min}-state properties are marked mandatory in the
+bindings but aren't used in the code anywhere. Can we drop those
+properties from the binding documentation? Or at the least, make them optional?
+
+[...]
+
+
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-pm" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
