@@ -1,58 +1,77 @@
-From: Keerthy <a0393675-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH v2 2/6] rtc: omap: Add external clock enabling support
-Date: Fri, 14 Aug 2015 10:25:11 +0530
-Message-ID: <55CD74AF.4020803@ti.com>
-References: <1439198906-31189-1-git-send-email-j-keerthy@ti.com> <1439198906-31189-3-git-send-email-j-keerthy@ti.com> <alpine.DEB.2.02.1508121422020.7154@utopia.booyaka.com> <55CB99C2.7010007@ti.com> <20150812201636.GJ3411@piout.net> <alpine.DEB.2.02.1508131822510.1009@utopia.booyaka.com>
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Subject: Re: [PATCH v2] ARM: shmobile: kzm9g dts: Use adxl345-specific compatible property
+Date: Fri, 14 Aug 2015 08:17:28 +0300
+Message-ID: <1710972.6MUFEBJ6zn@avalon>
+References: <1436180132-26190-1-git-send-email-geert+renesas@glider.be> <10744920.2768uXkYtL@avalon> <20150814045414.GA7739@verge.net.au>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <alpine.DEB.2.02.1508131822510.1009-rwI8Ez+7Ko+d5PgPZx9QOdBPR1lH4CV8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Paul Walmsley <paul-DWxLp4Yu+b8AvxtiuMwx3w@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Keerthy <j-keerthy-l0cyMroinI0@public.gmane.org>
-Cc: tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org, johan-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, grygorii.strashko-l0cyMroinI0@public.gmane.org, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, nm-l0cyMroinI0@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, t-kristo-l0cyMroinI0@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <20150814045414.GA7739@verge.net.au>
+Sender: linux-sh-owner@vger.kernel.org
+To: Simon Horman <horms@verge.net.au>
+Cc: Geert Uytterhoeven <geert@linux-m68k.org>, Geert Uytterhoeven <geert+renesas@glider.be>, Linux-sh list <linux-sh@vger.kernel.org>, Magnus Damm <magnus.damm@gmail.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
+Hi Simon,
 
+On Friday 14 August 2015 13:54:16 Simon Horman wrote:
+> On Fri, Aug 14, 2015 at 12:31:09AM +0300, Laurent Pinchart wrote:
+> > On Thursday 13 August 2015 11:26:32 Geert Uytterhoeven wrote:
+> >> On Thu, Aug 13, 2015 at 2:05 AM, Simon Horman <horms@verge.net.au> wrote:
+> >>> On Wed, Jul 08, 2015 at 09:51:49AM +0900, Simon Horman wrote:
+> >>>> On Tue, Jul 07, 2015 at 09:56:29AM +0300, Laurent Pinchart wrote:
+> >>>>> On Tuesday 07 July 2015 09:26:21 Simon Horman wrote:
+> >>>>>> On Mon, Jul 06, 2015 at 04:29:33PM +0300, Laurent Pinchart wrote:
+> >>>>>>> On Monday 06 July 2015 12:55:32 Geert Uytterhoeven wrote:
+> >>>>>>>> Replace the deprecated generic "adi,adxl34x" compatible value by
+> >>>>>>>> the adxl345-specific "adi,adxl345" value, cfr. commit
+> >>>>>>>> e465bf6fc55d5ce2 ("DT:
+> >>>>>>>> i2c: Deprecate adi,adxl34x compatible string").
+> >>>>>>>> 
+> >>>>>>>> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> >>>>>>> 
+> >>>>>>> Acked-by: Laurent Pinchart
+> >>>>>>> <laurent.pinchart+renesas@ideasonboard.com>
+> >>>>>>> 
+> >>>>>>>> ---
+> >>>>>>>> Depends on commit 3a38958d2477b718 ("Input: adxl34x - add OF
+> >>>>>>>> match support"), which is in v4.2-rc1.
+> >>>>>>>> 
+> >>>>>>>> This is v2 of "ARM: shmobile: kzm9g dts: Add adxl345-specific
+> >>>>>>>> compatible property".
+> >>>>>> 
+> >>>>>> It appears to me that this will cause a regression when booting old
+> >>>>>> kernels with new dts blobs. For that reason think we should
+> >>>>>> consider v1 of this change coupled with a schedule to remove use of
+> >>>>>> the deprecated compat string.
+> >>>>> 
+> >>>>> That's the forward compatibility that Geert mentioned, is that
+> >>>>> really an issue, especially on this board ?
+> >>>> 
+> >>>> I think it would be best to provide backwards compatibility unless
+> >>>> there is a compelling reason not to.
+> >>> 
+> >>> I would like to revisit this discussion with a view to getting some
+> >>> version of this patch queued up (yes I know I pushed back on it
+> >>> earlier in this thread).
+> >> 
+> >> I'm fine with applying v1.
+> > 
+> > And I'm quite unsurprisingly not, as I've asked for a v2.
+> > 
+> > The "adi,adxl34x" compatible string is deprecated. That means we still
+> > support it in the driver for device trees that haven't been updated, but
+> > it shouldn't be used forward by new device trees. That's why the device
+> > tree sources contained in the kernel shouldn't use it, especially given
+> > that they often serve as references for device trees shipped out of tree.
+> 
+> Thanks, I see your point now. I have queued up v2.
 
-On Friday 14 August 2015 01:47 AM, Paul Walmsley wrote:
-> Hi guys
->
-> On Wed, 12 Aug 2015, Alexandre Belloni wrote:
->
->> On 13/08/2015 at 00:38:50 +0530, Keerthy wrote :
->>> The intent here is to switch to a higher precision clock which is the
->>> internal clock when available.
->>>
->>> Alexandre,
->>>
->>> Is dynamic switching preferred over sticking  to external clock always if
->>> present?
->>
->> I'd say that I don't really care. I'd say the best would be to make a
->> decision based on clock-accuracy but maybe that is an information you
->> don't have yet. Anyway, this could be added at a later date.
->
-> Either the clock mux logic is glitchless, in which case the RTC is likely
-> to lose at least 31 microseconds per switch; or it's not glitchless, in
-> which case it's unsafe to switch the RTC clock source while the clock
-> isn't gated.  Keerthy, before submitting this patch for merging, I'd
-> suggest consulting your hardware folks to figure out which case it is.
+Thank you :-)
 
-Paul,
+-- 
+Regards,
 
-Thanks. Yes so i am doing the static way first. Keeping external clock 
-always if available. Switching dynamically can be done later with more 
-clarifications.
+Laurent Pinchart
 
-Thanks,
-Keerthy
-
->
->
-> - Paul
->
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
