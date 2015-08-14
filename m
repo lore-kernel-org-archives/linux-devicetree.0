@@ -1,104 +1,53 @@
-From: Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: Re: [RFC] net: stmmac: socfpga: dt binding
-Date: Fri, 14 Aug 2015 17:57:48 +0200
-Message-ID: <20150814155748.GE9841@pengutronix.de>
-References: <20150813194105.GC9841@pengutronix.de>
- <55CE0BEC.9050002@opensource.altera.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+From: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
+Subject: [PATCH v2 0/4] PCI: arm64/powerpc: Fix parsing of linux,pci-probe-only
+Date: Fri, 14 Aug 2015 17:19:15 +0100
+Message-ID: <1439569159-10051-1-git-send-email-marc.zyngier@arm.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <55CE0BEC.9050002-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Dinh Nguyen <dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>
+To: Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, Paul Mackerras <paulus-eUNUBHrolfbYtjvyW6yDsg@public.gmane.org>, Michael Ellerman <mpe-Gsx/Oe8HsFggBc27wqDAHg@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Suravee Suthikulpanit <Suravee.Suthikulpanit-5C7GfCeVMHo@public.gmane.org>, Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Alexander Graf <agraf-l3A5Bk7waGM@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi!
+The pci-host-generic driver parses the linux,pci-probe-only property,
+and assumes that it will have a boolean parameter.
 
-On Fri, Aug 14, 2015 at 10:40:28AM -0500, Dinh Nguyen wrote:
-> On 08/13/2015 02:41 PM, Steffen Trumtrar wrote:
-> > Hi!
-> > 
-> > I'm in the middle of getting the IEEE1588/PTP features of the GMAC up and
-> > running. The problem I have is with the current binding however.
-> > 
-> > The documentation says:
-> > 
-> > Example:
-> > 
-> > gmac0: ethernet@ff700000 {
-> > 	compatible = "altr,socfpga-stmmac", "snps,dwmac-3.70a", "snps,dwmac";
-> > 	altr,sysmgr-syscon = <&sysmgr 0x60 0>;
-> > 	status = "disabled";
-> > 	reg = <0xff700000 0x2000>;
-> > 	interrupts = <0 115 4>;
-> > 	interrupt-names = "macirq";
-> > 	mac-address = [00 00 00 00 00 00];/* Filled in by U-Boot */
-> > 	clocks = <&emac_0_clk>;
-> > 	clock-names = "stmmaceth";
-> > };
-> > 
-> > The problem is with the "altr,sysmgr-syscon" property. It was invented,
-> > because the Arria10 and the Arria5/CycloneV have different register
-> 
-> "altr,sysmgr-syscon" was invented before Arria10 was in the picture. It
-> was invented as a way to reach out and toggle registers that had a
-> direct impact to the ethernet IP, but was located in a separate IP block.
-> 
-> From the documentation:
-> 
-> "- altr,sysmgr-syscon : Should be the phandle to the system manager node
-> that encompasses the glue register, the register offset, and the
-> register shift."
-> 
-> So "altr,sysmgr-syscon" is a pretty generic property that toggles the
-> system manager. At the time, I was only using it for the PHYSEL bits and
-> did not consider the PTP clock select offsets.
-> 
+Turns out that the Seattle DTS file has a naked "linux,pci-probe-only"
+property, which leads to the driver dereferencing some unsuspecting
+memory location. Nothing really bad happens (we end up reading some
+other bit of DT, fortunately), but that not a reason to keep it this
+way. Turns out that the Pseries code (where this code was lifted from)
+may suffer from the same issue.
 
-Hm, okay.
+The first patch introduces a common (and fixed) version of that check
+that can be used by drivers and architectures that require it. The two
+following patches change the pci-host-generic driver and the powerpc
+code to use it.
 
-> > offsets and shifts. This information is however not enough to describe all
-> > properties of the hardware, but more of a crutch IMHO.
-> > The shifts are for the PHYSEL bits. Of course now I need some
-> > different shifts AND I need to access an additional register with different
-> > shifts on Arria10 and CycloneV in the sysmgr.
-> > 
-> > So, the standard way of handling this is with a new compatible for each
-> > type and getting rid of the register offset and shift in the property,
-> > I guess. And test the DT and print a deprecation warning if the property
-> > is still there.
-> > 
-> > Do you see any other/better way of fixing this?
-> > 
-> > As a side note: Is it reasonable to use the "clk_ptp_ref" property of the
-> > stmmac to decide if the PTP features should be enabled or not?
-> > As the hardware needs to be configured to use this clock, I think the
-> > presence of this property is a good enough indicator.
-> > 
-> 
-> I think what you're trying to do is reach the PTP clock select bits that
-> are located in the system manager, right? Should this be done through
-> the clock manager instead of stmmac driver?
-> 
+Finally, the bad property is removed from the Seatle DTS, because it
+is simply not necessary (it actually prevents me from using SR-IOV,
+which otherwise runs fine without the probe-only thing).
 
-That is also a possibility I guess. Although I'm not sure how that would
-look like.
-I also need to set the emac_1/emac_0 bits in the FPGA Interface group,
-otherwise the clock doesn't reach the EMAC.
-These are all random bits somewhere, so syscon is totally fine here. I
-personally wouldn't like to specify all this stuff in the devicetree however.
-The driver can/does know this stuff if it knows what device it is running on.
+This has been tested on the offending Seattle board.
 
-Regards,
-Steffen
+* From v1:
+  - Consolidate the parsing in of_pci.c (Bjorn)
+
+Marc Zyngier (4):
+  of/pci: Add of_pci_check_probe_only to parse "linux,pci-probe-only"
+  PCI: pci-host-generic: Fix lookup of linux,pci-probe-only property
+  powerpc: PCI: Fix lookup of linux,pci-probe-only property
+  arm64: dts: Drop linux,pci-probe-only from the Seattle DTS
+
+ arch/arm64/boot/dts/amd/amd-overdrive.dts |  1 -
+ arch/powerpc/platforms/pseries/setup.c    | 14 ++------------
+ drivers/of/of_pci.c                       | 30 ++++++++++++++++++++++++++++++
+ drivers/pci/host/pci-host-generic.c       |  9 +--------
+ include/linux/of_pci.h                    |  3 +++
+ 5 files changed, 36 insertions(+), 21 deletions(-)
 
 -- 
-Pengutronix e.K.                           |                             |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+2.1.4
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
