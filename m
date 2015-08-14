@@ -1,132 +1,77 @@
-From: Rob Herring <robherring2@gmail.com>
-Subject: Re: [PATCH] arm: rpi: Device tree modifications for U-Boot
-Date: Fri, 14 Aug 2015 15:29:03 -0500
-Message-ID: <CAL_Jsq++ihz6svJAKWwT7-=KyJvyWXjdf=tZb4aDGgV_Dc=-Nw@mail.gmail.com>
-References: <1439303153-12171-1-git-send-email-sjg@chromium.org>
- <1439312701.2451.3.camel@lynxeye.de>
- <CAPnjgZ3ztXnkxZJvitiXiKMzq5+x46hbv0PW4HcF7yGgsXUV+Q@mail.gmail.com>
- <CAPnjgZ0hzyjy=8o8ocaGCoOC7Js4CirhystidbvtabzbhRi4RQ@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <CAPnjgZ0hzyjy=8o8ocaGCoOC7Js4CirhystidbvtabzbhRi4RQ@mail.gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Simon Glass <sjg@chromium.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, Devicetree Discuss <devicetree@vger.kernel.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Russell King <linux@arm.linux.org.uk>, Pawel Moll <pawel.moll@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Lucas Stach <dev@lynxeye.de>, Lee Jones <lee@kernel.org>, lk <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, linux-rpi-kernel@lists.infradead.org, Kumar Gala <galak@codeaurora.org>, Stephen Warren <swarren@nvidia.com>, lak <linux-arm-kernel@lists.infradead.org>
+From: Christophe Ricard <christophe.ricard@gmail.com>
+Subject: [PATCH 01/11] nfc: st-nci: Remove duplicate file include/linux/platform_data/st_nci.h
+Date: Fri, 14 Aug 2015 22:33:30 +0200
+Message-ID: <1439584420-5446-2-git-send-email-christophe-h.ricard@st.com>
+References: <1439584420-5446-1-git-send-email-christophe-h.ricard@st.com>
+Return-path: <stable-owner@vger.kernel.org>
+In-Reply-To: <1439584420-5446-1-git-send-email-christophe-h.ricard@st.com>
+Sender: stable-owner@vger.kernel.org
+To: sameo@linux.intel.com
+Cc: linux-nfc@lists.01.org, christophe-h.ricard@st.com, christophe.ricard@gmail.com, devicetree@vger.kernel.org, stable@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Aug 14, 2015 at 1:34 PM, Simon Glass <sjg@chromium.org> wrote:
-> -linux-tegra
->
-> Hi,
->
-> On 12 August 2015 at 07:21, Simon Glass <sjg@chromium.org> wrote:
->> Hi Lucas,
->>
->> On 11 August 2015 at 11:05, Lucas Stach <dev@lynxeye.de> wrote:
->>> Hi Simon,
->>>
->>> why did you send this to the Tegra ML?
->>>
->>> Am Dienstag, den 11.08.2015, 08:25 -0600 schrieb Simon Glass:
->>>> This updates the device tree from the kernel version to something suitable
->>>> for U-Boot:
->>>>
->>>> - Add stdout-path alias for console
->>>> - Mark the /soc node to be available pre-relocation so that the early
->>>> serial console works (we need the 'ranges' property to be available)
+commit "nfc: st-nci: Rename st21nfcb to st-nci" adds
+include/linux/platform_data/st_nci.h duplicated with
+include/linux/platform_data/st-nci.h.
 
-I find it quite strange that you must explicitly enable the parent
-node, but not the uart node.
+Only drivers/nfc/st-nci/i2c.c uses include/linux/platform_data/st_nci.h.
 
->>>>
->>>> Signed-off-by: Simon Glass <sjg@chromium.org>
->>>> ---
->>>>
->>>>  arch/arm/boot/dts/bcm2835.dtsi | 4 +++-
->>>>  1 file changed, 3 insertions(+), 1 deletion(-)
->>>>
->>>> diff --git a/arch/arm/boot/dts/bcm2835.dtsi b/arch/arm/boot/dts/bcm2835.dtsi
->>>> index 301c73f..bd6bff6 100644
->>>> --- a/arch/arm/boot/dts/bcm2835.dtsi
->>>> +++ b/arch/arm/boot/dts/bcm2835.dtsi
->>>> @@ -8,6 +8,7 @@
->>>>
->>>>       chosen {
->>>>               bootargs = "earlyprintk console=ttyAMA0";
->>>> +             stdout-path = &uart;
->>>>       };
->>>>
->>>>       soc {
->>>> @@ -16,6 +17,7 @@
->>>>               #size-cells = <1>;
->>>>               ranges = <0x7e000000 0x20000000 0x02000000>;
->>>>               dma-ranges = <0x40000000 0x00000000 0x20000000>;
->>>> +             u-boot,dm-pre-reloc;
->>>
->>> Why do you need this and why should upstream carry your favourite
->>> bootloaders configuration? This is in no way hardware description.
->>
->> I'm not sure how much you know about U-Boot, so let me know if you
->> need more info.
->>
->> U-Boot normally starts up by setting up its serial UART and displaying
->> a banner message. At this stage typically only a few devices are
->> initialised (e.g. maybe just the UART). It then relocates itself to
->> the top of memory and starts up all the devices. It throws away any
->> previous devices that it set up before relocation and starts again.
->>
->> U-Boot uses a thing called driver model (dm) which handles driver
->> binding and probing. Driver model has the device tree and would
->> normally scan through it and create devices for everything it finds.
+Cc: stable@vger.kernel.org
+Reported-by: Hauke Mehrtens <hauke@hauke-m.de>
+Signed-off-by: Christophe Ricard <christophe-h.ricard@st.com>
+---
+ drivers/nfc/st-nci/i2c.c             |  2 +-
+ include/linux/platform_data/st_nci.h | 29 -----------------------------
+ 2 files changed, 1 insertion(+), 30 deletions(-)
+ delete mode 100644 include/linux/platform_data/st_nci.h
 
-How do you debug the DM itself? It seems like you still would need
-something earlier for debug like earlycon in the kernel. u-boot DM is
-probably simple enough you can get away with using it early, but you
-often can't as the complexity increases. Ultimately you need something
-simple that just hits all the registers needed to get characters out.
-What happens when you add pinmux, clocks, PMIC, power domains, etc. to
-the DM and they all become dependencies for the UART?
-
->> Before relocation we don't need every device. Also the CPU is often
->> running slowly, perhaps without the cache enabled. SDRAM may not be
->> available yet so space is short. We want to avoid starting up things
->> that will not be used.
->>
->> So this property indicates that the device is needed before relocation
->> and should be set up by driver model. We need it to avoid a very slow
->> and memory-hungry startup.
-
-Can't the need for that property change over time? Either as more
-drivers are converted to DM you need to add this or you add some
-feature that depends on a driver (e.g. get a board rev or boot mode
-from GPIO). You would have backwards compatibility issues with this.
-I'm somewhat less worried about that for u-boot as we should be
-bundling the dtb and bootloader rather than kernel and dtb. For the
-UART, you can just get which UART to initialize early from
-stdout-path. But for other cases, couldn't you just have the platform
-provide the list of needed drivers. Then when u-boot needs change, you
-just change u-boot.
-
->> As to why upstream should accept it, my understanding of upstream is
->> that people can send patches to it and in fact are encouraged to do
->> so, to avoid misunderstandings and duplication. The device tree files
->> are stored in Linux so any binding or source file changes should end
->> up there. Otherwise the files tend to diverge and we end up with
->> multiple bindings and multiple versions of the same source file.
->
-> Is the above explanation sufficient? Will this patch be applied?
-
-Well, for starters bindings need to be documented, so you need to send
-this as a binding doc with this detail.
-
-Rob
+diff --git a/drivers/nfc/st-nci/i2c.c b/drivers/nfc/st-nci/i2c.c
+index 06175ce..b2a467c 100644
+--- a/drivers/nfc/st-nci/i2c.c
++++ b/drivers/nfc/st-nci/i2c.c
+@@ -25,7 +25,7 @@
+ #include <linux/interrupt.h>
+ #include <linux/delay.h>
+ #include <linux/nfc.h>
+-#include <linux/platform_data/st_nci.h>
++#include <linux/platform_data/st-nci.h>
+ 
+ #include "ndlc.h"
+ 
+diff --git a/include/linux/platform_data/st_nci.h b/include/linux/platform_data/st_nci.h
+deleted file mode 100644
+index d9d400a..0000000
+--- a/include/linux/platform_data/st_nci.h
++++ /dev/null
+@@ -1,29 +0,0 @@
+-/*
+- * Driver include for ST NCI NFC chip family.
+- *
+- * Copyright (C) 2014-2015  STMicroelectronics SAS. All rights reserved.
+- *
+- * This program is free software; you can redistribute it and/or modify it
+- * under the terms and conditions of the GNU General Public License,
+- * version 2, as published by the Free Software Foundation.
+- *
+- * This program is distributed in the hope that it will be useful,
+- * but WITHOUT ANY WARRANTY; without even the implied warranty of
+- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+- * GNU General Public License for more details.
+- *
+- * You should have received a copy of the GNU General Public License
+- * along with this program; if not, see <http://www.gnu.org/licenses/>.
+- */
+-
+-#ifndef _ST_NCI_H_
+-#define _ST_NCI_H_
+-
+-#define ST_NCI_DRIVER_NAME "st_nci"
+-
+-struct st_nci_nfc_platform_data {
+-	unsigned int gpio_reset;
+-	unsigned int irq_polarity;
+-};
+-
+-#endif /* _ST_NCI_H_ */
+-- 
+2.1.4
