@@ -1,48 +1,44 @@
-From: Johan Hovold <johan-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 2/2] rtc: omap: Add external clock enabling support
-Date: Fri, 14 Aug 2015 12:54:23 +0200
-Message-ID: <20150814105423.GA20570@localhost>
-References: <1439449668-32301-1-git-send-email-j-keerthy@ti.com>
- <1439449668-32301-3-git-send-email-j-keerthy@ti.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH v4 2/4] gpio: brcmstb: Add interrupt and wakeup source support
+Date: Fri, 14 Aug 2015 14:36:53 +0200
+Message-ID: <CACRpkdaTES0EtbTBUGJLfFC4-fg91Fef1CBLh5tor9SpMCo1og@mail.gmail.com>
+References: <1438391865-7862-1-git-send-email-gregory.0xf0@gmail.com>
+	<1438391865-7862-3-git-send-email-gregory.0xf0@gmail.com>
+	<CACRpkdaz3k_N1qS5M_jmprPz8fHXeLtTke_YT8i2gaehmme+OQ@mail.gmail.com>
+	<CADtm3G7NQqDKwGujZUA9CUJ15+e8fLg0Kupbn2CMc0MeK9DbMw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1439449668-32301-3-git-send-email-j-keerthy-l0cyMroinI0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Keerthy <j-keerthy-l0cyMroinI0@public.gmane.org>
-Cc: linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org, johan-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, grygorii.strashko-l0cyMroinI0@public.gmane.org, bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, t-kristo-l0cyMroinI0@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <CADtm3G7NQqDKwGujZUA9CUJ15+e8fLg0Kupbn2CMc0MeK9DbMw@mail.gmail.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Gregory Fong <gregory.0xf0@gmail.com>
+Cc: Alexandre Courbot <gnurou@gmail.com>, bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>, Brian Norris <computersforpeace@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Florian Fainelli <f.fainelli@gmail.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>, Russell King <linux@arm.linux.org.uk>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Aug 13, 2015 at 12:37:48PM +0530, Keerthy wrote:
-> Configure the clock source to either internal clock
-> or external clock based on the availability of the clocks.
-> External clock is preferred as it can be ticking during suspend.
-> 
-> Signed-off-by: Keerthy <j-keerthy-l0cyMroinI0@public.gmane.org>
+On Fri, Aug 14, 2015 at 1:49 AM, Gregory Fong <gregory.0xf0@gmail.com> wrote:
+> On Thu, Aug 13, 2015 at 4:11 AM, Linus Walleij <linus.walleij@linaro.org> wrote:
+>> On Sat, Aug 1, 2015 at 3:17 AM, Gregory Fong <gregory.0xf0@gmail.com> wrote:
 
-> @@ -627,6 +642,17 @@ static int omap_rtc_probe(struct platform_device *pdev)
->  	if (reg != new_ctrl)
->  		rtc_write(rtc, OMAP_RTC_CTRL_REG, new_ctrl);
->  
-> +	/*
-> +	 * If we have the external clock then
-> +	 * Switch to external clock so we can keep ticking
-> +	 * acorss suspend
-> +	 */
+>> This patch does not apply cleanly because the version in my
+>> tree has INIT_LIST_HEAD(&priv->bank_list);
+>> before the sanity check.
+>>
+>> I applied it manually, but check that things are working right.
+>
+> Your tree seems to be missing
+>
+> commit 2252607d327d5219a6331b50e6ec266d56402be0
+> Author: Gregory Fong <gregory.0xf0@gmail.com>
+> Date:   Wed Jun 17 18:00:40 2015 -0700
+>
+>     gpio: brcmstb: fix null ptr dereference in driver remove
+>
+> which you had pulled in and sent for 4.2-rc1.  It should apply cleanly
+> on top of that.
 
-You should fix up the comment (e.g. stray capitalisation and typo) as
-well.
+Yes sorry, my bad.
 
-Perhaps reword as
+I merged in v4.2-rc4 and now it looks better.
 
-	/*
-	 * If we have an external clock then switch to it so we can keep
-	 * ticking across suspend.
-	 */
-
-Johan
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Yours,
+Linus Walleij
