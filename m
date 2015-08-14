@@ -1,12 +1,12 @@
 From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH 4/6] ARM: dts: sun7i: Enable USB DRC on pcDuino 3
-Date: Fri, 14 Aug 2015 16:44:35 +0200
-Message-ID: <1439563477-12295-5-git-send-email-hdegoede@redhat.com>
+Subject: [PATCH 5/6] ARM: dts: sun7i: Enable USB DRC on cubieboard2
+Date: Fri, 14 Aug 2015 16:44:36 +0200
+Message-ID: <1439563477-12295-6-git-send-email-hdegoede@redhat.com>
 References: <1439563477-12295-1-git-send-email-hdegoede@redhat.com>
 Reply-To: hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBDRZXY4CYYORBYH5W6XAKGQE3VYQCBY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-sunxi+bncBDRZXY4CYYORBYX5W6XAKGQEAGNQPJI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 In-Reply-To: <1439563477-12295-1-git-send-email-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
@@ -19,24 +19,24 @@ To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.o
 Cc: Jelle van der Waa <jelle-oJJ1AqDjjO4@public.gmane.org>, Ralph Willekes <benadski-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Jelle van der Waa <jelle-oJJ1AqDjjO4@public.gmane.org>
+From: Ralph Benadski <benadski-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 
-Enable the otg/drc usb controller on the pcDuino 3.
+Enable the otg/drc usb controller on the cubieboard2.
 
 Note this board has the otg-vbus connected directly to the 5v-dcc of
 the board, so there is no vbus0 regulator, nor vbus0-det.
 
-Signed-off-by: Jelle van der Waa <jelle-oJJ1AqDjjO4@public.gmane.org>
+Signed-off-by: Ralph Benadski <benadski-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 ---
- arch/arm/boot/dts/sun7i-a20-pcduino3.dts | 19 +++++++++++++++++++
+ arch/arm/boot/dts/sun7i-a20-cubieboard2.dts | 19 +++++++++++++++++++
  1 file changed, 19 insertions(+)
 
-diff --git a/arch/arm/boot/dts/sun7i-a20-pcduino3.dts b/arch/arm/boot/dts/sun7i-a20-pcduino3.dts
-index 99e238b..08cf715 100644
---- a/arch/arm/boot/dts/sun7i-a20-pcduino3.dts
-+++ b/arch/arm/boot/dts/sun7i-a20-pcduino3.dts
-@@ -173,6 +173,10 @@
+diff --git a/arch/arm/boot/dts/sun7i-a20-cubieboard2.dts b/arch/arm/boot/dts/sun7i-a20-cubieboard2.dts
+index f35957d..7cbb22b 100644
+--- a/arch/arm/boot/dts/sun7i-a20-cubieboard2.dts
++++ b/arch/arm/boot/dts/sun7i-a20-cubieboard2.dts
+@@ -207,6 +207,10 @@
  	status = "okay";
  };
  
@@ -45,9 +45,9 @@ index 99e238b..08cf715 100644
 +};
 +
  &pio {
- 	led_pins_pcduino3: led_pins@0 {
- 		allwinner,pins = "PH15", "PH16";
-@@ -187,6 +191,13 @@
+ 	led_pins_cubieboard2: led_pins@0 {
+ 		allwinner,pins = "PH20", "PH21";
+@@ -214,12 +218,24 @@
  		allwinner,drive = <SUN4I_PINCTRL_10_MA>;
  		allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
  	};
@@ -61,7 +61,6 @@ index 99e238b..08cf715 100644
  };
  
  &reg_ahci_5v {
-@@ -237,7 +248,15 @@
  	status = "okay";
  };
  
@@ -70,6 +69,12 @@ index 99e238b..08cf715 100644
 +	status = "okay";
 +};
 +
+ #include "axp209.dtsi"
+ 
+ &reg_dcdc2 {
+@@ -262,6 +278,9 @@
+ };
+ 
  &usbphy {
 +	pinctrl-names = "default";
 +	pinctrl-0 = <&usb0_id_detect_pin>;
