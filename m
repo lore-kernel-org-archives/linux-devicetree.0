@@ -1,95 +1,83 @@
-From: Simon Glass <sjg@chromium.org>
-Subject: Re: [PATCH] arm: rpi: Device tree modifications for U-Boot
-Date: Fri, 14 Aug 2015 12:34:41 -0600
-Message-ID: <CAPnjgZ0hzyjy=8o8ocaGCoOC7Js4CirhystidbvtabzbhRi4RQ@mail.gmail.com>
-References: <1439303153-12171-1-git-send-email-sjg@chromium.org>
- <1439312701.2451.3.camel@lynxeye.de> <CAPnjgZ3ztXnkxZJvitiXiKMzq5+x46hbv0PW4HcF7yGgsXUV+Q@mail.gmail.com>
+From: Moritz Fischer <moritz.fischer@ettus.com>
+Subject: Re: [PATCH v10 3/8] add fpga manager core
+Date: Fri, 14 Aug 2015 11:42:25 -0700
+Message-ID: <CAAtXAHcLXtexeW-LuaeD_c9F+dN8QiTfv7FNm=xQ6phsqr6y=A@mail.gmail.com>
+References: <1439487452-23977-1-git-send-email-atull@opensource.altera.com>
+	<1439487452-23977-5-git-send-email-atull@opensource.altera.com>
+	<CAAtXAHc=+nzcDQ-=-gkj=BfpjCeMu-nu5yW6bZPhB3w1=_Ek7g@mail.gmail.com>
+	<alpine.DEB.2.02.1508140925560.1866@linuxheads99>
+	<alpine.DEB.2.02.1508141026280.661@linuxheads99>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAPnjgZ3ztXnkxZJvitiXiKMzq5+x46hbv0PW4HcF7yGgsXUV+Q@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Lucas Stach <dev@lynxeye.de>
-Cc: lak <linux-arm-kernel@lists.infradead.org>, Stephen Warren <swarren@wwwdotorg.org>, Stephen Warren <swarren@nvidia.com>, Russell King <linux@arm.linux.org.uk>, Lee Jones <lee@kernel.org>, Devicetree Discuss <devicetree@vger.kernel.org>, Kumar Gala <galak@codeaurora.org>, lk <linux-kernel@vger.kernel.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <robh+dt@kernel.org>, linux-rpi-kernel@lists.infradead.org, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <alpine.DEB.2.02.1508141026280.661@linuxheads99>
+Sender: linux-doc-owner@vger.kernel.org
+To: atull <atull@opensource.altera.com>
+Cc: Greg KH <gregkh@linuxfoundation.org>, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, hpa@zytor.com, Michal Simek <monstr@monstr.eu>, Michal Simek <michal.simek@xilinx.com>, rdunlap@infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, robh+dt@kernel.org, Grant Likely <grant.likely@linaro.org>, iws@ovro.caltech.edu, linux-doc@vger.kernel.org, pavel@denx.de, broonie@kernel.org, Philip Balister <philip@balister.org>, rubini@gnudd.com, s.trumtrar@pengutronix.de, jason@lakedaemon.net, kyle.teske@ni.com, Nicolas Pitre <nico@linaro.org>, balbi@ti.com, m.chehab@samsung.com, David Brown <davidb@codeaurora.org>, Rob Landley <rob@landley.net>, davem@davemloft.net, cesarb@cesarb.net, sameo@linux.intel.com, akpm@linux-foundation.org, Linus Walleij <linus.walleij@linaro.org>, pawel.moll@arm.com, mark.rutland
 List-Id: devicetree@vger.kernel.org
 
--linux-tegra
+Hi Alan,
 
-Hi,
-
-On 12 August 2015 at 07:21, Simon Glass <sjg@chromium.org> wrote:
-> Hi Lucas,
+On Fri, Aug 14, 2015 at 8:46 AM, atull <atull@opensource.altera.com> wrote:
+> On Fri, 14 Aug 2015, atull wrote:
 >
-> On 11 August 2015 at 11:05, Lucas Stach <dev@lynxeye.de> wrote:
->> Hi Simon,
+>> On Fri, 14 Aug 2015, Moritz Fischer wrote:
 >>
->> why did you send this to the Tegra ML?
+>> > Hi Alan,
+>> >
+>> > I've updated my Zynq driver (it can be found in an older version
+>> > against your v8 in the Xilinx tree, too)
+>> >
+>> > https://github.com/mfischer/linux/tree/alan-fpga-mgr-v10
 >>
->> Am Dienstag, den 11.08.2015, 08:25 -0600 schrieb Simon Glass:
->>> This updates the device tree from the kernel version to something suitable
->>> for U-Boot:
->>>
->>> - Add stdout-path alias for console
->>> - Mark the /soc node to be available pre-relocation so that the early
->>> serial console works (we need the 'ranges' property to be available)
->>>
->>> Signed-off-by: Simon Glass <sjg@chromium.org>
->>> ---
->>>
->>>  arch/arm/boot/dts/bcm2835.dtsi | 4 +++-
->>>  1 file changed, 3 insertions(+), 1 deletion(-)
->>>
->>> diff --git a/arch/arm/boot/dts/bcm2835.dtsi b/arch/arm/boot/dts/bcm2835.dtsi
->>> index 301c73f..bd6bff6 100644
->>> --- a/arch/arm/boot/dts/bcm2835.dtsi
->>> +++ b/arch/arm/boot/dts/bcm2835.dtsi
->>> @@ -8,6 +8,7 @@
->>>
->>>       chosen {
->>>               bootargs = "earlyprintk console=ttyAMA0";
->>> +             stdout-path = &uart;
->>>       };
->>>
->>>       soc {
->>> @@ -16,6 +17,7 @@
->>>               #size-cells = <1>;
->>>               ranges = <0x7e000000 0x20000000 0x02000000>;
->>>               dma-ranges = <0x40000000 0x00000000 0x20000000>;
->>> +             u-boot,dm-pre-reloc;
+>> Since we are both already using this and have been for a while now, I hope it
+>> can go up into the mainstream instead of continuing to exist only in Altera
+>> and Xilinx's git trees.
+
+Yeah, that was definitely my intention. I just held off submitting my
+driver for mainline,
+because your patchset was still sort of a moving target.
+And that would be like the 3rd layer of dependencies :-)
+
+The reason for inclusion into the Xilinx tree was so people can play
+around with it already.
 >>
->> Why do you need this and why should upstream carry your favourite
->> bootloaders configuration? This is in no way hardware description.
 >
-> I'm not sure how much you know about U-Boot, so let me know if you
-> need more info.
+> Hi Moritz,
 >
-> U-Boot normally starts up by setting up its serial UART and displaying
-> a banner message. At this stage typically only a few devices are
-> initialised (e.g. maybe just the UART). It then relocates itself to
-> the top of memory and starts up all the devices. It throws away any
-> previous devices that it set up before relocation and starts again.
+> I fetched your git tree and took a look at your low level driver.
 >
-> U-Boot uses a thing called driver model (dm) which handles driver
-> binding and probing. Driver model has the device tree and would
-> normally scan through it and create devices for everything it finds.
->
-> Before relocation we don't need every device. Also the CPU is often
-> running slowly, perhaps without the cache enabled. SDRAM may not be
-> available yet so space is short. We want to avoid starting up things
-> that will not be used.
->
-> So this property indicates that the device is needed before relocation
-> and should be set up by driver model. We need it to avoid a very slow
-> and memory-hungry startup.
->
-> As to why upstream should accept it, my understanding of upstream is
-> that people can send patches to it and in fact are encouraged to do
-> so, to avoid misunderstandings and duplication. The device tree files
-> are stored in Linux so any binding or source file changes should end
-> up there. Otherwise the files tend to diverge and we end up with
-> multiple bindings and multiple versions of the same source file.
+> I had a some feedback.  write_complete() is a blocking call, waiting for the
+> FPGA to go into operating state and timing out (ETIMEDOUT) if necessary.  The
+> fpga-mgr.c framework is assuming that when write_complete exits with status 0,
+> that means that the FPGA is in operating state.  That's why it's proper for us
+> to add "mgr->state = FPGA_MGR_STATE_OPERATING" after write_complete returns
+> success as you noted.  My suggestion is that your write_complete() should check
+> status in this way.  Whatever error codes it returns will get propagated.
 
-Is the above explanation sufficient? Will this patch be applied?
+Fair enough, I had misunderstood the API then :-) Another option would
+have been to have the sysfs
+function actually query the state function instead of using the cached
+mgr->state value.
+I'll fix my driver ;-) I'll probably do something like
 
-Regards,
-Simon
+#define zynq_fpga_poll_timeout(priv, addr, val, cond, sleep_us, timeout_us) \
+       readl_poll_timeout(priv->io_base + addr, val, cond, sleep_us, \
+                          timeout_us)
+
+>
+> Also, I'm wondering how the simple-fpga-bus stuff looks to you now that you've
+> had it for a little while.
+
+To be honest I haven't played much with it aside from making sure it
+works. I had to submit another patchset for
+the Zynq's reset controller to make it work. The whole dt overlay is
+pretty cool, but the syntax took some getting used to.
+
+>
+> Thank,
+> Alan
+
+Thanks for your feedback,
+
+Moritz
