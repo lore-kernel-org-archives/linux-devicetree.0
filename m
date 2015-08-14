@@ -1,50 +1,40 @@
-From: Bjorn Helgaas <bhelgaas@google.com>
-Subject: Re: [PATCH v3 0/5] PCI: st: provide support for dw pcie
-Date: Fri, 14 Aug 2015 09:53:10 -0500
-Message-ID: <20150814145310.GD26431@google.com>
-References: <1428657168-12495-1-git-send-email-gabriel.fernandez@linaro.org>
+From: Gabriele Paoloni <gabriele.paoloni-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+Subject: RE: [PATCH v6 3/6] PCI: designware: Add ARM64 support
+Date: Fri, 14 Aug 2015 14:55:07 +0000
+Message-ID: <EE11001F9E5DDD47B7634E2F8A612F2E01D7BC19@lhreml503-mbs>
+References: <1438848559-232109-1-git-send-email-wangzhou1@hisilicon.com>
+ <1438848559-232109-4-git-send-email-wangzhou1@hisilicon.com>
+ <55C44B18.4010103@hisilicon.com> <55CDFFC0.40604@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-pci-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1428657168-12495-1-git-send-email-gabriel.fernandez@linaro.org>
-Sender: linux-pci-owner@vger.kernel.org
-To: Gabriel FERNANDEZ <gabriel.fernandez@st.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Srinivas Kandagatla <srinivas.kandagatla@gmail.com>, Maxime Coquelin <maxime.coquelin@st.com>, Patrice Chotard <patrice.chotard@st.com>, Russell King <linux@arm.linux.org.uk>, Jingoo Han <jg1.han@samsung.com>, Lucas Stach <l.stach@pengutronix.de>, Fabrice Gasnier <fabrice.gasnier@st.com>, Kishon Vijay Abraham I <kishon@ti.com>, Andrew Morton <akpm@linux-foundation.org>, " David S. Miller" <davem@davemloft.net>, Greg KH <gregkh@linuxfoundation.org>, Mauro Carvalho Chehab <mchehab@osg.samsung.com>, Joe Perches <joe@perches.com>, Tejun Heo <tj@kernel.org>, Arnd Bergmann <arnd@arndb.de>, Viresh Kumar <viresh.kumar@linaro.org>, Thierry Reding <treding@nvidia.com>, Phil Edworthy <phil.edw>
+Content-Type: text/plain; charset="Windows-1252"
+Content-Transfer-Encoding: 8BIT
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <55CDFFC0.40604-5wv7dgnIgG8@public.gmane.org>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: James Morse <james.morse-5wv7dgnIgG8@public.gmane.org>, "Wangzhou (B)" <wangzhou1-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
+Cc: Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Jingoo Han <jg1.han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Pratyush Anand <pratyush.anand-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, "linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org" <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, "thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org" <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Lorenzo Pieralisi <Lorenzo.Pieralisi-5wv7dgnIgG8@public.gmane.org>, Liviu Dudau <Liviu.Dudau-5wv7dgnIgG8@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, "robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Yuanzhichang <yuanzhichang-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Zhudacai <zhudacai-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, zhangjukuo <zhangjukuo-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, qiuzhenfa <qiuzhenfa-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, "liudongdong (C)" <liudongdong3-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, qiujiang <qiujiang-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, Kangfenglong <kangfen>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Apr 10, 2015 at 11:12:43AM +0200, Gabriel FERNANDEZ wrote:
-> Changes in v3:
->  - Remove power management functions (was not fully tested)
->  - Remove configuration space range from dt binding
->  - Remove pci_common_init_dev() call in pcie-designware.c to avoid 
->    default IO space declaration. 
 > 
-> Changes in v2:
->  - comestic corrections in device tree binding
->  - add pci-st.c into MAINTAINERS
->  - remove st_pcie_ops structure to avoid another level of indirection
->  - remove nasty busy-loop
->  - remove useless test using virt_to_phys()
->  - move disable io support into dw-pcie driver
+> I've tested this whole series on an ARM32 PCIe board:'Freescale i.MX6
+> Quad
+> SABRE Lite Board' with an Intel wireless card on v4.2-rc6.
 > 
-> I don't change the st_pcie_abort_handler() function because abort handling
-> is masked during boot.
+> I can rescan the bus, load firmware, list nearby APs, and even get MSIs
+> coming from the card.
+> 
+> Tested-By: James Morse <james.morse-5wv7dgnIgG8@public.gmane.org>
 > 
 > 
-> This patch-set introduces a STMicroelectronics PCIe controller.
-> It's based on designware PCIe driver.
+> Thanks,
 > 
-> Gabriel Fernandez (5):
->   ARM: STi: Kconfig update for PCIe support
->   PCI: st: Add Device Tree bindings for sti pcie
->   PCI: st: Provide support for the sti PCIe controller
->   pci: designware: remove pci_common_init_dev()
->   MAINTAINERS: Add pci-st.c to ARCH/STI architecture
+> James
 
-Hi Gabriel,
+Many Thanks for this James!
 
-I lost track of where we are with this.  I *think* I'm waiting for a v4
-posting, but I haven't seen it yet.  Let me know if I've missed something.
-
-Bjorn
+Gab
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
