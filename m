@@ -1,183 +1,170 @@
-From: Jonas Gorski <jogo-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>
-Subject: Re: [PATCH] mtd: part: add generic parsing of linux,part-probe
-Date: Sat, 15 Aug 2015 13:57:48 +0200
-Message-ID: <55CF293C.5000304@openwrt.org>
-References: <1431884112-28236-1-git-send-email-hauke@hauke-m.de>
- <20150518224910.GU11598@ld-irv-0074>
- <CAOiHx=k9SuwEYZ10P8kmHF25P2O2r6+9gaBTSQ6kXFxfDnzL=w@mail.gmail.com>
- <20150519230900.GB11598@ld-irv-0074>
+From: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Subject: Re: [PATCH] arm: rpi: Device tree modifications for U-Boot
+Date: Sat, 15 Aug 2015 07:46:38 -0600
+Message-ID: <CAPnjgZ3ubK_5j4AV4wO6xgoRf8iN+G8YSQm0pSW5fVzwpxYu5Q@mail.gmail.com>
+References: <1439303153-12171-1-git-send-email-sjg@chromium.org>
+ <1439312701.2451.3.camel@lynxeye.de> <CAPnjgZ3ztXnkxZJvitiXiKMzq5+x46hbv0PW4HcF7yGgsXUV+Q@mail.gmail.com>
+ <CAPnjgZ0hzyjy=8o8ocaGCoOC7Js4CirhystidbvtabzbhRi4RQ@mail.gmail.com> <CAL_Jsq++ihz6svJAKWwT7-=KyJvyWXjdf=tZb4aDGgV_Dc=-Nw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20150519230900.GB11598@ld-irv-0074>
+In-Reply-To: <CAL_Jsq++ihz6svJAKWwT7-=KyJvyWXjdf=tZb4aDGgV_Dc=-Nw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>, MTD Maling List <linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, bcm-kernel-feedback-list <bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mathieu Olivari <mathieu-A+ZNKFmMK5xy9aJCnZT0Uw@public.gmane.org>, rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org
+To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Lucas Stach <dev-8ppwABl0HbeELgA04lAiVw@public.gmane.org>, lak <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Lee Jones <lee-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Devicetree Discuss <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, lk <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Let's get this discussion back on track ;-)
+Hi Rob,
 
-On 20.05.2015 01:09, Brian Norris wrote:
-> On Tue, May 19, 2015 at 10:25:58AM +0200, Jonas Gorski wrote:
->> On Tue, May 19, 2015 at 12:49 AM, Brian Norris
->> <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
->>> On Sun, May 17, 2015 at 07:35:12PM +0200, Hauke Mehrtens wrote:
->>>> --- a/drivers/mtd/mtdpart.c
->>>> +++ b/drivers/mtd/mtdpart.c
-> ...
->>>> @@ -718,6 +719,35 @@ void deregister_mtd_parser(struct mtd_part_parser *p)
->>>> +static const char * const *of_get_probes(struct device_node *dp)
->>>> +{
-> ...
->>>> +     cp = of_get_property(dp, "linux,part-probe", &cplen);
+On 14 August 2015 at 14:29, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> On Fri, Aug 14, 2015 at 1:34 PM, Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org> wrote:
+>> -linux-tegra
+>>
+>> Hi,
+>>
+>> On 12 August 2015 at 07:21, Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org> wrote:
+>>> Hi Lucas,
 >>>
->>> I see this is not property is not documented in the first place. If
->>> we're going to make it generically useful, we definitely need to
->>> document it, including what the supported partition probe names are.
->>>
->>> I'm also kind of ambivalent on this point, but I might as well ask: does
->>> the 'linux,...' naming make sense? We're not really supposed to be
->>> putting pure software information in the device tree, let alone info
->>> that's specific to Linux. I see how the partition parser could be (and
->>> should be, really) considered OS-agnostic, though, and might deserve a
->>> spot in the DT, at least if it's not safe to run arbitrary partition
->>> parsers on all MTDs.
->>
->> As long as we use the direct parser names, we should keep the linux prefix.
->>
->> Actually a common issue is that many firmware partition tags aren't
->> capable of describing the full flash layout, so partition parsers have
->> to "cheat" and make a lot of assumptions, e.g. the location and the
->> size of the bootloader. So wo would need to have a mix of static
->> partitions (bootloader, bootloader config, calibration data) and
->> dynamic ones (kernel, rootfs, overlay).
-> 
-> OK, so this much seems to suggest that we can't really determine a set of
-> parsers that apply to all MTDs, and we have to stick with some kind of
-> platform information for choosing a set of custom parsers.
-
-We even want per-device information, because device manufacturers
-might "port" image tags to other architectures, e.g. Linksys used the trx
-partition table originally from bcm47xx also for ar71xx devices, wich
-normally uses u-boot uImage (+ cmdlineparts).
-
->> So ideally we would pass the
->> static partitions as device tree nodes, and let the partition parsers
->> then be applied to partitions instead of the full mtd device. This
->> would also work as a safeguard against mis-guessing important
->> partitions like calibration data which aren't recoverable in case they
->> get overwritten.
->>
->> So my first Idea would be having something like this:
-> [...]
-> 
-> Not commenting on this portion yet. I'll read the others' comments
-> later, but I think that's veering a little off the track of the original
-> problem.
-> 
->>>> @@ -754,6 +784,13 @@ int parse_mtd_partitions(struct mtd_info *master, const char *const *types,
->>>>  {
->>>>       struct mtd_part_parser *parser;
->>>>       int ret = 0;
->>>> +     const char *const *types_of = NULL;
->>>> +
->>>> +     if (data && data->of_node) {
->>>> +             types_of = of_get_probes(data->of_node);
->>>> +             if (types_of != NULL)
->>>> +                     types = types_of;
->>>> +     }
->>>
->>> I'm not sure I really like the semantics here. This means that the
->>> device tree can override all Linux defaults. So we can't, for instance,
->>> have the cmdline parser override all other selections (e.g., for
->>> debugging), or make sure that 'ofpart' is available for all MTDs.
->>
->> Letting the device tree override cmdline parsers is actually a valid
->> use case for OpenWrt, where the bootloader passes a
->> different/incompatible partition layout through mtdparts than what is
->> actually used by the firmware on flash.
-> 
-> That seems like a sucky firmware, and not an argument for changing how
-> Linux works. Can't you override their cmdline somehow?
-
-Sometimes yes, sometimes no. If the bootloader doesn't touch the dtb,
-there is no issue, but e.g. ipq806x bootloaders will overwrite any pre-
-existing bootargs in the chosen node with the bootloader one.
-
-At OpenWrt we do have hacks like "bootargs-replace" and "bootargs-extend",
-but this doesn't feel very clean either.
-
-And sometimes you even want a mix of them, e.g. on devices with support
-for multiple images you want the information from which image it booted
-(which is usually exposed through bootargs), but still use your own
-proprietary layout. Or the bootloader passes the ethernet mac addresses
-through the commandline, etc.
-
->> If we want to make it overrideable for debug purposes adding a
->> commandline parameter like
->> mtdparser="<mtdname>:<parser1[,parser2,...]>" might be a better
->> option.
->>
+>>> On 11 August 2015 at 11:05, Lucas Stach <dev-8ppwABl0HbeELgA04lAiVw@public.gmane.org> wrote:
+>>>> Hi Simon,
 >>>>
->>>>       if (!types)
->>>>               types = default_mtd_part_types;
+>>>> why did you send this to the Tegra ML?
+>>>>
+>>>> Am Dienstag, den 11.08.2015, 08:25 -0600 schrieb Simon Glass:
+>>>>> This updates the device tree from the kernel version to something suitable
+>>>>> for U-Boot:
+>>>>>
+>>>>> - Add stdout-path alias for console
+>>>>> - Mark the /soc node to be available pre-relocation so that the early
+>>>>> serial console works (we need the 'ranges' property to be available)
+>
+> I find it quite strange that you must explicitly enable the parent
+> node, but not the uart node.
+
+U-Boot tries hard to find and bind the UART using the stdout-path
+link. I would like to add it in the UART node also but we were able to
+work around it so far.
+
+>
+>>>>>
+>>>>> Signed-off-by: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+>>>>> ---
+>>>>>
+>>>>>  arch/arm/boot/dts/bcm2835.dtsi | 4 +++-
+>>>>>  1 file changed, 3 insertions(+), 1 deletion(-)
+>>>>>
+>>>>> diff --git a/arch/arm/boot/dts/bcm2835.dtsi b/arch/arm/boot/dts/bcm2835.dtsi
+>>>>> index 301c73f..bd6bff6 100644
+>>>>> --- a/arch/arm/boot/dts/bcm2835.dtsi
+>>>>> +++ b/arch/arm/boot/dts/bcm2835.dtsi
+>>>>> @@ -8,6 +8,7 @@
+>>>>>
+>>>>>       chosen {
+>>>>>               bootargs = "earlyprintk console=ttyAMA0";
+>>>>> +             stdout-path = &uart;
+>>>>>       };
+>>>>>
+>>>>>       soc {
+>>>>> @@ -16,6 +17,7 @@
+>>>>>               #size-cells = <1>;
+>>>>>               ranges = <0x7e000000 0x20000000 0x02000000>;
+>>>>>               dma-ranges = <0x40000000 0x00000000 0x20000000>;
+>>>>> +             u-boot,dm-pre-reloc;
+>>>>
+>>>> Why do you need this and why should upstream carry your favourite
+>>>> bootloaders configuration? This is in no way hardware description.
 >>>
->>> In fact, I don't really like this existing hunk either ^^^. It has the
->>> same effect, of killing things like cmdlinepart, which should be
->>> available on all MTDs.
+>>> I'm not sure how much you know about U-Boot, so let me know if you
+>>> need more info.
+>>>
+>>> U-Boot normally starts up by setting up its serial UART and displaying
+>>> a banner message. At this stage typically only a few devices are
+>>> initialised (e.g. maybe just the UART). It then relocates itself to
+>>> the top of memory and starts up all the devices. It throws away any
+>>> previous devices that it set up before relocation and starts again.
+>>>
+>>> U-Boot uses a thing called driver model (dm) which handles driver
+>>> binding and probing. Driver model has the device tree and would
+>>> normally scan through it and create devices for everything it finds.
+>
+> How do you debug the DM itself? It seems like you still would need
+> something earlier for debug like earlycon in the kernel. u-boot DM is
+> probably simple enough you can get away with using it early, but you
+> often can't as the complexity increases. Ultimately you need something
+> simple that just hits all the registers needed to get characters out.
+> What happens when you add pinmux, clocks, PMIC, power domains, etc. to
+> the DM and they all become dependencies for the UART?
+
+This doesn't seem like a device tree binding question but let me try
+to answer it.
+
+This is a problem - one of the challenges of driver model is that the
+UART gets further away from the reset vector.
+
+In U-Boot there is a single debug UART which can be supported by the
+various serial drivers (only one can be selected on each platform).
+There is a special debug_uart_init() function which is supposed to set
+up the UART for that platform. After that, and until driver model UART
+is up, console output can go through the debug UART.
+
+>
+>>> Before relocation we don't need every device. Also the CPU is often
+>>> running slowly, perhaps without the cache enabled. SDRAM may not be
+>>> available yet so space is short. We want to avoid starting up things
+>>> that will not be used.
+>>>
+>>> So this property indicates that the device is needed before relocation
+>>> and should be set up by driver model. We need it to avoid a very slow
+>>> and memory-hungry startup.
+>
+> Can't the need for that property change over time? Either as more
+> drivers are converted to DM you need to add this or you add some
+> feature that depends on a driver (e.g. get a board rev or boot mode
+> from GPIO). You would have backwards compatibility issues with this.
+> I'm somewhat less worried about that for u-boot as we should be
+> bundling the dtb and bootloader rather than kernel and dtb. For the
+> UART, you can just get which UART to initialize early from
+> stdout-path. But for other cases, couldn't you just have the platform
+> provide the list of needed drivers. Then when u-boot needs change, you
+> just change u-boot.
+
+Yes U-Boot and its device tree are normally built from the same tree
+at the same time. We don't expect to have to support an older or newer
+device tree with the same U-Boot binary. So I don't see a problem
+here.
+
+The UART should have as few dependencies as possible. But if the
+particular platform needs to check a GPIO to find out the UART number
+(i.e. stdout-path cannot be used) then we would need to support that
+case. It hasn't come up yet but it might. I certainly see platforms
+where we need some other nodes before relocation and would like to
+mark them as such. But I hope that for UART we can generally use
+stdout-path.
+
+The list of drivers doesn't help that much. What would I do with such
+a list, and where would I keep such platform-specific information
+other than in the device tree? It seems much simpler to hold the
+information about what the platform needs to get through early boot in
+one place. Then we have just a few lines of generic code to deal with
+it.
+
+>
+>>> As to why upstream should accept it, my understanding of upstream is
+>>> that people can send patches to it and in fact are encouraged to do
+>>> so, to avoid misunderstandings and duplication. The device tree files
+>>> are stored in Linux so any binding or source file changes should end
+>>> up there. Otherwise the files tend to diverge and we end up with
+>>> multiple bindings and multiple versions of the same source file.
 >>
->> default_mtd_part_types contains cmdline part, so it should be
->> available unless they pass their own parsers.
-> 
-> Right, but
-> (1) I don't like each driver deciding which parsers are available;
-> platform setup should be independent of the flash/controller driver, and
-> (2) the cmdline partition parser and ofpart parsers should always be
-> available for use on all drivers; to break that is a bug, IMO.
-> 
-> I think Hauke brought up a similar point to (1).
+>> Is the above explanation sufficient? Will this patch be applied?
+>
+> Well, for starters bindings need to be documented, so you need to send
+> this as a binding doc with this detail.
 
-Right. For (1), I think adding a way for specifying parsers to use through
-commandline for non-OF and a OF-way would be the way to get away from a
-driver centric assignment.
+OK I'll update the patch and resend it.
 
-(2) is a lot harder, because we also have to think about precedence. If
-there are both cmdline and ofpart parititions, which one should trump? And
-what about the platform specific parser(s)?
-
-Also I noticed a thing which I don't like about the current "linux,part-probe"
-(or my proposed mtdparsers commandline flag) at all: we define parser names,
-but we should define partition table names, which are well defined in a
-document somewhere.
-
-So maybe for the of-part, maybe we could make it "similar" to the stdout
-thing:
-
-aliases {
-	sflash0 = &sflash0;
-	sflash1 = &sflash1;
-	nand = &nand;
-};
-
-chosen {
-	...
-	mtd-partition-table-type = "nand:fixed-layout",
-				   "sflash0:commandline",
-				   "sflash1:bcm47xx-trx";
-};
-
-Which makes it also clear that this is configuration data.
-
-The commandline version could be then mtdtabletypes="<mtdname>:<table-type>[;...]"
-
-And then translate the table type names to their parser names (maybe parsers might
-also support more than one partition table type).
-
-This would make a "clean" separation from the linux-internal parser names.
-
-
-Jonas
+Regards.
+Simon
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
