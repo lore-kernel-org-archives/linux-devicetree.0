@@ -1,61 +1,132 @@
-From: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
-Subject: Re: [PATCH RFC 3/3] nvmem: add permission flags in nvmem_config
-Date: Sat, 15 Aug 2015 09:21:56 +0200 (CEST)
-Message-ID: <1634428787.18822.1439623316281.JavaMail.open-xchange@oxbsltgw04.schlund.de>
-References: <1439290931-18232-1-git-send-email-srinivas.kandagatla@linaro.org> <1439291024-18375-1-git-send-email-srinivas.kandagatla@linaro.org>
-Reply-To: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
+From: Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
+Subject: Re: [PATCH 3/3] ARM: dts: UniPhier: add ProXstream2 and PH1-LD6b
+ SoC/board support
+Date: Sat, 15 Aug 2015 17:21:59 +0900
+Message-ID: <CAK7LNATVhFLe_ObuLdWxNWiO=kapBrvEJEVHEfZC8Bu5AsRASA@mail.gmail.com>
+References: <1438687264-26538-1-git-send-email-yamada.masahiro@socionext.com>
+	<1438687264-26538-4-git-send-email-yamada.masahiro@socionext.com>
+	<20150811130739.GD30181@localhost>
+	<CAK7LNAQ+6tQ9Ci6LKsAB7kLj0o60Hizo2gOokDH9qW=FnO0gEA@mail.gmail.com>
+	<CAOesGMhhSKr6Nn7YEjoB9V_5-yhwzn_fKZ7FSU3U-2XYT5mJrQ@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-api-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1439291024-18375-1-git-send-email-srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: linux-api-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org, linux-api-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, maitysanchayan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mporter-OWPKS81ov/FWk0Htik3J/w@public.gmane.org, pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAOesGMhhSKr6Nn7YEjoB9V_5-yhwzn_fKZ7FSU3U-2XYT5mJrQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Srinivas,
+Hi Olof,
 
-> Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> hat am 11. August 2015 um
-> 13:03 geschrieben:
->
->
-> This patch adds perm variable to nvmem_config structure which will allow
-> providers to specify the permissions required for the sysfs binary file.
-> This permission is applied on top of root-only access permissions set by
-> the core.
->
-> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> ---
-> drivers/nvmem/core.c | 1 +
-> include/linux/nvmem-provider.h | 1 +
-> 2 files changed, 2 insertions(+)
->
-> diff --git a/drivers/nvmem/core.c b/drivers/nvmem/core.c
-> index 414ed23..7481387 100644
-> --- a/drivers/nvmem/core.c
-> +++ b/drivers/nvmem/core.c
-> @@ -312,6 +312,7 @@ struct nvmem_device *nvmem_register(const struct
-> nvmem_config *config)
-> config->read_only;
-> nvmem->bin = bin_attr_template;
-> nvmem->bin.attr.mode = nvmem->read_only ? : (S_IRUSR | S_IWUSR);
-> + nvmem->bin.attr.mode |= config->perm;
-> nvmem->bin.size = nvmem->size;
-> device_initialize(&nvmem->dev);
->
-> diff --git a/include/linux/nvmem-provider.h b/include/linux/nvmem-provider.h
-> index 0b68caf..de9a61f 100644
-> --- a/include/linux/nvmem-provider.h
-> +++ b/include/linux/nvmem-provider.h
-> @@ -23,6 +23,7 @@ struct nvmem_config {
-> const struct nvmem_cell_info *cells;
-> int ncells;
-> bool read_only;
-> + u16 perm; /* visibility in sysfs */
 
-how about "umode_t mode" or "umode_t sysfs_mode"?
+2015-08-13 18:09 GMT+09:00 Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>:
+> On Wed, Aug 12, 2015 at 3:14 PM, Masahiro Yamada
+> <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org> wrote:
+>> Hi Olof,
+>>
+>>
+>> 2015-08-11 22:07 GMT+09:00 Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>:
+>>> Hi,
+>>>
+>>> On Tue, Aug 04, 2015 at 08:21:04PM +0900, Masahiro Yamada wrote:
+>>>> Initial version of DTSI for ProXstream2 and PH1-LD6b and DTS for
+>>>> PH1-LD6b reference board.
+>>>>
+>>>> Signed-off-by: Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
+>>>> ---
+>>>>
+>>>>  arch/arm/boot/dts/Makefile                  |   3 +-
+>>>>  arch/arm/boot/dts/uniphier-ph1-ld6b-ref.dts | 105 +++++++++++
+>>>>  arch/arm/boot/dts/uniphier-ph1-ld6b.dtsi    |  67 +++++++
+>>>>  arch/arm/boot/dts/uniphier-proxstream2.dtsi | 273 ++++++++++++++++++++++++++++
+>>>>  4 files changed, 447 insertions(+), 1 deletion(-)
+>>>>  create mode 100644 arch/arm/boot/dts/uniphier-ph1-ld6b-ref.dts
+>>>>  create mode 100644 arch/arm/boot/dts/uniphier-ph1-ld6b.dtsi
+>>>>  create mode 100644 arch/arm/boot/dts/uniphier-proxstream2.dtsi
+>>>>
+>>>> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+>>>> index 246473a..6eb3f2f 100644
+>>>> --- a/arch/arm/boot/dts/Makefile
+>>>> +++ b/arch/arm/boot/dts/Makefile
+>>>> @@ -645,7 +645,8 @@ dtb-$(CONFIG_ARCH_UNIPHIER) += \
+>>>>       uniphier-ph1-sld3-ref.dtb \
+>>>>       uniphier-ph1-ld4-ref.dtb \
+>>>>       uniphier-ph1-pro4-ref.dtb \
+>>>> -     uniphier-ph1-sld8-ref.dtb
+>>>> +     uniphier-ph1-sld8-ref.dtb \
+>>>> +     uniphier-ph1-ld6b-ref.dtb
+>>>
+>>> Please always add entries here sorted, don't just append. I've fixed it
+>>> up for you this time.
+>>>
+>>>
+>>
+>> Please do not do that (without my ack).
+>
+> I'm not going to go get your ack for something as trivial as this. We
+> do make sure subplatform maintainers are in the loop and get to review
+> code that touches their platform, but in this case this was a shared
+> makefile and there were no functional changes.
+>
+>> It was already sorted from old SoC to new SoC.
+>>
+>> Sorting chronologically (in other words, in the order of chip ID)
+>> makes more sense than sorting alphabetically.
+>
+> No, it doesn't. All entries in these files should be sorted
+> alphabetically. Sometimes we miss out on it, but it's the goal.
 
-Beside that the whole series looks good to me.
 
-Thanks Stefan
+I did not know that, my apology.
+
+
+
+> If you sort chronologically it's impossible for anyone but people
+> intimately familiar with UniPhier's product history to add any new
+> entries in the right location. Also, since it's likely that newer
+> chips will be introduced over time, new entries are likely to just be
+> appends instead of inserted at more varied locations in the files.
+>
+> Append-only additions are more likely to have add/add conflicts, which
+> is why we're preferring alphabetical sort order in the first place.
+
+
+This is true for various entries as well as arch/arm/boot/dts/Makefile.
+I am wondering how far we should stick to alphabetical sorting.
+
+
+For example, do you recommend OF compatible tables should be sorted
+alphabetically?
+
+
+arch/arm/mach-uniphier/uniphier.c:
+
+static const char * const uniphier_dt_compat[] __initconst = {
+        "socionext,ph1-sld3",
+        "socionext,ph1-ld4",
+        "socionext,ph1-pro4",
+        "socionext,ph1-sld8",
+        "socionext,ph1-pro5",
+        "socionext,proxstream2",
+        "socionext,ph1-ld6b",
+        NULL,
+};
+
+This table (only containing SoC names) is currently sorted
+chronologically, and the logic
+is the same as arch/arm/boot/dts/Makefile.
+
+
+This file belongs to my maintainer-ship, but I just wonder
+which sorting rule, chronologically or alphabetically, is better in general.
+
+
+
+-- 
+Best Regards
+Masahiro Yamada
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
