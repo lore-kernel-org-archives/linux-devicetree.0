@@ -1,382 +1,315 @@
-From: Gavin Shan <gwshan@linux.vnet.ibm.com>
-Subject: Re: [PATCH v6 20/42] powerpc/powernv: Create PEs dynamically
-Date: Sat, 15 Aug 2015 14:59:48 +1000
-Message-ID: <20150815045948.GA27636@gwshan>
-References: <1438834307-26960-1-git-send-email-gwshan@linux.vnet.ibm.com>
- <1438834307-26960-21-git-send-email-gwshan@linux.vnet.ibm.com>
- <55CDF2AC.2090908@ozlabs.ru>
-Reply-To: Gavin Shan <gwshan@linux.vnet.ibm.com>
+From: Bjorn Andersson <bjorn.andersson-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>
+Subject: Re: [PATCH 3/3] mtd: add SMEM parser for QCOM platforms
+Date: Fri, 14 Aug 2015 22:48:17 -0700
+Message-ID: <20150815054817.GM13472@usrtlx11787.corpusers.net>
+References: <1439599573-3932-1-git-send-email-mathieu@codeaurora.org>
+ <1439599573-3932-4-git-send-email-mathieu@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-pci-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <55CDF2AC.2090908@ozlabs.ru>
-Sender: linux-pci-owner@vger.kernel.org
-To: Alexey Kardashevskiy <aik@ozlabs.ru>
-Cc: Gavin Shan <gwshan@linux.vnet.ibm.com>, linuxppc-dev@lists.ozlabs.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, benh@kernel.crashing.org, mpe@ellerman.id.au, bhelgaas@google.com, grant.likely@linaro.org, robherring2@gmail.com, panto@antoniou-consulting.com
+In-Reply-To: <1439599573-3932-4-git-send-email-mathieu-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mathieu Olivari <mathieu-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "pawel.moll-5wv7dgnIgG8@public.gmane.org" <pawel.moll-5wv7dgnIgG8@public.gmane.org>, "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org" <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, "galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org" <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org" <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, "dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org" <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, "computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "agross-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org" <agross-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org" <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Aug 14, 2015 at 11:52:44PM +1000, Alexey Kardashevskiy wrote:
->On 08/06/2015 02:11 PM, Gavin Shan wrote:
->>Currently, the PEs and their associated resources are assigned
->>in ppc_md.pcibios_fixup() except those consumed by SRIOV VFs.
->>The function is called for once after PCI probing and resources
->>assignment is finished which isn't hotplug friendly.
->>
->>The patch creates PEs dynamically by ppc_md.pcibios_setup_bridge(),
->>which is called on the event during system bootup and PCI hotplug:
->>updating PCI bridge's windows after resource assignment/reassignment
->>are finished. For partial hotplug case, where not all PCI devices
->>belonging to the PE are unplugged and plugged again, we just need
->>unbinding/binding the affected PCI devices with the corresponding
->>PE without creating new one.
->>
->>Besides, it might require additional resources (e.g. M32) to the
->>windows of the PCI bridge when unplugging current adapter, and
->>insert a different adapter if there is one PCI slot, which is
->>assumed behind root port, or the downstream bridge of the PCIE
->>switch behind root port. The parent bridge of the newly plugged
->>adapter would reject the request to add more resources, leading
->>to hotplug failure. For the issue, the patch extends the windows
->>of root port, or the upstream port of the PCIe switch behind root
->>port to PHB's windows when ppc_md.pcibios_setup_bridge() is called.
->>
->>There is no upstream bridge for root bus, so we have to fix it up
->>before any PE is created because the root bus PE is the ancestor
->>to anyone else.
->>
->>Signed-off-by: Gavin Shan <gwshan@linux.vnet.ibm.com>
->>---
->>  arch/powerpc/platforms/powernv/pci-ioda.c | 226 ++++++++++++++++++------------
->>  arch/powerpc/platforms/powernv/pci.h      |   1 +
->>  2 files changed, 137 insertions(+), 90 deletions(-)
->>
->>diff --git a/arch/powerpc/platforms/powernv/pci-ioda.c b/arch/powerpc/platforms/powernv/pci-ioda.c
->>index 8aa6ab8..37847a3 100644
->>--- a/arch/powerpc/platforms/powernv/pci-ioda.c
->>+++ b/arch/powerpc/platforms/powernv/pci-ioda.c
->>@@ -1083,6 +1083,13 @@ static void pnv_ioda_setup_same_PE(struct pci_bus *bus, struct pnv_ioda_pe *pe)
->>  				pci_name(dev));
->>  			continue;
->>  		}
->>+
->>+		/* The PCI device might be not detached from the
->>+		 * PE in partial hotplug case.
->>+		 */
->>+		if (pdn->pe_number != IODA_INVALID_PE)
->>+			continue;
->>+
->>  		pdn->pe_number = pe->pe_number;
->>  		pe->dma32_weight += pnv_ioda_dma_weight(dev);
->>  		if ((pe->flags & PNV_IODA_PE_BUS_ALL) && dev->subordinate)
->>@@ -1101,9 +1108,27 @@ static struct pnv_ioda_pe *pnv_ioda_setup_bus_PE(struct pci_bus *bus, bool all)
->>  	struct pci_controller *hose = pci_bus_to_host(bus);
->>  	struct pnv_phb *phb = hose->private_data;
->>  	struct pnv_ioda_pe *pe = NULL;
->>+	int pe_num;
->>+
->>+	/* For partial hotplug case, the PE instance hasn't been destroyed
->>+	 * yet. We shouldn't allocated a new one and assign resources to
->>+	 * it. The existing PE instance should be reused, but we should
->>+	 * associate the devices to the PE.
->>+	 */
->>+	pe_num = phb->ioda.pe_rmap[bus->number << 8];
->>+	if (pe_num != IODA_INVALID_PE) {
->>+		pe = &phb->ioda.pe_array[pe_num];
->>+		pnv_ioda_setup_same_PE(bus, pe);
->>+		return NULL;
->>+	}
->>+
->>+	/* PE number for root bus should have been reserved */
->>+	if (pci_is_root_bus(bus) &&
->>+	    phb->ioda.root_pe_idx != IODA_INVALID_PE)
->>+		pe = &phb->ioda.pe_array[phb->ioda.root_pe_idx];
->>
->>  	/* Check if PE is determined by M64 */
->>-	if (phb->pick_m64_pe)
->>+	if (!pe && phb->pick_m64_pe)
->
->
->else if (phb->pick_m64_pe)
->
+On Fri 14 Aug 17:46 PDT 2015, Mathieu Olivari wrote:
 
-No. When this function is called for the root of root bus, the PE
-should have been reserved. So we still have to check @pe.
+> On QCOM platforms using MTD devices storage (such as IPQ806x), SMEM is
+> used to store partition layout. This new parser can now be used to read
+> SMEM and use it to register an MTD layout according to its content.
+> 
 
->
->
->>  		pe = phb->pick_m64_pe(bus, all);
->>
->>  	/* The PE number isn't pinned by M64 */
->>@@ -1150,46 +1175,6 @@ static struct pnv_ioda_pe *pnv_ioda_setup_bus_PE(struct pci_bus *bus, bool all)
->>  	return pe;
->>  }
->>
->>-static void pnv_ioda_setup_PEs(struct pci_bus *bus)
->>-{
->>-	struct pci_dev *dev;
->>-
->>-	pnv_ioda_setup_bus_PE(bus, false);
->>-
->>-	list_for_each_entry(dev, &bus->devices, bus_list) {
->>-		if (dev->subordinate) {
->>-			if (pci_pcie_type(dev) == PCI_EXP_TYPE_PCI_BRIDGE)
->>-				pnv_ioda_setup_bus_PE(dev->subordinate, true);
->>-			else
->>-				pnv_ioda_setup_PEs(dev->subordinate);
->>-		}
->>-	}
->>-}
->>-
->>-/*
->>- * Configure PEs so that the downstream PCI buses and devices
->>- * could have their associated PE#. Unfortunately, we didn't
->>- * figure out the way to identify the PLX bridge yet. So we
->>- * simply put the PCI bus and the subordinate behind the root
->>- * port to PE# here. The game rule here is expected to be changed
->>- * as soon as we can detected PLX bridge correctly.
->>- */
->>-static void pnv_pci_ioda_setup_PEs(void)
->>-{
->>-	struct pci_controller *hose, *tmp;
->>-	struct pnv_phb *phb;
->>-
->>-	list_for_each_entry_safe(hose, tmp, &hose_list, list_node) {
->>-		phb = hose->private_data;
->>-
->>-		/* M64 layout might affect PE allocation */
->>-		if (phb->reserve_m64_pe)
->>-			phb->reserve_m64_pe(hose->bus, NULL, true);
->>-
->>-		pnv_ioda_setup_PEs(hose->bus);
->>-	}
->>-}
->>-
->>  #ifdef CONFIG_PCI_IOV
->>  static int pnv_pci_vf_release_m64(struct pci_dev *pdev)
->>  {
->>@@ -2962,52 +2947,6 @@ static void pnv_ioda_setup_pe_seg(struct pci_controller *hose,
->>  	}
->>  }
->>
->>-static void pnv_pci_ioda_setup_seg(void)
->>-{
->>-	struct pci_controller *tmp, *hose;
->>-	struct pnv_phb *phb;
->>-	struct pnv_ioda_pe *pe;
->>-
->>-	list_for_each_entry_safe(hose, tmp, &hose_list, list_node) {
->>-		phb = hose->private_data;
->>-		list_for_each_entry(pe, &phb->ioda.pe_list, list) {
->>-			pnv_ioda_setup_pe_seg(hose, pe);
->>-		}
->>-	}
->>-}
->>-
->>-static void pnv_pci_ioda_setup_DMA(void)
->>-{
->>-	struct pci_controller *hose, *tmp;
->>-	struct pnv_phb *phb;
->>-	struct pnv_ioda_pe *pe;
->>-
->>-	list_for_each_entry_safe(hose, tmp, &hose_list, list_node) {
->>-		phb = hose->private_data;
->>-		pnv_pci_ioda_setup_opal_tce_kill(phb);
->>-
->>-		list_for_each_entry(pe, &phb->ioda.pe_dma_list, dma_link) {
->>-			if (!pe->dma32_weight)
->>-				continue;
->>-
->>-			switch (phb->type) {
->>-			case PNV_PHB_IODA1:
->>-				pnv_ioda1_setup_dma(phb, pe);
->>-				break;
->>-			case PNV_PHB_IODA2:
->>-				pnv_pci_ioda2_setup_dma_pe(phb, pe);
->>-				break;
->>-			default:
->>-				pr_warn("%s: No DMA for PHB type %d\n",
->>-					__func__, phb->type);
->>-			}
->>-		}
->>-
->>-		/* Mark the PHB initialization done */
->>-		phb->initialized = 1;
->>-	}
->>-}
->>-
->>  static void pnv_pci_ioda_create_dbgfs(void)
->>  {
->>  #ifdef CONFIG_DEBUG_FS
->>@@ -3029,9 +2968,8 @@ static void pnv_pci_ioda_create_dbgfs(void)
->>
->>  static void pnv_pci_ioda_fixup(void)
->>  {
->>-	pnv_pci_ioda_setup_PEs();
->>-	pnv_pci_ioda_setup_seg();
->>-	pnv_pci_ioda_setup_DMA();
->>+	struct pci_controller *hose, *tmp;
->>+	struct pnv_phb *phb;
->>
->>  	pnv_pci_ioda_create_dbgfs();
->>
->>@@ -3039,6 +2977,12 @@ static void pnv_pci_ioda_fixup(void)
->>  	eeh_init();
->>  	eeh_addr_cache_build();
->>  #endif
->>+
->>+	/* Notify initialization of PHB done */
->>+	list_for_each_entry_safe(hose, tmp, &hose_list, list_node) {
->>+		phb = hose->private_data;
->>+		phb->initialized = 1;
->>+	}
->>  }
->>
->>  /*
->>@@ -3082,6 +3026,105 @@ static resource_size_t pnv_pci_window_alignment(struct pci_bus *bus,
->>  	return phb->ioda.io_segsize;
->>  }
->>
->>+/*
->>+ * We are updating root port or the upstream bridge behind the
->>+ * root port with PHB's windows in order to accommodate the
->>+ * changes on required resources during PCI (slot) hotplug,
->>+ * which is connected to either root port or the downstream
->>+ * ports of PCIe switch behind the root port.
->>+ */
->>+static void pnv_pci_fixup_bridge_resources(struct pci_bus *bus,
->>+					   unsigned long type)
->>+{
->>+	struct pci_controller *hose = pci_bus_to_host(bus);
->>+	struct pnv_phb *phb = hose->private_data;
->>+	struct pci_dev *bridge = bus->self;
->>+	struct resource *r, *w;
->>+	int i;
->>+
->>+	/* Check if we need apply fixup to the bridge's windows */
->>+	if (!pci_is_root_bus(bridge->bus) &&
->>+	    !pci_is_root_bus(bridge->bus->self->bus))
->>+		return;
->>+
->>+	/* Fixup the resoureces */
->>+	for (i = 0; i < PCI_BRIDGE_RESOURCE_NUM; i++) {
->>+		r = &bridge->resource[PCI_BRIDGE_RESOURCES + i];
->>+		if (!r->flags || !r->parent)
->>+			continue;
->>+
->>+		w = NULL;
->>+		if (r->flags & type & IORESOURCE_IO)
->>+			w = &hose->io_resource;
->>+		else if (pnv_pci_is_mem_pref_64(r->flags) &&
->>+			 (type & IORESOURCE_PREFETCH) &&
->>+			 phb->ioda.m64_segsize)
->>+			w = &hose->mem_resources[1];
->>+		else if (r->flags & type & IORESOURCE_MEM)
->>+			w = &hose->mem_resources[0];
->>+
->>+		r->start = w->start;
->>+		r->end = w->end;
->>+	}
->>+}
->>+
->>+static void pnv_pci_setup_bridge(struct pci_bus *bus,
->>+				 unsigned long type)
->>+{
->>+	struct pci_controller *hose = pci_bus_to_host(bus);
->>+	struct pnv_phb *phb = hose->private_data;
->>+	struct pci_dev *bridge = bus->self;
->>+	struct pnv_ioda_pe *pe;
->>+	bool all = (pci_pcie_type(bridge) == PCI_EXP_TYPE_PCI_BRIDGE);
->>+
->>+	/* The root bus (ancestor PE) should be finalized
->>+	 * before anyone else
->>+	 */
->>+	if (!phb->ioda.root_pe_is_populated) {
->>+		pe = pnv_ioda_setup_bus_PE(phb->hose->bus, false);
->>+		if (pe && phb->ioda.root_pe_idx == IODA_INVALID_PE)
->>+			phb->ioda.root_pe_idx = pe->pe_number;
->>+			phb->ioda.root_pe_is_populated = true;
->>+		}
->
->
->This "}" should be 1 tab left. Of you lost one "{" after if() and its
->counterpart.
->
+Nice to see another user of the smem code :)
 
-Good catch! 
+> diff --git a/drivers/mtd/qcom_smem_part.c b/drivers/mtd/qcom_smem_part.c
+[..]
+> +
+> +/* Processor/host identifier for the application processor */
+> +#define SMEM_HOST_APPS			0
 
->>+
->>+	/* Extend bridge's windows if necessary */
->>+	pnv_pci_fixup_bridge_resources(bus, type);
->>+
->>+	/* Don't assign PE to bus which doesn't have any
->>+	 * subordinate PCI devices.
->>+	 */
->>+	if (list_empty(&bus->devices))
->>+		return;
->>+
->>+	/* Reserve PEs for M64 resource */
->>+	if (phb->reserve_m64_pe)
->>+		phb->reserve_m64_pe(bus, NULL, all);
->>+
->>+	/* Assign PE. We might run here because of partial hotplug.
->>+	 * For the case, we just pick up the existing PE and should
->>+	 * not allocate resources again.
->>+	 */
->>+	pe = pnv_ioda_setup_bus_PE(bus, all);
->>+	if (!pe)
->>+		return;
->>+
->>+	/* Setup MMIO mapping */
->>+	pnv_ioda_setup_pe_seg(hose, pe);
->>+
->>+	/* Setup DMA */
->>+	switch (phb->type) {
->>+	case PNV_PHB_IODA1:
->>+		pnv_ioda1_setup_dma(phb, pe);
->>+		break;
->>+	case PNV_PHB_IODA2:
->>+		pnv_pci_ioda2_setup_dma_pe(phb, pe);
->>+		break;
->>+	default:
->>+		pr_warn("%s: No DMA for PHB type %d\n",
->>+			__func__, phb->type);
->>+	}
->>+}
->>+
->>  #ifdef CONFIG_PCI_IOV
->>  static resource_size_t pnv_pci_iov_resource_alignment(struct pci_dev *pdev,
->>  						      int resno)
->>@@ -3147,6 +3190,7 @@ static const struct pci_controller_ops pnv_pci_ioda_controller_ops = {
->>  #endif
->>         .enable_device_hook = pnv_pci_enable_device_hook,
->>         .window_alignment = pnv_pci_window_alignment,
->>+	.setup_bridge = pnv_pci_setup_bridge,
->>         .reset_secondary_bus = pnv_pci_reset_secondary_bus,
->>         .dma_set_mask = pnv_pci_ioda_dma_set_mask,
->>         .shutdown = pnv_pci_ioda_shutdown,
->>@@ -3218,6 +3262,8 @@ static void __init pnv_pci_init_ioda_phb(struct device_node *np,
->>  	if (phb->regs == NULL)
->>  		pr_err("  Failed to map registers !\n");
->>
->>+	pnv_pci_ioda_setup_opal_tce_kill(phb);
->>+
->>  	/* Initialize more IODA stuff */
->>  	phb->ioda.total_pe_num = 1;
->>  	prop32 = of_get_property(np, "ibm,opal-num-pes", NULL);
->>diff --git a/arch/powerpc/platforms/powernv/pci.h b/arch/powerpc/platforms/powernv/pci.h
->>index e93a489..a160491 100644
->>--- a/arch/powerpc/platforms/powernv/pci.h
->>+++ b/arch/powerpc/platforms/powernv/pci.h
->>@@ -136,6 +136,7 @@ struct pnv_phb {
->>  			/* Global bridge info */
->>  			unsigned int		total_pe_num;
->>  			unsigned int		root_pe_idx;
->>+			bool			root_pe_is_populated;
->>  			unsigned int		reserved_pe_idx;
->>
->>  			/* 32-bit MMIO window */
->>
+This makes me wonder if there will ever be an apps partition. I would
+have picked QCOM_SMEM_HOST_ANY, but I don't know what future platforms
+might hold for us.
 
-Thanks,
-Gavin
+
+And as a side note, I think I will propose that we rename that define
+QCOM_SMEM_GLOBAL.
+
+> +
+> +/* SMEM items index */
+> +#define SMEM_AARM_PARTITION_TABLE	9
+> +#define SMEM_BOOT_FLASH_TYPE		421
+> +#define SMEM_BOOT_FLASH_BLOCK_SIZE	424
+> +
+> +/* SMEM Flash types */
+> +#define SMEM_FLASH_NAND			2
+> +#define SMEM_FLASH_SPI			6
+> +
+> +#define SMEM_PART_NAME_SZ		16
+> +#define SMEM_PARTS_MAX			32
+> +
+> +struct smem_partition {
+> +	char name[SMEM_PART_NAME_SZ];
+> +	__le32 start;
+> +	__le32 size;
+> +	__le32 attr;
+> +};
+> +
+> +struct smem_partition_table {
+> +	u8 magic[8];
+> +	__le32 version;
+> +	__le32 len;
+> +	struct smem_partition parts[SMEM_PARTS_MAX];
+> +};
+> +
+> +/* SMEM Magic values in partition table */
+> +static const u8 SMEM_PTABLE_MAGIC[] = {
+> +	0xaa, 0x73, 0xee, 0x55,
+> +	0xdb, 0xbd, 0x5e, 0xe3,
+> +};
+> +
+> +static int qcom_smem_get_flash_blksz(u64 **smem_blksz)
+
+Instead of passing pointers around I think you should just make this
+function return < 0 for errors and >= 0 for the requested data. You can
+probably still have it as an int, as the current values are well below
+the size of the int.
+
+> +{
+> +	int ret;
+> +	size_t size;
+> +
+> +	ret = qcom_smem_get(SMEM_HOST_APPS, SMEM_BOOT_FLASH_BLOCK_SIZE,
+> +			    (void **) smem_blksz, &size);
+> +
+> +	if (ret < 0) {
+> +		pr_err("Unable to read flash blksz from SMEM\n");
+> +		return -ENOENT;
+> +	}
+> +
+> +	if (size != sizeof(**smem_blksz)) {
+> +		pr_err("Invalid flash blksz size in SMEM\n");
+> +		return -EINVAL;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static int qcom_smem_get_flash_type(u64 **smem_flash_type)
+
+Same as above.
+
+> +{
+> +	int ret;
+> +	size_t size;
+> +
+> +	ret = qcom_smem_get(SMEM_HOST_APPS, SMEM_BOOT_FLASH_TYPE,
+> +			    (void **) smem_flash_type, &size);
+> +
+> +	if (ret < 0) {
+> +		pr_err("Unable to read flash type from SMEM\n");
+> +		return -ENOENT;
+> +	}
+> +
+> +	if (size != sizeof(**smem_flash_type)) {
+> +		pr_err("Invalid flash type size in SMEM\n");
+> +		return -EINVAL;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static int qcom_smem_get_flash_partitions(struct smem_partition_table **pparts)
+> +{
+> +	int ret;
+> +	size_t size;
+> +
+> +	ret = qcom_smem_get(SMEM_HOST_APPS, SMEM_AARM_PARTITION_TABLE,
+> +			    (void **) pparts, &size);
+> +
+
+If you don't care about the size just pass NULL as the last argument.
+
+> +	if (ret < 0) {
+> +		pr_err("Unable to read partition table from SMEM\n");
+> +		return -ENOENT;
+> +	}
+
+I think it would be cleaner if you had this function check the magic and
+version and then return the partition pointer. That is:
+
+static smem_partition *qcom_smem_get_flash_partitions(size_t *count)
+
+
+And make *count = le32_to_cpu(table->len); so you don't have to care
+about that below.
+
+(And use NULL or ERR_PTR for the error paths)
+
+> +
+> +	return 0;
+> +}
+> +
+> +static int of_dev_node_match(struct device *dev, void *data)
+> +{
+> +	return dev->of_node == data;
+> +}
+> +
+> +static bool is_spi_device(struct device_node *np)
+> +{
+> +	struct device *dev;
+> +
+> +	dev = bus_find_device(&spi_bus_type, NULL, np, of_dev_node_match);
+> +	if (!dev)
+> +		return false;
+> +
+> +	put_device(dev);
+> +	return true;
+> +}
+> +
+> +static int parse_qcom_smem_partitions(struct mtd_info *master,
+> +				      struct mtd_partition **pparts,
+> +				      struct mtd_part_parser_data *data)
+> +{
+> +	struct smem_partition_table *smem_parts;
+> +	u64 *smem_flash_type, *smem_blksz;
+> +	struct mtd_partition *mtd_parts;
+> +	struct device_node *of_node = data->of_node;
+> +	int i, ret;
+> +
+> +	/*
+> +	 * SMEM will only store the partition table of the boot device.
+> +	 * If this is not the boot device, do not return any partition.
+> +	 */
+
+I guess this is the result of below checks, but it's not describing
+what's actually done here. I think it should say "only parse
+partitions on the specified memory type" or something like that.
+
+> +	ret = qcom_smem_get_flash_type(&smem_flash_type);
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	if ((*smem_flash_type == SMEM_FLASH_NAND && !mtd_type_is_nand(master))
+> +	    || (*smem_flash_type == SMEM_FLASH_SPI && !is_spi_device(of_node)))
+> +		return 0;
+> +
+> +	/*
+> +	 * Just for sanity purpose, make sure the block size in SMEM matches the
+> +	 * block size of the MTD device
+> +	 */
+
+Well, this is not only for sanity purpose, as you multiply all sizes
+with this number below...
+
+> +	ret = qcom_smem_get_flash_blksz(&smem_blksz);
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	if (*smem_blksz != master->erasesize) {
+> +		pr_err("SMEM block size differs from MTD block size\n");
+> +		return -EINVAL;
+> +	}
+> +
+> +	/* Get partition pointer from SMEM */
+> +	ret = qcom_smem_get_flash_partitions(&smem_parts);
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	if (memcmp(SMEM_PTABLE_MAGIC, smem_parts->magic,
+> +		   sizeof(SMEM_PTABLE_MAGIC))) {
+> +		pr_err("SMEM partition magic invalid\n");
+> +		return -EINVAL;
+> +	}
+> +
+> +	/* Allocate and populate the mtd structures */
+> +	mtd_parts = kcalloc(le32_to_cpu(smem_parts->len), sizeof(*mtd_parts),
+> +			    GFP_KERNEL);
+> +	if (!mtd_parts)
+> +		return -ENOMEM;
+> +
+> +	for (i = 0; i < smem_parts->len; i++) {
+
+This might have the wrong endian...
+
+> +		struct smem_partition *s_part = &smem_parts->parts[i];
+> +		struct mtd_partition *m_part = &mtd_parts[i];
+
+I think Stephens suggestion was that you assign *pparts before looping
+and then you simply do:
+
+*pparts = mtd_parts;
+
+while (len--) {
+	..
+
+	s_part++;
+	mtd_parts++;
+}
+
+> +
+> +		m_part->name = s_part->name;
+
+I tried to follow the mtd code, and I believe that this pointer might
+be freed in free_partition(). If so you must kstrdup it here.
+
+> +		m_part->size = le32_to_cpu(s_part->size) * (*smem_blksz);
+> +		m_part->offset = le32_to_cpu(s_part->start) * (*smem_blksz);
+> +
+> +		/*
+> +		 * The last SMEM partition may have its size marked as
+> +		 * something like 0xffffffff, which means "until the end of the
+> +		 * flash device". In this case, truncate it.
+> +		 */
+> +		if (m_part->offset + m_part->size > master->size)
+> +			m_part->size = master->size - m_part->offset;
+> +	}
+> +
+> +	*pparts = mtd_parts;
+> +
+> +	return smem_parts->len;
+
+Again, this might be in the wrong endian.
+
+> +}
+> +
+> +static struct mtd_part_parser qcom_smem_parser = {
+> +	.owner = THIS_MODULE,
+> +	.parse_fn = parse_qcom_smem_partitions,
+> +	.name = "qcom-smem",
+> +};
+> +
+> +static int __init qcom_smem_parser_init(void)
+> +{
+> +	register_mtd_parser(&qcom_smem_parser);
+> +	return 0;
+> +}
+> +
+> +static void __exit qcom_smem_parser_exit(void)
+> +{
+> +	deregister_mtd_parser(&qcom_smem_parser);
+> +}
+> +
+> +module_init(qcom_smem_parser_init);
+> +module_exit(qcom_smem_parser_exit);
+
+Mostly unrelated to this patch; This makes me appreciate the
+module_platform_driver() macro, would be nice to see a patch that
+introduces something similar for partition parsers.
+
+> +
+> +MODULE_LICENSE("GPL");
+
+Are you sure you don't mean "GPL v2" here?
+
+> +MODULE_AUTHOR("Mathieu Olivari <mathieu-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>");
+> +MODULE_DESCRIPTION("Parsing code for SMEM based partition tables");
+
+Regards,
+Bjorn
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
