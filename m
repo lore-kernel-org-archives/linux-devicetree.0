@@ -1,50 +1,72 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [PATCH] spi: Mediatek: fix endian warnings
-Date: Sat, 15 Aug 2015 22:17:15 +0200
-Message-ID: <4559739.Ziakvog9nM@wuerfel>
-References: <1439289789-29026-1-git-send-email-leilk.liu@mediatek.com>
- <1871097.B3YgX5rNy0@wuerfel>
+From: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
+Subject: Re: [PATCH 1/2] i2c: add i2c-lpc2k driver
+Date: Sat, 15 Aug 2015 22:24:28 +0200
+Message-ID: <20150815202423.GD3463@katana>
+References: <1436741242-13489-1-git-send-email-manabian@gmail.com>
+ <1436741242-13489-2-git-send-email-manabian@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-In-Reply-To: <1871097.B3YgX5rNy0@wuerfel>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mediatek>,
- <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-mediatek/>
-List-Post: <mailto:linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mediatek>,
- <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "Linux-mediatek" <linux-mediatek-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: Leilk Liu <leilk.liu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1436741242-13489-2-git-send-email-manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Joachim Eastwood <manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Saturday 15 August 2015 22:16:03 Arnd Bergmann wrote:
-> On Tuesday 11 August 2015 18:43:09 Leilk Liu wrote:
-> > @@ -359,9 +359,11 @@ static void mtk_spi_setup_dma_addr(struct spi_master *master,
-> >         struct mtk_spi *mdata = spi_master_get_devdata(master);
-> >  
-> >         if (mdata->tx_sgl)
-> > -               writel(cpu_to_le32(xfer->tx_dma), mdata->base + SPI_TX_SRC_REG);
-> > +               writel((__force u32)cpu_to_le32(xfer->tx_dma),
-> > +                      mdata->base + SPI_TX_SRC_REG);
-> >         if (mdata->rx_sgl)
-> > -               writel(cpu_to_le32(xfer->rx_dma), mdata->base + SPI_RX_DST_REG);
-> > +               writel((__force u32)cpu_to_le32(xfer->rx_dma),
-> > +                      mdata->base + SPI_RX_DST_REG);
-> >  }
-> > 
+On Mon, Jul 13, 2015 at 12:47:21AM +0200, Joachim Eastwood wrote:
+> Add support for the I2C controller found on several NXP devices
+> including LPC2xxx, LPC178x/7x and LPC18xx/43xx. The controller
+> is implemented as a state machine and the driver act upon the
+> state changes when the bus is accessed.
 > 
-> This looks wrong: writel takes a CPU-endian argument, so the value returned
-> from cpu_to_le32() is not appropriate.
+> The I2C controller supports master/slave operation, bus
+> arbitration, programmable clock rate, and speeds up to 1 Mbit/s.
 > 
-> The warning is correct, and you have to remove the cpu_to_le32() conversion
-> in order to get the driver to behave correctly when the kernel is built
-> as big-endian.
+> Signed-off-by: Joachim Eastwood <manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 
-Nevermind, I now saw the issue has already been raised.
+Thanks for the submission! Looking mostly good already.
 
-	Arnd
+> +static void i2c_lpc2k_pump_msg(struct lpc2k_i2c *i2c)
+> +{
+> +	unsigned char data;
+> +	u32 status;
+> +
+> +	/*
+> +	 * I2C in the LPC2xxx series is basically a state machine.
+> +	 * Just run through the steps based on the current status.
+> +	 */
+> +	status = readl(i2c->reg_base + LPC24XX_I2STAT);
+> +
+> +	switch (status) {
+> +	case M_START:
+> +	case M_REPSTART:
+> +		/* Start bit was just sent out, send out addr and dir */
+> +		data = (i2c->msg->addr << 1);
+> +		if (i2c->msg->flags & I2C_M_RD)
+> +			data |= 1;
+> +
+> +		writel(data, i2c->reg_base + LPC24XX_I2DAT);
+> +		writel(LPC24XX_STA, i2c->reg_base + LPC24XX_I2CONCLR);
+> +
+> +		dev_dbg(&i2c->adap.dev, "Start sent with addr 0x%02x\n", data);
+
+I assume the driver is basically working. So, in my book, most of this
+debug output is useful when the driver was developed, not so much
+afterwards. Also, it is printed in interrupt context possibly causing
+latency. However, the information is useful for understanding the
+driver, so I'd suggest to convert them into comments?
+
+> +	i2c->adap.nr = pdev->id;
+> +
+> +	ret = i2c_add_numbered_adapter(&i2c->adap);
+
+Intended? Most DT enabled drivers simply user i2c_add_adapter(). The
+core then takes care of aliases defined in DT.
+
+And please have a look at Documentation/i2c/fault-codes. Arbitration
+Lost should be -EAGAIN, NACK should be -ENXIO, and so forth...
+
+Thanks,
+
+   Wolfram
