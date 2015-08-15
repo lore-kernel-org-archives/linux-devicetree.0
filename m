@@ -1,398 +1,184 @@
-From: Alexey Kardashevskiy <aik@ozlabs.ru>
-Subject: Re: [PATCH v6 20/42] powerpc/powernv: Create PEs dynamically
-Date: Sat, 15 Aug 2015 19:23:56 +1000
-Message-ID: <55CF052C.5060305@ozlabs.ru>
-References: <1438834307-26960-1-git-send-email-gwshan@linux.vnet.ibm.com>
- <1438834307-26960-21-git-send-email-gwshan@linux.vnet.ibm.com>
- <55CDF2AC.2090908@ozlabs.ru> <20150815045948.GA27636@gwshan>
+From: Jonas Gorski <jogo-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>
+Subject: Re: [PATCH] mtd: part: add generic parsing of linux,part-probe
+Date: Sat, 15 Aug 2015 13:57:48 +0200
+Message-ID: <55CF293C.5000304@openwrt.org>
+References: <1431884112-28236-1-git-send-email-hauke@hauke-m.de>
+ <20150518224910.GU11598@ld-irv-0074>
+ <CAOiHx=k9SuwEYZ10P8kmHF25P2O2r6+9gaBTSQ6kXFxfDnzL=w@mail.gmail.com>
+ <20150519230900.GB11598@ld-irv-0074>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=koi8-r; format=flowed
+Content-Type: text/plain; charset=windows-1252
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <20150815045948.GA27636@gwshan>
-Sender: linux-pci-owner@vger.kernel.org
-To: Gavin Shan <gwshan@linux.vnet.ibm.com>
-Cc: linuxppc-dev@lists.ozlabs.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, benh@kernel.crashing.org, mpe@ellerman.id.au, bhelgaas@google.com, grant.likely@linaro.org, robherring2@gmail.com, panto@antoniou-consulting.com
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20150519230900.GB11598@ld-irv-0074>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>, MTD Maling List <linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, bcm-kernel-feedback-list <bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mathieu Olivari <mathieu-A+ZNKFmMK5xy9aJCnZT0Uw@public.gmane.org>, rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 08/15/2015 02:59 PM, Gavin Shan wrote:
-> On Fri, Aug 14, 2015 at 11:52:44PM +1000, Alexey Kardashevskiy wrote:
->> On 08/06/2015 02:11 PM, Gavin Shan wrote:
->>> Currently, the PEs and their associated resources are assigned
->>> in ppc_md.pcibios_fixup() except those consumed by SRIOV VFs.
->>> The function is called for once after PCI probing and resources
->>> assignment is finished which isn't hotplug friendly.
->>>
->>> The patch creates PEs dynamically by ppc_md.pcibios_setup_bridge(),
->>> which is called on the event during system bootup and PCI hotplug:
->>> updating PCI bridge's windows after resource assignment/reassignment
->>> are finished. For partial hotplug case, where not all PCI devices
->>> belonging to the PE are unplugged and plugged again, we just need
->>> unbinding/binding the affected PCI devices with the corresponding
->>> PE without creating new one.
->>>
->>> Besides, it might require additional resources (e.g. M32) to the
->>> windows of the PCI bridge when unplugging current adapter, and
->>> insert a different adapter if there is one PCI slot, which is
->>> assumed behind root port, or the downstream bridge of the PCIE
->>> switch behind root port. The parent bridge of the newly plugged
->>> adapter would reject the request to add more resources, leading
->>> to hotplug failure. For the issue, the patch extends the windows
->>> of root port, or the upstream port of the PCIe switch behind root
->>> port to PHB's windows when ppc_md.pcibios_setup_bridge() is called.
->>>
->>> There is no upstream bridge for root bus, so we have to fix it up
->>> before any PE is created because the root bus PE is the ancestor
->>> to anyone else.
->>>
->>> Signed-off-by: Gavin Shan <gwshan@linux.vnet.ibm.com>
->>> ---
->>>   arch/powerpc/platforms/powernv/pci-ioda.c | 226 ++++++++++++++++++------------
->>>   arch/powerpc/platforms/powernv/pci.h      |   1 +
->>>   2 files changed, 137 insertions(+), 90 deletions(-)
->>>
->>> diff --git a/arch/powerpc/platforms/powernv/pci-ioda.c b/arch/powerpc/platforms/powernv/pci-ioda.c
->>> index 8aa6ab8..37847a3 100644
->>> --- a/arch/powerpc/platforms/powernv/pci-ioda.c
->>> +++ b/arch/powerpc/platforms/powernv/pci-ioda.c
->>> @@ -1083,6 +1083,13 @@ static void pnv_ioda_setup_same_PE(struct pci_bus *bus, struct pnv_ioda_pe *pe)
->>>   				pci_name(dev));
->>>   			continue;
->>>   		}
->>> +
->>> +		/* The PCI device might be not detached from the
->>> +		 * PE in partial hotplug case.
->>> +		 */
->>> +		if (pdn->pe_number != IODA_INVALID_PE)
->>> +			continue;
->>> +
->>>   		pdn->pe_number = pe->pe_number;
->>>   		pe->dma32_weight += pnv_ioda_dma_weight(dev);
->>>   		if ((pe->flags & PNV_IODA_PE_BUS_ALL) && dev->subordinate)
->>> @@ -1101,9 +1108,27 @@ static struct pnv_ioda_pe *pnv_ioda_setup_bus_PE(struct pci_bus *bus, bool all)
->>>   	struct pci_controller *hose = pci_bus_to_host(bus);
->>>   	struct pnv_phb *phb = hose->private_data;
->>>   	struct pnv_ioda_pe *pe = NULL;
->>> +	int pe_num;
->>> +
->>> +	/* For partial hotplug case, the PE instance hasn't been destroyed
->>> +	 * yet. We shouldn't allocated a new one and assign resources to
->>> +	 * it. The existing PE instance should be reused, but we should
->>> +	 * associate the devices to the PE.
->>> +	 */
->>> +	pe_num = phb->ioda.pe_rmap[bus->number << 8];
->>> +	if (pe_num != IODA_INVALID_PE) {
->>> +		pe = &phb->ioda.pe_array[pe_num];
->>> +		pnv_ioda_setup_same_PE(bus, pe);
->>> +		return NULL;
->>> +	}
->>> +
->>> +	/* PE number for root bus should have been reserved */
->>> +	if (pci_is_root_bus(bus) &&
->>> +	    phb->ioda.root_pe_idx != IODA_INVALID_PE)
->>> +		pe = &phb->ioda.pe_array[phb->ioda.root_pe_idx];
->>>
->>>   	/* Check if PE is determined by M64 */
->>> -	if (phb->pick_m64_pe)
->>> +	if (!pe && phb->pick_m64_pe)
->>
->>
->> else if (phb->pick_m64_pe)
->>
->
-> No. When this function is called for the root of root bus, the PE
-> should have been reserved. So we still have to check @pe.
+Let's get this discussion back on track ;-)
 
-When you check for "if (!pe && phb->pick_m64_pe)", pe may be not NULL 
-_only_ if it was assigned by
-"pe = &phb->ioda.pe_array[phb->ioda.root_pe_idx]"
-and this assignment cannot produce NULL (assuming phb->ioda.pe_array!=NULL).
+On 20.05.2015 01:09, Brian Norris wrote:
+> On Tue, May 19, 2015 at 10:25:58AM +0200, Jonas Gorski wrote:
+>> On Tue, May 19, 2015 at 12:49 AM, Brian Norris
+>> <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+>>> On Sun, May 17, 2015 at 07:35:12PM +0200, Hauke Mehrtens wrote:
+>>>> --- a/drivers/mtd/mtdpart.c
+>>>> +++ b/drivers/mtd/mtdpart.c
+> ...
+>>>> @@ -718,6 +719,35 @@ void deregister_mtd_parser(struct mtd_part_parser *p)
+>>>> +static const char * const *of_get_probes(struct device_node *dp)
+>>>> +{
+> ...
+>>>> +     cp = of_get_property(dp, "linux,part-probe", &cplen);
+>>>
+>>> I see this is not property is not documented in the first place. If
+>>> we're going to make it generically useful, we definitely need to
+>>> document it, including what the supported partition probe names are.
+>>>
+>>> I'm also kind of ambivalent on this point, but I might as well ask: does
+>>> the 'linux,...' naming make sense? We're not really supposed to be
+>>> putting pure software information in the device tree, let alone info
+>>> that's specific to Linux. I see how the partition parser could be (and
+>>> should be, really) considered OS-agnostic, though, and might deserve a
+>>> spot in the DT, at least if it's not safe to run arbitrary partition
+>>> parsers on all MTDs.
+>>
+>> As long as we use the direct parser names, we should keep the linux prefix.
+>>
+>> Actually a common issue is that many firmware partition tags aren't
+>> capable of describing the full flash layout, so partition parsers have
+>> to "cheat" and make a lot of assumptions, e.g. the location and the
+>> size of the bootloader. So wo would need to have a mix of static
+>> partitions (bootloader, bootloader config, calibration data) and
+>> dynamic ones (kernel, rootfs, overlay).
+> 
+> OK, so this much seems to suggest that we can't really determine a set of
+> parsers that apply to all MTDs, and we have to stick with some kind of
+> platform information for choosing a set of custom parsers.
 
+We even want per-device information, because device manufacturers
+might "port" image tags to other architectures, e.g. Linksys used the trx
+partition table originally from bcm47xx also for ar71xx devices, wich
+normally uses u-boot uImage (+ cmdlineparts).
 
-So instead of "if (!pe && phb->pick_m64_pe)" you could do "else if 
-(phb->pick_m64_pe)". It is not serious at all, more about better readability.
+>> So ideally we would pass the
+>> static partitions as device tree nodes, and let the partition parsers
+>> then be applied to partitions instead of the full mtd device. This
+>> would also work as a safeguard against mis-guessing important
+>> partitions like calibration data which aren't recoverable in case they
+>> get overwritten.
+>>
+>> So my first Idea would be having something like this:
+> [...]
+> 
+> Not commenting on this portion yet. I'll read the others' comments
+> later, but I think that's veering a little off the track of the original
+> problem.
+> 
+>>>> @@ -754,6 +784,13 @@ int parse_mtd_partitions(struct mtd_info *master, const char *const *types,
+>>>>  {
+>>>>       struct mtd_part_parser *parser;
+>>>>       int ret = 0;
+>>>> +     const char *const *types_of = NULL;
+>>>> +
+>>>> +     if (data && data->of_node) {
+>>>> +             types_of = of_get_probes(data->of_node);
+>>>> +             if (types_of != NULL)
+>>>> +                     types = types_of;
+>>>> +     }
+>>>
+>>> I'm not sure I really like the semantics here. This means that the
+>>> device tree can override all Linux defaults. So we can't, for instance,
+>>> have the cmdline parser override all other selections (e.g., for
+>>> debugging), or make sure that 'ofpart' is available for all MTDs.
+>>
+>> Letting the device tree override cmdline parsers is actually a valid
+>> use case for OpenWrt, where the bootloader passes a
+>> different/incompatible partition layout through mtdparts than what is
+>> actually used by the firmware on flash.
+> 
+> That seems like a sucky firmware, and not an argument for changing how
+> Linux works. Can't you override their cmdline somehow?
 
+Sometimes yes, sometimes no. If the bootloader doesn't touch the dtb,
+there is no issue, but e.g. ipq806x bootloaders will overwrite any pre-
+existing bootargs in the chosen node with the bootloader one.
 
->
+At OpenWrt we do have hacks like "bootargs-replace" and "bootargs-extend",
+but this doesn't feel very clean either.
+
+And sometimes you even want a mix of them, e.g. on devices with support
+for multiple images you want the information from which image it booted
+(which is usually exposed through bootargs), but still use your own
+proprietary layout. Or the bootloader passes the ethernet mac addresses
+through the commandline, etc.
+
+>> If we want to make it overrideable for debug purposes adding a
+>> commandline parameter like
+>> mtdparser="<mtdname>:<parser1[,parser2,...]>" might be a better
+>> option.
 >>
+>>>>
+>>>>       if (!types)
+>>>>               types = default_mtd_part_types;
+>>>
+>>> In fact, I don't really like this existing hunk either ^^^. It has the
+>>> same effect, of killing things like cmdlinepart, which should be
+>>> available on all MTDs.
 >>
->>>   		pe = phb->pick_m64_pe(bus, all);
->>>
->>>   	/* The PE number isn't pinned by M64 */
->>> @@ -1150,46 +1175,6 @@ static struct pnv_ioda_pe *pnv_ioda_setup_bus_PE(struct pci_bus *bus, bool all)
->>>   	return pe;
->>>   }
->>>
->>> -static void pnv_ioda_setup_PEs(struct pci_bus *bus)
->>> -{
->>> -	struct pci_dev *dev;
->>> -
->>> -	pnv_ioda_setup_bus_PE(bus, false);
->>> -
->>> -	list_for_each_entry(dev, &bus->devices, bus_list) {
->>> -		if (dev->subordinate) {
->>> -			if (pci_pcie_type(dev) == PCI_EXP_TYPE_PCI_BRIDGE)
->>> -				pnv_ioda_setup_bus_PE(dev->subordinate, true);
->>> -			else
->>> -				pnv_ioda_setup_PEs(dev->subordinate);
->>> -		}
->>> -	}
->>> -}
->>> -
->>> -/*
->>> - * Configure PEs so that the downstream PCI buses and devices
->>> - * could have their associated PE#. Unfortunately, we didn't
->>> - * figure out the way to identify the PLX bridge yet. So we
->>> - * simply put the PCI bus and the subordinate behind the root
->>> - * port to PE# here. The game rule here is expected to be changed
->>> - * as soon as we can detected PLX bridge correctly.
->>> - */
->>> -static void pnv_pci_ioda_setup_PEs(void)
->>> -{
->>> -	struct pci_controller *hose, *tmp;
->>> -	struct pnv_phb *phb;
->>> -
->>> -	list_for_each_entry_safe(hose, tmp, &hose_list, list_node) {
->>> -		phb = hose->private_data;
->>> -
->>> -		/* M64 layout might affect PE allocation */
->>> -		if (phb->reserve_m64_pe)
->>> -			phb->reserve_m64_pe(hose->bus, NULL, true);
->>> -
->>> -		pnv_ioda_setup_PEs(hose->bus);
->>> -	}
->>> -}
->>> -
->>>   #ifdef CONFIG_PCI_IOV
->>>   static int pnv_pci_vf_release_m64(struct pci_dev *pdev)
->>>   {
->>> @@ -2962,52 +2947,6 @@ static void pnv_ioda_setup_pe_seg(struct pci_controller *hose,
->>>   	}
->>>   }
->>>
->>> -static void pnv_pci_ioda_setup_seg(void)
->>> -{
->>> -	struct pci_controller *tmp, *hose;
->>> -	struct pnv_phb *phb;
->>> -	struct pnv_ioda_pe *pe;
->>> -
->>> -	list_for_each_entry_safe(hose, tmp, &hose_list, list_node) {
->>> -		phb = hose->private_data;
->>> -		list_for_each_entry(pe, &phb->ioda.pe_list, list) {
->>> -			pnv_ioda_setup_pe_seg(hose, pe);
->>> -		}
->>> -	}
->>> -}
->>> -
->>> -static void pnv_pci_ioda_setup_DMA(void)
->>> -{
->>> -	struct pci_controller *hose, *tmp;
->>> -	struct pnv_phb *phb;
->>> -	struct pnv_ioda_pe *pe;
->>> -
->>> -	list_for_each_entry_safe(hose, tmp, &hose_list, list_node) {
->>> -		phb = hose->private_data;
->>> -		pnv_pci_ioda_setup_opal_tce_kill(phb);
->>> -
->>> -		list_for_each_entry(pe, &phb->ioda.pe_dma_list, dma_link) {
->>> -			if (!pe->dma32_weight)
->>> -				continue;
->>> -
->>> -			switch (phb->type) {
->>> -			case PNV_PHB_IODA1:
->>> -				pnv_ioda1_setup_dma(phb, pe);
->>> -				break;
->>> -			case PNV_PHB_IODA2:
->>> -				pnv_pci_ioda2_setup_dma_pe(phb, pe);
->>> -				break;
->>> -			default:
->>> -				pr_warn("%s: No DMA for PHB type %d\n",
->>> -					__func__, phb->type);
->>> -			}
->>> -		}
->>> -
->>> -		/* Mark the PHB initialization done */
->>> -		phb->initialized = 1;
->>> -	}
->>> -}
->>> -
->>>   static void pnv_pci_ioda_create_dbgfs(void)
->>>   {
->>>   #ifdef CONFIG_DEBUG_FS
->>> @@ -3029,9 +2968,8 @@ static void pnv_pci_ioda_create_dbgfs(void)
->>>
->>>   static void pnv_pci_ioda_fixup(void)
->>>   {
->>> -	pnv_pci_ioda_setup_PEs();
->>> -	pnv_pci_ioda_setup_seg();
->>> -	pnv_pci_ioda_setup_DMA();
->>> +	struct pci_controller *hose, *tmp;
->>> +	struct pnv_phb *phb;
->>>
->>>   	pnv_pci_ioda_create_dbgfs();
->>>
->>> @@ -3039,6 +2977,12 @@ static void pnv_pci_ioda_fixup(void)
->>>   	eeh_init();
->>>   	eeh_addr_cache_build();
->>>   #endif
->>> +
->>> +	/* Notify initialization of PHB done */
->>> +	list_for_each_entry_safe(hose, tmp, &hose_list, list_node) {
->>> +		phb = hose->private_data;
->>> +		phb->initialized = 1;
->>> +	}
->>>   }
->>>
->>>   /*
->>> @@ -3082,6 +3026,105 @@ static resource_size_t pnv_pci_window_alignment(struct pci_bus *bus,
->>>   	return phb->ioda.io_segsize;
->>>   }
->>>
->>> +/*
->>> + * We are updating root port or the upstream bridge behind the
->>> + * root port with PHB's windows in order to accommodate the
->>> + * changes on required resources during PCI (slot) hotplug,
->>> + * which is connected to either root port or the downstream
->>> + * ports of PCIe switch behind the root port.
->>> + */
->>> +static void pnv_pci_fixup_bridge_resources(struct pci_bus *bus,
->>> +					   unsigned long type)
->>> +{
->>> +	struct pci_controller *hose = pci_bus_to_host(bus);
->>> +	struct pnv_phb *phb = hose->private_data;
->>> +	struct pci_dev *bridge = bus->self;
->>> +	struct resource *r, *w;
->>> +	int i;
->>> +
->>> +	/* Check if we need apply fixup to the bridge's windows */
->>> +	if (!pci_is_root_bus(bridge->bus) &&
->>> +	    !pci_is_root_bus(bridge->bus->self->bus))
->>> +		return;
->>> +
->>> +	/* Fixup the resoureces */
->>> +	for (i = 0; i < PCI_BRIDGE_RESOURCE_NUM; i++) {
->>> +		r = &bridge->resource[PCI_BRIDGE_RESOURCES + i];
->>> +		if (!r->flags || !r->parent)
->>> +			continue;
->>> +
->>> +		w = NULL;
->>> +		if (r->flags & type & IORESOURCE_IO)
->>> +			w = &hose->io_resource;
->>> +		else if (pnv_pci_is_mem_pref_64(r->flags) &&
->>> +			 (type & IORESOURCE_PREFETCH) &&
->>> +			 phb->ioda.m64_segsize)
->>> +			w = &hose->mem_resources[1];
->>> +		else if (r->flags & type & IORESOURCE_MEM)
->>> +			w = &hose->mem_resources[0];
->>> +
->>> +		r->start = w->start;
->>> +		r->end = w->end;
->>> +	}
->>> +}
->>> +
->>> +static void pnv_pci_setup_bridge(struct pci_bus *bus,
->>> +				 unsigned long type)
->>> +{
->>> +	struct pci_controller *hose = pci_bus_to_host(bus);
->>> +	struct pnv_phb *phb = hose->private_data;
->>> +	struct pci_dev *bridge = bus->self;
->>> +	struct pnv_ioda_pe *pe;
->>> +	bool all = (pci_pcie_type(bridge) == PCI_EXP_TYPE_PCI_BRIDGE);
->>> +
->>> +	/* The root bus (ancestor PE) should be finalized
->>> +	 * before anyone else
->>> +	 */
->>> +	if (!phb->ioda.root_pe_is_populated) {
->>> +		pe = pnv_ioda_setup_bus_PE(phb->hose->bus, false);
->>> +		if (pe && phb->ioda.root_pe_idx == IODA_INVALID_PE)
->>> +			phb->ioda.root_pe_idx = pe->pe_number;
->>> +			phb->ioda.root_pe_is_populated = true;
->>> +		}
->>
->>
->> This "}" should be 1 tab left. Of you lost one "{" after if() and its
->> counterpart.
->>
->
-> Good catch!
->
->>> +
->>> +	/* Extend bridge's windows if necessary */
->>> +	pnv_pci_fixup_bridge_resources(bus, type);
->>> +
->>> +	/* Don't assign PE to bus which doesn't have any
->>> +	 * subordinate PCI devices.
->>> +	 */
->>> +	if (list_empty(&bus->devices))
->>> +		return;
->>> +
->>> +	/* Reserve PEs for M64 resource */
->>> +	if (phb->reserve_m64_pe)
->>> +		phb->reserve_m64_pe(bus, NULL, all);
->>> +
->>> +	/* Assign PE. We might run here because of partial hotplug.
->>> +	 * For the case, we just pick up the existing PE and should
->>> +	 * not allocate resources again.
->>> +	 */
->>> +	pe = pnv_ioda_setup_bus_PE(bus, all);
->>> +	if (!pe)
->>> +		return;
->>> +
->>> +	/* Setup MMIO mapping */
->>> +	pnv_ioda_setup_pe_seg(hose, pe);
->>> +
->>> +	/* Setup DMA */
->>> +	switch (phb->type) {
->>> +	case PNV_PHB_IODA1:
->>> +		pnv_ioda1_setup_dma(phb, pe);
->>> +		break;
->>> +	case PNV_PHB_IODA2:
->>> +		pnv_pci_ioda2_setup_dma_pe(phb, pe);
->>> +		break;
->>> +	default:
->>> +		pr_warn("%s: No DMA for PHB type %d\n",
->>> +			__func__, phb->type);
->>> +	}
->>> +}
->>> +
->>>   #ifdef CONFIG_PCI_IOV
->>>   static resource_size_t pnv_pci_iov_resource_alignment(struct pci_dev *pdev,
->>>   						      int resno)
->>> @@ -3147,6 +3190,7 @@ static const struct pci_controller_ops pnv_pci_ioda_controller_ops = {
->>>   #endif
->>>          .enable_device_hook = pnv_pci_enable_device_hook,
->>>          .window_alignment = pnv_pci_window_alignment,
->>> +	.setup_bridge = pnv_pci_setup_bridge,
->>>          .reset_secondary_bus = pnv_pci_reset_secondary_bus,
->>>          .dma_set_mask = pnv_pci_ioda_dma_set_mask,
->>>          .shutdown = pnv_pci_ioda_shutdown,
->>> @@ -3218,6 +3262,8 @@ static void __init pnv_pci_init_ioda_phb(struct device_node *np,
->>>   	if (phb->regs == NULL)
->>>   		pr_err("  Failed to map registers !\n");
->>>
->>> +	pnv_pci_ioda_setup_opal_tce_kill(phb);
->>> +
->>>   	/* Initialize more IODA stuff */
->>>   	phb->ioda.total_pe_num = 1;
->>>   	prop32 = of_get_property(np, "ibm,opal-num-pes", NULL);
->>> diff --git a/arch/powerpc/platforms/powernv/pci.h b/arch/powerpc/platforms/powernv/pci.h
->>> index e93a489..a160491 100644
->>> --- a/arch/powerpc/platforms/powernv/pci.h
->>> +++ b/arch/powerpc/platforms/powernv/pci.h
->>> @@ -136,6 +136,7 @@ struct pnv_phb {
->>>   			/* Global bridge info */
->>>   			unsigned int		total_pe_num;
->>>   			unsigned int		root_pe_idx;
->>> +			bool			root_pe_is_populated;
->>>   			unsigned int		reserved_pe_idx;
->>>
->>>   			/* 32-bit MMIO window */
->>>
->
-> Thanks,
-> Gavin
->
+>> default_mtd_part_types contains cmdline part, so it should be
+>> available unless they pass their own parsers.
+> 
+> Right, but
+> (1) I don't like each driver deciding which parsers are available;
+> platform setup should be independent of the flash/controller driver, and
+> (2) the cmdline partition parser and ofpart parsers should always be
+> available for use on all drivers; to break that is a bug, IMO.
+> 
+> I think Hauke brought up a similar point to (1).
+
+Right. For (1), I think adding a way for specifying parsers to use through
+commandline for non-OF and a OF-way would be the way to get away from a
+driver centric assignment.
+
+(2) is a lot harder, because we also have to think about precedence. If
+there are both cmdline and ofpart parititions, which one should trump? And
+what about the platform specific parser(s)?
+
+Also I noticed a thing which I don't like about the current "linux,part-probe"
+(or my proposed mtdparsers commandline flag) at all: we define parser names,
+but we should define partition table names, which are well defined in a
+document somewhere.
+
+So maybe for the of-part, maybe we could make it "similar" to the stdout
+thing:
+
+aliases {
+	sflash0 = &sflash0;
+	sflash1 = &sflash1;
+	nand = &nand;
+};
+
+chosen {
+	...
+	mtd-partition-table-type = "nand:fixed-layout",
+				   "sflash0:commandline",
+				   "sflash1:bcm47xx-trx";
+};
+
+Which makes it also clear that this is configuration data.
+
+The commandline version could be then mtdtabletypes="<mtdname>:<table-type>[;...]"
+
+And then translate the table type names to their parser names (maybe parsers might
+also support more than one partition table type).
+
+This would make a "clean" separation from the linux-internal parser names.
 
 
--- 
-Alexey
+Jonas
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
