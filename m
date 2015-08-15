@@ -1,53 +1,37 @@
-From: Jianwei Wang <jianwei.wang.chn@gmail.com>
-Subject: Re: [PATCH v14 3/6] drm/panel: simple: Add support for NEC
- NL4827HC19-05B 480x272 panel
-Date: Fri, 14 Aug 2015 20:13:36 -0400
-Message-ID: <CANk3uyBZuBOZNHqNmiRTcFAEH6BOXhD2sS=EKsY_EHfzjY406Q@mail.gmail.com>
-References: <1438158605-28248-1-git-send-email-jianwei.wang.chn@gmail.com>
- <1438158605-28248-4-git-send-email-jianwei.wang.chn@gmail.com>
- <20150813122312.GC11095@ulmo>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20150813122312.GC11095@ulmo>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Thierry Reding <thierry.reding@gmail.com>
-Cc: devicetree@vger.kernel.org, Xiubo Li <lixiubo@cmss.chinamobile.com>, Daniel Vetter <daniel.vetter@ffwll.ch>, Alison Wang <b18965@freescale.com>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, scottwood@freescale.com, linux-arm-kernel@lists.infradead.org
+From: Mathieu Olivari <mathieu@codeaurora.org>
+Subject: [PATCH 0/3] qcom: Add SMEM MTD parser
+Date: Fri, 14 Aug 2015 17:46:10 -0700
+Message-ID: <1439599573-3932-1-git-send-email-mathieu@codeaurora.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk, dwmw2@infradead.org, computersforpeace@gmail.com, agross@codeaurora.org, sboyd@codeaurora.org, bjorn.andersson@sonymobile.com
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org, Mathieu Olivari <mathieu@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gVGh1LCBBdWcgMTMsIDIwMTUgYXQgODoyMyBBTSwgVGhpZXJyeSBSZWRpbmcKPHRoaWVycnku
-cmVkaW5nQGdtYWlsLmNvbT4gd3JvdGU6Cj4gT24gV2VkLCBKdWwgMjksIDIwMTUgYXQgMDQ6MzA6
-MDJQTSArMDgwMCwgSmlhbndlaSBXYW5nIHdyb3RlOgo+PiBUaGlzIGFkZHMgc3VwcG9ydCBmb3Ig
-dGhlIE5FQyBOTDQ4MjdIQzE5LTA1QiA0ODB4MjcyIHBhbmVsIHRvIHRoZSBEUk0KPj4gc2ltcGxl
-IHBhbmVsIGRyaXZlci4KPj4KPj4gU2lnbmVkLW9mZi1ieTogQWxpc29uIFdhbmcgPGIxODk2NUBm
-cmVlc2NhbGUuY29tPgo+PiBTaWduZWQtb2ZmLWJ5OiBYaXVibyBMaSA8bGl4aXVib0BjbXNzLmNo
-aW5hbW9iaWxlLmNvbT4KPj4gU2lnbmVkLW9mZi1ieTogSmlhbndlaSBXYW5nIDxqaWFud2VpLndh
-bmcuY2huQGdtYWlsLmNvbT4KPj4gQWNrZWQtYnk6IERhbmllbCBWZXR0ZXIgPGRhbmllbC52ZXR0
-ZXJAZmZ3bGwuY2g+Cj4+IC0tLQo+PiAgLi4uL2JpbmRpbmdzL3BhbmVsL25lYyxubDQ4MjdoYzE5
-XzA1Yi50eHQgICAgICAgICAgfCAgNyArKysrKysKPj4gIGRyaXZlcnMvZ3B1L2RybS9wYW5lbC9w
-YW5lbC1zaW1wbGUuYyAgICAgICAgICAgICAgIHwgMjYgKysrKysrKysrKysrKysrKysrKysrKwo+
-PiAgMiBmaWxlcyBjaGFuZ2VkLCAzMyBpbnNlcnRpb25zKCspCj4+ICBjcmVhdGUgbW9kZSAxMDA2
-NDQgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3BhbmVsL25lYyxubDQ4MjdoYzE5
-XzA1Yi50eHQKPj4KPj4gZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5k
-aW5ncy9wYW5lbC9uZWMsbmw0ODI3aGMxOV8wNWIudHh0IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0
-cmVlL2JpbmRpbmdzL3BhbmVsL25lYyxubDQ4MjdoYzE5XzA1Yi50eHQKPj4gbmV3IGZpbGUgbW9k
-ZSAxMDA2NDQKPj4gaW5kZXggMDAwMDAwMC4uMjBlOTQ3Mwo+PiAtLS0gL2Rldi9udWxsCj4+ICsr
-KyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9wYW5lbC9uZWMsbmw0ODI3aGMx
-OV8wNWIudHh0Cj4+IEBAIC0wLDAgKzEsNyBAQAo+PiArTkVDIExDRCBUZWNobm9sb2dpZXMsTHRk
-LiBXUVZHQSBURlQgTENEIHBhbmVsCj4+ICsKPj4gK1JlcXVpcmVkIHByb3BlcnRpZXM6Cj4+ICst
-IGNvbXBhdGlibGU6IHNob3VsZCBiZSAibmVjLG5sNDgyN2hjMTlfMDViIgo+Cj4gVW5kZXJzY29y
-ZXMgYXJlIGRlcHJlY2F0ZWQgaW4gY29tcGF0aWJsZSBzdHJpbmdzLCBzbyBJJ3ZlIGFwcGxpZWQg
-dGhpcwo+IHdpdGggIm5lYyxubDQ4MjdoYzE5LTA1YiIuCj4KPiBUaGllcnJ5CgpPa2F5LCB0aGFu
-a3MuCgpKaWFud2VpCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9y
-ZwpodHRwOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVs
-Cg==
+QCOM platforms such as IPQ806x are using SMEM to store their flash
+layout. This patch set adds the DT nodes required to instanciate SMEM
+on IPQ806x and add an MTD parser using it.
+
+This change is based on the SMEM driver posted here:
+*https://lkml.org/lkml/2015/7/27/1125
+
+v2:
+*Release the SPI device reference after looking it up (put_device())
+*Represent SMEM data as __le32 rather than u32
+*Move new DT nodes in their proper respective location
+*Address readability concerns in MTD parser
+
+Mathieu Olivari (3):
+  ARM: qcom: add SFPB nodes to IPQ806x dts
+  ARM: qcom: add SMEM device node to IPQ806x dts
+  mtd: add SMEM parser for QCOM platforms
+
+ arch/arm/boot/dts/qcom-ipq8064.dtsi |  23 +++-
+ drivers/mtd/Kconfig                 |   7 ++
+ drivers/mtd/Makefile                |   1 +
+ drivers/mtd/qcom_smem_part.c        | 224 ++++++++++++++++++++++++++++++++++++
+ 4 files changed, 254 insertions(+), 1 deletion(-)
+ create mode 100644 drivers/mtd/qcom_smem_part.c
+
+-- 
+2.1.4
