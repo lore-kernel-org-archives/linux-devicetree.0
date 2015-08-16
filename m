@@ -1,253 +1,67 @@
-From: Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-Subject: Re: [PATCH v2] nfc: s3fwrn5: Add driver for Samsung S3FWRN5 NFC Chip
-Date: Sun, 16 Aug 2015 23:07:25 +0200
-Message-ID: <20150816210725.GB17402@zurbaran.home>
-References: <1438266376-11229-1-git-send-email-r.baldyga@samsung.com>
+From: Doug Anderson <dianders@chromium.org>
+Subject: Re: [RFC PATCH v5 1/9] mmc: dw_mmc: Add external dma interface support
+Date: Sun, 16 Aug 2015 14:10:46 -0700
+Message-ID: <CAD=FV=W1dzqoJuJtJsD5TPKmSBpUbBcifGz654o9x8J1rX6-GQ@mail.gmail.com>
+References: <1439541232-30100-1-git-send-email-shawn.lin@rock-chips.com>
+	<1439541275-30146-1-git-send-email-shawn.lin@rock-chips.com>
+	<1522710.BT6Gc0L6oH@diego>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1438266376-11229-1-git-send-email-r.baldyga-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Sender: linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Robert Baldyga <r.baldyga-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Cc: lauro.venancio-430g2QfJUUCGglJvpFV4uA@public.gmane.org, aloisio.almeida-430g2QfJUUCGglJvpFV4uA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-nfc-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org, m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, pebolle-IWqWACnzNjzz+pZb47iToQ@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <1522710.BT6Gc0L6oH@diego>
+Sender: linux-mmc-owner@vger.kernel.org
+To: =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko@sntech.de>
+Cc: Shawn Lin <shawn.lin@rock-chips.com>, Jaehoon Chung <jh80.chung@samsung.com>, Ulf Hansson <ulf.hansson@linaro.org>, Vineet.Gupta1@synopsys.com, Wei Xu <xuwei5@hisilicon.com>, Joachim Eastwood <manabian@gmail.com>, Alexey Brodkin <abrodkin@synopsys.com>, Kukjin Kim <kgene@kernel.org>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, Russell King <linux@arm.linux.org.uk>, Zhangfei Gao <zhangfei.gao@linaro.org>, Jun Nie <jun.nie@linaro.org>, Ralf Baechle <ralf@linux-mips.org>, Govindraj Raja <govindraj.raja@imgtec.com>, Arnd Bergmann <arnd@arndb.de>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, linux-mips@linux-mips.org, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.>
 List-Id: devicetree@vger.kernel.org
 
-Hi Robert,
+Heiko,
 
-On Thu, Jul 30, 2015 at 04:26:16PM +0200, Robert Baldyga wrote:
-> +static int s3fwrn5_firmware_update(struct s3fwrn5_info *info)
-> +{
-> +	u32 version;
-> +	bool need_update;
-> +	int ret;
-> +
-> +	ENTER();
-We have many tracing tools and frameworks in the kernel, I don't think
-this is needed.
+On Fri, Aug 14, 2015 at 3:13 PM, Heiko St=C3=BCbner <heiko@sntech.de> w=
+rote:
+> Hi Shawn,
+>
+> Am Freitag, 14. August 2015, 16:34:35 schrieb Shawn Lin:
+>> DesignWare MMC Controller can supports two types of DMA
+>> mode: external dma and internal dma. We get a RK312x platform
+>> integrated dw_mmc and ARM pl330 dma controller. This patch add
+>> edmac ops to support these platforms. I've tested it on RK312x
+>> platform with edmac mode and RK3288 platform with idmac mode.
+>>
+>> Signed-off-by: Shawn Lin <shawn.lin@rock-chips.com>
+>
+> judging by your "from", I guess you're running this on some older Roc=
+kchip soc
+> without the idma? Because I tried testing this on a Radxa Rock, but o=
+nly got
+> failures, from the start (failed to read card status register). In PI=
+O mode
+> everything works again.
+>
+>
+> I guess I overlooked just some tiny detail, but to me the dma channel=
+ ids seem
+> correct after all. Maybe you have any hints what I'm doing wrong?
 
+If I were a guessing man (which I'm not), I'd guess that perhaps
+you're running into troubles with our friend the PL330.
 
-> +static int s3fwrn5_nci_send(struct nci_dev *ndev, struct sk_buff *skb)
-> +{
-> +	struct s3fwrn5_info *info = nci_get_drvdata(ndev);
-> +	int ret;
-> +
-> +	ENTER();
-> +
-> +	mutex_lock(&info->mutex);
-> +
-> +	if (s3fwrn5_get_mode(info) != S3FWRN5_MODE_NCI)
-Why can't we use this routine in firmware mode ?
+There appear to be strange issues with the PL330 on Rockchip SoCs.  I
+was only peripherally involved with them, but I know at least about
+some of the patches in our tree, like:
 
+https://chromium-review.googlesource.com/237607
+=46ROMLIST: DMA: pl330: support burst mode for dev-to-mem and mem-to-de=
+v transmit
 
-> +		return -EINVAL;
-You must unlock before returning.
+https://chromium-review.googlesource.com/237393
+CHROMIUM: dmaengine: pl330: support quirks for some broken
 
-> +int s3fwrn5_recv_frame(struct nci_dev *ndev, struct sk_buff *skb,
-> +	enum s3fwrn5_mode mode)
-> +{
-> +	struct s3fwrn5_info *info = nci_get_drvdata(ndev);
-> +
-> +	switch (mode) {
-> +	case S3FWRN5_MODE_NCI:
-> +		return info->custom_nci ?
-> +			s3fwrn5_nci_recv_frame(ndev, skb) :
-> +			nci_recv_frame(ndev, skb);
-In NCI mode, you should not have any of this logic implemented here, but
-rely on the NCI core one instead.
+https://chromium-review.googlesource.com/237396
+CHROMIUM: dmaengine: pl330: add quirk for broken no flushp
 
-> +int s3fwrn5_fw_get_base_addr(struct s3fwrn5_fw_cmd_get_bootinfo_rsp *bootinfo,
-> +	u32 *base_addr)
-This should be a static routine.
+https://chromium-review.googlesource.com/237394
+CHROMIUM: ARM: dts: rockchip: Add broken-no-flushp into rk3288.dtsi
 
-
-> +{
-> +	int i;
-> +	struct {
-> +		u8 version[4];
-> +		u32 base_addr;
-> +	} match[] = {
-> +		{{0x05, 0x00, 0x00, 0x00}, 0x00005000},
-> +		{{0x05, 0x00, 0x00, 0x01}, 0x00003000},
-> +		{{0x05, 0x00, 0x00, 0x02}, 0x00003000},
-> +		{{0x05, 0x00, 0x00, 0x03}, 0x00003000},
-> +		{{0x05, 0x00, 0x00, 0x05}, 0x00003000}
-> +	};
-> +
-> +	for (i = 0; i < ARRAY_SIZE(match); ++i)
-> +		if (bootinfo->hw_version[0] == match[i].version[0] &&
-> +			bootinfo->hw_version[1] == match[i].version[1] &&
-> +			bootinfo->hw_version[3] == match[i].version[3]) {
-> +			*base_addr = match[i].base_addr;
-> +			return 0;
-> +		}
-> +
-> +	return -EINVAL;
-> +}
-> +
-> +bool s3fwrn5_fw_is_custom(struct s3fwrn5_fw_cmd_get_bootinfo_rsp *bootinfo)
-> +{
-> +	return !!bootinfo->hw_version[2];
-> +}
-This should be a static inline routine.
-
-
-> +static int s3fwrn5_i2c_nci_read(struct s3fwrn5_i2c_phy *phy)
-> +{
-> +	struct nci_ctrl_hdr hdr;
-> +	struct sk_buff *skb;
-> +	int ret;
-> +
-> +	ENTER();
-> +
-> +	ret = i2c_master_recv(phy->i2c_dev, (char *)&hdr, NCI_CTRL_HDR_SIZE);
-> +	if (ret < 0)
-> +		return ret;
-> +
-> +	if (ret < NCI_CTRL_HDR_SIZE)
-> +		return -EBADMSG;
-> +
-> +	skb = alloc_skb(NCI_CTRL_HDR_SIZE + hdr.plen, GFP_KERNEL);
-> +	if (!skb)
-> +		return -ENOMEM;
-> +
-> +	memcpy(skb_put(skb, NCI_CTRL_HDR_SIZE), &hdr, NCI_CTRL_HDR_SIZE);
-> +
-> +	if (hdr.plen == 0)
-> +		goto out;
-> +
-> +	ret = i2c_master_recv(phy->i2c_dev, skb_put(skb, hdr.plen), hdr.plen);
-> +	if (ret != hdr.plen) {
-> +		kfree_skb(skb);
-> +		return -EBADMSG;
-> +	}
-> +
-> +out:
-> +	DUMP_SKB("R:", skb);
-> +
-> +	return s3fwrn5_recv_frame(phy->ndev, skb, S3FWRN5_MODE_NCI);
-> +}
-Please factorize s3fwrn5_i2c_nci_read and s3fwrn5_i2c_fw_read. They
-share the same logic, only the header sizes differ.
-
-
-> +static int s3fwrn5_nci_core_reset(struct s3fwrn5_nci_info *nci_info,
-> +	struct nci_core_reset_cmd *cmd)
-> +{
-> +	struct nci_core_reset_rsp *nci_rsp;
-> +	struct sk_buff *msg, *rsp = NULL;
-> +	int ret;
-> +
-> +	ret = s3fwrn5_nci_prep_cmd(&msg, NCI_OP_CORE_RESET_CMD,
-> +		sizeof(*cmd), cmd);
-> +	if (ret < 0)
-> +		return ret;
-> +
-> +	ret = s3fwrn5_nci_send_msg(nci_info, msg, &rsp);
-> +	kfree_skb(msg);
-> +	if (ret < 0)
-> +		goto out;
-> +
-> +	nci_rsp = (void *) rsp->data + NCI_CTRL_HDR_SIZE;
-> +	if (nci_rsp->status != NCI_STATUS_OK)
-> +		return -EIO;
-> +
-> +out:
-> +	kfree_skb(rsp);
-> +	return ret;
-> +}
-Please export an nci_core_reset() command from nci/core.c for that, that
-would be a __nci_request(ndev, nci_reset_req) wrapper.
-Your prep_cmd and send_msg routines are a duplication of the nci/core.c
-code, we should avoid that.
-
-
-> +static int s3fwrn5_nci_core_init_get_version(struct s3fwrn5_nci_info *nci_info,
-> +	__u32 *version)
-> +{
-> +	struct nci_core_init_rsp_1 *nci_rsp;
-> +	struct sk_buff *msg, *rsp = NULL;
-> +	struct nci_ctrl_hdr *hdr;
-> +	int ret;
-> +
-> +	ret = s3fwrn5_nci_prep_cmd(&msg, NCI_OP_CORE_INIT_CMD, 0, NULL);
-> +	if (ret < 0)
-> +		return ret;
-> +
-> +	ret = s3fwrn5_nci_send_msg(nci_info, msg, &rsp);
-> +	kfree_skb(msg);
-> +	if (ret < 0)
-> +		goto out;
-> +
-> +	hdr = (void *) rsp->data;
-> +	if (hdr->plen != 20) {
-> +		ret = -EIO;
-> +		goto out;
-> +	}
-> +
-> +	nci_rsp = (void *) rsp->data + NCI_CTRL_HDR_SIZE;
-> +	if (nci_rsp->status != NCI_STATUS_OK) {
-> +		ret = -EIO;
-> +		goto out;
-> +	}
-> +
-> +	memcpy(version, rsp->data + NCI_CTRL_HDR_SIZE + 16, 4);
-This should all be contained in ndev->manufact_id and
-ndev->manufact_specific_info after nci_open_device() is done with the
-init path.
-If you need a hook (post_setup) for this, please add it and call it from
-nci_open_device().
-
-
-> +static int s3fwrn5_nci_fw_cfg(struct s3fwrn5_nci_info *nci_info,
-> +	struct nci_prop_fw_cfg_cmd *cmd)
-> +{
-> +	struct nci_prop_fw_cfg_rsp *nci_rsp;
-> +	struct sk_buff *msg, *rsp = NULL;
-> +	int ret;
-> +
-> +	ret = s3fwrn5_nci_prep_cmd(&msg, NCI_OP_PROP_FW_CFG_CMD,
-> +		sizeof(*cmd), cmd);
-> +	if (ret < 0)
-> +		return ret;
-> +
-> +	ret = s3fwrn5_nci_send_msg(nci_info, msg, &rsp);
-> +	kfree_skb(msg);
-> +	if (ret < 0)
-> +		goto out;
-> +
-> +	nci_rsp = (void *) rsp->data + NCI_CTRL_HDR_SIZE;
-> +	if (nci_rsp->status != NCI_STATUS_OK)
-> +		ret = -EIO;
-> +
-> +out:
-> +	kfree_skb(rsp);
-> +	return ret;
-> +}
-Please use nci_prop_cmd for sending proprietary and register your
-proprietary responses through nci_prop_ops.
-See b6355e972aaab0173ce11a1650e7dba67f820918 for more details.
-
-> +int s3fwrn5_nci_recv_frame(struct nci_dev *ndev, struct sk_buff *skb)
-> +{
-> +	struct s3fwrn5_info *info = nci_get_drvdata(ndev);
-> +	struct s3fwrn5_nci_info *nci_info = &info->nci_info;
-> +
-> +	ENTER();
-> +
-> +	BUG_ON(nci_info->rsp);
-> +
-> +	nci_info->rsp = skb;
-> +
-> +	complete(&nci_info->completion);
-> +
-> +	return 0;
-> +}
-This one should be entirely handled by the NCI core code.
-
-Cheers,
-Samuel.
---
-To unsubscribe from this list: send the line "unsubscribe linux-wireless" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+https://chromium-review.googlesource.com/242063
+CHROMIUM: ASoC: rockchip_i2s: modify DMA max burst to 1
