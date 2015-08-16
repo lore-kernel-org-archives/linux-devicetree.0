@@ -1,67 +1,36 @@
-From: Doug Anderson <dianders@chromium.org>
-Subject: Re: [RFC PATCH v5 1/9] mmc: dw_mmc: Add external dma interface support
-Date: Sun, 16 Aug 2015 14:10:46 -0700
-Message-ID: <CAD=FV=W1dzqoJuJtJsD5TPKmSBpUbBcifGz654o9x8J1rX6-GQ@mail.gmail.com>
-References: <1439541232-30100-1-git-send-email-shawn.lin@rock-chips.com>
-	<1439541275-30146-1-git-send-email-shawn.lin@rock-chips.com>
-	<1522710.BT6Gc0L6oH@diego>
+From: Samuel Ortiz <sameo@linux.intel.com>
+Subject: Re: [PATCH 11/11] nfc: netlink: Add check on NFC_ATTR_VENDOR_DATA
+Date: Mon, 17 Aug 2015 01:38:24 +0200
+Message-ID: <20150816233752.GA3114@zurbaran.home>
+References: <1439584420-5446-1-git-send-email-christophe-h.ricard@st.com>
+ <1439584420-5446-12-git-send-email-christophe-h.ricard@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-mmc-owner@vger.kernel.org>
-In-Reply-To: <1522710.BT6Gc0L6oH@diego>
-Sender: linux-mmc-owner@vger.kernel.org
-To: =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko@sntech.de>
-Cc: Shawn Lin <shawn.lin@rock-chips.com>, Jaehoon Chung <jh80.chung@samsung.com>, Ulf Hansson <ulf.hansson@linaro.org>, Vineet.Gupta1@synopsys.com, Wei Xu <xuwei5@hisilicon.com>, Joachim Eastwood <manabian@gmail.com>, Alexey Brodkin <abrodkin@synopsys.com>, Kukjin Kim <kgene@kernel.org>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, Russell King <linux@arm.linux.org.uk>, Zhangfei Gao <zhangfei.gao@linaro.org>, Jun Nie <jun.nie@linaro.org>, Ralf Baechle <ralf@linux-mips.org>, Govindraj Raja <govindraj.raja@imgtec.com>, Arnd Bergmann <arnd@arndb.de>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, linux-mips@linux-mips.org, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <stable-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1439584420-5446-12-git-send-email-christophe-h.ricard@st.com>
+Sender: stable-owner@vger.kernel.org
+To: Christophe Ricard <christophe.ricard@gmail.com>
+Cc: linux-nfc@lists.01.org, christophe-h.ricard@st.com, devicetree@vger.kernel.org, stable@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Heiko,
+Hi Christophe,
 
-On Fri, Aug 14, 2015 at 3:13 PM, Heiko St=C3=BCbner <heiko@sntech.de> w=
-rote:
-> Hi Shawn,
->
-> Am Freitag, 14. August 2015, 16:34:35 schrieb Shawn Lin:
->> DesignWare MMC Controller can supports two types of DMA
->> mode: external dma and internal dma. We get a RK312x platform
->> integrated dw_mmc and ARM pl330 dma controller. This patch add
->> edmac ops to support these platforms. I've tested it on RK312x
->> platform with edmac mode and RK3288 platform with idmac mode.
->>
->> Signed-off-by: Shawn Lin <shawn.lin@rock-chips.com>
->
-> judging by your "from", I guess you're running this on some older Roc=
-kchip soc
-> without the idma? Because I tried testing this on a Radxa Rock, but o=
-nly got
-> failures, from the start (failed to read card status register). In PI=
-O mode
-> everything works again.
->
->
-> I guess I overlooked just some tiny detail, but to me the dma channel=
- ids seem
-> correct after all. Maybe you have any hints what I'm doing wrong?
+On Fri, Aug 14, 2015 at 10:33:40PM +0200, Christophe Ricard wrote:
+> @@ -1450,8 +1450,6 @@ nla_put_failure:
+>  free_msg:
+>  	nlmsg_free(msg);
+>  	kfree(ctx);
+> -
+> -	return;
+This should not be part of the patch, I removed it.
 
-If I were a guessing man (which I'm not), I'd guess that perhaps
-you're running into troubles with our friend the PL330.
+> @@ -1529,7 +1527,6 @@ static int nfc_genl_vendor_cmd(struct sk_buff *skb,
+>  
+>  	for (i = 0; i < dev->n_vendor_cmds; i++) {
+>  		cmd = &dev->vendor_cmds[i];
+> -
+Ditto.
 
-There appear to be strange issues with the PL330 on Rockchip SoCs.  I
-was only peripherally involved with them, but I know at least about
-some of the patches in our tree, like:
-
-https://chromium-review.googlesource.com/237607
-=46ROMLIST: DMA: pl330: support burst mode for dev-to-mem and mem-to-de=
-v transmit
-
-https://chromium-review.googlesource.com/237393
-CHROMIUM: dmaengine: pl330: support quirks for some broken
-
-https://chromium-review.googlesource.com/237396
-CHROMIUM: dmaengine: pl330: add quirk for broken no flushp
-
-https://chromium-review.googlesource.com/237394
-CHROMIUM: ARM: dts: rockchip: Add broken-no-flushp into rk3288.dtsi
-
-https://chromium-review.googlesource.com/242063
-CHROMIUM: ASoC: rockchip_i2s: modify DMA max burst to 1
+Cheers,
+Samuel.
