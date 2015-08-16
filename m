@@ -1,63 +1,66 @@
-From: Ian Campbell <ian.campbell@citrix.com>
-Subject: Re: [PATCH v5] dtb: Create a common home for cross-architecture
- dtsi files.
-Date: Sun, 16 Aug 2015 10:01:11 +0100
-Message-ID: <1439715671.3480.21.camel@citrix.com>
-References: <1438618000-1091-1-git-send-email-ian.campbell@citrix.com>
-	 <1439287646.9747.212.camel@citrix.com>
-	 <CAL_JsqKv2aOEM-U7JNZnaHomA6HFBSFhSLZ-zhp7c20s6gQBaQ@mail.gmail.com>
+From: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v3 5/7] iio: Support triggered events
+Date: Sun, 16 Aug 2015 10:05:54 +0100
+Message-ID: <55D05272.7010107@kernel.org>
+References: <1438174469-19054-1-git-send-email-vladimir.barinov@cogentembedded.com>
+ <1438174648-19296-1-git-send-email-vladimir.barinov@cogentembedded.com>
+ <55C4B66C.1020609@metafoo.de> <55C4D878.1010605@cogentembedded.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=windows-1252
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAL_JsqKv2aOEM-U7JNZnaHomA6HFBSFhSLZ-zhp7c20s6gQBaQ@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robherring2@gmail.com>, "arm@kernel.org" <arm@kernel.org>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Kumar Gala <galak@codeaurora.org>, Liviu Dudau <liviu.dudau@arm.com>, Sudeep Holla <sudeep.holla@arm.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Russell King <linux@arm.linux.org.uk>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Kristina Martsenko <kristina.martsenko@arm.com>, Kevin Hilman <khilman@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <55C4D878.1010605-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Vladimir Barinov <vladimir.barinov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>
+Cc: Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Peter Meerwald <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, cory.tusar-J6Z/VSE8EyIAspv4Qr0y0gC/G2K4zDHf@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 2015-08-14 at 16:21 -0500, Rob Herring wrote:
-> +arm-soc
+Vladimir - before I forget, could you try to wrap emails to around 
+80 characters per line.  Otherwise we end up with really tricky
+to read thread when some are doing so and others aren't!
 
-I could've sworn I did the same at one point. Obviously not.
-
+On 07/08/15 17:10, Vladimir Barinov wrote:
+> Hi Lars,
 > 
-> On Tue, Aug 11, 2015 at 5:07 AM, Ian Campbell <
-> ian.campbell@citrix.com> wrote:
-> > On Mon, 2015-08-03 at 17:06 +0100, Ian Campbell wrote:
-> > > Commit 9ccd608070b6 ("arm64: dts: add device tree for ARM SMM
-> > > -A53x2 on
-> > > LogicTile Express 20MG") added a new dts file to arch/arm64 which
-> > > included "../../../../arm/boot/dts/vexpress-v2m-rs1.dtsi", i.e. a
-> > > .dtsi supplied by arch/arm.
-> > > 
-> > > Unfortunately this causes some issues for the split device tree
-> > > repository[0], since things get moved around there. In that 
-> > > context
-> > > the new .dts ends up at src/arm64/arm/vexpress-v2f-1xv7
-> > > -ca53x2.dts
-> > > while the include is at src/arm/vexpress-v2m-rs1.dtsi.
-> > 
-> > Hi Grant,
-> > 
-> > Do you think there is any chance of getting this into 4.2-rc$NEXT 
-> > or shall
-> > we wait until 4.3? I'm assuming this should go via the DT tree, but 
-> > maybe
-> > it should go via an ARM tree?
+> On 07.08.2015 16:45, Lars-Peter Clausen wrote:
+>> Hi,
+>>
+>> On 07/29/2015 02:57 PM, Vladimir Barinov wrote:
+>>> Support triggered events.
+>>>
+>>> This is useful for chips that don't have their own interrupt sources.
+>>> It allows to use generic/standalone iio triggers for those drivers.
+>>>
+>> Thanks for the patch. Can you describe in more detail how
+>> INDIO_EVENT_TRIGGERED differs from the INDIO_BUFFER_TRIGGERED. By just
+>> looking at the source code I don't understand quite why it is necessary.
+> This is needed for the case when iio buffer is not used and used only
+> iio event.
 > 
-> I was assuming this would go thru the arm-soc tree which is why I
-> acked it. It is getting a bit late for 4.2 at this point, but I guess
-> the standalone tree remains broken for these platforms until this is
-> done.
+> The difference to INDIO_BUFFER_TRIGGERED is that for triggered buffer
+> the trigger poll function is attached (using
+> iio_trigger_attach_poll_func) only in industrialio-buffer.c using
+> number of steps/conditions starting by issuing 1 to buffer/enable
+> sysfs path.
+> 
+> For chips that do not use iio buffer but use only iio events the
+> iio_trigger_attach_poll_func never called.
+> 
+> In case of using INDIO_BUFFER_TRIGGERED the poll func is
+> attached/detached via industrialio-buffer.c In case of using
+> INDIO_EVENT_TRIGGERED the poll func is attached/detached via
+> industrialio-trigger.c during set/change the current trigger.
+> 
+> Regards, Vladimir
+You've convinced Lars and I agree with his argument that this
+is a sensible addition to IIO.
+> 
 
-Correct.
-
->  Probably not such a big deal in grand scheme of things.
-
-I guess not. FWIW I've not pushed since the breakage started happening,
-so the split tree isn't broken, but it's also now however many weeks
-behind. Once 4.3-rc1 arrives with this fixed I'll push all the 4.2-rcN
-and 4.2 as well.
-
-Ian.
+>> Thanks,
+>> - Lars
+>>
+> 
+> -- 
+> To unsubscribe from this list: send the line "unsubscribe linux-iio" in
+> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
