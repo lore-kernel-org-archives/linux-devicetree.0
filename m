@@ -1,582 +1,1132 @@
-From: Joachim Eastwood <manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH v2 1/2] i2c: add i2c-lpc2k driver
-Date: Sun, 16 Aug 2015 20:10:16 +0200
-Message-ID: <1439748617-7683-2-git-send-email-manabian@gmail.com>
-References: <1439748617-7683-1-git-send-email-manabian@gmail.com>
-Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1439748617-7683-1-git-send-email-manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org
-Cc: Joachim Eastwood <manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Vladimir Barinov <vladimir.barinov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v3 1/7] iio: adc: hi8435: Holt HI-8435 threshold detector
+Date: Sun, 16 Aug 2015 21:54:50 +0300
+Message-ID: <55D0DC7A.7090600@cogentembedded.com>
+References: <1438174469-19054-1-git-send-email-vladimir.barinov@cogentembedded.com> <1438174617-19143-1-git-send-email-vladimir.barinov@cogentembedded.com> <55C642C1.4070105@kernel.org> <55CA08BC.4070202@cogentembedded.com> <55D05144.70509@kernel.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <55D05144.70509-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Peter Meerwald <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, cory.tusar-J6Z/VSE8EyIAspv4Qr0y0gC/G2K4zDHf@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Add support for the I2C controller found on several NXP devices
-including LPC2xxx, LPC178x/7x and LPC18xx/43xx. The controller
-is implemented as a state machine and the driver act upon the
-state changes when the bus is accessed.
+Hi Jonathan,
 
-The I2C controller supports master/slave operation, bus
-arbitration, programmable clock rate, and speeds up to 1 Mbit/s.
+On 16.08.2015 12:00, Jonathan Cameron wrote:
+> On 11/08/15 15:37, Vladimir Barinov wrote:
+>> Hi Jonathan,
+>>
+>> Thank you for the review.
+> Sorry I was being so indecisive.  Always take a while when something
+> 'new' turns up to gather opinions and select the best option.  You
+> are just the unlucky guy who happened to hit the question first!
+>
+> Anyhow, I'm basically happy (now) with the events approach though
+> I would suggest some modifications to how exactly it is done
+> (see inline).
+Nice to hear!
+I've got some light in the tunnel :)
 
-Signed-off-by: Joachim Eastwood <manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
----
- drivers/i2c/busses/Kconfig     |  10 +
- drivers/i2c/busses/Makefile    |   1 +
- drivers/i2c/busses/i2c-lpc2k.c | 513 +++++++++++++++++++++++++++++++++++++++++
- 3 files changed, 524 insertions(+)
- create mode 100644 drivers/i2c/busses/i2c-lpc2k.c
+Thank you for dealing with this stuff.
+Please find one minor questions below.
 
-diff --git a/drivers/i2c/busses/Kconfig b/drivers/i2c/busses/Kconfig
-index 0b798ae708fe..48f4b796003c 100644
---- a/drivers/i2c/busses/Kconfig
-+++ b/drivers/i2c/busses/Kconfig
-@@ -619,6 +619,16 @@ config I2C_KEMPLD
- 	  This driver can also be built as a module. If so, the module
- 	  will be called i2c-kempld.
- 
-+config I2C_LPC2K
-+	tristate "I2C bus support for NXP LPC2K/LPC178x/18xx/43xx"
-+	depends on OF && (ARCH_LPC18XX || COMPILE_TEST)
-+	help
-+	  This driver supports the I2C interface found several NXP
-+	  devices including LPC2xxx, LPC178x/7x and LPC18xx/43xx.
-+
-+	  This driver can also be built as a module.  If so, the module
-+	  will be called i2c-lpc2k.
-+
- config I2C_MESON
- 	tristate "Amlogic Meson I2C controller"
- 	depends on ARCH_MESON
-diff --git a/drivers/i2c/busses/Makefile b/drivers/i2c/busses/Makefile
-index 50e8bbb65f1c..6df3b303bd09 100644
---- a/drivers/i2c/busses/Makefile
-+++ b/drivers/i2c/busses/Makefile
-@@ -59,6 +59,7 @@ obj-$(CONFIG_I2C_IMX)		+= i2c-imx.o
- obj-$(CONFIG_I2C_IOP3XX)	+= i2c-iop3xx.o
- obj-$(CONFIG_I2C_JZ4780)	+= i2c-jz4780.o
- obj-$(CONFIG_I2C_KEMPLD)	+= i2c-kempld.o
-+obj-$(CONFIG_I2C_LPC2K)		+= i2c-lpc2k.o
- obj-$(CONFIG_I2C_MESON)		+= i2c-meson.o
- obj-$(CONFIG_I2C_MPC)		+= i2c-mpc.o
- obj-$(CONFIG_I2C_MT65XX)	+= i2c-mt65xx.o
-diff --git a/drivers/i2c/busses/i2c-lpc2k.c b/drivers/i2c/busses/i2c-lpc2k.c
-new file mode 100644
-index 000000000000..8560a13bf1b3
---- /dev/null
-+++ b/drivers/i2c/busses/i2c-lpc2k.c
-@@ -0,0 +1,513 @@
-+/*
-+ * Copyright (C) 2011 NXP Semiconductors
-+ *
-+ * Code portions referenced from the i2x-pxa and i2c-pnx drivers
-+ *
-+ * Make SMBus byte and word transactions work on LPC178x/7x
-+ * Copyright (c) 2012
-+ * Alexander Potashev, Emcraft Systems, aspotashev-qv+LCo8X3VpBDgjK7y7TUQ@public.gmane.org
-+ * Anton Protopopov, Emcraft Systems, antonp-qv+LCo8X3VpBDgjK7y7TUQ@public.gmane.org
-+ *
-+ * Copyright (C) 2015 Joachim Eastwood <manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License as published by
-+ * the Free Software Foundation; either version 2 of the License, or
-+ * (at your option) any later version.
-+ *
-+ */
-+
-+#include <linux/clk.h>
-+#include <linux/errno.h>
-+#include <linux/i2c.h>
-+#include <linux/interrupt.h>
-+#include <linux/io.h>
-+#include <linux/kernel.h>
-+#include <linux/module.h>
-+#include <linux/of.h>
-+#include <linux/of_device.h>
-+#include <linux/platform_device.h>
-+#include <linux/sched.h>
-+#include <linux/time.h>
-+
-+/* LPC24xx register offsets and bits */
-+#define LPC24XX_I2CONSET	0x00
-+#define LPC24XX_I2STAT		0x04
-+#define LPC24XX_I2DAT		0x08
-+#define LPC24XX_I2ADDR		0x0c
-+#define LPC24XX_I2SCLH		0x10
-+#define LPC24XX_I2SCLL		0x14
-+#define LPC24XX_I2CONCLR	0x18
-+
-+#define LPC24XX_AA		BIT(2)
-+#define LPC24XX_SI		BIT(3)
-+#define LPC24XX_STO		BIT(4)
-+#define LPC24XX_STA		BIT(5)
-+#define LPC24XX_I2EN		BIT(6)
-+
-+#define LPC24XX_STO_AA		(LPC24XX_STO | LPC24XX_AA)
-+#define LPC24XX_CLEAR_ALL	(LPC24XX_AA | LPC24XX_SI | LPC24XX_STO | \
-+				 LPC24XX_STA | LPC24XX_I2EN)
-+
-+/* I2C SCL clock has different duty cycle depending on mode */
-+#define I2C_STD_MODE_DUTY		46
-+#define I2C_FAST_MODE_DUTY		36
-+#define I2C_FAST_MODE_PLUS_DUTY		38
-+
-+/*
-+ * 26 possible I2C status codes, but codes applicable only
-+ * to master are listed here and used in this driver
-+ */
-+enum {
-+	M_BUS_ERROR		= 0x00,
-+	M_START			= 0x08,
-+	M_REPSTART		= 0x10,
-+	MX_ADDR_W_ACK		= 0x18,
-+	MX_ADDR_W_NACK		= 0x20,
-+	MX_DATA_W_ACK		= 0x28,
-+	MX_DATA_W_NACK		= 0x30,
-+	M_DATA_ARB_LOST		= 0x38,
-+	MR_ADDR_R_ACK		= 0x40,
-+	MR_ADDR_R_NACK		= 0x48,
-+	MR_DATA_R_ACK		= 0x50,
-+	MR_DATA_R_NACK		= 0x58,
-+	M_I2C_IDLE		= 0xf8,
-+};
-+
-+struct lpc2k_i2c {
-+	void __iomem		*base;
-+	struct clk		*clk;
-+	int			irq;
-+	wait_queue_head_t	wait;
-+	struct i2c_adapter	adap;
-+	struct i2c_msg		*msg;
-+	int			msg_idx;
-+	int			msg_status;
-+	int			is_last;
-+};
-+
-+static void i2c_lpc2k_reset(struct lpc2k_i2c *i2c)
-+{
-+	/* Will force clear all statuses */
-+	writel(LPC24XX_CLEAR_ALL, i2c->base + LPC24XX_I2CONCLR);
-+	writel(0, i2c->base + LPC24XX_I2ADDR);
-+	writel(LPC24XX_I2EN, i2c->base + LPC24XX_I2CONSET);
-+}
-+
-+static int i2c_lpc2k_clear_arb(struct lpc2k_i2c *i2c)
-+{
-+	unsigned long timeout = jiffies + msecs_to_jiffies(1000);
-+
-+	/*
-+	 * If the transfer needs to abort for some reason, we'll try to
-+	 * force a stop condition to clear any pending bus conditions
-+	 */
-+	writel(LPC24XX_STO, i2c->base + LPC24XX_I2CONSET);
-+
-+	/* Wait for status change */
-+	while (readl(i2c->base + LPC24XX_I2STAT) != M_I2C_IDLE) {
-+		if (time_after(jiffies, timeout)) {
-+			/* Bus was not idle, try to reset adapter */
-+			i2c_lpc2k_reset(i2c);
-+			return -EBUSY;
-+		}
-+
-+		cpu_relax();
-+	}
-+
-+	return 0;
-+}
-+
-+static void i2c_lpc2k_pump_msg(struct lpc2k_i2c *i2c)
-+{
-+	unsigned char data;
-+	u32 status;
-+
-+	/*
-+	 * I2C in the LPC2xxx series is basically a state machine.
-+	 * Just run through the steps based on the current status.
-+	 */
-+	status = readl(i2c->base + LPC24XX_I2STAT);
-+
-+	switch (status) {
-+	case M_START:
-+	case M_REPSTART:
-+		/* Start bit was just sent out, send out addr and dir */
-+		data = i2c->msg->addr << 1;
-+		if (i2c->msg->flags & I2C_M_RD)
-+			data |= 1;
-+
-+		writel(data, i2c->base + LPC24XX_I2DAT);
-+		writel(LPC24XX_STA, i2c->base + LPC24XX_I2CONCLR);
-+		break;
-+
-+	case MX_ADDR_W_ACK:
-+	case MX_DATA_W_ACK:
-+		/*
-+		 * Address or data was sent out with an ACK. If there is more
-+		 * data to send, send it now
-+		 */
-+		if (i2c->msg_idx < i2c->msg->len) {
-+			writel(i2c->msg->buf[i2c->msg_idx],
-+			       i2c->base + LPC24XX_I2DAT);
-+		} else if (i2c->is_last) {
-+			/* Last message, send stop */
-+			writel(LPC24XX_STO_AA, i2c->base + LPC24XX_I2CONSET);
-+			writel(LPC24XX_SI, i2c->base + LPC24XX_I2CONCLR);
-+			i2c->msg_status = 0;
-+			disable_irq_nosync(i2c->irq);
-+		} else {
-+			i2c->msg_status = 0;
-+			disable_irq_nosync(i2c->irq);
-+		}
-+
-+		i2c->msg_idx++;
-+		break;
-+
-+	case MR_ADDR_R_ACK:
-+		/* Receive first byte from slave */
-+		if (i2c->msg->len == 1) {
-+			/* Last byte, return NACK */
-+			writel(LPC24XX_AA, i2c->base + LPC24XX_I2CONCLR);
-+		} else {
-+			/* Not last byte, return ACK */
-+			writel(LPC24XX_AA, i2c->base + LPC24XX_I2CONSET);
-+		}
-+
-+		writel(LPC24XX_STA, i2c->base + LPC24XX_I2CONCLR);
-+		break;
-+
-+	case MR_DATA_R_NACK:
-+		/*
-+		 * The I2C shows NACK status on reads, so we need to accept
-+		 * the NACK as an ACK here. This should be ok, as the real
-+		 * BACK would of been caught on the address write.
-+		 */
-+	case MR_DATA_R_ACK:
-+		/* Data was received */
-+		if (i2c->msg_idx < i2c->msg->len) {
-+			i2c->msg->buf[i2c->msg_idx] =
-+					readl(i2c->base + LPC24XX_I2DAT);
-+		}
-+
-+		/* If transfer is done, send STOP */
-+		if (i2c->msg_idx >= i2c->msg->len - 1 && i2c->is_last) {
-+			writel(LPC24XX_STO_AA, i2c->base + LPC24XX_I2CONSET);
-+			writel(LPC24XX_SI, i2c->base + LPC24XX_I2CONCLR);
-+			i2c->msg_status = 0;
-+		}
-+
-+		/* Message is done */
-+		if (i2c->msg_idx >= i2c->msg->len - 1) {
-+			i2c->msg_status = 0;
-+			disable_irq_nosync(i2c->irq);
-+		}
-+
-+		/*
-+		 * One pre-last data input, send NACK to tell the slave that
-+		 * this is going to be the last data byte to be transferred.
-+		 */
-+		if (i2c->msg_idx >= i2c->msg->len - 2) {
-+			/* One byte left to receive - NACK */
-+			writel(LPC24XX_AA, i2c->base + LPC24XX_I2CONCLR);
-+		} else {
-+			/* More than one byte left to receive - ACK */
-+			writel(LPC24XX_AA, i2c->base + LPC24XX_I2CONSET);
-+		}
-+
-+		writel(LPC24XX_STA, i2c->base + LPC24XX_I2CONCLR);
-+		i2c->msg_idx++;
-+		break;
-+
-+	case MX_ADDR_W_NACK:
-+	case MX_DATA_W_NACK:
-+	case MR_ADDR_R_NACK:
-+		/* NACK processing is done */
-+		writel(LPC24XX_STO_AA, i2c->base + LPC24XX_I2CONSET);
-+		i2c->msg_status = -ENXIO;
-+		disable_irq_nosync(i2c->irq);
-+		break;
-+
-+	case M_DATA_ARB_LOST:
-+		/* Arbitration lost */
-+		i2c->msg_status = -EAGAIN;
-+
-+		/* Release the I2C bus */
-+		writel(LPC24XX_STA | LPC24XX_STO, i2c->base + LPC24XX_I2CONCLR);
-+		disable_irq_nosync(i2c->irq);
-+		break;
-+
-+	default:
-+		/* Unexpected statuses */
-+		i2c->msg_status = -EIO;
-+		disable_irq_nosync(i2c->irq);
-+		break;
-+	}
-+
-+	/* Exit on failure or all bytes transferred */
-+	if (i2c->msg_status != -EBUSY)
-+		wake_up(&i2c->wait);
-+
-+	/*
-+	 * If `msg_status` is zero, then `lpc2k_process_msg()`
-+	 * is responsible for clearing the SI flag.
-+	 */
-+	if (i2c->msg_status != 0)
-+		writel(LPC24XX_SI, i2c->base + LPC24XX_I2CONCLR);
-+}
-+
-+static int lpc2k_process_msg(struct lpc2k_i2c *i2c, int msgidx)
-+{
-+	/* A new transfer is kicked off by initiating a start condition */
-+	if (!msgidx) {
-+		writel(LPC24XX_STA, i2c->base + LPC24XX_I2CONSET);
-+	} else {
-+		/*
-+		 * A multi-message I2C transfer continues where the
-+		 * previous I2C transfer left off and uses the
-+		 * current condition of the I2C adapter.
-+		 */
-+		if (unlikely(i2c->msg->flags & I2C_M_NOSTART)) {
-+			WARN_ON(i2c->msg->len == 0);
-+
-+			if (!(i2c->msg->flags & I2C_M_RD)) {
-+				/* Start transmit of data */
-+				writel(i2c->msg->buf[0],
-+				       i2c->base + LPC24XX_I2DAT);
-+				i2c->msg_idx++;
-+			}
-+		} else {
-+			/* Start or repeated start */
-+			writel(LPC24XX_STA, i2c->base + LPC24XX_I2CONSET);
-+		}
-+
-+		writel(LPC24XX_SI, i2c->base + LPC24XX_I2CONCLR);
-+	}
-+
-+	enable_irq(i2c->irq);
-+
-+	/* Wait for transfer completion */
-+	if (wait_event_timeout(i2c->wait, i2c->msg_status != -EBUSY,
-+			       msecs_to_jiffies(1000)) == 0) {
-+		disable_irq_nosync(i2c->irq);
-+
-+		return -ETIMEDOUT;
-+	}
-+
-+	return i2c->msg_status;
-+}
-+
-+static int i2c_lpc2k_xfer(struct i2c_adapter *adap, struct i2c_msg *msgs,
-+			  int msg_num)
-+{
-+	struct lpc2k_i2c *i2c = i2c_get_adapdata(adap);
-+	int ret, i;
-+	u32 stat;
-+
-+	/* Check for bus idle condition */
-+	stat = readl(i2c->base + LPC24XX_I2STAT);
-+	if (stat != M_I2C_IDLE) {
-+		/* Something is holding the bus, try to clear it */
-+		return i2c_lpc2k_clear_arb(i2c);
-+	}
-+
-+	/* Process a single message at a time */
-+	for (i = 0; i < msg_num; i++) {
-+		/* Save message pointer and current message data index */
-+		i2c->msg = &msgs[i];
-+		i2c->msg_idx = 0;
-+		i2c->msg_status = -EBUSY;
-+		i2c->is_last = (i == (msg_num - 1));
-+
-+		ret = lpc2k_process_msg(i2c, i);
-+		if (ret)
-+			return ret;
-+	}
-+
-+	return msg_num;
-+}
-+
-+static irqreturn_t i2c_lpc2k_handler(int irq, void *dev_id)
-+{
-+	struct lpc2k_i2c *i2c = dev_id;
-+
-+	if (readl(i2c->base + LPC24XX_I2CONSET) & LPC24XX_SI) {
-+		i2c_lpc2k_pump_msg(i2c);
-+		return IRQ_HANDLED;
-+	}
-+
-+	return IRQ_NONE;
-+}
-+
-+static u32 i2c_lpc2k_functionality(struct i2c_adapter *adap)
-+{
-+	/* Only emulated SMBus for now */
-+	return I2C_FUNC_I2C | I2C_FUNC_SMBUS_EMUL;
-+}
-+
-+static const struct i2c_algorithm i2c_lpc2k_algorithm = {
-+	.master_xfer	= i2c_lpc2k_xfer,
-+	.functionality	= i2c_lpc2k_functionality,
-+};
-+
-+static int i2c_lpc2k_probe(struct platform_device *pdev)
-+{
-+	struct lpc2k_i2c *i2c;
-+	struct resource *res;
-+	u32 bus_clk_rate;
-+	u32 scl_high;
-+	u32 clkrate;
-+	int ret;
-+
-+	i2c = devm_kzalloc(&pdev->dev, sizeof(*i2c), GFP_KERNEL);
-+	if (!i2c)
-+		return -ENOMEM;
-+
-+	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-+	i2c->base = devm_ioremap_resource(&pdev->dev, res);
-+	if (IS_ERR(i2c->base))
-+		return PTR_ERR(i2c->base);
-+
-+	i2c->irq = platform_get_irq(pdev, 0);
-+	if (i2c->irq < 0) {
-+		dev_err(&pdev->dev, "can't get interrupt resource\n");
-+		return i2c->irq;
-+	}
-+
-+	init_waitqueue_head(&i2c->wait);
-+
-+	i2c->clk = devm_clk_get(&pdev->dev, NULL);
-+	if (IS_ERR(i2c->clk)) {
-+		dev_err(&pdev->dev, "error getting clock\n");
-+		return PTR_ERR(i2c->clk);
-+	}
-+
-+	ret = clk_prepare_enable(i2c->clk);
-+	if (ret) {
-+		dev_err(&pdev->dev, "unable to enable clock.\n");
-+		return ret;
-+	}
-+
-+	ret = devm_request_irq(&pdev->dev, i2c->irq, i2c_lpc2k_handler, 0,
-+			       dev_name(&pdev->dev), i2c);
-+	if (ret < 0) {
-+		dev_err(&pdev->dev, "can't request interrupt.\n");
-+		goto fail_clk;
-+	}
-+
-+	disable_irq_nosync(i2c->irq);
-+
-+	/* Place controller is a known state */
-+	i2c_lpc2k_reset(i2c);
-+
-+	ret = of_property_read_u32(pdev->dev.of_node, "clock-frequency",
-+				   &bus_clk_rate);
-+	if (ret)
-+		bus_clk_rate = 100000; /* 100 kHz default clock rate */
-+
-+	clkrate = clk_get_rate(i2c->clk);
-+	if (clkrate == 0) {
-+		dev_err(&pdev->dev, "can't get I2C base clock\n");
-+		ret = -EINVAL;
-+		goto fail_clk;
-+	}
-+
-+	/* Setup I2C dividers to generate clock with proper duty cycle */
-+	clkrate = clkrate / bus_clk_rate;
-+	if (bus_clk_rate <= 100000)
-+		scl_high = (clkrate * I2C_STD_MODE_DUTY) / 100;
-+	else if (bus_clk_rate <= 400000)
-+		scl_high = (clkrate * I2C_FAST_MODE_DUTY) / 100;
-+	else
-+		scl_high = (clkrate * I2C_FAST_MODE_PLUS_DUTY) / 100;
-+
-+	writel(scl_high, i2c->base + LPC24XX_I2SCLH);
-+	writel(clkrate - scl_high, i2c->base + LPC24XX_I2SCLL);
-+
-+	platform_set_drvdata(pdev, i2c);
-+
-+	i2c_set_adapdata(&i2c->adap, i2c);
-+	i2c->adap.owner = THIS_MODULE;
-+	strlcpy(i2c->adap.name, "LPC2K I2C adapter", sizeof(i2c->adap.name));
-+	i2c->adap.algo = &i2c_lpc2k_algorithm;
-+	i2c->adap.dev.parent = &pdev->dev;
-+	i2c->adap.dev.of_node = pdev->dev.of_node;
-+
-+	ret = i2c_add_adapter(&i2c->adap);
-+	if (ret < 0) {
-+		dev_err(&pdev->dev, "failed to add adapter!\n");
-+		goto fail_clk;
-+	}
-+
-+	dev_info(&pdev->dev, "LPC2K I2C adapter\n");
-+
-+	return 0;
-+
-+fail_clk:
-+	clk_disable_unprepare(i2c->clk);
-+	return ret;
-+}
-+
-+static int i2c_lpc2k_remove(struct platform_device *dev)
-+{
-+	struct lpc2k_i2c *i2c = platform_get_drvdata(dev);
-+
-+	i2c_del_adapter(&i2c->adap);
-+	clk_disable_unprepare(i2c->clk);
-+
-+	return 0;
-+}
-+
-+#ifdef CONFIG_PM
-+static int i2c_lpc2k_suspend(struct device *dev)
-+{
-+	struct platform_device *pdev = to_platform_device(dev);
-+	struct lpc2k_i2c *i2c = platform_get_drvdata(pdev);
-+
-+	clk_disable(i2c->clk);
-+
-+	return 0;
-+}
-+
-+static int i2c_lpc2k_resume(struct device *dev)
-+{
-+	struct platform_device *pdev = to_platform_device(dev);
-+	struct lpc2k_i2c *i2c = platform_get_drvdata(pdev);
-+
-+	clk_enable(i2c->clk);
-+	i2c_lpc2k_reset(i2c);
-+
-+	return 0;
-+}
-+
-+static const struct dev_pm_ops i2c_lpc2k_dev_pm_ops = {
-+	.suspend_noirq = i2c_lpc2k_suspend,
-+	.resume_noirq = i2c_lpc2k_resume,
-+};
-+
-+#define I2C_LPC2K_DEV_PM_OPS (&i2c_lpc2k_dev_pm_ops)
-+#else
-+#define I2C_LPC2K_DEV_PM_OPS NULL
-+#endif
-+
-+static const struct of_device_id lpc2k_i2c_match[] = {
-+	{ .compatible = "nxp,lpc1788-i2c" },
-+	{},
-+};
-+MODULE_DEVICE_TABLE(of, lpc2k_i2c_match);
-+
-+static struct platform_driver i2c_lpc2k_driver = {
-+	.probe	= i2c_lpc2k_probe,
-+	.remove	= i2c_lpc2k_remove,
-+	.driver	= {
-+		.name		= "lpc2k-i2c",
-+		.pm		= I2C_LPC2K_DEV_PM_OPS,
-+		.of_match_table	= lpc2k_i2c_match,
-+	},
-+};
-+module_platform_driver(i2c_lpc2k_driver);
-+
-+MODULE_AUTHOR("Kevin Wells <kevin.wells-3arQi8VN3Tc@public.gmane.org>");
-+MODULE_DESCRIPTION("I2C driver for LPC2xxx devices");
-+MODULE_LICENSE("GPL");
-+MODULE_ALIAS("platform:lpc2k-i2c");
--- 
-1.8.0
+Regards,
+Vladimir
+
+>
+> Jonathan
+>> On 08.08.2015 20:56, Jonathan Cameron wrote:
+>>> On 29/07/15 13:56, Vladimir Barinov wrote:
+>>>> Add Holt threshold detector driver for HI-8435 chip
+>>>>
+>>>> Signed-off-by: Vladimir Barinov <vladimir.barinov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+>>> Because it usually reads better that way, I review from the bottom.
+>>> Might make more sense if you read the comments that way around ;)
+>> I did try to match this way.
+>> At some places the comments below the code, but in other places the comments are above the code :)
+> Yeah, I've never been consistent ;)
+>>> I'm going to guess that the typical usecase for this device is in realtime
+>>> systems where polling gives a nice predictable timing (hence the lack of any
+>>> interrupt support).  These typically operate as 'scanning' devices
+>>> (e.g. you update all state at approximately the same time, by reading
+>>> one input after another in some predefined order).
+>> Probably you are right about 8435 h/w design or there were other
+>> reason why this functionality was dropped in comparison to 8429
+>> chip. The Holt chip hi-8429 has both hardware interrupt and hardware
+>> debounce enable lines, but it has less amount of sensors (just 8
+>> outputs).
+>>> Does the use of events actually map well to this use case?  You are taking
+>>> something that (other than the results being a bit different) is basically
+>>> a digital I/O interface and mapping it (sort of) to an interrupt chip
+>>> when it isn't nothing of the sort.
+>> a) Using hardware point of view.
+>>
+>> I was thinking that it matches the events a little bit more then
+>> buffer, because the chip senses for threshold changes (passing
+>> threshold high or threshold low margins) and then notifies the upper
+>> layer. The bad point here is that the chip does not have interrupt
+>> line for sensor state change (i.e. threshold passing).
+>>
+>> If it would have the interrupt line for sensor state changes then the
+>> event interface map this case best way.
+> Agreed.  I'm coming round to the argument Lars made that we should end
+> up with the interface being the same whether or not there is an interrupt
+> there.  Actually I suspect in the long run we will end up with both
+> a buffered interface and an event interface as they simply have different
+> usecases for the same hardware (which is why we are having these lengthy
+> discussions in the first place!)
+>
+>> b) Using s/w point of view
+>>
+>> I answer relying on current iio stack implementation. I do understand
+>> that the 8435 chip is not the common/usual iio client like
+>> adc/dac/light/others, so I'm trying to match the existent iio stack.
+> Yes.  It's certainly throwing up lots of questions!
+>>  From s/w point of view it does not matter much difference between
+>> event or buffer interface for this chip because in provides 1-bit
+>> change and does not have it's own interrupt source line.
+> Yes, just requires the userspace side to track the state if it wants
+> to know.  Actually the one nasty is initialization. When the events
+> are first enabled I guess we fire them all once (if any limits are currently
+> breached).  That way the state can always be known.
+>> The event interface has generic interface to fill in falling/rising
+>> thresholds but buffer interface does not.
+> We can always add more ABI.
+>
+>> The buffer interface has already has the trigger poll func support
+>> but event interface does not. So I've tried to implement the
+>> triggered event in iio stack. BTW: Doesn't the triggered event
+>> support match the usecase with iio_interrupt_trigger? Or it does not
+>> make sense to have triggered events (even with irqtrig) at all?
+> Initially I was unsure about this, but Lars and you have convinced me.
+> I'm happy having that in the subsystem.  Can also be used for devices
+> which have an interrupt but which didn't get wired for some reason rather
+> than having them have some internal poll loop (as we have done up to now).
+>
+>   
+>>> I'd like more opinions on this, but my gut reaction is that we would
+>>> be better making the normal buffered infrastructure handle this data
+>>> properly rather than pushing it through the events intrastructure.
+>>>
+>>> Your solution is neat and tidy in someways but feels like it is mashing
+>>> data into a particular format.
+>> Probably that's all because the chip lacks smth from buffer interface
+>> approach (the data should diferent the 1-bit) and smth from event
+>> interface approach (lack of h/w interrupt line)
+> Agreed.
+>>> To add to the complexity we could have debounce logic.  If we mapped to a
+>>> fill the buffer with a scan mode, how would we handle this?
+>>> My guess is that it would simply delay transistions.  Perhaps we even
+>>> support reading both the value right now and the debounced value if that
+>>> is possible?
+>> I did handle it in the driver the same way in both cases (buffer and
+>> event interfaces): event/buffer trigger issues interrupt and then the
+>> driver checks value right now and after delay (debounce_interval).
+> I am yet to be convinced we want software debounce in the kernel.  This
+> is something that the input subsystem has always had.  Partly the aim of
+> IIO was to provide a slim system where all this stuff was moved to userspace.
+Ok, I will remove the s/w debounce in the driver for now.
+
+>
+> Ultimately the ideal option to my mind is to finally write an inkernel
+> interface for the events data flow (as we have for buffered data) then
+> we can have a generic attachable debounce unit independent of any particular
+> driver.  Hohum.  Now all I need is someone to write it or a few weeks off
+> work ;)
+This is a nice design :)
+But much more hard then implement this in the driver.
+
+>> If we do not plan to put debounced values to buffer then we may cache
+>> during debouncing procedure and then return via
+>> IIO_CHAN_INFO_DEBOUNCE_VALUE (or other info name). Probably even with
+>> timestamp.
+>>> However, here the debounce is all software.  To my mind, move this into
+>>> userspace entirely. We aren't dealing with big data here so it's hardly
+>>> going to be particularly challenging.
+>> I will drop it on your demand in favour to encourage chipmakers to provide h/w debounce,
+>> but this was much easy/efficient to have it in kernel space, since
+>> during run generic_buffer sample (or other) we got the new data and then we have to start timer, then timer expires
+>> and we read raw values from sysfs manually to compare the one that came from buffer and one after debounce
+>> delay.
+> If you are clocking evenly and we were using buffering you'd simply do it as readback in time
+> rather than the other way around - thus no timer at all.  Just each time check the last N
+> samples to see if they are all high or all low or similar.
+This is right for high frequency clocking.
+If we are clocking evently at low frequency (~1Hz) and the recommended 
+debounce interval is 10-100ms then
+we should use timer for issuing extra clock inside 10-100ms for 
+check/validate the event.
+>
+>>> So my gut feeling is definitely we need to make the buffer infrastructure
+>>> handle 1 bit values (in groups) then push this data out that way.
+>> I will wait for your final decision.
+> Lets proceed with the event version.  If someone has a strong usecase
+> for adding buffering as well, there is nothing stopping the driver doing both
+> that I can see (once we have the core infrastructure in place).
+Ok, thx.
+
+>>> Still I would like other opinions on this!
+>>>
+>>> Jonathan
+>>>
+>>>> ---
+>>>> Changes in version 2:
+>>>> - Added file sysfs-bus-iio-adc-hi8435
+>>>> - Changed naming from "discrete ADC" to "threshold detector"
+>>>> - Replaced swab16p/swab32p with be16_to_cpup/be32_to_cpup
+>>>> - Made *_show and *_store functions static
+>>>> - moved out from iio buffers to iio events
+>>>> - removed hi8436/hi8437 chips from the driver
+>>>> - moved from debounce_soft_delay/enable to debounce_interval via
+>>>>     IIO_CHAN_INFO_DEBOUNCE_TIME
+>>>> - added name extention "comparator"
+>>>> - moved threshold/hysteresis setup via generic iio event sysfs
+>>>> - added software mask/unmask channel events
+>>>> - added programming sensor outputs while in test mode via
+>>>>     IIO_CHAN_INFO_RAW
+>>>> - added channels .ext_info for programming sensing mode
+>>>> Changes in version 3:
+>>>> - fixed typos
+>>>> - moved <linux/interrupt.h> to match alphabetic order
+>>>> - fixed missed */event/* prefix in the ABI description
+>>>> - added missed colon in sysfs-bus-iio-adc-hi8435 file after "What"
+>>>> - moved in_voltageY_comparator_thresh_either_en and debounce_time
+>>>>     to sysfs-bus-iio file
+>>>> - added error checking for hi8435_write[b|w]
+>>>>
+>>>>    Documentation/ABI/testing/sysfs-bus-iio            |   1 +
+>>>>    Documentation/ABI/testing/sysfs-bus-iio-adc-hi8435 |  61 ++
+>>>>    drivers/iio/adc/Kconfig                            |  11 +
+>>>>    drivers/iio/adc/Makefile                           |   1 +
+>>>>    drivers/iio/adc/hi8435.c                           | 659 +++++++++++++++++++++
+>>>>    5 files changed, 742 insertions(+)
+>>>>    create mode 100644 Documentation/ABI/testing/sysfs-bus-iio-adc-hi8435
+>>>>    create mode 100644 drivers/iio/adc/hi8435.c
+>>>>
+>>>> diff --git a/Documentation/ABI/testing/sysfs-bus-iio b/Documentation/ABI/testing/sysfs-bus-iio
+>>>> index 70c9b1a..09eac44 100644
+>>>> --- a/Documentation/ABI/testing/sysfs-bus-iio
+>>>> +++ b/Documentation/ABI/testing/sysfs-bus-iio
+>>>> @@ -572,6 +572,7 @@ What:        /sys/.../iio:deviceX/events/in_rot_from_north_magnetic_tilt_comp_thresh_r
+>>>>    What:        /sys/.../iio:deviceX/events/in_rot_from_north_magnetic_tilt_comp_thresh_falling_en
+>>>>    What:        /sys/.../iio:deviceX/events/in_rot_from_north_true_tilt_comp_thresh_rising_en
+>>>>    What:        /sys/.../iio:deviceX/events/in_rot_from_north_true_tilt_comp_thresh_falling_en
+>>>> +What:        /sys/.../iio:deviceX/events/in_voltageY_comparator_thresh_either_en
+>>>>    What:        /sys/.../iio:deviceX/events/in_voltageY_supply_thresh_rising_en
+>>>>    What:        /sys/.../iio:deviceX/events/in_voltageY_supply_thresh_falling_en
+>>>>    What:        /sys/.../iio:deviceX/events/in_voltageY_thresh_rising_en
+>>>> diff --git a/Documentation/ABI/testing/sysfs-bus-iio-adc-hi8435 b/Documentation/ABI/testing/sysfs-bus-iio-adc-hi8435
+>>>> new file mode 100644
+>>>> index 0000000..c59d81d
+>>>> --- /dev/null
+>>>> +++ b/Documentation/ABI/testing/sysfs-bus-iio-adc-hi8435
+>>>> @@ -0,0 +1,61 @@
+>>>> +What:        /sys/bus/iio/devices/iio:deviceX/in_voltageY_comparator_raw
+> We really try to use the extended names infrequently and normally only
+> for things like 'this voltage channel is internally connected to the power
+> supply rail'.  Don't think we need it here.   As suggested below, if we
+> are going events then we don't want to expose a _raw reading except via
+> in the 'events' directory where it would be a 'current event status'.
+> Anyhow, I talk about that futher down.
+I will remove *_raw.
+
+>>>> +Date:        July 2015
+>>>> +KernelVersion:    4.2.0
+>>>> +Contact:    source-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org
+>>>> +Description:
+>>>> +        Read value is a voltage threshold measurement from channel Y.
+>>>> +        Could be either 0 if sensor voltage is lower then low voltage
+>>>> +        threshold or 1 if sensor voltage is higher then high voltage
+>>>> +        threshold.
+>>>> +        Write value is a programmed sensor output while in self test
+>>>> +        mode. Could be either 0 or 1. The programmed value will be read
+>>>> +        back if /sys/bus/iio/devices/iio:deviceX/test_enable is set to 1.
+>>>> +
+>>>> +What:        /sys/bus/iio/devices/iio:deviceX/test_enable
+>>>> +Date:        July 2015
+>>>> +KernelVersion:    4.2.0
+>>>> +Contact:    source-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org
+>>>> +Description:
+>>>> +        Enable/disable the HI-8435 self test mode.
+>>>> +        If enabled the in_voltageY_comparator_raw should be read back
+>>>> +        accordingly to written value to in_voltageY_comparator_raw.
+> Hmm. Normally we just do self tests at startup.  So set some patterns, read them
+> and then verify they are fine.  Drops the need for a userspace interface
+> that can get a little confusing (writing to what is normally a read
+> only attribute).  Would this work here?
+>
+> Alternatively, just add a debugfs interface to allow this to be set rather than
+> exposing it via sysfs all the time?
+I will add debugfs or drop it (since I did use write_raw() for setting 
+sensor output in test mode)
+
+>
+>>>> +
+>>>> +What:        /sys/bus/iio/devices/iio:deviceX/in_voltageY_comparator_sensing_mode
+>>>> +Date:        July 2015
+>>>> +KernelVersion:    4.2.0
+>>>> +Contact:    source-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org
+>>>> +Description:
+>>>> +        Program sensor type for threshold detector inputs.
+>>>> +        Could be either "GND-Open" or "Supply-Open" mode. Y is a
+>>>> +        threshold detector input channel. Channels 0..7, 8..15, 16..23
+>>>> +        and 24..31 has common sensor types.
+>>>> +
+>>>> +What:        /sys/bus/iio/devices/iio:deviceX/events/in_voltageY_comparator_thresh_falling_value
+> This is where the comparator extended name looks a bit silly as we are
+> clearly comparing it anyway due to the thresh_falling part ;)
+I will remove the extended name.
+
+>>>> +Date:        July 2015
+>>>> +KernelVersion:    4.2.0
+>>>> +Contact:    source-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org
+>>>> +Description:
+>>>> +        Channel Y low voltage threshold. If sensor input voltage goes lower then
+>>>> +        this value then the threshold falling event is pushed.
+>>>> +        Depending on in_voltageY_comparator_sensing_mode the low voltage threshold
+>>>> +        is separately set for "GND-Open" and "Supply-Open" modes.
+>>>> +        Channels 0..31 have common low threshold values, but could have different
+>>>> +        sensing_modes.
+>>>> +        The low voltage threshold range is between 2..21V.
+>>>> +        Hysteresis between low and high thresholds can not be lower then 2 and
+>>>> +        can not be odd.
+>>>> +
+>>>> +What:        /sys/bus/iio/devices/iio:deviceX/events/in_voltageY_comparator_thresh_rising_value
+>>>> +Date:        July 2015
+>>>> +KernelVersion:    4.2.0
+>>>> +Contact:    source-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org
+>>>> +Description:
+>>>> +        Channel Y high voltage threshold. If sensor input voltage goes higher then
+>>>> +        this value then the threshold rising event is pushed.
+>>>> +        Depending on in_voltageY_comparator_sensing_mode the high voltage threshold
+>>>> +        is separately set for "GND-Open" and "Supply-Open" modes.
+>>>> +        Channels 0..31 have common high threshold values, but could have different
+>>>> +        sensing_modes.
+>>>> +        The high voltage threshold range is between 3..22V.
+>>>> +        Hysteresis between low and high thresholds can not be lower then 2 and
+>>>> +        can not be odd.
+>>>> diff --git a/drivers/iio/adc/Kconfig b/drivers/iio/adc/Kconfig
+>>>> index eb0cd89..553c91e 100644
+>>>> --- a/drivers/iio/adc/Kconfig
+>>>> +++ b/drivers/iio/adc/Kconfig
+>>>> @@ -170,6 +170,17 @@ config EXYNOS_ADC
+>>>>          of SoCs for drivers such as the touchscreen and hwmon to use to share
+>>>>          this resource.
+>>>>    +config HI8435
+>>>> +    tristate "Holt Integrated Circuits HI-8435 threshold detector"
+>>>> +    select IIO_TRIGGERED_EVENT
+>>>> +    depends on SPI
+>>>> +    help
+>>>> +      If you say yes here you get support for Holt Integrated Circuits
+>>>> +      HI-8435 chip.
+>>>> +
+>>>> +      This driver can also be built as a module. If so, the module will be
+>>>> +      called hi8435.
+>>>> +
+>>>>    config LP8788_ADC
+>>>>        tristate "LP8788 ADC driver"
+>>>>        depends on MFD_LP8788
+>>>> diff --git a/drivers/iio/adc/Makefile b/drivers/iio/adc/Makefile
+>>>> index a096210..00f367aa 100644
+>>>> --- a/drivers/iio/adc/Makefile
+>>>> +++ b/drivers/iio/adc/Makefile
+>>>> @@ -19,6 +19,7 @@ obj-$(CONFIG_BERLIN2_ADC) += berlin2-adc.o
+>>>>    obj-$(CONFIG_DA9150_GPADC) += da9150-gpadc.o
+>>>>    obj-$(CONFIG_CC10001_ADC) += cc10001_adc.o
+>>>>    obj-$(CONFIG_EXYNOS_ADC) += exynos_adc.o
+>>>> +obj-$(CONFIG_HI8435) += hi8435.o
+>>>>    obj-$(CONFIG_LP8788_ADC) += lp8788_adc.o
+>>>>    obj-$(CONFIG_MAX1027) += max1027.o
+>>>>    obj-$(CONFIG_MAX1363) += max1363.o
+>>>> diff --git a/drivers/iio/adc/hi8435.c b/drivers/iio/adc/hi8435.c
+>>>> new file mode 100644
+>>>> index 0000000..f3dab5a
+>>>> --- /dev/null
+>>>> +++ b/drivers/iio/adc/hi8435.c
+>>>> @@ -0,0 +1,659 @@
+>>>> +/*
+>>>> + * Holt Integrated Circuits HI-8435 threshold detector driver
+>>>> + *
+>>>> + * Copyright (C) 2015 Zodiac Inflight Innovations
+>>>> + * Copyright (C) 2015 Cogent Embedded, Inc.
+>>>> + *
+>>>> + * This program is free software; you can redistribute  it and/or modify it
+>>>> + * under  the terms of  the GNU General  Public License as published by the
+>>>> + * Free Software Foundation;  either version 2 of the  License, or (at your
+>>>> + * option) any later version.
+>>>> + */
+>>>> +
+>>>> +#include <linux/delay.h>
+>>>> +#include <linux/iio/events.h>
+>>>> +#include <linux/iio/iio.h>
+>>>> +#include <linux/iio/sysfs.h>
+>>>> +#include <linux/iio/trigger.h>
+>>>> +#include <linux/iio/trigger_consumer.h>
+>>>> +#include <linux/iio/triggered_event.h>
+>>>> +#include <linux/interrupt.h>
+>>>> +#include <linux/module.h>
+>>>> +#include <linux/of.h>
+>>>> +#include <linux/of_device.h>
+>>>> +#include <linux/of_gpio.h>
+>>>> +#include <linux/spi/spi.h>
+>>>> +#include <linux/workqueue.h>
+>>>> +
+>>>> +#define DRV_NAME "hi8435"
+>>>> +
+>>>> +/* Register offsets for HI-8435 */
+>>>> +#define HI8435_CTRL_REG            0x02
+>>>> +#define HI8435_PSEN_REG            0x04
+>>>> +#define HI8435_TMDATA_REG        0x1E
+>>>> +#define HI8435_GOCENHYS_REG        0x3A
+>>>> +#define HI8435_SOCENHYS_REG        0x3C
+>>> Hmm. These aren't in the docs that I can immediately acquire...
+>>> Any chance of some more meaningful naming?
+>> I did follow the register naming in the chip datasheet:
+>> http://www.holtic.com/products/3081-hi-8435.aspx
+>>
+>> The SO7_0 means "Sensor status bank 0 register: SO<7:0>".
+>> Does HI8435_STATUS_BANK0_REG work?
+> Ah, I missed the meaning entirely by not noticing they were 8 bits
+> each ;)  This current naming is fine.
+>> Or should I just add comments instead of changing definition?
+>>>> +#define HI8435_SO7_0_REG        0x10
+>>>> +#define HI8435_SO15_8_REG        0x12
+>>>    +#define HI8435_SO23_16_REG        0x14
+>>>> +#define HI8435_SO31_24_REG        0x16
+>>>> +#define HI8435_SO31_0_REG        0x78
+>>>> +
+>>>> +#define HI8435_WRITE_OPCODE        0x00
+>>>> +#define HI8435_READ_OPCODE        0x80
+>>>> +
+>>>> +/* CTRL register bits */
+>>>> +#define HI8435_CTRL_TEST        0x01
+>>>> +#define HI8435_CTRL_SRST        0x02
+>>>> +
+>>>> +#define HI8435_DEBOUNCE_DELAY_MAX    1000    /* msec */
+>>>> +#define HI8435_DEBOUNCE_DELAY_DEF    100    /* msec */
+>>>> +
+>>>> +struct hi8435_priv {
+>>>> +    struct spi_device *spi;
+>>>> +    struct mutex lock;
+>>>> +    struct delayed_work work;
+>>>> +
+>>>> +    int reset_gpio;
+>>>> +    int debounce_interval; /* msec */
+>>>> +    u32 debounce_val; /* prev value to compare during software debounce */
+>>>> +
+>>>> +    unsigned long event_scan_mask; /* soft mask/unmask channels events */
+>>>> +    unsigned int event_prev_val;
+>>>> +
+>>>> +    unsigned threshold_lo[2]; /* GND-Open and Supply-Open thresholds */
+>>>> +    unsigned threshold_hi[2]; /* GND-Open and Supply-Open threshold */
+>>>> +    u8 reg_buffer[4] ____cacheline_aligned;
+>>>> +};
+>>>> +
+>>>> +static int hi8435_readb(struct hi8435_priv *priv, u8 reg, u8 *val)
+>>>> +{
+>>>> +    reg |= HI8435_READ_OPCODE;
+>>>> +    return spi_write_then_read(priv->spi, &reg, 1, val, 1);
+>>>> +}
+>>>> +
+>>>> +static int hi8435_readw(struct hi8435_priv *priv, u8 reg, u16 *val)
+>>>> +{
+>>>> +    int ret;
+>>>> +
+>>>> +    reg |= HI8435_READ_OPCODE;
+>>>> +    ret = spi_write_then_read(priv->spi, &reg, 1, val, 2);
+>>>> +    *val = be16_to_cpup(val);
+>>>> +
+>>>> +    return ret;
+>>>> +}
+>>>> +
+>>>> +static int hi8435_readl(struct hi8435_priv *priv, u8 reg, u32 *val)
+>>>> +{
+>>>> +    int ret;
+>>>> +
+>>>> +    reg |= HI8435_READ_OPCODE;
+>>>> +    ret = spi_write_then_read(priv->spi, &reg, 1, val, 4);
+>>>> +    *val = be32_to_cpup(val);
+>>>> +
+>>>> +    return ret;
+>>>> +}
+>>>> +
+>>>> +static int hi8435_writeb(struct hi8435_priv *priv, u8 reg, u8 val)
+>>>> +{
+>>>> +    priv->reg_buffer[0] = reg | HI8435_WRITE_OPCODE;
+>>>> +    priv->reg_buffer[1] = val;
+>>>> +
+>>>> +    return spi_write(priv->spi, priv->reg_buffer, 2);
+>>>> +}
+>>>> +
+>>>> +static int hi8435_writew(struct hi8435_priv *priv, u8 reg, u16 val)
+>>>> +{
+>>>> +    priv->reg_buffer[0] = reg | HI8435_WRITE_OPCODE;
+>>>> +    priv->reg_buffer[1] = (val >> 8) & 0xff;
+>>>> +    priv->reg_buffer[2] = val & 0xff;
+>>>> +
+>>>> +    return spi_write(priv->spi, priv->reg_buffer, 3);
+>>>> +}
+>>>> +
+>>>> +static ssize_t hi8435_test_enable_show(struct device *dev,
+>>>> +                       struct device_attribute *attr, char *buf)
+>>>> +{
+>>>> +    struct hi8435_priv *priv = iio_priv(dev_to_iio_dev(dev));
+>>>> +    int ret;
+>>>> +    u8 reg;
+>>>> +
+>>>> +    ret = hi8435_readb(priv, HI8435_CTRL_REG, &reg);
+>>>> +    if (ret < 0)
+>>>> +        return ret;
+>>>> +
+>>>> +    return sprintf(buf, "%d\n", reg & HI8435_CTRL_TEST);
+>>>> +}
+>>>> +
+>>>> +static ssize_t hi8435_test_enable_store(struct device *dev,
+>>>> +                    struct device_attribute *attr,
+>>>> +                    const char *buf, size_t len)
+>>>> +{
+>>>> +    struct hi8435_priv *priv = iio_priv(dev_to_iio_dev(dev));
+>>>> +    unsigned int val;
+>>>> +    int ret;
+>>>> +
+>>>> +    ret = kstrtouint(buf, 10, &val);
+>>>> +    if (ret)
+>>>> +        return ret;
+>>>> +
+>>>> +    ret = hi8435_writeb(priv, HI8435_CTRL_REG, val ? HI8435_CTRL_TEST : 0);
+>>>> +    if (ret < 0)
+>>>> +        return ret;
+>>>> +
+>>>> +    return len;
+>>>> +}
+>>>> +
+>>>> +static IIO_DEVICE_ATTR(test_enable, S_IRUGO | S_IWUSR,
+>>>> +    hi8435_test_enable_show, hi8435_test_enable_store, 0);
+>>>> +
+>>>> +static struct attribute *hi8435_attributes[] = {
+>>>> +    &iio_dev_attr_test_enable.dev_attr.attr,
+>>>> +    NULL,
+>>>> +};
+>>>> +
+>>>> +static struct attribute_group hi8435_attribute_group = {
+>>>> +    .attrs = hi8435_attributes,
+>>>> +};
+>>>> +
+>>>> +static int hi8435_read_raw(struct iio_dev *idev,
+>>>> +               const struct iio_chan_spec *chan,
+>>>> +               int *val, int *val2, long mask)
+>>>> +{
+>>>> +    struct hi8435_priv *priv = iio_priv(idev);
+>>>> +    int ret;
+>>>> +
+>>>> +    switch (mask) {
+>>>> +    case IIO_CHAN_INFO_RAW:
+>>>> +        ret = hi8435_readl(priv, HI8435_SO31_0_REG, val);
+>>>> +        if (ret < 0)
+>>>> +            return ret;
+>>>> +        *val = !!(*val & BIT(chan->channel));
+>>>> +        return IIO_VAL_INT;
+> This is where we end up in an odd possition having elected to report these
+> as 'events'.
+> We are reporting a 'last event state' via a read raw rather than as part
+> of the events infrastructure. I wonder if instead we want to allow the
+> events stuff to give us a 'am I true now signal'.
+> Would be easy enough to add and would give a clear interface.
+I agree.
+
+I was thinking to use it only for getting initial states.
+But it is ok if we assume that default state is all 0 and then
+make UI changes in accordance to coming events.
+
+Also It might be useful for UI debounce for clocking at low frequency when
+debounce interval is much smaller then clocking/polling period.
+
+>
+> IIO_EV_INFO_CURRENT_STATE and attibute naming something like
+> in_voltageY_thresh_rising_state
+> which reads either 1 or 0?
+Got it.
+I will remove *_raw in favour of new event interface entry.
+It should be read-only (read_event_value), right?
+
+May I use the pair callback write_event_value() for my test_mode for
+setting each sense output manually?
+Or should I put all test mode related stuff into debugfs?
+
+>
+> For other devices we might need to take into account the
+> we are not currently measuring but that can be done by an error
+> return.
+>
+>>>> +    case IIO_CHAN_INFO_DEBOUNCE_TIME:
+>>>> +        *val = priv->debounce_interval;
+>>>> +        return IIO_VAL_INT;
+>>>> +    default:
+>>>> +        return -EINVAL;
+>>>> +    }
+>>>> +}
+>>>> +
+>>>> +static int hi8435_write_raw(struct iio_dev *idev,
+>>>> +                const struct iio_chan_spec *chan,
+>>>> +                int val, int val2, long mask)
+>>>> +{
+>>>> +    struct hi8435_priv *priv = iio_priv(idev);
+>>>> +
+>>>> +    switch (mask) {
+>>>> +    case IIO_CHAN_INFO_RAW:
+>>>> +        /* program sensors outputs in test mode */
+>>>> +        return hi8435_writeb(priv, HI8435_TMDATA_REG, val ? 0x1 : 0x2);
+>>>> +    case IIO_CHAN_INFO_DEBOUNCE_TIME:
+>>>> +        if (val < 0)
+>>>> +            return -EINVAL;
+>>>> +        if (val > HI8435_DEBOUNCE_DELAY_MAX)
+>>>> +            val = HI8435_DEBOUNCE_DELAY_MAX;
+>>>> +        priv->debounce_interval = val;
+>>>> +        return 0;
+>>>> +    default:
+>>>> +        return -EINVAL;
+>>>> +    }
+>>>> +}
+>>>> +
+>>>> +static int hi8435_read_event_config(struct iio_dev *idev,
+>>>> +                    const struct iio_chan_spec *chan,
+>>>> +                    enum iio_event_type type,
+>>>> +                    enum iio_event_direction dir)
+>>>> +{
+>>>> +    struct hi8435_priv *priv = iio_priv(idev);
+>>>> +
+>>>> +    return !!(priv->event_scan_mask & BIT(chan->channel));
+>>>> +}
+>>>> +
+>>>> +static int hi8435_write_event_config(struct iio_dev *idev,
+>>>> +                     const struct iio_chan_spec *chan,
+>>>> +                     enum iio_event_type type,
+>>>> +                     enum iio_event_direction dir, int state)
+>>>> +{
+>>>> +    struct hi8435_priv *priv = iio_priv(idev);
+>>>> +
+>>>> +    priv->event_scan_mask &= ~BIT(chan->channel);
+>>>> +    if (state)
+>>>> +        priv->event_scan_mask |= BIT(chan->channel);
+>>>> +
+>>>> +    return 0;
+>>>> +}
+>>>> +
+>>>> +static int hi8435_read_event_value(struct iio_dev *idev,
+>>>> +                   const struct iio_chan_spec *chan,
+>>>> +                   enum iio_event_type type,
+>>>> +                   enum iio_event_direction dir,
+>>>> +                   enum iio_event_info info,
+>>>> +                   int *val, int *val2)
+>>>> +{
+>>>> +    struct hi8435_priv *priv = iio_priv(idev);
+>>>> +    int ret;
+>>>> +    u8 mode, psen;
+>>>> +    u16 reg;
+>>>> +
+>>>> +    ret = hi8435_readb(priv, HI8435_PSEN_REG, &psen);
+>>>> +    if (ret < 0)
+>>>> +        return ret;
+>>>> +
+>>>> +    /* Supply-Open or GND-Open sensing mode */
+>>>> +    mode = !!(psen & BIT(chan->channel / 8));
+>>>> +
+>>>> +    ret = hi8435_readw(priv, mode ? HI8435_SOCENHYS_REG :
+>>>> +                 HI8435_GOCENHYS_REG, &reg);
+>>>> +    if (ret < 0)
+>>>> +        return ret;
+>>>> +
+>>>> +    if (dir == IIO_EV_DIR_FALLING)
+>>>> +        *val = ((reg & 0xff) - (reg >> 8)) / 2;
+>>>> +
+>>>> +    if (dir == IIO_EV_DIR_RISING)
+>>>> +        *val = ((reg & 0xff) + (reg >> 8)) / 2;
+>>>> +
+>>>> +    return IIO_VAL_INT;
+>>>> +}
+>>>> +
+>>>> +static int hi8435_write_event_value(struct iio_dev *idev,
+>>>> +                    const struct iio_chan_spec *chan,
+>>>> +                    enum iio_event_type type,
+>>>> +                    enum iio_event_direction dir,
+>>>> +                    enum iio_event_info info,
+>>>> +                    int val, int val2)
+>>>> +{
+>>>> +    struct hi8435_priv *priv = iio_priv(idev);
+>>>> +    int ret;
+>>>> +    u8 mode, psen;
+>>>> +    u16 reg;
+>>>> +
+>>>> +    ret = hi8435_readb(priv, HI8435_PSEN_REG, &psen);
+>>>> +    if (ret < 0)
+>>>> +        return ret;
+>>>> +
+>>>> +    /* Supply-Open or GND-Open sensing mode */
+>>>> +    mode = !!(psen & BIT(chan->channel / 8));
+>>>> +
+>>>> +    ret = hi8435_readw(priv, mode ? HI8435_SOCENHYS_REG :
+>>>> +                 HI8435_GOCENHYS_REG, &reg);
+>>>> +    if (ret < 0)
+>>>> +        return ret;
+>>>> +
+>>>> +    if (dir == IIO_EV_DIR_FALLING) {
+>>>> +        /* falling threshold range 2..21V, hysteresis minimum 2V */
+>>>> +        if (val < 2 || val > 21 || (val + 1) >= priv->threshold_hi[mode])
+>>>> +            return -EINVAL;
+>>>> +
+>>>> +        if (val == priv->threshold_lo[mode])
+>>>> +            return 0;
+>>>> +
+>>>> +        priv->threshold_lo[mode] = val;
+>>>> +
+>>>> +        /* hysteresis must not be odd */
+>>>> +        if ((priv->threshold_hi[mode] - priv->threshold_lo[mode]) % 2)
+>>>> +            priv->threshold_hi[mode]--;
+>>>> +    }
+>>>> +
+>>>> +    if (dir == IIO_EV_DIR_RISING) {
+>>>> +        /* rising threshold range 3..22V, hysteresis minimum 2V */
+>>>> +        if (val < 3 || val > 22 || val <= (priv->threshold_lo[mode] + 1))
+>>>> +            return -EINVAL;
+>>>> +
+>>>> +        if (val == priv->threshold_hi[mode])
+>>>> +            return 0;
+>>>> +
+>>>> +        priv->threshold_hi[mode] = val;
+>>>> +
+>>>> +        /* hysteresis must not be odd */
+>>>> +        if ((priv->threshold_hi[mode] - priv->threshold_lo[mode]) % 2)
+>>>> +            priv->threshold_lo[mode]++;
+>>>> +    }
+>>>> +
+>>>> +    /* program thresholds */
+>>>> +    mutex_lock(&priv->lock);
+>>>> +
+>>>> +    ret = hi8435_readw(priv, mode ? HI8435_SOCENHYS_REG :
+>>>> +                 HI8435_GOCENHYS_REG, &reg);
+>>>> +    if (ret < 0) {
+>>>> +        mutex_unlock(&priv->lock);
+>>>> +        return ret;
+>>>> +    }
+>>>> +
+>>>> +    /* hysteresis */
+>>>> +    reg = priv->threshold_hi[mode] - priv->threshold_lo[mode];
+>>>> +    reg <<= 8;
+>>>> +    /* threshold center */
+>>>> +    reg |= (priv->threshold_hi[mode] + priv->threshold_lo[mode]);
+>>>> +
+>>>> +    ret = hi8435_writew(priv, mode ? HI8435_SOCENHYS_REG :
+>>>> +                  HI8435_GOCENHYS_REG, reg);
+>>>> +
+>>>> +    mutex_unlock(&priv->lock);
+>>>> +
+>>>> +    return ret;
+>>>> +}
+>>>> +
+>>>> +static const struct iio_event_spec hi8435_events[] = {
+>>>> +    {
+>>>> +        .type = IIO_EV_TYPE_THRESH,
+>>>> +        .dir = IIO_EV_DIR_RISING,
+>>>> +        .mask_separate = BIT(IIO_EV_INFO_VALUE),
+>>>> +    }, {
+>>>> +        .type = IIO_EV_TYPE_THRESH,
+>>>> +        .dir = IIO_EV_DIR_FALLING,
+>>>> +        .mask_separate = BIT(IIO_EV_INFO_VALUE),
+>>>> +    }, {
+>>>> +        .type = IIO_EV_TYPE_THRESH,
+>>>> +        .dir = IIO_EV_DIR_EITHER,
+>>>> +        .mask_separate = BIT(IIO_EV_INFO_ENABLE),
+>>>> +    },
+>>>> +};
+>>>> +
+>>>> +static int hi8435_get_sensing_mode(struct iio_dev *idev,
+>>>> +                   const struct iio_chan_spec *chan)
+>>>> +{
+>>>> +    struct hi8435_priv *priv = iio_priv(idev);
+>>>> +    int ret;
+>>>> +    u8 reg;
+>>>> +
+>>>> +    ret = hi8435_readb(priv, HI8435_PSEN_REG, &reg);
+>>>> +    if (ret < 0)
+>>>> +        return ret;
+>>>> +
+>>>> +    return !!(reg & BIT(chan->channel / 8));
+>>>> +}
+>>>> +
+>>>> +static int hi8435_set_sensing_mode(struct iio_dev *idev,
+>>>> +                   const struct iio_chan_spec *chan,
+>>>> +                   unsigned int mode)
+>>>> +{
+>>>> +    struct hi8435_priv *priv = iio_priv(idev);
+>>>> +    int ret;
+>>>> +    u8 reg;
+>>>> +
+>>>> +    mutex_lock(&priv->lock);
+>>>> +
+>>>> +    ret = hi8435_readb(priv, HI8435_PSEN_REG, &reg);
+>>>> +    if (ret < 0) {
+>>>> +        mutex_unlock(&priv->lock);
+>>>> +        return ret;
+>>>> +    }
+>>>> +
+>>>> +    reg &= ~BIT(chan->channel / 8);
+>>>> +    if (mode)
+>>>> +        reg |= BIT(chan->channel / 8);
+>>>> +
+>>>> +    ret = hi8435_writeb(priv, HI8435_PSEN_REG, reg);
+>>>> +
+>>>> +    mutex_unlock(&priv->lock);
+>>>> +
+>>>> +    return ret;
+>>>> +}
+>>>> +
+>>>> +static const char * const hi8435_sensing_modes[] = { "GND-Open",
+>>>> +                             "Supply-Open" };
+>>>> +
+>>>> +static const struct iio_enum hi8435_sensing_mode = {
+>>>> +    .items = hi8435_sensing_modes,
+>>>> +    .num_items = ARRAY_SIZE(hi8435_sensing_modes),
+>>>> +    .get = hi8435_get_sensing_mode,
+>>>> +    .set = hi8435_set_sensing_mode,
+>>>> +};
+>>>> +
+>>>> +static const struct iio_chan_spec_ext_info hi8435_ext_info[] = {
+>>>> +    IIO_ENUM("sensing_mode", IIO_SEPARATE, &hi8435_sensing_mode),
+>>>> +    {},
+>>>> +};
+>>>> +
+>>>> +#define HI8435_VOLTAGE_CHANNEL(num)                    \
+>>>> +{                                    \
+>>>> +    .type = IIO_VOLTAGE,                        \
+>>>> +    .indexed = 1,                            \
+>>>> +    .channel = num,                            \
+>>>> +    .info_mask_separate = BIT(IIO_CHAN_INFO_RAW),            \
+> If we are using events, why have the raw access at all?
+I will remove *_raw.
+
+I will probably add  IIO_EV_INFO_CURRENT_STATE.
+
+>>>> +    .info_mask_shared_by_all = BIT(IIO_CHAN_INFO_DEBOUNCE_TIME),    \
+>>>> +    .event_spec = hi8435_events,                    \
+>>>> +    .num_event_specs = ARRAY_SIZE(hi8435_events),            \
+>>>> +    .ext_info = hi8435_ext_info,                    \
+>>>> +    .extend_name = "comparator"                    \
+>>> I'm really not sure about this approach.  Can see where you are coming
+>>> from. We already have an events interface supporting these things so
+>>> why not use it?   I'm just doubtful it is an efficient option or a clean
+>>> interface (would like more opinions on this!)
+>> Sorry, I did not understand here.
+>> Is it about .extend_name ?
+>> I did add "comparator" extention to have attributes look like "in_voltage0_comparator_raw"
+> I'd drop it, particularly if we also drop the raw access.
+Now I understand. Thank you for clarification.
+I will remove it.
+
+>>>> +}
+>>>> +
+>>>> +static const struct iio_chan_spec hi8435_channels[] = {
+>>>> +    HI8435_VOLTAGE_CHANNEL(0),
+>>>> +    HI8435_VOLTAGE_CHANNEL(1),
+>>>> +    HI8435_VOLTAGE_CHANNEL(2),
+>>>> +    HI8435_VOLTAGE_CHANNEL(3),
+>>>> +    HI8435_VOLTAGE_CHANNEL(4),
+>>>> +    HI8435_VOLTAGE_CHANNEL(5),
+>>>> +    HI8435_VOLTAGE_CHANNEL(6),
+>>>> +    HI8435_VOLTAGE_CHANNEL(7),
+>>>> +    HI8435_VOLTAGE_CHANNEL(8),
+>>>> +    HI8435_VOLTAGE_CHANNEL(9),
+>>>> +    HI8435_VOLTAGE_CHANNEL(10),
+>>>> +    HI8435_VOLTAGE_CHANNEL(11),
+>>>> +    HI8435_VOLTAGE_CHANNEL(12),
+>>>> +    HI8435_VOLTAGE_CHANNEL(13),
+>>>> +    HI8435_VOLTAGE_CHANNEL(14),
+>>>> +    HI8435_VOLTAGE_CHANNEL(15),
+>>>> +    HI8435_VOLTAGE_CHANNEL(16),
+>>>> +    HI8435_VOLTAGE_CHANNEL(17),
+>>>> +    HI8435_VOLTAGE_CHANNEL(18),
+>>>> +    HI8435_VOLTAGE_CHANNEL(19),
+>>>> +    HI8435_VOLTAGE_CHANNEL(20),
+>>>> +    HI8435_VOLTAGE_CHANNEL(21),
+>>>> +    HI8435_VOLTAGE_CHANNEL(22),
+>>>> +    HI8435_VOLTAGE_CHANNEL(23),
+>>>> +    HI8435_VOLTAGE_CHANNEL(24),
+>>>> +    HI8435_VOLTAGE_CHANNEL(25),
+>>>> +    HI8435_VOLTAGE_CHANNEL(26),
+>>>> +    HI8435_VOLTAGE_CHANNEL(27),
+>>>> +    HI8435_VOLTAGE_CHANNEL(28),
+>>>> +    HI8435_VOLTAGE_CHANNEL(29),
+>>>> +    HI8435_VOLTAGE_CHANNEL(30),
+>>>> +    HI8435_VOLTAGE_CHANNEL(31),
+>>>> +    IIO_CHAN_SOFT_TIMESTAMP(32),
+>>>> +};
+>>>> +
+>>>> +static const struct iio_info hi8435_info = {
+>>>> +    .driver_module = THIS_MODULE,
+>>>> +    .attrs = &hi8435_attribute_group,
+>>>> +    .read_raw = hi8435_read_raw,
+>>>> +    .write_raw = hi8435_write_raw,
+>>>> +    .read_event_config = &hi8435_read_event_config,
+>>>> +    .write_event_config = hi8435_write_event_config,
+>>>> +    .read_event_value = &hi8435_read_event_value,
+>>>> +    .write_event_value = &hi8435_write_event_value,
+>>>> +};
+>>>> +
+>>>> +static void hi8435_iio_push_event(struct iio_dev *idev, unsigned int val)
+>>>> +{
+>>>> +    struct hi8435_priv *priv = iio_priv(idev);
+>>>> +    enum iio_event_direction dir;
+>>>> +    unsigned int i;
+>>>> +    unsigned int status = priv->event_prev_val ^ val;
+>>>> +
+>>>> +    if (!status)
+>>>> +        return;
+>>>> +
+>>>> +    for_each_set_bit(i, &priv->event_scan_mask, 32) {
+>>>> +        if (!(status & BIT(i)))
+>>>> +            continue;
+>>>> +
+>>>> +        dir = val & BIT(i) ? IIO_EV_DIR_RISING : IIO_EV_DIR_FALLING;
+>>>> +
+>>>> +        iio_push_event(idev,
+>>>> +                   IIO_UNMOD_EVENT_CODE(IIO_VOLTAGE, i,
+>>>> +                            IIO_EV_TYPE_THRESH, dir),
+>>>> +                   iio_get_time_ns());
+>>>> +    }
+>>>> +
+>>>> +    priv->event_prev_val = val;
+>>>> +}
+>>>> +
+>>>> +static void hi8435_debounce_work(struct work_struct *work)
+>>>> +{
+>>>> +    struct hi8435_priv *priv = container_of(work, struct hi8435_priv,
+>>>> +                        work.work);
+>>>> +    struct iio_dev *idev = spi_get_drvdata(priv->spi);
+>>>> +    u32 val;
+>>>> +    int ret;
+>>>> +
+>>>> +    ret = hi8435_readl(priv, HI8435_SO31_0_REG, &val);
+>>>> +    if (ret < 0)
+>>>> +        return;
+>>>> +
+>>>> +    if (val == priv->debounce_val)
+>>>> +        hi8435_iio_push_event(idev, val);
+>>>> +    else
+>>>> +        dev_warn(&priv->spi->dev, "filtered by software debounce");
+>>> Definitely not.  Warning every time a standard event occurs?  Not
+>>> a good idea.  Use the debug stuff if you want a way of knowing this
+>>> happened, then it will silent under normal use.
+>> I'd say it is not standard event, but occasional/debounce event.
+>> Anyway I agree with you.
+>>
+>>>> +}
+>>>> +
+>>>> +static irqreturn_t hi8435_trigger_handler(int irq, void *private)
+>>>> +{
+>>>> +    struct iio_poll_func *pf = private;
+>>>> +    struct iio_dev *idev = pf->indio_dev;
+>>>> +    struct hi8435_priv *priv = iio_priv(idev);
+>>>> +    u32 val;
+>>>> +    int ret;
+>>>> +
+>>>> +    ret = hi8435_readl(priv, HI8435_SO31_0_REG, &val);
+>>>> +    if (ret < 0)
+>>>> +        goto err_read;
+>>>> +
+>>>> +    if (priv->debounce_interval) {
+>>>> +        priv->debounce_val = val;
+>>>> +        schedule_delayed_work(&priv->work,
+>>>> +                msecs_to_jiffies(priv->debounce_interval));
+>>> This is another element that makes me doubt that the event interface
+>>> is the way to do this.  I'd much rather we pushed the debouncing out
+>>> to userspace where cleverer things can be done (and more adaptive things).
+>>> Here to keep the event flow low you have to do it in the kernel.
+>> Yes, it is helpful for reducing the data flow (buffer data or event data)
+>> Many kernel drivers support s/w event debouncing, f.e. usb cable plug-in, or other connectors.
+> True enough that it is common functionality.  However, we try to keep
+> the IIO datahandling as minimal as possible and leave the job to userspace.
+>
+> We aren't likely to be dealing with huge datarates here (as we are effectively
+> polling at maybe a few hundred Hz).   Also, with the hysterisis set sensibly
+> seems unlikely that much bounce due to noise will ever occur.  If you get
+> bounce that overcomes that then you probably have a wiring or logic problem!
+Ok, I see. I will remove it.
+
+>>>> +    } else {
+>>>> +        hi8435_iio_push_event(idev, val);
+>>>> +    }
+>>>> +
+>>>> +err_read:
+>>>> +    iio_trigger_notify_done(idev->trig);
+>>>> +
+>>>> +    return IRQ_HANDLED;
+>>>> +}
+>>>> +
+>>>> +static void hi8435_parse_dt(struct hi8435_priv *priv)
+>>>> +{
+>>>> +    struct device_node *np = priv->spi->dev.of_node;
+>>>> +    int ret;
+>>>> +
+>>>> +    ret = of_get_named_gpio(np, "holt,reset-gpios", 0);
+>>>> +    priv->reset_gpio = ret < 0 ? 0 : ret;
+>>> Silly question, but can gpio0 exist on a board?  I suspect you
+>>> may need an additional variable to hold that this request failed
+>>> rather than using the magic value of 0.
+>> I will do handle this case, thank you.
+> Look at what Lars added on this question...
+>>>> +
+>>>> +    ret = of_property_read_u32(np, "holt,debounce-interval",
+>>>> +                   &priv->debounce_interval);
+>>>> +    if (ret)
+>>>> +        priv->debounce_interval = 0;
+>>>> +    if (priv->debounce_interval > HI8435_DEBOUNCE_DELAY_MAX)
+>>>> +        priv->debounce_interval = HI8435_DEBOUNCE_DELAY_MAX;
+>>>> +}
+>>>> +
+>>>> +static int hi8435_probe(struct spi_device *spi)
+>>>> +{
+>>>> +    struct iio_dev *idev;
+>>>> +    struct hi8435_priv *priv;
+>>>> +    int ret;
+>>>> +
+>>>> +    idev = devm_iio_device_alloc(&spi->dev, sizeof(*priv));
+>>>> +    if (!idev)
+>>>> +        return -ENOMEM;
+>>>> +
+>>>> +    priv = iio_priv(idev);
+>>>> +    priv->spi = spi;
+>>>> +
+>>>> +    if (spi->dev.of_node)
+>>>> +        hi8435_parse_dt(priv);
+>>>> +
+>>>> +    spi_set_drvdata(spi, idev);
+>>>> +    mutex_init(&priv->lock);
+>>>> +    INIT_DELAYED_WORK(&priv->work, hi8435_debounce_work);
+>>>> +
+>>>> +    idev->dev.parent    = &spi->dev;
+>>>> +    idev->name        = spi_get_device_id(spi)->name;
+>>>> +    idev->modes        = INDIO_DIRECT_MODE;
+>>>> +    idev->info        = &hi8435_info;
+>>>> +    idev->channels        = hi8435_channels;
+>>>> +    idev->num_channels    = ARRAY_SIZE(hi8435_channels);
+>>>> +
+>>>> +    if (priv->reset_gpio) {
+>>>> +        ret = devm_gpio_request(&spi->dev, priv->reset_gpio, idev->name);
+>>>> +        if (!ret) {
+>>>> +            /* chip hardware reset */
+>>>> +            gpio_direction_output(priv->reset_gpio, 0);
+>>>> +            udelay(5);
+>>>> +            gpio_direction_output(priv->reset_gpio, 1);
+>>>> +        }
+>>>> +    } else {
+>>>> +        /* chip software reset */
+>>>> +        hi8435_writeb(priv, HI8435_CTRL_REG, HI8435_CTRL_SRST);
+>>>> +        /* get out from reset state */
+>>>> +        hi8435_writeb(priv, HI8435_CTRL_REG, 0);
+>>>> +    }
+>>>> +
+>>>> +    /* unmask all events */
+>>>> +    priv->event_scan_mask = ~(0);
+>>>> +    /* initialize default thresholds */
+>>>> +    priv->threshold_lo[0] = priv->threshold_lo[1] = 2;
+>>>> +    priv->threshold_hi[0] = priv->threshold_hi[1] = 4;
+>>> These seem very random.  Why these values or
+>> The aim for thresholds initialization is that they are in undefined state after h/w reset and
+>> the driver allows userspace to change thresholds (high or low) separately.
+>>
+>> There is a restriction in the chip - the hysteresis can not be even.
+>> If the hysteresis is set to even value then it get's into lock state and not functional anymore. (I've figured this out empirically).
+> *nice*
+>> So we need to initialize thresholds (aka hysteresis + it's center) to some initial value to be able to change
+>> high and low thresholds separately and avoid even values for hysteresis.
+>>
+>> I will also add these comments.
+> Cool
+>>>> +    hi8435_writew(priv, HI8435_GOCENHYS_REG, 0x206);
+>>> What is 0x206?  Again, I guess a default. I'd like to see a comment
+>>> here saying what real world value it corresponds to.
+>> Yes it is default values.
+>>
+>> The 0x206 is a code for HI threshold voltage = 4V and low voltage threshold = 2V.
+>> The register HI8435_SOCENHYS_REG describes the voltage hysteresis of the sensor and the hysteresis center.
+>> The 0x206 is an encoded value for 2V-to-4V voltage threshold.
+>>
+>> I will add comments.
+> good.
+>>>> +    hi8435_writew(priv, HI8435_SOCENHYS_REG, 0x206);
+>>>> +
+>>> I am as yet unconvinced that using triggers to poll events is a terribly
+>>> good idea.  Feels rather like we are doing this due to a deficiency in
+>>> the buffer interface than because sending events makes sense here.
+>> Actually the first version of this driver was against the buffer interface.
+>> I did try to use your tip and switched to event interface :)
+> oops.
+>> Do you think I should switch to buffer interface back?
+> Nope. As discussed above, right now this approach is winning (just ;)
+>>>> +    ret = iio_triggered_event_setup(idev, NULL, hi8435_trigger_handler);
+>>>> +    if (ret)
+>>>> +        return ret;
+>>>> +
+>>>> +    ret = iio_device_register(idev);
+>>>> +    if (ret < 0) {
+>>>> +        dev_err(&spi->dev, "unable to register device\n");
+>>>> +        goto unregister_triggered_event;
+>>>> +    }
+>>>> +
+>>>> +    return 0;
+>>>> +
+>>>> +unregister_triggered_event:
+>>>> +    iio_triggered_event_cleanup(idev);
+>>>> +    return ret;
+>>>> +}
+>>>> +
+>>>> +static int hi8435_remove(struct spi_device *spi)
+>>>> +{
+>>>> +    struct iio_dev *idev = spi_get_drvdata(spi);
+>>>> +    struct hi8435_priv *priv = iio_priv(idev);
+>>>> +
+>>>> +    cancel_delayed_work_sync(&priv->work);
+>>>> +    iio_device_unregister(idev);
+>>>> +    iio_triggered_event_cleanup(idev);
+>>>> +
+>>>> +    return 0;
+>>>> +}
+>>>> +
+>>>> +static const struct of_device_id hi8435_dt_ids[] = {
+>>>> +    { .compatible = "holt,hi8435" },
+>>>> +    {},
+>>>> +};
+>>>> +MODULE_DEVICE_TABLE(of, hi8435_dt_ids);
+>>>> +
+>>>> +static const struct spi_device_id hi8435_id[] = {
+>>>> +    { "hi8435", 0},
+>>>> +    { }
+>>>> +};
+>>>> +MODULE_DEVICE_TABLE(spi, hi8435_id);
+>>>> +
+>>>> +static struct spi_driver hi8435_driver = {
+>>>> +    .driver    = {
+>>>> +        .name        = DRV_NAME,
+>>>> +        .of_match_table    = of_match_ptr(hi8435_dt_ids),
+>>>> +    },
+>>>> +    .probe        = hi8435_probe,
+>>>> +    .remove        = hi8435_remove,
+>>>> +    .id_table    = hi8435_id,
+>>>> +};
+>>>> +module_spi_driver(hi8435_driver);
+>>>> +
+>>>> +MODULE_LICENSE("GPL");
+>>>> +MODULE_AUTHOR("Vladimir Barinov");
+>>>> +MODULE_DESCRIPTION("HI-8435 threshold detector");
+>>>>
+>> -- 
+>> To unsubscribe from this list: send the line "unsubscribe linux-iio" in
+>> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+>> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
