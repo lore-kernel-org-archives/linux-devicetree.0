@@ -1,70 +1,44 @@
-From: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
-Subject: Re: [PATCH] spi: Mediatek: fix endian warnings
-Date: Sun, 16 Aug 2015 15:06:39 +0100
-Message-ID: <20150816140639.GE7557@n2100.arm.linux.org.uk>
-References: <1439289789-29026-1-git-send-email-leilk.liu@mediatek.com>
- <1871097.B3YgX5rNy0@wuerfel>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH] ARM: dts: sun4i: Enable otg in host only
+ mode on Jesurun Q5
+Date: Sun, 16 Aug 2015 18:11:37 +0200
+Message-ID: <20150816161137.GD9000@lukather>
+References: <1438723809-9010-1-git-send-email-hdegoede@redhat.com>
+Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="oj4kGyHlBMXGt3Le"
+Return-path: <linux-sunxi+bncBD2ZNBF5VYJRBOXMYKXAKGQEGCGDFTQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1871097.B3YgX5rNy0@wuerfel>
-Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: Leilk Liu <leilk.liu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+In-Reply-To: <1438723809-9010-1-git-send-email-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <http://groups.google.com/group/linux-sunxi/subscribe>
+To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Aug 15, 2015 at 10:16:03PM +0200, Arnd Bergmann wrote:
-> On Tuesday 11 August 2015 18:43:09 Leilk Liu wrote:
-> > @@ -359,9 +359,11 @@ static void mtk_spi_setup_dma_addr(struct spi_master *master,
-> >         struct mtk_spi *mdata = spi_master_get_devdata(master);
-> >  
-> >         if (mdata->tx_sgl)
-> > -               writel(cpu_to_le32(xfer->tx_dma), mdata->base + SPI_TX_SRC_REG);
-> > +               writel((__force u32)cpu_to_le32(xfer->tx_dma),
-> > +                      mdata->base + SPI_TX_SRC_REG);
-> >         if (mdata->rx_sgl)
-> > -               writel(cpu_to_le32(xfer->rx_dma), mdata->base + SPI_RX_DST_REG);
-> > +               writel((__force u32)cpu_to_le32(xfer->rx_dma),
-> > +                      mdata->base + SPI_RX_DST_REG);
-> >  }
-> > 
+--oj4kGyHlBMXGt3Le
+Content-Type: text/plain; charset=UTF-8
+Content-Disposition: inline
+
+1;3803;0c
+On Tue, Aug 04, 2015 at 11:30:09PM +0200, Hans de Goede wrote:
+> The Jesurun Q5 has the musb hooked up to an usb-a receptacle, enable it
+> in host-only mode.
 > 
-> This looks wrong: writel takes a CPU-endian argument, so the value returned
-> from cpu_to_le32() is not appropriate.
-> 
-> The warning is correct, and you have to remove the cpu_to_le32() conversion
-> in order to get the driver to behave correctly when the kernel is built
-> as big-endian.
+> Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 
-Indeed, it's about time people started thinking more about the warnings
-and why we have coded things in the way we have.
+Queued, thanks!
 
-Look people.  cpu_to_le32() takes a value in the CPU endian, and
-converts it to a little endian 32-bit number.  See, the clue is in
-the name.
-
-All writel() implementations take a CPU number and write it in little
-endian format.  Hence, writel() almost always uses cpu_to_le32()
-internally.
-
-Now think about what you're saying with "cpu_to_le32(cpu_to_le32())".
-It's utter rubbish, total crap.  It's wrong no matter which way you
-look at it.
-
-We have le32_to_cpu() which does what it says on the tin.  Same with
-be32_to_cpu() and cpu_to_be32().
-
-Don't hack around this stuff with __force.  If you're having to use
-__force to get rid of a warning here, you _ARE_ doing something wrong,
-no questions about that.  __force in driver code is a definite sign
-that you are doing something wrong.  Don't do it.  Ask the question
-if you think you need it.
+Maxime
 
 -- 
-FTTC broadband for 0.8mile line: currently at 10.5Mbps down 400kbps up
-according to speedtest.net.
---
-To unsubscribe from this list: send the line "unsubscribe linux-spi" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Maxime Ripard, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
+--oj4kGyHlBMXGt3Le--
