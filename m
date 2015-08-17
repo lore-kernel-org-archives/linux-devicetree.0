@@ -1,91 +1,74 @@
-From: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-Subject: Re: [2/2] ARM: dts: Add missing irq pinctrl for max77686 on smdk5250
-Date: Mon, 17 Aug 2015 14:50:31 +0900
-Message-ID: <CAJKOXPdzhqXFWT0=eXpr+jjs8R4kFAMq2DSSsFHVEZq_PdAN2w@mail.gmail.com>
-References: <1416312509-11530-2-git-send-email-yadi.brar@samsung.com>
-	<553F68CC.6030504@samsung.com>
-	<5544657A.7010006@gmail.com>
+From: Wang Dongsheng <Dongsheng.Wang-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: RE: [PATCH v2 1/2] powerpc/85xx: Add binding for SCFG
+Date: Mon, 17 Aug 2015 05:50:35 +0000
+Message-ID: <SN1PR0301MB16165146428CF6A8C48FF1B29D790@SN1PR0301MB1616.namprd03.prod.outlook.com>
+References: <1439521930-28191-1-git-send-email-dongsheng.wang@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <5544657A.7010006@gmail.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Pankaj Dubey <pankaj.dubey@samsung.com>, Yadwinder Singh Brar <yadi.brar@samsung.com>, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, kgene.kim@samsung.com
-Cc: robh+dt@kernel.org, yadi.brar01@gmail.com
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1439521930-28191-1-git-send-email-dongsheng.wang-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Wang Dongsheng <Dongsheng.Wang-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Cc: Priyanka Jain <Priyanka.Jain-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-2015-05-02 14:49 GMT+09:00 Krzysztof Kozlowski <k.kozlowski.k@gmail.com>:
-> W dniu 28.04.2015 o 20:02, Pankaj Dubey pisze:
->> Hi Kukjin,
->>
->> Any updated for this patch. Without this PMIC RTC is not working on
->> SMDK5250.
->>
->
-> Could you resend the patch after rebasing it?
->
-> Best regards,
-> Krzysztof
+Hi Scott,
 
-Dear Pankaj and Yadwinder,
+Could you apply the patches?
 
-Do you plan to do anything with this patch?
+Regards,
+-Dongsheng
 
-Best regards,
-Krzysztof
+> -----Original Message-----
+> From: Dongsheng Wang [mailto:dongsheng.wang-KZfg59tc24xl57MIdRCFDg@public.gmane.org]
+> Sent: Friday, August 14, 2015 11:12 AM
+> To: Wood Scott-B07421
+> Cc: Jain Priyanka-B32167; devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; linuxppc-
+> dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org; Wang Dongsheng-B40534
+> Subject: [PATCH v2 1/2] powerpc/85xx: Add binding for SCFG
+> 
+> From: Wang Dongsheng <dongsheng.wang-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+> 
+> SCFG provides SoC specific configuration and status registers for
+> the chip. Add this for powerpc platform.
+> 
+> Signed-off-by: Wang Dongsheng <dongsheng.wang-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+> ---
+> *V2*
+> - Remove scfg description in board.txt and create scfg.txt for scfg.
+> - Change "fsl,<board>-scfg" to "fsl,<chip>-scfg"
+> 
+> diff --git a/Documentation/devicetree/bindings/powerpc/fsl/scfg.txt
+> b/Documentation/devicetree/bindings/powerpc/fsl/scfg.txt
+> new file mode 100644
+> index 0000000..0532c46
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/powerpc/fsl/scfg.txt
+> @@ -0,0 +1,18 @@
+> +Freescale Supplement configuration unit (SCFG)
+> +
+> +SCFG is the supplemental configuration unit, that provides SoC specific
+> +configuration and status registers for the chip. Such as getting PEX port
+> +status.
+> +
+> +Required properties:
+> +
+> +- compatible: should be "fsl,<chip>-scfg"
+> +- reg: should contain base address and length of SCFG memory-mapped
+> +registers
+> +
+> +Example:
+> +
+> +	scfg: global-utilities@fc000 {
+> +		compatible = "fsl,t1040-scfg";
+> +		reg = <0xfc000 0x1000>;
+> +	};
+> --
+> 2.1.0.27.g96db324
 
-
->> Thanks,
->> Pankaj Dubey
->>
->> On Tuesday 18 November 2014 05:38 PM, Yadwinder Singh Brar wrote:
->>> This patch adds pinctrl configuration for using configuring gpx3-2 as an
->>> external interrupt from max77686. Though max77686 RTC is enabled and gets
->>> probed by default, it doesnt work as its unable to get interrupt.
->>>
->>> This patch makes max77686 RTC work and also configures it as wakeup
->>> source.
->>>
->>> Signed-off-by: Yadwinder Singh Brar <yadi.brar@samsung.com>
->>> Reviewed-by: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
->>> Tested-by: Pankaj Dubey <pankaj.dubey@samsung.com>
->>>
->>> ---
->>> arch/arm/boot/dts/exynos5250-smdk5250.dts |   12 ++++++++++++
->>>   1 files changed, 12 insertions(+), 0 deletions(-)
->>>
->>> diff --git a/arch/arm/boot/dts/exynos5250-smdk5250.dts
->>> b/arch/arm/boot/dts/exynos5250-smdk5250.dts
->>> index 95b5b51..19cd918 100644
->>> --- a/arch/arm/boot/dts/exynos5250-smdk5250.dts
->>> +++ b/arch/arm/boot/dts/exynos5250-smdk5250.dts
->>> @@ -131,6 +131,9 @@
->>>           reg = <0x09>;
->>>           interrupt-parent = <&gpx3>;
->>>           interrupts = <2 IRQ_TYPE_NONE>;
->>> +        pinctrl-names = "default";
->>> +        pinctrl-0 = <&max77686_irq>;
->>> +        wakeup-source;
->>>
->>>           voltage-regulators {
->>>               ldo1_reg: LDO1 {
->>> @@ -411,3 +414,12 @@
->>>           };
->>>       };
->>>   };
->>> +
->>> +&pinctrl_0 {
->>> +    max77686_irq: max77686-irq {
->>> +        samsung,pins = "gpx3-2";
->>> +        samsung,pin-function = <0xf>;
->>> +        samsung,pin-pud = <0>;
->>> +        samsung,pin-drv = <0>;
->>> +    };
->>> +};
->>>
->> --
->> To unsubscribe from this list: send the line "unsubscribe
->> linux-samsung-soc" in
->> the body of a message to majordomo@vger.kernel.org
->> More majordomo info at  http://vger.kernel.org/majordomo-info.html
->
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
