@@ -1,43 +1,52 @@
-From: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>
-Subject: Re: [PATCH] [PATCH v4] mtd:spi-nor: Add Altera Quad SPI Driver
-Date: Mon, 17 Aug 2015 19:53:23 +0200
-Message-ID: <201508171953.23955.marex@denx.de>
-References: <1433316644-3748-1-git-send-email-vndao@altera.com> <CAN1oZWx1z0vq_8csMx3bs70ULfhR03CgX=NtTBj1HiLA8FdZjg@mail.gmail.com> <20150817160338.GN60523@google.com>
+From: Eric Anholt <eric@anholt.net>
+Subject: Re: [PATCH 3/7] drm/vc4: Add KMS support for Raspberry Pi.
+Date: Mon, 17 Aug 2015 10:56:23 -0700
+Message-ID: <877fotx0hk.fsf@eliezer.anholt.net>
+References: <1439427380-2436-1-git-send-email-eric@anholt.net>
+ <1439427380-2436-4-git-send-email-eric@anholt.net>
+ <55CEC3D8.7060103@wwwdotorg.org>
 Mime-Version: 1.0
-Content-Type: Text/Plain;
-  charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20150817160338.GN60523-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Viet Nga Dao <vndao-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, =?utf-8?q?Rafa=C5=82_Mi=C5=82ecki?= <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Graham Moore <grmoore-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <55CEC3D8.7060103@wwwdotorg.org>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Stephen Warren <swarren@wwwdotorg.org>
+Cc: devicetree@vger.kernel.org, Lee Jones <lee@kernel.org>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-rpi-kernel@lists.infradead.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Monday, August 17, 2015 at 06:03:38 PM, Brian Norris wrote:
-
-Hi!
-
-[...]
-
-> > Hi Brian,
-> > It is really unfortunate that this controller is not able to read full
-> > JEDEC ID. It only can provide 1 byte ID. I did discuss with IP
-> > designer about this, but it is really unfortunate that they are not
-> > able to fix that issue. Hence it requires software to make changes.
-
-Thanks for CCing me, I assume this is a driver for that "altera_epcq_controller"
-which you can synthesise into your FPGA, is that correct? Is there an Hard IP 
-variant of this controller in the public or is this purely Soft IP?
-
-Also, I cannot find any documentation for this IP block even if I search through 
-Quartus/QSys, is there any proper documentation available anywhere?
-
-[...]
-
-Best regards,
-Marek Vasut
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+cjwjc2VjdXJlIG1ldGhvZD1wZ3BtaW1lIG1vZGU9c2lnbj4KU3RlcGhlbiBXYXJyZW4gPHN3YXJy
+ZW5Ad3d3ZG90b3JnLm9yZz4gd3JpdGVzOgoKPiBPbiAwOC8xMi8yMDE1IDA2OjU2IFBNLCBFcmlj
+IEFuaG9sdCB3cm90ZToKPj4gVGhpcyBpcyB0aGUgc3RhcnQgb2YgYSBmdWxsIFZDNCBkcml2ZXIu
+ICBSaWdodCBub3cgdGhpcyBqdXN0IHN1cHBvcnRzCj4+IGNvbmZpZ3VyaW5nIHRoZSBkaXNwbGF5
+IHVzaW5nIGEgcHJlLWV4aXN0aW5nIHZpZGVvIG1vZGUgKGJlY2F1c2UKPj4gY2hhbmdpbmcgdGhl
+IHBpeGVsIGNsb2NrIGlzbid0IGF2YWlsYWJsZSB5ZXQsIGFuZCBkb2Vzbid0IHdvcmsgd2hlbiBp
+dAo+PiBpcykuICBIb3dldmVyLCB0aGlzIGlzIGVub3VnaCBmb3IgZmJjb24gYW5kIGJyaW5naW5n
+IHVwIFggdXNpbmcKPj4geGY4Ni12aWRlby1tb2Rlc2V0dGluZy4KPgo+PiBkaWZmIC0tZ2l0IGEv
+ZHJpdmVycy9ncHUvZHJtL3ZjNC9LY29uZmlnIGIvZHJpdmVycy9ncHUvZHJtL3ZjNC9LY29uZmln
+Cj4KPj4gK2NvbmZpZyBEUk1fVkM0Cj4+ICsJdHJpc3RhdGUgIkJyb2FkY29tIFZDNCBHcmFwaGlj
+cyIKPgo+PiArCWhlbHAKPj4gKwkgIENob29zZSB0aGlzIG9wdGlvbiBpZiB5b3UgaGF2ZSBhIHN5
+c3RlbSB0aGF0IGhhcyBhIEJyb2FkY29tCj4+ICsJICBWQzQgR1BVLCBzdWNoIGFzIHRoZSBSYXNw
+YmVycnkgUGkgb3Igb3RoZXIgQkNNMjcwOC9CQ00yODM1Lgo+PiArCj4+ICsJICBUaGlzIGRyaXZl
+ciByZXF1aXJlcyB0aGF0ICJhdm9pZF93YXJuaW5ncz0yIiBiZSBwcmVzZW50IGluCj4+ICsJICB0
+aGUgY29uZmlnLnR4dCBmb3IgdGhlIGZpcm13YXJlLCB0byBrZWVwIGl0IGZyb20gc21hc2hpbmcK
+Pj4gKwkgIG91ciBkaXNwbGF5IHNldHVwLgo+Cj4gVGhlIG5lZWQgZm9yICJhdm9pZF93YXJuaW5n
+cz0yIiBzZWVtcyBsaWtlIGl0IHdpbGwgdHJpcCBwZW9wbGUgdXAuIEkKPiBkb24ndCB0aGluayBp
+dCdzIGluIGFueSBjb25maWcudHh0IEkndmUgc2Vlbi4gQ2FuIHlvdSBleHBhbmQgbW9yZSBvbiB0
+aGF0PwoKVGhlIHdhcm5pbmdzIHRoaW5nIGlzIHRoZSBmaXJtd2FyZSB3YXRjaGluZyBmb3IgdW5k
+ZXJ2b2x0YWdlIGFuZCB0aGVuIGl0CmNhbGxzIGludG8gZGlzcG1hbnggdG8gb3ZlcmxheSBhIGxp
+dHRsZSByYWluYm93IGJveCBvbiB0aGUgc2NyZWVuLiAgVGhpcwpvZiBjb3Vyc2UgaW50ZXJmZXJl
+cyB3aXRoIG91ciBkaXNwbGF5IHNldHVwLgoKSSB0aGluayB3ZSdsbCBiZSBhYmxlIHRvIHdpcmUg
+dXAgbm90aWZpY2F0aW9ucyB0byBMaW51eCBmb3IKdW5kZXJ2b2x0YWdlLCBhdCB3aGljaCBwb2lu
+dCB3ZSBjYW4gZG8gc29tZXRoaW5nIHVzZWZ1bCB3aXRoIHRoYXQKaW5mb3JtYXRpb24sIG91cnNl
+bHZlcy4KX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJp
+LWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHA6
+Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
