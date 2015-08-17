@@ -1,87 +1,54 @@
-From: Pankaj Dubey <pankaj.dubey@samsung.com>
-Subject: Re: [3/4] ARM: dts: Add UART2 dt node for Exynos3250 SoC
-Date: Mon, 17 Aug 2015 09:03:48 +0530
-Message-ID: <55D1561C.90805@samsung.com>
-References: <1439264784-30322-4-git-send-email-cw00.choi@samsung.com>
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH] spi: Mediatek: fix endian warnings
+Date: Sun, 16 Aug 2015 20:30:47 -0700
+Message-ID: <20150817033047.GM10748@sirena.org.uk>
+References: <1439289789-29026-1-git-send-email-leilk.liu@mediatek.com>
+ <1871097.B3YgX5rNy0@wuerfel>
+ <20150816140639.GE7557@n2100.arm.linux.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-reply-to: <1439264784-30322-4-git-send-email-cw00.choi@samsung.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Chanwoo Choi <cw00.choi@samsung.com>, s.nawrocki@samsung.com, tomasz.figa@gmail.com, kgene@kernel.org, k.kozlowski@samsung.com
-Cc: mturquette@baylibre.com, sboyd@codeaurora.org, linux-samsung-soc@vger.kernel.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="jvwwc3lboJHenLjr"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20150816140639.GE7557-l+eeeJia6m9vn6HldHNs0ANdhmdF6hFW@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Leilk Liu <leilk.liu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Chanwoo,
 
-Similar patch was posted here[1].
+--jvwwc3lboJHenLjr
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-[1]: 
-http://lists.infradead.org/pipermail/linux-arm-kernel/2014-September/291023.html
+On Sun, Aug 16, 2015 at 03:06:39PM +0100, Russell King - ARM Linux wrote:
 
-Thanks,
-Pankaj Dubey
+> All writel() implementations take a CPU number and write it in little
+> endian format.  Hence, writel() almost always uses cpu_to_le32()
+> internally.
 
-On Tuesday 11 August 2015 09:16 AM, Chanwoo Choi wrote:
-> This patch add the uart2 devicetree node for Exynos3250 SoC.
->
-> Cc: Kukjin Kim <kgene@kernel.org>
-> Cc: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-> Signed-off-by: Chanwoo Choi <cw00.choi@samsung.com>
-> Reviewed-by: Krzysztof Kozlowski <k.kozlowski@samsung.com>
->
-> ---
-> arch/arm/boot/dts/exynos3250-pinctrl.dtsi |  7 +++++++
->   arch/arm/boot/dts/exynos3250.dtsi         | 12 ++++++++++++
->   2 files changed, 19 insertions(+)
->
-> diff --git a/arch/arm/boot/dts/exynos3250-pinctrl.dtsi b/arch/arm/boot/dts/exynos3250-pinctrl.dtsi
-> index 5ab81c39e2c9..eac1d21c10d4 100644
-> --- a/arch/arm/boot/dts/exynos3250-pinctrl.dtsi
-> +++ b/arch/arm/boot/dts/exynos3250-pinctrl.dtsi
-> @@ -120,6 +120,13 @@
->   		samsung,pin-drv = <0>;
->   	};
->
-> +	uart2_data: uart2-data {
-> +		samsung,pins = "gpa1-0", "gpa1-1";
-> +		samsung,pin-function = <2>;
-> +		samsung,pin-pud = <0>;
-> +		samsung,pin-drv = <0>;
-> +	};
-> +
->   	i2c3_bus: i2c3-bus {
->   		samsung,pins = "gpa1-2", "gpa1-3";
->   		samsung,pin-function = <3>;
-> diff --git a/arch/arm/boot/dts/exynos3250.dtsi b/arch/arm/boot/dts/exynos3250.dtsi
-> index 2db99433e17f..02f3250766c9 100644
-> --- a/arch/arm/boot/dts/exynos3250.dtsi
-> +++ b/arch/arm/boot/dts/exynos3250.dtsi
-> @@ -42,6 +42,7 @@
->   		i2c7 = &i2c_7;
->   		serial0 = &serial_0;
->   		serial1 = &serial_1;
-> +		serial2 = &serial_2;
->   	};
->
->   	cpus {
-> @@ -435,6 +436,17 @@
->   			status = "disabled";
->   		};
->
-> +		serial_2: serial@13820000 {
-> +			compatible = "samsung,exynos4210-uart";
-> +			reg = <0x13820000 0x100>;
-> +			interrupts = <0 111 0>;
-> +			clocks = <&cmu CLK_UART2>, <&cmu CLK_SCLK_UART2>;
-> +			clock-names = "uart", "clk_uart_baud0";
-> +			pinctrl-names = "default";
-> +			pinctrl-0 = <&uart2_data>;
-> +			status = "disabled";
-> +		};
-> +
->   		i2c_0: i2c@13860000 {
->   			#address-cells = <1>;
->   			#size-cells = <0>;
->
+I think the reason this keeps coming up is that people aren't expecting
+writel() to be doing endianness conversion, it's easy to get caught out
+by it.
+
+--jvwwc3lboJHenLjr
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQEcBAEBCAAGBQJV0VViAAoJECTWi3JdVIfQx5QH/jLWJxe/sJWv1Wr/womw+fEJ
+yssGpSdtxY8i7EL5o8PTPGPRk40C3ciLmzqCLjm8O7EmKxh1cRnNmkhaadLbE10I
+xroHJM9jct4t+fnnFVlpp8vL13rP9+i3QKfdxSL1yPYpKQh3cHAB8xbJk6EDRiZY
+KcrbsZ4eSpv7W2fIbfeFulMRrmx3AVNXpwRldMXFia0Cp3UUFnUNPPPPxIrq18b+
+MItZdtJKEMuQl38HRvPr1rckJZ/+WTLv7Gg6xCFIq8DgOI0mbk9z2NtSWLWUDB/y
+tdWVTWEjHtx7CZ1mhm7i7hV1Oa5yqsY+JhBJt3Ix6Ae+LA/0O4HLVSfPpYguJ6s=
+=RpzB
+-----END PGP SIGNATURE-----
+
+--jvwwc3lboJHenLjr--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
