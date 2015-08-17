@@ -1,44 +1,47 @@
-From: David Miller <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>
-Subject: Re: [PATCH 2/5] net: add Hisilicon Network Subsystem hnae
- framework support
-Date: Mon, 17 Aug 2015 12:25:48 -0700 (PDT)
-Message-ID: <20150817.122548.203456335027850542.davem@davemloft.net>
-References: <1439548222-231611-1-git-send-email-liguozhu@hisilicon.com>
-	<1439548222-231611-3-git-send-email-liguozhu@hisilicon.com>
+From: Ezequiel Garcia <ezequiel-30ULvvUtt6G51wMPkGsGjgyUoB5FGQPZ@public.gmane.org>
+Subject: Re: [PATCH v2 1/2] i2c: add i2c-lpc2k driver
+Date: Mon, 17 Aug 2015 17:18:30 -0300
+Message-ID: <20150817201830.GA11033@laptop>
+References: <1439748617-7683-1-git-send-email-manabian@gmail.com>
+ <1439748617-7683-2-git-send-email-manabian@gmail.com>
 Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1439548222-231611-3-git-send-email-liguozhu-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: liguozhu-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, Yisen.Zhuang-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, paul.gortmaker-CWA4WttNNZF54TAoqtyWWQ@public.gmane.org, dingtianhong-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linuxarm-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, salil.mehta-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, huangdaode-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, liguozhu-hv44wF8Li93QT0dZR+AlfA@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1439748617-7683-2-git-send-email-manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Joachim Eastwood <manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ariel-30ULvvUtt6G51wMPkGsGjgyUoB5FGQPZ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: Kenneth Lee <liguozhu-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
-Date: Fri, 14 Aug 2015 18:30:19 +0800
-
-> diff --git a/drivers/net/ethernet/hisilicon/hns/hnae.c b/drivers/net/ethernet/hisilicon/hns/hnae.c
-> new file mode 100644
-> index 0000000..fd09768
-> --- /dev/null
-> +++ b/drivers/net/ethernet/hisilicon/hns/hnae.c
- ...
-> +static inline void hnae_list_add(spinlock_t *lock, struct list_head *node,
-> +				 struct list_head *head)
-> +{
-> +	unsigned long flags;
+On 16 Aug 08:10 PM, Joachim Eastwood wrote:
+[..]
 > +
-> +	spin_lock_irqsave(lock, flags);
-> +	list_add_tail_rcu(node, head);
-> +	spin_unlock_irqrestore(lock, flags);
-> +}
+> +static int i2c_lpc2k_clear_arb(struct lpc2k_i2c *i2c)
+> +{
+> +	unsigned long timeout = jiffies + msecs_to_jiffies(1000);
+> +
+> +	/*
+> +	 * If the transfer needs to abort for some reason, we'll try to
+> +	 * force a stop condition to clear any pending bus conditions
+> +	 */
+> +	writel(LPC24XX_STO, i2c->base + LPC24XX_I2CONSET);
+> +
+> +	/* Wait for status change */
+> +	while (readl(i2c->base + LPC24XX_I2STAT) != M_I2C_IDLE) {
+> +		if (time_after(jiffies, timeout)) {
+> +			/* Bus was not idle, try to reset adapter */
+> +			i2c_lpc2k_reset(i2c);
+> +			return -EBUSY;
+> +		}
+> +
+> +		cpu_relax();
+> +	}
 
-Do not declare functions 'inline' in foo.c files, let the compiler decide
-on it's own.
+I believe you can use readl_{relaxed}_poll_timeout_{atomic} here.
 
-This applies to your entire patch series.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Ccing Ariel, maybe he can help with a test.
+
+-- 
+Ezequiel Garcia, VanguardiaSur
+www.vanguardiasur.com.ar
