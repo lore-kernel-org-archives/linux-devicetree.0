@@ -1,324 +1,91 @@
-From: Mathieu Olivari <mathieu@codeaurora.org>
-Subject: Re: [PATCH 3/3] mtd: add SMEM parser for QCOM platforms
-Date: Mon, 17 Aug 2015 14:24:52 -0700
-Message-ID: <20150817212452.GA3816@codeaurora.org>
-References: <1439599573-3932-1-git-send-email-mathieu@codeaurora.org>
- <1439599573-3932-4-git-send-email-mathieu@codeaurora.org>
- <20150815054817.GM13472@usrtlx11787.corpusers.net>
+From: Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Subject: Re: [RFC PATCH v1] mmc: sdhci-of-arasan: Add the support for
+ sdhci-5.1
+Date: Tue, 18 Aug 2015 07:40:47 +0800
+Message-ID: <55D270FF.5030309@rock-chips.com>
+References: <1439279190-9556-1-git-send-email-shawn.lin@rock-chips.com>
+ <55CA0C6F.7000002@xilinx.com> <55CAD499.5070701@xilinx.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20150815054817.GM13472@usrtlx11787.corpusers.net>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Bjorn Andersson <bjorn.andersson@sonymobile.com>
-Cc: "robh+dt@kernel.org" <robh+dt@kernel.org>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "galak@codeaurora.org" <galak@codeaurora.org>, "linux@arm.linux.org.uk" <linux@arm.linux.org.uk>, "dwmw2@infradead.org" <dwmw2@infradead.org>, "computersforpeace@gmail.com" <computersforpeace@gmail.com>, "agross@codeaurora.org" <agross@codeaurora.org>, "sboyd@codeaurora.org" <sboyd@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <55CAD499.5070701-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Aug 14, 2015 at 10:48:17PM -0700, Bjorn Andersson wrote:
-> On Fri 14 Aug 17:46 PDT 2015, Mathieu Olivari wrote:
-> 
-> > On QCOM platforms using MTD devices storage (such as IPQ806x), SMEM is
-> > used to store partition layout. This new parser can now be used to read
-> > SMEM and use it to register an MTD layout according to its content.
-> > 
-> 
-> Nice to see another user of the smem code :)
-> 
-> > diff --git a/drivers/mtd/qcom_smem_part.c b/drivers/mtd/qcom_smem_part.c
-> [..]
-> > +
-> > +/* Processor/host identifier for the application processor */
-> > +#define SMEM_HOST_APPS			0
-> 
-> This makes me wonder if there will ever be an apps partition. I would
-> have picked QCOM_SMEM_HOST_ANY, but I don't know what future platforms
-> might hold for us.
-> 
-> 
-> And as a side note, I think I will propose that we rename that define
-> QCOM_SMEM_GLOBAL.
-OK; I'll rename it in QCOM_SMEM_GLOBAL then to be in sync.
-> 
-> > +
-> > +/* SMEM items index */
-> > +#define SMEM_AARM_PARTITION_TABLE	9
-> > +#define SMEM_BOOT_FLASH_TYPE		421
-> > +#define SMEM_BOOT_FLASH_BLOCK_SIZE	424
-> > +
-> > +/* SMEM Flash types */
-> > +#define SMEM_FLASH_NAND			2
-> > +#define SMEM_FLASH_SPI			6
-> > +
-> > +#define SMEM_PART_NAME_SZ		16
-> > +#define SMEM_PARTS_MAX			32
-> > +
-> > +struct smem_partition {
-> > +	char name[SMEM_PART_NAME_SZ];
-> > +	__le32 start;
-> > +	__le32 size;
-> > +	__le32 attr;
-> > +};
-> > +
-> > +struct smem_partition_table {
-> > +	u8 magic[8];
-> > +	__le32 version;
-> > +	__le32 len;
-> > +	struct smem_partition parts[SMEM_PARTS_MAX];
-> > +};
-> > +
-> > +/* SMEM Magic values in partition table */
-> > +static const u8 SMEM_PTABLE_MAGIC[] = {
-> > +	0xaa, 0x73, 0xee, 0x55,
-> > +	0xdb, 0xbd, 0x5e, 0xe3,
-> > +};
-> > +
-> > +static int qcom_smem_get_flash_blksz(u64 **smem_blksz)
-> 
-> Instead of passing pointers around I think you should just make this
-> function return < 0 for errors and >= 0 for the requested data. You can
-> probably still have it as an int, as the current values are well below
-> the size of the int.
-Good point. Thanks. I'll report it.
-> 
-> > +{
-> > +	int ret;
-> > +	size_t size;
-> > +
-> > +	ret = qcom_smem_get(SMEM_HOST_APPS, SMEM_BOOT_FLASH_BLOCK_SIZE,
-> > +			    (void **) smem_blksz, &size);
-> > +
-> > +	if (ret < 0) {
-> > +		pr_err("Unable to read flash blksz from SMEM\n");
-> > +		return -ENOENT;
-> > +	}
-> > +
-> > +	if (size != sizeof(**smem_blksz)) {
-> > +		pr_err("Invalid flash blksz size in SMEM\n");
-> > +		return -EINVAL;
-> > +	}
-> > +
-> > +	return 0;
-> > +}
-> > +
-> > +static int qcom_smem_get_flash_type(u64 **smem_flash_type)
-> 
-> Same as above.
-OK.
-> 
-> > +{
-> > +	int ret;
-> > +	size_t size;
-> > +
-> > +	ret = qcom_smem_get(SMEM_HOST_APPS, SMEM_BOOT_FLASH_TYPE,
-> > +			    (void **) smem_flash_type, &size);
-> > +
-> > +	if (ret < 0) {
-> > +		pr_err("Unable to read flash type from SMEM\n");
-> > +		return -ENOENT;
-> > +	}
-> > +
-> > +	if (size != sizeof(**smem_flash_type)) {
-> > +		pr_err("Invalid flash type size in SMEM\n");
-> > +		return -EINVAL;
-> > +	}
-> > +
-> > +	return 0;
-> > +}
-> > +
-> > +static int qcom_smem_get_flash_partitions(struct smem_partition_table **pparts)
-> > +{
-> > +	int ret;
-> > +	size_t size;
-> > +
-> > +	ret = qcom_smem_get(SMEM_HOST_APPS, SMEM_AARM_PARTITION_TABLE,
-> > +			    (void **) pparts, &size);
-> > +
-> 
-> If you don't care about the size just pass NULL as the last argument.
-OK.
-> 
-> > +	if (ret < 0) {
-> > +		pr_err("Unable to read partition table from SMEM\n");
-> > +		return -ENOENT;
-> > +	}
-> 
-> I think it would be cleaner if you had this function check the magic and
-> version and then return the partition pointer. That is:
-> 
-> static smem_partition *qcom_smem_get_flash_partitions(size_t *count)
-> 
-> 
-> And make *count = le32_to_cpu(table->len); so you don't have to care
-> about that below.
-> 
-> (And use NULL or ERR_PTR for the error paths)
-Same; good idea. I'll make the mod.
-> 
-> > +
-> > +	return 0;
-> > +}
-> > +
-> > +static int of_dev_node_match(struct device *dev, void *data)
-> > +{
-> > +	return dev->of_node == data;
-> > +}
-> > +
-> > +static bool is_spi_device(struct device_node *np)
-> > +{
-> > +	struct device *dev;
-> > +
-> > +	dev = bus_find_device(&spi_bus_type, NULL, np, of_dev_node_match);
-> > +	if (!dev)
-> > +		return false;
-> > +
-> > +	put_device(dev);
-> > +	return true;
-> > +}
-> > +
-> > +static int parse_qcom_smem_partitions(struct mtd_info *master,
-> > +				      struct mtd_partition **pparts,
-> > +				      struct mtd_part_parser_data *data)
-> > +{
-> > +	struct smem_partition_table *smem_parts;
-> > +	u64 *smem_flash_type, *smem_blksz;
-> > +	struct mtd_partition *mtd_parts;
-> > +	struct device_node *of_node = data->of_node;
-> > +	int i, ret;
-> > +
-> > +	/*
-> > +	 * SMEM will only store the partition table of the boot device.
-> > +	 * If this is not the boot device, do not return any partition.
-> > +	 */
-> 
-> I guess this is the result of below checks, but it's not describing
-> what's actually done here. I think it should say "only parse
-> partitions on the specified memory type" or something like that.
-OK.
-> 
-> > +	ret = qcom_smem_get_flash_type(&smem_flash_type);
-> > +	if (ret < 0)
-> > +		return ret;
-> > +
-> > +	if ((*smem_flash_type == SMEM_FLASH_NAND && !mtd_type_is_nand(master))
-> > +	    || (*smem_flash_type == SMEM_FLASH_SPI && !is_spi_device(of_node)))
-> > +		return 0;
-> > +
-> > +	/*
-> > +	 * Just for sanity purpose, make sure the block size in SMEM matches the
-> > +	 * block size of the MTD device
-> > +	 */
-> 
-> Well, this is not only for sanity purpose, as you multiply all sizes
-> with this number below...
-I'll update the comment.
-> 
-> > +	ret = qcom_smem_get_flash_blksz(&smem_blksz);
-> > +	if (ret < 0)
-> > +		return ret;
-> > +
-> > +	if (*smem_blksz != master->erasesize) {
-> > +		pr_err("SMEM block size differs from MTD block size\n");
-> > +		return -EINVAL;
-> > +	}
-> > +
-> > +	/* Get partition pointer from SMEM */
-> > +	ret = qcom_smem_get_flash_partitions(&smem_parts);
-> > +	if (ret < 0)
-> > +		return ret;
-> > +
-> > +	if (memcmp(SMEM_PTABLE_MAGIC, smem_parts->magic,
-> > +		   sizeof(SMEM_PTABLE_MAGIC))) {
-> > +		pr_err("SMEM partition magic invalid\n");
-> > +		return -EINVAL;
-> > +	}
-> > +
-> > +	/* Allocate and populate the mtd structures */
-> > +	mtd_parts = kcalloc(le32_to_cpu(smem_parts->len), sizeof(*mtd_parts),
-> > +			    GFP_KERNEL);
-> > +	if (!mtd_parts)
-> > +		return -ENOMEM;
-> > +
-> > +	for (i = 0; i < smem_parts->len; i++) {
-> 
-> This might have the wrong endian...
-Right. I'll do a le32_to_cpu()
-> 
-> > +		struct smem_partition *s_part = &smem_parts->parts[i];
-> > +		struct mtd_partition *m_part = &mtd_parts[i];
-> 
-> I think Stephens suggestion was that you assign *pparts before looping
-> and then you simply do:
-> 
-> *pparts = mtd_parts;
-> 
-> while (len--) {
-> 	..
-> 
-> 	s_part++;
-> 	mtd_parts++;
-> }
-> 
-> > +
-> > +		m_part->name = s_part->name;
-> 
-> I tried to follow the mtd code, and I believe that this pointer might
-> be freed in free_partition(). If so you must kstrdup it here.
-OK.
-> 
-> > +		m_part->size = le32_to_cpu(s_part->size) * (*smem_blksz);
-> > +		m_part->offset = le32_to_cpu(s_part->start) * (*smem_blksz);
-> > +
-> > +		/*
-> > +		 * The last SMEM partition may have its size marked as
-> > +		 * something like 0xffffffff, which means "until the end of the
-> > +		 * flash device". In this case, truncate it.
-> > +		 */
-> > +		if (m_part->offset + m_part->size > master->size)
-> > +			m_part->size = master->size - m_part->offset;
-> > +	}
-> > +
-> > +	*pparts = mtd_parts;
-> > +
-> > +	return smem_parts->len;
-> 
-> Again, this might be in the wrong endian.
-Yes.
-> 
-> > +}
-> > +
-> > +static struct mtd_part_parser qcom_smem_parser = {
-> > +	.owner = THIS_MODULE,
-> > +	.parse_fn = parse_qcom_smem_partitions,
-> > +	.name = "qcom-smem",
-> > +};
-> > +
-> > +static int __init qcom_smem_parser_init(void)
-> > +{
-> > +	register_mtd_parser(&qcom_smem_parser);
-> > +	return 0;
-> > +}
-> > +
-> > +static void __exit qcom_smem_parser_exit(void)
-> > +{
-> > +	deregister_mtd_parser(&qcom_smem_parser);
-> > +}
-> > +
-> > +module_init(qcom_smem_parser_init);
-> > +module_exit(qcom_smem_parser_exit);
-> 
-> Mostly unrelated to this patch; This makes me appreciate the
-> module_platform_driver() macro, would be nice to see a patch that
-> introduces something similar for partition parsers.
-> 
-> > +
-> > +MODULE_LICENSE("GPL");
-> 
-> Are you sure you don't mean "GPL v2" here?
-I'll update it.
-> 
-> > +MODULE_AUTHOR("Mathieu Olivari <mathieu@codeaurora.org>");
-> > +MODULE_DESCRIPTION("Parsing code for SMEM based partition tables");
-> 
-> Regards,
-> Bjorn
+Hi Ulf,
+
+On 2015/8/12 13:07, Michal Simek wrote:
+> +linux-mmc
+>
+> On 08/11/2015 04:53 PM, Michal Simek wrote:
+>> On 08/11/2015 09:46 AM, Shawn Lin wrote:
+>>> This patch adds the compatible string in sdhci-of-arasan.c to
+>>> support sdhci-arasan5.1 version of controller. No documented
+>>> controller IP version is found in the TRM, so we use ths version
+>>> of command queueing engine integrated into this controller by arasan
+>>> to specify our controller.
+>>>
+>>> Signed-off-by: Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+>>>
+>>> ---
+>>>
+>>> Changes in v1:
+>>> - Remove redundant SDHCI_QUIRK_CAP_CLOCK_BASE_BROKEN for "arasan, sdhci-5.1" since
+>>>    SDHCI will check "host->max_clk == 0" and let driver get it from host->ops->get_max_clock.
+>>>
+>>>   Documentation/devicetree/bindings/mmc/arasan,sdhci.txt | 2 +-
+>>>   drivers/mmc/host/sdhci-of-arasan.c                     | 1 +
+>>>   2 files changed, 2 insertions(+), 1 deletion(-)
+>>>
+>>> diff --git a/Documentation/devicetree/bindings/mmc/arasan,sdhci.txt b/Documentation/devicetree/bindings/mmc/arasan,sdhci.txt
+>>> index 7e94903..da541c3 100644
+>>> --- a/Documentation/devicetree/bindings/mmc/arasan,sdhci.txt
+>>> +++ b/Documentation/devicetree/bindings/mmc/arasan,sdhci.txt
+>>> @@ -9,7 +9,7 @@ Device Tree Bindings for the Arasan SDHCI Controller
+>>>
+>>>   Required Properties:
+>>>     - compatible: Compatibility string. Must be 'arasan,sdhci-8.9a' or
+>>> -                'arasan,sdhci-4.9a'
+>>> +                'arasan,sdhci-4.9a' or 'arasan,sdhci-5.1'
+>>>     - reg: From mmc bindings: Register location and length.
+>>>     - clocks: From clock bindings: Handles to clock inputs.
+>>>     - clock-names: From clock bindings: Tuple including "clk_xin" and "clk_ahb"
+>>> diff --git a/drivers/mmc/host/sdhci-of-arasan.c b/drivers/mmc/host/sdhci-of-arasan.c
+>>> index ef5a7d2..75379cb 100644
+>>> --- a/drivers/mmc/host/sdhci-of-arasan.c
+>>> +++ b/drivers/mmc/host/sdhci-of-arasan.c
+>>> @@ -217,6 +217,7 @@ static int sdhci_arasan_remove(struct platform_device *pdev)
+>>>
+>>>   static const struct of_device_id sdhci_arasan_of_match[] = {
+>>>   	{ .compatible = "arasan,sdhci-8.9a" },
+>>> +	{ .compatible = "arasan,sdhci-5.1" },
+>>>   	{ .compatible = "arasan,sdhci-4.9a" },
+>>>   	{ }
+>>>   };
+>>>
+>>
+>> Acked-by: Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+
+Could you pull this patch into your repository?
+
+>>
+>> Thanks,
+>> Michal
+>>
+>>
+>
+>
+>
+>
+
+
+-- 
+Shawn Lin
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
