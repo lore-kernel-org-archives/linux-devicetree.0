@@ -1,169 +1,92 @@
-From: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH] [PATCH v4] mtd:spi-nor: Add Altera Quad SPI Driver
-Date: Mon, 17 Aug 2015 09:03:38 -0700
-Message-ID: <20150817160338.GN60523@google.com>
-References: <1433316644-3748-1-git-send-email-vndao@altera.com>
- <20150724183749.GI8876@google.com>
- <CAN1oZWx1z0vq_8csMx3bs70ULfhR03CgX=NtTBj1HiLA8FdZjg@mail.gmail.com>
+From: Tomi Valkeinen <tomi.valkeinen@ti.com>
+Subject: Re: [PATCH RESEND v6 0/2] Driver for TI tlc591xx 8/16 Channel i2c
+ LED driver
+Date: Mon, 17 Aug 2015 19:40:54 +0300
+Message-ID: <55D20E96.3020504@ti.com>
+References: <1426630107-25057-1-git-send-email-andrew@lunn.ch> <55D1CF84.8040906@ti.com> <20150817132718.GF7537@lunn.ch> <55D1EBA8.9090609@ti.com> <20150817142147.GG7537@lunn.ch>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <CAN1oZWx1z0vq_8csMx3bs70ULfhR03CgX=NtTBj1HiLA8FdZjg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Viet Nga Dao <vndao-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>
-Cc: David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, "linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, =?utf-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature";
+	boundary="5EHeSCXM8kkHVkAhKBtbMNcpvJhGwndmT"
+Return-path: <linux-leds-owner@vger.kernel.org>
+In-Reply-To: <20150817142147.GG7537@lunn.ch>
+Sender: linux-leds-owner@vger.kernel.org
+To: Andrew Lunn <andrew@lunn.ch>
+Cc: cooloney@gmail.com, rpurdie@rpsys.net, linux-leds@vger.kernel.org, devicetree@vger.kernel.org, Matthew.Fatheree@belkin.com, "R, Vignesh" <vigneshr@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jul 27, 2015 at 03:10:23PM +0800, Viet Nga Dao wrote:
-> On Sat, Jul 25, 2015 at 2:37 AM, Brian Norris
-> <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> > On Wed, Jun 03, 2015 at 12:30:44AM -0700, vndao-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org wrote:
-> >> From: VIET NGA DAO <vndao-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>
-> >>
-> >> Altera Quad SPI Controller is a soft IP which enables access to
-> >> Altera EPCS, EPCQ and Mircon flash chips. This patch adds driver
-> >> for these devices.
-> >>
-> >> Signed-off-by: VIET NGA DAO <vndao-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>
-> >>
-> >> ---
-> >> v4:
-> >> - Add more flash devices support ( EPCQL and Micron)
-> >
-> > ^^ Unfortunately, I think you've added yourself another burden with this
-> > one. Most of the rest actually is looking pretty good, so it's sad to
-> > see this hold your driver back. Comments below.
+--5EHeSCXM8kkHVkAhKBtbMNcpvJhGwndmT
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: quoted-printable
 
-FWIW, this comment still stands. I cannot take your patch as-is.
 
-> >> - Remove redundant messages
-> >> - Change EPCQ_OPCODE_ID to NON_EPCS_OPCODE_ID
-> >> - Replace get_flash_name to altera_quadspi_scan
-> >> - Remove clk related parts
-> >> - Remove altera_quadspi_plat
-> >> - Change device tree reg name and remove opcode-id
-> >>
-> >> v3:
-> >> - Change altera_epcq driver name to altera_quadspi for more generic name
-> >> - Implement flash name searching in altera_quadspi.c instead of spi-nor
-> >> - Edit the altra quadspi info table in spi-nor
-> >> - Remove wait_til_ready in all read,write, erase, lock, unlock functions
-> >> - Merge .h and .c into 1 file
-> >>
-> >> v2:
-> >> - Change to spi_nor structure
-> >> - Add lock and unlock functions for spi_nor
-> >> - Simplify the altera_epcq_lock function
-> >> - Replace reg by compatible in device tree
-> >> ---
-> >>  .../devicetree/bindings/mtd/altera-quadspi.txt     |   49 ++
-> >>  drivers/mtd/spi-nor/Kconfig                        |    8 +
-> >>  drivers/mtd/spi-nor/Makefile                       |    1 +
-> >>  drivers/mtd/spi-nor/altera-quadspi.c               |  568 ++++++++++++++++++++
-> >>  drivers/mtd/spi-nor/spi-nor.c                      |   30 +
-> >>  5 files changed, 656 insertions(+), 0 deletions(-)
-> >>  create mode 100644 Documentation/devicetree/bindings/mtd/altera-quadspi.txt
-> >>  create mode 100644 drivers/mtd/spi-nor/altera-quadspi.c
-> >>
-> >> diff --git a/Documentation/devicetree/bindings/mtd/altera-quadspi.txt b/Documentation/devicetree/bindings/mtd/altera-quadspi.txt
-> >> new file mode 100644
-> >> index 0000000..2873319
-> >> --- /dev/null
-> >> +++ b/Documentation/devicetree/bindings/mtd/altera-quadspi.txt
-> >> @@ -0,0 +1,49 @@
-> >> +* MTD Altera QUADSPI driver
-> >> +
-> >> +Required properties:
-> >> +- compatible: Should be "altr,quadspi-1.0"
-> >> +- reg: Address and length of the register set  for the device. It contains
-> >> +  the information of registers in the same order as described by reg-names
-> >> +- reg-names: Should contain the reg names
-> >> +  "avl_csr": Should contain the register configuration base address
-> >> +  "avl_mem": Should contain the data base address
-> >> +- #address-cells: Must be <1>.
-> >> +- #size-cells: Must be <0>.
-> >> +- flash device tree subnode, there must be a node with the following fields:
-> >> +     - compatible: Should contain the flash name:
-> >> +       1. EPCS:   epcs16, epcs64, epcs128
-> >> +       2. EPCQ:   epcq16, epcq32, epcq64, epcq128, epcq256, epcq512, epcq1024
-> >> +       3. EPCQ-L: epcql256, epcql512, epcql1024
-> >> +       4. Mircon: n25q016-nonjedec, n25q032-nonjedec, n25q064-nonjedec,
-> >> +                  n25q128a13-nonjedec, n25q128a11-nonjedec, n25q256a-nonjedec,
-> >> +                  n25q256a11-nonjedec, n25q512a-nonjedec, n25q512ax3-nonjedec,
-> >> +                  mt25ql512-nonjedec, n25q00-nonjedec, n25q00a11-nonjedec
-> >
-> > OK, so you're adding a bunch of Micron flashes which already have
-> > support via standard DT bindings and spi-nor library code, except now
-> > you're adding "-nonjedec" to all of them. You better have a *really*
-> > good reason for this. Are these flash not compatible with the JEDEC READ
-> > ID opcode, by which every other system identifies these parts? Or are
-> > you adding these names because of limitations in your controller? For
-> > the former, I might be able to understand the need, but for the latter,
-> > I'm much disinclined to support this. There's got to be a better way.
-> >
-> 
-> Hi Brian,
-> It is really unfortunate that this controller is not able to read full
-> JEDEC ID. It only can provide 1 byte ID. I did discuss with IP
-> designer about this, but it is really unfortunate that they are not
-> able to fix that issue. Hence it requires software to make changes.
+On 17/08/15 17:21, Andrew Lunn wrote:
 
-Wow, what a joke. (Please quote me to your IP "designer.")
+>>> If you think your PWM code is so much better, please submit a revert
+>>> patch plus your PWM LED driver. We can find somebody to do a side by
+>>> side review.
+>>
+>> It's not about the driver code. That can be cleaned up if needed. The
+>> question is whether the driver should be a PWM driver or a LED driver.=
 
-In any case, there's no way I'm going to support a ton of new
-"*-nonjedec" strings just to support your completely broken controller.
-These aren't actually "nonjedec" flash devices, and AFAICT, there's
-absolutely nothing wrong with the flash that requires this description.
-It's purely your controller's fault.
+>=20
+> There i disagree. It is all about the code. Release early, release
+> often.  Show us the code. Get it discussed, reviewed, tested, and then
+> ultimately merged.
+>=20
+> You keep saying PWM is the way to solve this problem, but where is
+> your code showing your solution is superior to mine, yet still solves
+> my use case?
 
-Thus, I'm not changing the DT binding for all the flash you want to use.
+No, I have not said PWM is the way to solve this problem. I have said it
+sounds to me that a PWM driver better matches the HW and our use case. I
+have asked you if PWM + pwd-leds would solve your use case as well as a
+led driver.
 
-Instead, I think we need to assume that your controller is completely
-incapable of identifying the flash that's attached to it, and instead
-just rely on specifying this entirely in the device tree. Then, we need
-a flag for your driver to notify spi-nor.c that it can't trust the READ
-ID command at all, and it must instead rely strictly on flash string
-matching. e.g. something like:
+If you don't have an answer, it's fine to say "I don't know". But you
+have just ignored the question. And even worse, you dropped me (and
+Vignesh) from the latest mail thread.
 
-	ret = of_modalias_node(np, name, sizeof(name)); /* e.g., name = "n25q016" */
-	if (ret < 0)
-		return ret;
-	nor->controller_flags |= SPI_NOR_MY_CONTROLLER_SUCKS_AND_CANT_DO_READID;
-	ret = spi_nor_scan(nor, name, mode);
+We have a pwm driver for the chip, but it only supports TLC59108. It
+should be trivial to extend it to support TLC59116, but it's pointless
+to spend time on that if a PWM driver doesn't handle your use cases.
 
-along with something like this in spi-nor.c:
+> So please stop talking and show us the code.
 
-diff --git a/drivers/mtd/spi-nor/spi-nor.c b/drivers/mtd/spi-nor/spi-nor.c
-index 47df4b5eae2f..04d3aa7ec641 100644
---- a/drivers/mtd/spi-nor/spi-nor.c
-+++ b/drivers/mtd/spi-nor/spi-nor.c
-@@ -709,6 +709,11 @@ static const struct spi_device_id *spi_nor_read_id(struct spi_nor *nor)
- 	u8			id[SPI_NOR_MAX_ID_LEN];
- 	struct flash_info	*info;
- 
-+	if (nor->my_foo_flags & SPI_NOR_MY_CONTROLLER_SUCKS_AND_CANT_DO_READID) {
-+		dev_err(nor->dev, "READ ID not supported\n");
-+		return ERR_PTR(-EOPNOTSUPP);
-+	}
-+
- 	tmp = nor->read_reg(nor, SPINOR_OP_RDID, id, SPI_NOR_MAX_ID_LEN);
- 	if (tmp < 0) {
- 		dev_dbg(nor->dev, " error %d reading JEDEC ID\n", tmp);
-@@ -1018,6 +1023,10 @@ int spi_nor_scan(struct spi_nor *nor, const char *name, enum read_mode mode)
- 
- 	if (name)
- 		id = spi_nor_match_id(name);
-+	if (!id && (nor->my_foo_flags & SPI_NOR_MY_CONTROLLER_SUCKS_AND_CANT_DO_READID)) {
-+		dev_err(dev, "no matching device found, and your controller sucks\n");
-+		return -ENODEV;
-+	}
- 	/* Try to auto-detect if chip name wasn't specified or not found */
- 	if (!id)
- 		id = spi_nor_read_id(nor);
+TLC591xx is quite simple HW, and the code doing the HW programming
+should be identical for a pwm and for a led driver. I don't see either a
+pwm or a led driver being somehow superior. They are very similar simple
+drivers, implementing a different interface. Whether the interface works
+for you should be clear from the interface itself. The code is just detai=
+ls.
 
-Brian
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+On the other hand, if you want something you can use to test, it's a
+different case, but you haven't indicated any interest in that.
+
+ Tomi
+
+
+--5EHeSCXM8kkHVkAhKBtbMNcpvJhGwndmT
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQIcBAEBCAAGBQJV0g6WAAoJEPo9qoy8lh71TusP/27pz3ICSgSRCjOq0+LTqk97
+XckWauNrkTHnw0Exf8I+Y52XildtiTBmp8gc6JyrYU31mm3fPSpRfnd40GiJHLci
+hPytQRRoFYRyNZ7/lEwGhZOCh8vVYRaW4bHeKja48Ue5HKyuZ/++6a6wGzPZOaYU
+MXxUc6Msyvb29mdFI+eQSzLz4nK4IW7bUvcNpMC7Dha/5oEaFt32GJq9FKKzmqBM
+i0Xt6/mN/zLt5II/uKqYmIs/ZBSA+5SYWPNhfWjAUxuhvpCPNwZaYsVqCpDWbrjS
+tWpjHnBMcLePInLLwXXOzkFc1fKbTGtklFsSfVgrYQcvUq3tYaCA+wOb+K63+dCg
+dUQegc8PNreabft9xX8rHZKu4kIHN7Mo2/qRP7/fymF6huDKg5UVqblhB5uB6+7o
+KjhyEUbwFvxfIHXoAOchbFO4PPaPZ9bgytuz52AWj19MrH0MyaVz//ICRRKaHxAA
+2C7r0GRtp7quvpzrgMz4/Se88JzPDY7DLtb0iXU8Hqm+7Hs+O0S3yOgmASJK4sLi
+x79JiPs0s2HIgazaGeDMwx1voom1AvPKKVzYqefFWDFUsoqZSgf+fizwp/6dOz2L
+3DCC6pVojSPdxHuIvlwkcDeeuYSQIqiRiUWo5hDHaZf8cYI0zEJdRTTLiApk/mOn
+/sPb6HmjnHl/lgvn3nMJ
+=IU5w
+-----END PGP SIGNATURE-----
+
+--5EHeSCXM8kkHVkAhKBtbMNcpvJhGwndmT--
