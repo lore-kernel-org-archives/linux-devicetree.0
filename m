@@ -1,114 +1,184 @@
-From: Jyri Sarha <jsarha@ti.com>
-Subject: Re: [PATCH RFC v3 6/7] drm/i2c: tda998x: Register ASoC
- HDMI codec for audio functionality
-Date: Mon, 17 Aug 2015 10:25:23 +0300
-Message-ID: <55D18C63.1010401@ti.com>
-References: <cover.1439542916.git.jsarha@ti.com>
- <1e8e3215caa932dab68de8576aee81f5e1008163.1439542916.git.jsarha@ti.com>
- <20150814100616.GH7576@n2100.arm.linux.org.uk>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH v7 4/5] clk: Provide critical clock support
+Date: Mon, 17 Aug 2015 08:42:44 +0100
+Message-ID: <20150817074244.GA3239@x1>
+References: <1437570255-21049-1-git-send-email-lee.jones@linaro.org>
+ <1437570255-21049-5-git-send-email-lee.jones@linaro.org>
+ <CAGsJ_4zKn-o4ZxZ0-xzCStvuTkdC5xqD9FneWna-0dNVgp=1DQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <20150814100616.GH7576@n2100.arm.linux.org.uk>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Russell King - ARM Linux <linux@arm.linux.org.uk>
-Cc: devicetree@vger.kernel.org, alsa-devel@alsa-project.org, peter.ujfalusi@ti.com, moinejf@free.fr, airlied@linux.ie, tomi.valkeinen@ti.com, dri-devel@lists.freedesktop.org, liam.r.girdwood@linux.intel.com, tony@atomide.com, broonie@kernel.org, bcousson@baylibre.com, linux-omap@vger.kernel.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAGsJ_4zKn-o4ZxZ0-xzCStvuTkdC5xqD9FneWna-0dNVgp=1DQ@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Barry Song <21cnbao@gmail.com>
+Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, LKML <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Mike Turquette <mturquette@linaro.org>, kernel@stlinux.com, Sascha Hauer <s.hauer@pengutronix.de>, Stephen Boyd <sboyd@codeaurora.org>, Geert Uytterhoeven <geert@linux-m68k.org>, Maxime Ripard <maxime.ripard@free-electrons.com>
 List-Id: devicetree@vger.kernel.org
 
-On 08/14/15 13:06, Russell King - ARM Linux wrote:
-> On Fri, Aug 14, 2015 at 12:30:44PM +0300, Jyri Sarha wrote:
->> +static int tda998x_write_aif(struct tda998x_priv *priv,
->> +			     struct hdmi_audio_infoframe *cea)
->> +{
->> +	uint8_t buf[HDMI_INFOFRAME_SIZE(AUDIO)];
->> +	int len;
->> +
->> +	len = hdmi_audio_infoframe_pack(cea, buf, sizeof(buf));
->> +	if (len < 0) {
->> +		dev_err(&priv->hdmi->dev,
->> +			"Failed to pack audio infoframe: %d\n", len);
->> +		return len;
->> +	}
->> +
->> +	/* Write the audio information packet */
->> +	tda998x_write_if(priv, DIP_IF_FLAGS_IF4, REG_IF4_HB0, buf, len);
->> +	return 0;
->> +}
->> +
->
-> I have such a function already queued up, but I can't push it out at the
-> moment because of too many conflicts across all my DRM work.  I'm waiting
-> for after 4.3-rc1 before publishing anything from or accepting anything
-> else into DRM branches.
->
+On Mon, 17 Aug 2015, Barry Song wrote:
 
-Ok, is the code available some where? Could take a look so I can align 
-my code to that.
+> 2015-07-22 21:04 GMT+08:00 Lee Jones <lee.jones@linaro.org>:
+> > Lots of platforms contain clocks which if turned off would prove fa=
+tal.
+> > The only way to recover from these catastrophic failures is to rest=
+art
+> > the board(s).  Now, when a clock provider is registered with the
+> > framework it is possible for a list of critical clocks to be suppli=
+ed
+> > which must be kept ungated.  Each clock mentioned in the newly
+> > introduced 'critical-clock' property will be clk_prepare_enable()d
+> > where the normal references will be taken.  This will prevent the
+> > common clk framework from attempting to gate them during the normal
+> > clk_disable_unused() and disable_clock() procedures.
+> >
+> > Note that it will still be possible for knowledgeable drivers to tu=
+rn
+> > these clocks off using clk_{enable,disable}_critical() calls.
+> >
+> > Signed-off-by: Lee Jones <lee.jones@linaro.org>
+>=20
+> hi Lee,
+> i have another email about this. i am wondering whether
+> CLK_IGNORE_UNUSE is still useful after your patch. another solution
+> for your patch might be extending the current CLK_IGNORE_UNUSE to
+> runtime?
+>=20
+>=20
+> copy the mail here:
+> currently we can set a CLK_IGNORE_UNUSE flag to  a clock to stop
+> clk_disable_unused()  from disabling it at the boot stage:
+>=20
+> static void clk_disable_unused_subtree(struct clk_core *core)
+> {
+> ...
+>=20
+> if (core->flags & CLK_IGNORE_UNUSED)
+> goto unlock_out;
+> }
+>=20
+> static int clk_disable_unused(void)
+> {
+> ...
+>=20
+> clk_unprepare_unused_subtree(core);
+> ...
+>  return 0;
+> }
+>=20
+> late_initcall_sync(clk_disable_unused);
+>=20
+> so if there are two clocks A and B, A is the parent of B, and A is
+> marked as CLK_IGNORE_UNUSED.
+>=20
+> in boot stage if there is nobody using A and B, Linux will disable B
+> due to clk_disable_unused() , but keep A being enabled since A has
+> CLK_IGNORE_UNUSED.
+>=20
+> but in Linux runtime, we might frequently disable /enable B in runtim=
+e
+> power management, this will cause A disabled since Linux will not
+> check CLK_IGNORE_UNUSED for runtime disabling clk .
+>=20
+>  so this makes CLK_IGNORE_UNUSE only work if we don't disable its
+> sub-clock at runtime. this looks making no sense.
+>=20
+>  i am thinking whether we should do some changes to make it have side
+> affect for runtime clk disable. otherwise, why do we want to stop it
+> from being disabled during boot stage?
 
->>   static void
->>   tda998x_write_avi(struct tda998x_priv *priv, struct drm_display_mode *mode)
->>   {
->> @@ -670,19 +691,24 @@ static void tda998x_audio_mute(struct tda998x_priv *priv, bool on)
->>   	}
->>   }
->>
->> -static void
->> +static int
->>   tda998x_configure_audio(struct tda998x_priv *priv,
->> -		struct drm_display_mode *mode, struct tda998x_encoder_params *p)
->> +			int mode_clock,
->> +			int ena_ap,
->> +			int dai_format,
->> +			int sample_width,
->> +			int sample_rate,
->> +			const u8 *status)
->
-> I don't think this is an improvement.
->
+This is one of this problems, along with some others that this set
+aims to solve.
 
-Still it makes the function more generic and enables its usage in 
-HDMI-codec API implementation. I'll try to make it look tidier.
+Extending CLK_IGNORE_UNUSED is not a good idea.  In fact, if we can
+phase it out completely, that will be a good thing.
 
->> +static int tda998x_audio_get_eld(struct device *dev, uint8_t *buf, size_t len)
->> +{
->> +	struct tda998x_priv *priv = dev_get_drvdata(dev);
->> +	struct drm_mode_config *config = &priv->encoder->dev->mode_config;
->> +	struct drm_connector *connector;
->> +	int ret = -ENODEV;
->> +
->> +	mutex_lock(&config.mutex);
->> +	list_for_each_entry(connector, &config->connector_list, head) {
->> +		if (priv->encoder == connector->encoder) {
->> +			memcpy(buf, connector->eld,
->> +			       min(sizeof(connector->eld), len));
->> +			ret = 0;
->> +		}
->> +	}
->> +	mutex_unlock(&config.mutex);
->
-> Obviously untested.  Should be config->mutex.
->
+Since this set Mike has submitted an alternitive solution.
 
-Sorry. Should never do these last minute changes. I must have been 
-compiling and testing different code version. I first had this function 
-using config->connection_mutex, but then - after reading the eld related 
-code - found that mode_config mutex should be used instead.
+Please see: https://groups.google.com/forum/#!msg/linux.kernel/kX_nWSsW=
+RxU/IZSjhG5Ed4oJ
 
-> But in any case, when I kill the DRM slave encoder code in here, this
-> becomes unnecessary.
->
+>  I am not sure whether i missed something in clk core level support.
+>=20
+> -barry
+>=20
+> > ---
+> >  drivers/clk/clk-conf.c | 45 ++++++++++++++++++++++++++++++++++++++=
+++++++-
+> >  1 file changed, 44 insertions(+), 1 deletion(-)
+> >
+> > diff --git a/drivers/clk/clk-conf.c b/drivers/clk/clk-conf.c
+> > index aad4796..f83c1c2 100644
+> > --- a/drivers/clk/clk-conf.c
+> > +++ b/drivers/clk/clk-conf.c
+> > @@ -116,6 +116,45 @@ static int __set_clk_rates(struct device_node =
+*node, bool clk_supplier)
+> >         return 0;
+> >  }
+> >
+> > +static int __set_critical_clocks(struct device_node *node, bool cl=
+k_supplier)
+> > +{
+> > +       struct of_phandle_args clkspec;
+> > +       struct clk *clk;
+> > +       struct property *prop;
+> > +       const __be32 *cur;
+> > +       uint32_t index;
+> > +       int ret;
+> > +
+> > +       if (!clk_supplier)
+> > +               return 0;
+> > +
+> > +       of_property_for_each_u32(node, "critical-clock", prop, cur,=
+ index) {
+> > +               clkspec.np =3D node;
+> > +               clkspec.args_count =3D 1;
+> > +               clkspec.args[0] =3D index;
+> > +
+> > +               clk =3D of_clk_get_from_provider(&clkspec);
+> > +               if (IS_ERR(clk)) {
+> > +                       pr_err("clk: couldn't get clock %u for %s\n=
+",
+> > +                               index, node->full_name);
+> > +                       return PTR_ERR(clk);
+> > +               }
+> > +
+> > +               clk_init_critical(clk);
+> > +
+> > +               ret =3D clk_prepare_enable(clk);
+> > +               if (ret) {
+> > +                       pr_err("Failed to enable clock %u for %s: %=
+d\n",
+> > +                              index, node->full_name, ret);
+> > +                       return ret;
+> > +               }
+> > +
+> > +               pr_debug("Setting clock as critical %pC\n", clk);
+> > +       }
+> > +
+> > +       return 0;
+> > +}
+> > +
+> >  /**
+> >   * of_clk_set_defaults() - parse and set assigned clocks configura=
+tion
+> >   * @node: device node to apply clock settings for
+> > @@ -139,6 +178,10 @@ int of_clk_set_defaults(struct device_node *no=
+de, bool clk_supplier)
+> >         if (rc < 0)
+> >                 return rc;
+> >
+> > -       return __set_clk_rates(node, clk_supplier);
+> > +       rc =3D __set_clk_rates(node, clk_supplier);
+> > +       if (rc < 0)
+> > +               return rc;
+> > +
+> > +       return __set_critical_clocks(node, clk_supplier);
+> >  }
+> >  EXPORT_SYMBOL_GPL(of_clk_set_defaults);
 
-Ok, The information from ELD needs be passed to audio side constraints 
-somehow. I'd love to see the code you have in queue.
-
-Best regards,
-Jyri
+--=20
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org =E2=94=82 Open source software for ARM SoCs
+=46ollow Linaro: Facebook | Twitter | Blog
