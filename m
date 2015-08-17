@@ -1,117 +1,66 @@
-From: Johan Hovold <johan-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 2/2] rtc: omap: Add external clock enabling support
-Date: Mon, 17 Aug 2015 14:10:02 +0200
-Message-ID: <20150817121002.GG7053@localhost>
-References: <1439787338-27396-1-git-send-email-j-keerthy@ti.com>
- <1439787338-27396-3-git-send-email-j-keerthy@ti.com>
- <20150817113000.GF7053@localhost>
- <55D1C7CF.3070406@ti.com>
+From: Tomi Valkeinen <tomi.valkeinen@ti.com>
+Subject: Re: [PATCH RESEND v6 0/2] Driver for TI tlc591xx 8/16 Channel i2c
+ LED driver
+Date: Mon, 17 Aug 2015 15:11:48 +0300
+Message-ID: <55D1CF84.8040906@ti.com>
+References: <1426630107-25057-1-git-send-email-andrew@lunn.ch>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <55D1C7CF.3070406-l0cyMroinI0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Keerthy <a0393675-l0cyMroinI0@public.gmane.org>
-Cc: Johan Hovold <johan-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Keerthy <j-keerthy-l0cyMroinI0@public.gmane.org>, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org, grygorii.strashko-l0cyMroinI0@public.gmane.org, bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, t-kristo-l0cyMroinI0@public.gmane.org
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature";
+	boundary="WDJ5qBUsqMFotHIqW5Ia6xXNTKfm7aDud"
+Return-path: <linux-leds-owner@vger.kernel.org>
+In-Reply-To: <1426630107-25057-1-git-send-email-andrew@lunn.ch>
+Sender: linux-leds-owner@vger.kernel.org
+To: Andrew Lunn <andrew@lunn.ch>, cooloney@gmail.com
+Cc: rpurdie@rpsys.net, linux-leds@vger.kernel.org, devicetree@vger.kernel.org, Matthew.Fatheree@belkin.com
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Aug 17, 2015 at 05:08:55PM +0530, Keerthy wrote:
-> 
-> 
-> On Monday 17 August 2015 05:00 PM, Johan Hovold wrote:
-> > On Mon, Aug 17, 2015 at 10:25:38AM +0530, Keerthy wrote:
-> >> Configure the clock source to either internal clock
-> >> or external clock based on the availability of the clocks.
-> >> External clock is preferred as it can be ticking during suspend.
-> >>
-> >> Signed-off-by: Keerthy <j-keerthy-l0cyMroinI0@public.gmane.org>
-> >> ---
-> >>
-> >> Changes in V2:
-> >>
-> >>    * Changed clk_prepare calls to clk_prepare_enable.
-> >>    * Changed clk_unprepare calls to clk_disable_unprepare.
-> >>    * Added clk pointers for external and internal clock to omap_rtc structure.
-> >>
-> >>   drivers/rtc/rtc-omap.c | 40 ++++++++++++++++++++++++++++++++++++++++
-> >>   1 file changed, 40 insertions(+)
-> >>
-> >> diff --git a/drivers/rtc/rtc-omap.c b/drivers/rtc/rtc-omap.c
-> >> index 8b6355f..46b3944 100644
-> >> --- a/drivers/rtc/rtc-omap.c
-> >> +++ b/drivers/rtc/rtc-omap.c
-> >> @@ -25,6 +25,7 @@
-> >>   #include <linux/of_device.h>
-> >>   #include <linux/pm_runtime.h>
-> >>   #include <linux/io.h>
-> >> +#include <linux/clk.h>
-> >>
-> >>   /*
-> >>    * The OMAP RTC is a year/month/day/hours/minutes/seconds BCD clock
-> >> @@ -107,6 +108,7 @@
-> >>
-> >>   /* OMAP_RTC_OSC_REG bit fields: */
-> >>   #define OMAP_RTC_OSC_32KCLK_EN		BIT(6)
-> >> +#define OMAP_RTC_OSC_SEL_32KCLK_SRC	BIT(3)
-> >>
-> >>   /* OMAP_RTC_IRQWAKEEN bit fields: */
-> >>   #define OMAP_RTC_IRQWAKEEN_ALARM_WAKEEN	BIT(1)
-> >> @@ -132,10 +134,13 @@ struct omap_rtc_device_type {
-> >>   struct omap_rtc {
-> >>   	struct rtc_device *rtc;
-> >>   	void __iomem *base;
-> >> +	struct clk *ext_clk;
-> >> +	struct clk *int_clk;
-> >
-> > As was already suggested, you could just use one clock here for now.
-> 
-> If the intent is to enable dynamic switching in future why not have both 
-> the clock pointers ready?
+--WDJ5qBUsqMFotHIqW5Ia6xXNTKfm7aDud
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: quoted-printable
 
-Because it needlessly complicates the clock handling below, and those
-bits would need to be rewritten anyway when/if dynamic switching is
-implemented.
+Hi Andrew, (and Brian),
 
-> >
-> >>   	int irq_alarm;
-> >>   	int irq_timer;
-> >>   	u8 interrupts_reg;
-> >>   	bool is_pmic_controller;
-> >> +	bool has_ext_clk;
-> >>   	const struct omap_rtc_device_type *type;
-> >>   };
-> >>
-> >> @@ -553,6 +558,17 @@ static int omap_rtc_probe(struct platform_device *pdev)
-> >>   	if (rtc->irq_alarm <= 0)
-> >>   		return -ENOENT;
-> >>
-> >> +	rtc->ext_clk = devm_clk_get(&pdev->dev, "ext-clk");
-> >> +	if (!IS_ERR(rtc->ext_clk)) {
-> >> +		rtc->has_ext_clk = true;
-> >> +		clk_prepare_enable(rtc->ext_clk);
-> >> +	} else {
-> >> +		rtc->int_clk = devm_clk_get(&pdev->dev, "int-clk");
-> >> +
-> >> +		if (!IS_ERR(rtc->int_clk))
-> >> +			clk_prepare_enable(rtc->int_clk);
-> >> +	}
-> >> +
-> >
-> > Which would allow some simplification here.
-> >
-> > But shouldn't enabling the internal clock go in its own patch before you
-> > add support for the external clock?
-> 
-> I am okay with splitting but for now its either or situation so enabling 
-> in one patch made sense to me.
+On 18/03/15 00:08, Andrew Lunn wrote:
+> This patchset is a driver for the TI tlc59116 16 Channel i2c LED
+> driver and tlc59108 8 Channel i2c LED driver. This driver is used on
+> the Belkin WRT1900AC access point and the C code is derived from code
+> Belkin contributed to OpenWRT.  However it has been extensively
+> re-written, and a device tree binding added to replace platform data.
 
-Since you're doing two different things here (fixing the missing clock
-enable and adding support for the external clock), I'd suggest doing it
-in two patches.
+I see this is now in 4.2-rc... And I see you dropped me from Cc in this
+resend series. Because of that, I missed this resend, and couldn't
+object to merging.
 
-Johan
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+I'm not very happy about this getting merged. I think I had valid
+comments to the driver, to which I did get no answers. You knew my
+objections, but you did not even bother mentioning those in the resend
+intro.
+
+ Tomi
+
+
+--WDJ5qBUsqMFotHIqW5Ia6xXNTKfm7aDud
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQIcBAEBCAAGBQJV0c+EAAoJEPo9qoy8lh71ntkQAJhJ2UygiIGwnw7Rcv/QwVJF
+7VLV+DH6QC5YZFDE8LwgAEXtd0QGuwaCuFKZnzGYtuCOLulXwqmxcs4ARIzZmbXF
+A9JmR4iE9X/Iyf3jqAFTArnF4xm2xvjAPAI/d3/u+F4kc2SEcuqcZNgA4YipklU8
+bq7lstvYMcyTC2M+TpZrqwpOqG8zuvCuHRsjpHDt/bDjvOdVj5tAvWuHDq+nkfXs
+32kJNOw0FEtTTBUor0BbwGfnRW6/jFAwnqvlQN6ayqJmFrShVBdtsm540C+CrIpV
+QGy/OEmE0A7IQTqHCVGinaoyada90jiBWuJgntz8wiHr7IWOTdevIOMOdlbexMOr
+IXbZUw8D84YbgMtayqqFcTjkcKQwFr5iafF2sYQU51b8Llhl0KezAyAxmKZilG3y
+howBwwAUWgJ+Z7dmapjSwV4d4d/2rSOlvGiSFgZ3FNCsLX6dZjRiD7QhZEvFjwkS
+0fEP8MNaPWCNmAjl2hy/HPJzygbodQrotvRt6z1FP1hDU2YcxjIMFfxTXid3kpgO
+7clh1obMpFet5POrJ2NauZTeldNjcVs+uTXpv9UxMNfLQG5d+PtJnTTRdlo9YztJ
+lD7Ot6e875Ty2nX3kaI8EXez/Ml/+HUBi+sksGeRZ1T2JtBtzb/jZomJywYt4E52
+AqyfTDBH0dTmVCvTKoZD
+=edXK
+-----END PGP SIGNATURE-----
+
+--WDJ5qBUsqMFotHIqW5Ia6xXNTKfm7aDud--
