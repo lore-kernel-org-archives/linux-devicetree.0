@@ -1,322 +1,300 @@
-From: Mathieu Olivari <mathieu@codeaurora.org>
-Subject: [PATCH v3 3/3] mtd: add SMEM parser for QCOM platforms
-Date: Mon, 17 Aug 2015 16:47:46 -0700
-Message-ID: <1439855266-26242-4-git-send-email-mathieu@codeaurora.org>
-References: <1439855266-26242-1-git-send-email-mathieu@codeaurora.org>
+From: Michael Turquette <mturquette@baylibre.com>
+Subject: Re: [RESEND PATCH v5] clk: mediatek: Export CPU mux clocks for CPU frequency
+ control
+Date: Mon, 17 Aug 2015 16:57:04 -0700
+Message-ID: <20150817235704.31346.92895@quantum>
+References: <1439801805-19043-1-git-send-email-pi-cheng.chen@linaro.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8BIT
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1439855266-26242-1-git-send-email-mathieu@codeaurora.org>
+In-Reply-To: <1439801805-19043-1-git-send-email-pi-cheng.chen@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk, dwmw2@infradead.org, computersforpeace@gmail.com, agross@codeaurora.org, sboyd@codeaurora.org, bjorn.andersson@sonymobile.com
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org, Mathieu Olivari <mathieu@codeaurora.org>
+To: Stephen Boyd <sboyd@codeaurora.org>
+Cc: Viresh Kumar <viresh.kumar@linaro.org>, Sascha Hauer <s.hauer@pengutronix.de>, Matthias Brugger <matthias.bgg@gmail.com>, Daniel Kurtz <djkurtz@chromium.org>, James Liao <jamesjj.liao@mediatek.com>, linux-mediatek@lists.infradead.org, linaro-kernel@lists.linaro.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, "pi-cheng.chen" <pi-cheng.chen@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-On QCOM platforms using MTD devices storage (such as IPQ806x), SMEM is
-used to store partition layout. This new parser can now be used to read
-SMEM and use it to register an MTD layout according to its content.
+Quoting Pi-Cheng Chen (2015-08-17 01:56:45)
+> From: "pi-cheng.chen" <pi-cheng.chen@linaro.org>
+> 
+> This patch adds CPU mux clocks which are used by Mediatek cpufreq driver
+> for intermediate clock source switching.
+> 
+> Signed-off-by: Pi-Cheng Chen <pi-cheng.chen@linaro.org>
+> Reviewed-by: Daniel Kurtz <djkurtz@chromium.org>
 
-Signed-off-by: Mathieu Olivari <mathieu@codeaurora.org>
----
+Looks OK to me. Can I expect an mtk clk pull request? I think that the
+only mtk patches outstanding are this one and the 13MHz clk patch but I
+want to double check with you guys.
 
-Notes:
-    v2:
-    *Release the SPI device reference after looking it up (put_device())
-    *Represent SMEM data as __le32 rather than u32
-    *Move new DT nodes in their proper respective location
-    *Address readability concerns in MTD parser
-    
-    v3:
-    *Redefine SMEM functions prototypes for better readability
-    *Duplicate MTD name instead of pointing to SMEM string location in case
-     mtd layer tries to free it
-    *Rework some of the comments
+Regards,
+Mike
 
- drivers/mtd/Kconfig          |   7 ++
- drivers/mtd/Makefile         |   1 +
- drivers/mtd/qcom_smem_part.c | 246 +++++++++++++++++++++++++++++++++++++++++++
- 3 files changed, 254 insertions(+)
- create mode 100644 drivers/mtd/qcom_smem_part.c
-
-diff --git a/drivers/mtd/Kconfig b/drivers/mtd/Kconfig
-index a03ad29..debc887 100644
---- a/drivers/mtd/Kconfig
-+++ b/drivers/mtd/Kconfig
-@@ -155,6 +155,13 @@ config MTD_BCM47XX_PARTS
- 	  This provides partitions parser for devices based on BCM47xx
- 	  boards.
- 
-+config MTD_QCOM_SMEM_PARTS
-+	tristate "QCOM SMEM partitioning support"
-+	depends on QCOM_SMEM
-+	help
-+	  This provides partitions parser for QCOM devices using SMEM
-+	  such as IPQ806x.
-+
- comment "User Modules And Translation Layers"
- 
- #
-diff --git a/drivers/mtd/Makefile b/drivers/mtd/Makefile
-index 99bb9a1..b3c7de4 100644
---- a/drivers/mtd/Makefile
-+++ b/drivers/mtd/Makefile
-@@ -13,6 +13,7 @@ obj-$(CONFIG_MTD_AFS_PARTS)	+= afs.o
- obj-$(CONFIG_MTD_AR7_PARTS)	+= ar7part.o
- obj-$(CONFIG_MTD_BCM63XX_PARTS)	+= bcm63xxpart.o
- obj-$(CONFIG_MTD_BCM47XX_PARTS)	+= bcm47xxpart.o
-+obj-$(CONFIG_MTD_QCOM_SMEM_PARTS) += qcom_smem_part.o
- 
- # 'Users' - code which presents functionality to userspace.
- obj-$(CONFIG_MTD_BLKDEVS)	+= mtd_blkdevs.o
-diff --git a/drivers/mtd/qcom_smem_part.c b/drivers/mtd/qcom_smem_part.c
-new file mode 100644
-index 0000000..cb7ea9a
---- /dev/null
-+++ b/drivers/mtd/qcom_smem_part.c
-@@ -0,0 +1,246 @@
-+/*
-+ * Copyright (c) 2015, The Linux Foundation. All rights reserved.
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 and
-+ * only version 2 as published by the Free Software Foundation.
-+ *
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
-+ */
-+
-+#include <linux/kernel.h>
-+#include <linux/device.h>
-+#include <linux/slab.h>
-+
-+#include <linux/mtd/mtd.h>
-+#include <linux/mtd/partitions.h>
-+#include <linux/spi/spi.h>
-+#include <linux/module.h>
-+
-+#include <linux/soc/qcom/smem.h>
-+
-+/* Processor/host identifier for the application processor */
-+#define QCOM_SMEM_GLOBAL		0
-+
-+/* SMEM items index */
-+#define SMEM_AARM_PARTITION_TABLE	9
-+#define SMEM_BOOT_FLASH_TYPE		421
-+#define SMEM_BOOT_FLASH_BLOCK_SIZE	424
-+
-+/* SMEM Flash types */
-+#define SMEM_FLASH_NAND			2
-+#define SMEM_FLASH_SPI			6
-+
-+#define SMEM_PART_NAME_SZ		16
-+#define SMEM_PARTS_MAX			32
-+
-+struct smem_partition {
-+	char name[SMEM_PART_NAME_SZ];
-+	__le32 start;
-+	__le32 size;
-+	__le32 attr;
-+};
-+
-+struct smem_partition_table {
-+	u8 magic[8];
-+	__le32 version;
-+	__le32 len;
-+	struct smem_partition parts[SMEM_PARTS_MAX];
-+};
-+
-+/* SMEM Magic values in partition table */
-+static const u8 SMEM_PTABLE_MAGIC[] = {
-+	0xaa, 0x73, 0xee, 0x55,
-+	0xdb, 0xbd, 0x5e, 0xe3,
-+};
-+
-+static int qcom_smem_get_flash_blksz(void)
-+{
-+	int ret;
-+	size_t size;
-+	u64 *smem_blksz;
-+
-+	ret = qcom_smem_get(QCOM_SMEM_GLOBAL, SMEM_BOOT_FLASH_BLOCK_SIZE,
-+			    (void **) &smem_blksz, &size);
-+
-+	if (ret < 0) {
-+		pr_err("Unable to read flash blksz from SMEM\n");
-+		return -ENOENT;
-+	}
-+
-+	if (size != sizeof(*smem_blksz)) {
-+		pr_err("Invalid flash blksz size in SMEM\n");
-+		return -EINVAL;
-+	}
-+
-+	/* Sanity check block size value before casting it */
-+	if (*smem_blksz > INT_MAX) {
-+		pr_err("Invalid flash block size in SMEM\n");
-+		return -EINVAL;
-+	}
-+
-+	return (int) *smem_blksz;
-+}
-+
-+static int qcom_smem_get_flash_type(void)
-+{
-+	int ret;
-+	size_t size;
-+	u64 *smem_flash_type;
-+
-+	ret = qcom_smem_get(QCOM_SMEM_GLOBAL, SMEM_BOOT_FLASH_TYPE,
-+			    (void **) &smem_flash_type, &size);
-+
-+	if (ret < 0) {
-+		pr_err("Unable to read flash type from SMEM\n");
-+		return -ENOENT;
-+	}
-+
-+	if (size != sizeof(*smem_flash_type)) {
-+		pr_err("Invalid flash type size in SMEM\n");
-+		return -EINVAL;
-+	}
-+
-+	/* Sanity check flash type value before casting it */
-+	if (*smem_flash_type > INT_MAX) {
-+		pr_err("Invalid flash type in SMEM\n");
-+		return -EINVAL;
-+	}
-+
-+	return (int) *smem_flash_type;
-+}
-+
-+static struct smem_partition *qcom_smem_get_flash_partitions(size_t *count)
-+{
-+	struct smem_partition_table *smem_parts;
-+	int ret;
-+
-+	ret = qcom_smem_get(QCOM_SMEM_GLOBAL, SMEM_AARM_PARTITION_TABLE,
-+			    (void **) &smem_parts, NULL);
-+
-+	if (ret < 0) {
-+		pr_err("Unable to read partition table from SMEM\n");
-+		return ERR_PTR(-ENOENT);
-+	}
-+
-+	if (memcmp(SMEM_PTABLE_MAGIC, smem_parts->magic,
-+		   sizeof(SMEM_PTABLE_MAGIC))) {
-+		pr_err("SMEM partition magic invalid\n");
-+		return ERR_PTR(-EINVAL);
-+	}
-+
-+	if (le32_to_cpu(smem_parts->version) != 3) {
-+		pr_err("SMEM version unsupported\n");
-+		return ERR_PTR(-EINVAL);
-+	}
-+
-+	*count = le32_to_cpu(smem_parts->len);
-+
-+	return smem_parts->parts;
-+}
-+
-+static int of_dev_node_match(struct device *dev, void *data)
-+{
-+	return dev->of_node == data;
-+}
-+
-+static bool is_spi_device(struct device_node *np)
-+{
-+	struct device *dev;
-+
-+	dev = bus_find_device(&spi_bus_type, NULL, np, of_dev_node_match);
-+	if (!dev)
-+		return false;
-+
-+	put_device(dev);
-+	return true;
-+}
-+
-+static int parse_qcom_smem_partitions(struct mtd_info *master,
-+				      struct mtd_partition **pparts,
-+				      struct mtd_part_parser_data *data)
-+{
-+	struct smem_partition *smem_part;
-+	int smem_flash_type, smem_blksz;
-+	size_t nbparts = 0, len;
-+	struct mtd_partition *mtd_parts;
-+	struct device_node *of_node = data->of_node;
-+
-+	/* Only parse partitions on the specified memory type */
-+	smem_flash_type = qcom_smem_get_flash_type();
-+	if (smem_flash_type < 0)
-+		return smem_flash_type;
-+
-+	if ((smem_flash_type == SMEM_FLASH_NAND && !mtd_type_is_nand(master))
-+	    || (smem_flash_type == SMEM_FLASH_SPI && !is_spi_device(of_node)))
-+		return 0;
-+
-+	/* Make sure the block size in SMEM matches the block size in MTD */
-+	smem_blksz = qcom_smem_get_flash_blksz();
-+	if (smem_blksz < 0)
-+		return smem_blksz;
-+
-+	if (smem_blksz != master->erasesize) {
-+		pr_err("SMEM block size differs from MTD block size\n");
-+		return -EINVAL;
-+	}
-+
-+	/* Get partition pointer from SMEM */
-+	smem_part = qcom_smem_get_flash_partitions(&nbparts);
-+	if (IS_ERR_OR_NULL(smem_part))
-+		return -EINVAL;
-+
-+	/* Allocate and populate the mtd structures */
-+	mtd_parts = kcalloc(nbparts, sizeof(*mtd_parts), GFP_KERNEL);
-+	if (!mtd_parts)
-+		return -ENOMEM;
-+
-+	*pparts = mtd_parts;
-+	len = nbparts;
-+
-+	while (len--) {
-+		mtd_parts->name = kstrdup(smem_part->name, GFP_KERNEL);
-+		mtd_parts->size = le32_to_cpu(smem_part->size) * smem_blksz;
-+		mtd_parts->offset = le32_to_cpu(smem_part->start) * smem_blksz;
-+
-+		/*
-+		 * The last SMEM partition may have its size marked as
-+		 * something like 0xffffffff, which means "until the end of the
-+		 * flash device". In this case, truncate it.
-+		 */
-+		if (mtd_parts->offset + mtd_parts->size > master->size)
-+			mtd_parts->size = master->size - mtd_parts->offset;
-+
-+		smem_part++;
-+		mtd_parts++;
-+	}
-+
-+	return nbparts;
-+}
-+
-+static struct mtd_part_parser qcom_smem_parser = {
-+	.owner = THIS_MODULE,
-+	.parse_fn = parse_qcom_smem_partitions,
-+	.name = "qcom-smem",
-+};
-+
-+static int __init qcom_smem_parser_init(void)
-+{
-+	register_mtd_parser(&qcom_smem_parser);
-+	return 0;
-+}
-+
-+static void __exit qcom_smem_parser_exit(void)
-+{
-+	deregister_mtd_parser(&qcom_smem_parser);
-+}
-+
-+module_init(qcom_smem_parser_init);
-+module_exit(qcom_smem_parser_exit);
-+
-+MODULE_LICENSE("GPL V2");
-+MODULE_AUTHOR("Mathieu Olivari <mathieu@codeaurora.org>");
-+MODULE_DESCRIPTION("Parsing code for SMEM based partition tables");
--- 
-2.1.4
+> ---
+> Changes in v5:
+> - Replace __initdata with __initconst to fix compiling error
+> 
+> Changes in v4:
+> - Fix some minor issues for v3
+> - Rebase to the patch that adds 13mhz clock for MT8173[1]
+> 
+> Changes in v3:
+> - Rebase to 4.2-rc1
+> - Fix some issues of v2
+> 
+> Changes in v2:
+> - Remove use of .determine_rate callback
+> 
+> [1] http://patchwork.kernerl.xyz/patch/6777041/
+> ---
+>  drivers/clk/mediatek/Makefile          |   2 +-
+>  drivers/clk/mediatek/clk-cpumux.c      | 127 +++++++++++++++++++++++++++++++++
+>  drivers/clk/mediatek/clk-cpumux.h      |  22 ++++++
+>  drivers/clk/mediatek/clk-mt8173.c      |  23 ++++++
+>  include/dt-bindings/clock/mt8173-clk.h |   4 +-
+>  5 files changed, 176 insertions(+), 2 deletions(-)
+>  create mode 100644 drivers/clk/mediatek/clk-cpumux.c
+>  create mode 100644 drivers/clk/mediatek/clk-cpumux.h
+> 
+> diff --git a/drivers/clk/mediatek/Makefile b/drivers/clk/mediatek/Makefile
+> index 8e4b2a4..299917a 100644
+> --- a/drivers/clk/mediatek/Makefile
+> +++ b/drivers/clk/mediatek/Makefile
+> @@ -1,4 +1,4 @@
+> -obj-y += clk-mtk.o clk-pll.o clk-gate.o
+> +obj-y += clk-mtk.o clk-pll.o clk-gate.o clk-cpumux.o
+>  obj-$(CONFIG_RESET_CONTROLLER) += reset.o
+>  obj-y += clk-mt8135.o
+>  obj-y += clk-mt8173.o
+> diff --git a/drivers/clk/mediatek/clk-cpumux.c b/drivers/clk/mediatek/clk-cpumux.c
+> new file mode 100644
+> index 0000000..fb04fe1
+> --- /dev/null
+> +++ b/drivers/clk/mediatek/clk-cpumux.c
+> @@ -0,0 +1,127 @@
+> +/*
+> + * Copyright (c) 2015 Linaro Ltd.
+> + * Author: Pi-Cheng Chen <pi-cheng.chen@linaro.org>
+> + *
+> + * This program is free software; you can redistribute it and/or modify
+> + * it under the terms of the GNU General Public License version 2 as
+> + * published by the Free Software Foundation.
+> + *
+> + * This program is distributed in the hope that it will be useful,
+> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
+> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+> + * GNU General Public License for more details.
+> + */
+> +
+> +#include <linux/clk-provider.h>
+> +#include <linux/mfd/syscon.h>
+> +#include <linux/slab.h>
+> +
+> +#include "clk-mtk.h"
+> +#include "clk-cpumux.h"
+> +
+> +struct mtk_clk_cpumux {
+> +       struct clk_hw   hw;
+> +       struct regmap   *regmap;
+> +       u32             reg;
+> +       u32             mask;
+> +       u8              shift;
+> +};
+> +
+> +static inline struct mtk_clk_cpumux *to_clk_mux(struct clk_hw *_hw)
+> +{
+> +       return container_of(_hw, struct mtk_clk_cpumux, hw);
+> +}
+> +
+> +static u8 clk_cpumux_get_parent(struct clk_hw *hw)
+> +{
+> +       struct mtk_clk_cpumux *mux = to_clk_mux(hw);
+> +       int num_parents = __clk_get_num_parents(hw->clk);
+> +       unsigned int val;
+> +
+> +       regmap_read(mux->regmap, mux->reg, &val);
+> +
+> +       val >>= mux->shift;
+> +       val &= mux->mask;
+> +
+> +       if (val >= num_parents)
+> +               return -EINVAL;
+> +
+> +       return val;
+> +}
+> +
+> +static int clk_cpumux_set_parent(struct clk_hw *hw, u8 index)
+> +{
+> +       struct mtk_clk_cpumux *mux = to_clk_mux(hw);
+> +       u32 mask, val;
+> +
+> +       val = index << mux->shift;
+> +       mask = mux->mask << mux->shift;
+> +
+> +       return regmap_update_bits(mux->regmap, mux->reg, mask, val);
+> +}
+> +
+> +static const struct clk_ops clk_cpumux_ops = {
+> +       .get_parent = clk_cpumux_get_parent,
+> +       .set_parent = clk_cpumux_set_parent,
+> +};
+> +
+> +static struct clk __init *mtk_clk_register_cpumux(const struct mtk_composite *mux,
+> +                                          struct regmap *regmap)
+> +{
+> +       struct mtk_clk_cpumux *cpumux;
+> +       struct clk *clk;
+> +       struct clk_init_data init;
+> +
+> +       cpumux = kzalloc(sizeof(*cpumux), GFP_KERNEL);
+> +       if (!cpumux)
+> +               return ERR_PTR(-ENOMEM);
+> +
+> +       init.name = mux->name;
+> +       init.ops = &clk_cpumux_ops;
+> +       init.parent_names = mux->parent_names;
+> +       init.num_parents = mux->num_parents;
+> +       init.flags = mux->flags;
+> +
+> +       cpumux->reg = mux->mux_reg;
+> +       cpumux->shift = mux->mux_shift;
+> +       cpumux->mask = BIT(mux->mux_width) - 1;
+> +       cpumux->regmap = regmap;
+> +       cpumux->hw.init = &init;
+> +
+> +       clk = clk_register(NULL, &cpumux->hw);
+> +       if (IS_ERR(clk))
+> +               kfree(cpumux);
+> +
+> +       return clk;
+> +}
+> +
+> +int __init mtk_clk_register_cpumuxes(struct device_node *node,
+> +                             const struct mtk_composite *clks, int num,
+> +                             struct clk_onecell_data *clk_data)
+> +{
+> +       int i;
+> +       struct clk *clk;
+> +       struct regmap *regmap;
+> +
+> +       regmap = syscon_node_to_regmap(node);
+> +       if (IS_ERR(regmap)) {
+> +               pr_err("Cannot find regmap for %s: %ld\n", node->full_name,
+> +                      PTR_ERR(regmap));
+> +               return PTR_ERR(regmap);
+> +       }
+> +
+> +       for (i = 0; i < num; i++) {
+> +               const struct mtk_composite *mux = &clks[i];
+> +
+> +               clk = mtk_clk_register_cpumux(mux, regmap);
+> +               if (IS_ERR(clk)) {
+> +                       pr_err("Failed to register clk %s: %ld\n",
+> +                              mux->name, PTR_ERR(clk));
+> +                       continue;
+> +               }
+> +
+> +               clk_data->clks[mux->id] = clk;
+> +       }
+> +
+> +       return 0;
+> +}
+> diff --git a/drivers/clk/mediatek/clk-cpumux.h b/drivers/clk/mediatek/clk-cpumux.h
+> new file mode 100644
+> index 0000000..52c769f
+> --- /dev/null
+> +++ b/drivers/clk/mediatek/clk-cpumux.h
+> @@ -0,0 +1,22 @@
+> +/*
+> + * Copyright (c) 2015 Linaro Ltd.
+> + * Author: Pi-Cheng Chen <pi-cheng.chen@linaro.org>
+> + *
+> + * This program is free software; you can redistribute it and/or modify
+> + * it under the terms of the GNU General Public License version 2 as
+> + * published by the Free Software Foundation.
+> + *
+> + * This program is distributed in the hope that it will be useful,
+> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
+> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+> + * GNU General Public License for more details.
+> + */
+> +
+> +#ifndef __DRV_CLK_CPUMUX_H
+> +#define __DRV_CLK_CPUMUX_H
+> +
+> +int mtk_clk_register_cpumuxes(struct device_node *node,
+> +                             const struct mtk_composite *clks, int num,
+> +                             struct clk_onecell_data *clk_data);
+> +
+> +#endif /* __DRV_CLK_CPUMUX_H */
+> diff --git a/drivers/clk/mediatek/clk-mt8173.c b/drivers/clk/mediatek/clk-mt8173.c
+> index 540c5c3..053ca27 100644
+> --- a/drivers/clk/mediatek/clk-mt8173.c
+> +++ b/drivers/clk/mediatek/clk-mt8173.c
+> @@ -19,6 +19,7 @@
+>  
+>  #include "clk-mtk.h"
+>  #include "clk-gate.h"
+> +#include "clk-cpumux.h"
+>  
+>  #include <dt-bindings/clock/mt8173-clk.h>
+>  
+> @@ -517,6 +518,25 @@ static const char * const i2s3_b_ck_parents[] __initconst = {
+>         "apll2_div5"
+>  };
+>  
+> +static const char * const ca53_parents[] __initconst = {
+> +       "clk26m",
+> +       "armca7pll",
+> +       "mainpll",
+> +       "univpll"
+> +};
+> +
+> +static const char * const ca57_parents[] __initconst = {
+> +       "clk26m",
+> +       "armca15pll",
+> +       "mainpll",
+> +       "univpll"
+> +};
+> +
+> +static const struct mtk_composite cpu_muxes[] __initconst = {
+> +       MUX(CLK_INFRA_CA53SEL, "infra_ca53_sel", ca53_parents, 0x0000, 0, 2),
+> +       MUX(CLK_INFRA_CA57SEL, "infra_ca57_sel", ca57_parents, 0x0000, 2, 2),
+> +};
+> +
+>  static const struct mtk_composite top_muxes[] __initconst = {
+>         /* CLK_CFG_0 */
+>         MUX(CLK_TOP_AXI_SEL, "axi_sel", axi_parents, 0x0040, 0, 3),
+> @@ -743,6 +763,9 @@ static void __init mtk_infrasys_init(struct device_node *node)
+>                                                 clk_data);
+>         mtk_clk_register_factors(infra_divs, ARRAY_SIZE(infra_divs), clk_data);
+>  
+> +       mtk_clk_register_cpumuxes(node, cpu_muxes, ARRAY_SIZE(cpu_muxes),
+> +                                               clk_data);
+> +
+>         r = of_clk_add_provider(node, of_clk_src_onecell_get, clk_data);
+>         if (r)
+>                 pr_err("%s(): could not register clock provider: %d\n",
+> diff --git a/include/dt-bindings/clock/mt8173-clk.h b/include/dt-bindings/clock/mt8173-clk.h
+> index fa2a2bb..a17cbaa 100644
+> --- a/include/dt-bindings/clock/mt8173-clk.h
+> +++ b/include/dt-bindings/clock/mt8173-clk.h
+> @@ -188,7 +188,9 @@
+>  #define CLK_INFRA_PMICSPI              10
+>  #define CLK_INFRA_PMICWRAP             11
+>  #define CLK_INFRA_CLK_13M              12
+> -#define CLK_INFRA_NR_CLK               13
+> +#define CLK_INFRA_CA53SEL              13
+> +#define CLK_INFRA_CA57SEL              14
+> +#define CLK_INFRA_NR_CLK               15
+>  
+>  /* PERI_SYS */
+>  
+> -- 
+> 1.9.1
+> 
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-kernel" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> Please read the FAQ at  http://www.tux.org/lkml/
