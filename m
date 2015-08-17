@@ -1,69 +1,90 @@
-From: Michal Suchanek <hramrach-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH] of: fdt: mark unflattened tree as detached
-Date: Thu, 7 May 2015 00:53:14 +0200
-Message-ID: <b81cbbe39d68500b57bd8512fca41ac0193511b1.1439793321.git.hramrach@gmail.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
+From: "Liguozhu (Kenneth)" <liguozhu@hisilicon.com>
+Subject: =?gb2312?B?tPC4tDogW1BBVENIIDEvNV0gbmV0OiBhZGQgSGlzaWxpY29uIE5ldHdvcmsg?=
+ =?gb2312?Q?Subsystem_support_(config_and_documents)?=
+Date: Mon, 17 Aug 2015 01:28:07 +0000
+Message-ID: <161EFA05D917D0419F95C4CAEEF86C1094E95FAA@SZXEMA504-MBS.china.huawei.com>
+References: <1439548222-231611-1-git-send-email-liguozhu@hisilicon.com>
+ <1439548222-231611-2-git-send-email-liguozhu@hisilicon.com>
+ <1536926.jEJjsM70Lj@wuerfel>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="gb2312"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1536926.jEJjsM70Lj@wuerfel>
+Content-Language: zh-CN
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Salil Mehta <salil.mehta@huawei.com>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, Dingtianhong <dingtianhong@huawei.com>, "will.deacon@arm.com" <will.deacon@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Linuxarm <linuxarm@huawei.com>, "paul.gortmaker@windriver.com" <paul.gortmaker@windriver.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, huangdaode <huangdaode@hisilicon.com>, "galak@codeaurora.org" <galak@codeaurora.org>, "zhangfei.gao@linaro.org" <zhangfei.gao@linaro.org>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, "Zhuangyuzeng (Yisen)" <yisen.zhuang@huawei.com>, "davem@davemloft.net" <davem@davemloft.net>
 List-Id: devicetree@vger.kernel.org
 
-The tree returned from of_fdt_unflatten_tree cannot be attached to the
-live tree because it is not marked as detached so mark it as such. The
-dt resolver checks the flag and refuses to process the tree otherwise.
-
-Signed-off-by: Michal Suchanek <hramrach-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
----
- drivers/of/fdt.c | 12 +++++++++---
- 1 file changed, 9 insertions(+), 3 deletions(-)
-
-diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
-index 0749656..32523e6 100644
---- a/drivers/of/fdt.c
-+++ b/drivers/of/fdt.c
-@@ -383,7 +383,8 @@ static void * unflatten_dt_node(const void *blob,
-  */
- static void __unflatten_device_tree(const void *blob,
- 			     struct device_node **mynodes,
--			     void * (*dt_alloc)(u64 size, u64 align))
-+			     void * (*dt_alloc)(u64 size, u64 align),
-+			     bool detached)
- {
- 	unsigned long size;
- 	int start;
-@@ -427,6 +428,10 @@ static void __unflatten_device_tree(const void *blob,
- 	if (be32_to_cpup(mem + size) != 0xdeadbeef)
- 		pr_warning("End of tree marker overwritten: %08x\n",
- 			   be32_to_cpup(mem + size));
-+	if (detached) {
-+		of_node_set_flag(*mynodes, OF_DETACHED);
-+		pr_debug("unflattened tree is detached\n");
-+	}
- 
- 	pr_debug(" <- unflatten_device_tree()\n");
- }
-@@ -447,7 +452,7 @@ static void *kernel_tree_alloc(u64 size, u64 align)
- void of_fdt_unflatten_tree(const unsigned long *blob,
- 			struct device_node **mynodes)
- {
--	__unflatten_device_tree(blob, mynodes, &kernel_tree_alloc);
-+	__unflatten_device_tree(blob, mynodes, &kernel_tree_alloc, true);
- }
- EXPORT_SYMBOL_GPL(of_fdt_unflatten_tree);
- 
-@@ -1099,7 +1104,8 @@ bool __init early_init_dt_scan(void *params)
- void __init unflatten_device_tree(void)
- {
- 	__unflatten_device_tree(initial_boot_params, &of_root,
--				early_init_dt_alloc_memory_arch);
-+				early_init_dt_alloc_memory_arch,
-+				false);
- 
- 	/* Get pointer to "/chosen" and "/aliases" nodes for use everywhere */
- 	of_alias_scan(early_init_dt_alloc_memory_arch);
--- 
-2.1.4
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+VGhhbmtzLCBBcm5kLiANCg0KUmVnYXJkaW5nIHRoZSBhZS1uYW1lOiBpdCBpcyB0aGUgbmFtZSBv
+ZiB0aGUgQWNjZWxlcmF0aW9uIEVuZ2luZS4gSXQgaXMgcHJvdmlkZWQgYnkgdGhlIEJJT1MgYWNj
+b3JkaW5nIHRvIHRoZSBwb3NpdGlvbiBhbmQgdGhlIGZlYXR1cmUgZW5hYmxlZCBvZiB0aGUgSVAu
+IFNvICJzb2MwIiBtZWFucyBpdCBpcyBvbiBTb0MgTm8uIDAsIHdoaWxlICJuNCIgbWVhbnMgaXQg
+aXMgcnVubmluZyBvbiAiTm9uLWRzYWYgbW9kZSA0Ii4gSWRlYWxseSwgd2Ugc2hvdWxkIHNldHVw
+IHRoZSBydWxlIHRvIG5hbWUgaXQuIEJ1dCBhcyBJIHNhaWQgaW4gdGhlIHBhdGNoc2V0LCB0aGUg
+SVAgaXMgb3JpZ2luYWwgZGVzaWduZWQgZm9yIGEgYmFyZSBtZXRhbCBzb2x1dGlvbiwgaXQgaXMg
+d29ydGhsZXNzIHRvIGV4cG9ydCBhbGwgbW9kZXMgYW5kIHdlIGFyZSBwbGFubmluZyB0byBhZGQg
+bW9yZSBtb2RlIGZvciBMaW51eCBpdHNlbGYgaW4gdGhlIElQIGluIGZ1dHVyZSB2ZXJzaW9uLiBT
+byBJIHRoaW5rIHRoZSBiZXR0ZXIgd2F5IGlzIHRvIGxlYXZlIGl0IGFzIGEgIm5hbWUiIGJ1dCBh
+ZGQgbW9yZSBtZWFuaW5nIGluIHRoZSBmdXR1cmUuDQoNClJlZ2FyZGluZyB0aGUgYWUtb3B0czog
+aXQgaXMgdGhlIGluaXRpYWwgdmFsdWUgZm9yIHRoZSBBRSdzIHJ1bnRpbWUgb3B0aW9ucywgQ3Vy
+cmVudGx5LCB3ZSBoYXZlIG9ubHkgInBvcnQgbnVtYmVyIiAodGhlcmUgYXJlIDZYR0UrMkdFIHBv
+cnQgZm9yIGEgRFNBRiBBRSkgYXMgb3B0aW9uLiBCdXQgZm9yIGZ1dHVyZSB2ZXJzaW9uLCB3ZSB3
+aWxsIGFkZCBvdGhlciBvcHRpb25zIHN1Y2ggYXMgImVuYWJsZSBTcGFubmluZyBUcmVlIFByb3Rv
+Y29sIGFsZ29yaXRobSkiIGFuZCBzbyBvbi4gDQoNClNob3VsZCBJIGFkZCB0aGVzZSBiYWNrZ3Jv
+dW5kIHRvIHNvbWV3aGVyZT8NCg0KQmVzdCBSZWdhcmRzDQotS2VubmV0aCBMZWUgKEhpc2lsaWNv
+bikNCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX18NCrG+08q8/rywxuS4vbz+uqzT0Luqzqq5q8u+tcSxo8Pc0MXPoqOsvfbP3tPat6LLzbj4
+yc/D5rXY1rfW0MHQs/a1xLj2yMu78si61+mho737DQrWucjOus7G5Mv7yMvS1MjOus7Qzsq9yrnT
+w6OosPzAqLWrsrvP3tPayKuyv7vysr+31rXY0LnCtqGiuLTWxqGiu/LJoreio6mxvtPKvP7W0A0K
+tcTQxc+ioaPI57n7xPq07crVwcuxvtPKvP6jrMfrxPrBory0tee7sLvy08q8/s2o1qq3orz+yMuy
+osm+s/2xvtPKvP6joQ0KVGhpcyBlLW1haWwgYW5kIGl0cyBhdHRhY2htZW50cyBjb250YWluIGNv
+bmZpZGVudGlhbCBpbmZvcm1hdGlvbiBmcm9tIEhVQVdFSSwgd2hpY2ggDQppcyBpbnRlbmRlZCBv
+bmx5IGZvciB0aGUgcGVyc29uIG9yIGVudGl0eSB3aG9zZSBhZGRyZXNzIGlzIGxpc3RlZCBhYm92
+ZS4gQW55IHVzZSBvZiB0aGUgDQppbmZvcm1hdGlvbiBjb250YWluZWQgaGVyZWluIGluIGFueSB3
+YXkgKGluY2x1ZGluZywgYnV0IG5vdCBsaW1pdGVkIHRvLCB0b3RhbCBvciBwYXJ0aWFsIA0KZGlz
+Y2xvc3VyZSwgcmVwcm9kdWN0aW9uLCBvciBkaXNzZW1pbmF0aW9uKSBieSBwZXJzb25zIG90aGVy
+IHRoYW4gdGhlIGludGVuZGVkIA0KcmVjaXBpZW50KHMpIGlzIHByb2hpYml0ZWQuIElmIHlvdSBy
+ZWNlaXZlIHRoaXMgZS1tYWlsIGluIGVycm9yLCBwbGVhc2Ugbm90aWZ5IHRoZSBzZW5kZXIgYnkg
+DQpwaG9uZSBvciBlbWFpbCBpbW1lZGlhdGVseSBhbmQgZGVsZXRlIGl0IQ0KDQoNCg0KDQotLS0t
+LdPKvP7Urbz+LS0tLS0NCreivP7IyzogQXJuZCBCZXJnbWFubiBbbWFpbHRvOmFybmRAYXJuZGIu
+ZGVdIA0Kt6LLzcqxvOQ6IDIwMTXE6jjUwjE1yNUgNDo1MA0KytW8/sjLOiBMaWd1b3podSAoS2Vu
+bmV0aCkNCrOty806IHJvYmgrZHRAa2VybmVsLm9yZzsgcGF3ZWwubW9sbEBhcm0uY29tOyBtYXJr
+LnJ1dGxhbmRAYXJtLmNvbTsgaWpjK2RldmljZXRyZWVAaGVsbGlvbi5vcmcudWs7IGdhbGFrQGNv
+ZGVhdXJvcmEub3JnOyBjYXRhbGluLm1hcmluYXNAYXJtLmNvbTsgd2lsbC5kZWFjb25AYXJtLmNv
+bTsgWmh1YW5neXV6ZW5nIChZaXNlbik7IGRhdmVtQGRhdmVtbG9mdC5uZXQ7IHBhdWwuZ29ydG1h
+a2VyQHdpbmRyaXZlci5jb207IERpbmd0aWFuaG9uZzsgemhhbmdmZWkuZ2FvQGxpbmFyby5vcmc7
+IGRldmljZXRyZWVAdmdlci5rZXJuZWwub3JnOyBsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3Jn
+OyBsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmc7IG5ldGRldkB2Z2VyLmtlcm5l
+bC5vcmc7IExpbnV4YXJtOyBTYWxpbCBNZWh0YTsgaHVhbmdkYW9kZTsgTGlndW96aHUgKEtlbm5l
+dGgpDQrW98ziOiBSZTogW1BBVENIIDEvNV0gbmV0OiBhZGQgSGlzaWxpY29uIE5ldHdvcmsgU3Vi
+c3lzdGVtIHN1cHBvcnQgKGNvbmZpZyBhbmQgZG9jdW1lbnRzKQ0KDQpPbiBGcmlkYXkgMTQgQXVn
+dXN0IDIwMTUgMTg6MzA6MTggS2VubmV0aCBMZWUgd3JvdGU6DQo+IGRpZmYgLS1naXQgYS9Eb2N1
+bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvbmV0L2hpc2lsaWNvbi1obnMtbmljLnR4dCBi
+L0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9uZXQvaGlzaWxpY29uLWhucy1uaWMu
+dHh0DQo+IG5ldyBmaWxlIG1vZGUgMTAwNjQ0DQo+IGluZGV4IDAwMDAwMDAuLjVhYjY5NjkNCj4g
+LS0tIC9kZXYvbnVsbA0KPiArKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3Mv
+bmV0L2hpc2lsaWNvbi1obnMtbmljLnR4dA0KPiBAQCAtMCwwICsxLDE0IEBADQo+ICtIaXNpbGlj
+b24gTmV0d29yayBTdWJzeXN0ZW0gTklDIGNvbnRyb2xsZXINCj4gKw0KPiArUmVxdWlyZWQgcHJv
+cGVydGllczoNCj4gKy0gY29tcGF0aWJsZTogaGlzaWxpY29uLGhucy1uaWMNCj4gKy0gYWUtbmFt
+ZTogYWNjZWxlcmF0b3IgbmFtZSB3aG8gcHJvdmlkZSB0aGlzIGludGVyZmFjZQ0KPiArLSBhZS1v
+cHRzOiBvcHRpb25zIChzdHJpbmcpIHRvIHRoZSBhY2NlbGVyYXRvci4gZS5nLiB0aGUgaW5kZXgg
+aW50ZXJmYWNlDQo+ICsNCj4gK0V4YW1wbGU6DQo+ICsNCj4gKyAgICAgICBldGhlcm5ldEAwew0K
+PiArICAgICAgICAgICAgICAgY29tcGF0aWJsZSA9ICJoaXNpbGljb24saG5zLW5pYyI7DQo+ICsg
+ICAgICAgICAgICAgICBhZS1uYW1lID0gInNvYzAtbjQiOw0KPiArICAgICAgICAgICAgICAgYWUt
+b3B0cyA9ICIwIjsNCj4gKyAgICAgICB9Ow0KPiANCg0KVGhlc2UgcHJvcGVydGllcyBsb29rIHZl
+cnkgdW5jb252ZW50aW9uYWwuIFdoYXQgYXJlIHRoZSB2YWxpZCBzdHJpbmdzDQpmb3IgYWUtbmFt
+ZSBhbmQgYWUtb3B0cz8gSXQgbG9va3MgbGlrZSB0aGUgbGF0dGVyIGlzIGp1c3QgYSBudW1iZXIs
+DQpzbyB3aHkgbm90IHVzZSBhbiBpbnRlZ2VyIHByb3BlcnR5Pw0KDQoJQXJuZA0KX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KbGludXgtYXJtLWtlcm5lbCBt
+YWlsaW5nIGxpc3QKbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9s
+aXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8vbGludXgtYXJtLWtlcm5lbAo=
