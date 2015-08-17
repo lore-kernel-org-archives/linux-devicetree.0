@@ -1,52 +1,88 @@
-From: Eric Anholt <eric@anholt.net>
-Subject: Re: [PATCH 3/7] drm/vc4: Add KMS support for Raspberry Pi.
-Date: Mon, 17 Aug 2015 10:56:23 -0700
-Message-ID: <877fotx0hk.fsf@eliezer.anholt.net>
-References: <1439427380-2436-1-git-send-email-eric@anholt.net>
- <1439427380-2436-4-git-send-email-eric@anholt.net>
- <55CEC3D8.7060103@wwwdotorg.org>
+From: "Jon Medhurst (Tixy)" <tixy@linaro.org>
+Subject: Re: [PATCH 2/4] drm: Add support for ARM's HDLCD controller.
+Date: Mon, 17 Aug 2015 19:17:53 +0100
+Message-ID: <1439835473.3341.88.camel@linaro.org>
+References: <1438784892-27888-1-git-send-email-Liviu.Dudau@arm.com>
+	 <1438784892-27888-3-git-send-email-Liviu.Dudau@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <55CEC3D8.7060103@wwwdotorg.org>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Stephen Warren <swarren@wwwdotorg.org>
-Cc: devicetree@vger.kernel.org, Lee Jones <lee@kernel.org>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-rpi-kernel@lists.infradead.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1438784892-27888-3-git-send-email-Liviu.Dudau@arm.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Liviu Dudau <Liviu.Dudau@arm.com>
+Cc: David Airlie <airlied@linux.ie>, dri-devel@lists.freedesktop.org, linux-arm-kernel@lists.infradead.org, Mark Rutland <mark.rutland@arm.com>, Arnd Bergmann <arnd@arndb.de>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Catalin Marinas <catalin.marinas@arm.com>, Sudeep Holla <sudeep.holla@arm.com>, Will Deacon <will.deacon@arm.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, Olof Johansson <olof@lixom.net>, Robin Murphy <robin.murphy@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-cjwjc2VjdXJlIG1ldGhvZD1wZ3BtaW1lIG1vZGU9c2lnbj4KU3RlcGhlbiBXYXJyZW4gPHN3YXJy
-ZW5Ad3d3ZG90b3JnLm9yZz4gd3JpdGVzOgoKPiBPbiAwOC8xMi8yMDE1IDA2OjU2IFBNLCBFcmlj
-IEFuaG9sdCB3cm90ZToKPj4gVGhpcyBpcyB0aGUgc3RhcnQgb2YgYSBmdWxsIFZDNCBkcml2ZXIu
-ICBSaWdodCBub3cgdGhpcyBqdXN0IHN1cHBvcnRzCj4+IGNvbmZpZ3VyaW5nIHRoZSBkaXNwbGF5
-IHVzaW5nIGEgcHJlLWV4aXN0aW5nIHZpZGVvIG1vZGUgKGJlY2F1c2UKPj4gY2hhbmdpbmcgdGhl
-IHBpeGVsIGNsb2NrIGlzbid0IGF2YWlsYWJsZSB5ZXQsIGFuZCBkb2Vzbid0IHdvcmsgd2hlbiBp
-dAo+PiBpcykuICBIb3dldmVyLCB0aGlzIGlzIGVub3VnaCBmb3IgZmJjb24gYW5kIGJyaW5naW5n
-IHVwIFggdXNpbmcKPj4geGY4Ni12aWRlby1tb2Rlc2V0dGluZy4KPgo+PiBkaWZmIC0tZ2l0IGEv
-ZHJpdmVycy9ncHUvZHJtL3ZjNC9LY29uZmlnIGIvZHJpdmVycy9ncHUvZHJtL3ZjNC9LY29uZmln
-Cj4KPj4gK2NvbmZpZyBEUk1fVkM0Cj4+ICsJdHJpc3RhdGUgIkJyb2FkY29tIFZDNCBHcmFwaGlj
-cyIKPgo+PiArCWhlbHAKPj4gKwkgIENob29zZSB0aGlzIG9wdGlvbiBpZiB5b3UgaGF2ZSBhIHN5
-c3RlbSB0aGF0IGhhcyBhIEJyb2FkY29tCj4+ICsJICBWQzQgR1BVLCBzdWNoIGFzIHRoZSBSYXNw
-YmVycnkgUGkgb3Igb3RoZXIgQkNNMjcwOC9CQ00yODM1Lgo+PiArCj4+ICsJICBUaGlzIGRyaXZl
-ciByZXF1aXJlcyB0aGF0ICJhdm9pZF93YXJuaW5ncz0yIiBiZSBwcmVzZW50IGluCj4+ICsJICB0
-aGUgY29uZmlnLnR4dCBmb3IgdGhlIGZpcm13YXJlLCB0byBrZWVwIGl0IGZyb20gc21hc2hpbmcK
-Pj4gKwkgIG91ciBkaXNwbGF5IHNldHVwLgo+Cj4gVGhlIG5lZWQgZm9yICJhdm9pZF93YXJuaW5n
-cz0yIiBzZWVtcyBsaWtlIGl0IHdpbGwgdHJpcCBwZW9wbGUgdXAuIEkKPiBkb24ndCB0aGluayBp
-dCdzIGluIGFueSBjb25maWcudHh0IEkndmUgc2Vlbi4gQ2FuIHlvdSBleHBhbmQgbW9yZSBvbiB0
-aGF0PwoKVGhlIHdhcm5pbmdzIHRoaW5nIGlzIHRoZSBmaXJtd2FyZSB3YXRjaGluZyBmb3IgdW5k
-ZXJ2b2x0YWdlIGFuZCB0aGVuIGl0CmNhbGxzIGludG8gZGlzcG1hbnggdG8gb3ZlcmxheSBhIGxp
-dHRsZSByYWluYm93IGJveCBvbiB0aGUgc2NyZWVuLiAgVGhpcwpvZiBjb3Vyc2UgaW50ZXJmZXJl
-cyB3aXRoIG91ciBkaXNwbGF5IHNldHVwLgoKSSB0aGluayB3ZSdsbCBiZSBhYmxlIHRvIHdpcmUg
-dXAgbm90aWZpY2F0aW9ucyB0byBMaW51eCBmb3IKdW5kZXJ2b2x0YWdlLCBhdCB3aGljaCBwb2lu
-dCB3ZSBjYW4gZG8gc29tZXRoaW5nIHVzZWZ1bCB3aXRoIHRoYXQKaW5mb3JtYXRpb24sIG91cnNl
-bHZlcy4KX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJp
-LWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHA6
-Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
+I haven't reviewed the code in detail, just had one comment I alluded to
+in a private email the other day...
+
+On Wed, 2015-08-05 at 15:28 +0100, Liviu Dudau wrote:
+
+> diff --git a/drivers/gpu/drm/arm/hdlcd_crtc.c b/drivers/gpu/drm/arm/hdlcd_crtc.c
+[...]
+> +void hdlcd_set_scanout(struct hdlcd_drm_private *hdlcd)
+> +{
+> +	struct drm_framebuffer *fb = hdlcd->crtc.primary->fb;
+> +	struct drm_gem_cma_object *gem;
+> +	unsigned int depth, bpp;
+> +	dma_addr_t scanout_start;
+> +
+> +	drm_fb_get_bpp_depth(fb->pixel_format, &depth, &bpp);
+> +	gem = drm_fb_cma_get_gem_obj(fb, 0);
+> +
+> +	scanout_start = gem->paddr + fb->offsets[0] +
+> +		(hdlcd->crtc.y * fb->pitches[0]) + (hdlcd->crtc.x * bpp/8);
+> +
+> +	hdlcd_write(hdlcd, HDLCD_REG_FB_BASE, scanout_start);
+> +}
+> +
+
+The above function accesses various pointers and values, which
+presumably all need to be valid and consistent. However...
+
+[...]
+> diff --git a/drivers/gpu/drm/arm/hdlcd_drv.c b/drivers/gpu/drm/arm/hdlcd_drv.c
+[...]
+> +static irqreturn_t hdlcd_irq(int irq, void *arg)
+> +{
+> +	struct drm_device *dev = arg;
+> +	struct hdlcd_drm_private *hdlcd = dev->dev_private;
+> +	unsigned long irq_status;
+> +
+> +	irq_status = hdlcd_read(hdlcd, HDLCD_REG_INT_STATUS);
+> +
+> +#ifdef CONFIG_DEBUG_FS
+> +	if (irq_status & HDLCD_INTERRUPT_UNDERRUN) {
+> +		atomic_inc(&hdlcd->buffer_underrun_count);
+> +	}
+> +	if (irq_status & HDLCD_INTERRUPT_DMA_END) {
+> +		atomic_inc(&hdlcd->dma_end_count);
+> +	}
+> +	if (irq_status & HDLCD_INTERRUPT_BUS_ERROR) {
+> +		atomic_inc(&hdlcd->bus_error_count);
+> +	}
+> +	if (irq_status & HDLCD_INTERRUPT_VSYNC) {
+> +		atomic_inc(&hdlcd->vsync_count);
+> +	}
+> +#endif
+> +	if (irq_status & HDLCD_INTERRUPT_VSYNC) {
+> +		struct drm_pending_vblank_event *event;
+> +		unsigned long flags;
+> +
+> +		hdlcd_set_scanout(hdlcd);
+
+hdlcd_set_scanout is being called on every vsync interrupt, can we
+guarantee that is safe? What if we're in the middle of a page flip or
+panning operation? Seems to me that there is at least scope for
+incorrect addresses being calculated leading to a nasty glitch on the
+screen for one frame. And in the worst case, possibly invalid pointer
+being dereferenced.
+
+So, if scanout needs to be set on every vsync, would it not be safer
+(and more efficient) to have a single variable storing the value to use
+during interrupts, and recalculate that value outside of interrupts
+whenever things are changed?
+
+-- 
+Tixy
