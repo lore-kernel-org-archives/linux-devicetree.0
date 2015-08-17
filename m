@@ -1,56 +1,44 @@
-From: Jyri Sarha <jsarha@ti.com>
-Subject: Re: [PATCH RFC v3 3/7] ASoC: hdmi-codec: Add
- hdmi-codec for external HDMI-encoders
-Date: Mon, 17 Aug 2015 22:22:52 +0300
-Message-ID: <55D2348C.5060103@ti.com>
-References: <cover.1439542916.git.jsarha@ti.com>
- <ed41a6c0b594866c05e695cc066371d0e3862c7e.1439542916.git.jsarha@ti.com>
- <20150814161820.GU10748@sirena.org.uk> <55D1884B.6050800@ti.com>
- <20150817184102.GW10748@sirena.org.uk>
+From: David Miller <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>
+Subject: Re: [PATCH 2/5] net: add Hisilicon Network Subsystem hnae
+ framework support
+Date: Mon, 17 Aug 2015 12:25:48 -0700 (PDT)
+Message-ID: <20150817.122548.203456335027850542.davem@davemloft.net>
+References: <1439548222-231611-1-git-send-email-liguozhu@hisilicon.com>
+	<1439548222-231611-3-git-send-email-liguozhu@hisilicon.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Type: Text/Plain; charset=us-ascii
 Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <20150817184102.GW10748@sirena.org.uk>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Mark Brown <broonie@kernel.org>
-Cc: devicetree@vger.kernel.org, alsa-devel@alsa-project.org, peter.ujfalusi@ti.com, moinejf@free.fr, airlied@linux.ie, dri-devel@lists.freedesktop.org, liam.r.girdwood@linux.intel.com, tony@atomide.com, tomi.valkeinen@ti.com, bcousson@baylibre.com, rmk+kernel@arm.linux.org.uk, linux-omap@vger.kernel.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1439548222-231611-3-git-send-email-liguozhu-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: liguozhu-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org
+Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, Yisen.Zhuang-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, paul.gortmaker-CWA4WttNNZF54TAoqtyWWQ@public.gmane.org, dingtianhong-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linuxarm-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, salil.mehta-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, huangdaode-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, liguozhu-hv44wF8Li93QT0dZR+AlfA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 08/17/15 21:41, Mark Brown wrote:
-> On Mon, Aug 17, 2015 at 10:07:55AM +0300, Jyri Sarha wrote:
->> On 08/14/15 19:18, Mark Brown wrote:
->>> On Fri, Aug 14, 2015 at 12:30:41PM +0300, Jyri Sarha wrote:
->
->>>> +	/* Called when ASoC starts an audio stream setup. The call
->>>> +	 * provides an audio abort callback for stoping an ongoing
->>>> +	 * stream if the HDMI audio becomes unavailable.
->>>> +	 * Optional */
->>>> +	int (*audio_startup)(struct device *dev,
->>>> +			     void (*abort_cb)(struct device *dev));
->
->>> I'm a bit confused about what is going to use abort_cb() and why they
->>> wouldn't just call shutdown instead?
->
->> audio_shutdown() is for ASoC side to tell video side that audio playback has
->> stopped.
->
->> The abort_cb() is for video side to inform ASoC that current audio stream
->> can not continue anymore and it should be aborted. The similar mechanism is
->> currently in use in sound/soc/omap/omap-hdmi-audio.c.
->
-> Someone reading the code needs to be able to understand this.
->
+From: Kenneth Lee <liguozhu-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
+Date: Fri, 14 Aug 2015 18:30:19 +0800
 
-Ok, I'll improve the comment above.
+> diff --git a/drivers/net/ethernet/hisilicon/hns/hnae.c b/drivers/net/ethernet/hisilicon/hns/hnae.c
+> new file mode 100644
+> index 0000000..fd09768
+> --- /dev/null
+> +++ b/drivers/net/ethernet/hisilicon/hns/hnae.c
+ ...
+> +static inline void hnae_list_add(spinlock_t *lock, struct list_head *node,
+> +				 struct list_head *head)
+> +{
+> +	unsigned long flags;
+> +
+> +	spin_lock_irqsave(lock, flags);
+> +	list_add_tail_rcu(node, head);
+> +	spin_unlock_irqrestore(lock, flags);
+> +}
 
-Thanks,
-Jyri
+Do not declare functions 'inline' in foo.c files, let the compiler decide
+on it's own.
+
+This applies to your entire patch series.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
