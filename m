@@ -1,66 +1,68 @@
-From: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Subject: Re: [PATCH RESEND v6 0/2] Driver for TI tlc591xx 8/16 Channel i2c
- LED driver
-Date: Mon, 17 Aug 2015 15:11:48 +0300
-Message-ID: <55D1CF84.8040906@ti.com>
-References: <1426630107-25057-1-git-send-email-andrew@lunn.ch>
+From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Subject: Re: [PATCH RFC 3/3] nvmem: add permission flags in nvmem_config
+Date: Mon, 17 Aug 2015 13:31:34 +0100
+Message-ID: <55D1D426.8020504@linaro.org>
+References: <1439290931-18232-1-git-send-email-srinivas.kandagatla@linaro.org> <1439291024-18375-1-git-send-email-srinivas.kandagatla@linaro.org> <1634428787.18822.1439623316281.JavaMail.open-xchange@oxbsltgw04.schlund.de>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature";
-	boundary="WDJ5qBUsqMFotHIqW5Ia6xXNTKfm7aDud"
-Return-path: <linux-leds-owner@vger.kernel.org>
-In-Reply-To: <1426630107-25057-1-git-send-email-andrew@lunn.ch>
-Sender: linux-leds-owner@vger.kernel.org
-To: Andrew Lunn <andrew@lunn.ch>, cooloney@gmail.com
-Cc: rpurdie@rpsys.net, linux-leds@vger.kernel.org, devicetree@vger.kernel.org, Matthew.Fatheree@belkin.com
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <1634428787.18822.1439623316281.JavaMail.open-xchange@oxbsltgw04.schlund.de>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Stefan Wahren <stefan.wahren@i2se.com>
+Cc: wxt@rock-chips.com, linux-api@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, p.zabel@pengutronix.de, Andrew Lunn <andrew@lunn.ch>, sboyd@codeaurora.org, arnd@arndb.de, linux-arm-kernel@lists.infradead.org, khilman@kernel.org, maitysanchayan@gmail.com, s.hauer@pengutronix.de, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, mporter@konsulko.com, pantelis.antoniou@konsulko.com, devicetree@vger.kernel.org, Mark Brown <broonie@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 List-Id: devicetree@vger.kernel.org
 
---WDJ5qBUsqMFotHIqW5Ia6xXNTKfm7aDud
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: quoted-printable
-
-Hi Andrew, (and Brian),
-
-On 18/03/15 00:08, Andrew Lunn wrote:
-> This patchset is a driver for the TI tlc59116 16 Channel i2c LED
-> driver and tlc59108 8 Channel i2c LED driver. This driver is used on
-> the Belkin WRT1900AC access point and the C code is derived from code
-> Belkin contributed to OpenWRT.  However it has been extensively
-> re-written, and a device tree binding added to replace platform data.
-
-I see this is now in 4.2-rc... And I see you dropped me from Cc in this
-resend series. Because of that, I missed this resend, and couldn't
-object to merging.
-
-I'm not very happy about this getting merged. I think I had valid
-comments to the driver, to which I did get no answers. You knew my
-objections, but you did not even bother mentioning those in the resend
-intro.
-
- Tomi
 
 
---WDJ5qBUsqMFotHIqW5Ia6xXNTKfm7aDud
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
+On 15/08/15 08:21, Stefan Wahren wrote:
+> Hi Srinivas,
+>
+>> Srinivas Kandagatla <srinivas.kandagatla@linaro.org> hat am 11. August 2015 um
+>> 13:03 geschrieben:
+>>
+>>
+>> This patch adds perm variable to nvmem_config structure which will allow
+>> providers to specify the permissions required for the sysfs binary file.
+>> This permission is applied on top of root-only access permissions set by
+>> the core.
+>>
+>> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+>> ---
+>> drivers/nvmem/core.c | 1 +
+>> include/linux/nvmem-provider.h | 1 +
+>> 2 files changed, 2 insertions(+)
+>>
+>> diff --git a/drivers/nvmem/core.c b/drivers/nvmem/core.c
+>> index 414ed23..7481387 100644
+>> --- a/drivers/nvmem/core.c
+>> +++ b/drivers/nvmem/core.c
+>> @@ -312,6 +312,7 @@ struct nvmem_device *nvmem_register(const struct
+>> nvmem_config *config)
+>> config->read_only;
+>> nvmem->bin = bin_attr_template;
+>> nvmem->bin.attr.mode = nvmem->read_only ? : (S_IRUSR | S_IWUSR);
+>> + nvmem->bin.attr.mode |= config->perm;
+>> nvmem->bin.size = nvmem->size;
+>> device_initialize(&nvmem->dev);
+>>
+>> diff --git a/include/linux/nvmem-provider.h b/include/linux/nvmem-provider.h
+>> index 0b68caf..de9a61f 100644
+>> --- a/include/linux/nvmem-provider.h
+>> +++ b/include/linux/nvmem-provider.h
+>> @@ -23,6 +23,7 @@ struct nvmem_config {
+>> const struct nvmem_cell_info *cells;
+>> int ncells;
+>> bool read_only;
+>> + u16 perm; /* visibility in sysfs */
+>
+> how about "umode_t mode" or "umode_t sysfs_mode"?
+>
+Yep, "umode_t mode" sounds much better.
+I will use it that.
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQIcBAEBCAAGBQJV0c+EAAoJEPo9qoy8lh71ntkQAJhJ2UygiIGwnw7Rcv/QwVJF
-7VLV+DH6QC5YZFDE8LwgAEXtd0QGuwaCuFKZnzGYtuCOLulXwqmxcs4ARIzZmbXF
-A9JmR4iE9X/Iyf3jqAFTArnF4xm2xvjAPAI/d3/u+F4kc2SEcuqcZNgA4YipklU8
-bq7lstvYMcyTC2M+TpZrqwpOqG8zuvCuHRsjpHDt/bDjvOdVj5tAvWuHDq+nkfXs
-32kJNOw0FEtTTBUor0BbwGfnRW6/jFAwnqvlQN6ayqJmFrShVBdtsm540C+CrIpV
-QGy/OEmE0A7IQTqHCVGinaoyada90jiBWuJgntz8wiHr7IWOTdevIOMOdlbexMOr
-IXbZUw8D84YbgMtayqqFcTjkcKQwFr5iafF2sYQU51b8Llhl0KezAyAxmKZilG3y
-howBwwAUWgJ+Z7dmapjSwV4d4d/2rSOlvGiSFgZ3FNCsLX6dZjRiD7QhZEvFjwkS
-0fEP8MNaPWCNmAjl2hy/HPJzygbodQrotvRt6z1FP1hDU2YcxjIMFfxTXid3kpgO
-7clh1obMpFet5POrJ2NauZTeldNjcVs+uTXpv9UxMNfLQG5d+PtJnTTRdlo9YztJ
-lD7Ot6e875Ty2nX3kaI8EXez/Ml/+HUBi+sksGeRZ1T2JtBtzb/jZomJywYt4E52
-AqyfTDBH0dTmVCvTKoZD
-=edXK
------END PGP SIGNATURE-----
-
---WDJ5qBUsqMFotHIqW5Ia6xXNTKfm7aDud--
+--srini
+> Beside that the whole series looks good to me.
+>
+> Thanks Stefan
+>
