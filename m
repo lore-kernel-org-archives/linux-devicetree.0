@@ -1,115 +1,47 @@
 From: Ley Foon Tan <lftan@altera.com>
-Subject: [PATCH v4 4/5] Documentation: dt-bindings: pci: altera pcie device tree binding
-Date: Mon, 17 Aug 2015 17:09:38 +0800
-Message-ID: <1439802579-22651-5-git-send-email-lftan@altera.com>
+Subject: [PATCH v4 1/5] arm: add msi.h to Kbuild
+Date: Mon, 17 Aug 2015 17:09:35 +0800
+Message-ID: <1439802579-22651-2-git-send-email-lftan@altera.com>
 References: <1439802579-22651-1-git-send-email-lftan@altera.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 In-Reply-To: <1439802579-22651-1-git-send-email-lftan@altera.com>
-Sender: linux-kernel-owner@vger.kernel.org
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: Bjorn Helgaas <bhelgaas@google.com>, Russell King <linux@arm.linux.org.uk>, Marc Zyngier <marc.zyngier@arm.com>
-Cc: Arnd Bergmann <arnd@arndb.de>, Dinh Nguyen <dinguyen@opensource.altera.com>, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, Ley Foon Tan <lftan@altera.com>, lftan.linux@gmail.com, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, lftan.linux@gmail.com, Arnd Bergmann <arnd@arndb.de>, linux-doc@vger.kernel.org, linux-pci@vger.kernel.org, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Kumar Gala <galak@codeaurora.org>, Ley Foon Tan <lftan@altera.com>, Dinh Nguyen <dinguyen@opensource.altera.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-This patch adds the bindings for Altera PCIe host controller driver and
-Altera PCIe MSI driver.
+Include asm-generic/msi.h to support CONFIG_GENERIC_MSI_IRQ_DOMAIN.
+This to fix compilation error:
+"include/linux/msi.h:123:21: fatal error: asm/msi.h:
+No such file or directory"
 
 Signed-off-by: Ley Foon Tan <lftan@altera.com>
 ---
- .../devicetree/bindings/pci/altera-pcie-msi.txt    | 27 ++++++++++++
- .../devicetree/bindings/pci/altera-pcie.txt        | 49 ++++++++++++++++++++++
- 2 files changed, 76 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/pci/altera-pcie-msi.txt
- create mode 100644 Documentation/devicetree/bindings/pci/altera-pcie.txt
+ arch/arm/include/asm/Kbuild | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/Documentation/devicetree/bindings/pci/altera-pcie-msi.txt b/Documentation/devicetree/bindings/pci/altera-pcie-msi.txt
-new file mode 100644
-index 0000000..7f330c9
---- /dev/null
-+++ b/Documentation/devicetree/bindings/pci/altera-pcie-msi.txt
-@@ -0,0 +1,27 @@
-+* Altera PCIe MSI controller
-+
-+Required properties:
-+- compatible:	should contain "altr,msi-1.0"
-+- reg:		specifies the physical base address of the controller and
-+		the length of the memory mapped region.
-+- reg-names:	Must include the following entries:
-+		"csr": CSR registers
-+		"vector_slave": vectors region
-+-interrupts:	specifies the interrupt source of the parent interrupt
-+		controller. The format of the interrupt specifier depends on the
-+		parent interrupt controller.
-+- num-vectors:	Number of vectors, range 1 to 32.
-+- msi-controller:	indicates that this is MSI controller node
-+
-+
-+Example
-+msi0: msi@0xFF200000 {
-+	compatible = "altr,msi-1.0";
-+	reg = <0xFF200000 0x00000010
-+		0xFF200010 0x00000080>;
-+	reg-names = "csr", "vector_slave";
-+	interrupt-parent = <&hps_0_arm_gic_0>;
-+	interrupts = <0 42 4>;
-+	msi-controller = <1>;
-+	num-vectors = <32>;
-+};
-diff --git a/Documentation/devicetree/bindings/pci/altera-pcie.txt b/Documentation/devicetree/bindings/pci/altera-pcie.txt
-new file mode 100644
-index 0000000..73a8dc0
---- /dev/null
-+++ b/Documentation/devicetree/bindings/pci/altera-pcie.txt
-@@ -0,0 +1,49 @@
-+* Altera PCIe controller
-+
-+Required properties:
-+- compatible :	should contain "altr,pcie-root-port-1.0"
-+- reg:		A list of physical base address and length for TXS and CRA.
-+- reg-names:	Must include the following entries:
-+		"Txs" or "txs": TXS region
-+		"Cra" or "cra": Control register access region
-+-interrupts:	specifies the interrupt source of the parent interrupt controller.
-+		The format of the interrupt specifier depends on the parent interrupt
-+		controller.
-+- device_type:	must be "pci"
-+- #address-cells:	set to <3>
-+- #size-cells:	set to <2>
-+- #interrupt-cells:	set to <1>
-+- ranges:		Describes the translation of addresses for root ports and standard
-+		PCI regions.
-+- interrupt-map-mask and interrupt-map: standard PCI properties
-+	to define the mapping of the PCIe interface to interrupt
-+	numbers.
-+
-+Optional properties:
-+- msi-parent:	Link to the hardware entity that serves as the MSI controller for this PCIe
-+		controller.
-+- bus-range:	PCI bus numbers covered
-+
-+Example
-+	pcie_0: pcie@0xc00000000 {
-+		compatible = "altr,pcie-root-port-1.0";
-+		reg = <0xc0000000 0x20000000>,
-+			<0xff220000 0x00004000>;
-+		reg-names = "Txs", "Cra";
-+		interrupt-parent = <&hps_0_arm_gic_0>;
-+		interrupts = <0 40 4>;
-+		interrupt-controller;
-+		#interrupt-cells = <1>;
-+		bus-range = <0x0 0xFF>;
-+		device_type = "pci";
-+		msi-parent = <&msi_to_gic_gen_0>;
-+		#address-cells = <3>;
-+		#size-cells = <2>;
-+		interrupt-map-mask = <0 0 0 7>;
-+		interrupt-map = <0 0 0 1 &pcie_0 1>,
-+			            <0 0 0 2 &pcie_0 2>,
-+			            <0 0 0 3 &pcie_0 3>,
-+			            <0 0 0 4 &pcie_0 4>;
-+		ranges = <0x82000000 0x00000000 0x00000000 0xc0000000 0x00000000 0x10000000
-+			    0x82000000 0x00000000 0x10000000 0xd0000000 0x00000000 0x10000000>;
-+	};
+diff --git a/arch/arm/include/asm/Kbuild b/arch/arm/include/asm/Kbuild
+index 83c5019..ddc2761 100644
+--- a/arch/arm/include/asm/Kbuild
++++ b/arch/arm/include/asm/Kbuild
+@@ -14,6 +14,7 @@ generic-y += local.h
+ generic-y += local64.h
+ generic-y += mcs_spinlock.h
+ generic-y += msgbuf.h
++generic-y += msi.h
+ generic-y += param.h
+ generic-y += parport.h
+ generic-y += poll.h
 -- 
 1.8.2.1
