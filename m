@@ -1,95 +1,324 @@
-From: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Subject: Re: [PATCH RESEND v6 0/2] Driver for TI tlc591xx 8/16 Channel i2c
- LED driver
-Date: Mon, 17 Aug 2015 23:47:29 +0300
-Message-ID: <55D24861.3020202@ti.com>
-References: <1426630107-25057-1-git-send-email-andrew@lunn.ch> <55D1CF84.8040906@ti.com> <20150817132718.GF7537@lunn.ch> <55D1EBA8.9090609@ti.com> <20150817142147.GG7537@lunn.ch> <55D20E96.3020504@ti.com> <20150817164822.GA29494@lunn.ch>
+From: Mathieu Olivari <mathieu@codeaurora.org>
+Subject: Re: [PATCH 3/3] mtd: add SMEM parser for QCOM platforms
+Date: Mon, 17 Aug 2015 14:24:52 -0700
+Message-ID: <20150817212452.GA3816@codeaurora.org>
+References: <1439599573-3932-1-git-send-email-mathieu@codeaurora.org>
+ <1439599573-3932-4-git-send-email-mathieu@codeaurora.org>
+ <20150815054817.GM13472@usrtlx11787.corpusers.net>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature";
-	boundary="IQKXBTjCkp7kl5IdIU4GASxGVWFQui2p8"
-Return-path: <linux-leds-owner@vger.kernel.org>
-In-Reply-To: <20150817164822.GA29494@lunn.ch>
-Sender: linux-leds-owner@vger.kernel.org
-To: Andrew Lunn <andrew@lunn.ch>
-Cc: cooloney@gmail.com, rpurdie@rpsys.net, linux-leds@vger.kernel.org, devicetree@vger.kernel.org, Matthew.Fatheree@belkin.com, "R, Vignesh" <vigneshr@ti.com>, Jacek Anaszewski <j.anaszewski@samsung.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20150815054817.GM13472@usrtlx11787.corpusers.net>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Bjorn Andersson <bjorn.andersson@sonymobile.com>
+Cc: "robh+dt@kernel.org" <robh+dt@kernel.org>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "galak@codeaurora.org" <galak@codeaurora.org>, "linux@arm.linux.org.uk" <linux@arm.linux.org.uk>, "dwmw2@infradead.org" <dwmw2@infradead.org>, "computersforpeace@gmail.com" <computersforpeace@gmail.com>, "agross@codeaurora.org" <agross@codeaurora.org>, "sboyd@codeaurora.org" <sboyd@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
---IQKXBTjCkp7kl5IdIU4GASxGVWFQui2p8
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: quoted-printable
-
-
-
-On 17/08/15 19:48, Andrew Lunn wrote:
->> TLC591xx is quite simple HW, and the code doing the HW programming
->> should be identical for a pwm and for a led driver. I don't see either=
- a
->> pwm or a led driver being somehow superior. They are very similar simp=
-le
->> drivers, implementing a different interface. Whether the interface wor=
-ks
->> for you should be clear from the interface itself. The code is just de=
-tails.
->>
->> On the other hand, if you want something you can use to test, it's a
->> different case, but you haven't indicated any interest in that.
->=20
-> What i want is code in the kernel to driver the LEDs on my Linksys
-> WRT1900ac. You say, "the code is just details", is just plain
-> wrong. Code is the Linux kernel and is the process of getting stuff
-> into the kernel. I've followed the process, submitted code for review,
-> fixed up comments, got it tested and ACKed by people, and merged.
-
-Your process also included in ignoring my questions, and dropping me
-from cc so you'd get the driver merged. My idea of the Linux development
-process differs greatly from yours.
-
-> Where as all you have done is emailed.
-
-Yes, as you were writing the driver for the HW, and I was expecting
-answers from you. I would find it rather rude if I'm working on a
-driver, getting comments on it and fixing things, and suddenly someone
-else goes and writes his own version of the driver for the HW.
-
-I presumed that you would either answer to my comments, or you would cc
-me when you want to ping the maintainers.
-
-Sure, if the driver is complex or somehow controversial it's good to
-have different implementations of the driver so the best one can be
-picked. This is not the case here. The HW is simple, and both PWM and
-LED interfaces are simple. The code is just details in such a case.
-
-I can post a pwm based driver tomorrow. I could've done that long ago if
-you would have just said that you're not interested in finding answers
-to my questions or trying a pwm driver. Or if you'd have bothered to cc
-me in the last series, so I would've realized you are done with the drive=
-r.
-
- Tomi
-
-
---IQKXBTjCkp7kl5IdIU4GASxGVWFQui2p8
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQIcBAEBCAAGBQJV0khtAAoJEPo9qoy8lh71i9YQAK26QE7s1KElu9sNA0wa4rsw
-w8Lcno7gR82k9HIhwh4IgplWmwBkztCSc1YhPN6Q78KGBLYC6fpPtSlgmq+dC87r
-JtteE/2wGa8mPQ0cQjWFg3xuPmF+nky1gVsPkWSZ1C+Eth57ntKFqRx4N7FEFMg0
-g4kOEF/iuX6CuI10DeR4JamuDZuUzSEnLTDdFn85sXmhGzAJ6e5zl1Z/QhLGZXd7
-HD6f3trVtrHW1j7tahWCGAeo7gLVuLW751JJ4Hojypf+S0kHC57Eptyqka0YZaMx
-jvrQorzMJ3jDSyZZYH0QwQlAIGKHU8MjBiDP238OKK6IbiG/13woFpcVav8USyo3
-BdeLL1vwdGIlnkjDi9mbdyCuRRSdtVhNqp4lwkZYLsKZdOuXCyAQkGi7+0NUPuq9
-G2WeW3wqkW6KwkEAaR+EHldcjkSzyGYQKnqi5U5erumnVik9+RfCqe9OJeZiYhts
-T3BONkgbF/cgdoZQ5cbq0YmI3TybrECH5DrSkguvAo06mkc4q2lBvqD6Aomuz9PC
-3AwNt6TASYUw5SxQ/VNEykLCP0cmHFjXVSfwVdBNRau1Sf2Rfpmc74vxZ6Ay9F58
-4nKDxuq+1oH6PS0EOPmZOP6ME/FSPQF7tXnqI2zDyrZPwvFRgn2EZqS3CjWrEyZ9
-rOhESAtUhmbrTdG2vxqu
-=83am
------END PGP SIGNATURE-----
-
---IQKXBTjCkp7kl5IdIU4GASxGVWFQui2p8--
+On Fri, Aug 14, 2015 at 10:48:17PM -0700, Bjorn Andersson wrote:
+> On Fri 14 Aug 17:46 PDT 2015, Mathieu Olivari wrote:
+> 
+> > On QCOM platforms using MTD devices storage (such as IPQ806x), SMEM is
+> > used to store partition layout. This new parser can now be used to read
+> > SMEM and use it to register an MTD layout according to its content.
+> > 
+> 
+> Nice to see another user of the smem code :)
+> 
+> > diff --git a/drivers/mtd/qcom_smem_part.c b/drivers/mtd/qcom_smem_part.c
+> [..]
+> > +
+> > +/* Processor/host identifier for the application processor */
+> > +#define SMEM_HOST_APPS			0
+> 
+> This makes me wonder if there will ever be an apps partition. I would
+> have picked QCOM_SMEM_HOST_ANY, but I don't know what future platforms
+> might hold for us.
+> 
+> 
+> And as a side note, I think I will propose that we rename that define
+> QCOM_SMEM_GLOBAL.
+OK; I'll rename it in QCOM_SMEM_GLOBAL then to be in sync.
+> 
+> > +
+> > +/* SMEM items index */
+> > +#define SMEM_AARM_PARTITION_TABLE	9
+> > +#define SMEM_BOOT_FLASH_TYPE		421
+> > +#define SMEM_BOOT_FLASH_BLOCK_SIZE	424
+> > +
+> > +/* SMEM Flash types */
+> > +#define SMEM_FLASH_NAND			2
+> > +#define SMEM_FLASH_SPI			6
+> > +
+> > +#define SMEM_PART_NAME_SZ		16
+> > +#define SMEM_PARTS_MAX			32
+> > +
+> > +struct smem_partition {
+> > +	char name[SMEM_PART_NAME_SZ];
+> > +	__le32 start;
+> > +	__le32 size;
+> > +	__le32 attr;
+> > +};
+> > +
+> > +struct smem_partition_table {
+> > +	u8 magic[8];
+> > +	__le32 version;
+> > +	__le32 len;
+> > +	struct smem_partition parts[SMEM_PARTS_MAX];
+> > +};
+> > +
+> > +/* SMEM Magic values in partition table */
+> > +static const u8 SMEM_PTABLE_MAGIC[] = {
+> > +	0xaa, 0x73, 0xee, 0x55,
+> > +	0xdb, 0xbd, 0x5e, 0xe3,
+> > +};
+> > +
+> > +static int qcom_smem_get_flash_blksz(u64 **smem_blksz)
+> 
+> Instead of passing pointers around I think you should just make this
+> function return < 0 for errors and >= 0 for the requested data. You can
+> probably still have it as an int, as the current values are well below
+> the size of the int.
+Good point. Thanks. I'll report it.
+> 
+> > +{
+> > +	int ret;
+> > +	size_t size;
+> > +
+> > +	ret = qcom_smem_get(SMEM_HOST_APPS, SMEM_BOOT_FLASH_BLOCK_SIZE,
+> > +			    (void **) smem_blksz, &size);
+> > +
+> > +	if (ret < 0) {
+> > +		pr_err("Unable to read flash blksz from SMEM\n");
+> > +		return -ENOENT;
+> > +	}
+> > +
+> > +	if (size != sizeof(**smem_blksz)) {
+> > +		pr_err("Invalid flash blksz size in SMEM\n");
+> > +		return -EINVAL;
+> > +	}
+> > +
+> > +	return 0;
+> > +}
+> > +
+> > +static int qcom_smem_get_flash_type(u64 **smem_flash_type)
+> 
+> Same as above.
+OK.
+> 
+> > +{
+> > +	int ret;
+> > +	size_t size;
+> > +
+> > +	ret = qcom_smem_get(SMEM_HOST_APPS, SMEM_BOOT_FLASH_TYPE,
+> > +			    (void **) smem_flash_type, &size);
+> > +
+> > +	if (ret < 0) {
+> > +		pr_err("Unable to read flash type from SMEM\n");
+> > +		return -ENOENT;
+> > +	}
+> > +
+> > +	if (size != sizeof(**smem_flash_type)) {
+> > +		pr_err("Invalid flash type size in SMEM\n");
+> > +		return -EINVAL;
+> > +	}
+> > +
+> > +	return 0;
+> > +}
+> > +
+> > +static int qcom_smem_get_flash_partitions(struct smem_partition_table **pparts)
+> > +{
+> > +	int ret;
+> > +	size_t size;
+> > +
+> > +	ret = qcom_smem_get(SMEM_HOST_APPS, SMEM_AARM_PARTITION_TABLE,
+> > +			    (void **) pparts, &size);
+> > +
+> 
+> If you don't care about the size just pass NULL as the last argument.
+OK.
+> 
+> > +	if (ret < 0) {
+> > +		pr_err("Unable to read partition table from SMEM\n");
+> > +		return -ENOENT;
+> > +	}
+> 
+> I think it would be cleaner if you had this function check the magic and
+> version and then return the partition pointer. That is:
+> 
+> static smem_partition *qcom_smem_get_flash_partitions(size_t *count)
+> 
+> 
+> And make *count = le32_to_cpu(table->len); so you don't have to care
+> about that below.
+> 
+> (And use NULL or ERR_PTR for the error paths)
+Same; good idea. I'll make the mod.
+> 
+> > +
+> > +	return 0;
+> > +}
+> > +
+> > +static int of_dev_node_match(struct device *dev, void *data)
+> > +{
+> > +	return dev->of_node == data;
+> > +}
+> > +
+> > +static bool is_spi_device(struct device_node *np)
+> > +{
+> > +	struct device *dev;
+> > +
+> > +	dev = bus_find_device(&spi_bus_type, NULL, np, of_dev_node_match);
+> > +	if (!dev)
+> > +		return false;
+> > +
+> > +	put_device(dev);
+> > +	return true;
+> > +}
+> > +
+> > +static int parse_qcom_smem_partitions(struct mtd_info *master,
+> > +				      struct mtd_partition **pparts,
+> > +				      struct mtd_part_parser_data *data)
+> > +{
+> > +	struct smem_partition_table *smem_parts;
+> > +	u64 *smem_flash_type, *smem_blksz;
+> > +	struct mtd_partition *mtd_parts;
+> > +	struct device_node *of_node = data->of_node;
+> > +	int i, ret;
+> > +
+> > +	/*
+> > +	 * SMEM will only store the partition table of the boot device.
+> > +	 * If this is not the boot device, do not return any partition.
+> > +	 */
+> 
+> I guess this is the result of below checks, but it's not describing
+> what's actually done here. I think it should say "only parse
+> partitions on the specified memory type" or something like that.
+OK.
+> 
+> > +	ret = qcom_smem_get_flash_type(&smem_flash_type);
+> > +	if (ret < 0)
+> > +		return ret;
+> > +
+> > +	if ((*smem_flash_type == SMEM_FLASH_NAND && !mtd_type_is_nand(master))
+> > +	    || (*smem_flash_type == SMEM_FLASH_SPI && !is_spi_device(of_node)))
+> > +		return 0;
+> > +
+> > +	/*
+> > +	 * Just for sanity purpose, make sure the block size in SMEM matches the
+> > +	 * block size of the MTD device
+> > +	 */
+> 
+> Well, this is not only for sanity purpose, as you multiply all sizes
+> with this number below...
+I'll update the comment.
+> 
+> > +	ret = qcom_smem_get_flash_blksz(&smem_blksz);
+> > +	if (ret < 0)
+> > +		return ret;
+> > +
+> > +	if (*smem_blksz != master->erasesize) {
+> > +		pr_err("SMEM block size differs from MTD block size\n");
+> > +		return -EINVAL;
+> > +	}
+> > +
+> > +	/* Get partition pointer from SMEM */
+> > +	ret = qcom_smem_get_flash_partitions(&smem_parts);
+> > +	if (ret < 0)
+> > +		return ret;
+> > +
+> > +	if (memcmp(SMEM_PTABLE_MAGIC, smem_parts->magic,
+> > +		   sizeof(SMEM_PTABLE_MAGIC))) {
+> > +		pr_err("SMEM partition magic invalid\n");
+> > +		return -EINVAL;
+> > +	}
+> > +
+> > +	/* Allocate and populate the mtd structures */
+> > +	mtd_parts = kcalloc(le32_to_cpu(smem_parts->len), sizeof(*mtd_parts),
+> > +			    GFP_KERNEL);
+> > +	if (!mtd_parts)
+> > +		return -ENOMEM;
+> > +
+> > +	for (i = 0; i < smem_parts->len; i++) {
+> 
+> This might have the wrong endian...
+Right. I'll do a le32_to_cpu()
+> 
+> > +		struct smem_partition *s_part = &smem_parts->parts[i];
+> > +		struct mtd_partition *m_part = &mtd_parts[i];
+> 
+> I think Stephens suggestion was that you assign *pparts before looping
+> and then you simply do:
+> 
+> *pparts = mtd_parts;
+> 
+> while (len--) {
+> 	..
+> 
+> 	s_part++;
+> 	mtd_parts++;
+> }
+> 
+> > +
+> > +		m_part->name = s_part->name;
+> 
+> I tried to follow the mtd code, and I believe that this pointer might
+> be freed in free_partition(). If so you must kstrdup it here.
+OK.
+> 
+> > +		m_part->size = le32_to_cpu(s_part->size) * (*smem_blksz);
+> > +		m_part->offset = le32_to_cpu(s_part->start) * (*smem_blksz);
+> > +
+> > +		/*
+> > +		 * The last SMEM partition may have its size marked as
+> > +		 * something like 0xffffffff, which means "until the end of the
+> > +		 * flash device". In this case, truncate it.
+> > +		 */
+> > +		if (m_part->offset + m_part->size > master->size)
+> > +			m_part->size = master->size - m_part->offset;
+> > +	}
+> > +
+> > +	*pparts = mtd_parts;
+> > +
+> > +	return smem_parts->len;
+> 
+> Again, this might be in the wrong endian.
+Yes.
+> 
+> > +}
+> > +
+> > +static struct mtd_part_parser qcom_smem_parser = {
+> > +	.owner = THIS_MODULE,
+> > +	.parse_fn = parse_qcom_smem_partitions,
+> > +	.name = "qcom-smem",
+> > +};
+> > +
+> > +static int __init qcom_smem_parser_init(void)
+> > +{
+> > +	register_mtd_parser(&qcom_smem_parser);
+> > +	return 0;
+> > +}
+> > +
+> > +static void __exit qcom_smem_parser_exit(void)
+> > +{
+> > +	deregister_mtd_parser(&qcom_smem_parser);
+> > +}
+> > +
+> > +module_init(qcom_smem_parser_init);
+> > +module_exit(qcom_smem_parser_exit);
+> 
+> Mostly unrelated to this patch; This makes me appreciate the
+> module_platform_driver() macro, would be nice to see a patch that
+> introduces something similar for partition parsers.
+> 
+> > +
+> > +MODULE_LICENSE("GPL");
+> 
+> Are you sure you don't mean "GPL v2" here?
+I'll update it.
+> 
+> > +MODULE_AUTHOR("Mathieu Olivari <mathieu@codeaurora.org>");
+> > +MODULE_DESCRIPTION("Parsing code for SMEM based partition tables");
+> 
+> Regards,
+> Bjorn
