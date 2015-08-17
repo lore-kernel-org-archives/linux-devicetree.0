@@ -1,91 +1,68 @@
-From: Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Subject: Re: [RFC PATCH v1] mmc: sdhci-of-arasan: Add the support for
- sdhci-5.1
-Date: Tue, 18 Aug 2015 07:40:47 +0800
-Message-ID: <55D270FF.5030309@rock-chips.com>
-References: <1439279190-9556-1-git-send-email-shawn.lin@rock-chips.com>
- <55CA0C6F.7000002@xilinx.com> <55CAD499.5070701@xilinx.com>
+From: Sagar Dharia <sdharia@codeaurora.org>
+Subject: Re: [PATCH V3 5/6] slimbus: Add support for 'clock-pause' feature
+Date: Mon, 17 Aug 2015 17:43:01 -0600
+Message-ID: <55D27185.4000101@codeaurora.org>
+References: <1438585190-11894-1-git-send-email-sdharia@codeaurora.org>
+ <1438585190-11894-6-git-send-email-sdharia@codeaurora.org>
+ <20150814183918.GF10748@sirena.org.uk>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=windows-1252; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <55CAD499.5070701-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <20150814183918.GF10748@sirena.org.uk>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Mark Brown <broonie@kernel.org>
+Cc: gregkh@linuxfoundation.org, bp@suse.de, poeschel@lemonage.de, treding@nvidia.com, gong.chen@linux.intel.com, andreas.noever@gmail.com, alan@linux.intel.com, mathieu.poirier@linaro.org, daniel@ffwll.ch, oded.gabbay@amd.com, jkosina@suse.cz, sharon.dvir1@mail.huji.ac.il, joe@perches.com, davem@davemloft.net, james.hogan@imgtec.com, michael.opdenacker@free-electrons.com, daniel.thompson@linaro.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, kheitke@audience.com, mlocke@codeaurora.org, agross@codeaurora.org, linux-arm-msm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Ulf,
+Hi Mark,
 
-On 2015/8/12 13:07, Michal Simek wrote:
-> +linux-mmc
+On 8/14/2015 12:39 PM, Mark Brown wrote:
+> On Mon, Aug 03, 2015 at 12:59:49AM -0600, Sagar Dharia wrote:
 >
-> On 08/11/2015 04:53 PM, Michal Simek wrote:
->> On 08/11/2015 09:46 AM, Shawn Lin wrote:
->>> This patch adds the compatible string in sdhci-of-arasan.c to
->>> support sdhci-arasan5.1 version of controller. No documented
->>> controller IP version is found in the TRM, so we use ths version
->>> of command queueing engine integrated into this controller by arasan
->>> to specify our controller.
->>>
->>> Signed-off-by: Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
->>>
->>> ---
->>>
->>> Changes in v1:
->>> - Remove redundant SDHCI_QUIRK_CAP_CLOCK_BASE_BROKEN for "arasan, sdhci-5.1" since
->>>    SDHCI will check "host->max_clk == 0" and let driver get it from host->ops->get_max_clock.
->>>
->>>   Documentation/devicetree/bindings/mmc/arasan,sdhci.txt | 2 +-
->>>   drivers/mmc/host/sdhci-of-arasan.c                     | 1 +
->>>   2 files changed, 2 insertions(+), 1 deletion(-)
->>>
->>> diff --git a/Documentation/devicetree/bindings/mmc/arasan,sdhci.txt b/Documentation/devicetree/bindings/mmc/arasan,sdhci.txt
->>> index 7e94903..da541c3 100644
->>> --- a/Documentation/devicetree/bindings/mmc/arasan,sdhci.txt
->>> +++ b/Documentation/devicetree/bindings/mmc/arasan,sdhci.txt
->>> @@ -9,7 +9,7 @@ Device Tree Bindings for the Arasan SDHCI Controller
->>>
->>>   Required Properties:
->>>     - compatible: Compatibility string. Must be 'arasan,sdhci-8.9a' or
->>> -                'arasan,sdhci-4.9a'
->>> +                'arasan,sdhci-4.9a' or 'arasan,sdhci-5.1'
->>>     - reg: From mmc bindings: Register location and length.
->>>     - clocks: From clock bindings: Handles to clock inputs.
->>>     - clock-names: From clock bindings: Tuple including "clk_xin" and "clk_ahb"
->>> diff --git a/drivers/mmc/host/sdhci-of-arasan.c b/drivers/mmc/host/sdhci-of-arasan.c
->>> index ef5a7d2..75379cb 100644
->>> --- a/drivers/mmc/host/sdhci-of-arasan.c
->>> +++ b/drivers/mmc/host/sdhci-of-arasan.c
->>> @@ -217,6 +217,7 @@ static int sdhci_arasan_remove(struct platform_device *pdev)
->>>
->>>   static const struct of_device_id sdhci_arasan_of_match[] = {
->>>   	{ .compatible = "arasan,sdhci-8.9a" },
->>> +	{ .compatible = "arasan,sdhci-5.1" },
->>>   	{ .compatible = "arasan,sdhci-4.9a" },
->>>   	{ }
->>>   };
->>>
->>
->> Acked-by: Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+>> @@ -459,6 +459,8 @@ int slim_register_controller(struct slim_controller *ctrl)
+>>   	mutex_init(&ctrl->m_ctrl);
+>>   	spin_lock_init(&ctrl->tx.lock);
+>>   	spin_lock_init(&ctrl->rx.lock);
+>> +	mutex_init(&ctrl->sched.m_reconf);
+>> +	init_completion(&ctrl->sched.pause_comp);
+> Should there not be more interaction with the rest of the framework on
+> clock pauses - the bus will need to be started to do transfers for
+> example?
 
-Could you pull this patch into your repository?
+I'm relying on controller's pm_runtime as you pointed out for 
+entering/exiting clock-pause.
+The reason to initiate clock-pause from controller was more on the lines 
+of clock-pause sequence being expensive, and tight coupling between 
+controller/framer-clocks and clock-pause.
+Three reconfiguration-transfer-commands have to be broadcast on the 
+lines to enter clock-pause, and exiting it is needs 'wakeup' callback 
+for controller.
+Doing this per transfer will be a big overhead.
+Using pm_runtime's autosuspend feature allows the controller-device to 
+enter clock-pause after periods of inactivity to avoid thrashing.
+As a trade-off, I am proposing that controller should initiate 
+clock-pause from its pm_runtime callbacks, and framework should provide 
+the means to do it.
+Also, typically clocks of the controller are coupled with clock-pause 
+and clocks cannot be turned off until the clock-pause sequence is sent 
+on the bus since framer has to keep clocking the bus.
 
->>
->> Thanks,
->> Michal
->>
->>
+Thanks
+Sagar
+
 >
+>> +#include <linux/slimbus.h>
+>> +/**
+> Missing blank line.
 >
->
->
+>> + * slim_ctrl_clk_pause: Called by slimbus controller to enter/exit 'clock pause'
+> Is the controller the best place to initiate bus pausing?  It's
+> surprising to me that it would be, the bus being idle isn't something
+> that needs controller specific knowledge so I'd expect the framework to
+> have standard support for this.
 
 
 -- 
-Shawn Lin
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+hosted by The Linux Foundation
