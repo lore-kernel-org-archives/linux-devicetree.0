@@ -1,88 +1,99 @@
-From: "Jon Medhurst (Tixy)" <tixy@linaro.org>
-Subject: Re: [PATCH 2/4] drm: Add support for ARM's HDLCD controller.
-Date: Mon, 17 Aug 2015 19:17:53 +0100
-Message-ID: <1439835473.3341.88.camel@linaro.org>
-References: <1438784892-27888-1-git-send-email-Liviu.Dudau@arm.com>
-	 <1438784892-27888-3-git-send-email-Liviu.Dudau@arm.com>
+From: Eric Anholt <eric@anholt.net>
+Subject: Re: [PATCH 1/7] drm/vc4: Add devicetree bindings for VC4.
+Date: Mon, 17 Aug 2015 11:30:14 -0700
+Message-ID: <874mjxwyx5.fsf@eliezer.anholt.net>
+References: <1439427380-2436-1-git-send-email-eric@anholt.net>
+ <1439427380-2436-2-git-send-email-eric@anholt.net>
+ <55CEC25E.7070303@wwwdotorg.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1438784892-27888-3-git-send-email-Liviu.Dudau@arm.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Liviu Dudau <Liviu.Dudau@arm.com>
-Cc: David Airlie <airlied@linux.ie>, dri-devel@lists.freedesktop.org, linux-arm-kernel@lists.infradead.org, Mark Rutland <mark.rutland@arm.com>, Arnd Bergmann <arnd@arndb.de>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Catalin Marinas <catalin.marinas@arm.com>, Sudeep Holla <sudeep.holla@arm.com>, Will Deacon <will.deacon@arm.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, Olof Johansson <olof@lixom.net>, Robin Murphy <robin.murphy@arm.com>
+Content-Type: multipart/mixed; boundary="===============0425089777=="
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <55CEC25E.7070303@wwwdotorg.org>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Stephen Warren <swarren@wwwdotorg.org>, dri-devel@lists.freedesktop.org
+Cc: devicetree@vger.kernel.org, Lee Jones <lee@kernel.org>, linux-rpi-kernel@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-I haven't reviewed the code in detail, just had one comment I alluded to
-in a private email the other day...
+--===============0425089777==
+Content-Type: multipart/signed; boundary="=-=-=";
+	micalg=pgp-sha512; protocol="application/pgp-signature"
 
-On Wed, 2015-08-05 at 15:28 +0100, Liviu Dudau wrote:
+--=-=-=
+Content-Type: text/plain
 
-> diff --git a/drivers/gpu/drm/arm/hdlcd_crtc.c b/drivers/gpu/drm/arm/hdlcd_crtc.c
-[...]
-> +void hdlcd_set_scanout(struct hdlcd_drm_private *hdlcd)
-> +{
-> +	struct drm_framebuffer *fb = hdlcd->crtc.primary->fb;
-> +	struct drm_gem_cma_object *gem;
-> +	unsigned int depth, bpp;
-> +	dma_addr_t scanout_start;
-> +
-> +	drm_fb_get_bpp_depth(fb->pixel_format, &depth, &bpp);
-> +	gem = drm_fb_cma_get_gem_obj(fb, 0);
-> +
-> +	scanout_start = gem->paddr + fb->offsets[0] +
-> +		(hdlcd->crtc.y * fb->pitches[0]) + (hdlcd->crtc.x * bpp/8);
-> +
-> +	hdlcd_write(hdlcd, HDLCD_REG_FB_BASE, scanout_start);
-> +}
-> +
+Stephen Warren <swarren@wwwdotorg.org> writes:
 
-The above function accesses various pointers and values, which
-presumably all need to be valid and consistent. However...
+> On 08/12/2015 06:56 PM, Eric Anholt wrote:
+>> Signed-off-by: Eric Anholt <eric@anholt.net>
+>
+> This one definitely needs a patch description, since someone might not
+> know what a VC4 is, and "git log" won't show the text from the binding
+> doc itself. I'd suggest adding the initial paragraph of the binding doc
+> as the patch description, or more.
+>
+>> diff --git a/Documentation/devicetree/bindings/gpu/brcm,bcm-vc4.txt b/Documentation/devicetree/bindings/gpu/brcm,bcm-vc4.txt
 
-[...]
-> diff --git a/drivers/gpu/drm/arm/hdlcd_drv.c b/drivers/gpu/drm/arm/hdlcd_drv.c
-[...]
-> +static irqreturn_t hdlcd_irq(int irq, void *arg)
-> +{
-> +	struct drm_device *dev = arg;
-> +	struct hdlcd_drm_private *hdlcd = dev->dev_private;
-> +	unsigned long irq_status;
-> +
-> +	irq_status = hdlcd_read(hdlcd, HDLCD_REG_INT_STATUS);
-> +
-> +#ifdef CONFIG_DEBUG_FS
-> +	if (irq_status & HDLCD_INTERRUPT_UNDERRUN) {
-> +		atomic_inc(&hdlcd->buffer_underrun_count);
-> +	}
-> +	if (irq_status & HDLCD_INTERRUPT_DMA_END) {
-> +		atomic_inc(&hdlcd->dma_end_count);
-> +	}
-> +	if (irq_status & HDLCD_INTERRUPT_BUS_ERROR) {
-> +		atomic_inc(&hdlcd->bus_error_count);
-> +	}
-> +	if (irq_status & HDLCD_INTERRUPT_VSYNC) {
-> +		atomic_inc(&hdlcd->vsync_count);
-> +	}
-> +#endif
-> +	if (irq_status & HDLCD_INTERRUPT_VSYNC) {
-> +		struct drm_pending_vblank_event *event;
-> +		unsigned long flags;
-> +
-> +		hdlcd_set_scanout(hdlcd);
+>> +- hvss:		List of references to HVS video scalers
+>> +- encoders:	List of references to output encoders (HDMI, SDTV)
+>
+> Would it make sense to make all those nodes child node of the vc4
+> object. That way, there's no need to have these lists of objects; they
+> can be automatically built up as the DT is enumerated. I know that e.g.
+> the NVIDIA Tegra host1x binding works this way, and I think it may have
+> been inspired by other similar cases.
 
-hdlcd_set_scanout is being called on every vsync interrupt, can we
-guarantee that is safe? What if we're in the middle of a page flip or
-panning operation? Seems to me that there is at least scope for
-incorrect addresses being calculated leading to a nasty glitch on the
-screen for one frame. And in the worst case, possibly invalid pointer
-being dereferenced.
+I've looked at tegra, and the component system used by msm appears to be
+nicer than it.  To follow tegra's model, it looks like I need to build
+this extra bus thing corresponding to host1x that is effectively the
+drivers/base/component.c code, so that I can get at vc4's structure from
+the component drivers.
 
-So, if scanout needs to be set on every vsync, would it not be safer
-(and more efficient) to have a single variable storing the value to use
-during interrupts, and recalculate that value outside of interrupts
-whenever things are changed?
+> Of course, this is only appropriate if the HW modules really are
+> logically children of the VC4 HW module. Perhaps they aren't. If they
+> aren't though, I wonder what this "vc4" module actually represents in HW?
 
--- 
-Tixy
+It's the subsystem, same as we use a subsystem node for msm, sti,
+rockchip, imx, and exynos.  This appears to be the common model of how
+the collection of graphics-related components is represented in the DT.
+
+--=-=-=
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBCgAGBQJV0ig3AAoJELXWKTbR/J7on3sQAIuqSQIicKD9Aq1CrHQnT6jT
+fvP+nTKjD5UDqiOu0SwKh1OLlB9Qvg/uVW9bhbL269FTG6B3VnmMRNVcXQvc3blb
+1wnG3Bj59xtc40qH3qLy1mVzqe+2RUOPLTsDRln1QEsX4M0CqusUEHzijPUxSVA9
+KoIEz0KUVQDERVFgknwRR7OjrkQQGtph4rvmV7ms5gG4WMEMP4OHEphUJptckI74
+9RGQb+EKCRdeYrm5gMFETiRcqrVTxGMVo7t/jjq5SEOsvQd7YEeWgfITs/kTJzda
+Hj6LUYBQ3p5kHkNPwaLG0W2Jc2GRFGqa5QOlMqUdLtEnsxUb4GwVlrt6fFoN5F34
+/XTEF4QIOvmft/Nj/xVz1zIkzolM7zNmLprz3PI71Z3kdbTsuNkHD1+eb/c654a/
+c9GHlHApAd2ZLyoGaRql5DaClIsj4w1dZf9IOPT+457AkSItxV10JJ0m6tx1BqRH
+BM2u5gmbwGXeVRYkktHvJ8OjMCPr7/c7h1moTa9tUV8tbHv/kyXnjHXEMyprz0mo
+qVxY0CYrBXk0zBKj6BQzKAZOb90k5Mex/1/3T4HcEHQYh800GjLHW0VVtLfOpLq8
+L1I3Z43b2jaXutQ2mCPLvG9vxasy399TotO11X0Wfmlg7O6K65Xw2TW1ogh65R8/
+YRtj7IUNWUk3VNuNvXBl
+=pFUQ
+-----END PGP SIGNATURE-----
+--=-=-=--
+
+--===============0425089777==
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: base64
+Content-Disposition: inline
+
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVs
+IG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHA6Ly9saXN0
+cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
+
+--===============0425089777==--
