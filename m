@@ -1,85 +1,102 @@
-From: Mauro Carvalho Chehab <mchehab@osg.samsung.com>
-Subject: Re: [PATCH v2 05/11] ARM: DT: STi: STiH407: Add c8sectpfe LinuxDVB
- DT node.
-Date: Mon, 17 Aug 2015 11:52:42 -0300
-Message-ID: <20150817115242.4ae9a51e@recife.lan>
-References: <1438276141-16902-1-git-send-email-peter.griffin@linaro.org>
-	<1438276141-16902-6-git-send-email-peter.griffin@linaro.org>
+From: Mathias Nyman <mathias.nyman-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Subject: Re: [PATCH v5 4/5] xhci: mediatek: support MTK xHCI host controller
+Date: Mon, 17 Aug 2015 18:07:35 +0300
+Message-ID: <55D1F8B7.9060306@linux.intel.com>
+References: <1438950644-27290-1-git-send-email-chunfeng.yun@mediatek.com>
+ <1438950644-27290-5-git-send-email-chunfeng.yun@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1438276141-16902-6-git-send-email-peter.griffin@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Peter Griffin <peter.griffin@linaro.org>
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, srinivas.kandagatla@gmail.com, maxime.coquelin@st.com, patrice.chotard@st.com, m.krufky@samsung.com, lee.jones@linaro.org, hugues.fruchet@st.com, linux-media@vger.kernel.org, devicetree@vger.kernel.org, joe@perches.com
+Return-path: <linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+In-Reply-To: <1438950644-27290-5-git-send-email-chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mediatek>,
+ <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-mediatek/>
+List-Post: <mailto:linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Help: <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mediatek>,
+ <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
+Sender: "Linux-mediatek" <linux-mediatek-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Errors-To: linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Chunfeng Yun <chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Mathias Nyman <mathias.nyman-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, John Crispin <blogic-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Em Thu, 30 Jul 2015 18:08:55 +0100
-Peter Griffin <peter.griffin@linaro.org> escreveu:
+Hi
 
-> This patch adds in the required DT node for the c8sectpfe
-> Linux DVB demux driver which allows the tsin channels
-> to be used on an upstream kernel.
-> 
-> Signed-off-by: Peter Griffin <peter.griffin@linaro.org>
-> ---
->  arch/arm/boot/dts/stihxxx-b2120.dtsi | 38 ++++++++++++++++++++++++++++++++++++
->  1 file changed, 38 insertions(+)
-> 
-> diff --git a/arch/arm/boot/dts/stihxxx-b2120.dtsi b/arch/arm/boot/dts/stihxxx-b2120.dtsi
-> index 62994ae..1bc018e 100644
-> --- a/arch/arm/boot/dts/stihxxx-b2120.dtsi
-> +++ b/arch/arm/boot/dts/stihxxx-b2120.dtsi
-> @@ -6,6 +6,10 @@
->   * it under the terms of the GNU General Public License version 2 as
->   * published by the Free Software Foundation.
->   */
-> +
-> +#include <dt-bindings/clock/stih407-clks.h>
-> +#include <dt-bindings/media/c8sectpfe.h>
-> +
->  / {
->  	soc {
->  		sbc_serial0: serial@9530000 {
-> @@ -85,5 +89,39 @@
->  			status = "okay";
->  		};
->  
-> +		c8sectpfe@08a20000 {
-> +			compatible = "st,stih407-c8sectpfe";
-> +			status = "okay";
-> +			reg = <0x08a20000 0x10000>, <0x08a00000 0x4000>;
-> +			reg-names = "c8sectpfe", "c8sectpfe-ram";
-> +
-> +			interrupts = <0 34 0>, <0 35 0>;
-> +			interrupt-names = "c8sectpfe-error-irq",
-> +					  "c8sectpfe-idle-irq";
-> +
-> +			pinctrl-names	= "tsin0-serial", "tsin0-parallel",
-> +					  "tsin3-serial", "tsin4-serial",
-> +					  "tsin5-serial";
-> +
-> +			pinctrl-0	= <&pinctrl_tsin0_serial>;
-> +			pinctrl-1	= <&pinctrl_tsin0_parallel>;
-> +			pinctrl-2	= <&pinctrl_tsin3_serial>;
-> +			pinctrl-3	= <&pinctrl_tsin4_serial_alt3>;
-> +			pinctrl-4	= <&pinctrl_tsin5_serial_alt1>;
-> +
-> +			clocks = <&clk_s_c0_flexgen CLK_PROC_STFE>;
-> +			clock-names = "c8sectpfe";
-> +
-> +			/* tsin0 is TSA on NIMA */
-> +			tsin0: port@0 {
-> +
-> +				tsin-num = <0>;
-> +				serial-not-parallel;
-> +				i2c-bus = <&ssc2>;
+On 07.08.2015 15:30, Chunfeng Yun wrote:
+> MTK xhci host controller defines some extra SW scheduling
+> parameters for HW to minimize the scheduling effort for
+> synchronous and interrupt endpoints. The parameters are
+> put into reseved DWs of slot context and endpoint context
+>
+>
 
-There's no ssc2 defined at the device tree.
+...
 
-I'll revert this patch and mark the driver as broken until this gets
-fixed.
+> + * The TD size is the number of max packet sized packets remaining in the TD
+> + * (including this TRB), right shifted by 10.
+> + * It must fit in bits 21:17, so it can't be bigger than 31.
+> + */
+> +u32 xhci_mtk_td_remainder_quirk(unsigned int td_running_total,
+> +	unsigned trb_buffer_length, struct urb *urb)
+> +{
+> +	u32 max = 31;
+> +	int remainder, td_packet_count, packet_transferred;
+> +	unsigned int td_transfer_size = urb->transfer_buffer_length;
+> +	unsigned int maxp;
+> +
+> +	maxp = GET_MAX_PACKET(usb_endpoint_maxp(&urb->ep->desc));
+> +
+> +	/* 0 for the last TRB */
+> +	if (td_running_total + trb_buffer_length == td_transfer_size)
+> +		return 0;
+> +
+> +	packet_transferred = td_running_total / maxp;
+> +	td_packet_count = DIV_ROUND_UP(td_transfer_size, maxp);
+> +	remainder = td_packet_count - packet_transferred;
+> +
+> +	if (remainder > max)
+> +		return max << 17;
+> +	else
+> +		return remainder << 17;
+> +}
 
-Regards,
-Mauro
+I started looking at this xhci_mtk_td_remainder() function, one
+of the places this patch touches the existing xhci code.
+
+The remainder functions in xhci are already bit too messy, and
+adding one more function which does almost the same thing makes
+it even messier.
+
+For example queuing a bulk transfer will end up like this:
+
+>   		/* Set the TRB length, TD size, and interrupter fields. */
+>   		if (xhci->hci_version < 0x100) {
+> -			remainder = xhci_td_remainder(
+> +			if (xhci->quirks & XHCI_MTK_HOST) {
+> +				remainder = xhci_mtk_td_remainder_quirk(
+> +					running_total, trb_buff_len, urb);
+> +			} else {
+> +				remainder = xhci_td_remainder(
+>   					urb->transfer_buffer_length -
+>   					running_total);
+> +			}
+>   		} else {
+>   			remainder = xhci_v1_0_td_remainder(running_total,
+>   					trb_buff_len, total_packet_count, urb,
+
+and similar for isoc and control transfers.
+
+I'll see if I can simplify the existing remainder calculations into one function, then it should
+be enough to just add something like this into it:
+
+if (xhci->quirks & XHCI_MTK_HOST)
+	trb_buff_len = 0;
+  	
+This way we can skip all the extra hassle that comes with a new exported quirk function
+
+Is the Mediatek xhci really a xHCI 0.96 or older controller? (hci_version < 0x100)
+Not a xHCI 1.0 or 1.1 ?
+
+-Mathias
