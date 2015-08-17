@@ -1,68 +1,333 @@
-From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Subject: Re: [PATCH RFC 3/3] nvmem: add permission flags in nvmem_config
-Date: Mon, 17 Aug 2015 13:31:34 +0100
-Message-ID: <55D1D426.8020504@linaro.org>
-References: <1439290931-18232-1-git-send-email-srinivas.kandagatla@linaro.org> <1439291024-18375-1-git-send-email-srinivas.kandagatla@linaro.org> <1634428787.18822.1439623316281.JavaMail.open-xchange@oxbsltgw04.schlund.de>
+From: Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH V6 2/3] nvmem: add driver for ocotp in i.MX23 and i.MX28
+Date: Mon, 17 Aug 2015 13:34:58 +0100
+Message-ID: <55D1D4F2.2050209@linaro.org>
+References: <1439418116-1833-1-git-send-email-stefan.wahren@i2se.com> <1439418116-1833-3-git-send-email-stefan.wahren@i2se.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <1634428787.18822.1439623316281.JavaMail.open-xchange@oxbsltgw04.schlund.de>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Stefan Wahren <stefan.wahren@i2se.com>
-Cc: wxt@rock-chips.com, linux-api@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, p.zabel@pengutronix.de, Andrew Lunn <andrew@lunn.ch>, sboyd@codeaurora.org, arnd@arndb.de, linux-arm-kernel@lists.infradead.org, khilman@kernel.org, maitysanchayan@gmail.com, s.hauer@pengutronix.de, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, mporter@konsulko.com, pantelis.antoniou@konsulko.com, devicetree@vger.kernel.org, Mark Brown <broonie@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1439418116-1833-3-git-send-email-stefan.wahren-eS4NqCHxEME@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>, =?UTF-8?B?SmFudXN6IFXFvHlja2k=?= <j.uzycki-cjVIcFy54eMe9JSWTWOYM+658FiBabzs@public.gmane.org>, Fabio Estevam <fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
 
 
-On 15/08/15 08:21, Stefan Wahren wrote:
-> Hi Srinivas,
+On 12/08/15 23:21, Stefan Wahren wrote:
+> This patch brings read-only support for the On-Chip OTP cells
+> in the i.MX23 and i.MX28 processor. The driver implements the
+> new NVMEM provider API.
 >
->> Srinivas Kandagatla <srinivas.kandagatla@linaro.org> hat am 11. August 2015 um
->> 13:03 geschrieben:
->>
->>
->> This patch adds perm variable to nvmem_config structure which will allow
->> providers to specify the permissions required for the sysfs binary file.
->> This permission is applied on top of root-only access permissions set by
->> the core.
->>
->> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
->> ---
->> drivers/nvmem/core.c | 1 +
->> include/linux/nvmem-provider.h | 1 +
->> 2 files changed, 2 insertions(+)
->>
->> diff --git a/drivers/nvmem/core.c b/drivers/nvmem/core.c
->> index 414ed23..7481387 100644
->> --- a/drivers/nvmem/core.c
->> +++ b/drivers/nvmem/core.c
->> @@ -312,6 +312,7 @@ struct nvmem_device *nvmem_register(const struct
->> nvmem_config *config)
->> config->read_only;
->> nvmem->bin = bin_attr_template;
->> nvmem->bin.attr.mode = nvmem->read_only ? : (S_IRUSR | S_IWUSR);
->> + nvmem->bin.attr.mode |= config->perm;
->> nvmem->bin.size = nvmem->size;
->> device_initialize(&nvmem->dev);
->>
->> diff --git a/include/linux/nvmem-provider.h b/include/linux/nvmem-provider.h
->> index 0b68caf..de9a61f 100644
->> --- a/include/linux/nvmem-provider.h
->> +++ b/include/linux/nvmem-provider.h
->> @@ -23,6 +23,7 @@ struct nvmem_config {
->> const struct nvmem_cell_info *cells;
->> int ncells;
->> bool read_only;
->> + u16 perm; /* visibility in sysfs */
+> Signed-off-by: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
+> Reviewed-by: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>
+> ---
+>   drivers/nvmem/Kconfig     |   11 ++
+>   drivers/nvmem/Makefile    |    2 +
+>   drivers/nvmem/mxs-ocotp.c |  257 +++++++++++++++++++++++++++++++++++++++++++++
+>   3 files changed, 270 insertions(+)
+>   create mode 100644 drivers/nvmem/mxs-ocotp.c
 >
-> how about "umode_t mode" or "umode_t sysfs_mode"?
->
-Yep, "umode_t mode" sounds much better.
-I will use it that.
+Looks good to me,
 
---srini
-> Beside that the whole series looks good to me.
+Acked-by: Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+
+> diff --git a/drivers/nvmem/Kconfig b/drivers/nvmem/Kconfig
+> index 8db2978..a7b43b9 100644
+> --- a/drivers/nvmem/Kconfig
+> +++ b/drivers/nvmem/Kconfig
+> @@ -36,4 +36,15 @@ config NVMEM_SUNXI_SID
+>   	  This driver can also be built as a module. If so, the module
+>   	  will be called nvmem_sunxi_sid.
 >
-> Thanks Stefan
+> +config NVMEM_MXS_OCOTP
+> +	tristate "Freescale MXS On-Chip OTP Memory Support"
+> +	depends on ARCH_MXS || COMPILE_TEST
+> +	help
+> +	  If you say Y here, you will get readonly access to the
+> +	  One Time Programmable memory pages that are stored
+> +	  on the Freescale i.MX23/i.MX28 processor.
+> +
+> +	  This driver can also be built as a module. If so, the module
+> +	  will be called nvmem-mxs-ocotp.
+> +
+>   endif
+> diff --git a/drivers/nvmem/Makefile b/drivers/nvmem/Makefile
+> index 4328b93..e9b6f3c 100644
+> --- a/drivers/nvmem/Makefile
+> +++ b/drivers/nvmem/Makefile
+> @@ -10,3 +10,5 @@ obj-$(CONFIG_QCOM_QFPROM)	+= nvmem_qfprom.o
+>   nvmem_qfprom-y			:= qfprom.o
+>   obj-$(CONFIG_NVMEM_SUNXI_SID)	+= nvmem_sunxi_sid.o
+>   nvmem_sunxi_sid-y		:= sunxi_sid.o
+> +obj-$(CONFIG_NVMEM_MXS_OCOTP)	+= nvmem-mxs-ocotp.o
+> +nvmem-mxs-ocotp-y		:= mxs-ocotp.o
+> diff --git a/drivers/nvmem/mxs-ocotp.c b/drivers/nvmem/mxs-ocotp.c
+> new file mode 100644
+> index 0000000..8ba19bb
+> --- /dev/null
+> +++ b/drivers/nvmem/mxs-ocotp.c
+> @@ -0,0 +1,257 @@
+> +/*
+> + * Freescale MXS On-Chip OTP driver
+> + *
+> + * Copyright (C) 2015 Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
+> + *
+> + * Based on the driver from Huang Shijie and Christoph G. Baumann
+> + *
+> + * This program is free software; you can redistribute it and/or modify
+> + * it under the terms of the GNU General Public License as published by
+> + * the Free Software Foundation; either version 2 of the License, or
+> + * (at your option) any later version.
+> + *
+> + * This program is distributed in the hope that it will be useful,
+> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
+> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+> + * GNU General Public License for more details.
+> + *
+> + */
+> +#include <linux/clk.h>
+> +#include <linux/delay.h>
+> +#include <linux/device.h>
+> +#include <linux/err.h>
+> +#include <linux/io.h>
+> +#include <linux/module.h>
+> +#include <linux/nvmem-provider.h>
+> +#include <linux/of_device.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/regmap.h>
+> +#include <linux/slab.h>
+> +#include <linux/stmp_device.h>
+> +
+> +/* OCOTP registers and bits */
+> +
+> +#define BM_OCOTP_CTRL_RD_BANK_OPEN	BIT(12)
+> +#define BM_OCOTP_CTRL_ERROR		BIT(9)
+> +#define BM_OCOTP_CTRL_BUSY		BIT(8)
+> +
+> +#define OCOTP_TIMEOUT		10000
+> +#define OCOTP_DATA_OFFSET	0x20
+> +
+> +struct mxs_ocotp {
+> +	struct clk *clk;
+> +	void __iomem *base;
+> +	struct nvmem_device *nvmem;
+> +};
+> +
+> +static int mxs_ocotp_wait(struct mxs_ocotp *otp)
+> +{
+> +	int timeout = OCOTP_TIMEOUT;
+> +	unsigned int status = 0;
+> +
+> +	while (timeout--) {
+> +		status = readl(otp->base);
+> +
+> +		if (!(status & (BM_OCOTP_CTRL_BUSY | BM_OCOTP_CTRL_ERROR)))
+> +			break;
+> +
+> +		cpu_relax();
+> +	}
+> +
+> +	if (status & BM_OCOTP_CTRL_BUSY)
+> +		return -EBUSY;
+> +	else if (status & BM_OCOTP_CTRL_ERROR)
+> +		return -EIO;
+> +
+> +	return 0;
+> +}
+> +
+> +static int mxs_ocotp_read(void *context, const void *reg, size_t reg_size,
+> +			  void *val, size_t val_size)
+> +{
+> +	struct mxs_ocotp *otp = context;
+> +	unsigned int offset = *(u32 *)reg;
+> +	u32 *buf = val;
+> +	int ret;
+> +
+> +	ret = clk_enable(otp->clk);
+> +	if (ret)
+> +		return ret;
+> +
+> +	writel(BM_OCOTP_CTRL_ERROR, otp->base + STMP_OFFSET_REG_CLR);
+> +
+> +	ret = mxs_ocotp_wait(otp);
+> +	if (ret)
+> +		goto disable_clk;
+> +
+> +	/* open OCOTP banks for read */
+> +	writel(BM_OCOTP_CTRL_RD_BANK_OPEN, otp->base + STMP_OFFSET_REG_SET);
+> +
+> +	/* approximately wait 33 hclk cycles */
+> +	udelay(1);
+> +
+> +	ret = mxs_ocotp_wait(otp);
+> +	if (ret)
+> +		goto close_banks;
+> +
+> +	while (val_size) {
+> +		if ((offset < OCOTP_DATA_OFFSET) || (offset % 16)) {
+> +			/* fill up non-data register */
+> +			*buf = 0;
+> +		} else {
+> +			*buf = readl(otp->base + offset);
+> +		}
+> +
+> +		buf++;
+> +		val_size--;
+> +		offset += reg_size;
+> +	}
+> +
+> +close_banks:
+> +	/* close banks for power saving */
+> +	writel(BM_OCOTP_CTRL_RD_BANK_OPEN, otp->base + STMP_OFFSET_REG_CLR);
+> +
+> +disable_clk:
+> +	clk_disable(otp->clk);
+> +
+> +	return ret;
+> +}
+> +
+> +static int mxs_ocotp_write(void *context, const void *data, size_t count)
+> +{
+> +	/* We don't want to support writing */
+> +	return 0;
+> +}
+> +
+> +static bool mxs_ocotp_writeable_reg(struct device *dev, unsigned int reg)
+> +{
+> +	return false;
+> +}
+> +
+> +static struct nvmem_config ocotp_config = {
+> +	.name = "mxs-ocotp",
+> +	.owner = THIS_MODULE,
+> +};
+> +
+> +static const struct regmap_range imx23_ranges[] = {
+> +	regmap_reg_range(OCOTP_DATA_OFFSET, 0x210),
+> +};
+> +
+> +static const struct regmap_access_table imx23_access = {
+> +	.yes_ranges = imx23_ranges,
+> +	.n_yes_ranges = ARRAY_SIZE(imx23_ranges),
+> +};
+> +
+> +static const struct regmap_range imx28_ranges[] = {
+> +	regmap_reg_range(OCOTP_DATA_OFFSET, 0x290),
+> +};
+> +
+> +static const struct regmap_access_table imx28_access = {
+> +	.yes_ranges = imx28_ranges,
+> +	.n_yes_ranges = ARRAY_SIZE(imx28_ranges),
+> +};
+> +
+> +static struct regmap_bus mxs_ocotp_bus = {
+> +	.read = mxs_ocotp_read,
+> +	.write = mxs_ocotp_write, /* make regmap_init() happy */
+> +	.reg_format_endian_default = REGMAP_ENDIAN_NATIVE,
+> +	.val_format_endian_default = REGMAP_ENDIAN_NATIVE,
+> +};
+> +
+> +static struct regmap_config mxs_ocotp_config = {
+> +	.reg_bits = 32,
+> +	.val_bits = 32,
+> +	.reg_stride = 16,
+> +	.writeable_reg = mxs_ocotp_writeable_reg,
+> +};
+> +
+> +static const struct of_device_id mxs_ocotp_match[] = {
+> +	{ .compatible = "fsl,imx23-ocotp", .data = &imx23_access },
+> +	{ .compatible = "fsl,imx28-ocotp", .data = &imx28_access },
+> +	{ /* sentinel */},
+> +};
+> +MODULE_DEVICE_TABLE(of, mxs_ocotp_match);
+> +
+> +static int mxs_ocotp_probe(struct platform_device *pdev)
+> +{
+> +	struct device *dev = &pdev->dev;
+> +	struct mxs_ocotp *otp;
+> +	struct resource *res;
+> +	const struct of_device_id *match;
+> +	struct regmap *regmap;
+> +	const struct regmap_access_table *access;
+> +	int ret;
+> +
+> +	match = of_match_device(dev->driver->of_match_table, dev);
+> +	if (!match || !match->data)
+> +		return -EINVAL;
+> +
+> +	otp = devm_kzalloc(dev, sizeof(*otp), GFP_KERNEL);
+> +	if (!otp)
+> +		return -ENOMEM;
+> +
+> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> +	otp->base = devm_ioremap_resource(dev, res);
+> +	if (IS_ERR(otp->base))
+> +		return PTR_ERR(otp->base);
+> +
+> +	otp->clk = devm_clk_get(&pdev->dev, NULL);
+> +	if (IS_ERR(otp->clk))
+> +		return PTR_ERR(otp->clk);
+> +
+> +	ret = clk_prepare(otp->clk);
+> +	if (ret < 0) {
+> +		dev_err(dev, "failed to prepare clk: %d\n", ret);
+> +		return ret;
+> +	}
+> +
+> +	access = match->data;
+> +	mxs_ocotp_config.rd_table = access;
+> +	mxs_ocotp_config.max_register = access->yes_ranges[0].range_max;
+> +
+> +	regmap = devm_regmap_init(dev, &mxs_ocotp_bus, otp, &mxs_ocotp_config);
+> +	if (IS_ERR(regmap)) {
+> +		dev_err(dev, "regmap init failed\n");
+> +		ret = PTR_ERR(regmap);
+> +		goto err_clk;
+> +	}
+> +
+> +	ocotp_config.dev = dev;
+> +	otp->nvmem = nvmem_register(&ocotp_config);
+> +	if (IS_ERR(otp->nvmem)) {
+> +		ret = PTR_ERR(otp->nvmem);
+> +		goto err_clk;
+> +	}
+> +
+> +	platform_set_drvdata(pdev, otp);
+> +
+> +	return 0;
+> +
+> +err_clk:
+> +	clk_unprepare(otp->clk);
+> +
+> +	return ret;
+> +}
+> +
+> +static int mxs_ocotp_remove(struct platform_device *pdev)
+> +{
+> +	struct mxs_ocotp *otp = platform_get_drvdata(pdev);
+> +
+> +	clk_unprepare(otp->clk);
+> +
+> +	return nvmem_unregister(otp->nvmem);
+> +}
+> +
+> +static struct platform_driver mxs_ocotp_driver = {
+> +	.probe = mxs_ocotp_probe,
+> +	.remove = mxs_ocotp_remove,
+> +	.driver = {
+> +		.name = "mxs-ocotp",
+> +		.of_match_table = mxs_ocotp_match,
+> +	},
+> +};
+> +
+> +module_platform_driver(mxs_ocotp_driver);
+> +MODULE_AUTHOR("Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>");
+> +MODULE_DESCRIPTION("driver for OCOTP in i.MX23/i.MX28");
+> +MODULE_LICENSE("GPL v2");
 >
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
