@@ -1,30 +1,54 @@
-From: ADMINISTRATOR <drmadrededios-W4soNSHqLSHe4eqMfDMnGQ@public.gmane.org>
-Subject: ATTENTION: VALIDATE YOUR EMAIL NOW
-Date: Mon, 17 Aug 2015 09:03:12 -0500 (PET)
-Message-ID: <742170189.4906.1439820192720.JavaMail.root@zimbra.vivienda.gob.pe>
-Reply-To: ADMINISTRATOR <null-9L0DNp+izQdL/KvgCIM703ibw/lP+ip5@public.gmane.org>
+From: Andrew Lunn <andrew@lunn.ch>
+Subject: Re: [PATCH RESEND v6 0/2] Driver for TI tlc591xx 8/16 Channel i2c
+ LED driver
+Date: Mon, 17 Aug 2015 16:21:47 +0200
+Message-ID: <20150817142147.GG7537@lunn.ch>
+References: <1426630107-25057-1-git-send-email-andrew@lunn.ch>
+ <55D1CF84.8040906@ti.com>
+ <20150817132718.GF7537@lunn.ch>
+ <55D1EBA8.9090609@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: i@i.net
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-leds-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <55D1EBA8.9090609@ti.com>
+Sender: linux-leds-owner@vger.kernel.org
+To: Tomi Valkeinen <tomi.valkeinen@ti.com>
+Cc: cooloney@gmail.com, rpurdie@rpsys.net, linux-leds@vger.kernel.org, devicetree@vger.kernel.org, Matthew.Fatheree@belkin.com
 List-Id: devicetree@vger.kernel.org
 
+> > Hi Tomi
+> > 
+> > Our discussions were going around in circles, no progress being made.
+> > The subsystem maintainer is ultimately the one who needs to decide,
+> > bar Linus himself. Bryan Wu has seen all the discussions, and
+> > ultimately decided the driver was O.K, despite any unresolved issues
+> > you might have.
+> 
+> If so, Bryan did not comment to the unanswered questions in any way.
+> More probable is that he missed them.
 
+I would not jump to that conclusion. As one of the maintainers of
+Marvell SoCs, i don't feel the need to address every open question
+going back and forward between two developers, when i decide to end
+the discussion by just accepting the patch.
 
-ATTENTION!!!!
- 
-Your Webmail has almost exceeded quota limit,
- Login Below to confirm Webmail activity in our Database and 
-authenticate the validity of your Webmail Usage to increase your quota 
-to avoid temporal interruption and loss of files in your Webmail system.
- 
-Click Here To Validate Login: http://www.mlik.heliohost.org/mailer/WebMail.html
- 
-Mail Administrative HELP DESK
-WEBMAIL TEAM
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> > If you think your PWM code is so much better, please submit a revert
+> > patch plus your PWM LED driver. We can find somebody to do a side by
+> > side review.
+> 
+> It's not about the driver code. That can be cleaned up if needed. The
+> question is whether the driver should be a PWM driver or a LED driver.
+
+There i disagree. It is all about the code. Release early, release
+often.  Show us the code. Get it discussed, reviewed, tested, and then
+ultimately merged.
+
+You keep saying PWM is the way to solve this problem, but where is
+your code showing your solution is superior to mine, yet still solves
+my use case?
+
+So please stop talking and show us the code.
+
+   Thanks
+	Andrew
