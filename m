@@ -1,36 +1,67 @@
-From: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-Subject: Re: [PATCH 4/4] ARM: dts: Add MSHC2 dt node for Exynos3250 SoC
-Date: Mon, 17 Aug 2015 11:13:35 +0900
-Message-ID: <55D1434F.1040502@samsung.com>
-References: <1439264784-30322-1-git-send-email-cw00.choi@samsung.com>
- <1439264784-30322-5-git-send-email-cw00.choi@samsung.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <1439264784-30322-5-git-send-email-cw00.choi@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Chanwoo Choi <cw00.choi@samsung.com>, s.nawrocki@samsung.com, tomasz.figa@gmail.com, kgene@kernel.org
-Cc: mturquette@baylibre.com, sboyd@codeaurora.org, linux-samsung-soc@vger.kernel.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+From: Huang Shijie <shijie.huang-5wv7dgnIgG8@public.gmane.org>
+Subject: [PATCH] arm64: dts: Juno: fix the wrong memory map sizes for the I2C/EHCI/OHCI
+Date: Mon, 17 Aug 2015 11:24:43 +0800
+Message-ID: <1439781883-2335-1-git-send-email-shijie.huang@arm.com>
+Content-Type: text/plain; charset=WINDOWS-1252
+Content-Transfer-Encoding: quoted-printable
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: catalin.marinas-5wv7dgnIgG8@public.gmane.org
+Cc: will.deacon-5wv7dgnIgG8@public.gmane.org, shijie8-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Huang Shijie <shijie.huang-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 11.08.2015 12:46, Chanwoo Choi wrote:
-> This patch add the MSHC2 (Mobile Storage Host Controller) devicetree node for
-> Exynos3250 SoC.
+>From the "Juno ARM Development Platform Soc Techinical Reference Mannual(r1=
+p0)",
+we get the following memory map sizes (3-25):
+=09I2C      : 0x7ffa0000  0x7ffa00ff       (256B)
+=09USB OHCI : 0x7ffb0000  0x7ffb0fff       (4KB)
+=09USB EHCI : 0x7ffc0000  0x7ffc0fff       (4KB)
 
-s/add/adds/
-s/devicetree/Device Tree/
+This patch fixes the wrong memory map sizes for them.
 
-> 
-> Cc: Kukjin Kim <kgene@kernel.org>
-> Cc: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-> Signed-off-by: Chanwoo Choi <cw00.choi@samsung.com>
-> ---
->  arch/arm/boot/dts/exynos3250-pinctrl.dtsi | 35 +++++++++++++++++++++++++++++++
->  arch/arm/boot/dts/exynos3250.dtsi         | 13 ++++++++++++
->  2 files changed, 48 insertions(+)
+Signed-off-by: Huang Shijie <shijie.huang-5wv7dgnIgG8@public.gmane.org>
+---
+There is something wrong with my email account, so try to send it out again=
+.
+---
+ arch/arm64/boot/dts/arm/juno-base.dtsi | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-Reviewed-by: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+diff --git a/arch/arm64/boot/dts/arm/juno-base.dtsi b/arch/arm64/boot/dts/a=
+rm/juno-base.dtsi
+index e3ee960..7b2715f 100644
+--- a/arch/arm64/boot/dts/arm/juno-base.dtsi
++++ b/arch/arm64/boot/dts/arm/juno-base.dtsi
+@@ -74,7 +74,7 @@
+=20
+ =09i2c@7ffa0000 {
+ =09=09compatible =3D "snps,designware-i2c";
+-=09=09reg =3D <0x0 0x7ffa0000 0x0 0x1000>;
++=09=09reg =3D <0x0 0x7ffa0000 0x0 0x100>;
+ =09=09#address-cells =3D <1>;
+ =09=09#size-cells =3D <0>;
+ =09=09interrupts =3D <GIC_SPI 104 IRQ_TYPE_LEVEL_HIGH>;
+@@ -95,14 +95,14 @@
+=20
+ =09ohci@7ffb0000 {
+ =09=09compatible =3D "generic-ohci";
+-=09=09reg =3D <0x0 0x7ffb0000 0x0 0x10000>;
++=09=09reg =3D <0x0 0x7ffb0000 0x0 0x1000>;
+ =09=09interrupts =3D <GIC_SPI 116 IRQ_TYPE_LEVEL_HIGH>;
+ =09=09clocks =3D <&soc_usb48mhz>;
+ =09};
+=20
+ =09ehci@7ffc0000 {
+ =09=09compatible =3D "generic-ehci";
+-=09=09reg =3D <0x0 0x7ffc0000 0x0 0x10000>;
++=09=09reg =3D <0x0 0x7ffc0000 0x0 0x1000>;
+ =09=09interrupts =3D <GIC_SPI 117 IRQ_TYPE_LEVEL_HIGH>;
+ =09=09clocks =3D <&soc_usb48mhz>;
+ =09};
+--=20
+2.1.4
 
-Best regards,
-Krzysztof
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
