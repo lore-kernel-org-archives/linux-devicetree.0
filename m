@@ -1,69 +1,66 @@
-From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [U-Boot] [PATCH v3 01/11] dm: serial: Update binding for PL01x
- serial UART
-Date: Mon, 17 Aug 2015 09:46:22 +0200
-Message-ID: <CACRpkdZc9WOJ00mvf3s1sqVqNOtQnYPyYuk8uqEvoB0AD5KCjw@mail.gmail.com>
-References: <1438954951-13329-1-git-send-email-sjg@chromium.org>
-	<1438954951-13329-2-git-send-email-sjg@chromium.org>
-	<CACRpkdZa2O1MqCVT8q2P0u0ciXK+6HFbQQGXB_-chimg=FbzQg@mail.gmail.com>
-	<CAPnjgZ3V1KS7POEhsvj63OSB29MUtyaZGBoFR8JGPnaN=-fXVw@mail.gmail.com>
-	<55CCBFB2.7050301@wwwdotorg.org>
-	<20150813181346.GS25532@bill-the-cat>
-	<1439492679.242.35.camel@freebsd.org>
-	<CAL_JsqL8tcECpdwCxatd6ULS8z0UU160OXr8S0ZGTTRRrUaeSQ@mail.gmail.com>
-	<1439574356.242.60.camel@freebsd.org>
+From: Gabriel Fernandez <gabriel.fernandez@linaro.org>
+Subject: Re: [PATCH v3 0/5] PCI: st: provide support for dw pcie
+Date: Mon, 17 Aug 2015 09:53:16 +0200
+Message-ID: <CAG374jB3sjfb5Y2L_SBeZ-9Yaw6uZL6OQsk81K8mE6a0MEYkdQ@mail.gmail.com>
+References: <1428657168-12495-1-git-send-email-gabriel.fernandez@linaro.org> <20150814145310.GD26431@google.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1439574356.242.60.camel-h+KGxgPPiopAfugRpC6u6w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Ian Lepore <ian-h+KGxgPPiopAfugRpC6u6w@public.gmane.org>, Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
-Cc: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Tom Rini <trini-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Joe Hershberger <joe.hershberger-acOepvfBmUk@public.gmane.org>, Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, U-Boot Mailing List <u-boot-0aAXYlwwYIKGBzrmiIFOJg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <20150814145310.GD26431@google.com>
+Sender: linux-pci-owner@vger.kernel.org
+To: Bjorn Helgaas <bhelgaas@google.com>
+Cc: Gabriel FERNANDEZ <gabriel.fernandez@st.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Srinivas Kandagatla <srinivas.kandagatla@gmail.com>, Maxime Coquelin <maxime.coquelin@st.com>, Patrice Chotard <patrice.chotard@st.com>, Russell King <linux@arm.linux.org.uk>, Jingoo Han <jg1.han@samsung.com>, Lucas Stach <l.stach@pengutronix.de>, Fabrice Gasnier <fabrice.gasnier@st.com>, Kishon Vijay Abraham I <kishon@ti.com>, Andrew Morton <akpm@linux-foundation.org>, "David S. Miller" <davem@davemloft.net>, Greg KH <gregkh@linuxfoundation.org>, Mauro Carvalho Chehab <mchehab@osg.samsung.com>, Joe Perches <joe@perches.com>, Tejun Heo <tj@kernel.org>, Arnd Bergmann <arnd@arndb.de>, Viresh Kumar <viresh.kumar@linaro.org>, Thierry
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Aug 14, 2015 at 7:45 PM, Ian Lepore <ian-h+KGxgPPiopAfugRpC6u6w@public.gmane.org> wrote:
-> On Fri, 2015-08-14 at 09:27 -0500, Rob Herring wrote:
->> Ian:
->> > So if I want to write a FreeBSD i2c eeprom driver that uses DT data,
->> > what are my choices?  I have exactly one:  make my driver essentially a
->> > clone of the Linux driver, with all the same data hard-coded in source.
+Hi Bjorn,
+
+To be honest I'm wainting that Zhou patch (PCI: designware: Add ARM64
+support) is accepted.
+
+Because this patch allows to remove "pci: designware: remove
+pci_common_init_dev()" from my patchset. I think it's more judicious
+to do that.
+
+I can send a v4 based on Zhou patchset ([PATCH v6 0/6] PCI: hisi: Add
+PCIe host support for HiSilicon SoC Hip05) if you want ?
+
+Best Regards
+
+Gabriel.
+
+On 14 August 2015 at 16:53, Bjorn Helgaas <bhelgaas@google.com> wrote:
+> On Fri, Apr 10, 2015 at 11:12:43AM +0200, Gabriel FERNANDEZ wrote:
+>> Changes in v3:
+>>  - Remove power management functions (was not fully tested)
+>>  - Remove configuration space range from dt binding
+>>  - Remove pci_common_init_dev() call in pcie-designware.c to avoid
+>>    default IO space declaration.
 >>
->> Don't you already have these drivers w/o using DT? If you did, you
->> would have this information already in the drivers. It wouldn't be a
->> question of the binding being Linux specific, but rather can we move
->> more of the data out of drivers and into DT. That is fundamentally a
->> different issue than is a binding Linux specific.
+>> Changes in v2:
+>>  - comestic corrections in device tree binding
+>>  - add pci-st.c into MAINTAINERS
+>>  - remove st_pcie_ops structure to avoid another level of indirection
+>>  - remove nasty busy-loop
+>>  - remove useless test using virt_to_phys()
+>>  - move disable io support into dw-pcie driver
+>>
+>> I don't change the st_pcie_abort_handler() function because abort handling
+>> is masked during boot.
+>>
+>>
+>> This patch-set introduces a STMicroelectronics PCIe controller.
+>> It's based on designware PCIe driver.
+>>
+>> Gabriel Fernandez (5):
+>>   ARM: STi: Kconfig update for PCIe support
+>>   PCI: st: Add Device Tree bindings for sti pcie
+>>   PCI: st: Provide support for the sti PCIe controller
+>>   pci: designware: remove pci_common_init_dev()
+>>   MAINTAINERS: Add pci-st.c to ARCH/STI architecture
 >
-> This last paragraph most eloquently illustrates the point I was trying
-> to make:  From the point of view of someone who only knows about the
-> existing linux driver and how it is written, the current DT data is
-> perfect.  It's exactly what that existing driver needs to know, and from
-> that position you can argue that it is thus the ONLY thing any driver
-> written by anyone would need to know.  That assumes that everyone wants
-> to just clone the linux drivers (or in our case, because of licensing,
-> rewrite the drivers in a completely linux-compatible way that somehow
-> isn't simply copying them in violation of the GPL).
-
-For some reason I just get the feeling that the relationship between
-*BSD and Linux is lacking in communication. Or that the timing is
-wrong. The OS:es don't hate each other but they don't really understand
-each other either.
-
-So whenever some shared asset needs management there is a
-statement like "if you really love me, you should involve me more",
-from either side.
-
-And yes, it is the common human mistake of simply assuming
-everyone else in the world works exactly like me (and in worst case
-we assume others are plain stupid or a lesser imperfect version of
-ourselves if they don't). But as always, they are usually just thinking
-differently, smart in another way.
-
-So I think these communities need some relationship therapy.
-
-Yours,
-Linus Walleij
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> Hi Gabriel,
+>
+> I lost track of where we are with this.  I *think* I'm waiting for a v4
+> posting, but I haven't seen it yet.  Let me know if I've missed something.
+>
+> Bjorn
