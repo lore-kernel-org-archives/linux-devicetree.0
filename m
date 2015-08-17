@@ -1,184 +1,69 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH v7 4/5] clk: Provide critical clock support
-Date: Mon, 17 Aug 2015 08:42:44 +0100
-Message-ID: <20150817074244.GA3239@x1>
-References: <1437570255-21049-1-git-send-email-lee.jones@linaro.org>
- <1437570255-21049-5-git-send-email-lee.jones@linaro.org>
- <CAGsJ_4zKn-o4ZxZ0-xzCStvuTkdC5xqD9FneWna-0dNVgp=1DQ@mail.gmail.com>
+From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [U-Boot] [PATCH v3 01/11] dm: serial: Update binding for PL01x
+ serial UART
+Date: Mon, 17 Aug 2015 09:46:22 +0200
+Message-ID: <CACRpkdZc9WOJ00mvf3s1sqVqNOtQnYPyYuk8uqEvoB0AD5KCjw@mail.gmail.com>
+References: <1438954951-13329-1-git-send-email-sjg@chromium.org>
+	<1438954951-13329-2-git-send-email-sjg@chromium.org>
+	<CACRpkdZa2O1MqCVT8q2P0u0ciXK+6HFbQQGXB_-chimg=FbzQg@mail.gmail.com>
+	<CAPnjgZ3V1KS7POEhsvj63OSB29MUtyaZGBoFR8JGPnaN=-fXVw@mail.gmail.com>
+	<55CCBFB2.7050301@wwwdotorg.org>
+	<20150813181346.GS25532@bill-the-cat>
+	<1439492679.242.35.camel@freebsd.org>
+	<CAL_JsqL8tcECpdwCxatd6ULS8z0UU160OXr8S0ZGTTRRrUaeSQ@mail.gmail.com>
+	<1439574356.242.60.camel@freebsd.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAGsJ_4zKn-o4ZxZ0-xzCStvuTkdC5xqD9FneWna-0dNVgp=1DQ@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Barry Song <21cnbao@gmail.com>
-Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, LKML <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Mike Turquette <mturquette@linaro.org>, kernel@stlinux.com, Sascha Hauer <s.hauer@pengutronix.de>, Stephen Boyd <sboyd@codeaurora.org>, Geert Uytterhoeven <geert@linux-m68k.org>, Maxime Ripard <maxime.ripard@free-electrons.com>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1439574356.242.60.camel-h+KGxgPPiopAfugRpC6u6w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Ian Lepore <ian-h+KGxgPPiopAfugRpC6u6w@public.gmane.org>, Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
+Cc: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Tom Rini <trini-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Joe Hershberger <joe.hershberger-acOepvfBmUk@public.gmane.org>, Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, U-Boot Mailing List <u-boot-0aAXYlwwYIKGBzrmiIFOJg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 17 Aug 2015, Barry Song wrote:
+On Fri, Aug 14, 2015 at 7:45 PM, Ian Lepore <ian-h+KGxgPPiopAfugRpC6u6w@public.gmane.org> wrote:
+> On Fri, 2015-08-14 at 09:27 -0500, Rob Herring wrote:
+>> Ian:
+>> > So if I want to write a FreeBSD i2c eeprom driver that uses DT data,
+>> > what are my choices?  I have exactly one:  make my driver essentially a
+>> > clone of the Linux driver, with all the same data hard-coded in source.
+>>
+>> Don't you already have these drivers w/o using DT? If you did, you
+>> would have this information already in the drivers. It wouldn't be a
+>> question of the binding being Linux specific, but rather can we move
+>> more of the data out of drivers and into DT. That is fundamentally a
+>> different issue than is a binding Linux specific.
+>
+> This last paragraph most eloquently illustrates the point I was trying
+> to make:  From the point of view of someone who only knows about the
+> existing linux driver and how it is written, the current DT data is
+> perfect.  It's exactly what that existing driver needs to know, and from
+> that position you can argue that it is thus the ONLY thing any driver
+> written by anyone would need to know.  That assumes that everyone wants
+> to just clone the linux drivers (or in our case, because of licensing,
+> rewrite the drivers in a completely linux-compatible way that somehow
+> isn't simply copying them in violation of the GPL).
 
-> 2015-07-22 21:04 GMT+08:00 Lee Jones <lee.jones@linaro.org>:
-> > Lots of platforms contain clocks which if turned off would prove fa=
-tal.
-> > The only way to recover from these catastrophic failures is to rest=
-art
-> > the board(s).  Now, when a clock provider is registered with the
-> > framework it is possible for a list of critical clocks to be suppli=
-ed
-> > which must be kept ungated.  Each clock mentioned in the newly
-> > introduced 'critical-clock' property will be clk_prepare_enable()d
-> > where the normal references will be taken.  This will prevent the
-> > common clk framework from attempting to gate them during the normal
-> > clk_disable_unused() and disable_clock() procedures.
-> >
-> > Note that it will still be possible for knowledgeable drivers to tu=
-rn
-> > these clocks off using clk_{enable,disable}_critical() calls.
-> >
-> > Signed-off-by: Lee Jones <lee.jones@linaro.org>
->=20
-> hi Lee,
-> i have another email about this. i am wondering whether
-> CLK_IGNORE_UNUSE is still useful after your patch. another solution
-> for your patch might be extending the current CLK_IGNORE_UNUSE to
-> runtime?
->=20
->=20
-> copy the mail here:
-> currently we can set a CLK_IGNORE_UNUSE flag to  a clock to stop
-> clk_disable_unused()  from disabling it at the boot stage:
->=20
-> static void clk_disable_unused_subtree(struct clk_core *core)
-> {
-> ...
->=20
-> if (core->flags & CLK_IGNORE_UNUSED)
-> goto unlock_out;
-> }
->=20
-> static int clk_disable_unused(void)
-> {
-> ...
->=20
-> clk_unprepare_unused_subtree(core);
-> ...
->  return 0;
-> }
->=20
-> late_initcall_sync(clk_disable_unused);
->=20
-> so if there are two clocks A and B, A is the parent of B, and A is
-> marked as CLK_IGNORE_UNUSED.
->=20
-> in boot stage if there is nobody using A and B, Linux will disable B
-> due to clk_disable_unused() , but keep A being enabled since A has
-> CLK_IGNORE_UNUSED.
->=20
-> but in Linux runtime, we might frequently disable /enable B in runtim=
-e
-> power management, this will cause A disabled since Linux will not
-> check CLK_IGNORE_UNUSED for runtime disabling clk .
->=20
->  so this makes CLK_IGNORE_UNUSE only work if we don't disable its
-> sub-clock at runtime. this looks making no sense.
->=20
->  i am thinking whether we should do some changes to make it have side
-> affect for runtime clk disable. otherwise, why do we want to stop it
-> from being disabled during boot stage?
+For some reason I just get the feeling that the relationship between
+*BSD and Linux is lacking in communication. Or that the timing is
+wrong. The OS:es don't hate each other but they don't really understand
+each other either.
 
-This is one of this problems, along with some others that this set
-aims to solve.
+So whenever some shared asset needs management there is a
+statement like "if you really love me, you should involve me more",
+from either side.
 
-Extending CLK_IGNORE_UNUSED is not a good idea.  In fact, if we can
-phase it out completely, that will be a good thing.
+And yes, it is the common human mistake of simply assuming
+everyone else in the world works exactly like me (and in worst case
+we assume others are plain stupid or a lesser imperfect version of
+ourselves if they don't). But as always, they are usually just thinking
+differently, smart in another way.
 
-Since this set Mike has submitted an alternitive solution.
+So I think these communities need some relationship therapy.
 
-Please see: https://groups.google.com/forum/#!msg/linux.kernel/kX_nWSsW=
-RxU/IZSjhG5Ed4oJ
-
->  I am not sure whether i missed something in clk core level support.
->=20
-> -barry
->=20
-> > ---
-> >  drivers/clk/clk-conf.c | 45 ++++++++++++++++++++++++++++++++++++++=
-++++++-
-> >  1 file changed, 44 insertions(+), 1 deletion(-)
-> >
-> > diff --git a/drivers/clk/clk-conf.c b/drivers/clk/clk-conf.c
-> > index aad4796..f83c1c2 100644
-> > --- a/drivers/clk/clk-conf.c
-> > +++ b/drivers/clk/clk-conf.c
-> > @@ -116,6 +116,45 @@ static int __set_clk_rates(struct device_node =
-*node, bool clk_supplier)
-> >         return 0;
-> >  }
-> >
-> > +static int __set_critical_clocks(struct device_node *node, bool cl=
-k_supplier)
-> > +{
-> > +       struct of_phandle_args clkspec;
-> > +       struct clk *clk;
-> > +       struct property *prop;
-> > +       const __be32 *cur;
-> > +       uint32_t index;
-> > +       int ret;
-> > +
-> > +       if (!clk_supplier)
-> > +               return 0;
-> > +
-> > +       of_property_for_each_u32(node, "critical-clock", prop, cur,=
- index) {
-> > +               clkspec.np =3D node;
-> > +               clkspec.args_count =3D 1;
-> > +               clkspec.args[0] =3D index;
-> > +
-> > +               clk =3D of_clk_get_from_provider(&clkspec);
-> > +               if (IS_ERR(clk)) {
-> > +                       pr_err("clk: couldn't get clock %u for %s\n=
-",
-> > +                               index, node->full_name);
-> > +                       return PTR_ERR(clk);
-> > +               }
-> > +
-> > +               clk_init_critical(clk);
-> > +
-> > +               ret =3D clk_prepare_enable(clk);
-> > +               if (ret) {
-> > +                       pr_err("Failed to enable clock %u for %s: %=
-d\n",
-> > +                              index, node->full_name, ret);
-> > +                       return ret;
-> > +               }
-> > +
-> > +               pr_debug("Setting clock as critical %pC\n", clk);
-> > +       }
-> > +
-> > +       return 0;
-> > +}
-> > +
-> >  /**
-> >   * of_clk_set_defaults() - parse and set assigned clocks configura=
-tion
-> >   * @node: device node to apply clock settings for
-> > @@ -139,6 +178,10 @@ int of_clk_set_defaults(struct device_node *no=
-de, bool clk_supplier)
-> >         if (rc < 0)
-> >                 return rc;
-> >
-> > -       return __set_clk_rates(node, clk_supplier);
-> > +       rc =3D __set_clk_rates(node, clk_supplier);
-> > +       if (rc < 0)
-> > +               return rc;
-> > +
-> > +       return __set_critical_clocks(node, clk_supplier);
-> >  }
-> >  EXPORT_SYMBOL_GPL(of_clk_set_defaults);
-
---=20
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-=46ollow Linaro: Facebook | Twitter | Blog
+Yours,
+Linus Walleij
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
