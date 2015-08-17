@@ -1,87 +1,85 @@
-From: Thierry Reding <thierry.reding@gmail.com>
-Subject: Re: [PATCH 1/2] Documentation: dt: add Broadcom BCM7038 PWM
- controller binding
-Date: Mon, 17 Aug 2015 16:49:49 +0200
-Message-ID: <20150817144947.GG6891@ulmo.nvidia.com>
-References: <1438908959-1578-1-git-send-email-f.fainelli@gmail.com>
- <1438908959-1578-2-git-send-email-f.fainelli@gmail.com>
+From: Mauro Carvalho Chehab <mchehab@osg.samsung.com>
+Subject: Re: [PATCH v2 05/11] ARM: DT: STi: STiH407: Add c8sectpfe LinuxDVB
+ DT node.
+Date: Mon, 17 Aug 2015 11:52:42 -0300
+Message-ID: <20150817115242.4ae9a51e@recife.lan>
+References: <1438276141-16902-1-git-send-email-peter.griffin@linaro.org>
+	<1438276141-16902-6-git-send-email-peter.griffin@linaro.org>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="8bBEDOJVaa9YlTAt"
-Return-path: <linux-pwm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1438908959-1578-2-git-send-email-f.fainelli@gmail.com>
-Sender: linux-pwm-owner@vger.kernel.org
-To: Florian Fainelli <f.fainelli@gmail.com>
-Cc: linux-kernel@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "open list:PWM SUBSYSTEM" <linux-pwm@vger.kernel.org>, "open list:OPEN FIRMWARE AND..." <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1438276141-16902-6-git-send-email-peter.griffin@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Peter Griffin <peter.griffin@linaro.org>
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, srinivas.kandagatla@gmail.com, maxime.coquelin@st.com, patrice.chotard@st.com, m.krufky@samsung.com, lee.jones@linaro.org, hugues.fruchet@st.com, linux-media@vger.kernel.org, devicetree@vger.kernel.org, joe@perches.com
 List-Id: devicetree@vger.kernel.org
 
+Em Thu, 30 Jul 2015 18:08:55 +0100
+Peter Griffin <peter.griffin@linaro.org> escreveu:
 
---8bBEDOJVaa9YlTAt
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Thu, Aug 06, 2015 at 05:55:57PM -0700, Florian Fainelli wrote:
-> Add a binding documentation for the Broadcom BCM7038 PWM controller found=
- in
-> BCM7xxx chips.
->=20
-> Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+> This patch adds in the required DT node for the c8sectpfe
+> Linux DVB demux driver which allows the tsin channels
+> to be used on an upstream kernel.
+> 
+> Signed-off-by: Peter Griffin <peter.griffin@linaro.org>
 > ---
->  .../devicetree/bindings/pwm/brcm,bcm7038-pwm.txt   | 22 ++++++++++++++++=
-++++++
->  1 file changed, 22 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/pwm/brcm,bcm7038-pw=
-m.txt
->=20
-> diff --git a/Documentation/devicetree/bindings/pwm/brcm,bcm7038-pwm.txt b=
-/Documentation/devicetree/bindings/pwm/brcm,bcm7038-pwm.txt
-> new file mode 100644
-> index 000000000000..8b9bc43b561e
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/pwm/brcm,bcm7038-pwm.txt
-> @@ -0,0 +1,22 @@
-> +Broadcom BCM7038 PWM controller (BCM7xxx Set Top Box PWM controller)
+>  arch/arm/boot/dts/stihxxx-b2120.dtsi | 38 ++++++++++++++++++++++++++++++++++++
+>  1 file changed, 38 insertions(+)
+> 
+> diff --git a/arch/arm/boot/dts/stihxxx-b2120.dtsi b/arch/arm/boot/dts/stihxxx-b2120.dtsi
+> index 62994ae..1bc018e 100644
+> --- a/arch/arm/boot/dts/stihxxx-b2120.dtsi
+> +++ b/arch/arm/boot/dts/stihxxx-b2120.dtsi
+> @@ -6,6 +6,10 @@
+>   * it under the terms of the GNU General Public License version 2 as
+>   * published by the Free Software Foundation.
+>   */
 > +
-> +Required properties:
+> +#include <dt-bindings/clock/stih407-clks.h>
+> +#include <dt-bindings/media/c8sectpfe.h>
 > +
-> +- compatible: must be "brcm,bcm7038-pwm"
-> +- reg: physical base address and length for this controller
-> +- #pwm-cells: should be 2. See pwm.txt in this directory for a descripti=
-on
-> +  of the cells format.
+>  / {
+>  	soc {
+>  		sbc_serial0: serial@9530000 {
+> @@ -85,5 +89,39 @@
+>  			status = "okay";
+>  		};
+>  
+> +		c8sectpfe@08a20000 {
+> +			compatible = "st,stih407-c8sectpfe";
+> +			status = "okay";
+> +			reg = <0x08a20000 0x10000>, <0x08a00000 0x4000>;
+> +			reg-names = "c8sectpfe", "c8sectpfe-ram";
 > +
-> +Optional properties:
+> +			interrupts = <0 34 0>, <0 35 0>;
+> +			interrupt-names = "c8sectpfe-error-irq",
+> +					  "c8sectpfe-idle-irq";
 > +
-> +- clocks: a phandle to the reference clock for this block which is fed t=
-hrough
-> +  its internal variable clock frequency generator
+> +			pinctrl-names	= "tsin0-serial", "tsin0-parallel",
+> +					  "tsin3-serial", "tsin4-serial",
+> +					  "tsin5-serial";
+> +
+> +			pinctrl-0	= <&pinctrl_tsin0_serial>;
+> +			pinctrl-1	= <&pinctrl_tsin0_parallel>;
+> +			pinctrl-2	= <&pinctrl_tsin3_serial>;
+> +			pinctrl-3	= <&pinctrl_tsin4_serial_alt3>;
+> +			pinctrl-4	= <&pinctrl_tsin5_serial_alt1>;
+> +
+> +			clocks = <&clk_s_c0_flexgen CLK_PROC_STFE>;
+> +			clock-names = "c8sectpfe";
+> +
+> +			/* tsin0 is TSA on NIMA */
+> +			tsin0: port@0 {
+> +
+> +				tsin-num = <0>;
+> +				serial-not-parallel;
+> +				i2c-bus = <&ssc2>;
 
-Why is this optional? I would assume that the hardware always needs some
-sort of reference clock to properly function.
+There's no ssc2 defined at the device tree.
 
-Thierry
+I'll revert this patch and mark the driver as broken until this gets
+fixed.
 
---8bBEDOJVaa9YlTAt
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQIcBAABCAAGBQJV0fSGAAoJEN0jrNd/PrOhE88P/R7tgeI4Uslv5HwlllHllmCt
-Z4lrsTi6ERW0sQ/S2VJy7rDB6fjEzEALcuH5TAPPeZGrxeCOkKQNqu1q53nYodS2
-A8+f0l2gnHbkuONM8awZSaYOpR9shEgkHgOYAZaDn8YVTNUOFDUlWnHgOmsYVqLt
-UXJ5vLrfT92/dHlE4Rvj8LlpAC0wcgM8vnHQvMuToVfCKRN+s3Vy6Ua4KK4cJ7pV
-Ax81GlS1a0AHiTWjb3f0cZ4EQJKHtfp1drCzztlgRnkOQ5rRSkVCBIwdCAYwbIQl
-/kh5PNTWopx0ScutdtUASgA7GKru0xcAXRgxz7gEWXLHe9t/ui2l+cCm7leMRXwQ
-8soKQjLkwbCpPukfttSird5iI1JZGG9GHkaDx1+VtFfhCEAf+aAnjUgQuRC68OXg
-I4WSapXv55Z2xvqeSlIkqinbCw7MzR8KDW365cs2jRjo4iOWwh58yIX2TttXPnbm
-61v56+gl5U15YmXoLnNf6Cpw9qHKW3ECUCM0cdZPJsCQ1ZCgHSckY10LoJHmYbDL
-KfdisZHLJbNbCUdhZ1dlBXM23Hy14RpOGl6i6eXg/+0avRuwFdnNapPsA+ClJt/E
-L27zdUzYVAj9uWs48K5nQJWIY1YcSkjY8DOsgGksH5GPPJVo0vdMLgTUxl7cctkw
-7TPwx2O3dvFOQDHy7PBQ
-=UMzi
------END PGP SIGNATURE-----
-
---8bBEDOJVaa9YlTAt--
+Regards,
+Mauro
