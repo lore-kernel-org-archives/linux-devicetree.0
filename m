@@ -1,107 +1,122 @@
-From: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Subject: Re: [PATCH RESEND v6 0/2] Driver for TI tlc591xx 8/16 Channel i2c
- LED driver
-Date: Mon, 17 Aug 2015 17:11:52 +0300
-Message-ID: <55D1EBA8.9090609@ti.com>
-References: <1426630107-25057-1-git-send-email-andrew@lunn.ch> <55D1CF84.8040906@ti.com> <20150817132718.GF7537@lunn.ch>
+From: Thierry Reding <thierry.reding@gmail.com>
+Subject: Re: [PATCH v5 2/2] pwm: Add support for R-Car PWM Timer
+Date: Mon, 17 Aug 2015 16:15:35 +0200
+Message-ID: <20150817141533.GB6891@ulmo.nvidia.com>
+References: <1434359324-2964-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+ <1434359324-2964-3-git-send-email-yoshihiro.shimoda.uh@renesas.com>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature";
-	boundary="u0xUaE0xQw6EQ4aal7lblenIkBfRWoxR5"
-Return-path: <linux-leds-owner@vger.kernel.org>
-In-Reply-To: <20150817132718.GF7537@lunn.ch>
-Sender: linux-leds-owner@vger.kernel.org
-To: Andrew Lunn <andrew@lunn.ch>, cooloney@gmail.com
-Cc: rpurdie@rpsys.net, linux-leds@vger.kernel.org, devicetree@vger.kernel.org, Matthew.Fatheree@belkin.com
+	protocol="application/pgp-signature"; boundary="St7VIuEGZ6dlpu13"
+Return-path: <linux-pwm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1434359324-2964-3-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+Sender: linux-pwm-owner@vger.kernel.org
+To: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Cc: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux-pwm@vger.kernel.org, linux-sh@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
---u0xUaE0xQw6EQ4aal7lblenIkBfRWoxR5
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: quoted-printable
 
+--St7VIuEGZ6dlpu13
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
+Sorry for taking an awful long time to get around to this. The driver
+looks generally okay, but I have a few minor comments...
 
-On 17/08/15 16:27, Andrew Lunn wrote:
-> On Mon, Aug 17, 2015 at 03:11:48PM +0300, Tomi Valkeinen wrote:
->> Hi Andrew, (and Brian),
+On Mon, Jun 15, 2015 at 06:08:44PM +0900, Yoshihiro Shimoda wrote:
+> This patch adds support for R-Car SoCs PWM Timer.
 
-(Sorry for typoing your name, Bryan =3D).
+This could be a little more verbose. You could say for example how many
+channels the driver exposes, or mention typical use-cases (if any).
 
->> On 18/03/15 00:08, Andrew Lunn wrote:
->>> This patchset is a driver for the TI tlc59116 16 Channel i2c LED
->>> driver and tlc59108 8 Channel i2c LED driver. This driver is used on
->>> the Belkin WRT1900AC access point and the C code is derived from code=
+> diff --git a/drivers/pwm/pwm-rcar.c b/drivers/pwm/pwm-rcar.c
+[...]
+> +static int rcar_pwm_get_clock_division(struct rcar_pwm_chip *rp, int period_ns)
+> +{
+> +	int div;
 
->>> Belkin contributed to OpenWRT.  However it has been extensively
->>> re-written, and a device tree binding added to replace platform data.=
+Can be unsigned int.
 
->>
->> I see this is now in 4.2-rc... And I see you dropped me from Cc in thi=
-s
->> resend series. Because of that, I missed this resend, and couldn't
->> object to merging.
->>
->> I'm not very happy about this getting merged. I think I had valid
->> comments to the driver, to which I did get no answers. You knew my
->> objections, but you did not even bother mentioning those in the resend=
+> +	unsigned long clk_rate = clk_get_rate(rp->clk);
+> +	unsigned long long max;	/* max cycle / nanoseconds */
+> +
+> +	if (!clk_rate)
 
->> intro.
->=20
-> Hi Tomi
->=20
-> Our discussions were going around in circles, no progress being made.
-> The subsystem maintainer is ultimately the one who needs to decide,
-> bar Linus himself. Bryan Wu has seen all the discussions, and
-> ultimately decided the driver was O.K, despite any unresolved issues
-> you might have.
+I prefer it when these are explicit: clk_rate == 0. This goes for
+numerical comparisons. For booleans, or NULL pointer comparisons the
+!expression is fine.
 
-If so, Bryan did not comment to the unanswered questions in any way.
-More probable is that he missed them.
+> +static int rcar_pwm_config(struct pwm_chip *chip, struct pwm_device *pwm,
+> +			   int duty_ns, int period_ns)
+> +{
+> +	struct rcar_pwm_chip *rp = to_rcar_pwm_chip(chip);
+> +	int div = rcar_pwm_get_clock_division(rp, period_ns);
+> +	int ret;
+> +
+> +	if (div < 0)
+> +		return div;
+> +
+> +	/* Let the core driver set pwm->period if disabled and duty_ns == 0 */
+> +	if (!test_bit(PWMF_ENABLED, &pwm->flags) && !duty_ns)
+> +		return 0;
+> +
+> +	rcar_pwm_bit_modify(rp, RCAR_PWMCR_SYNC, RCAR_PWMCR_SYNC, RCAR_PWMCR);
+> +	ret = rcar_pwm_set_counter(rp, div, duty_ns, period_ns);
+> +	rcar_pwm_set_clock_control(rp, div);
+> +	rcar_pwm_bit_modify(rp, RCAR_PWMCR_SYNC, 0, RCAR_PWMCR);
+> +
+> +	return ret;
+> +}
+> +
+> +static int rcar_pwm_enable(struct pwm_chip *chip, struct pwm_device *pwm)
+> +{
+> +	struct rcar_pwm_chip *rp = to_rcar_pwm_chip(chip);
+> +	u32 pwmcnt;
+> +
+> +	/* Don't enable the PWM device if CYC0 or PH0 is 0 */
+> +	pwmcnt = rcar_pwm_read(rp, RCAR_PWMCNT);
+> +	if (!(pwmcnt & RCAR_PWMCNT_CYC0_MASK) ||
+> +	    !(pwmcnt & RCAR_PWMCNT_PH0_MASK))
+> +		return -EINVAL;
 
-It's not easy as a maintainer to follow all the discussions on the
-various threads. It's your responsibility as the sender of the patches
-to make sure all the relevant information is available for the maintainer=
-=2E
+This looks wrong. Any errors in configuration should've been caught by
+the ->config() implementation. Why can't you return -EINVAL on this
+condition in ->config()? ->enable() failing should only be the case if
+truly the PWM can't be enabled, not if it's badly configured.
 
-> If you think your PWM code is so much better, please submit a revert
-> patch plus your PWM LED driver. We can find somebody to do a side by
-> side review.
+> +static struct platform_driver rcar_pwm_driver = {
+> +	.probe		= rcar_pwm_probe,
+> +	.remove		= rcar_pwm_remove,
+> +	.driver		= {
+> +		.name	= "pwm-rcar",
+> +		.of_match_table = of_match_ptr(rcar_pwm_of_table),
+> +	}
+> +};
 
-It's not about the driver code. That can be cleaned up if needed. The
-question is whether the driver should be a PWM driver or a LED driver.
+This doesn't need the artificial padding. A single space around = is
+enough.
 
-My question to you was that if this driver would be a PWM driver, and
-you would use pwm-leds to implement the led functionality, would that
-cover your use case?
+Thierry
 
-We use the chip as a PWM device, for backlight, and also as a GPIO
-expander. A PWM driver makes sense in our case. If it also works fine
-for your use case, then isn't a PWM driver better option?
-
- Tomi
-
-
---u0xUaE0xQw6EQ4aal7lblenIkBfRWoxR5
+--St7VIuEGZ6dlpu13
 Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v2
 
-iQIbBAEBCAAGBQJV0euoAAoJEPo9qoy8lh71g4wP+IsU1cKXuIkcISBwwRlIjURg
-3HvywNjHqysTEj6xXAuml+nodNSXjIDYfB4fseJIFtbfI57aX3t6f0KCgQjvO09Q
-2zyHEuvl3Ks41dDrvKFUk4f3IBuszjb9J5g41/m2Eb1FUnn9U46D3f+Pp6oM/Wxh
-ZPuaHvpbzlUZ6JWo3inlN84OdUk7+kDsWS4UsZzxJJ2EydAYBaoaULvyL6qyRc20
-vvV67wxXNTnCQwllmIWJYMTtivC9hGK01F5ImacJdgZ3TT5fvHcqS1ZJPM6H8njl
-2AWZ3YFEOXBIcVShWwCxJKkkzZ3ZLboKn2N1EhZZ+BE/RXWlytmH5Uz6IbgXPhDw
-rdLdaG+vGBJTWwyxuIsiFd1PO9MNHD1WCJ+kr8bMcEq5tT6Q8g1uiJS7nhiN1gFR
-iJt0ky26+1mKGeEB9fH2posZt+SQmybG7EY/kHIBVPA1OfjAxSTvQs0z/5KpohNf
-7b6BR1/rb0a7fz4v4cwS3PnHsWf0by7JLhiWIfPCQL9vpKb0K0X/m8zHjgjJZgni
-mzZH93LXfkn6U14aSHPVwk4P/D5MBLauylLvi0thHNMSuKQUV423Ip8K5cJfXyf9
-ULQQuPJNHBJFr83vZLhItkKCTEMoHuFQjHLW6v+mXZTM6Q1JGdfy99SL2936KNZ+
-daQ3goUR3eZejTNcEAo=
-=G16h
+iQIcBAABCAAGBQJV0eyDAAoJEN0jrNd/PrOhu9kQAKeVWAhzWKmp/ZwizHZAVa+b
+8AbjrzTU4RQHA9DdahmSQN9ozcPD2J6oTPmums7zDZtV0+YFrSEmpd0uZODgnbER
++z9N0KsAKrotXGynW8s7cM21ZGMsnLvuP5WAXrRHA+6pmyt9W2O7JkJqBEb1JKtk
+dSkuNQ2o+d+/i+paHnnZ5MfWn92bbbFOtUBii317a5h7Kdipx+2Yfd7E3LXBHYOk
+09SqLM7N2lCB+vTEeTFkaRER1jTmzWAb09L9MA2KZ9jQraO9oOaCWQ2BQ3jmiaOW
+BZOodbVGXo233zB4HnQqEAlchvKyvfZtVGN/cS/zCrYfa7t5fFlHVzZMxvn3OTQU
+8reg8s39z3pXi2ZBwKeNyr5Lsu/DGBMeahp3twjSedcKh4JWpJd75ioujqhBdAKw
+C+FYbVtTZj66kKMxyfTMtB5BBh39jAQN00NuR7qbwKTjtldXQ+UO2LyF9gpJqzFB
+7VkxiHhL4vOVQ6vFT91dHE+AxhSpLPLq3WrS5aLtKuWCquaV6+kD0wefIwEYlBOi
+fJ7E0IDRXhLKv2fsrWsg9fFFoKoTp8e4Zfo7A6f2z8cdANqWRflqRqTz8x5TIIbG
+7rB8RUQuG2oAPowHxE1h0xd6oWV1PGqZlM8DjN/eSxFGHGr0xP/MJrZ99jHrfg+4
+LbQmIrtaLJxNKfhkOLTn
+=PMw+
 -----END PGP SIGNATURE-----
 
---u0xUaE0xQw6EQ4aal7lblenIkBfRWoxR5--
+--St7VIuEGZ6dlpu13--
