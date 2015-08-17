@@ -1,102 +1,104 @@
-From: Mathias Nyman <mathias.nyman-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-Subject: Re: [PATCH v5 4/5] xhci: mediatek: support MTK xHCI host controller
-Date: Mon, 17 Aug 2015 18:07:35 +0300
-Message-ID: <55D1F8B7.9060306@linux.intel.com>
-References: <1438950644-27290-1-git-send-email-chunfeng.yun@mediatek.com>
- <1438950644-27290-5-git-send-email-chunfeng.yun@mediatek.com>
+From: Liviu Dudau <Liviu.Dudau-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH 2/4] drm: Add support for ARM's HDLCD controller.
+Date: Mon, 17 Aug 2015 16:15:47 +0100
+Message-ID: <20150817151547.GA1020@e106497-lin.cambridge.arm.com>
+References: <1438784892-27888-1-git-send-email-Liviu.Dudau@arm.com>
+ <1438784892-27888-3-git-send-email-Liviu.Dudau@arm.com>
+ <CACvgo537C6SRfhMTNoE4cSLJukcXuKLvt1TRykynX--ybEhmaQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-In-Reply-To: <1438950644-27290-5-git-send-email-chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mediatek>,
- <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-mediatek/>
-List-Post: <mailto:linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mediatek>,
- <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "Linux-mediatek" <linux-mediatek-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: Chunfeng Yun <chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Mathias Nyman <mathias.nyman-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, John Crispin <blogic-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CACvgo537C6SRfhMTNoE4cSLJukcXuKLvt1TRykynX--ybEhmaQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Content-Disposition: inline
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Emil Velikov <emil.l.velikov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, ML dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, Jon Medhurst <tixy-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Catalin Marinas <Catalin.Marinas-5wv7dgnIgG8@public.gmane.org>, Sudeep Holla <Sudeep.Holla-5wv7dgnIgG8@public.gmane.org>, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, "Linux-Kernel@Vger. Kernel. Org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Robin Murphy <Robin.Murphy-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi
+On Sun, Aug 16, 2015 at 09:56:33AM +0100, Emil Velikov wrote:
+> Hi Liviu,
 
-On 07.08.2015 15:30, Chunfeng Yun wrote:
-> MTK xhci host controller defines some extra SW scheduling
-> parameters for HW to minimize the scheduling effort for
-> synchronous and interrupt endpoints. The parameters are
-> put into reseved DWs of slot context and endpoint context
->
->
+Hi Emil,
 
-...
+>=20
+> On 5 August 2015 at 15:28, Liviu Dudau <Liviu.Dudau-5wv7dgnIgG8@public.gmane.org> wrote:
+> > The HDLCD controller is a display controller that supports resoluti=
+ons
+> > up to 4096x4096 pixels. It is present on various development boards
+> > produced by ARM Ltd and emulated by the latest Fast Models from the
+> > company.
+> >
+> I believe there is a unofficial requirement(?) for new drm drivers to
+> use atomic modesetting. Not 100% sure on this one though. The
+> following drivers: tegra, msm, rcar-du, i915, and Daniel's blog [1]
+> [2] cat provide some information on the topic.
 
-> + * The TD size is the number of max packet sized packets remaining in the TD
-> + * (including this TRB), right shifted by 10.
-> + * It must fit in bits 21:17, so it can't be bigger than 31.
-> + */
-> +u32 xhci_mtk_td_remainder_quirk(unsigned int td_running_total,
-> +	unsigned trb_buffer_length, struct urb *urb)
-> +{
-> +	u32 max = 31;
-> +	int remainder, td_packet_count, packet_transferred;
-> +	unsigned int td_transfer_size = urb->transfer_buffer_length;
-> +	unsigned int maxp;
-> +
-> +	maxp = GET_MAX_PACKET(usb_endpoint_maxp(&urb->ep->desc));
-> +
-> +	/* 0 for the last TRB */
-> +	if (td_running_total + trb_buffer_length == td_transfer_size)
-> +		return 0;
-> +
-> +	packet_transferred = td_running_total / maxp;
-> +	td_packet_count = DIV_ROUND_UP(td_transfer_size, maxp);
-> +	remainder = td_packet_count - packet_transferred;
-> +
-> +	if (remainder > max)
-> +		return max << 17;
-> +	else
-> +		return remainder << 17;
-> +}
+I am also interested to know if this is a requirement or not.
+Thanks for the pointers, I will review them again to see if I did miss
+anything. I remember reading them at the beginning of the year but prob=
+ably
+the Christmas haze did not clear enough when I did.
 
-I started looking at this xhci_mtk_td_remainder() function, one
-of the places this patch touches the existing xhci code.
+>=20
+> The driver seems to has has a bit of dead code guarded by
+> HDLCD_*_UNDERRUN. Perhaps these macros should become build or runtime
+> switch(es) ?
 
-The remainder functions in xhci are already bit too messy, and
-adding one more function which does almost the same thing makes
-it even messier.
+There is a comment in hdlcd_drv.h explaining what HDLCD_SHOW_UNDERRUN c=
+an
+be used for. As for HDLCD_COUNT_BUFFERUNDERRUNS, you are right, it's de=
+ad
+code from the earlier debugging code that got removed before submission=
+=2E
+I will correct that.
 
-For example queuing a bulk transfer will end up like this:
+>=20
+> Most DRM drivers do not threat dma, bus_error, vsync and/or underrun
+> interrupts as debug functionality. They are of limited use in this
+> driver, presently, yet the CONFIG_DEBUG_FS guard seems a bit strange
+> imho.
 
->   		/* Set the TRB length, TD size, and interrupter fields. */
->   		if (xhci->hci_version < 0x100) {
-> -			remainder = xhci_td_remainder(
-> +			if (xhci->quirks & XHCI_MTK_HOST) {
-> +				remainder = xhci_mtk_td_remainder_quirk(
-> +					running_total, trb_buff_len, urb);
-> +			} else {
-> +				remainder = xhci_td_remainder(
->   					urb->transfer_buffer_length -
->   					running_total);
-> +			}
->   		} else {
->   			remainder = xhci_v1_0_td_remainder(running_total,
->   					trb_buff_len, total_packet_count, urb,
+The HDLCD device has only 1 interrupt that can fire and there is no oth=
+er
+way to show the reason for the interrupt in the driver. It was useful w=
+hen
+debugging underruns and/or vsync issues so I thought it might be useful
+to keep around. Putting it the other way: if you are going to use this =
+device
+and the image is not completely rendered I would not be able to give yo=
+u
+support to figure out what went wrong without this debugging informatio=
+n.
+With this in place I can tell the difference between a busy system vs o=
+ne
+where the interrupt latency is large.
 
-and similar for isoc and control transfers.
+Best regards,
+Liviu
 
-I'll see if I can simplify the existing remainder calculations into one function, then it should
-be enough to just add something like this into it:
+>=20
+> Cheers,
+> Emil
+>=20
+> [1] http://blog.ffwll.ch/2014/11/atomic-modeset-support-for-kms-drive=
+rs.html
+> [2] http://blog.ffwll.ch/2015/01/update-for-atomic-display-updates.ht=
+ml
+>=20
 
-if (xhci->quirks & XHCI_MTK_HOST)
-	trb_buff_len = 0;
-  	
-This way we can skip all the extra hassle that comes with a new exported quirk function
+--=20
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+| I would like to |
+| fix the world,  |
+| but they're not |
+| giving me the   |
+ \ source code!  /
+  ---------------
+    =C2=AF\_(=E3=83=84)_/=C2=AF
 
-Is the Mediatek xhci really a xHCI 0.96 or older controller? (hci_version < 0x100)
-Not a xHCI 1.0 or 1.1 ?
-
--Mathias
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
