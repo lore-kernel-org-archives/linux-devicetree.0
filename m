@@ -1,71 +1,28 @@
-From: Eric Anholt <eric@anholt.net>
-Subject: [PATCH v2 7/7] ARM: bcm2835: Add VC4 to the device tree.
-Date: Tue, 18 Aug 2015 14:54:08 -0700
-Message-ID: <1439934848-7196-8-git-send-email-eric@anholt.net>
-References: <1439934848-7196-1-git-send-email-eric@anholt.net>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <1439934848-7196-1-git-send-email-eric@anholt.net>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: dri-devel@lists.freedesktop.org
-Cc: devicetree@vger.kernel.org, Stephen Warren <swarren@wwwdotorg.org>, Lee Jones <lee@kernel.org>, linux-kernel@vger.kernel.org, linux-rpi-kernel@lists.infradead.org, linux-arm-kernel@lists.infradead.org
+From: Mathieu Olivari <mathieu-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Subject: [PATCH 0/2] ARM: qcom: enable console output on IPQ806x
+Date: Tue, 18 Aug 2015 15:05:36 -0700
+Message-ID: <1439935538-13932-1-git-send-email-mathieu@codeaurora.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, agross-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mathieu Olivari <mathieu-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-VkM0IGlzIHRoZSBHUFUgKGRpc3BsYXkgYW5kIDNEKSBwcmVzZW50IG9uIHRoZSAyODM1LgoKU2ln
-bmVkLW9mZi1ieTogRXJpYyBBbmhvbHQgPGVyaWNAYW5ob2x0Lm5ldD4KLS0tCgp2MjogU29ydCBi
-eSByZWdpc3RlciBhZGRyZXNzLCBtYXJrIEhETUkgYXMgZGlzYWJsZWQgYnkgZGVmYXVsdCBpbiB0
-aGUKICAgIFNvQyBmaWxlIGFuZCBlbmFibGUgaXQgZnJvbSAtcnBpLgoKIGFyY2gvYXJtL2Jvb3Qv
-ZHRzL2JjbTI4MzUtcnBpLmR0c2kgfCAgNCArKysrCiBhcmNoL2FybS9ib290L2R0cy9iY20yODM1
-LmR0c2kgICAgIHwgNDQgKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysKIDIg
-ZmlsZXMgY2hhbmdlZCwgNDggaW5zZXJ0aW9ucygrKQoKZGlmZiAtLWdpdCBhL2FyY2gvYXJtL2Jv
-b3QvZHRzL2JjbTI4MzUtcnBpLmR0c2kgYi9hcmNoL2FybS9ib290L2R0cy9iY20yODM1LXJwaS5k
-dHNpCmluZGV4IDI5Y2M3YmEuLmY3MjE3OTA2IDEwMDY0NAotLS0gYS9hcmNoL2FybS9ib290L2R0
-cy9iY20yODM1LXJwaS5kdHNpCisrKyBiL2FyY2gvYXJtL2Jvb3QvZHRzL2JjbTI4MzUtcnBpLmR0
-c2kKQEAgLTQ5LDYgKzQ5LDEwIEBACiAJc3RhdHVzID0gIm9rYXkiOwogfTsKIAorJmhkbWkgewor
-CXN0YXR1cyA9ICJva2F5IjsKK307CisKICZzZGhjaSB7CiAJc3RhdHVzID0gIm9rYXkiOwogCWJ1
-cy13aWR0aCA9IDw0PjsKZGlmZiAtLWdpdCBhL2FyY2gvYXJtL2Jvb3QvZHRzL2JjbTI4MzUuZHRz
-aSBiL2FyY2gvYXJtL2Jvb3QvZHRzL2JjbTI4MzUuZHRzaQppbmRleCAyMDU3NGNjLi5lNjI1YTIx
-IDEwMDY0NAotLS0gYS9hcmNoL2FybS9ib290L2R0cy9iY20yODM1LmR0c2kKKysrIGIvYXJjaC9h
-cm0vYm9vdC9kdHMvYmNtMjgzNS5kdHNpCkBAIC0xLDQgKzEsNSBAQAogI2luY2x1ZGUgPGR0LWJp
-bmRpbmdzL3BpbmN0cmwvYmNtMjgzNS5oPgorI2luY2x1ZGUgPGR0LWJpbmRpbmdzL2dwaW8vZ3Bp
-by5oPgogI2luY2x1ZGUgInNrZWxldG9uLmR0c2kiCiAKIC8gewpAQCAtMTMxLDYgKzEzMiwxOCBA
-QAogCQkJc3RhdHVzID0gImRpc2FibGVkIjsKIAkJfTsKIAorCQlwdjA6IGJyY20sdmM0LXBpeGVs
-dmFsdmVAN2UyMDYwMDAgeworCQkJY29tcGF0aWJsZSA9ICJicmNtLHZjNC1waXhlbHZhbHZlIjsK
-KwkJCXJlZyA9IDwweDdlMjA2MDAwIDB4MTAwPjsKKwkJCWludGVycnVwdHMgPSA8MiAxMz47IC8q
-IHB3YTIgKi8KKwkJfTsKKworCQlwdjE6IGJyY20sdmM0LXBpeGVsdmFsdmVAN2UyMDcwMDAgewor
-CQkJY29tcGF0aWJsZSA9ICJicmNtLHZjNC1waXhlbHZhbHZlIjsKKwkJCXJlZyA9IDwweDdlMjA3
-MDAwIDB4MTAwPjsKKwkJCWludGVycnVwdHMgPSA8MiAxND47IC8qIHB3YTEgKi8KKwkJfTsKKwog
-CQlzZGhjaTogc2RoY2lAN2UzMDAwMDAgewogCQkJY29tcGF0aWJsZSA9ICJicmNtLGJjbTI4MzUt
-c2RoY2kiOwogCQkJcmVnID0gPDB4N2UzMDAwMDAgMHgxMDA+OwpAQCAtMTM5LDYgKzE1MiwxMiBA
-QAogCQkJc3RhdHVzID0gImRpc2FibGVkIjsKIAkJfTsKIAorCQlodnM6IGJyY20saHZzQDdlNDAw
-MDAwIHsKKwkJCWNvbXBhdGlibGUgPSAiYnJjbSx2YzQtaHZzIjsKKwkJCXJlZyA9IDwweDdlNDAw
-MDAwIDB4NjAwMD47CisJCQlpbnRlcnJ1cHRzID0gPDIgMT47CisJCX07CisKIAkJaTJjMTogaTJj
-QDdlODA0MDAwIHsKIAkJCWNvbXBhdGlibGUgPSAiYnJjbSxiY20yODM1LWkyYyI7CiAJCQlyZWcg
-PSA8MHg3ZTgwNDAwMCAweDEwMDA+OwpAQCAtMTU5LDYgKzE3OCwyMyBAQAogCQkJc3RhdHVzID0g
-ImRpc2FibGVkIjsKIAkJfTsKIAorCQlwdjI6IGJyY20sdmM0LXBpeGVsdmFsdmVAN2U4MDcwMDAg
-eworCQkJY29tcGF0aWJsZSA9ICJicmNtLHZjNC1waXhlbHZhbHZlIjsKKwkJCXJlZyA9IDwweDdl
-ODA3MDAwIDB4MTAwPjsKKwkJCWludGVycnVwdHMgPSA8MiAxMD47IC8qIHBpeGVsdmFsdmUgKi8K
-KwkJfTsKKworCQloZG1pOiBicmNtLHZjNC1oZG1pQDdlOTAyMDAwIHsKKwkJCWNvbXBhdGlibGUg
-PSAiYnJjbSx2YzQtaGRtaSI7CisJCQlyZWcgPSA8MHg3ZTkwMjAwMCAweDYwMD4sCisJCQkgICAg
-ICA8MHg3ZTgwODAwMCAweDEwMD47CisJCQlpbnRlcnJ1cHRzID0gPDIgOD4sIDwyIDk+OworCQkJ
-ZGRjID0gPCZpMmMyPjsKKwkJCWhwZC1ncGlvID0gPCZncGlvIDQ2IEdQSU9fQUNUSVZFX0hJR0g+
-OworCQkJY3J0YyA9IDwmcHYyPjsKKwkJCXN0YXR1cyA9ICJkaXNhYmxlZCI7CisJCX07CisKIAkJ
-dXNiQDdlOTgwMDAwIHsKIAkJCWNvbXBhdGlibGUgPSAiYnJjbSxiY20yODM1LXVzYiI7CiAJCQly
-ZWcgPSA8MHg3ZTk4MDAwMCAweDEwMDAwPjsKQEAgLTE2OCw2ICsyMDQsMTQgQEAKIAkJYXJtLXBt
-dSB7CiAJCQljb21wYXRpYmxlID0gImFybSxhcm0xMTc2LXBtdSI7CiAJCX07CisKKwkJdmM0OiB2
-YzRAMHg3ZTRjMDAwMCB7CisJCQljb21wYXRpYmxlID0gImJyY20sdmM0IjsKKworCQkJY3J0Y3Mg
-PSA8JnB2MD4sIDwmcHYxPiwgPCZwdjI+OworCQkJZW5jb2RlcnMgPSA8JmhkbWk+OworCQkJaHZz
-cyA9IDwmaHZzPjsKKwkJfTsKIAl9OwogCiAJY2xvY2tzIHsKLS0gCjIuMS40CgpfX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBs
-aXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cDovL2xpc3RzLmZyZWVkZXNr
-dG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
+This change set adds uart nodes in ipq806x dtsi and add the chosen node
+in AP148 dts file to use it as a console.
+
+Mathieu Olivari (2):
+  ARM: qcom: add uart labels to IPQ806x dts
+  ARCH: qcom: enable uart output by default on AP148
+
+ arch/arm/boot/dts/qcom-ipq8064-ap148.dts |  8 ++++++++
+ arch/arm/boot/dts/qcom-ipq8064.dtsi      | 15 +++++++++------
+ 2 files changed, 17 insertions(+), 6 deletions(-)
+
+-- 
+2.1.4
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
