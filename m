@@ -1,40 +1,40 @@
-From: Dinh Nguyen <dinguyen@opensource.altera.com>
-Subject: Re: [PATCHv2] arm64: dts: Add base stratix 10 dtsi
-Date: Tue, 18 Aug 2015 11:04:32 -0500
-Message-ID: <alpine.DEB.2.02.1508181103230.23339@linux-builds1>
-References: <1439308127-7412-1-git-send-email-dinguyen@opensource.altera.com>
+From: Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 0/4] PL08x DT bindings and LPC18xx DMA support
+Date: Tue, 18 Aug 2015 22:12:51 +0530
+Message-ID: <20150818164251.GW13546@localhost>
+References: <1436616727-4847-1-git-send-email-manabian@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1439308127-7412-1-git-send-email-dinguyen@opensource.altera.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: robh+dt@kernel.org, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, mark.rutland@arm.com, pawel.moll@arm.com, catalin.marinas@arm.com, will.deacon@arm.com
-Cc: dinh.linux@gmail.com, jszhang@marvell.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1436616727-4847-1-git-send-email-manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Joachim Eastwood <manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: arnd-r2nGTMty4D4@public.gmane.org, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, rmk+kernel-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 11 Aug 2015, dinguyen@opensource.altera.com wrote:
-
-> From: Dinh Nguyen <dinguyen@opensource.altera.com>
+On Sat, Jul 11, 2015 at 02:12:03PM +0200, Joachim Eastwood wrote:
+> Hi Vinod,
 > 
-> Add the base DTS for Altera's SoCFPGA Stratix 10 platform.
+> This is the non-RFC version of the patch set with only a few changes.
+> Hope this can go in for 4.3. Changes to the DT for LPC18xx/43xx will
+> go thru arm-soc once this get accepted.
 > 
-> Signed-off-by: Dinh Nguyen <dinguyen@opensource.altera.com>
-> ---
-> v2: use interrupt-affinity for pmu node
-> ---
->  arch/arm64/Kconfig                                 |   5 +
->  arch/arm64/boot/dts/Makefile                       |   1 +
->  arch/arm64/boot/dts/altera/Makefile                |   5 +
->  arch/arm64/boot/dts/altera/socfpga_stratix10.dtsi  | 358 +++++++++++++++++++++
->  .../boot/dts/altera/socfpga_stratix10_socdk.dts    |  38 +++
->  arch/arm64/configs/defconfig                       |   1 +
->  6 files changed, 408 insertions(+)
->  create mode 100644 arch/arm64/boot/dts/altera/Makefile
->  create mode 100644 arch/arm64/boot/dts/altera/socfpga_stratix10.dtsi
->  create mode 100644 arch/arm64/boot/dts/altera/socfpga_stratix10_socdk.dts
 > 
+> This patch set aims to add support for DMA on the NXP LPC18xx/43xx
+> (Cortex-M3/M4) platform. The platform has a PL080 controller with a
+> mux in front of the DMA request lines. This setup is quite common
+> and can be found on most other, if not all, NXP LPC devices.
+> 
+> Patch set adds DT support for the PL08x dmaengine driver and a DMA
+> router driver for the LPC18xx/43xx DMA multiplexer.
 
-Soft ping on this pach?
+Applied, thanks
 
-BR,
-Dinh
+-- 
+~Vinod
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
