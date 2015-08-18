@@ -1,127 +1,162 @@
-From: vikas <vikas.manocha-qxv4g6HH51o@public.gmane.org>
-Subject: Re: [PATCH V7 1/2] mtd: spi-nor: Bindings for Cadence Quad SPI Flash
- Controller driver.
-Date: Mon, 17 Aug 2015 19:35:55 -0700
-Message-ID: <55D29A0B.20408@st.com>
-References: <1439522892-7524-1-git-send-email-marex@denx.de>
+From: YH Huang <yh.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH v6 2/3] pwm: add MediaTek display PWM driver support
+Date: Tue, 18 Aug 2015 10:47:48 +0800
+Message-ID: <1439866068.26145.12.camel@mtksdaap41>
+References: <1437380237-28961-1-git-send-email-yh.huang@mediatek.com>
+	 <1437380237-28961-3-git-send-email-yh.huang@mediatek.com>
+	 <20150817132259.GM8453@ulmo.nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1439522892-7524-1-git-send-email-marex-ynQEQJNshbs@public.gmane.org>
+In-Reply-To: <20150817132259.GM8453-AwZRO8vwLAwmlAP/+Wk3EA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>, "linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Cc: Graham Moore <grmoore-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>, Alan Tull <atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Dinh Nguyen <dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>, Yves Vandervennet <yvanderv-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, linux-pwm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, yh.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Marek,
-
-On 08/13/2015 08:28 PM, Marek Vasut wrote:
-> From: Graham Moore <grmoore-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
+On Mon, 2015-08-17 at 15:23 +0200, Thierry Reding wrote:
+> On Mon, Jul 20, 2015 at 04:17:16PM +0800, YH Huang wrote:
+> > Add display PWM driver support to modify backlight for MT8173 and MT6595.
+> > The PWM has one channel to control the brightness of the display.
+> > When the (high_width / period) is closer to 1, the screen is brighter;
+> > otherwise, it is darker.
+> > 
+> > Signed-off-by: YH Huang <yh.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+> > ---
+> >  drivers/pwm/Kconfig        |  10 ++
+> >  drivers/pwm/Makefile       |   1 +
+> >  drivers/pwm/pwm-mtk-disp.c | 232 +++++++++++++++++++++++++++++++++++++++++++++
+> >  3 files changed, 243 insertions(+)
+> >  create mode 100644 drivers/pwm/pwm-mtk-disp.c
+> > 
+> > diff --git a/drivers/pwm/Kconfig b/drivers/pwm/Kconfig
+> > index b1541f4..f5b03a4 100644
+> > --- a/drivers/pwm/Kconfig
+> > +++ b/drivers/pwm/Kconfig
+> > @@ -211,6 +211,16 @@ config PWM_LPSS_PLATFORM
+> >  	  To compile this driver as a module, choose M here: the module
+> >  	  will be called pwm-lpss-platform.
+> >  
+> > +config PWM_MTK_DISP
+> > +	tristate "MediaTek display PWM driver"
+> > +	depends on ARCH_MEDIATEK || COMPILE_TEST
 > 
-> Add binding document for the Cadence QSPI controller.
+> This is going to break randconfig builds. From a quick look your driver
+> will fail to build at least on architectures that don't set HAVE_IOMEM.
+> I know that's quite exotic, but I've had to deal with fallout from
+> things like this in the past. If you want || COMPILE_TEST you should at
+> least add a "depends on HAVE_IOMEM".
 > 
-> Signed-off-by: Graham Moore <grmoore-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
-> Signed-off-by: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>
-> Cc: Alan Tull <atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
-> Cc: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> Cc: David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>
-> Cc: Dinh Nguyen <dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
-> Cc: Graham Moore <grmoore-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
-> Cc: Vikas MANOCHA <vikas.manocha-qxv4g6HH51o@public.gmane.org>
-> Cc: Yves Vandervennet <yvanderv-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
-> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> ---
->  .../devicetree/bindings/mtd/cadence_quadspi.txt    | 50 ++++++++++++++++++++++
->  1 file changed, 50 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/mtd/cadence_quadspi.txt
+> linux/clk.h seems to have stubs for all of the functions that you use,
+> so those shouldn't be a problem.
 > 
-> V2: Add cdns prefix to driver-specific bindings.
-> V3: Use existing property "is-decoded-cs" instead of creating a
->     duplicate, "ext-decoder". Timing parameters are in nanoseconds,
->     not master reference clocks. Remove bus-num completely.
-> V4: Add new properties fifo-width and trigger-address
-> V7: - Prefix all of the Cadence-specific properties with cdns prefix,
->       those are in particular "cdns,is-decoded-cs", "cdns,fifo-depth",
->       "cdns,fifo-width", "cdns,trigger-address".
->     - Drop bogus properties which were not used and were incorrect.
+
+I will add it and this will be like:
+
+depends on ARCH_MEDIATEK || COMPILE_TEST
+depends on HAS_IOMEM
+
+> > +	help
+> > +	  Generic PWM framework driver for MediaTek disp-pwm device.
+> > +	  The PWM is used to control the backlight brightness for display.
+> > +
+> > +	  To compile this driver as a module, choose M here: the module
+> > +	  will be called pwm-mtk-disp.
+> > +
+> >  config PWM_MXS
+> >  	tristate "Freescale MXS PWM support"
+> >  	depends on ARCH_MXS && OF
+> [...]
+> > diff --git a/drivers/pwm/pwm-mtk-disp.c b/drivers/pwm/pwm-mtk-disp.c
+> > new file mode 100644
+> > index 0000000..69682a0
+> > --- /dev/null
+> > +++ b/drivers/pwm/pwm-mtk-disp.c
+> > @@ -0,0 +1,232 @@
+> > +/*
+> > + * MediaTek display pulse-width-modulation controller driver.
+> > + * Copyright (c) 2015 MediaTek Inc.
+> > + * Author: YH Huang <yh.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+> > + *
+> > + * This program is free software; you can redistribute it and/or modify
+> > + * it under the terms of the GNU General Public License version 2 as
+> > + * published by the Free Software Foundation.
+> > + *
+> > + * This program is distributed in the hope that it will be useful,
+> > + * but WITHOUT ANY WARRANTY; without even the implied warranty of
+> > + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+> > + * GNU General Public License for more details.
+> > + */
+> > +
+> > +#include <linux/clk.h>
+> > +#include <linux/err.h>
+> > +#include <linux/io.h>
+> > +#include <linux/module.h>
+> > +#include <linux/of.h>
+> > +#include <linux/pwm.h>
+> > +#include <linux/platform_device.h>
 > 
-> diff --git a/Documentation/devicetree/bindings/mtd/cadence_quadspi.txt b/Documentation/devicetree/bindings/mtd/cadence_quadspi.txt
-> new file mode 100644
-> index 0000000..ebaf1fd
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/mtd/cadence_quadspi.txt
-> @@ -0,0 +1,50 @@
-> +* Cadence Quad SPI controller
-> +
-> +Required properties:
-> +- compatible : Should be "cdns,qspi-nor".
-> +- reg : Contains two entries, each of which is a tuple consisting of a
-> +	physical address and length.  The first entry is the address and
-> +	length of the controller register set.  The second entry is the
-> +	address and length of the QSPI Controller data area.
-
-"Controller data area", i think it means mapped NOR Flash address ?
-If yes, it would be more clear with "Physical base address & size of NOR Flash".
-
-> +- interrupts : Unit interrupt specifier for the controller interrupt.
-> +- clocks : phandle to the Quad SPI clock.
-> +- cdns,fifo-depth : Size of the data FIFO in words.
-
-It actually is sram-depth, better would be "sram-depth" to avoid confusion.
-
-> +- cdns,fifo-width: Bus width of the data FIFO in bytes.
-> +- cdns,trigger-address : 32-bit indirect AHB trigger address.
-
-we might make trigger-address also part of property "reg".
-
-> +
-> +Optional properties:
-> +- cdns,is-decoded-cs : Flag to indicate whether decoder is used or not.
-
-Not clear about the usage of decoder, if it does not make sense we might remove it from driver.
-
-> +
-> +Optional subnodes:
-
-I think flash subnode is mandatory.
-
-Rgds,
-Vikas
-
-> +Subnodes of the Cadence Quad SPI controller are spi slave nodes with additional
-> +custom properties:
-> +- cdns,read-delay : Delay for read capture logic, in clock cycles
-> +- cdns,tshsl-ns : Delay in nanoseconds for the length that the master mode chip select outputs are de-asserted between transactions.
-> +- cdns,tsd2d-ns : Delay in nanoseconds between one chip select being de-activated and the activation of another.
-> +- cdns,tchsh-ns : Delay in nanoseconds between last bit of current transaction and deasserting the device chip select (qspi_n_ss_out).
-> +- cdns,tslch-ns : Delay in nanoseconds between setting qspi_n_ss_out low and first bit transfer.
-> +
-> +Example:
-> +
-> +	qspi: spi@ff705000 {
-> +		compatible = "cdns,qspi-nor";
-> +		#address-cells = <1>;
-> +		#size-cells = <0>;
-> +		reg = <0xff705000 0x1000>,
-> +		      <0xffa00000 0x1000>;
-> +		interrupts = <0 151 4>;
-> +		clocks = <&qspi_clk>;
-> +		cdns,is-decoded-cs;
-> +		cdns,fifo-depth = <128>;
-> +		cdns,fifo-width = <4>;
-> +		cdns,trigger-address = <0x00000000>;
-> +
-> +		flash0: n25q00@0 {
-> +			...
-> +			cdns,read-delay = <4>;
-> +			cdns,tshsl-ns = <50>;
-> +			cdns,tsd2d-ns = <50>;
-> +			cdns,tchsh-ns = <4>;
-> +			cdns,tslch-ns = <4>;
-> +		};
-> +	};
+> The above two aren't correctly sorted.
 > 
+
+Arrange like this:
+
+#include <linux/platform_device.h>
+#include <linux/pwm.h>
+
+> > +#include <linux/slab.h>
+> > +
+> > +#define DISP_PWM_EN		0x00
+> > +#define PWM_ENABLE_MASK		BIT(0)
+> > +
+> > +#define DISP_PWM_COMMIT		0x08
+> > +#define PWM_COMMIT_MASK		BIT(0)
+> > +
+> > +#define DISP_PWM_CON_0		0x10
+> > +#define PWM_CLKDIV_SHIFT	16
+> > +#define PWM_CLKDIV_MAX		0x3ff
+> > +#define PWM_CLKDIV_MASK		(PWM_CLKDIV_MAX << PWM_CLKDIV_SHIFT)
+> > +
+> > +#define DISP_PWM_CON_1		0x14
+> > +#define PWM_PERIOD_MASK		0xfff
+> > +/* Shift log2(PWM_PERIOD_MASK + 1) as divisor */
+> > +#define PWM_PERIOD_BIT_SHIFT	12
+> 
+> There are still two names for the same value here. I thought we had
+> agreed on this becoming something like the below?
+> 
+> 	#define PWM_PERIOD_BIT_SHIFT 12
+> 	#define PWM_PERIOD_MASK ((1 << PWM_PERIOD_BIT_SHIFT) - 1)
+> 
+> Although PWM_PERIOD_BIT_WIDTH would probably be a better name. Or
+> PWM_PERIOD_BITS or similar.
+> 
+
+I will revise to 
+
+#define PWM_PERIOD_BIT_WIDTH 12
+#define PWM_PERIOD_MASK ((1 << PWM_PERIOD_BIT_WIDTH) - 1)
+
+> > +static int mtk_disp_pwm_remove(struct platform_device *pdev)
+> > +{
+> > +	struct mtk_disp_pwm *mdp = platform_get_drvdata(pdev);
+> > +	int ret = pwmchip_remove(&mdp->chip);
+> 
+> I'd prefer this to be separate lines:
+> 
+> 	int ret;
+> 
+> 	ret = pwmchip_remove(&mdp->chip);
+
+OK.
+
+Thanks for your suggestions.
+
+Regards,
+YH Huang
+
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
