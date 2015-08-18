@@ -1,48 +1,81 @@
-From: Javier Martinez Canillas <javier@dowhile0.org>
-Subject: Re: [PATCH 2/2] ARM: dts: rockchip: correct regulator PM properties
-Date: Tue, 18 Aug 2015 22:38:05 +0200
-Message-ID: <CABxcv==UJXn+v3KE9EE=ry_0aC-T1PBePjyKzn7oawtF=rrNzw@mail.gmail.com>
-References: <1439923455-109818-1-git-send-email-briannorris@chromium.org>
-	<1439923455-109818-2-git-send-email-briannorris@chromium.org>
-	<51457775.D3ds00ymOJ@phil>
-	<CABxcv==hssVa-b=cOjh3QhEOmQPZVvEPt0apLHQOva3GjJb9PA@mail.gmail.com>
+From: vikas <vikas.manocha-qxv4g6HH51o@public.gmane.org>
+Subject: Re: [PATCH V7 2/2] mtd: spi-nor: Add driver for Cadence Quad SPI
+ Flash Controller.
+Date: Tue, 18 Aug 2015 13:35:46 -0700
+Message-ID: <55D39722.8030506@st.com>
+References: <1439522892-7524-1-git-send-email-marex@denx.de> <1439522892-7524-2-git-send-email-marex@denx.de> <55D299CD.2070809@st.com> <55D384D6.9040303@opensource.altera.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CABxcv==hssVa-b=cOjh3QhEOmQPZVvEPt0apLHQOva3GjJb9PA@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Heiko Stuebner <heiko@sntech.de>
-Cc: Brian Norris <briannorris@chromium.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Alexandru M Stan <amstan@chromium.org>, Linux Kernel <linux-kernel@vger.kernel.org>, Douglas Anderson <dianders@chromium.org>, linux-rockchip@lists.infradead.org, Brian Norris <computersforpeace@gmail.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <55D384D6.9040303-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Graham Moore <grmoore-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
+Cc: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>, "linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Alan Tull <atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Dinh Nguyen <dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>, Yves Vandervennet <yvanderv-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Aug 18, 2015 at 10:30 PM, Javier Martinez Canillas
-<javier@dowhile0.org> wrote:
-> On Tue, Aug 18, 2015 at 9:17 PM, Heiko Stuebner <heiko@sntech.de> wrote:
->>>
->>>               vcc5v_touch: SWITCH_REG2 {
->>>                       regulator-name = "vcc5v_touch";
->>> -                     regulator-suspend-mem-disabled;
->>> +                     regulator-state-mem {
->>> +                             regulator-on-in-suspend;
->>> +                     };
->>
->> wouldn't regulator-suspend-mem-disabled translate to regulator-off-in-suspend?
->
-> Correct, the downstream regulator-suspend-mem-disabled is equivalent
-> to regulator-off-in-suspend in mainline.
->
->> At least looks like it according to https://lkml.org/lkml/2013/7/25/592
->>
->
-> I guess you meant https://lkml.org/lkml/2014/10/10/162 since it was
-> Chanwoo's and not Vincent's version that finally landed.
->
->>
+Hi,
 
-oh, now I got that you referenced Vincent's patch just to show the
-regulator-suspend-mem-disabled property description.
 
-Sorry for the noise then but yes you are right about the translation :-)
+On 08/18/2015 12:17 PM, Graham Moore wrote:
+> Hi Vikas,
+> 
+> On 08/17/2015 09:34 PM, vikas wrote:
+>  > Hi Marek,
+>  >
+> 
+> [...]
+> 
+>  >> +
+>>> +/* Operation timeout value */
+>>> +#define CQSPI_TIMEOUT_MS                       500
+>>> +#define CQSPI_READ_TIMEOUT_MS                  10
+>>
+>> please add some comment about the timeouts value selection.
+>>
+> 
+> I wish I could comment, but I don't know the origin of these values. 
+> The 500 ms value is probably just "a very long time".
 
-Best regards,
-Javier
+In my opinion we should have some logical value based on some worst timing like read/write sector.
+I let you decide on this point.
+
+> 
+> [...]
+> 
+>>> +
+>>> +       cqspi->irq_mask = CQSPI_IRQ_MASK_RD;
+>>> +       writel(cqspi->irq_mask, reg_base + CQSPI_REG_IRQMASK);
+>>
+>> here interrupt mask is being configured for every read, better would be to move it in init.
+>>
+> 
+> [...]
+> 
+>>> +
+>>> +       cqspi->irq_mask = CQSPI_IRQ_MASK_WR;
+>>> +       writel(cqspi->irq_mask, reg_base + CQSPI_REG_IRQMASK);
+>>
+>> same like read, it should be moved to init.
+>>
+> 
+> It uses different masks for read and write
+
+Yeah i saw it but why not to OR these values & configure for once in init. 
+After that in ISR, check for the interrupt source & take action accordingly. I think other drivers also use it this way.
+
+Rgds,
+Vikas
+
+> 
+> [...]
+> 
+> BR,
+> Graham
+> 
+> .
+> 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
