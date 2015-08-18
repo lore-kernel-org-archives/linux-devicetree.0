@@ -1,60 +1,101 @@
-From: Bjorn Andersson <bjorn.andersson@sonymobile.com>
-Subject: Re: [PATCH v3 2/3] ARM: qcom: add SMEM device node to IPQ806x dts
-Date: Tue, 18 Aug 2015 11:11:38 -0700
-Message-ID: <20150818181138.GV13472@usrtlx11787.corpusers.net>
-References: <1439855266-26242-1-git-send-email-mathieu@codeaurora.org>
- <1439855266-26242-3-git-send-email-mathieu@codeaurora.org>
+From: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Subject: Re: [PATCH v3 2/4] ASoC: rockchip: Add rockchip SPDIF transceiver driver
+Date: Tue, 18 Aug 2015 20:25:38 +0200
+Message-ID: <1463451.tH10lfH9Hm@phil>
+References: <1438947854-3743-1-git-send-email-sjoerd.simons@collabora.co.uk> <1438947854-3743-3-git-send-email-sjoerd.simons@collabora.co.uk>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1439855266-26242-3-git-send-email-mathieu@codeaurora.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mathieu Olivari <mathieu@codeaurora.org>
-Cc: "robh+dt@kernel.org" <robh+dt@kernel.org>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "galak@codeaurora.org" <galak@codeaurora.org>, "linux@arm.linux.org.uk" <linux@arm.linux.org.uk>, "dwmw2@infradead.org" <dwmw2@infradead.org>, "computersforpeace@gmail.com" <computersforpeace@gmail.com>, "agross@codeaurora.org" <agross@codeaurora.org>, "sboyd@codeaurora.org" <sboyd@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>
+Content-Transfer-Encoding: 7Bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1438947854-3743-3-git-send-email-sjoerd.simons-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sjoerd Simons <sjoerd.simons-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>
+Cc: linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Jaroslav Kysela <perex-/Fr2/VpizcU@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Takashi Iwai <tiwai-IBi9RG/b67k@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon 17 Aug 16:47 PDT 2015, Mathieu Olivari wrote:
+Hi Sjoerd,
 
-> SMEM is used on IPQ806x to store various board related information such
-> as boot device and flash partition layout. We'll declare it as a device
-> so we can make use of it thanks to the new SMEM soc driver.
-> 
-> Signed-off-by: Mathieu Olivari <mathieu@codeaurora.org>
-> ---
->  arch/arm/boot/dts/qcom-ipq8064.dtsi | 8 +++++++-
->  1 file changed, 7 insertions(+), 1 deletion(-)
-> 
-> diff --git a/arch/arm/boot/dts/qcom-ipq8064.dtsi b/arch/arm/boot/dts/qcom-ipq8064.dtsi
-> index 8d366ae..85dbccf 100644
-> --- a/arch/arm/boot/dts/qcom-ipq8064.dtsi
-> +++ b/arch/arm/boot/dts/qcom-ipq8064.dtsi
-> @@ -55,7 +55,7 @@
->  			no-map;
->  		};
->  
-> -		smem@41000000 {
-> +		smem: smem@41000000 {
 
-I would preferred if you used a name like "smem_region", although I
-don't think we will use the phandle name "smem" for anything else...
-
->  			reg = <0x41000000 0x200000>;
->  			no-map;
->  		};
-> @@ -341,4 +341,10 @@
->  
->  		#hwlock-cells = <1>;
->  	};
+> +static int rk_spdif_probe(struct platform_device *pdev)
+> +{
+> +	struct rk_spdif_dev *spdif;
+> +	struct resource *res;
+> +	void __iomem *regs;
+> +	int ret;
 > +
-> +	smem {
-> +		compatible = "qcom,smem";
-> +		memory-region = <&smem>;
-> +		hwlocks = <&sfpb_mutex 3>;
-> +	};
->  };
+> +	spdif = devm_kzalloc(&pdev->dev, sizeof(*spdif), GFP_KERNEL);
+> +	if (!spdif)
+> +		return -ENOMEM;
+> +
+> +	spdif->hclk = devm_clk_get(&pdev->dev, "spdif_hclk");
 
-Acked-by: Bjorn Andersson <bjorn.andersson@sonymobile.com>
+I guess this could be named just "hclk" - as it is the identifier local to the 
+spdif-ip. (Of course in the binding too)
 
-Regards,
-Bjorn
+
+> +	if (IS_ERR(spdif->hclk)) {
+> +		dev_err(&pdev->dev, "Can't retrieve rk_spdif bus clock\n");
+> +		return PTR_ERR(spdif->hclk);
+> +	}
+> +	ret = clk_prepare_enable(spdif->hclk);
+> +	if (ret) {
+> +		dev_err(spdif->dev, "hclock enable failed %d\n", ret);
+> +		return ret;
+> +	}
+> +
+> +	spdif->mclk = devm_clk_get(&pdev->dev, "spdif_clk");
+
+The Rockchip TRMs (and the rest of the driver as well) refer to this clock as 
+"mclk", so I guess the identifier could just be named the same.
+
+
+> +	if (IS_ERR(spdif->mclk)) {
+> +		dev_err(&pdev->dev, "Can't retrieve rk_spdif master clock\n");
+> +		return PTR_ERR(spdif->hclk);
+> +	}
+> +
+> +	ret = clk_prepare_enable(spdif->mclk);
+> +	if (ret) {
+> +		dev_err(spdif->dev, "clock enable failed %d\n", ret);
+> +		return ret;
+> +	}
+
+I guess this plays into what Mark already wrote, but as the code stands right 
+now, you enable the mclk here and then through runtime_resume as well, so that 
+it stays running all the time, as the refcount is either 2 or 1 but never 0.
+
+Also I don't think mixing devm_clk_get + clk_prepare_enable calls works well. 
+If the devm_clk_get(... "spdif_clk") fails, the hclk would stay running right 
+now.
+
+
+[...]
+
+> +static int rk_spdif_remove(struct platform_device *pdev)
+> +{
+> +	struct rk_spdif_dev *spdif = dev_get_drvdata(&pdev->dev);
+> +
+> +	pm_runtime_disable(&pdev->dev);
+> +	if (!pm_runtime_status_suspended(&pdev->dev))
+> +		rk_spdif_runtime_suspend(&pdev->dev);
+> +
+> +	clk_disable_unprepare(spdif->mclk);
+> +	clk_disable_unprepare(spdif->hclk);
+> +	snd_dmaengine_pcm_unregister(&pdev->dev);
+> +	snd_soc_unregister_component(&pdev->dev);
+
+I think the ordering should stay symmetric to the probe function, where you 
+have
+	clk_enable
+	snd_register
+so here it should probably be
+	snd_unregister 
+	clk_disable
+
+
+
+Heiko
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
