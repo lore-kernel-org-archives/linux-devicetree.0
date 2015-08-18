@@ -1,75 +1,42 @@
-From: Michal Suchanek <hramrach@gmail.com>
-Subject: [PATCH v3 2/5] mtd: mtdpart: Do not fail mtd probe when parsing
- partitions fails.
-Date: 18 Aug 2015 15:34:07 -0000
-Message-ID: <97366073dfe93b478f24e2fc30ca818326906e0a.1439911625.git.hramrach@gmail.com>
-References: <cover.1439911625.git.hramrach@gmail.com>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v2] ARM: dts: sunxi: Add regulators for
+ LeMaker BananaPi
+Date: Tue, 18 Aug 2015 17:36:31 +0200
+Message-ID: <20150818153631.GH2547@lukather>
+References: <1438532305-5884-1-git-send-email-public_timo.s@silentcreek.de>
+Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
-In-Reply-To: <cover.1439911625.git.hramrach@gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
-List-Post: <mailto:linux-mtd@lists.infradead.org>
-List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
-Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
-To: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, David Woodhouse <dwmw2@infradead.org>, Brian Norris <computersforpeace@gmail.com>, Michal Suchanek <hramrach@gmail.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="Dx9iWuMxHO1cCoFc"
+Return-path: <linux-sunxi+bncBD2ZNBF5VYJRBAFCZWXAKGQEBTAKGQA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1438532305-5884-1-git-send-email-public_timo.s-fWgRPtSzPNU3WX+qO2AYSQ@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <http://groups.google.com/group/linux-sunxi/subscribe>
+To: Timo Sigurdsson <public_timo.s-fWgRPtSzPNU3WX+qO2AYSQ@public.gmane.org>
+Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Due to wrong assumption in ofpart ofpart fails on Exynos on SPI chips
-with no partitions because the subnode containing controller data
-confuses the ofpart parser.
+--Dx9iWuMxHO1cCoFc
+Content-Type: text/plain; charset=UTF-8
+Content-Disposition: inline
 
-Thus compiling in ofpart support automatically fails probing any SPI NOR
-flash without partitions on Exynos.
+On Sun, Aug 02, 2015 at 06:18:25PM +0200, Timo Sigurdsson wrote:
+> sun7i-a20-bananapi.dts doesn't contain regulator nodes for the AXP209 PMU
+> driver, so add them to allow for voltage-scaling with cpufreq-dt.
+> 
+> Signed-off-by: Timo Sigurdsson <public_timo.s-fWgRPtSzPNU3WX+qO2AYSQ@public.gmane.org>
 
-Compiling in a partitioning scheme should not cause probe of otherwise
-valid device to fail.
+Queued, thanks!
+Maxime
 
-Remove that failure possibility when MTD_PARTITIONED_MASTER is set.
-
-Signed-off-by: Michal Suchanek <hramrach@gmail.com>
-
----
-v2:
-
- - only allow partition parsing failure when MTD_PARTITIONED_MASTER is
-   set
----
- drivers/mtd/mtdpart.c | 9 +++++++--
- 1 file changed, 7 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/mtd/mtdpart.c b/drivers/mtd/mtdpart.c
-index 31888c2..6eafbe9 100644
---- a/drivers/mtd/mtdpart.c
-+++ b/drivers/mtd/mtdpart.c
-@@ -774,10 +774,15 @@ int parse_mtd_partitions(struct mtd_info *master, const char *const *types,
- 		if (ret > 0) {
- 			printk(KERN_NOTICE "%d %s partitions found on MTD device %s\n",
- 			       ret, parser->name, master->name);
--			break;
-+			return ret;
-+		}
-+		if (!IS_ENABLED(CONFIG_MTD_PARTITIONED_MASTER) && (ret < 0)) {
-+			pr_err("Error parsing %s partitions on %s\n",
-+			       parser->name, master->name);
-+			return ret;
- 		}
- 	}
--	return ret;
-+	return 0;
- }
- 
- int mtd_is_partition(const struct mtd_info *mtd)
 -- 
-2.1.4
-
-
-______________________________________________________
-Linux MTD discussion mailing list
-http://lists.infradead.org/mailman/listinfo/linux-mtd/
+Maxime Ripard, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
+--Dx9iWuMxHO1cCoFc--
