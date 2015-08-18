@@ -1,83 +1,55 @@
-From: YH Huang <yh.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Subject: [PATCH v7 1/3] dt-bindings: pwm: add MediaTek display PWM bindings
-Date: Tue, 18 Aug 2015 15:27:53 +0800
-Message-ID: <1439882875-19596-2-git-send-email-yh.huang@mediatek.com>
-References: <1439882875-19596-1-git-send-email-yh.huang@mediatek.com>
+From: Ludovic Desroches <ludovic.desroches@atmel.com>
+Subject: Re: [PATCH v2 0/3] introduce driver for the Atmel SDMMC
+Date: Tue, 18 Aug 2015 10:32:35 +0200
+Message-ID: <20150818083235.GL7268@odux.rfo.atmel.com>
+References: <1438179768-818-1-git-send-email-ludovic.desroches@atmel.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-In-Reply-To: <1439882875-19596-1-git-send-email-yh.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mediatek>,
- <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-mediatek/>
-List-Post: <mailto:linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mediatek>,
- <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "Linux-mediatek" <linux-mediatek-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: linux-pwm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, YH Huang <yh.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1438179768-818-1-git-send-email-ludovic.desroches@atmel.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Cc: ulf.hansson@linaro.org, nicolas.ferre@atmel.com, alexandre.belloni@free-electrons.com, pebolle@tiscali.nl, arnd@arndb.de, Ludovic Desroches <ludovic.desroches@atmel.com>
 List-Id: devicetree@vger.kernel.org
 
-Document the device-tree binding of MediaTek display PWM.
-The PWM has one channel to control the backlight brightness for display.
-It supports MT8173 and MT6595.
+Hi,
 
-Signed-off-by: YH Huang <yh.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
----
- .../devicetree/bindings/pwm/pwm-mtk-disp.txt       |   42 ++++++++++++++++++++
- 1 file changed, 42 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/pwm/pwm-mtk-disp.txt
+On Wed, Jul 29, 2015 at 04:22:45PM +0200, Ludovic Desroches wrote:
+> Hi,
+> 
+> This set of patches introduce a driver for the new Atmel SDMMC device avaible
+> on SAMA5D2 SoC.
+> 
+> There is also a resend of an old patch which has not been taken. Ulf asked
+> for some reviews since it could impact all sdhci devices but nobody did it...
+> This patch is not necessary for patch 2/3. It only fixes a special use case. If
+> there are objections about it, drop it, I don't want to delay the Atmel SDMMC
+> driver inclusion only for this patch.
 
-diff --git a/Documentation/devicetree/bindings/pwm/pwm-mtk-disp.txt b/Documentation/devicetree/bindings/pwm/pwm-mtk-disp.txt
-new file mode 100644
-index 0000000..f8f59ba
---- /dev/null
-+++ b/Documentation/devicetree/bindings/pwm/pwm-mtk-disp.txt
-@@ -0,0 +1,42 @@
-+MediaTek display PWM controller
-+
-+Required properties:
-+ - compatible: should be "mediatek,<name>-disp-pwm":
-+   - "mediatek,mt8173-disp-pwm": found on mt8173 SoC.
-+   - "mediatek,mt6595-disp-pwm": found on mt6595 SoC.
-+ - reg: physical base address and length of the controller's registers.
-+ - #pwm-cells: must be 2. See pwm.txt in this directory for a description of
-+   the cell format.
-+ - clocks: phandle and clock specifier of the PWM reference clock.
-+ - clock-names: must contain the following:
-+   - "main": clock used to generate PWM signals.
-+   - "mm": sync signals from the modules of mmsys.
-+ - pinctrl-names: Must contain a "default" entry.
-+ - pinctrl-0: One property must exist for each entry in pinctrl-names.
-+   See pinctrl/pinctrl-bindings.txt for details of the property values.
-+
-+Example:
-+	pwm0: pwm@1401e000 {
-+		compatible = "mediatek,mt8173-disp-pwm",
-+			     "mediatek,mt6595-disp-pwm";
-+		reg = <0 0x1401e000 0 0x1000>;
-+		#pwm-cells = <2>;
-+		clocks = <&mmsys CLK_MM_DISP_PWM026M>,
-+			 <&mmsys CLK_MM_DISP_PWM0MM>;
-+		clock-names = "main", "mm";
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&disp_pwm0_pins>;
-+	};
-+
-+	backlight_lcd: backlight_lcd {
-+		compatible = "pwm-backlight";
-+		pwms = <&pwm0 0 1000000>;
-+		brightness-levels = <
-+			  0  16  32  48  64  80  96 112
-+			128 144 160 176 192 208 224 240
-+			255
-+		>;
-+		default-brightness-level = <9>;
-+		power-supply = <&mt6397_vio18_reg>;
-+		enable-gpios = <&pio 95 GPIO_ACTIVE_HIGH>;
-+	};
--- 
-1.7.9.5
+Ping, any objections about this driver?
+
+> 
+> Changes:
+> - from v1:
+>   - update license
+> 
+> Ludovic Desroches (3):
+>   mmc: sdhci: switch from programmable clock mode to divided one if
+>     needed
+>   mmc: sdhci-of-at91: introduce driver for the Atmel SDMMC
+>   MAINTAINERS: add entry for Atmel sdhci-of-at91 driver
+> 
+>  .../devicetree/bindings/mmc/sdhci-atmel.txt        |  21 +++
+>  MAINTAINERS                                        |   6 +
+>  drivers/mmc/host/Kconfig                           |   8 +
+>  drivers/mmc/host/Makefile                          |   1 +
+>  drivers/mmc/host/sdhci-of-at91.c                   | 192 +++++++++++++++++++++
+>  drivers/mmc/host/sdhci.c                           |  29 +++-
+>  6 files changed, 248 insertions(+), 9 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/mmc/sdhci-atmel.txt
+>  create mode 100644 drivers/mmc/host/sdhci-of-at91.c
+> 
+> -- 
+> 2.5.0
+> 
