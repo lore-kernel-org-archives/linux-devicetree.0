@@ -1,97 +1,51 @@
-From: lei liu <leilk.liu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH] spi: mediatek: fix spi incorrect endian usage and
- remove redundant clock
-Date: Tue, 18 Aug 2015 21:14:29 +0800
-Message-ID: <1439903669.30929.2.camel@mhfsdcap03>
-References: <1439895231-17778-1-git-send-email-leilk.liu@mediatek.com>
-	 <CAOiHx=nBOtm3c7QQpA-SSxXzJGjUEJQBtR9CynoeqsXRoz4fRg@mail.gmail.com>
+From: Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Subject: [RFC PATCH 0/7] DMA: Add support for Tegra210 ADMA
+Date: Tue, 18 Aug 2015 14:49:08 +0100
+Message-ID: <1439905755-25150-1-git-send-email-jonathanh@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAOiHx=nBOtm3c7QQpA-SSxXzJGjUEJQBtR9CynoeqsXRoz4fRg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jonas Gorski <jogo-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>
-Cc: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 2015-08-18 at 14:19 +0200, Jonas Gorski wrote:
-> Hi,
-> 
-> On Tue, Aug 18, 2015 at 12:53 PM, Leilk Liu <leilk.liu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org> wrote:
-> > This patch fixes incorrect endian usage, removes redundant
-> > clock in prepare_hardware/unprepare_hardware and revises
-> > coding styles.
-> >
-> > Signed-off-by: Leilk Liu <leilk.liu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-> >
-> > ---
-> > Change in this patch:
-> > 1. fix incorrect endian usage on big-endian system.
-> > 2. delete redundant clock in prepare/unprepare_hardware.
-> > 3. revise coding styles.
-> 
-> The usual philosophy is to have one change per patch, so this might be
-> better as three patches. But this is Mark's call. Since the driver
-> isn't yet in Linus' tree, it might be a-ok to mix style improvements
-> and actual fixes, but as soon as it landed in Linus' tree you need to
-> keep them separate, so fixes can be easily backported.
-> 
+Add support for Tegra210 Audio DMA (ADMA) controller. This driver is based
+upon the existing Tegra20-APB DMA driver and a lot of the core code has
+been re-used.
 
-OK, I'll divide this patch to three patches on next version.
+This is currently being distributed as an RFC to get feedback on the
+approach and although this has been compile and boot tested, it still
+needs further functional testing to ensure it is working well.
 
-> Regarding the content ...
-> 
-> > ---
-> >  drivers/spi/spi-mt65xx.c                 | 163 +++++++++++++------------------
-> >  include/linux/platform_data/spi-mt65xx.h |   2 -
-> >  2 files changed, 69 insertions(+), 96 deletions(-)
-> >
-> > diff --git a/drivers/spi/spi-mt65xx.c b/drivers/spi/spi-mt65xx.c
-> > index 519f50c..a9da887 100644
-> > --- a/drivers/spi/spi-mt65xx.c
-> > +++ b/drivers/spi/spi-mt65xx.c
-> > @@ -694,6 +662,7 @@ static int mtk_spi_resume(struct device *dev)
-> >         if (!pm_runtime_suspended(dev)) {
-> >                 ret = clk_prepare_enable(mdata->spi_clk);
-> >                 if (ret < 0)
-> > +                       dev_err(dev, "failed to enable spi_clk (%d)\n", ret);
-> >                         return ret;
-> 
-> You need to add braces here, else the "return ret" isn't covered by
-> the if () anymore and you always return at this place.
-> 
-Yes.I'll fix it.
+This series is based upon the Tegra-APB clean-up series [0].
 
-> >         }
-> >
-> > @@ -720,8 +689,14 @@ static int mtk_spi_runtime_resume(struct device *dev)
-> >  {
-> >         struct spi_master *master = dev_get_drvdata(dev);
-> >         struct mtk_spi *mdata = spi_master_get_devdata(master);
-> > +       int ret;
-> > +
-> > +       ret = clk_prepare_enable(mdata->spi_clk);
-> > +       if (ret < 0)
-> > +               dev_err(dev, "failed to enable spi_clk (%d)\n", ret);
-> > +               return ret;
-> 
-> Same here. Although at least here it should be harmless, as
-> clk_prepare_enable doesn't return > 0.
-> 
-Yes.I'll fix it too.
-> >
-> > -       return clk_prepare_enable(mdata->spi_clk);
-> > +       return 0;
-> >  }
-> >  #endif /* CONFIG_PM */
-> >
-> 
-> 
-> Jonas
+[0] https://lkml.org/lkml/2015/8/6/315
 
+Jon Hunter (7):
+  DMA: tegra-apb: Correct runtime-pm usage
+  DMA: tegra-apb: Move code dealing with h/w registers into separate
+    functions
+  DMA: tegra-apb: Clean-up and simplify setting up of transfer
+    parameters
+  DMA: tegra-apb: Add a function table for functions dealing with
+    registers
+  DMA: tegra-apb: Move common code into separate source files
+  Documentation: DT: Add binding documentation for NVIDIA ADMA
+  DMA: tegra-adma: Add support for Tegra210 ADMA
 
---
-To unsubscribe from this list: send the line "unsubscribe linux-spi" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+ .../devicetree/bindings/dma/tegra210-adma.txt      |   49 +
+ drivers/dma/Kconfig                                |   16 +
+ drivers/dma/Makefile                               |    2 +
+ drivers/dma/tegra-common.c                         |  734 +++++++++++++
+ drivers/dma/tegra-common.h                         |  260 +++++
+ drivers/dma/tegra20-apb-dma.c                      | 1121 +++-----------------
+ drivers/dma/tegra210-adma.c                        |  710 +++++++++++++
+ 7 files changed, 1928 insertions(+), 964 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/dma/tegra210-adma.txt
+ create mode 100644 drivers/dma/tegra-common.c
+ create mode 100644 drivers/dma/tegra-common.h
+ create mode 100644 drivers/dma/tegra210-adma.c
+
+-- 
+2.1.4
