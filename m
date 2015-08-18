@@ -1,47 +1,48 @@
 From: Adrian Alonso <aalonso@freescale.com>
-Subject: [PATCH 3/8] ARM: dts: imx: imx7d-sbd add iomuxc-lpsr hoggrp-2 pads
-Date: Tue, 18 Aug 2015 10:48:54 -0500
-Message-ID: <1439912939-17535-3-git-send-email-aalonso@freescale.com>
+Subject: [PATCH 7/8] pinctrl: freescale: imx: fix flat functions default return
+Date: Tue, 18 Aug 2015 10:48:58 -0500
+Message-ID: <1439912939-17535-7-git-send-email-aalonso@freescale.com>
 References: <1439912939-17535-1-git-send-email-aalonso@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-gpio-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 In-Reply-To: <1439912939-17535-1-git-send-email-aalonso@freescale.com>
-Sender: linux-gpio-owner@vger.kernel.org
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: linux-arm-kernel@lists.infradead.org, shawn.guo@linaro.org, shawnguo@kernel.org, linus.walleij@linaro.org, lznuaa@gmail.com
-Cc: linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, robh+dt@kernel.org, Anson.Huang@freescale.com, Frank.Li@freescale.com, yibin.gong@freescale.com, nitin.garg@freescale.com
+Cc: devicetree@vger.kernel.org, Frank.Li@freescale.com, nitin.garg@freescale.com, Anson.Huang@freescale.com, linux-gpio@vger.kernel.org, robh+dt@kernel.org, yibin.gong@freescale.com
 List-Id: devicetree@vger.kernel.org
 
-Add imx7d-sdb iomuxc-lpsr hoggrp-2 default pads settings
+Fix imx pinctrl dt flat functions default return value.
+If property fsl,pins is not found in function_np and
+pinctrl_np return false to indicate that DT is not using
+flat functions.
 
 Signed-off-by: Adrian Alonso <aalonso@freescale.com>
 ---
- arch/arm/boot/dts/imx7d-sdb.dts | 15 +++++++++++++++
- 1 file changed, 15 insertions(+)
+ drivers/pinctrl/freescale/pinctrl-imx.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm/boot/dts/imx7d-sdb.dts b/arch/arm/boot/dts/imx7d-sdb.dts
-index fdd1d7c..63af4ea 100644
---- a/arch/arm/boot/dts/imx7d-sdb.dts
-+++ b/arch/arm/boot/dts/imx7d-sdb.dts
-@@ -406,3 +406,18 @@
+diff --git a/drivers/pinctrl/freescale/pinctrl-imx.c b/drivers/pinctrl/freescale/pinctrl-imx.c
+index 1009b52..3e02887 100644
+--- a/drivers/pinctrl/freescale/pinctrl-imx.c
++++ b/drivers/pinctrl/freescale/pinctrl-imx.c
+@@ -641,7 +641,7 @@ static bool imx_pinctrl_dt_is_flat_functions(struct device_node *np)
+ 		}
+ 	}
  
- 	};
- };
-+
-+&iomuxc_lpsr {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_hog_2>;
-+
-+	imx7d-sdb {
-+		pinctrl_hog_2: hoggrp-2 {
-+			fsl,pins = <
-+				MX7D_PAD_GPIO1_IO05__GPIO1_IO5    0x14
-+				MX7D_PAD_GPIO1_IO07__GPIO1_IO7    0x59
-+				MX7D_PAD_GPIO1_IO00__WDOD1_WDOG_B 0x74
-+			>;
-+		};
-+	};
-+};
+-	return true;
++	return false;
+ }
+ 
+ static int imx_pinctrl_probe_dt(struct platform_device *pdev,
 -- 
 2.1.4
-
