@@ -1,40 +1,78 @@
-From: Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 0/4] PL08x DT bindings and LPC18xx DMA support
-Date: Tue, 18 Aug 2015 22:12:51 +0530
-Message-ID: <20150818164251.GW13546@localhost>
-References: <1436616727-4847-1-git-send-email-manabian@gmail.com>
+From: Emil Velikov <emil.l.velikov@gmail.com>
+Subject: Re: [PATCH 2/4] drm: Add support for ARM's HDLCD controller.
+Date: Tue, 18 Aug 2015 17:41:59 +0100
+Message-ID: <CACvgo53KWsC1ZeYYF2bW=4=BeuexaEgBHT=+h2U60iS9nYvYpw@mail.gmail.com>
+References: <1438784892-27888-1-git-send-email-Liviu.Dudau@arm.com>
+ <1438784892-27888-3-git-send-email-Liviu.Dudau@arm.com>
+ <CACvgo537C6SRfhMTNoE4cSLJukcXuKLvt1TRykynX--ybEhmaQ@mail.gmail.com>
+ <20150817151547.GA1020@e106497-lin.cambridge.arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1436616727-4847-1-git-send-email-manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Joachim Eastwood <manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: arnd-r2nGTMty4D4@public.gmane.org, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, rmk+kernel-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20150817151547.GA1020@e106497-lin.cambridge.arm.com>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Liviu Dudau <Liviu.Dudau@arm.com>
+Cc: Mark Rutland <Mark.Rutland@arm.com>, Jon Medhurst <tixy@linaro.org>, Pawel Moll <Pawel.Moll@arm.com>, Arnd Bergmann <arnd@arndb.de>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Catalin Marinas <Catalin.Marinas@arm.com>, Kumar Gala <galak@codeaurora.org>, Will Deacon <Will.Deacon@arm.com>, "Linux-Kernel@Vger. Kernel. Org" <linux-kernel@vger.kernel.org>, ML dri-devel <dri-devel@lists.freedesktop.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Sudeep Holla <Sudeep.Holla@arm.com>, Robin Murphy <Robin.Murphy@arm.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Jul 11, 2015 at 02:12:03PM +0200, Joachim Eastwood wrote:
-> Hi Vinod,
-> 
-> This is the non-RFC version of the patch set with only a few changes.
-> Hope this can go in for 4.3. Changes to the DT for LPC18xx/43xx will
-> go thru arm-soc once this get accepted.
-> 
-> 
-> This patch set aims to add support for DMA on the NXP LPC18xx/43xx
-> (Cortex-M3/M4) platform. The platform has a PL080 controller with a
-> mux in front of the DMA request lines. This setup is quite common
-> and can be found on most other, if not all, NXP LPC devices.
-> 
-> Patch set adds DT support for the PL08x dmaengine driver and a DMA
-> router driver for the LPC18xx/43xx DMA multiplexer.
-
-Applied, thanks
-
--- 
-~Vinod
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+T24gMTcgQXVndXN0IDIwMTUgYXQgMTY6MTUsIExpdml1IER1ZGF1IDxMaXZpdS5EdWRhdUBhcm0u
+Y29tPiB3cm90ZToKPiBPbiBTdW4sIEF1ZyAxNiwgMjAxNSBhdCAwOTo1NjozM0FNICswMTAwLCBF
+bWlsIFZlbGlrb3Ygd3JvdGU6Cj4+IEhpIExpdml1LAo+Cj4gSGkgRW1pbCwKPgo+Pgo+PiBPbiA1
+IEF1Z3VzdCAyMDE1IGF0IDE1OjI4LCBMaXZpdSBEdWRhdSA8TGl2aXUuRHVkYXVAYXJtLmNvbT4g
+d3JvdGU6Cj4+ID4gVGhlIEhETENEIGNvbnRyb2xsZXIgaXMgYSBkaXNwbGF5IGNvbnRyb2xsZXIg
+dGhhdCBzdXBwb3J0cyByZXNvbHV0aW9ucwo+PiA+IHVwIHRvIDQwOTZ4NDA5NiBwaXhlbHMuIEl0
+IGlzIHByZXNlbnQgb24gdmFyaW91cyBkZXZlbG9wbWVudCBib2FyZHMKPj4gPiBwcm9kdWNlZCBi
+eSBBUk0gTHRkIGFuZCBlbXVsYXRlZCBieSB0aGUgbGF0ZXN0IEZhc3QgTW9kZWxzIGZyb20gdGhl
+Cj4+ID4gY29tcGFueS4KPj4gPgo+PiBJIGJlbGlldmUgdGhlcmUgaXMgYSB1bm9mZmljaWFsIHJl
+cXVpcmVtZW50KD8pIGZvciBuZXcgZHJtIGRyaXZlcnMgdG8KPj4gdXNlIGF0b21pYyBtb2Rlc2V0
+dGluZy4gTm90IDEwMCUgc3VyZSBvbiB0aGlzIG9uZSB0aG91Z2guIFRoZQo+PiBmb2xsb3dpbmcg
+ZHJpdmVyczogdGVncmEsIG1zbSwgcmNhci1kdSwgaTkxNSwgYW5kIERhbmllbCdzIGJsb2cgWzFd
+Cj4+IFsyXSBjYXQgcHJvdmlkZSBzb21lIGluZm9ybWF0aW9uIG9uIHRoZSB0b3BpYy4KPgo+IEkg
+YW0gYWxzbyBpbnRlcmVzdGVkIHRvIGtub3cgaWYgdGhpcyBpcyBhIHJlcXVpcmVtZW50IG9yIG5v
+dC4KPiBUaGFua3MgZm9yIHRoZSBwb2ludGVycywgSSB3aWxsIHJldmlldyB0aGVtIGFnYWluIHRv
+IHNlZSBpZiBJIGRpZCBtaXNzCj4gYW55dGhpbmcuIEkgcmVtZW1iZXIgcmVhZGluZyB0aGVtIGF0
+IHRoZSBiZWdpbm5pbmcgb2YgdGhlIHllYXIgYnV0IHByb2JhYmx5Cj4gdGhlIENocmlzdG1hcyBo
+YXplIGRpZCBub3QgY2xlYXIgZW5vdWdoIHdoZW4gSSBkaWQuCj4KVGhlcmUgd2FzIGEgc2ltaWxh
+ciBxdWVzdGlvbiBmcm9tIHRoZSBmcmVlc2NhbGUgZGN1IHBlb3BsZSBbMV0uIEkKYmVsaWV2ZSB0
+aGF0IHRoZSBhbnN3ZXIgc3RpbGwgYXBwbGllcy4KClsxXSBodHRwOi8vbGlzdHMuZnJlZWRlc2t0
+b3Aub3JnL2FyY2hpdmVzL2RyaS1kZXZlbC8yMDE1LU1hcmNoLzA3ODY4OS5odG1sCgo+Pgo+PiBU
+aGUgZHJpdmVyIHNlZW1zIHRvIGhhcyBoYXMgYSBiaXQgb2YgZGVhZCBjb2RlIGd1YXJkZWQgYnkK
+Pj4gSERMQ0RfKl9VTkRFUlJVTi4gUGVyaGFwcyB0aGVzZSBtYWNyb3Mgc2hvdWxkIGJlY29tZSBi
+dWlsZCBvciBydW50aW1lCj4+IHN3aXRjaChlcykgPwo+Cj4gVGhlcmUgaXMgYSBjb21tZW50IGlu
+IGhkbGNkX2Rydi5oIGV4cGxhaW5pbmcgd2hhdCBIRExDRF9TSE9XX1VOREVSUlVOIGNhbgo+IGJl
+IHVzZWQgZm9yLiBBcyBmb3IgSERMQ0RfQ09VTlRfQlVGRkVSVU5ERVJSVU5TLCB5b3UgYXJlIHJp
+Z2h0LCBpdCdzIGRlYWQKPiBjb2RlIGZyb20gdGhlIGVhcmxpZXIgZGVidWdnaW5nIGNvZGUgdGhh
+dCBnb3QgcmVtb3ZlZCBiZWZvcmUgc3VibWlzc2lvbi4KPiBJIHdpbGwgY29ycmVjdCB0aGF0Lgo+
+CkkgaGF2ZW4ndCBzZWVuIG90aGVyIGRybSBkcml2ZXJzIGZvbGxvdyB0aGUgInNldCBhIG1hY3Jv
+IHRoYXQgaXMKZG9jdW1lbnRlZCBpbiBhIGhlYWRlciBhbmQgcmVidWlsZCIgYXBwcm9hY2guIERl
+dnMgZWl0aGVyIGFkZCBhIENPTkZJRwpvcHRpb24gZm9yIGl0LCBvciBleHBvc2UgaXQgYXMgYSBt
+b2R1bGUgcGFyYW1ldGVyLiBJSVJDIHRoZSBub3V2ZWF1CmRyaXZlciBkb2VzIGV2ZW4gbW9yZSAt
+IGl0IGVuYWJsZXMgdGhlIHVuZGVycnVuIG1hY2hpbmVyeQp1bmNvbmRpdGlvbmFsbHkuCgo+Pgo+
+PiBNb3N0IERSTSBkcml2ZXJzIGRvIG5vdCB0aHJlYXQgZG1hLCBidXNfZXJyb3IsIHZzeW5jIGFu
+ZC9vciB1bmRlcnJ1bgo+PiBpbnRlcnJ1cHRzIGFzIGRlYnVnIGZ1bmN0aW9uYWxpdHkuIFRoZXkg
+YXJlIG9mIGxpbWl0ZWQgdXNlIGluIHRoaXMKPj4gZHJpdmVyLCBwcmVzZW50bHksIHlldCB0aGUg
+Q09ORklHX0RFQlVHX0ZTIGd1YXJkIHNlZW1zIGEgYml0IHN0cmFuZ2UKPj4gaW1oby4KPgo+IFRo
+ZSBIRExDRCBkZXZpY2UgaGFzIG9ubHkgMSBpbnRlcnJ1cHQgdGhhdCBjYW4gZmlyZSBhbmQgdGhl
+cmUgaXMgbm8gb3RoZXIKPiB3YXkgdG8gc2hvdyB0aGUgcmVhc29uIGZvciB0aGUgaW50ZXJydXB0
+IGluIHRoZSBkcml2ZXIuIEl0IHdhcyB1c2VmdWwgd2hlbgo+IGRlYnVnZ2luZyB1bmRlcnJ1bnMg
+YW5kL29yIHZzeW5jIGlzc3VlcyBzbyBJIHRob3VnaHQgaXQgbWlnaHQgYmUgdXNlZnVsCj4gdG8g
+a2VlcCBhcm91bmQuIFB1dHRpbmcgaXQgdGhlIG90aGVyIHdheTogaWYgeW91IGFyZSBnb2luZyB0
+byB1c2UgdGhpcyBkZXZpY2UKPiBhbmQgdGhlIGltYWdlIGlzIG5vdCBjb21wbGV0ZWx5IHJlbmRl
+cmVkIEkgd291bGQgbm90IGJlIGFibGUgdG8gZ2l2ZSB5b3UKPiBzdXBwb3J0IHRvIGZpZ3VyZSBv
+dXQgd2hhdCB3ZW50IHdyb25nIHdpdGhvdXQgdGhpcyBkZWJ1Z2dpbmcgaW5mb3JtYXRpb24uCj4g
+V2l0aCB0aGlzIGluIHBsYWNlIEkgY2FuIHRlbGwgdGhlIGRpZmZlcmVuY2UgYmV0d2VlbiBhIGJ1
+c3kgc3lzdGVtIHZzIG9uZQo+IHdoZXJlIHRoZSBpbnRlcnJ1cHQgbGF0ZW5jeSBpcyBsYXJnZS4K
+PgpPdXQgb2YgY3VyaW9zaXR5IC0gYXJlIHRoZXJlIGFueSBpbXBsaWNhdGlvbnMvc2lkZS1lZmZl
+Y3RzIGZyb20gaGF2aW5nCnRoZXNlIGVuYWJsZWQgPwoKVGhhbmtzLApFbWlsCl9fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxp
+c3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwOi8vbGlzdHMuZnJlZWRlc2t0
+b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
