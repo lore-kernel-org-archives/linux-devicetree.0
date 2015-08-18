@@ -1,130 +1,89 @@
 From: Michael Turquette <mturquette@baylibre.com>
-Subject: Re: [PATCH 3/4 v3][RFC] arm64: renesas: Add initial r8a7795 SoC support
-Date: Mon, 17 Aug 2015 17:20:18 -0700
-Message-ID: <20150818002018.31346.63666@quantum>
-References: <877fpdw3av.wl%kuninori.morimoto.gx@renesas.com>
- <873801w377.wl%kuninori.morimoto.gx@renesas.com> <1559394.i3FG4v33fI@avalon>
- <CAMuHMdX+edyEWNaSV5d7Knxs8ZjxN7hLPqQgmb+4awNNnfpRDQ@mail.gmail.com>
+Subject: Re: [PATCH 1/2] clk: add lpc18xx creg clk driver
+Date: Mon, 17 Aug 2015 17:26:04 -0700
+Message-ID: <20150818002604.31346.18322@quantum>
+References: <1436651307-24098-1-git-send-email-manabian@gmail.com>
+ <1436651307-24098-2-git-send-email-manabian@gmail.com>
+ <20150811204127.31346.16729@quantum>
+ <CAGhQ9VwZaM_iWTkQYVTuTiyb6gCG2y6s8WFVySCHt7YHE1qbcA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <CAMuHMdX+edyEWNaSV5d7Knxs8ZjxN7hLPqQgmb+4awNNnfpRDQ@mail.gmail.com>
-Sender: linux-sh-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert@linux-m68k.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>, Simon <horms@verge.net.au>, Magnus <magnus.damm@gmail.com>, Linux-sh list <linux-sh@vger.kernel.org>, linux-clk@vger.kernel.org, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <CAGhQ9VwZaM_iWTkQYVTuTiyb6gCG2y6s8WFVySCHt7YHE1qbcA@mail.gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Joachim Eastwood <manabian@gmail.com>
+Cc: devicetree@vger.kernel.org, Stephen Boyd <sboyd@codeaurora.org>, linux-clk@vger.kernel.org, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Quoting Geert Uytterhoeven (2015-08-04 05:34:06)
-> On Tue, Aug 4, 2015 at 2:22 PM, Laurent Pinchart
-> <laurent.pinchart@ideasonboard.com> wrote:
-> > On Monday 03 August 2015 01:53:23 Kuninori Morimoto wrote:
-> >> --- /dev/null
-> >> +++ b/arch/arm64/boot/dts/renesas/r8a7795.dtsi
-> >> @@ -0,0 +1,93 @@
-> >> +/ {
-> 
-> >> +     clocks {
+Quoting Joachim Eastwood (2015-08-13 13:43:11)
+> On 11 August 2015 at 22:41, Michael Turquette <mturquette@baylibre.com> wrote:
+> > Hi Joachim,
 > >
-> > Let's try to make it right from the start on Gen3. The CPG node should be a
-> > direct child of the bus node mentioned above, and the MSTP clocks should be
-> > children of the CPG node.
+> > Quoting Joachim Eastwood (2015-07-11 14:48:26)
+> >> +static void __init lpc18xx_creg_clk_init(struct device_node *np)
+> >> +{
+> >> +       const char *clk_32khz_parent;
+> >> +       struct regmap *syscon;
+> >> +
+> >> +       syscon = syscon_node_to_regmap(np->parent);
+> >> +       if (IS_ERR(syscon)) {
+> >> +               pr_err("%s: syscon lookup failed\n", __func__);
+> >> +               return;
+> >> +       }
+> >> +
+> >> +       clk_32khz_parent = of_clk_get_parent_name(np, 0);
+> >> +
+> >> +       clk_creg[CREG_CLK_32KHZ] =
+> >> +               clk_register_creg_clk(&clk_creg_clocks[CREG_CLK_32KHZ],
+> >> +                                     &clk_32khz_parent, syscon);
+> >> +
+> >> +       clk_creg[CREG_CLK_1KHZ] =
+> >> +               clk_register_creg_clk(&clk_creg_clocks[CREG_CLK_1KHZ],
+> >> +                                     &clk_creg_clocks[CREG_CLK_32KHZ].name,
+> >> +                                     syscon);
+> >> +
+> >> +       of_clk_add_provider(np, of_clk_src_onecell_get, &clk_base_data);
+> >> +}
+> >> +CLK_OF_DECLARE(lpc18xx_creg_clk, "nxp,lpc1850-creg-clk", lpc18xx_creg_clk_init);
+> >
+> > I'll ask the same question that Stephen asked in your CCU/CGU driver
+> > series: is it necessary to use CLK_OF_DECLARE here or can you use the
+> > platform device model?
 > 
-> Agreed.
+> The 32 kHz clock from the CREG block is a clock parent to the CGU
+> block so it's possible that it will required early. This is all
+> depends on how the boot loader initially configures the CGU.
 > 
-> > I'm not sure where to put the non-memory-mapped clocks though, should they be
-> > directly under the root node ? It would make sense for extal_clk, but how
-> > about the fixed-factor clocks ? Should they be children of the CPG node too ?
-> 
-> I believe the current trend is to put clocks like "extal_clk" under the root
-> node.
-> As the fixed-factor clocks are generated by the CPG module, and we do have
-> a device node for it, I'd make them children of the CPG node, too.
-> 
-> Any comments from the clk+dt experts?
+> Currently in the DTS for lpc18xx cgu it has:
+> clocks = <&xtal>, <&xtal32>, <...>;
+> xtal32 is just a temporary placeholder until the CREG clock is in place.
 
-I don't know if anyone is an expert ;-)
-
-extal_clk should be under the root node. That is true for all
-board-level clocks and clock controllers.
-
-Within the SoC we want to model the clock controller as a node in DT,
-not necessarily all of the individual clocks. So you definitely need a
-"cpg" node in DT with #clock-cells > 0.
-
-Whether or not you enumerate the individual clocks in DT is up to you. I
-do not like the data-driven approach of putting the clock definition
-data into DT. It makes it awkward to do things like set a flag on a
-single clock later on. Simply using the clock controller phandle plus
-one or more offsets is preferred over a per-clock phandle.
-
-Stephen and I have been discussing what a formal clock-controller
-binding would look like, and one item we came up with is that any
-sub-nodes of the controller would not be allowed to have a #clock-cells
-property.
-
-Also, while you're thinking about the perfect clock binding, please do
-consider dropping clock-output-names if you can. Specifying clock-names
-alongside the clocks property inside of the consumer node is a bit more
-elegant in my opinion. This is also a bit easier if you think about
-expressing your clock data with C inside of your provider driver.
+Well that seems wrong. Is it just a matter of probe order where you try
+to probe the cgu driver before the creg driver?
 
 Regards,
 Mike
 
 > 
-> Thanks!
 > 
-> >> +             #address-cells = <2>;
-> >> +             #size-cells = <2>;
-> >> +             ranges;
-> >> +
-> >> +             extal_clk: extal_clk {
-> >> +                     compatible = "fixed-clock";
-> >> +                     #clock-cells = <0>;
-> >> +                     clock-frequency = <0>;
-> >> +                     clock-output-names = "extal";
-> >> +             };
-> >> +             cpg_clocks: cpg_clocks@e6150000 {
-> >> +                     compatible = "renesas,r8a7795-cpg-clocks",
-> >> +                                  "renesas,rcar-gen3-cpg-clocks";
-> >> +                     reg = <0 0xe6150000 0 0x1000>;
-> >> +                     clocks = <&extal_clk>;
-> >> +                     #clock-cells = <1>;
-> >> +                     clock-output-names = "main", "pll0", "pll1","pll2",
-> >> +                                          "pll3", "pll4";
-> >> +             };
-> >> +             p_clk: p_clk {
-> >> +                     compatible = "fixed-factor-clock";
-> >> +                     clocks = <&cpg_clocks RCAR_GEN3_CLK_PLL1>;
-> >> +                     #clock-cells = <0>;
-> >> +                     clock-div = <24>;
-> >> +                     clock-mult = <1>;
-> >> +                     clock-output-names = "p";
-> >> +             };
-> >> +             mstp3_clks: mstp3_clks@e615013c {
-> >> +                     compatible = "renesas,r8a7795-mstp-clocks",
-> >> +                                  "renesas,cpg-mstp-clocks";
-> >> +                     reg = <0 0xe615013c 0 4>, <0 0xe6150048 0 4>;
-> >> +                     clocks =  <&p_clk>;
-> >> +                     #clock-cells = <1>;
-> >> +                     renesas,clock-indices = <RCAR_GEN3_CLK_IRDA>;
-> >> +                     clock-output-names = "irda";
-> >> +             };
-> >> +     };
-> >> +};
+> Note that while it's possible to use the 32k clock together with PLL0
+> to generate the main CPU bus clock I doubt it will be common
+> configuration. It is however fully possible to do.
 > 
-> Gr{oetje,eeting}s,
 > 
->                         Geert
+> regards,
+> Joachim Eastwood
 > 
-> --
-> Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-> 
-> In personal conversations with technical people, I call myself a hacker. But
-> when I'm talking to journalists I just say "programmer" or something like that.
->                                 -- Linus Torvalds
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-clk" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
