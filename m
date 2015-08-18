@@ -1,101 +1,73 @@
-From: Dinh Nguyen <dinh.linux@gmail.com>
-Subject: Re: [PATCH v4 4/5] Documentation: dt-bindings: pci: altera pcie
- device tree binding
-Date: Tue, 18 Aug 2015 14:22:11 -0500
-Message-ID: <CADhT+wdwYQWq=yiw1R9YEXX=WTDtoj-5=6EysX=aHUjdSvU89w@mail.gmail.com>
-References: <1439802579-22651-1-git-send-email-lftan@altera.com>
-	<1439802579-22651-5-git-send-email-lftan@altera.com>
+From: Graham Moore <grmoore@opensource.altera.com>
+Subject: Re: [PATCH V7 2/2] mtd: spi-nor: Add driver for Cadence Quad SPI
+ Flash Controller.
+Date: Tue, 18 Aug 2015 14:17:42 -0500
+Message-ID: <55D384D6.9040303@opensource.altera.com>
+References: <1439522892-7524-1-git-send-email-marex@denx.de>
+ <1439522892-7524-2-git-send-email-marex@denx.de> <55D299CD.2070809@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <1439802579-22651-5-git-send-email-lftan@altera.com>
-Sender: linux-pci-owner@vger.kernel.org
-To: Ley Foon Tan <lftan@altera.com>
-Cc: Bjorn Helgaas <bhelgaas@google.com>, Russell King <linux@arm.linux.org.uk>, Marc Zyngier <marc.zyngier@arm.com>, Arnd Bergmann <arnd@arndb.de>, Dinh Nguyen <dinguyen@opensource.altera.com>, linux-pci@vger.kernel.org, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, Linux List <linux-kernel@vger.kernel.org>, Ley Foon Tan <lftan.linux@gmail.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
+In-Reply-To: <55D299CD.2070809@st.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
+List-Post: <mailto:linux-mtd@lists.infradead.org>
+List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
+Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
+To: vikas <vikas.manocha@st.com>
+Cc: Marek Vasut <marex@denx.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Alan Tull <atull@opensource.altera.com>, Yves Vandervennet <yvanderv@opensource.altera.com>, "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>, Dinh Nguyen <dinguyen@opensource.altera.com>, Brian Norris <computersforpeace@gmail.com>, David Woodhouse <dwmw2@infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Aug 17, 2015 at 4:09 AM, Ley Foon Tan <lftan@altera.com> wrote:
-> This patch adds the bindings for Altera PCIe host controller driver and
-> Altera PCIe MSI driver.
+Hi Vikas,
+
+On 08/17/2015 09:34 PM, vikas wrote:
+ > Hi Marek,
+ >
+
+[...]
+
+ >> +
+>> +/* Operation timeout value */
+>> +#define CQSPI_TIMEOUT_MS                       500
+>> +#define CQSPI_READ_TIMEOUT_MS                  10
 >
-> Signed-off-by: Ley Foon Tan <lftan@altera.com>
-> ---
->  .../devicetree/bindings/pci/altera-pcie-msi.txt    | 27 ++++++++++++
->  .../devicetree/bindings/pci/altera-pcie.txt        | 49 ++++++++++++++++++++++
->  2 files changed, 76 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/pci/altera-pcie-msi.txt
->  create mode 100644 Documentation/devicetree/bindings/pci/altera-pcie.txt
+> please add some comment about the timeouts value selection.
 >
-> diff --git a/Documentation/devicetree/bindings/pci/altera-pcie-msi.txt b/Documentation/devicetree/bindings/pci/altera-pcie-msi.txt
-> new file mode 100644
-> index 0000000..7f330c9
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/pci/altera-pcie-msi.txt
-> @@ -0,0 +1,27 @@
-> +* Altera PCIe MSI controller
-> +
-> +Required properties:
-> +- compatible:  should contain "altr,msi-1.0"
-> +- reg:         specifies the physical base address of the controller and
-> +               the length of the memory mapped region.
-> +- reg-names:   Must include the following entries:
-> +               "csr": CSR registers
-> +               "vector_slave": vectors region
 
-Can you be a little bit more specific here? What is a vectors region?
-Also, I'm not 100% sure, but I think "vector-slave" should be used.
+I wish I could comment, but I don't know the origin of these values. 
+The 500 ms value is probably just "a very long time".
 
-> +-interrupts:   specifies the interrupt source of the parent interrupt
-> +               controller. The format of the interrupt specifier depends on the
-> +               parent interrupt controller.
+[...]
 
-Need to document "interrupt-parent" .
+>> +
+>> +       cqspi->irq_mask = CQSPI_IRQ_MASK_RD;
+>> +       writel(cqspi->irq_mask, reg_base + CQSPI_REG_IRQMASK);
+>
+> here interrupt mask is being configured for every read, better would be to move it in init.
+>
 
-> +- num-vectors: Number of vectors, range 1 to 32.
-> +- msi-controller:      indicates that this is MSI controller node
-> +
-> +
-> +Example
-> +msi0: msi@0xFF200000 {
-> +       compatible = "altr,msi-1.0";
-> +       reg = <0xFF200000 0x00000010
-> +               0xFF200010 0x00000080>;
-> +       reg-names = "csr", "vector_slave";
-> +       interrupt-parent = <&hps_0_arm_gic_0>;
-> +       interrupts = <0 42 4>;
-> +       msi-controller = <1>;
-> +       num-vectors = <32>;
-> +};
-> diff --git a/Documentation/devicetree/bindings/pci/altera-pcie.txt b/Documentation/devicetree/bindings/pci/altera-pcie.txt
-> new file mode 100644
-> index 0000000..73a8dc0
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/pci/altera-pcie.txt
-> @@ -0,0 +1,49 @@
-> +* Altera PCIe controller
-> +
-> +Required properties:
-> +- compatible : should contain "altr,pcie-root-port-1.0"
-> +- reg:         A list of physical base address and length for TXS and CRA.
-> +- reg-names:   Must include the following entries:
-> +               "Txs" or "txs": TXS region
+[...]
 
-What is a TXS region?
+>> +
+>> +       cqspi->irq_mask = CQSPI_IRQ_MASK_WR;
+>> +       writel(cqspi->irq_mask, reg_base + CQSPI_REG_IRQMASK);
+>
+> same like read, it should be moved to init.
+>
 
-> +               "Cra" or "cra": Control register access region
-> +-interrupts:   specifies the interrupt source of the parent interrupt controller.
-> +               The format of the interrupt specifier depends on the parent interrupt
-> +               controller.
-> +- device_type: must be "pci"
-> +- #address-cells:      set to <3>
-> +- #size-cells: set to <2>
-> +- #interrupt-cells:    set to <1>
-> +- ranges:              Describes the translation of addresses for root ports and standard
-> +               PCI regions.
-> +- interrupt-map-mask and interrupt-map: standard PCI properties
-> +       to define the mapping of the PCIe interface to interrupt
-> +       numbers.
+It uses different masks for read and write
 
-"interrupt-parent" ?
+[...]
 
-Dinh
+BR,
+Graham
+
+
+______________________________________________________
+Linux MTD discussion mailing list
+http://lists.infradead.org/mailman/listinfo/linux-mtd/
