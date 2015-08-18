@@ -1,38 +1,44 @@
-From: Eric Anholt <eric@anholt.net>
-Subject: [PATCH v2 5/7] drm/vc4: Allow vblank to be disabled
-Date: Tue, 18 Aug 2015 14:54:06 -0700
-Message-ID: <1439934848-7196-6-git-send-email-eric@anholt.net>
+From: Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
+Subject: [PATCH v2 2/7] MAINTAINERS: Add myself for the new VC4 (RPi GPU) graphics driver.
+Date: Tue, 18 Aug 2015 14:54:03 -0700
+Message-ID: <1439934848-7196-3-git-send-email-eric@anholt.net>
 References: <1439934848-7196-1-git-send-email-eric@anholt.net>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <1439934848-7196-1-git-send-email-eric@anholt.net>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: dri-devel@lists.freedesktop.org
-Cc: devicetree@vger.kernel.org, Derek Foreman <derekf@osg.samsung.com>, Stephen Warren <swarren@wwwdotorg.org>, Lee Jones <lee@kernel.org>, linux-kernel@vger.kernel.org, linux-rpi-kernel@lists.infradead.org, linux-arm-kernel@lists.infradead.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1439934848-7196-1-git-send-email-eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Lee Jones <lee-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-RnJvbTogRGVyZWsgRm9yZW1hbiA8ZGVyZWtmQG9zZy5zYW1zdW5nLmNvbT4KClNpZ25lZC1vZmYt
-Ynk6IERlcmVrIEZvcmVtYW4gPGRlcmVrZkBvc2cuc2Ftc3VuZy5jb20+ClNpZ25lZC1vZmYtYnk6
-IEVyaWMgQW5ob2x0IDxlcmljQGFuaG9sdC5uZXQ+Ci0tLQogZHJpdmVycy9ncHUvZHJtL3ZjNC92
-YzRfa21zLmMgfCAyICsrCiAxIGZpbGUgY2hhbmdlZCwgMiBpbnNlcnRpb25zKCspCgpkaWZmIC0t
-Z2l0IGEvZHJpdmVycy9ncHUvZHJtL3ZjNC92YzRfa21zLmMgYi9kcml2ZXJzL2dwdS9kcm0vdmM0
-L3ZjNF9rbXMuYwppbmRleCBhMzQ0MzlmLi5mODgxY2Q0IDEwMDY0NAotLS0gYS9kcml2ZXJzL2dw
-dS9kcm0vdmM0L3ZjNF9rbXMuYworKysgYi9kcml2ZXJzL2dwdS9kcm0vdmM0L3ZjNF9rbXMuYwpA
-QCAtNzcsNiArNzcsOCBAQCBpbnQgdmM0X2ttc19sb2FkKHN0cnVjdCBkcm1fZGV2aWNlICpkZXYp
-CiAJZGV2LT5tb2RlX2NvbmZpZy5mdW5jcyA9ICZ2YzRfbW9kZV9mdW5jczsKIAlkZXYtPm1vZGVf
-Y29uZmlnLnByZWZlcnJlZF9kZXB0aCA9IDI0OwogCisJZGV2LT52YmxhbmtfZGlzYWJsZV9hbGxv
-d2VkID0gdHJ1ZTsKKwogCXJldCA9IHZjNF9pbml0X21vZGVzZXRfb2JqZWN0cyhkZXYpOwogCWlm
-IChyZXQpCiAJCWdvdG8gZmFpbDsKLS0gCjIuMS40CgpfX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBs
-aXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cDovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFu
-L2xpc3RpbmZvL2RyaS1kZXZlbAo=
+Signed-off-by: Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
+---
+
+v2: Mark it Supported, not Maintained.
+
+ MAINTAINERS | 6 ++++++
+ 1 file changed, 6 insertions(+)
+
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 9c9dd5f..5292087 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -3592,6 +3592,12 @@ S:	Maintained
+ F:	drivers/gpu/drm/rockchip/
+ F:	Documentation/devicetree/bindings/video/rockchip*
+ 
++DRM DRIVERS FOR VC4
++M:	Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
++T:	git git://github.com/anholt/linux
++S:	Supported
++F:	drivers/gpu/drm/vc4/*
++
+ DSBR100 USB FM RADIO DRIVER
+ M:	Alexey Klimov <klimov.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+ L:	linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+-- 
+2.1.4
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
