@@ -1,152 +1,73 @@
-From: Michael van der Westhuizen <michael-XrNoQAPr3WXM9gW82pYGhQ@public.gmane.org>
-Subject: [PATCH v3 2/2] spi: dw: Allow interface drivers to limit data I/O to word sizes
-Date: Tue, 18 Aug 2015 22:21:53 +0200
-Message-ID: <1439929313-4948-3-git-send-email-michael@smart-africa.com>
-References: <1439929313-4948-1-git-send-email-michael@smart-africa.com>
-Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1439929313-4948-1-git-send-email-michael-XrNoQAPr3WXM9gW82pYGhQ@public.gmane.org>
-Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Thor Thayer <tthayer-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>, Andy Shevchenko <andriy.shevchenko-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Michael van der Westhuizen <michael-XrNoQAPr3WXM9gW82pYGhQ@public.gmane.org>
+From: vikas <vikas.manocha-qxv4g6HH51o@public.gmane.org>
+Subject: Re: [PATCH V7 1/2] mtd: spi-nor: Bindings for Cadence Quad SPI Flash
+ Controller driver.
+Date: Tue, 18 Aug 2015 13:18:33 -0700
+Message-ID: <55D39319.70108@st.com>
+References: <1439522892-7524-1-git-send-email-marex@denx.de> <55D29A0B.20408@st.com> <201508180647.30119.marex@denx.de> <0B80CAC4-70B3-4557-8D6E-4CA84AF9CEA2@st.com> <55D3819D.1040009@opensource.altera.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <55D3819D.1040009-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Graham Moore <grmoore-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
+Cc: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>, "linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Alan Tull <atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Dinh Nguyen <dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>, Yves Vandervennet <yvanderv-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The commit dd11444327ce ("spi: dw-spi: Convert 16bit accesses to 32bit
-accesses") changed all 16bit accesses in the DW_apb_ssi driver to 32bit.
-This, unfortunately, breaks data register access on picoXcell, where the
-DW IP needs data register accesses to be word accesses (all other
-accesses appear to be OK).
+Hi,
 
-This change introduces a new master variable to allow interface drivers
-to specify that 16bit data transfer I/O is required.  This change also
-introduces the ability to set this variable via device tree bindings in
-the MMIO interface driver.  Both the core and the MMIO interface driver
-default to the current 32bit behaviour.
+On 08/18/2015 12:03 PM, Graham Moore wrote:
+> Hi all,
+> 
+> On 08/18/2015 12:48 AM, Vikas MANOCHA wrote:
+> 
+> [...]
+> 
+>>>>> +Required properties:
+>>>>> +- compatible : Should be "cdns,qspi-nor".
+>>>>> +- reg : Contains two entries, each of which is a tuple consisting of a
+>>>>> +    physical address and length.  The first entry is the address and
+>>>>> +    length of the controller register set.  The second entry is the
+>>>>> +    address and length of the QSPI Controller data area.
+>>>>
+>>>> "Controller data area", i think it means mapped NOR Flash address ?
+>>>
+>>> Probably ; Graham ?
+>>>
+>>>> If yes, it would be more clear with "Physical base address & size of NOR
+>>>> Flash".
+>>>
+>>> This is the Direct mode thing, correct ? We don't support this, so I think
+>>> we should drop this bit altogether and keep only one single address in this
+>>> field.
+>>
+>> No it's not.
+>>
+> 
+> It's the location of the SRAM fifo.  Also direct mode location I think, 
+> if that were ever used.
 
-Before this change, on a picoXcell pc3x3:
- spi_master spi32766: interrupt_transfer: fifo overrun/underrun
- m25p80 spi32766.0: error -5 reading 9f
- m25p80: probe of spi32766.0 failed with error -5
+Hmm...It is the base address of NOR flash. SRAM is not memory mapped.
 
-After this change:
- m25p80 spi32766.0: m25p40 (512 Kbytes)
+> 
+> The size is determined by a configuration parameter during system 
+> design.  On Altera Cyclone5 the size is really big compared to SRAM 
+> fifo.  I don't know why, maybe some hw engineer thought it would be 
+> better to have a large size in case direct mode was used.
 
-Fixes: dd11444327ce ("spi: dw-spi: Convert 16bit accesses to 32bit accesses")
-Signed-off-by: Michael van der Westhuizen <michael-XrNoQAPr3WXM9gW82pYGhQ@public.gmane.org>
----
-Changes in v3:
-  - Rename the DT property as requested by Rob Herring.
+my comment is about second parameter of property "reg" which is NOR flash address, so above explanation does not
+make sense for it.
+Also in direct mode, sram does not come into play.
 
-Changes in v2:
-  - Incorporate review feedback from Andy Shevchenko
-    - Rework the DT bindings to accept an I/O register width as a
-      number of bytes rather than using a boolean spefifying the
-      width preference to be 16 bits.
-    - Add data register access wrapper functions and use them when
-      reading and writing the data register.
+Rgds,
+Vikas
 
- drivers/spi/spi-dw-mmio.c |  3 +++
- drivers/spi/spi-dw.c      |  4 ++--
- drivers/spi/spi-dw.h      | 35 +++++++++++++++++++++++++++++++++++
- 3 files changed, 40 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/spi/spi-dw-mmio.c b/drivers/spi/spi-dw-mmio.c
-index eb03e12..7edede6 100644
---- a/drivers/spi/spi-dw-mmio.c
-+++ b/drivers/spi/spi-dw-mmio.c
-@@ -74,6 +74,9 @@ static int dw_spi_mmio_probe(struct platform_device *pdev)
- 
- 	dws->max_freq = clk_get_rate(dwsmmio->clk);
- 
-+	of_property_read_u32(pdev->dev.of_node, "reg-io-width",
-+			     &dws->reg_io_width);
-+
- 	num_cs = 4;
- 
- 	if (pdev->dev.of_node)
-diff --git a/drivers/spi/spi-dw.c b/drivers/spi/spi-dw.c
-index 8d67d03..4fbfcdc 100644
---- a/drivers/spi/spi-dw.c
-+++ b/drivers/spi/spi-dw.c
-@@ -194,7 +194,7 @@ static void dw_writer(struct dw_spi *dws)
- 			else
- 				txw = *(u16 *)(dws->tx);
- 		}
--		dw_writel(dws, DW_SPI_DR, txw);
-+		dw_write_io_reg(dws, DW_SPI_DR, txw);
- 		dws->tx += dws->n_bytes;
- 	}
- }
-@@ -205,7 +205,7 @@ static void dw_reader(struct dw_spi *dws)
- 	u16 rxw;
- 
- 	while (max--) {
--		rxw = dw_readl(dws, DW_SPI_DR);
-+		rxw = dw_read_io_reg(dws, DW_SPI_DR);
- 		/* Care rx only if the transfer's original "rx" is not null */
- 		if (dws->rx_end - dws->len) {
- 			if (dws->n_bytes == 1)
-diff --git a/drivers/spi/spi-dw.h b/drivers/spi/spi-dw.h
-index 6c91391..b75ed32 100644
---- a/drivers/spi/spi-dw.h
-+++ b/drivers/spi/spi-dw.h
-@@ -109,6 +109,7 @@ struct dw_spi {
- 	u32			fifo_len;	/* depth of the FIFO buffer */
- 	u32			max_freq;	/* max bus freq supported */
- 
-+	u32			reg_io_width;	/* DR I/O width in bytes */
- 	u16			bus_num;
- 	u16			num_cs;		/* supported slave numbers */
- 
-@@ -145,11 +146,45 @@ static inline u32 dw_readl(struct dw_spi *dws, u32 offset)
- 	return __raw_readl(dws->regs + offset);
- }
- 
-+static inline u16 dw_readw(struct dw_spi *dws, u32 offset)
-+{
-+	return __raw_readw(dws->regs + offset);
-+}
-+
- static inline void dw_writel(struct dw_spi *dws, u32 offset, u32 val)
- {
- 	__raw_writel(val, dws->regs + offset);
- }
- 
-+static inline void dw_writew(struct dw_spi *dws, u32 offset, u16 val)
-+{
-+	__raw_writew(val, dws->regs + offset);
-+}
-+
-+static inline u32 dw_read_io_reg(struct dw_spi *dws, u32 offset)
-+{
-+	switch (dws->reg_io_width) {
-+	case 2:
-+		return dw_readw(dws, offset);
-+	case 4:
-+	default:
-+		return dw_readl(dws, offset);
-+	}
-+}
-+
-+static inline void dw_write_io_reg(struct dw_spi *dws, u32 offset, u32 val)
-+{
-+	switch (dws->reg_io_width) {
-+	case 2:
-+		dw_writew(dws, offset, val);
-+		break;
-+	case 4:
-+	default:
-+		dw_writel(dws, offset, val);
-+		break;
-+	}
-+}
-+
- static inline void spi_enable_chip(struct dw_spi *dws, int enable)
- {
- 	dw_writel(dws, DW_SPI_SSIENR, (enable ? 1 : 0));
--- 
-2.1.4
-
+> 
+> BR,
+> Graham
+> .
+> 
 --
-To unsubscribe from this list: send the line "unsubscribe linux-spi" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
