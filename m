@@ -1,127 +1,142 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: Re: [PATCH v2] ARM: dts: sunxi: Add regulators for
- LeMaker BananaPi
-Date: Tue, 18 Aug 2015 17:33:34 +0200
-Message-ID: <20150818153334.GG2547@lukather>
-References: <1438532305-5884-1-git-send-email-public_timo.s@silentcreek.de>
- <20150803094723.GD2564@lukather>
- <55BF688D.5010905@redhat.com>
-Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
+From: Michal Suchanek <hramrach@gmail.com>
+Subject: [PATCH v3 3/5] mtd: ofpart: update devicetree binding specification
+Date: 18 Aug 2015 15:34:08 -0000
+Message-ID: <e47db0c8eeaeb11353bcb2f4dcd138e813c3ecd7.1439911625.git.hramrach@gmail.com>
+References: <cover.1439911625.git.hramrach@gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="BzCohdixPhurzSK4"
-Return-path: <linux-sunxi+bncBD2ZNBF5VYJRBUFAZWXAKGQE53YYOTQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <55BF688D.5010905-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <http://groups.google.com/group/linux-sunxi/subscribe>
-To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Cc: Timo Sigurdsson <public_timo.s-fWgRPtSzPNU3WX+qO2AYSQ@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
+In-Reply-To: <cover.1439911625.git.hramrach@gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
+List-Post: <mailto:linux-mtd@lists.infradead.org>
+List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
+Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
+To: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, David Woodhouse <dwmw2@infradead.org>, Brian Norris <computersforpeace@gmail.com>, Michal Suchanek <hramrach@gmail.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
---BzCohdixPhurzSK4
-Content-Type: text/plain; charset=UTF-8
-Content-Disposition: inline
+To avoid conflict with other drivers using subnodes of the mtd device
+create only one ofpart-specific node rather than any number of
+arbitrary partition subnodes.
 
-On Mon, Aug 03, 2015 at 03:11:41PM +0200, Hans de Goede wrote:
-> Hi,
-> 
-> On 03-08-15 11:47, Maxime Ripard wrote:
-> >On Sun, Aug 02, 2015 at 06:18:25PM +0200, Timo Sigurdsson wrote:
-> >>sun7i-a20-bananapi.dts doesn't contain regulator nodes for the AXP209 PMU
-> >>driver, so add them to allow for voltage-scaling with cpufreq-dt.
-> >>
-> >>Signed-off-by: Timo Sigurdsson <public_timo.s-fWgRPtSzPNU3WX+qO2AYSQ@public.gmane.org>
-> >>---
-> >>Changes since v1 (RFC):
-> >>
-> >>- Dropped the changes to the cpufreq operating points and renamed the patch
-> >>accordingly
-> >>- Limited the CPU voltage range so it doesn't exceed the SOC specifications
-> >>---
-> >>  arch/arm/boot/dts/sun7i-a20-bananapi.dts | 35 ++++++++++++++++++++++++++++----
-> >>  1 file changed, 31 insertions(+), 4 deletions(-)
-> >>
-> >>diff --git a/arch/arm/boot/dts/sun7i-a20-bananapi.dts b/arch/arm/boot/dts/sun7i-a20-bananapi.dts
-> >>index 9f7b472..74382f3 100644
-> >>--- a/arch/arm/boot/dts/sun7i-a20-bananapi.dts
-> >>+++ b/arch/arm/boot/dts/sun7i-a20-bananapi.dts
-> >>@@ -92,6 +92,10 @@
-> >>  	status = "okay";
-> >>  };
-> >>
-> >>+&cpu0 {
-> >>+	cpu-supply = <&reg_dcdc2>;
-> >>+};
-> >>+
-> >>  &ehci0 {
-> >>  	status = "okay";
-> >>  };
-> >>@@ -119,13 +123,9 @@
-> >>  	status = "okay";
-> >>
-> >>  	axp209: pmic@34 {
-> >>-		compatible = "x-powers,axp209";
-> >>  		reg = <0x34>;
-> >>  		interrupt-parent = <&nmi_intc>;
-> >>  		interrupts = <0 IRQ_TYPE_LEVEL_LOW>;
-> >>-
-> >>-		interrupt-controller;
-> >>-		#interrupt-cells = <1>;
-> >>  	};
-> >>  };
-> >>
-> >>@@ -182,6 +182,33 @@
-> >>  	};
-> >>  };
-> >>
-> >>+#include "axp209.dtsi"
-> >>+
-> >>+&reg_dcdc2 {
-> >>+	regulator-always-on;
-> >>+	regulator-min-microvolt = <1000000>;
-> >>+	regulator-max-microvolt = <1400000>;
-> >>+	regulator-name = "vdd-cpu";
-> >>+};
-> >>+
-> >>+&reg_dcdc3 {
-> >>+	regulator-always-on;
-> >>+	regulator-min-microvolt = <1000000>;
-> >>+	regulator-max-microvolt = <1400000>;
-> >>+	regulator-name = "vdd-int-dll";
-> >>+};
-> >>+
-> >>+&reg_ldo1 {
-> >>+	regulator-name = "vdd-rtc";
-> >>+};
-> >>+
-> >>+&reg_ldo2 {
-> >>+	regulator-always-on;
-> >>+	regulator-min-microvolt = <3000000>;
-> >>+	regulator-max-microvolt = <3000000>;
-> >>+	regulator-name = "avcc";
-> >>+};
-> >
-> >What regulator provides the 3.3V regulator used in the rest of this DT
-> >then (MMC, GMAC) ?
-> 
-> A separate fixed regulator, like most (all?) other axp209 using boards,
-> e.g. the cubieboard has a TCS4199 regulator for this, and the banana
-> boards use a XL8206/UP1746 for this, according to the schematics I
-> have.
+Signed-off-by: Michal Suchanek <hramrach@gmail.com>
+---
+v3:
 
-Ack.
+ - rename DT node ofpart -> partitions
+---
+ .../devicetree/bindings/mtd/partition.txt          | 68 +++++++++++++---------
+ 1 file changed, 40 insertions(+), 28 deletions(-)
 
-Thanks!
-Maxime
-
+diff --git a/Documentation/devicetree/bindings/mtd/partition.txt b/Documentation/devicetree/bindings/mtd/partition.txt
+index 8e5557d..8c2aff7 100644
+--- a/Documentation/devicetree/bindings/mtd/partition.txt
++++ b/Documentation/devicetree/bindings/mtd/partition.txt
+@@ -4,10 +4,16 @@ Partitions can be represented by sub-nodes of an mtd device. This can be used
+ on platforms which have strong conventions about which portions of a flash are
+ used for what purposes, but which don't use an on-flash partition table such
+ as RedBoot.
++
++The partition table should be partitions subnode of the mtd node. Partitions are
++defined in subnodes of the partitions node.
++
++For backwards compatibility partitions as direct subnodes of the mtd device are
++supported. This use is discouraged.
+ NOTE: if the sub-node has a compatible string, then it is not a partition.
+ 
+-#address-cells & #size-cells must both be present in the mtd device. There are
+-two valid values for both:
++#address-cells & #size-cells must both be present in the partitions subnode of the
++mtd device. There are two valid values for both:
+ <1>: for partitions that require a single 32-bit cell to represent their
+      size/address (aka the value is below 4 GiB)
+ <2>: for partitions that require two 32-bit cells to represent their
+@@ -28,44 +34,50 @@ Examples:
+ 
+ 
+ flash@0 {
+-	#address-cells = <1>;
+-	#size-cells = <1>;
++	partitions {
++		#address-cells = <1>;
++		#size-cells = <1>;
+ 
+-	partition@0 {
+-		label = "u-boot";
+-		reg = <0x0000000 0x100000>;
+-		read-only;
+-	};
++		partition@0 {
++			label = "u-boot";
++			reg = <0x0000000 0x100000>;
++			read-only;
++		};
+ 
+-	uimage@100000 {
+-		reg = <0x0100000 0x200000>;
++		uimage@100000 {
++			reg = <0x0100000 0x200000>;
++		};
+ 	};
+ };
+ 
+ flash@1 {
+-	#address-cells = <1>;
+-	#size-cells = <2>;
++	partitions {
++		#address-cells = <1>;
++		#size-cells = <2>;
+ 
+-	/* a 4 GiB partition */
+-	partition@0 {
+-		label = "filesystem";
+-		reg = <0x00000000 0x1 0x00000000>;
++		/* a 4 GiB partition */
++		partition@0 {
++			label = "filesystem";
++			reg = <0x00000000 0x1 0x00000000>;
++		};
+ 	};
+ };
+ 
+ flash@2 {
+-	#address-cells = <2>;
+-	#size-cells = <2>;
++	partitions {
++		#address-cells = <2>;
++		#size-cells = <2>;
+ 
+-	/* an 8 GiB partition */
+-	partition@0 {
+-		label = "filesystem #1";
+-		reg = <0x0 0x00000000 0x2 0x00000000>;
+-	};
++		/* an 8 GiB partition */
++		partition@0 {
++			label = "filesystem #1";
++			reg = <0x0 0x00000000 0x2 0x00000000>;
++		};
+ 
+-	/* a 4 GiB partition */
+-	partition@200000000 {
+-		label = "filesystem #2";
+-		reg = <0x2 0x00000000 0x1 0x00000000>;
++		/* a 4 GiB partition */
++		partition@200000000 {
++			label = "filesystem #2";
++			reg = <0x2 0x00000000 0x1 0x00000000>;
++		};
+ 	};
+ };
 -- 
-Maxime Ripard, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
---BzCohdixPhurzSK4--
+2.1.4
+
+
+______________________________________________________
+Linux MTD discussion mailing list
+http://lists.infradead.org/mailman/listinfo/linux-mtd/
