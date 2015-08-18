@@ -1,67 +1,138 @@
-From: Graham Moore <grmoore@opensource.altera.com>
-Subject: Re: [PATCH V7 1/2] mtd: spi-nor: Bindings for Cadence Quad SPI Flash
- Controller driver.
-Date: Tue, 18 Aug 2015 14:03:57 -0500
-Message-ID: <55D3819D.1040009@opensource.altera.com>
-References: <1439522892-7524-1-git-send-email-marex@denx.de>
- <55D29A0B.20408@st.com> <201508180647.30119.marex@denx.de>
- <0B80CAC4-70B3-4557-8D6E-4CA84AF9CEA2@st.com>
+From: Dinh Nguyen <dinh.linux@gmail.com>
+Subject: Re: [PATCH v4 2/5] pci:host: Add Altera PCIe host controller driver
+Date: Tue, 18 Aug 2015 14:11:58 -0500
+Message-ID: <CADhT+wfjYaEefScKNz-R5miA+_Ybm8PTHgG6jDT9ntb9e89twQ@mail.gmail.com>
+References: <1439802579-22651-1-git-send-email-lftan@altera.com>
+	<1439802579-22651-3-git-send-email-lftan@altera.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
-In-Reply-To: <0B80CAC4-70B3-4557-8D6E-4CA84AF9CEA2@st.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
-List-Post: <mailto:linux-mtd@lists.infradead.org>
-List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
-Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
-To: Vikas MANOCHA <vikas.manocha@st.com>
-Cc: Marek Vasut <marex@denx.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Alan Tull <atull@opensource.altera.com>, Yves Vandervennet <yvanderv@opensource.altera.com>, "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>, Dinh Nguyen <dinguyen@opensource.altera.com>, Brian Norris <computersforpeace@gmail.com>, David Woodhouse <dwmw2@infradead.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <1439802579-22651-3-git-send-email-lftan@altera.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Ley Foon Tan <lftan@altera.com>
+Cc: Bjorn Helgaas <bhelgaas@google.com>, Russell King <linux@arm.linux.org.uk>, Marc Zyngier <marc.zyngier@arm.com>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Ley Foon Tan <lftan.linux@gmail.com>, Arnd Bergmann <arnd@arndb.de>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, linux-pci@vger.kernel.org, Ian Campbell <ijc+devicetree@hellion.org.uk>, Linux List <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Kumar Gala <galak@codeaurora.org>, Dinh Nguyen <dinguyen@opensource.altera.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi all,
-
-On 08/18/2015 12:48 AM, Vikas MANOCHA wrote:
-
-[...]
-
->>>> +Required properties:
->>>> +- compatible : Should be "cdns,qspi-nor".
->>>> +- reg : Contains two entries, each of which is a tuple consisting of a
->>>> +    physical address and length.  The first entry is the address and
->>>> +    length of the controller register set.  The second entry is the
->>>> +    address and length of the QSPI Controller data area.
->>>
->>> "Controller data area", i think it means mapped NOR Flash address ?
->>
->> Probably ; Graham ?
->>
->>> If yes, it would be more clear with "Physical base address & size of NOR
->>> Flash".
->>
->> This is the Direct mode thing, correct ? We don't support this, so I think
->> we should drop this bit altogether and keep only one single address in this
->> field.
+On Mon, Aug 17, 2015 at 4:09 AM, Ley Foon Tan <lftan@altera.com> wrote:
+> This patch adds the Altera PCIe host controller driver.
 >
-> No it's not.
+> Signed-off-by: Ley Foon Tan <lftan@altera.com>
+> ---
+>  drivers/pci/host/Kconfig       |   7 +
+>  drivers/pci/host/Makefile      |   1 +
+>  drivers/pci/host/pcie-altera.c | 543 +++++++++++++++++++++++++++++++++++++++++
+>  3 files changed, 551 insertions(+)
+>  create mode 100644 drivers/pci/host/pcie-altera.c
+>
+> diff --git a/drivers/pci/host/Kconfig b/drivers/pci/host/Kconfig
+> index 675c2d1..4b4754a 100644
+> --- a/drivers/pci/host/Kconfig
+> +++ b/drivers/pci/host/Kconfig
+> @@ -145,4 +145,11 @@ config PCIE_IPROC_BCMA
+>           Say Y here if you want to use the Broadcom iProc PCIe controller
+>           through the BCMA bus interface
 >
 
-It's the location of the SRAM fifo.  Also direct mode location I think, 
-if that were ever used.
+<snip>
 
-The size is determined by a configuration parameter during system 
-design.  On Altera Cyclone5 the size is really big compared to SRAM 
-fifo.  I don't know why, maybe some hw engineer thought it would be 
-better to have a large size in case direct mode was used.
+> +
+> +/* Address translation table entry size */
+> +#define ATT_ENTRY_SIZE         8
+> +
+> +#define DWORD_MASK             3
+> +
+> +struct altera_pcie {
+> +       struct platform_device  *pdev;
+> +       struct resource         *txs;
 
-BR,
-Graham
+You have "Txs" documented in the bindings document, you have a pointer
+here, but you've never used it
+anywhre in the code? What is it for?
 
-______________________________________________________
-Linux MTD discussion mailing list
-http://lists.infradead.org/mailman/listinfo/linux-mtd/
+> +       void __iomem            *cra_base;
+> +       int                     irq;
+> +       u8                      root_bus_nr;
+> +       struct irq_domain               *irq_domain;
+> +       struct resource         bus_range;
+> +       struct list_head                resources;
+> +};
+> +
+
+<snip>
+
+> +
+> +static int tlp_cfg_dword_read(struct altera_pcie *pcie, u8 bus, u32 devfn,
+> +                             int where, u32 *value)
+> +{
+> +       int ret;
+> +       u32 headers[TLP_HDR_SIZE];
+> +
+> +       if (bus == pcie->root_bus_nr)
+> +               headers[0] = TLP_CFG_DW0(TLP_FMTTYPE_CFGRD0);
+> +       else
+> +               headers[0] = TLP_CFG_DW0(TLP_FMTTYPE_CFGRD1);
+> +
+> +       headers[1] = TLP_CFG_DW1(TLP_REQ_ID(pcie->root_bus_nr, devfn),
+> +                                       TLP_READ_TAG);
+> +       headers[2] = TLP_CFG_DW2(bus, devfn, where);
+> +
+> +       tlp_write_packet(pcie, headers, 0);
+> +
+> +       ret = tlp_read_packet(pcie, value);
+> +       if (ret)
+> +               *value = ~0UL;  /* return 0xFFFFFFFF if error */
+> +
+> +       return ret;
+> +}
+> +
+> +static int tlp_cfg_dword_write(struct altera_pcie *pcie, u8 bus, u32 devfn,
+> +                              int where, u32 value)
+> +{
+> +       u32 headers[TLP_HDR_SIZE];
+> +
+> +       if (bus == pcie->root_bus_nr)
+> +               headers[0] = TLP_CFG_DW0(TLP_FMTTYPE_CFGWR0);
+> +       else
+> +               headers[0] = TLP_CFG_DW0(TLP_FMTTYPE_CFGWR1);
+> +
+> +       headers[1] = TLP_CFG_DW1(TLP_REQ_ID(pcie->root_bus_nr, devfn),
+> +                                       TLP_WRITE_TAG);
+> +       headers[2] = TLP_CFG_DW2(bus, devfn, where);
+> +
+> +       tlp_write_packet(pcie, headers, value);
+> +
+> +       tlp_read_packet(pcie, NULL);
+
+You need to check for the error here.
+
+> +
+> +       /* Keep an eye out for changes to the root bus number */
+> +       if ((bus == pcie->root_bus_nr) && (where == PCI_PRIMARY_BUS))
+> +               pcie->root_bus_nr = (u8)(value);
+> +
+> +       return PCIBIOS_SUCCESSFUL;
+> +}
+> +
+
+<snip>
+
+> +
+> +static int altera_pcie_parse_dt(struct altera_pcie *pcie)
+> +{
+> +       struct resource *cra;
+> +       struct platform_device *pdev = pcie->pdev;
+> +
+> +       cra = platform_get_resource_byname(pdev, IORESOURCE_MEM, "Cra");
+> +       if (!cra) {
+> +               cra = platform_get_resource_byname(pdev, IORESOURCE_MEM, "cra");
+> +               if (!cra) {
+> +                       dev_err(&pdev->dev,
+> +                               "no cra memory resource defined\n");
+> +                       return -ENODEV;
+> +               }
+> +       }
+> +
+
+What about "Txs"?
+
+Dinh
