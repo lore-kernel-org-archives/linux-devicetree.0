@@ -1,73 +1,76 @@
-From: vikas <vikas.manocha-qxv4g6HH51o@public.gmane.org>
-Subject: Re: [PATCH V7 1/2] mtd: spi-nor: Bindings for Cadence Quad SPI Flash
- Controller driver.
-Date: Tue, 18 Aug 2015 13:18:33 -0700
-Message-ID: <55D39319.70108@st.com>
-References: <1439522892-7524-1-git-send-email-marex@denx.de> <55D29A0B.20408@st.com> <201508180647.30119.marex@denx.de> <0B80CAC4-70B3-4557-8D6E-4CA84AF9CEA2@st.com> <55D3819D.1040009@opensource.altera.com>
+From: Javier Martinez Canillas <javier@dowhile0.org>
+Subject: Re: [PATCH 2/2] ARM: dts: rockchip: correct regulator PM properties
+Date: Tue, 18 Aug 2015 22:30:18 +0200
+Message-ID: <CABxcv==hssVa-b=cOjh3QhEOmQPZVvEPt0apLHQOva3GjJb9PA@mail.gmail.com>
+References: <1439923455-109818-1-git-send-email-briannorris@chromium.org>
+	<1439923455-109818-2-git-send-email-briannorris@chromium.org>
+	<51457775.D3ds00ymOJ@phil>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <55D3819D.1040009-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Graham Moore <grmoore-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
-Cc: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>, "linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Alan Tull <atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Dinh Nguyen <dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>, Yves Vandervennet <yvanderv-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <51457775.D3ds00ymOJ@phil>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Heiko Stuebner <heiko@sntech.de>
+Cc: Brian Norris <briannorris@chromium.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Alexandru M Stan <amstan@chromium.org>, Linux Kernel <linux-kernel@vger.kernel.org>, Douglas Anderson <dianders@chromium.org>, linux-rockchip@lists.infradead.org, Brian Norris <computersforpeace@gmail.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Hello Heiko,
 
-On 08/18/2015 12:03 PM, Graham Moore wrote:
-> Hi all,
-> 
-> On 08/18/2015 12:48 AM, Vikas MANOCHA wrote:
-> 
-> [...]
-> 
->>>>> +Required properties:
->>>>> +- compatible : Should be "cdns,qspi-nor".
->>>>> +- reg : Contains two entries, each of which is a tuple consisting of a
->>>>> +    physical address and length.  The first entry is the address and
->>>>> +    length of the controller register set.  The second entry is the
->>>>> +    address and length of the QSPI Controller data area.
->>>>
->>>> "Controller data area", i think it means mapped NOR Flash address ?
->>>
->>> Probably ; Graham ?
->>>
->>>> If yes, it would be more clear with "Physical base address & size of NOR
->>>> Flash".
->>>
->>> This is the Direct mode thing, correct ? We don't support this, so I think
->>> we should drop this bit altogether and keep only one single address in this
->>> field.
+On Tue, Aug 18, 2015 at 9:17 PM, Heiko Stuebner <heiko@sntech.de> wrote:
+> Hi Brian,
+>
+>
+> thanks for catching these oversights, but see below
+>
+> Am Dienstag, 18. August 2015, 11:44:15 schrieb Brian Norris:
+>> This DTS file was submitted with non-upstream bindings. I happened
+>> across this while reviewing the jaq DTS.
 >>
->> No it's not.
+>> Signed-off-by: Brian Norris <briannorris@chromium.org>
+>> Cc: Alexandru M Stan <amstan@chromium.org>
+>> Cc: Douglas Anderson <dianders@chromium.org>
+>> ---
+>> Tested on jaq, not minnie
 >>
-> 
-> It's the location of the SRAM fifo.  Also direct mode location I think, 
-> if that were ever used.
+>>  arch/arm/boot/dts/rk3288-veyron-minnie.dts | 8 ++++++--
+>>  1 file changed, 6 insertions(+), 2 deletions(-)
+>>
+>> diff --git a/arch/arm/boot/dts/rk3288-veyron-minnie.dts
+>> b/arch/arm/boot/dts/rk3288-veyron-minnie.dts index
+>> 0e30bd6bf92b..6f619c154dc6 100644
+>> --- a/arch/arm/boot/dts/rk3288-veyron-minnie.dts
+>> +++ b/arch/arm/boot/dts/rk3288-veyron-minnie.dts
+>> @@ -128,12 +128,16 @@
+>>                       regulator-min-microvolt = <3300000>;
+>>                       regulator-max-microvolt = <3300000>;
+>>                       regulator-name = "vcc33_touch";
+>> -                     regulator-suspend-mem-disabled;
+>> +                     regulator-state-mem {
+>> +                             regulator-on-in-suspend;
+>> +                     };
+>>               };
+>>
+>>               vcc5v_touch: SWITCH_REG2 {
+>>                       regulator-name = "vcc5v_touch";
+>> -                     regulator-suspend-mem-disabled;
+>> +                     regulator-state-mem {
+>> +                             regulator-on-in-suspend;
+>> +                     };
+>
+> wouldn't regulator-suspend-mem-disabled translate to regulator-off-in-suspend?
 
-Hmm...It is the base address of NOR flash. SRAM is not memory mapped.
+Correct, the downstream regulator-suspend-mem-disabled is equivalent
+to regulator-off-in-suspend in mainline.
 
-> 
-> The size is determined by a configuration parameter during system 
-> design.  On Altera Cyclone5 the size is really big compared to SRAM 
-> fifo.  I don't know why, maybe some hw engineer thought it would be 
-> better to have a large size in case direct mode was used.
+> At least looks like it according to https://lkml.org/lkml/2013/7/25/592
+>
 
-my comment is about second parameter of property "reg" which is NOR flash address, so above explanation does not
-make sense for it.
-Also in direct mode, sram does not come into play.
+I guess you meant https://lkml.org/lkml/2014/10/10/162 since it was
+Chanwoo's and not Vincent's version that finally landed.
 
-Rgds,
-Vikas
+>
+> Heiko
+>
 
-> 
-> BR,
-> Graham
-> .
-> 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Best regards,
+Javier
