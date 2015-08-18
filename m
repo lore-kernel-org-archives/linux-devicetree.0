@@ -1,78 +1,55 @@
-From: Emil Velikov <emil.l.velikov@gmail.com>
-Subject: Re: [PATCH 2/4] drm: Add support for ARM's HDLCD controller.
-Date: Tue, 18 Aug 2015 17:41:59 +0100
-Message-ID: <CACvgo53KWsC1ZeYYF2bW=4=BeuexaEgBHT=+h2U60iS9nYvYpw@mail.gmail.com>
-References: <1438784892-27888-1-git-send-email-Liviu.Dudau@arm.com>
- <1438784892-27888-3-git-send-email-Liviu.Dudau@arm.com>
- <CACvgo537C6SRfhMTNoE4cSLJukcXuKLvt1TRykynX--ybEhmaQ@mail.gmail.com>
- <20150817151547.GA1020@e106497-lin.cambridge.arm.com>
+From: Mathieu Olivari <mathieu@codeaurora.org>
+Subject: Re: [PATCH v3 0/3] qcom: Add SMEM MTD parser
+Date: Tue, 18 Aug 2015 10:03:33 -0700
+Message-ID: <20150818170333.GA1581@codeaurora.org>
+References: <1439855266-26242-1-git-send-email-mathieu@codeaurora.org>
+ <CAOiHx=nPDBPsj_Kg_7AkFeieedwGbcJmvALDp2eK+6aKi0wOJA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20150817151547.GA1020@e106497-lin.cambridge.arm.com>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Liviu Dudau <Liviu.Dudau@arm.com>
-Cc: Mark Rutland <Mark.Rutland@arm.com>, Jon Medhurst <tixy@linaro.org>, Pawel Moll <Pawel.Moll@arm.com>, Arnd Bergmann <arnd@arndb.de>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Catalin Marinas <Catalin.Marinas@arm.com>, Kumar Gala <galak@codeaurora.org>, Will Deacon <Will.Deacon@arm.com>, "Linux-Kernel@Vger. Kernel. Org" <linux-kernel@vger.kernel.org>, ML dri-devel <dri-devel@lists.freedesktop.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Sudeep Holla <Sudeep.Holla@arm.com>, Robin Murphy <Robin.Murphy@arm.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAOiHx=nPDBPsj_Kg_7AkFeieedwGbcJmvALDp2eK+6aKi0wOJA@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Jonas Gorski <jogo@openwrt.org>
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, linux@arm.linux.org.uk, David Woodhouse <dwmw2@infradead.org>, Brian Norris <computersforpeace@gmail.com>, agross@codeaurora.org, sboyd@codeaurora.org, bjorn.andersson@sonymobile.com, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, MTD Maling List <linux-mtd@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gMTcgQXVndXN0IDIwMTUgYXQgMTY6MTUsIExpdml1IER1ZGF1IDxMaXZpdS5EdWRhdUBhcm0u
-Y29tPiB3cm90ZToKPiBPbiBTdW4sIEF1ZyAxNiwgMjAxNSBhdCAwOTo1NjozM0FNICswMTAwLCBF
-bWlsIFZlbGlrb3Ygd3JvdGU6Cj4+IEhpIExpdml1LAo+Cj4gSGkgRW1pbCwKPgo+Pgo+PiBPbiA1
-IEF1Z3VzdCAyMDE1IGF0IDE1OjI4LCBMaXZpdSBEdWRhdSA8TGl2aXUuRHVkYXVAYXJtLmNvbT4g
-d3JvdGU6Cj4+ID4gVGhlIEhETENEIGNvbnRyb2xsZXIgaXMgYSBkaXNwbGF5IGNvbnRyb2xsZXIg
-dGhhdCBzdXBwb3J0cyByZXNvbHV0aW9ucwo+PiA+IHVwIHRvIDQwOTZ4NDA5NiBwaXhlbHMuIEl0
-IGlzIHByZXNlbnQgb24gdmFyaW91cyBkZXZlbG9wbWVudCBib2FyZHMKPj4gPiBwcm9kdWNlZCBi
-eSBBUk0gTHRkIGFuZCBlbXVsYXRlZCBieSB0aGUgbGF0ZXN0IEZhc3QgTW9kZWxzIGZyb20gdGhl
-Cj4+ID4gY29tcGFueS4KPj4gPgo+PiBJIGJlbGlldmUgdGhlcmUgaXMgYSB1bm9mZmljaWFsIHJl
-cXVpcmVtZW50KD8pIGZvciBuZXcgZHJtIGRyaXZlcnMgdG8KPj4gdXNlIGF0b21pYyBtb2Rlc2V0
-dGluZy4gTm90IDEwMCUgc3VyZSBvbiB0aGlzIG9uZSB0aG91Z2guIFRoZQo+PiBmb2xsb3dpbmcg
-ZHJpdmVyczogdGVncmEsIG1zbSwgcmNhci1kdSwgaTkxNSwgYW5kIERhbmllbCdzIGJsb2cgWzFd
-Cj4+IFsyXSBjYXQgcHJvdmlkZSBzb21lIGluZm9ybWF0aW9uIG9uIHRoZSB0b3BpYy4KPgo+IEkg
-YW0gYWxzbyBpbnRlcmVzdGVkIHRvIGtub3cgaWYgdGhpcyBpcyBhIHJlcXVpcmVtZW50IG9yIG5v
-dC4KPiBUaGFua3MgZm9yIHRoZSBwb2ludGVycywgSSB3aWxsIHJldmlldyB0aGVtIGFnYWluIHRv
-IHNlZSBpZiBJIGRpZCBtaXNzCj4gYW55dGhpbmcuIEkgcmVtZW1iZXIgcmVhZGluZyB0aGVtIGF0
-IHRoZSBiZWdpbm5pbmcgb2YgdGhlIHllYXIgYnV0IHByb2JhYmx5Cj4gdGhlIENocmlzdG1hcyBo
-YXplIGRpZCBub3QgY2xlYXIgZW5vdWdoIHdoZW4gSSBkaWQuCj4KVGhlcmUgd2FzIGEgc2ltaWxh
-ciBxdWVzdGlvbiBmcm9tIHRoZSBmcmVlc2NhbGUgZGN1IHBlb3BsZSBbMV0uIEkKYmVsaWV2ZSB0
-aGF0IHRoZSBhbnN3ZXIgc3RpbGwgYXBwbGllcy4KClsxXSBodHRwOi8vbGlzdHMuZnJlZWRlc2t0
-b3Aub3JnL2FyY2hpdmVzL2RyaS1kZXZlbC8yMDE1LU1hcmNoLzA3ODY4OS5odG1sCgo+Pgo+PiBU
-aGUgZHJpdmVyIHNlZW1zIHRvIGhhcyBoYXMgYSBiaXQgb2YgZGVhZCBjb2RlIGd1YXJkZWQgYnkK
-Pj4gSERMQ0RfKl9VTkRFUlJVTi4gUGVyaGFwcyB0aGVzZSBtYWNyb3Mgc2hvdWxkIGJlY29tZSBi
-dWlsZCBvciBydW50aW1lCj4+IHN3aXRjaChlcykgPwo+Cj4gVGhlcmUgaXMgYSBjb21tZW50IGlu
-IGhkbGNkX2Rydi5oIGV4cGxhaW5pbmcgd2hhdCBIRExDRF9TSE9XX1VOREVSUlVOIGNhbgo+IGJl
-IHVzZWQgZm9yLiBBcyBmb3IgSERMQ0RfQ09VTlRfQlVGRkVSVU5ERVJSVU5TLCB5b3UgYXJlIHJp
-Z2h0LCBpdCdzIGRlYWQKPiBjb2RlIGZyb20gdGhlIGVhcmxpZXIgZGVidWdnaW5nIGNvZGUgdGhh
-dCBnb3QgcmVtb3ZlZCBiZWZvcmUgc3VibWlzc2lvbi4KPiBJIHdpbGwgY29ycmVjdCB0aGF0Lgo+
-CkkgaGF2ZW4ndCBzZWVuIG90aGVyIGRybSBkcml2ZXJzIGZvbGxvdyB0aGUgInNldCBhIG1hY3Jv
-IHRoYXQgaXMKZG9jdW1lbnRlZCBpbiBhIGhlYWRlciBhbmQgcmVidWlsZCIgYXBwcm9hY2guIERl
-dnMgZWl0aGVyIGFkZCBhIENPTkZJRwpvcHRpb24gZm9yIGl0LCBvciBleHBvc2UgaXQgYXMgYSBt
-b2R1bGUgcGFyYW1ldGVyLiBJSVJDIHRoZSBub3V2ZWF1CmRyaXZlciBkb2VzIGV2ZW4gbW9yZSAt
-IGl0IGVuYWJsZXMgdGhlIHVuZGVycnVuIG1hY2hpbmVyeQp1bmNvbmRpdGlvbmFsbHkuCgo+Pgo+
-PiBNb3N0IERSTSBkcml2ZXJzIGRvIG5vdCB0aHJlYXQgZG1hLCBidXNfZXJyb3IsIHZzeW5jIGFu
-ZC9vciB1bmRlcnJ1bgo+PiBpbnRlcnJ1cHRzIGFzIGRlYnVnIGZ1bmN0aW9uYWxpdHkuIFRoZXkg
-YXJlIG9mIGxpbWl0ZWQgdXNlIGluIHRoaXMKPj4gZHJpdmVyLCBwcmVzZW50bHksIHlldCB0aGUg
-Q09ORklHX0RFQlVHX0ZTIGd1YXJkIHNlZW1zIGEgYml0IHN0cmFuZ2UKPj4gaW1oby4KPgo+IFRo
-ZSBIRExDRCBkZXZpY2UgaGFzIG9ubHkgMSBpbnRlcnJ1cHQgdGhhdCBjYW4gZmlyZSBhbmQgdGhl
-cmUgaXMgbm8gb3RoZXIKPiB3YXkgdG8gc2hvdyB0aGUgcmVhc29uIGZvciB0aGUgaW50ZXJydXB0
-IGluIHRoZSBkcml2ZXIuIEl0IHdhcyB1c2VmdWwgd2hlbgo+IGRlYnVnZ2luZyB1bmRlcnJ1bnMg
-YW5kL29yIHZzeW5jIGlzc3VlcyBzbyBJIHRob3VnaHQgaXQgbWlnaHQgYmUgdXNlZnVsCj4gdG8g
-a2VlcCBhcm91bmQuIFB1dHRpbmcgaXQgdGhlIG90aGVyIHdheTogaWYgeW91IGFyZSBnb2luZyB0
-byB1c2UgdGhpcyBkZXZpY2UKPiBhbmQgdGhlIGltYWdlIGlzIG5vdCBjb21wbGV0ZWx5IHJlbmRl
-cmVkIEkgd291bGQgbm90IGJlIGFibGUgdG8gZ2l2ZSB5b3UKPiBzdXBwb3J0IHRvIGZpZ3VyZSBv
-dXQgd2hhdCB3ZW50IHdyb25nIHdpdGhvdXQgdGhpcyBkZWJ1Z2dpbmcgaW5mb3JtYXRpb24uCj4g
-V2l0aCB0aGlzIGluIHBsYWNlIEkgY2FuIHRlbGwgdGhlIGRpZmZlcmVuY2UgYmV0d2VlbiBhIGJ1
-c3kgc3lzdGVtIHZzIG9uZQo+IHdoZXJlIHRoZSBpbnRlcnJ1cHQgbGF0ZW5jeSBpcyBsYXJnZS4K
-PgpPdXQgb2YgY3VyaW9zaXR5IC0gYXJlIHRoZXJlIGFueSBpbXBsaWNhdGlvbnMvc2lkZS1lZmZl
-Y3RzIGZyb20gaGF2aW5nCnRoZXNlIGVuYWJsZWQgPwoKVGhhbmtzLApFbWlsCl9fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxp
-c3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwOi8vbGlzdHMuZnJlZWRlc2t0
-b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+On Tue, Aug 18, 2015 at 02:30:14PM +0200, Jonas Gorski wrote:
+> Hi,
+> 
+> On Tue, Aug 18, 2015 at 1:47 AM, Mathieu Olivari <mathieu@codeaurora.org> wrote:
+> > QCOM platforms such as IPQ806x are using SMEM to store their flash
+> > layout. This patch set adds the DT nodes required to instanciate SMEM
+> > on IPQ806x and add an MTD parser using it.
+> >
+> > This change is based on the SMEM driver posted here:
+> > *https://lkml.org/lkml/2015/7/27/1125
+> 
+> Nice work. After testing it on AP148 I see this:
+> 
+> [    2.481507] 12 qcom-smem partitions found on MTD device qcom-nandc
+> [    2.481540] Creating 12 MTD partitions on "qcom-nandc":
+> [    2.486690] 0x000000000000-0x000000040000 : "0:SBL1"
+> [    2.492842] 0x000000040000-0x000000180000 : "0:MIBIB"
+> [    2.497857] 0x000000180000-0x0000002c0000 : "0:SBL2"
+> [    2.502895] 0x0000002c0000-0x000000540000 : "0:SBL3"
+> [    2.507828] 0x000000540000-0x000000660000 : "0:DDRCONFIG"
+> [    2.512857] 0x000000660000-0x000000780000 : "0:SSD"
+> [    2.518074] 0x000000780000-0x000000a00000 : "0:TZ"
+> [    2.522834] 0x000000a00000-0x000000c80000 : "0:RPM"
+> [    2.527607] 0x000000c80000-0x000001180000 : "0:APPSBL"
+> [    2.532472] 0x000001180000-0x000001200000 : "0:APPSBLENV"
+> [    2.537586] 0x000001200000-0x000001340000 : "0:ART"
+> [    2.543140] 0x000001340000-0x000005340000 : "rootfs"
+> 
+> Are all these partition names supposed to be prefixed with "0:"? This
+> is using the OpenWrt applied version.
+
+Yes. These are the names as they are listed in SMEM. If you run the
+"smem" command from the U-boot prompt, you will see the same information.
+I'm not sure what the 0: prefix means, and where it comes from to be
+honest.
+
+> 
+> 
+> Jonas
