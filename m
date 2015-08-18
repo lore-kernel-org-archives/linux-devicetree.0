@@ -1,86 +1,50 @@
 From: Jonas Gorski <jogo-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>
-Subject: Re: [PATCH] spi: mediatek: fix spi incorrect endian usage and remove
- redundant clock
-Date: Tue, 18 Aug 2015 14:19:54 +0200
-Message-ID: <CAOiHx=nBOtm3c7QQpA-SSxXzJGjUEJQBtR9CynoeqsXRoz4fRg@mail.gmail.com>
-References: <1439895231-17778-1-git-send-email-leilk.liu@mediatek.com>
+Subject: Re: [PATCH v3 0/3] qcom: Add SMEM MTD parser
+Date: Tue, 18 Aug 2015 14:30:14 +0200
+Message-ID: <CAOiHx=nPDBPsj_Kg_7AkFeieedwGbcJmvALDp2eK+6aKi0wOJA@mail.gmail.com>
+References: <1439855266-26242-1-git-send-email-mathieu@codeaurora.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1439895231-17778-1-git-send-email-leilk.liu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Leilk Liu <leilk.liu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Cc: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1439855266-26242-1-git-send-email-mathieu-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mathieu Olivari <mathieu-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, agross-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, bjorn.andersson-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, MTD Maling List <linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
 Hi,
 
-On Tue, Aug 18, 2015 at 12:53 PM, Leilk Liu <leilk.liu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org> wrote:
-> This patch fixes incorrect endian usage, removes redundant
-> clock in prepare_hardware/unprepare_hardware and revises
-> coding styles.
+On Tue, Aug 18, 2015 at 1:47 AM, Mathieu Olivari <mathieu-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org> wrote:
+> QCOM platforms such as IPQ806x are using SMEM to store their flash
+> layout. This patch set adds the DT nodes required to instanciate SMEM
+> on IPQ806x and add an MTD parser using it.
 >
-> Signed-off-by: Leilk Liu <leilk.liu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
->
-> ---
-> Change in this patch:
-> 1. fix incorrect endian usage on big-endian system.
-> 2. delete redundant clock in prepare/unprepare_hardware.
-> 3. revise coding styles.
+> This change is based on the SMEM driver posted here:
+> *https://lkml.org/lkml/2015/7/27/1125
 
-The usual philosophy is to have one change per patch, so this might be
-better as three patches. But this is Mark's call. Since the driver
-isn't yet in Linus' tree, it might be a-ok to mix style improvements
-and actual fixes, but as soon as it landed in Linus' tree you need to
-keep them separate, so fixes can be easily backported.
+Nice work. After testing it on AP148 I see this:
 
-Regarding the content ...
+[    2.481507] 12 qcom-smem partitions found on MTD device qcom-nandc
+[    2.481540] Creating 12 MTD partitions on "qcom-nandc":
+[    2.486690] 0x000000000000-0x000000040000 : "0:SBL1"
+[    2.492842] 0x000000040000-0x000000180000 : "0:MIBIB"
+[    2.497857] 0x000000180000-0x0000002c0000 : "0:SBL2"
+[    2.502895] 0x0000002c0000-0x000000540000 : "0:SBL3"
+[    2.507828] 0x000000540000-0x000000660000 : "0:DDRCONFIG"
+[    2.512857] 0x000000660000-0x000000780000 : "0:SSD"
+[    2.518074] 0x000000780000-0x000000a00000 : "0:TZ"
+[    2.522834] 0x000000a00000-0x000000c80000 : "0:RPM"
+[    2.527607] 0x000000c80000-0x000001180000 : "0:APPSBL"
+[    2.532472] 0x000001180000-0x000001200000 : "0:APPSBLENV"
+[    2.537586] 0x000001200000-0x000001340000 : "0:ART"
+[    2.543140] 0x000001340000-0x000005340000 : "rootfs"
 
-> ---
->  drivers/spi/spi-mt65xx.c                 | 163 +++++++++++++------------------
->  include/linux/platform_data/spi-mt65xx.h |   2 -
->  2 files changed, 69 insertions(+), 96 deletions(-)
->
-> diff --git a/drivers/spi/spi-mt65xx.c b/drivers/spi/spi-mt65xx.c
-> index 519f50c..a9da887 100644
-> --- a/drivers/spi/spi-mt65xx.c
-> +++ b/drivers/spi/spi-mt65xx.c
-> @@ -694,6 +662,7 @@ static int mtk_spi_resume(struct device *dev)
->         if (!pm_runtime_suspended(dev)) {
->                 ret = clk_prepare_enable(mdata->spi_clk);
->                 if (ret < 0)
-> +                       dev_err(dev, "failed to enable spi_clk (%d)\n", ret);
->                         return ret;
-
-You need to add braces here, else the "return ret" isn't covered by
-the if () anymore and you always return at this place.
-
->         }
->
-> @@ -720,8 +689,14 @@ static int mtk_spi_runtime_resume(struct device *dev)
->  {
->         struct spi_master *master = dev_get_drvdata(dev);
->         struct mtk_spi *mdata = spi_master_get_devdata(master);
-> +       int ret;
-> +
-> +       ret = clk_prepare_enable(mdata->spi_clk);
-> +       if (ret < 0)
-> +               dev_err(dev, "failed to enable spi_clk (%d)\n", ret);
-> +               return ret;
-
-Same here. Although at least here it should be harmless, as
-clk_prepare_enable doesn't return > 0.
-
->
-> -       return clk_prepare_enable(mdata->spi_clk);
-> +       return 0;
->  }
->  #endif /* CONFIG_PM */
->
+Are all these partition names supposed to be prefixed with "0:"? This
+is using the OpenWrt applied version.
 
 
 Jonas
 --
-To unsubscribe from this list: send the line "unsubscribe linux-spi" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
