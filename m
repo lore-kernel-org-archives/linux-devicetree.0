@@ -1,138 +1,69 @@
-From: Dinh Nguyen <dinh.linux@gmail.com>
-Subject: Re: [PATCH v4 2/5] pci:host: Add Altera PCIe host controller driver
-Date: Tue, 18 Aug 2015 14:11:58 -0500
-Message-ID: <CADhT+wfjYaEefScKNz-R5miA+_Ybm8PTHgG6jDT9ntb9e89twQ@mail.gmail.com>
-References: <1439802579-22651-1-git-send-email-lftan@altera.com>
-	<1439802579-22651-3-git-send-email-lftan@altera.com>
+From: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Subject: Re: [PATCH 2/2] ARM: dts: rockchip: correct regulator PM properties
+Date: Tue, 18 Aug 2015 21:17:06 +0200
+Message-ID: <51457775.D3ds00ymOJ@phil>
+References: <1439923455-109818-1-git-send-email-briannorris@chromium.org> <1439923455-109818-2-git-send-email-briannorris@chromium.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <1439802579-22651-3-git-send-email-lftan@altera.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Ley Foon Tan <lftan@altera.com>
-Cc: Bjorn Helgaas <bhelgaas@google.com>, Russell King <linux@arm.linux.org.uk>, Marc Zyngier <marc.zyngier@arm.com>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Ley Foon Tan <lftan.linux@gmail.com>, Arnd Bergmann <arnd@arndb.de>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, linux-pci@vger.kernel.org, Ian Campbell <ijc+devicetree@hellion.org.uk>, Linux List <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Kumar Gala <galak@codeaurora.org>, Dinh Nguyen <dinguyen@opensource.altera.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1439923455-109818-2-git-send-email-briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Cc: linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Alexandru M Stan <amstan-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Douglas Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Aug 17, 2015 at 4:09 AM, Ley Foon Tan <lftan@altera.com> wrote:
-> This patch adds the Altera PCIe host controller driver.
->
-> Signed-off-by: Ley Foon Tan <lftan@altera.com>
+Hi Brian,
+
+
+thanks for catching these oversights, but see below
+
+Am Dienstag, 18. August 2015, 11:44:15 schrieb Brian Norris:
+> This DTS file was submitted with non-upstream bindings. I happened
+> across this while reviewing the jaq DTS.
+> 
+> Signed-off-by: Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+> Cc: Alexandru M Stan <amstan-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+> Cc: Douglas Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
 > ---
->  drivers/pci/host/Kconfig       |   7 +
->  drivers/pci/host/Makefile      |   1 +
->  drivers/pci/host/pcie-altera.c | 543 +++++++++++++++++++++++++++++++++++++++++
->  3 files changed, 551 insertions(+)
->  create mode 100644 drivers/pci/host/pcie-altera.c
->
-> diff --git a/drivers/pci/host/Kconfig b/drivers/pci/host/Kconfig
-> index 675c2d1..4b4754a 100644
-> --- a/drivers/pci/host/Kconfig
-> +++ b/drivers/pci/host/Kconfig
-> @@ -145,4 +145,11 @@ config PCIE_IPROC_BCMA
->           Say Y here if you want to use the Broadcom iProc PCIe controller
->           through the BCMA bus interface
->
+> Tested on jaq, not minnie
+> 
+>  arch/arm/boot/dts/rk3288-veyron-minnie.dts | 8 ++++++--
+>  1 file changed, 6 insertions(+), 2 deletions(-)
+> 
+> diff --git a/arch/arm/boot/dts/rk3288-veyron-minnie.dts
+> b/arch/arm/boot/dts/rk3288-veyron-minnie.dts index
+> 0e30bd6bf92b..6f619c154dc6 100644
+> --- a/arch/arm/boot/dts/rk3288-veyron-minnie.dts
+> +++ b/arch/arm/boot/dts/rk3288-veyron-minnie.dts
+> @@ -128,12 +128,16 @@
+>  			regulator-min-microvolt = <3300000>;
+>  			regulator-max-microvolt = <3300000>;
+>  			regulator-name = "vcc33_touch";
+> -			regulator-suspend-mem-disabled;
+> +			regulator-state-mem {
+> +				regulator-on-in-suspend;
+> +			};
+>  		};
+> 
+>  		vcc5v_touch: SWITCH_REG2 {
+>  			regulator-name = "vcc5v_touch";
+> -			regulator-suspend-mem-disabled;
+> +			regulator-state-mem {
+> +				regulator-on-in-suspend;
+> +			};
 
-<snip>
+wouldn't regulator-suspend-mem-disabled translate to regulator-off-in-suspend?
+At least looks like it according to https://lkml.org/lkml/2013/7/25/592
 
-> +
-> +/* Address translation table entry size */
-> +#define ATT_ENTRY_SIZE         8
-> +
-> +#define DWORD_MASK             3
-> +
-> +struct altera_pcie {
-> +       struct platform_device  *pdev;
-> +       struct resource         *txs;
 
-You have "Txs" documented in the bindings document, you have a pointer
-here, but you've never used it
-anywhre in the code? What is it for?
+Heiko
 
-> +       void __iomem            *cra_base;
-> +       int                     irq;
-> +       u8                      root_bus_nr;
-> +       struct irq_domain               *irq_domain;
-> +       struct resource         bus_range;
-> +       struct list_head                resources;
-> +};
-> +
+>  		};
+>  	};
+>  };
 
-<snip>
-
-> +
-> +static int tlp_cfg_dword_read(struct altera_pcie *pcie, u8 bus, u32 devfn,
-> +                             int where, u32 *value)
-> +{
-> +       int ret;
-> +       u32 headers[TLP_HDR_SIZE];
-> +
-> +       if (bus == pcie->root_bus_nr)
-> +               headers[0] = TLP_CFG_DW0(TLP_FMTTYPE_CFGRD0);
-> +       else
-> +               headers[0] = TLP_CFG_DW0(TLP_FMTTYPE_CFGRD1);
-> +
-> +       headers[1] = TLP_CFG_DW1(TLP_REQ_ID(pcie->root_bus_nr, devfn),
-> +                                       TLP_READ_TAG);
-> +       headers[2] = TLP_CFG_DW2(bus, devfn, where);
-> +
-> +       tlp_write_packet(pcie, headers, 0);
-> +
-> +       ret = tlp_read_packet(pcie, value);
-> +       if (ret)
-> +               *value = ~0UL;  /* return 0xFFFFFFFF if error */
-> +
-> +       return ret;
-> +}
-> +
-> +static int tlp_cfg_dword_write(struct altera_pcie *pcie, u8 bus, u32 devfn,
-> +                              int where, u32 value)
-> +{
-> +       u32 headers[TLP_HDR_SIZE];
-> +
-> +       if (bus == pcie->root_bus_nr)
-> +               headers[0] = TLP_CFG_DW0(TLP_FMTTYPE_CFGWR0);
-> +       else
-> +               headers[0] = TLP_CFG_DW0(TLP_FMTTYPE_CFGWR1);
-> +
-> +       headers[1] = TLP_CFG_DW1(TLP_REQ_ID(pcie->root_bus_nr, devfn),
-> +                                       TLP_WRITE_TAG);
-> +       headers[2] = TLP_CFG_DW2(bus, devfn, where);
-> +
-> +       tlp_write_packet(pcie, headers, value);
-> +
-> +       tlp_read_packet(pcie, NULL);
-
-You need to check for the error here.
-
-> +
-> +       /* Keep an eye out for changes to the root bus number */
-> +       if ((bus == pcie->root_bus_nr) && (where == PCI_PRIMARY_BUS))
-> +               pcie->root_bus_nr = (u8)(value);
-> +
-> +       return PCIBIOS_SUCCESSFUL;
-> +}
-> +
-
-<snip>
-
-> +
-> +static int altera_pcie_parse_dt(struct altera_pcie *pcie)
-> +{
-> +       struct resource *cra;
-> +       struct platform_device *pdev = pcie->pdev;
-> +
-> +       cra = platform_get_resource_byname(pdev, IORESOURCE_MEM, "Cra");
-> +       if (!cra) {
-> +               cra = platform_get_resource_byname(pdev, IORESOURCE_MEM, "cra");
-> +               if (!cra) {
-> +                       dev_err(&pdev->dev,
-> +                               "no cra memory resource defined\n");
-> +                       return -ENODEV;
-> +               }
-> +       }
-> +
-
-What about "Txs"?
-
-Dinh
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
