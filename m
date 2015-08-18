@@ -1,100 +1,221 @@
-From: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Subject: Re: [PATCH v3 2/4] ASoC: rockchip: Add rockchip SPDIF transceiver driver
-Date: Tue, 18 Aug 2015 20:25:38 +0200
-Message-ID: <1463451.tH10lfH9Hm@phil>
-References: <1438947854-3743-1-git-send-email-sjoerd.simons@collabora.co.uk> <1438947854-3743-3-git-send-email-sjoerd.simons@collabora.co.uk>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
+From: Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Subject: [PATCH 1/2] ARM: dts: rockchip: add veyron-jaq board
+Date: Tue, 18 Aug 2015 11:44:14 -0700
+Message-ID: <1439923455-109818-1-git-send-email-briannorris@chromium.org>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1438947854-3743-3-git-send-email-sjoerd.simons-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sjoerd Simons <sjoerd.simons-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>
-Cc: linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Jaroslav Kysela <perex-/Fr2/VpizcU@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Takashi Iwai <tiwai-IBi9RG/b67k@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Cc: linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Alexandru M Stan <amstan-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Douglas Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Sjoerd,
+a.k.a. Haier Chromebook 11
 
+Signed-off-by: Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Cc: Alexandru M Stan <amstan-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Cc: Douglas Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+---
+ arch/arm/boot/dts/Makefile              |   1 +
+ arch/arm/boot/dts/rk3288-veyron-jaq.dts | 176 ++++++++++++++++++++++++++++++++
+ 2 files changed, 177 insertions(+)
+ create mode 100644 arch/arm/boot/dts/rk3288-veyron-jaq.dts
 
-> +static int rk_spdif_probe(struct platform_device *pdev)
-> +{
-> +	struct rk_spdif_dev *spdif;
-> +	struct resource *res;
-> +	void __iomem *regs;
-> +	int ret;
-> +
-> +	spdif = devm_kzalloc(&pdev->dev, sizeof(*spdif), GFP_KERNEL);
-> +	if (!spdif)
-> +		return -ENOMEM;
-> +
-> +	spdif->hclk = devm_clk_get(&pdev->dev, "spdif_hclk");
+diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+index 7805a6541a38..7a2c3c88ce9e 100644
+--- a/arch/arm/boot/dts/Makefile
++++ b/arch/arm/boot/dts/Makefile
+@@ -493,6 +493,7 @@ dtb-$(CONFIG_ARCH_ROCKCHIP) += \
+ 	rk3288-veyron-jerry.dtb \
+ 	rk3288-veyron-minnie.dtb \
+ 	rk3288-veyron-pinky.dtb \
++	rk3288-veyron-jaq.dtb \
+ 	rk3288-veyron-speedy.dtb
+ dtb-$(CONFIG_ARCH_S3C24XX) += \
+ 	s3c2416-smdk2416.dtb
+diff --git a/arch/arm/boot/dts/rk3288-veyron-jaq.dts b/arch/arm/boot/dts/rk3288-veyron-jaq.dts
+new file mode 100644
+index 000000000000..ea6130156216
+--- /dev/null
++++ b/arch/arm/boot/dts/rk3288-veyron-jaq.dts
+@@ -0,0 +1,176 @@
++/*
++ * Google Veyron Jaq Rev 1+ board device tree source
++ *
++ * Copyright 2015 Google, Inc
++ *
++ * This file is dual-licensed: you can use it either under the terms
++ * of the GPL or the X11 license, at your option. Note that this dual
++ * licensing only applies to this file, and not this project as a
++ * whole.
++ *
++ *  a) This file is free software; you can redistribute it and/or
++ *     modify it under the terms of the GNU General Public License as
++ *     published by the Free Software Foundation; either version 2 of the
++ *     License, or (at your option) any later version.
++ *
++ *     This file is distributed in the hope that it will be useful,
++ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
++ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ *     GNU General Public License for more details.
++ *
++ *  Or, alternatively,
++ *
++ *  b) Permission is hereby granted, free of charge, to any person
++ *     obtaining a copy of this software and associated documentation
++ *     files (the "Software"), to deal in the Software without
++ *     restriction, including without limitation the rights to use,
++ *     copy, modify, merge, publish, distribute, sublicense, and/or
++ *     sell copies of the Software, and to permit persons to whom the
++ *     Software is furnished to do so, subject to the following
++ *     conditions:
++ *
++ *     The above copyright notice and this permission notice shall be
++ *     included in all copies or substantial portions of the Software.
++ *
++ *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
++ *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
++ *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
++ *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
++ *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
++ *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
++ *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
++ *     OTHER DEALINGS IN THE SOFTWARE.
++ */
++
++/dts-v1/;
++
++#include "rk3288-veyron-chromebook.dtsi"
++#include "cros-ec-sbs.dtsi"
++
++/ {
++	model = "Google Jaq";
++	compatible = "google,veyron-jaq-rev5", "google,veyron-jaq-rev4",
++		     "google,veyron-jaq-rev3", "google,veyron-jaq-rev2",
++		     "google,veyron-jaq-rev1", "google,veyron-jaq",
++		     "google,veyron", "rockchip,rk3288";
++
++	panel_regulator: panel-regulator {
++		compatible = "regulator-fixed";
++		enable-active-high;
++		gpio = <&gpio7 14 GPIO_ACTIVE_HIGH>;
++		pinctrl-names = "default";
++		pinctrl-0 = <&lcd_enable_h>;
++		regulator-name = "panel_regulator";
++		vin-supply = <&vcc33_sys>;
++	};
++
++	vcc18_lcd: vcc18-lcd {
++		compatible = "regulator-fixed";
++		enable-active-high;
++		gpio = <&gpio2 13 GPIO_ACTIVE_HIGH>;
++		pinctrl-names = "default";
++		pinctrl-0 = <&avdd_1v8_disp_en>;
++		regulator-name = "vcc18_lcd";
++		regulator-always-on;
++		regulator-boot-on;
++		vin-supply = <&vcc18_wl>;
++	};
++
++	backlight_regulator: backlight-regulator {
++		compatible = "regulator-fixed";
++		enable-active-high;
++		gpio = <&gpio2 12 GPIO_ACTIVE_HIGH>;
++		pinctrl-names = "default";
++		pinctrl-0 = <&bl_pwr_en>;
++		regulator-name = "backlight_regulator";
++		vin-supply = <&vcc33_sys>;
++		startup-delay-us = <15000>;
++	};
++};
++
++&rk808 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pmic_int_l &dvs_1 &dvs_2>;
++	dvs-gpios = <&gpio7 12 GPIO_ACTIVE_HIGH>,
++		    <&gpio7 15 GPIO_ACTIVE_HIGH>;
++
++	regulators {
++		mic_vcc: LDO_REG2 {
++			regulator-name = "mic_vcc";
++			regulator-always-on;
++			regulator-boot-on;
++			regulator-min-microvolt = <1800000>;
++			regulator-max-microvolt = <1800000>;
++			regulator-state-mem {
++				regulator-on-in-suspend;
++			};
++		};
++	};
++};
++
++&sdmmc {
++	disable-wp;
++	pinctrl-names = "default";
++	pinctrl-0 = <&sdmmc_clk &sdmmc_cmd &sdmmc_cd_disabled &sdmmc_cd_gpio
++			&sdmmc_bus4>;
++};
++
++&vcc_5v {
++	enable-active-high;
++	gpio = <&gpio7 21 GPIO_ACTIVE_HIGH>;
++	pinctrl-names = "default";
++	pinctrl-0 = <&drv_5v>;
++};
++
++&vcc50_hdmi {
++	enable-active-high;
++	gpio = <&gpio5 19 GPIO_ACTIVE_HIGH>;
++	pinctrl-names = "default";
++	pinctrl-0 = <&vcc50_hdmi_en>;
++};
++
++&pinctrl {
++	backlight {
++		bl_pwr_en: bl_pwr_en {
++			rockchip,pins = <2 12 RK_FUNC_GPIO &pcfg_pull_none>;
++		};
++	};
++
++	buck-5v {
++		drv_5v: drv-5v {
++			rockchip,pins = <7 21 RK_FUNC_GPIO &pcfg_pull_none>;
++		};
++	};
++
++	edp {
++		edp_hpd: edp_hpd {
++			rockchip,pins = <7 11 RK_FUNC_2 &pcfg_pull_down>;
++		};
++	};
++
++	hdmi {
++		vcc50_hdmi_en: vcc50-hdmi-en {
++			rockchip,pins = <5 19 RK_FUNC_GPIO &pcfg_pull_none>;
++		};
++	};
++
++	lcd {
++		lcd_enable_h: lcd-en {
++			rockchip,pins = <7 14 RK_FUNC_GPIO &pcfg_pull_none>;
++		};
++
++		avdd_1v8_disp_en: avdd-1v8-disp-en {
++			rockchip,pins = <2 13 RK_FUNC_GPIO &pcfg_pull_none>;
++		};
++	};
++
++	pmic {
++		dvs_1: dvs-1 {
++			rockchip,pins = <7 12 RK_FUNC_GPIO &pcfg_pull_down>;
++		};
++
++		dvs_2: dvs-2 {
++			rockchip,pins = <7 15 RK_FUNC_GPIO &pcfg_pull_down>;
++		};
++	};
++};
+-- 
+2.5.0.276.gf5e568e
 
-I guess this could be named just "hclk" - as it is the identifier local to the 
-spdif-ip. (Of course in the binding too)
-
-
-> +	if (IS_ERR(spdif->hclk)) {
-> +		dev_err(&pdev->dev, "Can't retrieve rk_spdif bus clock\n");
-> +		return PTR_ERR(spdif->hclk);
-> +	}
-> +	ret = clk_prepare_enable(spdif->hclk);
-> +	if (ret) {
-> +		dev_err(spdif->dev, "hclock enable failed %d\n", ret);
-> +		return ret;
-> +	}
-> +
-> +	spdif->mclk = devm_clk_get(&pdev->dev, "spdif_clk");
-
-The Rockchip TRMs (and the rest of the driver as well) refer to this clock as 
-"mclk", so I guess the identifier could just be named the same.
-
-
-> +	if (IS_ERR(spdif->mclk)) {
-> +		dev_err(&pdev->dev, "Can't retrieve rk_spdif master clock\n");
-> +		return PTR_ERR(spdif->hclk);
-> +	}
-> +
-> +	ret = clk_prepare_enable(spdif->mclk);
-> +	if (ret) {
-> +		dev_err(spdif->dev, "clock enable failed %d\n", ret);
-> +		return ret;
-> +	}
-
-I guess this plays into what Mark already wrote, but as the code stands right 
-now, you enable the mclk here and then through runtime_resume as well, so that 
-it stays running all the time, as the refcount is either 2 or 1 but never 0.
-
-Also I don't think mixing devm_clk_get + clk_prepare_enable calls works well. 
-If the devm_clk_get(... "spdif_clk") fails, the hclk would stay running right 
-now.
-
-
-[...]
-
-> +static int rk_spdif_remove(struct platform_device *pdev)
-> +{
-> +	struct rk_spdif_dev *spdif = dev_get_drvdata(&pdev->dev);
-> +
-> +	pm_runtime_disable(&pdev->dev);
-> +	if (!pm_runtime_status_suspended(&pdev->dev))
-> +		rk_spdif_runtime_suspend(&pdev->dev);
-> +
-> +	clk_disable_unprepare(spdif->mclk);
-> +	clk_disable_unprepare(spdif->hclk);
-> +	snd_dmaengine_pcm_unregister(&pdev->dev);
-> +	snd_soc_unregister_component(&pdev->dev);
-
-I think the ordering should stay symmetric to the probe function, where you 
-have
-	clk_enable
-	snd_register
-so here it should probably be
-	snd_unregister 
-	clk_disable
-
-
-
-Heiko
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
