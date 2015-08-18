@@ -1,37 +1,35 @@
-From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Subject: [PATCH v2 1/6] ARM: dts: ifc6410: Add pwrseq support for WLAN
-Date: Tue, 18 Aug 2015 14:06:52 +0100
-Message-ID: <1439903212-19931-1-git-send-email-srinivas.kandagatla@linaro.org>
+From: Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: [PATCH v2 2/6] ARM: dts: qs600: add pwrseq support to WLAN
+Date: Tue, 18 Aug 2015 14:10:01 +0100
+Message-ID: <1439903401-20189-1-git-send-email-srinivas.kandagatla@linaro.org>
 References: <1439903069-19752-1-git-send-email-srinivas.kandagatla@linaro.org>
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <1439903069-19752-1-git-send-email-srinivas.kandagatla@linaro.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: agross@codeaurora.org, linux-arm-msm@vger.kernel.org
-Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Russell King <linux@arm.linux.org.uk>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, srinivas.kandagatla@linaro.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1439903069-19752-1-git-send-email-srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: agross-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This patch adds pwrseq for WLAN which resets the WLAN just before the
-SDIO bus is up.
+Add pwrseq support to sdcc4 which would enable a proper reset of WLAN
+without ugly hacks in the board support file.
 
-Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 ---
- arch/arm/boot/dts/qcom-apq8064-ifc6410.dts | 31 ++++++++++++++++++++++++++++++
- 1 file changed, 31 insertions(+)
+ arch/arm/boot/dts/qcom-apq8064-cm-qs600.dts | 32 +++++++++++++++++++++++++++++
+ 1 file changed, 32 insertions(+)
 
-diff --git a/arch/arm/boot/dts/qcom-apq8064-ifc6410.dts b/arch/arm/boot/dts/qcom-apq8064-ifc6410.dts
-index 88d6655..b1f9ddb 100644
---- a/arch/arm/boot/dts/qcom-apq8064-ifc6410.dts
-+++ b/arch/arm/boot/dts/qcom-apq8064-ifc6410.dts
-@@ -1,5 +1,6 @@
+diff --git a/arch/arm/boot/dts/qcom-apq8064-cm-qs600.dts b/arch/arm/boot/dts/qcom-apq8064-cm-qs600.dts
+index 34ccb26..ebde2b7 100644
+--- a/arch/arm/boot/dts/qcom-apq8064-cm-qs600.dts
++++ b/arch/arm/boot/dts/qcom-apq8064-cm-qs600.dts
+@@ -1,9 +1,25 @@
  #include "qcom-apq8064-v2.0.dtsi"
- #include <dt-bindings/gpio/gpio.h>
++#include <dt-bindings/gpio/gpio.h>
 +#include <dt-bindings/pinctrl/qcom,pmic-gpio.h>
  
  / {
- 	model = "Qualcomm APQ8064/IFC6410";
-@@ -10,6 +11,20 @@
- 		serial1 = &gsbi6_serial;
- 	};
+ 	model = "CompuLab CM-QS600";
+ 	compatible = "qcom,apq8064-cm-qs600", "qcom,apq8064";
  
 +	pwrseq {
 +		#address-cells = <1>;
@@ -49,9 +47,9 @@ index 88d6655..b1f9ddb 100644
 +
  	soc {
  		pinctrl@800000 {
- 			card_detect: card_detect {
-@@ -206,6 +221,21 @@
- 			status = "okay";
+ 			i2c1_pins: i2c1 {
+@@ -155,6 +171,21 @@
+ 			regulator-always-on;
  		};
  
 +		qcom,ssbi@500000 {
@@ -72,13 +70,18 @@ index 88d6655..b1f9ddb 100644
  		amba {
  			/* eMMC */
  			sdcc1: sdcc@12400000 {
-@@ -227,6 +257,7 @@
+@@ -173,6 +204,7 @@
  				status = "okay";
- 				vmmc-supply = <&ext_3p3v>;
- 				vqmmc-supply = <&pm8921_lvs1>;
+ 				vmmc-supply = <&v3p3_fixed>;
+ 				vqmmc-supply = <&v3p3_fixed>;
 +				mmc-pwrseq = <&sdcc4_pwrseq>;
  			};
  		};
  	};
 -- 
 1.9.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
