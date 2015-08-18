@@ -1,143 +1,63 @@
-From: Jonathan Cameron <jic23-tko9wxEg+fIOOJlXag/Snyp2UmYkHbXO@public.gmane.org>
-Subject: Re: [PATCH v3 2/2] devicetree: Add documentation for UPISEMI us5182d ALS and Proximity sensor
-Date: Tue, 18 Aug 2015 18:36:23 +0100
-Message-ID: <2D4880A7-6EA2-4738-B60B-1052FFC34225@jic23.retrosnub.co.uk>
-References: <1439544580-21179-1-git-send-email-adriana.reus@intel.com> <1439544580-21179-3-git-send-email-adriana.reus@intel.com> <55CF4D54.8010007@kernel.org> <55D34B7E.2020407@intel.com>
+From: Bjorn Andersson <bjorn.andersson-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>
+Subject: Re: [PATCH v3 1/3] ARM: qcom: add SFPB nodes to IPQ806x dts
+Date: Tue, 18 Aug 2015 10:59:21 -0700
+Message-ID: <20150818175921.GT13472@usrtlx11787.corpusers.net>
+References: <1439855266-26242-1-git-send-email-mathieu@codeaurora.org>
+ <1439855266-26242-2-git-send-email-mathieu@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain;
- charset=UTF-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <55D34B7E.2020407-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Adriana Reus <adriana.reus-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org, daniel.baluta-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org
-Cc: linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1439855266-26242-2-git-send-email-mathieu-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mathieu Olivari <mathieu-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "pawel.moll-5wv7dgnIgG8@public.gmane.org" <pawel.moll-5wv7dgnIgG8@public.gmane.org>, "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org" <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, "galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org" <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org" <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, "dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org" <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, "computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "agross-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org" <agross-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org" <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+On Mon 17 Aug 16:47 PDT 2015, Mathieu Olivari wrote:
 
+> Add one new node to the ipq806x.dtsi file to declare & register the
+> hardware spinlock devices. This mechanism is required to be used by
+> other drivers such as SMEM.
+> 
 
-On 18 August 2015 16:13:02 BST, Adriana Reus <adriana.reus-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org> wrote:
->
->Thank you Jonathan, I'll add a new patch set soon, added some comments 
->inline also.
->
->Adriana
->On 15.08.2015 17:31, Jonathan Cameron wrote:
->> On 14/08/15 10:29, Adriana Reus wrote:
->>> Added entries in trivial-devices and i2c/vendor-prefixes for
->>> the us5182d als and proximity sensor. Also added a documentation
->file for
->>> this sensor's properties.
->>>
->>> Signed-off-by: Adriana Reus <adriana.reus-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
->> It's not a trivial device if it has it's own docs.  So don't add it
->to that list
->> (the point is to not have separate docs for devices that don't really
->have
->> any device tree data other than where they are.
->right, I'll add a new path set soon.
->>
->> Few more bits inline.
->>> ---
->>>    No changes - resending because I forgot to cc devicetree.
->>>   .../devicetree/bindings/i2c/trivial-devices.txt    |  1 +
->>>   .../devicetree/bindings/iio/light/us5182d.txt      | 24
->++++++++++++++++++++++
->>>   .../devicetree/bindings/vendor-prefixes.txt        |  1 +
->>>   3 files changed, 26 insertions(+)
->>>   create mode 100644
->Documentation/devicetree/bindings/iio/light/us5182d.txt
->>>
->>> diff --git
->a/Documentation/devicetree/bindings/i2c/trivial-devices.txt
->b/Documentation/devicetree/bindings/i2c/trivial-devices.txt
->>> index 00f8652..96d3b9c 100644
->>> --- a/Documentation/devicetree/bindings/i2c/trivial-devices.txt
->>> +++ b/Documentation/devicetree/bindings/i2c/trivial-devices.txt
->>> @@ -99,4 +99,5 @@ ti,tsc2003		I2C Touch-Screen Controller
->>>   ti,tmp102		Low Power Digital Temperature Sensor with SMBUS/Two
->Wire Serial Interface
->>>   ti,tmp103		Low Power Digital Temperature Sensor with SMBUS/Two
->Wire Serial Interface
->>>   ti,tmp275		Digital Temperature Sensor
->>> +upisemi,usd5182		Als and Proximity Sensor
->>>   winbond,wpct301		i2c trusted platform module (TPM)
->>> diff --git a/Documentation/devicetree/bindings/iio/light/us5182d.txt
->b/Documentation/devicetree/bindings/iio/light/us5182d.txt
->>> new file mode 100644
->>> index 0000000..9ac3336
->>> --- /dev/null
->>> +++ b/Documentation/devicetree/bindings/iio/light/us5182d.txt
->>> @@ -0,0 +1,24 @@
->>> +* UPISEMI us5182d I2C ALS and Proximity sensor
->>> +
->>> +Required properties:
->>> +- compatible: must be "upisemi,usd5182"
->>> +- reg: the I2C address of the device
->>> +
->>> +Optional properties:
->>> +- upisemi,glass-coef: glass attenuation factor
->>> +- upisemi,dark-ths: array of thresholds corresponding to every
->scale
->> That needs more detail. I've read the driver and I am not sure what
->exactly
->> you mean!  Why should a scale have a threshold?
->I'll try to be more specific. These are values representing adc counts,
->
->that's why there are different values corresponding to every scale.
->>> +- upisemi,upper-dark-gain: tuning factor applied when light > th
->>> +- upisemi,lower-dark-gain: tuning factor applied when light < th
->>> +
->>> +Example:
->>> +
->>> +    usd5182@39 {
->>> +                compatible = "upisemi,usd5182";
->>> +                reg = <0x39>;
->>> +                upisemi,glass-coef = < 1000 >;
->>> +                upisemi,dark-ths = /bits/ 16 <170 200 512 512 800
->2000 4000 8000>;
->>> +                upisemi,upper-dark-gain = /bits/ 8 <0x00>;
->>> +                upisemi,lower-dark-gain = /bits/ 8 <0x16>;
->> Not sure why these are in hex.. Or why we care if they are 8 bits. 
->If there is a limit
->> on the possible values, perhaps mention it in the docs above.
->I should have been (much) more specific here: that represents a float 
->number with 4 integer bits and 4 fractional bits (Q4.4), so I find hex 
->more intuitive since it's split in half, let me know if you think 
->otherwise. 
-One for the device tree guys to answer rather than me.  My gut feeling would be
-a representation that made this obvious but I have no idea what normal choice would be.
->I'll add a more complete description. As for the "/bits/ x" 
->it's because currently in the driver I use the read_property_u8 or
->*_u16 
->functions, these require that the dts entry be as I wrote it in the 
->example, and since it's an example it should be functional, so I feel 
->that is ok as it is.
->>
->>
->>> +    };
->>> +
->> One blank line at the end is neough.
->>> +
->>> diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt
->b/Documentation/devicetree/bindings/vendor-prefixes.txt
->>> index d444757..5b40bab 100644
->>> --- a/Documentation/devicetree/bindings/vendor-prefixes.txt
->>> +++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
->>> @@ -211,6 +211,7 @@ toshiba	Toshiba Corporation
->>>   toumaz	Toumaz
->>>   tplink	TP-LINK Technologies Co., Ltd.
->>>   truly	Truly Semiconductors Limited
->>> +upisemi	uPI Semiconductor Corp.
->>>   usi	Universal Scientific Industrial Co., Ltd.
->>>   v3	V3 Semiconductor
->>>   variscite	Variscite Ltd.
->>>
->>
->--
->To unsubscribe from this list: send the line "unsubscribe linux-iio" in
->the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
->More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Reviewed-by: Bjorn Andersson <bjorn.andersson-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>
 
--- 
-Sent from my Android device with K-9 Mail. Please excuse my brevity.
+> Signed-off-by: Mathieu Olivari <mathieu-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+> ---
+>  arch/arm/boot/dts/qcom-ipq8064.dtsi | 11 +++++++++++
+>  1 file changed, 11 insertions(+)
+> 
+> diff --git a/arch/arm/boot/dts/qcom-ipq8064.dtsi b/arch/arm/boot/dts/qcom-ipq8064.dtsi
+> index 9f727d8..8d366ae 100644
+> --- a/arch/arm/boot/dts/qcom-ipq8064.dtsi
+> +++ b/arch/arm/boot/dts/qcom-ipq8064.dtsi
+> @@ -329,5 +329,16 @@
+>  			#reset-cells = <1>;
+>  		};
+>  
+> +		sfpb_mutex_block: syscon@1200600 {
+> +			compatible = "syscon";
+> +			reg = <0x01200600 0x100>;
+
+I have this block listed to start at 0x1200000 and used 0x604 as offset
+when testing this. In my docs there's nothing in those first 0x600 bytes
+though, so this works fine for me.
+
+> +		};
+> +	};
+> +
+> +	sfpb_mutex: sfpb-mutex {
+> +		compatible = "qcom,sfpb-mutex";
+> +		syscon = <&sfpb_mutex_block 4 4>;
+> +
+> +		#hwlock-cells = <1>;
+>  	};
+>  };
+
+Regards,
+Bjorn
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
