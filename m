@@ -1,55 +1,74 @@
-From: Bjorn Andersson <bjorn.andersson-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>
-Subject: [PATCH] regulator: Introduce property to flag set-load support
-Date: Tue, 18 Aug 2015 15:14:06 -0700
-Message-ID: <1439936046-5289-1-git-send-email-bjorn.andersson@sonymobile.com>
-Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Mathieu Olivari <mathieu@codeaurora.org>
+Subject: [PATCH] ARM: qcom: Disable i2c device on gsbi4 for ipq806x
+Date: Tue, 18 Aug 2015 15:21:28 -0700
+Message-ID: <1439936488-14870-1-git-send-email-mathieu@codeaurora.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: sboyd@codeaurora.org, agross@codeaurora.org, rnayak@codeaurora.org, architt@codeaurora.org
+Cc: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk, mturquette@baylibre.com, mathieu@codeaurora.org, mturquette@linaro.org, georgi.djakov@linaro.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Introduce "regulator-allow-set-load" property to make it possible to
-flag in the board configuration that a regulator is allowed to have the
-load requirements changed.
+Disable the i2c device on gsbi4 and mark gsbi4_h and gsbi4_qup clks as
+unused. If they are enabled, clock framework will turn them off at end
+of probe. On ipq806x by design gsbi4_qup, gsbi4_h clks and i2c on gsbi4
+are meant for RPM usage. So turning them off in kernel is incorrect.
 
-Signed-off-by: Bjorn Andersson <bjorn.andersson-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>
+Signed-off-by: Mathieu Olivari <mathieu@codeaurora.org>
 ---
- Documentation/devicetree/bindings/regulator/regulator.txt | 1 +
- drivers/regulator/of_regulator.c                          | 3 +++
- 2 files changed, 4 insertions(+)
+ arch/arm/boot/dts/qcom-ipq8064-ap148.dts | 9 ---------
+ drivers/clk/qcom/gcc-ipq806x.c           | 6 +++---
+ 2 files changed, 3 insertions(+), 12 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/regulator/regulator.txt b/Documentation/devicetree/bindings/regulator/regulator.txt
-index 24bd422cecd5..1d112fc456aa 100644
---- a/Documentation/devicetree/bindings/regulator/regulator.txt
-+++ b/Documentation/devicetree/bindings/regulator/regulator.txt
-@@ -11,6 +11,7 @@ Optional properties:
- - regulator-always-on: boolean, regulator should never be disabled
- - regulator-boot-on: bootloader/firmware enabled regulator
- - regulator-allow-bypass: allow the regulator to go into bypass mode
-+- regulator-allow-set-load: allow the regulator performance level to be configured
- - <name>-supply: phandle to the parent supply/regulator node
- - regulator-ramp-delay: ramp delay for regulator(in uV/uS)
-   For hardware which supports disabling ramp rate, it should be explicitly
-diff --git a/drivers/regulator/of_regulator.c b/drivers/regulator/of_regulator.c
-index 250700c853bf..499e437c7e91 100644
---- a/drivers/regulator/of_regulator.c
-+++ b/drivers/regulator/of_regulator.c
-@@ -76,6 +76,9 @@ static void of_get_regulation_constraints(struct device_node *np,
- 	if (of_property_read_bool(np, "regulator-allow-bypass"))
- 		constraints->valid_ops_mask |= REGULATOR_CHANGE_BYPASS;
+diff --git a/arch/arm/boot/dts/qcom-ipq8064-ap148.dts b/arch/arm/boot/dts/qcom-ipq8064-ap148.dts
+index b08907a..36e2b04 100644
+--- a/arch/arm/boot/dts/qcom-ipq8064-ap148.dts
++++ b/arch/arm/boot/dts/qcom-ipq8064-ap148.dts
+@@ -46,15 +46,6 @@
+ 			serial@16340000 {
+ 				status = "ok";
+ 			};
+-
+-			i2c4: i2c@16380000 {
+-				status = "ok";
+-
+-				clock-frequency = <200000>;
+-
+-				pinctrl-0 = <&i2c4_pins>;
+-				pinctrl-names = "default";
+-			};
+ 		};
  
-+	if (of_property_read_bool(np, "regulator-allow-set-load"))
-+		constraints->valid_ops_mask |= REGULATOR_CHANGE_DRMS;
-+
- 	ret = of_property_read_u32(np, "regulator-ramp-delay", &pval);
- 	if (!ret) {
- 		if (pval)
+ 		gsbi5: gsbi@1a200000 {
+diff --git a/drivers/clk/qcom/gcc-ipq806x.c b/drivers/clk/qcom/gcc-ipq806x.c
+index 5639699..eb4065e 100644
+--- a/drivers/clk/qcom/gcc-ipq806x.c
++++ b/drivers/clk/qcom/gcc-ipq806x.c
+@@ -809,7 +809,7 @@ static struct clk_rcg gsbi6_qup_src = {
+ 			.parent_names = gcc_pxo_pll8,
+ 			.num_parents = 2,
+ 			.ops = &clk_rcg_ops,
+-			.flags = CLK_SET_PARENT_GATE,
++			.flags = CLK_SET_PARENT_GATE | CLK_IGNORE_UNUSED,
+ 		},
+ 	},
+ };
+@@ -874,7 +874,7 @@ static struct clk_branch gsbi7_qup_clk = {
+ 			.parent_names = (const char *[]){ "gsbi7_qup_src" },
+ 			.num_parents = 1,
+ 			.ops = &clk_branch_ops,
+-			.flags = CLK_SET_RATE_PARENT,
++			.flags = CLK_SET_RATE_PARENT | CLK_IGNORE_UNUSED,
+ 		},
+ 	},
+ };
+@@ -922,7 +922,7 @@ static struct clk_branch gsbi4_h_clk = {
+ 		.hw.init = &(struct clk_init_data){
+ 			.name = "gsbi4_h_clk",
+ 			.ops = &clk_branch_ops,
+-			.flags = CLK_IS_ROOT,
++			.flags = CLK_IS_ROOT | CLK_IGNORE_UNUSED,
+ 		},
+ 	},
+ };
 -- 
-1.8.2.2
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+2.1.4
