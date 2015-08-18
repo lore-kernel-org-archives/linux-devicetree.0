@@ -1,40 +1,64 @@
-From: Mathieu Olivari <mathieu@codeaurora.org>
-Subject: [PATCH] ARM: qcom: add memory node to IPQ806x/AP148
-Date: Tue, 18 Aug 2015 15:26:44 -0700
-Message-ID: <1439936804-15138-1-git-send-email-mathieu@codeaurora.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: galak@codeaurora.org, agross@codeaurora.org, sboyd@codeaurora.org
-Cc: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, linux@arm.linux.org.uk, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Mathieu Olivari <mathieu@codeaurora.org>
+From: Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Subject: Re: [PATCH 2/2] ARM: dts: rockchip: correct regulator PM properties
+Date: Tue, 18 Aug 2015 15:48:31 -0700
+Message-ID: <20150818224831.GA140911@google.com>
+References: <1439923455-109818-1-git-send-email-briannorris@chromium.org>
+ <1439923455-109818-2-git-send-email-briannorris@chromium.org>
+ <51457775.D3ds00ymOJ@phil>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <51457775.D3ds00ymOJ@phil>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Cc: linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Alexandru M Stan <amstan-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Douglas Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On recent bootloaders, the bootloader patches the DT blob with memory
-information. However, with old bootloader, this operation doesn't
-happen, which leads the board to freeze in the early init code.
+On Tue, Aug 18, 2015 at 09:17:06PM +0200, Heiko Stuebner wrote:
+> Am Dienstag, 18. August 2015, 11:44:15 schrieb Brian Norris:
+> > This DTS file was submitted with non-upstream bindings. I happened
+> > across this while reviewing the jaq DTS.
+> > 
+> > Signed-off-by: Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+> > Cc: Alexandru M Stan <amstan-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+> > Cc: Douglas Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+> > ---
+> > Tested on jaq, not minnie
+> > 
+> >  arch/arm/boot/dts/rk3288-veyron-minnie.dts | 8 ++++++--
+> >  1 file changed, 6 insertions(+), 2 deletions(-)
+> > 
+> > diff --git a/arch/arm/boot/dts/rk3288-veyron-minnie.dts
+> > b/arch/arm/boot/dts/rk3288-veyron-minnie.dts index
+> > 0e30bd6bf92b..6f619c154dc6 100644
+> > --- a/arch/arm/boot/dts/rk3288-veyron-minnie.dts
+> > +++ b/arch/arm/boot/dts/rk3288-veyron-minnie.dts
+> > @@ -128,12 +128,16 @@
+> >  			regulator-min-microvolt = <3300000>;
+> >  			regulator-max-microvolt = <3300000>;
+> >  			regulator-name = "vcc33_touch";
+> > -			regulator-suspend-mem-disabled;
+> > +			regulator-state-mem {
+> > +				regulator-on-in-suspend;
+> > +			};
+> >  		};
+> > 
+> >  		vcc5v_touch: SWITCH_REG2 {
+> >  			regulator-name = "vcc5v_touch";
+> > -			regulator-suspend-mem-disabled;
+> > +			regulator-state-mem {
+> > +				regulator-on-in-suspend;
+> > +			};
+> 
+> wouldn't regulator-suspend-mem-disabled translate to regulator-off-in-suspend?
+> At least looks like it according to https://lkml.org/lkml/2013/7/25/592
 
-This patch adds the memory node to the AP148 dts explicitly to cover all
-boot cases.
+You are right. My bad. Will fix. (Need to fix this in jaq too.)
 
-Signed-off-by: Mathieu Olivari <mathieu@codeaurora.org>
----
- arch/arm/boot/dts/qcom-ipq8064-ap148.dts | 5 +++++
- 1 file changed, 5 insertions(+)
-
-diff --git a/arch/arm/boot/dts/qcom-ipq8064-ap148.dts b/arch/arm/boot/dts/qcom-ipq8064-ap148.dts
-index 36e2b04..6886d09 100644
---- a/arch/arm/boot/dts/qcom-ipq8064-ap148.dts
-+++ b/arch/arm/boot/dts/qcom-ipq8064-ap148.dts
-@@ -4,6 +4,11 @@
- 	model = "Qualcomm IPQ8064/AP148";
- 	compatible = "qcom,ipq8064-ap148", "qcom,ipq8064";
- 
-+	memory@0 {
-+		reg = <0x42000000 0x1e000000>;
-+		device_type = "memory";
-+	};
-+
- 	reserved-memory {
- 		#address-cells = <1>;
- 		#size-cells = <1>;
--- 
-2.1.4
+Thanks,
+Brian
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
