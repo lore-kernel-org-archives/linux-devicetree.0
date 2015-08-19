@@ -1,66 +1,51 @@
-From: Bjorn Andersson <bjorn.andersson-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>
-Subject: Re: [PATCH v4 2/3] ARM: qcom: add SMEM device node to IPQ806x dts
-Date: Wed, 19 Aug 2015 09:36:28 -0700
-Message-ID: <20150819163628.GY13472@usrtlx11787.corpusers.net>
-References: <1439931860-7473-1-git-send-email-mathieu@codeaurora.org>
- <1439931860-7473-3-git-send-email-mathieu@codeaurora.org>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH v3 0/8] ARM: sunxi: Add Reduced Serial Bus support
+Date: Wed, 19 Aug 2015 09:32:32 -0700
+Message-ID: <20150819163232.GS10748@sirena.org.uk>
+References: <1439958009-14056-1-git-send-email-wens@csie.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="//EvipGn50MqgBlL"
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1439931860-7473-3-git-send-email-mathieu-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mathieu Olivari <mathieu-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "pawel.moll-5wv7dgnIgG8@public.gmane.org" <pawel.moll-5wv7dgnIgG8@public.gmane.org>, "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org" <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, "galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org" <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org" <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, "dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org" <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, "computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "agross-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org" <agross-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org" <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+In-Reply-To: <1439958009-14056-1-git-send-email-wens@csie.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Chen-Yu Tsai <wens@csie.org>
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com, Hans de Goede <hdegoede@redhat.com>, Meng Zhang <kevin@allwinnertech.com>, shuge@allwinnertech.com, kevin.z.m.zh@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-On Tue 18 Aug 14:04 PDT 2015, Mathieu Olivari wrote:
 
-> SMEM is used on IPQ806x to store various board related information such
-> as boot device and flash partition layout. We'll declare it as a device
-> so we can make use of it thanks to the new SMEM soc driver.
-> 
+--//EvipGn50MqgBlL
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Reviewed-by: Bjorn Andersson <bjorn.andersson-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>
+On Wed, Aug 19, 2015 at 12:20:01PM +0800, Chen-Yu Tsai wrote:
+> Hi everyone,
+>=20
+> This is my third attempt at adding support for Allwinner's Reduced
+> Serial Bus (RSB), which is used to communicate with PMICs and other
+> peripherals on their newer SoCs, such as the A23/A33/A80.
 
-> Signed-off-by: Mathieu Olivari <mathieu-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-> ---
-> 
-> Notes:
->     v2:
->     *Rename "smem" tag into "smem_region"
-> 
->  arch/arm/boot/dts/qcom-ipq8064.dtsi | 8 +++++++-
->  1 file changed, 7 insertions(+), 1 deletion(-)
-> 
-> diff --git a/arch/arm/boot/dts/qcom-ipq8064.dtsi b/arch/arm/boot/dts/qcom-ipq8064.dtsi
-> index 8d366ae..9834c94 100644
-> --- a/arch/arm/boot/dts/qcom-ipq8064.dtsi
-> +++ b/arch/arm/boot/dts/qcom-ipq8064.dtsi
-> @@ -55,7 +55,7 @@
->  			no-map;
->  		};
->  
-> -		smem@41000000 {
-> +		smem_region: smem@41000000 {
->  			reg = <0x41000000 0x200000>;
->  			no-map;
->  		};
-> @@ -341,4 +341,10 @@
->  
->  		#hwlock-cells = <1>;
->  	};
-> +
-> +	smem {
-> +		compatible = "qcom,smem";
-> +		memory-region = <&smem_region>;
-> +		hwlocks = <&sfpb_mutex 3>;
-> +	};
->  };
-> -- 
-> 2.1.4
-> 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+This is flagged as something that is specific to the Allwinner SoCs.
+Why add generic regmap support rather than just implement the regmap
+reg_read() and reg_write() in a regmap in the controller driver?  Are
+there expected to be other controller drivers from other vendors?
+
+--//EvipGn50MqgBlL
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQEcBAEBCAAGBQJV1K+gAAoJECTWi3JdVIfQMnwH/RywHcdG7BRz8PqrdB1FkEs3
+mvIiHCfPTA09Gi/ozmLtRDlyTezQHQDo+SiAzKR/t08o+cXQ+3UJIIPHDlg50nie
+jlNAEF+iOvcBHYhOPEjQPrN9Z3aLUH3zff9SDgcW9QprUcqR000sJb2I1NKl5QPe
+gn3b3xhfE+oTIYOic0ZFATdWvT7zviZY0nJxX1fykaZWDo2LHi5Z7E/o2s0sK798
+x0dnsmm/ZGNJDNDVeQpMvvr4hub29Jsfb2l80RL4vfQVF6VYm4S/8rsDX+fN0HOL
+rSFfZqGQhPeba/XbbToaqnqB2bWOIhMXF//kFb74KafaOtSRWUQ7WVJmGSSZp8E=
+=btIq
+-----END PGP SIGNATURE-----
+
+--//EvipGn50MqgBlL--
