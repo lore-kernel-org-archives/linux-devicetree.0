@@ -1,165 +1,333 @@
-From: Thierry Reding <thierry.reding@gmail.com>
-Subject: Re: [PATCH v6 2/2] pwm: Add support for R-Car PWM Timer
-Date: Wed, 19 Aug 2015 12:07:33 +0200
-Message-ID: <20150819100732.GC26627@ulmo>
-References: <1439957639-4816-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
- <1439957639-4816-3-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+From: Yury <yury.norov@gmail.com>
+Subject: Re: [PATCH v5 1/5] arm/arm64: add smccc ARCH32
+Date: Wed, 19 Aug 2015 13:56:39 +0300
+Message-ID: <55D460E7.9070104@gmail.com>
+References: <1439973629-19505-1-git-send-email-jens.wiklander@linaro.org> <1439973629-19505-2-git-send-email-jens.wiklander@linaro.org>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="Qbvjkv9qwOGw/5Fx"
-Return-path: <linux-pwm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1439957639-4816-3-git-send-email-yoshihiro.shimoda.uh@renesas.com>
-Sender: linux-pwm-owner@vger.kernel.org
-To: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Cc: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux-pwm@vger.kernel.org, linux-sh@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1439973629-19505-2-git-send-email-jens.wiklander@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Jens Wiklander <jens.wiklander@linaro.org>
+Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Kees Cook <keescook@chromium.org>, valentin.manea@huawei.com, Mark Rutland <mark.rutland@arm.com>, javier@javigon.com, emmanuel.michel@st.com, Michal Simek <michal.simek@xilinx.com>, jean-michel.delorme@st.com, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, Rob Herring <robh+dt@kernel.org>, Alexey Klimov <klimov.linux@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
+On 19.08.2015 11:40, Jens Wiklander wrote:
+ >
+ > Adds helpers to do SMC based on ARM SMC Calling Convention.
+ > CONFIG_HAVE_SMCCC is enabled for architectures that may support
+ > the SMC instruction. It's the responsibility of the caller to
+ > know if the SMC instruction is supported by the platform.
+ >
+ > Signed-off-by: Jens Wiklander <jens.wiklander@linaro.org>
+ > ---
+ >  arch/arm/Kconfig               |  4 +++
+ >  arch/arm/kernel/Makefile       |  2 ++
+ >  arch/arm/kernel/smccc-call.S   | 26 ++++++++++++++
+ >  arch/arm/kernel/smccc.c        | 17 +++++++++
+ >  arch/arm64/Kconfig             |  4 +++
+ >  arch/arm64/kernel/Makefile     |  1 +
+ >  arch/arm64/kernel/smccc-call.S | 34 ++++++++++++++++++
+ >  arch/arm64/kernel/smccc.c      | 17 +++++++++
+ >  include/linux/arm-smccc.h      | 79 
+++++++++++++++++++++++++++++++++++++++++++
+ >  9 files changed, 184 insertions(+)
+ >  create mode 100644 arch/arm/kernel/smccc-call.S
+ >  create mode 100644 arch/arm/kernel/smccc.c
+ >  create mode 100644 arch/arm64/kernel/smccc-call.S
+ >  create mode 100644 arch/arm64/kernel/smccc.c
+ >  create mode 100644 include/linux/arm-smccc.h
+ >
+ > diff --git a/arch/arm/Kconfig b/arch/arm/Kconfig
+ > index 45df48b..75e4da3 100644
+ > --- a/arch/arm/Kconfig
+ > +++ b/arch/arm/Kconfig
+ > @@ -221,6 +221,9 @@ config NEED_RET_TO_USER
+ >  config ARCH_MTD_XIP
+ >  	bool
+ >
+ > +config HAVE_SMCCC
+ > +	bool
+ > +
+ >  config VECTORS_BASE
+ >  	hex
+ >  	default 0xffff0000 if MMU || CPU_HIGH_VECTOR
+ > @@ -324,6 +327,7 @@ config ARCH_MULTIPLATFORM
+ >  	select CLKSRC_OF
+ >  	select COMMON_CLK
+ >  	select GENERIC_CLOCKEVENTS
+ > +	select HAVE_SMCCC if CPU_V7
+ >  	select MIGHT_HAVE_PCI
+ >  	select MULTI_IRQ_HANDLER
+ >  	select SPARSE_IRQ
+ > diff --git a/arch/arm/kernel/Makefile b/arch/arm/kernel/Makefile
+ > index 752725d..8cdd25b 100644
+ > --- a/arch/arm/kernel/Makefile
+ > +++ b/arch/arm/kernel/Makefile
+ > @@ -90,4 +90,6 @@ obj-y				+= psci.o psci-call.o
+ >  obj-$(CONFIG_SMP)		+= psci_smp.o
+ >  endif
+ >
+ > +obj-$(CONFIG_HAVE_SMCCC)	+= smccc-call.o smccc.o
+ > +
+ >  extra-y := $(head-y) vmlinux.lds
+ > diff --git a/arch/arm/kernel/smccc-call.S b/arch/arm/kernel/smccc-call.S
+ > new file mode 100644
+ > index 0000000..05bc554
+ > --- /dev/null
+ > +++ b/arch/arm/kernel/smccc-call.S
+ > @@ -0,0 +1,26 @@
+ > +/*
+ > + * Copyright (c) 2015, Linaro Limited
+ > + *
+ > + * This software is licensed under the terms of the GNU General Public
+ > + * License version 2, as published by the Free Software Foundation, and
+ > + * may be copied, distributed, and modified under those terms.
+ > + *
+ > + * This program is distributed in the hope that it will be useful,
+ > + * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ > + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ > + * GNU General Public License for more details.
+ > + *
+ > + */
+ > +#include <linux/linkage.h>
+ > +
+ > +#include <asm/opcodes-sec.h>
+ > +
+ > +/* void smccc_call32(struct smccc_param32 *param) */
+ > +ENTRY(smccc_call32)
+ > +	push	{r4-r8, lr}
+ > +	mov	r8, r0
+ > +	ldm	r8, {r0-r7}
+ > +	__SMC(0)
+ > +	stm	r8, {r0-r7}
+ > +	pop	{r4-r8, pc}
+ > +ENDPROC(smccc_call32)
+ > diff --git a/arch/arm/kernel/smccc.c b/arch/arm/kernel/smccc.c
+ > new file mode 100644
+ > index 0000000..ba4039e
+ > --- /dev/null
+ > +++ b/arch/arm/kernel/smccc.c
+ > @@ -0,0 +1,17 @@
+ > +/*
+ > + * Copyright (c) 2015, Linaro Limited
+ > + *
+ > + * This software is licensed under the terms of the GNU General Public
+ > + * License version 2, as published by the Free Software Foundation, and
+ > + * may be copied, distributed, and modified under those terms.
+ > + *
+ > + * This program is distributed in the hope that it will be useful,
+ > + * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ > + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ > + * GNU General Public License for more details.
+ > + *
+ > + */
+ > +#include <linux/export.h>
+ > +#include <linux/arm-smccc.h>
+ > +
+ > +EXPORT_SYMBOL_GPL(smccc_call32);
+ > diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
+ > index 7796af4..b3ea778 100644
+ > --- a/arch/arm64/Kconfig
+ > +++ b/arch/arm64/Kconfig
+ > @@ -83,6 +83,7 @@ config ARM64
+ >  	select SPARSE_IRQ
+ >  	select SYSCTL_EXCEPTION_TRACE
+ >  	select HAVE_CONTEXT_TRACKING
+ > +	select HAVE_SMCCC
+ >  	help
+ >  	  ARM 64-bit (AArch64) Linux support.
+ >
+ > @@ -146,6 +147,9 @@ config KERNEL_MODE_NEON
+ >  config FIX_EARLYCON_MEM
+ >  	def_bool y
+ >
+ > +config HAVE_SMCCC
+ > +	bool
+ > +
+ >  config PGTABLE_LEVELS
+ >  	int
+ >  	default 2 if ARM64_64K_PAGES && ARM64_VA_BITS_42
+ > diff --git a/arch/arm64/kernel/Makefile b/arch/arm64/kernel/Makefile
+ > index 426d076..f7804f7 100644
+ > --- a/arch/arm64/kernel/Makefile
+ > +++ b/arch/arm64/kernel/Makefile
+ > @@ -36,6 +36,7 @@ arm64-obj-$(CONFIG_EFI)			+= efi.o efi-stub.o 
+efi-entry.o
+ >  arm64-obj-$(CONFIG_PCI)			+= pci.o
+ >  arm64-obj-$(CONFIG_ARMV8_DEPRECATED)	+= armv8_deprecated.o
+ >  arm64-obj-$(CONFIG_ACPI)		+= acpi.o
+ > +arm64-obj-$(CONFIG_HAVE_SMCCC)		+= smccc-call.o smccc.o
+ >
+ >  obj-y					+= $(arm64-obj-y) vdso/
+ >  obj-m					+= $(arm64-obj-m)
+ > diff --git a/arch/arm64/kernel/smccc-call.S 
+b/arch/arm64/kernel/smccc-call.S
+ > new file mode 100644
+ > index 0000000..3ce7fe8
+ > --- /dev/null
+ > +++ b/arch/arm64/kernel/smccc-call.S
+ > @@ -0,0 +1,34 @@
+ > +/*
+ > + * Copyright (c) 2015, Linaro Limited
+ > + *
+ > + * This program is free software; you can redistribute it and/or modify
+ > + * it under the terms of the GNU General Public License Version 2 as
+ > + * published by the Free Software Foundation.
+ > + *
+ > + * This program is distributed in the hope that it will be useful,
+ > + * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ > + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ > + * GNU General Public License for more details.
+ > + *
+ > + */
+ > +#include <linux/linkage.h>
+ > +
+ > +#define SMC_PARAM_W0_OFFS	0
+ > +#define SMC_PARAM_W2_OFFS	8
+ > +#define SMC_PARAM_W4_OFFS	16
+ > +#define SMC_PARAM_W6_OFFS	24
+ > +
+ > +/* void smccc_call32(struct smccc_param32 *param) */
+ > +ENTRY(smccc_call32)
+ > +	stp	x28, x30, [sp, #-16]!
+ > +	mov	x28, x0
+ > +	ldp	w0, w1, [x28, #SMC_PARAM_W0_OFFS]
+ > +	ldp	w2, w3, [x28, #SMC_PARAM_W2_OFFS]
+ > +	ldp	w4, w5, [x28, #SMC_PARAM_W4_OFFS]
+ > +	ldp	w6, w7, [x28, #SMC_PARAM_W6_OFFS]
+ > +	smc	#0
+ > +	stp	w0, w1, [x28, #SMC_PARAM_W0_OFFS]
+ > +	stp	w2, w3, [x28, #SMC_PARAM_W2_OFFS]
+ > +	ldp	x28, x30, [sp], #16
+ > +	ret
+ > +ENDPROC(smccc_call32)
+ > diff --git a/arch/arm64/kernel/smccc.c b/arch/arm64/kernel/smccc.c
+ > new file mode 100644
+ > index 0000000..ba4039e
+ > --- /dev/null
+ > +++ b/arch/arm64/kernel/smccc.c
+ > @@ -0,0 +1,17 @@
+ > +/*
+ > + * Copyright (c) 2015, Linaro Limited
+ > + *
+ > + * This software is licensed under the terms of the GNU General Public
+ > + * License version 2, as published by the Free Software Foundation, and
+ > + * may be copied, distributed, and modified under those terms.
+ > + *
+ > + * This program is distributed in the hope that it will be useful,
+ > + * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ > + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ > + * GNU General Public License for more details.
+ > + *
+ > + */
+ > +#include <linux/export.h>
+ > +#include <linux/arm-smccc.h>
+ > +
+ > +EXPORT_SYMBOL_GPL(smccc_call32);
+ > diff --git a/include/linux/arm-smccc.h b/include/linux/arm-smccc.h
+ > new file mode 100644
+ > index 0000000..9b8d775
+ > --- /dev/null
+ > +++ b/include/linux/arm-smccc.h
+ > @@ -0,0 +1,79 @@
+ > +/*
+ > + * Copyright (c) 2015, Linaro Limited
+ > + *
+ > + * This software is licensed under the terms of the GNU General Public
+ > + * License version 2, as published by the Free Software Foundation, and
+ > + * may be copied, distributed, and modified under those terms.
+ > + *
+ > + * This program is distributed in the hope that it will be useful,
+ > + * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ > + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ > + * GNU General Public License for more details.
+ > + *
+ > + */
+ > +#ifndef __LINUX_ARM_SMCCC_H
+ > +#define __LINUX_ARM_SMCCC_H
+ > +
+ > +#include <linux/types.h>
+ > +
+ > +/*
+ > + * This file provideds defines common defines for ARM SMC Calling
 
---Qbvjkv9qwOGw/5Fx
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+typos here?
 
-On Wed, Aug 19, 2015 at 01:13:59PM +0900, Yoshihiro Shimoda wrote:
-> This patch adds support for R-Car SoCs PWM Timer. The PWM timer of
-> R-Car H2 has 7 channels. So, we can use the channels if we describe
-> device tree nodes.
->=20
-> Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-> Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
-> ---
->  drivers/pwm/Kconfig    |  11 ++
->  drivers/pwm/Makefile   |   1 +
->  drivers/pwm/pwm-rcar.c | 265 +++++++++++++++++++++++++++++++++++++++++++=
-++++++
->  3 files changed, 277 insertions(+)
->  create mode 100644 drivers/pwm/pwm-rcar.c
+ > + * Convention as specified in
+ > + * http://infocenter.arm.com/help/topic/com.arm.doc.den0028a/index.html
+ > + */
+ > +
+ > +#define SMCCC_SMC_32			(0 << 30)
 
-Found a couple more things. No need to respin for any of these, I can
-make the changes when applying, but I'd like confirmation on a couple
-of things below.
+0 << 30 is just 0, and so meaningless.
+It's better to introduce SMCCC_IS_32() macro instead.
 
-[...]
-> diff --git a/drivers/pwm/pwm-rcar.c b/drivers/pwm/pwm-rcar.c
-[...]
-> +static int rcar_pwm_set_counter(struct rcar_pwm_chip *rp, int div, int d=
-uty_ns,
-> +				int period_ns)
-> +{
-> +	unsigned long long one_cycle, tmp;	/* 0.01 nanoseconds */
+ > +#define SMCCC_SMC_64			(1 << 30)
+ > +#define SMCCC_FAST_CALL			(1 << 31)
+ > +#define SMCCC_STD_CALL			(0 << 31)
 
-I'm not quite sure why you need the extra multiplication and division by
-100 here. Is this for extra accuracy?
+The same
 
-> +	unsigned long clk_rate =3D clk_get_rate(rp->clk);
-> +	u32 cyc, ph;
-> +
-> +	one_cycle =3D (unsigned long long)NSEC_PER_SEC * 100ULL * (1 << div);
-> +	do_div(one_cycle, clk_rate);
-> +
-> +	tmp =3D period_ns * 100ULL;
-> +	do_div(tmp, one_cycle);
-> +	cyc =3D (tmp << RCAR_PWMCNT_CYC0_SHIFT) & RCAR_PWMCNT_CYC0_MASK;
-> +
-> +	tmp =3D duty_ns * 100ULL;
-> +	do_div(tmp, one_cycle);
-> +	ph =3D tmp & RCAR_PWMCNT_PH0_MASK;
-> +
-> +	/* Avoid prohibited setting */
-> +	if (cyc !=3D 0 && ph !=3D 0) {
-> +		rcar_pwm_write(rp, cyc | ph, RCAR_PWMCNT);
-> +		return 0;
-> +	} else {
-> +		return -EINVAL;
-> +	}
-
-I think the ordering here is unintuitive, better would be:
-
-	if (cyc =3D=3D 0 || ph =3D=3D 0)
-		return -EINVAL;
-
-	rcar_pwm_write(rp, cyc | ph, RCAR_PWMCNT);
-
-	return 0;
-
-> +static int rcar_pwm_config(struct pwm_chip *chip, struct pwm_device *pwm,
-> +			   int duty_ns, int period_ns)
-> +{
-> +	struct rcar_pwm_chip *rp =3D to_rcar_pwm_chip(chip);
-> +	int div =3D rcar_pwm_get_clock_division(rp, period_ns);
-> +	int ret;
-> +
-> +	if (div < 0)
-> +		return div;
-> +
-> +	/* Let the core driver set pwm->period if disabled and duty_ns =3D=3D 0=
- */
-> +	if (!test_bit(PWMF_ENABLED, &pwm->flags) && !duty_ns)
-> +		return 0;
-> +
-> +	rcar_pwm_bit_modify(rp, RCAR_PWMCR_SYNC, RCAR_PWMCR_SYNC, RCAR_PWMCR);
-> +	ret =3D rcar_pwm_set_counter(rp, div, duty_ns, period_ns);
-> +	rcar_pwm_set_clock_control(rp, div);
-> +	rcar_pwm_bit_modify(rp, RCAR_PWMCR_SYNC, 0, RCAR_PWMCR);
-
-Just making sure: is it correct to execute the above two lines even if
-ret < 0?
-
-> +static int rcar_pwm_probe(struct platform_device *pdev)
-> +{
-> +	struct rcar_pwm_chip *rcar_pwm;
-> +	struct resource *res;
-> +	int ret;
-> +
-> +	rcar_pwm =3D devm_kzalloc(&pdev->dev, sizeof(*rcar_pwm), GFP_KERNEL);
-> +	if (rcar_pwm =3D=3D NULL)
-> +		return -ENOMEM;
-> +
-> +	res =3D platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> +	rcar_pwm->base =3D devm_ioremap_resource(&pdev->dev, res);
-> +	if (IS_ERR(rcar_pwm->base))
-> +		return PTR_ERR(rcar_pwm->base);
-> +
-> +	rcar_pwm->clk =3D devm_clk_get(&pdev->dev, NULL);
-> +	if (IS_ERR(rcar_pwm->clk)) {
-> +		dev_err(&pdev->dev, "cannot get clock\n");
-> +		return PTR_ERR(rcar_pwm->clk);
-> +	}
-> +
-> +	platform_set_drvdata(pdev, rcar_pwm);
-> +
-> +	rcar_pwm->chip.dev =3D &pdev->dev;
-> +	rcar_pwm->chip.ops =3D &rcar_pwm_ops;
-> +	rcar_pwm->chip.of_xlate =3D of_pwm_xlate_with_flags;
-
-This seems to be missing a:
-
-	rcar_pwm->chip.of_pwm_n_cells =3D 3;
-
-?
-
-Thierry
-
---Qbvjkv9qwOGw/5Fx
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQIcBAABCAAGBQJV1FVhAAoJEN0jrNd/PrOh32cP/ROFq1aDJ0F9X02hr/hDvdc1
-6TnIHKRWKj8dk6wAS6lpDp0FQUj69x2xxAq3rj5E9bRi9JQgK88fWYlC8tkDxzdQ
-DHfst/q5OBlGNxoAv1f7cRxyrFyh5d0MNtBTLmxBwCzAcCd0rsAM7PhZ8m/sMZs/
-gsbfYfNJIhgTlHJ8y5QbjsyrG9IZm49Hiw0PH+ImLNm4QQZO6MF2Gyl35d/g845/
-UYWNYWRo+qI37OMJUTcISNttgKDTuIcbv+YRFObSLbe95zo88Y29XT2dEcnfRwvI
-vJMjzNAFXnmpcFnysWjxw0HgCpuIu6E2Ig1CWl5wrJG7A0dDwUxG/uvSUcJE4/+5
-tUwIq/xeVoqKAPtGLTmKKRAxG6Ue8MUMsktZENg+77nfxXh945kf7lDnV2hj8XMT
-w05vAIVqHsA4NmguWwlu8eRnSlDjFjnfYFqQiwrSQbvXaHXK5j5gtX97hodYaJuH
-OfYYKOHzZZ71jou1AYVuVhC2L2UYxKEZiVqxTSHlg5c0i4aLkhJ0npBCLcIMnt38
-EpuTldcll9HaaNjjf0r6Tsgq3P8kdJwwjVEh/2uY1VZ6fGWSDdd1v4gq+wK3G5rn
-GsVYKbe6PpcRGcZiOYUnAezj3ynGanOxxhREpKAkKiDYqdJeI44tufjP4Ywl/fgt
-65J9aCuYu9iS9HLfad6t
-=YxoN
------END PGP SIGNATURE-----
-
---Qbvjkv9qwOGw/5Fx--
+ > +
+ > +#define SMCCC_OWNER_MASK		0x3F
+ > +#define SMCCC_OWNER_SHIFT		24
+ > +
+ > +#define SMCCC_FUNC_MASK			0xFFFF
+ > +
+ > +#define SMCCC_IS_FAST_CALL(smc_val)	((smc_val) & SMCCC_FAST_CALL)
+ > +#define SMCCC_IS_64(smc_val)		((smc_val) & SMCCC_SMC_64)
+ > +#define SMCCC_FUNC_NUM(smc_val)		((smc_val) & SMCCC_FUNC_MASK)
+ > +#define SMCCC_OWNER_NUM(smc_val) \
+ > +	(((smc_val) >> SMCCC_OWNER_SHIFT) & SMCCC_OWNER_MASK)
+ > +
+ > +#define SMCCC_CALL_VAL(type, calling_convention, owner, func_num) \
+ > +			((type) | (calling_convention) | \
+ > +			(((owner) & SMCCC_OWNER_MASK) << SMCCC_OWNER_SHIFT) | \
+ > +			((func_num) & SMCCC_FUNC_MASK))
+ > +
+ > +#define SMCCC_OWNER_ARCH		0
+ > +#define SMCCC_OWNER_CPU			1
+ > +#define SMCCC_OWNER_SIP			2
+ > +#define SMCCC_OWNER_OEM			3
+ > +#define SMCCC_OWNER_STANDARD		4
+ > +#define SMCCC_OWNER_TRUSTED_APP		48
+ > +#define SMCCC_OWNER_TRUSTED_APP_END	49
+ > +#define SMCCC_OWNER_TRUSTED_OS		50
+ > +#define SMCCC_OWNER_TRUSTED_OS_END	63
+ > +
+ > +struct smccc_param32 {
+ > +	u32 a0;
+ > +	u32 a1;
+ > +	u32 a2;
+ > +	u32 a3;
+ > +	u32 a4;
+ > +	u32 a5;
+ > +	u32 a6;
+ > +	u32 a7;
+ > +};
+ > +
+ > +/**
+ > + * smccc_call32() - make ARCH32 SMC calls
+ > + * @param: values to pass in registers 0 to 7
+ > + *
+ > + * This function is used to make SMC calls following SMC Calling 
+Convention
+ > + * for ARCH32 calls. The content of the supplied param are copied to
+ > + * registers 0 to 7 prior to the SMC instruction. Values a0..a3 are 
+updated
+ > + * with the content from register 0 to 3 on return from the SMC
+ > + * instruction.
+ > + */
+ > +void smccc_call32(struct smccc_param32 *param);
+ > +
+ > +#endif /*__LINUX_ARM_SMCCC_H*/
+ > --
+ > 1.9.1
+ >
+ >
+ > _______________________________________________
+ > linux-arm-kernel mailing list
+ > linux-arm-kernel@lists.infradead.org
+ > http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
