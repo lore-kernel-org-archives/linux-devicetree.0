@@ -1,13 +1,13 @@
 From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: [PATCH v3 7/8] ARM: dts: sun8i: ippo-q8h-v5: Enable
+Subject: [PATCH v3 8/8] ARM: dts: sun8i: sinlinx-sina33: Enable
  Reduced Serial Bus controller
-Date: Wed, 19 Aug 2015 12:20:08 +0800
-Message-ID: <1439958009-14056-8-git-send-email-wens@csie.org>
+Date: Wed, 19 Aug 2015 12:20:09 +0800
+Message-ID: <1439958009-14056-9-git-send-email-wens@csie.org>
 References: <1439958009-14056-1-git-send-email-wens@csie.org>
 Reply-To: wens-jdAy2FN1RRM@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBCMILY6JWQBBBGEI2CXAKGQEK4UZRYQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-sunxi+bncBCMILY6JWQBBBGMI2CXAKGQEUOFSCCY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 In-Reply-To: <1439958009-14056-1-git-send-email-wens-jdAy2FN1RRM@public.gmane.org>
 List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
@@ -24,14 +24,14 @@ The Reduced Serial Bus controller is used to talk to the onboard PMIC.
 
 Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
 ---
- arch/arm/boot/dts/sun8i-a23-ippo-q8h-v5.dts | 4 ++++
+ arch/arm/boot/dts/sun8i-a33-sinlinx-sina33.dts | 4 ++++
  1 file changed, 4 insertions(+)
 
-diff --git a/arch/arm/boot/dts/sun8i-a23-ippo-q8h-v5.dts b/arch/arm/boot/dts/sun8i-a23-ippo-q8h-v5.dts
-index 8d9da6886a4c..2e45a82c8981 100644
---- a/arch/arm/boot/dts/sun8i-a23-ippo-q8h-v5.dts
-+++ b/arch/arm/boot/dts/sun8i-a23-ippo-q8h-v5.dts
-@@ -120,6 +120,10 @@
+diff --git a/arch/arm/boot/dts/sun8i-a33-sinlinx-sina33.dts b/arch/arm/boot/dts/sun8i-a33-sinlinx-sina33.dts
+index 1d5390d4e03a..13ce68f06dd6 100644
+--- a/arch/arm/boot/dts/sun8i-a33-sinlinx-sina33.dts
++++ b/arch/arm/boot/dts/sun8i-a33-sinlinx-sina33.dts
+@@ -130,6 +130,10 @@
  	};
  };
  
@@ -39,8 +39,8 @@ index 8d9da6886a4c..2e45a82c8981 100644
 +	status = "okay";
 +};
 +
- &r_uart {
+ &uart0 {
  	pinctrl-names = "default";
- 	pinctrl-0 = <&r_uart_pins_a>;
+ 	pinctrl-0 = <&uart0_pins_b>;
 -- 
 2.5.0
