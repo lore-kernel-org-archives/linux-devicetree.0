@@ -1,118 +1,166 @@
-From: Roy Pledge <roy.pledge-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: RE: [PATCH 1/2] powerpc/qman: Change fsl,qman-channel-id to
- cell-index
-Date: Wed, 19 Aug 2015 20:52:55 +0000
-Message-ID: <BN3PR0301MB12670C0BE318280D1C53FE0F8C670@BN3PR0301MB1267.namprd03.prod.outlook.com>
-References: <1429311187-19062-1-git-send-email-scottwood@freescale.com>
-	 <BN3PR0301MB126796C0EC18EEBB26702C588CD10@BN3PR0301MB1267.namprd03.prod.outlook.com>
-	 <1430858734.16357.256.camel@freescale.com>
-	 <BN3PR0301MB1267E5A61E7E5BC2789F9E898CDA0@BN3PR0301MB1267.namprd03.prod.outlook.com>
- <1431470762.16357.511.camel@freescale.com>
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Subject: Re: [PATCH 3/4 v3][RFC] arm64: renesas: Add initial r8a7795 SoC support
+Date: Thu, 20 Aug 2015 00:29:57 +0300
+Message-ID: <12310001.Bt8qbPIiMv@avalon>
+References: <877fpdw3av.wl%kuninori.morimoto.gx@renesas.com> <20150818002018.31346.63666@quantum> <CAMuHMdXDuG5izkMCrBmTtznbFNQzXUVLKTrG9a_K=L2qbbkv5Q@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1431470762.16357.511.camel-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Cc: "linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Madalin-Cristian Bucur <madalin.bucur-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Haiying Wang <Haiying.Wang-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <CAMuHMdXDuG5izkMCrBmTtznbFNQzXUVLKTrG9a_K=L2qbbkv5Q@mail.gmail.com>
+Sender: linux-sh-owner@vger.kernel.org
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Michael Turquette <mturquette@baylibre.com>, Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>, Simon <horms@verge.net.au>, Magnus <magnus.damm@gmail.com>, Linux-sh list <linux-sh@vger.kernel.org>, linux-clk@vger.kernel.org, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-U29ycnkgZm9yIGRpZ2dpbmcgdXAgYW4gb2xkIHRocmVhZCBoZXJlIFNjb3R0LCBidXQgd2UgbmV2
-ZXIgZGlkIGNsb3NlIG9uIHRoaXMgZGlzY3Vzc2lvbi4gIFNlZSBteSByZXBsaWVzIGlubGluZSBi
-ZWxvdy4uLi4NCg0KPiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBXb29kIFNj
-b3R0LUIwNzQyMQ0KPiBTZW50OiBUdWVzZGF5LCBNYXkgMTIsIDIwMTUgNjo0NiBQTQ0KPiBUbzog
-UGxlZGdlIFJveS1SMDEzNTYNCj4gQ2M6IGxpbnV4cHBjLWRldkBsaXN0cy5vemxhYnMub3JnOyBk
-ZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZzsgQnVjdXINCj4gTWFkYWxpbi1DcmlzdGlhbi1CMzI3
-MTYNCj4gU3ViamVjdDogUmU6IFtQQVRDSCAxLzJdIHBvd2VycGMvcW1hbjogQ2hhbmdlIGZzbCxx
-bWFuLWNoYW5uZWwtaWQgdG8gY2VsbC0NCj4gaW5kZXgNCj4gDQo+IE9uIFR1ZSwgMjAxNS0wNS0x
-MiBhdCAxNjoxOSAtMDUwMCwgUGxlZGdlIFJveS1SMDEzNTYgd3JvdGU6DQo+ID4gPiA+DQo+ID4g
-PiA+IEkgZG9uJ3QgYmVsaWV2ZSB0aGlzIGlzIGNvcnJlY3QgLSBsZXQgbWUgZXhwbGFpbiB0aGUg
-cmF0aW9uYWwgd2h5DQo+ID4gPiA+IHdlIGhhZCB0d28NCj4gPiA+IHByb3BlcnRpZXMgaW4gdGhl
-IFFNYW4gcG9ydGFsIHRvIGJlZ2luIHdpdGguDQo+ID4gPiA+DQo+ID4gPiA+IFRoZSB0d28gcHJv
-cGVydGllcyBpbiBxdWVzdGlvbiBhcmUgY2VsbC1pbmRleCBhbmQgZnNsLHFtYW4tY2hhbm5lbC1p
-ZC4NCj4gPiA+ID4NCj4gPiA+ID4gVGhlIGNlbGwtaW5kZXggcHJvcGVydHkgaXMgdXNlZCBpbiB1
-LWJvb3QgYXMgYW4gaW5kZXggZm9yIHRoZQ0KPiA+ID4gPiBzb2Z0d2FyZSBwb3J0YWwNCj4gPiA+
-IElEIHdoZW4gYWRkaW5nIHRoZSBmc2wsbGlvZG4gZnJvbSB0aGUgVS1ib290IHRhYmxlIGludG8g
-dGhlIGRldmljZSB0cmVlLg0KPiA+ID4NCj4gPiA+IFRoZSBkZXZpY2UgdHJlZSBpcyBub3Qgc3Vw
-cG9zZWQgdG8gY29udGFpbiBhcmJpdHJhcnkgc29mdHdhcmUgaWRlbnRpZmllcnMuDQo+ID4NCj4g
-PiBJIGFncmVlIC0gdGhpcyBpcyB3aHkgdGhlIG9yaWdpbmFsIGRldmljZSB0cmVlIGJpbmRpbmdz
-IHJlbW92ZWQNCj4gPiBjZWxsLWluZGV4IGFzIGl0IGNhbiBiZSBjYWxjdWxhdGVkLg0KPiAgVW5m
-b3J0dW5hdGVseSB1LWJvb3QgcmVsaWVkIG9uDQo+ID4gdGhpcyB2YWx1ZSBiZWluZyBwcmVzZW50
-IHNvIHRvIGJlIGJhY2t3YXJkIGNvbXBhdGlibGUgd2UgZG9uJ3QgaGF2ZSBhDQo+ID4gd2F5IHRv
-IHJlbW92ZSBpdC4gIEknbSBub3Qgc3VyZSBvbiB3aGF0IHRoZSBwcm9jZWR1cmUgaXMgdG8gY2hh
-bmdlDQo+ID4gdGhpbmdzIHUtYm9vdCByZWxpZXMgb24sDQo+IA0KPiBHZW5lcmFsbHkgdGhlIHBy
-b2NlZHVyZSBpcyB0aGF0IHdlIGRvbid0IGNoYW5nZSBpdC4gIEl0IHdvdWxkbid0IGJlIHNvIGJh
-ZCBpZg0KPiB1c2luZyBhbiBvbGQgVS1Cb290IGp1c3QgbWVhbnQgdGhhdCBkYXRhcGF0aCBkb2Vz
-bid0IHdvcmsgd2l0aCB1cHN0cmVhbQ0KPiBrZXJuZWxzIChzaW5jZSB0aGF0IGRvZXNuJ3Qgd29y
-ayBub3cpLCBidXQgYSBkdHMgdGhhdCBtYWtlcyBleGlzdGluZyBVLUJvb3QNCj4gY3Jhc2ggaXMg
-YW5vdGhlciBtYXR0ZXIuDQoNCklmIHRoaXMgaXMgdHJ1ZSB0aGVuIHdlIGNhbiBuZXZlciByZW1v
-dmUgdGhlIGNlbGwtaW5kZXggcHJvcGVydHkuICBUaGUgY2VsbC1pbmRleCBpbiB0aGlzIGNhc2Ug
-aXMgcmVmZXJyaW5nIHRvIHRoZSBwb3J0YWwgaW5kZXggd2hpY2ggY291bGQgYmUgY2FsY3VsYXRl
-ZCBmcm9tIHRoZSBxbWFuLXBvcnRhbEBYWFhYIHZhbHVlLiAgTXkgcHJlZmVyZW5jZSB3b3VsZCBi
-ZSB0byBlbGltaW5hdGUgY2VsbC1pbmRleCBhbmQgcmVwbGFjZSBpdCB3aXRoIHRoaXMgY2FsY3Vs
-YXRpb24gYnV0IHRoYXQgd291bGQgbWVhbiBvbGRlciB1LWJvb3Qgd291bGQgZmFpbCB0byB3b3Jr
-IHdpdGggbmV3ZXIga2VybmVsLiAgV2hpbGUgdGhlIGJ1ZyB0aGF0IGNhdXNlZCBvbGRlciB1LWJv
-b3QgdG8gY3Jhc2ggaWYgdGhpcyBwcm9wZXJ0eSBpcyBhbm5veWluZyB0aGlzIGhhcyBiZWVuIGFk
-ZHJlc3NlZCBpbiBtb3JlIHJlY2VudCB1LWJvb3RzLiBJIGNhbid0IGNvbW1lbnQgb24gYSBwb2xp
-Y3kgd2hlcmUgdS1ib290IG11c3QgYWx3YXlzIGJvb3QgbmV3ZXIgdmVyc2lvbiBvZiBMaW51eCAt
-IHRoYXQgbWVhbnMgTGludXggd2lsbCBoYXZlIHRvIGRyYWcgYWxvbmcgYmFnZ2FnZSBsaWtlIHRo
-aXMgcHJvcGVydHkgZm9yIGEgbG9uZyB0aW1lIChmb3JldmVyPykuIA0KDQo+ID4gPg0KPiA+ID4g
-PiBUaGUgIGZzbCxxbWFuLWNoYW5uZWwtaWQgcHJvcGVydHkgaXMgdXNlZCBpbiBMaW51eCBhbmQg
-Y29ycmVzcG9uZHMNCj4gPiA+ID4gdG8gYSBoYXJkd2FyZSB2YWx1ZSB0aGF0IGluZGljYXRlcyB3
-aGljaCBjaGFubmVsIGlzIGRlZGljYXRlZCB0bw0KPiA+ID4gPiB0aGUgc29mdHdhcmUgcG9ydGFs
-Lg0KPiA+ID4gPg0KPiA+ID4gPiBXaGlsZSBJJ20gbm90IGF3YXJlIG9mIGEgY3VycmVudCBTb0Mg
-d2hlcmUgdGhlIGNoYW5uZWwgSUQgZm9yIGENCj4gPiA+ID4gc29mdHdhcmUgcG9ydGFsIGRvZXMg
-bm90IG1hdGNoIHRoZSBpbmRleCAoaS5lLiBTV1AgMCB1c2VzIGNoYW5uZWwNCj4gPiA+ID4gMCwN
-Cj4gPiA+ID4gZXRjLikNCj4gPiA+DQo+ID4gPiBUaHVzIHRoZXJlJ3Mgbm8gYmFja3dhcmQgY29t
-cGF0aWJpbGl0eSBpc3N1ZSB3aXRoIHJlZGVmaW5pbmcNCj4gPiA+IGNlbGwtaW5kZXggdG8gbWVh
-biB0aGUgY2hhbm5lbCBJRC4NCj4gPg0KPiA+IENoYW5uZWwgSURzIGRvIGNoYW5nZSBhbmQgYXJl
-IGRlZmluZWQgd2hlbiB0aGUgU29DIGlzIGNyZWF0ZWQNCj4gDQo+IEJ1dCBmb3IgU29DcyB0aGF0
-IGFscmVhZHkgZXhpc3QsIHRoZXkgd29uJ3QgY2hhbmdlLCByaWdodD8gIFdlIGRvbid0IG5lZWQg
-dG8NCj4gY2FyZSBhYm91dCB3aGF0IGV4aXN0aW5nIFUtQm9vdCBkb2VzIG9uIG5ldyBTb0NzLCBz
-aW5jZSBVLUJvb3Qgd291bGQNCj4gbmVlZCB0byBiZSBjaGFuZ2VkIHRvIHN1cHBvcnQgdGhlIG5l
-dyBTb0MgYXQgYWxsLg0KDQpUaGlzIGNvZGUgaXNuJ3QgbG9va2luZyBhdCBTb0MgcHJvZHVjdCBu
-dW1iZXJzIC0gdGhlIHdob2xlIHBvaW50IG9mIHB1dHRpbmcgdGhpcyBpbiB0aGUgZGV2aWNlIHRy
-ZWUgaXMgdG8gYXZvaWQgZG9pbmcganVzdCB0aGF0LiAgSWYgd2UgaGFkIHRvIGFkZCBjb2RlIGZv
-ciBlYWNoIFNvQyB0byB1LWJvb3Qgd2UgbWF5IGFzIHdlbGwgZ2V0IHJpZCBvZiB0aGUgZGV2aWNl
-IHRyZWUgYW5kIGhhcmRjb2RlIHRoaXMgY29uZmlndXJhdGlvbiBpbiB0aGUgc291cmNlIGZpbGUg
-dGhhdCBpcyBTb0Mgc3BlY2lmaWMuDQoNCj4gDQo+ID4gIChsb29rIGF0IGNoZWNrcyBmb3IgUU1h
-biB2ZXJzaW9ucyBhbmQgYWRqdXN0bWVudHMgZm9yIFBvb2wgQ2hhbm5lbA0KPiA+IElEcyBpbiB0
-aGUgZHJpdmVyKS4gIElmIHRoZSBjaGFubmVsIElEIGZvciBwb3J0YWwgMCBldmVyIGJlY29tZXMg
-bm9uDQo+ID4gemVybyB3ZSBqdXN0IGVuZCB1cCBoYXZpbmcgdG8gbWFrZSBhIG1lc3MgaW4gdGhl
-IGNvZGUgb3IgcmVpbnRyb2R1Y2UNCj4gPiB0aGlzIGZpZWxkLg0KPiANCj4gV2hhdCBkZWZpbmVz
-IHRoYXQgcG9ydGFsIGFzICJwb3J0YWwgMCI/DQoNClBvcnRhbCAwIGlzIHBvcnRhbCAwIGJlY2F1
-c2UgaXQgaXMgYXQgb2Zmc2V0IDAgaW4gdGhlIFFNYW4gcG9ydGFsIG1lbW9yeSByZWdpb24uICBQ
-b3J0YWwgMSBpcyBhdCAweDQwMDAgZXRjLi4uICBOb3RlIHRoYXQgdGhpcyBpcyBub3QgdGhlIGNh
-c2UgZm9yIGZvcnRoY29taW5nIEFSTSBkZXZpY2VzIGFzIHBvcnRhbHMgYXJlIGRpc3RyaWJ1dGVk
-IGF0IDY0SyBpbnRlcnZhbHMuICBIb3dldmVyIHNpbmNlIHRoZSBkZXZpY2UgdHJlZSBwYXJzaW5n
-IGNvZGUgZm9yIEFSTSBpcyBzZXBhcmF0ZSBmcm9tIHRoZSBQUEMgY29kZSB0aGlzIHdpbGwgbm90
-IHBvc2UgYW55IGlzc3VlLg0KDQoNCj4gDQo+ID4gPiA+IGl0IGlzIHBvc3NpYmxlIHRoYXQgZnV0
-dXJlIFNvQ3MgY291bGQgc3RyYXkgZnJvbSB0aGlzIG1vZGVsLCB0aGVyZQ0KPiA+ID4gPiBpcyBu
-byByZWFzb24gZm9yIHBvcnRhbCBpbmRleCB0byBlcXVhbCBjaGFubmVsIElEIGF0IGFsbCB0aW1l
-cy4NCj4gPiA+DQo+ID4gPiBIb3cgY2FuIGZ1dHVyZSBTb0NzIGRpY3RhdGUgaG93IHdlIGFzc2ln
-biBhIHNvZnR3YXJlLWRlZmluZWQNCj4gaWRlbnRpZmllcj8NCj4gPiA+IElmIHNvZnR3YXJlIHdh
-bnRzIGl0IHRvIGJlIHRoZSBzYW1lIGFzIHRoZSBjaGFubmVsIGlkLCB0aGVuIGl0IHdpbGwgYmUu
-DQo+ID4gPg0KPiA+ID4gSWYgdGhlcmUgaXMgc29tZSBhc3BlY3Qgb2YgdGhlIGhhcmR3YXJlIGl0
-c2VsZiAobm90IHRoZQ0KPiA+ID4gZG9jdW1lbnRhdGlvbikgdGhhdCBjZWxsLWluZGV4IGN1cnJl
-bnRseSBjb3JyZXNwb25kcyB0bywgb3RoZXIgdGhhbg0KPiA+ID4gdGhlIGNoYW5uZWwgaWQsIHBs
-ZWFzZSBtYWtlIHRoYXQgY2xlYXIuDQo+ID4NCj4gPiBDaGFubmVsIElEIGlzIGRlZmluZWQgaW4g
-dGhlIFNvQyBSVEwgLSBpdCBpcyBub3QgY29udHJvbGxlZCBieQ0KPiA+IHNvZnR3YXJlIGFuZCBp
-dCBpcyBub3QgYSBzb2Z0d2FyZSBhc3NpZ25lZCBpZGVudGlmaWVyLiAgSXQgaXMgbm90DQo+ID4g
-cG9zc2libGUgZm9yIFNXIHRvIHNldCB0aGVzZSB2YWx1ZXMuDQo+IA0KPiBJIHNhaWQgIm90aGVy
-IHRoYW4gdGhlIGNoYW5uZWwgaWQiLiAgSW4gcGFydGljdWxhciwgSSB3YXMgYXNraW5nIGFib3V0
-IHRoZQ0KPiBjb25jZXB0IG9mICJwb3J0YWwgaW5kZXgiLg0KDQpUaGUgb25seSB0aGluZyBjZWxs
-LWluZGV4IGluZGljYXRlcyBpcyB0aGUgb2Zmc2V0IG9mIHRoZSBwb3J0YWwgaW4gdGhlIFFNYW4g
-YWRkcmVzcyBzcGFjZS4gIExpbnV4IGRvZXNuJ3QgbG9vayBhdCB0aGlzIHZhbHVlLiAgSWYgd2Ug
-Y2FuIGdldCBwYXN0IHRoZSBpc3N1ZSBvZiBvbGQgdS1ib290cyBub3Qgd29ya2luZyBJIHdvdWxk
-IGhhcHBpbHkgcHJvZHVjZSBwYXRjaGVzIHRoYXQgcmVtb3ZlIHRoaXMgZnJvbSB1LWJvb3QgYW5k
-IHRoZSBkZXZpY2UgdHJlZXMgYW5kIHN0YXJ0IHVzaW5nIHVuaXQtYWRkcmVzcyBmb3IgZGV0ZXJt
-aW5pbmcgd2hpY2ggcG9ydGFsIGlzIGJlaW5nIGluZGV4ZWQuICBTaW5jZSBjaGFubmVsLWlkIGlz
-IGEgcHJvcGVydHkgb2YgYSBwb3J0YWwgSSBiZWxpZXZlIGl0IHNob3VsZCBiZSBsZWZ0IGFzIGlz
-LiBJZiBub3QgSSBiZWxpZXZlIGl0IGlzIGJlc3QgdG8gbGVhdmUgYm90aCB2YWx1ZXMgaW4gcGxh
-Y2UgDQoNClJveQ0KIA0KDQo=
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Hello,
+
+On Wednesday 19 August 2015 09:49:28 Geert Uytterhoeven wrote:
+> On Tue, Aug 18, 2015 at 2:20 AM, Michael Turquette wrote:
+> > Quoting Geert Uytterhoeven (2015-08-04 05:34:06)
+> >> On Tue, Aug 4, 2015 at 2:22 PM, Laurent Pinchart wrote:
+> >>> On Monday 03 August 2015 01:53:23 Kuninori Morimoto wrote:
+> >>>> --- /dev/null
+> >>>> +++ b/arch/arm64/boot/dts/renesas/r8a7795.dtsi
+> >>>> @@ -0,0 +1,93 @@
+> >>>> +/ {
+> >>>> +     clocks {
+> >>> 
+> >>> Let's try to make it right from the start on Gen3. The CPG node should
+> >>> be a direct child of the bus node mentioned above, and the MSTP clocks
+> >>> should be children of the CPG node.
+> >> 
+> >> Agreed.
+> >> 
+> >>> I'm not sure where to put the non-memory-mapped clocks though, should
+> >>> they be directly under the root node ? It would make sense for
+> >>> extal_clk, but how about the fixed-factor clocks ? Should they be
+> >>> children of the CPG node too ?
+> >>
+> >> I believe the current trend is to put clocks like "extal_clk" under the
+> >> root node. As the fixed-factor clocks are generated by the CPG module,
+> >> and we do have a device node for it, I'd make them children of the CPG
+> >> node, too.
+> >> 
+> >> Any comments from the clk+dt experts?
+> > 
+> > I don't know if anyone is an expert ;-)
+> > 
+> > extal_clk should be under the root node. That is true for all
+> > board-level clocks and clock controllers.
+> 
+> OK.
+
+I agree too.
+
+> > Within the SoC we want to model the clock controller as a node in DT,
+> > not necessarily all of the individual clocks. So you definitely need a
+> > "cpg" node in DT with #clock-cells > 0.
+> 
+> OK.
+
+Ditto.
+
+> > Whether or not you enumerate the individual clocks in DT is up to you. I
+> > do not like the data-driven approach of putting the clock definition
+> > data into DT. It makes it awkward to do things like set a flag on a
+> > single clock later on. Simply using the clock controller phandle plus
+> > one or more offsets is preferred over a per-clock phandle.
+> > 
+> > Stephen and I have been discussing what a formal clock-controller
+> > binding would look like, and one item we came up with is that any
+> > sub-nodes of the controller would not be allowed to have a #clock-cells
+> > property.
+> 
+> Does that mean #clock-cells is inherited from the parent (cpg) node, or does
+> that preclude having any "fixed-factor-clock" or "renesas,cpg-div6-clock"
+> (both use #clock-cells = <0>), or "renesas,cpg-mstp-clocks" subnodes?
+
+We were thinking about moving the fixed factor clocks and the gate clocks as 
+subnodes as the CPG DT node, as those clocks are provided by the CPG. This 
+would require setting #clock-cells to 1 in the CPG node and to 0 in some of 
+the subnodes. If that's not allowed, how should the fixed factor clocks and 
+gate clocks be declared ?
+
+> > Also, while you're thinking about the perfect clock binding, please do
+> > consider dropping clock-output-names if you can. Specifying clock-names
+> > alongside the clocks property inside of the consumer node is a bit more
+> > elegant in my opinion. This is also a bit easier if you think about
+> > expressing your clock data with C inside of your provider driver.
+> 
+> Makes sense. I don't think anything relies on the "clock-output-names"
+> ... currently.
+> 
+> I was going to use it for identifying the GIC clock, though:
+> 
+> --- a/drivers/clk/shmobile/clk-mstp.c
+> +++ b/drivers/clk/shmobile/clk-mstp.c
+> @@ -144,6 +144,9 @@ cpg_mstp_clock_register(const char *name, const char
+> *paren init.name = name;
+>         init.ops = &cpg_mstp_clock_ops;
+>         init.flags = CLK_IS_BASIC | CLK_SET_RATE_PARENT;
+> +       /* INTC-SYS is the module clock of the GIC, and must not be disabled
+> */
+> +       if (!strcmp(name, "intc-sys"))
+> +               init.flags |= CLK_ENABLE_HAND_OFF;
+>         init.parent_names = &parent_name;
+>         init.num_parents = 1;
+> 
+> (FTR, on R-Car Gen3 the clock is called "intc-ap", not "intc-sys", doh...).
+> 
+> This does put some reliance on (undocumented) naming in DT, though, so not
+> having the "clock-output-names" would solve that.
+
+Using the clock name is indeed very messy, let's avoid that.
+
+> However, while "intc-sys"/"intc-ap" (if existent) is always MSTP408, MSTP408
+> is used for other modules on R-Car Gen1 and most older SoCs. so it would
+> complicate the driver code.
+
+How about setting the flag based on information provided in DT ?
+
+> >>>> +             #address-cells = <2>;
+> >>>> +             #size-cells = <2>;
+> >>>> +             ranges;
+> >>>> +
+> >>>> +             extal_clk: extal_clk {
+> >>>> +                     compatible = "fixed-clock";
+> >>>> +                     #clock-cells = <0>;
+> >>>> +                     clock-frequency = <0>;
+> >>>> +                     clock-output-names = "extal";
+> >>>> +             };
+> >>>> +             cpg_clocks: cpg_clocks@e6150000 {
+> >>>> +                     compatible = "renesas,r8a7795-cpg-clocks",
+> >>>> +                                  "renesas,rcar-gen3-cpg-clocks";
+> >>>> +                     reg = <0 0xe6150000 0 0x1000>;
+> >>>> +                     clocks = <&extal_clk>;
+> >>>> +                     #clock-cells = <1>;
+> >>>> +                     clock-output-names = "main", "pll0",
+> >>>> "pll1","pll2",
+> >>>> +                                          "pll3", "pll4";
+> >>>> +             };
+> >>>> +             p_clk: p_clk {
+> >>>> +                     compatible = "fixed-factor-clock";
+> >>>> +                     clocks = <&cpg_clocks RCAR_GEN3_CLK_PLL1>;
+> >>>> +                     #clock-cells = <0>;
+> >>>> +                     clock-div = <24>;
+> >>>> +                     clock-mult = <1>;
+> >>>> +                     clock-output-names = "p";
+> >>>> +             };
+> >>>> +             mstp3_clks: mstp3_clks@e615013c {
+> >>>> +                     compatible = "renesas,r8a7795-mstp-clocks",
+> >>>> +                                  "renesas,cpg-mstp-clocks";
+> >>>> +                     reg = <0 0xe615013c 0 4>, <0 0xe6150048 0 4>;
+> >>>> +                     clocks =  <&p_clk>;
+> >>>> +                     #clock-cells = <1>;
+> >>>> +                     renesas,clock-indices = <RCAR_GEN3_CLK_IRDA>;
+> >>>> +                     clock-output-names = "irda";
+> >>>> +             };
+> >>>> +     };
+> >>>> +};
+
+-- 
+Regards,
+
+Laurent Pinchart
+
