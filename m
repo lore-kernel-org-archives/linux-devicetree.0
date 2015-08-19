@@ -1,81 +1,133 @@
-From: Mathieu Olivari <mathieu-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: [PATCH 1/2] ARM: qcom: add mdio bus on IPQ806x/AP148
-Date: Wed, 19 Aug 2015 10:53:21 -0700
-Message-ID: <1440006802-2415-1-git-send-email-mathieu@codeaurora.org>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: agross-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mathieu Olivari <mathieu-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+From: Michael Welling <mwelling@ieee.org>
+Subject: Re: [PATCH] input: ti_am335x_tsc: Add open delay parameter
+Date: Wed, 19 Aug 2015 13:08:36 -0500
+Message-ID: <20150819180835.GB29773@deathstar>
+References: <1439318705-18601-1-git-send-email-mwelling@ieee.org>
+ <55CAE71C.4060505@ti.com>
+ <20150812184420.GA2442@deathstar>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-input-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20150812184420.GA2442@deathstar>
+Sender: linux-input-owner@vger.kernel.org
+To: Vignesh R <vigneshr@ti.com>
+Cc: Wolfram Sang <wsa@the-dreams.de>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-input@vger.kernel.org, Jonathan Cameron <jic23@kernel.org>, Brad Griffis <bgriffis@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-Ethernet switch on AP148 is connected through MDIO using GPIO 0 and 1.
-We'll add the new node using the bitbang driver on these two pins.
+On Wed, Aug 12, 2015 at 01:44:22PM -0500, Michael Welling wrote:
+> On Wed, Aug 12, 2015 at 11:56:36AM +0530, Vignesh R wrote:
+> > Hi Michael,
+> > 
+> > + Dmitry
+> > 
+> > On 08/12/2015 12:15 AM, Michael Welling wrote:
+> > > Adds a device tree parameter to set the open delay on the touchscreen
+> > > conversion steps. Increasing this parameter helps the touch accuracy on
+> > > some screens.
+> > > 
+> > > Signed-off-by: Michael Welling <mwelling@ieee.org>
+> > > ---
+> > >  .../bindings/input/touchscreen/ti-tsc-adc.txt          |  5 +++++
+> > >  drivers/input/touchscreen/ti_am335x_tsc.c              | 18 ++++++++++++++----
+> > >  2 files changed, 19 insertions(+), 4 deletions(-)
+> > > 
+> > > diff --git a/Documentation/devicetree/bindings/input/touchscreen/ti-tsc-adc.txt b/Documentation/devicetree/bindings/input/touchscreen/ti-tsc-adc.txt
+> > > index b1163bf..cb11fda 100644
+> > > --- a/Documentation/devicetree/bindings/input/touchscreen/ti-tsc-adc.txt
+> > > +++ b/Documentation/devicetree/bindings/input/touchscreen/ti-tsc-adc.txt
+> > > @@ -41,6 +41,11 @@ Optional properties:
+> > >  			 charge step, so this does in fact function as a
+> > >  			 hardware knob for adjusting the amount of "settling
+> > >  			 time".
+> > > +	ti,open-delay: Open delay applied to all touchscreen conversion steps.
+> > > +			The value corresponds to the number of ADC clock
+> > > +			cycles to wait after applying the step configuration
+> > > +			registers and before sending the start of ADC
+> > > +			conversion. Maximum value is 0x3FFFF.
+> > >  
+> > 
+> > Since open-delay is per step, is it not better to allow specifying
+> > open-delay per step like ti,chan-step-opendelay of adc? This will help
+> > control open-delay for all the four wires.
+> 
+> Do you see any reason why you would want a different delay for each step of
+> the conversion on the same touchscreen?
+> 
+> The user would need to know the number of steps what each of the steps do.
+> 
 
-Signed-off-by: Mathieu Olivari <mathieu-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
----
- arch/arm/boot/dts/qcom-ipq8064-ap148.dts | 31 ++++++++++++++++++++++++++++++-
- 1 file changed, 30 insertions(+), 1 deletion(-)
+Comments?
 
-diff --git a/arch/arm/boot/dts/qcom-ipq8064-ap148.dts b/arch/arm/boot/dts/qcom-ipq8064-ap148.dts
-index 6886d09..d73df24 100644
---- a/arch/arm/boot/dts/qcom-ipq8064-ap148.dts
-+++ b/arch/arm/boot/dts/qcom-ipq8064-ap148.dts
-@@ -19,8 +19,9 @@
- 		};
- 	};
- 
--	alias {
-+	aliases {
- 		serial0 = &uart4;
-+		mdio-gpio0 = &mdio0;
- 	};
- 
- 	chosen {
-@@ -84,6 +85,15 @@
- 					};
- 				};
- 			};
-+
-+			mdio0_pins: mdio0_pins {
-+				mux {
-+					pins = "gpio0", "gpio1";
-+					function = "gpio";
-+					drive-strength = <8>;
-+					bias-disable;
-+				};
-+			};
- 		};
- 
- 		sata-phy@1b400000 {
-@@ -93,5 +103,24 @@
- 		sata@29000000 {
- 			status = "ok";
- 		};
-+
-+		mdio0: mdio {
-+			compatible = "virtual,mdio-gpio";
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			gpios = <&qcom_pinmux 1 0 &qcom_pinmux 0 0>;
-+			pinctrl-0 = <&mdio0_pins>;
-+			pinctrl-names = "default";
-+
-+			phy0: ethernet-phy@0 {
-+				device_type = "ethernet-phy";
-+				reg = <0>;
-+			};
-+
-+			phy4: ethernet-phy@4 {
-+				device_type = "ethernet-phy";
-+				reg = <4>;
-+			};
-+		};
- 	};
- };
--- 
-2.1.4
+Any other concerns?
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> > 
+> > >  - child "adc"
+> > >  	ti,chan-step-opendelay: List of open delays for each channel of
+> > > diff --git a/drivers/input/touchscreen/ti_am335x_tsc.c b/drivers/input/touchscreen/ti_am335x_tsc.c
+> > > index 191a1b8..37a9729 100644
+> > > --- a/drivers/input/touchscreen/ti_am335x_tsc.c
+> > > +++ b/drivers/input/touchscreen/ti_am335x_tsc.c
+> > > @@ -54,6 +54,7 @@ struct titsc {
+> > >  	u32			inp_xp, inp_xn, inp_yp, inp_yn;
+> > >  	u32			step_mask;
+> > >  	u32			charge_delay;
+> > > +	u32			open_delay;
+> > >  };
+> > >  
+> > >  static unsigned int titsc_readl(struct titsc *ts, unsigned int reg)
+> > > @@ -148,7 +149,7 @@ static void titsc_step_config(struct titsc *ts_dev)
+> > >  	end_step = first_step + tsc_steps;
+> > >  	for (i = end_step - ts_dev->coordinate_readouts; i < end_step; i++) {
+> > >  		titsc_writel(ts_dev, REG_STEPCONFIG(i), config);
+> > > -		titsc_writel(ts_dev, REG_STEPDELAY(i), STEPCONFIG_OPENDLY);
+> > > +		titsc_writel(ts_dev, REG_STEPDELAY(i), ts_dev->open_delay);
+> > >  	}
+> > >  
+> > >  	config = 0;
+> > > @@ -172,7 +173,7 @@ static void titsc_step_config(struct titsc *ts_dev)
+> > >  	end_step = first_step + ts_dev->coordinate_readouts;
+> > >  	for (i = first_step; i < end_step; i++) {
+> > >  		titsc_writel(ts_dev, REG_STEPCONFIG(i), config);
+> > > -		titsc_writel(ts_dev, REG_STEPDELAY(i), STEPCONFIG_OPENDLY);
+> > > +		titsc_writel(ts_dev, REG_STEPDELAY(i), ts_dev->open_delay);
+> > >  	}
+> > >  
+> > >  	/* Make CHARGECONFIG same as IDLECONFIG */
+> > > @@ -188,13 +189,13 @@ static void titsc_step_config(struct titsc *ts_dev)
+> > >  			STEPCONFIG_INP(ts_dev->inp_xp);
+> > >  	titsc_writel(ts_dev, REG_STEPCONFIG(end_step), config);
+> > >  	titsc_writel(ts_dev, REG_STEPDELAY(end_step),
+> > > -			STEPCONFIG_OPENDLY);
+> > > +			ts_dev->open_delay);
+> > >  
+> > >  	end_step++;
+> > >  	config |= STEPCONFIG_INP(ts_dev->inp_yn);
+> > >  	titsc_writel(ts_dev, REG_STEPCONFIG(end_step), config);
+> > >  	titsc_writel(ts_dev, REG_STEPDELAY(end_step),
+> > > -			STEPCONFIG_OPENDLY);
+> > > +			ts_dev->open_delay);
+> > >  
+> > >  	/* The steps end ... end - readouts * 2 + 2 and bit 0 for TS_Charge */
+> > >  	stepenable = 1;
+> > > @@ -392,6 +393,15 @@ static int titsc_parse_dt(struct platform_device *pdev,
+> > >  		dev_warn(&pdev->dev, "ti,charge-delay not specified\n");
+> > >  	}
+> > >  
+> > > +	err = of_property_read_u32(node, "ti,open-delay",
+> > > +				   &ts_dev->open_delay);
+> > > +	/*
+> > > +	 * If ti,open-delay value is not specified, then use
+> > > +	 * STEPCONFIG_OPENDLY as the default value.
+> > > +	 */
+> > > +	if (err < 0)
+> > > +		ts_dev->open_delay = STEPCONFIG_OPENDLY;
+> > > +
+> > >  	return of_property_read_u32_array(node, "ti,wire-config",
+> > >  			ts_dev->config_inp, ARRAY_SIZE(ts_dev->config_inp));
+> > >  }
+> > > 
+> > 
+> > -- 
+> > Regards
+> > Vignesh
