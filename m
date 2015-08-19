@@ -1,48 +1,48 @@
-From: Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v7 2/3] cpufreq: mediatek: Add MT8173 cpufreq driver
-Date: Wed, 19 Aug 2015 11:11:20 +0530
-Message-ID: <20150819054120.GA3258@linux>
-References: <20150818102428.GD31148@linux>
- <1439949906-22177-1-git-send-email-pi-cheng.chen@linaro.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+From: Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
+Subject: [PATCH] ARM: dts: UniPhier: fix PPI interrupt CPU mask of timer nodes
+Date: Wed, 19 Aug 2015 14:45:47 +0900
+Message-ID: <1439963147-2592-1-git-send-email-yamada.masahiro@socionext.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1439949906-22177-1-git-send-email-pi-cheng.chen-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Pi-Cheng Chen <pi-cheng.chen-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: "Rafael J. Wysocki" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Bartlomiej Zolnierkiewicz <b.zolnierkie-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linaro-kernel-cunTk1MwBs8s++Sfvej+rw@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Cc: Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 19-08-15, 10:05, Pi-Cheng Chen wrote:
-> Mediatek MT8173 is an ARMv8 based quad-core (2*Cortex-A53 and
-> 2*Cortex-A72) SoC with duall clusters. For each cluster, two voltage
-> inputs, Vproc and Vsram are supplied by two regulators. For the big
-> cluster, two regulators come from different PMICs. In this case, when
-> scaling voltage inputs of the cluster, the voltages of two regulator
-> inputs need to be controlled by software explicitly under the SoC
-> specific limitation:
-> 
-> 	100mV < Vsram - Vproc < 200mV
-> 
-> which is called 'voltage tracking' mechanism. And when scaling the
-> frequency of cluster clock input, the input MUX need to be parented to
-> another "intermediate" stable PLL first and reparented to the original
-> PLL once the original PLL is stable at the target frequency. This patch
-> implements those mechanisms to enable CPU DVFS support for Mediatek
-> MT8173 SoC.
-> 
-> Signed-off-by: Pi-Cheng Chen <pi-cheng.chen-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> Acked-by: Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> ---
-> 
-> Changes in v7:
-> - add of_machine_is_compatible() check to be multiplatform friendly
+This SoC is integrated with 4 Cortex-A9 cores.  The GIC bindings
+says that the bits[15:8] of the 3rd cell of the interrupts property
+represents PPI interrupt CPU mask.  Because the timer interrupts are
+wired to all of the 4 cores, bits[15:8] should be set to 0xf.
 
-Looks fine, thanks.
+Signed-off-by: Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
+---
 
+ arch/arm/boot/dts/uniphier-proxstream2.dtsi | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/arch/arm/boot/dts/uniphier-proxstream2.dtsi b/arch/arm/boot/dts/uniphier-proxstream2.dtsi
+index ccf795a..4c7b246 100644
+--- a/arch/arm/boot/dts/uniphier-proxstream2.dtsi
++++ b/arch/arm/boot/dts/uniphier-proxstream2.dtsi
+@@ -249,14 +249,14 @@
+ 		timer@60000200 {
+ 			compatible = "arm,cortex-a9-global-timer";
+ 			reg = <0x60000200 0x20>;
+-			interrupts = <1 11 0x304>;
++			interrupts = <1 11 0xf04>;
+ 			clocks = <&arm_timer_clk>;
+ 		};
+ 
+ 		timer@60000600 {
+ 			compatible = "arm,cortex-a9-twd-timer";
+ 			reg = <0x60000600 0x20>;
+-			interrupts = <1 13 0x304>;
++			interrupts = <1 13 0xf04>;
+ 			clocks = <&arm_timer_clk>;
+ 		};
+ 
 -- 
-viresh
+1.9.1
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
