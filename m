@@ -1,83 +1,87 @@
-From: Leo Yan <leo.yan@linaro.org>
-Subject: [PATCH v1 3/3] arm64: dts: add Hi6220 mailbox node
-Date: Wed, 19 Aug 2015 17:37:35 +0800
-Message-ID: <1439977055-1747-4-git-send-email-leo.yan@linaro.org>
-References: <1439977055-1747-1-git-send-email-leo.yan@linaro.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1439977055-1747-1-git-send-email-leo.yan@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Jassi Brar <jassisinghbrar@gmail.com>, Bintian Wang <bintian.wang@huawei.com>, Haojian Zhuang <haojian.zhuang@linaro.org>, Yiping Xu <xuyiping@hisilicon.com>, Wei Xu <xuwei5@hisilicon.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, guodong.xu@linaro.org, Jian Zhang <zhangjian001@hisilicon.com>, Zhenwei Wang <Zhenwei.wang@hisilicon.com>, Haoju Mo <mohaoju@hisilicon.com>, Dan Zhao <dan.zhao@hisilicon.com>, kongfei@hisilicon.com, Guangyue Zeng <zengguangyue@hisilicon.com>
-Cc: Leo Yan <leo.yan@linaro.org>
+From: Liviu Dudau <Liviu.Dudau@arm.com>
+Subject: Re: [PATCH 2/4] drm: Add support for ARM's HDLCD controller.
+Date: Wed, 19 Aug 2015 10:46:26 +0100
+Message-ID: <20150819094626.GG1020@e106497-lin.cambridge.arm.com>
+References: <1438784892-27888-1-git-send-email-Liviu.Dudau@arm.com>
+ <1438784892-27888-3-git-send-email-Liviu.Dudau@arm.com>
+ <1439835473.3341.88.camel@linaro.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <1439835473.3341.88.camel@linaro.org>
+Content-Disposition: inline
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: "Jon Medhurst (Tixy)" <tixy@linaro.org>
+Cc: Mark Rutland <Mark.Rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>, Pawel Moll <Pawel.Moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Catalin Marinas <Catalin.Marinas@arm.com>, Kumar Gala <galak@codeaurora.org>, Will Deacon <Will.Deacon@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, Rob Herring <robh+dt@kernel.org>, Sudeep Holla <Sudeep.Holla@arm.com>, Robin Murphy <Robin.Murphy@arm.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Hi6220, below memory regions in DDR have specific purpose:
-
-  0x05e0,0000 - 0x05ef,ffff: For MCU firmware using at runtime;
-  0x0740,f000 - 0x0740,ffff: For MCU firmware's section;
-  0x06df,f000 - 0x06df,ffff: For mailbox message data.
-
-This patch reserves these memory regions and add device node for
-mailbox in dts.
-
-Signed-off-by: Leo Yan <leo.yan@linaro.org>
----
- arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts | 20 +++++++++++++++++---
- arch/arm64/boot/dts/hisilicon/hi6220.dtsi      |  8 ++++++++
- 2 files changed, 25 insertions(+), 3 deletions(-)
-
-diff --git a/arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts b/arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts
-index e36a539..d5470d3 100644
---- a/arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts
-+++ b/arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts
-@@ -7,9 +7,6 @@
- 
- /dts-v1/;
- 
--/*Reserved 1MB memory for MCU*/
--/memreserve/ 0x05e00000 0x00100000;
--
- #include "hi6220.dtsi"
- 
- / {
-@@ -28,4 +25,21 @@
- 		device_type = "memory";
- 		reg = <0x0 0x0 0x0 0x40000000>;
- 	};
-+
-+	reserved-memory {
-+		#address-cells = <2>;
-+		#size-cells = <2>;
-+		ranges;
-+
-+		mcu-buf@05e00000 {
-+			no-map;
-+			reg = <0x0 0x05e00000 0x0 0x00100000>,	/* MCU firmware buffer */
-+			      <0x0 0x0740f000 0x0 0x00001000>;	/* MCU firmware section */
-+		};
-+
-+		mbox-buf@06dff000 {
-+			no-map;
-+			reg = <0x0 0x06dff000 0x0 0x00001000>;	/* Mailbox message buf */
-+		};
-+	};
- };
-diff --git a/arch/arm64/boot/dts/hisilicon/hi6220.dtsi b/arch/arm64/boot/dts/hisilicon/hi6220.dtsi
-index 3f03380..9ff25bc 100644
---- a/arch/arm64/boot/dts/hisilicon/hi6220.dtsi
-+++ b/arch/arm64/boot/dts/hisilicon/hi6220.dtsi
-@@ -167,5 +167,13 @@
- 			clocks = <&ao_ctrl 36>, <&ao_ctrl 36>;
- 			clock-names = "uartclk", "apb_pclk";
- 		};
-+
-+		mailbox: mailbox@f7510000 {
-+			#mbox-cells = <1>;
-+			compatible = "hisilicon,hi6220-mbox";
-+			reg = <0x0 0xf7510000 0x0 0x1000>, /* IPC_S */
-+			      <0x0 0x06dff800 0x0 0x0800>; /* Mailbox buffer */
-+			interrupts = <GIC_SPI 94 IRQ_TYPE_LEVEL_HIGH>;
-+		};
- 	};
- };
--- 
-1.9.1
+T24gTW9uLCBBdWcgMTcsIDIwMTUgYXQgMDc6MTc6NTNQTSArMDEwMCwgSm9uIE1lZGh1cnN0IChU
+aXh5KSB3cm90ZToKPiBJIGhhdmVuJ3QgcmV2aWV3ZWQgdGhlIGNvZGUgaW4gZGV0YWlsLCBqdXN0
+IGhhZCBvbmUgY29tbWVudCBJIGFsbHVkZWQgdG8KPiBpbiBhIHByaXZhdGUgZW1haWwgdGhlIG90
+aGVyIGRheS4uLgo+IAo+IE9uIFdlZCwgMjAxNS0wOC0wNSBhdCAxNToyOCArMDEwMCwgTGl2aXUg
+RHVkYXUgd3JvdGU6Cj4gCj4gPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9ncHUvZHJtL2FybS9oZGxj
+ZF9jcnRjLmMgYi9kcml2ZXJzL2dwdS9kcm0vYXJtL2hkbGNkX2NydGMuYwo+IFsuLi5dCj4gPiAr
+dm9pZCBoZGxjZF9zZXRfc2Nhbm91dChzdHJ1Y3QgaGRsY2RfZHJtX3ByaXZhdGUgKmhkbGNkKQo+
+ID4gK3sKPiA+ICsJc3RydWN0IGRybV9mcmFtZWJ1ZmZlciAqZmIgPSBoZGxjZC0+Y3J0Yy5wcmlt
+YXJ5LT5mYjsKPiA+ICsJc3RydWN0IGRybV9nZW1fY21hX29iamVjdCAqZ2VtOwo+ID4gKwl1bnNp
+Z25lZCBpbnQgZGVwdGgsIGJwcDsKPiA+ICsJZG1hX2FkZHJfdCBzY2Fub3V0X3N0YXJ0Owo+ID4g
+Kwo+ID4gKwlkcm1fZmJfZ2V0X2JwcF9kZXB0aChmYi0+cGl4ZWxfZm9ybWF0LCAmZGVwdGgsICZi
+cHApOwo+ID4gKwlnZW0gPSBkcm1fZmJfY21hX2dldF9nZW1fb2JqKGZiLCAwKTsKPiA+ICsKPiA+
+ICsJc2Nhbm91dF9zdGFydCA9IGdlbS0+cGFkZHIgKyBmYi0+b2Zmc2V0c1swXSArCj4gPiArCQko
+aGRsY2QtPmNydGMueSAqIGZiLT5waXRjaGVzWzBdKSArIChoZGxjZC0+Y3J0Yy54ICogYnBwLzgp
+Owo+ID4gKwo+ID4gKwloZGxjZF93cml0ZShoZGxjZCwgSERMQ0RfUkVHX0ZCX0JBU0UsIHNjYW5v
+dXRfc3RhcnQpOwo+ID4gK30KPiA+ICsKPiAKPiBUaGUgYWJvdmUgZnVuY3Rpb24gYWNjZXNzZXMg
+dmFyaW91cyBwb2ludGVycyBhbmQgdmFsdWVzLCB3aGljaAo+IHByZXN1bWFibHkgYWxsIG5lZWQg
+dG8gYmUgdmFsaWQgYW5kIGNvbnNpc3RlbnQuIEhvd2V2ZXIuLi4KPiAKPiBbLi4uXQo+ID4gZGlm
+ZiAtLWdpdCBhL2RyaXZlcnMvZ3B1L2RybS9hcm0vaGRsY2RfZHJ2LmMgYi9kcml2ZXJzL2dwdS9k
+cm0vYXJtL2hkbGNkX2Rydi5jCj4gWy4uLl0KPiA+ICtzdGF0aWMgaXJxcmV0dXJuX3QgaGRsY2Rf
+aXJxKGludCBpcnEsIHZvaWQgKmFyZykKPiA+ICt7Cj4gPiArCXN0cnVjdCBkcm1fZGV2aWNlICpk
+ZXYgPSBhcmc7Cj4gPiArCXN0cnVjdCBoZGxjZF9kcm1fcHJpdmF0ZSAqaGRsY2QgPSBkZXYtPmRl
+dl9wcml2YXRlOwo+ID4gKwl1bnNpZ25lZCBsb25nIGlycV9zdGF0dXM7Cj4gPiArCj4gPiArCWly
+cV9zdGF0dXMgPSBoZGxjZF9yZWFkKGhkbGNkLCBIRExDRF9SRUdfSU5UX1NUQVRVUyk7Cj4gPiAr
+Cj4gPiArI2lmZGVmIENPTkZJR19ERUJVR19GUwo+ID4gKwlpZiAoaXJxX3N0YXR1cyAmIEhETENE
+X0lOVEVSUlVQVF9VTkRFUlJVTikgewo+ID4gKwkJYXRvbWljX2luYygmaGRsY2QtPmJ1ZmZlcl91
+bmRlcnJ1bl9jb3VudCk7Cj4gPiArCX0KPiA+ICsJaWYgKGlycV9zdGF0dXMgJiBIRExDRF9JTlRF
+UlJVUFRfRE1BX0VORCkgewo+ID4gKwkJYXRvbWljX2luYygmaGRsY2QtPmRtYV9lbmRfY291bnQp
+Owo+ID4gKwl9Cj4gPiArCWlmIChpcnFfc3RhdHVzICYgSERMQ0RfSU5URVJSVVBUX0JVU19FUlJP
+Uikgewo+ID4gKwkJYXRvbWljX2luYygmaGRsY2QtPmJ1c19lcnJvcl9jb3VudCk7Cj4gPiArCX0K
+PiA+ICsJaWYgKGlycV9zdGF0dXMgJiBIRExDRF9JTlRFUlJVUFRfVlNZTkMpIHsKPiA+ICsJCWF0
+b21pY19pbmMoJmhkbGNkLT52c3luY19jb3VudCk7Cj4gPiArCX0KPiA+ICsjZW5kaWYKPiA+ICsJ
+aWYgKGlycV9zdGF0dXMgJiBIRExDRF9JTlRFUlJVUFRfVlNZTkMpIHsKPiA+ICsJCXN0cnVjdCBk
+cm1fcGVuZGluZ192YmxhbmtfZXZlbnQgKmV2ZW50Owo+ID4gKwkJdW5zaWduZWQgbG9uZyBmbGFn
+czsKPiA+ICsKPiA+ICsJCWhkbGNkX3NldF9zY2Fub3V0KGhkbGNkKTsKPiAKPiBoZGxjZF9zZXRf
+c2Nhbm91dCBpcyBiZWluZyBjYWxsZWQgb24gZXZlcnkgdnN5bmMgaW50ZXJydXB0LCBjYW4gd2UK
+PiBndWFyYW50ZWUgdGhhdCBpcyBzYWZlPyBXaGF0IGlmIHdlJ3JlIGluIHRoZSBtaWRkbGUgb2Yg
+YSBwYWdlIGZsaXAgb3IKPiBwYW5uaW5nIG9wZXJhdGlvbj8gU2VlbXMgdG8gbWUgdGhhdCB0aGVy
+ZSBpcyBhdCBsZWFzdCBzY29wZSBmb3IKPiBpbmNvcnJlY3QgYWRkcmVzc2VzIGJlaW5nIGNhbGN1
+bGF0ZWQgbGVhZGluZyB0byBhIG5hc3R5IGdsaXRjaCBvbiB0aGUKPiBzY3JlZW4gZm9yIG9uZSBm
+cmFtZS4gQW5kIGluIHRoZSB3b3JzdCBjYXNlLCBwb3NzaWJseSBpbnZhbGlkIHBvaW50ZXIKPiBi
+ZWluZyBkZXJlZmVyZW5jZWQuCgpBZ3JlZSwgdGhlcmUgaXMgYSByaXNrIG9mIGNvcnJ1cHRpb24g
+aGVyZS4gSSdtIGdvaW5nIHRvIGxvb2sgYXQgdGhlIGF0b21pYwptb2RlIHNldHRpbmcgd2hpY2gg
+c2hvdWxkIGhvcGVmdWxseSByZXNvbHZlIG1vc3Qgb2YgdGhlc2UgaXNzdWVzLgoKPiAKPiBTbywg
+aWYgc2Nhbm91dCBuZWVkcyB0byBiZSBzZXQgb24gZXZlcnkgdnN5bmMsIHdvdWxkIGl0IG5vdCBi
+ZSBzYWZlcgo+IChhbmQgbW9yZSBlZmZpY2llbnQpIHRvIGhhdmUgYSBzaW5nbGUgdmFyaWFibGUg
+c3RvcmluZyB0aGUgdmFsdWUgdG8gdXNlCj4gZHVyaW5nIGludGVycnVwdHMsIGFuZCByZWNhbGN1
+bGF0ZSB0aGF0IHZhbHVlIG91dHNpZGUgb2YgaW50ZXJydXB0cwo+IHdoZW5ldmVyIHRoaW5ncyBh
+cmUgY2hhbmdlZD8KCmhkbGNkX3NldF9zY2Fub3V0KCkgZnVuY3Rpb24gaXMgbWVyZWx5IGEgY29u
+dmVuaWVuY2UgZnVuY3Rpb24gdG8gY2FsY3VsYXRlCnRoZSBzY2Fub3V0X3N0YXJ0IHZhcmlhYmxl
+LiBUaGUgaW50ZXJydXB0IGhhbmRsZXIgcHJvYmFibHkgZG9lc24ndCBuZWVkIHRvCmNhbGwgdGhh
+dCBhbmQgaXQgd2FzIG1vc3RseSBhIHNob3J0Y3V0IHRvIG1ha2Ugc3VyZSB0aGUgSERMQ0RfUkVH
+X0ZCX0JBU0UKcmVnaXN0ZXIgd2FzIHVwLXRvLWRhdGUgd2hlbiB0aGUgdnN5bmMgaW50ZXJydXB0
+IGhhcHBlbmVkLiBJIGhvcGUgdGhlCmF0b21pYyBtb2Rlc2V0IHdpbGwgY2xlYW51cCB0aGluZ3Mg
+aGVyZS4KCkJlc3QgcmVnYXJkcywKTGl2aXUKCj4gCj4gLS0gCj4gVGl4eQo+IAoKLS0gCj09PT09
+PT09PT09PT09PT09PT09CnwgSSB3b3VsZCBsaWtlIHRvIHwKfCBmaXggdGhlIHdvcmxkLCAgfAp8
+IGJ1dCB0aGV5J3JlIG5vdCB8CnwgZ2l2aW5nIG1lIHRoZSAgIHwKIFwgc291cmNlIGNvZGUhICAv
+CiAgLS0tLS0tLS0tLS0tLS0tCiAgICDCr1xfKOODhClfL8KvCgpfX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1k
+ZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cDovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9t
+YWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
