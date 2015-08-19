@@ -1,69 +1,95 @@
-From: Adriana Reus <adriana.reus@intel.com>
-Subject: [PATCH  v4 2/2] devicetree: Add documentation for UPISEMI us5182d ALS and Proximity sensor
-Date: Wed, 19 Aug 2015 12:07:53 +0300
-Message-ID: <1439975273-16387-3-git-send-email-adriana.reus@intel.com>
-References: <1439975273-16387-1-git-send-email-adriana.reus@intel.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1439975273-16387-1-git-send-email-adriana.reus@intel.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: jic23@kernel.org, pmeerw@pmeerw.net, daniel.baluta@intel.com
-Cc: linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Adriana Reus <adriana.reus@intel.com>
+From: Liviu Dudau <Liviu.Dudau@arm.com>
+Subject: Re: [PATCH 2/4] drm: Add support for ARM's HDLCD controller.
+Date: Wed, 19 Aug 2015 10:28:16 +0100
+Message-ID: <20150819092816.GF1020@e106497-lin.cambridge.arm.com>
+References: <1438784892-27888-1-git-send-email-Liviu.Dudau@arm.com>
+ <1438784892-27888-3-git-send-email-Liviu.Dudau@arm.com>
+ <CACvgo537C6SRfhMTNoE4cSLJukcXuKLvt1TRykynX--ybEhmaQ@mail.gmail.com>
+ <20150817151547.GA1020@e106497-lin.cambridge.arm.com>
+ <CACvgo53KWsC1ZeYYF2bW=4=BeuexaEgBHT=+h2U60iS9nYvYpw@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <CACvgo53KWsC1ZeYYF2bW=4=BeuexaEgBHT=+h2U60iS9nYvYpw@mail.gmail.com>
+Content-Disposition: inline
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Emil Velikov <emil.l.velikov@gmail.com>
+Cc: Mark Rutland <Mark.Rutland@arm.com>, Jon Medhurst <tixy@linaro.org>, Pawel Moll <Pawel.Moll@arm.com>, Arnd Bergmann <arnd@arndb.de>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Catalin Marinas <Catalin.Marinas@arm.com>, Kumar Gala <galak@codeaurora.org>, Will Deacon <Will.Deacon@arm.com>, "Linux-Kernel@Vger. Kernel. Org" <linux-kernel@vger.kernel.org>, ML dri-devel <dri-devel@lists.freedesktop.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Sudeep Holla <Sudeep.Holla@arm.com>, Robin Murphy <Robin.Murphy@arm.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Added entries in i2c/vendor-prefixes for the us5182d als and proximity sensor.
-Also added a documentation file for this sensor's properties.
-
-Signed-off-by: Adriana Reus <adriana.reus@intel.com>
----
- Changes since v3:
- * Added more specific description for the optional properties
- * Removed an extra newline
-
- .../devicetree/bindings/iio/light/us5182d.txt      | 23 ++++++++++++++++++++++
- .../devicetree/bindings/vendor-prefixes.txt        |  1 +
- 2 files changed, 24 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/iio/light/us5182d.txt
-
-diff --git a/Documentation/devicetree/bindings/iio/light/us5182d.txt b/Documentation/devicetree/bindings/iio/light/us5182d.txt
-new file mode 100644
-index 0000000..7785c56
---- /dev/null
-+++ b/Documentation/devicetree/bindings/iio/light/us5182d.txt
-@@ -0,0 +1,23 @@
-+* UPISEMI us5182d I2C ALS and Proximity sensor
-+
-+Required properties:
-+- compatible: must be "upisemi,usd5182"
-+- reg: the I2C address of the device
-+
-+Optional properties:
-+- upisemi,glass-coef: glass attenuation factor
-+- upisemi,dark-ths: array of thresholds (adc counts) corresponding to every scale
-+- upisemi,upper-dark-gain: tuning factor(4 int and 4 fractional bits - Q4.4) applied when light > threshold
-+- upisemi,lower-dark-gain: tuning factor(4 int and 4 fractional bits - Q4.4) applied when light < threshold
-+
-+Example:
-+
-+    usd5182@39 {
-+                compatible = "upisemi,usd5182";
-+                reg = <0x39>;
-+                upisemi,glass-coef = < 1000 >;
-+                upisemi,dark-ths = /bits/ 16 <170 200 512 512 800 2000 4000 8000>;
-+                upisemi,upper-dark-gain = /bits/ 8 <0x00>;
-+                upisemi,lower-dark-gain = /bits/ 8 <0x16>;
-+    };
-+
-diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
-index d444757..5b40bab 100644
---- a/Documentation/devicetree/bindings/vendor-prefixes.txt
-+++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
-@@ -211,6 +211,7 @@ toshiba	Toshiba Corporation
- toumaz	Toumaz
- tplink	TP-LINK Technologies Co., Ltd.
- truly	Truly Semiconductors Limited
-+upisemi	uPI Semiconductor Corp.
- usi	Universal Scientific Industrial Co., Ltd.
- v3	V3 Semiconductor
- variscite	Variscite Ltd.
--- 
-1.9.1
+T24gVHVlLCBBdWcgMTgsIDIwMTUgYXQgMDU6NDE6NTlQTSArMDEwMCwgRW1pbCBWZWxpa292IHdy
+b3RlOgo+IE9uIDE3IEF1Z3VzdCAyMDE1IGF0IDE2OjE1LCBMaXZpdSBEdWRhdSA8TGl2aXUuRHVk
+YXVAYXJtLmNvbT4gd3JvdGU6Cj4gPiBPbiBTdW4sIEF1ZyAxNiwgMjAxNSBhdCAwOTo1NjozM0FN
+ICswMTAwLCBFbWlsIFZlbGlrb3Ygd3JvdGU6Cj4gPj4gSGkgTGl2aXUsCj4gPgo+ID4gSGkgRW1p
+bCwKPiA+Cj4gPj4KPiA+PiBPbiA1IEF1Z3VzdCAyMDE1IGF0IDE1OjI4LCBMaXZpdSBEdWRhdSA8
+TGl2aXUuRHVkYXVAYXJtLmNvbT4gd3JvdGU6Cj4gPj4gPiBUaGUgSERMQ0QgY29udHJvbGxlciBp
+cyBhIGRpc3BsYXkgY29udHJvbGxlciB0aGF0IHN1cHBvcnRzIHJlc29sdXRpb25zCj4gPj4gPiB1
+cCB0byA0MDk2eDQwOTYgcGl4ZWxzLiBJdCBpcyBwcmVzZW50IG9uIHZhcmlvdXMgZGV2ZWxvcG1l
+bnQgYm9hcmRzCj4gPj4gPiBwcm9kdWNlZCBieSBBUk0gTHRkIGFuZCBlbXVsYXRlZCBieSB0aGUg
+bGF0ZXN0IEZhc3QgTW9kZWxzIGZyb20gdGhlCj4gPj4gPiBjb21wYW55Lgo+ID4+ID4KPiA+PiBJ
+IGJlbGlldmUgdGhlcmUgaXMgYSB1bm9mZmljaWFsIHJlcXVpcmVtZW50KD8pIGZvciBuZXcgZHJt
+IGRyaXZlcnMgdG8KPiA+PiB1c2UgYXRvbWljIG1vZGVzZXR0aW5nLiBOb3QgMTAwJSBzdXJlIG9u
+IHRoaXMgb25lIHRob3VnaC4gVGhlCj4gPj4gZm9sbG93aW5nIGRyaXZlcnM6IHRlZ3JhLCBtc20s
+IHJjYXItZHUsIGk5MTUsIGFuZCBEYW5pZWwncyBibG9nIFsxXQo+ID4+IFsyXSBjYXQgcHJvdmlk
+ZSBzb21lIGluZm9ybWF0aW9uIG9uIHRoZSB0b3BpYy4KPiA+Cj4gPiBJIGFtIGFsc28gaW50ZXJl
+c3RlZCB0byBrbm93IGlmIHRoaXMgaXMgYSByZXF1aXJlbWVudCBvciBub3QuCj4gPiBUaGFua3Mg
+Zm9yIHRoZSBwb2ludGVycywgSSB3aWxsIHJldmlldyB0aGVtIGFnYWluIHRvIHNlZSBpZiBJIGRp
+ZCBtaXNzCj4gPiBhbnl0aGluZy4gSSByZW1lbWJlciByZWFkaW5nIHRoZW0gYXQgdGhlIGJlZ2lu
+bmluZyBvZiB0aGUgeWVhciBidXQgcHJvYmFibHkKPiA+IHRoZSBDaHJpc3RtYXMgaGF6ZSBkaWQg
+bm90IGNsZWFyIGVub3VnaCB3aGVuIEkgZGlkLgo+ID4KPiBUaGVyZSB3YXMgYSBzaW1pbGFyIHF1
+ZXN0aW9uIGZyb20gdGhlIGZyZWVzY2FsZSBkY3UgcGVvcGxlIFsxXS4gSQo+IGJlbGlldmUgdGhh
+dCB0aGUgYW5zd2VyIHN0aWxsIGFwcGxpZXMuCj4gCj4gWzFdIGh0dHA6Ly9saXN0cy5mcmVlZGVz
+a3RvcC5vcmcvYXJjaGl2ZXMvZHJpLWRldmVsLzIwMTUtTWFyY2gvMDc4Njg5Lmh0bWwKPiAKPiA+
+Pgo+ID4+IFRoZSBkcml2ZXIgc2VlbXMgdG8gaGFzIGhhcyBhIGJpdCBvZiBkZWFkIGNvZGUgZ3Vh
+cmRlZCBieQo+ID4+IEhETENEXypfVU5ERVJSVU4uIFBlcmhhcHMgdGhlc2UgbWFjcm9zIHNob3Vs
+ZCBiZWNvbWUgYnVpbGQgb3IgcnVudGltZQo+ID4+IHN3aXRjaChlcykgPwo+ID4KPiA+IFRoZXJl
+IGlzIGEgY29tbWVudCBpbiBoZGxjZF9kcnYuaCBleHBsYWluaW5nIHdoYXQgSERMQ0RfU0hPV19V
+TkRFUlJVTiBjYW4KPiA+IGJlIHVzZWQgZm9yLiBBcyBmb3IgSERMQ0RfQ09VTlRfQlVGRkVSVU5E
+RVJSVU5TLCB5b3UgYXJlIHJpZ2h0LCBpdCdzIGRlYWQKPiA+IGNvZGUgZnJvbSB0aGUgZWFybGll
+ciBkZWJ1Z2dpbmcgY29kZSB0aGF0IGdvdCByZW1vdmVkIGJlZm9yZSBzdWJtaXNzaW9uLgo+ID4g
+SSB3aWxsIGNvcnJlY3QgdGhhdC4KPiA+Cj4gSSBoYXZlbid0IHNlZW4gb3RoZXIgZHJtIGRyaXZl
+cnMgZm9sbG93IHRoZSAic2V0IGEgbWFjcm8gdGhhdCBpcwo+IGRvY3VtZW50ZWQgaW4gYSBoZWFk
+ZXIgYW5kIHJlYnVpbGQiIGFwcHJvYWNoLiBEZXZzIGVpdGhlciBhZGQgYSBDT05GSUcKPiBvcHRp
+b24gZm9yIGl0LCBvciBleHBvc2UgaXQgYXMgYSBtb2R1bGUgcGFyYW1ldGVyLiBJSVJDIHRoZSBu
+b3V2ZWF1Cj4gZHJpdmVyIGRvZXMgZXZlbiBtb3JlIC0gaXQgZW5hYmxlcyB0aGUgdW5kZXJydW4g
+bWFjaGluZXJ5Cj4gdW5jb25kaXRpb25hbGx5LgoKQWRkaW5nIGEgbW9kdWxlIHBhcmFtZXRlciBw
+cm9iYWJseSBtYWtlcyBtb3JlIHNlbnNlLCBJIHdpbGwgbG9vayBpbnRvIHRoYXQuCgo+IAo+ID4+
+Cj4gPj4gTW9zdCBEUk0gZHJpdmVycyBkbyBub3QgdGhyZWF0IGRtYSwgYnVzX2Vycm9yLCB2c3lu
+YyBhbmQvb3IgdW5kZXJydW4KPiA+PiBpbnRlcnJ1cHRzIGFzIGRlYnVnIGZ1bmN0aW9uYWxpdHku
+IFRoZXkgYXJlIG9mIGxpbWl0ZWQgdXNlIGluIHRoaXMKPiA+PiBkcml2ZXIsIHByZXNlbnRseSwg
+eWV0IHRoZSBDT05GSUdfREVCVUdfRlMgZ3VhcmQgc2VlbXMgYSBiaXQgc3RyYW5nZQo+ID4+IGlt
+aG8uCj4gPgo+ID4gVGhlIEhETENEIGRldmljZSBoYXMgb25seSAxIGludGVycnVwdCB0aGF0IGNh
+biBmaXJlIGFuZCB0aGVyZSBpcyBubyBvdGhlcgo+ID4gd2F5IHRvIHNob3cgdGhlIHJlYXNvbiBm
+b3IgdGhlIGludGVycnVwdCBpbiB0aGUgZHJpdmVyLiBJdCB3YXMgdXNlZnVsIHdoZW4KPiA+IGRl
+YnVnZ2luZyB1bmRlcnJ1bnMgYW5kL29yIHZzeW5jIGlzc3VlcyBzbyBJIHRob3VnaHQgaXQgbWln
+aHQgYmUgdXNlZnVsCj4gPiB0byBrZWVwIGFyb3VuZC4gUHV0dGluZyBpdCB0aGUgb3RoZXIgd2F5
+OiBpZiB5b3UgYXJlIGdvaW5nIHRvIHVzZSB0aGlzIGRldmljZQo+ID4gYW5kIHRoZSBpbWFnZSBp
+cyBub3QgY29tcGxldGVseSByZW5kZXJlZCBJIHdvdWxkIG5vdCBiZSBhYmxlIHRvIGdpdmUgeW91
+Cj4gPiBzdXBwb3J0IHRvIGZpZ3VyZSBvdXQgd2hhdCB3ZW50IHdyb25nIHdpdGhvdXQgdGhpcyBk
+ZWJ1Z2dpbmcgaW5mb3JtYXRpb24uCj4gPiBXaXRoIHRoaXMgaW4gcGxhY2UgSSBjYW4gdGVsbCB0
+aGUgZGlmZmVyZW5jZSBiZXR3ZWVuIGEgYnVzeSBzeXN0ZW0gdnMgb25lCj4gPiB3aGVyZSB0aGUg
+aW50ZXJydXB0IGxhdGVuY3kgaXMgbGFyZ2UuCj4gPgo+IE91dCBvZiBjdXJpb3NpdHkgLSBhcmUg
+dGhlcmUgYW55IGltcGxpY2F0aW9ucy9zaWRlLWVmZmVjdHMgZnJvbSBoYXZpbmcKPiB0aGVzZSBl
+bmFibGVkID8KCkhhdmluZyB0aGUgY291bnRlcnMgY291bnRpbmcgdGhlIGludGVycnVwdHMgc2hv
+dWxkIG5vdCBhZmZlY3QgdGhlIGxhdGVuY3kgYW5kCmhhdmluZyB0aGUgZGVmYXVsdCBjb2xvdXIg
+cmVkIG1lYW5zIHBhcnRzIG9mIHRoZSBzY3JlZW4gd2lsbCBmbGFzaCB3aXRoIHRoYXQKY29sb3Vy
+IHdoZW4gdGhlIGRhdGEgdGhhdCB3YXMgc3VwcG9zZWQgdG8gYmUgdGhlcmUgY291bGQgbm90IGJl
+IGZldGNoZWQgaW4KdGltZSAodW5kZXJydW4pLiBZZXMsIHByb2JhYmx5IG5vdCBzb21ldGhpbmcg
+Y2FzdWFsIHVzZXJzIG9mIHRoZSBBUk0gYm9hcmRzCndpbGwgY29tcGxhaW4gYWJvdXQgYW5kIGEg
+aGlnaGx5IHZpc2libGUgZWZmZWN0IHdoZW4geW91IGhhdmUgYmFuZHdpZHRoCnN0YXJ2YXRpb24g
+aXNzdWVzLgoKQmVzdCByZWdhcmRzLApMaXZpdQoKPiAKPiBUaGFua3MsCj4gRW1pbAo+IAoKLS0g
+Cj09PT09PT09PT09PT09PT09PT09CnwgSSB3b3VsZCBsaWtlIHRvIHwKfCBmaXggdGhlIHdvcmxk
+LCAgfAp8IGJ1dCB0aGV5J3JlIG5vdCB8CnwgZ2l2aW5nIG1lIHRoZSAgIHwKIFwgc291cmNlIGNv
+ZGUhICAvCiAgLS0tLS0tLS0tLS0tLS0tCiAgICDCr1xfKOODhClfL8KvCgpfX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0
+CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cDovL2xpc3RzLmZyZWVkZXNrdG9w
+Lm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
