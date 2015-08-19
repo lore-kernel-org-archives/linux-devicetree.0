@@ -1,54 +1,175 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 1/3] spi: mediatek: revise coding style
-Date: Wed, 19 Aug 2015 09:53:16 -0700
-Message-ID: <20150819165316.GU10748@sirena.org.uk>
-References: <1439955478-2733-1-git-send-email-leilk.liu@mediatek.com>
- <1439955478-2733-2-git-send-email-leilk.liu@mediatek.com>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="H7iji7vV8C4tfdBP"
-Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1439955478-2733-2-git-send-email-leilk.liu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Leilk Liu <leilk.liu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+From: Mathieu Olivari <mathieu-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Subject: [PATCH 2/2] ARM: qcom: add GMAC nodes to IPQ806x platforms
+Date: Wed, 19 Aug 2015 10:53:22 -0700
+Message-ID: <1440006802-2415-2-git-send-email-mathieu@codeaurora.org>
+References: <1440006802-2415-1-git-send-email-mathieu@codeaurora.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1440006802-2415-1-git-send-email-mathieu-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: agross-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
+Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mathieu Olivari <mathieu-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+This change adds GMAC nodes to IPQ806x platforms, both to the dtsi and
+to the AP148 dts. This will provide ethernet connectivity to the device.
 
---H7iji7vV8C4tfdBP
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Signed-off-by: Mathieu Olivari <mathieu-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+---
+ arch/arm/boot/dts/qcom-ipq8064-ap148.dts | 33 ++++++++++++
+ arch/arm/boot/dts/qcom-ipq8064.dtsi      | 86 ++++++++++++++++++++++++++++++++
+ 2 files changed, 119 insertions(+)
 
-On Wed, Aug 19, 2015 at 11:37:56AM +0800, Leilk Liu wrote:
-> This patch revises mediatek spi driver coding styles.
+diff --git a/arch/arm/boot/dts/qcom-ipq8064-ap148.dts b/arch/arm/boot/dts/qcom-ipq8064-ap148.dts
+index d73df24..0958fa3 100644
+--- a/arch/arm/boot/dts/qcom-ipq8064-ap148.dts
++++ b/arch/arm/boot/dts/qcom-ipq8064-ap148.dts
+@@ -94,6 +94,18 @@
+ 					bias-disable;
+ 				};
+ 			};
++
++			rgmii2_pins: rgmii2_pins {
++				mux {
++					pins = "gpio27", "gpio28", "gpio29",
++					       "gpio30", "gpio31", "gpio32",
++					       "gpio51", "gpio52", "gpio59",
++					       "gpio60", "gpio61", "gpio62";
++					function = "rgmii2";
++					drive-strength = <8>;
++					bias-disable;
++				};
++			};
+ 		};
+ 
+ 		sata-phy@1b400000 {
+@@ -122,5 +134,26 @@
+ 				reg = <4>;
+ 			};
+ 		};
++
++		gmac1: ethernet@37200000 {
++			status = "ok";
++			phy-mode = "rgmii";
++			phy-handle = <&phy4>;
++			qcom,id = <1>;
++
++			pinctrl-0 = <&rgmii2_pins>;
++			pinctrl-names = "default";
++		};
++
++		gmac2: ethernet@37400000 {
++			status = "ok";
++			phy-mode = "sgmii";
++			qcom,id = <2>;
++
++			fixed-link {
++				speed = <1000>;
++				full-duplex;
++			};
++		};
+ 	};
+ };
+diff --git a/arch/arm/boot/dts/qcom-ipq8064.dtsi b/arch/arm/boot/dts/qcom-ipq8064.dtsi
+index 2f270d7..6706a56 100644
+--- a/arch/arm/boot/dts/qcom-ipq8064.dtsi
++++ b/arch/arm/boot/dts/qcom-ipq8064.dtsi
+@@ -336,6 +336,92 @@
+ 			compatible = "syscon";
+ 			reg = <0x01200600 0x100>;
+ 		};
++
++		nss_common: syscon@03000000 {
++			compatible = "syscon";
++			reg = <0x03000000 0x0000FFFF>;
++		};
++
++		qsgmii_csr: syscon@1bb00000 {
++			compatible = "syscon";
++			reg = <0x1bb00000 0x000001FF>;
++		};
++
++		gmac0: ethernet@37000000 {
++			device_type = "network";
++			compatible = "qcom,ipq806x-gmac";
++			reg = <0x37000000 0x200000>;
++			interrupts = <GIC_SPI 220 IRQ_TYPE_LEVEL_HIGH>;
++			interrupt-names = "macirq";
++
++			qcom,nss-common = <&nss_common>;
++			qcom,qsgmii-csr = <&qsgmii_csr>;
++
++			clocks = <&gcc GMAC_CORE1_CLK>;
++			clock-names = "stmmaceth";
++
++			resets = <&gcc GMAC_CORE1_RESET>;
++			reset-names = "stmmaceth";
++
++			status = "disabled";
++		};
++
++		gmac1: ethernet@37200000 {
++			device_type = "network";
++			compatible = "qcom,ipq806x-gmac";
++			reg = <0x37200000 0x200000>;
++			interrupts = <GIC_SPI 223 IRQ_TYPE_LEVEL_HIGH>;
++			interrupt-names = "macirq";
++
++			qcom,nss-common = <&nss_common>;
++			qcom,qsgmii-csr = <&qsgmii_csr>;
++
++			clocks = <&gcc GMAC_CORE2_CLK>;
++			clock-names = "stmmaceth";
++
++			resets = <&gcc GMAC_CORE2_RESET>;
++			reset-names = "stmmaceth";
++
++			status = "disabled";
++		};
++
++		gmac2: ethernet@37400000 {
++			device_type = "network";
++			compatible = "qcom,ipq806x-gmac";
++			reg = <0x37400000 0x200000>;
++			interrupts = <GIC_SPI 226 IRQ_TYPE_LEVEL_HIGH>;
++			interrupt-names = "macirq";
++
++			qcom,nss-common = <&nss_common>;
++			qcom,qsgmii-csr = <&qsgmii_csr>;
++
++			clocks = <&gcc GMAC_CORE3_CLK>;
++			clock-names = "stmmaceth";
++
++			resets = <&gcc GMAC_CORE3_RESET>;
++			reset-names = "stmmaceth";
++
++			status = "disabled";
++		};
++
++		gmac3: ethernet@37600000 {
++			device_type = "network";
++			compatible = "qcom,ipq806x-gmac";
++			reg = <0x37600000 0x200000>;
++			interrupts = <GIC_SPI 229 IRQ_TYPE_LEVEL_HIGH>;
++			interrupt-names = "macirq";
++
++			qcom,nss-common = <&nss_common>;
++			qcom,qsgmii-csr = <&qsgmii_csr>;
++
++			clocks = <&gcc GMAC_CORE4_CLK>;
++			clock-names = "stmmaceth";
++
++			resets = <&gcc GMAC_CORE4_RESET>;
++			reset-names = "stmmaceth";
++
++			status = "disabled";
++		};
+ 	};
+ 
+ 	sfpb_mutex: sfpb-mutex {
+-- 
+2.1.4
 
-Two problems here.  One is that it's best practice to make purely
-stylistic changes after any substantial ones, that way people can pick
-up bug fixes without needing the stylistic changes.  The other is that
-this just isn't an adequate changelog - what are the revisions that are
-being made to the coding style and why are they being made?  This is a
-very large change and there seem to be many different and unrelated
-changes being made here.
-
---H7iji7vV8C4tfdBP
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQEcBAEBCAAGBQJV1LR3AAoJECTWi3JdVIfQunUIAIXfYzovROdkwQ4hrInx3Y2F
-2/hDkd4YvSF7Botajaig607K9sHnROc10OTfnysfooyE6o2H/rzc1wxlV5g31uVW
-IebShDhZgWy930UqD/UNmv19vpBgoERZZWi7VDis7To3iExrbqoj8eLzIRaDQ6EG
-/RrqMjtu5Uw4rclPx4nfyvgBRBkNQcN0a8z+dEqNN1AznAh8WjG7PI0kw8ACGjlw
-UP1ity51Z7Jj9oYzoCkqYgGCYYrWkYpHEQHBDounvogcbXFa7GW+I797S6TQ568r
-3siAIe+9/UsSbmrGBoXYUMWAJNC/zjDXHEWCzAXth9GRkEKVjEUS1OsVw3p/o/I=
-=AkDi
------END PGP SIGNATURE-----
-
---H7iji7vV8C4tfdBP--
 --
-To unsubscribe from this list: send the line "unsubscribe linux-spi" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
