@@ -1,7 +1,7 @@
 From: Archit Taneja <architt@codeaurora.org>
-Subject: [PATCH v4 5/5] arm: qcom: dts: Enable NAND node on IPQ8064 AP148 platform
-Date: Wed, 19 Aug 2015 10:19:06 +0530
-Message-ID: <1439959746-25498-6-git-send-email-architt@codeaurora.org>
+Subject: [PATCH v4 3/5] dt/bindings: qcom_nandc: Add DT bindings
+Date: Wed, 19 Aug 2015 10:19:04 +0530
+Message-ID: <1439959746-25498-4-git-send-email-architt@codeaurora.org>
 References: <1438578498-32254-1-git-send-email-architt@codeaurora.org>
  <1439959746-25498-1-git-send-email-architt@codeaurora.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
@@ -11,80 +11,79 @@ To: linux-mtd@lists.infradead.org, dehrenberg@google.com, cernekee@gmail.com, co
 Cc: linux-arm-msm@vger.kernel.org, agross@codeaurora.org, linux-kernel@vger.kernel.org, Archit Taneja <architt@codeaurora.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Enable the NAND controller node on the AP148 platform. Provide pinmux
-information.
-
-v4:
-- Move bias-disable out of mux and create a separate group for it.
-- Place the dma node inside soc node and give the full path with address.
-
-v3, v2, v1:
-- No changes
+Add DT bindings document for the Qualcomm NAND controller driver.
 
 Cc: devicetree@vger.kernel.org
 
+v4:
+- No changes
+
+v3:
+- Don't use '0x' when specifying nand controller address space
+- Add optional property for on-flash bbt usage
+
+Acked-by: Andy Gross <agross@codeaurora.org>
 Signed-off-by: Archit Taneja <architt@codeaurora.org>
 ---
- arch/arm/boot/dts/qcom-ipq8064-ap148.dts | 40 ++++++++++++++++++++++++++++++++
- 1 file changed, 40 insertions(+)
+ .../devicetree/bindings/mtd/qcom_nandc.txt         | 49 ++++++++++++++++++++++
+ 1 file changed, 49 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/mtd/qcom_nandc.txt
 
-diff --git a/arch/arm/boot/dts/qcom-ipq8064-ap148.dts b/arch/arm/boot/dts/qcom-ipq8064-ap148.dts
-index 7f9ea50..648994c 100644
---- a/arch/arm/boot/dts/qcom-ipq8064-ap148.dts
-+++ b/arch/arm/boot/dts/qcom-ipq8064-ap148.dts
-@@ -30,6 +30,32 @@
- 					bias-none;
- 				};
- 			};
-+			nand_pins: nand_pins {
-+				mux {
-+					pins = "gpio34", "gpio35", "gpio36",
-+					       "gpio37", "gpio38", "gpio39",
-+					       "gpio40", "gpio41", "gpio42",
-+					       "gpio43", "gpio44", "gpio45",
-+					       "gpio46", "gpio47";
-+					function = "nand";
-+					drive-strength = <10>;
-+				};
-+				disable {
-+					pins = "gpio34", "gpio35", "gpio36",
-+					       "gpio37", "gpio38";
-+					bias-disable;
-+				};
-+				pullups {
-+					pins = "gpio39";
-+					bias-pull-up;
-+				};
-+				hold {
-+					pins = "gpio40", "gpio41", "gpio42",
-+					       "gpio43", "gpio44", "gpio45",
-+					       "gpio46", "gpio47";
-+					bias-bus-hold;
-+				};
-+			};
- 		};
- 
- 		gsbi@16300000 {
-@@ -93,5 +119,19 @@
- 		sata@29000000 {
- 			status = "ok";
- 		};
+diff --git a/Documentation/devicetree/bindings/mtd/qcom_nandc.txt b/Documentation/devicetree/bindings/mtd/qcom_nandc.txt
+new file mode 100644
+index 0000000..1de4643
+--- /dev/null
++++ b/Documentation/devicetree/bindings/mtd/qcom_nandc.txt
+@@ -0,0 +1,49 @@
++* Qualcomm NAND controller
 +
-+		dma@18300000 {
-+			status = "ok";
-+		};
++Required properties:
++- compatible:		should be "qcom,ebi2-nand" for IPQ806x
++- reg:			MMIO address range
++- clocks:		must contain core clock and always on clock
++- clock-names:		must contain "core" for the core clock and "aon" for the
++			always on clock
++- dmas:			DMA specifier, consisting of a phandle to the ADM DMA
++			controller node and the channel number to be used for
++			NAND. Refer to dma.txt and qcom_adm.txt for more details
++- dma-names:		must be "rxtx"
++- qcom,cmd-crci:	must contain the ADM command type CRCI block instance
++			number specified for the NAND controller on the given
++			platform
++- qcom,data-crci:	must contain the ADM data type CRCI block instance
++			number specified for the NAND controller on the given
++			platform
 +
-+		nand@1ac00000 {
-+			status = "ok";
++Optional properties:
++- nand-bus-width:	bus width. Must be 8 or 16. If not present, 8 is chosen
++			as default
 +
-+			pinctrl-0 = <&nand_pins>;
-+			pinctrl-names = "default";
++- nand-ecc-strength:	number of bits to correct per ECC step. Must be 4 or 8
++			bits. If not present, 4 is chosen as default
++- nand-on-flash-bbt:	Create/use on-flash bad block table
 +
-+			nand-ecc-strength = <4>;
-+			nand-bus-width = <8>;
-+		};
- 	};
- };
++The device tree may optionally contain sub-nodes describing partitions of the
++address space. See partition.txt for more detail.
++
++Example:
++
++nand@1ac00000 {
++	compatible = "qcom,ebi2-nandc";
++	reg = <0x1ac00000 0x800>;
++
++	clocks = <&gcc EBI2_CLK>,
++		 <&gcc EBI2_AON_CLK>;
++	clock-names = "core", "aon";
++
++	dmas = <&adm_dma 3>;
++	dma-names = "rxtx";
++	qcom,cmd-crci = <15>;
++	qcom,data-crci = <3>;
++
++	partition@0 {
++	...
++	};
++};
 -- 
 The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
 hosted by The Linux Foundation
