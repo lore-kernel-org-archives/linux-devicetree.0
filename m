@@ -1,103 +1,51 @@
-From: Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 2/2] dmaengine: Add support for the Analog Devices
- AXI-DMAC DMA controller
-Date: Wed, 19 Aug 2015 22:42:34 +0530
-Message-ID: <20150819171234.GP13546@localhost>
-References: <55D4B506.9010707@metafoo.de>
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 3/3] spi: mediatek: fix spi incorrect endian usage
+Date: Wed, 19 Aug 2015 10:26:26 -0700
+Message-ID: <20150819172626.GV10748@sirena.org.uk>
+References: <1439955478-2733-1-git-send-email-leilk.liu@mediatek.com>
+ <1439955478-2733-4-git-send-email-leilk.liu@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="D7NAS2w8UwTm8YEa"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <55D4B506.9010707-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>
- <1438076286-21164-2-git-send-email-lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>
+In-Reply-To: <1439955478-2733-4-git-send-email-leilk.liu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Leilk Liu <leilk.liu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jul 28, 2015 at 11:38:06AM +0200, Lars-Peter Clausen wrote:
-> +static void axi_dmac_start_transfer(struct axi_dmac_chan *chan)
-> +{
-> +	struct axi_dmac *dmac = chan_to_axi_dmac(chan);
-> +	struct virt_dma_desc *vdesc;
-> +	struct axi_dmac_desc *desc;
-> +	struct axi_dmac_sg *sg;
-> +	unsigned int flags = 0;
-> +	unsigned int val;
-> +
-> +	val = axi_dmac_read(dmac, AXI_DMAC_REG_START_TRANSFER);
-> +	if (val) /* Queue is full, wait for the next SOT IRQ */
-> +		return;
-> +
-> +	desc = chan->next_desc;
-> +
-> +	if (!desc) {
-> +		vdesc = vchan_next_desc(&chan->vchan);
-> +		if (!vdesc)
-> +			return;
-> +		list_move_tail(&vdesc->node, &chan->active_descs);
-> +		desc = to_axi_dmac_desc(vdesc);
-> +	}
-> +	sg = &desc->sg[desc->num_submitted];
-> +
-> +	desc->num_submitted++;
-> +	if (desc->num_submitted == desc->num_sgs)
-> +		chan->next_desc = NULL;
-> +	else
-> +		chan->next_desc = desc;
-> +
-> +	sg->id = axi_dmac_read(dmac, AXI_DMAC_REG_TRANSFER_ID);
-> +
-> +	if (axi_dmac_dest_is_mem(chan)) {
-> +		axi_dmac_write(dmac, AXI_DMAC_REG_DEST_ADDRESS, sg->dest_addr);
-> +		axi_dmac_write(dmac, AXI_DMAC_REG_DEST_STRIDE, sg->dest_stride);
-> +	}
-> +
-> +	if (axi_dmac_src_is_mem(chan)) {
-> +		axi_dmac_write(dmac, AXI_DMAC_REG_SRC_ADDRESS, sg->src_addr);
-> +		axi_dmac_write(dmac, AXI_DMAC_REG_SRC_STRIDE, sg->src_stride);
-> +	}
-> +
-> +	/*
-> +	 * If the hardware supports cyclic transfers and there is no callback to
-> +	 * call, enable hw cyclic mode to avoid unnecessary interrupts.
-> +	 */
-> +	if (chan->hw_cyclic && desc->cyclic && !desc->vdesc.tx.callback)
-> +		flags |= AXI_DMAC_FLAG_CYCLIC;
-> +
-> +	axi_dmac_write(dmac, AXI_DMAC_REG_X_LENGTH, sg->x_len - 1);
-> +	axi_dmac_write(dmac, AXI_DMAC_REG_Y_LENGTH, sg->y_len - 1);
-> +	axi_dmac_write(dmac, AXI_DMAC_REG_FLAGS, flags);
-> +	axi_dmac_write(dmac, AXI_DMAC_REG_START_TRANSFER, 1);
-> +}
 
-On Wed, Aug 19, 2015 at 06:55:34PM +0200, Lars-Peter Clausen wrote:
-> On 08/19/2015 06:32 PM, Vinod Koul wrote:
-> > On Tue, Jul 28, 2015 at 11:38:06AM +0200, Lars-Peter Clausen wrote:
-> >> +	desc = axi_dmac_alloc_desc(sg_len);
-> >> +	if (!desc)
-> >> +		return NULL;
-> >> +
-> >> +	for_each_sg(sgl, sg, sg_len, i) {
-> >> +		if (!axi_dmac_check_addr(chan, sg_dma_address(sg)) ||
-> >> +		    !axi_dmac_check_len(chan, sg_dma_len(sg))) {
-> >> +			kfree(desc);
-> >> +			return NULL;
-> >> +		}
-> >> +
-> >> +		if (direction == DMA_DEV_TO_MEM)
-> >> +			desc->sg[i].dest_addr = sg_dma_address(sg);
-> >> +		else
-> >> +			desc->sg[i].src_addr = sg_dma_address(sg);
-> > where is device side programming ?
-> 
-> in the start_transfer() function.
+--D7NAS2w8UwTm8YEa
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-I must have missed that but still don't see it here, can you point me
+On Wed, Aug 19, 2015 at 11:37:58AM +0800, Leilk Liu wrote:
+> TX_ENDIAN/RX_ENDIAN bits define whether to reverse the endian
+> order of the data DMA from/to memory. The endian order should
+> keep the same with cpu endian.
 
--- 
-~Vinod
+This doesn't apply, probably because it depends on your stylistic
+changes patch - this is an example of the issues I was mentioning with
+stylistic changes getting in the waty of fixes :(
 
+--D7NAS2w8UwTm8YEa
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQEcBAEBCAAGBQJV1Lw9AAoJECTWi3JdVIfQLI4H/1GLBPDiEigCLfVZ1wvQdxf/
+HzcqaSmFryw1IDmnLV1qt0s40T6VDsPOFfO1f+tFZeKd3zNZ0BYjgYiysf178SFj
+ZBvUZWC2aIQVouWXJh6Y/SLV45L2EYKdmci7ZNH5ylag/u0pmJlCVsaIjb9SfImq
+vNBA8FoJE7nNYpTvxd3bZLG8VJQIy8rDviKcAxnmsNswqgMtirnE1VAMftYuVuVd
+3NsiSlitYEdyKbU18hI5njm8j987NsdZC9gpVKlC1VzTS/gXxX67xuj15C7wu6Io
++Lp31atq2vxhYNTaXQw52Gfn117odMHBL/YsfEInMJZHnaFUtrWlSABgvhcNk0Q=
+=gKBx
+-----END PGP SIGNATURE-----
+
+--D7NAS2w8UwTm8YEa--
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
