@@ -1,66 +1,62 @@
-From: Leilk Liu <leilk.liu@mediatek.com>
-Subject: [PATCH 2/3] spi: mediatek: remove redundant clock in prepare_hardware/unprepare_hardware
-Date: Wed, 19 Aug 2015 11:37:57 +0800
-Message-ID: <1439955478-2733-3-git-send-email-leilk.liu@mediatek.com>
-References: <1439955478-2733-1-git-send-email-leilk.liu@mediatek.com>
+From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Subject: [PATCH v6 0/2] pwm: Add support for R-Car PWM Timer
+Date: Wed, 19 Aug 2015 13:13:57 +0900
+Message-ID: <1439957639-4816-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1439955478-2733-1-git-send-email-leilk.liu@mediatek.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mark Brown <broonie@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, Sascha Hauer <s.hauer@pengutronix.de>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-spi@vger.kernel.org, linux-mediatek@lists.infradead.org, Leilk Liu <leilk.liu@mediatek.com>
+Return-path: <linux-pwm-owner@vger.kernel.org>
+Sender: linux-pwm-owner@vger.kernel.org
+To: thierry.reding@gmail.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org
+Cc: linux-pwm@vger.kernel.org, linux-sh@vger.kernel.org, devicetree@vger.kernel.org, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
 List-Id: devicetree@vger.kernel.org
 
-clock in prepare_hardware/unprepare_hardware is redundant
-with pm_runtime, so remove them.
+This patch set is based on the latest linux-pwm.git / for-next branch.
+(commit id = 6e146f5c41da7e9601fe92fb4d06b45431dbf95b)
 
-Signed-off-by: Leilk Liu <leilk.liu@mediatek.com>
----
- drivers/spi/spi-mt65xx.c | 17 -----------------
- 1 file changed, 17 deletions(-)
+Changes from v5:
+ - Fix coding style and unreadable code in patch 2.
+ - Add "Reviewed-by: Simon Horman <horms+renesas@verge.net.au>".
 
-diff --git a/drivers/spi/spi-mt65xx.c b/drivers/spi/spi-mt65xx.c
-index 814bca4..1c2b215 100644
---- a/drivers/spi/spi-mt65xx.c
-+++ b/drivers/spi/spi-mt65xx.c
-@@ -181,13 +181,6 @@ static int mtk_spi_prepare_hardware(struct spi_master *master)
- 	struct spi_transfer *trans;
- 	struct mtk_spi *mdata = spi_master_get_devdata(master);
- 	struct spi_message *msg = master->cur_msg;
--	int ret;
--
--	ret = clk_prepare_enable(mdata->spi_clk);
--	if (ret < 0) {
--		dev_err(&master->dev, "failed to enable clock (%d)\n", ret);
--		return ret;
--	}
- 
- 	trans = list_first_entry(&msg->transfers, struct spi_transfer,
- 				 transfer_list);
-@@ -196,15 +189,6 @@ static int mtk_spi_prepare_hardware(struct spi_master *master)
- 		mtk_spi_reset(mdata);
- 	}
- 
--	return ret;
--}
--
--static int mtk_spi_unprepare_hardware(struct spi_master *master)
--{
--	struct mtk_spi *mdata = spi_master_get_devdata(master);
--
--	clk_disable_unprepare(mdata->spi_clk);
--
- 	return 0;
- }
- 
-@@ -537,7 +521,6 @@ static int mtk_spi_probe(struct platform_device *pdev)
- 
- 	master->set_cs = mtk_spi_set_cs;
- 	master->prepare_transfer_hardware = mtk_spi_prepare_hardware;
--	master->unprepare_transfer_hardware = mtk_spi_unprepare_hardware;
- 	master->prepare_message = mtk_spi_prepare_message;
- 	master->transfer_one = mtk_spi_transfer_one;
- 	master->can_dma = mtk_spi_can_dma;
+Changes from v4:
+ - Clean up coding style and typo in patch 2.
+ - Change to_rcar_pwm_chip() macro to static inline function in patch 2.
+ - Use writel()/readl() instead of iowrite32()/ioread32() in patch 2.
+ - Add an error handling in rcar_pwm_config() to avoid silent in patch 2.
+ - Remove success message in rcar_pwm_probe() in patch 2.
+ - Change rcar_pwm_remove() to always call pm_runtime_disable() in patch 2.
+
+Changes from v3:
+ - Fix register size in patch 1.
+ - Add "Acked-by: Geert Uytterhoeven <geert+renesas@glider.be>" in patch 1
+ - Remove an unnecessary definition in patch 2.
+ - Use "ULL" to avoid overflow in patch 2.
+ - Remove unnecessary casts in patch 2.
+
+Changes from v2:
+ - Add compatible string "renesas,pwm-rcar".
+ - Remove compatible strings "renesas,pwm-r8a77xx" in rcar_pwm_of_table.
+ - Fix build error.
+
+Changes from v1:
+ - Change compatible string to SoC-specific compatible values.
+ - Fix #pwm-call value to 2 in the device tree document.
+ - Fix "depends on" value in Kconfig.
+ - Fix help explanation in Kconfig.
+ - Remove an unnecessary member in rcar_pwm_chip.
+ - Remove hardcoded number of channels and change chip.npwm value to 1.
+ - Fix formulas for clock calculation to improve accuracy.
+
+Yoshihiro Shimoda (2):
+  pwm: Add device tree binding document for R-Car PWM Timer
+  pwm: Add support for R-Car PWM Timer
+
+ .../devicetree/bindings/pwm/renesas,pwm-rcar.txt   |  27 +++
+ drivers/pwm/Kconfig                                |  11 +
+ drivers/pwm/Makefile                               |   1 +
+ drivers/pwm/pwm-rcar.c                             | 265 +++++++++++++++++++++
+ 4 files changed, 304 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/pwm/renesas,pwm-rcar.txt
+ create mode 100644 drivers/pwm/pwm-rcar.c
+
 -- 
-1.8.1.1.dirty
+1.9.1
