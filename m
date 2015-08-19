@@ -1,150 +1,117 @@
-From: Stefan Wahren <info-saaNCTdWVBT7BZbvpMY5sg@public.gmane.org>
-Subject: Re: [PATCH v2 1/7] drm/vc4: Add devicetree bindings for VC4.
-Date: Wed, 19 Aug 2015 22:38:35 +0200
-Message-ID: <55D4E94B.8080103@lategoodbye.de>
-References: <1439934848-7196-1-git-send-email-eric@anholt.net>
- <1439934848-7196-2-git-send-email-eric@anholt.net>
+From: Roy Pledge <roy.pledge-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: RE: [PATCH 1/2] powerpc/qman: Change fsl,qman-channel-id to
+ cell-index
+Date: Wed, 19 Aug 2015 20:52:55 +0000
+Message-ID: <BN3PR0301MB12670C0BE318280D1C53FE0F8C670@BN3PR0301MB1267.namprd03.prod.outlook.com>
+References: <1429311187-19062-1-git-send-email-scottwood@freescale.com>
+	 <BN3PR0301MB126796C0EC18EEBB26702C588CD10@BN3PR0301MB1267.namprd03.prod.outlook.com>
+	 <1430858734.16357.256.camel@freescale.com>
+	 <BN3PR0301MB1267E5A61E7E5BC2789F9E898CDA0@BN3PR0301MB1267.namprd03.prod.outlook.com>
+ <1431470762.16357.511.camel@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1439934848-7196-2-git-send-email-eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
+In-Reply-To: <1431470762.16357.511.camel-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Content-Language: en-US
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
-Cc: dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Cc: "linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Madalin-Cristian Bucur <madalin.bucur-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Haiying Wang <Haiying.Wang-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Eric,
-
-Am 18.08.2015 um 23:54 schrieb Eric Anholt:
-> VC4 is the GPU (display and 3D) subsystem present on the 2835 and some
-> other Broadcom SoCs.
->
-> This binding follows the model of msm, imx, sti, and others, where
-> there is a subsystem node for the whole GPU, with nodes for the
-> individual HW components within it.
->
-> Signed-off-by: Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
-> ---
->
-> v2: Extend the commit message, fix several nits from Stephen Warren.
->
->   .../devicetree/bindings/gpu/brcm,bcm-vc4.txt       | 79 ++++++++++++++++++++++
->   1 file changed, 79 insertions(+)
->   create mode 100644 Documentation/devicetree/bindings/gpu/brcm,bcm-vc4.txt
->
-> diff --git a/Documentation/devicetree/bindings/gpu/brcm,bcm-vc4.txt b/Documentation/devicetree/bindings/gpu/brcm,bcm-vc4.txt
-> new file mode 100644
-> index 0000000..1b9fedc
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/gpu/brcm,bcm-vc4.txt
-> @@ -0,0 +1,79 @@
-> +Broadcom VC4 GPU
-> +
-> +The VC4 device present on the Raspberry Pi includes a display system
-> +with HDMI output and the HVS scaler for compositing display planes.
-> +
-> +Required properties for VC4:
-> +- compatible:	Should be "brcm,vc4"
-> +- crtcs:	List of phandles of pixelvalve scanout engines
-> +- hvss:		List of phandles of HVS video scalers
-> +- encoders:	List of phandles of output encoders (HDMI, SDTV)
-> +
-> +Required properties for Pixel Valve:
-> +- compatible:	Should be "brcm,vc4-pixelvalve"
-> +- reg:		Physical base address and length of the PV's registers
-> +- interrupts:	The interrupt number
-> +		  See bindings/interrupt-controller/brcm,bcm2835-armctrl-ic.txt
-> +
-> +Required properties for HVS:
-> +- compatible:	Should be "brcm,vc4-hvs"
-> +- reg:		Physical base address and length of the HVS's registers
-> +- interrupts:	The interrupt number
-> +		  See bindings/interrupt-controller/brcm,bcm2835-armctrl-ic.txt
-> +
-> +Required properties for HDMI
-> +- compatible:	Should be "brcm,vc4-hdmi"
-> +- reg:		Physical base address and length of the two register ranges
-> +		  ("HDMI" and "HD", in that order)
-> +- interrupts:	The interrupt numbers
-> +		  See bindings/interrupt-controller/brcm,bcm2835-armctrl-ic.txt
-> +- ddc:		phandle of the I2C controller used for DDC EDID probing
-> +- crtc:		phandle to the pixelvalve CRTC the HDMI encoder is attached to
-> +
-> +Optional properties for HDMI:
-> +- hpd-gpio:	The GPIO pin for HDMI hotplug detect (if it doesn't appear
-> +		  as an interrupt/status bit in the HDMI controller
-> +		  itself).  See bindings/pinctrl/brcm,bcm2835-gpio.txt
-> +
-> +Example:
-> +pv0: brcm,vc4-pixelvalve@7e206000 {
-
-AFAIK the DT node name should describe the function and usually don't 
-have a vendor prefix. Here some possible suggestions without deeper 
-knowledge of the hardware function:
-
-pv0: pixelvalve
-
-> +	compatible = "brcm,vc4-pixelvalve";
-> +	reg = <0x7e206000 0x100>;
-> +	interrupts = <2 13>; /* pwa2 */
-> +};
-> +
-> +pv1: brcm,vc4-pixelvalve@7e207000 {
-
-pv1: pixelvalve
-
-> +	compatible = "brcm,vc4-pixelvalve";
-> +	reg = <0x7e207000 0x100>;
-> +	interrupts = <2 14>; /* pwa1 */
-> +};
-> +
-> +pv2: brcm,vc4-pixelvalve@7e807000 {
-
-pv2: pixelvalve
-
-> +	compatible = "brcm,vc4-pixelvalve";
-> +	reg = <0x7e807000 0x100>;
-> +	interrupts = <2 10>; /* pixelvalve */
-> +};
-> +
-> +hvs: brcm,hvs@7e400000 {
-
-hvs: hvs
-
-> +	compatible = "brcm,vc4-hvs";
-> +	reg = <0x7e400000 0x6000>;
-> +	interrupts = <2 1>;
-> +};
-> +
-> +hdmi: brcm,vc4-hdmi@7e902000 {
-
-hdmi: hdmi
-
-> +	compatible = "brcm,vc4-hdmi";
-> +	reg = <0x7e902000 0x600>,
-> +	      <0x7e808000 0x100>;
-> +	interrupts = <2 8>, <2 9>;
-> +	ddc = <&i2c2>;
-> +	hpd-gpio = <&gpio 46 GPIO_ACTIVE_HIGH>;
-> +	crtc = <&pv2>;
-> +};
-> +
-> +vc4: vc4@0x7e4c0000 {
-
-vc4: gpu
-
-Regards
-Stefan
-
-> +	compatible = "brcm,vc4";
-> +
-> +	crtcs = <&pv0>, <&pv1>, <&pv2>;
-> +	encoders = <&hdmi>;
-> +	hvss = <&hvs>;
-> +};
->
-
+U29ycnkgZm9yIGRpZ2dpbmcgdXAgYW4gb2xkIHRocmVhZCBoZXJlIFNjb3R0LCBidXQgd2UgbmV2
+ZXIgZGlkIGNsb3NlIG9uIHRoaXMgZGlzY3Vzc2lvbi4gIFNlZSBteSByZXBsaWVzIGlubGluZSBi
+ZWxvdy4uLi4NCg0KPiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBXb29kIFNj
+b3R0LUIwNzQyMQ0KPiBTZW50OiBUdWVzZGF5LCBNYXkgMTIsIDIwMTUgNjo0NiBQTQ0KPiBUbzog
+UGxlZGdlIFJveS1SMDEzNTYNCj4gQ2M6IGxpbnV4cHBjLWRldkBsaXN0cy5vemxhYnMub3JnOyBk
+ZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZzsgQnVjdXINCj4gTWFkYWxpbi1DcmlzdGlhbi1CMzI3
+MTYNCj4gU3ViamVjdDogUmU6IFtQQVRDSCAxLzJdIHBvd2VycGMvcW1hbjogQ2hhbmdlIGZzbCxx
+bWFuLWNoYW5uZWwtaWQgdG8gY2VsbC0NCj4gaW5kZXgNCj4gDQo+IE9uIFR1ZSwgMjAxNS0wNS0x
+MiBhdCAxNjoxOSAtMDUwMCwgUGxlZGdlIFJveS1SMDEzNTYgd3JvdGU6DQo+ID4gPiA+DQo+ID4g
+PiA+IEkgZG9uJ3QgYmVsaWV2ZSB0aGlzIGlzIGNvcnJlY3QgLSBsZXQgbWUgZXhwbGFpbiB0aGUg
+cmF0aW9uYWwgd2h5DQo+ID4gPiA+IHdlIGhhZCB0d28NCj4gPiA+IHByb3BlcnRpZXMgaW4gdGhl
+IFFNYW4gcG9ydGFsIHRvIGJlZ2luIHdpdGguDQo+ID4gPiA+DQo+ID4gPiA+IFRoZSB0d28gcHJv
+cGVydGllcyBpbiBxdWVzdGlvbiBhcmUgY2VsbC1pbmRleCBhbmQgZnNsLHFtYW4tY2hhbm5lbC1p
+ZC4NCj4gPiA+ID4NCj4gPiA+ID4gVGhlIGNlbGwtaW5kZXggcHJvcGVydHkgaXMgdXNlZCBpbiB1
+LWJvb3QgYXMgYW4gaW5kZXggZm9yIHRoZQ0KPiA+ID4gPiBzb2Z0d2FyZSBwb3J0YWwNCj4gPiA+
+IElEIHdoZW4gYWRkaW5nIHRoZSBmc2wsbGlvZG4gZnJvbSB0aGUgVS1ib290IHRhYmxlIGludG8g
+dGhlIGRldmljZSB0cmVlLg0KPiA+ID4NCj4gPiA+IFRoZSBkZXZpY2UgdHJlZSBpcyBub3Qgc3Vw
+cG9zZWQgdG8gY29udGFpbiBhcmJpdHJhcnkgc29mdHdhcmUgaWRlbnRpZmllcnMuDQo+ID4NCj4g
+PiBJIGFncmVlIC0gdGhpcyBpcyB3aHkgdGhlIG9yaWdpbmFsIGRldmljZSB0cmVlIGJpbmRpbmdz
+IHJlbW92ZWQNCj4gPiBjZWxsLWluZGV4IGFzIGl0IGNhbiBiZSBjYWxjdWxhdGVkLg0KPiAgVW5m
+b3J0dW5hdGVseSB1LWJvb3QgcmVsaWVkIG9uDQo+ID4gdGhpcyB2YWx1ZSBiZWluZyBwcmVzZW50
+IHNvIHRvIGJlIGJhY2t3YXJkIGNvbXBhdGlibGUgd2UgZG9uJ3QgaGF2ZSBhDQo+ID4gd2F5IHRv
+IHJlbW92ZSBpdC4gIEknbSBub3Qgc3VyZSBvbiB3aGF0IHRoZSBwcm9jZWR1cmUgaXMgdG8gY2hh
+bmdlDQo+ID4gdGhpbmdzIHUtYm9vdCByZWxpZXMgb24sDQo+IA0KPiBHZW5lcmFsbHkgdGhlIHBy
+b2NlZHVyZSBpcyB0aGF0IHdlIGRvbid0IGNoYW5nZSBpdC4gIEl0IHdvdWxkbid0IGJlIHNvIGJh
+ZCBpZg0KPiB1c2luZyBhbiBvbGQgVS1Cb290IGp1c3QgbWVhbnQgdGhhdCBkYXRhcGF0aCBkb2Vz
+bid0IHdvcmsgd2l0aCB1cHN0cmVhbQ0KPiBrZXJuZWxzIChzaW5jZSB0aGF0IGRvZXNuJ3Qgd29y
+ayBub3cpLCBidXQgYSBkdHMgdGhhdCBtYWtlcyBleGlzdGluZyBVLUJvb3QNCj4gY3Jhc2ggaXMg
+YW5vdGhlciBtYXR0ZXIuDQoNCklmIHRoaXMgaXMgdHJ1ZSB0aGVuIHdlIGNhbiBuZXZlciByZW1v
+dmUgdGhlIGNlbGwtaW5kZXggcHJvcGVydHkuICBUaGUgY2VsbC1pbmRleCBpbiB0aGlzIGNhc2Ug
+aXMgcmVmZXJyaW5nIHRvIHRoZSBwb3J0YWwgaW5kZXggd2hpY2ggY291bGQgYmUgY2FsY3VsYXRl
+ZCBmcm9tIHRoZSBxbWFuLXBvcnRhbEBYWFhYIHZhbHVlLiAgTXkgcHJlZmVyZW5jZSB3b3VsZCBi
+ZSB0byBlbGltaW5hdGUgY2VsbC1pbmRleCBhbmQgcmVwbGFjZSBpdCB3aXRoIHRoaXMgY2FsY3Vs
+YXRpb24gYnV0IHRoYXQgd291bGQgbWVhbiBvbGRlciB1LWJvb3Qgd291bGQgZmFpbCB0byB3b3Jr
+IHdpdGggbmV3ZXIga2VybmVsLiAgV2hpbGUgdGhlIGJ1ZyB0aGF0IGNhdXNlZCBvbGRlciB1LWJv
+b3QgdG8gY3Jhc2ggaWYgdGhpcyBwcm9wZXJ0eSBpcyBhbm5veWluZyB0aGlzIGhhcyBiZWVuIGFk
+ZHJlc3NlZCBpbiBtb3JlIHJlY2VudCB1LWJvb3RzLiBJIGNhbid0IGNvbW1lbnQgb24gYSBwb2xp
+Y3kgd2hlcmUgdS1ib290IG11c3QgYWx3YXlzIGJvb3QgbmV3ZXIgdmVyc2lvbiBvZiBMaW51eCAt
+IHRoYXQgbWVhbnMgTGludXggd2lsbCBoYXZlIHRvIGRyYWcgYWxvbmcgYmFnZ2FnZSBsaWtlIHRo
+aXMgcHJvcGVydHkgZm9yIGEgbG9uZyB0aW1lIChmb3JldmVyPykuIA0KDQo+ID4gPg0KPiA+ID4g
+PiBUaGUgIGZzbCxxbWFuLWNoYW5uZWwtaWQgcHJvcGVydHkgaXMgdXNlZCBpbiBMaW51eCBhbmQg
+Y29ycmVzcG9uZHMNCj4gPiA+ID4gdG8gYSBoYXJkd2FyZSB2YWx1ZSB0aGF0IGluZGljYXRlcyB3
+aGljaCBjaGFubmVsIGlzIGRlZGljYXRlZCB0bw0KPiA+ID4gPiB0aGUgc29mdHdhcmUgcG9ydGFs
+Lg0KPiA+ID4gPg0KPiA+ID4gPiBXaGlsZSBJJ20gbm90IGF3YXJlIG9mIGEgY3VycmVudCBTb0Mg
+d2hlcmUgdGhlIGNoYW5uZWwgSUQgZm9yIGENCj4gPiA+ID4gc29mdHdhcmUgcG9ydGFsIGRvZXMg
+bm90IG1hdGNoIHRoZSBpbmRleCAoaS5lLiBTV1AgMCB1c2VzIGNoYW5uZWwNCj4gPiA+ID4gMCwN
+Cj4gPiA+ID4gZXRjLikNCj4gPiA+DQo+ID4gPiBUaHVzIHRoZXJlJ3Mgbm8gYmFja3dhcmQgY29t
+cGF0aWJpbGl0eSBpc3N1ZSB3aXRoIHJlZGVmaW5pbmcNCj4gPiA+IGNlbGwtaW5kZXggdG8gbWVh
+biB0aGUgY2hhbm5lbCBJRC4NCj4gPg0KPiA+IENoYW5uZWwgSURzIGRvIGNoYW5nZSBhbmQgYXJl
+IGRlZmluZWQgd2hlbiB0aGUgU29DIGlzIGNyZWF0ZWQNCj4gDQo+IEJ1dCBmb3IgU29DcyB0aGF0
+IGFscmVhZHkgZXhpc3QsIHRoZXkgd29uJ3QgY2hhbmdlLCByaWdodD8gIFdlIGRvbid0IG5lZWQg
+dG8NCj4gY2FyZSBhYm91dCB3aGF0IGV4aXN0aW5nIFUtQm9vdCBkb2VzIG9uIG5ldyBTb0NzLCBz
+aW5jZSBVLUJvb3Qgd291bGQNCj4gbmVlZCB0byBiZSBjaGFuZ2VkIHRvIHN1cHBvcnQgdGhlIG5l
+dyBTb0MgYXQgYWxsLg0KDQpUaGlzIGNvZGUgaXNuJ3QgbG9va2luZyBhdCBTb0MgcHJvZHVjdCBu
+dW1iZXJzIC0gdGhlIHdob2xlIHBvaW50IG9mIHB1dHRpbmcgdGhpcyBpbiB0aGUgZGV2aWNlIHRy
+ZWUgaXMgdG8gYXZvaWQgZG9pbmcganVzdCB0aGF0LiAgSWYgd2UgaGFkIHRvIGFkZCBjb2RlIGZv
+ciBlYWNoIFNvQyB0byB1LWJvb3Qgd2UgbWF5IGFzIHdlbGwgZ2V0IHJpZCBvZiB0aGUgZGV2aWNl
+IHRyZWUgYW5kIGhhcmRjb2RlIHRoaXMgY29uZmlndXJhdGlvbiBpbiB0aGUgc291cmNlIGZpbGUg
+dGhhdCBpcyBTb0Mgc3BlY2lmaWMuDQoNCj4gDQo+ID4gIChsb29rIGF0IGNoZWNrcyBmb3IgUU1h
+biB2ZXJzaW9ucyBhbmQgYWRqdXN0bWVudHMgZm9yIFBvb2wgQ2hhbm5lbA0KPiA+IElEcyBpbiB0
+aGUgZHJpdmVyKS4gIElmIHRoZSBjaGFubmVsIElEIGZvciBwb3J0YWwgMCBldmVyIGJlY29tZXMg
+bm9uDQo+ID4gemVybyB3ZSBqdXN0IGVuZCB1cCBoYXZpbmcgdG8gbWFrZSBhIG1lc3MgaW4gdGhl
+IGNvZGUgb3IgcmVpbnRyb2R1Y2UNCj4gPiB0aGlzIGZpZWxkLg0KPiANCj4gV2hhdCBkZWZpbmVz
+IHRoYXQgcG9ydGFsIGFzICJwb3J0YWwgMCI/DQoNClBvcnRhbCAwIGlzIHBvcnRhbCAwIGJlY2F1
+c2UgaXQgaXMgYXQgb2Zmc2V0IDAgaW4gdGhlIFFNYW4gcG9ydGFsIG1lbW9yeSByZWdpb24uICBQ
+b3J0YWwgMSBpcyBhdCAweDQwMDAgZXRjLi4uICBOb3RlIHRoYXQgdGhpcyBpcyBub3QgdGhlIGNh
+c2UgZm9yIGZvcnRoY29taW5nIEFSTSBkZXZpY2VzIGFzIHBvcnRhbHMgYXJlIGRpc3RyaWJ1dGVk
+IGF0IDY0SyBpbnRlcnZhbHMuICBIb3dldmVyIHNpbmNlIHRoZSBkZXZpY2UgdHJlZSBwYXJzaW5n
+IGNvZGUgZm9yIEFSTSBpcyBzZXBhcmF0ZSBmcm9tIHRoZSBQUEMgY29kZSB0aGlzIHdpbGwgbm90
+IHBvc2UgYW55IGlzc3VlLg0KDQoNCj4gDQo+ID4gPiA+IGl0IGlzIHBvc3NpYmxlIHRoYXQgZnV0
+dXJlIFNvQ3MgY291bGQgc3RyYXkgZnJvbSB0aGlzIG1vZGVsLCB0aGVyZQ0KPiA+ID4gPiBpcyBu
+byByZWFzb24gZm9yIHBvcnRhbCBpbmRleCB0byBlcXVhbCBjaGFubmVsIElEIGF0IGFsbCB0aW1l
+cy4NCj4gPiA+DQo+ID4gPiBIb3cgY2FuIGZ1dHVyZSBTb0NzIGRpY3RhdGUgaG93IHdlIGFzc2ln
+biBhIHNvZnR3YXJlLWRlZmluZWQNCj4gaWRlbnRpZmllcj8NCj4gPiA+IElmIHNvZnR3YXJlIHdh
+bnRzIGl0IHRvIGJlIHRoZSBzYW1lIGFzIHRoZSBjaGFubmVsIGlkLCB0aGVuIGl0IHdpbGwgYmUu
+DQo+ID4gPg0KPiA+ID4gSWYgdGhlcmUgaXMgc29tZSBhc3BlY3Qgb2YgdGhlIGhhcmR3YXJlIGl0
+c2VsZiAobm90IHRoZQ0KPiA+ID4gZG9jdW1lbnRhdGlvbikgdGhhdCBjZWxsLWluZGV4IGN1cnJl
+bnRseSBjb3JyZXNwb25kcyB0bywgb3RoZXIgdGhhbg0KPiA+ID4gdGhlIGNoYW5uZWwgaWQsIHBs
+ZWFzZSBtYWtlIHRoYXQgY2xlYXIuDQo+ID4NCj4gPiBDaGFubmVsIElEIGlzIGRlZmluZWQgaW4g
+dGhlIFNvQyBSVEwgLSBpdCBpcyBub3QgY29udHJvbGxlZCBieQ0KPiA+IHNvZnR3YXJlIGFuZCBp
+dCBpcyBub3QgYSBzb2Z0d2FyZSBhc3NpZ25lZCBpZGVudGlmaWVyLiAgSXQgaXMgbm90DQo+ID4g
+cG9zc2libGUgZm9yIFNXIHRvIHNldCB0aGVzZSB2YWx1ZXMuDQo+IA0KPiBJIHNhaWQgIm90aGVy
+IHRoYW4gdGhlIGNoYW5uZWwgaWQiLiAgSW4gcGFydGljdWxhciwgSSB3YXMgYXNraW5nIGFib3V0
+IHRoZQ0KPiBjb25jZXB0IG9mICJwb3J0YWwgaW5kZXgiLg0KDQpUaGUgb25seSB0aGluZyBjZWxs
+LWluZGV4IGluZGljYXRlcyBpcyB0aGUgb2Zmc2V0IG9mIHRoZSBwb3J0YWwgaW4gdGhlIFFNYW4g
+YWRkcmVzcyBzcGFjZS4gIExpbnV4IGRvZXNuJ3QgbG9vayBhdCB0aGlzIHZhbHVlLiAgSWYgd2Ug
+Y2FuIGdldCBwYXN0IHRoZSBpc3N1ZSBvZiBvbGQgdS1ib290cyBub3Qgd29ya2luZyBJIHdvdWxk
+IGhhcHBpbHkgcHJvZHVjZSBwYXRjaGVzIHRoYXQgcmVtb3ZlIHRoaXMgZnJvbSB1LWJvb3QgYW5k
+IHRoZSBkZXZpY2UgdHJlZXMgYW5kIHN0YXJ0IHVzaW5nIHVuaXQtYWRkcmVzcyBmb3IgZGV0ZXJt
+aW5pbmcgd2hpY2ggcG9ydGFsIGlzIGJlaW5nIGluZGV4ZWQuICBTaW5jZSBjaGFubmVsLWlkIGlz
+IGEgcHJvcGVydHkgb2YgYSBwb3J0YWwgSSBiZWxpZXZlIGl0IHNob3VsZCBiZSBsZWZ0IGFzIGlz
+LiBJZiBub3QgSSBiZWxpZXZlIGl0IGlzIGJlc3QgdG8gbGVhdmUgYm90aCB2YWx1ZXMgaW4gcGxh
+Y2UgDQoNClJveQ0KIA0KDQo=
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
