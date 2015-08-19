@@ -1,100 +1,180 @@
-From: Gabriel Fernandez <gabriel.fernandez@linaro.org>
-Subject: [PATCH 2/2] drivers: clk: st: Rename st_pll3200c32_407_c0_x into st_pll3200c32_cx_x
-Date: Wed, 19 Aug 2015 10:48:14 +0200
-Message-ID: <1439974094-32322-3-git-send-email-gabriel.fernandez@linaro.org>
-References: <1439974094-32322-1-git-send-email-gabriel.fernandez@linaro.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1439974094-32322-1-git-send-email-gabriel.fernandez@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Srinivas Kandagatla <srinivas.kandagatla@gmail.com>, Maxime Coquelin <maxime.coquelin@st.com>, Patrice Chotard <patrice.chotard@st.com>, Russell King <linux@arm.linux.org.uk>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Gabriel Fernandez <gabriel.fernandez@linaro.org>, Peter Griffin <peter.griffin@linaro.org>, Pankaj Dev <pankaj.dev@st.com>, Olivier Bideau <olivier.bideau@st.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Fabian Frederick <fabf@skynet.be>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, kernel@stlinux.com, linux-clk@vger.kernel.org
+From: Andy Shevchenko <andriy.shevchenko-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Subject: Re: [PATCH v3 2/2] spi: dw: Allow interface drivers to limit data
+ I/O to word sizes
+Date: Wed, 19 Aug 2015 11:51:06 +0300
+Message-ID: <1439974266.23314.8.camel@linux.intel.com>
+References: <1439929313-4948-1-git-send-email-michael@smart-africa.com>
+	 <1439929313-4948-3-git-send-email-michael@smart-africa.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1439929313-4948-3-git-send-email-michael-XrNoQAPr3WXM9gW82pYGhQ@public.gmane.org>
+Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Michael van der Westhuizen <michael-XrNoQAPr3WXM9gW82pYGhQ@public.gmane.org>, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Thor Thayer <tthayer-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Use a generic name for this kind of PLL
+On Tue, 2015-08-18 at 22:21 +0200, Michael van der Westhuizen wrote:
+> The commit dd11444327ce ("spi: dw-spi: Convert 16bit accesses to 
+> 32bit
+> accesses") changed all 16bit accesses in the DW_apb_ssi driver to 
+> 32bit.
+> This, unfortunately, breaks data register access on picoXcell, where 
+> the
+> DW IP needs data register accesses to be word accesses (all other
+> accesses appear to be OK).
+> 
+> This change introduces a new master variable to allow interface 
+> drivers
+> to specify that 16bit data transfer I/O is required.  This change 
+> also
+> introduces the ability to set this variable via device tree bindings 
+> in
+> the MMIO interface driver.  Both the core and the MMIO interface 
+> driver
+> default to the current 32bit behaviour.
+> 
+> Before this change, on a picoXcell pc3x3:
+>  spi_master spi32766: interrupt_transfer: fifo overrun/underrun
+>  m25p80 spi32766.0: error -5 reading 9f
+>  m25p80: probe of spi32766.0 failed with error -5
+> 
+> After this change:
+>  m25p80 spi32766.0: m25p40 (512 Kbytes)
 
-Correction in dts files are already done here:
-commit 5eb26c605909 ("ARM: STi: DT: Rename st_pll3200c32_407_c0_x into st_pll3200c32_cx_x")
+Reviewed-by: Andy Shevchenko <andriy.shevchenko-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
 
-Signed-off-by: Gabriel Fernandez <gabriel.fernandez@linaro.org>
----
- drivers/clk/st/clkgen-fsyn.c |  8 ++++----
- drivers/clk/st/clkgen-pll.c  | 12 ++++++------
- 2 files changed, 10 insertions(+), 10 deletions(-)
+> 
+> Fixes: dd11444327ce ("spi: dw-spi: Convert 16bit accesses to 32bit 
+> accesses")
+> Signed-off-by: Michael van der Westhuizen <michael-XrNoQAPr3WXM9gW82pYGhQ@public.gmane.org>
+> ---
+> Changes in v3:
+>   - Rename the DT property as requested by Rob Herring.
+> 
+> Changes in v2:
+>   - Incorporate review feedback from Andy Shevchenko
+>     - Rework the DT bindings to accept an I/O register width as a
+>       number of bytes rather than using a boolean spefifying the
+>       width preference to be 16 bits.
+>     - Add data register access wrapper functions and use them when
+>       reading and writing the data register.
+> 
+>  drivers/spi/spi-dw-mmio.c |  3 +++
+>  drivers/spi/spi-dw.c      |  4 ++--
+>  drivers/spi/spi-dw.h      | 35 +++++++++++++++++++++++++++++++++++
+>  3 files changed, 40 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/spi/spi-dw-mmio.c b/drivers/spi/spi-dw-mmio.c
+> index eb03e12..7edede6 100644
+> --- a/drivers/spi/spi-dw-mmio.c
+> +++ b/drivers/spi/spi-dw-mmio.c
+> @@ -74,6 +74,9 @@ static int dw_spi_mmio_probe(struct platform_device 
+> *pdev)
+>  
+>  	dws->max_freq = clk_get_rate(dwsmmio->clk);
+>  
+> +	of_property_read_u32(pdev->dev.of_node, "reg-io-width",
+> +			     &dws->reg_io_width);
+> +
+>  	num_cs = 4;
+>  
+>  	if (pdev->dev.of_node)
+> diff --git a/drivers/spi/spi-dw.c b/drivers/spi/spi-dw.c
+> index 8d67d03..4fbfcdc 100644
+> --- a/drivers/spi/spi-dw.c
+> +++ b/drivers/spi/spi-dw.c
+> @@ -194,7 +194,7 @@ static void dw_writer(struct dw_spi *dws)
+>  			else
+>  				txw = *(u16 *)(dws->tx);
+>  		}
+> -		dw_writel(dws, DW_SPI_DR, txw);
+> +		dw_write_io_reg(dws, DW_SPI_DR, txw);
+>  		dws->tx += dws->n_bytes;
+>  	}
+>  }
+> @@ -205,7 +205,7 @@ static void dw_reader(struct dw_spi *dws)
+>  	u16 rxw;
+>  
+>  	while (max--) {
+> -		rxw = dw_readl(dws, DW_SPI_DR);
+> +		rxw = dw_read_io_reg(dws, DW_SPI_DR);
+>  		/* Care rx only if the transfer's original "rx" is 
+> not null */
+>  		if (dws->rx_end - dws->len) {
+>  			if (dws->n_bytes == 1)
+> diff --git a/drivers/spi/spi-dw.h b/drivers/spi/spi-dw.h
+> index 6c91391..b75ed32 100644
+> --- a/drivers/spi/spi-dw.h
+> +++ b/drivers/spi/spi-dw.h
+> @@ -109,6 +109,7 @@ struct dw_spi {
+>  	u32			fifo_len;	/* depth of the FIFO 
+> buffer */
+>  	u32			max_freq;	/* max bus freq 
+> supported */
+>  
+> +	u32			reg_io_width;	/* DR I/O width in 
+> bytes */
+>  	u16			bus_num;
+>  	u16			num_cs;		/* supported 
+> slave numbers */
+>  
+> @@ -145,11 +146,45 @@ static inline u32 dw_readl(struct dw_spi *dws, 
+> u32 offset)
+>  	return __raw_readl(dws->regs + offset);
+>  }
+>  
+> +static inline u16 dw_readw(struct dw_spi *dws, u32 offset)
+> +{
+> +	return __raw_readw(dws->regs + offset);
+> +}
+> +
+>  static inline void dw_writel(struct dw_spi *dws, u32 offset, u32 
+> val)
+>  {
+>  	__raw_writel(val, dws->regs + offset);
+>  }
+>  
+> +static inline void dw_writew(struct dw_spi *dws, u32 offset, u16 
+> val)
+> +{
+> +	__raw_writew(val, dws->regs + offset);
+> +}
+> +
+> +static inline u32 dw_read_io_reg(struct dw_spi *dws, u32 offset)
+> +{
+> +	switch (dws->reg_io_width) {
+> +	case 2:
+> +		return dw_readw(dws, offset);
+> +	case 4:
+> +	default:
+> +		return dw_readl(dws, offset);
+> +	}
+> +}
+> +
+> +static inline void dw_write_io_reg(struct dw_spi *dws, u32 offset, 
+> u32 val)
+> +{
+> +	switch (dws->reg_io_width) {
+> +	case 2:
+> +		dw_writew(dws, offset, val);
+> +		break;
+> +	case 4:
+> +	default:
+> +		dw_writel(dws, offset, val);
+> +		break;
+> +	}
+> +}
+> +
+>  static inline void spi_enable_chip(struct dw_spi *dws, int enable)
+>  {
+>  	dw_writel(dws, DW_SPI_SSIENR, (enable ? 1 : 0));
 
-diff --git a/drivers/clk/st/clkgen-fsyn.c b/drivers/clk/st/clkgen-fsyn.c
-index 83ccf14..576cd03 100644
---- a/drivers/clk/st/clkgen-fsyn.c
-+++ b/drivers/clk/st/clkgen-fsyn.c
-@@ -307,7 +307,7 @@ static const struct clkgen_quadfs_data st_fs660c32_F_416 = {
- 	.get_rate	= clk_fs660c32_dig_get_rate,
- };
- 
--static const struct clkgen_quadfs_data st_fs660c32_C_407 = {
-+static const struct clkgen_quadfs_data st_fs660c32_C = {
- 	.nrst_present = true,
- 	.nrst	= { CLKGEN_FIELD(0x2f0, 0x1, 0),
- 		    CLKGEN_FIELD(0x2f0, 0x1, 1),
-@@ -350,7 +350,7 @@ static const struct clkgen_quadfs_data st_fs660c32_C_407 = {
- 	.get_rate	= clk_fs660c32_dig_get_rate,
- };
- 
--static const struct clkgen_quadfs_data st_fs660c32_D_407 = {
-+static const struct clkgen_quadfs_data st_fs660c32_D = {
- 	.nrst_present = true,
- 	.nrst	= { CLKGEN_FIELD(0x2a0, 0x1, 0),
- 		    CLKGEN_FIELD(0x2a0, 0x1, 1),
-@@ -1077,11 +1077,11 @@ static const struct of_device_id quadfs_of_match[] = {
- 	},
- 	{
- 		.compatible = "st,stih407-quadfs660-C",
--		.data = &st_fs660c32_C_407
-+		.data = &st_fs660c32_C
- 	},
- 	{
- 		.compatible = "st,stih407-quadfs660-D",
--		.data = &st_fs660c32_D_407
-+		.data = &st_fs660c32_D
- 	},
- 	{}
- };
-diff --git a/drivers/clk/st/clkgen-pll.c b/drivers/clk/st/clkgen-pll.c
-index 47a38a9..b2a332c 100644
---- a/drivers/clk/st/clkgen-pll.c
-+++ b/drivers/clk/st/clkgen-pll.c
-@@ -193,7 +193,7 @@ static const struct clkgen_pll_data st_pll3200c32_407_a0 = {
- 	.ops		= &stm_pll3200c32_ops,
- };
- 
--static const struct clkgen_pll_data st_pll3200c32_407_c0_0 = {
-+static const struct clkgen_pll_data st_pll3200c32_cx_0 = {
- 	/* 407 C0 PLL0 */
- 	.pdn_status	= CLKGEN_FIELD(0x2a0,	0x1,			8),
- 	.locked_status	= CLKGEN_FIELD(0x2a0,	0x1,			24),
-@@ -205,7 +205,7 @@ static const struct clkgen_pll_data st_pll3200c32_407_c0_0 = {
- 	.ops		= &stm_pll3200c32_ops,
- };
- 
--static const struct clkgen_pll_data st_pll3200c32_407_c0_1 = {
-+static const struct clkgen_pll_data st_pll3200c32_cx_1 = {
- 	/* 407 C0 PLL1 */
- 	.pdn_status	= CLKGEN_FIELD(0x2c8,	0x1,			8),
- 	.locked_status	= CLKGEN_FIELD(0x2c8,	0x1,			24),
-@@ -624,12 +624,12 @@ static const struct of_device_id c32_pll_of_match[] = {
- 		.data = &st_pll3200c32_407_a0,
- 	},
- 	{
--		.compatible = "st,stih407-plls-c32-c0_0",
--		.data = &st_pll3200c32_407_c0_0,
-+		.compatible = "st,plls-c32-cx_0",
-+		.data = &st_pll3200c32_cx_0,
- 	},
- 	{
--		.compatible = "st,stih407-plls-c32-c0_1",
--		.data = &st_pll3200c32_407_c0_1,
-+		.compatible = "st,plls-c32-cx_1",
-+		.data = &st_pll3200c32_cx_1,
- 	},
- 	{
- 		.compatible = "st,stih407-plls-c32-a9",
 -- 
-1.9.1
+Andy Shevchenko <andriy.shevchenko-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Intel Finland Oy
+--
+To unsubscribe from this list: send the line "unsubscribe linux-spi" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
