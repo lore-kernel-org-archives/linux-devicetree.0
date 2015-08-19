@@ -1,166 +1,319 @@
-From: Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: Re: [PATCH 1/2] powerpc/qman: Change fsl,qman-channel-id to
- cell-index
-Date: Wed, 19 Aug 2015 16:30:21 -0500
-Message-ID: <20150819213021.GA22290@home.buserror.net>
-References: <1429311187-19062-1-git-send-email-scottwood@freescale.com>
- <BN3PR0301MB126796C0EC18EEBB26702C588CD10@BN3PR0301MB1267.namprd03.prod.outlook.com>
- <1430858734.16357.256.camel@freescale.com>
- <BN3PR0301MB1267E5A61E7E5BC2789F9E898CDA0@BN3PR0301MB1267.namprd03.prod.outlook.com>
- <1431470762.16357.511.camel@freescale.com>
- <BN3PR0301MB12670C0BE318280D1C53FE0F8C670@BN3PR0301MB1267.namprd03.prod.outlook.com>
+From: Stefan Wahren <info@lategoodbye.de>
+Subject: Re: [PATCH v2 3/7] drm/vc4: Add KMS support for Raspberry Pi.
+Date: Wed, 19 Aug 2015 23:37:14 +0200
+Message-ID: <55D4F70A.30508@lategoodbye.de>
+References: <1439934848-7196-1-git-send-email-eric@anholt.net>
+ <1439934848-7196-4-git-send-email-eric@anholt.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <BN3PR0301MB12670C0BE318280D1C53FE0F8C670-CEkquS/Gb80KBjv5qxT+hJwN6zqB+hSMnBOFsp37pqbUKgpGm//BTAC/G2K4zDHf@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Pledge Roy-R01356 <roy.pledge-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Cc: "linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Bucur Madalin-Cristian-B32716 <madalin.bucur-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Wang Haiying-R54964 <Haiying.Wang-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Content-Type: text/plain; charset=utf-8;
+	format=flowed
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1439934848-7196-4-git-send-email-eric@anholt.net>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Eric Anholt <eric@anholt.net>
+Cc: dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-rpi-kernel@lists.infradead.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Aug 19, 2015 at 03:52:55PM -0500, Pledge Roy-R01356 wrote:
-> Sorry for digging up an old thread here Scott, but we never did close on this discussion.  See my replies inline below....
-> 
-> > -----Original Message-----
-> > From: Wood Scott-B07421
-> > Sent: Tuesday, May 12, 2015 6:46 PM
-> > To: Pledge Roy-R01356
-> > Cc: linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org; devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; Bucur
-> > Madalin-Cristian-B32716
-> > Subject: Re: [PATCH 1/2] powerpc/qman: Change fsl,qman-channel-id to cell-
-> > index
-> > 
-> > On Tue, 2015-05-12 at 16:19 -0500, Pledge Roy-R01356 wrote:
-> > > > >
-> > > > > I don't believe this is correct - let me explain the rational why
-> > > > > we had two
-> > > > properties in the QMan portal to begin with.
-> > > > >
-> > > > > The two properties in question are cell-index and fsl,qman-channel-id.
-> > > > >
-> > > > > The cell-index property is used in u-boot as an index for the
-> > > > > software portal
-> > > > ID when adding the fsl,liodn from the U-boot table into the device tree.
-> > > >
-> > > > The device tree is not supposed to contain arbitrary software identifiers.
-> > >
-> > > I agree - this is why the original device tree bindings removed
-> > > cell-index as it can be calculated.
-> >  Unfortunately u-boot relied on
-> > > this value being present so to be backward compatible we don't have a
-> > > way to remove it.  I'm not sure on what the procedure is to change
-> > > things u-boot relies on,
-> > 
-> > Generally the procedure is that we don't change it.  It wouldn't be so bad if
-> > using an old U-Boot just meant that datapath doesn't work with upstream
-> > kernels (since that doesn't work now), but a dts that makes existing U-Boot
-> > crash is another matter.
-> 
-> If this is true then we can never remove the cell-index property.
+Hi Eric,
 
-Correct.
+only a few nits.
 
-> The cell-index in this case is referring to the portal index which
-> could be calculated from the qman-portal@XXXX value.  My preference
-> would be to eliminate cell-index and replace it with this calculation
-> but that would mean older u-boot would fail to work with newer kernel. 
-> While the bug that caused older u-boot to crash if this property is
-> annoying this has been addressed in more recent u-boots.  I can't
-> comment on a policy where u-boot must always boot newer version of
-> Linux - that means Linux will have to drag along baggage like this
-> property for a long time (forever?).
+Am 18.08.2015 um 23:54 schrieb Eric Anholt:
+> This is the start of a full VC4 driver.  Right now this just supports
+> configuring the display using a pre-existing video mode (because
+> changing the pixel clock isn't available yet, and doesn't work when i=
+t
+> is).  However, this is enough for fbcon and bringing up X using
+> xf86-video-modesetting.
+>
+> Signed-off-by: Eric Anholt <eric@anholt.net>
+> ---
+>
+> v2: Drop FB_HELPER select thanks to Archit's patches.  Do manual init
+>      ordering instead of using the .load hook.  Structure registratio=
+n
+>      more like tegra's, but still using the typical "component" code.
+>      Drop no-op hooks for atomic_begin and mode_fixup() now that
+>      they're optional.  Drop sentinel in Makefile.  Fix minor style
+>      nits I noticed on another reread.
+>
+>   drivers/gpu/drm/Kconfig           |   2 +
+>   drivers/gpu/drm/Makefile          |   1 +
+>   drivers/gpu/drm/vc4/Kconfig       |  13 +
+>   drivers/gpu/drm/vc4/Makefile      |  17 +
+>   drivers/gpu/drm/vc4/vc4_bo.c      |  52 ++++
+>   drivers/gpu/drm/vc4/vc4_crtc.c    | 565 +++++++++++++++++++++++++++=
++++++++
+>   drivers/gpu/drm/vc4/vc4_debugfs.c |  38 +++
+>   drivers/gpu/drm/vc4/vc4_drv.c     | 271 ++++++++++++++++
+>   drivers/gpu/drm/vc4/vc4_drv.h     | 120 ++++++++
+>   drivers/gpu/drm/vc4/vc4_hdmi.c    | 633 +++++++++++++++++++++++++++=
++++++++++++
+>   drivers/gpu/drm/vc4/vc4_hvs.c     | 161 ++++++++++
+>   drivers/gpu/drm/vc4/vc4_kms.c     |  84 +++++
+>   drivers/gpu/drm/vc4/vc4_plane.c   | 320 +++++++++++++++++++
+>   drivers/gpu/drm/vc4/vc4_regs.h    | 562 +++++++++++++++++++++++++++=
+++++++
+>   14 files changed, 2839 insertions(+)
+>   create mode 100644 drivers/gpu/drm/vc4/Kconfig
+>   create mode 100644 drivers/gpu/drm/vc4/Makefile
+>   create mode 100644 drivers/gpu/drm/vc4/vc4_bo.c
+>   create mode 100644 drivers/gpu/drm/vc4/vc4_crtc.c
+>   create mode 100644 drivers/gpu/drm/vc4/vc4_debugfs.c
+>   create mode 100644 drivers/gpu/drm/vc4/vc4_drv.c
+>   create mode 100644 drivers/gpu/drm/vc4/vc4_drv.h
+>   create mode 100644 drivers/gpu/drm/vc4/vc4_hdmi.c
+>   create mode 100644 drivers/gpu/drm/vc4/vc4_hvs.c
+>   create mode 100644 drivers/gpu/drm/vc4/vc4_kms.c
+>   create mode 100644 drivers/gpu/drm/vc4/vc4_plane.c
+>   create mode 100644 drivers/gpu/drm/vc4/vc4_regs.h
+>
+> [...]
+> +static void vc4_crtc_mode_set_nofb(struct drm_crtc *crtc)
+> +{
+> +	struct vc4_crtc *vc4_crtc =3D to_vc4_crtc(crtc);
+> +	struct drm_crtc_state *state =3D crtc->state;
+> +	struct drm_display_mode *mode =3D &state->adjusted_mode;
+> +	u32 vactive =3D (mode->vdisplay >>
+> +		       ((mode->flags & DRM_MODE_FLAG_INTERLACE) ? 1 : 0));
+> +	u32 format =3D PV_CONTROL_FORMAT_24;
+> +	bool debug_dump_regs =3D false;
+> +
+> +	if (debug_dump_regs) {
+> +		DRM_INFO("CRTC %d regs before:\n", drm_crtc_index(crtc));
+> +		vc4_crtc_dump_regs(vc4_crtc);
+> +	}
+> +
+> +	/* This is where we would set the pixel clock. */
+> +
+> +	/* Reset the PV fifo. */
+> +	CRTC_WRITE(PV_CONTROL, 0);
+> +	CRTC_WRITE(PV_CONTROL, PV_CONTROL_FIFO_CLR | PV_CONTROL_EN);
+> +	CRTC_WRITE(PV_CONTROL, 0);
+> +
+> +	CRTC_WRITE(PV_HORZA,
+> +		   VC4_SET_FIELD(mode->htotal - mode->hsync_end,
+> +				 PV_HORZA_HBP) |
+> +		   VC4_SET_FIELD(mode->hsync_end - mode->hsync_start,
+> +				 PV_HORZA_HSYNC));
+> +	CRTC_WRITE(PV_HORZB,
+> +		   VC4_SET_FIELD(mode->hsync_start - mode->hdisplay,
+> +				 PV_HORZB_HFP) |
+> +		   VC4_SET_FIELD(mode->hdisplay, PV_HORZB_HACTIVE));
+> +
+> +	CRTC_WRITE(PV_VERTA,
+> +		   VC4_SET_FIELD(mode->vtotal - mode->vsync_end,
+> +				 PV_VERTA_VBP) |
+> +		   VC4_SET_FIELD(mode->vsync_end - mode->vsync_start,
+> +				 PV_VERTA_VSYNC));
+> +	CRTC_WRITE(PV_VERTB,
+> +		   VC4_SET_FIELD(mode->vsync_start - mode->vdisplay,
+> +				 PV_VERTB_VFP) |
+> +		   VC4_SET_FIELD(vactive, PV_VERTB_VACTIVE));
+> +	if (mode->flags & DRM_MODE_FLAG_INTERLACE) {
+> +		/* Write PV_VERTA_EVEN/VERTB_EVEN */
+> +	}
 
-The baggage isn't particularly onerous.  It's just using a suboptimal
-property name.  The semantics are exactly the same as
-fsl,qman-channel-id.
+checkpatch complains here. Is this intended to have only a comment? Is=20
+it a TODO?
 
-> > > >
-> > > > > The  fsl,qman-channel-id property is used in Linux and corresponds
-> > > > > to a hardware value that indicates which channel is dedicated to
-> > > > > the software portal.
-> > > > >
-> > > > > While I'm not aware of a current SoC where the channel ID for a
-> > > > > software portal does not match the index (i.e. SWP 0 uses channel
-> > > > > 0,
-> > > > > etc.)
-> > > >
-> > > > Thus there's no backward compatibility issue with redefining
-> > > > cell-index to mean the channel ID.
-> > >
-> > > Channel IDs do change and are defined when the SoC is created
-> > 
-> > But for SoCs that already exist, they won't change, right?  We don't need to
-> > care about what existing U-Boot does on new SoCs, since U-Boot would
-> > need to be changed to support the new SoC at all.
-> 
-> This code isn't looking at SoC product numbers - the whole point of
-> putting this in the device tree is to avoid doing just that.  If we had
-> to add code for each SoC to u-boot we may as well get rid of the device
-> tree and hardcode this configuration in the source file that is SoC
-> specific.
+> [...]
+> --- /dev/null
+> +++ b/drivers/gpu/drm/vc4/vc4_drv.h
+> @@ -0,0 +1,120 @@
+> +/*
+> + * Copyright (C) 2015 Broadcom
+> + *
+> + * This program is free software; you can redistribute it and/or mod=
+ify
+> + * it under the terms of the GNU General Public License version 2 as
+> + * published by the Free Software Foundation.
+> + */
+> +
+> +#include "drmP.h"
+> +#include "drm_gem_cma_helper.h"
+> +
+> +struct vc4_dev {
+> +	struct drm_device *dev;
+> +
+> +	struct vc4_hdmi *hdmi;
+> +	struct vc4_hvs *hvs;
+> +	struct vc4_crtc *crtc[3];
+> +};
+> +
+> +static inline struct vc4_dev *
+> +to_vc4_dev(struct drm_device *dev)
+> +{
+> +	return (struct vc4_dev *)dev->dev_private;
+> +}
+> +
+> +struct vc4_bo {
+> +	struct drm_gem_cma_object base;
+> +};
+> +
+> +static inline struct vc4_bo *
+> +to_vc4_bo(struct drm_gem_object *bo)
+> +{
+> +	return (struct vc4_bo *)bo;
+> +}
+> +
+> +struct vc4_hvs {
+> +	struct platform_device *pdev;
+> +	void __iomem *regs;
+> +	void __iomem *dlist;
+> +};
+> +
+> +struct vc4_crtc {
+> +	struct drm_crtc base;
+> +	void __iomem *regs;
+> +
+> +	/* Which HVS channel we're using for our CRTC. */
+> +	int channel;
+> +
+> +	/* Pointer to the actual hardware display list memory for the
+> +	 * crtc.
+> +	 */
+> +	u32 __iomem *dlist;
+> +
+> +	u32 dlist_size; /* in dwords */
+> +
+> +	struct drm_pending_vblank_event *event;
+> +};
+> +
+> +static inline struct vc4_crtc *
+> +to_vc4_crtc(struct drm_crtc *crtc)
+> +{
+> +	return (struct vc4_crtc *)crtc;
+> +}
+> +
+> +struct vc4_plane {
+> +	struct drm_plane base;
+> +};
+> +
+> +static inline struct vc4_plane *
+> +to_vc4_plane(struct drm_plane *plane)
+> +{
+> +	return (struct vc4_plane *)plane;
+> +}
+> +
+> +#define HVS_READ(offset) readl(vc4->hvs->regs + offset)
+> +#define HVS_WRITE(offset, val) writel(val, vc4->hvs->regs + offset)
+> +
+> +/* vc4_bo.c */
 
-The point of putting this in the device tree is to avoid per-SoC code in
-*Linux*.  U-Boot does use the device tree for similar purposes on some
-platforms, but that's not something we've done yet.  I'm not sure how
-it's relevant, though.  How would it be different if we had
-fsl,qman-channel-id and no cell-index?
+I'm not sure about these filename references.
 
-When I mentioned U-Boot needing to be updated for new SoCs, I meant to
-run in general, not specifically the QMan code.  So, needing to be
-compatible with existing QMan code is only an issue for SoCs where an
-older U-Boot actually exists.  We don't need to care what the old code
-would have done on newer SoCs.
+> +void vc4_free_object(struct drm_gem_object *gem_obj);
+> +struct vc4_bo *vc4_bo_create(struct drm_device *dev, size_t size);
+> +int vc4_dumb_create(struct drm_file *file_priv,
+> +		    struct drm_device *dev,
+> +		    struct drm_mode_create_dumb *args);
+> +struct dma_buf *vc4_prime_export(struct drm_device *dev,
+> +				 struct drm_gem_object *obj, int flags);
+> +
+> +/* vc4_crtc.c */
+> +extern struct platform_driver vc4_crtc_driver;
+> +int vc4_enable_vblank(struct drm_device *dev, int crtc_id);
+> +void vc4_disable_vblank(struct drm_device *dev, int crtc_id);
+> +void vc4_cancel_page_flip(struct drm_crtc *crtc, struct drm_file *fi=
+le);
+> +int vc4_crtc_debugfs_regs(struct seq_file *m, void *arg);
+> +
+> +/* vc4_debugfs.c */
+> +int vc4_debugfs_init(struct drm_minor *minor);
+> +void vc4_debugfs_cleanup(struct drm_minor *minor);
+> +
+> +/* vc4_drv.c */
+> +void __iomem *vc4_ioremap_regs(struct platform_device *dev, int inde=
+x);
+> +
+> +/* vc4_hdmi.c */
+> +extern struct platform_driver vc4_hdmi_driver;
+> +struct drm_encoder *vc4_hdmi_encoder_init(struct drm_device *dev);
+> +struct drm_connector *vc4_hdmi_connector_init(struct drm_device *dev=
+,
+> +					      struct drm_encoder *encoder);
+> +int vc4_hdmi_debugfs_regs(struct seq_file *m, void *unused);
+> +
+> +/* vc4_hvs.c */
+> +extern struct platform_driver vc4_hvs_driver;
+> +void vc4_hvs_dump_state(struct drm_device *dev);
+> +int vc4_hvs_debugfs_regs(struct seq_file *m, void *unused);
+> +
+> +/* vc4_kms.c */
+> +int vc4_kms_load(struct drm_device *dev);
+> +
+> +/* vc4_plane.c */
+> +struct drm_plane *vc4_plane_init(struct drm_device *dev,
+> +				 enum drm_plane_type type);
+> +u32 vc4_plane_write_dlist(struct drm_plane *plane, u32 __iomem *dlis=
+t);
+> +u32 vc4_plane_dlist_size(struct drm_plane_state *state);
+>
+> [...]
+> diff --git a/drivers/gpu/drm/vc4/vc4_regs.h b/drivers/gpu/drm/vc4/vc4=
+_regs.h
+> new file mode 100644
+> index 0000000..0eff631
+> --- /dev/null
+> +++ b/drivers/gpu/drm/vc4/vc4_regs.h
+> @@ -0,0 +1,562 @@
+> +/*
+> + *  Copyright =C2=A9 2014-2015 Broadcom
+> + *
+> + * This program is free software; you can redistribute it and/or mod=
+ify
+> + * it under the terms of the GNU General Public License version 2 as
+> + * published by the Free Software Foundation.
+> + */
+> +
+> +#define VC4_MASK(high, low) (((1 << ((high) - (low) + 1)) - 1) << (l=
+ow))
+> +/* Using the GNU statement expression extension */
+> +#define VC4_SET_FIELD(value, field)					\
+> +	({								\
+> +		uint32_t fieldval =3D (value) << field##_SHIFT;		\
+> +		WARN_ON((fieldval & ~field##_MASK) !=3D 0);		\
+> +		fieldval & field##_MASK;				\
+> +	 })
+> +
+> +#define VC4_GET_FIELD(word, field) (((word) & field##_MASK) >>		\
+> +				    field##_SHIFT)
+> +
+> +#define V3D_IDENT0   0x00000
+> +# define V3D_EXPECTED_IDENT0 \
+> +	((2 << 24) | \
+> +	('V' << 0) | \
+> +	('3' << 8) | \
+> +	 ('D' << 16))
+> +
+> +#define V3D_IDENT1   0x00004
+> +/* Multiples of 1kb */
+> +# define V3D_IDENT1_VPM_SIZE_MASK                      VC4_MASK(31, =
+28)
+> +# define V3D_IDENT1_VPM_SIZE_SHIFT                     28
+> +# define V3D_IDENT1_NSEM_MASK                          VC4_MASK(23, =
+16)
+> +# define V3D_IDENT1_NSEM_SHIFT                         16
+> +# define V3D_IDENT1_TUPS_MASK                          VC4_MASK(15, =
+12)
+> +# define V3D_IDENT1_TUPS_SHIFT                         12
+> +# define V3D_IDENT1_QUPS_MASK                          VC4_MASK(11, =
+8)
+> +# define V3D_IDENT1_QUPS_SHIFT                         8
+> +# define V3D_IDENT1_NSLC_MASK                          VC4_MASK(7, 4=
+)
+> +# define V3D_IDENT1_NSLC_SHIFT                         4
+> +# define V3D_IDENT1_REV_MASK                           VC4_MASK(3, 0=
+)
+> +# define V3D_IDENT1_REV_SHIFT                          0
+> +
+> +#define V3D_IDENT2   0x00008
+> +#define V3D_SCRATCH  0x00010
+> +#define V3D_L2CACTL  0x00020
+> +# define V3D_L2CACTL_L2CCLR                            (1 << 2)
 
-> > >  (look at checks for QMan versions and adjustments for Pool Channel
-> > > IDs in the driver).  If the channel ID for portal 0 ever becomes non
-> > > zero we just end up having to make a mess in the code or reintroduce
-> > > this field.
-> > 
-> > What defines that portal as "portal 0"?
-> 
-> Portal 0 is portal 0 because it is at offset 0 in the QMan portal
-> memory region.  Portal 1 is at 0x4000 etc...  Note that this is not the
-> case for forthcoming ARM devices as portals are distributed at 64K
-> intervals.  However since the device tree parsing code for ARM is
-> separate from the PPC code this will not pose any issue.
+Maybe you could use the BIT macro?
 
-I don't understand why it would cause an issue in any case.  U-Boot would
-need to either know the mapping from portal address to channel id, or get
-it from the device tree.  There's no need to introduce the concept of
-"portal number" except perhaps as some internal implementation detail.
-
-> 
-> > 
-> > > > > it is possible that future SoCs could stray from this model, there
-> > > > > is no reason for portal index to equal channel ID at all times.
-> > > >
-> > > > How can future SoCs dictate how we assign a software-defined
-> > identifier?
-> > > > If software wants it to be the same as the channel id, then it will be.
-> > > >
-> > > > If there is some aspect of the hardware itself (not the
-> > > > documentation) that cell-index currently corresponds to, other than
-> > > > the channel id, please make that clear.
-> > >
-> > > Channel ID is defined in the SoC RTL - it is not controlled by
-> > > software and it is not a software assigned identifier.  It is not
-> > > possible for SW to set these values.
-> > 
-> > I said "other than the channel id".  In particular, I was asking about the
-> > concept of "portal index".
-> 
-> The only thing cell-index indicates is the offset of the portal in the
-> QMan address space.
-
-cell-index has been redefined to not mean that at all.  It now only means
-channel ID.  We can do this because the value happens to be the same for
-all existing SoCs (and we should be sure to avoid putting things into the
-SDK for the aforementioned ARM chips that are contrary to the new
-definition).
-
--Scott
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Thanks Stefan
