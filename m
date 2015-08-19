@@ -1,133 +1,36 @@
-From: Michael Welling <mwelling@ieee.org>
-Subject: Re: [PATCH] input: ti_am335x_tsc: Add open delay parameter
-Date: Wed, 19 Aug 2015 13:08:36 -0500
-Message-ID: <20150819180835.GB29773@deathstar>
-References: <1439318705-18601-1-git-send-email-mwelling@ieee.org>
- <55CAE71C.4060505@ti.com>
- <20150812184420.GA2442@deathstar>
+From: atull <atull@opensource.altera.com>
+Subject: Re: [PATCH v10 5/8] staging: usage documentation for simple fpga
+ bus
+Date: Wed, 19 Aug 2015 13:28:03 -0500
+Message-ID: <alpine.DEB.2.02.1508191327320.15060@linuxheads99>
+References: <1439487452-23977-1-git-send-email-atull@opensource.altera.com> <1439487452-23977-7-git-send-email-atull@opensource.altera.com> <20150817120355.GD434@amd>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-input-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20150812184420.GA2442@deathstar>
-Sender: linux-input-owner@vger.kernel.org
-To: Vignesh R <vigneshr@ti.com>
-Cc: Wolfram Sang <wsa@the-dreams.de>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-input@vger.kernel.org, Jonathan Cameron <jic23@kernel.org>, Brad Griffis <bgriffis@ti.com>
+Content-Type: text/plain; charset="US-ASCII"
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <20150817120355.GD434@amd>
+Sender: linux-doc-owner@vger.kernel.org
+To: Pavel Machek <pavel@denx.de>
+Cc: gregkh@linuxfoundation.org, jgunthorpe@obsidianresearch.com, hpa@zytor.com, monstr@monstr.eu, michal.simek@xilinx.com, rdunlap@infradead.org, Moritz Fischer <moritz.fischer@ettus.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, pantelis.antoniou@konsulko.com, robh+dt@kernel.org, grant.likely@linaro.org, iws@ovro.caltech.edu, linux-doc@vger.kernel.org, broonie@kernel.org, philip@balister.org, rubini@gnudd.com, s.trumtrar@pengutronix.de, jason@lakedaemon.net, kyle.teske@ni.com, nico@linaro.org, balbi@ti.com, m.chehab@samsung.com, davidb@codeaurora.org, rob@landley.net, davem@davemloft.net, cesarb@cesarb.net, sameo@linux.intel.com, akpm@linux-foundation.org, linus.walleij@linaro.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devel@driverde
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Aug 12, 2015 at 01:44:22PM -0500, Michael Welling wrote:
-> On Wed, Aug 12, 2015 at 11:56:36AM +0530, Vignesh R wrote:
-> > Hi Michael,
-> > 
-> > + Dmitry
-> > 
-> > On 08/12/2015 12:15 AM, Michael Welling wrote:
-> > > Adds a device tree parameter to set the open delay on the touchscreen
-> > > conversion steps. Increasing this parameter helps the touch accuracy on
-> > > some screens.
-> > > 
-> > > Signed-off-by: Michael Welling <mwelling@ieee.org>
-> > > ---
-> > >  .../bindings/input/touchscreen/ti-tsc-adc.txt          |  5 +++++
-> > >  drivers/input/touchscreen/ti_am335x_tsc.c              | 18 ++++++++++++++----
-> > >  2 files changed, 19 insertions(+), 4 deletions(-)
-> > > 
-> > > diff --git a/Documentation/devicetree/bindings/input/touchscreen/ti-tsc-adc.txt b/Documentation/devicetree/bindings/input/touchscreen/ti-tsc-adc.txt
-> > > index b1163bf..cb11fda 100644
-> > > --- a/Documentation/devicetree/bindings/input/touchscreen/ti-tsc-adc.txt
-> > > +++ b/Documentation/devicetree/bindings/input/touchscreen/ti-tsc-adc.txt
-> > > @@ -41,6 +41,11 @@ Optional properties:
-> > >  			 charge step, so this does in fact function as a
-> > >  			 hardware knob for adjusting the amount of "settling
-> > >  			 time".
-> > > +	ti,open-delay: Open delay applied to all touchscreen conversion steps.
-> > > +			The value corresponds to the number of ADC clock
-> > > +			cycles to wait after applying the step configuration
-> > > +			registers and before sending the start of ADC
-> > > +			conversion. Maximum value is 0x3FFFF.
-> > >  
-> > 
-> > Since open-delay is per step, is it not better to allow specifying
-> > open-delay per step like ti,chan-step-opendelay of adc? This will help
-> > control open-delay for all the four wires.
-> 
-> Do you see any reason why you would want a different delay for each step of
-> the conversion on the same touchscreen?
-> 
-> The user would need to know the number of steps what each of the steps do.
-> 
+On Mon, 17 Aug 2015, Pavel Machek wrote:
 
-Comments?
-
-Any other concerns?
-
+> On Thu 2015-08-13 12:37:29, atull@opensource.altera.com wrote:
+> > From: Alan Tull <atull@opensource.altera.com>
 > > 
-> > >  - child "adc"
-> > >  	ti,chan-step-opendelay: List of open delays for each channel of
-> > > diff --git a/drivers/input/touchscreen/ti_am335x_tsc.c b/drivers/input/touchscreen/ti_am335x_tsc.c
-> > > index 191a1b8..37a9729 100644
-> > > --- a/drivers/input/touchscreen/ti_am335x_tsc.c
-> > > +++ b/drivers/input/touchscreen/ti_am335x_tsc.c
-> > > @@ -54,6 +54,7 @@ struct titsc {
-> > >  	u32			inp_xp, inp_xn, inp_yp, inp_yn;
-> > >  	u32			step_mask;
-> > >  	u32			charge_delay;
-> > > +	u32			open_delay;
-> > >  };
-> > >  
-> > >  static unsigned int titsc_readl(struct titsc *ts, unsigned int reg)
-> > > @@ -148,7 +149,7 @@ static void titsc_step_config(struct titsc *ts_dev)
-> > >  	end_step = first_step + tsc_steps;
-> > >  	for (i = end_step - ts_dev->coordinate_readouts; i < end_step; i++) {
-> > >  		titsc_writel(ts_dev, REG_STEPCONFIG(i), config);
-> > > -		titsc_writel(ts_dev, REG_STEPDELAY(i), STEPCONFIG_OPENDLY);
-> > > +		titsc_writel(ts_dev, REG_STEPDELAY(i), ts_dev->open_delay);
-> > >  	}
-> > >  
-> > >  	config = 0;
-> > > @@ -172,7 +173,7 @@ static void titsc_step_config(struct titsc *ts_dev)
-> > >  	end_step = first_step + ts_dev->coordinate_readouts;
-> > >  	for (i = first_step; i < end_step; i++) {
-> > >  		titsc_writel(ts_dev, REG_STEPCONFIG(i), config);
-> > > -		titsc_writel(ts_dev, REG_STEPDELAY(i), STEPCONFIG_OPENDLY);
-> > > +		titsc_writel(ts_dev, REG_STEPDELAY(i), ts_dev->open_delay);
-> > >  	}
-> > >  
-> > >  	/* Make CHARGECONFIG same as IDLECONFIG */
-> > > @@ -188,13 +189,13 @@ static void titsc_step_config(struct titsc *ts_dev)
-> > >  			STEPCONFIG_INP(ts_dev->inp_xp);
-> > >  	titsc_writel(ts_dev, REG_STEPCONFIG(end_step), config);
-> > >  	titsc_writel(ts_dev, REG_STEPDELAY(end_step),
-> > > -			STEPCONFIG_OPENDLY);
-> > > +			ts_dev->open_delay);
-> > >  
-> > >  	end_step++;
-> > >  	config |= STEPCONFIG_INP(ts_dev->inp_yn);
-> > >  	titsc_writel(ts_dev, REG_STEPCONFIG(end_step), config);
-> > >  	titsc_writel(ts_dev, REG_STEPDELAY(end_step),
-> > > -			STEPCONFIG_OPENDLY);
-> > > +			ts_dev->open_delay);
-> > >  
-> > >  	/* The steps end ... end - readouts * 2 + 2 and bit 0 for TS_Charge */
-> > >  	stepenable = 1;
-> > > @@ -392,6 +393,15 @@ static int titsc_parse_dt(struct platform_device *pdev,
-> > >  		dev_warn(&pdev->dev, "ti,charge-delay not specified\n");
-> > >  	}
-> > >  
-> > > +	err = of_property_read_u32(node, "ti,open-delay",
-> > > +				   &ts_dev->open_delay);
-> > > +	/*
-> > > +	 * If ti,open-delay value is not specified, then use
-> > > +	 * STEPCONFIG_OPENDLY as the default value.
-> > > +	 */
-> > > +	if (err < 0)
-> > > +		ts_dev->open_delay = STEPCONFIG_OPENDLY;
-> > > +
-> > >  	return of_property_read_u32_array(node, "ti,wire-config",
-> > >  			ts_dev->config_inp, ARRAY_SIZE(ts_dev->config_inp));
-> > >  }
-> > > 
+> > Add a document spelling out usage of the simple fpga bus.
 > > 
-> > -- 
-> > Regards
-> > Vignesh
+> > Signed-off-by: Alan Tull <atull@opensource.altera.com>
+> 
+> Acked-by: Pavel Machek <pavel@denx.de>
+> 										Pavel
+Hi Pavel,
+
+Thanks!
+
+Alan
+
+> -- 
+> (english) http://www.livejournal.com/~pavelmachek
+> (cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blog.html
+> 
