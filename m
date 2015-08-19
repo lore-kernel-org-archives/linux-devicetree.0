@@ -1,7 +1,7 @@
 From: Lee Jones <lee.jones@linaro.org>
-Subject: [PATCH v3 5/5] ARM: STi: DT: STiH407: Enable Mailbox testing facility
-Date: Wed, 19 Aug 2015 15:22:55 +0100
-Message-ID: <1439994175-13360-6-git-send-email-lee.jones@linaro.org>
+Subject: [PATCH v3 3/5] ARM: STi: stih407-family: Add nodes for Mailbox
+Date: Wed, 19 Aug 2015 15:22:53 +0100
+Message-ID: <1439994175-13360-4-git-send-email-lee.jones@linaro.org>
 References: <1439994175-13360-1-git-send-email-lee.jones@linaro.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1439994175-13360-1-git-send-email-lee.jones@linaro.org>
@@ -10,32 +10,60 @@ To: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 Cc: kernel@stlinux.com, jassisinghbrar@gmail.com, devicetree@vger.kernel.org, Lee Jones <lee.jones@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch supplies a Client node to enable the Mailbox testing
-facility.  It will be used to send and receive messages from any
-given co-processor in order to test the STi Mailbox Controller
-driver.
+This patch supplies the Mailbox Controller nodes.  In order to
+request channels, these nodes will be referenced by Mailbox
+Client nodes.
 
 Signed-off-by: Lee Jones <lee.jones@linaro.org>
 ---
- arch/arm/boot/dts/stih407-family.dtsi | 6 ++++++
- 1 file changed, 6 insertions(+)
+ arch/arm/boot/dts/stih407-family.dtsi | 36 +++++++++++++++++++++++++++++++++++
+ 1 file changed, 36 insertions(+)
 
 diff --git a/arch/arm/boot/dts/stih407-family.dtsi b/arch/arm/boot/dts/stih407-family.dtsi
-index 32da3f8..ac1d1ee 100644
+index 838b812..32da3f8 100644
 --- a/arch/arm/boot/dts/stih407-family.dtsi
 +++ b/arch/arm/boot/dts/stih407-family.dtsi
-@@ -566,6 +566,12 @@
+@@ -565,5 +565,41 @@
+ 						  <&phy_port2 PHY_TYPE_USB3>;
  			};
  		};
- 
-+		mailbox_test {
-+			compatible = "mailbox_test";
-+			mboxes = <&mailbox2 1 31>, <&mailbox0 1 31>;
-+			mbox-names = "tx", "rx";
++
++		mailbox0: mailbox@0  {
++			compatible	= "st,stih407-mailbox";
++			reg		= <0x8f00000 0x1000>;
++			interrupts	= <GIC_SPI 1 IRQ_TYPE_NONE>;
++			#mbox-cells	= <2>;
++			mbox-name	= "a9";
++			status		= "okay";
 +		};
 +
- 		mailbox0: mailbox@0  {
- 			compatible	= "st,stih407-mailbox";
- 			reg		= <0x8f00000 0x1000>;
++		mailbox1: mailbox@1 {
++			compatible	= "st,stih407-mailbox";
++			reg		= <0x8f01000 0x1000>;
++			#mbox-cells	= <2>;
++			mbox-name	= "st231_gp_1";
++			status		= "okay";
++			tx-only;
++		};
++
++		mailbox2: mailbox@2 {
++			compatible	= "st,stih407-mailbox";
++			reg		= <0x8f02000 0x1000>;
++			#mbox-cells	= <2>;
++			mbox-name	= "st231_gp_0";
++			status		= "okay";
++			tx-only;
++		};
++
++		mailbox3: mailbox@3 {
++			compatible	= "st,stih407-mailbox";
++			reg		= <0x8f03000 0x1000>;
++			#mbox-cells	= <2>;
++			mbox-name	= "st231_audio_video";
++			status		= "okay";
++			tx-only;
++		};
+ 	};
+ };
 -- 
 1.9.1
