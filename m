@@ -1,72 +1,89 @@
-From: Will Deacon <will.deacon@arm.com>
-Subject: Re: [PATCH v5 1/5] arm/arm64: add smccc ARCH32
-Date: Wed, 19 Aug 2015 17:50:09 +0100
-Message-ID: <20150819165009.GC10297@arm.com>
-References: <1439973629-19505-1-git-send-email-jens.wiklander@linaro.org>
- <1439973629-19505-2-git-send-email-jens.wiklander@linaro.org>
+From: Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>
+Subject: Re: [PATCH 2/2] dmaengine: Add support for the Analog Devices AXI-DMAC
+ DMA controller
+Date: Wed, 19 Aug 2015 18:55:34 +0200
+Message-ID: <55D4B506.9010707@metafoo.de>
+References: <1438076286-21164-1-git-send-email-lars@metafoo.de> <1438076286-21164-2-git-send-email-lars@metafoo.de> <20150819163203.GF13546@localhost>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1439973629-19505-2-git-send-email-jens.wiklander@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Jens Wiklander <jens.wiklander@linaro.org>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Kees Cook <keescook@chromium.org>, "valentin.manea@huawei.com" <valentin.manea@huawei.com>, Mark Rutland <Mark.Rutland@arm.com>, "javier@javigon.com" <javier@javigon.com>, "emmanuel.michel@st.com" <emmanuel.michel@st.com>, Michal Simek <michal.simek@xilinx.com>, "jean-michel.delorme@st.com" <jean-michel.delorme@st.com>, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, Rob Herring <robh+dt@kernel.org>
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 8bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20150819163203.GF13546@localhost>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Aug 19, 2015 at 09:40:25AM +0100, Jens Wiklander wrote:
-> Adds helpers to do SMC based on ARM SMC Calling Convention.
-> CONFIG_HAVE_SMCCC is enabled for architectures that may support
-> the SMC instruction. It's the responsibility of the caller to
-> know if the SMC instruction is supported by the platform.
+On 08/19/2015 06:32 PM, Vinod Koul wrote:
+> On Tue, Jul 28, 2015 at 11:38:06AM +0200, Lars-Peter Clausen wrote:
+>> +	active = axi_dmac_active_desc(chan);
+>> +	if (!active)
+>> +		return;
+>> +
+>> +	if (active->cyclic) {
+>> +		vchan_cyclic_callback(&active->vdesc);
+>> +	} else {
+>> +		while (active &&
+> do you need to check this, you did that few lines back?
+
+It gets overwritten in the loop.
 
 [...]
-> diff --git a/arch/arm64/kernel/smccc-call.S b/arch/arm64/kernel/smccc-call.S
-> new file mode 100644
-> index 0000000..3ce7fe8
-> --- /dev/null
-> +++ b/arch/arm64/kernel/smccc-call.S
-> @@ -0,0 +1,34 @@
-> +/*
-> + * Copyright (c) 2015, Linaro Limited
-> + *
-> + * This program is free software; you can redistribute it and/or modify
-> + * it under the terms of the GNU General Public License Version 2 as
-> + * published by the Free Software Foundation.
-> + *
-> + * This program is distributed in the hope that it will be useful,
-> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
-> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-> + * GNU General Public License for more details.
-> + *
-> + */
-> +#include <linux/linkage.h>
-> +
-> +#define SMC_PARAM_W0_OFFS      0
-> +#define SMC_PARAM_W2_OFFS      8
-> +#define SMC_PARAM_W4_OFFS      16
-> +#define SMC_PARAM_W6_OFFS      24
-> +
-> +/* void smccc_call32(struct smccc_param32 *param) */
-> +ENTRY(smccc_call32)
-> +       stp     x28, x30, [sp, #-16]!
+> 
+>> +static struct dma_async_tx_descriptor *axi_dmac_prep_slave_sg(
+>> +	struct dma_chan *c, struct scatterlist *sgl,
+>> +	unsigned int sg_len, enum dma_transfer_direction direction,
+>> +	unsigned long flags, void *context)
+>> +{
+>> +	struct axi_dmac_chan *chan = to_axi_dmac_chan(c);
+>> +	struct axi_dmac_desc *desc;
+>> +	struct scatterlist *sg;
+>> +	unsigned int i;
+>> +
+>> +	if (direction != chan->direction)
+> 
+> are the channels unidirectional
 
-Why are you saving lr?
+yes.
 
-> +       mov     x28, x0
-> +       ldp     w0, w1, [x28, #SMC_PARAM_W0_OFFS]
-> +       ldp     w2, w3, [x28, #SMC_PARAM_W2_OFFS]
-> +       ldp     w4, w5, [x28, #SMC_PARAM_W4_OFFS]
-> +       ldp     w6, w7, [x28, #SMC_PARAM_W6_OFFS]
-> +       smc     #0
-> +       stp     w0, w1, [x28, #SMC_PARAM_W0_OFFS]
-> +       stp     w2, w3, [x28, #SMC_PARAM_W2_OFFS]
-> +       ldp     x28, x30, [sp], #16
-> +       ret
-> +ENDPROC(smccc_call32)
+> 
+>> +		return NULL;
+>> +
+>> +	desc = axi_dmac_alloc_desc(sg_len);
+>> +	if (!desc)
+>> +		return NULL;
+>> +
+>> +	for_each_sg(sgl, sg, sg_len, i) {
+>> +		if (!axi_dmac_check_addr(chan, sg_dma_address(sg)) ||
+>> +		    !axi_dmac_check_len(chan, sg_dma_len(sg))) {
+>> +			kfree(desc);
+>> +			return NULL;
+>> +		}
+>> +
+>> +		if (direction == DMA_DEV_TO_MEM)
+>> +			desc->sg[i].dest_addr = sg_dma_address(sg);
+>> +		else
+>> +			desc->sg[i].src_addr = sg_dma_address(sg);
+> where is device side programming ?
 
-Could we deal with this like we do for PSCI instead? (see
-__invoke_psci_fn_smc). We could also then rename psci-call.S to fw-call.S
-and stick this in there too.
+in the start_transfer() function.
 
-Will
+> 
+>> +
+>> +	if (axi_dmac_dest_is_mem(chan) && axi_dmac_src_is_mem(chan))
+>> +		chan->direction = DMA_MEM_TO_MEM;
+>> +	else if (!axi_dmac_dest_is_mem(chan) && axi_dmac_src_is_mem(chan))
+>> +		chan->direction = DMA_MEM_TO_DEV;
+>> +	else if (axi_dmac_dest_is_mem(chan) && !axi_dmac_src_is_mem(chan))
+>> +		chan->direction = DMA_DEV_TO_MEM;
+>> +	else
+>> +		chan->direction = DMA_DEV_TO_DEV;
+> 
+> ok this seems to answer my other question but is this something we are
+> specifying in SW or capability of a channel?
+
+That's a capability of the hardware.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
