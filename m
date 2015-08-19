@@ -1,157 +1,109 @@
-From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Subject: RE: [PATCH v6 2/2] pwm: Add support for R-Car PWM Timer
-Date: Wed, 19 Aug 2015 11:00:55 +0000
-Message-ID: <SG2PR06MB0919160A49BA4FCAF2DA500BD8670@SG2PR06MB0919.apcprd06.prod.outlook.com>
-References: <1439957639-4816-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
- <1439957639-4816-3-git-send-email-yoshihiro.shimoda.uh@renesas.com>
- <20150819100732.GC26627@ulmo>
+From: chunfeng yun <chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH v5 4/5] xhci: mediatek: support MTK xHCI host controller
+Date: Wed, 19 Aug 2015 19:21:13 +0800
+Message-ID: <1439983273.11157.1.camel@mhfsdcap03>
+References: <1438950644-27290-1-git-send-email-chunfeng.yun@mediatek.com>
+ <1438950644-27290-5-git-send-email-chunfeng.yun@mediatek.com>
+ <55D1F8B7.9060306@linux.intel.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <20150819100732.GC26627@ulmo>
-Content-Language: ja-JP
-Sender: linux-sh-owner@vger.kernel.org
-To: Thierry Reding <thierry.reding@gmail.com>
-Cc: "robh+dt@kernel.org" <robh+dt@kernel.org>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "galak@codeaurora.org" <galak@codeaurora.org>, "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>, "linux-sh@vger.kernel.org" <linux-sh@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+In-Reply-To: <55D1F8B7.9060306-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mediatek>,
+ <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-mediatek/>
+List-Post: <mailto:linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Help: <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mediatek>,
+ <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
+Sender: "Linux-mediatek" <linux-mediatek-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Errors-To: linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Mathias Nyman <mathias.nyman-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>, Mathias Nyman <mathias.nyman-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, John Crispin <blogic-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Thierry,
-
-> Sent: Wednesday, August 19, 2015 7:08 PM
+Hi
+On Mon, 2015-08-17 at 18:07 +0300, Mathias Nyman wrote:
+> Hi
 > 
-> On Wed, Aug 19, 2015 at 01:13:59PM +0900, Yoshihiro Shimoda wrote:
-> > This patch adds support for R-Car SoCs PWM Timer. The PWM timer of
-> > R-Car H2 has 7 channels. So, we can use the channels if we describe
-> > device tree nodes.
+> On 07.08.2015 15:30, Chunfeng Yun wrote:
+> > MTK xhci host controller defines some extra SW scheduling
+> > parameters for HW to minimize the scheduling effort for
+> > synchronous and interrupt endpoints. The parameters are
+> > put into reseved DWs of slot context and endpoint context
 > >
-> > Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-> > Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
-> > ---
-> >  drivers/pwm/Kconfig    |  11 ++
-> >  drivers/pwm/Makefile   |   1 +
-> >  drivers/pwm/pwm-rcar.c | 265 +++++++++++++++++++++++++++++++++++++++++++++++++
-> >  3 files changed, 277 insertions(+)
-> >  create mode 100644 drivers/pwm/pwm-rcar.c
+> >
 > 
-> Found a couple more things. No need to respin for any of these, I can
-> make the changes when applying, but I'd like confirmation on a couple
-> of things below.
-
-Thank you!
-
-> > diff --git a/drivers/pwm/pwm-rcar.c b/drivers/pwm/pwm-rcar.c
-> [...]
-> > +static int rcar_pwm_set_counter(struct rcar_pwm_chip *rp, int div, int duty_ns,
-> > +				int period_ns)
+> ...
+> 
+> > + * The TD size is the number of max packet sized packets remaining in the TD
+> > + * (including this TRB), right shifted by 10.
+> > + * It must fit in bits 21:17, so it can't be bigger than 31.
+> > + */
+> > +u32 xhci_mtk_td_remainder_quirk(unsigned int td_running_total,
+> > +	unsigned trb_buffer_length, struct urb *urb)
 > > +{
-> > +	unsigned long long one_cycle, tmp;	/* 0.01 nanoseconds */
-> 
-> I'm not quite sure why you need the extra multiplication and division by
-> 100 here. Is this for extra accuracy?
-
-Yes, this is for extra accuracy.
-
-> > +	unsigned long clk_rate = clk_get_rate(rp->clk);
-> > +	u32 cyc, ph;
+> > +	u32 max = 31;
+> > +	int remainder, td_packet_count, packet_transferred;
+> > +	unsigned int td_transfer_size = urb->transfer_buffer_length;
+> > +	unsigned int maxp;
 > > +
-> > +	one_cycle = (unsigned long long)NSEC_PER_SEC * 100ULL * (1 << div);
-> > +	do_div(one_cycle, clk_rate);
+> > +	maxp = GET_MAX_PACKET(usb_endpoint_maxp(&urb->ep->desc));
 > > +
-> > +	tmp = period_ns * 100ULL;
-> > +	do_div(tmp, one_cycle);
-> > +	cyc = (tmp << RCAR_PWMCNT_CYC0_SHIFT) & RCAR_PWMCNT_CYC0_MASK;
-> > +
-> > +	tmp = duty_ns * 100ULL;
-> > +	do_div(tmp, one_cycle);
-> > +	ph = tmp & RCAR_PWMCNT_PH0_MASK;
-> > +
-> > +	/* Avoid prohibited setting */
-> > +	if (cyc != 0 && ph != 0) {
-> > +		rcar_pwm_write(rp, cyc | ph, RCAR_PWMCNT);
-> > +		return 0;
-> > +	} else {
-> > +		return -EINVAL;
-> > +	}
-> 
-> I think the ordering here is unintuitive, better would be:
-> 
-> 	if (cyc == 0 || ph == 0)
-> 		return -EINVAL;
-> 
-> 	rcar_pwm_write(rp, cyc | ph, RCAR_PWMCNT);
-> 
-> 	return 0;
-
-Thank you! I think so.
-
-> > +static int rcar_pwm_config(struct pwm_chip *chip, struct pwm_device *pwm,
-> > +			   int duty_ns, int period_ns)
-> > +{
-> > +	struct rcar_pwm_chip *rp = to_rcar_pwm_chip(chip);
-> > +	int div = rcar_pwm_get_clock_division(rp, period_ns);
-> > +	int ret;
-> > +
-> > +	if (div < 0)
-> > +		return div;
-> > +
-> > +	/* Let the core driver set pwm->period if disabled and duty_ns == 0 */
-> > +	if (!test_bit(PWMF_ENABLED, &pwm->flags) && !duty_ns)
+> > +	/* 0 for the last TRB */
+> > +	if (td_running_total + trb_buffer_length == td_transfer_size)
 > > +		return 0;
 > > +
-> > +	rcar_pwm_bit_modify(rp, RCAR_PWMCR_SYNC, RCAR_PWMCR_SYNC, RCAR_PWMCR);
-> > +	ret = rcar_pwm_set_counter(rp, div, duty_ns, period_ns);
-> > +	rcar_pwm_set_clock_control(rp, div);
-> > +	rcar_pwm_bit_modify(rp, RCAR_PWMCR_SYNC, 0, RCAR_PWMCR);
+> > +	packet_transferred = td_running_total / maxp;
+> > +	td_packet_count = DIV_ROUND_UP(td_transfer_size, maxp);
+> > +	remainder = td_packet_count - packet_transferred;
+> > +
+> > +	if (remainder > max)
+> > +		return max << 17;
+> > +	else
+> > +		return remainder << 17;
+> > +}
 > 
-> Just making sure: is it correct to execute the above two lines even if
-> ret < 0?
-
-Oops, this driver should not call the rcar_pwm_set_clock_control()
-because divider ratio might be changed.
-However, this driver should execute rcar_pwm_bit_modify(rp, RCAR_PWMCR_SYNC, 0, RCAR_PWMCR)
-to clear the "SYNC" bit.
-
-> > +static int rcar_pwm_probe(struct platform_device *pdev)
-> > +{
-> > +	struct rcar_pwm_chip *rcar_pwm;
-> > +	struct resource *res;
-> > +	int ret;
-> > +
-> > +	rcar_pwm = devm_kzalloc(&pdev->dev, sizeof(*rcar_pwm), GFP_KERNEL);
-> > +	if (rcar_pwm == NULL)
-> > +		return -ENOMEM;
-> > +
-> > +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> > +	rcar_pwm->base = devm_ioremap_resource(&pdev->dev, res);
-> > +	if (IS_ERR(rcar_pwm->base))
-> > +		return PTR_ERR(rcar_pwm->base);
-> > +
-> > +	rcar_pwm->clk = devm_clk_get(&pdev->dev, NULL);
-> > +	if (IS_ERR(rcar_pwm->clk)) {
-> > +		dev_err(&pdev->dev, "cannot get clock\n");
-> > +		return PTR_ERR(rcar_pwm->clk);
-> > +	}
-> > +
-> > +	platform_set_drvdata(pdev, rcar_pwm);
-> > +
-> > +	rcar_pwm->chip.dev = &pdev->dev;
-> > +	rcar_pwm->chip.ops = &rcar_pwm_ops;
-> > +	rcar_pwm->chip.of_xlate = of_pwm_xlate_with_flags;
+> I started looking at this xhci_mtk_td_remainder() function, one
+> of the places this patch touches the existing xhci code.
 > 
-> This seems to be missing a:
+> The remainder functions in xhci are already bit too messy, and
+> adding one more function which does almost the same thing makes
+> it even messier.
 > 
-> 	rcar_pwm->chip.of_pwm_n_cells = 3;
+> For example queuing a bulk transfer will end up like this:
 > 
-> ?
+> >   		/* Set the TRB length, TD size, and interrupter fields. */
+> >   		if (xhci->hci_version < 0x100) {
+> > -			remainder = xhci_td_remainder(
+> > +			if (xhci->quirks & XHCI_MTK_HOST) {
+> > +				remainder = xhci_mtk_td_remainder_quirk(
+> > +					running_total, trb_buff_len, urb);
+> > +			} else {
+> > +				remainder = xhci_td_remainder(
+> >   					urb->transfer_buffer_length -
+> >   					running_total);
+> > +			}
+> >   		} else {
+> >   			remainder = xhci_v1_0_td_remainder(running_total,
+> >   					trb_buff_len, total_packet_count, urb,
+> 
+> and similar for isoc and control transfers.
+> 
+> I'll see if I can simplify the existing remainder calculations into one function, then it should
+> be enough to just add something like this into it:
+> 
+> if (xhci->quirks & XHCI_MTK_HOST)
+> 	trb_buff_len = 0;
+>   	
+> This way we can skip all the extra hassle that comes with a new exported quirk function
+> 
+> Is the Mediatek xhci really a xHCI 0.96 or older controller? (hci_version < 0x100)
+> Not a xHCI 1.0 or 1.1 ?
+> 
+It is xHCI 0.96, but add some feature of xHCI 1.0
 
-Thank you for the point.
-I just tested this driver only sysfs interface.
-This driver should use of_pwm_simple_xlate and the value is set to 2
-because this PWM timer doesn't support polarity.
+Thanks a lot
 
-Best regards,
-Yoshihiro Shimoda
-
-> Thierry
-
+> -Mathias
