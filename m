@@ -1,85 +1,26 @@
-From: Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Subject: [PATCH v2 3/3] ARM: dts: rockchip: correct regulator power states for suspend
-Date: Wed, 19 Aug 2015 15:18:41 -0700
-Message-ID: <1440022721-73712-3-git-send-email-briannorris@chromium.org>
-References: <1440022721-73712-1-git-send-email-briannorris@chromium.org>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1440022721-73712-1-git-send-email-briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Alexandru M Stan <amstan-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Douglas Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: [PATCH 0/2] Add VIN and ADV7180 device tree support for R8A7794/SILK board
+Date: Thu, 20 Aug 2015 01:20:42 +0300
+Message-ID: <1750082.WpWf34HsI6@wasted.cogentembedded.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-sh-owner@vger.kernel.org>
+Sender: linux-sh-owner@vger.kernel.org
+To: horms@verge.net.au, linux-sh@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org
+Cc: magnus.damm@gmail.com, linux@arm.linux.org.uk, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-When getting translated from a downstream device tree that used slightly
-different DT bindings, these regulators got labeled with the
-"on-in-suspend" state, when they were actually supposed to be turned off
-for S3 suspend. This was harmless, but not intentional, AFAICT.
+Hello.
 
-Let's turn them off to get the optimal power state.
+   Here's the set of 2 patches against Simon Horman's 'renesas.git' repo's
+'renesas-devel-20150819-v4.2-rc7' tag. Here we add the VIN and ADV7180
+video decoder device tree support on the R8A7794/SILK board. The patchset
+requires previously posted SILK SDHI1 support patch in order to apply and 
+R8A7794/SILK I2C1 support in order to apply and build.
 
-Signed-off-by: Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Cc: Alexandru M Stan <amstan-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Cc: Douglas Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
----
-New in v2. Tested jaq.
+[1/2] ARM: shmobile: r8a7794: add VIN DT support
+[2/2] ARM: shmobile: silk: add VIN0/ADV7180 DT support
 
- arch/arm/boot/dts/rk3288-veyron-jerry.dts  | 2 +-
- arch/arm/boot/dts/rk3288-veyron-pinky.dts  | 2 +-
- arch/arm/boot/dts/rk3288-veyron-sdmmc.dtsi | 4 ++--
- 3 files changed, 4 insertions(+), 4 deletions(-)
+MBR, Sergei
 
-diff --git a/arch/arm/boot/dts/rk3288-veyron-jerry.dts b/arch/arm/boot/dts/rk3288-veyron-jerry.dts
-index 42d724559915..60bd6e91e308 100644
---- a/arch/arm/boot/dts/rk3288-veyron-jerry.dts
-+++ b/arch/arm/boot/dts/rk3288-veyron-jerry.dts
-@@ -99,7 +99,7 @@
- 			regulator-min-microvolt = <1800000>;
- 			regulator-max-microvolt = <1800000>;
- 			regulator-state-mem {
--				regulator-on-in-suspend;
-+				regulator-off-in-suspend;
- 			};
- 		};
- 	};
-diff --git a/arch/arm/boot/dts/rk3288-veyron-pinky.dts b/arch/arm/boot/dts/rk3288-veyron-pinky.dts
-index 25eb4b0c1330..94b56e33d947 100644
---- a/arch/arm/boot/dts/rk3288-veyron-pinky.dts
-+++ b/arch/arm/boot/dts/rk3288-veyron-pinky.dts
-@@ -109,7 +109,7 @@
- 			regulator-boot-on;
- 			regulator-name = "vcc18_lcd";
- 			regulator-state-mem {
--				regulator-on-in-suspend;
-+				regulator-off-in-suspend;
- 			};
- 		};
- 	};
-diff --git a/arch/arm/boot/dts/rk3288-veyron-sdmmc.dtsi b/arch/arm/boot/dts/rk3288-veyron-sdmmc.dtsi
-index 788468a48163..b5334ecff13c 100644
---- a/arch/arm/boot/dts/rk3288-veyron-sdmmc.dtsi
-+++ b/arch/arm/boot/dts/rk3288-veyron-sdmmc.dtsi
-@@ -93,7 +93,7 @@
- 			regulator-min-microvolt = <3300000>;
- 			regulator-max-microvolt = <3300000>;
- 			regulator-state-mem {
--				regulator-on-in-suspend;
-+				regulator-off-in-suspend;
- 			};
- 		};
- 
-@@ -102,7 +102,7 @@
- 			regulator-min-microvolt = <3300000>;
- 			regulator-max-microvolt = <3300000>;
- 			regulator-state-mem {
--				regulator-on-in-suspend;
-+				regulator-off-in-suspend;
- 			};
- 		};
- 	};
--- 
-2.5.0.276.gf5e568e
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
