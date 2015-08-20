@@ -1,100 +1,59 @@
-From: Chee Nouk Phoo <cnphoon@altera.com>
-Subject: [PATCH] Altera Modular ADC driver device tree binding
-Date: Thu, 20 Aug 2015 00:46:35 -0700
-Message-ID: <1440056795-6190-1-git-send-email-cnphoon@altera.com>
+From: Marek Vasut <marex@denx.de>
+Subject: Re: [PATCH] [PATCH v5] mtd:spi-nor: Add Altera Quad SPI Driver
+Date: Thu, 20 Aug 2015 11:42:18 +0200
+Message-ID: <201508201142.18586.marex@denx.de>
+References: <1440053705-3836-1-git-send-email-vndao@altera.com> <201508201052.47502.marex@denx.de> <CAN1oZWzADdeNyZofXQwKa0F2_Jv4Oda824ew5C3Ug+-V9Lx3hw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: Text/Plain;
+  charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAN1oZWzADdeNyZofXQwKa0F2_Jv4Oda824ew5C3Ug+-V9Lx3hw@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-Cc: lars@metafoo.de, Michael.Hennerich@analog.com, cnphoon.linux@gmail.com, Chee Nouk Phoon <cnphoon@altera.com>
+To: Viet Nga Dao <vndao@altera.com>
+Cc: "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>, Brian Norris <computersforpeace@gmail.com>, David Woodhouse <dwmw2@infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, nga_chi86 <ngachi86@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Chee Nouk Phoon <cnphoon@altera.com>
+On Thursday, August 20, 2015 at 11:18:14 AM, Viet Nga Dao wrote:
 
-Altera Modular ADC is soft IP that wraps the hardened ADC block in a Max1
-device. It can be configured to dual ADC mode that supports two channel
-synchronous sampling or independent single ADCs. ADC sampled values will be
-written into memory slots in sequence determined by a user configurable
-sequencer block.
+Hi,
 
-This patch adds device tree binding for Altera Modular ADC driver
+[...]
 
-Signed-off-by: Chee Nouk Phoon <cnphoon@altera.com>
----
- .../bindings/iio/adc/altr,modular-adc.txt          |   63 ++++++++++++++++++++
- 1 files changed, 63 insertions(+), 0 deletions(-)
- create mode 100755 Documentation/devicetree/bindings/iio/adc/altr,modular-adc.txt
+> >> That is why we decided to upstream the
+> >> driver. If the hardware fix, there might not need to have any changes
+> >> in driver to support or if yes, it will be just minor.
+> > 
+> > If the hardware can do proper READID opcode, this entire nonsense table
+> > will go away and a proper integration into the SPI NOR framework will
+> > take place.
+> > 
+> > You might consider submitting this driver for staging, but I definitely
+> > am not a big fan of that.
+> 
+> You might misunderstand the hardware problem i mention here. This soft
+> IP controller is able to provide the ID for our Altera EPCS/EPCQ flash
+> chips, which are non JEDEC chips. As from EPCQ device data sheet
+> (https://www.altera.com/content/dam/altera-www/global/en_US/pdfs/literature
+> /hb/cfg/cfg_cf52012.pdf), the device ID is 8 bit data.
 
-diff --git a/Documentation/devicetree/bindings/iio/adc/altr,modular-adc.txt b/Documentation/devicetree/bindings/iio/adc/altr,modular-adc.txt
-new file mode 100755
-index 0000000..4106cb4
---- /dev/null
-+++ b/Documentation/devicetree/bindings/iio/adc/altr,modular-adc.txt
-@@ -0,0 +1,63 @@
-+Altera Modular (Dual) ADC
-+
-+This binding document describes both Altera Modular ADC and Altera Modular Dual
-+ADC. Both options can be configured during generation time in Qsys. This driver
-+only support standard sequencer with Avalon-MM sample storage with up to 64
-+memory slots.
-+
-+Required properties:
-+- compatible: must be one of the following strings
-+  "altr,modular-adc": single ADC configuration
-+  "altr,modular-dual-adc": dual ADC configuration
-+
-+- reg: Address and length of the register set for the device. It contains the
-+  information of registers in the same order as described by reg-names
-+
-+- reg-names: Should contain the reg names
-+  "sequencer_csr": register region for adc sequencer block
-+  "sample_store_csr": register region for sample store block
-+
-+- interrupts: interrupt line for ADC
-+
-+- altr,adc-mode : ADC configuration
-+  1: single ADC mode
-+  2: dual ADC mode
-+
-+- altr,adc-slot-count : specify number of conversion slot in use
-+
-+- altr,adc<ADC index>-slot-sequence-<slot index>: specify ADC channel 
-+  conversion sequence
-+  <ADC index>: instantiated ADC number
-+  <slot index>: slot index for ADC memory slot
-+
-+- altr,adc-number : specify ADC number when single ADC mode is selected
-+  1: 1st ADC
-+  2: 2nd ACD
-+
-+Example: single ADC
-+modular_adc_0: adc@0x20000200 {
-+  compatible = "altr,modular-adc";
-+  reg = <0x20000000 0x00000008>,
-+    <0x20000200 0x00000200>;
-+  reg-names = "sequencer_csr", "sample_store_csr";
-+  interrupt-parent = <&cpu>;
-+  interrupts = <8>;
-+  altr,adc-mode = <1>;
-+  altr,adc-slot-count = <2>;
-+  altr,adc1-slot-sequence-1 = <1>;
-+  altr,adc-number = <1>;
-+};
-+
-+Example: dual ADC
-+modular_adc_1: adc@0x18002200 {
-+  compatible = "altr,modular-dual-adc";
-+  reg = <0x18002000 0x00000008>,
-+    <0x18002200 0x00000200>;
-+  reg-names = "sequencer_csr", "sample_store_csr";
-+  interrupt-parent = <&cpu>;
-+  interrupts = <8>;
-+  altr,adc-mode = <2>;
-+  altr,adc-slot-count = <1>;
-+  altr,adc1-slot-sequence-1 = <6>;
-+  altr,adc2-slot-sequence-1 = <6>;
-+};
-\ No newline at end of file
--- 
-1.7.1
+So what exactly is the output of READID instruction followed by 6 Byte read
+on an EPCQ chip?
+
+> The remaining
+> problem here is that this controller is able to support Micron chips but
+> it currently has
+> limitation in providing only 8 bit ID, which is not full JEDEC ID for
+> Micron chips.
+
+OK
+
+> Hence, we are asking hardware engineer to find out the
+> solution so that the driver does not need to do any dirty hacking. And
+> so, this table should still be here even hardware fix will take place
+> or not.
+
+[...]
+
+Best regards,
+Marek Vasut
