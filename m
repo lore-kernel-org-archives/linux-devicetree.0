@@ -1,47 +1,40 @@
-From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCHv2] arm64: dts: Add base stratix 10 dtsi
-Date: Thu, 20 Aug 2015 18:23:08 +0100
-Message-ID: <20150820172308.GA2711@svinekod>
-References: <1439308127-7412-1-git-send-email-dinguyen@opensource.altera.com>
+From: Justin Chen <justinpopo6-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH 0/2] watchdog: driver for BCM7038 and newer chips.
+Date: Thu, 20 Aug 2015 10:41:24 -0700
+Message-ID: <1440092486-16905-1-git-send-email-justinpopo6@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1439308127-7412-1-git-send-email-dinguyen@opensource.altera.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: "dinguyen@opensource.altera.com" <dinguyen@opensource.altera.com>
-Cc: "robh+dt@kernel.org" <robh+dt@kernel.org>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "galak@codeaurora.org" <galak@codeaurora.org>, Pawel Moll <Pawel.Moll@arm.com>, Catalin Marinas <Catalin.Marinas@arm.com>, Will Deacon <Will.Deacon@arm.com>, "dinh.linux@gmail.com" <dinh.linux@gmail.com>, "jszhang@marvell.com" <jszhang@marvell.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Justin Chen <justinpopo6-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+This driver is for a watchdog block contained in all Broadcom Set-top
+Box chips since BCM7038. BCM7038 was made public during the 2004 CES,
+and since then, many chips use this watchdog block including some cable
+modem chips.
 
-> +/ {
-> +	compatible = "altr,socfpga-stratix10";
-> +	#address-cells = <1>;
-> +	#size-cells = <1>;
+Patch 1: watchdog device tree binding documentation
 
-I would recommend that you make your root #address-cells and #size-cells equal
-to 2, as that will simplify matters later if/when you need to add anything
-beyond the first 4GB for some particular board.
+Patch 2: watchdog driver
 
-If everything in the SoC falls within the first 4GB you can have a ranges
-property on your /soc node and have only one cell below that.
+Justin Chen (2):
+  watchdog: bcm7038: add device tree binding documentation
+  watchdog: Watchdog driver for Broadcom Set-Top Box
 
-[...]
+ .../bindings/watchdog/brcm,bcm7038-wdt.txt         |  19 ++
+ drivers/watchdog/Kconfig                           |   8 +
+ drivers/watchdog/Makefile                          |   1 +
+ drivers/watchdog/bcm7038_wdt.c                     | 253 +++++++++++++++++++++
+ 4 files changed, 281 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/watchdog/brcm,bcm7038-wdt.txt
+ create mode 100644 drivers/watchdog/bcm7038_wdt.c
 
-> +	intc: intc@ffff8000 {
+-- 
+2.1.0
 
-The unit-address doesn't match the first address in the reg entry.
-
-> +		compatible = "arm,gic-400", "arm,cortex-a15-gic";
-> +		#interrupt-cells = <3>;
-> +		interrupt-controller;
-> +		reg = <0x0 0xffff9000 0x1000>,
-> +		      <0x0 0xffffa000 0x2000>,
-> +		      <0x0 0xffffc000 0x1000>,
-> +		      <0x0 0xffffd000 0x1000>;
-> +	};
-
-Shouldn't the virtual CPU interface also be 0x2000 long?
-
-Mark.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
