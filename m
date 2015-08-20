@@ -1,105 +1,81 @@
-From: punnaiah choudary kalluri <punnaia-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH v4 2/2] dma: Add Xilinx zynqmp dma engine driver support
-Date: Thu, 20 Aug 2015 12:01:27 +0530
-Message-ID: <CAGnW=BaU__+B2uAK=qpV3QP60SqSUxx-kgJVs0t42K0fqTxL0g@mail.gmail.com>
-References: <1438831173-8761-1-git-send-email-punnaia@xilinx.com>
-	<1438831173-8761-2-git-send-email-punnaia@xilinx.com>
-	<20150820061312.GA13546@localhost>
+From: Kishon Vijay Abraham I <kishon@ti.com>
+Subject: Re: [PATCH] usb: musb: omap2430: use *syscon* framework API to write
+ to mailbox register
+Date: Thu, 20 Aug 2015 12:05:20 +0530
+Message-ID: <55D57528.1080207@ti.com>
+References: <1438697169-32359-1-git-send-email-kishon@ti.com> <20150805080113.GV16878@atomide.com> <55C21885.6000902@ti.com> <20150806084716.GB4215@atomide.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20150820061312.GA13546@localhost>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
-Cc: Punnaiah Choudary Kalluri <punnaiah.choudary.kalluri-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "pawel.moll-5wv7dgnIgG8@public.gmane.org" <pawel.moll-5wv7dgnIgG8@public.gmane.org>, "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org" <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org" <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Punnaiah Choudary <kpc528-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20150806084716.GB4215@atomide.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Tony Lindgren <tony@atomide.com>, balbi@ti.com
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org, linux-omap@vger.kernel.org, nsekhar@ti.com, gregkh@linuxfoundation.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Aug 20, 2015 at 11:43 AM, Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org> wrote:
-> On Thu, Aug 06, 2015 at 08:49:33AM +0530, Punnaiah Choudary Kalluri wrote:
->
->> +     list_for_each_entry_safe(desc, next, &chan->done_list, node) {
->> +             dma_async_tx_callback callback;
->> +             void *callback_param;
->> +
->> +             list_del(&desc->node);
->> +
->> +             callback = desc->async_tx.callback;
->> +             callback_param = desc->async_tx.callback_param;
->> +             if (callback) {
->> +                     if (in_interrupt())
->> +                             spin_unlock_bh(&chan->lock);
->> +                     else
->> +                             spin_unlock(&chan->lock);
->
-> This looks bad!
-> Why would callback be called from different context. It should only be
-> invoked from your tasklet
+Hi,
 
-During the terminate call, driver need to clean up the existing BDs so that time
-this function will be called from the thread or process context in
-addition to the
-tasklet context.
+On Thursday 06 August 2015 02:17 PM, Tony Lindgren wrote:
+> * Kishon Vijay Abraham I <kishon@ti.com> [150805 07:10]:
+>> On Wednesday 05 August 2015 01:31 PM, Tony Lindgren wrote:
+>>>
+>>> We don't have syscon-otghs and to me it seems we need a PHY driver
+>>> as I pointed out at:
+>>
+>> If *syscon-otghs* is not present, then it'll fall-back to using the *ctrl-module*.
+> 
+> OK great.
+> 
+>>>
+>>> https://lkml.org/lkml/2015/6/24/231
+>>
+>> Maybe I should have explained this in the previous thread. The *otghs* register
+>> that we are trying to access here does _not_ belong to the PHY. It acts as
+>> mailbox register from MUSB glue (TI integration layer) to MUSB core. That's why
+>> it's programmed in the TI glue layer (omap2430.c).
+>>
+>> Even when we were using the older API [omap_control_usb_set_mode()], we first
+>> call omap_musb_mailbox from the PHY drivers (phy-twl4030-usb.c,
+>> phy-twl6030-usb.c) and then omap_musb_mailbox in the TI glue writes to the
+>> control module instead of PHY drivers directly calling omap_control_usb_set_mode().
+> 
+> Hmm looking at "Table 18-204. CONTROL_USBOTGHS_CONTROL" it seems to mention
+> "transceiver" for quite a few bitfields :) Probably what that register does
+> is control a PHY over ULPI.
 
-DO you have any suggestion here ?
+OMAP4 uses UTMI PHY and it uses CONTROL_USBOTGHS_CONTROL too.
+> 
+> So from Linux kernel point of view we're best off treating it as a PHY.
+> It seems it should have a minimal PHY driver similar to what we have for
+> dm816x control module in drivers/phy/phy-dm816x-usb.c.
 
+hmm.. IMHO CONTROL_USBOTGHS_CONTROL register belongs to the TI MUSB glue and
+should be programmed in omap2430.c. It's better to get the opinion of Felipe
+here. Felipe?
+> 
+> For reference, here is the register bitfields pasted from 4460 TRM:
+> 
+> Table 18-204. CONTROL_USBOTGHS_CONTROL, p3972
+> Physical Address 0x4A00 233C
+> 
+> BIT	NAME		DESCIPTION
+> 8	DISCHRGVBUS	... OTG transceiver does (not) discharge VBUS ...
+> 7	CHRGVBUS	... OTG transceiver does (not) charge VBUS ...
+> 6	IDPULLUP	... OTG transceiver does (not) drive VBUS ...
+> 4	IDDIG		... OTG transceiver does (not) apply a pullup to ID ...
+> 3	SESSEND		... VBUS voltage is above/below VB_SESS_END ...	
+> 2	VBUSVALID	... VBUS is above the threshold ...
+> 1	BVALID		... VBUS voltage is above/below VB_SESS_VLD ...
+> 0	AVALID		... BUS voltage is above/below VA_SESS_VLD ...
+> 
+> So how about just adding ONTROL_USBOTGHS_CONTROL support to the existing
+> drivers/phy/phy-omap-usb2.c instead? It seems that it should allow us
+> to completely get rid of the custom mailbox stuff for MUSB 2430 support?
 
->
->> +static int zynqmp_dma_device_terminate_all(struct dma_chan *dchan)
->> +{
->> +     struct zynqmp_dma_chan *chan = to_chan(dchan);
->> +
->> +     spin_lock_bh(&chan->lock);
->> +     zynqmp_dma_reset(chan);
->> +     spin_unlock_bh(&chan->lock);
->
-> No descriptor cleanup
+Not in phy-omap-usb2.c. It's the UTMI PHY driver and is not used by OMAP3 based
+boards (uses twl4030 ULPI PHY). CONTROL_USBOTGHS_CONTROL has to be programmed
+for OMAP3 also.
 
-zynqmp_dma_reset will do the descriptor cleanup.
-
->
->> +static void zynqmp_dma_chan_remove(struct zynqmp_dma_chan *chan)
->> +{
->> +     if (!chan)
->> +             return;
->> +
->> +     devm_free_irq(chan->zdev->dev, chan->irq, chan);
->> +     tasklet_kill(&chan->tasklet);
->> +     list_del(&chan->common.device_node);
->
-> not deregistering with dmaengine?
-
-This i am doing it in zynqmp_dma_remove function. Each channel will be
-a standalone dma device for ZynqMP DMA case
-
->
->> +     zdev->chan = chan;
->> +     tasklet_init(&chan->tasklet, zynqmp_dma_do_tasklet, (ulong)chan);
->> +     spin_lock_init(&chan->lock);
->> +     INIT_LIST_HEAD(&chan->active_list);
->> +     INIT_LIST_HEAD(&chan->pending_list);
->> +     INIT_LIST_HEAD(&chan->done_list);
->> +     INIT_LIST_HEAD(&chan->free_list);
->
-> You can simmplify this by using vchan framework!
-
-I got your point . but i have already said my reasons why i am
-reluctant to use vchan framework in v3 review.
-
->
->> +MODULE_AUTHOR("Xilinx, Inc.");
->> +MODULE_DESCRIPTION("Xilinx ZynqMP DMA driver");
->> +MODULE_LICENSE("GPL");
-> No alias, how did it get loaded?
-
-I will fix this. thanks.
-
-Regards,
-Punnaiah
->
-> --
-> ~Vinod
->
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Thanks
+Kishon
