@@ -1,30 +1,105 @@
-From: Rameshwar Sahu <rsahu@apm.com>
-Subject: Re: [PATCH v1 1/4] dmaengine: Add support for new feature CRC32C
-Date: Thu, 20 Aug 2015 11:59:07 +0530
-Message-ID: <CAFd313x+MD5C2stJ-YdKrt6Ywzt4_2GmK3pJTFjfwrhPnCdopQ@mail.gmail.com>
-References: <1438258268-3099-1-git-send-email-rsahu@apm.com>
-	<1438258268-3099-2-git-send-email-rsahu@apm.com>
-	<20150820052631.GW13546@localhost>
+From: punnaiah choudary kalluri <punnaia-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH v4 2/2] dma: Add Xilinx zynqmp dma engine driver support
+Date: Thu, 20 Aug 2015 12:01:27 +0530
+Message-ID: <CAGnW=BaU__+B2uAK=qpV3QP60SqSUxx-kgJVs0t42K0fqTxL0g@mail.gmail.com>
+References: <1438831173-8761-1-git-send-email-punnaia@xilinx.com>
+	<1438831173-8761-2-git-send-email-punnaia@xilinx.com>
+	<20150820061312.GA13546@localhost>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-crypto-owner@vger.kernel.org>
-In-Reply-To: <20150820052631.GW13546@localhost>
-Sender: linux-crypto-owner@vger.kernel.org
-To: Vinod Koul <vinod.koul@intel.com>
-Cc: dan.j.williams@intel.com, Herbert Xu <herbert@gondor.apana.org.au>, davem@davemloft.net, linux-crypto@vger.kernel.org, dmaengine@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, jcm@redhat.com, patches@apm.com
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20150820061312.GA13546@localhost>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Cc: Punnaiah Choudary Kalluri <punnaiah.choudary.kalluri-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "pawel.moll-5wv7dgnIgG8@public.gmane.org" <pawel.moll-5wv7dgnIgG8@public.gmane.org>, "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org" <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org" <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Punnaiah Choudary <kpc528-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Vinod,
-
-On Thu, Aug 20, 2015 at 10:56 AM, Vinod Koul <vinod.koul@intel.com> wrote:
-> On Thu, Jul 30, 2015 at 05:41:05PM +0530, Rameshwar Prasad Sahu wrote:
->> This patch adds support for new feature CRC32C calculation in
->> dmaengine framework.
+On Thu, Aug 20, 2015 at 11:43 AM, Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org> wrote:
+> On Thu, Aug 06, 2015 at 08:49:33AM +0530, Punnaiah Choudary Kalluri wrote:
 >
-> Looks okay can you please update Documentation also
+>> +     list_for_each_entry_safe(desc, next, &chan->done_list, node) {
+>> +             dma_async_tx_callback callback;
+>> +             void *callback_param;
+>> +
+>> +             list_del(&desc->node);
+>> +
+>> +             callback = desc->async_tx.callback;
+>> +             callback_param = desc->async_tx.callback_param;
+>> +             if (callback) {
+>> +                     if (in_interrupt())
+>> +                             spin_unlock_bh(&chan->lock);
+>> +                     else
+>> +                             spin_unlock(&chan->lock);
+>
+> This looks bad!
+> Why would callback be called from different context. It should only be
+> invoked from your tasklet
 
-Thanks, I will update Documentation.
+During the terminate call, driver need to clean up the existing BDs so that time
+this function will be called from the thread or process context in
+addition to the
+tasklet context.
+
+DO you have any suggestion here ?
+
+
+>
+>> +static int zynqmp_dma_device_terminate_all(struct dma_chan *dchan)
+>> +{
+>> +     struct zynqmp_dma_chan *chan = to_chan(dchan);
+>> +
+>> +     spin_lock_bh(&chan->lock);
+>> +     zynqmp_dma_reset(chan);
+>> +     spin_unlock_bh(&chan->lock);
+>
+> No descriptor cleanup
+
+zynqmp_dma_reset will do the descriptor cleanup.
+
+>
+>> +static void zynqmp_dma_chan_remove(struct zynqmp_dma_chan *chan)
+>> +{
+>> +     if (!chan)
+>> +             return;
+>> +
+>> +     devm_free_irq(chan->zdev->dev, chan->irq, chan);
+>> +     tasklet_kill(&chan->tasklet);
+>> +     list_del(&chan->common.device_node);
+>
+> not deregistering with dmaengine?
+
+This i am doing it in zynqmp_dma_remove function. Each channel will be
+a standalone dma device for ZynqMP DMA case
+
+>
+>> +     zdev->chan = chan;
+>> +     tasklet_init(&chan->tasklet, zynqmp_dma_do_tasklet, (ulong)chan);
+>> +     spin_lock_init(&chan->lock);
+>> +     INIT_LIST_HEAD(&chan->active_list);
+>> +     INIT_LIST_HEAD(&chan->pending_list);
+>> +     INIT_LIST_HEAD(&chan->done_list);
+>> +     INIT_LIST_HEAD(&chan->free_list);
+>
+> You can simmplify this by using vchan framework!
+
+I got your point . but i have already said my reasons why i am
+reluctant to use vchan framework in v3 review.
+
+>
+>> +MODULE_AUTHOR("Xilinx, Inc.");
+>> +MODULE_DESCRIPTION("Xilinx ZynqMP DMA driver");
+>> +MODULE_LICENSE("GPL");
+> No alias, how did it get loaded?
+
+I will fix this. thanks.
+
+Regards,
+Punnaiah
 >
 > --
 > ~Vinod
 >
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
