@@ -1,66 +1,113 @@
-From: Yakir Yang <ykk-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Subject: Re: HOW TO MAKE SAMPLES DIR IN THE MAINLINE KERNEL TO BE COMPILED
- AND CREATED ".KO" FILE IN THE SAME DIRECTORY
-Date: Thu, 20 Aug 2015 05:20:22 -0500
-Message-ID: <55D5A9E6.1010509@rock-chips.com>
-References: <CAAbfDBcA-gRh8pbKxDGvAZqPbyLzUK3HPqU42c7LK7fX4xD_KA@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+From: Rameshwar Prasad Sahu <rsahu-qTEPVZfXA3Y@public.gmane.org>
+Subject: [PATCH] dmaengine: xgene-dma: Fix holding lock while calling tx callback in cleanup path
+Date: Thu, 20 Aug 2015 16:00:56 +0530
+Message-ID: <1440066656-15516-1-git-send-email-rsahu@apm.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAAbfDBcA-gRh8pbKxDGvAZqPbyLzUK3HPqU42c7LK7fX4xD_KA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: ravi ranjan Mishra <raviranjanmishra24-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, seanpaul-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, Takashi Iwai <tiwai-l3A5Bk7waGM@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, Andrzej Hajda <a.hajda-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Gustavo Padovan <gustavo.padovan-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Vincent Palatin <vpalatin-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, dianders-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Yao <mark.yao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Kyungmin Park <kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, djkurtz-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, ajaynumb-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Andy Yan <andy.yan-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+To: vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org
+Cc: dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, patches-qTEPVZfXA3Y@public.gmane.org, Rameshwar Prasad Sahu <rsahu-qTEPVZfXA3Y@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Ravi,
+This patch fixes the an locking issue where client callback performs
+further submission.
 
-I'm wondering is your e-mail come from eDP thread ? cause I see lots of 
-cc guys some as eDP emails :)
+Signed-off-by: Rameshwar Prasad Sahu <rsahu-qTEPVZfXA3Y@public.gmane.org>
+---
+ drivers/dma/xgene-dma.c | 33 ++++++++++++++++++++++-----------
+ 1 file changed, 22 insertions(+), 11 deletions(-)
 
-And for your question, I am not sure I understand rightly. Do you mean 
-that your ".ko" module not in
-the same directory with driver source code?
+diff --git a/drivers/dma/xgene-dma.c b/drivers/dma/xgene-dma.c
+index d1c8809..0b82bc0 100644
+--- a/drivers/dma/xgene-dma.c
++++ b/drivers/dma/xgene-dma.c
+@@ -763,12 +763,17 @@ static void xgene_dma_cleanup_descriptors(struct xgene_dma_chan *chan)
+ 	struct xgene_dma_ring *ring = &chan->rx_ring;
+ 	struct xgene_dma_desc_sw *desc_sw, *_desc_sw;
+ 	struct xgene_dma_desc_hw *desc_hw;
++	struct list_head ld_completed;
+ 	u8 status;
 
-If it's your question, I think you can fix it by add SUBDIRS flag in 
-your driver makefile.
-I test it on kernel 3.14, but I think it would be okay on mainline 
-kernel, it works good
-in my side, I see hello.ko in my hello/
++	INIT_LIST_HEAD(&ld_completed);
++
++	spin_lock_bh(&chan->lock);
++
+ 	/* Clean already completed and acked descriptors */
+ 	xgene_dma_clean_completed_descriptor(chan);
 
-[~/work/kernel-3.14/hello] 7392h41m $ ls
-hello.c  hello.ko  hello.mod.c  hello.mod.o  hello.o  Makefile 
-modules.order  Module.symvers
+-	/* Run the callback for each descriptor, in order */
++	/* Move all completed descriptors to ld completed queue, in order */
+ 	list_for_each_entry_safe(desc_sw, _desc_sw, &chan->ld_running, node) {
+ 		/* Get subsequent hw descriptor from DMA rx ring */
+ 		desc_hw = &ring->desc_hw[ring->head];
+@@ -811,15 +816,17 @@ static void xgene_dma_cleanup_descriptors(struct xgene_dma_chan *chan)
+ 		/* Mark this hw descriptor as processed */
+ 		desc_hw->m0 = cpu_to_le64(XGENE_DMA_DESC_EMPTY_SIGNATURE);
 
-# My test makefile
-obj-m := hello.o
+-		xgene_dma_run_tx_complete_actions(chan, desc_sw);
+-
+-		xgene_dma_clean_running_descriptor(chan, desc_sw);
+-
+ 		/*
+ 		 * Decrement the pending transaction count
+ 		 * as we have processed one
+ 		 */
+ 		chan->pending--;
++
++		/*
++		 * Delete this node from ld running queue and append it to
++		 * ld completed queue for further processing
++		 */
++		list_move_tail(&desc_sw->node, &ld_completed);
+ 	}
 
-KERNEL_DIR := ~/work/kernel-3.14
-PWD := $(shell pwd)
+ 	/*
+@@ -828,6 +835,14 @@ static void xgene_dma_cleanup_descriptors(struct xgene_dma_chan *chan)
+ 	 * ahead and free the descriptors below.
+ 	 */
+ 	xgene_chan_xfer_ld_pending(chan);
++
++	spin_unlock_bh(&chan->lock);
++
++	/* Run the callback for each descriptor, in order */
++	list_for_each_entry_safe(desc_sw, _desc_sw, &ld_completed, node) {
++		xgene_dma_run_tx_complete_actions(chan, desc_sw);
++		xgene_dma_clean_running_descriptor(chan, desc_sw);
++	}
+ }
 
-all:
-     make -C $(KERNEL_DIR) SUBDIRS=$(PWD) modules
+ static int xgene_dma_alloc_chan_resources(struct dma_chan *dchan)
+@@ -876,11 +891,11 @@ static void xgene_dma_free_chan_resources(struct dma_chan *dchan)
+ 	if (!chan->desc_pool)
+ 		return;
 
-clean:
-     rm *.o *.ko *.mod.c
+-	spin_lock_bh(&chan->lock);
+-
+ 	/* Process all running descriptor */
+ 	xgene_dma_cleanup_descriptors(chan);
 
-.PHONY:clean
++	spin_lock_bh(&chan->lock);
++
+ 	/* Clean all link descriptor queues */
+ 	xgene_dma_free_desc_list(chan, &chan->ld_pending);
+ 	xgene_dma_free_desc_list(chan, &chan->ld_running);
+@@ -1200,15 +1215,11 @@ static void xgene_dma_tasklet_cb(unsigned long data)
+ {
+ 	struct xgene_dma_chan *chan = (struct xgene_dma_chan *)data;
 
+-	spin_lock_bh(&chan->lock);
+-
+ 	/* Run all cleanup for descriptors which have been completed */
+ 	xgene_dma_cleanup_descriptors(chan);
 
-Wish can help,
-- Yakir
+ 	/* Re-enable DMA channel IRQ */
+ 	enable_irq(chan->rx_irq);
+-
+-	spin_unlock_bh(&chan->lock);
+ }
 
-On 08/20/2015 03:45 AM, ravi ranjan Mishra wrote:
-> Hi ,
->
-> i did make in the kernel directory but sample directory is not able to 
-> compiled and generating .ko file in the same directory.
->
-> can you please tell.
->
-> Thanks,
-> Ravi
-
+ static irqreturn_t xgene_dma_chan_ring_isr(int irq, void *id)
+--
+1.8.2.1
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
