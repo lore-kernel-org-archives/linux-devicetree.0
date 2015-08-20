@@ -1,57 +1,73 @@
-From: Viet Nga Dao <vndao-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH] [PATCH v4] mtd:spi-nor: Add Altera Quad SPI Driver
-Date: Thu, 20 Aug 2015 15:37:33 +0800
-Message-ID: <CAN1oZWx_wefKJhB2pVbhw_UUZNR8LfveS-FPBFtgndGg_nXoUw@mail.gmail.com>
-References: <CAN1oZWyE9E2kRkGZPajpiNbpeKEjOhs9NDNDbUpmdw18WNYL2A@mail.gmail.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH 3/4 v3][RFC] arm64: renesas: Add initial r8a7795 SoC support
+Date: Thu, 20 Aug 2015 09:43:34 +0200
+Message-ID: <CAMuHMdWMNLf-fDsiLNFwO05i0cqBHkdM2mwC3GinwWFN4pWFZg@mail.gmail.com>
+References: <877fpdw3av.wl%kuninori.morimoto.gx@renesas.com>
+	<20150818002018.31346.63666@quantum>
+	<CAMuHMdXDuG5izkMCrBmTtznbFNQzXUVLKTrG9a_K=L2qbbkv5Q@mail.gmail.com>
+	<12310001.Bt8qbPIiMv@avalon>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAN1oZWyE9E2kRkGZPajpiNbpeKEjOhs9NDNDbUpmdw18WNYL2A-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, marex-ynQEQJNshbs@public.gmane.org
-Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, nga_chi86 <ngachi86-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <12310001.Bt8qbPIiMv@avalon>
+Sender: linux-sh-owner@vger.kernel.org
+To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: Michael Turquette <mturquette@baylibre.com>, Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>, Simon <horms@verge.net.au>, Magnus <magnus.damm@gmail.com>, Linux-sh list <linux-sh@vger.kernel.org>, linux-clk@vger.kernel.org, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
->> On Tuesday, August 18, 2015 at 03:24:44 AM, Brian Norris wrote:
->>> I'm not very helpful here, so hopefully Viet can be of more use:
+Hi Laurent,
+
+On Wed, Aug 19, 2015 at 11:29 PM, Laurent Pinchart
+<laurent.pinchart@ideasonboard.com> wrote:
+>> > Also, while you're thinking about the perfect clock binding, please do
+>> > consider dropping clock-output-names if you can. Specifying clock-names
+>> > alongside the clocks property inside of the consumer node is a bit more
+>> > elegant in my opinion. This is also a bit easier if you think about
+>> > expressing your clock data with C inside of your provider driver.
 >>
->> Yup :)
+>> Makes sense. I don't think anything relies on the "clock-output-names"
+>> ... currently.
 >>
->>> On Mon, Aug 17, 2015 at 07:53:23PM +0200, Marek Vasut wrote:
->>> > On Monday, August 17, 2015 at 06:03:38 PM, Brian Norris wrote:
->>> > Also, I cannot find any documentation for this IP block even if I
->>> > search through Quartus/QSys, is there any proper documentation
->>> > available anywhere?
->>>
->>> I never found proper documentation, but I didn't look too hard. I've
->>> mostly been going off of Viet's comments and code.
+>> I was going to use it for identifying the GIC clock, though:
 >>
->> Me neither, and I looked through the altera stuff in fact. I'm trying to learn whether this is just an Soft IP, in which case it certainly can be fixed ; or if there is actually some chip shipping with this crap synthesised into actual silicon.
+>> --- a/drivers/clk/shmobile/clk-mstp.c
+>> +++ b/drivers/clk/shmobile/clk-mstp.c
+>> @@ -144,6 +144,9 @@ cpg_mstp_clock_register(const char *name, const char
+>> *paren init.name = name;
+>>         init.ops = &cpg_mstp_clock_ops;
+>>         init.flags = CLK_IS_BASIC | CLK_SET_RATE_PARENT;
+>> +       /* INTC-SYS is the module clock of the GIC, and must not be disabled
+>> */
+>> +       if (!strcmp(name, "intc-sys"))
+>> +               init.flags |= CLK_ENABLE_HAND_OFF;
+>>         init.parent_names = &parent_name;
+>>         init.num_parents = 1;
 >>
->>> But FWIW, I did find some relevant info for the peculiar Altera EPCQ
->>> flash here:
->>>
->>> https://www.altera.com/content/dam/altera-www/global/en_US/pdfs/litera
->>> ture/
->>> hb/cfg/cfg_cf52012.pdf
+>> (FTR, on R-Car Gen3 the clock is called "intc-ap", not "intc-sys", doh...).
 >>
->> Altera EPCS/EPCQ flashes are just rebranded micron flashes, they just have different JEDEC >ID and are a bit more expensive.
+>> This does put some reliance on (undocumented) naming in DT, though, so not
+>> having the "clock-output-names" would solve that.
 >
-> You can find the document at here
-> (https://www.altera.com/content/dam/altera-www/global/en_US/pdfs/literature/ug/ug_embedded_ip.pdf)
->  Chapter 42.Page 407.
+> Using the clock name is indeed very messy, let's avoid that.
 >
-> For the soft IP issue, i've requested hardware engineer to come out
-> the solution. So in the mean way, our driver will NOT support Micron
-> flashes until hardware fix is completed.
+>> However, while "intc-sys"/"intc-ap" (if existent) is always MSTP408, MSTP408
+>> is used for other modules on R-Car Gen1 and most older SoCs. so it would
+>> complicate the driver code.
 >
-> Hence, i just submitted version 5 for this driver with eliminating
-> micron device support. Hope this version will get ACKed by you.
->
-> Thanks,
-> Viet Nga
+> How about setting the flag based on information provided in DT ?
+
+Like scanning DT for the GIC, and looking for its clock?
+
+I don't want to add an explicit flag in DT, as it's not a hardware property,
+but a deficiency of the current GIC driver/subsystem.
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
