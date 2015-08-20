@@ -1,59 +1,73 @@
-From: Marek Vasut <marex@denx.de>
+From: Alexander Stein <alexander.stein-93q1YBGzJSMe9JSWTWOYM3xStJ4P+DSV@public.gmane.org>
 Subject: Re: [PATCH] [PATCH v5] mtd:spi-nor: Add Altera Quad SPI Driver
-Date: Thu, 20 Aug 2015 11:42:18 +0200
-Message-ID: <201508201142.18586.marex@denx.de>
-References: <1440053705-3836-1-git-send-email-vndao@altera.com> <201508201052.47502.marex@denx.de> <CAN1oZWzADdeNyZofXQwKa0F2_Jv4Oda824ew5C3Ug+-V9Lx3hw@mail.gmail.com>
+Date: Thu, 20 Aug 2015 12:06:36 +0200
+Message-ID: <3030745.IsU6n2jnJj@ws-stein>
+References: <1440053705-3836-1-git-send-email-vndao@altera.com> <201508201003.38179.marex@denx.de>
 Mime-Version: 1.0
-Content-Type: Text/Plain;
-  charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAN1oZWzADdeNyZofXQwKa0F2_Jv4Oda824ew5C3Ug+-V9Lx3hw@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Viet Nga Dao <vndao@altera.com>
-Cc: "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>, Brian Norris <computersforpeace@gmail.com>, David Woodhouse <dwmw2@infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, nga_chi86 <ngachi86@gmail.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <201508201003.38179.marex-ynQEQJNshbs@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>
+Cc: linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, vndao-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org, computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ngachi86-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thursday, August 20, 2015 at 11:18:14 AM, Viet Nga Dao wrote:
+Hello Marek,
 
-Hi,
-
-[...]
-
-> >> That is why we decided to upstream the
-> >> driver. If the hardware fix, there might not need to have any changes
-> >> in driver to support or if yes, it will be just minor.
-> > 
-> > If the hardware can do proper READID opcode, this entire nonsense table
-> > will go away and a proper integration into the SPI NOR framework will
-> > take place.
-> > 
-> > You might consider submitting this driver for staging, but I definitely
-> > am not a big fan of that.
+On Thursday 20 August 2015 10:03:38, Marek Vasut wrote:
+> > +Example:
+> > +
+> > +			quadspi_controller_0: quadspi@0x180014a0 {
+> > +				compatible = "altr,quadspi-1.0";
+> > +				reg = <0x180014a0 0x00000020>,
+> > +				      <0x14000000 0x04000000>;
+> > +				reg-names = "avl_csr", "avl_mem";
+> > +				#address-cells = <1>;
+> > +				#size-cells = <0>;
+> > +				flash0: epcq256@0 {
+> > +					compatible = "altr,epcq256";
+> > +					#address-cells = <1>;
+> > +					#size-cells = <1>;
+> > +					partition@0 {
+> > +						/* 16 MB for raw data. */
+> > +						label = "EPCQ Flash 0 raw data";
+> > +						reg = <0x0 0x1000000>;
+> > +					};
+> > +					partition@1000000 {
+> > +						/* 16 MB for jffs2 data. */
+> > +						label = "EPCQ Flash 0 JFFS 2";
+> > +						reg = <0x1000000 0x1000000>;
+> > +					};
 > 
-> You might misunderstand the hardware problem i mention here. This soft
-> IP controller is able to provide the ID for our Altera EPCS/EPCQ flash
-> chips, which are non JEDEC chips. As from EPCQ device data sheet
-> (https://www.altera.com/content/dam/altera-www/global/en_US/pdfs/literature
-> /hb/cfg/cfg_cf52012.pdf), the device ID is 8 bit data.
+> IIRC, encoding partitions into OF is deprecated (and it shouldn't be
+> part of the example anyway, so please remove this bit).
 
-So what exactly is the output of READID instruction followed by 6 Byte read
-on an EPCQ chip?
-
-> The remaining
-> problem here is that this controller is able to support Micron chips but
-> it currently has
-> limitation in providing only 8 bit ID, which is not full JEDEC ID for
-> Micron chips.
-
-OK
-
-> Hence, we are asking hardware engineer to find out the
-> solution so that the driver does not need to do any dirty hacking. And
-> so, this table should still be here even hardware fix will take place
-> or not.
-
-[...]
+Do you mean specifying partitions in OF is deprecated in general? Is there any link for that?
+What would be an alternative to it?
 
 Best regards,
-Marek Vasut
+Alexander
+-- 
+Dipl.-Inf. Alexander Stein
+SYS TEC electronic GmbH
+alexander.stein-93q1YBGzJSMe9JSWTWOYM3xStJ4P+DSV@public.gmane.org
+
+Legal and Commercial Address:
+Am Windrad 2
+08468 Heinsdorfergrund
+Germany
+
+Office: +49 (0) 3765 38600-0
+Fax:    +49 (0) 3765 38600-4100
+ 
+Managing Directors:
+	Director Technology/CEO: Dipl.-Phys. Siegmar Schmidt;
+	Director Commercial Affairs/COO: Dipl. Ing. (FH) Armin von Collrepp
+Commercial Registry:
+	Amtsgericht Chemnitz, HRB 28082; USt.-Id Nr. DE150534010
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
