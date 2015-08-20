@@ -1,65 +1,34 @@
-Return-Path: <f.fainelli@gmail.com>
-Message-ID: <55CE281D.8090104@gmail.com>
-Date: Fri, 14 Aug 2015 10:40:45 -0700
-From: Florian Fainelli <f.fainelli@gmail.com>
+Return-Path: <raviranjanmishra24@gmail.com>
 MIME-Version: 1.0
-Subject: Re: [PATCH 2/2] pwm: Add Broadcom BCM7038 PWM controller support
-References: <1438908959-1578-1-git-send-email-f.fainelli@gmail.com> <1438908959-1578-3-git-send-email-f.fainelli@gmail.com>
-In-Reply-To: <1438908959-1578-3-git-send-email-f.fainelli@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-To: linux-kernel@vger.kernel.org
-Cc: bcm-kernel-feedback-list@broadcom.com, Thierry Reding <thierry.reding@gmail.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, PWM SUBSYSTEM <linux-pwm@vger.kernel.org>, "open list:OPEN FIRMWARE AND..." <devicetree@vger.kernel.org>
+Date: Thu, 20 Aug 2015 14:15:24 +0530
+Message-ID: <CAAbfDBcA-gRh8pbKxDGvAZqPbyLzUK3HPqU42c7LK7fX4xD_KA@mail.gmail.com>
+Subject: HOW TO MAKE SAMPLES DIR IN THE MAINLINE KERNEL TO BE COMPILED AND
+ CREATED ".KO" FILE IN THE SAME DIRECTORY
+From: ravi ranjan Mishra <raviranjanmishra24@gmail.com>
+Content-Type: multipart/alternative; boundary=089e0141aa1a165140051dba2ce0
+To: linux-arm-kernel@lists.infradead.org, seanpaul@google.com, Takashi Iwai <tiwai@suse.de>, dri-devel@lists.freedesktop.org, Andrzej Hajda <a.hajda@samsung.com>, Yakir Yang <ykk@rock-chips.com>, Gustavo Padovan <gustavo.padovan@collabora.co.uk>, linux-samsung-soc@vger.kernel.org, Vincent Palatin <vpalatin@chromium.org>, linux-rockchip@lists.infradead.org, Kishon Vijay Abraham I <kishon@ti.com>, David Airlie <airlied@linux.ie>, devicetree@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, dianders@google.com, Rob Herring <robh+dt@kernel.org>, Mark Yao <mark.yao@rock-chips.com>, linux-kernel@vger.kernel.org, Kyungmin Park <kyungmin.park@samsung.com>, djkurtz@google.com, Philipp Zabel <p.zabel@pengutronix.de>, Kumar Gala <galak@codeaurora.org>, ajaynumb@gmail.com, Andy Yan <andy.yan@rock-chips.com>
 List-ID: <devicetree@vger.kernel.org>
 
-On 06/08/15 17:55, Florian Fainelli wrote:
-> Add support for the BCM7038-style PWM controller found in all BCM7xxx STB SoCs.
-> This controller has a hardcoded 2 channels per controller, and cascades a
-> variable frequency generator on top of a fixed frequency generator which offers
-> a range of a 148ns period all the way to ~622ms periods.
-> 
-> Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
-> ---
+--089e0141aa1a165140051dba2ce0
+Content-Type: text/plain; charset=UTF-8
 
-[snip]
+Hi ,
 
-> +	/* Try to grab the clock and its rate, if not available, default
-> +	 * to the base 27Mhz clock domain this block comes from.
-> +	 */
-> +	p->clk = devm_clk_get(&pdev->dev, NULL);
-> +	if (IS_ERR(p->clk)) {
-> +		p->clk = NULL;
-> +		p->rate = (unsigned long)of_id->data;
-> +	} else {
-> +		clk_prepare_enable(p->clk);
-> +		p->rate = clk_get_rate(p->clk);
-> +	}
+i did make in the kernel directory but sample directory is not able to
+compiled and generating .ko file in the same directory.
 
-Replying to myself here, I have reworked that part to use a helper
-function which uses either clk_get_rate() or p->rate because even though
-the backing clock for that core is fixed, we could have a variable rate
-clock in the future, so fetching an accurate rate would be necessary.
+can you please tell.
 
-[snip]
+Thanks,
+Ravi
 
-> +
-> +#ifdef CONFIG_PM_SLEEP
-> +static int brcmstb_pwm_suspend(struct device *d)
-> +{
+--089e0141aa1a165140051dba2ce0
+Content-Type: text/html; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
-And here, we should disable the clock
+<div dir=3D"ltr">Hi ,<div><br></div><div>i did make in the kernel directory=
+ but sample directory is not able to compiled and generating .ko file in th=
+e same directory.</div><div><br></div><div>can you please tell.</div><div><=
+br></div><div>Thanks,</div><div>Ravi=C2=A0</div></div>
 
-> +	return 0;
-> +}
-> +
-> +static int brcmstb_pwm_resume(struct device *d)
-> +{
-
-And enable it here.
-
-I would still appreciate some feedback on the DT binding and this driver
-in general before submitting a v2.
-
-Thanks!
--- 
-Florian
+--089e0141aa1a165140051dba2ce0--
