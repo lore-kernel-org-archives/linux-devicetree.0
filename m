@@ -1,71 +1,65 @@
-From: Marek Vasut <marex@denx.de>
-Subject: Re: [PATCH] [PATCH v5] mtd:spi-nor: Add Altera Quad SPI Driver
-Date: Thu, 20 Aug 2015 23:52:22 +0200
-Message-ID: <201508202352.22313.marex@denx.de>
-References: <1440053705-3836-1-git-send-email-vndao@altera.com> <3030745.IsU6n2jnJj@ws-stein> <20150820201925.GD74600@google.com>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH 2/3] ARM: dts: sun6i: Turn on gmac on Colombus
+Date: Fri, 21 Aug 2015 00:12:59 +0200
+Message-ID: <20150820221259.GM30520@lukather>
+References: <1438960955-6551-1-git-send-email-hdegoede@redhat.com>
+ <1438960955-6551-2-git-send-email-hdegoede@redhat.com>
+ <20150819151754.GH30520@lukather>
+ <55D5725F.6000106@redhat.com>
+Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
 Mime-Version: 1.0
-Content-Type: Text/Plain;
-  charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20150820201925.GD74600@google.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Brian Norris <computersforpeace@gmail.com>
-Cc: Alexander Stein <alexander.stein@systec-electronic.com>, linux-mtd@lists.infradead.org, vndao@altera.com, dwmw2@infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, ngachi86@gmail.com
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="qwymS7QpGZeA8tRa"
+Return-path: <linux-sunxi+bncBD2ZNBF5VYJRB3NB3GXAKGQEM4DU2PQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <55D5725F.6000106-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <http://groups.google.com/group/linux-sunxi/subscribe>
+To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thursday, August 20, 2015 at 10:19:25 PM, Brian Norris wrote:
-> On Thu, Aug 20, 2015 at 12:06:36PM +0200, Alexander Stein wrote:
-> > On Thursday 20 August 2015 10:03:38, Marek Vasut wrote:
-> > > > +Example:
-> > > > +
-> > > > +			quadspi_controller_0: quadspi@0x180014a0 {
-> > > > +				compatible = "altr,quadspi-1.0";
-> > > > +				reg = <0x180014a0 0x00000020>,
-> > > > +				      <0x14000000 0x04000000>;
-> > > > +				reg-names = "avl_csr", "avl_mem";
-> > > > +				#address-cells = <1>;
-> > > > +				#size-cells = <0>;
-> > > > +				flash0: epcq256@0 {
-> > > > +					compatible = "altr,epcq256";
-> > > > +					#address-cells = <1>;
-> > > > +					#size-cells = <1>;
-> > > > +					partition@0 {
-> > > > +						/* 16 MB for raw data. 
-*/
-> > > > +						label = "EPCQ Flash 0 
-raw data";
-> > > > +						reg = <0x0 0x1000000>;
-> > > > +					};
-> > > > +					partition@1000000 {
-> > > > +						/* 16 MB for jffs2 data. 
-*/
-> > > > +						label = "EPCQ Flash 0 
-JFFS 2";
-> > > > +						reg = <0x1000000 
-0x1000000>;
-> > > > +					};
-> > > 
-> > > IIRC, encoding partitions into OF is deprecated (and it shouldn't be
-> > > part of the example anyway, so please remove this bit).
-> > 
-> > Do you mean specifying partitions in OF is deprecated in general? Is
-> > there any link for that? What would be an alternative to it?
+--qwymS7QpGZeA8tRa
+Content-Type: text/plain; charset=UTF-8
+Content-Disposition: inline
+
+On Thu, Aug 20, 2015 at 08:23:27AM +0200, Hans de Goede wrote:
+> Hi,
 > 
-> This is the first I've heard of such a deprecation. I would argue that
-> it's still probably one of the best ways to specify partitions. It's not
-> exactly perfect (partitions aren't really "hardware", so may not belong
-> in the "hardware description")
+> On 08/19/2015 05:17 PM, Maxime Ripard wrote:
+> >On Fri, Aug 07, 2015 at 05:22:34PM +0200, Hans de Goede wrote:
+> >>We've everything we need to support the gmac on Colombus, turn it on.
+> >>
+> >>Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+> >
+> >I recall that the phy was powered by one of the AXP221 regulators,
+> >does it require some additional stuff (like a recent u-boot), or does
+> >it just work and my memory is bad :) ?
+> 
+> I think it just works, it MAY be connected to aldo1 but according to
+> the git history for the u-boot defconfig that one is used for wifi not
+> for the gmac, and we do not enable any other "spare" regulators in the
+> u-boot config.
+> 
+> I do not have any schematics, so no way to say for sure.
+> 
+> I can confirm that the GMAC work fine with the latest u-boot
+> master. Looking in the history we've always enabled ALDO1
+> on the Colombus in upstream u-boot, so this should all just work.
 
-Which is the reasoning why I heard it was deprecated, but it seems my
-knowledge is not correct. I apologize for the misinformation, sorry.
+Except that if it is the case, the DT was working fine with the stock
+bootloader, and it doesn't anymore, while we have no way to upgrade
+it.
 
-> , but IMO it's better than cmdlineparts,
-> for instance. I also don't really know of any good-enough, generically
-> useful on-flash partition formats, especially ones that can handle the
-> complexities of NAND.
+Maxime
 
-Right.
-
-Best regards,
-Marek Vasut
+-- 
+Maxime Ripard, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
+--qwymS7QpGZeA8tRa--
