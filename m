@@ -1,29 +1,147 @@
-From: Michal Suchanek <hramrach-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [linux-sunxi] [PATCH 4/9] spi: sun4i: add DMA support
-Date: Thu, 20 Aug 2015 16:24:02 +0200
-Message-ID: <CAOMqctSj0evKAbUvG08N1f24BmSM1mZrRyjDas3UCZnsy1CCpQ@mail.gmail.com>
-References: <cover.1440080122.git.hramrach@gmail.com> <ccf776869b0d7fe2c78bcc41d6cd1896bf732296.1440080122.git.hramrach@gmail.com>
+From: Daniel Lezcano <daniel.lezcano@linaro.org>
+Subject: Re: [PATCH v2 1/5] clocksource: mediatek: do not enable GPT_CLK_EVT
+ when setup
+Date: Thu, 20 Aug 2015 16:28:26 +0200
+Message-ID: <55D5E40A.6080904@linaro.org>
+References: <CAGS+omD8k_Cfxv3bYyjmjtLbiavo-WmJPn0Z-CBhN_nnv65Tag@mail.gmail.com>	 <1437552878-3684-1-git-send-email-yingjoe.chen@mediatek.com>	 <55CC56C4.8080201@linaro.org> <1439820602.3414.12.camel@mtksdaap41>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=utf-8;
+	format=flowed
 Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <ccf776869b0d7fe2c78bcc41d6cd1896bf732296.1440080122.git.hramrach-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: =?UTF-8?Q?Emilio_L=C3=B3pez?= <emilio-0Z03zUJReD5OxF6Tv1QG9Q@public.gmane.org>
-Cc: linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-spi <linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1439820602.3414.12.camel@mtksdaap41>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Yingjoe Chen <yingjoe.chen@mediatek.com>
+Cc: Daniel Kurtz <djkurtz@chromium.org>, Stephen Boyd <sboyd@codeaurora.org>, Thomas Gleixner <tglx@linutronix.de>, James Liao <jamesjj.liao@mediatek.com>, Russell King <linux@arm.linux.org.uk>, srv_heupstream <srv_heupstream@mediatek.com>, Arnd Bergmann <arnd@arndb.de>, "open list:OPEN FIRMWARE AND..." <devicetree@vger.kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, Michael Turquette <mturquette@baylibre.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Olof Johansson <olof@lixom.net>, Rob Herring <robh+dt@kernel.org>, linux-mediatek@lists.infradead.org, Sascha Hauer <kernel@pengutronix.de>, Matthias Brugger <matthias.bgg@gmail.com>, linux-clk@vger.kernel.org, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On 20 August 2015 at 16:19, Emilio L=C3=B3pez <emilio-0Z03zUJReD5OxF6Tv1QG9Q@public.gmane.org> wr=
-ote:
-> From: Emilio L=C3=B3pez <emilio-0Z03zUJReD5OxF6Tv1QG9Q@public.gmane.org>
+On 08/17/2015 04:10 PM, Yingjoe Chen wrote:
+> On Thu, 2015-08-13 at 10:35 +0200, Daniel Lezcano wrote:
+>> On 07/22/2015 10:14 AM, Yingjoe Chen wrote:
+>>> Spurious mtk timer interrupt is noticed at boot and cause kernel
+>>> crash. It seems if GPT is enabled, it will latch irq status even
+>>> when its IRQ is disabled.
 
-Something went wrong with overriding the headers
+It "seems" ?
 
-Sorry
+>>> When irq is enabled afterward, we see
+>>> spurious interrupt.
 
-Michal
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Doesn't have the firmware something to do with that ?
+
+I have a mtk 8173 board I can use next week. How do you reproduce the=20
+issue ?
+
+>>> Change init flow to only enable GPT_CLK_SRC at mtk_timer_init.
+>>>
+>>> Acked-by: Matthias Brugger <matthias.bgg@gmail.com>
+>>> Reviewed-by: Daniel Kurtz <djkurtz@chromium.org>
+>>> Signed-off-by: Yingjoe Chen <yingjoe.chen@mediatek.com>
+>>> ---
+>>>
+>>> Update to my patch [1], added __init as Daniel suggest. This is the
+>>> only patch that need to change in that series, so I only sent this =
+one.
+>>>
+>>> http://lists.infradead.org/pipermail/linux-mediatek/2015-July/00154=
+5.html
+>>>
+>>>    drivers/clocksource/mtk_timer.c | 16 ++++++++++------
+>>>    1 file changed, 10 insertions(+), 6 deletions(-)
+>>>
+>>> diff --git a/drivers/clocksource/mtk_timer.c b/drivers/clocksource/=
+mtk_timer.c
+>>> index 68ab423..2ba5b66 100644
+>>> --- a/drivers/clocksource/mtk_timer.c
+>>> +++ b/drivers/clocksource/mtk_timer.c
+>>> @@ -156,9 +156,11 @@ static void mtk_timer_global_reset(struct mtk_=
+clock_event_device *evt)
+>>>    	writel(0x3f, evt->gpt_base + GPT_IRQ_ACK_REG);
+>>>    }
+>>>
+>>> -static void
+>>> -mtk_timer_setup(struct mtk_clock_event_device *evt, u8 timer, u8 o=
+ption)
+>>> +static void __init mtk_timer_setup(struct mtk_clock_event_device *=
+evt,
+>>> +				   u8 timer, u8 option, bool enable)
+>>>    {
+>>> +	u32 val;
+>>> +
+>>>    	writel(TIMER_CTRL_CLEAR | TIMER_CTRL_DISABLE,
+>>>    		evt->gpt_base + TIMER_CTRL_REG(timer));
+>>>
+>>> @@ -167,8 +169,10 @@ mtk_timer_setup(struct mtk_clock_event_device =
+*evt, u8 timer, u8 option)
+>>>
+>>>    	writel(0x0, evt->gpt_base + TIMER_CMP_REG(timer));
+>>>
+>>> -	writel(TIMER_CTRL_OP(option) | TIMER_CTRL_ENABLE,
+>>> -			evt->gpt_base + TIMER_CTRL_REG(timer));
+>>> +	val =3D TIMER_CTRL_OP(option);
+>>> +	if (enable)
+>>> +		val |=3D TIMER_CTRL_ENABLE;
+>>> +	writel(val, evt->gpt_base + TIMER_CTRL_REG(timer));
+>>
+>> Instead of the 'enable' new option, I prefer a test with 'timer' wit=
+h a
+>> comment:
+>>
+>> 	/*
+>> 	 * the timer hw is broken in that way ... bla bla, so we only
+>> 	 * enable the clocksource ...
+>> 	 */
+>> 	if (timer =3D=3D GPT_CLK_SRC)
+>> 		val |=3D TIMER_CTRL_ENABLE;
+>
+> Hi Daniel,
+>
+> Thanks for your review.
+> Since this bug happens to anyone using interrupt,
+
+Can you elaborate ? I don't get the point.
+
+> I'm not sure checking
+> timer and only enable it for GPT_CLK_SRC is easier to read. Anyway, I=
+'ll
+> change to this in next version.
+>> That said, can you have a look at commit 1096be08 ?
+>> "clockevents: sun5i: Fix setup_irq init sequence"
+>>
+>> first and check if moving the interrupt request after the
+>> clockevents_config_and_register could fix your issue.
+>
+> I've tested this before, see:
+>
+> http://lists.infradead.org/pipermail/linux-mediatek/2015-May/000539.h=
+tml
+> http://lists.infradead.org/pipermail/linux-mediatek/2015-May/000551.h=
+tml
+
+I could take or ack this patch trusting it fixes the issue but there ar=
+e=20
+some points that need clarifications.
+
+  - Does the spurious interrupt occurs *every* time ? at each boot ?
+
+The previous patches were supposed to fix the issue but they actually=20
+didn't. So how is tested the patch ?
+
+Regarding the different fixes for this problem, it sounds like you are=20
+proceeding by trial and error.
+
+Please give a more detailed analysis of the problem and especially chec=
+k=20
+the timer is not altered by the firmware leaving it in a transient stat=
+e=20
+or whatever.
+
+   -- Daniel
+
+--=20
+  <http://www.linaro.org/> Linaro.org =E2=94=82 Open source software fo=
+r ARM SoCs
+
+=46ollow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
