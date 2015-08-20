@@ -1,58 +1,52 @@
-From: Yakir Yang <ykk@rock-chips.com>
-Subject: Re: [PATCH v3 0/14] Add Analogix Core Display Port Driver
-Date: Wed, 19 Aug 2015 20:02:57 -0500
-Message-ID: <55D52741.3080709@rock-chips.com>
-References: <1439995728-18046-1-git-send-email-ykk@rock-chips.com> <CAPM=9tx6qMnHEfYpi5_+Ay9P5fy=JqthMp6-t0fxFPfm8E4k7Q@mail.gmail.com>
+From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Subject: Re: [PATCH v3 0/8] ARM: sunxi: Add Reduced Serial Bus support
+Date: Thu, 20 Aug 2015 09:59:27 +0800
+Message-ID: <CAGb2v66X-CMQiS1dNqhwamTsVbnf+7siSTV3xGwn-C91Zhw3uA@mail.gmail.com>
+References: <1439958009-14056-1-git-send-email-wens@csie.org> <20150819163232.GS10748@sirena.org.uk>
+Reply-To: wens-jdAy2FN1RRM@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <CAPM=9tx6qMnHEfYpi5_+Ay9P5fy=JqthMp6-t0fxFPfm8E4k7Q@mail.gmail.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Dave Airlie <airlied@gmail.com>
-Cc: Heiko Stuebner <heiko@sntech.de>, Thierry Reding <treding@nvidia.com>, Jingoo Han <jingoohan1@gmail.com>, Fabio Estevam <fabio.estevam@freescale.com>, Inki Dae <inki.dae@samsung.com>, joe@perches.com, Russell King <rmk+kernel@arm.linux.org.uk>, Daniel Kurtz <djkurtz@google.com>, dianders@google.com, Sean Paul <seanpaul@google.com>, Takashi Iwai <tiwai@suse.de>, Ajay kumar <ajaynumb@gmail.com>, Andrzej Hajda <a.hajda@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, Philipp Zabel <p.zabel@pengutronix.de>, David Airlie <airlied@linux.ie>, Gustavo Padovan <gustavo.padovan@collabora.co.uk>, Vincent Palatin <vpalatin@chromium.org>, Mark Yao <mark.yao@rock-chips.com>, Andy Yan <andy.yan@rock-chips.com>, Kumar Gala <galak@codeaurora.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Kishon
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sunxi+bncBCMILY6JWQBBBGPJ2SXAKGQE45JCKUA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <20150819163232.GS10748-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <http://groups.google.com/group/linux-sunxi/subscribe>
+To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Shuge <shuge-0TFLnhJekD6UEPyfVivIlAC/G2K4zDHf@public.gmane.org>, Meng Zhang <kevin.z.m.zh-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Dave,
-
-On 08/19/2015 06:54 PM, Dave Airlie wrote:
-> On 20 August 2015 at 00:48, Yakir Yang <ykk@rock-chips.com> wrote:
->> Hi all,
->>     The Samsung Exynos eDP controller and Rockchip RK3288 eDP controller
->> share the same IP, so a lot of parts can be re-used. I split the common
->> code into bridge directory, then rk3288 and exynos only need to keep
->> some platform code. Cause I can't find the exact IP name of exynos dp
->> controller, so I decide to name dp core driver with "analogix" which I
->> find in rk3288 eDP TRM ;)
+On Thu, Aug 20, 2015 at 12:32 AM, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
+> On Wed, Aug 19, 2015 at 12:20:01PM +0800, Chen-Yu Tsai wrote:
+>> Hi everyone,
 >>
->> Beyond that, there are three light registers setting differents bewteen
->> exynos and rk3288.
->> 1. RK3288 have five special pll resigters which not indicata in exynos
->>     dp controller.
->> 2. The address of DP_PHY_PD(dp phy power manager register) are different
->>     between rk3288 and exynos.
->> 3. Rk3288 and exynos have different setting with AUX_HW_RETRY_CTL(dp debug
->>     register).
->>
->> I have verified this series on two kinds of rockchip platform board, one
->> is rk3288 sdk board which connect with a 2K display port monitor, the other
->> is google jerry chromebook which connect with a eDP screen "cnm,n116bgeea2",
->> both of them works rightlly.
->>
->> I haven't verified the dp function on samsung platform, cause I haven't got
->> exynos boards. I can only ensure that there are no build error on samsung
->> platform, wish some samsung guys help to test. ;)
-> I'd like to pull this in, but it probably needs an ack from Samsung,
+>> This is my third attempt at adding support for Allwinner's Reduced
+>> Serial Bus (RSB), which is used to communicate with PMICs and other
+>> peripherals on their newer SoCs, such as the A23/A33/A80.
 >
-> Inki can you guys find some time to test this?
->
-> Dave.
+> This is flagged as something that is specific to the Allwinner SoCs.
+> Why add generic regmap support rather than just implement the regmap
+> reg_read() and reg_write() in a regmap in the controller driver?  Are
+> there expected to be other controller drivers from other vendors?
 
-Wow, thanks a lots  :-)
+I don't expect there to be any other controller drivers. And it seems
+at least some of the devices are dual interface (I2C/RSB). Though I
+don't see how its connected to the generic regmap support. Regmap
+is for device drivers connected to the RSB bus, not the bus controller
+itself.
 
-Still waiting for some reviews and acks.
+That said, there are a few RSB mfd slave devices that need support,
+those being the later AXP series PMICs, and AC100/AC200 audio-codec/RTC
+chips. The current axp20x driver already uses i2c regmaps.
 
-Best regards,
-- Yakir
->
->
+I could throw all the RSB-related stuff together, presumably under
+drivers/soc/sunxi/rsb, though that doesn't help the fact that common
+regmap code would be  better than scattering regmap_* in various mfd
+drivers.
+
+
+Regards
+ChenYu
