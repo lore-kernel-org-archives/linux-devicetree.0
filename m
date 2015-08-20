@@ -1,121 +1,75 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v3 1/8] rsb: Add generic Reduced Serial Bus
- (RSB) controller binding documentation
-Date: Thu, 20 Aug 2015 17:08:45 +0200
-Message-ID: <20150820150845.GB30520@lukather>
-References: <1439958009-14056-1-git-send-email-wens@csie.org>
- <1439958009-14056-2-git-send-email-wens@csie.org>
-Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="XoSOsMJQ8mz74oyx"
-Return-path: <linux-sunxi+bncBD2ZNBF5VYJRB76226XAKGQEJH2H24I-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1439958009-14056-2-git-send-email-wens-jdAy2FN1RRM@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <http://groups.google.com/group/linux-sunxi/subscribe>
-To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Meng Zhang <kevin-0TFLnhJekD6UEPyfVivIlAC/G2K4zDHf@public.gmane.org>, shuge-0TFLnhJekD6UEPyfVivIlAC/G2K4zDHf@public.gmane.org, kevin.z.m.zh-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+From: Robert Baldyga <r.baldyga@samsung.com>
+Subject: [PATCH v3 0/3] nfc: Add driver for Samsung S3FWRN5 NFC Chip
+Date: Thu, 20 Aug 2015 17:25:59 +0200
+Message-ID: <1440084362-27909-1-git-send-email-r.baldyga@samsung.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: sameo@linux.intel.com, lauro.venancio@openbossa.org, aloisio.almeida@openbossa.org
+Cc: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux-wireless@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-nfc@lists.01.org, m.szyprowski@samsung.com, pebolle@tiscali.nl, Robert Baldyga <r.baldyga@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
---XoSOsMJQ8mz74oyx
-Content-Type: text/plain; charset=UTF-8
-Content-Disposition: inline
+Hello,
 
-Hi,
+This patchset adds driver for NFC chip Samsung S3FWRN5. First two patches
+are touching NCI core due to some non-standard chip behaviour.
 
-Thanks a lot for working on this.
+The first one adds post_setup() handler, which is called after NCI_CORE_INIT
+request. It's because we need to read current firmware version from 
+ndev->manufact_specific_info.
 
-On Wed, Aug 19, 2015 at 12:20:02PM +0800, Chen-Yu Tsai wrote:
-> Reduced Serial Bus is a proprietary 2-line push-pull serial bus
-> supporting multiple slave devices.
-> 
-> It was developed by Allwinner, Inc. and used by Allwinner and X-Powers,
-> Inc. for their line of PMICs and other peripheral ICs.
-> 
-> Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-> ---
->  Documentation/devicetree/bindings/rsb/rsb.txt | 50 +++++++++++++++++++++++++++
->  1 file changed, 50 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/rsb/rsb.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/rsb/rsb.txt b/Documentation/devicetree/bindings/rsb/rsb.txt
-> new file mode 100644
-> index 000000000000..0b027948ca9c
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/rsb/rsb.txt
-> @@ -0,0 +1,50 @@
-> +Reduced Serial Bus (RSB) Controller
-> +
-> +This document defines a generic set of bindings for use by RSB controllers.
-> +A controller is modelled in device tree as a node with zero or more child
-> +nodes, each representing a unique slave device on the bus.
-> +
-> +Required properties:
-> +
-> + - #address-cells : must be 2
-> + - #size-cells : must be 0
-> +
-> +Optional properties:
-> +
-> + - clock-frequency : Desired bus clock frequency in Hz. Maximum is 20 MHz.
+The second one adds nci_core_reset() and nci_core_init() functions which
+are needed to reinit NCI core after updating firmware in pose_setup()
+callback.
 
-What is the default if not set?
+Best regards,
+Robert Baldyga
 
-> +
-> +Child nodes:
-> +
-> +An RSB controller node can contain zero or more child nodes representing
-> +slave devices on the bus.  Child 'reg' properties are specified as a
-> +runtime address, hardware address pair. The hardware address is hardwired
-> +in the device, which can normally be found in the datasheet. The runtime
-> +address is set by software. No 2 devices on the same bus shall have the
-> +same runtime address.
-> +
-> +Valid runtime addresses - There are only 15 valid runtime addresses:
-> +
-> +    0x17, 0x2d, 0x3a, 0x4e, 0x59, 0x63, 0x74, 0x8b,
-> +    0x9c, 0xa6, 0xb1, 0xc5, 0xd2, 0xe8, 0xff
-> +
-> +It is highly recommended that one choose the same runtime addresses as
-> +vendor BSPs use so that a) the addresses remain the same across different
-> +software systems, and b) addresses of supported and listed slave devices
-> +don't conflict with unsupported or not yet listed devices.
+Changelog:
 
-I'd expect to have the hardware address first, but maybe it's just me
-:)
+v3:
+- Addressed comments from Samuel Ortiz:
+  - Used nci_prop_cmd and nci_prop_ops to handle proprietary requests
+  - Refactorized s3fwrn5_i2c_nci_read and s3fwrn5_i2c_fw_read
+  - Miscellaneous minor fixes
+- Added patch "NFC: nci: Add post_setup handler"
+- Added patch "NFC: nci: export nci_core_reset and nci_core_init"
 
+v2: http://www.spinics.net/lists/linux-wireless/msg139241.html
+- Addressed comments from Paul Bolle
 
-> +Example:
-> +
-> +	rsb@... {
-> +		compatible = "...";
-> +		reg = <...>;
-> +		/* ... */
-> +		#address-cells = <2>;
-> +		#size-cells = <0>;
-> +
-> +		pmic@2d {
+v1: http://www.spinics.net/lists/kernel/msg2044290.html
 
-The unit-address should be 2d,3e3.
+Robert Baldyga (3):
+  NFC: nci: Add post_setup handler
+  NFC: nci: export nci_core_reset and nci_core_init
+  nfc: s3fwrn5: Add driver for Samsung S3FWRN5 NFC Chip
 
-> +			compatible = "...";
-> +			reg = <0x2d 0x3e3>;
-> +
-> +			/* ... */
-> +		};
-> +	};
-> -- 
-> 2.5.0
-> 
+ .../devicetree/bindings/net/nfc/s3fwrn5.txt        |  27 ++
+ MAINTAINERS                                        |   6 +
+ drivers/nfc/Kconfig                                |   1 +
+ drivers/nfc/Makefile                               |   1 +
+ drivers/nfc/s3fwrn5/Kconfig                        |  19 +
+ drivers/nfc/s3fwrn5/Makefile                       |  11 +
+ drivers/nfc/s3fwrn5/core.c                         | 219 +++++++++
+ drivers/nfc/s3fwrn5/firmware.c                     | 511 +++++++++++++++++++++
+ drivers/nfc/s3fwrn5/firmware.h                     | 111 +++++
+ drivers/nfc/s3fwrn5/i2c.c                          | 306 ++++++++++++
+ drivers/nfc/s3fwrn5/nci.c                          | 165 +++++++
+ drivers/nfc/s3fwrn5/nci.h                          |  89 ++++
+ drivers/nfc/s3fwrn5/s3fwrn5.h                      |  99 ++++
+ include/net/nfc/nci_core.h                         |   3 +
+ net/nfc/nci/core.c                                 |  18 +
+ 15 files changed, 1586 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/net/nfc/s3fwrn5.txt
+ create mode 100644 drivers/nfc/s3fwrn5/Kconfig
+ create mode 100644 drivers/nfc/s3fwrn5/Makefile
+ create mode 100644 drivers/nfc/s3fwrn5/core.c
+ create mode 100644 drivers/nfc/s3fwrn5/firmware.c
+ create mode 100644 drivers/nfc/s3fwrn5/firmware.h
+ create mode 100644 drivers/nfc/s3fwrn5/i2c.c
+ create mode 100644 drivers/nfc/s3fwrn5/nci.c
+ create mode 100644 drivers/nfc/s3fwrn5/nci.h
+ create mode 100644 drivers/nfc/s3fwrn5/s3fwrn5.h
 
 -- 
-Maxime Ripard, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
---XoSOsMJQ8mz74oyx--
+1.9.1
