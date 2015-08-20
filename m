@@ -1,74 +1,62 @@
-From: Vinod Koul <vinod.koul@intel.com>
-Subject: Re: [PATCH v4 2/2] dma: Add Xilinx zynqmp dma engine driver support
-Date: Thu, 20 Aug 2015 11:43:12 +0530
-Message-ID: <20150820061312.GA13546@localhost>
-References: <1438831173-8761-1-git-send-email-punnaia@xilinx.com>
- <1438831173-8761-2-git-send-email-punnaia@xilinx.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+From: Jingoo Han <jingoohan1@gmail.com>
+Subject: Re: [PATCH v3 12/14] drm: bridge/analogix_dp: expand the delay time for hpd detect
+Date: Thu, 20 Aug 2015 15:11:29 +0900
+Message-ID: <A474A3AB-86A8-4967-B90F-31920A5E7BA3@gmail.com>
+References: <1439995728-18046-1-git-send-email-ykk@rock-chips.com> <1439995929-18719-1-git-send-email-ykk@rock-chips.com>
+Mime-Version: 1.0 (1.0)
+Content-Type: text/plain;
+	charset=us-ascii
+Content-Transfer-Encoding: 8BIT
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1438831173-8761-2-git-send-email-punnaia@xilinx.com>
+In-Reply-To: <1439995929-18719-1-git-send-email-ykk@rock-chips.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Punnaiah Choudary Kalluri <punnaiah.choudary.kalluri@xilinx.com>
-Cc: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, michal.simek@xilinx.com, dan.j.williams@intel.com, dmaengine@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, kalluripunnaiahchoudary@gmail.com, kpc528@gmail.com, Punnaiah Choudary Kalluri <punnaia@xilinx.com>
+To: Yakir Yang <ykk@rock-chips.com>
+Cc: Heiko Stuebner <heiko@sntech.de>, Thierry Reding <treding@nvidia.com>, Fabio Estevam <fabio.estevam@freescale.com>, Inki Dae <inki.dae@samsung.com>, "joe@perches.com" <joe@perches.com>, Russell King <rmk+kernel@arm.linux.org.uk>, "djkurtz@google.com" <djkurtz@google.com>, "dianders@google.com" <dianders@google.com>, "seanpaul@google.com" <seanpaul@google.com>, Takashi Iwai <tiwai@suse.de>, "ajaynumb@gmail.com" <ajaynumb@gmail.com>, Andrzej Hajda <a.hajda@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, Philipp Zabel <p.zabel@pengutronix.de>, David Airlie <airlied@linux.ie>, Gustavo Padovan <gustavo.padovan@collabora.co.uk>, Vincent Palatin <vpalatin@chromium.org>, Mark Yao <mark.yao@rock-chips.com>, Andy Yan <andy.yan@rock-chips.com>, Kumar Gala <galak@codeaurora.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <robh+dt@kernel.org>, Pawel
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Aug 06, 2015 at 08:49:33AM +0530, Punnaiah Choudary Kalluri wrote:
+On 2015. 8. 19., at PM 11:52, Yakir Yang <ykk@rock-chips.com> wrote:
+> 
+> Some edp screen with no hpd signal would need some delay time
+> to ensure that screen would be ready for work, so we can expand
+> the delay time in hpd detect function, it works prefectly on my
+> rk3288 sdk board.
 
-> +	list_for_each_entry_safe(desc, next, &chan->done_list, node) {
-> +		dma_async_tx_callback callback;
-> +		void *callback_param;
-> +
-> +		list_del(&desc->node);
-> +
-> +		callback = desc->async_tx.callback;
-> +		callback_param = desc->async_tx.callback_param;
-> +		if (callback) {
-> +			if (in_interrupt())
-> +				spin_unlock_bh(&chan->lock);
-> +			else
-> +				spin_unlock(&chan->lock);
+Then, this delay has a dependency on the "rk3288 sdk" board.
+Also, if the delay time is expanded, the booting time of some Exybos boards will be increased unnecessarily. :-(
 
-This looks bad!
-Why would callback be called from different context. It should only be
-invoked from your tasklet
+So, please add new DT property such as 'hpd-delay' that can be added to board DT files.
 
-> +static int zynqmp_dma_device_terminate_all(struct dma_chan *dchan)
-> +{
-> +	struct zynqmp_dma_chan *chan = to_chan(dchan);
-> +
-> +	spin_lock_bh(&chan->lock);
-> +	zynqmp_dma_reset(chan);
-> +	spin_unlock_bh(&chan->lock);
+If there is not that DT property in DT files, the default value '10' will written to a variable such as 'unsigned int hpd_delay'.
+If there is the DT property in DT files, the delay value will written to the variable when parsing DT values
+and will be used in analogix_dp_detect_hpd().
 
-No descriptor cleanup
+What I want to say is that there should not be harmful effect on the existing Exynos boards, due to unrelated reasons.
 
-> +static void zynqmp_dma_chan_remove(struct zynqmp_dma_chan *chan)
-> +{
-> +	if (!chan)
-> +		return;
-> +
-> +	devm_free_irq(chan->zdev->dev, chan->irq, chan);
-> +	tasklet_kill(&chan->tasklet);
-> +	list_del(&chan->common.device_node);
+Best regards,
+Jingoo Han
 
-not deregistering with dmaengine?
-
-> +	zdev->chan = chan;
-> +	tasklet_init(&chan->tasklet, zynqmp_dma_do_tasklet, (ulong)chan);
-> +	spin_lock_init(&chan->lock);
-> +	INIT_LIST_HEAD(&chan->active_list);
-> +	INIT_LIST_HEAD(&chan->pending_list);
-> +	INIT_LIST_HEAD(&chan->done_list);
-> +	INIT_LIST_HEAD(&chan->free_list);
-
-You can simmplify this by using vchan framework!
-
-> +MODULE_AUTHOR("Xilinx, Inc.");
-> +MODULE_DESCRIPTION("Xilinx ZynqMP DMA driver");
-> +MODULE_LICENSE("GPL");
-No alias, how did it get loaded?
-
--- 
-~Vinod
+> Signed-off-by: Yakir Yang <ykk@rock-chips.com>
+> ---
+> Changes in v3: None
+> Changes in v2: None
+> 
+> drivers/gpu/drm/bridge/analogix_dp_core.c | 2 +-
+> 1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/gpu/drm/bridge/analogix_dp_core.c b/drivers/gpu/drm/bridge/analogix_dp_core.c
+> index 99870f7..75dd44a 100644
+> --- a/drivers/gpu/drm/bridge/analogix_dp_core.c
+> +++ b/drivers/gpu/drm/bridge/analogix_dp_core.c
+> @@ -68,7 +68,7 @@ static int analogix_dp_detect_hpd(struct analogix_dp_device *dp)
+>            return 0;
+> 
+>        timeout_loop++;
+> -        usleep_range(10, 11);
+> +        usleep_range(100, 110);
+>    }
+> 
+>    /*
+> -- 
+> 1.9.1
+> 
+> 
