@@ -1,78 +1,65 @@
-From: Michal Simek <michal.simek@xilinx.com>
-Subject: Re: [PATCH v5 1/5] arm/arm64: add smccc ARCH32
-Date: Thu, 20 Aug 2015 13:35:58 +0200
-Message-ID: <55D5BB9E.3020304@xilinx.com>
-References: <1439973629-19505-1-git-send-email-jens.wiklander@linaro.org>
- <1439973629-19505-2-git-send-email-jens.wiklander@linaro.org>
- <20150819165009.GC10297@arm.com>
+From: Pankaj Dubey <pankaj.dubey@samsung.com>
+Subject: Re: [PATCH 2/5] ARM: EXYNOS: Remove SROM related register settings
+ from mach-exynos
+Date: Thu, 20 Aug 2015 17:06:49 +0530
+Message-ID: <55D5BBD1.1030905@samsung.com>
+References: <1430296712-10287-1-git-send-email-pankaj.dubey@samsung.com>
+ <1430296712-10287-3-git-send-email-pankaj.dubey@samsung.com>
+ <5565B0D1.80004@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
+Content-Type: text/plain; charset=windows-1252; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20150819165009.GC10297@arm.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Will Deacon <will.deacon@arm.com>, Jens Wiklander <jens.wiklander@linaro.org>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Kees Cook <keescook@chromium.org>, "valentin.manea@huawei.com" <valentin.manea@huawei.com>, Mark Rutland <Mark.Rutland@arm.com>, "javier@javigon.com" <javier@javigon.com>, "emmanuel.michel@st.com" <emmanuel.michel@st.com>, Michal Simek <michal.simek@xilinx.com>, "jean-michel.delorme@st.com" <jean-michel.delorme@st.com>, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, Rob Herring <robh+dt@kernel.org>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <5565B0D1.80004@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Krzysztof Kozlowski <k.kozlowski@samsung.com>, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Cc: thomas.ab@samsung.com, kgene@kernel.org, linux@arm.linux.org.uk, heiko@sntech.de
 List-Id: devicetree@vger.kernel.org
 
-On 08/19/2015 06:50 PM, Will Deacon wrote:
-> On Wed, Aug 19, 2015 at 09:40:25AM +0100, Jens Wiklander wrote:
->> Adds helpers to do SMC based on ARM SMC Calling Convention.
->> CONFIG_HAVE_SMCCC is enabled for architectures that may support
->> the SMC instruction. It's the responsibility of the caller to
->> know if the SMC instruction is supported by the platform.
-> 
-> [...]
->> diff --git a/arch/arm64/kernel/smccc-call.S b/arch/arm64/kernel/smccc-call.S
->> new file mode 100644
->> index 0000000..3ce7fe8
->> --- /dev/null
->> +++ b/arch/arm64/kernel/smccc-call.S
->> @@ -0,0 +1,34 @@
->> +/*
->> + * Copyright (c) 2015, Linaro Limited
->> + *
->> + * This program is free software; you can redistribute it and/or modify
->> + * it under the terms of the GNU General Public License Version 2 as
->> + * published by the Free Software Foundation.
->> + *
->> + * This program is distributed in the hope that it will be useful,
->> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
->> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
->> + * GNU General Public License for more details.
->> + *
->> + */
->> +#include <linux/linkage.h>
->> +
->> +#define SMC_PARAM_W0_OFFS      0
->> +#define SMC_PARAM_W2_OFFS      8
->> +#define SMC_PARAM_W4_OFFS      16
->> +#define SMC_PARAM_W6_OFFS      24
->> +
->> +/* void smccc_call32(struct smccc_param32 *param) */
->> +ENTRY(smccc_call32)
->> +       stp     x28, x30, [sp, #-16]!
-> 
-> Why are you saving lr?
-> 
->> +       mov     x28, x0
->> +       ldp     w0, w1, [x28, #SMC_PARAM_W0_OFFS]
->> +       ldp     w2, w3, [x28, #SMC_PARAM_W2_OFFS]
->> +       ldp     w4, w5, [x28, #SMC_PARAM_W4_OFFS]
->> +       ldp     w6, w7, [x28, #SMC_PARAM_W6_OFFS]
->> +       smc     #0
->> +       stp     w0, w1, [x28, #SMC_PARAM_W0_OFFS]
->> +       stp     w2, w3, [x28, #SMC_PARAM_W2_OFFS]
->> +       ldp     x28, x30, [sp], #16
->> +       ret
->> +ENDPROC(smccc_call32)
-> 
-> Could we deal with this like we do for PSCI instead? (see
-> __invoke_psci_fn_smc). We could also then rename psci-call.S to fw-call.S
-> and stick this in there too.
+Hi Krzysztof,
 
-I think that make sense to make smc, hvc calling more generic. Remove
-psci name from __invoke_psci_fn_smc and just use it in other drivers.
+On Wednesday 27 May 2015 05:26 PM, Krzysztof Kozlowski wrote:
+> W dniu 29.04.2015 o 17:38, Pankaj Dubey pisze:
+>> As now we have dedicated driver for SROM controller, it will take care
+>> of saving register banks during S2R so we can safely remove these
+>> settings from mach-exynos.
+>>
+>> Signed-off-by: Pankaj Dubey <pankaj.dubey@samsung.com>
+>> ---
+>>   arch/arm/mach-exynos/Kconfig                   |  2 +
+>>   arch/arm/mach-exynos/exynos.c                  | 10 -----
+>>   arch/arm/mach-exynos/include/mach/map.h        |  3 --
+>>   arch/arm/mach-exynos/suspend.c                 | 20 +---------
+>>   arch/arm/plat-samsung/include/plat/map-s5p.h   |  1 -
+>>   arch/arm/plat-samsung/include/plat/regs-srom.h | 54 --------------------------
+>>   6 files changed, 4 insertions(+), 86 deletions(-)
+>>   delete mode 100644 arch/arm/plat-samsung/include/plat/regs-srom.h
+>>
+>> diff --git a/arch/arm/mach-exynos/Kconfig b/arch/arm/mach-exynos/Kconfig
+>> index 603820e..e842b23 100644
+>> --- a/arch/arm/mach-exynos/Kconfig
+>> +++ b/arch/arm/mach-exynos/Kconfig
+>> @@ -25,6 +25,8 @@ menuconfig ARCH_EXYNOS
+>>   	select S5P_DEV_MFC
+>>   	select SRAM
+>>   	select MFD_SYSCON
+>> +	select SOC_SAMSUNG
+>> +	select EXYNOS_SROM
+>
+> What about the difference of execution time? The suspend/resume of
+> device may not be called in the same time as previous syscore ops. Does
+> this have any impact?
+>
+
+
+I had tested it for S2R at that time on SMDK5250 board and it was fine. 
+I do not noticed any issue in S2R, so I feel timing should not have any 
+impact.
 
 Thanks,
-Michal
+Pankaj Dubey
+
+> Best regards,
+> Krzysztof
+>
+>
