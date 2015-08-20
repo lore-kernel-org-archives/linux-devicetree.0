@@ -1,61 +1,35 @@
 From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 4/4] spi: mediatek: revise coding style
-Date: Thu, 20 Aug 2015 11:17:52 -0700
-Message-ID: <20150820181752.GH12027@sirena.org.uk>
-References: <1440062349-25513-1-git-send-email-leilk.liu@mediatek.com>
- <1440062349-25513-5-git-send-email-leilk.liu@mediatek.com>
+Subject: Re: [PATCH 1/9] spi: sunxi: fix transfer timeout
+Date: Thu, 20 Aug 2015 11:41:32 -0700
+Message-ID: <20150820184132.GO12027@sirena.org.uk>
+References: <cover.1440080122.git.hramrach@gmail.com>
+ <0e0b52774a48ddb71dc8095b66942451cd31ff7d.1440080122.git.hramrach@gmail.com>
+Reply-To: broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="dDnEQgWzhgf+8aPe"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+	protocol="application/pgp-signature"; boundary="NKtYx2Ppz7d1tORf"
+Return-path: <linux-sunxi+bncBDQ2L75W5QGBB2563CXAKGQE3ZD4XUY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1440062349-25513-5-git-send-email-leilk.liu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Leilk Liu <leilk.liu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+In-Reply-To: <0e0b52774a48ddb71dc8095b66942451cd31ff7d.1440080122.git.hramrach-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <http://groups.google.com/group/linux-sunxi/subscribe>
+To: Michal Suchanek <hramrach-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-
---dDnEQgWzhgf+8aPe
-Content-Type: text/plain; charset=us-ascii
+--NKtYx2Ppz7d1tORf
+Content-Type: text/plain; charset=UTF-8
 Content-Disposition: inline
 
-On Thu, Aug 20, 2015 at 05:19:09PM +0800, Leilk Liu wrote:
-> This patch revises littery coding style according to comments.
+On Thu, Aug 20, 2015 at 02:19:45PM -0000, Michal Suchanek wrote:
 
-I can't understand this commit log, sorry - what are the comments that
-are being addressed?
+>  drivers/spi/spi-sun4i.c | 10 +++++++++-
+>  drivers/spi/spi-sun6i.c | 10 +++++++++-
 
-> -	reg_val |= (((high_time - 1) & 0xff) << SPI_CFG0_SCK_HIGH_OFFSET);
-> -	reg_val |= (((low_time - 1) & 0xff) << SPI_CFG0_SCK_LOW_OFFSET);
-> -	reg_val |= (((holdtime - 1) & 0xff) << SPI_CFG0_CS_HOLD_OFFSET);
-> -	reg_val |= (((setuptime - 1) & 0xff) << SPI_CFG0_CS_SETUP_OFFSET);
-> +	reg_val |= (((sck_time - 1) & 0xff) << SPI_CFG0_SCK_HIGH_OFFSET);
-> +	reg_val |= (((sck_time - 1) & 0xff) << SPI_CFG0_SCK_LOW_OFFSET);
-> +	reg_val |= (((cs_time - 1) & 0xff) << SPI_CFG0_CS_HOLD_OFFSET);
-> +	reg_val |= (((cs_time - 1) & 0xff) << SPI_CFG0_CS_SETUP_OFFSET);
-
-This isn't a coding style change this is (I think) renaming a bunch of
-variables for some reason.
-
---dDnEQgWzhgf+8aPe
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQEcBAEBCAAGBQJV1hnPAAoJECTWi3JdVIfQWHcH/A2n4Ej3jYZ0ewdd4kjaiqoD
-xh6Wa5FqJEMDr+R/kJJtwQs2tb9Ch5j15P/xYQGeYiyhOqX5HiePrYpV4Vvn5j7n
-hS8LlJkaj5EgB6CKqQ2diN6+tcf/61mjF+tiU+BoWyJA6HN0SjHNQOtvYmolvawI
-Iim2vtjIW7UtUq/3r7V8zidi0f5HEb9xZCBrbUmq0adrJmxOLKmhEo8F4ONwWOGk
-77vwGgMeTpYAQGBpMKb3ga6BmcdLf+UzVDilHcr6xFXWhcEF+xcpvM6UR0WyxHJ+
-peECbSrsTLHnOTehnapOh8esDShgABz66YuqF14/CsMrpMtSooTnJZXgTNRs38E=
-=HL3K
------END PGP SIGNATURE-----
-
---dDnEQgWzhgf+8aPe--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Are we *sure* we can't work on merging these drivers :(
+--NKtYx2Ppz7d1tORf--
