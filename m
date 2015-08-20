@@ -1,37 +1,32 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 3/9] spi: sunxi: check that transfer speed
- is non-zero
-Date: Thu, 20 Aug 2015 11:45:04 -0700
-Message-ID: <20150820184504.GP12027@sirena.org.uk>
-References: <cover.1440080122.git.hramrach@gmail.com>
- <3688fab67e7cdc7bcbff73dfd6b0fcdcc4e79eb6.1440080122.git.hramrach@gmail.com>
-Reply-To: broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH 0/2] Add R8A7794/SILK I2C device tree support
+Date: Thu, 20 Aug 2015 11:54:29 -0700
+Message-ID: <20150820185429.GD18990@verge.net.au>
+References: <2390854.nqPs17CVpc@wasted.cogentembedded.com>
+ <55D4FE61.5010800@cogentembedded.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="MWF3YmTHhoLNIVQC"
-Return-path: <linux-sunxi+bncBDQ2L75W5QGBBOWA3CXAKGQEJPSUL6A-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-sh-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <3688fab67e7cdc7bcbff73dfd6b0fcdcc4e79eb6.1440080122.git.hramrach-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <http://groups.google.com/group/linux-sunxi/subscribe>
-To: Michal Suchanek <hramrach-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+In-Reply-To: <55D4FE61.5010800@cogentembedded.com>
+Sender: linux-sh-owner@vger.kernel.org
+To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Cc: linux-sh@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org, magnus.damm@gmail.com, linux@arm.linux.org.uk, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
---MWF3YmTHhoLNIVQC
-Content-Type: text/plain; charset=UTF-8
-Content-Disposition: inline
+On Thu, Aug 20, 2015 at 01:08:33AM +0300, Sergei Shtylyov wrote:
+> On 08/20/2015 12:57 AM, Sergei Shtylyov wrote:
+> 
+> >    Here's the set of 2 patches against Simon Horman's 'renesas.git' repo's
+> >'renesas-devel-20150819-v4.2-rc7' tag. Here we add the I2C device tree support
+> >for the R8A7794/SILK board.
+> >
+> >[1/2] ARM: shmobile: r8a7794: add I2C DT support
+> >[2/2] ARM: shmobile: silk: add I2C1 DT support
+> 
+>    Simon, actually the above patch is atop of my SILK SDHI1 patch but should
+> apply with offsets atop of your tag.
 
-On Thu, Aug 20, 2015 at 02:19:46PM -0000, Michal Suchanek wrote:
-> When the maximum transfer speed is not set for a SPI slave the value
-> remains 0 and the code in sunxi SPI divides by it. Use an arbitrary
-> speed instead in that case.
+Thanks for following up.
 
-You should always be using the transfer speed that is defined per
-transfer, the core will ensure that this is always set.
---MWF3YmTHhoLNIVQC--
+I have queued up this series for v4.4.
