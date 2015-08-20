@@ -1,47 +1,50 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH 1/9] spi: sunxi: fix transfer timeout
-Date: Thu, 20 Aug 2015 21:34:33 +0200
-Message-ID: <20150820193433.GH30520@lukather>
-References: <cover.1440080122.git.hramrach@gmail.com>
- <0e0b52774a48ddb71dc8095b66942451cd31ff7d.1440080122.git.hramrach@gmail.com>
- <20150820184132.GO12027@sirena.org.uk>
-Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="6ZcLte273om6Oiqd"
-Return-path: <linux-sunxi+bncBD2ZNBF5VYJRBS6X3CXAKGQE4Y2U6XY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20150820184132.GO12027-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <http://groups.google.com/group/linux-sunxi/subscribe>
-To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Michal Suchanek <hramrach-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Vladimir Barinov <vladimir.barinov@cogentembedded.com>
+Subject: [PATCH v4 0/4] iio: adc: hi8435: Add Holt HI-8435 threshold detector
+Date: Thu, 20 Aug 2015 22:37:01 +0300
+Message-ID: <1440099421-4762-1-git-send-email-vladimir.barinov@cogentembedded.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Jonathan Cameron <jic23@kernel.org>
+Cc: Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald <pmeerw@pmeerw.net>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, cory.tusar@pid1solutions.com
 List-Id: devicetree@vger.kernel.org
 
---6ZcLte273om6Oiqd
-Content-Type: text/plain; charset=UTF-8
-Content-Disposition: inline
+Hello,
 
-On Thu, Aug 20, 2015 at 11:41:32AM -0700, Mark Brown wrote:
-> On Thu, Aug 20, 2015 at 02:19:45PM -0000, Michal Suchanek wrote:
-> 
-> >  drivers/spi/spi-sun4i.c | 10 +++++++++-
-> >  drivers/spi/spi-sun6i.c | 10 +++++++++-
-> 
-> Are we *sure* we can't work on merging these drivers :(
+This adds the folowing:
+- Support triggered events
+- Add Holt vendor prefix
+- Holt threshold detector driver for HI-8435 chip
+- Document HI-8435 DT bindings
 
-Those are two different IPs, that don't really share anything but
-their author...
+PDF file can be found here:
+http://www.holtic.com/products/3081-hi-8435.aspx
 
-Maxime
+Vladimir Barinov (4):
+[1/4] iio: Support triggered events
+[2/4] dt: Add vendor prefix 'holt'
+[3/4] iio: adc: hi8435: Holt HI-8435 threshold detector
+[4/4] dt: Document Holt HI-8435 bindings
 
--- 
-Maxime Ripard, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
---6ZcLte273om6Oiqd--
+---
+This patchset is against the 'kernel/git/jic23/iio.git' repo, 'togreg' branch.
+
+ Documentation/ABI/testing/sysfs-bus-iio               |    1 
+ Documentation/ABI/testing/sysfs-bus-iio-adc-hi8435    |   39 +
+ Documentation/devicetree/bindings/iio/adc/hi8435.txt  |   21 
+ Documentation/devicetree/bindings/vendor-prefixes.txt |    1 
+ drivers/iio/Kconfig                                   |    6 
+ drivers/iio/Makefile                                  |    1 
+ drivers/iio/adc/Kconfig                               |   11 
+ drivers/iio/adc/Makefile                              |    1 
+ drivers/iio/adc/hi8435.c                              |  535 ++++++++++++++++++
+ drivers/iio/industrialio-core.c                       |    4 
+ drivers/iio/industrialio-trigger.c                    |   12 
+ drivers/iio/industrialio-triggered-event.c            |   68 ++
+ include/linux/iio/iio.h                               |    3 
+ include/linux/iio/triggered_event.h                   |   11 
+ 14 files changed, 710 insertions(+), 4 deletions(-)
+ create mode 100644 Documentation/ABI/testing/sysfs-bus-iio-adc-hi8435
+ create mode 100644 Documentation/devicetree/bindings/iio/adc/hi8435.txt
+ create mode 100644 drivers/iio/adc/hi8435.c
+ create mode 100644 drivers/iio/industrialio-triggered-event.c
+ create mode 100644 include/linux/iio/triggered_event.h
