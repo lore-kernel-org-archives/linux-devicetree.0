@@ -1,60 +1,49 @@
-From: Viet Nga Dao <vndao@altera.com>
-Subject: Re: [PATCH] [PATCH v4] mtd:spi-nor: Add Altera Quad SPI Driver
-Date: Thu, 20 Aug 2015 15:33:23 +0800
-Message-ID: <CAN1oZWyE9E2kRkGZPajpiNbpeKEjOhs9NDNDbUpmdw18WNYL2A@mail.gmail.com>
+From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [linux-sunxi] Re: [PATCH 4/6] ARM: dts: sun7i: Enable USB DRC on
+ pcDuino 3
+Date: Thu, 20 Aug 2015 09:36:33 +0200
+Message-ID: <55D58381.7040801@redhat.com>
+References: <1439563477-12295-1-git-send-email-hdegoede@redhat.com>
+ <1439563477-12295-5-git-send-email-hdegoede@redhat.com>
+ <20150820064545.GM30520@lukather>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Brian Norris <computersforpeace@gmail.com>, David Woodhouse <dwmw2@infradead.org>, marex@denx.de
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, nga_chi86 <ngachi86@gmail.com>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20150820064545.GM30520@lukather>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Jelle van der Waa <jelle-oJJ1AqDjjO4@public.gmane.org>, Ralph Willekes <benadski-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Aug 18, 2015 at 2:55 PM, Viet Nga Dao <vndao@altera.com> wrote:
->
->
-> -----Original Message-----
-> From: marex@denx.de
-> Sent: Tuesday, August 18, 2015 9:33 AM
-> To: Brian Norris
-> Cc: linux-mtd@lists.infradead.org; Viet Nga Dao; devicetree@vger.kernel.org; Rafa?? Mi??ecki; linux-kernel@vger.kernel.org; David Woodhouse; Graham Moore
-> Subject: Re: [PATCH] [PATCH v4] mtd:spi-nor: Add Altera Quad SPI Driver
->
-> On Tuesday, August 18, 2015 at 03:24:44 AM, Brian Norris wrote:
->> I'm not very helpful here, so hopefully Viet can be of more use:
->
-> Yup :)
->
->> On Mon, Aug 17, 2015 at 07:53:23PM +0200, Marek Vasut wrote:
->> > On Monday, August 17, 2015 at 06:03:38 PM, Brian Norris wrote:
->> > Also, I cannot find any documentation for this IP block even if I
->> > search through Quartus/QSys, is there any proper documentation
->> > available anywhere?
+Hi,
+
+On 08/20/2015 08:45 AM, Maxime Ripard wrote:
+> On Fri, Aug 14, 2015 at 04:44:35PM +0200, Hans de Goede wrote:
+>> From: Jelle van der Waa <jelle-oJJ1AqDjjO4@public.gmane.org>
 >>
->> I never found proper documentation, but I didn't look too hard. I've
->> mostly been going off of Viet's comments and code.
->
-> Me neither, and I looked through the altera stuff in fact. I'm trying to learn whether this is just an Soft IP, in which case it certainly can be fixed ; or if there is actually some chip shipping with this crap synthesised into actual silicon.
->
->> But FWIW, I did find some relevant info for the peculiar Altera EPCQ
->> flash here:
+>> Enable the otg/drc usb controller on the pcDuino 3.
 >>
->> https://www.altera.com/content/dam/altera-www/global/en_US/pdfs/litera
->> ture/
->> hb/cfg/cfg_cf52012.pdf
+>> Note this board has the otg-vbus connected directly to the 5v-dcc of
+>> the board, so there is no vbus0 regulator, nor vbus0-det.
 >
-> Altera EPCS/EPCQ flashes are just rebranded micron flashes, they just have different JEDEC >ID and are a bit more expensive.
+> Can it do OTG then?
 
-You can find the document at here
-(https://www.altera.com/content/dam/altera-www/global/en_US/pdfs/literature/ug/ug_embedded_ip.pdf)
- Chapter 42.Page 407.
+Yes.
 
-For the soft IP issue, i've requested hardware engineer to come out
-the solution. So in the mean way, our driver will NOT support Micron
-flashes until hardware fix is completed.
+> If VBUS is tied to the 5v, there's no way for the
+> board to shut it down when acting as peripheral, right?
 
-Hence, i just submitted version 5 for this driver with eliminating
-micron device support. Hope this version will get ACKed by you.
+Correct, the idea is to power it over otg when using it
+as a peripheral, or at least power it from a usb port of
+the machine for which it is a peripheral. Note that the
+original cubieboard (both A10 and A20 versions) have the
+same issue.
 
-Thanks,
-Viet Nga
+Regards,
+
+Hans
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
