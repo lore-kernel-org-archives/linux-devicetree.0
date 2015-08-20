@@ -1,40 +1,73 @@
-From: Michal Suchanek <hramrach-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 3/9] spi: sunxi: check that transfer speed is non-zero
-Date: Thu, 20 Aug 2015 21:45:07 +0200
-Message-ID: <CAOMqctSfdxWeWDogzHxONE+Qxf7vp6rJnBmxECV89PQO0hXARg@mail.gmail.com>
-References: <cover.1440080122.git.hramrach@gmail.com> <3688fab67e7cdc7bcbff73dfd6b0fcdcc4e79eb6.1440080122.git.hramrach@gmail.com>
- <20150820144836.GV30520@lukather>
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Subject: Re: [PATCH 3/4 v3][RFC] arm64: renesas: Add initial r8a7795 SoC support
+Date: Thu, 20 Aug 2015 22:48:05 +0300
+Message-ID: <4206643.R1gTHQZqhM@avalon>
+References: <877fpdw3av.wl%kuninori.morimoto.gx@renesas.com> <12310001.Bt8qbPIiMv@avalon> <CAMuHMdWMNLf-fDsiLNFwO05i0cqBHkdM2mwC3GinwWFN4pWFZg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20150820144836.GV30520@lukather>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-spi <linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <CAMuHMdWMNLf-fDsiLNFwO05i0cqBHkdM2mwC3GinwWFN4pWFZg@mail.gmail.com>
+Sender: linux-sh-owner@vger.kernel.org
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Michael Turquette <mturquette@baylibre.com>, Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>, Simon <horms@verge.net.au>, Magnus <magnus.damm@gmail.com>, Linux-sh list <linux-sh@vger.kernel.org>, linux-clk@vger.kernel.org, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 20 August 2015 at 16:48, Maxime Ripard
-<maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
-> On Thu, Aug 20, 2015 at 02:19:46PM -0000, Michal Suchanek wrote:
->> When the maximum transfer speed is not set for a SPI slave the value
->> remains 0 and the code in sunxi SPI divides by it. Use an arbitrary
->> speed instead in that case.
->>
->> Signed-off-by: Michal Suchanek <hramrach-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->
-> spi->max_speed_hz is set using the spi-max-frequency property, and
-> spi->will error out if that property isn't set. What am I missing?
->
+Hi Geert,
 
-Spidev I guess.
+On Thursday 20 August 2015 09:43:34 Geert Uytterhoeven wrote:
+> On Wed, Aug 19, 2015 at 11:29 PM, Laurent Pinchart wrote:
+> >> > Also, while you're thinking about the perfect clock binding, please do
+> >> > consider dropping clock-output-names if you can. Specifying clock-names
+> >> > alongside the clocks property inside of the consumer node is a bit more
+> >> > elegant in my opinion. This is also a bit easier if you think about
+> >> > expressing your clock data with C inside of your provider driver.
+> >> 
+> >> Makes sense. I don't think anything relies on the "clock-output-names"
+> >> ... currently.
+> >> 
+> >> I was going to use it for identifying the GIC clock, though:
+> >> 
+> >> --- a/drivers/clk/shmobile/clk-mstp.c
+> >> +++ b/drivers/clk/shmobile/clk-mstp.c
+> >> @@ -144,6 +144,9 @@ cpg_mstp_clock_register(const char *name, const char
+> >> *paren init.name = name;
+> >> 
+> >>         init.ops = &cpg_mstp_clock_ops;
+> >>         init.flags = CLK_IS_BASIC | CLK_SET_RATE_PARENT;
+> >> 
+> >> +       /* INTC-SYS is the module clock of the GIC, and must not be
+> >> disabled */
+> >> +       if (!strcmp(name, "intc-sys"))
+> >> +               init.flags |= CLK_ENABLE_HAND_OFF;
+> >> 
+> >>         init.parent_names = &parent_name;
+> >>         init.num_parents = 1;
+> >> 
+> >> (FTR, on R-Car Gen3 the clock is called "intc-ap", not "intc-sys",
+> >> doh...).
+> >> 
+> >> This does put some reliance on (undocumented) naming in DT, though, so
+> >> not
+> >> having the "clock-output-names" would solve that.
+> > 
+> > Using the clock name is indeed very messy, let's avoid that.
+> > 
+> >> However, while "intc-sys"/"intc-ap" (if existent) is always MSTP408,
+> >> MSTP408 is used for other modules on R-Car Gen1 and most older SoCs. so
+> >> it would complicate the driver code.
+> > 
+> > How about setting the flag based on information provided in DT ?
+> 
+> Like scanning DT for the GIC, and looking for its clock?
+> 
+> I don't want to add an explicit flag in DT, as it's not a hardware property,
+> but a deficiency of the current GIC driver/subsystem.
 
-You can set the speed to arbitrary value from userspace at any time
-using the spidev ioctls.
+What are the changes we can fix the GIC driver in a reasonable time frame ?
 
-Thanks
+-- 
+Regards,
 
-Michal
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Laurent Pinchart
+
