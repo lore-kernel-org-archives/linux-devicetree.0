@@ -1,59 +1,71 @@
-From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH v5 1/5] arm/arm64: add smccc ARCH32
-Date: Thu, 20 Aug 2015 22:30:29 +0100
-Message-ID: <20150820213029.GA1426@svinekod>
-References: <1439973629-19505-1-git-send-email-jens.wiklander@linaro.org>
- <1439973629-19505-2-git-send-email-jens.wiklander@linaro.org>
- <20150819165009.GC10297@arm.com>
- <20150820113729.GA25962@ermac>
+From: Marek Vasut <marex@denx.de>
+Subject: Re: [PATCH] [PATCH v5] mtd:spi-nor: Add Altera Quad SPI Driver
+Date: Thu, 20 Aug 2015 23:52:22 +0200
+Message-ID: <201508202352.22313.marex@denx.de>
+References: <1440053705-3836-1-git-send-email-vndao@altera.com> <3030745.IsU6n2jnJj@ws-stein> <20150820201925.GD74600@google.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20150820113729.GA25962@ermac>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jens Wiklander <jens.wiklander-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Kees Cook <keescook-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, "valentin.manea-hv44wF8Li93QT0dZR+AlfA@public.gmane.org" <valentin.manea-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, "javier-5MUHepqpBA1BDgjK7y7TUQ@public.gmane.org" <javier-5MUHepqpBA1BDgjK7y7TUQ@public.gmane.org>, "emmanuel.michel-qxv4g6HH51o@public.gmane.org" <emmanuel.michel-qxv4g6HH51o@public.gmane.org>, Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, "jean-michel.delorme-qxv4g6HH51o@public.gmane.org" <jean-michel.delorme-qxv4g6HH51o@public.gmane.org>, Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Content-Type: Text/Plain;
+  charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20150820201925.GD74600@google.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Brian Norris <computersforpeace@gmail.com>
+Cc: Alexander Stein <alexander.stein@systec-electronic.com>, linux-mtd@lists.infradead.org, vndao@altera.com, dwmw2@infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, ngachi86@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Aug 20, 2015 at 12:37:29PM +0100, Jens Wiklander wrote:
-> On Wed, Aug 19, 2015 at 05:50:09PM +0100, Will Deacon wrote:
-> > On Wed, Aug 19, 2015 at 09:40:25AM +0100, Jens Wiklander wrote:
-> > > Adds helpers to do SMC based on ARM SMC Calling Convention.
-> > > CONFIG_HAVE_SMCCC is enabled for architectures that may support
-> > > the SMC instruction. It's the responsibility of the caller to
-> > > know if the SMC instruction is supported by the platform.
-
-[...]
-
-> > > +       mov     x28, x0
-> > > +       ldp     w0, w1, [x28, #SMC_PARAM_W0_OFFS]
-> > > +       ldp     w2, w3, [x28, #SMC_PARAM_W2_OFFS]
-> > > +       ldp     w4, w5, [x28, #SMC_PARAM_W4_OFFS]
-> > > +       ldp     w6, w7, [x28, #SMC_PARAM_W6_OFFS]
-> > > +       smc     #0
-> > > +       stp     w0, w1, [x28, #SMC_PARAM_W0_OFFS]
-> > > +       stp     w2, w3, [x28, #SMC_PARAM_W2_OFFS]
-> > > +       ldp     x28, x30, [sp], #16
-> > > +       ret
-> > > +ENDPROC(smccc_call32)
+On Thursday, August 20, 2015 at 10:19:25 PM, Brian Norris wrote:
+> On Thu, Aug 20, 2015 at 12:06:36PM +0200, Alexander Stein wrote:
+> > On Thursday 20 August 2015 10:03:38, Marek Vasut wrote:
+> > > > +Example:
+> > > > +
+> > > > +			quadspi_controller_0: quadspi@0x180014a0 {
+> > > > +				compatible = "altr,quadspi-1.0";
+> > > > +				reg = <0x180014a0 0x00000020>,
+> > > > +				      <0x14000000 0x04000000>;
+> > > > +				reg-names = "avl_csr", "avl_mem";
+> > > > +				#address-cells = <1>;
+> > > > +				#size-cells = <0>;
+> > > > +				flash0: epcq256@0 {
+> > > > +					compatible = "altr,epcq256";
+> > > > +					#address-cells = <1>;
+> > > > +					#size-cells = <1>;
+> > > > +					partition@0 {
+> > > > +						/* 16 MB for raw data. 
+*/
+> > > > +						label = "EPCQ Flash 0 
+raw data";
+> > > > +						reg = <0x0 0x1000000>;
+> > > > +					};
+> > > > +					partition@1000000 {
+> > > > +						/* 16 MB for jffs2 data. 
+*/
+> > > > +						label = "EPCQ Flash 0 
+JFFS 2";
+> > > > +						reg = <0x1000000 
+0x1000000>;
+> > > > +					};
+> > > 
+> > > IIRC, encoding partitions into OF is deprecated (and it shouldn't be
+> > > part of the example anyway, so please remove this bit).
 > > 
-> > Could we deal with this like we do for PSCI instead? (see
-> > __invoke_psci_fn_smc). We could also then rename psci-call.S to fw-call.S
-> > and stick this in there too.
+> > Do you mean specifying partitions in OF is deprecated in general? Is
+> > there any link for that? What would be an alternative to it?
 > 
-> I assume you're referring to when to use "hvc" and "smc".
+> This is the first I've heard of such a deprecation. I would argue that
+> it's still probably one of the best ways to specify partitions. It's not
+> exactly perfect (partitions aren't really "hardware", so may not belong
+> in the "hardware description")
 
-I assume he's on about passing the values in registers rather than a struct.
+Which is the reasoning why I heard it was deprecated, but it seems my
+knowledge is not correct. I apologize for the misinformation, sorry.
 
->From the looks of the SMC Calling Convention documentation, it's valid to have
-return values in registers r0-r3, which necessitates the use of a struct (at
-least for the return values).
+> , but IMO it's better than cmdlineparts,
+> for instance. I also don't really know of any good-enough, generically
+> useful on-flash partition formats, especially ones that can handle the
+> complexities of NAND.
 
-Thanks,
-Mark.
+Right.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Best regards,
+Marek Vasut
