@@ -1,41 +1,59 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 1/9] spi: sunxi: fix transfer timeout
-Date: Thu, 20 Aug 2015 14:29:07 -0700
-Message-ID: <20150820212907.GV12027@sirena.org.uk>
-References: <cover.1440080122.git.hramrach@gmail.com>
- <0e0b52774a48ddb71dc8095b66942451cd31ff7d.1440080122.git.hramrach@gmail.com>
- <20150820184132.GO12027@sirena.org.uk>
- <20150820193433.GH30520@lukather>
- <20150820210830.GS12027@sirena.org.uk>
- <20150820211850.GI30520@lukather>
-Reply-To: broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH v5 1/5] arm/arm64: add smccc ARCH32
+Date: Thu, 20 Aug 2015 22:30:29 +0100
+Message-ID: <20150820213029.GA1426@svinekod>
+References: <1439973629-19505-1-git-send-email-jens.wiklander@linaro.org>
+ <1439973629-19505-2-git-send-email-jens.wiklander@linaro.org>
+ <20150819165009.GC10297@arm.com>
+ <20150820113729.GA25962@ermac>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="SvF6CGw9fzJC4Rcx"
-Return-path: <linux-sunxi+bncBDQ2L75W5QGBBM4N3GXAKGQE2L6OTYY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20150820211850.GI30520@lukather>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <http://groups.google.com/group/linux-sunxi/subscribe>
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Michal Suchanek <hramrach-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+In-Reply-To: <20150820113729.GA25962@ermac>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jens Wiklander <jens.wiklander-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Kees Cook <keescook-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, "valentin.manea-hv44wF8Li93QT0dZR+AlfA@public.gmane.org" <valentin.manea-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, "javier-5MUHepqpBA1BDgjK7y7TUQ@public.gmane.org" <javier-5MUHepqpBA1BDgjK7y7TUQ@public.gmane.org>, "emmanuel.michel-qxv4g6HH51o@public.gmane.org" <emmanuel.michel-qxv4g6HH51o@public.gmane.org>, Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, "jean-michel.delorme-qxv4g6HH51o@public.gmane.org" <jean-michel.delorme-qxv4g6HH51o@public.gmane.org>, Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
---SvF6CGw9fzJC4Rcx
-Content-Type: text/plain; charset=UTF-8
-Content-Disposition: inline
+On Thu, Aug 20, 2015 at 12:37:29PM +0100, Jens Wiklander wrote:
+> On Wed, Aug 19, 2015 at 05:50:09PM +0100, Will Deacon wrote:
+> > On Wed, Aug 19, 2015 at 09:40:25AM +0100, Jens Wiklander wrote:
+> > > Adds helpers to do SMC based on ARM SMC Calling Convention.
+> > > CONFIG_HAVE_SMCCC is enabled for architectures that may support
+> > > the SMC instruction. It's the responsibility of the caller to
+> > > know if the SMC instruction is supported by the platform.
 
-On Thu, Aug 20, 2015 at 11:18:50PM +0200, Maxime Ripard wrote:
+[...]
 
-> at the driver level. And I'm not really sure that we can do much more
-> at the framework level either, except maybe handling the timeout
-> directly (but then the drivers would have to handle the recovering
-> after a timeout too).
+> > > +       mov     x28, x0
+> > > +       ldp     w0, w1, [x28, #SMC_PARAM_W0_OFFS]
+> > > +       ldp     w2, w3, [x28, #SMC_PARAM_W2_OFFS]
+> > > +       ldp     w4, w5, [x28, #SMC_PARAM_W4_OFFS]
+> > > +       ldp     w6, w7, [x28, #SMC_PARAM_W6_OFFS]
+> > > +       smc     #0
+> > > +       stp     w0, w1, [x28, #SMC_PARAM_W0_OFFS]
+> > > +       stp     w2, w3, [x28, #SMC_PARAM_W2_OFFS]
+> > > +       ldp     x28, x30, [sp], #16
+> > > +       ret
+> > > +ENDPROC(smccc_call32)
+> > 
+> > Could we deal with this like we do for PSCI instead? (see
+> > __invoke_psci_fn_smc). We could also then rename psci-call.S to fw-call.S
+> > and stick this in there too.
+> 
+> I assume you're referring to when to use "hvc" and "smc".
 
-We have handle_err() for that sort of cleanup.
---SvF6CGw9fzJC4Rcx--
+I assume he's on about passing the values in registers rather than a struct.
+
+>From the looks of the SMC Calling Convention documentation, it's valid to have
+return values in registers r0-r3, which necessitates the use of a struct (at
+least for the return values).
+
+Thanks,
+Mark.
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
