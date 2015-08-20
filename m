@@ -1,164 +1,74 @@
-From: Jingoo Han <jingoohan1@gmail.com>
-Subject: Re: [PATCH v3 0/14] Add Analogix Core Display Port Driver
-Date: Thu, 20 Aug 2015 14:54:22 +0900
-Message-ID: <58DB3289-29F0-4C2D-97F6-EB0555392DF2@gmail.com>
-References: <1439995728-18046-1-git-send-email-ykk@rock-chips.com>
- <55D557BD.8070004@codeaurora.org>
-Mime-Version: 1.0 (1.0)
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <55D557BD.8070004@codeaurora.org>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Archit Taneja <architt@codeaurora.org>
-Cc: "seanpaul@google.com" <seanpaul@google.com>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, Andrzej Hajda <a.hajda@samsung.com>, Yakir Yang <ykk@rock-chips.com>, Gustavo Padovan <gustavo.padovan@collabora.co.uk>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, Vincent Palatin <vpalatin@chromium.org>, Kishon Vijay Abraham I <kishon@ti.com>, "linux-rockchip@lists.infradead.org" <linux-rockchip@lists.infradead.org>, Russell King <rmk+kernel@arm.linux.org.uk>, Thierry Reding <treding@nvidia.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, "dianders@google.com" <dianders@google.com>, "ajaynumb@gmail.com" <ajaynumb@gmail.com>, Rob Herring <robh+dt@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+From: Vinod Koul <vinod.koul@intel.com>
+Subject: Re: [PATCH v4 2/2] dma: Add Xilinx zynqmp dma engine driver support
+Date: Thu, 20 Aug 2015 11:43:12 +0530
+Message-ID: <20150820061312.GA13546@localhost>
+References: <1438831173-8761-1-git-send-email-punnaia@xilinx.com>
+ <1438831173-8761-2-git-send-email-punnaia@xilinx.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1438831173-8761-2-git-send-email-punnaia@xilinx.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Punnaiah Choudary Kalluri <punnaiah.choudary.kalluri@xilinx.com>
+Cc: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, michal.simek@xilinx.com, dan.j.williams@intel.com, dmaengine@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, kalluripunnaiahchoudary@gmail.com, kpc528@gmail.com, Punnaiah Choudary Kalluri <punnaia@xilinx.com>
 List-Id: devicetree@vger.kernel.org
 
-T24gMjAxNS4gOC4gMjAuLCBhdCBQTSAxOjI5LCBBcmNoaXQgVGFuZWphIDxhcmNoaXR0QGNvZGVh
-dXJvcmEub3JnPiB3cm90ZToKPiAKPiBIaSwKPiAKPj4gT24gMDgvMTkvMjAxNSAwODoxOCBQTSwg
-WWFraXIgWWFuZyB3cm90ZToKPj4gCj4+IEhpIGFsbCwKPj4gICAgVGhlIFNhbXN1bmcgRXh5bm9z
-IGVEUCBjb250cm9sbGVyIGFuZCBSb2NrY2hpcCBSSzMyODggZURQIGNvbnRyb2xsZXIKPj4gc2hh
-cmUgdGhlIHNhbWUgSVAsIHNvIGEgbG90IG9mIHBhcnRzIGNhbiBiZSByZS11c2VkLiBJIHNwbGl0
-IHRoZSBjb21tb24KPj4gY29kZSBpbnRvIGJyaWRnZSBkaXJlY3RvcnksIHRoZW4gcmszMjg4IGFu
-ZCBleHlub3Mgb25seSBuZWVkIHRvIGtlZXAKPj4gc29tZSBwbGF0Zm9ybSBjb2RlLiBDYXVzZSBJ
-IGNhbid0IGZpbmQgdGhlIGV4YWN0IElQIG5hbWUgb2YgZXh5bm9zIGRwCj4+IGNvbnRyb2xsZXIs
-IHNvIEkgZGVjaWRlIHRvIG5hbWUgZHAgY29yZSBkcml2ZXIgd2l0aCAiYW5hbG9naXgiIHdoaWNo
-IEkKPj4gZmluZCBpbiByazMyODggZURQIFRSTSA7KQo+PiAKPj4gQmV5b25kIHRoYXQsIHRoZXJl
-IGFyZSB0aHJlZSBsaWdodCByZWdpc3RlcnMgc2V0dGluZyBkaWZmZXJlbnRzIGJld3RlZW4KPj4g
-ZXh5bm9zIGFuZCByazMyODguCj4+IDEuIFJLMzI4OCBoYXZlIGZpdmUgc3BlY2lhbCBwbGwgcmVz
-aWd0ZXJzIHdoaWNoIG5vdCBpbmRpY2F0YSBpbiBleHlub3MKPj4gICAgZHAgY29udHJvbGxlci4K
-Pj4gMi4gVGhlIGFkZHJlc3Mgb2YgRFBfUEhZX1BEKGRwIHBoeSBwb3dlciBtYW5hZ2VyIHJlZ2lz
-dGVyKSBhcmUgZGlmZmVyZW50Cj4+ICAgIGJldHdlZW4gcmszMjg4IGFuZCBleHlub3MuCj4+IDMu
-IFJrMzI4OCBhbmQgZXh5bm9zIGhhdmUgZGlmZmVyZW50IHNldHRpbmcgd2l0aCBBVVhfSFdfUkVU
-UllfQ1RMKGRwIGRlYnVnCj4+ICAgIHJlZ2lzdGVyKS4KPj4gCj4+IEkgaGF2ZSB2ZXJpZmllZCB0
-aGlzIHNlcmllcyBvbiB0d28ga2luZHMgb2Ygcm9ja2NoaXAgcGxhdGZvcm0gYm9hcmQsIG9uZQo+
-PiBpcyByazMyODggc2RrIGJvYXJkIHdoaWNoIGNvbm5lY3Qgd2l0aCBhIDJLIGRpc3BsYXkgcG9y
-dCBtb25pdG9yLCB0aGUgb3RoZXIKPj4gaXMgZ29vZ2xlIGplcnJ5IGNocm9tZWJvb2sgd2hpY2gg
-Y29ubmVjdCB3aXRoIGEgZURQIHNjcmVlbiAiY25tLG4xMTZiZ2VlYTIiLAo+PiBib3RoIG9mIHRo
-ZW0gd29ya3MgcmlnaHRsbHkuCj4+IAo+PiBJIGhhdmVuJ3QgdmVyaWZpZWQgdGhlIGRwIGZ1bmN0
-aW9uIG9uIHNhbXN1bmcgcGxhdGZvcm0sIGNhdXNlIEkgaGF2ZW4ndCBnb3QKPj4gZXh5bm9zIGJv
-YXJkcy4gSSBjYW4gb25seSBlbnN1cmUgdGhhdCB0aGVyZSBhcmUgbm8gYnVpbGQgZXJyb3Igb24g
-c2Ftc3VuZwo+PiBwbGF0Zm9ybSwgd2lzaCBzb21lIHNhbXN1bmcgZ3V5cyBoZWxwIHRvIHRlc3Qu
-IDspCj4+IAo+PiBUaGFua3MsCj4+IC0gWWFraXIKPj4gCj4+IENoYW5nZXMgaW4gdjM6Cj4+IC0g
-VGFrZSBUaGllcnJ5IFJlZGluZyBzdWdnZXN0LCBtb3ZlIGV4eW5vcydzIHZpZGVvX3RpbWluZyBj
-b2RlCj4+ICAgdG8gYW5hbG9naXhfZHAtZXh5bm9zIHBsYXRmb3JtIGRyaXZlciwgYWRkIGdldF9t
-b2RlcyBtZXRob2QKPj4gICB0byBzdHJ1Y3QgYW5hbG9naXhfZHBfcGxhdF9kYXRhLgo+PiAtIFRh
-a2UgSGVpa28gc3VnZ2VzdCwgcmVuYW1lIHNvbWUgInNhbXN1bmcqIiBkdHMgcHJvcGVyeSB0byAi
-YW5hbG9naXgqIi4KPj4gLSBUYWtlIFRoaWVycnkgUmVkaW5nIHN1Z2dlc3QsIGR5bmFtaWMgcGFy
-c2UgdmlkZW8gdGltaW5nIGluZm8gZnJvbQo+PiAgIHN0cnVjdCBkcm1fZGlzcGxheV9tb2RlIGFu
-ZCBzdHJ1Y3QgZHJtX2Rpc3BsYXlfaW5mby4KPj4gLSBUYWtlIFRoaWVycnkgUmVkaW5nIHN1Z2dl
-c3QsIGxpbmtfcmF0ZSBhbmQgbGFuZV9jb3VudCBzaG91bGRuJ3QgY29uZmlnIHRvCj4+ICAgdGhl
-IERUIHByb3BlcnR5IHZhbHVlIGRpcmVjdGx5LCBidXQgd2UgY2FuIHRha2UgdGhvc2UgYXMgaGFy
-ZHdhcmUgbGltaXRlLgo+PiAgIEZvciBleGFtcGxlLCBSSzMyODggb25seSBzdXBwb3J0IDQgcGh5
-c2ljYWwgbGFuZXMgb2YgMi43LzEuNjIgR2Jwcy9sYW5lLAo+PiAgIHNvIERUIHByb3BlcnR5IHdv
-dWxkIGxpa2UgImxpbmstcmF0ZSA9IDB4MGEiICJsYW5lLWNvdW50ID0gNCIuCj4+IC0gVGFrZSBI
-ZWlrbyBzdWdnZXN0LCBhZGQgZGV2aWNldHJlZSBiaW5kaW5nIGRvY3VtZW50cy4KPj4gLSBUYWtl
-IFRoaWVycnkgUmVkaW5nIHN1Z2dlc3QsIHJlbW92ZSBzeW5jIHBvbCAmIGNvbG9yaW1ldHJ5IHBy
-b3Blcmllcwo+PiAgIGZyb20gdGhlIG5ldyBhbmFsb2dpeCBkcCBkcml2ZXIgZGV2aWNldHJlZSBi
-aW5kaW5nLgo+PiAtIFVwZGF0ZSB0aGUgZXhpc3QgZXh5bm9zIGR0c2kgZmlsZSB3aXRoIHRoZSBs
-YXRlc3QgRFAgRFQgcHJvcGVyaWVzLgo+PiAtIFRha2UgVGhpZXJyeSBSZWRpbmcgYW5kIEhlaWtv
-IHN1Z2dlc3QsIGxlYXZlICJzY2xrX2VkcF8yNG0iIHRvIHJvY2tjaGlwCj4+ICAgZHAgcGh5IGRy
-aXZlciB3aGljaCBuYW1lIHRvICIyNG0iLCBhbmQgbGVhdmUgInNjbGtfZWRwIiB0byBhbmFsb2dp
-eCBkcAo+PiAgIGNvcmUgZHJpdmVyIHdoaWNoIG5hbWUgdG8gImRwIiwgYW5kIGxlYXZlICJwY2xr
-X2VkcCIgdG8gcm9ja2NoaXAgZHAgcGxhdGZvcm0KPj4gICBkcml2ZXIgd2hpY2ggbmFtZSB0byAi
-cGNsayIuCj4+IC0gVGFrZSBIZWlrbyBzdWdnZXN0LCBhZGQgZGV2aWNldHJlZSBiaW5kaW5nIGRv
-Y3VtZW50Lgo+PiAtIFRha2UgSGVpa28gc3VnZ2VzdCwgcmVtb3ZlICJyb2NrY2hpcCxwYW5lbCIg
-RFQgcHJvcGVydHksIHRha2UgdXNlIG9mIHJlbW90ZQo+PiAgIHBvaW50IHRvIGdldCBwYW5lbCBu
-b2RlLgo+PiAtIEFkZCB0aGUgbmV3IGZ1bmN0aW9uIHBvaW50IGFuYWxvZ2l4X2RwX3BsYXRkYXRh
-LmdldF9tb2RlcyBpbml0Lgo+PiAtIFRha2UgSGVpa28gc3VnZ2VzdCwgYWRkIHJvY2tjaGlwIGRw
-IHBoeSBkcml2ZXIsCj4+ICAgY29sbGVjdCB0aGUgcGh5IGNsb2NrcyBhbmQgcG93ZXIgY29udHJv
-bC4KPj4gLSBBZGQgImFuYWxvZ2l4LG5lZWQtZm9yY2UtaHBkIiB0byBpbmRpY2F0ZSB3aGV0aGVy
-IGRyaXZlciBuZWVkIGZvY2UKPj4gICBocGQgd2hlbiBocGQgZGV0ZWN0IGZhaWxlZC4KPj4gLSBt
-b3ZlIGRwIGhwZCBkZXRlY3QgdG8gY29ubmVjdG9yIGRldGVjdCBmdW5jdGlvbi4KPj4gLSBBZGQg
-ZWRpZCBtb2RlcyBwYXJzZSBzdXBwb3J0Cj4+IAo+PiBDaGFuZ2VzIGluIHYyOgo+PiAtIFRha2Ug
-Sm9lIFByZWNoZXMgYWR2aXNlLCBpbXByb3ZlZCBjb21taXQgbWVzc2FnZSBtb3JlIHJlYWRhYmxl
-LCBhbmQKPj4gICBhdm9pZCB1c2luZyBzb21lIHVuY29tbW9uIHN0eWxlIGxpa2UgYmVsbG93Ogo+
-PiAgIC0gIHJldHZhbCA9IGV4eW5vc19kcF9yZWFkX2J5dGVzX2Zyb21faTJjKC4uLgo+PiAgICAg
-ICAgICAgICAgICAuLi4pCj4+ICAgKyAgcmV0dmFsID0KPj4gICArICBleHlub3NfZHBfcmVhZF9i
-eXRlc19mcm9tX2kyYyguLi4uLi4pOwo+PiAtIFRha2UgSmluZ29vIEhhbiBzdWdnZXN0LCBqdXN0
-IHJlbW92ZSBteSBuYW1lIGZyb20gYXV0aG9yIGxpc3QuCj4+IC0gVGFrZSBKaW5nb28gSGFuIHN1
-Z2dlc3QsIHJlbW92ZSBuZXcgY29weXJpZ2h0Cj4+IC0gRml4IGNvbXBpbGVkIGZhaWxlZCBkdXQg
-dG8gYW5hbG9naXhfZHBfZGV2aWNlIG1pc3NwZWxsCj4+IC0gVGFrZSBIZWlrbyBzdWdnZXN0LCBn
-ZXQgcGFuZWwgbm9kZSB3aXRoIHJlbW90ZS1lbmRwb2ludCBtZXRob2QsCj4+ICAgYW5kIGNyZWF0
-ZSBkZXZpY2V0cmVlIGJpbmRpbmcgZm9yIGRyaXZlci4KPj4gLSBSZW1vdmUgdGhlIGNsb2NrIGVu
-YWJsZS9kaXNiYWxlIHdpdGggInNjbGtfZWRwIiAmICJzY2xrX2VkcF8yNG0iLAo+PiAgIGxlYXZl
-IHRob3NlIGNsb2NrIHRvIHJvY2tjaGlwIGRwIHBoeSBkcml2ZXIuCj4+IC0gQWRkIEdOVSBsaWNl
-bnNlIHYyIGRlY2xhcmVkIGFuZCBzYW1zdW5nIGNvcHlyaWdodAo+PiAtIEZpeCBjb21waWxlIGZh
-aWxlZCBkdXQgdG8gcGh5X3BkX2FkZHIgdmFyaWFibGUgbWlzc3BlbGwgZXJyb3IKPj4gCj4+IFlh
-a2lyIFlhbmcgKDE0KToKPj4gICBkcm06IGV4eW5vcy9kcDogZml4IGNvZGUgc3R5bGUKPj4gICBk
-cm06IGV4eW5vcy9kcDogY29udmVydCB0byBkcm0gYnJpZGdlIG1vZGUKPj4gICBkcm06IGJyaWRn
-ZTogYW5hbG9naXhfZHA6IHNwbGl0IGV4eW5vcyBkcCBkcml2ZXIgdG8gYnJpZGdlIGRpcgo+PiAg
-IGRybTogYnJpZGdlL2FuYWxvZ2l4X2RwOiBkeW5hbWljIHBhcnNlIHN5bmNfcG9sICYgaW50ZXJs
-YWNlICYKPj4gICAgIGNvbG9yaW1ldHJ5Cj4+ICAgZHJtOiBicmlkZ2UvYW5hbG9naXhfZHA6IGZp
-eCBsaW5rX3JhdGUgJiBsYW5lX2NvdW50IGJ1Zwo+PiAgIERvY3VtZW50YXRpb246IGRybS9icmlk
-Z2U6IGFkZCBkb2N1bWVudCBmb3IgYW5hbG9naXhfZHAKPj4gICBkcm06IHJvY2tjaGlwL2RwOiBh
-ZGQgcm9ja2NoaXAgcGxhdGZvcm0gZHAgZHJpdmVyCj4+ICAgcGh5OiBBZGQgZHJpdmVyIGZvciBy
-b2NrY2hpcCBEaXNwbGF5IFBvcnQgUEhZCj4+ICAgZHJtOiBicmlkZ2UvYW5hbG9naXhfZHA6IGFk
-ZCBwbGF0Zm9ybSBkZXZpY2UgdHlwZSBzdXBwb3J0Cj4+ICAgZHJtOiBicmlkZ2U6IGFuYWxvZ2l4
-X2RwOiBhZGQgc29tZSByazMyODggc3BlY2lhbCByZWdpc3RlcnMgc2V0dGluZwo+PiAgIGRybTog
-YnJpZGdlOiBhbmFsb2dpeF9kcDogdHJ5IGZvcmNlIGhwZCBhZnRlciBwbHVnIGluIGxvb2t1cCBm
-YWlsZWQKPj4gICBkcm06IGJyaWRnZS9hbmFsb2dpeF9kcDogZXhwYW5kIHRoZSBkZWxheSB0aW1l
-IGZvciBocGQgZGV0ZWN0Cj4+ICAgZHJtOiBicmlkZ2UvYW5hbG9naXhfZHA6IG1vdmUgaHBkIGRl
-dGVjdCB0byBjb25uZWN0b3IgZGV0ZWN0IGZ1bmN0aW9uCj4+ICAgZHJtOiBicmlkZ2UvYW5hbG9n
-aXhfZHA6IGFkZCBlZGlkIG1vZGVzIHBhcnNlIGluIGdldF9tb2RlcyBtZXRob2QKPj4gCj4+ICAu
-Li4vZGV2aWNldHJlZS9iaW5kaW5ncy9kcm0vYnJpZGdlL2FuYWxvZ2l4X2RwLnR4dCB8ICAgNzMg
-Kwo+PiAgLi4uL2RldmljZXRyZWUvYmluZGluZ3MvcGh5L3JvY2tjaGlwLWRwLXBoeS50eHQgICAg
-fCAgIDI2ICsKPj4gIC4uLi9iaW5kaW5ncy92aWRlby9hbmFsb2dpeF9kcC1yb2NrY2hpcC50eHQg
-ICAgICAgIHwgICA4MyArKwo+PiAgLi4uL2RldmljZXRyZWUvYmluZGluZ3MvdmlkZW8vZXh5bm9z
-X2RwLnR4dCAgICAgICAgfCAgIDUxICstCj4+ICBhcmNoL2FybS9ib290L2R0cy9leHlub3M1MjUw
-LWFybmRhbGUuZHRzICAgICAgICAgICB8ICAgMTAgKy0KPj4gIGFyY2gvYXJtL2Jvb3QvZHRzL2V4
-eW5vczUyNTAtc21kazUyNTAuZHRzICAgICAgICAgIHwgICAxMCArLQo+PiAgYXJjaC9hcm0vYm9v
-dC9kdHMvZXh5bm9zNTI1MC1zbm93LmR0cyAgICAgICAgICAgICAgfCAgIDEyICstCj4+ICBhcmNo
-L2FybS9ib290L2R0cy9leHlub3M1MjUwLXNwcmluZy5kdHMgICAgICAgICAgICB8ICAgMTIgKy0K
-Pj4gIGFyY2gvYXJtL2Jvb3QvZHRzL2V4eW5vczU0MjAtcGVhY2gtcGl0LmR0cyAgICAgICAgIHwg
-ICAxMiArLQo+PiAgYXJjaC9hcm0vYm9vdC9kdHMvZXh5bm9zNTQyMC1zbWRrNTQyMC5kdHMgICAg
-ICAgICAgfCAgIDEwICstCj4+ICBhcmNoL2FybS9ib290L2R0cy9leHlub3M1ODAwLXBlYWNoLXBp
-LmR0cyAgICAgICAgICB8ICAgMTIgKy0KPj4gIGRyaXZlcnMvZ3B1L2RybS9icmlkZ2UvS2NvbmZp
-ZyAgICAgICAgICAgICAgICAgICAgIHwgICAgNSArCj4+ICBkcml2ZXJzL2dwdS9kcm0vYnJpZGdl
-L01ha2VmaWxlICAgICAgICAgICAgICAgICAgICB8ICAgIDEgKwo+PiAgZHJpdmVycy9ncHUvZHJt
-L2JyaWRnZS9hbmFsb2dpeF9kcF9jb3JlLmMgICAgICAgICAgfCAxMzgyICsrKysrKysrKysrKysr
-KysrKysKPj4gIGRyaXZlcnMvZ3B1L2RybS9icmlkZ2UvYW5hbG9naXhfZHBfY29yZS5oICAgICAg
-ICAgIHwgIDI4NiArKysrCj4+ICBkcml2ZXJzL2dwdS9kcm0vYnJpZGdlL2FuYWxvZ2l4X2RwX3Jl
-Zy5jICAgICAgICAgICB8IDEyOTQgKysrKysrKysrKysrKysrKysrCj4+ICAuLi4vZXh5bm9zX2Rw
-X3JlZy5oID0+IGJyaWRnZS9hbmFsb2dpeF9kcF9yZWcuaH0gICB8ICAyNzAgKystLQo+PiAgZHJp
-dmVycy9ncHUvZHJtL2V4eW5vcy9LY29uZmlnICAgICAgICAgICAgICAgICAgICAgfCAgICA1ICst
-Cj4+ICBkcml2ZXJzL2dwdS9kcm0vZXh5bm9zL01ha2VmaWxlICAgICAgICAgICAgICAgICAgICB8
-ICAgIDIgKy0KPj4gIGRyaXZlcnMvZ3B1L2RybS9leHlub3MvYW5hbG9naXhfZHAtZXh5bm9zLmMg
-ICAgICAgIHwgIDM0NyArKysrKwo+PiAgZHJpdmVycy9ncHUvZHJtL2V4eW5vcy9leHlub3NfZHBf
-Y29yZS5jICAgICAgICAgICAgfCAxNDE2IC0tLS0tLS0tLS0tLS0tLS0tLS0tCj4+ICBkcml2ZXJz
-L2dwdS9kcm0vZXh5bm9zL2V4eW5vc19kcF9jb3JlLmggICAgICAgICAgICB8ICAyODIgLS0tLQo+
-PiAgZHJpdmVycy9ncHUvZHJtL2V4eW5vcy9leHlub3NfZHBfcmVnLmMgICAgICAgICAgICAgfCAx
-MjYzIC0tLS0tLS0tLS0tLS0tLS0tCj4+ICBkcml2ZXJzL2dwdS9kcm0vcm9ja2NoaXAvS2NvbmZp
-ZyB8ICAgIDkgKwo+PiAgZHJpdmVycy9ncHUvZHJtL3JvY2tjaGlwL01ha2VmaWxlICAgICAgICAg
-ICAgICAgICAgfCAgICAxICsKPj4gIGRyaXZlcnMvZ3B1L2RybS9yb2NrY2hpcC9hbmFsb2dpeF9k
-cC1yb2NrY2hpcC5jICAgIHwgIDM5MCArKysrKysKPj4gIGRyaXZlcnMvcGh5L0tjb25maWcgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgIHwgICAgNyArCj4+ICBkcml2ZXJzL3BoeS9NYWtl
-ZmlsZSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICB8ICAgIDEgKwo+PiAgZHJpdmVycy9w
-aHkvcGh5LXJvY2tjaGlwLWRwLmMgICAgICAgICAgICAgICAgICAgICAgfCAgMTg1ICsrKwo+PiAg
-aW5jbHVkZS9kcm0vYnJpZGdlL2FuYWxvZ2l4X2RwLmggfCAgIDQwICsKPj4gIDMwIGZpbGVzIGNo
-YW5nZWQsIDQzMjUgaW5zZXJ0aW9ucygrKSwgMzE3MiBkZWxldGlvbnMoLSkKPj4gIGNyZWF0ZSBt
-b2RlIDEwMDY0NCBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZHJtL2JyaWRnZS9h
-bmFsb2dpeF9kcC50eHQKPj4gIGNyZWF0ZSBtb2RlIDEwMDY0NCBEb2N1bWVudGF0aW9uL2Rldmlj
-ZXRyZWUvYmluZGluZ3MvcGh5L3JvY2tjaGlwLWRwLXBoeS50eHQKPj4gIGNyZWF0ZSBtb2RlIDEw
-MDY0NCBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvdmlkZW8vYW5hbG9naXhfZHAt
-cm9ja2NoaXAudHh0Cj4+ICBjcmVhdGUgbW9kZSAxMDA2NDQgZHJpdmVycy9ncHUvZHJtL2JyaWRn
-ZS9hbmFsb2dpeF9kcF9jb3JlLmMKPj4gIGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL2dwdS9k
-cm0vYnJpZGdlL2FuYWxvZ2l4X2RwX2NvcmUuaAo+PiAgY3JlYXRlIG1vZGUgMTAwNjQ0IGRyaXZl
-cnMvZ3B1L2RybS9icmlkZ2UvYW5hbG9naXhfZHBfcmVnLmMKPiAKPiBNaW5vciBjb21tZW50OiBT
-aW5jZSB0aGVyZSBhcmUgYSBmZXcgZmlsZXMgcmVxdWlyZWQgZm9yIHRoZSBkcml2ZXIsCj4gY291
-bGQgeW91IGNyZWF0ZSBhIHNlcGFyYXRlIGZvbGRlciB3aXRoaW4gZHJpdmVycy9ncHUvZHJtL2Jy
-aWRnZT8KCkkgYWdyZWUgb24gdGhpcyBvcGluaW9uLgpUaGFuayB5b3UuIAoKQmVzdCByZWdhcmRz
-LApKaW5nb28gSGFuCgo+IFRoYW5rcywKPiBBcmNoaXQKPiAKPiAtLSAKPiBRdWFsY29tbSBJbm5v
-dmF0aW9uIENlbnRlciwgSW5jLiBpcyBhIG1lbWJlciBvZiBDb2RlIEF1cm9yYSBGb3J1bSwKPiBh
-IExpbnV4IEZvdW5kYXRpb24gQ29sbGFib3JhdGl2ZSBQcm9qZWN0Cl9fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJp
-LWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3Jn
-L21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+On Thu, Aug 06, 2015 at 08:49:33AM +0530, Punnaiah Choudary Kalluri wrote:
+
+> +	list_for_each_entry_safe(desc, next, &chan->done_list, node) {
+> +		dma_async_tx_callback callback;
+> +		void *callback_param;
+> +
+> +		list_del(&desc->node);
+> +
+> +		callback = desc->async_tx.callback;
+> +		callback_param = desc->async_tx.callback_param;
+> +		if (callback) {
+> +			if (in_interrupt())
+> +				spin_unlock_bh(&chan->lock);
+> +			else
+> +				spin_unlock(&chan->lock);
+
+This looks bad!
+Why would callback be called from different context. It should only be
+invoked from your tasklet
+
+> +static int zynqmp_dma_device_terminate_all(struct dma_chan *dchan)
+> +{
+> +	struct zynqmp_dma_chan *chan = to_chan(dchan);
+> +
+> +	spin_lock_bh(&chan->lock);
+> +	zynqmp_dma_reset(chan);
+> +	spin_unlock_bh(&chan->lock);
+
+No descriptor cleanup
+
+> +static void zynqmp_dma_chan_remove(struct zynqmp_dma_chan *chan)
+> +{
+> +	if (!chan)
+> +		return;
+> +
+> +	devm_free_irq(chan->zdev->dev, chan->irq, chan);
+> +	tasklet_kill(&chan->tasklet);
+> +	list_del(&chan->common.device_node);
+
+not deregistering with dmaengine?
+
+> +	zdev->chan = chan;
+> +	tasklet_init(&chan->tasklet, zynqmp_dma_do_tasklet, (ulong)chan);
+> +	spin_lock_init(&chan->lock);
+> +	INIT_LIST_HEAD(&chan->active_list);
+> +	INIT_LIST_HEAD(&chan->pending_list);
+> +	INIT_LIST_HEAD(&chan->done_list);
+> +	INIT_LIST_HEAD(&chan->free_list);
+
+You can simmplify this by using vchan framework!
+
+> +MODULE_AUTHOR("Xilinx, Inc.");
+> +MODULE_DESCRIPTION("Xilinx ZynqMP DMA driver");
+> +MODULE_LICENSE("GPL");
+No alias, how did it get loaded?
+
+-- 
+~Vinod
