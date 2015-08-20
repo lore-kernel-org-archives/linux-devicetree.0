@@ -1,62 +1,63 @@
-From: Jingoo Han <jingoohan1@gmail.com>
-Subject: Re: [PATCH v3 12/14] drm: bridge/analogix_dp: expand the delay time for hpd detect
-Date: Thu, 20 Aug 2015 15:11:29 +0900
-Message-ID: <A474A3AB-86A8-4967-B90F-31920A5E7BA3@gmail.com>
-References: <1439995728-18046-1-git-send-email-ykk@rock-chips.com> <1439995929-18719-1-git-send-email-ykk@rock-chips.com>
-Mime-Version: 1.0 (1.0)
-Content-Type: text/plain;
-	charset=us-ascii
-Content-Transfer-Encoding: 8BIT
+From: punnaiah choudary kalluri <punnaia@xilinx.com>
+Subject: Re: [PATCH v4 1/2] Documentation: dt: Add Xilinx zynqmp dma device
+ tree binding documentation
+Date: Thu, 20 Aug 2015 11:41:33 +0530
+Message-ID: <CAGnW=BbjdAUf5SgRXvNNoamhuVjKC4miBUGSiV_s4+Byb0nzog@mail.gmail.com>
+References: <1438831173-8761-1-git-send-email-punnaia@xilinx.com>
+	<20150820055255.GZ13546@localhost>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1439995929-18719-1-git-send-email-ykk@rock-chips.com>
+In-Reply-To: <20150820055255.GZ13546@localhost>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Yakir Yang <ykk@rock-chips.com>
-Cc: Heiko Stuebner <heiko@sntech.de>, Thierry Reding <treding@nvidia.com>, Fabio Estevam <fabio.estevam@freescale.com>, Inki Dae <inki.dae@samsung.com>, "joe@perches.com" <joe@perches.com>, Russell King <rmk+kernel@arm.linux.org.uk>, "djkurtz@google.com" <djkurtz@google.com>, "dianders@google.com" <dianders@google.com>, "seanpaul@google.com" <seanpaul@google.com>, Takashi Iwai <tiwai@suse.de>, "ajaynumb@gmail.com" <ajaynumb@gmail.com>, Andrzej Hajda <a.hajda@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, Philipp Zabel <p.zabel@pengutronix.de>, David Airlie <airlied@linux.ie>, Gustavo Padovan <gustavo.padovan@collabora.co.uk>, Vincent Palatin <vpalatin@chromium.org>, Mark Yao <mark.yao@rock-chips.com>, Andy Yan <andy.yan@rock-chips.com>, Kumar Gala <galak@codeaurora.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <robh+dt@kernel.org>, Pawel
+To: Vinod Koul <vinod.koul@intel.com>
+Cc: Punnaiah Choudary Kalluri <punnaiah.choudary.kalluri@xilinx.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "michal.simek@xilinx.com" <michal.simek@xilinx.com>, dan.j.williams@intel.com, dmaengine@vger.kernel.org, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-arm-kernel@lists.infradead.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Punnaiah Choudary <kpc528@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On 2015. 8. 19., at PM 11:52, Yakir Yang <ykk@rock-chips.com> wrote:
-> 
-> Some edp screen with no hpd signal would need some delay time
-> to ensure that screen would be ready for work, so we can expand
-> the delay time in hpd detect function, it works prefectly on my
-> rk3288 sdk board.
+On Thu, Aug 20, 2015 at 11:22 AM, Vinod Koul <vinod.koul@intel.com> wrote:
+> On Thu, Aug 06, 2015 at 08:49:32AM +0530, Punnaiah Choudary Kalluri wrote:
+>> Device-tree binding documentation for Xilinx zynqmp dma engine used in
+>> Zynq UltraScale+ MPSoC.
+>>
+>> Signed-off-by: Punnaiah Choudary Kalluri <punnaia@xilinx.com>
+>> ---
+>> Changes in v4:
+>> - None
+>> Changes in v3:
+>> - None
+>> Changes in v2:
+>> - None
+>> ---
+>>  .../devicetree/bindings/dma/xilinx/zynqmp_dma.txt  |   61 ++++++++++++++++++++
+>>  1 files changed, 61 insertions(+), 0 deletions(-)
+>>  create mode 100644 Documentation/devicetree/bindings/dma/xilinx/zynqmp_dma.txt
+>>
+>> diff --git a/Documentation/devicetree/bindings/dma/xilinx/zynqmp_dma.txt b/Documentation/devicetree/bindings/dma/xilinx/zynqmp_dma.txt
+>> new file mode 100644
+>> index 0000000..e4f92b9
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/dma/xilinx/zynqmp_dma.txt
+>> @@ -0,0 +1,61 @@
+>> +Xilinx ZynqMP DMA engine, it does support memory to memory transfers,
+>> +memory to device and device to memory transfers. It also has flow
+>> +control and rate control support for slave/peripheral dma access.
+>> +
+>> +Required properties:
+>> +- compatible: Should be "xlnx,zynqmp-dma-1.0"
+>> +- #dma-cells: Should be <1>, a single cell holding a line request number
+>> +- reg: Memory map for module access
+>> +- interrupt-parent: Interrupt controller the interrupt is routed through
+>> +- interrupts: Should contain DMA channel interrupt
+> channel interrupt or interrupts, former says it is plural
 
-Then, this delay has a dependency on the "rk3288 sdk" board.
-Also, if the delay time is expanded, the booting time of some Exybos boards will be increased unnecessarily. :-(
+ZynqMP DMA has single interrupt for each channel So, that is the reason
+i have explicitly mentioned it as interrupt ( not interrupts).
 
-So, please add new DT property such as 'hpd-delay' that can be added to board DT files.
+Please let me know if you still want it to be plural.
 
-If there is not that DT property in DT files, the default value '10' will written to a variable such as 'unsigned int hpd_delay'.
-If there is the DT property in DT files, the delay value will written to the variable when parsing DT values
-and will be used in analogix_dp_detect_hpd().
-
-What I want to say is that there should not be harmful effect on the existing Exynos boards, due to unrelated reasons.
-
-Best regards,
-Jingoo Han
-
-> Signed-off-by: Yakir Yang <ykk@rock-chips.com>
-> ---
-> Changes in v3: None
-> Changes in v2: None
-> 
-> drivers/gpu/drm/bridge/analogix_dp_core.c | 2 +-
-> 1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/gpu/drm/bridge/analogix_dp_core.c b/drivers/gpu/drm/bridge/analogix_dp_core.c
-> index 99870f7..75dd44a 100644
-> --- a/drivers/gpu/drm/bridge/analogix_dp_core.c
-> +++ b/drivers/gpu/drm/bridge/analogix_dp_core.c
-> @@ -68,7 +68,7 @@ static int analogix_dp_detect_hpd(struct analogix_dp_device *dp)
->            return 0;
-> 
->        timeout_loop++;
-> -        usleep_range(10, 11);
-> +        usleep_range(100, 110);
->    }
-> 
->    /*
-> -- 
-> 1.9.1
-> 
-> 
+Regards,
+Punnaiah
+>
+> --
+> ~Vinod
+>
