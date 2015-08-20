@@ -1,72 +1,93 @@
-From: Leo Yan <leo.yan-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 2/3] mailbox: Hi6220: add mailbox driver
-Date: Thu, 20 Aug 2015 21:44:38 +0800
-Message-ID: <20150820134438.GA18629@leoy-linaro>
-References: <1440039239-8772-1-git-send-email-leo.yan@linaro.org>
- <1440039239-8772-3-git-send-email-leo.yan@linaro.org>
- <55D568E2.9060505@hisilicon.com>
+From: Michal Suchanek <hramrach-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH 1/9] spi: sunxi: fix transfer timeout
+Date: 20 Aug 2015 14:19:45 -0000
+Message-ID: <0e0b52774a48ddb71dc8095b66942451cd31ff7d.1440080122.git.hramrach@gmail.com>
+References: <cover.1440080122.git.hramrach@gmail.com>
+Reply-To: hramrach-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <55D568E2.9060505-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: YiPing Xu <xuyiping-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Bintian Wang <bintian.wang-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, haojian.zhuang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, Wei Xu <xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, guodong.xu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, Jian Zhang <zhangjian001-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Zhenwei Wang <Zhenwei.wang-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Haoju Mo <mohaoju-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Dan Zhao <dan.zhao-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, kongfei-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, Guangyue Zeng <zengguangyue-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sunxi+bncBCQMLUOX54MBBAWE26XAKGQEKJCXICI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <cover.1440080122.git.hramrach-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <http://groups.google.com/group/linux-sunxi/subscribe>
+To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Yiping,
+The trasfer timeout is fixed at 1000 ms. Reading a 4Mbyte flash over
+1MHz SPI bus takes way longer than that. Calculate the timeout from the
+actual time the transfer is supposed to take and multiply by 2 for good
+measure.
 
-Thanks for review, please see below comments.
+Signed-off-by: Michal Suchanek <hramrach-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+---
+ drivers/spi/spi-sun4i.c | 10 +++++++++-
+ drivers/spi/spi-sun6i.c | 10 +++++++++-
+ 2 files changed, 18 insertions(+), 2 deletions(-)
 
-On Thu, Aug 20, 2015 at 01:42:58PM +0800, YiPing Xu wrote:
-> On 2015/8/20 10:53, Leo Yan wrote:
-> >Add driver for Hi6220 mailbox, the mailbox communicates with MCU; for
-> >sending data, it can support two methods for low level implementation:
-> >one is to use interrupt as acknowledge, another is automatic mode which
-> >without any acknowledge. These two methods have been supported in the
-> >driver. For receiving data, it will depend on the interrupt to notify
-> >the channel has incoming message; enhance rx channel's message queue,
-> >which is based on the code in drivers/mailbox/omap-mailbox.c.
-> >
-> >Now mailbox driver is used to send message to MCU to control dynamic
-> >voltage and frequency scaling for CPU, GPU and DDR.
-> >
-> >Signed-off-by: Leo Yan <leo.yan-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-
-[...]
-
-> >+static int hi6220_mbox_send_data(struct mbox_chan *chan, void *msg)
-> >+{
-> >+	struct hi6220_mbox_chan *mchan = chan->con_priv;
-> >+	struct hi6220_mbox *mbox = mchan->parent;
-> >+	int irq = mchan->remote_irq;
-> >+	u32 *buf = msg;
-> >+	unsigned long flags;
-> >+	int i;
-> >+
-> >+	hi6220_mbox_set_status(mchan, HI6220_MBOX_STATUS_TX);
-> 
-> 	hi6220_mbox_set_status is called in send_data context, and it is
-> also called in hi6220_mbox_rx_interrupt and
-> hi6220_mbox_tx_interrupt.
-> 
-> 	no race condition here?
-
-Have thought this question yet when writing code; it will _NOT_
-introduce race condition according to below implementation details:
-
-- Every channel have its own slot, so there have no race condition
-  between channels;
-- The channel is unidirectional; so it will be only for tx or rx at
-  the same time;
-- The channel operation is sequential, so it have the sequence as:
-  For tx: startup -> send_data -> tx_irq (for ack);
-  For rx: startup -> rx_irq -> recv_data;
-
-Thanks,
-Leo Yan
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/drivers/spi/spi-sun4i.c b/drivers/spi/spi-sun4i.c
+index fbb0a4d..48532ec 100644
+--- a/drivers/spi/spi-sun4i.c
++++ b/drivers/spi/spi-sun4i.c
+@@ -170,6 +170,7 @@ static int sun4i_spi_transfer_one(struct spi_master *master,
+ {
+ 	struct sun4i_spi *sspi = spi_master_get_devdata(master);
+ 	unsigned int mclk_rate, div, timeout;
++	unsigned int start, end, tx_time;
+ 	unsigned int tx_len = 0;
+ 	int ret = 0;
+ 	u32 reg;
+@@ -279,9 +280,16 @@ static int sun4i_spi_transfer_one(struct spi_master *master,
+ 	reg = sun4i_spi_read(sspi, SUN4I_CTL_REG);
+ 	sun4i_spi_write(sspi, SUN4I_CTL_REG, reg | SUN4I_CTL_XCH);
+ 
++	tx_time = max_t(int, tfr->len * 8 * 2 / (speed / 1000), 100);
++	start = jiffies;
+ 	timeout = wait_for_completion_timeout(&sspi->done,
+-					      msecs_to_jiffies(1000));
++					      msecs_to_jiffies(tx_time));
++	end = jiffies;
+ 	if (!timeout) {
++		dev_warn(&master->dev,
++			 "%s: timeout transferring %u bytes@%iHz for %i(%i)ms",
++			 dev_name(&spi->dev), tfr->len, speed,
++			 jiffies_to_msecs(end - start), tx_time);
+ 		ret = -ETIMEDOUT;
+ 		goto out;
+ 	}
+diff --git a/drivers/spi/spi-sun6i.c b/drivers/spi/spi-sun6i.c
+index ac48f59..3d0f66c 100644
+--- a/drivers/spi/spi-sun6i.c
++++ b/drivers/spi/spi-sun6i.c
+@@ -162,6 +162,7 @@ static int sun6i_spi_transfer_one(struct spi_master *master,
+ 	unsigned int mclk_rate, div, timeout;
+ 	unsigned int tx_len = 0;
+ 	int ret = 0;
++	unsigned int start, end, tx_time;
+ 	u32 reg;
+ 
+ 	/* We don't support transfer larger than the FIFO */
+@@ -269,9 +270,16 @@ static int sun6i_spi_transfer_one(struct spi_master *master,
+ 	reg = sun6i_spi_read(sspi, SUN6I_TFR_CTL_REG);
+ 	sun6i_spi_write(sspi, SUN6I_TFR_CTL_REG, reg | SUN6I_TFR_CTL_XCH);
+ 
++	tx_time = max_t(int, tfr->len * 8 * 2 / (speed / 1000), 100);
++	start = jiffies;
+ 	timeout = wait_for_completion_timeout(&sspi->done,
+-					      msecs_to_jiffies(1000));
++					      msecs_to_jiffies(tx_time));
++	end = jiffies;
+ 	if (!timeout) {
++		dev_warn(&master->dev,
++			 "%s: timeout transferring %u bytes@%iHz for %i(%i)ms",
++			 dev_name(&spi->dev), tfr->len, speed,
++			 jiffies_to_msecs(end - start), tx_time);
+ 		ret = -ETIMEDOUT;
+ 		goto out;
+ 	}
+-- 
+2.1.4
