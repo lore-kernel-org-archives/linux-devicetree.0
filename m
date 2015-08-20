@@ -1,158 +1,40 @@
-From: Michael Welling <mwelling@ieee.org>
-Subject: Re: [PATCH] input: ti_am335x_tsc: Add open delay parameter
-Date: Thu, 20 Aug 2015 17:17:41 -0500
-Message-ID: <20150820221740.GA28249@deathstar>
-References: <1439318705-18601-1-git-send-email-mwelling@ieee.org>
- <55CAE71C.4060505@ti.com>
- <20150812184420.GA2442@deathstar>
- <20150819180835.GB29773@deathstar>
- <55D5C3F2.80900@ti.com>
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH 0/2] Add VIN and ADV7180 device tree support for
+ R8A7794/SILK board
+Date: Thu, 20 Aug 2015 16:11:14 -0700
+Message-ID: <20150820231114.GN18990@verge.net.au>
+References: <1750082.WpWf34HsI6@wasted.cogentembedded.com>
+ <20150820185435.GE18990@verge.net.au>
+ <55D624AD.7060801@cogentembedded.com>
+ <55D6363F.4050207@cogentembedded.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-input-owner@vger.kernel.org>
+Return-path: <linux-sh-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <55D5C3F2.80900@ti.com>
-Sender: linux-input-owner@vger.kernel.org
-To: Vignesh R <vigneshr@ti.com>
-Cc: Wolfram Sang <wsa@the-dreams.de>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>, Jonathan Cameron <jic23@kernel.org>, "Griffis, Brad" <bgriffis@ti.com>
+In-Reply-To: <55D6363F.4050207@cogentembedded.com>
+Sender: linux-sh-owner@vger.kernel.org
+To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Cc: linux-sh@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org, magnus.damm@gmail.com, linux@arm.linux.org.uk, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Aug 20, 2015 at 05:41:30PM +0530, Vignesh R wrote:
+On Thu, Aug 20, 2015 at 11:19:11PM +0300, Sergei Shtylyov wrote:
+> On 08/20/2015 10:04 PM, Sergei Shtylyov wrote:
 > 
-> 
-> On 08/19/2015 11:38 PM, Michael Welling wrote:
-> > On Wed, Aug 12, 2015 at 01:44:22PM -0500, Michael Welling wrote:
-> >> On Wed, Aug 12, 2015 at 11:56:36AM +0530, Vignesh R wrote:
-> >>> Hi Michael,
+> >>>    Here's the set of 2 patches against Simon Horman's 'renesas.git' repo's
+> >>>'renesas-devel-20150819-v4.2-rc7' tag. Here we add the VIN and ADV7180
+> >>>video decoder device tree support on the R8A7794/SILK board. The patchset
+> >>>requires previously posted SILK SDHI1 support patch in order to apply and
+> >>>R8A7794/SILK I2C1 support in order to apply and build.
 > >>>
-> >>> + Dmitry
-> >>>
-> >>> On 08/12/2015 12:15 AM, Michael Welling wrote:
-> >>>> Adds a device tree parameter to set the open delay on the touchscreen
-> >>>> conversion steps. Increasing this parameter helps the touch accuracy on
-> >>>> some screens.
-> >>>>
-> >>>> Signed-off-by: Michael Welling <mwelling@ieee.org>
-> >>>> ---
-> >>>>  .../bindings/input/touchscreen/ti-tsc-adc.txt          |  5 +++++
-> >>>>  drivers/input/touchscreen/ti_am335x_tsc.c              | 18 ++++++++++++++----
-> >>>>  2 files changed, 19 insertions(+), 4 deletions(-)
-> >>>>
-> >>>> diff --git a/Documentation/devicetree/bindings/input/touchscreen/ti-tsc-adc.txt b/Documentation/devicetree/bindings/input/touchscreen/ti-tsc-adc.txt
-> >>>> index b1163bf..cb11fda 100644
-> >>>> --- a/Documentation/devicetree/bindings/input/touchscreen/ti-tsc-adc.txt
-> >>>> +++ b/Documentation/devicetree/bindings/input/touchscreen/ti-tsc-adc.txt
-> >>>> @@ -41,6 +41,11 @@ Optional properties:
-> >>>>  			 charge step, so this does in fact function as a
-> >>>>  			 hardware knob for adjusting the amount of "settling
-> >>>>  			 time".
-> >>>> +	ti,open-delay: Open delay applied to all touchscreen conversion steps.
-> >>>> +			The value corresponds to the number of ADC clock
-> >>>> +			cycles to wait after applying the step configuration
-> >>>> +			registers and before sending the start of ADC
-> >>>> +			conversion. Maximum value is 0x3FFFF.
-> >>>>  
-> >>>
-> >>> Since open-delay is per step, is it not better to allow specifying
-> >>> open-delay per step like ti,chan-step-opendelay of adc? This will help
-> >>> control open-delay for all the four wires.
+> >>>[1/2] ARM: shmobile: r8a7794: add VIN DT support
+> >>>[2/2] ARM: shmobile: silk: add VIN0/ADV7180 DT support
 > >>
-> >> Do you see any reason why you would want a different delay for each step of
-> >> the conversion on the same touchscreen?
+> >>Thanks, I have queued these up for v4.4.
+> >
+> >    Perhaps a bit too early: the PFC VIN patch hasn't been merged yet. Sorry
+> >for not specifying the PFC dependency...
 > 
-> 
-> Sorry for the delay,
-> 
-> I haven't seen different delays being used for different channels on
-> 4-wire TSC ( not sure of 5-wire or 8 wire designs). Since this is DT
-> change, I just wanted to make sure more flexibility is provided.
-> 
-> >>
-> >> The user would need to know the number of steps what each of the steps do.
-> >>
-> 
-> 
-> What I was thinking was making open-delay configurable per channel (one
-> entry for X+, X-, Y+, Y-).
-> 
-> For example, for a 4-wire TSC:
-> ti,chan-open-delay = <0x30 0x100 0x20 0x10>; /* for X+, X-, Y+, Y- */
->
+>    OTOH, the frames get captured somehow even without the PFC patch, so
+> might as well leave these patches applied. Your choice...
 
-What about the readings for the pressure?
- 
-> 
-> >>>
-> >>>>  - child "adc"
-> >>>>  	ti,chan-step-opendelay: List of open delays for each channel of
-> >>>> diff --git a/drivers/input/touchscreen/ti_am335x_tsc.c b/drivers/input/touchscreen/ti_am335x_tsc.c
-> >>>> index 191a1b8..37a9729 100644
-> >>>> --- a/drivers/input/touchscreen/ti_am335x_tsc.c
-> >>>> +++ b/drivers/input/touchscreen/ti_am335x_tsc.c
-> >>>> @@ -54,6 +54,7 @@ struct titsc {
-> >>>>  	u32			inp_xp, inp_xn, inp_yp, inp_yn;
-> >>>>  	u32			step_mask;
-> >>>>  	u32			charge_delay;
-> >>>> +	u32			open_delay;
-> >>>>  };
-> >>>>  
-> >>>>  static unsigned int titsc_readl(struct titsc *ts, unsigned int reg)
-> >>>> @@ -148,7 +149,7 @@ static void titsc_step_config(struct titsc *ts_dev)
-> >>>>  	end_step = first_step + tsc_steps;
-> >>>>  	for (i = end_step - ts_dev->coordinate_readouts; i < end_step; i++) {
-> >>>>  		titsc_writel(ts_dev, REG_STEPCONFIG(i), config);
-> >>>> -		titsc_writel(ts_dev, REG_STEPDELAY(i), STEPCONFIG_OPENDLY);
-> >>>> +		titsc_writel(ts_dev, REG_STEPDELAY(i), ts_dev->open_delay);
-> >>>>  	}
-> >>>>  
-> >>>>  	config = 0;
-> >>>> @@ -172,7 +173,7 @@ static void titsc_step_config(struct titsc *ts_dev)
-> >>>>  	end_step = first_step + ts_dev->coordinate_readouts;
-> >>>>  	for (i = first_step; i < end_step; i++) {
-> >>>>  		titsc_writel(ts_dev, REG_STEPCONFIG(i), config);
-> >>>> -		titsc_writel(ts_dev, REG_STEPDELAY(i), STEPCONFIG_OPENDLY);
-> >>>> +		titsc_writel(ts_dev, REG_STEPDELAY(i), ts_dev->open_delay);
-> >>>>  	}
-> >>>>  
-> >>>>  	/* Make CHARGECONFIG same as IDLECONFIG */
-> >>>> @@ -188,13 +189,13 @@ static void titsc_step_config(struct titsc *ts_dev)
-> >>>>  			STEPCONFIG_INP(ts_dev->inp_xp);
-> >>>>  	titsc_writel(ts_dev, REG_STEPCONFIG(end_step), config);
-> >>>>  	titsc_writel(ts_dev, REG_STEPDELAY(end_step),
-> >>>> -			STEPCONFIG_OPENDLY);
-> >>>> +			ts_dev->open_delay);
-> >>>>  
-> >>>>  	end_step++;
-> >>>>  	config |= STEPCONFIG_INP(ts_dev->inp_yn);
-> >>>>  	titsc_writel(ts_dev, REG_STEPCONFIG(end_step), config);
-> >>>>  	titsc_writel(ts_dev, REG_STEPDELAY(end_step),
-> >>>> -			STEPCONFIG_OPENDLY);
-> >>>> +			ts_dev->open_delay);
-> >>>>  
-> >>>>  	/* The steps end ... end - readouts * 2 + 2 and bit 0 for TS_Charge */
-> >>>>  	stepenable = 1;
-> >>>> @@ -392,6 +393,15 @@ static int titsc_parse_dt(struct platform_device *pdev,
-> >>>>  		dev_warn(&pdev->dev, "ti,charge-delay not specified\n");
-> >>>>  	}
-> >>>>  
-> >>>> +	err = of_property_read_u32(node, "ti,open-delay",
-> >>>> +				   &ts_dev->open_delay);
-> >>>> +	/*
-> >>>> +	 * If ti,open-delay value is not specified, then use
-> >>>> +	 * STEPCONFIG_OPENDLY as the default value.
-> >>>> +	 */
-> >>>> +	if (err < 0)
-> >>>> +		ts_dev->open_delay = STEPCONFIG_OPENDLY;
-> >>>> +
-> >>>>  	return of_property_read_u32_array(node, "ti,wire-config",
-> >>>>  			ts_dev->config_inp, ARRAY_SIZE(ts_dev->config_inp));
-> >>>>  }
-> >>>>
-> >>>
-> >>> -- 
-> >>> Regards
-> >>> Vignesh
-> 
-> -- 
-> Regards
-> Vignesh
+Thanks. I will defer these patches for now.
