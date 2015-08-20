@@ -1,59 +1,61 @@
 From: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Subject: Re: [PATCH] [PATCH v5] mtd:spi-nor: Add Altera Quad SPI Driver
-Date: Thu, 20 Aug 2015 13:19:25 -0700
-Message-ID: <20150820201925.GD74600@google.com>
+Date: Thu, 20 Aug 2015 13:37:26 -0700
+Message-ID: <20150820203726.GE74600@google.com>
 References: <1440053705-3836-1-git-send-email-vndao@altera.com>
  <201508201003.38179.marex@denx.de>
- <3030745.IsU6n2jnJj@ws-stein>
+ <CAN1oZWwLRYxs=eeWi8jh-jo8+C7WckdW1hfyunmq5_1qb1Jb8w@mail.gmail.com>
+ <201508201052.47502.marex@denx.de>
+ <CAN1oZWzADdeNyZofXQwKa0F2_Jv4Oda824ew5C3Ug+-V9Lx3hw@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <3030745.IsU6n2jnJj@ws-stein>
+In-Reply-To: <CAN1oZWzADdeNyZofXQwKa0F2_Jv4Oda824ew5C3Ug+-V9Lx3hw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Alexander Stein <alexander.stein-93q1YBGzJSMe9JSWTWOYM3xStJ4P+DSV@public.gmane.org>
-Cc: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, vndao-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org, dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ngachi86-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+To: Viet Nga Dao <vndao-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>
+Cc: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>, "linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, nga_chi86 <ngachi86-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Aug 20, 2015 at 12:06:36PM +0200, Alexander Stein wrote:
-> On Thursday 20 August 2015 10:03:38, Marek Vasut wrote:
-> > > +Example:
-> > > +
-> > > +			quadspi_controller_0: quadspi@0x180014a0 {
-> > > +				compatible = "altr,quadspi-1.0";
-> > > +				reg = <0x180014a0 0x00000020>,
-> > > +				      <0x14000000 0x04000000>;
-> > > +				reg-names = "avl_csr", "avl_mem";
-> > > +				#address-cells = <1>;
-> > > +				#size-cells = <0>;
-> > > +				flash0: epcq256@0 {
-> > > +					compatible = "altr,epcq256";
-> > > +					#address-cells = <1>;
-> > > +					#size-cells = <1>;
-> > > +					partition@0 {
-> > > +						/* 16 MB for raw data. */
-> > > +						label = "EPCQ Flash 0 raw data";
-> > > +						reg = <0x0 0x1000000>;
-> > > +					};
-> > > +					partition@1000000 {
-> > > +						/* 16 MB for jffs2 data. */
-> > > +						label = "EPCQ Flash 0 JFFS 2";
-> > > +						reg = <0x1000000 0x1000000>;
-> > > +					};
-> > 
-> > IIRC, encoding partitions into OF is deprecated (and it shouldn't be
-> > part of the example anyway, so please remove this bit).
-> 
-> Do you mean specifying partitions in OF is deprecated in general? Is there any link for that?
-> What would be an alternative to it?
+On Thu, Aug 20, 2015 at 05:18:14PM +0800, Viet Nga Dao wrote:
+> You might misunderstand the hardware problem i mention here. This soft
+> IP controller is able to provide the ID for our Altera EPCS/EPCQ flash
+> chips, which are non JEDEC chips. As from EPCQ device data sheet
+> (https://www.altera.com/content/dam/altera-www/global/en_US/pdfs/literature/hb/cfg/cfg_cf52012.pdf),
+> the device ID is 8 bit data.
 
-This is the first I've heard of such a deprecation. I would argue that
-it's still probably one of the best ways to specify partitions. It's not
-exactly perfect (partitions aren't really "hardware", so may not belong
-in the "hardware description"), but IMO it's better than cmdlineparts,
-for instance. I also don't really know of any good-enough, generically
-useful on-flash partition formats, especially ones that can handle the
-complexities of NAND.
+8 bits of data is vastly insufficient for uniquely identifying a flash.
+This is not extendible and is not really a candidate for inclusion in
+mainline, unless it's somehow guaranteed that these flash can only be
+used with your controller (and I'm not sure how you would do that).
+Otherwise, you need to augment every flash with more out-of-band
+device-tree information.
+
+> The remaining problem here is that this
+> controller is able to support Micron chips but it currently has
+> limitation in providing only 8 bit ID, which is not full JEDEC ID for
+> Micron chips.
+
+You're just proving my point. I will not support "READ ID" detection
+that is based on only 8 bits of ID.
+
+> Hence, we are asking hardware engineer to find out the
+> solution so that the driver does not need to do any dirty hacking.
+
+OK, then I wish your hardware team great speed.
+
+> And
+> so, this table should still be here even hardware fix will take place
+> or not.
+
+I'm not sure how you come to this conclusion.
+
+BTW, to reiterate one other question that I feel wasn't adequately
+answered: what does the full ID string look like for these EPCS/EPCQ
+flash chips? Not the ID as seen by your limited controller, but the ID
+that can be reported by the flash chip. Is it really only an 8-bit
+number? Or does it have a longer string that your controller just can't
+read?
 
 Brian
 --
