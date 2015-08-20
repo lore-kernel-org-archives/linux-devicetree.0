@@ -1,41 +1,71 @@
-From: Rameshwar Sahu <rsahu-qTEPVZfXA3Y@public.gmane.org>
-Subject: Re: [PATCH v1 1/4] dmaengine: Add support for new feature CRC32C
-Date: Thu, 20 Aug 2015 13:18:18 +0530
-Message-ID: <CAFd313wjAayC9++YdfDwO8tCYsTxBvAGNvPNeEVtBjhskY82eg@mail.gmail.com>
-References: <1438258268-3099-1-git-send-email-rsahu@apm.com>
-	<1438258268-3099-2-git-send-email-rsahu@apm.com>
-	<20150820052631.GW13546@localhost>
-	<CAFd313x+MD5C2stJ-YdKrt6Ywzt4_2GmK3pJTFjfwrhPnCdopQ@mail.gmail.com>
-	<20150820070849.GF13546@localhost>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20150820070849.GF13546@localhost>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
-Cc: dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, Herbert Xu <herbert-lOAM2aK0SrRLBo1qDEOMRrpzq4S04n8Q@public.gmane.org>, davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org, linux-crypto-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, patches-qTEPVZfXA3Y@public.gmane.org
+From: Jingoo Han <jingoohan1@gmail.com>
+Subject: Re: [PATCH v3 13/14] drm: bridge/analogix_dp: move hpd detect to connector detect function
+Date: Thu, 20 Aug 2015 16:49:00 +0900
+Message-ID: <6E5CEF9B-19D4-4AC4-B5B1-BC667979302D@gmail.com>
+References: <1439995728-18046-1-git-send-email-ykk@rock-chips.com> <1439995939-18770-1-git-send-email-ykk@rock-chips.com>
+Mime-Version: 1.0 (1.0)
+Content-Type: text/plain;
+	charset=us-ascii
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <1439995939-18770-1-git-send-email-ykk@rock-chips.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Yakir Yang <ykk@rock-chips.com>
+Cc: Heiko Stuebner <heiko@sntech.de>, Thierry Reding <treding@nvidia.com>, Fabio Estevam <fabio.estevam@freescale.com>, Inki Dae <inki.dae@samsung.com>, "joe@perches.com" <joe@perches.com>, Russell King <rmk+kernel@arm.linux.org.uk>, "djkurtz@google.com" <djkurtz@google.com>, "dianders@google.com" <dianders@google.com>, "seanpaul@google.com" <seanpaul@google.com>, Takashi Iwai <tiwai@suse.de>, "ajaynumb@gmail.com" <ajaynumb@gmail.com>, Andrzej Hajda <a.hajda@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, Philipp Zabel <p.zabel@pengutronix.de>, David Airlie <airlied@linux.ie>, Gustavo Padovan <gustavo.padovan@collabora.co.uk>, Vincent Palatin <vpalatin@chromium.org>, Mark Yao <mark.yao@rock-chips.com>, Andy Yan <andy.yan@rock-chips.com>, Kumar Gala <galak@codeaurora.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <robh+dt@kernel.org>, Pawel
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Aug 20, 2015 at 12:38 PM, Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org> wrote:
-> On Thu, Aug 20, 2015 at 11:59:07AM +0530, Rameshwar Sahu wrote:
->> Hi Vinod,
->>
->> On Thu, Aug 20, 2015 at 10:56 AM, Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org> wrote:
->> > On Thu, Jul 30, 2015 at 05:41:05PM +0530, Rameshwar Prasad Sahu wrote:
->> >> This patch adds support for new feature CRC32C calculation in
->> >> dmaengine framework.
->> >
->> > Looks okay can you please update Documentation also
->>
->> Thanks, I will update Documentation.
->
-> Also add a wrapper for new API
-Okay
->
-> --
-> ~Vinod
->
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+On 2015. 8. 19., at PM 11:52, Yakir Yang <ykk@rock-chips.com> wrote:
+> 
+
+
+What is the reason to make this patch?
+
+Please make commit message including the reason.
+
+Best regards,
+Jingoo Han
+
+> Signed-off-by: Yakir Yang <ykk@rock-chips.com>
+> ---
+> Changes in v3:
+> - move dp hpd detect to connector detect function.
+> 
+> Changes in v2: None
+> 
+> drivers/gpu/drm/bridge/analogix_dp_core.c | 12 ++++++------
+> 1 file changed, 6 insertions(+), 6 deletions(-)
+> 
+> diff --git a/drivers/gpu/drm/bridge/analogix_dp_core.c b/drivers/gpu/drm/bridge/analogix_dp_core.c
+> index 75dd44a..052b9b3 100644
+> --- a/drivers/gpu/drm/bridge/analogix_dp_core.c
+> +++ b/drivers/gpu/drm/bridge/analogix_dp_core.c
+> @@ -915,12 +915,6 @@ static void analogix_dp_commit(struct analogix_dp_device *dp)
+>            DRM_ERROR("failed to disable the panel\n");
+>    }
+> 
+> -    ret = analogix_dp_detect_hpd(dp);
+> -    if (ret) {
+> -        /* Cable has been disconnected, we're done */
+> -        return;
+> -    }
+> -
+>    ret = analogix_dp_handle_edid(dp);
+>    if (ret) {
+>        dev_err(dp->dev, "unable to handle edid\n");
+> @@ -953,6 +947,12 @@ static void analogix_dp_commit(struct analogix_dp_device *dp)
+> static enum drm_connector_status analogix_dp_detect(
+>                struct drm_connector *connector, bool force)
+> {
+> +    struct analogix_dp_device *dp = connector_to_dp(connector);
+> +
+> +    if (analogix_dp_detect_hpd(dp))
+> +        /* Cable has been disconnected, we're done */
+> +        return connector_status_disconnected;
+> +
+>    return connector_status_connected;
+> }
+> 
+> -- 
+> 1.9.1
+> 
+> 
