@@ -1,46 +1,96 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH 6/6] ARM: dts: sun8i: Add support for
- qt90h-v4 tablets
-Date: Thu, 20 Aug 2015 08:47:12 +0200
-Message-ID: <20150820064712.GN30520@lukather>
-References: <1439563477-12295-1-git-send-email-hdegoede@redhat.com>
- <1439563477-12295-7-git-send-email-hdegoede@redhat.com>
-Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
+From: Ganapatrao Kulkarni <gpkulkarni-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v5 0/8] arm64, numa: Add numa support for arm64 platforms.
+Date: Thu, 20 Aug 2015 12:20:29 +0530
+Message-ID: <CAFpQJXVtAq9SG5qoRHYE-18tS+LaU7Fid1yBvx=-UFRjdnVrfQ@mail.gmail.com>
+References: <1439570374-4079-1-git-send-email-gkulkarni@caviumnetworks.com>
+	<CAFpQJXXXFmWE5rk9=KW_Vg0B9aA+Cd_6YQOeiCZ21Q61cSQ+ew@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="8MZM6zh5Bb05FW+3"
-Return-path: <linux-sunxi+bncBD2ZNBF5VYJRB4XP2WXAKGQE655CHFI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1439563477-12295-7-git-send-email-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <http://groups.google.com/group/linux-sunxi/subscribe>
-To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Cc: Jelle van der Waa <jelle-oJJ1AqDjjO4@public.gmane.org>, Ralph Willekes <benadski-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAFpQJXXXFmWE5rk9=KW_Vg0B9aA+Cd_6YQOeiCZ21Q61cSQ+ew-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Ganapatrao Kulkarni <gkulkarni-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>
+Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Leif Lindholm <leif.lindholm-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, rfranz-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org, Ard Biesheuvel <ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "msalter-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org" <msalter-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Steve Capper <steve.capper-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Hanjun Guo <hanjun.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Al Stone <al.stone-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Prasun Kapoor <Prasun.Kapoor-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
---8MZM6zh5Bb05FW+3
-Content-Type: text/plain; charset=UTF-8
-Content-Disposition: inline
+Hi Maintainers,
 
-On Fri, Aug 14, 2015 at 04:44:37PM +0200, Hans de Goede wrote:
-> The gt90h is a pcb found in generic 9" tablets with an A23 soc, 1G RAM
-> and 8G nand, rtl8723as usb wifi, 1 micro usb port and 1 micro sd slot.
-> 
-> This commit adds a dts for v4 of the gt90h pcb.
-> 
-> Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 
-Applied, thanks!
+On Fri, Aug 14, 2015 at 10:14 PM, Ganapatrao Kulkarni
+<gpkulkarni-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> On Fri, Aug 14, 2015 at 10:09 PM, Ganapatrao Kulkarni
+> <gkulkarni-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org> wrote:
+>> v5:
+>>         - created base verion of numa.c which creates dummy numa without using dt
+>>           on single socket platforms. Then added patches for dt support.
+>>         - Incorporated review comments from Hanjun Guo.
+>>
+>> v4:
+>> done changes as per Arnd review comments.
+>>
+>> v3:
+>> Added changes to support numa on arm64 based platforms.
+>> Tested these patches on cavium's multinode(2 node topology) platform.
+>> In this patchset, defined and implemented dt bindings for numa mapping
+>> for core and memory using device node property arm,associativity.
+>>
+>> v2:
+>> Defined and implemented numa map for memory, cores to node and
+>> proximity distance matrix of nodes.
+>>
+>> v1:
+>> Initial patchset to support numa on arm64 platforms.
+>>
+>> Note:
+>>         1. This patchset is tested for numa with dt on
+>>            thunderx single socket and dual socket boards.
+>>         2. Numa DT booting needs the dt memory nodes, which are deleted in current efi-stub,
+>>         hence to try numa with dt, you need to rebase with ard's patchset.
+>>         http://git.linaro.org/people/ard.biesheuvel/linux-arm.git/shortlog/refs/heads/arm64-uefi-early-fdt-handling
+>>
+>>
+>> Ganapatrao Kulkarni (4):
+>>   arm64, numa: adding numa support for arm64 platforms.
+>>   Documentation: arm64/arm: dt bindings for numa.
+>>   arm64, numa: adding numa support for arm64 platforms.
+>>   arm64, dt, thunderx: Add initial dts for Cavium Thunder SoC in 2 Node
+>>     topology.
+>>
+>>  Documentation/devicetree/bindings/arm/numa.txt  | 212 +++++++
+>>  arch/arm64/Kconfig                              |  32 +
+>>  arch/arm64/boot/dts/cavium/Makefile             |   2 +-
+>>  arch/arm64/boot/dts/cavium/thunder-88xx-2n.dts  |  78 +++
+>>  arch/arm64/boot/dts/cavium/thunder-88xx-2n.dtsi | 790 ++++++++++++++++++++++++
+>>  arch/arm64/include/asm/mmzone.h                 |  32 +
+>>  arch/arm64/include/asm/numa.h                   |  49 ++
+>>  arch/arm64/kernel/Makefile                      |   1 +
+>>  arch/arm64/kernel/dt_numa.c                     | 316 ++++++++++
+>>  arch/arm64/kernel/setup.c                       |   9 +
+>>  arch/arm64/kernel/smp.c                         |   3 +
+>>  arch/arm64/mm/Makefile                          |   1 +
+>>  arch/arm64/mm/init.c                            |  34 +-
+>>  arch/arm64/mm/numa.c                            | 563 +++++++++++++++++
+>>  14 files changed, 2115 insertions(+), 7 deletions(-)
+>>  create mode 100644 Documentation/devicetree/bindings/arm/numa.txt
+>>  create mode 100644 arch/arm64/boot/dts/cavium/thunder-88xx-2n.dts
+>>  create mode 100644 arch/arm64/boot/dts/cavium/thunder-88xx-2n.dtsi
+>>  create mode 100644 arch/arm64/include/asm/mmzone.h
+>>  create mode 100644 arch/arm64/include/asm/numa.h
+>>  create mode 100644 arch/arm64/kernel/dt_numa.c
+>>  create mode 100644 arch/arm64/mm/numa.c
+>>
+>> --
+>> 1.8.1.4
+>>
+> sorry, minor correction, this patchset has 4 patches.
+>
+> PATCH v5 0/8 => PATCH v5 0/4
 
-Maxime
+please review this patchset.
 
--- 
-Maxime Ripard, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
---8MZM6zh5Bb05FW+3--
+thanks
+Ganapat
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
