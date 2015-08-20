@@ -1,75 +1,62 @@
 From: Robert Baldyga <r.baldyga@samsung.com>
-Subject: [PATCH v3 0/3] nfc: Add driver for Samsung S3FWRN5 NFC Chip
-Date: Thu, 20 Aug 2015 17:25:59 +0200
-Message-ID: <1440084362-27909-1-git-send-email-r.baldyga@samsung.com>
+Subject: [PATCH v3 2/3] NFC: nci: export nci_core_reset and nci_core_init
+Date: Thu, 20 Aug 2015 17:26:01 +0200
+Message-ID: <1440084362-27909-3-git-send-email-r.baldyga@samsung.com>
+References: <1440084362-27909-1-git-send-email-r.baldyga@samsung.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-reply-to: <1440084362-27909-1-git-send-email-r.baldyga@samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: sameo@linux.intel.com, lauro.venancio@openbossa.org, aloisio.almeida@openbossa.org
 Cc: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux-wireless@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-nfc@lists.01.org, m.szyprowski@samsung.com, pebolle@tiscali.nl, Robert Baldyga <r.baldyga@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-Hello,
+Some drivers needs to have ability to reinit NCI core, for example after
+updating firmware in setup() of post_setup() callback. This patch makes
+nci_core_reset() and nci_core_init() functions public, to make it possible.
 
-This patchset adds driver for NFC chip Samsung S3FWRN5. First two patches
-are touching NCI core due to some non-standard chip behaviour.
+Signed-off-by: Robert Baldyga <r.baldyga@samsung.com>
+---
+ include/net/nfc/nci_core.h |  2 ++
+ net/nfc/nci/core.c         | 14 ++++++++++++++
+ 2 files changed, 16 insertions(+)
 
-The first one adds post_setup() handler, which is called after NCI_CORE_INIT
-request. It's because we need to read current firmware version from 
-ndev->manufact_specific_info.
-
-The second one adds nci_core_reset() and nci_core_init() functions which
-are needed to reinit NCI core after updating firmware in pose_setup()
-callback.
-
-Best regards,
-Robert Baldyga
-
-Changelog:
-
-v3:
-- Addressed comments from Samuel Ortiz:
-  - Used nci_prop_cmd and nci_prop_ops to handle proprietary requests
-  - Refactorized s3fwrn5_i2c_nci_read and s3fwrn5_i2c_fw_read
-  - Miscellaneous minor fixes
-- Added patch "NFC: nci: Add post_setup handler"
-- Added patch "NFC: nci: export nci_core_reset and nci_core_init"
-
-v2: http://www.spinics.net/lists/linux-wireless/msg139241.html
-- Addressed comments from Paul Bolle
-
-v1: http://www.spinics.net/lists/kernel/msg2044290.html
-
-Robert Baldyga (3):
-  NFC: nci: Add post_setup handler
-  NFC: nci: export nci_core_reset and nci_core_init
-  nfc: s3fwrn5: Add driver for Samsung S3FWRN5 NFC Chip
-
- .../devicetree/bindings/net/nfc/s3fwrn5.txt        |  27 ++
- MAINTAINERS                                        |   6 +
- drivers/nfc/Kconfig                                |   1 +
- drivers/nfc/Makefile                               |   1 +
- drivers/nfc/s3fwrn5/Kconfig                        |  19 +
- drivers/nfc/s3fwrn5/Makefile                       |  11 +
- drivers/nfc/s3fwrn5/core.c                         | 219 +++++++++
- drivers/nfc/s3fwrn5/firmware.c                     | 511 +++++++++++++++++++++
- drivers/nfc/s3fwrn5/firmware.h                     | 111 +++++
- drivers/nfc/s3fwrn5/i2c.c                          | 306 ++++++++++++
- drivers/nfc/s3fwrn5/nci.c                          | 165 +++++++
- drivers/nfc/s3fwrn5/nci.h                          |  89 ++++
- drivers/nfc/s3fwrn5/s3fwrn5.h                      |  99 ++++
- include/net/nfc/nci_core.h                         |   3 +
- net/nfc/nci/core.c                                 |  18 +
- 15 files changed, 1586 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/net/nfc/s3fwrn5.txt
- create mode 100644 drivers/nfc/s3fwrn5/Kconfig
- create mode 100644 drivers/nfc/s3fwrn5/Makefile
- create mode 100644 drivers/nfc/s3fwrn5/core.c
- create mode 100644 drivers/nfc/s3fwrn5/firmware.c
- create mode 100644 drivers/nfc/s3fwrn5/firmware.h
- create mode 100644 drivers/nfc/s3fwrn5/i2c.c
- create mode 100644 drivers/nfc/s3fwrn5/nci.c
- create mode 100644 drivers/nfc/s3fwrn5/nci.h
- create mode 100644 drivers/nfc/s3fwrn5/s3fwrn5.h
-
+diff --git a/include/net/nfc/nci_core.h b/include/net/nfc/nci_core.h
+index 1bdaa5f..d0d0f1e 100644
+--- a/include/net/nfc/nci_core.h
++++ b/include/net/nfc/nci_core.h
+@@ -278,6 +278,8 @@ int nci_request(struct nci_dev *ndev,
+ 			    unsigned long opt),
+ 		unsigned long opt, __u32 timeout);
+ int nci_prop_cmd(struct nci_dev *ndev, __u8 oid, size_t len, __u8 *payload);
++int nci_core_reset(struct nci_dev *ndev);
++int nci_core_init(struct nci_dev *ndev);
+ 
+ int nci_recv_frame(struct nci_dev *ndev, struct sk_buff *skb);
+ int nci_set_config(struct nci_dev *ndev, __u8 id, size_t len, __u8 *val);
+diff --git a/net/nfc/nci/core.c b/net/nfc/nci/core.c
+index d9045ec..943889b 100644
+--- a/net/nfc/nci/core.c
++++ b/net/nfc/nci/core.c
+@@ -351,6 +351,20 @@ int nci_prop_cmd(struct nci_dev *ndev, __u8 oid, size_t len, __u8 *payload)
+ }
+ EXPORT_SYMBOL(nci_prop_cmd);
+ 
++int nci_core_reset(struct nci_dev *ndev)
++{
++	return __nci_request(ndev, nci_reset_req, 0,
++			     msecs_to_jiffies(NCI_RESET_TIMEOUT));
++}
++EXPORT_SYMBOL(nci_core_reset);
++
++int nci_core_init(struct nci_dev *ndev)
++{
++	return __nci_request(ndev, nci_init_req, 0,
++			     msecs_to_jiffies(NCI_INIT_TIMEOUT));
++}
++EXPORT_SYMBOL(nci_core_init);
++
+ static int nci_open_device(struct nci_dev *ndev)
+ {
+ 	int rc = 0;
 -- 
 1.9.1
