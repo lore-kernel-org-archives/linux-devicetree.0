@@ -1,142 +1,366 @@
-From: Gabriele Paoloni <gabriele.paoloni@huawei.com>
-Subject: RE: [PATCH v7 3/6] PCI: designware: Add ARM64 support
-Date: Thu, 20 Aug 2015 11:10:24 +0000
-Message-ID: <EE11001F9E5DDD47B7634E2F8A612F2E01D81BAC@lhreml503-mbs>
-References: <1439812554-180426-1-git-send-email-wangzhou1@hisilicon.com>
-	 <1439812554-180426-4-git-send-email-wangzhou1@hisilicon.com>
-	 <1439988852.31432.15.camel@pengutronix.de>
-	 <EE11001F9E5DDD47B7634E2F8A612F2E01D81315@lhreml503-mbs>
-	 <1439998622.31432.44.camel@pengutronix.de>
-	 <EE11001F9E5DDD47B7634E2F8A612F2E01D8139B@lhreml503-mbs>
- <1440059243.31432.59.camel@pengutronix.de>
+From: Pankaj Dubey <pankaj.dubey@samsung.com>
+Subject: Re: [PATCH 1/5] drivers: soc: add support for exynos SROM driver
+Date: Thu, 20 Aug 2015 17:04:46 +0530
+Message-ID: <55D5BB56.1030405@samsung.com>
+References: <1430296712-10287-1-git-send-email-pankaj.dubey@samsung.com>
+ <1430296712-10287-2-git-send-email-pankaj.dubey@samsung.com>
+ <5565AFE6.5030106@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <1440059243.31432.59.camel@pengutronix.de>
-Content-Language: en-US
-Sender: linux-pci-owner@vger.kernel.org
-To: Lucas Stach <l.stach@pengutronix.de>
-Cc: "Wangzhou (B)" <wangzhou1@hisilicon.com>, Bjorn Helgaas <bhelgaas@google.com>, "jingoohan1@gmail.com" <jingoohan1@gmail.com>, Pratyush Anand <pratyush.anand@gmail.com>, Arnd Bergmann <arnd@arndb.de>, "linux@arm.linux.org.uk" <linux@arm.linux.org.uk>, "thomas.petazzoni@free-electrons.com" <thomas.petazzoni@free-electrons.com>, "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>, "james.morse@arm.com" <james.morse@arm.com>, "Liviu.Dudau@arm.com" <Liviu.Dudau@arm.com>, "jason@lakedaemon.net" <jason@lakedaemon.net>, "robh@kernel.org" <robh@kernel.org>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Yuanzhichang <yuanzhichang@hisilicon.com>, Zhudacai <zhudacai@hisilicon.com>, zhangjukuo <zhangjukuo@huawei.com>, qiuzhe
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <5565AFE6.5030106@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Krzysztof Kozlowski <k.kozlowski@samsung.com>, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Cc: thomas.ab@samsung.com, kgene@kernel.org, linux@arm.linux.org.uk, heiko@sntech.de
 List-Id: devicetree@vger.kernel.org
 
-SGkgTHVjYXMNCg0KQWdhaW4gbWFueSB0aGFua3MgZm9yIGV4cGxhaW5pbmcgYW5kIGZvciB5b3Vy
-IHRpbWUuDQoNCkkgZ290IHlvdXIgcG9pbnQgbm93IGFuZCBJIGhhdmUgZHVnIGEgYml0IGJldHRl
-ciBpbiB0aGUgUENJX0RPTUFJTlMgY29kZS4NCg0KSG93ZXZlciBJIGhhdmUgYSBxdWVzdGlvbi4u
-LnNlZSBpbmxpbmUgYmVsb3cNCg0KPiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9t
-OiBMdWNhcyBTdGFjaCBbbWFpbHRvOmwuc3RhY2hAcGVuZ3V0cm9uaXguZGVdDQo+IFNlbnQ6IFRo
-dXJzZGF5LCBBdWd1c3QgMjAsIDIwMTUgOToyNyBBTQ0KPiBUbzogR2FicmllbGUgUGFvbG9uaQ0K
-PiBDYzogV2FuZ3pob3UgKEIpOyBCam9ybiBIZWxnYWFzOyBqaW5nb29oYW4xQGdtYWlsLmNvbTsg
-UHJhdHl1c2ggQW5hbmQ7DQo+IEFybmQgQmVyZ21hbm47IGxpbnV4QGFybS5saW51eC5vcmcudWs7
-IHRob21hcy5wZXRhenpvbmlAZnJlZS0NCj4gZWxlY3Ryb25zLmNvbTsgbG9yZW56by5waWVyYWxp
-c2lAYXJtLmNvbTsgamFtZXMubW9yc2VAYXJtLmNvbTsNCj4gTGl2aXUuRHVkYXVAYXJtLmNvbTsg
-amFzb25AbGFrZWRhZW1vbi5uZXQ7IHJvYmhAa2VybmVsLm9yZzsgbGludXgtDQo+IHBjaUB2Z2Vy
-Lmtlcm5lbC5vcmc7IGxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZzsNCj4gZGV2
-aWNldHJlZUB2Z2VyLmtlcm5lbC5vcmc7IFl1YW56aGljaGFuZzsgWmh1ZGFjYWk7IHpoYW5nanVr
-dW87DQo+IHFpdXpoZW5mYTsgbGl1ZG9uZ2RvbmcgKEMpOyBxaXVqaWFuZzsgeHV3ZWkgKE8pOyBM
-aWd1b3podSAoS2VubmV0aCkNCj4gU3ViamVjdDogUmU6IFtQQVRDSCB2NyAzLzZdIFBDSTogZGVz
-aWdud2FyZTogQWRkIEFSTTY0IHN1cHBvcnQNCj4gDQo+IEhpIEdhYiwNCj4gDQo+IEFtIE1pdHR3
-b2NoLCBkZW4gMTkuMDguMjAxNSwgMTY6MzQgKzAwMDAgc2NocmllYiBHYWJyaWVsZSBQYW9sb25p
-Og0KPiA+IEhpIEx1Y2FzDQo+ID4NCj4gPiBGaXJzdCBvZiBhbGwgbWFueSB0aGFua3MgZm9yIHRo
-ZSBxdWljayByZXBseSwgcmVhbGx5IGFwcHJlY2lhdGVkDQo+ID4NCj4gPiA+IC0tLS0tT3JpZ2lu
-YWwgTWVzc2FnZS0tLS0tDQo+ID4gPiBGcm9tOiBMdWNhcyBTdGFjaCBbbWFpbHRvOmwuc3RhY2hA
-cGVuZ3V0cm9uaXguZGVdDQo+ID4gPiBTZW50OiBXZWRuZXNkYXksIEF1Z3VzdCAxOSwgMjAxNSA0
-OjM3IFBNDQo+ID4gPiBUbzogR2FicmllbGUgUGFvbG9uaQ0KPiA+ID4gQ2M6IFdhbmd6aG91IChC
-KTsgQmpvcm4gSGVsZ2FhczsgamluZ29vaGFuMUBnbWFpbC5jb207IFByYXR5dXNoDQo+IEFuYW5k
-Ow0KPiA+ID4gQXJuZCBCZXJnbWFubjsgbGludXhAYXJtLmxpbnV4Lm9yZy51azsgdGhvbWFzLnBl
-dGF6em9uaUBmcmVlLQ0KPiA+ID4gZWxlY3Ryb25zLmNvbTsgbG9yZW56by5waWVyYWxpc2lAYXJt
-LmNvbTsgamFtZXMubW9yc2VAYXJtLmNvbTsNCj4gPiA+IExpdml1LkR1ZGF1QGFybS5jb207IGph
-c29uQGxha2VkYWVtb24ubmV0OyByb2JoQGtlcm5lbC5vcmc7IGxpbnV4LQ0KPiA+ID4gcGNpQHZn
-ZXIua2VybmVsLm9yZzsgbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnOw0KPiA+
-ID4gZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5vcmc7IFl1YW56aGljaGFuZzsgWmh1ZGFjYWk7IHpo
-YW5nanVrdW87DQo+ID4gPiBxaXV6aGVuZmE7IGxpdWRvbmdkb25nIChDKTsgcWl1amlhbmc7IHh1
-d2VpIChPKTsgTGlndW96aHUgKEtlbm5ldGgpDQo+ID4gPiBTdWJqZWN0OiBSZTogW1BBVENIIHY3
-IDMvNl0gUENJOiBkZXNpZ253YXJlOiBBZGQgQVJNNjQgc3VwcG9ydA0KPiA+ID4NCj4gPiA+IEhp
-IEdhYiwNCj4gPiA+DQo+ID4gPiBBbSBNaXR0d29jaCwgZGVuIDE5LjA4LjIwMTUsIDE1OjE2ICsw
-MDAwIHNjaHJpZWIgR2FicmllbGUgUGFvbG9uaToNCj4gPiA+ID4gSGkgTHVjYXMNCj4gPiA+ID4N
-Cj4gPiA+ID4gSSBoYXZlIHJld3JpdHRlbiB0aGUgcGF0Y2ggdG8gdGFrZSBpbnRvIGFjY291bnQg
-bXVsdGlwbGUNCj4gY29udHJvbGxlcnMuDQo+ID4gPiA+DQo+ID4gPiA+IEFzIHlvdSBjYW4gc2Vl
-IG5vdyB0aGVyZSBpcyBhIHN0YXRpYyB2YXIgaW4gZHdfcGNpZV9ob3N0X2luaXQoKQ0KPiB0aGF0
-DQo+ID4gPiB0cmFja3MNCj4gPiA+ID4gdGhlIGJ1cyBudW1iZXJzIHVzZWQuDQo+ID4gPg0KPiA+
-ID4gVGhpcyBpcyB3cm9uZy4gVGhlIERUIHNwZWNpZmllcyB0aGUgdmFsaWQgYnVzIG51bWJlciBy
-YW5nZS4gWW91IGNhbg0KPiBub3QNCj4gPiA+IGp1c3QgYXNzaWduIHRoZSBuZXh0IGZyZWUgYnVz
-IG51bWJlciB0byB0aGUgcm9vdCBidXMuDQo+ID4NCj4gPiBJIHRoaW5rIHRoaXMgaXMgd2hhdCBp
-cyBiZWluZyBkb25lIGluDQo+ID4gaHR0cDovL2x4ci5mcmVlLWVsZWN0cm9ucy5jb20vc291cmNl
-L2FyY2gvYXJtL2tlcm5lbC9iaW9zMzIuYyNMNDk1DQo+ID4gYW5kIGN1cnJlbnRseSBkZXNpZ253
-YXJlIGFzc2lnbnMgdGhlIHJvb3QgYnVzIG51bWJlciBpbg0KPiA+IGh0dHA6Ly9seHIuZnJlZS1l
-bGVjdHJvbnMuY29tL3NvdXJjZS9kcml2ZXJzL3BjaS9ob3N0L3BjaWUtDQo+IGRlc2lnbndhcmUu
-YyNMNzMwDQo+ID4NCj4gWW91IGZvdW5kIHRoZSByaWdodCBzcG90LiBJdCB3b3JrcyBhIGJpdCBk
-aWZmZXJlbnQgdGhhbiBJIHJlbWVtYmVyLCBidXQNCj4gaXMgbGVzcyBicm9rZW4gdGhhbiB5b3Vy
-IGN1cnJlbnQgY29kZS4gOikNCj4gDQo+IEl0IGFjdHVhbGx5IGFzc2lnbnMgdGhlIG5leHQgaW5z
-dGFuY2UgYSByb290IGJ1cyBudW1iZXIgYmVoaW5kIHRoZQ0KPiBjdXJyZW50IGluc3RhbmNlcyBi
-dXMgcmFuZ2UuIFBsZWFzZSBub3RlIHRoZSBkaWZmZXJlbmNlIHRvIHlvdXIgY29kZQ0KPiB3aGlj
-aCBhc3NpZ25zIHRoZSBuZXh0IGZyZWUgYnVzIG51bWJlciwgd2hpY2ggbWF5IHN0aWxsIGxheSB3
-aXRoaW4gdGhlDQo+IGN1cnJlbnQgaW5zdGFuY2VzIGJ1cyByYW5nZS4NCg0KTW1tbSBoZXJlIEkg
-aGF2ZSBkb25lIGEgbWlzdGFrZTogaW4gdGhlIGN1cnJlbnQgZGVzaWdud2FyZSB0aGUgbnVtYmVy
-IG9mIGh3DQpjb250cm9sbGVycyBpcyBhbHdheXMgMQ0KaHR0cDovL2x4ci5mcmVlLWVsZWN0cm9u
-cy5jb20vc291cmNlL2RyaXZlcnMvcGNpL2hvc3QvcGNpZS1kZXNpZ253YXJlLmMjTDUxMA0KU28g
-dGhlIGxvb3AgaW4gYmlvczMyLmMgZG9lcyBub3Qgd29yayBvbiBtdWx0aXBsZSBQQ0llIHBvcnRz
-Li4uDQpIb3dldmVyIHlvdXIgY29tbWVudCBhYm91dCBQQ0lfRE9NQUlOUyBlbmxpZ2h0ZW5lZCBt
-eSBtaW5kIGFuZCBub3cgSSBzZWUNCnRoYXQgd2hlbiBDT05GSUdfUENJX0RPTUFJTlMgaXMgZGVm
-aW5lZCB3ZSBoYXZlIHRoZSBkb21haW5zIG51bWJlcnMNCih0cmFja2VkIGJ5IF9fZG9tYWluX25y
-KS4NClNvIChjb3JyZWN0IG1lIGlmIEkgYW0gd3JvbmcpIGlmIHdlIGhhdmUgMiBQQ0llIHBvcnRz
-IHRoYXQgZG8gbm90IHNwZWNpZnkNCnRoZSAiYnVzLXJhbmdlIiBwcm9wZXJ0eSwgYm90aCByb290
-IHBvcnRzIHdpbGwgZW51bWVyYXRlIHN0YXJ0aW5nIGZyb20gDQpyb290X2J1c19uciA9IDAgYW5k
-IGV2ZXJ5dGhpbmcgd2lsbCBzdGlsbCB3b3JrIG9rLg0KDQpTbyBpZiBteSBhc3N1bXB0aW9uIGlz
-IGNvcnJlY3QsIEkgZG8gbm90IHNlZSB3aHkgdGhlIG9yZ2luYWwgcGF0Y2ggZnJvbSBXYW5nIA0K
-WmhvdSBpcyB3cm9uZy4gDQpUaGUgb25seSBwb2ludCBjYW4gYmUgdGhhdCBhc3NpZ25pbmcgcHAt
-PnJvb3RfYnVzX25yID0gMCBpcyBub3QgcmVxdWlyZWQgDQphcyBwcCBtZW1vcnkgaXMga3phbGxv
-YydlZCAoYW4gdGhlcmVmb3JlIGluaXQgdG8gemVybykuDQoNCg0KPiANCj4gPg0KPiA+IEluIGdl
-bmVyYWwgSSBhZ3JlZSB3aXRoIHlvdSBidXQgaWYgeW91IGxvb2sgYXQgYWxsIHRoZSBjdXJyZW50
-DQo+IGRyaXZlcnMNCj4gPiBiYXNlZCBvbiBkZXNpZ253YXJlIG5vbmUgb2YgdGhlbSBkZWZpbmUg
-dGhlICJidXMtcmFuZ2UiIGR0YiBwcm9wZXJ0eS4NCj4gPiBUaGVyZWZvcmUgZG9pbmcgYXMgeW91
-IHNheSB3b3VsZCBicmVhayB0aGUgY3VycmVudCBkcml2ZXIgd2hlbiB3ZQ0KPiBoYXZlDQo+ID4g
-bXVsdGlwbGUgY29udHJvbGxlcnMuLi5hbSBJIHJpZ2h0Pw0KPiA+DQo+IFRoZSBjdXJyZW50IF9j
-b2RlXyB3b3JrcyBmaW5lIGZvciBtdWx0aXBsZSBjb250cm9sbGVycy4gSXQncyBqdXN0IHRoYXQN
-Cj4geW91IG11c3QgZGVmaW5lIHRoZSBidXMgcmFuZ2UgcHJvcGVydHkgaW4gdGhlIERUQiBpZiB5
-b3Ugd2FudCB0byBlbmFibGUNCj4gbXVsdGlwbGUgaW5zdGFuY2VzIG9mIG9uZSBjb250cm9sbGVy
-IGFuZCBzdXBwb3J0IGEga2VybmVsIHdpdGhvdXQgUENJDQo+IGRvbWFpbnMgc3VwcG9ydC4gQXMg
-YWxsIGN1cnJlbnQgaW1wbGVtZW50YXRpb25zIGhhdmUgb25seSBhIHNpbmdsZQ0KPiBpbnN0YW5j
-ZSBvZiB0aGUgY29udHJvbGxlciBwZXIgU29DLCBvciBkZXBlbmQgb24gUENJIGRvbWFpbiBzdXBw
-b3J0LA0KPiBpdCdzIHRvdGFsbHkgZmluZSBmb3IgdGhlbSB0byBub3QgZGVmaW5lIHRoZSBidXMg
-cmFuZ2VzIHByb3BlcnR5LCBhcw0KPiBpdCdzIGFuIG9wdGlvbmFsIHByb3BlcnR5IGFuZCBpdCBp
-cyB3ZWxsIGRlZmluZWQgaG93IHRoaW5ncyBiZWhhdmUgaWYNCj4gaXQNCj4gaXMgYWJzZW50LiBX
-ZSBhYnNvbHV0ZWx5IG5lZWQgdG8ga2VlcCB0aGF0IHNwZWNpZmllZCBiZWhhdmlvci4NCj4gDQo+
-ID4gSWYgdGhhdCBpcyB0aGUgY2FzZSBpbiBvcmRlciB0byBmaXggdGhpcyBpbiB0aGUgd2F5IHlv
-dSBzYXkgSSB3b3VsZA0KPiBuZWVkDQo+ID4gdG8gYXNzaWduICJidXMtcmFuZ2UiIGZvciBhbGwg
-dGhlIFBDSWUgZHJpdmVycyB3aXRoIG11bHRpcGxlDQo+IGNvbnRyb2xsZXJzOg0KPiA+IGluIHRo
-aXMgY2FzZSBJIHdvdWxkIHNwbGl0IHRoZSBkZWZhdWx0IHJhbmdlIGV2ZW5seSAodGhhdCBpcywg
-aWYgd2UNCj4gaGF2ZQ0KPiA+IHR3byBjb250cm9sbGVycyBJIHdvdWxkIGRlZmluZSAiYnVzLXJh
-bmdlIiAgMC0xMjcgYW5kIDEyOC0yNTUpDQo+ID4NCj4gPiBJZiB5b3UgdGhpbmsgdGhpcyBzb2x1
-dGlvbiBpcyBvayBJIGNhbiBnbyBmb3IgaXQuIE15IG9ubHkgZG91YnQgd2FzDQo+IGFib3V0DQo+
-ID4gdG91Y2hpbmcgb3RoZXIgdmVuZG9ycyBEVEJzLi4uLg0KPiA+DQo+IFlvdSBkb24ndCBuZWVk
-IHRvIHRvdWNoIGFueSBvZiB0aGUgY3VycmVudCBEVEJzLCBhcyB0aGV5IGFyZSBmaW5lIHdpdGgN
-Cj4gdGhlIGRlZmF1bHQgYnVzIHJhbmdlIGJlaGF2aW9yLiBZb3UgbmVlZCB0byBrZWVwIHRoZSBz
-cGVjaWZpZWQgYmVoYXZpb3INCj4gb2YgdGhlIGJ1cyByYW5nZSBwcm9wZXJ0eSB3aXRoIHRoZSBu
-ZXcgY29kZS4NCj4gDQo+IFJlZ2FyZHMsDQo+IEx1Y2FzDQo+ID4NCj4gPiA+DQo+ID4gPiBJdCBp
-cyBwZXJmZWN0bHkgdmFsaWQgdG8gaGF2ZSBhIGJ1cyByYW5nZSBvZiAweDAwLTB4MTAgYXNzaWdu
-ZWQgdG8NCj4gb25lDQo+ID4gPiBpbnN0YW5jZSBhbmQgMHg1MC0weGZmIHRvIHRoZSBuZXh0IGlu
-c3RhbmNlLiBBZGRpdGlvbmFsIHdpdGggUENJZQ0KPiA+ID4gaG90cGx1ZyB5b3UgbWF5IG5vdCB1
-c2UgdGhlIGZ1bGwgcmFuZ2Ugb2YgdGhlIGJ1cyBudW1iZXJzIG9uIG9uZQ0KPiA+ID4gaW5zdGFu
-Y2UgYXQgdGhlIGZpcnN0IHNjYW4sIGJ1dCBvbmx5IGxhdGVyIHBvcHVsYXRlIG1vcmUgYnVzZXMg
-d2hlbg0KPiA+ID4gbW9yZQ0KPiA+ID4gYnJpZGdlcyBhcmUgYWRkZWQgdG8gdGhlIHRyZWUuDQo+
-ID4gPg0KPiA+ID4gPiBEcml2ZXJzIHRoYXQgZG8gbm90IHNwZWNpZnkgdGhlIGJ1cyByYW5nZSBp
-biB0aGUgRFRCIHNldCBwcC0NCj4gPiA+ID5yb290X2J1c19uciA9IERXX1JPT1RfTlJfVU5ERUZJ
-TkVELg0KPiA+ID4gPiBEZXNpZ253YXJlIHdpbGwgY2hlY2sgaWYgdGhlIGZsYWcgaXMgc2V0IGFu
-ZCB3aWxsIHVzZSB0aGUNCj4gYXV0b21hdGljDQo+ID4gPiBidXMgcmFuZ2UNCj4gPiA+ID4gYXNz
-aWdubWVudC4NCj4gPiA+DQo+ID4gPiBObywgcGxlYXNlIGxldHMgZ2V0IHJpZCBvZiB0aGlzIGFz
-c2lnbm1lbnQgYWx0b2dldGhlci4gVGhlIGdsdWUNCj4gZHJpdmVycw0KPiA+ID4gaGF2ZSBubyBi
-dXNpbmVzcyBpbiBhc3NpZ25pbmcgdGhlIGJ1cyByYW5nZS4gUGxlYXNlIHJlbW92ZSB0aGUNCj4g
-PiA+IHBwLT5yb290X2J1c19uciBhc3NpZ25tZW50IGZyb20gYWxsIHRoZSBnbHVlIGRyaXZlcnMu
-DQo+ID4gPg0KPiA+ID4gImJ1cyByYW5nZSIgaXMgYSBnZW5lcmljIERXIFBDSWUgcHJvcGVydHks
-IHNvIGp1c3QgcGFyc2UgdGhlIHJvb3QNCj4gYnVzDQo+ID4gPiBudW1iZXIgZnJvbSB0aGUgRFQs
-IGl0IGlzIGhhbmRsZWQgdGhlIHNhbWUgd2F5IGZvciBhbGwgdGhlIERXIGJhc2VkDQo+ID4gPiBQ
-Q0llDQo+ID4gPiBkcml2ZXJzLiBUaGUgYmluZGluZ3Mgc3BlY2lmaWVzIHRoYXQgaWYgdGhlIGJ1
-cyByYW5nZSBwcm9wZXJ0eSBpcw0KPiA+ID4gbWlzc2luZyB0aGUgcmFuZ2UgaXMgMHgwMC0weGZm
-LCBzbyB5b3UgY2FuIGRlZmF1bHQgdG8gMCBhcyB0aGUgcm9vdA0KPiBidXMNCj4gPiA+IG51bWJl
-ciBpbiB0aGF0IGNhc2UuDQo+ID4gPg0KPiA+ID4gQWxzbyBJIHdvdWxkIHRoaW5rIHRoaXMgY29u
-dmVyc2lvbiB3YXJyYW50cyBhIHBhdGNoIG9uIGl0cyBvd24gYW5kDQo+ID4gPiBzaG91bGQgbm90
-IGJlIG1peGVkIGluIHRoZSBBUk02NCBzdXBwb3J0IHBhdGNoLg0KPiA+ID4NCj4gPiA+IFJlZ2Fy
-ZHMsDQo+ID4gPiBMdWNhcw0KPiA+ID4NCj4gDQo+IC0tDQo+IFBlbmd1dHJvbml4IGUuSy4gICAg
-ICAgICAgICAgfCBMdWNhcyBTdGFjaCAgICAgICAgICAgICAgICAgfA0KPiBJbmR1c3RyaWFsIExp
-bnV4IFNvbHV0aW9ucyAgIHwgaHR0cDovL3d3dy5wZW5ndXRyb25peC5kZS8gIHwNCg0K
+Hi Krzysztof,
+
+Sorry for delay in reply, as I got busy in some other official 
+assignments and could not take this series further at that time.
+
+On Wednesday 27 May 2015 05:22 PM, Krzysztof Kozlowski wrote:
+> W dniu 29.04.2015 o 17:38, Pankaj Dubey pisze:
+>> This patch adds Exynos SROM controller driver which will handle
+>> save restore of SROM registers during S2R.
+>>
+>> Change-Id: Iaddaaebc1d7090c9889e948e68e886519562c43c
+>
+> Please remove it.
+
+Will do it.
+
+>
+>> Signed-off-by: Pankaj Dubey <pankaj.dubey@samsung.com>
+>> ---
+>>   drivers/soc/Kconfig               |   1 +
+>>   drivers/soc/Makefile              |   1 +
+>>   drivers/soc/samsung/Kconfig       |  14 ++++
+>>   drivers/soc/samsung/Makefile      |   1 +
+>>   drivers/soc/samsung/exynos-srom.c | 142 ++++++++++++++++++++++++++++++++++++++
+>>   drivers/soc/samsung/exynos-srom.h |  51 ++++++++++++++
+>>   6 files changed, 210 insertions(+)
+>>   create mode 100644 drivers/soc/samsung/Kconfig
+>>   create mode 100644 drivers/soc/samsung/Makefile
+>>   create mode 100644 drivers/soc/samsung/exynos-srom.c
+>>   create mode 100644 drivers/soc/samsung/exynos-srom.h
+>>
+>> diff --git a/drivers/soc/Kconfig b/drivers/soc/Kconfig
+>> index 76d6bd4..c3abfbe 100644
+>> --- a/drivers/soc/Kconfig
+>> +++ b/drivers/soc/Kconfig
+>> @@ -1,6 +1,7 @@
+>>   menu "SOC (System On Chip) specific Drivers"
+>>
+>>   source "drivers/soc/qcom/Kconfig"
+>> +source "drivers/soc/samsung/Kconfig"
+>>   source "drivers/soc/ti/Kconfig"
+>>   source "drivers/soc/versatile/Kconfig"
+>>
+>> diff --git a/drivers/soc/Makefile b/drivers/soc/Makefile
+>> index 063113d..620366f 100644
+>> --- a/drivers/soc/Makefile
+>> +++ b/drivers/soc/Makefile
+>> @@ -3,6 +3,7 @@
+>>   #
+>>
+>>   obj-$(CONFIG_ARCH_QCOM)		+= qcom/
+>> +obj-$(CONFIG_SOC_SAMSUNG)	+= samsung/
+>>   obj-$(CONFIG_ARCH_TEGRA)	+= tegra/
+>>   obj-$(CONFIG_SOC_TI)		+= ti/
+>>   obj-$(CONFIG_PLAT_VERSATILE)	+= versatile/
+>> diff --git a/drivers/soc/samsung/Kconfig b/drivers/soc/samsung/Kconfig
+>> new file mode 100644
+>> index 0000000..b6fa4e6
+>> --- /dev/null
+>> +++ b/drivers/soc/samsung/Kconfig
+>> @@ -0,0 +1,14 @@
+>> +#
+>> +# SAMSUNG SoC drivers
+>> +#
+>> +menu "Samsung SOC driver support"
+>> +
+>> +config SOC_SAMSUNG
+>> +	bool
+>
+> Any reason for not using menuconfig?
+>
+
+For one of my Exynos PMU patchset [1] this suggestion came from Russel 
+King, not to use user-visible sysmbol if not required.
+[1]: 
+http://lists.infradead.org/pipermail/linux-arm-kernel/2014-November/304451.html
+
+>> +
+>> +config EXYNOS_SROM
+>> +	bool
+>> +	depends on ARM && ARCH_EXYNOS
+>> +	select SOC_BUS
+>
+> Why we need to select SOC_BUS?
+>
+
+We do not need it, will modify.
+
+>> +
+>> +endmenu
+>> diff --git a/drivers/soc/samsung/Makefile b/drivers/soc/samsung/Makefile
+>> new file mode 100644
+>> index 0000000..9c554d5
+>> --- /dev/null
+>> +++ b/drivers/soc/samsung/Makefile
+>> @@ -0,0 +1 @@
+>> +obj-$(CONFIG_EXYNOS_SROM)	+= exynos-srom.o
+>> diff --git a/drivers/soc/samsung/exynos-srom.c b/drivers/soc/samsung/exynos-srom.c
+>> new file mode 100644
+>> index 0000000..8aae762
+>> --- /dev/null
+>> +++ b/drivers/soc/samsung/exynos-srom.c
+>> @@ -0,0 +1,142 @@
+>> +/*
+>> + * Copyright (c) 2015 Samsung Electronics Co., Ltd.
+>> + *	      http://www.samsung.com/
+>> + *
+>> + * EXYNOS - SROM Controller support
+>> + * Author: Pankaj Dubey <pankaj.dubey@samsung.com>
+>> + *
+>> + * This program is free software; you can redistribute it and/or modify
+>> + * it under the terms of the GNU General Public License version 2 as
+>> + * published by the Free Software Foundation.
+>> + */
+>> +
+>> +#include <linux/io.h>
+>> +#include <linux/of.h>
+>> +#include <linux/of_address.h>
+>> +#include <linux/of_platform.h>
+>> +#include <linux/platform_device.h>
+>> +#include <linux/slab.h>
+>> +#include "exynos-srom.h"
+>> +
+>> +static void __iomem *exynos_srom_base;
+>> +
+>> +static unsigned long exynos_srom_offsets[] = {
+>
+> static const
+>
+>> +	/* SROM side */
+>> +	S5P_SROM_BW,
+>> +	S5P_SROM_BC0,
+>> +	S5P_SROM_BC1,
+>> +	S5P_SROM_BC2,
+>> +	S5P_SROM_BC3,
+>> +};
+>> +
+>> +/**
+>> + * struct exynos_srom_reg_dump: register dump of SROM Controller registers.
+>> + * @offset: srom register offset from the controller base address.
+>> + * @value: the value to be register at offset.
+>
+> Maybe:
+> @value: the value of register under the offset
+>
+
+OK.
+
+>> + */
+>> +struct exynos_srom_reg_dump {
+>> +	u32     offset;
+>> +	u32     value;
+>> +};
+>> +
+>> +static struct exynos_srom_reg_dump *exynos_srom_regs;
+>> +
+>> +static struct exynos_srom_reg_dump *exynos_srom_alloc_reg_dump(
+>> +		const unsigned long *rdump,
+>> +		unsigned long nr_rdump)
+>> +{
+>> +	struct exynos_srom_reg_dump *rd;
+>> +	unsigned int i;
+>> +
+>> +	rd = kcalloc(nr_rdump, sizeof(*rd), GFP_KERNEL);
+>> +	if (!rd)
+>> +		return NULL;
+>> +
+>> +	for (i = 0; i < nr_rdump; ++i)
+>> +		rd[i].offset = rdump[i];
+>> +
+>> +	return rd;
+>> +}
+>> +
+>> +static void exynos_srom_save(void __iomem *base,
+>> +				    struct exynos_srom_reg_dump *rd,
+>> +				    unsigned int num_regs)
+>> +{
+>> +	for (; num_regs > 0; --num_regs, ++rd)
+>> +		rd->value = readl(base + rd->offset);
+>> +
+>> +}
+>> +
+>> +static void exynos_srom_restore(void __iomem *base,
+>> +				      const struct exynos_srom_reg_dump *rd,
+>> +				      unsigned int num_regs)
+>> +{
+>> +	for (; num_regs > 0; --num_regs, ++rd)
+>> +		writel(rd->value, base + rd->offset);
+>> +
+>> +}
+>> +
+>> +static const struct of_device_id of_exynos_srom_ids[] = {
+>> +	{
+>> +		.compatible	= "samsung,exynos-srom",
+>> +	},
+>> +	{},
+>> +};
+>> +
+>> +static int exynos_srom_probe(struct platform_device *pdev)
+>> +{
+>> +	struct device_node *np;
+>> +	struct device *dev = &pdev->dev;
+>> +
+>> +	np = dev->of_node;
+>> +	exynos_srom_base = of_iomap(np, 0);
+>> +
+>> +	if (!exynos_srom_base)
+>> +		return PTR_ERR(exynos_srom_base);
+>
+> This looks wrong. If this is NULL, do not convert it to ERR. What will
+> be the value of PTR_ERR(NULL)?
+>
+
+Ok will handle it properly.
+
+>> +
+>> +	exynos_srom_regs = exynos_srom_alloc_reg_dump(exynos_srom_offsets,
+>> +			sizeof(exynos_srom_offsets));
+>
+> if (NULL) then what? Have you tested the error paths in the probe?
+>
+
+I have not tested this for error path, will take care.
+
+>> +
+>> +	return 0;
+>> +}
+>> +
+>> +#ifdef CONFIG_PM_SLEEP
+>> +static int exynos_srom_suspend(struct device *dev)
+>> +{
+>> +	exynos_srom_save(exynos_srom_base, exynos_srom_regs,
+>> +				ARRAY_SIZE(exynos_srom_offsets));
+>> +
+>> +	return 0;
+>> +}
+>> +
+>> +static int exynos_srom_resume(struct device *dev)
+>> +{
+>> +	exynos_srom_restore(exynos_srom_base, exynos_srom_regs,
+>> +				ARRAY_SIZE(exynos_srom_offsets));
+>> +
+>> +	return 0;
+>> +}
+>> +
+>> +static const struct dev_pm_ops exynos_srom_dev_pm_ops = {
+>> +	SET_SYSTEM_SLEEP_PM_OPS(exynos_srom_suspend, exynos_srom_resume)
+>> +};
+>> +
+>> +#define DEV_PM_OPS	(&exynos_srom_dev_pm_ops)
+>> +#else
+>> +#define DEV_PM_OPS	NULL
+>> +#endif /* CONFIG_PM_SLEEP */
+>
+> That look like an old code. Please use SIMPLE_DEV_PM_OPS unless there is
+> a reason not to.
+>
+
+Thanks for suggestion, will update accordingly.
+
+>> +
+>> +static struct platform_driver exynos_srom_driver = {
+>> +	.probe = exynos_srom_probe,
+>> +	.driver = {
+>> +		.name = "exynos-srom",
+>> +		.of_match_table = of_exynos_srom_ids,
+>> +		.pm = DEV_PM_OPS,
+>> +	},
+>> +};
+>> +
+>> +static int __init exynos_srom_init(void)
+>> +{
+>> +	return platform_driver_register(&exynos_srom_driver);
+>> +}
+>> +device_initcall(exynos_srom_init);
+>> diff --git a/drivers/soc/samsung/exynos-srom.h b/drivers/soc/samsung/exynos-srom.h
+>> new file mode 100644
+>> index 0000000..e6ee438
+>> --- /dev/null
+>> +++ b/drivers/soc/samsung/exynos-srom.h
+>> @@ -0,0 +1,51 @@
+>> +/*
+>> + * Copyright (c) 2015 Samsung Electronics Co., Ltd.
+>> + *		http://www.samsung.com
+>> + *
+>> + * Exynos SROMC register definitions
+>> + *
+>> + * This program is free software; you can redistribute it and/or modify
+>> + * it under the terms of the GNU General Public License version 2 as
+>> + * published by the Free Software Foundation.
+>> +*/
+>> +
+>> +#ifndef __SAMSUNG_REGS_SROM_H
+>> +#define __SAMSUNG_REGS_SROM_H __FILE__
+>
+> The double-inclusion protection looks different than file path and name.
+> Please make it similar.
+>
+
+OK.
+
+>> +#define S5P_SROMREG(x)		(x)
+>> +
+>> +#define S5P_SROM_BW		S5P_SROMREG(0x0)
+>> +#define S5P_SROM_BC0		S5P_SROMREG(0x4)
+>> +#define S5P_SROM_BC1		S5P_SROMREG(0x8)
+>> +#define S5P_SROM_BC2		S5P_SROMREG(0xc)
+>> +#define S5P_SROM_BC3		S5P_SROMREG(0x10)
+>> +#define S5P_SROM_BC4		S5P_SROMREG(0x14)
+>> +#define S5P_SROM_BC5		S5P_SROMREG(0x18)
+>> +
+>> +/* one register BW holds 4 x 4-bit packed settings for NCS0 - NCS3 */
+>> +
+>> +#define S5P_SROM_BW__DATAWIDTH__SHIFT		0
+>> +#define S5P_SROM_BW__ADDRMODE__SHIFT		1
+>> +#define S5P_SROM_BW__WAITENABLE__SHIFT		2
+>> +#define S5P_SROM_BW__BYTEENABLE__SHIFT		3
+>> +
+>> +#define S5P_SROM_BW__CS_MASK			0xf
+>> +
+>> +#define S5P_SROM_BW__NCS0__SHIFT		0
+>> +#define S5P_SROM_BW__NCS1__SHIFT		4
+>> +#define S5P_SROM_BW__NCS2__SHIFT		8
+>> +#define S5P_SROM_BW__NCS3__SHIFT		12
+>> +#define S5P_SROM_BW__NCS4__SHIFT		16
+>> +#define S5P_SROM_BW__NCS5__SHIFT		20
+>> +
+>> +/* applies to same to BCS0 - BCS3 */
+>> +
+>> +#define S5P_SROM_BCX__PMC__SHIFT		0
+>> +#define S5P_SROM_BCX__TACP__SHIFT		4
+>> +#define S5P_SROM_BCX__TCAH__SHIFT		8
+>> +#define S5P_SROM_BCX__TCOH__SHIFT		12
+>> +#define S5P_SROM_BCX__TACC__SHIFT		16
+>> +#define S5P_SROM_BCX__TCOS__SHIFT		24
+>> +#define S5P_SROM_BCX__TACS__SHIFT		28
+>
+> s/S5P/EXYNOS/
+>
+OK.
+
+Thanks,
+Pankaj Dubey
+
+>> +
+>> +#endif /* __SAMSUNG_REGS_SROM_H */
+>>
+>
+>
