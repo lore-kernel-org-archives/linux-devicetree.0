@@ -1,78 +1,176 @@
-From: Kishon Vijay Abraham I <kishon@ti.com>
-Subject: Re: [PATCH v2 00/16] omap_hsmmc: regulator usage cleanup and fixes
-Date: Thu, 20 Aug 2015 18:06:03 +0530
-Message-ID: <55D5C9B3.80802@ti.com>
-References: <1438604801-11823-1-git-send-email-kishon@ti.com>
+From: Barry Song <21cnbao-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v7 4/5] clk: Provide critical clock support
+Date: Thu, 20 Aug 2015 21:23:02 +0800
+Message-ID: <CAGsJ_4xZOktOy=SMft+VA9JOLBauk-_vchVY=Cs62PzrZ+socQ@mail.gmail.com>
+References: <1437570255-21049-1-git-send-email-lee.jones@linaro.org>
+ <1437570255-21049-5-git-send-email-lee.jones@linaro.org> <CAGsJ_4zKn-o4ZxZ0-xzCStvuTkdC5xqD9FneWna-0dNVgp=1DQ@mail.gmail.com>
+ <20150817074244.GA3239@x1>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1438604801-11823-1-git-send-email-kishon@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: ulf.hansson@linaro.org, afenkart@gmail.com, tony@atomide.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mmc@vger.kernel.org, linux-omap@vger.kernel.org
-Cc: nsekhar@ti.com
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20150817074244.GA3239@x1>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, kernel-F5mvAk5X5gdBDgjK7y7TUQ@public.gmane.org, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, shengtao.sheng-kQvG35nSl+M@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+2015-08-17 15:42 GMT+08:00 Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>:
+> On Mon, 17 Aug 2015, Barry Song wrote:
+>
+>> 2015-07-22 21:04 GMT+08:00 Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>:
+>> > Lots of platforms contain clocks which if turned off would prove fatal.
+>> > The only way to recover from these catastrophic failures is to restart
+>> > the board(s).  Now, when a clock provider is registered with the
+>> > framework it is possible for a list of critical clocks to be supplied
+>> > which must be kept ungated.  Each clock mentioned in the newly
+>> > introduced 'critical-clock' property will be clk_prepare_enable()d
+>> > where the normal references will be taken.  This will prevent the
+>> > common clk framework from attempting to gate them during the normal
+>> > clk_disable_unused() and disable_clock() procedures.
+>> >
+>> > Note that it will still be possible for knowledgeable drivers to turn
+>> > these clocks off using clk_{enable,disable}_critical() calls.
+>> >
+>> > Signed-off-by: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+>>
+>> hi Lee,
+>> i have another email about this. i am wondering whether
+>> CLK_IGNORE_UNUSE is still useful after your patch. another solution
+>> for your patch might be extending the current CLK_IGNORE_UNUSE to
+>> runtime?
+>>
+>>
+>> copy the mail here:
+>> currently we can set a CLK_IGNORE_UNUSE flag to  a clock to stop
+>> clk_disable_unused()  from disabling it at the boot stage:
+>>
+>> static void clk_disable_unused_subtree(struct clk_core *core)
+>> {
+>> ...
+>>
+>> if (core->flags & CLK_IGNORE_UNUSED)
+>> goto unlock_out;
+>> }
+>>
+>> static int clk_disable_unused(void)
+>> {
+>> ...
+>>
+>> clk_unprepare_unused_subtree(core);
+>> ...
+>>  return 0;
+>> }
+>>
+>> late_initcall_sync(clk_disable_unused);
+>>
+>> so if there are two clocks A and B, A is the parent of B, and A is
+>> marked as CLK_IGNORE_UNUSED.
+>>
+>> in boot stage if there is nobody using A and B, Linux will disable B
+>> due to clk_disable_unused() , but keep A being enabled since A has
+>> CLK_IGNORE_UNUSED.
+>>
+>> but in Linux runtime, we might frequently disable /enable B in runtime
+>> power management, this will cause A disabled since Linux will not
+>> check CLK_IGNORE_UNUSED for runtime disabling clk .
+>>
+>>  so this makes CLK_IGNORE_UNUSE only work if we don't disable its
+>> sub-clock at runtime. this looks making no sense.
+>>
+>>  i am thinking whether we should do some changes to make it have side
+>> affect for runtime clk disable. otherwise, why do we want to stop it
+>> from being disabled during boot stage?
+>
+> This is one of this problems, along with some others that this set
+> aims to solve.
+>
+> Extending CLK_IGNORE_UNUSED is not a good idea.  In fact, if we can
+> phase it out completely, that will be a good thing.
 
-On Monday 03 August 2015 05:56 PM, Kishon Vijay Abraham I wrote:
-> Changes from v1:
-> *) return on -EPROBE_DEFER and other fatal errors. (Don't return only
->    if the return value is -ENODEV)
-> *) Remove the beagle x15 dts patch. It can be part of a different
->    series.
-> *) Avoid using regulator_is_enabled for vqmmc since if the regulator
->    is shared and the other users are not using regulator_is_enabled
->    then there can be unbalanced regulator_enable/regulator_disable
-> 
-> This patch series does the following
-> *) Uses devm_regulator_get_optional() for vmmc and then removes the
->    CONFIG_REGULATOR check altogether.
-> *) return on -EPROBE_DEFER and any other fatal errors
-> *) enable/disable vmmc_aux regulator based on prior state
-> 
-> I've pushed this patch series to
-> git://git.ti.com/linux-phy/linux-phy.git mmc_regulator_cleanup_fixes_v2
-> 
-> Please note the branch also has the pbias fixes [1] & [2].
-> [1] -> https://lkml.org/lkml/2015/7/27/358
-> [2] -> https://lkml.org/lkml/2015/7/27/391
-> 
-> This series is in preparation for implementing the voltage switch
-> sequence so that UHS cards can be supported.
-> 
-> Did basic read/write test in J6, J6 Eco, Beagle-x15, AM437x EVM,
-> Beaglebone black, OMAP5 uEVM and OMAP4 PANDA.
+i would agree it is better we can drop CLK_IGNORE_UNUSED since it is
+confusing...
 
-I have now done read/write test in omap3 beagle-xm with this series!
 
-Thanks
-Kishon
-> 
-> Kishon Vijay Abraham I (15):
->   mmc: host: omap_hsmmc: use devm_regulator_get_optional() for vmmc
->   mmc: host: omap_hsmmc: return on fatal errors from omap_hsmmc_reg_get
->   mmc: host: omap_hsmmc: cleanup omap_hsmmc_reg_get()
->   mmc: host: omap_hsmmc: use the ocrmask provided by the vmmc regulator
->   mmc: host: omap_hsmmc: use mmc_host's vmmc and vqmmc
->   mmc: host: omap_hsmmc: remove unnecessary pbias set_voltage
->   mmc: host: omap_hsmmc: return error if any of the regulator APIs fail
->   mmc: host: omap_hsmmc: add separate functions for enable/disable
->     supply
->   mmc: host: omap_hsmmc: add separate function to set pbias
->   mmc: host: omap_hsmmc: avoid pbias regulator enable on power off
->   mmc: host: omap_hsmmc: don't use ->set_power to set initial regulator
->     state
->   mmc: host: omap_hsmmc: enable/disable vmmc_aux regulator based on
->     previous state
->   mmc: host: omap_hsmmc: use regulator_is_enabled to find pbias status
->   mmc: host: omap_hsmmc: use ios->vdd for setting vmmc voltage
->   mmc: host: omap_hsmmc: remove CONFIG_REGULATOR check
-> 
-> Roger Quadros (1):
->   mmc: host: omap_hsmmc: use "mmc_of_parse_voltage" to get ocr_avail
-> 
->  .../devicetree/bindings/mmc/ti-omap-hsmmc.txt      |    2 +
->  drivers/mmc/host/omap_hsmmc.c                      |  340 +++++++++++++-------
->  2 files changed, 224 insertions(+), 118 deletions(-)
-> 
+>
+> Since this set Mike has submitted an alternitive solution.
+>
+> Please see: https://groups.google.com/forum/#!msg/linux.kernel/kX_nWSsWRxU/IZSjhG5Ed4oJ
+>
+>>  I am not sure whether i missed something in clk core level support.
+>>
+>> -barry
+>>
+>> > ---
+>> >  drivers/clk/clk-conf.c | 45 ++++++++++++++++++++++++++++++++++++++++++++-
+>> >  1 file changed, 44 insertions(+), 1 deletion(-)
+>> >
+>> > diff --git a/drivers/clk/clk-conf.c b/drivers/clk/clk-conf.c
+>> > index aad4796..f83c1c2 100644
+>> > --- a/drivers/clk/clk-conf.c
+>> > +++ b/drivers/clk/clk-conf.c
+>> > @@ -116,6 +116,45 @@ static int __set_clk_rates(struct device_node *node, bool clk_supplier)
+>> >         return 0;
+>> >  }
+>> >
+>> > +static int __set_critical_clocks(struct device_node *node, bool clk_supplier)
+>> > +{
+>> > +       struct of_phandle_args clkspec;
+>> > +       struct clk *clk;
+>> > +       struct property *prop;
+>> > +       const __be32 *cur;
+>> > +       uint32_t index;
+>> > +       int ret;
+>> > +
+>> > +       if (!clk_supplier)
+>> > +               return 0;
+>> > +
+>> > +       of_property_for_each_u32(node, "critical-clock", prop, cur, index) {
+>> > +               clkspec.np = node;
+>> > +               clkspec.args_count = 1;
+>> > +               clkspec.args[0] = index;
+>> > +
+>> > +               clk = of_clk_get_from_provider(&clkspec);
+>> > +               if (IS_ERR(clk)) {
+>> > +                       pr_err("clk: couldn't get clock %u for %s\n",
+>> > +                               index, node->full_name);
+>> > +                       return PTR_ERR(clk);
+>> > +               }
+>> > +
+>> > +               clk_init_critical(clk);
+>> > +
+>> > +               ret = clk_prepare_enable(clk);
+>> > +               if (ret) {
+>> > +                       pr_err("Failed to enable clock %u for %s: %d\n",
+>> > +                              index, node->full_name, ret);
+>> > +                       return ret;
+>> > +               }
+>> > +
+>> > +               pr_debug("Setting clock as critical %pC\n", clk);
+>> > +       }
+>> > +
+>> > +       return 0;
+>> > +}
+>> > +
+>> >  /**
+>> >   * of_clk_set_defaults() - parse and set assigned clocks configuration
+>> >   * @node: device node to apply clock settings for
+>> > @@ -139,6 +178,10 @@ int of_clk_set_defaults(struct device_node *node, bool clk_supplier)
+>> >         if (rc < 0)
+>> >                 return rc;
+>> >
+>> > -       return __set_clk_rates(node, clk_supplier);
+>> > +       rc = __set_clk_rates(node, clk_supplier);
+>> > +       if (rc < 0)
+>> > +               return rc;
+>> > +
+>> > +       return __set_critical_clocks(node, clk_supplier);
+>> >  }
+>> >  EXPORT_SYMBOL_GPL(of_clk_set_defaults);
+>
+> --
+
+-barry
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
