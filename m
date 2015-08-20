@@ -1,65 +1,158 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH 2/3] ARM: dts: sun6i: Turn on gmac on Colombus
-Date: Fri, 21 Aug 2015 00:12:59 +0200
-Message-ID: <20150820221259.GM30520@lukather>
-References: <1438960955-6551-1-git-send-email-hdegoede@redhat.com>
- <1438960955-6551-2-git-send-email-hdegoede@redhat.com>
- <20150819151754.GH30520@lukather>
- <55D5725F.6000106@redhat.com>
-Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
+From: Michael Welling <mwelling@ieee.org>
+Subject: Re: [PATCH] input: ti_am335x_tsc: Add open delay parameter
+Date: Thu, 20 Aug 2015 17:17:41 -0500
+Message-ID: <20150820221740.GA28249@deathstar>
+References: <1439318705-18601-1-git-send-email-mwelling@ieee.org>
+ <55CAE71C.4060505@ti.com>
+ <20150812184420.GA2442@deathstar>
+ <20150819180835.GB29773@deathstar>
+ <55D5C3F2.80900@ti.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="qwymS7QpGZeA8tRa"
-Return-path: <linux-sunxi+bncBD2ZNBF5VYJRB3NB3GXAKGQEM4DU2PQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-input-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <55D5725F.6000106-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <http://groups.google.com/group/linux-sunxi/subscribe>
-To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <55D5C3F2.80900@ti.com>
+Sender: linux-input-owner@vger.kernel.org
+To: Vignesh R <vigneshr@ti.com>
+Cc: Wolfram Sang <wsa@the-dreams.de>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>, Jonathan Cameron <jic23@kernel.org>, "Griffis, Brad" <bgriffis@ti.com>
 List-Id: devicetree@vger.kernel.org
 
---qwymS7QpGZeA8tRa
-Content-Type: text/plain; charset=UTF-8
-Content-Disposition: inline
-
-On Thu, Aug 20, 2015 at 08:23:27AM +0200, Hans de Goede wrote:
-> Hi,
+On Thu, Aug 20, 2015 at 05:41:30PM +0530, Vignesh R wrote:
 > 
-> On 08/19/2015 05:17 PM, Maxime Ripard wrote:
-> >On Fri, Aug 07, 2015 at 05:22:34PM +0200, Hans de Goede wrote:
-> >>We've everything we need to support the gmac on Colombus, turn it on.
+> 
+> On 08/19/2015 11:38 PM, Michael Welling wrote:
+> > On Wed, Aug 12, 2015 at 01:44:22PM -0500, Michael Welling wrote:
+> >> On Wed, Aug 12, 2015 at 11:56:36AM +0530, Vignesh R wrote:
+> >>> Hi Michael,
+> >>>
+> >>> + Dmitry
+> >>>
+> >>> On 08/12/2015 12:15 AM, Michael Welling wrote:
+> >>>> Adds a device tree parameter to set the open delay on the touchscreen
+> >>>> conversion steps. Increasing this parameter helps the touch accuracy on
+> >>>> some screens.
+> >>>>
+> >>>> Signed-off-by: Michael Welling <mwelling@ieee.org>
+> >>>> ---
+> >>>>  .../bindings/input/touchscreen/ti-tsc-adc.txt          |  5 +++++
+> >>>>  drivers/input/touchscreen/ti_am335x_tsc.c              | 18 ++++++++++++++----
+> >>>>  2 files changed, 19 insertions(+), 4 deletions(-)
+> >>>>
+> >>>> diff --git a/Documentation/devicetree/bindings/input/touchscreen/ti-tsc-adc.txt b/Documentation/devicetree/bindings/input/touchscreen/ti-tsc-adc.txt
+> >>>> index b1163bf..cb11fda 100644
+> >>>> --- a/Documentation/devicetree/bindings/input/touchscreen/ti-tsc-adc.txt
+> >>>> +++ b/Documentation/devicetree/bindings/input/touchscreen/ti-tsc-adc.txt
+> >>>> @@ -41,6 +41,11 @@ Optional properties:
+> >>>>  			 charge step, so this does in fact function as a
+> >>>>  			 hardware knob for adjusting the amount of "settling
+> >>>>  			 time".
+> >>>> +	ti,open-delay: Open delay applied to all touchscreen conversion steps.
+> >>>> +			The value corresponds to the number of ADC clock
+> >>>> +			cycles to wait after applying the step configuration
+> >>>> +			registers and before sending the start of ADC
+> >>>> +			conversion. Maximum value is 0x3FFFF.
+> >>>>  
+> >>>
+> >>> Since open-delay is per step, is it not better to allow specifying
+> >>> open-delay per step like ti,chan-step-opendelay of adc? This will help
+> >>> control open-delay for all the four wires.
 > >>
-> >>Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-> >
-> >I recall that the phy was powered by one of the AXP221 regulators,
-> >does it require some additional stuff (like a recent u-boot), or does
-> >it just work and my memory is bad :) ?
+> >> Do you see any reason why you would want a different delay for each step of
+> >> the conversion on the same touchscreen?
 > 
-> I think it just works, it MAY be connected to aldo1 but according to
-> the git history for the u-boot defconfig that one is used for wifi not
-> for the gmac, and we do not enable any other "spare" regulators in the
-> u-boot config.
 > 
-> I do not have any schematics, so no way to say for sure.
+> Sorry for the delay,
 > 
-> I can confirm that the GMAC work fine with the latest u-boot
-> master. Looking in the history we've always enabled ALDO1
-> on the Colombus in upstream u-boot, so this should all just work.
+> I haven't seen different delays being used for different channels on
+> 4-wire TSC ( not sure of 5-wire or 8 wire designs). Since this is DT
+> change, I just wanted to make sure more flexibility is provided.
+> 
+> >>
+> >> The user would need to know the number of steps what each of the steps do.
+> >>
+> 
+> 
+> What I was thinking was making open-delay configurable per channel (one
+> entry for X+, X-, Y+, Y-).
+> 
+> For example, for a 4-wire TSC:
+> ti,chan-open-delay = <0x30 0x100 0x20 0x10>; /* for X+, X-, Y+, Y- */
+>
 
-Except that if it is the case, the DT was working fine with the stock
-bootloader, and it doesn't anymore, while we have no way to upgrade
-it.
-
-Maxime
-
--- 
-Maxime Ripard, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
---qwymS7QpGZeA8tRa--
+What about the readings for the pressure?
+ 
+> 
+> >>>
+> >>>>  - child "adc"
+> >>>>  	ti,chan-step-opendelay: List of open delays for each channel of
+> >>>> diff --git a/drivers/input/touchscreen/ti_am335x_tsc.c b/drivers/input/touchscreen/ti_am335x_tsc.c
+> >>>> index 191a1b8..37a9729 100644
+> >>>> --- a/drivers/input/touchscreen/ti_am335x_tsc.c
+> >>>> +++ b/drivers/input/touchscreen/ti_am335x_tsc.c
+> >>>> @@ -54,6 +54,7 @@ struct titsc {
+> >>>>  	u32			inp_xp, inp_xn, inp_yp, inp_yn;
+> >>>>  	u32			step_mask;
+> >>>>  	u32			charge_delay;
+> >>>> +	u32			open_delay;
+> >>>>  };
+> >>>>  
+> >>>>  static unsigned int titsc_readl(struct titsc *ts, unsigned int reg)
+> >>>> @@ -148,7 +149,7 @@ static void titsc_step_config(struct titsc *ts_dev)
+> >>>>  	end_step = first_step + tsc_steps;
+> >>>>  	for (i = end_step - ts_dev->coordinate_readouts; i < end_step; i++) {
+> >>>>  		titsc_writel(ts_dev, REG_STEPCONFIG(i), config);
+> >>>> -		titsc_writel(ts_dev, REG_STEPDELAY(i), STEPCONFIG_OPENDLY);
+> >>>> +		titsc_writel(ts_dev, REG_STEPDELAY(i), ts_dev->open_delay);
+> >>>>  	}
+> >>>>  
+> >>>>  	config = 0;
+> >>>> @@ -172,7 +173,7 @@ static void titsc_step_config(struct titsc *ts_dev)
+> >>>>  	end_step = first_step + ts_dev->coordinate_readouts;
+> >>>>  	for (i = first_step; i < end_step; i++) {
+> >>>>  		titsc_writel(ts_dev, REG_STEPCONFIG(i), config);
+> >>>> -		titsc_writel(ts_dev, REG_STEPDELAY(i), STEPCONFIG_OPENDLY);
+> >>>> +		titsc_writel(ts_dev, REG_STEPDELAY(i), ts_dev->open_delay);
+> >>>>  	}
+> >>>>  
+> >>>>  	/* Make CHARGECONFIG same as IDLECONFIG */
+> >>>> @@ -188,13 +189,13 @@ static void titsc_step_config(struct titsc *ts_dev)
+> >>>>  			STEPCONFIG_INP(ts_dev->inp_xp);
+> >>>>  	titsc_writel(ts_dev, REG_STEPCONFIG(end_step), config);
+> >>>>  	titsc_writel(ts_dev, REG_STEPDELAY(end_step),
+> >>>> -			STEPCONFIG_OPENDLY);
+> >>>> +			ts_dev->open_delay);
+> >>>>  
+> >>>>  	end_step++;
+> >>>>  	config |= STEPCONFIG_INP(ts_dev->inp_yn);
+> >>>>  	titsc_writel(ts_dev, REG_STEPCONFIG(end_step), config);
+> >>>>  	titsc_writel(ts_dev, REG_STEPDELAY(end_step),
+> >>>> -			STEPCONFIG_OPENDLY);
+> >>>> +			ts_dev->open_delay);
+> >>>>  
+> >>>>  	/* The steps end ... end - readouts * 2 + 2 and bit 0 for TS_Charge */
+> >>>>  	stepenable = 1;
+> >>>> @@ -392,6 +393,15 @@ static int titsc_parse_dt(struct platform_device *pdev,
+> >>>>  		dev_warn(&pdev->dev, "ti,charge-delay not specified\n");
+> >>>>  	}
+> >>>>  
+> >>>> +	err = of_property_read_u32(node, "ti,open-delay",
+> >>>> +				   &ts_dev->open_delay);
+> >>>> +	/*
+> >>>> +	 * If ti,open-delay value is not specified, then use
+> >>>> +	 * STEPCONFIG_OPENDLY as the default value.
+> >>>> +	 */
+> >>>> +	if (err < 0)
+> >>>> +		ts_dev->open_delay = STEPCONFIG_OPENDLY;
+> >>>> +
+> >>>>  	return of_property_read_u32_array(node, "ti,wire-config",
+> >>>>  			ts_dev->config_inp, ARRAY_SIZE(ts_dev->config_inp));
+> >>>>  }
+> >>>>
+> >>>
+> >>> -- 
+> >>> Regards
+> >>> Vignesh
+> 
+> -- 
+> Regards
+> Vignesh
