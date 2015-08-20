@@ -1,52 +1,48 @@
-From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: Re: [PATCH v3 0/8] ARM: sunxi: Add Reduced Serial Bus support
-Date: Thu, 20 Aug 2015 09:59:27 +0800
-Message-ID: <CAGb2v66X-CMQiS1dNqhwamTsVbnf+7siSTV3xGwn-C91Zhw3uA@mail.gmail.com>
-References: <1439958009-14056-1-git-send-email-wens@csie.org> <20150819163232.GS10748@sirena.org.uk>
-Reply-To: wens-jdAy2FN1RRM@public.gmane.org
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBCMILY6JWQBBBGPJ2SXAKGQE45JCKUA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <20150819163232.GS10748-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <http://groups.google.com/group/linux-sunxi/subscribe>
-To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Shuge <shuge-0TFLnhJekD6UEPyfVivIlAC/G2K4zDHf@public.gmane.org>, Meng Zhang <kevin.z.m.zh-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+From: Leo Yan <leo.yan@linaro.org>
+Subject: [PATCH v2 0/3] mailbox: hisilicon: add Hi6220 mailbox driver
+Date: Thu, 20 Aug 2015 10:53:56 +0800
+Message-ID: <1440039239-8772-1-git-send-email-leo.yan@linaro.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, galak@codeaurora.org, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Jassi Brar <jassisinghbrar@gmail.com>, Bintian Wang <bintian.wang@huawei.com>, haojian.zhuang@linaro.org, Yiping Xu <xuyiping@hisilicon.com>, Wei Xu <xuwei5@hisilicon.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, guodong.xu@linaro.org, Jian Zhang <zhangjian001@hisilicon.com>, Zhenwei Wang <Zhenwei.wang@hisilicon.com>, Haoju Mo <mohaoju@hisilicon.com>, Dan Zhao <dan.zhao@hisilicon.com>, kongfei@hisilicon.com, Guangyue Zeng <zengguangyue@hisilicon.com>
+Cc: Leo Yan <leo.yan@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Aug 20, 2015 at 12:32 AM, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
-> On Wed, Aug 19, 2015 at 12:20:01PM +0800, Chen-Yu Tsai wrote:
->> Hi everyone,
->>
->> This is my third attempt at adding support for Allwinner's Reduced
->> Serial Bus (RSB), which is used to communicate with PMICs and other
->> peripherals on their newer SoCs, such as the A23/A33/A80.
->
-> This is flagged as something that is specific to the Allwinner SoCs.
-> Why add generic regmap support rather than just implement the regmap
-> reg_read() and reg_write() in a regmap in the controller driver?  Are
-> there expected to be other controller drivers from other vendors?
+Hi6220 mailbox supports up to 32 channels. Each channel is unidirectional
+with a maximum message size of 8 words. I/O is performed using register
+access (there is no DMA) and the cell raises an interrupt when messages
+are received.
 
-I don't expect there to be any other controller drivers. And it seems
-at least some of the devices are dual interface (I2C/RSB). Though I
-don't see how its connected to the generic regmap support. Regmap
-is for device drivers connected to the RSB bus, not the bus controller
-itself.
+This patch series is to implement Hi6220 mailbox driver. It registers
+two channels into framework for communication with MCU, one is tx channel
+and another is rx channel. Now mailbox driver is used to send message to
+MCU to control dynamic voltage and frequency scaling for CPU, GPU and DDR.
 
-That said, there are a few RSB mfd slave devices that need support,
-those being the later AXP series PMICs, and AC100/AC200 audio-codec/RTC
-chips. The current axp20x driver already uses i2c regmaps.
+Changes from v1:
+* Correct lock usage for SMP scenario
 
-I could throw all the RSB-related stuff together, presumably under
-drivers/soc/sunxi/rsb, though that doesn't help the fact that common
-regmap code would be  better than scattering regmap_* in various mfd
-drivers.
+Changes from RFC:
+* According to Jassi's review, totally remove the abstract common driver
+  layer and only commit driver dedicated for Hi6220
+* According to Paul Bolle's review, fix typo issue for Kconfig and remove
+  unnecessary dependency with OF and fix minor for mailbox driver
+* Refine a little for dts nodes
 
 
-Regards
-ChenYu
+Leo Yan (3):
+  dt-bindings: mailbox: Document Hi6220 mailbox driver
+  mailbox: Hi6220: add mailbox driver
+  arm64: dts: add Hi6220 mailbox node
+
+ .../bindings/mailbox/hisilicon,hi6220-mailbox.txt  |  57 +++
+ arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts     |  20 +-
+ arch/arm64/boot/dts/hisilicon/hi6220.dtsi          |   8 +
+ drivers/mailbox/Kconfig                            |   8 +
+ drivers/mailbox/Makefile                           |   2 +
+ drivers/mailbox/hi6220-mailbox.c                   | 519 +++++++++++++++++++++
+ 6 files changed, 611 insertions(+), 3 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/mailbox/hisilicon,hi6220-mailbox.txt
+ create mode 100644 drivers/mailbox/hi6220-mailbox.c
+
+-- 
+1.9.1
