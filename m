@@ -1,29 +1,65 @@
-From: Adriana Reus <adriana.reus-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH v6 0/2] Add support and documentation for UPISEMI us5182d als and proximity sensor
-Date: Thu, 20 Aug 2015 13:12:12 +0300
-Message-ID: <1440065534-8601-1-git-send-email-adriana.reus@intel.com>
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org, daniel.baluta-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org
-Cc: linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Adriana Reus <adriana.reus-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+From: Adriana Reus <adriana.reus@intel.com>
+Subject: [PATCH v6 2/2] devicetree: Add documentation for UPISEMI us5182d ALS and Proximity sensor
+Date: Thu, 20 Aug 2015 13:12:14 +0300
+Message-ID: <1440065534-8601-3-git-send-email-adriana.reus@intel.com>
+References: <1440065534-8601-1-git-send-email-adriana.reus@intel.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1440065534-8601-1-git-send-email-adriana.reus@intel.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: jic23@kernel.org, pmeerw@pmeerw.net, daniel.baluta@intel.com
+Cc: linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Adriana Reus <adriana.reus@intel.com>
 List-Id: devicetree@vger.kernel.org
 
-This series adds basic support for this als and proximity sensor
-and devicetree docs.
+Added entries in i2c/vendor-prefixes for the us5182d als and proximity sensor.
+Also added a documentation file for this sensor's properties.
 
-Adriana Reus (2):
-  iio: light: Add support for UPISEMI uS5182d als and proximity sensor
-  devicetree: Add documentation for UPISEMI us5182d ALS and Proximity
-    sensor
-
- .../devicetree/bindings/iio/light/us5182d.txt      |  23 +
- .../devicetree/bindings/vendor-prefixes.txt        |   1 +
- drivers/iio/light/Kconfig                          |  10 +
- drivers/iio/light/Makefile                         |   1 +
- drivers/iio/light/us5182d.c                        | 507 +++++++++++++++++++++
- 5 files changed, 542 insertions(+)
+Signed-off-by: Adriana Reus <adriana.reus@intel.com>
+---
+ .../devicetree/bindings/iio/light/us5182d.txt      | 23 ++++++++++++++++++++++
+ .../devicetree/bindings/vendor-prefixes.txt        |  1 +
+ 2 files changed, 24 insertions(+)
  create mode 100644 Documentation/devicetree/bindings/iio/light/us5182d.txt
- create mode 100644 drivers/iio/light/us5182d.c
 
+diff --git a/Documentation/devicetree/bindings/iio/light/us5182d.txt b/Documentation/devicetree/bindings/iio/light/us5182d.txt
+new file mode 100644
+index 0000000..7785c56
+--- /dev/null
++++ b/Documentation/devicetree/bindings/iio/light/us5182d.txt
+@@ -0,0 +1,23 @@
++* UPISEMI us5182d I2C ALS and Proximity sensor
++
++Required properties:
++- compatible: must be "upisemi,usd5182"
++- reg: the I2C address of the device
++
++Optional properties:
++- upisemi,glass-coef: glass attenuation factor
++- upisemi,dark-ths: array of thresholds (adc counts) corresponding to every scale
++- upisemi,upper-dark-gain: tuning factor(4 int and 4 fractional bits - Q4.4) applied when light > threshold
++- upisemi,lower-dark-gain: tuning factor(4 int and 4 fractional bits - Q4.4) applied when light < threshold
++
++Example:
++
++    usd5182@39 {
++                compatible = "upisemi,usd5182";
++                reg = <0x39>;
++                upisemi,glass-coef = < 1000 >;
++                upisemi,dark-ths = /bits/ 16 <170 200 512 512 800 2000 4000 8000>;
++                upisemi,upper-dark-gain = /bits/ 8 <0x00>;
++                upisemi,lower-dark-gain = /bits/ 8 <0x16>;
++    };
++
+diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
+index d444757..5b40bab 100644
+--- a/Documentation/devicetree/bindings/vendor-prefixes.txt
++++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
+@@ -211,6 +211,7 @@ toshiba	Toshiba Corporation
+ toumaz	Toumaz
+ tplink	TP-LINK Technologies Co., Ltd.
+ truly	Truly Semiconductors Limited
++upisemi	uPI Semiconductor Corp.
+ usi	Universal Scientific Industrial Co., Ltd.
+ v3	V3 Semiconductor
+ variscite	Variscite Ltd.
 -- 
 1.9.1
