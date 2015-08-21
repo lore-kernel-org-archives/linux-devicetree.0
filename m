@@ -1,94 +1,120 @@
-From: <dawei.chien-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Subject: [PATCH] arm64: dts: mt8173: Add thermal zone node for mt8173.
-Date: Fri, 21 Aug 2015 20:29:21 +0800
-Message-ID: <1440160161-28354-1-git-send-email-dawei.chien@mediatek.com>
+From: Thierry Reding <treding@nvidia.com>
+Subject: Re: [PATCH v3 0/14] Add Analogix Core Display Port Driver
+Date: Fri, 21 Aug 2015 15:16:33 +0200
+Message-ID: <20150821131631.GC22118@ulmo.nvidia.com>
+References: <1439995728-18046-1-git-send-email-ykk@rock-chips.com>
+ <105A0032-83A0-4B75-AE94-258F12451670@gmail.com>
+ <55D6F6F8.70504@rock-chips.com>
+ <8384E112-E1F4-4CD3-85BF-A2A25989783F@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mediatek>,
- <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-mediatek/>
-List-Post: <mailto:linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mediatek>,
- <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "Linux-mediatek" <linux-mediatek-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "Rafael J. Wysocki" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Hongzhou Yang <hongzhou.yang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, "Dawei.Chien" <dawei.chien-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Eddie Huang <eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="WplhKdTI2c8ulnbP"
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <8384E112-E1F4-4CD3-85BF-A2A25989783F@gmail.com>
+Content-Disposition: inline
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Jingoo Han <jingoohan1@gmail.com>
+Cc: Yakir Yang <ykk@rock-chips.com>, Heiko Stuebner <heiko@sntech.de>, Fabio Estevam <fabio.estevam@freescale.com>, Inki Dae <inki.dae@samsung.com>, "joe@perches.com" <joe@perches.com>, Russell King <rmk+kernel@arm.linux.org.uk>, "djkurtz@google.com" <djkurtz@google.com>, "dianders@google.com" <dianders@google.com>, "seanpaul@google.com" <seanpaul@google.com>, Takashi Iwai <tiwai@suse.de>, "ajaynumb@gmail.com" <ajaynumb@gmail.com>, Andrzej Hajda <a.hajda@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, Philipp Zabel <p.zabel@pengutronix.de>, David Airlie <airlied@linux.ie>, Gustavo Padovan <gustavo.padovan@collabora.co.uk>, Vincent Palatin <vpalatin@chromium.org>, Mark Yao <mark.yao@rock-chips.com>, Andy Yan <andy.yan@rock-chips.com>, Kumar Gala <galak@codeaurora.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <robh+dt@kernel.org>, Pawel
 List-Id: devicetree@vger.kernel.org
 
-From: "Dawei.Chien" <dawei.chien-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+--WplhKdTI2c8ulnbP
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Add thermal zone node to mt8173.dtsi.
+On Fri, Aug 21, 2015 at 08:24:16PM +0900, Jingoo Han wrote:
+> On 2015. 8. 21., at PM 7:01, Yakir Yang <ykk@rock-chips.com> wrote:
+> >=20
+> > Hi Jingoo,
+> >=20
+> >> =E5=9C=A8 2015/8/21 16:20, Jingoo Han =E5=86=99=E9=81=93:
+> >>> On 2015. 8. 19., at PM 11:48, Yakir Yang <ykk@rock-chips.com> wrote:
+> >>=20
+> >> .....
+> >>=20
+> >>> .../bindings/video/analogix_dp-rockchip.txt        |   83 ++
+> >>> .../devicetree/bindings/video/exynos_dp.txt        |   51 +-
+> >>> arch/arm/boot/dts/exynos5250-arndale.dts           |   10 +-
+> >>> arch/arm/boot/dts/exynos5250-smdk5250.dts          |   10 +-
+> >>> arch/arm/boot/dts/exynos5250-snow.dts              |   12 +-
+> >>> arch/arm/boot/dts/exynos5250-spring.dts            |   12 +-
+> >>> arch/arm/boot/dts/exynos5420-peach-pit.dts         |   12 +-
+> >>> arch/arm/boot/dts/exynos5420-smdk5420.dts          |   10 +-
+> >>> arch/arm/boot/dts/exynos5800-peach-pi.dts          |   12 +-
+> >>> drivers/gpu/drm/bridge/Kconfig                     |    5 +
+> >>> drivers/gpu/drm/bridge/Makefile                    |    1 +
+> >>> drivers/gpu/drm/bridge/analogix_dp_core.c          | 1382 +++++++++++=
+++++++++
+> >>> drivers/gpu/drm/bridge/analogix_dp_core.h          |  286 ++++
+> >>> drivers/gpu/drm/bridge/analogix_dp_reg.c           | 1294 +++++++++++=
++++++++
+> >>> .../exynos_dp_reg.h =3D> bridge/analogix_dp_reg.h}   |  270 ++--
+> >>> drivers/gpu/drm/exynos/Kconfig                     |    5 +-
+> >>> drivers/gpu/drm/exynos/Makefile                    |    2 +-
+> >>> drivers/gpu/drm/exynos/analogix_dp-exynos.c        |  347 +++++
+> >> Would you change this file name to "exynos_dp.c"?
+> >=20
+> > Sorry, I don't think so  ;(
+> >=20
+> > I think IP_name+Soc_name would be better in this re-use case.
+>=20
+> So? Is there the naming rule such as "IP_name+SoC_name"?
+>=20
+> > Beside I see
+> > there are lots of driver named with this format in kernel, such as dw_h=
+dmi & dw_mmc
+>=20
+> Please look at other dw cases.
+> For example, look at dw_pcie.
+>=20
+> drivers/pci/host/
+> pcie-designware.c
+> pci-spear13xx.c
+> pci-exynos.c
+>=20
+> In this case, pci-spear13xx.c and pci-exynos.c do not use "IP_name+SoC_na=
+me", even though these are dw IPs.
+>=20
+> Also, naming consistency is more important.
+> Now, Exynos DRM files are using "exynos_drm_" prefix.
+>=20
+> drivers/gpu/drm/exynos/
+> exynos_drm_buf.c
+> exynos_drm_core.c
+> ....
+>=20
+> However, "analogix_dp-exynos.c" looks very inconsistent.
+>=20
+> If there is no strict naming rule, please use "exynos_dp.c"
+> or "exynos_drm_dp.c".=20
 
-Change-Id: I2d3a5d2edd0847f15e54d54233680a6d999bf340
-Signed-off-by: Dawei.Chien <dawei.chien-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
----
- arch/arm64/boot/dts/mediatek/mt8173.dtsi |   44 ++++++++++++++++++++++++++++++
- 1 file changed, 44 insertions(+)
+Exynos DRM maintainers get to pick their filenames, so Yakir, please
+rename as Jingoo suggested.
 
-diff --git a/arch/arm64/boot/dts/mediatek/mt8173.dtsi b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
-index 924fdb6..dc7761f 100644
---- a/arch/arm64/boot/dts/mediatek/mt8173.dtsi
-+++ b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
-@@ -14,6 +14,7 @@
- #include <dt-bindings/interrupt-controller/irq.h>
- #include <dt-bindings/interrupt-controller/arm-gic.h>
- #include "mt8173-pinfunc.h"
-+#include <dt-bindings/thermal/thermal.h>
- 
- / {
- 	compatible = "mediatek,mt8173";
-@@ -87,6 +88,49 @@
- 		#clock-cells = <0>;
- 	};
- 
-+	thermal-zones {
-+		cpu_thermal: cpu_thermal {
-+			polling-delay-passive = <1000>; /* milliseconds */
-+			polling-delay = <1000>; /* milliseconds */
-+
-+			thermal-sensors = <&thermal MT8173_THERMAL_ZONE_CA57>;
-+			sustainable-power = <1500>;
-+
-+			trips {
-+				threshold: trip-point@0 {
-+					temperature = <68000>; /* millicelsius */
-+					hysteresis = <2000>; /* millicelsius */
-+					type = "passive";
-+				};
-+
-+				target: trip-point@1 {
-+					temperature = <85000>; /* millicelsius */
-+					hysteresis = <2000>; /* millicelsius */
-+					type = "passive";
-+				};
-+
-+				cpu_crit: cpu_crit@0 {
-+					temperature = <115000>; /* millicelsius */
-+					hysteresis = <2000>; /* millicelsius */
-+					type = "critical";
-+				};
-+			};
-+
-+			cooling-maps {
-+				map@0 {
-+					trip = <&target>;
-+					cooling-device = <&cpu0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
-+					contribution = <1024>;
-+				};
-+				map@1 {
-+					trip = <&target>;
-+					cooling-device = <&cpu2 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
-+					contribution = <2048>;
-+				};
-+			};
-+		};
-+	};
-+
- 	timer {
- 		compatible = "arm,armv8-timer";
- 		interrupt-parent = <&gic>;
--- 
-1.7.9.5
+Even if you didn't the first thing that would go into the Exynos DRM
+driver tree after this is merged is a rename patch anyway.
+
+Thierry
+
+--WplhKdTI2c8ulnbP
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQIcBAABCAAGBQJV1ySsAAoJEN0jrNd/PrOh/r0QAKWnKrpi02YDSdKHNyfDs75b
+PzIpRa+QMZJwFdbA1XEpEsxgR4nNM5vZXzbNnTAWcXeqcjx+7lWCaxYx+gXES3OI
+gl/EDZ2UQrIoK4V3QFL78z0NPj9CwnoUFlXVmJyaFXR6IXD1n/T1wHO/2I7uXwL7
+VCttBFLU4dSB8Sff6nqJ6lOT2eogyWbrMmwq2CMrnu6KCmb22rsT60YZ9LcKTwVM
+RGbD/voyTVKLjlEoNqwNrkqR+Ys5aLIE+jv7v+wR4ilNWzICgzFoCVyXwYW/+BF7
+v6UkyJZLGF2lswTV22PjctXeRmeWfBSgTrzZTaFW890KMQuqvAchAt8z1+PRCgxa
+12fBsHWXswnTJAe94zrCl9efY2MASYfp4AxhLZkssqwXlOypmyUf5FSlsRdwvsl0
++5hX9Pc993HJuXSO6FtciH439TsTGUDadKEy+tyGWR4mciScnAFDwNlweEw7DvZ0
+k5dZ/BwDs5Ntv60fk0Ewqokya819UBa0Q13/zEJzlVr82mTQiVPIdBvyqVPpi9E+
+sjUl2eRT/zaMdaoMr7ThaDc4Y1tkgoXPRn5QcuLxXlE0IvJk+IFrxO1PWrTuqpfi
+3YwfNlSdfO0gPh+5wJD8pvJtrLiP6tX7RoTKJMf/OoObwdiYGlt/RBBFtAMRN/4j
+jRAljPme1sKX9EW5ONTF
+=YEy4
+-----END PGP SIGNATURE-----
+
+--WplhKdTI2c8ulnbP--
