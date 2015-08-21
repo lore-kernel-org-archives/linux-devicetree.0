@@ -1,194 +1,109 @@
-From: Varadarajan Narayanan <varada@codeaurora.org>
-Subject: [PATCH] qcom: ipq40xx: Add basic board/dts support for IPQ40XX SoC
-Date: Fri, 21 Aug 2015 14:50:35 +0530
-Message-ID: <20150821092035.GA22319@codeaurora.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-Content-Disposition: inline
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Andy Gross <agross@codeaurora.org>, David Brown <davidb@codeaurora.org>, Varadarajan Narayanan <varada@codeaurora.org>, Stephen Boyd <sboyd@codeaurora.org>, Lina Iyer <lina.iyer@linaro.org>, Georgi Djakov <gdjakov@mm-sol.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org
-Cc: jaigan@codeaurora.org, snlakshm@codeaurora.org
+From: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>
+Subject: [PATCH V8 1/2] mtd: spi-nor: Bindings for Cadence Quad SPI Flash Controller driver.
+Date: Fri, 21 Aug 2015 11:20:50 +0200
+Message-ID: <1440148851-14621-1-git-send-email-marex@denx.de>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: Graham Moore <grmoore-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>, Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>, Alan Tull <atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Dinh Nguyen <dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>, Vikas MANOCHA <vikas.manocha-qxv4g6HH51o@public.gmane.org>, Yves Vandervennet <yvanderv-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Add initial dts files and SoC support for IPQ40XX
+From: Graham Moore <grmoore-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
 
-Signed-off-by: Varadarajan Narayanan <varada@codeaurora.org>
+Add binding document for the Cadence QSPI controller.
 
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index 246473a..6b4caee 100644
---- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -477,7 +477,8 @@ dtb-$(CONFIG_ARCH_QCOM) += \
- 	qcom-ipq8064-ap148.dtb \
- 	qcom-msm8660-surf.dtb \
- 	qcom-msm8960-cdp.dtb \
--	qcom-msm8974-sony-xperia-honami.dtb
-+	qcom-msm8974-sony-xperia-honami.dtb \
-+	qcom-ipq40xx-r3pc.dtb
- dtb-$(CONFIG_ARCH_REALVIEW) += \
- 	arm-realview-pb1176.dtb
- dtb-$(CONFIG_ARCH_ROCKCHIP) += \
-diff --git a/arch/arm/boot/dts/qcom-ipq40xx-r3pc.dts b/arch/arm/boot/dts/qcom-ipq40xx-r3pc.dts
+Signed-off-by: Graham Moore <grmoore-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
+Signed-off-by: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>
+Cc: Alan Tull <atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
+Cc: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>
+Cc: Dinh Nguyen <dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
+Cc: Graham Moore <grmoore-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
+Cc: Vikas MANOCHA <vikas.manocha-qxv4g6HH51o@public.gmane.org>
+Cc: Yves Vandervennet <yvanderv-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+---
+ .../devicetree/bindings/mtd/cadence-quadspi.txt    | 56 ++++++++++++++++++++++
+ 1 file changed, 56 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/mtd/cadence-quadspi.txt
+
+V2: Add cdns prefix to driver-specific bindings.
+V3: Use existing property "is-decoded-cs" instead of creating a
+    duplicate, "ext-decoder". Timing parameters are in nanoseconds,
+    not master reference clocks. Remove bus-num completely.
+V4: Add new properties fifo-width and trigger-address
+V7: - Prefix all of the Cadence-specific properties with cdns prefix,
+      those are in particular "cdns,is-decoded-cs", "cdns,fifo-depth",
+      "cdns,fifo-width", "cdns,trigger-address".
+    - Drop bogus properties which were not used and were incorrect.
+V8: Align lines to 80 chars.
+
+diff --git a/Documentation/devicetree/bindings/mtd/cadence-quadspi.txt b/Documentation/devicetree/bindings/mtd/cadence-quadspi.txt
 new file mode 100644
-index 0000000..7e4e629
+index 0000000..f248056
 --- /dev/null
-+++ b/arch/arm/boot/dts/qcom-ipq40xx-r3pc.dts
-@@ -0,0 +1,33 @@
-+/* Copyright (c) 2014, The Linux Foundation. All rights reserved.
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 and
-+ * only version 2 as published by the Free Software Foundation.
-+ *
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
-+ */
++++ b/Documentation/devicetree/bindings/mtd/cadence-quadspi.txt
+@@ -0,0 +1,56 @@
++* Cadence Quad SPI controller
 +
-+#include "qcom-ipq40xx.dtsi"
++Required properties:
++- compatible : Should be "cdns,qspi-nor".
++- reg : Contains two entries, each of which is a tuple consisting of a
++	physical address and length. The first entry is the address and
++	length of the controller register set. The second entry is the
++	address and length of the QSPI Controller data area.
++- interrupts : Unit interrupt specifier for the controller interrupt.
++- clocks : phandle to the Quad SPI clock.
++- cdns,fifo-depth : Size of the data FIFO in words.
++- cdns,fifo-width : Bus width of the data FIFO in bytes.
++- cdns,trigger-address : 32-bit indirect AHB trigger address.
 +
-+/ {
-+	model = "Qualcomm Technologies, Inc. IPQ40XX R3PC";
-+	compatible = "qcom,ipq40xx-r3pc", "qcom,ipq40xx";
++Optional properties:
++- cdns,is-decoded-cs : Flag to indicate whether decoder is used or not.
 +
-+	memory {
-+		device_type = "memory";
-+		reg = <0x80000000 0x20000000>; /* 512MB */
-+	};
++Optional subnodes:
++Subnodes of the Cadence Quad SPI controller are spi slave nodes with additional
++custom properties:
++- cdns,read-delay : Delay for read capture logic, in clock cycles
++- cdns,tshsl-ns : Delay in nanoseconds for the length that the master
++                  mode chip select outputs are de-asserted between
++		  transactions.
++- cdns,tsd2d-ns : Delay in nanoseconds between one chip select being
++                  de-activated and the activation of another.
++- cdns,tchsh-ns : Delay in nanoseconds between last bit of current
++                  transaction and deasserting the device chip select
++		  (qspi_n_ss_out).
++- cdns,tslch-ns : Delay in nanoseconds between setting qspi_n_ss_out low
++                  and first bit transfer.
 +
-+	chosen {
-+		bootargs = "root=/dev/ram rw init=/init console=ttyMSM0,115200n8 initrd=0x82000000,0x000E2246";
-+	};
++Example:
 +
-+	soc {
-+		serial@78b0000 {
-+			status = "ok";
-+		};
-+	};
-+};
-diff --git a/arch/arm/boot/dts/qcom-ipq40xx.dtsi b/arch/arm/boot/dts/qcom-ipq40xx.dtsi
-new file mode 100644
-index 0000000..f572f38
---- /dev/null
-+++ b/arch/arm/boot/dts/qcom-ipq40xx.dtsi
-@@ -0,0 +1,81 @@
-+/*
-+ * Copyright (c) 2014, The Linux Foundation. All rights reserved.
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 and
-+ * only version 2 as published by the Free Software Foundation.
-+ *
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
-+ */
-+
-+/dts-v1/;
-+
-+#include "skeleton.dtsi"
-+
-+/ {
-+	model = "Qualcomm Technologies, Inc. IPQ40XX";
-+	compatible = "qcom,ipq40xx";
-+	interrupt-parent = <&intc>;
-+
-+	cpus {
++	qspi: spi@ff705000 {
++		compatible = "cdns,qspi-nor";
 +		#address-cells = <1>;
 +		#size-cells = <0>;
-+		cpu@0 {
-+			device_type = "cpu";
-+			compatible = "arm,cortex-a7";
-+			reg = <0x0>;
-+		};
++		reg = <0xff705000 0x1000>,
++		      <0xffa00000 0x1000>;
++		interrupts = <0 151 4>;
++		clocks = <&qspi_clk>;
++		cdns,is-decoded-cs;
++		cdns,fifo-depth = <128>;
++		cdns,fifo-width = <4>;
++		cdns,trigger-address = <0x00000000>;
 +
-+		cpu@1 {
-+			device_type = "cpu";
-+			compatible = "arm,cortex-a7";
-+			reg = <0x1>;
-+		};
-+
-+		cpu@2 {
-+			device_type = "cpu";
-+			compatible = "arm,cortex-a7";
-+			reg = <0x2>;
-+		};
-+
-+		cpu@3 {
-+			device_type = "cpu";
-+			compatible = "arm,cortex-a7";
-+			reg = <0x3>;
++		flash0: n25q00@0 {
++			...
++			cdns,read-delay = <4>;
++			cdns,tshsl-ns = <50>;
++			cdns,tsd2d-ns = <50>;
++			cdns,tchsh-ns = <4>;
++			cdns,tslch-ns = <4>;
 +		};
 +	};
-+
-+	soc {
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		ranges;
-+		compatible = "simple-bus";
-+
-+		intc: interrupt-controller@b000000 {
-+			compatible = "qcom,msm-qgic2";
-+			interrupt-controller;
-+			#interrupt-cells = <3>;
-+			reg = <0x0b000000 0x1000>,
-+			<0x0b002000 0x1000>;
-+		};
-+
-+		timer {
-+			compatible = "arm,armv7-timer";
-+			interrupts = <1 2 0xf08>,
-+				     <1 3 0xf08>,
-+				     <1 4 0xf08>,
-+				     <1 1 0xf08>;
-+			clock-frequency = <20833333>;
-+		};
-+
-+		serial@78b0000 {
-+			compatible = "qcom,msm-uartdm-v1.4", "qcom,msm-uartdm";
-+			reg = <0x78b0000 0x200>;
-+			interrupts = <0 108 0>;
-+			status = "disabled";
-+		};
-+	};
-+};
-diff --git a/arch/arm/configs/ipq_defconfig b/arch/arm/configs/ipq_defconfig
-index 1cabd8b..054a159 100644
---- a/arch/arm/configs/ipq_defconfig
-+++ b/arch/arm/configs/ipq_defconfig
-@@ -22,6 +22,7 @@ CONFIG_ARCH_MSM8X60=y
- CONFIG_ARCH_MSM8960=y
- CONFIG_ARCH_MSM8974=y
- CONFIG_ARCH_IPQ8064=y
-+CONFIG_ARCH_IPQ40XX=y
- CONFIG_SMP=y
- CONFIG_PREEMPT=y
- CONFIG_AEABI=y
-diff --git a/arch/arm/mach-qcom/Kconfig b/arch/arm/mach-qcom/Kconfig
-index fab49a2..3add9f9 100644
---- a/arch/arm/mach-qcom/Kconfig
-+++ b/arch/arm/mach-qcom/Kconfig
-@@ -26,4 +26,8 @@ config ARCH_IPQ8064
- 	bool "Enable support for IPQ806x"
- 	select CLKSRC_QCOM
- 
-+config ARCH_IPQ40XX
-+	bool "Enable support for IPQ40XX"
-+	select HAVE_ARM_ARCH_TIMER
-+
- endif
-diff --git a/arch/arm/mach-qcom/board.c b/arch/arm/mach-qcom/board.c
-index 6d8bbf7..566487d 100644
---- a/arch/arm/mach-qcom/board.c
-+++ b/arch/arm/mach-qcom/board.c
-@@ -22,6 +22,7 @@ static const char * const qcom_dt_match[] __initconst = {
- 	"qcom,ipq8064",
- 	"qcom,msm8660-surf",
- 	"qcom,msm8960-cdp",
-+	"qcom,ipq40xx-r3pc",
- 	NULL
- };
- 
+-- 
+2.1.4
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
