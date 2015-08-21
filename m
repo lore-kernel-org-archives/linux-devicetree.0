@@ -1,103 +1,126 @@
-From: Chen Bough <Haibo.Chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: RE: [PATCH v2 2/5] Documentation: Detail permitted DT properties for
- the imx6ul_tsc
-Date: Fri, 21 Aug 2015 08:30:16 +0000
-Message-ID: <BY1PR03MB1388BBEF576297D76E7E3F839A650@BY1PR03MB1388.namprd03.prod.outlook.com>
-References: <1438077521-12857-1-git-send-email-haibo.chen@freescale.com>
- <1438077521-12857-3-git-send-email-haibo.chen@freescale.com>
- <20150819055434.GF11161@pengutronix.de>
+From: Vinod Koul <vinod.koul@intel.com>
+Subject: Re: [PATCH] dmaengine: xgene-dma: Fix holding lock while calling tx
+ callback in cleanup path
+Date: Fri, 21 Aug 2015 14:09:46 +0530
+Message-ID: <20150821083946.GO13546@localhost>
+References: <1440066656-15516-1-git-send-email-rsahu@apm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20150819055434.GF11161-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Markus Pargmann <mpa-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "pawel.moll-5wv7dgnIgG8@public.gmane.org" <pawel.moll-5wv7dgnIgG8@public.gmane.org>, "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org" <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, "galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org" <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org" <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org" <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, "dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org" <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, "arnd-r2nGTMty4D4@public.gmane.org" <arnd-r2nGTMty4D4@public.gmane.org>, "mchehab-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org" <mchehab-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>, "christian.gmeiner-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <christian.gmeiner-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "scott.liu-9cfG7bMpBgR9nmWX13WWKA@public.gmane.org" <scott.liu-9cfG7bMpBgR9nmWX13WWKA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org" <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, jonathar-dY08KVG/lbpWk0Htik3J/w@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1440066656-15516-1-git-send-email-rsahu@apm.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rameshwar Prasad Sahu <rsahu@apm.com>
+Cc: dan.j.williams@intel.com, dmaengine@vger.kernel.org, arnd@arndb.de, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, jcm@redhat.com, patches@apm.com
 List-Id: devicetree@vger.kernel.org
 
-SGkgTWFya3VzLA0KDQo+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+IEZyb206IE1hcmt1
-cyBQYXJnbWFubiBbbWFpbHRvOm1wYUBwZW5ndXRyb25peC5kZV0NCj4gU2VudDogV2VkbmVzZGF5
-LCBBdWd1c3QgMTksIDIwMTUgMTo1NSBQTQ0KPiBUbzogQ2hlbiBIYWliby1CNTE0MjENCj4gQ2M6
-IHJvYmgrZHRAa2VybmVsLm9yZzsgcGF3ZWwubW9sbEBhcm0uY29tOyBtYXJrLnJ1dGxhbmRAYXJt
-LmNvbTsNCj4gaWpjK2RldmljZXRyZWVAaGVsbGlvbi5vcmcudWs7IGdhbGFrQGNvZGVhdXJvcmEu
-b3JnOyBzaGF3bmd1b0BrZXJuZWwub3JnOw0KPiBrZXJuZWxAcGVuZ3V0cm9uaXguZGU7IGxpbnV4
-QGFybS5saW51eC5vcmcudWs7IGRtaXRyeS50b3Jva2hvdkBnbWFpbC5jb207DQo+IGRldmljZXRy
-ZWVAdmdlci5rZXJuZWwub3JnOyBzYnJhbmRlbkBicm9hZGNvbS5jb207IGFybmRAYXJuZGIuZGU7
-DQo+IG1jaGVoYWJAb3NnLnNhbXN1bmcuY29tOyBjaHJpc3RpYW4uZ21laW5lckBnbWFpbC5jb207
-DQo+IHNjb3R0LmxpdUBlbWMuY29tLnR3OyBsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnOyBo
-ZGVnb2VkZUByZWRoYXQuY29tOw0KPiBqb25hdGhhckBicm9hZGNvbS5jb207IGJlbmphbWluLnRp
-c3NvaXJlc0ByZWRoYXQuY29tOw0KPiBoYW5zLnZlcmt1aWxAY2lzY28uY29tOyBoYWRlc3NAaGFk
-ZXNzLm5ldDsgbGludXgtaW5wdXRAdmdlci5rZXJuZWwub3JnOw0KPiBnZWVydEBsaW51eC1tNjhr
-Lm9yZzsgc2ViYXN0aWVuLnN6eW1hbnNraUBhcm1hZGV1cy5jb207DQo+IG1hbWxpbmF2QGdtYWls
-LmNvbTsgbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnDQo+IFN1YmplY3Q6IFJl
-OiBbUEFUQ0ggdjIgMi81XSBEb2N1bWVudGF0aW9uOiBEZXRhaWwgcGVybWl0dGVkIERUIHByb3Bl
-cnRpZXMNCj4gZm9yIHRoZSBpbXg2dWxfdHNjDQo+IA0KPiBIaSwNCj4gDQo+IE9uIFR1ZSwgSnVs
-IDI4LCAyMDE1IGF0IDA1OjU4OjM4UE0gKzA4MDAsIEhhaWJvIENoZW4gd3JvdGU6DQo+ID4gSGVy
-ZSB3ZSBhcHBseSByZXF1aXJlZCBkb2N1bWVudGF0aW9uIGZvciB0aGUgaW14NnVsIHRvdWNoIHNj
-cmVlbg0KPiA+IGNvbnRyb2xsZXIgZHJpdmVyIHdoaWNoIGRlc2NyaWJlIGF2YWlsYWJsZSBwcm9w
-ZXJ0aWVzIGFuZCBob3cgdG8gdXNlDQo+ID4gdGhlbS4NCj4gPg0KPiA+IFNpZ25lZC1vZmYtYnk6
-IEhhaWJvIENoZW4gPGhhaWJvLmNoZW5AZnJlZXNjYWxlLmNvbT4NCj4gPiAtLS0NCj4gPiAgLi4u
-L2JpbmRpbmdzL2lucHV0L3RvdWNoc2NyZWVuL2lteDZ1bF90c2MudHh0ICAgICAgfCAzNg0KPiAr
-KysrKysrKysrKysrKysrKysrKysrDQo+ID4gIDEgZmlsZSBjaGFuZ2VkLCAzNiBpbnNlcnRpb25z
-KCspDQo+ID4gIGNyZWF0ZSBtb2RlIDEwMDY0NA0KPiA+IERvY3VtZW50YXRpb24vZGV2aWNldHJl
-ZS9iaW5kaW5ncy9pbnB1dC90b3VjaHNjcmVlbi9pbXg2dWxfdHNjLnR4dA0KPiA+DQo+ID4gZGlm
-ZiAtLWdpdA0KPiA+IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2lucHV0L3Rv
-dWNoc2NyZWVuL2lteDZ1bF90c2MudHh0DQo+ID4gYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUv
-YmluZGluZ3MvaW5wdXQvdG91Y2hzY3JlZW4vaW14NnVsX3RzYy50eHQNCj4gPiBuZXcgZmlsZSBt
-b2RlIDEwMDY0NA0KPiA+IGluZGV4IDAwMDAwMDAuLmFjNDFjMzINCj4gPiAtLS0gL2Rldi9udWxs
-DQo+ID4gKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2lucHV0L3RvdWNo
-c2NyZWVuL2lteDZ1bF90c2MudA0KPiA+ICsrKyB4dA0KPiA+IEBAIC0wLDAgKzEsMzYgQEANCj4g
-PiArKiBGcmVlc2NhbGUgaS5NWDZVTCBUb3VjaCBDb250cm9sbGVyDQo+ID4gKw0KPiA+ICtSZXF1
-aXJlZCBwcm9wZXJ0aWVzOg0KPiA+ICstIGNvbXBhdGlibGU6IG11c3QgYmUgImZzbCxpbXg2dWwt
-dHNjIi4NCj4gPiArLSByZWc6IHRoaXMgdG91Y2ggY29udHJvbGxlciBhZGRyZXNzIGFuZCB0aGUg
-QURDMiBhZGRyZXNzLg0KPiANCj4gVGhpcyBzdWdnZXN0cyB0aGF0IHRoaXMgZHJpdmVyIGlzIHVz
-aW5nIGEgdW5pdCBBREMyLiBXaGljaCBhbHNvIG1lYW5zDQo+IHRoYXQgdGhlcmUgYXJlIG1vcmUg
-dGhhbiBvbmUgQURDIHdoaWNoIGFyZSBwcm9iYWJseSBpZGVudGljYWw/DQo+IA0KPiBTaG91bGRu
-J3QgdGhlc2UgQURDcyBiZSBwcm9wZXJseSBkZXNjcmliZWQgYnkgdGhlaXIgb3duIGRldmljZSBu
-b2Rlcw0KPiBpbnN0ZWFkIG9mIHRoZXNlIHR3byByZWdpc3RlciByYW5nZXMsIHR3byBpbnRlcnJ1
-cHRzIGFuZCB0d28gY2xvY2tzPw0KPiANCj4gSXMgJ0FEQzInIHVzYWJsZSB3aXRob3V0IHRzYz8g
-VGhlbiBBREMxL0FEQzIgc2hvdWxkIHBlcmhhcHMgZ2V0IGEgcHJvcGVyDQo+IElJTyBkcml2ZXIu
-DQoNCkZvciBpLk1YNlVMLCB0aGVyZSBhcmUgdHdvIEFEQy4gQURDMSBpcyBhIG5vcm1hbCBBREMs
-IGFuZCBBREMyIGNhbiBvbmx5IHdvcmtzIGZvcg0KVFNDLCB0aGUgY2hhbm5lbHMgb2YgQURDMiBh
-cmUgY29ubmVjdGVkIHRvIFRTQyBkaXJlY3RseS4gVFNDIGFuZCBBREMyIHNob3VsZCB3b3JrDQp0
-b2dldGhlciBhcyBhIHRvdWNoIHNjcmVlbiBjb250cm9sbGVyLiANCg0KRm9yIEFEQzEsIGl0IHNo
-YXJlIHRoZSBkcml2ZXIgdmY2MTBfYWRjLmMgKGRyaXZlcnMvaWlvL2FkYy92ZjYxMF9hZGMuYyku
-IA0KDQpCZXN0IFJlZ2FyZHMNCg0KSGFpYm8gDQogDQo+IA0KPiBVbmZvcnR1bmF0ZWx5IEkgZG9u
-J3QgaGF2ZSB0aGUgcmVmZXJlbmNlIG1hbnVhbCB0byBoYXZlIGEgbG9vayBob3cgdGhpcw0KPiBh
-bGwgd29ya3MuDQo+IA0KPiBCZXN0IHJlZ2FyZHMsDQo+IA0KPiBNYXJrdXMNCj4gDQo+ID4gKy0g
-aW50ZXJydXB0czogdGhlIGludGVycnVwdCBvZiB0aGlzIHRvdWNoIGNvbnRyb2xsZXIgYW5kIEFE
-QzIuDQo+ID4gKy0gY2xvY2tzOiB0aGUgcm9vdCBjbG9jayBvZiB0b3VjaCBjb250cm9sbGVyIGFu
-ZCBBREMyLg0KPiA+ICstIGNsb2NrLW5hbWVzOyBtdXN0IGJlICJ0c2MiIGFuZCAiYWRjIi4NCj4g
-PiArLSB4bnVyLWdwaW86IHRoZSBYLSBncGlvIHRoaXMgY29udHJvbGxlciBjb25uZWN0IHRvLg0K
-PiA+ICsgIFRoaXMgeG51ci1ncGlvIHJldHVybnMgdG8gaGlnaCBvbmNlIHRoZSBmaW5nZXIgbGVh
-dmUgdGhlIHRvdWNoDQo+ID4gK3NjcmVlbiAoVGhlDQo+ID4gKyAgbGFzdCB0b3VjaCBldmVudCB0
-aGUgdG91Y2ggY29udHJvbGxlciBjYXB0dXJlKS4NCj4gPiArDQo+ID4gK09wdGlvbmFsIHByb3Bl
-cnRpZXM6DQo+ID4gKy0gbWVhc3VyZS1kZWxheS10aW1lOiB0aGUgdmFsdWUgb2YgbWVhc3VyZSBk
-ZWxheSB0aW1lLg0KPiA+ICsgIEJlZm9yZSBYLWF4aXMgb3IgWS1heGlzIG1lYXN1cmVtZW50LCB0
-aGUgc2NyZWVuIG5lZWQgc29tZSB0aW1lDQo+ID4gK2JlZm9yZQ0KPiA+ICsgIGV2ZW4gcG90ZW50
-aWFsIGRpc3RyaWJ1dGlvbiByZWFkeS4NCj4gPiArICBUaGlzIHZhbHVlIGRlcGVuZHMgb24gdGhl
-IHRvdWNoIHNjcmVlbi4NCj4gPiArLSBwcmUtY2hhcmdlLXRpbWU6IHRoZSB0b3VjaCBzY3JlZW4g
-bmVlZCBzb21lIHRpbWUgdG8gcHJlY2hhcmdlLg0KPiA+ICsgIFRoaXMgdmFsdWUgZGVwZW5kcyBv
-biB0aGUgdG91Y2ggc2NyZWVuLg0KPiA+ICsNCj4gPiArRXhhbXBsZToNCj4gPiArCXRzYzogdHNj
-QDAyMDQwMDAwIHsNCj4gPiArCQljb21wYXRpYmxlID0gImZzbCxpbXg2dWwtdHNjIjsNCj4gPiAr
-CQlyZWcgPSA8MHgwMjA0MDAwMCAweDQwMDA+LCA8MHgwMjE5YzAwMCAweDQwMDA+Ow0KPiA+ICsJ
-CWludGVycnVwdHMgPSA8R0lDX1NQSSAzIElSUV9UWVBFX0xFVkVMX0hJR0g+LA0KPiA+ICsJCQkg
-ICAgIDxHSUNfU1BJIDEwMSBJUlFfVFlQRV9MRVZFTF9ISUdIPjsNCj4gPiArCQljbG9ja3MgPSA8
-JmNsa3MgSU1YNlVMX0NMS19JUEc+LA0KPiA+ICsJCQkgPCZjbGtzIElNWDZVTF9DTEtfQURDMj47
-DQo+ID4gKwkJY2xvY2stbmFtZXMgPSAidHNjIiwgImFkYyI7DQo+ID4gKwkJcGluY3RybC1uYW1l
-cyA9ICJkZWZhdWx0IjsNCj4gPiArCQlwaW5jdHJsLTAgPSA8JnBpbmN0cmxfdHNjPjsNCj4gPiAr
-CQl4bnVyLWdwaW8gPSA8JmdwaW8xIDMgR1BJT19BQ1RJVkVfSElHSD47DQo+ID4gKwkJbWVhc3Vy
-ZS1kZWxheS10aW1lID0gPDB4ZmZmPjsNCj4gPiArCQlwcmUtY2hhcmdlLXRpbWUgPSA8MHhmZmZm
-PjsNCj4gPiArCQlzdGF0dXMgPSAib2theSI7DQo+ID4gKwl9Ow0KPiA+IC0tDQo+ID4gMS45LjEN
-Cj4gPg0KPiA+DQo+ID4NCj4gDQo+IC0tDQo+IFBlbmd1dHJvbml4IGUuSy4gICAgICAgICAgICAg
-ICAgICAgICAgICAgICB8DQo+IHwNCj4gSW5kdXN0cmlhbCBMaW51eCBTb2x1dGlvbnMgICAgICAg
-ICAgICAgICAgIHwgaHR0cDovL3d3dy5wZW5ndXRyb25peC5kZS8NCj4gfA0KPiBQZWluZXIgU3Ry
-LiA2LTgsIDMxMTM3IEhpbGRlc2hlaW0sIEdlcm1hbnkgfCBQaG9uZTogKzQ5LTUxMjEtMjA2OTE3
-LTANCj4gfA0KPiBBbXRzZ2VyaWNodCBIaWxkZXNoZWltLCBIUkEgMjY4NiAgICAgICAgICAgfCBG
-YXg6ICAgKzQ5LTUxMjEtMjA2OTE3LTU1NTUNCj4gfA0K
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+On Thu, Aug 20, 2015 at 04:00:56PM +0530, Rameshwar Prasad Sahu wrote:
+> This patch fixes the an locking issue where client callback performs
+		^^^^^^^^^^^^
+??
+
+> further submission.
+Do you men you are preventing that or fixing for this to be allowed?
+
+> 
+> Signed-off-by: Rameshwar Prasad Sahu <rsahu@apm.com>
+> ---
+>  drivers/dma/xgene-dma.c | 33 ++++++++++++++++++++++-----------
+>  1 file changed, 22 insertions(+), 11 deletions(-)
+> 
+> diff --git a/drivers/dma/xgene-dma.c b/drivers/dma/xgene-dma.c
+> index d1c8809..0b82bc0 100644
+> --- a/drivers/dma/xgene-dma.c
+> +++ b/drivers/dma/xgene-dma.c
+> @@ -763,12 +763,17 @@ static void xgene_dma_cleanup_descriptors(struct xgene_dma_chan *chan)
+>  	struct xgene_dma_ring *ring = &chan->rx_ring;
+>  	struct xgene_dma_desc_sw *desc_sw, *_desc_sw;
+>  	struct xgene_dma_desc_hw *desc_hw;
+> +	struct list_head ld_completed;
+>  	u8 status;
+> 
+> +	INIT_LIST_HEAD(&ld_completed);
+> +
+> +	spin_lock_bh(&chan->lock);
+> +
+>  	/* Clean already completed and acked descriptors */
+>  	xgene_dma_clean_completed_descriptor(chan);
+> 
+> -	/* Run the callback for each descriptor, in order */
+> +	/* Move all completed descriptors to ld completed queue, in order */
+>  	list_for_each_entry_safe(desc_sw, _desc_sw, &chan->ld_running, node) {
+>  		/* Get subsequent hw descriptor from DMA rx ring */
+>  		desc_hw = &ring->desc_hw[ring->head];
+> @@ -811,15 +816,17 @@ static void xgene_dma_cleanup_descriptors(struct xgene_dma_chan *chan)
+>  		/* Mark this hw descriptor as processed */
+>  		desc_hw->m0 = cpu_to_le64(XGENE_DMA_DESC_EMPTY_SIGNATURE);
+> 
+> -		xgene_dma_run_tx_complete_actions(chan, desc_sw);
+> -
+> -		xgene_dma_clean_running_descriptor(chan, desc_sw);
+> -
+>  		/*
+>  		 * Decrement the pending transaction count
+>  		 * as we have processed one
+>  		 */
+>  		chan->pending--;
+> +
+> +		/*
+> +		 * Delete this node from ld running queue and append it to
+> +		 * ld completed queue for further processing
+> +		 */
+> +		list_move_tail(&desc_sw->node, &ld_completed);
+>  	}
+> 
+>  	/*
+> @@ -828,6 +835,14 @@ static void xgene_dma_cleanup_descriptors(struct xgene_dma_chan *chan)
+>  	 * ahead and free the descriptors below.
+>  	 */
+>  	xgene_chan_xfer_ld_pending(chan);
+> +
+> +	spin_unlock_bh(&chan->lock);
+> +
+> +	/* Run the callback for each descriptor, in order */
+> +	list_for_each_entry_safe(desc_sw, _desc_sw, &ld_completed, node) {
+> +		xgene_dma_run_tx_complete_actions(chan, desc_sw);
+> +		xgene_dma_clean_running_descriptor(chan, desc_sw);
+> +	}
+>  }
+> 
+>  static int xgene_dma_alloc_chan_resources(struct dma_chan *dchan)
+> @@ -876,11 +891,11 @@ static void xgene_dma_free_chan_resources(struct dma_chan *dchan)
+>  	if (!chan->desc_pool)
+>  		return;
+> 
+> -	spin_lock_bh(&chan->lock);
+> -
+>  	/* Process all running descriptor */
+>  	xgene_dma_cleanup_descriptors(chan);
+> 
+> +	spin_lock_bh(&chan->lock);
+> +
+>  	/* Clean all link descriptor queues */
+>  	xgene_dma_free_desc_list(chan, &chan->ld_pending);
+>  	xgene_dma_free_desc_list(chan, &chan->ld_running);
+> @@ -1200,15 +1215,11 @@ static void xgene_dma_tasklet_cb(unsigned long data)
+>  {
+>  	struct xgene_dma_chan *chan = (struct xgene_dma_chan *)data;
+> 
+> -	spin_lock_bh(&chan->lock);
+> -
+>  	/* Run all cleanup for descriptors which have been completed */
+>  	xgene_dma_cleanup_descriptors(chan);
+> 
+>  	/* Re-enable DMA channel IRQ */
+>  	enable_irq(chan->rx_irq);
+> -
+> -	spin_unlock_bh(&chan->lock);
+>  }
+> 
+>  static irqreturn_t xgene_dma_chan_ring_isr(int irq, void *id)
+> --
+> 1.8.2.1
+> 
+
+-- 
+~Vinod
