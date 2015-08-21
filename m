@@ -1,132 +1,42 @@
-From: Rameshwar Sahu <rsahu@apm.com>
+From: Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
 Subject: Re: [PATCH] dmaengine: xgene-dma: Fix holding lock while calling tx
  callback in cleanup path
-Date: Fri, 21 Aug 2015 14:15:08 +0530
-Message-ID: <CAFd313wEAWjzJa82R1ujh3vyMasDvicQ4nZHq1qqZ5y7D4ixzQ@mail.gmail.com>
+Date: Fri, 21 Aug 2015 14:21:46 +0530
+Message-ID: <20150821085146.GP13546@localhost>
 References: <1440066656-15516-1-git-send-email-rsahu@apm.com>
-	<20150821083946.GO13546@localhost>
+ <20150821083946.GO13546@localhost>
+ <CAFd313wEAWjzJa82R1ujh3vyMasDvicQ4nZHq1qqZ5y7D4ixzQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20150821083946.GO13546@localhost>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Vinod Koul <vinod.koul@intel.com>
-Cc: dan.j.williams@intel.com, dmaengine@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, jcm@redhat.com, patches@apm.com
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <CAFd313wEAWjzJa82R1ujh3vyMasDvicQ4nZHq1qqZ5y7D4ixzQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rameshwar Sahu <rsahu-qTEPVZfXA3Y@public.gmane.org>
+Cc: dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, patches-qTEPVZfXA3Y@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Vinod,
+On Fri, Aug 21, 2015 at 02:15:08PM +0530, Rameshwar Sahu wrote:
+> Hi Vinod,
+> 
+> On Fri, Aug 21, 2015 at 2:09 PM, Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org> wrote:
+> > On Thu, Aug 20, 2015 at 04:00:56PM +0530, Rameshwar Prasad Sahu wrote:
+> >> This patch fixes the an locking issue where client callback performs
+> >                 ^^^^^^^^^^^^
+> > ??
+> >
+> >> further submission.
+> > Do you men you are preventing that or fixing for this to be allowed?
+> 
+> Fixing lock to allow client to submit further request in there
+> callback routine if they would like.
 
-On Fri, Aug 21, 2015 at 2:09 PM, Vinod Koul <vinod.koul@intel.com> wrote:
-> On Thu, Aug 20, 2015 at 04:00:56PM +0530, Rameshwar Prasad Sahu wrote:
->> This patch fixes the an locking issue where client callback performs
->                 ^^^^^^^^^^^^
-> ??
->
->> further submission.
-> Do you men you are preventing that or fixing for this to be allowed?
+Okay please fix the changelog to make it clear :)
 
-Fixing lock to allow client to submit further request in there
-callback routine if they would like.
->
->>
->> Signed-off-by: Rameshwar Prasad Sahu <rsahu@apm.com>
->> ---
->>  drivers/dma/xgene-dma.c | 33 ++++++++++++++++++++++-----------
->>  1 file changed, 22 insertions(+), 11 deletions(-)
->>
->> diff --git a/drivers/dma/xgene-dma.c b/drivers/dma/xgene-dma.c
->> index d1c8809..0b82bc0 100644
->> --- a/drivers/dma/xgene-dma.c
->> +++ b/drivers/dma/xgene-dma.c
->> @@ -763,12 +763,17 @@ static void xgene_dma_cleanup_descriptors(struct xgene_dma_chan *chan)
->>       struct xgene_dma_ring *ring = &chan->rx_ring;
->>       struct xgene_dma_desc_sw *desc_sw, *_desc_sw;
->>       struct xgene_dma_desc_hw *desc_hw;
->> +     struct list_head ld_completed;
->>       u8 status;
->>
->> +     INIT_LIST_HEAD(&ld_completed);
->> +
->> +     spin_lock_bh(&chan->lock);
->> +
->>       /* Clean already completed and acked descriptors */
->>       xgene_dma_clean_completed_descriptor(chan);
->>
->> -     /* Run the callback for each descriptor, in order */
->> +     /* Move all completed descriptors to ld completed queue, in order */
->>       list_for_each_entry_safe(desc_sw, _desc_sw, &chan->ld_running, node) {
->>               /* Get subsequent hw descriptor from DMA rx ring */
->>               desc_hw = &ring->desc_hw[ring->head];
->> @@ -811,15 +816,17 @@ static void xgene_dma_cleanup_descriptors(struct xgene_dma_chan *chan)
->>               /* Mark this hw descriptor as processed */
->>               desc_hw->m0 = cpu_to_le64(XGENE_DMA_DESC_EMPTY_SIGNATURE);
->>
->> -             xgene_dma_run_tx_complete_actions(chan, desc_sw);
->> -
->> -             xgene_dma_clean_running_descriptor(chan, desc_sw);
->> -
->>               /*
->>                * Decrement the pending transaction count
->>                * as we have processed one
->>                */
->>               chan->pending--;
->> +
->> +             /*
->> +              * Delete this node from ld running queue and append it to
->> +              * ld completed queue for further processing
->> +              */
->> +             list_move_tail(&desc_sw->node, &ld_completed);
->>       }
->>
->>       /*
->> @@ -828,6 +835,14 @@ static void xgene_dma_cleanup_descriptors(struct xgene_dma_chan *chan)
->>        * ahead and free the descriptors below.
->>        */
->>       xgene_chan_xfer_ld_pending(chan);
->> +
->> +     spin_unlock_bh(&chan->lock);
->> +
->> +     /* Run the callback for each descriptor, in order */
->> +     list_for_each_entry_safe(desc_sw, _desc_sw, &ld_completed, node) {
->> +             xgene_dma_run_tx_complete_actions(chan, desc_sw);
->> +             xgene_dma_clean_running_descriptor(chan, desc_sw);
->> +     }
->>  }
->>
->>  static int xgene_dma_alloc_chan_resources(struct dma_chan *dchan)
->> @@ -876,11 +891,11 @@ static void xgene_dma_free_chan_resources(struct dma_chan *dchan)
->>       if (!chan->desc_pool)
->>               return;
->>
->> -     spin_lock_bh(&chan->lock);
->> -
->>       /* Process all running descriptor */
->>       xgene_dma_cleanup_descriptors(chan);
->>
->> +     spin_lock_bh(&chan->lock);
->> +
->>       /* Clean all link descriptor queues */
->>       xgene_dma_free_desc_list(chan, &chan->ld_pending);
->>       xgene_dma_free_desc_list(chan, &chan->ld_running);
->> @@ -1200,15 +1215,11 @@ static void xgene_dma_tasklet_cb(unsigned long data)
->>  {
->>       struct xgene_dma_chan *chan = (struct xgene_dma_chan *)data;
->>
->> -     spin_lock_bh(&chan->lock);
->> -
->>       /* Run all cleanup for descriptors which have been completed */
->>       xgene_dma_cleanup_descriptors(chan);
->>
->>       /* Re-enable DMA channel IRQ */
->>       enable_irq(chan->rx_irq);
->> -
->> -     spin_unlock_bh(&chan->lock);
->>  }
->>
->>  static irqreturn_t xgene_dma_chan_ring_isr(int irq, void *id)
->> --
->> 1.8.2.1
->>
->
-> --
-> ~Vinod
+-- 
+~Vinod
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
