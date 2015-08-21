@@ -1,20 +1,20 @@
 From: Vikas MANOCHA <vikas.manocha-qxv4g6HH51o@public.gmane.org>
-Subject: Re: [PATCH V7 1/2] mtd: spi-nor: Bindings for Cadence Quad SPI
- Flash Controller driver.
-Date: Fri, 21 Aug 2015 09:00:05 +0200
-Message-ID: <6F1A0998-0895-4E5D-9FF9-82BAD42A945B@st.com>
+Subject: Re: [PATCH V7 2/2] mtd: spi-nor: Add driver for Cadence Quad SPI
+ Flash Controller.
+Date: Fri, 21 Aug 2015 09:09:13 +0200
+Message-ID: <66396623-E1BC-4DF7-BC19-E85BE2F347D9@st.com>
 References: <1439522892-7524-1-git-send-email-marex@denx.de>
- <201508200603.19962.marex@denx.de> <55D5FB19.9010402@st.com>
- <201508210546.28932.marex@denx.de>
+ <1439522892-7524-2-git-send-email-marex@denx.de> <55D299CD.2070809@st.com>
+ <201508210604.30272.marex@denx.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 8BIT
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <201508210546.28932.marex-ynQEQJNshbs@public.gmane.org>
+In-Reply-To: <201508210604.30272.marex-ynQEQJNshbs@public.gmane.org>
 Content-Language: en-US
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>
-Cc: Graham Moore <grmoore-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>, "linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Alan Tull <atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Dinh Nguyen <dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>, Yves Vandervennet <yvanderv-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Cc: "linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Graham Moore <grmoore-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>, Alan Tull <atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Dinh Nguyen <dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>, Yves Vandervennet <yvanderv-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
 Hi,
@@ -23,95 +23,189 @@ Hi,
 
 > On Aug 20, 2015, at 10:20 PM, Marek Vasut <marex-ynQEQJNshbs@public.gmane.org> wrote:
 > 
->> On Thursday, August 20, 2015 at 06:06:49 PM, vikas wrote:
->> Hi,
+>> On Tuesday, August 18, 2015 at 04:34:53 AM, vikas wrote:
+>> Hi Marek,
 > 
-> Hi!
+> Hi,
 > 
 > [...]
 > 
->>>>> It's the location of the SRAM fifo.  Also direct mode location I think,
->>>>> if that were ever used.
->>>> 
->>>> Hmm...It is the base address of NOR flash. SRAM is not memory mapped.
->>> 
->>> Huh ? I am inclined to trust Graham more -- I have seen memory mapped
->>> SRAM, but I have yet to see memory mapped SPI NOR.
+>>> +#define CQSPI_POLL_IDLE_RETRY                  3
+>>> +
+>>> +#define CQSPI_REG_SRAM_RESV_WORDS              2
+>>> +#define CQSPI_REG_SRAM_PARTITION_WR            1
 >> 
->> Well, SPI NOR flash in SOCs normally is memory mapped.
-> 
-> I'm afraid you have some very disturbed views of how SPI NORs are operated
-> most of the time.
-
-Just wondering what should I say, hoping you will sit back and try to correct your views.
-
-> No, SPI NOR is most often hanging off of some sort of SPI
-> controller just like any other SPI device. It is definitelly not common for
-> a SPI NOR to be memory mapped.
-
-Definitely ? And what made you think like this ? Do you even know the spi peripheral you are sending patch for has memory mapped nor flash ?
-
-> 
->> To give some mainline examples, all Spear family SOCs (spear300, 320, 1310,
->> 1340).
-> 
-> That's an exception, not a rule :)
-
-And there are many such exceptions starting from this cadence qspi :-)
-
-> 
->>> Also, the driver code clearly
->>> uses that area in a way one would use a memory mapped SRAM with FIFO on
->>> the other side. I think the above description is pretty much OK.
+>> remove unused macros.
 >> 
->> that is the purpose of making NOR flash memory mapped.
+>>> +#define CQSPI_REG_SRAM_THRESHOLD_BYTES         50
+>> 
+>> the macro is used only for write sram watermark, something like
+>> ...WR_THRESH_BYTES would be better. Infact instead of magic number like
+>> 50, it should be based on sram_depth similar to read watermark
+>> configuration.
 > 
-> I'm not sure if you agree with me or not anymore. I am pretty sure the 
-> discussion went quite far for such a trivial matter though.
+> I suppose if the fifo falls below 1/8, that might be a sensible time to
+> trigger an underflow interrupt.
+> 
+>>> +
+>>> +/* Instruction type */
+>>> +#define CQSPI_INST_TYPE_SINGLE                 0
+>>> +#define CQSPI_INST_TYPE_DUAL                   1
+>>> +#define CQSPI_INST_TYPE_QUAD                   2
+>>> +
+>>> +#define CQSPI_DUMMY_CLKS_MAX                   31
+>>> +
+>>> +#define CQSPI_STIG_DATA_LEN_MAX                        8
+>>> +
+>>> +/* Register map */
+>>> +#define CQSPI_REG_CONFIG                       0x00
+>>> +#define CQSPI_REG_CONFIG_ENABLE_MASK           BIT(0)
+>>> +#define CQSPI_REG_CONFIG_DECODE_MASK           BIT(9)
+>>> +#define CQSPI_REG_CONFIG_CHIPSELECT_LSB                10
+>>> +#define CQSPI_REG_CONFIG_DMA_MASK              BIT(15)
+>>> +#define CQSPI_REG_CONFIG_BAUD_LSB              19
+>>> +#define CQSPI_REG_CONFIG_IDLE_LSB              31
+>> 
+>> To be consistent, it would be good to use BIT(nr) for all bit positions.
+> 
+> You don't use BIT() macro for bitfields and the above are bitfields.
+> Thus, this is not applicable.
+> 
+>>> +#define CQSPI_REG_CONFIG_CHIPSELECT_MASK       0xF
+>>> +#define CQSPI_REG_CONFIG_BAUD_MASK             0xF
+> 
+> [...]
+> 
+>>> +#define CQSPI_REG_CMDADDRESS                   0x94
+>>> +#define CQSPI_REG_CMDREADDATALOWER             0xA0
+>>> +#define CQSPI_REG_CMDREADDATAUPPER             0xA4
+>>> +#define CQSPI_REG_CMDWRITEDATALOWER            0xA8
+>>> +#define CQSPI_REG_CMDWRITEDATAUPPER            0xAC
+>> 
+>> I am not sure if there is any recommended way but instread of register
+>> macros with offset, isn't it better to use something like struct cdns_qspi
+>> {
+>>                    u32 config,
+>>                    u32 rd_instn,
+>>                    ....
+>>                };
+>> & then configuring the pointer to this structure to the peripheral's (qspi
+>> controller in this case) base address.
+> 
+> U-Boot is slowly abolishing this practice as it turned out to be a horrible
+> mistake, which is annoying to deal with . No, I will not do this.
+> 
+>> It helps in debugging also as you can have all registers under one
+>> structure, easy/clean access of register like cdsn_qspi_ptr->config
+>> instead of adding offset for every access & also clean picture of all
+>> peripheral registers.
+> 
+> Once you have three similar controllers with only one register mapped
+> elsewhere, you'd need three such structures. This approach does look
+> nice at first, but certainly does not scale.
+> 
+>>> +
+>>> +/* Interrupt status bits */
+>>> +#define CQSPI_REG_IRQ_MODE_ERR                 BIT(0)
+>>> +#define CQSPI_REG_IRQ_UNDERFLOW BIT(1)
+>>> +#define CQSPI_REG_IRQ_IND_COMP                 BIT(2)
+>>> +#define CQSPI_REG_IRQ_IND_RD_REJECT            BIT(3)
+>>> +#define CQSPI_REG_IRQ_WR_PROTECTED_ERR         BIT(4)
+>>> +#define CQSPI_REG_IRQ_ILLEGAL_AHB_ERR          BIT(5)
+>>> +#define CQSPI_REG_IRQ_WATERMARK                        BIT(6)
+>>> +#define CQSPI_REG_IRQ_IND_RD_OVERFLOW          BIT(12)
+> 
+> [...]
+> 
+>>> +
+>>> +static unsigned int cqspi_check_timeout(const unsigned long timeout)
+>>> +{
+>>> +       return time_before(jiffies, timeout);
+>>> +}
+>> 
+>> try to replace using blocking jiffies check using kernel timeout function.
+> 
+> What function do you refer to ?
+> 
+> [...]
+> 
+>>> +static int cqspi_indirect_read_execute(struct spi_nor *nor,
+>>> +                                      u8 *rxbuf, const unsigned n_rx)
+>>> +{
+>>> +       struct cqspi_flash_pdata *f_pdata = nor->priv;
+>>> +       struct cqspi_st *cqspi = f_pdata->cqspi;
+>>> +       void __iomem *reg_base = cqspi->iobase;
+>>> +       void __iomem *ahb_base = cqspi->ahb_base;
+>>> +       unsigned int remaining = n_rx;
+>>> +       unsigned int reg = 0;
+>>> +       unsigned int bytes_to_read = 0;
+>>> +       unsigned int timeout;
+>>> +       int ret = 0;
+>>> +
+>>> +       writel(remaining, reg_base + CQSPI_REG_INDIRECTRDBYTES);
+>>> +
+>>> +       /* Clear all interrupts. */
+>>> +       writel(CQSPI_IRQ_STATUS_MASK, reg_base + CQSPI_REG_IRQSTATUS);
+>>> +
+>>> +       cqspi->irq_mask = CQSPI_IRQ_MASK_RD;
+>>> +       writel(cqspi->irq_mask, reg_base + CQSPI_REG_IRQMASK);
+>> 
+>> here interrupt mask is being configured for every read, better would be to
+>> move it in init.
+> 
+> It certainly would not, it is configured differently for READ and WRITE.
 
-I definitely disagree with you.
-I stop here now.
+And what is blocking to configure read and write mask together at one time in the register ?
+
+> 
+>>> +
+>>> +       reinit_completion(&cqspi->transfer_complete);
+>>> +       writel(CQSPI_REG_INDIRECTRD_START_MASK,
+>>> +              reg_base + CQSPI_REG_INDIRECTRD);
+>>> +
+>>> +       while (remaining > 0) {
+>>> +               ret =
+> 
+> [...]
+> 
+>>> +static void cqspi_controller_init(struct cqspi_st *cqspi)
+>>> +{
+>>> +       cqspi_controller_disable(cqspi);
+>>> +
+>>> +       /* Configure the remap address register, no remap */
+>>> +       writel(0, cqspi->iobase + CQSPI_REG_REMAP);
+>>> +
+>>> +       /* Disable all interrupts. */
+>>> +       writel(0, cqspi->iobase + CQSPI_REG_IRQMASK);
+>>> +
+>>> +       /* Configure the SRAM split to 1:1 . */
+>>> +       writel(cqspi->fifo_depth / 2, cqspi->iobase +
+>>> CQSPI_REG_SRAMPARTITION); +
+>>> +       /* Load indirect trigger address. */
+>> 
+>> almost all comments of this function seems unnecessary.
+> 
+> I disagree, having sensible comments in code makes my life easier after
+> I have to revisit the code a few years later.
+
+Yes for sensible comments , you are loading value in one register and commenting it.
 
 Cheers,
-Vikas
+Vikas 
 
 > 
->>>>> The size is determined by a configuration parameter during system
->>>>> design.  On Altera Cyclone5 the size is really big compared to SRAM
->>>>> fifo.  I don't know why, maybe some hw engineer thought it would be
->>>>> better to have a large size in case direct mode was used.
->>>> 
->>>> my comment is about second parameter of property "reg" which is NOR
->>>> flash address, so above explanation does not make sense for it.
->>>> Also in direct mode, sram does not come into play.
->>> 
->>> This is absolutelly not a SPI NOR address.
->> 
->> Then i can only suggest to check out the controller literature.
->> 
->> Think like this : what is the purpose of SRAM in all this flash access
->> business, It can work without SRAM also, the only purpose of sram (& in
->> fact indirect mode) is to access data from flash memory without AHB access
->> to trigger it. Once the data is available in SRAM(in case of read), AHB
->> Master can access it with low letency. Same is true for writes. SRAM is
->> integral internal part of state machine in case of indirect mode, there is
->> no need for it to memory mapped. If the controller does not support
->> indirect mode, there is no need of sram in the system.
->> 
->> Hope it is little bit more clear.
+>>> +       writel(cqspi->trigger_address,
+>>> +              cqspi->iobase + CQSPI_REG_INDIRECTTRIGGER);
+>>> +
+>>> +       /* Program read and write watermark. */
+>>> +       writel(cqspi->fifo_depth * cqspi->fifo_width / 2,
+>>> +              cqspi->iobase + CQSPI_REG_INDIRECTRDWATERMARK);
+>>> +       writel(CQSPI_REG_SRAM_THRESHOLD_BYTES,
+>>> +              cqspi->iobase + CQSPI_REG_INDIRECTWRWATERMARK);
 > 
-> It is, I understand what you're trying to convey now.
+> [...]
 > 
-> Yes, this register area can be used in certain modes of the controller in
-> such a way that it presents a window of the SPI NOR, which can be directly
-> accessed.
-> 
-> This register area can also be used as a FIFO, which is the way we used this
-> area in the driver . We read/write the first four bytes when communicating
-> with the flash.
-> 
-> So I don't really see a problem with calling the second register a "Controller
-> data area", that's what the IP documentation also calls it.
+> Best regards,
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
