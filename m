@@ -1,47 +1,54 @@
-From: Yinghai Lu <yinghai-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v4 43/52] OF/PCI: Add IORESOURCE_MEM_64 for 64-bit resource
-Date: Fri, 21 Aug 2015 11:24:04 -0700
-Message-ID: <CAE9FiQWYDevQkdF5OU5QTrGpQEtutCqcKbcNrZAhDHZqixYJtg@mail.gmail.com>
-References: <1440138067-4314-1-git-send-email-yinghai@kernel.org>
-	<1440138067-4314-44-git-send-email-yinghai@kernel.org>
-	<CAL_JsqL3pR2U4Fzv0j5Htd2O0cRXVQta-1rOZLkWR9kyz89RuA@mail.gmail.com>
+From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH 2/2] dts: keystone: Change "ti,davinci-i2c" compatible to
+ "ti,keystone-i2c"
+Date: Fri, 21 Aug 2015 19:25:16 +0100
+Message-ID: <20150821182500.GA2000@svinekod>
+References: <55D6F39A.2030402@nokia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAL_JsqL3pR2U4Fzv0j5Htd2O0cRXVQta-1rOZLkWR9kyz89RuA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <55D6F39A.2030402-xNZwKgViW5gAvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, David Miller <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, Wei Yang <weiyang-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>, TJ <linux-7m3hRoVZU5A@public.gmane.org>, Yijing Wang <wangyijing-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, "linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Alexander Sverdlin <alexander.sverdlin-xNZwKgViW5gAvxtiuMwx3w@public.gmane.org>
+Cc: Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>, Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, "linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Aug 21, 2015 at 11:18 AM, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> On Fri, Aug 21, 2015 at 1:20 AM, Yinghai Lu <yinghai-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
->> For device resource PREF bit setting under bridge 64-bit pref resource,
->> we need to make sure only set PREF for 64bit resource, so set
->> IORESOUCE_MEM_64 for 64bit resource during OF device resource flags
->> parsing.
->>
->> Link: https://bugzilla.kernel.org/show_bug.cgi?id=96261
->> Link: https://bugzilla.kernel.org/show_bug.cgi?id=96241
->> Signed-off-by: Yinghai Lu <yinghai-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
->> Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
->> Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
->> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
->
-> My comment from v1[1] is not addressed still.
->
->
-> [1] https://lkml.org/lkml/2015/7/10/736
+On Fri, Aug 21, 2015 at 10:47:06AM +0100, Alexander Sverdlin wrote:
+> Now as "i2c-davinci" driver has special handling for Keystone it's time to switch
+> the device tree to use new "compatible" property.
+> 
+> Signed-off-by: Alexander Sverdlin <alexander.sverdlin-xNZwKgViW5gAvxtiuMwx3w@public.gmane.org>
+> ---
+>  arch/arm/boot/dts/keystone.dtsi |    6 +++---
+>  1 files changed, 3 insertions(+), 3 deletions(-)
+> 
+> diff --git a/arch/arm/boot/dts/keystone.dtsi b/arch/arm/boot/dts/keystone.dtsi
+> index 72816d6..a846597 100644
+> --- a/arch/arm/boot/dts/keystone.dtsi
+> +++ b/arch/arm/boot/dts/keystone.dtsi
+> @@ -106,7 +106,7 @@
+>  		};
+>  
+>  		i2c0: i2c@2530000 {
+> -			compatible = "ti,davinci-i2c";
+> +			compatible = "ti,keystone-i2c";
 
-| As the BZ says, we have several identical functions. Can we fix the
-| drivers/of/address.c version and remove the Sparc versions. The only
-| diff is the generic version converts from be32. I think that should be
-| a nop for Sparc.
+>From what I understand of the previous patch, this is effectively an
+optimisation, and things worked to some extent with the "ti,davinci-i2c"
+string.
 
-That would be better to let guys with Sparc or other OF arch to do the
-unification.
+So could you leave that as a fallback, i.e. have:
 
-Yinghai
+	compatible = "ti,keystone-i2c", "ti,davinci-i2c";
+
+That way an old kernel still functions with this DT, which among other things
+makes debugging and bisecting far easier.
+
+Or are things actually broken with the "ti,davinci-i2c" string?
+
+Thanks,
+Mark
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
