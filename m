@@ -1,100 +1,91 @@
-From: Kishon Vijay Abraham I <kishon@ti.com>
-Subject: Re: [PATCH v2 00/16] omap_hsmmc: regulator usage cleanup and fixes
-Date: Fri, 21 Aug 2015 18:57:28 +0530
-Message-ID: <55D72740.3000304@ti.com>
-References: <1438604801-11823-1-git-send-email-kishon@ti.com> <55D5C9B3.80802@ti.com> <20150821074131.GK4215@atomide.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-mmc-owner@vger.kernel.org>
-In-Reply-To: <20150821074131.GK4215@atomide.com>
-Sender: linux-mmc-owner@vger.kernel.org
-To: Tony Lindgren <tony@atomide.com>
-Cc: ulf.hansson@linaro.org, afenkart@gmail.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mmc@vger.kernel.org, linux-omap@vger.kernel.org, nsekhar@ti.com
+From: Sanchayan Maity <maitysanchayan@gmail.com>
+Subject: [PATCH v4 0/3] Add support for touchscreen on Colibri VF50
+Date: Fri, 21 Aug 2015 18:56:29 +0530
+Message-ID: <cover.1440162473.git.maitysanchayan@gmail.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: dmitry.torokhov@gmail.com, linux-input@vger.kernel.org, devicetree@vger.kernel.org
+Cc: shawnguo@kernel.org, stefan@agner.ch, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Sanchayan Maity <maitysanchayan@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Tony,
+Hello,
 
-On Friday 21 August 2015 01:11 PM, Tony Lindgren wrote:
-> * Kishon Vijay Abraham I <kishon@ti.com> [150820 05:39]:
->> Hi,
->>
->> On Monday 03 August 2015 05:56 PM, Kishon Vijay Abraham I wrote:
->>> Changes from v1:
->>> *) return on -EPROBE_DEFER and other fatal errors. (Don't return only
->>>    if the return value is -ENODEV)
->>> *) Remove the beagle x15 dts patch. It can be part of a different
->>>    series.
->>> *) Avoid using regulator_is_enabled for vqmmc since if the regulator
->>>    is shared and the other users are not using regulator_is_enabled
->>>    then there can be unbalanced regulator_enable/regulator_disable
->>>
->>> This patch series does the following
->>> *) Uses devm_regulator_get_optional() for vmmc and then removes the
->>>    CONFIG_REGULATOR check altogether.
->>> *) return on -EPROBE_DEFER and any other fatal errors
->>> *) enable/disable vmmc_aux regulator based on prior state
->>>
->>> I've pushed this patch series to
->>> git://git.ti.com/linux-phy/linux-phy.git mmc_regulator_cleanup_fixes_v2
->>>
->>> Please note the branch also has the pbias fixes [1] & [2].
->>> [1] -> https://lkml.org/lkml/2015/7/27/358
->>> [2] -> https://lkml.org/lkml/2015/7/27/391
->>>
->>> This series is in preparation for implementing the voltage switch
->>> sequence so that UHS cards can be supported.
->>>
->>> Did basic read/write test in J6, J6 Eco, Beagle-x15, AM437x EVM,
->>> Beaglebone black, OMAP5 uEVM and OMAP4 PANDA.
->>
->> I have now done read/write test in omap3 beagle-xm with this series!
-> 
-> Great thanks for doing that. Also gave this series a try here
-> with my off idle MMC SDIO WLAN card test and things still work
-> for me. That's not really testing the PBIAS regulator though,
-> but a good torture test for saving and restoring context. So
-> FWIW:
-> 
-> Tested-by: Tony Lindgren <tony@atomide.com>
-> 
-> If you need a PM torture test for PBIAS regulator, you could try
-> to do the following on your beagle xm MMC card with
-> oamp2plus_defconfig:
-> 
-> 1. Make sure EHCI modules are not loaded and OTG USB cable is
->    not connected
-> 
-> 2. Enable UART timeouts and off idle with something like:
-> 
-> !/bin/bash
-> 
-> uarts=$(find /sys/class/tty/tty[SO]*/device/power/ -type d)
-> for uart in $uarts; do
->         echo 3000 > $uart/autosuspend_delay_ms 2>&1
-> done
-> 
-> modprobe leds-gpio
-> modprobe ledtrig-default-on
-> 
-> uarts=$(find /sys/class/tty/tty[SO]*/power/ -type d 2>/dev/null)
-> for uart in $uarts; do
->         echo enabled > $uart/wakeup 2>&1
->         echo auto > $uart/control 2>&1
-> done
-> 
-> echo 1 > /sys/kernel/debug/pm_debug/enable_off_mode
-> 
-> 3. Make sure you start seeing core_pwrdm OFF count increasing
->    with cat /sys/kernel/debug/pm_debug/count
-> 
-> MMC should keep on working when hitting idle, if not, something
-> is not saved or restored properly. And SDIO WLAN cards should
-> wake up the system and respond to ping if the wakeirq is
-> configured in the dts file for the MMC controller. At least
-> mwifiex_sdio cards work for this :)
+The patchset adds support for 4 wire touchscreen on Toradex Colibri
+VF50 modules.
 
-Thanks for the detailed explanation. Sure will add those tests.
+Thanks Dmitry for your feedback.
 
-Cheers
-Kishon
+Changes since v3:
+1. Add a #define for the average readings measurement.
+2. Instead of configuring gpios every open, configure them on request.
+3. Use a memory barrier and synchronize irq call to make sure IRQ is
+not running past close.
+4. Drop inline for vf50_ts_get_gpiod
+5. Convert "ret" to "error"
+6. Use devm_add_action to add a function for releasing iio channels and
+drop remove completely.
+7. Kill __set_bits()
+8. Instead of requesting for pen irq as gpio and then irq, use the
+interrupts property for DT and let it be handled automatically. Anyways
+we never read it's state.
+9. Just use IRQF_ONESHOT here, rely on the platform/OF to read and set up
+the trigger properly (via "interrupts" property).
+
+Changes since v2:
+1. Fix pin multiplexing for pins in idle state. Configuration of the
+pen detect pull up viz. PTA19__GPIO_9 resulted in generation of pen
+irq's on a continuous basis.
+2. Fix pinmux of the ADC pins as per the recommended pinmux in TRM.
+3. Use a threaded irq handler instead of a irq handler plus workqueue
+approach.
+4. Use a low level trigger with oneshot flag specifier instead of the
+previous falling edge triggered irq's. This coupled with the fix in
+point 1 fixes the previous continuous spurious irq generation bug.
+5. Change/fix the TS measurement logic to account for the fact that
+iio_channel_read_raw might actually return an error. To be more
+specific use break instead of continue and take care to close the
+FET's in case of channel read error.
+6. Drop the first patch "Add io-channel-cells property for ADC node"
+as it has already been applied.
+7. Move the iio channel get call again at the start. Having it in
+the end resulted in crashes sometimes when iio was not probed and
+the ts device got probed and opened earlier.
+
+Changes since v1:
+1. Fix/drop comments
+2. Use an inline function for multiple gpiod_get calls in probe
+3. Remove the pull up in the pinmux specified in DT for touchctrl_gpios
+4. Add the io-channel-cells property before status property.
+5. Add GPIOLIB as dependency in the Kconfig file
+
+Version 3 of the patchset can be found here
+https://lkml.org/lkml/2015/8/5/173
+
+Version 2 of the patchset can be found here
+https://www.mail-archive.com/linux-input@vger.kernel.org/msg18090.html
+
+Version 1 of the patchset can be found here
+https://lkml.org/lkml/2015/6/30/103
+
+Thank you very much for the feedback till now.
+
+Regards,
+Sanchayan.
+
+Sanchayan Maity (3):
+  ARM: dts: vf500-colibri: Add device tree node for touchscreen support
+  input: Add DT binding documentation for Colibri VF50 touchscreen
+  touchscreen: colibri-vf50-ts: Add touchscreen support for Colibri VF50
+
+ .../bindings/input/touchscreen/colibri-vf50-ts.txt |  36 ++
+ arch/arm/boot/dts/vf500-colibri-eval-v3.dts        |   4 +
+ arch/arm/boot/dts/vf500-colibri.dtsi               |  47 +++
+ drivers/input/touchscreen/Kconfig                  |  12 +
+ drivers/input/touchscreen/Makefile                 |   1 +
+ drivers/input/touchscreen/colibri-vf50-ts.c        | 370 +++++++++++++++++++++
+ 6 files changed, 470 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/input/touchscreen/colibri-vf50-ts.txt
+ create mode 100644 drivers/input/touchscreen/colibri-vf50-ts.c
+
+-- 
+2.5.0
