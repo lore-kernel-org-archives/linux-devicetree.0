@@ -1,54 +1,103 @@
 From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH 2/2] dts: keystone: Change "ti,davinci-i2c" compatible to
- "ti,keystone-i2c"
-Date: Fri, 21 Aug 2015 19:25:16 +0100
-Message-ID: <20150821182500.GA2000@svinekod>
-References: <55D6F39A.2030402@nokia.com>
+Subject: Re: [PATCH v1 3/3] arm64: dts: add Hi6220 mailbox node
+Date: Fri, 21 Aug 2015 19:40:59 +0100
+Message-ID: <20150821184059.GB2000@svinekod>
+References: <1439977055-1747-1-git-send-email-leo.yan@linaro.org>
+ <1439977055-1747-4-git-send-email-leo.yan@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <55D6F39A.2030402-xNZwKgViW5gAvxtiuMwx3w@public.gmane.org>
+In-Reply-To: <1439977055-1747-4-git-send-email-leo.yan-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Alexander Sverdlin <alexander.sverdlin-xNZwKgViW5gAvxtiuMwx3w@public.gmane.org>
-Cc: Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>, Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, "linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Leo Yan <leo.yan-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Catalin Marinas <Catalin.Marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Bintian Wang <bintian.wang-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, Haojian Zhuang <haojian.zhuang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Yiping Xu <xuyiping-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Wei Xu <xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "guodong.xu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <guodong.xu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Jian Zhang <zhangjian001-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Zhenwei Wang <Zhenwei.wang-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Haoju Mo <mohaoju-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Dan Zhao <dan.zhao-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, "kongfei-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org" <kongfei-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Guangyu
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Aug 21, 2015 at 10:47:06AM +0100, Alexander Sverdlin wrote:
-> Now as "i2c-davinci" driver has special handling for Keystone it's time to switch
-> the device tree to use new "compatible" property.
+On Wed, Aug 19, 2015 at 10:37:35AM +0100, Leo Yan wrote:
+> On Hi6220, below memory regions in DDR have specific purpose:
 > 
-> Signed-off-by: Alexander Sverdlin <alexander.sverdlin-xNZwKgViW5gAvxtiuMwx3w@public.gmane.org>
+>   0x05e0,0000 - 0x05ef,ffff: For MCU firmware using at runtime;
+>   0x0740,f000 - 0x0740,ffff: For MCU firmware's section;
+>   0x06df,f000 - 0x06df,ffff: For mailbox message data.
+> 
+> This patch reserves these memory regions and add device node for
+> mailbox in dts.
+> 
+> Signed-off-by: Leo Yan <leo.yan-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 > ---
->  arch/arm/boot/dts/keystone.dtsi |    6 +++---
->  1 files changed, 3 insertions(+), 3 deletions(-)
+>  arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts | 20 +++++++++++++++++---
+>  arch/arm64/boot/dts/hisilicon/hi6220.dtsi      |  8 ++++++++
+>  2 files changed, 25 insertions(+), 3 deletions(-)
 > 
-> diff --git a/arch/arm/boot/dts/keystone.dtsi b/arch/arm/boot/dts/keystone.dtsi
-> index 72816d6..a846597 100644
-> --- a/arch/arm/boot/dts/keystone.dtsi
-> +++ b/arch/arm/boot/dts/keystone.dtsi
-> @@ -106,7 +106,7 @@
->  		};
+> diff --git a/arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts b/arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts
+> index e36a539..d5470d3 100644
+> --- a/arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts
+> +++ b/arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts
+> @@ -7,9 +7,6 @@
 >  
->  		i2c0: i2c@2530000 {
-> -			compatible = "ti,davinci-i2c";
-> +			compatible = "ti,keystone-i2c";
+>  /dts-v1/;
+>  
+> -/*Reserved 1MB memory for MCU*/
+> -/memreserve/ 0x05e00000 0x00100000;
+> -
+>  #include "hi6220.dtsi"
+>  
+>  / {
+> @@ -28,4 +25,21 @@
+>  		device_type = "memory";
+>  		reg = <0x0 0x0 0x0 0x40000000>;
+>  	};
+> +
+> +	reserved-memory {
+> +		#address-cells = <2>;
+> +		#size-cells = <2>;
+> +		ranges;
+> +
+> +		mcu-buf@05e00000 {
+> +			no-map;
+> +			reg = <0x0 0x05e00000 0x0 0x00100000>,	/* MCU firmware buffer */
+> +			      <0x0 0x0740f000 0x0 0x00001000>;	/* MCU firmware section */
+> +		};
+> +
+> +		mbox-buf@06dff000 {
+> +			no-map;
+> +			reg = <0x0 0x06dff000 0x0 0x00001000>;	/* Mailbox message buf */
+> +		};
+> +	};
 
->From what I understand of the previous patch, this is effectively an
-optimisation, and things worked to some extent with the "ti,davinci-i2c"
-string.
+As far as I can see, it would be simpler to simply carve these out of the
+memory node.
 
-So could you leave that as a fallback, i.e. have:
-
-	compatible = "ti,keystone-i2c", "ti,davinci-i2c";
-
-That way an old kernel still functions with this DT, which among other things
-makes debugging and bisecting far easier.
-
-Or are things actually broken with the "ti,davinci-i2c" string?
+I don't see why you need reserved-memory here, given you're not referring to
+these regions by phandle anyway.
 
 Thanks,
-Mark
+Mark.
+
+
+>  };
+> diff --git a/arch/arm64/boot/dts/hisilicon/hi6220.dtsi b/arch/arm64/boot/dts/hisilicon/hi6220.dtsi
+> index 3f03380..9ff25bc 100644
+> --- a/arch/arm64/boot/dts/hisilicon/hi6220.dtsi
+> +++ b/arch/arm64/boot/dts/hisilicon/hi6220.dtsi
+> @@ -167,5 +167,13 @@
+>  			clocks = <&ao_ctrl 36>, <&ao_ctrl 36>;
+>  			clock-names = "uartclk", "apb_pclk";
+>  		};
+> +
+> +		mailbox: mailbox@f7510000 {
+> +			#mbox-cells = <1>;
+> +			compatible = "hisilicon,hi6220-mbox";
+> +			reg = <0x0 0xf7510000 0x0 0x1000>, /* IPC_S */
+> +			      <0x0 0x06dff800 0x0 0x0800>; /* Mailbox buffer */
+> +			interrupts = <GIC_SPI 94 IRQ_TYPE_LEVEL_HIGH>;
+> +		};
+>  	};
+>  };
+> -- 
+> 1.9.1
+> 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
