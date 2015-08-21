@@ -1,264 +1,104 @@
-From: Varadarajan Narayanan <varada-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: [PATCH v2] qcom: ipq40xx: Add basic board/dts support for IPQ40XX SoC
-Date: Fri, 21 Aug 2015 16:02:53 +0530
-Message-ID: <20150821103253.GA27466@codeaurora.org>
+From: Jens Wiklander <jens.wiklander-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v5 1/5] arm/arm64: add smccc ARCH32
+Date: Fri, 21 Aug 2015 13:43:32 +0200
+Message-ID: <20150821114331.GA11701@ermac>
+References: <1439973629-19505-1-git-send-email-jens.wiklander@linaro.org>
+ <1439973629-19505-2-git-send-email-jens.wiklander@linaro.org>
+ <20150819165009.GC10297@arm.com>
+ <20150820113729.GA25962@ermac>
+ <20150821092430.GC30930@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
+In-Reply-To: <20150821092430.GC30930-5wv7dgnIgG8@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Andy Gross <agross-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, David Brown <davidb-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Varadarajan Narayanan <varada-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Lina Iyer <lina.iyer-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Georgi Djakov <gdjakov-NEYub+7Iv8PQT0dZR+AlfA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: jaigan-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, snlakshm-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
+To: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
+Cc: "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Kees Cook <keescook-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, "valentin.manea-hv44wF8Li93QT0dZR+AlfA@public.gmane.org" <valentin.manea-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, "javier-5MUHepqpBA1BDgjK7y7TUQ@public.gmane.org" <javier-5MUHepqpBA1BDgjK7y7TUQ@public.gmane.org>, "emmanuel.michel-qxv4g6HH51o@public.gmane.org" <emmanuel.michel-qxv4g6HH51o@public.gmane.org>, Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, "jean-michel.delorme-qxv4g6HH51o@public.gmane.org" <jean-michel.delorme-qxv4g6HH51o@public.gmane.org>, Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Add initial dts files and SoC support for IPQ40XX
+On Fri, Aug 21, 2015 at 10:24:30AM +0100, Will Deacon wrote:
+> On Thu, Aug 20, 2015 at 12:37:29PM +0100, Jens Wiklander wrote:
+> > On Wed, Aug 19, 2015 at 05:50:09PM +0100, Will Deacon wrote:
+> > > On Wed, Aug 19, 2015 at 09:40:25AM +0100, Jens Wiklander wrote:
+> > > > Adds helpers to do SMC based on ARM SMC Calling Convention.
+> > > > CONFIG_HAVE_SMCCC is enabled for architectures that may support
+> > > > the SMC instruction. It's the responsibility of the caller to
+> > > > know if the SMC instruction is supported by the platform.
+> > > 
+> > > [...]
+> > > > diff --git a/arch/arm64/kernel/smccc-call.S b/arch/arm64/kernel/smccc-call.S
+> > > > new file mode 100644
+> > > > index 0000000..3ce7fe8
+> > > > --- /dev/null
+> > > > +++ b/arch/arm64/kernel/smccc-call.S
+> > > > @@ -0,0 +1,34 @@
+> > > > +/*
+> > > > + * Copyright (c) 2015, Linaro Limited
+> > > > + *
+> > > > + * This program is free software; you can redistribute it and/or modify
+> > > > + * it under the terms of the GNU General Public License Version 2 as
+> > > > + * published by the Free Software Foundation.
+> > > > + *
+> > > > + * This program is distributed in the hope that it will be useful,
+> > > > + * but WITHOUT ANY WARRANTY; without even the implied warranty of
+> > > > + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+> > > > + * GNU General Public License for more details.
+> > > > + *
+> > > > + */
+> > > > +#include <linux/linkage.h>
+> > > > +
+> > > > +#define SMC_PARAM_W0_OFFS      0
+> > > > +#define SMC_PARAM_W2_OFFS      8
+> > > > +#define SMC_PARAM_W4_OFFS      16
+> > > > +#define SMC_PARAM_W6_OFFS      24
+> > > > +
+> > > > +/* void smccc_call32(struct smccc_param32 *param) */
+> > > > +ENTRY(smccc_call32)
+> > > > +       stp     x28, x30, [sp, #-16]!
+> > > 
+> > > Why are you saving lr?
+> > 
+> > Agree, no point in saving lr, but I still need to decrease sp with 16 to
+> > maintain correct alignment. I'll do it with an str instruction instead.
+> 
+> That or pad out with xzr
+> 
+> > > 
+> > > > +       mov     x28, x0
+> > > > +       ldp     w0, w1, [x28, #SMC_PARAM_W0_OFFS]
+> > > > +       ldp     w2, w3, [x28, #SMC_PARAM_W2_OFFS]
+> > > > +       ldp     w4, w5, [x28, #SMC_PARAM_W4_OFFS]
+> > > > +       ldp     w6, w7, [x28, #SMC_PARAM_W6_OFFS]
+> > > > +       smc     #0
+> > > > +       stp     w0, w1, [x28, #SMC_PARAM_W0_OFFS]
+> > > > +       stp     w2, w3, [x28, #SMC_PARAM_W2_OFFS]
+> > > > +       ldp     x28, x30, [sp], #16
+> > > > +       ret
+> > > > +ENDPROC(smccc_call32)
+> > > 
+> > > Could we deal with this like we do for PSCI instead? (see
+> > > __invoke_psci_fn_smc). We could also then rename psci-call.S to fw-call.S
+> > > and stick this in there too.
+> > 
+> > I assume you're referring to when to use "hvc" and "smc".
+> 
+> No, I mean use a C prototype to avoid marshalling the parameters in assembly
+> like this. As Rutland pointed out, the return value is a bit messy, but
+> the arguments align nicely with the PCS afaict.
 
-Signed-off-by: Varadarajan Narayanan <varada-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
----
-Changes in v2:
-  - Added devicetree bindings documentation
+If possible I'd like the function to have the same prototype for both
+arm and arm64. For arm it's not possible to supply more than 4
+parameters. To fully support SMC Calling Convention we need to be able
+to pass 8 parameters and have 4 return values. The OP-TEE driver in this
+patch set depends on this. I don't see how we can avoid the marshalling
+here.
 
- .../devicetree/bindings/clock/qca,gcnt.txt         | 14 ++++
- Documentation/devicetree/bindings/ipq.txt          | 16 ++++
- arch/arm/boot/dts/Makefile                         |  3 +-
- arch/arm/boot/dts/qcom-ipq40xx-r3pc.dts            | 33 +++++++++
- arch/arm/boot/dts/qcom-ipq40xx.dtsi                | 86 ++++++++++++++++++++++
- arch/arm/configs/ipq_defconfig                     |  1 +
- arch/arm/mach-qcom/Kconfig                         |  4 +
- arch/arm/mach-qcom/board.c                         |  1 +
- 8 files changed, 157 insertions(+), 1 deletion(-)
- create mode 100644 Documentation/devicetree/bindings/clock/qca,gcnt.txt
- create mode 100644 Documentation/devicetree/bindings/ipq.txt
- create mode 100644 arch/arm/boot/dts/qcom-ipq40xx-r3pc.dts
- create mode 100644 arch/arm/boot/dts/qcom-ipq40xx.dtsi
+We could have two versions of the SMCCC functions, one simplified which
+only uses registers and one complete like this one with marshalling.
 
-diff --git a/Documentation/devicetree/bindings/clock/qca,gcnt.txt b/Documentation/devicetree/bindings/clock/qca,gcnt.txt
-new file mode 100644
-index 0000000..dd0d71e
---- /dev/null
-+++ b/Documentation/devicetree/bindings/clock/qca,gcnt.txt
-@@ -0,0 +1,14 @@
-+QCA Global Counter
-+------------------------------------------------
-+
-+Required properties :
-+- compatible : "qcom,qca-gcnt"
-+
-+- reg : shall contain base register location and length
-+
-+Example:
-+
-+	counter {
-+		compatible = "qcom,qca-gcnt";
-+		reg = <0x004a1000 0x4>;
-+	};
-diff --git a/Documentation/devicetree/bindings/ipq.txt b/Documentation/devicetree/bindings/ipq.txt
-new file mode 100644
-index 0000000..7d56bd0
---- /dev/null
-+++ b/Documentation/devicetree/bindings/ipq.txt
-@@ -0,0 +1,16 @@
-+Qualcomm IPQ device tree bindings
-+---------------------------------
-+
-+System on Chip
-+
-+Device tree must specify which SoC it uses, with one of the
-+following compatible strings
-+
-+       "qcom,ipq40xx"
-+
-+Platform
-+
-+Device tree must specify which Platform it uses, with one of the
-+following compatible strings
-+
-+       "qcom,ipq40xx-r3pc"
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index 246473a..6b4caee 100644
---- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -477,7 +477,8 @@ dtb-$(CONFIG_ARCH_QCOM) += \
- 	qcom-ipq8064-ap148.dtb \
- 	qcom-msm8660-surf.dtb \
- 	qcom-msm8960-cdp.dtb \
--	qcom-msm8974-sony-xperia-honami.dtb
-+	qcom-msm8974-sony-xperia-honami.dtb \
-+	qcom-ipq40xx-r3pc.dtb
- dtb-$(CONFIG_ARCH_REALVIEW) += \
- 	arm-realview-pb1176.dtb
- dtb-$(CONFIG_ARCH_ROCKCHIP) += \
-diff --git a/arch/arm/boot/dts/qcom-ipq40xx-r3pc.dts b/arch/arm/boot/dts/qcom-ipq40xx-r3pc.dts
-new file mode 100644
-index 0000000..7e4e629
---- /dev/null
-+++ b/arch/arm/boot/dts/qcom-ipq40xx-r3pc.dts
-@@ -0,0 +1,33 @@
-+/* Copyright (c) 2014, The Linux Foundation. All rights reserved.
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 and
-+ * only version 2 as published by the Free Software Foundation.
-+ *
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
-+ */
-+
-+#include "qcom-ipq40xx.dtsi"
-+
-+/ {
-+	model = "Qualcomm Technologies, Inc. IPQ40XX R3PC";
-+	compatible = "qcom,ipq40xx-r3pc", "qcom,ipq40xx";
-+
-+	memory {
-+		device_type = "memory";
-+		reg = <0x80000000 0x20000000>; /* 512MB */
-+	};
-+
-+	chosen {
-+		bootargs = "root=/dev/ram rw init=/init console=ttyMSM0,115200n8 initrd=0x82000000,0x000E2246";
-+	};
-+
-+	soc {
-+		serial@78b0000 {
-+			status = "ok";
-+		};
-+	};
-+};
-diff --git a/arch/arm/boot/dts/qcom-ipq40xx.dtsi b/arch/arm/boot/dts/qcom-ipq40xx.dtsi
-new file mode 100644
-index 0000000..76c55a3
---- /dev/null
-+++ b/arch/arm/boot/dts/qcom-ipq40xx.dtsi
-@@ -0,0 +1,86 @@
-+/*
-+ * Copyright (c) 2014, The Linux Foundation. All rights reserved.
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 and
-+ * only version 2 as published by the Free Software Foundation.
-+ *
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
-+ */
-+
-+/dts-v1/;
-+
-+#include "skeleton.dtsi"
-+
-+/ {
-+	model = "Qualcomm Technologies, Inc. IPQ40XX";
-+	compatible = "qcom,ipq40xx";
-+	interrupt-parent = <&intc>;
-+
-+	cpus {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		cpu@0 {
-+			device_type = "cpu";
-+			compatible = "arm,cortex-a7";
-+			reg = <0x0>;
-+		};
-+
-+		cpu@1 {
-+			device_type = "cpu";
-+			compatible = "arm,cortex-a7";
-+			reg = <0x1>;
-+		};
-+
-+		cpu@2 {
-+			device_type = "cpu";
-+			compatible = "arm,cortex-a7";
-+			reg = <0x2>;
-+		};
-+
-+		cpu@3 {
-+			device_type = "cpu";
-+			compatible = "arm,cortex-a7";
-+			reg = <0x3>;
-+		};
-+	};
-+
-+	soc {
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		ranges;
-+		compatible = "simple-bus";
-+
-+		intc: interrupt-controller@b000000 {
-+			compatible = "qcom,msm-qgic2";
-+			interrupt-controller;
-+			#interrupt-cells = <3>;
-+			reg = <0x0b000000 0x1000>,
-+			<0x0b002000 0x1000>;
-+		};
-+
-+		counter {
-+			compatible = "qcom,qca-gcnt";
-+			reg = <0x004a1000 0x4>;
-+		};
-+
-+		timer {
-+			compatible = "arm,armv7-timer";
-+			interrupts = <1 2 0xf08>,
-+				     <1 3 0xf08>,
-+				     <1 4 0xf08>,
-+				     <1 1 0xf08>;
-+			clock-frequency = <20833333>;
-+		};
-+
-+		serial@78b0000 {
-+			compatible = "qcom,msm-uartdm-v1.4", "qcom,msm-uartdm";
-+			reg = <0x78b0000 0x200>;
-+			interrupts = <0 108 0>;
-+			status = "disabled";
-+		};
-+	};
-+};
-diff --git a/arch/arm/configs/ipq_defconfig b/arch/arm/configs/ipq_defconfig
-index 1cabd8b..054a159 100644
---- a/arch/arm/configs/ipq_defconfig
-+++ b/arch/arm/configs/ipq_defconfig
-@@ -22,6 +22,7 @@ CONFIG_ARCH_MSM8X60=y
- CONFIG_ARCH_MSM8960=y
- CONFIG_ARCH_MSM8974=y
- CONFIG_ARCH_IPQ8064=y
-+CONFIG_ARCH_IPQ40XX=y
- CONFIG_SMP=y
- CONFIG_PREEMPT=y
- CONFIG_AEABI=y
-diff --git a/arch/arm/mach-qcom/Kconfig b/arch/arm/mach-qcom/Kconfig
-index fab49a2..3add9f9 100644
---- a/arch/arm/mach-qcom/Kconfig
-+++ b/arch/arm/mach-qcom/Kconfig
-@@ -26,4 +26,8 @@ config ARCH_IPQ8064
- 	bool "Enable support for IPQ806x"
- 	select CLKSRC_QCOM
- 
-+config ARCH_IPQ40XX
-+	bool "Enable support for IPQ40XX"
-+	select HAVE_ARM_ARCH_TIMER
-+
- endif
-diff --git a/arch/arm/mach-qcom/board.c b/arch/arm/mach-qcom/board.c
-index 6d8bbf7..566487d 100644
---- a/arch/arm/mach-qcom/board.c
-+++ b/arch/arm/mach-qcom/board.c
-@@ -22,6 +22,7 @@ static const char * const qcom_dt_match[] __initconst = {
- 	"qcom,ipq8064",
- 	"qcom,msm8660-surf",
- 	"qcom,msm8960-cdp",
-+	"qcom,ipq40xx-r3pc",
- 	NULL
- };
- 
--- 
-1.8.2.1
-
+Thanks,
+Jens
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
