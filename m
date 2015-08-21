@@ -1,115 +1,194 @@
-From: Rameshwar Prasad Sahu <rsahu-qTEPVZfXA3Y@public.gmane.org>
-Subject: [PATCH v2] dmaengine: xgene-dma: Fix the lock to allow client for further submission of requests
-Date: Fri, 21 Aug 2015 14:33:34 +0530
-Message-ID: <1440147814-22016-1-git-send-email-rsahu@apm.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org
-Cc: dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, patches-qTEPVZfXA3Y@public.gmane.org, Rameshwar Prasad Sahu <rsahu-qTEPVZfXA3Y@public.gmane.org>
+From: Varadarajan Narayanan <varada@codeaurora.org>
+Subject: [PATCH] qcom: ipq40xx: Add basic board/dts support for IPQ40XX SoC
+Date: Fri, 21 Aug 2015 14:50:35 +0530
+Message-ID: <20150821092035.GA22319@codeaurora.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Content-Disposition: inline
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Andy Gross <agross@codeaurora.org>, David Brown <davidb@codeaurora.org>, Varadarajan Narayanan <varada@codeaurora.org>, Stephen Boyd <sboyd@codeaurora.org>, Lina Iyer <lina.iyer@linaro.org>, Georgi Djakov <gdjakov@mm-sol.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org
+Cc: jaigan@codeaurora.org, snlakshm@codeaurora.org
 List-Id: devicetree@vger.kernel.org
 
-This patch provides the fix in the cleanup routing such that client can perform
-further submission by releasing the lock before calling client's callback function.
+Add initial dts files and SoC support for IPQ40XX
 
-Signed-off-by: Rameshwar Prasad Sahu <rsahu-qTEPVZfXA3Y@public.gmane.org>
----
- drivers/dma/xgene-dma.c | 33 ++++++++++++++++++++++-----------
- 1 file changed, 22 insertions(+), 11 deletions(-)
+Signed-off-by: Varadarajan Narayanan <varada@codeaurora.org>
 
-diff --git a/drivers/dma/xgene-dma.c b/drivers/dma/xgene-dma.c
-index d1c8809..0b82bc0 100644
---- a/drivers/dma/xgene-dma.c
-+++ b/drivers/dma/xgene-dma.c
-@@ -763,12 +763,17 @@ static void xgene_dma_cleanup_descriptors(struct xgene_dma_chan *chan)
- 	struct xgene_dma_ring *ring = &chan->rx_ring;
- 	struct xgene_dma_desc_sw *desc_sw, *_desc_sw;
- 	struct xgene_dma_desc_hw *desc_hw;
-+	struct list_head ld_completed;
- 	u8 status;
-
-+	INIT_LIST_HEAD(&ld_completed);
+diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+index 246473a..6b4caee 100644
+--- a/arch/arm/boot/dts/Makefile
++++ b/arch/arm/boot/dts/Makefile
+@@ -477,7 +477,8 @@ dtb-$(CONFIG_ARCH_QCOM) += \
+ 	qcom-ipq8064-ap148.dtb \
+ 	qcom-msm8660-surf.dtb \
+ 	qcom-msm8960-cdp.dtb \
+-	qcom-msm8974-sony-xperia-honami.dtb
++	qcom-msm8974-sony-xperia-honami.dtb \
++	qcom-ipq40xx-r3pc.dtb
+ dtb-$(CONFIG_ARCH_REALVIEW) += \
+ 	arm-realview-pb1176.dtb
+ dtb-$(CONFIG_ARCH_ROCKCHIP) += \
+diff --git a/arch/arm/boot/dts/qcom-ipq40xx-r3pc.dts b/arch/arm/boot/dts/qcom-ipq40xx-r3pc.dts
+new file mode 100644
+index 0000000..7e4e629
+--- /dev/null
++++ b/arch/arm/boot/dts/qcom-ipq40xx-r3pc.dts
+@@ -0,0 +1,33 @@
++/* Copyright (c) 2014, The Linux Foundation. All rights reserved.
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License version 2 and
++ * only version 2 as published by the Free Software Foundation.
++ *
++ * This program is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ * GNU General Public License for more details.
++ */
 +
-+	spin_lock_bh(&chan->lock);
++#include "qcom-ipq40xx.dtsi"
 +
- 	/* Clean already completed and acked descriptors */
- 	xgene_dma_clean_completed_descriptor(chan);
-
--	/* Run the callback for each descriptor, in order */
-+	/* Move all completed descriptors to ld completed queue, in order */
- 	list_for_each_entry_safe(desc_sw, _desc_sw, &chan->ld_running, node) {
- 		/* Get subsequent hw descriptor from DMA rx ring */
- 		desc_hw = &ring->desc_hw[ring->head];
-@@ -811,15 +816,17 @@ static void xgene_dma_cleanup_descriptors(struct xgene_dma_chan *chan)
- 		/* Mark this hw descriptor as processed */
- 		desc_hw->m0 = cpu_to_le64(XGENE_DMA_DESC_EMPTY_SIGNATURE);
-
--		xgene_dma_run_tx_complete_actions(chan, desc_sw);
--
--		xgene_dma_clean_running_descriptor(chan, desc_sw);
--
- 		/*
- 		 * Decrement the pending transaction count
- 		 * as we have processed one
- 		 */
- 		chan->pending--;
++/ {
++	model = "Qualcomm Technologies, Inc. IPQ40XX R3PC";
++	compatible = "qcom,ipq40xx-r3pc", "qcom,ipq40xx";
 +
-+		/*
-+		 * Delete this node from ld running queue and append it to
-+		 * ld completed queue for further processing
-+		 */
-+		list_move_tail(&desc_sw->node, &ld_completed);
- 	}
-
- 	/*
-@@ -828,6 +835,14 @@ static void xgene_dma_cleanup_descriptors(struct xgene_dma_chan *chan)
- 	 * ahead and free the descriptors below.
- 	 */
- 	xgene_chan_xfer_ld_pending(chan);
++	memory {
++		device_type = "memory";
++		reg = <0x80000000 0x20000000>; /* 512MB */
++	};
 +
-+	spin_unlock_bh(&chan->lock);
++	chosen {
++		bootargs = "root=/dev/ram rw init=/init console=ttyMSM0,115200n8 initrd=0x82000000,0x000E2246";
++	};
 +
-+	/* Run the callback for each descriptor, in order */
-+	list_for_each_entry_safe(desc_sw, _desc_sw, &ld_completed, node) {
-+		xgene_dma_run_tx_complete_actions(chan, desc_sw);
-+		xgene_dma_clean_running_descriptor(chan, desc_sw);
-+	}
- }
-
- static int xgene_dma_alloc_chan_resources(struct dma_chan *dchan)
-@@ -876,11 +891,11 @@ static void xgene_dma_free_chan_resources(struct dma_chan *dchan)
- 	if (!chan->desc_pool)
- 		return;
-
--	spin_lock_bh(&chan->lock);
--
- 	/* Process all running descriptor */
- 	xgene_dma_cleanup_descriptors(chan);
-
-+	spin_lock_bh(&chan->lock);
++	soc {
++		serial@78b0000 {
++			status = "ok";
++		};
++	};
++};
+diff --git a/arch/arm/boot/dts/qcom-ipq40xx.dtsi b/arch/arm/boot/dts/qcom-ipq40xx.dtsi
+new file mode 100644
+index 0000000..f572f38
+--- /dev/null
++++ b/arch/arm/boot/dts/qcom-ipq40xx.dtsi
+@@ -0,0 +1,81 @@
++/*
++ * Copyright (c) 2014, The Linux Foundation. All rights reserved.
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License version 2 and
++ * only version 2 as published by the Free Software Foundation.
++ *
++ * This program is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ * GNU General Public License for more details.
++ */
 +
- 	/* Clean all link descriptor queues */
- 	xgene_dma_free_desc_list(chan, &chan->ld_pending);
- 	xgene_dma_free_desc_list(chan, &chan->ld_running);
-@@ -1200,15 +1215,11 @@ static void xgene_dma_tasklet_cb(unsigned long data)
- {
- 	struct xgene_dma_chan *chan = (struct xgene_dma_chan *)data;
-
--	spin_lock_bh(&chan->lock);
--
- 	/* Run all cleanup for descriptors which have been completed */
- 	xgene_dma_cleanup_descriptors(chan);
-
- 	/* Re-enable DMA channel IRQ */
- 	enable_irq(chan->rx_irq);
--
--	spin_unlock_bh(&chan->lock);
- }
-
- static irqreturn_t xgene_dma_chan_ring_isr(int irq, void *id)
---
-1.8.2.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
++/dts-v1/;
++
++#include "skeleton.dtsi"
++
++/ {
++	model = "Qualcomm Technologies, Inc. IPQ40XX";
++	compatible = "qcom,ipq40xx";
++	interrupt-parent = <&intc>;
++
++	cpus {
++		#address-cells = <1>;
++		#size-cells = <0>;
++		cpu@0 {
++			device_type = "cpu";
++			compatible = "arm,cortex-a7";
++			reg = <0x0>;
++		};
++
++		cpu@1 {
++			device_type = "cpu";
++			compatible = "arm,cortex-a7";
++			reg = <0x1>;
++		};
++
++		cpu@2 {
++			device_type = "cpu";
++			compatible = "arm,cortex-a7";
++			reg = <0x2>;
++		};
++
++		cpu@3 {
++			device_type = "cpu";
++			compatible = "arm,cortex-a7";
++			reg = <0x3>;
++		};
++	};
++
++	soc {
++		#address-cells = <1>;
++		#size-cells = <1>;
++		ranges;
++		compatible = "simple-bus";
++
++		intc: interrupt-controller@b000000 {
++			compatible = "qcom,msm-qgic2";
++			interrupt-controller;
++			#interrupt-cells = <3>;
++			reg = <0x0b000000 0x1000>,
++			<0x0b002000 0x1000>;
++		};
++
++		timer {
++			compatible = "arm,armv7-timer";
++			interrupts = <1 2 0xf08>,
++				     <1 3 0xf08>,
++				     <1 4 0xf08>,
++				     <1 1 0xf08>;
++			clock-frequency = <20833333>;
++		};
++
++		serial@78b0000 {
++			compatible = "qcom,msm-uartdm-v1.4", "qcom,msm-uartdm";
++			reg = <0x78b0000 0x200>;
++			interrupts = <0 108 0>;
++			status = "disabled";
++		};
++	};
++};
+diff --git a/arch/arm/configs/ipq_defconfig b/arch/arm/configs/ipq_defconfig
+index 1cabd8b..054a159 100644
+--- a/arch/arm/configs/ipq_defconfig
++++ b/arch/arm/configs/ipq_defconfig
+@@ -22,6 +22,7 @@ CONFIG_ARCH_MSM8X60=y
+ CONFIG_ARCH_MSM8960=y
+ CONFIG_ARCH_MSM8974=y
+ CONFIG_ARCH_IPQ8064=y
++CONFIG_ARCH_IPQ40XX=y
+ CONFIG_SMP=y
+ CONFIG_PREEMPT=y
+ CONFIG_AEABI=y
+diff --git a/arch/arm/mach-qcom/Kconfig b/arch/arm/mach-qcom/Kconfig
+index fab49a2..3add9f9 100644
+--- a/arch/arm/mach-qcom/Kconfig
++++ b/arch/arm/mach-qcom/Kconfig
+@@ -26,4 +26,8 @@ config ARCH_IPQ8064
+ 	bool "Enable support for IPQ806x"
+ 	select CLKSRC_QCOM
+ 
++config ARCH_IPQ40XX
++	bool "Enable support for IPQ40XX"
++	select HAVE_ARM_ARCH_TIMER
++
+ endif
+diff --git a/arch/arm/mach-qcom/board.c b/arch/arm/mach-qcom/board.c
+index 6d8bbf7..566487d 100644
+--- a/arch/arm/mach-qcom/board.c
++++ b/arch/arm/mach-qcom/board.c
+@@ -22,6 +22,7 @@ static const char * const qcom_dt_match[] __initconst = {
+ 	"qcom,ipq8064",
+ 	"qcom,msm8660-surf",
+ 	"qcom,msm8960-cdp",
++	"qcom,ipq40xx-r3pc",
+ 	NULL
+ };
+ 
