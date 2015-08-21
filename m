@@ -1,265 +1,28 @@
-From: Liviu Dudau <Liviu.Dudau@arm.com>
-Subject: Re: [PATCH v7 3/6] PCI: designware: Add ARM64 support
-Date: Fri, 21 Aug 2015 14:42:30 +0100
-Message-ID: <20150821134230.GQ1020@e106497-lin.cambridge.arm.com>
-References: <1439812554-180426-1-git-send-email-wangzhou1@hisilicon.com>
- <1439812554-180426-4-git-send-email-wangzhou1@hisilicon.com>
- <1439988852.31432.15.camel@pengutronix.de>
- <EE11001F9E5DDD47B7634E2F8A612F2E01D81315@lhreml503-mbs>
- <1439998622.31432.44.camel@pengutronix.de>
- <EE11001F9E5DDD47B7634E2F8A612F2E01D8139B@lhreml503-mbs>
- <1440059243.31432.59.camel@pengutronix.de>
- <EE11001F9E5DDD47B7634E2F8A612F2E01D81BAC@lhreml503-mbs>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [PATCH 3/5] net: add Hisilicon Network Subsystem MDIO support
+Date: Fri, 21 Aug 2015 16:01:02 +0200
+Message-ID: <2127960.zhC3sTrby5@wuerfel>
+References: <1439548222-231611-1-git-send-email-liguozhu@hisilicon.com> <2142879.tTtWetb0nc@wuerfel> <20150817091750.GA134983@Turing-Arch-b>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <EE11001F9E5DDD47B7634E2F8A612F2E01D81BAC@lhreml503-mbs>
-Content-Disposition: inline
-Sender: linux-pci-owner@vger.kernel.org
-To: Gabriele Paoloni <gabriele.paoloni@huawei.com>
-Cc: Lucas Stach <l.stach@pengutronix.de>, "Wangzhou (B)" <wangzhou1@hisilicon.com>, Bjorn Helgaas <bhelgaas@google.com>, "jingoohan1@gmail.com" <jingoohan1@gmail.com>, Pratyush Anand <pratyush.anand@gmail.com>, Arnd Bergmann <arnd@arndb.de>, "linux@arm.linux.org.uk" <linux@arm.linux.org.uk>, "thomas.petazzoni@free-electrons.com" <thomas.petazzoni@free-electrons.com>, Lorenzo Pieralisi <Lorenzo.Pieralisi@arm.com>, James Morse <James.Morse@arm.com>, "jason@lakedaemon.net" <jason@lakedaemon.net>, "robh@kernel.org" <robh@kernel.org>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Yuanzhichang <yuanzhichang@hisilicon.com>, Zhudacai <zhudacai@hisilicon.com>, zhangjukuo <zhangjukuo@huawei.com>, qiuzhenfa <qiuzhenfa@hisilicon.co>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20150817091750.GA134983@Turing-Arch-b>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Kenneth Lee <liguozhu-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, Yisen.Zhuang-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org, paul.gortmaker-CWA4WttNNZF54TAoqtyWWQ@public.gmane.org, dingtianhong-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linuxarm-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, salil.mehta-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, huangdaode-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, Kenneth Lee <liguozhu-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Aug 20, 2015 at 12:10:24PM +0100, Gabriele Paoloni wrote:
-> Hi Lucas
->=20
-> Again many thanks for explaining and for your time.
->=20
-> I got your point now and I have dug a bit better in the PCI_DOMAINS c=
-ode.
->=20
-> However I have a question...see inline below
->=20
-> > -----Original Message-----
-> > From: Lucas Stach [mailto:l.stach@pengutronix.de]
-> > Sent: Thursday, August 20, 2015 9:27 AM
-> > To: Gabriele Paoloni
-> > Cc: Wangzhou (B); Bjorn Helgaas; jingoohan1@gmail.com; Pratyush Ana=
-nd;
-> > Arnd Bergmann; linux@arm.linux.org.uk; thomas.petazzoni@free-
-> > electrons.com; lorenzo.pieralisi@arm.com; james.morse@arm.com;
-> > Liviu.Dudau@arm.com; jason@lakedaemon.net; robh@kernel.org; linux-
-> > pci@vger.kernel.org; linux-arm-kernel@lists.infradead.org;
-> > devicetree@vger.kernel.org; Yuanzhichang; Zhudacai; zhangjukuo;
-> > qiuzhenfa; liudongdong (C); qiujiang; xuwei (O); Liguozhu (Kenneth)
-> > Subject: Re: [PATCH v7 3/6] PCI: designware: Add ARM64 support
-> >=20
-> > Hi Gab,
-> >=20
-> > Am Mittwoch, den 19.08.2015, 16:34 +0000 schrieb Gabriele Paoloni:
-> > > Hi Lucas
-> > >
-> > > First of all many thanks for the quick reply, really appreciated
-> > >
-> > > > -----Original Message-----
-> > > > From: Lucas Stach [mailto:l.stach@pengutronix.de]
-> > > > Sent: Wednesday, August 19, 2015 4:37 PM
-> > > > To: Gabriele Paoloni
-> > > > Cc: Wangzhou (B); Bjorn Helgaas; jingoohan1@gmail.com; Pratyush
-> > Anand;
-> > > > Arnd Bergmann; linux@arm.linux.org.uk; thomas.petazzoni@free-
-> > > > electrons.com; lorenzo.pieralisi@arm.com; james.morse@arm.com;
-> > > > Liviu.Dudau@arm.com; jason@lakedaemon.net; robh@kernel.org; lin=
-ux-
-> > > > pci@vger.kernel.org; linux-arm-kernel@lists.infradead.org;
-> > > > devicetree@vger.kernel.org; Yuanzhichang; Zhudacai; zhangjukuo;
-> > > > qiuzhenfa; liudongdong (C); qiujiang; xuwei (O); Liguozhu (Kenn=
-eth)
-> > > > Subject: Re: [PATCH v7 3/6] PCI: designware: Add ARM64 support
-> > > >
-> > > > Hi Gab,
-> > > >
-> > > > Am Mittwoch, den 19.08.2015, 15:16 +0000 schrieb Gabriele Paolo=
-ni:
-> > > > > Hi Lucas
-> > > > >
-> > > > > I have rewritten the patch to take into account multiple
-> > controllers.
-> > > > >
-> > > > > As you can see now there is a static var in dw_pcie_host_init=
-()
-> > that
-> > > > tracks
-> > > > > the bus numbers used.
-> > > >
-> > > > This is wrong. The DT specifies the valid bus number range. You=
- can
-> > not
-> > > > just assign the next free bus number to the root bus.
-> > >
-> > > I think this is what is being done in
-> > > http://lxr.free-electrons.com/source/arch/arm/kernel/bios32.c#L49=
-5
-> > > and currently designware assigns the root bus number in
-> > > http://lxr.free-electrons.com/source/drivers/pci/host/pcie-
-> > designware.c#L730
-> > >
-> > You found the right spot. It works a bit different than I remember,=
- but
-> > is less broken than your current code. :)
-> >=20
-> > It actually assigns the next instance a root bus number behind the
-> > current instances bus range. Please note the difference to your cod=
-e
-> > which assigns the next free bus number, which may still lay within =
-the
-> > current instances bus range.
+On Monday 17 August 2015 17:17:50 Kenneth Lee wrote:
+> Thanks, Arnd, 
+> 
+> You are right. This is the same IP as hip04_mdio.c. We just mis-understand the
+> hardware design. We will merge them and re-submit the patches.
 
-Hi Gabriele,
+Ok, great!
 
->=20
-> Mmmm here I have done a mistake: in the current designware the number=
- of hw
-> controllers is always 1
-> http://lxr.free-electrons.com/source/drivers/pci/host/pcie-designware=
-=2Ec#L510
-> So the loop in bios32.c does not work on multiple PCIe ports...
-
-Bios32.c is broken for multiple PCIe hosts for multiple reasons, this i=
-s just
-one of them. Hence the effort to get rid of it for maintained drivers.
-
-> However your comment about PCI_DOMAINS enlightened my mind and now I =
-see
-> that when CONFIG_PCI_DOMAINS is defined we have the domains numbers
-> (tracked by __domain_nr).
-
-CONFIG_PCI_DOMAINS in itself doesn't do much without adding code to you=
-r driver.
-You could request a new domain for each controller with a special prope=
-rty to
-disable that behaviour in the dts, or you could enable CONFIG_PCI_DOMAI=
-NS_GENERIC
-which will give you a new domain automatically.
-
-> So (correct me if I am wrong) if we have 2 PCIe ports that do not spe=
-cify
-> the "bus-range" property, both root ports will enumerate starting fro=
-m=20
-> root_bus_nr =3D 0 and everything will still work ok.
-
-Correct.
-
-Best regards,
-Liviu
-
->=20
-> So if my assumption is correct, I do not see why the orginal patch fr=
-om Wang=20
-> Zhou is wrong.=20
-> The only point can be that assigning pp->root_bus_nr =3D 0 is not req=
-uired=20
-> as pp memory is kzalloc'ed (an therefore init to zero).
->=20
->=20
-> >=20
-> > >
-> > > In general I agree with you but if you look at all the current
-> > drivers
-> > > based on designware none of them define the "bus-range" dtb prope=
-rty.
-> > > Therefore doing as you say would break the current driver when we
-> > have
-> > > multiple controllers...am I right?
-> > >
-> > The current _code_ works fine for multiple controllers. It's just t=
-hat
-> > you must define the bus range property in the DTB if you want to en=
-able
-> > multiple instances of one controller and support a kernel without P=
-CI
-> > domains support. As all current implementations have only a single
-> > instance of the controller per SoC, or depend on PCI domain support=
-,
-> > it's totally fine for them to not define the bus ranges property, a=
-s
-> > it's an optional property and it is well defined how things behave =
-if
-> > it
-> > is absent. We absolutely need to keep that specified behavior.
-> >=20
-> > > If that is the case in order to fix this in the way you say I wou=
-ld
-> > need
-> > > to assign "bus-range" for all the PCIe drivers with multiple
-> > controllers:
-> > > in this case I would split the default range evenly (that is, if =
-we
-> > have
-> > > two controllers I would define "bus-range"  0-127 and 128-255)
-> > >
-> > > If you think this solution is ok I can go for it. My only doubt w=
-as
-> > about
-> > > touching other vendors DTBs....
-> > >
-> > You don't need to touch any of the current DTBs, as they are fine w=
-ith
-> > the default bus range behavior. You need to keep the specified beha=
-vior
-> > of the bus range property with the new code.
-> >=20
-> > Regards,
-> > Lucas
-> > >
-> > > >
-> > > > It is perfectly valid to have a bus range of 0x00-0x10 assigned=
- to
-> > one
-> > > > instance and 0x50-0xff to the next instance. Additional with PC=
-Ie
-> > > > hotplug you may not use the full range of the bus numbers on on=
-e
-> > > > instance at the first scan, but only later populate more buses =
-when
-> > > > more
-> > > > bridges are added to the tree.
-> > > >
-> > > > > Drivers that do not specify the bus range in the DTB set pp-
-> > > > >root_bus_nr =3D DW_ROOT_NR_UNDEFINED.
-> > > > > Designware will check if the flag is set and will use the
-> > automatic
-> > > > bus range
-> > > > > assignment.
-> > > >
-> > > > No, please lets get rid of this assignment altogether. The glue
-> > drivers
-> > > > have no business in assigning the bus range. Please remove the
-> > > > pp->root_bus_nr assignment from all the glue drivers.
-> > > >
-> > > > "bus range" is a generic DW PCIe property, so just parse the ro=
-ot
-> > bus
-> > > > number from the DT, it is handled the same way for all the DW b=
-ased
-> > > > PCIe
-> > > > drivers. The bindings specifies that if the bus range property =
-is
-> > > > missing the range is 0x00-0xff, so you can default to 0 as the =
-root
-> > bus
-> > > > number in that case.
-> > > >
-> > > > Also I would think this conversion warrants a patch on its own =
-and
-> > > > should not be mixed in the ARM64 support patch.
-> > > >
-> > > > Regards,
-> > > > Lucas
-> > > >
-> >=20
-> > --
-> > Pengutronix e.K.             | Lucas Stach                 |
-> > Industrial Linux Solutions   | http://www.pengutronix.de/  |
->=20
-
---=20
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-| I would like to |
-| fix the world,  |
-| but they're not |
-| giving me the   |
- \ source code!  /
-  ---------------
-    =C2=AF\_(=E3=83=84)_/=C2=AF
+	Arnd
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
