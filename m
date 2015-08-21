@@ -1,212 +1,226 @@
-From: Vikas MANOCHA <vikas.manocha-qxv4g6HH51o@public.gmane.org>
-Subject: Re: [PATCH V7 2/2] mtd: spi-nor: Add driver for Cadence Quad SPI
- Flash Controller.
-Date: Fri, 21 Aug 2015 09:09:13 +0200
-Message-ID: <66396623-E1BC-4DF7-BC19-E85BE2F347D9@st.com>
-References: <1439522892-7524-1-git-send-email-marex@denx.de>
- <1439522892-7524-2-git-send-email-marex@denx.de> <55D299CD.2070809@st.com>
- <201508210604.30272.marex@denx.de>
+From: Shawn Lin <shawn.lin@rock-chips.com>
+Subject: Re: [RFC PATCH v6 1/9] mmc: dw_mmc: Add external dma interface
+ support
+Date: Fri, 21 Aug 2015 15:27:43 +0800
+Message-ID: <55D6D2EF.7010501@rock-chips.com>
+References: <1440060204-26203-1-git-send-email-shawn.lin@rock-chips.com>
+ <1440060233-26244-1-git-send-email-shawn.lin@rock-chips.com>
+ <55D6C4D4.8010005@samsung.com> <55D6C57D.4070402@rock-chips.com>
+ <55D6C6B6.3060706@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <201508210604.30272.marex-ynQEQJNshbs@public.gmane.org>
-Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>
-Cc: "linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Graham Moore <grmoore-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>, Alan Tull <atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Dinh Nguyen <dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>, Yves Vandervennet <yvanderv-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=utf-8;
+	format=flowed
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <55D6C6B6.3060706@samsung.com>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Jaehoon Chung <jh80.chung@samsung.com>, ulf.hansson@linaro.org
+Cc: shawn.lin@rock-chips.com, Vineet.Gupta1@synopsys.com, Wei Xu <xuwei5@hisilicon.com>, Joachim Eastwood <manabian@gmail.com>, Alexey Brodkin <abrodkin@synopsys.com>, Kukjin Kim <kgene@kernel.org>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, Russell King <linux@arm.linux.org.uk>, Zhangfei Gao <zhangfei.gao@linaro.org>, Jun Nie <jun.nie@linaro.org>, Ralf Baechle <ralf@linux-mips.org>, Govindraj Raja <govindraj.raja@imgtec.com>, Arnd Bergmann <arnd@arndb.de>, heiko@sntech.de, dianders@chromium.org, linux-samsung-soc@vger.kernel.org, linux-mips@linux-mips.org, linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, CPGS <cpgs@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+On 2015/8/21 14:35, Jaehoon Chung wrote:
+> On 08/21/2015 03:30 PM, Shawn Lin wrote:
+>> On 2015/8/21 14:27, Jaehoon Chung wrote:
+>>> Hi, Shawn.
+>>>
+>>> Is this based on Ulf's repository?
+>>
+>>
+>> no, it's based on "https://github.com/jh80chung/dw-mmc.git tags/dw-m=
+mc-for-ulf-v4.2" =EF=BC=9A=EF=BC=89
+>
+> Oh..I will rebase to Ulf's next branch on this weekend.
+> Then could you rebase this patch? And i added more comments at below.=
+=2E :)
+>
+
+Okay, I will rebase to Ulf's next.
+
+> Best Regards,
+> Jaehoon Chung
+>
+>>
+
+[...]
+
+>>>> index ec6dbcd..7e1d13b 100644
+>>>> --- a/drivers/mmc/host/dw_mmc-pltfm.c
+>>>> +++ b/drivers/mmc/host/dw_mmc-pltfm.c
+>>>> @@ -59,6 +59,8 @@ int dw_mci_pltfm_register(struct platform_device=
+ *pdev,
+>>>>        host->pdata =3D pdev->dev.platform_data;
+>>>>
+>>>>        regs =3D platform_get_resource(pdev, IORESOURCE_MEM, 0);
+>>>> +    /* Get registers' physical base address */
+>>>> +    host->phy_regs =3D (void *)(regs->start);
+>>>>        host->regs =3D devm_ioremap_resource(&pdev->dev, regs);
+>>>>        if (IS_ERR(host->regs))
+>>>>            return PTR_ERR(host->regs);
+>>>
+>>> Is this board specific code? If so, separate the patch.
+
+It's might not board specific code.
+dmaengine need dw_mmc's *physical* fifo address for data transfer, so I=
+=20
+get controller physical address  here in order to calculate physical=20
+fifo address.
+
+regs is from dt-bindings, for instance:
+          dwmmc0@12200000 {
+                  compatible =3D "snps,dw-mshc";
+                   clocks =3D <&clock 351>, <&clock 132>;
+                  clock-names =3D "biu", "ciu";
+                  reg =3D <0x12200000 0x1000>;
+                  interrupts =3D <0 75 0>;
+                  #address-cells =3D <1>;
+                  #size-cells =3D <0>;
+          };
+
+so, host->phy_regs will be 0x12200000 .
+
+[...]
+
+>>>> +static void dw_mci_dmac_complete_dma(void *arg)
+>>>>    {
+>>>> +    struct dw_mci *host =3D arg;
+>>>>        struct mmc_data *data =3D host->data;
+>>>>
+>>>>        dev_vdbg(host->dev, "DMA complete\n");
+>>>>
+>>>> +    if (host->use_dma =3D=3D TRANS_MODE_EDMAC)
+>>>> +        if (data && (data->flags & MMC_DATA_READ))
+>>>
+>>> Combine one condition.
+
+okay.
+
+[...]
+
+>>>> +    u32 fifo_offset =3D host->fifo_reg - host->regs;
+>>>> +    int ret =3D 0;
+>>>> +
+>>>> +    /* Set external dma config: burst size, burst width */
+>>>> +    cfg.dst_addr =3D (dma_addr_t)(host->phy_regs + fifo_offset);
+>>>
+>>> host->phy_regs is not assigned?
+
+we got it at dw_mci_pltfm_register. See comments above. :)
+
+[...]
+
+>>>>            mmc->max_blk_count =3D mmc->max_req_size / 512;
+>>>> +    } else if (host->use_dma =3D=3D TRANS_MODE_EDMAC) {
+>>>> +            mmc->max_segs =3D 64;
+>>>> +            mmc->max_blk_size =3D 65536;
+>>>> +            mmc->max_blk_count =3D 65535;
+>>>> +            mmc->max_req_size =3D
+>>>> +                    mmc->max_blk_size * mmc->max_blk_count;
+>>>> +            mmc->max_seg_size =3D mmc->max_req_size;
+>>>
+>>> Fix the indention
+
+Hmm..I check it attentively but can't find the indention . Might it's=20
+because you apply it against Ulf's repo?
+
+>>>
+
+[...]
+
+>>>>
+>>>> -    /* Alloc memory for sg translation */
+>>>> -    host->sg_cpu =3D dmam_alloc_coherent(host->dev, PAGE_SIZE,
+>>>> -                      &host->sg_dma, GFP_KERNEL);
+>>>> -    if (!host->sg_cpu) {
+>>>> -        dev_err(host->dev, "%s: could not alloc DMA memory\n",
+>>>> -            __func__);
+>>>> +    /* Check tansfer mode */
+>>>> +    trans_mode =3D SDMMC_GET_TRANS_MODE(mci_readl(host, HCON));
+>>>> +    if (trans_mode =3D=3D 0) {
+>>>> +        trans_mode =3D TRANS_MODE_IDMAC;
+>>>> +    } else if (trans_mode =3D=3D 1 || trans_mode =3D=3D 2) {
+>>>> +        trans_mode =3D TRANS_MODE_EDMAC;
+>>>> +    } else {
+>>>> +        trans_mode =3D TRANS_MODE_PIO;
+>>>
+>>> what are trans_mode "0, 1, 2"?
+>>> (00 - none) is NO-DMA interface, isn't? is it IDMAC mode?
+>>>
+
+No, I guess the databook's ambiguous description confuse everybody.
+
+I got double comfirm from my ASCI team as well as Synoposys
+2b'00: NO-DMA interface -->  It support IDMAC actually
+2b'01 & 2b'02: DW_DMA & GENERIC_DMA --> Support 2 types of external dma=
+=2E
+2b'02: NON-DW-DMA --> only support PIO
+
+refer to the description below:
+Parameter Name: DMA_INTERFACE
+Legal Values: 0-3
+Default Value: 0
+Description:
+  0- No DMA Interface
+  1- DesignWare DMA Interface
+  2- Generic DMA Interface
+  3- Non DW DMA Interface
+In DesignWare DMA mode, request/acknowledge protocol meets DW_ahb_dmac
+controller protocol. In this mode, host data bus is also used for DMA=20
+transfers.Generic DMA-type interface has simpler request/acknowledge=20
+handshake and has dedicated read/write data bus for DMA transfers. Non=20
+DW DMAC interface uses dw_dma_single interface in addition to the=20
+existing interface and uses host data bus for DMA transfers. This is=20
+configurable only if INTERNAL_DMAC=3D0.
+
+>>>>            goto no_dma;
+>>>>        }
+>
+>>>> +        dev_info(host->dev, "Using external DMA controller.\n");
+>>>> +    }
+>>>>
+>>>>        if (!host->dma_ops)
+>>>>            goto no_dma;
+>>>> @@ -2562,12 +2720,12 @@ static void dw_mci_init_dma(struct dw_mci =
+*host)
+>>>>            goto no_dma;
+>>>>        }
+>>>>
+>>>> -    host->use_dma =3D 1;
+>>>> +    host->use_dma =3D trans_mode;
+>>>
+>>> Also confuse, if trans_mode is assigned host->use_dma, can mode val=
+ue be directly assigned to host->use_dma?
+>>>
+
+Good idea, I will do it.  :)
+
+>>> trans_mode =3D TRAMS_MODE_PIO;
+>>> host->use_dma =3D trans_mode;
+>>>
+
+[...]
+
+>>>>
+>>>> @@ -2890,7 +3047,7 @@ int dw_mci_probe(struct dw_mci *host)
+>>>>         * Get the host data width - this assumes that HCON has bee=
+n set with
+>>>>         * the correct values.
+>>>>         */
+>>>> -    i =3D (mci_readl(host, HCON) >> 7) & 0x7;
+>>>> +    i =3D SDMMC_GET_HDATA_WIDTH(mci_readl(host, HCON));
+>>>
+>>> This is not related with supporting external dma interface.
+>>> Separate this.
+>>>
+
+Okay, It will be split into another one.
+
+>>>>        if (!i) {
+>>>>            host->push_data =3D dw_mci_push_data16;
+>>>>            host->pull_data =3D dw_mci_pull_data16;
 
 
 
-> On Aug 20, 2015, at 10:20 PM, Marek Vasut <marex-ynQEQJNshbs@public.gmane.org> wrote:
-> 
->> On Tuesday, August 18, 2015 at 04:34:53 AM, vikas wrote:
->> Hi Marek,
-> 
-> Hi,
-> 
-> [...]
-> 
->>> +#define CQSPI_POLL_IDLE_RETRY                  3
->>> +
->>> +#define CQSPI_REG_SRAM_RESV_WORDS              2
->>> +#define CQSPI_REG_SRAM_PARTITION_WR            1
->> 
->> remove unused macros.
->> 
->>> +#define CQSPI_REG_SRAM_THRESHOLD_BYTES         50
->> 
->> the macro is used only for write sram watermark, something like
->> ...WR_THRESH_BYTES would be better. Infact instead of magic number like
->> 50, it should be based on sram_depth similar to read watermark
->> configuration.
-> 
-> I suppose if the fifo falls below 1/8, that might be a sensible time to
-> trigger an underflow interrupt.
-> 
->>> +
->>> +/* Instruction type */
->>> +#define CQSPI_INST_TYPE_SINGLE                 0
->>> +#define CQSPI_INST_TYPE_DUAL                   1
->>> +#define CQSPI_INST_TYPE_QUAD                   2
->>> +
->>> +#define CQSPI_DUMMY_CLKS_MAX                   31
->>> +
->>> +#define CQSPI_STIG_DATA_LEN_MAX                        8
->>> +
->>> +/* Register map */
->>> +#define CQSPI_REG_CONFIG                       0x00
->>> +#define CQSPI_REG_CONFIG_ENABLE_MASK           BIT(0)
->>> +#define CQSPI_REG_CONFIG_DECODE_MASK           BIT(9)
->>> +#define CQSPI_REG_CONFIG_CHIPSELECT_LSB                10
->>> +#define CQSPI_REG_CONFIG_DMA_MASK              BIT(15)
->>> +#define CQSPI_REG_CONFIG_BAUD_LSB              19
->>> +#define CQSPI_REG_CONFIG_IDLE_LSB              31
->> 
->> To be consistent, it would be good to use BIT(nr) for all bit positions.
-> 
-> You don't use BIT() macro for bitfields and the above are bitfields.
-> Thus, this is not applicable.
-> 
->>> +#define CQSPI_REG_CONFIG_CHIPSELECT_MASK       0xF
->>> +#define CQSPI_REG_CONFIG_BAUD_MASK             0xF
-> 
-> [...]
-> 
->>> +#define CQSPI_REG_CMDADDRESS                   0x94
->>> +#define CQSPI_REG_CMDREADDATALOWER             0xA0
->>> +#define CQSPI_REG_CMDREADDATAUPPER             0xA4
->>> +#define CQSPI_REG_CMDWRITEDATALOWER            0xA8
->>> +#define CQSPI_REG_CMDWRITEDATAUPPER            0xAC
->> 
->> I am not sure if there is any recommended way but instread of register
->> macros with offset, isn't it better to use something like struct cdns_qspi
->> {
->>                    u32 config,
->>                    u32 rd_instn,
->>                    ....
->>                };
->> & then configuring the pointer to this structure to the peripheral's (qspi
->> controller in this case) base address.
-> 
-> U-Boot is slowly abolishing this practice as it turned out to be a horrible
-> mistake, which is annoying to deal with . No, I will not do this.
-> 
->> It helps in debugging also as you can have all registers under one
->> structure, easy/clean access of register like cdsn_qspi_ptr->config
->> instead of adding offset for every access & also clean picture of all
->> peripheral registers.
-> 
-> Once you have three similar controllers with only one register mapped
-> elsewhere, you'd need three such structures. This approach does look
-> nice at first, but certainly does not scale.
-> 
->>> +
->>> +/* Interrupt status bits */
->>> +#define CQSPI_REG_IRQ_MODE_ERR                 BIT(0)
->>> +#define CQSPI_REG_IRQ_UNDERFLOW BIT(1)
->>> +#define CQSPI_REG_IRQ_IND_COMP                 BIT(2)
->>> +#define CQSPI_REG_IRQ_IND_RD_REJECT            BIT(3)
->>> +#define CQSPI_REG_IRQ_WR_PROTECTED_ERR         BIT(4)
->>> +#define CQSPI_REG_IRQ_ILLEGAL_AHB_ERR          BIT(5)
->>> +#define CQSPI_REG_IRQ_WATERMARK                        BIT(6)
->>> +#define CQSPI_REG_IRQ_IND_RD_OVERFLOW          BIT(12)
-> 
-> [...]
-> 
->>> +
->>> +static unsigned int cqspi_check_timeout(const unsigned long timeout)
->>> +{
->>> +       return time_before(jiffies, timeout);
->>> +}
->> 
->> try to replace using blocking jiffies check using kernel timeout function.
-> 
-> What function do you refer to ?
-> 
-> [...]
-> 
->>> +static int cqspi_indirect_read_execute(struct spi_nor *nor,
->>> +                                      u8 *rxbuf, const unsigned n_rx)
->>> +{
->>> +       struct cqspi_flash_pdata *f_pdata = nor->priv;
->>> +       struct cqspi_st *cqspi = f_pdata->cqspi;
->>> +       void __iomem *reg_base = cqspi->iobase;
->>> +       void __iomem *ahb_base = cqspi->ahb_base;
->>> +       unsigned int remaining = n_rx;
->>> +       unsigned int reg = 0;
->>> +       unsigned int bytes_to_read = 0;
->>> +       unsigned int timeout;
->>> +       int ret = 0;
->>> +
->>> +       writel(remaining, reg_base + CQSPI_REG_INDIRECTRDBYTES);
->>> +
->>> +       /* Clear all interrupts. */
->>> +       writel(CQSPI_IRQ_STATUS_MASK, reg_base + CQSPI_REG_IRQSTATUS);
->>> +
->>> +       cqspi->irq_mask = CQSPI_IRQ_MASK_RD;
->>> +       writel(cqspi->irq_mask, reg_base + CQSPI_REG_IRQMASK);
->> 
->> here interrupt mask is being configured for every read, better would be to
->> move it in init.
-> 
-> It certainly would not, it is configured differently for READ and WRITE.
+--=20
+Best Regards
+Shawn Lin
 
-And what is blocking to configure read and write mask together at one time in the register ?
-
-> 
->>> +
->>> +       reinit_completion(&cqspi->transfer_complete);
->>> +       writel(CQSPI_REG_INDIRECTRD_START_MASK,
->>> +              reg_base + CQSPI_REG_INDIRECTRD);
->>> +
->>> +       while (remaining > 0) {
->>> +               ret =
-> 
-> [...]
-> 
->>> +static void cqspi_controller_init(struct cqspi_st *cqspi)
->>> +{
->>> +       cqspi_controller_disable(cqspi);
->>> +
->>> +       /* Configure the remap address register, no remap */
->>> +       writel(0, cqspi->iobase + CQSPI_REG_REMAP);
->>> +
->>> +       /* Disable all interrupts. */
->>> +       writel(0, cqspi->iobase + CQSPI_REG_IRQMASK);
->>> +
->>> +       /* Configure the SRAM split to 1:1 . */
->>> +       writel(cqspi->fifo_depth / 2, cqspi->iobase +
->>> CQSPI_REG_SRAMPARTITION); +
->>> +       /* Load indirect trigger address. */
->> 
->> almost all comments of this function seems unnecessary.
-> 
-> I disagree, having sensible comments in code makes my life easier after
-> I have to revisit the code a few years later.
-
-Yes for sensible comments , you are loading value in one register and commenting it.
-
-Cheers,
-Vikas 
-
-> 
->>> +       writel(cqspi->trigger_address,
->>> +              cqspi->iobase + CQSPI_REG_INDIRECTTRIGGER);
->>> +
->>> +       /* Program read and write watermark. */
->>> +       writel(cqspi->fifo_depth * cqspi->fifo_width / 2,
->>> +              cqspi->iobase + CQSPI_REG_INDIRECTRDWATERMARK);
->>> +       writel(CQSPI_REG_SRAM_THRESHOLD_BYTES,
->>> +              cqspi->iobase + CQSPI_REG_INDIRECTWRWATERMARK);
-> 
-> [...]
-> 
-> Best regards,
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
