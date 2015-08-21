@@ -1,79 +1,102 @@
-From: Jingoo Han <jingoohan1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v3 0/14] Add Analogix Core Display Port Driver
-Date: Fri, 21 Aug 2015 17:20:57 +0900
-Message-ID: <105A0032-83A0-4B75-AE94-258F12451670@gmail.com>
-References: <1439995728-18046-1-git-send-email-ykk@rock-chips.com>
-Mime-Version: 1.0 (1.0)
-Content-Type: text/plain;
-	charset=us-ascii
-Content-Transfer-Encoding: 8BIT
+From: Chen Bough <Haibo.Chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: RE: [PATCH v2 2/5] Documentation: Detail permitted DT properties for
+ the imx6ul_tsc
+Date: Fri, 21 Aug 2015 08:30:16 +0000
+Message-ID: <BY1PR03MB1388BBEF576297D76E7E3F839A650@BY1PR03MB1388.namprd03.prod.outlook.com>
+References: <1438077521-12857-1-git-send-email-haibo.chen@freescale.com>
+ <1438077521-12857-3-git-send-email-haibo.chen@freescale.com>
+ <20150819055434.GF11161@pengutronix.de>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1439995728-18046-1-git-send-email-ykk-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+In-Reply-To: <20150819055434.GF11161-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Content-Language: en-US
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Yakir Yang <ykk-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Cc: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Fabio Estevam <fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Inki Dae <inki.dae-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "joe-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org" <joe-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org>, Russell King <rmk+kernel-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, "djkurtz-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org" <djkurtz-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, "dianders-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org" <dianders-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, "seanpaul-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org" <seanpaul-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Takashi Iwai <tiwai-l3A5Bk7waGM@public.gmane.org>, "ajaynumb-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <ajaynumb-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Andrzej Hajda <a.hajda-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Kyungmin Park <kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Gustavo Padovan <gustavo.padovan-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>, Vincent Palatin <vpalatin-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Mark Yao <mark.yao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Andy Yan <andy.yan-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel
+To: Markus Pargmann <mpa-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "pawel.moll-5wv7dgnIgG8@public.gmane.org" <pawel.moll-5wv7dgnIgG8@public.gmane.org>, "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org" <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, "galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org" <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org" <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org" <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, "dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org" <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, "arnd-r2nGTMty4D4@public.gmane.org" <arnd-r2nGTMty4D4@public.gmane.org>, "mchehab-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org" <mchehab-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>, "christian.gmeiner-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <christian.gmeiner-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "scott.liu-9cfG7bMpBgR9nmWX13WWKA@public.gmane.org" <scott.liu-9cfG7bMpBgR9nmWX13WWKA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org" <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, jonathar-dY08KVG/lbpWk0Htik3J/w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 2015. 8. 19., at PM 11:48, Yakir Yang <ykk-TNX95d0MmH7DzftRWevZcw@public.gmane.org> wrote:
-> 
-> 
-
-.....
-
-> .../bindings/video/analogix_dp-rockchip.txt        |   83 ++
-> .../devicetree/bindings/video/exynos_dp.txt        |   51 +-
-> arch/arm/boot/dts/exynos5250-arndale.dts           |   10 +-
-> arch/arm/boot/dts/exynos5250-smdk5250.dts          |   10 +-
-> arch/arm/boot/dts/exynos5250-snow.dts              |   12 +-
-> arch/arm/boot/dts/exynos5250-spring.dts            |   12 +-
-> arch/arm/boot/dts/exynos5420-peach-pit.dts         |   12 +-
-> arch/arm/boot/dts/exynos5420-smdk5420.dts          |   10 +-
-> arch/arm/boot/dts/exynos5800-peach-pi.dts          |   12 +-
-> drivers/gpu/drm/bridge/Kconfig                     |    5 +
-> drivers/gpu/drm/bridge/Makefile                    |    1 +
-> drivers/gpu/drm/bridge/analogix_dp_core.c          | 1382 +++++++++++++++++++
-> drivers/gpu/drm/bridge/analogix_dp_core.h          |  286 ++++
-> drivers/gpu/drm/bridge/analogix_dp_reg.c           | 1294 ++++++++++++++++++
-> .../exynos_dp_reg.h => bridge/analogix_dp_reg.h}   |  270 ++--
-> drivers/gpu/drm/exynos/Kconfig                     |    5 +-
-> drivers/gpu/drm/exynos/Makefile                    |    2 +-
-> drivers/gpu/drm/exynos/analogix_dp-exynos.c        |  347 +++++
-
-Would you change this file name to "exynos_dp.c"?
-
-Best regards,
-Jingoo Han
-
-> drivers/gpu/drm/exynos/exynos_dp_core.c            | 1416 --------------------
-> drivers/gpu/drm/exynos/exynos_dp_core.h            |  282 ----
-> drivers/gpu/drm/exynos/exynos_dp_reg.c             | 1263 -----------------
-> drivers/gpu/drm/rockchip/Kconfig                   |    9 +
-> drivers/gpu/drm/rockchip/Makefile                  |    1 +
-> drivers/gpu/drm/rockchip/analogix_dp-rockchip.c    |  390 ++++++
-> drivers/phy/Kconfig                                |    7 +
-> drivers/phy/Makefile                               |    1 +
-> drivers/phy/phy-rockchip-dp.c                      |  185 +++
-> include/drm/bridge/analogix_dp.h                   |   40 +
-> 30 files changed, 4325 insertions(+), 3172 deletions(-)
-> create mode 100644 Documentation/devicetree/bindings/drm/bridge/analogix_dp.txt
-> create mode 100644 Documentation/devicetree/bindings/phy/rockchip-dp-phy.txt
-> create mode 100644 Documentation/devicetree/bindings/video/analogix_dp-rockchip.txt
-> create mode 100644 drivers/gpu/drm/bridge/analogix_dp_core.c
-> create mode 100644 drivers/gpu/drm/bridge/analogix_dp_core.h
-> create mode 100644 drivers/gpu/drm/bridge/analogix_dp_reg.c
-> rename drivers/gpu/drm/{exynos/exynos_dp_reg.h => bridge/analogix_dp_reg.h} (62%)
-> create mode 100644 drivers/gpu/drm/exynos/analogix_dp-exynos.c
-> delete mode 100644 drivers/gpu/drm/exynos/exynos_dp_core.c
-> delete mode 100644 drivers/gpu/drm/exynos/exynos_dp_core.h
-> delete mode 100644 drivers/gpu/drm/exynos/exynos_dp_reg.c
-> create mode 100644 drivers/gpu/drm/rockchip/analogix_dp-rockchip.c
-> create mode 100644 drivers/phy/phy-rockchip-dp.c
-> create mode 100644 include/drm/bridge/analogix_dp.h
-> 
-> -- 
-> 1.9.1
-> 
-> 
+SGkgTWFya3VzLA0KDQo+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+IEZyb206IE1hcmt1
+cyBQYXJnbWFubiBbbWFpbHRvOm1wYUBwZW5ndXRyb25peC5kZV0NCj4gU2VudDogV2VkbmVzZGF5
+LCBBdWd1c3QgMTksIDIwMTUgMTo1NSBQTQ0KPiBUbzogQ2hlbiBIYWliby1CNTE0MjENCj4gQ2M6
+IHJvYmgrZHRAa2VybmVsLm9yZzsgcGF3ZWwubW9sbEBhcm0uY29tOyBtYXJrLnJ1dGxhbmRAYXJt
+LmNvbTsNCj4gaWpjK2RldmljZXRyZWVAaGVsbGlvbi5vcmcudWs7IGdhbGFrQGNvZGVhdXJvcmEu
+b3JnOyBzaGF3bmd1b0BrZXJuZWwub3JnOw0KPiBrZXJuZWxAcGVuZ3V0cm9uaXguZGU7IGxpbnV4
+QGFybS5saW51eC5vcmcudWs7IGRtaXRyeS50b3Jva2hvdkBnbWFpbC5jb207DQo+IGRldmljZXRy
+ZWVAdmdlci5rZXJuZWwub3JnOyBzYnJhbmRlbkBicm9hZGNvbS5jb207IGFybmRAYXJuZGIuZGU7
+DQo+IG1jaGVoYWJAb3NnLnNhbXN1bmcuY29tOyBjaHJpc3RpYW4uZ21laW5lckBnbWFpbC5jb207
+DQo+IHNjb3R0LmxpdUBlbWMuY29tLnR3OyBsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnOyBo
+ZGVnb2VkZUByZWRoYXQuY29tOw0KPiBqb25hdGhhckBicm9hZGNvbS5jb207IGJlbmphbWluLnRp
+c3NvaXJlc0ByZWRoYXQuY29tOw0KPiBoYW5zLnZlcmt1aWxAY2lzY28uY29tOyBoYWRlc3NAaGFk
+ZXNzLm5ldDsgbGludXgtaW5wdXRAdmdlci5rZXJuZWwub3JnOw0KPiBnZWVydEBsaW51eC1tNjhr
+Lm9yZzsgc2ViYXN0aWVuLnN6eW1hbnNraUBhcm1hZGV1cy5jb207DQo+IG1hbWxpbmF2QGdtYWls
+LmNvbTsgbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnDQo+IFN1YmplY3Q6IFJl
+OiBbUEFUQ0ggdjIgMi81XSBEb2N1bWVudGF0aW9uOiBEZXRhaWwgcGVybWl0dGVkIERUIHByb3Bl
+cnRpZXMNCj4gZm9yIHRoZSBpbXg2dWxfdHNjDQo+IA0KPiBIaSwNCj4gDQo+IE9uIFR1ZSwgSnVs
+IDI4LCAyMDE1IGF0IDA1OjU4OjM4UE0gKzA4MDAsIEhhaWJvIENoZW4gd3JvdGU6DQo+ID4gSGVy
+ZSB3ZSBhcHBseSByZXF1aXJlZCBkb2N1bWVudGF0aW9uIGZvciB0aGUgaW14NnVsIHRvdWNoIHNj
+cmVlbg0KPiA+IGNvbnRyb2xsZXIgZHJpdmVyIHdoaWNoIGRlc2NyaWJlIGF2YWlsYWJsZSBwcm9w
+ZXJ0aWVzIGFuZCBob3cgdG8gdXNlDQo+ID4gdGhlbS4NCj4gPg0KPiA+IFNpZ25lZC1vZmYtYnk6
+IEhhaWJvIENoZW4gPGhhaWJvLmNoZW5AZnJlZXNjYWxlLmNvbT4NCj4gPiAtLS0NCj4gPiAgLi4u
+L2JpbmRpbmdzL2lucHV0L3RvdWNoc2NyZWVuL2lteDZ1bF90c2MudHh0ICAgICAgfCAzNg0KPiAr
+KysrKysrKysrKysrKysrKysrKysrDQo+ID4gIDEgZmlsZSBjaGFuZ2VkLCAzNiBpbnNlcnRpb25z
+KCspDQo+ID4gIGNyZWF0ZSBtb2RlIDEwMDY0NA0KPiA+IERvY3VtZW50YXRpb24vZGV2aWNldHJl
+ZS9iaW5kaW5ncy9pbnB1dC90b3VjaHNjcmVlbi9pbXg2dWxfdHNjLnR4dA0KPiA+DQo+ID4gZGlm
+ZiAtLWdpdA0KPiA+IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2lucHV0L3Rv
+dWNoc2NyZWVuL2lteDZ1bF90c2MudHh0DQo+ID4gYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUv
+YmluZGluZ3MvaW5wdXQvdG91Y2hzY3JlZW4vaW14NnVsX3RzYy50eHQNCj4gPiBuZXcgZmlsZSBt
+b2RlIDEwMDY0NA0KPiA+IGluZGV4IDAwMDAwMDAuLmFjNDFjMzINCj4gPiAtLS0gL2Rldi9udWxs
+DQo+ID4gKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2lucHV0L3RvdWNo
+c2NyZWVuL2lteDZ1bF90c2MudA0KPiA+ICsrKyB4dA0KPiA+IEBAIC0wLDAgKzEsMzYgQEANCj4g
+PiArKiBGcmVlc2NhbGUgaS5NWDZVTCBUb3VjaCBDb250cm9sbGVyDQo+ID4gKw0KPiA+ICtSZXF1
+aXJlZCBwcm9wZXJ0aWVzOg0KPiA+ICstIGNvbXBhdGlibGU6IG11c3QgYmUgImZzbCxpbXg2dWwt
+dHNjIi4NCj4gPiArLSByZWc6IHRoaXMgdG91Y2ggY29udHJvbGxlciBhZGRyZXNzIGFuZCB0aGUg
+QURDMiBhZGRyZXNzLg0KPiANCj4gVGhpcyBzdWdnZXN0cyB0aGF0IHRoaXMgZHJpdmVyIGlzIHVz
+aW5nIGEgdW5pdCBBREMyLiBXaGljaCBhbHNvIG1lYW5zDQo+IHRoYXQgdGhlcmUgYXJlIG1vcmUg
+dGhhbiBvbmUgQURDIHdoaWNoIGFyZSBwcm9iYWJseSBpZGVudGljYWw/DQo+IA0KPiBTaG91bGRu
+J3QgdGhlc2UgQURDcyBiZSBwcm9wZXJseSBkZXNjcmliZWQgYnkgdGhlaXIgb3duIGRldmljZSBu
+b2Rlcw0KPiBpbnN0ZWFkIG9mIHRoZXNlIHR3byByZWdpc3RlciByYW5nZXMsIHR3byBpbnRlcnJ1
+cHRzIGFuZCB0d28gY2xvY2tzPw0KPiANCj4gSXMgJ0FEQzInIHVzYWJsZSB3aXRob3V0IHRzYz8g
+VGhlbiBBREMxL0FEQzIgc2hvdWxkIHBlcmhhcHMgZ2V0IGEgcHJvcGVyDQo+IElJTyBkcml2ZXIu
+DQoNCkZvciBpLk1YNlVMLCB0aGVyZSBhcmUgdHdvIEFEQy4gQURDMSBpcyBhIG5vcm1hbCBBREMs
+IGFuZCBBREMyIGNhbiBvbmx5IHdvcmtzIGZvcg0KVFNDLCB0aGUgY2hhbm5lbHMgb2YgQURDMiBh
+cmUgY29ubmVjdGVkIHRvIFRTQyBkaXJlY3RseS4gVFNDIGFuZCBBREMyIHNob3VsZCB3b3JrDQp0
+b2dldGhlciBhcyBhIHRvdWNoIHNjcmVlbiBjb250cm9sbGVyLiANCg0KRm9yIEFEQzEsIGl0IHNo
+YXJlIHRoZSBkcml2ZXIgdmY2MTBfYWRjLmMgKGRyaXZlcnMvaWlvL2FkYy92ZjYxMF9hZGMuYyku
+IA0KDQpCZXN0IFJlZ2FyZHMNCg0KSGFpYm8gDQogDQo+IA0KPiBVbmZvcnR1bmF0ZWx5IEkgZG9u
+J3QgaGF2ZSB0aGUgcmVmZXJlbmNlIG1hbnVhbCB0byBoYXZlIGEgbG9vayBob3cgdGhpcw0KPiBh
+bGwgd29ya3MuDQo+IA0KPiBCZXN0IHJlZ2FyZHMsDQo+IA0KPiBNYXJrdXMNCj4gDQo+ID4gKy0g
+aW50ZXJydXB0czogdGhlIGludGVycnVwdCBvZiB0aGlzIHRvdWNoIGNvbnRyb2xsZXIgYW5kIEFE
+QzIuDQo+ID4gKy0gY2xvY2tzOiB0aGUgcm9vdCBjbG9jayBvZiB0b3VjaCBjb250cm9sbGVyIGFu
+ZCBBREMyLg0KPiA+ICstIGNsb2NrLW5hbWVzOyBtdXN0IGJlICJ0c2MiIGFuZCAiYWRjIi4NCj4g
+PiArLSB4bnVyLWdwaW86IHRoZSBYLSBncGlvIHRoaXMgY29udHJvbGxlciBjb25uZWN0IHRvLg0K
+PiA+ICsgIFRoaXMgeG51ci1ncGlvIHJldHVybnMgdG8gaGlnaCBvbmNlIHRoZSBmaW5nZXIgbGVh
+dmUgdGhlIHRvdWNoDQo+ID4gK3NjcmVlbiAoVGhlDQo+ID4gKyAgbGFzdCB0b3VjaCBldmVudCB0
+aGUgdG91Y2ggY29udHJvbGxlciBjYXB0dXJlKS4NCj4gPiArDQo+ID4gK09wdGlvbmFsIHByb3Bl
+cnRpZXM6DQo+ID4gKy0gbWVhc3VyZS1kZWxheS10aW1lOiB0aGUgdmFsdWUgb2YgbWVhc3VyZSBk
+ZWxheSB0aW1lLg0KPiA+ICsgIEJlZm9yZSBYLWF4aXMgb3IgWS1heGlzIG1lYXN1cmVtZW50LCB0
+aGUgc2NyZWVuIG5lZWQgc29tZSB0aW1lDQo+ID4gK2JlZm9yZQ0KPiA+ICsgIGV2ZW4gcG90ZW50
+aWFsIGRpc3RyaWJ1dGlvbiByZWFkeS4NCj4gPiArICBUaGlzIHZhbHVlIGRlcGVuZHMgb24gdGhl
+IHRvdWNoIHNjcmVlbi4NCj4gPiArLSBwcmUtY2hhcmdlLXRpbWU6IHRoZSB0b3VjaCBzY3JlZW4g
+bmVlZCBzb21lIHRpbWUgdG8gcHJlY2hhcmdlLg0KPiA+ICsgIFRoaXMgdmFsdWUgZGVwZW5kcyBv
+biB0aGUgdG91Y2ggc2NyZWVuLg0KPiA+ICsNCj4gPiArRXhhbXBsZToNCj4gPiArCXRzYzogdHNj
+QDAyMDQwMDAwIHsNCj4gPiArCQljb21wYXRpYmxlID0gImZzbCxpbXg2dWwtdHNjIjsNCj4gPiAr
+CQlyZWcgPSA8MHgwMjA0MDAwMCAweDQwMDA+LCA8MHgwMjE5YzAwMCAweDQwMDA+Ow0KPiA+ICsJ
+CWludGVycnVwdHMgPSA8R0lDX1NQSSAzIElSUV9UWVBFX0xFVkVMX0hJR0g+LA0KPiA+ICsJCQkg
+ICAgIDxHSUNfU1BJIDEwMSBJUlFfVFlQRV9MRVZFTF9ISUdIPjsNCj4gPiArCQljbG9ja3MgPSA8
+JmNsa3MgSU1YNlVMX0NMS19JUEc+LA0KPiA+ICsJCQkgPCZjbGtzIElNWDZVTF9DTEtfQURDMj47
+DQo+ID4gKwkJY2xvY2stbmFtZXMgPSAidHNjIiwgImFkYyI7DQo+ID4gKwkJcGluY3RybC1uYW1l
+cyA9ICJkZWZhdWx0IjsNCj4gPiArCQlwaW5jdHJsLTAgPSA8JnBpbmN0cmxfdHNjPjsNCj4gPiAr
+CQl4bnVyLWdwaW8gPSA8JmdwaW8xIDMgR1BJT19BQ1RJVkVfSElHSD47DQo+ID4gKwkJbWVhc3Vy
+ZS1kZWxheS10aW1lID0gPDB4ZmZmPjsNCj4gPiArCQlwcmUtY2hhcmdlLXRpbWUgPSA8MHhmZmZm
+PjsNCj4gPiArCQlzdGF0dXMgPSAib2theSI7DQo+ID4gKwl9Ow0KPiA+IC0tDQo+ID4gMS45LjEN
+Cj4gPg0KPiA+DQo+ID4NCj4gDQo+IC0tDQo+IFBlbmd1dHJvbml4IGUuSy4gICAgICAgICAgICAg
+ICAgICAgICAgICAgICB8DQo+IHwNCj4gSW5kdXN0cmlhbCBMaW51eCBTb2x1dGlvbnMgICAgICAg
+ICAgICAgICAgIHwgaHR0cDovL3d3dy5wZW5ndXRyb25peC5kZS8NCj4gfA0KPiBQZWluZXIgU3Ry
+LiA2LTgsIDMxMTM3IEhpbGRlc2hlaW0sIEdlcm1hbnkgfCBQaG9uZTogKzQ5LTUxMjEtMjA2OTE3
+LTANCj4gfA0KPiBBbXRzZ2VyaWNodCBIaWxkZXNoZWltLCBIUkEgMjY4NiAgICAgICAgICAgfCBG
+YXg6ICAgKzQ5LTUxMjEtMjA2OTE3LTU1NTUNCj4gfA0K
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
