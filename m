@@ -1,276 +1,91 @@
-From: Robert Richter <robert.richter@caviumnetworks.com>
-Subject: Re: [PATCH v5 2/4] Documentation: arm64/arm: dt bindings for numa.
-Date: Sat, 22 Aug 2015 17:06:16 +0200
-Message-ID: <20150822150616.GC8624@rric.localhost>
-References: <1439570374-4079-1-git-send-email-gkulkarni@caviumnetworks.com>
- <1439570374-4079-3-git-send-email-gkulkarni@caviumnetworks.com>
+From: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 13/18] iio: adc: mcp320x: Set struct spi_driver
+ .of_match_table
+Date: Sat, 22 Aug 2015 18:48:53 +0100
+Message-ID: <55D8B605.4040302@kernel.org>
+References: <1440054451-1223-1-git-send-email-javier@osg.samsung.com>
+ <1440054451-1223-14-git-send-email-javier@osg.samsung.com>
+ <20150820200912.GA2866@deathstar> <55D64E80.4050502@osg.samsung.com>
+ <20150820222906.GB28249@deathstar> <55D65937.6070909@osg.samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=windows-1252
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <1439570374-4079-3-git-send-email-gkulkarni@caviumnetworks.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Arnd Bergmann <arnd@arndb.de>, Rob Herring <robh+dt@kernel.org>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, steve.capper@linaro.org, pawel.moll@arm.com, al.stone@linaro.org, ard.biesheuvel@linaro.org, catalin.marinas@arm.com, ijc+devicetree@hellion.org.uk, Will.Deacon@arm.com, leif.lindholm@linaro.org, rfranz@cavium.com, galak@codeaurora.org, hanjun.guo@linaro.org, msalter@redhat.com, grant.likely@linaro.org, Ganapatrao Kulkarni <gkulkarni@caviumnetworks.com>, linux-arm-kernel@lists.infradead.org, gpkulkarni@gmail.com
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <55D65937.6070909-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Javier Martinez Canillas <javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>, Michael Welling <mwelling-EkmVulN54Sk@public.gmane.org>
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Andrea Galbusera <gizero-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Peter Meerwald <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Manfred Schlaegl <manfred.schlaegl-RbZlAiThDcE@public.gmane.org>, =?UTF-8?Q?S=c3=b8ren_Andersen?= <san-KGKi0rHxN0fKWSuBa/xFvVpr/1R2p/CL@public.gmane.org>, Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 14.08.15 22:09:32, Ganapatrao Kulkarni wrote:
-> DT bindings for numa map for memory, cores and IOs using
-> arm,associativity device node property.
-
-Arnd, Rob,
-
-as the change below suggests the same topology syntax as already
-implemented for PPC, could you take a look at this one for arm64?
-Please ack the devicetree changes, assuming you are fine with it.
-
-All other review comments are addressed so far and there are no open
-issues with the patches. This would help us to further drive this
-series upstream.
-
-Many thanks,
-
--Robert
-
-
-> Signed-off-by: Ganapatrao Kulkarni <gkulkarni@caviumnetworks.com>
-> ---
->  Documentation/devicetree/bindings/arm/numa.txt | 212 +++++++++++++++++++++++++
->  1 file changed, 212 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/arm/numa.txt
+On 20/08/15 23:48, Javier Martinez Canillas wrote:
+> Hello Michael,
 > 
-> diff --git a/Documentation/devicetree/bindings/arm/numa.txt b/Documentation/devicetree/bindings/arm/numa.txt
-> new file mode 100644
-> index 0000000..dc3ef86
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/arm/numa.txt
-> @@ -0,0 +1,212 @@
-> +==============================================================================
-> +NUMA binding description.
-> +==============================================================================
-> +
-> +==============================================================================
-> +1 - Introduction
-> +==============================================================================
-> +
-> +Systems employing a Non Uniform Memory Access (NUMA) architecture contain
-> +collections of hardware resources including processors, memory, and I/O buses,
-> +that comprise what is commonly known as a NUMA node.
-> +Processor accesses to memory within the local NUMA node is generally faster
-> +than processor accesses to memory outside of the local NUMA node.
-> +DT defines interfaces that allow the platform to convey NUMA node
-> +topology information to OS.
-> +
-> +==============================================================================
-> +2 - arm,associativity
-> +==============================================================================
-> +The mapping is done using arm,associativity device property.
-> +this property needs to be present in every device node which needs to to be
-> +mapped to numa nodes.
-> +
-> +arm,associativity property is set of 32-bit integers which defines level of
-> +topology and boundary in the system at which a significant difference in
-> +performance can be measured between cross-device accesses within
-> +a single location and those spanning multiple locations.
-> +The first cell always contains the broadest subdivision within the system,
-> +while the last cell enumerates the individual devices, such as an SMT thread
-> +of a CPU, or a bus bridge within an SoC".
-> +
-> +ex:
-> +	/* board 0, socket 0, cluster 0, core 0  thread 0 */
-> +	arm,associativity = <0 0 0 0 0>;
-> +
-> +==============================================================================
-> +3 - arm,associativity-reference-points
-> +==============================================================================
-> +This property is a set of 32-bit integers, each representing an index into
-> +the arm,associativity nodes. The first integer is the most significant
-> +NUMA boundary and the following are progressively less significant boundaries.
-> +There can be more than one level of NUMA.
-> +
-> +Ex:
-> +	arm,associativity-reference-points = <0 1>;
-> +	The board Id(index 0) used first to calculate the associativity (node
-> +	distance), then follows the  socket id(index 1).
-> +
-> +	arm,associativity-reference-points = <1 0>;
-> +	The socket Id(index 1) used first to calculate the associativity,
-> +	then follows the board id(index 0).
-> +
-> +	arm,associativity-reference-points = <0>;
-> +	Only the board Id(index 0) used to calculate the associativity.
-> +
-> +	arm,associativity-reference-points = <1>;
-> +	Only socket Id(index 1) used to calculate the associativity.
-> +
-> +==============================================================================
-> +4 - Example dts
-> +==============================================================================
-> +
-> +Example: 2 Node system consists of 2 boards and each board having one socket
-> +and 8 core in each socket.
-> +
-> +	arm,associativity-reference-points = <0>;
-> +
-> +	memory@00c00000 {
-> +		device_type = "memory";
-> +		reg = <0x0 0x00c00000 0x0 0x80000000>;
-> +		/* board 0, socket 0, no specific core */
-> +		arm,associativity = <0 0 0xffff>;
-> +	};
-> +
-> +	memory@10000000000 {
-> +		device_type = "memory";
-> +		reg = <0x100 0x00000000 0x0 0x80000000>;
-> +		/* board 1, socket 0, no specific core */
-> +		arm,associativity = <1 0 0xffff>;
-> +	};
-> +
-> +	cpus {
-> +		#address-cells = <2>;
-> +		#size-cells = <0>;
-> +
-> +		cpu@000 {
-> +			device_type = "cpu";
-> +			compatible =  "arm,armv8";
-> +			reg = <0x0 0x000>;
-> +			enable-method = "psci";
-> +			/* board 0, socket 0, core 0*/
-> +			arm,associativity = <0 0 0>;
-> +		};
-> +		cpu@001 {
-> +			device_type = "cpu";
-> +			compatible =  "arm,armv8";
-> +			reg = <0x0 0x001>;
-> +			enable-method = "psci";
-> +			arm,associativity = <0 0 1>;
-> +		};
-> +		cpu@002 {
-> +			device_type = "cpu";
-> +			compatible =  "arm,armv8";
-> +			reg = <0x0 0x002>;
-> +			enable-method = "psci";
-> +			arm,associativity = <0 0 2>;
-> +		};
-> +		cpu@003 {
-> +			device_type = "cpu";
-> +			compatible =  "arm,armv8";
-> +			reg = <0x0 0x003>;
-> +			enable-method = "psci";
-> +			arm,associativity = <0 0 3>;
-> +		};
-> +		cpu@004 {
-> +			device_type = "cpu";
-> +			compatible =  "arm,armv8";
-> +			reg = <0x0 0x004>;
-> +			enable-method = "psci";
-> +			arm,associativity = <0 0 4>;
-> +		};
-> +		cpu@005 {
-> +			device_type = "cpu";
-> +			compatible =  "arm,armv8";
-> +			reg = <0x0 0x005>;
-> +			enable-method = "psci";
-> +			arm,associativity = <0 0 5>;
-> +		};
-> +		cpu@006 {
-> +			device_type = "cpu";
-> +			compatible =  "arm,armv8";
-> +			reg = <0x0 0x006>;
-> +			enable-method = "psci";
-> +			arm,associativity = <0 0 6>;
-> +		};
-> +		cpu@007 {
-> +			device_type = "cpu";
-> +			compatible =  "arm,armv8";
-> +			reg = <0x0 0x007>;
-> +			enable-method = "psci";
-> +			arm,associativity = <0 0 7>;
-> +		};
-> +		cpu@008 {
-> +			device_type = "cpu";
-> +			compatible =  "arm,armv8";
-> +			reg = <0x0 0x008>;
-> +			enable-method = "psci";
-> +			/* board 1, socket 0, core 0*/
-> +			arm,associativity = <1 0 0>;
-> +		};
-> +		cpu@009 {
-> +			device_type = "cpu";
-> +			compatible =  "arm,armv8";
-> +			reg = <0x0 0x009>;
-> +			enable-method = "psci";
-> +			arm,associativity = <1 0 1>;
-> +		};
-> +		cpu@00a {
-> +			device_type = "cpu";
-> +			compatible =  "arm,armv8";
-> +			reg = <0x0 0x00a>;
-> +			enable-method = "psci";
-> +			arm,associativity = <0 0 2>;
-> +		};
-> +		cpu@00b {
-> +			device_type = "cpu";
-> +			compatible =  "arm,armv8";
-> +			reg = <0x0 0x00b>;
-> +			enable-method = "psci";
-> +			arm,associativity = <1 0 3>;
-> +		};
-> +		cpu@00c {
-> +			device_type = "cpu";
-> +			compatible =  "arm,armv8";
-> +			reg = <0x0 0x00c>;
-> +			enable-method = "psci";
-> +			arm,associativity = <1 0 4>;
-> +		};
-> +		cpu@00d {
-> +			device_type = "cpu";
-> +			compatible =  "arm,armv8";
-> +			reg = <0x0 0x00d>;
-> +			enable-method = "psci";
-> +			arm,associativity = <1 0 5>;
-> +		};
-> +		cpu@00e {
-> +			device_type = "cpu";
-> +			compatible =  "arm,armv8";
-> +			reg = <0x0 0x00e>;
-> +			enable-method = "psci";
-> +			arm,associativity = <1 0 6>;
-> +		};
-> +		cpu@00f {
-> +			device_type = "cpu";
-> +			compatible =  "arm,armv8";
-> +			reg = <0x0 0x00f>;
-> +			enable-method = "psci";
-> +			arm,associativity = <1 0 7>;
-> +		};
-> +	};
-> +
-> +	pcie0: pcie0@0x8480,00000000 {
-> +		compatible = "arm,armv8";
-> +		device_type = "pci";
-> +		bus-range = <0 255>;
-> +		#size-cells = <2>;
-> +		#address-cells = <3>;
-> +		reg = <0x8480 0x00000000 0 0x10000000>;  /* Configuration space */
-> +		ranges = <0x03000000 0x8010 0x00000000 0x8010 0x00000000 0x70 0x00000000>; /* mem ranges */
-> +		/* board 0, socket 0, pci bus 0*/
-> +		arm,associativity = <0 0 0>;
-> +        };
-> -- 
-> 1.8.1.4
+> On 08/21/2015 12:29 AM, Michael Welling wrote:
+>> On Fri, Aug 21, 2015 at 12:02:40AM +0200, Javier Martinez Canillas wrote:
+>>> Hello Michael,
+>>>
+>>> On 08/20/2015 10:09 PM, Michael Welling wrote:
+>>>> On Thu, Aug 20, 2015 at 09:07:26AM +0200, Javier Martinez Canillas wrote:
+>>>>> The driver has an OF id table but the .of_match_table is not set so
+>>>>> the SPI core can't do an OF style match and the table was unused.
+>>>>>
+>>>>
+>>>> Is an OF style match necessary?
+>>>>
+>>>
+>>> Did you read the cover letter [0] on which I explain why is needed to
+>>> avoid breaking module autoloading in the future? Once the SPI core is
+>>> changed by RFC patch 18/18? (you were cc'ed in the cover letter BTW).
+>>
+>> Well I have read it now. :)
+>>
 > 
+> Great :)
+>  
+>>>
+>>>> I have been using devicetree and it matches based on the .id_table.
+>>>>
+>>>
+>>> Yes it fallbacks to the .id_table or the driver name but the correct
+>>> thing to do for devices registered by OF, is to match using the
+>>> compatible string.
+>>>
+>>>> Couldn't we just remove the mcp320x_dt_ids table instead?
+>>>>
+>>>
+>>> No, that is the wrong thing to do IMHO since the compatible string
+>>> contains both vendor and device name whle the .id_table only contains
+>>> a device name.
+>>>
+>>> So it makes sense to match using the compatible string and also report
+>>> the OF modalias information to user-space.
+>>>
+>>> Otherwise what's the point of the vendor in the compatible string for
+>>> SPI devices? You can just use "bar" instead of "foo,bar" as a string.
+>>>
+>>
+>> Well then shouldn't the patch include adding the vendor to the compatible
+>> string?
+>>
 > 
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+> Well, I was talking in general. You are right that this specific driver does
+> not have a vendor prefix for the compatible strings. This is incorrect
+> according to the ePAPR document [0].
+> 
+> However, these compatible strings are already documented as a DT binding doc
+> in Documentation/devicetree/bindings/iio/adc/mcp320x.txt so I don't know
+> what is the correct thing to do in this situation.
+Take the view the old version is wrong but needs to be supported and add also
+the corrected strings + document them.
+
+cc'd The device tree list for any more comments on this.
+> 
+> Changing the compatible string will break old DTB with newer kernels and that
+> is a no go. But that doesn't invalidate what I said since once the SPI core
+> is changed and report OF modalias, you will need a MODULE_DEVICE_TABLE(of,...)
+> regardless if the compatible string has a vendor prefix or not.
+> 
+> [0]: https://www.power.org/documentation/epapr-version-1-1/
+> 
+> Best regards,
+> 
