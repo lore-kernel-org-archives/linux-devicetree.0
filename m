@@ -1,61 +1,77 @@
-From: Ricardo Ribalda Delgado <ricardo.ribalda-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 2/2] drivercore: Fix unregistration path of platform devices
-Date: Sat, 22 Aug 2015 14:57:04 +0200
-Message-ID: <CAPybu_1j68GgmCwssS+f8jBzn1sOrALTpFzGdZh4pyBNYjDgLg@mail.gmail.com>
-References: <1433686811-12303-1-git-send-email-grant.likely@linaro.org>
- <1433686811-12303-3-git-send-email-grant.likely@linaro.org>
- <20150615164630.GC1583@katana> <CAPybu_0S2b+xo3UJKbgpu39rtPT2x89+nEZ_hahLXiGbcCmeEA@mail.gmail.com>
- <CAPybu_0dYgQ_vKnXhZyOf-m5Z7DOnRKD4bB91dWk41pepmqDDA@mail.gmail.com>
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: Re: [PATCH v6 2/5] dt-bindings: Add a binding for Mediatek xHCI host
+ controller
+Date: Sat, 22 Aug 2015 16:23:41 +0300
+Message-ID: <55D877DD.3010400@cogentembedded.com>
+References: <1440207911-17666-1-git-send-email-chunfeng.yun@mediatek.com>
+ <1440207911-17666-3-git-send-email-chunfeng.yun@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAPybu_0dYgQ_vKnXhZyOf-m5Z7DOnRKD4bB91dWk41pepmqDDA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
-Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1440207911-17666-3-git-send-email-chunfeng.yun@mediatek.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Chunfeng Yun <chunfeng.yun@mediatek.com>, Mathias Nyman <mathias.nyman@intel.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, Felipe Balbi <balbi@ti.com>, Sascha Hauer <s.hauer@pengutronix.de>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Roger Quadros <rogerq@ti.com>, linux-usb@vger.kernel.org, linux-mediatek@lists.infradead.org, John Crispin <blogic@openwrt.org>, Daniel Kurtz <djkurtz@chromium.org>, Kishon Vijay Abraham I <kishon@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-ping?
+Hello.
 
-On Thu, Jul 16, 2015 at 10:33 PM, Ricardo Ribalda Delgado
-<ricardo.ribalda-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> ping?
->
-> Hello Grant, Hello Greg
->
-> Is there any planned timeframe for applying this patch into someones tree?
->
->
-> Thanks!
->
-> On Tue, Jun 23, 2015 at 7:12 PM, Ricardo Ribalda Delgado
-> <ricardo.ribalda-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
->> Hello
->>
->>> Tested-by: Wolfram Sang <wsa+renesas-jBu1N2QxHDJrcw3mvpCnnVaTQe2KTcn/@public.gmane.org>
->>
->> This patch now have a bunch of tested-by and without it, the current
->> version of linux-next crash.
->>
->> Who will take it? Grant,  Greg? Please make sure to notify
->> linux-stable since at least 4.1
->>
->> Thanks!
->>
->>
->> --
->> Ricardo Ribalda
->
->
->
-> --
-> Ricardo Ribalda
+On 8/22/2015 4:45 AM, Chunfeng Yun wrote:
 
+> add a DT binding documentation of xHCI host controller for the
+> MT8173 SoC from Mediatek.
 
+> Signed-off-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
+> ---
+>   .../devicetree/bindings/usb/mt8173-xhci.txt        | 52 ++++++++++++++++++++++
+>   1 file changed, 52 insertions(+)
+>   create mode 100644 Documentation/devicetree/bindings/usb/mt8173-xhci.txt
+>
+> diff --git a/Documentation/devicetree/bindings/usb/mt8173-xhci.txt b/Documentation/devicetree/bindings/usb/mt8173-xhci.txt
+> new file mode 100644
+> index 0000000..8e6e463
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/usb/mt8173-xhci.txt
+> @@ -0,0 +1,52 @@
+> +mt65XX xHCI
 
--- 
-Ricardo Ribalda
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+    The file is called mt8173-xhci.txt. Are you sure MT65xx should be here?
+
+> +
+> +The device node for Mediatek SOC usb3.0 host controller
+> +
+> +Required properties:
+> + - compatible : should contain "mediatek,mt8173-xhci"
+> + - reg : specifies physical base address and size of the registers,
+> +	the first one for MAC, the second for IPPC
+> + - interrupts : interrupt used by the controller
+> + - power-domains : a phandle to USB power domain node to control usb's
+
+    USB's -- be consistent, please.
+
+> +	mtcmos
+> + - vusb33-supply : regulator of usb avdd3.3v
+> +
+> + - clocks : a list of phandle + clock-specifier pairs, one for each
+> +	entry in clock-names
+> + - clock-names : must contain
+> +	"sys_ck": for clock of xHCI MAC
+> +	"wakeup_deb_p0": for usb wakeup debounce clock of port0
+> +	"wakeup_deb_p0": for usb wakeup debounce clock of port1
+
+    USB.
+
+> +
+> + - phys : a list of phandle + phy specifier pairs
+> + - usb3-lpm-capable : supports USB3 LPM
+> + - mediatek,syscon-wakeup : phandle to syscon used to access usb wakeup
+> +	control register
+> + - mediatek,wakeup-src : 1: ip sleep wakeup mode; 2: line state wakeup
+> +	mode; others means don't enable wakeup source of usb
+
+    "Others mean" and "USB".
+
+[...]
+
+MBR, Sergei
