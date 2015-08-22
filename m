@@ -1,294 +1,276 @@
-From: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v3 5/7] iio: Support triggered events
-Date: Sat, 22 Aug 2015 14:52:12 +0100
-Message-ID: <55D87E8C.4030108@kernel.org>
-References: <1438174469-19054-1-git-send-email-vladimir.barinov@cogentembedded.com>
- <1438174648-19296-1-git-send-email-vladimir.barinov@cogentembedded.com>
- <55D055C9.4020409@kernel.org> <55D0EF57.5050304@cogentembedded.com>
+From: Robert Richter <robert.richter@caviumnetworks.com>
+Subject: Re: [PATCH v5 2/4] Documentation: arm64/arm: dt bindings for numa.
+Date: Sat, 22 Aug 2015 17:06:16 +0200
+Message-ID: <20150822150616.GC8624@rric.localhost>
+References: <1439570374-4079-1-git-send-email-gkulkarni@caviumnetworks.com>
+ <1439570374-4079-3-git-send-email-gkulkarni@caviumnetworks.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <55D0EF57.5050304-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Vladimir Barinov <vladimir.barinov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
-Cc: Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Peter Meerwald <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, cory.tusar-J6Z/VSE8EyIAspv4Qr0y0gC/G2K4zDHf@public.gmane.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <1439570374-4079-3-git-send-email-gkulkarni@caviumnetworks.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Arnd Bergmann <arnd@arndb.de>, Rob Herring <robh+dt@kernel.org>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, steve.capper@linaro.org, pawel.moll@arm.com, al.stone@linaro.org, ard.biesheuvel@linaro.org, catalin.marinas@arm.com, ijc+devicetree@hellion.org.uk, Will.Deacon@arm.com, leif.lindholm@linaro.org, rfranz@cavium.com, galak@codeaurora.org, hanjun.guo@linaro.org, msalter@redhat.com, grant.likely@linaro.org, Ganapatrao Kulkarni <gkulkarni@caviumnetworks.com>, linux-arm-kernel@lists.infradead.org, gpkulkarni@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-On 16/08/15 21:15, Vladimir Barinov wrote:
-> Hi Jonathan,
-> 
-> Thank you for review.
-> Find some comments below.
-> 
-> Regards,
-> Vladimir
-> 
-> On 16.08.2015 12:20, Jonathan Cameron wrote:
->> On 29/07/15 13:57, Vladimir Barinov wrote:
->>> Support triggered events.
->>>
->>> This is useful for chips that don't have their own interrupt sources.
->>> It allows to use generic/standalone iio triggers for those drivers.
->> As we have concluded this is a good thing to have, I've take a closer
->> look at it.
->>
->> I think we need to slightly separate the buffer and event uses of
->> triggers as it's entirely plausible both might be enabled at the same
->> time.  Don't think this should be hard however.
->>
->> I can concieve of weird restrictions from certain hardware (particularly
->> where hardware buffers are concerned) in which events are not monitored
->> when we are reading through the buffer but we can tackle that when we
->> actually need to.
->>
->> Anyhow, few bits inline.  Thanks for your persistence with this!
->>
->> Jonathan
->>
->>> Signed-off-by: Vladimir Barinov <vladimir.barinov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
->>> ---
->>> Changes in version 2:
->>> - initially added
->>> Changes in version 3:
->>> - fixed grammar in patch description
->>> - changed license header to match "GNU Public License v2 or later"
->>>
->>>   drivers/iio/Kconfig                        |  6 +++
->>>   drivers/iio/Makefile                       |  1 +
->>>   drivers/iio/industrialio-core.c            |  4 +-
->>>   drivers/iio/industrialio-trigger.c         | 12 +++++-
->>>   drivers/iio/industrialio-triggered-event.c | 68 ++++++++++++++++++++++++++++++
->>>   include/linux/iio/iio.h                    |  1 +
->>>   include/linux/iio/triggered_event.h        | 11 +++++
->>>   7 files changed, 99 insertions(+), 4 deletions(-)
->>>   create mode 100644 drivers/iio/industrialio-triggered-event.c
->>>   create mode 100644 include/linux/iio/triggered_event.h
->>>
->>> diff --git a/drivers/iio/Kconfig b/drivers/iio/Kconfig
->>> index 4011eff..8fcc92f 100644
->>> --- a/drivers/iio/Kconfig
->>> +++ b/drivers/iio/Kconfig
->>> @@ -58,6 +58,12 @@ config IIO_CONSUMERS_PER_TRIGGER
->>>       This value controls the maximum number of consumers that a
->>>       given trigger may handle. Default is 2.
->>>   +config IIO_TRIGGERED_EVENT
->>> +    tristate
->>> +    select IIO_TRIGGER
->>> +    help
->>> +      Provides helper functions for setting up triggered events.
->>> +
->>>   source "drivers/iio/accel/Kconfig"
->>>   source "drivers/iio/adc/Kconfig"
->>>   source "drivers/iio/amplifiers/Kconfig"
->>> diff --git a/drivers/iio/Makefile b/drivers/iio/Makefile
->>> index 698afc2..40dc13e 100644
->>> --- a/drivers/iio/Makefile
->>> +++ b/drivers/iio/Makefile
->>> @@ -9,6 +9,7 @@ industrialio-$(CONFIG_IIO_TRIGGER) += industrialio-trigger.o
->>>   industrialio-$(CONFIG_IIO_BUFFER_CB) += buffer_cb.o
->>>     obj-$(CONFIG_IIO_TRIGGERED_BUFFER) += industrialio-triggered-buffer.o
->>> +obj-$(CONFIG_IIO_TRIGGERED_EVENT) += industrialio-triggered-event.o
->>>   obj-$(CONFIG_IIO_KFIFO_BUF) += kfifo_buf.o
->>>     obj-y += accel/
->>> diff --git a/drivers/iio/industrialio-core.c b/drivers/iio/industrialio-core.c
->>> index 3524b0d..54d71ea 100644
->>> --- a/drivers/iio/industrialio-core.c
->>> +++ b/drivers/iio/industrialio-core.c
->>> @@ -948,7 +948,7 @@ static void iio_device_unregister_sysfs(struct iio_dev *indio_dev)
->>>   static void iio_dev_release(struct device *device)
->>>   {
->>>       struct iio_dev *indio_dev = dev_to_iio_dev(device);
->>> -    if (indio_dev->modes & INDIO_BUFFER_TRIGGERED)
->>> +    if (indio_dev->modes & (INDIO_BUFFER_TRIGGERED | INDIO_EVENT_TRIGGERED))
->>>           iio_device_unregister_trigger_consumer(indio_dev);
->>>       iio_device_unregister_eventset(indio_dev);
->>>       iio_device_unregister_sysfs(indio_dev);
->>> @@ -1218,7 +1218,7 @@ int iio_device_register(struct iio_dev *indio_dev)
->>>               "Failed to register event set\n");
->>>           goto error_free_sysfs;
->>>       }
->>> -    if (indio_dev->modes & INDIO_BUFFER_TRIGGERED)
->>> +    if (indio_dev->modes & (INDIO_BUFFER_TRIGGERED | INDIO_EVENT_TRIGGERED))
->>>           iio_device_register_trigger_consumer(indio_dev);
->>>         if ((indio_dev->modes & INDIO_ALL_BUFFER_MODES) &&
->>> diff --git a/drivers/iio/industrialio-trigger.c b/drivers/iio/industrialio-trigger.c
->>> index d31098e..72b63e7 100644
->>> --- a/drivers/iio/industrialio-trigger.c
->>> +++ b/drivers/iio/industrialio-trigger.c
->>> @@ -345,10 +345,18 @@ static ssize_t iio_trigger_write_current(struct device *dev,
->>>         indio_dev->trig = trig;
->>>   -    if (oldtrig)
->>> +    if (oldtrig) {
->>> +        if (indio_dev->currentmode == INDIO_EVENT_TRIGGERED)
->>> +            iio_trigger_detach_poll_func(oldtrig,
->>> +                             indio_dev->pollfunc);
->>>           iio_trigger_put(oldtrig);
->>> -    if (indio_dev->trig)
->>> +    }
->>> +    if (indio_dev->trig) {
->>>           iio_trigger_get(indio_dev->trig);
->>> +        if (indio_dev->currentmode == INDIO_EVENT_TRIGGERED)
->>> +            iio_trigger_attach_poll_func(indio_dev->trig,
->>> +                             indio_dev->pollfunc);
->>> +    }
->>>         return len;
->>>   }
->>> diff --git a/drivers/iio/industrialio-triggered-event.c b/drivers/iio/industrialio-triggered-event.c
->>> new file mode 100644
->>> index 0000000..1e5ad33
->>> --- /dev/null
->>> +++ b/drivers/iio/industrialio-triggered-event.c
->>> @@ -0,0 +1,68 @@
->>> + /*
->>> + * Copyright (C) 2015 Cogent Embedded, Inc.
->>> + *
->>> + * This program is free software; you can redistribute  it and/or modify it
->>> + * under  the terms of  the GNU General  Public License as published by the
->>> + * Free Software Foundation;  either version 2 of the  License, or (at your
->>> + * option) any later version.
->>> + */
->>> +
->>> +#include <linux/kernel.h>
->>> +#include <linux/export.h>
->>> +#include <linux/module.h>
->>> +#include <linux/iio/iio.h>
->>> +#include <linux/iio/triggered_event.h>
->>> +#include <linux/iio/trigger_consumer.h>
->>> +
->>> +/**
->>> + * iio_triggered_event_setup() - Setup pollfunc for triggered event
->>> + * @indio_dev:        IIO device structure
->>> + * @pollfunc_bh:    Function which will be used as pollfunc bottom half
->>> + * @pollfunc_th:    Function which will be used as pollfunc top half
->>> + *
->>> + * This function combines some common tasks which will normally be performed
->>> + * when setting up a triggered event. It will allocate the pollfunc and
->>> + * set mode to use it for triggered event.
->>> + *
->>> + * Before calling this function the indio_dev structure should already be
->>> + * completely initialized, but not yet registered. In practice this means that
->>> + * this function should be called right before iio_device_register().
->>> + *
->>> + * To free the resources allocated by this function call
->>> + * iio_triggered_event_cleanup().
->>> + */
->>> +int iio_triggered_event_setup(struct iio_dev *indio_dev,
->>> +    irqreturn_t (*pollfunc_bh)(int irq, void *p),
->>> +    irqreturn_t (*pollfunc_th)(int irq, void *p))
->>> +{
->>> +    indio_dev->pollfunc = iio_alloc_pollfunc(pollfunc_bh,
->>> +                         pollfunc_th,
->>> +                         IRQF_ONESHOT,
->>> +                         indio_dev,
->>> +                         "%s_consumer%d",
->>> +                         indio_dev->name,
->>> +                         indio_dev->id);
->>> +    if (indio_dev->pollfunc == NULL)
->>> +        return -ENOMEM;
->>> +
->>> +    /* Flag that pollfunc is used for triggered event */
->>> +    indio_dev->modes |= INDIO_EVENT_TRIGGERED;
->>> +    indio_dev->currentmode = INDIO_EVENT_TRIGGERED;
->> Can conceive of a corner case here.  What if both buffer
->> and event are being triggered?  No real problem with
->> running them off the same trigger, but right now enabling
->> one will take out the other.
-> To avoid conflict it should be separate pollfunc
-> (indio_dev->pollfunc_event = ...) since we do runtime pollfunc
-> attach/detach for both buffer and event interfaces.
-Agreed.
-> 
->>
->> Might also want to not enable triggered event mode
->> until we enable some events?
-> I think it will need to change most drivers that use event interface since
-> events are enabled inside them via write_event_config() callback or
-> events may have already been enabled during driver probe.
-Pretty much no devices come up with events enabled (might be a really
-stupid one or two out there where there is no control over it other
-than masking the interrupt).
+On 14.08.15 22:09:32, Ganapatrao Kulkarni wrote:
+> DT bindings for numa map for memory, cores and IOs using
+> arm,associativity device node property.
 
-Hmm.  True enough, the core has little knowledge of whether events are
-enabled or not.  I guess attaching the poll function when it doesn't
-do anything (no events enabled) is pretty low cost anyway so lets
-leave it as it is.
+Arnd, Rob,
+
+as the change below suggests the same topology syntax as already
+implemented for PPC, could you take a look at this one for arm64?
+Please ack the devicetree changes, assuming you are fine with it.
+
+All other review comments are addressed so far and there are no open
+issues with the patches. This would help us to further drive this
+series upstream.
+
+Many thanks,
+
+-Robert
+
+
+> Signed-off-by: Ganapatrao Kulkarni <gkulkarni@caviumnetworks.com>
+> ---
+>  Documentation/devicetree/bindings/arm/numa.txt | 212 +++++++++++++++++++++++++
+>  1 file changed, 212 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/arm/numa.txt
 > 
->>
->> Perhaps we need separate indio_dev->event_mode and
-> event_modes ?
-> This probably not necessary since iio stack checks for flags set in
-> indio_dev->modes value.
->> indio_dev->current_event_mode fields to make the two
->> configurable independently?
-> I think it works, but with separate indio_dev->pollfunc_event.
-> 
-> Should it be inidio_dev->current_event_mode or inidio_dev->currentmode_event for
-> consistency?
-Which ever looks best to you.
-> 
-> I will verify your idea with using one trigger for both event and buffer interface on hi8435 driver
-> by adding buffer interface that I will try internally (will not send).
->
-cool
->>
->> I get the feeling this particular feature is going to evolve
->> somewhat as we get a feel for how it is being used.
->>
->>> +
->>> +    return 0;
->>> +}
->>> +EXPORT_SYMBOL(iio_triggered_event_setup);
->>> +
->>> +/**
->>> + * iio_triggered_event_cleanup() - Free resources allocated by iio_triggered_event_setup()
->>> + * @indio_dev: IIO device structure
->>> + */
->>> +void iio_triggered_event_cleanup(struct iio_dev *indio_dev)
->>> +{
->>> +    iio_dealloc_pollfunc(indio_dev->pollfunc);
->>> +}
->>> +EXPORT_SYMBOL(iio_triggered_event_cleanup);
->>> +
->>> +MODULE_AUTHOR("Vladimir Barinov");
->>> +MODULE_DESCRIPTION("IIO helper functions for setting up triggered events");
->>> +MODULE_LICENSE("GPL");
->>> diff --git a/include/linux/iio/iio.h b/include/linux/iio/iio.h
->>> index f791482..b691ee0 100644
->>> --- a/include/linux/iio/iio.h
->>> +++ b/include/linux/iio/iio.h
->>> @@ -294,6 +294,7 @@ static inline s64 iio_get_time_ns(void)
->>>   #define INDIO_BUFFER_TRIGGERED        0x02
->>>   #define INDIO_BUFFER_SOFTWARE        0x04
->>>   #define INDIO_BUFFER_HARDWARE        0x08
->>> +#define INDIO_EVENT_TRIGGERED        0x10
->>>     #define INDIO_ALL_BUFFER_MODES                    \
->>>       (INDIO_BUFFER_TRIGGERED | INDIO_BUFFER_HARDWARE | INDIO_BUFFER_SOFTWARE)
->>> diff --git a/include/linux/iio/triggered_event.h b/include/linux/iio/triggered_event.h
->>> new file mode 100644
->>> index 0000000..e9894e9
->>> --- /dev/null
->>> +++ b/include/linux/iio/triggered_event.h
->>> @@ -0,0 +1,11 @@
->>> +#ifndef _LINUX_IIO_TRIGGERED_EVENT_H_
->>> +#define _LINUX_IIO_TRIGGERED_EVENT_H_
->>> +
->>> +#include <linux/interrupt.h>
->>> +
->>> +int iio_triggered_event_setup(struct iio_dev *indio_dev,
->>> +    irqreturn_t (*pollfunc_bh)(int irq, void *p),
->>> +    irqreturn_t (*pollfunc_th)(int irq, void *p));
->> We renamed the parameters of the equivalent buffer function recently
->> to avoid some confusion.  Could you follow that for this one as well.
-> Ok
-> 
->>
->>> +void iio_triggered_event_cleanup(struct iio_dev *indio_dev);
->>> +
->>> +#endif
->>>
-> 
+> diff --git a/Documentation/devicetree/bindings/arm/numa.txt b/Documentation/devicetree/bindings/arm/numa.txt
+> new file mode 100644
+> index 0000000..dc3ef86
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/arm/numa.txt
+> @@ -0,0 +1,212 @@
+> +==============================================================================
+> +NUMA binding description.
+> +==============================================================================
+> +
+> +==============================================================================
+> +1 - Introduction
+> +==============================================================================
+> +
+> +Systems employing a Non Uniform Memory Access (NUMA) architecture contain
+> +collections of hardware resources including processors, memory, and I/O buses,
+> +that comprise what is commonly known as a NUMA node.
+> +Processor accesses to memory within the local NUMA node is generally faster
+> +than processor accesses to memory outside of the local NUMA node.
+> +DT defines interfaces that allow the platform to convey NUMA node
+> +topology information to OS.
+> +
+> +==============================================================================
+> +2 - arm,associativity
+> +==============================================================================
+> +The mapping is done using arm,associativity device property.
+> +this property needs to be present in every device node which needs to to be
+> +mapped to numa nodes.
+> +
+> +arm,associativity property is set of 32-bit integers which defines level of
+> +topology and boundary in the system at which a significant difference in
+> +performance can be measured between cross-device accesses within
+> +a single location and those spanning multiple locations.
+> +The first cell always contains the broadest subdivision within the system,
+> +while the last cell enumerates the individual devices, such as an SMT thread
+> +of a CPU, or a bus bridge within an SoC".
+> +
+> +ex:
+> +	/* board 0, socket 0, cluster 0, core 0  thread 0 */
+> +	arm,associativity = <0 0 0 0 0>;
+> +
+> +==============================================================================
+> +3 - arm,associativity-reference-points
+> +==============================================================================
+> +This property is a set of 32-bit integers, each representing an index into
+> +the arm,associativity nodes. The first integer is the most significant
+> +NUMA boundary and the following are progressively less significant boundaries.
+> +There can be more than one level of NUMA.
+> +
+> +Ex:
+> +	arm,associativity-reference-points = <0 1>;
+> +	The board Id(index 0) used first to calculate the associativity (node
+> +	distance), then follows the  socket id(index 1).
+> +
+> +	arm,associativity-reference-points = <1 0>;
+> +	The socket Id(index 1) used first to calculate the associativity,
+> +	then follows the board id(index 0).
+> +
+> +	arm,associativity-reference-points = <0>;
+> +	Only the board Id(index 0) used to calculate the associativity.
+> +
+> +	arm,associativity-reference-points = <1>;
+> +	Only socket Id(index 1) used to calculate the associativity.
+> +
+> +==============================================================================
+> +4 - Example dts
+> +==============================================================================
+> +
+> +Example: 2 Node system consists of 2 boards and each board having one socket
+> +and 8 core in each socket.
+> +
+> +	arm,associativity-reference-points = <0>;
+> +
+> +	memory@00c00000 {
+> +		device_type = "memory";
+> +		reg = <0x0 0x00c00000 0x0 0x80000000>;
+> +		/* board 0, socket 0, no specific core */
+> +		arm,associativity = <0 0 0xffff>;
+> +	};
+> +
+> +	memory@10000000000 {
+> +		device_type = "memory";
+> +		reg = <0x100 0x00000000 0x0 0x80000000>;
+> +		/* board 1, socket 0, no specific core */
+> +		arm,associativity = <1 0 0xffff>;
+> +	};
+> +
+> +	cpus {
+> +		#address-cells = <2>;
+> +		#size-cells = <0>;
+> +
+> +		cpu@000 {
+> +			device_type = "cpu";
+> +			compatible =  "arm,armv8";
+> +			reg = <0x0 0x000>;
+> +			enable-method = "psci";
+> +			/* board 0, socket 0, core 0*/
+> +			arm,associativity = <0 0 0>;
+> +		};
+> +		cpu@001 {
+> +			device_type = "cpu";
+> +			compatible =  "arm,armv8";
+> +			reg = <0x0 0x001>;
+> +			enable-method = "psci";
+> +			arm,associativity = <0 0 1>;
+> +		};
+> +		cpu@002 {
+> +			device_type = "cpu";
+> +			compatible =  "arm,armv8";
+> +			reg = <0x0 0x002>;
+> +			enable-method = "psci";
+> +			arm,associativity = <0 0 2>;
+> +		};
+> +		cpu@003 {
+> +			device_type = "cpu";
+> +			compatible =  "arm,armv8";
+> +			reg = <0x0 0x003>;
+> +			enable-method = "psci";
+> +			arm,associativity = <0 0 3>;
+> +		};
+> +		cpu@004 {
+> +			device_type = "cpu";
+> +			compatible =  "arm,armv8";
+> +			reg = <0x0 0x004>;
+> +			enable-method = "psci";
+> +			arm,associativity = <0 0 4>;
+> +		};
+> +		cpu@005 {
+> +			device_type = "cpu";
+> +			compatible =  "arm,armv8";
+> +			reg = <0x0 0x005>;
+> +			enable-method = "psci";
+> +			arm,associativity = <0 0 5>;
+> +		};
+> +		cpu@006 {
+> +			device_type = "cpu";
+> +			compatible =  "arm,armv8";
+> +			reg = <0x0 0x006>;
+> +			enable-method = "psci";
+> +			arm,associativity = <0 0 6>;
+> +		};
+> +		cpu@007 {
+> +			device_type = "cpu";
+> +			compatible =  "arm,armv8";
+> +			reg = <0x0 0x007>;
+> +			enable-method = "psci";
+> +			arm,associativity = <0 0 7>;
+> +		};
+> +		cpu@008 {
+> +			device_type = "cpu";
+> +			compatible =  "arm,armv8";
+> +			reg = <0x0 0x008>;
+> +			enable-method = "psci";
+> +			/* board 1, socket 0, core 0*/
+> +			arm,associativity = <1 0 0>;
+> +		};
+> +		cpu@009 {
+> +			device_type = "cpu";
+> +			compatible =  "arm,armv8";
+> +			reg = <0x0 0x009>;
+> +			enable-method = "psci";
+> +			arm,associativity = <1 0 1>;
+> +		};
+> +		cpu@00a {
+> +			device_type = "cpu";
+> +			compatible =  "arm,armv8";
+> +			reg = <0x0 0x00a>;
+> +			enable-method = "psci";
+> +			arm,associativity = <0 0 2>;
+> +		};
+> +		cpu@00b {
+> +			device_type = "cpu";
+> +			compatible =  "arm,armv8";
+> +			reg = <0x0 0x00b>;
+> +			enable-method = "psci";
+> +			arm,associativity = <1 0 3>;
+> +		};
+> +		cpu@00c {
+> +			device_type = "cpu";
+> +			compatible =  "arm,armv8";
+> +			reg = <0x0 0x00c>;
+> +			enable-method = "psci";
+> +			arm,associativity = <1 0 4>;
+> +		};
+> +		cpu@00d {
+> +			device_type = "cpu";
+> +			compatible =  "arm,armv8";
+> +			reg = <0x0 0x00d>;
+> +			enable-method = "psci";
+> +			arm,associativity = <1 0 5>;
+> +		};
+> +		cpu@00e {
+> +			device_type = "cpu";
+> +			compatible =  "arm,armv8";
+> +			reg = <0x0 0x00e>;
+> +			enable-method = "psci";
+> +			arm,associativity = <1 0 6>;
+> +		};
+> +		cpu@00f {
+> +			device_type = "cpu";
+> +			compatible =  "arm,armv8";
+> +			reg = <0x0 0x00f>;
+> +			enable-method = "psci";
+> +			arm,associativity = <1 0 7>;
+> +		};
+> +	};
+> +
+> +	pcie0: pcie0@0x8480,00000000 {
+> +		compatible = "arm,armv8";
+> +		device_type = "pci";
+> +		bus-range = <0 255>;
+> +		#size-cells = <2>;
+> +		#address-cells = <3>;
+> +		reg = <0x8480 0x00000000 0 0x10000000>;  /* Configuration space */
+> +		ranges = <0x03000000 0x8010 0x00000000 0x8010 0x00000000 0x70 0x00000000>; /* mem ranges */
+> +		/* board 0, socket 0, pci bus 0*/
+> +		arm,associativity = <0 0 0>;
+> +        };
 > -- 
-> To unsubscribe from this list: send the line "unsubscribe linux-iio" in
-> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 1.8.1.4
+> 
+> 
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
