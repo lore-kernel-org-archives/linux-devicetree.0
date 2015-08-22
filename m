@@ -1,100 +1,140 @@
-From: Chunfeng Yun <chunfeng.yun@mediatek.com>
-Subject: [PATCH v6 1/5] dt-bindings: Add usb3.0 phy binding for MT65xx SoCs
-Date: Sat, 22 Aug 2015 09:45:07 +0800
-Message-ID: <1440207911-17666-2-git-send-email-chunfeng.yun@mediatek.com>
-References: <1440207911-17666-1-git-send-email-chunfeng.yun@mediatek.com>
+From: punnaiah choudary kalluri <punnaia-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH v4 1/2] Documentation: dt: Add Xilinx zynqmp dma device
+ tree binding documentation
+Date: Sat, 22 Aug 2015 16:17:36 +0530
+Message-ID: <CAGnW=Bb=pJgdDRv_isrMC2b+z5cPwKJLhR4E0Z8=L0uCGAh0xQ@mail.gmail.com>
+References: <1438831173-8761-1-git-send-email-punnaia@xilinx.com>
+	<CAAtXAHdu10dchedaApLiw6+b583z4D8Of1TAEGDmhhVLOy+8YA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1440207911-17666-1-git-send-email-chunfeng.yun@mediatek.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mathias Nyman <mathias.nyman@intel.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, Felipe Balbi <balbi@ti.com>, Chunfeng Yun <chunfeng.yun@mediatek.com>, Sascha Hauer <s.hauer@pengutronix.de>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Roger Quadros <rogerq@ti.com>, linux-usb@vger.kernel.org, linux-mediatek@lists.infradead.org, John Crispin <blogic@openwrt.org>, Daniel Kurtz <djkurtz@chromium.org>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, Kishon Vijay Abraham I <kishon@ti.com>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAAtXAHdu10dchedaApLiw6+b583z4D8Of1TAEGDmhhVLOy+8YA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Moritz Fischer <moritz.fischer-+aYTwkv1SeIAvxtiuMwx3w@public.gmane.org>
+Cc: Punnaiah Choudary Kalluri <punnaiah.choudary.kalluri-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "pawel.moll-5wv7dgnIgG8@public.gmane.org" <pawel.moll-5wv7dgnIgG8@public.gmane.org>, "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org" <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Punnaiah Choudary <kpc528-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-add a DT binding documentation of usb3.0 phy for MT65xx
-SoCs from Mediatek.
+Hi Moritz,
 
-Signed-off-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
----
- .../devicetree/bindings/phy/phy-mt65xx-usb.txt     | 69 ++++++++++++++++++++++
- 1 file changed, 69 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/phy/phy-mt65xx-usb.txt
+  Thanks. I will take care of these suggestions in next version
 
-diff --git a/Documentation/devicetree/bindings/phy/phy-mt65xx-usb.txt b/Documentation/devicetree/bindings/phy/phy-mt65xx-usb.txt
-new file mode 100644
-index 0000000..5812d20
---- /dev/null
-+++ b/Documentation/devicetree/bindings/phy/phy-mt65xx-usb.txt
-@@ -0,0 +1,69 @@
-+mt65xx USB3.0 PHY binding
-+--------------------------
-+
-+This binding describes a usb3.0 phy for mt65xx platforms of Medaitek SoC.
-+
-+Required properties (controller (parent) node):
-+ - compatible	: should be "mediatek,mt8173-u3phy"
-+ - reg		: offset and length of register for phy, exclude port's
-+		  register.
-+ - clocks	: a list of phandle + clock-specifier pairs, one for each
-+		  entry in clock-names
-+ - clock-names	: must contain
-+		  "u3phya_ref": for reference clock of usb3.0 analog phy.
-+
-+Required nodes	: a sub-node is required for each port the controller
-+		  provides. Address range information including the usual
-+		  'reg' property is used inside these nodes to describe
-+		  the controller's topology. These nodes are translated
-+		  by the driver's .xlate() function.
-+
-+Required properties (port (child) node):
-+- reg		: address and length of the register set for the port.
-+- #phy-cells	: should be 1 (See second example)
-+		  cell after port phandle is phy type from:
-+			- PHY_TYPE_USB2
-+			- PHY_TYPE_USB3
-+
-+Example:
-+
-+u3phy: usb-phy@11290000 {
-+	compatible = "mediatek,mt8173-u3phy";
-+	reg = <0 0x11290000 0 0x800>;
-+	clocks = <&apmixedsys CLK_APMIXED_REF2USB_TX>;
-+	clock-names = "u3phya_ref";
-+	#address-cells = <2>;
-+	#size-cells = <2>;
-+	ranges;
-+	status = "okay";
-+
-+	phy_port0: port@11290800 {
-+		reg = <0 0x11290800 0 0x800>;
-+		#phy-cells = <1>;
-+		status = "okay";
-+	};
-+
-+	phy_port1: port@11291000 {
-+		reg = <0 0x11291000 0 0x800>;
-+		#phy-cells = <1>;
-+		status = "okay";
-+	};
-+};
-+
-+Specifying phy control of devices
-+---------------------------------
-+
-+Device nodes should specify the configuration required in their "phys"
-+property, containing a phandle to the phy port node and a device type;
-+phy-names for each port are optional.
-+
-+Example:
-+
-+#include <dt-bindings/phy/phy.h>
-+
-+usb30: usb@11270000 {
-+	...
-+	phys = <&phy_port0 PHY_TYPE_USB3>;
-+	phy-names = "usb3-0";
-+	...
-+};
--- 
-1.8.1.1.dirty
+Regards,
+Punnaiah
+
+On Fri, Aug 21, 2015 at 10:12 PM, Moritz Fischer
+<moritz.fischer-+aYTwkv1SeIAvxtiuMwx3w@public.gmane.org> wrote:
+> Hi all,
+>
+> sorry for HTML mail spam last night ... couple of nits below
+>
+> On Wed, Aug 5, 2015 at 8:19 PM, Punnaiah Choudary Kalluri
+> <punnaiah.choudary.kalluri-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org> wrote:
+>> Device-tree binding documentation for Xilinx zynqmp dma engine used in
+>> Zynq UltraScale+ MPSoC.
+>>
+>> Signed-off-by: Punnaiah Choudary Kalluri <punnaia-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+>> ---
+>> Changes in v4:
+>> - None
+>> Changes in v3:
+>> - None
+>> Changes in v2:
+>> - None
+>> ---
+>>  .../devicetree/bindings/dma/xilinx/zynqmp_dma.txt  |   61 ++++++++++++++++++++
+>>  1 files changed, 61 insertions(+), 0 deletions(-)
+>>  create mode 100644 Documentation/devicetree/bindings/dma/xilinx/zynqmp_dma.txt
+>>
+>> diff --git a/Documentation/devicetree/bindings/dma/xilinx/zynqmp_dma.txt b/Documentation/devicetree/bindings/dma/xilinx/zynqmp_dma.txt
+>> new file mode 100644
+>> index 0000000..e4f92b9
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/dma/xilinx/zynqmp_dma.txt
+>> @@ -0,0 +1,61 @@
+>> +Xilinx ZynqMP DMA engine, it does support memory to memory transfers,
+>> +memory to device and device to memory transfers. It also has flow
+>> +control and rate control support for slave/peripheral dma access.
+>
+> How about: The Xilinx ZynqMP DMA engine does support memory to memory transfers,
+> memory to device and device to memory transfers. It also has flow
+> control and rate control
+> support for slave / peripheral DMA access.
+>> +
+>> +Required properties:
+>> +- compatible: Should be "xlnx,zynqmp-dma-1.0"
+>> +- #dma-cells: Should be <1>, a single cell holding a line request number
+>> +- reg: Memory map for module access
+>> +- interrupt-parent: Interrupt controller the interrupt is routed through
+>> +- interrupts: Should contain DMA channel interrupt
+>> +- xlnx,bus-width: AXI buswidth in bits. Should contain 128 or 64
+>> +
+>> +Optional properties:
+>> +- xlnx,include-sg: Indicates the controller to operate in simple or scatter
+>> +                  gather dma mode
+> s/dma/DMA
+>> +- xlnx,ratectrl: Scheduling interval in terms of clock cycles for
+>> +                source AXI transaction
+>> +- xlnx,overfetch: Tells whether the channel is allowed to over fetch the data
+> (Maybe) s/Tells/Determines/
+>> +- xlnx,src-issue: Number of AXI outstanding transactions on source side
+>> +- xlnx,desc-axi-cohrnt: Tells whether the AXI transactions generated for the
+>> +                       descriptor read are marked Non-coherent
+> (Maybe) s/Tells/Determines/
+>> +- xlnx,src-axi-cohrnt: Tells whether the AXI transactions generated for the
+>> +                       source descriptor payload are marked Non-coherent
+> same
+>> +- xlnx,dst-axi-cohrnt: Tells whether the AXI transactions generated for the
+>> +                       dst descriptor payload are marked Non-coherent
+>> +- xlnx,desc-axi-qos: AXI QOS bits to be used for descriptor fetch
+>> +- xlnx,src-axi-qos: AXI QOS bits to be used for data read
+>> +- xlnx,dst-axi-qos: AXI QOS bits to be used for data write
+>> +- xlnx,desc-axi-cache: AXI cache bits to be used for descriptor fetch.
+>> +- xlnx,desc-axi-cache: AXI cache bits to be used for data read
+>> +- xlnx,desc-axi-cache: AXI cache bits to be used for data write
+>> +- xlnx,src-burst-len: AXI length for data read. Support only power of 2 values
+>> +                     i.e 1,2,4,8 and 16
+>> +- xlnx,dst-burst-len: AXI length for data write. Support only power of 2 values
+>> +                     i.e 1,2,4,8 and 16
+>> +
+>> +Example:
+>> +++++++++
+>> +fpd_dma_chan1: dma@FD500000 {
+>> +       compatible = "xlnx,zynqmp-dma-1.0";
+>> +       reg = <0x0 0xFD500000 0x1000>;
+>> +       #dma_cells = <1>;
+> #dma-cells = <1>;
+>> +       interrupt-parent = <&gic>;
+>> +       interrupts = <0 117 4>;
+>> +       xlnx,bus-width = <128>;
+>> +       xlnx,include-sg;
+>> +       xlnx,overfetch;
+>> +       xlnx,ratectrl = <0>;
+>> +       xlnx,src-issue = <16>;
+>> +       xlnx,desc-axi-cohrnt;
+>> +       xlnx,src-axi-cohrnt;
+>> +       xlnx,dst-axi-cohrnt;
+>> +       xlnx,desc-axi-qos = <0>;
+>> +       xlnx,desc-axi-cache = <0>;
+>> +       xlnx,src-axi-qos = <0>;
+>> +       xlnx,src-axi-cache = <2>;
+>> +       xlnx,dst-axi-qos = <0>;
+>> +       xlnx,dst-axi-cache = <2>;
+>> +       xlnx,src-burst-len = <4>;
+>> +       xlnx,dst-burst-len = <4>;
+>> +};
+>> --
+>> 1.7.4
+>>
+>>
+>> _______________________________________________
+>> linux-arm-kernel mailing list
+>> linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+>> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+>
+> Cheers,
+>
+> Moritz
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
