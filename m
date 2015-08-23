@@ -1,7 +1,7 @@
 From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH 2/5] ARM: dts: sun4i: inet97fv2: Add regulator nodes
-Date: Mon, 24 Aug 2015 00:37:23 +0200
-Message-ID: <1440369446-22195-2-git-send-email-hdegoede@redhat.com>
+Subject: [PATCH 3/5] ARM: dts: sun4i: inet97fv2: Enable otg controller
+Date: Mon, 24 Aug 2015 00:37:24 +0200
+Message-ID: <1440369446-22195-3-git-send-email-hdegoede@redhat.com>
 References: <1440369446-22195-1-git-send-email-hdegoede@redhat.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <1440369446-22195-1-git-send-email-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
@@ -10,77 +10,71 @@ To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.o
 Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Use axp209.dtsi and add regulator nodes for the regulators used on the
-inet97fv2 tablet.
+Enable the otg controller on the inet97fv2 tablet.
 
 Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 ---
- arch/arm/boot/dts/sun4i-a10-inet97fv2.dts | 35 +++++++++++++++++++++++++++----
- 1 file changed, 31 insertions(+), 4 deletions(-)
+ arch/arm/boot/dts/sun4i-a10-inet97fv2.dts | 34 +++++++++++++++++++++++++++++++
+ 1 file changed, 34 insertions(+)
 
 diff --git a/arch/arm/boot/dts/sun4i-a10-inet97fv2.dts b/arch/arm/boot/dts/sun4i-a10-inet97fv2.dts
-index 51621c5..69e22bd 100644
+index 69e22bd..309a0da 100644
 --- a/arch/arm/boot/dts/sun4i-a10-inet97fv2.dts
 +++ b/arch/arm/boot/dts/sun4i-a10-inet97fv2.dts
-@@ -61,6 +61,10 @@
- 	};
- };
- 
-+&cpu0 {
-+	cpu-supply = <&reg_dcdc2>;
-+};
-+
- &ehci1 {
- 	status = "okay";
- };
-@@ -71,15 +75,13 @@
- 	status = "okay";
- 
- 	axp209: pmic@34 {
--		compatible = "x-powers,axp209";
- 		reg = <0x34>;
- 		interrupts = <0>;
--
--		interrupt-controller;
--		#interrupt-cells = <1>;
- 	};
- };
- 
-+#include "axp209.dtsi"
-+
- &mmc0 {
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&mmc0_pins_a>, <&mmc0_cd_pin_reference_design>;
-@@ -90,6 +92,31 @@
+@@ -92,6 +92,26 @@
  	status = "okay";
  };
  
-+&reg_dcdc2 {
-+	regulator-always-on;
-+	regulator-min-microvolt = <1000000>;
-+	regulator-max-microvolt = <1400000>;
-+	regulator-name = "vdd-cpu";
++&otg_sram {
++	status = "okay";
 +};
 +
-+&reg_dcdc3 {
-+	regulator-always-on;
-+	regulator-min-microvolt = <1250000>;
-+	regulator-max-microvolt = <1250000>;
-+	regulator-name = "vdd-int-dll";
++&pio {
++	usb0_id_detect_pin: usb0_id_detect_pin@0 {
++		allwinner,pins = "PH4";
++		allwinner,function = "gpio_in";
++		allwinner,drive = <SUN4I_PINCTRL_10_MA>;
++		allwinner,pull = <SUN4I_PINCTRL_PULL_UP>;
++	};
++
++	usb0_vbus_detect_pin: usb0_vbus_detect_pin@0 {
++		allwinner,pins = "PH5";
++		allwinner,function = "gpio_in";
++		allwinner,drive = <SUN4I_PINCTRL_10_MA>;
++		allwinner,pull = <SUN4I_PINCTRL_PULL_DOWN>;
++	};
 +};
 +
-+&reg_ldo1 {
-+	regulator-name = "vdd-rtc";
-+};
-+
-+&reg_ldo2 {
-+	regulator-always-on;
-+	regulator-min-microvolt = <3000000>;
-+	regulator-max-microvolt = <3000000>;
-+	regulator-name = "avcc";
+ &reg_dcdc2 {
+ 	regulator-always-on;
+ 	regulator-min-microvolt = <1000000>;
+@@ -117,6 +137,10 @@
+ 	regulator-name = "avcc";
+ };
+ 
++&reg_usb0_vbus {
++	status = "okay";
 +};
 +
  &reg_usb2_vbus {
+ 	status = "okay";
+ };
+@@ -127,7 +151,17 @@
+ 	status = "okay";
+ };
+ 
++&usb_otg {
++	dr_mode = "otg";
++	status = "okay";
++};
++
+ &usbphy {
++	pinctrl-names = "default";
++	pinctrl-0 = <&usb0_id_detect_pin>, <&usb0_vbus_detect_pin>;
++	usb0_id_det-gpio = <&pio 7 4 GPIO_ACTIVE_HIGH>; /* PH4 */
++	usb0_vbus_det-gpio = <&pio 7 5 GPIO_ACTIVE_HIGH>; /* PH5 */
++	usb0_vbus-supply = <&reg_usb0_vbus>;
+ 	usb2_vbus-supply = <&reg_usb2_vbus>;
  	status = "okay";
  };
 -- 
