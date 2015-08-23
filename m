@@ -1,60 +1,142 @@
 From: Magnus Damm <magnus.damm@gmail.com>
-Subject: [PATCH v2 00/07] ARM: shmobile: APMU DT support via SMP Enable method V2
-Date: Sun, 23 Aug 2015 16:24:27 +0900
-Message-ID: <20150823072427.14156.1960.sendpatchset@little-apple>
+Subject: [PATCH v2 02/07] ARM: shmobile: Add APMU DT support via Enable method
+Date: Sun, 23 Aug 2015 16:24:49 +0900
+Message-ID: <20150823072449.14156.40934.sendpatchset@little-apple>
+References: <20150823072427.14156.1960.sendpatchset@little-apple>
 Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <20150823072427.14156.1960.sendpatchset@little-apple>
 Sender: linux-sh-owner@vger.kernel.org
 To: linux-sh@vger.kernel.org
 Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, lorenzo.pieralisi@arm.com, keita.kobayashi.ym@renesas.com, horms@verge.net.au, geert@linux-m68k.org, laurent.pinchart@ideasonboard.com, Magnus Damm <magnus.damm@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-ARM: shmobile: APMU DT support via SMP Enable method V2
+From: Magnus Damm <damm+renesas@opensource.se>
 
-[PATCH v2 01/07] devicetree: bindings: Renesas APMU and SMP Enable method
-[PATCH v2 02/07] ARM: shmobile: Add APMU DT support via Enable method
-[PATCH v2 03/07] ARM: shmobile: Add APMU nodes to r8a7790 DTSI
-[PATCH v2 04/07] ARM: shmobile: Add APMU nodes to r8a7791 DTSI
-[PATCH v2 05/07] ARM: shmobile: Add function to prioritize DT SMP
-[PATCH v2 06/07] ARM: shmobile: Prioritize r8a7790 DT APMU support
-[PATCH v2 07/07] ARM: shmobile: Prioritize r8a7791 DT APMU support
-
-These patches add DT support for the APMU hardware commonly found in
-Renesas R-Car Gen2 SoCs. Without these patches the APMU gets configured
-through data expressed in C, and with this series applied it is possible
-to describe the APMU configuration in DT and let the enable method point
-out that the APMU should be used.
-
-Patch 1 and 2 are Documenting and adding DT support to the APMU driver
-together with enabling use of the enable-method way to describe that
-the APMU hardware is needed for SMP operation.
-
-Patch 3 and 4 are related to r8a7790/r8a7791 support that get a DTSI update
-to describe the APMU hardware. To avoid breaking support for older DTBs out
-in the wild these patches keep the older existing C code APMU configuration
-as-is. Patch 5-7 make sure that during run-time, if the APMU is installed
-via the DT enable-method then it will not be overriden by older non-DT
-configuration.
-
-I suggest making APMU DT configuration mandatory for SMP operation on
-newer SoCs and that we keep the old APMU support code in place for a
-good number of kernel releases or until we can identify a couple of major
-reasons good enough to force a DTB update on the end users.
-
-In the future r8a7793 and r8a7794 support may be added by using code
-similar to patch 3 and 4 but without any C-based SMP code and fallback.
+Allow DT configuration of the APMU hardware in the case when the APMU is
+pointed out in the DTB via the enable-method. The ability to configure
+the APMU via C code is still kept intact to prevent DTB breakage for older
+SoCs that do not rely on the enable-method for SMP support.
 
 Signed-off-by: Magnus Damm <damm+renesas@opensource.se>
 ---
 
-Written against renesas-drivers-2015-08-18-v4.2-rc7
+ Changes since V1:
+ - Adjusted to use .cpu_can_disable instead of .cpu_disable
+
+ arch/arm/mach-shmobile/platsmp-apmu.c |   89 +++++++++++++++++++++++++++++++--
+ 1 file changed, 85 insertions(+), 4 deletions(-)
+
+--- 0001/arch/arm/mach-shmobile/platsmp-apmu.c
++++ work/arch/arm/mach-shmobile/platsmp-apmu.c	2015-08-23 15:33:57.742366518 +0900
+@@ -24,6 +24,7 @@
+ #include <asm/suspend.h>
+ #include "common.h"
+ #include "platsmp-apmu.h"
++#include "rcar-gen2.h"
  
- Documentation/devicetree/bindings/arm/cpus.txt           |    1 
- Documentation/devicetree/bindings/power/renesas,apmu.txt |   31 ++++
- arch/arm/boot/dts/r8a7790.dtsi                           |   13 ++
- arch/arm/boot/dts/r8a7791.dtsi                           |    7 +
- arch/arm/mach-shmobile/common.h                          |    1 
- arch/arm/mach-shmobile/platsmp-apmu.c                    |   89 +++++++++++++-
- arch/arm/mach-shmobile/platsmp.c                         |    7 +
- arch/arm/mach-shmobile/setup-r8a7790.c                   |    1 
- arch/arm/mach-shmobile/setup-r8a7791.c                   |    1 
- 9 files changed, 147 insertions(+), 4 deletions(-)
+ static struct {
+ 	void __iomem *iomem;
+@@ -117,15 +118,64 @@ static void apmu_parse_cfg(void (*fn)(st
+ 	}
+ }
+ 
+-void __init shmobile_smp_apmu_prepare_cpus(unsigned int max_cpus,
+-					   struct rcar_apmu_config *apmu_config,
+-					   int num)
++static const struct of_device_id apmu_ids[] = {
++	{ .compatible = "renesas,apmu" },
++	{ /*sentinel*/ }
++};
++
++static void apmu_parse_dt(void (*fn)(struct resource *res, int cpu, int bit))
++{
++	struct device_node *np_apmu, *np_cpu;
++	struct resource res;
++	u32 id;
++	int bit, index;
++	bool is_allowed;
++
++	for_each_matching_node(np_apmu, apmu_ids) {
++		/* only enable the cluster that includes the boot CPU */
++		is_allowed = false;
++		for (bit = 0; bit < CONFIG_NR_CPUS; bit++) {
++			np_cpu = of_parse_phandle(np_apmu, "cpus", bit);
++			if (np_cpu) {
++				if (!of_property_read_u32(np_cpu, "reg", &id)) {
++					if (id == cpu_logical_map(0))
++						is_allowed = true;
++				}
++				of_node_put(np_cpu);
++			}
++		}
++		if (!is_allowed)
++			continue;
++
++		for (bit = 0; bit < CONFIG_NR_CPUS; bit++) {
++			np_cpu = of_parse_phandle(np_apmu, "cpus", bit);
++			if (np_cpu) {
++				if (!of_property_read_u32(np_cpu, "reg", &id)) {
++					index = get_logical_index(id);
++					if ((index >= 0) &&
++					    !of_address_to_resource(np_apmu,
++								    0, &res))
++						fn(&res, index, bit);
++				}
++				of_node_put(np_cpu);
++			}
++		}
++		of_node_put(np_apmu);
++	}
++}
++
++static void __init shmobile_smp_apmu_setup_boot(void)
+ {
+ 	/* install boot code shared by all CPUs */
+ 	shmobile_boot_fn = virt_to_phys(shmobile_smp_boot);
+ 	shmobile_boot_arg = MPIDR_HWID_BITMASK;
++}
+ 
+-	/* perform per-cpu setup */
++void __init shmobile_smp_apmu_prepare_cpus(unsigned int max_cpus,
++					   struct rcar_apmu_config *apmu_config,
++					   int num)
++{
++	shmobile_smp_apmu_setup_boot();
+ 	apmu_parse_cfg(apmu_init_cpu, apmu_config, num);
+ }
+ 
+@@ -236,3 +286,34 @@ void __init shmobile_smp_apmu_suspend_in
+ 	shmobile_suspend_ops.enter = shmobile_smp_apmu_enter_suspend;
+ }
+ #endif
++
++static void __init shmobile_smp_apmu_prepare_cpus_dt(unsigned int max_cpus)
++{
++	shmobile_smp_apmu_setup_boot();
++	apmu_parse_dt(apmu_init_cpu);
++	rcar_gen2_pm_init();
++}
++
++static int shmobile_smp_apmu_boot_secondary_md21(unsigned int cpu,
++						 struct task_struct *idle)
++{
++	/* Error out when hardware debug mode is enabled */
++	if (rcar_gen2_read_mode_pins() & BIT(21)) {
++		pr_warn("Unable to boot CPU%u when MD21 is set\n", cpu);
++		return -ENOTSUPP;
++	}
++
++	return shmobile_smp_apmu_boot_secondary(cpu, idle);
++}
++
++static struct smp_operations apmu_smp_ops __initdata = {
++	.smp_prepare_cpus	= shmobile_smp_apmu_prepare_cpus_dt,
++	.smp_boot_secondary	= shmobile_smp_apmu_boot_secondary_md21,
++#ifdef CONFIG_HOTPLUG_CPU
++	.cpu_can_disable	= shmobile_smp_cpu_can_disable,
++	.cpu_die		= shmobile_smp_apmu_cpu_die,
++	.cpu_kill		= shmobile_smp_apmu_cpu_kill,
++#endif
++};
++
++CPU_METHOD_OF_DECLARE(shmobile_smp_apmu, "renesas,apmu", &apmu_smp_ops);
