@@ -1,39 +1,67 @@
-From: Scott Shu <scott.shu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Subject: [PATCH v4 4/8] ARM: multi_v7_defconfig: enable INFRACFG and SCPSYS modules
-Date: Sun, 23 Aug 2015 17:01:03 +0800
-Message-ID: <1440320467-26118-5-git-send-email-scott.shu@mediatek.com>
-References: <1440320467-26118-1-git-send-email-scott.shu@mediatek.com>
+From: Scott Shu <scott.shu@mediatek.com>
+Subject: [PATCH v4 0/8] This series adds SMP support for the MediaTek MT6580.
+Date: Sun, 23 Aug 2015 17:00:59 +0800
+Message-ID: <1440320467-26118-1-git-send-email-scott.shu@mediatek.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1440320467-26118-1-git-send-email-scott.shu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, wsd_upstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, loda.chou-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, jades.shih-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, scott.shu-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Scott Shu <scott.shu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Russell King <linux@arm.linux.org.uk>, Matthias Brugger <matthias.bgg@gmail.com>, Sascha Hauer <s.hauer@pengutronix.de>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, wsd_upstream@mediatek.com, loda.chou@mediatek.com, jades.shih@mediatek.com, scott.shu@gmail.com, Scott Shu <scott.shu@mediatek.com>
 List-Id: devicetree@vger.kernel.org
 
-The INFRACFG contains various infrastructure registers and the SCPSYS handles
-several power management related tasks. Both are needed for SMP and CPU
-hotplug on MT6580.
+This patchset adds support SMP on MediaTek MT6580 Cortex-A7 quad-core SoC.
 
-Signed-off-by: Scott Shu <scott.shu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
----
- arch/arm/configs/multi_v7_defconfig | 2 ++
- 1 file changed, 2 insertions(+)
+This is based on v4.2-rc1 and following patch series:
+(1) Yingjoe Chen's "Add SMP bringup support for mt65xx socs" [1]
+(2) Mars Cheng's "Add mt6580 basic chip support" [2]
+(3) Sascha Hauer's "Mediatek SCPSYS power domain support" [3]
 
-diff --git a/arch/arm/configs/multi_v7_defconfig b/arch/arm/configs/multi_v7_defconfig
-index 6d83a1b..c272edd 100644
---- a/arch/arm/configs/multi_v7_defconfig
-+++ b/arch/arm/configs/multi_v7_defconfig
-@@ -596,6 +596,8 @@ CONFIG_KEYBOARD_NVEC=y
- CONFIG_SERIO_NVEC_PS2=y
- CONFIG_NVEC_POWER=y
- CONFIG_NVEC_PAZ00=y
-+CONFIG_MTK_INFRACFG=y
-+CONFIG_MTK_SCPSYS=y
- CONFIG_QCOM_GSBI=y
- CONFIG_QCOM_PM=y
- CONFIG_COMMON_CLK_QCOM=y
+The secondary cores are power off as default on MT6580, this change adds
+a new enable-method to turn on power to the cores during booting process.
+
+The System Power Manager (SPM) inside the SCPSYS is for the CPU MTCMOS
+power domain control. Please check [3] for more information about SCPSYS.
+
+[1] https://lkml.org/lkml/2015/5/16/33
+[2] https://lkml.org/lkml/2015/6/30/119
+[3] https://lkml.org/lkml/2015/6/9/172
+
+Change in v4:
+1. Remove boot_lock and pen_release stuff
+2. Fix some coding style
+
+Change in v3:
+1. Add CPU power control in SCPSYS driver
+
+Change in v2:
+1. Rebase to 4.2-rc1
+2. Fix using usleep() in atomic context
+3. Put a timeout in cpu power on/off sequence
+4. Fix some coding style
+
+Scott Shu (8):
+  Document: bindings: DT: Add SMP enable method for MT6580 SoC platform
+  dt-bindings: soc: Add SCPSYS compatible support for mt6580
+  soc: Mediatek: Add SCPSYS CPU power domain driver
+  ARM: multi_v7_defconfig: enable INFRACFG and SCPSYS modules
+  ARM: mediatek: add smp bringup code for MT6580
+  ARM: Mediatek: enable GPT6 on boot up to make arch timer working    
+    for MT6580
+  ARM: dts: mt6580: Add device nodes to the MT6580 dtsi file
+  ARM: dts: mt6580: enable basic SMP bringup for MT6580
+
+ Documentation/devicetree/bindings/arm/cpus.txt     |   1 +
+ .../devicetree/bindings/soc/mediatek/scpsys.txt    |   2 +-
+ arch/arm/boot/dts/mt6580.dtsi                      |  26 +++
+ arch/arm/configs/multi_v7_defconfig                |   2 +
+ arch/arm/mach-mediatek/mediatek.c                  |   4 +-
+ arch/arm/mach-mediatek/platsmp.c                   |  67 ++++++
+ drivers/soc/mediatek/mtk-scpsys.c                  | 250 +++++++++++++++++++++
+ include/linux/soc/mediatek/scpsys.h                |   9 +
+ 8 files changed, 359 insertions(+), 2 deletions(-)
+ create mode 100644 include/linux/soc/mediatek/scpsys.h
+
 -- 
 1.9.1
 
@@ -49,7 +77,3 @@ that you have received this e-mail in error, please notify the sender
 immediately (by replying to this e-mail), delete any and all copies of 
 this e-mail (including any attachments) from your system, and do not
 disclose the content of this e-mail to any other person. Thank you!
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
