@@ -1,55 +1,80 @@
-From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH 5/5] ARM: dts: sun4i: inet97fv2: Enable i2c1 and
- i2c2 controllers
-Date: Mon, 24 Aug 2015 00:37:26 +0200
-Message-ID: <1440369446-22195-5-git-send-email-hdegoede@redhat.com>
-References: <1440369446-22195-1-git-send-email-hdegoede@redhat.com>
-Reply-To: hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org
+From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v3 1/8] rsb: Add generic Reduced Serial Bus (RSB)
+ controller binding documentation
+Date: Sun, 23 Aug 2015 17:43:03 -0500
+Message-ID: <CAL_JsqJA6MEtnF35ThPDgVmEZHyui39-HLsefWPQ1tzzfLAW3w@mail.gmail.com>
+References: <1439958009-14056-1-git-send-email-wens@csie.org> <1439958009-14056-2-git-send-email-wens@csie.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBDRZXY4CYYORBNEW5GXAKGQEWNWGWFA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <1440369446-22195-1-git-send-email-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <http://groups.google.com/group/linux-sunxi/subscribe>
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1439958009-14056-2-git-send-email-wens-jdAy2FN1RRM@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Meng Zhang <kevin-0TFLnhJekD6UEPyfVivIlAC/G2K4zDHf@public.gmane.org>, Shuge <shuge-0TFLnhJekD6UEPyfVivIlAC/G2K4zDHf@public.gmane.org>, kevin.z.m.zh-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Enable i2c1 and i2c2 controllers, these are used for the touchscreen resp.
-the accelerometer.
+On Tue, Aug 18, 2015 at 11:20 PM, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org> wrote:
+> Reduced Serial Bus is a proprietary 2-line push-pull serial bus
+> supporting multiple slave devices.
+>
+> It was developed by Allwinner, Inc. and used by Allwinner and X-Powers,
+> Inc. for their line of PMICs and other peripheral ICs.
+>
+> Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+> ---
+>  Documentation/devicetree/bindings/rsb/rsb.txt | 50 +++++++++++++++++++++++++++
+>  1 file changed, 50 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/rsb/rsb.txt
+>
+> diff --git a/Documentation/devicetree/bindings/rsb/rsb.txt b/Documentation/devicetree/bindings/rsb/rsb.txt
+> new file mode 100644
+> index 000000000000..0b027948ca9c
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/rsb/rsb.txt
+> @@ -0,0 +1,50 @@
+> +Reduced Serial Bus (RSB) Controller
+> +
+> +This document defines a generic set of bindings for use by RSB controllers.
+> +A controller is modelled in device tree as a node with zero or more child
+> +nodes, each representing a unique slave device on the bus.
+> +
+> +Required properties:
+> +
+> + - #address-cells : must be 2
+> + - #size-cells : must be 0
+> +
+> +Optional properties:
+> +
+> + - clock-frequency : Desired bus clock frequency in Hz. Maximum is 20 MHz.
+> +
+> +Child nodes:
+> +
+> +An RSB controller node can contain zero or more child nodes representing
+> +slave devices on the bus.  Child 'reg' properties are specified as a
+> +runtime address, hardware address pair. The hardware address is hardwired
+> +in the device, which can normally be found in the datasheet. The runtime
+> +address is set by software. No 2 devices on the same bus shall have the
+> +same runtime address.
+> +
+> +Valid runtime addresses - There are only 15 valid runtime addresses:
+> +
+> +    0x17, 0x2d, 0x3a, 0x4e, 0x59, 0x63, 0x74, 0x8b,
+> +    0x9c, 0xa6, 0xb1, 0xc5, 0xd2, 0xe8, 0xff
+> +
+> +It is highly recommended that one choose the same runtime addresses as
+> +vendor BSPs use so that a) the addresses remain the same across different
+> +software systems, and b) addresses of supported and listed slave devices
+> +don't conflict with unsupported or not yet listed devices.
 
-Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
----
- arch/arm/boot/dts/sun4i-a10-inet97fv2.dts | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
+I fail to understand why the run-time address belongs in DT or why
+alignment to vendor BSP matters? I can see the desire to align DTs if
+the vendor OS was dependent on having this information. Having to
+access the vendor OS to determine what address to pick does not seem
+like the right way to write a DTS. It seems to me that the RSB bus
+driver should allocate run-time addresses dynamically.
 
-diff --git a/arch/arm/boot/dts/sun4i-a10-inet97fv2.dts b/arch/arm/boot/dts/sun4i-a10-inet97fv2.dts
-index 909fde9..77c31da 100644
---- a/arch/arm/boot/dts/sun4i-a10-inet97fv2.dts
-+++ b/arch/arm/boot/dts/sun4i-a10-inet97fv2.dts
-@@ -83,6 +83,18 @@
- 
- #include "axp209.dtsi"
- 
-+&i2c1 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&i2c1_pins_a>;
-+	status = "okay";
-+};
-+
-+&i2c2 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&i2c2_pins_a>;
-+	status = "okay";
-+};
-+
- &lradc {
- 	vref-supply = <&reg_ldo2>;
- 	status = "okay";
--- 
-2.4.3
+Rob
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
