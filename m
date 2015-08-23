@@ -1,80 +1,59 @@
-From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v3 1/8] rsb: Add generic Reduced Serial Bus (RSB)
- controller binding documentation
-Date: Sun, 23 Aug 2015 17:43:03 -0500
-Message-ID: <CAL_JsqJA6MEtnF35ThPDgVmEZHyui39-HLsefWPQ1tzzfLAW3w@mail.gmail.com>
-References: <1439958009-14056-1-git-send-email-wens@csie.org> <1439958009-14056-2-git-send-email-wens@csie.org>
+From: Olof Johansson <olof@lixom.net>
+Subject: Re: [PATCH v5] dtb: Create a common home for cross-architecture dtsi files.
+Date: Sun, 23 Aug 2015 16:13:54 -0700
+Message-ID: <CAOesGMj46mvbdya1OQnZzL8VrxVwxAV3KoZZRtk3c0CTVx7d5w@mail.gmail.com>
+References: <1438618000-1091-1-git-send-email-ian.campbell@citrix.com>
+	<1439287646.9747.212.camel@citrix.com>
+	<CAL_JsqKv2aOEM-U7JNZnaHomA6HFBSFhSLZ-zhp7c20s6gQBaQ@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1439958009-14056-2-git-send-email-wens-jdAy2FN1RRM@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Meng Zhang <kevin-0TFLnhJekD6UEPyfVivIlAC/G2K4zDHf@public.gmane.org>, Shuge <shuge-0TFLnhJekD6UEPyfVivIlAC/G2K4zDHf@public.gmane.org>, kevin.z.m.zh-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Return-path: <linux-kbuild-owner@vger.kernel.org>
+In-Reply-To: <CAL_JsqKv2aOEM-U7JNZnaHomA6HFBSFhSLZ-zhp7c20s6gQBaQ@mail.gmail.com>
+Sender: linux-kbuild-owner@vger.kernel.org
+To: Rob Herring <robherring2@gmail.com>
+Cc: Ian Campbell <ian.campbell@citrix.com>, "arm@kernel.org" <arm@kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Kumar Gala <galak@codeaurora.org>, Liviu Dudau <liviu.dudau@arm.com>, Sudeep Holla <sudeep.holla@arm.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Russell King <linux@arm.linux.org.uk>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Kristina Martsenko <kristina.martsenko@arm.com>, Kevin Hilman <khilman@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Aug 18, 2015 at 11:20 PM, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org> wrote:
-> Reduced Serial Bus is a proprietary 2-line push-pull serial bus
-> supporting multiple slave devices.
+On Fri, Aug 14, 2015 at 2:21 PM, Rob Herring <robherring2@gmail.com> wrote:
+> +arm-soc
 >
-> It was developed by Allwinner, Inc. and used by Allwinner and X-Powers,
-> Inc. for their line of PMICs and other peripheral ICs.
+> On Tue, Aug 11, 2015 at 5:07 AM, Ian Campbell <ian.campbell@citrix.com> wrote:
+>> On Mon, 2015-08-03 at 17:06 +0100, Ian Campbell wrote:
+>>> Commit 9ccd608070b6 ("arm64: dts: add device tree for ARM SMM-A53x2 on
+>>> LogicTile Express 20MG") added a new dts file to arch/arm64 which
+>>> included "../../../../arm/boot/dts/vexpress-v2m-rs1.dtsi", i.e. a
+>>> .dtsi supplied by arch/arm.
+>>>
+>>> Unfortunately this causes some issues for the split device tree
+>>> repository[0], since things get moved around there. In that context
+>>> the new .dts ends up at src/arm64/arm/vexpress-v2f-1xv7-ca53x2.dts
+>>> while the include is at src/arm/vexpress-v2m-rs1.dtsi.
+>>
+>> Hi Grant,
+>>
+>> Do you think there is any chance of getting this into 4.2-rc$NEXT or shall
+>> we wait until 4.3? I'm assuming this should go via the DT tree, but maybe
+>> it should go via an ARM tree?
 >
-> Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-> ---
->  Documentation/devicetree/bindings/rsb/rsb.txt | 50 +++++++++++++++++++++++++++
->  1 file changed, 50 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/rsb/rsb.txt
->
-> diff --git a/Documentation/devicetree/bindings/rsb/rsb.txt b/Documentation/devicetree/bindings/rsb/rsb.txt
-> new file mode 100644
-> index 000000000000..0b027948ca9c
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/rsb/rsb.txt
-> @@ -0,0 +1,50 @@
-> +Reduced Serial Bus (RSB) Controller
-> +
-> +This document defines a generic set of bindings for use by RSB controllers.
-> +A controller is modelled in device tree as a node with zero or more child
-> +nodes, each representing a unique slave device on the bus.
-> +
-> +Required properties:
-> +
-> + - #address-cells : must be 2
-> + - #size-cells : must be 0
-> +
-> +Optional properties:
-> +
-> + - clock-frequency : Desired bus clock frequency in Hz. Maximum is 20 MHz.
-> +
-> +Child nodes:
-> +
-> +An RSB controller node can contain zero or more child nodes representing
-> +slave devices on the bus.  Child 'reg' properties are specified as a
-> +runtime address, hardware address pair. The hardware address is hardwired
-> +in the device, which can normally be found in the datasheet. The runtime
-> +address is set by software. No 2 devices on the same bus shall have the
-> +same runtime address.
-> +
-> +Valid runtime addresses - There are only 15 valid runtime addresses:
-> +
-> +    0x17, 0x2d, 0x3a, 0x4e, 0x59, 0x63, 0x74, 0x8b,
-> +    0x9c, 0xa6, 0xb1, 0xc5, 0xd2, 0xe8, 0xff
-> +
-> +It is highly recommended that one choose the same runtime addresses as
-> +vendor BSPs use so that a) the addresses remain the same across different
-> +software systems, and b) addresses of supported and listed slave devices
-> +don't conflict with unsupported or not yet listed devices.
+> I was assuming this would go thru the arm-soc tree which is why I
+> acked it. It is getting a bit late for 4.2 at this point, but I guess
+> the standalone tree remains broken for these platforms until this is
+> done. Probably not such a big deal in grand scheme of things.
 
-I fail to understand why the run-time address belongs in DT or why
-alignment to vendor BSP matters? I can see the desire to align DTs if
-the vendor OS was dependent on having this information. Having to
-access the vendor OS to determine what address to pick does not seem
-like the right way to write a DTS. It seems to me that the RSB bus
-driver should allocate run-time addresses dynamically.
+I'm cc:d in the far tail of a thread, so I'll just comment here
+instead of further up:
 
-Rob
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+I'm not a fan at all of creating kernel/dts/<arch>/*, at least if
+there's expected to be contents in there.
+
+We don't have include/linux/asm-<arch>/ in the common tree either.
+Let's not create that for dts.
+
+So, while I'm all for a prefix-based sharing of DTSI files, I don't
+want them to go in a common kernel/dts directory.
+
+Besides sharing some snippets between arm and arm64, what else is
+expected to need to go into such a shared location today?
+
+
+-Olof
