@@ -1,55 +1,54 @@
-From: Magnus Damm <magnus.damm@gmail.com>
-Subject: Re: [PATCH 02/04] ARM: shmobile: Add APMU DT support via Enable method
-Date: Sun, 23 Aug 2015 16:23:17 +0900
-Message-ID: <CANqRtoTm0-K-Tk0Js8_TSNNWhX84FHNxQ1gAUXB0LBgfG8dJow@mail.gmail.com>
-References: <20150521012138.25972.91336.sendpatchset@little-apple>
-	<20150521012200.25972.64826.sendpatchset@little-apple>
-	<CAMuHMdXwMB17YXpqR9xr07vPg84CQL3W1Q20+gL+JvFEpOt+5Q@mail.gmail.com>
+From: Scott Shu <scott.shu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Subject: [PATCH v4 2/8] dt-bindings: soc: Add SCPSYS compatible support for mt6580
+Date: Sun, 23 Aug 2015 17:01:01 +0800
+Message-ID: <1440320467-26118-3-git-send-email-scott.shu@mediatek.com>
+References: <1440320467-26118-1-git-send-email-scott.shu@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <CAMuHMdXwMB17YXpqR9xr07vPg84CQL3W1Q20+gL+JvFEpOt+5Q@mail.gmail.com>
-Sender: linux-sh-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Linux-sh list <linux-sh@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, =?UTF-8?B?5bCP5p6X5pWs5aSq?= <keita.kobayashi.ym@renesas.com>, Simon Horman <horms@verge.net.au>
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1440320467-26118-1-git-send-email-scott.shu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, wsd_upstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, loda.chou-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, jades.shih-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, scott.shu-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Scott Shu <scott.shu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Geert,
+This adds "mediatek,mt6580-scpsys" in the compatible properties of
+SCPSYS node for MT6580 SoC.
 
-On Thu, May 21, 2015 at 5:13 PM, Geert Uytterhoeven
-<geert@linux-m68k.org> wrote:
-> On Thu, May 21, 2015 at 3:22 AM, Magnus Damm <magnus.damm@gmail.com> wrote:
->> --- 0001/arch/arm/mach-shmobile/platsmp-apmu.c
->> +++ work/arch/arm/mach-shmobile/platsmp-apmu.c  2015-05-20 22:26:43.152366518 +0900
->
->> +static void apmu_parse_dt(void (*fn)(struct resource *res, int cpu, int bit))
->> +{
->> +       struct device_node *np_apmu, *np_cpu;
->> +       struct resource res;
->> +       u32 id;
->> +       int bit, index;
->> +       bool is_allowed;
->> +
->> +       for_each_matching_node(np_apmu, apmu_ids) {
->> +               /* only enable the cluster that includes the boot CPU */
->> +               is_allowed = false;
->
-> You can declare the variable here instead of at the top of the function.
+Signed-off-by: Scott Shu <scott.shu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+---
+ Documentation/devicetree/bindings/soc/mediatek/scpsys.txt | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Sure, good idea.
+diff --git a/Documentation/devicetree/bindings/soc/mediatek/scpsys.txt b/Documentation/devicetree/bindings/soc/mediatek/scpsys.txt
+index c051114..7998bc2 100644
+--- a/Documentation/devicetree/bindings/soc/mediatek/scpsys.txt
++++ b/Documentation/devicetree/bindings/soc/mediatek/scpsys.txt
+@@ -12,7 +12,7 @@ power/power_domain.txt. It provides the power domains defined in
+ include/dt-bindings/power/mt8173-power.h.
+ 
+ Required properties:
+-- compatible: Must be "mediatek,mt8173-scpsys"
++- compatible: Must be "mediatek,mt6580-scpsys" or "mediatek,mt8173-scpsys"
+ - #power-domain-cells: Must be 1
+ - reg: Address range of the SCPSYS unit
+ - infracfg: must contain a phandle to the infracfg controller
+-- 
+1.9.1
 
->> +               for (bit = 0; bit < CONFIG_NR_CPUS; bit++) {
->> +                       np_cpu = of_parse_phandle(np_apmu, "cpus", bit);
->> +                       if (np_cpu) {
->> +                               if (!of_property_read_u32(np_cpu, "reg", &id)) {
->> +                                       if (id == cpu_logical_map(0))
->> +                                               is_allowed = true;
->
-> You can do "of_node_put(np_cpu); break;" here, to stop scanning.
-
-Yes, that's correct. I did not manage to get this update into the V2
-series but will do later on in V3.
-
-Thanks!
-
-/ magnus
+************* Email Confidentiality Notice ********************
+The information contained in this e-mail message (including any 
+attachments) may be confidential, proprietary, privileged, or otherwise
+exempt from disclosure under applicable laws. It is intended to be 
+conveyed only to the designated recipient(s). Any use, dissemination, 
+distribution, printing, retaining or copying of this e-mail (including its 
+attachments) by unintended recipient(s) is strictly prohibited and may 
+be unlawful. If you are not an intended recipient of this e-mail, or believe 
+that you have received this e-mail in error, please notify the sender 
+immediately (by replying to this e-mail), delete any and all copies of 
+this e-mail (including any attachments) from your system, and do not
+disclose the content of this e-mail to any other person. Thank you!
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
