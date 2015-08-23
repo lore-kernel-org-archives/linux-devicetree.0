@@ -1,49 +1,46 @@
-From: Scott Shu <scott.shu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Subject: [PATCH v4 1/8] Document: bindings: DT: Add SMP enable method for
- MT6580 SoC platform
-Date: Sun, 23 Aug 2015 17:01:00 +0800
-Message-ID: <1440320467-26118-2-git-send-email-scott.shu@mediatek.com>
+From: Scott Shu <scott.shu@mediatek.com>
+Subject: [PATCH v4 6/8] ARM: Mediatek: enable GPT6 on boot up to make arch timer working for MT6580
+Date: Sun, 23 Aug 2015 17:01:05 +0800
+Message-ID: <1440320467-26118-7-git-send-email-scott.shu@mediatek.com>
 References: <1440320467-26118-1-git-send-email-scott.shu@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-In-Reply-To: <1440320467-26118-1-git-send-email-scott.shu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mediatek>,
- <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-mediatek/>
-List-Post: <mailto:linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mediatek>,
- <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "Linux-mediatek" <linux-mediatek-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, wsd_upstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, scott.shu-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, loda.chou-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, jades.shih-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Scott Shu <scott.shu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1440320467-26118-1-git-send-email-scott.shu@mediatek.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Russell King <linux@arm.linux.org.uk>, Matthias Brugger <matthias.bgg@gmail.com>, Sascha Hauer <s.hauer@pengutronix.de>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, wsd_upstream@mediatek.com, loda.chou@mediatek.com, jades.shih@mediatek.com, scott.shu@gmail.com, Scott Shu <scott.shu@mediatek.com>
 List-Id: devicetree@vger.kernel.org
 
-For MT6580 SoC platform, the secondary cores are in powered off state
-as default, so compared with MT6589, one new enable method is needed.
-This method using the SPM (System Power Manager) inside the SCPSYS to
-control the CPU power.
+We enable GTP6 which ungates the arch timer clock.
 
-Signed-off-by: Scott Shu <scott.shu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Signed-off-by: Scott Shu <scott.shu@mediatek.com>
 ---
- Documentation/devicetree/bindings/arm/cpus.txt | 1 +
- 1 file changed, 1 insertion(+)
+ arch/arm/mach-mediatek/mediatek.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/Documentation/devicetree/bindings/arm/cpus.txt b/Documentation/devicetree/bindings/arm/cpus.txt
-index d58eb45..66a8f03 100644
---- a/Documentation/devicetree/bindings/arm/cpus.txt
-+++ b/Documentation/devicetree/bindings/arm/cpus.txt
-@@ -195,6 +195,7 @@ nodes to be present and contain the properties described below.
- 			    "marvell,armada-380-smp"
- 			    "marvell,armada-390-smp"
- 			    "marvell,armada-xp-smp"
-+			    "mediatek,mt6580-smp"
- 			    "mediatek,mt6589-smp"
- 			    "mediatek,mt81xx-tz-smp"
- 			    "qcom,gcc-msm8660"
+diff --git a/arch/arm/mach-mediatek/mediatek.c b/arch/arm/mach-mediatek/mediatek.c
+index 6b38d67..469d332 100644
+--- a/arch/arm/mach-mediatek/mediatek.c
++++ b/arch/arm/mach-mediatek/mediatek.c
+@@ -28,7 +28,8 @@ static void __init mediatek_timer_init(void)
+ {
+ 	void __iomem *gpt_base = 0;
+ 
+-	if (of_machine_is_compatible("mediatek,mt6589") ||
++	if (of_machine_is_compatible("mediatek,mt6580") ||
++	    of_machine_is_compatible("mediatek,mt6589") ||
+ 	    of_machine_is_compatible("mediatek,mt8135") ||
+ 	    of_machine_is_compatible("mediatek,mt8127")) {
+ 		/* turn on GPT6 which ungates arch timer clocks */
+@@ -46,6 +47,7 @@ static void __init mediatek_timer_init(void)
+ };
+ 
+ static const char * const mediatek_board_dt_compat[] = {
++	"mediatek,mt6580",
+ 	"mediatek,mt6589",
+ 	"mediatek,mt6592",
+ 	"mediatek,mt8127",
 -- 
 1.9.1
 
