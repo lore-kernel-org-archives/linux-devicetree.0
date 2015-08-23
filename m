@@ -1,74 +1,71 @@
-From: Stefan Agner <stefan@agner.ch>
-Subject: Re: [PATCH v4 1/3] ARM: dts: vf500-colibri: Add device tree node for
- touchscreen support
-Date: Sat, 22 Aug 2015 18:54:28 -0700
-Message-ID: <a20cfadaea07ab255ac94fd5e567e5cf@agner.ch>
-References: <cover.1440162473.git.maitysanchayan@gmail.com>
- <a960c538cf419a816d73fbea7d4380ea773aa6ba.1440162473.git.maitysanchayan@gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-input-owner@vger.kernel.org>
-In-Reply-To: <a960c538cf419a816d73fbea7d4380ea773aa6ba.1440162473.git.maitysanchayan@gmail.com>
-Sender: linux-input-owner@vger.kernel.org
-To: Sanchayan Maity <maitysanchayan@gmail.com>
-Cc: dmitry.torokhov@gmail.com, linux-input@vger.kernel.org, devicetree@vger.kernel.org, shawnguo@kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+From: Magnus Damm <magnus.damm@gmail.com>
+Subject: [PATCH v2 01/07] devicetree: bindings: Renesas APMU and SMP Enable method
+Date: Sun, 23 Aug 2015 16:24:39 +0900
+Message-ID: <20150823072439.14156.96621.sendpatchset@little-apple>
+References: <20150823072427.14156.1960.sendpatchset@little-apple>
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <20150823072427.14156.1960.sendpatchset@little-apple>
+Sender: linux-sh-owner@vger.kernel.org
+To: linux-sh@vger.kernel.org
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, lorenzo.pieralisi@arm.com, keita.kobayashi.ym@renesas.com, horms@verge.net.au, geert@linux-m68k.org, laurent.pinchart@ideasonboard.com, Magnus Damm <magnus.damm@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On 2015-08-21 06:26, Sanchayan Maity wrote:
-> Add device tree node for touchscreen support on Colibri VF50. The
-> touchscreen functionality on VF50 uses the ADC channels of Vybrid
-> and some GPIOs. Also add pinctrl nodes for proper pinmux.
-> 
-> Signed-off-by: Sanchayan Maity <maitysanchayan@gmail.com>
-> ---
->  arch/arm/boot/dts/vf500-colibri-eval-v3.dts |  4 +++
->  arch/arm/boot/dts/vf500-colibri.dtsi        | 47 +++++++++++++++++++++++++++++
->  2 files changed, 51 insertions(+)
-> 
-> diff --git a/arch/arm/boot/dts/vf500-colibri-eval-v3.dts
-> b/arch/arm/boot/dts/vf500-colibri-eval-v3.dts
-> index 7fc782c..14c0b00 100644
-> --- a/arch/arm/boot/dts/vf500-colibri-eval-v3.dts
-> +++ b/arch/arm/boot/dts/vf500-colibri-eval-v3.dts
-> @@ -15,3 +15,7 @@
->  	model = "Toradex Colibri VF50 on Colibri Evaluation Board";
->  	compatible = "toradex,vf500-colibri_vf50-on-eval",
-> "toradex,vf500-colibri_vf50", "fsl,vf500";
->  };
-> +
-> +&touchscreen {
-> +	status = "okay";
-> +};
-> diff --git a/arch/arm/boot/dts/vf500-colibri.dtsi
-> b/arch/arm/boot/dts/vf500-colibri.dtsi
-> index cee34a3..84f091d 100644
-> --- a/arch/arm/boot/dts/vf500-colibri.dtsi
-> +++ b/arch/arm/boot/dts/vf500-colibri.dtsi
-> @@ -17,4 +17,51 @@
->  	memory {
->  		reg = <0x80000000 0x8000000>;
->  	};
-> +
-> +	touchscreen: vf50-touchscreen {
-> +		compatible = "toradex,vf50-touchscreen";
-> +		io-channels = <&adc1 0>,<&adc0 0>,
-> +				<&adc0 1>,<&adc1 2>;
-> +		xp-gpios = <&gpio0 13 GPIO_ACTIVE_LOW>;
-> +		xm-gpios = <&gpio2 29 GPIO_ACTIVE_HIGH>;
-> +		yp-gpios = <&gpio0 12 GPIO_ACTIVE_LOW>;
-> +		ym-gpios = <&gpio0 4 GPIO_ACTIVE_HIGH>;
-> +		interrupt-parent = <&gpio0>;
-> +		interrupts = <8 IRQ_TYPE_LEVEL_LOW>;
-> +		pinctrl-names = "idle","default","gpios";
-> +		pinctrl-0 = <&pinctrl_touchctrl_idle>;
-> +		pinctrl-1 = <&pinctrl_touchctrl_default>;
-> +		pinctrl-2 = <&pinctrl_touchctrl_gpios>;
-> +		vf50-ts-min-pressure = <200>;
+From: Magnus Damm <damm+renesas@opensource.se>
 
-Since this is a touch screen related property, we even would want to
-have that in the board specific device-tree (vf500-colibri-eval-v3.dts).
+Add DT binding documentation for the APMU hardware and add "renesas,apmu"
+to the list of enable methods for the ARM cpus.
 
+Signed-off-by: Magnus Damm <damm+renesas@opensource.se>
+---
 
---
-Stefan
+ Changes since V1:
+ - None
+
+ Documentation/devicetree/bindings/arm/cpus.txt           |    1 
+ Documentation/devicetree/bindings/power/renesas,apmu.txt |   31 ++++++++++++++
+ 2 files changed, 32 insertions(+)
+
+--- 0001/Documentation/devicetree/bindings/arm/cpus.txt
++++ work/Documentation/devicetree/bindings/arm/cpus.txt	2015-05-20 21:55:51.912366518 +0900
+@@ -197,6 +197,7 @@ nodes to be present and contain the prop
+ 			    "qcom,gcc-msm8660"
+ 			    "qcom,kpss-acc-v1"
+ 			    "qcom,kpss-acc-v2"
++			    "renesas,apmu"
+ 			    "rockchip,rk3066-smp"
+ 
+ 	- cpu-release-addr
+--- /dev/null
++++ work/Documentation/devicetree/bindings/power/renesas,apmu.txt	2015-05-20 22:39:34.872366518 +0900
+@@ -0,0 +1,31 @@
++DT bindings for the Renesas Advanced Power Management Unit
++
++Renesas R-Car line of SoCs utilize one or more APMU hardware units
++for CPU core power domain control including SMP boot and CPU Hotplug.
++
++Required properties:
++
++- compatible: Should be "renesas,apmu-<soctype>", "renesas,apmu" as fallback.
++	      Examples with soctypes are:
++		- "renesas,apmu-r8a7790" (R-Car H2)
++		- "renesas,apmu-r8a7791" (R-Car M2-W)
++		- "renesas,apmu-r8a7792" (R-Car V2H)
++		- "renesas,apmu-r8a7793" (R-Car M2-N)
++		- "renesas,apmu-r8a7794" (R-Car E2)
++
++- reg: Base address and length of the I/O registers used by the APMU.
++
++- cpus: This node contains a list of CPU cores, which should match the order
++  of CPU cores used by the WUPCR and PSTR registers in the Advanced Power
++  Management Until section of the device's datasheet.
++
++
++Example:
++
++This shows the r8a7791 APMU that can control CPU0 and CPU1.
++
++	apmu@e6152000 {
++		compatible = "renesas,apmu-r8a7791", "renesas,apmu";
++		reg = <0 0xe6152000 0 0x188>;
++		cpus = <&cpu0 &cpu1>;
++	};
