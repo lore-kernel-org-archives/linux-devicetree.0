@@ -1,54 +1,40 @@
-From: Magnus Damm <magnus.damm@gmail.com>
-Subject: [PATCH v2 05/07] ARM: shmobile: Add function to prioritize DT SMP
-Date: Sun, 23 Aug 2015 16:25:21 +0900
-Message-ID: <20150823072521.14156.35151.sendpatchset@little-apple>
+From: Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH v2 06/07] ARM: shmobile: Prioritize r8a7790 DT APMU support
+Date: Sun, 23 Aug 2015 16:25:32 +0900
+Message-ID: <20150823072532.14156.88588.sendpatchset@little-apple>
 References: <20150823072427.14156.1960.sendpatchset@little-apple>
-Return-path: <linux-sh-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <20150823072427.14156.1960.sendpatchset@little-apple>
-Sender: linux-sh-owner@vger.kernel.org
-To: linux-sh@vger.kernel.org
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, lorenzo.pieralisi@arm.com, keita.kobayashi.ym@renesas.com, horms@verge.net.au, geert@linux-m68k.org, laurent.pinchart@ideasonboard.com, Magnus Damm <magnus.damm@gmail.com>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org, keita.kobayashi.ym-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org, horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org, geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org, laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Magnus Damm <damm+renesas@opensource.se>
+From: Magnus Damm <damm+renesas-yzvPICuk2ACczHhG9Qg4qA@public.gmane.org>
 
-Add a function to check if other DT based method is available, and
-if so return false to not hook up smp_ops from the machine vector.
+Adjust the r8a7790 SoC support code to not configure any non-DT SMP code
+in case the DT-based enable-method has been installed already.
 
-This results in that DT-based SMP support has priority over older
-C-based smp_ops code, and in case DT-based SMP support code does not
-exist in the DTB then the old smp_ops code will still work as-is.
-
-Signed-off-by: Magnus Damm <damm+renesas@opensource.se>
+Signed-off-by: Magnus Damm <damm+renesas-yzvPICuk2ACczHhG9Qg4qA@public.gmane.org>
 ---
 
  Changes since V1:
- - Reworked r8a7791-specific version to become reusable function.
+ - New patch.
 
- arch/arm/mach-shmobile/common.h  |    1 +
- arch/arm/mach-shmobile/platsmp.c |    7 +++++++
- 2 files changed, 8 insertions(+)
+ arch/arm/mach-shmobile/setup-r8a7790.c |    1 +
+ 1 file changed, 1 insertion(+)
 
---- 0001/arch/arm/mach-shmobile/common.h
-+++ work/arch/arm/mach-shmobile/common.h	2015-08-23 15:26:18.722366518 +0900
-@@ -11,6 +11,7 @@ extern void shmobile_smp_sleep(void);
- extern void shmobile_smp_hook(unsigned int cpu, unsigned long fn,
- 			      unsigned long arg);
- extern bool shmobile_smp_cpu_can_disable(unsigned int cpu);
-+extern bool shmobile_smp_init_fallback_ops(void);
- extern void shmobile_boot_scu(void);
- extern void shmobile_smp_scu_prepare_cpus(unsigned int max_cpus);
- extern void shmobile_smp_scu_cpu_die(unsigned int cpu);
---- 0001/arch/arm/mach-shmobile/platsmp.c
-+++ work/arch/arm/mach-shmobile/platsmp.c	2015-08-23 15:26:13.692366518 +0900
-@@ -36,3 +36,10 @@ bool shmobile_smp_cpu_can_disable(unsign
- 	return true; /* Hotplug of any CPU is supported */
- }
- #endif
-+
-+bool __init shmobile_smp_init_fallback_ops(void)
-+{
-+	/* fallback on PSCI/smp_ops if no other DT based method is detected */
-+	return platform_can_secondary_boot() ? true : false;
-+}
-+
+--- 0001/arch/arm/mach-shmobile/setup-r8a7790.c
++++ work/arch/arm/mach-shmobile/setup-r8a7790.c	2015-08-23 15:44:29.102366518 +0900
+@@ -28,6 +28,7 @@ static const char * const r8a7790_boards
+ };
+ 
+ DT_MACHINE_START(R8A7790_DT, "Generic R8A7790 (Flattened Device Tree)")
++	.smp_init	= shmobile_smp_init_fallback_ops,
+ 	.smp		= smp_ops(r8a7790_smp_ops),
+ 	.init_early	= shmobile_init_delay,
+ 	.init_time	= rcar_gen2_timer_init,
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
