@@ -1,97 +1,38 @@
-From: maitysanchayan@gmail.com
-Subject: Re: [PATCH v4 2/3] input: Add DT binding documentation for Colibri
- VF50 touchscreen
-Date: Sun, 23 Aug 2015 21:45:28 +0530
-Message-ID: <20150823161528.GD3935@Sanchayan-Arch>
-References: <cover.1440162473.git.maitysanchayan@gmail.com>
- <8446d6df4b39f0b0acdc37afd4d66dbcca4d09ba.1440162473.git.maitysanchayan@gmail.com>
- <24b47f359d019e8871887777372b442b@agner.ch>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Return-path: <linux-input-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <24b47f359d019e8871887777372b442b@agner.ch>
-Sender: linux-input-owner@vger.kernel.org
-To: Stefan Agner <stefan@agner.ch>
-Cc: dmitry.torokhov@gmail.com, linux-input@vger.kernel.org, devicetree@vger.kernel.org, shawnguo@kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+From: Grant Likely <grant.likely@linaro.org>
+Subject: [PATCH] MAINTAINERS: Add Frank Rowand as DT maintainer
+Date: Sun, 23 Aug 2015 13:34:08 -0700
+Message-ID: <1440362048-13647-1-git-send-email-grant.likely@linaro.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Cc: Grant Likely <grant.likely@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-On 15-08-22 18:36:54, Stefan Agner wrote:
-> On 2015-08-21 06:26, Sanchayan Maity wrote:
-> > This adds device tree binding documentation for the Colibri VF50
-> > touchscreen driver.
-> > 
-> > Signed-off-by: Sanchayan Maity <maitysanchayan@gmail.com>
-> > ---
-> >  .../bindings/input/touchscreen/colibri-vf50-ts.txt | 36 ++++++++++++++++++++++
-> >  1 file changed, 36 insertions(+)
-> >  create mode 100644
-> > Documentation/devicetree/bindings/input/touchscreen/colibri-vf50-ts.txt
-> > 
-> > diff --git
-> > a/Documentation/devicetree/bindings/input/touchscreen/colibri-vf50-ts.txt
-> > b/Documentation/devicetree/bindings/input/touchscreen/colibri-vf50-ts.txt
-> > new file mode 100644
-> > index 0000000..e615aa9
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/input/touchscreen/colibri-vf50-ts.txt
-> > @@ -0,0 +1,36 @@
-> > +* Toradex Colibri VF50 Touchscreen driver
-> > +
-> > +Required Properties:
-> > +- compatible must be toradex,vf50-touchscreen
-> > +- io-channels: adc channels being used by the Colibri VF50 module
-> > +- xp-gpios: FET gate driver for input of X+
-> > +- xm-gpios: FET gate driver for input of X-
-> > +- yp-gpios: FET gate driver for input of Y+
-> > +- ym-gpios: FET gate driver for input of Y-
-> > +- interrupt-parent: phandle for the interrupt controller
-> > +- interrupts: pen irq interrupt for touch detection
-> 
-> I like the use of the interrupt interface for the touch detection pin.
-> Maybe you can mention here that this is (typically) a GPIO...
-> 
-> > +- pinctrl-names: "idle", "default", "gpios"
-> > +- pinctrl-0: pinctrl node for idle state gpio pinmux
-> > +- pinctrl-1: pinctrl node for touch detection state pinmux
-> 
-> "touch detection" for default is rather confusing or even wrong. The
-> Idle state is used for pen/touch detection, default is used for X/Y and
-> Pressure measurement (maybe better described as touch measurement).
+Frank has agreed to step up and help with DT core code maintainership.
+At the same time, Grant is taking a step back from active maintainership
+responsibilities. Add Frank to the device tree core code entry and
+shuffle Grant to the end of the list. In a few releases time Grant will
+be removed entirely.
 
-Ok. Understood. I see how my wordings can create confusion or are
-misleading. Will fix.
+Signed-off-by: Grant Likely <grant.likely@linaro.org>
+---
+ MAINTAINERS | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-- Sanchayan.
-
-> 
-> > +- pinctrl-2: pinctrl node for gpios functioning as FET gate drivers
-> > +- vf50-ts-min-pressure: pressure level at which to stop measuring X/Y values
-> > +
-> > +Example:
-> > +
-> > +	touchctrl: vf50_touchctrl {
-> > +		compatible = "toradex,vf50-touchscreen";
-> > +		io-channels = <&adc1 0>,<&adc0 0>,
-> > +				<&adc0 1>,<&adc1 2>;
-> > +		xp-gpios = <&gpio0 13 GPIO_ACTIVE_LOW>;
-> > +		xm-gpios = <&gpio2 29 GPIO_ACTIVE_HIGH>;
-> > +		yp-gpios = <&gpio0 12 GPIO_ACTIVE_LOW>;
-> > +		ym-gpios = <&gpio0 4 GPIO_ACTIVE_HIGH>;
-> > +		interrupt-parent = <&gpio0>;
-> > +		interrupts = <8 IRQ_TYPE_LEVEL_LOW>;
-> > +		pinctrl-names = "idle","default","gpios";
-> > +		pinctrl-0 = <&pinctrl_touchctrl_idle>;
-> > +		pinctrl-1 = <&pinctrl_touchctrl_default>;
-> > +		pinctrl-2 = <&pinctrl_touchctrl_gpios>;
-> > +		vf50-ts-min-pressure = <200>;
-> > +		status = "disabled";
-> > +	};
-> 
-> Otherwise I agree with 1 and 2:
-> 
-> Acked-by: Stefan Agner <stefan@agner.ch>
-> 
-> --
-> Stefan
-> 
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 993d4cfd5aa0..c032364bf5d4 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -7482,8 +7482,9 @@ F:	Documentation/i2c/busses/i2c-ocores
+ F:	drivers/i2c/busses/i2c-ocores.c
+ 
+ OPEN FIRMWARE AND FLATTENED DEVICE TREE
+-M:	Grant Likely <grant.likely@linaro.org>
+ M:	Rob Herring <robh+dt@kernel.org>
++M:	Frank Rowand <frowand.list@gmail.com>
++M:	Grant Likely <grant.likely@linaro.org>
+ L:	devicetree@vger.kernel.org
+ W:	http://www.devicetree.org/
+ T:	git git://git.kernel.org/pub/scm/linux/kernel/git/glikely/linux.git
+-- 
+2.1.4
