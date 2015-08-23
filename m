@@ -1,91 +1,89 @@
-From: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 13/18] iio: adc: mcp320x: Set struct spi_driver
- .of_match_table
-Date: Sat, 22 Aug 2015 18:48:53 +0100
-Message-ID: <55D8B605.4040302@kernel.org>
-References: <1440054451-1223-1-git-send-email-javier@osg.samsung.com>
- <1440054451-1223-14-git-send-email-javier@osg.samsung.com>
- <20150820200912.GA2866@deathstar> <55D64E80.4050502@osg.samsung.com>
- <20150820222906.GB28249@deathstar> <55D65937.6070909@osg.samsung.com>
+From: Stefan Agner <stefan@agner.ch>
+Subject: Re: [PATCH v4 2/3] input: Add DT binding documentation for Colibri
+ VF50 touchscreen
+Date: Sat, 22 Aug 2015 18:36:54 -0700
+Message-ID: <24b47f359d019e8871887777372b442b@agner.ch>
+References: <cover.1440162473.git.maitysanchayan@gmail.com>
+ <8446d6df4b39f0b0acdc37afd4d66dbcca4d09ba.1440162473.git.maitysanchayan@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <55D65937.6070909-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Javier Martinez Canillas <javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>, Michael Welling <mwelling-EkmVulN54Sk@public.gmane.org>
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Andrea Galbusera <gizero-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Peter Meerwald <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Manfred Schlaegl <manfred.schlaegl-RbZlAiThDcE@public.gmane.org>, =?UTF-8?Q?S=c3=b8ren_Andersen?= <san-KGKi0rHxN0fKWSuBa/xFvVpr/1R2p/CL@public.gmane.org>, Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-input-owner@vger.kernel.org>
+In-Reply-To: <8446d6df4b39f0b0acdc37afd4d66dbcca4d09ba.1440162473.git.maitysanchayan@gmail.com>
+Sender: linux-input-owner@vger.kernel.org
+To: Sanchayan Maity <maitysanchayan@gmail.com>
+Cc: dmitry.torokhov@gmail.com, linux-input@vger.kernel.org, devicetree@vger.kernel.org, shawnguo@kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 20/08/15 23:48, Javier Martinez Canillas wrote:
-> Hello Michael,
+On 2015-08-21 06:26, Sanchayan Maity wrote:
+> This adds device tree binding documentation for the Colibri VF50
+> touchscreen driver.
 > 
-> On 08/21/2015 12:29 AM, Michael Welling wrote:
->> On Fri, Aug 21, 2015 at 12:02:40AM +0200, Javier Martinez Canillas wrote:
->>> Hello Michael,
->>>
->>> On 08/20/2015 10:09 PM, Michael Welling wrote:
->>>> On Thu, Aug 20, 2015 at 09:07:26AM +0200, Javier Martinez Canillas wrote:
->>>>> The driver has an OF id table but the .of_match_table is not set so
->>>>> the SPI core can't do an OF style match and the table was unused.
->>>>>
->>>>
->>>> Is an OF style match necessary?
->>>>
->>>
->>> Did you read the cover letter [0] on which I explain why is needed to
->>> avoid breaking module autoloading in the future? Once the SPI core is
->>> changed by RFC patch 18/18? (you were cc'ed in the cover letter BTW).
->>
->> Well I have read it now. :)
->>
+> Signed-off-by: Sanchayan Maity <maitysanchayan@gmail.com>
+> ---
+>  .../bindings/input/touchscreen/colibri-vf50-ts.txt | 36 ++++++++++++++++++++++
+>  1 file changed, 36 insertions(+)
+>  create mode 100644
+> Documentation/devicetree/bindings/input/touchscreen/colibri-vf50-ts.txt
 > 
-> Great :)
->  
->>>
->>>> I have been using devicetree and it matches based on the .id_table.
->>>>
->>>
->>> Yes it fallbacks to the .id_table or the driver name but the correct
->>> thing to do for devices registered by OF, is to match using the
->>> compatible string.
->>>
->>>> Couldn't we just remove the mcp320x_dt_ids table instead?
->>>>
->>>
->>> No, that is the wrong thing to do IMHO since the compatible string
->>> contains both vendor and device name whle the .id_table only contains
->>> a device name.
->>>
->>> So it makes sense to match using the compatible string and also report
->>> the OF modalias information to user-space.
->>>
->>> Otherwise what's the point of the vendor in the compatible string for
->>> SPI devices? You can just use "bar" instead of "foo,bar" as a string.
->>>
->>
->> Well then shouldn't the patch include adding the vendor to the compatible
->> string?
->>
-> 
-> Well, I was talking in general. You are right that this specific driver does
-> not have a vendor prefix for the compatible strings. This is incorrect
-> according to the ePAPR document [0].
-> 
-> However, these compatible strings are already documented as a DT binding doc
-> in Documentation/devicetree/bindings/iio/adc/mcp320x.txt so I don't know
-> what is the correct thing to do in this situation.
-Take the view the old version is wrong but needs to be supported and add also
-the corrected strings + document them.
+> diff --git
+> a/Documentation/devicetree/bindings/input/touchscreen/colibri-vf50-ts.txt
+> b/Documentation/devicetree/bindings/input/touchscreen/colibri-vf50-ts.txt
+> new file mode 100644
+> index 0000000..e615aa9
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/input/touchscreen/colibri-vf50-ts.txt
+> @@ -0,0 +1,36 @@
+> +* Toradex Colibri VF50 Touchscreen driver
+> +
+> +Required Properties:
+> +- compatible must be toradex,vf50-touchscreen
+> +- io-channels: adc channels being used by the Colibri VF50 module
+> +- xp-gpios: FET gate driver for input of X+
+> +- xm-gpios: FET gate driver for input of X-
+> +- yp-gpios: FET gate driver for input of Y+
+> +- ym-gpios: FET gate driver for input of Y-
+> +- interrupt-parent: phandle for the interrupt controller
+> +- interrupts: pen irq interrupt for touch detection
 
-cc'd The device tree list for any more comments on this.
-> 
-> Changing the compatible string will break old DTB with newer kernels and that
-> is a no go. But that doesn't invalidate what I said since once the SPI core
-> is changed and report OF modalias, you will need a MODULE_DEVICE_TABLE(of,...)
-> regardless if the compatible string has a vendor prefix or not.
-> 
-> [0]: https://www.power.org/documentation/epapr-version-1-1/
-> 
-> Best regards,
-> 
+I like the use of the interrupt interface for the touch detection pin.
+Maybe you can mention here that this is (typically) a GPIO...
+
+> +- pinctrl-names: "idle", "default", "gpios"
+> +- pinctrl-0: pinctrl node for idle state gpio pinmux
+> +- pinctrl-1: pinctrl node for touch detection state pinmux
+
+"touch detection" for default is rather confusing or even wrong. The
+Idle state is used for pen/touch detection, default is used for X/Y and
+Pressure measurement (maybe better described as touch measurement).
+
+> +- pinctrl-2: pinctrl node for gpios functioning as FET gate drivers
+> +- vf50-ts-min-pressure: pressure level at which to stop measuring X/Y values
+> +
+> +Example:
+> +
+> +	touchctrl: vf50_touchctrl {
+> +		compatible = "toradex,vf50-touchscreen";
+> +		io-channels = <&adc1 0>,<&adc0 0>,
+> +				<&adc0 1>,<&adc1 2>;
+> +		xp-gpios = <&gpio0 13 GPIO_ACTIVE_LOW>;
+> +		xm-gpios = <&gpio2 29 GPIO_ACTIVE_HIGH>;
+> +		yp-gpios = <&gpio0 12 GPIO_ACTIVE_LOW>;
+> +		ym-gpios = <&gpio0 4 GPIO_ACTIVE_HIGH>;
+> +		interrupt-parent = <&gpio0>;
+> +		interrupts = <8 IRQ_TYPE_LEVEL_LOW>;
+> +		pinctrl-names = "idle","default","gpios";
+> +		pinctrl-0 = <&pinctrl_touchctrl_idle>;
+> +		pinctrl-1 = <&pinctrl_touchctrl_default>;
+> +		pinctrl-2 = <&pinctrl_touchctrl_gpios>;
+> +		vf50-ts-min-pressure = <200>;
+> +		status = "disabled";
+> +	};
+
+Otherwise I agree with 1 and 2:
+
+Acked-by: Stefan Agner <stefan@agner.ch>
+
+--
+Stefan
+
