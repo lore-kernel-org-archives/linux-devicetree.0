@@ -1,53 +1,67 @@
-From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v4 2/4] dt: Add vendor prefix 'holt'
-Date: Sun, 23 Aug 2015 17:32:37 -0500
-Message-ID: <CAL_JsqJHT+s_+cDw5h2Ra7uh+4bHsGKXN-o0GAQ1DS_HdfWg7w@mail.gmail.com>
-References: <1440099421-4762-1-git-send-email-vladimir.barinov@cogentembedded.com>
- <1440099488-4850-1-git-send-email-vladimir.barinov@cogentembedded.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Subject: [PATCH 1/5] ARM: dts: sun4i: inet97fv2: Disable unused usb controllers
+Date: Mon, 24 Aug 2015 00:37:22 +0200
+Message-ID: <1440369446-22195-1-git-send-email-hdegoede@redhat.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1440099488-4850-1-git-send-email-vladimir.barinov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Vladimir Barinov <vladimir.barinov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
-Cc: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Peter Meerwald <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Cory Tusar <cory.tusar-J6Z/VSE8EyIAspv4Qr0y0gC/G2K4zDHf@public.gmane.org>
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Aug 20, 2015 at 2:38 PM, Vladimir Barinov
-<vladimir.barinov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org> wrote:
-> Add Holt Integrated Circuits, Inc. to the list of device tree vendor
-> prefixes
->
-> Signed-off-by: Vladimir Barinov <vladimir.barinov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+The inet97fv2 tablet only has a usb-2 wifi device connected to the second
+ehci controller, disable the first ehci controller and both ohci
+controllers.
 
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+---
+ arch/arm/boot/dts/sun4i-a10-inet97fv2.dts | 17 -----------------
+ 1 file changed, 17 deletions(-)
 
-> ---
-> Changes in version 2:
-> - none
-> Changes in version 3:
-> - none
-> Changes in version 4:
-> - none
->
->  Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
->  1 file changed, 1 insertion(+)
->
-> diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
-> index d444757..bc64cc9 100644
-> --- a/Documentation/devicetree/bindings/vendor-prefixes.txt
-> +++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
-> @@ -99,6 +99,7 @@ himax Himax Technologies, Inc.
->  hisilicon      Hisilicon Limited.
->  hit    Hitachi Ltd.
->  hitex  Hitex Development Tools
-> +holt   Holt Integrated Circuits, Inc.
->  honeywell      Honeywell
->  hp     Hewlett Packard
->  i2se   I2SE GmbH
-> --
-> 1.9.1
->
+diff --git a/arch/arm/boot/dts/sun4i-a10-inet97fv2.dts b/arch/arm/boot/dts/sun4i-a10-inet97fv2.dts
+index 6c927a8..51621c5 100644
+--- a/arch/arm/boot/dts/sun4i-a10-inet97fv2.dts
++++ b/arch/arm/boot/dts/sun4i-a10-inet97fv2.dts
+@@ -61,10 +61,6 @@
+ 	};
+ };
+ 
+-&ehci0 {
+-	status = "okay";
+-};
+-
+ &ehci1 {
+ 	status = "okay";
+ };
+@@ -94,18 +90,6 @@
+ 	status = "okay";
+ };
+ 
+-&ohci0 {
+-	status = "okay";
+-};
+-
+-&ohci1 {
+-	status = "okay";
+-};
+-
+-&reg_usb1_vbus {
+-	status = "okay";
+-};
+-
+ &reg_usb2_vbus {
+ 	status = "okay";
+ };
+@@ -117,7 +101,6 @@
+ };
+ 
+ &usbphy {
+-	usb1_vbus-supply = <&reg_usb1_vbus>;
+ 	usb2_vbus-supply = <&reg_usb2_vbus>;
+ 	status = "okay";
+ };
+-- 
+2.4.3
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
