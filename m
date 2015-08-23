@@ -1,86 +1,90 @@
 From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH 3/5] ARM: dts: sun4i: inet97fv2: Enable otg controller
-Date: Mon, 24 Aug 2015 00:37:24 +0200
-Message-ID: <1440369446-22195-3-git-send-email-hdegoede@redhat.com>
+Subject: [PATCH 4/5] ARM: dts: sun4i: inet97fv2: Enable support
+ for tablet keys
+Date: Mon, 24 Aug 2015 00:37:25 +0200
+Message-ID: <1440369446-22195-4-git-send-email-hdegoede@redhat.com>
 References: <1440369446-22195-1-git-send-email-hdegoede@redhat.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Reply-To: hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sunxi+bncBDRZXY4CYYORBMUW5GXAKGQESWBEV7Y-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 In-Reply-To: <1440369446-22195-1-git-send-email-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <http://groups.google.com/group/linux-sunxi/subscribe>
 To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Enable the otg controller on the inet97fv2 tablet.
+Enable support for the tablet keys which are connected via the lradc.
 
 Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 ---
- arch/arm/boot/dts/sun4i-a10-inet97fv2.dts | 34 +++++++++++++++++++++++++++++++
- 1 file changed, 34 insertions(+)
+ arch/arm/boot/dts/sun4i-a10-inet97fv2.dts | 41 +++++++++++++++++++++++++++++++
+ 1 file changed, 41 insertions(+)
 
 diff --git a/arch/arm/boot/dts/sun4i-a10-inet97fv2.dts b/arch/arm/boot/dts/sun4i-a10-inet97fv2.dts
-index 69e22bd..309a0da 100644
+index 309a0da..909fde9 100644
 --- a/arch/arm/boot/dts/sun4i-a10-inet97fv2.dts
 +++ b/arch/arm/boot/dts/sun4i-a10-inet97fv2.dts
-@@ -92,6 +92,26 @@
- 	status = "okay";
- };
+@@ -47,6 +47,7 @@
+ #include "sunxi-common-regulators.dtsi"
  
-+&otg_sram {
+ #include <dt-bindings/gpio/gpio.h>
++#include <dt-bindings/input/input.h>
+ 
+ / {
+ 	model = "INet-97F Rev 02";
+@@ -82,6 +83,46 @@
+ 
+ #include "axp209.dtsi"
+ 
++&lradc {
++	vref-supply = <&reg_ldo2>;
 +	status = "okay";
-+};
 +
-+&pio {
-+	usb0_id_detect_pin: usb0_id_detect_pin@0 {
-+		allwinner,pins = "PH4";
-+		allwinner,function = "gpio_in";
-+		allwinner,drive = <SUN4I_PINCTRL_10_MA>;
-+		allwinner,pull = <SUN4I_PINCTRL_PULL_UP>;
++	button@200 {
++		label = "Menu";
++		linux,code = <KEY_MENU>;
++		channel = <0>;
++		voltage = <200000>;
 +	};
 +
-+	usb0_vbus_detect_pin: usb0_vbus_detect_pin@0 {
-+		allwinner,pins = "PH5";
-+		allwinner,function = "gpio_in";
-+		allwinner,drive = <SUN4I_PINCTRL_10_MA>;
-+		allwinner,pull = <SUN4I_PINCTRL_PULL_DOWN>;
++	button@600 {
++		label = "Volume Up";
++		linux,code = <KEY_VOLUMEUP>;
++		channel = <0>;
++		voltage = <600000>;
++	};
++
++	button@800 {
++		label = "Volume Down";
++		linux,code = <KEY_VOLUMEDOWN>;
++		channel = <0>;
++		voltage = <800000>;
++	};
++
++	button@1000 {
++		label = "Home";
++		linux,code = <KEY_HOMEPAGE>;
++		channel = <0>;
++		voltage = <1000000>;
++	};
++
++	button@1200 {
++		label = "Esc";
++		linux,code = <KEY_ESC>;
++		channel = <0>;
++		voltage = <1200000>;
 +	};
 +};
 +
- &reg_dcdc2 {
- 	regulator-always-on;
- 	regulator-min-microvolt = <1000000>;
-@@ -117,6 +137,10 @@
- 	regulator-name = "avcc";
- };
- 
-+&reg_usb0_vbus {
-+	status = "okay";
-+};
-+
- &reg_usb2_vbus {
- 	status = "okay";
- };
-@@ -127,7 +151,17 @@
- 	status = "okay";
- };
- 
-+&usb_otg {
-+	dr_mode = "otg";
-+	status = "okay";
-+};
-+
- &usbphy {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&usb0_id_detect_pin>, <&usb0_vbus_detect_pin>;
-+	usb0_id_det-gpio = <&pio 7 4 GPIO_ACTIVE_HIGH>; /* PH4 */
-+	usb0_vbus_det-gpio = <&pio 7 5 GPIO_ACTIVE_HIGH>; /* PH5 */
-+	usb0_vbus-supply = <&reg_usb0_vbus>;
- 	usb2_vbus-supply = <&reg_usb2_vbus>;
- 	status = "okay";
- };
+ &mmc0 {
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&mmc0_pins_a>, <&mmc0_cd_pin_reference_design>;
 -- 
 2.4.3
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
