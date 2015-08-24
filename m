@@ -1,45 +1,154 @@
-From: Shawn Lin <shawn.lin@rock-chips.com>
-Subject: [RFC PATCH v7 10/10] arm: zx_defconfig: remove CONFIG_MMC_DW_IDMAC
-Date: Mon, 24 Aug 2015 09:28:04 +0800
-Message-ID: <1440379684-24811-1-git-send-email-shawn.lin@rock-chips.com>
-References: <1440379479-24308-1-git-send-email-shawn.lin@rock-chips.com>
-Return-path: <linux-mmc-owner@vger.kernel.org>
-In-Reply-To: <1440379479-24308-1-git-send-email-shawn.lin@rock-chips.com>
-Sender: linux-mmc-owner@vger.kernel.org
-To: jh80.chung@samsung.com, ulf.hansson@linaro.org
-Cc: Vineet.Gupta1@synopsys.com, Wei Xu <xuwei5@hisilicon.com>, Joachim Eastwood <manabian@gmail.com>, Alexey Brodkin <abrodkin@synopsys.com>, Kukjin Kim <kgene@kernel.org>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, Russell King <linux@arm.linux.org.uk>, Zhangfei Gao <zhangfei.gao@linaro.org>, Jun Nie <jun.nie@linaro.org>, Ralf Baechle <ralf@linux-mips.org>, Govindraj Raja <govindraj.raja@imgtec.com>, Arnd Bergmann <arnd@arndb.de>, heiko@sntech.de, dianders@chromium.org, linux-samsung-soc@vger.kernel.org, linux-mips@linux-mips.org, linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Shawn Lin <shawn.lin@rock-chips.com>
+From: Masahiro Yamada <yamada.masahiro@socionext.com>
+Subject: [PATCH 3/3] ARM: dts: uniphier: add outer cache controller nodes
+Date: Mon, 24 Aug 2015 11:18:12 +0900
+Message-ID: <1440382692-3855-4-git-send-email-yamada.masahiro@socionext.com>
+References: <1440382692-3855-1-git-send-email-yamada.masahiro@socionext.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1440382692-3855-1-git-send-email-yamada.masahiro@socionext.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: arm@kernel.org
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Russell King <linux@arm.linux.org.uk>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-kernel@vger.kernel.org, Masahiro Yamada <yamada.masahiro@socionext.com>, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-DesignWare MMC Controller's transfer mode should be decided
-at runtime instead of compile-time. So we remove this config
-option and read dw_mmc's register to select DMA master.
+Add L2 cache controller nodes for all the UniPhier SoC DTSI.
+Also, add an L3 cache controller node for PH1-Pro5 DTSI.
 
-Signed-off-by: Shawn Lin <shawn.lin@rock-chips.com>
+Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
 ---
 
-Changes in v7: None
-Changes in v6: None
-Changes in v5: None
-Changes in v4: None
-Changes in v3: None
-Changes in v2: None
+ arch/arm/boot/dts/uniphier-ph1-ld4.dtsi     |  7 +++++++
+ arch/arm/boot/dts/uniphier-ph1-pro4.dtsi    |  7 +++++++
+ arch/arm/boot/dts/uniphier-ph1-pro5.dtsi    | 14 ++++++++++++++
+ arch/arm/boot/dts/uniphier-ph1-sld3.dtsi    |  7 +++++++
+ arch/arm/boot/dts/uniphier-ph1-sld8.dtsi    |  7 +++++++
+ arch/arm/boot/dts/uniphier-proxstream2.dtsi |  7 +++++++
+ 6 files changed, 49 insertions(+)
 
- arch/arm/configs/zx_defconfig | 1 -
- 1 file changed, 1 deletion(-)
-
-diff --git a/arch/arm/configs/zx_defconfig b/arch/arm/configs/zx_defconfig
-index b200bb0..ab683fb 100644
---- a/arch/arm/configs/zx_defconfig
-+++ b/arch/arm/configs/zx_defconfig
-@@ -83,7 +83,6 @@ CONFIG_MMC=y
- CONFIG_MMC_UNSAFE_RESUME=y
- CONFIG_MMC_BLOCK_MINORS=16
- CONFIG_MMC_DW=y
--CONFIG_MMC_DW_IDMAC=y
- CONFIG_EXT2_FS=y
- CONFIG_EXT4_FS=y
- CONFIG_EXT4_FS_POSIX_ACL=y
+diff --git a/arch/arm/boot/dts/uniphier-ph1-ld4.dtsi b/arch/arm/boot/dts/uniphier-ph1-ld4.dtsi
+index a6a185f..2d60960 100644
+--- a/arch/arm/boot/dts/uniphier-ph1-ld4.dtsi
++++ b/arch/arm/boot/dts/uniphier-ph1-ld4.dtsi
+@@ -91,6 +91,13 @@
+ 			#size-cells = <1>;
+ 		};
+ 
++		l2-cache@500c0000 {
++			compatible = "socionext,uniphier-l2-cache";
++			reg = <0x500c0000 0x2000>, <0x503c0100 0x4>,
++			      <0x506c0000 0x400>;
++			interrupts = <0 174 4>, <0 175 4>;
++		};
++
+ 		serial0: serial@54006800 {
+ 			compatible = "socionext,uniphier-uart";
+ 			status = "disabled";
+diff --git a/arch/arm/boot/dts/uniphier-ph1-pro4.dtsi b/arch/arm/boot/dts/uniphier-ph1-pro4.dtsi
+index e8bbc45..02acc07 100644
+--- a/arch/arm/boot/dts/uniphier-ph1-pro4.dtsi
++++ b/arch/arm/boot/dts/uniphier-ph1-pro4.dtsi
+@@ -98,6 +98,13 @@
+ 			#size-cells = <1>;
+ 		};
+ 
++		l2-cache@500c0000 {
++			compatible = "socionext,uniphier-l2-cache";
++			reg = <0x500c0000 0x2000>, <0x503c0100 0x4>,
++			      <0x506c0000 0x400>;
++			interrupts = <0 174 4>, <0 175 4>;
++		};
++
+ 		serial0: serial@54006800 {
+ 			compatible = "socionext,uniphier-uart";
+ 			status = "disabled";
+diff --git a/arch/arm/boot/dts/uniphier-ph1-pro5.dtsi b/arch/arm/boot/dts/uniphier-ph1-pro5.dtsi
+index 59c2b12..084bc47 100644
+--- a/arch/arm/boot/dts/uniphier-ph1-pro5.dtsi
++++ b/arch/arm/boot/dts/uniphier-ph1-pro5.dtsi
+@@ -98,6 +98,20 @@
+ 			#size-cells = <1>;
+ 		};
+ 
++		l2-cache@500c0000 {
++			compatible = "socionext,uniphier-l2-cache";
++			reg = <0x500c0000 0x2000>, <0x503c0100 0x8>,
++			      <0x506c0000 0x400>;
++			interrupts = <0 190 4>, <0 191 4>;
++		};
++
++		l3-cache@500c8000 {
++			compatible = "socionext,uniphier-l3-cache";
++			reg = <0x500c8000 0x2000>, <0x503c8100 0x8>,
++			      <0x506c8000 0x400>;
++			interrupts = <0 174 4>, <0 175 4>;
++		};
++
+ 		serial0: serial@54006800 {
+ 			compatible = "socionext,uniphier-uart";
+ 			status = "disabled";
+diff --git a/arch/arm/boot/dts/uniphier-ph1-sld3.dtsi b/arch/arm/boot/dts/uniphier-ph1-sld3.dtsi
+index 3cc90cd..e989281 100644
+--- a/arch/arm/boot/dts/uniphier-ph1-sld3.dtsi
++++ b/arch/arm/boot/dts/uniphier-ph1-sld3.dtsi
+@@ -120,6 +120,13 @@
+ 			      <0x20000100 0x100>;
+ 		};
+ 
++		l2-cache@500c0000 {
++			compatible = "socionext,uniphier-l2-cache";
++			reg = <0x500c0000 0x2000>, <0x503c0100 0x4>,
++			      <0x506c0000 0x400>;
++			interrupts = <0 174 4>, <0 175 4>;
++		};
++
+ 		serial0: serial@54006800 {
+ 			compatible = "socionext,uniphier-uart";
+ 			status = "disabled";
+diff --git a/arch/arm/boot/dts/uniphier-ph1-sld8.dtsi b/arch/arm/boot/dts/uniphier-ph1-sld8.dtsi
+index 58067df..3ff897c 100644
+--- a/arch/arm/boot/dts/uniphier-ph1-sld8.dtsi
++++ b/arch/arm/boot/dts/uniphier-ph1-sld8.dtsi
+@@ -91,6 +91,13 @@
+ 			#size-cells = <1>;
+ 		};
+ 
++		l2-cache@500c0000 {
++			compatible = "socionext,uniphier-l2-cache";
++			reg = <0x500c0000 0x2000>, <0x503c0100 0x4>,
++			      <0x506c0000 0x400>;
++			interrupts = <0 174 4>, <0 175 4>;
++		};
++
+ 		serial0: serial@54006800 {
+ 			compatible = "socionext,uniphier-uart";
+ 			status = "disabled";
+diff --git a/arch/arm/boot/dts/uniphier-proxstream2.dtsi b/arch/arm/boot/dts/uniphier-proxstream2.dtsi
+index 4c7b246..f318548 100644
+--- a/arch/arm/boot/dts/uniphier-proxstream2.dtsi
++++ b/arch/arm/boot/dts/uniphier-proxstream2.dtsi
+@@ -110,6 +110,13 @@
+ 			#size-cells = <1>;
+ 		};
+ 
++		l2-cache@500c0000 {
++			compatible = "socionext,uniphier-l2-cache";
++			reg = <0x500c0000 0x2000>, <0x503c0100 0x4>,
++			      <0x506c0000 0x400>;
++			interrupts = <0 174 4>, <0 175 4>, <0 190 4>, <0 191 4>;
++		};
++
+ 		serial0: serial@54006800 {
+ 			compatible = "socionext,uniphier-uart";
+ 			status = "disabled";
 -- 
-2.3.7
-
-
+1.9.1
