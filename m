@@ -1,44 +1,41 @@
-From: Yingjoe Chen <yingjoe.chen@mediatek.com>
-Subject: Re: [PATCH v2 1/5] clocksource: mediatek: do not enable GPT_CLK_EVT
- when setup
-Date: Mon, 24 Aug 2015 22:22:20 +0800
-Message-ID: <1440426140.17418.1.camel@mtksdaap41>
-References: <CAGS+omD8k_Cfxv3bYyjmjtLbiavo-WmJPn0Z-CBhN_nnv65Tag@mail.gmail.com>
-			 <1437552878-3684-1-git-send-email-yingjoe.chen@mediatek.com>
-			 <55CC56C4.8080201@linaro.org> <1439820602.3414.12.camel@mtksdaap41>
-		 <55D5E40A.6080904@linaro.org> <1440167950.20169.29.camel@mtksdaap41>
-	 <55DACCEF.8040004@linaro.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <55DACCEF.8040004@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Daniel Lezcano <daniel.lezcano@linaro.org>
-Cc: Daniel Kurtz <djkurtz@chromium.org>, Stephen Boyd <sboyd@codeaurora.org>, Thomas Gleixner <tglx@linutronix.de>, James Liao <jamesjj.liao@mediatek.com>, Russell King <linux@arm.linux.org.uk>, srv_heupstream <srv_heupstream@mediatek.com>, Arnd Bergmann <arnd@arndb.de>, "open list:OPEN FIRMWARE AND..." <devicetree@vger.kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, Michael Turquette <mturquette@baylibre.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Olof Johansson <olof@lixom.net>, Rob Herring <robh+dt@kernel.org>, linux-mediatek@lists.infradead.org, Sascha Hauer <kernel@pengutronix.de>, Matthias Brugger <matthias.bgg@gmail.com>, linux-clk@vger.kernel.org, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+From: Gabriel Fernandez <gabriel.fernandez-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: [PATCH v2] ARM: DT: STi: STiH418: Fix mmc0 clock configuration
+Date: Mon, 24 Aug 2015 16:23:21 +0200
+Message-ID: <1440426201-23201-1-git-send-email-gabriel.fernandez@linaro.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Srinivas Kandagatla <srinivas.kandagatla-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Maxime Coquelin <maxime.coquelin-qxv4g6HH51o@public.gmane.org>, Patrice Chotard <patrice.chotard-qxv4g6HH51o@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, kernel-F5mvAk5X5gdBDgjK7y7TUQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 2015-08-24 at 09:51 +0200, Daniel Lezcano wrote:
-> On 08/21/2015 04:39 PM, Yingjoe Chen wrote:
-> 
-> [ ... ]
-> 
-> >>    - Does the spurious interrupt occurs *every* time ? at each boot ?
-> >
-> > Yes. If you applied this series to enable mtk timer without this fix on
-> > mt8173 or mt8135 you can reproduce it. It occurs for every boot.
-> >
-> > It crash before uart driver is ready, so you'll have to use earlycon to
-> > see the crash log.
-> 
-> Can you give me the earlycon params ?
+This patch configure correctly the MMC-0 clock for STiH418 platform.
 
-Hi Daniel,
+Signed-off-by: Gabriel Fernandez <gabriel.fernandez-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Acked-by: Maxime Coquelin <maxime.coquelin-qxv4g6HH51o@public.gmane.org>
+---
+ arch/arm/boot/dts/stih418.dtsi | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-You probably already figure this out. anyway I'm using this to enable
-earlycon:
+diff --git a/arch/arm/boot/dts/stih418.dtsi b/arch/arm/boot/dts/stih418.dtsi
+index 8160a75..965f881 100644
+--- a/arch/arm/boot/dts/stih418.dtsi
++++ b/arch/arm/boot/dts/stih418.dtsi
+@@ -99,5 +99,11 @@
+ 			phys = <&usb2_picophy2>;
+ 			phy-names = "usb";
+ 		};
++
++		mmc0: sdhci@09060000 {
++			assigned-clocks = <&clk_s_c0_flexgen CLK_MMC_0>;
++			assigned-clock-parents = <&clk_s_c0_pll1 0>;
++			assigned-clock-rates = <200000000>;
++		};
+ 	};
+ };
+-- 
+1.9.1
 
-Add 'earlycon' in bootargs, and in device tree chosen part, add
-"linux,stdout-path=&uart0;"
-
-Joe.C
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
