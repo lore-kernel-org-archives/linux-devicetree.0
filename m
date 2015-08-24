@@ -1,70 +1,111 @@
-From: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
-Subject: Re: [PATCH v2] i2c: allow specifying separate wakeup interrupt in
- device tree
-Date: Mon, 24 Aug 2015 14:35:28 +0200
-Message-ID: <20150824123528.GF3608@katana>
-References: <20150818065251.GA22085@dtor-ws>
+From: Qais Yousef <qais.yousef-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+Subject: [PATCH 00/10] Add support for img AXD audio hardware decoder
+Date: Mon, 24 Aug 2015 13:39:09 +0100
+Message-ID: <1440419959-14315-1-git-send-email-qais.yousef@imgtec.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="1Ow488MNN9B9o/ov"
+Content-Type: text/plain
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20150818065251.GA22085@dtor-ws>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Mika Westerberg <mika.westerberg-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, "Rafael J. Wysocki" <rafael.j.wysocki-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Vignesh R <vigneshr-l0cyMroinI0@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org
+Cc: Qais Yousef <qais.yousef-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Jaroslav Kysela <perex-/Fr2/VpizcU@public.gmane.org>, Takashi Iwai <tiwai-IBi9RG/b67k@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+This patch series adds AXD Alsa Compress Offload SoC driver.
 
---1Ow488MNN9B9o/ov
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+AXD is an audio hardware based on MIPS architecture that supports decoding,
+encoding, GEQ, resampling, mixing and synchronisation. At the moment only
+decoding support is added in hope to add the rest of the functionality on
+top of that once this is accepted.
 
-On Mon, Aug 17, 2015 at 11:52:51PM -0700, Dmitry Torokhov wrote:
-> Instead of having each i2c driver individually parse device tree data in
-> case it or platform supports separate wakeup interrupt, and handle
-> enabling and disabling wakeup interrupts in their power management
-> routines, let's have i2c core do that for us.
->=20
-> Platforms wishing to specify separate wakeup interrupt for the device
-> should use named interrupt syntax in their DTSes:
->=20
-> 	interrupt-parent =3D <&intc1>;
-> 	interrupts =3D <5 0>, <6 0>;
-> 	interrupt-names =3D "irq", "wakeup";
->=20
-> This patch is inspired by work done by Vignesh R <vigneshr-l0cyMroinI0@public.gmane.org> for
-> pixcir_i2c_ts driver.
->=20
-> Signed-off-by: Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+I divided the files into separate patches by functionality in hope it'll
+make the reviewing process easier. Worth noting that a lot of the cmd interface
+helper funtions in patch 7 are not used yet but will be as support for more
+functionality is added later.
 
-Applied to for-next, thanks!
+At the moment this code has been tested on Pistachio SoC using gstreamer patched
+with the code in this link
 
+	https://bugzilla.gnome.org/show_bug.cgi?id=743192
 
---1Ow488MNN9B9o/ov
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+Qais Yousef (10):
+  irqchip: irq-mips-gic: export gic_send_ipi
+  dt: add img,axd.txt device tree binding document
+  ALSA: add AXD Audio Processing IP alsa driver
+  ALSA: axd: add fw binary header manipulation files
+  ALSA: axd: add buffers manipulation files
+  ALSA: axd: add basic files for sending/receiving axd cmds
+  ALSA: axd: add cmd interface helper functions
+  ALSA: axd: add low level AXD platform setup files
+  ALSA: axd: add alsa compress offload operations
+  ALSA: axd: add Makefile
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
+ .../devicetree/bindings/sound/img,axd.txt          |   34 +
+ drivers/irqchip/irq-mips-gic.c                     |    1 +
+ sound/soc/Kconfig                                  |    1 +
+ sound/soc/Makefile                                 |    1 +
+ sound/soc/img/Kconfig                              |   11 +
+ sound/soc/img/Makefile                             |    1 +
+ sound/soc/img/axd/Makefile                         |   13 +
+ sound/soc/img/axd/axd_alsa_ops.c                   |  211 ++
+ sound/soc/img/axd/axd_api.h                        |  649 ++++
+ sound/soc/img/axd/axd_buffers.c                    |  243 ++
+ sound/soc/img/axd/axd_buffers.h                    |   74 +
+ sound/soc/img/axd/axd_cmds.c                       |  102 +
+ sound/soc/img/axd/axd_cmds.h                       |  532 ++++
+ sound/soc/img/axd/axd_cmds_config.c                | 1235 ++++++++
+ sound/soc/img/axd/axd_cmds_decoder_config.c        |  422 +++
+ sound/soc/img/axd/axd_cmds_info.c                  | 1249 ++++++++
+ sound/soc/img/axd/axd_cmds_internal.c              | 3264 ++++++++++++++++++++
+ sound/soc/img/axd/axd_cmds_internal.h              |  317 ++
+ sound/soc/img/axd/axd_cmds_pipes.c                 | 1387 +++++++++
+ sound/soc/img/axd/axd_hdr.c                        |   64 +
+ sound/soc/img/axd/axd_hdr.h                        |   24 +
+ sound/soc/img/axd/axd_module.c                     |  742 +++++
+ sound/soc/img/axd/axd_module.h                     |   83 +
+ sound/soc/img/axd/axd_platform.h                   |   35 +
+ sound/soc/img/axd/axd_platform_mips.c              |  416 +++
+ 25 files changed, 11111 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/sound/img,axd.txt
+ create mode 100644 sound/soc/img/Kconfig
+ create mode 100644 sound/soc/img/Makefile
+ create mode 100644 sound/soc/img/axd/Makefile
+ create mode 100644 sound/soc/img/axd/axd_alsa_ops.c
+ create mode 100644 sound/soc/img/axd/axd_api.h
+ create mode 100644 sound/soc/img/axd/axd_buffers.c
+ create mode 100644 sound/soc/img/axd/axd_buffers.h
+ create mode 100644 sound/soc/img/axd/axd_cmds.c
+ create mode 100644 sound/soc/img/axd/axd_cmds.h
+ create mode 100644 sound/soc/img/axd/axd_cmds_config.c
+ create mode 100644 sound/soc/img/axd/axd_cmds_decoder_config.c
+ create mode 100644 sound/soc/img/axd/axd_cmds_info.c
+ create mode 100644 sound/soc/img/axd/axd_cmds_internal.c
+ create mode 100644 sound/soc/img/axd/axd_cmds_internal.h
+ create mode 100644 sound/soc/img/axd/axd_cmds_pipes.c
+ create mode 100644 sound/soc/img/axd/axd_hdr.c
+ create mode 100644 sound/soc/img/axd/axd_hdr.h
+ create mode 100644 sound/soc/img/axd/axd_module.c
+ create mode 100644 sound/soc/img/axd/axd_module.h
+ create mode 100644 sound/soc/img/axd/axd_platform.h
+ create mode 100644 sound/soc/img/axd/axd_platform_mips.c
 
-iQIcBAEBAgAGBQJV2w+QAAoJEBQN5MwUoCm2qaoP/2xuVeT7tNbuKbcTKrBCB7fV
-1XcLSAmix8luxEPto/us+5dPFO0e14BUVIOPIPLs8T3wZp+oK7kuzMA1meRyh+RA
-E3CGNXchm9DtqqPmiMaVh5gjQAerWY2dUviWH3cL5h6kWT+wb9jePLMxDw0O/Bs0
-vqDNTy8MU8eHDsgP4X6fASAd4WsJUXGIsMGx2xlEr9s7PvDFrqbYcAa6SYKfWUCg
-X+NRiSIRl0EAQfXxBGF39eJtLM4tX/LbJDto8UgCJV0aeRusH2HVBUMjKuX3+wmc
-AYsPgLSo2eHm6WHlA14gssQ8cEwMoaS0czJV6PNwiZhBztaqSTxbErA5bjZZ8zC9
-3Jr9eYbAeThRO2xSY97oQAQ4I7bFKjgORZHuo7xEBRMqsss6lk/zRyxiiUkKcixw
-W0icXbTQVJ2pqxBtC01ihSmOo+XjTSdSoyIbbuzL+Cw4xHuYbPIxvOFu8V9uNqWb
-fvkNJEc9vGcAFFXr+mO0jandIDhbPa6LYQixR8yZ/+wDTfnCdrF6b5Q6U4liy3v4
-qjetugZnoTWWNRxilnLfwUbg0X+K/gkphNorNNVJ3E8FjzSHesmrvRN0lFUMZ99P
-RmcPpdHE+Mz5LG65/23oiln4uKFidlITwPv0+LH19oZ4XzTgnXycS1VGdF29clQ5
-t8q5ddHrpxfXqyE7GUpe
-=PgWQ
------END PGP SIGNATURE-----
+Cc: Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
+Cc: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
+Cc: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>
+Cc: Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Jaroslav Kysela <perex-/Fr2/VpizcU@public.gmane.org>
+Cc: Takashi Iwai <tiwai-IBi9RG/b67k@public.gmane.org>
+-- 
+2.1.0
 
---1Ow488MNN9B9o/ov--
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
