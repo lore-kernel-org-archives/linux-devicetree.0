@@ -1,7 +1,7 @@
 From: Vaibhav Hiremath <vaibhav.hiremath@linaro.org>
-Subject: [PATCH-v2 2/5] mfd: 88pm800: Update the header file with 32K clk related macros
-Date: Tue, 25 Aug 2015 00:26:31 +0530
-Message-ID: <1440442594-3102-4-git-send-email-vaibhav.hiremath@linaro.org>
+Subject: [PATCH-v2 5/5] mfd: 88pm800: Add support for clk subdevice
+Date: Tue, 25 Aug 2015 00:26:34 +0530
+Message-ID: <1440442594-3102-7-git-send-email-vaibhav.hiremath@linaro.org>
 References: <1440442594-3102-1-git-send-email-vaibhav.hiremath@linaro.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1440442594-3102-1-git-send-email-vaibhav.hiremath@linaro.org>
@@ -10,51 +10,63 @@ To: linux-arm-kernel@lists.infradead.org
 Cc: robh+dt@kernel.org, mturquette@baylibre.com, lee.jones@linaro.org, k.kozlowski@samsung.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, Vaibhav Hiremath <vaibhav.hiremath@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-Update header file with required macros for 32KHz buffered clock
-output of 88PM800 family of device.
-These macros will be used in clk provider driver.
+This patch adds mfd_cell/clk-subdevice for 88PM800 MFD
+(and family of devices).
 
 Signed-off-by: Vaibhav Hiremath <vaibhav.hiremath@linaro.org>
 ---
- include/linux/mfd/88pm80x.h | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
+ drivers/mfd/88pm800.c | 25 +++++++++++++++++++++++++
+ 1 file changed, 25 insertions(+)
 
-diff --git a/include/linux/mfd/88pm80x.h b/include/linux/mfd/88pm80x.h
-index 122cfd2..0215d5f 100644
---- a/include/linux/mfd/88pm80x.h
-+++ b/include/linux/mfd/88pm80x.h
-@@ -91,6 +91,7 @@ enum {
- /* Referance and low power registers */
- #define PM800_LOW_POWER1		(0x20)
- #define PM800_LOW_POWER2		(0x21)
-+#define PM800_LOW_POWER2_XO_LJ_EN	BIT(5)
+diff --git a/drivers/mfd/88pm800.c b/drivers/mfd/88pm800.c
+index c4e097d..a928eed 100644
+--- a/drivers/mfd/88pm800.c
++++ b/drivers/mfd/88pm800.c
+@@ -173,6 +173,14 @@ static const struct mfd_cell regulator_devs[] = {
+ 	},
+ };
  
- #define PM800_LOW_POWER_CONFIG3		(0x22)
- #define PM800_LDOBK_FREEZE		BIT(7)
-@@ -138,6 +139,13 @@ enum {
- #define PM800_ALARM			BIT(5)
- #define PM800_RTC1_USE_XO		BIT(7)
- 
-+#define PM800_32K_OUTX_SEL_MASK		0x3
-+/* 32KHz clk output sel mode */
-+#define PM800_32K_OUTX_SEL_ZERO		0x0
-+#define PM800_32K_OUTX_SEL_INT_32KHZ	0x1
-+#define PM800_32K_OUTX_SEL_XO_32KHZ	0x2
-+#define PM800_32K_OUTX_SEL_HIZ		0x3
++static struct mfd_cell clk_devs[] = {
++	{
++		.name = "88pm80x-clk",
++		.of_compatible = "marvell,88pm800-clk",
++		.id = -1,
++	},
++};
 +
- /* Regulator Control Registers: BUCK1,BUCK5,LDO1 have DVC */
+ static const struct regmap_irq pm800_irqs[] = {
+ 	/* INT0 */
+ 	[PM800_IRQ_ONKEY] = {
+@@ -344,6 +352,17 @@ static int device_regulator_init(struct pm80x_chip *chip)
+ 			ARRAY_SIZE(regulator_devs), NULL, 0, NULL);
+ }
  
- /* buck registers */
-@@ -208,6 +216,10 @@ enum {
- #define PM800_PMOD_MEAS1		0x52
- #define PM800_PMOD_MEAS2		0x53
- 
-+/* Oscillator control */
-+#define PM800_OSC_CNTRL1		0x50
-+#define PM800_OSC_CNTRL1_OSC_FREERUN_EN	BIT(1)
++static int device_clk_init(struct pm80x_chip *chip)
++{
++	if (chip->type == CHIP_PM800)
++		clk_devs[0].name = "88pm800-clk";
++	else if (chip->type == CHIP_PM860)
++		clk_devs[0].name = "88pm860-clk";
 +
- #define PM800_GPADC0_MEAS1		0x54
- #define PM800_GPADC0_MEAS2		0x55
- #define PM800_GPADC1_MEAS1		0x56
++	return mfd_add_devices(chip->dev, 0, &clk_devs[0],
++			ARRAY_SIZE(clk_devs), NULL, 0, NULL);
++}
++
+ static int device_irq_init_800(struct pm80x_chip *chip)
+ {
+ 	struct regmap *map = chip->regmap;
+@@ -511,6 +530,12 @@ static int device_800_init(struct pm80x_chip *chip)
+ 		goto out;
+ 	}
+ 
++	ret = device_clk_init(chip);
++	if (ret) {
++		dev_err(chip->dev, "Failed to add clk subdev\n");
++		goto out;
++	}
++
+ 	return 0;
+ out_dev:
+ 	mfd_remove_devices(chip->dev);
 -- 
 1.9.1
