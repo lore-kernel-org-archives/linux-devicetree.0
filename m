@@ -1,60 +1,89 @@
 From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH] of: Add vendor prefix for Sharp Microelectronics
-Date: Mon, 24 Aug 2015 10:16:28 -0500
-Message-ID: <CAL_Jsq+LYpjtqFbMLA6sQRsU3trLTaj2caZxztCbKesXMkObvg@mail.gmail.com>
-References: <1406901044-32654-1-git-send-email-thierry.reding@gmail.com>
- <20141013115409.GB16186@ulmo> <20150701120141.GA18065@ulmo.nvidia.com>
- <CAL_JsqJtRObzkdDz5X2Np8kdjfXP+YZo+=-cDPmM+wYff6OEwQ@mail.gmail.com> <CAJAp7OjMKApxObdThqwTR+1dhG9ZUiGqUj4LrsjJLg_q2FFM1w@mail.gmail.com>
+Subject: Re: [PATCH] of/platform: add function to populate default bus
+Date: Mon, 24 Aug 2015 10:16:56 -0500
+Message-ID: <CAL_JsqLkFmZxBxndEUogBCJj1ffFrJMyaY838z0K7VqnfWtNxg@mail.gmail.com>
+References: <1438537483-26414-1-git-send-email-hauke@hauke-m.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAJAp7OjMKApxObdThqwTR+1dhG9ZUiGqUj4LrsjJLg_q2FFM1w-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <1438537483-26414-1-git-send-email-hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Bjorn Andersson <bjorn-UYDU3/A3LUY@public.gmane.org>
-Cc: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>
+Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Joachim Eastwood <manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jul 28, 2015 at 8:25 PM, Bjorn Andersson <bjorn-UYDU3/A3LUY@public.gmane.org> wrote:
-> On Wed, Jul 1, 2015 at 10:41 AM, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
->> On Wed, Jul 1, 2015 at 7:01 AM, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
->>> On Mon, Oct 13, 2014 at 01:54:09PM +0200, Thierry Reding wrote:
->>>> On Fri, Aug 01, 2014 at 03:50:44PM +0200, Thierry Reding wrote:
->>>> > From: Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
->>>> >
->>>> > Use "sharp" as the vendor prefix for Sharp Microelectronics in device
->>>> > tree compatible strings.
->>>> >
->>>> > Signed-off-by: Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
->>>> > ---
->>>> >  Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
->>>> >  1 file changed, 1 insertion(+)
->>>>
->>>> Ping?
->>>
->>> Rob, I just stumbled across this in my stack of patches that never got
->>> merged. Can you ack this?
->>
->> Sorry, missed this one. I've flagged it now to apply for 4.2 or you
->> can if you prefer:
->>
->> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
->>
+On Sun, Aug 2, 2015 at 12:44 PM, Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org> wrote:
+> When a default bus like the simple-bus should be used someone had to
+> call of_platform_populate() with the default match table. This match
+> table was not exported, so it is impossible for code build as a module
+> to use this. Instead of exporting of_default_bus_match_table, add a new
+> function which uses this default match table and populates the bus.
 >
-> Sorry for jumping in late, but found this as I was about to submit a
-> patch for the same addition.
->
-> Except that from what I can find the real name is "Sharp
-> Microelectronics of the Americas" (or Europe...), which is a division
-> of Sharp Electronics Corporation, a subsidiary of Sharp Corporation -
-> the latter which is what's used in the data sheets for my e.g. the
-> lp855x.
->
-> So I think the patch should instead be adding:
-> sharp   Sharp Corporation
+> Signed-off-by: Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>
 
-I didn't get to it for 4.2 after all, so I've fixed this up.
+Applied. Thanks.
 
 Rob
+
+> ---
+>  drivers/of/platform.c       | 9 +++++++++
+>  include/linux/of_platform.h | 9 +++++++++
+>  2 files changed, 18 insertions(+)
+>
+> diff --git a/drivers/of/platform.c b/drivers/of/platform.c
+> index ddf8e42..918f01f 100644
+> --- a/drivers/of/platform.c
+> +++ b/drivers/of/platform.c
+> @@ -456,6 +456,15 @@ int of_platform_populate(struct device_node *root,
+>  }
+>  EXPORT_SYMBOL_GPL(of_platform_populate);
+>
+> +int of_platform_default_populate(struct device_node *root,
+> +                                const struct of_dev_auxdata *lookup,
+> +                                struct device *parent)
+> +{
+> +       return of_platform_populate(root, of_default_bus_match_table, lookup,
+> +                                   parent);
+> +}
+> +EXPORT_SYMBOL_GPL(of_platform_default_populate);
+> +
+>  static int of_platform_device_destroy(struct device *dev, void *data)
+>  {
+>         /* Do not touch devices not populated from the device tree */
+> diff --git a/include/linux/of_platform.h b/include/linux/of_platform.h
+> index 611a691..956a100 100644
+> --- a/include/linux/of_platform.h
+> +++ b/include/linux/of_platform.h
+> @@ -72,6 +72,9 @@ extern int of_platform_populate(struct device_node *root,
+>                                 const struct of_device_id *matches,
+>                                 const struct of_dev_auxdata *lookup,
+>                                 struct device *parent);
+> +extern int of_platform_default_populate(struct device_node *root,
+> +                                       const struct of_dev_auxdata *lookup,
+> +                                       struct device *parent);
+>  extern void of_platform_depopulate(struct device *parent);
+>  #else
+>  static inline int of_platform_populate(struct device_node *root,
+> @@ -81,6 +84,12 @@ static inline int of_platform_populate(struct device_node *root,
+>  {
+>         return -ENODEV;
+>  }
+> +static inline int of_platform_default_populate(struct device_node *root,
+> +                                              const struct of_dev_auxdata *lookup,
+> +                                              struct device *parent)
+> +{
+> +       return -ENODEV;
+> +}
+>  static inline void of_platform_depopulate(struct device *parent) { }
+>  #endif
+>
+> --
+> 2.1.4
+>
+> --
+> To unsubscribe from this list: send the line "unsubscribe devicetree" in
+> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
