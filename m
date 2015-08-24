@@ -1,139 +1,78 @@
-From: Chen Bough <Haibo.Chen@freescale.com>
-Subject: RE: [PATCH v2 2/5] Documentation: Detail permitted DT properties for
- the imx6ul_tsc
-Date: Mon, 24 Aug 2015 08:34:07 +0000
-Message-ID: <BY1PR03MB13889F047C4E1440D2F7554C9A620@BY1PR03MB1388.namprd03.prod.outlook.com>
-References: <1438077521-12857-1-git-send-email-haibo.chen@freescale.com>
- <1438077521-12857-3-git-send-email-haibo.chen@freescale.com>
- <20150819055434.GF11161@pengutronix.de>
- <BY1PR03MB1388BBEF576297D76E7E3F839A650@BY1PR03MB1388.namprd03.prod.outlook.com>
- <20150821092725.GB706@pengutronix.de>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-input-owner@vger.kernel.org>
-In-Reply-To: <20150821092725.GB706@pengutronix.de>
-Content-Language: en-US
-Sender: linux-input-owner@vger.kernel.org
-To: Markus Pargmann <mpa@pengutronix.de>
-Cc: "robh+dt@kernel.org" <robh+dt@kernel.org>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "galak@codeaurora.org" <galak@codeaurora.org>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "linux@arm.linux.org.uk" <linux@arm.linux.org.uk>, "dmitry.torokhov@gmail.com" <dmitry.torokhov@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "sbranden@broadcom.com" <sbranden@broadcom.com>, "arnd@arndb.de" <arnd@arndb.de>, "mchehab@osg.samsung.com" <mchehab@osg.samsung.com>, "christian.gmeiner@gmail.com" <christian.gmeiner@gmail.com>, "scott.liu@emc.com.tw" <scott.liu@emc.com.tw>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "hdegoede@redhat.com" <hdegoede@redhat.com>, jonathar@broadcom.com
+From: kernel-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org
+Subject: [PATCH v4 0/5] bcm2835: auxiliar device support for spi
+Date: Mon, 24 Aug 2015 08:40:03 +0000
+Message-ID: <1440405608-3995-1-git-send-email-kernel@martin.sperl.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Lee Jones <lee-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: Martin Sperl <kernel-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogTWFya3VzIFBhcmdtYW5u
-IFttYWlsdG86bXBhQHBlbmd1dHJvbml4LmRlXQ0KPiBTZW50OiBGcmlkYXksIEF1Z3VzdCAyMSwg
-MjAxNSA1OjI3IFBNDQo+IFRvOiBDaGVuIEhhaWJvLUI1MTQyMQ0KPiBDYzogcm9iaCtkdEBrZXJu
-ZWwub3JnOyBwYXdlbC5tb2xsQGFybS5jb207IG1hcmsucnV0bGFuZEBhcm0uY29tOw0KPiBpamMr
-ZGV2aWNldHJlZUBoZWxsaW9uLm9yZy51azsgZ2FsYWtAY29kZWF1cm9yYS5vcmc7IHNoYXduZ3Vv
-QGtlcm5lbC5vcmc7DQo+IGtlcm5lbEBwZW5ndXRyb25peC5kZTsgbGludXhAYXJtLmxpbnV4Lm9y
-Zy51azsgZG1pdHJ5LnRvcm9raG92QGdtYWlsLmNvbTsNCj4gZGV2aWNldHJlZUB2Z2VyLmtlcm5l
-bC5vcmc7IHNicmFuZGVuQGJyb2FkY29tLmNvbTsgYXJuZEBhcm5kYi5kZTsNCj4gbWNoZWhhYkBv
-c2cuc2Ftc3VuZy5jb207IGNocmlzdGlhbi5nbWVpbmVyQGdtYWlsLmNvbTsNCj4gc2NvdHQubGl1
-QGVtYy5jb20udHc7IGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc7IGhkZWdvZWRlQHJlZGhh
-dC5jb207DQo+IGpvbmF0aGFyQGJyb2FkY29tLmNvbTsgYmVuamFtaW4udGlzc29pcmVzQHJlZGhh
-dC5jb207DQo+IGhhbnMudmVya3VpbEBjaXNjby5jb207IGhhZGVzc0BoYWRlc3MubmV0OyBsaW51
-eC1pbnB1dEB2Z2VyLmtlcm5lbC5vcmc7DQo+IGdlZXJ0QGxpbnV4LW02OGsub3JnOyBzZWJhc3Rp
-ZW4uc3p5bWFuc2tpQGFybWFkZXVzLmNvbTsNCj4gbWFtbGluYXZAZ21haWwuY29tOyBsaW51eC1h
-cm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmcNCj4gU3ViamVjdDogUmU6IFtQQVRDSCB2MiAy
-LzVdIERvY3VtZW50YXRpb246IERldGFpbCBwZXJtaXR0ZWQgRFQgcHJvcGVydGllcw0KPiBmb3Ig
-dGhlIGlteDZ1bF90c2MNCj4gDQo+IE9uIEZyaSwgQXVnIDIxLCAyMDE1IGF0IDA4OjMwOjE2QU0g
-KzAwMDAsIENoZW4gQm91Z2ggd3JvdGU6DQo+ID4gSGkgTWFya3VzLA0KPiA+DQo+ID4gPiAtLS0t
-LU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiA+ID4gRnJvbTogTWFya3VzIFBhcmdtYW5uIFttYWls
-dG86bXBhQHBlbmd1dHJvbml4LmRlXQ0KPiA+ID4gU2VudDogV2VkbmVzZGF5LCBBdWd1c3QgMTks
-IDIwMTUgMTo1NSBQTQ0KPiA+ID4gVG86IENoZW4gSGFpYm8tQjUxNDIxDQo+ID4gPiBDYzogcm9i
-aCtkdEBrZXJuZWwub3JnOyBwYXdlbC5tb2xsQGFybS5jb207IG1hcmsucnV0bGFuZEBhcm0uY29t
-Ow0KPiA+ID4gaWpjK2RldmljZXRyZWVAaGVsbGlvbi5vcmcudWs7IGdhbGFrQGNvZGVhdXJvcmEu
-b3JnOw0KPiA+ID4gaWpjK3NoYXduZ3VvQGtlcm5lbC5vcmc7DQo+ID4gPiBrZXJuZWxAcGVuZ3V0
-cm9uaXguZGU7IGxpbnV4QGFybS5saW51eC5vcmcudWs7DQo+ID4gPiBkbWl0cnkudG9yb2tob3ZA
-Z21haWwuY29tOyBkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZzsNCj4gPiA+IHNicmFuZGVuQGJy
-b2FkY29tLmNvbTsgYXJuZEBhcm5kYi5kZTsgbWNoZWhhYkBvc2cuc2Ftc3VuZy5jb207DQo+ID4g
-PiBjaHJpc3RpYW4uZ21laW5lckBnbWFpbC5jb207IHNjb3R0LmxpdUBlbWMuY29tLnR3Ow0KPiA+
-ID4gbGludXgta2VybmVsQHZnZXIua2VybmVsLm9yZzsgaGRlZ29lZGVAcmVkaGF0LmNvbTsNCj4g
-PiA+IGpvbmF0aGFyQGJyb2FkY29tLmNvbTsgYmVuamFtaW4udGlzc29pcmVzQHJlZGhhdC5jb207
-DQo+ID4gPiBoYW5zLnZlcmt1aWxAY2lzY28uY29tOyBoYWRlc3NAaGFkZXNzLm5ldDsNCj4gPiA+
-IGxpbnV4LWlucHV0QHZnZXIua2VybmVsLm9yZzsgZ2VlcnRAbGludXgtbTY4ay5vcmc7DQo+ID4g
-PiBzZWJhc3RpZW4uc3p5bWFuc2tpQGFybWFkZXVzLmNvbTsgbWFtbGluYXZAZ21haWwuY29tOw0K
-PiA+ID4gbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnDQo+ID4gPiBTdWJqZWN0
-OiBSZTogW1BBVENIIHYyIDIvNV0gRG9jdW1lbnRhdGlvbjogRGV0YWlsIHBlcm1pdHRlZCBEVA0K
-PiA+ID4gcHJvcGVydGllcyBmb3IgdGhlIGlteDZ1bF90c2MNCj4gPiA+DQo+ID4gPiBIaSwNCj4g
-PiA+DQo+ID4gPiBPbiBUdWUsIEp1bCAyOCwgMjAxNSBhdCAwNTo1ODozOFBNICswODAwLCBIYWli
-byBDaGVuIHdyb3RlOg0KPiA+ID4gPiBIZXJlIHdlIGFwcGx5IHJlcXVpcmVkIGRvY3VtZW50YXRp
-b24gZm9yIHRoZSBpbXg2dWwgdG91Y2ggc2NyZWVuDQo+ID4gPiA+IGNvbnRyb2xsZXIgZHJpdmVy
-IHdoaWNoIGRlc2NyaWJlIGF2YWlsYWJsZSBwcm9wZXJ0aWVzIGFuZCBob3cgdG8NCj4gPiA+ID4g
-dXNlIHRoZW0uDQo+ID4gPiA+DQo+ID4gPiA+IFNpZ25lZC1vZmYtYnk6IEhhaWJvIENoZW4gPGhh
-aWJvLmNoZW5AZnJlZXNjYWxlLmNvbT4NCj4gPiA+ID4gLS0tDQo+ID4gPiA+ICAuLi4vYmluZGlu
-Z3MvaW5wdXQvdG91Y2hzY3JlZW4vaW14NnVsX3RzYy50eHQgICAgICB8IDM2DQo+ID4gPiArKysr
-KysrKysrKysrKysrKysrKysrDQo+ID4gPiA+ICAxIGZpbGUgY2hhbmdlZCwgMzYgaW5zZXJ0aW9u
-cygrKQ0KPiA+ID4gPiAgY3JlYXRlIG1vZGUgMTAwNjQ0DQo+ID4gPiA+IERvY3VtZW50YXRpb24v
-ZGV2aWNldHJlZS9iaW5kaW5ncy9pbnB1dC90b3VjaHNjcmVlbi9pbXg2dWxfdHNjLnR4dA0KPiA+
-ID4gPg0KPiA+ID4gPiBkaWZmIC0tZ2l0DQo+ID4gPiA+IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0
-cmVlL2JpbmRpbmdzL2lucHV0L3RvdWNoc2NyZWVuL2lteDZ1bF90c2MudA0KPiA+ID4gPiB4dA0K
-PiA+ID4gPiBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9pbnB1dC90b3VjaHNj
-cmVlbi9pbXg2dWxfdHNjLnQNCj4gPiA+ID4geHQNCj4gPiA+ID4gbmV3IGZpbGUgbW9kZSAxMDA2
-NDQNCj4gPiA+ID4gaW5kZXggMDAwMDAwMC4uYWM0MWMzMg0KPiA+ID4gPiAtLS0gL2Rldi9udWxs
-DQo+ID4gPiA+ICsrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9pbnB1dC90
-b3VjaHNjcmVlbi9pbXg2dWxfdA0KPiA+ID4gPiArKysgc2MudA0KPiA+ID4gPiArKysgeHQNCj4g
-PiA+ID4gQEAgLTAsMCArMSwzNiBAQA0KPiA+ID4gPiArKiBGcmVlc2NhbGUgaS5NWDZVTCBUb3Vj
-aCBDb250cm9sbGVyDQo+ID4gPiA+ICsNCj4gPiA+ID4gK1JlcXVpcmVkIHByb3BlcnRpZXM6DQo+
-ID4gPiA+ICstIGNvbXBhdGlibGU6IG11c3QgYmUgImZzbCxpbXg2dWwtdHNjIi4NCj4gPiA+ID4g
-Ky0gcmVnOiB0aGlzIHRvdWNoIGNvbnRyb2xsZXIgYWRkcmVzcyBhbmQgdGhlIEFEQzIgYWRkcmVz
-cy4NCj4gPiA+DQo+ID4gPiBUaGlzIHN1Z2dlc3RzIHRoYXQgdGhpcyBkcml2ZXIgaXMgdXNpbmcg
-YSB1bml0IEFEQzIuIFdoaWNoIGFsc28NCj4gPiA+IG1lYW5zIHRoYXQgdGhlcmUgYXJlIG1vcmUg
-dGhhbiBvbmUgQURDIHdoaWNoIGFyZSBwcm9iYWJseSBpZGVudGljYWw/DQo+ID4gPg0KPiA+ID4g
-U2hvdWxkbid0IHRoZXNlIEFEQ3MgYmUgcHJvcGVybHkgZGVzY3JpYmVkIGJ5IHRoZWlyIG93biBk
-ZXZpY2Ugbm9kZXMNCj4gPiA+IGluc3RlYWQgb2YgdGhlc2UgdHdvIHJlZ2lzdGVyIHJhbmdlcywg
-dHdvIGludGVycnVwdHMgYW5kIHR3byBjbG9ja3M/DQo+ID4gPg0KPiA+ID4gSXMgJ0FEQzInIHVz
-YWJsZSB3aXRob3V0IHRzYz8gVGhlbiBBREMxL0FEQzIgc2hvdWxkIHBlcmhhcHMgZ2V0IGENCj4g
-PiA+IHByb3BlciBJSU8gZHJpdmVyLg0KPiA+DQo+ID4gRm9yIGkuTVg2VUwsIHRoZXJlIGFyZSB0
-d28gQURDLiBBREMxIGlzIGEgbm9ybWFsIEFEQywgYW5kIEFEQzIgY2FuDQo+ID4gb25seSB3b3Jr
-cyBmb3IgVFNDLCB0aGUgY2hhbm5lbHMgb2YgQURDMiBhcmUgY29ubmVjdGVkIHRvIFRTQw0KPiA+
-IGRpcmVjdGx5LiBUU0MgYW5kIEFEQzIgc2hvdWxkIHdvcmsgdG9nZXRoZXIgYXMgYSB0b3VjaCBz
-Y3JlZW4NCj4gY29udHJvbGxlci4NCj4gDQo+IEJ1dCBhcyBJIHVuZGVyc3RhbmQgdGhlc2UgYXJl
-IHR3byBkaWZmZXJlbnQgdW5pdHMuIFdvdWxkbid0IGl0IGJlIGJldHRlcg0KPiB0byBhYnN0cmFj
-dCBpdCB0aGF0IHdheSBpbiB0aGUgRFQ/DQoNClNpbmNlIHRoZSBBREMyIGp1c3Qgd29yayBmb3Ig
-VFNDLCBubyBvdGhlciB1c2UsIHdoeSBub3QgYmluZCBBREMyIGFuZCBUU0M/DQpJZiBzZXBhcmF0
-ZSwgc2VlbXMgQURDMiBjYW4gd29ya3MgYXMgYSBub3JtYWwgQURDLCBidXQgYWN0dWFsbHkgaXQg
-Y2FuJ3QuDQoNCkJlc3QgcmVnYXJkcywNCg0KSGFpYm8NCg0KPiANCj4gQmVzdCByZWdhcmRzLA0K
-PiANCj4gTWFya3VzDQo+IA0KPiA+DQo+ID4gRm9yIEFEQzEsIGl0IHNoYXJlIHRoZSBkcml2ZXIg
-dmY2MTBfYWRjLmMgKGRyaXZlcnMvaWlvL2FkYy92ZjYxMF9hZGMuYykuDQo+ID4NCj4gPiBCZXN0
-IFJlZ2FyZHMNCj4gPg0KPiA+IEhhaWJvDQo+ID4NCj4gPiA+DQo+ID4gPiBVbmZvcnR1bmF0ZWx5
-IEkgZG9uJ3QgaGF2ZSB0aGUgcmVmZXJlbmNlIG1hbnVhbCB0byBoYXZlIGEgbG9vayBob3cNCj4g
-PiA+IHRoaXMgYWxsIHdvcmtzLg0KPiA+ID4NCj4gPiA+IEJlc3QgcmVnYXJkcywNCj4gPiA+DQo+
-ID4gPiBNYXJrdXMNCj4gPiA+DQo+ID4gPiA+ICstIGludGVycnVwdHM6IHRoZSBpbnRlcnJ1cHQg
-b2YgdGhpcyB0b3VjaCBjb250cm9sbGVyIGFuZCBBREMyLg0KPiA+ID4gPiArLSBjbG9ja3M6IHRo
-ZSByb290IGNsb2NrIG9mIHRvdWNoIGNvbnRyb2xsZXIgYW5kIEFEQzIuDQo+ID4gPiA+ICstIGNs
-b2NrLW5hbWVzOyBtdXN0IGJlICJ0c2MiIGFuZCAiYWRjIi4NCj4gPiA+ID4gKy0geG51ci1ncGlv
-OiB0aGUgWC0gZ3BpbyB0aGlzIGNvbnRyb2xsZXIgY29ubmVjdCB0by4NCj4gPiA+ID4gKyAgVGhp
-cyB4bnVyLWdwaW8gcmV0dXJucyB0byBoaWdoIG9uY2UgdGhlIGZpbmdlciBsZWF2ZSB0aGUgdG91
-Y2gNCj4gPiA+ID4gK3NjcmVlbiAoVGhlDQo+ID4gPiA+ICsgIGxhc3QgdG91Y2ggZXZlbnQgdGhl
-IHRvdWNoIGNvbnRyb2xsZXIgY2FwdHVyZSkuDQo+ID4gPiA+ICsNCj4gPiA+ID4gK09wdGlvbmFs
-IHByb3BlcnRpZXM6DQo+ID4gPiA+ICstIG1lYXN1cmUtZGVsYXktdGltZTogdGhlIHZhbHVlIG9m
-IG1lYXN1cmUgZGVsYXkgdGltZS4NCj4gPiA+ID4gKyAgQmVmb3JlIFgtYXhpcyBvciBZLWF4aXMg
-bWVhc3VyZW1lbnQsIHRoZSBzY3JlZW4gbmVlZCBzb21lIHRpbWUNCj4gPiA+ID4gK2JlZm9yZQ0K
-PiA+ID4gPiArICBldmVuIHBvdGVudGlhbCBkaXN0cmlidXRpb24gcmVhZHkuDQo+ID4gPiA+ICsg
-IFRoaXMgdmFsdWUgZGVwZW5kcyBvbiB0aGUgdG91Y2ggc2NyZWVuLg0KPiA+ID4gPiArLSBwcmUt
-Y2hhcmdlLXRpbWU6IHRoZSB0b3VjaCBzY3JlZW4gbmVlZCBzb21lIHRpbWUgdG8gcHJlY2hhcmdl
-Lg0KPiA+ID4gPiArICBUaGlzIHZhbHVlIGRlcGVuZHMgb24gdGhlIHRvdWNoIHNjcmVlbi4NCj4g
-PiA+ID4gKw0KPiA+ID4gPiArRXhhbXBsZToNCj4gPiA+ID4gKwl0c2M6IHRzY0AwMjA0MDAwMCB7
-DQo+ID4gPiA+ICsJCWNvbXBhdGlibGUgPSAiZnNsLGlteDZ1bC10c2MiOw0KPiA+ID4gPiArCQly
-ZWcgPSA8MHgwMjA0MDAwMCAweDQwMDA+LCA8MHgwMjE5YzAwMCAweDQwMDA+Ow0KPiA+ID4gPiAr
-CQlpbnRlcnJ1cHRzID0gPEdJQ19TUEkgMyBJUlFfVFlQRV9MRVZFTF9ISUdIPiwNCj4gPiA+ID4g
-KwkJCSAgICAgPEdJQ19TUEkgMTAxIElSUV9UWVBFX0xFVkVMX0hJR0g+Ow0KPiA+ID4gPiArCQlj
-bG9ja3MgPSA8JmNsa3MgSU1YNlVMX0NMS19JUEc+LA0KPiA+ID4gPiArCQkJIDwmY2xrcyBJTVg2
-VUxfQ0xLX0FEQzI+Ow0KPiA+ID4gPiArCQljbG9jay1uYW1lcyA9ICJ0c2MiLCAiYWRjIjsNCj4g
-PiA+ID4gKwkJcGluY3RybC1uYW1lcyA9ICJkZWZhdWx0IjsNCj4gPiA+ID4gKwkJcGluY3RybC0w
-ID0gPCZwaW5jdHJsX3RzYz47DQo+ID4gPiA+ICsJCXhudXItZ3BpbyA9IDwmZ3BpbzEgMyBHUElP
-X0FDVElWRV9ISUdIPjsNCj4gPiA+ID4gKwkJbWVhc3VyZS1kZWxheS10aW1lID0gPDB4ZmZmPjsN
-Cj4gPiA+ID4gKwkJcHJlLWNoYXJnZS10aW1lID0gPDB4ZmZmZj47DQo+ID4gPiA+ICsJCXN0YXR1
-cyA9ICJva2F5IjsNCj4gPiA+ID4gKwl9Ow0KPiA+ID4gPiAtLQ0KPiA+ID4gPiAxLjkuMQ0KPiA+
-ID4gPg0KPiA+ID4gPg0KPiA+ID4gPg0KPiA+ID4NCj4gPiA+IC0tDQo+ID4gPiBQZW5ndXRyb25p
-eCBlLksuICAgICAgICAgICAgICAgICAgICAgICAgICAgfA0KPiA+ID4gfA0KPiA+ID4gSW5kdXN0
-cmlhbCBMaW51eCBTb2x1dGlvbnMgICAgICAgICAgICAgICAgIHwNCj4gaHR0cDovL3d3dy5wZW5n
-dXRyb25peC5kZS8NCj4gPiA+IHwNCj4gPiA+IFBlaW5lciBTdHIuIDYtOCwgMzExMzcgSGlsZGVz
-aGVpbSwgR2VybWFueSB8IFBob25lOg0KPiA+ID4gKzQ5LTUxMjEtMjA2OTE3LTANCj4gPiA+IHwN
-Cj4gPiA+IEFtdHNnZXJpY2h0IEhpbGRlc2hlaW0sIEhSQSAyNjg2ICAgICAgICAgICB8IEZheDog
-ICArNDktNTEyMS0yMDY5MTctDQo+IDU1NTUNCj4gPiA+IHwNCj4gDQo+IC0tDQo+IFBlbmd1dHJv
-bml4IGUuSy4gICAgICAgICAgICAgICAgICAgICAgICAgICB8DQo+IHwNCj4gSW5kdXN0cmlhbCBM
-aW51eCBTb2x1dGlvbnMgICAgICAgICAgICAgICAgIHwgaHR0cDovL3d3dy5wZW5ndXRyb25peC5k
-ZS8NCj4gfA0KPiBQZWluZXIgU3RyLiA2LTgsIDMxMTM3IEhpbGRlc2hlaW0sIEdlcm1hbnkgfCBQ
-aG9uZTogKzQ5LTUxMjEtMjA2OTE3LTANCj4gfA0KPiBBbXRzZ2VyaWNodCBIaWxkZXNoZWltLCBI
-UkEgMjY4NiAgICAgICAgICAgfCBGYXg6ICAgKzQ5LTUxMjEtMjA2OTE3LTU1NTUNCj4gfA0K
+From: Martin Sperl <kernel-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org>
+
+The BCM2835 contains 3 auxiliar devices:
+* spi1
+* spi2
+* uart1
+
+All of those 3 devices are enabled/disabled via a shared register,
+which is set by default to be disabled.
+
+Access to this register needs to get serialized.
+
+So fter several iterations of discussions with the following idea:
+* syscon - device tree should describe HW not drivers to use -
+           'compatiblity = "brcm,bcm2835-aux-enable", "syscon";'
+           is not acceptable
+* regulator - it is not necessarily a regulator or a power gate
+              that is implemented in HW, so it is not valid to use
+              this framework
+
+The recommendation was made to create a new minimal API in soc
+just for access to this shared enable/disable register.
+
+This patch-series implements:
+* the bcm2835-auxiliar device enable/disable api in soc.
+* the bcm2835-auxiliar spi device driver
+
+The uart1 device driver (ns16550 based) is not implemented so far
+but should be using the same API.
+
+Martin Sperl (5):
+  soc: bcm2835: auxiliar devices enable infrastructure
+  ARM: bcm2835: add DT for the bcm2835 auxiliar devices
+  dt/bindings: bcm2835: add binding documentation for bcm2835-aux
+  spi: bcm2835: new driver implementing auxiliar spi1/spi2 on the
+    bcm2835 soc
+  dt/bindings: bcm2835: Add binding documentation for auxiliar spi
+    devices
+
+ .../bindings/soc/bcm/brcm,bcm2835-aux.txt          |   27 ++
+ .../bindings/spi/brcm,bcm2835-aux-spi.txt          |   61 +++
+ arch/arm/boot/dts/bcm2835.dtsi                     |   37 ++
+ arch/arm/configs/bcm2835_defconfig                 |    1 +
+ drivers/soc/Kconfig                                |    1 +
+ drivers/soc/Makefile                               |    1 +
+ drivers/soc/bcm/Kconfig                            |   11 +
+ drivers/soc/bcm/Makefile                           |    1 +
+ drivers/soc/bcm/bcm2835-aux.c                      |  154 ++++++
+ drivers/spi/Kconfig                                |   12 +
+ drivers/spi/Makefile                               |    1 +
+ drivers/spi/spi-bcm2835aux.c                       |  506 ++++++++++++++++++++
+ include/linux/soc/bcm/bcm2835-aux.h                |   23 +
+ 13 files changed, 836 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/soc/bcm/brcm,bcm2835-aux.txt
+ create mode 100644 Documentation/devicetree/bindings/spi/brcm,bcm2835-aux-spi.txt
+ create mode 100644 drivers/soc/bcm/Kconfig
+ create mode 100644 drivers/soc/bcm/Makefile
+ create mode 100644 drivers/soc/bcm/bcm2835-aux.c
+ create mode 100644 drivers/spi/spi-bcm2835aux.c
+ create mode 100644 include/linux/soc/bcm/bcm2835-aux.h
+
+--
+1.7.10.4
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
