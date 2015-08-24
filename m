@@ -1,62 +1,39 @@
-From: Vaibhav Hiremath <vaibhav.hiremath@linaro.org>
-Subject: Re: [PATCH-v3 1/2] mfd: devicetree: bindings: 88pm800: Add DT property
- for dual phase enable
-Date: Mon, 24 Aug 2015 20:24:10 +0530
-Message-ID: <55DB3012.6010904@linaro.org>
-References: <1440420006-31556-1-git-send-email-vaibhav.hiremath@linaro.org> <1440420006-31556-2-git-send-email-vaibhav.hiremath@linaro.org> <20150824130205.GE3237@x1>
+From: Rob Herring <robherring2@gmail.com>
+Subject: Re: [PATCH] of: add vendor prefix for Socionext Inc.
+Date: Mon, 24 Aug 2015 10:11:32 -0500
+Message-ID: <CAL_JsqLjV+m+nRd7aW1GWg-rzwO+ndzAPxCUcRTatzaq+RvHQw@mail.gmail.com>
+References: <1438163133-4539-1-git-send-email-yamada.masahiro@socionext.com> <20150824065724.GB3247@x1>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20150824130205.GE3237@x1>
+In-Reply-To: <20150824065724.GB3247@x1>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Lee Jones <lee.jones@linaro.org>
-Cc: linux-arm-kernel@lists.infradead.org, robh+dt@kernel.org, devicetree@vger.kernel.org, k.kozlowski@samsung.com, broonie@kernel.org, linux-kernel@vger.kernel.org
+Cc: Masahiro Yamada <yamada.masahiro@socionext.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>, Hayato Suzuki <hytszk@gmail.com>, Thierry Reding <treding@nvidia.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Philipp Zabel <p.zabel@pengutronix.de>, Kumar Gala <galak@codeaurora.org>, Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Arnaud Ebalard <arno@natisbad.org>, Rob Herring <robh+dt@kernel.org>, Antony Pavlov <antonynpavlov@gmail.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-
-
-On Monday 24 August 2015 06:32 PM, Lee Jones wrote:
-> On Mon, 24 Aug 2015, Vaibhav Hiremath wrote:
+On Mon, Aug 24, 2015 at 1:57 AM, Lee Jones <lee.jones@linaro.org> wrote=
+:
+> On Wed, 29 Jul 2015, Masahiro Yamada wrote:
 >
->> 88PM860 family of device supports dual phase mode on BUCK1 supply
->> providing total 6A capacity.
->> Note that by default they operate independently with 3A capacity.
->>
->> This patch updates the devicetree binding with DT property
->> to enable dual-phase mode on BUCK1.
->>
->> Signed-off-by: Vaibhav Hiremath <vaibhav.hiremath@linaro.org>
+>> Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
 >> ---
->>   Documentation/devicetree/bindings/mfd/88pm800.txt | 6 ++++++
->>   1 file changed, 6 insertions(+)
 >>
->> diff --git a/Documentation/devicetree/bindings/mfd/88pm800.txt b/Documentation/devicetree/bindings/mfd/88pm800.txt
->> index dec842f..2c82fcb 100644
->> --- a/Documentation/devicetree/bindings/mfd/88pm800.txt
->> +++ b/Documentation/devicetree/bindings/mfd/88pm800.txt
->> @@ -9,6 +9,12 @@ Required parent device properties:
->>   - #interrupt-cells 	: should be 1.
->>   			  The cell is the 88pm80x local IRQ number
->>
->> +Optional properties :
->> +- marvell,88pm860-buck1-dualphase-en  : If set, enable dual phase on BUCK1,
->> +  providing 6A capacity.
->> +  Without this both BUCK1A and BUCK1B operates independently with 3A capacity.
->> +  (This property is only applicable to 88PM860)
+>>  Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
+>>  1 file changed, 1 insertion(+)
 >
-> This will require a Regulator Ack.
+> Patch has been around for nearly a month and is pretty trivial, so I'=
+m
+> just going to go ahead an apply it.
+
+Okay. I just added it now going thru my backlog, but will drop it.
+
+Rob
+
 >
-> My suggestion would be to remove the 'buck' number, as the same
-> property could be used on any Buck, and remove the '-en' part, as
-> this is implied.
->
-
-Ok, Will do it in next version.
-
-Mark,
-
-Any comments here before I spin V4.
-
-Thanks,
-Vaibhav
+> --
+> Lee Jones
+> Linaro STMicroelectronics Landing Team Lead
+> Linaro.org =E2=94=82 Open source software for ARM SoCs
+> Follow Linaro: Facebook | Twitter | Blog
