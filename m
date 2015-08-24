@@ -1,71 +1,69 @@
-From: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
-Subject: Re: [PATCH v3 06/14] Documentation: drm/bridge: add document for
- analogix_dp
-Date: Mon, 24 Aug 2015 13:57:58 +0100
-Message-ID: <20150824125758.GA7557@n2100.arm.linux.org.uk>
-References: <1439995728-18046-1-git-send-email-ykk@rock-chips.com>
- <1439995834-18363-1-git-send-email-ykk@rock-chips.com>
- <CAL_JsqLz+8RtBucctUj4euXZ3Ac0DvB52N9ONpAerh5T9BiTJg@mail.gmail.com>
+From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH-v3 1/2] mfd: devicetree: bindings: 88pm800: Add DT
+ property for dual phase enable
+Date: Mon, 24 Aug 2015 14:02:05 +0100
+Message-ID: <20150824130205.GE3237@x1>
+References: <1440420006-31556-1-git-send-email-vaibhav.hiremath@linaro.org>
+ <1440420006-31556-2-git-send-email-vaibhav.hiremath@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <CAL_JsqLz+8RtBucctUj4euXZ3Ac0DvB52N9ONpAerh5T9BiTJg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <1440420006-31556-2-git-send-email-vaibhav.hiremath-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Yakir Yang <ykk-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Jingoo Han <jingoohan1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Fabio Estevam <fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Inki Dae <inki.dae-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Joe Perches <joe-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org>, Sean Paul <seanpaul-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Takashi Iwai <tiwai-l3A5Bk7waGM@public.gmane.org>, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, Andrzej Hajda <a.hajda-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Gustavo Padovan <gustavo.padovan-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>, "linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Vincent Palatin <vpalatin-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Doug Anderson <dianders-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+To: Vaibhav Hiremath <vaibhav.hiremath-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Aug 23, 2015 at 06:23:14PM -0500, Rob Herring wrote:
-> On Wed, Aug 19, 2015 at 9:50 AM, Yakir Yang <ykk-TNX95d0MmH7DzftRWevZcw@public.gmane.org> wrote:
-> > +       -analogix,color-depth:
-> > +               number of bits per colour component.
-> > +                       COLOR_6 = 0, COLOR_8 = 1, COLOR_10 = 2, COLOR_12 = 3
-> 
-> This seems pretty generic. Just use 6, 8, 10, or 12 for values. And
-> drop the vendor prefix.
+On Mon, 24 Aug 2015, Vaibhav Hiremath wrote:
 
-Please think about this some more.  What does "color-depth" mean?  Does it
-mean the number of bits per colour _component_, or does it mean the total
-number of bits to represent a particular colour.  It's confusing as it
-stands.
+> 88PM860 family of device supports dual phase mode on BUCK1 supply
+> providing total 6A capacity.
+> Note that by default they operate independently with 3A capacity.
+>=20
+> This patch updates the devicetree binding with DT property
+> to enable dual-phase mode on BUCK1.
+>=20
+> Signed-off-by: Vaibhav Hiremath <vaibhav.hiremath-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> ---
+>  Documentation/devicetree/bindings/mfd/88pm800.txt | 6 ++++++
+>  1 file changed, 6 insertions(+)
+>=20
+> diff --git a/Documentation/devicetree/bindings/mfd/88pm800.txt b/Docu=
+mentation/devicetree/bindings/mfd/88pm800.txt
+> index dec842f..2c82fcb 100644
+> --- a/Documentation/devicetree/bindings/mfd/88pm800.txt
+> +++ b/Documentation/devicetree/bindings/mfd/88pm800.txt
+> @@ -9,6 +9,12 @@ Required parent device properties:
+>  - #interrupt-cells 	: should be 1.
+>  			  The cell is the 88pm80x local IRQ number
+> =20
+> +Optional properties :
+> +- marvell,88pm860-buck1-dualphase-en  : If set, enable dual phase on=
+ BUCK1,
+> +  providing 6A capacity.
+> +  Without this both BUCK1A and BUCK1B operates independently with 3A=
+ capacity.
+> +  (This property is only applicable to 88PM860)
 
-> > +Optional properties for dp-controller:
-> > +       -analogix,hpd-gpio:
-> > +               Hotplug detect GPIO.
-> > +                       Indicates which GPIO should be used for hotplug
-> > +                       detection
-> 
-> We should align with "hpd-gpios" used by HDMI connector binding. Or do
-> we need a DP connector binding that this should be defined in?
-> Probably so.
-> 
-> The DRM related bindings are such a cluster f*ck with everyone picking
-> their own way to do things. Just grep hpd in bindings for starters.
-> That is just the tip.
+This will require a Regulator Ack.
 
-I'm not surprised one iota that DRM bindings are a mess.  There's no one
-overlooking the adoption of DRM bindings, so surprise surprise, everyone
-does their own thing.  This is exactly what happens every time in that
-scenario.  It's not a new problem.
+My suggestion would be to remove the 'buck' number, as the same
+property could be used on any Buck, and remove the '-en' part, as
+this is implied.
 
-When we adopted the graph bindings for iMX DRM, I thought exactly at that
-time "it would be nice if this could become the standard for binding DRM
-components together" but I don't have the authority from either the DT
-perspective or the DRM perspective to mandate that.  Neither does anyone
-else.  That's the _real_ problem here.
+>  88pm80x family of devices consists of varied group of sub-devices:
+> =20
+>  Device		 	Supply Names	 Description
 
-I've seen several DRM bindings go by which don't use the of-graph stuff,
-which means that they'll never be compatible with generic components
-which do use the of-graph stuff.
-
-Like you say, it's a mess, but it's a mess of our own making, because no
-one has the authority to regulate this.
-
--- 
-FTTC broadband for 0.8mile line: currently at 10.5Mbps down 400kbps up
-according to speedtest.net.
+--=20
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org =E2=94=82 Open source software for ARM SoCs
+=46ollow Linaro: Facebook | Twitter | Blog
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
