@@ -1,57 +1,48 @@
-From: Michal Simek <michal.simek@xilinx.com>
-Subject: Re: [PATCH] doc: dt: Add interrupt parent to Xilinx AXI DMA
- instantation example.
-Date: Mon, 24 Aug 2015 08:42:27 +0200
-Message-ID: <55DABCD3.60806@xilinx.com>
-References: <1440174775-14470-1-git-send-email-moritz.fischer@ettus.com>
+From: Vaibhav Hiremath <vaibhav.hiremath-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH-v6 0/6] mfd: 88pm800: Add Device tree support
+Date: Mon, 24 Aug 2015 12:13:34 +0530
+Message-ID: <55DABD16.8080309@linaro.org>
+References: <1436358392-15449-1-git-send-email-vaibhav.hiremath@linaro.org> <55A40A32.8060901@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
+Content-Type: text/plain; charset=windows-1252; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1440174775-14470-1-git-send-email-moritz.fischer@ettus.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Moritz Fischer <moritz.fischer@ettus.com>, michal.simek@xilinx.com
-Cc: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, soren.brinkmann@xilinx.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <55A40A32.8060901-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 08/21/2015 06:32 PM, Moritz Fischer wrote:
-> This patch adds 'interrupt-parent' properties to the instantation example in
-> the docs for the devicetree bindings of the Xilinx AXI DMA driver.
-> 
-> Signed-off-by: Moritz Fischer <moritz.fischer@ettus.com>
-> ---
->  Documentation/devicetree/bindings/dma/xilinx/xilinx_dma.txt | 3 +++
->  1 file changed, 3 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/dma/xilinx/xilinx_dma.txt b/Documentation/devicetree/bindings/dma/xilinx/xilinx_dma.txt
-> index 2291c40..7c956e9 100644
-> --- a/Documentation/devicetree/bindings/dma/xilinx/xilinx_dma.txt
-> +++ b/Documentation/devicetree/bindings/dma/xilinx/xilinx_dma.txt
-> @@ -19,6 +19,7 @@ Required child node properties:
->  - compatible: It should be either "xlnx,axi-dma-mm2s-channel" or
->  	"xlnx,axi-dma-s2mm-channel".
->  - interrupts: Should contain per channel DMA interrupts.
-> +- interrupt-parent: Should contain interrupt parent.
->  - xlnx,datawidth: Should contain the stream data width, take values
->  	{32,64...1024}.
->  
-> @@ -36,11 +37,13 @@ axi_dma_0: axidma@40400000 {
->  	dma-channel@40400000 {
->  		compatible = "xlnx,axi-dma-mm2s-channel";
->  		interrupts = < 0 59 4 >;
-> +		interrupt-parent = <&intc>;
->  		xlnx,datawidth = <0x40>;
->  	} ;
->  	dma-channel@40400030 {
->  		compatible = "xlnx,axi-dma-s2mm-channel";
->  		interrupts = < 0 58 4 >;
-> +		interrupt-parent = <&intc>;
->  		xlnx,datawidth = <0x40>;
->  	} ;
->  } ;
-> 
 
-Acked-by: Michal Simek <michal.simek@xilinx.com>
+
+On Tuesday 14 July 2015 12:27 AM, Vaibhav Hiremath wrote:
+>
+>
+> On Wednesday 08 July 2015 05:56 PM, Vaibhav Hiremath wrote:
+>> This patch-series adds support for Device tree to 88PM800 mfd driver.
+>> It also sets default configuration of irq clear method if board file
+>> doesn't exist.
+>>
+>> Testing::
+>>   - Boot tested on PXA1928 based platform.
+>>   - probe of mfd, rtc and regulator function passing successfully.
+>>   - Basic read operations on registers
+>>   - irq clear configuration
+>>
+>> V5 => V6
+>> =======
+>
+> I hope this will be queued for 4.2
+>
+
+
+Lee,
+
+This patch-series is pending since long time, reviewed and acked.
+Request to queue it up for next merge window.
 
 Thanks,
-Michal
+Vaibhav
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
