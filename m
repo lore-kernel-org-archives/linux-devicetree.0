@@ -1,78 +1,139 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH v4 3/4] mfd: Add DT binding for Maxim MAX77802 IC
-Date: Mon, 24 Aug 2015 12:49:01 +0100
-Message-ID: <20150824114901.GC3237@x1>
-References: <1440406041-25071-1-git-send-email-javier@osg.samsung.com>
- <1440406041-25071-4-git-send-email-javier@osg.samsung.com>
+From: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
+Subject: Re: [PATCH] phy: rcar-gen3-usb2: Add R-Car Gen3 USB2 PHY driver
+Date: Mon, 24 Aug 2015 14:13:17 +0200
+Message-ID: <CAMuHMdXshUCWs=sbVA8pBmsdOm3GwkWJ5NN8YCDXYX_6W5QFAg@mail.gmail.com>
+References: <1440052098-4840-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <1440406041-25071-4-git-send-email-javier@osg.samsung.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Javier Martinez Canillas <javier@osg.samsung.com>
-Cc: devicetree@vger.kernel.org, Krzysztof Kozlowski <k.kozlowski@samsung.com>, linux-samsung-soc@vger.kernel.org, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1440052098-4840-1-git-send-email-yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Yoshihiro Shimoda <yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+Cc: kishon-l0cyMroinI0@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux-sh list <linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gTW9uLCAyNCBBdWcgMjAxNSwgSmF2aWVyIE1hcnRpbmV6IENhbmlsbGFzIHdyb3RlOgoKPiBU
-aGUgTUFYNzc4MDIgaXMgYSBjaGlwIHRoYXQgY29udGFpbnMgcmVndWxhdG9ycywgMiAzMmtIeiBj
-bG9ja3MsCj4gYSBSVEMgYW5kIGFuIEkyQyBpbnRlcmZhY2UgdG8gcHJvZ3JhbSB0aGUgaW5kaXZp
-ZHVhbCBjb21wb25lbnRzLgo+IAo+IFRoZSBhcmUgYWxyZWFkeSBEVCBiaW5kaW5ncyBmb3IgdGhl
-IHJlZ3VsYXRvcnMgYW5kIGNsb2NrcyBhbmQKPiB0aGVzZSByZWZlcmVuY2UgdG8gYSBiaW5kaW5n
-cy9tZmQvbWF4Nzc4MDIudHh0IGZpbGUsIHRoYXQgZGlkbid0Cj4gZXhpc3QsIGZvciB0aGUgZGV0
-YWlscyBhYm91dCB0aGUgUE1JQy4KPiAKPiBTaWduZWQtb2ZmLWJ5OiBKYXZpZXIgTWFydGluZXog
-Q2FuaWxsYXMgPGphdmllckBvc2cuc2Ftc3VuZy5jb20+Cj4gUmV2aWV3ZWQtYnk6IEtyenlzenRv
-ZiBLb3psb3dza2kgPGsua296bG93c2tpQHNhbXN1bmcuY29tPgo+IAo+IC0tLQo+IAo+IENoYW5n
-ZXMgaW4gdjQ6Cj4gLSBSZXdvcmQgc2VjdGlvbiBhYm91dCBtYXg3NzgwMiBjbG9jayBhbmQgcmVn
-dWxhdG9yIERUIGJpbmRpbmcgZG9jcy4KPiAgIFN1Z2dlc3RlZCBieSBMZWUgSm9uZXMuCj4gLSBB
-bGlnbiBtYXg3NzgwMiBtZmQgcmVxdWlyZWQgcHJvcGVydGllcy4gU3VnZ2VzdGVkIGJ5IExlZSBK
-b25lcy4KPiAKPiBDaGFuZ2VzIGluIHYzOgo+IC0gQWRkIEtyenlzenRvZiBLb3psb3dza2kgUmV2
-aWV3ZWQtYnkgdGFnIHRvIHBhdGNoICMzLgo+IC0gQ2FwaXRhbGlzZSBhbGwgYWNyb255bXMuIFN1
-Z2dlc3RlZCBieSBMZWUgSm9uZXMuCj4gLSBVc2UgcmVsYXRpdmUgcGF0aCB0byByZWZlciBvdGhl
-ciBiaW5kaW5ncy4gU3VnZ2VzdGVkIGJ5IExlZSBKb25lcy4KPiAtIFVzZSBJUlFfVFlQRV9OT05F
-IGluc3RlYWQgb2YgMCBpbiBleGFtcGxlLiBTdWdnZXN0ZWQgYnkgTGVlIEpvbmVzLgo+IAo+IENo
-YW5nZXMgaW4gdjI6Cj4gLSBVc2UgdGhlIGNvcnJlY3QgIm1heGltLG1heDc3ODAyIiBjb21wYXRp
-YmxlIHN0cmluZy4KPiAgIFN1Z2dlc3RlZCBieSBLcnp5c3p0b2YgS296bG93c2tpCj4gLSBVc2Ug
-YSBwbWljIGdlbmVyaWMgbm9kZSBuYW1lIGZvciB0aGUgbWF4Nzc4MDIgbm9kZSBleGFtcGxlLgo+
-ICAgU3VnZ2VzdGVkIGJ5IFNlcmdlaSBTaHR5bHlvdi4KPiAKPiAgRG9jdW1lbnRhdGlvbi9kZXZp
-Y2V0cmVlL2JpbmRpbmdzL21mZC9tYXg3NzgwMi50eHQgfCAyNiArKysrKysrKysrKysrKysrKysr
-KysrCj4gIDEgZmlsZSBjaGFuZ2VkLCAyNiBpbnNlcnRpb25zKCspCj4gIGNyZWF0ZSBtb2RlIDEw
-MDY0NCBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvbWZkL21heDc3ODAyLnR4dAoK
-QXBwbGllZCwgdGhhbmtzLgoKPiBkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVl
-L2JpbmRpbmdzL21mZC9tYXg3NzgwMi50eHQgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmlu
-ZGluZ3MvbWZkL21heDc3ODAyLnR4dAo+IG5ldyBmaWxlIG1vZGUgMTAwNjQ0Cj4gaW5kZXggMDAw
-MDAwMDAwMDAwLi41MWZjMWE2MGNhYTUKPiAtLS0gL2Rldi9udWxsCj4gKysrIGIvRG9jdW1lbnRh
-dGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL21mZC9tYXg3NzgwMi50eHQKPiBAQCAtMCwwICsxLDI2
-IEBACj4gK01heGltIE1BWDc3ODAyIG11bHRpLWZ1bmN0aW9uIGRldmljZQo+ICsKPiArVGhlIE1h
-eGltIE1BWDc3ODAyIGlzIGEgUG93ZXIgTWFuYWdlbWVudCBJQyAoUE1JQykgdGhhdCBjb250YWlu
-cyAxMCBoaWdoCj4gK2VmZmljaWVuY3kgQnVjayByZWd1bGF0b3JzLCAzMiBMb3ctRHJvcE91dCAo
-TERPKSByZWd1bGF0b3JzIHVzZWQgdG8gcG93ZXIKPiArdXAgYXBwbGljYXRpb24gcHJvY2Vzc29y
-cyBhbmQgcGVyaXBoZXJhbHMsIGEgMi1jaGFubmVsIDMya0h6IGNsb2NrIG91dHB1dHMsCj4gK2Eg
-UmVhbC1UaW1lLUNsb2NrIChSVEMpIGFuZCBhIEkyQyBpbnRlcmZhY2UgdG8gcHJvZ3JhbSB0aGUg
-aW5kaXZpZHVhbAo+ICtyZWd1bGF0b3JzLCBjbG9ja3Mgb3V0cHV0cyBhbmQgdGhlIFJUQy4KPiAr
-Cj4gK0JpbmRpbmdzIGZvciB0aGUgYnVpbHQtaW4gMzJrIGNsb2NrIGdlbmVyYXRvciBibG9jayBh
-bmQKPiArcmVndWxhdG9ycyBhcmUgZGVmaW5lZCBpbiAuLi9jbGsvbWF4aW0sbWF4Nzc4MDIudHh0
-IGFuZAo+ICsuLi9yZWd1bGF0b3IvbWF4Nzc4MDIudHh0IHJlc3BlY3RpdmVseS4KPiArCj4gK1Jl
-cXVpcmVkIHByb3BlcnRpZXM6Cj4gKy0gY29tcGF0aWJsZQkJOiBNdXN0IGJlICJtYXhpbSxtYXg3
-NzgwMiIKPiArLSByZWcJCQk6IFNwZWNpZmllcyB0aGUgSTJDIHNsYXZlIGFkZHJlc3Mgb2YgUE1J
-QyBibG9jay4KPiArLSBpbnRlcnJ1cHRzCQk6IEkyQyBkZXZpY2UgSVJRIGxpbmUgY29ubmVjdGVk
-IHRvIHRoZSBtYWluIFNvQy4KPiArLSBpbnRlcnJ1cHQtcGFyZW50CTogVGhlIHBhcmVudCBpbnRl
-cnJ1cHQgY29udHJvbGxlci4KPiArCj4gK0V4YW1wbGU6Cj4gKwo+ICsJbWF4Nzc4MDI6IHBtaWNA
-MDkgewo+ICsJCWNvbXBhdGlibGUgPSAibWF4aW0sbWF4Nzc4MDIiOwo+ICsJCWludGVycnVwdC1w
-YXJlbnQgPSA8JmludGM+Owo+ICsJCWludGVycnVwdHMgPSA8MjYgSVJRX1RZUEVfTk9ORT47Cj4g
-KwkJcmVnID0gPDB4MDk+Owo+ICsJfTsKCi0tIApMZWUgSm9uZXMKTGluYXJvIFNUTWljcm9lbGVj
-dHJvbmljcyBMYW5kaW5nIFRlYW0gTGVhZApMaW5hcm8ub3JnIOKUgiBPcGVuIHNvdXJjZSBzb2Z0
-d2FyZSBmb3IgQVJNIFNvQ3MKRm9sbG93IExpbmFybzogRmFjZWJvb2sgfCBUd2l0dGVyIHwgQmxv
-ZwoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KbGludXgt
-YXJtLWtlcm5lbCBtYWlsaW5nIGxpc3QKbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQu
-b3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8vbGludXgtYXJt
-LWtlcm5lbAo=
+Hi Shimoda-san,
+
+On Thu, Aug 20, 2015 at 8:28 AM, Yoshihiro Shimoda
+<yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org> wrote:
+> This patch adds support for R-Car generation 3 USB2 PHY driver.
+> This SoC has 3 EHCI/OHCI channels, and the channel 0 is shared
+> with the HSUSB (USB2.0 peripheral) device.
+>
+> So, the purpose of this driver is:
+>  1) initializes some registers of SoC specific to use the
+>     {ehci,ohci}-platform driver.
+>
+>  2) detects id pin to select host or peripheral on the channel 0.
+>
+> For now, this driver only supports 1) above.
+
+Thanks for your patch!
+
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/phy/rcar-gen3-phy-usb2.txt
+> @@ -0,0 +1,37 @@
+> +* Renesas R-Car generation 3 USB 2.0 PHY
+> +
+> +This file provides information on what the device node for the R-Car generation
+> +3 USB 2.0 PHY contains.
+> +
+> +Required properties:
+> +- compatible: "renesas,usb2-phy-r8a7795" if the device is a part of R8A7795 SoC.
+
+"an R8A7795 SoC".
+
+> +- reg: offset and length of the USB2.0 host register block.
+> +- reg-names: must be "usb2".
+> +- clocks: clock phandle and specifier pair.
+
+"pair(s)."
+
+> +- clock-names: string, clock input name, must be "usb2", and optional "hsusb".
+
+names
+
+> +- #phy-cells: see phy-bindings.txt in the same directory, must be <0>.
+> +
+> +Optional proparies:
+
+properties
+
+> +To use a USB channel which EHCI/OHCI and HSUSB are combined, the device tree
+
+s/which/where/
+
+> +node should set HSUSB proparies to reg and reg-names proparies:
+
+properties (x2)
+
+> +- reg: offset and length of the HSUSB register block.
+> +- reg-names: must be "hsusb".
+> +
+> +Example (R-Car H3):
+> +
+> +       usb-phy@ee080200 {
+> +               compatible = "renesas,usb2-phy-r8a7795";
+> +               reg = <0 0xee080200 0 0x6ff>, <0 0xe6590100 0 0x100>;
+> +               reg-names = "usb2", "hsusb";
+> +               clocks = <&mstp7_clks R8A7795_CLK_EHCI0>,
+> +                        <&mstp7_clks R8A7795_CLK_HSUSB>;
+
+If you ever want to enable Runtime PM, do you want the first MSTP clock to be
+managed automatically?
+What about the second optional clock?
+
+> +               clock-names = "usb2", "hsusb";
+> +       };
+> +
+> +       usb-phy@ee0a0200 {
+> +               compatible = "renesas,usb2-phy-r8a7795";
+> +               reg = <0 0xee0a0200 0 0x6ff>;
+> +               reg-names = "usb2";
+> +               clocks = <&mstp7_clks R8A7795_CLK_EHCI0>;
+> +               clock-names = "usb2";
+> +       };
+
+> --- /dev/null
+> +++ b/drivers/phy/phy-rcar-gen3-usb2.c
+
+> +static int rcar_gen3_phy_usb2_init(struct phy *p)
+> +{
+> +       struct rcar_gen3_phy_usb2_channel *channel = phy_get_drvdata(p);
+> +       unsigned long flags;
+> +       void __iomem *usb2_base = channel->usb2.base;
+> +       void __iomem *hsusb_base = channel->hsusb.base;
+> +       u32 tmp;
+> +
+> +       /* Since ops->init() is called once, this driver enables both clocks */
+> +       clk_prepare_enable(channel->usb2.clk);
+> +       clk_prepare_enable(channel->hsusb.clk);
+
+So this driver manages its clock(s) itself, and doesn't support Runtime PM.
+
+> +static int rcar_gen3_phy_usb2_exit(struct phy *p)
+> +{
+> +       struct rcar_gen3_phy_usb2_channel *channel = phy_get_drvdata(p);
+> +
+> +       writel(0, channel->usb2.base + USB2_INT_ENABLE);
+> +
+> +       clk_disable_unprepare(channel->hsusb.clk);
+> +       clk_disable_unprepare(channel->usb2.clk);
+> +
+> +       return 0;
+> +}
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
