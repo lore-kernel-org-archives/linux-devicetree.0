@@ -1,67 +1,63 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH v4 2/4] mfd: max77686: Use a generic name for the PMIC
- node in the example
-Date: Mon, 24 Aug 2015 12:48:48 +0100
-Message-ID: <20150824114848.GB3237@x1>
-References: <1440406041-25071-1-git-send-email-javier@osg.samsung.com>
- <1440406041-25071-3-git-send-email-javier@osg.samsung.com>
+From: Leif Lindholm <leif.lindholm@linaro.org>
+Subject: Re: [PATCH v1 3/3] arm64: dts: add Hi6220 mailbox node
+Date: Mon, 24 Aug 2015 12:49:03 +0100
+Message-ID: <20150824114903.GT10728@bivouac.eciton.net>
+References: <1439977055-1747-1-git-send-email-leo.yan@linaro.org>
+ <1439977055-1747-4-git-send-email-leo.yan@linaro.org>
+ <20150821184059.GB2000@svinekod>
+ <20150824091845.GA28290@leoy-linaro>
+ <20150824095144.GA7139@leverpostej>
+ <1440411596.3517.12.camel@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1440406041-25071-3-git-send-email-javier@osg.samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Javier Martinez Canillas <javier@osg.samsung.com>
-Cc: devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, Mark Brown <broonie@kernel.org>, linux-kernel@vger.kernel.org, Krzysztof Kozlowski <k.kozlowski@samsung.com>, linux-arm-kernel@lists.infradead.org
+In-Reply-To: <1440411596.3517.12.camel@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Haojian Zhuang <haojian.zhuang@linaro.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, Leo Yan <leo.yan@linaro.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <Pawel.Moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Catalin Marinas <Catalin.Marinas@arm.com>, Will Deacon <Will.Deacon@arm.com>, Jassi Brar <jassisinghbrar@gmail.com>, Bintian Wang <bintian.wang@huawei.com>, Yiping Xu <xuyiping@hisilicon.com>, Wei Xu <xuwei5@hisilicon.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "guodong.xu@linaro.org" <guodong.xu@linaro.org>, Jian Zhang <zhangjian001@hisilicon.com>, Zhenwei Wang <Zhenwei.wang@hisilicon.com>, Haoju Mo <mohaoju@hisilicon.com>, Dan Zhao <dan.zhao@hisilicon.com>, "kongfei@hisilicon.com" <kongfei@>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 24 Aug 2015, Javier Martinez Canillas wrote:
+On Mon, Aug 24, 2015 at 06:19:56PM +0800, Haojian Zhuang wrote:
+> > If your EFI memory map describes the memory as mappable, it is wrong.
+> 
+> When kernel is working, kernel will create its own page table based on
+> UEFI memory map. Since it's reserved in DTS file as Leo's patch, it'll
+> be moved to reserved memblock. Why is it wrong?
+> 
+> In the second, UEFI is firmware. When it's stable, nobody should change
+> it without any reason.
 
-> The ePAPR standard says that: "the name of a node should be somewhat
-> generic, reflecting the function of the device and not its precise
-> programming model."
->=20
-> So, change the max77686 binding document example to use a generic
-> node name instead of using the chip's name.
->=20
-> Suggested-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-> Signed-off-by: Javier Martinez Canillas <javier@osg.samsung.com>
-> Acked-by: Lee Jones <lee.jones@linaro.org>
->=20
-> ---
->=20
-> Changes in v4:
-> - Add Lee Jones Acked-by tag to patch #2.
->=20
-> Changes in v3:
-> - Fix typo in ePAPR document name. Suggested by Sergei Shtylyov
->=20
-> Changes in v2: None
->=20
->  Documentation/devicetree/bindings/mfd/max77686.txt | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+Much like the memory map.
 
-Applied, thanks.
+> These reserved memory are used in mailbox driver.
+> Look. It's driver, so it could be changed at any time.
 
-> diff --git a/Documentation/devicetree/bindings/mfd/max77686.txt b/Doc=
-umentation/devicetree/bindings/mfd/max77686.txt
-> index 8221102d3fc2..d2ed3c20a5c3 100644
-> --- a/Documentation/devicetree/bindings/mfd/max77686.txt
-> +++ b/Documentation/devicetree/bindings/mfd/max77686.txt
-> @@ -48,7 +48,7 @@ to get matched with their hardware counterparts as =
-follow:
-> =20
->  Example:
-> =20
-> -	max77686@09 {
-> +	max77686: pmic@09 {
->  		compatible =3D "maxim,max77686";
->  		interrupt-parent =3D <&wakeup_eint>;
->  		interrupts =3D <26 0>;
+No, it is a set of regions of memory set aside for use by a different
+master in the system as well as communications with that master.
 
---=20
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-=46ollow Linaro: Facebook | Twitter | Blog
+The fact that there is a driver somewhere that is aware of this is
+entirely beside the point. All agents in the system must adher to this
+protocol.
+
+> Why do you want
+> to UEFI knowing this memory range? Do you hope UEFI to change when
+> mailbox driver is changed?
+
+Yes.
+
+UEFI is a runtime environment. Having random magic areas not to be
+touched will cause random pieces of software running under it to break
+horribly or break other things horribly.
+Unless you mark them as reserved in the UEFI memory map.
+At which point the Linux kernel will automatically ignore them, and
+the proposed patch is redundant.
+
+So, yes, if you want a system that can boot reliably, run testsuites
+(like SCT or FWTS), run applications (like fastboot ... or the EFI
+stub kernel itself), then any memory regions that is reserved for
+mailbox communication (or other masters in the system) _must_ be
+marked in the EFI memory map.
+
+/
+    Leif
