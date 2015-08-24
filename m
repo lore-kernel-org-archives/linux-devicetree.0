@@ -1,48 +1,115 @@
-From: Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
-Subject: Re: [PATCH 1/3] ARM: uniphier: add outer cache support
-Date: Mon, 24 Aug 2015 11:58:39 +0900
-Message-ID: <CAK7LNASYUaHkarg8CghDdFWGzTtN90qv2X7_rL-q0CDjAKPZaw@mail.gmail.com>
-References: <1440382692-3855-1-git-send-email-yamada.masahiro@socionext.com>
-	<1440382692-3855-2-git-send-email-yamada.masahiro@socionext.com>
-	<1440383359.2670.15.camel@perches.com>
+From: Leo Yan <leo.yan@linaro.org>
+Subject: Re: [PATCH v1 3/3] arm64: dts: add Hi6220 mailbox node
+Date: Mon, 24 Aug 2015 11:27:55 +0800
+Message-ID: <20150824032755.GA29395@leoy-linaro>
+References: <1439977055-1747-1-git-send-email-leo.yan@linaro.org>
+ <1439977055-1747-4-git-send-email-leo.yan@linaro.org>
+ <20150821184059.GB2000@svinekod>
+ <20150822133050.GA4265@leoy-linaro>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1440383359.2670.15.camel-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Joe Perches <joe-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org>
-Cc: arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Jiri Slaby <jslaby-IBi9RG/b67k@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Jungseung Lee <js07.lee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Tejun Heo <tj-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mauro Carvalho Chehab <mchehab-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Nathan Lynch <nathan_lynch-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>, Kees Cook <keescook-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Paul Bolle <pebolle-IWqWACnzNjzz+pZb47iToQ@public.gmane.org>, Greg KH <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20150822133050.GA4265@leoy-linaro>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Mark Rutland <mark.rutland@arm.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <Pawel.Moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Catalin Marinas <Catalin.Marinas@arm.com>, Will Deacon <Will.Deacon@arm.com>, Jassi Brar <jassisinghbrar@gmail.com>, Bintian Wang <bintian.wang@huawei.com>, Haojian Zhuang <haojian.zhuang@linaro.org>, Yiping Xu <xuyiping@hisilicon.com>, Wei Xu <xuwei5@hisilicon.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "guodong.xu@linaro.org" <guodong.xu@linaro.org>, Jian Zhang <zhangjian001@hisilicon.com>, Zhenwei Wang <Zhenwei.wang@hisilicon.com>, Haoju Mo <mohaoju@hisilicon.com>, Dan Zhao <dan.zhao@hisilicon.com>, "kongfei@hisilicon.com" <kongfei@hisilicon.com>, Guangyu
 List-Id: devicetree@vger.kernel.org
 
-Hi Joe,
+Hi Mark,
 
+On Sat, Aug 22, 2015 at 09:30:50PM +0800, Leo Yan wrote:
+> On Fri, Aug 21, 2015 at 07:40:59PM +0100, Mark Rutland wrote:
+> > On Wed, Aug 19, 2015 at 10:37:35AM +0100, Leo Yan wrote:
+> > > On Hi6220, below memory regions in DDR have specific purpose:
+> > > 
+> > >   0x05e0,0000 - 0x05ef,ffff: For MCU firmware using at runtime;
+> > >   0x0740,f000 - 0x0740,ffff: For MCU firmware's section;
+> > >   0x06df,f000 - 0x06df,ffff: For mailbox message data.
+> > > 
+> > > This patch reserves these memory regions and add device node for
+> > > mailbox in dts.
+> > > 
+> > > Signed-off-by: Leo Yan <leo.yan@linaro.org>
+> > > ---
+> > >  arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts | 20 +++++++++++++++++---
+> > >  arch/arm64/boot/dts/hisilicon/hi6220.dtsi      |  8 ++++++++
+> > >  2 files changed, 25 insertions(+), 3 deletions(-)
+> > > 
+> > > diff --git a/arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts b/arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts
+> > > index e36a539..d5470d3 100644
+> > > --- a/arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts
+> > > +++ b/arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts
+> > > @@ -7,9 +7,6 @@
+> > >  
+> > >  /dts-v1/;
+> > >  
+> > > -/*Reserved 1MB memory for MCU*/
+> > > -/memreserve/ 0x05e00000 0x00100000;
+> > > -
+> > >  #include "hi6220.dtsi"
+> > >  
+> > >  / {
+> > > @@ -28,4 +25,21 @@
+> > >  		device_type = "memory";
+> > >  		reg = <0x0 0x0 0x0 0x40000000>;
+> > >  	};
+> > > +
+> > > +	reserved-memory {
+> > > +		#address-cells = <2>;
+> > > +		#size-cells = <2>;
+> > > +		ranges;
+> > > +
+> > > +		mcu-buf@05e00000 {
+> > > +			no-map;
+> > > +			reg = <0x0 0x05e00000 0x0 0x00100000>,	/* MCU firmware buffer */
+> > > +			      <0x0 0x0740f000 0x0 0x00001000>;	/* MCU firmware section */
+> > > +		};
+> > > +
+> > > +		mbox-buf@06dff000 {
+> > > +			no-map;
+> > > +			reg = <0x0 0x06dff000 0x0 0x00001000>;	/* Mailbox message buf */
+> > > +		};
+> > > +	};
+> > 
+> > As far as I can see, it would be simpler to simply carve these out of the
+> > memory node.
+> 
+> Will modify for MCU firmware buffer and section.
+> 
+> > I don't see why you need reserved-memory here, given you're not referring to
+> > these regions by phandle anyway.
+> 
+> mbox-buf is used by below mailbox's node, but the start address has
+> been truncated with 4KB alignment; so should keep it, right?
 
-2015-08-24 11:29 GMT+09:00 Joe Perches <joe-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org>:
-> On Mon, 2015-08-24 at 11:18 +0900, Masahiro Yamada wrote:
->> This commit adds support for UniPhier outer cache controller.
->> All the UniPhier SoCs are equipped with the L2 cache, while the L3
->> cache is currently only integrated on PH1-Pro5 SoC.
->
-> style trivia:
->
-> You might add and use
->         #define pr_fmt(fmt) "uniphier: " fmt
-> before any other #include so all of the pr_<level>
-> uses are automatically prefixed.
+I think i got your point, all these nodes can be removed and just use
+memory node to carve them out; but currently i saw the memory node
+cannot be passed correctly from UEFI to kernel, we will check for
+this. So will follow your suggestion if without any unknown reason.
 
+Thanks,
+Leo Yan
 
-I did not know that.  Thanks!
-
-I will do so for the whole series in v2.
-
-
-
-
-
--- 
-Best Regards
-Masahiro Yamada
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> > >  };
+> > > diff --git a/arch/arm64/boot/dts/hisilicon/hi6220.dtsi b/arch/arm64/boot/dts/hisilicon/hi6220.dtsi
+> > > index 3f03380..9ff25bc 100644
+> > > --- a/arch/arm64/boot/dts/hisilicon/hi6220.dtsi
+> > > +++ b/arch/arm64/boot/dts/hisilicon/hi6220.dtsi
+> > > @@ -167,5 +167,13 @@
+> > >  			clocks = <&ao_ctrl 36>, <&ao_ctrl 36>;
+> > >  			clock-names = "uartclk", "apb_pclk";
+> > >  		};
+> > > +
+> > > +		mailbox: mailbox@f7510000 {
+> > > +			#mbox-cells = <1>;
+> > > +			compatible = "hisilicon,hi6220-mbox";
+> > > +			reg = <0x0 0xf7510000 0x0 0x1000>, /* IPC_S */
+> > > +			      <0x0 0x06dff800 0x0 0x0800>; /* Mailbox buffer */
+> > > +			interrupts = <GIC_SPI 94 IRQ_TYPE_LEVEL_HIGH>;
+> > > +		};
+> > >  	};
+> > >  };
+> > > -- 
+> > > 1.9.1
+> > > 
