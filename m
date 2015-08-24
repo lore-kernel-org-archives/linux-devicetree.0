@@ -1,79 +1,99 @@
-From: Rob Herring <robherring2@gmail.com>
-Subject: Re: [PATCH 1/1] of: to support binding numa node to root subnode(non-bus)
-Date: Mon, 24 Aug 2015 08:25:31 -0500
-Message-ID: <CAL_Jsq+Ab-=Dwi4LFR8NjB8mL1DJTY_a1a4Zm88wjcWHM4eS0g@mail.gmail.com>
-References: <1440419410-10520-1-git-send-email-thunder.leizhen@huawei.com>
+From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH 02/10] dt: add img,axd.txt device tree binding document
+Date: Mon, 24 Aug 2015 14:26:33 +0100
+Message-ID: <20150824132633.GF7139@leverpostej>
+References: <1440419959-14315-1-git-send-email-qais.yousef@imgtec.com>
+ <1440419959-14315-3-git-send-email-qais.yousef@imgtec.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1440419410-10520-1-git-send-email-thunder.leizhen@huawei.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Zhen Lei <thunder.leizhen@huawei.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>
-Cc: Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, devicetree <devicetree@vger.kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-kernel <linux-kernel@vger.kernel.org>, Zefan Li <lizefan@huawei.com>, Xinwei Hu <huxinwei@huawei.com>, Tianhong Ding <dingtianhong@huawei.com>, Hanjun Guo <guohanjun@huawei.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1440419959-14315-3-git-send-email-qais.yousef-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Qais Yousef <qais.yousef-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+Cc: "alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org" <alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-+benh
-
-On Mon, Aug 24, 2015 at 7:30 AM, Zhen Lei <thunder.leizhen@huawei.com> wrote:
-> If use of_platform_populate to scan dt-nodes and add devices, the
-> subnode of root(such as /smmu), when being scanned and invoke
-
-You should have a bus as the sub-node of root rather than devices
-directly off of root. You still have a problem though...
-
-> of_device_add, the ofdev->dev.parent is always equal &platform_bus. So
-> that, function set_dev_node will not be called. And in device_add,
-> dev_to_node(parent) always return NUMA_NO_NODE.
->
-> Signed-off-by: Zhen Lei <thunder.leizhen@huawei.com>
+On Mon, Aug 24, 2015 at 01:39:11PM +0100, Qais Yousef wrote:
+> Signed-off-by: Qais Yousef <qais.yousef-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+> Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
+> Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+> Cc: Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>
+> Cc: Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 > ---
->  drivers/base/core.c | 2 +-
->  drivers/of/device.c | 2 +-
->  2 files changed, 2 insertions(+), 2 deletions(-)
->
-> diff --git a/drivers/base/core.c b/drivers/base/core.c
-> index dafae6d..5df4f46b 100644
-> --- a/drivers/base/core.c
-> +++ b/drivers/base/core.c
-> @@ -1017,7 +1017,7 @@ int device_add(struct device *dev)
->                 dev->kobj.parent = kobj;
->
->         /* use parent numa_node */
-> -       if (parent)
-> +       if (parent && (parent != &platform_bus))
+>  .../devicetree/bindings/sound/img,axd.txt          | 34 ++++++++++++++++++++++
+>  1 file changed, 34 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/sound/img,axd.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/sound/img,axd.txt b/Documentation/devicetree/bindings/sound/img,axd.txt
+> new file mode 100644
+> index 000000000000..6a8764a79d01
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/sound/img,axd.txt
+> @@ -0,0 +1,34 @@
+> +* AXD Audio Processing IP Binding *
+> +
+> +Required properties:
+> +- compatible: "img,axd"
 
-This is only fixing one specific case, but I think things are broken
-for any case where the NUMA associativity if not set at the top level
-bus node. I think this should be something like:
+This sounds awfully generic. Is there not a more complete name?
 
-if (parent && (dev_to_node(dev) != NO_NUMA_NODE))
+> +- clocks: phandle for the clock that drives AXD.
+> +- interrupts: the GIC interrupt where AXD is connected
+> +- gic-irq: it takes two non-zero values, the first one is the host hwirq and
+> +           the second one is AXD's. Host's hwirq should match the value in
+> +           interrupts.
 
-Then the OF code can set the node however it wants.
+I don't understand what this gic-irq property is for; and it generally
+doesn't look right.
 
->                 set_dev_node(dev, dev_to_node(parent));
->
->         /* first, register with generic layer. */
-> diff --git a/drivers/of/device.c b/drivers/of/device.c
-> index 8b91ea2..96ebece 100644
-> --- a/drivers/of/device.c
-> +++ b/drivers/of/device.c
-> @@ -63,7 +63,7 @@ int of_device_add(struct platform_device *ofdev)
->         /* device_add will assume that this device is on the same node as
->          * the parent. If there is no parent defined, set the node
->          * explicitly */
-> -       if (!ofdev->dev.parent)
-> +       if (!ofdev->dev.parent || (ofdev->dev.parent == &platform_bus))
+Could you please describe what this is and why you thing it is
+necessary?
 
-And then remove the if here.
+> +
+> +Optional properties:
+> +- vpe: VPE number on which AXD should start. Must be provided if AXD is
+> +       running as a single VPE along Linux on the same core.
+> +       It can't be VPE0.
+> +       The VPE will be offlined before AXD is loaded.
 
->                 set_dev_node(&ofdev->dev, of_node_to_nid(ofdev->dev.of_node));
->
->         return device_add(&ofdev->dev);
-> --
-> 2.5.0
->
->
-> --
-> To unsubscribe from this list: send the line "unsubscribe devicetree" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Likewise could you please elaborate on this is?
+
+What is a VPE number? What does it mean to start at that number?
+
+> +- inbuf-size: size of shared input buffers area. By default it's 0x7800 bytes.
+> +- outbuf-size: size of shared output buffers area. By default it's 0x3c000 bytes.
+
+Is this something the kernel dynamically allocates? Why does this need
+to be in the DT?
+
+Thanks,
+Mark.
+
+> +
+> +
+> +Example:
+> +
+> +	axdclk: axdclk@400M {
+> +		#clock-cells = <0>;
+> +		compatible = "fixed-clock";
+> +		clock-frequency = <400000000>;
+> +	};
+> +
+> +	axd {
+> +		compatible = "img,axd";
+> +		clocks = <&axdclk>;
+> +		interrupts = <36 IRQ_TYPE_EDGE_RISING>;
+> +		gic-irq = <36 37>;
+> +		vpe = <1>;
+> +	};
+> -- 
+> 2.1.0
+> 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
