@@ -1,492 +1,140 @@
-From: Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v4 3/3] touchscreen: colibri-vf50-ts: Add touchscreen
- support for Colibri VF50
-Date: Fri, 21 Aug 2015 18:30:57 -0700
-Message-ID: <20150822013057.GA12702@dtor-pixel>
-References: <cover.1440162473.git.maitysanchayan@gmail.com>
- <915c9122cfba83c6fbbc519c10ae2d101e27bc5b.1440162473.git.maitysanchayan@gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <915c9122cfba83c6fbbc519c10ae2d101e27bc5b.1440162473.git.maitysanchayan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sanchayan Maity <maitysanchayan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, stefan-XLVq0VzYD2Y@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+From: Shawn Lin <shawn.lin@rock-chips.com>
+Subject: [RFC PATCH v7 0/10] Add external dma support for Synopsys MSHC
+Date: Mon, 24 Aug 2015 09:24:39 +0800
+Message-ID: <1440379479-24308-1-git-send-email-shawn.lin@rock-chips.com>
+Return-path: <linux-mmc-owner@vger.kernel.org>
+Sender: linux-mmc-owner@vger.kernel.org
+To: jh80.chung@samsung.com, ulf.hansson@linaro.org
+Cc: Vineet.Gupta1@synopsys.com, Wei Xu <xuwei5@hisilicon.com>, Joachim Eastwood <manabian@gmail.com>, Alexey Brodkin <abrodkin@synopsys.com>, Kukjin Kim <kgene@kernel.org>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, Russell King <linux@arm.linux.org.uk>, Zhangfei Gao <zhangfei.gao@linaro.org>, Jun Nie <jun.nie@linaro.org>, Ralf Baechle <ralf@linux-mips.org>, Govindraj Raja <govindraj.raja@imgtec.com>, Arnd Bergmann <arnd@arndb.de>, heiko@sntech.de, dianders@chromium.org, linux-samsung-soc@vger.kernel.org, linux-mips@linux-mips.org, linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Shawn Lin <shawn.lin@rock-chips.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Sanchayan,
 
-On Fri, Aug 21, 2015 at 06:56:32PM +0530, Sanchayan Maity wrote:
-> The Colibri Vybrid VF50 module supports 4-wire touchscreens using
-> FETs and ADC inputs. This driver uses the IIO consumer interface
-> and relies on the vf610_adc driver based on the IIO framework.
-> 
+Synopsys DesignWare mobile storage host controller supports three
+types of transfer mode: pio, internal dma and external dma. However,
+dw_mmc can only supports pio and internal dma now. Thus some platforms
+using dw-mshc integrated with generic dma can't work in dma mode. So we
+submit this patch to achieve it.
 
-Thank you for making changes. I have a few comments still.
+And the config option, CONFIG_MMC_DW_IDMAC, was added by Will Newton
+(commit:f95f3850) for the first version of dw_mmc and never be touched since
+then. At that time dt-bindings hadn't been introduced into dw_mmc yet means
+we should select CONFIG_MMC_DW_IDMAC to enable internal dma mode at compile
+time. Nowadays, device-tree helps us to support a variety of boards with one
+kernel. That's why we need to remove it and decide the transfer mode by reading
+dw_mmc's HCON reg at runtime.
 
-> Signed-off-by: Sanchayan Maity <maitysanchayan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> ---
->  drivers/input/touchscreen/Kconfig           |  12 +
->  drivers/input/touchscreen/Makefile          |   1 +
->  drivers/input/touchscreen/colibri-vf50-ts.c | 370 ++++++++++++++++++++++++++++
->  3 files changed, 383 insertions(+)
->  create mode 100644 drivers/input/touchscreen/colibri-vf50-ts.c
-> 
-> diff --git a/drivers/input/touchscreen/Kconfig b/drivers/input/touchscreen/Kconfig
-> index 80f6386..28948ca 100644
-> --- a/drivers/input/touchscreen/Kconfig
-> +++ b/drivers/input/touchscreen/Kconfig
-> @@ -1027,4 +1027,16 @@ config TOUCHSCREEN_ZFORCE
->  	  To compile this driver as a module, choose M here: the
->  	  module will be called zforce_ts.
->  
-> +config TOUCHSCREEN_COLIBRI_VF50
-> +	tristate "Toradex Colibri on board touchscreen driver"
-> +	depends on GPIOLIB && IIO && VF610_ADC
+This RFC patch needs lots of ACKs. I know it's hard, but it does need someone
+to make the running.
 
-Can we possibly add "|| COMPILE_TEST" dependency? Will it compile
-without IIO or VF610_ADC enabled?
+Patch does the following things:
+- remove CONFIG_MMC_DW_IDMAC config option
+- add bindings for edmac used by synopsys-dw-mshc
+  at runtime
+- add edmac support for synopsys-dw-mshc
+
+Patch is based on next of git://git.linaro.org/people/ulf.hansson/mmc
+
+Test emmc throughput on my platform with edmac support and without edmac support(pio only)
+iozone -L64 -S32 -azecwI -+n -r4k -r64k -r128k -s1g -i0 -i1 -i2 -f datafile -Rb out.xls > /mnt/result.txt
+(light cpu loading, Direct IO, fixed line size, all pattern recycle, 1GB data in total)
+ ___________________________________________________________
+|                   external dma mode                       |
+|-----------------------------------------------------------|
+|blksz | Random Read | Random Write | Seq Read   | Seq Write|
+|-----------------------------------------------------------|
+|4kB   |  13953kB/s  |    8602kB/s  | 13672kB/s  |  9785kB/s|
+|-----------------------------------------------------------|
+|64kB  |  46058kB/s  |   24794kB/s  | 48058kB/s  | 25418kB/s|
+|-----------------------------------------------------------|
+|128kB |  57026kB/s  |   35117kB/s  | 57375kB/s  | 35183kB/s|
+|-----------------------------------------------------------|
+                           VS
+ ___________________________________________________________
+|                          pio mode                         |
+|-----------------------------------------------------------|
+|blksz | Random Read  | Random Write | Seq Read  | Seq Write|
+|-----------------------------------------------------------|
+|4kB   |  11720kB/s   |    8644kB/s  | 11549kB/s |  9624kB/s|
+|-----------------------------------------------------------|
+|64kB  |  21869kB/s   |   24414kB/s  | 22031kB/s | 27986kB/s|
+|-----------------------------------------------------------|
+|128kB |  23718kB/s   |   34495kB/s  | 24698kB/s | 34637kB/s|
+|-----------------------------------------------------------|
 
 
-> +	help
-> +	  Say Y here if you have a Colibri VF50 and plan to use
-> +	  the on-board provided 4-wire touchscreen driver.
-> +
-> +	  If unsure, say N.
-> +
-> +	  To compile this driver as a module, choose M here: the
-> +	  module will be called colibri_vf50_ts.
-> +
->  endif
-> diff --git a/drivers/input/touchscreen/Makefile b/drivers/input/touchscreen/Makefile
-> index 44deea7..93746a0 100644
-> --- a/drivers/input/touchscreen/Makefile
-> +++ b/drivers/input/touchscreen/Makefile
-> @@ -84,3 +84,4 @@ obj-$(CONFIG_TOUCHSCREEN_W90X900)	+= w90p910_ts.o
->  obj-$(CONFIG_TOUCHSCREEN_SX8654)	+= sx8654.o
->  obj-$(CONFIG_TOUCHSCREEN_TPS6507X)	+= tps6507x-ts.o
->  obj-$(CONFIG_TOUCHSCREEN_ZFORCE)	+= zforce_ts.o
-> +obj-$(CONFIG_TOUCHSCREEN_COLIBRI_VF50)	+= colibri-vf50-ts.o
-> diff --git a/drivers/input/touchscreen/colibri-vf50-ts.c b/drivers/input/touchscreen/colibri-vf50-ts.c
-> new file mode 100644
-> index 0000000..0793fdc
-> --- /dev/null
-> +++ b/drivers/input/touchscreen/colibri-vf50-ts.c
-> @@ -0,0 +1,370 @@
-> +/* Copyright 2015 Toradex AG
-> + *
-> + * Toradex Colibri VF50 Touchscreen driver
-> + *
-> + * Originally authored by Stefan Agner for 3.0 kernel
-> + *
-> + * This program is free software; you can redistribute it and/or modify
-> + * it under the terms of the GNU General Public License as published by
-> + * the Free Software Foundation; either version 2 of the License, or
-> + * (at your option) any later version.
-> + */
-> +
-> +#include <linux/delay.h>
-> +#include <linux/err.h>
-> +#include <linux/gpio.h>
-> +#include <linux/iio/consumer.h>
-> +#include <linux/iio/types.h>
-> +#include <linux/input.h>
-> +#include <linux/interrupt.h>
-> +#include <linux/kernel.h>
-> +#include <linux/module.h>
-> +#include <linux/pinctrl/consumer.h>
+Changes in v7:
+- rebased on Ulf's next
+- combine condition state
+- elaborate more about DMA_INTERFACE
+- define some macro for DMA_INERFACE value
+- spilt HCON ops' changes into another patch
 
-Don't you need gpio/consumer.h?
+Changes in v6:
+- add trans_mode condition for IDMAC initialization
+  suggested by Heiko
+- re-test my patch on rk3188 platform and update commit msg
+- update performance of pio vs edmac in cover letter
 
-> +#include <linux/platform_device.h>
-> +#include <linux/slab.h>
-> +#include <linux/types.h>
-> +
-> +#define DRIVER_NAME "colibri-vf50-ts"
-> +#define DRV_VERSION "1.0"
-> +
-> +#define VF_ADC_MAX ((1 << 12) - 1)
-> +
-> +#define COLI_TOUCH_MIN_DELAY_US 1000
-> +#define COLI_TOUCH_MAX_DELAY_US 2000
-> +#define COLI_TOUCH_NO_OF_AVGS	5
-> +
-> +struct vf50_touch_device {
-> +	struct platform_device	*pdev;
-> +	struct input_dev	*ts_input;
-> +	struct iio_channel	*channels;
-> +	struct gpio_desc *gpio_xp;
-> +	struct gpio_desc *gpio_xm;
-> +	struct gpio_desc *gpio_yp;
-> +	struct gpio_desc *gpio_ym;
-> +	struct gpio_desc *gpio_pen_detect;
+Changes in v5:
+- add the title of cover letter
+- fix typo of comment
+- add macro for reading HCON register
+- add "Acked-by: Krzysztof Kozlowski <k.kozlowski@samsung.com>" for exynos_defconfig patch
+- add "Acked-by: Vineet Gupta <vgupta@synopsys.com>" for axs10x_defconfig patch
+- add "Acked-by: Govindraj Raja <govindraj.raja@imgtec.com>" and
+  "Acked-by: Ralf Baechle <ralf@linux-mips.org>" for pistachio_defconfig patch
+- add "Acked-by: Joachim Eastwood <manabian@gmail.com>" for lpc18xx_defconfig patch
+- add "Acked-by: Wei Xu <xuwei5@hisilicon.com>" for hisi_defconfig patch
+- rebase on "https://github.com/jh80chung/dw-mmc.git tags/dw-mmc-for-ulf-v4.2" for merging easily
 
-I do not see gpio_pen_detect being used anymore.
+Changes in v4:
+- remove "host->trans_mode" and use "host->use_dma" to indicate
+  transfer mode.
+- remove all bt-bindings' changes since we don't need new properities.
+- check transfer mode at runtime by reading HCON reg
+- spilt defconfig changes for each sub-architecture
+- fix the title of cover letter
+- reuse some code for reducing code size
 
-> +	int pen_irq;
-> +	int min_pressure;
-> +	bool stop_touchscreen;
-> +};
-> +
-> +/*
-> + * Enables given plates and measures touch parameters using ADC
-> + */
-> +static int adc_ts_measure(struct iio_channel *channel,
-> +		  struct gpio_desc *plate_p, struct gpio_desc *plate_m)
-> +{
-> +	int i, value = 0, val = 0;
-> +	int ret;
-> +
-> +	gpiod_set_value(plate_p, 1);
-> +	gpiod_set_value(plate_m, 1);
-> +
-> +	usleep_range(COLI_TOUCH_MIN_DELAY_US, COLI_TOUCH_MAX_DELAY_US);
-> +
-> +	for (i = 0; i < COLI_TOUCH_NO_OF_AVGS; i++) {
-> +		ret = iio_read_channel_raw(channel, &val);
-> +		if (ret < 0) {
-> +			value = ret;
-> +			goto error_iio_read;
-> +		}
-> +
-> +		value += val;
-> +	}
-> +
-> +	value /= COLI_TOUCH_NO_OF_AVGS;
-> +
-> +error_iio_read:
-> +	gpiod_set_value(plate_p, 0);
-> +	gpiod_set_value(plate_m, 0);
-> +
-> +	return value;
-> +}
-> +
-> +/*
-> + * Enable touch detection using falling edge detection on XM
-> + */
-> +static void vf50_ts_enable_touch_detection(struct vf50_touch_device *vf50_ts)
-> +{
-> +	/* Enable plate YM (needs to be strong GND, high active) */
-> +	gpiod_set_value(vf50_ts->gpio_ym, 1);
-> +
-> +	/*
-> +	 * Let the platform mux to idle state in order to enable
-> +	 * Pull-Up on GPIO
-> +	 */
-> +	pinctrl_pm_select_idle_state(&vf50_ts->pdev->dev);
-> +}
-> +
-> +/*
-> + * ADC touch screen sampling bottom half irq handler
-> + */
-> +static irqreturn_t vf50_ts_irq_bh(int irq, void *private)
-> +{
-> +	struct vf50_touch_device *vf50_ts = (struct vf50_touch_device *)private;
+Changes in v3:
+- choose transfer mode at runtime
+- remove all CONFIG_MMC_DW_IDMAC config option
+- add supports-idmac property for some platforms
 
-No need to cast from void * pointer.
+Changes in v2:
+- Fix typo of dev_info msg
+- remove unused dmach from declaration of dw_mci_dma_slave
 
-> +	struct device *dev = &vf50_ts->pdev->dev;
-> +	int val_x, val_y, val_z1, val_z2, val_p = 0;
-> +	bool discard_val_on_start = true;
-> +
-> +	/* Disable the touch detection plates */
-> +	gpiod_set_value(vf50_ts->gpio_ym, 0);
-> +
-> +	/* Let the platform mux to default state in order to mux as ADC */
-> +	pinctrl_pm_select_default_state(dev);
-> +
-> +	while (!vf50_ts->stop_touchscreen) {
-> +		/* X-Direction */
-> +		val_x = adc_ts_measure(&vf50_ts->channels[0],
-> +				vf50_ts->gpio_xp, vf50_ts->gpio_xm);
-> +		if (val_x < 0)
-> +			break;
-> +
-> +		/* Y-Direction */
-> +		val_y = adc_ts_measure(&vf50_ts->channels[1],
-> +				vf50_ts->gpio_yp, vf50_ts->gpio_ym);
-> +		if (val_y < 0)
-> +			break;
-> +
-> +		/*
-> +		 * Touch pressure
-> +		 * Measure on XP/YM
-> +		 */
-> +		val_z1 = adc_ts_measure(&vf50_ts->channels[2],
-> +				vf50_ts->gpio_yp, vf50_ts->gpio_xm);
-> +		if (val_z1 < 0)
-> +			break;
-> +		val_z2 = adc_ts_measure(&vf50_ts->channels[3],
-> +				vf50_ts->gpio_yp, vf50_ts->gpio_xm);
-> +		if (val_z2 < 0)
-> +			break;
-> +
-> +		/* Validate signal (avoid calculation using noise) */
-> +		if (val_z1 > 64 && val_x > 64) {
-> +			/*
-> +			 * Calculate resistance between the plates
-> +			 * lower resistance means higher pressure
-> +			 */
-> +			int r_x = (1000 * val_x) / VF_ADC_MAX;
-> +
-> +			val_p = (r_x * val_z2) / val_z1 - r_x;
-> +
-> +		} else {
-> +			val_p = 2000;
-> +		}
-> +
-> +		val_p = 2000 - val_p;
-> +		dev_dbg(dev, "Measured values: x: %d, y: %d, z1: %d, z2: %d, "
-> +			"p: %d\n", val_x, val_y, val_z1, val_z2, val_p);
-> +
-> +		/*
-> +		 * If touch pressure is too low, stop measuring and reenable
-> +		 * touch detection
-> +		 */
-> +		if (val_p < vf50_ts->min_pressure || val_p > 2000)
-> +			break;
-> +
-> +		/*
-> +		 * The pressure may not be enough for the first x and the
-> +		 * second y measurement, but, the pressure is ok when the
-> +		 * driver is doing the third and fourth measurement. To
-> +		 * take care of this, we drop the first measurement always.
-> +		 */
-> +		if (discard_val_on_start) {
-> +			discard_val_on_start = false;
-> +		} else {
-> +			/*
-> +			 * Report touch position and sleep for
-> +			 * next measurement
-> +			 */
-> +			input_report_abs(vf50_ts->ts_input,
-> +					ABS_X, VF_ADC_MAX - val_x);
-> +			input_report_abs(vf50_ts->ts_input,
-> +					ABS_Y, VF_ADC_MAX - val_y);
-> +			input_report_abs(vf50_ts->ts_input,
-> +					ABS_PRESSURE, val_p);
-> +			input_report_key(vf50_ts->ts_input, BTN_TOUCH, 1);
-> +			input_sync(vf50_ts->ts_input);
-> +		}
-> +
-> +		msleep(10);
-> +	}
-> +
-> +	/* Report no more touch, reenable touch detection */
-> +	input_report_abs(vf50_ts->ts_input, ABS_PRESSURE, 0);
-> +	input_report_key(vf50_ts->ts_input, BTN_TOUCH, 0);
-> +	input_sync(vf50_ts->ts_input);
-> +
-> +	vf50_ts_enable_touch_detection(vf50_ts);
-> +
-> +	/* Wait for the pull-up to be stable on high */
-> +	msleep(10);
-> +
-> +	return IRQ_HANDLED;
-> +}
-> +
-> +static int vf50_ts_open(struct input_dev *dev_input)
-> +{
-> +	struct vf50_touch_device *touchdev = input_get_drvdata(dev_input);
-> +	struct device *dev = &touchdev->pdev->dev;
-> +
-> +	dev_dbg(dev, "Input device %s opened, starting touch detection\n",
-> +			dev_input->name);
-> +
-> +	touchdev->stop_touchscreen = false;
-> +
-> +	/* Mux detection before request IRQ, wait for pull-up to settle */
-> +	vf50_ts_enable_touch_detection(touchdev);
-> +	msleep(10);
-> +
-> +	return 0;
-> +}
-> +
-> +static void vf50_ts_close(struct input_dev *dev_input)
-> +{
-> +	struct vf50_touch_device *touchdev = input_get_drvdata(dev_input);
-> +	struct device *dev = &touchdev->pdev->dev;
-> +
-> +	touchdev->stop_touchscreen = true;
-> +
-> +	/* Make sure IRQ is not running past close */
-> +	mb();
-> +	synchronize_irq(touchdev->pen_irq);
-> +
+Shawn Lin (10):
+  mmc: dw_mmc: Add external dma interface support
+  mmc: dw_mmc: use macro for HCON register operations
+  Documentation: synopsys-dw-mshc: add bindings for idmac and edmac
+  mips: pistachio_defconfig: remove CONFIG_MMC_DW_IDMAC
+  arc: axs10x_defconfig: remove CONFIG_MMC_DW_IDMAC
+  arm: exynos_defconfig: remove CONFIG_MMC_DW_IDMAC
+  arm: hisi_defconfig: remove CONFIG_MMC_DW_IDMAC
+  arm: lpc18xx_defconfig: remove CONFIG_MMC_DW_IDMAC
+  arm: multi_v7_defconfig: remove CONFIG_MMC_DW_IDMAC
+  arm: zx_defconfig: remove CONFIG_MMC_DW_IDMAC
 
-Should we drive the gpio_ym inactive here? What about pin control?
-
-> +	dev_dbg(dev, "Input device %s closed, disable touch detection\n",
-> +		dev_input->name);
-> +}
-> +
-> +static int vf50_ts_get_gpiod(struct device *dev,
-> +	struct gpio_desc **gpio_d, const char *con_id, enum gpiod_flags flags)
-> +{
-> +	int error;
-> +
-> +	*gpio_d = devm_gpiod_get(dev, con_id, flags);
-> +	if (IS_ERR(*gpio_d)) {
-> +		error = PTR_ERR(*gpio_d);
-> +		dev_err(dev, "Could not get gpio_%s %d\n", con_id, error);
-> +		return error;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static void vf50_ts_channel_release(void *data)
-> +{
-> +	struct vf50_touch_device *touchdev = data;
-> +
-> +	iio_channel_release_all(touchdev->channels);
-> +}
-> +
-> +static int vf50_ts_probe(struct platform_device *pdev)
-> +{
-> +	struct input_dev *input;
-> +	struct iio_channel *channels;
-> +	struct device *dev = &pdev->dev;
-> +	struct vf50_touch_device *touchdev;
-> +	int error;
-> +
-> +	channels = iio_channel_get_all(dev);
-> +	if (IS_ERR(channels))
-> +		return PTR_ERR(channels);
-> +
-> +	touchdev = devm_kzalloc(dev, sizeof(*touchdev), GFP_KERNEL);
-> +	if (!touchdev) {
-> +		error = -ENOMEM;
-> +		return error;
-
-Why not simply
-
-		return -ENOMEM;
-
-here?
-
-Also you are leaking your iio channels here. You need to install the
-custom action earlier.
-
-> +	}
-> +
-> +	error = of_property_read_u32(dev->of_node, "vf50-ts-min-pressure",
-> +				 &touchdev->min_pressure);
-> +	if (error)
-> +		return error;
-> +
-> +	error = devm_add_action(dev, vf50_ts_channel_release, channels);
-> +	if (error) {
-> +		dev_err(dev, "Failed to register iio channel release action");
-
-You also need
-
-		vf50_ts_channel_release(touchdev);
-
-> +		return error;
-> +	}
-> +
-> +	input = devm_input_allocate_device(dev);
-> +	if (!input) {
-> +		dev_err(dev, "Failed to allocate TS input device\n");
-> +		error = -ENOMEM;
-> +		return error;
-
-Again simply return error code, no need to assign to the error variable.
-
-> +	}
-> +
-> +	platform_set_drvdata(pdev, touchdev);
-> +
-> +	touchdev->pdev = pdev;
-> +	touchdev->channels = channels;
-> +
-> +	input->name = DRIVER_NAME;
-> +	input->id.bustype = BUS_HOST;
-> +	input->dev.parent = dev;
-> +	input->open = vf50_ts_open;
-> +	input->close = vf50_ts_close;
-> +
-> +	input_set_capability(input, EV_KEY, BTN_TOUCH);
-> +	input_set_abs_params(input, ABS_X, 0, VF_ADC_MAX, 0, 0);
-> +	input_set_abs_params(input, ABS_Y, 0, VF_ADC_MAX, 0, 0);
-> +	input_set_abs_params(input, ABS_PRESSURE, 0, VF_ADC_MAX, 0, 0);
-> +
-> +	touchdev->ts_input = input;
-> +	input_set_drvdata(input, touchdev);
-> +	error = input_register_device(input);
-> +	if (error) {
-> +		dev_err(dev, "Failed to register input device\n");
-> +		return error;
-> +	}
-> +
-> +	error = vf50_ts_get_gpiod(dev, &touchdev->gpio_xp,
-> +				"xp", GPIOD_OUT_LOW);
-> +	if (error)
-> +		return error;
-> +
-> +	error = vf50_ts_get_gpiod(dev, &touchdev->gpio_xm,
-> +				"xm", GPIOD_OUT_LOW);
-> +	if (error)
-> +		return error;
-> +
-> +	error = vf50_ts_get_gpiod(dev, &touchdev->gpio_yp,
-> +				"yp", GPIOD_OUT_LOW);
-> +	if (error)
-> +		return error;
-> +
-> +	error = vf50_ts_get_gpiod(dev, &touchdev->gpio_ym,
-> +				"ym", GPIOD_OUT_LOW);
-> +	if (error)
-> +		return error;
-> +
-> +	touchdev->pen_irq = platform_get_irq(pdev, 0);
-> +	if (touchdev->pen_irq < 0)
-> +		return touchdev->pen_irq;
-> +
-> +	error = devm_request_threaded_irq(dev, touchdev->pen_irq, NULL,
-> +			vf50_ts_irq_bh, IRQF_ONESHOT,
-> +			"vf50 touch", touchdev);
-> +	if (error < 0)
-> +		return error;
-> +
-> +	return 0;
-> +}
-> +
-> +static const struct of_device_id vf50_touch_of_match[] = {
-> +	{ .compatible = "toradex,vf50-touchscreen", },
-> +	{ }
-> +};
-> +MODULE_DEVICE_TABLE(of, vf50_touch_of_match);
-> +
-> +static struct platform_driver vf50_touch_driver = {
-> +	.driver = {
-> +		.name = "toradex,vf50_touchctrl",
-> +		.of_match_table = vf50_touch_of_match,
-> +	},
-> +	.probe = vf50_ts_probe,
-> +};
-> +
-> +module_platform_driver(vf50_touch_driver);
-> +
-> +MODULE_AUTHOR("Sanchayan Maity");
-> +MODULE_DESCRIPTION("Colibri VF50 Touchscreen driver");
-> +MODULE_LICENSE("GPL v2");
-
-Please change it to "GPL" which means GPL v2+ to match license notice at
-the top.
-
-> +MODULE_VERSION(DRV_VERSION);
-> -- 
-> 2.5.0
-> 
-
-Thank you.
+ .../devicetree/bindings/mmc/synopsys-dw-mshc.txt   |  25 ++
+ arch/arc/configs/axs101_defconfig                  |   1 -
+ arch/arc/configs/axs103_defconfig                  |   1 -
+ arch/arc/configs/axs103_smp_defconfig              |   1 -
+ arch/arm/configs/exynos_defconfig                  |   1 -
+ arch/arm/configs/hisi_defconfig                    |   1 -
+ arch/arm/configs/lpc18xx_defconfig                 |   1 -
+ arch/arm/configs/multi_v7_defconfig                |   1 -
+ arch/arm/configs/zx_defconfig                      |   1 -
+ arch/mips/configs/pistachio_defconfig              |   1 -
+ drivers/mmc/host/Kconfig                           |  11 +-
+ drivers/mmc/host/dw_mmc-pltfm.c                    |   2 +
+ drivers/mmc/host/dw_mmc.c                          | 277 +++++++++++++++++----
+ drivers/mmc/host/dw_mmc.h                          |   9 +
+ include/linux/mmc/dw_mmc.h                         |  23 +-
+ 15 files changed, 283 insertions(+), 73 deletions(-)
 
 -- 
-Dmitry
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+2.3.7
+
+
