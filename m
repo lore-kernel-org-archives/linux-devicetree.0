@@ -1,31 +1,76 @@
-From: Sekhar Nori <nsekhar@ti.com>
-Subject: Re: [net-next PATCH 1/3] drivers: net: cpsw: add am335x errata workarround
- for interrutps
-Date: Mon, 24 Aug 2015 15:34:24 +0530
-Message-ID: <55DAEC28.3030107@ti.com>
-References: <1439373175-8650-1-git-send-email-mugunthanvnm@ti.com> <1439373175-8650-2-git-send-email-mugunthanvnm@ti.com>
+From: Cyrille Pitchen <cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH linux-next v4 0/5] add driver for Atmel QSPI controller
+Date: Mon, 24 Aug 2015 12:13:55 +0200
+Message-ID: <cover.1440410236.git.cyrille.pitchen@atmel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <1439373175-8650-2-git-send-email-mugunthanvnm@ti.com>
-Sender: netdev-owner@vger.kernel.org
-To: Mugunthan V N <mugunthanvnm@ti.com>, netdev@vger.kernel.org
-Cc: devicetree@vger.kernel.org, linux-omap@vger.kernel.org, "David S . Miller" <davem@davemloft.net>, Tony Lindgren <tony@atomide.com>, alex.aring@gmail.com
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, beanhuo-AL4WhLSQfzjQT0dZR+AlfA@public.gmane.org, juhosg-p3rKhJxN3npAfugRpC6u6w@public.gmane.org, marex-ynQEQJNshbs@public.gmane.org, shijie.huang-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, ben-/+tVBieCtBitmTQ+vhA3Yw@public.gmane.org
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Cyrille Pitchen <cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Mugunthan,
+ChangeLog
 
-On Wednesday 12 August 2015 03:22 PM, Mugunthan V N wrote:
-> +static const struct of_device_id cpsw_of_mtable[] = {
-> +	{ .compatible = "ti,cpsw", .data = &cpsw_devtype[CPSW], },
+v4:
+- add "OF && HAS_DMA" dependency in Kconfig for Atmel Quad SPI driver.
+- return -ENOMEM instead of the return code of dma_mapping_error() as this
+  function returns a boolean on ARM achitecture.
+- add "Acked-by: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>" for Atmel Quad
+  SPI driver and its DT binding documentation.
 
-> +	{ .compatible = "ti,am335x-cpsw", .data = &cpsw_devtype[AM335X_CPSW], },
-> +	{ .compatible = "ti,am4372-cpsw", .data = &cpsw_devtype[AM4372_CPSW], },
-> +	{ .compatible = "ti,dra7-cpsw", .data = &cpsw_devtype[DRA7_CPSW], },
+v3:
+- reword the comment which explains that spi_nor_set_protocol() is used by
+  the spi-nor framework to notify lower layers, especially the (Q)SPI
+  controller about a protocol change.
+- change the definitions of register/bitfield macros in the Atmel QSPI
+  controller driver: get rid of concatenation operator and use BIT and
+  GENMASK macros when possible.
+- use #define[SPACE] instead of #define[TAB]
 
-I do not see documentation added for these compatibles. Since the series
-is already applied, can you send additional patches adding documentation?
+v2:
+- remove the patches to set the "latency code" of Spansion QSPI memories
+  (support of Spansion memories may be submitted in later series).
+- rename "qspi" node into "spi" in the DT example to fit ePAPR standard.
+- remove the useless "qspi0" label from the DT node example.
+- remove the leading 0 from the size of the second memory region to make
+  it consistent with the size of the first memory region.
+- indent the DT bindings documentation to make it more readable.
+- remove the useless ".bus	= &platform_bus_type," line from the
+  platform driver definition.
 
-Thanks,
-Sekhar
+v1:
+
+This series of patches add support for the new Atmel QSPI controller
+embedded inside sama5d2x SoCs.
+
+These patches were first developped for linux-3.18-at91 and tested on a
+sama5d27 Xplained ultra board, which embeds a Micron n25q128a13 QSPI NOR
+flash memory. Then the series was adapted for mainline.
+
+Cyrille Pitchen (5):
+  mtd: spi-nor: notify (Q)SPI controller about protocol change
+  Documentation: mtd: add a DT property to set the number of dummy
+    cycles
+  mtd: spi-nor: allow to tune the number of dummy cycles
+  Documentation: atmel-quadspi: add binding file for Atmel QSPI driver
+  mtd: atmel-quadspi: add driver for Atmel QSPI controller
+
+ .../devicetree/bindings/mtd/atmel-quadspi.txt      |  29 +
+ .../devicetree/bindings/mtd/jedec,spi-nor.txt      |   6 +
+ drivers/mtd/spi-nor/Kconfig                        |   7 +
+ drivers/mtd/spi-nor/Makefile                       |   1 +
+ drivers/mtd/spi-nor/atmel-quadspi.c                | 876 +++++++++++++++++++++
+ drivers/mtd/spi-nor/spi-nor.c                      | 118 ++-
+ include/linux/mtd/spi-nor.h                        |  15 +
+ 7 files changed, 1033 insertions(+), 19 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/mtd/atmel-quadspi.txt
+ create mode 100644 drivers/mtd/spi-nor/atmel-quadspi.c
+
+-- 
+1.8.2.2
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
