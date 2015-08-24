@@ -1,101 +1,64 @@
-From: Javier Martinez Canillas <javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>
-Subject: Re: [PATCH 13/18] iio: adc: mcp320x: Set struct spi_driver
- .of_match_table
-Date: Mon, 24 Aug 2015 09:19:24 +0200
-Message-ID: <55DAC57C.9020502@osg.samsung.com>
-References: <1440054451-1223-1-git-send-email-javier@osg.samsung.com>
- <1440054451-1223-14-git-send-email-javier@osg.samsung.com>
- <20150820200912.GA2866@deathstar> <55D64E80.4050502@osg.samsung.com>
- <20150820222906.GB28249@deathstar> <55D65937.6070909@osg.samsung.com>
- <55D8B605.4040302@kernel.org>
- <CAL_Jsq+_ET8O=vQirFutY5sF7rkK-qF_1uTAroto2dZzC4ugWA@mail.gmail.com>
+From: Alexander Sverdlin <alexander.sverdlin-xNZwKgViW5gAvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 2/2] dts: keystone: Change "ti,davinci-i2c" compatible to
+ "ti,keystone-i2c"
+Date: Mon, 24 Aug 2015 09:17:15 +0200
+Message-ID: <55DAC4FB.9010201@nokia.com>
+References: <55D6F39A.2030402@nokia.com> <20150821182500.GA2000@svinekod>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAL_Jsq+_ET8O=vQirFutY5sF7rkK-qF_1uTAroto2dZzC4ugWA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Michael Welling <mwelling-EkmVulN54Sk@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Andrea Galbusera <gizero-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Peter Meerwald <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Manfred Schlaegl <manfred.schlaegl-RbZlAiThDcE@public.gmane.org>, =?UTF-8?Q?S=c3=b8ren_Andersen?= <san-KGKi0rHxN0fKWSuBa/xFvVpr/1R2p/CL@public.gmane.org>, Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20150821182500.GA2000@svinekod>
+Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: ext Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>, Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, "linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello Rob and Jonathan,
+Hello Mark,
 
-On 08/24/2015 12:10 AM, Rob Herring wrote:
-> On Sat, Aug 22, 2015 at 12:48 PM, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
->> On 20/08/15 23:48, Javier Martinez Canillas wrote:
->>> Hello Michael,
->>>
->>> On 08/21/2015 12:29 AM, Michael Welling wrote:
->>>> On Fri, Aug 21, 2015 at 12:02:40AM +0200, Javier Martinez Canillas wrote:
->>>>> Hello Michael,
->>>>>
->>>>> On 08/20/2015 10:09 PM, Michael Welling wrote:
->>>>>> On Thu, Aug 20, 2015 at 09:07:26AM +0200, Javier Martinez Canillas wrote:
->>>>>>> The driver has an OF id table but the .of_match_table is not set so
->>>>>>> the SPI core can't do an OF style match and the table was unused.
->>>>>>>
->>>>>>
->>>>>> Is an OF style match necessary?
->>>>>>
->>>>>
->>>>> Did you read the cover letter [0] on which I explain why is needed to
->>>>> avoid breaking module autoloading in the future? Once the SPI core is
->>>>> changed by RFC patch 18/18? (you were cc'ed in the cover letter BTW).
->>>>
->>>> Well I have read it now. :)
->>>>
->>>
->>> Great :)
->>>
->>>>>
->>>>>> I have been using devicetree and it matches based on the .id_table.
->>>>>>
->>>>>
->>>>> Yes it fallbacks to the .id_table or the driver name but the correct
->>>>> thing to do for devices registered by OF, is to match using the
->>>>> compatible string.
->>>>>
->>>>>> Couldn't we just remove the mcp320x_dt_ids table instead?
->>>>>>
->>>>>
->>>>> No, that is the wrong thing to do IMHO since the compatible string
->>>>> contains both vendor and device name whle the .id_table only contains
->>>>> a device name.
->>>>>
->>>>> So it makes sense to match using the compatible string and also report
->>>>> the OF modalias information to user-space.
->>>>>
->>>>> Otherwise what's the point of the vendor in the compatible string for
->>>>> SPI devices? You can just use "bar" instead of "foo,bar" as a string.
->>>>>
->>>>
->>>> Well then shouldn't the patch include adding the vendor to the compatible
->>>> string?
->>>>
->>>
->>> Well, I was talking in general. You are right that this specific driver does
->>> not have a vendor prefix for the compatible strings. This is incorrect
->>> according to the ePAPR document [0].
->>>
->>> However, these compatible strings are already documented as a DT binding doc
->>> in Documentation/devicetree/bindings/iio/adc/mcp320x.txt so I don't know
->>> what is the correct thing to do in this situation.
->> Take the view the old version is wrong but needs to be supported and add also
->> the corrected strings + document them.
->>
->> cc'd The device tree list for any more comments on this.
+On 21/08/15 20:25, ext Mark Rutland wrote:
+>> Now as "i2c-davinci" driver has special handling for Keystone it's time to switch
+>> > the device tree to use new "compatible" property.
+>> > 
+>> > Signed-off-by: Alexander Sverdlin <alexander.sverdlin-xNZwKgViW5gAvxtiuMwx3w@public.gmane.org>
+>> > ---
+>> >  arch/arm/boot/dts/keystone.dtsi |    6 +++---
+>> >  1 files changed, 3 insertions(+), 3 deletions(-)
+>> > 
+>> > diff --git a/arch/arm/boot/dts/keystone.dtsi b/arch/arm/boot/dts/keystone.dtsi
+>> > index 72816d6..a846597 100644
+>> > --- a/arch/arm/boot/dts/keystone.dtsi
+>> > +++ b/arch/arm/boot/dts/keystone.dtsi
+>> > @@ -106,7 +106,7 @@
+>> >  		};
+>> >  
+>> >  		i2c0: i2c@2530000 {
+>> > -			compatible = "ti,davinci-i2c";
+>> > +			compatible = "ti,keystone-i2c";
+>>From what I understand of the previous patch, this is effectively an
+> optimisation, and things worked to some extent with the "ti,davinci-i2c"
+> string.
+
+Indeed this is an optimization.
+
+> So could you leave that as a fallback, i.e. have:
 > 
-> Agreed. Document both and mark the old one deprecated.
->
+> 	compatible = "ti,keystone-i2c", "ti,davinci-i2c";
 
-Thanks a lot for your comments. I'll do that as a follow up then.
- 
-> Rob
-> 
+And I have no problem leaving fallback compatible.
 
-Best regards,
+> That way an old kernel still functions with this DT, which among other things
+> makes debugging and bisecting far easier.
+
+I've just thought, that we do not care about backwards-compatibility for the DT in
+the kernel tree, because one always have the correct one linked to the kernel.
+And this evaluation module never has it flashed to some persistent storage outside
+of kernel image, so version mismatch is impossible.
+
+> Or are things actually broken with the "ti,davinci-i2c" string?
+
+No, not in this case.
+
 -- 
-Javier Martinez Canillas
-Open Source Group
-Samsung Research America
+Best regards,
+Alexander Sverdlin.
