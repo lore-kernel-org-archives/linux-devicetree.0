@@ -1,131 +1,99 @@
-From: Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [RFC PATCH 7/7] DMA: tegra-adma: Add support for Tegra210 ADMA
-Date: Mon, 24 Aug 2015 09:55:03 +0100
-Message-ID: <55DADBE7.80006@nvidia.com>
-References: <1439905755-25150-1-git-send-email-jonathanh@nvidia.com> <1439905755-25150-8-git-send-email-jonathanh@nvidia.com> <20150823143328.GC13546@localhost>
+From: Leo Yan <leo.yan@linaro.org>
+Subject: Re: [PATCH v1 3/3] arm64: dts: add Hi6220 mailbox node
+Date: Mon, 24 Aug 2015 17:18:45 +0800
+Message-ID: <20150824091845.GA28290@leoy-linaro>
+References: <1439977055-1747-1-git-send-email-leo.yan@linaro.org>
+ <1439977055-1747-4-git-send-email-leo.yan@linaro.org>
+ <20150821184059.GB2000@svinekod>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20150823143328.GC13546@localhost>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
-Cc: Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20150821184059.GB2000@svinekod>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Mark Rutland <mark.rutland@arm.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <Pawel.Moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Catalin Marinas <Catalin.Marinas@arm.com>, Will Deacon <Will.Deacon@arm.com>, Jassi Brar <jassisinghbrar@gmail.com>, Bintian Wang <bintian.wang@huawei.com>, Haojian Zhuang <haojian.zhuang@linaro.org>, Yiping Xu <xuyiping@hisilicon.com>, Wei Xu <xuwei5@hisilicon.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "guodong.xu@linaro.org" <guodong.xu@linaro.org>, Jian Zhang <zhangjian001@hisilicon.com>, Zhenwei Wang <Zhenwei.wang@hisilicon.com>, Haoju Mo <mohaoju@hisilicon.com>, Dan Zhao <dan.zhao@hisilicon.com>, "kongfei@hisilicon.com" <kongfei@hisilicon.com>, Guangyu
 List-Id: devicetree@vger.kernel.org
 
+Hi Mark,
 
-On 23/08/15 15:33, Vinod Koul wrote:
-> On Tue, Aug 18, 2015 at 02:49:15PM +0100, Jon Hunter wrote:
->> +#define AHUB_TO_MEMORY						2
->> +#define MEMORY_TO_AHUB						4
+On Fri, Aug 21, 2015 at 07:40:59PM +0100, Mark Rutland wrote:
+> On Wed, Aug 19, 2015 at 10:37:35AM +0100, Leo Yan wrote:
+> > On Hi6220, below memory regions in DDR have specific purpose:
+> > 
+> >   0x05e0,0000 - 0x05ef,ffff: For MCU firmware using at runtime;
+> >   0x0740,f000 - 0x0740,ffff: For MCU firmware's section;
+> >   0x06df,f000 - 0x06df,ffff: For mailbox message data.
+> > 
+> > This patch reserves these memory regions and add device node for
+> > mailbox in dts.
+> > 
+> > Signed-off-by: Leo Yan <leo.yan@linaro.org>
+> > ---
+> >  arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts | 20 +++++++++++++++++---
+> >  arch/arm64/boot/dts/hisilicon/hi6220.dtsi      |  8 ++++++++
+> >  2 files changed, 25 insertions(+), 3 deletions(-)
+> > 
+> > diff --git a/arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts b/arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts
+> > index e36a539..d5470d3 100644
+> > --- a/arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts
+> > +++ b/arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts
+> > @@ -7,9 +7,6 @@
+> >  
+> >  /dts-v1/;
+> >  
+> > -/*Reserved 1MB memory for MCU*/
+> > -/memreserve/ 0x05e00000 0x00100000;
+> > -
+> >  #include "hi6220.dtsi"
+> >  
+> >  / {
+> > @@ -28,4 +25,21 @@
+> >  		device_type = "memory";
+> >  		reg = <0x0 0x0 0x0 0x40000000>;
+> >  	};
+> > +
+> > +	reserved-memory {
+> > +		#address-cells = <2>;
+> > +		#size-cells = <2>;
+> > +		ranges;
+> > +
+> > +		mcu-buf@05e00000 {
+> > +			no-map;
+> > +			reg = <0x0 0x05e00000 0x0 0x00100000>,	/* MCU firmware buffer */
+> > +			      <0x0 0x0740f000 0x0 0x00001000>;	/* MCU firmware section */
+> > +		};
+> > +
+> > +		mbox-buf@06dff000 {
+> > +			no-map;
+> > +			reg = <0x0 0x06dff000 0x0 0x00001000>;	/* Mailbox message buf */
+> > +		};
+> > +	};
 > 
-> namespace this aptly as well
+> As far as I can see, it would be simpler to simply carve these out of the
+> memory node.
 > 
->> +static void tegra_adma_stop(struct tegra_dma_channel *tdc)
->> +{
->> +	u32 status;
->> +
->> +	/* TODO: Do we need to disable interrupts here? */
-> 
-> when?
+> I don't see why you need reserved-memory here, given you're not referring to
+> these regions by phandle anyway.
 
-Once everyone is happy with the RFC in general.
+- Now we have enabled EFI_STUB, so the memory node will be removed in
+  kernel:
+    efi_entry()
+      \-> allocate_new_fdt_and_exit_boot()
+            \-> update_fdt();
 
->> +static void tegra_adma_start(struct tegra_dma_channel *tdc,
->> +		struct tegra_dma_sg_req *sg_req)
->> +{
->> +	struct tegra_adma_chan_regs *ch_regs = &sg_req->adma_ch_regs;
->> +
->> +	/* Update transfer done count for position calculation */
->> +	tdc->adma_ch_regs.tc = ch_regs->tc;
->> +	tdc_write(tdc, ADMA_CH_TC, ch_regs->tc);
->> +	tdc_write(tdc, ADMA_CH_CTRL, ch_regs->ctrl);
->> +	tdc_write(tdc, ADMA_CH_LOWER_SOURCE_ADDR, ch_regs->src_ptr);
->> +	tdc_write(tdc, ADMA_CH_LOWER_TARGET_ADDR, ch_regs->tgt_ptr);
->> +	tdc_write(tdc, ADMA_CH_AHUB_FIFO_CTRL, ch_regs->ahub_fifo_ctrl);
->> +	tdc_write(tdc, ADMA_CH_CONFIG, ch_regs->config);
-> empty line here please
+  Finally in kernel it cannot use memory node to carve out reseved
+  memory regions.
 
-Ok.
+- On the other hand, DTS's the memory node is to "describes the
+  physical memory layout for the system"; so it's better to use it only
+  to describe the hardware info for memory. We can use reserved-memory
+  to help manage the memory regions which are reserved from software
+  perspective.
 
->> +static int tegra_adma_get_xfer_params(struct tegra_dma_channel *tdc,
->> +				      struct tegra_adma_chan_regs *ch_regs,
->> +				      enum dma_transfer_direction direction)
->> +{
->> +	u32 burst_size, ctrl, ctrl_mask, slave_id, fifo_mask, fifo_shift;
->> +
->> +	ch_regs->ahub_fifo_ctrl = tdc_read(tdc, ADMA_CH_AHUB_FIFO_CTRL);
->> +	ch_regs->config = tdc_read(tdc, ADMA_CH_CONFIG);
->> +	ch_regs->ctrl = tdc_read(tdc, ADMA_CH_CTRL);
->> +	slave_id = tdc->dma_sconfig.slave_id;
->> +
->> +	switch (direction) {
->> +	case DMA_MEM_TO_DEV:
->> +		burst_size = fls(tdc->dma_sconfig.dst_maxburst);
->> +		ctrl_mask = ADMA_CH_CTRL_TX_REQUEST_SELECT_MASK;
->> +		ctrl = MEMORY_TO_AHUB << ADMA_CH_CTRL_TRANSFER_DIRECTION_SHIFT;
->> +		ctrl |= slave_id << ADMA_CH_CTRL_TX_REQUEST_SELECT_SHIFT;
->> +		fifo_mask = ADMA_CH_AHUB_FIFO_CTRL_TX_FIFO_SIZE_MASK;
->> +		fifo_shift = ADMA_CH_AHUB_FIFO_CTRL_TX_FIFO_SIZE_SHIFT;
->> +		break;
-> Empty line here pls
+According to upper info, we still need to use reserved-memory node to
+depict the reserved memory regions. i have no knowledge about EFI_STUB,
+so please confirm or correct as needed.
 
-Ok, any reason why? Other dma drivers don't appear to do this.
-
->> +	case DMA_DEV_TO_MEM:
->> +		burst_size = fls(tdc->dma_sconfig.src_maxburst);
->> +		ctrl_mask = ADMA_CH_CTRL_RX_REQUEST_SELECT_MASK;
->> +		ctrl = AHUB_TO_MEMORY << ADMA_CH_CTRL_TRANSFER_DIRECTION_SHIFT;
->> +		ctrl |= slave_id << ADMA_CH_CTRL_RX_REQUEST_SELECT_SHIFT;
->> +		fifo_mask = ADMA_CH_AHUB_FIFO_CTRL_RX_FIFO_SIZE_MASK;
->> +		fifo_shift = ADMA_CH_AHUB_FIFO_CTRL_RX_FIFO_SIZE_SHIFT;
->> +		break;
-> 
-> here too...
-> 
->> +	default:
->> +		dev_err(tdc2dev(tdc), "Dma direction is not supported\n");
->> +		return -EINVAL;
->> +	}
->> +
->> +	if (!burst_size || burst_size > ADMA_BURSTSIZE_16)
->> +		burst_size = ADMA_BURSTSIZE_16;
->> +
->> +	ch_regs->ahub_fifo_ctrl &= ~fifo_mask;
->> +	ch_regs->ahub_fifo_ctrl |= ADMA_FIFO_DEFAULT_SIZE << fifo_shift;
->> +	ch_regs->config &= ~ADMA_CH_CONFIG_BURST_SIZE_MASK;
->> +	ch_regs->config |= burst_size << ADMA_CH_CONFIG_BURST_SIZE_SHIFT;
->> +	ch_regs->ctrl &= ~(ctrl_mask | ADMA_CH_CTRL_TRANSFER_DIRECTION_MASK);
->> +	ch_regs->ctrl |= ctrl;
->> +
->> +	return -EINVAL;
-> ??
-
-Thanks. That's an error. Will fix.
-
->> +static int tegra_adma_pm_suspend(struct device *dev)
->> +{
->> +	struct tegra_dma *tdma = dev_get_drvdata(dev);
->> +	int i;
->> +	int ret;
->> +
->> +	ret = pm_runtime_get_sync(dev);
-> why is this required :)
-
-To ensure that the clocks are enabled before the registers are read.
-This function saves the dma context before suspend, in case the hardware
-state is lost.
-
->> +static int tegra_adma_pm_resume(struct device *dev)
->> +{
->> +	struct tegra_dma *tdma = dev_get_drvdata(dev);
->> +	int i;
->> +	int ret;
->> +
->> +	ret = pm_runtime_get_sync(dev);
-> and this
-
-Same here.
-
-Cheers
-Jon
+Thanks,
+Leo Yan
