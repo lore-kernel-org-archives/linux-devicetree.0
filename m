@@ -1,50 +1,54 @@
-From: Marek Vasut <marex@denx.de>
-Subject: Re: [PATCH linux-next v4 5/5] mtd: atmel-quadspi: add driver for Atmel QSPI controller
-Date: Mon, 24 Aug 2015 15:15:44 +0200
-Message-ID: <201508241515.45036.marex@denx.de>
-References: <cover.1440410236.git.cyrille.pitchen@atmel.com> <201508241303.52066.marex@denx.de> <20150824124924.GZ7557@n2100.arm.linux.org.uk>
+From: Jon Hunter <jonathanh@nvidia.com>
+Subject: Re: [RFC PATCH 1/7] DMA: tegra-apb: Correct runtime-pm usage
+Date: Mon, 24 Aug 2015 14:22:49 +0100
+Message-ID: <55DB1AA9.7090906@nvidia.com>
+References: <1439905755-25150-1-git-send-email-jonathanh@nvidia.com> <1439905755-25150-2-git-send-email-jonathanh@nvidia.com> <20150823141707.GB13546@localhost> <55DADA11.5040306@nvidia.com> <20150824092230.GI13546@localhost>
 Mime-Version: 1.0
-Content-Type: Text/Plain;
-  charset="us-ascii"
+Content-Type: text/plain; charset="windows-1252"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20150824124924.GZ7557@n2100.arm.linux.org.uk>
+In-Reply-To: <20150824092230.GI13546@localhost>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Russell King - ARM Linux <linux@arm.linux.org.uk>
-Cc: Cyrille Pitchen <cyrille.pitchen@atmel.com>, mark.rutland@arm.com, devicetree@vger.kernel.org, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, ben@decadent.org.uk, zajec5@gmail.com, nicolas.ferre@atmel.com, linux-kernel@vger.kernel.org, robh+dt@kernel.org, linux-spi@vger.kernel.org, juhosg@openwrt.org, broonie@kernel.org, linux-mtd@lists.infradead.org, galak@codeaurora.org, shijie.huang@intel.com, computersforpeace@gmail.com, dwmw2@infradead.org, linux-arm-kernel@lists.infradead.org, beanhuo@micron.com
+To: Vinod Koul <vinod.koul@intel.com>
+Cc: Laxman Dewangan <ldewangan@nvidia.com>, Stephen Warren <swarren@wwwdotorg.org>, Thierry Reding <thierry.reding@gmail.com>, Alexandre Courbot <gnurou@gmail.com>, dmaengine@vger.kernel.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Monday, August 24, 2015 at 02:49:24 PM, Russell King - ARM Linux wrote:
 
-Hi Russell,
-
-> On Mon, Aug 24, 2015 at 01:03:51PM +0200, Marek Vasut wrote:
-> > These are functions, not macros :)
-> > 
-> > btw is there any reason for these ? I'd say, just put the read*() and
-> > write*() functions directly into the code and be done with it, it is
-> > much less confusing.
-> > 
-> > Also, why do you use the _relaxed() versions of the functions ?
+On 24/08/15 10:22, Vinod Koul wrote:
+> On Mon, Aug 24, 2015 at 09:47:13AM +0100, Jon Hunter wrote:
+>>
+>> On 23/08/15 15:17, Vinod Koul wrote:
+>>> On Tue, Aug 18, 2015 at 02:49:09PM +0100, Jon Hunter wrote:
+>>>
+>>>> @@ -1543,7 +1531,7 @@ static int tegra_dma_pm_suspend(struct device *dev)
+>>>>  	int ret;
+>>>>  
+>>>>  	/* Enable clock before accessing register */
+>>>> -	ret = tegra_dma_runtime_resume(dev);
+>>>> +	ret = pm_runtime_get_sync(dev);
+>>>
+>>> why is this required ?
+>>
+>> Because the clock could be disabled when this function is called. This
+>> function saves the DMA context so that if the context is lost during
+>> suspend, it can be restored.
 > 
-> Now that the _relaxed() accessors are available throughout the kernel,
-> everyone should be using the _relaxed() versions unless they need the
-> properties of the non-relaxed versions.
+> Have you verified this? Coz my understanding is that when PM does suspend it
+> will esnure you are runtime resume if runtime suspended and then will do
+> suspend.
+> So you do not need to do above
 
-You mean the memory barrier, right ?
+I see what you are saying. I did some testing with ftrace today to trace
+rpm and suspend/resume calls. If the dma controller is runtime suspended
+and I do not call pm_runtime_get_sync() above then I do not see any
+runtime resume of the dma controller prior to suspend. Now I was hoping
+that this would cause a complete kernel crash but it did not and so the
+DMA clock did not appear to be needed here (at least on the one board I
+tested). However, I would not go as far as to remove this and prefer to
+keep as above.
 
-> Remember that the non-relaxed
-> versions are rather expensive on ARM due to the need to go all the way
-> out to the L2 cache - it at least doubles the number of accesses for
-> every read*/write*().
+Furthermore, other drivers do similar things, including the sirf dma
+controller (see sirf-dma.c).
 
-I think in case of this driver, we don't need the non-relaxed version
-anywhere, right ? Thanks for the educational writeup :)
-
-btw. is [1] still the current study material on the I/O accessor best
-practices please ?
-
-[1] http://permalink.gmane.org/gmane.linux.ports.arm.kernel/117644
-
-Best regards,
-Marek Vasut
+Cheers
+Jon
