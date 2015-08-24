@@ -1,71 +1,180 @@
-From: "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Subject: Re: [RFC PATCH 1/7] DMA: tegra-apb: Correct runtime-pm usage
-Date: Tue, 25 Aug 2015 02:04:50 +0200
-Message-ID: <13590312.K3yoQT5YDc@vostro.rjw.lan>
-References: <1439905755-25150-1-git-send-email-jonathanh@nvidia.com> <55DB1AA9.7090906@nvidia.com> <20150824142143.GK13546@localhost>
+From: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+Subject: Re: [PATCH v3 06/14] Documentation: drm/bridge: add document for
+ analogix_dp
+Date: Tue, 25 Aug 2015 08:49:36 +0900
+Message-ID: <55DBAD90.3040901@samsung.com>
+References: <1439995728-18046-1-git-send-email-ykk@rock-chips.com>
+ <1439995834-18363-1-git-send-email-ykk@rock-chips.com>
+ <CAL_JsqLz+8RtBucctUj4euXZ3Ac0DvB52N9ONpAerh5T9BiTJg@mail.gmail.com>
+ <CAJKOXPeEm8exg_UG0tDnaEGO40ejBKZ-ok=bKbVrwYvXnDaMdg@mail.gmail.com>
+ <55DA8486.1000803@rock-chips.com> <55DA9B72.1030804@samsung.com>
+ <55DB1281.9070502@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20150824142143.GK13546@localhost>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Vinod Koul <vinod.koul@intel.com>
-Cc: Jon Hunter <jonathanh@nvidia.com>, Rafael <rafael.j.wysocki@intel.com>, Laxman Dewangan <ldewangan@nvidia.com>, Stephen Warren <swarren@wwwdotorg.org>, Thierry Reding <thierry.reding@gmail.com>, Alexandre Courbot <gnurou@gmail.com>, dmaengine@vger.kernel.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <55DB1281.9070502@rock-chips.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Yakir Yang <ykk@rock-chips.com>, Rob Herring <robherring2@gmail.com>
+Cc: heiko@sntech.de, Sean Paul <seanpaul@google.com>, Takashi Iwai <tiwai@suse.de>, dri-devel <dri-devel@lists.freedesktop.org>, Andrzej Hajda <a.hajda@samsung.com>, Gustavo Padovan <gustavo.padovan@collabora.co.uk>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, Vincent Palatin <vpalatin@chromium.org>, Kishon Vijay Abraham I <kishon@ti.com>, linux-rockchip@lists.infradead.org, Russell King <rmk+kernel@arm.linux.org.uk>, Thierry Reding <treding@nvidia.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, David Airlie <airlied@linux.ie>, Doug Anderson <dianders@google.com>, Inki Dae <inki.dae@samsung.com>, Ajay kumar <ajaynumb@gmail.com>, Rob Herring <robh+dt@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>M
 List-Id: devicetree@vger.kernel.org
 
-On Monday, August 24, 2015 07:51:43 PM Vinod Koul wrote:
-> On Mon, Aug 24, 2015 at 02:22:49PM +0100, Jon Hunter wrote:
-> > 
-> > On 24/08/15 10:22, Vinod Koul wrote:
-> > > On Mon, Aug 24, 2015 at 09:47:13AM +0100, Jon Hunter wrote:
-> > >>
-> > >> On 23/08/15 15:17, Vinod Koul wrote:
-> > >>> On Tue, Aug 18, 2015 at 02:49:09PM +0100, Jon Hunter wrote:
-> > >>>
-> > >>>> @@ -1543,7 +1531,7 @@ static int tegra_dma_pm_suspend(struct device *dev)
-> > >>>>  	int ret;
-> > >>>>  
-> > >>>>  	/* Enable clock before accessing register */
-> > >>>> -	ret = tegra_dma_runtime_resume(dev);
-> > >>>> +	ret = pm_runtime_get_sync(dev);
-> > >>>
-> > >>> why is this required ?
-> > >>
-> > >> Because the clock could be disabled when this function is called. This
-> > >> function saves the DMA context so that if the context is lost during
-> > >> suspend, it can be restored.
-> > > 
-> > > Have you verified this? Coz my understanding is that when PM does suspend it
-> > > will esnure you are runtime resume if runtime suspended and then will do
-> > > suspend.
-> > > So you do not need to do above
-> > 
-> > I see what you are saying. I did some testing with ftrace today to trace
-> > rpm and suspend/resume calls. If the dma controller is runtime suspended
-> > and I do not call pm_runtime_get_sync() above then I do not see any
-> > runtime resume of the dma controller prior to suspend. Now I was hoping
-> > that this would cause a complete kernel crash but it did not and so the
-> > DMA clock did not appear to be needed here (at least on the one board I
-> > tested). However, I would not go as far as to remove this and prefer to
-> > keep as above.
-> 
-> Okay am adding Rafael here for his recommendations.
+On 24.08.2015 21:48, Yakir Yang wrote:
+> Hi Krzysztof,
+>=20
+> =E5=9C=A8 08/24/2015 12:20 PM, Krzysztof Kozlowski =E5=86=99=E9=81=93=
+:
+>> On 24.08.2015 11:42, Yakir Yang wrote:
+>>> Hi Krzysztof,
+>>>
+>>> =E5=9C=A8 08/23/2015 07:43 PM, Krzysztof Kozlowski =E5=86=99=E9=81=93=
+:
+>>>> 2015-08-24 8:23 GMT+09:00 Rob Herring <robherring2@gmail.com>:
+>>>>> On Wed, Aug 19, 2015 at 9:50 AM, Yakir Yang <ykk@rock-chips.com>
+>>>>> wrote:
+>>>>>> Analogix dp driver is split from exynos dp driver, so we just
+>>>>>> make an copy of exynos_dp.txt, and then simplify exynos_dp.txt
+>>>>>>
+>>>>>> Beside update some exynos dtsi file with the latest change
+>>>>>> according to the devicetree binding documents.
+>>>>> You can't just change the exynos bindings and break compatibility=
+=2E Is
+>>>>> there some agreement with exynos folks to do this?
+>>>> No, there is no agreement. This wasn't even sent to Exynos maintai=
+ners.
+>>> Sorry about this one, actually I have add Exynos maintainers in ver=
+sion
+>>> 1 & version 2,
+>>> but lose some maintainers in version 3, I would fix it in bellow
+>>> versions.
+>>>
+>>>> Additionally the patchset did not look interesting to me because o=
+f
+>>>> misleading subject - Documentation instead of "ARM: dts:".
+>>>>
+>>>> Yakir, please:
+>>>> 1. Provide backward compatibility. Mark old properties as deprecat=
+ed
+>>>> but still support them.
+>>> Do you mean that I should keep the old properties declare in
+>>> exynos-dp.txt,
+>>> but just mark them as deprecated flag.
+>> That is one of ways how to do this. However more important is that
+>> driver should still support old bindings so such code:
+>> -       if (of_property_read_u32(dp_node, "samsung,color-space",
+>> +       if (of_property_read_u32(dp_node, "analogix,color-space",
+>>
+>> is probably wrong. Will the driver support old DTB in the same way a=
+s it
+>> was supporting before the change?
+>=20
+> Okay, I got your means. So document is not the focus, the most import=
+ant
+> is that
+> driver should support the old dts prop.
 
-Well, and what is the question I'm supposed to answer, exactly?
+Right, the focus is on the driver.
 
-I was in Seattle last week, so haven't been following this closely.
+> If so the new analogix dp driver
+> should keep
+> the "samsung,color-space", rather then just mark it with [DEPRECATED]=
+ flag.
 
-> I have tested in past and if my driver was runtime suspended we were resumed
-> prior to being suspended. So I am not sure why you did not see that
-> behaviour, and if that is right we don't need to force resume here
+If you are replacing a binding/property then it should be marked
+deprecated. This means that the old property is still working but new
+users of it should not be added.
 
-We're adding code for skipping runtime-resume-before-system-suspend, because
-it is not desirable in general.
+>=20
+> But from your follow suggest, I think you agree to update driver code=
+,
+> and just mark
+> old prop with deprecated flag. If so I think such code would not be w=
+rong
+>=20
+> -       if (of_property_read_u32(dp_node, "samsung,color-space",
+> +      if (of_property_read_u32(dp_node, "analogix,color-space",
 
-The rule of thumb is that if you know you need to change the device's settings
-(eg. because of wakeup being enabled or not) for system suspend and that
-requires the device to be resumed, resume it.  It can stay suspended
-otherwise.
+It looks wrong because it breaks backward compatibility with existing
+DTB. As I said before:
+>>> 1. Provide backward compatibility. Mark old properties
+>>> as deprecated but still support them.
 
-Thanks,
-Rafael
+
+> And actually @Rob have suggest me to remove the prefix, just use
+> "color-space" here.
+
+=46or new bindings I don't mind. But please remember about existing use=
+rs,
+existing DTB and bisectability.
+
+>=20
+>>
+>>> Let me show same examples, make
+>>> me understand your suggest rightly.
+>> exynos-dp already contains deprecated properties. Other ways of doin=
+g
+>> this would be:
+>> Documentation/devicetree/bindings/input/touchscreen/touchscreen.txt
+>> Documentation/devicetree/bindings/rtc/s3c-rtc.txt
+>>
+>> It depends up to you. The "touchscreen" looks good because it organi=
+zes
+>> old properties in a common section. In case of exynos-dp.txt you can=
+ add
+>> at beginning of file information about new bindings and mark everyth=
+ing
+>> deprecated.
+>=20
+> Whoops, thanks for your remind, I prefer the "touchscreen" style.
+>=20
+>>> 1. "samsung,ycbcr-coeff" is abandoned in latest analogix-dp driver,
+>>> absolutely
+>>>      I should not carry this to analogix-dp.txt document. But I sho=
+uld
+>>> keep this in
+>>>      exynos-dp.txt document, and mark them with an little
+>>> "deprecated" flag.
+>>>
+>>> [Documentation/devicetree/bindings/video/exynos_dp.txt]
+>>> Required properties for dp-controller:
+>>>     [...]
+>>>      -samsung,ycbcr-coeff (DEPRECATED):
+>>>          YCbCr co-efficients for input video.
+>>>              COLOR_YCBCR601 =3D 0, COLOR_YCBCR709 =3D 1
+>>>
+>>> Is it right ?
+>> Yes, this is right.
+>>
+>>>> 2. Separate all DTS changes to a separate patch, unless bisectabil=
+ity
+>>>> would be hurt. Anyway you should prepare it in a such way that
+>>>> separation would be possible without breaking bisectability.
+>>> So I should separate this patch into two parts, one is name "Docume=
+nt:",
+>>> the other is "ARM: dts: ".
+>> Yes.
+>>
+>>> Honestly, I don't understand what the "bisectability" means in this
+>>> case.
+>> I was referring to bisectability in general. The patchset should be
+>> fully bisectable which means that it does not introduce any issues
+>> during "git bisect". This effectively means that at each intermediat=
+e
+>> step (after applying each patch, one by one) every existing stuff wo=
+rks
+>> the same as previously without any regression. Including booting wit=
+h
+>> old DTB.
+>=20
+> Oh, thanks for your careful explain, so I guess your first comment is
+> talking about
+> the "bisectability" that if I only apply the 01 - 05 patches, kernel
+> could not bootup
+> normally, cause driver need "analogix,color-space" but DTB only have
+> "samsung,color-space".
+
+Right. In the same time please remember that kernel may be booted with
+old DTB.
+
+Best regards,
+Krzysztof
