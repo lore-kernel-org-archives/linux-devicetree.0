@@ -1,445 +1,92 @@
-From: Jingoo Han <jingoohan1@gmail.com>
-Subject: Re: [PATCH v3 06/14] Documentation: drm/bridge: add document for analogix_dp
-Date: Mon, 24 Aug 2015 16:40:41 +0900
-Message-ID: <4CAFC1ED-400F-46E4-B61F-82BB1ED018EA@gmail.com>
-References: <1439995728-18046-1-git-send-email-ykk@rock-chips.com> <1439995834-18363-1-git-send-email-ykk@rock-chips.com> <CAL_JsqLz+8RtBucctUj4euXZ3Ac0DvB52N9ONpAerh5T9BiTJg@mail.gmail.com> <CAJKOXPeEm8exg_UG0tDnaEGO40ejBKZ-ok=bKbVrwYvXnDaMdg@mail.gmail.com>
-Mime-Version: 1.0 (1.0)
-Content-Type: text/plain;
-	charset=us-ascii
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <CAJKOXPeEm8exg_UG0tDnaEGO40ejBKZ-ok=bKbVrwYvXnDaMdg@mail.gmail.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Krzysztof Kozlowski <k.kozlowski@samsung.com>, Yakir Yang <ykk@rock-chips.com>
-Cc: Rob Herring <robherring2@gmail.com>, Heiko Stuebner <heiko@sntech.de>, Sean Paul <seanpaul@google.com>, Takashi Iwai <tiwai@suse.de>, dri-devel <dri-devel@lists.freedesktop.org>, Andrzej Hajda <a.hajda@samsung.com>, Gustavo Padovan <gustavo.padovan@collabora.co.uk>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, Vincent Palatin <vpalatin@chromium.org>, Kishon Vijay Abraham I <kishon@ti.com>, "linux-rockchip@lists.infradead.org" <linux-rockchip@lists.infradead.org>, Russell King <rmk+kernel@arm.linux.org.uk>, Thierry Reding <treding@nvidia.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, David Airlie <airlied@linux.ie>, Doug Anderson <dianders@google.com>, Inki Dae <inki.dae@samsung.com>, Ajay kumar <ajaynumb@gmail.com>, Rob Herring <robh+dt@k>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH 3/4 v3][RFC] arm64: renesas: Add initial r8a7795 SoC support
+Date: Mon, 24 Aug 2015 09:51:07 +0200
+Message-ID: <CAMuHMdXdN4JgjUzLaSwqh61bZ3=NvrPHOW1xWjmyD+f=TLXDfg@mail.gmail.com>
+References: <877fpdw3av.wl%kuninori.morimoto.gx@renesas.com>
+	<12310001.Bt8qbPIiMv@avalon>
+	<CAMuHMdWMNLf-fDsiLNFwO05i0cqBHkdM2mwC3GinwWFN4pWFZg@mail.gmail.com>
+	<4206643.R1gTHQZqhM@avalon>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <4206643.R1gTHQZqhM@avalon>
+Sender: linux-sh-owner@vger.kernel.org
+To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: Michael Turquette <mturquette@baylibre.com>, Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>, Simon <horms@verge.net.au>, Magnus <magnus.damm@gmail.com>, Linux-sh list <linux-sh@vger.kernel.org>, linux-clk@vger.kernel.org, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 2015. 8. 24., at AM 9:43, Krzysztof Kozlowski <k.kozlowski@samsung.com> wrote:
-> 
-> 2015-08-24 8:23 GMT+09:00 Rob Herring <robherring2@gmail.com>:
->>> On Wed, Aug 19, 2015 at 9:50 AM, Yakir Yang <ykk@rock-chips.com> wrote:
->>> Analogix dp driver is split from exynos dp driver, so we just
->>> make an copy of exynos_dp.txt, and then simplify exynos_dp.txt
->>> 
->>> Beside update some exynos dtsi file with the latest change
->>> according to the devicetree binding documents.
->> 
->> You can't just change the exynos bindings and break compatibility. Is
->> there some agreement with exynos folks to do this?
-> 
-> No, there is no agreement. This wasn't even sent to Exynos maintainers.
-> Additionally the patchset did not look interesting to me because of
-> misleading subject - Documentation instead of "ARM: dts:".
-> 
-> Yakir, please:
-> 1. Provide backward compatibility. Mark old properties as deprecated
-> but still support them.
-> 2. Separate all DTS changes to a separate patch, unless bisectability
-> would be hurt. Anyway you should prepare it in a such way that
-> separation would be possible without breaking bisectability.
-> 3. Use proper subject for the patch changing DTS. This is not
-> documentation change!
-> 4. Please use script get_maintainers to obtain list of valid
-> maintainers and CC-them with at least cover letter and patches
-> requiring their attention.
+Hi Laurent,
 
-To Yakir Yang,
+On Thu, Aug 20, 2015 at 9:48 PM, Laurent Pinchart
+<laurent.pinchart@ideasonboard.com> wrote:
+> On Thursday 20 August 2015 09:43:34 Geert Uytterhoeven wrote:
+>> On Wed, Aug 19, 2015 at 11:29 PM, Laurent Pinchart wrote:
+>> >> > Also, while you're thinking about the perfect clock binding, please do
+>> >> > consider dropping clock-output-names if you can. Specifying clock-names
+>> >> > alongside the clocks property inside of the consumer node is a bit more
+>> >> > elegant in my opinion. This is also a bit easier if you think about
+>> >> > expressing your clock data with C inside of your provider driver.
+>> >>
+>> >> Makes sense. I don't think anything relies on the "clock-output-names"
+>> >> ... currently.
+>> >>
+>> >> I was going to use it for identifying the GIC clock, though:
+>> >>
+>> >> --- a/drivers/clk/shmobile/clk-mstp.c
+>> >> +++ b/drivers/clk/shmobile/clk-mstp.c
+>> >> @@ -144,6 +144,9 @@ cpg_mstp_clock_register(const char *name, const char
+>> >> *paren init.name = name;
+>> >>
+>> >>         init.ops = &cpg_mstp_clock_ops;
+>> >>         init.flags = CLK_IS_BASIC | CLK_SET_RATE_PARENT;
+>> >>
+>> >> +       /* INTC-SYS is the module clock of the GIC, and must not be
+>> >> disabled */
+>> >> +       if (!strcmp(name, "intc-sys"))
+>> >> +               init.flags |= CLK_ENABLE_HAND_OFF;
+>> >>
+>> >>         init.parent_names = &parent_name;
+>> >>         init.num_parents = 1;
+>> >>
+>> >> (FTR, on R-Car Gen3 the clock is called "intc-ap", not "intc-sys",
+>> >> doh...).
+>> >>
+>> >> This does put some reliance on (undocumented) naming in DT, though, so
+>> >> not
+>> >> having the "clock-output-names" would solve that.
+>> >
+>> > Using the clock name is indeed very messy, let's avoid that.
+>> >
+>> >> However, while "intc-sys"/"intc-ap" (if existent) is always MSTP408,
+>> >> MSTP408 is used for other modules on R-Car Gen1 and most older SoCs. so
+>> >> it would complicate the driver code.
+>> >
+>> > How about setting the flag based on information provided in DT ?
+>>
+>> Like scanning DT for the GIC, and looking for its clock?
+>>
+>> I don't want to add an explicit flag in DT, as it's not a hardware property,
+>> but a deficiency of the current GIC driver/subsystem.
+>
+> What are the changes we can fix the GIC driver in a reasonable time frame ?
 
-Please be careful when you CC people.
+Very low.
 
-I don't find the reason why you CC'ed the following people. Of course, they
-look to be one of the talented developers. However, they look to be
-unrelated to your patchset.
+The GIC driver uses IRQCHIP_DECLARE(), hence it's initialized from
+of_irq_init() <- irqchip_init() <- init_IRQ() <- start_kernel().
 
- Takashi Iwai
- Vincent Palatin
- Fabio Estevam
- Philipp Zabel
+The MSTP clock driver uses CLK_OF_DECLARE(), hence it's initialized from
+of_clk_init() <- time_init() <- start_kernel(), but 7 calls later.
 
+IRQCHIP_DECLARE() doesn't support deferred probing.
 
-Also, please add Exynos Architecture maintainers to CC list. I don't understand
-why you removed them from CC list.
- Kukjin Kim
- Krzysztof Kozlowski
+Gr{oetje,eeting}s,
 
-Without their Ack, you will not change the codes of ARM Exynos Architecture.
+                        Geert
 
-Best regards,
-Jingoo Han
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
-> 
-> Best regards,
-> Krzysztof
-> 
-> 
->> 
->> 
->>> Signed-off-by: Yakir Yang <ykk@rock-chips.com>
->>> ---
->>> Changes in v3:
->>> - Take Heiko suggest, add devicetree binding documents.
->>> - Take Thierry Reding suggest, remove sync pol & colorimetry properies
->>>  from the new analogix dp driver devicetree binding.
->>> - Update the exist exynos dtsi file with the latest DP DT properies.
->>> 
->>> Changes in v2: None
->>> 
->>> .../devicetree/bindings/drm/bridge/analogix_dp.txt | 70 ++++++++++++++++++++++
->>> .../devicetree/bindings/video/exynos_dp.txt        | 50 ++++++----------
->>> arch/arm/boot/dts/exynos5250-arndale.dts           | 10 ++--
->>> arch/arm/boot/dts/exynos5250-smdk5250.dts          | 10 ++--
->>> arch/arm/boot/dts/exynos5250-snow.dts              | 12 ++--
->>> arch/arm/boot/dts/exynos5250-spring.dts            | 12 ++--
->>> arch/arm/boot/dts/exynos5420-peach-pit.dts         | 12 ++--
->>> arch/arm/boot/dts/exynos5420-smdk5420.dts          | 10 ++--
->>> arch/arm/boot/dts/exynos5800-peach-pi.dts          | 12 ++--
->>> 9 files changed, 119 insertions(+), 79 deletions(-)
->>> create mode 100644 Documentation/devicetree/bindings/drm/bridge/analogix_dp.txt
->>> 
->>> diff --git a/Documentation/devicetree/bindings/drm/bridge/analogix_dp.txt b/Documentation/devicetree/bindings/drm/bridge/analogix_dp.txt
->>> new file mode 100644
->>> index 0000000..6127018
->>> --- /dev/null
->>> +++ b/Documentation/devicetree/bindings/drm/bridge/analogix_dp.txt
->>> @@ -0,0 +1,70 @@
->>> +Analogix Display Port bridge bindings
->>> +
->>> +Required properties for dp-controller:
->>> +       -compatible:
->>> +               platform specific such as:
->>> +                * "samsung,exynos5-dp"
->>> +                * "rockchip,rk3288-dp"
->>> +       -reg:
->>> +               physical base address of the controller and length
->>> +               of memory mapped region.
->>> +       -interrupts:
->>> +               interrupt combiner values.
->>> +       -clocks:
->>> +               from common clock binding: handle to dp clock.
->>> +       -clock-names:
->>> +               from common clock binding: Shall be "dp".
->>> +       -interrupt-parent:
->>> +               phandle to Interrupt combiner node.
->>> +       -phys:
->>> +               from general PHY binding: the phandle for the PHY device.
->>> +       -phy-names:
->>> +               from general PHY binding: Should be "dp".
->>> +       -analogix,color-space:
->>> +               input video data format.
->>> +                       COLOR_RGB = 0, COLOR_YCBCR422 = 1, COLOR_YCBCR444 = 2
->>> +       -analogix,color-depth:
->>> +               number of bits per colour component.
->>> +                       COLOR_6 = 0, COLOR_8 = 1, COLOR_10 = 2, COLOR_12 = 3
->> 
->> This seems pretty generic. Just use 6, 8, 10, or 12 for values. And
->> drop the vendor prefix.
->> 
->>> +       -analogix,link-rate:
->>> +               max link rate supported by the eDP controller.
->>> +                       LINK_RATE_1_62GBPS = 0x6, LINK_RATE_2_70GBPS = 0x0A,
->>> +                       LINK_RATE_5_40GBPS = 0x14
->> 
->> Same here. I'd rather see something like "link-rate-mbps" and use the
->> actual rate.
->> 
->>> +       -analogix,lane-count:
->>> +               max number of lanes supported by the eDP contoller.
->>> +                       LANE_COUNT1 = 1, LANE_COUNT2 = 2, LANE_COUNT4 = 4
->> 
->> And drop the vendor prefix here.
->> 
->>> +       -port@[X]: SoC specific port nodes with endpoint definitions as defined
->>> +               in Documentation/devicetree/bindings/media/video-interfaces.txt,
->>> +               please refer to the SoC specific binding document:
->>> +               * Documentation/devicetree/bindings/video/exynos_dp.txt
->>> +               * Documentation/devicetree/bindings/video/analogix_dp-rockchip.txt
->>> +
->>> +Optional properties for dp-controller:
->>> +       -analogix,hpd-gpio:
->>> +               Hotplug detect GPIO.
->>> +                       Indicates which GPIO should be used for hotplug
->>> +                       detection
->> 
->> We should align with "hpd-gpios" used by HDMI connector binding. Or do
->> we need a DP connector binding that this should be defined in?
->> Probably so.
->> 
->> The DRM related bindings are such a cluster f*ck with everyone picking
->> their own way to do things. Just grep hpd in bindings for starters.
->> That is just the tip.
->> 
->>> +       -video interfaces: Device node can contain video interface port
->>> +                           nodes according to [1].
->> 
->> Isn't this the same as ports above? How are they optional? 0 ports
->> would be pretty useless.
->> 
->>> +
->>> +[1]: Documentation/devicetree/bindings/media/video-interfaces.txt
->>> +-------------------------------------------------------------------------------
->>> +
->>> +Example:
->>> +
->>> +       dp-controller {
->>> +               compatible = "samsung,exynos5-dp";
->>> +               reg = <0x145b0000 0x10000>;
->>> +               interrupts = <10 3>;
->>> +               interrupt-parent = <&combiner>;
->>> +               clocks = <&clock 342>;
->>> +               clock-names = "dp";
->>> +
->>> +               phys = <&dp_phy>;
->>> +               phy-names = "dp";
->>> +
->>> +               analogix,color-space = <0>;
->>> +               analogix,color-depth = <1>;
->>> +               analogix,link-rate = <0x0a>;
->>> +               analogix,lane-count = <4>;
->>> +       };
->>> diff --git a/Documentation/devicetree/bindings/video/exynos_dp.txt b/Documentation/devicetree/bindings/video/exynos_dp.txt
->>> index 7a3a9cd..177506f 100644
->>> --- a/Documentation/devicetree/bindings/video/exynos_dp.txt
->>> +++ b/Documentation/devicetree/bindings/video/exynos_dp.txt
->>> @@ -31,28 +31,10 @@ Required properties for dp-controller:
->>>                from general PHY binding: the phandle for the PHY device.
->>>        -phy-names:
->>>                from general PHY binding: Should be "dp".
->>> -       -samsung,color-space:
->>> -               input video data format.
->>> -                       COLOR_RGB = 0, COLOR_YCBCR422 = 1, COLOR_YCBCR444 = 2
->>> -       -samsung,dynamic-range:
->>> -               dynamic range for input video data.
->>> -                       VESA = 0, CEA = 1
->>> -       -samsung,ycbcr-coeff:
->>> -               YCbCr co-efficients for input video.
->>> -                       COLOR_YCBCR601 = 0, COLOR_YCBCR709 = 1
->>> -       -samsung,color-depth:
->>> -               number of bits per colour component.
->>> -                       COLOR_6 = 0, COLOR_8 = 1, COLOR_10 = 2, COLOR_12 = 3
->>> -       -samsung,link-rate:
->>> -               link rate supported by the panel.
->>> -                       LINK_RATE_1_62GBPS = 0x6, LINK_RATE_2_70GBPS = 0x0A
->>> -       -samsung,lane-count:
->>> -               number of lanes supported by the panel.
->>> -                       LANE_COUNT1 = 1, LANE_COUNT2 = 2, LANE_COUNT4 = 4
->>> -       - display-timings: timings for the connected panel as described by
->>> -               Documentation/devicetree/bindings/video/display-timing.txt
->>> 
->>> Optional properties for dp-controller:
->>> +       - display-timings: timings for the connected panel as described by
->>> +               Documentation/devicetree/bindings/video/display-timing.txt
->>>        -interlaced:
->>>                interlace scan mode.
->>>                        Progressive if defined, Interlaced if not defined
->>> @@ -62,14 +44,18 @@ Optional properties for dp-controller:
->>>        -hsync-active-high:
->>>                HSYNC polarity configuration.
->>>                        High if defined, Low if not defined
->>> -       -samsung,hpd-gpio:
->>> -               Hotplug detect GPIO.
->>> -                       Indicates which GPIO should be used for hotplug
->>> -                       detection
->>> -       -video interfaces: Device node can contain video interface port
->>> -                           nodes according to [1].
->>> 
->>> -[1]: Documentation/devicetree/bindings/media/video-interfaces.txt
->>> +For the below properties, please refer to Analogix DP binding document:
->>> + * Documentation/devicetree/bindings/drm/bridge/analogix_dp.txt
->>> +       -phys (required)
->>> +       -phy-names (required)
->>> +       -analogix,color-space (required)
->>> +       -analogix,color-depth (required)
->>> +       -analogix,link-rate (required)
->>> +       -analogix,lane-count (required)
->>> +       -analogix,hpd-gpio (optional)
->>> +       -video interfaces (optional)
->>> +-------------------------------------------------------------------------------
->>> 
->>> Example:
->>> 
->>> @@ -88,12 +74,10 @@ SOC specific portion:
->>> 
->>> Board Specific portion:
->>>        dp-controller {
->>> -               samsung,color-space = <0>;
->>> -               samsung,dynamic-range = <0>;
->>> -               samsung,ycbcr-coeff = <0>;
->>> -               samsung,color-depth = <1>;
->>> -               samsung,link-rate = <0x0a>;
->>> -               samsung,lane-count = <4>;
->>> +               analogix,color-space = <0>;
->>> +               analogix,color-depth = <1>;
->>> +               analogix,link-rate = <0x0a>;
->>> +               analogix,lane-count = <4>;
->>> 
->>>                display-timings {
->>>                        native-mode = <&lcd_timing>;
->>> diff --git a/arch/arm/boot/dts/exynos5250-arndale.dts b/arch/arm/boot/dts/exynos5250-arndale.dts
->>> index 7e728a1..e48798d 100644
->>> --- a/arch/arm/boot/dts/exynos5250-arndale.dts
->>> +++ b/arch/arm/boot/dts/exynos5250-arndale.dts
->>> @@ -119,12 +119,10 @@
->>> 
->>> &dp {
->>>        status = "okay";
->>> -       samsung,color-space = <0>;
->>> -       samsung,dynamic-range = <0>;
->>> -       samsung,ycbcr-coeff = <0>;
->>> -       samsung,color-depth = <1>;
->>> -       samsung,link-rate = <0x0a>;
->>> -       samsung,lane-count = <4>;
->>> +       analogix,color-space = <0>;
->>> +       analogix,color-depth = <1>;
->>> +       analogix,link-rate = <0x0a>;
->>> +       analogix,lane-count = <4>;
->>> };
->>> 
->>> &fimd {
->>> diff --git a/arch/arm/boot/dts/exynos5250-smdk5250.dts b/arch/arm/boot/dts/exynos5250-smdk5250.dts
->>> index 4fe186d..b8c6b8b 100644
->>> --- a/arch/arm/boot/dts/exynos5250-smdk5250.dts
->>> +++ b/arch/arm/boot/dts/exynos5250-smdk5250.dts
->>> @@ -75,12 +75,10 @@
->>> };
->>> 
->>> &dp {
->>> -       samsung,color-space = <0>;
->>> -       samsung,dynamic-range = <0>;
->>> -       samsung,ycbcr-coeff = <0>;
->>> -       samsung,color-depth = <1>;
->>> -       samsung,link-rate = <0x0a>;
->>> -       samsung,lane-count = <4>;
->>> +       analogix,color-space = <0>;
->>> +       analogix,color-depth = <1>;
->>> +       analogix,link-rate = <0x0a>;
->>> +       analogix,lane-count = <4>;
->>> 
->>>        pinctrl-names = "default";
->>>        pinctrl-0 = <&dp_hpd>;
->>> diff --git a/arch/arm/boot/dts/exynos5250-snow.dts b/arch/arm/boot/dts/exynos5250-snow.dts
->>> index b7f4122..9ce2b89 100644
->>> --- a/arch/arm/boot/dts/exynos5250-snow.dts
->>> +++ b/arch/arm/boot/dts/exynos5250-snow.dts
->>> @@ -239,13 +239,11 @@
->>>        status = "okay";
->>>        pinctrl-names = "default";
->>>        pinctrl-0 = <&dp_hpd>;
->>> -       samsung,color-space = <0>;
->>> -       samsung,dynamic-range = <0>;
->>> -       samsung,ycbcr-coeff = <0>;
->>> -       samsung,color-depth = <1>;
->>> -       samsung,link-rate = <0x0a>;
->>> -       samsung,lane-count = <2>;
->>> -       samsung,hpd-gpio = <&gpx0 7 GPIO_ACTIVE_HIGH>;
->>> +       analogix,color-space = <0>;
->>> +       analogix,color-depth = <1>;
->>> +       analogix,link-rate = <0x0a>;
->>> +       analogix,lane-count = <2>;
->>> +       analogix,hpd-gpio = <&gpx0 7 GPIO_ACTIVE_HIGH>;
->>> 
->>>        ports {
->>>                port@0 {
->>> diff --git a/arch/arm/boot/dts/exynos5250-spring.dts b/arch/arm/boot/dts/exynos5250-spring.dts
->>> index d03f9b8..9288ae6 100644
->>> --- a/arch/arm/boot/dts/exynos5250-spring.dts
->>> +++ b/arch/arm/boot/dts/exynos5250-spring.dts
->>> @@ -69,13 +69,11 @@
->>>        status = "okay";
->>>        pinctrl-names = "default";
->>>        pinctrl-0 = <&dp_hpd_gpio>;
->>> -       samsung,color-space = <0>;
->>> -       samsung,dynamic-range = <0>;
->>> -       samsung,ycbcr-coeff = <0>;
->>> -       samsung,color-depth = <1>;
->>> -       samsung,link-rate = <0x0a>;
->>> -       samsung,lane-count = <1>;
->>> -       samsung,hpd-gpio = <&gpc3 0 GPIO_ACTIVE_HIGH>;
->>> +       analogix,color-space = <0>;
->>> +       analogix,color-depth = <1>;
->>> +       analogix,link-rate = <0x0a>;
->>> +       analogix,lane-count = <1>;
->>> +       analogix,hpd-gpio = <&gpc3 0 GPIO_ACTIVE_HIGH>;
->>> };
->>> 
->>> &ehci {
->>> diff --git a/arch/arm/boot/dts/exynos5420-peach-pit.dts b/arch/arm/boot/dts/exynos5420-peach-pit.dts
->>> index 8f4d76c..695a380 100644
->>> --- a/arch/arm/boot/dts/exynos5420-peach-pit.dts
->>> +++ b/arch/arm/boot/dts/exynos5420-peach-pit.dts
->>> @@ -147,13 +147,11 @@
->>>        status = "okay";
->>>        pinctrl-names = "default";
->>>        pinctrl-0 = <&dp_hpd_gpio>;
->>> -       samsung,color-space = <0>;
->>> -       samsung,dynamic-range = <0>;
->>> -       samsung,ycbcr-coeff = <0>;
->>> -       samsung,color-depth = <1>;
->>> -       samsung,link-rate = <0x06>;
->>> -       samsung,lane-count = <2>;
->>> -       samsung,hpd-gpio = <&gpx2 6 0>;
->>> +       analogix,color-space = <0>;
->>> +       analogix,color-depth = <1>;
->>> +       analogix,link-rate = <0x06>;
->>> +       analogix,lane-count = <2>;
->>> +       analogix,hpd-gpio = <&gpx2 6 0>;
->>> 
->>>        ports {
->>>                port@0 {
->>> diff --git a/arch/arm/boot/dts/exynos5420-smdk5420.dts b/arch/arm/boot/dts/exynos5420-smdk5420.dts
->>> index 98871f9..fd46714 100644
->>> --- a/arch/arm/boot/dts/exynos5420-smdk5420.dts
->>> +++ b/arch/arm/boot/dts/exynos5420-smdk5420.dts
->>> @@ -91,12 +91,10 @@
->>> &dp {
->>>        pinctrl-names = "default";
->>>        pinctrl-0 = <&dp_hpd>;
->>> -       samsung,color-space = <0>;
->>> -       samsung,dynamic-range = <0>;
->>> -       samsung,ycbcr-coeff = <0>;
->>> -       samsung,color-depth = <1>;
->>> -       samsung,link-rate = <0x0a>;
->>> -       samsung,lane-count = <4>;
->>> +       analogix,color-space = <0>;
->>> +       analogix,color-depth = <1>;
->>> +       analogix,link-rate = <0x0a>;
->>> +       analogix,lane-count = <4>;
->>>        status = "okay";
->>> };
->>> 
->>> diff --git a/arch/arm/boot/dts/exynos5800-peach-pi.dts b/arch/arm/boot/dts/exynos5800-peach-pi.dts
->>> index 7d5b386..54b4c63 100644
->>> --- a/arch/arm/boot/dts/exynos5800-peach-pi.dts
->>> +++ b/arch/arm/boot/dts/exynos5800-peach-pi.dts
->>> @@ -141,13 +141,11 @@
->>>        status = "okay";
->>>        pinctrl-names = "default";
->>>        pinctrl-0 = <&dp_hpd_gpio>;
->>> -       samsung,color-space = <0>;
->>> -       samsung,dynamic-range = <0>;
->>> -       samsung,ycbcr-coeff = <0>;
->>> -       samsung,color-depth = <1>;
->>> -       samsung,link-rate = <0x0a>;
->>> -       samsung,lane-count = <2>;
->>> -       samsung,hpd-gpio = <&gpx2 6 0>;
->>> +       analogix,color-space = <0>;
->>> +       analogix,color-depth = <1>;
->>> +       analogix,link-rate = <0x0a>;
->>> +       analogix,lane-count = <2>;
->>> +       analogix,hpd-gpio = <&gpx2 6 0>;
->>>        panel = <&panel>;
->>> };
->>> 
->>> --
->>> 1.9.1
->>> 
->>> 
->>> 
->>> _______________________________________________
->>> linux-arm-kernel mailing list
->>> linux-arm-kernel@lists.infradead.org
->>> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
->> 
->> _______________________________________________
->> linux-arm-kernel mailing list
->> linux-arm-kernel@lists.infradead.org
->> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvald
