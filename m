@@ -1,60 +1,49 @@
-From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 1/7] drm/vc4: Add devicetree bindings for VC4.
-Date: Mon, 24 Aug 2015 08:47:00 -0500
-Message-ID: <CAL_JsqJxiGUR5BxBPyR3-0NxqWsOxMGrWQA6cMXe2pjTom__nw@mail.gmail.com>
-References: <1439427380-2436-1-git-send-email-eric@anholt.net>
- <1439427380-2436-2-git-send-email-eric@anholt.net> <55CEC25E.7070303@wwwdotorg.org>
- <874mjxwyx5.fsf@eliezer.anholt.net>
+From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH 1/3] Docs: dt: add generic MSI bindings
+Date: Mon, 24 Aug 2015 14:47:31 +0100
+Message-ID: <20150824134731.GA31344@leverpostej>
+References: <1437670365-20704-1-git-send-email-mark.rutland@arm.com>
+ <1437670365-20704-2-git-send-email-mark.rutland@arm.com>
+ <20150805165120.GB28849@leverpostej>
+ <20150824101755.GC7139@leverpostej>
+ <CAL_Jsq+-xKsfBwqjHnSKPxtO1muu-NLEHZTTLpSqw=sBuU1Gjw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <874mjxwyx5.fsf-omZaPlIz5HhaEpDpdNBo/KxOck334EZe@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <CAL_Jsq+-xKsfBwqjHnSKPxtO1muu-NLEHZTTLpSqw=sBuU1Gjw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
-Cc: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Lee Jones <lee-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Marc Zyngier <Marc.Zyngier-5wv7dgnIgG8@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org" <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, Robin Murphy <Robin.Murphy-5wv7dgnIgG8@public.gmane.org>, Lorenzo Pieralisi <Lorenzo.Pieralisi-5wv7dgnIgG8@public.gmane.org>, "arnd-r2nGTMty4D4@public.gmane.org" <arnd-r2nGTMty4D4@public.gmane.org>, "treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org" <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, "ddaney-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org" <ddaney-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>, "majun258-hv44wF8Li93QT0dZR+AlfA@public.gmane.org" <majun258-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, "thunder.leizhen-hv44wF8Li93QT0dZR+AlfA@public.gmane.org" <thunder.leizhen-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, "tirumalesh.chalamarla-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org" <tirumalesh.chalamarla-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>, "laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org" <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Aug 17, 2015 at 1:30 PM, Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org> wrote:
-> Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org> writes:
->
->> On 08/12/2015 06:56 PM, Eric Anholt wrote:
->>> Signed-off-by: Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
->>
->> This one definitely needs a patch description, since someone might not
->> know what a VC4 is, and "git log" won't show the text from the binding
->> doc itself. I'd suggest adding the initial paragraph of the binding doc
->> as the patch description, or more.
->>
->>> diff --git a/Documentation/devicetree/bindings/gpu/brcm,bcm-vc4.txt b/Documentation/devicetree/bindings/gpu/brcm,bcm-vc4.txt
->
->>> +- hvss:             List of references to HVS video scalers
->>> +- encoders: List of references to output encoders (HDMI, SDTV)
->>
->> Would it make sense to make all those nodes child node of the vc4
->> object. That way, there's no need to have these lists of objects; they
->> can be automatically built up as the DT is enumerated. I know that e.g.
->> the NVIDIA Tegra host1x binding works this way, and I think it may have
->> been inspired by other similar cases.
->
-> I've looked at tegra, and the component system used by msm appears to be
-> nicer than it.  To follow tegra's model, it looks like I need to build
-> this extra bus thing corresponding to host1x that is effectively the
-> drivers/base/component.c code, so that I can get at vc4's structure from
-> the component drivers.
->
->> Of course, this is only appropriate if the HW modules really are
->> logically children of the VC4 HW module. Perhaps they aren't. If they
->> aren't though, I wonder what this "vc4" module actually represents in HW?
->
-> It's the subsystem, same as we use a subsystem node for msm, sti,
-> rockchip, imx, and exynos.  This appears to be the common model of how
-> the collection of graphics-related components is represented in the DT.
+On Mon, Aug 24, 2015 at 02:37:59PM +0100, Rob Herring wrote:
+> On Mon, Aug 24, 2015 at 5:17 AM, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org> wrote:
+> > On Wed, Aug 05, 2015 at 05:51:20PM +0100, Mark Rutland wrote:
+> >> Rob,
+> >>
+> >> Do you have any objections to this, or are you happy to take this patch?
+> >>
+> >> There's a user of this binding (the GICv3 ITS) queued for v4.3 already in
+> >> the tip tree, so either we either need to be ok with this binding or we
+> >> need to rework that before v4.3.
+> >
+> > Sorry to ping, but are you happy to take this? Marc's replied and
+> > provided his ack.
+> 
+> Sorry. Looks fine to me, so I'll apply.
 
-I think most of these bindings are wrong. They are grouped together
-because that is what DRM wants not because that reflects the h/w. So
-convince me this is one block, not that it is what other people do.
+Cheers!
 
-Rob
+> What about patch 2 and 3? I can't find patch 3 in my mail.
+
+Those should wait for now.
+
+We don't yet have a user and there's ongoing discussion w.r.t. the PCI
+parts that I expect will pick up again as people return from LPC.
+
+Thanks,
+Mark.
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
