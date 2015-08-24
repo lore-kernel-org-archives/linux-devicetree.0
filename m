@@ -1,69 +1,94 @@
-From: Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Subject: Re: [PATCH v2 1/3] ARM: dts: rockchip: add veyron-jaq board
-Date: Mon, 24 Aug 2015 11:06:23 -0700
-Message-ID: <20150824180623.GA84867@google.com>
-References: <1440022721-73712-1-git-send-email-briannorris@chromium.org>
- <CABxcv=nQAfCzj_bQ9N-XYEPCNuihyrkUOz7=ogetKzye4KKNng@mail.gmail.com>
- <20150824175315.GA81574@google.com>
- <7504130.baa3QaVrQb@phil>
- <CABxcv=nXwL6LV0vnjffA0JV4NB-_mCufe3-0c7fsRKW3DE+-_g@mail.gmail.com>
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Subject: Re: [PATCH v2 01/07] devicetree: bindings: Renesas APMU and SMP Enable method
+Date: Mon, 24 Aug 2015 21:25:10 +0300
+Message-ID: <20008630.OlgzF7YJEU@avalon>
+References: <20150823072427.14156.1960.sendpatchset@little-apple> <20150823072439.14156.96621.sendpatchset@little-apple>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <CABxcv=nXwL6LV0vnjffA0JV4NB-_mCufe3-0c7fsRKW3DE+-_g-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Javier Martinez Canillas <javier-0uQlZySMnqxg9hUCZPvPmw@public.gmane.org>
-Cc: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Alexandru M Stan <amstan-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Douglas Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <20150823072439.14156.96621.sendpatchset@little-apple>
+Sender: linux-sh-owner@vger.kernel.org
+To: Magnus Damm <magnus.damm@gmail.com>
+Cc: linux-sh@vger.kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, lorenzo.pieralisi@arm.com, keita.kobayashi.ym@renesas.com, horms@verge.net.au, geert@linux-m68k.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Aug 24, 2015 at 08:01:29PM +0200, Javier Martinez Canillas wrote:
-> On Mon, Aug 24, 2015 at 7:58 PM, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org> wrote:
-> > Am Montag, 24. August 2015, 10:53:15 schrieb Brian Norris:
-> >> On Thu, Aug 20, 2015 at 01:29:40AM +0200, Javier Martinez Canillas wrote:
-> >> > [...]
-> >> >
-> >> > > +
-> >> > > +&rk808 {
-> >> > > +       pinctrl-names = "default";
-> >> > > +       pinctrl-0 = <&pmic_int_l &dvs_1 &dvs_2>;
-> >> > > +       dvs-gpios = <&gpio7 12 GPIO_ACTIVE_HIGH>,
-> >> > > +                   <&gpio7 15 GPIO_ACTIVE_HIGH>;
-> >> >
-> >> > I see the dvs-gpios DT property is documented in the downstream
-> >> > ChromiumOS 3.18 tree [0] but I don't see it neither mentioned in
-> >> > Documentation/devicetree/bindings/mfd/rk808.txt in mainline nor code
-> >> > that parses it in the drivers/regulator/rk808-regulator.c driver.
-> >>
-> >> Good catch.
-> >>
-> >> > So I think this should be removed and also the dvs_{1,2} pinctrl
-> >> > lines.
-> >>
-> >> OK, will do. I see that jerry, minnie, and speedy also have the pinctrl
-> >> lines. Should they be killed as well?
-> >
-> > Personally I think the pinctrl settings can stay. Their configuration is part
-> > of the hardware and not subject to the binding of the device using them.
-> >
-> > And of course, the change to support them is already pending, with the binding
-> > itself already in the mfd tree.
-> >
+Hi Magnus,
+
+Thank you for the patch.
+
+On Sunday 23 August 2015 16:24:39 Magnus Damm wrote:
+> From: Magnus Damm <damm+renesas@opensource.se>
 > 
-> I missed that the change to add support for this is already in the mfd tree.
-
-Me too. So I'll leave all the dvs-* stuff as-is, then. This makes the
-v2->v3 delta very small...
-
-> >
-> > So it doesn't matter to much if they're in there already or not, as we'll
-> > hopefully soon make use of them anyway.
-> >
+> Add DT binding documentation for the APMU hardware and add "renesas,apmu"
+> to the list of enable methods for the ARM cpus.
 > 
-> Agreed.
+> Signed-off-by: Magnus Damm <damm+renesas@opensource.se>
+> ---
+> 
+>  Changes since V1:
+>  - None
+> 
+>  Documentation/devicetree/bindings/arm/cpus.txt           |    1
+>  Documentation/devicetree/bindings/power/renesas,apmu.txt |   31 +++++++++++
+>  2 files changed, 32 insertions(+)
+> 
+> --- 0001/Documentation/devicetree/bindings/arm/cpus.txt
+> +++ work/Documentation/devicetree/bindings/arm/cpus.txt	2015-05-20
+> 21:55:51.912366518 +0900 @@ -197,6 +197,7 @@ nodes to be present and
+> contain the prop
+>  			    "qcom,gcc-msm8660"
+>  			    "qcom,kpss-acc-v1"
+>  			    "qcom,kpss-acc-v2"
+> +			    "renesas,apmu"
+>  			    "rockchip,rk3066-smp"
+> 
+>  	- cpu-release-addr
+> --- /dev/null
+> +++ work/Documentation/devicetree/bindings/power/renesas,apmu.txt	
+2015-05-20
+> 22:39:34.872366518 +0900 @@ -0,0 +1,31 @@
+> +DT bindings for the Renesas Advanced Power Management Unit
+> +
+> +Renesas R-Car line of SoCs utilize one or more APMU hardware units
+> +for CPU core power domain control including SMP boot and CPU Hotplug.
+> +
+> +Required properties:
+> +
+> +- compatible: Should be "renesas,apmu-<soctype>", "renesas,apmu" as
+> fallback.
+> +	      Examples with soctypes are:
+> +		- "renesas,apmu-r8a7790" (R-Car H2)
+> +		- "renesas,apmu-r8a7791" (R-Car M2-W)
+> +		- "renesas,apmu-r8a7792" (R-Car V2H)
+> +		- "renesas,apmu-r8a7793" (R-Car M2-N)
+> +		- "renesas,apmu-r8a7794" (R-Car E2)
+> +
+> +- reg: Base address and length of the I/O registers used by the APMU.
+> +
+> +- cpus: This node contains a list of CPU cores, which should match the
+> order
+> +  of CPU cores used by the WUPCR and PSTR registers in the Advanced Power
+> +  Management Until section of the device's datasheet.
+> +
+> +
+> +Example:
+> +
+> +This shows the r8a7791 APMU that can control CPU0 and CPU1.
+> +
+> +	apmu@e6152000 {
+> +		compatible = "renesas,apmu-r8a7791", "renesas,apmu";
+> +		reg = <0 0xe6152000 0 0x188>;
 
-Brian
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Are the CA7 and CA15 APMUs identical ? If not you won't be able to instantiate 
+two APMU nodes, and it might be better to span the whole registers range of 
+both CA7 and CA15.
+
+> +		cpus = <&cpu0 &cpu1>;
+> +	};
+
+-- 
+Regards,
+
+Laurent Pinchart
+
