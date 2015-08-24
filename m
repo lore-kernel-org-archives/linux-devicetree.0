@@ -1,125 +1,79 @@
-From: Qais Yousef <qais.yousef-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH 02/10] dt: add img,axd.txt device tree binding document
-Date: Mon, 24 Aug 2015 14:49:24 +0100
-Message-ID: <55DB20E4.60708@imgtec.com>
-References: <1440419959-14315-1-git-send-email-qais.yousef@imgtec.com> <1440419959-14315-3-git-send-email-qais.yousef@imgtec.com> <20150824132633.GF7139@leverpostej>
+From: Rob Herring <robherring2@gmail.com>
+Subject: Re: [PATCH 1/7] drm/vc4: Add devicetree bindings for VC4.
+Date: Mon, 24 Aug 2015 08:56:14 -0500
+Message-ID: <CAL_JsqKhfQS46NwbTq0PNDpnNuztnRkcK+WDhFMaayE_8dDt3Q@mail.gmail.com>
+References: <1439427380-2436-1-git-send-email-eric@anholt.net> <1439427380-2436-2-git-send-email-eric@anholt.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20150824132633.GF7139@leverpostej>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: "alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org" <alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1439427380-2436-2-git-send-email-eric@anholt.net>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Eric Anholt <eric@anholt.net>
+Cc: dri-devel <dri-devel@lists.freedesktop.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Stephen Warren <swarren@wwwdotorg.org>, Lee Jones <lee@kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-rpi-kernel@lists.infradead.org, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On 08/24/2015 02:26 PM, Mark Rutland wrote:
-> On Mon, Aug 24, 2015 at 01:39:11PM +0100, Qais Yousef wrote:
->> Signed-off-by: Qais Yousef <qais.yousef-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
->> Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
->> Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
->> Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
->> Cc: Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>
->> Cc: Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
->> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
->> Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
->> ---
->>   .../devicetree/bindings/sound/img,axd.txt          | 34 ++++++++++++++++++++++
->>   1 file changed, 34 insertions(+)
->>   create mode 100644 Documentation/devicetree/bindings/sound/img,axd.txt
->>
->> diff --git a/Documentation/devicetree/bindings/sound/img,axd.txt b/Documentation/devicetree/bindings/sound/img,axd.txt
->> new file mode 100644
->> index 000000000000..6a8764a79d01
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/sound/img,axd.txt
->> @@ -0,0 +1,34 @@
->> +* AXD Audio Processing IP Binding *
->> +
->> +Required properties:
->> +- compatible: "img,axd"
-> This sounds awfully generic. Is there not a more complete name?
-
-Shouldn't img prefix to help against this? We can sure use another name 
-though like "img,axd-audio-decoder" or something like that. I'll need to 
-check.
-
+On Wed, Aug 12, 2015 at 7:56 PM, Eric Anholt <eric@anholt.net> wrote:
+> Signed-off-by: Eric Anholt <eric@anholt.net>
+> ---
+>  .../devicetree/bindings/gpu/brcm,bcm-vc4.txt       | 83 ++++++++++++++++++++++
+>  1 file changed, 83 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/gpu/brcm,bcm-vc4.txt
 >
->> +- clocks: phandle for the clock that drives AXD.
->> +- interrupts: the GIC interrupt where AXD is connected
->> +- gic-irq: it takes two non-zero values, the first one is the host hwirq and
->> +           the second one is AXD's. Host's hwirq should match the value in
->> +           interrupts.
-> I don't understand what this gic-irq property is for; and it generally
-> doesn't look right.
->
-> Could you please describe what this is and why you thing it is
-> necessary?
+> diff --git a/Documentation/devicetree/bindings/gpu/brcm,bcm-vc4.txt b/Documentation/devicetree/bindings/gpu/brcm,bcm-vc4.txt
+> new file mode 100644
+> index 0000000..2b13e61
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/gpu/brcm,bcm-vc4.txt
+> @@ -0,0 +1,83 @@
+> +Broadcom VC4 GPU
+> +
+> +The VC4 device present on the Raspberry Pi includes a display system
+> +with HDMI output and the HVS scaler for compositing display planes.
+> +
+> +Required properties for VC4:
+> +- compatible:  Should be "brcm,vc4"
+> +- crtcs:       List of references to pixelvalve scanout engines
+> +- hvss:                List of references to HVS video scalers
+> +- encoders:    List of references to output encoders (HDMI, SDTV)
 
-AXD and host cores exchange interrupts using GIC interrupt controller. 
-To configure AXD firmware to send and listen to the correct GIC 
-interrupts we need these values, hence this property.
+Creating these links is what the OF graph binding is for. Please use
+it. Plus this is a DRMism in the binding.
 
-If there's a way to reverse the irq mappings of 'interrupts' property 
-from the driver code we can get rid of that and have 2 interrupts 
-properties instead. But as far as I can see there's no way to get the hw 
-irq value from the mapped linux irq unless I missed something.
+> +
+> +Required properties for Pixel Valve:
+> +- compatible:  Should be "brcm,vc4-pixelvalve"
 
->
->> +
->> +Optional properties:
->> +- vpe: VPE number on which AXD should start. Must be provided if AXD is
->> +       running as a single VPE along Linux on the same core.
->> +       It can't be VPE0.
->> +       The VPE will be offlined before AXD is loaded.
-> Likewise could you please elaborate on this is?
->
-> What is a VPE number? What does it mean to start at that number?
+There's only one version of IP and all chips have the same bugs? You
+should have chip names in the compatible strings.
 
-VPE is MIPS notation of hardware thread. Instead of being a complete 
-separate core AXD can run as a hardware thread (VPE) inside a Linux 
-core. This number indicates which hardware thread to run AXD at.
+> +- reg:         Physical base address and length of the PV's registers
+> +- interrupts:  The interrupt number
+> +                 See bindings/interrupt-controller/brcm,bcm2835-armctrl-ic.txt
+> +
+> +Required properties for HVS:
+> +- compatible:  Should be "brcm,vc4-hvs"
+> +- reg:         Physical base address and length of the HVS's registers
+> +- interrupts:  The interrupt number
+> +                 See bindings/interrupt-controller/brcm,bcm2835-armctrl-ic.txt
+> +
+> +Required properties for HDMI
+> +- compatible:  Should be "brcm,vc4-hdmi"
+> +- reg:         Physical base address and length of the two register ranges
+> +                 ("HDMI" and "HD")
+> +- interrupts:  The interrupt numbers
+> +                 See bindings/interrupt-controller/brcm,bcm2835-armctrl-ic.txt
+> +- ddc:         phandle of the I2C controller used for DDC EDID probing
+> +- crtc:                phandle to the pixelvalve CRTC the HDMI encoder is attached to
 
->
->> +- inbuf-size: size of shared input buffers area. By default it's 0x7800 bytes.
->> +- outbuf-size: size of shared output buffers area. By default it's 0x3c000 bytes.
-> Is this something the kernel dynamically allocates? Why does this need
-> to be in the DT?
+Same comment about OF graph.
 
-We use CMA to allocate this buffer area. This optional property is there 
-to give the user a chance to use larger/smaller buffers if they think 
-they need to. This buffer area is shared between Linux and AXD to 
-exchange data.
+> +
+> +Optional properties for HDMI:
+> +- hpd-gpio:    The GPIO pin for HDMI hotplug detect (if it doesn't appear
+> +                 as an interrupt/status bit in the HDMI controller
+> +                 itself).  See bindings/pinctrl/brcm,bcm2835-gpio.txt
 
-Thanks,
-Qais
+Use the hdmi-connector binding. This doesn't belong here. The clue is
+your comment in parenthesis.
 
->
-> Thanks,
-> Mark.
->
->> +
->> +
->> +Example:
->> +
->> +	axdclk: axdclk@400M {
->> +		#clock-cells = <0>;
->> +		compatible = "fixed-clock";
->> +		clock-frequency = <400000000>;
->> +	};
->> +
->> +	axd {
->> +		compatible = "img,axd";
->> +		clocks = <&axdclk>;
->> +		interrupts = <36 IRQ_TYPE_EDGE_RISING>;
->> +		gic-irq = <36 37>;
->> +		vpe = <1>;
->> +	};
->> -- 
->> 2.1.0
->>
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Rob
