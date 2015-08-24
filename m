@@ -1,171 +1,118 @@
-From: Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH] Input: edt-ft5x06 - Switch to newer gpio framework
-Date: Mon, 24 Aug 2015 13:56:24 -0700
-Message-ID: <20150824205624.GG22442@dtor-ws>
-References: <1440184112-11061-1-git-send-email-fcooper@ti.com>
- <20150824194113.GE22442@dtor-ws>
- <55DB7514.7030009@ti.com>
- <20150824200126.GF22442@dtor-ws>
- <55DB7BA4.5010905@ti.com>
- <55DB7D4F.4090004@ti.com>
+From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v5] dtb: Create a common home for cross-architecture dtsi files.
+Date: Mon, 24 Aug 2015 15:58:29 -0500
+Message-ID: <CAL_JsqKu6B1Q1q38GFSkdAT+Gxg3=87uk8ZOGPH96Eni0cer_g@mail.gmail.com>
+References: <1438618000-1091-1-git-send-email-ian.campbell@citrix.com>
+ <1439287646.9747.212.camel@citrix.com> <CAL_JsqKv2aOEM-U7JNZnaHomA6HFBSFhSLZ-zhp7c20s6gQBaQ@mail.gmail.com>
+ <CAOesGMj46mvbdya1OQnZzL8VrxVwxAV3KoZZRtk3c0CTVx7d5w@mail.gmail.com>
+ <CAL_Jsq+tUmRfvKE6vf+za6TsG_fhMWn5M2DDDLcCfkDt=KJGVg@mail.gmail.com> <CAOesGMigmaEviCDBAncomkq+uowr18B5FTOmOyBHsNz4p6F6Dw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <55DB7D4F.4090004-l0cyMroinI0@public.gmane.org>
+In-Reply-To: <CAOesGMigmaEviCDBAncomkq+uowr18B5FTOmOyBHsNz4p6F6Dw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: "Franklin S Cooper Jr." <fcooper-l0cyMroinI0@public.gmane.org>
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
+Cc: Ian Campbell <ian.campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>, "arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Liviu Dudau <liviu.dudau-5wv7dgnIgG8@public.gmane.org>, Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>, Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Kristina Martsenko <kristina.martsenko-5wv7dgnIgG8@public.gmane.org>, Kevin Hilman <khilman-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Linux Kbuild mailing list <linux-kbuild-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Aug 24, 2015 at 03:23:43PM -0500, Franklin S Cooper Jr. wrote:
-> 
-> 
-> On 08/24/2015 03:16 PM, Franklin S Cooper Jr. wrote:
-> >
-> > On 08/24/2015 03:01 PM, Dmitry Torokhov wrote:
-> >> On Mon, Aug 24, 2015 at 02:48:36PM -0500, Franklin S Cooper Jr. wrote:
-> >>> On 08/24/2015 02:41 PM, Dmitry Torokhov wrote:
-> >>>> On Fri, Aug 21, 2015 at 02:08:32PM -0500, Franklin S Cooper Jr wrote:
-> >>>>> The current/old gpio framework used doesn't properly listen to
-> >>>>> ACTIVE_LOW and ACTIVE_HIGH flags. The newer gpio framework takes into
-> >>>>> account these flags when setting gpio values.
-> >>>>>
-> >>>>> Also use gpiod_set_value_cansleep since wake and reset pins can be
-> >>>>> provided by bus based io expanders.
-> >>>>>
-> >>>>> Signed-off-by: Franklin S Cooper Jr <fcooper-l0cyMroinI0@public.gmane.org>
-> >>>>> ---
-> >>>>>  .../bindings/input/touchscreen/edt-ft5x06.txt      |   4 +-
-> >>>>>  drivers/input/touchscreen/edt-ft5x06.c             | 115 +++++++--------------
-> >>>>>  include/linux/input/edt-ft5x06.h                   |   4 +-
-> >>>>>  3 files changed, 43 insertions(+), 80 deletions(-)
-> >>>>>
-> >>>>> diff --git a/Documentation/devicetree/bindings/input/touchscreen/edt-ft5x06.txt b/Documentation/devicetree/bindings/input/touchscreen/edt-ft5x06.txt
-> >>>>> index 76db967..9330d4d 100644
-> >>>>> --- a/Documentation/devicetree/bindings/input/touchscreen/edt-ft5x06.txt
-> >>>>> +++ b/Documentation/devicetree/bindings/input/touchscreen/edt-ft5x06.txt
-> >>>>> @@ -50,6 +50,6 @@ Example:
-> >>>>>  		pinctrl-0 = <&edt_ft5x06_pins>;
-> >>>>>  		interrupt-parent = <&gpio2>;
-> >>>>>  		interrupts = <5 0>;
-> >>>>> -		reset-gpios = <&gpio2 6 1>;
-> >>>>> -		wake-gpios = <&gpio4 9 0>;
-> >>>>> +		reset-gpios = <&gpio2 6 GPIO_ACTIVE_LOW>;
-> >>>>> +		wake-gpios = <&gpio4 9 GPIO_ACTIVE_HIGH>;
-> >>>>>  	};
-> >>>>> diff --git a/drivers/input/touchscreen/edt-ft5x06.c b/drivers/input/touchscreen/edt-ft5x06.c
-> >>>>> index 394b1de..6b128b3 100644
-> >>>>> --- a/drivers/input/touchscreen/edt-ft5x06.c
-> >>>>> +++ b/drivers/input/touchscreen/edt-ft5x06.c
-> >>>>> @@ -91,9 +91,9 @@ struct edt_ft5x06_ts_data {
-> >>>>>  	u16 num_x;
-> >>>>>  	u16 num_y;
-> >>>>>  
-> >>>>> -	int reset_pin;
-> >>>>> -	int irq_pin;
-> >>>>> -	int wake_pin;
-> >>>>> +	struct gpio_desc *reset_pin;
-> >>>>> +	struct gpio_desc *wake_pin;
-> >>>>> +	struct gpio_desc *irq_pin;
-> >>>>>  
-> >>>>>  #if defined(CONFIG_DEBUG_FS)
-> >>>>>  	struct dentry *debug_dir;
-> >>>>> @@ -755,36 +755,14 @@ edt_ft5x06_ts_teardown_debugfs(struct edt_ft5x06_ts_data *tsdata)
-> >>>>>  static int edt_ft5x06_ts_reset(struct i2c_client *client,
-> >>>>>  			struct edt_ft5x06_ts_data *tsdata)
-> >>>>>  {
-> >>>>> -	int error;
-> >>>>> -
-> >>>>> -	if (gpio_is_valid(tsdata->wake_pin)) {
-> >>>>> -		error = devm_gpio_request_one(&client->dev,
-> >>>>> -					tsdata->wake_pin, GPIOF_OUT_INIT_LOW,
-> >>>>> -					"edt-ft5x06 wake");
-> >>>>> -		if (error) {
-> >>>>> -			dev_err(&client->dev,
-> >>>>> -				"Failed to request GPIO %d as wake pin, error %d\n",
-> >>>>> -				tsdata->wake_pin, error);
-> >>>>> -			return error;
-> >>>>> -		}
-> >>>>> -
-> >>>>> +	if (tsdata->wake_pin) {
-> >>>>>  		msleep(5);
-> >>>>> -		gpio_set_value(tsdata->wake_pin, 1);
-> >>>>> +		gpiod_set_value_cansleep(tsdata->wake_pin, 1);
-> >>>>>  	}
-> >>>>> -	if (gpio_is_valid(tsdata->reset_pin)) {
-> >>>>> -		/* this pulls reset down, enabling the low active reset */
-> >>>>> -		error = devm_gpio_request_one(&client->dev,
-> >>>>> -					tsdata->reset_pin, GPIOF_OUT_INIT_LOW,
-> >>>>> -					"edt-ft5x06 reset");
-> >>>>> -		if (error) {
-> >>>>> -			dev_err(&client->dev,
-> >>>>> -				"Failed to request GPIO %d as reset pin, error %d\n",
-> >>>>> -				tsdata->reset_pin, error);
-> >>>>> -			return error;
-> >>>>> -		}
-> >>>>>  
-> >>>>> +	if (tsdata->reset_pin) {
-> >>>>>  		msleep(5);
-> >>>>> -		gpio_set_value(tsdata->reset_pin, 1);
-> >>>>> +		gpiod_set_value_cansleep(tsdata->reset_pin, 1);
-> >>>> So this leaves the reset pin active. How exactly was this tested?
-> >>> Normally if the output gpio connected to the reset pin is ACTIVE_HIGH then this will take the tsc out of reset since
-> >>> the reset pin is active low. However, I have a board that has an inverter between the gpio and reset pin. So if I leave
-> >>> the gpio as ACTIVE_HIGH then the inverter would cause the reset pin to go low which will keep it in reset. So instead
-> >>> I set the gpio to ACTIVE_LOW which gives me the expected result.
-> >> I do not really care about particular board. Assuming that polarity of
-> >> the GPIO in DTS is specified correctly the effect of:
-> >>
-> >> 	gpiod_set_value_cansleep(tsdata->reset_pin, 1);
-> >>
-> >> is reset pin being _active_, i.e. the chip is staying in reset state.
-> > Setting the reset pin to 1/high will take the tsc out of reset. Setting the pin to 0/low will put the tsc into reset mode.
+On Sun, Aug 23, 2015 at 6:52 PM, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org> wrote:
+> On Sun, Aug 23, 2015 at 4:42 PM, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+>> On Sun, Aug 23, 2015 at 6:13 PM, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org> wrote:
+>>> On Fri, Aug 14, 2015 at 2:21 PM, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+>>>> +arm-soc
+>>>>
+>>>> On Tue, Aug 11, 2015 at 5:07 AM, Ian Campbell <ian.campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org> wrote:
+>>>>> On Mon, 2015-08-03 at 17:06 +0100, Ian Campbell wrote:
+>>>>>> Commit 9ccd608070b6 ("arm64: dts: add device tree for ARM SMM-A53x2 on
+>>>>>> LogicTile Express 20MG") added a new dts file to arch/arm64 which
+>>>>>> included "../../../../arm/boot/dts/vexpress-v2m-rs1.dtsi", i.e. a
+>>>>>> .dtsi supplied by arch/arm.
+>>>>>>
+>>>>>> Unfortunately this causes some issues for the split device tree
+>>>>>> repository[0], since things get moved around there. In that context
+>>>>>> the new .dts ends up at src/arm64/arm/vexpress-v2f-1xv7-ca53x2.dts
+>>>>>> while the include is at src/arm/vexpress-v2m-rs1.dtsi.
+>>>>>
+>>>>> Hi Grant,
+>>>>>
+>>>>> Do you think there is any chance of getting this into 4.2-rc$NEXT or shall
+>>>>> we wait until 4.3? I'm assuming this should go via the DT tree, but maybe
+>>>>> it should go via an ARM tree?
+>>>>
+>>>> I was assuming this would go thru the arm-soc tree which is why I
+>>>> acked it. It is getting a bit late for 4.2 at this point, but I guess
+>>>> the standalone tree remains broken for these platforms until this is
+>>>> done. Probably not such a big deal in grand scheme of things.
+>>>
+>>> I'm cc:d in the far tail of a thread, so I'll just comment here
+>>> instead of further up:
+>>>
+>>> I'm not a fan at all of creating kernel/dts/<arch>/*, at least if
+>>> there's expected to be contents in there.
+>>>
+>>> We don't have include/linux/asm-<arch>/ in the common tree either.
+>>> Let's not create that for dts.
+>>
+>> I'd really like to move ALL dts files from arch/*. There's nothing
+>> really tied to the architecture. They may happen to use some bindings
+>> that only apply to an architecture, but fundamentally they don't
+>> depend on the arch. Also, I'd like to be able to do "make all-dtbs"
+>> and build every dtb in the tree.
+>
+> The main benefit of keeping it per architecture and platform is that
+> it partitions the maintainer and review space a bit.
 
-It seems you are not quite getting gpiod API. Consider:
+Except we have a fire hose and a bunch of dripping faucets.
 
-For gpios described as GPIO_ACTIVE_LOW:
+> Right now it's not possible to do even per-arch "all-dtbs" since only
+> the currently configured platforms will get their dtbs compiled.
 
-gpiod_set_value_cansleep(gpio, 1) => GPIO is LOW
-gpiod_set_value_cansleep(gpio, 0) => GPIO is HIGH
+I know. It's been on my todo list for a while. Having that per arch at
+least would be an improvement. Having it arch independent would mean I
+don't even need a cross-compiler (probably).
 
-For gpios described as GPIO_ACTIVE_HIGH:
+>> That said, I'm not crazy enough to propose this re-org in the kernel
+>> tree, but would like to do that if/when we moved dts files out of the
+>> kernel.
+>
+> I believe this is currently still quite firmly in the "if" stage. :(
 
-gpiod_set_value_cansleep(gpio, 1) => GPIO is HIGH
-gpiod_set_value_cansleep(gpio, 0) => GPIO is LOW
+There's some renewed discussion around it recently, but still no one
+to step up and do it.
 
-IOW with gpiod API 1 means logical active and can be either HIGH or LOW,
-depending on GPIO definition in DTS.
+>>> So, while I'm all for a prefix-based sharing of DTSI files, I don't
+>>> want them to go in a common kernel/dts directory.
+>>>
+>>> Besides sharing some snippets between arm and arm64, what else is
+>>> expected to need to go into such a shared location today?
+>>
+>> Overlays. You easily have the same sharing of common boards. There are
+>> also usecases of overlays on architectures that don't generally use DT
+>> (x86).
+>
+> Ok, overlays might make sense if they can be made to work generically
+> enough and not be tied to expectations of the base board platform.
 
-> >> By the way, both reset and wake pins are active low according to the
-> >> data sheet I found.
-> > Your right. Reset and wake are both active low. However, that part of the code is trying to get the tsc out of reset which is
-> > why its setting the value to 1. Setting the pin to 1 was being done even before my patch.
-> >
-> > What has changed was removing the below line which puts the tsc in reset.
-> >
-> > error = devm_gpio_request_one(&client->dev, tsdata->reset_pin, GPIOF_OUT_INIT_LOW,"edt-ft5x06 reset");
-> >
-> > However, the above line isn't needed since when I request the gpio I already configured it as an output
-> > with a default value of 0.
+That's the goal at least.
 
-So the old sequence resulted in GPIO going XXX->0->1 which brought the
-chip into reset and out of it. With the sequence you have, assuming
-that the GPIO is described as GPIO_ACTIVE_LOW (to match data sheet),
-we'll be getting XXX->1->0:
+> Still, even then I don't see dts as a core kernel feature (kernel/*),
+> lib/* might make more sense. And I don't want to see things like
+> vexpress stuff in there.
 
-devm_gpiod_get_optional(&client->dev, "reset", GPIOD_OUT_LOW) =>
-	GPIO is *HIGH*
+How's it any different than vexpress board stuff under drivers/.
 
-gpiod_set_value_cansleep(gpio, 1) => GPIO is *LOW*
+The original suggestion was under include/dt-bindings/. Not sure if
+you saw or like that?
 
-> >
-> Sorry accidentally hit reply in this thread instead of reply all. Adding back everyone removed from CC list.
+>> We could also see sharing between PPC and ARM on FSL networking parts,
+>> but I've not heard if they actually have that problem.
+>
+> Yeah, there could potentially be some sharing between MIPS and
+> ARM{,64} too, but I don't know if we'll actually see it done.
 
-Thanks.
+Yep, hard to say.
 
--- 
-Dmitry
+Rob
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
