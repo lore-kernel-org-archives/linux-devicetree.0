@@ -1,57 +1,84 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: Re-using sun5i-a13.dtsi for the r8 ?
-Date: Mon, 24 Aug 2015 16:26:30 +0200
-Message-ID: <20150824142630.GU2413@lukather>
-References: <55D6D8E3.3020403@redhat.com>
-Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
+From: Rob Herring <robherring2@gmail.com>
+Subject: Re: [PATCH v3 06/14] Documentation: drm/bridge: add document for analogix_dp
+Date: Mon, 24 Aug 2015 09:48:27 -0500
+Message-ID: <CAL_JsqKZYMMzV9Sc2r3K_rnM0FNuyb1TyJEhjGq1Hf7dTiWFKQ@mail.gmail.com>
+References: <1439995728-18046-1-git-send-email-ykk@rock-chips.com>
+ <1439995834-18363-1-git-send-email-ykk@rock-chips.com> <CAL_JsqLz+8RtBucctUj4euXZ3Ac0DvB52N9ONpAerh5T9BiTJg@mail.gmail.com>
+ <20150824125758.GA7557@n2100.arm.linux.org.uk>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="fryGc0vzirnrYIcd"
-Return-path: <linux-sunxi+bncBD2ZNBF5VYJRBF6T5SXAKGQEGF3GHZA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <55D6D8E3.3020403-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <http://groups.google.com/group/linux-sunxi/subscribe>
-To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Cc: devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20150824125758.GA7557@n2100.arm.linux.org.uk>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Russell King - ARM Linux <linux@arm.linux.org.uk>
+Cc: Yakir Yang <ykk@rock-chips.com>, Heiko Stuebner <heiko@sntech.de>, Thierry Reding <treding@nvidia.com>, Jingoo Han <jingoohan1@gmail.com>, Fabio Estevam <fabio.estevam@freescale.com>, Inki Dae <inki.dae@samsung.com>, Joe Perches <joe@perches.com>, Sean Paul <seanpaul@google.com>, Takashi Iwai <tiwai@suse.de>, dri-devel <dri-devel@lists.freedesktop.org>, Andrzej Hajda <a.hajda@samsung.com>, Gustavo Padovan <gustavo.padovan@collabora.co.uk>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, Vincent Palatin <vpalatin@chromium.org>, linux-rockchip@lists.infradead.org, Kishon Vijay Abraham I <kishon@ti.com>, David Airlie <airlied@linux.ie>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Doug Anderson <dianders@google.com>, Rob Herring <robh+dt@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
---fryGc0vzirnrYIcd
-Content-Type: text/plain; charset=UTF-8
-Content-Disposition: inline
+On Mon, Aug 24, 2015 at 7:57 AM, Russell King - ARM Linux
+<linux@arm.linux.org.uk> wrote:
+> On Sun, Aug 23, 2015 at 06:23:14PM -0500, Rob Herring wrote:
+>> On Wed, Aug 19, 2015 at 9:50 AM, Yakir Yang <ykk@rock-chips.com> wrote:
+>> > +       -analogix,color-depth:
+>> > +               number of bits per colour component.
+>> > +                       COLOR_6 = 0, COLOR_8 = 1, COLOR_10 = 2, COLOR_12 = 3
+>>
+>> This seems pretty generic. Just use 6, 8, 10, or 12 for values. And
+>> drop the vendor prefix.
+>
+> Please think about this some more.  What does "color-depth" mean?  Does it
+> mean the number of bits per colour _component_, or does it mean the total
+> number of bits to represent a particular colour.  It's confusing as it
+> stands.
 
-Hi,
+Then "component-color-bpp" perhaps?
 
-On Fri, Aug 21, 2015 at 09:53:07AM +0200, Hans de Goede wrote:
-> I just realized that I never answered your question about the need
-> for a tvencoder simplefb node in sun5i-a13.dtsi, like the one from
-> the "ARM: dts: sun5i: Add simplefb node for tvencoder output"
-> 
-> I think the real question is do we want to use sun5i-a13.dtsi for
-> the r8 ?
+>
+>> > +Optional properties for dp-controller:
+>> > +       -analogix,hpd-gpio:
+>> > +               Hotplug detect GPIO.
+>> > +                       Indicates which GPIO should be used for hotplug
+>> > +                       detection
+>>
+>> We should align with "hpd-gpios" used by HDMI connector binding. Or do
+>> we need a DP connector binding that this should be defined in?
+>> Probably so.
+>>
+>> The DRM related bindings are such a cluster f*ck with everyone picking
+>> their own way to do things. Just grep hpd in bindings for starters.
+>> That is just the tip.
+>
+> I'm not surprised one iota that DRM bindings are a mess.  There's no one
+> overlooking the adoption of DRM bindings, so surprise surprise, everyone
+> does their own thing.  This is exactly what happens every time in that
+> scenario.  It's not a new problem.
 
-So far, the only information I got about the R8 was that it was
-strictly identical to the A13, and it was making sense to re-use it
-entirely.
+True.
 
-> I would expect us to use a sun5i-r8.dtsi, this one could then
-> include sun5i-a13.dtsi, and have the extra simplefb node for
-> the tvencoder. Putting the simplefb node for the tvencoder
-> in sun5i-a13.dtsi feels wrong because the A13 package does
-> not have a tvout pin.
+> When we adopted the graph bindings for iMX DRM, I thought exactly at that
+> time "it would be nice if this could become the standard for binding DRM
+> components together" but I don't have the authority from either the DT
+> perspective or the DRM perspective to mandate that.  Neither does anyone
+> else.  That's the _real_ problem here.
+>
+> I've seen several DRM bindings go by which don't use the of-graph stuff,
+> which means that they'll never be compatible with generic components
+> which do use the of-graph stuff.
 
-But if it turns out it's not, then yeah, we'll have to make another
-DTSI.
+It goes beyond bindings IMO. The use of the component framework or not
+has been at the whim of driver writers as well. It is either used or
+private APIs are created. I'm using components and my need for it
+boils down to passing the struct drm_device pointer to the encoder.
+Other components like panels and bridges have different ways to attach
+to the DRM driver.
 
-Maxime
+> Like you say, it's a mess, but it's a mess of our own making, because no
+> one has the authority to regulate this.
 
--- 
-Maxime Ripard, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
---fryGc0vzirnrYIcd--
+Certainly, and I will take some blame here. We deferred a lot of
+binding review to subsystem maintainers with the directive to ask for
+help when needed. The latter has not happened. We need to improve the
+situation here before we end up with a bigger mess. The momentum to
+use DRM on Android is growing, so the problem is only going to get
+worse if we do nothing.
+
+Rob
