@@ -1,146 +1,146 @@
-From: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>
-Subject: Re: [PATCH linux-next v4 3/5] mtd: spi-nor: allow to tune the number of dummy cycles
-Date: Mon, 24 Aug 2015 18:48:50 +0200
-Message-ID: <201508241848.50974.marex@denx.de>
-References: <cover.1440410236.git.cyrille.pitchen@atmel.com> <201508241248.17466.marex@denx.de> <55DB4986.1000207@atmel.com>
-Mime-Version: 1.0
-Content-Type: Text/Plain;
-  charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <55DB4986.1000207-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Cyrille Pitchen <cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Cc: nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, beanhuo-AL4WhLSQfzjQT0dZR+AlfA@public.gmane.org, juhosg-p3rKhJxN3npAfugRpC6u6w@public.gmane.org, shijie.huang-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, ben-/+tVBieCtBitmTQ+vhA3Yw@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+From: fu.wei@linaro.org
+Subject: [PATCH v7 0/8] Watchdog: introduce ARM SBSA watchdog driver
+Date: Tue, 25 Aug 2015 01:01:15 +0800
+Message-ID: <1440435683-7343-1-git-send-email-fu.wei@linaro.org>
+References: <=fu.wei@linaro.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <=fu.wei@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Suravee.Suthikulpanit@amd.com, hanjun.guo@linaro.org, linaro-acpi@lists.linaro.org, linux-watchdog@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org
+Cc: tekkamanninja@gmail.com, graeme.gregory@linaro.org, al.stone@linaro.org, arnd@arndb.de, linux@roeck-us.net, vgandhi@codeaurora.org, wim@iguana.be, jcm@redhat.com, leo.duran@amd.com, corbet@lwn.net, mark.rutland@arm.com, catalin.marinas@arm.com, will.deacon@arm.com, rjw@rjwysocki.net, dyoung@redhat.com, panand@redhat.com, Fu Wei <fu.wei@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-On Monday, August 24, 2015 at 06:42:46 PM, Cyrille Pitchen wrote:
-> Hi Marek,
+From: Fu Wei <fu.wei@linaro.org>
 
-Hi!
+This patchset:
+    (1)Introduce Documentation/devicetree/bindings/watchdog/sbsa-gwdt.txt
+    for FDT info of SBSA Generic Watchdog, and give two examples of
+    adding SBSA Generic Watchdog device node into the dts files:
+    foundation-v8.dts and amd-seattle-soc.dtsi.
 
-[...]
+    (2)Introduce "pretimeout" into the watchdog framework, and update
+    Documentation/watchdog/watchdog-kernel-api.txt to introduce:
+        (1)the new elements in the watchdog_device and watchdog_ops struct;
+        (2)the new API "watchdog_init_timeouts".
 
-> >> - * Dummy Cycle calculation for different type of read.
-> >> - * It can be used to support more commands with
-> >> - * different dummy cycle requirements.
-> >> - */
-> >> -static inline int spi_nor_read_dummy_cycles(struct spi_nor *nor)
-> >> -{
-> >> -	switch (nor->flash_read) {
-> >> -	case SPI_NOR_FAST:
-> >> -	case SPI_NOR_DUAL:
-> >> -	case SPI_NOR_QUAD:
-> >> -		return 8;
-> >> -	case SPI_NOR_NORMAL:
-> >> -		return 0;
-> >> -	}
-> >> -	return 0;
-> >> -}
-> > 
-> > You can probably just soup up this function so that it sets the
-> > nor->read_dummy, no ?
-> 
-> Actually, this is what the patch does: spi_nor_read_dummy_cycles() was
-> reused and enhanced few lines below where you've pointed out the
-> "switch (nor->flash_read)" block should be move after the else block.
+    (3)Introduce ARM SBSA watchdog driver:
+        a.Use linux kernel watchdog framework;
+        b.Work with FDT on ARM64;
+        c.Use "pretimeout" in watchdog framework;
+        d.Support getting timeout and pretimeout from parameter and FDT
+          at the driver init stage.
+        e.In the first timeout, do panic to save system context;
+        f.In the second stage, user can still feed the dog without
+          cleaning WS0. By this feature, we can avoid the panic infinite
+          loops, while backing up a large system context in a server.
+        g.In the second stage, can trigger WS1 by setting pretimeout = 0
+          if necessary.
 
-You know what? I'll go get some sleep, coffee doesn't cut it anymore :)
+    (4)Introduce ACPI GTDT parser: drivers/acpi/gtdt.c
+    Parse SBSA Generic Watchdog Structure in GTDT table of ACPI,
+    and create a platform device with that information.
+    This platform device can be used by This Watchdog driver.
+    drivers/clocksource/arm_arch_timer.c is simplified by this GTDT support.
 
-> I think when I wrote the code I've chosen to move the definition of this
-> function instead of adding forward declarations of functions such as
-> read_cr() or write_sr_cr(), which are now called by
-> micron_set_dummy_cycles().
+This patchset has been tested with watchdog daemon
+(ACPI/FDT, module/build-in) on the following platforms:
+    (1)ARM Foundation v8 model
 
-Yep, that's all right, sorry for the confusion.
+Changelog:
+v7: Rebase to latest kernel version(4.2-rc7).
+    Improve FDT support: geting resource by order, instead of name.
+    According to the FDT support, Update the example dts file, gtdt.c
+    and sbsa_gwdt.c.
+    Pass the sparse test, and fix the warning.
+    Fix the max_pretimeout and max_timeout value overflow bug.
+    Delete the WCV output value.
+    
 
-> >> -/*
-> >> 
-> >>   * Write status register 1 byte
-> >>   * Returns negative if error occurred.
-> >>   */
-> >> 
-> >> @@ -1012,6 +994,81 @@ static int set_quad_mode(struct spi_nor *nor,
-> >> struct flash_info *info) }
-> >> 
-> >>  }
+v6: Improve the dtb example files: reduce the register frame size to 4K.
+    Improve pretimeout support:
+        (1) improve watchdog_init_timeouts function
+	(2) rename watchdog_check_min_max_timeouts back to the original name
+        (1) improve watchdog_timeout_invalid/watchdog_pretimeout_invalid
+    Add the new features in the sbsa_gwdt driver:
+	(1) In the second stage, user can feed the dog without cleaning WS0.
+	(2) In the second stage, user can trigger WS1 by setting pretimeout = 0.
+	(3) expand the max value of pretimeout, in case 10 second is not enough
+	    for a kdump kernel reboot in panic.
 
-[...]
+v5: Improve pretimeout support:
+        (1)fix typo in documentation and comments.
+	(2)fix the timeout limits validation bug.
+    Simplify sbsa_gwdt driver:
+	(1)integrate all the registers access functions into caller.
 
-> >> +/*
-> >> + * Dummy Cycle calculation for different type of read.
-> >> + * It can be used to support more commands with
-> >> + * different dummy cycle requirements.
-> >> + */
-> >> +static int spi_nor_read_dummy_cycles(struct spi_nor *nor,
-> >> +				     const struct flash_info *info)
-> >> +{
-> >> +	struct device_node *np = nor->dev->of_node;
-> >> +	u32 num_dummy_cycles;
-> >> +
-> >> +	if (np && !of_property_read_u32(np, "m25p,num-dummy-cycles",
-> >> +					&num_dummy_cycles)) {
-> >> +		nor->read_dummy = num_dummy_cycles;
-> >> +
-> >> +		/*
-> >> +		 * This switch block might be moved after the if...then...else
-> >> +		 * statement but it was not tested with all Spansion or Micron
-> >> +		 * memories.
-> >> +		 * Now the "m25p,num-dummy-cycles" property needs to be
-> >> +		 * explicitly set in the device tree so the switch statement is
-> >> +		 * executed. This should avoid unwanted side effects and keep
-> >> +		 * backward compatibility.
-> >> +		 */
-> >> +		switch (JEDEC_MFR(info)) {
-> >> +		case CFI_MFR_ST:
-> >> +			return micron_set_dummy_cycles(nor);
-> > 
-> >> +		default:
-> > If you do have m25p,num-dummy-cycles set for non-micron flash, you have a
-> > problem here I believe.
-> > 
-> >> +			break;
-> >> +		}
-> >> +	} else {
-> > 
-> > The solution would be to drop this else {} bit here, so that if you fail
-> > in the DT-based configuration, you fall back to this old behavior. What
-> > do you think please ? :)
-> 
-> Good idea!
-> I also add a trace for the default case of "switch (JEDEC_MFR(info))":
-> 
-> dev_warn(dev, "can't set the number of dummy cycles\n");
+v4: Refactor GTDT support code: remove it from arch/arm64/kernel/acpi.c,
+    put it into drivers/acpi/gtdt.c file.
+    Integrate the GTDT code of drivers/clocksource/arm_arch_timer.c into
+    drivers/acpi/gtdt.c.
+    Improve pretimeout support, fix "pretimeout == 0" problem.
+    Simplify sbsa_gwdt driver:
+        (1)timeout/pretimeout limits setup;
+        (2)keepalive function;
+        (3)delete "clk == 0" check;
+        (4)delete WS0 status bit check in interrupt routine;
+        (5)sbsa_gwdt_set_wcv function.
 
-Maybe change this to "setting the number of dummy cycles not supported by chip, 
-ignoring" or something, to be explicit about the fallback and that this is not
-supported by the chip. But this is just an idea, feel free to ignore it.
+v3: Delete "export arch_timer_get_rate" patch.
+    Driver back to use arch_timer_get_cntfrq.
+    Improve watchdog_init_timeouts function and update relevant documentation.
+    Improve watchdog_timeout_invalid and watchdog_pretimeout_invalid.
+    Improve foundation-v8.dts: delete the unnecessary tag of device node.
+    Remove "ARM64 || COMPILE_TEST" from Kconfig.
+    Add comments in arch/arm64/kernel/acpi.c
+    Fix typoes and incorrect comments.
 
-> So the user is notified that the driver could not use the value of
-> "m25p,num-dummy-cycles" from the DT before falling back to the legacy
-> code.
+v2: Improve watchdog-kernel-api.txt documentation for pretimeout support.
+    Export "arch_timer_get_rate" in arm_arch_timer.c.
+    Add watchdog_init_timeouts API for pretimeout support in framework.
+    Improve suspend and resume foundation in driver
+    Improve timeout/pretimeout values init code in driver.
+    Delete unnecessary items of the sbsa_gwdt struct and #define.
+    Delete all unnecessary debug info in driver.
+    Fix 64bit division bug.
+    Use the arch_timer interface to get watchdog clock rate.
+    Add MODULE_DEVICE_TABLE for platform device id.
+    Fix typoes.
 
-Yup.
+v1: The first version upstream patchset to linux mailing list.
 
-> >> +		switch (nor->flash_read) {
-> >> +		case SPI_NOR_FAST:
-> >> +		case SPI_NOR_DUAL:
-> >> +		case SPI_NOR_QUAD:
-> >> +			nor->read_dummy = 8;
-> >> +		case SPI_NOR_NORMAL:
-> >> +			nor->read_dummy = 0;
-> >> +		}
-> >> +	}
-> >> +
-> >> +	return 0;
-> >> +}
-> > 
-> > [...]
-> 
-> thanks for the review!
+Fu Wei (8):
+  Documentation: add sbsa-gwdt.txt documentation
+  ARM64: add SBSA Generic Watchdog device node in foundation-v8.dts
+  ARM64: add SBSA Generic Watchdog device node in amd-seattle-soc.dtsi
+  Watchdog: introdouce "pretimeout" into framework
+  Watchdog: introduce ARM SBSA watchdog driver
+  ACPI: add GTDT table parse driver into ACPI driver
+  Watchdog: enable ACPI GTDT support for ARM SBSA watchdog driver
+  clocksource: simplify ACPI code in arm_arch_timer.c
 
-Im glad it helped ;-)
---
-To unsubscribe from this list: send the line "unsubscribe linux-spi" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+ .../devicetree/bindings/watchdog/sbsa-gwdt.txt     |  32 ++
+ Documentation/watchdog/watchdog-kernel-api.txt     |  47 ++-
+ arch/arm64/boot/dts/amd/amd-seattle-soc.dtsi       |   8 +
+ arch/arm64/boot/dts/arm/foundation-v8.dts          |   7 +
+ arch/arm64/kernel/time.c                           |   4 +-
+ drivers/acpi/Kconfig                               |   9 +
+ drivers/acpi/Makefile                              |   1 +
+ drivers/acpi/gtdt.c                                | 178 ++++++++
+ drivers/clocksource/Kconfig                        |   1 +
+ drivers/clocksource/arm_arch_timer.c               |  60 +--
+ drivers/watchdog/Kconfig                           |  15 +
+ drivers/watchdog/Makefile                          |   1 +
+ drivers/watchdog/sbsa_gwdt.c                       | 459 +++++++++++++++++++++
+ drivers/watchdog/watchdog_core.c                   |  98 +++--
+ drivers/watchdog/watchdog_dev.c                    |  53 +++
+ include/clocksource/arm_arch_timer.h               |   8 +
+ include/linux/acpi.h                               |   5 +
+ include/linux/clocksource.h                        |   4 +-
+ include/linux/watchdog.h                           |  39 +-
+ 19 files changed, 939 insertions(+), 90 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/watchdog/sbsa-gwdt.txt
+ create mode 100644 drivers/acpi/gtdt.c
+ create mode 100644 drivers/watchdog/sbsa_gwdt.c
+
+-- 
+2.4.3
