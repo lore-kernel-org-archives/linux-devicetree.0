@@ -1,83 +1,60 @@
 From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v2] drivers/of/fdt.c: replace pr_warning by pr_warn
-Date: Mon, 24 Aug 2015 10:12:13 -0500
-Message-ID: <CAL_JsqKu7M4apkbBESi_HvtTZHzwfCQWmV1iWjHJK3-EMKsPxQ@mail.gmail.com>
-References: <1437961744-197158-1-git-send-email-long.wanglong@huawei.com>
+Subject: Re: [PATCH] of: Add vendor prefix for Sharp Microelectronics
+Date: Mon, 24 Aug 2015 10:16:28 -0500
+Message-ID: <CAL_Jsq+LYpjtqFbMLA6sQRsU3trLTaj2caZxztCbKesXMkObvg@mail.gmail.com>
+References: <1406901044-32654-1-git-send-email-thierry.reding@gmail.com>
+ <20141013115409.GB16186@ulmo> <20150701120141.GA18065@ulmo.nvidia.com>
+ <CAL_JsqJtRObzkdDz5X2Np8kdjfXP+YZo+=-cDPmM+wYff6OEwQ@mail.gmail.com> <CAJAp7OjMKApxObdThqwTR+1dhG9ZUiGqUj4LrsjJLg_q2FFM1w@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1437961744-197158-1-git-send-email-long.wanglong-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+In-Reply-To: <CAJAp7OjMKApxObdThqwTR+1dhG9ZUiGqUj4LrsjJLg_q2FFM1w-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Wang Long <long.wanglong-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, peifeiyue-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, wanglong-m92B/FuLcaEcWVvVuXF20w@public.gmane.org
+To: Bjorn Andersson <bjorn-UYDU3/A3LUY@public.gmane.org>
+Cc: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Jul 26, 2015 at 8:49 PM, Wang Long <long.wanglong-hv44wF8Li93QT0dZR+AlfA@public.gmane.org> wrote:
-> Update the last pr_warning callsite in drivers/of.
-> When we use script "./scripts/checkpatch.pl" to check
-> a patch, using pr_warning will produce WARNING:
+On Tue, Jul 28, 2015 at 8:25 PM, Bjorn Andersson <bjorn-UYDU3/A3LUY@public.gmane.org> wrote:
+> On Wed, Jul 1, 2015 at 10:41 AM, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+>> On Wed, Jul 1, 2015 at 7:01 AM, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+>>> On Mon, Oct 13, 2014 at 01:54:09PM +0200, Thierry Reding wrote:
+>>>> On Fri, Aug 01, 2014 at 03:50:44PM +0200, Thierry Reding wrote:
+>>>> > From: Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+>>>> >
+>>>> > Use "sharp" as the vendor prefix for Sharp Microelectronics in device
+>>>> > tree compatible strings.
+>>>> >
+>>>> > Signed-off-by: Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+>>>> > ---
+>>>> >  Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
+>>>> >  1 file changed, 1 insertion(+)
+>>>>
+>>>> Ping?
+>>>
+>>> Rob, I just stumbled across this in my stack of patches that never got
+>>> merged. Can you ack this?
+>>
+>> Sorry, missed this one. I've flagged it now to apply for 4.2 or you
+>> can if you prefer:
+>>
+>> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+>>
 >
->         WARNING: Prefer pr_warn(... to pr_warning(...
->         #22: FILE: drivers/of/fdt.c:428:
->         +               pr_warning("End of tree marker overwritten: %08x\n",
+> Sorry for jumping in late, but found this as I was about to submit a
+> patch for the same addition.
 >
-> So,we should convert pr_warning to pr_warn.
+> Except that from what I can find the real name is "Sharp
+> Microelectronics of the Americas" (or Europe...), which is a division
+> of Sharp Electronics Corporation, a subsidiary of Sharp Corporation -
+> the latter which is what's used in the data sheets for my e.g. the
+> lp855x.
 >
-> Signed-off-by: Wang Long <long.wanglong-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+> So I think the patch should instead be adding:
+> sharp   Sharp Corporation
 
-Applied. Thanks.
+I didn't get to it for 4.2 after all, so I've fixed this up.
 
 Rob
-
-> ---
->  drivers/of/fdt.c | 10 +++++-----
->  1 file changed, 5 insertions(+), 5 deletions(-)
->
-> diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
-> index 0749656..e1f61b8 100644
-> --- a/drivers/of/fdt.c
-> +++ b/drivers/of/fdt.c
-> @@ -425,7 +425,7 @@ static void __unflatten_device_tree(const void *blob,
->         start = 0;
->         unflatten_dt_node(blob, mem, &start, NULL, mynodes, 0, false);
->         if (be32_to_cpup(mem + size) != 0xdeadbeef)
-> -               pr_warning("End of tree marker overwritten: %08x\n",
-> +               pr_warn("End of tree marker overwritten: %08x\n",
->                            be32_to_cpup(mem + size));
->
->         pr_debug(" <- unflatten_device_tree()\n");
-> @@ -985,24 +985,24 @@ void __init __weak early_init_dt_add_memory_arch(u64 base, u64 size)
->         size &= PAGE_MASK;
->
->         if (base > MAX_PHYS_ADDR) {
-> -               pr_warning("Ignoring memory block 0x%llx - 0x%llx\n",
-> +               pr_warn("Ignoring memory block 0x%llx - 0x%llx\n",
->                                 base, base + size);
->                 return;
->         }
->
->         if (base + size - 1 > MAX_PHYS_ADDR) {
-> -               pr_warning("Ignoring memory range 0x%llx - 0x%llx\n",
-> +               pr_warn("Ignoring memory range 0x%llx - 0x%llx\n",
->                                 ((u64)MAX_PHYS_ADDR) + 1, base + size);
->                 size = MAX_PHYS_ADDR - base + 1;
->         }
->
->         if (base + size < phys_offset) {
-> -               pr_warning("Ignoring memory block 0x%llx - 0x%llx\n",
-> +               pr_warn("Ignoring memory block 0x%llx - 0x%llx\n",
->                            base, base + size);
->                 return;
->         }
->         if (base < phys_offset) {
-> -               pr_warning("Ignoring memory range 0x%llx - 0x%llx\n",
-> +               pr_warn("Ignoring memory range 0x%llx - 0x%llx\n",
->                            base, phys_offset);
->                 size -= phys_offset - base;
->                 base = phys_offset;
-> --
-> 1.8.3.4
->
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
