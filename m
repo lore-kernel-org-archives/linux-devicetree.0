@@ -1,139 +1,41 @@
-From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH v1 3/3] arm64: dts: add Hi6220 mailbox node
-Date: Mon, 24 Aug 2015 13:48:01 +0100
-Message-ID: <20150824124800.GD7139@leverpostej>
-References: <1439977055-1747-1-git-send-email-leo.yan@linaro.org>
- <1439977055-1747-4-git-send-email-leo.yan@linaro.org>
- <20150821184059.GB2000@svinekod>
- <20150824091845.GA28290@leoy-linaro>
- <20150824095144.GA7139@leverpostej>
- <1440411596.3517.12.camel@linaro.org>
+From: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+Subject: Re: [PATCH linux-next v4 5/5] mtd: atmel-quadspi: add driver for
+ Atmel QSPI controller
+Date: Mon, 24 Aug 2015 13:49:24 +0100
+Message-ID: <20150824124924.GZ7557@n2100.arm.linux.org.uk>
+References: <cover.1440410236.git.cyrille.pitchen@atmel.com>
+ <bf368fc101f38db231131b69eff0863210f2b01c.1440410236.git.cyrille.pitchen@atmel.com>
+ <201508241303.52066.marex@denx.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1440411596.3517.12.camel@linaro.org>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Haojian Zhuang <haojian.zhuang@linaro.org>
-Cc: "leo.yan@linaro.org" <leo.yan@linaro.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <Pawel.Moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Catalin Marinas <Catalin.Marinas@arm.com>, Will Deacon <Will.Deacon@arm.com>, Jassi Brar <jassisinghbrar@gmail.com>, Bintian Wang <bintian.wang@huawei.com>, Yiping Xu <xuyiping@hisilicon.com>, Wei Xu <xuwei5@hisilicon.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "guodong.xu@linaro.org" <guodong.xu@linaro.org>, Jian Zhang <zhangjian001@hisilicon.com>, Zhenwei Wang <Zhenwei.wang@hisilicon.com>, Haoju Mo <mohaoju@hisilicon.com>, Dan Zhao <dan.zhao@hisilicon.com>, "kongfei@hisilicon.com" <kongfei@hisilicon.com>, Guangyu
+In-Reply-To: <201508241303.52066.marex-ynQEQJNshbs@public.gmane.org>
+Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>
+Cc: Cyrille Pitchen <cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, ben-/+tVBieCtBitmTQ+vhA3Yw@public.gmane.org, zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, juhosg-p3rKhJxN3npAfugRpC6u6w@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, shijie.huang-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, beanhuo-AL4WhLSQfzjQT0dZR+AlfA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-> > > > I don't see why you need reserved-memory here, given you're not referring to
-> > > > these regions by phandle anyway.
-> > > 
-> > > - Now we have enabled EFI_STUB, so the memory node will be removed in
-> > >   kernel:
-> > >     efi_entry()
-> > >       \-> allocate_new_fdt_and_exit_boot()
-> > >             \-> update_fdt();
-> > > 
-> > >   Finally in kernel it cannot use memory node to carve out reseved
-> > >   memory regions.
-> > > 
-> > > - On the other hand, DTS's the memory node is to "describes the
-> > >   physical memory layout for the system"; so it's better to use it only
-> > >   to describe the hardware info for memory. We can use reserved-memory
-> > >   to help manage the memory regions which are reserved from software
-> > >   perspective.
-> > 
-> > The fact that you have no-map means that the memory should not be
-> > described to the kernel as mappable in the first place. It's wrong to
-> > place such memory in the memory node, even if listed in reserved-memory.
-> > 
-> > If your EFI memory map describes the memory as mappable, it is wrong.
+On Mon, Aug 24, 2015 at 01:03:51PM +0200, Marek Vasut wrote:
+> These are functions, not macros :)
 > 
-> When kernel is working, kernel will create its own page table based on
-> UEFI memory map. Since it's reserved in DTS file as Leo's patch, it'll
-> be moved to reserved memblock. Why is it wrong?
-
-That is a _Linux_ detail, not a _UEFI_ detail.
-
-Anything which only handles UEFI and knows nothing of reserved-memory
-(e.g. GRUB) will be broken and/or break the Linux use of the region, as
-it will happily try to allocate memory in the region (and could even
-decide to reserve it permanently for its own usage).
-
-If the memory is truly specific to the mailbox, then UEFI needs to know
-that it is reserved as such. If it is not, then it need not be described
-in the DT and can be allocated dynamically by the kernel.
-
-> In the second, UEFI is firmware. When it's stable, nobody should change
-> it without any reason. These reserved memory are used in mailbox driver.
-> Look. It's driver, so it could be changed at any time. Why do you want
-> to UEFI knowing this memory range? Do you hope UEFI to change when
-> mailbox driver is changed?
-
-It shouldn't need to change if that memory is truly reserved for the
-sole use of the mailbox. If that's not the case then we have a different
-issue.
-
-If the memory range to use can be allocated by the driver, then I don't
-see why it should be described in reserved-memory. It certainly should
-not require a no-map attribute.
-
-Additionally, the driver needs to ensure that the requisite cache
-maintenance takes place prior to the use of the memory region given
-prior agents may have ampped it as cacheable, leaving stale (perhaps
-dirty) lines in the caches.
-
-> > > According to upper info, we still need to use reserved-memory node to
-> > > depict the reserved memory regions. i have no knowledge about EFI_STUB,
-> > > so please confirm or correct as needed.
-> > 
-> > If the memory shouldn't be mapped, it should neither be in the memory
-> > node nor EFI memory map (with attributes allowing it to be mapped) to
-> > begin with.
+> btw is there any reason for these ? I'd say, just put the read*() and
+> write*() functions directly into the code and be done with it, it is
+> much less confusing.
 > 
-> As I said above, kernel will create its own page table. When kernel's
-> page table is working, UEFI's page table is destroying. So the memory
-> won't be mapped twice at the same time. What's wrong?
-> > 
-> > As far as I can see you do not need to use reserved-memory.
-> 
-> 1. Are we talking on the same thing? Leo already mentioned that all
-> memory node in DTB will be destroyed by kernel when EFI_STUB is enabled
-> on arm. Did you read the source code after his reply?
-> And you suggested that Leo to use discrete memory region in DTB. It is
-> really wrong. Kernel only gets memory map information from UEFI, not
-> DTB.
+> Also, why do you use the _relaxed() versions of the functions ?
 
-I did _not_ suggest that Leo use discrete memory. I suggested that
-reserved regions should not be described in the memory node (the same
-premise applying to the UEFI memory map).
+Now that the _relaxed() accessors are available throughout the kernel,
+everyone should be using the _relaxed() versions unless they need the
+properties of the non-relaxed versions.  Remember that the non-relaxed
+versions are rather expensive on ARM due to the need to go all the way
+out to the L2 cache - it at least doubles the number of accesses for
+every read*/write*().
 
-w.r.t. UEFI, please see my comments above. If you're using the UEFI
-memory map, you have to use the UEFI memory map, not the UEFI memory map
-with additional (non-UEFI) caveats applied atop.
-
-> 2. The working flow is in below.
->    a. Kernel gets memory map information from UEFI.
->    b. Kernel loads the memory reserved information from DTB.
-
-This relies on Linux, and ignores other UEFI clients.
-
-> 3. Do you mean the reserved-memory is totally wrong? If it's wrong,
-> please submit patches to remove all reserved-memory in linux kernel
-> first.
-
-I did not say that.
-
-I said that describing some memory in a memory node, then also
-describing that in reserved-memory with a no-map property was wrong. If
-it's never meant to be mapped then there's no reason for it to be in the
-memory node.
-
-> 4. Again and again. Memory node should be only used to describe the
-> RAM information.
-
-The memory node describes the memory available to the OS. There are some
-caveats w.r.t. /memreserve/, regions which may be mapped but remain
-unused and so on, but the memory node does generally encode a policy
-that the memory may be used.
-
-Describing unusable memory in a memory node is pointless, and has an
-adverse effect on clients which don't support reserved-memory. It's
-doubly harmful when that memory should never be mapped.
-
-Thanks,
-Mark.
+-- 
+FTTC broadband for 0.8mile line: currently at 10.5Mbps down 400kbps up
+according to speedtest.net.
+--
+To unsubscribe from this list: send the line "unsubscribe linux-spi" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
