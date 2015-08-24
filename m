@@ -1,74 +1,35 @@
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [PATCH v2 03/07] ARM: shmobile: Add APMU nodes to r8a7790 DTSI
-Date: Mon, 24 Aug 2015 21:29:09 +0300
-Message-ID: <1534893.ppOlo5pCGu@avalon>
-References: <20150823072427.14156.1960.sendpatchset@little-apple> <20150823072500.14156.35604.sendpatchset@little-apple>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <20150823072500.14156.35604.sendpatchset@little-apple>
-Sender: linux-sh-owner@vger.kernel.org
-To: Magnus Damm <magnus.damm@gmail.com>
-Cc: linux-sh@vger.kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, lorenzo.pieralisi@arm.com, keita.kobayashi.ym@renesas.com, horms@verge.net.au, geert@linux-m68k.org
+From: Florian Fainelli <f.fainelli@gmail.com>
+Subject: [PATCH v2 0/2] pwm: Broadcom BCM7038 PWM controller (v2)
+Date: Mon, 24 Aug 2015 11:27:55 -0700
+Message-ID: <1440440877-10644-1-git-send-email-f.fainelli@gmail.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-kernel@vger.kernel.org
+Cc: bcm-kernel-feedback-list@broadcom.com, thierry.reding@gmail.com, devicetree@vger.kernel.org, linux-pwm@vger.kernel.org, Florian Fainelli <f.fainelli@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Magnus,
+Hi,
 
-Thank you for the patch.
+This patch series add PWM support for the Broadcom BCM7xxx
+chips which feature one or more PWM controllers capable of
+output periods from 148ns to ~622ms using a combination of
+variable and fixed frequency settings.
 
-On Sunday 23 August 2015 16:25:00 Magnus Damm wrote:
-> From: Magnus Damm <damm+renesas@opensource.se>
-> 
-> Add an APMU DT node for the r8a7790 SoC and use the enable-method to
-> point out that the APMU should be used for SMP support.
-> 
-> Signed-off-by: Magnus Damm <damm+renesas@opensource.se>
-> ---
-> 
->  Changes from V1:
->  - New patch
-> 
->  arch/arm/boot/dts/r8a7790.dtsi |   13 +++++++++++++
->  1 file changed, 13 insertions(+)
-> 
-> --- 0001/arch/arm/boot/dts/r8a7790.dtsi
-> +++ work/arch/arm/boot/dts/r8a7790.dtsi	2015-08-23 15:51:24.132366518 +0900
-> @@ -43,6 +43,7 @@
->  	cpus {
->  		#address-cells = <1>;
->  		#size-cells = <0>;
-> +		enable-method = "renesas,apmu";
-> 
->  		cpu0: cpu@0 {
->  			device_type = "cpu";
-> @@ -112,6 +113,18 @@
->  		};
->  	};
-> 
-> +	apmu@e6151000 {
-> +		compatible = "renesas,apmu-r8a7790", "renesas,apmu";
-> +		reg = <0 0xe6151000 0 0x188>;
-> +		cpus = <&cpu4 &cpu5 &cpu6 &cpu7>;
-> +	};
-> +
-> +	apmu@e6152000 {
-> +		compatible = "renesas,apmu-r8a7790", "renesas,apmu";
-> +		reg = <0 0xe6152000 0 0x188>;
-> +		cpus = <&cpu0 &cpu1 &cpu2 &cpu3>;
-> +	};
+The controller does not support setting a polarity.
 
-I wonder whether those two nodes shouldn't be moved inside the CPG node as it 
-seems that the APMU is part of the CPG IP core. We can delay that though, as 
-the Gen3 DTS will need to be refactored anyway.
+This is based on Thierry's pwm/next branch.
 
-> +
->  	gic: interrupt-controller@f1001000 {
->  		compatible = "arm,gic-400";
->  		#interrupt-cells = <3>;
+Florian Fainelli (2):
+  Documentation: dt: add Broadcom BCM7038 PWM controller binding
+  pwm: Add Broadcom BCM7038 PWM controller support
+
+ .../devicetree/bindings/pwm/brcm,bcm7038-pwm.txt   |  22 ++
+ drivers/pwm/Kconfig                                |  10 +
+ drivers/pwm/Makefile                               |   1 +
+ drivers/pwm/pwm-brcmstb.c                          | 338 +++++++++++++++++++++
+ 4 files changed, 371 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/pwm/brcm,bcm7038-pwm.txt
+ create mode 100644 drivers/pwm/pwm-brcmstb.c
 
 -- 
-Regards,
-
-Laurent Pinchart
-
+2.1.0
