@@ -1,290 +1,113 @@
-From: Gabriel Fernandez <gabriel.fernandez@linaro.org>
-Subject: [PATCH v2 3/4] drivers: clk: st: Correct the pll-type for A9 for
- stih418
-Date: Mon, 24 Aug 2015 11:40:50 +0200
-Message-ID: <1440409251-11166-4-git-send-email-gabriel.fernandez@linaro.org>
-References: <1440409251-11166-1-git-send-email-gabriel.fernandez@linaro.org>
+From: Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [PATCH v1 3/3] arm64: dts: add Hi6220 mailbox node
+Date: Mon, 24 Aug 2015 10:51:45 +0100
+Message-ID: <20150824095144.GA7139@leverpostej>
+References: <1439977055-1747-1-git-send-email-leo.yan@linaro.org>
+ <1439977055-1747-4-git-send-email-leo.yan@linaro.org>
+ <20150821184059.GB2000@svinekod>
+ <20150824091845.GA28290@leoy-linaro>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1440409251-11166-1-git-send-email-gabriel.fernandez@linaro.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Srinivas Kandagatla <srinivas.kandagatla@gmail.com>, Maxime Coquelin <maxime.coquelin@st.com>, Patrice Chotard <patrice.chotard@st.com>, Russell King <linux@arm.linux.org.uk>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Gabriel Fernandez <gabriel.fernandez@linaro.org>, Peter Griffin <peter.griffin@linaro.org>, Pankaj Dev <pankaj.dev@st.com>, Olivier Bideau <olivier.bideau@st.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Fabian Frederick <fabf@skynet.be>
-Cc: devicetree@vger.kernel.org, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, kernel@stlinux.com
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20150824091845.GA28290@leoy-linaro>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Leo Yan <leo.yan@linaro.org>
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <Pawel.Moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Catalin Marinas <Catalin.Marinas@arm.com>, Will Deacon <Will.Deacon@arm.com>, Jassi Brar <jassisinghbrar@gmail.com>, Bintian Wang <bintian.wang@huawei.com>, Haojian Zhuang <haojian.zhuang@linaro.org>, Yiping Xu <xuyiping@hisilicon.com>, Wei Xu <xuwei5@hisilicon.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "guodong.xu@linaro.org" <guodong.xu@linaro.org>, Jian Zhang <zhangjian001@hisilicon.com>, Zhenwei Wang <Zhenwei.wang@hisilicon.com>, Haoju Mo <mohaoju@hisilicon.com>, Dan Zhao <dan.zhao@hisilicon.com>, "kongfei@hisilicon.com" <kongfei@hisilicon.com>, Guangyu
 List-Id: devicetree@vger.kernel.org
 
-Add support for new PLL-type for stih418 A9-PLL.
-Currently the 407_A9_PLL type being used, it is corrected with this patch
-4600c28 PLL allows to reach higher frequencies
-so its programming algorithm is extended.
+On Mon, Aug 24, 2015 at 10:18:45AM +0100, Leo Yan wrote:
+> Hi Mark,
+> 
+> On Fri, Aug 21, 2015 at 07:40:59PM +0100, Mark Rutland wrote:
+> > On Wed, Aug 19, 2015 at 10:37:35AM +0100, Leo Yan wrote:
+> > > On Hi6220, below memory regions in DDR have specific purpose:
+> > > 
+> > >   0x05e0,0000 - 0x05ef,ffff: For MCU firmware using at runtime;
+> > >   0x0740,f000 - 0x0740,ffff: For MCU firmware's section;
+> > >   0x06df,f000 - 0x06df,ffff: For mailbox message data.
+> > > 
+> > > This patch reserves these memory regions and add device node for
+> > > mailbox in dts.
+> > > 
+> > > Signed-off-by: Leo Yan <leo.yan@linaro.org>
+> > > ---
+> > >  arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts | 20 +++++++++++++++++---
+> > >  arch/arm64/boot/dts/hisilicon/hi6220.dtsi      |  8 ++++++++
+> > >  2 files changed, 25 insertions(+), 3 deletions(-)
+> > > 
+> > > diff --git a/arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts b/arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts
+> > > index e36a539..d5470d3 100644
+> > > --- a/arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts
+> > > +++ b/arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts
+> > > @@ -7,9 +7,6 @@
+> > >  
+> > >  /dts-v1/;
+> > >  
+> > > -/*Reserved 1MB memory for MCU*/
+> > > -/memreserve/ 0x05e00000 0x00100000;
+> > > -
+> > >  #include "hi6220.dtsi"
+> > >  
+> > >  / {
+> > > @@ -28,4 +25,21 @@
+> > >  		device_type = "memory";
+> > >  		reg = <0x0 0x0 0x0 0x40000000>;
+> > >  	};
+> > > +
+> > > +	reserved-memory {
+> > > +		#address-cells = <2>;
+> > > +		#size-cells = <2>;
+> > > +		ranges;
+> > > +
+> > > +		mcu-buf@05e00000 {
+> > > +			no-map;
+> > > +			reg = <0x0 0x05e00000 0x0 0x00100000>,	/* MCU firmware buffer */
+> > > +			      <0x0 0x0740f000 0x0 0x00001000>;	/* MCU firmware section */
+> > > +		};
+> > > +
+> > > +		mbox-buf@06dff000 {
+> > > +			no-map;
+> > > +			reg = <0x0 0x06dff000 0x0 0x00001000>;	/* Mailbox message buf */
+> > > +		};
+> > > +	};
+> > 
+> > As far as I can see, it would be simpler to simply carve these out of the
+> > memory node.
+> > 
+> > I don't see why you need reserved-memory here, given you're not referring to
+> > these regions by phandle anyway.
+> 
+> - Now we have enabled EFI_STUB, so the memory node will be removed in
+>   kernel:
+>     efi_entry()
+>       \-> allocate_new_fdt_and_exit_boot()
+>             \-> update_fdt();
+> 
+>   Finally in kernel it cannot use memory node to carve out reseved
+>   memory regions.
+> 
+> - On the other hand, DTS's the memory node is to "describes the
+>   physical memory layout for the system"; so it's better to use it only
+>   to describe the hardware info for memory. We can use reserved-memory
+>   to help manage the memory regions which are reserved from software
+>   perspective.
 
-Signed-off-by: Pankaj Dev <pankaj.dev@st.com>
-Signed-off-by: Gabriel Fernandez <gabriel.fernandez@linaro.org>
----
- .../devicetree/bindings/clock/st/st,clkgen-pll.txt |   1 +
- drivers/clk/st/clkgen-pll.c                        | 194 +++++++++++++++++++++
- 2 files changed, 195 insertions(+)
+The fact that you have no-map means that the memory should not be
+described to the kernel as mappable in the first place. It's wrong to
+place such memory in the memory node, even if listed in reserved-memory.
 
-diff --git a/Documentation/devicetree/bindings/clock/st/st,clkgen-pll.txt b/Documentation/devicetree/bindings/clock/st/st,clkgen-pll.txt
-index e2c6db0..8f84c81 100644
---- a/Documentation/devicetree/bindings/clock/st/st,clkgen-pll.txt
-+++ b/Documentation/devicetree/bindings/clock/st/st,clkgen-pll.txt
-@@ -23,6 +23,7 @@ Required properties:
- 	"st,stih407-plls-c32-a9",	"st,clkgen-plls-c32"
- 	"st,plls-c32-cx_0",		"st,clkgen-plls-c32"
- 	"st,plls-c32-cx_1",		"st,clkgen-plls-c32"
-+	"st,stih418-plls-c28-a9",	"st,clkgen-plls-c32"
- 
- 	"st,stih415-gpu-pll-c32",	"st,clkgengpu-pll-c32"
- 	"st,stih416-gpu-pll-c32",	"st,clkgengpu-pll-c32"
-diff --git a/drivers/clk/st/clkgen-pll.c b/drivers/clk/st/clkgen-pll.c
-index 94e5a0b..3eb4ffb 100644
---- a/drivers/clk/st/clkgen-pll.c
-+++ b/drivers/clk/st/clkgen-pll.c
-@@ -44,6 +44,13 @@ DEFINE_SPINLOCK(clkgen_a9_lock);
- 
- #define C32_MAX_ODFS (4)
- 
-+/*
-+ * PLL configuration register bits for PLL4600 C28
-+ */
-+#define C28_NDIV_MASK (0xff)
-+#define C28_IDF_MASK (0x7)
-+#define C28_ODF_MASK (0x3f)
-+
- struct clkgen_pll_data {
- 	struct clkgen_field pdn_status;
- 	struct clkgen_field pdn_ctrl;
-@@ -68,6 +75,7 @@ static const struct clk_ops st_pll800c65_ops;
- static const struct clk_ops stm_pll3200c32_ops;
- static const struct clk_ops stm_pll3200c32_a9_ops;
- static const struct clk_ops st_pll1200c32_ops;
-+static const struct clk_ops stm_pll4600c28_ops;
- 
- static const struct clkgen_pll_data st_pll1600c65_ax = {
- 	.pdn_status	= CLKGEN_FIELD(0x0, 0x1,			19),
-@@ -256,6 +264,22 @@ static const struct clkgen_pll_data st_pll3200c32_407_a9 = {
- 	.ops		= &stm_pll3200c32_a9_ops,
- };
- 
-+static struct clkgen_pll_data st_pll4600c28_418_a9 = {
-+	/* 418 A9 */
-+	.pdn_status	= CLKGEN_FIELD(0x1a8,	0x1,			0),
-+	.pdn_ctrl	= CLKGEN_FIELD(0x1a8,	0x1,			0),
-+	.locked_status	= CLKGEN_FIELD(0x87c,	0x1,			0),
-+	.ndiv		= CLKGEN_FIELD(0x1b0,	C28_NDIV_MASK,		0),
-+	.idf		= CLKGEN_FIELD(0x1a8,	C28_IDF_MASK,		25),
-+	.num_odfs = 1,
-+	.odf		= { CLKGEN_FIELD(0x1b0, C28_ODF_MASK,		8) },
-+	.odf_gate	= { CLKGEN_FIELD(0x1ac, 0x1,			28) },
-+	.switch2pll_en	= true,
-+	.switch2pll	= CLKGEN_FIELD(0x1a4,	0x1,			1),
-+	.lock		= &clkgen_a9_lock,
-+	.ops		= &stm_pll4600c28_ops,
-+};
-+
- /**
-  * DOC: Clock Generated by PLL, rate set and enabled by bootloader
-  *
-@@ -611,6 +635,163 @@ static unsigned long recalc_stm_pll1200c32(struct clk_hw *hw,
- 	return rate;
- }
- 
-+/* PLL output structure
-+ * FVCO >> /2 >> FVCOBY2 (no output)
-+ *                 |> Divider (ODF) >> PHI
-+ *
-+ * FVCOby2 output = (input * 2 * NDIV) / IDF (assuming FRAC_CONTROL==L)
-+ *
-+ * Rules:
-+ *   4Mhz <= INFF input <= 350Mhz
-+ *   4Mhz <= INFIN (INFF / IDF) <= 50Mhz
-+ *   19.05Mhz <= FVCOby2 output (PHI w ODF=1) <= 3000Mhz
-+ *   1 <= i (register/dec value for IDF) <= 7
-+ *   8 <= n (register/dec value for NDIV) <= 246
-+ */
-+
-+static int clk_pll4600c28_get_params(unsigned long input, unsigned long output,
-+			  struct stm_pll *pll)
-+{
-+
-+	unsigned long i, infin, n;
-+	unsigned long deviation = ~0;
-+	unsigned long new_freq, new_deviation;
-+
-+	/* Output clock range: 19Mhz to 3000Mhz */
-+	if (output < 19000000 || output > 3000000000u)
-+		return -EINVAL;
-+
-+	/* For better jitter, IDF should be smallest and NDIV must be maximum */
-+	for (i = 1; i <= 7 && deviation; i++) {
-+		/* INFIN checks */
-+		infin = input / i;
-+		if (infin < 4000000 || infin > 50000000)
-+			continue;	/* Invalid case */
-+
-+		n = output / (infin * 2);
-+		if (n < 8 || n > 246)
-+			continue;	/* Invalid case */
-+		if (n < 246)
-+			n++;	/* To work around 'y' when n=x.y */
-+
-+		for (; n >= 8 && deviation; n--) {
-+			new_freq = infin * 2 * n;
-+			if (new_freq < output)
-+				break;	/* Optimization: shorting loop */
-+
-+			new_deviation = new_freq - output;
-+			if (!new_deviation || new_deviation < deviation) {
-+				pll->idf  = i;
-+				pll->ndiv = n;
-+				deviation = new_deviation;
-+			}
-+		}
-+	}
-+
-+	if (deviation == ~0) /* No solution found */
-+		return -EINVAL;
-+
-+	return 0;
-+}
-+
-+static int clk_pll4600c28_get_rate(unsigned long input, struct stm_pll *pll,
-+			unsigned long *rate)
-+{
-+	if (!pll->idf)
-+		pll->idf = 1;
-+
-+	*rate = (input / pll->idf) * 2 * pll->ndiv;
-+
-+	return 0;
-+}
-+
-+static unsigned long recalc_stm_pll4600c28(struct clk_hw *hw,
-+				    unsigned long parent_rate)
-+{
-+	struct clkgen_pll *pll = to_clkgen_pll(hw);
-+	struct stm_pll params;
-+	unsigned long rate;
-+
-+	if (!clkgen_pll_is_enabled(hw) || !clkgen_pll_is_locked(hw))
-+		return 0;
-+
-+	params.ndiv = CLKGEN_READ(pll, ndiv);
-+	params.idf = CLKGEN_READ(pll, idf);
-+
-+	clk_pll4600c28_get_rate(parent_rate, &params, &rate);
-+
-+	pr_debug("%s:%s rate %lu\n", __clk_get_name(hw->clk), __func__, rate);
-+
-+	return rate;
-+}
-+
-+static long round_rate_stm_pll4600c28(struct clk_hw *hw, unsigned long rate,
-+				      unsigned long *prate)
-+{
-+	struct stm_pll params;
-+
-+	if (!clk_pll4600c28_get_params(*prate, rate, &params)) {
-+		clk_pll4600c28_get_rate(*prate, &params, &rate);
-+	} else {
-+		pr_debug("%s: %s rate %ld Invalid\n", __func__,
-+			 __clk_get_name(hw->clk), rate);
-+		return 0;
-+	}
-+
-+	pr_debug("%s: %s new rate %ld [ndiv=%u] [idf=%u]\n",
-+		 __func__, __clk_get_name(hw->clk),
-+		 rate, (unsigned int)params.ndiv,
-+		 (unsigned int)params.idf);
-+
-+	return rate;
-+}
-+
-+static int set_rate_stm_pll4600c28(struct clk_hw *hw, unsigned long rate,
-+				   unsigned long parent_rate)
-+{
-+	struct clkgen_pll *pll = to_clkgen_pll(hw);
-+	struct stm_pll params;
-+	long hwrate;
-+	unsigned long flags = 0;
-+
-+	if (!rate || !parent_rate)
-+		return -EINVAL;
-+
-+	if (!clk_pll4600c28_get_params(parent_rate, rate, &params)) {
-+		clk_pll4600c28_get_rate(parent_rate, &params, &hwrate);
-+	} else {
-+		pr_debug("%s: %s rate %ld Invalid\n", __func__,
-+			 __clk_get_name(hw->clk), rate);
-+		return -EINVAL;
-+	}
-+
-+	pr_debug("%s: %s new rate %ld [ndiv=0x%x] [idf=0x%x]\n",
-+		 __func__, __clk_get_name(hw->clk),
-+		 hwrate, (unsigned int)params.ndiv,
-+		 (unsigned int)params.idf);
-+
-+	if (!hwrate)
-+		return -EINVAL;
-+
-+	pll->ndiv = params.ndiv;
-+	pll->idf = params.idf;
-+
-+	clkgen_pll_disable(hw);
-+
-+	if (pll->lock)
-+		spin_lock_irqsave(pll->lock, flags);
-+
-+	CLKGEN_WRITE(pll, ndiv, pll->ndiv);
-+	CLKGEN_WRITE(pll, idf, pll->idf);
-+
-+	if (pll->lock)
-+		spin_unlock_irqrestore(pll->lock, flags);
-+
-+	clkgen_pll_enable(hw);
-+
-+	return 0;
-+}
-+
- static const struct clk_ops st_pll1600c65_ops = {
- 	.enable		= clkgen_pll_enable,
- 	.disable	= clkgen_pll_disable,
-@@ -648,6 +829,15 @@ static const struct clk_ops st_pll1200c32_ops = {
- 	.recalc_rate	= recalc_stm_pll1200c32,
- };
- 
-+static const struct clk_ops stm_pll4600c28_ops = {
-+	.enable		= clkgen_pll_enable,
-+	.disable	= clkgen_pll_disable,
-+	.is_enabled	= clkgen_pll_is_enabled,
-+	.recalc_rate	= recalc_stm_pll4600c28,
-+	.round_rate	= round_rate_stm_pll4600c28,
-+	.set_rate	= set_rate_stm_pll4600c28,
-+};
-+
- static struct clk * __init clkgen_pll_register(const char *parent_name,
- 				struct clkgen_pll_data	*pll_data,
- 				void __iomem *reg,
-@@ -893,6 +1083,10 @@ static const struct of_device_id c32_pll_of_match[] = {
- 		.compatible = "st,stih407-plls-c32-a9",
- 		.data = &st_pll3200c32_407_a9,
- 	},
-+	{
-+		.compatible = "st,stih418-plls-c28-a9",
-+		.data = &st_pll4600c28_418_a9,
-+	},
- 	{}
- };
- 
--- 
-1.9.1
+If your EFI memory map describes the memory as mappable, it is wrong.
+
+> According to upper info, we still need to use reserved-memory node to
+> depict the reserved memory regions. i have no knowledge about EFI_STUB,
+> so please confirm or correct as needed.
+
+If the memory shouldn't be mapped, it should neither be in the memory
+node nor EFI memory map (with attributes allowing it to be mapped) to
+begin with.
+
+As far as I can see you do not need to use reserved-memory.
+
+Thanks,
+Mark.
