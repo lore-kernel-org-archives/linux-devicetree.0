@@ -1,69 +1,105 @@
-From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH-v3 1/2] mfd: devicetree: bindings: 88pm800: Add DT
- property for dual phase enable
-Date: Mon, 24 Aug 2015 14:02:05 +0100
-Message-ID: <20150824130205.GE3237@x1>
-References: <1440420006-31556-1-git-send-email-vaibhav.hiremath@linaro.org>
- <1440420006-31556-2-git-send-email-vaibhav.hiremath@linaro.org>
+From: Heiko Stuebner <heiko@sntech.de>
+Subject: Re: [PATCH v3 06/14] Documentation: drm/bridge: add document for analogix_dp
+Date: Mon, 24 Aug 2015 15:03:05 +0200
+Message-ID: <18468783.Lfl8UEMQ1s@phil>
+References: <1439995728-18046-1-git-send-email-ykk@rock-chips.com> <55DA9B72.1030804@samsung.com> <55DB1281.9070502@rock-chips.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1440420006-31556-2-git-send-email-vaibhav.hiremath-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Vaibhav Hiremath <vaibhav.hiremath-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <55DB1281.9070502@rock-chips.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Yakir Yang <ykk@rock-chips.com>
+Cc: Krzysztof Kozlowski <k.kozlowski@samsung.com>, Rob Herring <robherring2@gmail.com>, Sean Paul <seanpaul@google.com>, Takashi Iwai <tiwai@suse.de>, dri-devel <dri-devel@lists.freedesktop.org>, Andrzej Hajda <a.hajda@samsung.com>, Gustavo Padovan <gustavo.padovan@collabora.co.uk>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, Vincent Palatin <vpalatin@chromium.org>, Kishon Vijay Abraham I <kishon@ti.com>, linux-rockchip@lists.infradead.org, Russell King <rmk+kernel@arm.linux.org.uk>, Thierry Reding <treding@nvidia.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, David Airlie <airlied@linux.ie>, Doug Anderson <dianders@google.com>, Inki Dae <inki.dae@samsung.com>, Ajay kumar <ajaynumb@gmail.com>, Rob Herring <robh+dt@kernel.org>, linux-arm-kern
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 24 Aug 2015, Vaibhav Hiremath wrote:
+Hi Yakir,
 
-> 88PM860 family of device supports dual phase mode on BUCK1 supply
-> providing total 6A capacity.
-> Note that by default they operate independently with 3A capacity.
+Am Montag, 24. August 2015, 20:48:01 schrieb Yakir Yang:
+> =E5=9C=A8 08/24/2015 12:20 PM, Krzysztof Kozlowski =E5=86=99=E9=81=93=
+:
+> > On 24.08.2015 11:42, Yakir Yang wrote:
+> >> Hi Krzysztof,
+> >>=20
+> >> =E5=9C=A8 08/23/2015 07:43 PM, Krzysztof Kozlowski =E5=86=99=E9=81=
+=93:
+> >>> 2015-08-24 8:23 GMT+09:00 Rob Herring <robherring2@gmail.com>:
+> >>>> On Wed, Aug 19, 2015 at 9:50 AM, Yakir Yang <ykk@rock-chips.com>=
+ wrote:
+> >>>>> Analogix dp driver is split from exynos dp driver, so we just
+> >>>>> make an copy of exynos_dp.txt, and then simplify exynos_dp.txt
+> >>>>>=20
+> >>>>> Beside update some exynos dtsi file with the latest change
+> >>>>> according to the devicetree binding documents.
+> >>>>=20
+> >>>> You can't just change the exynos bindings and break compatibilit=
+y. Is
+> >>>> there some agreement with exynos folks to do this?
+> >>>=20
+> >>> No, there is no agreement. This wasn't even sent to Exynos mainta=
+iners.
+> >>=20
+> >> Sorry about this one, actually I have add Exynos maintainers in ve=
+rsion
+> >> 1 & version 2,
+> >> but lose some maintainers in version 3, I would fix it in bellow
+> >> versions.
+> >>=20
+> >>> Additionally the patchset did not look interesting to me because =
+of
+> >>> misleading subject - Documentation instead of "ARM: dts:".
+> >>>=20
+> >>> Yakir, please:
+> >>> 1. Provide backward compatibility. Mark old properties as depreca=
+ted
+> >>> but still support them.
+> >>=20
+> >> Do you mean that I should keep the old properties declare in
+> >> exynos-dp.txt,
+> >> but just mark them as deprecated flag.
+> >=20
+> > That is one of ways how to do this. However more important is that
+> > driver should still support old bindings so such code:
+> > -       if (of_property_read_u32(dp_node, "samsung,color-space",
+> > +       if (of_property_read_u32(dp_node, "analogix,color-space",
+> >=20
+> > is probably wrong. Will the driver support old DTB in the same way =
+as it
+> > was supporting before the change?
 >=20
-> This patch updates the devicetree binding with DT property
-> to enable dual-phase mode on BUCK1.
+> Okay, I got your means. So document is not the focus, the most import=
+ant
+> is that
+> driver should support the old dts prop. If so the new analogix dp dri=
+ver
+> should keep
+> the "samsung,color-space", rather then just mark it with [DEPRECATED]=
+ flag.
 >=20
-> Signed-off-by: Vaibhav Hiremath <vaibhav.hiremath-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> ---
->  Documentation/devicetree/bindings/mfd/88pm800.txt | 6 ++++++
->  1 file changed, 6 insertions(+)
+> But from your follow suggest, I think you agree to update driver code=
+,
+> and just mark
+> old prop with deprecated flag. If so I think such code would not be w=
+rong
 >=20
-> diff --git a/Documentation/devicetree/bindings/mfd/88pm800.txt b/Docu=
-mentation/devicetree/bindings/mfd/88pm800.txt
-> index dec842f..2c82fcb 100644
-> --- a/Documentation/devicetree/bindings/mfd/88pm800.txt
-> +++ b/Documentation/devicetree/bindings/mfd/88pm800.txt
-> @@ -9,6 +9,12 @@ Required parent device properties:
->  - #interrupt-cells 	: should be 1.
->  			  The cell is the 88pm80x local IRQ number
-> =20
-> +Optional properties :
-> +- marvell,88pm860-buck1-dualphase-en  : If set, enable dual phase on=
- BUCK1,
-> +  providing 6A capacity.
-> +  Without this both BUCK1A and BUCK1B operates independently with 3A=
- capacity.
-> +  (This property is only applicable to 88PM860)
+> -       if (of_property_read_u32(dp_node, "samsung,color-space",
+> +      if (of_property_read_u32(dp_node, "analogix,color-space",
 
-This will require a Regulator Ack.
+In a generic driver, the property should have either none, or the analo=
+gix=20
+prefix. But DT-properties need to be backwards compatible, meaning an o=
+lder=20
+Exynos devicetree should run unmodified with a newer kernel.
 
-My suggestion would be to remove the 'buck' number, as the same
-property could be used on any Buck, and remove the '-en' part, as
-this is implied.
+So the common course of action is to mark the old one as deprecated but=
+ still=20
+test for both, so something like:
 
->  88pm80x family of devices consists of varied group of sub-devices:
-> =20
->  Device		 	Supply Names	 Description
+       if (of_property_read_u32(dp_node, "analogix,color-space",
+                                 &dp_video_config->color_space))
+	       if (of_property_read_u32(dp_node, "samsung,color-space",
+                	                 &dp_video_config->color_space)) {
 
---=20
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-=46ollow Linaro: Facebook | Twitter | Blog
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+                	dev_err(dev, "failed to get color-space\n");
+                	return ERR_PTR(-EINVAL);
+        	}
