@@ -1,76 +1,105 @@
-From: Vaibhav Hiremath <vaibhav.hiremath@linaro.org>
-Subject: [PATCH-v2 3/5] mfd: devicetree: bindings: Add clock subdevice node information
-Date: Tue, 25 Aug 2015 00:26:32 +0530
-Message-ID: <1440442594-3102-5-git-send-email-vaibhav.hiremath@linaro.org>
-References: <1440442594-3102-1-git-send-email-vaibhav.hiremath@linaro.org>
+From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Subject: Re: [PATCH] Input: edt-ft5x06 - Switch to newer gpio framework
+Date: Mon, 24 Aug 2015 12:41:13 -0700
+Message-ID: <20150824194113.GE22442@dtor-ws>
+References: <1440184112-11061-1-git-send-email-fcooper@ti.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1440442594-3102-1-git-send-email-vaibhav.hiremath@linaro.org>
+Content-Disposition: inline
+In-Reply-To: <1440184112-11061-1-git-send-email-fcooper@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-arm-kernel@lists.infradead.org
-Cc: robh+dt@kernel.org, mturquette@baylibre.com, lee.jones@linaro.org, k.kozlowski@samsung.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, Vaibhav Hiremath <vaibhav.hiremath@linaro.org>
+To: Franklin S Cooper Jr <fcooper@ti.com>
+Cc: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-input@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-This patch updates the binding documentation for optional
-clocks node and related information for buffered 32KHz clock.
+On Fri, Aug 21, 2015 at 02:08:32PM -0500, Franklin S Cooper Jr wrote:
+> The current/old gpio framework used doesn't properly listen to
+> ACTIVE_LOW and ACTIVE_HIGH flags. The newer gpio framework takes into
+> account these flags when setting gpio values.
+> 
+> Also use gpiod_set_value_cansleep since wake and reset pins can be
+> provided by bus based io expanders.
+> 
+> Signed-off-by: Franklin S Cooper Jr <fcooper@ti.com>
+> ---
+>  .../bindings/input/touchscreen/edt-ft5x06.txt      |   4 +-
+>  drivers/input/touchscreen/edt-ft5x06.c             | 115 +++++++--------------
+>  include/linux/input/edt-ft5x06.h                   |   4 +-
+>  3 files changed, 43 insertions(+), 80 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/input/touchscreen/edt-ft5x06.txt b/Documentation/devicetree/bindings/input/touchscreen/edt-ft5x06.txt
+> index 76db967..9330d4d 100644
+> --- a/Documentation/devicetree/bindings/input/touchscreen/edt-ft5x06.txt
+> +++ b/Documentation/devicetree/bindings/input/touchscreen/edt-ft5x06.txt
+> @@ -50,6 +50,6 @@ Example:
+>  		pinctrl-0 = <&edt_ft5x06_pins>;
+>  		interrupt-parent = <&gpio2>;
+>  		interrupts = <5 0>;
+> -		reset-gpios = <&gpio2 6 1>;
+> -		wake-gpios = <&gpio4 9 0>;
+> +		reset-gpios = <&gpio2 6 GPIO_ACTIVE_LOW>;
+> +		wake-gpios = <&gpio4 9 GPIO_ACTIVE_HIGH>;
+>  	};
+> diff --git a/drivers/input/touchscreen/edt-ft5x06.c b/drivers/input/touchscreen/edt-ft5x06.c
+> index 394b1de..6b128b3 100644
+> --- a/drivers/input/touchscreen/edt-ft5x06.c
+> +++ b/drivers/input/touchscreen/edt-ft5x06.c
+> @@ -91,9 +91,9 @@ struct edt_ft5x06_ts_data {
+>  	u16 num_x;
+>  	u16 num_y;
+>  
+> -	int reset_pin;
+> -	int irq_pin;
+> -	int wake_pin;
+> +	struct gpio_desc *reset_pin;
+> +	struct gpio_desc *wake_pin;
+> +	struct gpio_desc *irq_pin;
+>  
+>  #if defined(CONFIG_DEBUG_FS)
+>  	struct dentry *debug_dir;
+> @@ -755,36 +755,14 @@ edt_ft5x06_ts_teardown_debugfs(struct edt_ft5x06_ts_data *tsdata)
+>  static int edt_ft5x06_ts_reset(struct i2c_client *client,
+>  			struct edt_ft5x06_ts_data *tsdata)
+>  {
+> -	int error;
+> -
+> -	if (gpio_is_valid(tsdata->wake_pin)) {
+> -		error = devm_gpio_request_one(&client->dev,
+> -					tsdata->wake_pin, GPIOF_OUT_INIT_LOW,
+> -					"edt-ft5x06 wake");
+> -		if (error) {
+> -			dev_err(&client->dev,
+> -				"Failed to request GPIO %d as wake pin, error %d\n",
+> -				tsdata->wake_pin, error);
+> -			return error;
+> -		}
+> -
+> +	if (tsdata->wake_pin) {
+>  		msleep(5);
+> -		gpio_set_value(tsdata->wake_pin, 1);
+> +		gpiod_set_value_cansleep(tsdata->wake_pin, 1);
+>  	}
+> -	if (gpio_is_valid(tsdata->reset_pin)) {
+> -		/* this pulls reset down, enabling the low active reset */
+> -		error = devm_gpio_request_one(&client->dev,
+> -					tsdata->reset_pin, GPIOF_OUT_INIT_LOW,
+> -					"edt-ft5x06 reset");
+> -		if (error) {
+> -			dev_err(&client->dev,
+> -				"Failed to request GPIO %d as reset pin, error %d\n",
+> -				tsdata->reset_pin, error);
+> -			return error;
+> -		}
+>  
+> +	if (tsdata->reset_pin) {
+>  		msleep(5);
+> -		gpio_set_value(tsdata->reset_pin, 1);
+> +		gpiod_set_value_cansleep(tsdata->reset_pin, 1);
 
-Signed-off-by: Vaibhav Hiremath <vaibhav.hiremath@linaro.org>
-Reviewed-by: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-Acked-by: Rob Herring <robh@kernel.org>
----
- Documentation/devicetree/bindings/mfd/88pm800.txt | 27 +++++++++++++++++++++++
- 1 file changed, 27 insertions(+)
+So this leaves the reset pin active. How exactly was this tested?
 
-diff --git a/Documentation/devicetree/bindings/mfd/88pm800.txt b/Documentation/devicetree/bindings/mfd/88pm800.txt
-index 2c82fcb..bc6cb02 100644
---- a/Documentation/devicetree/bindings/mfd/88pm800.txt
-+++ b/Documentation/devicetree/bindings/mfd/88pm800.txt
-@@ -15,6 +15,26 @@ Optional properties :
-   Without this both BUCK1A and BUCK1B operates independently with 3A capacity.
-   (This property is only applicable to 88PM860)
- 
-+Optional nodes:
-+- clocks: 88pm800 family of devices provide multiple buffered 32.768
-+  KHz outputs, so to register these as clocks with common clock framework
-+  instantiate a sub-node named "clocks". It uses the common clock binding
-+  documented in :
-+  [Documentation/devicetree/bindings/clock/clock-bindings.txt]
-+
-+  - #clock-cells: should be 1.
-+
-+  - The following is the list of clocks generated by the controller. Each clock
-+    is assigned an identifier and client nodes use this identifier to specify
-+    the clock which they consume.
-+    Clock		ID           	Devices
-+    ----------------------------------------------------------
-+    pm800_clk32k_1	0		88PM800 and 88PM860
-+    pm800_clk32k_2	1		88PM800 and 88PM860
-+    pm800_clk32k_3	2		88PM800
-+
-+  - compatible: Should be : "marvell,88pm800-clk"
-+
- 88pm80x family of devices consists of varied group of sub-devices:
- 
- Device		 	Supply Names	 Description
-@@ -22,6 +42,7 @@ Device		 	Supply Names	 Description
- 88pm80x-onkey		:		: On key
- 88pm80x-rtc		:		: RTC
- 88pm80x-regulator	:		: Regulators
-+88pm80x-clk		:		: 32KHz Clk provider
- 
- Example:
- 
-@@ -33,6 +54,12 @@ Example:
- 		interrupt-controller;
- 		#interrupt-cells = <1>;
- 
-+		pm800clk: clocks {
-+			compatible = "marvell,88pm800-clk";
-+			#clock-cells = <1>;
-+			clock-output-names = "xx", "yy", "zz";
-+		};
-+
- 		regulators {
- 			compatible = "marvell,88pm80x-regulator";
- 
+Thanks.
+
 -- 
-1.9.1
+Dmitry
