@@ -1,57 +1,70 @@
-From: Zhen Lei <thunder.leizhen-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH 1/1] of: to support binding numa node to root subnode(non-bus)
-Date: Mon, 24 Aug 2015 20:30:10 +0800
-Message-ID: <1440419410-10520-1-git-send-email-thunder.leizhen@huawei.com>
+From: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
+Subject: Re: [PATCH v2] i2c: allow specifying separate wakeup interrupt in
+ device tree
+Date: Mon, 24 Aug 2015 14:35:28 +0200
+Message-ID: <20150824123528.GF3608@katana>
+References: <20150818065251.GA22085@dtor-ws>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="1Ow488MNN9B9o/ov"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20150818065251.GA22085@dtor-ws>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Cc: Zefan Li <lizefan-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, Xinwei Hu <huxinwei-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, Tianhong Ding <dingtianhong-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, Hanjun Guo <guohanjun-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, Zhen Lei <thunder.leizhen-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+To: Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Mika Westerberg <mika.westerberg-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, "Rafael J. Wysocki" <rafael.j.wysocki-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Vignesh R <vigneshr-l0cyMroinI0@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-If use of_platform_populate to scan dt-nodes and add devices, the
-subnode of root(such as /smmu), when being scanned and invoke
-of_device_add, the ofdev->dev.parent is always equal &platform_bus. So
-that, function set_dev_node will not be called. And in device_add,
-dev_to_node(parent) always return NUMA_NO_NODE.
 
-Signed-off-by: Zhen Lei <thunder.leizhen-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
----
- drivers/base/core.c | 2 +-
- drivers/of/device.c | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+--1Ow488MNN9B9o/ov
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/drivers/base/core.c b/drivers/base/core.c
-index dafae6d..5df4f46b 100644
---- a/drivers/base/core.c
-+++ b/drivers/base/core.c
-@@ -1017,7 +1017,7 @@ int device_add(struct device *dev)
- 		dev->kobj.parent = kobj;
+On Mon, Aug 17, 2015 at 11:52:51PM -0700, Dmitry Torokhov wrote:
+> Instead of having each i2c driver individually parse device tree data in
+> case it or platform supports separate wakeup interrupt, and handle
+> enabling and disabling wakeup interrupts in their power management
+> routines, let's have i2c core do that for us.
+>=20
+> Platforms wishing to specify separate wakeup interrupt for the device
+> should use named interrupt syntax in their DTSes:
+>=20
+> 	interrupt-parent =3D <&intc1>;
+> 	interrupts =3D <5 0>, <6 0>;
+> 	interrupt-names =3D "irq", "wakeup";
+>=20
+> This patch is inspired by work done by Vignesh R <vigneshr-l0cyMroinI0@public.gmane.org> for
+> pixcir_i2c_ts driver.
+>=20
+> Signed-off-by: Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 
- 	/* use parent numa_node */
--	if (parent)
-+	if (parent && (parent != &platform_bus))
- 		set_dev_node(dev, dev_to_node(parent));
-
- 	/* first, register with generic layer. */
-diff --git a/drivers/of/device.c b/drivers/of/device.c
-index 8b91ea2..96ebece 100644
---- a/drivers/of/device.c
-+++ b/drivers/of/device.c
-@@ -63,7 +63,7 @@ int of_device_add(struct platform_device *ofdev)
- 	/* device_add will assume that this device is on the same node as
- 	 * the parent. If there is no parent defined, set the node
- 	 * explicitly */
--	if (!ofdev->dev.parent)
-+	if (!ofdev->dev.parent || (ofdev->dev.parent == &platform_bus))
- 		set_dev_node(&ofdev->dev, of_node_to_nid(ofdev->dev.of_node));
-
- 	return device_add(&ofdev->dev);
---
-2.5.0
+Applied to for-next, thanks!
 
 
+--1Ow488MNN9B9o/ov
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBAgAGBQJV2w+QAAoJEBQN5MwUoCm2qaoP/2xuVeT7tNbuKbcTKrBCB7fV
+1XcLSAmix8luxEPto/us+5dPFO0e14BUVIOPIPLs8T3wZp+oK7kuzMA1meRyh+RA
+E3CGNXchm9DtqqPmiMaVh5gjQAerWY2dUviWH3cL5h6kWT+wb9jePLMxDw0O/Bs0
+vqDNTy8MU8eHDsgP4X6fASAd4WsJUXGIsMGx2xlEr9s7PvDFrqbYcAa6SYKfWUCg
+X+NRiSIRl0EAQfXxBGF39eJtLM4tX/LbJDto8UgCJV0aeRusH2HVBUMjKuX3+wmc
+AYsPgLSo2eHm6WHlA14gssQ8cEwMoaS0czJV6PNwiZhBztaqSTxbErA5bjZZ8zC9
+3Jr9eYbAeThRO2xSY97oQAQ4I7bFKjgORZHuo7xEBRMqsss6lk/zRyxiiUkKcixw
+W0icXbTQVJ2pqxBtC01ihSmOo+XjTSdSoyIbbuzL+Cw4xHuYbPIxvOFu8V9uNqWb
+fvkNJEc9vGcAFFXr+mO0jandIDhbPa6LYQixR8yZ/+wDTfnCdrF6b5Q6U4liy3v4
+qjetugZnoTWWNRxilnLfwUbg0X+K/gkphNorNNVJ3E8FjzSHesmrvRN0lFUMZ99P
+RmcPpdHE+Mz5LG65/23oiln4uKFidlITwPv0+LH19oZ4XzTgnXycS1VGdF29clQ5
+t8q5ddHrpxfXqyE7GUpe
+=PgWQ
+-----END PGP SIGNATURE-----
+
+--1Ow488MNN9B9o/ov--
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
