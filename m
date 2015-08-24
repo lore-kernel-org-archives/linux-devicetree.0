@@ -1,68 +1,55 @@
-From: Thomas Gleixner <tglx@linutronix.de>
-Subject: Re: [PATCH v7 8/8] clocksource: simplify ACPI code in
- arm_arch_timer.c
-Date: Mon, 24 Aug 2015 19:50:14 +0200 (CEST)
-Message-ID: <alpine.DEB.2.11.1508241942450.3873@nanos>
-References: <=fu.wei@linaro.org> <1440435683-7343-1-git-send-email-fu.wei@linaro.org> <1440435683-7343-9-git-send-email-fu.wei@linaro.org>
+From: Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Subject: Re: [PATCH v2 1/3] ARM: dts: rockchip: add veyron-jaq board
+Date: Mon, 24 Aug 2015 10:53:15 -0700
+Message-ID: <20150824175315.GA81574@google.com>
+References: <1440022721-73712-1-git-send-email-briannorris@chromium.org>
+ <CABxcv=nQAfCzj_bQ9N-XYEPCNuihyrkUOz7=ogetKzye4KKNng@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1440435683-7343-9-git-send-email-fu.wei@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Fu Wei <fu.wei@linaro.org>
-Cc: Suravee.Suthikulpanit@amd.com, hanjun.guo@linaro.org, linaro-acpi@lists.linaro.org, linux-watchdog@vger.kernel.org, devicetree@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, linux-doc@vger.kernel.org, tekkamanninja@gmail.com, graeme.gregory@linaro.org, al.stone@linaro.org, Arnd Bergmann <arnd@arndb.de>, linux@roeck-us.net, vgandhi@codeaurora.org, wim@iguana.be, Jon Masters <jcm@redhat.com>, leo.duran@amd.com, Jonathan Corbet <corbet@lwn.net>, mark.rutland@arm.com, catalin.marinas@arm.com, will.deacon@arm.com, rjw@rjwysocki.net, dyoung@redhat.com, panand@redhat.com, Daniel Lezcano <daniel.lezcano@linaro.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <CABxcv=nQAfCzj_bQ9N-XYEPCNuihyrkUOz7=ogetKzye4KKNng-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Javier Martinez Canillas <javier-0uQlZySMnqxg9hUCZPvPmw@public.gmane.org>
+Cc: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Alexandru M Stan <amstan-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Douglas Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 25 Aug 2015, fu.wei@linaro.org wrote:
-
-You Cc the world and some more on your patch, but you fail to add the
-maintainers of the clocksource code to the Cc list. Sigh.
-
-> From: Fu Wei <fu.wei@linaro.org>
+On Thu, Aug 20, 2015 at 01:29:40AM +0200, Javier Martinez Canillas wrote:
+> Hello Brian,
 > 
-> The patch update arm_arch_timer driver to use the function
-> provided by the new GTDT driver of ACPI.
-> By this way, arm_arch_timer.c can be simplified, and separate
-> all the ACPI GTDT knowledge from this timer driver.
+> [...]
+> 
+> > +
+> > +&rk808 {
+> > +       pinctrl-names = "default";
+> > +       pinctrl-0 = <&pmic_int_l &dvs_1 &dvs_2>;
+> > +       dvs-gpios = <&gpio7 12 GPIO_ACTIVE_HIGH>,
+> > +                   <&gpio7 15 GPIO_ACTIVE_HIGH>;
+> 
+> I see the dvs-gpios DT property is documented in the downstream
+> ChromiumOS 3.18 tree [0] but I don't see it neither mentioned in
+> Documentation/devicetree/bindings/mfd/rk808.txt in mainline nor code
+> that parses it in the drivers/regulator/rk808-regulator.c driver.
 
-That's not a proper changelog and this patch want's to be split in two:
+Good catch.
 
-1) Implement the new ACPI function
+> So I think this should be removed and also the dvs_{1,2} pinctrl
+> lines.
 
-2) Make use of it
- 
-> index 0aa135d..99505bb 100644
-> --- a/drivers/clocksource/arm_arch_timer.c
-> +++ b/drivers/clocksource/arm_arch_timer.c
-> @@ -817,68 +817,30 @@ CLOCKSOURCE_OF_DECLARE(armv7_arch_timer_mem, "arm,armv7-timer-mem",
->  		       arch_timer_mem_init);
->  
->  #ifdef CONFIG_ACPI
-> -static int __init map_generic_timer_interrupt(u32 interrupt, u32 flags)
-> -{
-> -	int trigger, polarity;
-> -
-> -	if (!interrupt)
-> -		return 0;
-> -
-> -	trigger = (flags & ACPI_GTDT_INTERRUPT_MODE) ? ACPI_EDGE_SENSITIVE
-> -			: ACPI_LEVEL_SENSITIVE;
-> -
-> -	polarity = (flags & ACPI_GTDT_INTERRUPT_POLARITY) ? ACPI_ACTIVE_LOW
-> -			: ACPI_ACTIVE_HIGH;
-> -
-> -	return acpi_register_gsi(NULL, interrupt, trigger, polarity);
-> -}
-> -
->  /* Initialize per-processor generic timer */
-> -static int __init arch_timer_acpi_init(struct acpi_table_header *table)
-> +void __init arch_timer_acpi_init(void)
->  {
+OK, will do. I see that jerry, minnie, and speedy also have the pinctrl
+lines. Should they be killed as well?
 
-And how is that supposed to work when we have next generation CPUs
-which implement a different timer? You break multisystem kernels that
-way.
+> The rest of the patch looks good to me though so with these
+> removed feel free to add:
+> 
+> Reviewed-by: Javier Martinez Canillas <javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>
 
-Thanks,
+Thanks.
 
-	tglx
+> [0]: https://chromium.googlesource.com/chromiumos/third_party/kernel/+/chromeos-3.14/Documentation/devicetree/bindings/mfd/rk808.txt
+
+Brian
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
