@@ -1,89 +1,52 @@
 From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH] of/platform: add function to populate default bus
-Date: Mon, 24 Aug 2015 10:16:56 -0500
-Message-ID: <CAL_JsqLkFmZxBxndEUogBCJj1ffFrJMyaY838z0K7VqnfWtNxg@mail.gmail.com>
-References: <1438537483-26414-1-git-send-email-hauke@hauke-m.de>
+Subject: Re: [PATCH v2] of: Add vendor prefix for JEDEC Solid State Technology Association
+Date: Mon, 24 Aug 2015 10:17:11 -0500
+Message-ID: <CAL_JsqKZaGVw_CWPhvH_YWaAhOcZArWxJ-yh7fuAx-zxavh+aw@mail.gmail.com>
+References: <1438693881-10432-1-git-send-email-geert+renesas@glider.be>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1438537483-26414-1-git-send-email-hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>
+In-Reply-To: <1438693881-10432-1-git-send-email-geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>
-Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Joachim Eastwood <manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+To: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Aug 2, 2015 at 12:44 PM, Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org> wrote:
-> When a default bus like the simple-bus should be used someone had to
-> call of_platform_populate() with the default match table. This match
-> table was not exported, so it is impossible for code build as a module
-> to use this. Instead of exporting of_default_bus_match_table, add a new
-> function which uses this default match table and populates the bus.
+On Tue, Aug 4, 2015 at 8:11 AM, Geert Uytterhoeven
+<geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org> wrote:
+> Add the "jedec" vendor prefix for the "JEDEC Solid State Technology
+> Association" (formerly known as the "Joint Electron Device Engineering
+> Council"), which is already in use in several bindings.
 >
-> Signed-off-by: Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>
+> Signed-off-by: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+> Acked-by: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 
 Applied. Thanks.
 
 Rob
 
 > ---
->  drivers/of/platform.c       | 9 +++++++++
->  include/linux/of_platform.h | 9 +++++++++
->  2 files changed, 18 insertions(+)
+> v2:
+>   - Add Acked-by.
+> ---
+>  Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
+>  1 file changed, 1 insertion(+)
 >
-> diff --git a/drivers/of/platform.c b/drivers/of/platform.c
-> index ddf8e42..918f01f 100644
-> --- a/drivers/of/platform.c
-> +++ b/drivers/of/platform.c
-> @@ -456,6 +456,15 @@ int of_platform_populate(struct device_node *root,
->  }
->  EXPORT_SYMBOL_GPL(of_platform_populate);
->
-> +int of_platform_default_populate(struct device_node *root,
-> +                                const struct of_dev_auxdata *lookup,
-> +                                struct device *parent)
-> +{
-> +       return of_platform_populate(root, of_default_bus_match_table, lookup,
-> +                                   parent);
-> +}
-> +EXPORT_SYMBOL_GPL(of_platform_default_populate);
-> +
->  static int of_platform_device_destroy(struct device *dev, void *data)
->  {
->         /* Do not touch devices not populated from the device tree */
-> diff --git a/include/linux/of_platform.h b/include/linux/of_platform.h
-> index 611a691..956a100 100644
-> --- a/include/linux/of_platform.h
-> +++ b/include/linux/of_platform.h
-> @@ -72,6 +72,9 @@ extern int of_platform_populate(struct device_node *root,
->                                 const struct of_device_id *matches,
->                                 const struct of_dev_auxdata *lookup,
->                                 struct device *parent);
-> +extern int of_platform_default_populate(struct device_node *root,
-> +                                       const struct of_dev_auxdata *lookup,
-> +                                       struct device *parent);
->  extern void of_platform_depopulate(struct device *parent);
->  #else
->  static inline int of_platform_populate(struct device_node *root,
-> @@ -81,6 +84,12 @@ static inline int of_platform_populate(struct device_node *root,
->  {
->         return -ENODEV;
->  }
-> +static inline int of_platform_default_populate(struct device_node *root,
-> +                                              const struct of_dev_auxdata *lookup,
-> +                                              struct device *parent)
-> +{
-> +       return -ENODEV;
-> +}
->  static inline void of_platform_depopulate(struct device *parent) { }
->  #endif
->
+> diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
+> index f727469b0893b2c3..1d88c84545b4dfd9 100644
+> --- a/Documentation/devicetree/bindings/vendor-prefixes.txt
+> +++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
+> @@ -113,6 +113,7 @@ intel       Intel Corporation
+>  intercontrol   Inter Control Group
+>  isee   ISEE 2007 S.L.
+>  isil   Intersil
+> +jedec  JEDEC Solid State Technology Association
+>  karo   Ka-Ro electronics GmbH
+>  keymile        Keymile GmbH
+>  kinetic Kinetic Technologies
 > --
-> 2.1.4
+> 1.9.1
 >
-> --
-> To unsubscribe from this list: send the line "unsubscribe devicetree" in
-> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
