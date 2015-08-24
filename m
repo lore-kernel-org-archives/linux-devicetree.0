@@ -1,98 +1,65 @@
-From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH 02/10] dt: add img,axd.txt device tree binding document
-Date: Mon, 24 Aug 2015 14:26:33 +0100
-Message-ID: <20150824132633.GF7139@leverpostej>
-References: <1440419959-14315-1-git-send-email-qais.yousef@imgtec.com>
- <1440419959-14315-3-git-send-email-qais.yousef@imgtec.com>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH 1/5] ARM: dts: sun4i: inet97fv2: Disable unused usb
+ controllers
+Date: Mon, 24 Aug 2015 15:35:18 +0200
+Message-ID: <20150824133518.GL2413@lukather>
+References: <1440369446-22195-1-git-send-email-hdegoede@redhat.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="qySB1iFW++5nzUxH"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1440419959-14315-3-git-send-email-qais.yousef-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+In-Reply-To: <1440369446-22195-1-git-send-email-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Qais Yousef <qais.yousef-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
-Cc: "alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org" <alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Aug 24, 2015 at 01:39:11PM +0100, Qais Yousef wrote:
-> Signed-off-by: Qais Yousef <qais.yousef-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
-> Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
-> Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-> Cc: Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>
-> Cc: Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> ---
->  .../devicetree/bindings/sound/img,axd.txt          | 34 ++++++++++++++++++++++
->  1 file changed, 34 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/sound/img,axd.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/sound/img,axd.txt b/Documentation/devicetree/bindings/sound/img,axd.txt
-> new file mode 100644
-> index 000000000000..6a8764a79d01
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/sound/img,axd.txt
-> @@ -0,0 +1,34 @@
-> +* AXD Audio Processing IP Binding *
-> +
-> +Required properties:
-> +- compatible: "img,axd"
 
-This sounds awfully generic. Is there not a more complete name?
+--qySB1iFW++5nzUxH
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> +- clocks: phandle for the clock that drives AXD.
-> +- interrupts: the GIC interrupt where AXD is connected
-> +- gic-irq: it takes two non-zero values, the first one is the host hwirq and
-> +           the second one is AXD's. Host's hwirq should match the value in
-> +           interrupts.
+On Mon, Aug 24, 2015 at 12:37:22AM +0200, Hans de Goede wrote:
+> The inet97fv2 tablet only has a usb-2 wifi device connected to the second
+> ehci controller, disable the first ehci controller and both ohci
+> controllers.
+>=20
+> Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 
-I don't understand what this gic-irq property is for; and it generally
-doesn't look right.
+Queued, thanks.
 
-Could you please describe what this is and why you thing it is
-necessary?
+Maxime
 
-> +
-> +Optional properties:
-> +- vpe: VPE number on which AXD should start. Must be provided if AXD is
-> +       running as a single VPE along Linux on the same core.
-> +       It can't be VPE0.
-> +       The VPE will be offlined before AXD is loaded.
+--=20
+Maxime Ripard, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
 
-Likewise could you please elaborate on this is?
+--qySB1iFW++5nzUxH
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
-What is a VPE number? What does it mean to start at that number?
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
 
-> +- inbuf-size: size of shared input buffers area. By default it's 0x7800 bytes.
-> +- outbuf-size: size of shared output buffers area. By default it's 0x3c000 bytes.
+iQIcBAEBAgAGBQJV2x2WAAoJEBx+YmzsjxAgySkP/2fV/qvALBYx9By67bBoa66a
+TmA66TLO+Qt5TeZoIRxGESpXsF4A2QqLOVTtUXOQOaAhDd6E6ZvhuinC+ghzK1uv
+Jt2YyzL40C6mlkWhAzTZ9r0yZhBXQ7b1TA3vFTskkMzBNICJ6fBzXvidFCTkLr76
+p8Rxw+JMIFkF81qDzLKTHX9nVK2DfKt/hc7UDuppsmVUl0xbmHM46E6L8DNk+mrc
+PewRYH0mOXXqXOqMXsm7Z9B6xM5jAOfEmi8D2l3FLv0pwpnb0lraXKQf9Hj9Vfe0
+vaCGJRDzyRaFYSBq2vO9paSQJzEfYAE0t2HFV9I9pRw0Rxf8nyrFnwtH3gsIftk9
+1705ZifoWtylXzBrulRRGVviuPHRjet4fXC15RsDLpe9nuK7Olg1rWgsyZhrV41b
+LA6PJNfaqJmZcF1LMYigAS9aAUHJpiK6pJQDyVnrpfPzmi0bW4kC47eeW8by/OHB
+PaSa3Xlobe32FyZtXAT6wddmR7B0xrI7TCR5VHK+l2hGyG0x5BVt4uJaQBt6wvBQ
+Kf5DUrmwKaPSHevbD+TQuhWlF1jIYytqa0VLOgAJfNLWMnX/3b3NEYRBpcAHmpni
+FOCHhUbzBycoOqLFnzGuRRuAU9drmPGZrASlLT4EwizIrmdefOehPlsFYJfH3qkI
+Fi1/JNb1IXVADiOtu/HO
+=CC8q
+-----END PGP SIGNATURE-----
 
-Is this something the kernel dynamically allocates? Why does this need
-to be in the DT?
-
-Thanks,
-Mark.
-
-> +
-> +
-> +Example:
-> +
-> +	axdclk: axdclk@400M {
-> +		#clock-cells = <0>;
-> +		compatible = "fixed-clock";
-> +		clock-frequency = <400000000>;
-> +	};
-> +
-> +	axd {
-> +		compatible = "img,axd";
-> +		clocks = <&axdclk>;
-> +		interrupts = <36 IRQ_TYPE_EDGE_RISING>;
-> +		gic-irq = <36 37>;
-> +		vpe = <1>;
-> +	};
-> -- 
-> 2.1.0
-> 
+--qySB1iFW++5nzUxH--
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
