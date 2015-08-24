@@ -1,281 +1,101 @@
-From: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
-Subject: Re: [PATCH] ARM: sun7i: dt: Add new Olimex A20 EVB device
-Date: Mon, 24 Aug 2015 09:18:00 +0200
-Message-ID: <20150824071800.GE2413@lukather>
-References: <1440002596-2611-1-git-send-email-codekipper@gmail.com>
- <20150820154545.GF30520@lukather>
- <CAEKpxBnQ+kCVYfE8JL5JzH5ZXb3azjwmjfAE5OXULaVm0bj2ew@mail.gmail.com>
-Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
+From: Javier Martinez Canillas <javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>
+Subject: Re: [PATCH 13/18] iio: adc: mcp320x: Set struct spi_driver
+ .of_match_table
+Date: Mon, 24 Aug 2015 09:19:24 +0200
+Message-ID: <55DAC57C.9020502@osg.samsung.com>
+References: <1440054451-1223-1-git-send-email-javier@osg.samsung.com>
+ <1440054451-1223-14-git-send-email-javier@osg.samsung.com>
+ <20150820200912.GA2866@deathstar> <55D64E80.4050502@osg.samsung.com>
+ <20150820222906.GB28249@deathstar> <55D65937.6070909@osg.samsung.com>
+ <55D8B605.4040302@kernel.org>
+ <CAL_Jsq+_ET8O=vQirFutY5sF7rkK-qF_1uTAroto2dZzC4ugWA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="VdOwlNaOFKGAtAAV"
-Return-path: <linux-sunxi+bncBD2ZNBF5VYJRBKMK5OXAKGQELFQMRFY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <CAEKpxBnQ+kCVYfE8JL5JzH5ZXb3azjwmjfAE5OXULaVm0bj2ew-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <http://groups.google.com/group/linux-sunxi/subscribe>
-To: Code Kipper <codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAL_Jsq+_ET8O=vQirFutY5sF7rkK-qF_1uTAroto2dZzC4ugWA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Michael Welling <mwelling-EkmVulN54Sk@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Andrea Galbusera <gizero-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Peter Meerwald <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Manfred Schlaegl <manfred.schlaegl-RbZlAiThDcE@public.gmane.org>, =?UTF-8?Q?S=c3=b8ren_Andersen?= <san-KGKi0rHxN0fKWSuBa/xFvVpr/1R2p/CL@public.gmane.org>, Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
---VdOwlNaOFKGAtAAV
-Content-Type: text/plain; charset=UTF-8
-Content-Disposition: inline
+Hello Rob and Jonathan,
 
-On Fri, Aug 21, 2015 at 07:36:01AM +0200, Code Kipper wrote:
-> On 20 August 2015 at 17:45, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-> wrote:
+On 08/24/2015 12:10 AM, Rob Herring wrote:
+> On Sat, Aug 22, 2015 at 12:48 PM, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
+>> On 20/08/15 23:48, Javier Martinez Canillas wrote:
+>>> Hello Michael,
+>>>
+>>> On 08/21/2015 12:29 AM, Michael Welling wrote:
+>>>> On Fri, Aug 21, 2015 at 12:02:40AM +0200, Javier Martinez Canillas wrote:
+>>>>> Hello Michael,
+>>>>>
+>>>>> On 08/20/2015 10:09 PM, Michael Welling wrote:
+>>>>>> On Thu, Aug 20, 2015 at 09:07:26AM +0200, Javier Martinez Canillas wrote:
+>>>>>>> The driver has an OF id table but the .of_match_table is not set so
+>>>>>>> the SPI core can't do an OF style match and the table was unused.
+>>>>>>>
+>>>>>>
+>>>>>> Is an OF style match necessary?
+>>>>>>
+>>>>>
+>>>>> Did you read the cover letter [0] on which I explain why is needed to
+>>>>> avoid breaking module autoloading in the future? Once the SPI core is
+>>>>> changed by RFC patch 18/18? (you were cc'ed in the cover letter BTW).
+>>>>
+>>>> Well I have read it now. :)
+>>>>
+>>>
+>>> Great :)
+>>>
+>>>>>
+>>>>>> I have been using devicetree and it matches based on the .id_table.
+>>>>>>
+>>>>>
+>>>>> Yes it fallbacks to the .id_table or the driver name but the correct
+>>>>> thing to do for devices registered by OF, is to match using the
+>>>>> compatible string.
+>>>>>
+>>>>>> Couldn't we just remove the mcp320x_dt_ids table instead?
+>>>>>>
+>>>>>
+>>>>> No, that is the wrong thing to do IMHO since the compatible string
+>>>>> contains both vendor and device name whle the .id_table only contains
+>>>>> a device name.
+>>>>>
+>>>>> So it makes sense to match using the compatible string and also report
+>>>>> the OF modalias information to user-space.
+>>>>>
+>>>>> Otherwise what's the point of the vendor in the compatible string for
+>>>>> SPI devices? You can just use "bar" instead of "foo,bar" as a string.
+>>>>>
+>>>>
+>>>> Well then shouldn't the patch include adding the vendor to the compatible
+>>>> string?
+>>>>
+>>>
+>>> Well, I was talking in general. You are right that this specific driver does
+>>> not have a vendor prefix for the compatible strings. This is incorrect
+>>> according to the ePAPR document [0].
+>>>
+>>> However, these compatible strings are already documented as a DT binding doc
+>>> in Documentation/devicetree/bindings/iio/adc/mcp320x.txt so I don't know
+>>> what is the correct thing to do in this situation.
+>> Take the view the old version is wrong but needs to be supported and add also
+>> the corrected strings + document them.
+>>
+>> cc'd The device tree list for any more comments on this.
 > 
-> > Hi,
-> >
-> > On Wed, Aug 19, 2015 at 06:43:16PM +0200, codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org wrote:
-> > > From: Marcus Cooper <codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> > >
-> > > The A20-SOM-EVB is a reference design of a 2-layer board for the
-> > > A20-SOM.
-> > > It expands the features of A20-SOM by adding VGA connector, HDMI
-> > > connector, audio In/Out, LCD connector, 2 Mpix camera, gigabit
-> > > Ethernet, SATA, USB-OTG and 2 USB hosts.
-> > >
-> > > This patch adds basic support for the device
-> > > https://www.olimex.com/Products/SOM/A20/A20-SOM-EVB/
-> > >
-> > > More information on the SOM can be found here
-> > > http://linux-sunxi.org/Olimex_A20-SOM.
-> > >
-> > > Signed-off-by: Marcus Cooper <codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> >
-> > Is there any other SOM planned that could work with that baseboard? Or
-> > any other baseboard for that SOM?
+> Agreed. Document both and mark the old one deprecated.
 >
-> I've seen neither. We could always create a som.dtsi later is one emerges.
 
-Yep. The real pain would be if there's several SOM and several
-base-boards that are created.
-
-> > > ---
-> > >  arch/arm/boot/dts/Makefile                    |   1 +
-> > >  arch/arm/boot/dts/sun7i-a20-olinuxino-evb.dts | 233
-> > ++++++++++++++++++++++++++
-> > >  2 files changed, 234 insertions(+)
-> > >  create mode 100644 arch/arm/boot/dts/sun7i-a20-olinuxino-evb.dts
-> >
-> Relooking at their website I can see that the device does not come under
-> the olinuxino brand so maybe I should rename the dts to
-> sun7i-a20-olimex-som-evb.dts
-
-Looks good for me.
-
+Thanks a lot for your comments. I'll do that as a follow up then.
+ 
+> Rob
 > 
-> > >
-> > > diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-> > > index 6d7cec1..fdbda9b 100644
-> > > --- a/arch/arm/boot/dts/Makefile
-> > > +++ b/arch/arm/boot/dts/Makefile
-> > > @@ -613,6 +613,7 @@ dtb-$(CONFIG_MACH_SUN7I) += \
-> > >       sun7i-a20-olinuxino-lime.dtb \
-> > >       sun7i-a20-olinuxino-lime2.dtb \
-> > >       sun7i-a20-olinuxino-micro.dtb \
-> > > +     sun7i-a20-olinuxino-evb.dtb \
-> > >       sun7i-a20-orangepi.dtb \
-> > >       sun7i-a20-orangepi-mini.dtb \
-> > >       sun7i-a20-pcduino3.dtb \
-> > > diff --git a/arch/arm/boot/dts/sun7i-a20-olinuxino-evb.dts
-> > b/arch/arm/boot/dts/sun7i-a20-olinuxino-evb.dts
-> > > new file mode 100644
-> > > index 0000000..a0071fa
-> > > --- /dev/null
-> > > +++ b/arch/arm/boot/dts/sun7i-a20-olinuxino-evb.dts
-> > > @@ -0,0 +1,233 @@
-> > > +/*
-> > > + * Copyright 2015 - Marcus Cooper <codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> > > + *
-> > > + * This file is dual-licensed: you can use it either under the terms
-> > > + * of the GPL or the X11 license, at your option. Note that this dual
-> > > + * licensing only applies to this file, and not this project as a
-> > > + * whole.
-> > > + *
-> > > + *  a) This file is free software; you can redistribute it and/or
-> > > + *     modify it under the terms of the GNU General Public License as
-> > > + *     published by the Free Software Foundation; either version 2 of
-> > the
-> > > + *     License, or (at your option) any later version.
-> > > + *
-> > > + *     This file is distributed in the hope that it will be useful,
-> > > + *     but WITHOUT ANY WARRANTY; without even the implied warranty of
-> > > + *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> > > + *     GNU General Public License for more details.
-> > > + *
-> > > + * Or, alternatively,
-> > > + *
-> > > + *  b) Permission is hereby granted, free of charge, to any person
-> > > + *     obtaining a copy of this software and associated documentation
-> > > + *     files (the "Software"), to deal in the Software without
-> > > + *     restriction, including without limitation the rights to use,
-> > > + *     copy, modify, merge, publish, distribute, sublicense, and/or
-> > > + *     sell copies of the Software, and to permit persons to whom the
-> > > + *     Software is furnished to do so, subject to the following
-> > > + *     conditions:
-> > > + *
-> > > + *     The above copyright notice and this permission notice shall be
-> > > + *     included in all copies or substantial portions of the Software.
-> > > + *
-> > > + *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-> > > + *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
-> > > + *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-> > > + *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
-> > > + *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
-> > > + *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-> > > + *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-> > > + *     OTHER DEALINGS IN THE SOFTWARE.
-> > > + */
-> > > +
-> > > +/dts-v1/;
-> > > +#include "sun7i-a20.dtsi"
-> > > +#include "sunxi-common-regulators.dtsi"
-> > > +
-> > > +#include <dt-bindings/gpio/gpio.h>
-> > > +#include <dt-bindings/interrupt-controller/irq.h>
-> > > +#include <dt-bindings/pinctrl/sun4i-a10.h>
-> > > +
-> > > +/ {
-> > > +     model = "Olimex A20-OLinuXino-EVB";
-> > > +     compatible = "olimex,a20-olinuxino-evb", "allwinner,sun7i-a20";
-> > > +
-> > > +     aliases {
-> > > +             serial0 = &uart0;
-> > > +     };
-> > > +
-> > > +     chosen {
-> > > +             stdout-path = "serial0:115200n8";
-> > > +     };
-> > > +
-> > > +     leds {
-> > > +             compatible = "gpio-leds";
-> > > +             pinctrl-names = "default";
-> > > +             pinctrl-0 = <&led_pins_olinuxinoevb>;
-> > > +
-> > > +             green {
-> > > +                     label = "a20-olinuxino-evb:green:usr";
-> > > +                     gpios = <&pio 7 2 GPIO_ACTIVE_HIGH>;
-> > > +                     default-state = "on";
-> > > +             };
-> > > +     };
-> > > +
-> > > +     reg_axp_ipsout: axp_ipsout {
-> > > +             compatible = "regulator-fixed";
-> > > +             regulator-name = "axp-ipsout";
-> > > +             regulator-min-microvolt = <5000000>;
-> > > +             regulator-max-microvolt = <5000000>;
-> > > +             regulator-always-on;
-> > > +     };
-> > > +};
-> > > +
-> > > +&ahci {
-> > > +     target-supply = <&reg_ahci_5v>;
-> > > +     status = "okay";
-> > > +};
-> > > +
-> > > +&ehci0 {
-> > > +     status = "okay";
-> > > +};
-> > > +
-> > > +&ehci1 {
-> > > +     status = "okay";
-> > > +};
-> > > +
-> > > +&gmac {
-> > > +     pinctrl-names = "default";
-> > > +     pinctrl-0 = <&gmac_pins_rgmii_a>;
-> > > +     phy = <&phy1>;
-> > > +     phy-mode = "rgmii";
-> > > +     status = "okay";
-> > > +
-> > > +     phy1: ethernet-phy@1 {
-> > > +             reg = <1>;
-> > > +     };
-> > > +};
-> > > +
-> > > +&i2c0 {
-> > > +     pinctrl-names = "default";
-> > > +     pinctrl-0 = <&i2c0_pins_a>;
-> > > +     status = "okay";
-> > > +
-> > > +     axp209: pmic@34 {
-> > > +             compatible = "x-powers,axp209";
-> > > +             reg = <0x34>;
-> > > +             interrupt-parent = <&nmi_intc>;
-> > > +             interrupts = <0 IRQ_TYPE_LEVEL_LOW>;
-> > > +
-> > > +             interrupt-controller;
-> > > +             #interrupt-cells = <1>;
-> > > +
-> > > +             acin-supply = <&reg_axp_ipsout>;
-> > > +             vin2-supply = <&reg_axp_ipsout>;
-> > > +             vin3-supply = <&reg_axp_ipsout>;
-> > > +             ldo24in-supply = <&reg_axp_ipsout>;
-> > > +             ldo3in-supply = <&reg_axp_ipsout>;
-> >
-> > Please use the axp209 dtsi.
-> >
-> Will do
-> 
-> >
-> > > +
-> > > +             regulators {
-> > > +                     vdd_rtc: ldo1 {
-> > > +                             regulator-min-microvolt = <1300000>;
-> > > +                             regulator-max-microvolt = <1300000>;
-> > > +                             regulator-always-on;
-> > > +                     };
-> > > +
-> > > +                     avcc: ldo2 {
-> > > +                             regulator-min-microvolt = <1800000>;
-> > > +                             regulator-max-microvolt = <3300000>;
-> > > +                             regulator-always-on;
-> > > +                     };
-> > > +
-> > > +                     vcc_csi0: ldo3 {
-> > > +                             regulator-min-microvolt = <700000>;
-> > > +                             regulator-max-microvolt = <3500000>;
-> > > +                             regulator-always-on;
-> > > +                     };
-> > > +
-> > > +                     vcc_csi1: ldo4 {
-> > > +                             regulator-min-microvolt = <1250000>;
-> > > +                             regulator-max-microvolt = <3300000>;
-> > > +                             regulator-always-on;
-> > > +                     };
-> >
-> > the csi regulators are always-on too? What function do they provide?
-> >
-> This was a c & p from the lime 2 dts as their fex files are very similar. I
-> can remove this for now.
 
-Please do. And if it does make the board unstable, then it's probably
-not the CSI regulator.
-
-> > > +                     vdd_cpu: dcdc2 {
-> > > +                             regulator-min-microvolt = <700000>;
-> > > +                             regulator-max-microvolt = <2275000>;
-> >
-> > This is way outside of the CPU operating range. Are you sure of your
-> > constraints?
->
-> ditto. I will check on this.
-
-Remember, constraints are not the boundaries of what the PMIC can
-provide, but what the components on the other end can accept.
-
-Maxime
-
+Best regards,
 -- 
-Maxime Ripard, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
---VdOwlNaOFKGAtAAV--
+Javier Martinez Canillas
+Open Source Group
+Samsung Research America
