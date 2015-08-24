@@ -1,69 +1,61 @@
-From: Qais Yousef <qais.yousef@imgtec.com>
-Subject: [PATCH 02/10] dt: add img,axd.txt device tree binding document
-Date: Mon, 24 Aug 2015 13:39:11 +0100
-Message-ID: <1440419959-14315-3-git-send-email-qais.yousef@imgtec.com>
-References: <1440419959-14315-1-git-send-email-qais.yousef@imgtec.com>
-Mime-Version: 1.0
-Content-Type: text/plain
+From: Vaibhav Hiremath <vaibhav.hiremath@linaro.org>
+Subject: [PATCH-v3 0/2] regulator: 88pm800: Add dual phase mode support on BUCK1
+Date: Mon, 24 Aug 2015 18:10:04 +0530
+Message-ID: <1440420006-31556-1-git-send-email-vaibhav.hiremath@linaro.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1440419959-14315-1-git-send-email-qais.yousef@imgtec.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: alsa-devel@alsa-project.org
-Cc: Qais Yousef <qais.yousef@imgtec.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: linux-arm-kernel@lists.infradead.org
+Cc: robh+dt@kernel.org, devicetree@vger.kernel.org, k.kozlowski@samsung.com, lee.jones@linaro.org, broonie@kernel.org, linux-kernel@vger.kernel.org, Vaibhav Hiremath <vaibhav.hiremath@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Qais Yousef <qais.yousef@imgtec.com>
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: Pawel Moll <pawel.moll@arm.com>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Ian Campbell <ijc+devicetree@hellion.org.uk>
-Cc: Kumar Gala <galak@codeaurora.org>
-Cc: devicetree@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
----
- .../devicetree/bindings/sound/img,axd.txt          | 34 ++++++++++++++++++++++
- 1 file changed, 34 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/sound/img,axd.txt
+88PM860 device supports dual phase mode on BUCK1 output.
+In normal usecase, BUCK1A and BUCK1B operates independently with 3A
+capacity. And they both can work as a dual phase providing 6A capacity.
 
-diff --git a/Documentation/devicetree/bindings/sound/img,axd.txt b/Documentation/devicetree/bindings/sound/img,axd.txt
-new file mode 100644
-index 000000000000..6a8764a79d01
---- /dev/null
-+++ b/Documentation/devicetree/bindings/sound/img,axd.txt
-@@ -0,0 +1,34 @@
-+* AXD Audio Processing IP Binding *
-+
-+Required properties:
-+- compatible: "img,axd"
-+- clocks: phandle for the clock that drives AXD.
-+- interrupts: the GIC interrupt where AXD is connected
-+- gic-irq: it takes two non-zero values, the first one is the host hwirq and
-+           the second one is AXD's. Host's hwirq should match the value in
-+           interrupts.
-+
-+Optional properties:
-+- vpe: VPE number on which AXD should start. Must be provided if AXD is
-+       running as a single VPE along Linux on the same core.
-+       It can't be VPE0.
-+       The VPE will be offlined before AXD is loaded.
-+- inbuf-size: size of shared input buffers area. By default it's 0x7800 bytes.
-+- outbuf-size: size of shared output buffers area. By default it's 0x3c000 bytes.
-+
-+
-+Example:
-+
-+	axdclk: axdclk@400M {
-+		#clock-cells = <0>;
-+		compatible = "fixed-clock";
-+		clock-frequency = <400000000>;
-+	};
-+
-+	axd {
-+		compatible = "img,axd";
-+		clocks = <&axdclk>;
-+		interrupts = <36 IRQ_TYPE_EDGE_RISING>;
-+		gic-irq = <36 37>;
-+		vpe = <1>;
-+	};
+This patch series is subset of earlier patch-series
+Link to earlier series - https://lkml.org/lkml/2015/7/16/722
+
+Except PATCH[5/5], all other patches in the series are accepted and
+queued up for next merge window.
+And based on discussion on the list, creating DT property to enable
+dual-phase mode on BUCK1.
+
+Testing:
+ - Tested on 88PM860 based platform
+ - Boot tested 
+ - Tested with & without DT property being set
+ - Read register value before and after probe to make sure that
+   value has been set.
+
+V2 => V3:
+========
+ - Based on discussion on earlier patch-series,
+   (comments from Krzysztof Kozlowski)
+   Dynamically controlled current capacity and registration of BUCK1B,
+   in case of BUCK1 dual phase mode enabled.
+   Now, if BUCK1 dual phase is enabled, current capacity is set to 6A,
+   and, BUCK1B will not be registered to regulator framework.
+
+V1 => V2:
+========
+ - This is new patch-series, where, all accepted patches dropped.
+   Upgraded Patch version, to ease review.
+ - Based on Mark Brown's comment, we should use DT property of its own.
+   using set_current_limit() is not right way here.
+   So, created DT property for Dual phase mode enable.
+ - Updated binding for new DT property
+
+
+Vaibhav Hiremath (2):
+  mfd: devicetree: bindings: 88pm800: Add DT property for dual phase
+    enable
+  regulator: 88pm800: Add support for configuration of dual phase on
+    BUCK1
+
+ Documentation/devicetree/bindings/mfd/88pm800.txt |  6 ++++
+ drivers/regulator/88pm800.c                       | 40 +++++++++++++++++++++++
+ include/linux/mfd/88pm80x.h                       |  3 ++
+ 3 files changed, 49 insertions(+)
+
 -- 
-2.1.0
+1.9.1
