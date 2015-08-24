@@ -1,64 +1,49 @@
-From: Alexander Sverdlin <alexander.sverdlin-xNZwKgViW5gAvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 2/2] dts: keystone: Change "ti,davinci-i2c" compatible to
- "ti,keystone-i2c"
-Date: Mon, 24 Aug 2015 09:17:15 +0200
-Message-ID: <55DAC4FB.9010201@nokia.com>
-References: <55D6F39A.2030402@nokia.com> <20150821182500.GA2000@svinekod>
+From: Peter Ujfalusi <peter.ujfalusi@ti.com>
+Subject: [PATCH 03/11] ARM: DTS: dra7-evm: Rename mmc2_3v3 supply to evm_3v3_sw
+Date: Mon, 24 Aug 2015 10:19:59 +0300
+Message-ID: <1440400807-32274-4-git-send-email-peter.ujfalusi@ti.com>
+References: <1440400807-32274-1-git-send-email-peter.ujfalusi@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20150821182500.GA2000@svinekod>
-Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: ext Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>, Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, "linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1440400807-32274-1-git-send-email-peter.ujfalusi@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Tony Lindgren <tony@atomide.com>
+Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, Tero Kristo <t-kristo@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-Hello Mark,
+Use the name for the supply as it is in the schematics since the same
+supply is used for other peripherals than MMC2, like audio.
 
-On 21/08/15 20:25, ext Mark Rutland wrote:
->> Now as "i2c-davinci" driver has special handling for Keystone it's time to switch
->> > the device tree to use new "compatible" property.
->> > 
->> > Signed-off-by: Alexander Sverdlin <alexander.sverdlin-xNZwKgViW5gAvxtiuMwx3w@public.gmane.org>
->> > ---
->> >  arch/arm/boot/dts/keystone.dtsi |    6 +++---
->> >  1 files changed, 3 insertions(+), 3 deletions(-)
->> > 
->> > diff --git a/arch/arm/boot/dts/keystone.dtsi b/arch/arm/boot/dts/keystone.dtsi
->> > index 72816d6..a846597 100644
->> > --- a/arch/arm/boot/dts/keystone.dtsi
->> > +++ b/arch/arm/boot/dts/keystone.dtsi
->> > @@ -106,7 +106,7 @@
->> >  		};
->> >  
->> >  		i2c0: i2c@2530000 {
->> > -			compatible = "ti,davinci-i2c";
->> > +			compatible = "ti,keystone-i2c";
->>From what I understand of the previous patch, this is effectively an
-> optimisation, and things worked to some extent with the "ti,davinci-i2c"
-> string.
+Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
+---
+ arch/arm/boot/dts/dra7-evm.dts | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-Indeed this is an optimization.
-
-> So could you leave that as a fallback, i.e. have:
-> 
-> 	compatible = "ti,keystone-i2c", "ti,davinci-i2c";
-
-And I have no problem leaving fallback compatible.
-
-> That way an old kernel still functions with this DT, which among other things
-> makes debugging and bisecting far easier.
-
-I've just thought, that we do not care about backwards-compatibility for the DT in
-the kernel tree, because one always have the correct one linked to the kernel.
-And this evaluation module never has it flashed to some persistent storage outside
-of kernel image, so version mismatch is impossible.
-
-> Or are things actually broken with the "ti,davinci-i2c" string?
-
-No, not in this case.
-
+diff --git a/arch/arm/boot/dts/dra7-evm.dts b/arch/arm/boot/dts/dra7-evm.dts
+index a6c82e5b64fe..de02cf5853a9 100644
+--- a/arch/arm/boot/dts/dra7-evm.dts
++++ b/arch/arm/boot/dts/dra7-evm.dts
+@@ -28,9 +28,9 @@
+ 		gpio = <&pcf_gpio_21 5 GPIO_ACTIVE_HIGH>;
+ 	};
+ 
+-	mmc2_3v3: fixedregulator-mmc2 {
++	evm_3v3_sw: fixedregulator-evm_3v3_sw {
+ 		compatible = "regulator-fixed";
+-		regulator-name = "mmc2_3v3";
++		regulator-name = "evm_3v3_sw";
+ 		regulator-min-microvolt = <3300000>;
+ 		regulator-max-microvolt = <3300000>;
+ 	};
+@@ -484,7 +484,7 @@
+ 
+ &mmc2 {
+ 	status = "okay";
+-	vmmc-supply = <&mmc2_3v3>;
++	vmmc-supply = <&evm_3v3_sw>;
+ 	bus-width = <8>;
+ };
+ 
 -- 
-Best regards,
-Alexander Sverdlin.
+2.5.0
