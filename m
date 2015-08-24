@@ -1,67 +1,68 @@
-From: Javier Martinez Canillas <javier-0uQlZySMnqxg9hUCZPvPmw@public.gmane.org>
+From: Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
 Subject: Re: [PATCH v2 1/3] ARM: dts: rockchip: add veyron-jaq board
-Date: Mon, 24 Aug 2015 20:01:29 +0200
-Message-ID: <CABxcv=nXwL6LV0vnjffA0JV4NB-_mCufe3-0c7fsRKW3DE+-_g@mail.gmail.com>
+Date: Mon, 24 Aug 2015 11:06:23 -0700
+Message-ID: <20150824180623.GA84867@google.com>
 References: <1440022721-73712-1-git-send-email-briannorris@chromium.org>
-	<CABxcv=nQAfCzj_bQ9N-XYEPCNuihyrkUOz7=ogetKzye4KKNng@mail.gmail.com>
-	<20150824175315.GA81574@google.com>
-	<7504130.baa3QaVrQb@phil>
+ <CABxcv=nQAfCzj_bQ9N-XYEPCNuihyrkUOz7=ogetKzye4KKNng@mail.gmail.com>
+ <20150824175315.GA81574@google.com>
+ <7504130.baa3QaVrQb@phil>
+ <CABxcv=nXwL6LV0vnjffA0JV4NB-_mCufe3-0c7fsRKW3DE+-_g@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <7504130.baa3QaVrQb@phil>
+Content-Disposition: inline
+In-Reply-To: <CABxcv=nXwL6LV0vnjffA0JV4NB-_mCufe3-0c7fsRKW3DE+-_g-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Cc: Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Alexandru M Stan <amstan-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Douglas Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+To: Javier Martinez Canillas <javier-0uQlZySMnqxg9hUCZPvPmw@public.gmane.org>
+Cc: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Alexandru M Stan <amstan-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Douglas Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello Heiko,
+On Mon, Aug 24, 2015 at 08:01:29PM +0200, Javier Martinez Canillas wrote:
+> On Mon, Aug 24, 2015 at 7:58 PM, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org> wrote:
+> > Am Montag, 24. August 2015, 10:53:15 schrieb Brian Norris:
+> >> On Thu, Aug 20, 2015 at 01:29:40AM +0200, Javier Martinez Canillas wrote:
+> >> > [...]
+> >> >
+> >> > > +
+> >> > > +&rk808 {
+> >> > > +       pinctrl-names = "default";
+> >> > > +       pinctrl-0 = <&pmic_int_l &dvs_1 &dvs_2>;
+> >> > > +       dvs-gpios = <&gpio7 12 GPIO_ACTIVE_HIGH>,
+> >> > > +                   <&gpio7 15 GPIO_ACTIVE_HIGH>;
+> >> >
+> >> > I see the dvs-gpios DT property is documented in the downstream
+> >> > ChromiumOS 3.18 tree [0] but I don't see it neither mentioned in
+> >> > Documentation/devicetree/bindings/mfd/rk808.txt in mainline nor code
+> >> > that parses it in the drivers/regulator/rk808-regulator.c driver.
+> >>
+> >> Good catch.
+> >>
+> >> > So I think this should be removed and also the dvs_{1,2} pinctrl
+> >> > lines.
+> >>
+> >> OK, will do. I see that jerry, minnie, and speedy also have the pinctrl
+> >> lines. Should they be killed as well?
+> >
+> > Personally I think the pinctrl settings can stay. Their configuration is part
+> > of the hardware and not subject to the binding of the device using them.
+> >
+> > And of course, the change to support them is already pending, with the binding
+> > itself already in the mfd tree.
+> >
+> 
+> I missed that the change to add support for this is already in the mfd tree.
 
-On Mon, Aug 24, 2015 at 7:58 PM, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org> wrote:
-> Am Montag, 24. August 2015, 10:53:15 schrieb Brian Norris:
->> On Thu, Aug 20, 2015 at 01:29:40AM +0200, Javier Martinez Canillas wrote:
->> > Hello Brian,
->> >
->> > [...]
->> >
->> > > +
->> > > +&rk808 {
->> > > +       pinctrl-names = "default";
->> > > +       pinctrl-0 = <&pmic_int_l &dvs_1 &dvs_2>;
->> > > +       dvs-gpios = <&gpio7 12 GPIO_ACTIVE_HIGH>,
->> > > +                   <&gpio7 15 GPIO_ACTIVE_HIGH>;
->> >
->> > I see the dvs-gpios DT property is documented in the downstream
->> > ChromiumOS 3.18 tree [0] but I don't see it neither mentioned in
->> > Documentation/devicetree/bindings/mfd/rk808.txt in mainline nor code
->> > that parses it in the drivers/regulator/rk808-regulator.c driver.
->>
->> Good catch.
->>
->> > So I think this should be removed and also the dvs_{1,2} pinctrl
->> > lines.
->>
->> OK, will do. I see that jerry, minnie, and speedy also have the pinctrl
->> lines. Should they be killed as well?
->
-> Personally I think the pinctrl settings can stay. Their configuration is part
-> of the hardware and not subject to the binding of the device using them.
->
-> And of course, the change to support them is already pending, with the binding
-> itself already in the mfd tree.
->
+Me too. So I'll leave all the dvs-* stuff as-is, then. This makes the
+v2->v3 delta very small...
 
-I missed that the change to add support for this is already in the mfd tree.
+> >
+> > So it doesn't matter to much if they're in there already or not, as we'll
+> > hopefully soon make use of them anyway.
+> >
+> 
+> Agreed.
 
->
-> So it doesn't matter to much if they're in there already or not, as we'll
-> hopefully soon make use of them anyway.
->
-
-Agreed.
-
-Best regards,
-Javier
+Brian
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
