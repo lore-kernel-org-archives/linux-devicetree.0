@@ -1,62 +1,86 @@
-From: Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
-Subject: Re: [PATCH 0/3] ARM: uniphier: add outer cache support and rework SMP operations
-Date: Tue, 25 Aug 2015 10:50:00 +0900
-Message-ID: <CAK7LNAQk4aEgZV3y90zBVMeq=jA45v683sCR1e5BBYtg5AcDOA@mail.gmail.com>
-References: <1440382692-3855-1-git-send-email-yamada.masahiro@socionext.com>
-	<CAOesGMgL3bNH_wG3igSJhNOkV0uUfNWEi0t-Gny2A1oNnGKu=w@mail.gmail.com>
+From: Pi-Cheng Chen <pi-cheng.chen-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [RESEND PATCH 0/3 v6] Add Mediatek MT8173 cpufreq driver
+Date: Tue, 25 Aug 2015 10:10:44 +0800
+Message-ID: <CALx668VWg2xVxzy8P7f5QFWRzm+TDJXUghL-_rbvRLsLYjtnng@mail.gmail.com>
+References: <1439803465-19683-1-git-send-email-pi-cheng.chen@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAOesGMgL3bNH_wG3igSJhNOkV0uUfNWEi0t-Gny2A1oNnGKu=w@mail.gmail.com>
+In-Reply-To: <1439803465-19683-1-git-send-email-pi-cheng.chen-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Jungseung Lee <js07.lee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Mauro Carvalho Chehab <mchehab-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>, "arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Jiri Slaby <jslaby-IBi9RG/b67k@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Kees Cook <keescook-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Joe Perches <joe-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Paul Bolle <pebolle-IWqWACnzNjzz+pZb47iToQ@public.gmane.org>, Greg KH <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Nathan Lynch <nathan_lynch-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>"linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linu>
+To: "Rafael J. Wysocki" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>
+Cc: Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linaro Kernel Mailman List <linaro-kernel-cunTk1MwBs8s++Sfvej+rw@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Olof,
+On Mon, Aug 17, 2015 at 5:24 PM, Pi-Cheng Chen <pi-cheng.chen-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+> MT8173 is a ARMv8 based SoC with 2 clusters. All CPUs in a single cluster
+> share the same power and clock domain. This series tries to add cpufreq support
+> for MT8173 SoC. The v6 of this series is resent with Acks added.
 
+Hi Rafael,
 
-2015-08-25 6:47 GMT+09:00 Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>:
-> Hi,
+Not sure if I has missed the merge window.
+Do I have chance to have this series merged for 4.3?
+Would you please take [1,2] of this series?
+Thanks.
+
+Best Regards,
+Pi-Cheng
+
 >
-> On Sun, Aug 23, 2015 at 7:18 PM, Masahiro Yamada
-> <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org> wrote:
->> 1/3: add outer cache support
->> 2/3: rework SMP operations
->> 3/3: add device tree nodes
+> changes in v6:
+> - Move clock and regulator consumer properties document to the device tree
+>   bindings documents of MT8173 CPU DVFS clock driver
+> - Add change log to describe what is implemented in the MT8173 cpufreq driver
+> - Add missed rcu_read_unlock() in the error path
+> - Move of_init_opp_table() call to make sure all required hardware resources
+>   are already there before it is called
+> - Add comments to describe why both platform driver and deivce registration
+>   codes are put in the initcall function
+> - Use the term "voltage tracking" instead of "voltage trace" according to an
+>   internal SoC document
 >
-> Timing of this is unfortunate, please resend after 4.3-rc1 is out and
-> we can queue it up.
-
-Given that rc8 is out and the merge window has been delayed,
-is it still too late for 4.3-rc1?
-
-
-
->> Because 2/3 highly depends on 1/3, I hope whole of this series
->> is applied to ARM-SOC tree.
+> changes in v5:
+> - Move resource allocation code from init() into probe() and remove some unused
+>   functions due to this change
+> - Fix descriptions for device tree binding document
+> - Address review comments for last version
+> - Register CPU cooling device
 >
-> Review or acked-by from Russell would be appreciated in that case.
+> Changes in v4:
+> - Add bindings for MT8173 cpufreq driver
+> - Move OPP table back into device tree
+> - Address comments for last version
 >
->> Olof,
->> From this series, I am using "ARM: uniphier:" rather than "ARM: UniPhier:"
->> for the subject prefixes because I noticed you often rephased so when you
->> applied my patches.
->> Are sub-arch names in lower cases preferable in subject prefixes?
+> Changes in v3:
+> - Implement MT8173 specific standalone cpufreq driver instead of using
+>   cpufreq-dt driver
+> - Define OPP table in the driver source code until new OPP binding is ready
 >
-> If you look at "git log --no-merges --oneline arch/arm/mach-*" you'll
-> see that most platforms use either all-caps or all-lowercase.
-
-I see.
-
-But, we use "UniPhier" (with only U and P capitalized) in our official
-documents.
-
-
-
--- 
-Best Regards
-Masahiro Yamada
+> Changes in v2:
+> - Add intermediate frequency support in cpufreq-dt driver
+> - Use voltage scaling code of cpufreq-dt for little cluster instead of
+>   implementaion in notifier of mtk-cpufreq driver
+> - Code refinement for mtk-cpufreq driver
+>
+> Pi-Cheng Chen (3):
+>   dt-bindings: mediatek: Add MT8173 CPU DVFS clock bindings
+>   cpufreq: mediatek: Add MT8173 cpufreq driver
+>   arm64: dts: mt8173: Add mt8173 cpufreq driver support
+>
+>  .../devicetree/bindings/clock/mt8173-cpu-dvfs.txt  |  83 ++++
+>  arch/arm64/boot/dts/mediatek/mt8173-evb.dts        |  18 +
+>  arch/arm64/boot/dts/mediatek/mt8173.dtsi           |  64 +++
+>  drivers/cpufreq/Kconfig.arm                        |   7 +
+>  drivers/cpufreq/Makefile                           |   1 +
+>  drivers/cpufreq/mt8173-cpufreq.c                   | 524 +++++++++++++++++++++
+>  6 files changed, 697 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/clock/mt8173-cpu-dvfs.txt
+>  create mode 100644 drivers/cpufreq/mt8173-cpufreq.c
+>
+> --
+> 1.9.1
+>
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
