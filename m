@@ -1,57 +1,78 @@
-From: Haibo Chen <haibo.chen@freescale.com>
-Subject: Re: [PATCH v6 0/6] mmc: imx: a few fixes and new feature
-Date: Tue, 25 Aug 2015 11:34:19 +0800
-Message-ID: <20150825033418.GA15468@b51421-server.ap.freescale.net>
-References: <1439293111-21077-1-git-send-email-haibo.chen@freescale.com>
- <20150813085854.GA19166@shlinux1.ap.freescale.net>
+From: Magnus Damm <magnus.damm@gmail.com>
+Subject: Re: [PATCH v2 00/07] ARM: shmobile: APMU DT support via SMP Enable
+ method V2
+Date: Tue, 25 Aug 2015 13:09:50 +0900
+Message-ID: <CANqRtoQzpNSr8dWRvGmS_VWBEsi-=dB6PUGVzWQHAXK6xb2f2A@mail.gmail.com>
+References: <20150823072427.14156.1960.sendpatchset@little-apple>
+	<20150825004923.GC17673@verge.net.au>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Return-path: <linux-mmc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20150813085854.GA19166@shlinux1.ap.freescale.net>
-Sender: linux-mmc-owner@vger.kernel.org
-To: Dong Aisheng <aisheng.dong@freescale.com>, ulf.hansson@linaro.org
-Cc: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, shawnguo@kernel.org, kernel@pengutronix.de, linux@arm.linux.org.uk, johan.derycke@barco.com, mkl@pengutronix.de, haibo.chen@freescale.com, fabio.estevam@freescale.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mmc@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <20150825004923.GC17673@verge.net.au>
+Sender: linux-sh-owner@vger.kernel.org
+To: Simon Horman <horms@verge.net.au>
+Cc: SH-Linux <linux-sh@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, =?UTF-8?B?5bCP5p6X5pWs5aSq?= <keita.kobayashi.ym@renesas.com>, Geert Uytterhoeven <geert@linux-m68k.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Aug 13, 2015 at 04:58:56PM +0800, Dong Aisheng wrote:
-> On Tue, Aug 11, 2015 at 07:38:25PM +0800, Haibo Chen wrote:
-> > Changes for v6:
-> > -remove duplicate code in esdhc_set_uhs_signaling().
-> > -fix a typo for patch-2.
-> > -make commit log of patch-3 more specific.
-> > 
-> > Haibo Chen (6):
-> >   mmc: sdhci-esdhc-imx: add imx7d support and support HS400
-> >   mmc: sdhci-esdhc-imx: add tuning-step setting support
-> >   mmc: sdhci-esdhc-imx: add imx7d support in bingding doc
-> >   ARM: dts: imx7d-sdb: add eMMC5.0 support
-> >   mmc: sdhci-esdhc-imx: set back the burst_length_enable bit to 1
-> >   mmc: sdhci-esdhc-imx: change default watermark level and burst length
-> > 
-> >  .../devicetree/bindings/mmc/fsl-imx-esdhc.txt      |   6 ++
-> >  arch/arm/boot/dts/imx7d-sdb.dts                    |  13 +++
-> >  drivers/mmc/host/sdhci-esdhc-imx.c                 | 114 ++++++++++++++++++++-
-> >  include/linux/platform_data/mmc-esdhc-imx.h        |   1 +
-> >  4 files changed, 130 insertions(+), 4 deletions(-)
-> > 
-> > -- 
-> > 1.9.1
-> > 
-> 
-> The patch set looks good to me.
-> 
-> Acked-by: Dong Aisheng <aisheng.dong@freescale.com>
-> 
-> Regards
-> Dong Aisheng
+Hi Simon,
 
-Hi Ulf,
+On Tue, Aug 25, 2015 at 9:49 AM, Simon Horman <horms@verge.net.au> wrote:
+> Hi Magnus,
+>
+> On Sun, Aug 23, 2015 at 04:24:27PM +0900, Magnus Damm wrote:
+>> ARM: shmobile: APMU DT support via SMP Enable method V2
+>>
+>> [PATCH v2 01/07] devicetree: bindings: Renesas APMU and SMP Enable method
+>> [PATCH v2 02/07] ARM: shmobile: Add APMU DT support via Enable method
+>> [PATCH v2 03/07] ARM: shmobile: Add APMU nodes to r8a7790 DTSI
+>> [PATCH v2 04/07] ARM: shmobile: Add APMU nodes to r8a7791 DTSI
+>> [PATCH v2 05/07] ARM: shmobile: Add function to prioritize DT SMP
+>> [PATCH v2 06/07] ARM: shmobile: Prioritize r8a7790 DT APMU support
+>> [PATCH v2 07/07] ARM: shmobile: Prioritize r8a7791 DT APMU support
+>>
+>> These patches add DT support for the APMU hardware commonly found in
+>> Renesas R-Car Gen2 SoCs. Without these patches the APMU gets configured
+>> through data expressed in C, and with this series applied it is possible
+>> to describe the APMU configuration in DT and let the enable method point
+>> out that the APMU should be used.
+>>
+>> Patch 1 and 2 are Documenting and adding DT support to the APMU driver
+>> together with enabling use of the enable-method way to describe that
+>> the APMU hardware is needed for SMP operation.
+>>
+>> Patch 3 and 4 are related to r8a7790/r8a7791 support that get a DTSI update
+>> to describe the APMU hardware. To avoid breaking support for older DTBs out
+>> in the wild these patches keep the older existing C code APMU configuration
+>> as-is. Patch 5-7 make sure that during run-time, if the APMU is installed
+>> via the DT enable-method then it will not be overriden by older non-DT
+>> configuration.
+>>
+>> I suggest making APMU DT configuration mandatory for SMP operation on
+>> newer SoCs and that we keep the old APMU support code in place for a
+>> good number of kernel releases or until we can identify a couple of major
+>> reasons good enough to force a DTB update on the end users.
+>>
+>> In the future r8a7793 and r8a7794 support may be added by using code
+>> similar to patch 3 and 4 but without any C-based SMP code and fallback.
+>
+> Sounds reasonable.
+>
+> Looking over the review of this series I see only one minor comment
+> regarding spelling in documentation. I have it in mind to queue up
+> this series with that problem fixed unless objections are raised
+> in the near future. Please feel free to convince me otherwise or
+> repost the series with the spelling error fixed.
 
-Can you help pull these patches into your branch?
+Thanks for your feedback! My plan is to update this series once more
+early next month, so no need to pick anything up right now.
 
+I feel that we should discuss with the ARM SoC guys about the reason
+why SMP Enable DT binding is needed. From my side it seems enough to
+determine the SMP configuration from the SoC part number (and maybe
+APMU DT bits) that we already have encoded in DT.
 
-Best regards
+Perhaps discussing that at ELCE would be good?
 
-Haibo
--- 
+Best,
+
+/ magnus
