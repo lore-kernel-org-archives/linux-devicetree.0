@@ -1,418 +1,89 @@
-From: Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH-v2 4/5] clk: 88pm800: Add clk provider driver for 88pm800
- family of devices
-Date: Tue, 25 Aug 2015 14:08:21 +0900
-Message-ID: <55DBF845.4070700@samsung.com>
-References: <1440442594-3102-1-git-send-email-vaibhav.hiremath@linaro.org>
- <1440442594-3102-6-git-send-email-vaibhav.hiremath@linaro.org>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: Re: Re-using sun5i-a13.dtsi for the r8 ?
+Date: Tue, 25 Aug 2015 07:14:50 +0200
+Message-ID: <20150825051450.GY2413@lukather>
+References: <55D6D8E3.3020403@redhat.com>
+ <20150824142630.GU2413@lukather>
+ <CAGRGNgW06-znXSnPKS3nfU_FseTZ0OcMea5qEzHVaTkpRfXHUg@mail.gmail.com>
+Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-reply-to: <1440442594-3102-6-git-send-email-vaibhav.hiremath-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Vaibhav Hiremath <vaibhav.hiremath-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="YBGzgpgHAney5ErF"
+Return-path: <linux-sunxi+bncBD2ZNBF5VYJRBTHT56XAKGQEGFHA6WQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <CAGRGNgW06-znXSnPKS3nfU_FseTZ0OcMea5qEzHVaTkpRfXHUg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <http://groups.google.com/group/linux-sunxi/subscribe>
+To: Julian Calaby <julian.calaby-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 25.08.2015 03:56, Vaibhav Hiremath wrote:
-> 88PM800 family of devices supports buffered 32KHz clock output,
-> for example,
+--YBGzgpgHAney5ErF
+Content-Type: text/plain; charset=UTF-8
+Content-Disposition: inline
+
+On Tue, Aug 25, 2015 at 10:24:51AM +1000, Julian Calaby wrote:
+> Hi Maxime,
 > 
-> 88PM800: CLK32k_1, CLK32k_2 and CLK32k_3
-> 88PM860: CLK32K_1 and CLK32K_2
+> On Tue, Aug 25, 2015 at 12:26 AM, Maxime Ripard
+> <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
+> > Hi,
+> >
+> > On Fri, Aug 21, 2015 at 09:53:07AM +0200, Hans de Goede wrote:
+> >> I just realized that I never answered your question about the need
+> >> for a tvencoder simplefb node in sun5i-a13.dtsi, like the one from
+> >> the "ARM: dts: sun5i: Add simplefb node for tvencoder output"
+> >>
+> >> I think the real question is do we want to use sun5i-a13.dtsi for
+> >> the r8 ?
+> >
+> > So far, the only information I got about the R8 was that it was
+> > strictly identical to the A13, and it was making sense to re-use it
+> > entirely.
 > 
-> This patch adds new clk provider driver to support enable/disable
-> of the 32KHz clock output from 88PM800 family of devices.
+> Does having the tvout pin change the pinmux options or is that pin
+> strictly single use?
+>
+> (And if it is strictly single use, is adding that pin the entirety of
+> the software visible hardware changes?)
+
+I have no idea.
+
+> >> I would expect us to use a sun5i-r8.dtsi, this one could then
+> >> include sun5i-a13.dtsi, and have the extra simplefb node for
+> >> the tvencoder. Putting the simplefb node for the tvencoder
+> >> in sun5i-a13.dtsi feels wrong because the A13 package does
+> >> not have a tvout pin.
+> >
+> > But if it turns out it's not, then yeah, we'll have to make another
+> > DTSI.
 > 
-> Signed-off-by: Vaibhav Hiremath <vaibhav.hiremath-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> ---
->  drivers/clk/Kconfig       |   8 ++
->  drivers/clk/Makefile      |   1 +
->  drivers/clk/clk-88pm800.c | 341 ++++++++++++++++++++++++++++++++++++++++++++++
->  3 files changed, 350 insertions(+)
->  create mode 100644 drivers/clk/clk-88pm800.c
-> 
-> diff --git a/drivers/clk/Kconfig b/drivers/clk/Kconfig
-> index 42f7120..c34c14d 100644
-> --- a/drivers/clk/Kconfig
-> +++ b/drivers/clk/Kconfig
-> @@ -167,6 +167,14 @@ config COMMON_CLK_CDCE706
->  	---help---
->  	  This driver supports TI CDCE706 programmable 3-PLL clock synthesizer.
->  
-> +config COMMON_CLK_88PM800
-> +	tristate "Clock driver for 88PM800 MFD"
-> +	depends on MFD_88PM800
-> +	---help---
-> +	  This driver supports 88PM800 & 88PM860 crystal oscillator
-> +	  clock. These multi-function devices have two (88PM860) or three
-> +	  (88PM800) fixed-rate output, clocked at 32KHz each.
-> +
->  source "drivers/clk/bcm/Kconfig"
->  source "drivers/clk/hisilicon/Kconfig"
->  source "drivers/clk/qcom/Kconfig"
-> diff --git a/drivers/clk/Makefile b/drivers/clk/Makefile
-> index c4cf075..5248cd3 100644
-> --- a/drivers/clk/Makefile
-> +++ b/drivers/clk/Makefile
-> @@ -80,3 +80,4 @@ obj-$(CONFIG_X86)			+= x86/
->  obj-$(CONFIG_ARCH_ZX)			+= zte/
->  obj-$(CONFIG_ARCH_ZYNQ)			+= zynq/
->  obj-$(CONFIG_H8300)		+= h8300/
-> +obj-$(CONFIG_COMMON_CLK_88PM800)	+= clk-88pm800.o
-> diff --git a/drivers/clk/clk-88pm800.c b/drivers/clk/clk-88pm800.c
-> new file mode 100644
-> index 0000000..4c045e1
-> --- /dev/null
-> +++ b/drivers/clk/clk-88pm800.c
-> @@ -0,0 +1,341 @@
-> +/*
-> + * clk-88pm800.c - Clock driver for 88PM800 family of devices
-> + *
-> + * This driver is created based on clk-s2mps11.c
-> + *
-> + * Copyright (C) 2015 Linaro Ltd.
-> + *
-> + * This program is free software; you can redistribute  it and/or modify it
-> + * under  the terms of  the GNU General  Public License as published by the
-> + * Free Software Foundation;  either version 2 of the  License, or (at your
-> + * option) any later version.
-> + *
-> + * This program is distributed in the hope that it will be useful,
-> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
-> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> + * GNU General Public License for more details.
-> + *
-> + */
-> +
-> +#include <linux/module.h>
-> +#include <linux/err.h>
-> +#include <linux/of.h>
-> +#include <linux/clkdev.h>
-> +#include <linux/regmap.h>
-> +#include <linux/clk-provider.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/mfd/88pm80x.h>
-> +
-> +/* Number of clocks output from 88pm800 family of device */
-> +enum {
-> +	PM800_CLK32K_1 = 0,
-> +	PM800_CLK32K_2,
-> +	PM800_CLK32K_3,
-> +	PM800_CLKS_NUM,
-> +};
-> +
-> +struct pm800_clk {
-> +	struct pm80x_chip *chip;
-> +	struct device_node *clk_np;
-> +	struct clk_hw hw;
-> +	struct clk *clk;
-> +	struct clk_lookup *lookup;
-> +	u32 mask;
-> +	u32 shift;
-> +	unsigned int reg;
-> +};
-> +
-> +static struct pm800_clk *to_pm800_clk(struct clk_hw *hw)
-> +{
-> +	return container_of(hw, struct pm800_clk, hw);
-> +}
-> +
-> +static int pm800_clk_prepare(struct clk_hw *hw)
-> +{
-> +	struct pm800_clk *pm800 = to_pm800_clk(hw);
-> +
-> +	/* We always want to use XO clock */
-> +	return regmap_update_bits(pm800->chip->regmap,
-> +				 pm800->reg,
-> +				 pm800->mask,
-> +				 PM800_32K_OUTX_SEL_XO_32KHZ << pm800->shift);
-> +}
-> +
-> +static void pm800_clk_unprepare(struct clk_hw *hw)
-> +{
-> +	struct pm800_clk *pm800 = to_pm800_clk(hw);
-> +
-> +	regmap_update_bits(pm800->chip->regmap, pm800->reg,
-> +				pm800->mask, ~pm800->mask);
-> +}
-> +
-> +static int pm800_clk_is_prepared(struct clk_hw *hw)
-> +{
-> +	int ret;
-> +	u32 val;
-> +	struct pm800_clk *pm800 = to_pm800_clk(hw);
-> +
-> +	ret = regmap_read(pm800->chip->regmap,
-> +				pm800->reg, &val);
-> +	if (ret < 0)
-> +		return -EINVAL;
-> +
-> +	return (val & pm800->mask) >> pm800->shift;
-> +}
-> +
-> +static unsigned long pm800_clk_recalc_rate(struct clk_hw *hw,
-> +					     unsigned long parent_rate)
-> +{
-> +	return 32768;
-> +}
-> +
-> +static const struct clk_ops pm800_clk_ops = {
-> +	.prepare	= pm800_clk_prepare,
-> +	.unprepare	= pm800_clk_unprepare,
-> +	.is_prepared	= pm800_clk_is_prepared,
-> +	.recalc_rate	= pm800_clk_recalc_rate,
-> +};
-> +
-> +static struct clk_init_data pm800_clks_init[PM800_CLKS_NUM] = {
-> +	[PM800_CLK32K_1] = {
-> +		.name	= "pm800_clk32k_1",
-> +		.ops	= &pm800_clk_ops,
-> +		.flags	= CLK_IS_ROOT,
-> +	},
-> +	[PM800_CLK32K_2] = {
-> +		.name	= "pm800_clk32k_2",
-> +		.ops	= &pm800_clk_ops,
-> +		.flags	= CLK_IS_ROOT,
-> +	},
-> +	[PM800_CLK32K_3] = {
-> +		.name	= "pm800_clk32k_3",
-> +		.ops	= &pm800_clk_ops,
-> +		.flags	= CLK_IS_ROOT,
-> +	},
-> +};
-> +
-> +static struct clk_init_data pm860_clks_init[PM800_CLKS_NUM] = {
-> +	[PM800_CLK32K_1] = {
-> +		.name	= "pm800_clk32k_1",
-> +		.ops	= &pm800_clk_ops,
-> +		.flags	= CLK_IS_ROOT,
-> +	},
-> +	[PM800_CLK32K_2] = {
-> +		.name	= "pm800_clk32k_2",
-> +		.ops	= &pm800_clk_ops,
-> +		.flags	= CLK_IS_ROOT,
-> +	},
-> +};
-> +
-> +static int pm800_init_clk(struct pm800_clk *pm800_clks)
-> +{
-> +	int ret;
-> +
-> +	/* Enable XO_LJ : Low jitter clock of 32KHz from XO */
-> +	ret = regmap_update_bits(pm800_clks->chip->regmap, PM800_LOW_POWER2,
-> +			PM800_LOW_POWER2_XO_LJ_EN, PM800_LOW_POWER2_XO_LJ_EN);
-> +	if (ret)
-> +		return ret;
-> +
-> +	/* Enable USE_XO : Use XO clock for all internal timing reference */
-> +	ret = regmap_update_bits(pm800_clks->chip->regmap, PM800_RTC_CONTROL,
-> +			PM800_RTC1_USE_XO, PM800_RTC1_USE_XO);
-> +	if (ret)
-> +		return ret;
-> +
-> +	/* OSC_FREERUN: Enable Osc free running mode by clearing the bit */
-> +	ret = regmap_update_bits(pm800_clks->chip->regmap, PM800_OSC_CNTRL1,
-> +			PM800_OSC_CNTRL1_OSC_FREERUN_EN, 0);
-> +	if (ret)
-> +		return ret;
-> +
-> +	return 0;
-> +}
-> +
-> +static struct device_node *pm800_clk_parse_dt(struct platform_device *pdev,
-> +		struct clk_init_data *clks_init)
-> +{
-> +	struct pm80x_chip *chip = dev_get_drvdata(pdev->dev.parent);
-> +	struct device_node *clk_np;
-> +	int i;
-> +
-> +	if (!chip->dev->of_node)
-> +		return ERR_PTR(-EINVAL);
-> +
-> +	clk_np = of_get_child_by_name(chip->dev->of_node, "clocks");
-> +	if (!clk_np) {
-> +		dev_err(&pdev->dev, "could not find clock sub-node\n");
-> +		return ERR_PTR(-EINVAL);
-> +	}
-> +
-> +	for (i = 0; i < PM800_CLKS_NUM; i++) {
-> +		if (!clks_init[i].name)
-> +			continue; /* Skip clocks not present in some devices */
-> +
-> +		of_property_read_string_index(clk_np, "clock-output-names", i,
-> +				&clks_init[i].name);
-> +	}
-> +
-> +	return clk_np;
-> +}
-> +
-> +static int pm800_clk_probe(struct platform_device *pdev)
-> +{
-> +	struct pm80x_chip *chip = dev_get_drvdata(pdev->dev.parent);
-> +	struct pm800_clk *pm800_clks;
-> +	struct clk_init_data *clks_init;
-> +	static struct clk **clk_table;
-> +	static struct clk_onecell_data *of_clk_data;
-> +	int i, ret;
-> +
-> +	pm800_clks = devm_kcalloc(&pdev->dev, PM800_CLKS_NUM,
-> +				sizeof(*pm800_clks), GFP_KERNEL);
-> +	if (!pm800_clks)
-> +		return -ENOMEM;
-> +
-> +	clk_table = devm_kcalloc(&pdev->dev, PM800_CLKS_NUM,
-> +				sizeof(struct clk *), GFP_KERNEL);
-> +	if (!clk_table)
-> +		return -ENOMEM;
-> +
-> +	switch (platform_get_device_id(pdev)->driver_data) {
-> +	case CHIP_PM800:
-> +		clks_init = pm800_clks_init;
-> +		break;
-> +	case CHIP_PM860:
-> +		clks_init = pm860_clks_init;
-> +		break;
-> +	default:
-> +		dev_err(&pdev->dev, "Invalid device type\n");
-> +		return -EINVAL;
-> +	}
-> +
-> +	/* Store clocks of_node in first element of pm800_clks array */
-> +	pm800_clks->clk_np = pm800_clk_parse_dt(pdev, clks_init);
-> +	if (IS_ERR(pm800_clks->clk_np))
-> +		return PTR_ERR(pm800_clks->clk_np);
-> +
-> +	of_clk_data = devm_kzalloc(&pdev->dev, sizeof(*of_clk_data), GFP_KERNEL);
-> +	if (!of_clk_data) {
-> +		ret = -ENOMEM;
-> +		goto err_clk_np;
-> +	}
-> +
-> +	for (i = 0; i < PM800_CLKS_NUM; i++) {
-> +		if (!clks_init[i].name)
-> +			continue; /* Skip clocks not present in some devices */
-> +
-> +		pm800_clks[i].chip = chip;
-> +		pm800_clks[i].hw.init = &clks_init[i];
-> +		/*
-> +		 * As of now, mask and shift formula below works for both
-> +		 * 88PM800 and it's family of devices,
-> +		 *
-> +		 *  PM800_RTC_MISC2:
-> +		 *      1:0	= CK_32K_OUT1_SEL
-> +		 *      3:2	= CK_32K_OUT2_SEL
-> +		 *      5:4	= CK_32K_OUT3_SEL
-> +		 */
-> +		pm800_clks[i].shift = i * 2;
-> +		pm800_clks[i].mask = PM800_32K_OUTX_SEL_MASK << pm800_clks[i].shift;
-> +		pm800_clks[i].reg = PM800_RTC_MISC2;
-> +
-> +		pm800_clks[i].clk = devm_clk_register(&pdev->dev,
-> +							&pm800_clks[i].hw);
-> +		if (IS_ERR(pm800_clks[i].clk)) {
-> +			dev_err(&pdev->dev, "Fail to register : %s\n",
-> +						clks_init[i].name);
-> +			ret = PTR_ERR(pm800_clks[i].clk);
-> +			goto err;
-> +		}
-> +
-> +		pm800_clks[i].lookup = clkdev_create(pm800_clks[i].clk,
-> +					clks_init[i].name, NULL);
-> +		if (!pm800_clks[i].lookup) {
-> +			ret = -ENOMEM;
-> +			goto err;
-> +		}
-> +
-> +		clk_table[i] = pm800_clks[i].clk;
-> +	}
-> +
-> +	of_clk_data->clks = clk_table;
-> +	of_clk_data->clk_num = PM800_CLKS_NUM;
-> +	ret = of_clk_add_provider(pm800_clks->clk_np, of_clk_src_onecell_get,
-> +			of_clk_data);
-> +	if (ret) {
-> +		dev_err(&pdev->dev, "Fail to add OF clk provider : %d\n", ret);
-> +		goto err;
-> +	}
-> +
-> +	/* Common for all 32KHz clock output */
-> +	ret = pm800_init_clk(&pm800_clks[0]);
-> +	if (ret) {
-> +		dev_err(&pdev->dev, "Failed to initialize clk : %d\n", ret);
-> +		goto err;
+> IMHO that's enough of a change to warrant a new DTSI,
 
-You're missing here of_clk_del_provider().
+Yep.
 
-> +	}
-> +
-> +	platform_set_drvdata(pdev, pm800_clks);
-> +
-> +	return 0;
-> +
-> +err:
-> +	for (i = 0; i < PM800_CLKS_NUM; i++) {
-> +		if (pm800_clks[i].lookup)
-> +			clkdev_drop(pm800_clks[i].lookup);
-> +	}
-> +err_clk_np:
-> +	/* Drop the reference obtained in pm800_clk_parse_dt */
-> +	of_node_put(pm800_clks[0].clk_np);
-> +
-> +	return ret;
-> +}
-> +
-> +static int pm800_clk_remove(struct platform_device *pdev)
-> +{
-> +	struct pm800_clk *pm800_clks = platform_get_drvdata(pdev);
-> +	int i;
-> +
-> +	of_clk_del_provider(pm800_clks[0].clk_np);
-> +	/* Drop the reference obtained in pm800_clk_parse_dt */
-> +	of_node_put(pm800_clks[0].clk_np);
-> +
-> +	for (i = 0; i < PM800_CLKS_NUM; i++) {
-> +		if (pm800_clks[i].lookup)
-> +			clkdev_drop(pm800_clks[i].lookup);
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static const struct platform_device_id pm800_clk_id[] = {
-> +	{ "88pm800-clk", CHIP_PM800},
-> +	{ "88pm860-clk", CHIP_PM860},
-> +	{ },
-> +};
-> +MODULE_DEVICE_TABLE(platform, pm800_clk_id);
-> +
-> +static struct platform_driver pm800_clk_driver = {
-> +	.driver = {
-> +		.name  = "88pm80x-clk",
-> +	},
-> +	.probe = pm800_clk_probe,
-> +	.remove = pm800_clk_remove,
-> +	.id_table = pm800_clk_id,
-> +};
-> +
-> +static int __init pm800_clk_init(void)
-> +{
-> +	return platform_driver_register(&pm800_clk_driver);
-> +}
-> +subsys_initcall(pm800_clk_init);
+> I feel that someone's going to use the lack of DTSI as "proof" that
+> we don't support the R8 or try to use the tv encoder on an A13.
 
-Does it have to be subsys_initcall instead of regular
-module_platform_driver? Strict ordering of modules should be avoided. Do
-you require it?
+But that argument is dubious. That's not how it works. The list of
+DTSIs has never been comprehensive list of the supported SoCs.
 
-Rest looks fine (actually Stephen pointed some issue during previous
-review so I had easier job).
+We support SoCs that don't have a DTSI (like we can see with the R8),
+and we also support, and even support DT that don't even have a
+matching machine. It's never been that way, and will never be.
 
-Best regards,
-Krzysztof
+Plus, you're never actually using the DTSI directly, just the board
+DT, that will be there.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Maxime
+
+-- 
+Maxime Ripard, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
+--YBGzgpgHAney5ErF--
