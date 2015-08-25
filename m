@@ -1,127 +1,80 @@
-From: Cyrille Pitchen <cyrille.pitchen@atmel.com>
-Subject: Re: [PATCH v8 1/2] mfd: devicetree: add bindings for Atmel Flexcom
-Date: Tue, 25 Aug 2015 13:42:21 +0200
-Message-ID: <55DC549D.7060307@atmel.com>
-References: <cover.1437731428.git.cyrille.pitchen@atmel.com> <738a001f14a5fa4fa8e5f90ad859a318cba0de42.1437731428.git.cyrille.pitchen@atmel.com> <20150724150854.GI3436@x1>
+From: Ulf Hansson <ulf.hansson@linaro.org>
+Subject: Re: [PATCH v2 00/16] omap_hsmmc: regulator usage cleanup and fixes
+Date: Tue, 25 Aug 2015 13:50:19 +0200
+Message-ID: <CAPDyKFpSst5wnR-ZJd3w1J-iWYXqKvXAJTaye_DK=NH_cBzsgw@mail.gmail.com>
+References: <1438604801-11823-1-git-send-email-kishon@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain; charset=UTF-8
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20150724150854.GI3436@x1>
+In-Reply-To: <1438604801-11823-1-git-send-email-kishon@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Lee Jones <lee.jones@linaro.org>
-Cc: nicolas.ferre@atmel.com, boris.brezillon@free-electrons.com, alexandre.belloni@free-electrons.com, sameo@linux.intel.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org
+To: Kishon Vijay Abraham I <kishon@ti.com>
+Cc: Andreas Fenkart <afenkart@gmail.com>, Tony Lindgren <tony@atomide.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-mmc <linux-mmc@vger.kernel.org>, linux-omap <linux-omap@vger.kernel.org>, Sekhar Nori <nsekhar@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi all,
+On 3 August 2015 at 14:26, Kishon Vijay Abraham I <kishon@ti.com> wrote:
+> Changes from v1:
+> *) return on -EPROBE_DEFER and other fatal errors. (Don't return only
+>    if the return value is -ENODEV)
+> *) Remove the beagle x15 dts patch. It can be part of a different
+>    series.
+> *) Avoid using regulator_is_enabled for vqmmc since if the regulator
+>    is shared and the other users are not using regulator_is_enabled
+>    then there can be unbalanced regulator_enable/regulator_disable
+>
+> This patch series does the following
+> *) Uses devm_regulator_get_optional() for vmmc and then removes the
+>    CONFIG_REGULATOR check altogether.
+> *) return on -EPROBE_DEFER and any other fatal errors
+> *) enable/disable vmmc_aux regulator based on prior state
+>
+> I've pushed this patch series to
+> git://git.ti.com/linux-phy/linux-phy.git mmc_regulator_cleanup_fixes_v2
+>
+> Please note the branch also has the pbias fixes [1] & [2].
+> [1] -> https://lkml.org/lkml/2015/7/27/358
+> [2] -> https://lkml.org/lkml/2015/7/27/391
+>
+> This series is in preparation for implementing the voltage switch
+> sequence so that UHS cards can be supported.
+>
+> Did basic read/write test in J6, J6 Eco, Beagle-x15, AM437x EVM,
+> Beaglebone black, OMAP5 uEVM and OMAP4 PANDA.
+>
+> Kishon Vijay Abraham I (15):
+>   mmc: host: omap_hsmmc: use devm_regulator_get_optional() for vmmc
+>   mmc: host: omap_hsmmc: return on fatal errors from omap_hsmmc_reg_get
+>   mmc: host: omap_hsmmc: cleanup omap_hsmmc_reg_get()
+>   mmc: host: omap_hsmmc: use the ocrmask provided by the vmmc regulator
+>   mmc: host: omap_hsmmc: use mmc_host's vmmc and vqmmc
+>   mmc: host: omap_hsmmc: remove unnecessary pbias set_voltage
+>   mmc: host: omap_hsmmc: return error if any of the regulator APIs fail
+>   mmc: host: omap_hsmmc: add separate functions for enable/disable
+>     supply
+>   mmc: host: omap_hsmmc: add separate function to set pbias
+>   mmc: host: omap_hsmmc: avoid pbias regulator enable on power off
+>   mmc: host: omap_hsmmc: don't use ->set_power to set initial regulator
+>     state
+>   mmc: host: omap_hsmmc: enable/disable vmmc_aux regulator based on
+>     previous state
+>   mmc: host: omap_hsmmc: use regulator_is_enabled to find pbias status
+>   mmc: host: omap_hsmmc: use ios->vdd for setting vmmc voltage
+>   mmc: host: omap_hsmmc: remove CONFIG_REGULATOR check
+>
+> Roger Quadros (1):
+>   mmc: host: omap_hsmmc: use "mmc_of_parse_voltage" to get ocr_avail
+>
+>  .../devicetree/bindings/mmc/ti-omap-hsmmc.txt      |    2 +
+>  drivers/mmc/host/omap_hsmmc.c                      |  340 +++++++++++++-------
+>  2 files changed, 224 insertions(+), 118 deletions(-)
+>
+> --
+> 1.7.9.5
+>
 
-any feedback on this kind of DT bindings?
-Is it a proper way of using the "ranges" property?
+I tried to apply this on top of my next branch, but it didn't work.
+Could you please rebase and send a v3!?
+While you do that, please add Tony's tested-by tag as well.
 
-Best regards,
-
-Cyrille
-
-Le 24/07/2015 17:08, Lee Jones a =C3=A9crit :
-> DT chaps,
->=20
-> Please can you take a look at this binding.
->=20
-> In particular the use of the 'ranges' property to store device 'mode'=
-=2E
->=20
->> This patch documents the DT bindings for the Atmel Flexcom which wil=
-l be
->> introduced by sama5d2x SoCs. These bindings will be used by the actu=
-al
->> Flexcom driver to be sent in another patch.
->>
->> Signed-off-by: Cyrille Pitchen <cyrille.pitchen@atmel.com>
->> Acked-by: Nicolas Ferre <nicolas.ferre@atmel.com>
->> ---
->>  .../devicetree/bindings/mfd/atmel-flexcom.txt      | 68 +++++++++++=
-+++++++++++
->>  1 file changed, 68 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/mfd/atmel-flex=
-com.txt
->>
->> diff --git a/Documentation/devicetree/bindings/mfd/atmel-flexcom.txt=
- b/Documentation/devicetree/bindings/mfd/atmel-flexcom.txt
->> new file mode 100644
->> index 000000000000..588d527dbfa7
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/mfd/atmel-flexcom.txt
->> @@ -0,0 +1,68 @@
->> +* Device tree bindings for Atmel Flexcom (Flexible Serial Communica=
-tion Unit)
->> +
->> +The Atmel Flexcom is just a wrapper which embeds a SPI controller, =
-an I2C
->> +controller and an USART. Only one function can be used at a time an=
-d is chosen
->> +at boot time according to the device tree.
->> +
->> +Required properties:
->> +- compatible:		Should be "atmel,sama5d2-flexcom"
->> +- reg:			Should be the pair (offset, size) for the Flexcom
->> +			dedicated I/O registers (without USART, TWI or SPI
->> +			registers).
->> +- clocks:		Should be the Flexcom peripheral clock from PMC.
->> +- #address-cells:	Should be <2>
->> +- #size-cells:		Should be <1>
->> +- ranges:		Should be a list of ranges.
->> +			One range per peripheral wrapped by the Flexcom. So each
->> +			range is a triplet (child_addr, parent_addr, size). The
->> +			first u32 of "child_addr" is the value to be set in the
->> +			Operating Mode bitfield of the Flexcom Mode Register.
->> +			Then "parent_addr" stores the base address of the
->> +			corresponding peripheral in the system memory. Finally,
->> +			"size" if the size of the memory region of this
->> +			peripheral.
->> +
->> +Required child:
->> +A single available child for the serial controller to enable.
->> +
->> +Required properties of this child:
->> +- reg:			Should be a pair (child_addr, size) with child_addr
->> +			matching one of the parent ranges.
->> +- clocks:		Should be the very same phandle as for the parent's one.
->> +
->> +Other properties remain unchanged. See documentation of the respect=
-ive device:
->> +- ../serial/atmel-usart.txt
->> +- ../spi/spi_atmel.txt
->> +- ../i2c/i2c-at91.txt
->> +
->> +Example:
->> +
->> +flexcom@f8034000 {
->> +	compatible =3D "atmel,sama5d2-flexcom";
->> +	reg =3D <0xf8034000 0x200>;
->> +	clocks =3D <&flx0_clk>;
->> +	#address-cells =3D <2>;
->> +	#size-cells =3D <1>;
->> +	ranges =3D <1 0 0xf8034200 0x200		/* opmode 1: USART */
->> +		  2 0 0xf8034400 0x200		/* opmode 2: SPI */
->> +		  3 0 0xf8034600 0x200>;	/* opmode 3: I2C */
->> +
->> +	spi@2,0 {
->> +		compatible =3D "atmel,at91rm9200-spi";
->> +		reg =3D <2 0 0x200>;
->> +		interrupts =3D <19 IRQ_TYPE_LEVEL_HIGH 7>;
->> +		pinctrl-names =3D "default";
->> +		pinctrl-0 =3D <&pinctrl_flx0_default>;
->> +		#address-cells =3D <1>;
->> +		#size-cells =3D <0>;
->> +		clocks =3D <&flx0_clk>;
->> +		clock-names =3D "spi_clk";
->> +		atmel,fifo-size =3D <32>;
->> +
->> +		mtd_dataflash@0 {
->> +			compatible =3D "atmel,at25f512b";
->> +			reg =3D <0>;
->> +			spi-max-frequency =3D <20000000>;
->> +		};
->> +	};
->> +};
->=20
+Kind regards
+Uffe
