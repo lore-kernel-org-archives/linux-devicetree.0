@@ -1,70 +1,78 @@
-From: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>
-Subject: Re: [PATCH linux-next v4 5/5] mtd: atmel-quadspi: add driver for Atmel QSPI controller
-Date: Tue, 25 Aug 2015 12:22:10 +0200
-Message-ID: <201508251222.10813.marex@denx.de>
-References: <cover.1440410236.git.cyrille.pitchen@atmel.com> <201508241303.52066.marex@denx.de> <55DC40C1.3050405@atmel.com>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH-v2 1/5] mfd: 88pm800: Fix tabbing issue
+Date: Tue, 25 Aug 2015 11:30:19 +0100
+Message-ID: <20150825103019.GP19409@x1>
+References: <1440442594-3102-1-git-send-email-vaibhav.hiremath@linaro.org>
+ <1440442594-3102-2-git-send-email-vaibhav.hiremath@linaro.org>
+ <20150825075121.GE19409@x1>
+ <55DC2A51.6090008@linaro.org>
 Mime-Version: 1.0
-Content-Type: Text/Plain; charset=iso-8859-1
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <55DC40C1.3050405-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Cyrille Pitchen <cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Cc: nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, beanhuo-AL4WhLSQfzjQT0dZR+AlfA@public.gmane.org, juhosg-p3rKhJxN3npAfugRpC6u6w@public.gmane.org, shijie.huang-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, ben-/+tVBieCtBitmTQ+vhA3Yw@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <55DC2A51.6090008@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Vaibhav Hiremath <vaibhav.hiremath@linaro.org>
+Cc: linux-arm-kernel@lists.infradead.org, robh+dt@kernel.org, mturquette@baylibre.com, k.kozlowski@samsung.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tuesday, August 25, 2015 at 12:17:37 PM, Cyrille Pitchen wrote:
-> Hi Marek,
-
-Hi!
-
-> Le 24/08/2015 13:03, Marek Vasut a =E9crit :
-> > On Monday, August 24, 2015 at 12:14:00 PM, Cyrille Pitchen wrote:
-> >> This driver add support to the new Atmel QSPI controller embedded =
-into
-> >> sama5d2x SoCs. It expects a NOR memory to be connected to the QSPI
-> >> controller.
-> >>=20
-> >> Signed-off-by: Cyrille Pitchen <cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-> >> Acked-by: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-> >=20
-> > Hi,
-> >=20
-> > [...]
-> >=20
-> >> +/* Register access macros */
-> >=20
-> > These are functions, not macros :)
-> >=20
-> > btw is there any reason for these ? I'd say, just put the read*() a=
-nd
-> > write*() functions directly into the code and be done with it, it i=
-s
-> > much less confusing.
+On Tue, 25 Aug 2015, Vaibhav Hiremath wrote:
+> On Tuesday 25 August 2015 01:21 PM, Lee Jones wrote:
+> >On Tue, 25 Aug 2015, Vaibhav Hiremath wrote:
+> >
+> >>Driver had coding style issues where spaces were used instead
+> >>of tabs. This patch fixes them all.
+> >
+> >That's not all it's doing though is it?
+> >
 >=20
-> If you don't mind, I'd rather keep some of these inline functions. I =
-have
-> no strong justification, it's more a personal taste: it makes lines
-> shorter as it avoids the need to add "->regs + ".
-> Also it makes the code consistent with other Atmel drivers which alre=
-ady
-> use such wrappers.
->=20
-> However I'll fix the comment and remove the byte and word versions, w=
-hich
-> are not used. So only qspi_readl() and qspi_writel() are left.
->=20
-> Does it sound good to you?
+> Yes, its just tabbing related fixes.
 
-In my mind, seeing explicit readl_relaxed() somewhere is much easier to
-digest than seeing some wrapper, which I have to look up. But please do
-wait for others to voice their concern too, I might not be the best per=
-son
-to tell you what to do when it comes to wrapping IO accessors ;-)
+No, it's really not.
 
-Best regards,
-Marek Vasut
---
-To unsubscribe from this list: send the line "unsubscribe linux-spi" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> >Please describe all of your changes.
+
+=2E.. we're also taking the opportunity to remove the unnecessary
+protection surrounding some of the defined values.
+
+> >>Signed-off-by: Vaibhav Hiremath <vaibhav.hiremath@linaro.org>
+> >>---
+> >>  drivers/mfd/88pm800.c | 125 ++++++++++++++++++++++++-------------=
+-------------
+> >>  1 file changed, 61 insertions(+), 64 deletions(-)
+> >>
+> >>diff --git a/drivers/mfd/88pm800.c b/drivers/mfd/88pm800.c
+> >>index f104a32..c4e097d 100644
+> >>--- a/drivers/mfd/88pm800.c
+> >>+++ b/drivers/mfd/88pm800.c
+> >>@@ -30,55 +30,55 @@
+> >>  #include <linux/of_device.h>
+> >>
+> >>  /* Interrupt Registers */
+> >>-#define PM800_INT_STATUS1		(0x05)
+> >>+#define PM800_INT_STATUS1		0x05
+> >>  #define PM800_ONKEY_INT_STS1		(1 << 0)
+> >>  #define PM800_EXTON_INT_STS1		(1 << 1)
+> >>-#define PM800_CHG_INT_STS1			(1 << 2)
+> >>-#define PM800_BAT_INT_STS1			(1 << 3)
+> >>-#define PM800_RTC_INT_STS1			(1 << 4)
+> >>+#define PM800_CHG_INT_STS1		(1 << 2)
+> >>+#define PM800_BAT_INT_STS1		(1 << 3)
+> >>+#define PM800_RTC_INT_STS1		(1 << 4)
+> >>  #define PM800_CLASSD_OC_INT_STS1	(1 << 5)
+> >
+> >These should all be replaced by BIT().
+> >
+> >Please fix the whole file.
+>=20
+> Will do.
+>=20
+> Thanks,
+> Vaibhav
+
+--=20
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org =E2=94=82 Open source software for ARM SoCs
+=46ollow Linaro: Facebook | Twitter | Blog
