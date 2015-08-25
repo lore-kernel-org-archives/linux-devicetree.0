@@ -1,76 +1,112 @@
-From: "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
-Subject: Re: [RFC PATCH 1/7] DMA: tegra-apb: Correct runtime-pm usage
-Date: Wed, 26 Aug 2015 00:46:46 +0200
-Message-ID: <55DCF056.40004@intel.com>
-References: <1439905755-25150-1-git-send-email-jonathanh@nvidia.com> <55DB1AA9.7090906@nvidia.com> <20150824142143.GK13546@localhost> <13590312.K3yoQT5YDc@vostro.rjw.lan> <55DC375F.1070907@nvidia.com>
+From: Rob Herring <robherring2@gmail.com>
+Subject: Re: [PATCH 1/7] drm/vc4: Add devicetree bindings for VC4.
+Date: Tue, 25 Aug 2015 18:22:29 -0500
+Message-ID: <CAL_JsqJpWmEpOZK5-HG5Xz8J-h7SX8ViytagjxGLdeMwXeONow@mail.gmail.com>
+References: <1439427380-2436-1-git-send-email-eric@anholt.net>
+ <1439427380-2436-2-git-send-email-eric@anholt.net> <55CEC25E.7070303@wwwdotorg.org>
+ <874mjxwyx5.fsf@eliezer.anholt.net> <CAL_JsqJxiGUR5BxBPyR3-0NxqWsOxMGrWQA6cMXe2pjTom__nw@mail.gmail.com>
+ <CAF6AEGu2fi0M7DsicHz+5SDHi1DyDRmvWjkmYPPgY6pZ423WcA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <55DC375F.1070907@nvidia.com>
+In-Reply-To: <CAF6AEGu2fi0M7DsicHz+5SDHi1DyDRmvWjkmYPPgY6pZ423WcA@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jon Hunter <jonathanh@nvidia.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Vinod Koul <vinod.koul@intel.com>
-Cc: Laxman Dewangan <ldewangan@nvidia.com>, Stephen Warren <swarren@wwwdotorg.org>, Thierry Reding <thierry.reding@gmail.com>, Alexandre Courbot <gnurou@gmail.com>, dmaengine@vger.kernel.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+To: Rob Clark <robdclark@gmail.com>
+Cc: Eric Anholt <eric@anholt.net>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Stephen Warren <swarren@wwwdotorg.org>, Lee Jones <lee@kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, dri-devel <dri-devel@lists.freedesktop.org>, linux-rpi-kernel@lists.infradead.org, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On 8/25/2015 11:37 AM, Jon Hunter wrote:
-> On 25/08/15 01:04, Rafael J. Wysocki wrote:
->> On Monday, August 24, 2015 07:51:43 PM Vinod Koul wrote:
->>> On Mon, Aug 24, 2015 at 02:22:49PM +0100, Jon Hunter wrote:
->>>> On 24/08/15 10:22, Vinod Koul wrote:
->>>>> On Mon, Aug 24, 2015 at 09:47:13AM +0100, Jon Hunter wrote:
->>>>>> On 23/08/15 15:17, Vinod Koul wrote:
->>>>>>> On Tue, Aug 18, 2015 at 02:49:09PM +0100, Jon Hunter wrote:
->>>>>>>
->>>>>>>> @@ -1543,7 +1531,7 @@ static int tegra_dma_pm_suspend(struct device *dev)
->>>>>>>>   	int ret;
->>>>>>>>   
->>>>>>>>   	/* Enable clock before accessing register */
->>>>>>>> -	ret = tegra_dma_runtime_resume(dev);
->>>>>>>> +	ret = pm_runtime_get_sync(dev);
->>>>>>> why is this required ?
->>>>>> Because the clock could be disabled when this function is called. This
->>>>>> function saves the DMA context so that if the context is lost during
->>>>>> suspend, it can be restored.
->>>>> Have you verified this? Coz my understanding is that when PM does suspend it
->>>>> will esnure you are runtime resume if runtime suspended and then will do
->>>>> suspend.
->>>>> So you do not need to do above
->>>> I see what you are saying. I did some testing with ftrace today to trace
->>>> rpm and suspend/resume calls. If the dma controller is runtime suspended
->>>> and I do not call pm_runtime_get_sync() above then I do not see any
->>>> runtime resume of the dma controller prior to suspend. Now I was hoping
->>>> that this would cause a complete kernel crash but it did not and so the
->>>> DMA clock did not appear to be needed here (at least on the one board I
->>>> tested). However, I would not go as far as to remove this and prefer to
->>>> keep as above.
->>> Okay am adding Rafael here for his recommendations.
->> Well, and what is the question I'm supposed to answer, exactly?
+On Tue, Aug 25, 2015 at 3:42 PM, Rob Clark <robdclark@gmail.com> wrote:
+> On Mon, Aug 24, 2015 at 9:47 AM, Rob Herring <robherring2@gmail.com> wrote:
+>> On Mon, Aug 17, 2015 at 1:30 PM, Eric Anholt <eric@anholt.net> wrote:
+>>> Stephen Warren <swarren@wwwdotorg.org> writes:
+>>>
+>>>> On 08/12/2015 06:56 PM, Eric Anholt wrote:
+>>>>> Signed-off-by: Eric Anholt <eric@anholt.net>
+>>>>
+>>>> This one definitely needs a patch description, since someone might not
+>>>> know what a VC4 is, and "git log" won't show the text from the binding
+>>>> doc itself. I'd suggest adding the initial paragraph of the binding doc
+>>>> as the patch description, or more.
+>>>>
+>>>>> diff --git a/Documentation/devicetree/bindings/gpu/brcm,bcm-vc4.txt b/Documentation/devicetree/bindings/gpu/brcm,bcm-vc4.txt
+>>>
+>>>>> +- hvss:             List of references to HVS video scalers
+>>>>> +- encoders: List of references to output encoders (HDMI, SDTV)
+>>>>
+>>>> Would it make sense to make all those nodes child node of the vc4
+>>>> object. That way, there's no need to have these lists of objects; they
+>>>> can be automatically built up as the DT is enumerated. I know that e.g.
+>>>> the NVIDIA Tegra host1x binding works this way, and I think it may have
+>>>> been inspired by other similar cases.
+>>>
+>>> I've looked at tegra, and the component system used by msm appears to be
+>>> nicer than it.  To follow tegra's model, it looks like I need to build
+>>> this extra bus thing corresponding to host1x that is effectively the
+>>> drivers/base/component.c code, so that I can get at vc4's structure from
+>>> the component drivers.
+>>>
+>>>> Of course, this is only appropriate if the HW modules really are
+>>>> logically children of the VC4 HW module. Perhaps they aren't. If they
+>>>> aren't though, I wonder what this "vc4" module actually represents in HW?
+>>>
+>>> It's the subsystem, same as we use a subsystem node for msm, sti,
+>>> rockchip, imx, and exynos.  This appears to be the common model of how
+>>> the collection of graphics-related components is represented in the DT.
 >>
->> I was in Seattle last week, so haven't been following this closely.
->>
->>> I have tested in past and if my driver was runtime suspended we were resumed
->>> prior to being suspended. So I am not sure why you did not see that
->>> behaviour, and if that is right we don't need to force resume here
->> We're adding code for skipping runtime-resume-before-system-suspend, because
->> it is not desirable in general.
->>
->> The rule of thumb is that if you know you need to change the device's settings
->> (eg. because of wakeup being enabled or not) for system suspend and that
->> requires the device to be resumed, resume it.  It can stay suspended
->> otherwise.
-> Thanks Rafael.
+>> I think most of these bindings are wrong. They are grouped together
+>> because that is what DRM wants not because that reflects the h/w. So
+>> convince me this is one block, not that it is what other people do.
 >
-> Vinod, thinking about this some more, I am wondering if it is just
-> better to get rid of the suspend/resume callbacks and simply handling
-> the state in the runtime suspend/resume callbacks. I think that would be
-> safe too, because once the clock has been disabled, then who knows what
-> the context state will be.
+> I think, when it comes to more complex driver subsystems (like drm in
+> particular) we have a bit of mismatch between how things look from the
+> "pure hw ignoring sw" perspective, and the "how sw and in particular
+> userspace expects things" perspective.  Maybe it is less a problem in
+> other subsystems, where bindings map to things that are only visible
+> in the kernel, or well defined devices like uart or sata controller.
+> But when given the choice, I'm going to err on the side of not
+> confusing userspace and the large software stack that sits above
+> drm/kms, over dt purity.
 
-One caveat here: system suspend may be invoked at any time, so you need 
-to ensure that the device is properly suspended when that happens.
+I wasn't implying that this should get exposed to userspace as
+components. V4L2 has gone that route with media controller and
+sub-devs. Perhaps that is needed for DRM, perhaps not. For the moment,
+I definitely agree the kernel should hide most/all of those details,
+but I don't think that means DT has to hide the details or know what
+components are handled by a single driver. My point was that on the DT
+side we have a mixture of OF graph usage, parent-child nodes or custom
+phandles (this case) to describe the relationships between h/w
+components. That's not necessarily wrong, but we should have some
+rules around how certain relationships are described. Then in the
+drivers we have a mixture of deferred probe, component API, and custom
+inter-module APIs to control init order. We then have a mixture of all
+those which leads to very few if any drivers having the same overall
+structure that could be shared. Should we mandate using the component
+API for h/w that is discrete blocks? Should we throw out the component
+API for something else? Can we tie the graph parsing and component API
+together with common code?
 
-I believe you at least need a ->suspend callback for that.
 
-Cheers,
-Rafael
+> Maybe it would be nice to have a sort of dt overlay that adds the bits
+> needed to tie together hw blocks that should be assembled into a
+> single logical device for linux and userspace (but maybe not some
+> other hypothetical operating system).  But so far that doesn't exist.
+
+OF graph is supposed to do this. OF graph is a double edged sword. It
+is very flexible, but then each platform can do something different.
+We need to have some level of requirements around how the OF graph is
+used. As an example, any system with an HDMI connector should have an
+"hdmi-connector" compatible node or encoder/bridge chips/blocks must
+have certain ports defined.
+
+
+> All we have is a hammer (devicetree), everything looks like a nail.
+> End result is we end up adding some things in the bindings which
+> aren't purely about the hw.  Until someone invents a screwdriver, I'm
+> not sure what else to do.  In the end, other hypothetical OS is free
+> to ignore those extra fields in the bindings if it doesn't need them.
+> So meh?
+
+We really want to err on the side of fewer bindings, not more as once
+used they are an ABI.
+
+Rob
