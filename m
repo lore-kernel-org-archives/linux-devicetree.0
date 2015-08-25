@@ -1,49 +1,93 @@
-From: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v10 1/5] mtd: nand: vf610_nfc: Freescale NFC for VF610,
- MPC5125 and others
-Date: Tue, 25 Aug 2015 13:34:12 -0700
-Message-ID: <20150825203412.GM81844@google.com>
-References: <1438594050-4595-1-git-send-email-stefan@agner.ch>
- <1438594050-4595-2-git-send-email-stefan@agner.ch>
+From: Rob Clark <robdclark@gmail.com>
+Subject: Re: [PATCH 1/7] drm/vc4: Add devicetree bindings for VC4.
+Date: Tue, 25 Aug 2015 16:42:18 -0400
+Message-ID: <CAF6AEGu2fi0M7DsicHz+5SDHi1DyDRmvWjkmYPPgY6pZ423WcA@mail.gmail.com>
+References: <1439427380-2436-1-git-send-email-eric@anholt.net>
+ <1439427380-2436-2-git-send-email-eric@anholt.net>
+ <55CEC25E.7070303@wwwdotorg.org>
+ <874mjxwyx5.fsf@eliezer.anholt.net>
+ <CAL_JsqJxiGUR5BxBPyR3-0NxqWsOxMGrWQA6cMXe2pjTom__nw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1438594050-4595-2-git-send-email-stefan-XLVq0VzYD2Y@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
-Cc: dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, sebastian-E0PNVn5OA6ohrxcnuTQ+TQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, marb-Z4QKGCRq86k@public.gmane.org, aaron-yuhzfaV+M/Wz3Dx2OeFgIA@public.gmane.org, bpringlemeir-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, albert.aribaud-iEu9NFBzPZE@public.gmane.org, klimov.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Bill Pringlemeir <bpringlemeir-ygJ1pmMJ17cAvxtiuMwx3w@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <CAL_JsqJxiGUR5BxBPyR3-0NxqWsOxMGrWQA6cMXe2pjTom__nw@mail.gmail.com>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Rob Herring <robherring2@gmail.com>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Stephen Warren <swarren@wwwdotorg.org>, Lee Jones <lee@kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, dri-devel <dri-devel@lists.freedesktop.org>, linux-rpi-kernel@lists.infradead.org, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-One more thing...
-
-On Mon, Aug 03, 2015 at 11:27:26AM +0200, Stefan Agner wrote:
-> --- /dev/null
-> +++ b/drivers/mtd/nand/vf610_nfc.c
-> @@ -0,0 +1,645 @@
-...
-> +struct vf610_nfc {
-> +	struct mtd_info mtd;
-> +	struct nand_chip chip;
-> +	struct device *dev;
-> +	void __iomem *regs;
-> +	struct completion cmd_done;
-> +	uint buf_offset;
-> +	int page_sz;
-
-AFAICT (even with the 2nd patch), you never really use this field. You
-just set it/increment it, but don't use it for anything. Kill it?
-
-> +	/* Status and ID are in alternate locations. */
-> +	int alt_buf;
-> +#define ALT_BUF_ID   1
-> +#define ALT_BUF_STAT 2
-> +#define ALT_BUF_ONFI 3
-> +	struct clk *clk;
-> +};
-
-Brian
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+T24gTW9uLCBBdWcgMjQsIDIwMTUgYXQgOTo0NyBBTSwgUm9iIEhlcnJpbmcgPHJvYmhlcnJpbmcy
+QGdtYWlsLmNvbT4gd3JvdGU6Cj4gT24gTW9uLCBBdWcgMTcsIDIwMTUgYXQgMTozMCBQTSwgRXJp
+YyBBbmhvbHQgPGVyaWNAYW5ob2x0Lm5ldD4gd3JvdGU6Cj4+IFN0ZXBoZW4gV2FycmVuIDxzd2Fy
+cmVuQHd3d2RvdG9yZy5vcmc+IHdyaXRlczoKPj4KPj4+IE9uIDA4LzEyLzIwMTUgMDY6NTYgUE0s
+IEVyaWMgQW5ob2x0IHdyb3RlOgo+Pj4+IFNpZ25lZC1vZmYtYnk6IEVyaWMgQW5ob2x0IDxlcmlj
+QGFuaG9sdC5uZXQ+Cj4+Pgo+Pj4gVGhpcyBvbmUgZGVmaW5pdGVseSBuZWVkcyBhIHBhdGNoIGRl
+c2NyaXB0aW9uLCBzaW5jZSBzb21lb25lIG1pZ2h0IG5vdAo+Pj4ga25vdyB3aGF0IGEgVkM0IGlz
+LCBhbmQgImdpdCBsb2ciIHdvbid0IHNob3cgdGhlIHRleHQgZnJvbSB0aGUgYmluZGluZwo+Pj4g
+ZG9jIGl0c2VsZi4gSSdkIHN1Z2dlc3QgYWRkaW5nIHRoZSBpbml0aWFsIHBhcmFncmFwaCBvZiB0
+aGUgYmluZGluZyBkb2MKPj4+IGFzIHRoZSBwYXRjaCBkZXNjcmlwdGlvbiwgb3IgbW9yZS4KPj4+
+Cj4+Pj4gZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9ncHUv
+YnJjbSxiY20tdmM0LnR4dCBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9ncHUv
+YnJjbSxiY20tdmM0LnR4dAo+Pgo+Pj4+ICstIGh2c3M6ICAgICAgICAgICAgIExpc3Qgb2YgcmVm
+ZXJlbmNlcyB0byBIVlMgdmlkZW8gc2NhbGVycwo+Pj4+ICstIGVuY29kZXJzOiBMaXN0IG9mIHJl
+ZmVyZW5jZXMgdG8gb3V0cHV0IGVuY29kZXJzIChIRE1JLCBTRFRWKQo+Pj4KPj4+IFdvdWxkIGl0
+IG1ha2Ugc2Vuc2UgdG8gbWFrZSBhbGwgdGhvc2Ugbm9kZXMgY2hpbGQgbm9kZSBvZiB0aGUgdmM0
+Cj4+PiBvYmplY3QuIFRoYXQgd2F5LCB0aGVyZSdzIG5vIG5lZWQgdG8gaGF2ZSB0aGVzZSBsaXN0
+cyBvZiBvYmplY3RzOyB0aGV5Cj4+PiBjYW4gYmUgYXV0b21hdGljYWxseSBidWlsdCB1cCBhcyB0
+aGUgRFQgaXMgZW51bWVyYXRlZC4gSSBrbm93IHRoYXQgZS5nLgo+Pj4gdGhlIE5WSURJQSBUZWdy
+YSBob3N0MXggYmluZGluZyB3b3JrcyB0aGlzIHdheSwgYW5kIEkgdGhpbmsgaXQgbWF5IGhhdmUK
+Pj4+IGJlZW4gaW5zcGlyZWQgYnkgb3RoZXIgc2ltaWxhciBjYXNlcy4KPj4KPj4gSSd2ZSBsb29r
+ZWQgYXQgdGVncmEsIGFuZCB0aGUgY29tcG9uZW50IHN5c3RlbSB1c2VkIGJ5IG1zbSBhcHBlYXJz
+IHRvIGJlCj4+IG5pY2VyIHRoYW4gaXQuICBUbyBmb2xsb3cgdGVncmEncyBtb2RlbCwgaXQgbG9v
+a3MgbGlrZSBJIG5lZWQgdG8gYnVpbGQKPj4gdGhpcyBleHRyYSBidXMgdGhpbmcgY29ycmVzcG9u
+ZGluZyB0byBob3N0MXggdGhhdCBpcyBlZmZlY3RpdmVseSB0aGUKPj4gZHJpdmVycy9iYXNlL2Nv
+bXBvbmVudC5jIGNvZGUsIHNvIHRoYXQgSSBjYW4gZ2V0IGF0IHZjNCdzIHN0cnVjdHVyZSBmcm9t
+Cj4+IHRoZSBjb21wb25lbnQgZHJpdmVycy4KPj4KPj4+IE9mIGNvdXJzZSwgdGhpcyBpcyBvbmx5
+IGFwcHJvcHJpYXRlIGlmIHRoZSBIVyBtb2R1bGVzIHJlYWxseSBhcmUKPj4+IGxvZ2ljYWxseSBj
+aGlsZHJlbiBvZiB0aGUgVkM0IEhXIG1vZHVsZS4gUGVyaGFwcyB0aGV5IGFyZW4ndC4gSWYgdGhl
+eQo+Pj4gYXJlbid0IHRob3VnaCwgSSB3b25kZXIgd2hhdCB0aGlzICJ2YzQiIG1vZHVsZSBhY3R1
+YWxseSByZXByZXNlbnRzIGluIEhXPwo+Pgo+PiBJdCdzIHRoZSBzdWJzeXN0ZW0sIHNhbWUgYXMg
+d2UgdXNlIGEgc3Vic3lzdGVtIG5vZGUgZm9yIG1zbSwgc3RpLAo+PiByb2NrY2hpcCwgaW14LCBh
+bmQgZXh5bm9zLiAgVGhpcyBhcHBlYXJzIHRvIGJlIHRoZSBjb21tb24gbW9kZWwgb2YgaG93Cj4+
+IHRoZSBjb2xsZWN0aW9uIG9mIGdyYXBoaWNzLXJlbGF0ZWQgY29tcG9uZW50cyBpcyByZXByZXNl
+bnRlZCBpbiB0aGUgRFQuCj4KPiBJIHRoaW5rIG1vc3Qgb2YgdGhlc2UgYmluZGluZ3MgYXJlIHdy
+b25nLiBUaGV5IGFyZSBncm91cGVkIHRvZ2V0aGVyCj4gYmVjYXVzZSB0aGF0IGlzIHdoYXQgRFJN
+IHdhbnRzIG5vdCBiZWNhdXNlIHRoYXQgcmVmbGVjdHMgdGhlIGgvdy4gU28KPiBjb252aW5jZSBt
+ZSB0aGlzIGlzIG9uZSBibG9jaywgbm90IHRoYXQgaXQgaXMgd2hhdCBvdGhlciBwZW9wbGUgZG8u
+CgpJIHRoaW5rLCB3aGVuIGl0IGNvbWVzIHRvIG1vcmUgY29tcGxleCBkcml2ZXIgc3Vic3lzdGVt
+cyAobGlrZSBkcm0gaW4KcGFydGljdWxhcikgd2UgaGF2ZSBhIGJpdCBvZiBtaXNtYXRjaCBiZXR3
+ZWVuIGhvdyB0aGluZ3MgbG9vayBmcm9tIHRoZQoicHVyZSBodyBpZ25vcmluZyBzdyIgcGVyc3Bl
+Y3RpdmUsIGFuZCB0aGUgImhvdyBzdyBhbmQgaW4gcGFydGljdWxhcgp1c2Vyc3BhY2UgZXhwZWN0
+cyB0aGluZ3MiIHBlcnNwZWN0aXZlLiAgTWF5YmUgaXQgaXMgbGVzcyBhIHByb2JsZW0gaW4Kb3Ro
+ZXIgc3Vic3lzdGVtcywgd2hlcmUgYmluZGluZ3MgbWFwIHRvIHRoaW5ncyB0aGF0IGFyZSBvbmx5
+IHZpc2libGUKaW4gdGhlIGtlcm5lbCwgb3Igd2VsbCBkZWZpbmVkIGRldmljZXMgbGlrZSB1YXJ0
+IG9yIHNhdGEgY29udHJvbGxlci4KQnV0IHdoZW4gZ2l2ZW4gdGhlIGNob2ljZSwgSSdtIGdvaW5n
+IHRvIGVyciBvbiB0aGUgc2lkZSBvZiBub3QKY29uZnVzaW5nIHVzZXJzcGFjZSBhbmQgdGhlIGxh
+cmdlIHNvZnR3YXJlIHN0YWNrIHRoYXQgc2l0cyBhYm92ZQpkcm0va21zLCBvdmVyIGR0IHB1cml0
+eS4KCk1heWJlIGl0IHdvdWxkIGJlIG5pY2UgdG8gaGF2ZSBhIHNvcnQgb2YgZHQgb3ZlcmxheSB0
+aGF0IGFkZHMgdGhlIGJpdHMKbmVlZGVkIHRvIHRpZSB0b2dldGhlciBodyBibG9ja3MgdGhhdCBz
+aG91bGQgYmUgYXNzZW1ibGVkIGludG8gYQpzaW5nbGUgbG9naWNhbCBkZXZpY2UgZm9yIGxpbnV4
+IGFuZCB1c2Vyc3BhY2UgKGJ1dCBtYXliZSBub3Qgc29tZQpvdGhlciBoeXBvdGhldGljYWwgb3Bl
+cmF0aW5nIHN5c3RlbSkuICBCdXQgc28gZmFyIHRoYXQgZG9lc24ndCBleGlzdC4KQWxsIHdlIGhh
+dmUgaXMgYSBoYW1tZXIgKGRldmljZXRyZWUpLCBldmVyeXRoaW5nIGxvb2tzIGxpa2UgYSBuYWls
+LgpFbmQgcmVzdWx0IGlzIHdlIGVuZCB1cCBhZGRpbmcgc29tZSB0aGluZ3MgaW4gdGhlIGJpbmRp
+bmdzIHdoaWNoCmFyZW4ndCBwdXJlbHkgYWJvdXQgdGhlIGh3LiAgVW50aWwgc29tZW9uZSBpbnZl
+bnRzIGEgc2NyZXdkcml2ZXIsIEknbQpub3Qgc3VyZSB3aGF0IGVsc2UgdG8gZG8uICBJbiB0aGUg
+ZW5kLCBvdGhlciBoeXBvdGhldGljYWwgT1MgaXMgZnJlZQp0byBpZ25vcmUgdGhvc2UgZXh0cmEg
+ZmllbGRzIGluIHRoZSBiaW5kaW5ncyBpZiBpdCBkb2Vzbid0IG5lZWQgdGhlbS4KU28gbWVoPwoK
+QlIsCi1SCgoKPiBSb2IKPgo+IF9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fCj4gbGludXgtYXJtLWtlcm5lbCBtYWlsaW5nIGxpc3QKPiBsaW51eC1hcm0ta2Vy
+bmVsQGxpc3RzLmluZnJhZGVhZC5vcmcKPiBodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWls
+bWFuL2xpc3RpbmZvL2xpbnV4LWFybS1rZXJuZWwKX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlz
+dHMuZnJlZWRlc2t0b3Aub3JnCmh0dHA6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9s
+aXN0aW5mby9kcmktZGV2ZWwK
