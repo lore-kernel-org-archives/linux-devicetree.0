@@ -1,54 +1,57 @@
-From: Kevin Hilman <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [RESEND PATCH v16 3/4] soc: rockchip: power-domain: Add power domain driver
-Date: Tue, 25 Aug 2015 13:57:16 -0700
-Message-ID: <7hwpwjaxxv.fsf@deeprootsystems.com>
+From: Kevin Hilman <khilman@kernel.org>
+Subject: Re: [RESEND PATCH v16 4/4] ARM: dts: add the support power-domain node on RK3288 SoCs
+Date: Tue, 25 Aug 2015 14:07:04 -0700
+Message-ID: <7hfv37axhj.fsf@deeprootsystems.com>
 References: <1440487486-6154-1-git-send-email-wxt@rock-chips.com>
-	<1440487486-6154-4-git-send-email-wxt@rock-chips.com>
+	<1440487486-6154-5-git-send-email-wxt@rock-chips.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1440487486-6154-4-git-send-email-wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org> (Caesar
-	Wang's message of "Tue, 25 Aug 2015 15:24:45 +0800")
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Cc: heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "jinkun.hong" <jinkun.hong-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1440487486-6154-5-git-send-email-wxt@rock-chips.com> (Caesar
+	Wang's message of "Tue, 25 Aug 2015 15:24:46 +0800")
+Sender: linux-kernel-owner@vger.kernel.org
+To: Caesar Wang <wxt@rock-chips.com>
+Cc: heiko@sntech.de, ulf.hansson@linaro.org, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, dianders@chromium.org, tomasz.figa@gmail.com, dmitry.torokhov@gmail.com, linux-kernel@vger.kernel.org, galak@codeaurora.org, linux@arm.linux.org.uk, robh+dt@kernel.org, arnd@arndb.de, linus.walleij@linaro.org, ijc+devicetree@hellion.org.uk, devicetree@vger.kernel.org, "jinkun.hong" <jinkun.hong@rock-chips.com>
 List-Id: devicetree@vger.kernel.org
 
-Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org> writes:
+Caesar Wang <wxt@rock-chips.com> writes:
 
-> This driver is found on RK3288 SoCs.
+> We can add more domains node in the future.
+> This patch add the needed clocks into power-controller.
+> As the discuess about all the device clocks being listed in
+> the power-domains itself.
 >
-> In order to meet high performance and low power requirements, a power
-> management unit is designed or saving power when RK3288 in low power
-> mode.
-> The RK3288 PMU is dedicated for managing the power of the whole chip.
+> There are several reasons as follows:
 >
-> PMU can work in the Low Power Mode by setting bit[0] of PMU_PWRMODE_CON
-> register. After setting the register, PMU would enter the Low Power mode.
-> In the low power mode, pmu will auto power on/off the specified power
-> domain, send idle req to specified power domain, shut down/up pll and
-> so on. All of above are configurable by setting corresponding registers.
->
-> Signed-off-by: jinkun.hong <jinkun.hong-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-> Signed-off-by: Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+> Firstly, the clocks need be turned off to save power when
+> the system enter the suspend state. So we need to enumerate
+> the clocks in the dts. In order to power domain can turn on and off.
 
-[...]
+Yes, but this is the job of device drivers which are runtime PM adapted
+to gate their own clocks.  I agree these clocks need to be enumerated in
+the DTS, but they should be in the device nodes.
 
-> diff --git a/drivers/soc/rockchip/Kconfig b/drivers/soc/rockchip/Kconfig
-> new file mode 100644
-> index 0000000..87a09c3
-> --- /dev/null
-> +++ b/drivers/soc/rockchip/Kconfig
-> @@ -0,0 +1,13 @@
-> +#
-> +# Rockchip Soc drivers
-> +#
-> +config PM_GENERIC_DOMAINS
+> Secondly, the reset-circuit should reset be synchronous on RK3288,
+> then sync revoked. So we need to enable clocks of all devices.
+> In other words, we have to enable the clocks before you operate them
+> if all the device clocks are included in someone domians.
 
-Why are you (re)defining this config option?  This name is already used in kernel/pm/Kconfig.
+Yes, this is pretty common for reset.  
+
+> Someone wish was to get the clocks by reading the clocks from the
+> device nodes, We can do that but we can solve the above issues.
+
+I don't follow this sentence.  Are you saying doing that will not solve
+the above issues?  Why not?  Please explain.
+
+If there are non-device clocks that also need to be enabled before
+asserting reset, then those are candidates for the power-domain node,
+but not device clocks.
+
+> Anyway, the best ideas we can fix it in the future SoCs.
+
+I don't think this is an SoC design issue as this is needed when you
+have synchronous reset.  My concern is primarily around how to describe
+this in the DT.
 
 Kevin
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
