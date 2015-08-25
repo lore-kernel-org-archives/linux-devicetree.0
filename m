@@ -1,125 +1,78 @@
-From: Leo Yan <leo.yan-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v1 3/3] arm64: dts: add Hi6220 mailbox node
-Date: Wed, 26 Aug 2015 00:00:30 +0800
-Message-ID: <20150825160030.GA3774@leoy-linaro>
-References: <20150821184059.GB2000@svinekod>
- <20150824091845.GA28290@leoy-linaro>
- <20150824095144.GA7139@leverpostej>
- <1440411596.3517.12.camel@linaro.org>
- <20150824114903.GT10728@bivouac.eciton.net>
- <1440490427.10987.29.camel@linaro.org>
- <20150825094630.GU10728@bivouac.eciton.net>
- <1440497710.10987.42.camel@linaro.org>
- <20150825104256.GB13471@leverpostej>
- <1440510194.10987.52.camel@linaro.org>
+From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 1/1] of: to support binding numa node to root subnode(non-bus)
+Date: Tue, 25 Aug 2015 11:05:48 -0500
+Message-ID: <CAL_JsqL-FQqzFYBGmUn13-Tt0sTL_Mohyn752hADBkF2WfukBw@mail.gmail.com>
+References: <1440419410-10520-1-git-send-email-thunder.leizhen@huawei.com>
+ <CAL_Jsq+Ab-=Dwi4LFR8NjB8mL1DJTY_a1a4Zm88wjcWHM4eS0g@mail.gmail.com> <55DBD1F8.1010206@huawei.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1440510194.10987.52.camel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+In-Reply-To: <55DBD1F8.1010206-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Haojian Zhuang <haojian.zhuang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Leif Lindholm <leif.lindholm-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Catalin Marinas <Catalin.Marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Bintian Wang <bintian.wang-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, Yiping Xu <xuyiping-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Wei Xu <xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "guodong.xu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <guodong.xu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Jian Zhang <zhangjian001-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Zhenwei Wang <Zhenwei.wang-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Haoju Mo <mohaoju-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Dan Zhao <dan.zhao-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, kongfei@hisilicon.c
+To: "Leizhen (ThunderTown)" <thunder.leizhen-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+Cc: Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Zefan Li <lizefan-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, Xinwei Hu <huxinwei-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, Tianhong Ding <dingtianhong-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, Hanjun Guo <guohanjun-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Aug 25, 2015 at 09:43:14PM +0800, Haojian Zhuang wrote:
-> On Tue, 2015-08-25 at 11:42 +0100, Mark Rutland wrote:
-> > > > Are you then going to hack GRUB, release a special HiKey version of
-> > > > GRUB, not support any other versions, and still can your firmware
-> > > > UEFI?
-> > > 
-> > > I don't need to hack GRUB at all.
-> > 
-> > Then it is working for you by pure chance alone.
-> > 
-> > Please listen to the advice you are being given here; we're trying to
-> > ensure that your platform functions (and continues to function) as best
-> > it can.
-> 
-> Since we discussed a lot on this, let's make a conclusion on it.
-> 
-> 1. UEFI could append the reserved buffer in it's memory mapping.
-> 2. These reserved buffer must be declared in DT, since we also need to
->    support non-UEFI (uboot) at the same time.
-> 3. Mailbox node should reference reserved buffer by phandle in DT. Then
->    map the buffer as non-cacheable in driver.
-> 4. These reserved buffer must use "no-map" property since it should be
->    non-cacheable in driver.
+On Mon, Aug 24, 2015 at 9:24 PM, Leizhen (ThunderTown)
+<thunder.leizhen-hv44wF8Li93QT0dZR+AlfA@public.gmane.org> wrote:
+>
+>
+> On 2015/8/24 21:25, Rob Herring wrote:
+>> +benh
+>>
+>> On Mon, Aug 24, 2015 at 7:30 AM, Zhen Lei <thunder.leizhen-hv44wF8Li93QT0dZR+AlfA@public.gmane.org> wrote:
+>>> If use of_platform_populate to scan dt-nodes and add devices, the
+>>> subnode of root(such as /smmu), when being scanned and invoke
+>>
+>> You should have a bus as the sub-node of root rather than devices
+>> directly off of root. You still have a problem though...
+>
+> But actually the parent of bus is also &platform_bus if we didn't have special initialization.
+> For example:
+> The function of_platform_device_create_pdata invoke of_device_alloc first, then invoke of_device_add.
+> But in of_device_alloc, we can find that:
+>         dev->dev.parent = parent ? : &platform_bus;
 
-For more specific discussion for DTS, i list two options at here;
+This syntax is confusing, but in GCC this is the same as:
 
-- Option 1: just simply reserve memory regions through memory node,
-  and mailbox node will directly use the buffer through reg ranges;
+dev->dev.parent = parent ? parent : &platform_bus;
 
-- Option 2: use reserved-memory and mailbox node will refer phandle
-  of reserved-memory;
+And parent is set for everything except nodes off of root.
+/sys/devices/platform/* will show the hierarchy.
 
-These two options both can work well with UEFI and Uboot, but option 1
-is more simple and straightforward; so i personally prefer it. But
-look forwarding your guys' suggestion.
+>>> of_device_add, the ofdev->dev.parent is always equal &platform_bus. So
+>>> that, function set_dev_node will not be called. And in device_add,
+>>> dev_to_node(parent) always return NUMA_NO_NODE.
+>>>
+>>> Signed-off-by: Zhen Lei <thunder.leizhen-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+>>> ---
+>>>  drivers/base/core.c | 2 +-
+>>>  drivers/of/device.c | 2 +-
+>>>  2 files changed, 2 insertions(+), 2 deletions(-)
+>>>
+>>> diff --git a/drivers/base/core.c b/drivers/base/core.c
+>>> index dafae6d..5df4f46b 100644
+>>> --- a/drivers/base/core.c
+>>> +++ b/drivers/base/core.c
+>>> @@ -1017,7 +1017,7 @@ int device_add(struct device *dev)
+>>>                 dev->kobj.parent = kobj;
+>>>
+>>>         /* use parent numa_node */
+>>> -       if (parent)
+>>> +       if (parent && (parent != &platform_bus))
+>>
+>> This is only fixing one specific case, but I think things are broken
+>> for any case where the NUMA associativity if not set at the top level
+>> bus node. I think this should be something like:
+>>
+>> if (parent && (dev_to_node(dev) != NO_NUMA_NODE))
+>
+> It seems a mistake, we should use equal sign.
+> if (parent && (dev_to_node(dev) == NUMA_NO_NODE))
 
-Option 1:
+Ah, yes.
 
-	memory@0 {
-		device_type = "memory";
-		reg = <0x00000000 0x00000000 0x00000000 0x05e00000>,
-		      <0x00000000 0x05f00000 0x00000000 0x00eff000>,
-		      <0x00000000 0x06e00000 0x00000000 0x0060f000>,
-		      <0x00000000 0x07410000 0x00000000 0x38bf0000>;
-	};
-
-        [...]
-
-	mailbox: mailbox@f7510000 {
-		#mbox-cells = <1>;
-		compatible = "hisilicon,hi6220-mbox";
-		reg = <0x0 0xf7510000 0x0 0x1000>, /* IPC_S */
-		      <0x0 0x06dff800 0x0 0x0800>; /* Mailbox buffer */
-		interrupts = <GIC_SPI 94 IRQ_TYPE_LEVEL_HIGH>;
-	};
-
-Option 2:
-
-	memory@0 {
-		device_type = "memory";
-		reg = <0x0 0x0 0x0 0x40000000>;
-	};
-
-	reserved-memory {
-		#address-cells = <2>;
-		#size-cells = <2>;
-		ranges;
-
-		mcu_reserved: mcu_reserved@06dff000 {
-			no-map;
-			reg = <0x0 0x06dff000 0x0 0x00001000>,	/* MCU mailbox buffer */
-			      <0x0 0x05e00000 0x0 0x00100000>,	/* MCU firmware buffer */
-			      <0x0 0x0740f000 0x0 0x00001000>;	/* MCU firmware section */
-		};
-	};
-
-        [...]
-
-	mailbox: mailbox@f7510000 {
-		#mbox-cells = <1>;
-		compatible = "hisilicon,hi6220-mbox";
-		reg = <0x0 0xf7510000 0x0 0x1000>; /* IPC_S */
-		memory-region = <&mcu_reserved>;   /* Mailbox buffer */
-		interrupts = <GIC_SPI 94 IRQ_TYPE_LEVEL_HIGH>;
-	};
-
-
-> 5. A patch is necessary in kernel. If efi stub feature is enabled,
->    arm kernel should not parse memory node or reserved memory buffer in
->    DT any more. Arm kernel should either fetch memory information from 
->    efi or DT. Currently arm kernel fetch both efi memory information and
->    reserved buffer from DTB at the same time.
-> 
-> Do you agree on these points?
-> 
-> Regards
-> Haojian
-> 
+Rob
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
