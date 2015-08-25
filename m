@@ -1,54 +1,90 @@
 From: Ulf Hansson <ulf.hansson@linaro.org>
-Subject: Re: [PATCH v2 0/3] introduce driver for the Atmel SDMMC
-Date: Tue, 25 Aug 2015 14:07:14 +0200
-Message-ID: <CAPDyKFqVjDSKaBhb1_V-u1PEykxgU9V+0Dp00VTDNFLEkRO2Qg@mail.gmail.com>
-References: <1438179768-818-1-git-send-email-ludovic.desroches@atmel.com>
+Subject: Re: [RFC PATCH v1] mmc: sdhci-of-arasan: Add the support for sdhci-5.1
+Date: Tue, 25 Aug 2015 14:07:07 +0200
+Message-ID: <CAPDyKFrAGd-xDKLK=xAm_L=jgM0t4eQpspngZkwy+B3923BndQ@mail.gmail.com>
+References: <1439279190-9556-1-git-send-email-shawn.lin@rock-chips.com>
+	<55CA0C6F.7000002@xilinx.com>
+	<55CAD499.5070701@xilinx.com>
+	<55D270FF.5030309@rock-chips.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1438179768-818-1-git-send-email-ludovic.desroches@atmel.com>
+In-Reply-To: <55D270FF.5030309@rock-chips.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Ludovic Desroches <ludovic.desroches@atmel.com>
-Cc: linux-mmc <linux-mmc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Nicolas Ferre <nicolas.ferre@atmel.com>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, pebolle@tiscali.nl, Arnd Bergmann <arnd@arndb.de>
+To: Shawn Lin <shawn.lin@rock-chips.com>
+Cc: Michal Simek <michal.simek@xilinx.com>, =?UTF-8?Q?S=C3=B6ren_Brinkmann?= <soren.brinkmann@xilinx.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 29 July 2015 at 16:22, Ludovic Desroches <ludovic.desroches@atmel.com> wrote:
-> Hi,
+On 18 August 2015 at 01:40, Shawn Lin <shawn.lin@rock-chips.com> wrote:
+> Hi Ulf,
 >
-> This set of patches introduce a driver for the new Atmel SDMMC device avaible
-> on SAMA5D2 SoC.
 >
-> There is also a resend of an old patch which has not been taken. Ulf asked
-> for some reviews since it could impact all sdhci devices but nobody did it...
-> This patch is not necessary for patch 2/3. It only fixes a special use case. If
-> there are objections about it, drop it, I don't want to delay the Atmel SDMMC
-> driver inclusion only for this patch.
+> On 2015/8/12 13:07, Michal Simek wrote:
+>>
+>> +linux-mmc
+>>
+>> On 08/11/2015 04:53 PM, Michal Simek wrote:
+>>>
+>>> On 08/11/2015 09:46 AM, Shawn Lin wrote:
+>>>>
+>>>> This patch adds the compatible string in sdhci-of-arasan.c to
+>>>> support sdhci-arasan5.1 version of controller. No documented
+>>>> controller IP version is found in the TRM, so we use ths version
+>>>> of command queueing engine integrated into this controller by arasan
+>>>> to specify our controller.
+>>>>
+>>>> Signed-off-by: Shawn Lin <shawn.lin@rock-chips.com>
+>>>>
+>>>> ---
+>>>>
+>>>> Changes in v1:
+>>>> - Remove redundant SDHCI_QUIRK_CAP_CLOCK_BASE_BROKEN for "arasan,
+>>>> sdhci-5.1" since
+>>>>    SDHCI will check "host->max_clk == 0" and let driver get it from
+>>>> host->ops->get_max_clock.
+>>>>
+>>>>   Documentation/devicetree/bindings/mmc/arasan,sdhci.txt | 2 +-
+>>>>   drivers/mmc/host/sdhci-of-arasan.c                     | 1 +
+>>>>   2 files changed, 2 insertions(+), 1 deletion(-)
+>>>>
+>>>> diff --git a/Documentation/devicetree/bindings/mmc/arasan,sdhci.txt
+>>>> b/Documentation/devicetree/bindings/mmc/arasan,sdhci.txt
+>>>> index 7e94903..da541c3 100644
+>>>> --- a/Documentation/devicetree/bindings/mmc/arasan,sdhci.txt
+>>>> +++ b/Documentation/devicetree/bindings/mmc/arasan,sdhci.txt
+>>>> @@ -9,7 +9,7 @@ Device Tree Bindings for the Arasan SDHCI Controller
+>>>>
+>>>>   Required Properties:
+>>>>     - compatible: Compatibility string. Must be 'arasan,sdhci-8.9a' or
+>>>> -                'arasan,sdhci-4.9a'
+>>>> +                'arasan,sdhci-4.9a' or 'arasan,sdhci-5.1'
+>>>>     - reg: From mmc bindings: Register location and length.
+>>>>     - clocks: From clock bindings: Handles to clock inputs.
+>>>>     - clock-names: From clock bindings: Tuple including "clk_xin" and
+>>>> "clk_ahb"
+>>>> diff --git a/drivers/mmc/host/sdhci-of-arasan.c
+>>>> b/drivers/mmc/host/sdhci-of-arasan.c
+>>>> index ef5a7d2..75379cb 100644
+>>>> --- a/drivers/mmc/host/sdhci-of-arasan.c
+>>>> +++ b/drivers/mmc/host/sdhci-of-arasan.c
+>>>> @@ -217,6 +217,7 @@ static int sdhci_arasan_remove(struct
+>>>> platform_device *pdev)
+>>>>
+>>>>   static const struct of_device_id sdhci_arasan_of_match[] = {
+>>>>         { .compatible = "arasan,sdhci-8.9a" },
+>>>> +       { .compatible = "arasan,sdhci-5.1" },
+>>>>         { .compatible = "arasan,sdhci-4.9a" },
+>>>>         { }
+>>>>   };
+>>>>
+>>>
+>>> Acked-by: Michal Simek <michal.simek@xilinx.com>
 >
-> Changes:
-> - from v1:
->   - update license
 >
-> Ludovic Desroches (3):
->   mmc: sdhci: switch from programmable clock mode to divided one if
->     needed
->   mmc: sdhci-of-at91: introduce driver for the Atmel SDMMC
->   MAINTAINERS: add entry for Atmel sdhci-of-at91 driver
->
->  .../devicetree/bindings/mmc/sdhci-atmel.txt        |  21 +++
->  MAINTAINERS                                        |   6 +
->  drivers/mmc/host/Kconfig                           |   8 +
->  drivers/mmc/host/Makefile                          |   1 +
->  drivers/mmc/host/sdhci-of-at91.c                   | 192 +++++++++++++++++++++
->  drivers/mmc/host/sdhci.c                           |  29 +++-
->  6 files changed, 248 insertions(+), 9 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/mmc/sdhci-atmel.txt
->  create mode 100644 drivers/mmc/host/sdhci-of-at91.c
->
-> --
-> 2.5.0
+> Could you pull this patch into your repository?
 >
 
-Thanks, applied all three patches for next!
+Thanks, applied for next!
 
 Kind regards
 Uffe
