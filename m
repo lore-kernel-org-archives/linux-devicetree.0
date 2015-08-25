@@ -1,73 +1,118 @@
-From: Peter Griffin <peter.griffin@linaro.org>
-Subject: Re: [PATCH 1/7] dmaengine: st_fdma: Add STMicroelectronics FDMA DT
- binding documentation
-Date: Tue, 25 Aug 2015 18:08:40 +0100
-Message-ID: <20150825170840.GA1498@griffinp-ThinkPad-X1-Carbon-2nd>
-References: <1436371888-27863-1-git-send-email-peter.griffin@linaro.org>
- <1436371888-27863-2-git-send-email-peter.griffin@linaro.org>
- <20150819150605.GA13546@localhost>
+From: Fu Wei <fu.wei@linaro.org>
+Subject: Re: [PATCH v7 8/8] clocksource: simplify ACPI code in arm_arch_timer.c
+Date: Wed, 26 Aug 2015 01:19:45 +0800
+Message-ID: <CADyBb7sVGePKtU45_DBGd74fykAPVshmbnRQJDDOrrvoHTGcKQ@mail.gmail.com>
+References: <=fu.wei@linaro.org>
+	<1440435683-7343-1-git-send-email-fu.wei@linaro.org>
+	<1440435683-7343-9-git-send-email-fu.wei@linaro.org>
+	<alpine.DEB.2.11.1508241942450.3873@nanos>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20150819150605.GA13546@localhost>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Vinod Koul <vinod.koul@intel.com>
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, srinivas.kandagatla@gmail.com, maxime.coquelin@st.com, patrice.chotard@st.com, dan.j.williams@intel.com, lee.jones@linaro.org, devicetree@vger.kernel.org, dmaengine@vger.kernel.org, ludovic.barre@st.com
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <alpine.DEB.2.11.1508241942450.3873@nanos>
+Sender: linux-doc-owner@vger.kernel.org
+To: Thomas Gleixner <tglx@linutronix.de>
+Cc: Suravee Suthikulpanit <Suravee.Suthikulpanit@amd.com>, Hanjun Guo <hanjun.guo@linaro.org>, Linaro ACPI Mailman List <linaro-acpi@lists.linaro.org>, linux-watchdog@vger.kernel.org, devicetree@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, linux-doc@vger.kernel.org, Wei Fu <tekkamanninja@gmail.com>, G Gregory <graeme.gregory@linaro.org>, Al Stone <al.stone@linaro.org>, Arnd Bergmann <arnd@arndb.de>, Guenter Roeck <linux@roeck-us.net>, Vipul Gandhi <vgandhi@codeaurora.org>, Wim Van Sebroeck <wim@iguana.be>, Jon Masters <jcm@redhat.com>, Leo Duran <leo.duran@amd.com>, Jonathan Corbet <corbet@lwn.net>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Rafael Wysocki <rjw@rjwysocki.net>, dyoung@redhat.com, panand@redhat.com, Daniel Lezcano <daniel.lezcano@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Vinod,
+Hi Thomas,
 
-Thanks for reviewing.
 
-On Wed, 19 Aug 2015, Vinod Koul wrote:
+On 25 August 2015 at 01:50, Thomas Gleixner <tglx@linutronix.de> wrote:
+> On Tue, 25 Aug 2015, fu.wei@linaro.org wrote:
+>
+> You Cc the world and some more on your patch, but you fail to add the
+> maintainers of the clocksource code to the Cc list. Sigh.
 
-> On Wed, Jul 08, 2015 at 05:11:22PM +0100, Peter Griffin wrote:
-> > This patch adds the DT binding documentation for the FDMA constroller
-> > found on STi based chipsets from STMicroelectronics.
-> > 
-> > Signed-off-by: Ludovic Barre <ludovic.barre@st.com>
-> > Signed-off-by: Peter Griffin <peter.griffin@linaro.org>
-> > ---
-> >  Documentation/devicetree/bindings/dma/st_fdma.txt | 76 +++++++++++++++++++++++
-> >  1 file changed, 76 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/dma/st_fdma.txt
-> > 
-> > diff --git a/Documentation/devicetree/bindings/dma/st_fdma.txt b/Documentation/devicetree/bindings/dma/st_fdma.txt
-> > new file mode 100644
-> > index 0000000..1ec7470
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/dma/st_fdma.txt
-> > @@ -0,0 +1,76 @@
-> > +* STMicroelectronics Flexible Direct Memory Access Device Tree bindings
-> > +
-> > +The FDMA is a general-purpose direct memory access controller capable of
-> > +supporting 16 independent DMA channels. It accepts up to 32 DMA requests.
-> > +The FDMA is based on a Slim processor which require a firmware.
-> > +
-> > +* FDMA Controller
-> > +
-> > +Required properties:
-> > +- compatible	: Should be "st,fdma_mpe31"
-> > +- reg		: Should contain DMA registers location and length
-> > +- interrupts	: Should contain one interrupt shared by all channel
-> 
-> s/channel/channels
+my fault
+So sorry for that, I will add the maintainers of clocksource into cc list.
 
-Will fix in v2.
+>
+>> From: Fu Wei <fu.wei@linaro.org>
+>>
+>> The patch update arm_arch_timer driver to use the function
+>> provided by the new GTDT driver of ACPI.
+>> By this way, arm_arch_timer.c can be simplified, and separate
+>> all the ACPI GTDT knowledge from this timer driver.
+>
+> That's not a proper changelog and this patch want's to be split in two:
+>
+> 1) Implement the new ACPI function
+>
+> 2) Make use of it
 
-> 
-> > +- dma-channels	: Number of channels supported by the controller
-> > +- #dma-cells	: Must be <3>.
-> 
-> any reason three?
+Yes, you are right , will improve this
 
-Yes, it is documented further down in the file under DMA Client.
+>
+>> index 0aa135d..99505bb 100644
+>> --- a/drivers/clocksource/arm_arch_timer.c
+>> +++ b/drivers/clocksource/arm_arch_timer.c
+>> @@ -817,68 +817,30 @@ CLOCKSOURCE_OF_DECLARE(armv7_arch_timer_mem, "arm,armv7-timer-mem",
+>>                      arch_timer_mem_init);
+>>
+>>  #ifdef CONFIG_ACPI
+>> -static int __init map_generic_timer_interrupt(u32 interrupt, u32 flags)
+>> -{
+>> -     int trigger, polarity;
+>> -
+>> -     if (!interrupt)
+>> -             return 0;
+>> -
+>> -     trigger = (flags & ACPI_GTDT_INTERRUPT_MODE) ? ACPI_EDGE_SENSITIVE
+>> -                     : ACPI_LEVEL_SENSITIVE;
+>> -
+>> -     polarity = (flags & ACPI_GTDT_INTERRUPT_POLARITY) ? ACPI_ACTIVE_LOW
+>> -                     : ACPI_ACTIVE_HIGH;
+>> -
+>> -     return acpi_register_gsi(NULL, interrupt, trigger, polarity);
+>> -}
+>> -
+>>  /* Initialize per-processor generic timer */
+>> -static int __init arch_timer_acpi_init(struct acpi_table_header *table)
+>> +void __init arch_timer_acpi_init(void)
+>>  {
+>
+> And how is that supposed to work when we have next generation CPUs
+> which implement a different timer? You break multisystem kernels that
+> way.
 
-To make it clearer in V2 I could change to
+yes, you are right, If there is a  next generation CPUs  which
+implement a different timer, (maybe) this driver can not work.
+we may need a new timer driver.
 
-"- #dma-cells	: Must be <3>. See DMA client section below"?
+But,
+(1) for now,  aarch64  core always has the arch timer(this timer is
+part of aarch64 architecture).
+and the existing code make  ARM64 kernel "select ARM_ARCH_TIMER "
+(2) GTDT is designed for generic timer, so in this call "
+arch_timer_acpi_init"  we  parse the gtdt info.
 
-regards,
+(3) once we have a ARM64 CPUs which implement a different timer, we
+may need to select a right timer in the config stage.
+and this timer may not be described in GTDT.  So we can implement
+another arch_timer_acpi_init by that time in new timer driver..
+if the new time still uses GTDT(or new version GTDT), we may need to
+update gtdt.c for new timer by that time.
 
-Peter.
+but before we really have this new timer, I think this code is OK to use.
+
+Do I understand your comment correctly? :-)
+
+>
+> Thanks,
+>
+>         tglx
+
+
+
+-- 
+Best regards,
+
+Fu Wei
+Software Engineer
+Red Hat Software (Beijing) Co.,Ltd.Shanghai Branch
+Ph: +86 21 61221326(direct)
+Ph: +86 186 2020 4684 (mobile)
+Room 1512, Regus One Corporate Avenue,Level 15,
+One Corporate Avenue,222 Hubin Road,Huangpu District,
+Shanghai,China 200021
