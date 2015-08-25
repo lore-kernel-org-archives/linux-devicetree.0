@@ -1,71 +1,57 @@
-From: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
-Subject: Re: [PATCH v3 06/14] Documentation: drm/bridge: add document for
- analogix_dp
-Date: Tue, 25 Aug 2015 10:29:39 +0100
-Message-ID: <20150825092939.GM7557@n2100.arm.linux.org.uk>
-References: <1439995728-18046-1-git-send-email-ykk@rock-chips.com>
- <1439995834-18363-1-git-send-email-ykk@rock-chips.com>
- <CAL_JsqLz+8RtBucctUj4euXZ3Ac0DvB52N9ONpAerh5T9BiTJg@mail.gmail.com>
- <20150824125758.GA7557@n2100.arm.linux.org.uk>
- <CAL_JsqKZYMMzV9Sc2r3K_rnM0FNuyb1TyJEhjGq1Hf7dTiWFKQ@mail.gmail.com>
- <20150825091246.GA14034@ulmo.nvidia.com>
+From: Ley Foon Tan <lftan@altera.com>
+Subject: [PATCH v5 0/5] Altera PCIe host controller driver with MSI support
+Date: Tue, 25 Aug 2015 17:35:43 +0800
+Message-ID: <1440495348-2666-1-git-send-email-lftan@altera.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20150825091246.GA14034-AwZRO8vwLAwmlAP/+Wk3EA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Cc: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Yakir Yang <ykk-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Jingoo Han <jingoohan1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Fabio Estevam <fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Inki Dae <inki.dae-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Joe Perches <joe-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org>, Sean Paul <seanpaul-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Takashi Iwai <tiwai-l3A5Bk7waGM@public.gmane.org>, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, Andrzej Hajda <a.hajda-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Gustavo Padovan <gustavo.padovan-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>, "linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Vincent Palatin <vpalatin-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Doug Anderson <dianders-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Content-Type: text/plain
+Return-path: <linux-doc-owner@vger.kernel.org>
+Sender: linux-doc-owner@vger.kernel.org
+To: Bjorn Helgaas <bhelgaas@google.com>, Russell King <linux@arm.linux.org.uk>, Marc Zyngier <marc.zyngier@arm.com>
+Cc: Arnd Bergmann <arnd@arndb.de>, Dinh Nguyen <dinguyen@opensource.altera.com>, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, Ley Foon Tan <lftan@altera.com>, lftan.linux@gmail.com, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Aug 25, 2015 at 11:12:48AM +0200, Thierry Reding wrote:
-> On Mon, Aug 24, 2015 at 09:48:27AM -0500, Rob Herring wrote:
-> > It goes beyond bindings IMO. The use of the component framework or not
-> > has been at the whim of driver writers as well. It is either used or
-> > private APIs are created. I'm using components and my need for it
-> > boils down to passing the struct drm_device pointer to the encoder.
-> > Other components like panels and bridges have different ways to attach
-> > to the DRM driver.
-> 
-> I certainly support unification, but it needs to be reasonable. There
-> are cases where a different structure for the binding work better than
-> another and I think this always needs to be evaluated on a case by case
-> basis.
+This is the 5th version of patch set to add support for Altera PCIe host
+controller with MSI feature on Altera FPGA device families. This patchset
+mainly resolve comments from Dinh Nguyen in v5 and some fixes.
 
-It can't be a case-by-case basis.
+It is based on patch series from Marc Zyngier "Per-device MSI domain &
+platform MSI" [1] to get rid of struct msi_controller.
 
-The TDA998x encoder/connector is going to be component only.  This is
-a generic chip, which can be attached to the output of any parallel
-RGB+sync+clock bus.  In other words, it could appear anywhere.
+v4->v5 changes:
+- pcie-altera: check error for tlp_read_packet
+- pcie-altera: remove unused txs from altera_pcie struct
+- doc: update pcie and msi binding doc
+- fix aligned and unaligned qword in tlp_cfg_dword_write
+- add altera_pcie_fixup_res
 
-Are you really saying that we need to support multiple schemes of
-attaching the driver to DRM?  That's totally insane IMHO.
+History:
+-------
+[v1]: https://lkml.org/lkml/2015/7/28/395
+[v2]: https://lkml.org/lkml/2015/7/31/267
+[v3]: http://www.kernelhub.org/?msg=811940&p=2
+[v4]: https://lkml.org/lkml/2015/8/17/141
 
-The problem with the drm_encoder_slave stuff is that you can't sanely
-attach of-nodes to the drm-created i2c device.  Yes, you can parse
-them from the DT file as a sub-node of the upper device, but that
-then goes against the principle of the I2C bindings, which is to
-list the I2C devices as a child below the I2C adapter node.  If you
-try and put the DT node there, then the OF code will create the I2C
-device for you, and the drm_encoder_slave stuff won't have the
-control it needs to communicate through the wrapped i2c_driver
-stuff.
+Ley Foon Tan (5):
+  arm: add msi.h to Kbuild
+  pci:host: Add Altera PCIe host controller driver
+  pci: altera: Add Altera PCIe MSI driver
+  Documentation: dt-bindings: pci: altera pcie device tree binding
+  MAINTAINERS: Add Altera PCIe and MSI drivers maintainer
 
-So, tda998x is going component-only, as that's the _only_ sane solution
-for it.
-
-Now, what happens when some other DRM driver wants to use the tda998x
-driver, and its bindings are not compatible with the component helpers?
-They're pretty much stuck up the creek without a paddle.
-
-Case by case doesn't work unless you're talking about truely isolated
-hardware where no one shares anything.
+ .../devicetree/bindings/pci/altera-pcie-msi.txt    |  28 +
+ .../devicetree/bindings/pci/altera-pcie.txt        |  49 ++
+ MAINTAINERS                                        |  16 +
+ arch/arm/include/asm/Kbuild                        |   1 +
+ drivers/pci/host/Kconfig                           |  15 +
+ drivers/pci/host/Makefile                          |   2 +
+ drivers/pci/host/pcie-altera-msi.c                 | 322 +++++++++++
+ drivers/pci/host/pcie-altera.c                     | 588 +++++++++++++++++++++
+ 8 files changed, 1021 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/pci/altera-pcie-msi.txt
+ create mode 100644 Documentation/devicetree/bindings/pci/altera-pcie.txt
+ create mode 100644 drivers/pci/host/pcie-altera-msi.c
+ create mode 100644 drivers/pci/host/pcie-altera.c
 
 -- 
-FTTC broadband for 0.8mile line: currently at 10.5Mbps down 400kbps up
-according to speedtest.net.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+1.8.2.1
+
