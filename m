@@ -1,390 +1,61 @@
-From: Ley Foon Tan <lftan@altera.com>
-Subject: [PATCH v5 3/5] pci: altera: Add Altera PCIe MSI driver
-Date: Tue, 25 Aug 2015 17:35:46 +0800
-Message-ID: <1440495348-2666-4-git-send-email-lftan@altera.com>
-References: <1440495348-2666-1-git-send-email-lftan@altera.com>
+From: Yakir Yang <ykk@rock-chips.com>
+Subject: Re: [PATCH v3 06/14] Documentation: drm/bridge: add document for
+ analogix_dp
+Date: Tue, 25 Aug 2015 17:37:06 +0800
+Message-ID: <55DC3742.2070308@rock-chips.com>
+References: <1439995728-18046-1-git-send-email-ykk@rock-chips.com>
+ <1439995834-18363-1-git-send-email-ykk@rock-chips.com>
+ <CAL_JsqLz+8RtBucctUj4euXZ3Ac0DvB52N9ONpAerh5T9BiTJg@mail.gmail.com>
+ <20150825091534.GB14034@ulmo.nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1440495348-2666-1-git-send-email-lftan@altera.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Bjorn Helgaas <bhelgaas@google.com>, Russell King <linux@arm.linux.org.uk>, Marc Zyngier <marc.zyngier@arm.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, lftan.linux@gmail.com, Arnd Bergmann <arnd@arndb.de>, linux-doc@vger.kernel.org, linux-pci@vger.kernel.org, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Kumar Gala <galak@codeaurora.org>, Ley Foon Tan <lftan@altera.com>, Dinh Nguyen <dinguyen@opensource.altera.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=UTF-8;
+	format=flowed
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20150825091534.GB14034@ulmo.nvidia.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Thierry Reding <treding@nvidia.com>, Rob Herring <robherring2@gmail.com>
+Cc: Heiko Stuebner <heiko@sntech.de>, Jingoo Han <jingoohan1@gmail.com>, Fabio Estevam <fabio.estevam@freescale.com>, Inki Dae <inki.dae@samsung.com>, Joe Perches <joe@perches.com>, Russell King <rmk+kernel@arm.linux.org.uk>, Sean Paul <seanpaul@google.com>, Takashi Iwai <tiwai@suse.de>, dri-devel <dri-devel@lists.freedesktop.org>, Andrzej Hajda <a.hajda@samsung.com>, Gustavo Padovan <gustavo.padovan@collabora.co.uk>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, Vincent Palatin <vpalatin@chromium.org>, linux-rockchip@lists.infradead.org, Kishon Vijay Abraham I <kishon@ti.com>, David Airlie <airlied@linux.ie>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Doug Anderson <dianders@google.com>, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.i
 List-Id: devicetree@vger.kernel.org
 
-This patch adds Altera PCIe MSI driver. This soft IP supports configurable
-number of vectors, which is a dts parameter.
+Hi Thierry,
 
-Signed-off-by: Ley Foon Tan <lftan@altera.com>
----
- drivers/pci/host/Kconfig           |   8 +
- drivers/pci/host/Makefile          |   1 +
- drivers/pci/host/pcie-altera-msi.c | 322 +++++++++++++++++++++++++++++++++++++
- 3 files changed, 331 insertions(+)
- create mode 100644 drivers/pci/host/pcie-altera-msi.c
+=E5=9C=A8 2015/8/25 17:15, Thierry Reding =E5=86=99=E9=81=93:
+> On Sun, Aug 23, 2015 at 06:23:14PM -0500, Rob Herring wrote:
+>> On Wed, Aug 19, 2015 at 9:50 AM, Yakir Yang <ykk@rock-chips.com> wro=
+te:
+> [...]
+>>> +       -analogix,link-rate:
+>>> +               max link rate supported by the eDP controller.
+>>> +                       LINK_RATE_1_62GBPS =3D 0x6, LINK_RATE_2_70G=
+BPS =3D 0x0A,
+>>> +                       LINK_RATE_5_40GBPS =3D 0x14
+>> Same here. I'd rather see something like "link-rate-mbps" and use th=
+e
+>> actual rate.
+> There is no need whatsoever to hard-code this in DT. (e)DP provides t=
+he
+> means to detect what rate the link supports and the specification
+> provides guidance on how to select an appropriate one.
 
-diff --git a/drivers/pci/host/Kconfig b/drivers/pci/host/Kconfig
-index 4b4754a..d28cc6d 100644
---- a/drivers/pci/host/Kconfig
-+++ b/drivers/pci/host/Kconfig
-@@ -152,4 +152,12 @@ config PCIE_ALTERA
- 	  Say Y here if you want to enable PCIe controller support for Altera
- 	  SoCFPGA family of SoCs.
- 
-+config PCIE_ALTERA_MSI
-+	bool "Altera PCIe MSI feature"
-+	depends on PCI_MSI
-+	select PCI_MSI_IRQ_DOMAIN
-+	help
-+	  Say Y here if you want PCIe MSI support for the Altera SocFPGA SoC.
-+	  This MSI driver supports Altera MSI to GIC controller IP.
-+
- endmenu
-diff --git a/drivers/pci/host/Makefile b/drivers/pci/host/Makefile
-index 6954f76..6c4913d 100644
---- a/drivers/pci/host/Makefile
-+++ b/drivers/pci/host/Makefile
-@@ -18,3 +18,4 @@ obj-$(CONFIG_PCIE_IPROC) += pcie-iproc.o
- obj-$(CONFIG_PCIE_IPROC_PLATFORM) += pcie-iproc-platform.o
- obj-$(CONFIG_PCIE_IPROC_BCMA) += pcie-iproc-bcma.o
- obj-$(CONFIG_PCIE_ALTERA) += pcie-altera.o
-+obj-$(CONFIG_PCIE_ALTERA_MSI) += pcie-altera-msi.o
-diff --git a/drivers/pci/host/pcie-altera-msi.c b/drivers/pci/host/pcie-altera-msi.c
-new file mode 100644
-index 0000000..d3ad96f
---- /dev/null
-+++ b/drivers/pci/host/pcie-altera-msi.c
-@@ -0,0 +1,322 @@
-+/*
-+ * Copyright Altera Corporation (C) 2013-2015. All rights reserved
-+ *
-+ * This program is free software; you can redistribute it and/or modify it
-+ * under the terms and conditions of the GNU General Public License,
-+ * version 2, as published by the Free Software Foundation.
-+ *
-+ * This program is distributed in the hope it will be useful, but WITHOUT
-+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-+ * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
-+ * more details.
-+ *
-+ * You should have received a copy of the GNU General Public License along with
-+ * this program.  If not, see <http://www.gnu.org/licenses/>.
-+ */
-+#include <linux/interrupt.h>
-+#include <linux/irqchip/chained_irq.h>
-+#include <linux/module.h>
-+#include <linux/msi.h>
-+#include <linux/of_address.h>
-+#include <linux/of_irq.h>
-+#include <linux/of_pci.h>
-+#include <linux/pci.h>
-+#include <linux/platform_device.h>
-+#include <linux/slab.h>
-+
-+#define MSI_STATUS		0x0
-+#define MSI_ERROR		0x4
-+#define MSI_INTMASK		0x8
-+
-+#define MAX_MSI_VECTORS		32
-+struct altera_msi {
-+	DECLARE_BITMAP(used, MAX_MSI_VECTORS);
-+	struct mutex		lock;	/* proctect used variable */
-+	struct platform_device	*pdev;
-+	struct irq_domain		*msi_domain;
-+	struct irq_domain		*inner_domain;
-+	void __iomem		*csr_base;
-+	void __iomem		*vector_base;
-+	phys_addr_t		vector_phy;
-+	u32			num_of_vectors;
-+	int			irq;
-+};
-+
-+static inline void msi_writel(struct altera_msi *msi, u32 value, u32 reg)
-+{
-+	writel_relaxed(value, msi->csr_base + reg);
-+}
-+
-+static inline u32 msi_readl(struct altera_msi *msi, u32 reg)
-+{
-+	return readl_relaxed(msi->csr_base + reg);
-+}
-+
-+static void altera_msi_isr(unsigned int irq, struct irq_desc *desc)
-+{
-+	struct irq_chip *chip = irq_desc_get_chip(desc);
-+	struct altera_msi *msi;
-+	unsigned long status;
-+	u32 num_of_vectors;
-+	u32 bit;
-+	u32 virq;
-+
-+	chained_irq_enter(chip, desc);
-+	msi = irq_desc_get_handler_data(desc);
-+	num_of_vectors = msi->num_of_vectors;
-+
-+	do {
-+		status = msi_readl(msi, MSI_STATUS);
-+		if (!status)
-+			break;
-+
-+		do {
-+			bit = find_first_bit(&status, num_of_vectors);
-+			/* Dummy read from vector to clear the interrupt */
-+			readl_relaxed(msi->vector_base + (bit * sizeof(u32)));
-+
-+			virq = irq_find_mapping(msi->inner_domain, bit);
-+			if (virq && test_bit(bit, msi->used))
-+				generic_handle_irq(virq);
-+			else
-+				dev_err(&msi->pdev->dev, "unexpected MSI\n");
-+
-+			/* Clear the bit from status and repeat without reading
-+			 * again status register. */
-+			__clear_bit(bit, &status);
-+		} while (status);
-+	} while (1);
-+
-+	chained_irq_exit(chip, desc);
-+}
-+
-+static struct irq_chip altera_msi_irq_chip = {
-+	.name = "Altera PCIe MSI",
-+	.irq_enable = pci_msi_unmask_irq,
-+	.irq_disable = pci_msi_mask_irq,
-+	.irq_mask = pci_msi_mask_irq,
-+	.irq_unmask = pci_msi_unmask_irq,
-+};
-+
-+static struct msi_domain_info altera_msi_domain_info = {
-+	.flags	= (MSI_FLAG_USE_DEF_DOM_OPS | MSI_FLAG_USE_DEF_CHIP_OPS |
-+		     MSI_FLAG_PCI_MSIX),
-+	.chip	= &altera_msi_irq_chip,
-+};
-+
-+static void altera_compose_msi_msg(struct irq_data *data, struct msi_msg *msg)
-+{
-+	struct altera_msi *msi = irq_data_get_irq_chip_data(data);
-+	phys_addr_t addr = msi->vector_phy + (data->hwirq * sizeof(u32));
-+
-+	msg->address_lo = lower_32_bits(addr);
-+	msg->address_hi = upper_32_bits(addr);
-+	msg->data = data->hwirq;
-+
-+	dev_dbg(&msi->pdev->dev, "msi#%d address_lo 0x%x address_hi 0x%x\n",
-+		(int)data->hwirq, msg->address_hi, msg->address_lo);
-+}
-+
-+static int altera_msi_set_affinity(struct irq_data *irq_data,
-+				   const struct cpumask *mask, bool force)
-+{
-+	 return -EINVAL;
-+}
-+
-+static struct irq_chip altera_msi_bottom_irq_chip = {
-+	.name			= "Altera MSI",
-+	.irq_compose_msi_msg	= altera_compose_msi_msg,
-+	.irq_set_affinity	= altera_msi_set_affinity,
-+};
-+
-+static int altera_irq_domain_alloc(struct irq_domain *domain, unsigned int virq,
-+				   unsigned int nr_irqs, void *args)
-+{
-+	struct altera_msi *msi = domain->host_data;
-+	unsigned long bit;
-+	u32 mask;
-+
-+	WARN_ON(nr_irqs != 1);
-+	mutex_lock(&msi->lock);
-+
-+	bit = find_first_zero_bit(msi->used, msi->num_of_vectors);
-+	if (bit >= msi->num_of_vectors)
-+		return -ENOSPC;
-+
-+	set_bit(bit, msi->used);
-+
-+	mutex_unlock(&msi->lock);
-+
-+	irq_domain_set_info(domain, virq, bit, &altera_msi_bottom_irq_chip,
-+			    domain->host_data, handle_simple_irq,
-+			    NULL, NULL);
-+	set_irq_flags(virq, IRQF_VALID);
-+
-+	mask = msi_readl(msi, MSI_INTMASK);
-+	mask |= 1 << bit;
-+	msi_writel(msi, mask, MSI_INTMASK);
-+
-+	return 0;
-+}
-+
-+static void altera_irq_domain_free(struct irq_domain *domain,
-+				   unsigned int virq, unsigned int nr_irqs)
-+{
-+	struct irq_data *d = irq_domain_get_irq_data(domain, virq);
-+	struct altera_msi *msi = irq_data_get_irq_chip_data(d);
-+	u32 mask;
-+
-+	mutex_lock(&msi->lock);
-+
-+	if (!test_bit(d->hwirq, msi->used)) {
-+		dev_err(&msi->pdev->dev, "trying to free unused MSI#%lu\n",
-+			d->hwirq);
-+	} else {
-+		__clear_bit(d->hwirq, msi->used);
-+		mask = msi_readl(msi, MSI_INTMASK);
-+		mask &= ~(1 << d->hwirq);
-+		msi_writel(msi, mask, MSI_INTMASK);
-+	}
-+
-+	mutex_unlock(&msi->lock);
-+}
-+
-+static const struct irq_domain_ops msi_domain_ops = {
-+	.alloc	= altera_irq_domain_alloc,
-+	.free	= altera_irq_domain_free,
-+};
-+
-+static int altera_allocate_domains(struct altera_msi *msi)
-+{
-+	msi->inner_domain = irq_domain_add_linear(NULL, msi->num_of_vectors,
-+					     &msi_domain_ops, msi);
-+	if (!msi->inner_domain) {
-+		dev_err(&msi->pdev->dev, "failed to create IRQ domain\n");
-+		return -ENOMEM;
-+	}
-+
-+	msi->msi_domain = pci_msi_create_irq_domain(msi->pdev->dev.of_node,
-+				&altera_msi_domain_info, msi->inner_domain);
-+	if (!msi->msi_domain) {
-+		dev_err(&msi->pdev->dev, "failed to create MSI domain\n");
-+		irq_domain_remove(msi->inner_domain);
-+		return -ENOMEM;
-+	}
-+
-+	return 0;
-+}
-+
-+static void altera_free_domains(struct altera_msi *msi)
-+{
-+	irq_domain_remove(msi->msi_domain);
-+	irq_domain_remove(msi->inner_domain);
-+}
-+
-+static int altera_msi_remove(struct platform_device *pdev)
-+{
-+	struct altera_msi *msi = platform_get_drvdata(pdev);
-+
-+	msi_writel(msi, 0, MSI_INTMASK);
-+	irq_set_chained_handler(msi->irq, NULL);
-+	irq_set_handler_data(msi->irq, NULL);
-+
-+	altera_free_domains(msi);
-+
-+	platform_set_drvdata(pdev, NULL);
-+	return 0;
-+}
-+
-+static int altera_msi_probe(struct platform_device *pdev)
-+{
-+	struct altera_msi *msi;
-+	struct device_node *np = pdev->dev.of_node;
-+	struct resource *res;
-+	int ret;
-+
-+	msi = devm_kzalloc(&pdev->dev, sizeof(struct altera_msi),
-+			   GFP_KERNEL);
-+	if (!msi)
-+		return -ENOMEM;
-+
-+	mutex_init(&msi->lock);
-+	msi->pdev = pdev;
-+
-+	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "csr");
-+	if (!res) {
-+		dev_err(&pdev->dev,
-+			"no csr memory resource defined\n");
-+		return -ENODEV;
-+	}
-+
-+	msi->csr_base = devm_ioremap_resource(&pdev->dev, res);
-+	if (IS_ERR(msi->csr_base)) {
-+		dev_err(&pdev->dev, "failed to map csr memory\n");
-+		return PTR_ERR(msi->csr_base);
-+	}
-+
-+	res = platform_get_resource_byname(pdev, IORESOURCE_MEM,
-+					   "vector_slave");
-+	if (!res) {
-+		dev_err(&pdev->dev,
-+			"no vector_slave memory resource defined\n");
-+		return -ENODEV;
-+	}
-+
-+	msi->vector_base = devm_ioremap_resource(&pdev->dev, res);
-+	if (IS_ERR(msi->vector_base)) {
-+		dev_err(&pdev->dev, "failed to map vector_slave memory\n");
-+		return PTR_ERR(msi->vector_base);
-+	}
-+
-+	msi->vector_phy = res->start;
-+
-+	if (of_property_read_u32(np, "num-vectors", &msi->num_of_vectors)) {
-+		dev_err(&pdev->dev, "failed to parse the number of vectors\n");
-+		return -EINVAL;
-+	}
-+
-+	ret = altera_allocate_domains(msi);
-+	if (ret)
-+		return ret;
-+
-+	msi->irq = platform_get_irq(pdev, 0);
-+	if (msi->irq <= 0) {
-+		dev_err(&pdev->dev, "failed to map IRQ: %d\n", msi->irq);
-+		ret = -ENODEV;
-+		goto err;
-+	}
-+
-+	irq_set_chained_handler_and_data(msi->irq, altera_msi_isr, msi);
-+	platform_set_drvdata(pdev, msi);
-+
-+	return 0;
-+
-+err:
-+	altera_msi_remove(pdev);
-+	return ret;
-+}
-+
-+static const struct of_device_id altera_msi_of_match[] = {
-+	{ .compatible = "altr,msi-1.0", NULL },
-+	{ },
-+};
-+
-+static struct platform_driver altera_msi_driver = {
-+	.driver = {
-+		.name = "altera-msi",
-+		.of_match_table = altera_msi_of_match,
-+	},
-+	.probe = altera_msi_probe,
-+	.remove = altera_msi_remove,
-+};
-+
-+static int __init altera_msi_init(void)
-+{
-+	return platform_driver_register(&altera_msi_driver);
-+}
-+
-+subsys_initcall(altera_msi_init);
-+
-+MODULE_AUTHOR("Ley Foon Tan <lftan@altera.com>");
-+MODULE_DESCRIPTION("Altera PCIe MSI support");
-+MODULE_LICENSE("GPL v2");
--- 
-1.8.2.1
+Hmm... could you share more about this :-)
+
+I only find that drm_dp_link_probe() could get the panel link-rate and
+num-lanes by reading the DP_DPCD_REV messag.
+
+I don't found there are some guidance to help select the approriate one=
+=2E
+Beside this DT prop just indicate the max eDP controller link-rate & la=
+nes
+support, how could eDP detect them automatically?
+
+- Yakir
+
+>>> +       -analogix,lane-count:
+>>> +               max number of lanes supported by the eDP contoller.
+>>> +                       LANE_COUNT1 =3D 1, LANE_COUNT2 =3D 2, LANE_=
+COUNT4 =3D 4
+>> And drop the vendor prefix here.
+> Same as for the link rate.
+>
+> Thierry
