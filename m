@@ -1,76 +1,32 @@
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [PATCH v2 03/07] ARM: shmobile: Add APMU nodes to r8a7790 DTSI
-Date: Tue, 25 Aug 2015 08:50:03 +0300
-Message-ID: <1526541.cKGtqzOZAK@avalon>
-References: <20150823072427.14156.1960.sendpatchset@little-apple> <1534893.ppOlo5pCGu@avalon> <CANqRtoQev9=mA_rHBKDOMisoi2o8eekiPPfbG+wUjR0yFK-uCQ@mail.gmail.com>
+From: Mugunthan V N <mugunthanvnm@ti.com>
+Subject: Re: [net-next PATCH 1/3] drivers: net: cpsw: add am335x errata workarround
+ for interrutps
+Date: Tue, 25 Aug 2015 11:47:33 +0530
+Message-ID: <55DC087D.4090604@ti.com>
+References: <1439373175-8650-1-git-send-email-mugunthanvnm@ti.com> <1439373175-8650-2-git-send-email-mugunthanvnm@ti.com> <55DAEC28.3030107@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <CANqRtoQev9=mA_rHBKDOMisoi2o8eekiPPfbG+wUjR0yFK-uCQ@mail.gmail.com>
-Sender: linux-sh-owner@vger.kernel.org
-To: Magnus Damm <magnus.damm@gmail.com>
-Cc: SH-Linux <linux-sh@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, =?utf-8?B?5bCP5p6X5pWs5aSq?= <keita.kobayashi.ym@renesas.com>, "Simon Horman [Horms]" <horms@verge.net.au>, Geert Uytterhoeven <geert@linux-m68k.org>
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <55DAEC28.3030107@ti.com>
+Sender: netdev-owner@vger.kernel.org
+To: Sekhar Nori <nsekhar@ti.com>, netdev@vger.kernel.org
+Cc: devicetree@vger.kernel.org, linux-omap@vger.kernel.org, "David S . Miller" <davem@davemloft.net>, Tony Lindgren <tony@atomide.com>, alex.aring@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Magnus,
-
-On Tuesday 25 August 2015 13:13:46 Magnus Damm wrote:
-> On Tue, Aug 25, 2015 at 3:29 AM, Laurent Pinchart wrote:
-> > On Sunday 23 August 2015 16:25:00 Magnus Damm wrote:
-> >> From: Magnus Damm <damm+renesas@opensource.se>
-> >> 
-> >> Add an APMU DT node for the r8a7790 SoC and use the enable-method to
-> >> point out that the APMU should be used for SMP support.
-> >> 
-> >> Signed-off-by: Magnus Damm <damm+renesas@opensource.se>
-> >> ---
-> >> 
-> >>  Changes from V1:
-> >>  - New patch
-> >>  
-> >>  arch/arm/boot/dts/r8a7790.dtsi |   13 +++++++++++++
-> >>  1 file changed, 13 insertions(+)
-> >> 
-> >> --- 0001/arch/arm/boot/dts/r8a7790.dtsi
-> >> +++ work/arch/arm/boot/dts/r8a7790.dtsi       2015-08-23
-> >> 15:51:24.132366518 +0900 @@ -43,6 +43,7 @@
-> >>       cpus {
-> >>               #address-cells = <1>;
-> >>               #size-cells = <0>;
-> >> +             enable-method = "renesas,apmu";
-> >> 
-> >>               cpu0: cpu@0 {
-> >>                       device_type = "cpu";
-> >> @@ -112,6 +113,18 @@
-> >>               };
-> >>       };
-> >> 
-> >> +     apmu@e6151000 {
-> >> +             compatible = "renesas,apmu-r8a7790", "renesas,apmu";
-> >> +             reg = <0 0xe6151000 0 0x188>;
-> >> +             cpus = <&cpu4 &cpu5 &cpu6 &cpu7>;
-> >> +     };
-> >> +
-> >> +     apmu@e6152000 {
-> >> +             compatible = "renesas,apmu-r8a7790", "renesas,apmu";
-> >> +             reg = <0 0xe6152000 0 0x188>;
-> >> +             cpus = <&cpu0 &cpu1 &cpu2 &cpu3>;
-> >> +     };
-> > 
-> > I wonder whether those two nodes shouldn't be moved inside the CPG node as
-> > it seems that the APMU is part of the CPG IP core. We can delay that
-> > though, as the Gen3 DTS will need to be refactored anyway.
+On Monday 24 August 2015 03:34 PM, Sekhar Nori wrote:
+> Hi Mugunthan,
 > 
-> Hm, I don't mind reworking things, but with power domain focus I sort
-> of expected the APMU to be closer to SYSC than the CPG actually...
+> On Wednesday 12 August 2015 03:22 PM, Mugunthan V N wrote:
+>> > +static const struct of_device_id cpsw_of_mtable[] = {
+>> > +	{ .compatible = "ti,cpsw", .data = &cpsw_devtype[CPSW], },
+>> > +	{ .compatible = "ti,am335x-cpsw", .data = &cpsw_devtype[AM335X_CPSW], },
+>> > +	{ .compatible = "ti,am4372-cpsw", .data = &cpsw_devtype[AM4372_CPSW], },
+>> > +	{ .compatible = "ti,dra7-cpsw", .data = &cpsw_devtype[DRA7_CPSW], },
+> I do not see documentation added for these compatibles. Since the series
+> is already applied, can you send additional patches adding documentation?
 
-So did I, but the APMU is in the CPG address range, and is documented in the 
-datasheet in the same section as the CPG (7. for CPG, 7A. for MSTP and 7B. for 
-APMU). Don't ask me why :-)
+Will submit a patch ASAP
 
--- 
-Regards,
-
-Laurent Pinchart
-
+Regards
+Mugunthan V N
