@@ -1,87 +1,106 @@
-From: Pi-Cheng Chen <pi-cheng.chen-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [RESEND PATCH 0/3 v6] Add Mediatek MT8173 cpufreq driver
-Date: Tue, 25 Aug 2015 10:10:44 +0800
-Message-ID: <CALx668VWg2xVxzy8P7f5QFWRzm+TDJXUghL-_rbvRLsLYjtnng@mail.gmail.com>
-References: <1439803465-19683-1-git-send-email-pi-cheng.chen@linaro.org>
+From: "Leizhen (ThunderTown)" <thunder.leizhen@huawei.com>
+Subject: Re: [PATCH 1/1] of: to support binding numa node to root
+ subnode(non-bus)
+Date: Tue, 25 Aug 2015 10:24:56 +0800
+Message-ID: <55DBD1F8.1010206@huawei.com>
+References: <1440419410-10520-1-git-send-email-thunder.leizhen@huawei.com>
+ <CAL_Jsq+Ab-=Dwi4LFR8NjB8mL1DJTY_a1a4Zm88wjcWHM4eS0g@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1439803465-19683-1-git-send-email-pi-cheng.chen-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: "Rafael J. Wysocki" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>
-Cc: Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linaro Kernel Mailman List <linaro-kernel-cunTk1MwBs8s++Sfvej+rw@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAL_Jsq+Ab-=Dwi4LFR8NjB8mL1DJTY_a1a4Zm88wjcWHM4eS0g@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robherring2@gmail.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>
+Cc: Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, devicetree <devicetree@vger.kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-kernel <linux-kernel@vger.kernel.org>, Zefan Li <lizefan@huawei.com>, Xinwei Hu <huxinwei@huawei.com>, Tianhong Ding <dingtianhong@huawei.com>, Hanjun Guo <guohanjun@huawei.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Aug 17, 2015 at 5:24 PM, Pi-Cheng Chen <pi-cheng.chen-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
-> MT8173 is a ARMv8 based SoC with 2 clusters. All CPUs in a single cluster
-> share the same power and clock domain. This series tries to add cpufreq support
-> for MT8173 SoC. The v6 of this series is resent with Acks added.
 
-Hi Rafael,
 
-Not sure if I has missed the merge window.
-Do I have chance to have this series merged for 4.3?
-Would you please take [1,2] of this series?
-Thanks.
+On 2015/8/24 21:25, Rob Herring wrote:
+> +benh
+> 
+> On Mon, Aug 24, 2015 at 7:30 AM, Zhen Lei <thunder.leizhen@huawei.com> wrote:
+>> If use of_platform_populate to scan dt-nodes and add devices, the
+>> subnode of root(such as /smmu), when being scanned and invoke
+> 
+> You should have a bus as the sub-node of root rather than devices
+> directly off of root. You still have a problem though...
 
-Best Regards,
-Pi-Cheng
+But actually the parent of bus is also &platform_bus if we didn't have special initialization.
+For example:
+The function of_platform_device_create_pdata invoke of_device_alloc first, then invoke of_device_add.
+But in of_device_alloc, we can find that:
+	dev->dev.parent = parent ? : &platform_bus;
 
->
-> changes in v6:
-> - Move clock and regulator consumer properties document to the device tree
->   bindings documents of MT8173 CPU DVFS clock driver
-> - Add change log to describe what is implemented in the MT8173 cpufreq driver
-> - Add missed rcu_read_unlock() in the error path
-> - Move of_init_opp_table() call to make sure all required hardware resources
->   are already there before it is called
-> - Add comments to describe why both platform driver and deivce registration
->   codes are put in the initcall function
-> - Use the term "voltage tracking" instead of "voltage trace" according to an
->   internal SoC document
->
-> changes in v5:
-> - Move resource allocation code from init() into probe() and remove some unused
->   functions due to this change
-> - Fix descriptions for device tree binding document
-> - Address review comments for last version
-> - Register CPU cooling device
->
-> Changes in v4:
-> - Add bindings for MT8173 cpufreq driver
-> - Move OPP table back into device tree
-> - Address comments for last version
->
-> Changes in v3:
-> - Implement MT8173 specific standalone cpufreq driver instead of using
->   cpufreq-dt driver
-> - Define OPP table in the driver source code until new OPP binding is ready
->
-> Changes in v2:
-> - Add intermediate frequency support in cpufreq-dt driver
-> - Use voltage scaling code of cpufreq-dt for little cluster instead of
->   implementaion in notifier of mtk-cpufreq driver
-> - Code refinement for mtk-cpufreq driver
->
-> Pi-Cheng Chen (3):
->   dt-bindings: mediatek: Add MT8173 CPU DVFS clock bindings
->   cpufreq: mediatek: Add MT8173 cpufreq driver
->   arm64: dts: mt8173: Add mt8173 cpufreq driver support
->
->  .../devicetree/bindings/clock/mt8173-cpu-dvfs.txt  |  83 ++++
->  arch/arm64/boot/dts/mediatek/mt8173-evb.dts        |  18 +
->  arch/arm64/boot/dts/mediatek/mt8173.dtsi           |  64 +++
->  drivers/cpufreq/Kconfig.arm                        |   7 +
->  drivers/cpufreq/Makefile                           |   1 +
->  drivers/cpufreq/mt8173-cpufreq.c                   | 524 +++++++++++++++++++++
->  6 files changed, 697 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/clock/mt8173-cpu-dvfs.txt
->  create mode 100644 drivers/cpufreq/mt8173-cpufreq.c
->
-> --
-> 1.9.1
->
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 
+>> of_device_add, the ofdev->dev.parent is always equal &platform_bus. So
+>> that, function set_dev_node will not be called. And in device_add,
+>> dev_to_node(parent) always return NUMA_NO_NODE.
+>>
+>> Signed-off-by: Zhen Lei <thunder.leizhen@huawei.com>
+>> ---
+>>  drivers/base/core.c | 2 +-
+>>  drivers/of/device.c | 2 +-
+>>  2 files changed, 2 insertions(+), 2 deletions(-)
+>>
+>> diff --git a/drivers/base/core.c b/drivers/base/core.c
+>> index dafae6d..5df4f46b 100644
+>> --- a/drivers/base/core.c
+>> +++ b/drivers/base/core.c
+>> @@ -1017,7 +1017,7 @@ int device_add(struct device *dev)
+>>                 dev->kobj.parent = kobj;
+>>
+>>         /* use parent numa_node */
+>> -       if (parent)
+>> +       if (parent && (parent != &platform_bus))
+> 
+> This is only fixing one specific case, but I think things are broken
+> for any case where the NUMA associativity if not set at the top level
+> bus node. I think this should be something like:
+> 
+> if (parent && (dev_to_node(dev) != NO_NUMA_NODE))
+
+It seems a mistake, we should use equal sign.
+if (parent && (dev_to_node(dev) == NUMA_NO_NODE))
+
+> 
+> Then the OF code can set the node however it wants.
+
+OK. I will send patch v2 base upon your advice. Thank you.
+
+> 
+>>                 set_dev_node(dev, dev_to_node(parent));
+>>
+>>         /* first, register with generic layer. */
+>> diff --git a/drivers/of/device.c b/drivers/of/device.c
+>> index 8b91ea2..96ebece 100644
+>> --- a/drivers/of/device.c
+>> +++ b/drivers/of/device.c
+>> @@ -63,7 +63,7 @@ int of_device_add(struct platform_device *ofdev)
+>>         /* device_add will assume that this device is on the same node as
+>>          * the parent. If there is no parent defined, set the node
+>>          * explicitly */
+>> -       if (!ofdev->dev.parent)
+>> +       if (!ofdev->dev.parent || (ofdev->dev.parent == &platform_bus))
+> 
+> And then remove the if here.
+> 
+
+OK. I also think remove this statement will be better. Althouth set_dev_node maybe called two times,
+but it only spends very little time, and this almost happened at initialization phase.
+
+>>                 set_dev_node(&ofdev->dev, of_node_to_nid(ofdev->dev.of_node));
+>>
+>>         return device_add(&ofdev->dev);
+>> --
+>> 2.5.0
+>>
+>>
+>> --
+>> To unsubscribe from this list: send the line "unsubscribe devicetree" in
+>> the body of a message to majordomo@vger.kernel.org
+>> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 
+> .
+> 
