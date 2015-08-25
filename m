@@ -1,40 +1,148 @@
-From: Vishal Mahaveer <vishalm-l0cyMroinI0@public.gmane.org>
-Subject: [PATCH] ARM: dts: DRA7: fix a typo in ethernet
-Date: Tue, 25 Aug 2015 16:50:50 -0500
-Message-ID: <1440539450-8393-1-git-send-email-vishalm@ti.com>
+From: Shenwei Wang <shenwei.wang@freescale.com>
+Subject: [PATCH v3 1/1][Resend] misc: sram: add dev_pm_ops to support module power gate
+Date: Tue, 25 Aug 2015 17:03:07 -0500
+Message-ID: <1440540187-6208-1-git-send-email-shenwei.wang@freescale.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Cc: Suman Anna <s-anna-l0cyMroinI0@public.gmane.org>, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: gregkh@linuxfoundation.org, arnd@arndb.de, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, b20788@freescale.com
 List-Id: devicetree@vger.kernel.org
 
-Register address in name of the node is wrong
+When system goes into low power states like SUSPEND_MEM and
+HIBERNATION, the hardware IP block may be powered off to reduce
+the power consumption. This power down will lost all the
+data inside the ram. This patch added the dev_pm_ops and
+implemented two callbacks: suspend_noirq and resume_noirq, which
+will save the data in the on-chip-ram right before power down
+and restore it after system resumes.
 
-Signed-off-by: Vishal Mahaveer <vishalm-l0cyMroinI0@public.gmane.org>
-Acked-by: Mugunthan V N <mugunthanvnm-l0cyMroinI0@public.gmane.org>
+A new property string named "can-power-gate" is added to
+the devicetree bindings too.
+
+Based-on-a-patch-by: Anson Huang <b20788@freescale.com>
+Signed-off-by: Shenwei Wang <shenwei.wang@freescale.com>
+
 ---
- arch/arm/boot/dts/dra7.dtsi |    2 +-
- 1 files changed, 1 insertions(+), 1 deletions(-)
+Change log:
 
-diff --git a/arch/arm/boot/dts/dra7.dtsi b/arch/arm/boot/dts/dra7.dtsi
-index 1e29ccf..9a20d46 100644
---- a/arch/arm/boot/dts/dra7.dtsi
-+++ b/arch/arm/boot/dts/dra7.dtsi
-@@ -1398,7 +1398,7 @@
- 			ti,irqs-safe-map = <0>;
- 		};
- 
--		mac: ethernet@4a100000 {
-+		mac: ethernet@48484000 {
- 			compatible = "ti,cpsw";
- 			ti,hwmods = "gmac";
- 			clocks = <&dpll_gmac_ck>, <&gmac_gmii_ref_clk_div>;
--- 
-1.7.4.1
+PATCH v3
+	Removed the unnecessary clk_enable/clk_disable.
 
+PATCH v2
+	Use vmalloc to allocate the SRAM backup memory.
+	Code clean up.
+
+ Documentation/devicetree/bindings/misc/sram.txt |  2 ++
+ drivers/misc/sram.c                             | 42 +++++++++++++++++++++++++
+ 2 files changed, 44 insertions(+)
+
+diff --git a/Documentation/devicetree/bindings/misc/sram.txt b/Documentation/devicetree/bindings/misc/sram.txt
+index 36cbe5a..1170086 100644
+--- a/Documentation/devicetree/bindings/misc/sram.txt
++++ b/Documentation/devicetree/bindings/misc/sram.txt
+@@ -33,6 +33,8 @@ Optional properties in the area nodes:
+
+ - compatible : standard definition, should contain a vendor specific string
+                in the form <vendor>,[<device>-]<usage>
++- can-power-gate: a property to tell the driver that the sram can support
++		power gate
+
+ Example:
+
+diff --git a/drivers/misc/sram.c b/drivers/misc/sram.c
+index 15c33cc..db9f1fa 100644
+--- a/drivers/misc/sram.c
++++ b/drivers/misc/sram.c
+@@ -30,7 +30,9 @@
+
+ struct sram_dev {
+ 	struct device *dev;
++	void *power_off_save;
+ 	void __iomem *virt_base;
++	u32 size;
+
+ 	struct gen_pool *pool;
+ 	struct clk *clk;
+@@ -156,6 +158,33 @@ static int sram_reserve_regions(struct sram_dev *sram, struct resource *res)
+ 	return ret;
+ }
+
++static int sram_suspend_noirq(struct device *dev)
++{
++	struct platform_device *pdev = to_platform_device(dev);
++	struct sram_dev *sram = platform_get_drvdata(pdev);
++
++	if (!sram->power_off_save)
++		return 0;
++
++	/* Save necessary regs */
++	memcpy(sram->power_off_save, sram->virt_base, sram->size);
++
++	return 0;
++}
++
++static int sram_resume_noirq(struct device *dev)
++{
++	struct platform_device *pdev = to_platform_device(dev);
++	struct sram_dev *sram = platform_get_drvdata(pdev);
++
++	if (!sram->power_off_save)
++		return 0;
++
++	memcpy(sram->virt_base, sram->power_off_save, sram->size);
++
++	return 0;
++}
++
+ static int sram_probe(struct platform_device *pdev)
+ {
+ 	struct sram_dev *sram;
+@@ -176,6 +205,7 @@ static int sram_probe(struct platform_device *pdev)
+ 	}
+
+ 	size = resource_size(res);
++	sram->size = size;
+
+ 	if (!devm_request_mem_region(sram->dev, res->start, size, pdev->name)) {
+ 		dev_err(sram->dev, "could not request region for resource\n");
+@@ -203,6 +233,9 @@ static int sram_probe(struct platform_device *pdev)
+
+ 	platform_set_drvdata(pdev, sram);
+
++	if (of_property_read_bool(pdev->dev.of_node, "can-power-gate"))
++		sram->power_off_save = vmalloc(size);
++
+ 	dev_dbg(sram->dev, "SRAM pool: %zu KiB @ 0x%p\n",
+ 		gen_pool_size(sram->pool) / 1024, sram->virt_base);
+
+@@ -219,6 +252,9 @@ static int sram_remove(struct platform_device *pdev)
+ 	if (sram->clk)
+ 		clk_disable_unprepare(sram->clk);
+
++	if (sram->power_off_save)
++		vfree(sram->power_off_save);
++
+ 	return 0;
+ }
+
+@@ -229,10 +265,16 @@ static const struct of_device_id sram_dt_ids[] = {
+ };
+ #endif
+
++static const struct dev_pm_ops sram_pm_ops = {
++	.suspend_noirq = sram_suspend_noirq,
++	.resume_noirq = sram_resume_noirq,
++};
++
+ static struct platform_driver sram_driver = {
+ 	.driver = {
+ 		.name = "sram",
+ 		.of_match_table = of_match_ptr(sram_dt_ids),
++		.pm	= &sram_pm_ops,
+ 	},
+ 	.probe = sram_probe,
+ 	.remove = sram_remove,
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+2.5.0.rc2
