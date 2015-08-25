@@ -1,119 +1,128 @@
-From: Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2] mmc: sunxi: Don't start commands while
- the card is busy
-Date: Tue, 25 Aug 2015 15:58:45 +0200
-Message-ID: <CAPDyKFpJGBA7GN=PJmWdpT+_OiPF_ET0i9wC7XYBCJA9EwLrgw@mail.gmail.com>
-References: <1436541284-11800-1-git-send-email-hdegoede@redhat.com>
-	<CAPDyKFoNe0bghfSXs48stHzZToTc7Hjd5gVPy-VbDF8bzdVVMQ@mail.gmail.com>
-	<55BC8ADE.3070802@redhat.com>
-	<CAPDyKFrYvL33DsaATg4fyAJg=G3SEuOP+xU=o_UwasmNZ+a07Q@mail.gmail.com>
-	<55DC5B09.2020705@redhat.com>
-Reply-To: ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+From: Yakir Yang <ykk@rock-chips.com>
+Subject: Re: [PATCH v3 06/14] Documentation: drm/bridge: add document for
+ analogix_dp
+Date: Tue, 25 Aug 2015 22:02:25 +0800
+Message-ID: <55DC7571.6000204@rock-chips.com>
+References: <1439995728-18046-1-git-send-email-ykk@rock-chips.com>
+ <1439995834-18363-1-git-send-email-ykk@rock-chips.com>
+ <CAL_JsqLz+8RtBucctUj4euXZ3Ac0DvB52N9ONpAerh5T9BiTJg@mail.gmail.com>
+ <20150824125758.GA7557@n2100.arm.linux.org.uk>
+ <CAL_JsqKZYMMzV9Sc2r3K_rnM0FNuyb1TyJEhjGq1Hf7dTiWFKQ@mail.gmail.com>
+ <20150825091246.GA14034@ulmo.nvidia.com> <55DC383F.4000103@rock-chips.com>
+ <20150825100628.GD14034@ulmo.nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBDF57NG2XIHRBFXJ6GXAKGQEXJKW3TI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <55DC5B09.2020705-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <http://groups.google.com/group/linux-sunxi/subscribe>
-To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Cc: Chris Ball <chris-OsFVWbfNK3isTnJN9+BGXg@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Arend van Spriel <arend-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, linux-mmc <linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Eugene K <sigintmailru-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Type: text/plain; charset=utf-8;
+	format=flowed
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <20150825100628.GD14034@ulmo.nvidia.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Thierry Reding <treding@nvidia.com>
+Cc: Rob Herring <robherring2@gmail.com>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Heiko Stuebner <heiko@sntech.de>, Jingoo Han <jingoohan1@gmail.com>, Fabio Estevam <fabio.estevam@freescale.com>, Inki Dae <inki.dae@samsung.com>, Joe Perches <joe@perches.com>, Sean Paul <seanpaul@google.com>, Takashi Iwai <tiwai@suse.de>, dri-devel <dri-devel@lists.freedesktop.org>, Andrzej Hajda <a.hajda@samsung.com>, Gustavo Padovan <gustavo.padovan@collabora.co.uk>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, Vincent Palatin <vpalatin@chromium.org>, linux-rockchip@lists.infradead.org, Kishon Vijay Abraham I <kishon@ti.com>, David Airlie <airlied@linux.ie>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Doug Anderson <dianders@google.com>Rob Herring <ro>
 List-Id: devicetree@vger.kernel.org
 
-On 25 August 2015 at 14:09, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org> wrote:
-> Hi,
->
->
-> On 25-08-15 14:05, Ulf Hansson wrote:
->>
->> On 1 August 2015 at 11:01, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org> wrote:
->>>
->>> Hi,
->>>
->>> On 21-07-15 14:15, Ulf Hansson wrote:
->>>>
->>>>
->>>> On 10 July 2015 at 17:14, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org> wrote:
->>>>>
->>>>>
->>>>> Some sdio wifi modules have not been working reliable with the
->>>>> sunxi-mmc
->>>>> host code. This turns out to be caused by it starting new commands
->>>>> while
->>>>> the card signals that it is still busy processing a previous command.
->>>>
->>>>
->>>>
->>>> Which are those commands?
->>>
->>>
->>>
->>> The code were things get stuck when not waiting for the busy signal uses
->>> the following sdio helper functions:
->>>
->>> sdio_readb/sdio_writeb
->>> sdio_f0_readb/sdio_f0_writeb
->>> sdio_readw/sdio_writew
->>> sdio_readl/sdio_writel
->>> sdio_readsb
->>> sdio_memcpy_fromio/sdio_memcpy_toio
->>>
->>> And directly issues the following command:
->>>
->>>          mmc_dat.flags = write ? MMC_DATA_WRITE : MMC_DATA_READ;
->>>          mmc_cmd.opcode = SD_IO_RW_EXTENDED;
->>>          mmc_cmd.arg = write ? 1<<31 : 0;        /* write flag  */
->>>          mmc_cmd.arg |= (fn & 0x7) << 28;        /* SDIO func num */
->>>          mmc_cmd.arg |= 1<<27;                   /* block mode */
->>>          /* for function 1 the addr will be incremented */
->>>          mmc_cmd.arg |= (fn == 1) ? 1<<26 : 0;
->>>          mmc_cmd.flags = MMC_RSP_SPI_R5 | MMC_RSP_R5 | MMC_CMD_ADTC;
->>>
->>> I do not know if the busy wait is necessary for all
->>> of these, but the hack in the android kernel code,
->>> which inserts calls to a wait_card_busy function directly
->>> into: drivers/net/wireless/brcm80211/brcmfmac/bcmsdh.c
->>>
->>> Does so for all of these.
->>>
->>>> Or more interesting, which response types do
->>>>
->>>> these commands expect?
->>>> I don't think this is a sunxi specific issue, I have seen similar
->>>> issues for other host controllers.
->>>
->>>
->>>
->>> Agreed, recent dw-mmc patches address the same issue, also involving
->>> broadcom sdio wifi chips.
->>>
->>>> I am thinking that perhaps this should be managed by the mmc core
->>>> instead of local hacks to sunxi. Potentially we could make the core to
->>>> invoke the already existing host_ops->card_busy() callback when
->>>> needed...
->>>
->>>
->>>
->>> I'm fine with solving this either way, implementing host_ops->card_busy()
->>> for sunxi is easy, and if the core os modified to call that function
->>> before issue sdio io ops (which seems to be the common thing here),
->>> then that indeed is better then having the sunxi code always do
->>> the busy check.
->>
->>
->> Okay, so let's make the core to call the ->card_busy() callback and
->> then it's up to each host driver to implement that callback.
->
->
-> Ok, do you plan to do a patch for this, or do you expect to get
-> one submitted to you ?
+Hi Thierry,
 
-I prefer to get a patch submitted to me. My bandwidth has been limited
-and still have a lot to catch up with...
+=E5=9C=A8 2015/8/25 18:06, Thierry Reding =E5=86=99=E9=81=93:
+> On Tue, Aug 25, 2015 at 05:41:19PM +0800, Yakir Yang wrote:
+>> Hi Thierry,
+>>
+>> =E5=9C=A8 2015/8/25 17:12, Thierry Reding =E5=86=99=E9=81=93:
+>>> On Mon, Aug 24, 2015 at 09:48:27AM -0500, Rob Herring wrote:
+>>>> On Mon, Aug 24, 2015 at 7:57 AM, Russell King - ARM Linux
+>>>> <linux@arm.linux.org.uk> wrote:
+>>>>> On Sun, Aug 23, 2015 at 06:23:14PM -0500, Rob Herring wrote:
+>>>>>> On Wed, Aug 19, 2015 at 9:50 AM, Yakir Yang <ykk@rock-chips.com>=
+ wrote:
+>>>>>>> +       -analogix,color-depth:
+>>>>>>> +               number of bits per colour component.
+>>>>>>> +                       COLOR_6 =3D 0, COLOR_8 =3D 1, COLOR_10 =
+=3D 2, COLOR_12 =3D 3
+>>>>>> This seems pretty generic. Just use 6, 8, 10, or 12 for values. =
+And
+>>>>>> drop the vendor prefix.
+>>>>> Please think about this some more.  What does "color-depth" mean?=
+  Does it
+>>>>> mean the number of bits per colour _component_, or does it mean t=
+he total
+>>>>> number of bits to represent a particular colour.  It's confusing =
+as it
+>>>>> stands.
+>>>> Then "component-color-bpp" perhaps?
+>>> There should be no need to have this in DT at all. The BPC is a pro=
+perty
+>>> of the attached panel and it should come from the panel (either the
+>>> panel driver or parsed from EDID if available).
+>> Actually I have send an email about this one to you in version 2, ju=
+st past
+>> from that email:
+>>
+>> "samsung,color_space" and "samsung,color-depth"
+>>
+>> The drm_display_info's color_formats and bpc indicate the monitor di=
+splay
+>> ability, but
+>> the edp driver could not take it as input video format directly.
+>>
+>> For example, with my DP TV I would found "RGB444 & YCRCB422 & & YCRC=
+B444"
+>> support in drm_display_info.color_formats and 16bit bpc support, but=
+ RK3288
+>> crtc
+>> driver could only output RGB & ITU formats, so finally analogix_dp-r=
+ockchip
+>> driver
+>> config crtc to RGBaaa 10bpc mode.
+>>
+>> In this sutiation, the analogix_dp core driver would pazzled by the
+>> drm_display_info,
+>> can't chose the right color_space and bpc.
+>>
+>> And this is the place that confused me, wish you could give some ide=
+as about
+>> this one :-)
+> Your display driver should choose whatever it is capable of outputtin=
+g.
+> If the display reports that it can do 16 bits-per-color, but your
+> display driver can't do it, then it should choose a configuration tha=
+t
+> it supports. Similarily for the color encodings. If you can't generat=
+e
+> YCrCb444 with your hardware, then it's the driver's job to know about
+> that and select the next appropriate configuration.
+>
+> But hard-coding this is not the right solution because the value in D=
+T
+> may end up conflicting with what the display reports.
 
-Kind regards
-Uffe
+Yeah, thanks for your explain, you are right. It's the best way to get=20
+"color-depth"
+and "color-space" from display driver, not to hard-code in DT prop.
+
+But if the common analogix-dp driver want to get those values, then=20
+those values
+should come from the common drm struct data. Personally I think "struct=
+=20
+drm_crtc"
+is the best place that should indicate the output ability of SoC vop/lc=
+dc.
+
+But I haven't find out there are some place to store those message for=20
+now (I don't
+think it's good to modify the original color-space and color-bpc which=20
+parsed from
+monitor edid).
+
+So could you share sme ideas about this, and I would rather to talk wit=
+h=20
+Mark (Author
+of rockchip drm driver) to find out the better way to fix this one.
+
+Besides, I would appreciate very much if you can share some ideas about=
+=20
+how Exynos
+handler with this problem ;)
+
+Thanks,
+- Yakir
+> Thierry
