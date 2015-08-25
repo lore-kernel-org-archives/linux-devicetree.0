@@ -1,57 +1,90 @@
-From: Leif Lindholm <leif.lindholm@linaro.org>
-Subject: Re: [PATCH v1 3/3] arm64: dts: add Hi6220 mailbox node
-Date: Tue, 25 Aug 2015 15:24:16 +0100
-Message-ID: <20150825142416.GW10728@bivouac.eciton.net>
-References: <20150821184059.GB2000@svinekod>
- <20150824091845.GA28290@leoy-linaro>
- <20150824095144.GA7139@leverpostej>
- <1440411596.3517.12.camel@linaro.org>
- <20150824114903.GT10728@bivouac.eciton.net>
- <1440490427.10987.29.camel@linaro.org>
- <20150825094630.GU10728@bivouac.eciton.net>
- <1440497710.10987.42.camel@linaro.org>
- <20150825104256.GB13471@leverpostej>
- <1440510194.10987.52.camel@linaro.org>
+From: Ulf Hansson <ulf.hansson@linaro.org>
+Subject: Re: [PATCH v2 16/16] mmc: host: omap_hsmmc: use "mmc_of_parse_voltage"
+ to get ocr_avail
+Date: Tue, 25 Aug 2015 16:50:13 +0200
+Message-ID: <CAPDyKFoctSjBb0aPFNe0cyHe0uoD_DkWooQ-yyTX-P+bGJa_Vw@mail.gmail.com>
+References: <1438604801-11823-1-git-send-email-kishon@ti.com>
+	<1438604801-11823-17-git-send-email-kishon@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=UTF-8
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1440510194.10987.52.camel@linaro.org>
+In-Reply-To: <1438604801-11823-17-git-send-email-kishon@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Haojian Zhuang <haojian.zhuang@linaro.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, "leo.yan@linaro.org" <leo.yan@linaro.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <Pawel.Moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Catalin Marinas <Catalin.Marinas@arm.com>, Will Deacon <Will.Deacon@arm.com>, Jassi Brar <jassisinghbrar@gmail.com>, Bintian Wang <bintian.wang@huawei.com>, Yiping Xu <xuyiping@hisilicon.com>, Wei Xu <xuwei5@hisilicon.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "guodong.xu@linaro.org" <guodong.xu@linaro.org>, Jian Zhang <zhangjian001@hisilicon.com>, Zhenwei Wang <Zhenwei.wang@hisilicon.com>, Haoju Mo <mohaoju@hisilicon.com>, Dan Zhao <dan.zhao@hisilicon.com>, kongfei@hisilicon.
+To: Kishon Vijay Abraham I <kishon@ti.com>
+Cc: Andreas Fenkart <afenkart@gmail.com>, Tony Lindgren <tony@atomide.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-mmc <linux-mmc@vger.kernel.org>, linux-omap <linux-omap@vger.kernel.org>, Sekhar Nori <nsekhar@ti.com>, Roger Quadros <rogerq@ti.com>, Lokesh Vutla <lokeshvutla@ti.com>, Murali Karicheri <m-karicheri2@ti.com>, Franklin S Cooper Jr <fcooper@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Aug 25, 2015 at 09:43:14PM +0800, Haojian Zhuang wrote:
-> Since we discussed a lot on this, let's make a conclusion on it.
-> 
-> 1. UEFI could append the reserved buffer in it's memory mapping.
+On 3 August 2015 at 14:26, Kishon Vijay Abraham I <kishon@ti.com> wrote:
+> From: Roger Quadros <rogerq@ti.com>
+>
+> For platforms that doesn't have explicit regulator control in MMC,
+> populate voltage-ranges in MMC device tree node and use
+> mmc_of_parse_voltage to get ocr_avail
 
-Yes. It needs to.
+I don't like this.
 
-(I will let Mark comment on points 2-4.)
+If we are able to fetch the OCR mask via an external regulator, that
+shall be done.
 
-> 5. A patch is necessary in kernel. If efi stub feature is enabled,
->    arm kernel should not parse memory node or reserved memory buffer in
->    DT any more.
+I think the mmc_of_parse_voltage() API and the corresponding DT
+binding it parses, should be used for those HW when we don't have an
+external regulator to use. For example if the MMC controller itself
+somehow controls the voltage levels. Is that really the case for you?
 
-This is already the case. The stub deletes any present memory nodes and
-reserved entries in drivers/firmware/efi/libstub/fdt.c:update_fdt().
+Kind regards
+Uffe
 
-Then, during setup_arch(), arch/arm64/kernel/efi.c:efi_init() calls
-reserve_regions(), which adds only those memory regions available for
-use by Linux as RAM to memblock.
-
->    Arm kernel should either fetch memory information from 
->    efi or DT.
-
-Absolutely.
-
->    Currently arm kernel fetch both efi memory information and
->    reserved buffer from DTB at the same time.
-
-No, it does not.
-
-Regards,
-
-Leif
+>
+> Signed-off-by: Roger Quadros <rogerq@ti.com>
+> Signed-off-by: Lokesh Vutla <lokeshvutla@ti.com>
+> Signed-off-by: Murali Karicheri <m-karicheri2@ti.com>
+> Signed-off-by: Franklin S Cooper Jr <fcooper@ti.com>
+> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+> ---
+>  .../devicetree/bindings/mmc/ti-omap-hsmmc.txt      |    2 ++
+>  drivers/mmc/host/omap_hsmmc.c                      |    9 ++++++++-
+>  2 files changed, 10 insertions(+), 1 deletion(-)
+>
+> diff --git a/Documentation/devicetree/bindings/mmc/ti-omap-hsmmc.txt b/Documentation/devicetree/bindings/mmc/ti-omap-hsmmc.txt
+> index 76bf087..2408e87 100644
+> --- a/Documentation/devicetree/bindings/mmc/ti-omap-hsmmc.txt
+> +++ b/Documentation/devicetree/bindings/mmc/ti-omap-hsmmc.txt
+> @@ -22,6 +22,8 @@ ti,dual-volt: boolean, supports dual voltage cards
+>  ti,non-removable: non-removable slot (like eMMC)
+>  ti,needs-special-reset: Requires a special softreset sequence
+>  ti,needs-special-hs-handling: HSMMC IP needs special setting for handling High Speed
+> +voltage-ranges: Specify the voltage range supported if regulator framework
+> +isn't enabled.
+>  dmas: List of DMA specifiers with the controller specific format
+>  as described in the generic DMA client binding. A tx and rx
+>  specifier is required.
+> diff --git a/drivers/mmc/host/omap_hsmmc.c b/drivers/mmc/host/omap_hsmmc.c
+> index 15973f1..d884d8f 100644
+> --- a/drivers/mmc/host/omap_hsmmc.c
+> +++ b/drivers/mmc/host/omap_hsmmc.c
+> @@ -2184,7 +2184,13 @@ static int omap_hsmmc_probe(struct platform_device *pdev)
+>                         goto err_irq;
+>         }
+>
+> -       mmc->ocr_avail = mmc_pdata(host)->ocr_mask;
+> +       if (!mmc_pdata(host)->ocr_mask) {
+> +               ret = mmc_of_parse_voltage(pdev->dev.of_node, &mmc->ocr_avail);
+> +               if (ret)
+> +                       goto err_parse_voltage;
+> +       } else {
+> +               mmc->ocr_avail = mmc_pdata(host)->ocr_mask;
+> +       }
+>
+>         omap_hsmmc_disable_irq(host);
+>
+> @@ -2224,6 +2230,7 @@ static int omap_hsmmc_probe(struct platform_device *pdev)
+>
+>  err_slot_name:
+>         mmc_remove_host(mmc);
+> +err_parse_voltage:
+>         omap_hsmmc_reg_put(host);
+>  err_irq:
+>         device_init_wakeup(&pdev->dev, false);
+> --
+> 1.7.9.5
+>
