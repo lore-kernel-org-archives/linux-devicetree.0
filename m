@@ -1,85 +1,46 @@
-From: Paolo Pisati <p.pisati-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: omap_wdt: node present in device-tree but kmod is not autoloaded
-Date: Tue, 25 Aug 2015 16:06:07 +0200
-Message-ID: <20150825140607.GA23311@luxor.wired.org>
+From: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH v1 3/3] arm64: dts: add Hi6220 mailbox node
+Date: Tue, 25 Aug 2015 15:13:26 +0100
+Message-ID: <55DC7806.2010003@arm.com>
+References: <1439977055-1747-1-git-send-email-leo.yan@linaro.org> <1439977055-1747-4-git-send-email-leo.yan@linaro.org> <55DC532C.3020005@arm.com> <20150825140450.GB28262@leoy-linaro>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
+In-Reply-To: <20150825140450.GB28262@leoy-linaro>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-omap <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-dt <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Leo Yan <leo.yan-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "guodong.xu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <guodong.xu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Jian Zhang <zhangjian001-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Zhenwei Wang <Zhenwei.wang-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Haoju Mo <mohaoju-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Dan Zhao <dan.zhao-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, "kongfei-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org" <kongfei-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Guangyue Zeng <zengguangyue-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Catalin Marinas <Catalin.Marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Bintian Wang <bintian.wang-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The question is two-folded, hence the crossposting.
 
-I have a kernel that runs perfectly on my beaglebone black, except for one thing
-- the kmod for the watchdog is not autoloaded upon boot albeit the device-tree
-node is present:
 
-ubuntu@beaglebone:~$ dmesg | grep wdt
-ubuntu@beaglebone:~$ ll /dev/watch* 
-ls: cannot access /dev/watch*: No such file or directory
-ubuntu@beaglebone:~$ ls -la /proc/device-tree/ocp/wdt\@44e35000/
-total 0
-drwxr-xr-x  2 root root  0 Aug 25 13:43 .
-drwxr-xr-x 54 root root  0 Aug 25 13:43 ..
--r--r--r--  1 root root 13 Aug 25 13:43 compatible
--r--r--r--  1 root root  4 Aug 25 13:43 interrupts
--r--r--r--  1 root root  4 Aug 25 13:43 name
--r--r--r--  1 root root  8 Aug 25 13:43 reg
--r--r--r--  1 root root 10 Aug 25 13:43 ti,hwmods
-ubuntu@beaglebone:~$ cat /proc/device-tree/ocp/wdt\@44e35000/compatible 
-ti,omap3-wdt
-ubuntu@beaglebone:~$ ls -la /sys/bus/platform/devices/ocp/*wdt*
-total 0
-drwxr-xr-x  3 root root    0 Aug 25 13:49 ./
-drwxr-xr-x 33 root root    0 Aug 25 13:49 ../
--rw-r--r--  1 root root 4096 Aug 25 13:49 driver_override
--r--r--r--  1 root root 4096 Aug 25 13:49 modalias
-lrwxrwxrwx  1 root root    0 Aug 25 13:49 of_node ->
-../../../../firmware/devicetree/base/ocp/wdt@44e35000/
-drwxr-xr-x  2 root root    0 Aug 25 13:49 power/
-lrwxrwxrwx  1 root root    0 Aug 25 13:49 subsystem -> ../../../../bus/platform/
--rw-r--r--  1 root root 4096 Aug 25 13:49 uevent
+On 25/08/15 15:04, Leo Yan wrote:
+> Hi Sudeep,
+>
+> On Tue, Aug 25, 2015 at 12:36:12PM +0100, Sudeep Holla wrote:
+>>
+>>
+>> On 19/08/15 10:37, Leo Yan wrote:
+>>> On Hi6220, below memory regions in DDR have specific purpose:
+>>>
+>>>    0x05e0,0000 - 0x05ef,ffff: For MCU firmware using at runtime;
+>>>    0x0740,f000 - 0x0740,ffff: For MCU firmware's section;
+>>>    0x06df,f000 - 0x06df,ffff: For mailbox message data.
+>>>
+>>
+>> Unless I am reading the DTS file completely wrong, I don't think the
+>> above memory regions are in DDR as per the memory node.
+>
+> i'm not sure if understand correctly for your question; Hikey board
+> has DDR 1GB@0x0, but there have some memory regions are used for MCU.
+>
 
-and if i manually load the module:
+Ah, I misread the address range, left the leading zero and assumed they
+are not in DDR range. Sorry for the noise.
 
-ubuntu@beaglebone:~$ sudo modprobe omap_wdt
-ubuntu@beaglebone:~$ dmesg | grep wdt
-[  388.104283] omap_wdt: OMAP Watchdog Timer Rev 0x01: initial timeout 60 sec
-ubuntu@beaglebone:~$ ls -la /dev/watchdog*
-crw------- 1 root root  10, 130 Aug 25 13:46 /dev/watchdog
-crw------- 1 root root 251,   0 Aug 25 13:46 /dev/watchdog0
-ubuntu@beaglebone:~$ ls -la /sys/bus/platform/devices/ocp/*wdt*                                                             
-total 0
-drwxr-xr-x  3 root root    0 Aug 25 13:53 .
-drwxr-xr-x 33 root root    0 Aug 25 13:49 ..
-lrwxrwxrwx  1 root root    0 Aug 25 13:53 driver ->
-../../../../bus/platform/drivers/omap_wdt
--rw-r--r--  1 root root 4096 Aug 25 13:49 driver_override
--r--r--r--  1 root root 4096 Aug 25 13:49 modalias
-lrwxrwxrwx  1 root root    0 Aug 25 13:49 of_node ->
-../../../../firmware/devicetree/base/ocp/wdt@44e35000
-drwxr-xr-x  2 root root    0 Aug 25 13:49 power
-lrwxrwxrwx  1 root root    0 Aug 25 13:49 subsystem -> ../../../../bus/platform
--rw-r--r--  1 root root 4096 Aug 25 13:49 uevent
-
-and then the device works as expected.
-
-So here are my questions:
-
-1) My understanding was that, once a device node was present in the device-tree
-and there was a compatible driver available, it would have been autoloaded, so why it's
-not happening here?
-
-2) And more importantly, how do i debug these situations?
-Building a kernel with the driver built-in, and comparing the two dmesgs, didn't
-show any noticeable difference either.
-
-Any idea?
--- 
-bye,
-p.
+Regards,
+Sudeep
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
