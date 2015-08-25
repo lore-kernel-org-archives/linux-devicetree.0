@@ -1,69 +1,61 @@
-From: Haojian Zhuang <haojian.zhuang@linaro.org>
-Subject: Re: [PATCH v1 3/3] arm64: dts: add Hi6220 mailbox node
-Date: Tue, 25 Aug 2015 16:13:47 +0800
-Message-ID: <1440490427.10987.29.camel@linaro.org>
-References: <1439977055-1747-1-git-send-email-leo.yan@linaro.org>
-	 <1439977055-1747-4-git-send-email-leo.yan@linaro.org>
-	 <20150821184059.GB2000@svinekod> <20150824091845.GA28290@leoy-linaro>
-	 <20150824095144.GA7139@leverpostej> <1440411596.3517.12.camel@linaro.org>
-	 <20150824114903.GT10728@bivouac.eciton.net>
+From: Vaibhav Hiremath <vaibhav.hiremath@linaro.org>
+Subject: Re: [PATCH-v2 5/5] mfd: 88pm800: Add support for clk subdevice
+Date: Tue, 25 Aug 2015 14:01:02 +0530
+Message-ID: <55DC27C6.3020500@linaro.org>
+References: <1440442594-3102-1-git-send-email-vaibhav.hiremath@linaro.org>
+ <1440442594-3102-7-git-send-email-vaibhav.hiremath@linaro.org>
+ <55DBFC40.3010603@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20150824114903.GT10728@bivouac.eciton.net>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Leif Lindholm <leif.lindholm@linaro.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, Leo Yan <leo.yan@linaro.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <Pawel.Moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Catalin Marinas <Catalin.Marinas@arm.com>, Will Deacon <Will.Deacon@arm.com>, Jassi Brar <jassisinghbrar@gmail.com>, Bintian Wang <bintian.wang@huawei.com>, Yiping Xu <xuyiping@hisilicon.com>, Wei Xu <xuwei5@hisilicon.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "guodong.xu@linaro.org" <guodong.xu@linaro.org>, Jian Zhang <zhangjian001@hisilicon.com>, Zhenwei Wang <Zhenwei.wang@hisilicon.com>, Haoju Mo <mohaoju@hisilicon.com>, Dan Zhao <dan.zhao@hisilicon.com>, "kongfei@hisilicon.com" <kongfei@>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <55DBFC40.3010603@samsung.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Krzysztof Kozlowski <k.kozlowski@samsung.com>, linux-arm-kernel@lists.infradead.org
+Cc: devicetree@vger.kernel.org, mturquette@baylibre.com, linux-kernel@vger.kernel.org, robh+dt@kernel.org, lee.jones@linaro.org, linux-clk@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 2015-08-24 at 12:49 +0100, Leif Lindholm wrote:
-> On Mon, Aug 24, 2015 at 06:19:56PM +0800, Haojian Zhuang wrote:
-> > > If your EFI memory map describes the memory as mappable, it is wrong.
-> > 
-> > When kernel is working, kernel will create its own page table based on
-> > UEFI memory map. Since it's reserved in DTS file as Leo's patch, it'll
-> > be moved to reserved memblock. Why is it wrong?
-> > 
-> > In the second, UEFI is firmware. When it's stable, nobody should change
-> > it without any reason.
-> 
-> Much like the memory map.
-> 
-> > These reserved memory are used in mailbox driver.
-> > Look. It's driver, so it could be changed at any time.
-> 
-> No, it is a set of regions of memory set aside for use by a different
-> master in the system as well as communications with that master.
-> 
-> The fact that there is a driver somewhere that is aware of this is
-> entirely beside the point. All agents in the system must adher to this
-> protocol.
-> 
-> > Why do you want
-> > to UEFI knowing this memory range? Do you hope UEFI to change when
-> > mailbox driver is changed?
-> 
-> Yes.
-> 
-> UEFI is a runtime environment. Having random magic areas not to be
-> touched will cause random pieces of software running under it to break
-> horribly or break other things horribly.
-> Unless you mark them as reserved in the UEFI memory map.
-> At which point the Linux kernel will automatically ignore them, and
-> the proposed patch is redundant.
-> 
-> So, yes, if you want a system that can boot reliably, run testsuites
-> (like SCT or FWTS), run applications (like fastboot ... or the EFI
-> stub kernel itself), then any memory regions that is reserved for
-> mailbox communication (or other masters in the system) _must_ be
-> marked in the EFI memory map.
 
-1. We need support both UEFI and uboot. So the reserved buffer have to
-be declared in DTB since they are used by kernel driver, not UEFI.
 
-2. UEFI just loads grub. It's no time to run any other custom EFI
-application.
+On Tuesday 25 August 2015 10:55 AM, Krzysztof Kozlowski wrote:
+> On 25.08.2015 03:56, Vaibhav Hiremath wrote:
+>> This patch adds mfd_cell/clk-subdevice for 88PM800 MFD
+>> (and family of devices).
+>>
+>> Signed-off-by: Vaibhav Hiremath <vaibhav.hiremath@linaro.org>
+>> ---
+>>   drivers/mfd/88pm800.c | 25 +++++++++++++++++++++++++
+>>   1 file changed, 25 insertions(+)
+>>
+>> diff --git a/drivers/mfd/88pm800.c b/drivers/mfd/88pm800.c
+>> index c4e097d..a928eed 100644
+>> --- a/drivers/mfd/88pm800.c
+>> +++ b/drivers/mfd/88pm800.c
+>> @@ -173,6 +173,14 @@ static const struct mfd_cell regulator_devs[] = {
+>>   	},
+>>   };
+>>
+>> +static struct mfd_cell clk_devs[] = {
+>> +	{
+>> +		.name = "88pm80x-clk",
+>> +		.of_compatible = "marvell,88pm800-clk",
+>> +		.id = -1,
+>
+> The "-1" here stands for PLATFORM_DEVID_NONE?
+>
 
-Regards
-Haojian
+Yes,
+
+But it is rarely used in the kernel. so was reluctant to use and
+decided to follow existing implementation.
+
+Thanks,
+Vaibhav
