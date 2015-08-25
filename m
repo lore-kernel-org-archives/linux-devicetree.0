@@ -1,95 +1,100 @@
-From: Brian Norris <computersforpeace@gmail.com>
-Subject: Re: [PATCH v10 1/5] mtd: nand: vf610_nfc: Freescale NFC for VF610,
- MPC5125 and others
-Date: Tue, 25 Aug 2015 13:16:31 -0700
-Message-ID: <20150825201631.GK81844@google.com>
+From: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v10 3/5] mtd: nand: vf610_nfc: add device tree bindings
+Date: Tue, 25 Aug 2015 13:25:46 -0700
+Message-ID: <20150825202546.GL81844@google.com>
 References: <1438594050-4595-1-git-send-email-stefan@agner.ch>
- <1438594050-4595-2-git-send-email-stefan@agner.ch>
+ <1438594050-4595-4-git-send-email-stefan@agner.ch>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1438594050-4595-2-git-send-email-stefan@agner.ch>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Stefan Agner <stefan@agner.ch>
-Cc: dwmw2@infradead.org, sebastian@breakpoint.cc, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, shawn.guo@linaro.org, kernel@pengutronix.de, boris.brezillon@free-electrons.com, marb@ixxat.de, aaron@tastycactus.com, bpringlemeir@gmail.com, linux-mtd@lists.infradead.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, albert.aribaud@3adev.fr, klimov.linux@gmail.com, Bill Pringlemeir <bpringlemeir@nbsps.com>
+In-Reply-To: <1438594050-4595-4-git-send-email-stefan-XLVq0VzYD2Y@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
+Cc: dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, sebastian-E0PNVn5OA6ohrxcnuTQ+TQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, marb-Z4QKGCRq86k@public.gmane.org, aaron-yuhzfaV+M/Wz3Dx2OeFgIA@public.gmane.org, bpringlemeir-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, albert.aribaud-iEu9NFBzPZE@public.gmane.org, klimov.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Bill Pringlemeir <bpringlemeir-ygJ1pmMJ17cAvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-A few more comments.
+Sorry, I realized a potential issue here.
 
-On Mon, Aug 03, 2015 at 11:27:26AM +0200, Stefan Agner wrote:
-> diff --git a/drivers/mtd/nand/vf610_nfc.c b/drivers/mtd/nand/vf610_nfc.c
+On Mon, Aug 03, 2015 at 11:27:28AM +0200, Stefan Agner wrote:
+> Signed-off-by: Bill Pringlemeir <bpringlemeir-ygJ1pmMJ17cAvxtiuMwx3w@public.gmane.org>
+> Acked-by: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> Reviewed-by: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> Signed-off-by: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
+> ---
+>  .../devicetree/bindings/mtd/vf610-nfc.txt          | 45 ++++++++++++++++++++++
+>  1 file changed, 45 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/mtd/vf610-nfc.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/mtd/vf610-nfc.txt b/Documentation/devicetree/bindings/mtd/vf610-nfc.txt
 > new file mode 100644
-> index 0000000..5c8dfe8
+> index 0000000..cae5f25
 > --- /dev/null
-> +++ b/drivers/mtd/nand/vf610_nfc.c
-> @@ -0,0 +1,645 @@
-
-...
-
-> +/*
-> + * This function supports Vybrid only (MPC5125 would have full RB and four CS)
-> + */
-> +static void vf610_nfc_select_chip(struct mtd_info *mtd, int chip)
-> +{
-> +#ifdef CONFIG_SOC_VF610
-
-Why the #ifdef? I don't see anything compile-time specific to SOC_VF610.
-
-If this is trying to handle the comment above ("This function supports
-Vybrid only (MPC5125 would have full RB and four CS)") then that's the
-wrong way of doing it, as you need to support multiplatform kernels.
-You'll need to have a way to differentiate the different platform
-support at runtime, not compile time.
-
-> +	struct vf610_nfc *nfc = mtd_to_nfc(mtd);
-> +	u32 tmp = vf610_nfc_read(nfc, NFC_ROW_ADDR);
+> +++ b/Documentation/devicetree/bindings/mtd/vf610-nfc.txt
+> @@ -0,0 +1,45 @@
+> +Freescale's NAND flash controller (NFC)
 > +
-> +	tmp &= ~(ROW_ADDR_CHIP_SEL_RB_MASK | ROW_ADDR_CHIP_SEL_MASK);
-> +	tmp |= 1 << ROW_ADDR_CHIP_SEL_RB_SHIFT;
+> +This variant of the Freescale NAND flash controller (NFC) can be found on
+> +Vybrid (vf610), MPC5125, MCF54418 and Kinetis K70.
 > +
-> +	if (chip == 0)
-> +		tmp |= 1 << ROW_ADDR_CHIP_SEL_SHIFT;
-> +	else if (chip == 1)
-> +		tmp |= 2 << ROW_ADDR_CHIP_SEL_SHIFT;
+> +Required properties:
+> +- compatible: Should be set to "fsl,vf610-nfc"
+> +- reg: address range of the NFC
+> +- interrupts: interrupt of the NFC
+> +- nand-bus-width: see nand.txt
+> +- nand-ecc-mode: see nand.txt
+> +- nand-on-flash-bbt: see nand.txt
 
-	else ... ?
+Stumbling across the "multi-CS" questions on the driver reminds me: it
+typically makes sense to define new NAND bindings using separate NAND
+*controller* and *flash* device nodes. The above 3 properties, at least,
+would apply on a per-flash basis, not per-controller typically. See
+sunxi-nand, for instance:
 
-Maybe you can write this as a formulaic pattern (e.g.:
+http://lxr.free-electrons.com/source/Documentation/devicetree/bindings/mtd/sunxi-nand.txt
 
-	tmp |= (chip + 1) << ROW_ADDR_CHIP_SEL_SHIFT;
+brcmnand had a similar pattern:
 
-) and just do the "max # of chips" checks on a per-platform basis in the
-probe(). Then I'm guessing this same function can apply to both
-platforms. (I'm not looking at HW datasheets for this, BTW, just
-guessing based on the context here.)
+https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git/tree/Documentation/devicetree/bindings/mtd/brcm,brcmnand.txt
 
-But wait...I see that you call nand_scan_ident() with a max of 1 chip.
-So you won't ever see the chip > 0 case, right?
+(Perhaps it's time we standardized this a little more formally...)
 
-So does this driver support multiple flash attached or not? Looks like
-you're assuming you'll only be using chip-select 0. (This is fine for
-now, but at least your code should acknowledge this. Perhaps a comment
-at the top under "limitations.")
-
+> +- assigned-clocks: main clock from the SoC, for Vybrid <&clks VF610_CLK_NFC>;
+> +- assigned-clock-rates: The NAND bus timing is derived from this clock
+> +    rate and should not exceed maximum timing for any NAND memory chip
+> +    in a board stuffing. Typical NAND memory timings derived from this
+> +    clock are found in the SoC hardware reference manual. Furthermore,
+> +    there might be restrictions on maximum rates when using hardware ECC.
 > +
-> +	vf610_nfc_write(nfc, NFC_ROW_ADDR, tmp);
-> +#endif
-> +}
-
-...
-
-> +static int vf610_nfc_probe(struct platform_device *pdev)
-> +{
-
-...
-
-> +	/* first scan to find the device and get the page size */
-> +	if (nand_scan_ident(mtd, 1, NULL)) {
-> +		err = -ENXIO;
-> +		goto error;
-> +	}
-
-...
+> +- #address-cells, #size-cells : Must be present if the device has sub-nodes
+> +  representing partitions.
+> +
+> +Required properties for hardware ECC:
+> +- nand-ecc-strength: supported strengths are 24 and 32 bit (see nand.txt)
+> +- nand-ecc-step-size: step size equals page size, currently only 2k pages are
+> +    supported
+> +
+> +Example:
+> +
+> +	nfc: nand@400e0000 {
+> +		compatible = "fsl,vf610-nfc";
+> +		#address-cells = <1>;
+> +		#size-cells = <1>;
+> +		reg = <0x400e0000 0x4000>;
+> +		interrupts = <GIC_SPI 83 IRQ_TYPE_LEVEL_HIGH>;
+> +		clocks = <&clks VF610_CLK_NFC>;
+> +		clock-names = "nfc";
+> +		assigned-clocks = <&clks VF610_CLK_NFC>;
+> +		assigned-clock-rates = <33000000>;
+> +		nand-bus-width = <8>;
+> +		nand-ecc-mode = "hw";
+> +		nand-ecc-strength = <32>;
+> +		nand-ecc-step-size = <2048>;
+> +		nand-on-flash-bbt;
+> +	};
 
 Brian
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
