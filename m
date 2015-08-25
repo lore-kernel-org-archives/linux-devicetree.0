@@ -1,60 +1,95 @@
-From: Jonas Gorski <jogo-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>
-Subject: Re: [PATCH linux-next v4 5/5] mtd: atmel-quadspi: add driver for
- Atmel QSPI controller
-Date: Tue, 25 Aug 2015 11:46:08 +0200
-Message-ID: <CAOiHx=kExyKAoGW4ciWHHxGNosNR0VdvHHrSqeo7RH1rNOXgig@mail.gmail.com>
-References: <cover.1440410236.git.cyrille.pitchen@atmel.com>
- <201508241303.52066.marex@denx.de> <55DB4EA6.9090807@atmel.com> <201508241945.33577.marex@denx.de>
+From: Leif Lindholm <leif.lindholm@linaro.org>
+Subject: Re: [PATCH v1 3/3] arm64: dts: add Hi6220 mailbox node
+Date: Tue, 25 Aug 2015 10:46:30 +0100
+Message-ID: <20150825094630.GU10728@bivouac.eciton.net>
+References: <1439977055-1747-1-git-send-email-leo.yan@linaro.org>
+ <1439977055-1747-4-git-send-email-leo.yan@linaro.org>
+ <20150821184059.GB2000@svinekod>
+ <20150824091845.GA28290@leoy-linaro>
+ <20150824095144.GA7139@leverpostej>
+ <1440411596.3517.12.camel@linaro.org>
+ <20150824114903.GT10728@bivouac.eciton.net>
+ <1440490427.10987.29.camel@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <201508241945.33577.marex-ynQEQJNshbs@public.gmane.org>
-Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>
-Cc: Cyrille Pitchen <cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Ben Hutchings <ben-/+tVBieCtBitmTQ+vhA3Yw@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Gabor Juhos <juhosg-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, MTD Maling List <linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "Bean Huo (beanhuo)" <beanhuo-AL4WhLSQfzjQT0dZR+AlfA@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1440490427.10987.29.camel@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Haojian Zhuang <haojian.zhuang@linaro.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, Leo Yan <leo.yan@linaro.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <Pawel.Moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Catalin Marinas <Catalin.Marinas@arm.com>, Will Deacon <Will.Deacon@arm.com>, Jassi Brar <jassisinghbrar@gmail.com>, Bintian Wang <bintian.wang@huawei.com>, Yiping Xu <xuyiping@hisilicon.com>, Wei Xu <xuwei5@hisilicon.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "guodong.xu@linaro.org" <guodong.xu@linaro.org>, Jian Zhang <zhangjian001@hisilicon.com>, Zhenwei Wang <Zhenwei.wang@hisilicon.com>, Haoju Mo <mohaoju@hisilicon.com>, Dan Zhao <dan.zhao@hisilicon.com>, "kongfei@hisilicon.com" <kongfei@>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Aug 24, 2015 at 7:45 PM, Marek Vasut <marex-ynQEQJNshbs@public.gmane.org> wrote:
-> On Monday, August 24, 2015 at 07:04:38 PM, Cyrille Pitchen wrote:
->> Hi Marek,
->
-> Hi!
->
->> Le 24/08/2015 13:03, Marek Vasut a =C3=A9crit :
->> > On Monday, August 24, 2015 at 12:14:00 PM, Cyrille Pitchen wrote:
->> >> This driver add support to the new Atmel QSPI controller embedded=
- into
->> >> sama5d2x SoCs. It expects a NOR memory to be connected to the QSP=
-I
->> >> controller.
->
-> [...]
->
->> >> +  /* Compute address parameters */
->> >> +  switch (cmd->enable.bits.address) {
->> >> +  case 4:
->> >> +          ifr |=3D QSPI_IFR_ADDRL;
->> >> +          /*break;*/ /* fallback to the 24bit address case */
->> >
->> > What's this commented out bit of code for ? :-)
->>
->> I just wanted to stress out there was no missing "break;".
->> I've reworded the comment to:
->> /* No "break" on purpose: fallback to the 24bit address case. */
->
-> Oh, the address is in bytes . I see, yes, it makes sense to be more
-> explicit here about the purpose of the fallback. I think this change
-> in the comment will make it easier for everyone who comes back in a
-> few years and reads this code.
+On Tue, Aug 25, 2015 at 04:13:47PM +0800, Haojian Zhuang wrote:
+> On Mon, 2015-08-24 at 12:49 +0100, Leif Lindholm wrote:
+> > On Mon, Aug 24, 2015 at 06:19:56PM +0800, Haojian Zhuang wrote:
+> > > > If your EFI memory map describes the memory as mappable, it is wrong.
+> > > 
+> > > When kernel is working, kernel will create its own page table based on
+> > > UEFI memory map. Since it's reserved in DTS file as Leo's patch, it'll
+> > > be moved to reserved memblock. Why is it wrong?
+> > > 
+> > > In the second, UEFI is firmware. When it's stable, nobody should change
+> > > it without any reason.
+> > 
+> > Much like the memory map.
+> > 
+> > > These reserved memory are used in mailbox driver.
+> > > Look. It's driver, so it could be changed at any time.
+> > 
+> > No, it is a set of regions of memory set aside for use by a different
+> > master in the system as well as communications with that master.
+> > 
+> > The fact that there is a driver somewhere that is aware of this is
+> > entirely beside the point. All agents in the system must adher to this
+> > protocol.
+> > 
+> > > Why do you want
+> > > to UEFI knowing this memory range? Do you hope UEFI to change when
+> > > mailbox driver is changed?
+> > 
+> > Yes.
+> > 
+> > UEFI is a runtime environment. Having random magic areas not to be
+> > touched will cause random pieces of software running under it to break
+> > horribly or break other things horribly.
+> > Unless you mark them as reserved in the UEFI memory map.
+> > At which point the Linux kernel will automatically ignore them, and
+> > the proposed patch is redundant.
+> > 
+> > So, yes, if you want a system that can boot reliably, run testsuites
+> > (like SCT or FWTS), run applications (like fastboot ... or the EFI
+> > stub kernel itself), then any memory regions that is reserved for
+> > mailbox communication (or other masters in the system) _must_ be
+> > marked in the EFI memory map.
+> 
+> 1. We need support both UEFI and uboot. So the reserved buffer have to
+> be declared in DTB since they are used by kernel driver, not UEFI.
 
-I think you are looking for the term "(switch case) fallthrough", not
-"fallback". "Fallback" makes it sound like there is something missing,
-or an invalid state.
+The buffer may need to be declared in DTB also, but it most certanily
+needs to be declared in UEFI.
 
+And for the U-Boot case, since it is not memory available to Linux, it
+should not be declared as "memory".
 
-Jonas
---
-To unsubscribe from this list: send the line "unsubscribe linux-spi" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 2. UEFI just loads grub. It's no time to run any other custom EFI
+> application.
+
+Apart from being completely irrelevant, how are you intending to
+validate that GRUB never touches these memory regions?
+
+Build a version once, test it, and hope the results remain valid
+forever? And then when you move the regions and the previously working
+GRUB now tramples all over them? Or when something changes in upstream
+GRUB and its memory allocations drifts into the secretly untouchable
+regions?
+
+Are you then going to hack GRUB, release a special HiKey version of
+GRUB, not support any other versions, and still can your firmware
+UEFI?
+
+Repeat again and again for any other UEFI applications - including
+fastboot, SCT, FWTS and the UEFI stub kernel.
+
+/
+    Leif
