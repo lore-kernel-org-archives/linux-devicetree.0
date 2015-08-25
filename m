@@ -1,55 +1,53 @@
-From: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH linux-next v4 5/5] mtd: atmel-quadspi: add driver for
- Atmel QSPI controller
-Date: Tue, 25 Aug 2015 08:57:49 -0700
-Message-ID: <20150825155749.GA7622@localhost>
-References: <cover.1440410236.git.cyrille.pitchen@atmel.com>
- <201508241303.52066.marex@denx.de>
- <55DC40C1.3050405@atmel.com>
- <201508251222.10813.marex@denx.de>
+From: Russell King - ARM Linux <linux@arm.linux.org.uk>
+Subject: Re: [PATCH v3 06/14] Documentation: drm/bridge: add document for
+ analogix_dp
+Date: Tue, 25 Aug 2015 16:57:52 +0100
+Message-ID: <20150825155752.GU7557@n2100.arm.linux.org.uk>
+References: <1439995728-18046-1-git-send-email-ykk@rock-chips.com>
+ <1439995834-18363-1-git-send-email-ykk@rock-chips.com>
+ <20150825095817.GC14034@ulmo.nvidia.com>
+ <55DC75C8.209@rock-chips.com>
+ <20150825142150.GB3820@ulmo.nvidia.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <201508251222.10813.marex-ynQEQJNshbs@public.gmane.org>
-Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>
-Cc: Cyrille Pitchen <cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, beanhuo-AL4WhLSQfzjQT0dZR+AlfA@public.gmane.org, juhosg-p3rKhJxN3npAfugRpC6u6w@public.gmane.org, shijie.huang-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, ben-/+tVBieCtBitmTQ+vhA3Yw@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+In-Reply-To: <20150825142150.GB3820@ulmo.nvidia.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Thierry Reding <treding@nvidia.com>
+Cc: Yakir Yang <ykk@rock-chips.com>, Heiko Stuebner <heiko@sntech.de>, Jingoo Han <jingoohan1@gmail.com>, Fabio Estevam <fabio.estevam@freescale.com>, Inki Dae <inki.dae@samsung.com>, joe@perches.com, djkurtz@google.com, dianders@google.com, seanpaul@google.com, Takashi Iwai <tiwai@suse.de>, ajaynumb@gmail.com, Andrzej Hajda <a.hajda@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, Philipp Zabel <p.zabel@pengutronix.de>, David Airlie <airlied@linux.ie>, Gustavo Padovan <gustavo.padovan@collabora.co.uk>, Vincent Palatin <vpalatin@chromium.org>, Mark Yao <mark.yao@rock-chips.com>, Andy Yan <andy.yan@rock-chips.com>, Kumar Gala <galak@codeaurora.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Kishon Vijay Abraham I <kishon@ti.com>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.orgl
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Aug 25, 2015 at 12:22:10PM +0200, Marek Vasut wrote:
-> On Tuesday, August 25, 2015 at 12:17:37 PM, Cyrille Pitchen wrote:
-> > If you don't mind, I'd rather keep some of these inline functions. I have
-> > no strong justification, it's more a personal taste: it makes lines
-> > shorter as it avoids the need to add "->regs + ".
-> > Also it makes the code consistent with other Atmel drivers which already
-> > use such wrappers.
-> > 
-> > However I'll fix the comment and remove the byte and word versions, which
-> > are not used. So only qspi_readl() and qspi_writel() are left.
-> > 
-> > Does it sound good to you?
-> 
-> In my mind, seeing explicit readl_relaxed() somewhere is much easier to
-> digest than seeing some wrapper, which I have to look up. But please do
-> wait for others to voice their concern too, I might not be the best person
-> to tell you what to do when it comes to wrapping IO accessors ;-)
+On Tue, Aug 25, 2015 at 04:21:51PM +0200, Thierry Reding wrote:
+> You cited code from dw_hdmi.c earlier, it looks like it might be correct
+> even though it doesn't cite a reference for why this was done. Perhaps
+> someone on this thread, or someone involved with dw_hdmi can answer
+> where that code came from.
 
-I could go either way, but there are times where local wrapper I/O
-accessors are useful. Case in point: it makes it really easy to make the
-choice between readl() and readl_relaxed() in one place (i.e., the
-discussion you had in another branch of this thread). That's been useful
-for me on brcmnand, where certain platforms (big-endian MIPS) have
-different assumptions about endianness than your average platform. Also,
-it helps with things like what Robert Jarzmik is trying to do on
-pxa3xx_nand -- add debug info to print every register read/write.
+dw_hdmi doesn't do any format conversion - it's hard coded to RGB, 8
+bits per colour component.  That's a requirement for all HDMI sinks.
 
-Also as Cyrille mentioned, personal taste is a factor.
+The reason it's hard-coded in dw_hdmi is that (a) no one has yet decided
+its worth the effort to get the dw_hdmi hardware to do the colourspace
+conversion to the YUV spaces and verify that it works, and (b) I really
+don't see the point when we're talking about computer like devices which
+work primerily with RGB and RGB is always supported by the sink.
 
-Anyway, I'll go with whatever makes sense between y'all. I don't mind.
+As far as greater colour depths go, the driver came from the Freescale
+iMX6 code base, and the hardware which feeds dw_hdmi can't do more than
+8 bits per component - so going to 10, 12 or 16 bits per component is
+beyond what iMX6 can cope with.  Hence, no one on the iMX6 side has a
+need for the deep colour stuff.
 
-Brian
---
-To unsubscribe from this list: send the line "unsubscribe linux-spi" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+In any case, I view this as a very low priority issue - it would be nice
+to have audio support on HDMI for iMX6 at some point in the next 20 years,
+preferably before the hardware becomes obsolete.  I've been maintaining
+patches for this for 1.5 years now... how much longer is it going to take?
+My pull request to David from 15th July was ignored.  My re-send of that
+after he returned was ignored.  My reminder of it has been ignored.  What's
+going on in DRM land?  It would be nice to get _some_ kind of feedback so
+I know why they're not being taken, so I can fix whatever the issue is.
+
+-- 
+FTTC broadband for 0.8mile line: currently at 10.5Mbps down 400kbps up
+according to speedtest.net.
