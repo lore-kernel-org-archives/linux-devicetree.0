@@ -1,104 +1,86 @@
-From: Leo Yan <leo.yan@linaro.org>
-Subject: Re: [PATCH v1 3/3] arm64: dts: add Hi6220 mailbox node
-Date: Tue, 25 Aug 2015 22:04:50 +0800
-Message-ID: <20150825140450.GB28262@leoy-linaro>
-References: <1439977055-1747-1-git-send-email-leo.yan@linaro.org>
- <1439977055-1747-4-git-send-email-leo.yan@linaro.org>
- <55DC532C.3020005@arm.com>
+From: Paolo Pisati <p.pisati-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: omap_wdt: node present in device-tree but kmod is not autoloaded
+Date: Tue, 25 Aug 2015 16:06:07 +0200
+Message-ID: <20150825140607.GA23311@luxor.wired.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <55DC532C.3020005@arm.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Sudeep Holla <sudeep.holla@arm.com>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "guodong.xu@linaro.org" <guodong.xu@linaro.org>, Jian Zhang <zhangjian001@hisilicon.com>, Zhenwei Wang <Zhenwei.wang@hisilicon.com>, Haoju Mo <mohaoju@hisilicon.com>, Dan Zhao <dan.zhao@hisilicon.com>, "kongfei@hisilicon.com" <kongfei@hisilicon.com>, Guangyue Zeng <zengguangyue@hisilicon.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <Pawel.Moll@arm.com>, Mark Rutland <Mark.Rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Catalin Marinas <Catalin.Marinas@arm.com>, Will Deacon <Will.Deacon@arm.com>, Jassi Brar <jassisinghbrar@gmail.com>, Bintian Wang <bintian.wang@huawei.com>, Haojian Zhuang <haojian.zhuang@linaro>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-omap <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-dt <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Sudeep,
+The question is two-folded, hence the crossposting.
 
-On Tue, Aug 25, 2015 at 12:36:12PM +0100, Sudeep Holla wrote:
-> 
-> 
-> On 19/08/15 10:37, Leo Yan wrote:
-> >On Hi6220, below memory regions in DDR have specific purpose:
-> >
-> >   0x05e0,0000 - 0x05ef,ffff: For MCU firmware using at runtime;
-> >   0x0740,f000 - 0x0740,ffff: For MCU firmware's section;
-> >   0x06df,f000 - 0x06df,ffff: For mailbox message data.
-> >
-> 
-> Unless I am reading the DTS file completely wrong, I don't think the
-> above memory regions are in DDR as per the memory node.
+I have a kernel that runs perfectly on my beaglebone black, except for one thing
+- the kmod for the watchdog is not autoloaded upon boot albeit the device-tree
+node is present:
 
-i'm not sure if understand correctly for your question; Hikey board
-has DDR 1GB@0x0, but there have some memory regions are used for MCU.
+ubuntu@beaglebone:~$ dmesg | grep wdt
+ubuntu@beaglebone:~$ ll /dev/watch* 
+ls: cannot access /dev/watch*: No such file or directory
+ubuntu@beaglebone:~$ ls -la /proc/device-tree/ocp/wdt\@44e35000/
+total 0
+drwxr-xr-x  2 root root  0 Aug 25 13:43 .
+drwxr-xr-x 54 root root  0 Aug 25 13:43 ..
+-r--r--r--  1 root root 13 Aug 25 13:43 compatible
+-r--r--r--  1 root root  4 Aug 25 13:43 interrupts
+-r--r--r--  1 root root  4 Aug 25 13:43 name
+-r--r--r--  1 root root  8 Aug 25 13:43 reg
+-r--r--r--  1 root root 10 Aug 25 13:43 ti,hwmods
+ubuntu@beaglebone:~$ cat /proc/device-tree/ocp/wdt\@44e35000/compatible 
+ti,omap3-wdt
+ubuntu@beaglebone:~$ ls -la /sys/bus/platform/devices/ocp/*wdt*
+total 0
+drwxr-xr-x  3 root root    0 Aug 25 13:49 ./
+drwxr-xr-x 33 root root    0 Aug 25 13:49 ../
+-rw-r--r--  1 root root 4096 Aug 25 13:49 driver_override
+-r--r--r--  1 root root 4096 Aug 25 13:49 modalias
+lrwxrwxrwx  1 root root    0 Aug 25 13:49 of_node ->
+../../../../firmware/devicetree/base/ocp/wdt@44e35000/
+drwxr-xr-x  2 root root    0 Aug 25 13:49 power/
+lrwxrwxrwx  1 root root    0 Aug 25 13:49 subsystem -> ../../../../bus/platform/
+-rw-r--r--  1 root root 4096 Aug 25 13:49 uevent
 
-So this patch is to reserve these memory regions so that make sure
-kernel will not map and allocate them.
+and if i manually load the module:
 
-Will remove these memory regions from memory node in next version.
+ubuntu@beaglebone:~$ sudo modprobe omap_wdt
+ubuntu@beaglebone:~$ dmesg | grep wdt
+[  388.104283] omap_wdt: OMAP Watchdog Timer Rev 0x01: initial timeout 60 sec
+ubuntu@beaglebone:~$ ls -la /dev/watchdog*
+crw------- 1 root root  10, 130 Aug 25 13:46 /dev/watchdog
+crw------- 1 root root 251,   0 Aug 25 13:46 /dev/watchdog0
+ubuntu@beaglebone:~$ ls -la /sys/bus/platform/devices/ocp/*wdt*                                                             
+total 0
+drwxr-xr-x  3 root root    0 Aug 25 13:53 .
+drwxr-xr-x 33 root root    0 Aug 25 13:49 ..
+lrwxrwxrwx  1 root root    0 Aug 25 13:53 driver ->
+../../../../bus/platform/drivers/omap_wdt
+-rw-r--r--  1 root root 4096 Aug 25 13:49 driver_override
+-r--r--r--  1 root root 4096 Aug 25 13:49 modalias
+lrwxrwxrwx  1 root root    0 Aug 25 13:49 of_node ->
+../../../../firmware/devicetree/base/ocp/wdt@44e35000
+drwxr-xr-x  2 root root    0 Aug 25 13:49 power
+lrwxrwxrwx  1 root root    0 Aug 25 13:49 subsystem -> ../../../../bus/platform
+-rw-r--r--  1 root root 4096 Aug 25 13:49 uevent
 
-> >This patch reserves these memory regions and add device node for
-> >mailbox in dts.
-> >
-> >Signed-off-by: Leo Yan <leo.yan@linaro.org>
-> >---
-> >  arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts | 20 +++++++++++++++++---
-> >  arch/arm64/boot/dts/hisilicon/hi6220.dtsi      |  8 ++++++++
-> >  2 files changed, 25 insertions(+), 3 deletions(-)
-> >
-> >diff --git a/arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts b/arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts
-> >index e36a539..d5470d3 100644
-> >--- a/arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts
-> >+++ b/arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts
-> >@@ -7,9 +7,6 @@
-> >
-> >  /dts-v1/;
-> >
-> >-/*Reserved 1MB memory for MCU*/
-> >-/memreserve/ 0x05e00000 0x00100000;
-> >-
-> >  #include "hi6220.dtsi"
-> >
-> >  / {
-> >@@ -28,4 +25,21 @@
-> >  		device_type = "memory";
-> >  		reg = <0x0 0x0 0x0 0x40000000>;
-> >  	};
-> 
-> I have no access to the spec, but I read this as 1GB RAM @0x0
-> Unless this entry is completely wrong, what your commit log claims is
-> incorrect. If this entry is wrong I wonder how is it booting with this
-> DT then.
+and then the device works as expected.
 
-Do you mean should remove all reserved memory regions from memory
-node? Will submit next version's patch for this.
+So here are my questions:
 
-Kernel can boot successfully on Hikey with this patch [1].
+1) My understanding was that, once a device node was present in the device-tree
+and there was a compatible driver available, it would have been autoloaded, so why it's
+not happening here?
 
-[1] https://github.com/96boards/linux
+2) And more importantly, how do i debug these situations?
+Building a kernel with the driver built-in, and comparing the two dmesgs, didn't
+show any noticeable difference either.
 
-> >+
-> >+	reserved-memory {
-> >+		#address-cells = <2>;
-> >+		#size-cells = <2>;
-> >+		ranges;
-> >+
-> >+		mcu-buf@05e00000 {
-> >+			no-map;
-> >+			reg = <0x0 0x05e00000 0x0 0x00100000>,	/* MCU firmware buffer */
-> >+			      <0x0 0x0740f000 0x0 0x00001000>;	/* MCU firmware section */
-> 
-> So I don't see how can this be part of DDR ? Or at-least part of DDR
-> that's mapped by kernel ?
-
-Here use reserved-memory node to remove these regions from memblock
-during kernel's boot up; kernel also will not map for them with
-property "no-map".
-
-I think this is the same question which have been brought up by Mark
-in his early mail and suggested to use UEFI to do this.
-
-Thanks,
-Leo Yan
+Any idea?
+-- 
+bye,
+p.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
