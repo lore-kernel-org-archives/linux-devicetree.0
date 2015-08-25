@@ -1,57 +1,29 @@
-From: Kevin Hilman <khilman@kernel.org>
-Subject: Re: [RESEND PATCH v16 4/4] ARM: dts: add the support power-domain node on RK3288 SoCs
-Date: Tue, 25 Aug 2015 14:07:04 -0700
-Message-ID: <7hfv37axhj.fsf@deeprootsystems.com>
-References: <1440487486-6154-1-git-send-email-wxt@rock-chips.com>
-	<1440487486-6154-5-git-send-email-wxt@rock-chips.com>
+From: Andy Gross <agross@codeaurora.org>
+Subject: Re: [PATCH] arm64: dts: qcom: Add RNG device tree node
+Date: Tue, 25 Aug 2015 16:08:57 -0500
+Message-ID: <20150825210857.GA12349@qualcomm.com>
+References: <1440517062-30313-1-git-send-email-stanimir.varbanov@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1440487486-6154-5-git-send-email-wxt@rock-chips.com> (Caesar
-	Wang's message of "Tue, 25 Aug 2015 15:24:46 +0800")
+Content-Disposition: inline
+In-Reply-To: <1440517062-30313-1-git-send-email-stanimir.varbanov@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Caesar Wang <wxt@rock-chips.com>
-Cc: heiko@sntech.de, ulf.hansson@linaro.org, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, dianders@chromium.org, tomasz.figa@gmail.com, dmitry.torokhov@gmail.com, linux-kernel@vger.kernel.org, galak@codeaurora.org, linux@arm.linux.org.uk, robh+dt@kernel.org, arnd@arndb.de, linus.walleij@linaro.org, ijc+devicetree@hellion.org.uk, devicetree@vger.kernel.org, "jinkun.hong" <jinkun.hong@rock-chips.com>
+To: Stanimir Varbanov <stanimir.varbanov@linaro.org>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Olof Johansson <olof@lixom.net>, Stephen Boyd <sboyd@codeaurora.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Caesar Wang <wxt@rock-chips.com> writes:
+On Tue, Aug 25, 2015 at 06:37:42PM +0300, Stanimir Varbanov wrote:
+> Adds rng device tree node for msm8916 SoCs.
+> 
+> Signed-off-by: Stanimir Varbanov <stanimir.varbanov@linaro.org>
+> ---
+>  arch/arm64/boot/dts/qcom/msm8916.dtsi |    7 +++++++
+>  1 file changed, 7 insertions(+)
 
-> We can add more domains node in the future.
-> This patch add the needed clocks into power-controller.
-> As the discuess about all the device clocks being listed in
-> the power-domains itself.
->
-> There are several reasons as follows:
->
-> Firstly, the clocks need be turned off to save power when
-> the system enter the suspend state. So we need to enumerate
-> the clocks in the dts. In order to power domain can turn on and off.
+Looks good to me.  Applied.
 
-Yes, but this is the job of device drivers which are runtime PM adapted
-to gate their own clocks.  I agree these clocks need to be enumerated in
-the DTS, but they should be in the device nodes.
-
-> Secondly, the reset-circuit should reset be synchronous on RK3288,
-> then sync revoked. So we need to enable clocks of all devices.
-> In other words, we have to enable the clocks before you operate them
-> if all the device clocks are included in someone domians.
-
-Yes, this is pretty common for reset.  
-
-> Someone wish was to get the clocks by reading the clocks from the
-> device nodes, We can do that but we can solve the above issues.
-
-I don't follow this sentence.  Are you saying doing that will not solve
-the above issues?  Why not?  Please explain.
-
-If there are non-device clocks that also need to be enabled before
-asserting reset, then those are candidates for the power-domain node,
-but not device clocks.
-
-> Anyway, the best ideas we can fix it in the future SoCs.
-
-I don't think this is an SoC design issue as this is needed when you
-have synchronous reset.  My concern is primarily around how to describe
-this in the DT.
-
-Kevin
+-- 
+Qualcomm Innovation Center, Inc.
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
