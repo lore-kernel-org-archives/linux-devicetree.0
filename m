@@ -1,33 +1,98 @@
-From: Zhen Lei <thunder.leizhen-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH 0/1] of: to support binding numa node to specified device
-Date: Tue, 25 Aug 2015 12:08:21 +0800
-Message-ID: <1440475702-7720-1-git-send-email-thunder.leizhen@huawei.com>
+From: Magnus Damm <magnus.damm@gmail.com>
+Subject: Re: [PATCH v2 01/07] devicetree: bindings: Renesas APMU and SMP
+ Enable method
+Date: Tue, 25 Aug 2015 13:11:31 +0900
+Message-ID: <CANqRtoQkmy9JKe6B=QjiNDdFenVukO8zvSDz8NNtWCL-g6zqRQ@mail.gmail.com>
+References: <20150823072427.14156.1960.sendpatchset@little-apple>
+	<20150823072439.14156.96621.sendpatchset@little-apple>
+	<20008630.OlgzF7YJEU@avalon>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Cc: Zefan Li <lizefan-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, Xinwei Hu <huxinwei-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, Tianhong Ding <dingtianhong-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, Hanjun Guo <guohanjun-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, Zhen Lei <thunder.leizhen-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <20008630.OlgzF7YJEU@avalon>
+Sender: linux-sh-owner@vger.kernel.org
+To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: SH-Linux <linux-sh@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, =?UTF-8?B?5bCP5p6X5pWs5aSq?= <keita.kobayashi.ym@renesas.com>, "Simon Horman [Horms]" <horms@verge.net.au>, Geert Uytterhoeven <geert@linux-m68k.org>
 List-Id: devicetree@vger.kernel.org
 
-Changelog:
-v1 -> v2:
-In patch v1, binding numa node to specified device only take effect for dt-nodes
-directly of root. Patch v2 removed this limitation, we can binding numa node to
-any specified device in devicetree.
+Hi Laurent,
 
-Zhen Lei (1):
-  of: to support binding numa node to specified device in devicetree
+On Tue, Aug 25, 2015 at 3:25 AM, Laurent Pinchart
+<laurent.pinchart@ideasonboard.com> wrote:
+> Hi Magnus,
+>
+> Thank you for the patch.
+>
+> On Sunday 23 August 2015 16:24:39 Magnus Damm wrote:
+>> From: Magnus Damm <damm+renesas@opensource.se>
+>>
+>> Add DT binding documentation for the APMU hardware and add "renesas,apmu"
+>> to the list of enable methods for the ARM cpus.
+>>
+>> Signed-off-by: Magnus Damm <damm+renesas@opensource.se>
+>> ---
+>>
+>>  Changes since V1:
+>>  - None
+>>
+>>  Documentation/devicetree/bindings/arm/cpus.txt           |    1
+>>  Documentation/devicetree/bindings/power/renesas,apmu.txt |   31 +++++++++++
+>>  2 files changed, 32 insertions(+)
+>>
+>> --- 0001/Documentation/devicetree/bindings/arm/cpus.txt
+>> +++ work/Documentation/devicetree/bindings/arm/cpus.txt       2015-05-20
+>> 21:55:51.912366518 +0900 @@ -197,6 +197,7 @@ nodes to be present and
+>> contain the prop
+>>                           "qcom,gcc-msm8660"
+>>                           "qcom,kpss-acc-v1"
+>>                           "qcom,kpss-acc-v2"
+>> +                         "renesas,apmu"
+>>                           "rockchip,rk3066-smp"
+>>
+>>       - cpu-release-addr
+>> --- /dev/null
+>> +++ work/Documentation/devicetree/bindings/power/renesas,apmu.txt
+> 2015-05-20
+>> 22:39:34.872366518 +0900 @@ -0,0 +1,31 @@
+>> +DT bindings for the Renesas Advanced Power Management Unit
+>> +
+>> +Renesas R-Car line of SoCs utilize one or more APMU hardware units
+>> +for CPU core power domain control including SMP boot and CPU Hotplug.
+>> +
+>> +Required properties:
+>> +
+>> +- compatible: Should be "renesas,apmu-<soctype>", "renesas,apmu" as
+>> fallback.
+>> +           Examples with soctypes are:
+>> +             - "renesas,apmu-r8a7790" (R-Car H2)
+>> +             - "renesas,apmu-r8a7791" (R-Car M2-W)
+>> +             - "renesas,apmu-r8a7792" (R-Car V2H)
+>> +             - "renesas,apmu-r8a7793" (R-Car M2-N)
+>> +             - "renesas,apmu-r8a7794" (R-Car E2)
+>> +
+>> +- reg: Base address and length of the I/O registers used by the APMU.
+>> +
+>> +- cpus: This node contains a list of CPU cores, which should match the
+>> order
+>> +  of CPU cores used by the WUPCR and PSTR registers in the Advanced Power
+>> +  Management Until section of the device's datasheet.
+>> +
+>> +
+>> +Example:
+>> +
+>> +This shows the r8a7791 APMU that can control CPU0 and CPU1.
+>> +
+>> +     apmu@e6152000 {
+>> +             compatible = "renesas,apmu-r8a7791", "renesas,apmu";
+>> +             reg = <0 0xe6152000 0 0x188>;
+>
+> Are the CA7 and CA15 APMUs identical ? If not you won't be able to instantiate
+> two APMU nodes, and it might be better to span the whole registers range of
+> both CA7 and CA15.
 
- drivers/base/core.c |  2 +-
- drivers/of/device.c | 11 ++++++-----
- 2 files changed, 7 insertions(+), 6 deletions(-)
+I believe they are identical, but now when you mention it I should
+really double check!
 
--- 
-2.5.0
+Cheers,
 
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+/ magnus
