@@ -1,89 +1,82 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: Re: Re-using sun5i-a13.dtsi for the r8 ?
-Date: Tue, 25 Aug 2015 07:14:50 +0200
-Message-ID: <20150825051450.GY2413@lukather>
-References: <55D6D8E3.3020403@redhat.com>
- <20150824142630.GU2413@lukather>
- <CAGRGNgW06-znXSnPKS3nfU_FseTZ0OcMea5qEzHVaTkpRfXHUg@mail.gmail.com>
-Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
+From: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+Subject: Re: [PATCH-v2 5/5] mfd: 88pm800: Add support for clk subdevice
+Date: Tue, 25 Aug 2015 14:25:20 +0900
+Message-ID: <55DBFC40.3010603@samsung.com>
+References: <1440442594-3102-1-git-send-email-vaibhav.hiremath@linaro.org>
+ <1440442594-3102-7-git-send-email-vaibhav.hiremath@linaro.org>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="YBGzgpgHAney5ErF"
-Return-path: <linux-sunxi+bncBD2ZNBF5VYJRBTHT56XAKGQEGFHA6WQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <CAGRGNgW06-znXSnPKS3nfU_FseTZ0OcMea5qEzHVaTkpRfXHUg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <http://groups.google.com/group/linux-sunxi/subscribe>
-To: Julian Calaby <julian.calaby-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-reply-to: <1440442594-3102-7-git-send-email-vaibhav.hiremath@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Vaibhav Hiremath <vaibhav.hiremath@linaro.org>, linux-arm-kernel@lists.infradead.org
+Cc: robh+dt@kernel.org, mturquette@baylibre.com, lee.jones@linaro.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
---YBGzgpgHAney5ErF
-Content-Type: text/plain; charset=UTF-8
-Content-Disposition: inline
-
-On Tue, Aug 25, 2015 at 10:24:51AM +1000, Julian Calaby wrote:
-> Hi Maxime,
+On 25.08.2015 03:56, Vaibhav Hiremath wrote:
+> This patch adds mfd_cell/clk-subdevice for 88PM800 MFD
+> (and family of devices).
 > 
-> On Tue, Aug 25, 2015 at 12:26 AM, Maxime Ripard
-> <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
-> > Hi,
-> >
-> > On Fri, Aug 21, 2015 at 09:53:07AM +0200, Hans de Goede wrote:
-> >> I just realized that I never answered your question about the need
-> >> for a tvencoder simplefb node in sun5i-a13.dtsi, like the one from
-> >> the "ARM: dts: sun5i: Add simplefb node for tvencoder output"
-> >>
-> >> I think the real question is do we want to use sun5i-a13.dtsi for
-> >> the r8 ?
-> >
-> > So far, the only information I got about the R8 was that it was
-> > strictly identical to the A13, and it was making sense to re-use it
-> > entirely.
+> Signed-off-by: Vaibhav Hiremath <vaibhav.hiremath@linaro.org>
+> ---
+>  drivers/mfd/88pm800.c | 25 +++++++++++++++++++++++++
+>  1 file changed, 25 insertions(+)
 > 
-> Does having the tvout pin change the pinmux options or is that pin
-> strictly single use?
->
-> (And if it is strictly single use, is adding that pin the entirety of
-> the software visible hardware changes?)
+> diff --git a/drivers/mfd/88pm800.c b/drivers/mfd/88pm800.c
+> index c4e097d..a928eed 100644
+> --- a/drivers/mfd/88pm800.c
+> +++ b/drivers/mfd/88pm800.c
+> @@ -173,6 +173,14 @@ static const struct mfd_cell regulator_devs[] = {
+>  	},
+>  };
+>  
+> +static struct mfd_cell clk_devs[] = {
+> +	{
+> +		.name = "88pm80x-clk",
+> +		.of_compatible = "marvell,88pm800-clk",
+> +		.id = -1,
 
-I have no idea.
+The "-1" here stands for PLATFORM_DEVID_NONE?
 
-> >> I would expect us to use a sun5i-r8.dtsi, this one could then
-> >> include sun5i-a13.dtsi, and have the extra simplefb node for
-> >> the tvencoder. Putting the simplefb node for the tvencoder
-> >> in sun5i-a13.dtsi feels wrong because the A13 package does
-> >> not have a tvout pin.
-> >
-> > But if it turns out it's not, then yeah, we'll have to make another
-> > DTSI.
+Best regards,
+Krzysztof
+
+> +	},
+> +};
+> +
+>  static const struct regmap_irq pm800_irqs[] = {
+>  	/* INT0 */
+>  	[PM800_IRQ_ONKEY] = {
+> @@ -344,6 +352,17 @@ static int device_regulator_init(struct pm80x_chip *chip)
+>  			ARRAY_SIZE(regulator_devs), NULL, 0, NULL);
+>  }
+>  
+> +static int device_clk_init(struct pm80x_chip *chip)
+> +{
+> +	if (chip->type == CHIP_PM800)
+> +		clk_devs[0].name = "88pm800-clk";
+> +	else if (chip->type == CHIP_PM860)
+> +		clk_devs[0].name = "88pm860-clk";
+> +
+> +	return mfd_add_devices(chip->dev, 0, &clk_devs[0],
+> +			ARRAY_SIZE(clk_devs), NULL, 0, NULL);
+> +}
+> +
+>  static int device_irq_init_800(struct pm80x_chip *chip)
+>  {
+>  	struct regmap *map = chip->regmap;
+> @@ -511,6 +530,12 @@ static int device_800_init(struct pm80x_chip *chip)
+>  		goto out;
+>  	}
+>  
+> +	ret = device_clk_init(chip);
+> +	if (ret) {
+> +		dev_err(chip->dev, "Failed to add clk subdev\n");
+> +		goto out;
+> +	}
+> +
+>  	return 0;
+>  out_dev:
+>  	mfd_remove_devices(chip->dev);
 > 
-> IMHO that's enough of a change to warrant a new DTSI,
-
-Yep.
-
-> I feel that someone's going to use the lack of DTSI as "proof" that
-> we don't support the R8 or try to use the tv encoder on an A13.
-
-But that argument is dubious. That's not how it works. The list of
-DTSIs has never been comprehensive list of the supported SoCs.
-
-We support SoCs that don't have a DTSI (like we can see with the R8),
-and we also support, and even support DT that don't even have a
-matching machine. It's never been that way, and will never be.
-
-Plus, you're never actually using the DTSI directly, just the board
-DT, that will be there.
-
-Maxime
-
--- 
-Maxime Ripard, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
---YBGzgpgHAney5ErF--
