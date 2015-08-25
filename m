@@ -1,79 +1,102 @@
-From: Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v2 03/07] ARM: shmobile: Add APMU nodes to r8a7790 DTSI
-Date: Tue, 25 Aug 2015 13:13:46 +0900
-Message-ID: <CANqRtoQev9=mA_rHBKDOMisoi2o8eekiPPfbG+wUjR0yFK-uCQ@mail.gmail.com>
-References: <20150823072427.14156.1960.sendpatchset@little-apple>
-	<20150823072500.14156.35604.sendpatchset@little-apple>
-	<1534893.ppOlo5pCGu@avalon>
+From: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+Subject: Re: [PATCH-v3 2/2] regulator: 88pm800: Add support for configuration
+ of dual phase on BUCK1
+Date: Tue, 25 Aug 2015 13:48:57 +0900
+Message-ID: <55DBF3B9.4060602@samsung.com>
+References: <1440420006-31556-1-git-send-email-vaibhav.hiremath@linaro.org>
+ <1440420006-31556-3-git-send-email-vaibhav.hiremath@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1534893.ppOlo5pCGu@avalon>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
-Cc: SH-Linux <linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>, =?UTF-8?B?5bCP5p6X5pWs5aSq?= <keita.kobayashi.ym-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, "Simon Horman [Horms]" <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-reply-to: <1440420006-31556-3-git-send-email-vaibhav.hiremath@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Vaibhav Hiremath <vaibhav.hiremath@linaro.org>, linux-arm-kernel@lists.infradead.org
+Cc: robh+dt@kernel.org, devicetree@vger.kernel.org, lee.jones@linaro.org, broonie@kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Laurent,
+On 24.08.2015 21:40, Vaibhav Hiremath wrote:
+> 88PM860 device supports dual phase mode on BUCK1 output.
+> In normal usecase, BUCK1A and BUCK1B operates independently with 3A
+> capacity. And they both can work as a dual phase providing 6A capacity.
+> 
+> This patch updates the regulator driver to read the respective
+> DT property and enable dual-phase mode on BUCK1.
+> Note that if dual phase mode is enabled, then BUCK1B will not be
+> registered to the regulator framework and the current capacity of
+> BUCK1(A) would be set to 6A [3A of BUCK1A + 3A of BUCK1B].
+> 
+> Signed-off-by: Vaibhav Hiremath <vaibhav.hiremath@linaro.org>
+> ---
+>  drivers/regulator/88pm800.c | 40 ++++++++++++++++++++++++++++++++++++++++
+>  include/linux/mfd/88pm80x.h |  3 +++
+>  2 files changed, 43 insertions(+)
+> 
+> diff --git a/drivers/regulator/88pm800.c b/drivers/regulator/88pm800.c
+> index 365a154..7aca6d17 100644
+> --- a/drivers/regulator/88pm800.c
+> +++ b/drivers/regulator/88pm800.c
+> @@ -267,6 +267,37 @@ static struct pm800_regulator_info pm860_regulator_info[] = {
+>  	PM800_LDO(ldo20, LDO20, LDO_ENA1_3, 3, 10000, ldo_volt_table2),
+>  };
+>  
+> +static int pm800_regulator_init(struct platform_device *pdev,
+> +		struct pm800_regulator_info *info)
+> +{
+> +	struct pm800_regulators *pm800_data = platform_get_drvdata(pdev);
+> +	struct pm80x_chip *chip = pm800_data->chip;
+> +	int ret = 0;
+> +
+> +	/* Currently only supported on 88pm860 device */
+> +	if (chip->type != CHIP_PM860)
+> +		return 0;
+> +
+> +	if (of_property_read_bool(pdev->dev.of_node,
+> +				"marvell,88pm860-buck1-dualphase-en")) {
+> +		/* Update the constraint  to [3A (BUCK1A) + 3A (BUCK1B)] */
+> +		info[PM800_ID_BUCK1].max_ua = 6000000;
+> +		/* Remove BUCK1B from the list, as we are in dual phase mode */
+> +		memset(&info[PM800_ID_BUCK1B], 0, sizeof(*info));
+> +		/* Enable dual phase mode */
+> +		ret = regmap_update_bits(chip->subchip->regmap_power,
+> +					PM860_BUCK1_MISC,
+> +					BUCK1_DUAL_PHASE_SEL,
+> +					BUCK1_DUAL_PHASE_SEL);
+> +		if (ret) {
+> +			dev_err(chip->dev, "failed to set dual-pase mode %d\n", ret);
+> +			return ret;
+> +		}
+> +	}
+> +
+> +	return ret;
+> +}
+> +
+>  static int pm800_regulator_probe(struct platform_device *pdev)
+>  {
+>  	struct pm80x_chip *chip = dev_get_drvdata(pdev->dev.parent);
+> @@ -311,11 +342,20 @@ static int pm800_regulator_probe(struct platform_device *pdev)
+>  		return -ENODEV;
+>  	}
+>  
+> +	ret = pm800_regulator_init(pdev, info);
+> +	if (ret) {
+> +		dev_err(&pdev->dev, "failed to init 88pm800 regulator device\n");
+> +		return ret;
+> +	}
+> +
+>  	config.dev = chip->dev;
+>  	config.regmap = pm800_data->map;
+>  	for (i = 0; i < PM800_ID_RG_MAX; i++) {
+>  		struct regulator_dev *regulator;
+>  
+> +		if (!info[i].desc.name)
+> +			continue;
 
-On Tue, Aug 25, 2015 at 3:29 AM, Laurent Pinchart
-<laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org> wrote:
-> Hi Magnus,
->
-> Thank you for the patch.
->
-> On Sunday 23 August 2015 16:25:00 Magnus Damm wrote:
->> From: Magnus Damm <damm+renesas-yzvPICuk2ACczHhG9Qg4qA@public.gmane.org>
->>
->> Add an APMU DT node for the r8a7790 SoC and use the enable-method to
->> point out that the APMU should be used for SMP support.
->>
->> Signed-off-by: Magnus Damm <damm+renesas-yzvPICuk2ACczHhG9Qg4qA@public.gmane.org>
->> ---
->>
->>  Changes from V1:
->>  - New patch
->>
->>  arch/arm/boot/dts/r8a7790.dtsi |   13 +++++++++++++
->>  1 file changed, 13 insertions(+)
->>
->> --- 0001/arch/arm/boot/dts/r8a7790.dtsi
->> +++ work/arch/arm/boot/dts/r8a7790.dtsi       2015-08-23 15:51:24.132366518 +0900
->> @@ -43,6 +43,7 @@
->>       cpus {
->>               #address-cells = <1>;
->>               #size-cells = <0>;
->> +             enable-method = "renesas,apmu";
->>
->>               cpu0: cpu@0 {
->>                       device_type = "cpu";
->> @@ -112,6 +113,18 @@
->>               };
->>       };
->>
->> +     apmu@e6151000 {
->> +             compatible = "renesas,apmu-r8a7790", "renesas,apmu";
->> +             reg = <0 0xe6151000 0 0x188>;
->> +             cpus = <&cpu4 &cpu5 &cpu6 &cpu7>;
->> +     };
->> +
->> +     apmu@e6152000 {
->> +             compatible = "renesas,apmu-r8a7790", "renesas,apmu";
->> +             reg = <0 0xe6152000 0 0x188>;
->> +             cpus = <&cpu0 &cpu1 &cpu2 &cpu3>;
->> +     };
->
-> I wonder whether those two nodes shouldn't be moved inside the CPG node as it
-> seems that the APMU is part of the CPG IP core. We can delay that though, as
-> the Gen3 DTS will need to be refactored anyway.
+How the driver was working without this on 88PM800? There is a gap in
+pm800_regulator_info - three regulators are not set.
 
-Hm, I don't mind reworking things, but with power domain focus I sort
-of expected the APMU to be closer to SYSC than the CPG actually...
+The patch itself looks good
+Reviewed-by: Krzysztof Kozlowski <k.kozlowski@samsung.com>
 
-Thanks,
-
-/ magnus
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Best regards,
+Krzysztof
