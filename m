@@ -1,61 +1,59 @@
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH v2 00/07] ARM: shmobile: APMU DT support via SMP Enable
- method V2
-Date: Tue, 25 Aug 2015 09:49:24 +0900
-Message-ID: <20150825004923.GC17673@verge.net.au>
-References: <20150823072427.14156.1960.sendpatchset@little-apple>
+From: Yakir Yang <ykk@rock-chips.com>
+Subject: Re: [PATCH v3 06/14] Documentation: drm/bridge: add document for
+ analogix_dp
+Date: Tue, 25 Aug 2015 09:21:51 +0800
+Message-ID: <55DBC32F.4040607@rock-chips.com>
+References: <1439995728-18046-1-git-send-email-ykk@rock-chips.com>
+ <1439995834-18363-1-git-send-email-ykk@rock-chips.com>
+ <CAL_JsqLz+8RtBucctUj4euXZ3Ac0DvB52N9ONpAerh5T9BiTJg@mail.gmail.com>
+ <20150824125758.GA7557@n2100.arm.linux.org.uk>
+ <CAL_JsqKZYMMzV9Sc2r3K_rnM0FNuyb1TyJEhjGq1Hf7dTiWFKQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-sh-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20150823072427.14156.1960.sendpatchset@little-apple>
-Sender: linux-sh-owner@vger.kernel.org
-To: Magnus Damm <magnus.damm@gmail.com>
-Cc: linux-sh@vger.kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, lorenzo.pieralisi@arm.com, keita.kobayashi.ym@renesas.com, geert@linux-m68k.org, laurent.pinchart@ideasonboard.com
+Content-Type: text/plain; charset=utf-8;
+	format=flowed
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAL_JsqKZYMMzV9Sc2r3K_rnM0FNuyb1TyJEhjGq1Hf7dTiWFKQ@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robherring2@gmail.com>, Russell King - ARM Linux <linux@arm.linux.org.uk>
+Cc: Heiko Stuebner <heiko@sntech.de>, Thierry Reding <treding@nvidia.com>, Jingoo Han <jingoohan1@gmail.com>, Fabio Estevam <fabio.estevam@freescale.com>, Inki Dae <inki.dae@samsung.com>, Joe Perches <joe@perches.com>, Sean Paul <seanpaul@google.com>, Takashi Iwai <tiwai@suse.de>, dri-devel <dri-devel@lists.freedesktop.org>, Andrzej Hajda <a.hajda@samsung.com>, Gustavo Padovan <gustavo.padovan@collabora.co.uk>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, Vincent Palatin <vpalatin@chromium.org>, linux-rockchip@lists.infradead.org, Kishon Vijay Abraham I <kishon@ti.com>, David Airlie <airlied@linux.ie>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Doug Anderson <dianders@google.com>, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradea
 List-Id: devicetree@vger.kernel.org
 
-Hi Magnus,
 
-On Sun, Aug 23, 2015 at 04:24:27PM +0900, Magnus Damm wrote:
-> ARM: shmobile: APMU DT support via SMP Enable method V2
-> 
-> [PATCH v2 01/07] devicetree: bindings: Renesas APMU and SMP Enable method
-> [PATCH v2 02/07] ARM: shmobile: Add APMU DT support via Enable method
-> [PATCH v2 03/07] ARM: shmobile: Add APMU nodes to r8a7790 DTSI
-> [PATCH v2 04/07] ARM: shmobile: Add APMU nodes to r8a7791 DTSI
-> [PATCH v2 05/07] ARM: shmobile: Add function to prioritize DT SMP
-> [PATCH v2 06/07] ARM: shmobile: Prioritize r8a7790 DT APMU support
-> [PATCH v2 07/07] ARM: shmobile: Prioritize r8a7791 DT APMU support
-> 
-> These patches add DT support for the APMU hardware commonly found in
-> Renesas R-Car Gen2 SoCs. Without these patches the APMU gets configured
-> through data expressed in C, and with this series applied it is possible
-> to describe the APMU configuration in DT and let the enable method point
-> out that the APMU should be used.
-> 
-> Patch 1 and 2 are Documenting and adding DT support to the APMU driver
-> together with enabling use of the enable-method way to describe that
-> the APMU hardware is needed for SMP operation.
-> 
-> Patch 3 and 4 are related to r8a7790/r8a7791 support that get a DTSI update
-> to describe the APMU hardware. To avoid breaking support for older DTBs out
-> in the wild these patches keep the older existing C code APMU configuration
-> as-is. Patch 5-7 make sure that during run-time, if the APMU is installed
-> via the DT enable-method then it will not be overriden by older non-DT
-> configuration.
-> 
-> I suggest making APMU DT configuration mandatory for SMP operation on
-> newer SoCs and that we keep the old APMU support code in place for a
-> good number of kernel releases or until we can identify a couple of major
-> reasons good enough to force a DTB update on the end users.
-> 
-> In the future r8a7793 and r8a7794 support may be added by using code
-> similar to patch 3 and 4 but without any C-based SMP code and fallback.
 
-Sounds reasonable.
+=E5=9C=A8 2015/8/24 22:48, Rob Herring =E5=86=99=E9=81=93:
+> On Mon, Aug 24, 2015 at 7:57 AM, Russell King - ARM Linux
+> <linux@arm.linux.org.uk> wrote:
+>> On Sun, Aug 23, 2015 at 06:23:14PM -0500, Rob Herring wrote:
+>>> On Wed, Aug 19, 2015 at 9:50 AM, Yakir Yang <ykk@rock-chips.com> wr=
+ote:
+>>>> +       -analogix,color-depth:
+>>>> +               number of bits per colour component.
+>>>> +                       COLOR_6 =3D 0, COLOR_8 =3D 1, COLOR_10 =3D=
+ 2, COLOR_12 =3D 3
+>>> This seems pretty generic. Just use 6, 8, 10, or 12 for values. And
+>>> drop the vendor prefix.
+>> Please think about this some more.  What does "color-depth" mean?  D=
+oes it
+>> mean the number of bits per colour _component_, or does it mean the =
+total
+>> number of bits to represent a particular colour.  It's confusing as =
+it
+>> stands.
+> Then "component-color-bpp" perhaps?
 
-Looking over the review of this series I see only one minor comment
-regarding spelling in documentation. I have it in mind to queue up
-this series with that problem fixed unless objections are raised
-in the near future. Please feel free to convince me otherwise or
-repost the series with the spelling error fixed.
+Actually this "color-bpp" should come from crtc driver, maybe should=20
+come from
+"struct drm_crtc {".
+
+Like rockchip stuffs, analogix_dp-rockchip call an mode_config from=20
+rockchip_drm_vop
+driver and set output mode to RGB[10:10:10], then vop driver just store=
+=20
+the output mode
+type to the private struct "vop->connecot_out_mode". do think that this=
+=20
+outmode should
+store into crtc, not just come from DT prop.
+
+- Yakir
