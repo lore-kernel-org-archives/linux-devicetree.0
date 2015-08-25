@@ -1,115 +1,52 @@
-From: Vaibhav Hiremath <vaibhav.hiremath@linaro.org>
-Subject: Re: [PATCH-v3 2/2] regulator: 88pm800: Add support for configuration
- of dual phase on BUCK1
-Date: Tue, 25 Aug 2015 11:53:44 +0530
-Message-ID: <55DC09F0.6010109@linaro.org>
-References: <1440420006-31556-1-git-send-email-vaibhav.hiremath@linaro.org> <1440420006-31556-3-git-send-email-vaibhav.hiremath@linaro.org> <55DBF3B9.4060602@samsung.com>
+From: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH 12/17] ARM: dts: am57xx-beagle-x15: Fix regulator populated
+ in MMC1 dt node
+Date: Tue, 25 Aug 2015 12:06:55 +0530
+Message-ID: <55DC0D07.7030504@ti.com>
+References: <1438168187-1614-1-git-send-email-kishon@ti.com> <1438168187-1614-13-git-send-email-kishon@ti.com> <55B92B88.1080409@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Type: text/plain; charset="windows-1252"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <55DBF3B9.4060602@samsung.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Krzysztof Kozlowski <k.kozlowski@samsung.com>, linux-arm-kernel@lists.infradead.org
-Cc: robh+dt@kernel.org, devicetree@vger.kernel.org, lee.jones@linaro.org, broonie@kernel.org, linux-kernel@vger.kernel.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <55B92B88.1080409-l0cyMroinI0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, afenkart-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: nsekhar-l0cyMroinI0@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+Hi Tony,
 
-
-On Tuesday 25 August 2015 10:18 AM, Krzysztof Kozlowski wrote:
-> On 24.08.2015 21:40, Vaibhav Hiremath wrote:
->> 88PM860 device supports dual phase mode on BUCK1 output.
->> In normal usecase, BUCK1A and BUCK1B operates independently with 3A
->> capacity. And they both can work as a dual phase providing 6A capacity.
+On Thursday 30 July 2015 01:07 AM, Nishanth Menon wrote:
+> On 07/29/2015 06:09 AM, Kishon Vijay Abraham I wrote:
+>> For beagle x15, both the vdd and io lines are connected to the
+>> same regulator (ldo1_reg). However vmmc_aux is populated to vdd_3v3.
+>> Remove it.
 >>
->> This patch updates the regulator driver to read the respective
->> DT property and enable dual-phase mode on BUCK1.
->> Note that if dual phase mode is enabled, then BUCK1B will not be
->> registered to the regulator framework and the current capacity of
->> BUCK1(A) would be set to 6A [3A of BUCK1A + 3A of BUCK1B].
->>
->> Signed-off-by: Vaibhav Hiremath <vaibhav.hiremath@linaro.org>
+>> Signed-off-by: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
 >> ---
->>   drivers/regulator/88pm800.c | 40 ++++++++++++++++++++++++++++++++++++++++
->>   include/linux/mfd/88pm80x.h |  3 +++
->>   2 files changed, 43 insertions(+)
+>>  arch/arm/boot/dts/am57xx-beagle-x15.dts |    1 -
+>>  1 file changed, 1 deletion(-)
 >>
->> diff --git a/drivers/regulator/88pm800.c b/drivers/regulator/88pm800.c
->> index 365a154..7aca6d17 100644
->> --- a/drivers/regulator/88pm800.c
->> +++ b/drivers/regulator/88pm800.c
->> @@ -267,6 +267,37 @@ static struct pm800_regulator_info pm860_regulator_info[] = {
->>   	PM800_LDO(ldo20, LDO20, LDO_ENA1_3, 3, 10000, ldo_volt_table2),
->>   };
+>> diff --git a/arch/arm/boot/dts/am57xx-beagle-x15.dts b/arch/arm/boot/dts/am57xx-beagle-x15.dts
+>> index a63bf78..d0db5c5 100644
+>> --- a/arch/arm/boot/dts/am57xx-beagle-x15.dts
+>> +++ b/arch/arm/boot/dts/am57xx-beagle-x15.dts
+>> @@ -579,7 +579,6 @@
+>>  	pinctrl-0 = <&mmc1_pins_default>;
+>>  
+>>  	vmmc-supply = <&ldo1_reg>;
+>> -	vmmc_aux-supply = <&vdd_3v3>;
+>>  	pbias-supply = <&pbias_mmc_reg>;
+>>  	bus-width = <4>;
+>>  	cd-gpios = <&gpio6 27 0>; /* gpio 219 */
 >>
->> +static int pm800_regulator_init(struct platform_device *pdev,
->> +		struct pm800_regulator_info *info)
->> +{
->> +	struct pm800_regulators *pm800_data = platform_get_drvdata(pdev);
->> +	struct pm80x_chip *chip = pm800_data->chip;
->> +	int ret = 0;
->> +
->> +	/* Currently only supported on 88pm860 device */
->> +	if (chip->type != CHIP_PM860)
->> +		return 0;
->> +
->> +	if (of_property_read_bool(pdev->dev.of_node,
->> +				"marvell,88pm860-buck1-dualphase-en")) {
->> +		/* Update the constraint  to [3A (BUCK1A) + 3A (BUCK1B)] */
->> +		info[PM800_ID_BUCK1].max_ua = 6000000;
->> +		/* Remove BUCK1B from the list, as we are in dual phase mode */
->> +		memset(&info[PM800_ID_BUCK1B], 0, sizeof(*info));
->> +		/* Enable dual phase mode */
->> +		ret = regmap_update_bits(chip->subchip->regmap_power,
->> +					PM860_BUCK1_MISC,
->> +					BUCK1_DUAL_PHASE_SEL,
->> +					BUCK1_DUAL_PHASE_SEL);
->> +		if (ret) {
->> +			dev_err(chip->dev, "failed to set dual-pase mode %d\n", ret);
->> +			return ret;
->> +		}
->> +	}
->> +
->> +	return ret;
->> +}
->> +
->>   static int pm800_regulator_probe(struct platform_device *pdev)
->>   {
->>   	struct pm80x_chip *chip = dev_get_drvdata(pdev->dev.parent);
->> @@ -311,11 +342,20 @@ static int pm800_regulator_probe(struct platform_device *pdev)
->>   		return -ENODEV;
->>   	}
->>
->> +	ret = pm800_regulator_init(pdev, info);
->> +	if (ret) {
->> +		dev_err(&pdev->dev, "failed to init 88pm800 regulator device\n");
->> +		return ret;
->> +	}
->> +
->>   	config.dev = chip->dev;
->>   	config.regmap = pm800_data->map;
->>   	for (i = 0; i < PM800_ID_RG_MAX; i++) {
->>   		struct regulator_dev *regulator;
->>
->> +		if (!info[i].desc.name)
->> +			continue;
->
-> How the driver was working without this on 88PM800? There is a gap in
-> pm800_regulator_info - three regulators are not set.
->
+> Acked-by: Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>
 
-I have 88PM860 based board, where the whole array will be filled up.
-So it was missed I guess :)
+Can you pick this one or you want me to resend it?
 
-But when I introduced logic for skipping BUCK1B, I hit this.
-And here is the fix.
-
-
-> The patch itself looks good
-> Reviewed-by: Krzysztof Kozlowski <k.kozlowski@samsung.com>
->
-
-Thanks for your review.
-
-Thanks,
-Vaibhav
+Thanks
+Kishon
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
