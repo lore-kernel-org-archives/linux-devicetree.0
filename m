@@ -1,90 +1,177 @@
-From: Ulf Hansson <ulf.hansson@linaro.org>
-Subject: Re: [RFC PATCH v1] mmc: sdhci-of-arasan: Add the support for sdhci-5.1
-Date: Tue, 25 Aug 2015 14:07:07 +0200
-Message-ID: <CAPDyKFrAGd-xDKLK=xAm_L=jgM0t4eQpspngZkwy+B3923BndQ@mail.gmail.com>
-References: <1439279190-9556-1-git-send-email-shawn.lin@rock-chips.com>
-	<55CA0C6F.7000002@xilinx.com>
-	<55CAD499.5070701@xilinx.com>
-	<55D270FF.5030309@rock-chips.com>
+From: Varadarajan Narayanan <varada@codeaurora.org>
+Subject: [PATCH v4] qcom: ipq4019: Add basic board/dts support for IPQ4019 SoC
+Date: Tue, 25 Aug 2015 17:38:04 +0530
+Message-ID: <20150825120804.GA30996@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <55D270FF.5030309@rock-chips.com>
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
-To: Shawn Lin <shawn.lin@rock-chips.com>
-Cc: Michal Simek <michal.simek@xilinx.com>, =?UTF-8?Q?S=C3=B6ren_Brinkmann?= <soren.brinkmann@xilinx.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>
+To: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 18 August 2015 at 01:40, Shawn Lin <shawn.lin@rock-chips.com> wrote:
-> Hi Ulf,
->
->
-> On 2015/8/12 13:07, Michal Simek wrote:
->>
->> +linux-mmc
->>
->> On 08/11/2015 04:53 PM, Michal Simek wrote:
->>>
->>> On 08/11/2015 09:46 AM, Shawn Lin wrote:
->>>>
->>>> This patch adds the compatible string in sdhci-of-arasan.c to
->>>> support sdhci-arasan5.1 version of controller. No documented
->>>> controller IP version is found in the TRM, so we use ths version
->>>> of command queueing engine integrated into this controller by arasan
->>>> to specify our controller.
->>>>
->>>> Signed-off-by: Shawn Lin <shawn.lin@rock-chips.com>
->>>>
->>>> ---
->>>>
->>>> Changes in v1:
->>>> - Remove redundant SDHCI_QUIRK_CAP_CLOCK_BASE_BROKEN for "arasan,
->>>> sdhci-5.1" since
->>>>    SDHCI will check "host->max_clk == 0" and let driver get it from
->>>> host->ops->get_max_clock.
->>>>
->>>>   Documentation/devicetree/bindings/mmc/arasan,sdhci.txt | 2 +-
->>>>   drivers/mmc/host/sdhci-of-arasan.c                     | 1 +
->>>>   2 files changed, 2 insertions(+), 1 deletion(-)
->>>>
->>>> diff --git a/Documentation/devicetree/bindings/mmc/arasan,sdhci.txt
->>>> b/Documentation/devicetree/bindings/mmc/arasan,sdhci.txt
->>>> index 7e94903..da541c3 100644
->>>> --- a/Documentation/devicetree/bindings/mmc/arasan,sdhci.txt
->>>> +++ b/Documentation/devicetree/bindings/mmc/arasan,sdhci.txt
->>>> @@ -9,7 +9,7 @@ Device Tree Bindings for the Arasan SDHCI Controller
->>>>
->>>>   Required Properties:
->>>>     - compatible: Compatibility string. Must be 'arasan,sdhci-8.9a' or
->>>> -                'arasan,sdhci-4.9a'
->>>> +                'arasan,sdhci-4.9a' or 'arasan,sdhci-5.1'
->>>>     - reg: From mmc bindings: Register location and length.
->>>>     - clocks: From clock bindings: Handles to clock inputs.
->>>>     - clock-names: From clock bindings: Tuple including "clk_xin" and
->>>> "clk_ahb"
->>>> diff --git a/drivers/mmc/host/sdhci-of-arasan.c
->>>> b/drivers/mmc/host/sdhci-of-arasan.c
->>>> index ef5a7d2..75379cb 100644
->>>> --- a/drivers/mmc/host/sdhci-of-arasan.c
->>>> +++ b/drivers/mmc/host/sdhci-of-arasan.c
->>>> @@ -217,6 +217,7 @@ static int sdhci_arasan_remove(struct
->>>> platform_device *pdev)
->>>>
->>>>   static const struct of_device_id sdhci_arasan_of_match[] = {
->>>>         { .compatible = "arasan,sdhci-8.9a" },
->>>> +       { .compatible = "arasan,sdhci-5.1" },
->>>>         { .compatible = "arasan,sdhci-4.9a" },
->>>>         { }
->>>>   };
->>>>
->>>
->>> Acked-by: Michal Simek <michal.simek@xilinx.com>
->
->
-> Could you pull this patch into your repository?
->
+Add initial dts files and SoC support for IPQ4019
 
-Thanks, applied for next!
+Signed-off-by: Varadarajan Narayanan <varada@codeaurora.org>
+---
+Changes in v2:
+  - Added devicetree bindings documentation
 
-Kind regards
-Uffe
+Changes in v3:
+  - Split 'gcnt' into a separate patch
+  - Added the new entries to Makefiles, Kconfig & board.c in sorted order
+  - Used "qcom,ipq40xx" instead of "qcom,ipq40xx-r3pc" in board.c
+
+Changes in v4:
+  - Renamed IPQ40xx as IPQ4019
+  - Moved kconfig and defconfig enablement to separate patch
+  - Dropped Documentation/devicetree/bindings/qcom.txt
+
+ arch/arm/boot/dts/Makefile              |  1 +
+ arch/arm/boot/dts/qcom-ipq4019-r3pc.dts | 34 ++++++++++++++
+ arch/arm/boot/dts/qcom-ipq4019.dtsi     | 81 +++++++++++++++++++++++++++++++++
+ 3 files changed, 116 insertions(+)
+ create mode 100644 arch/arm/boot/dts/qcom-ipq4019-r3pc.dts
+ create mode 100644 arch/arm/boot/dts/qcom-ipq4019.dtsi
+
+diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+index 246473a..ca603f3 100644
+--- a/arch/arm/boot/dts/Makefile
++++ b/arch/arm/boot/dts/Makefile
+@@ -474,6 +474,7 @@ dtb-$(CONFIG_ARCH_QCOM) += \
+ 	qcom-apq8074-dragonboard.dtb \
+ 	qcom-apq8084-ifc6540.dtb \
+ 	qcom-apq8084-mtp.dtb \
++	qcom-ipq4019-r3pc.dtb \
+ 	qcom-ipq8064-ap148.dtb \
+ 	qcom-msm8660-surf.dtb \
+ 	qcom-msm8960-cdp.dtb \
+diff --git a/arch/arm/boot/dts/qcom-ipq4019-r3pc.dts b/arch/arm/boot/dts/qcom-ipq4019-r3pc.dts
+new file mode 100644
+index 0000000..e3855d7
+--- /dev/null
++++ b/arch/arm/boot/dts/qcom-ipq4019-r3pc.dts
+@@ -0,0 +1,34 @@
++/* Copyright (c) 2014, The Linux Foundation. All rights reserved.
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License version 2 and
++ * only version 2 as published by the Free Software Foundation.
++ *
++ * This program is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ * GNU General Public License for more details.
++ */
++
++#include "qcom-ipq4019.dtsi"
++
++/ {
++	model = "Qualcomm Technologies, Inc. IPQ4019 R3PC";
++	compatible = "qcom,ipq4019-r3pc", "qcom,ipq4019";
++
++	memory {
++		device_type = "memory";
++		reg = <0x80000000 0x20000000>; /* 512MB */
++	};
++
++	chosen {
++		bootargs = "root=/dev/ram rw init=/init initrd=0x82000000,0x000E2246";
++		stdout-path = "/serial@78b0000:115200";
++	};
++
++	soc {
++		serial@78b0000 {
++			status = "ok";
++		};
++	};
++};
+diff --git a/arch/arm/boot/dts/qcom-ipq4019.dtsi b/arch/arm/boot/dts/qcom-ipq4019.dtsi
+new file mode 100644
+index 0000000..1be0322
+--- /dev/null
++++ b/arch/arm/boot/dts/qcom-ipq4019.dtsi
+@@ -0,0 +1,81 @@
++/*
++ * Copyright (c) 2014, The Linux Foundation. All rights reserved.
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License version 2 and
++ * only version 2 as published by the Free Software Foundation.
++ *
++ * This program is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ * GNU General Public License for more details.
++ */
++
++/dts-v1/;
++
++#include "skeleton.dtsi"
++
++/ {
++	model = "Qualcomm Technologies, Inc. IPQ4019";
++	compatible = "qcom,ipq4019";
++	interrupt-parent = <&intc>;
++
++	cpus {
++		#address-cells = <1>;
++		#size-cells = <0>;
++		cpu@0 {
++			device_type = "cpu";
++			compatible = "arm,cortex-a7";
++			reg = <0x0>;
++		};
++
++		cpu@1 {
++			device_type = "cpu";
++			compatible = "arm,cortex-a7";
++			reg = <0x1>;
++		};
++
++		cpu@2 {
++			device_type = "cpu";
++			compatible = "arm,cortex-a7";
++			reg = <0x2>;
++		};
++
++		cpu@3 {
++			device_type = "cpu";
++			compatible = "arm,cortex-a7";
++			reg = <0x3>;
++		};
++	};
++
++	soc {
++		#address-cells = <1>;
++		#size-cells = <1>;
++		ranges;
++		compatible = "simple-bus";
++
++		intc: interrupt-controller@b000000 {
++			compatible = "qcom,msm-qgic2";
++			interrupt-controller;
++			#interrupt-cells = <3>;
++			reg = <0x0b000000 0x1000>,
++			<0x0b002000 0x1000>;
++		};
++
++		serial@78b0000 {
++			compatible = "qcom,msm-uartdm-v1.4", "qcom,msm-uartdm";
++			reg = <0x78b0000 0x200>;
++			interrupts = <0 108 0>;
++			status = "disabled";
++		};
++	};
++
++	timer {
++		compatible = "arm,armv7-timer";
++		interrupts = <1 2 0xf08>,
++			     <1 3 0xf08>,
++			     <1 4 0xf08>,
++			     <1 1 0xf08>;
++		clock-frequency = <20833333>;
++	};
++};
+-- 
+1.8.2.1
