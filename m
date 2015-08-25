@@ -1,118 +1,75 @@
-From: Hans de Goede <hdegoede@redhat.com>
-Subject: Re: [PATCH v2] mmc: sunxi: Don't start commands while the card is
- busy
-Date: Tue, 25 Aug 2015 14:09:45 +0200
-Message-ID: <55DC5B09.2020705@redhat.com>
-References: <1436541284-11800-1-git-send-email-hdegoede@redhat.com>
- <CAPDyKFoNe0bghfSXs48stHzZToTc7Hjd5gVPy-VbDF8bzdVVMQ@mail.gmail.com>
- <55BC8ADE.3070802@redhat.com>
- <CAPDyKFrYvL33DsaATg4fyAJg=G3SEuOP+xU=o_UwasmNZ+a07Q@mail.gmail.com>
+From: Leo Yan <leo.yan-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v1 1/3] dt-bindings: mailbox: Document Hi6220 mailbox
+ driver
+Date: Tue, 25 Aug 2015 21:01:49 +0800
+Message-ID: <20150825130149.GA28262@leoy-linaro>
+References: <1439977055-1747-1-git-send-email-leo.yan@linaro.org>
+ <1439977055-1747-2-git-send-email-leo.yan@linaro.org>
+ <55DC4EC0.4060301@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-mmc-owner@vger.kernel.org>
-In-Reply-To: <CAPDyKFrYvL33DsaATg4fyAJg=G3SEuOP+xU=o_UwasmNZ+a07Q@mail.gmail.com>
-Sender: linux-mmc-owner@vger.kernel.org
-To: Ulf Hansson <ulf.hansson@linaro.org>
-Cc: Chris Ball <chris@printf.net>, Mike Turquette <mturquette@linaro.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, Arend van Spriel <arend@broadcom.com>, Sascha Hauer <s.hauer@pengutronix.de>, linux-mmc <linux-mmc@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, devicetree <devicetree@vger.kernel.org>, linux-sunxi@googlegroups.com, Eugene K <sigintmailru@gmail.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <55DC4EC0.4060301-5wv7dgnIgG8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
+Cc: Wei Xu <xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Catalin Marinas <Catalin.Marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Bintian Wang <bintian.wang-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, Haojian Zhuang <haojian.zhuang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Yiping Xu <xuyiping-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "guodong.xu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <guodong.xu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Jian Zhang <zhangjian001-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Zhenwei Wang <Zhenwei.wang-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Haoju Mo <mohaoju-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Dan Zhao <dan.zhao-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, kongfei@hisilicon
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Hi Sudeep,
 
-On 25-08-15 14:05, Ulf Hansson wrote:
-> On 1 August 2015 at 11:01, Hans de Goede <hdegoede@redhat.com> wrote:
->> Hi,
->>
->> On 21-07-15 14:15, Ulf Hansson wrote:
->>>
->>> On 10 July 2015 at 17:14, Hans de Goede <hdegoede@redhat.com> wrote:
->>>>
->>>> Some sdio wifi modules have not been working reliable with the sunxi-mmc
->>>> host code. This turns out to be caused by it starting new commands while
->>>> the card signals that it is still busy processing a previous command.
->>>
->>>
->>> Which are those commands?
->>
->>
->> The code were things get stuck when not waiting for the busy signal uses
->> the following sdio helper functions:
->>
->> sdio_readb/sdio_writeb
->> sdio_f0_readb/sdio_f0_writeb
->> sdio_readw/sdio_writew
->> sdio_readl/sdio_writel
->> sdio_readsb
->> sdio_memcpy_fromio/sdio_memcpy_toio
->>
->> And directly issues the following command:
->>
->>          mmc_dat.flags = write ? MMC_DATA_WRITE : MMC_DATA_READ;
->>          mmc_cmd.opcode = SD_IO_RW_EXTENDED;
->>          mmc_cmd.arg = write ? 1<<31 : 0;        /* write flag  */
->>          mmc_cmd.arg |= (fn & 0x7) << 28;        /* SDIO func num */
->>          mmc_cmd.arg |= 1<<27;                   /* block mode */
->>          /* for function 1 the addr will be incremented */
->>          mmc_cmd.arg |= (fn == 1) ? 1<<26 : 0;
->>          mmc_cmd.flags = MMC_RSP_SPI_R5 | MMC_RSP_R5 | MMC_CMD_ADTC;
->>
->> I do not know if the busy wait is necessary for all
->> of these, but the hack in the android kernel code,
->> which inserts calls to a wait_card_busy function directly
->> into: drivers/net/wireless/brcm80211/brcmfmac/bcmsdh.c
->>
->> Does so for all of these.
->>
->>> Or more interesting, which response types do
->>>
->>> these commands expect?
->>> I don't think this is a sunxi specific issue, I have seen similar
->>> issues for other host controllers.
->>
->>
->> Agreed, recent dw-mmc patches address the same issue, also involving
->> broadcom sdio wifi chips.
->>
->>> I am thinking that perhaps this should be managed by the mmc core
->>> instead of local hacks to sunxi. Potentially we could make the core to
->>> invoke the already existing host_ops->card_busy() callback when
->>> needed...
->>
->>
->> I'm fine with solving this either way, implementing host_ops->card_busy()
->> for sunxi is easy, and if the core os modified to call that function
->> before issue sdio io ops (which seems to be the common thing here),
->> then that indeed is better then having the sunxi code always do
->> the busy check.
->
-> Okay, so let's make the core to call the ->card_busy() callback and
-> then it's up to each host driver to implement that callback.
+Thanks for review, please see below comment.
 
-Ok, do you plan to do a patch for this, or do you expect to get
-one submitted to you ?
+On Tue, Aug 25, 2015 at 12:17:20PM +0100, Sudeep Holla wrote:
+> On 19/08/15 10:37, Leo Yan wrote:
+> >Document the new compatible for Hisilicon Hi6220 mailbox driver.
+> >
+> >Signed-off-by: Leo Yan <leo.yan-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> >---
+> >  .../bindings/mailbox/hisilicon,hi6220-mailbox.txt  | 57 ++++++++++++++++++++++
+> >  1 file changed, 57 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/mailbox/hisilicon,hi6220-mailbox.txt
+> >
+> >diff --git a/Documentation/devicetree/bindings/mailbox/hisilicon,hi6220-mailbox.txt b/Documentation/devicetree/bindings/mailbox/hisilicon,hi6220-mailbox.txt
+> >new file mode 100644
+> >index 0000000..3dfb0b0
+> >--- /dev/null
+> >+++ b/Documentation/devicetree/bindings/mailbox/hisilicon,hi6220-mailbox.txt
+> >@@ -0,0 +1,57 @@
+> >+Hisilicon Hi6220 Mailbox Driver
+> >+===============================
+> >+
+> >+Hisilicon Hi6220 mailbox supports up to 32 channels. Each channel
+> >+is unidirectional with a maximum message size of 8 words. I/O is
+> >+performed using register access (there is no DMA) and the cell
+> >+raises an interrupt when messages are received.
+> >+
+> >+Mailbox Device Node:
+> >+====================
+> >+
+> >+Required properties:
+> >+--------------------
+> >+- compatible:		Shall be "hisilicon,hi6220-mbox"
+> >+- reg:			Contains the mailbox register address range (base
+> >+			address and length); the first item is for IPC
+> >+			registers, the second item is shared buffer for
+> >+			slots.
+> 
+> Not sure if the shared buffer needs to be part of the controller binding
+> as it's not related to it. It's just agreement between the endpoints of
+> this mailbox on particular SoC and IMO has to part of the client binding.
 
-Regards,
+Yes, we need distinguish the buffer is really used for channel's
+management or just only used for client. Here "shared buffer" is
+used for channels' state machine, mode and raw data with 8 words.
 
-Hans
+So mailbox driver just read/write raw data according to client's
+requirement, client will define their specific format for data
+transcation.
 
-
-> As an optimization, we might consider (in a separate step) to add
-> MMC_RSP_BUSY to the response type. I realize that would somewhat be a
-> violation of the spec, but apparently the SDIO spec isn't really clear
-> on this area.
->
->>
->>> Within this context, could I ask whether you controller supports IRQ
->>> based HW-busy detection? Or you need polling of the status register?
->>
->>
->> I'm afraid that we need to poll the status register. I've been unable
->> to find an irq flag corresponding to this.
->
-> Okay, thanks for the info.
->
-> [...]
->
-> Kind regards
-> Uffe
->
+Thanks,
+Leo Yan
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
