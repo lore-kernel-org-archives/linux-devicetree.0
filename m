@@ -1,7 +1,7 @@
 From: Peter Griffin <peter.griffin@linaro.org>
-Subject: [PATCH 1/3] ARM: DT: STi: stihxxx-b2120: Add pulse-width properties to ssc2 & ssc3
-Date: Tue, 25 Aug 2015 17:22:08 +0100
-Message-ID: <1440519730-486-2-git-send-email-peter.griffin@linaro.org>
+Subject: [PATCH 2/3] ARM: DT: STi: STiH407: Add c8sectpfe LinuxDVB DT node.
+Date: Tue, 25 Aug 2015 17:22:09 +0100
+Message-ID: <1440519730-486-3-git-send-email-peter.griffin@linaro.org>
 References: <1440519730-486-1-git-send-email-peter.griffin@linaro.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1440519730-486-1-git-send-email-peter.griffin@linaro.org>
@@ -10,38 +10,69 @@ To: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, srinivas
 Cc: peter.griffin@linaro.org, lee.jones@linaro.org, kernel@stlinux.com, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Adding these properties makes the I2C bus to the demodulators much
-more reliable, and we no longer suffer from I2C errors when tuning.
+This patch adds in the required DT node for the c8sectpfe
+Linux DVB demux driver which allows the tsin channels
+to be used on an upstream kernel.
 
 Signed-off-by: Peter Griffin <peter.griffin@linaro.org>
 ---
- arch/arm/boot/dts/stihxxx-b2120.dtsi | 10 ++++++++--
- 1 file changed, 8 insertions(+), 2 deletions(-)
+ arch/arm/boot/dts/stihxxx-b2120.dtsi | 38 ++++++++++++++++++++++++++++++++++++
+ 1 file changed, 38 insertions(+)
 
 diff --git a/arch/arm/boot/dts/stihxxx-b2120.dtsi b/arch/arm/boot/dts/stihxxx-b2120.dtsi
-index f589fe4..62994ae 100644
+index 62994ae..1bc018e 100644
 --- a/arch/arm/boot/dts/stihxxx-b2120.dtsi
 +++ b/arch/arm/boot/dts/stihxxx-b2120.dtsi
-@@ -27,12 +27,18 @@
- 			};
- 		};
- 
--		i2c@9842000 {
-+		ssc2: i2c@9842000 {
+@@ -6,6 +6,10 @@
+  * it under the terms of the GNU General Public License version 2 as
+  * published by the Free Software Foundation.
+  */
++
++#include <dt-bindings/clock/stih407-clks.h>
++#include <dt-bindings/media/c8sectpfe.h>
++
+ / {
+ 	soc {
+ 		sbc_serial0: serial@9530000 {
+@@ -85,5 +89,39 @@
  			status = "okay";
-+			clock-frequency = <100000>;
-+			st,i2c-min-scl-pulse-width-us = <0>;
-+			st,i2c-min-sda-pulse-width-us = <5>;
  		};
  
--		i2c@9843000 {
-+		ssc3: i2c@9843000 {
- 			status = "okay";
-+			clock-frequency = <100000>;
-+			st,i2c-min-scl-pulse-width-us = <0>;
-+			st,i2c-min-sda-pulse-width-us = <5>;
- 		};
- 
- 		i2c@9844000 {
++		c8sectpfe@08a20000 {
++			compatible = "st,stih407-c8sectpfe";
++			status = "okay";
++			reg = <0x08a20000 0x10000>, <0x08a00000 0x4000>;
++			reg-names = "c8sectpfe", "c8sectpfe-ram";
++
++			interrupts = <0 34 0>, <0 35 0>;
++			interrupt-names = "c8sectpfe-error-irq",
++					  "c8sectpfe-idle-irq";
++
++			pinctrl-names	= "tsin0-serial", "tsin0-parallel",
++					  "tsin3-serial", "tsin4-serial",
++					  "tsin5-serial";
++
++			pinctrl-0	= <&pinctrl_tsin0_serial>;
++			pinctrl-1	= <&pinctrl_tsin0_parallel>;
++			pinctrl-2	= <&pinctrl_tsin3_serial>;
++			pinctrl-3	= <&pinctrl_tsin4_serial_alt3>;
++			pinctrl-4	= <&pinctrl_tsin5_serial_alt1>;
++
++			clocks = <&clk_s_c0_flexgen CLK_PROC_STFE>;
++			clock-names = "c8sectpfe";
++
++			/* tsin0 is TSA on NIMA */
++			tsin0: port@0 {
++
++				tsin-num = <0>;
++				serial-not-parallel;
++				i2c-bus = <&ssc2>;
++				rst-gpio = <&pio15 4 0>;
++
++				dvb-card = <STV0367_TDA18212_NIMA_1>;
++			};
++		};
+ 	};
+ };
 -- 
 1.9.1
