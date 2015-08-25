@@ -1,44 +1,104 @@
-From: Yakir Yang <ykk-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Subject: Re: [PATCH v3 06/14] Documentation: drm/bridge: add document for
- analogix_dp
-Date: Tue, 25 Aug 2015 22:03:52 +0800
-Message-ID: <55DC75C8.209@rock-chips.com>
-References: <1439995728-18046-1-git-send-email-ykk@rock-chips.com>
- <1439995834-18363-1-git-send-email-ykk@rock-chips.com>
- <20150825095817.GC14034@ulmo.nvidia.com>
+From: Leo Yan <leo.yan@linaro.org>
+Subject: Re: [PATCH v1 3/3] arm64: dts: add Hi6220 mailbox node
+Date: Tue, 25 Aug 2015 22:04:50 +0800
+Message-ID: <20150825140450.GB28262@leoy-linaro>
+References: <1439977055-1747-1-git-send-email-leo.yan@linaro.org>
+ <1439977055-1747-4-git-send-email-leo.yan@linaro.org>
+ <55DC532C.3020005@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
-	format=flowed
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20150825095817.GC14034-AwZRO8vwLAwmlAP/+Wk3EA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Cc: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Jingoo Han <jingoohan1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Fabio Estevam <fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Inki Dae <inki.dae-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, joe-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org, Russell King <rmk+kernel-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, djkurtz-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, dianders-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, seanpaul-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, Takashi Iwai <tiwai-l3A5Bk7waGM@public.gmane.org>, ajaynumb-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Andrzej Hajda <a.hajda-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Kyungmin Park <kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Gustavo Padovan <gustavo.padovan-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>, Vincent Palatin <vpalatin-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Mark Yao <mark.yao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Andy Yan <andy.yan-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-fy+rA21nqHI@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <55DC532C.3020005@arm.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Sudeep Holla <sudeep.holla@arm.com>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "guodong.xu@linaro.org" <guodong.xu@linaro.org>, Jian Zhang <zhangjian001@hisilicon.com>, Zhenwei Wang <Zhenwei.wang@hisilicon.com>, Haoju Mo <mohaoju@hisilicon.com>, Dan Zhao <dan.zhao@hisilicon.com>, "kongfei@hisilicon.com" <kongfei@hisilicon.com>, Guangyue Zeng <zengguangyue@hisilicon.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <Pawel.Moll@arm.com>, Mark Rutland <Mark.Rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Catalin Marinas <Catalin.Marinas@arm.com>, Will Deacon <Will.Deacon@arm.com>, Jassi Brar <jassisinghbrar@gmail.com>, Bintian Wang <bintian.wang@huawei.com>, Haojian Zhuang <haojian.zhuang@linaro>
 List-Id: devicetree@vger.kernel.org
 
-Hi Thierry,
+Hi Sudeep,
 
-=E5=9C=A8 2015/8/25 17:58, Thierry Reding =E5=86=99=E9=81=93:
-> On Wed, Aug 19, 2015 at 09:50:34AM -0500, Yakir Yang wrote:
-> [...]
->> +	-analogix,color-space:
->> +		input video data format.
->> +			COLOR_RGB =3D 0, COLOR_YCBCR422 =3D 1, COLOR_YCBCR444 =3D 2
-> I don't think DT is an appropriate place to set this. To my knowledge
-> this depends on the display and/or mode, so I don't think hard-coding
-> it here is the right thing to do.
+On Tue, Aug 25, 2015 at 12:36:12PM +0100, Sudeep Holla wrote:
+> 
+> 
+> On 19/08/15 10:37, Leo Yan wrote:
+> >On Hi6220, below memory regions in DDR have specific purpose:
+> >
+> >   0x05e0,0000 - 0x05ef,ffff: For MCU firmware using at runtime;
+> >   0x0740,f000 - 0x0740,ffff: For MCU firmware's section;
+> >   0x06df,f000 - 0x06df,ffff: For mailbox message data.
+> >
+> 
+> Unless I am reading the DTS file completely wrong, I don't think the
+> above memory regions are in DDR as per the memory node.
 
-Yeah, same question with my previous reply ;)
+i'm not sure if understand correctly for your question; Hikey board
+has DDR 1GB@0x0, but there have some memory regions are used for MCU.
+
+So this patch is to reserve these memory regions so that make sure
+kernel will not map and allocate them.
+
+Will remove these memory regions from memory node in next version.
+
+> >This patch reserves these memory regions and add device node for
+> >mailbox in dts.
+> >
+> >Signed-off-by: Leo Yan <leo.yan@linaro.org>
+> >---
+> >  arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts | 20 +++++++++++++++++---
+> >  arch/arm64/boot/dts/hisilicon/hi6220.dtsi      |  8 ++++++++
+> >  2 files changed, 25 insertions(+), 3 deletions(-)
+> >
+> >diff --git a/arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts b/arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts
+> >index e36a539..d5470d3 100644
+> >--- a/arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts
+> >+++ b/arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts
+> >@@ -7,9 +7,6 @@
+> >
+> >  /dts-v1/;
+> >
+> >-/*Reserved 1MB memory for MCU*/
+> >-/memreserve/ 0x05e00000 0x00100000;
+> >-
+> >  #include "hi6220.dtsi"
+> >
+> >  / {
+> >@@ -28,4 +25,21 @@
+> >  		device_type = "memory";
+> >  		reg = <0x0 0x0 0x0 0x40000000>;
+> >  	};
+> 
+> I have no access to the spec, but I read this as 1GB RAM @0x0
+> Unless this entry is completely wrong, what your commit log claims is
+> incorrect. If this entry is wrong I wonder how is it booting with this
+> DT then.
+
+Do you mean should remove all reserved memory regions from memory
+node? Will submit next version's patch for this.
+
+Kernel can boot successfully on Hikey with this patch [1].
+
+[1] https://github.com/96boards/linux
+
+> >+
+> >+	reserved-memory {
+> >+		#address-cells = <2>;
+> >+		#size-cells = <2>;
+> >+		ranges;
+> >+
+> >+		mcu-buf@05e00000 {
+> >+			no-map;
+> >+			reg = <0x0 0x05e00000 0x0 0x00100000>,	/* MCU firmware buffer */
+> >+			      <0x0 0x0740f000 0x0 0x00001000>;	/* MCU firmware section */
+> 
+> So I don't see how can this be part of DDR ? Or at-least part of DDR
+> that's mapped by kernel ?
+
+Here use reserved-memory node to remove these regions from memblock
+during kernel's boot up; kernel also will not map for them with
+property "no-map".
+
+I think this is the same question which have been brought up by Mark
+in his early mail and suggested to use UEFI to do this.
 
 Thanks,
-- Yakir
->
-> Thierry
-
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Leo Yan
