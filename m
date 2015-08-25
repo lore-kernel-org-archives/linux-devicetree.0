@@ -1,106 +1,63 @@
-From: "Leizhen (ThunderTown)" <thunder.leizhen@huawei.com>
-Subject: Re: [PATCH 1/1] of: to support binding numa node to root
- subnode(non-bus)
-Date: Tue, 25 Aug 2015 10:24:56 +0800
-Message-ID: <55DBD1F8.1010206@huawei.com>
-References: <1440419410-10520-1-git-send-email-thunder.leizhen@huawei.com>
- <CAL_Jsq+Ab-=Dwi4LFR8NjB8mL1DJTY_a1a4Zm88wjcWHM4eS0g@mail.gmail.com>
+From: Olof Johansson <olof@lixom.net>
+Subject: Re: [PATCH 0/3] ARM: uniphier: add outer cache support and rework SMP operations
+Date: Mon, 24 Aug 2015 20:05:45 -0700
+Message-ID: <CAOesGMj2M2GBE+KgkUw1PeWQEbzv0spkx58WfVDoGyPYDQGC4g@mail.gmail.com>
+References: <1440382692-3855-1-git-send-email-yamada.masahiro@socionext.com>
+	<CAOesGMgL3bNH_wG3igSJhNOkV0uUfNWEi0t-Gny2A1oNnGKu=w@mail.gmail.com>
+	<CAK7LNAQk4aEgZV3y90zBVMeq=jA45v683sCR1e5BBYtg5AcDOA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAL_Jsq+Ab-=Dwi4LFR8NjB8mL1DJTY_a1a4Zm88wjcWHM4eS0g@mail.gmail.com>
+In-Reply-To: <CAK7LNAQk4aEgZV3y90zBVMeq=jA45v683sCR1e5BBYtg5AcDOA@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robherring2@gmail.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>
-Cc: Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, devicetree <devicetree@vger.kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-kernel <linux-kernel@vger.kernel.org>, Zefan Li <lizefan@huawei.com>, Xinwei Hu <huxinwei@huawei.com>, Tianhong Ding <dingtianhong@huawei.com>, Hanjun Guo <guohanjun@huawei.com>
+To: Masahiro Yamada <yamada.masahiro@socionext.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, Linus Walleij <linus.walleij@linaro.org>, Jungseung Lee <js07.lee@gmail.com>, Florian Fainelli <f.fainelli@gmail.com>, Russell King <linux@arm.linux.org.uk>, Arnd Bergmann <arnd@arndb.de>, Mauro Carvalho Chehab <mchehab@osg.samsung.com>, "arm@kernel.org" <arm@kernel.org>, Jiri Slaby <jslaby@suse.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Kees Cook <keescook@chromium.org>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <u.kleine-koenig@pengutronix.de>, Joe Perches <joe@perches.com>, Rob Herring <robh+dt@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Paul Bolle <pebolle@tiscali.nl>, Greg KH <gregkh@linuxfoundation.org>, Nathan Lynch <nathan_lynch@mentor.com>"linux-kernel@vger.kernel.org" <linu>
 List-Id: devicetree@vger.kernel.org
 
-
-
-On 2015/8/24 21:25, Rob Herring wrote:
-> +benh
-> 
-> On Mon, Aug 24, 2015 at 7:30 AM, Zhen Lei <thunder.leizhen@huawei.com> wrote:
->> If use of_platform_populate to scan dt-nodes and add devices, the
->> subnode of root(such as /smmu), when being scanned and invoke
-> 
-> You should have a bus as the sub-node of root rather than devices
-> directly off of root. You still have a problem though...
-
-But actually the parent of bus is also &platform_bus if we didn't have special initialization.
-For example:
-The function of_platform_device_create_pdata invoke of_device_alloc first, then invoke of_device_add.
-But in of_device_alloc, we can find that:
-	dev->dev.parent = parent ? : &platform_bus;
-
-> 
->> of_device_add, the ofdev->dev.parent is always equal &platform_bus. So
->> that, function set_dev_node will not be called. And in device_add,
->> dev_to_node(parent) always return NUMA_NO_NODE.
+On Mon, Aug 24, 2015 at 6:50 PM, Masahiro Yamada
+<yamada.masahiro@socionext.com> wrote:
+> Hi Olof,
+>
+>
+> 2015-08-25 6:47 GMT+09:00 Olof Johansson <olof@lixom.net>:
+>> Hi,
 >>
->> Signed-off-by: Zhen Lei <thunder.leizhen@huawei.com>
->> ---
->>  drivers/base/core.c | 2 +-
->>  drivers/of/device.c | 2 +-
->>  2 files changed, 2 insertions(+), 2 deletions(-)
+>> On Sun, Aug 23, 2015 at 7:18 PM, Masahiro Yamada
+>> <yamada.masahiro@socionext.com> wrote:
+>>> 1/3: add outer cache support
+>>> 2/3: rework SMP operations
+>>> 3/3: add device tree nodes
 >>
->> diff --git a/drivers/base/core.c b/drivers/base/core.c
->> index dafae6d..5df4f46b 100644
->> --- a/drivers/base/core.c
->> +++ b/drivers/base/core.c
->> @@ -1017,7 +1017,7 @@ int device_add(struct device *dev)
->>                 dev->kobj.parent = kobj;
+>> Timing of this is unfortunate, please resend after 4.3-rc1 is out and
+>> we can queue it up.
+>
+> Given that rc8 is out and the merge window has been delayed,
+> is it still too late for 4.3-rc1?
+
+Yes.
+
+>>> Because 2/3 highly depends on 1/3, I hope whole of this series
+>>> is applied to ARM-SOC tree.
 >>
->>         /* use parent numa_node */
->> -       if (parent)
->> +       if (parent && (parent != &platform_bus))
-> 
-> This is only fixing one specific case, but I think things are broken
-> for any case where the NUMA associativity if not set at the top level
-> bus node. I think this should be something like:
-> 
-> if (parent && (dev_to_node(dev) != NO_NUMA_NODE))
-
-It seems a mistake, we should use equal sign.
-if (parent && (dev_to_node(dev) == NUMA_NO_NODE))
-
-> 
-> Then the OF code can set the node however it wants.
-
-OK. I will send patch v2 base upon your advice. Thank you.
-
-> 
->>                 set_dev_node(dev, dev_to_node(parent));
+>> Review or acked-by from Russell would be appreciated in that case.
 >>
->>         /* first, register with generic layer. */
->> diff --git a/drivers/of/device.c b/drivers/of/device.c
->> index 8b91ea2..96ebece 100644
->> --- a/drivers/of/device.c
->> +++ b/drivers/of/device.c
->> @@ -63,7 +63,7 @@ int of_device_add(struct platform_device *ofdev)
->>         /* device_add will assume that this device is on the same node as
->>          * the parent. If there is no parent defined, set the node
->>          * explicitly */
->> -       if (!ofdev->dev.parent)
->> +       if (!ofdev->dev.parent || (ofdev->dev.parent == &platform_bus))
-> 
-> And then remove the if here.
-> 
+>>> Olof,
+>>> From this series, I am using "ARM: uniphier:" rather than "ARM: UniPhier:"
+>>> for the subject prefixes because I noticed you often rephased so when you
+>>> applied my patches.
+>>> Are sub-arch names in lower cases preferable in subject prefixes?
+>>
+>> If you look at "git log --no-merges --oneline arch/arm/mach-*" you'll
+>> see that most platforms use either all-caps or all-lowercase.
+>
+> I see.
+>
+> But, we use "UniPhier" (with only U and P capitalized) in our official
+> documents.
 
-OK. I also think remove this statement will be better. Althouth set_dev_node maybe called two times,
-but it only spends very little time, and this almost happened at initialization phase.
+That's OK, others surely capitalize their platform names too in
+documentation. Some of them even have funkier capitalization than
+that, such as "SPEAr".
 
->>                 set_dev_node(&ofdev->dev, of_node_to_nid(ofdev->dev.of_node));
->>
->>         return device_add(&ofdev->dev);
->> --
->> 2.5.0
->>
->>
->> --
->> To unsubscribe from this list: send the line "unsubscribe devicetree" in
->> the body of a message to majordomo@vger.kernel.org
->> More majordomo info at  http://vger.kernel.org/majordomo-info.html
-> 
-> .
-> 
+
+-Olof
