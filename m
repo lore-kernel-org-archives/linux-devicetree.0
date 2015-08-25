@@ -1,116 +1,122 @@
-From: Thierry Reding <treding@nvidia.com>
-Subject: Re: [PATCH v3 06/14] Documentation: drm/bridge: add document for
- analogix_dp
-Date: Tue, 25 Aug 2015 12:06:30 +0200
-Message-ID: <20150825100628.GD14034@ulmo.nvidia.com>
-References: <1439995728-18046-1-git-send-email-ykk@rock-chips.com>
- <1439995834-18363-1-git-send-email-ykk@rock-chips.com>
- <CAL_JsqLz+8RtBucctUj4euXZ3Ac0DvB52N9ONpAerh5T9BiTJg@mail.gmail.com>
- <20150824125758.GA7557@n2100.arm.linux.org.uk>
- <CAL_JsqKZYMMzV9Sc2r3K_rnM0FNuyb1TyJEhjGq1Hf7dTiWFKQ@mail.gmail.com>
- <20150825091246.GA14034@ulmo.nvidia.com>
- <55DC383F.4000103@rock-chips.com>
+From: Haojian Zhuang <haojian.zhuang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v1 3/3] arm64: dts: add Hi6220 mailbox node
+Date: Tue, 25 Aug 2015 18:15:10 +0800
+Message-ID: <1440497710.10987.42.camel@linaro.org>
+References: <1439977055-1747-1-git-send-email-leo.yan@linaro.org>
+	 <1439977055-1747-4-git-send-email-leo.yan@linaro.org>
+	 <20150821184059.GB2000@svinekod> <20150824091845.GA28290@leoy-linaro>
+	 <20150824095144.GA7139@leverpostej> <1440411596.3517.12.camel@linaro.org>
+	 <20150824114903.GT10728@bivouac.eciton.net>
+	 <1440490427.10987.29.camel@linaro.org>
+	 <20150825094630.GU10728@bivouac.eciton.net>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="jL2BoiuKMElzg3CS"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <55DC383F.4000103@rock-chips.com>
-Content-Disposition: inline
-Sender: linux-kernel-owner@vger.kernel.org
-To: Yakir Yang <ykk@rock-chips.com>
-Cc: Rob Herring <robherring2@gmail.com>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Heiko Stuebner <heiko@sntech.de>, Jingoo Han <jingoohan1@gmail.com>, Fabio Estevam <fabio.estevam@freescale.com>, Inki Dae <inki.dae@samsung.com>, Joe Perches <joe@perches.com>, Sean Paul <seanpaul@google.com>, Takashi Iwai <tiwai@suse.de>, dri-devel <dri-devel@lists.freedesktop.org>, Andrzej Hajda <a.hajda@samsung.com>, Gustavo Padovan <gustavo.padovan@collabora.co.uk>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, Vincent Palatin <vpalatin@chromium.org>, linux-rockchip@lists.infradead.org, Kishon Vijay Abraham I <kishon@ti.com>, David Airlie <airlied@linux.ie>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Doug Anderson <dianders@google.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20150825094630.GU10728-t77nlHhSwNqAroYi2ySoxKxOck334EZe@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Leif Lindholm <leif.lindholm-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Leo Yan <leo.yan-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Catalin Marinas <Catalin.Marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Bintian Wang <bintian.wang-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, Yiping Xu <xuyiping-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Wei Xu <xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "guodong.xu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <guodong.xu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Jian Zhang <zhangjian001-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Zhenwei Wang <Zhenwei.wang-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Haoju Mo <mohaoju-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Dan Zhao <dan.zhao-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, "kongfei-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org" <kongfei@>
 List-Id: devicetree@vger.kernel.org
 
---jL2BoiuKMElzg3CS
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On Tue, 2015-08-25 at 10:46 +0100, Leif Lindholm wrote:
+> On Tue, Aug 25, 2015 at 04:13:47PM +0800, Haojian Zhuang wrote:
+> > On Mon, 2015-08-24 at 12:49 +0100, Leif Lindholm wrote:
+> > > On Mon, Aug 24, 2015 at 06:19:56PM +0800, Haojian Zhuang wrote:
+> > > > > If your EFI memory map describes the memory as mappable, it is wrong.
+> > > > 
+> > > > When kernel is working, kernel will create its own page table based on
+> > > > UEFI memory map. Since it's reserved in DTS file as Leo's patch, it'll
+> > > > be moved to reserved memblock. Why is it wrong?
+> > > > 
+> > > > In the second, UEFI is firmware. When it's stable, nobody should change
+> > > > it without any reason.
+> > > 
+> > > Much like the memory map.
+> > > 
+> > > > These reserved memory are used in mailbox driver.
+> > > > Look. It's driver, so it could be changed at any time.
+> > > 
+> > > No, it is a set of regions of memory set aside for use by a different
+> > > master in the system as well as communications with that master.
+> > > 
+> > > The fact that there is a driver somewhere that is aware of this is
+> > > entirely beside the point. All agents in the system must adher to this
+> > > protocol.
+> > > 
+> > > > Why do you want
+> > > > to UEFI knowing this memory range? Do you hope UEFI to change when
+> > > > mailbox driver is changed?
+> > > 
+> > > Yes.
+> > > 
+> > > UEFI is a runtime environment. Having random magic areas not to be
+> > > touched will cause random pieces of software running under it to break
+> > > horribly or break other things horribly.
+> > > Unless you mark them as reserved in the UEFI memory map.
+> > > At which point the Linux kernel will automatically ignore them, and
+> > > the proposed patch is redundant.
+> > > 
+> > > So, yes, if you want a system that can boot reliably, run testsuites
+> > > (like SCT or FWTS), run applications (like fastboot ... or the EFI
+> > > stub kernel itself), then any memory regions that is reserved for
+> > > mailbox communication (or other masters in the system) _must_ be
+> > > marked in the EFI memory map.
+> > 
+> > 1. We need support both UEFI and uboot. So the reserved buffer have to
+> > be declared in DTB since they are used by kernel driver, not UEFI.
+> 
+> The buffer may need to be declared in DTB also, but it most certanily
+> needs to be declared in UEFI.
+> 
+> And for the U-Boot case, since it is not memory available to Linux, it
+> should not be declared as "memory".
 
-On Tue, Aug 25, 2015 at 05:41:19PM +0800, Yakir Yang wrote:
-> Hi Thierry,
->=20
-> =E5=9C=A8 2015/8/25 17:12, Thierry Reding =E5=86=99=E9=81=93:
-> >On Mon, Aug 24, 2015 at 09:48:27AM -0500, Rob Herring wrote:
-> >>On Mon, Aug 24, 2015 at 7:57 AM, Russell King - ARM Linux
-> >><linux@arm.linux.org.uk> wrote:
-> >>>On Sun, Aug 23, 2015 at 06:23:14PM -0500, Rob Herring wrote:
-> >>>>On Wed, Aug 19, 2015 at 9:50 AM, Yakir Yang <ykk@rock-chips.com> wrot=
-e:
-> >>>>>+       -analogix,color-depth:
-> >>>>>+               number of bits per colour component.
-> >>>>>+                       COLOR_6 =3D 0, COLOR_8 =3D 1, COLOR_10 =3D 2=
-, COLOR_12 =3D 3
-> >>>>This seems pretty generic. Just use 6, 8, 10, or 12 for values. And
-> >>>>drop the vendor prefix.
-> >>>Please think about this some more.  What does "color-depth" mean?  Doe=
-s it
-> >>>mean the number of bits per colour _component_, or does it mean the to=
-tal
-> >>>number of bits to represent a particular colour.  It's confusing as it
-> >>>stands.
-> >>Then "component-color-bpp" perhaps?
-> >There should be no need to have this in DT at all. The BPC is a property
-> >of the attached panel and it should come from the panel (either the
-> >panel driver or parsed from EDID if available).
->=20
-> Actually I have send an email about this one to you in version 2, just pa=
-st
-> from that email:
->=20
-> "samsung,color_space" and "samsung,color-depth"
->=20
-> The drm_display_info's color_formats and bpc indicate the monitor display
-> ability, but
-> the edp driver could not take it as input video format directly.
->=20
-> For example, with my DP TV I would found "RGB444 & YCRCB422 & & YCRCB444"
-> support in drm_display_info.color_formats and 16bit bpc support, but RK32=
-88
-> crtc
-> driver could only output RGB & ITU formats, so finally analogix_dp-rockch=
-ip
-> driver
-> config crtc to RGBaaa 10bpc mode.
->=20
-> In this sutiation, the analogix_dp core driver would pazzled by the
-> drm_display_info,
-> can't chose the right color_space and bpc.
->=20
-> And this is the place that confused me, wish you could give some ideas ab=
-out
-> this one :-)
+Something are messed at here. We have these buffer are used in mailbox.
+They should be allocated as non-cacheable.
 
-Your display driver should choose whatever it is capable of outputting.
-If the display reports that it can do 16 bits-per-color, but your
-display driver can't do it, then it should choose a configuration that
-it supports. Similarily for the color encodings. If you can't generate
-YCrCb444 with your hardware, then it's the driver's job to know about
-that and select the next appropriate configuration.
+If these buffers are contained in memory memblock in kernel, it means
+that they exist in kernel page table with cachable property. When it's
+used in mailbox driver with non-cachable property, it'll only cause
+cache maintenance issue. So Leo declared these buffers as reserved
+in DT with "no-map" property. It's the key. It could avoid the cache
+maintenance issue.
 
-But hard-coding this is not the right solution because the value in DT
-may end up conflicting with what the display reports.
+> 
+> > 2. UEFI just loads grub. It's no time to run any other custom EFI
+> > application.
+> 
+> Apart from being completely irrelevant, how are you intending to
+> validate that GRUB never touches these memory regions?
+> 
 
-Thierry
+GRUB is just a part of bootloader. When linux kernel is running,
+who cares GRUB? GRUB's lifetime is already finished.
 
---jL2BoiuKMElzg3CS
-Content-Type: application/pgp-signature; name="signature.asc"
+By the way, UEFI code region is at [0x3Dxx_xxxx, 0x3DFF_FFFF]. Those
+mailbox buffer is in [0x05e0_xxxx, 0x06f0_xxxx]. Then I can make sure
+UEFI won't touch the reserved buffer. Even if UEFI touched the reserved
+buffer, is it an issue? Definitely it's not. UEFI's lifetime is end
+when linux kernel is running at hikey. Even if UEFI runtime service
+is enabled, the runtime data area is at [0x38xx_xxxx, 0x38xx_xxxx].
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
+> Build a version once, test it, and hope the results remain valid
+> forever? And then when you move the regions and the previously working
+> GRUB now tramples all over them? Or when something changes in upstream
+> GRUB and its memory allocations drifts into the secretly untouchable
+> regions?
 
-iQIcBAABCAAGBQJV3D4kAAoJEN0jrNd/PrOhqPcQAJSGUCn4e+nkhR0y81v5wv1i
-iQxQoqVEs6zze7Ye890IXGt+Ke2XI/Iy3nFibZ8pJfLn1jwb8/EktH4GgoMe0Cy/
-PvnaAB5eKekS0Q93ZcB22wGVcPxBBrpiyX0mT2nEwz/pYoceuSTquOwOMWqIHyK+
-66tbPyzo2JLisl3x2ifUxnzUXjnthCVpniFfYUoKYal8rqrPt7/jLpjiMrI/hvWb
-vAZDadtguHpuJG7dIQupr9LYZIlNvG4dNdHzsgGShxvP9BbIgG0QRW1YbKCE1K9T
-HUUK35lnevqsSXE2kJHJsNkUYAjbLiOEFcklmuohuDQa5YzCXNleOrYKs2W5Sbej
-PNRFykK81IGemuXTPrsj2Lrj+V66A8TuIsyxsfuHaVxhIZAMXzA7mCNnmEIEQ87/
-PsMrfypl2JUWrZ2fd3BkdwhmnT/NDu9rQlCjuzGMIciyMERgp9HUYGZHBAeUI7Kj
-GWAmam2HVq6t1BIUH4mA3Kx+cc3beVsmPVNS2JcWt84ZXSLqR7Hjc3BAuBPdtmlI
-4jtxxzQb16UWtOWlD89aO9Csym3Fn3eJik0WCyhJyJNRM7856qUU/yEYC3fYVH3I
-uyR2IEJaUhVYXzduP9I8gusutcwais5z06cZg+Pegz9ny9jHqgAsxSI5R1fWIhfe
-jzImZIST8U/jk3Yn5xfX
-=zxwc
------END PGP SIGNATURE-----
+As I said above, UEFI won't touch it. And even UEFI touch it, kernel
+doesn't care since UEFI's lifetime is end.
 
---jL2BoiuKMElzg3CS--
+> 
+> Are you then going to hack GRUB, release a special HiKey version of
+> GRUB, not support any other versions, and still can your firmware
+> UEFI?
+
+I don't need to hack GRUB at all.
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
