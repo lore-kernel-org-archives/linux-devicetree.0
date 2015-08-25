@@ -1,81 +1,114 @@
-From: Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [RFC PATCH 1/7] DMA: tegra-apb: Correct runtime-pm usage
-Date: Tue, 25 Aug 2015 10:37:35 +0100
-Message-ID: <55DC375F.1070907@nvidia.com>
-References: <1439905755-25150-1-git-send-email-jonathanh@nvidia.com> <55DB1AA9.7090906@nvidia.com> <20150824142143.GK13546@localhost> <13590312.K3yoQT5YDc@vostro.rjw.lan>
+From: Yakir Yang <ykk@rock-chips.com>
+Subject: Re: [PATCH v3 06/14] Documentation: drm/bridge: add document for
+ analogix_dp
+Date: Tue, 25 Aug 2015 17:41:19 +0800
+Message-ID: <55DC383F.4000103@rock-chips.com>
+References: <1439995728-18046-1-git-send-email-ykk@rock-chips.com>
+ <1439995834-18363-1-git-send-email-ykk@rock-chips.com>
+ <CAL_JsqLz+8RtBucctUj4euXZ3Ac0DvB52N9ONpAerh5T9BiTJg@mail.gmail.com>
+ <20150824125758.GA7557@n2100.arm.linux.org.uk>
+ <CAL_JsqKZYMMzV9Sc2r3K_rnM0FNuyb1TyJEhjGq1Hf7dTiWFKQ@mail.gmail.com>
+ <20150825091246.GA14034@ulmo.nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <13590312.K3yoQT5YDc-sKB8Sp2ER+y1GS7QM15AGw@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: "Rafael J. Wysocki" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
-Cc: Rafael <rafael.j.wysocki-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=UTF-8;
+	format=flowed
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <20150825091246.GA14034@ulmo.nvidia.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Thierry Reding <treding@nvidia.com>, Rob Herring <robherring2@gmail.com>
+Cc: Russell King - ARM Linux <linux@arm.linux.org.uk>, Heiko Stuebner <heiko@sntech.de>, Jingoo Han <jingoohan1@gmail.com>, Fabio Estevam <fabio.estevam@freescale.com>, Inki Dae <inki.dae@samsung.com>, Joe Perches <joe@perches.com>, Sean Paul <seanpaul@google.com>, Takashi Iwai <tiwai@suse.de>, dri-devel <dri-devel@lists.freedesktop.org>, Andrzej Hajda <a.hajda@samsung.com>, Gustavo Padovan <gustavo.padovan@collabora.co.uk>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, Vincent Palatin <vpalatin@chromium.org>, linux-rockchip@lists.infradead.org, Kishon Vijay Abraham I <kishon@ti.com>, David Airlie <airlied@linux.ie>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Doug Anderson <dianders@google.com>, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@
 List-Id: devicetree@vger.kernel.org
 
+Hi Thierry,
 
-On 25/08/15 01:04, Rafael J. Wysocki wrote:
-> On Monday, August 24, 2015 07:51:43 PM Vinod Koul wrote:
->> On Mon, Aug 24, 2015 at 02:22:49PM +0100, Jon Hunter wrote:
+=E5=9C=A8 2015/8/25 17:12, Thierry Reding =E5=86=99=E9=81=93:
+> On Mon, Aug 24, 2015 at 09:48:27AM -0500, Rob Herring wrote:
+>> On Mon, Aug 24, 2015 at 7:57 AM, Russell King - ARM Linux
+>> <linux@arm.linux.org.uk> wrote:
+>>> On Sun, Aug 23, 2015 at 06:23:14PM -0500, Rob Herring wrote:
+>>>> On Wed, Aug 19, 2015 at 9:50 AM, Yakir Yang <ykk@rock-chips.com> w=
+rote:
+>>>>> +       -analogix,color-depth:
+>>>>> +               number of bits per colour component.
+>>>>> +                       COLOR_6 =3D 0, COLOR_8 =3D 1, COLOR_10 =3D=
+ 2, COLOR_12 =3D 3
+>>>> This seems pretty generic. Just use 6, 8, 10, or 12 for values. An=
+d
+>>>> drop the vendor prefix.
+>>> Please think about this some more.  What does "color-depth" mean?  =
+Does it
+>>> mean the number of bits per colour _component_, or does it mean the=
+ total
+>>> number of bits to represent a particular colour.  It's confusing as=
+ it
+>>> stands.
+>> Then "component-color-bpp" perhaps?
+> There should be no need to have this in DT at all. The BPC is a prope=
+rty
+> of the attached panel and it should come from the panel (either the
+> panel driver or parsed from EDID if available).
+
+Actually I have send an email about this one to you in version 2, just=20
+past from that email:
+
+"samsung,color_space" and "samsung,color-depth"
+
+The drm_display_info's color_formats and bpc indicate the monitor=20
+display ability, but
+the edp driver could not take it as input video format directly.
+
+=46or example, with my DP TV I would found "RGB444 & YCRCB422 & & YCRCB=
+444"
+support in drm_display_info.color_formats and 16bit bpc support, but=20
+RK3288 crtc
+driver could only output RGB & ITU formats, so finally=20
+analogix_dp-rockchip driver
+config crtc to RGBaaa 10bpc mode.
+
+In this sutiation, the analogix_dp core driver would pazzled by the=20
+drm_display_info,
+can't chose the right color_space and bpc.
+
+And this is the place that confused me, wish you could give some ideas=20
+about this one :-)
+
+- Yakir
+>>> When we adopted the graph bindings for iMX DRM, I thought exactly a=
+t that
+>>> time "it would be nice if this could become the standard for bindin=
+g DRM
+>>> components together" but I don't have the authority from either the=
+ DT
+>>> perspective or the DRM perspective to mandate that.  Neither does a=
+nyone
+>>> else.  That's the _real_ problem here.
 >>>
->>> On 24/08/15 10:22, Vinod Koul wrote:
->>>> On Mon, Aug 24, 2015 at 09:47:13AM +0100, Jon Hunter wrote:
->>>>>
->>>>> On 23/08/15 15:17, Vinod Koul wrote:
->>>>>> On Tue, Aug 18, 2015 at 02:49:09PM +0100, Jon Hunter wrote:
->>>>>>
->>>>>>> @@ -1543,7 +1531,7 @@ static int tegra_dma_pm_suspend(struct device *dev)
->>>>>>>  	int ret;
->>>>>>>  
->>>>>>>  	/* Enable clock before accessing register */
->>>>>>> -	ret = tegra_dma_runtime_resume(dev);
->>>>>>> +	ret = pm_runtime_get_sync(dev);
->>>>>>
->>>>>> why is this required ?
->>>>>
->>>>> Because the clock could be disabled when this function is called. This
->>>>> function saves the DMA context so that if the context is lost during
->>>>> suspend, it can be restored.
->>>>
->>>> Have you verified this? Coz my understanding is that when PM does suspend it
->>>> will esnure you are runtime resume if runtime suspended and then will do
->>>> suspend.
->>>> So you do not need to do above
->>>
->>> I see what you are saying. I did some testing with ftrace today to trace
->>> rpm and suspend/resume calls. If the dma controller is runtime suspended
->>> and I do not call pm_runtime_get_sync() above then I do not see any
->>> runtime resume of the dma controller prior to suspend. Now I was hoping
->>> that this would cause a complete kernel crash but it did not and so the
->>> DMA clock did not appear to be needed here (at least on the one board I
->>> tested). However, I would not go as far as to remove this and prefer to
->>> keep as above.
->>
->> Okay am adding Rafael here for his recommendations.
-> 
-> Well, and what is the question I'm supposed to answer, exactly?
-> 
-> I was in Seattle last week, so haven't been following this closely.
-> 
->> I have tested in past and if my driver was runtime suspended we were resumed
->> prior to being suspended. So I am not sure why you did not see that
->> behaviour, and if that is right we don't need to force resume here
-> 
-> We're adding code for skipping runtime-resume-before-system-suspend, because
-> it is not desirable in general.
-> 
-> The rule of thumb is that if you know you need to change the device's settings
-> (eg. because of wakeup being enabled or not) for system suspend and that
-> requires the device to be resumed, resume it.  It can stay suspended
-> otherwise.
-
-Thanks Rafael.
-
-Vinod, thinking about this some more, I am wondering if it is just
-better to get rid of the suspend/resume callbacks and simply handling
-the state in the runtime suspend/resume callbacks. I think that would be
-safe too, because once the clock has been disabled, then who knows what
-the context state will be.
-
-Cheers
-Jon
+>>> I've seen several DRM bindings go by which don't use the of-graph s=
+tuff,
+>>> which means that they'll never be compatible with generic component=
+s
+>>> which do use the of-graph stuff.
+>> It goes beyond bindings IMO. The use of the component framework or n=
+ot
+>> has been at the whim of driver writers as well. It is either used or
+>> private APIs are created. I'm using components and my need for it
+>> boils down to passing the struct drm_device pointer to the encoder.
+>> Other components like panels and bridges have different ways to atta=
+ch
+>> to the DRM driver.
+> I certainly support unification, but it needs to be reasonable. There
+> are cases where a different structure for the binding work better tha=
+n
+> another and I think this always needs to be evaluated on a case by ca=
+se
+> basis.
+>
+> Because of that I think it makes sense to make all these framework bi=
+ts
+> opt-in, otherwise we could easily end up in a situation where drivers
+> have to be rearchitected (or even DT bindings altered!) in order to b=
+e
+> able to reuse code.
+>
+> Thierry
