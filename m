@@ -1,93 +1,147 @@
-From: Rob Clark <robdclark@gmail.com>
-Subject: Re: [PATCH 1/7] drm/vc4: Add devicetree bindings for VC4.
-Date: Tue, 25 Aug 2015 16:42:18 -0400
-Message-ID: <CAF6AEGu2fi0M7DsicHz+5SDHi1DyDRmvWjkmYPPgY6pZ423WcA@mail.gmail.com>
-References: <1439427380-2436-1-git-send-email-eric@anholt.net>
- <1439427380-2436-2-git-send-email-eric@anholt.net>
- <55CEC25E.7070303@wwwdotorg.org>
- <874mjxwyx5.fsf@eliezer.anholt.net>
- <CAL_JsqJxiGUR5BxBPyR3-0NxqWsOxMGrWQA6cMXe2pjTom__nw@mail.gmail.com>
+From: Boris Brezillon <boris.brezillon@free-electrons.com>
+Subject: Re: [PATCH v10 2/5] mtd: nand: vf610_nfc: add hardware BCH-ECC
+ support
+Date: Tue, 25 Aug 2015 22:43:35 +0200
+Message-ID: <20150825224335.6f846a28@bbrezillon>
+References: <1438594050-4595-1-git-send-email-stefan@agner.ch>
+	<1438594050-4595-3-git-send-email-stefan@agner.ch>
+	<ff2e2716578a1ae5f0c4b0e0ca8bbdc3@agner.ch>
+	<20150825195411.GJ81844@google.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <CAL_JsqJxiGUR5BxBPyR3-0NxqWsOxMGrWQA6cMXe2pjTom__nw@mail.gmail.com>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Rob Herring <robherring2@gmail.com>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Stephen Warren <swarren@wwwdotorg.org>, Lee Jones <lee@kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, dri-devel <dri-devel@lists.freedesktop.org>, linux-rpi-kernel@lists.infradead.org, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20150825195411.GJ81844@google.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Brian Norris <computersforpeace@gmail.com>, Stefan Agner <stefan@agner.ch>
+Cc: sebastian@breakpoint.cc, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, shawn.guo@linaro.org, kernel@pengutronix.de, marb@ixxat.de, aaron@tastycactus.com, bpringlemeir@gmail.com, linux-mtd@lists.infradead.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, albert.aribaud@3adev.fr, klimov.linux@gmail.com, Bill Pringlemeir <bpringlemeir@nbsps.com>
 List-Id: devicetree@vger.kernel.org
 
-T24gTW9uLCBBdWcgMjQsIDIwMTUgYXQgOTo0NyBBTSwgUm9iIEhlcnJpbmcgPHJvYmhlcnJpbmcy
-QGdtYWlsLmNvbT4gd3JvdGU6Cj4gT24gTW9uLCBBdWcgMTcsIDIwMTUgYXQgMTozMCBQTSwgRXJp
-YyBBbmhvbHQgPGVyaWNAYW5ob2x0Lm5ldD4gd3JvdGU6Cj4+IFN0ZXBoZW4gV2FycmVuIDxzd2Fy
-cmVuQHd3d2RvdG9yZy5vcmc+IHdyaXRlczoKPj4KPj4+IE9uIDA4LzEyLzIwMTUgMDY6NTYgUE0s
-IEVyaWMgQW5ob2x0IHdyb3RlOgo+Pj4+IFNpZ25lZC1vZmYtYnk6IEVyaWMgQW5ob2x0IDxlcmlj
-QGFuaG9sdC5uZXQ+Cj4+Pgo+Pj4gVGhpcyBvbmUgZGVmaW5pdGVseSBuZWVkcyBhIHBhdGNoIGRl
-c2NyaXB0aW9uLCBzaW5jZSBzb21lb25lIG1pZ2h0IG5vdAo+Pj4ga25vdyB3aGF0IGEgVkM0IGlz
-LCBhbmQgImdpdCBsb2ciIHdvbid0IHNob3cgdGhlIHRleHQgZnJvbSB0aGUgYmluZGluZwo+Pj4g
-ZG9jIGl0c2VsZi4gSSdkIHN1Z2dlc3QgYWRkaW5nIHRoZSBpbml0aWFsIHBhcmFncmFwaCBvZiB0
-aGUgYmluZGluZyBkb2MKPj4+IGFzIHRoZSBwYXRjaCBkZXNjcmlwdGlvbiwgb3IgbW9yZS4KPj4+
-Cj4+Pj4gZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9ncHUv
-YnJjbSxiY20tdmM0LnR4dCBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9ncHUv
-YnJjbSxiY20tdmM0LnR4dAo+Pgo+Pj4+ICstIGh2c3M6ICAgICAgICAgICAgIExpc3Qgb2YgcmVm
-ZXJlbmNlcyB0byBIVlMgdmlkZW8gc2NhbGVycwo+Pj4+ICstIGVuY29kZXJzOiBMaXN0IG9mIHJl
-ZmVyZW5jZXMgdG8gb3V0cHV0IGVuY29kZXJzIChIRE1JLCBTRFRWKQo+Pj4KPj4+IFdvdWxkIGl0
-IG1ha2Ugc2Vuc2UgdG8gbWFrZSBhbGwgdGhvc2Ugbm9kZXMgY2hpbGQgbm9kZSBvZiB0aGUgdmM0
-Cj4+PiBvYmplY3QuIFRoYXQgd2F5LCB0aGVyZSdzIG5vIG5lZWQgdG8gaGF2ZSB0aGVzZSBsaXN0
-cyBvZiBvYmplY3RzOyB0aGV5Cj4+PiBjYW4gYmUgYXV0b21hdGljYWxseSBidWlsdCB1cCBhcyB0
-aGUgRFQgaXMgZW51bWVyYXRlZC4gSSBrbm93IHRoYXQgZS5nLgo+Pj4gdGhlIE5WSURJQSBUZWdy
-YSBob3N0MXggYmluZGluZyB3b3JrcyB0aGlzIHdheSwgYW5kIEkgdGhpbmsgaXQgbWF5IGhhdmUK
-Pj4+IGJlZW4gaW5zcGlyZWQgYnkgb3RoZXIgc2ltaWxhciBjYXNlcy4KPj4KPj4gSSd2ZSBsb29r
-ZWQgYXQgdGVncmEsIGFuZCB0aGUgY29tcG9uZW50IHN5c3RlbSB1c2VkIGJ5IG1zbSBhcHBlYXJz
-IHRvIGJlCj4+IG5pY2VyIHRoYW4gaXQuICBUbyBmb2xsb3cgdGVncmEncyBtb2RlbCwgaXQgbG9v
-a3MgbGlrZSBJIG5lZWQgdG8gYnVpbGQKPj4gdGhpcyBleHRyYSBidXMgdGhpbmcgY29ycmVzcG9u
-ZGluZyB0byBob3N0MXggdGhhdCBpcyBlZmZlY3RpdmVseSB0aGUKPj4gZHJpdmVycy9iYXNlL2Nv
-bXBvbmVudC5jIGNvZGUsIHNvIHRoYXQgSSBjYW4gZ2V0IGF0IHZjNCdzIHN0cnVjdHVyZSBmcm9t
-Cj4+IHRoZSBjb21wb25lbnQgZHJpdmVycy4KPj4KPj4+IE9mIGNvdXJzZSwgdGhpcyBpcyBvbmx5
-IGFwcHJvcHJpYXRlIGlmIHRoZSBIVyBtb2R1bGVzIHJlYWxseSBhcmUKPj4+IGxvZ2ljYWxseSBj
-aGlsZHJlbiBvZiB0aGUgVkM0IEhXIG1vZHVsZS4gUGVyaGFwcyB0aGV5IGFyZW4ndC4gSWYgdGhl
-eQo+Pj4gYXJlbid0IHRob3VnaCwgSSB3b25kZXIgd2hhdCB0aGlzICJ2YzQiIG1vZHVsZSBhY3R1
-YWxseSByZXByZXNlbnRzIGluIEhXPwo+Pgo+PiBJdCdzIHRoZSBzdWJzeXN0ZW0sIHNhbWUgYXMg
-d2UgdXNlIGEgc3Vic3lzdGVtIG5vZGUgZm9yIG1zbSwgc3RpLAo+PiByb2NrY2hpcCwgaW14LCBh
-bmQgZXh5bm9zLiAgVGhpcyBhcHBlYXJzIHRvIGJlIHRoZSBjb21tb24gbW9kZWwgb2YgaG93Cj4+
-IHRoZSBjb2xsZWN0aW9uIG9mIGdyYXBoaWNzLXJlbGF0ZWQgY29tcG9uZW50cyBpcyByZXByZXNl
-bnRlZCBpbiB0aGUgRFQuCj4KPiBJIHRoaW5rIG1vc3Qgb2YgdGhlc2UgYmluZGluZ3MgYXJlIHdy
-b25nLiBUaGV5IGFyZSBncm91cGVkIHRvZ2V0aGVyCj4gYmVjYXVzZSB0aGF0IGlzIHdoYXQgRFJN
-IHdhbnRzIG5vdCBiZWNhdXNlIHRoYXQgcmVmbGVjdHMgdGhlIGgvdy4gU28KPiBjb252aW5jZSBt
-ZSB0aGlzIGlzIG9uZSBibG9jaywgbm90IHRoYXQgaXQgaXMgd2hhdCBvdGhlciBwZW9wbGUgZG8u
-CgpJIHRoaW5rLCB3aGVuIGl0IGNvbWVzIHRvIG1vcmUgY29tcGxleCBkcml2ZXIgc3Vic3lzdGVt
-cyAobGlrZSBkcm0gaW4KcGFydGljdWxhcikgd2UgaGF2ZSBhIGJpdCBvZiBtaXNtYXRjaCBiZXR3
-ZWVuIGhvdyB0aGluZ3MgbG9vayBmcm9tIHRoZQoicHVyZSBodyBpZ25vcmluZyBzdyIgcGVyc3Bl
-Y3RpdmUsIGFuZCB0aGUgImhvdyBzdyBhbmQgaW4gcGFydGljdWxhcgp1c2Vyc3BhY2UgZXhwZWN0
-cyB0aGluZ3MiIHBlcnNwZWN0aXZlLiAgTWF5YmUgaXQgaXMgbGVzcyBhIHByb2JsZW0gaW4Kb3Ro
-ZXIgc3Vic3lzdGVtcywgd2hlcmUgYmluZGluZ3MgbWFwIHRvIHRoaW5ncyB0aGF0IGFyZSBvbmx5
-IHZpc2libGUKaW4gdGhlIGtlcm5lbCwgb3Igd2VsbCBkZWZpbmVkIGRldmljZXMgbGlrZSB1YXJ0
-IG9yIHNhdGEgY29udHJvbGxlci4KQnV0IHdoZW4gZ2l2ZW4gdGhlIGNob2ljZSwgSSdtIGdvaW5n
-IHRvIGVyciBvbiB0aGUgc2lkZSBvZiBub3QKY29uZnVzaW5nIHVzZXJzcGFjZSBhbmQgdGhlIGxh
-cmdlIHNvZnR3YXJlIHN0YWNrIHRoYXQgc2l0cyBhYm92ZQpkcm0va21zLCBvdmVyIGR0IHB1cml0
-eS4KCk1heWJlIGl0IHdvdWxkIGJlIG5pY2UgdG8gaGF2ZSBhIHNvcnQgb2YgZHQgb3ZlcmxheSB0
-aGF0IGFkZHMgdGhlIGJpdHMKbmVlZGVkIHRvIHRpZSB0b2dldGhlciBodyBibG9ja3MgdGhhdCBz
-aG91bGQgYmUgYXNzZW1ibGVkIGludG8gYQpzaW5nbGUgbG9naWNhbCBkZXZpY2UgZm9yIGxpbnV4
-IGFuZCB1c2Vyc3BhY2UgKGJ1dCBtYXliZSBub3Qgc29tZQpvdGhlciBoeXBvdGhldGljYWwgb3Bl
-cmF0aW5nIHN5c3RlbSkuICBCdXQgc28gZmFyIHRoYXQgZG9lc24ndCBleGlzdC4KQWxsIHdlIGhh
-dmUgaXMgYSBoYW1tZXIgKGRldmljZXRyZWUpLCBldmVyeXRoaW5nIGxvb2tzIGxpa2UgYSBuYWls
-LgpFbmQgcmVzdWx0IGlzIHdlIGVuZCB1cCBhZGRpbmcgc29tZSB0aGluZ3MgaW4gdGhlIGJpbmRp
-bmdzIHdoaWNoCmFyZW4ndCBwdXJlbHkgYWJvdXQgdGhlIGh3LiAgVW50aWwgc29tZW9uZSBpbnZl
-bnRzIGEgc2NyZXdkcml2ZXIsIEknbQpub3Qgc3VyZSB3aGF0IGVsc2UgdG8gZG8uICBJbiB0aGUg
-ZW5kLCBvdGhlciBoeXBvdGhldGljYWwgT1MgaXMgZnJlZQp0byBpZ25vcmUgdGhvc2UgZXh0cmEg
-ZmllbGRzIGluIHRoZSBiaW5kaW5ncyBpZiBpdCBkb2Vzbid0IG5lZWQgdGhlbS4KU28gbWVoPwoK
-QlIsCi1SCgoKPiBSb2IKPgo+IF9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fCj4gbGludXgtYXJtLWtlcm5lbCBtYWlsaW5nIGxpc3QKPiBsaW51eC1hcm0ta2Vy
-bmVsQGxpc3RzLmluZnJhZGVhZC5vcmcKPiBodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWls
-bWFuL2xpc3RpbmZvL2xpbnV4LWFybS1rZXJuZWwKX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlz
-dHMuZnJlZWRlc2t0b3Aub3JnCmh0dHA6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9s
-aXN0aW5mby9kcmktZGV2ZWwK
+Brian, Stefan,
+
+On Tue, 25 Aug 2015 12:54:11 -0700
+Brian Norris <computersforpeace@gmail.com> wrote:
+
+> On Mon, Aug 03, 2015 at 11:28:43AM +0200, Stefan Agner wrote:
+> > On 2015-08-03 11:27, Stefan Agner wrote:
+> > <snip>
+> > > +static inline int vf610_nfc_correct_data(struct mtd_info *mtd, uint8_t *dat,
+> > > +					 uint8_t *oob, int oob_loaded)
+> > > +{
+> > > +	struct vf610_nfc *nfc = mtd_to_nfc(mtd);
+> > > +	u8 ecc_status;
+> > > +	u8 ecc_count;
+> > > +	int flip;
+> > > +
+> > > +	ecc_status = __raw_readb(nfc->regs + ECC_SRAM_ADDR * 8 + ECC_OFFSET);
+> 
+> Why __raw_readb()? That's not normally encourage, and it has issues with
+> endianness. It looks like maybe this is actulaly a 32-bit register, and
+> you're having trouble when trying to do bytewise access? I see this
+> earlier:
+> 
+> /*
+>  * ECC status is stored at NFC_CFG[ECCADD] +4 for little-endian
+>  * and +7 for big-endian SoCs.
+>  */
+> #ifdef __LITTLE_ENDIAN
+> #define ECC_OFFSET      4
+> #else
+> #define ECC_OFFSET      7
+> #endif
+> 
+> So maybe you really just want:
+> 
+> #define ECC_OFFSET	4
+> ...
+> 	ecc_status = vf610_nfc_read(ECC_SRAM_ADDR * 8 + ECC_OFFSET) & 0xff;
+> 
+> ?
+> 
+> > > +	ecc_count = ecc_status & ECC_ERR_COUNT;
+> > > +
+> > > +	if (!(ecc_status & ECC_STATUS_MASK))
+> > > +		return ecc_count;
+> > > +
+> > > +	if (!oob_loaded)
+> > > +		vf610_nfc_read_buf(mtd, oob, mtd->oobsize);
+> > > +
+> > > +	/*
+> > > +	 * On an erased page, bit count (including OOB) should be zero or
+> > > +	 * at least less then half of the ECC strength.
+> > > +	 */
+> > > +	flip = count_written_bits(dat, nfc->chip.ecc.size, ecc_count);
+> 
+> Another side note: why are you using ecc_count as a max threshold? AIUI,
+> an ECC algorithm doesn't really report useful error count information if
+> it's above the correction limit. So wouldn't we be looking to count up
+> to our SW threshold? i.e., ecc.strength / 2, or similar? Similar
+> comments below.
+
+The exact threshold value is still something I'm not sure about, though
+I'm sure it should be correlated to ecc.strength value (whether it's
+directly set to ecc.strength or less than ecc.strength is something
+we'll have to figure out).
+
+> 
+> > > +	flip += count_written_bits(oob, mtd->oobsize - nfc->chip.ecc.bytes,
+> > > +				   ecc_count);
+> > 
+> > With ECC the controller seems to clear the ECC bytes in SRAM buffer.
+> > This is a dump of 64 Bit OOB with the 32-error ECC mode which requires
+> > 60 bytes of OOB for ECC:
+> > 
+> > [   22.190273] ff ff ff ff 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+> > 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+> > 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+> 
+> Hmm, that's not really good. The point is that we need to make sure that
+> everything that could have been programmed (including the ECC area) was
+> not actually programmed. But your ECC controller is not, contrary to
+> MTD's expectations, dumping raw uncorrected data here.
+
+Yep, for this test we really need the ECC bytes generated for the chunk
+you're currently testing.
+How to retrieve those bytes really depends on your NAND controller, but
+such controllers usually provides a way to disable the ECC engine. The
+only thing you'll have to do in this case is disable the ECC engine and
+read the OOB data (using RNDOUT and read_buf for example).
+
+> 
+> > [   22.209698] vf610_nfc_correct_data, flips 1
+> > 
+> > Not sure if this is acceptable, but I now only count the bits in the
+> > non-ECC area of the OOB.
+> 
+> That's not the intention of my suggestion. You're still missing out on a
+> class of patterns that might look close to all 0xff but are not
+> actually.
+
+Exactly.
+
+> 
+> If the HW ECC really doesn't give you valid data+OOB at this point, then
+> you might have to re-read with ECC disabled. Of course, that's got a
+> performance cost...
+
+As suggested above, if that's possible, reading the OOB area (or a
+portion of the OOB area) with the ECC engine disabled should be enough.
+
+> 
+> Or perhaps Boris has a better suggestion? He's been surveying other NAND
+> drivers that need to do similar things, and he's working on providing
+> some support code for common design patterns.
+
+Yep, the patch series is here in case you want to have a look [1].
+
+Best Regards,
+
+Boris
+
+[1]https://patchwork.ozlabs.org/patch/509970/
+
+
+-- 
+Boris Brezillon, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
