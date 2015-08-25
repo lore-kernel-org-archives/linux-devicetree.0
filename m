@@ -1,118 +1,52 @@
-From: Fu Wei <fu.wei@linaro.org>
-Subject: Re: [PATCH v7 8/8] clocksource: simplify ACPI code in arm_arch_timer.c
-Date: Wed, 26 Aug 2015 01:19:45 +0800
-Message-ID: <CADyBb7sVGePKtU45_DBGd74fykAPVshmbnRQJDDOrrvoHTGcKQ@mail.gmail.com>
-References: <=fu.wei@linaro.org>
-	<1440435683-7343-1-git-send-email-fu.wei@linaro.org>
-	<1440435683-7343-9-git-send-email-fu.wei@linaro.org>
-	<alpine.DEB.2.11.1508241942450.3873@nanos>
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v3 2/4] spi: mediatek: replace int with u32, delete TAB
+ and define MTK_SPI_PAUSE_INT_STATUS marco
+Date: Tue, 25 Aug 2015 18:47:21 +0100
+Message-ID: <20150825174721.GH12878@sirena.org.uk>
+References: <1440387918-22191-1-git-send-email-leilk.liu@mediatek.com>
+ <1440387918-22191-3-git-send-email-leilk.liu@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <alpine.DEB.2.11.1508241942450.3873@nanos>
-Sender: linux-doc-owner@vger.kernel.org
-To: Thomas Gleixner <tglx@linutronix.de>
-Cc: Suravee Suthikulpanit <Suravee.Suthikulpanit@amd.com>, Hanjun Guo <hanjun.guo@linaro.org>, Linaro ACPI Mailman List <linaro-acpi@lists.linaro.org>, linux-watchdog@vger.kernel.org, devicetree@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, linux-doc@vger.kernel.org, Wei Fu <tekkamanninja@gmail.com>, G Gregory <graeme.gregory@linaro.org>, Al Stone <al.stone@linaro.org>, Arnd Bergmann <arnd@arndb.de>, Guenter Roeck <linux@roeck-us.net>, Vipul Gandhi <vgandhi@codeaurora.org>, Wim Van Sebroeck <wim@iguana.be>, Jon Masters <jcm@redhat.com>, Leo Duran <leo.duran@amd.com>, Jonathan Corbet <corbet@lwn.net>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Rafael Wysocki <rjw@rjwysocki.net>, dyoung@redhat.com, panand@redhat.com, Daniel Lezcano <daniel.lezcano@linaro.org>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="jaoouwwPWoQSJZYp"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1440387918-22191-3-git-send-email-leilk.liu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Leilk Liu <leilk.liu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Thomas,
 
+--jaoouwwPWoQSJZYp
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-On 25 August 2015 at 01:50, Thomas Gleixner <tglx@linutronix.de> wrote:
-> On Tue, 25 Aug 2015, fu.wei@linaro.org wrote:
->
-> You Cc the world and some more on your patch, but you fail to add the
-> maintainers of the clocksource code to the Cc list. Sigh.
+On Mon, Aug 24, 2015 at 11:45:16AM +0800, Leilk Liu wrote:
 
-my fault
-So sorry for that, I will add the maintainers of clocksource into cc list.
+> this patch replaces int with u32, deletes TAB, and defines
+> MTK_SPI_PAUSE_INT_STATUS marco.
 
->
->> From: Fu Wei <fu.wei@linaro.org>
->>
->> The patch update arm_arch_timer driver to use the function
->> provided by the new GTDT driver of ACPI.
->> By this way, arm_arch_timer.c can be simplified, and separate
->> all the ACPI GTDT knowledge from this timer driver.
->
-> That's not a proper changelog and this patch want's to be split in two:
->
-> 1) Implement the new ACPI function
->
-> 2) Make use of it
+You've listed three changes in one patch and they're not obviously
+interrelated.  As has been said before one change per patch please :(
 
-Yes, you are right , will improve this
+--jaoouwwPWoQSJZYp
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
->
->> index 0aa135d..99505bb 100644
->> --- a/drivers/clocksource/arm_arch_timer.c
->> +++ b/drivers/clocksource/arm_arch_timer.c
->> @@ -817,68 +817,30 @@ CLOCKSOURCE_OF_DECLARE(armv7_arch_timer_mem, "arm,armv7-timer-mem",
->>                      arch_timer_mem_init);
->>
->>  #ifdef CONFIG_ACPI
->> -static int __init map_generic_timer_interrupt(u32 interrupt, u32 flags)
->> -{
->> -     int trigger, polarity;
->> -
->> -     if (!interrupt)
->> -             return 0;
->> -
->> -     trigger = (flags & ACPI_GTDT_INTERRUPT_MODE) ? ACPI_EDGE_SENSITIVE
->> -                     : ACPI_LEVEL_SENSITIVE;
->> -
->> -     polarity = (flags & ACPI_GTDT_INTERRUPT_POLARITY) ? ACPI_ACTIVE_LOW
->> -                     : ACPI_ACTIVE_HIGH;
->> -
->> -     return acpi_register_gsi(NULL, interrupt, trigger, polarity);
->> -}
->> -
->>  /* Initialize per-processor generic timer */
->> -static int __init arch_timer_acpi_init(struct acpi_table_header *table)
->> +void __init arch_timer_acpi_init(void)
->>  {
->
-> And how is that supposed to work when we have next generation CPUs
-> which implement a different timer? You break multisystem kernels that
-> way.
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
 
-yes, you are right, If there is a  next generation CPUs  which
-implement a different timer, (maybe) this driver can not work.
-we may need a new timer driver.
+iQEcBAEBCAAGBQJV3KooAAoJECTWi3JdVIfQL1gH/1IAlVcjXNIUSJBhRaJaHA2W
+MPy4v5ahSC45/5zayi9jMUlU6fG/owD105MDTsHaROhL1roFLo3AEbs9RVfj6P0z
+bTAk7/SM8wS7C5iwCUbmEljmRZSFMBr1N+Y1/aNHB51o6CpOijkEN44hjVzN7TCO
+tFxIoo1UCynOkWjTtCyLm3RnNOvhBxZLKM0Wt1Pm0wC0CDsY6Q/Fv9jzVC91iHBG
+g1T5eSA+XXs75iZA68GNoBrUb75J3IU8wVZCakVuD3t+qskzsMr8PjnLBu/VahCS
+2hztij7BnEKFM7FFkeqhEi2P8UK7e4+Auuk1pO2bndJHiTb3uVqHR4lmjLFAgwA=
+=9cGh
+-----END PGP SIGNATURE-----
 
-But,
-(1) for now,  aarch64  core always has the arch timer(this timer is
-part of aarch64 architecture).
-and the existing code make  ARM64 kernel "select ARM_ARCH_TIMER "
-(2) GTDT is designed for generic timer, so in this call "
-arch_timer_acpi_init"  we  parse the gtdt info.
-
-(3) once we have a ARM64 CPUs which implement a different timer, we
-may need to select a right timer in the config stage.
-and this timer may not be described in GTDT.  So we can implement
-another arch_timer_acpi_init by that time in new timer driver..
-if the new time still uses GTDT(or new version GTDT), we may need to
-update gtdt.c for new timer by that time.
-
-but before we really have this new timer, I think this code is OK to use.
-
-Do I understand your comment correctly? :-)
-
->
-> Thanks,
->
->         tglx
-
-
-
--- 
-Best regards,
-
-Fu Wei
-Software Engineer
-Red Hat Software (Beijing) Co.,Ltd.Shanghai Branch
-Ph: +86 21 61221326(direct)
-Ph: +86 186 2020 4684 (mobile)
-Room 1512, Regus One Corporate Avenue,Level 15,
-One Corporate Avenue,222 Hubin Road,Huangpu District,
-Shanghai,China 200021
+--jaoouwwPWoQSJZYp--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
