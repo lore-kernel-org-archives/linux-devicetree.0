@@ -1,188 +1,76 @@
-From: Kevin Hilman <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [RESEND PATCH v16 4/4] ARM: dts: add the support power-domain node on RK3288 SoCs
-Date: Tue, 25 Aug 2015 15:45:55 -0700
-Message-ID: <7htwrn6l7g.fsf@deeprootsystems.com>
-References: <1440487486-6154-1-git-send-email-wxt@rock-chips.com>
-	<1440487486-6154-5-git-send-email-wxt@rock-chips.com>
-	<7hfv37axhj.fsf@deeprootsystems.com>
-	<CAD=FV=V6oG+9U=W_JZmqCuNo-9-5wW8ffZzG7ZE_3cnSTNAjFQ@mail.gmail.com>
+From: "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
+Subject: Re: [RFC PATCH 1/7] DMA: tegra-apb: Correct runtime-pm usage
+Date: Wed, 26 Aug 2015 00:46:46 +0200
+Message-ID: <55DCF056.40004@intel.com>
+References: <1439905755-25150-1-git-send-email-jonathanh@nvidia.com> <55DB1AA9.7090906@nvidia.com> <20150824142143.GK13546@localhost> <13590312.K3yoQT5YDc@vostro.rjw.lan> <55DC375F.1070907@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAD=FV=V6oG+9U=W_JZmqCuNo-9-5wW8ffZzG7ZE_3cnSTNAjFQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-	(Doug Anderson's message of "Tue, 25 Aug 2015 14:48:41 -0700")
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Cc: Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Heiko =?utf-8?Q?St=C3=BCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Tomasz Figa <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-kernel@vger.kernel.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, "devicetree@vger.kernel.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "jinkun.hong" <jinkun.hong-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <55DC375F.1070907@nvidia.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Jon Hunter <jonathanh@nvidia.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Vinod Koul <vinod.koul@intel.com>
+Cc: Laxman Dewangan <ldewangan@nvidia.com>, Stephen Warren <swarren@wwwdotorg.org>, Thierry Reding <thierry.reding@gmail.com>, Alexandre Courbot <gnurou@gmail.com>, dmaengine@vger.kernel.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org> writes:
-
-> Kevin,
+On 8/25/2015 11:37 AM, Jon Hunter wrote:
+> On 25/08/15 01:04, Rafael J. Wysocki wrote:
+>> On Monday, August 24, 2015 07:51:43 PM Vinod Koul wrote:
+>>> On Mon, Aug 24, 2015 at 02:22:49PM +0100, Jon Hunter wrote:
+>>>> On 24/08/15 10:22, Vinod Koul wrote:
+>>>>> On Mon, Aug 24, 2015 at 09:47:13AM +0100, Jon Hunter wrote:
+>>>>>> On 23/08/15 15:17, Vinod Koul wrote:
+>>>>>>> On Tue, Aug 18, 2015 at 02:49:09PM +0100, Jon Hunter wrote:
+>>>>>>>
+>>>>>>>> @@ -1543,7 +1531,7 @@ static int tegra_dma_pm_suspend(struct device *dev)
+>>>>>>>>   	int ret;
+>>>>>>>>   
+>>>>>>>>   	/* Enable clock before accessing register */
+>>>>>>>> -	ret = tegra_dma_runtime_resume(dev);
+>>>>>>>> +	ret = pm_runtime_get_sync(dev);
+>>>>>>> why is this required ?
+>>>>>> Because the clock could be disabled when this function is called. This
+>>>>>> function saves the DMA context so that if the context is lost during
+>>>>>> suspend, it can be restored.
+>>>>> Have you verified this? Coz my understanding is that when PM does suspend it
+>>>>> will esnure you are runtime resume if runtime suspended and then will do
+>>>>> suspend.
+>>>>> So you do not need to do above
+>>>> I see what you are saying. I did some testing with ftrace today to trace
+>>>> rpm and suspend/resume calls. If the dma controller is runtime suspended
+>>>> and I do not call pm_runtime_get_sync() above then I do not see any
+>>>> runtime resume of the dma controller prior to suspend. Now I was hoping
+>>>> that this would cause a complete kernel crash but it did not and so the
+>>>> DMA clock did not appear to be needed here (at least on the one board I
+>>>> tested). However, I would not go as far as to remove this and prefer to
+>>>> keep as above.
+>>> Okay am adding Rafael here for his recommendations.
+>> Well, and what is the question I'm supposed to answer, exactly?
+>>
+>> I was in Seattle last week, so haven't been following this closely.
+>>
+>>> I have tested in past and if my driver was runtime suspended we were resumed
+>>> prior to being suspended. So I am not sure why you did not see that
+>>> behaviour, and if that is right we don't need to force resume here
+>> We're adding code for skipping runtime-resume-before-system-suspend, because
+>> it is not desirable in general.
+>>
+>> The rule of thumb is that if you know you need to change the device's settings
+>> (eg. because of wakeup being enabled or not) for system suspend and that
+>> requires the device to be resumed, resume it.  It can stay suspended
+>> otherwise.
+> Thanks Rafael.
 >
-> On Tue, Aug 25, 2015 at 2:07 PM, Kevin Hilman <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
->> Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org> writes:
->>
->>> We can add more domains node in the future.
->>> This patch add the needed clocks into power-controller.
->>> As the discuess about all the device clocks being listed in
->>> the power-domains itself.
->>>
->>> There are several reasons as follows:
->>>
->>> Firstly, the clocks need be turned off to save power when
->>> the system enter the suspend state. So we need to enumerate
->>> the clocks in the dts. In order to power domain can turn on and off.
->>
->> Yes, but this is the job of device drivers which are runtime PM adapted
->> to gate their own clocks.  I agree these clocks need to be enumerated in
->> the DTS, but they should be in the device nodes.
->
-> I _think_ what Caesar means is that the alternative to this patch is
-> to leave the clocks on all the time as they were during the early days
-> of Rockchip (AKA last year).  If the clocks are on all the time then
-> the power domain patches can work fine.  However, once you start
-> letting clocks turn off then you need to make sure that the power
-> domain code turns the back on temporarily.
+> Vinod, thinking about this some more, I am wondering if it is just
+> better to get rid of the suspend/resume callbacks and simply handling
+> the state in the runtime suspend/resume callbacks. I think that would be
+> safe too, because once the clock has been disabled, then who knows what
+> the context state will be.
 
-Yup, I understand that part, and many SoCs have this same "feature".
+One caveat here: system suspend may be invoked at any time, so you need 
+to ensure that the device is properly suspended when that happens.
 
->>> Secondly, the reset-circuit should reset be synchronous on RK3288,
->>> then sync revoked. So we need to enable clocks of all devices.
->>> In other words, we have to enable the clocks before you operate them
->>> if all the device clocks are included in someone domians.
->>
->> Yes, this is pretty common for reset.
->>
->>> Someone wish was to get the clocks by reading the clocks from the
->>> device nodes, We can do that but we can solve the above issues.
->>
->> I don't follow this sentence.  Are you saying doing that will not solve
->> the above issues?  Why not?  Please explain.
->>
->> If there are non-device clocks that also need to be enabled before
->> asserting reset, then those are candidates for the power-domain node,
->> but not device clocks.
->
-> It's been a long time and I don't know that I've reviewed every
-> revision of this series, but I think there was a proposal that we
-> shouldn't list clocks here.  Instead we should search through and find
-> all devices that refer to this power domain, reach in and find their
-> clocks, and turn them on.  Did I get that right?  
+I believe you at least need a ->suspend callback for that.
 
-Yes...
-
-> To put things in a
-> concrete way, for pd_vio we'd go through the entire device tree
-> ourselves and find all properties that look like "power-domains =
-> <&power RK3288_PD_VIO>;".  We'd then find the parent of those
-> properties and look for a property named "clocks".  We'd then iterate
-> over all those clocks and turn those on.  Did I get that right?
-
-... but you make it sound like more work than it is.  The genpd already
-keeps a list of devices that refer to the power domain.  In fact, the
-genpd 'attach' method can be platform-specific, so could be used to keep
-track of a list (or a subset) of clocks which are needed for reset.
-
-> The above doesn't seem like a terribly great idea to me for a number
-> of reasons, including:
->
-> 1. If I remember correctly, it's important to turn on clocks for
-> devices even if they're not something you're using / have a driver
-> for.  If you don't then the device won't get reset properly and this
-> can affect things like suspend/resume because the hardware in the SoC
-> will query all devices at suspend time to make sure they're ready.  
-
-Correct.  This condition also exists in the clock framework when unused
-clocks are disabled, or if you have drivers but PM_RUNTIME is disabled
-(which can happen from userspace on a per-device basis) so it needs to
-be understood and managed already.
-
-> If
-> a device is wedged because its clock wasn't on at the right them then
-> it will cause problems.
-
-Right.  I'm not arguing that the power domain doesn't have to deal with
-device clocks. It has to for sync reset.  The objection I have have is
-where these clocks are described.
-
-> 2. If we absolutely need to turn all clocks and we get clocks from
-> device tree nodes on then it means we need device tree nodes for every
-> device in the domain.  
-
-Isn't that the end goal?
-
-> These would be needed even if there are no
-> accepted bindings for this device yet.  So we'd need to do one of: A)
-> Block power domain patches on feature complete bindings for all
-> drivers; B) Make up non-approved compatible strings for all devices
-> and throw them into the DTS; C) Add nodes in the DTS without a
-> compatible string just to satisfy the power domain requirements.  None
-> of these seem terribly appealing.
-
-well, I think we can be slightly more accomodating than that and go for
-somewhere in between:
-
-D) In the power-domain DTS, clearly describe why each clock is needed by
-the power-domain.  In particular list out clocks that are not device
-clocks (and why they need to be asserted for reset) and separate those
-from device clocks which are only listed in the power-domain because
-there is not *yet* a driver/binding for that device node.
-
-Doing it that way also makes it clear that when a new driver/binding is
-added, the clocks should be removed from the power-domain node and put
-into the device node.
-
-Also, this addresses my primary concern that the DTS acurately describes
-the hardware.  IOW, in hardware, most of these clocks are are properties
-of devices, not power-domains, and the DT should reflect that.
-
-IMO, if it's not describing the hardware, and is a placeholder until a
-driver/binding is in place, it should be properly documented.
-
-> 3. It is entirely possible that there are clocks that will be listed
-> in the individual devices that aren't needed for powering on the power
-> domain.  I'd tend to believe that PCLK_EDP_CTRL (the pixel clock)
-> doesn't really need to be turned on when adjusting the "VIO" power
-> domain.  Right now Caesar has it listed, but it probably isn't needed
-> (Caesar: can you confirm?).
-
-Yes, I suspect there are several of those, which is also why I'd like to
-see the clocks in the power-domain node described in detail, and exacly 
-why they're needed to be enabled.
-
-Also, in the current proposed DTS, clocks that are listed in both device
-nodes and the power domain are also suspicous, especially when the
-device node doesn't have a power-domain property.  (c.f. vop[bl] nodes
-and ACLK_VOP[01] clocks.)  For that matter, this series doesn't add any
-devices to the power domains, which makes it even more confusing about
-how this is meant to work.  IOW, with no devices belonging to
-power-domains, how are the power-domain power_on/power_off callbacks
-being called?
-
-> 4. It seems just slightly brittle to be reaching into other device
-> nodes and making assumptions about their properties.  Yeah, it's
-> probably safe to assume that "clocks" has a list of clocks and
-> "power-domains" will point to something whose first entry is a
-> phandle, but it still seems just a tad bit like violating an
-> abstraction barrier.
-
-shmobile is already doing this with platform-specific genpd attach
-callbacks, and using the pm_clk API.  I don't see any issues with that.
-
-> Anyway, perhaps I'm misunderstanding, or perhaps my concerns are
-> simply not for important things.  If so feel free to yell at me.  ;)
-
-No need for me to yell. Your concerns are perfectly valid, and it's not
-my style anyways. ;)
-
-Thanks for the feedback,
-
-Kevin
-
-
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Cheers,
+Rafael
