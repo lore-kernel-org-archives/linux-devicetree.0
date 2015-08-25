@@ -1,75 +1,36 @@
-From: Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Subject: Re: [PATCH v1 3/3] arm64: dts: add Hi6220 mailbox node
-Date: Tue, 25 Aug 2015 16:51:22 +0200
-Message-ID: <CAKv+Gu-b=QvMF++V9UjULRxrGvoz-0ytFLeuLm8Y5sQH4p53Sw@mail.gmail.com>
-References: <20150821184059.GB2000@svinekod>
-	<20150824091845.GA28290@leoy-linaro>
-	<20150824095144.GA7139@leverpostej>
-	<1440411596.3517.12.camel@linaro.org>
-	<20150824114903.GT10728@bivouac.eciton.net>
-	<1440490427.10987.29.camel@linaro.org>
-	<20150825094630.GU10728@bivouac.eciton.net>
-	<1440497710.10987.42.camel@linaro.org>
-	<20150825104256.GB13471@leverpostej>
-	<1440510194.10987.52.camel@linaro.org>
-	<20150825142416.GW10728@bivouac.eciton.net>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20150825142416.GW10728@bivouac.eciton.net>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Leif Lindholm <leif.lindholm@linaro.org>
-Cc: Haojian Zhuang <haojian.zhuang@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Dan Zhao <dan.zhao@hisilicon.com>, Catalin Marinas <Catalin.Marinas@arm.com>, Will Deacon <Will.Deacon@arm.com>, Jian Zhang <zhangjian001@hisilicon.com>, Guangyue Zeng <zengguangyue@hisilicon.com>, Yiping Xu <xuyiping@hisilicon.com>, Jassi Brar <jassisinghbrar@gmail.com>, Wei Xu <xuwei5@hisilicon.com>, Zhenwei Wang <Zhenwei.wang@hisilicon.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Bintian Wang <bintian.wang@huawei.com>, Pawel Moll <Pawel.Moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "kongfei@hisilicon.com" <kongfei@hisilicon.com>, Rob Herring <robh+dt@kernel.org>, Haoju Mo <mohaoju@hisilicon.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "guodong.xu@linaro.org" <guodong.xu@l>
+From: Stanimir Varbanov <stanimir.varbanov@linaro.org>
+Subject: [PATCH] arm64: dts: qcom: Add RNG device tree node
+Date: Tue, 25 Aug 2015 18:37:42 +0300
+Message-ID: <1440517062-30313-1-git-send-email-stanimir.varbanov@linaro.org>
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Olof Johansson <olof@lixom.net>, Andy Gross <agross@codeaurora.org>, Stephen Boyd <sboyd@codeaurora.org>
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, Stanimir Varbanov <stanimir.varbanov@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-On 25 August 2015 at 16:24, Leif Lindholm <leif.lindholm@linaro.org> wrote:
-> On Tue, Aug 25, 2015 at 09:43:14PM +0800, Haojian Zhuang wrote:
->> Since we discussed a lot on this, let's make a conclusion on it.
->>
->> 1. UEFI could append the reserved buffer in it's memory mapping.
->
-> Yes. It needs to.
->
-> (I will let Mark comment on points 2-4.)
->
->> 5. A patch is necessary in kernel. If efi stub feature is enabled,
->>    arm kernel should not parse memory node or reserved memory buffer in
->>    DT any more.
->
-> This is already the case. The stub deletes any present memory nodes and
-> reserved entries in drivers/firmware/efi/libstub/fdt.c:update_fdt().
->
-> Then, during setup_arch(), arch/arm64/kernel/efi.c:efi_init() calls
-> reserve_regions(), which adds only those memory regions available for
-> use by Linux as RAM to memblock.
->
->>    Arm kernel should either fetch memory information from
->>    efi or DT.
->
-> Absolutely.
->
->>    Currently arm kernel fetch both efi memory information and
->>    reserved buffer from DTB at the same time.
->
-> No, it does not.
->
+Adds rng device tree node for msm8916 SoCs.
 
-It should not, but it does. Due to an oversight, the stub removes
-/memreserve/ entries but ignores the reserved-memory node completely.
+Signed-off-by: Stanimir Varbanov <stanimir.varbanov@linaro.org>
+---
+ arch/arm64/boot/dts/qcom/msm8916.dtsi |    7 +++++++
+ 1 file changed, 7 insertions(+)
 
-This was reported here in fact
-
-http://thread.gmane.org/gmane.linux.kernel.efi/5736/focus=5742
-
-but there has not been a followup to this series.
-
-I think it is fine to keep those memory reservations in the DT, but
-you should simply understand that UEFI does not parse the DT, so you
-need to tell it which memory it cannot touch. Otherwise, the firmware
-itself or anything that executes under it (UEFI drivers, the UEFI
-Shell, GRUB, the UEFI stub in the kernel) will think it is available
-and may allocate it for its own use. This may include runtime services
-regions that will remain reserved even after exiting boot services.
-
+diff --git a/arch/arm64/boot/dts/qcom/msm8916.dtsi b/arch/arm64/boot/dts/qcom/msm8916.dtsi
+index 0f49ebd0aa8b..060c6c53ff33 100644
+--- a/arch/arm64/boot/dts/qcom/msm8916.dtsi
++++ b/arch/arm64/boot/dts/qcom/msm8916.dtsi
+@@ -215,5 +215,12 @@
+ 			interrupt-controller;
+ 			#interrupt-cells = <4>;
+ 		};
++
++		rng@22000 {
++			compatible = "qcom,prng";
++			reg = <0x00022000 0x200>;
++			clocks = <&gcc GCC_PRNG_AHB_CLK>;
++			clock-names = "core";
++		};
+ 	};
+ };
 -- 
-Ard.
+1.7.9.5
