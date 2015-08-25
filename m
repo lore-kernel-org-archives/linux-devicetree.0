@@ -1,58 +1,91 @@
-From: Haojian Zhuang <haojian.zhuang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v1 3/3] arm64: dts: add Hi6220 mailbox node
-Date: Tue, 25 Aug 2015 21:43:14 +0800
-Message-ID: <1440510194.10987.52.camel@linaro.org>
-References: <1439977055-1747-1-git-send-email-leo.yan@linaro.org>
-	 <1439977055-1747-4-git-send-email-leo.yan@linaro.org>
-	 <20150821184059.GB2000@svinekod> <20150824091845.GA28290@leoy-linaro>
-	 <20150824095144.GA7139@leverpostej> <1440411596.3517.12.camel@linaro.org>
-	 <20150824114903.GT10728@bivouac.eciton.net>
-	 <1440490427.10987.29.camel@linaro.org>
-	 <20150825094630.GU10728@bivouac.eciton.net>
-	 <1440497710.10987.42.camel@linaro.org> <20150825104256.GB13471@leverpostej>
+From: Pavel Pisa <ppisa4lists-hnFyeMMZ0rvQT0dZR+AlfA@public.gmane.org>
+Subject: Myir AM437x Rico board support for Linux 4.1 kernel
+Date: Tue, 25 Aug 2015 15:39:40 +0200
+Message-ID: <201508251539.41234.ppisa4lists@pikron.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: Text/Plain;
+  charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20150825104256.GB13471@leverpostej>
+Content-Disposition: inline
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: Leif Lindholm <leif.lindholm-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "leo.yan-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <leo.yan-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Catalin Marinas <Catalin.Marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Bintian Wang <bintian.wang-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, Yiping Xu <xuyiping-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Wei Xu <xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "guodong.xu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <guodong.xu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Jian Zhang <zhangjian001-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Zhenwei Wang <Zhenwei.wang-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Haoju Mo <mohaoju-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Dan Zhao <dan.zhao-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, kongfei@hisil
+To: linux-arm-kernel-xIg/pKzrS19vn6HldHNs0ANdhmdF6hFW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>, Dan Murphy <DMurphy-l0cyMroinI0@public.gmane.org>, support-0A6ZgDe55FJWk0Htik3J/w@public.gmane.org, =?iso-8859-1?q?Beno=EEt_Cousson?= <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Kevin Su <kevin.su-0A6ZgDe55FJWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 2015-08-25 at 11:42 +0100, Mark Rutland wrote:
-> > > Are you then going to hack GRUB, release a special HiKey version of
-> > > GRUB, not support any other versions, and still can your firmware
-> > > UEFI?
-> > 
-> > I don't need to hack GRUB at all.
-> 
-> Then it is working for you by pure chance alone.
-> 
-> Please listen to the advice you are being given here; we're trying to
-> ensure that your platform functions (and continues to function) as best
-> it can.
+Hello everybody,
 
-Since we discussed a lot on this, let's make a conclusion on it.
+I have been asked to help with Linux on Myir Rico board.
+I have decided to try actual stable kernel from Ti tree
 
-1. UEFI could append the reserved buffer in it's memory mapping.
-2. These reserved buffer must be declared in DT, since we also need to
-   support non-UEFI (uboot) at the same time.
-3. Mailbox node should reference reserved buffer by phandle in DT. Then
-   map the buffer as non-cacheable in driver.
-4. These reserved buffer must use "no-map" property since it should be
-   non-cacheable in driver.
-5. A patch is necessary in kernel. If efi stub feature is enabled,
-   arm kernel should not parse memory node or reserved memory buffer in
-   DT any more. Arm kernel should either fetch memory information from 
-   efi or DT. Currently arm kernel fetch both efi memory information and
-   reserved buffer from DTB at the same time.
+  git://git.ti.com/ti-linux-kernel/ti-linux-kernel.git
+     branch ti-linux-4.1.y
 
-Do you agree on these points?
+instead of delivered dated 3.12.10 one to solve some issues
+and have chance to port possible enhancements to mainline.
 
-Regards
-Haojian
+I have successfully prepared environment which loads kernel
+over TFTP and boot actual Debian Jessie armhf from NFS export.
 
+Because I have not found up to date device tree for this
+board I have analyzed delivered sources against best matching
+Ti kernel and then prepared DTS which works on the board
+and I want to know if somebody works on this support, can help
+to finish/better tune parameters and if there is chance
+that configs are included into mainline or some other public
+repository. Because I do not know who is working on this support
+and who is right maintainer I send only pointers to my files.
+
+http://cmp.felk.cvut.cz/~pisa/arm/myir-rico/am437x-myir-ricoboard.dts
+ based on Ti am437x-gp-evm.dts
+
+http://cmp.felk.cvut.cz/~pisa/arm/myir-rico/am437x-myir-ricoboard-hdmi.dts
+ based on Ti am437x-gp-evm-hdmi.dts
+
+http://cmp.felk.cvut.cz/~pisa/arm/myir-rico/am437x-myir-ricoboard_defconfig
+
+If there is interrest for discussion and inclusion, I send usual
+inlined GIT patches series.
+
+As for DTS, I expect that the regulators section does not match correctly
+Rico board HW but it works for what client company needs
+  evm_v3_3d: fixedregulator-v3_3d
+  vtt_fixed: fixedregulator-vtt
+
+Ethernet, serials, cameras, local MTD, SDcard and most of other devices works.
+SPI Flash does not work. I have not invested time to that.
+
+The client needs to connect special camera (infrared) to the VPFE so I have
+spent some time on AM437x VPFE support enhancement.
+
+I have added V4L2_PIX_FMT_Y10 pixel format and some minimal/stub 
+implementation of vpfe_enum_frameintervals, vpfe_g_parm, vvpfe_s_parm, 
+pfe_s_parm and I would be happy if my work can help to somebody other
+as well. But work has been driven strict deadline to provide working
+solution in one week so if there is interrest then most has to be
+rewritten/clean up.
+
+Generally, I am quite pleased by Ti's Linux tree state and support.
+That week has been my first time with AM chips we used other archs
+(powerpc and multiple i.MXs for most of our other projects till now).
+
+Probably off topic for these lists but what are suggested options
+for graphic configuration when Qt4/E or Qt5 is run on framebuffer.
+Is it better to use CONFIG_DRM_OMAP or CONFIG_FB_OMAP2 ?
+Is SGX driver available for 4.1 Linux kernel (reply offlist, please,
+if proprietary only)? Are there other possibilities how to use
+OMAP AM437xx hardware to accelerate video color and formats
+transformations? Can be VPFE planes used somehow to embed
+video in Qt application? I, personally, prefer strongly
+opensource only options but target company has probably minimal
+requirements in this area.
+
+Thanks for feedback,
+
+                Pavel Pisa
+    e-mail:     pisa-/N2ztlQkxE7Ub/6JBqosbQ@public.gmane.org
+    www:        http://cmp.felk.cvut.cz/~pisa
+    university: http://dce.fel.cvut.cz/
+    company:    http://www.pikron.com/
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
