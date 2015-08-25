@@ -1,78 +1,201 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH-v2 3/5] mfd: devicetree: bindings: Add clock subdevice
- node information
-Date: Tue, 25 Aug 2015 08:58:58 +0100
-Message-ID: <20150825075858.GH19409@x1>
-References: <1440442594-3102-1-git-send-email-vaibhav.hiremath@linaro.org>
- <1440442594-3102-5-git-send-email-vaibhav.hiremath@linaro.org>
+From: Haojian Zhuang <haojian.zhuang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v1 3/3] arm64: dts: add Hi6220 mailbox node
+Date: Tue, 25 Aug 2015 16:04:45 +0800
+Message-ID: <1440489885.10987.26.camel@linaro.org>
+References: <1439977055-1747-1-git-send-email-leo.yan@linaro.org>
+	 <1439977055-1747-4-git-send-email-leo.yan@linaro.org>
+	 <20150821184059.GB2000@svinekod> <20150824091845.GA28290@leoy-linaro>
+	 <20150824095144.GA7139@leverpostej> <1440411596.3517.12.camel@linaro.org>
+	 <20150824124800.GD7139@leverpostej>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <1440442594-3102-5-git-send-email-vaibhav.hiremath@linaro.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Vaibhav Hiremath <vaibhav.hiremath@linaro.org>
-Cc: devicetree@vger.kernel.org, k.kozlowski@samsung.com, mturquette@baylibre.com, linux-kernel@vger.kernel.org, robh+dt@kernel.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20150824124800.GD7139@leverpostej>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: "leo.yan-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <leo.yan-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Catalin Marinas <Catalin.Marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Bintian Wang <bintian.wang-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, Yiping Xu <xuyiping-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Wei Xu <xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "guodong.xu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <guodong.xu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Jian Zhang <zhangjian001-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Zhenwei Wang <Zhenwei.wang-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Haoju Mo <mohaoju-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Dan Zhao <dan.zhao-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, "kongfei-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org" <kongfei-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Guangyu
 List-Id: devicetree@vger.kernel.org
 
-T24gVHVlLCAyNSBBdWcgMjAxNSwgVmFpYmhhdiBIaXJlbWF0aCB3cm90ZToKCj4gVGhpcyBwYXRj
-aCB1cGRhdGVzIHRoZSBiaW5kaW5nIGRvY3VtZW50YXRpb24gZm9yIG9wdGlvbmFsCj4gY2xvY2tz
-IG5vZGUgYW5kIHJlbGF0ZWQgaW5mb3JtYXRpb24gZm9yIGJ1ZmZlcmVkIDMyS0h6IGNsb2NrLgo+
-IAo+IFNpZ25lZC1vZmYtYnk6IFZhaWJoYXYgSGlyZW1hdGggPHZhaWJoYXYuaGlyZW1hdGhAbGlu
-YXJvLm9yZz4KPiBSZXZpZXdlZC1ieTogS3J6eXN6dG9mIEtvemxvd3NraSA8ay5rb3psb3dza2lA
-c2Ftc3VuZy5jb20+Cj4gQWNrZWQtYnk6IFJvYiBIZXJyaW5nIDxyb2JoQGtlcm5lbC5vcmc+Cj4g
-LS0tCj4gIERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9tZmQvODhwbTgwMC50eHQg
-fCAyNyArKysrKysrKysrKysrKysrKysrKysrKwo+ICAxIGZpbGUgY2hhbmdlZCwgMjcgaW5zZXJ0
-aW9ucygrKQo+IAo+IGRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGlu
-Z3MvbWZkLzg4cG04MDAudHh0IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL21m
-ZC84OHBtODAwLnR4dAo+IGluZGV4IDJjODJmY2IuLmJjNmNiMDIgMTAwNjQ0Cj4gLS0tIGEvRG9j
-dW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL21mZC84OHBtODAwLnR4dAo+ICsrKyBiL0Rv
-Y3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9tZmQvODhwbTgwMC50eHQKPiBAQCAtMTUs
-NiArMTUsMjYgQEAgT3B0aW9uYWwgcHJvcGVydGllcyA6Cj4gICAgV2l0aG91dCB0aGlzIGJvdGgg
-QlVDSzFBIGFuZCBCVUNLMUIgb3BlcmF0ZXMgaW5kZXBlbmRlbnRseSB3aXRoIDNBIGNhcGFjaXR5
-Lgo+ICAgIChUaGlzIHByb3BlcnR5IGlzIG9ubHkgYXBwbGljYWJsZSB0byA4OFBNODYwKQo+ICAK
-PiArT3B0aW9uYWwgbm9kZXM6Cj4gKy0gY2xvY2tzOiA4OHBtODAwIGZhbWlseSBvZiBkZXZpY2Vz
-IHByb3ZpZGUgbXVsdGlwbGUgYnVmZmVyZWQgMzIuNzY4Cj4gKyAgS0h6IG91dHB1dHMsIHNvIHRv
-IHJlZ2lzdGVyIHRoZXNlIGFzIGNsb2NrcyB3aXRoIGNvbW1vbiBjbG9jayBmcmFtZXdvcmsKPiAr
-ICBpbnN0YW50aWF0ZSBhIHN1Yi1ub2RlIG5hbWVkICJjbG9ja3MiLiBJdCB1c2VzIHRoZSBjb21t
-b24gY2xvY2sgYmluZGluZwo+ICsgIGRvY3VtZW50ZWQgaW4gOgo+ICsgIFtEb2N1bWVudGF0aW9u
-L2RldmljZXRyZWUvYmluZGluZ3MvY2xvY2svY2xvY2stYmluZGluZ3MudHh0XQoKSSB0ZW5kIHRv
-IHByZWZlciByZWxhdGl2ZSBwYXRocy4gIEZpcnN0bHkgYmVjYXVzZSB0aGV5J3JlIHNob3J0ZXIg
-YW5kCm1vcmUgc3VjY2luY3QgYW5kIHNlY29uZGx5IGJlY2F1c2UgaWYgd2UgZG8gZXZlbnR1YWxs
-eSBtb3ZlIERUIG91dCBvZgp0aGUga2VybmVsLCBpdCB3aWxsIGJlIGxlc3MgaGFzc2xlIHRvIHJl
-bmFtZSBlYWNoIG9mIHRoZW0uCgo+ICsgIC0gI2Nsb2NrLWNlbGxzOiBzaG91bGQgYmUgMS4KPiAr
-Cj4gKyAgLSBUaGUgZm9sbG93aW5nIGlzIHRoZSBsaXN0IG9mIGNsb2NrcyBnZW5lcmF0ZWQgYnkg
-dGhlIGNvbnRyb2xsZXIuIEVhY2ggY2xvY2sKPiArICAgIGlzIGFzc2lnbmVkIGFuIGlkZW50aWZp
-ZXIgYW5kIGNsaWVudCBub2RlcyB1c2UgdGhpcyBpZGVudGlmaWVyIHRvIHNwZWNpZnkKPiArICAg
-IHRoZSBjbG9jayB3aGljaCB0aGV5IGNvbnN1bWUuCj4gKyAgICBDbG9jawkJSUQgICAgICAgICAg
-IAlEZXZpY2VzCj4gKyAgICAtLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tCj4gKyAgICBwbTgwMF9jbGszMmtfMQkwCQk4OFBNODAwIGFuZCA4
-OFBNODYwCj4gKyAgICBwbTgwMF9jbGszMmtfMgkxCQk4OFBNODAwIGFuZCA4OFBNODYwCj4gKyAg
-ICBwbTgwMF9jbGszMmtfMwkyCQk4OFBNODAwCj4gKwo+ICsgIC0gY29tcGF0aWJsZTogU2hvdWxk
-IGJlIDogIm1hcnZlbGwsODhwbTgwMC1jbGsiCj4gKwo+ICA4OHBtODB4IGZhbWlseSBvZiBkZXZp
-Y2VzIGNvbnNpc3RzIG9mIHZhcmllZCBncm91cCBvZiBzdWItZGV2aWNlczoKPiAgCj4gIERldmlj
-ZQkJIAlTdXBwbHkgTmFtZXMJIERlc2NyaXB0aW9uCj4gQEAgLTIyLDYgKzQyLDcgQEAgRGV2aWNl
-CQkgCVN1cHBseSBOYW1lcwkgRGVzY3JpcHRpb24KPiAgODhwbTgweC1vbmtleQkJOgkJOiBPbiBr
-ZXkKPiAgODhwbTgweC1ydGMJCToJCTogUlRDCj4gIDg4cG04MHgtcmVndWxhdG9yCToJCTogUmVn
-dWxhdG9ycwo+ICs4OHBtODB4LWNsawkJOgkJOiAzMktIeiBDbGsgcHJvdmlkZXIKCk5pdDogQWxw
-aGFiZXRpY2FsPwoKPiAgRXhhbXBsZToKPiAgCj4gQEAgLTMzLDYgKzU0LDEyIEBAIEV4YW1wbGU6
-Cj4gIAkJaW50ZXJydXB0LWNvbnRyb2xsZXI7Cj4gIAkJI2ludGVycnVwdC1jZWxscyA9IDwxPjsK
-PiAgCj4gKwkJcG04MDBjbGs6IGNsb2NrcyB7Cj4gKwkJCWNvbXBhdGlibGUgPSAibWFydmVsbCw4
-OHBtODAwLWNsayI7Cj4gKwkJCSNjbG9jay1jZWxscyA9IDwxPjsKPiArCQkJY2xvY2stb3V0cHV0
-LW5hbWVzID0gInh4IiwgInl5IiwgInp6IjsKPiArCQl9Owo+ICsKPiAgCQlyZWd1bGF0b3JzIHsK
-PiAgCQkJY29tcGF0aWJsZSA9ICJtYXJ2ZWxsLDg4cG04MHgtcmVndWxhdG9yIjsKPiAgCgotLSAK
-TGVlIEpvbmVzCkxpbmFybyBTVE1pY3JvZWxlY3Ryb25pY3MgTGFuZGluZyBUZWFtIExlYWQKTGlu
-YXJvLm9yZyDilIIgT3BlbiBzb3VyY2Ugc29mdHdhcmUgZm9yIEFSTSBTb0NzCkZvbGxvdyBMaW5h
-cm86IEZhY2Vib29rIHwgVHdpdHRlciB8IEJsb2cKCl9fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fCmxpbnV4LWFybS1rZXJuZWwgbWFpbGluZyBsaXN0CmxpbnV4
-LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9y
-Zy9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4LWFybS1rZXJuZWwK
+On Mon, 2015-08-24 at 13:48 +0100, Mark Rutland wrote:
+> > > > > I don't see why you need reserved-memory here, given you're not referring to
+> > > > > these regions by phandle anyway.
+> > > > 
+> > > > - Now we have enabled EFI_STUB, so the memory node will be removed in
+> > > >   kernel:
+> > > >     efi_entry()
+> > > >       \-> allocate_new_fdt_and_exit_boot()
+> > > >             \-> update_fdt();
+> > > > 
+> > > >   Finally in kernel it cannot use memory node to carve out reseved
+> > > >   memory regions.
+> > > > 
+> > > > - On the other hand, DTS's the memory node is to "describes the
+> > > >   physical memory layout for the system"; so it's better to use it only
+> > > >   to describe the hardware info for memory. We can use reserved-memory
+> > > >   to help manage the memory regions which are reserved from software
+> > > >   perspective.
+> > > 
+> > > The fact that you have no-map means that the memory should not be
+> > > described to the kernel as mappable in the first place. It's wrong to
+> > > place such memory in the memory node, even if listed in reserved-memory.
+> > > 
+> > > If your EFI memory map describes the memory as mappable, it is wrong.
+> > 
+> > When kernel is working, kernel will create its own page table based on
+> > UEFI memory map. Since it's reserved in DTS file as Leo's patch, it'll
+> > be moved to reserved memblock. Why is it wrong?
+> 
+> That is a _Linux_ detail, not a _UEFI_ detail.
+> 
+> Anything which only handles UEFI and knows nothing of reserved-memory
+> (e.g. GRUB) will be broken and/or break the Linux use of the region, as
+> it will happily try to allocate memory in the region (and could even
+> decide to reserve it permanently for its own usage).
+> 
+> If the memory is truly specific to the mailbox, then UEFI needs to know
+> that it is reserved as such. If it is not, then it need not be described
+> in the DT and can be allocated dynamically by the kernel.
+
+No. We support both UEFI and uboot on hikey. We must reserve these
+mailbox buffer in DT. Otherwise, it's a problem to support uboot.
+We should only deliver one kernel and one DTB to support both UEFI and
+uboot.
+
+And mailbox driver is already upgraded from beginning. Nobody can say
+that it won't be upgraded again in the future.
+
+By the way, UEFI is loaded in the upper memory region of hikey. It won't
+break anything in linux kernel.
+> 
+> > In the second, UEFI is firmware. When it's stable, nobody should change
+> > it without any reason. These reserved memory are used in mailbox driver.
+> > Look. It's driver, so it could be changed at any time. Why do you want
+> > to UEFI knowing this memory range? Do you hope UEFI to change when
+> > mailbox driver is changed?
+> 
+> It shouldn't need to change if that memory is truly reserved for the
+> sole use of the mailbox. If that's not the case then we have a different
+> issue.
+> 
+> If the memory range to use can be allocated by the driver, then I don't
+> see why it should be described in reserved-memory. It certainly should
+> not require a no-map attribute.
+> 
+> Additionally, the driver needs to ensure that the requisite cache
+> maintenance takes place prior to the use of the memory region given
+> prior agents may have ampped it as cacheable, leaving stale (perhaps
+> dirty) lines in the caches.
+> 
+
+Since those mailbox buffer is declared as reserved with "no-map"
+property, it means that linux kernel won't create the page table of
+them.
+
+The meaning of "no-map" is removing it from memory memblock.
+setup_arch()
+  |
+  ---> efi_init() -- Get memory map information from UEFI
+  |
+  ---> arm64_memblock_init()
+  |      |
+  |      ---> early_init_fdt_scan_reserved_mem()
+  |           Get reserved memory buffer from DT. Split memory
+  |           memblock according to reserved buffer.
+  ---> paging_init()
+         |--> map_mem()
+              _Only_ map the discrete memory memblock into kernel
+              page table.
+
+>From this working flow, we could know that those mailbox buffers
+won't be mapped into kernel page table. So there's no concern on
+cache maintenance.
+              
+> > > > According to upper info, we still need to use reserved-memory node to
+> > > > depict the reserved memory regions. i have no knowledge about EFI_STUB,
+> > > > so please confirm or correct as needed.
+> > > 
+> > > If the memory shouldn't be mapped, it should neither be in the memory
+> > > node nor EFI memory map (with attributes allowing it to be mapped) to
+> > > begin with.
+> > 
+> > As I said above, kernel will create its own page table. When kernel's
+> > page table is working, UEFI's page table is destroying. So the memory
+> > won't be mapped twice at the same time. What's wrong?
+> > > 
+> > > As far as I can see you do not need to use reserved-memory.
+> > 
+> > 1. Are we talking on the same thing? Leo already mentioned that all
+> > memory node in DTB will be destroyed by kernel when EFI_STUB is enabled
+> > on arm. Did you read the source code after his reply?
+> > And you suggested that Leo to use discrete memory region in DTB. It is
+> > really wrong. Kernel only gets memory map information from UEFI, not
+> > DTB.
+> 
+> I did _not_ suggest that Leo use discrete memory. I suggested that
+> reserved regions should not be described in the memory node (the same
+> premise applying to the UEFI memory map).
+
+I agree that reserved region shouldn't be described in the memory node.
+And Leo didn't describe reserved region in memory node too.
+
+> 
+> w.r.t. UEFI, please see my comments above. If you're using the UEFI
+> memory map, you have to use the UEFI memory map, not the UEFI memory map
+> with additional (non-UEFI) caveats applied atop.
+
+The main concern is that we're supporting both UEFI and uboot.
+Declaring these reserved buffer in DTB will be a better choice.
+
+> 
+> > 2. The working flow is in below.
+> >    a. Kernel gets memory map information from UEFI.
+> >    b. Kernel loads the memory reserved information from DTB.
+> 
+> This relies on Linux, and ignores other UEFI clients.
+
+Yes, it's depend on CONFIG_EFI_STUB.
+
+> 
+> > 3. Do you mean the reserved-memory is totally wrong? If it's wrong,
+> > please submit patches to remove all reserved-memory in linux kernel
+> > first.
+> 
+> I did not say that.
+> 
+> I said that describing some memory in a memory node, then also
+> describing that in reserved-memory with a no-map property was wrong. If
+> it's never meant to be mapped then there's no reason for it to be in the
+> memory node.
+
+No, it's not never mapped. Leo just wants it to be mapped as
+uncacheable in mailbox driver.
+
+If we look at his mailbox node in DT, Leo used these memory regions
+in reg property. He wants to use ioremap() in mailbox driver.
+
+> 
+> > 4. Again and again. Memory node should be only used to describe the
+> > RAM information.
+> 
+> The memory node describes the memory available to the OS. There are some
+> caveats w.r.t. /memreserve/, regions which may be mapped but remain
+> unused and so on, but the memory node does generally encode a policy
+> that the memory may be used.
+> 
+> Describing unusable memory in a memory node is pointless, and has an
+> adverse effect on clients which don't support reserved-memory. It's
+> doubly harmful when that memory should never be mapped.
+> 
+
+He didn't declare those buffer in memory node. He only declared it
+in reserved-memory node. And it's not never be mapped. He use ioremap()
+in the driver.
+
+And I think that Leo could use phandle to reference the reserved buffer
+in mailbox node. Then it could be more clear.
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
