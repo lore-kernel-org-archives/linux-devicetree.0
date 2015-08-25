@@ -1,81 +1,105 @@
-From: Julian Calaby <julian.calaby-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: Re: Re-using sun5i-a13.dtsi for the r8 ?
-Date: Tue, 25 Aug 2015 15:27:09 +1000
-Message-ID: <CAGRGNgUpDZnPxnSP5wmcAFL=gHmGS5vURGxjAV-ywWn4u61E6w@mail.gmail.com>
-References: <55D6D8E3.3020403@redhat.com> <20150824142630.GU2413@lukather>
- <CAGRGNgW06-znXSnPKS3nfU_FseTZ0OcMea5qEzHVaTkpRfXHUg@mail.gmail.com> <20150825051450.GY2413@lukather>
-Reply-To: julian.calaby-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+From: Yoshihiro Shimoda <yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+Subject: RE: [PATCH] phy: rcar-gen3-usb2: Add R-Car Gen3 USB2 PHY driver
+Date: Tue, 25 Aug 2015 05:48:09 +0000
+Message-ID: <SG2PR06MB0919F3509296F9B9CFEF362BD8610@SG2PR06MB0919.apcprd06.prod.outlook.com>
+References: <1440052098-4840-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+ <CAMuHMdXshUCWs=sbVA8pBmsdOm3GwkWJ5NN8YCDXYX_6W5QFAg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBDQIP76OUQLBBQPZ56XAKGQEQMNEAXY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <20150825051450.GY2413@lukather>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <http://groups.google.com/group/linux-sunxi/subscribe>
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAMuHMdXshUCWs=sbVA8pBmsdOm3GwkWJ5NN8YCDXYX_6W5QFAg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Content-Language: ja-JP
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
+Cc: "kishon-l0cyMroinI0@public.gmane.org" <kishon-l0cyMroinI0@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux-sh list <linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Maxime,
-
-On Tue, Aug 25, 2015 at 3:14 PM, Maxime Ripard
-<maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
-> On Tue, Aug 25, 2015 at 10:24:51AM +1000, Julian Calaby wrote:
->> Hi Maxime,
->>
->> On Tue, Aug 25, 2015 at 12:26 AM, Maxime Ripard
->> <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
->> > Hi,
->> >
->> > On Fri, Aug 21, 2015 at 09:53:07AM +0200, Hans de Goede wrote:
->> >> I just realized that I never answered your question about the need
->> >> for a tvencoder simplefb node in sun5i-a13.dtsi, like the one from
->> >> the "ARM: dts: sun5i: Add simplefb node for tvencoder output"
->> >>
->> >> I think the real question is do we want to use sun5i-a13.dtsi for
->> >> the r8 ?
->> >
->> > So far, the only information I got about the R8 was that it was
->> > strictly identical to the A13, and it was making sense to re-use it
->> > entirely.
->>
->> Does having the tvout pin change the pinmux options or is that pin
->> strictly single use?
->>
->> (And if it is strictly single use, is adding that pin the entirety of
->> the software visible hardware changes?)
->
-> I have no idea.
->
->> >> I would expect us to use a sun5i-r8.dtsi, this one could then
->> >> include sun5i-a13.dtsi, and have the extra simplefb node for
->> >> the tvencoder. Putting the simplefb node for the tvencoder
->> >> in sun5i-a13.dtsi feels wrong because the A13 package does
->> >> not have a tvout pin.
->> >
->> > But if it turns out it's not, then yeah, we'll have to make another
->> > DTSI.
->>
->> IMHO that's enough of a change to warrant a new DTSI,
->
-> Yep.
->
->> I feel that someone's going to use the lack of DTSI as "proof" that
->> we don't support the R8 or try to use the tv encoder on an A13.
->
-> But that argument is dubious. That's not how it works. The list of
-> DTSIs has never been comprehensive list of the supported SoCs.
-
-Most definitely. I'm not talking about sensible people here. =)
-
-Thanks,
-
--- 
-Julian Calaby
-
-Email: julian.calaby-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
-Profile: http://www.google.com/profiles/julian.calaby/
+SGkgR2VlcnQtc2FuLA0KDQo+IFNlbnQ6IE1vbmRheSwgQXVndXN0IDI0LCAyMDE1IDk6MTMgUE0N
+Cj4gDQo+IEhpIFNoaW1vZGEtc2FuLA0KPiANCj4gT24gVGh1LCBBdWcgMjAsIDIwMTUgYXQgODoy
+OCBBTSwgWW9zaGloaXJvIFNoaW1vZGENCj4gPHlvc2hpaGlyby5zaGltb2RhLnVoQHJlbmVzYXMu
+Y29tPiB3cm90ZToNCj4gPiBUaGlzIHBhdGNoIGFkZHMgc3VwcG9ydCBmb3IgUi1DYXIgZ2VuZXJh
+dGlvbiAzIFVTQjIgUEhZIGRyaXZlci4NCj4gPiBUaGlzIFNvQyBoYXMgMyBFSENJL09IQ0kgY2hh
+bm5lbHMsIGFuZCB0aGUgY2hhbm5lbCAwIGlzIHNoYXJlZA0KPiA+IHdpdGggdGhlIEhTVVNCIChV
+U0IyLjAgcGVyaXBoZXJhbCkgZGV2aWNlLg0KPiA+DQo+ID4gU28sIHRoZSBwdXJwb3NlIG9mIHRo
+aXMgZHJpdmVyIGlzOg0KPiA+ICAxKSBpbml0aWFsaXplcyBzb21lIHJlZ2lzdGVycyBvZiBTb0Mg
+c3BlY2lmaWMgdG8gdXNlIHRoZQ0KPiA+ICAgICB7ZWhjaSxvaGNpfS1wbGF0Zm9ybSBkcml2ZXIu
+DQo+ID4NCj4gPiAgMikgZGV0ZWN0cyBpZCBwaW4gdG8gc2VsZWN0IGhvc3Qgb3IgcGVyaXBoZXJh
+bCBvbiB0aGUgY2hhbm5lbCAwLg0KPiA+DQo+ID4gRm9yIG5vdywgdGhpcyBkcml2ZXIgb25seSBz
+dXBwb3J0cyAxKSBhYm92ZS4NCj4gDQo+IFRoYW5rcyBmb3IgeW91ciBwYXRjaCENCg0KVGhhbmsg
+eW91IHZlcnkgbXVjaCBmb3IgeW91ciByZXZpZXchDQoNCj4gPiAtLS0gL2Rldi9udWxsDQo+ID4g
+KysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3BoeS9yY2FyLWdlbjMtcGh5
+LXVzYjIudHh0DQo+ID4gQEAgLTAsMCArMSwzNyBAQA0KPiA+ICsqIFJlbmVzYXMgUi1DYXIgZ2Vu
+ZXJhdGlvbiAzIFVTQiAyLjAgUEhZDQo+ID4gKw0KPiA+ICtUaGlzIGZpbGUgcHJvdmlkZXMgaW5m
+b3JtYXRpb24gb24gd2hhdCB0aGUgZGV2aWNlIG5vZGUgZm9yIHRoZSBSLUNhciBnZW5lcmF0aW9u
+DQo+ID4gKzMgVVNCIDIuMCBQSFkgY29udGFpbnMuDQo+ID4gKw0KPiA+ICtSZXF1aXJlZCBwcm9w
+ZXJ0aWVzOg0KPiA+ICstIGNvbXBhdGlibGU6ICJyZW5lc2FzLHVzYjItcGh5LXI4YTc3OTUiIGlm
+IHRoZSBkZXZpY2UgaXMgYSBwYXJ0IG9mIFI4QTc3OTUgU29DLg0KPiANCj4gImFuIFI4QTc3OTUg
+U29DIi4NCg0KSSB3aWxsIGZpeCB0aGlzIGluIHYyLg0KKEkgd2lsbCBzdWJtaXQgdjIgcGF0Y2gg
+bGF0ZSB0b2RheS4pDQoNCj4gPiArLSByZWc6IG9mZnNldCBhbmQgbGVuZ3RoIG9mIHRoZSBVU0Iy
+LjAgaG9zdCByZWdpc3RlciBibG9jay4NCj4gPiArLSByZWctbmFtZXM6IG11c3QgYmUgInVzYjIi
+Lg0KPiA+ICstIGNsb2NrczogY2xvY2sgcGhhbmRsZSBhbmQgc3BlY2lmaWVyIHBhaXIuDQo+IA0K
+PiAicGFpcihzKS4iDQoNCkkgd2lsbCBmaXggdGhpcy4NCg0KPiA+ICstIGNsb2NrLW5hbWVzOiBz
+dHJpbmcsIGNsb2NrIGlucHV0IG5hbWUsIG11c3QgYmUgInVzYjIiLCBhbmQgb3B0aW9uYWwgImhz
+dXNiIi4NCj4gDQo+IG5hbWVzDQoNClRoYW5rIHlvdSBmb3IgdGhlIHBvaW50Lg0KQXMgeW91IG1l
+bnRpb25lZCBhYm91dCBydW50aW1lIFBNIGJlbG93LCBJIHdpbGwgcmVtb3ZlIHRoaXMgcHJvcGVy
+dHkuDQoNCj4gPiArLSAjcGh5LWNlbGxzOiBzZWUgcGh5LWJpbmRpbmdzLnR4dCBpbiB0aGUgc2Ft
+ZSBkaXJlY3RvcnksIG11c3QgYmUgPDA+Lg0KPiA+ICsNCj4gPiArT3B0aW9uYWwgcHJvcGFyaWVz
+Og0KPiANCj4gcHJvcGVydGllcw0KDQpPb3BzLCBJIHdpbGwgZml4IGl0Lg0KSSBzaG91bGQgaGF2
+ZSBkb25lIGFzcGVsbCBjb21tYW5kIGJlZm9yZSBJIHN1Ym1pdHRlZC4NCklmIEkgZGlkIHRoYXQg
+Y29tbWFuZCwgSSBmb3VuZCBvdGhlciB0eXBvIGluIHRoaXMgcGF0Y2ggOikNCg0KPiA+ICtUbyB1
+c2UgYSBVU0IgY2hhbm5lbCB3aGljaCBFSENJL09IQ0kgYW5kIEhTVVNCIGFyZSBjb21iaW5lZCwg
+dGhlIGRldmljZSB0cmVlDQo+IA0KPiBzL3doaWNoL3doZXJlLw0KPiANCj4gPiArbm9kZSBzaG91
+bGQgc2V0IEhTVVNCIHByb3BhcmllcyB0byByZWcgYW5kIHJlZy1uYW1lcyBwcm9wYXJpZXM6DQo+
+IA0KPiBwcm9wZXJ0aWVzICh4MikNCg0KSSB3aWxsIGZpeCBpdC4NCg0KPiA+ICstIHJlZzogb2Zm
+c2V0IGFuZCBsZW5ndGggb2YgdGhlIEhTVVNCIHJlZ2lzdGVyIGJsb2NrLg0KPiA+ICstIHJlZy1u
+YW1lczogbXVzdCBiZSAiaHN1c2IiLg0KPiA+ICsNCj4gPiArRXhhbXBsZSAoUi1DYXIgSDMpOg0K
+PiA+ICsNCj4gPiArICAgICAgIHVzYi1waHlAZWUwODAyMDAgew0KPiA+ICsgICAgICAgICAgICAg
+ICBjb21wYXRpYmxlID0gInJlbmVzYXMsdXNiMi1waHktcjhhNzc5NSI7DQo+ID4gKyAgICAgICAg
+ICAgICAgIHJlZyA9IDwwIDB4ZWUwODAyMDAgMCAweDZmZj4sIDwwIDB4ZTY1OTAxMDAgMCAweDEw
+MD47DQo+ID4gKyAgICAgICAgICAgICAgIHJlZy1uYW1lcyA9ICJ1c2IyIiwgImhzdXNiIjsNCj4g
+PiArICAgICAgICAgICAgICAgY2xvY2tzID0gPCZtc3RwN19jbGtzIFI4QTc3OTVfQ0xLX0VIQ0kw
+PiwNCj4gPiArICAgICAgICAgICAgICAgICAgICAgICAgPCZtc3RwN19jbGtzIFI4QTc3OTVfQ0xL
+X0hTVVNCPjsNCj4gDQo+IElmIHlvdSBldmVyIHdhbnQgdG8gZW5hYmxlIFJ1bnRpbWUgUE0sIGRv
+IHlvdSB3YW50IHRoZSBmaXJzdCBNU1RQIGNsb2NrIHRvIGJlDQo+IG1hbmFnZWQgYXV0b21hdGlj
+YWxseT8NCj4gV2hhdCBhYm91dCB0aGUgc2Vjb25kIG9wdGlvbmFsIGNsb2NrPw0KDQpUaGFuayB5
+b3UgdmVyeSBtdWNoIGZvciB0aGUgcG9pbnQuDQpJIGRpZG4ndCB0YWtlIGNhcmUgYWJvdXQgUnVu
+dGltZSBQTS4gSG93ZXZlciwgSSB3YW50IHRvIGVuYWJsZSBSdW50aW1lIFBNDQpiZWNhdXNlIHVz
+YiBob3N0IGFuZCBmdW5jdGlvbiBkcml2ZXJzIHN1cHBvcnQgaXQuDQoNCj4gPiArICAgICAgICAg
+ICAgICAgY2xvY2stbmFtZXMgPSAidXNiMiIsICJoc3VzYiI7DQo+ID4gKyAgICAgICB9Ow0KPiA+
+ICsNCj4gPiArICAgICAgIHVzYi1waHlAZWUwYTAyMDAgew0KPiA+ICsgICAgICAgICAgICAgICBj
+b21wYXRpYmxlID0gInJlbmVzYXMsdXNiMi1waHktcjhhNzc5NSI7DQo+ID4gKyAgICAgICAgICAg
+ICAgIHJlZyA9IDwwIDB4ZWUwYTAyMDAgMCAweDZmZj47DQo+ID4gKyAgICAgICAgICAgICAgIHJl
+Zy1uYW1lcyA9ICJ1c2IyIjsNCj4gPiArICAgICAgICAgICAgICAgY2xvY2tzID0gPCZtc3RwN19j
+bGtzIFI4QTc3OTVfQ0xLX0VIQ0kwPjsNCj4gPiArICAgICAgICAgICAgICAgY2xvY2stbmFtZXMg
+PSAidXNiMiI7DQo+ID4gKyAgICAgICB9Ow0KPiANCj4gPiAtLS0gL2Rldi9udWxsDQo+ID4gKysr
+IGIvZHJpdmVycy9waHkvcGh5LXJjYXItZ2VuMy11c2IyLmMNCj4gDQo+ID4gK3N0YXRpYyBpbnQg
+cmNhcl9nZW4zX3BoeV91c2IyX2luaXQoc3RydWN0IHBoeSAqcCkNCj4gPiArew0KPiA+ICsgICAg
+ICAgc3RydWN0IHJjYXJfZ2VuM19waHlfdXNiMl9jaGFubmVsICpjaGFubmVsID0gcGh5X2dldF9k
+cnZkYXRhKHApOw0KPiA+ICsgICAgICAgdW5zaWduZWQgbG9uZyBmbGFnczsNCj4gPiArICAgICAg
+IHZvaWQgX19pb21lbSAqdXNiMl9iYXNlID0gY2hhbm5lbC0+dXNiMi5iYXNlOw0KPiA+ICsgICAg
+ICAgdm9pZCBfX2lvbWVtICpoc3VzYl9iYXNlID0gY2hhbm5lbC0+aHN1c2IuYmFzZTsNCj4gPiAr
+ICAgICAgIHUzMiB0bXA7DQo+ID4gKw0KPiA+ICsgICAgICAgLyogU2luY2Ugb3BzLT5pbml0KCkg
+aXMgY2FsbGVkIG9uY2UsIHRoaXMgZHJpdmVyIGVuYWJsZXMgYm90aCBjbG9ja3MgKi8NCj4gPiAr
+ICAgICAgIGNsa19wcmVwYXJlX2VuYWJsZShjaGFubmVsLT51c2IyLmNsayk7DQo+ID4gKyAgICAg
+ICBjbGtfcHJlcGFyZV9lbmFibGUoY2hhbm5lbC0+aHN1c2IuY2xrKTsNCj4gDQo+IFNvIHRoaXMg
+ZHJpdmVyIG1hbmFnZXMgaXRzIGNsb2NrKHMpIGl0c2VsZiwgYW5kIGRvZXNuJ3Qgc3VwcG9ydCBS
+dW50aW1lIFBNLg0KDQpTbywgSSB3aWxsIHVzZSByZW1vdmUgY2xrIEFQSXMgaW4gdGhpcyBkcml2
+ZXIuDQoNCkJlc3QgcmVnYXJkcywNCllvc2hpaGlybyBTaGltb2RhDQoNCj4gPiArc3RhdGljIGlu
+dCByY2FyX2dlbjNfcGh5X3VzYjJfZXhpdChzdHJ1Y3QgcGh5ICpwKQ0KPiA+ICt7DQo+ID4gKyAg
+ICAgICBzdHJ1Y3QgcmNhcl9nZW4zX3BoeV91c2IyX2NoYW5uZWwgKmNoYW5uZWwgPSBwaHlfZ2V0
+X2RydmRhdGEocCk7DQo+ID4gKw0KPiA+ICsgICAgICAgd3JpdGVsKDAsIGNoYW5uZWwtPnVzYjIu
+YmFzZSArIFVTQjJfSU5UX0VOQUJMRSk7DQo+ID4gKw0KPiA+ICsgICAgICAgY2xrX2Rpc2FibGVf
+dW5wcmVwYXJlKGNoYW5uZWwtPmhzdXNiLmNsayk7DQo+ID4gKyAgICAgICBjbGtfZGlzYWJsZV91
+bnByZXBhcmUoY2hhbm5lbC0+dXNiMi5jbGspOw0KPiA+ICsNCj4gPiArICAgICAgIHJldHVybiAw
+Ow0KPiA+ICt9DQo+IA0KPiBHcntvZXRqZSxlZXRpbmd9cywNCj4gDQo+ICAgICAgICAgICAgICAg
+ICAgICAgICAgIEdlZXJ0DQo+IA0KPiAtLQ0KPiBHZWVydCBVeXR0ZXJob2V2ZW4gLS0gVGhlcmUn
+cyBsb3RzIG9mIExpbnV4IGJleW9uZCBpYTMyIC0tIGdlZXJ0QGxpbnV4LW02OGsub3JnDQo+IA0K
+PiBJbiBwZXJzb25hbCBjb252ZXJzYXRpb25zIHdpdGggdGVjaG5pY2FsIHBlb3BsZSwgSSBjYWxs
+IG15c2VsZiBhIGhhY2tlci4gQnV0DQo+IHdoZW4gSSdtIHRhbGtpbmcgdG8gam91cm5hbGlzdHMg
+SSBqdXN0IHNheSAicHJvZ3JhbW1lciIgb3Igc29tZXRoaW5nIGxpa2UgdGhhdC4NCj4gICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAtLSBMaW51cyBUb3J2YWxkcw0K
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
