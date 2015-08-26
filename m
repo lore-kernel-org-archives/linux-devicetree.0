@@ -1,167 +1,108 @@
-From: Peter Griffin <peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 2/3] ARM: DT: STi: STiH407: Add c8sectpfe LinuxDVB DT
- node.
-Date: Wed, 26 Aug 2015 12:44:33 +0100
-Message-ID: <20150826114433.GB1498@griffinp-ThinkPad-X1-Carbon-2nd>
-References: <1440519730-486-1-git-send-email-peter.griffin@linaro.org>
- <1440519730-486-3-git-send-email-peter.griffin@linaro.org>
- <20150826073041.GT19409@x1>
+From: Daniel Vetter <daniel@ffwll.ch>
+Subject: Re: [PATCH 1/7] drm/vc4: Add devicetree bindings for VC4.
+Date: Wed, 26 Aug 2015 13:52:29 +0200
+Message-ID: <20150826115229.GI1367@phenom.ffwll.local>
+References: <1439427380-2436-1-git-send-email-eric@anholt.net>
+ <1439427380-2436-2-git-send-email-eric@anholt.net>
+ <55CEC25E.7070303@wwwdotorg.org>
+ <874mjxwyx5.fsf@eliezer.anholt.net>
+ <CAL_JsqJxiGUR5BxBPyR3-0NxqWsOxMGrWQA6cMXe2pjTom__nw@mail.gmail.com>
+ <CAF6AEGu2fi0M7DsicHz+5SDHi1DyDRmvWjkmYPPgY6pZ423WcA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
 Content-Disposition: inline
-In-Reply-To: <20150826073041.GT19409@x1>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, srinivas.kandagatla-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, maxime.coquelin-qxv4g6HH51o@public.gmane.org, patrice.chotard-qxv4g6HH51o@public.gmane.org, mchehab-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org, kernel-F5mvAk5X5gdBDgjK7y7TUQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+In-Reply-To: <CAF6AEGu2fi0M7DsicHz+5SDHi1DyDRmvWjkmYPPgY6pZ423WcA@mail.gmail.com>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Rob Clark <robdclark@gmail.com>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Stephen Warren <swarren@wwwdotorg.org>, Lee Jones <lee@kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, dri-devel <dri-devel@lists.freedesktop.org>, Rob Herring <robherring2@gmail.com>, linux-rpi-kernel@lists.infradead.org, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Lee,
-
-On Wed, 26 Aug 2015, Lee Jones wrote:
-
-> On Tue, 25 Aug 2015, Peter Griffin wrote:
-> 
-> > This patch adds in the required DT node for the c8sectpfe
-> > Linux DVB demux driver which allows the tsin channels
-> > to be used on an upstream kernel.
-> > 
-> > Signed-off-by: Peter Griffin <peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> > ---
-> >  arch/arm/boot/dts/stihxxx-b2120.dtsi | 38 ++++++++++++++++++++++++++++++++++++
-> >  1 file changed, 38 insertions(+)
-> > 
-> > diff --git a/arch/arm/boot/dts/stihxxx-b2120.dtsi b/arch/arm/boot/dts/stihxxx-b2120.dtsi
-> > index 62994ae..1bc018e 100644
-> > --- a/arch/arm/boot/dts/stihxxx-b2120.dtsi
-> > +++ b/arch/arm/boot/dts/stihxxx-b2120.dtsi
-> > @@ -6,6 +6,10 @@
-> >   * it under the terms of the GNU General Public License version 2 as
-> >   * published by the Free Software Foundation.
-> >   */
-> > +
-> > +#include <dt-bindings/clock/stih407-clks.h>
-> > +#include <dt-bindings/media/c8sectpfe.h>
-> > +
-> 
-> Looks like some of the STi files are a little wavering on convention,
-> but I suggest the extra '\n's are superfluous.
-
-Ok I will remove them in v2.
-
-> 
-> >  / {
-> >  	soc {
-> >  		sbc_serial0: serial@9530000 {
-> > @@ -85,5 +89,39 @@
-> >  			status = "okay";
-> >  		};
-> >  
-> > +		c8sectpfe@08a20000 {
-> 
-> This should be a device type, not a model number.
-> 
-> demodulator@abcdabcd {
-
-Ok will change to demux@08a20000 in v2
-
-> 
-> > +			compatible = "st,stih407-c8sectpfe";
-> 
-> To the uninitiated c8sectpfe is pretty indecipherable.
-
-It is the name of the IP block in the datasheet. It stands
-for SECurity TRansport Processor FrontEnd
-
-> 
-> How about *-c8sectpfe-demod?
-
-That doesn't really make sense, the demod is a seperate device
-typically controlled over I2C bus and connected to this IP block
-via the TS pins. Also although a tsin channel is "normally" connected
-to a demodulator device there is no reason it couldn't be connected
-for example to another STi chipset which is doing tsout.
-
-Also this IP block can do more than accept tsin, it can
-also do tsout, and merge TS channels together (some coming from
-DDR, external TS pins). Which are features we hope to add
-to the driver in the future so the name needs to be very generic.
-
-So with that in mind I would prefer to leave the compatible as
-the name of the IP block from the SoC datasheet.
-
-> 
-> > +			status = "okay";
-> > +			reg = <0x08a20000 0x10000>, <0x08a00000 0x4000>;
-> > +			reg-names = "c8sectpfe", "c8sectpfe-ram";
-> > +
-> > +			interrupts = <0 34 0>, <0 35 0>;
-> 
-> Please use the predetermined DEFINES for the flags cell.
-
-Will fix in V2
-
-> 
-> > +			interrupt-names = "c8sectpfe-error-irq",
-> > +					  "c8sectpfe-idle-irq";
-> > +
-> > +			pinctrl-names	= "tsin0-serial", "tsin0-parallel",
-> > +					  "tsin3-serial", "tsin4-serial",
-> > +					  "tsin5-serial";
-> 
-> I would put *-names *under* the properties they pertain to and in the
-> same format i.e. one per line in this case, for easy eye-match.
-
-Ok will change in V2.
-> 
-> > +			pinctrl-0	= <&pinctrl_tsin0_serial>;
-> > +			pinctrl-1	= <&pinctrl_tsin0_parallel>;
-> > +			pinctrl-2	= <&pinctrl_tsin3_serial>;
-> > +			pinctrl-3	= <&pinctrl_tsin4_serial_alt3>;
-> > +			pinctrl-4	= <&pinctrl_tsin5_serial_alt1>;
-> > +
-> > +			clocks = <&clk_s_c0_flexgen CLK_PROC_STFE>;
-> > +			clock-names = "c8sectpfe";
-> > +
-> > +			/* tsin0 is TSA on NIMA */
-> > +			tsin0: port@0 {
-> > +
-> 
-> Why the '\n'?
-
-Removed in v2
-> 
-> > +				tsin-num = <0>;
-> > +				serial-not-parallel;
-> > +				i2c-bus = <&ssc2>;
-> 
-> If you are adding this property, I would get Wolfram or one of the DT
-> guys to Ack it.
-
-This driver is actually already accepted, I just missed off one patch from
-the v2 series which meant this patch broke the build when Mauro applied it,
-which is the reason for re-sending it.
-
-This binding is the same way the drm display drivers use DT via ddc-i2c-bus
-property to get the i2c bus for EDID control, so I think uncontroversial.
-> 
-> > +				rst-gpio = <&pio15 4 0>;
-> 
-> Why not use the whole name "reset"?
-> 
-> "-gpio" should be "-gpios".
-> 
-> So, in full: "reset-gpios"?
-> 
-> Flags: GPIO_ACTIVE_HIGH ?
-
-Doing a grep, that does seem to be "more standard". Will fix in V2 as a single
-atomic commit.
-
-regards,
-
-Peter.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+T24gVHVlLCBBdWcgMjUsIDIwMTUgYXQgMDQ6NDI6MThQTSAtMDQwMCwgUm9iIENsYXJrIHdyb3Rl
+Ogo+IE9uIE1vbiwgQXVnIDI0LCAyMDE1IGF0IDk6NDcgQU0sIFJvYiBIZXJyaW5nIDxyb2JoZXJy
+aW5nMkBnbWFpbC5jb20+IHdyb3RlOgo+ID4gT24gTW9uLCBBdWcgMTcsIDIwMTUgYXQgMTozMCBQ
+TSwgRXJpYyBBbmhvbHQgPGVyaWNAYW5ob2x0Lm5ldD4gd3JvdGU6Cj4gPj4gU3RlcGhlbiBXYXJy
+ZW4gPHN3YXJyZW5Ad3d3ZG90b3JnLm9yZz4gd3JpdGVzOgo+ID4+Cj4gPj4+IE9uIDA4LzEyLzIw
+MTUgMDY6NTYgUE0sIEVyaWMgQW5ob2x0IHdyb3RlOgo+ID4+Pj4gU2lnbmVkLW9mZi1ieTogRXJp
+YyBBbmhvbHQgPGVyaWNAYW5ob2x0Lm5ldD4KPiA+Pj4KPiA+Pj4gVGhpcyBvbmUgZGVmaW5pdGVs
+eSBuZWVkcyBhIHBhdGNoIGRlc2NyaXB0aW9uLCBzaW5jZSBzb21lb25lIG1pZ2h0IG5vdAo+ID4+
+PiBrbm93IHdoYXQgYSBWQzQgaXMsIGFuZCAiZ2l0IGxvZyIgd29uJ3Qgc2hvdyB0aGUgdGV4dCBm
+cm9tIHRoZSBiaW5kaW5nCj4gPj4+IGRvYyBpdHNlbGYuIEknZCBzdWdnZXN0IGFkZGluZyB0aGUg
+aW5pdGlhbCBwYXJhZ3JhcGggb2YgdGhlIGJpbmRpbmcgZG9jCj4gPj4+IGFzIHRoZSBwYXRjaCBk
+ZXNjcmlwdGlvbiwgb3IgbW9yZS4KPiA+Pj4KPiA+Pj4+IGRpZmYgLS1naXQgYS9Eb2N1bWVudGF0
+aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZ3B1L2JyY20sYmNtLXZjNC50eHQgYi9Eb2N1bWVudGF0
+aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZ3B1L2JyY20sYmNtLXZjNC50eHQKPiA+Pgo+ID4+Pj4g
+Ky0gaHZzczogICAgICAgICAgICAgTGlzdCBvZiByZWZlcmVuY2VzIHRvIEhWUyB2aWRlbyBzY2Fs
+ZXJzCj4gPj4+PiArLSBlbmNvZGVyczogTGlzdCBvZiByZWZlcmVuY2VzIHRvIG91dHB1dCBlbmNv
+ZGVycyAoSERNSSwgU0RUVikKPiA+Pj4KPiA+Pj4gV291bGQgaXQgbWFrZSBzZW5zZSB0byBtYWtl
+IGFsbCB0aG9zZSBub2RlcyBjaGlsZCBub2RlIG9mIHRoZSB2YzQKPiA+Pj4gb2JqZWN0LiBUaGF0
+IHdheSwgdGhlcmUncyBubyBuZWVkIHRvIGhhdmUgdGhlc2UgbGlzdHMgb2Ygb2JqZWN0czsgdGhl
+eQo+ID4+PiBjYW4gYmUgYXV0b21hdGljYWxseSBidWlsdCB1cCBhcyB0aGUgRFQgaXMgZW51bWVy
+YXRlZC4gSSBrbm93IHRoYXQgZS5nLgo+ID4+PiB0aGUgTlZJRElBIFRlZ3JhIGhvc3QxeCBiaW5k
+aW5nIHdvcmtzIHRoaXMgd2F5LCBhbmQgSSB0aGluayBpdCBtYXkgaGF2ZQo+ID4+PiBiZWVuIGlu
+c3BpcmVkIGJ5IG90aGVyIHNpbWlsYXIgY2FzZXMuCj4gPj4KPiA+PiBJJ3ZlIGxvb2tlZCBhdCB0
+ZWdyYSwgYW5kIHRoZSBjb21wb25lbnQgc3lzdGVtIHVzZWQgYnkgbXNtIGFwcGVhcnMgdG8gYmUK
+PiA+PiBuaWNlciB0aGFuIGl0LiAgVG8gZm9sbG93IHRlZ3JhJ3MgbW9kZWwsIGl0IGxvb2tzIGxp
+a2UgSSBuZWVkIHRvIGJ1aWxkCj4gPj4gdGhpcyBleHRyYSBidXMgdGhpbmcgY29ycmVzcG9uZGlu
+ZyB0byBob3N0MXggdGhhdCBpcyBlZmZlY3RpdmVseSB0aGUKPiA+PiBkcml2ZXJzL2Jhc2UvY29t
+cG9uZW50LmMgY29kZSwgc28gdGhhdCBJIGNhbiBnZXQgYXQgdmM0J3Mgc3RydWN0dXJlIGZyb20K
+PiA+PiB0aGUgY29tcG9uZW50IGRyaXZlcnMuCj4gPj4KPiA+Pj4gT2YgY291cnNlLCB0aGlzIGlz
+IG9ubHkgYXBwcm9wcmlhdGUgaWYgdGhlIEhXIG1vZHVsZXMgcmVhbGx5IGFyZQo+ID4+PiBsb2dp
+Y2FsbHkgY2hpbGRyZW4gb2YgdGhlIFZDNCBIVyBtb2R1bGUuIFBlcmhhcHMgdGhleSBhcmVuJ3Qu
+IElmIHRoZXkKPiA+Pj4gYXJlbid0IHRob3VnaCwgSSB3b25kZXIgd2hhdCB0aGlzICJ2YzQiIG1v
+ZHVsZSBhY3R1YWxseSByZXByZXNlbnRzIGluIEhXPwo+ID4+Cj4gPj4gSXQncyB0aGUgc3Vic3lz
+dGVtLCBzYW1lIGFzIHdlIHVzZSBhIHN1YnN5c3RlbSBub2RlIGZvciBtc20sIHN0aSwKPiA+PiBy
+b2NrY2hpcCwgaW14LCBhbmQgZXh5bm9zLiAgVGhpcyBhcHBlYXJzIHRvIGJlIHRoZSBjb21tb24g
+bW9kZWwgb2YgaG93Cj4gPj4gdGhlIGNvbGxlY3Rpb24gb2YgZ3JhcGhpY3MtcmVsYXRlZCBjb21w
+b25lbnRzIGlzIHJlcHJlc2VudGVkIGluIHRoZSBEVC4KPiA+Cj4gPiBJIHRoaW5rIG1vc3Qgb2Yg
+dGhlc2UgYmluZGluZ3MgYXJlIHdyb25nLiBUaGV5IGFyZSBncm91cGVkIHRvZ2V0aGVyCj4gPiBi
+ZWNhdXNlIHRoYXQgaXMgd2hhdCBEUk0gd2FudHMgbm90IGJlY2F1c2UgdGhhdCByZWZsZWN0cyB0
+aGUgaC93LiBTbwo+ID4gY29udmluY2UgbWUgdGhpcyBpcyBvbmUgYmxvY2ssIG5vdCB0aGF0IGl0
+IGlzIHdoYXQgb3RoZXIgcGVvcGxlIGRvLgo+IAo+IEkgdGhpbmssIHdoZW4gaXQgY29tZXMgdG8g
+bW9yZSBjb21wbGV4IGRyaXZlciBzdWJzeXN0ZW1zIChsaWtlIGRybSBpbgo+IHBhcnRpY3VsYXIp
+IHdlIGhhdmUgYSBiaXQgb2YgbWlzbWF0Y2ggYmV0d2VlbiBob3cgdGhpbmdzIGxvb2sgZnJvbSB0
+aGUKPiAicHVyZSBodyBpZ25vcmluZyBzdyIgcGVyc3BlY3RpdmUsIGFuZCB0aGUgImhvdyBzdyBh
+bmQgaW4gcGFydGljdWxhcgo+IHVzZXJzcGFjZSBleHBlY3RzIHRoaW5ncyIgcGVyc3BlY3RpdmUu
+ICBNYXliZSBpdCBpcyBsZXNzIGEgcHJvYmxlbSBpbgo+IG90aGVyIHN1YnN5c3RlbXMsIHdoZXJl
+IGJpbmRpbmdzIG1hcCB0byB0aGluZ3MgdGhhdCBhcmUgb25seSB2aXNpYmxlCj4gaW4gdGhlIGtl
+cm5lbCwgb3Igd2VsbCBkZWZpbmVkIGRldmljZXMgbGlrZSB1YXJ0IG9yIHNhdGEgY29udHJvbGxl
+ci4KPiBCdXQgd2hlbiBnaXZlbiB0aGUgY2hvaWNlLCBJJ20gZ29pbmcgdG8gZXJyIG9uIHRoZSBz
+aWRlIG9mIG5vdAo+IGNvbmZ1c2luZyB1c2Vyc3BhY2UgYW5kIHRoZSBsYXJnZSBzb2Z0d2FyZSBz
+dGFjayB0aGF0IHNpdHMgYWJvdmUKPiBkcm0va21zLCBvdmVyIGR0IHB1cml0eS4KPiAKPiBNYXli
+ZSBpdCB3b3VsZCBiZSBuaWNlIHRvIGhhdmUgYSBzb3J0IG9mIGR0IG92ZXJsYXkgdGhhdCBhZGRz
+IHRoZSBiaXRzCj4gbmVlZGVkIHRvIHRpZSB0b2dldGhlciBodyBibG9ja3MgdGhhdCBzaG91bGQg
+YmUgYXNzZW1ibGVkIGludG8gYQo+IHNpbmdsZSBsb2dpY2FsIGRldmljZSBmb3IgbGludXggYW5k
+IHVzZXJzcGFjZSAoYnV0IG1heWJlIG5vdCBzb21lCj4gb3RoZXIgaHlwb3RoZXRpY2FsIG9wZXJh
+dGluZyBzeXN0ZW0pLiAgQnV0IHNvIGZhciB0aGF0IGRvZXNuJ3QgZXhpc3QuCj4gQWxsIHdlIGhh
+dmUgaXMgYSBoYW1tZXIgKGRldmljZXRyZWUpLCBldmVyeXRoaW5nIGxvb2tzIGxpa2UgYSBuYWls
+Lgo+IEVuZCByZXN1bHQgaXMgd2UgZW5kIHVwIGFkZGluZyBzb21lIHRoaW5ncyBpbiB0aGUgYmlu
+ZGluZ3Mgd2hpY2gKPiBhcmVuJ3QgcHVyZWx5IGFib3V0IHRoZSBody4gIFVudGlsIHNvbWVvbmUg
+aW52ZW50cyBhIHNjcmV3ZHJpdmVyLCBJJ20KPiBub3Qgc3VyZSB3aGF0IGVsc2UgdG8gZG8uICBJ
+biB0aGUgZW5kLCBvdGhlciBoeXBvdGhldGljYWwgT1MgaXMgZnJlZQo+IHRvIGlnbm9yZSB0aG9z
+ZSBleHRyYSBmaWVsZHMgaW4gdGhlIGJpbmRpbmdzIGlmIGl0IGRvZXNuJ3QgbmVlZCB0aGVtLgo+
+IFNvIG1laD8KCkkgdGhvdWdodCB3ZSBhZ3JlZWQgYSB3aGlsZSBiYWNrIHRoYXQgdGhlc2Uga2lu
+ZCBvZiAicHVsbCBldmVyeXRoaW5nIGZvcgp0aGUgbG9naWNhbCBkZXZpY2UgdG9nZXRoZXIiIGR0
+IG5vZGVzIHdoaWNoIGp1c3QgaGF2ZSBwaWxlcyBvZiBwaGFuZGxlcwphcmUgdG90YWxseSBhY2Nl
+cHRlZD8gQXQgbGVhc3QgdGhhdCdzIHRoZSBwb2ludCBiZWhpbmQgdGhlIGNvbXBvbmVudApoZWxw
+ZXJzLCBhbmQgRXJpYyBldmVuIHN1Z2dlc3RlZCB0byBjcmVhdGUgZHQtc3BlY2lmaWMgY29tcG9u
+ZW50IGhlbHBlcnMKdG8gY3V0IGRvd24gYSBiaXQgb24gdGhlIHVzdWFsIGJvaWxlcnBsYXRlLiBk
+dCBtYWludGFpbmVycyBhcmUgYWxzbyBmaW5lCndpdGggdGhpcyBhcHByb2FjaCBhZmFpay4gRnJv
+bSBteSB1bmRlcnN0YW5kaW5nIHRlZ3JhIHdpdGggdGhlIGhvc3QxeCBidXMKcmVhbGx5IGlzIHRo
+ZSBvZGQgb25lIG91dCBhbmQgbm90IHRoZSBub3JtLgoKR2l2ZW4gdGhhdCBhbmQgd2l0aCB0aGUg
+aG9wZSB0aGF0IHdlJ2xsIGV2ZW50dWFsbHkgc2VlIGEgZHQtZW5hYmxlZApjb21wb25lbnQgZnVu
+Y3Rpb25zIHRvIHN0YW5kYXJkaXplIHRoaXMgZXZlbiBtb3JlIHRoZSBvdmVyYWxsIGNvbmNlcHQg
+aXMKCkFja2VkLWJ5OiBEYW5pZWwgVmV0dGVyIDxkYW5pZWwudmV0dGVyQGZmd2xsLmNoPgoKQ2hl
+ZXJzLCBEYW5pZWwKLS0gCkRhbmllbCBWZXR0ZXIKU29mdHdhcmUgRW5naW5lZXIsIEludGVsIENv
+cnBvcmF0aW9uCmh0dHA6Ly9ibG9nLmZmd2xsLmNoCl9fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxp
+c3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4v
+bGlzdGluZm8vZHJpLWRldmVsCg==
