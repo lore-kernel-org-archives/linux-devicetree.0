@@ -1,63 +1,69 @@
-From: Yingjoe Chen <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH 0/5] add GPT timer support for mt8173
-Date: Wed, 26 Aug 2015 22:10:08 +0800
-Message-ID: <1440598208.30139.3.camel@mtksdaap41>
-References: <1436779969-18610-1-git-send-email-yingjoe.chen@mediatek.com>
-	 <55DD6CC4.6010708@linaro.org>
+From: Felipe Balbi <balbi@ti.com>
+Subject: Re: [PATCH] of: device: fix NULL pointer dereference on driver
+ removal
+Date: Wed, 26 Aug 2015 09:12:21 -0500
+Message-ID: <20150826141221.GB14625@saruman.tx.rr.com>
+References: <1440531290-17526-1-git-send-email-balbi@ti.com>
+ <CAL_JsqJYwQhFyZBFL2eC5mwO-o9xf3K5nn7vgfus_ySBR7NMWA@mail.gmail.com>
+Reply-To: <balbi@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <55DD6CC4.6010708-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, James Liao <jamesjj.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="TakKZr9L6Hm6aLOc"
+Return-path: <stable-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAL_JsqJYwQhFyZBFL2eC5mwO-o9xf3K5nn7vgfus_ySBR7NMWA@mail.gmail.com>
+Sender: stable-owner@vger.kernel.org
+To: Rob Herring <robherring2@gmail.com>
+Cc: Felipe Balbi <balbi@ti.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux OMAP Mailing List <linux-omap@vger.kernel.org>, stable <stable@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 2015-08-26 at 09:37 +0200, Daniel Lezcano wrote:
-> On 07/13/2015 11:32 AM, Yingjoe Chen wrote:
-> > This series add GPT timer support for mt8173. This is based on v4.2-rc1
-> > and Matthias' next branch (for dts parts).
-> >
-> > The first 2 patches comes from 'Add SMP bringup support for mt65xx socs'
-> > series [1]. I decide to move these 2 patches to this series, since it
-> > is more relevent here. They are changed based on Matthias' and Daniel's
-> > comments.
-> >
-> > [1] http://lists.infradead.org/pipermail/linux-mediatek/2015-May/000714.html
-> >
-> > Daniel Kurtz (1):
-> >    arm64: dts: mt8173: add timer node
-> >
-> > Yingjoe Chen (4):
-> >    clocksource: mediatek: do not enable GPT_CLK_EVT when setup
-> >    clocksource: mediatek: Use GPT as sched clock source
-> >    arm64: mediatek: enable MTK_TIMER
-> >    clk: mediatek: add 13mhz clock for MT8173
-> >
-> >   arch/arm64/Kconfig                       |  1 +
-> >   arch/arm64/boot/dts/mediatek/mt8173.dtsi |  9 +++++++++
-> >   drivers/clk/mediatek/clk-mt8173.c        |  5 +++++
-> >   drivers/clocksource/mtk_timer.c          | 26 ++++++++++++++++++++------
-> >   include/dt-bindings/clock/mt8173-clk.h   |  3 ++-
-> >   5 files changed, 37 insertions(+), 7 deletions(-)
-> 
-> Who will take this patchset ? I can take the patch 2 if needed.
-> 
-> 
+--TakKZr9L6Hm6aLOc
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Hi Daniel,
+On Wed, Aug 26, 2015 at 08:14:36AM -0500, Rob Herring wrote:
+> On Tue, Aug 25, 2015 at 2:34 PM, Felipe Balbi <balbi@ti.com> wrote:
+> > If we don't insert resources into the resource tree,
+> > calls to of_platform_depopulate() will end up in NULL
+> > pointer dereferences because the resource parent will
+> > be set to NULL even though we still have more resources
+> > to go through.
+>=20
+> Long standing problem. A fix is in -next now and will go into 4.3 (plus s=
+table):
+>=20
+> commit 11c63e4718acad3d8f04601c80fddd4b3d1455b1
+> Author: Grant Likely <grant.likely@linaro.org>
+> Date:   Sun Jun 7 15:20:11 2015 +0100
+>=20
+>     drivercore: Fix unregistration path of platform devices
 
-Please take patch 2 with your fix. Thanks.
+that commit works, but too late to add a Tested-by :-)
 
-I think patch 3(enable MTK_TIMER in Kconfig) and 5 (add timer node)
-should go through Matthias' tree to arm-soc and patch 4(add 13mhz clock)
-should go through James' mtk-clk tree to clk maintainer.
+--=20
+balbi
 
-Joe.C
+--TakKZr9L6Hm6aLOc
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+iQIcBAEBAgAGBQJV3clFAAoJEIaOsuA1yqREJTAQAJh6PBaRydjy1rX++w3e9JH6
+Z2cYiFu2mowtr+Z28hOI2kMtwT0JrfSeXbZ0jMTMajsgSOKnjscm403yDsfEvI3v
+27QEuTgVp59PHv2irIS1E1osmUV3dyZ6OoEqejNLSP5Mxx9rPuODzRPZYB7ezN+z
+QPNQt8Hjy5HOc9Zb/DrbcCrqXWL/XJknfPut67jIQlkipICcBrOVbsmwORn+iHpg
+eiVDCJTc3c5jvhQihTn4ks3AO2COUn4x48pDYUYkOzH9Epqi6KoYVV1+1lvlGfLy
+xPApHQxQGb1aw9z6Jt65OCo+vxrxpWeXXRPw82jQyKm5MpvVszMly26FsescK88J
+y7u7eX2k+x8goYahjO/KQfVHFpoNYQjebfX1QgIhDWWhWyVdkd/eKY8Hi5YG6s4E
+07NduJFN9+hdZueBI8d7Xt+D6QWHrFlqfKqk/OpqYo1WVTZ/ArJjYmp/pEg8Htd1
+5NoXLtJ/a+64cZsJmtSuNWgzNrQcETdkvpRewUWtgqXNXYaeAiEt0r9xzmV0+dUa
+k+CQlHLUtW2FAsi1fADOGdvFJ1RLuYQFZgIgxujB5jMsNqAaagte4B04Ekc2badF
+xkRiKY10CcKzEOHdWCv3DUCyCIVkBuaEe1Sa/sNqgHU2Q9EFI/S9l0CQxxIY3s6s
+RE9PfkEn+vS8sZTkBlXD
+=EfMe
+-----END PGP SIGNATURE-----
+
+--TakKZr9L6Hm6aLOc--
