@@ -1,119 +1,41 @@
-From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 1/7] drm/vc4: Add devicetree bindings for VC4.
-Date: Wed, 26 Aug 2015 09:30:17 -0500
-Message-ID: <CAL_JsqJ2v=wBaUe_gN_UcpQKis+kRH6oa0NTN24Lp9w9LVWtbQ@mail.gmail.com>
-References: <1439427380-2436-1-git-send-email-eric@anholt.net>
- <1439427380-2436-2-git-send-email-eric@anholt.net> <55CEC25E.7070303@wwwdotorg.org>
- <874mjxwyx5.fsf@eliezer.anholt.net> <CAL_JsqJxiGUR5BxBPyR3-0NxqWsOxMGrWQA6cMXe2pjTom__nw@mail.gmail.com>
- <CAF6AEGu2fi0M7DsicHz+5SDHi1DyDRmvWjkmYPPgY6pZ423WcA@mail.gmail.com>
- <20150826115229.GI1367@phenom.ffwll.local> <20150826120934.GC320@ulmo.nvidia.com>
+From: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>
+Subject: Re: [PATCH linux-next v5 3/5] mtd: spi-nor: allow to tune the number of dummy cycles
+Date: Wed, 26 Aug 2015 16:39:02 +0200
+Message-ID: <201508261639.02377.marex@denx.de>
+References: <cover.1440580764.git.cyrille.pitchen@atmel.com> <4324f398c0e69e3057e7da6a1a3e0328b44f224f.1440580764.git.cyrille.pitchen@atmel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: Text/Plain;
+  charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20150826120934.GC320-AwZRO8vwLAwmlAP/+Wk3EA@public.gmane.org>
+In-Reply-To: <4324f398c0e69e3057e7da6a1a3e0328b44f224f.1440580764.git.cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Rob Clark <robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Lee Jones <lee-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+To: Cyrille Pitchen <cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Cc: nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, beanhuo-AL4WhLSQfzjQT0dZR+AlfA@public.gmane.org, juhosg-p3rKhJxN3npAfugRpC6u6w@public.gmane.org, shijie.huang-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, ben-/+tVBieCtBitmTQ+vhA3Yw@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Aug 26, 2015 at 7:09 AM, Thierry Reding
-<thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> On Wed, Aug 26, 2015 at 01:52:29PM +0200, Daniel Vetter wrote:
->> On Tue, Aug 25, 2015 at 04:42:18PM -0400, Rob Clark wrote:
->> > On Mon, Aug 24, 2015 at 9:47 AM, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
->> > > On Mon, Aug 17, 2015 at 1:30 PM, Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org> wrote:
->> > >> Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org> writes:
->> > >>
->> > >>> On 08/12/2015 06:56 PM, Eric Anholt wrote:
->> > >>>> Signed-off-by: Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
->> > >>>
->> > >>> This one definitely needs a patch description, since someone might not
->> > >>> know what a VC4 is, and "git log" won't show the text from the binding
->> > >>> doc itself. I'd suggest adding the initial paragraph of the binding doc
->> > >>> as the patch description, or more.
->> > >>>
->> > >>>> diff --git a/Documentation/devicetree/bindings/gpu/brcm,bcm-vc4.txt b/Documentation/devicetree/bindings/gpu/brcm,bcm-vc4.txt
->> > >>
->> > >>>> +- hvss:             List of references to HVS video scalers
->> > >>>> +- encoders: List of references to output encoders (HDMI, SDTV)
->> > >>>
->> > >>> Would it make sense to make all those nodes child node of the vc4
->> > >>> object. That way, there's no need to have these lists of objects; they
->> > >>> can be automatically built up as the DT is enumerated. I know that e.g.
->> > >>> the NVIDIA Tegra host1x binding works this way, and I think it may have
->> > >>> been inspired by other similar cases.
->> > >>
->> > >> I've looked at tegra, and the component system used by msm appears to be
->> > >> nicer than it.  To follow tegra's model, it looks like I need to build
->> > >> this extra bus thing corresponding to host1x that is effectively the
->> > >> drivers/base/component.c code, so that I can get at vc4's structure from
->> > >> the component drivers.
->> > >>
->> > >>> Of course, this is only appropriate if the HW modules really are
->> > >>> logically children of the VC4 HW module. Perhaps they aren't. If they
->> > >>> aren't though, I wonder what this "vc4" module actually represents in HW?
->> > >>
->> > >> It's the subsystem, same as we use a subsystem node for msm, sti,
->> > >> rockchip, imx, and exynos.  This appears to be the common model of how
->> > >> the collection of graphics-related components is represented in the DT.
->> > >
->> > > I think most of these bindings are wrong. They are grouped together
->> > > because that is what DRM wants not because that reflects the h/w. So
->> > > convince me this is one block, not that it is what other people do.
->> >
->> > I think, when it comes to more complex driver subsystems (like drm in
->> > particular) we have a bit of mismatch between how things look from the
->> > "pure hw ignoring sw" perspective, and the "how sw and in particular
->> > userspace expects things" perspective.  Maybe it is less a problem in
->> > other subsystems, where bindings map to things that are only visible
->> > in the kernel, or well defined devices like uart or sata controller.
->> > But when given the choice, I'm going to err on the side of not
->> > confusing userspace and the large software stack that sits above
->> > drm/kms, over dt purity.
->> >
->> > Maybe it would be nice to have a sort of dt overlay that adds the bits
->> > needed to tie together hw blocks that should be assembled into a
->> > single logical device for linux and userspace (but maybe not some
->> > other hypothetical operating system).  But so far that doesn't exist.
->> > All we have is a hammer (devicetree), everything looks like a nail.
->> > End result is we end up adding some things in the bindings which
->> > aren't purely about the hw.  Until someone invents a screwdriver, I'm
->> > not sure what else to do.  In the end, other hypothetical OS is free
->> > to ignore those extra fields in the bindings if it doesn't need them.
->> > So meh?
->>
->> I thought we agreed a while back that these kind of "pull everything for
->> the logical device together" dt nodes which just have piles of phandles
->> are totally accepted? At least that's the point behind the component
->> helpers, and Eric even suggested to create dt-specific component helpers
->> to cut down a bit on the usual boilerplate. dt maintainers are also fine
->> with this approach afaik. From my understanding tegra with the host1x bus
->> really is the odd one out and not the norm.
->
-> I agree that in many aspects Tegra is somewhat special. But the same
-> principles that the host1x infrastructure uses could be implemented in a
-> similar way for other DRM drivers. You can easily collect information
-> about subdevices by walking the device tree and matching on known
-> compatible strings. And you can also instantiate the top-level device
-> from driver code rather than have it in DT. It should still be possible
-> to make this work without an artificial device node in DT. The component
-> and master infrastructure is largely orthogonal to that, and as far as I
-> remember the only blocker is the need for a top-level device. I wonder
-> if perhaps this could be made to work by binding the master to the top-
-> level SoC device.
->
-> Obviously adding the node in DT is easier, but to my knowledge easy has
-> never been a good excuse for mangling DT. Perhaps that's different these
-> days...
+On Wednesday, August 26, 2015 at 02:30:25 PM, Cyrille Pitchen wrote:
+> The number of dummy cycles used during Fast Read commands can be reduced
+> to improve transfer performances. Each manufacturer has a dedicated set of
+> registers to provide the memory with the exact number of dummy cycles it
+> should expect. Both the memory and the (Q)SPI controller must agree on
+> this number of dummy cycles.
+> 
+> The number of dummy cycles can be found into the memory datasheet and
+> mostly depends on the SPI clock frequency, the Fast Read op code and the
+> Single/Dual Data Rate mode.
+> 
+> Probing JEDEC Serial Flash Discoverable Parameters (SFDP) tables would
+> only provide the driver with a high enough number of dummy cycles for each
+> Fast Read command to be used for all clock frequencies: this solution
+> would not be optimized.
+> 
+> Signed-off-by: Cyrille Pitchen <cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
 
-I agree we should avoid the virtual node if possible. It is certainly
-possible as I started out with one and removed it. At least in my
-case, it essentially required the drm_device and crtc to be a single
-driver rather than 2 components. However, I'm more concerned that we
-are consistent from platform to platform where it makes sense than
-whether we have a somewhat questionable node or not.
+Acked-by: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>
 
-Rob
+Best regards,
+Marek Vasut
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
