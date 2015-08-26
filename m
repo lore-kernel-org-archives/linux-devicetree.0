@@ -1,131 +1,377 @@
-From: Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: Re: [PATCH 1/2] usb: chipidea: add xilinx zynq platform data
-Date: Thu, 27 Aug 2015 12:33:40 +0800
-Message-ID: <20150827043339.GA29157@shlinux2>
-References: <1440602865-30468-1-git-send-email-nathan.sullivan@ni.com>
- <CALHRZuqFtaRFNd9D=a+x2rZ2848ZOGYbTkSWCHxNPcW_NvocxA@mail.gmail.com>
+From: Chee Nouk Phoo <cnphoon-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>
+Subject: [PATCH] Altera Modular ADC driver support
+Date: Wed, 26 Aug 2015 09:03:28 -0700
+Message-ID: <1440605008-30021-1-git-send-email-cnphoon@altera.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <CALHRZuqFtaRFNd9D=a+x2rZ2848ZOGYbTkSWCHxNPcW_NvocxA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: sundeep subbaraya <sundeep.lkml-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Nathan Sullivan <nathan.sullivan-acOepvfBmUk@public.gmane.org>, Subbaraya Sundeep Bhatta <sbhatta-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, Michael.Hennerich-OyLXuOCK7orQT0dZR+AlfA@public.gmane.org, cnphoon.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Chee Nouk Phoon <cnphoon-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Aug 27, 2015 at 10:59:22AM +0530, sundeep subbaraya wrote:
-> Hi,
-> 
-> 
-> On Wed, Aug 26, 2015 at 8:57 PM, Nathan Sullivan <nathan.sullivan-acOepvfBmUk@public.gmane.org> wrote:
-> > The Xilinx Zynq udc does not need the CI_HDRC_DISABLE_STREAMING flag,
-> > unlike the default platform data.  Add platform data specific to the
-> > Zynq udc.
-> >
-> > Based on a patch by the same name from the Xilinx vendor tree.
-> 
-> I am that Xilinx guy who sent this patch :). It is in Xilinx tree as
-> temporary fix and
-> I did not debug further why UDC works only when streaming is enabled.
-> Probably this is right time to post my question here.
-> I was expecting like:
-> Streaming disabled - both low bandwidth and high bandwidth systems
-> should work fine
-> Streaming enabled - only for high bandwidth systems
-> but this is not the case, Zynq UDC works only when Streaming is enabled.
-> Please correct me if I am wrong.
+From: Chee Nouk Phoon <cnphoon-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>
 
-You are right, stream mode disabled should work at anytime.
-It is so strange why zynq UDC only works when stream mode is enabled.
+Altera Modular ADC is soft IP that wraps the hardened ADC block in a Max10
+device. It can be configured to dual ADC mode that supports two channel
+synchronous sampling or independent single ADCs. ADC sampled values will be
+written into memory slots in sequence determined by a user configurable
+sequencer block.
 
-Peter
-> 
-> Thanks,
-> Sundeep
-> 
-> >
-> > Signed-off-by: Nathan Sullivan <nathan.sullivan-acOepvfBmUk@public.gmane.org>
-> > ---
-> >  drivers/usb/chipidea/ci_hdrc_usb2.c |   25 +++++++++++++++++++------
-> >  1 file changed, 19 insertions(+), 6 deletions(-)
-> >
-> > diff --git a/drivers/usb/chipidea/ci_hdrc_usb2.c b/drivers/usb/chipidea/ci_hdrc_usb2.c
-> > index 9eae1a1..4456d2c 100644
-> > --- a/drivers/usb/chipidea/ci_hdrc_usb2.c
-> > +++ b/drivers/usb/chipidea/ci_hdrc_usb2.c
-> > @@ -12,6 +12,7 @@
-> >  #include <linux/dma-mapping.h>
-> >  #include <linux/module.h>
-> >  #include <linux/of.h>
-> > +#include <linux/of_platform.h>
-> >  #include <linux/phy/phy.h>
-> >  #include <linux/platform_device.h>
-> >  #include <linux/usb/chipidea.h>
-> > @@ -30,18 +31,36 @@ static const struct ci_hdrc_platform_data ci_default_pdata = {
-> >         .flags          = CI_HDRC_DISABLE_STREAMING,
-> >  };
-> >
-> > +static struct ci_hdrc_platform_data ci_zynq_pdata = {
-> > +       .capoffset      = DEF_CAPOFFSET,
-> > +};
-> > +
-> > +static const struct of_device_id ci_hdrc_usb2_of_match[] = {
-> > +       { .compatible = "chipidea,usb2"},
-> > +       { .compatible = "xlnx,zynq-usb-2.20a", .data = &ci_zynq_pdata},
-> > +       { }
-> > +};
-> > +MODULE_DEVICE_TABLE(of, ci_hdrc_usb2_of_match);
-> > +
-> >  static int ci_hdrc_usb2_probe(struct platform_device *pdev)
-> >  {
-> >         struct device *dev = &pdev->dev;
-> >         struct ci_hdrc_usb2_priv *priv;
-> >         struct ci_hdrc_platform_data *ci_pdata = dev_get_platdata(dev);
-> >         int ret;
-> > +       const struct of_device_id *match;
-> >
-> >         if (!ci_pdata) {
-> >                 ci_pdata = devm_kmalloc(dev, sizeof(*ci_pdata), GFP_KERNEL);
-> >                 *ci_pdata = ci_default_pdata;   /* struct copy */
-> >         }
-> >
-> > +       match = of_match_device(ci_hdrc_usb2_of_match, &pdev->dev);
-> > +       if (match && match->data) {
-> > +               /* struct copy */
-> > +               *ci_pdata = *(struct ci_hdrc_platform_data *)match->data;
-> > +       }
-> > +
-> >         priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
-> >         if (!priv)
-> >                 return -ENOMEM;
-> > @@ -96,12 +115,6 @@ static int ci_hdrc_usb2_remove(struct platform_device *pdev)
-> >         return 0;
-> >  }
-> >
-> > -static const struct of_device_id ci_hdrc_usb2_of_match[] = {
-> > -       { .compatible = "chipidea,usb2" },
-> > -       { }
-> > -};
-> > -MODULE_DEVICE_TABLE(of, ci_hdrc_usb2_of_match);
-> > -
-> >  static struct platform_driver ci_hdrc_usb2_driver = {
-> >         .probe  = ci_hdrc_usb2_probe,
-> >         .remove = ci_hdrc_usb2_remove,
-> > --
-> > 1.7.10.4
-> >
-> > --
-> > To unsubscribe from this list: send the line "unsubscribe linux-kernel" in
-> > the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> > More majordomo info at  http://vger.kernel.org/majordomo-info.html
-> > Please read the FAQ at  http://www.tux.org/lkml/
+This patch adds Altera Modular ADC driver support
 
+Signed-off-by: Chee Nouk Phoon <cnphoon-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>
+---
+ drivers/iio/adc/Kconfig           |   12 ++
+ drivers/iio/adc/Makefile          |    1 +
+ drivers/iio/adc/alt_modular_adc.c |  307 +++++++++++++++++++++++++++++++++++++
+ 3 files changed, 320 insertions(+), 0 deletions(-)
+ create mode 100644 drivers/iio/adc/alt_modular_adc.c
+
+diff --git a/drivers/iio/adc/Kconfig b/drivers/iio/adc/Kconfig
+index eb0cd89..b0b1cff 100644
+--- a/drivers/iio/adc/Kconfig
++++ b/drivers/iio/adc/Kconfig
+@@ -117,6 +117,18 @@ config AD799X
+ 	  i2c analog to digital converters (ADC). Provides direct access
+ 	  via sysfs.
+ 
++config ALT_MODULAR_ADC
++	tristate "Altera Modular ADC driver"
++	depends on NIOS2
++	select ANON_INODES
++
++	help
++	  Say yes here to have support for Altera Modular ADC. The driver
++	  supports both Altera Modular ADC and Altera Modular Dual ADC.
++
++	  The driver can also be build as a module. If so the module will be
++	  called alt_modular_adc.
++
+ config AT91_ADC
+ 	tristate "Atmel AT91 ADC"
+ 	depends on ARCH_AT91
+diff --git a/drivers/iio/adc/Makefile b/drivers/iio/adc/Makefile
+index a096210..d7f10e0 100644
+--- a/drivers/iio/adc/Makefile
++++ b/drivers/iio/adc/Makefile
+@@ -38,3 +38,4 @@ obj-$(CONFIG_VF610_ADC) += vf610_adc.o
+ obj-$(CONFIG_VIPERBOARD_ADC) += viperboard_adc.o
+ xilinx-xadc-y := xilinx-xadc-core.o xilinx-xadc-events.o
+ obj-$(CONFIG_XILINX_XADC) += xilinx-xadc.o
++obj-$(CONFIG_ALT_MODULAR_ADC) += alt_modular_adc.o
+diff --git a/drivers/iio/adc/alt_modular_adc.c b/drivers/iio/adc/alt_modular_adc.c
+new file mode 100644
+index 0000000..a5649d7
+--- /dev/null
++++ b/drivers/iio/adc/alt_modular_adc.c
+@@ -0,0 +1,307 @@
++/*
++ * Copyright (C) 2015 Altera Corporation. All rights reserved.
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms and conditions of the GNU General Public License,
++ * version 2, as published by the Free Software Foundation.
++ *
++ * This program is distributed in the hope it will be useful, but WITHOUT
++ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
++ * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
++ * more details.
++ *
++ * You should have received a copy of the GNU General Public License along with
++ * this program.  If not, see <http://www.gnu.org/licenses/>.
++ */
++
++#include <linux/device.h>
++#include <linux/err.h>
++#include <linux/io.h>
++#include <linux/kernel.h>
++#include <linux/module.h>
++#include <linux/of.h>
++#include <linux/platform_device.h>
++#include <linux/slab.h>
++
++#include <linux/iio/iio.h>
++
++/* Constant Definitions */
++#define MODE_MAX_SLOT		64
++#define MODE_MAX_ADC		2
++#define MODE_MAX_CHANNEL	18
++#define MODE_SINGLE_ADC		1
++#define MODE_DUAL_ADC		2
++#define MODE_ADC_BITS		12
++#define MODE_ADC_STORE_BITS	16
++
++/* Register Definitions */
++#define ADC_CMD_REG		0x0
++#define ADC_IER_REG		0x100
++#define ADC_ISR_REG		0x104
++
++#define ADC_RUN_MSK		0x1
++#define ADC_SINGLE_MKS		0x2
++#define ADC_STOP_MSK		0x0
++#define ADC_LOW_MSK		0xFFF
++#define ADC_HIGH_MSK		0xFFF0000
++
++struct altera_adc {
++	void __iomem		*seq_regs;
++	void __iomem		*sample_regs;
++
++	unsigned int		mode;
++	unsigned int		slot_count;
++	unsigned int		slot_sequence[MODE_MAX_ADC][MODE_MAX_SLOT];
++	unsigned int		adc_number;
++
++	u32			value;
++	u32			address;
++};
++
++static int alt_modular_adc_read_raw(struct iio_dev *indio_dev,
++				struct iio_chan_spec const *chan,
++				int *val,
++				int *val2,
++				long mask)
++{
++	struct altera_adc *adc = iio_priv(indio_dev);
++	int ret = -EINVAL;
++
++	if (mask != IIO_CHAN_INFO_RAW)
++		return -EINVAL;
++
++	adc->value = readl(adc->sample_regs + (chan->address * 4));
++
++	if (adc->mode == MODE_SINGLE_ADC) {
++		*val = (adc->value & ADC_LOW_MSK);
++		ret = IIO_VAL_INT;
++	} else if (adc->mode == MODE_DUAL_ADC) {
++		*val = (adc->value & ADC_LOW_MSK);
++		*val2 = ((adc->value & ADC_HIGH_MSK) >> 16);
++		ret = IIO_VAL_INT_MULTIPLE;
++	}
++
++	return ret;
++}
++
++static const struct iio_info adc_iio_info = {
++	.read_raw = &alt_modular_adc_read_raw,
++	.driver_module = THIS_MODULE,
++};
++
++static int alt_modular_adc_channel_init(struct iio_dev *indio_dev)
++{
++	struct altera_adc *adc = iio_priv(indio_dev);
++	struct iio_chan_spec *chan_array;
++	struct iio_chan_spec *chan;
++	char str[20];
++	int i;
++
++	chan_array = kcalloc(adc->slot_count,
++		sizeof(struct iio_chan_spec), GFP_KERNEL);
++
++	if (chan_array == NULL)
++		return -ENOMEM;
++
++	chan = chan_array;
++	for (i = 0; i < adc->slot_count; i++, chan++) {
++		chan->type = IIO_VOLTAGE;
++		chan->indexed = 1;
++		chan->channel = i;
++		chan->address = i;
++
++		/* Construct iio sysfs name*/
++		if (adc->mode == MODE_SINGLE_ADC) {
++			sprintf(str, "adc%d-ch%d", adc->adc_number,
++				adc->slot_sequence[0][i]);
++		} else if (adc->mode == MODE_DUAL_ADC) {
++			sprintf(str, "adc1-ch%d_adc2-ch%d",
++				adc->slot_sequence[0][i],
++				adc->slot_sequence[1][i]);
++		} else {
++			return -EINVAL;
++		}
++
++		chan->datasheet_name = str;
++		chan->extend_name = str,
++		chan->scan_index = i;
++		chan->scan_type.sign = 'u';
++		chan->scan_type.realbits = MODE_ADC_BITS;
++		chan->scan_type.storagebits = MODE_ADC_STORE_BITS;
++		chan->scan_type.endianness = IIO_CPU;
++		chan->info_mask_separate = BIT(IIO_CHAN_INFO_RAW);
++	}
++
++	indio_dev->channels = chan_array;
++
++	return 0;
++}
++
++static const struct of_device_id alt_modular_adc_match[] = {
++	{ .compatible = "altr,modular-adc-1.0" },
++	{ .compatible = "altr,modular-dual-adc-1.0" },
++	{ /* Sentinel */ }
++};
++MODULE_DEVICE_TABLE(of, alt_modular_adc_match);
++
++static int alt_modular_adc_parse_dt(struct iio_dev *indio_dev,
++				struct device *dev)
++{
++	struct altera_adc *adc = iio_priv(indio_dev);
++	struct device_node *np = dev->of_node;
++	u32 value;
++	int ret, i, j;
++	char str[50];
++
++	ret = of_property_read_u32(np, "altr,adc-mode", &value);
++	if (ret < 0)
++		return ret;
++	if (value > MODE_MAX_ADC) {
++		dev_err(dev, "Invalid ADC mode value");
++		return -EINVAL;
++	}
++	adc->mode = value;
++
++
++	ret = of_property_read_u32(np, "altr,adc-slot-count", &value);
++	if (ret < 0)
++		return ret;
++	if (value > MODE_MAX_SLOT) {
++		dev_err(dev, "Invalid ADC slot count value");
++		return -EINVAL;
++	}
++	adc->slot_count = value;
++
++	ret = of_property_read_u32(np, "altr,adc-number", &value);
++	if (ret < 0)
++		return ret;
++	if (value > MODE_MAX_ADC) {
++		dev_err(dev, "Invalid ADC number value");
++		return -EINVAL;
++	}
++	adc->adc_number = value;
++
++	/* Device tree lookup for channels for each memory slots */
++	for (j = 0; j < adc->mode; j++) {
++		for (i = 0; i < adc->slot_count; i++) {
++			str[0] = '\0';
++
++			sprintf(str, "altr,adc%d-slot-sequence-%d",
++				(j + 1), (i + 1));
++
++			ret = of_property_read_u32(np, str, &value);
++			if (ret < 0)
++				return ret;
++			if (value > MODE_MAX_CHANNEL) {
++				dev_err(dev, "Invalid ADC channel value");
++				return -EINVAL;
++			}
++			adc->slot_sequence[j][i] = value;
++		}
++	}
++
++	return 0;
++}
++
++static int alt_modular_adc_probe(struct platform_device *pdev)
++{
++	struct altera_adc *adc = NULL;
++	struct device_node *np = pdev->dev.of_node;
++	struct iio_dev *indio_dev = NULL;
++	struct resource *mem;
++	int ret = -ENODEV;
++
++	if (!np)
++		return ret;
++
++	indio_dev = iio_device_alloc(sizeof(struct altera_adc));
++	if (!indio_dev) {
++		dev_err(&pdev->dev, "failed allocating iio device\n");
++		return -ENOMEM;
++	}
++
++	adc = iio_priv(indio_dev);
++
++	mem = platform_get_resource(pdev, IORESOURCE_MEM, 0);
++	adc->seq_regs = devm_ioremap_resource(&pdev->dev, mem);
++	if (!adc->seq_regs) {
++		ret = -ENOMEM;
++		goto err_iio;
++	}
++
++	mem = platform_get_resource(pdev, IORESOURCE_MEM, 1);
++	adc->sample_regs = devm_ioremap_resource(&pdev->dev, mem);
++	if (!adc->sample_regs) {
++		ret = -ENOMEM;
++		goto err_iio;
++	}
++
++	ret = alt_modular_adc_parse_dt(indio_dev, &pdev->dev);
++	if (ret < 0) {
++		dev_err(&pdev->dev, "failed to parse device tree\n");
++		goto err_iio;
++	}
++
++	ret = alt_modular_adc_channel_init(indio_dev);
++	if (ret < 0) {
++		dev_err(&pdev->dev, "failed initialize ADC channels\n");
++		goto err_iio;
++	}
++
++	platform_set_drvdata(pdev, indio_dev);
++
++	indio_dev->name = dev_name(&pdev->dev);
++	indio_dev->dev.parent = &pdev->dev;
++	indio_dev->dev.of_node = pdev->dev.of_node;
++	indio_dev->info = &adc_iio_info;
++	indio_dev->modes = INDIO_DIRECT_MODE;
++	indio_dev->num_channels = adc->slot_count;
++
++	ret = iio_device_register(indio_dev);
++	if (ret)
++		goto err_iio;
++
++	/* Disable Interrupt */
++	writel(0, (adc->sample_regs + ADC_IER_REG));
++
++	/* Start Continuous Sampling */
++	writel((ADC_RUN_MSK), (adc->seq_regs + ADC_CMD_REG));
++
++	return 0;
++
++
++err_iio:
++	iio_device_free(indio_dev);
++	return ret;
++}
++
++static int alt_modular_adc_remove(struct platform_device *pdev)
++{
++	struct iio_dev *indio_dev = platform_get_drvdata(pdev);
++	struct altera_adc *adc = iio_priv(indio_dev);
++
++	/* Stop ADC */
++	writel((ADC_STOP_MSK), (adc->seq_regs + ADC_CMD_REG));
++
++	/* Unregister ADC */
++	iio_device_unregister(indio_dev);
++
++	return 0;
++}
++
++static struct platform_driver altr_modular_adc_driver = {
++	.probe		= alt_modular_adc_probe,
++	.remove		= alt_modular_adc_remove,
++	.driver		= {
++		.name	= "alt-modular-adc",
++		.owner	= THIS_MODULE,
++		.of_match_table = alt_modular_adc_match,
++	},
++};
++
++
++module_platform_driver(altr_modular_adc_driver);
++
++MODULE_DESCRIPTION("Altera Modular ADC Driver");
++MODULE_AUTHOR("Chee Nouk Phoon <cnphoon-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>");
++MODULE_LICENSE("GPL v2");
 -- 
-
-Best Regards,
-Peter Chen
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+1.7.1
