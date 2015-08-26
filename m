@@ -1,70 +1,67 @@
-From: Alexander Holler <holler@ahsoftware.de>
-Subject: [PATCH 10/16] deps: dts: omap: beagle: make some remote-endpoints
- non-dependencies
-Date: Wed, 26 Aug 2015 14:28:22 +0200
-Message-ID: <1440592108-3740-11-git-send-email-holler@ahsoftware.de>
-References: <1440592108-3740-1-git-send-email-holler@ahsoftware.de>
+From: Cyrille Pitchen <cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH linux-next v5 4/5] Documentation: atmel-quadspi: add binding file for Atmel QSPI driver
+Date: Wed, 26 Aug 2015 14:30:26 +0200
+Message-ID: <793cb906c79eed821cf9b47e79dc1b54a7a5dbd0.1440580764.git.cyrille.pitchen@atmel.com>
+References: <cover.1440580764.git.cyrille.pitchen@atmel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1440592108-3740-1-git-send-email-holler@ahsoftware.de>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: linux-kernel@vger.kernel.org
-Cc: devicetree@vger.kernel.org, Russel King <linux@arm.linux.org.uk>, Tomeu Vizoso <tomeu.vizoso@collabora.com>, Greg KH <gregkh@linuxfoundation.org>, Grant Likely <grant.likely@linaro.org>, Alexander Holler <holler@ahsoftware.de>, Andrew Morton <akpm@linux-foundation.org>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain
+Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <cover.1440580764.git.cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, beanhuo-AL4WhLSQfzjQT0dZR+AlfA@public.gmane.org, juhosg-p3rKhJxN3npAfugRpC6u6w@public.gmane.org, marex-ynQEQJNshbs@public.gmane.org, shijie.huang-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, ben-/+tVBieCtBitmTQ+vhA3Yw@public.gmane.org
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Cyrille Pitchen <cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This is necessary to remove dependency cycles introduced by
-'remote-endpoints'.
+This patch documents the DT bindings for the driver of the Atmel QSPI
+controller embedded inside sama5d2x SoCs.
 
-Signed-off-by: Alexander Holler <holler@ahsoftware.de>
+Signed-off-by: Cyrille Pitchen <cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Acked-by: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Acked-by: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>
 ---
- arch/arm/boot/dts/omap3-beagle.dts | 4 ++++
- 1 file changed, 4 insertions(+)
+ .../devicetree/bindings/mtd/atmel-quadspi.txt      | 29 ++++++++++++++++++++++
+ 1 file changed, 29 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/mtd/atmel-quadspi.txt
 
-diff --git a/arch/arm/boot/dts/omap3-beagle.dts b/arch/arm/boot/dts/omap3-beagle.dts
-index a547411..78ba39e 100644
---- a/arch/arm/boot/dts/omap3-beagle.dts
-+++ b/arch/arm/boot/dts/omap3-beagle.dts
-@@ -101,6 +101,7 @@
- 
- 				tfp410_in: endpoint@0 {
- 					remote-endpoint = <&dpi_out>;
-+					no-dependencies = <&dpi_out>;
- 				};
- 			};
- 
-@@ -109,6 +110,7 @@
- 
- 				tfp410_out: endpoint@0 {
- 					remote-endpoint = <&dvi_connector_in>;
-+					no-dependencies = <&dvi_connector_in>;
- 				};
- 			};
- 		};
-@@ -150,6 +152,7 @@
- 			etb_in: endpoint {
- 				slave-mode;
- 				remote-endpoint = <&etm_out>;
-+				no-dependencies = <&etm_out>;
- 			};
- 		};
- 	};
-@@ -373,6 +376,7 @@
- 	port {
- 		venc_out: endpoint {
- 			remote-endpoint = <&tv_connector_in>;
-+			no-dependencies = <&tv_connector_in>;
- 			ti,channels = <2>;
- 		};
- 	};
+diff --git a/Documentation/devicetree/bindings/mtd/atmel-quadspi.txt b/Documentation/devicetree/bindings/mtd/atmel-quadspi.txt
+new file mode 100644
+index 000000000000..0b8d545bb198
+--- /dev/null
++++ b/Documentation/devicetree/bindings/mtd/atmel-quadspi.txt
+@@ -0,0 +1,29 @@
++* Atmel Quad Serial Peripheral Interface (QSPI)
++
++Required properties:
++- compatible:     should be "atmel,sama5d2-qspi"
++- reg:            the first contains the register location and length,
++                  the second contains the memory mapping address and length
++- interrupts:     should contain the interrupt for the device
++- clocks:         the phandle of the clock needed by the QSPI controller
++- #address-cells: should be <1>
++- #size-cells:    should be <0>
++
++Example:
++
++spi@f0020000 {
++	compatible = "atmel,sama5d2-qspi";
++	reg = <0xf0020000 0x100>,
++	      <0xd0000000 0x8000000>;
++	interrupts = <52 IRQ_TYPE_LEVEL_HIGH 7>;
++	clocks = <&spi0_clk>;
++	#address-cells = <1>;
++	#size-cells = <0>;
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_spi0_default>;
++	status = "okay";
++
++	m25p80@0 {
++		...
++	};
++};
 -- 
-2.1.0
+1.8.2.2
+
+--
+To unsubscribe from this list: send the line "unsubscribe linux-spi" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
