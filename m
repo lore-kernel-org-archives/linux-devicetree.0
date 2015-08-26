@@ -1,100 +1,80 @@
-From: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
-Subject: Re: [PATCH v2 00/07] ARM: shmobile: APMU DT support via SMP Enable
- method V2
-Date: Wed, 26 Aug 2015 14:28:52 +0900
-Message-ID: <20150826052851.GA9515@verge.net.au>
-References: <20150823072427.14156.1960.sendpatchset@little-apple>
- <20150825004923.GC17673@verge.net.au>
- <CANqRtoQzpNSr8dWRvGmS_VWBEsi-=dB6PUGVzWQHAXK6xb2f2A@mail.gmail.com>
+From: Varadarajan Narayanan <varada@codeaurora.org>
+Subject: Re: [PATCH v3] qcom: ipq40xx: Add basic board/dts support for
+ IPQ40XX SoC
+Date: Wed, 26 Aug 2015 11:09:50 +0530
+Message-ID: <20150826053950.GB25312@codeaurora.org>
+References: <20150824092813.GA15581@codeaurora.org>
+ <20150824224928.GE14330@codeaurora.org>
+ <20150825081042.GA14028@codeaurora.org>
+ <20150825211405.GJ19120@codeaurora.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <CANqRtoQzpNSr8dWRvGmS_VWBEsi-=dB6PUGVzWQHAXK6xb2f2A-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: SH-Linux <linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>, =?utf-8?B?5bCP5p6X5pWs5aSq?= <keita.kobayashi.ym-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
+In-Reply-To: <20150825211405.GJ19120@codeaurora.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Stephen Boyd <sboyd@codeaurora.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Russell King <linux@arm.linux.org.uk>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-arm-msm@vger.kernel.org, Andy Gross <agross@codeaurora.org>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Georgi Djakov <gdjakov@mm-sol.com>, Kumar Gala <galak@codeaurora.org>, David Brown <davidb@codeaurora.org>, linux-soc@vger.kernel.org, Lina Iyer <lina.iyer@linaro.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-[resending as vegr rejected the previous attempt]
-
-On 25 August 2015 at 13:09, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-
-> Hi Simon,
->
-> On Tue, Aug 25, 2015 at 9:49 AM, Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org> wrote:
-> > Hi Magnus,
+On Tue, Aug 25, 2015 at 02:14:05PM -0700, Stephen Boyd wrote:
+> On 08/25, Varadarajan Narayanan wrote:
+> > On Mon, Aug 24, 2015 at 03:49:28PM -0700, Stephen Boyd wrote:
+> > > On 08/24, Varadarajan Narayanan wrote:
 > >
-> > On Sun, Aug 23, 2015 at 04:24:27PM +0900, Magnus Damm wrote:
-> >> ARM: shmobile: APMU DT support via SMP Enable method V2
-> >>
-> >> [PATCH v2 01/07] devicetree: bindings: Renesas APMU and SMP Enable
-> method
-> >> [PATCH v2 02/07] ARM: shmobile: Add APMU DT support via Enable method
-> >> [PATCH v2 03/07] ARM: shmobile: Add APMU nodes to r8a7790 DTSI
-> >> [PATCH v2 04/07] ARM: shmobile: Add APMU nodes to r8a7791 DTSI
-> >> [PATCH v2 05/07] ARM: shmobile: Add function to prioritize DT SMP
-> >> [PATCH v2 06/07] ARM: shmobile: Prioritize r8a7790 DT APMU support
-> >> [PATCH v2 07/07] ARM: shmobile: Prioritize r8a7791 DT APMU support
-> >>
-> >> These patches add DT support for the APMU hardware commonly found in
-> >> Renesas R-Car Gen2 SoCs. Without these patches the APMU gets configured
-> >> through data expressed in C, and with this series applied it is possible
-> >> to describe the APMU configuration in DT and let the enable method point
-> >> out that the APMU should be used.
-> >>
-> >> Patch 1 and 2 are Documenting and adding DT support to the APMU driver
-> >> together with enabling use of the enable-method way to describe that
-> >> the APMU hardware is needed for SMP operation.
-> >>
-> >> Patch 3 and 4 are related to r8a7790/r8a7791 support that get a DTSI
-> update
-> >> to describe the APMU hardware. To avoid breaking support for older DTBs
-> out
-> >> in the wild these patches keep the older existing C code APMU
-> configuration
-> >> as-is. Patch 5-7 make sure that during run-time, if the APMU is
-> installed
-> >> via the DT enable-method then it will not be overriden by older non-DT
-> >> configuration.
-> >>
-> >> I suggest making APMU DT configuration mandatory for SMP operation on
-> >> newer SoCs and that we keep the old APMU support code in place for a
-> >> good number of kernel releases or until we can identify a couple of
-> major
-> >> reasons good enough to force a DTB update on the end users.
-> >>
-> >> In the future r8a7793 and r8a7794 support may be added by using code
-> >> similar to patch 3 and 4 but without any C-based SMP code and fallback.
+> > > > +	compatible = "qcom,ipq40xx-r3pc", "qcom,ipq40xx";
+> > > > +
+> > > > +	memory {
+> > > > +		device_type = "memory";
+> > > > +		reg = <0x80000000 0x20000000>; /* 512MB */
+> > > > +	};
+> > >
+> > > Doesn't the bootloader fill the memory node for us? Why do we
+> > > need this?
+> > >
+> > > > +
+> > > > +	chosen {
+> > > > +		bootargs = "root=/dev/ram rw init=/init console=ttyMSM0,115200n8 initrd=0x82000000,0x000E2246";
+> > > > +	};
+> > >
+> > > Please don't add bootargs. Use stdout-path for the console part
+> > > and everything else should be done by the bootloader or is the
+> > > defaults.
 > >
-> > Sounds reasonable.
+> > Since this is for the emulation platform, we don't have the bootloader.
+>
+> Why are we upstreaming an emulation platform?
+
+Ok, will skip this.
+
+-Varada
+
+> I assume you have some sort of scripts or something to load the
+> kernel image into the emulator, so those scripts could go and
+> modify the dtb in place to populate the initrd and commandline.
+> If you need pointers on that feel free to contact me directly.
+>
 > >
-> > Looking over the review of this series I see only one minor comment
-> > regarding spelling in documentation. I have it in mind to queue up
-> > this series with that problem fixed unless objections are raised
-> > in the near future. Please feel free to convince me otherwise or
-> > repost the series with the spelling error fixed.
+> > > > +			compatible = "arm,armv7-timer";
+> > > > +			interrupts = <1 2 0xf08>,
+> > > > +				     <1 3 0xf08>,
+> > > > +				     <1 4 0xf08>,
+> > > > +				     <1 1 0xf08>;
+> > > > +			clock-frequency = <20833333>;
+> > >
+> > > Drop this clock-frequency part if you can. The hardware should
+> > > properly report the frequency.
+> >
+> > Cannot drop this. This is the ref-clock frequency. For the
+> > chip it is 48MHz, for emulation is ~20MHz. Similar to
+> > https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git/tree/arch/arm/boot/dts/qcom-msm8974.dtsi#n89
 >
-> Thanks for your feedback! My plan is to update this series once more
-> early next month, so no need to pick anything up right now.
+> And the hardware is not emulated properly to report the actual
+> frequency that the timer is running at? That's sad.
 >
-
-Thanks, I will immediately do nothing.
-
-
-> I feel that we should discuss with the ARM SoC guys about the reason
-> why SMP Enable DT binding is needed. From my side it seems enough to
-> determine the SMP configuration from the SoC part number (and maybe
-> APMU DT bits) that we already have encoded in DT.
+> At the least, this should be in the board specific dtsi file
+> instead of the SoC specific file, because it's a board quirk.
 >
-> Perhaps discussing that at ELCE would be good?
->
-> Best,
->
-> / magnus
->
->
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> --
+> Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+> a Linux Foundation Collaborative Project
