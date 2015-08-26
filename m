@@ -1,130 +1,141 @@
-From: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
-Subject: Re: [PATCH 2/5] ARM: NSP: add minimal Northstar Plus device tree
-Date: Wed, 26 Aug 2015 13:04:35 -0700
-Message-ID: <CAOesGMif9Bxx=K5GQqkiJKg2SD7QvgU8=2PQa65mEbJHnhNQ8Q@mail.gmail.com>
-References: <1440092804-25726-1-git-send-email-jonmason@broadcom.com>
-	<CAOesGMhE40_mfZCD2PqcTObE_Gz_6rKFwhf3-6kZY4n9Yxn2rQ@mail.gmail.com>
-	<20150826184009.GA4171@broadcom.com>
+From: Dave Airlie <airlied@gmail.com>
+Subject: Re: [PATCH 1/7] drm/vc4: Add devicetree bindings for VC4.
+Date: Thu, 27 Aug 2015 06:59:36 +1000
+Message-ID: <CAPM=9tw=3yGQE3_G+=ian-+iV-OCRatbFc-stoMczmXeM2Ko+Q@mail.gmail.com>
+References: <1439427380-2436-1-git-send-email-eric@anholt.net>
+ <1439427380-2436-2-git-send-email-eric@anholt.net>
+ <55CEC25E.7070303@wwwdotorg.org>
+ <874mjxwyx5.fsf@eliezer.anholt.net>
+ <CAL_JsqJxiGUR5BxBPyR3-0NxqWsOxMGrWQA6cMXe2pjTom__nw@mail.gmail.com>
+ <CAF6AEGu2fi0M7DsicHz+5SDHi1DyDRmvWjkmYPPgY6pZ423WcA@mail.gmail.com>
+ <20150826115229.GI1367@phenom.ffwll.local>
+ <20150826120934.GC320@ulmo.nvidia.com>
+ <CAL_JsqJ2v=wBaUe_gN_UcpQKis+kRH6oa0NTN24Lp9w9LVWtbQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20150826184009.GA4171-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jon Mason <jonmason-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Cc: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Broadcom Kernel Feedback List <bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Kapil Hali <kapilh-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <CAL_JsqJ2v=wBaUe_gN_UcpQKis+kRH6oa0NTN24Lp9w9LVWtbQ@mail.gmail.com>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Rob Herring <robherring2@gmail.com>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Stephen Warren <swarren@wwwdotorg.org>, Lee Jones <lee@kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, dri-devel <dri-devel@lists.freedesktop.org>, linux-rpi-kernel@lists.infradead.org, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Aug 26, 2015 at 11:40 AM, Jon Mason <jonmason-dY08KVG/lbpWk0Htik3J/w@public.gmane.org> wrote:
-> On Tue, Aug 25, 2015 at 04:36:45PM -0700, Olof Johansson wrote:
->> Hi,
->>
->> I'm not sure what the strategy behind your cc:ing on this patch set
->> is. I only got a couple of them in my inbox, and this one wasn't one
->> of them. :)
->
-> I sent them to the people listed as maintainers in get_maintainer.pl.
-> It didn't seem to include you in all of them, but I thought the
-> mailing list would be enough of a catch all.  My apologies.  I'll CC
-> everyone listed as a maintainer on all of the patches in the future.
-
-No worries. Just pointing it out since you asked me to look at the
-patches and, well, I hadn't received them all. :)
-
->> On Thu, Aug 20, 2015 at 10:46 AM, Jon Mason <jonmason-dY08KVG/lbpWk0Htik3J/w@public.gmane.org> wrote:
->> > Add a very minimalistic set of Northstar Plus Device Tree files which
->> > describes the SoC and the BCM958625 implementation.  The perpherials
->> > described are:
->> >
->> > ARM Cortex A9 CPU
->> > 2 8250 UARTs
->> > ARM GIC
->> > PL310 L2 Cache
->> > ARM A9 Global timer
->> >
->> > Signed-off-by: Jon Mason <jonmason-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
->> > Signed-off-by: Kapil Hali <kapilh-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
->> > Reviewed-by: Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
->> > Reviewed-by: Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
->>
->> Seeing reviewed-by already attached to a v1 of a patchset has limited
->> value for someone on the outside.
->>
->> Reviewed-by is one of those tags that has a value that's mostly
->> dependent on who it comes from. By not actually seeing the review and
->> the feedback provided (and revisions made), less data is provided to
->> tell if it's a valuable review or not.
->>
->> Also, if you're posting the code you should probably have your name
->> below Kapil's, since you're the one signing off the origin of the
->> code. See Documentation/SubmittingPatches.txt for details on what
->> S-o-b actually means.
->
-> We worked on it together, but I'll be happy to reorder as you suggest.
->
->>
->>
->> > --- /dev/null
->> > +++ b/arch/arm/boot/dts/bcm-nsp.dtsi
->> > @@ -0,0 +1,105 @@
->> > +/*
->> > + *  BSD LICENSE
->> > + *
->> > + *  Copyright(c) 2015 Broadcom Corporation.  All rights reserved.
->> > + *
->> > + *  Redistribution and use in source and binary forms, with or without
->> > + *  modification, are permitted provided that the following conditions
->> > + *  are met:
->> > + *
->> > + *    * Redistributions of source code must retain the above copyright
->> > + *      notice, this list of conditions and the following disclaimer.
->> > + *    * Redistributions in binary form must reproduce the above copyright
->> > + *      notice, this list of conditions and the following disclaimer in
->> > + *      the documentation and/or other materials provided with the
->> > + *      distribution.
->> > + *    * Neither the name of Broadcom Corporation nor the names of its
->> > + *      contributors may be used to endorse or promote products derived
->> > + *      from this software without specific prior written permission.
->> > + *
->> > + *  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
->> > + *  "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
->> > + *  LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
->> > + *  A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
->> > + *  OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
->> > + *  SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
->> > + *  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
->> > + *  DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
->> > + *  THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
->> > + *  (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
->> > + *  OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
->> > + */
->>
->> I'm not sure we've seen BSD-only submissions before. I'll let DT
->> maintainers (or Ian) speak up in case this would cause problems.
->
-> I was following the precedent in arch/arm/boot/dts/bcm-cygnus.dtsi.
-> If this is preferred to be GPL v2, then I will happily comply.
-
-No, we'd rather have BSD-only than GPL-only, so keeping it as it is
-should be OK.
-
->> > +       chosen {
->> > +               stdout-path = "serial0:115200n8";
->> > +       };
->>
->> No way to mount a root filesystem yet? How much work remains for that
->> to be possible, and what's the plan for that?
->
-> It mounts rootfs.  I am adding the rootfs to the kernel and device
-> tree blob via the u-boot mkimage command.  It boots all the way to
-> shell without issue.
-
-Sure, any system with memory can use ramdisk for root, that's not what I meant.
-
-Still, based on post from Scott it sounds like NAND support isn't far away.
-
-
--Olof
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+T24gMjcgQXVndXN0IDIwMTUgYXQgMDA6MzAsIFJvYiBIZXJyaW5nIDxyb2JoZXJyaW5nMkBnbWFp
+bC5jb20+IHdyb3RlOgo+IE9uIFdlZCwgQXVnIDI2LCAyMDE1IGF0IDc6MDkgQU0sIFRoaWVycnkg
+UmVkaW5nCj4gPHRoaWVycnkucmVkaW5nQGdtYWlsLmNvbT4gd3JvdGU6Cj4+IE9uIFdlZCwgQXVn
+IDI2LCAyMDE1IGF0IDAxOjUyOjI5UE0gKzAyMDAsIERhbmllbCBWZXR0ZXIgd3JvdGU6Cj4+PiBP
+biBUdWUsIEF1ZyAyNSwgMjAxNSBhdCAwNDo0MjoxOFBNIC0wNDAwLCBSb2IgQ2xhcmsgd3JvdGU6
+Cj4+PiA+IE9uIE1vbiwgQXVnIDI0LCAyMDE1IGF0IDk6NDcgQU0sIFJvYiBIZXJyaW5nIDxyb2Jo
+ZXJyaW5nMkBnbWFpbC5jb20+IHdyb3RlOgo+Pj4gPiA+IE9uIE1vbiwgQXVnIDE3LCAyMDE1IGF0
+IDE6MzAgUE0sIEVyaWMgQW5ob2x0IDxlcmljQGFuaG9sdC5uZXQ+IHdyb3RlOgo+Pj4gPiA+PiBT
+dGVwaGVuIFdhcnJlbiA8c3dhcnJlbkB3d3dkb3Rvcmcub3JnPiB3cml0ZXM6Cj4+PiA+ID4+Cj4+
+PiA+ID4+PiBPbiAwOC8xMi8yMDE1IDA2OjU2IFBNLCBFcmljIEFuaG9sdCB3cm90ZToKPj4+ID4g
+Pj4+PiBTaWduZWQtb2ZmLWJ5OiBFcmljIEFuaG9sdCA8ZXJpY0BhbmhvbHQubmV0Pgo+Pj4gPiA+
+Pj4KPj4+ID4gPj4+IFRoaXMgb25lIGRlZmluaXRlbHkgbmVlZHMgYSBwYXRjaCBkZXNjcmlwdGlv
+biwgc2luY2Ugc29tZW9uZSBtaWdodCBub3QKPj4+ID4gPj4+IGtub3cgd2hhdCBhIFZDNCBpcywg
+YW5kICJnaXQgbG9nIiB3b24ndCBzaG93IHRoZSB0ZXh0IGZyb20gdGhlIGJpbmRpbmcKPj4+ID4g
+Pj4+IGRvYyBpdHNlbGYuIEknZCBzdWdnZXN0IGFkZGluZyB0aGUgaW5pdGlhbCBwYXJhZ3JhcGgg
+b2YgdGhlIGJpbmRpbmcgZG9jCj4+PiA+ID4+PiBhcyB0aGUgcGF0Y2ggZGVzY3JpcHRpb24sIG9y
+IG1vcmUuCj4+PiA+ID4+Pgo+Pj4gPiA+Pj4+IGRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2Rl
+dmljZXRyZWUvYmluZGluZ3MvZ3B1L2JyY20sYmNtLXZjNC50eHQgYi9Eb2N1bWVudGF0aW9uL2Rl
+dmljZXRyZWUvYmluZGluZ3MvZ3B1L2JyY20sYmNtLXZjNC50eHQKPj4+ID4gPj4KPj4+ID4gPj4+
+PiArLSBodnNzOiAgICAgICAgICAgICBMaXN0IG9mIHJlZmVyZW5jZXMgdG8gSFZTIHZpZGVvIHNj
+YWxlcnMKPj4+ID4gPj4+PiArLSBlbmNvZGVyczogTGlzdCBvZiByZWZlcmVuY2VzIHRvIG91dHB1
+dCBlbmNvZGVycyAoSERNSSwgU0RUVikKPj4+ID4gPj4+Cj4+PiA+ID4+PiBXb3VsZCBpdCBtYWtl
+IHNlbnNlIHRvIG1ha2UgYWxsIHRob3NlIG5vZGVzIGNoaWxkIG5vZGUgb2YgdGhlIHZjNAo+Pj4g
+PiA+Pj4gb2JqZWN0LiBUaGF0IHdheSwgdGhlcmUncyBubyBuZWVkIHRvIGhhdmUgdGhlc2UgbGlz
+dHMgb2Ygb2JqZWN0czsgdGhleQo+Pj4gPiA+Pj4gY2FuIGJlIGF1dG9tYXRpY2FsbHkgYnVpbHQg
+dXAgYXMgdGhlIERUIGlzIGVudW1lcmF0ZWQuIEkga25vdyB0aGF0IGUuZy4KPj4+ID4gPj4+IHRo
+ZSBOVklESUEgVGVncmEgaG9zdDF4IGJpbmRpbmcgd29ya3MgdGhpcyB3YXksIGFuZCBJIHRoaW5r
+IGl0IG1heSBoYXZlCj4+PiA+ID4+PiBiZWVuIGluc3BpcmVkIGJ5IG90aGVyIHNpbWlsYXIgY2Fz
+ZXMuCj4+PiA+ID4+Cj4+PiA+ID4+IEkndmUgbG9va2VkIGF0IHRlZ3JhLCBhbmQgdGhlIGNvbXBv
+bmVudCBzeXN0ZW0gdXNlZCBieSBtc20gYXBwZWFycyB0byBiZQo+Pj4gPiA+PiBuaWNlciB0aGFu
+IGl0LiAgVG8gZm9sbG93IHRlZ3JhJ3MgbW9kZWwsIGl0IGxvb2tzIGxpa2UgSSBuZWVkIHRvIGJ1
+aWxkCj4+PiA+ID4+IHRoaXMgZXh0cmEgYnVzIHRoaW5nIGNvcnJlc3BvbmRpbmcgdG8gaG9zdDF4
+IHRoYXQgaXMgZWZmZWN0aXZlbHkgdGhlCj4+PiA+ID4+IGRyaXZlcnMvYmFzZS9jb21wb25lbnQu
+YyBjb2RlLCBzbyB0aGF0IEkgY2FuIGdldCBhdCB2YzQncyBzdHJ1Y3R1cmUgZnJvbQo+Pj4gPiA+
+PiB0aGUgY29tcG9uZW50IGRyaXZlcnMuCj4+PiA+ID4+Cj4+PiA+ID4+PiBPZiBjb3Vyc2UsIHRo
+aXMgaXMgb25seSBhcHByb3ByaWF0ZSBpZiB0aGUgSFcgbW9kdWxlcyByZWFsbHkgYXJlCj4+PiA+
+ID4+PiBsb2dpY2FsbHkgY2hpbGRyZW4gb2YgdGhlIFZDNCBIVyBtb2R1bGUuIFBlcmhhcHMgdGhl
+eSBhcmVuJ3QuIElmIHRoZXkKPj4+ID4gPj4+IGFyZW4ndCB0aG91Z2gsIEkgd29uZGVyIHdoYXQg
+dGhpcyAidmM0IiBtb2R1bGUgYWN0dWFsbHkgcmVwcmVzZW50cyBpbiBIVz8KPj4+ID4gPj4KPj4+
+ID4gPj4gSXQncyB0aGUgc3Vic3lzdGVtLCBzYW1lIGFzIHdlIHVzZSBhIHN1YnN5c3RlbSBub2Rl
+IGZvciBtc20sIHN0aSwKPj4+ID4gPj4gcm9ja2NoaXAsIGlteCwgYW5kIGV4eW5vcy4gIFRoaXMg
+YXBwZWFycyB0byBiZSB0aGUgY29tbW9uIG1vZGVsIG9mIGhvdwo+Pj4gPiA+PiB0aGUgY29sbGVj
+dGlvbiBvZiBncmFwaGljcy1yZWxhdGVkIGNvbXBvbmVudHMgaXMgcmVwcmVzZW50ZWQgaW4gdGhl
+IERULgo+Pj4gPiA+Cj4+PiA+ID4gSSB0aGluayBtb3N0IG9mIHRoZXNlIGJpbmRpbmdzIGFyZSB3
+cm9uZy4gVGhleSBhcmUgZ3JvdXBlZCB0b2dldGhlcgo+Pj4gPiA+IGJlY2F1c2UgdGhhdCBpcyB3
+aGF0IERSTSB3YW50cyBub3QgYmVjYXVzZSB0aGF0IHJlZmxlY3RzIHRoZSBoL3cuIFNvCj4+PiA+
+ID4gY29udmluY2UgbWUgdGhpcyBpcyBvbmUgYmxvY2ssIG5vdCB0aGF0IGl0IGlzIHdoYXQgb3Ro
+ZXIgcGVvcGxlIGRvLgo+Pj4gPgo+Pj4gPiBJIHRoaW5rLCB3aGVuIGl0IGNvbWVzIHRvIG1vcmUg
+Y29tcGxleCBkcml2ZXIgc3Vic3lzdGVtcyAobGlrZSBkcm0gaW4KPj4+ID4gcGFydGljdWxhcikg
+d2UgaGF2ZSBhIGJpdCBvZiBtaXNtYXRjaCBiZXR3ZWVuIGhvdyB0aGluZ3MgbG9vayBmcm9tIHRo
+ZQo+Pj4gPiAicHVyZSBodyBpZ25vcmluZyBzdyIgcGVyc3BlY3RpdmUsIGFuZCB0aGUgImhvdyBz
+dyBhbmQgaW4gcGFydGljdWxhcgo+Pj4gPiB1c2Vyc3BhY2UgZXhwZWN0cyB0aGluZ3MiIHBlcnNw
+ZWN0aXZlLiAgTWF5YmUgaXQgaXMgbGVzcyBhIHByb2JsZW0gaW4KPj4+ID4gb3RoZXIgc3Vic3lz
+dGVtcywgd2hlcmUgYmluZGluZ3MgbWFwIHRvIHRoaW5ncyB0aGF0IGFyZSBvbmx5IHZpc2libGUK
+Pj4+ID4gaW4gdGhlIGtlcm5lbCwgb3Igd2VsbCBkZWZpbmVkIGRldmljZXMgbGlrZSB1YXJ0IG9y
+IHNhdGEgY29udHJvbGxlci4KPj4+ID4gQnV0IHdoZW4gZ2l2ZW4gdGhlIGNob2ljZSwgSSdtIGdv
+aW5nIHRvIGVyciBvbiB0aGUgc2lkZSBvZiBub3QKPj4+ID4gY29uZnVzaW5nIHVzZXJzcGFjZSBh
+bmQgdGhlIGxhcmdlIHNvZnR3YXJlIHN0YWNrIHRoYXQgc2l0cyBhYm92ZQo+Pj4gPiBkcm0va21z
+LCBvdmVyIGR0IHB1cml0eS4KPj4+ID4KPj4+ID4gTWF5YmUgaXQgd291bGQgYmUgbmljZSB0byBo
+YXZlIGEgc29ydCBvZiBkdCBvdmVybGF5IHRoYXQgYWRkcyB0aGUgYml0cwo+Pj4gPiBuZWVkZWQg
+dG8gdGllIHRvZ2V0aGVyIGh3IGJsb2NrcyB0aGF0IHNob3VsZCBiZSBhc3NlbWJsZWQgaW50byBh
+Cj4+PiA+IHNpbmdsZSBsb2dpY2FsIGRldmljZSBmb3IgbGludXggYW5kIHVzZXJzcGFjZSAoYnV0
+IG1heWJlIG5vdCBzb21lCj4+PiA+IG90aGVyIGh5cG90aGV0aWNhbCBvcGVyYXRpbmcgc3lzdGVt
+KS4gIEJ1dCBzbyBmYXIgdGhhdCBkb2Vzbid0IGV4aXN0Lgo+Pj4gPiBBbGwgd2UgaGF2ZSBpcyBh
+IGhhbW1lciAoZGV2aWNldHJlZSksIGV2ZXJ5dGhpbmcgbG9va3MgbGlrZSBhIG5haWwuCj4+PiA+
+IEVuZCByZXN1bHQgaXMgd2UgZW5kIHVwIGFkZGluZyBzb21lIHRoaW5ncyBpbiB0aGUgYmluZGlu
+Z3Mgd2hpY2gKPj4+ID4gYXJlbid0IHB1cmVseSBhYm91dCB0aGUgaHcuICBVbnRpbCBzb21lb25l
+IGludmVudHMgYSBzY3Jld2RyaXZlciwgSSdtCj4+PiA+IG5vdCBzdXJlIHdoYXQgZWxzZSB0byBk
+by4gIEluIHRoZSBlbmQsIG90aGVyIGh5cG90aGV0aWNhbCBPUyBpcyBmcmVlCj4+PiA+IHRvIGln
+bm9yZSB0aG9zZSBleHRyYSBmaWVsZHMgaW4gdGhlIGJpbmRpbmdzIGlmIGl0IGRvZXNuJ3QgbmVl
+ZCB0aGVtLgo+Pj4gPiBTbyBtZWg/Cj4+Pgo+Pj4gSSB0aG91Z2h0IHdlIGFncmVlZCBhIHdoaWxl
+IGJhY2sgdGhhdCB0aGVzZSBraW5kIG9mICJwdWxsIGV2ZXJ5dGhpbmcgZm9yCj4+PiB0aGUgbG9n
+aWNhbCBkZXZpY2UgdG9nZXRoZXIiIGR0IG5vZGVzIHdoaWNoIGp1c3QgaGF2ZSBwaWxlcyBvZiBw
+aGFuZGxlcwo+Pj4gYXJlIHRvdGFsbHkgYWNjZXB0ZWQ/IEF0IGxlYXN0IHRoYXQncyB0aGUgcG9p
+bnQgYmVoaW5kIHRoZSBjb21wb25lbnQKPj4+IGhlbHBlcnMsIGFuZCBFcmljIGV2ZW4gc3VnZ2Vz
+dGVkIHRvIGNyZWF0ZSBkdC1zcGVjaWZpYyBjb21wb25lbnQgaGVscGVycwo+Pj4gdG8gY3V0IGRv
+d24gYSBiaXQgb24gdGhlIHVzdWFsIGJvaWxlcnBsYXRlLiBkdCBtYWludGFpbmVycyBhcmUgYWxz
+byBmaW5lCj4+PiB3aXRoIHRoaXMgYXBwcm9hY2ggYWZhaWsuIEZyb20gbXkgdW5kZXJzdGFuZGlu
+ZyB0ZWdyYSB3aXRoIHRoZSBob3N0MXggYnVzCj4+PiByZWFsbHkgaXMgdGhlIG9kZCBvbmUgb3V0
+IGFuZCBub3QgdGhlIG5vcm0uCj4+Cj4+IEkgYWdyZWUgdGhhdCBpbiBtYW55IGFzcGVjdHMgVGVn
+cmEgaXMgc29tZXdoYXQgc3BlY2lhbC4gQnV0IHRoZSBzYW1lCj4+IHByaW5jaXBsZXMgdGhhdCB0
+aGUgaG9zdDF4IGluZnJhc3RydWN0dXJlIHVzZXMgY291bGQgYmUgaW1wbGVtZW50ZWQgaW4gYQo+
+PiBzaW1pbGFyIHdheSBmb3Igb3RoZXIgRFJNIGRyaXZlcnMuIFlvdSBjYW4gZWFzaWx5IGNvbGxl
+Y3QgaW5mb3JtYXRpb24KPj4gYWJvdXQgc3ViZGV2aWNlcyBieSB3YWxraW5nIHRoZSBkZXZpY2Ug
+dHJlZSBhbmQgbWF0Y2hpbmcgb24ga25vd24KPj4gY29tcGF0aWJsZSBzdHJpbmdzLiBBbmQgeW91
+IGNhbiBhbHNvIGluc3RhbnRpYXRlIHRoZSB0b3AtbGV2ZWwgZGV2aWNlCj4+IGZyb20gZHJpdmVy
+IGNvZGUgcmF0aGVyIHRoYW4gaGF2ZSBpdCBpbiBEVC4gSXQgc2hvdWxkIHN0aWxsIGJlIHBvc3Np
+YmxlCj4+IHRvIG1ha2UgdGhpcyB3b3JrIHdpdGhvdXQgYW4gYXJ0aWZpY2lhbCBkZXZpY2Ugbm9k
+ZSBpbiBEVC4gVGhlIGNvbXBvbmVudAo+PiBhbmQgbWFzdGVyIGluZnJhc3RydWN0dXJlIGlzIGxh
+cmdlbHkgb3J0aG9nb25hbCB0byB0aGF0LCBhbmQgYXMgZmFyIGFzIEkKPj4gcmVtZW1iZXIgdGhl
+IG9ubHkgYmxvY2tlciBpcyB0aGUgbmVlZCBmb3IgYSB0b3AtbGV2ZWwgZGV2aWNlLiBJIHdvbmRl
+cgo+PiBpZiBwZXJoYXBzIHRoaXMgY291bGQgYmUgbWFkZSB0byB3b3JrIGJ5IGJpbmRpbmcgdGhl
+IG1hc3RlciB0byB0aGUgdG9wLQo+PiBsZXZlbCBTb0MgZGV2aWNlLgo+Pgo+PiBPYnZpb3VzbHkg
+YWRkaW5nIHRoZSBub2RlIGluIERUIGlzIGVhc2llciwgYnV0IHRvIG15IGtub3dsZWRnZSBlYXN5
+IGhhcwo+PiBuZXZlciBiZWVuIGEgZ29vZCBleGN1c2UgZm9yIG1hbmdsaW5nIERULiBQZXJoYXBz
+IHRoYXQncyBkaWZmZXJlbnQgdGhlc2UKPj4gZGF5cy4uLgo+Cj4gSSBhZ3JlZSB3ZSBzaG91bGQg
+YXZvaWQgdGhlIHZpcnR1YWwgbm9kZSBpZiBwb3NzaWJsZS4gSXQgaXMgY2VydGFpbmx5Cj4gcG9z
+c2libGUgYXMgSSBzdGFydGVkIG91dCB3aXRoIG9uZSBhbmQgcmVtb3ZlZCBpdC4gQXQgbGVhc3Qg
+aW4gbXkKPiBjYXNlLCBpdCBlc3NlbnRpYWxseSByZXF1aXJlZCB0aGUgZHJtX2RldmljZSBhbmQg
+Y3J0YyB0byBiZSBhIHNpbmdsZQo+IGRyaXZlciByYXRoZXIgdGhhbiAyIGNvbXBvbmVudHMuIEhv
+d2V2ZXIsIEknbSBtb3JlIGNvbmNlcm5lZCB0aGF0IHdlCj4gYXJlIGNvbnNpc3RlbnQgZnJvbSBw
+bGF0Zm9ybSB0byBwbGF0Zm9ybSB3aGVyZSBpdCBtYWtlcyBzZW5zZSB0aGFuCj4gd2hldGhlciB3
+ZSBoYXZlIGEgc29tZXdoYXQgcXVlc3Rpb25hYmxlIG5vZGUgb3Igbm90Lgo+Cmh0dHA6Ly9saXN0
+cy5mcmVlZGVza3RvcC5vcmcvYXJjaGl2ZXMvZHJpLWRldmVsLzIwMTMtSnVseS8wNDExNTkuaHRt
+bAoKU28gY2FuIHdlIGF0IGxlYXN0IGhhdmUgc29tZSBjb250aW51aXR5IG9mIGRlY2lzaW9uIG1h
+a2luZywKYmlrZXNoZWRkaW5nIHRoaXMgZXZlcnkgdGltZSB3ZSBzdWJtaXQgYSBkcml2ZXIgaXNu
+J3QgZ2l2aW5nIG1lIGFueQpob3BlIGdvaW5nIGZvcndhcmQuCgpEYXZlLgpfX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0
+CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cDovL2xpc3RzLmZyZWVkZXNrdG9w
+Lm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
