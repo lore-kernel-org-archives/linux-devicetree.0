@@ -1,49 +1,76 @@
-From: Cyrille Pitchen <cyrille.pitchen@atmel.com>
-Subject: [PATCH linux-next v5 2/5] Documentation: mtd: add a DT property to set the number of dummy cycles
-Date: Wed, 26 Aug 2015 14:30:24 +0200
-Message-ID: <648dbf9f9d1d4cd414fe2df8d298880b2245c7b5.1440580764.git.cyrille.pitchen@atmel.com>
-References: <cover.1440580764.git.cyrille.pitchen@atmel.com>
-Mime-Version: 1.0
-Content-Type: text/plain
+From: Alexander Holler <holler@ahsoftware.de>
+Subject: [PATCH 11/16] deps: WIP: generic: annotate some initcalls
+Date: Wed, 26 Aug 2015 14:28:23 +0200
+Message-ID: <1440592108-3740-12-git-send-email-holler@ahsoftware.de>
+References: <1440592108-3740-1-git-send-email-holler@ahsoftware.de>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <cover.1440580764.git.cyrille.pitchen@atmel.com>
+In-Reply-To: <1440592108-3740-1-git-send-email-holler@ahsoftware.de>
 Sender: linux-kernel-owner@vger.kernel.org
-To: nicolas.ferre@atmel.com, broonie@kernel.org, linux-spi@vger.kernel.org, dwmw2@infradead.org, computersforpeace@gmail.com, zajec5@gmail.com, beanhuo@micron.com, juhosg@openwrt.org, marex@denx.de, shijie.huang@intel.com, ben@decadent.org.uk
-Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux-mtd@lists.infradead.org, Cyrille Pitchen <cyrille.pitchen@atmel.com>
+To: linux-kernel@vger.kernel.org
+Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Greg KH <gregkh@linuxfoundation.org>, Russel King <linux@arm.linux.org.uk>, Andrew Morton <akpm@linux-foundation.org>, Grant Likely <grant.likely@linaro.org>, Tomeu Vizoso <tomeu.vizoso@collabora.com>, Alexander Holler <holler@ahsoftware.de>
 List-Id: devicetree@vger.kernel.org
 
-Depending on the SPI clock frequency, the Fast Read op code and the
-Single/Dual Data Rate mode, the number of dummy cycles can be tuned to
-improve transfer speed.
-The actual number of dummy cycles is specific for each memory model and is
-provided by the manufacturer thanks to the memory datasheet.
+WIP means Work In Progress.
 
-Signed-off-by: Cyrille Pitchen <cyrille.pitchen@atmel.com>
+Change some generic drivers to offer annotated initcalls.
+
+Signed-off-by: Alexander Holler <holler@ahsoftware.de>
 ---
- Documentation/devicetree/bindings/mtd/jedec,spi-nor.txt | 6 ++++++
- 1 file changed, 6 insertions(+)
+ drivers/input/keyboard/gpio_keys.c | 2 +-
+ drivers/misc/sram.c                | 2 +-
+ drivers/regulator/fixed.c          | 3 ++-
+ drivers/usb/phy/phy-generic.c      | 2 +-
+ 4 files changed, 5 insertions(+), 4 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/mtd/jedec,spi-nor.txt b/Documentation/devicetree/bindings/mtd/jedec,spi-nor.txt
-index 2bee68103b01..4387567d8024 100644
---- a/Documentation/devicetree/bindings/mtd/jedec,spi-nor.txt
-+++ b/Documentation/devicetree/bindings/mtd/jedec,spi-nor.txt
-@@ -19,6 +19,11 @@ Optional properties:
-                    all chips and support for it can not be detected at runtime.
-                    Refer to your chips' datasheet to check if this is supported
-                    by your chip.
-+- m25p,num-dummy-cycles : Set the number of dummy cycles for Fast Read commands.
-+                          Depending on the manufacturer additional dedicated
-+                          commands are sent to the flash memory so the
-+                          controller and the memory can agree on the number of
-+                          dummy cycles to use.
+diff --git a/drivers/input/keyboard/gpio_keys.c b/drivers/input/keyboard/gpio_keys.c
+index ddf4045..319bcf7 100644
+--- a/drivers/input/keyboard/gpio_keys.c
++++ b/drivers/input/keyboard/gpio_keys.c
+@@ -855,7 +855,7 @@ static void __exit gpio_keys_exit(void)
+ 	platform_driver_unregister(&gpio_keys_device_driver);
+ }
  
- Example:
+-late_initcall(gpio_keys_init);
++annotated_initcall(late, gpio_keys_init, gpio_keys_device_driver.driver);
+ module_exit(gpio_keys_exit);
  
-@@ -29,4 +34,5 @@ Example:
- 		reg = <0>;
- 		spi-max-frequency = <40000000>;
- 		m25p,fast-read;
-+		m25p,num-dummy-cycles = <8>;
- 	};
+ MODULE_LICENSE("GPL");
+diff --git a/drivers/misc/sram.c b/drivers/misc/sram.c
+index 15c33cc..eb662bd 100644
+--- a/drivers/misc/sram.c
++++ b/drivers/misc/sram.c
+@@ -243,4 +243,4 @@ static int __init sram_init(void)
+ 	return platform_driver_register(&sram_driver);
+ }
+ 
+-postcore_initcall(sram_init);
++annotated_initcall(postcore, sram_init, sram_driver.driver);
+diff --git a/drivers/regulator/fixed.c b/drivers/regulator/fixed.c
+index ff62d69..ec35d10 100644
+--- a/drivers/regulator/fixed.c
++++ b/drivers/regulator/fixed.c
+@@ -221,7 +221,8 @@ static int __init regulator_fixed_voltage_init(void)
+ {
+ 	return platform_driver_register(&regulator_fixed_voltage_driver);
+ }
+-subsys_initcall(regulator_fixed_voltage_init);
++annotated_initcall(subsys, regulator_fixed_voltage_init,
++					regulator_fixed_voltage_driver.driver);
+ 
+ static void __exit regulator_fixed_voltage_exit(void)
+ {
+diff --git a/drivers/usb/phy/phy-generic.c b/drivers/usb/phy/phy-generic.c
+index deee68e..baf95d0 100644
+--- a/drivers/usb/phy/phy-generic.c
++++ b/drivers/usb/phy/phy-generic.c
+@@ -360,7 +360,7 @@ static int __init usb_phy_generic_init(void)
+ {
+ 	return platform_driver_register(&usb_phy_generic_driver);
+ }
+-subsys_initcall(usb_phy_generic_init);
++annotated_initcall(subsys, usb_phy_generic_init, usb_phy_generic_driver.driver);
+ 
+ static void __exit usb_phy_generic_exit(void)
+ {
 -- 
-1.8.2.2
+2.1.0
