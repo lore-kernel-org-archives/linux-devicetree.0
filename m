@@ -1,76 +1,116 @@
-From: Alexander Holler <holler@ahsoftware.de>
-Subject: [PATCH 11/16] deps: WIP: generic: annotate some initcalls
-Date: Wed, 26 Aug 2015 14:28:23 +0200
-Message-ID: <1440592108-3740-12-git-send-email-holler@ahsoftware.de>
-References: <1440592108-3740-1-git-send-email-holler@ahsoftware.de>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1440592108-3740-1-git-send-email-holler@ahsoftware.de>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org
-Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Greg KH <gregkh@linuxfoundation.org>, Russel King <linux@arm.linux.org.uk>, Andrew Morton <akpm@linux-foundation.org>, Grant Likely <grant.likely@linaro.org>, Tomeu Vizoso <tomeu.vizoso@collabora.com>, Alexander Holler <holler@ahsoftware.de>
+From: Cyrille Pitchen <cyrille.pitchen@atmel.com>
+Subject: [PATCH linux-next v5 1/5] mtd: spi-nor: notify (Q)SPI controller
+ about protocol change
+Date: Wed, 26 Aug 2015 14:30:23 +0200
+Message-ID: <464fce12d75a5ba2105456cfd0a385b2d40305ba.1440580764.git.cyrille.pitchen@atmel.com>
+References: <cover.1440580764.git.cyrille.pitchen@atmel.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <cover.1440580764.git.cyrille.pitchen@atmel.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: nicolas.ferre@atmel.com, broonie@kernel.org, linux-spi@vger.kernel.org, dwmw2@infradead.org, computersforpeace@gmail.com, zajec5@gmail.com, beanhuo@micron.com, juhosg@openwrt.org, marex@denx.de, shijie.huang@intel.com, ben@decadent.org.uk
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, linux-kernel@vger.kernel.org, robh+dt@kernel.org, linux-mtd@lists.infradead.org, galak@codeaurora.org, Cyrille Pitchen <cyrille.pitchen@atmel.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-WIP means Work In Progress.
+Once the Quad SPI mode has been enabled on a Micron flash memory, this
+device expects ALL the following commands to use the SPI 4-4-4 protocol.
+The (Q)SPI controller needs to be notified about the protocol change so it
+can adapt and keep on dialoging with the Micron memory.
 
-Change some generic drivers to offer annotated initcalls.
-
-Signed-off-by: Alexander Holler <holler@ahsoftware.de>
+Signed-off-by: Cyrille Pitchen <cyrille.pitchen@atmel.com>
+Acked-by: Marek Vasut <marex@denx.de>
+Acked-by: Bean Huo <beanhuo@micron.com>
 ---
- drivers/input/keyboard/gpio_keys.c | 2 +-
- drivers/misc/sram.c                | 2 +-
- drivers/regulator/fixed.c          | 3 ++-
- drivers/usb/phy/phy-generic.c      | 2 +-
- 4 files changed, 5 insertions(+), 4 deletions(-)
+ drivers/mtd/spi-nor/spi-nor.c | 21 +++++++++++++++++++++
+ include/linux/mtd/spi-nor.h   | 13 +++++++++++++
+ 2 files changed, 34 insertions(+)
 
-diff --git a/drivers/input/keyboard/gpio_keys.c b/drivers/input/keyboard/gpio_keys.c
-index ddf4045..319bcf7 100644
---- a/drivers/input/keyboard/gpio_keys.c
-+++ b/drivers/input/keyboard/gpio_keys.c
-@@ -855,7 +855,7 @@ static void __exit gpio_keys_exit(void)
- 	platform_driver_unregister(&gpio_keys_device_driver);
+diff --git a/drivers/mtd/spi-nor/spi-nor.c b/drivers/mtd/spi-nor/spi-nor.c
+index c27d427fead4..c8810313a752 100644
+--- a/drivers/mtd/spi-nor/spi-nor.c
++++ b/drivers/mtd/spi-nor/spi-nor.c
+@@ -165,6 +165,22 @@ static inline int write_disable(struct spi_nor *nor)
+ 	return nor->write_reg(nor, SPINOR_OP_WRDI, NULL, 0, 0);
  }
  
--late_initcall(gpio_keys_init);
-+annotated_initcall(late, gpio_keys_init, gpio_keys_device_driver.driver);
- module_exit(gpio_keys_exit);
- 
- MODULE_LICENSE("GPL");
-diff --git a/drivers/misc/sram.c b/drivers/misc/sram.c
-index 15c33cc..eb662bd 100644
---- a/drivers/misc/sram.c
-+++ b/drivers/misc/sram.c
-@@ -243,4 +243,4 @@ static int __init sram_init(void)
- 	return platform_driver_register(&sram_driver);
- }
- 
--postcore_initcall(sram_init);
-+annotated_initcall(postcore, sram_init, sram_driver.driver);
-diff --git a/drivers/regulator/fixed.c b/drivers/regulator/fixed.c
-index ff62d69..ec35d10 100644
---- a/drivers/regulator/fixed.c
-+++ b/drivers/regulator/fixed.c
-@@ -221,7 +221,8 @@ static int __init regulator_fixed_voltage_init(void)
++/*
++ * Let the spi-nor framework notify lower layers, especially the driver of the
++ * (Q)SPI controller, about the new protocol to be used. Indeed, once the
++ * spi-nor framework has sent manufacturer specific commands to a memory to
++ * enable its Quad SPI mode, it should immediately after tell the QSPI
++ * controller to use the very same Quad SPI protocol as expected by the memory.
++ */
++static inline int spi_nor_set_protocol(struct spi_nor *nor,
++				       enum spi_protocol proto)
++{
++	if (nor->set_protocol)
++		return nor->set_protocol(nor, proto);
++
++	return 0;
++}
++
+ static inline struct spi_nor *mtd_to_spi_nor(struct mtd_info *mtd)
  {
- 	return platform_driver_register(&regulator_fixed_voltage_driver);
- }
--subsys_initcall(regulator_fixed_voltage_init);
-+annotated_initcall(subsys, regulator_fixed_voltage_init,
-+					regulator_fixed_voltage_driver.driver);
+ 	return mtd->priv;
+@@ -940,6 +956,11 @@ static int micron_quad_enable(struct spi_nor *nor)
+ 		return ret;
+ 	}
  
- static void __exit regulator_fixed_voltage_exit(void)
- {
-diff --git a/drivers/usb/phy/phy-generic.c b/drivers/usb/phy/phy-generic.c
-index deee68e..baf95d0 100644
---- a/drivers/usb/phy/phy-generic.c
-+++ b/drivers/usb/phy/phy-generic.c
-@@ -360,7 +360,7 @@ static int __init usb_phy_generic_init(void)
- {
- 	return platform_driver_register(&usb_phy_generic_driver);
- }
--subsys_initcall(usb_phy_generic_init);
-+annotated_initcall(subsys, usb_phy_generic_init, usb_phy_generic_driver.driver);
++	/* switch protocol to Quad CMD 4-4-4 */
++	ret = spi_nor_set_protocol(nor, SPI_PROTO_4_4_4);
++	if (ret)
++		return ret;
++
+ 	ret = spi_nor_wait_till_ready(nor);
+ 	if (ret)
+ 		return ret;
+diff --git a/include/linux/mtd/spi-nor.h b/include/linux/mtd/spi-nor.h
+index e5409524bb0a..1bf6f11310ef 100644
+--- a/include/linux/mtd/spi-nor.h
++++ b/include/linux/mtd/spi-nor.h
+@@ -87,6 +87,16 @@ enum read_mode {
+ 	SPI_NOR_QUAD,
+ };
  
- static void __exit usb_phy_generic_exit(void)
- {
++enum spi_protocol {
++	SPI_PROTO_1_1_1,	/* SPI */
++	SPI_PROTO_1_1_2,	/* Dual Output */
++	SPI_PROTO_1_1_4,	/* Quad Output */
++	SPI_PROTO_1_2_2,	/* Dual IO */
++	SPI_PROTO_1_4_4,	/* Quad IO */
++	SPI_PROTO_2_2_2,	/* Dual Command */
++	SPI_PROTO_4_4_4,	/* Quad Command */
++};
++
+ /**
+  * struct spi_nor_xfer_cfg - Structure for defining a Serial Flash transfer
+  * @wren:		command for "Write Enable", or 0x00 for not required
+@@ -149,6 +159,7 @@ enum spi_nor_option_flags {
+  *			read/write/erase/lock/unlock operations
+  * @read_xfer:		[OPTIONAL] the read fundamental primitive
+  * @write_xfer:		[OPTIONAL] the writefundamental primitive
++ * @set_protocol:	[OPTIONAL] notify about protocol change
+  * @read_reg:		[DRIVER-SPECIFIC] read out the register
+  * @write_reg:		[DRIVER-SPECIFIC] write data to the register
+  * @read:		[DRIVER-SPECIFIC] read data from the SPI NOR
+@@ -185,6 +196,8 @@ struct spi_nor {
+ 	int (*write_reg)(struct spi_nor *nor, u8 opcode, u8 *buf, int len,
+ 			int write_enable);
+ 
++	int (*set_protocol)(struct spi_nor *nor, enum spi_protocol proto);
++
+ 	int (*read)(struct spi_nor *nor, loff_t from,
+ 			size_t len, size_t *retlen, u_char *read_buf);
+ 	void (*write)(struct spi_nor *nor, loff_t to,
 -- 
-2.1.0
+1.8.2.2
