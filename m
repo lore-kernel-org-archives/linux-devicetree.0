@@ -1,33 +1,32 @@
-From: Stephen Warren <swarren@wwwdotorg.org>
-Subject: Re: [PATCH v2 7/7] ARM: bcm2835: Add VC4 to the device tree.
-Date: Tue, 25 Aug 2015 20:04:36 -0600
-Message-ID: <55DD1EB4.9000401@wwwdotorg.org>
-References: <1439934848-7196-1-git-send-email-eric@anholt.net>
- <1439934848-7196-8-git-send-email-eric@anholt.net>
+From: Viresh Kumar <viresh.kumar@linaro.org>
+Subject: Re: [RESEND PATCH 0/3 v6] Add Mediatek MT8173 cpufreq driver
+Date: Wed, 26 Aug 2015 07:46:59 +0530
+Message-ID: <20150826021659.GD8784@linux>
+References: <1439803465-19683-1-git-send-email-pi-cheng.chen@linaro.org>
+ <CALx668VWg2xVxzy8P7f5QFWRzm+TDJXUghL-_rbvRLsLYjtnng@mail.gmail.com>
+ <1617873.VRHfat3V76@vostro.rjw.lan>
+ <CALx668UvkYhLoU8rxLG70RqTzsnaiV5-ybDYTKqb4MEJS8pmRw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <1439934848-7196-8-git-send-email-eric@anholt.net>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Eric Anholt <eric@anholt.net>
-Cc: devicetree@vger.kernel.org, Lee Jones <lee@kernel.org>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-rpi-kernel@lists.infradead.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CALx668UvkYhLoU8rxLG70RqTzsnaiV5-ybDYTKqb4MEJS8pmRw@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Pi-Cheng Chen <pi-cheng.chen@linaro.org>
+Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>, Matthias Brugger <matthias.bgg@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Michael Turquette <mturquette@baylibre.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, Linaro Kernel Mailman List <linaro-kernel@lists.linaro.org>, linux-mediatek@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-T24gMDgvMTgvMjAxNSAwMzo1NCBQTSwgRXJpYyBBbmhvbHQgd3JvdGU6Cj4gVkM0IGlzIHRoZSBH
-UFUgKGRpc3BsYXkgYW5kIDNEKSBwcmVzZW50IG9uIHRoZSAyODM1LgoKVGhpcyBwYXRjaCBhbmQg
-cGF0Y2ggMSBzZWVtIE9LIHRvIG1lLCBhbHRob3VnaCBJJ2xsIHdpdGhob2xkIGFueSBhY2sKdW50
-aWwgdGhlIERUIGJpbmRpbmcgZGVzaWduIGRpc2N1c3Npb24gd2l0aCBSb2IgaGFzIGJlZW4gcmVz
-b2x2ZWQuIEkKaGF2ZW4ndCBsb29rZWQgYXQgdGhlIE9GIGdyYXBoIGJpbmRpbmdzIGhlIG1lbnRp
-b25lZCBzbyBoYXZlIG5vIGNsdWUKYWJvdXQgaGlzIHN1Z2dlc3Rpb25zLgpfX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0
-CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cDovL2xpc3RzLmZyZWVkZXNrdG9w
-Lm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
+On 26-08-15, 09:25, Pi-Cheng Chen wrote:
+> The [3/3] is based on Mediatek SoC maintainer tree[1] and the patch which
+> introduce a new clock type[2] consumed by MT8173 cpufreq driver. So it will
+> cause some conflicts if it goes through your tree. I am not sure how this
+> should be handled, but should it be merged through Mediatek SoC maintainer
+> tree?
+
+Just get that applied to MTK tree, it doesn't have any dependency on
+rest of the patches for build/boot. The only thing is that cpufreq
+wouldn't work and it will work as soon as Rafael's and MTK's trees are
+merged by Linus.
+
+-- 
+viresh
