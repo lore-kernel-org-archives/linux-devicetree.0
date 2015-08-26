@@ -1,80 +1,129 @@
-From: Varadarajan Narayanan <varada@codeaurora.org>
-Subject: Re: [PATCH v3] qcom: ipq40xx: Add basic board/dts support for
- IPQ40XX SoC
-Date: Wed, 26 Aug 2015 11:09:50 +0530
-Message-ID: <20150826053950.GB25312@codeaurora.org>
-References: <20150824092813.GA15581@codeaurora.org>
- <20150824224928.GE14330@codeaurora.org>
- <20150825081042.GA14028@codeaurora.org>
- <20150825211405.GJ19120@codeaurora.org>
+From: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>
+Subject: Re: [PATCH 2/2] mtd: spi-nor: Add driver for Cadence Quad SPI Flash Controller.
+Date: Wed, 26 Aug 2015 08:19:02 +0200
+Message-ID: <201508260819.02535.marex@denx.de>
+References: <1440148851-14621-1-git-send-email-marex@denx.de> <1440148851-14621-2-git-send-email-marex@denx.de> <55DCE7AE.5070501@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20150825211405.GJ19120@codeaurora.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Stephen Boyd <sboyd@codeaurora.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Russell King <linux@arm.linux.org.uk>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-arm-msm@vger.kernel.org, Andy Gross <agross@codeaurora.org>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Georgi Djakov <gdjakov@mm-sol.com>, Kumar Gala <galak@codeaurora.org>, David Brown <davidb@codeaurora.org>, linux-soc@vger.kernel.org, Lina Iyer <lina.iyer@linaro.org>, linux-arm-kernel@lists.infradead.org
+Content-Type: Text/Plain;
+  charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <55DCE7AE.5070501-qxv4g6HH51o@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: vikas <vikas.manocha-qxv4g6HH51o@public.gmane.org>
+Cc: "linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Graham Moore <grmoore-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>, Alan Tull <atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Dinh Nguyen <dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>, Yves Vandervennet <yvanderv-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Aug 25, 2015 at 02:14:05PM -0700, Stephen Boyd wrote:
-> On 08/25, Varadarajan Narayanan wrote:
-> > On Mon, Aug 24, 2015 at 03:49:28PM -0700, Stephen Boyd wrote:
-> > > On 08/24, Varadarajan Narayanan wrote:
-> >
-> > > > +	compatible = "qcom,ipq40xx-r3pc", "qcom,ipq40xx";
-> > > > +
-> > > > +	memory {
-> > > > +		device_type = "memory";
-> > > > +		reg = <0x80000000 0x20000000>; /* 512MB */
-> > > > +	};
-> > >
-> > > Doesn't the bootloader fill the memory node for us? Why do we
-> > > need this?
-> > >
-> > > > +
-> > > > +	chosen {
-> > > > +		bootargs = "root=/dev/ram rw init=/init console=ttyMSM0,115200n8 initrd=0x82000000,0x000E2246";
-> > > > +	};
-> > >
-> > > Please don't add bootargs. Use stdout-path for the console part
-> > > and everything else should be done by the bootloader or is the
-> > > defaults.
-> >
-> > Since this is for the emulation platform, we don't have the bootloader.
->
-> Why are we upstreaming an emulation platform?
+On Wednesday, August 26, 2015 at 12:09:50 AM, vikas wrote:
+> Hi,
+> 
+> On 08/21/2015 02:20 AM, Marek Vasut wrote:
+> > From: Graham Moore <grmoore-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
+> > 
+> > Add support for the Cadence QSPI controller. This controller is
+> > present in the Altera SoCFPGA SoCs and this driver has been tested
+> > on the Cyclone V SoC.
+> > 
+> > Signed-off-by: Graham Moore <grmoore-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
+> > Signed-off-by: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>
+> > Cc: Alan Tull <atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
+> > Cc: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> > Cc: David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>
+> > Cc: Dinh Nguyen <dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
+> > Cc: Graham Moore <grmoore-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
+> > Cc: Vikas MANOCHA <vikas.manocha-qxv4g6HH51o@public.gmane.org>
+> > Cc: Yves Vandervennet <yvanderv-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
+> > Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> > ---
+> > 
+> >  drivers/mtd/spi-nor/Kconfig           |   11 +
+> >  drivers/mtd/spi-nor/Makefile          |    1 +
+> >  drivers/mtd/spi-nor/cadence-quadspi.c | 1260
+> >  +++++++++++++++++++++++++++++++++ 3 files changed, 1272 insertions(+)
+> >  create mode 100644 drivers/mtd/spi-nor/cadence-quadspi.c
+> > 
+> > V2: use NULL instead of modalias in spi_nor_scan call
+> > V3: Use existing property is-decoded-cs instead of creating duplicate.
+> > V4: Support Micron quad mode by snooping command stream for EVCR command
+> > 
+> >     and subsequently configuring Cadence controller for quad mode.
+> > 
+> > V5: Clean up sparse and smatch complaints.  Remove snooping of Micron
+> > 
+> >     quad mode.  Add comment on XIP mode bit and dummy clock cycles.  Set
+> >     up SRAM partition at 1:1 during init.
+> > 
+> > V6: Remove dts patch that was included by mistake.  Incorporate Vikas's
+> > 
+> >     comments regarding fifo width, SRAM partition setting, and trigger
+> >     address.  Trigger address was added as an unsigned int, as it is not
+> >     an IO resource per se, and does not need to be mapped. Also add
+> >     Marek Vasut's workaround for picking up OF properties on subnodes.
+> > 
+> > V7: - Perform coding-style cleanup and type fixes. Remove ugly QSPI_*()
+> > 
+> >       macros and replace them with functions. Get rid of unused
+> >       variables.
+> >     
+> >     - Implement support for nor->set_protocol() to handle Quad-command,
+> >     
+> >       this patch now depends on the following patch:
+> >       mtd: spi-nor: notify (Q)SPI controller about protocol change
+> >     
+> >     - Replace that cqspi_fifo_read() disaster with plain old readsl()
+> >     
+> >       and cqspi_fifo_write() tentacle horror with pretty writesl().
+> >     
+> >     - Remove CQSPI_SUPPORT_XIP_CHIPS, which is broken.
+> >     - Get rid of cqspi_find_chipselect() mess, instead just place the
+> >     
+> >       struct cqspi_st and chipselect number into struct cqspi_flash_pdata
+> >       and set nor->priv to the struct cqspi_flash_pdata of that
+> >       particular chip.
+> >     
+> >     - Replace the odd math in calculate_ticks_for_ns() with
+> >     DIV_ROUND_UP(). - Make variables const where applicable.
+> > 
+> > V8: - Implement a function to wait for bit being set/unset for a given
+> > 
+> >       period of time and use it to replace the ad-hoc bits of code.
+> >     
+> >     - Configure the write underflow watermark to be 1/8 if FIFO size.
+> >     - Extract out the SPI NOR flash probing code into separate function
+> >     
+> >       to clearly mark what will soon be considered a boilerplate code.
+> >     
+> >     - Repair the handling of mode bits, which caused instability in V7.
+> >     - Clean up the interrupt handling
+> >     - Fix Kconfig help text and make the patch depend on OF and
+> >     COMPILE_TEST.
+> > 
+> > diff --git a/drivers/mtd/spi-nor/Kconfig b/drivers/mtd/spi-nor/Kconfig
+> > index 89bf4c1..ed253a2 100644
+> > --- a/drivers/mtd/spi-nor/Kconfig
+> > +++ b/drivers/mtd/spi-nor/Kconfig
+> > @@ -40,4 +40,15 @@ config SPI_NXP_SPIFI
+> > 
+> >           Flash. Enable this option if you have a device with a SPIFI
+> >           controller and want to access the Flash as a mtd device.
+> > 
+> > +config SPI_CADENCE_QUADSPI
+> > +       tristate "Cadence Quad SPI controller"
+> > +       depends on OF && COMPILE_TEST
+> > +       help
+> > +         Enable support for the Cadence Quad SPI Flash controller.
+> > +
+> > +         Cadence QSPI is a specialized controller for connecting an SPI
+> > +         Flash over 1/2/4-bit wide bus. Enable this option if you have a
+> > +         device with a Cadence QSPI controller and want to access the
+> > +         Flash as an MTD device.
+> > +
+> 
+> the patch failed to apply, please rebase it to master.
 
-Ok, will skip this.
-
--Varada
-
-> I assume you have some sort of scripts or something to load the
-> kernel image into the emulator, so those scripts could go and
-> modify the dtb in place to populate the initrd and commandline.
-> If you need pointers on that feel free to contact me directly.
->
-> >
-> > > > +			compatible = "arm,armv7-timer";
-> > > > +			interrupts = <1 2 0xf08>,
-> > > > +				     <1 3 0xf08>,
-> > > > +				     <1 4 0xf08>,
-> > > > +				     <1 1 0xf08>;
-> > > > +			clock-frequency = <20833333>;
-> > >
-> > > Drop this clock-frequency part if you can. The hardware should
-> > > properly report the frequency.
-> >
-> > Cannot drop this. This is the ref-clock frequency. For the
-> > chip it is 48MHz, for emulation is ~20MHz. Similar to
-> > https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git/tree/arch/arm/boot/dts/qcom-msm8974.dtsi#n89
->
-> And the hardware is not emulated properly to report the actual
-> frequency that the timer is running at? That's sad.
->
-> At the least, this should be in the board specific dtsi file
-> instead of the SoC specific file, because it's a board quirk.
->
-> --
-> Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-> a Linux Foundation Collaborative Project
+it's based on -next, I'm sure you can fix trivial conflicts yourself if you
+need to apply it elsewhere. Do you have any other review comments ?
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
