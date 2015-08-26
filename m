@@ -1,139 +1,111 @@
-From: Thierry Reding <thierry.reding@gmail.com>
-Subject: Re: [PATCH 1/7] drm/vc4: Add devicetree bindings for VC4.
-Date: Wed, 26 Aug 2015 13:51:50 +0200
-Message-ID: <20150826115148.GB320@ulmo.nvidia.com>
-References: <1439427380-2436-1-git-send-email-eric@anholt.net>
- <1439427380-2436-2-git-send-email-eric@anholt.net>
- <55CEC25E.7070303@wwwdotorg.org>
+From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 2/3] ARM: DT: STi: STiH407: Add c8sectpfe LinuxDVB DT
+ node.
+Date: Wed, 26 Aug 2015 12:57:52 +0100
+Message-ID: <20150826115752.GX19409@x1>
+References: <1440519730-486-1-git-send-email-peter.griffin@linaro.org>
+ <1440519730-486-3-git-send-email-peter.griffin@linaro.org>
+ <20150826073041.GT19409@x1>
+ <20150826114433.GB1498@griffinp-ThinkPad-X1-Carbon-2nd>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============1622969773=="
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <55CEC25E.7070303@wwwdotorg.org>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Stephen Warren <swarren@wwwdotorg.org>
-Cc: devicetree@vger.kernel.org, Lee Jones <lee@kernel.org>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-rpi-kernel@lists.infradead.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20150826114433.GB1498@griffinp-ThinkPad-X1-Carbon-2nd>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Peter Griffin <peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, srinivas.kandagatla-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, maxime.coquelin-qxv4g6HH51o@public.gmane.org, patrice.chotard-qxv4g6HH51o@public.gmane.org, mchehab-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org, kernel-F5mvAk5X5gdBDgjK7y7TUQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+On Wed, 26 Aug 2015, Peter Griffin wrote:
+> On Wed, 26 Aug 2015, Lee Jones wrote:
+> > On Tue, 25 Aug 2015, Peter Griffin wrote:
+> >=20
+> > > This patch adds in the required DT node for the c8sectpfe
+> > > Linux DVB demux driver which allows the tsin channels
+> > > to be used on an upstream kernel.
+> > >=20
+> > > Signed-off-by: Peter Griffin <peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> > > ---
+> > >  arch/arm/boot/dts/stihxxx-b2120.dtsi | 38 ++++++++++++++++++++++=
+++++++++++++++
+> > >  1 file changed, 38 insertions(+)
+> > >=20
+> > > diff --git a/arch/arm/boot/dts/stihxxx-b2120.dtsi b/arch/arm/boot=
+/dts/stihxxx-b2120.dtsi
+> > > index 62994ae..1bc018e 100644
+> > > --- a/arch/arm/boot/dts/stihxxx-b2120.dtsi
+> > > +++ b/arch/arm/boot/dts/stihxxx-b2120.dtsi
 
---===============1622969773==
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="mxv5cy4qt+RJ9ypb"
-Content-Disposition: inline
+[...]
 
-
---mxv5cy4qt+RJ9ypb
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Fri, Aug 14, 2015 at 10:38:54PM -0600, Stephen Warren wrote:
-> On 08/12/2015 06:56 PM, Eric Anholt wrote:
-> > Signed-off-by: Eric Anholt <eric@anholt.net>
+> > How about *-c8sectpfe-demod?
 >=20
-> This one definitely needs a patch description, since someone might not
-> know what a VC4 is, and "git log" won't show the text from the binding
-> doc itself. I'd suggest adding the initial paragraph of the binding doc
-> as the patch description, or more.
+> That doesn't really make sense, the demod is a seperate device
+> typically controlled over I2C bus and connected to this IP block
+> via the TS pins. Also although a tsin channel is "normally" connected
+> to a demodulator device there is no reason it couldn't be connected
+> for example to another STi chipset which is doing tsout.
 >=20
-> > diff --git a/Documentation/devicetree/bindings/gpu/brcm,bcm-vc4.txt b/D=
-ocumentation/devicetree/bindings/gpu/brcm,bcm-vc4.txt
+> Also this IP block can do more than accept tsin, it can
+> also do tsout, and merge TS channels together (some coming from
+> DDR, external TS pins). Which are features we hope to add
+> to the driver in the future so the name needs to be very generic.
 >=20
-> > +Required properties for VC4:
-> > +- compatible:	Should be "brcm,vc4"
-> > +- crtcs:	List of references to pixelvalve scanout engines
+> So with that in mind I would prefer to leave the compatible as
+> the name of the IP block from the SoC datasheet.
+
+Understood.  Thanks for the explanation.
+
+[...]
+
+> > > +				tsin-num =3D <0>;
+> > > +				serial-not-parallel;
+> > > +				i2c-bus =3D <&ssc2>;
+> >=20
+> > If you are adding this property, I would get Wolfram or one of the =
+DT
+> > guys to Ack it.
 >=20
-> s/references to/phandles of/ would be more typical DT language.
+> This driver is actually already accepted, I just missed off one patch=
+ from
+> the v2 series which meant this patch broke the build when Mauro appli=
+ed it,
+> which is the reason for re-sending it.
 >=20
-> > +- hvss:		List of references to HVS video scalers
-> > +- encoders:	List of references to output encoders (HDMI, SDTV)
+> This binding is the same way the drm display drivers use DT via ddc-i=
+2c-bus
+> property to get the i2c bus for EDID control, so I think uncontrovers=
+ial.
+
+You're still adding a non-vendor property.  If you think it's generic
+enough not to require a "<vendor>," prefix, please attempt to document
+it in a generic binding document.
+
+> > > +				rst-gpio =3D <&pio15 4 0>;
+> >=20
+> > Why not use the whole name "reset"?
+> >=20
+> > "-gpio" should be "-gpios".
+> >=20
+> > So, in full: "reset-gpios"?
+> >=20
+> > Flags: GPIO_ACTIVE_HIGH ?
 >=20
-> Would it make sense to make all those nodes child node of the vc4
-> object. That way, there's no need to have these lists of objects; they
-> can be automatically built up as the DT is enumerated. I know that e.g.
-> the NVIDIA Tegra host1x binding works this way, and I think it may have
-> been inspired by other similar cases.
+> Doing a grep, that does seem to be "more standard". Will fix in V2 as=
+ a single
+> atomic commit.
 
-Actually the host1x binding was the first of its kind. Unfortunately for
-the purposes of this discussion (but fortunately otherwise) Tegra is the
-odd-ball it seems. host1x is indeed a physical parent of all the devices
-pertaining to the DRM driver, so the DT description is accurate from a
-hardware point of view while at the same time giving us a top-level
-device that we can bind against.
+It's not just 'more standard', it's documented in the GPIO binding.
 
-Now for most other cases it seems like the central piece that they are
-missing is this top-level device, hence why the "virtual DRM subsystem
-device" is instantiated. I tried to argue in the past that it wasn't a
-proper description and proposed alternatives, but I was always pretty
-much the only one with this viewpoint, so my comments ended up being
-ignored.
-
-Technically there is nothing that would prevent other drivers from doing
-without the lists of phandles. On Tegra, again this might be special for
-this particular hardware, we've never had a need to describe these kinds
-of relationships. Each display controller can essentially drive each of
-the outputs, which we deal with elegantly by setting the .possible_crtcs
-mask of the encoders.
-
-Also, to pull together all devices that are needed to make up the DRM
-device, we use a list of compatible strings in the driver to find these
-devices. Then as each of them registers with the host1x bus we wait for
-the subdevice list to become empty and ->probe() the component host1x
-device.
-
-Note that while this predates component/master, this is all very similar
-in principle (Russell and I did have some discussions about this back at
-the time, but I'm not sure how much, if anything, he took as inspiration
-=66rom the host1x infrastructure). After component/master was merged I did
-try to convert Tegra DRM to use it. Things looked pretty good, but ended
-up not working because each componentized device must have a unique
-master device. This poses a problem because on Tegra we needed the top-
-level (i.e. master) device to be shared among multiple drivers.
-
-I posted patches at some point to try and fix remedy the situation but
-wasn't able to elicit any reactions, and since I had something that was
-working did not pursue this any further.
-
-Thierry
-
---mxv5cy4qt+RJ9ypb
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQIcBAABCAAGBQJV3ahRAAoJEN0jrNd/PrOhjQ0P+gPpB0Xtf0ufAkL8Huqh3pAZ
-bdDW7W2I8yXh6QPBa3QQ7Ig+hrLA0XnLI5U2vCm4FeXK+ElBVOqXtSMRjjBo1PoQ
-zvjGQwsNwtLII3c0ESOastNy1VaXLmfRMHIV3U1ktyMjGzPzAebxljeBkbC6znSt
-mMFnuI0Tgq/Ot6Vs0aZHEZsBgzNEPQe2hOrshvBtdEx4GmR/E/T0xehjeDQDjbv7
-cHDQsfI7+6ADa/etptJF4f5alX4H/PrAM/cVt3XFdiJIvSM/+Gu3PgjxqslW+xvG
-sLlTP2kyHi9JLcuGflBpHG/WBXXZyOMJiR41DCmG5PtdkJFiaGobxkpt7XgLFSFR
-gABcn8MgcpQRvueDzib3UnX9cnpg8qRj20DoaN6RGeuHqB23XzJje6qY9NVSHs47
-u6vCO1bbhjsBntbe7cmlStIERm56WcjYNzdD9TpYno6oBJGlRcvXCvBTZjv6WsF0
-ZWtJiTzA9lYUGnlGUTgzyda8dVzZ2v8So+JfaOFh6lwCIdgr7P2fevDKZ3E20KmF
-u+TdtBLXjj5F14GTbFyYaE55WSYcAAvadI/sPk7JC74UZ44+brv/LL9Shu4uh3Ld
-Up0L2WaO0p/qmdBWDsp6O1jAHaGdUbbzSd7/s4xJc+uShxVcYWHtzzv08bEyzLyr
-Q7wRluKvxE7cWC3hucqF
-=WOHE
------END PGP SIGNATURE-----
-
---mxv5cy4qt+RJ9ypb--
-
---===============1622969773==
-Content-Type: text/plain; charset="utf-8"
-MIME-Version: 1.0
-Content-Transfer-Encoding: base64
-Content-Disposition: inline
-
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVs
-IG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHA6Ly9saXN0
-cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
-
---===============1622969773==--
+--=20
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org =E2=94=82 Open source software for ARM SoCs
+=46ollow Linaro: Facebook | Twitter | Blog
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
