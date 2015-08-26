@@ -1,56 +1,58 @@
-From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 6/7] MAINTAINERS: Add FDMA driver files to STi section.
-Date: Wed, 26 Aug 2015 08:33:51 +0100
-Message-ID: <20150826073351.GU19409@x1>
-References: <1436371888-27863-1-git-send-email-peter.griffin@linaro.org>
- <1436371888-27863-7-git-send-email-peter.griffin@linaro.org>
+From: Daniel Lezcano <daniel.lezcano@linaro.org>
+Subject: Re: [PATCH 0/5] add GPT timer support for mt8173
+Date: Wed, 26 Aug 2015 09:37:40 +0200
+Message-ID: <55DD6CC4.6010708@linaro.org>
+References: <1436779969-18610-1-git-send-email-yingjoe.chen@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=UTF-8;
+	format=flowed
 Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1436371888-27863-7-git-send-email-peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Peter Griffin <peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, srinivas.kandagatla-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, maxime.coquelin-qxv4g6HH51o@public.gmane.org, patrice.chotard-qxv4g6HH51o@public.gmane.org, vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ludovic.barre-qxv4g6HH51o@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1436779969-18610-1-git-send-email-yingjoe.chen@mediatek.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Yingjoe Chen <yingjoe.chen@mediatek.com>, Matthias Brugger <matthias.bgg@gmail.com>, Thomas Gleixner <tglx@linutronix.de>, Stephen Boyd <sboyd@codeaurora.org>, Michael Turquette <mturquette@baylibre.com>, James Liao <jamesjj.liao@mediatek.com>
+Cc: Russell King <linux@arm.linux.org.uk>, devicetree@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, Catalin Marinas <catalin.marinas@arm.com>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-mediatek@lists.infradead.org, Sascha Hauer <kernel@pengutronix.de>, Olof Johansson <olof@lixom.net>, srv_heupstream@mediatek.com, linux-arm-kernel@lists.infradead.org, Daniel Kurtz <djkurtz@chromium.org>, linux-clk@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 08 Jul 2015, Peter Griffin wrote:
+On 07/13/2015 11:32 AM, Yingjoe Chen wrote:
+> This series add GPT timer support for mt8173. This is based on v4.2-r=
+c1
+> and Matthias' next branch (for dts parts).
+>
+> The first 2 patches comes from 'Add SMP bringup support for mt65xx so=
+cs'
+> series [1]. I decide to move these 2 patches to this series, since it
+> is more relevent here. They are changed based on Matthias' and Daniel=
+'s
+> comments.
+>
+> [1] http://lists.infradead.org/pipermail/linux-mediatek/2015-May/0007=
+14.html
+>
+> Daniel Kurtz (1):
+>    arm64: dts: mt8173: add timer node
+>
+> Yingjoe Chen (4):
+>    clocksource: mediatek: do not enable GPT_CLK_EVT when setup
+>    clocksource: mediatek: Use GPT as sched clock source
+>    arm64: mediatek: enable MTK_TIMER
+>    clk: mediatek: add 13mhz clock for MT8173
+>
+>   arch/arm64/Kconfig                       |  1 +
+>   arch/arm64/boot/dts/mediatek/mt8173.dtsi |  9 +++++++++
+>   drivers/clk/mediatek/clk-mt8173.c        |  5 +++++
+>   drivers/clocksource/mtk_timer.c          | 26 ++++++++++++++++++++-=
+-----
+>   include/dt-bindings/clock/mt8173-clk.h   |  3 ++-
+>   5 files changed, 37 insertions(+), 7 deletions(-)
 
-> This patch adds the FDMA driver files to the STi
-> section of the maintainers file.
->=20
-> Signed-off-by: Peter Griffin <peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> ---
->  MAINTAINERS | 2 ++
->  1 file changed, 2 insertions(+)
->=20
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index 8133cef..8cb1ad9 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -1503,6 +1503,8 @@ S:	Maintained
->  F:	arch/arm/mach-sti/
->  F:	arch/arm/boot/dts/sti*
->  F:	drivers/clocksource/arm_global_timer.c
-> +F:	drivers/dma/st_fdma.*
-> +F:	drivers/dma/st_fdma_xbar.c
+Who will take this patchset ? I can take the patch 2 if needed.
 
-How about you replace both lines with:
-
-=46:	drivers/dma/st_fdma*
-
->  F:	drivers/i2c/busses/i2c-st.c
->  F:	drivers/media/rc/st_rc.c
->  F:	drivers/mmc/host/sdhci-st.c
 
 --=20
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-=46ollow Linaro: Facebook | Twitter | Blog
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+  <http://www.linaro.org/> Linaro.org =E2=94=82 Open source software fo=
+r ARM SoCs
+
+=46ollow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
