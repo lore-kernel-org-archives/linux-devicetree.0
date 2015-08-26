@@ -1,149 +1,78 @@
-From: Stefan Agner <stefan@agner.ch>
-Subject: Re: [PATCH v10 2/5] mtd: nand: vf610_nfc: add hardware BCH-ECC
- support
-Date: Wed, 26 Aug 2015 10:57:38 -0700
-Message-ID: <07a479863eef4c53ab2ef6ef85321680@agner.ch>
-References: <1438594050-4595-1-git-send-email-stefan@agner.ch>
- <1438594050-4595-3-git-send-email-stefan@agner.ch>
- <ff2e2716578a1ae5f0c4b0e0ca8bbdc3@agner.ch>
- <20150825195411.GJ81844@google.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH 00/10] Add support for img AXD audio
+	hardware decoder
+Date: Wed, 26 Aug 2015 19:04:36 +0100
+Message-ID: <20150826180436.GC28760@sirena.org.uk>
+References: <1440419959-14315-1-git-send-email-qais.yousef@imgtec.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20150825195411.GJ81844@google.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Brian Norris <computersforpeace@gmail.com>, bpringlemeir@gmail.com
-Cc: sebastian@breakpoint.cc, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, shawn.guo@linaro.org, kernel@pengutronix.de, boris.brezillon@free-electrons.com, marb@ixxat.de, aaron@tastycactus.com, linux-mtd@lists.infradead.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, albert.aribaud@3adev.fr, klimov.linux@gmail.com, Bill Pringlemeir <bpringlemeir@nbsps.com>
+Content-Type: multipart/mixed; boundary="===============0559820135625718801=="
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <1440419959-14315-1-git-send-email-qais.yousef@imgtec.com>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Qais Yousef <qais.yousef@imgtec.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, linux-mips@linux-mips.org, alsa-devel@alsa-project.org, Jason Cooper <jason@lakedaemon.net>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Marc Zyngier <marc.zyngier@arm.com>, Takashi Iwai <tiwai@suse.com>, linux-kernel@vger.kernel.org, Liam Girdwood <lgirdwood@gmail.com>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, Thomas Gleixner <tglx@linutronix.de>
 List-Id: devicetree@vger.kernel.org
 
-On 2015-08-25 12:54, Brian Norris wrote:
-> On Mon, Aug 03, 2015 at 11:28:43AM +0200, Stefan Agner wrote:
->> On 2015-08-03 11:27, Stefan Agner wrote:
->> <snip>
->> > +static inline int vf610_nfc_correct_data(struct mtd_info *mtd, uint8_t *dat,
->> > +					 uint8_t *oob, int oob_loaded)
->> > +{
->> > +	struct vf610_nfc *nfc = mtd_to_nfc(mtd);
->> > +	u8 ecc_status;
->> > +	u8 ecc_count;
->> > +	int flip;
->> > +
->> > +	ecc_status = __raw_readb(nfc->regs + ECC_SRAM_ADDR * 8 + ECC_OFFSET);
-> 
-> Why __raw_readb()? That's not normally encourage, and it has issues with
-> endianness. It looks like maybe this is actulaly a 32-bit register, and
-> you're having trouble when trying to do bytewise access? I see this
-> earlier:
-> 
-> /*
->  * ECC status is stored at NFC_CFG[ECCADD] +4 for little-endian
->  * and +7 for big-endian SoCs.
->  */
-> #ifdef __LITTLE_ENDIAN
-> #define ECC_OFFSET      4
-> #else
-> #define ECC_OFFSET      7
-> #endif
-> 
-> So maybe you really just want:
-> 
-> #define ECC_OFFSET	4
-> ...
-> 	ecc_status = vf610_nfc_read(ECC_SRAM_ADDR * 8 + ECC_OFFSET) & 0xff;
-> 
-> ?
-> 
 
-Agreed, much cleaner.
+--===============0559820135625718801==
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="LwW0XdcUbUexiWVK"
+Content-Disposition: inline
 
->> > +	ecc_count = ecc_status & ECC_ERR_COUNT;
->> > +
->> > +	if (!(ecc_status & ECC_STATUS_MASK))
->> > +		return ecc_count;
->> > +
->> > +	if (!oob_loaded)
->> > +		vf610_nfc_read_buf(mtd, oob, mtd->oobsize);
->> > +
->> > +	/*
->> > +	 * On an erased page, bit count (including OOB) should be zero or
->> > +	 * at least less then half of the ECC strength.
->> > +	 */
->> > +	flip = count_written_bits(dat, nfc->chip.ecc.size, ecc_count);
-> 
-> Another side note: why are you using ecc_count as a max threshold? AIUI,
-> an ECC algorithm doesn't really report useful error count information if
-> it's above the correction limit. So wouldn't we be looking to count up
-> to our SW threshold? i.e., ecc.strength / 2, or similar? Similar
-> comments below.
-> 
 
-Initially, that was the only threshold below, hence it made sense. But I
-agree, we should count up to the threshold used below...
+--LwW0XdcUbUexiWVK
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
->> > +	flip += count_written_bits(oob, mtd->oobsize - nfc->chip.ecc.bytes,
->> > +				   ecc_count);
->>
->> With ECC the controller seems to clear the ECC bytes in SRAM buffer.
->> This is a dump of 64 Bit OOB with the 32-error ECC mode which requires
->> 60 bytes of OOB for ECC:
->>
->> [   22.190273] ff ff ff ff 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
->> 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
->> 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-> 
-> Hmm, that's not really good. The point is that we need to make sure that
-> everything that could have been programmed (including the ECC area) was
-> not actually programmed. But your ECC controller is not, contrary to
-> MTD's expectations, dumping raw uncorrected data here.
-> 
->> [   22.209698] vf610_nfc_correct_data, flips 1
->>
->> Not sure if this is acceptable, but I now only count the bits in the
->> non-ECC area of the OOB.
-> 
-> That's not the intention of my suggestion. You're still missing out on a
-> class of patterns that might look close to all 0xff but are not
-> actually.
-> 
-> If the HW ECC really doesn't give you valid data+OOB at this point, then
-> you might have to re-read with ECC disabled. Of course, that's got a
-> performance cost...
+On Mon, Aug 24, 2015 at 01:39:09PM +0100, Qais Yousef wrote:
 
-Yes I can do that. Not sure yet how it will look like exactly, maybe I
-only need to reread the OOB area and (re-)use the main data part since
-those arrive uncorrected in the error case.
+> Qais Yousef (10):
+>   irqchip: irq-mips-gic: export gic_send_ipi
+>   dt: add img,axd.txt device tree binding document
+>   ALSA: add AXD Audio Processing IP alsa driver
+>   ALSA: axd: add fw binary header manipulation files
+>   ALSA: axd: add buffers manipulation files
+>   ALSA: axd: add basic files for sending/receiving axd cmds
+>   ALSA: axd: add cmd interface helper functions
+>   ALSA: axd: add low level AXD platform setup files
+>   ALSA: axd: add alsa compress offload operations
+>   ALSA: axd: add Makefile
 
-> 
-> Or perhaps Boris has a better suggestion? He's been surveying other NAND
-> drivers that need to do similar things, and he's working on providing
-> some support code for common design patterns.
-> 
->> Btw, if the ECC check fails, the controller seems kind of count the
->> amount of bitflips. It works for most devices reliable, but we had
->> devices for which that number was not accurate, see:
->> http://thread.gmane.org/gmane.linux.ports.arm.kernel/357439
-> 
-> I'm a little confused there. Why would you be expecting to get a count
-> of bitflips, when the ECC engine can't correct all errors? How is it
-> supposed to know what the "right" data is if the bit errors are beyond
-> the correction strength?
+Please try to use subject lines matching the style for the subsystem, I
+very nearly deleted this unread because it looks like an ALSA patch
+series, not an ASoC one.
 
-When printing the ECC error count on ECC fail when reading an erased
-NAND flash, the numbers of bit flips (stuck at zero) seem to widely
-correlate with the number returned by the controller. While it seems to
-correlate widely, there are exceptions, as discussed in the thread:
-http://thread.gmane.org/gmane.linux.ports.arm.kernel/295424
+--LwW0XdcUbUexiWVK
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
-Maybe this is an artifact of the ECC algorithm we just can't/shouldn't
-rely on? I am not sure where this originated, I did not found any
-indication in the reference manual about what that value contains in the
-error case.
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
 
-Bill, do you have an idea why we used that value as threshold in early
-implementations?
+iQEcBAEBCAAGBQJV3f+zAAoJECTWi3JdVIfQDD0H/Rv5PJHlXTHPut//XcmWFdjW
+ZEbb8EbNzBiGp9uhsOSs5ERfBEVi1CjDDaizb0rfaOyI/y1X+0alRsl4oaOV/Xi1
+aJ50s3o23cUg21eaB6i1tUtX2vm07vEVbwgEAiOa7nXiKL3nhTg0//DgC4//zedE
+gB7X1qKLBw7aah0PRMBDkVIQP2hEDwockP5Jp6MS9TTBFWA/EuADWfxtbOmKepbz
+vC9LQIksBz3Pdy3PNuQy5aSH9irdGllVP7Fca2aEfk4LJ0a2q/wUoJUTrnsh3MJy
+6pvbTMHNf85EqD1guc3CuI/jb1wPfsJwkeFzmujW9iHRxT9Bv7AkaDT7+InBrNc=
+=9Ye+
+-----END PGP SIGNATURE-----
 
-Otherwise I also think we should just drop the use of this value.
+--LwW0XdcUbUexiWVK--
 
---
-Stefan
+--===============0559820135625718801==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+
+--===============0559820135625718801==--
