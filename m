@@ -1,55 +1,70 @@
-From: Brian Norris <computersforpeace@gmail.com>
-Subject: Re: [PATCH v10 2/5] mtd: nand: vf610_nfc: add hardware BCH-ECC
- support
-Date: Wed, 26 Aug 2015 14:34:48 -0700
-Message-ID: <20150826213448.GU81844@google.com>
-References: <1438594050-4595-1-git-send-email-stefan@agner.ch>
- <1438594050-4595-3-git-send-email-stefan@agner.ch>
- <ff2e2716578a1ae5f0c4b0e0ca8bbdc3@agner.ch>
- <20150825195411.GJ81844@google.com>
- <07a479863eef4c53ab2ef6ef85321680@agner.ch>
+From: Jon Mason <jonmason-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Subject: [PATCH v2 1/5] dt-bindings: Create Documentation for NSP DT bindings
+Date: Wed, 26 Aug 2015 18:35:26 -0400
+Message-ID: <1440628530-6137-2-git-send-email-jonmason@broadcom.com>
+References: <1440628530-6137-1-git-send-email-jonmason@broadcom.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <07a479863eef4c53ab2ef6ef85321680@agner.ch>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Stefan Agner <stefan@agner.ch>
-Cc: bpringlemeir@gmail.com, sebastian@breakpoint.cc, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, shawn.guo@linaro.org, kernel@pengutronix.de, boris.brezillon@free-electrons.com, marb@ixxat.de, aaron@tastycactus.com, linux-mtd@lists.infradead.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, albert.aribaud@3adev.fr, klimov.linux@gmail.com, Bill Pringlemeir <bpringlemeir@nbsps.com>
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1440628530-6137-1-git-send-email-jonmason-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Kevin Hilman <khilman-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Aug 26, 2015 at 10:57:38AM -0700, Stefan Agner wrote:
-> On 2015-08-25 12:54, Brian Norris wrote:
-> > On Mon, Aug 03, 2015 at 11:28:43AM +0200, Stefan Agner wrote:
-> >> Btw, if the ECC check fails, the controller seems kind of count the
-> >> amount of bitflips. It works for most devices reliable, but we had
-> >> devices for which that number was not accurate, see:
-> >> http://thread.gmane.org/gmane.linux.ports.arm.kernel/357439
-> > 
-> > I'm a little confused there. Why would you be expecting to get a count
-> > of bitflips, when the ECC engine can't correct all errors? How is it
-> > supposed to know what the "right" data is if the bit errors are beyond
-> > the correction strength?
-> 
-> When printing the ECC error count on ECC fail when reading an erased
-> NAND flash, the numbers of bit flips (stuck at zero) seem to widely
-> correlate with the number returned by the controller. While it seems to
-> correlate widely, there are exceptions, as discussed in the thread:
-> http://thread.gmane.org/gmane.linux.ports.arm.kernel/295424
-> 
-> Maybe this is an artifact of the ECC algorithm we just can't/shouldn't
-> rely on? I am not sure where this originated, I did not found any
-> indication in the reference manual about what that value contains in the
-> error case.
+Add the documentation for the Broadcom Northstar Plus device tree
+bindings.
 
-Doesn't sound too reliable to me. And I'm not sure even if it was
-reliable, that it would provide much value. We have to a lot of
-re-counting anyway, so we might as well just be using our own threshold.
-Or maybe I'm missing the point.
+Signed-off-by: Jon Mason <jonmason-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+---
+ .../devicetree/bindings/arm/bcm/brcm,nsp.txt       | 34 ++++++++++++++++++++++
+ 1 file changed, 34 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/arm/bcm/brcm,nsp.txt
 
-> Bill, do you have an idea why we used that value as threshold in early
-> implementations?
-> 
-> Otherwise I also think we should just drop the use of this value.
+diff --git a/Documentation/devicetree/bindings/arm/bcm/brcm,nsp.txt b/Documentation/devicetree/bindings/arm/bcm/brcm,nsp.txt
+new file mode 100644
+index 0000000..eae53e4
+--- /dev/null
++++ b/Documentation/devicetree/bindings/arm/bcm/brcm,nsp.txt
+@@ -0,0 +1,34 @@
++Broadcom Northstar Plus device tree bindings
++--------------------------------------------
++
++Broadcom Northstar Plus family of SoCs are used for switching control
++and management applications as well as residential router/gateway
++applications. The SoC features dual core Cortex A9 ARM CPUs, integrating
++several peripheral interfaces including multiple Gigabit Ethernet PHYs,
++DDR3 memory, PCIE Gen-2, USB 2.0 and USB 3.0, serial and NAND flash,
++SATA and several other IO controllers.
++
++Boards with Northstar Plus SoCs shall have the following properties:
++
++Required root node property:
++
++BCM58522
++compatible = "brcm,bcm58522", "brcm,nsp";
++
++BCM58525
++compatible = "brcm,bcm58525", "brcm,nsp";
++
++BCM58535
++compatible = "brcm,bcm58535", "brcm,nsp";
++
++BCM58622
++compatible = "brcm,bcm58622", "brcm,nsp";
++
++BCM58623
++compatible = "brcm,bcm58623", "brcm,nsp";
++
++BCM58625
++compatible = "brcm,bcm58625", "brcm,nsp";
++
++BCM88312
++compatible = "brcm,bcm88312", "brcm,nsp";
+-- 
+1.9.1
 
-Brian
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
