@@ -1,178 +1,103 @@
-From: Thierry Reding <thierry.reding@gmail.com>
-Subject: Re: [PATCH 1/7] drm/vc4: Add devicetree bindings for VC4.
-Date: Wed, 26 Aug 2015 14:09:36 +0200
-Message-ID: <20150826120934.GC320@ulmo.nvidia.com>
-References: <1439427380-2436-1-git-send-email-eric@anholt.net>
- <1439427380-2436-2-git-send-email-eric@anholt.net>
- <55CEC25E.7070303@wwwdotorg.org>
- <874mjxwyx5.fsf@eliezer.anholt.net>
- <CAL_JsqJxiGUR5BxBPyR3-0NxqWsOxMGrWQA6cMXe2pjTom__nw@mail.gmail.com>
- <CAF6AEGu2fi0M7DsicHz+5SDHi1DyDRmvWjkmYPPgY6pZ423WcA@mail.gmail.com>
- <20150826115229.GI1367@phenom.ffwll.local>
+From: Kishon Vijay Abraham I <kishon@ti.com>
+Subject: Re: [PATCH v2 16/16] mmc: host: omap_hsmmc: use "mmc_of_parse_voltage"
+ to get ocr_avail
+Date: Wed, 26 Aug 2015 17:51:12 +0530
+Message-ID: <55DDAF38.4040502@ti.com>
+References: <1438604801-11823-1-git-send-email-kishon@ti.com>	<1438604801-11823-17-git-send-email-kishon@ti.com> <CAPDyKFoctSjBb0aPFNe0cyHe0uoD_DkWooQ-yyTX-P+bGJa_Vw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============1803065836=="
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20150826115229.GI1367@phenom.ffwll.local>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Rob Clark <robdclark@gmail.com>, Rob Herring <robherring2@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Stephen Warren <swarren@wwwdotorg.org>, Lee Jones <lee@kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, dri-devel <dri-devel@lists.freedesktop.org>, linux-rpi-kernel@lists.infradead.org, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAPDyKFoctSjBb0aPFNe0cyHe0uoD_DkWooQ-yyTX-P+bGJa_Vw@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Ulf Hansson <ulf.hansson@linaro.org>
+Cc: Andreas Fenkart <afenkart@gmail.com>, Tony Lindgren <tony@atomide.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-mmc <linux-mmc@vger.kernel.org>, linux-omap <linux-omap@vger.kernel.org>, Sekhar Nori <nsekhar@ti.com>, Roger Quadros <rogerq@ti.com>, Lokesh Vutla <lokeshvutla@ti.com>, Murali Karicheri <m-karicheri2@ti.com>, Franklin S Cooper Jr <fcooper@ti.com>
 List-Id: devicetree@vger.kernel.org
 
+Hi Ulf,
 
---===============1803065836==
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="+xNpyl7Qekk2NvDX"
-Content-Disposition: inline
+On Tuesday 25 August 2015 08:20 PM, Ulf Hansson wrote:
+> On 3 August 2015 at 14:26, Kishon Vijay Abraham I <kishon@ti.com> wrote:
+>> From: Roger Quadros <rogerq@ti.com>
+>>
+>> For platforms that doesn't have explicit regulator control in MMC,
+>> populate voltage-ranges in MMC device tree node and use
+>> mmc_of_parse_voltage to get ocr_avail
+> 
+> I don't like this.
+> 
+> If we are able to fetch the OCR mask via an external regulator, that
+> shall be done.
+> 
+> I think the mmc_of_parse_voltage() API and the corresponding DT
+> binding it parses, should be used for those HW when we don't have an
+> external regulator to use. For example if the MMC controller itself
+> somehow controls the voltage levels. Is that really the case for you?
 
+This was actually added to support Galileo platform which doesn't have
+regulators modelled. Indeed it would be better to model external
+regulators (even if it is always on) and get OCR from the regulator.
 
---+xNpyl7Qekk2NvDX
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+I'll drop this patch and re-send the series re-based to your next branch.
 
-On Wed, Aug 26, 2015 at 01:52:29PM +0200, Daniel Vetter wrote:
-> On Tue, Aug 25, 2015 at 04:42:18PM -0400, Rob Clark wrote:
-> > On Mon, Aug 24, 2015 at 9:47 AM, Rob Herring <robherring2@gmail.com> wr=
-ote:
-> > > On Mon, Aug 17, 2015 at 1:30 PM, Eric Anholt <eric@anholt.net> wrote:
-> > >> Stephen Warren <swarren@wwwdotorg.org> writes:
-> > >>
-> > >>> On 08/12/2015 06:56 PM, Eric Anholt wrote:
-> > >>>> Signed-off-by: Eric Anholt <eric@anholt.net>
-> > >>>
-> > >>> This one definitely needs a patch description, since someone might =
-not
-> > >>> know what a VC4 is, and "git log" won't show the text from the bind=
-ing
-> > >>> doc itself. I'd suggest adding the initial paragraph of the binding=
- doc
-> > >>> as the patch description, or more.
-> > >>>
-> > >>>> diff --git a/Documentation/devicetree/bindings/gpu/brcm,bcm-vc4.tx=
-t b/Documentation/devicetree/bindings/gpu/brcm,bcm-vc4.txt
-> > >>
-> > >>>> +- hvss:             List of references to HVS video scalers
-> > >>>> +- encoders: List of references to output encoders (HDMI, SDTV)
-> > >>>
-> > >>> Would it make sense to make all those nodes child node of the vc4
-> > >>> object. That way, there's no need to have these lists of objects; t=
-hey
-> > >>> can be automatically built up as the DT is enumerated. I know that =
-e.g.
-> > >>> the NVIDIA Tegra host1x binding works this way, and I think it may =
-have
-> > >>> been inspired by other similar cases.
-> > >>
-> > >> I've looked at tegra, and the component system used by msm appears t=
-o be
-> > >> nicer than it.  To follow tegra's model, it looks like I need to bui=
-ld
-> > >> this extra bus thing corresponding to host1x that is effectively the
-> > >> drivers/base/component.c code, so that I can get at vc4's structure =
-=66rom
-> > >> the component drivers.
-> > >>
-> > >>> Of course, this is only appropriate if the HW modules really are
-> > >>> logically children of the VC4 HW module. Perhaps they aren't. If th=
-ey
-> > >>> aren't though, I wonder what this "vc4" module actually represents =
-in HW?
-> > >>
-> > >> It's the subsystem, same as we use a subsystem node for msm, sti,
-> > >> rockchip, imx, and exynos.  This appears to be the common model of h=
-ow
-> > >> the collection of graphics-related components is represented in the =
-DT.
-> > >
-> > > I think most of these bindings are wrong. They are grouped together
-> > > because that is what DRM wants not because that reflects the h/w. So
-> > > convince me this is one block, not that it is what other people do.
-> >=20
-> > I think, when it comes to more complex driver subsystems (like drm in
-> > particular) we have a bit of mismatch between how things look from the
-> > "pure hw ignoring sw" perspective, and the "how sw and in particular
-> > userspace expects things" perspective.  Maybe it is less a problem in
-> > other subsystems, where bindings map to things that are only visible
-> > in the kernel, or well defined devices like uart or sata controller.
-> > But when given the choice, I'm going to err on the side of not
-> > confusing userspace and the large software stack that sits above
-> > drm/kms, over dt purity.
-> >=20
-> > Maybe it would be nice to have a sort of dt overlay that adds the bits
-> > needed to tie together hw blocks that should be assembled into a
-> > single logical device for linux and userspace (but maybe not some
-> > other hypothetical operating system).  But so far that doesn't exist.
-> > All we have is a hammer (devicetree), everything looks like a nail.
-> > End result is we end up adding some things in the bindings which
-> > aren't purely about the hw.  Until someone invents a screwdriver, I'm
-> > not sure what else to do.  In the end, other hypothetical OS is free
-> > to ignore those extra fields in the bindings if it doesn't need them.
-> > So meh?
->=20
-> I thought we agreed a while back that these kind of "pull everything for
-> the logical device together" dt nodes which just have piles of phandles
-> are totally accepted? At least that's the point behind the component
-> helpers, and Eric even suggested to create dt-specific component helpers
-> to cut down a bit on the usual boilerplate. dt maintainers are also fine
-> with this approach afaik. From my understanding tegra with the host1x bus
-> really is the odd one out and not the norm.
+Thanks
+Kishon
 
-I agree that in many aspects Tegra is somewhat special. But the same
-principles that the host1x infrastructure uses could be implemented in a
-similar way for other DRM drivers. You can easily collect information
-about subdevices by walking the device tree and matching on known
-compatible strings. And you can also instantiate the top-level device
-=66rom driver code rather than have it in DT. It should still be possible
-to make this work without an artificial device node in DT. The component
-and master infrastructure is largely orthogonal to that, and as far as I
-remember the only blocker is the need for a top-level device. I wonder
-if perhaps this could be made to work by binding the master to the top-
-level SoC device.
-
-Obviously adding the node in DT is easier, but to my knowledge easy has
-never been a good excuse for mangling DT. Perhaps that's different these
-days...
-
-Thierry
-
---+xNpyl7Qekk2NvDX
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQIcBAABCAAGBQJV3ax8AAoJEN0jrNd/PrOhNrAQAL6FDqCMdHlZr52YuLEwnNnT
-0IGlew7pOa7Ai9YhqONhdG0IJUVxeBFE2t7OA9tXT7dVm4fo05aleNrbwD4qq/eC
-kG8d5WBsDtXclIsBX2M7SzMGmfGb3pDY4YhznU4Gl9iqzohqyzZppprg21ZhASfB
-jVt+Agn0fRCwVtLxFCvJPuUTHWAs8P7apjNP+D0CCp3+9H47zTJvaW8ZnBP1+hWH
-kQ66j6PZf4fHz/lDiF8dCncHJkawbCda2evxtSf5nkw4lRx3wiTiVHxBgpUxYSlq
-DemwleLJ6nwYxgmk5G04Wwl82ZvEGlFIjA/dcxvfT/Mc/wGkKEISYnxZ+Nyi3DjJ
-Dt+5FeZUy048q/y/kAim4i20bwRFtpjCE497izKVH3Hy5ZUMgrK7WI/cy6sCGLpq
-/KrBRx9yY3g5b7JwuM2E6/+V3/EdI4VEiDFjdCcsr+TqlISTh+sbuk2OzRdeVe/g
-E8PhFjeTyRWD8HrA/xdMGKRjbuEp5XPgYEhe7CIQLZV+vJaXZ5v0PFAdC5XuEiQg
-0ruRslIQdHwqNFMTxqRNUMRiq6G/vZmPCLBlLR0OLZQ1zC/4gRVbRoJqwi44ceLr
-vhmbV6C7S7krZ9kndfaiAjKpaDUfNISP0MmwfzYEw4LEsQERjMJcK2yjB7f+/18A
-tMleBVKTc5rG6rz1Yf6C
-=oYaQ
------END PGP SIGNATURE-----
-
---+xNpyl7Qekk2NvDX--
-
---===============1803065836==
-Content-Type: text/plain; charset="utf-8"
-MIME-Version: 1.0
-Content-Transfer-Encoding: base64
-Content-Disposition: inline
-
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVs
-IG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHA6Ly9saXN0
-cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
-
---===============1803065836==--
+> 
+> Kind regards
+> Uffe
+> 
+>>
+>> Signed-off-by: Roger Quadros <rogerq@ti.com>
+>> Signed-off-by: Lokesh Vutla <lokeshvutla@ti.com>
+>> Signed-off-by: Murali Karicheri <m-karicheri2@ti.com>
+>> Signed-off-by: Franklin S Cooper Jr <fcooper@ti.com>
+>> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+>> ---
+>>  .../devicetree/bindings/mmc/ti-omap-hsmmc.txt      |    2 ++
+>>  drivers/mmc/host/omap_hsmmc.c                      |    9 ++++++++-
+>>  2 files changed, 10 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/Documentation/devicetree/bindings/mmc/ti-omap-hsmmc.txt b/Documentation/devicetree/bindings/mmc/ti-omap-hsmmc.txt
+>> index 76bf087..2408e87 100644
+>> --- a/Documentation/devicetree/bindings/mmc/ti-omap-hsmmc.txt
+>> +++ b/Documentation/devicetree/bindings/mmc/ti-omap-hsmmc.txt
+>> @@ -22,6 +22,8 @@ ti,dual-volt: boolean, supports dual voltage cards
+>>  ti,non-removable: non-removable slot (like eMMC)
+>>  ti,needs-special-reset: Requires a special softreset sequence
+>>  ti,needs-special-hs-handling: HSMMC IP needs special setting for handling High Speed
+>> +voltage-ranges: Specify the voltage range supported if regulator framework
+>> +isn't enabled.
+>>  dmas: List of DMA specifiers with the controller specific format
+>>  as described in the generic DMA client binding. A tx and rx
+>>  specifier is required.
+>> diff --git a/drivers/mmc/host/omap_hsmmc.c b/drivers/mmc/host/omap_hsmmc.c
+>> index 15973f1..d884d8f 100644
+>> --- a/drivers/mmc/host/omap_hsmmc.c
+>> +++ b/drivers/mmc/host/omap_hsmmc.c
+>> @@ -2184,7 +2184,13 @@ static int omap_hsmmc_probe(struct platform_device *pdev)
+>>                         goto err_irq;
+>>         }
+>>
+>> -       mmc->ocr_avail = mmc_pdata(host)->ocr_mask;
+>> +       if (!mmc_pdata(host)->ocr_mask) {
+>> +               ret = mmc_of_parse_voltage(pdev->dev.of_node, &mmc->ocr_avail);
+>> +               if (ret)
+>> +                       goto err_parse_voltage;
+>> +       } else {
+>> +               mmc->ocr_avail = mmc_pdata(host)->ocr_mask;
+>> +       }
+>>
+>>         omap_hsmmc_disable_irq(host);
+>>
+>> @@ -2224,6 +2230,7 @@ static int omap_hsmmc_probe(struct platform_device *pdev)
+>>
+>>  err_slot_name:
+>>         mmc_remove_host(mmc);
+>> +err_parse_voltage:
+>>         omap_hsmmc_reg_put(host);
+>>  err_irq:
+>>         device_init_wakeup(&pdev->dev, false);
+>> --
+>> 1.7.9.5
+>>
