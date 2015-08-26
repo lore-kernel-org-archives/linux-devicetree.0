@@ -1,71 +1,90 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH 1/3] ARM: uniphier: add outer cache support
-Date: Wed, 26 Aug 2015 15:39:28 +0200
-Message-ID: <CACRpkdbJppuA6ZyciNAGfSgrf4M2THVHggzuZYSqORjy2JBp_A@mail.gmail.com>
-References: <1440382692-3855-1-git-send-email-yamada.masahiro@socionext.com>
-	<1440382692-3855-2-git-send-email-yamada.masahiro@socionext.com>
+From: Jonas Gorski <jogo-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>
+Subject: Re: [PATCH linux-next v5 1/5] mtd: spi-nor: notify (Q)SPI controller
+ about protocol change
+Date: Wed, 26 Aug 2015 16:02:49 +0200
+Message-ID: <CAOiHx=n+byfsbJNhnboqDEwhruOT8uKDJ+CcES7QBqPDLVAMsw@mail.gmail.com>
+References: <cover.1440580764.git.cyrille.pitchen@atmel.com> <464fce12d75a5ba2105456cfd0a385b2d40305ba.1440580764.git.cyrille.pitchen@atmel.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1440382692-3855-2-git-send-email-yamada.masahiro@socionext.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc: "arm@kernel.org" <arm@kernel.org>, Arnd Bergmann <arnd@arndb.de>, Jiri Slaby <jslaby@suse.com>, Kumar Gala <galak@codeaurora.org>, Jungseung Lee <js07.lee@gmail.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <robh+dt@kernel.org>, Tejun Heo <tj@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Florian Fainelli <f.fainelli@gmail.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Andrew Morton <akpm@linux-foundation.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Mauro Carvalho Chehab <mchehab@osg.samsung.com>, Russell King <linux@arm.linux.org.uk>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Nathan Lynch <nathan_lynch@mentor.com>, Kees Cook <keescook@chromium.org>, Paul Bolle <pebolle@tiscali.nl>, Greg KH <gregkh@linuxfoundation.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Dav
+Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <464fce12d75a5ba2105456cfd0a385b2d40305ba.1440580764.git.cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Cyrille Pitchen <cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Cc: nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "Bean Huo (beanhuo)" <beanhuo-AL4WhLSQfzjQT0dZR+AlfA@public.gmane.org>, Gabor Juhos <juhosg-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>, =?UTF-8?B?TWFyZWsgVmHFoXV0?= <marex-ynQEQJNshbs@public.gmane.org>, shijie.huang-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, Ben Hutchings <ben-/+tVBieCtBitmTQ+vhA3Yw@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, MTD Maling List <linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Aug 24, 2015 at 4:18 AM, Masahiro Yamada
-<yamada.masahiro@socionext.com> wrote:
-> This commit adds support for UniPhier outer cache controller.
-> All the UniPhier SoCs are equipped with the L2 cache, while the L3
-> cache is currently only integrated on PH1-Pro5 SoC.
+On Wed, Aug 26, 2015 at 2:30 PM, Cyrille Pitchen
+<cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org> wrote:
+> Once the Quad SPI mode has been enabled on a Micron flash memory, this
+> device expects ALL the following commands to use the SPI 4-4-4 protocol.
+> The (Q)SPI controller needs to be notified about the protocol change so it
+> can adapt and keep on dialoging with the Micron memory.
+
+Doesn't that mean you need to disable quad mode on removal? Else the
+following will break/fail:
+
+insmod atmel-quadspi.ko ~> spi-nor attaches -> sees micron -> enables quad mode
+rmmod atmel-quadspi.ko ~> spi-nor detaches
+insmod atmel-quadspi.ko ~> spi-nor attaches -> fails to read the id
+because flash is still in quad mode.
+
+> Signed-off-by: Cyrille Pitchen <cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+> Acked-by: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>
+> Acked-by: Bean Huo <beanhuo-AL4WhLSQfzjQT0dZR+AlfA@public.gmane.org>
+> ---
+>  drivers/mtd/spi-nor/spi-nor.c | 21 +++++++++++++++++++++
+>  include/linux/mtd/spi-nor.h   | 13 +++++++++++++
+>  2 files changed, 34 insertions(+)
 >
-> Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
-
-Wow it is really a custom L2$ controller. Wow. Just wow. That's
-really brave, given all the problems we've seen in l2x0.
-
-> +UniPhier SoCs are integrated with a level 2 cache controller that resides
-> +outside of the ARM cores, some of them also have a level 3 cache controller.
+> diff --git a/drivers/mtd/spi-nor/spi-nor.c b/drivers/mtd/spi-nor/spi-nor.c
+> index c27d427fead4..c8810313a752 100644
+> --- a/drivers/mtd/spi-nor/spi-nor.c
+> +++ b/drivers/mtd/spi-nor/spi-nor.c
+> @@ -165,6 +165,22 @@ static inline int write_disable(struct spi_nor *nor)
+>         return nor->write_reg(nor, SPINOR_OP_WRDI, NULL, 0, 0);
+>  }
+>
+> +/*
+> + * Let the spi-nor framework notify lower layers, especially the driver of the
+> + * (Q)SPI controller, about the new protocol to be used. Indeed, once the
+> + * spi-nor framework has sent manufacturer specific commands to a memory to
+> + * enable its Quad SPI mode, it should immediately after tell the QSPI
+> + * controller to use the very same Quad SPI protocol as expected by the memory.
+> + */
+> +static inline int spi_nor_set_protocol(struct spi_nor *nor,
+> +                                      enum spi_protocol proto)
+> +{
+> +       if (nor->set_protocol)
+> +               return nor->set_protocol(nor, proto);
 > +
-> +Required properties:
-> +- compatible: should be one of the followings:
-> +       "socionext,uniphier-l2-cache"   (L2 cache)
-> +       "socionext,uniphier-l3-cache"   (L3 cache)
+> +       return 0;
 
-Refer to and use the 3.7.3 ePAPR v1.1 specification too:
-https://www.power.org/wp-content/uploads/2012/06/Power_ePAPR_APPROVED_v1.1.pdf
+Shouldn't the default assumption be that it won't support it? Also it
+might make sense to first check if it's supported before enabling it
+in the chip, so that we don't enable something just to then find out
+we can't back out of it.
 
-cache-unified and cache-level are *not* optional and should be required.
+I also wonder if we need an extra flag for that as at least SPI has
+RX_{DUAL,QUAD} and TX_{DUAL,QUAD} separated, so in theory there could
+be a controller that supports quad read, but not quad write, so we
+shouldn't be using the quad mode in that case. m25p80 currently sets
+SPI_NOR_{DUAL,QUAD} only based on SPI_RX_{DUAL,QUAD}, so that would
+then fail.
 
-So:
+At least the n25q32 seems to support the "boring" 1_1_2 and 1_1_4
+commands, so these should work in case the spi controller does not
+support quad tx, but quad rx.
 
-> +The L2 cache must exist to use the L3 cache; adding only an L3 cache device
-> +node to the device tree causes the initialization failure of the whole outer
-> +cache system.
-> +
-> +Example:
-> +       l2-cache@500c0000 {
-> +               compatible = "socionext,uniphier-l2-cache";
-> +               reg = <0x500c0000 0x2000>, <0x503c0100 0x8>,
-> +                     <0x506c0000 0x400>;
+So maybe an additional flag for the "full" dual/quad modes would be in order.
 
-cache-unified;
-cache-level = <2>;
+Last but not least, the protocol probably should be stored somewhere
+in the nor struct, so that users don't have to store it themselves (I
+assume they will need to check it for each command again to know if
+the cmd/address should be send in serial or quad mode).
 
-> +       /* Not all of UniPhier SoCs have L3 cache */
-> +       l3-cache@500c8000 {
-> +               compatible = "socionext,uniphier-l3-cache";
-> +               reg = <0x500c8000 0x2000>, <0x503c8100 0x8>,
-> +                     <0x506c8000 0x400>;
 
-cache-unified;
-cache-level = <3>;
-
-(I'm just assuming this cache is unified, anything else would be baffling.)
-
-Further the ePAPR spec optionally supports specifying things like the
-cache size, number of sets, block size and line size, unless this can
-be hard coded.
-
-Yours,
-Linus Walleij
+Jonas
+--
+To unsubscribe from this list: send the line "unsubscribe linux-spi" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
