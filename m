@@ -1,45 +1,70 @@
 From: Alexander Holler <holler@ahsoftware.de>
-Subject: [PATCH 16/16] phy: phy-core: fix initcall level
-Date: Wed, 26 Aug 2015 14:28:28 +0200
-Message-ID: <1440592108-3740-17-git-send-email-holler@ahsoftware.de>
+Subject: [PATCH 10/16] deps: dts: omap: beagle: make some remote-endpoints
+ non-dependencies
+Date: Wed, 26 Aug 2015 14:28:22 +0200
+Message-ID: <1440592108-3740-11-git-send-email-holler@ahsoftware.de>
 References: <1440592108-3740-1-git-send-email-holler@ahsoftware.de>
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 In-Reply-To: <1440592108-3740-1-git-send-email-holler@ahsoftware.de>
-Sender: linux-kernel-owner@vger.kernel.org
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: linux-kernel@vger.kernel.org
-Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Greg KH <gregkh@linuxfoundation.org>, Russel King <linux@arm.linux.org.uk>, Andrew Morton <akpm@linux-foundation.org>, Grant Likely <grant.likely@linaro.org>, Tomeu Vizoso <tomeu.vizoso@collabora.com>, Alexander Holler <holler@ahsoftware.de>, Kishon Vijay Abraham I <kishon@ti.com>
+Cc: devicetree@vger.kernel.org, Russel King <linux@arm.linux.org.uk>, Tomeu Vizoso <tomeu.vizoso@collabora.com>, Greg KH <gregkh@linuxfoundation.org>, Grant Likely <grant.likely@linaro.org>, Alexander Holler <holler@ahsoftware.de>, Andrew Morton <akpm@linux-foundation.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-The phy-core has to be initialized before other dependent usb-drivers,
-otherwise a crash might occur.
-
-Currently phy_core_init() is called in the initcall-level device, which is
-the same level where most usb-drivers will end up. By luck this seemed to
-have been called most of the time before other usb-drivers without having
-been explicitly enforced. But if phy_core_init() is not called before a
-dependent driver, a null-pointer exception might occur (e.g. because the
-phy device class isn't registered).
-
-To fix this, phy_core_init() is moved to the initcall-level fs (right
-before the standard initcall level device).
+This is necessary to remove dependency cycles introduced by
+'remote-endpoints'.
 
 Signed-off-by: Alexander Holler <holler@ahsoftware.de>
 ---
- drivers/phy/phy-core.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/arm/boot/dts/omap3-beagle.dts | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/drivers/phy/phy-core.c b/drivers/phy/phy-core.c
-index fc48fac..4945029 100644
---- a/drivers/phy/phy-core.c
-+++ b/drivers/phy/phy-core.c
-@@ -930,7 +930,7 @@ static int __init phy_core_init(void)
+diff --git a/arch/arm/boot/dts/omap3-beagle.dts b/arch/arm/boot/dts/omap3-beagle.dts
+index a547411..78ba39e 100644
+--- a/arch/arm/boot/dts/omap3-beagle.dts
++++ b/arch/arm/boot/dts/omap3-beagle.dts
+@@ -101,6 +101,7 @@
  
- 	return 0;
- }
--module_init(phy_core_init);
-+fs_initcall_sync(phy_core_init);
+ 				tfp410_in: endpoint@0 {
+ 					remote-endpoint = <&dpi_out>;
++					no-dependencies = <&dpi_out>;
+ 				};
+ 			};
  
- static void __exit phy_core_exit(void)
- {
+@@ -109,6 +110,7 @@
+ 
+ 				tfp410_out: endpoint@0 {
+ 					remote-endpoint = <&dvi_connector_in>;
++					no-dependencies = <&dvi_connector_in>;
+ 				};
+ 			};
+ 		};
+@@ -150,6 +152,7 @@
+ 			etb_in: endpoint {
+ 				slave-mode;
+ 				remote-endpoint = <&etm_out>;
++				no-dependencies = <&etm_out>;
+ 			};
+ 		};
+ 	};
+@@ -373,6 +376,7 @@
+ 	port {
+ 		venc_out: endpoint {
+ 			remote-endpoint = <&tv_connector_in>;
++			no-dependencies = <&tv_connector_in>;
+ 			ti,channels = <2>;
+ 		};
+ 	};
 -- 
 2.1.0
