@@ -1,249 +1,86 @@
-From: Alexander Holler <holler@ahsoftware.de>
-Subject: [PATCH 05/16] deps: introduce initcalls annotated with a struct device_driver
-Date: Wed, 26 Aug 2015 14:28:17 +0200
-Message-ID: <1440592108-3740-6-git-send-email-holler@ahsoftware.de>
-References: <1440592108-3740-1-git-send-email-holler@ahsoftware.de>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1440592108-3740-1-git-send-email-holler@ahsoftware.de>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org
-Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Greg KH <gregkh@linuxfoundation.org>, Russel King <linux@arm.linux.org.uk>, Andrew Morton <akpm@linux-foundation.org>, Grant Likely <grant.likely@linaro.org>, Tomeu Vizoso <tomeu.vizoso@collabora.com>, Alexander Holler <holler@ahsoftware.de>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [PATCH 1/3] ARM: uniphier: add outer cache support
+Date: Wed, 26 Aug 2015 14:52:45 +0200
+Message-ID: <4027826.UsiXogeDbt@wuerfel>
+References: <1440382692-3855-1-git-send-email-yamada.masahiro@socionext.com> <2021253.vgeYqalDfp@wuerfel> <CAK7LNAQ_oymnQNEcP+FDqyxNKtMyiCwgxSRMmg5HAKQW9C6eRg@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAK7LNAQ_oymnQNEcP+FDqyxNKtMyiCwgxSRMmg5HAKQW9C6eRg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
+Cc: arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Jiri Slaby <jslaby-IBi9RG/b67k@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Jungseung Lee <js07.lee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Tejun Heo <tj-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mauro Carvalho Chehab <mchehab-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Nathan Lynch <nathan_lynch-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>, Kees Cook <keescook-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Paul Bolle <pebolle-IWqWACnzNjzz+pZb47iToQ@public.gmane.org>, Greg KH <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Joe Perches <joe-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Make it possible to identify initcalls before calling them by adding
-a pointer to a struct device_driver to the stored pointer to an initcall.
+On Wednesday 26 August 2015 10:38:59 Masahiro Yamada wrote:
+> 
+> 2015-08-25 4:59 GMT+09:00 Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>:
+> > On Monday 24 August 2015 11:18:10 Masahiro Yamada wrote:
 
-This is e.g. necessary in order to sort initcalls by whatever means
-before calling them.
+> Nothing.
+> 
+> This outer cache is not a variant of l2x0/pl310.
+> It was designed only for our SoCs from scratch.
 
-To annotate an initcall, the following changes are necessary on
-drivers which want to offer that feature:
+Ok, I see.
 
-now				annotated
---------------------------------------------------------------------------
-pure_initcall(fn)		annotated_initcall(pure, fn, dev_drv)
-core_initcall(fn)		annotated_initcall(core, fn, dev_drv)
-core_initcall_sync(fn)		annotated_initcall_sync(core, fn, dev_drv)
-...
-late_initcall(fn)		annotated_initcall(late, fn, dev_drv)
-module_init(fn)			annotated_module_init(fn, dev_drv)
+> > Would it make sense to at least share the
+> > common entry point at l2x0_of_init() so you don't need to call it from
+> > the platform file?
+> 
+> I do not think so.
+> 
+> 
+> l2x0_of_init() checks L2X0_AUX_CTRL register,
+> but the cache-uniphier does not have such register,
+> so the boot code crashes.
+> 
+> 
+> 
+> BTW, what makes l2x0_of_init() so special?
+> 
+> Only L2x0/L310 and variants can be initialized
+> directly from init_IRQ().
 
-module_platform_driver(drv)	no changes necessary, done automatically
-module_platform_driver_probe(drv, probe)	no changes necessary
-module_i2c_driver(i2c_drv)	no changes necessary, done automatically
+The only thing that is special about it is that almost everyone
+uses it because it is often licensed together with the Cortex-A
+cores from ARM. There are a few variants that are closely related
+(tauros3 and aurora, both from Marvell. All other outer_cache
+implementations (feroceon, xscale, tauros2) are for older
+Marvell (or Intel) cores that have since been replaced with
+Cortex-A cores in newer products.
 
-E.g. to make the driver sram offering an annotated initcall the
-following patch is necessary:
+> Moreover, outer-cache init seems to be unrelated to
+> IRQ init.
 
-----
--postcore_initcall(sram_init);
-+annotated_initcall(postcore, sram_init, sram_driver.driver);
-----
+Agreed, this is also just a historic artifact, as we don't really
+have a place to put cache controller initialization, and the
+irq init callback was already there at the time when people
+added code to init their outer caches. It often does not matter
+much where you call it, but doing it early speeds up the boot
+time.
 
-These changes can be done without any fear. If the feature is disabled,
-which is the default, the new macros will just map to the old ones and
-nothing is changed at all.
+It would be nice to unify the cache initialization a bit further,
+apparently only a few older platforms still call the l2x0 init
+manually and we can probably all convert them to the implicit
+configuration in one way or another.
 
-Signed-off-by: Alexander Holler <holler@ahsoftware.de>
----
- arch/arm/kernel/vmlinux.lds.S     |  1 +
- include/asm-generic/vmlinux.lds.h |  6 ++++++
- include/linux/device.h            | 12 ++++++++++++
- include/linux/i2c.h               |  2 +-
- include/linux/init.h              | 33 +++++++++++++++++++++++++++++++++
- include/linux/module.h            |  2 ++
- include/linux/platform_device.h   | 16 ++++++++++++----
- init/Kconfig                      |  3 +++
- 8 files changed, 70 insertions(+), 5 deletions(-)
+As we now have three kinds of cache controllers (l2x0, tauros2
+and uniphier) that we need to support using DT, it would be nice
+for generalize that init sequence a bit more.
 
-diff --git a/arch/arm/kernel/vmlinux.lds.S b/arch/arm/kernel/vmlinux.lds.S
-index 8b60fde..10a328f 100644
---- a/arch/arm/kernel/vmlinux.lds.S
-+++ b/arch/arm/kernel/vmlinux.lds.S
-@@ -213,6 +213,7 @@ SECTIONS
- #endif
- 		INIT_SETUP(16)
- 		INIT_CALLS
-+		ANNOTATED_INITCALL
- 		CON_INITCALL
- 		SECURITY_INITCALL
- 		INIT_RAM_FS
-diff --git a/include/asm-generic/vmlinux.lds.h b/include/asm-generic/vmlinux.lds.h
-index 8bd374d..7318ba7 100644
---- a/include/asm-generic/vmlinux.lds.h
-+++ b/include/asm-generic/vmlinux.lds.h
-@@ -660,6 +660,11 @@
- 		INIT_CALLS_LEVEL(7)					\
- 		VMLINUX_SYMBOL(__initcall_end) = .;
- 
-+#define ANNOTATED_INITCALL						\
-+		VMLINUX_SYMBOL(__annotated_initcall_start) = .;		\
-+		*(.annotated_initcall.init)				\
-+		VMLINUX_SYMBOL(__annotated_initcall_end) = .;
-+
- #define CON_INITCALL							\
- 		VMLINUX_SYMBOL(__con_initcall_start) = .;		\
- 		*(.con_initcall.init)					\
-@@ -816,6 +821,7 @@
- 		INIT_DATA						\
- 		INIT_SETUP(initsetup_align)				\
- 		INIT_CALLS						\
-+		ANNOTATED_INITCALL					\
- 		CON_INITCALL						\
- 		SECURITY_INITCALL					\
- 		INIT_RAM_FS						\
-diff --git a/include/linux/device.h b/include/linux/device.h
-index a2b4ea7..128fddd 100644
---- a/include/linux/device.h
-+++ b/include/linux/device.h
-@@ -1321,4 +1321,16 @@ static int __init __driver##_init(void) \
- } \
- device_initcall(__driver##_init);
- 
-+#define annotated_module_driver(__driver, __register, __unregister, ...) \
-+static int __init __driver##_init(void) \
-+{ \
-+	return __register(&(__driver), ##__VA_ARGS__); \
-+} \
-+annotated_module_init(__driver##_init, __driver.driver); \
-+static void __exit __driver##_exit(void) \
-+{ \
-+	__unregister(&(__driver), ##__VA_ARGS__); \
-+} \
-+module_exit(__driver##_exit)
-+
- #endif /* _DEVICE_H_ */
-diff --git a/include/linux/i2c.h b/include/linux/i2c.h
-index e83a738..fa63ec1 100644
---- a/include/linux/i2c.h
-+++ b/include/linux/i2c.h
-@@ -626,7 +626,7 @@ static inline int i2c_adapter_id(struct i2c_adapter *adap)
-  * use this macro once, and calling it replaces module_init() and module_exit()
-  */
- #define module_i2c_driver(__i2c_driver) \
--	module_driver(__i2c_driver, i2c_add_driver, \
-+	annotated_module_driver(__i2c_driver, i2c_add_driver, \
- 			i2c_del_driver)
- 
- #endif /* I2C */
-diff --git a/include/linux/init.h b/include/linux/init.h
-index b449f37..52ea986 100644
---- a/include/linux/init.h
-+++ b/include/linux/init.h
-@@ -124,6 +124,15 @@
- typedef int (*initcall_t)(void);
- typedef void (*exitcall_t)(void);
- 
-+struct device_driver;
-+
-+struct _annotated_initcall {
-+	initcall_t initcall;
-+	struct device_driver *driver;
-+};
-+extern struct _annotated_initcall __annotated_initcall_start[],
-+				  __annotated_initcall_end[];
-+
- extern initcall_t __con_initcall_start[], __con_initcall_end[];
- extern initcall_t __security_initcall_start[], __security_initcall_end[];
- 
-@@ -184,6 +193,11 @@ extern bool initcall_debug;
- 	__attribute__((__section__(".initcall" #id ".init"))) = fn; \
- 	LTO_REFERENCE_INITCALL(__initcall_##fn##id)
- 
-+#define __define_annotated_initcall(fn, drv) \
-+	static struct _annotated_initcall __annotated_initcall_##fn __used \
-+	__attribute__((__section__(".annotated_initcall.init"))) = \
-+							{ fn, &(drv) }
-+
- /*
-  * Early initcalls run before initializing SMP.
-  *
-@@ -216,6 +230,25 @@ extern bool initcall_debug;
- #define late_initcall(fn)		__define_initcall(fn, 7)
- #define late_initcall_sync(fn)		__define_initcall(fn, 7s)
- 
-+/*
-+ * Annotated initcalls are accompanied by a struct device_driver.
-+ * This makes initcalls identifiable and is used to order initcalls.
-+ *
-+ * If disabled, nothing is changed and the classic level based
-+ * initialization sequence is in use.
-+ */
-+#ifdef CONFIG_ANNOTATED_INITCALLS
-+#define annotated_module_init(fn, drv)	__define_annotated_initcall(fn, drv)
-+#define annotated_initcall(level, fn, drv) \
-+					__define_annotated_initcall(fn, drv)
-+#define annotated_initcall_sync(level, fn, drv) \
-+					__define_annotated_initcall(fn, drv)
-+#else
-+#define annotated_module_init(fn, drv)	module_init(fn)
-+#define annotated_initcall(level, fn, drv)	level ## _initcall(fn)
-+#define annotated_initcall_sync(level, fn, drv)	level ## _initcall_sync(fn)
-+#endif
-+
- #define __initcall(fn) device_initcall(fn)
- 
- #define __exitcall(fn) \
-diff --git a/include/linux/module.h b/include/linux/module.h
-index 3a19c79..6079d28 100644
---- a/include/linux/module.h
-+++ b/include/linux/module.h
-@@ -119,6 +119,8 @@ extern void cleanup_module(void);
- #define device_initcall_sync(fn)	module_init(fn)
- #define late_initcall(fn)		module_init(fn)
- #define late_initcall_sync(fn)		module_init(fn)
-+#define annotated_initcall(level, fn, drv)	module_init(fn)
-+#define annotated_module_init(fn, drv)	module_init(fn)
- 
- #define console_initcall(fn)		module_init(fn)
- #define security_initcall(fn)		module_init(fn)
-diff --git a/include/linux/platform_device.h b/include/linux/platform_device.h
-index bba08f4..baa5a66 100644
---- a/include/linux/platform_device.h
-+++ b/include/linux/platform_device.h
-@@ -218,9 +218,17 @@ static inline void platform_set_drvdata(struct platform_device *pdev,
-  * boilerplate.  Each module may only use this macro once, and
-  * calling it replaces module_init() and module_exit()
-  */
--#define module_platform_driver(__platform_driver) \
--	module_driver(__platform_driver, platform_driver_register, \
--			platform_driver_unregister)
-+#define module_platform_driver(__driver) \
-+static int __init __driver##_init(void) \
-+{ \
-+	return platform_driver_register(&(__driver)); \
-+} \
-+annotated_module_init(__driver##_init, __driver.driver); \
-+static void __exit __driver##_exit(void) \
-+{ \
-+	platform_driver_unregister(&(__driver)); \
-+} \
-+module_exit(__driver##_exit)
- 
- /* builtin_platform_driver() - Helper macro for builtin drivers that
-  * don't do anything special in driver init.  This eliminates some
-@@ -242,7 +250,7 @@ static int __init __platform_driver##_init(void) \
- 	return platform_driver_probe(&(__platform_driver), \
- 				     __platform_probe);    \
- } \
--module_init(__platform_driver##_init); \
-+annotated_module_init(__platform_driver##_init, __platform_driver.driver); \
- static void __exit __platform_driver##_exit(void) \
- { \
- 	platform_driver_unregister(&(__platform_driver)); \
-diff --git a/init/Kconfig b/init/Kconfig
-index af09b4f..5cfd7c4 100644
---- a/init/Kconfig
-+++ b/init/Kconfig
-@@ -26,6 +26,9 @@ config IRQ_WORK
- config BUILDTIME_EXTABLE_SORT
- 	bool
- 
-+config ANNOTATED_INITCALLS
-+	bool
-+
- menu "General setup"
- 
- config BROKEN
--- 
-2.1.0
+A first step would be to add the tauros2 and uniphier outer cache
+init to the init_IRQ() function, and then have another patch
+that moves all the outercache initialization into a new place
+like arch/arm/mm/outercache.c so we don't clutter up irq.c
+with unrelated stuff.
+
+Russell probably also has some ideas on this topic, in doubt
+just do what he suggests.
+
+	Arnd
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
