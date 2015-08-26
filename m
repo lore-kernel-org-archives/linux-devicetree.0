@@ -1,110 +1,60 @@
-From: Jon Mason <jonmason@broadcom.com>
-Subject: [PATCH v2 3/5] ARM: NSP: Add basic support for Broadcom Northstar Plus SoC
-Date: Wed, 26 Aug 2015 18:35:28 -0400
-Message-ID: <1440628530-6137-4-git-send-email-jonmason@broadcom.com>
-References: <1440628530-6137-1-git-send-email-jonmason@broadcom.com>
+From: vikas <vikas.manocha-qxv4g6HH51o@public.gmane.org>
+Subject: Re: [PATCH 2/2] mtd: spi-nor: Add driver for Cadence Quad SPI Flash
+ Controller.
+Date: Wed, 26 Aug 2015 16:05:07 -0700
+Message-ID: <55DE4623.8090508@st.com>
+References: <1440148851-14621-1-git-send-email-marex@denx.de> <1440148851-14621-2-git-send-email-marex@denx.de> <55DCE7AE.5070501@st.com> <201508260819.02535.marex@denx.de> <55DDDF99.4030701@st.com> <20150826180631.GS81844@google.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1440628530-6137-1-git-send-email-jonmason@broadcom.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Olof Johansson <olof@lixom.net>, Arnd Bergmann <arnd@arndb.de>, Kevin Hilman <khilman@linaro.org>
-Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Florian Fainelli <f.fainelli@gmail.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, bcm-kernel-feedback-list@broadcom.com, linux-kernel@vger.kernel.org, Kapil Hali <kapilh@broadcom.com>
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20150826180631.GS81844-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>, "linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Graham Moore <grmoore-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>, Alan Tull <atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Dinh Nguyen <dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>, Yves Vandervennet <yvanderv-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Broadcom Northstar Plus family of SoCs are used for switching
-control and management applications as well as residential
-router/gateway applications. The SoC features dual core Cortex
-A9 ARM CPUs, integrating several peripheral interfaces including
-multiple Gigabit Ethernet PHYs, DDR3 memory, PCIE Gen-2, USB 2.0
-and USB 3.0, serial and NAND flash, SATA and several other IO
-controllers.
+Hi,
 
-Signed-off-by: Kapil Hali <kapilh@broadcom.com>
-Signed-off-by: Jon Mason <jonmason@broadcom.com>
----
- arch/arm/mach-bcm/Kconfig   | 14 ++++++++++++++
- arch/arm/mach-bcm/Makefile  |  5 ++++-
- arch/arm/mach-bcm/bcm_nsp.c | 25 +++++++++++++++++++++++++
- 3 files changed, 43 insertions(+), 1 deletion(-)
- create mode 100644 arch/arm/mach-bcm/bcm_nsp.c
+On 08/26/2015 11:06 AM, Brian Norris wrote:
+> On Wed, Aug 26, 2015 at 08:47:37AM -0700, vikas wrote:
+>> On 08/25/2015 11:19 PM, Marek Vasut wrote:
+>>> On Wednesday, August 26, 2015 at 12:09:50 AM, vikas wrote:
+>>>> the patch failed to apply, please rebase it to master.
+>>>
+>>> it's based on -next, I'm sure you can fix trivial conflicts yourself if you
+>>> need to apply it elsewhere. Do you have any other review comments ?
+>>
+>> Always rebase the patch on master.
+> 
+> Development works against -next, not Linus' master:
+> 
+> https://lwn.net/Articles/289013/
+> 
+> This is also noted here:
+> 
+> https://www.kernel.org/doc/man-pages/linux-next.html
+> 
+> Technically, you should work off of the respective subsystem tree (see
+> entries in MAINTAINERS). For MTD, this is also documented here:
+> 
+> http://linux-mtd.infradead.org/source.html
+> 
+> In the end, most MTD patches get applied to l2-mtd.git, but l2-mtd.git
+> and linux-next.git should provide pretty similar MTD patching
+> experiences, as the former is included in the latter.
 
-diff --git a/arch/arm/mach-bcm/Kconfig b/arch/arm/mach-bcm/Kconfig
-index 0ac9e4b3..22c85b1 100644
---- a/arch/arm/mach-bcm/Kconfig
-+++ b/arch/arm/mach-bcm/Kconfig
-@@ -35,6 +35,20 @@ config ARCH_BCM_CYGNUS
- 	  BCM11300, BCM11320, BCM11350, BCM11360,
- 	  BCM58300, BCM58302, BCM58303, BCM58305.
- 
-+config ARCH_BCM_NSP
-+	bool "Broadcom Northstar Plus SoC Support" if ARCH_MULTI_V7
-+	select ARCH_BCM_IPROC
-+	select ARM_ERRATA_754322
-+	select ARM_ERRATA_775420
-+	help
-+	  Support for Broadcom Northstar Plus SoC.
-+	  Broadcom Northstar Plus family of SoCs are used for switching control
-+	  and management applications as well as residential router/gateway
-+	  applications. The SoC features dual core Cortex A9 ARM CPUs,
-+	  integrating several peripheral interfaces including multiple Gigabit
-+	  Ethernet PHYs, DDR3 memory, PCIE Gen-2, USB 2.0 and USB 3.0, serial and
-+	  NAND flash, SATA and several other IO controllers.
-+
- config ARCH_BCM_5301X
- 	bool "Broadcom BCM470X / BCM5301X ARM SoC" if ARCH_MULTI_V7
- 	select ARCH_BCM_IPROC
-diff --git a/arch/arm/mach-bcm/Makefile b/arch/arm/mach-bcm/Makefile
-index 4fb0da4..786d720 100644
---- a/arch/arm/mach-bcm/Makefile
-+++ b/arch/arm/mach-bcm/Makefile
-@@ -1,5 +1,5 @@
- #
--# Copyright (C) 2012-2014 Broadcom Corporation
-+# Copyright (C) 2012-2015 Broadcom Corporation
- #
- # This program is free software; you can redistribute it and/or
- # modify it under the terms of the GNU General Public License as
-@@ -13,6 +13,9 @@
- # Cygnus
- obj-$(CONFIG_ARCH_BCM_CYGNUS) +=  bcm_cygnus.o
- 
-+# Northstar Plus
-+obj-$(CONFIG_ARCH_BCM_NSP) += bcm_nsp.o
-+
- # BCM281XX
- obj-$(CONFIG_ARCH_BCM_281XX)	+= board_bcm281xx.o
- 
-diff --git a/arch/arm/mach-bcm/bcm_nsp.c b/arch/arm/mach-bcm/bcm_nsp.c
-new file mode 100644
-index 0000000..a1101a3
---- /dev/null
-+++ b/arch/arm/mach-bcm/bcm_nsp.c
-@@ -0,0 +1,25 @@
-+/*
-+ * Copyright (C) 2015 Broadcom Corporation
-+ *
-+ * This program is free software; you can redistribute it and/or
-+ * modify it under the terms of the GNU General Public License as
-+ * published by the Free Software Foundation version 2.
-+ *
-+ * This program is distributed "as is" WITHOUT ANY WARRANTY of any
-+ * kind, whether express or implied; without even the implied warranty
-+ * of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
-+ */
-+
-+#include <asm/mach/arch.h>
-+
-+static const char *const bcm_nsp_dt_compat[] __initconst = {
-+	"brcm,nsp",
-+	NULL,
-+};
-+
-+DT_MACHINE_START(NSP_DT, "Broadcom Northstar Plus SoC")
-+	.l2c_aux_val	= 0,
-+	.l2c_aux_mask	= ~0,
-+	.dt_compat = bcm_nsp_dt_compat,
-+MACHINE_END
--- 
-1.9.1
+Thanks Brian for these useful links, appreciate it.
+
+Rgds,
+Vikas
+
+> 
+> Regards,
+> Brian
+> .
+> 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
