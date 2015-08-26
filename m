@@ -1,141 +1,118 @@
-From: Dave Airlie <airlied@gmail.com>
-Subject: Re: [PATCH 1/7] drm/vc4: Add devicetree bindings for VC4.
-Date: Thu, 27 Aug 2015 06:59:36 +1000
-Message-ID: <CAPM=9tw=3yGQE3_G+=ian-+iV-OCRatbFc-stoMczmXeM2Ko+Q@mail.gmail.com>
-References: <1439427380-2436-1-git-send-email-eric@anholt.net>
- <1439427380-2436-2-git-send-email-eric@anholt.net>
- <55CEC25E.7070303@wwwdotorg.org>
- <874mjxwyx5.fsf@eliezer.anholt.net>
- <CAL_JsqJxiGUR5BxBPyR3-0NxqWsOxMGrWQA6cMXe2pjTom__nw@mail.gmail.com>
- <CAF6AEGu2fi0M7DsicHz+5SDHi1DyDRmvWjkmYPPgY6pZ423WcA@mail.gmail.com>
- <20150826115229.GI1367@phenom.ffwll.local>
- <20150826120934.GC320@ulmo.nvidia.com>
- <CAL_JsqJ2v=wBaUe_gN_UcpQKis+kRH6oa0NTN24Lp9w9LVWtbQ@mail.gmail.com>
+From: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
+Subject: Re: [PATCH v10 3/5] mtd: nand: vf610_nfc: add device tree bindings
+Date: Wed, 26 Aug 2015 14:15:45 -0700
+Message-ID: <56589547ed623481ca2b94ff364d6434@agner.ch>
+References: <1438594050-4595-1-git-send-email-stefan@agner.ch>
+ <1438594050-4595-4-git-send-email-stefan@agner.ch>
+ <20150825202546.GL81844@google.com>
+ <BLU436-SMTP1971442F63D96D55AC8E905B8600@phx.gbl>
+ <20150826173903.25479201@bbrezillon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <CAL_JsqJ2v=wBaUe_gN_UcpQKis+kRH6oa0NTN24Lp9w9LVWtbQ@mail.gmail.com>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Rob Herring <robherring2@gmail.com>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Stephen Warren <swarren@wwwdotorg.org>, Lee Jones <lee@kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, dri-devel <dri-devel@lists.freedesktop.org>, linux-rpi-kernel@lists.infradead.org, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20150826173903.25479201@bbrezillon>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Bill Pringlemeir <bpringle-rieW9WUcm8FFJ04o6PK0Fg@public.gmane.org>
+Cc: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, sebastian-E0PNVn5OA6ohrxcnuTQ+TQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, marb-Z4QKGCRq86k@public.gmane.org, aaron-yuhzfaV+M/Wz3Dx2OeFgIA@public.gmane.org, bpringlemeir-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, albert.aribaud-iEu9NFBzPZE@public.gmane.org, klimov.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Bill Pringlemeir <bpringlemeir-ygJ1pmMJ17cAvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gMjcgQXVndXN0IDIwMTUgYXQgMDA6MzAsIFJvYiBIZXJyaW5nIDxyb2JoZXJyaW5nMkBnbWFp
-bC5jb20+IHdyb3RlOgo+IE9uIFdlZCwgQXVnIDI2LCAyMDE1IGF0IDc6MDkgQU0sIFRoaWVycnkg
-UmVkaW5nCj4gPHRoaWVycnkucmVkaW5nQGdtYWlsLmNvbT4gd3JvdGU6Cj4+IE9uIFdlZCwgQXVn
-IDI2LCAyMDE1IGF0IDAxOjUyOjI5UE0gKzAyMDAsIERhbmllbCBWZXR0ZXIgd3JvdGU6Cj4+PiBP
-biBUdWUsIEF1ZyAyNSwgMjAxNSBhdCAwNDo0MjoxOFBNIC0wNDAwLCBSb2IgQ2xhcmsgd3JvdGU6
-Cj4+PiA+IE9uIE1vbiwgQXVnIDI0LCAyMDE1IGF0IDk6NDcgQU0sIFJvYiBIZXJyaW5nIDxyb2Jo
-ZXJyaW5nMkBnbWFpbC5jb20+IHdyb3RlOgo+Pj4gPiA+IE9uIE1vbiwgQXVnIDE3LCAyMDE1IGF0
-IDE6MzAgUE0sIEVyaWMgQW5ob2x0IDxlcmljQGFuaG9sdC5uZXQ+IHdyb3RlOgo+Pj4gPiA+PiBT
-dGVwaGVuIFdhcnJlbiA8c3dhcnJlbkB3d3dkb3Rvcmcub3JnPiB3cml0ZXM6Cj4+PiA+ID4+Cj4+
-PiA+ID4+PiBPbiAwOC8xMi8yMDE1IDA2OjU2IFBNLCBFcmljIEFuaG9sdCB3cm90ZToKPj4+ID4g
-Pj4+PiBTaWduZWQtb2ZmLWJ5OiBFcmljIEFuaG9sdCA8ZXJpY0BhbmhvbHQubmV0Pgo+Pj4gPiA+
-Pj4KPj4+ID4gPj4+IFRoaXMgb25lIGRlZmluaXRlbHkgbmVlZHMgYSBwYXRjaCBkZXNjcmlwdGlv
-biwgc2luY2Ugc29tZW9uZSBtaWdodCBub3QKPj4+ID4gPj4+IGtub3cgd2hhdCBhIFZDNCBpcywg
-YW5kICJnaXQgbG9nIiB3b24ndCBzaG93IHRoZSB0ZXh0IGZyb20gdGhlIGJpbmRpbmcKPj4+ID4g
-Pj4+IGRvYyBpdHNlbGYuIEknZCBzdWdnZXN0IGFkZGluZyB0aGUgaW5pdGlhbCBwYXJhZ3JhcGgg
-b2YgdGhlIGJpbmRpbmcgZG9jCj4+PiA+ID4+PiBhcyB0aGUgcGF0Y2ggZGVzY3JpcHRpb24sIG9y
-IG1vcmUuCj4+PiA+ID4+Pgo+Pj4gPiA+Pj4+IGRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2Rl
-dmljZXRyZWUvYmluZGluZ3MvZ3B1L2JyY20sYmNtLXZjNC50eHQgYi9Eb2N1bWVudGF0aW9uL2Rl
-dmljZXRyZWUvYmluZGluZ3MvZ3B1L2JyY20sYmNtLXZjNC50eHQKPj4+ID4gPj4KPj4+ID4gPj4+
-PiArLSBodnNzOiAgICAgICAgICAgICBMaXN0IG9mIHJlZmVyZW5jZXMgdG8gSFZTIHZpZGVvIHNj
-YWxlcnMKPj4+ID4gPj4+PiArLSBlbmNvZGVyczogTGlzdCBvZiByZWZlcmVuY2VzIHRvIG91dHB1
-dCBlbmNvZGVycyAoSERNSSwgU0RUVikKPj4+ID4gPj4+Cj4+PiA+ID4+PiBXb3VsZCBpdCBtYWtl
-IHNlbnNlIHRvIG1ha2UgYWxsIHRob3NlIG5vZGVzIGNoaWxkIG5vZGUgb2YgdGhlIHZjNAo+Pj4g
-PiA+Pj4gb2JqZWN0LiBUaGF0IHdheSwgdGhlcmUncyBubyBuZWVkIHRvIGhhdmUgdGhlc2UgbGlz
-dHMgb2Ygb2JqZWN0czsgdGhleQo+Pj4gPiA+Pj4gY2FuIGJlIGF1dG9tYXRpY2FsbHkgYnVpbHQg
-dXAgYXMgdGhlIERUIGlzIGVudW1lcmF0ZWQuIEkga25vdyB0aGF0IGUuZy4KPj4+ID4gPj4+IHRo
-ZSBOVklESUEgVGVncmEgaG9zdDF4IGJpbmRpbmcgd29ya3MgdGhpcyB3YXksIGFuZCBJIHRoaW5r
-IGl0IG1heSBoYXZlCj4+PiA+ID4+PiBiZWVuIGluc3BpcmVkIGJ5IG90aGVyIHNpbWlsYXIgY2Fz
-ZXMuCj4+PiA+ID4+Cj4+PiA+ID4+IEkndmUgbG9va2VkIGF0IHRlZ3JhLCBhbmQgdGhlIGNvbXBv
-bmVudCBzeXN0ZW0gdXNlZCBieSBtc20gYXBwZWFycyB0byBiZQo+Pj4gPiA+PiBuaWNlciB0aGFu
-IGl0LiAgVG8gZm9sbG93IHRlZ3JhJ3MgbW9kZWwsIGl0IGxvb2tzIGxpa2UgSSBuZWVkIHRvIGJ1
-aWxkCj4+PiA+ID4+IHRoaXMgZXh0cmEgYnVzIHRoaW5nIGNvcnJlc3BvbmRpbmcgdG8gaG9zdDF4
-IHRoYXQgaXMgZWZmZWN0aXZlbHkgdGhlCj4+PiA+ID4+IGRyaXZlcnMvYmFzZS9jb21wb25lbnQu
-YyBjb2RlLCBzbyB0aGF0IEkgY2FuIGdldCBhdCB2YzQncyBzdHJ1Y3R1cmUgZnJvbQo+Pj4gPiA+
-PiB0aGUgY29tcG9uZW50IGRyaXZlcnMuCj4+PiA+ID4+Cj4+PiA+ID4+PiBPZiBjb3Vyc2UsIHRo
-aXMgaXMgb25seSBhcHByb3ByaWF0ZSBpZiB0aGUgSFcgbW9kdWxlcyByZWFsbHkgYXJlCj4+PiA+
-ID4+PiBsb2dpY2FsbHkgY2hpbGRyZW4gb2YgdGhlIFZDNCBIVyBtb2R1bGUuIFBlcmhhcHMgdGhl
-eSBhcmVuJ3QuIElmIHRoZXkKPj4+ID4gPj4+IGFyZW4ndCB0aG91Z2gsIEkgd29uZGVyIHdoYXQg
-dGhpcyAidmM0IiBtb2R1bGUgYWN0dWFsbHkgcmVwcmVzZW50cyBpbiBIVz8KPj4+ID4gPj4KPj4+
-ID4gPj4gSXQncyB0aGUgc3Vic3lzdGVtLCBzYW1lIGFzIHdlIHVzZSBhIHN1YnN5c3RlbSBub2Rl
-IGZvciBtc20sIHN0aSwKPj4+ID4gPj4gcm9ja2NoaXAsIGlteCwgYW5kIGV4eW5vcy4gIFRoaXMg
-YXBwZWFycyB0byBiZSB0aGUgY29tbW9uIG1vZGVsIG9mIGhvdwo+Pj4gPiA+PiB0aGUgY29sbGVj
-dGlvbiBvZiBncmFwaGljcy1yZWxhdGVkIGNvbXBvbmVudHMgaXMgcmVwcmVzZW50ZWQgaW4gdGhl
-IERULgo+Pj4gPiA+Cj4+PiA+ID4gSSB0aGluayBtb3N0IG9mIHRoZXNlIGJpbmRpbmdzIGFyZSB3
-cm9uZy4gVGhleSBhcmUgZ3JvdXBlZCB0b2dldGhlcgo+Pj4gPiA+IGJlY2F1c2UgdGhhdCBpcyB3
-aGF0IERSTSB3YW50cyBub3QgYmVjYXVzZSB0aGF0IHJlZmxlY3RzIHRoZSBoL3cuIFNvCj4+PiA+
-ID4gY29udmluY2UgbWUgdGhpcyBpcyBvbmUgYmxvY2ssIG5vdCB0aGF0IGl0IGlzIHdoYXQgb3Ro
-ZXIgcGVvcGxlIGRvLgo+Pj4gPgo+Pj4gPiBJIHRoaW5rLCB3aGVuIGl0IGNvbWVzIHRvIG1vcmUg
-Y29tcGxleCBkcml2ZXIgc3Vic3lzdGVtcyAobGlrZSBkcm0gaW4KPj4+ID4gcGFydGljdWxhcikg
-d2UgaGF2ZSBhIGJpdCBvZiBtaXNtYXRjaCBiZXR3ZWVuIGhvdyB0aGluZ3MgbG9vayBmcm9tIHRo
-ZQo+Pj4gPiAicHVyZSBodyBpZ25vcmluZyBzdyIgcGVyc3BlY3RpdmUsIGFuZCB0aGUgImhvdyBz
-dyBhbmQgaW4gcGFydGljdWxhcgo+Pj4gPiB1c2Vyc3BhY2UgZXhwZWN0cyB0aGluZ3MiIHBlcnNw
-ZWN0aXZlLiAgTWF5YmUgaXQgaXMgbGVzcyBhIHByb2JsZW0gaW4KPj4+ID4gb3RoZXIgc3Vic3lz
-dGVtcywgd2hlcmUgYmluZGluZ3MgbWFwIHRvIHRoaW5ncyB0aGF0IGFyZSBvbmx5IHZpc2libGUK
-Pj4+ID4gaW4gdGhlIGtlcm5lbCwgb3Igd2VsbCBkZWZpbmVkIGRldmljZXMgbGlrZSB1YXJ0IG9y
-IHNhdGEgY29udHJvbGxlci4KPj4+ID4gQnV0IHdoZW4gZ2l2ZW4gdGhlIGNob2ljZSwgSSdtIGdv
-aW5nIHRvIGVyciBvbiB0aGUgc2lkZSBvZiBub3QKPj4+ID4gY29uZnVzaW5nIHVzZXJzcGFjZSBh
-bmQgdGhlIGxhcmdlIHNvZnR3YXJlIHN0YWNrIHRoYXQgc2l0cyBhYm92ZQo+Pj4gPiBkcm0va21z
-LCBvdmVyIGR0IHB1cml0eS4KPj4+ID4KPj4+ID4gTWF5YmUgaXQgd291bGQgYmUgbmljZSB0byBo
-YXZlIGEgc29ydCBvZiBkdCBvdmVybGF5IHRoYXQgYWRkcyB0aGUgYml0cwo+Pj4gPiBuZWVkZWQg
-dG8gdGllIHRvZ2V0aGVyIGh3IGJsb2NrcyB0aGF0IHNob3VsZCBiZSBhc3NlbWJsZWQgaW50byBh
-Cj4+PiA+IHNpbmdsZSBsb2dpY2FsIGRldmljZSBmb3IgbGludXggYW5kIHVzZXJzcGFjZSAoYnV0
-IG1heWJlIG5vdCBzb21lCj4+PiA+IG90aGVyIGh5cG90aGV0aWNhbCBvcGVyYXRpbmcgc3lzdGVt
-KS4gIEJ1dCBzbyBmYXIgdGhhdCBkb2Vzbid0IGV4aXN0Lgo+Pj4gPiBBbGwgd2UgaGF2ZSBpcyBh
-IGhhbW1lciAoZGV2aWNldHJlZSksIGV2ZXJ5dGhpbmcgbG9va3MgbGlrZSBhIG5haWwuCj4+PiA+
-IEVuZCByZXN1bHQgaXMgd2UgZW5kIHVwIGFkZGluZyBzb21lIHRoaW5ncyBpbiB0aGUgYmluZGlu
-Z3Mgd2hpY2gKPj4+ID4gYXJlbid0IHB1cmVseSBhYm91dCB0aGUgaHcuICBVbnRpbCBzb21lb25l
-IGludmVudHMgYSBzY3Jld2RyaXZlciwgSSdtCj4+PiA+IG5vdCBzdXJlIHdoYXQgZWxzZSB0byBk
-by4gIEluIHRoZSBlbmQsIG90aGVyIGh5cG90aGV0aWNhbCBPUyBpcyBmcmVlCj4+PiA+IHRvIGln
-bm9yZSB0aG9zZSBleHRyYSBmaWVsZHMgaW4gdGhlIGJpbmRpbmdzIGlmIGl0IGRvZXNuJ3QgbmVl
-ZCB0aGVtLgo+Pj4gPiBTbyBtZWg/Cj4+Pgo+Pj4gSSB0aG91Z2h0IHdlIGFncmVlZCBhIHdoaWxl
-IGJhY2sgdGhhdCB0aGVzZSBraW5kIG9mICJwdWxsIGV2ZXJ5dGhpbmcgZm9yCj4+PiB0aGUgbG9n
-aWNhbCBkZXZpY2UgdG9nZXRoZXIiIGR0IG5vZGVzIHdoaWNoIGp1c3QgaGF2ZSBwaWxlcyBvZiBw
-aGFuZGxlcwo+Pj4gYXJlIHRvdGFsbHkgYWNjZXB0ZWQ/IEF0IGxlYXN0IHRoYXQncyB0aGUgcG9p
-bnQgYmVoaW5kIHRoZSBjb21wb25lbnQKPj4+IGhlbHBlcnMsIGFuZCBFcmljIGV2ZW4gc3VnZ2Vz
-dGVkIHRvIGNyZWF0ZSBkdC1zcGVjaWZpYyBjb21wb25lbnQgaGVscGVycwo+Pj4gdG8gY3V0IGRv
-d24gYSBiaXQgb24gdGhlIHVzdWFsIGJvaWxlcnBsYXRlLiBkdCBtYWludGFpbmVycyBhcmUgYWxz
-byBmaW5lCj4+PiB3aXRoIHRoaXMgYXBwcm9hY2ggYWZhaWsuIEZyb20gbXkgdW5kZXJzdGFuZGlu
-ZyB0ZWdyYSB3aXRoIHRoZSBob3N0MXggYnVzCj4+PiByZWFsbHkgaXMgdGhlIG9kZCBvbmUgb3V0
-IGFuZCBub3QgdGhlIG5vcm0uCj4+Cj4+IEkgYWdyZWUgdGhhdCBpbiBtYW55IGFzcGVjdHMgVGVn
-cmEgaXMgc29tZXdoYXQgc3BlY2lhbC4gQnV0IHRoZSBzYW1lCj4+IHByaW5jaXBsZXMgdGhhdCB0
-aGUgaG9zdDF4IGluZnJhc3RydWN0dXJlIHVzZXMgY291bGQgYmUgaW1wbGVtZW50ZWQgaW4gYQo+
-PiBzaW1pbGFyIHdheSBmb3Igb3RoZXIgRFJNIGRyaXZlcnMuIFlvdSBjYW4gZWFzaWx5IGNvbGxl
-Y3QgaW5mb3JtYXRpb24KPj4gYWJvdXQgc3ViZGV2aWNlcyBieSB3YWxraW5nIHRoZSBkZXZpY2Ug
-dHJlZSBhbmQgbWF0Y2hpbmcgb24ga25vd24KPj4gY29tcGF0aWJsZSBzdHJpbmdzLiBBbmQgeW91
-IGNhbiBhbHNvIGluc3RhbnRpYXRlIHRoZSB0b3AtbGV2ZWwgZGV2aWNlCj4+IGZyb20gZHJpdmVy
-IGNvZGUgcmF0aGVyIHRoYW4gaGF2ZSBpdCBpbiBEVC4gSXQgc2hvdWxkIHN0aWxsIGJlIHBvc3Np
-YmxlCj4+IHRvIG1ha2UgdGhpcyB3b3JrIHdpdGhvdXQgYW4gYXJ0aWZpY2lhbCBkZXZpY2Ugbm9k
-ZSBpbiBEVC4gVGhlIGNvbXBvbmVudAo+PiBhbmQgbWFzdGVyIGluZnJhc3RydWN0dXJlIGlzIGxh
-cmdlbHkgb3J0aG9nb25hbCB0byB0aGF0LCBhbmQgYXMgZmFyIGFzIEkKPj4gcmVtZW1iZXIgdGhl
-IG9ubHkgYmxvY2tlciBpcyB0aGUgbmVlZCBmb3IgYSB0b3AtbGV2ZWwgZGV2aWNlLiBJIHdvbmRl
-cgo+PiBpZiBwZXJoYXBzIHRoaXMgY291bGQgYmUgbWFkZSB0byB3b3JrIGJ5IGJpbmRpbmcgdGhl
-IG1hc3RlciB0byB0aGUgdG9wLQo+PiBsZXZlbCBTb0MgZGV2aWNlLgo+Pgo+PiBPYnZpb3VzbHkg
-YWRkaW5nIHRoZSBub2RlIGluIERUIGlzIGVhc2llciwgYnV0IHRvIG15IGtub3dsZWRnZSBlYXN5
-IGhhcwo+PiBuZXZlciBiZWVuIGEgZ29vZCBleGN1c2UgZm9yIG1hbmdsaW5nIERULiBQZXJoYXBz
-IHRoYXQncyBkaWZmZXJlbnQgdGhlc2UKPj4gZGF5cy4uLgo+Cj4gSSBhZ3JlZSB3ZSBzaG91bGQg
-YXZvaWQgdGhlIHZpcnR1YWwgbm9kZSBpZiBwb3NzaWJsZS4gSXQgaXMgY2VydGFpbmx5Cj4gcG9z
-c2libGUgYXMgSSBzdGFydGVkIG91dCB3aXRoIG9uZSBhbmQgcmVtb3ZlZCBpdC4gQXQgbGVhc3Qg
-aW4gbXkKPiBjYXNlLCBpdCBlc3NlbnRpYWxseSByZXF1aXJlZCB0aGUgZHJtX2RldmljZSBhbmQg
-Y3J0YyB0byBiZSBhIHNpbmdsZQo+IGRyaXZlciByYXRoZXIgdGhhbiAyIGNvbXBvbmVudHMuIEhv
-d2V2ZXIsIEknbSBtb3JlIGNvbmNlcm5lZCB0aGF0IHdlCj4gYXJlIGNvbnNpc3RlbnQgZnJvbSBw
-bGF0Zm9ybSB0byBwbGF0Zm9ybSB3aGVyZSBpdCBtYWtlcyBzZW5zZSB0aGFuCj4gd2hldGhlciB3
-ZSBoYXZlIGEgc29tZXdoYXQgcXVlc3Rpb25hYmxlIG5vZGUgb3Igbm90Lgo+Cmh0dHA6Ly9saXN0
-cy5mcmVlZGVza3RvcC5vcmcvYXJjaGl2ZXMvZHJpLWRldmVsLzIwMTMtSnVseS8wNDExNTkuaHRt
-bAoKU28gY2FuIHdlIGF0IGxlYXN0IGhhdmUgc29tZSBjb250aW51aXR5IG9mIGRlY2lzaW9uIG1h
-a2luZywKYmlrZXNoZWRkaW5nIHRoaXMgZXZlcnkgdGltZSB3ZSBzdWJtaXQgYSBkcml2ZXIgaXNu
-J3QgZ2l2aW5nIG1lIGFueQpob3BlIGdvaW5nIGZvcndhcmQuCgpEYXZlLgpfX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0
-CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cDovL2xpc3RzLmZyZWVkZXNrdG9w
-Lm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
+On 2015-08-26 08:39, Boris Brezillon wrote:
+> Hi Bill,
+> 
+> On Wed, 26 Aug 2015 11:26:36 -0400
+> Bill Pringlemeir <bpringle-rieW9WUcm8FFJ04o6PK0Fg@public.gmane.org> wrote:
+> 
+>> On 25 Aug 2015, computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org wrote:
+>>
+>> > Sorry, I realized a potential issue here.
+>>
+>> > On Mon, Aug 03, 2015 at 11:27:28AM +0200, Stefan Agner wrote:
+>> >> Signed-off-by: Bill Pringlemeir <bpringlemeir-ygJ1pmMJ17cAvxtiuMwx3w@public.gmane.org>
+>> >> Acked-by: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+>> >> Reviewed-by: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+>> >> Signed-off-by: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
+>> >> ---
+>> >> .../devicetree/bindings/mtd/vf610-nfc.txt | 45 ++++++++++++++++++++++
+>> >> 1 file changed, 45 insertions(+) create mode 100644
+>> >> Documentation/devicetree/bindings/mtd/vf610-nfc.txt
+>>
+>> >> diff --git a/Documentation/devicetree/bindings/mtd/vf610-nfc.txt
+>> >> b/Documentation/devicetree/bindings/mtd/vf610-nfc.txt
+>> >> new file mode 100644
+>> >> index 0000000..cae5f25
+>> >> --- /dev/null
+>> >> +++ b/Documentation/devicetree/bindings/mtd/vf610-nfc.txt
+>> >>>> -0,0 +1,45 @@
+>> >> +- nand-bus-width: see nand.txt
+>> >> +- nand-ecc-mode: see nand.txt
+>> >> +- nand-on-flash-bbt: see nand.txt
+>>
+>> > Stumbling across the "multi-CS" questions on the driver reminds me: it
+>> > typically makes sense to define new NAND bindings using separate NAND
+>> > *controller* and *flash* device nodes. The above 3 properties, at
+>> > least, would apply on a per-flash basis, not per-controller
+>> > typically. See sunxi-nand, for instance:
+>>
+>> > http://lxr.free-electrons.com/source/Documentation/devicetree/bindings/mtd/sunxi-nand.txt
+>>
+>> > brcmnand had a similar pattern:
+>>
+>> > https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git/tree/Documentation/devicetree/bindings/mtd/brcm,brcmnand.txt
+>>
+>> > (Perhaps it's time we standardized this a little more formally...)
+>>
+>> These would apply per chip, but the controller has to be configured to
+>> support each and every one.  Every time an operation was performed, we
+>> would have to check the chip type and reconfigure the controller.
+>> Currently, the driver does not support this and it would add a lot of
+>> overhead in some cases unless a register cache was used.
+>>
+>> Is the flexibility of using a system with combined 8/16bit devices
+>> really worth all the overhead?  Isn't it sort of brain dead hardware not
+>> to make all of the chips similar?  Why would everyone have to pay for
+>> such a crazy setup?
+>>
+>> To separate it would at least be a lie versus the code in the current
+>> form.  As well, there are only a few SOC which support multiple chip
+>> selects.  The 'multi-CS' register bits of this controller varies between
+>> PowerPC, 68K/Coldfire and ARM platforms.
+
+The DT can be a lie versus the code. The DT should reflect how the
+hardware is wired, afaik, if we take shortcuts in the driver code, that
+is fine. If we don't support a certain configuration right now (e.g.
+second NAND chip), the driver can just return an appropriate error code.
+>>
+>> I looked briefly at the brcmnand.c  and it seems that it is not
+>> supporting different ECC per chip even though the nodes are broken out
+>> this way.  In fact, if some raw functions are called, I think it will
+>> put it in ECC mode even if it wasn't before?  Well, I agree that this
+>> would be good generically, I think it puts a lot of effort in the
+>> drivers for not so much payoff?
+> 
+> Hm, the sunxi driver supports it, and it does not add such a big
+> overhead...
+> The only thing you have to do is cache a bunch of register values
+> per-chip and restore/apply them when the chip is selected
+> (in your ->select_chip() implementation).
+> 
+> Anyway, even if the suggested DT representation is a lie in regards to
+> your implementation, it's actually pretty accurate from an hardware
+> POV, and this is exactly what DT is supposed to represent.
+
+I agree with both of you. I don't see much value implementing multi-NAND
+chip support, especially with different configurations, at the moment. I
+am not aware of any hardware making use of that now.
+
+I will update the driver to parse a NAND sub node and get the ECC
+properties from the per flash configuration. However, I won't add chip
+select or multi-NAND support right now...
+
+Any objection?
+
+--
+Stefan
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
