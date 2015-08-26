@@ -1,32 +1,57 @@
-From: Viresh Kumar <viresh.kumar@linaro.org>
-Subject: Re: [RESEND PATCH 0/3 v6] Add Mediatek MT8173 cpufreq driver
-Date: Wed, 26 Aug 2015 07:46:59 +0530
-Message-ID: <20150826021659.GD8784@linux>
-References: <1439803465-19683-1-git-send-email-pi-cheng.chen@linaro.org>
- <CALx668VWg2xVxzy8P7f5QFWRzm+TDJXUghL-_rbvRLsLYjtnng@mail.gmail.com>
- <1617873.VRHfat3V76@vostro.rjw.lan>
- <CALx668UvkYhLoU8rxLG70RqTzsnaiV5-ybDYTKqb4MEJS8pmRw@mail.gmail.com>
+From: Shengjiu Wang <shengjiu.wang@freescale.com>
+Subject: Re: [PATCH V1 0/3] fix clock issue for fsl,spdif
+Date: Wed, 26 Aug 2015 09:19:24 +0800
+Message-ID: <20150826011922.GA9708@shlinux2>
+References: <cover.1439284957.git.shengjiu.wang@freescale.com>
+ <20150825184527.31346.52324@quantum>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="us-ascii"
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <CALx668UvkYhLoU8rxLG70RqTzsnaiV5-ybDYTKqb4MEJS8pmRw@mail.gmail.com>
+In-Reply-To: <20150825184527.31346.52324@quantum>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Pi-Cheng Chen <pi-cheng.chen@linaro.org>
-Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>, Matthias Brugger <matthias.bgg@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Michael Turquette <mturquette@baylibre.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, Linaro Kernel Mailman List <linaro-kernel@lists.linaro.org>, linux-mediatek@lists.infradead.org
+To: Michael Turquette <mturquette@baylibre.com>
+Cc: shawnguo@kernel.org, kernel@pengutronix.de, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk, sboyd@codeaurora.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 26-08-15, 09:25, Pi-Cheng Chen wrote:
-> The [3/3] is based on Mediatek SoC maintainer tree[1] and the patch which
-> introduce a new clock type[2] consumed by MT8173 cpufreq driver. So it will
-> cause some conflicts if it goes through your tree. I am not sure how this
-> should be handled, but should it be merged through Mediatek SoC maintainer
-> tree?
+On Tue, Aug 25, 2015 at 11:45:27AM -0700, Michael Turquette wrote:
+> Quoting Shengjiu Wang (2015-08-11 02:26:51)
+> > fix clock issue for fsl,spdif
+> > 
+> > Shengjiu Wang (3):
+> >   ARM: imx6q: Add SPDIF_GCLK clock in clock tree
+> >   ARM: imx6sl: Add SPDIF_GCLK clock in clock tree
+> >   ARM: imx6sx: Add SPDIF_GCLK clock in clock tree
+> 
+> Hello Shengjiu Wang,
+> 
+> Please move the dts changes into separate patches. I can take the
+> changes to the clock driver and the header through the clk tree, but the
+> dt patches need to go through arm-soc.
+> 
+> Regards,
+> Mike
 
-Just get that applied to MTK tree, it doesn't have any dependency on
-rest of the patches for build/boot. The only thing is that cpufreq
-wouldn't work and it will work as soon as Rafael's and MTK's trees are
-merged by Linus.
+Thanks Mike. I will send another patches for dts changes.
 
--- 
-viresh
+> 
+> > 
+> >  arch/arm/boot/dts/imx6qdl.dtsi            |  2 +-
+> >  arch/arm/boot/dts/imx6sl.dtsi             | 16 ++++++++++++++++
+> >  arch/arm/boot/dts/imx6sx.dtsi             |  2 +-
+> >  drivers/clk/imx/clk-imx6q.c               |  4 +++-
+> >  drivers/clk/imx/clk-imx6sl.c              |  4 +++-
+> >  drivers/clk/imx/clk-imx6sx.c              |  1 +
+> >  include/dt-bindings/clock/imx6qdl-clock.h |  3 ++-
+> >  include/dt-bindings/clock/imx6sl-clock.h  |  3 ++-
+> >  include/dt-bindings/clock/imx6sx-clock.h  |  3 ++-
+> >  9 files changed, 31 insertions(+), 7 deletions(-)
+> > 
+> > -- 
+> > 1.9.1
+> > 
+> > --
+> > To unsubscribe from this list: send the line "unsubscribe linux-kernel" in
+> > the body of a message to majordomo@vger.kernel.org
+> > More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> > Please read the FAQ at  http://www.tux.org/lkml/
