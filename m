@@ -1,73 +1,49 @@
-From: Alexander Holler <holler@ahsoftware.de>
-Subject: [PATCH 09/16] deps: dts: imx6q: make some remote-endpoints non-dependencies
-Date: Wed, 26 Aug 2015 14:28:21 +0200
-Message-ID: <1440592108-3740-10-git-send-email-holler@ahsoftware.de>
-References: <1440592108-3740-1-git-send-email-holler@ahsoftware.de>
+From: Cyrille Pitchen <cyrille.pitchen@atmel.com>
+Subject: [PATCH linux-next v5 2/5] Documentation: mtd: add a DT property to set the number of dummy cycles
+Date: Wed, 26 Aug 2015 14:30:24 +0200
+Message-ID: <648dbf9f9d1d4cd414fe2df8d298880b2245c7b5.1440580764.git.cyrille.pitchen@atmel.com>
+References: <cover.1440580764.git.cyrille.pitchen@atmel.com>
+Mime-Version: 1.0
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1440592108-3740-1-git-send-email-holler@ahsoftware.de>
+In-Reply-To: <cover.1440580764.git.cyrille.pitchen@atmel.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org
-Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Greg KH <gregkh@linuxfoundation.org>, Russel King <linux@arm.linux.org.uk>, Andrew Morton <akpm@linux-foundation.org>, Grant Likely <grant.likely@linaro.org>, Tomeu Vizoso <tomeu.vizoso@collabora.com>, Alexander Holler <holler@ahsoftware.de>
+To: nicolas.ferre@atmel.com, broonie@kernel.org, linux-spi@vger.kernel.org, dwmw2@infradead.org, computersforpeace@gmail.com, zajec5@gmail.com, beanhuo@micron.com, juhosg@openwrt.org, marex@denx.de, shijie.huang@intel.com, ben@decadent.org.uk
+Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux-mtd@lists.infradead.org, Cyrille Pitchen <cyrille.pitchen@atmel.com>
 List-Id: devicetree@vger.kernel.org
 
-This is necessary to remove dependency cycles introduced by
-'remote-endpoints'.
+Depending on the SPI clock frequency, the Fast Read op code and the
+Single/Dual Data Rate mode, the number of dummy cycles can be tuned to
+improve transfer speed.
+The actual number of dummy cycles is specific for each memory model and is
+provided by the manufacturer thanks to the memory datasheet.
 
-Signed-off-by: Alexander Holler <holler@ahsoftware.de>
+Signed-off-by: Cyrille Pitchen <cyrille.pitchen@atmel.com>
 ---
- arch/arm/boot/dts/imx6q.dtsi   | 2 ++
- arch/arm/boot/dts/imx6qdl.dtsi | 4 ++++
- 2 files changed, 6 insertions(+)
+ Documentation/devicetree/bindings/mtd/jedec,spi-nor.txt | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/arch/arm/boot/dts/imx6q.dtsi b/arch/arm/boot/dts/imx6q.dtsi
-index 399103b..8db7f25 100644
---- a/arch/arm/boot/dts/imx6q.dtsi
-+++ b/arch/arm/boot/dts/imx6q.dtsi
-@@ -184,6 +184,7 @@
+diff --git a/Documentation/devicetree/bindings/mtd/jedec,spi-nor.txt b/Documentation/devicetree/bindings/mtd/jedec,spi-nor.txt
+index 2bee68103b01..4387567d8024 100644
+--- a/Documentation/devicetree/bindings/mtd/jedec,spi-nor.txt
++++ b/Documentation/devicetree/bindings/mtd/jedec,spi-nor.txt
+@@ -19,6 +19,11 @@ Optional properties:
+                    all chips and support for it can not be detected at runtime.
+                    Refer to your chips' datasheet to check if this is supported
+                    by your chip.
++- m25p,num-dummy-cycles : Set the number of dummy cycles for Fast Read commands.
++                          Depending on the manufacturer additional dedicated
++                          commands are sent to the flash memory so the
++                          controller and the memory can agree on the number of
++                          dummy cycles to use.
  
- 				ipu2_di0_hdmi: endpoint@1 {
- 					remote-endpoint = <&hdmi_mux_2>;
-+					no-dependencies = <&hdmi_mux_2>;
- 				};
+ Example:
  
- 				ipu2_di0_mipi: endpoint@2 {
-@@ -205,6 +206,7 @@
- 
- 				ipu2_di1_hdmi: endpoint@1 {
- 					remote-endpoint = <&hdmi_mux_3>;
-+					no-dependencies = <&hdmi_mux_3>;
- 				};
- 
- 				ipu2_di1_mipi: endpoint@2 {
-diff --git a/arch/arm/boot/dts/imx6qdl.dtsi b/arch/arm/boot/dts/imx6qdl.dtsi
-index b57033e..db3d0d0 100644
---- a/arch/arm/boot/dts/imx6qdl.dtsi
-+++ b/arch/arm/boot/dts/imx6qdl.dtsi
-@@ -1150,10 +1150,12 @@
- 
- 				ipu1_di0_hdmi: endpoint@1 {
- 					remote-endpoint = <&hdmi_mux_0>;
-+					no-dependencies = <&hdmi_mux_0>;
- 				};
- 
- 				ipu1_di0_mipi: endpoint@2 {
- 					remote-endpoint = <&mipi_mux_0>;
-+					no-dependencies = <&mipi_mux_0>;
- 				};
- 
- 				ipu1_di0_lvds0: endpoint@3 {
-@@ -1175,10 +1177,12 @@
- 
- 				ipu1_di1_hdmi: endpoint@1 {
- 					remote-endpoint = <&hdmi_mux_1>;
-+					no-dependencies = <&hdmi_mux_1>;
- 				};
- 
- 				ipu1_di1_mipi: endpoint@2 {
- 					remote-endpoint = <&mipi_mux_1>;
-+					no-dependencies = <&mipi_mux_1>;
- 				};
- 
- 				ipu1_di1_lvds0: endpoint@3 {
+@@ -29,4 +34,5 @@ Example:
+ 		reg = <0>;
+ 		spi-max-frequency = <40000000>;
+ 		m25p,fast-read;
++		m25p,num-dummy-cycles = <8>;
+ 	};
 -- 
-2.1.0
+1.8.2.2
