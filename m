@@ -1,64 +1,99 @@
-From: Haojian Zhuang <haojian.zhuang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v1 3/3] arm64: dts: add Hi6220 mailbox node
-Date: Wed, 26 Aug 2015 10:41:52 +0800
-Message-ID: <1440556912.10987.54.camel@linaro.org>
-References: <20150824095144.GA7139@leverpostej>
-	 <1440411596.3517.12.camel@linaro.org>
-	 <20150824114903.GT10728@bivouac.eciton.net>
-	 <1440490427.10987.29.camel@linaro.org>
-	 <20150825094630.GU10728@bivouac.eciton.net>
-	 <1440497710.10987.42.camel@linaro.org> <20150825104256.GB13471@leverpostej>
-	 <1440510194.10987.52.camel@linaro.org>
-	 <20150825142416.GW10728@bivouac.eciton.net>
-	 <CAKv+Gu-b=QvMF++V9UjULRxrGvoz-0ytFLeuLm8Y5sQH4p53Sw@mail.gmail.com>
-	 <20150825153754.GY10728@bivouac.eciton.net>
+From: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
+Subject: Re: [PATCH v2 00/07] ARM: shmobile: APMU DT support via SMP Enable
+ method V2
+Date: Wed, 26 Aug 2015 14:28:52 +0900
+Message-ID: <20150826052851.GA9515@verge.net.au>
+References: <20150823072427.14156.1960.sendpatchset@little-apple>
+ <20150825004923.GC17673@verge.net.au>
+ <CANqRtoQzpNSr8dWRvGmS_VWBEsi-=dB6PUGVzWQHAXK6xb2f2A@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20150825153754.GY10728-t77nlHhSwNqAroYi2ySoxKxOck334EZe@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <CANqRtoQzpNSr8dWRvGmS_VWBEsi-=dB6PUGVzWQHAXK6xb2f2A-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Leif Lindholm <leif.lindholm-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Ard Biesheuvel <ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Dan Zhao <dan.zhao-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Catalin Marinas <Catalin.Marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, Jian Zhang <zhangjian001-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Guangyue Zeng <zengguangyue-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Yiping Xu <xuyiping-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Wei Xu <xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Zhenwei Wang <Zhenwei.wang-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Bintian Wang <bintian.wang-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "kongfei-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org" <kongfei-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Haoju Mo <mohaoju-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "guodong.xu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <guodong.xu@l>
+To: Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: SH-Linux <linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>, =?utf-8?B?5bCP5p6X5pWs5aSq?= <keita.kobayashi.ym-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 2015-08-25 at 16:37 +0100, Leif Lindholm wrote:
-> On Tue, Aug 25, 2015 at 04:51:22PM +0200, Ard Biesheuvel wrote:
-> > >>    Arm kernel should either fetch memory information from
-> > >>    efi or DT.
-> > >
-> > > Absolutely.
-> > >
-> > >>    Currently arm kernel fetch both efi memory information and
-> > >>    reserved buffer from DTB at the same time.
-> > >
-> > > No, it does not.
-> > 
-> > It should not, but it does. Due to an oversight, the stub removes
-> > /memreserve/ entries but ignores the reserved-memory node completely.
-> 
-> Urgh.
-> 
-> > This was reported here in fact
-> > 
-> > http://thread.gmane.org/gmane.linux.kernel.efi/5736/focus=5742
-> > 
-> > but there has not been a followup to this series.
-> 
-> Are all of those patches still relevant, or did some of them go in
-> already?
-> 
-> Haojian: can you give that patch a spin and see if it does what you
-> need, combined with adding the reserved areas to the UEFI memory map?
-> 
-> /
->     Leif
+[resending as vegr rejected the previous attempt]
 
-It's so nice. This patch is what I need.
+On 25 August 2015 at 13:09, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
 
-Thanks
-Haojian
+> Hi Simon,
+>
+> On Tue, Aug 25, 2015 at 9:49 AM, Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org> wrote:
+> > Hi Magnus,
+> >
+> > On Sun, Aug 23, 2015 at 04:24:27PM +0900, Magnus Damm wrote:
+> >> ARM: shmobile: APMU DT support via SMP Enable method V2
+> >>
+> >> [PATCH v2 01/07] devicetree: bindings: Renesas APMU and SMP Enable
+> method
+> >> [PATCH v2 02/07] ARM: shmobile: Add APMU DT support via Enable method
+> >> [PATCH v2 03/07] ARM: shmobile: Add APMU nodes to r8a7790 DTSI
+> >> [PATCH v2 04/07] ARM: shmobile: Add APMU nodes to r8a7791 DTSI
+> >> [PATCH v2 05/07] ARM: shmobile: Add function to prioritize DT SMP
+> >> [PATCH v2 06/07] ARM: shmobile: Prioritize r8a7790 DT APMU support
+> >> [PATCH v2 07/07] ARM: shmobile: Prioritize r8a7791 DT APMU support
+> >>
+> >> These patches add DT support for the APMU hardware commonly found in
+> >> Renesas R-Car Gen2 SoCs. Without these patches the APMU gets configured
+> >> through data expressed in C, and with this series applied it is possible
+> >> to describe the APMU configuration in DT and let the enable method point
+> >> out that the APMU should be used.
+> >>
+> >> Patch 1 and 2 are Documenting and adding DT support to the APMU driver
+> >> together with enabling use of the enable-method way to describe that
+> >> the APMU hardware is needed for SMP operation.
+> >>
+> >> Patch 3 and 4 are related to r8a7790/r8a7791 support that get a DTSI
+> update
+> >> to describe the APMU hardware. To avoid breaking support for older DTBs
+> out
+> >> in the wild these patches keep the older existing C code APMU
+> configuration
+> >> as-is. Patch 5-7 make sure that during run-time, if the APMU is
+> installed
+> >> via the DT enable-method then it will not be overriden by older non-DT
+> >> configuration.
+> >>
+> >> I suggest making APMU DT configuration mandatory for SMP operation on
+> >> newer SoCs and that we keep the old APMU support code in place for a
+> >> good number of kernel releases or until we can identify a couple of
+> major
+> >> reasons good enough to force a DTB update on the end users.
+> >>
+> >> In the future r8a7793 and r8a7794 support may be added by using code
+> >> similar to patch 3 and 4 but without any C-based SMP code and fallback.
+> >
+> > Sounds reasonable.
+> >
+> > Looking over the review of this series I see only one minor comment
+> > regarding spelling in documentation. I have it in mind to queue up
+> > this series with that problem fixed unless objections are raised
+> > in the near future. Please feel free to convince me otherwise or
+> > repost the series with the spelling error fixed.
+>
+> Thanks for your feedback! My plan is to update this series once more
+> early next month, so no need to pick anything up right now.
+>
 
+Thanks, I will immediately do nothing.
+
+
+> I feel that we should discuss with the ARM SoC guys about the reason
+> why SMP Enable DT binding is needed. From my side it seems enough to
+> determine the SMP configuration from the SoC part number (and maybe
+> APMU DT bits) that we already have encoded in DT.
+>
+> Perhaps discussing that at ELCE would be good?
+>
+> Best,
+>
+> / magnus
+>
+>
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
