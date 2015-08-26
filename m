@@ -1,103 +1,117 @@
-From: Kishon Vijay Abraham I <kishon@ti.com>
-Subject: Re: [PATCH v2 16/16] mmc: host: omap_hsmmc: use "mmc_of_parse_voltage"
- to get ocr_avail
-Date: Wed, 26 Aug 2015 17:51:12 +0530
-Message-ID: <55DDAF38.4040502@ti.com>
-References: <1438604801-11823-1-git-send-email-kishon@ti.com>	<1438604801-11823-17-git-send-email-kishon@ti.com> <CAPDyKFoctSjBb0aPFNe0cyHe0uoD_DkWooQ-yyTX-P+bGJa_Vw@mail.gmail.com>
+From: Varadarajan Narayanan <varada-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Subject: [PATCH v5] qcom: ipq4019: Add basic board/dts support for IPQ4019 SoC
+Date: Wed, 26 Aug 2015 17:57:47 +0530
+Message-ID: <20150826122747.GA4957@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAPDyKFoctSjBb0aPFNe0cyHe0uoD_DkWooQ-yyTX-P+bGJa_Vw@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Ulf Hansson <ulf.hansson@linaro.org>
-Cc: Andreas Fenkart <afenkart@gmail.com>, Tony Lindgren <tony@atomide.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-mmc <linux-mmc@vger.kernel.org>, linux-omap <linux-omap@vger.kernel.org>, Sekhar Nori <nsekhar@ti.com>, Roger Quadros <rogerq@ti.com>, Lokesh Vutla <lokeshvutla@ti.com>, Murali Karicheri <m-karicheri2@ti.com>, Franklin S Cooper Jr <fcooper@ti.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Ulf,
+Add initial dts files and SoC support for IPQ4019
 
-On Tuesday 25 August 2015 08:20 PM, Ulf Hansson wrote:
-> On 3 August 2015 at 14:26, Kishon Vijay Abraham I <kishon@ti.com> wrote:
->> From: Roger Quadros <rogerq@ti.com>
->>
->> For platforms that doesn't have explicit regulator control in MMC,
->> populate voltage-ranges in MMC device tree node and use
->> mmc_of_parse_voltage to get ocr_avail
-> 
-> I don't like this.
-> 
-> If we are able to fetch the OCR mask via an external regulator, that
-> shall be done.
-> 
-> I think the mmc_of_parse_voltage() API and the corresponding DT
-> binding it parses, should be used for those HW when we don't have an
-> external regulator to use. For example if the MMC controller itself
-> somehow controls the voltage levels. Is that really the case for you?
+Signed-off-by: Varadarajan Narayanan <varada-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+---
+Changes in v2:
+  - Added devicetree bindings documentation
 
-This was actually added to support Galileo platform which doesn't have
-regulators modelled. Indeed it would be better to model external
-regulators (even if it is always on) and get OCR from the regulator.
+Changes in v3:
+  - Split 'gcnt' into a separate patch
+  - Added the new entries to Makefiles, Kconfig & board.c in sorted order
+  - Used "qcom,ipq40xx" instead of "qcom,ipq40xx-r3pc" in board.c
 
-I'll drop this patch and re-send the series re-based to your next branch.
+Changes in v4:
+  - Removed r3pc dts
+  - Removed timer frequency
 
-Thanks
-Kishon
+ arch/arm/boot/dts/qcom-ipq4019.dtsi | 72 +++++++++++++++++++++++++++++++++++++
+ 1 file changed, 72 insertions(+)
+ create mode 100644 arch/arm/boot/dts/qcom-ipq4019.dtsi
 
-> 
-> Kind regards
-> Uffe
-> 
->>
->> Signed-off-by: Roger Quadros <rogerq@ti.com>
->> Signed-off-by: Lokesh Vutla <lokeshvutla@ti.com>
->> Signed-off-by: Murali Karicheri <m-karicheri2@ti.com>
->> Signed-off-by: Franklin S Cooper Jr <fcooper@ti.com>
->> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
->> ---
->>  .../devicetree/bindings/mmc/ti-omap-hsmmc.txt      |    2 ++
->>  drivers/mmc/host/omap_hsmmc.c                      |    9 ++++++++-
->>  2 files changed, 10 insertions(+), 1 deletion(-)
->>
->> diff --git a/Documentation/devicetree/bindings/mmc/ti-omap-hsmmc.txt b/Documentation/devicetree/bindings/mmc/ti-omap-hsmmc.txt
->> index 76bf087..2408e87 100644
->> --- a/Documentation/devicetree/bindings/mmc/ti-omap-hsmmc.txt
->> +++ b/Documentation/devicetree/bindings/mmc/ti-omap-hsmmc.txt
->> @@ -22,6 +22,8 @@ ti,dual-volt: boolean, supports dual voltage cards
->>  ti,non-removable: non-removable slot (like eMMC)
->>  ti,needs-special-reset: Requires a special softreset sequence
->>  ti,needs-special-hs-handling: HSMMC IP needs special setting for handling High Speed
->> +voltage-ranges: Specify the voltage range supported if regulator framework
->> +isn't enabled.
->>  dmas: List of DMA specifiers with the controller specific format
->>  as described in the generic DMA client binding. A tx and rx
->>  specifier is required.
->> diff --git a/drivers/mmc/host/omap_hsmmc.c b/drivers/mmc/host/omap_hsmmc.c
->> index 15973f1..d884d8f 100644
->> --- a/drivers/mmc/host/omap_hsmmc.c
->> +++ b/drivers/mmc/host/omap_hsmmc.c
->> @@ -2184,7 +2184,13 @@ static int omap_hsmmc_probe(struct platform_device *pdev)
->>                         goto err_irq;
->>         }
->>
->> -       mmc->ocr_avail = mmc_pdata(host)->ocr_mask;
->> +       if (!mmc_pdata(host)->ocr_mask) {
->> +               ret = mmc_of_parse_voltage(pdev->dev.of_node, &mmc->ocr_avail);
->> +               if (ret)
->> +                       goto err_parse_voltage;
->> +       } else {
->> +               mmc->ocr_avail = mmc_pdata(host)->ocr_mask;
->> +       }
->>
->>         omap_hsmmc_disable_irq(host);
->>
->> @@ -2224,6 +2230,7 @@ static int omap_hsmmc_probe(struct platform_device *pdev)
->>
->>  err_slot_name:
->>         mmc_remove_host(mmc);
->> +err_parse_voltage:
->>         omap_hsmmc_reg_put(host);
->>  err_irq:
->>         device_init_wakeup(&pdev->dev, false);
->> --
->> 1.7.9.5
->>
+diff --git a/arch/arm/boot/dts/qcom-ipq4019.dtsi b/arch/arm/boot/dts/qcom-ipq4019.dtsi
+new file mode 100644
+index 0000000..668cc84
+--- /dev/null
++++ b/arch/arm/boot/dts/qcom-ipq4019.dtsi
+@@ -0,0 +1,72 @@
++/*
++ * Copyright (c) 2014, The Linux Foundation. All rights reserved.
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License version 2 and
++ * only version 2 as published by the Free Software Foundation.
++ *
++ * This program is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ * GNU General Public License for more details.
++ */
++
++/dts-v1/;
++
++#include "skeleton.dtsi"
++
++/ {
++	model = "Qualcomm Technologies, Inc. IPQ4019";
++	compatible = "qcom,ipq4019";
++	interrupt-parent = <&intc>;
++
++	cpus {
++		#address-cells = <1>;
++		#size-cells = <0>;
++		cpu@0 {
++			device_type = "cpu";
++			compatible = "arm,cortex-a7";
++			reg = <0x0>;
++		};
++
++		cpu@1 {
++			device_type = "cpu";
++			compatible = "arm,cortex-a7";
++			reg = <0x1>;
++		};
++
++		cpu@2 {
++			device_type = "cpu";
++			compatible = "arm,cortex-a7";
++			reg = <0x2>;
++		};
++
++		cpu@3 {
++			device_type = "cpu";
++			compatible = "arm,cortex-a7";
++			reg = <0x3>;
++		};
++	};
++
++	soc {
++		#address-cells = <1>;
++		#size-cells = <1>;
++		ranges;
++		compatible = "simple-bus";
++
++		intc: interrupt-controller@b000000 {
++			compatible = "qcom,msm-qgic2";
++			interrupt-controller;
++			#interrupt-cells = <3>;
++			reg = <0x0b000000 0x1000>,
++			<0x0b002000 0x1000>;
++		};
++
++		serial@78b0000 {
++			compatible = "qcom,msm-uartdm-v1.4", "qcom,msm-uartdm";
++			reg = <0x78b0000 0x200>;
++			interrupts = <0 108 0>;
++			status = "disabled";
++		};
++	};
++};
+-- 
+1.8.2.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
