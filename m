@@ -1,165 +1,177 @@
-From: Alexander Holler <holler@ahsoftware.de>
-Subject: [PATCH 12/16] deps: WIP: imx: annotate some initcalls
-Date: Wed, 26 Aug 2015 14:28:24 +0200
-Message-ID: <1440592108-3740-13-git-send-email-holler@ahsoftware.de>
-References: <1440592108-3740-1-git-send-email-holler@ahsoftware.de>
+From: Cyrille Pitchen <cyrille.pitchen@atmel.com>
+Subject: [PATCH linux-next v5 3/5] mtd: spi-nor: allow to tune the number of dummy cycles
+Date: Wed, 26 Aug 2015 14:30:25 +0200
+Message-ID: <4324f398c0e69e3057e7da6a1a3e0328b44f224f.1440580764.git.cyrille.pitchen@atmel.com>
+References: <cover.1440580764.git.cyrille.pitchen@atmel.com>
+Mime-Version: 1.0
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1440592108-3740-1-git-send-email-holler@ahsoftware.de>
+In-Reply-To: <cover.1440580764.git.cyrille.pitchen@atmel.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org
-Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Greg KH <gregkh@linuxfoundation.org>, Russel King <linux@arm.linux.org.uk>, Andrew Morton <akpm@linux-foundation.org>, Grant Likely <grant.likely@linaro.org>, Tomeu Vizoso <tomeu.vizoso@collabora.com>, Alexander Holler <holler@ahsoftware.de>
+To: nicolas.ferre@atmel.com, broonie@kernel.org, linux-spi@vger.kernel.org, dwmw2@infradead.org, computersforpeace@gmail.com, zajec5@gmail.com, beanhuo@micron.com, juhosg@openwrt.org, marex@denx.de, shijie.huang@intel.com, ben@decadent.org.uk
+Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux-mtd@lists.infradead.org, Cyrille Pitchen <cyrille.pitchen@atmel.com>
 List-Id: devicetree@vger.kernel.org
 
-WIP means Work In Progress.
+The number of dummy cycles used during Fast Read commands can be reduced
+to improve transfer performances. Each manufacturer has a dedicated set of
+registers to provide the memory with the exact number of dummy cycles it
+should expect. Both the memory and the (Q)SPI controller must agree on
+this number of dummy cycles.
 
-Change some imx drivers to offer annotated initcalls.
+The number of dummy cycles can be found into the memory datasheet and
+mostly depends on the SPI clock frequency, the Fast Read op code and the
+Single/Dual Data Rate mode.
 
-Signed-off-by: Alexander Holler <holler@ahsoftware.de>
+Probing JEDEC Serial Flash Discoverable Parameters (SFDP) tables would
+only provide the driver with a high enough number of dummy cycles for each
+Fast Read command to be used for all clock frequencies: this solution
+would not be optimized.
+
+Signed-off-by: Cyrille Pitchen <cyrille.pitchen@atmel.com>
 ---
- arch/arm/mach-imx/gpc.c                   | 2 +-
- arch/arm/mach-imx/mmdc.c                  | 2 +-
- drivers/dma/mxs-dma.c                     | 2 +-
- drivers/gpio/gpio-mxc.c                   | 2 +-
- drivers/i2c/busses/i2c-imx.c              | 2 +-
- drivers/pinctrl/freescale/pinctrl-imx6q.c | 2 +-
- drivers/power/reset/imx-snvs-poweroff.c   | 2 +-
- drivers/regulator/anatop-regulator.c      | 3 ++-
- drivers/tty/serial/imx.c                  | 2 +-
- drivers/usb/phy/phy-mxs-usb.c             | 2 +-
- sound/soc/fsl/imx-audmux.c                | 2 +-
- 11 files changed, 12 insertions(+), 11 deletions(-)
+ drivers/mtd/spi-nor/spi-nor.c | 102 ++++++++++++++++++++++++++++++++++--------
+ include/linux/mtd/spi-nor.h   |   2 +
+ 2 files changed, 85 insertions(+), 19 deletions(-)
 
-diff --git a/arch/arm/mach-imx/gpc.c b/arch/arm/mach-imx/gpc.c
-index 8c4467f..3802614 100644
---- a/arch/arm/mach-imx/gpc.c
-+++ b/arch/arm/mach-imx/gpc.c
-@@ -468,4 +468,4 @@ static int __init imx_pgc_init(void)
- {
- 	return platform_driver_register(&imx_gpc_driver);
- }
--subsys_initcall(imx_pgc_init);
-+annotated_initcall(subsys, imx_pgc_init, imx_gpc_driver.driver);
-diff --git a/arch/arm/mach-imx/mmdc.c b/arch/arm/mach-imx/mmdc.c
-index db9621c..cf84c03 100644
---- a/arch/arm/mach-imx/mmdc.c
-+++ b/arch/arm/mach-imx/mmdc.c
-@@ -87,4 +87,4 @@ static int __init imx_mmdc_init(void)
- {
- 	return platform_driver_register(&imx_mmdc_driver);
- }
--postcore_initcall(imx_mmdc_init);
-+annotated_initcall(postcore, imx_mmdc_init, imx_mmdc_driver.driver);
-diff --git a/drivers/dma/mxs-dma.c b/drivers/dma/mxs-dma.c
-index 60de352..5bfa232 100644
---- a/drivers/dma/mxs-dma.c
-+++ b/drivers/dma/mxs-dma.c
-@@ -884,4 +884,4 @@ static int __init mxs_dma_module_init(void)
- {
- 	return platform_driver_probe(&mxs_dma_driver, mxs_dma_probe);
- }
--subsys_initcall(mxs_dma_module_init);
-+annotated_initcall(subsys, mxs_dma_module_init, mxs_dma_driver.driver);
-diff --git a/drivers/gpio/gpio-mxc.c b/drivers/gpio/gpio-mxc.c
-index ec1eb1b..0a22a62 100644
---- a/drivers/gpio/gpio-mxc.c
-+++ b/drivers/gpio/gpio-mxc.c
-@@ -506,7 +506,7 @@ static int __init gpio_mxc_init(void)
- {
- 	return platform_driver_register(&mxc_gpio_driver);
- }
--postcore_initcall(gpio_mxc_init);
-+annotated_initcall(postcore, gpio_mxc_init, mxc_gpio_driver.driver);
- 
- MODULE_AUTHOR("Freescale Semiconductor, "
- 	      "Daniel Mack <danielncaiaq.de>, "
-diff --git a/drivers/i2c/busses/i2c-imx.c b/drivers/i2c/busses/i2c-imx.c
-index 785aa67..c20d03c 100644
---- a/drivers/i2c/busses/i2c-imx.c
-+++ b/drivers/i2c/busses/i2c-imx.c
-@@ -1110,7 +1110,7 @@ static int __init i2c_adap_imx_init(void)
- {
- 	return platform_driver_register(&i2c_imx_driver);
- }
--subsys_initcall(i2c_adap_imx_init);
-+annotated_initcall(subsys, i2c_adap_imx_init, i2c_imx_driver.driver);
- 
- static void __exit i2c_adap_imx_exit(void)
- {
-diff --git a/drivers/pinctrl/freescale/pinctrl-imx6q.c b/drivers/pinctrl/freescale/pinctrl-imx6q.c
-index 4d1fcb8..77a1ffd 100644
---- a/drivers/pinctrl/freescale/pinctrl-imx6q.c
-+++ b/drivers/pinctrl/freescale/pinctrl-imx6q.c
-@@ -489,7 +489,7 @@ static int __init imx6q_pinctrl_init(void)
- {
- 	return platform_driver_register(&imx6q_pinctrl_driver);
- }
--arch_initcall(imx6q_pinctrl_init);
-+annotated_initcall(arch, imx6q_pinctrl_init, imx6q_pinctrl_driver.driver);
- 
- static void __exit imx6q_pinctrl_exit(void)
- {
-diff --git a/drivers/power/reset/imx-snvs-poweroff.c b/drivers/power/reset/imx-snvs-poweroff.c
-index ad6ce50..57a06dc 100644
---- a/drivers/power/reset/imx-snvs-poweroff.c
-+++ b/drivers/power/reset/imx-snvs-poweroff.c
-@@ -63,4 +63,4 @@ static int __init imx_poweroff_init(void)
- {
- 	return platform_driver_register(&imx_poweroff_driver);
- }
--device_initcall(imx_poweroff_init);
-+annotated_initcall(device, imx_poweroff_init, imx_poweroff_driver.driver);
-diff --git a/drivers/regulator/anatop-regulator.c b/drivers/regulator/anatop-regulator.c
-index 738adfa..97808da 100644
---- a/drivers/regulator/anatop-regulator.c
-+++ b/drivers/regulator/anatop-regulator.c
-@@ -331,7 +331,8 @@ static int __init anatop_regulator_init(void)
- {
- 	return platform_driver_register(&anatop_regulator_driver);
- }
--postcore_initcall(anatop_regulator_init);
-+annotated_initcall(postcore, anatop_regulator_init,
-+					anatop_regulator_driver.driver);
- 
- static void __exit anatop_regulator_exit(void)
- {
-diff --git a/drivers/tty/serial/imx.c b/drivers/tty/serial/imx.c
-index 54fdc78..c79e19b 100644
---- a/drivers/tty/serial/imx.c
-+++ b/drivers/tty/serial/imx.c
-@@ -2024,7 +2024,7 @@ static void __exit imx_serial_exit(void)
- 	uart_unregister_driver(&imx_reg);
+diff --git a/drivers/mtd/spi-nor/spi-nor.c b/drivers/mtd/spi-nor/spi-nor.c
+index c8810313a752..46d6e02f7560 100644
+--- a/drivers/mtd/spi-nor/spi-nor.c
++++ b/drivers/mtd/spi-nor/spi-nor.c
+@@ -121,24 +121,6 @@ static int read_cr(struct spi_nor *nor)
  }
  
--module_init(imx_serial_init);
-+annotated_module_init(imx_serial_init, serial_imx_driver.driver);
- module_exit(imx_serial_exit);
- 
- MODULE_AUTHOR("Sascha Hauer");
-diff --git a/drivers/usb/phy/phy-mxs-usb.c b/drivers/usb/phy/phy-mxs-usb.c
-index 3fcc048..dd2768d 100644
---- a/drivers/usb/phy/phy-mxs-usb.c
-+++ b/drivers/usb/phy/phy-mxs-usb.c
-@@ -577,7 +577,7 @@ static int __init mxs_phy_module_init(void)
- {
- 	return platform_driver_register(&mxs_phy_driver);
+ /*
+- * Dummy Cycle calculation for different type of read.
+- * It can be used to support more commands with
+- * different dummy cycle requirements.
+- */
+-static inline int spi_nor_read_dummy_cycles(struct spi_nor *nor)
+-{
+-	switch (nor->flash_read) {
+-	case SPI_NOR_FAST:
+-	case SPI_NOR_DUAL:
+-	case SPI_NOR_QUAD:
+-		return 8;
+-	case SPI_NOR_NORMAL:
+-		return 0;
+-	}
+-	return 0;
+-}
+-
+-/*
+  * Write status register 1 byte
+  * Returns negative if error occurred.
+  */
+@@ -1008,6 +990,86 @@ static int set_quad_mode(struct spi_nor *nor, const struct flash_info *info)
+ 	}
  }
--postcore_initcall(mxs_phy_module_init);
-+annotated_initcall(postcore, mxs_phy_module_init, mxs_phy_driver.driver);
  
- static void __exit mxs_phy_module_exit(void)
++static int micron_set_dummy_cycles(struct spi_nor *nor)
++{
++	int ret;
++	u8 val, mask;
++
++	/* Read the Volatile Configuration Register (VCR). */
++	ret = nor->read_reg(nor, SPINOR_OP_RD_VCR, &val, 1);
++	if (ret < 0) {
++		dev_err(nor->dev, "error %d reading VCR\n", ret);
++		return ret;
++	}
++
++	write_enable(nor);
++
++	/* Update the number of dummy into the VCR. */
++	mask = GENMASK(7, 4);
++	val &= ~mask;
++	val |= (nor->read_dummy << 4) & mask;
++	ret = nor->write_reg(nor, SPINOR_OP_WR_VCR, &val, 1, 0);
++	if (ret < 0) {
++		dev_err(nor->dev, "error while writing VCR register\n");
++		return ret;
++	}
++
++	ret = spi_nor_wait_till_ready(nor);
++	if (ret)
++		return ret;
++
++	return 0;
++}
++
++/*
++ * Dummy Cycle calculation for different type of read.
++ * It can be used to support more commands with
++ * different dummy cycle requirements.
++ */
++static int spi_nor_read_dummy_cycles(struct spi_nor *nor,
++				     const struct flash_info *info)
++{
++	struct device_node *np = nor->dev->of_node;
++	struct device *dev = nor->dev;
++	u32 num_dummy_cycles;
++
++	if (np && !of_property_read_u32(np, "m25p,num-dummy-cycles",
++					&num_dummy_cycles)) {
++		nor->read_dummy = num_dummy_cycles;
++
++		/*
++		 * This switch block might be moved at the end of the function,
++		 * once nor->read_dummy has been set, but it was not tested with
++		 * all Micron memories.
++		 * Now the "m25p,num-dummy-cycles" property needs to be
++		 * explicitly set in the device tree so the switch statement is
++		 * executed. This should avoid unwanted side effects and keep
++		 * backward compatibility.
++		 */
++		switch (JEDEC_MFR(info)) {
++		case CFI_MFR_ST:
++			return micron_set_dummy_cycles(nor);
++		default:
++			dev_warn(dev,
++				 "Tuning of the number of dummy cycles is not implemented for spi-nor of this manufacturer,\n"
++				 "ignoring the DT property value and falling back to the framework default settings.\n");
++			break;
++		}
++	}
++
++	/* Fallback to legacy code. */
++	switch (nor->flash_read) {
++	case SPI_NOR_FAST:
++	case SPI_NOR_DUAL:
++	case SPI_NOR_QUAD:
++		nor->read_dummy = 8;
++	case SPI_NOR_NORMAL:
++		nor->read_dummy = 0;
++	}
++
++	return 0;
++}
++
+ static int spi_nor_check(struct spi_nor *nor)
  {
-diff --git a/sound/soc/fsl/imx-audmux.c b/sound/soc/fsl/imx-audmux.c
-index fc57da3..19fd729 100644
---- a/sound/soc/fsl/imx-audmux.c
-+++ b/sound/soc/fsl/imx-audmux.c
-@@ -364,7 +364,7 @@ static int __init imx_audmux_init(void)
- {
- 	return platform_driver_register(&imx_audmux_driver);
- }
--subsys_initcall(imx_audmux_init);
-+annotated_initcall(subsys, imx_audmux_init, imx_audmux_driver.driver);
+ 	if (!nor->dev || !nor->read || !nor->write ||
+@@ -1208,7 +1270,9 @@ int spi_nor_scan(struct spi_nor *nor, const char *name, enum read_mode mode)
+ 		nor->addr_width = 3;
+ 	}
  
- static void __exit imx_audmux_exit(void)
- {
+-	nor->read_dummy = spi_nor_read_dummy_cycles(nor);
++	ret = spi_nor_read_dummy_cycles(nor, info);
++	if (ret)
++		return ret;
+ 
+ 	dev_info(dev, "%s (%lld Kbytes)\n", info->name,
+ 			(long long)mtd->size >> 10);
+diff --git a/include/linux/mtd/spi-nor.h b/include/linux/mtd/spi-nor.h
+index 1bf6f11310ef..e03a4c4053d3 100644
+--- a/include/linux/mtd/spi-nor.h
++++ b/include/linux/mtd/spi-nor.h
+@@ -59,6 +59,8 @@
+ /* Used for Micron flashes only. */
+ #define SPINOR_OP_RD_EVCR      0x65    /* Read EVCR register */
+ #define SPINOR_OP_WD_EVCR      0x61    /* Write EVCR register */
++#define SPINOR_OP_RD_VCR	0x85	/* Read VCR register */
++#define SPINOR_OP_WR_VCR	0x81	/* Write VCR register */
+ 
+ /* Status Register bits. */
+ #define SR_WIP			1	/* Write in progress */
 -- 
-2.1.0
+1.8.2.2
