@@ -1,57 +1,62 @@
-From: Jon Mason <jonmason-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Subject: [PATCH v2 0/5] Add Broadcom Northstar Plus Support
-Date: Wed, 26 Aug 2015 18:35:25 -0400
-Message-ID: <1440628530-6137-1-git-send-email-jonmason@broadcom.com>
+From: Jon Mason <jonmason@broadcom.com>
+Subject: [PATCH v2 5/5] MAINTAINERS: add entry for the Broadcom Northstar Plus SoCs
+Date: Wed, 26 Aug 2015 18:35:30 -0400
+Message-ID: <1440628530-6137-6-git-send-email-jonmason@broadcom.com>
+References: <1440628530-6137-1-git-send-email-jonmason@broadcom.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Kevin Hilman <khilman-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1440628530-6137-1-git-send-email-jonmason@broadcom.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Olof Johansson <olof@lixom.net>, Arnd Bergmann <arnd@arndb.de>, Kevin Hilman <khilman@linaro.org>
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Florian Fainelli <f.fainelli@gmail.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, bcm-kernel-feedback-list@broadcom.com, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+Modify the iProc MAINTAINER to cover the Nortstar Plus SoCs, and add me
+to the list of people responsible for it.  Since iProc is a family of
+SoCs that includes more than just Cygnus (i.e., Northstar (BCM5301X),
+Northstar Plus, Northstar 2, and a number of other platforms), remove it
+from the title to avoid any future confusion.
 
-Changes in version 2 incorporate Olof's comments regarding:
-* the removal of all "Reviewed-by" lines not occurring on external
-  mailing lists
-* reordering of s-o-b lines
-* modification of the device tree file to use labels when enabling
-* increated description of the modification to the MAINTAINERS entry
+Signed-off-by: Jon Mason <jonmason@broadcom.com>
+Acked-by: Scott Branden <sbranden@broadcom.com>
+---
+ MAINTAINERS | 12 ++++++++++--
+ 1 file changed, 10 insertions(+), 2 deletions(-)
 
-Also, modifying the "to" and "cc" recepients so that everyone is
-receving all of the patches. 
-
---
-
-This patch series adds support for the Broadcom Northstar Plus family of
-SoCs.  NSP is a Cortex A9 based SoC under the Broadcom iProc family.
-
-Jon Mason (5):
-  dt-bindings: Create Documentation for NSP DT bindings
-  ARM: NSP: add minimal Northstar Plus device tree
-  ARM: NSP: Add basic support for Broadcom Northstar Plus SoC
-  ARM: multi_v7_defconfig: Add NSP to defconfig
-  MAINTAINERS: add entry for the Broadcom Northstar Plus SoCs
-
- .../devicetree/bindings/arm/bcm/brcm,nsp.txt       |  34 +++++++
- MAINTAINERS                                        |  12 ++-
- arch/arm/boot/dts/Makefile                         |   2 +
- arch/arm/boot/dts/bcm-nsp.dtsi                     | 105 +++++++++++++++++++++
- arch/arm/boot/dts/bcm958625k.dts                   |  57 +++++++++++
- arch/arm/configs/multi_v7_defconfig                |   1 +
- arch/arm/mach-bcm/Kconfig                          |  14 +++
- arch/arm/mach-bcm/Makefile                         |   5 +-
- arch/arm/mach-bcm/bcm_nsp.c                        |  25 +++++
- 9 files changed, 252 insertions(+), 3 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/arm/bcm/brcm,nsp.txt
- create mode 100644 arch/arm/boot/dts/bcm-nsp.dtsi
- create mode 100644 arch/arm/boot/dts/bcm958625k.dts
- create mode 100644 arch/arm/mach-bcm/bcm_nsp.c
-
+diff --git a/MAINTAINERS b/MAINTAINERS
+index a9ae6c1..4b851f5 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -2315,19 +2315,27 @@ L:	linux-scsi@vger.kernel.org
+ S:	Supported
+ F:	drivers/scsi/bnx2i/
+ 
+-BROADCOM CYGNUS/IPROC ARM ARCHITECTURE
++BROADCOM IPROC ARM ARCHITECTURE
+ M:	Ray Jui <rjui@broadcom.com>
+ M:	Scott Branden <sbranden@broadcom.com>
++M:	Jon Mason <jonmason@broadcom.com>
+ L:	linux-arm-kernel@lists.infradead.org (moderated for non-subscribers)
+ L:	bcm-kernel-feedback-list@broadcom.com
+ T:	git git://github.com/broadcom/cygnus-linux.git
+ S:	Maintained
+ N:	iproc
+ N:	cygnus
++N:	nsp
+ N:	bcm9113*
+ N:	bcm9583*
+-N:	bcm583*
++N:	bcm9585*
++N:	bcm9586*
++N:	bcm988312
+ N:	bcm113*
++N:	bcm583*
++N:	bcm585*
++N:	bcm586*
++N:	bcm88312
+ 
+ BROADCOM BRCMSTB GPIO DRIVER
+ M:	Gregory Fong <gregory.0xf0@gmail.com>
 -- 
 1.9.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
