@@ -1,121 +1,166 @@
-From: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH v3 1/1][Resend] misc: sram: add dev_pm_ops to support
- module power gate
-Date: Wed, 26 Aug 2015 12:25:32 +0100
-Message-ID: <55DDA22C.4090408@arm.com>
-References: <1440540187-6208-1-git-send-email-shenwei.wang@freescale.com>
+From: Peter Griffin <peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 2/3] ARM: DT: STi: STiH407: Add c8sectpfe LinuxDVB DT
+ node.
+Date: Wed, 26 Aug 2015 12:44:33 +0100
+Message-ID: <20150826114433.GB1498@griffinp-ThinkPad-X1-Carbon-2nd>
+References: <1440519730-486-1-git-send-email-peter.griffin@linaro.org>
+ <1440519730-486-3-git-send-email-peter.griffin@linaro.org>
+ <20150826073041.GT19409@x1>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1440540187-6208-1-git-send-email-shenwei.wang-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20150826073041.GT19409@x1>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Shenwei Wang <shenwei.wang-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Cc: "gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org" <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, "arnd-r2nGTMty4D4@public.gmane.org" <arnd-r2nGTMty4D4@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, "ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org" <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, "galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org" <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "b20788-KZfg59tc24xl57MIdRCFDg@public.gmane.org" <b20788-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, srinivas.kandagatla-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, maxime.coquelin-qxv4g6HH51o@public.gmane.org, patrice.chotard-qxv4g6HH51o@public.gmane.org, mchehab-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org, kernel-F5mvAk5X5gdBDgjK7y7TUQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+Hi Lee,
 
+On Wed, 26 Aug 2015, Lee Jones wrote:
 
-On 25/08/15 23:03, Shenwei Wang wrote:
-> When system goes into low power states like SUSPEND_MEM and
-> HIBERNATION, the hardware IP block may be powered off to reduce
-> the power consumption. This power down will lost all the
-> data inside the ram. This patch added the dev_pm_ops and
-> implemented two callbacks: suspend_noirq and resume_noirq, which
-> will save the data in the on-chip-ram right before power down
-> and restore it after system resumes.
->
-> A new property string named "can-power-gate" is added to
-> the devicetree bindings too.
->
-> Based-on-a-patch-by: Anson Huang <b20788-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-> Signed-off-by: Shenwei Wang <shenwei.wang-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
->
-> ---
-> Change log:
->
-> PATCH v3
-> 	Removed the unnecessary clk_enable/clk_disable.
->
-> PATCH v2
-> 	Use vmalloc to allocate the SRAM backup memory.
-> 	Code clean up.
->
->   Documentation/devicetree/bindings/misc/sram.txt |  2 ++
->   drivers/misc/sram.c                             | 42 +++++++++++++++++++++++++
->   2 files changed, 44 insertions(+)
->
-> diff --git a/Documentation/devicetree/bindings/misc/sram.txt b/Documentation/devicetree/bindings/misc/sram.txt
-> index 36cbe5a..1170086 100644
-> --- a/Documentation/devicetree/bindings/misc/sram.txt
-> +++ b/Documentation/devicetree/bindings/misc/sram.txt
-> @@ -33,6 +33,8 @@ Optional properties in the area nodes:
->
->   - compatible : standard definition, should contain a vendor specific string
->                  in the form <vendor>,[<device>-]<usage>
-> +- can-power-gate: a property to tell the driver that the sram can support
-> +		power gate
->
->   Example:
->
-> diff --git a/drivers/misc/sram.c b/drivers/misc/sram.c
-> index 15c33cc..db9f1fa 100644
-> --- a/drivers/misc/sram.c
-> +++ b/drivers/misc/sram.c
-> @@ -30,7 +30,9 @@
->
->   struct sram_dev {
->   	struct device *dev;
-> +	void *power_off_save;
->   	void __iomem *virt_base;
-> +	u32 size;
->
->   	struct gen_pool *pool;
->   	struct clk *clk;
-> @@ -156,6 +158,33 @@ static int sram_reserve_regions(struct sram_dev *sram, struct resource *res)
->   	return ret;
->   }
->
-> +static int sram_suspend_noirq(struct device *dev)
-> +{
-> +	struct platform_device *pdev = to_platform_device(dev);
-> +	struct sram_dev *sram = platform_get_drvdata(pdev);
-> +
-> +	if (!sram->power_off_save)
-> +		return 0;
-> +
-> +	/* Save necessary regs */
-> +	memcpy(sram->power_off_save, sram->virt_base, sram->size);
-> +
-> +	return 0;
-> +}
-> +
-> +static int sram_resume_noirq(struct device *dev)
-> +{
-> +	struct platform_device *pdev = to_platform_device(dev);
-> +	struct sram_dev *sram = platform_get_drvdata(pdev);
-> +
-> +	if (!sram->power_off_save)
-> +		return 0;
-> +
-> +	memcpy(sram->virt_base, sram->power_off_save, sram->size);
+> On Tue, 25 Aug 2015, Peter Griffin wrote:
+> 
+> > This patch adds in the required DT node for the c8sectpfe
+> > Linux DVB demux driver which allows the tsin channels
+> > to be used on an upstream kernel.
+> > 
+> > Signed-off-by: Peter Griffin <peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> > ---
+> >  arch/arm/boot/dts/stihxxx-b2120.dtsi | 38 ++++++++++++++++++++++++++++++++++++
+> >  1 file changed, 38 insertions(+)
+> > 
+> > diff --git a/arch/arm/boot/dts/stihxxx-b2120.dtsi b/arch/arm/boot/dts/stihxxx-b2120.dtsi
+> > index 62994ae..1bc018e 100644
+> > --- a/arch/arm/boot/dts/stihxxx-b2120.dtsi
+> > +++ b/arch/arm/boot/dts/stihxxx-b2120.dtsi
+> > @@ -6,6 +6,10 @@
+> >   * it under the terms of the GNU General Public License version 2 as
+> >   * published by the Free Software Foundation.
+> >   */
+> > +
+> > +#include <dt-bindings/clock/stih407-clks.h>
+> > +#include <dt-bindings/media/c8sectpfe.h>
+> > +
+> 
+> Looks like some of the STi files are a little wavering on convention,
+> but I suggest the extra '\n's are superfluous.
 
-As I objected in the original thread[1], I am just iterating myself here
-again. IMO this is unnecessary and can be avoided. It's also not
-scalable for large SRAM. I *still can't understand* what's the use-case
-where you need to save/restore the entire SRAM content.
+Ok I will remove them in v2.
 
-I see it's mostly used for audio/video and some crypto use-case(in the
-mainline). In most of those cases, when you enter S2R, all the devices
-*needs to be in quiescent state* which implies they no longer use SRAM.
-So can you please care to provide your reasons for this save/restore ?
+> 
+> >  / {
+> >  	soc {
+> >  		sbc_serial0: serial@9530000 {
+> > @@ -85,5 +89,39 @@
+> >  			status = "okay";
+> >  		};
+> >  
+> > +		c8sectpfe@08a20000 {
+> 
+> This should be a device type, not a model number.
+> 
+> demodulator@abcdabcd {
 
-On some platforms, it's used for PM in which case it needs to be always on.
+Ok will change to demux@08a20000 in v2
 
-Regards,
-Sudeep
+> 
+> > +			compatible = "st,stih407-c8sectpfe";
+> 
+> To the uninitiated c8sectpfe is pretty indecipherable.
 
-[1] http://www.spinics.net/lists/arm-kernel/msg441449.html
+It is the name of the IP block in the datasheet. It stands
+for SECurity TRansport Processor FrontEnd
+
+> 
+> How about *-c8sectpfe-demod?
+
+That doesn't really make sense, the demod is a seperate device
+typically controlled over I2C bus and connected to this IP block
+via the TS pins. Also although a tsin channel is "normally" connected
+to a demodulator device there is no reason it couldn't be connected
+for example to another STi chipset which is doing tsout.
+
+Also this IP block can do more than accept tsin, it can
+also do tsout, and merge TS channels together (some coming from
+DDR, external TS pins). Which are features we hope to add
+to the driver in the future so the name needs to be very generic.
+
+So with that in mind I would prefer to leave the compatible as
+the name of the IP block from the SoC datasheet.
+
+> 
+> > +			status = "okay";
+> > +			reg = <0x08a20000 0x10000>, <0x08a00000 0x4000>;
+> > +			reg-names = "c8sectpfe", "c8sectpfe-ram";
+> > +
+> > +			interrupts = <0 34 0>, <0 35 0>;
+> 
+> Please use the predetermined DEFINES for the flags cell.
+
+Will fix in V2
+
+> 
+> > +			interrupt-names = "c8sectpfe-error-irq",
+> > +					  "c8sectpfe-idle-irq";
+> > +
+> > +			pinctrl-names	= "tsin0-serial", "tsin0-parallel",
+> > +					  "tsin3-serial", "tsin4-serial",
+> > +					  "tsin5-serial";
+> 
+> I would put *-names *under* the properties they pertain to and in the
+> same format i.e. one per line in this case, for easy eye-match.
+
+Ok will change in V2.
+> 
+> > +			pinctrl-0	= <&pinctrl_tsin0_serial>;
+> > +			pinctrl-1	= <&pinctrl_tsin0_parallel>;
+> > +			pinctrl-2	= <&pinctrl_tsin3_serial>;
+> > +			pinctrl-3	= <&pinctrl_tsin4_serial_alt3>;
+> > +			pinctrl-4	= <&pinctrl_tsin5_serial_alt1>;
+> > +
+> > +			clocks = <&clk_s_c0_flexgen CLK_PROC_STFE>;
+> > +			clock-names = "c8sectpfe";
+> > +
+> > +			/* tsin0 is TSA on NIMA */
+> > +			tsin0: port@0 {
+> > +
+> 
+> Why the '\n'?
+
+Removed in v2
+> 
+> > +				tsin-num = <0>;
+> > +				serial-not-parallel;
+> > +				i2c-bus = <&ssc2>;
+> 
+> If you are adding this property, I would get Wolfram or one of the DT
+> guys to Ack it.
+
+This driver is actually already accepted, I just missed off one patch from
+the v2 series which meant this patch broke the build when Mauro applied it,
+which is the reason for re-sending it.
+
+This binding is the same way the drm display drivers use DT via ddc-i2c-bus
+property to get the i2c bus for EDID control, so I think uncontroversial.
+> 
+> > +				rst-gpio = <&pio15 4 0>;
+> 
+> Why not use the whole name "reset"?
+> 
+> "-gpio" should be "-gpios".
+> 
+> So, in full: "reset-gpios"?
+> 
+> Flags: GPIO_ACTIVE_HIGH ?
+
+Doing a grep, that does seem to be "more standard". Will fix in V2 as a single
+atomic commit.
+
+regards,
+
+Peter.
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
