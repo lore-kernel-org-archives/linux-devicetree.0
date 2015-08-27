@@ -1,54 +1,42 @@
-From: Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Subject: Re: [PATCH 2/2] ARM: dts: rockchip: correct regulator PM properties
-Date: Thu, 27 Aug 2015 13:56:05 -0700
-Message-ID: <20150827205605.GA42154@google.com>
-References: <1439923455-109818-1-git-send-email-briannorris@chromium.org>
- <10828643.SSUS2EOuvv@phil>
- <CAD=FV=UiCcqCm+W4=ExOps8Npi=mkdVgJ2zgdomOw3YqPhCqug@mail.gmail.com>
- <2079050.z559I6SEaj@phil>
+From: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Subject: Re: [PATCH v3] ARM: dts: rockchip: add veyron-jaq board
+Date: Thu, 27 Aug 2015 15:07:30 -0700
+Message-ID: <CAD=FV=W34EXSvfJCRjaTy7jE-EnjMyechY2EcXn13G6HOfsh1w@mail.gmail.com>
+References: <1440457083-77519-1-git-send-email-briannorris@chromium.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <2079050.z559I6SEaj@phil>
+In-Reply-To: <1440457083-77519-1-git-send-email-briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Cc: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Alexandru M Stan <amstan-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+To: Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Cc: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Javier Martinez Canillas <javier-0uQlZySMnqxg9hUCZPvPmw@public.gmane.org>, Alexandru M Stan <amstan-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Aug 27, 2015 at 10:51:22PM +0200, Heiko Stuebner wrote:
-> Am Donnerstag, 27. August 2015, 12:30:51 schrieb Doug Anderson:
-> > If I understand correctly, the distinction between "standby" and "mem"
-> > is not too clearly defined, so if we wanted to use it for this it
-> > wouldn't be terrible?
+Brian,
 
-I never understood many clear definitions here either, personally.
+On Mon, Aug 24, 2015 at 3:58 PM, Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org> wrote:
+> a.k.a. Haier Chromebook 11, and others
+>
+> Signed-off-by: Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+> Cc: Alexandru M Stan <amstan-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+> Cc: Douglas Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+> Reviewed-by: Javier Martinez Canillas <javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>
+> ---
+> v2 -> v3:
+>  - add "and others" language
+>  - drop other patches from series (picked up already by Heiko)
+>
+> v1 -> v2:
+>  - add overlooked DT binding doc
+>  - fixup regulator suspend state for LDO_REG2
+>
+>
+>  Documentation/devicetree/bindings/arm/rockchip.txt |   7 +
+>  arch/arm/boot/dts/Makefile                         |   1 +
+>  arch/arm/boot/dts/rk3288-veyron-jaq.dts            | 176 +++++++++++++++++++++
+>  3 files changed, 184 insertions(+)
 
-> From reading Documentation/power/states.txt it looks like the boot-cpu is 
-> supposed to retain power in the suspend state. Although we also do not lose 
-> "operating state" in our suspend I guess?
-> 
-> So using the shallow suspend as standby sounds interesting, for the time when 
-> the deep suspend works too. If there is only one suspend state it 
-> automatically becomes the "mem"-state it seems.
-
-It's not really "automatic", it's a product of this line:
-
-static const struct platform_suspend_ops rk3288_suspend_ops = {
-        .enter   = rk3288_suspend_enter,
-        .valid   = suspend_valid_only_mem,  <--- here
-        .prepare = rk3288_suspend_prepare,
-        .finish  = rk3288_suspend_finish,
-};
-
-and the fact that we don't check the 'state' argument in
-.enter/.prepare/.finish.
-
-But still, I'm not sure it's productive to rename shallow until we support
-deep.
-
-Regards,
-Brian
+Reviewed-by: Douglas Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
