@@ -1,43 +1,40 @@
-From: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Subject: Re: [PATCH v3] ARM: dts: rockchip: add veyron-jaq board
-Date: Thu, 27 Aug 2015 15:07:30 -0700
-Message-ID: <CAD=FV=W34EXSvfJCRjaTy7jE-EnjMyechY2EcXn13G6HOfsh1w@mail.gmail.com>
-References: <1440457083-77519-1-git-send-email-briannorris@chromium.org>
+From: Justin Chen <justinpopo6@gmail.com>
+Subject: [PATCH v2 0/2] watchdog: driver for BCM7038 and newer chips.
+Date: Thu, 27 Aug 2015 15:53:22 -0700
+Message-ID: <1440716004-27022-1-git-send-email-justinpopo6@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1440457083-77519-1-git-send-email-briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Cc: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Javier Martinez Canillas <javier-0uQlZySMnqxg9hUCZPvPmw@public.gmane.org>, Alexandru M Stan <amstan-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-kernel@vger.kernel.org
+Cc: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org, wim@iguana.be, linux-watchdog@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com, Justin Chen <justinpopo6@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Brian,
+This driver is for a watchdog block contained in all Broadcom Set-top
+Box chips since BCM7038. BCM7038 was made public during the 2004 CES,
+and since then, many chips use this watchdog block including some cable
+modem chips.
 
-On Mon, Aug 24, 2015 at 3:58 PM, Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org> wrote:
-> a.k.a. Haier Chromebook 11, and others
->
-> Signed-off-by: Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-> Cc: Alexandru M Stan <amstan-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-> Cc: Douglas Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-> Reviewed-by: Javier Martinez Canillas <javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>
-> ---
-> v2 -> v3:
->  - add "and others" language
->  - drop other patches from series (picked up already by Heiko)
->
-> v1 -> v2:
->  - add overlooked DT binding doc
->  - fixup regulator suspend state for LDO_REG2
->
->
->  Documentation/devicetree/bindings/arm/rockchip.txt |   7 +
->  arch/arm/boot/dts/Makefile                         |   1 +
->  arch/arm/boot/dts/rk3288-veyron-jaq.dts            | 176 +++++++++++++++++++++
->  3 files changed, 184 insertions(+)
+Changes since v1:
+Removed clock-frequency because it brought unnecessary complexity to the
+driver.
+Renamed a few variables.
 
-Reviewed-by: Douglas Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Patch 1: watchdog device tree binding documentation
+
+Patch 2: watchdog driver
+
+Justin Chen (2):
+  watchdog: bcm7038: add device tree binding documentation
+  watchdog: Watchdog driver for Broadcom Set-Top Box
+
+ .../bindings/watchdog/brcm,bcm7038-wdt.txt         |  19 ++
+ drivers/watchdog/Kconfig                           |   8 +
+ drivers/watchdog/Makefile                          |   1 +
+ drivers/watchdog/bcm7038_wdt.c                     | 235 +++++++++++++++++++++
+ 4 files changed, 263 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/watchdog/brcm,bcm7038-wdt.txt
+ create mode 100644 drivers/watchdog/bcm7038_wdt.c
+
+-- 
+2.1.0
