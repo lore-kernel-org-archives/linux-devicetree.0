@@ -1,82 +1,161 @@
-From: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v6 2/2] devicetree: Add documentation for UPISEMI us5182d
- ALS and Proximity sensor
-Date: Thu, 27 Aug 2015 21:23:01 +0100
-Message-ID: <55DF71A5.1010705@kernel.org>
-References: <1440065534-8601-1-git-send-email-adriana.reus@intel.com>
- <1440065534-8601-3-git-send-email-adriana.reus@intel.com>
+From: vikas <vikas.manocha-qxv4g6HH51o@public.gmane.org>
+Subject: Re: [PATCH V8 1/2] mtd: spi-nor: Bindings for Cadence Quad SPI Flash
+ Controller driver.
+Date: Thu, 27 Aug 2015 13:18:58 -0700
+Message-ID: <55DF70B2.3070204@st.com>
+References: <1440148851-14621-1-git-send-email-marex@denx.de> <55DF4C82.3070708@st.com> <201508272012.51185.marex@denx.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
+Content-Type: text/plain; charset="windows-1252"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1440065534-8601-3-git-send-email-adriana.reus-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Adriana Reus <adriana.reus-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org, daniel.baluta-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org
-Cc: linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <201508272012.51185.marex-ynQEQJNshbs@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>
+Cc: "linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Graham Moore <grmoore-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>, Alan Tull <atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Dinh Nguyen <dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>, Yves Vandervennet <yvanderv-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 20/08/15 11:12, Adriana Reus wrote:
-> Added entries in i2c/vendor-prefixes for the us5182d als and proximity sensor.
-> Also added a documentation file for this sensor's properties.
+Hi,
+
+On 08/27/2015 11:12 AM, Marek Vasut wrote:
+> On Thursday, August 27, 2015 at 07:44:34 PM, vikas wrote:
+>> Hi,
+>>
+>> On 08/21/2015 02:20 AM, Marek Vasut wrote:
+>>> From: Graham Moore <grmoore-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
+>>>
+>>> Add binding document for the Cadence QSPI controller.
+>>>
+>>> Signed-off-by: Graham Moore <grmoore-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
+>>> Signed-off-by: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>
+>>> Cc: Alan Tull <atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
+>>> Cc: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+>>> Cc: David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>
+>>> Cc: Dinh Nguyen <dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
+>>> Cc: Graham Moore <grmoore-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
+>>> Cc: Vikas MANOCHA <vikas.manocha-qxv4g6HH51o@public.gmane.org>
+>>> Cc: Yves Vandervennet <yvanderv-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
+>>> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+>>> ---
+>>>
+>>>  .../devicetree/bindings/mtd/cadence-quadspi.txt    | 56
+>>>  ++++++++++++++++++++++ 1 file changed, 56 insertions(+)
+>>>  create mode 100644
+>>>  Documentation/devicetree/bindings/mtd/cadence-quadspi.txt
+>>>
+>>> V2: Add cdns prefix to driver-specific bindings.
+>>> V3: Use existing property "is-decoded-cs" instead of creating a
+>>>
+>>>     duplicate, "ext-decoder". Timing parameters are in nanoseconds,
+>>>     not master reference clocks. Remove bus-num completely.
+>>>
+>>> V4: Add new properties fifo-width and trigger-address
+>>> V7: - Prefix all of the Cadence-specific properties with cdns prefix,
+>>>
+>>>       those are in particular "cdns,is-decoded-cs", "cdns,fifo-depth",
+>>>       "cdns,fifo-width", "cdns,trigger-address".
+>>>     
+>>>     - Drop bogus properties which were not used and were incorrect.
+>>>
+>>> V8: Align lines to 80 chars.
+>>>
+>>> diff --git a/Documentation/devicetree/bindings/mtd/cadence-quadspi.txt
+>>> b/Documentation/devicetree/bindings/mtd/cadence-quadspi.txt new file
+>>> mode 100644
+>>> index 0000000..f248056
+>>> --- /dev/null
+>>> +++ b/Documentation/devicetree/bindings/mtd/cadence-quadspi.txt
+>>> @@ -0,0 +1,56 @@
+>>> +* Cadence Quad SPI controller
+>>> +
+>>> +Required properties:
+>>> +- compatible : Should be "cdns,qspi-nor".
+>>> +- reg : Contains two entries, each of which is a tuple consisting of a
+>>> +	physical address and length. The first entry is the address and
+>>> +	length of the controller register set. The second entry is the
+>>> +	address and length of the QSPI Controller data area.
+>>
+>> still hooked up with  "Controller data area", it is ambiguous.
+>> Use something which is more clear: Nor Flash memory mapped address.
 > 
-> Signed-off-by: Adriana Reus <adriana.reus-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
-This isn't that trivial so I'd like some device tree maintainer
-input if possible.
+> I have to disagree, I will call it whatever it is called in the datasheet
+> and it is called "controller data area".
 
-For now I've backed out the driver from my tree (given timing we have
-loads of time to sort this out!)
+It is preferable to use terminology which readers understand & that is the purpose
+of explaining it here otherwise we could have just pasted the doc link.
+I have to stop here for this point.
 
-Anyhow, anyone device tree related able to take a look at this.
-
-Adriana, btw these should be cc'd to the device tree maintainers in
-the first place (now added).
-
-Jonathan
-> ---
->  .../devicetree/bindings/iio/light/us5182d.txt      | 23 ++++++++++++++++++++++
->  .../devicetree/bindings/vendor-prefixes.txt        |  1 +
->  2 files changed, 24 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/iio/light/us5182d.txt
 > 
-> diff --git a/Documentation/devicetree/bindings/iio/light/us5182d.txt b/Documentation/devicetree/bindings/iio/light/us5182d.txt
-> new file mode 100644
-> index 0000000..7785c56
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/iio/light/us5182d.txt
-> @@ -0,0 +1,23 @@
-> +* UPISEMI us5182d I2C ALS and Proximity sensor
-> +
-> +Required properties:
-> +- compatible: must be "upisemi,usd5182"
-> +- reg: the I2C address of the device
-> +
-> +Optional properties:
-> +- upisemi,glass-coef: glass attenuation factor
-> +- upisemi,dark-ths: array of thresholds (adc counts) corresponding to every scale
-> +- upisemi,upper-dark-gain: tuning factor(4 int and 4 fractional bits - Q4.4) applied when light > threshold
-> +- upisemi,lower-dark-gain: tuning factor(4 int and 4 fractional bits - Q4.4) applied when light < threshold
-> +
-> +Example:
-> +
-> +    usd5182@39 {
-> +                compatible = "upisemi,usd5182";
-> +                reg = <0x39>;
-> +                upisemi,glass-coef = < 1000 >;
-> +                upisemi,dark-ths = /bits/ 16 <170 200 512 512 800 2000 4000 8000>;
-> +                upisemi,upper-dark-gain = /bits/ 8 <0x00>;
-> +                upisemi,lower-dark-gain = /bits/ 8 <0x16>;
-> +    };
-> +
-> diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
-> index d444757..5b40bab 100644
-> --- a/Documentation/devicetree/bindings/vendor-prefixes.txt
-> +++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
-> @@ -211,6 +211,7 @@ toshiba	Toshiba Corporation
->  toumaz	Toumaz
->  tplink	TP-LINK Technologies Co., Ltd.
->  truly	Truly Semiconductors Limited
-> +upisemi	uPI Semiconductor Corp.
->  usi	Universal Scientific Industrial Co., Ltd.
->  v3	V3 Semiconductor
->  variscite	Variscite Ltd.
+>>> +- interrupts : Unit interrupt specifier for the controller interrupt.
+>>> +- clocks : phandle to the Quad SPI clock.
+>>> +- cdns,fifo-depth : Size of the data FIFO in words.
+>>> +- cdns,fifo-width : Bus width of the data FIFO in bytes.
+>>> +- cdns,trigger-address : 32-bit indirect AHB trigger address.
+>>> +
+>>
+>>> +Optional properties:
+>> again, is it optional ? can the driver be used without these properties ?
 > 
+> Why wouldn't it be possible to use the driver with no SPI NOR attached to
+> it? It's a cornercase, but still a valid one.
+
+that's not right, this controller is only spi flash controller.
+
+> 
+>>> +- cdns,is-decoded-cs : Flag to indicate whether decoder is used or not.
+>>
+>> again, add info what the decoder is for ?
+> 
+> This is something Graham has to clarify. Based on the code (I'm sure you did
+> check the code), it's a 4:16 demuxer.
+
+Please clarify if possible & add the info for others benefit. This part is not common in other spi/nor controllers.
+
+> 
+>>> +
+>>> +Optional subnodes:
+>>> +Subnodes of the Cadence Quad SPI controller are spi slave nodes with
+>>> additional +custom properties:
+>>> +- cdns,read-delay : Delay for read capture logic, in clock cycles
+>>> +- cdns,tshsl-ns : Delay in nanoseconds for the length that the master
+>>> +                  mode chip select outputs are de-asserted between
+>>> +		  transactions.
+>>> +- cdns,tsd2d-ns : Delay in nanoseconds between one chip select being
+>>> +                  de-activated and the activation of another.
+>>> +- cdns,tchsh-ns : Delay in nanoseconds between last bit of current
+>>> +                  transaction and deasserting the device chip select
+>>> +		  (qspi_n_ss_out).
+>>> +- cdns,tslch-ns : Delay in nanoseconds between setting qspi_n_ss_out low
+>>> +                  and first bit transfer.
+>>> +
+>>> +Example:
+>>> +
+>>> +	qspi: spi@ff705000 {
+>>> +		compatible = "cdns,qspi-nor";
+>>> +		#address-cells = <1>;
+>>> +		#size-cells = <0>;
+>>> +		reg = <0xff705000 0x1000>,
+>>> +		      <0xffa00000 0x1000>;
+>>> +		interrupts = <0 151 4>;
+>>> +		clocks = <&qspi_clk>;
+>>> +		cdns,is-decoded-cs;
+>>
+>> flag value ?
+> 
+> Sorry, I don't quite understand the question. If you mean why there is no
+> value, it's because this is a boolean OF node, which just does't need to
+> have a value ; it's either present or not.
+
+you are right, thanks.
+
+Cheers,
+Vikas
+
+> 
+> Best regards,
+> Marek Vasut
+> .
+> 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
