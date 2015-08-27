@@ -1,76 +1,37 @@
-From: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
-Subject: Re: [RFC PATCH] arm/arm64: build all dtbs for CONPILE_TEST
-Date: Thu, 27 Aug 2015 09:08:08 -0700
-Message-ID: <CAOesGMjzBaobpLsS77UziWeYO9wo21SkdpWT=Pib6AM7DDKTnA@mail.gmail.com>
-References: <1440690994-5978-1-git-send-email-robh@kernel.org>
+From: Ben cook <spam-+s3v+l7Am2mRJKlD0jw6FVpr/1R2p/CL@public.gmane.org>
+Subject: Best regards, TO NEXT OF KIN.........
+Date: Thu, 27 Aug 2015 18:30:44 +0200
+Message-ID: <DEXSERV1VsSbGRbgv3K0001889b@dexam.co.uk>
+Reply-To: <ben.cook5511-/E1597aS9LSlP80pJB477g@public.gmane.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="Windows-1251"
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1440690994-5978-1-git-send-email-robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Content-Class: urn:content-classes:message
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: "arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Aug 27, 2015 at 8:56 AM, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
-> Enable building all dtb files when COMPILE_TEST is enabled. The dtbs are
-> not really dependent on a platform being enabled or any other kernel
-> config, so for testing coverage it is convenient to build all of the
-> dtbs.
->
-> This builds all dts files in the tree, not just targets listed. This
-> is simpler for arm64 which has a bunch of sub-dirs.
->
-> Signed-off-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> Cc: Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
-> Cc: Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>
-> Cc: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
-> ---
-> I've had this on my todo list for a while. RFC for now as I want to do
-> the rest of the arches as well. I was originally thinking a new target
-> for this, but thanks to Olof for the COMPILE_TEST suggestion.
->
-> Rob
->
->  arch/arm/boot/dts/Makefile   | 4 ++++
->  arch/arm64/boot/dts/Makefile | 6 ++++++
->  2 files changed, 10 insertions(+)
->
-> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-> index 246473a..4968442a 100644
-> --- a/arch/arm/boot/dts/Makefile
-> +++ b/arch/arm/boot/dts/Makefile
-> @@ -712,5 +712,9 @@ dtb-$(CONFIG_ARCH_MEDIATEK) += \
->  dtb-$(CONFIG_ARCH_ZX) += zx296702-ad1.dtb
->  endif
->
-> +dtstree                := $(srctree)/$(src)
-> +
-> +dtb-$(CONFIG_COMPILE_TEST) := $(patsubst $(dtstree)/%.dts,%.dtb, $(wildcard $(dtstree)/*.dts))
-> +
->  always         := $(dtb-y)
->  clean-files    := *.dtb
-> diff --git a/arch/arm64/boot/dts/Makefile b/arch/arm64/boot/dts/Makefile
-> index 38913be..9f19390 100644
-> --- a/arch/arm64/boot/dts/Makefile
-> +++ b/arch/arm64/boot/dts/Makefile
-> @@ -11,3 +11,9 @@ dts-dirs += sprd
->  dts-dirs += xilinx
->
->  subdir-y       := $(dts-dirs)
-> +
-> +dtstree                := $(srctree)/$(src)
-> +
-> +dtb-$(CONFIG_COMPILE_TEST) := $(patsubst $(dtstree)/%.dts,%.dtb, $(foreach d,$(dts-dirs), $(wildcard $(dtstree)/$(d)/*.dts)))
+Barrister Ben Cook
+La Sagrada Familia Calle Mallorca,
+601 08713 Seville Spain.
+Mobil: +34 631 093 714
 
-I think it would be more appropriate to build dtb-n  here instead of
-_any_ file ending in dts.
+> Attn: Dear Friend,
+>
+I am Barrister Ben Cook a solicitor at law. I am the personal attorney to late Mr. Robert a national of your country, who was an official contractor (category D) with REPSOL YPF, SPAIN (RY) an oil firm in Spain. Here in after shall be referred to as my client. On the 11th of March 2010, my client, his wife and their two only sons were involved in a car accident on holiday trip along Las Palmas express way. All occupants of the vehicle unfortunately lost their lives. Since then I have made several enquiries and presentations to locate any of my client's extended relatives, this has also proved abortive. It is after these several unsuccessful attempts to locate any member of his family failed that I decided to contact you since coincidentally you have your last name believing that you can in
+ variably be of help in this situation to stands as the next of kin to this my client. I am contacting you to assist in repatriating the money and property left behind by my client before th!
+!ey get confiscated or declared uns
+>
+Already, the finance company where the deceased had an account valued at about 1 Million Euros has issued me a notice/ultimatum to provide the next of kin or have the account confiscated within the next one Month. Since It has been unsuccessful in locating the relatives for over 2 years now, I seek your consent to present you as the next of kin of the deceased, so that the proceeds of this account valued at 1 Million Euros can be paid to your account and there after we can share the fund (money) in the ratio of 7:3. That is, I will have 70% of the proceed while you have 30% for your assistance. I have all necessary legal documents that can be used to back up any claim we may make. All I require is your honest co-operation to enable us see this transaction through .I guarantee that this wil
+ l be executed under a legitimate arrangement that will protect you from any breach of the law.
 
-It would be useful to build all files, but it's not the behavior that
-COMPILE_TEST usually has.
+Please get in touch with me by my email and send to me your telephone and fax numbers to enable us discuss further about this transaction.
+>
+Best regards,
+Barrister Ben Cook
 
 
--Olof
+=============MAX============= 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
