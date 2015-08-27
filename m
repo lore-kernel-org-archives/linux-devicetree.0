@@ -1,131 +1,87 @@
-From: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v10 1/5] mtd: nand: vf610_nfc: Freescale NFC for VF610,
- MPC5125 and others
-Date: Thu, 27 Aug 2015 09:34:21 -0700
-Message-ID: <20150827163421.GX81844@google.com>
-References: <1438594050-4595-1-git-send-email-stefan@agner.ch>
- <1438594050-4595-2-git-send-email-stefan@agner.ch>
- <20150825201631.GK81844@google.com>
- <bf1ed158fe08b51c4668faffde44083f@agner.ch>
+From: Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [PATCH v1 3/3] arm64: dts: add Hi6220 mailbox node
+Date: Thu, 27 Aug 2015 17:46:17 +0100
+Message-ID: <20150827164617.GB31748@leverpostej>
+References: <20150824095144.GA7139@leverpostej>
+ <1440411596.3517.12.camel@linaro.org>
+ <20150824114903.GT10728@bivouac.eciton.net>
+ <1440490427.10987.29.camel@linaro.org>
+ <20150825094630.GU10728@bivouac.eciton.net>
+ <1440497710.10987.42.camel@linaro.org>
+ <20150825104256.GB13471@leverpostej>
+ <1440510194.10987.52.camel@linaro.org>
+ <20150825160030.GA3774@leoy-linaro>
+ <1440552341.10987.53.camel@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <bf1ed158fe08b51c4668faffde44083f-XLVq0VzYD2Y@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
-Cc: dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, sebastian-E0PNVn5OA6ohrxcnuTQ+TQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, marb-Z4QKGCRq86k@public.gmane.org, aaron-yuhzfaV+M/Wz3Dx2OeFgIA@public.gmane.org, bpringlemeir-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, albert.aribaud-iEu9NFBzPZE@public.gmane.org, klimov.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Bill Pringlemeir <bpringlemeir-ygJ1pmMJ17cAvxtiuMwx3w@public.gmane.org>
+In-Reply-To: <1440552341.10987.53.camel@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Haojian Zhuang <haojian.zhuang@linaro.org>
+Cc: "leo.yan@linaro.org" <leo.yan@linaro.org>, Leif Lindholm <leif.lindholm@linaro.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <Pawel.Moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Catalin Marinas <Catalin.Marinas@arm.com>, Will Deacon <Will.Deacon@arm.com>, Jassi Brar <jassisinghbrar@gmail.com>, Bintian Wang <bintian.wang@huawei.com>, Yiping Xu <xuyiping@hisilicon.com>, Wei Xu <xuwei5@hisilicon.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "guodong.xu@linaro.org" <guodong.xu@linaro.org>, Jian Zhang <zhangjian001@hisilicon.com>, Zhenwei Wang <Zhenwei.wang@hisilicon.com>, Haoju Mo <mohaoju@hisilicon.com>, Dan Zhao <dan.zhao@hisilicon.com>, kongfei@hisil
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Aug 26, 2015 at 06:02:31PM -0700, Stefan Agner wrote:
-> On 2015-08-25 13:16, Brian Norris wrote:
-> > On Mon, Aug 03, 2015 at 11:27:26AM +0200, Stefan Agner wrote:
-> >> diff --git a/drivers/mtd/nand/vf610_nfc.c b/drivers/mtd/nand/vf610_nfc.c
-> >> new file mode 100644
-> >> index 0000000..5c8dfe8
-> >> --- /dev/null
-> >> +++ b/drivers/mtd/nand/vf610_nfc.c
-> >> @@ -0,0 +1,645 @@
+> > Option 2:
 > > 
-> > ...
+> > 	memory@0 {
+> > 		device_type = "memory";
+> > 		reg = <0x0 0x0 0x0 0x40000000>;
+> > 	};
 > > 
-> >> +/*
-> >> + * This function supports Vybrid only (MPC5125 would have full RB and four CS)
-> >> + */
-> >> +static void vf610_nfc_select_chip(struct mtd_info *mtd, int chip)
-> >> +{
-> >> +#ifdef CONFIG_SOC_VF610
+> > 	reserved-memory {
+> > 		#address-cells = <2>;
+> > 		#size-cells = <2>;
+> > 		ranges;
 > > 
-> > Why the #ifdef? I don't see anything compile-time specific to SOC_VF610.
+> > 		mcu_reserved: mcu_reserved@06dff000 {
+> > 			no-map;
+> > 			reg = <0x0 0x06dff000 0x0 0x00001000>,	/* MCU mailbox buffer */
+> > 			      <0x0 0x05e00000 0x0 0x00100000>,	/* MCU firmware buffer */
+> > 			      <0x0 0x0740f000 0x0 0x00001000>;	/* MCU firmware section */
+> > 		};
+> > 	};
 > > 
-> > If this is trying to handle the comment above ("This function supports
-> > Vybrid only (MPC5125 would have full RB and four CS)") then that's the
-> > wrong way of doing it, as you need to support multiplatform kernels.
-> > You'll need to have a way to differentiate the different platform
-> > support at runtime, not compile time.
-> 
-> Yes it is trying to handle the comment above. Well, the other two
-> platforms I am aware of are also different architectures... (PowerPC and
-> ColdFire). I think we won't have a multi-architecture kernel anytime
-> soon,
-
-Ha, right. Sorry, I don't really know this particular IP.
-
-> hence I think removing the code at compile time is the right thing
-> todo.
-
-I don't believe that conclusion follows though.
-
-> However, probably CONFIG_SOC_VF610 is the wrong symbol then, I could
-> just use CONFIG_ARM and add a comment that this might be different on
-> another other ARM SoC than VF610.
-> 
-> Just checked CodingStyle, and I see that IS_ENABLED is the preferred way
-> for conditional compiling.
-> 
-> So my suggestion:
-> 
-> static void vf610_nfc_select_chip(struct mtd_info *mtd, int chip)
-> {
-> 	struct vf610_nfc *nfc = mtd_to_nfc(mtd);
-> 	u32 tmp = vf610_nfc_read(nfc, NFC_ROW_ADDR);
-> 
-> 	if (!IS_ENABLED(CONFIG_ARM))
-> 		return;
-> 
-> 	/*
-> 	 * This code is only tested on the ARM platform VF610
-> 	 * PowerPC based MPC5125 would have full RB and four CS
-> 	 */
-> ....
-> 
-> With that the compiler should be able to remove this (currently) ARM
-> VF610 specific code on the other supported architectures...
-> 
-> What do you think?
-
-The code structure isn't bad, and yes, IS_ENABLED() would be preferable,
-as it removes some of the problems with #ifdef, but I still don't think
-the processor architecture has much to do with the version of the IP.
-The canonical way of distiguishing per-IP revisions is to key on the
-compatible property. So you'd have some kind of enum, which would
-currently only have an entry for VF610. i.e.:
-
-	/* MPC5125 not yet supported */
-	if (nfc->revision != NAND_VFC610)
-		return;
-
-> >> +	struct vf610_nfc *nfc = mtd_to_nfc(mtd);
-> >> +	u32 tmp = vf610_nfc_read(nfc, NFC_ROW_ADDR);
-> >> +
-> >> +	tmp &= ~(ROW_ADDR_CHIP_SEL_RB_MASK | ROW_ADDR_CHIP_SEL_MASK);
-> >> +	tmp |= 1 << ROW_ADDR_CHIP_SEL_RB_SHIFT;
-> >> +
-> >> +	if (chip == 0)
-> >> +		tmp |= 1 << ROW_ADDR_CHIP_SEL_SHIFT;
-> >> +	else if (chip == 1)
-> >> +		tmp |= 2 << ROW_ADDR_CHIP_SEL_SHIFT;
+> >         [...]
 > > 
-> > 	else ... ?
-> > 
-> > Maybe you can write this as a formulaic pattern (e.g.:
-> > 
-> > 	tmp |= (chip + 1) << ROW_ADDR_CHIP_SEL_SHIFT;
-> > 
-> > ) and just do the "max # of chips" checks on a per-platform basis in the
-> > probe(). Then I'm guessing this same function can apply to both
-> > platforms. (I'm not looking at HW datasheets for this, BTW, just
-> > guessing based on the context here.)
+> > 	mailbox: mailbox@f7510000 {
+> > 		#mbox-cells = <1>;
+> > 		compatible = "hisilicon,hi6220-mbox";
+> > 		reg = <0x0 0xf7510000 0x0 0x1000>; /* IPC_S */
+> > 		memory-region = <&mcu_reserved>;   /* Mailbox buffer */
+> > 		interrupts = <GIC_SPI 94 IRQ_TYPE_LEVEL_HIGH>;
+> > 	};
 > 
-> It seems that MCP5125 is different than VF610. MCP5125 has 4 chip
-> selects and 4 R/B signals, whereas VF610 has only 2 chip selects and
-> just 1 R/B signals...
+> I prefer the second one. From my view, memory node should only describe
+> the hardware information of memory.
 
-OK I don't presume to know what the different IP versions look like. And
-if you just note they are unsupported/untested, you're fine.
+That doesn't align with the spec. Per ePAPR, in the description of a
+memory node:
 
-Brian
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+	The client program may access memory not covered by any memory
+	reservations (see section 8.3) using any storage attributes it
+	chooses. However, before changing the storage attributes used to
+	access a real page, the client program is responsible for
+	performing actions required by the architecture and
+	implementation, possibly including flushing the real page from
+	the caches.
+
+Note that in this context, memory reservation applies to /memreserve/.
+We can only expect other software to handle /memreserve/, and not
+reserved-memory, as the latter was introduced by Linux and has not
+existed for anywhere near as long.
+
+Additionally, the OS is permitted to map reserved memory with cacheable
+attributes.
+
+So the memory nodes have never been about the raw hardware layout, but
+rather the regions that the OS may map. If (outside of the driver
+responsible for the region) the OS should not map a region of memory,
+that region should not appear in any memory node.
+
+As mentioned in my other reply, for a region that the OS could map but
+cannot use, I don't see much point in listing that memory in any memory
+node.
+
+Thanks,
+Mark
