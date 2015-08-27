@@ -1,60 +1,81 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH 4/4] remoteproc: debugfs: Add ability to boot remote
- processor using debugfs
-Date: Thu, 27 Aug 2015 07:44:52 +0100
-Message-ID: <20150827064452.GC19409@x1>
-References: <1440594483-29601-1-git-send-email-lee.jones@linaro.org>
- <1440594483-29601-5-git-send-email-lee.jones@linaro.org>
- <55DDF2A0.5010404@mentor.com>
+From: punnaiah choudary kalluri <punnaia@xilinx.com>
+Subject: Re: [PATCH 1/2] usb: chipidea: add xilinx zynq platform data
+Date: Thu, 27 Aug 2015 13:11:30 +0530
+Message-ID: <CAGnW=BYMnOFTaMQJtLXZ9ckCEHs+gCOCQR0VQFfO4HP=SMHBDQ@mail.gmail.com>
+References: <1440602865-30468-1-git-send-email-nathan.sullivan@ni.com>
+	<CALHRZuqFtaRFNd9D=a+x2rZ2848ZOGYbTkSWCHxNPcW_NvocxA@mail.gmail.com>
+	<20150827043339.GA29157@shlinux2>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <55DDF2A0.5010404@mentor.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Nathan Lynch <Nathan_Lynch@mentor.com>
-Cc: ohad@wizery.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, kernel@stlinux.com
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20150827043339.GA29157@shlinux2>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Peter Chen <peter.chen@freescale.com>
+Cc: sundeep subbaraya <sundeep.lkml@gmail.com>, Nathan Sullivan <nathan.sullivan@ni.com>, Subbaraya Sundeep Bhatta <sbhatta@xilinx.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "pawel.moll@arm.com" <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gV2VkLCAyNiBBdWcgMjAxNSwgTmF0aGFuIEx5bmNoIHdyb3RlOgoKPiBPbiAwOC8yNi8yMDE1
-IDA4OjA4IEFNLCBMZWUgSm9uZXMgd3JvdGU6Cj4gPiBTaWduZWQtb2ZmLWJ5OiBMZWUgSm9uZXMg
-PGxlZS5qb25lc0BsaW5hcm8ub3JnPgo+ID4gLS0tCj4gPiAgZHJpdmVycy9yZW1vdGVwcm9jL3Jl
-bW90ZXByb2NfZGVidWdmcy5jIHwgMjUgKysrKysrKysrKysrKysrKysrKysrKysrKwo+ID4gIDEg
-ZmlsZSBjaGFuZ2VkLCAyNSBpbnNlcnRpb25zKCspCj4gCj4gVGhlIGNvbW1pdCBtZXNzYWdlIHNo
-b3VsZCBkZXNjcmliZSB3aHkgdGhpcyBpcyBuZWVkZWQuLi4KPiAKPiA+IGRpZmYgLS1naXQgYS9k
-cml2ZXJzL3JlbW90ZXByb2MvcmVtb3RlcHJvY19kZWJ1Z2ZzLmMgYi9kcml2ZXJzL3JlbW90ZXBy
-b2MvcmVtb3RlcHJvY19kZWJ1Z2ZzLmMKPiA+IGluZGV4IDlkMzA4MDkuLjk2MjA5NjIgMTAwNjQ0
-Cj4gPiAtLS0gYS9kcml2ZXJzL3JlbW90ZXByb2MvcmVtb3RlcHJvY19kZWJ1Z2ZzLmMKPiA+ICsr
-KyBiL2RyaXZlcnMvcmVtb3RlcHJvYy9yZW1vdGVwcm9jX2RlYnVnZnMuYwo+ID4gQEAgLTg4LDgg
-Kzg4LDMzIEBAIHN0YXRpYyBzc2l6ZV90IHJwcm9jX3N0YXRlX3JlYWQoc3RydWN0IGZpbGUgKmZp
-bHAsIGNoYXIgX191c2VyICp1c2VyYnVmLAo+ID4gIAlyZXR1cm4gc2ltcGxlX3JlYWRfZnJvbV9i
-dWZmZXIodXNlcmJ1ZiwgY291bnQsIHBwb3MsIGJ1ZiwgaSk7Cj4gPiAgfQo+ID4gIAo+ID4gK3N0
-YXRpYyBzc2l6ZV90IHJwcm9jX3N0YXRlX3dyaXRlKHN0cnVjdCBmaWxlICpmaWxwLCBjb25zdCBj
-aGFyIF9fdXNlciAqdXNlcmJ1ZiwKPiA+ICsJCQkJIHNpemVfdCBjb3VudCwgbG9mZl90ICpwcG9z
-KQo+ID4gK3sKPiA+ICsJc3RydWN0IHJwcm9jICpycHJvYyA9IGZpbHAtPnByaXZhdGVfZGF0YTsK
-PiA+ICsJY2hhciBidWZbMl07Cj4gPiArCWludCByZXQ7Cj4gPiArCj4gPiArCXJldCA9IGNvcHlf
-ZnJvbV91c2VyKGJ1ZiwgdXNlcmJ1ZiwgMSk7Cj4gPiArCWlmIChyZXQpCj4gPiArCQlyZXR1cm4g
-LUVGQVVMVDsKPiA+ICsKPiA+ICsJc3dpdGNoIChidWZbMF0pIHsKPiA+ICsJY2FzZSAnMSc6Cj4g
-PiArCQlyZXQgPSBycHJvY19ib290KHJwcm9jKTsKPiA+ICsJCWlmIChyZXQpCj4gPiArCQkJZGV2
-X3dhcm4oJnJwcm9jLT5kZXYsICJCb290IGZhaWxlZDogJWRcbiIsIHJldCk7Cj4gPiArCQlicmVh
-azsKPiA+ICsJZGVmYXVsdDoKPiA+ICsJCXJwcm9jX3NodXRkb3duKHJwcm9jKTsKPiA+ICsJfQo+
-ID4gKwo+ID4gKwlyZXR1cm4gY291bnQ7Cj4gPiArfQo+IAo+IC4uLiBhbmQgSSBzdWdnZXN0IHRo
-YXQgdGhlIHVzZXIgaW50ZXJmYWNlIGJlIHJlY29uc2lkZXJlZC4gIElmICcxJyBtZWFucwo+ICJi
-b290IiBhbmQgbGl0ZXJhbGx5IGFueXRoaW5nIGVsc2UgbWVhbnMgInNodXQgZG93biIgdGhlbiB5
-b3UgY2FuJ3QgYWRkCj4gb3BlcmF0aW9ucyBpbiB0aGUgZnV0dXJlIHdpdGhvdXQgcG90ZW50aWFs
-bHkgYnJlYWtpbmcgdGhpbmdzLgoKR29vZCBwb2ludHMsIHdpbGwgZml4LgoKLS0gCkxlZSBKb25l
-cwpMaW5hcm8gU1RNaWNyb2VsZWN0cm9uaWNzIExhbmRpbmcgVGVhbSBMZWFkCkxpbmFyby5vcmcg
-4pSCIE9wZW4gc291cmNlIHNvZnR3YXJlIGZvciBBUk0gU29DcwpGb2xsb3cgTGluYXJvOiBGYWNl
-Ym9vayB8IFR3aXR0ZXIgfCBCbG9nCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fXwpsaW51eC1hcm0ta2VybmVsIG1haWxpbmcgbGlzdApsaW51eC1hcm0ta2Vy
-bmVsQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1h
-bi9saXN0aW5mby9saW51eC1hcm0ta2VybmVsCg==
+Hi,
+
+On Thu, Aug 27, 2015 at 10:03 AM, Peter Chen <peter.chen@freescale.com> wrote:
+> On Thu, Aug 27, 2015 at 10:59:22AM +0530, sundeep subbaraya wrote:
+>> Hi,
+>>
+>>
+>> On Wed, Aug 26, 2015 at 8:57 PM, Nathan Sullivan <nathan.sullivan@ni.com> wrote:
+>> > The Xilinx Zynq udc does not need the CI_HDRC_DISABLE_STREAMING flag,
+>> > unlike the default platform data.  Add platform data specific to the
+>> > Zynq udc.
+>> >
+>> > Based on a patch by the same name from the Xilinx vendor tree.
+>>
+>> I am that Xilinx guy who sent this patch :). It is in Xilinx tree as
+>> temporary fix and
+>> I did not debug further why UDC works only when streaming is enabled.
+>> Probably this is right time to post my question here.
+>> I was expecting like:
+>> Streaming disabled - both low bandwidth and high bandwidth systems
+>> should work fine
+>> Streaming enabled - only for high bandwidth systems
+>> but this is not the case, Zynq UDC works only when Streaming is enabled.
+>> Please correct me if I am wrong.
+>
+> You are right, stream mode disabled should work at anytime.
+> It is so strange why zynq UDC only works when stream mode is enabled.
+
+I am referring the section 8.5.2 in Synopsys usb 2.0 HS controllervDoc 2.20a,
+ this is what it says about SDIS (streaming mode disable option)
+
+Before activating this mode, the user must check if the TX latency
+buffers per endpoint are able to
+accommodate at least one entire maximum size packet. The RX buffer
+size must, at least, double the TX
+buffer size per endpoint. To optimize the stream disable performance,
+system bus burst must be set as high
+as possible.
+When the stream disable mode is used, the burst size (VUSB_HS_RX_BURST
+and VUSB_HS_TX_BURST)
+must be a integer sub-multiple of the latency buffer size
+(VUSB_HS_RX_DEPTH for RX buffer and
+VUSB_HS_TX_CHAN for the TX buffer). If this is not respected the
+controller will not work properly in stream
+disable mode.
+The stream disable mode should just be used in situations where the
+available system bandwidth is low or the
+system bus access latency is high, in order to avoid underruns and
+overruns in the latency buffers. This works
+for all types of endpoints, except for ISO endpoints.
+Such a system can't ensure the real time support that the ISO
+endpoints require, so the ISO endpoints are not
+supported when the SDIS bit is set.
+
+Definitely we need to root cause why disable streaming mode is not
+working for zynq but from controller spec
+point of view it is possible that controller not work properly in
+stream disable mode.
+
+Regards,
+Punnaiah
+
+>
+> Peter
+>>
