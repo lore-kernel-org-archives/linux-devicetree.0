@@ -1,182 +1,131 @@
-From: Bjorn Andersson <bjorn.andersson-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>
-Subject: [PATCH 1/4] dt-binding: gpio: Add Qualcomm SMSM device tree documentation
-Date: Thu, 27 Aug 2015 10:37:55 -0700
-Message-ID: <1440697078-4106-2-git-send-email-bjorn.andersson@sonymobile.com>
-References: <1440697078-4106-1-git-send-email-bjorn.andersson@sonymobile.com>
+From: vikas <vikas.manocha-qxv4g6HH51o@public.gmane.org>
+Subject: Re: [PATCH V8 1/2] mtd: spi-nor: Bindings for Cadence Quad SPI Flash
+ Controller driver.
+Date: Thu, 27 Aug 2015 10:44:34 -0700
+Message-ID: <55DF4C82.3070708@st.com>
+References: <1440148851-14621-1-git-send-email-marex@denx.de>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1440697078-4106-1-git-send-email-bjorn.andersson-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>
+In-Reply-To: <1440148851-14621-1-git-send-email-marex-ynQEQJNshbs@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>, "linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Cc: Graham Moore <grmoore-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>, Alan Tull <atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Dinh Nguyen <dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>, Yves Vandervennet <yvanderv-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This documents a device tree binding for exposing the Qualcomm Shared
-Memory State Machine as a set of gpio- and interrupt-controllers.
+Hi,
 
-Signed-off-by: Bjorn Andersson <bjorn.andersson-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>
----
- .../devicetree/bindings/gpio/qcom,smsm.txt         | 114 +++++++++++++++++++++
- drivers/gpio/Kconfig                               |   8 ++
- drivers/gpio/Makefile                              |   1 +
- 3 files changed, 123 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/gpio/qcom,smsm.txt
+On 08/21/2015 02:20 AM, Marek Vasut wrote:
+> From: Graham Moore <grmoore-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
+> 
+> Add binding document for the Cadence QSPI controller.
+> 
+> Signed-off-by: Graham Moore <grmoore-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
+> Signed-off-by: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>
+> Cc: Alan Tull <atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
+> Cc: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> Cc: David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>
+> Cc: Dinh Nguyen <dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
+> Cc: Graham Moore <grmoore-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
+> Cc: Vikas MANOCHA <vikas.manocha-qxv4g6HH51o@public.gmane.org>
+> Cc: Yves Vandervennet <yvanderv-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
+> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> ---
+>  .../devicetree/bindings/mtd/cadence-quadspi.txt    | 56 ++++++++++++++++++++++
+>  1 file changed, 56 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/mtd/cadence-quadspi.txt
+> 
+> V2: Add cdns prefix to driver-specific bindings.
+> V3: Use existing property "is-decoded-cs" instead of creating a
+>     duplicate, "ext-decoder". Timing parameters are in nanoseconds,
+>     not master reference clocks. Remove bus-num completely.
+> V4: Add new properties fifo-width and trigger-address
+> V7: - Prefix all of the Cadence-specific properties with cdns prefix,
+>       those are in particular "cdns,is-decoded-cs", "cdns,fifo-depth",
+>       "cdns,fifo-width", "cdns,trigger-address".
+>     - Drop bogus properties which were not used and were incorrect.
+> V8: Align lines to 80 chars.
+> 
+> diff --git a/Documentation/devicetree/bindings/mtd/cadence-quadspi.txt b/Documentation/devicetree/bindings/mtd/cadence-quadspi.txt
+> new file mode 100644
+> index 0000000..f248056
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/mtd/cadence-quadspi.txt
+> @@ -0,0 +1,56 @@
+> +* Cadence Quad SPI controller
+> +
+> +Required properties:
+> +- compatible : Should be "cdns,qspi-nor".
+> +- reg : Contains two entries, each of which is a tuple consisting of a
+> +	physical address and length. The first entry is the address and
+> +	length of the controller register set. The second entry is the
+> +	address and length of the QSPI Controller data area.
 
-diff --git a/Documentation/devicetree/bindings/gpio/qcom,smsm.txt b/Documentation/devicetree/bindings/gpio/qcom,smsm.txt
-new file mode 100644
-index 000000000000..06201ba76594
---- /dev/null
-+++ b/Documentation/devicetree/bindings/gpio/qcom,smsm.txt
-@@ -0,0 +1,114 @@
-+Qualcomm Shared Memory State Machine
-+
-+The Shared Memory State Machine facilitates broadcasting of single bit state
-+information between the processors in a Qualcomm SoC. Each processor is
-+assigned 32 bits of state that can be modified. A processor can through a
-+matrix of bitmaps signal subscription of notifications upon changes to a
-+certain bit owned by a certain remote processor.
-+
-+This document defines the binding for a driver that implements and exposes this
-+a GPIO controller and a set of interrupt controllers.
-+
-+- compatible:
-+	Usage: required
-+	Value type: <string>
-+	Definition: must be one of:
-+		    "qcom,smsm"
-+
-+- qcom,ipc-N:
-+	Usage: required
-+	Value type: <prop-encoded-array>
-+	Definition: three entries specifying the outgoing ipc bit used for
-+		    signaling the N:th remote processor
-+		    - phandle to a syscon node representing the apcs registers
-+		    - u32 representing offset to the register within the syscon
-+		    - u32 representing the ipc bit within the register
-+
-+- qcom,local-host:
-+	Usage: optional
-+	Value type: <u32>
-+	Definition: identifier of the local processor in the list of hosts, or
-+		    in other words specifier of the column in the subscription
-+		    matrix representing the local processor
-+		    defaults to host 0
-+
-+- #address-cells:
-+	Usage: required
-+	Value type: <u32>
-+	Definition: must be 1
-+
-+- #size-cells:
-+	Usage: required
-+	Value type: <u32>
-+	Definition: must be 0
-+
-+= SUBNODES
-+Each processor's state bits are described by a subnode of the smsm device node.
-+A node can either be a gpio-controller - denoting the local processors bits -
-+or an interrupt-controller - denoting a remote processors state bits.  The node
-+names are not important.
-+
-+- reg:
-+	Usage: required
-+	Value type: <u32>
-+	Definition: specifies the offset, in words, of the first bit for this
-+		    entry
-+
-+- gpio-controller:
-+	Usage: required for local entry
-+	Value type: <empty>
-+	Definition: marks the entry as a gpio-controller and the state bits to
-+		    belong to the local processor
-+
-+- #gpio-cells:
-+	Usage: required for local entry
-+	Value type: <u32>
-+	Definition: must be 2 - denotes bit number and GPIO flags
-+
-+- interrupt-controller:
-+	Usage: required for remote entries
-+	Value type: <empty>
-+	Definition: marks the entry as a interrupt-controller and the state bits
-+		    to belong to a remote processor
-+
-+- #interrupt-cells:
-+	Usage: required for remote entries
-+	Value type: <u32>
-+	Definition: must be 2 - denotes bit number and IRQ flags
-+
-+- interrupts:
-+	Usage: required for remote entries
-+	Value type: <prop-encoded-array>
-+	Definition: one entry specifying remote IRQ used by the remote processor
-+		    to signal changes of its state bits
-+
-+
-+= EXAMPLE
-+The following example shows the SMEM setup for controlling properties of the
-+wireless processor, defined from the 8974 apps processor's point-of-view. It
-+encompasses one outbound entry and the outgoing interrupt for the wireless
-+processor.
-+
-+smsm {
-+	compatible = "qcom,smsm";
-+
-+	#address-cells = <1>;
-+	#size-cells = <0>;
-+
-+	qcom,ipc-3 = <&apcs 8 19>;
-+
-+	apps_smsm: apps@0 {
-+		reg = <0>;
-+
-+		gpio-controller;
-+		#gpio-cells = <2>;
-+	};
-+
-+	wcnss_smsm: wcnss@7 {
-+		reg = <7>;
-+		interrupts = <0 144 1>;
-+
-+		interrupt-controller;
-+		#interrupt-cells = <2>;
-+	};
-+};
-diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
-index b4fc9e4d24c6..0e57b60faae8 100644
---- a/drivers/gpio/Kconfig
-+++ b/drivers/gpio/Kconfig
-@@ -354,6 +354,14 @@ config GPIO_PXA
- 	help
- 	  Say yes here to support the PXA GPIO device
- 
-+config GPIO_QCOM_SMSM
-+	bool "Qualcomm Shared Memory State Machine"
-+	depends on QCOM_SMEM
-+	help
-+	  Say yes here to support the Qualcomm Shared Memory State Machine.
-+	  The state machine is represented by bits in shared memory and is
-+	  exposed to the system as GPIOs.
-+
- config GPIO_RCAR
- 	tristate "Renesas R-Car GPIO"
- 	depends on ARM && (ARCH_SHMOBILE || COMPILE_TEST)
-diff --git a/drivers/gpio/Makefile b/drivers/gpio/Makefile
-index f79a7c482a99..0fd213892403 100644
---- a/drivers/gpio/Makefile
-+++ b/drivers/gpio/Makefile
-@@ -75,6 +75,7 @@ obj-$(CONFIG_GPIO_PCF857X)	+= gpio-pcf857x.o
- obj-$(CONFIG_GPIO_PCH)		+= gpio-pch.o
- obj-$(CONFIG_GPIO_PL061)	+= gpio-pl061.o
- obj-$(CONFIG_GPIO_PXA)		+= gpio-pxa.o
-+obj-$(CONFIG_GPIO_QCOM_SMSM)	+= gpio-qcom-smsm.o
- obj-$(CONFIG_GPIO_RC5T583)	+= gpio-rc5t583.o
- obj-$(CONFIG_GPIO_RDC321X)	+= gpio-rdc321x.o
- obj-$(CONFIG_GPIO_RCAR)		+= gpio-rcar.o
--- 
-1.8.2.2
+still hooked up with  "Controller data area", it is ambiguous.
+Use something which is more clear: Nor Flash memory mapped address.
 
+> +- interrupts : Unit interrupt specifier for the controller interrupt.
+> +- clocks : phandle to the Quad SPI clock.
+> +- cdns,fifo-depth : Size of the data FIFO in words.
+> +- cdns,fifo-width : Bus width of the data FIFO in bytes.
+> +- cdns,trigger-address : 32-bit indirect AHB trigger address.
+> +
+> +Optional properties:
+
+again, is it optional ? can the driver be used without these properties ?
+
+> +- cdns,is-decoded-cs : Flag to indicate whether decoder is used or not.
+
+again, add info what the decoder is for ? 
+
+> +
+> +Optional subnodes:
+> +Subnodes of the Cadence Quad SPI controller are spi slave nodes with additional
+> +custom properties:
+> +- cdns,read-delay : Delay for read capture logic, in clock cycles
+> +- cdns,tshsl-ns : Delay in nanoseconds for the length that the master
+> +                  mode chip select outputs are de-asserted between
+> +		  transactions.
+> +- cdns,tsd2d-ns : Delay in nanoseconds between one chip select being
+> +                  de-activated and the activation of another.
+> +- cdns,tchsh-ns : Delay in nanoseconds between last bit of current
+> +                  transaction and deasserting the device chip select
+> +		  (qspi_n_ss_out).
+> +- cdns,tslch-ns : Delay in nanoseconds between setting qspi_n_ss_out low
+> +                  and first bit transfer.
+> +
+> +Example:
+> +
+> +	qspi: spi@ff705000 {
+> +		compatible = "cdns,qspi-nor";
+> +		#address-cells = <1>;
+> +		#size-cells = <0>;
+> +		reg = <0xff705000 0x1000>,
+> +		      <0xffa00000 0x1000>;
+> +		interrupts = <0 151 4>;
+> +		clocks = <&qspi_clk>;
+> +		cdns,is-decoded-cs;
+
+flag value ?
+
+Cheers,
+Vikas
+
+> +		cdns,fifo-depth = <128>;
+> +		cdns,fifo-width = <4>;
+> +		cdns,trigger-address = <0x00000000>;
+> +
+> +		flash0: n25q00@0 {
+> +			...
+> +			cdns,read-delay = <4>;
+> +			cdns,tshsl-ns = <50>;
+> +			cdns,tsd2d-ns = <50>;
+> +			cdns,tchsh-ns = <4>;
+> +			cdns,tslch-ns = <4>;
+> +		};
+> +	};
+> 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
