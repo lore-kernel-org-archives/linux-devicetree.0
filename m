@@ -1,38 +1,49 @@
-From: Qais Yousef <qais.yousef@imgtec.com>
-Subject: Re: [PATCH 00/10] Add support for img AXD audio hardware decoder
-Date: Thu, 27 Aug 2015 10:07:08 +0100
-Message-ID: <55DED33C.50007@imgtec.com>
-References: <1440419959-14315-1-git-send-email-qais.yousef@imgtec.com>
- <20150826180436.GC28760@sirena.org.uk>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20150826180436.GC28760@sirena.org.uk>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mark Brown <broonie@kernel.org>
-Cc: alsa-devel@alsa-project.org, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, linux-kernel@vger.kernel.org, linux-mips@linux-mips.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org, Liam Girdwood <lgirdwood@gmail.com>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>
+From: Jaehoon Chung <jh80.chung@samsung.com>
+Subject: [PATCH] ARM: dts: use vqmmc-supply of emmc/sd for
+ exynos4412-odroid-common
+Date: Thu, 27 Aug 2015 18:29:18 +0900
+Message-ID: <1440667758-14960-1-git-send-email-jh80.chung@samsung.com>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: linux-samsung-soc@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Kukjin Kim <kgene@kernel.org>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, Jaehoon Chung <jh80.chung@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-On 08/26/2015 07:04 PM, Mark Brown wrote:
-> On Mon, Aug 24, 2015 at 01:39:09PM +0100, Qais Yousef wrote:
->
->> Qais Yousef (10):
->>    irqchip: irq-mips-gic: export gic_send_ipi
->>    dt: add img,axd.txt device tree binding document
->>    ALSA: add AXD Audio Processing IP alsa driver
->>    ALSA: axd: add fw binary header manipulation files
->>    ALSA: axd: add buffers manipulation files
->>    ALSA: axd: add basic files for sending/receiving axd cmds
->>    ALSA: axd: add cmd interface helper functions
->>    ALSA: axd: add low level AXD platform setup files
->>    ALSA: axd: add alsa compress offload operations
->>    ALSA: axd: add Makefile
-> Please try to use subject lines matching the style for the subsystem, I
-> very nearly deleted this unread because it looks like an ALSA patch
-> series, not an ASoC one.
+Currently vmmc's property is wrong.
+If it needs to control two supplies, then it has to use vmmc/vqmmc-supply.
+(Card supply power and I/O Line supply Power.)
 
-OK sorry about that. I'll fix this in the next series.
+Signed-off-by: Jaehoon Chung <jh80.chung@samsung.com>
+---
+ arch/arm/boot/dts/exynos4412-odroid-common.dtsi | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
 
-Thanks,
-Qais
+diff --git a/arch/arm/boot/dts/exynos4412-odroid-common.dtsi b/arch/arm/boot/dts/exynos4412-odroid-common.dtsi
+index ca7d168..4ddabfd 100644
+--- a/arch/arm/boot/dts/exynos4412-odroid-common.dtsi
++++ b/arch/arm/boot/dts/exynos4412-odroid-common.dtsi
+@@ -461,10 +461,10 @@
+ &mshc_0 {
+ 	pinctrl-0 = <&sd4_clk &sd4_cmd &sd4_bus4 &sd4_bus8>;
+ 	pinctrl-names = "default";
+-	vmmc-supply = <&ldo20_reg &buck8_reg>;
++	vmmc-supply = <&ldo20_reg>;
++	vqmmc-supply = <&buck8_reg>;
+ 	mmc-pwrseq = <&emmc_pwrseq>;
+ 	status = "okay";
+-
+ 	num-slots = <1>;
+ 	broken-cd;
+ 	card-detect-delay = <200>;
+@@ -485,7 +485,8 @@
+ 	bus-width = <4>;
+ 	pinctrl-0 = <&sd2_clk &sd2_cmd &sd2_cd &sd2_bus4>;
+ 	pinctrl-names = "default";
+-	vmmc-supply = <&ldo4_reg &ldo21_reg>;
++	vmmc-supply = <&ldo21_reg>;
++	vqmmc-supply = <&ldo4_reg>;
+ 	cd-gpios = <&gpk2 2 0>;
+ 	cd-inverted;
+ 	status = "okay";
+-- 
+1.9.1
