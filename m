@@ -1,31 +1,55 @@
-From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH 0/1] ARM: dts: sun5i: inet98v_rev2 fix regulator
- for the usb wifi
-Date: Thu, 27 Aug 2015 20:37:30 +0200
-Message-ID: <1440700651-30575-1-git-send-email-hdegoede@redhat.com>
-Reply-To: hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH-v3 1/2] mfd: devicetree: bindings: 88pm800: Add DT
+ property for dual phase enable
+Date: Thu, 27 Aug 2015 19:45:26 +0100
+Message-ID: <20150827184526.GJ5313@sirena.org.uk>
+References: <1440420006-31556-1-git-send-email-vaibhav.hiremath@linaro.org>
+ <1440420006-31556-2-git-send-email-vaibhav.hiremath@linaro.org>
+ <20150824130205.GE3237@x1>
+ <55DB3012.6010904@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBDRZXY4CYYORB35R7WXAKGQEFNE5A4Y-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <http://groups.google.com/group/linux-sunxi/subscribe>
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Jelle van der Waa <jelle-oJJ1AqDjjO4@public.gmane.org>, Ralph Willekes <benadski-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="bgLLobvf7eP6VP5c"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <55DB3012.6010904-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Vaibhav Hiremath <vaibhav.hiremath-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Maxime,
 
-Here is a fixup patch for the patch adding a dts for the inet98v_rev2.
+--bgLLobvf7eP6VP5c
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-I'm not sure if you've merged the original patch yet, hence I'm sending
-this as a follow-up patch. If you've not yet merged the original patch
-feel free to squash this fix in.
+On Mon, Aug 24, 2015 at 08:24:10PM +0530, Vaibhav Hiremath wrote:
 
-Regards,
+> Mark,
 
-Hans
+> Any comments here before I spin V4.
+
+Please just resubmit things, seeing that a change was requested is
+usually a good indication that a new version is incoming.
+
+--bgLLobvf7eP6VP5c
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQEcBAEBCAAGBQJV31rFAAoJECTWi3JdVIfQffQH/j+CY+lmkV5ua302DB9BpZ4i
+ToEqZXTrKUm88s0FMz3UiGFJ2VKHhc46n0aeUO1Juow0ZALS7K+oMVcrT6vv7re8
+oPtUScluMlIHS0txKDyP2lHg0Ndat6y63zD7is8ep2baqieN4zVFGxlpl4S5GQsf
+yEAbwUuIm+dEcPO+M3D5kbysTrA8zmQ2mpx6X7nuvtRpg2EOtoKgnIJB7PPP/U8m
+XkFnqiw3Y+2peCS2rI4QK2jV/vVAk+XjVdckRS0+j1w2YdVHX00EKbDfPtBdBhib
+fy5zU8iKgpAA5TWIA9KSeZn459YhA2/WQEA7GtD39g9HPlicad9Pu+8+8LsjBn4=
+=aNq9
+-----END PGP SIGNATURE-----
+
+--bgLLobvf7eP6VP5c--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
