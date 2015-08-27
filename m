@@ -1,160 +1,60 @@
-From: vikas <vikas.manocha-qxv4g6HH51o@public.gmane.org>
-Subject: Re: [PATCH V8 1/2] mtd: spi-nor: Bindings for Cadence Quad SPI Flash
- Controller driver.
-Date: Thu, 27 Aug 2015 13:18:58 -0700
-Message-ID: <55DF70B2.3070204@st.com>
-References: <1440148851-14621-1-git-send-email-marex@denx.de> <55DF4C82.3070708@st.com> <201508272012.51185.marex@denx.de>
+From: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
+Subject: Re: [RFC PATCH] arm/arm64: build all dtbs for CONPILE_TEST
+Date: Thu, 27 Aug 2015 22:46:38 +0200
+Message-ID: <CAMuHMdXYBBxi6Y+ZW6nLP7+NEBcjvOtNWQGCgwArqUV95JyZTw@mail.gmail.com>
+References: <1440690994-5978-1-git-send-email-robh@kernel.org>
+	<CAOesGMjzBaobpLsS77UziWeYO9wo21SkdpWT=Pib6AM7DDKTnA@mail.gmail.com>
+	<CAL_JsqK+QHgCu4x-X+ShyWhj6g=+X-AC5AeCLm1DNYfFdCpH5A@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <201508272012.51185.marex-ynQEQJNshbs@public.gmane.org>
+In-Reply-To: <CAL_JsqK+QHgCu4x-X+ShyWhj6g=+X-AC5AeCLm1DNYfFdCpH5A-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>
-Cc: "linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Graham Moore <grmoore-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>, Alan Tull <atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Dinh Nguyen <dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>, Yves Vandervennet <yvanderv-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, "arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Hi Rob,
 
-On 08/27/2015 11:12 AM, Marek Vasut wrote:
-> On Thursday, August 27, 2015 at 07:44:34 PM, vikas wrote:
->> Hi,
->>
->> On 08/21/2015 02:20 AM, Marek Vasut wrote:
->>> From: Graham Moore <grmoore-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
->>>
->>> Add binding document for the Cadence QSPI controller.
->>>
->>> Signed-off-by: Graham Moore <grmoore-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
->>> Signed-off-by: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>
->>> Cc: Alan Tull <atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
->>> Cc: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->>> Cc: David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>
->>> Cc: Dinh Nguyen <dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
->>> Cc: Graham Moore <grmoore-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
->>> Cc: Vikas MANOCHA <vikas.manocha-qxv4g6HH51o@public.gmane.org>
->>> Cc: Yves Vandervennet <yvanderv-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
->>> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
->>> ---
->>>
->>>  .../devicetree/bindings/mtd/cadence-quadspi.txt    | 56
->>>  ++++++++++++++++++++++ 1 file changed, 56 insertions(+)
->>>  create mode 100644
->>>  Documentation/devicetree/bindings/mtd/cadence-quadspi.txt
->>>
->>> V2: Add cdns prefix to driver-specific bindings.
->>> V3: Use existing property "is-decoded-cs" instead of creating a
->>>
->>>     duplicate, "ext-decoder". Timing parameters are in nanoseconds,
->>>     not master reference clocks. Remove bus-num completely.
->>>
->>> V4: Add new properties fifo-width and trigger-address
->>> V7: - Prefix all of the Cadence-specific properties with cdns prefix,
->>>
->>>       those are in particular "cdns,is-decoded-cs", "cdns,fifo-depth",
->>>       "cdns,fifo-width", "cdns,trigger-address".
->>>     
->>>     - Drop bogus properties which were not used and were incorrect.
->>>
->>> V8: Align lines to 80 chars.
->>>
->>> diff --git a/Documentation/devicetree/bindings/mtd/cadence-quadspi.txt
->>> b/Documentation/devicetree/bindings/mtd/cadence-quadspi.txt new file
->>> mode 100644
->>> index 0000000..f248056
->>> --- /dev/null
->>> +++ b/Documentation/devicetree/bindings/mtd/cadence-quadspi.txt
->>> @@ -0,0 +1,56 @@
->>> +* Cadence Quad SPI controller
->>> +
->>> +Required properties:
->>> +- compatible : Should be "cdns,qspi-nor".
->>> +- reg : Contains two entries, each of which is a tuple consisting of a
->>> +	physical address and length. The first entry is the address and
->>> +	length of the controller register set. The second entry is the
->>> +	address and length of the QSPI Controller data area.
->>
->> still hooked up with  "Controller data area", it is ambiguous.
->> Use something which is more clear: Nor Flash memory mapped address.
-> 
-> I have to disagree, I will call it whatever it is called in the datasheet
-> and it is called "controller data area".
+On Thu, Aug 27, 2015 at 9:07 PM, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
+>> It would be useful to build all files, but it's not the behavior that
+>> COMPILE_TEST usually has.
+>
+> Just changing to dtb-n would be equivalent because there is no other
+> dependency to enable building. Code has other dependencies typically.
+> What dtb do we not want to built in an allyesconfig build? If dtb's
+> have any dependencies, that would be a bug. To really make this
+> equivalent to a driver using COMPILE_TEST, we would need kconfig
+> symbols specifically for each platform's dtbs. Then we would have the
+> 2 stage unhide (setting COMPILE_TEST) then enable the option.
+>
+> I was also thinking that perhaps we don't want to require a kconfig
+> symbol for every platform family. Adding a kconfig entry is the only
+> way to enable building a dtb ATM. I know there are 2 camps to this
+> policy though.
 
-It is preferable to use terminology which readers understand & that is the purpose
-of explaining it here otherwise we could have just pasted the doc link.
-I have to stop here for this point.
+I think it would be good to have a single Kconfig option (depending on
+COMPILE_TEST) to build all dtbs.
 
-> 
->>> +- interrupts : Unit interrupt specifier for the controller interrupt.
->>> +- clocks : phandle to the Quad SPI clock.
->>> +- cdns,fifo-depth : Size of the data FIFO in words.
->>> +- cdns,fifo-width : Bus width of the data FIFO in bytes.
->>> +- cdns,trigger-address : 32-bit indirect AHB trigger address.
->>> +
->>
->>> +Optional properties:
->> again, is it optional ? can the driver be used without these properties ?
-> 
-> Why wouldn't it be possible to use the driver with no SPI NOR attached to
-> it? It's a cornercase, but still a valid one.
+For drivers, COMPILE_TEST doesn't enable anything by itself, it just
+relaxes dependencies. Hence if any driver is broken, I can still
+disable that driver in the .config.
 
-that's not right, this controller is only spi flash controller.
+If any dtb is broken, I cannot disable it, except by disabling COMPILE_TEST,
+which I may not want to do for other reasons (e.g. I'm compile testing my
+driver). If there would be an extra Kconfig symbol for building all dtbs,
+I can still disable it.
 
-> 
->>> +- cdns,is-decoded-cs : Flag to indicate whether decoder is used or not.
->>
->> again, add info what the decoder is for ?
-> 
-> This is something Graham has to clarify. Based on the code (I'm sure you did
-> check the code), it's a 4:16 demuxer.
+Gr{oetje,eeting}s,
 
-Please clarify if possible & add the info for others benefit. This part is not common in other spi/nor controllers.
+                        Geert
 
-> 
->>> +
->>> +Optional subnodes:
->>> +Subnodes of the Cadence Quad SPI controller are spi slave nodes with
->>> additional +custom properties:
->>> +- cdns,read-delay : Delay for read capture logic, in clock cycles
->>> +- cdns,tshsl-ns : Delay in nanoseconds for the length that the master
->>> +                  mode chip select outputs are de-asserted between
->>> +		  transactions.
->>> +- cdns,tsd2d-ns : Delay in nanoseconds between one chip select being
->>> +                  de-activated and the activation of another.
->>> +- cdns,tchsh-ns : Delay in nanoseconds between last bit of current
->>> +                  transaction and deasserting the device chip select
->>> +		  (qspi_n_ss_out).
->>> +- cdns,tslch-ns : Delay in nanoseconds between setting qspi_n_ss_out low
->>> +                  and first bit transfer.
->>> +
->>> +Example:
->>> +
->>> +	qspi: spi@ff705000 {
->>> +		compatible = "cdns,qspi-nor";
->>> +		#address-cells = <1>;
->>> +		#size-cells = <0>;
->>> +		reg = <0xff705000 0x1000>,
->>> +		      <0xffa00000 0x1000>;
->>> +		interrupts = <0 151 4>;
->>> +		clocks = <&qspi_clk>;
->>> +		cdns,is-decoded-cs;
->>
->> flag value ?
-> 
-> Sorry, I don't quite understand the question. If you mean why there is no
-> value, it's because this is a boolean OF node, which just does't need to
-> have a value ; it's either present or not.
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
 
-you are right, thanks.
-
-Cheers,
-Vikas
-
-> 
-> Best regards,
-> Marek Vasut
-> .
-> 
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
