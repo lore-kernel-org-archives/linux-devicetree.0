@@ -1,105 +1,62 @@
-From: Peter Griffin <peter.griffin@linaro.org>
-Subject: [PATCH v2 4/5] [media] c8sectpfe: Update binding to reset-gpios
-Date: Thu, 27 Aug 2015 13:29:34 +0100
-Message-ID: <1440678575-21646-5-git-send-email-peter.griffin@linaro.org>
-References: <1440678575-21646-1-git-send-email-peter.griffin@linaro.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1440678575-21646-1-git-send-email-peter.griffin@linaro.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, maxime.coquelin@st.com, srinivas.kandagatla@gmail.com, patrice.chotard@st.com, mchehab@osg.samsung.com
-Cc: peter.griffin@linaro.org, devicetree@vger.kernel.org, lee.jones@linaro.org, linux-media@vger.kernel.org
+From: Gabriel Fernandez <gabriel.fernandez@linaro.org>
+Subject: [PATCH v4 0/4] PCI: st: provide support for dw pcie
+Date: Thu, 27 Aug 2015 14:34:13 +0200
+Message-ID: <1440678857-27118-1-git-send-email-gabriel.fernandez@linaro.org>
+Return-path: <linux-pci-owner@vger.kernel.org>
+Sender: linux-pci-owner@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Srinivas Kandagatla <srinivas.kandagatla@gmail.com>, Maxime Coquelin <maxime.coquelin@st.com>, Patrice Chotard <patrice.chotard@st.com>, Russell King <linux@arm.linux.org.uk>, Bjorn Helgaas <bhelgaas@google.com>, Jingoo Han <jg1.han@samsung.com>, Lucas Stach <l.stach@pengutronix.de>, Fabrice Gasnier <fabrice.gasnier@st.com>, Kishon Vijay Abraham I <kishon@ti.com>, Andrew Morton <akpm@linux-foundation.org>, " David S. Miller" <davem@davemloft.net>, Greg KH <gregkh@linuxfoundation.org>, Mauro Carvalho Chehab <mchehab@osg.samsung.com>, Joe Perches <joe@perches.com>, Tejun Heo <tj@kernel.org>, Arnd Bergmann <arnd@arndb.de>, Viresh Kumar <viresh.kumar@linaro.org>, Thierry Reding <treding>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, kernel@stlinux.com, linux-pci@vger.kernel.org, Lee Jones <lee.jones@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-gpio.txt documents that GPIO properties should be named
-"[<name>-]gpios", with <name> being the purpose of this
-GPIO for the device.
 
-This change has been done as one atomic commit.
+This patchset is based on v4.2-rc1 and is based on 
+[PATCH v8 0/6] PCI: hisi: Add PCIe host support for HiSilicon SoC Hip05
+patchset from Zhou Wang.
 
-Signed-off-by: Peter Griffin <peter.griffin@linaro.org>
----
- Documentation/devicetree/bindings/media/stih407-c8sectpfe.txt | 6 +++---
- arch/arm/boot/dts/stihxxx-b2120.dtsi                          | 4 ++--
- drivers/media/platform/sti/c8sectpfe/c8sectpfe-core.c         | 2 +-
- 3 files changed, 6 insertions(+), 6 deletions(-)
+Changes in v4:
+ - Remove pci: designware: remove my pci_common_init_dev() patch and
+	use [PATCH v8 3/6] PCI: designware: Add ARM64 support instead.
+	This patch is a good solution for me to disable IO support.
+ - add __init to st_pcie_probe() and use module_init() instead
+	device_initcall() to prevent the probe function from being
+	deferred and to prevent module unloading.
 
-diff --git a/Documentation/devicetree/bindings/media/stih407-c8sectpfe.txt b/Documentation/devicetree/bindings/media/stih407-c8sectpfe.txt
-index d4def76..e70d840 100644
---- a/Documentation/devicetree/bindings/media/stih407-c8sectpfe.txt
-+++ b/Documentation/devicetree/bindings/media/stih407-c8sectpfe.txt
-@@ -35,7 +35,7 @@ Required properties (tsin (child) node):
- 
- - tsin-num	: tsin id of the InputBlock (must be between 0 to 6)
- - i2c-bus	: phandle to the I2C bus DT node which the demodulators & tuners on this tsin channel are connected.
--- rst-gpio	: reset gpio for this tsin channel.
-+- reset-gpios	: reset gpio for this tsin channel.
- 
- Optional properties (tsin (child) node):
- 
-@@ -75,7 +75,7 @@ Example:
- 			tsin-num		= <0>;
- 			serial-not-parallel;
- 			i2c-bus			= <&ssc2>;
--			rst-gpio		= <&pio15 4 0>;
-+			reset-gpios		= <&pio15 4 GPIO_ACTIVE_HIGH>;
- 			dvb-card		= <STV0367_TDA18212_NIMA_1>;
- 		};
- 
-@@ -83,7 +83,7 @@ Example:
- 			tsin-num		= <3>;
- 			serial-not-parallel;
- 			i2c-bus			= <&ssc3>;
--			rst-gpio		= <&pio15 7 0>;
-+			reset-gpios		= <&pio15 7 GPIO_ACTIVE_HIGH>;
- 			dvb-card		= <STV0367_TDA18212_NIMB_1>;
- 		};
- 	};
-diff --git a/arch/arm/boot/dts/stihxxx-b2120.dtsi b/arch/arm/boot/dts/stihxxx-b2120.dtsi
-index c014173..f932bfd 100644
---- a/arch/arm/boot/dts/stihxxx-b2120.dtsi
-+++ b/arch/arm/boot/dts/stihxxx-b2120.dtsi
-@@ -6,8 +6,8 @@
-  * it under the terms of the GNU General Public License version 2 as
-  * published by the Free Software Foundation.
-  */
--
- #include <dt-bindings/clock/stih407-clks.h>
-+#include <dt-bindings/gpio/gpio.h>
- #include <dt-bindings/media/c8sectpfe.h>
- / {
- 	soc {
-@@ -115,7 +115,7 @@
- 				tsin-num	= <0>;
- 				serial-not-parallel;
- 				i2c-bus		= <&ssc2>;
--				rst-gpio	= <&pio15 4 0>;
-+				reset-gpios	= <&pio15 4 GPIO_ACTIVE_HIGH>;
- 				dvb-card	= <STV0367_TDA18212_NIMA_1>;
- 			};
- 		};
-diff --git a/drivers/media/platform/sti/c8sectpfe/c8sectpfe-core.c b/drivers/media/platform/sti/c8sectpfe/c8sectpfe-core.c
-index 3a91093..c691e13 100644
---- a/drivers/media/platform/sti/c8sectpfe/c8sectpfe-core.c
-+++ b/drivers/media/platform/sti/c8sectpfe/c8sectpfe-core.c
-@@ -822,7 +822,7 @@ static int c8sectpfe_probe(struct platform_device *pdev)
- 		}
- 		of_node_put(i2c_bus);
- 
--		tsin->rst_gpio = of_get_named_gpio(child, "rst-gpio", 0);
-+		tsin->rst_gpio = of_get_named_gpio(child, "reset-gpios", 0);
- 
- 		ret = gpio_is_valid(tsin->rst_gpio);
- 		if (!ret) {
+Changes in v3:
+ - Remove power management functions (was not fully tested)
+ - Remove configuration space range from dt binding
+ - Remove pci_common_init_dev() call in pcie-designware.c to avoid 
+   default IO space declaration. 
+
+Changes in v2:
+ - comestic corrections in device tree binding
+ - add pci-st.c into MAINTAINERS
+ - remove st_pcie_ops structure to avoid another level of indirection
+ - remove nasty busy-loop
+ - remove useless test using virt_to_phys()
+ - move disable io support into dw-pcie driver
+
+I don't change the st_pcie_abort_handler() function because abort handling
+is masked during boot.
+
+
+This patch-set introduces a STMicroelectronics PCIe controller.
+It's based on designware PCIe driver.
+
+Gabriel Fernandez (4):
+  ARM: STi: Kconfig update for PCIe support
+  PCI: st: Add Device Tree bindings for sti pcie
+  PCI: st: Provide support for the sti PCIe controller
+  MAINTAINERS: Add pci-st.c to ARCH/STI architecture
+
+ Documentation/devicetree/bindings/pci/st-pcie.txt |  53 ++
+ MAINTAINERS                                       |   1 +
+ arch/arm/mach-sti/Kconfig                         |   2 +
+ drivers/pci/host/Kconfig                          |   9 +
+ drivers/pci/host/Makefile                         |   1 +
+ drivers/pci/host/pci-st.c                         | 583 ++++++++++++++++++++++
+ 6 files changed, 649 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/pci/st-pcie.txt
+ create mode 100644 drivers/pci/host/pci-st.c
+
 -- 
 1.9.1
