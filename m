@@ -1,166 +1,106 @@
-From: Kenneth Lee <liguozhu-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
-Subject: Re: =?utf-8?B?562U5aSNOiBbUEFUQ0ggMS81XSBu?= =?utf-8?Q?et=3A_ad?=
- =?utf-8?Q?d?= Hisilicon Network Subsystem support (config and documents)
-Date: Thu, 27 Aug 2015 17:50:35 +0800
-Message-ID: <20150827095035.GB26498@Turing-Arch-b>
-References: <1439548222-231611-1-git-send-email-liguozhu@hisilicon.com>
- <1536926.jEJjsM70Lj@wuerfel>
- <161EFA05D917D0419F95C4CAEEF86C1094E95FAA@SZXEMA504-MBS.china.huawei.com>
- <2543796.7JthO5WCfI@wuerfel>
+From: Marcel Ziswiler <marcel.ziswiler@toradex.com>
+Subject: [PATCH] arm: tegra: dtsi whitespace clean-up for tegra20,
+ tegra30 and tegra124
+Date: Thu, 27 Aug 2015 11:44:48 +0200
+Message-ID: <1440668688-17288-1-git-send-email-marcel.ziswiler@toradex.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <2543796.7JthO5WCfI@wuerfel>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "pawel.moll-5wv7dgnIgG8@public.gmane.org" <pawel.moll-5wv7dgnIgG8@public.gmane.org>, "ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org" <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, "catalin.marinas-5wv7dgnIgG8@public.gmane.org" <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, "will.deacon-5wv7dgnIgG8@public.gmane.org" <will.deacon-5wv7dgnIgG8@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linuxarm <linuxarm-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, "paul.gortmaker-CWA4WttNNZF54TAoqtyWWQ@public.gmane.org" <paul.gortmaker-CWA4WttNNZF54TAoqtyWWQ@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org" <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: linux-tegra@vger.kernel.org
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Russell King <linux@arm.linux.org.uk>, Pawel Moll <pawel.moll@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Marcel Ziswiler <marcel.ziswiler@toradex.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Thierry Reding <thierry.reding@gmail.com>, Kumar Gala <galak@codeaurora.org>, Alexandre Courbot <gnurou@gmail.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Aug 21, 2015 at 04:00:35PM +0200, Arnd Bergmann wrote:
-> Date: Fri, 21 Aug 2015 16:00:35 +0200
-> From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-> To: "Liguozhu (Kenneth)" <liguozhu-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
-> CC: "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>,
->  "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>,
->  "pawel.moll-5wv7dgnIgG8@public.gmane.org" <pawel.moll-5wv7dgnIgG8@public.gmane.org>, "ijc+devicetree@hellion.o=
-rg.uk"
->  <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, "catalin.marinas-5wv7dgnIgG8@public.gmane.org"
->  <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, "will.deacon-5wv7dgnIgG8@public.gmane.org" <will.deacon-AbSShOkvfpQ@public.gmane.org=
-m>,
->  "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux=
-arm
->  <linuxarm-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, "paul.gortmaker-CWA4WttNNZF54TAoqtyWWQ@public.gmane.org"
->  <paul.gortmaker-CWA4WttNNZF54TAoqtyWWQ@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt@kernel=
-=2Eorg>,
->  "galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org" <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "zhangfei.gao@linaro.=
-org"
->  <zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org"
->  <netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org=
->,
->  "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org"
->  <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-> Subject: Re: =E7=AD=94=E5=A4=8D: [PATCH 1/5] net: add Hisilicon Netwo=
-rk Subsystem
->  support (config and documents)
-> User-Agent: KMail/4.11.5 (Linux/3.16.0-10-generic; KDE/4.11.5; x86_64=
-; ; )
-> Message-ID: <2543796.7JthO5WCfI@wuerfel>
->=20
-> On Monday 17 August 2015 01:28:07 Liguozhu wrote:
-> > Thanks, Arnd.=20
-> >=20
-> > Regarding the ae-name: it is the name of the Acceleration Engine. I=
-t is provided
-> > by the BIOS according to the position and the feature enabled of th=
-e IP.
-> > So "soc0" means it is on SoC No. 0, while "n4" means it is running =
-on=20
-> >"Non-dsaf mode 4". Ideally, we should setup the rule to name it. But=
- as I
-> > said in the patchset, the IP is original designed for a bare metal =
-solution,
-> > it is worthless to export all modes and we are planning to add more=
- mode
-> > for Linux itself in the IP in future version. So I think the better=
- way is
-> > to leave it as a "name" but add more meaning in the future.
->=20
-> The name property is a bit awkward. The position is normally implied =
-by
-> the location of the parent device in the DT, so you should not need t=
-hat
-> at all and instead derive it elsewhere. You can also add strings to t=
-he
-> compatible property instead of this, to signify differences in the pr=
-ogramming
-> that are based on how the IP block is used.
-> =20
-> > Regarding the ae-opts: it is the initial value for the AE's runtime=
- options,
-> > Currently, we have only "port number" (there are 6XGE+2GE port for =
-a DSAF AE)
-> > as option. But for future version, we will add other options such a=
-s "enable
-> > Spanning Tree Protocol algorithm)" and so on.=20
->=20
-> I think these can easily be converted into an index property and bool=
-ean
-> flags (present if true, absent otherwise) for additional features.
-> =20
-> > Should I add these background to somewhere?
->=20
-> The binding document needs to list all supported configurations, if y=
-ou
-> have a string property, describe specifically what strings are allowe=
-d
-> and what they mean, but better try to avoid strings altogether.
->=20
-> 	Arnd
-> _______________________________________________
-> linuxarm mailing list
-> linuxarm-hv44wF8Li93QT0dZR+AlfA@public.gmane.org
-> http://rnd-openeuler.huawei.com/mailman/listinfo/linuxarm
+There were a few cases of eight spaces being used instead of a tab
+character plus one case of using two spaces after an equal sign instead
+of just one which this patch fixes.
 
-Dear Arnd,
+Signed-off-by: Marcel Ziswiler <marcel.ziswiler@toradex.com>
+---
 
-We are working on the new PatchSet. I describe the new design here so i=
-n case
-you can tell us if we make something wrong.
+ arch/arm/boot/dts/tegra124.dtsi |  2 +-
+ arch/arm/boot/dts/tegra20.dtsi  |  4 ++--
+ arch/arm/boot/dts/tegra30.dtsi  | 10 +++++-----
+ 3 files changed, 8 insertions(+), 8 deletions(-)
 
-So now we will keep some attributes in enthernet node like this:
-
-	ethernet@0{
-		compatible =3D "hisilicon,hns-nic";
-		ae-name =3D "dsaf1";
-		port-id =3D <0>;
-	};
-
-ae-name is simply a name referring to the name of dsa_name in SAF node.
-
-port-id is the index of port provided by DSAF (the accelerator). DSAF c=
-an
-connect to 8 PHYs. Port 0 to 1 are both used for adminstration purpose.=
- They
-are called debug ports.=20
-
-The remaining 6 PHYs are taken according to the mode of DSAF.
-
-In NIC mode of DSAF, all 6 PHYs are taken as ethernet ports to the CPU.=
- The
-port-id can be 2 to 7. Here is the diagram:
-
-            +-----+---------------+
-            |            CPU      |
-            +-+-+-+---+-+-+-+-+-+-+
-              | |     | | | | | |
-	     debug       service=20
-             port         port
-	     (0,1)       (2-7)
-
-In Switch mode of DSAF, all 6 PHYs are taken as physical ports connect =
-to a
-LAN Switch while the CPU side assume itself have one single NIC connect=
- to
-this switch. In this case, the port-id will be 2 only.
-
-            +-----+---------------+
-            |            CPU      |
-            +-+-+-+---+-+-+-+-+-+-+
-              | |         | service port(2)
-	     debug   +------------+
-             port    |   switch   |
-             (0,1)   +-+-+-+-+-+-++
-                       | | | | | |
-                        external
-			 port
-
-
---=20
-			-Kenneth(Hisilicon)
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/arch/arm/boot/dts/tegra124.dtsi b/arch/arm/boot/dts/tegra124.dtsi
+index 1e204a6..a5c878e 100644
+--- a/arch/arm/boot/dts/tegra124.dtsi
++++ b/arch/arm/boot/dts/tegra124.dtsi
+@@ -636,7 +636,7 @@
+ 		reg = <0x0 0x70030000 0x0 0x10000>;
+ 		interrupts = <GIC_SPI 81 IRQ_TYPE_LEVEL_HIGH>;
+ 		clocks = <&tegra_car TEGRA124_CLK_HDA>,
+-		         <&tegra_car TEGRA124_CLK_HDA2HDMI>,
++			 <&tegra_car TEGRA124_CLK_HDA2HDMI>,
+ 			 <&tegra_car TEGRA124_CLK_HDA2CODEC_2X>;
+ 		clock-names = "hda", "hda2hdmi", "hda2codec_2x";
+ 		resets = <&tegra_car 125>, /* hda */
+diff --git a/arch/arm/boot/dts/tegra20.dtsi b/arch/arm/boot/dts/tegra20.dtsi
+index e058709..0a8d1a6 100644
+--- a/arch/arm/boot/dts/tegra20.dtsi
++++ b/arch/arm/boot/dts/tegra20.dtsi
+@@ -601,8 +601,8 @@
+ 			 <&tegra_car TEGRA20_CLK_PLL_E>;
+ 		clock-names = "pex", "afi", "pll_e";
+ 		resets = <&tegra_car 70>,
+-		         <&tegra_car 72>,
+-		         <&tegra_car 74>;
++			 <&tegra_car 72>,
++			 <&tegra_car 74>;
+ 		reset-names = "pex", "afi", "pcie_x";
+ 		status = "disabled";
+ 
+diff --git a/arch/arm/boot/dts/tegra30.dtsi b/arch/arm/boot/dts/tegra30.dtsi
+index fe04fb5..38e1e27 100644
+--- a/arch/arm/boot/dts/tegra30.dtsi
++++ b/arch/arm/boot/dts/tegra30.dtsi
+@@ -42,8 +42,8 @@
+ 			 <&tegra_car TEGRA30_CLK_CML0>;
+ 		clock-names = "pex", "afi", "pll_e", "cml";
+ 		resets = <&tegra_car 70>,
+-		         <&tegra_car 72>,
+-		         <&tegra_car 74>;
++			 <&tegra_car 72>,
++			 <&tegra_car 74>;
+ 		reset-names = "pex", "afi", "pcie_x";
+ 		status = "disabled";
+ 
+@@ -153,7 +153,7 @@
+ 				  &tegra_car TEGRA30_CLK_GR3D2>;
+ 			clock-names = "3d", "3d2";
+ 			resets = <&tegra_car 24>,
+-			         <&tegra_car 98>;
++				 <&tegra_car 98>;
+ 			reset-names = "3d", "3d2";
+ 		};
+ 
+@@ -455,7 +455,7 @@
+ 	};
+ 
+ 	i2c@7000c000 {
+-		compatible =  "nvidia,tegra30-i2c", "nvidia,tegra20-i2c";
++		compatible = "nvidia,tegra30-i2c", "nvidia,tegra20-i2c";
+ 		reg = <0x7000c000 0x100>;
+ 		interrupts = <GIC_SPI 38 IRQ_TYPE_LEVEL_HIGH>;
+ 		#address-cells = <1>;
+@@ -660,7 +660,7 @@
+ 		reg = <0x70030000 0x10000>;
+ 		interrupts = <GIC_SPI 81 IRQ_TYPE_LEVEL_HIGH>;
+ 		clocks = <&tegra_car TEGRA30_CLK_HDA>,
+-		         <&tegra_car TEGRA30_CLK_HDA2HDMI>,
++			 <&tegra_car TEGRA30_CLK_HDA2HDMI>,
+ 			 <&tegra_car TEGRA30_CLK_HDA2CODEC_2X>;
+ 		clock-names = "hda", "hda2hdmi", "hda2codec_2x";
+ 		resets = <&tegra_car 125>, /* hda */
+-- 
+2.4.3
