@@ -1,45 +1,55 @@
-From: Heiko Stuebner <heiko@sntech.de>
+From: Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
 Subject: Re: [PATCH 2/2] ARM: dts: rockchip: correct regulator PM properties
-Date: Thu, 27 Aug 2015 22:51:22 +0200
-Message-ID: <2079050.z559I6SEaj@phil>
-References: <1439923455-109818-1-git-send-email-briannorris@chromium.org> <10828643.SSUS2EOuvv@phil> <CAD=FV=UiCcqCm+W4=ExOps8Npi=mkdVgJ2zgdomOw3YqPhCqug@mail.gmail.com>
+Date: Thu, 27 Aug 2015 13:56:05 -0700
+Message-ID: <20150827205605.GA42154@google.com>
+References: <1439923455-109818-1-git-send-email-briannorris@chromium.org>
+ <10828643.SSUS2EOuvv@phil>
+ <CAD=FV=UiCcqCm+W4=ExOps8Npi=mkdVgJ2zgdomOw3YqPhCqug@mail.gmail.com>
+ <2079050.z559I6SEaj@phil>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAD=FV=UiCcqCm+W4=ExOps8Npi=mkdVgJ2zgdomOw3YqPhCqug@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Doug Anderson <dianders@chromium.org>
-Cc: Brian Norris <briannorris@chromium.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Brian Norris <computersforpeace@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Alexandru M Stan <amstan@chromium.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <2079050.z559I6SEaj@phil>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Cc: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Alexandru M Stan <amstan-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Am Donnerstag, 27. August 2015, 12:30:51 schrieb Doug Anderson:
-> Hi,
+On Thu, Aug 27, 2015 at 10:51:22PM +0200, Heiko Stuebner wrote:
+> Am Donnerstag, 27. August 2015, 12:30:51 schrieb Doug Anderson:
+> > If I understand correctly, the distinction between "standby" and "mem"
+> > is not too clearly defined, so if we wanted to use it for this it
+> > wouldn't be terrible?
+
+I never understood many clear definitions here either, personally.
+
+> From reading Documentation/power/states.txt it looks like the boot-cpu is 
+> supposed to retain power in the suspend state. Although we also do not lose 
+> "operating state" in our suspend I guess?
 > 
-> On Tue, Aug 18, 2015 at 11:19 PM, Heiko Stuebner <heiko@sntech.de> wrote:
-> > great, just take into account the deep vs. shallow suspend modes :-)
-> 
-> One note: do you think it would make sense to re-implement shallow
-> suspend as "standby"?  I had a proof of concept doing that in
-> <https://chromium-review.googlesource.com/#/c/275123/>.  One nice
-> advantage is that you "magically" get a second set of regulator states
-> for standby vs "mem".
+> So using the shallow suspend as standby sounds interesting, for the time when 
+> the deep suspend works too. If there is only one suspend state it 
+> automatically becomes the "mem"-state it seems.
 
-Somewhere I've read something about keeping wifi associated to an ap during 
-suspend which might be a candidate for such a distinction?
+It's not really "automatic", it's a product of this line:
 
+static const struct platform_suspend_ops rk3288_suspend_ops = {
+        .enter   = rk3288_suspend_enter,
+        .valid   = suspend_valid_only_mem,  <--- here
+        .prepare = rk3288_suspend_prepare,
+        .finish  = rk3288_suspend_finish,
+};
 
-> If I understand correctly, the distinction between "standby" and "mem"
-> is not too clearly defined, so if we wanted to use it for this it
-> wouldn't be terrible?
+and the fact that we don't check the 'state' argument in
+.enter/.prepare/.finish.
 
->From reading Documentation/power/states.txt it looks like the boot-cpu is 
-supposed to retain power in the suspend state. Although we also do not lose 
-"operating state" in our suspend I guess?
+But still, I'm not sure it's productive to rename shallow until we support
+deep.
 
-So using the shallow suspend as standby sounds interesting, for the time when 
-the deep suspend works too. If there is only one suspend state it 
-automatically becomes the "mem"-state it seems.
-
-
-Heiko
+Regards,
+Brian
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
