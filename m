@@ -1,67 +1,45 @@
-From: Javier Martinez Canillas <javier@osg.samsung.com>
-Subject: Re: [PATCH] ARM: dts: use vqmmc-supply of emmc/sd for
- exynos4412-odroid-common
-Date: Thu, 27 Aug 2015 12:03:21 +0200
-Message-ID: <55DEE069.1030700@osg.samsung.com>
-References: <1440667758-14960-1-git-send-email-jh80.chung@samsung.com>
+From: Lee Jones <lee@kernel.org>
+Subject: Re: [PATCH v5 3/3] ARM: bcm2835: Add DT for the firmware clocks
+ driver.
+Date: Thu, 27 Aug 2015 11:48:54 +0100
+Message-ID: <20150827104854.GA4796@x1>
+References: <1439507142-2965-1-git-send-email-eric@anholt.net>
+ <1439507142-2965-4-git-send-email-eric@anholt.net>
+ <55CEBC6B.9070001@wwwdotorg.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <1440667758-14960-1-git-send-email-jh80.chung@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Jaehoon Chung <jh80.chung@samsung.com>, linux-samsung-soc@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Kukjin Kim <kgene@kernel.org>, Krzysztof Kozlowski <k.kozlowski@samsung.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <55CEBC6B.9070001@wwwdotorg.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Stephen Warren <swarren@wwwdotorg.org>
+Cc: Eric Anholt <eric@anholt.net>, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-rpi-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Stephen Boyd <sboyd@codeaurora.org>, Mike Turquette <mturquette@linaro.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hello Jaehoon,
+On Fri, 14 Aug 2015, Stephen Warren wrote:
 
-On 08/27/2015 11:29 AM, Jaehoon Chung wrote:
-> Currently vmmc's property is wrong.
-> If it needs to control two supplies, then it has to use vmmc/vqmmc-supply.
-> (Card supply power and I/O Line supply Power.)
+> On 08/13/2015 05:05 PM, Eric Anholt wrote:
+> > Signed-off-by: Eric Anholt <eric@anholt.net>
+> > Acked-by: Lee Jones <lee@kernel.org>
 > 
-> Signed-off-by: Jaehoon Chung <jh80.chung@samsung.com>
-> ---
->  arch/arm/boot/dts/exynos4412-odroid-common.dtsi | 7 ++++---
->  1 file changed, 4 insertions(+), 3 deletions(-)
+> A patch description might be nice, although admittedly the subject seems
+> clear enough.
+
+Agreed that the subject is clear enough on this occasion.
+
+> > diff --git a/arch/arm/boot/dts/bcm2835-rpi.dtsi b/arch/arm/boot/dts/bcm2835-rpi.dtsi
 > 
-> diff --git a/arch/arm/boot/dts/exynos4412-odroid-common.dtsi b/arch/arm/boot/dts/exynos4412-odroid-common.dtsi
-> index ca7d168..4ddabfd 100644
-> --- a/arch/arm/boot/dts/exynos4412-odroid-common.dtsi
-> +++ b/arch/arm/boot/dts/exynos4412-odroid-common.dtsi
-> @@ -461,10 +461,10 @@
->  &mshc_0 {
->  	pinctrl-0 = <&sd4_clk &sd4_cmd &sd4_bus4 &sd4_bus8>;
->  	pinctrl-names = "default";
-> -	vmmc-supply = <&ldo20_reg &buck8_reg>;
-> +	vmmc-supply = <&ldo20_reg>;
-> +	vqmmc-supply = <&buck8_reg>;
->  	mmc-pwrseq = <&emmc_pwrseq>;
->  	status = "okay";
-> -
->  	num-slots = <1>;
->  	broken-cd;
->  	card-detect-delay = <200>;
-> @@ -485,7 +485,8 @@
->  	bus-width = <4>;
->  	pinctrl-0 = <&sd2_clk &sd2_cmd &sd2_cd &sd2_bus4>;
->  	pinctrl-names = "default";
-> -	vmmc-supply = <&ldo4_reg &ldo21_reg>;
-> +	vmmc-supply = <&ldo21_reg>;
-> +	vqmmc-supply = <&ldo4_reg>;
->  	cd-gpios = <&gpk2 2 0>;
->  	cd-inverted;
->  	status = "okay";
->
+> > +		firmware_clocks: firmware-clocks {
+> > +			compatible = "raspberrypi,bcm2835-firmware-clocks";
+> > +			#clock-cells = <1>;
+> > +			raspberrypi,firmware = <&firmware>;
+> > +		};
+> 
+> No need to resend for this, but just a background note: DT node names
+> usually contain a device type not a device identity, so "clocks" not
+> "firmware-clocks" would be typical.
 
-I didn't check against the board schematics
-but the change makes sense to me.
+Please fix this up when you re-send the set.
 
-Reviewed-by: Javier Martinez Canillas <javier@osg.samsung.com>
- 
-Best regards,
--- 
-Javier Martinez Canillas
-Open Source Group
-Samsung Research America
+> This patch,
+> Acked-by: Stephen Warren <swarren@wwwdotorg.org>
