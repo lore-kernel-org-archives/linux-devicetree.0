@@ -1,34 +1,118 @@
-From: Andy Gross <agross@codeaurora.org>
-Subject: Re: [PATCH v2 5/6] ARM: dts: qs600: add alias to serial0
-Date: Wed, 26 Aug 2015 23:53:48 -0500
-Message-ID: <20150827045348.GK28274@qualcomm.com>
-References: <1439903069-19752-1-git-send-email-srinivas.kandagatla@linaro.org>
- <1439903427-20317-1-git-send-email-srinivas.kandagatla@linaro.org>
- <20150825214622.GC12349@qualcomm.com>
+From: sundeep subbaraya <sundeep.lkml-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 1/2] usb: chipidea: add xilinx zynq platform data
+Date: Thu, 27 Aug 2015 10:59:22 +0530
+Message-ID: <CALHRZuqFtaRFNd9D=a+x2rZ2848ZOGYbTkSWCHxNPcW_NvocxA@mail.gmail.com>
+References: <1440602865-30468-1-git-send-email-nathan.sullivan@ni.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20150825214622.GC12349@qualcomm.com>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Cc: linux-arm-msm@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Russell King <linux@arm.linux.org.uk>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1440602865-30468-1-git-send-email-nathan.sullivan-acOepvfBmUk@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Nathan Sullivan <nathan.sullivan-acOepvfBmUk@public.gmane.org>, Subbaraya Sundeep Bhatta <sbhatta-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Cc: Peter.Chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Aug 25, 2015 at 04:46:22PM -0500, Andy Gross wrote:
-> On Tue, Aug 18, 2015 at 02:10:27PM +0100, Srinivas Kandagatla wrote:
-> > This patch add alias node with serial0.
-> > 
-> > Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-> > ---
-> >  arch/arm/boot/dts/qcom-apq8064-cm-qs600.dts | 4 ++++
-> >  1 file changed, 4 insertions(+)
-> 
-> Looks fine.  Applied.
+Hi,
 
-Scratch that.  I dropped it from the patch list due to stephen's set.
 
--- 
-Qualcomm Innovation Center, Inc.
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+On Wed, Aug 26, 2015 at 8:57 PM, Nathan Sullivan <nathan.sullivan-acOepvfBmUk@public.gmane.org> wrote:
+> The Xilinx Zynq udc does not need the CI_HDRC_DISABLE_STREAMING flag,
+> unlike the default platform data.  Add platform data specific to the
+> Zynq udc.
+>
+> Based on a patch by the same name from the Xilinx vendor tree.
+
+I am that Xilinx guy who sent this patch :). It is in Xilinx tree as
+temporary fix and
+I did not debug further why UDC works only when streaming is enabled.
+Probably this is right time to post my question here.
+I was expecting like:
+Streaming disabled - both low bandwidth and high bandwidth systems
+should work fine
+Streaming enabled - only for high bandwidth systems
+but this is not the case, Zynq UDC works only when Streaming is enabled.
+Please correct me if I am wrong.
+
+Thanks,
+Sundeep
+
+>
+> Signed-off-by: Nathan Sullivan <nathan.sullivan-acOepvfBmUk@public.gmane.org>
+> ---
+>  drivers/usb/chipidea/ci_hdrc_usb2.c |   25 +++++++++++++++++++------
+>  1 file changed, 19 insertions(+), 6 deletions(-)
+>
+> diff --git a/drivers/usb/chipidea/ci_hdrc_usb2.c b/drivers/usb/chipidea/ci_hdrc_usb2.c
+> index 9eae1a1..4456d2c 100644
+> --- a/drivers/usb/chipidea/ci_hdrc_usb2.c
+> +++ b/drivers/usb/chipidea/ci_hdrc_usb2.c
+> @@ -12,6 +12,7 @@
+>  #include <linux/dma-mapping.h>
+>  #include <linux/module.h>
+>  #include <linux/of.h>
+> +#include <linux/of_platform.h>
+>  #include <linux/phy/phy.h>
+>  #include <linux/platform_device.h>
+>  #include <linux/usb/chipidea.h>
+> @@ -30,18 +31,36 @@ static const struct ci_hdrc_platform_data ci_default_pdata = {
+>         .flags          = CI_HDRC_DISABLE_STREAMING,
+>  };
+>
+> +static struct ci_hdrc_platform_data ci_zynq_pdata = {
+> +       .capoffset      = DEF_CAPOFFSET,
+> +};
+> +
+> +static const struct of_device_id ci_hdrc_usb2_of_match[] = {
+> +       { .compatible = "chipidea,usb2"},
+> +       { .compatible = "xlnx,zynq-usb-2.20a", .data = &ci_zynq_pdata},
+> +       { }
+> +};
+> +MODULE_DEVICE_TABLE(of, ci_hdrc_usb2_of_match);
+> +
+>  static int ci_hdrc_usb2_probe(struct platform_device *pdev)
+>  {
+>         struct device *dev = &pdev->dev;
+>         struct ci_hdrc_usb2_priv *priv;
+>         struct ci_hdrc_platform_data *ci_pdata = dev_get_platdata(dev);
+>         int ret;
+> +       const struct of_device_id *match;
+>
+>         if (!ci_pdata) {
+>                 ci_pdata = devm_kmalloc(dev, sizeof(*ci_pdata), GFP_KERNEL);
+>                 *ci_pdata = ci_default_pdata;   /* struct copy */
+>         }
+>
+> +       match = of_match_device(ci_hdrc_usb2_of_match, &pdev->dev);
+> +       if (match && match->data) {
+> +               /* struct copy */
+> +               *ci_pdata = *(struct ci_hdrc_platform_data *)match->data;
+> +       }
+> +
+>         priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
+>         if (!priv)
+>                 return -ENOMEM;
+> @@ -96,12 +115,6 @@ static int ci_hdrc_usb2_remove(struct platform_device *pdev)
+>         return 0;
+>  }
+>
+> -static const struct of_device_id ci_hdrc_usb2_of_match[] = {
+> -       { .compatible = "chipidea,usb2" },
+> -       { }
+> -};
+> -MODULE_DEVICE_TABLE(of, ci_hdrc_usb2_of_match);
+> -
+>  static struct platform_driver ci_hdrc_usb2_driver = {
+>         .probe  = ci_hdrc_usb2_probe,
+>         .remove = ci_hdrc_usb2_remove,
+> --
+> 1.7.10.4
+>
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-kernel" in
+> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> Please read the FAQ at  http://www.tux.org/lkml/
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
