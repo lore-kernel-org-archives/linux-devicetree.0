@@ -1,122 +1,76 @@
-From: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
-Subject: Re: [PATCH v10 1/5] mtd: nand: vf610_nfc: Freescale NFC for VF610,
- MPC5125 and others
-Date: Thu, 27 Aug 2015 10:25:15 -0700
-Message-ID: <9ccab0ac37e59f58b16718708653d7ea@agner.ch>
-References: <1438594050-4595-1-git-send-email-stefan@agner.ch>
- <1438594050-4595-2-git-send-email-stefan@agner.ch>
- <20150825201631.GK81844@google.com>
- <bf1ed158fe08b51c4668faffde44083f@agner.ch>
- <20150827163421.GX81844@google.com>
+From: Pratyush Anand <pratyush.anand@gmail.com>
+Subject: Re: [PATCH v4 3/4] PCI: st: Provide support for the sti PCIe
+ controller
+Date: Thu, 27 Aug 2015 23:01:16 +0530
+Message-ID: <CAHM4w1=g=UFoz=R-6hxJC0=fSieN1WDvZT97ykL1b3_YPhBjZg@mail.gmail.com>
+References: <1440678857-27118-1-git-send-email-gabriel.fernandez@linaro.org>
+ <1440678857-27118-4-git-send-email-gabriel.fernandez@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20150827163421.GX81844-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, sebastian-E0PNVn5OA6ohrxcnuTQ+TQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, marb-Z4QKGCRq86k@public.gmane.org, aaron-yuhzfaV+M/Wz3Dx2OeFgIA@public.gmane.org, bpringlemeir-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, albert.aribaud-iEu9NFBzPZE@public.gmane.org, klimov.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Bill Pringlemeir <bpringlemeir-ygJ1pmMJ17cAvxtiuMwx3w@public.gmane.org>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1440678857-27118-4-git-send-email-gabriel.fernandez@linaro.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Gabriel Fernandez <gabriel.fernandez@linaro.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, Andrew Lunn <andrew@lunn.ch>, kernel@stlinux.com, Viresh Kumar <viresh.kumar@linaro.org>, Liviu Dudau <liviu.dudau@arm.com>, Sachin Kamat <sachin.kamat@samsung.com>, linux-kernel@vger.kernel.org, Tanmay Inamdar <tinamdar@apm.com>, Lee Jones <lee.jones@linaro.org>, Mauro Carvalho Chehab <mchehab@osg.samsung.com>, Phil Edworthy <phil.edworthy@renesas.com>, Russell King <linux@arm.linux.org.uk>, Pawel Moll <pawel.moll@arm.com>, Jingoo Han <jg1.han@samsung.com>, Kishon Vijay Abraham I <kishon@ti.com>, Murali Karicheri <m-karicheri2@ti.com>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, Thierry Reding <treding@nvidia.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Tejun Heo <tj@kernel.org>, Rob
 List-Id: devicetree@vger.kernel.org
 
-On 2015-08-27 09:34, Brian Norris wrote:
-> On Wed, Aug 26, 2015 at 06:02:31PM -0700, Stefan Agner wrote:
->> On 2015-08-25 13:16, Brian Norris wrote:
->> > On Mon, Aug 03, 2015 at 11:27:26AM +0200, Stefan Agner wrote:
->> >> diff --git a/drivers/mtd/nand/vf610_nfc.c b/drivers/mtd/nand/vf610_nfc.c
->> >> new file mode 100644
->> >> index 0000000..5c8dfe8
->> >> --- /dev/null
->> >> +++ b/drivers/mtd/nand/vf610_nfc.c
->> >> @@ -0,0 +1,645 @@
->> >
->> > ...
->> >
->> >> +/*
->> >> + * This function supports Vybrid only (MPC5125 would have full RB and four CS)
->> >> + */
->> >> +static void vf610_nfc_select_chip(struct mtd_info *mtd, int chip)
->> >> +{
->> >> +#ifdef CONFIG_SOC_VF610
->> >
->> > Why the #ifdef? I don't see anything compile-time specific to SOC_VF610.
->> >
->> > If this is trying to handle the comment above ("This function supports
->> > Vybrid only (MPC5125 would have full RB and four CS)") then that's the
->> > wrong way of doing it, as you need to support multiplatform kernels.
->> > You'll need to have a way to differentiate the different platform
->> > support at runtime, not compile time.
->>
->> Yes it is trying to handle the comment above. Well, the other two
->> platforms I am aware of are also different architectures... (PowerPC and
->> ColdFire). I think we won't have a multi-architecture kernel anytime
->> soon,
-> 
-> Ha, right. Sorry, I don't really know this particular IP.
-> 
->> hence I think removing the code at compile time is the right thing
->> todo.
-> 
-> I don't believe that conclusion follows though.
-> 
->> However, probably CONFIG_SOC_VF610 is the wrong symbol then, I could
->> just use CONFIG_ARM and add a comment that this might be different on
->> another other ARM SoC than VF610.
->>
->> Just checked CodingStyle, and I see that IS_ENABLED is the preferred way
->> for conditional compiling.
->>
->> So my suggestion:
->>
->> static void vf610_nfc_select_chip(struct mtd_info *mtd, int chip)
->> {
->> 	struct vf610_nfc *nfc = mtd_to_nfc(mtd);
->> 	u32 tmp = vf610_nfc_read(nfc, NFC_ROW_ADDR);
->>
->> 	if (!IS_ENABLED(CONFIG_ARM))
->> 		return;
->>
->> 	/*
->> 	 * This code is only tested on the ARM platform VF610
->> 	 * PowerPC based MPC5125 would have full RB and four CS
->> 	 */
->> ....
->>
->> With that the compiler should be able to remove this (currently) ARM
->> VF610 specific code on the other supported architectures...
->>
->> What do you think?
-> 
-> The code structure isn't bad, and yes, IS_ENABLED() would be preferable,
-> as it removes some of the problems with #ifdef, but I still don't think
-> the processor architecture has much to do with the version of the IP.
+Hi Gabriel,
 
-Well yes, the processor architecture has probably not much to do with
-the IP version.
+Looks good to me.
 
-However, that particular problem, the wiring up of the CS/RB signals, is
-probably more SoC (as a whole) specific, and how that is done might have
-some relation which architecture is in use...
+On Thu, Aug 27, 2015 at 6:04 PM, Gabriel Fernandez
+<gabriel.fernandez@linaro.org> wrote:
+> sti pcie is built around a Synopsis Designware PCIe IP.
+>
+> Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
+> Signed-off-by: Gabriel Fernandez <gabriel.fernandez@linaro.org>
 
-I do not have a strong opinion on this, so we might as well go with the
-run-time distinction using compatible. If there are different IP
-variants within one architecture, we anyway would need to do that.
 
-> The canonical way of distiguishing per-IP revisions is to key on the
-> compatible property. So you'd have some kind of enum, which would
-> currently only have an entry for VF610. i.e.:
-> 
-> 	/* MPC5125 not yet supported */
-> 	if (nfc->revision != NAND_VFC610)
-> 		return;
-> 
+> +static int st_pcie_link_up(struct pcie_port *pp)
+> +{
+> +       u32 status;
+> +       int link_up;
 
-Ok, just checked, I can use the data field of the of table to assign
-specific data to a compatible string, similar to how pxa3xx_nand.c does
-it.
+nit: why not bool
 
---
-Stefan
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> +       int count = 0;
+
+[...]
+
+> +static void st_pcie_board_reset(struct pcie_port *pp)
+> +{
+> +       struct st_pcie *pcie = to_st_pcie(pp);
+> +
+> +       if (!gpio_is_valid(pcie->reset_gpio))
+> +               return;
+> +
+> +       if (gpio_direction_output(pcie->reset_gpio, 0)) {
+> +               dev_err(pp->dev, "Cannot set PERST# (gpio %u) to output\n",
+> +                       pcie->reset_gpio);
+> +               return;
+> +       }
+> +
+> +       /* From PCIe spec */
+> +       msleep(2);
+> +       gpio_direction_output(pcie->reset_gpio, 1);
+> +
+> +       /*
+> +        * PCIe specification states that you should not issue any config
+> +        * requests until 100ms after asserting reset, so we enforce that here
+> +        */
+> +       msleep(100);
+
+IIRC, specification says to wait after link training completes. So
+shouldn't it be after st_pcie_enable_ltssm. Moreover, I wonder why
+others do not need it.
+
+Reviewed-by: Pratyush Anand <pratyush.anand@gmail.com>
