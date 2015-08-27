@@ -1,76 +1,58 @@
-From: Pratyush Anand <pratyush.anand@gmail.com>
-Subject: Re: [PATCH v4 3/4] PCI: st: Provide support for the sti PCIe
- controller
-Date: Thu, 27 Aug 2015 23:01:16 +0530
-Message-ID: <CAHM4w1=g=UFoz=R-6hxJC0=fSieN1WDvZT97ykL1b3_YPhBjZg@mail.gmail.com>
-References: <1440678857-27118-1-git-send-email-gabriel.fernandez@linaro.org>
- <1440678857-27118-4-git-send-email-gabriel.fernandez@linaro.org>
+From: Bjorn Andersson <bjorn.andersson-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>
+Subject: [PATCH 0/4] Qualcomm Shared Memory State Machines
+Date: Thu, 27 Aug 2015 10:37:54 -0700
+Message-ID: <1440697078-4106-1-git-send-email-bjorn.andersson@sonymobile.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1440678857-27118-4-git-send-email-gabriel.fernandez@linaro.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Gabriel Fernandez <gabriel.fernandez@linaro.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, Andrew Lunn <andrew@lunn.ch>, kernel@stlinux.com, Viresh Kumar <viresh.kumar@linaro.org>, Liviu Dudau <liviu.dudau@arm.com>, Sachin Kamat <sachin.kamat@samsung.com>, linux-kernel@vger.kernel.org, Tanmay Inamdar <tinamdar@apm.com>, Lee Jones <lee.jones@linaro.org>, Mauro Carvalho Chehab <mchehab@osg.samsung.com>, Phil Edworthy <phil.edworthy@renesas.com>, Russell King <linux@arm.linux.org.uk>, Pawel Moll <pawel.moll@arm.com>, Jingoo Han <jg1.han@samsung.com>, Kishon Vijay Abraham I <kishon@ti.com>, Murali Karicheri <m-karicheri2@ti.com>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, Thierry Reding <treding@nvidia.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Tejun Heo <tj@kernel.org>, Rob
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Gabriel,
+This series implements the two different mechanisms for propagating single bit
+state information, used on the various Qualcomm platforms.
 
-Looks good to me.
+The system was traditionally used by the modem and application processor to
+convey information about boot progress, power states, error handling and so on.
+This was implemented as SMSM, with status bits representing a single local
+state.
 
-On Thu, Aug 27, 2015 at 6:04 PM, Gabriel Fernandez
-<gabriel.fernandez@linaro.org> wrote:
-> sti pcie is built around a Synopsis Designware PCIe IP.
->
-> Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
-> Signed-off-by: Gabriel Fernandez <gabriel.fernandez@linaro.org>
+As the complexity of the SoC grew the state bits array grew and the need for
+targeting specific state information at specific remote processors appeared.
+SMP2P solves this by having separate shared memory regions per processor-pair.
 
+This state information is e.g. used to convey progress and status of remote
+firmware loading. Individual bits maps to various stages of the boot and error
+states.
 
-> +static int st_pcie_link_up(struct pcie_port *pp)
-> +{
-> +       u32 status;
-> +       int link_up;
+As some of these states on some platforms are passed as physical signals
+instead, the two drivers are modelled as gpio- and interrupt-controllers -
+providing a nice abstraction both in device tree sense and Linux implementation
+sense.
 
-nit: why not bool
+Bjorn Andersson (4):
+  dt-binding: gpio: Add Qualcomm SMSM device tree documentation
+  gpio: qcom-smsm: Add driver for Qualcomm SMSM
+  dt-binding: gpio: Introduce qcom,smp2p binding documentation
+  gpio: qcom-smp2p: Qualcomm Shared Memory Point to Point
 
-> +       int count = 0;
+ .../devicetree/bindings/gpio/qcom,smp2p.txt        | 112 ++++
+ .../devicetree/bindings/gpio/qcom,smsm.txt         | 114 ++++
+ drivers/gpio/Kconfig                               |  15 +
+ drivers/gpio/Makefile                              |   2 +
+ drivers/gpio/gpio-qcom-smp2p.c                     | 601 ++++++++++++++++++++
+ drivers/gpio/gpio-qcom-smsm.c                      | 631 +++++++++++++++++++++
+ 6 files changed, 1475 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/gpio/qcom,smp2p.txt
+ create mode 100644 Documentation/devicetree/bindings/gpio/qcom,smsm.txt
+ create mode 100644 drivers/gpio/gpio-qcom-smp2p.c
+ create mode 100644 drivers/gpio/gpio-qcom-smsm.c
 
-[...]
+-- 
+1.8.2.2
 
-> +static void st_pcie_board_reset(struct pcie_port *pp)
-> +{
-> +       struct st_pcie *pcie = to_st_pcie(pp);
-> +
-> +       if (!gpio_is_valid(pcie->reset_gpio))
-> +               return;
-> +
-> +       if (gpio_direction_output(pcie->reset_gpio, 0)) {
-> +               dev_err(pp->dev, "Cannot set PERST# (gpio %u) to output\n",
-> +                       pcie->reset_gpio);
-> +               return;
-> +       }
-> +
-> +       /* From PCIe spec */
-> +       msleep(2);
-> +       gpio_direction_output(pcie->reset_gpio, 1);
-> +
-> +       /*
-> +        * PCIe specification states that you should not issue any config
-> +        * requests until 100ms after asserting reset, so we enforce that here
-> +        */
-> +       msleep(100);
-
-IIRC, specification says to wait after link training completes. So
-shouldn't it be after st_pcie_enable_ltssm. Moreover, I wonder why
-others do not need it.
-
-Reviewed-by: Pratyush Anand <pratyush.anand@gmail.com>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
