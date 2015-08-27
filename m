@@ -1,111 +1,73 @@
-From: Punit Agrawal <punit.agrawal-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH 1/3] dt-bindings: thermal: Add binding document for Mediatek thermal controller
-Date: Thu, 27 Aug 2015 12:49:39 +0100
-Message-ID: <9hh1tepj6i4.fsf@e105922-lin.cambridge.arm.com>
-References: <1440657677-2890-1-git-send-email-s.hauer@pengutronix.de>
-	<1440657677-2890-2-git-send-email-s.hauer@pengutronix.de>
+From: Hanjun Guo <hanjun.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v7 8/8] clocksource: simplify ACPI code in arm_arch_timer.c
+Date: Thu, 27 Aug 2015 20:02:28 +0800
+Message-ID: <55DEFC54.4090904@linaro.org>
+References: <=fu.wei@linaro.org> <1440435683-7343-1-git-send-email-fu.wei@linaro.org> <1440435683-7343-9-git-send-email-fu.wei@linaro.org> <alpine.DEB.2.11.1508241942450.3873@nanos> <CADyBb7sVGePKtU45_DBGd74fykAPVshmbnRQJDDOrrvoHTGcKQ@mail.gmail.com> <alpine.DEB.2.11.1508252113590.15006@nanos>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1440657677-2890-2-git-send-email-s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org> (Sascha
-	Hauer's message of "Thu, 27 Aug 2015 08:41:15 +0200")
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Zhang Rui <rui.zhang-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Eduardo Valentin <edubezval-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <alpine.DEB.2.11.1508252113590.15006@nanos>
+Sender: linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Fu Wei <fu.wei-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Suravee Suthikulpanit <Suravee.Suthikulpanit-5C7GfCeVMHo@public.gmane.org>, Linaro ACPI Mailman List <linaro-acpi-cunTk1MwBs8s++Sfvej+rw@public.gmane.org>, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Wei Fu <tekkamanninja-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, G Gregory <graeme.gregory-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Al Stone <al.stone-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Vipul Gandhi <vgandhi-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>, Jon Masters <jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Leo Duran <leo.duran-5C7GfCeVMHo@public.gmane.org>, Jonathan Corbet <corbet-T1hC0tSOHrs@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Rafael Wysocki <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, dyoung-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, panand-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-[ + device tree folks ]
+Hi Thomas,
 
-Hi Sascha,
+Thanks for the comments, I got some questions and
+reply below.
 
-When introducing a new binding, it is a good idea to get reviews from
-the device tree maintainers. I've added a few folks here. Please keep
-them in the loop for future postings.
+On 08/26/2015 03:17 AM, Thomas Gleixner wrote:
+> On Wed, 26 Aug 2015, Fu Wei wrote:
+>>>>   /* Initialize per-processor generic timer */
+>>>> -static int __init arch_timer_acpi_init(struct acpi_table_header *table)
+>>>> +void __init arch_timer_acpi_init(void)
+>>>>   {
+>>>
+>>> And how is that supposed to work when we have next generation CPUs
+>>> which implement a different timer? You break multisystem kernels that
+>>> way.
 
-Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org> writes:
+Sorry, I think I missed some context here that I don't understand
+why the code here will break multisystem kernels? I'm trying to
+understand the problem here and update the code :)
 
-> Signed-off-by: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-> Reviewed-by: Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-
-Please add a commit log.
-
-> ---
->  .../bindings/thermal/mediatek-thermal.txt          | 38 ++++++++++++++++++++++
->  include/dt-bindings/thermal/mt8173.h               | 13 ++++++++
->  2 files changed, 51 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/thermal/mediatek-thermal.txt
->  create mode 100644 include/dt-bindings/thermal/mt8173.h
+>>
+>> yes, you are right, If there is a  next generation CPUs  which
+>> implement a different timer, (maybe) this driver can not work.
+>> we may need a new timer driver.
+>>
+>> But,
+>> (1) for now,  aarch64  core always has the arch timer(this timer is
+>> part of aarch64 architecture).
+>> and the existing code make  ARM64 kernel "select ARM_ARCH_TIMER "
+>> (2) GTDT is designed for generic timer, so in this call "
+>> arch_timer_acpi_init"  we  parse the gtdt info.
+>> (3) once we have a ARM64 CPUs which implement a different timer, we
+>> may need to select a right timer in the config stage.
+>> and this timer may not be described in GTDT.  So we can implement
+>> another arch_timer_acpi_init by that time in new timer driver..
+>> if the new time still uses GTDT(or new version GTDT), we may need to
+>> update gtdt.c for new timer by that time.
 >
-> diff --git a/Documentation/devicetree/bindings/thermal/mediatek-thermal.txt b/Documentation/devicetree/bindings/thermal/mediatek-thermal.txt
-> new file mode 100644
-> index 0000000..1697375
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/thermal/mediatek-thermal.txt
-> @@ -0,0 +1,38 @@
-> +* Mediatek Thermal
-> +
-> +This describes the device tree binding for the Mediatek thermal controller
-> +which measures the on-SoC temperatures. This device does not have its own ADC,
-> +instead it directly controls the AUXADC via AHB bus accesses. For this reason
-> +this device needs phandles to the AUXADC. Also it controls a mux in the
-> +apmixedsys register space via AHB bus accesses, so a phandle to the APMIXEDSYS
-> +is also needed.
-> +
-> +Required properties:
-> +- compatible: "mediatek,mt8173-thermal"
-> +- reg: Address range of the thermal controller
-> +- interrupts: IRQ for the thermal controller
-> +- clocks, clock-names: Clocks needed for the thermal controller. required
-> +                       clocks are:
-> +		       "therm":	 Main clock needed for register access
-> +		       "auxadc": The AUXADC clock
-> +- resets: Reference to the reset controller controlling the thermal controller.
-> +- mediatek,auxadc: A phandle to the AUXADC which the thermal controller uses
-> +- mediatek,apmixedsys: A phandle to the APMIXEDSYS controller.
-> +- #thermal-sensor-cells : Should be 1. See ./thermal.txt for a description. See
-> +			  include/dt-bindings/thermal/mt8173.h for valid sensor
-> +			  numbers.
-> +
-> +Example:
-> +
-> +	thermal: thermal@1100b000 {
-> +		#thermal-sensor-cells = <1>;
-> +		compatible = "mediatek,mt8173-thermal";
-> +		reg = <0 0x1100b000 0 0x1000>;
-> +		interrupts = <0 70 IRQ_TYPE_LEVEL_LOW>;
-> +		clocks = <&pericfg CLK_PERI_THERM>, <&pericfg CLK_PERI_AUXADC>;
-> +		clock-names = "therm", "auxadc";
-> +		resets = <&pericfg MT8173_PERI_THERM_SW_RST>;
-> +		reset-names = "therm";
-> +		mediatek,auxadc = <&auxadc>;
-> +		mediatek,apmixedsys = <&apmixedsys>;
-> +	};
-> diff --git a/include/dt-bindings/thermal/mt8173.h b/include/dt-bindings/thermal/mt8173.h
-> new file mode 100644
-> index 0000000..692e74c
-> --- /dev/null
-> +++ b/include/dt-bindings/thermal/mt8173.h
-> @@ -0,0 +1,13 @@
-> +/*
-> + * This header provides constants for mediatek,mt8173-thermal
-> + */
-> +
-> +#ifndef _DT_BINDINGS_THERMAL_MEDIATEK_MT8173_H
-> +#define _DT_BINDINGS_THERMAL_MEDIATEK_MT8173_H
-> +
-> +#define MT8173_THERMAL_ZONE_CA53	0
-> +#define MT8173_THERMAL_ZONE_CA57	1
-> +#define MT8173_THERMAL_ZONE_GPU		2
-> +#define MT8173_THERMAL_ZONE_CORE	3
-> +
-> +#endif /* _DT_BINDINGS_THERMAL_MEDIATEK_MT8173_H */
+> That's simply wrong. You want to build kernels which run on both cpus
+> and the selection of the timer happens at runtime depending on the
+> ACPI info. We do the same thing with device tree.
 
-The constants in this include are not used in the patchset. Please drop
-this hunk and introduce it when you use it.
+I think the code can do that if I understand correctly. The code for
+now is that we only support arch timer on ARM64, and this patch set
+is adding SBSA watchdog timer support which need same function in
+arch timer, so we move that function to common place.
 
-Thanks,
-Punit
+We will load the driver (arch timer, memory mapped timer) when the
+ACPI table defines them, which when new timer is coming, that will
+defined in the ACPI table and load the driver as needed.
+
+Please correct me if I misse something, thanks.
+
+Hanjun
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe linux-watchdog" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
