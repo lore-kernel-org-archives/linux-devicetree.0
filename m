@@ -1,168 +1,131 @@
-From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH v1 3/3] arm64: dts: add Hi6220 mailbox node
-Date: Thu, 27 Aug 2015 17:31:09 +0100
-Message-ID: <20150827163108.GA31748@leverpostej>
-References: <1440411596.3517.12.camel@linaro.org>
- <20150824114903.GT10728@bivouac.eciton.net>
- <1440490427.10987.29.camel@linaro.org>
- <20150825094630.GU10728@bivouac.eciton.net>
- <1440497710.10987.42.camel@linaro.org>
- <20150825104256.GB13471@leverpostej>
- <1440510194.10987.52.camel@linaro.org>
- <20150825160030.GA3774@leoy-linaro>
- <1440552341.10987.53.camel@linaro.org>
- <20150826065950.GB19594@leoy-linaro>
+From: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v10 1/5] mtd: nand: vf610_nfc: Freescale NFC for VF610,
+ MPC5125 and others
+Date: Thu, 27 Aug 2015 09:34:21 -0700
+Message-ID: <20150827163421.GX81844@google.com>
+References: <1438594050-4595-1-git-send-email-stefan@agner.ch>
+ <1438594050-4595-2-git-send-email-stefan@agner.ch>
+ <20150825201631.GK81844@google.com>
+ <bf1ed158fe08b51c4668faffde44083f@agner.ch>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20150826065950.GB19594@leoy-linaro>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Leo Yan <leo.yan@linaro.org>
-Cc: Haojian Zhuang <haojian.zhuang@linaro.org>, Leif Lindholm <leif.lindholm@linaro.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <Pawel.Moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Catalin Marinas <Catalin.Marinas@arm.com>, Will Deacon <Will.Deacon@arm.com>, Jassi Brar <jassisinghbrar@gmail.com>, Bintian Wang <bintian.wang@huawei.com>, Yiping Xu <xuyiping@hisilicon.com>, Wei Xu <xuwei5@hisilicon.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "guodong.xu@linaro.org" <guodong.xu@linaro.org>, Jian Zhang <zhangjian001@hisilicon.com>, Zhenwei Wang <Zhenwei.wang@hisilicon.com>, Haoju Mo <mohaoju@hisilicon.com>, Dan Zhao <dan.zhao@hisilicon.com>, kongfei@hisi
+In-Reply-To: <bf1ed158fe08b51c4668faffde44083f-XLVq0VzYD2Y@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
+Cc: dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, sebastian-E0PNVn5OA6ohrxcnuTQ+TQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, marb-Z4QKGCRq86k@public.gmane.org, aaron-yuhzfaV+M/Wz3Dx2OeFgIA@public.gmane.org, bpringlemeir-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, albert.aribaud-iEu9NFBzPZE@public.gmane.org, klimov.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Bill Pringlemeir <bpringlemeir-ygJ1pmMJ17cAvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Aug 26, 2015 at 07:59:50AM +0100, Leo Yan wrote:
-> Hi Haojian,
-> 
-> On Wed, Aug 26, 2015 at 09:25:41AM +0800, Haojian Zhuang wrote:
-> > On Wed, 2015-08-26 at 00:00 +0800, Leo Yan wrote:
-> > > On Tue, Aug 25, 2015 at 09:43:14PM +0800, Haojian Zhuang wrote:
-> > > > On Tue, 2015-08-25 at 11:42 +0100, Mark Rutland wrote:
-> > > > > > > Are you then going to hack GRUB, release a special HiKey version of
-> > > > > > > GRUB, not support any other versions, and still can your firmware
-> > > > > > > UEFI?
-> > > > > > 
-> > > > > > I don't need to hack GRUB at all.
-> > > > > 
-> > > > > Then it is working for you by pure chance alone.
-> > > > > 
-> > > > > Please listen to the advice you are being given here; we're trying to
-> > > > > ensure that your platform functions (and continues to function) as best
-> > > > > it can.
-> > > > 
-> > > > Since we discussed a lot on this, let's make a conclusion on it.
-> > > > 
-> > > > 1. UEFI could append the reserved buffer in it's memory mapping.
-> > > > 2. These reserved buffer must be declared in DT, since we also need to
-> > > >    support non-UEFI (uboot) at the same time.
-> > > > 3. Mailbox node should reference reserved buffer by phandle in DT. Then
-> > > >    map the buffer as non-cacheable in driver.
-> > > > 4. These reserved buffer must use "no-map" property since it should be
-> > > >    non-cacheable in driver.
-> > > 
-> > > For more specific discussion for DTS, i list two options at here;
-> > > 
-> > > - Option 1: just simply reserve memory regions through memory node,
-> > >   and mailbox node will directly use the buffer through reg ranges;
-> > > 
-> > > - Option 2: use reserved-memory and mailbox node will refer phandle
-> > >   of reserved-memory;
-> > > 
-> > > These two options both can work well with UEFI and Uboot, but option 1
-> > > is more simple and straightforward; so i personally prefer it. But
-> > > look forwarding your guys' suggestion.
-> > > 
-> > > Option 1:
-> > > 
-> > > 	memory@0 {
-> > > 		device_type = "memory";
-> > > 		reg = <0x00000000 0x00000000 0x00000000 0x05e00000>,
-> > > 		      <0x00000000 0x05f00000 0x00000000 0x00eff000>,
-> > > 		      <0x00000000 0x06e00000 0x00000000 0x0060f000>,
-> > > 		      <0x00000000 0x07410000 0x00000000 0x38bf0000>;
-> > > 	};
-> > > 
-> > >         [...]
-> > > 
-> > > 	mailbox: mailbox@f7510000 {
-> > > 		#mbox-cells = <1>;
-> > > 		compatible = "hisilicon,hi6220-mbox";
-> > > 		reg = <0x0 0xf7510000 0x0 0x1000>, /* IPC_S */
-> > > 		      <0x0 0x06dff800 0x0 0x0800>; /* Mailbox buffer */
-> > > 		interrupts = <GIC_SPI 94 IRQ_TYPE_LEVEL_HIGH>;
-> > > 	};
-> > > 
-> > > Option 2:
-> > > 
-> > > 	memory@0 {
-> > > 		device_type = "memory";
-> > > 		reg = <0x0 0x0 0x0 0x40000000>;
-> > > 	};
-> > > 
-> > > 	reserved-memory {
-> > > 		#address-cells = <2>;
-> > > 		#size-cells = <2>;
-> > > 		ranges;
-> > > 
-> > > 		mcu_reserved: mcu_reserved@06dff000 {
-> > > 			no-map;
-> > > 			reg = <0x0 0x06dff000 0x0 0x00001000>,	/* MCU mailbox buffer */
-> > > 			      <0x0 0x05e00000 0x0 0x00100000>,	/* MCU firmware buffer */
-> > > 			      <0x0 0x0740f000 0x0 0x00001000>;	/* MCU firmware section */
-> > > 		};
-> > > 	};
-> > > 
-> > >         [...]
-> > > 
-> > > 	mailbox: mailbox@f7510000 {
-> > > 		#mbox-cells = <1>;
-> > > 		compatible = "hisilicon,hi6220-mbox";
-> > > 		reg = <0x0 0xf7510000 0x0 0x1000>; /* IPC_S */
-> > > 		memory-region = <&mcu_reserved>;   /* Mailbox buffer */
-> > > 		interrupts = <GIC_SPI 94 IRQ_TYPE_LEVEL_HIGH>;
-> > > 	};
+On Wed, Aug 26, 2015 at 06:02:31PM -0700, Stefan Agner wrote:
+> On 2015-08-25 13:16, Brian Norris wrote:
+> > On Mon, Aug 03, 2015 at 11:27:26AM +0200, Stefan Agner wrote:
+> >> diff --git a/drivers/mtd/nand/vf610_nfc.c b/drivers/mtd/nand/vf610_nfc.c
+> >> new file mode 100644
+> >> index 0000000..5c8dfe8
+> >> --- /dev/null
+> >> +++ b/drivers/mtd/nand/vf610_nfc.c
+> >> @@ -0,0 +1,645 @@
 > > 
-> > I prefer the second one. From my view, memory node should only describe
-> > the hardware information of memory.
+> > ...
+> > 
+> >> +/*
+> >> + * This function supports Vybrid only (MPC5125 would have full RB and four CS)
+> >> + */
+> >> +static void vf610_nfc_select_chip(struct mtd_info *mtd, int chip)
+> >> +{
+> >> +#ifdef CONFIG_SOC_VF610
+> > 
+> > Why the #ifdef? I don't see anything compile-time specific to SOC_VF610.
+> > 
+> > If this is trying to handle the comment above ("This function supports
+> > Vybrid only (MPC5125 would have full RB and four CS)") then that's the
+> > wrong way of doing it, as you need to support multiplatform kernels.
+> > You'll need to have a way to differentiate the different platform
+> > support at runtime, not compile time.
 > 
-> Yes, option 2 will be more simple for memory node.
+> Yes it is trying to handle the comment above. Well, the other two
+> platforms I am aware of are also different architectures... (PowerPC and
+> ColdFire). I think we won't have a multi-architecture kernel anytime
+> soon,
+
+Ha, right. Sorry, I don't really know this particular IP.
+
+> hence I think removing the code at compile time is the right thing
+> todo.
+
+I don't believe that conclusion follows though.
+
+> However, probably CONFIG_SOC_VF610 is the wrong symbol then, I could
+> just use CONFIG_ARM and add a comment that this might be different on
+> another other ARM SoC than VF610.
 > 
-> But option 2 also will introduce complexity for mailbox node, due mailbox
-> driver need use property "reg" and "memory-region" to sepeately depict
-> the regions for mailbox's ipc and slots. If later mailbox is designed to
-> use SRAM for both ipc and slots, then it will no matter with DDR anymore,
-> in this case option 1 will easily switch to support it.
+> Just checked CodingStyle, and I see that IS_ENABLED is the preferred way
+> for conditional compiling.
 > 
-> Another question is a general question: for Linux kernel, which is the
-> best method to reserve memory regions? According to previous discussion,
-> we can use /memory/ node or /reseved-memory/ node to reserve memory
-> regions.
+> So my suggestion:
+> 
+> static void vf610_nfc_select_chip(struct mtd_info *mtd, int chip)
+> {
+> 	struct vf610_nfc *nfc = mtd_to_nfc(mtd);
+> 	u32 tmp = vf610_nfc_read(nfc, NFC_ROW_ADDR);
+> 
+> 	if (!IS_ENABLED(CONFIG_ARM))
+> 		return;
+> 
+> 	/*
+> 	 * This code is only tested on the ARM platform VF610
+> 	 * PowerPC based MPC5125 would have full RB and four CS
+> 	 */
+> ....
+> 
+> With that the compiler should be able to remove this (currently) ARM
+> VF610 specific code on the other supported architectures...
+> 
+> What do you think?
 
-If the memory is truly reserved for a purpose and cannot be used for
-anything else, I don't think it should be in the memory node at all, and
-should be carved out. That aligns with what you'd do in UEFI (either not
-listing the region in the memory map, or listing it with attributes such
-that it may not be mapped and/or used).
+The code structure isn't bad, and yes, IS_ENABLED() would be preferable,
+as it removes some of the problems with #ifdef, but I still don't think
+the processor architecture has much to do with the version of the IP.
+The canonical way of distiguishing per-IP revisions is to key on the
+compatible property. So you'd have some kind of enum, which would
+currently only have an entry for VF610. i.e.:
 
-I don't see much of a reason for /memreserve/, as it can cause issues
-(by allowing the OS to map the region with cacheable attributes), and is
-not as rigorously specified for ARM as it is for Power in ePAPR.
+	/* MPC5125 not yet supported */
+	if (nfc->revision != NAND_VFC610)
+		return;
 
-I understand that reserved-memory is for carving out (potentially
-reusable) memory pools for devices or other special uses (perhaps a
-panic log). Usually such memory may also be used by the kernel for its
-own purposes if not presently required by the device.
+> >> +	struct vf610_nfc *nfc = mtd_to_nfc(mtd);
+> >> +	u32 tmp = vf610_nfc_read(nfc, NFC_ROW_ADDR);
+> >> +
+> >> +	tmp &= ~(ROW_ADDR_CHIP_SEL_RB_MASK | ROW_ADDR_CHIP_SEL_MASK);
+> >> +	tmp |= 1 << ROW_ADDR_CHIP_SEL_RB_SHIFT;
+> >> +
+> >> +	if (chip == 0)
+> >> +		tmp |= 1 << ROW_ADDR_CHIP_SEL_SHIFT;
+> >> +	else if (chip == 1)
+> >> +		tmp |= 2 << ROW_ADDR_CHIP_SEL_SHIFT;
+> > 
+> > 	else ... ?
+> > 
+> > Maybe you can write this as a formulaic pattern (e.g.:
+> > 
+> > 	tmp |= (chip + 1) << ROW_ADDR_CHIP_SEL_SHIFT;
+> > 
+> > ) and just do the "max # of chips" checks on a per-platform basis in the
+> > probe(). Then I'm guessing this same function can apply to both
+> > platforms. (I'm not looking at HW datasheets for this, BTW, just
+> > guessing based on the context here.)
+> 
+> It seems that MCP5125 is different than VF610. MCP5125 has 4 chip
+> selects and 4 R/B signals, whereas VF610 has only 2 chip selects and
+> just 1 R/B signals...
 
-Having an entry in reserved-memory does not necessitate the region also
-appears in memory nodes, and if a region cannot be used by an OS (or
-other software) for other purposes, I would not expect it to be describe
-in any memory node. That will prevent other software (e.g. bootloaders)
-from erroneously using the memory.
+OK I don't presume to know what the different IP versions look like. And
+if you just note they are unsupported/untested, you're fine.
 
-If you have a region described with no-map, I would expect that this
-doesn't exist in any memory node or the UEFI memory map, and is only
-under reserved-memory so it may be referred to by phandle in a
-consistent manner.
-
-> when review Juno's dts, i also see there have reserved 16MB DDR for secure
-> world. If so, looks like /reserved-memory/ node is unnecessary. if have some
-> specific scenarios will we use reserved-memory node to help reserve memory
-> regions?
-
-I'd expect shared DMA pools to appear in reserved-memory. The OS can
-choose to use these or ignore them if it chooses (or is otherwise forced
-to, e.g. were it loaded over one).
-
-Thanks,
-Mark.
+Brian
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
