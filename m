@@ -1,132 +1,65 @@
-From: vikas <vikas.manocha-qxv4g6HH51o@public.gmane.org>
-Subject: Re: [PATCH V8 1/2] mtd: spi-nor: Bindings for Cadence Quad SPI Flash
- Controller driver.
-Date: Thu, 27 Aug 2015 10:44:34 -0700
-Message-ID: <55DF4C82.3070708@st.com>
-References: <1440148851-14621-1-git-send-email-marex@denx.de>
+From: Rob Herring <robherring2@gmail.com>
+Subject: Re: [PATCH v3 6/8] scsi: ufs: make the UFS variant a platform device
+Date: Thu, 27 Aug 2015 12:56:06 -0500
+Message-ID: <CAL_JsqLYeM3fbU5jHq-+7SbwHH7T80bETZpkkjR_hbg=un1BBg@mail.gmail.com>
+References: <1440335381-5122-1-git-send-email-ygardi@codeaurora.org> <1440335381-5122-7-git-send-email-ygardi@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1440148851-14621-1-git-send-email-marex-ynQEQJNshbs@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>, "linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Cc: Graham Moore <grmoore-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>, Alan Tull <atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Dinh Nguyen <dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>, Yves Vandervennet <yvanderv-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1440335381-5122-7-git-send-email-ygardi@codeaurora.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Yaniv Gardi <ygardi@codeaurora.org>
+Cc: Jej B <James.Bottomley@hansenpartnership.com>, Paul Bolle <pebolle@tiscali.nl>, hch@infradead.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-scsi@vger.kernel.org, linux-arm-msm <linux-arm-msm@vger.kernel.org>, Santosh Y <santoshsy@gmail.com>, linux-scsi-owner@vger.kernel.org, Subhash Jadavani <subhashj@codeaurora.org>, Gilad Broner <gbroner@codeaurora.org>, Dolev Raviv <draviv@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Vinayak Holikatti <vinholikatti@gmail.com>, "James E.J. Bottomley" <JBottomley@odin.com>, Christoph Hellwig <hch@lst.de>, Sujit Reddy Thumma <sthumma@codeaurora.org>, Raviv Shvili <rshvili@codeaurora.org>, Sahitya Tummala <stummala@codeaurora.org>, open list:OPEN F
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-
-On 08/21/2015 02:20 AM, Marek Vasut wrote:
-> From: Graham Moore <grmoore-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
-> 
-> Add binding document for the Cadence QSPI controller.
-> 
-> Signed-off-by: Graham Moore <grmoore-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
-> Signed-off-by: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>
-> Cc: Alan Tull <atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
-> Cc: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> Cc: David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>
-> Cc: Dinh Nguyen <dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
-> Cc: Graham Moore <grmoore-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
-> Cc: Vikas MANOCHA <vikas.manocha-qxv4g6HH51o@public.gmane.org>
-> Cc: Yves Vandervennet <yvanderv-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
-> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+On Sun, Aug 23, 2015 at 8:09 AM, Yaniv Gardi <ygardi@codeaurora.org> wrote:
+> This change turns the UFS variant (SCSI_UFS_QCOM) into a UFS
+> a platform device.
+> In order to do so a few additional changes are required:
+> 1. The ufshcd-pltfrm is no longer serves as a platform device.
+>    Now it only serves as a group of platform APIs such as PM APIs
+>    (runtime suspend/resume, system suspend/resume etc), parsers of
+>    clocks, regulators and pm_levels from DT.
+> 2. What used to be the old platform "probe" is now "only"
+>    a pltfrm_init() routine, that does exactly the same, but only
+>    being called by the new probe function of the UFS variant.
+>
+> Signed-off-by: Yaniv Gardi <ygardi@codeaurora.org>
+>
 > ---
->  .../devicetree/bindings/mtd/cadence-quadspi.txt    | 56 ++++++++++++++++++++++
->  1 file changed, 56 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/mtd/cadence-quadspi.txt
-> 
-> V2: Add cdns prefix to driver-specific bindings.
-> V3: Use existing property "is-decoded-cs" instead of creating a
->     duplicate, "ext-decoder". Timing parameters are in nanoseconds,
->     not master reference clocks. Remove bus-num completely.
-> V4: Add new properties fifo-width and trigger-address
-> V7: - Prefix all of the Cadence-specific properties with cdns prefix,
->       those are in particular "cdns,is-decoded-cs", "cdns,fifo-depth",
->       "cdns,fifo-width", "cdns,trigger-address".
->     - Drop bogus properties which were not used and were incorrect.
-> V8: Align lines to 80 chars.
-> 
-> diff --git a/Documentation/devicetree/bindings/mtd/cadence-quadspi.txt b/Documentation/devicetree/bindings/mtd/cadence-quadspi.txt
-> new file mode 100644
-> index 0000000..f248056
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/mtd/cadence-quadspi.txt
-> @@ -0,0 +1,56 @@
-> +* Cadence Quad SPI controller
-> +
-> +Required properties:
-> +- compatible : Should be "cdns,qspi-nor".
-> +- reg : Contains two entries, each of which is a tuple consisting of a
-> +	physical address and length. The first entry is the address and
-> +	length of the controller register set. The second entry is the
-> +	address and length of the QSPI Controller data area.
+>  .../devicetree/bindings/ufs/ufshcd-pltfrm.txt      |  2 +-
+>  drivers/scsi/ufs/ufs-qcom.c                        | 78 +++++++++++++++++-
+>  drivers/scsi/ufs/ufshcd-pltfrm.c                   | 92 ++++++----------------
+>  drivers/scsi/ufs/ufshcd-pltfrm.h                   | 41 ++++++++++
+>  drivers/scsi/ufs/ufshcd.c                          | 10 +++
+>  drivers/scsi/ufs/ufshcd.h                          |  1 +
+>  6 files changed, 152 insertions(+), 72 deletions(-)
+>  create mode 100644 drivers/scsi/ufs/ufshcd-pltfrm.h
+>
+> diff --git a/Documentation/devicetree/bindings/ufs/ufshcd-pltfrm.txt b/Documentation/devicetree/bindings/ufs/ufshcd-pltfrm.txt
+> index 5357919..b39e765 100644
+> --- a/Documentation/devicetree/bindings/ufs/ufshcd-pltfrm.txt
+> +++ b/Documentation/devicetree/bindings/ufs/ufshcd-pltfrm.txt
+> @@ -4,7 +4,7 @@ UFSHC nodes are defined to describe on-chip UFS host controllers.
+>  Each UFS controller instance should have its own node.
+>
+>  Required properties:
+> -- compatible        : compatible list, contains "jedec,ufs-1.1"
+> +- compatible        : compatible list, contains "jedec,ufs-1.1" or "qcom,ufshc"
 
-still hooked up with  "Controller data area", it is ambiguous.
-Use something which is more clear: Nor Flash memory mapped address.
+Replying again as I inadvertently dropped everyone.
 
-> +- interrupts : Unit interrupt specifier for the controller interrupt.
-> +- clocks : phandle to the Quad SPI clock.
-> +- cdns,fifo-depth : Size of the data FIFO in words.
-> +- cdns,fifo-width : Bus width of the data FIFO in bytes.
-> +- cdns,trigger-address : 32-bit indirect AHB trigger address.
-> +
-> +Optional properties:
+This should also have a more specific compatible string with the SOC
+name/number in it. It may be "the same in all SOCs", but there is
+always the possibility for bugs/limitations to be found that are
+specific to an SOC even if all RTL versions are identical (e.g.
+different max clock speeds). It is about making the dtb future proof,
+not about what exactly you need today. You can keep qcom,ufshc for
+driver matching if you want.
 
-again, is it optional ? can the driver be used without these properties ?
+>  - interrupts        : <interrupt mapping for UFS host controller IRQ>
+>  - reg               : <registers mapping>
 
-> +- cdns,is-decoded-cs : Flag to indicate whether decoder is used or not.
+What about phy properties? No Unipro PHY block that requires setup?
 
-again, add info what the decoder is for ? 
-
-> +
-> +Optional subnodes:
-> +Subnodes of the Cadence Quad SPI controller are spi slave nodes with additional
-> +custom properties:
-> +- cdns,read-delay : Delay for read capture logic, in clock cycles
-> +- cdns,tshsl-ns : Delay in nanoseconds for the length that the master
-> +                  mode chip select outputs are de-asserted between
-> +		  transactions.
-> +- cdns,tsd2d-ns : Delay in nanoseconds between one chip select being
-> +                  de-activated and the activation of another.
-> +- cdns,tchsh-ns : Delay in nanoseconds between last bit of current
-> +                  transaction and deasserting the device chip select
-> +		  (qspi_n_ss_out).
-> +- cdns,tslch-ns : Delay in nanoseconds between setting qspi_n_ss_out low
-> +                  and first bit transfer.
-> +
-> +Example:
-> +
-> +	qspi: spi@ff705000 {
-> +		compatible = "cdns,qspi-nor";
-> +		#address-cells = <1>;
-> +		#size-cells = <0>;
-> +		reg = <0xff705000 0x1000>,
-> +		      <0xffa00000 0x1000>;
-> +		interrupts = <0 151 4>;
-> +		clocks = <&qspi_clk>;
-> +		cdns,is-decoded-cs;
-
-flag value ?
-
-Cheers,
-Vikas
-
-> +		cdns,fifo-depth = <128>;
-> +		cdns,fifo-width = <4>;
-> +		cdns,trigger-address = <0x00000000>;
-> +
-> +		flash0: n25q00@0 {
-> +			...
-> +			cdns,read-delay = <4>;
-> +			cdns,tshsl-ns = <50>;
-> +			cdns,tsd2d-ns = <50>;
-> +			cdns,tchsh-ns = <4>;
-> +			cdns,tslch-ns = <4>;
-> +		};
-> +	};
-> 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Rob
