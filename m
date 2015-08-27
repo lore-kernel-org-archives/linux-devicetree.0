@@ -1,89 +1,60 @@
-From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 2/4] remoteproc: Supply controller driver for ST's Remote
- Processors
-Date: Thu, 27 Aug 2015 07:45:39 +0100
-Message-ID: <20150827064539.GD19409@x1>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH 4/4] remoteproc: debugfs: Add ability to boot remote
+ processor using debugfs
+Date: Thu, 27 Aug 2015 07:44:52 +0100
+Message-ID: <20150827064452.GC19409@x1>
 References: <1440594483-29601-1-git-send-email-lee.jones@linaro.org>
- <1440594483-29601-3-git-send-email-lee.jones@linaro.org>
- <55DDF252.2010901@mentor.com>
+ <1440594483-29601-5-git-send-email-lee.jones@linaro.org>
+ <55DDF2A0.5010404@mentor.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 Content-Disposition: inline
-In-Reply-To: <55DDF252.2010901-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Nathan Lynch <Nathan_Lynch-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ohad-Ix1uc/W3ht7QT0dZR+AlfA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-F5mvAk5X5gdBDgjK7y7TUQ@public.gmane.org
+In-Reply-To: <55DDF2A0.5010404@mentor.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Nathan Lynch <Nathan_Lynch@mentor.com>
+Cc: ohad@wizery.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, kernel@stlinux.com
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 26 Aug 2015, Nathan Lynch wrote:
-
-> On 08/26/2015 08:08 AM, Lee Jones wrote:
-> > --- /dev/null
-> > +++ b/drivers/remoteproc/st_remoteproc.c
-> > @@ -0,0 +1,300 @@
-> > +/*
-> > + * ST's Remote Processor Control Driver
-> > + *
-> > + * Copyright (C) 2015 STMicroelectronics - All Rights Reserved
-> > + *
-> > + * Author: Ludovic Barre <ludovic.barre-qxv4g6HH51o@public.gmane.org>
->=20
-> When submitting code you didn't write, I'd say it's better practice t=
-o
-> clearly indicate its provenance in the commit message.  E.g. somethin=
-g
-> like "Driver based on code authored by Ludovic Barre for ST".  And
-> obtain signoffs etc if possible.
->=20
->=20
-> > + *
-> > + * This program is free software; you can redistribute it and/or m=
-odify
-> > + * it under the terms of the GNU General Public License as publish=
-ed by
-> > + * the Free Software Foundation; either version 2 of the License.
->=20
-> Please review the wording here.  It's unclear whether this is intende=
-d
-> to be v2-only or v2 or later.
->=20
->=20
-> > +static int st_rproc_stop(struct rproc *rproc)
-> > +{
-> > +	struct st_rproc *st_rproc =3D rproc->priv;
-> > +	int err =3D 0;
-> > +
-> > +	if (st_rproc->config->sw_reset) {
-> > +		err =3D reset_control_assert(st_rproc->sw_reset);
-> > +		if (err)
-> > +			dev_warn(&rproc->dev, "Failed to assert S/W Reset\n");
-> > +	}
-> > +
-> > +	if (st_rproc->config->pwr_reset) {
-> > +		err =3D reset_control_assert(st_rproc->pwr_reset);
-> > +		if (err)
-> > +			dev_warn(&rproc->dev, "Failed to assert Power Reset\n");
-> > +	}
-> > +
-> > +	clk_disable(st_rproc->clk);
-> > +
-> > +	return 0;
-> > +}
->=20
-> Seems like st_rproc_stop should propagate errors back to its caller
-> instead of always returning 0.
-
-Good points, will fix.
-
---=20
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-=46ollow Linaro: Facebook | Twitter | Blog
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+T24gV2VkLCAyNiBBdWcgMjAxNSwgTmF0aGFuIEx5bmNoIHdyb3RlOgoKPiBPbiAwOC8yNi8yMDE1
+IDA4OjA4IEFNLCBMZWUgSm9uZXMgd3JvdGU6Cj4gPiBTaWduZWQtb2ZmLWJ5OiBMZWUgSm9uZXMg
+PGxlZS5qb25lc0BsaW5hcm8ub3JnPgo+ID4gLS0tCj4gPiAgZHJpdmVycy9yZW1vdGVwcm9jL3Jl
+bW90ZXByb2NfZGVidWdmcy5jIHwgMjUgKysrKysrKysrKysrKysrKysrKysrKysrKwo+ID4gIDEg
+ZmlsZSBjaGFuZ2VkLCAyNSBpbnNlcnRpb25zKCspCj4gCj4gVGhlIGNvbW1pdCBtZXNzYWdlIHNo
+b3VsZCBkZXNjcmliZSB3aHkgdGhpcyBpcyBuZWVkZWQuLi4KPiAKPiA+IGRpZmYgLS1naXQgYS9k
+cml2ZXJzL3JlbW90ZXByb2MvcmVtb3RlcHJvY19kZWJ1Z2ZzLmMgYi9kcml2ZXJzL3JlbW90ZXBy
+b2MvcmVtb3RlcHJvY19kZWJ1Z2ZzLmMKPiA+IGluZGV4IDlkMzA4MDkuLjk2MjA5NjIgMTAwNjQ0
+Cj4gPiAtLS0gYS9kcml2ZXJzL3JlbW90ZXByb2MvcmVtb3RlcHJvY19kZWJ1Z2ZzLmMKPiA+ICsr
+KyBiL2RyaXZlcnMvcmVtb3RlcHJvYy9yZW1vdGVwcm9jX2RlYnVnZnMuYwo+ID4gQEAgLTg4LDgg
+Kzg4LDMzIEBAIHN0YXRpYyBzc2l6ZV90IHJwcm9jX3N0YXRlX3JlYWQoc3RydWN0IGZpbGUgKmZp
+bHAsIGNoYXIgX191c2VyICp1c2VyYnVmLAo+ID4gIAlyZXR1cm4gc2ltcGxlX3JlYWRfZnJvbV9i
+dWZmZXIodXNlcmJ1ZiwgY291bnQsIHBwb3MsIGJ1ZiwgaSk7Cj4gPiAgfQo+ID4gIAo+ID4gK3N0
+YXRpYyBzc2l6ZV90IHJwcm9jX3N0YXRlX3dyaXRlKHN0cnVjdCBmaWxlICpmaWxwLCBjb25zdCBj
+aGFyIF9fdXNlciAqdXNlcmJ1ZiwKPiA+ICsJCQkJIHNpemVfdCBjb3VudCwgbG9mZl90ICpwcG9z
+KQo+ID4gK3sKPiA+ICsJc3RydWN0IHJwcm9jICpycHJvYyA9IGZpbHAtPnByaXZhdGVfZGF0YTsK
+PiA+ICsJY2hhciBidWZbMl07Cj4gPiArCWludCByZXQ7Cj4gPiArCj4gPiArCXJldCA9IGNvcHlf
+ZnJvbV91c2VyKGJ1ZiwgdXNlcmJ1ZiwgMSk7Cj4gPiArCWlmIChyZXQpCj4gPiArCQlyZXR1cm4g
+LUVGQVVMVDsKPiA+ICsKPiA+ICsJc3dpdGNoIChidWZbMF0pIHsKPiA+ICsJY2FzZSAnMSc6Cj4g
+PiArCQlyZXQgPSBycHJvY19ib290KHJwcm9jKTsKPiA+ICsJCWlmIChyZXQpCj4gPiArCQkJZGV2
+X3dhcm4oJnJwcm9jLT5kZXYsICJCb290IGZhaWxlZDogJWRcbiIsIHJldCk7Cj4gPiArCQlicmVh
+azsKPiA+ICsJZGVmYXVsdDoKPiA+ICsJCXJwcm9jX3NodXRkb3duKHJwcm9jKTsKPiA+ICsJfQo+
+ID4gKwo+ID4gKwlyZXR1cm4gY291bnQ7Cj4gPiArfQo+IAo+IC4uLiBhbmQgSSBzdWdnZXN0IHRo
+YXQgdGhlIHVzZXIgaW50ZXJmYWNlIGJlIHJlY29uc2lkZXJlZC4gIElmICcxJyBtZWFucwo+ICJi
+b290IiBhbmQgbGl0ZXJhbGx5IGFueXRoaW5nIGVsc2UgbWVhbnMgInNodXQgZG93biIgdGhlbiB5
+b3UgY2FuJ3QgYWRkCj4gb3BlcmF0aW9ucyBpbiB0aGUgZnV0dXJlIHdpdGhvdXQgcG90ZW50aWFs
+bHkgYnJlYWtpbmcgdGhpbmdzLgoKR29vZCBwb2ludHMsIHdpbGwgZml4LgoKLS0gCkxlZSBKb25l
+cwpMaW5hcm8gU1RNaWNyb2VsZWN0cm9uaWNzIExhbmRpbmcgVGVhbSBMZWFkCkxpbmFyby5vcmcg
+4pSCIE9wZW4gc291cmNlIHNvZnR3YXJlIGZvciBBUk0gU29DcwpGb2xsb3cgTGluYXJvOiBGYWNl
+Ym9vayB8IFR3aXR0ZXIgfCBCbG9nCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fXwpsaW51eC1hcm0ta2VybmVsIG1haWxpbmcgbGlzdApsaW51eC1hcm0ta2Vy
+bmVsQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1h
+bi9saXN0aW5mby9saW51eC1hcm0ta2VybmVsCg==
