@@ -1,122 +1,153 @@
-From: Milo Kim <milo.kim-l0cyMroinI0@public.gmane.org>
-Subject: [RFC 4/4] usb: musb: use of_dev_get_platdata()
-Date: Fri, 28 Aug 2015 18:12:08 +0900
-Message-ID: <1440753128-3288-5-git-send-email-milo.kim@ti.com>
+From: Milo Kim <milo.kim@ti.com>
+Subject: [RFC 3/4] mfd: tps65910: use of_dev_get_platdata()
+Date: Fri, 28 Aug 2015 18:12:07 +0900
+Message-ID: <1440753128-3288-4-git-send-email-milo.kim@ti.com>
 References: <1440753128-3288-1-git-send-email-milo.kim@ti.com>
  <1440753128-3288-2-git-send-email-milo.kim@ti.com>
  <1440753128-3288-3-git-send-email-milo.kim@ti.com>
- <1440753128-3288-4-git-send-email-milo.kim@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1440753128-3288-4-git-send-email-milo.kim-l0cyMroinI0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Milo Kim <milo.kim-l0cyMroinI0@public.gmane.org>, Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1440753128-3288-3-git-send-email-milo.kim@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: grant.likely@linaro.org, devicetree@vger.kernel.org
+Cc: Milo Kim <milo.kim@ti.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Felipe Balbi <balbi@ti.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>, Samuel Ortiz <sameo@linux.intel.com>, Tony Lindgren <tony@atomide.com>, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-'of_dev_get_platdata()' makes if-statements simple.
+Platform data allocation, CONFIG_OF and condition statements are supported
+in of_dev_get_platdata().
+This patch shows how to use private data in each parser function.
+tps65910 calls of_dev_get_platdata() with driver private data, 'chip_id'.
+This data is used in tps65910_parse_dt().
 
-Cc: Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>
-Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
-Cc: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-Cc: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Signed-off-by: Milo Kim <milo.kim-l0cyMroinI0@public.gmane.org>
+'of_pmic_plat_data' is unnecessary any more. IRQ number is updated after
+parsing the DT.
+
+Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc: Felipe Balbi <balbi@ti.com>
+Cc: Grant Likely <grant.likely@linaro.org>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Lee Jones <lee.jones@linaro.org>
+Cc: Rob Herring <robh+dt@kernel.org>
+Cc: Samuel Ortiz <sameo@linux.intel.com>
+Cc: Tony Lindgren <tony@atomide.com>
+Cc: devicetree@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+Signed-off-by: Milo Kim <milo.kim@ti.com>
 ---
- drivers/usb/musb/ux500.c | 40 ++++++++++++++++------------------------
- 1 file changed, 16 insertions(+), 24 deletions(-)
+ drivers/mfd/tps65910.c | 49 ++++++++++++++++---------------------------------
+ 1 file changed, 16 insertions(+), 33 deletions(-)
 
-diff --git a/drivers/usb/musb/ux500.c b/drivers/usb/musb/ux500.c
-index 39168fe..851cf4a 100644
---- a/drivers/usb/musb/ux500.c
-+++ b/drivers/usb/musb/ux500.c
-@@ -25,6 +25,7 @@
- #include <linux/err.h>
- #include <linux/io.h>
- #include <linux/of.h>
-+#include <linux/of_device.h>
- #include <linux/platform_device.h>
- #include <linux/usb/musb-ux500.h>
+diff --git a/drivers/mfd/tps65910.c b/drivers/mfd/tps65910.c
+index 7612d89..2a068d7 100644
+--- a/drivers/mfd/tps65910.c
++++ b/drivers/mfd/tps65910.c
+@@ -378,7 +378,6 @@ err_sleep_init:
+ 	return ret;
+ }
  
-@@ -200,21 +201,16 @@ static const struct musb_platform_ops ux500_ops = {
- 	.set_vbus	= ux500_musb_set_vbus,
+-#ifdef CONFIG_OF
+ static const struct of_device_id tps65910_of_match[] = {
+ 	{ .compatible = "ti,tps65910", .data = (void *)TPS65910},
+ 	{ .compatible = "ti,tps65911", .data = (void *)TPS65911},
+@@ -386,30 +385,23 @@ static const struct of_device_id tps65910_of_match[] = {
  };
+ MODULE_DEVICE_TABLE(of, tps65910_of_match);
  
--static struct musb_hdrc_platform_data *
--ux500_of_probe(struct platform_device *pdev, struct device_node *np)
-+static int ux500_of_probe(struct device *dev, void *data, void *priv)
+-static struct tps65910_board *tps65910_parse_dt(struct i2c_client *client,
+-						unsigned long *chip_id)
++static int tps65910_parse_dt(struct device *dev, void *data, void *priv)
  {
--	struct musb_hdrc_platform_data *pdata;
-+	struct musb_hdrc_platform_data *pdata = data;
- 	const char *mode;
- 	int strlen;
+-	struct device_node *np = client->dev.of_node;
+-	struct tps65910_board *board_info;
++	struct device_node *np = dev->of_node;
++	struct tps65910_board *board_info = data;
++	unsigned long *chip_id = priv;
+ 	unsigned int prop;
+ 	const struct of_device_id *match;
+ 	int ret = 0;
  
--	pdata = devm_kzalloc(&pdev->dev, sizeof(*pdata), GFP_KERNEL);
--	if (!pdata)
+-	match = of_match_device(tps65910_of_match, &client->dev);
++	match = of_match_device(tps65910_of_match, dev);
+ 	if (!match) {
+-		dev_err(&client->dev, "Failed to find matching dt id\n");
 -		return NULL;
--
--	mode = of_get_property(np, "dr_mode", &strlen);
-+	mode = of_get_property(dev->of_node, "dr_mode", &strlen);
- 	if (!mode) {
--		dev_err(&pdev->dev, "No 'dr_mode' property found\n");
--		return NULL;
-+		dev_err(dev, "No 'dr_mode' property found\n");
++		dev_err(dev, "Failed to find matching dt id\n");
 +		return -EINVAL;
  	}
  
- 	if (strlen > 0) {
-@@ -226,31 +222,27 @@ ux500_of_probe(struct platform_device *pdev, struct device_node *np)
- 			pdata->mode = MUSB_PERIPHERAL;
- 	}
+ 	*chip_id  = (unsigned long)match->data;
  
--	return pdata;
+-	board_info = devm_kzalloc(&client->dev, sizeof(*board_info),
+-			GFP_KERNEL);
+-	if (!board_info) {
+-		dev_err(&client->dev, "Failed to allocate pdata\n");
+-		return NULL;
+-	}
+-
+ 	ret = of_property_read_u32(np, "ti,vmbch-threshold", &prop);
+ 	if (!ret)
+ 		board_info->vmbch_threshold = prop;
+@@ -421,21 +413,12 @@ static struct tps65910_board *tps65910_parse_dt(struct i2c_client *client,
+ 	prop = of_property_read_bool(np, "ti,en-ck32k-xtal");
+ 	board_info->en_ck32k_xtal = prop;
+ 
+-	board_info->irq = client->irq;
+ 	board_info->irq_base = -1;
+ 	board_info->pm_off = of_property_read_bool(np,
+ 			"ti,system-power-controller");
+ 
+-	return board_info;
+-}
+-#else
+-static inline
+-struct tps65910_board *tps65910_parse_dt(struct i2c_client *client,
+-					 unsigned long *chip_id)
+-{
+-	return NULL;
 +	return 0;
  }
+-#endif
  
- static int ux500_probe(struct platform_device *pdev)
+ static struct i2c_client *tps65910_i2c_client;
+ static void tps65910_power_off(void)
+@@ -457,21 +440,21 @@ static int tps65910_i2c_probe(struct i2c_client *i2c,
  {
- 	struct resource musb_resources[2];
--	struct musb_hdrc_platform_data	*pdata = dev_get_platdata(&pdev->dev);
--	struct device_node		*np = pdev->dev.of_node;
-+	struct musb_hdrc_platform_data	*pdata;
- 	struct platform_device		*musb;
- 	struct ux500_glue		*glue;
- 	struct clk			*clk;
- 	int				ret = -ENOMEM;
+ 	struct tps65910 *tps65910;
+ 	struct tps65910_board *pmic_plat_data;
+-	struct tps65910_board *of_pmic_plat_data = NULL;
+ 	struct tps65910_platform_data *init_data;
+ 	unsigned long chip_id = id->driver_data;
+ 	int ret = 0;
  
--	if (!pdata) {
--		if (np) {
--			pdata = ux500_of_probe(pdev, np);
--			if (!pdata)
--				goto err0;
-+	pdata = of_dev_get_platdata(&pdev->dev, sizeof(*pdata),
-+				    ux500_of_probe, NULL);
-+	if (IS_ERR(pdata))
-+		return PTR_ERR(pdata);
- 
--			pdev->dev.platform_data = pdata;
--		} else {
--			dev_err(&pdev->dev, "no pdata or device tree found\n");
--			goto err0;
--		}
+-	pmic_plat_data = dev_get_platdata(&i2c->dev);
+-
+-	if (!pmic_plat_data && i2c->dev.of_node) {
+-		pmic_plat_data = tps65910_parse_dt(i2c, &chip_id);
+-		of_pmic_plat_data = pmic_plat_data;
 -	}
-+	if (!pdata)
-+		goto err0;
-+
-+	pdev->dev.platform_data = pdata;
++	pmic_plat_data = of_dev_get_platdata(&i2c->dev,
++					     sizeof(*pmic_plat_data),
++					     tps65910_parse_dt, &chip_id);
++	if (IS_ERR(pmic_plat_data))
++		return PTR_ERR(pmic_plat_data);
  
- 	glue = devm_kzalloc(&pdev->dev, sizeof(*glue), GFP_KERNEL);
- 	if (!glue)
+ 	if (!pmic_plat_data)
+ 		return -EINVAL;
+ 
++	pmic_plat_data->irq = i2c->irq;
++
+ 	init_data = devm_kzalloc(&i2c->dev, sizeof(*init_data), GFP_KERNEL);
+ 	if (init_data == NULL)
+ 		return -ENOMEM;
+@@ -480,7 +463,7 @@ static int tps65910_i2c_probe(struct i2c_client *i2c,
+ 	if (tps65910 == NULL)
+ 		return -ENOMEM;
+ 
+-	tps65910->of_plat_data = of_pmic_plat_data;
++	tps65910->of_plat_data = pmic_plat_data;
+ 	i2c_set_clientdata(i2c, tps65910);
+ 	tps65910->dev = &i2c->dev;
+ 	tps65910->i2c_client = i2c;
 -- 
 1.9.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
