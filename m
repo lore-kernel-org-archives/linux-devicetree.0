@@ -1,95 +1,199 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: Userspace and Device-Tree
-Date: Fri, 28 Aug 2015 19:52:56 +0100
-Message-ID: <20150828185256.GW12027@sirena.org.uk>
-References: <01e601d0e0f9$614450d0$23ccf270$@gmail.com>
- <20150828101227.GD31748@leverpostej>
- <CAPiN7iV6LF6LtatzCQ5H6Nq=WivE+e4Z1OsA5cArkEZKqwPLBQ@mail.gmail.com>
- <20150828180544.GT12027@sirena.org.uk>
- <CAPiN7iXep-rWN5DyU1+Toso9CT7ppuNyEXX6ySU3AnxwBro2_A@mail.gmail.com>
+From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [RFC PATCH 2/5] Documentation: dt-bindings: add example DT
+ binding document
+Date: Fri, 28 Aug 2015 13:55:11 -0500
+Message-ID: <CAL_JsqJy21yBGe161MrTEC1kL4UD=h+skH=mPm-vjwZ7yEHoUA@mail.gmail.com>
+References: <1440739433-6799-1-git-send-email-mporter@konsulko.com>
+ <1440739433-6799-3-git-send-email-mporter@konsulko.com> <CAL_Jsq+FE4MCCfZC5hDhQBmM1gHibY82S9a8PC1GwsnWsPNxkg@mail.gmail.com>
+ <20150828174937.GB24203@beef>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="rfmCU+hJU+UQGUl0"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <CAPiN7iXep-rWN5DyU1+Toso9CT7ppuNyEXX6ySU3AnxwBro2_A-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Chris Read <chrisrfq-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-spec-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20150828174937.GB24203@beef>
+Sender: devicetree-spec-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Matt Porter <mporter-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
+Cc: Devicetree List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Devicetree Spec List <devicetree-spec-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Behan Webster <behanw-k/hB3zQhLwledRVtV/plodBPR1lH4CV8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+On Fri, Aug 28, 2015 at 12:49 PM, Matt Porter <mporter-OWPKS81ov/FWk0Htik3J/w@public.gmane.org> wrote:
+> On Fri, Aug 28, 2015 at 09:53:06AM -0500, Rob Herring wrote:
+>> On Fri, Aug 28, 2015 at 12:23 AM, Matt Porter <mporter-OWPKS81ov/FWk0Htik3J/w@public.gmane.org> wrote:
+>> > Add a skeleton DT binding document that serves as the canonical
+>> > example for implementing YAML-based DT bindings documentation.
+>> > The skeleton binding illustrates use of all fields and variations
+>> > described in the dt-binding-format.txt documentation.
+>> >
+>> > Signed-off-by: Matt Porter <mporter-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
+>> > ---
+>> >  Documentation/devicetree/bindings/skeleton.yaml | 98 +++++++++++++++++++++++++
+>> >  1 file changed, 98 insertions(+)
+>> >  create mode 100644 Documentation/devicetree/bindings/skeleton.yaml
+>> >
+>> > diff --git a/Documentation/devicetree/bindings/skeleton.yaml b/Documentation/devicetree/bindings/skeleton.yaml
+>> > new file mode 100644
+>> > index 0000000..175965f
+>> > --- /dev/null
+>> > +++ b/Documentation/devicetree/bindings/skeleton.yaml
+>> > @@ -0,0 +1,98 @@
+>> > +%YAML 1.2
+>> > +---
+>> > +id: skel-device
+>> > +
+>> > +title: Skeleton Device
+>> > +
+>> > +maintainer:
+>> > +  - name: Skeleton Person <skel-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+>>
+>> We'd want to tie this into get_maintainers.pl obviously.
+>
+> Right, I broke my rule of "no new tags for content we don't already
+> have" by adding this. It stems out of the discussion at LPC where
+> Mark suggested we could avoid the core bindings being moved by adding
+> maintainer info into the binding itself.
 
---rfmCU+hJU+UQGUl0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+If you stated that rule, I missed it...
 
-On Fri, Aug 28, 2015 at 11:43:19AM -0700, Chris Read wrote:
-> On Fri, Aug 28, 2015 at 11:05 AM, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
+> This is an area where more docs are needed. Ideally, on the first pass
+> conversion we would not attempt to populate these. I had considered
+> that we *could* only add maintainer: tags on core bindings to and
+> adjust get_maintainers.pl to use that info to override the standard
+> directory-based info if it exists. I don't think it's necessary to add
+> a specific maintainer for all of the peripheral bindings if the default
+> is the subsystem maintainer and the dt list. We could at least start
+> directing core binding discussion to the -spec list which is where I
+> think you'd like it.
 
-Please delete unneeded context from your replies, it makes it much
-easier to find any new content you have added.
+Yes, certainly this can solve my problem around handling core bindings.
 
-> > What's the issue you see here?  The GPIO subsystem isn't really for
-> > exposing things to userspace, it's for exposing GPIOs to the rest of the
-> > kernel.  The DT should just describe how the GPIOs are used and then the
-> > bindings for whatever the GPIOs are connected to will work out what to
-> > do with them, including exporting them to userspace if that's how
-> > they're handled.
+Some subsystem maintainers require a driver have a maintainer. We
+could certainly enforce that too. We could probably automatically
+populate this with the original author as a starting point. OTOH,
+bindings should not change frequently.
 
-> There is also the case, as in the connector example above, where the
-> GPIOs are not connected to anything that has a driver associated with
-> it.  In those circumstances it seems reasonable to allow a kernel module
-> to act like the driver which you suggest would normally work out what
+>
+>> > +
+>> > +description: >
+>> > +  The Skeleton Device binding represents the SK11 device produced by
+>> > +  the Skeleton Corporation. The binding can also support compatible
+>> > +  clones made by second source vendors.
+>> > +
+>> > +compatible:
+>> > +  - name: "skel,sk11"
+>> > +  - name: "faux,fx11"
+>>
+>> Is this an OR or AND? We need both.
+>
+> True, this only covers the OR case atm.
+>
+>> The complicated case is "one of {specific names} followed by {generic name}."
+>
+> I need to rethink these. I do have deprecated: tag for that case and
+> possibly "name:" gets split to "generic:" and "specific:" and we can
+> then do the right thing.
+>
+> For the above I would have:
+>
+> compatible:
+>   - specific: "skel,sk11"
+>   - specific: "faux,fx11"
 
-In this case the connector is the thing with the driver (or other in
-kernel user) and should be reponsible for doing something sensible with
-what's on the other end of the connector.
+This can still be an AND or OR relationship.
 
-> to do with the GPIOs, and export them if necessary.  My thought,
-> however, is that the kernel module would need to be configured with
-> board-specific data, including whether to expose the GPIOs to userspace.
-> It also seems like such configuration data might look like DT data.
+>
+> and something like the Allwinner simple framebuffer would be:
+>
+> compatible:
+>   - generic: "simple-framebuffer"
+>   - specific: "allwinner,simple-framebuffer"
+>
+> where our validator would insist on seeing one of the specific: tags
+> along with the generic: tag. A lot of bindings, given current doc
+> patterns would just have two tags like above.
 
-Sure, but that's just a normal driver...  ideally for these sorts of
-connectors there'd also be a way of enumerating anything that is
-connected (but often that's not specified).
+We could follow Pantelis' suggestion and do C style logic expressions:
 
-> > A driver can instantiate a userspace consummer if it finds that useful.
+name: ("chip1-ipblock" || "chip2-ipblock") && "generic-ipblock"
 
-> There is a userspace power-regulator consumer driver (found in
-> drivers/regulator/userspace-consumer.c) that was created to do
-> just that.  It allows hooking up a userspace controlled consumer
-> to any regulator allowing control from userspace.  So far so good.
 
-No, you're missing the point.  The point is that that driver can be
-instantiated from another device (one that describes the actual
-hardware) if it is useful to do so.
+>
+>> > +    description: A clone of the original sk11 device
+>> > +
+>> > +required:
+>> > +  - name: "reg"
+>>
+>> We definitely need type info from the start.
+>
+> Are you sure? Ugh.
+>
+> My big contention here is that we don't carry that content in the
+> docs today so we shouldn't try to add it in the initial conversion.
 
-> If a driver writer needs to conditionally expose some kind of control
-> to userspace based on some board-specific configuration mechanism,
-> I don't currently see a way to do that.
+What? We have that all over the place. Boolean properties, phandles, etc.
 
-I'd be very cautious about general drivers exposing regulators to
-userspace at all...
+> I think you are right in that we should have it documented in the
+> schema but I'm concerned that we make the starting conversion
+> effort too large by adding type info to all converted docs.
 
---rfmCU+hJU+UQGUl0
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+How we do the conversion certainly needs to be worked out. However,
+first we need some sort of agreement that yes this looks promising
+before we spend too much time on it. We need to wait for all the YAML
+haters to come out of hiding. :) Once the direction is settled, then
+we can iron out the details of the structure. Finally, then we can
+determine how to do the conversion. Just because we define how type
+information looks doesn't mean it has to be there day 1.
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
+> I think we gain a lot even without at the start, but I understand
+> why we need it and how it will help reduce the review firehose
+> with the associated validation tools.
+>
+>>
+>> > +    description: chip select address of skeleton device
+>> > +    reference: spi-slave
+>>
+>> I would like to not have to list properties if the inherited binding
+>> lists it. The problem is we need to say how many cells and the order
+>> (not a problem here, but for mmio devices).
+>
+> Yeah, make sense.
+>
+>> Perhaps we can list the reference at the top level for the node
+>> instead of for every property.
+>
+> That's a good point. I was wondering if per prop references would
+> get unwieldy once we actually add them into all the converted docs.
+> There's a huge number of existing docs without proper references.
 
-iQEcBAEBCAAGBQJV4K4HAAoJECTWi3JdVIfQCUEH/iaawrbSwDoPipf1kyzExovP
-RkcyYKo+A249aWnRUwcN/C2SK0RKiRbaBJkIKoKFm5OJ6bmX1A1bk/MLSmQWcmg3
-BumNxs+QUzr9h3e1HlYetqXZzbkvJSWgC/vaJHDlI+v22cZiAsb46SyS4RBVLcXR
-WAb331Z9lrguifCw+Vq5Ffm+bCvvd7CO954KVSwpVZmbb3Htya/hyFdWbXdDw1Y1
-NaVdd+bELbgc+TZS/4FREvxiJTFm9tOfTJWh+QE0IcGRb37HKv355G9ePutQW+vs
-rZU9C5oyXh36rwJnrkUdzigwaMlNSyLXIakQkYSv3yi08ASrkCh80Y/cNCLdYsw=
-=py9l
------END PGP SIGNATURE-----
+Yes, in many cases they are implied. It should be simple enough to
+generate the list though whether they point to the doc file or just
+list the properties.
 
---rfmCU+hJU+UQGUl0--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>
+> Ok, I'll take a look at collecting references per group of properties.
+>
+>>
+>> > +  - name: "spi-max-frequency"
+>> > +    description: >
+>> > +      Maximum SPI clocking speed of skeleton device in Hz, must be
+>> > +      1000000
+>> > +    reference: spi-slave
+>>
+>> Rather than listing the property and having constraint in description,
+>> perhaps we could add constraints like this:
+>>
+>> - spi-max-frequency-range: 1000000 1000000
+>>
+>> Or groups of constraints:
+>>
+>> - spi-max-frequency-constraints:
+>>   range: 1000000 1000000
+>>   some-other-constraint: <value>
+>
+> I was hoping to avoid this to start due to my argument for keeping it
+> simple for the first pass at conversion. However, the latter looks
+> flexible enough. We have cases with enumerated values as well to handle
+> the require some thought.
+
+We can always add constraints as a second step, but I'd like to define
+the structure at least.
+
+Rob
