@@ -1,141 +1,56 @@
-From: Doug Anderson <dianders@chromium.org>
-Subject: Re: [RESEND PATCH v16 4/4] ARM: dts: add the support power-domain
- node on RK3288 SoCs
-Date: Fri, 28 Aug 2015 14:08:52 -0700
-Message-ID: <CAD=FV=UrWauwX143MSZpus=L7N__jL1dU-FwaE8BU7wi=Lu2Qg@mail.gmail.com>
-References: <1440487486-6154-1-git-send-email-wxt@rock-chips.com>
-	<1440487486-6154-5-git-send-email-wxt@rock-chips.com>
-	<7hfv37axhj.fsf@deeprootsystems.com>
-	<CAD=FV=V6oG+9U=W_JZmqCuNo-9-5wW8ffZzG7ZE_3cnSTNAjFQ@mail.gmail.com>
-	<7htwrn6l7g.fsf@deeprootsystems.com>
-	<CAKdAkRS=9Dq+YpMNSjpij0Am4ZD6uUURv74OLLYf+akD=W885A@mail.gmail.com>
-	<7hmvxc45w2.fsf@deeprootsystems.com>
-	<CAD=FV=VTR-PBcXXX1jHNw65x_cMP9CKwVWBs+XCcFqFPp7msjA@mail.gmail.com>
-	<20150828200238.30921.24441@quantum>
+From: Bill Pringlemeir <bpringle-rieW9WUcm8FFJ04o6PK0Fg@public.gmane.org>
+Subject: Re: [PATCH v10 2/5] mtd: nand: vf610_nfc: add hardware BCH-ECC support
+Date: Fri, 28 Aug 2015 17:14:08 -0400
+Message-ID: <BLU436-SMTP79A4D637801F08C772536AB86E0@phx.gbl>
+References: <1438594050-4595-1-git-send-email-stefan@agner.ch>
+	<1438594050-4595-3-git-send-email-stefan@agner.ch>
+	<ff2e2716578a1ae5f0c4b0e0ca8bbdc3@agner.ch>
+	<20150825195411.GJ81844@google.com>
+	<07a479863eef4c53ab2ef6ef85321680@agner.ch>
+	<20150826213448.GU81844@google.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20150828200238.30921.24441@quantum>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Michael Turquette <mturquette@linaro.org>
-Cc: Kevin Hilman <khilman@kernel.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Caesar Wang <wxt@rock-chips.com>, =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko@sntech.de>, Ulf Hansson <ulf.hansson@linaro.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>, Tomasz Figa <tomasz.figa@gmail.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Rob Herring <robh+dt@kernel.org>, Arnd Bergmann <arnd@arndb.de>, Linus Walleij <linus.walleij@linaro.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "jinkun.hong" <jinkun.hong@rock-chips.com>
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20150826213448.GU81844-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org> (Brian Norris's message of
+	"Wed, 26 Aug 2015 14:34:48 -0700")
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>, bpringlemeir-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, sebastian-E0PNVn5OA6ohrxcnuTQ+TQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, marb-Z4QKGCRq86k@public.gmane.org, aaron-yuhzfaV+M/Wz3Dx2OeFgIA@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, albert.aribaud-iEu9NFBzPZE@public.gmane.org, klimov.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Bill Pringlemeir <bpringlemeir-ygJ1pmMJ17cAvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Mike,
 
-On Fri, Aug 28, 2015 at 1:02 PM, Michael Turquette
-<mturquette@linaro.org> wrote:
-> Hi Doug,
->
-> Quoting Doug Anderson (2015-08-27 19:03:20)
->> Kevin,
->>
->> On Thu, Aug 27, 2015 at 5:24 PM, Kevin Hilman <khilman@kernel.org> wrote:
->> >> That is not really workable: the attach and detach happen in
->> >> probe/remove path; if you do not have driver for the device you will
->> >> miss the clocks for it.
->> >
->> > And in my proposal, I suggested that clocks without drivers are
->> > good candidates to list in the domain, with the caveat that the be
->> > called out (documented) as being device clocks that are missing a
->> > driver, so when a driver shows up they can be moved accordingly, and in
->> > a way that actually describes the hardware.
->>
->> What happens if someone disables the driver using the CONFIG subsystem?
->
-> Kevin asked me to chime in on this thread, as I have a half-baked idea
-> that might solve the problem posed by your question above.
->
-> One thing I have been considering for a while is a fallback compatible
-> string that can be used for an IP block when either there is no driver
-> loaded or no driver exists at all. Something like "generic-ip-block".
->
-> The purpose of this compatible string is to allow us to model resource
-> consumption in dts accurately, regardless of whether or not a proper
-> driver has been written in Linux. This idea was born out of the
-> simple-fb binding/driver discussion last year[0].
->
-> Obviously such a binding would not enable any of the logic or function
-> of that IP block; that would require a proper driver. But it would allow
-> us to properly link system-wide resources that are consumed: the
-> generic-ip could consume clocks and regulators, it could belong to power
-> domains, etc. For this reason I have also thought that
-> "generic-resource-consumer" is an accurate compatible string.
->
-> This spares us from having to encode nasty details into the power domain
-> binding, which is exactly what would happen if you needed a dedicated
-> list of clocks in the power domain node that were not claimed by device
-> nodes/drivers.
->
-> Note that a real driver might exist for an IP block, but if that driver
-> is disabled in Kconfig AND the corresponding dt node has this fallback
-> compatible string, then we could be OK, from the perspective of the
-> power domain problem.
+On 26 Aug 2015, computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org wrote:
 
-OK, so that could solve the "Kconfig" problem.
+> On Wed, Aug 26, 2015 at 10:57:38AM -0700, Stefan Agner wrote:
+>> When printing the ECC error count on ECC fail when reading an erased
+>> NAND flash, the numbers of bit flips (stuck at zero) seem to widely
+>> correlate with the number returned by the controller. While it seems
+>> to correlate widely, there are exceptions, as discussed in the
+>> thread: http://thread.gmane.org/gmane.linux.ports.arm.kernel/295424
 
+>> Maybe this is an artifact of the ECC algorithm we just
+>> can't/shouldn't rely on? I am not sure where this originated, I did
+>> not found any indication in the reference manual about what that
+>> value contains in the error case.
 
->> What happens if this is a device that someone has set to 'status =
->> "disabled";' in the device tree?
->
-> If someone does that, then I think we should let that break power domain
-> transitions.
+> Doesn't sound too reliable to me. And I'm not sure even if it was
+> reliable, that it would provide much value. We have to a lot of
+> re-counting anyway, so we might as well just be using our own
+> threshold.  Or maybe I'm missing the point.
 
-So if you're on a board that doesn't use EDP but uses LVDS then their
-suspend/resume should be broken?
+>> Bill, do you have an idea why we used that value as threshold in
+>> early implementations?
 
-Specifically, it's my understanding that on this SoC:
+>> Otherwise I also think we should just drop the use of this value.
 
-1. There's a single "video IO" power domain that contains things like
-the video output processor, EDP, LVDS, HDMI, etc.
+Yes, using this value is not especially useful if we re-read with ECC
+disabled to count the bit flips for erased pages.   I think this is what
+Stefan has done in the 11th patch set.
 
-2. When you turn on/off the power domain it's important to clock all
-devices in the domain during the reset.
-
-3. If you don't clock all devices during the reset they get left in a
-"wedged" state.
-
-4. If you try to do things like suspend/resume it will query all
-devices.  If they've been left in the wedged state then suspend/resume
-will be blocked.
-
-...so this problem is still not solved.
-
->> Even if the device is disabled in one of those two ways, we still need
->> the clocks to be turned on.  ...so if we turn on/off the VIO domain we
->> need to turn on the EDP clock even if there's no EDP in the current
->> board / config.  We might turn on/off VIO for one of the other devices
->> in the VIO domain for one of the other devices in VIO that we are
->> using.
->
-> I'm hesitant to mention this but I am working on a patch series to
-> implement a clock "handoff" mechanism (also inspired by the simplefb
-> discussion). This allows us to set a per-clock flag that tells the
-> framework to enable that clock at registration time, and then the first
-> clock consumer driver to come along and claim that clock inherits that
-> clock enable reference count.
->
-> I'm working on v2 that lets us set this flag from DT, but I really only
-> plan to do this for special cases. For the normal case the flag should
-> be set in the Linux clock provider driver. In the mean time v1 is under
-> discussion[1].
-
-In this case if we're using LVDS and HDMI on a system, we don't want
-the EDP clock always on (that just wastes power).  We just need to
-clock it for the power domain transition.
-
-
-Note that nothing in the above solves the problem that not all clocks
-for a given device need to be turned on during power domain
-transitions.  If we're trying to describe hardware perfectly, we'd
-really need to add to each device:
-
-clocks = <clk1>, <clk2>, <clk3>, ...
-clock-names = "name1", "name2", "name3", ...
-clocks-for-power-domain-transition = "name2", "name3";
-
-...since perhaps the clock named "name1" isn't required for power
-domain transitions and so shouldn't be turned on.  Note that once
-we're going through and adding a special list, it doesn't seem that
-different than just adding the list in the power domain node instead
-(other than being more complex).
+-- 
+Married men live  longer than single men, but married  men are much more
+willing to die - Dilworth
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
