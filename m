@@ -1,7 +1,7 @@
 From: Lee Jones <lee.jones@linaro.org>
-Subject: [PATCH v2 2/4] remoteproc: dt: Provide bindings for ST's Remote Processor Controller driver
-Date: Fri, 28 Aug 2015 11:31:49 +0100
-Message-ID: <1440757911-9120-3-git-send-email-lee.jones@linaro.org>
+Subject: [PATCH v2 4/4] remoteproc: debugfs: Add ability to boot remote processor using debugfs
+Date: Fri, 28 Aug 2015 11:31:51 +0100
+Message-ID: <1440757911-9120-5-git-send-email-lee.jones@linaro.org>
 References: <1440757911-9120-1-git-send-email-lee.jones@linaro.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1440757911-9120-1-git-send-email-lee.jones@linaro.org>
@@ -10,53 +10,58 @@ To: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 Cc: kernel@stlinux.com, ohad@wizery.com, devicetree@vger.kernel.org, Nathan_Lynch@mentor.com, Lee Jones <lee.jones@linaro.org>, Ludovic Barre <ludovic.barre@st.com>
 List-Id: devicetree@vger.kernel.org
 
+This functionality is especially useful during the testing phase.  When
+used in conjunction with Mailbox's Test Framework we can trivially conduct
+end-to-end testing i.e. boot co-processor, send and receive messages to
+the co-processor, then shut it down again (repeat as required).
+
 Signed-off-by: Ludovic Barre <ludovic.barre@st.com>
 Signed-off-by: Lee Jones <lee.jones@linaro.org>
 ---
- .../devicetree/bindings/remoteproc/st-rproc.txt    | 35 ++++++++++++++++++++++
- 1 file changed, 35 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/remoteproc/st-rproc.txt
+ drivers/remoteproc/remoteproc_debugfs.c | 29 +++++++++++++++++++++++++++++
+ 1 file changed, 29 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/remoteproc/st-rproc.txt b/Documentation/devicetree/bindings/remoteproc/st-rproc.txt
-new file mode 100644
-index 0000000..fbd7d78
---- /dev/null
-+++ b/Documentation/devicetree/bindings/remoteproc/st-rproc.txt
-@@ -0,0 +1,35 @@
-+STMicroelectronics Remote Processor
-+-----------------------------------
+diff --git a/drivers/remoteproc/remoteproc_debugfs.c b/drivers/remoteproc/remoteproc_debugfs.c
+index 9d30809..464470d 100644
+--- a/drivers/remoteproc/remoteproc_debugfs.c
++++ b/drivers/remoteproc/remoteproc_debugfs.c
+@@ -88,8 +88,37 @@ static ssize_t rproc_state_read(struct file *filp, char __user *userbuf,
+ 	return simple_read_from_buffer(userbuf, count, ppos, buf, i);
+ }
+ 
++static ssize_t rproc_state_write(struct file *filp, const char __user *userbuf,
++				 size_t count, loff_t *ppos)
++{
++	struct rproc *rproc = filp->private_data;
++	char buf[2];
++	int ret;
 +
-+This binding provides support for adjunct processors found on ST SoCs.
++	ret = copy_from_user(buf, userbuf, 1);
++	if (ret)
++		return -EFAULT;
 +
-+The remote processors can be controlled from the bootloader or the primary OS.
-+If the bootloader starts a remote processor processor the primary OS must detect
-+its state and act accordingly.
++	switch (buf[0]) {
++	case '0':
++		rproc_shutdown(rproc);
++		break;
++	case '1':
++		ret = rproc_boot(rproc);
++		if (ret)
++			dev_warn(&rproc->dev, "Boot failed: %d\n", ret);
++		break;
++	default:
++		dev_err(&rproc->dev, "Unrecognised option: %x\n", buf[1]);
++		return -EINVAL;
++	}
 +
-+Required properties:
-+- compatible		Should be one of:
-+				"st,st231-rproc"
-+				"st,st40-rproc"
-+- reg			Size and length of reserved co-processor memory
-+- resets		Reset lines (See: ../reset/reset.txt)
-+- reset-names		Must be "sw_reset" and "pwr_reset"
-+- clocks		Clock for co-processor (See: ../clock/clock-bindings.txt)
-+- clock-names		Must be "rproc_clk"
-+- clock-frequency	Clock frequency to set co-processor at if the bootloader
-+			hasn't already done so
-+- st,syscfg-boot	The register that holds the boot vector for the co-processor
++	return count;
++}
 +
-+Example:
-+
-+	st231-audio@bae00000 {
-+		compatible	= "st,st231-rproc";
-+		reg		= <0xbae00000 0x01000000>;
-+		reg-names	= "rproc_mem";
-+		resets		= <&softreset STIH407_ST231_AUD_SOFTRESET>;
-+		reset-names	= "sw_reset";
-+		clocks		= <&clk_s_c0_flexgen CLK_ST231_AUD_0>;
-+		clock-names	= "rproc_clk";
-+		clock-frequency	= <600000000>;
-+		st,syscfg-boot	= <&syscfg_core 0x228>;
-+	};
+ static const struct file_operations rproc_state_ops = {
+ 	.read = rproc_state_read,
++	.write = rproc_state_write,
+ 	.open = simple_open,
+ 	.llseek	= generic_file_llseek,
+ };
 -- 
 1.9.1
