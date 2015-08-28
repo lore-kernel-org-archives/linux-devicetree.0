@@ -1,164 +1,51 @@
-From: Alim Akhtar <alim.akhtar@samsung.com>
-Subject: [PATCH] arm64: dts: Add BUS1 instance pinctrl support
-Date: Fri, 28 Aug 2015 16:55:34 +0530
-Message-ID: <1440761134-27639-1-git-send-email-alim.akhtar@samsung.com>
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org
-Cc: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, catalin.marinas@arm.com, will.deacon@arm.com, kgene@kernel.org, k.kozlowski@samsung.com, gautam.vivek@samsung.com
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH 0/1] ARM: dts: sun5i: inet98v_rev2 fix
+ regulator for the usb wifi
+Date: Fri, 28 Aug 2015 14:28:47 +0200
+Message-ID: <20150828122847.GH29389@lukather>
+References: <1440700651-30575-1-git-send-email-hdegoede@redhat.com>
+Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="o71xDhNo7p97+qVi"
+Return-path: <linux-sunxi+bncBD2ZNBF5VYJRBAFIQGXQKGQECEVFAFI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1440700651-30575-1-git-send-email-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <http://groups.google.com/group/linux-sunxi/subscribe>
+To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Cc: Jelle van der Waa <jelle-oJJ1AqDjjO4@public.gmane.org>, Ralph Willekes <benadski-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This adds BUS1 instance pinctrl for exynos7 soc.
+--o71xDhNo7p97+qVi
+Content-Type: text/plain; charset=UTF-8
+Content-Disposition: inline
 
-Signed-off-by: Alim Akhtar <alim.akhtar@samsung.com>
----
- arch/arm64/boot/dts/exynos/exynos7-pinctrl.dtsi |  111 +++++++++++++++++++++++
- arch/arm64/boot/dts/exynos/exynos7.dtsi         |    7 ++
- 2 files changed, 118 insertions(+)
+Hi Hans,
 
-diff --git a/arch/arm64/boot/dts/exynos/exynos7-pinctrl.dtsi b/arch/arm64/boot/dts/exynos/exynos7-pinctrl.dtsi
-index 2eef4a2..96be6e3 100644
---- a/arch/arm64/boot/dts/exynos/exynos7-pinctrl.dtsi
-+++ b/arch/arm64/boot/dts/exynos/exynos7-pinctrl.dtsi
-@@ -586,3 +586,114 @@
- 		samsung,pin-drv = <2>;
- 	};
- };
-+
-+&pinctrl_bus1 {
-+	etc1: etc1 {
-+		gpio-controller;
-+		#gpio-cells = <2>;
-+
-+		interrupt-controller;
-+		#interrupt-cells = <2>;
-+	};
-+
-+	gpf0: gpf0 {
-+		gpio-controller;
-+		#gpio-cells = <2>;
-+
-+		interrupt-controller;
-+		#interrupt-cells = <2>;
-+	};
-+
-+	gpf1: gpf1 {
-+		gpio-controller;
-+		#gpio-cells = <2>;
-+
-+		interrupt-controller;
-+		#interrupt-cells = <2>;
-+	};
-+
-+	gpf2: gpf2 {
-+		gpio-controller;
-+		#gpio-cells = <2>;
-+
-+		interrupt-controller;
-+		#interrupt-cells = <2>;
-+	};
-+
-+	gpf3: gpf3 {
-+		gpio-controller;
-+		#gpio-cells = <2>;
-+
-+		interrupt-controller;
-+		#interrupt-cells = <2>;
-+	};
-+
-+	gpf4: gpf4 {
-+		gpio-controller;
-+		#gpio-cells = <2>;
-+
-+		interrupt-controller;
-+		#interrupt-cells = <2>;
-+	};
-+
-+	gpf5: gpf5 {
-+		gpio-controller;
-+		#gpio-cells = <2>;
-+
-+		interrupt-controller;
-+		#interrupt-cells = <2>;
-+	};
-+
-+	gpg1: gpg1 {
-+		gpio-controller;
-+		#gpio-cells = <2>;
-+
-+		interrupt-controller;
-+		#interrupt-cells = <2>;
-+	};
-+
-+	gpg2: gpg2 {
-+		gpio-controller;
-+		#gpio-cells = <2>;
-+
-+		interrupt-controller;
-+		#interrupt-cells = <2>;
-+	};
-+
-+	gph1: gph1 {
-+		gpio-controller;
-+		#gpio-cells = <2>;
-+
-+		interrupt-controller;
-+		#interrupt-cells = <2>;
-+	};
-+
-+	gpv6: gpv6 {
-+		gpio-controller;
-+		#gpio-cells = <2>;
-+
-+		interrupt-controller;
-+		#interrupt-cells = <2>;
-+	};
-+
-+	spi5_bus: spi5-bus {
-+		samsung,pins = "gpf2-0", "gpf2-1", "gpf2-2", "gpf2-3";
-+		samsung,pin-function = <2>;
-+		samsung,pin-pud = <3>;
-+		samsung,pin-drv = <0>;
-+	};
-+
-+	ufs_refclk_out: ufs-refclk-out {
-+		samsung,pins = "gpg2-4";
-+		samsung,pin-function = <2>;
-+		samsung,pin-pud = <0>;
-+		samsung,pin-drv = <2>;
-+	};
-+
-+	ufs_rst_n: ufs-rst-n {
-+		samsung,pins = "gph1-5";
-+		samsung,pin-function = <2>;
-+		samsung,pin-pud = <3>;
-+		samsung,pin-drv = <0>;
-+	};
-+};
-diff --git a/arch/arm64/boot/dts/exynos/exynos7.dtsi b/arch/arm64/boot/dts/exynos/exynos7.dtsi
-index d7a37c3..f9c5a54 100644
---- a/arch/arm64/boot/dts/exynos/exynos7.dtsi
-+++ b/arch/arm64/boot/dts/exynos/exynos7.dtsi
-@@ -26,6 +26,7 @@
- 		pinctrl5 = &pinctrl_ese;
- 		pinctrl6 = &pinctrl_fsys0;
- 		pinctrl7 = &pinctrl_fsys1;
-+		pinctrl8 = &pinctrl_bus1;
- 	};
- 
- 	cpus {
-@@ -278,6 +279,12 @@
- 			interrupts = <0 203 0>;
- 		};
- 
-+		pinctrl_bus1: pinctrl@14870000 {
-+			compatible = "samsung,exynos7-pinctrl";
-+			reg = <0x14870000 0x1000>;
-+			interrupts = <0 384 0>;
-+		};
-+
- 		hsi2c_0: hsi2c@13640000 {
- 			compatible = "samsung,exynos7-hsi2c";
- 			reg = <0x13640000 0x1000>;
+On Thu, Aug 27, 2015 at 08:37:30PM +0200, Hans de Goede wrote:
+> Hi Maxime,
+> 
+> Here is a fixup patch for the patch adding a dts for the inet98v_rev2.
+> 
+> I'm not sure if you've merged the original patch yet, hence I'm sending
+> this as a follow-up patch. If you've not yet merged the original patch
+> feel free to squash this fix in.
+
+Have you ever submitted that first patch in the first place?
+
+I'm don't have the DTS file you're patching in my tree, and I don't
+see any email and/or patch relating to that board.
+
+Maxime
+
 -- 
-1.7.10.4
+Maxime Ripard, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
+--o71xDhNo7p97+qVi--
