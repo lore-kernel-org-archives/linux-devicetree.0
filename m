@@ -1,254 +1,164 @@
-From: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v5 2/4] Documentation: arm64/arm: dt bindings for numa.
-Date: Fri, 28 Aug 2015 13:32:33 +0200
-Message-ID: <55E046D1.10001@gmail.com>
-References: <1439570374-4079-1-git-send-email-gkulkarni@caviumnetworks.com>
- <1439570374-4079-3-git-send-email-gkulkarni@caviumnetworks.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1439570374-4079-3-git-send-email-gkulkarni-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Ganapatrao Kulkarni <gkulkarni-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Will.Deacon-5wv7dgnIgG8@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, leif.lindholm-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, rfranz-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org, ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, msalter-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, steve.capper-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, hanjun.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, al.stone-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
-Cc: gpkulkarni-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+From: Alim Akhtar <alim.akhtar@samsung.com>
+Subject: [PATCH] arm64: dts: Add BUS1 instance pinctrl support
+Date: Fri, 28 Aug 2015 16:55:34 +0530
+Message-ID: <1440761134-27639-1-git-send-email-alim.akhtar@samsung.com>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org
+Cc: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, catalin.marinas@arm.com, will.deacon@arm.com, kgene@kernel.org, k.kozlowski@samsung.com, gautam.vivek@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-On 14/08/15 18:39, Ganapatrao Kulkarni wrote:
-> DT bindings for numa map for memory, cores and IOs using
-> arm,associativity device node property.
->
-> Signed-off-by: Ganapatrao Kulkarni <gkulkarni-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>
-> ---
->   Documentation/devicetree/bindings/arm/numa.txt | 212 +++++++++++++++++++++++++
->   1 file changed, 212 insertions(+)
->   create mode 100644 Documentation/devicetree/bindings/arm/numa.txt
->
-> diff --git a/Documentation/devicetree/bindings/arm/numa.txt b/Documentation/devicetree/bindings/arm/numa.txt
-> new file mode 100644
-> index 0000000..dc3ef86
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/arm/numa.txt
-> @@ -0,0 +1,212 @@
-> +==============================================================================
-> +NUMA binding description.
-> +==============================================================================
-> +
-> +==============================================================================
-> +1 - Introduction
-> +==============================================================================
-> +
-> +Systems employing a Non Uniform Memory Access (NUMA) architecture contain
-> +collections of hardware resources including processors, memory, and I/O buses,
-> +that comprise what is commonly known as a NUMA node.
-> +Processor accesses to memory within the local NUMA node is generally faster
-> +than processor accesses to memory outside of the local NUMA node.
-> +DT defines interfaces that allow the platform to convey NUMA node
-> +topology information to OS.
-> +
-> +==============================================================================
-> +2 - arm,associativity
-> +==============================================================================
-> +The mapping is done using arm,associativity device property.
-> +this property needs to be present in every device node which needs to to be
-> +mapped to numa nodes.
-> +
-> +arm,associativity property is set of 32-bit integers which defines level of
-> +topology and boundary in the system at which a significant difference in
-> +performance can be measured between cross-device accesses within
-> +a single location and those spanning multiple locations.
-> +The first cell always contains the broadest subdivision within the system,
-> +while the last cell enumerates the individual devices, such as an SMT thread
-> +of a CPU, or a bus bridge within an SoC".
-> +
-> +ex:
-> +	/* board 0, socket 0, cluster 0, core 0  thread 0 */
-> +	arm,associativity = <0 0 0 0 0>;
-> +
-> +==============================================================================
-> +3 - arm,associativity-reference-points
-> +==============================================================================
-> +This property is a set of 32-bit integers, each representing an index into
-> +the arm,associativity nodes. The first integer is the most significant
-> +NUMA boundary and the following are progressively less significant boundaries.
-> +There can be more than one level of NUMA.
-> +
-> +Ex:
-> +	arm,associativity-reference-points = <0 1>;
-> +	The board Id(index 0) used first to calculate the associativity (node
-> +	distance), then follows the  socket id(index 1).
-> +
-> +	arm,associativity-reference-points = <1 0>;
-> +	The socket Id(index 1) used first to calculate the associativity,
-> +	then follows the board id(index 0).
-> +
-> +	arm,associativity-reference-points = <0>;
-> +	Only the board Id(index 0) used to calculate the associativity.
-> +
-> +	arm,associativity-reference-points = <1>;
-> +	Only socket Id(index 1) used to calculate the associativity.
-> +
-> +==============================================================================
-> +4 - Example dts
-> +==============================================================================
-> +
-> +Example: 2 Node system consists of 2 boards and each board having one socket
-> +and 8 core in each socket.
-> +
-> +	arm,associativity-reference-points = <0>;
-> +
-> +	memory@00c00000 {
-> +		device_type = "memory";
-> +		reg = <0x0 0x00c00000 0x0 0x80000000>;
-> +		/* board 0, socket 0, no specific core */
-> +		arm,associativity = <0 0 0xffff>;
-> +	};
-> +
-> +	memory@10000000000 {
-> +		device_type = "memory";
-> +		reg = <0x100 0x00000000 0x0 0x80000000>;
-> +		/* board 1, socket 0, no specific core */
-> +		arm,associativity = <1 0 0xffff>;
-> +	};
-> +
-> +	cpus {
-> +		#address-cells = <2>;
-> +		#size-cells = <0>;
-> +
-> +		cpu@000 {
-> +			device_type = "cpu";
-> +			compatible =  "arm,armv8";
-> +			reg = <0x0 0x000>;
-> +			enable-method = "psci";
-> +			/* board 0, socket 0, core 0*/
-> +			arm,associativity = <0 0 0>;
-> +		};
-> +		cpu@001 {
-> +			device_type = "cpu";
-> +			compatible =  "arm,armv8";
-> +			reg = <0x0 0x001>;
-> +			enable-method = "psci";
-> +			arm,associativity = <0 0 1>;
-> +		};
-> +		cpu@002 {
-> +			device_type = "cpu";
-> +			compatible =  "arm,armv8";
-> +			reg = <0x0 0x002>;
-> +			enable-method = "psci";
-> +			arm,associativity = <0 0 2>;
-> +		};
-> +		cpu@003 {
-> +			device_type = "cpu";
-> +			compatible =  "arm,armv8";
-> +			reg = <0x0 0x003>;
-> +			enable-method = "psci";
-> +			arm,associativity = <0 0 3>;
-> +		};
-> +		cpu@004 {
-> +			device_type = "cpu";
-> +			compatible =  "arm,armv8";
-> +			reg = <0x0 0x004>;
-> +			enable-method = "psci";
-> +			arm,associativity = <0 0 4>;
-> +		};
-> +		cpu@005 {
-> +			device_type = "cpu";
-> +			compatible =  "arm,armv8";
-> +			reg = <0x0 0x005>;
-> +			enable-method = "psci";
-> +			arm,associativity = <0 0 5>;
-> +		};
-> +		cpu@006 {
-> +			device_type = "cpu";
-> +			compatible =  "arm,armv8";
-> +			reg = <0x0 0x006>;
-> +			enable-method = "psci";
-> +			arm,associativity = <0 0 6>;
-> +		};
-> +		cpu@007 {
-> +			device_type = "cpu";
-> +			compatible =  "arm,armv8";
-> +			reg = <0x0 0x007>;
-> +			enable-method = "psci";
-> +			arm,associativity = <0 0 7>;
-> +		};
-> +		cpu@008 {
-> +			device_type = "cpu";
-> +			compatible =  "arm,armv8";
-> +			reg = <0x0 0x008>;
-> +			enable-method = "psci";
-> +			/* board 1, socket 0, core 0*/
-> +			arm,associativity = <1 0 0>;
-> +		};
-> +		cpu@009 {
-> +			device_type = "cpu";
-> +			compatible =  "arm,armv8";
-> +			reg = <0x0 0x009>;
-> +			enable-method = "psci";
-> +			arm,associativity = <1 0 1>;
-> +		};
-> +		cpu@00a {
-> +			device_type = "cpu";
-> +			compatible =  "arm,armv8";
-> +			reg = <0x0 0x00a>;
-> +			enable-method = "psci";
-> +			arm,associativity = <0 0 2>;
+This adds BUS1 instance pinctrl for exynos7 soc.
 
-Nit: this should be
-arm,associativity = <1 0 2>;
+Signed-off-by: Alim Akhtar <alim.akhtar@samsung.com>
+---
+ arch/arm64/boot/dts/exynos/exynos7-pinctrl.dtsi |  111 +++++++++++++++++++++++
+ arch/arm64/boot/dts/exynos/exynos7.dtsi         |    7 ++
+ 2 files changed, 118 insertions(+)
 
-> +		};
-> +		cpu@00b {
-> +			device_type = "cpu";
-> +			compatible =  "arm,armv8";
-> +			reg = <0x0 0x00b>;
-> +			enable-method = "psci";
-> +			arm,associativity = <1 0 3>;
-> +		};
-> +		cpu@00c {
-> +			device_type = "cpu";
-> +			compatible =  "arm,armv8";
-> +			reg = <0x0 0x00c>;
-> +			enable-method = "psci";
-> +			arm,associativity = <1 0 4>;
-> +		};
-> +		cpu@00d {
-> +			device_type = "cpu";
-> +			compatible =  "arm,armv8";
-> +			reg = <0x0 0x00d>;
-> +			enable-method = "psci";
-> +			arm,associativity = <1 0 5>;
-> +		};
-> +		cpu@00e {
-> +			device_type = "cpu";
-> +			compatible =  "arm,armv8";
-> +			reg = <0x0 0x00e>;
-> +			enable-method = "psci";
-> +			arm,associativity = <1 0 6>;
-> +		};
-> +		cpu@00f {
-> +			device_type = "cpu";
-> +			compatible =  "arm,armv8";
-> +			reg = <0x0 0x00f>;
-> +			enable-method = "psci";
-> +			arm,associativity = <1 0 7>;
-> +		};
-> +	};
-> +
-> +	pcie0: pcie0@0x8480,00000000 {
-> +		compatible = "arm,armv8";
-> +		device_type = "pci";
-> +		bus-range = <0 255>;
-> +		#size-cells = <2>;
-> +		#address-cells = <3>;
-> +		reg = <0x8480 0x00000000 0 0x10000000>;  /* Configuration space */
-> +		ranges = <0x03000000 0x8010 0x00000000 0x8010 0x00000000 0x70 0x00000000>; /* mem ranges */
-> +		/* board 0, socket 0, pci bus 0*/
-> +		arm,associativity = <0 0 0>;
-> +        };
->
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/arch/arm64/boot/dts/exynos/exynos7-pinctrl.dtsi b/arch/arm64/boot/dts/exynos/exynos7-pinctrl.dtsi
+index 2eef4a2..96be6e3 100644
+--- a/arch/arm64/boot/dts/exynos/exynos7-pinctrl.dtsi
++++ b/arch/arm64/boot/dts/exynos/exynos7-pinctrl.dtsi
+@@ -586,3 +586,114 @@
+ 		samsung,pin-drv = <2>;
+ 	};
+ };
++
++&pinctrl_bus1 {
++	etc1: etc1 {
++		gpio-controller;
++		#gpio-cells = <2>;
++
++		interrupt-controller;
++		#interrupt-cells = <2>;
++	};
++
++	gpf0: gpf0 {
++		gpio-controller;
++		#gpio-cells = <2>;
++
++		interrupt-controller;
++		#interrupt-cells = <2>;
++	};
++
++	gpf1: gpf1 {
++		gpio-controller;
++		#gpio-cells = <2>;
++
++		interrupt-controller;
++		#interrupt-cells = <2>;
++	};
++
++	gpf2: gpf2 {
++		gpio-controller;
++		#gpio-cells = <2>;
++
++		interrupt-controller;
++		#interrupt-cells = <2>;
++	};
++
++	gpf3: gpf3 {
++		gpio-controller;
++		#gpio-cells = <2>;
++
++		interrupt-controller;
++		#interrupt-cells = <2>;
++	};
++
++	gpf4: gpf4 {
++		gpio-controller;
++		#gpio-cells = <2>;
++
++		interrupt-controller;
++		#interrupt-cells = <2>;
++	};
++
++	gpf5: gpf5 {
++		gpio-controller;
++		#gpio-cells = <2>;
++
++		interrupt-controller;
++		#interrupt-cells = <2>;
++	};
++
++	gpg1: gpg1 {
++		gpio-controller;
++		#gpio-cells = <2>;
++
++		interrupt-controller;
++		#interrupt-cells = <2>;
++	};
++
++	gpg2: gpg2 {
++		gpio-controller;
++		#gpio-cells = <2>;
++
++		interrupt-controller;
++		#interrupt-cells = <2>;
++	};
++
++	gph1: gph1 {
++		gpio-controller;
++		#gpio-cells = <2>;
++
++		interrupt-controller;
++		#interrupt-cells = <2>;
++	};
++
++	gpv6: gpv6 {
++		gpio-controller;
++		#gpio-cells = <2>;
++
++		interrupt-controller;
++		#interrupt-cells = <2>;
++	};
++
++	spi5_bus: spi5-bus {
++		samsung,pins = "gpf2-0", "gpf2-1", "gpf2-2", "gpf2-3";
++		samsung,pin-function = <2>;
++		samsung,pin-pud = <3>;
++		samsung,pin-drv = <0>;
++	};
++
++	ufs_refclk_out: ufs-refclk-out {
++		samsung,pins = "gpg2-4";
++		samsung,pin-function = <2>;
++		samsung,pin-pud = <0>;
++		samsung,pin-drv = <2>;
++	};
++
++	ufs_rst_n: ufs-rst-n {
++		samsung,pins = "gph1-5";
++		samsung,pin-function = <2>;
++		samsung,pin-pud = <3>;
++		samsung,pin-drv = <0>;
++	};
++};
+diff --git a/arch/arm64/boot/dts/exynos/exynos7.dtsi b/arch/arm64/boot/dts/exynos/exynos7.dtsi
+index d7a37c3..f9c5a54 100644
+--- a/arch/arm64/boot/dts/exynos/exynos7.dtsi
++++ b/arch/arm64/boot/dts/exynos/exynos7.dtsi
+@@ -26,6 +26,7 @@
+ 		pinctrl5 = &pinctrl_ese;
+ 		pinctrl6 = &pinctrl_fsys0;
+ 		pinctrl7 = &pinctrl_fsys1;
++		pinctrl8 = &pinctrl_bus1;
+ 	};
+ 
+ 	cpus {
+@@ -278,6 +279,12 @@
+ 			interrupts = <0 203 0>;
+ 		};
+ 
++		pinctrl_bus1: pinctrl@14870000 {
++			compatible = "samsung,exynos7-pinctrl";
++			reg = <0x14870000 0x1000>;
++			interrupts = <0 384 0>;
++		};
++
+ 		hsi2c_0: hsi2c@13640000 {
+ 			compatible = "samsung,exynos7-hsi2c";
+ 			reg = <0x13640000 0x1000>;
+-- 
+1.7.10.4
