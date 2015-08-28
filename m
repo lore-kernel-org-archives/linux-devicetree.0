@@ -1,150 +1,87 @@
-From: Peter Griffin <peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 3/7] dmaengine: st_fdma: Add STMicroelectronics FDMA
- engine driver support
-Date: Fri, 28 Aug 2015 18:59:22 +0100
-Message-ID: <20150828175922.GA2853@griffinp-ThinkPad-X1-Carbon-2nd>
-References: <1436371888-27863-1-git-send-email-peter.griffin@linaro.org>
- <1436371888-27863-4-git-send-email-peter.griffin@linaro.org>
- <1436429872.20619.77.camel@tiscali.nl>
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: Userspace and Device-Tree
+Date: Fri, 28 Aug 2015 19:05:44 +0100
+Message-ID: <20150828180544.GT12027@sirena.org.uk>
+References: <01e601d0e0f9$614450d0$23ccf270$@gmail.com>
+ <20150828101227.GD31748@leverpostej>
+ <CAPiN7iV6LF6LtatzCQ5H6Nq=WivE+e4Z1OsA5cArkEZKqwPLBQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="PjTdUoKi0+yCYsVx"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1436429872.20619.77.camel-IWqWACnzNjzz+pZb47iToQ@public.gmane.org>
+In-Reply-To: <CAPiN7iV6LF6LtatzCQ5H6Nq=WivE+e4Z1OsA5cArkEZKqwPLBQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Paul Bolle <pebolle-IWqWACnzNjzz+pZb47iToQ@public.gmane.org>
-Cc: lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ludovic.barre-qxv4g6HH51o@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, srinivas.kandagatla-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, maxime.coquelin-qxv4g6HH51o@public.gmane.org, patrice.chotard-qxv4g6HH51o@public.gmane.org, vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org
+To: Chris Read <chrisrfq-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Paul,
 
-Thanks for reviewing.
+--PjTdUoKi0+yCYsVx
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-On Thu, 09 Jul 2015, Paul Bolle wrote:
+On Fri, Aug 28, 2015 at 10:24:54AM -0700, Chris Read wrote:
+> On Fri, Aug 28, 2015 at 3:12 AM, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org> wrote:
 
-> On wo, 2015-07-08 at 17:11 +0100, Peter Griffin wrote:
-> > --- a/drivers/dma/Kconfig
-> > +++ b/drivers/dma/Kconfig
->  
-> > +config ST_FDMA
-> > +	bool "ST FDMA dmaengine support"
-> > +	depends on ARCH_STI
-> > +	select DMA_ENGINE
-> > +	select FW_LOADER
-> > +	select FW_LOADER_USER_HELPER_FALLBACK
-> > +	select LIBELF_32
-> > +	select DMA_VIRTUAL_CHANNELS
-> > +	help
-> > +	  Enable support for ST FDMA controller.
-> > +	  It supports 16 independent DMA channels, accepts up to 32 DMA requests
-> > +
-> > +	  Say Y here if you have such a chipset.
-> > +	  If unsure, say N.
-> 
-> > --- a/drivers/dma/Makefile
-> > +++ b/drivers/dma/Makefile
-> > 
-> > +obj-$(CONFIG_ST_FDMA) += st_fdma.o
-> 
-> ST_FDMA is a bool symbol, so st_fdma.o can only be built-in.
+> > So long as the DT describes the HW, the subsystem can then choose to
+> > expose the devices as it wishes, and any policy atop of that can then be
+> > applied in the usual manner (e.g. udev for access control, naming, etc).
 
-Yes good spot, that is a mistake it should be tristate. Will fix in v2.
+> The issue I see is that drivers may want to expose something in one case,
+> but not in another, in a very board-specific way.  For example an I2C GPIO
+> expander has a driver that allows reading and writing the GPIOs that it
+> provides.  In one system the GPIOs control power switches and the DT
+> is used to connect them to regulators, and they are activated as device
+> files are opened.  There is no need to expose any GPIOs to userspace.
+> On another board the GPIOs are attached to a connector that is intended
+> for customization by an end user.  The same driver will want to expose
+> the GPIOs to userspace in one case, but not in another.  Thus I see a
+> need for some kind of board-specific configuration mechanism--without
+> a "board file". It doesn't need to be DT.
 
-> 
-> > --- /dev/null
-> > +++ b/drivers/dma/st_fdma.c
-> 
-> > +#include <linux/module.h>
-> 
-> Needed?
-> 
-> > +void *st_fdma_seg_to_mem(struct st_fdma_dev *fdev, u64 da, int len)
-> 
-> static?
+What's the issue you see here?  The GPIO subsystem isn't really for
+exposing things to userspace, it's for exposing GPIOs to the rest of the
+kernel.  The DT should just describe how the GPIOs are used and then the
+bindings for whatever the GPIOs are connected to will work out what to
+do with them, including exporting them to userspace if that's how
+they're handled.
 
-Fixed in v2.
+> > I don't see this as strictly a policy issue, because it's so
+> board-specific.
 
-> 
-> > +{
-> > +	[...]
-> > +}
-> 
-> > +static int
-> > +st_fdma_elf_load_segments(struct st_fdma_dev *fdev, const struct 
-> > firmware *fw)
-> > +{
-> > +	[...]
-> > +		dst = st_fdma_seg_to_mem(fdev, da, memsz);
-> > +		[...]
-> > +}
-> 
-> > +static const struct of_device_id st_fdma_match[] = {
-> > +	{ .compatible = "st,fdma_mpe31", .data = &fdma_mpe31 },
-> > +	{},
-> > +};
-> > +MODULE_DEVICE_TABLE(of, st_fdma_match);
-> 
-> MODULE_DEVICE_TABLE() is preprocessed away for built-in only code.
-> 
-> > +static int __exit st_fdma_remove(struct platform_device *pdev)
-> > +{
-> > +	struct st_fdma_dev *fdev = platform_get_drvdata(pdev);
-> > +
-> > +	wait_for_completion(&fdev->fw_ack);
-> > +
-> > +	st_fdma_clk_disable(fdev);
-> > +
-> > +	return 0;
-> > +}
-> 
-> Since this driver is built-in only this means st_fdma_remove() can never
-> be used, right?
+> A policy would need to allow for features like GPIOs to be both exposed or
+> to not be exposed, but in a board-specific way.
 
-Will be capable of being a module in v2.
+You're trying to handle this at the wrong level, it's not an issue for
+the GPIOs themselves.
 
-> 
-> > +static struct platform_driver st_fdma_platform_driver = {
-> > +	.driver = {
-> > +		.name = "st-fdma",
-> > +		.of_match_table = st_fdma_match,
-> > +		.pm = ST_FDMA_PM,
-> > +	},
-> > +	.probe = st_fdma_probe,
-> > +	.remove = st_fdma_remove,
-> > +};
-> > +module_platform_driver(st_fdma_platform_driver);
-> 
-> So can .remove be dropped?
-> 
-> Since v4.2-rc1 there's builtin_platform_driver() for built-in only code.
+> I see a strong need for board-specific configuration of drivers as they
+> apply
+> to exposure to userspace, but that need does not yet seem well addressed.
+> There are some kernel modules (such as userspace-consumer.c) that are
+> specifically designed to assist with this, but without some way to specify
+> how to hook them up to other devices, they aren't available.
 
-Thanks for the pointer, I wasn't aware of that function.
+A driver can instantiate a userspace consummer if it finds that useful.
 
-> 
-> > +bool st_fdma_filter_fn(struct dma_chan *chan, void *param)
-> > +{
-> > +	[...]
-> > +}
-> > +EXPORT_SYMBOL(st_fdma_filter_fn);
-> 
-> This series adds no users of this export. I suppose they will be added
-> in another series. Is that correct?
+--PjTdUoKi0+yCYsVx
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
-No the export is not required. Will fix in v2.
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
 
-> 
-> > +MODULE_LICENSE("GPL v2");
-> > +MODULE_DESCRIPTION("STMicroelectronics FDMA engine driver");
-> > +MODULE_AUTHOR("Ludovic.barre <Ludovic.barre-qxv4g6HH51o@public.gmane.org>");
-> 
-> These macros will, basically, be preprocessed away for built-in only
-> code.
+iQEcBAEBCAAGBQJV4KL3AAoJECTWi3JdVIfQqkwH/0LOb/VeSOIlHhyaqDUPqlJm
+qHCre35Iew6L2CKxaCI7axRTL/rjHbj/b5nzSJuJv7FdV72sN8wAsuuMXZ07qU/f
+N21Xe93GPtTfl0Y5LI2/MLiFKTbGsITSoPGFYiHmsniqnvVR3gGK/W2Tb7ijjLcl
+G1BaghkN2rDvNjDmMREqzDaW3ApbsUVHy5+jS6D0PdXcapdofqsbCzvE9TwFc2h0
+5rE4xDJ0wwWTpfWAw5qRRUbk+VEOtZD1i3MoCxzaUc5RMG1uzEXaH12N3AjGisMM
+npU1c4RWeBhzgAL/QXjx3x/Q12crxQxBiqKOuhR+6Ipt59Uul9XQ53kVKb2Na/Y=
+=httT
+-----END PGP SIGNATURE-----
 
-The driver will be capable of being a module in v2.
-
-regards,
-
-Peter.
+--PjTdUoKi0+yCYsVx--
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
