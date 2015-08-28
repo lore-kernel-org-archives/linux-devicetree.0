@@ -1,112 +1,127 @@
 From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v5 2/4] Documentation: arm64/arm: dt bindings for numa.
-Date: Fri, 28 Aug 2015 09:02:35 -0500
-Message-ID: <CAL_JsqLOpUTVeKbkJ6uPi0EYistd=BowAHdtSmaUYYDhU6c9Sg@mail.gmail.com>
-References: <1439570374-4079-1-git-send-email-gkulkarni@caviumnetworks.com>
- <1439570374-4079-3-git-send-email-gkulkarni@caviumnetworks.com> <20150828123228.GE31748@leverpostej>
+Subject: Re: [RFC PATCH 0/5] DT binding documents using text markup
+Date: Fri, 28 Aug 2015 09:26:17 -0500
+Message-ID: <CAL_Jsq+qCJfLYxVfyQ4gAxPWLZ2=WNa0H21+cRcBi7dGVG0PMA@mail.gmail.com>
+References: <1440739433-6799-1-git-send-email-mporter@konsulko.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20150828123228.GE31748@leverpostej>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
-Cc: Ganapatrao Kulkarni <gkulkarni-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <Catalin.Marinas-5wv7dgnIgG8@public.gmane.org>, "grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "leif.lindholm-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <leif.lindholm-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "rfranz-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org" <rfranz-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>, "ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "msalter-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org" <msalter-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "steve.capper-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <steve.capper-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "hanjun.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <hanjun.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "al.stone-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <al.stone-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "arnd-r2nGTMty4D4@public.gmane.org" <arnd-r2nGTMty4D4@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, "ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org" <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, "galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org" <galak@codeaurora>
+Return-path: <devicetree-spec-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1440739433-6799-1-git-send-email-mporter-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
+Sender: devicetree-spec-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Matt Porter <mporter-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
+Cc: Devicetree List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Devicetree Spec List <devicetree-spec-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Behan Webster <behanw-k/hB3zQhLwledRVtV/plodBPR1lH4CV8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-+benh
+On Fri, Aug 28, 2015 at 12:23 AM, Matt Porter <mporter-OWPKS81ov/FWk0Htik3J/w@public.gmane.org> wrote:
+> During the Device Tree microconference at Linux Plumbers 2015, we had
+> a short discussion about how to improve DT Binding Documentation. A
+> number of issues were raised (again, as these things have been
+> discussed in the past) including:
+>
+>         * Inconsistency between binding documents due to prose text
+>           format.
+>         * Inability to reliably machine read bindings for mass update
+>           or search.
+>         * Bit rot of bindings as new conventions are agreed upon but
+>           only new bindings are changed.
 
-On Fri, Aug 28, 2015 at 7:32 AM, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org> wrote:
-> Hi,
->
-> On Fri, Aug 14, 2015 at 05:39:32PM +0100, Ganapatrao Kulkarni wrote:
->> DT bindings for numa map for memory, cores and IOs using
->> arm,associativity device node property.
->
-> Given this is just a copy of ibm,associativity, I'm not sure I see much
-> point in renaming the properties.
+Thanks for pulling this together.
 
-So just keep the ibm? I'm okay with that. That would help move to
-common code. Alternatively, we could drop the vendor prefix and have
-common code just check for both.
+> Grant Likely probably summed up the issue best with "...as long as
+> bindings are human readable, we'll have issues...". The context
+> of that comment was, of course, regarding our current documents
+> written in very inconsistent prose style. When the topic of needing
+> the bindings in a rigid format was raised, there was general head
+> nodding that this was needed. It was noted that this has been
+> discussed many times before and nothing has been done.
+>
+> My proposed solution to the problem is to convert all DT bindings
+> a rigid text markup format. In choosing a text markup language my
+> requirements were:
+>
+>         1) Human readable
+>         2) Well documented
+>         3) Easy to translate to other data formats
+>         4) Well supported by tools and libraries
+>
+> After looking at a number of markup options, YAML stood out as the
+> one that meets all of these requirements. The YAML syntax is adopted
+> in many projects specifically because of the high level of readability.
+> A comprehensive spec is at http://www.yaml.org/spec/1.2/spec.html.
+> There's a number of tools to convert between YAML and other popular
+> data formats such as JSON and XML. XML was cited by Behan Webster
+> during the microconference as an important data format as the type
+> of developers that may produce comprehensive DTS Binding validation
+> tools will want to use XML. Every major scripting language has a
+> high level binding to the low level libyaml C library to facilitate
+> handling of YAML data files.
 
->
-> However, (somewhat counter to that) I'm also concerned that this isn't
-> sufficient for systems we're beginning to see today (more on that
-> below), so I don't think a simple copy of ibm,associativity is good
-> enough.
->
->>
->> Signed-off-by: Ganapatrao Kulkarni <gkulkarni-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>
->> ---
->>  Documentation/devicetree/bindings/arm/numa.txt | 212 +++++++++++++++++++++++++
->>  1 file changed, 212 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/arm/numa.txt
->>
->> diff --git a/Documentation/devicetree/bindings/arm/numa.txt b/Documentation/devicetree/bindings/arm/numa.txt
->> new file mode 100644
->> index 0000000..dc3ef86
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/arm/numa.txt
->> @@ -0,0 +1,212 @@
->> +==============================================================================
->> +NUMA binding description.
->> +==============================================================================
->> +
->> +==============================================================================
->> +1 - Introduction
->> +==============================================================================
->> +
->> +Systems employing a Non Uniform Memory Access (NUMA) architecture contain
->> +collections of hardware resources including processors, memory, and I/O buses,
->> +that comprise what is commonly known as a NUMA node.
->> +Processor accesses to memory within the local NUMA node is generally faster
->> +than processor accesses to memory outside of the local NUMA node.
->> +DT defines interfaces that allow the platform to convey NUMA node
->> +topology information to OS.
->> +
->> +==============================================================================
->> +2 - arm,associativity
->> +==============================================================================
->> +The mapping is done using arm,associativity device property.
->> +this property needs to be present in every device node which needs to to be
->> +mapped to numa nodes.
->
-> Can't there be some inheritance? e.g. all devices on a bus with an
-> arm,associativity property being assumed to share that value?
+Being markup language novice, this looks good to me.
 
-There is actually already based on kernel code. So the documentation
-just needs to be explicit.
+> One caveat with YAML is it does not tolerate tabs. Yes, I said it.
+> No tabs! This can be managed with proper editor modes and also with
+> helper scripts to strip tabs to aid in people passing planned
+> checkpatch.pl checks that would run YAML DT Binding specific tag
+> validators for new bindings.
 
->
->> +
->> +arm,associativity property is set of 32-bit integers which defines level of
->
-> s/set/list/ -- the order is important.
->
->> +topology and boundary in the system at which a significant difference in
->> +performance can be measured between cross-device accesses within
->> +a single location and those spanning multiple locations.
->> +The first cell always contains the broadest subdivision within the system,
->> +while the last cell enumerates the individual devices, such as an SMT thread
->> +of a CPU, or a bus bridge within an SoC".
->
-> While this gives us some hierarchy, this doesn't seem to encode relative
-> distances at all. That seems like an oversight.
->
-> Additionally, I'm somewhat unclear on how what you'd be expected to
-> provide for this property in cases like ring or mesh interconnects,
-> where there isn't a strict hierarchy (see systems with ARM's own CCN, or
-> Tilera's TILE-Mx), but there is some measure of closeness.
->
-> Must all of these have the same length? If so, why not have a
-> #(whatever)-cells property in the root to describe the expected length?
-> If not, how are they to be interpreted relative to each other?
+What do parsers do with tabs? Throw an error?
 
-All points that could be asked of the IBM binding. Perhaps Arnd or Ben
-can provide some insight or know who can?
+Beyond tabs, how do we check files can be parsed both generically and
+for any binding specific requirements. We now need a schema for
+checking the schema. We need some equivalent to compile testing.
+
+An example such as checking that compatible strings are documented as
+checkpatch.pl does would be nice. Roughly, that would be just list all
+compatible values.
+
+> The scope of the initial YAML DT Binding format was specifically
+> limited to supporting *only* the content we have in bindings today.
+> The idea here is to propose and agree on something that will take
+> us just a few steps in the right direction. If we move *all* current
+> binding content to a machine parseable format, additional features
+> can be added with more automation and scripting. As it stands today,
+> because of the inconsistency of the wording of the files, we can't
+> add a lot of new features to the content until we convert what we
+> have today into a standard format.
+>
+> With that said, it should be noted that some new features such as
+> "type" tags to indicate cell types could be added to support
+> additional DTS validation beyond what the current content supports.
+> Another possibility is adding "range" type information to validate
+> the legal values for a cell.
+>
+> This series is broken up into three major parts:
+>
+> 1) The documentation defining the YAML DT binding format
+> 2) A skeleton device binding example illustrating use of this format
+> 3) Some real binding conversions (eeprom.txt, phy-bindings.txt, and
+>    ti-phy.txt
+>
+> As a proof of concept of what can be done with a proper machine
+> readable DT binding source file, there's a simple markdown document
+> generator at https://github.com/konsulko/dtgendoc. Also, to see
+> actual output from the generator, the generated markdown from those
+> bindings is viewable at https://github.com/konsulko/dtgendoc/wiki
+
+Nice.
+
+> There's a lot of other possibilities for validation tools using
+> only the data we have today in the bindings. In addition, Frank
+> Rowand covered some DT debug techniques that would benefit from
+> the binding documentation being 100% reliably searchable.
+>
+> I found it useful to see a side-by-side view of a converted doc
+> versus the original content, so here's a screenshot of eeprom.txt
+> vs. eeprom.yaml:
+> https://github.com/konsulko/dtgendoc/wiki#eepromtxt-vs-eepromyaml
+>
+> When we decide on a text markup format that is acceptable, then the
+> next step is to convert all the bindings. That process would start
+> with the complete set of generic bindings as they will be referenced
+> by the actual device bindings.
+
+You are going to do that for everyone, right? ;)
+
+I've got some comments on the specific format as well.
 
 Rob
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
