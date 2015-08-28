@@ -1,51 +1,81 @@
-From: "Yang, Wenyou" <Wenyou.Yang-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Subject: RE: [PATCH v6 1/2] drivers: watchdog: add a driver to support
- SAMA5D4 watchdog timer
-Date: Fri, 28 Aug 2015 01:30:51 +0000
-Message-ID: <B256D81BAE5131468A838E5D7A243641C9F967D2@penmbx01>
-References: <1438856146-2459-1-git-send-email-wenyou.yang@atmel.com>
- <1438856206-2503-1-git-send-email-wenyou.yang@atmel.com>
- <55C4CDEB.9020505@roeck-us.net>
+From: Jaehoon Chung <jh80.chung@samsung.com>
+Subject: Re: [PATCH] ARM: dts: use vqmmc-supply of emmc/sd for
+ exynos4412-odroid-common
+Date: Fri, 28 Aug 2015 10:48:56 +0900
+Message-ID: <55DFBE08.9090603@samsung.com>
+References: <1440667758-14960-1-git-send-email-jh80.chung@samsung.com>
+ <55DF0204.1010604@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="gb2312"
-Content-Transfer-Encoding: base64
-Return-path: <linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <55C4CDEB.9020505-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
-Content-Language: en-US
-Sender: linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, "wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org" <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "pawel.moll-5wv7dgnIgG8@public.gmane.org" <pawel.moll-5wv7dgnIgG8@public.gmane.org>, "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org" <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, "galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org" <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: "sylvain.rochet-ETtyaVkrhkNWk0Htik3J/w@public.gmane.org" <sylvain.rochet-ETtyaVkrhkNWk0Htik3J/w@public.gmane.org>, "Ferre, Nicolas" <Nicolas.FERRE-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, "boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org" <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=iso-8859-2
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <55DF0204.1010604@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Krzysztof Kozlowski <k.kozlowski@samsung.com>, linux-samsung-soc@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Kukjin Kim <kgene@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogR3VlbnRlciBSb2VjayBb
-bWFpbHRvOmxpbnV4QHJvZWNrLXVzLm5ldF0NCj4gU2VudDogMjAxNcTqONTCN8jVIDIzOjI2DQo+
-IFRvOiBZYW5nLCBXZW55b3U7IHdpbUBpZ3VhbmEuYmU7IHJvYmgrZHRAa2VybmVsLm9yZzsgcGF3
-ZWwubW9sbEBhcm0uY29tOw0KPiBtYXJrLnJ1dGxhbmRAYXJtLmNvbTsgaWpjK2RldmljZXRyZWVA
-aGVsbGlvbi5vcmcudWs7IGdhbGFrQGNvZGVhdXJvcmEub3JnDQo+IENjOiBzeWx2YWluLnJvY2hl
-dEBmaW5zZWN1ci5jb207IEZlcnJlLCBOaWNvbGFzOyBib3Jpcy5icmV6aWxsb25AZnJlZS0NCj4g
-ZWxlY3Ryb25zLmNvbTsgZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5vcmc7IGxpbnV4LWtlcm5lbEB2
-Z2VyLmtlcm5lbC5vcmc7IGxpbnV4LQ0KPiB3YXRjaGRvZ0B2Z2VyLmtlcm5lbC5vcmcNCj4gU3Vi
-amVjdDogUmU6IFtQQVRDSCB2NiAxLzJdIGRyaXZlcnM6IHdhdGNoZG9nOiBhZGQgYSBkcml2ZXIg
-dG8gc3VwcG9ydCBTQU1BNUQ0DQo+IHdhdGNoZG9nIHRpbWVyDQo+IA0KPiBPbiAwOC8wNi8yMDE1
-IDAzOjE2IEFNLCBXZW55b3UgWWFuZyB3cm90ZToNCj4gPj5Gcm9tIFNBTUE1RDQsIHRoZSB3YXRj
-aGRvZyB0aW1lciBpcyB1cGdyYXRlZCB3aXRoIGEgbmV3IGZlYXR1cmUsDQo+ID4gd2hpY2ggaXMg
-ZGVzY3JpYmxlZCBhcyBpbiB0aGUgZGF0YXNoZWV0LCAiV0RUX01SIGNhbiBiZSB3cml0dGVuIHVu
-dGlsDQo+ID4gYSBMT0NLTVIgY29tbWFuZCBpcyBpc3N1ZWQgaW4gV0RUX0NSIi4NCj4gPiBUaGF0
-IGlzIHRvIHNheSwgYXMgbG9uZyBhcyB0aGUgYm9vdHN0cmFwIGFuZCB1LWJvb3QgZG9uJ3QgaXNz
-dWUgYQ0KPiA+IExPQ0tNUiBjb21tYW5kLCBXRFRfTVIgY2FuIGJlIHdyaXR0ZW4gbW9yZSB0aGFu
-IG9uY2UgaW4gdGhlIGRyaXZlci4NCj4gPg0KPiA+IFNvIHRoZSBTQU1BNUQ0IHdhdGNoZG9nIGRy
-aXZlcidzIGltcGxlbWVudGF0aW9uIGlzIGRpZmZlcmVudCBmcm9tIHRoZQ0KPiA+IGF0OTFzYW05
-MjYwIHdhdGNoZG9nIGRyaXZlciBpbXBsZW1lbnRlZCBpbiBmaWxlIGF0OTFzYW05X3dkdC5jLg0K
-PiA+IFRoZSB1c2VyIGFwcGxpY2F0aW9uIG9wZW4gdGhlIGRldmljZSBmaWxlIHRvIGVuYWJsZSB0
-aGUgd2F0Y2hkb2cgdGltZXINCj4gPiBoYXJkd2FyZSwgYW5kIGNsb3NlIHRvIGRpc2FibGUgaXQs
-IGFuZCBzZXQgdGhlIHdhdGNoZG9nIHRpbWVyIHRpbWVvdXQNCj4gPiBieSBzZXRpbmcgV0RWIGFu
-ZCBXREQgZmllbGRzIG9mIFdEVF9NUiByZWdpc3RlciwgYW5kIHBpbmcgdGhlIHdhdGNoZG9nDQo+
-ID4gYnkgaXNzdWluZyBXRFJTVFQgY29tbWFuZCB0byBXRFRfQ1IgcmVnaXN0ZXIgd2l0aCBoYXJk
-LWNvZGVkIGtleS4NCj4gPg0KPiA+IFNpZ25lZC1vZmYtYnk6IFdlbnlvdSBZYW5nIDx3ZW55b3Uu
-eWFuZ0BhdG1lbC5jb20+DQo+IA0KPiBSZXZpZXdlZC1ieTogR3VlbnRlciBSb2VjayA8bGludXhA
-cm9lY2stdXMubmV0Pg0KDQpIaSBWaW0sDQoNCkNhbiB0aGlzIHBhdGNoIHNlcmllcyBiZSBtZXJn
-ZWQ/IENvdWxkIHlvdSBwbGVhc2U/DQoNCkJlc3QgUmVnYXJkcywNCldlbnlvdSBZYW5nDQoNCg==
---
-To unsubscribe from this list: send the line "unsubscribe linux-watchdog" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+On 08/27/2015 09:26 PM, Krzysztof Kozlowski wrote:
+> W dniu 27.08.2015 o 18:29, Jaehoon Chung pisze:
+>> Currently vmmc's property is wrong.
+>> If it needs to control two supplies, then it has to use vmmc/vqmmc-supply.
+>> (Card supply power and I/O Line supply Power.)
+>>
+>> Signed-off-by: Jaehoon Chung <jh80.chung@samsung.com>
+>> ---
+>>  arch/arm/boot/dts/exynos4412-odroid-common.dtsi | 7 ++++---
+>>  1 file changed, 4 insertions(+), 3 deletions(-)
+>>
+>> diff --git a/arch/arm/boot/dts/exynos4412-odroid-common.dtsi b/arch/arm/boot/dts/exynos4412-odroid-common.dtsi
+>> index ca7d168..4ddabfd 100644
+>> --- a/arch/arm/boot/dts/exynos4412-odroid-common.dtsi
+>> +++ b/arch/arm/boot/dts/exynos4412-odroid-common.dtsi
+>> @@ -461,10 +461,10 @@
+>>  &mshc_0 {
+>>  	pinctrl-0 = <&sd4_clk &sd4_cmd &sd4_bus4 &sd4_bus8>;
+>>  	pinctrl-names = "default";
+>> -	vmmc-supply = <&ldo20_reg &buck8_reg>;
+>> +	vmmc-supply = <&ldo20_reg>;
+>> +	vqmmc-supply = <&buck8_reg>;
+> 
+> Shouldn't this be reversed? LDO20 has 1.8V and it goes to MMC connector,
+> so it should be VQMMC?
+
+If my schematics is right thing, buck8 is used LAN card power.
+I will send after removing buck8_reg. how about?
+Anyway, Thanks for pointing out. :)
+
+I don't know who this regulator applied. I have guessed that it used for eMMC.
+Sorry for guessing.
+
+Best Regards,
+Jaehoon Chung
+
+> 
+> In the same time I can't find on schematics where BUCK8 goes...
+> 
+> The SDHCI_2 node below looks good.
+> 
+> Best regards,
+> Krzysztof
+> 
+>>  	mmc-pwrseq = <&emmc_pwrseq>;
+>>  	status = "okay";
+>> -
+>>  	num-slots = <1>;
+>>  	broken-cd;
+>>  	card-detect-delay = <200>;
+>> @@ -485,7 +485,8 @@
+>>  	bus-width = <4>;
+>>  	pinctrl-0 = <&sd2_clk &sd2_cmd &sd2_cd &sd2_bus4>;
+>>  	pinctrl-names = "default";
+>> -	vmmc-supply = <&ldo4_reg &ldo21_reg>;
+>> +	vmmc-supply = <&ldo21_reg>;
+>> +	vqmmc-supply = <&ldo4_reg>;
+>>  	cd-gpios = <&gpk2 2 0>;
+>>  	cd-inverted;
+>>  	status = "okay";
+>>
+> 
+> 
+> 
