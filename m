@@ -1,54 +1,108 @@
-From: Florian Fainelli <fainelli-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH v2 2/5] ARM: NSP: add minimal Northstar Plus device tree
-Date: Fri, 28 Aug 2015 09:36:42 -0700
-Message-ID: <55E08E1A.8050805@broadcom.com>
-References: <1440628530-6137-1-git-send-email-jonmason@broadcom.com> <1440628530-6137-3-git-send-email-jonmason@broadcom.com> <CAL_JsqJb+Pj7c=3Q9ViPhU_=tJxqOzEhOPALctf-zaFHQv+bWg@mail.gmail.com>
+From: Peter Griffin <peter.griffin@linaro.org>
+Subject: Re: [PATCH v2 2/5] ARM: DT: STi: STiH407: Add c8sectpfe LinuxDVB DT
+ node.
+Date: Fri, 28 Aug 2015 18:07:40 +0100
+Message-ID: <20150828170740.GA18136@griffinp-ThinkPad-X1-Carbon-2nd>
+References: <1440678575-21646-1-git-send-email-peter.griffin@linaro.org>
+ <1440678575-21646-3-git-send-email-peter.griffin@linaro.org>
+ <20150828070100.GF4796@x1>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAL_JsqJb+Pj7c=3Q9ViPhU_=tJxqOzEhOPALctf-zaFHQv+bWg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jon Mason <jonmason-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Cc: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Kevin Hilman <khilman-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org" <bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Kapil Hali <kapilh-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-media-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20150828070100.GF4796@x1>
+Sender: linux-media-owner@vger.kernel.org
+To: Lee Jones <lee.jones@linaro.org>
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, maxime.coquelin@st.com, srinivas.kandagatla@gmail.com, patrice.chotard@st.com, mchehab@osg.samsung.com, devicetree@vger.kernel.org, linux-media@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 28/08/15 08:41, Rob Herring wrote:
-> On Wed, Aug 26, 2015 at 5:35 PM, Jon Mason <jonmason-dY08KVG/lbpWk0Htik3J/w@public.gmane.org> wrote:
->> Add a very minimalistic set of Northstar Plus Device Tree files which
->> describes the SoC and the BCM958625 implementation.  The perpherials
->> described are:
->>
->> ARM Cortex A9 CPU
->> 2 8250 UARTs
->> ARM GIC
->> PL310 L2 Cache
->> ARM A9 Global timer
->>
->> Signed-off-by: Kapil Hali <kapilh-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
->> Signed-off-by: Jon Mason <jonmason-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
->> ---
-[snip]
->> +       clocks {
->> +               #address-cells = <1>;
->> +               #size-cells = <1>;
->> +               ranges;
->> +
->> +               periph_clk: periph_clk {
->> +                       compatible = "fixed-clock";
->> +                       #clock-cells = <0>;
->> +                       clock-frequency = <500000000>;
->> +               };
->> +       };
->> +
->> +       uart0: serial@18000300 {
-> 
-> All these devices should go under a bus node.
+Hi Lee,
 
-Jon, you can send a replacement patch and I would drop this one. Thanks!
--- 
-Florian
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+On Fri, 28 Aug 2015, Lee Jones wrote:
+
+> On Thu, 27 Aug 2015, Peter Griffin wrote:
+> 
+> > This patch adds in the required DT node for the c8sectpfe
+> > Linux DVB demux driver which allows the tsin channels
+> > to be used on an upstream kernel.
+> > 
+> > Signed-off-by: Peter Griffin <peter.griffin@linaro.org>
+> > ---
+> >  arch/arm/boot/dts/stihxxx-b2120.dtsi | 34 ++++++++++++++++++++++++++++++++++
+> >  1 file changed, 34 insertions(+)
+> > 
+> > diff --git a/arch/arm/boot/dts/stihxxx-b2120.dtsi b/arch/arm/boot/dts/stihxxx-b2120.dtsi
+> > index 62994ae..c014173 100644
+> > --- a/arch/arm/boot/dts/stihxxx-b2120.dtsi
+> > +++ b/arch/arm/boot/dts/stihxxx-b2120.dtsi
+> > @@ -6,6 +6,9 @@
+> >   * it under the terms of the GNU General Public License version 2 as
+> >   * published by the Free Software Foundation.
+> >   */
+> > +
+> > +#include <dt-bindings/clock/stih407-clks.h>
+> > +#include <dt-bindings/media/c8sectpfe.h>
+> >  / {
+> >  	soc {
+> >  		sbc_serial0: serial@9530000 {
+> > @@ -85,5 +88,36 @@
+> >  			status = "okay";
+> >  		};
+> >  
+> > +		demux@08a20000 {
+> > +			compatible	= "st,stih407-c8sectpfe";
+> > +			status		= "okay";
+> > +			reg		= <0x08a20000 0x10000>,
+> > +					  <0x08a00000 0x4000>;
+> 
+> These look like they're the wrong way round.
+
+No, it isn't the wrong way round.
+
+> 
+> > +			reg-names	= "c8sectpfe", "c8sectpfe-ram";
+> > +			interrupts	= <GIC_SPI 34 IRQ_TYPE_NONE>,
+> > +					  <GIC_SPI 35 IRQ_TYPE_NONE>;
+> > +			interrupt-names	= "c8sectpfe-error-irq",
+> > +					  "c8sectpfe-idle-irq";
+> > +			pinctrl-names	= "tsin0-serial",
+> > +					  "tsin0-parallel",
+> > +					  "tsin3-serial",
+> > +					  "tsin4-serial",
+> > +					  "tsin5-serial";
+> > +			pinctrl-0	= <&pinctrl_tsin0_serial>;
+> > +			pinctrl-1	= <&pinctrl_tsin0_parallel>;
+> > +			pinctrl-2	= <&pinctrl_tsin3_serial>;
+> > +			pinctrl-3	= <&pinctrl_tsin4_serial_alt3>;
+> > +			pinctrl-4	= <&pinctrl_tsin5_serial_alt1>;
+> > +			clock-names	= "c8sectpfe";
+> > +			clocks		= <&clk_s_c0_flexgen CLK_PROC_STFE>;
+> 
+> Personal preferenc is that the *-names properties should come *after*
+> the ones they reference.
+
+Ok, will fix this in v3.
+
+> 
+> > +			/* tsin0 is TSA on NIMA */
+> > +			tsin0: port@0 {
+> > +				tsin-num	= <0>;
+> > +				serial-not-parallel;
+> > +				i2c-bus		= <&ssc2>;
+> > +				rst-gpio	= <&pio15 4 0>;
+> 
+> "reset-gpios"?
+> 
+> Use the GPIO DEFINES.
+
+This change is done in patch 4/5 as one atomic commit
+(code, dt doc, and dt node).
+
+I could have used the GPIO_DEFINE in this patch and
+updated the dt binding in 4/5.
+
+I'll do that in v3.
+
+regards,
+
+Peter.
