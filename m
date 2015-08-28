@@ -1,7 +1,7 @@
 From: Matt Porter <mporter-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
-Subject: [RFC PATCH 4/5] Documentation: dt-bindings: phy: add YAML generic PHY binding
-Date: Fri, 28 Aug 2015 01:23:52 -0400
-Message-ID: <1440739433-6799-5-git-send-email-mporter@konsulko.com>
+Subject: [RFC PATCH 1/5] Documentation: dt-bindings: add documentation on new DT binding format
+Date: Fri, 28 Aug 2015 01:23:49 -0400
+Message-ID: <1440739433-6799-2-git-send-email-mporter@konsulko.com>
 References: <1440739433-6799-1-git-send-email-mporter@konsulko.com>
 Return-path: <devicetree-spec-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <1440739433-6799-1-git-send-email-mporter-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
@@ -10,109 +10,126 @@ To: Devicetree List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Device
 Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Behan Webster <behanw-k/hB3zQhLwledRVtV/plodBPR1lH4CV8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Convert the generic phy-bindings.txt binding to standard YAML
-DT binding format.
+Documentation explaining the syntax and format of the YAML-based DT binding
+documentation.
 
 Signed-off-by: Matt Porter <mporter-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
 ---
- .../devicetree/bindings/phy/phy-bindings.yaml      | 89 ++++++++++++++++++++++
- 1 file changed, 89 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/phy/phy-bindings.yaml
+ .../devicetree/bindings/dt-binding-format.txt      | 106 +++++++++++++++++++++
+ 1 file changed, 106 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/dt-binding-format.txt
 
-diff --git a/Documentation/devicetree/bindings/phy/phy-bindings.yaml b/Documentation/devicetree/bindings/phy/phy-bindings.yaml
+diff --git a/Documentation/devicetree/bindings/dt-binding-format.txt b/Documentation/devicetree/bindings/dt-binding-format.txt
 new file mode 100644
-index 0000000..9b164d1
+index 0000000..f9acc22
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/phy/phy-bindings.yaml
-@@ -0,0 +1,89 @@
-+%YAML 1.2
-+---
-+id: phy-device
++++ b/Documentation/devicetree/bindings/dt-binding-format.txt
+@@ -0,0 +1,106 @@
++--------------------------
++Device Tree Binding Format
++--------------------------
 +
-+title: PHY device
++Background
++----------
 +
-+description: >
-+  This document explains only the device tree data binding.  For general
-+  information about PHY subsystem refer to Documentation/phy.txt
++DT bindings historically were written as text in prose format which
++led to issues in usability of that source documentation. Some of
++these issues include the need to programmatically process binding
++source documentation to do DTS validation, perform mass updates to
++format/style, and to generate publishable documentation in HTML or
++PDF form.
 +
-+required:
-+  - name: "#phy-cells"
-+    description: >
-+      number of cells in a PHY specifier. The meaning of all those
-+      cells is defined by the binding for the phy node. The PHY
-+      provider can use the values in cells to find the appropriate
-+      PHY.
++Overview
++--------
 +
-+optional:
-+  - name: "phy-supply"
-+    description: >
-+      phandle to a regulator that provides power to the PHY. This
-+      regulator will be managed during the PHY power on/off sequence.
++The DT binding format is based on the YAML text markup language.
++Although there are many text markup options available, YAML
++fulfills all requirements considered for a DT binding source format
++which include:
 +
-+example:
-+  - dts: |
-+      phys: phy {
-+          compatible = "xxx";
-+          reg = <...>;
-+          .
-+          .
-+          #phy-cells = <1>;
-+          .
-+          .
-+      };
-+    description: >
-+      Describes an IP block (PHY provider) that implements 2 different
-+      PHYs. In order to differentiate between these 2 PHYs, an
-+      additional specifier should be given while trying to get a
-+      reference to it.
-+...
++1) Must be human readable
++2) Must be easily translated to other data formats (XML, JSON, etc).
++3) Must have sufficient tools and libraries to enable developers to
++   build new tools for DT binding processing
++4) Must have a complete spec to refer to syntax
 +
-+---
-+id: phy-user
++YAML is documentated in the specification found at
++http://www.yaml.org/spec/1.2/spec.html
 +
-+title: PHY user
++The required YAML DT binding tag format and syntax are defined in
++the following sections.
 +
-+required:
-+  - name: "phys"
-+    description: >
-+      the phandle for the PHY device (used by the PHY subsystem)
-+  - name: "phy-names"
-+    description: >
-+      the names of the PHY corresponding to the PHYs present in the
-+      *phys* phandle
++YAML DT Binding Syntax
++----------------------
 +
-+example:
-+  - dts: |
-+      usb1: usb_otg_ss@xxx {
-+          compatible = "xxx";
-+          reg = <xxx>;
-+          .
-+          .
-+          phys = <&usb2_phy>, <&usb3_phy>;
-+          phy-names = "usb2phy", "usb3phy";
-+          .
-+          .
-+      };
-+    description: >
-+       Represents a controller that uses two PHYs, one for usb2 and one
-+       for usb3.
++* Lines starting with "#" are comments and not part of the binding itself
++* "%YAML 1.2" starts a file, indicating the version of YAML in use
++* "---" starts a binding document
++* "..." ends a binding document
++* Multiple binding documents may exist in a single file
++* Tabs are not permitted
++* Scope is denoted by indentation of two spaces
++* Key value pairs are denoted by "key: value"
++* Sequences are denoted by "- "
++* Scalar values may convert newlines to spaces and preserve blank
++  lines for long description formatting using ">"
++* Scalar values may escape all reserved characters and preserve
++  newlines by using "|" to denote literal style
 +
-+  - dts: |
-+      usb2: usb_otg_ss@xxx {
-+          compatible = "xxx";
-+          reg = <xxx>;
-+          .
-+          .
-+          phys = <&phys 1>;
-+          phy-names = "usbphy";
-+          .
-+          .
-+      };
-+    description: >
-+      Represents a controller that uses one of the PHYs of the PHY
-+      provider device defined previously. Note that the phy handle
-+      has an additional specifier "1" to differentiate between the
-+      two PHYs.
-+...
++For additional information on YAML syntax, refer to the specification
++at http://www.yaml.org/spec/1.2/spec.html
++
++YAML DT Binding Format
++----------------------
++
++The following YAML types are supported in the DT binding format:
++
++* [R] id: unique identifier in property form (e.g. skel-device)
++
++* [R] title: title of the binding
++
++* [O] maintainer: sequence of maintainers
++      [R] name: name and email of maintainer or mailing list in RFC822
++                form.
++
++* [O] description: full description of the binding
++
++* [O] compatible: sequence of valid compatible descriptors
++      [R] name: the compatible string surrounded in double quotes
++      [O] deprecated: a deprecated compatible string surrounded in
++                      double quotes
++      [O] description: description of the compatible string
++
++* [O] required: sequence of required properties:
++      [R] name: name of the property surrounded in double quotes
++      [R] description: description of the property
++      [O] reference: optional reference to a binding id
++
++* [O] optional: sequence of optional properties:
++      [R] name: name of the property surrounded in double quotes
++      [R] description: description of the property
++      [O] reference: optional reference to a binding id
++
++* [O] deprecated: sequence of deprecated properties:
++      [R] name: name of the property surrounded in double quotes
++      [R] description: description of the property
++      [O] reference: optional reference to a binding id
++
++* [R] example: sequence of examples:
++      [R] dts: DT source of example usage. The example text must use
++               literal style ("|") so that it retains indentation and
++               newlines.
++      [O] description: description of the example
++
++Note: [R] and [O] denote required and optional fields, respectively.
++
++Skeleton Binding
++----------------
++
++The skeleton.yaml binding found in the top of the DT binding tree
++is the canonical example of syntax and format to use when writing
++a DT binding document. It is maintained with the latest formatting
++conventions, making it the best starting point when writing a new DT
++binding.
 -- 
 2.1.4
