@@ -1,36 +1,58 @@
 From: Peter Griffin <peter.griffin@linaro.org>
-Subject: [PATCH v3 3/6] [media] c8sectpfe: Remove select on undefined LIBELF_32
-Date: Fri, 28 Aug 2015 18:52:39 +0100
-Message-ID: <1440784362-31217-4-git-send-email-peter.griffin@linaro.org>
+Subject: [PATCH v3 6/6] [media] c8sectpfe: Simplify for loop in load_slim_core_fw
+Date: Fri, 28 Aug 2015 18:52:42 +0100
+Message-ID: <1440784362-31217-7-git-send-email-peter.griffin@linaro.org>
 References: <1440784362-31217-1-git-send-email-peter.griffin@linaro.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <linux-media-owner@vger.kernel.org>
 In-Reply-To: <1440784362-31217-1-git-send-email-peter.griffin@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
+Sender: linux-media-owner@vger.kernel.org
 To: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, srinivas.kandagatla@gmail.com, maxime.coquelin@st.com, patrice.chotard@st.com, mchehab@osg.samsung.com
 Cc: peter.griffin@linaro.org, lee.jones@linaro.org, linux-media@vger.kernel.org, devicetree@vger.kernel.org, valentinrothberg@gmail.com, hugues.fruchet@st.com
 List-Id: devicetree@vger.kernel.org
 
-LIBELF_32 is not defined in Kconfig, and is left over legacy
-which is not required in the upstream driver, so remove it.
-
-Suggested-by: Valentin Rothberg <valentinrothberg@gmail.com>
 Signed-off-by: Peter Griffin <peter.griffin@linaro.org>
-Acked-by: Lee Jones <lee.jones@linaro.org>
 ---
- drivers/media/platform/sti/c8sectpfe/Kconfig | 1 -
- 1 file changed, 1 deletion(-)
+ drivers/media/platform/sti/c8sectpfe/c8sectpfe-core.c | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/media/platform/sti/c8sectpfe/Kconfig b/drivers/media/platform/sti/c8sectpfe/Kconfig
-index d1bfd4c..b9ec667 100644
---- a/drivers/media/platform/sti/c8sectpfe/Kconfig
-+++ b/drivers/media/platform/sti/c8sectpfe/Kconfig
-@@ -1,7 +1,6 @@
- config DVB_C8SECTPFE
- 	tristate "STMicroelectronics C8SECTPFE DVB support"
- 	depends on DVB_CORE && I2C && (ARCH_STI || ARCH_MULTIPLATFORM)
--	select LIBELF_32
- 	select FW_LOADER
- 	select FW_LOADER_USER_HELPER_FALLBACK
- 	select DEBUG_FS
+diff --git a/drivers/media/platform/sti/c8sectpfe/c8sectpfe-core.c b/drivers/media/platform/sti/c8sectpfe/c8sectpfe-core.c
+index c691e13..ce72ffb 100644
+--- a/drivers/media/platform/sti/c8sectpfe/c8sectpfe-core.c
++++ b/drivers/media/platform/sti/c8sectpfe/c8sectpfe-core.c
+@@ -1096,7 +1096,7 @@ static int load_slim_core_fw(const struct firmware *fw, void *context)
+ 	Elf32_Ehdr *ehdr;
+ 	Elf32_Phdr *phdr;
+ 	u8 __iomem *dst;
+-	int err, i;
++	int err = 0, i;
+ 
+ 	if (!fw || !context)
+ 		return -EINVAL;
+@@ -1105,7 +1105,7 @@ static int load_slim_core_fw(const struct firmware *fw, void *context)
+ 	phdr = (Elf32_Phdr *)(fw->data + ehdr->e_phoff);
+ 
+ 	/* go through the available ELF segments */
+-	for (i = 0; i < ehdr->e_phnum && !err; i++, phdr++) {
++	for (i = 0; i < ehdr->e_phnum; i++, phdr++) {
+ 
+ 		/* Only consider LOAD segments */
+ 		if (phdr->p_type != PT_LOAD)
+@@ -1118,7 +1118,7 @@ static int load_slim_core_fw(const struct firmware *fw, void *context)
+ 			dev_err(fei->dev,
+ 				"Segment %d is outside of firmware file\n", i);
+ 			err = -EINVAL;
+-			break;
++			goto err;
+ 		}
+ 
+ 		/*
+@@ -1146,6 +1146,7 @@ static int load_slim_core_fw(const struct firmware *fw, void *context)
+ 		}
+ 	}
+ 
++err:
+ 	release_firmware(fw);
+ 	return err;
+ }
 -- 
 1.9.1
