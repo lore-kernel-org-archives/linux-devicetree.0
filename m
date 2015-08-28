@@ -1,59 +1,75 @@
-From: Christ van Willegen <cvwillegen@gmail.com>
-Subject: Re: [Gta04-owner] [PATCH 0/4] UART slave device support - version 4
-Date: Fri, 28 Aug 2015 22:04:23 +0200
-Message-ID: <CA+Ot1Oys=NRi0Po2zNVwzJ=nUBEn6mWncZKLfuDKu4AymXsY-g@mail.gmail.com>
-References: <20150511013540.5709.93626.stgit@notabene.brown>
- <CACRpkdZf2AM_7Od1kVcBxokK5CJfhnsfZ_oNSF5w7rmZmcenCg@mail.gmail.com>
- <20150812092059.361e09bc@home.neil.brown.name> <CD86D8CD-20D8-44EF-8245-A3E49C2D3EA7@goldelico.com>
- <20150828070201.GA23975@amd> <0579762D-51C2-45F0-A362-EE31215A40E8@goldelico.com>
- <20150828110436.GA6857@amd>
+From: Olof Johansson <olof@lixom.net>
+Subject: Re: [PATCH 0/2 RESEND] power: reset: Add syscon reboot/poweroff
+ device nodes for APM X-Gene platform
+Date: Fri, 28 Aug 2015 13:06:34 -0700
+Message-ID: <CAOesGMj7E6ux3v5_RhdCGJFVCJoA_GP0hifZCvFMYMv6x7Pu+g@mail.gmail.com>
+References: <1433272747-27114-1-git-send-email-ttnguyen@apm.com>
+	<20150714084004.GA14593@localhost>
+	<CAPw-ZT=d2=dh-Hjugo9BStCuhTp82MMapUa1EGrD01EoTOG-nA@mail.gmail.com>
+	<CAOesGMhKRxUtr6XXsZgCJVUFTFL3eHySP8y-SmEzi=R53MxLRw@mail.gmail.com>
+	<CAPw-ZTnk8cZyFyMnBMUYXuxs9=2ydqxOzm+dYsg-=9_Suq+q7A@mail.gmail.com>
+	<CAOesGMimzcUDW4e1etxZNerEusWmEtT_um8XZoT0MkFpCnTf5w@mail.gmail.com>
+	<CADaLNDmPqb73UrOaVphkywZh8mfd4sPdA6i25USLt53sZ3hFuw@mail.gmail.com>
+	<20150726183742.GA24272@localhost>
+	<CADaLNDk5FT8ENQfiMQ+++NGg3VhuiTpnQtGW0L5DMYAuDKZ27g@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20150828110436.GA6857@amd>
+In-Reply-To: <CADaLNDk5FT8ENQfiMQ+++NGg3VhuiTpnQtGW0L5DMYAuDKZ27g@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: List for communicating with real GTA04 owners <gta04-owner@goldelico.com>
-Cc: "Dr. H. Nikolaus Schaller" <hns@goldelico.com>, Mark Rutland <mark.rutland@arm.com>, One Thousand Gnomes <gnomes@lxorguk.ukuu.org.uk>, Peter Hurley <peter@hurleysoftware.com>, Arnd Bergmann <arnd@arndb.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Linus Walleij <linus.walleij@linaro.org>, Sebastian Reichel <sre@kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <robherring2@gmail.com>, Grant Likely <grant.likely@linaro.org>, Marek Belisko <marek@goldelico.com>, Jiri Slaby <jslaby@suse.cz>
+To: Duc Dang <dhdang@apm.com>
+Cc: Loc Ho <lho@apm.com>, Tai Nguyen <ttnguyen@apm.com>, "arm@kernel.org" <arm@kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "patches@apm.com" <patches@apm.com>, Jon Masters <jcm@redhat.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi all,
+Hi,
 
-I will reverse a part of this e-mail to make replying easier.
-
-On Fri, Aug 28, 2015 at 1:04 PM, Pavel Machek <pavel@ucw.cz> wrote:
->> Please have a look into our RFC implementation and study it carefull=
-y
->> to learn why it is the better (IMHO more flexible, easier to maintai=
-n, more
->> modular) approach. Even if you don=E2=80=99t like phandles.
+On Fri, Aug 28, 2015 at 1:00 PM, Duc Dang <dhdang@apm.com> wrote:
+> On Sun, Jul 26, 2015 at 11:37 AM, Olof Johansson <olof@lixom.net> wrote:
+>>
+>> On Sat, Jul 25, 2015 at 11:34:42AM -0700, Duc Dang wrote:
+>> > Hi Olof,
+>> >
+>> > We are debating whether we should setup a company server (where we can
+>> > have full control about storage, user permissions, backup, ...) or
+>> > just use github.com to host our X-Gene kernel tree.
+>> >
+>> > Github seems already provide everything we need for a public source
+>> > tree. Per your experience, what is your (and probably other
+>> > maintainers) reference in git hosting server? Is there any
+>> > inconvenience or difficulty for the maintainers to pull/merge code
+>> > from Github versus from a company server?
+>>
+>> Hosting on github is fine with us in general. We do prefer to get
+>> signed pull requests in particular when they come from other sources
+>> than kernel.org, mostly because there's another third party involved in
+>> hosting the repo and by using signed tags there's less room for anyone
+>> to do bad stuff with the repository without someone noticing.
+>>
+>> If you host on github, please still use native git pull requests and not the
+>> ones that github provides via the web interface.
+>>
+>> Note however, that given the total volume of patches there's no strong need for
+>> you to have a public repo just to send code to us -- we're happy applying
+>> patches at the volumes we're currently looking at. I can imagine other reasons
+>> for why you would like to have a public repo though.
 >
-> It was also NAKed by device tree maintainers.
+> Hi Olof,
+>
+> I have APM X-Gene git ready on github. According to your response
+> above, I need to
+> send a signed pull request. I created a PGP key on public server
+> (https://pgp.mit.edu/pks/lookup?search=duc+dang&op=index) and signed the tag on
+> APM X-Gene tree with my key.
+>
+> Please let me know if I need anything else before sending the git pull
+> request to you.
+> My key is not signed by any maintainer yet, would you mind to arrange some
+> time next week to meet and help sign my key as well?
 
-This may be true, I can't recall those specific mails...
+Yeah, I can do that, and you can get more signatures at Linaro Connect
+in case you're attending.
 
-> You promised to shut up.
+(let's sort out details off-list).
 
-But this is uncalled for.
 
-IIRC there was, indeed, a long technical discussion about how to
-connect the Bluetooth chip to the 'UART'.
-
-I've seen Neil patches, and I've seen patches by Nikolaus.
-
-Both appear to have their problems. I think it's fair to:
-
-- Listen carefully to all arguments.
-- Have a benevolent dictator, which we have, look into the problem
-- Only 'shut up' after a thorough technical analysis has been made
-about both approaches to the problem.
-
-Both may have their merit in a number of ways. Don't just close your
-eyes, put your fingers in your ears and say 'I can't hear you!'. We
-are all adults, or at least, we should be in behaviour. The Linux
-system has grown so much _beacuse_ of people working together. Calling
-each other names and exiling them will _not_ solve the problem.
-
-Christ van Willegen
---=20
-09 F9 11 02 9D 74 E3 5B D8 41 56 C5 63 56 88 C0
+-Olof
