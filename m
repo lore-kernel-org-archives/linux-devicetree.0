@@ -1,123 +1,173 @@
-From: "Dr. H. Nikolaus Schaller" <hns@goldelico.com>
-Subject: Re: [Gta04-owner] [PATCH 0/4] UART slave device support - version 4
-Date: Fri, 28 Aug 2015 07:52:41 +0200
-Message-ID: <CD86D8CD-20D8-44EF-8245-A3E49C2D3EA7@goldelico.com>
-References: <20150511013540.5709.93626.stgit@notabene.brown> <CACRpkdZf2AM_7Od1kVcBxokK5CJfhnsfZ_oNSF5w7rmZmcenCg@mail.gmail.com> <20150812092059.361e09bc@home.neil.brown.name>
-Mime-Version: 1.0 (Mac OS X Mail 7.3 \(1878.6\))
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+From: Leo Yan <leo.yan@linaro.org>
+Subject: Re: [PATCH v1 3/3] arm64: dts: add Hi6220 mailbox node
+Date: Fri, 28 Aug 2015 14:37:19 +0800
+Message-ID: <20150828063719.GA22886@leoy-linaro>
+References: <20150824114903.GT10728@bivouac.eciton.net>
+ <1440490427.10987.29.camel@linaro.org>
+ <20150825094630.GU10728@bivouac.eciton.net>
+ <1440497710.10987.42.camel@linaro.org>
+ <20150825104256.GB13471@leverpostej>
+ <1440510194.10987.52.camel@linaro.org>
+ <20150825160030.GA3774@leoy-linaro>
+ <1440552341.10987.53.camel@linaro.org>
+ <20150826065950.GB19594@leoy-linaro>
+ <20150827163108.GA31748@leverpostej>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20150812092059.361e09bc@home.neil.brown.name>
+Content-Disposition: inline
+In-Reply-To: <20150827163108.GA31748@leverpostej>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, One Thousand Gnomes <gnomes@lxorguk.ukuu.org.uk>, Peter Hurley <peter@hurleysoftware.com>, Arnd Bergmann <arnd@arndb.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Sebastian Reichel <sre@kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <robherring2@gmail.com>, Pavel Machek <pavel@ucw.cz>, Grant Likely <grant.likely@linaro.org>, Jiri Slaby <jslaby@suse.cz>, Marek Belisko <marek@goldelico.com>, List for communicating with real GTA04 owners <gta04-owner@goldelico.com>
+To: Mark Rutland <mark.rutland@arm.com>
+Cc: Haojian Zhuang <haojian.zhuang@linaro.org>, Leif Lindholm <leif.lindholm@linaro.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <Pawel.Moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Catalin Marinas <Catalin.Marinas@arm.com>, Will Deacon <Will.Deacon@arm.com>, Jassi Brar <jassisinghbrar@gmail.com>, Bintian Wang <bintian.wang@huawei.com>, Yiping Xu <xuyiping@hisilicon.com>, Wei Xu <xuwei5@hisilicon.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "guodong.xu@linaro.org" <guodong.xu@linaro.org>, Jian Zhang <zhangjian001@hisilicon.com>, Zhenwei Wang <Zhenwei.wang@hisilicon.com>, Haoju Mo <mohaoju@hisilicon.com>, Dan Zhao <dan.zhao@hisilicon.com>, kongfei@hisi
 List-Id: devicetree@vger.kernel.org
 
-Hi Linus,
+Hi Mark,
 
-Am 12.08.2015 um 01:20 schrieb NeilBrown <neil@brown.name>:
+On Thu, Aug 27, 2015 at 05:31:09PM +0100, Mark Rutland wrote:
+> On Wed, Aug 26, 2015 at 07:59:50AM +0100, Leo Yan wrote:
+> > Hi Haojian,
+> > 
+> > On Wed, Aug 26, 2015 at 09:25:41AM +0800, Haojian Zhuang wrote:
+> > > On Wed, 2015-08-26 at 00:00 +0800, Leo Yan wrote:
+> > > > On Tue, Aug 25, 2015 at 09:43:14PM +0800, Haojian Zhuang wrote:
+> > > > > On Tue, 2015-08-25 at 11:42 +0100, Mark Rutland wrote:
+> > > > > > > > Are you then going to hack GRUB, release a special HiKey version of
+> > > > > > > > GRUB, not support any other versions, and still can your firmware
+> > > > > > > > UEFI?
+> > > > > > > 
+> > > > > > > I don't need to hack GRUB at all.
+> > > > > > 
+> > > > > > Then it is working for you by pure chance alone.
+> > > > > > 
+> > > > > > Please listen to the advice you are being given here; we're trying to
+> > > > > > ensure that your platform functions (and continues to function) as best
+> > > > > > it can.
+> > > > > 
+> > > > > Since we discussed a lot on this, let's make a conclusion on it.
+> > > > > 
+> > > > > 1. UEFI could append the reserved buffer in it's memory mapping.
+> > > > > 2. These reserved buffer must be declared in DT, since we also need to
+> > > > >    support non-UEFI (uboot) at the same time.
+> > > > > 3. Mailbox node should reference reserved buffer by phandle in DT. Then
+> > > > >    map the buffer as non-cacheable in driver.
+> > > > > 4. These reserved buffer must use "no-map" property since it should be
+> > > > >    non-cacheable in driver.
+> > > > 
+> > > > For more specific discussion for DTS, i list two options at here;
+> > > > 
+> > > > - Option 1: just simply reserve memory regions through memory node,
+> > > >   and mailbox node will directly use the buffer through reg ranges;
+> > > > 
+> > > > - Option 2: use reserved-memory and mailbox node will refer phandle
+> > > >   of reserved-memory;
+> > > > 
+> > > > These two options both can work well with UEFI and Uboot, but option 1
+> > > > is more simple and straightforward; so i personally prefer it. But
+> > > > look forwarding your guys' suggestion.
+> > > > 
+> > > > Option 1:
+> > > > 
+> > > > 	memory@0 {
+> > > > 		device_type = "memory";
+> > > > 		reg = <0x00000000 0x00000000 0x00000000 0x05e00000>,
+> > > > 		      <0x00000000 0x05f00000 0x00000000 0x00eff000>,
+> > > > 		      <0x00000000 0x06e00000 0x00000000 0x0060f000>,
+> > > > 		      <0x00000000 0x07410000 0x00000000 0x38bf0000>;
+> > > > 	};
+> > > > 
+> > > >         [...]
+> > > > 
+> > > > 	mailbox: mailbox@f7510000 {
+> > > > 		#mbox-cells = <1>;
+> > > > 		compatible = "hisilicon,hi6220-mbox";
+> > > > 		reg = <0x0 0xf7510000 0x0 0x1000>, /* IPC_S */
+> > > > 		      <0x0 0x06dff800 0x0 0x0800>; /* Mailbox buffer */
+> > > > 		interrupts = <GIC_SPI 94 IRQ_TYPE_LEVEL_HIGH>;
+> > > > 	};
+> > > > 
+> > > > Option 2:
+> > > > 
+> > > > 	memory@0 {
+> > > > 		device_type = "memory";
+> > > > 		reg = <0x0 0x0 0x0 0x40000000>;
+> > > > 	};
+> > > > 
+> > > > 	reserved-memory {
+> > > > 		#address-cells = <2>;
+> > > > 		#size-cells = <2>;
+> > > > 		ranges;
+> > > > 
+> > > > 		mcu_reserved: mcu_reserved@06dff000 {
+> > > > 			no-map;
+> > > > 			reg = <0x0 0x06dff000 0x0 0x00001000>,	/* MCU mailbox buffer */
+> > > > 			      <0x0 0x05e00000 0x0 0x00100000>,	/* MCU firmware buffer */
+> > > > 			      <0x0 0x0740f000 0x0 0x00001000>;	/* MCU firmware section */
+> > > > 		};
+> > > > 	};
+> > > > 
+> > > >         [...]
+> > > > 
+> > > > 	mailbox: mailbox@f7510000 {
+> > > > 		#mbox-cells = <1>;
+> > > > 		compatible = "hisilicon,hi6220-mbox";
+> > > > 		reg = <0x0 0xf7510000 0x0 0x1000>; /* IPC_S */
+> > > > 		memory-region = <&mcu_reserved>;   /* Mailbox buffer */
+> > > > 		interrupts = <GIC_SPI 94 IRQ_TYPE_LEVEL_HIGH>;
+> > > > 	};
+> > > 
+> > > I prefer the second one. From my view, memory node should only describe
+> > > the hardware information of memory.
+> > 
+> > Yes, option 2 will be more simple for memory node.
+> > 
+> > But option 2 also will introduce complexity for mailbox node, due mailbox
+> > driver need use property "reg" and "memory-region" to sepeately depict
+> > the regions for mailbox's ipc and slots. If later mailbox is designed to
+> > use SRAM for both ipc and slots, then it will no matter with DDR anymore,
+> > in this case option 1 will easily switch to support it.
+> > 
+> > Another question is a general question: for Linux kernel, which is the
+> > best method to reserve memory regions? According to previous discussion,
+> > we can use /memory/ node or /reseved-memory/ node to reserve memory
+> > regions.
+> 
+> If the memory is truly reserved for a purpose and cannot be used for
+> anything else, I don't think it should be in the memory node at all, and
+> should be carved out. That aligns with what you'd do in UEFI (either not
+> listing the region in the memory map, or listing it with attributes such
+> that it may not be mapped and/or used).
+> 
+> I don't see much of a reason for /memreserve/, as it can cause issues
+> (by allowing the OS to map the region with cacheable attributes), and is
+> not as rigorously specified for ARM as it is for Power in ePAPR.
+> 
+> I understand that reserved-memory is for carving out (potentially
+> reusable) memory pools for devices or other special uses (perhaps a
+> panic log). Usually such memory may also be used by the kernel for its
+> own purposes if not presently required by the device.
+> 
+> Having an entry in reserved-memory does not necessitate the region also
+> appears in memory nodes, and if a region cannot be used by an OS (or
+> other software) for other purposes, I would not expect it to be describe
+> in any memory node. That will prevent other software (e.g. bootloaders)
+> from erroneously using the memory.
+> 
+> If you have a region described with no-map, I would expect that this
+> doesn't exist in any memory node or the UEFI memory map, and is only
+> under reserved-memory so it may be referred to by phandle in a
+> consistent manner.
+> 
+> > when review Juno's dts, i also see there have reserved 16MB DDR for secure
+> > world. If so, looks like /reserved-memory/ node is unnecessary. if have some
+> > specific scenarios will we use reserved-memory node to help reserve memory
+> > regions?
+> 
+> I'd expect shared DMA pools to appear in reserved-memory. The OS can
+> choose to use these or ignore them if it chooses (or is otherwise forced
+> to, e.g. were it loaded over one).
 
-> On Fri, 7 Aug 2015 15:01:47 +0200 Linus Walleij
-> <linus.walleij@linaro.org> wrote:
->=20
->> Hi Neil,
->>=20
->> first, this is a *VERY* interesting and much needed patch series,
->> I intend to look closer at it, and if possible test it with some
->> (heh) board file device. Would be happy of you put me on CC for thes=
-e.
->>=20
->> On Mon, May 11, 2015 at 3:56 AM, NeilBrown <neil@brown.name> wrote:
->>=20
->>> When a device is connected to a UART via RS-232 (or similar), there
->>> is a DTR line that can be used for power management, and other "mod=
-em
->>> control" lines.
->>>=20
->>> On an embedded board, it is very likely that there is no "DTR", and
->>> any power management need to be done using some completely separate
->>> mechanism.
->>>=20
->>> So these "slaves" are really just for devices permanently attached =
-to
->>> UARTs without a full "RS-232" (or similar) connection.  The driver
->>> does all the extra control beyond Tx/Rx.
->>=20
->> What is usually happening (and I have seen it in a few places) is th=
-at
->> the SoC has *one* fully featured RS232 with CTS/RTS and even
->> DTS,DCD,RI and other esoterica, which is intended to be connected to=
- a
->> host serial port or so, for example if this SoC is to act as a modem
->> or a fax machine, or if it is to drive one.
->>=20
->> Then they often have a few more UART blocks, usually identical, whic=
-h
->> only have RxD+TxD available, so they are "just" UARTs.
->>=20
->> To complicate things further, you may wonder what happened with
->> the CTS/RTS (etc) signals from the other blocks. Usually they are th=
-ere
->> in the silicon but just routed to dead ends.
->>=20
->> To complicate it even further, usually all these pins are placed und=
-er
->> pin control multiplexing, so in an actual electronic design, the
->> system will mux out CTS/RTS (etc) from the fully featured RS232
->> blocks and only use them as UARTs anyways.
->>=20
->> Then there are those who created real simple RxD/TxD-only UARTs
->> ("yeah lets dump this RS232 legacy crap" / "yeah yeah")
->> and then realized they want to drive modems ("oh crap, it seemed
->> like a good idea at the time"). Then they usually take
->> two GPIO pins for CTS/RTS and drive them as GPIOs using
->> software and you have a cheap 4-line modem line. This is what
->> drivers/tty/serial/serial_mctrl_gpio.c is for if you wondered.
->>=20
->>> I've tested this set and it seems to work ... except that something
->>> is sadly broken with bluetooth support in 4.1-rc1 so I've only real=
-ly
->>> tested the GPS driver.  I guess it is time to rebase to -rc3.
->>=20
->> You have a hardware taget I see. Which one?
->=20
-> GTA04 (www.gta04.org - openmoko successor).
->=20
-> 3 uarts on OMAP3 are wired: one as RS-232 for console, one to bluetoo=
-th
-> half of a wifi/bluetooth module, and one to a GPS.
->=20
-> For the GPS, I just want to power on/off when the TTY is opened/close=
-d,
-> but the power-on sequence is non-trivial as both "turn on" and
-> "turn-off' toggle the same line, so I need to be able to detect curre=
-nt
-> state.
->=20
-> For the bluetooth, the power is a (shared) regulator.  As well as
-> power-on when the TTY is opened, I'd like regulator to be turned of
-> when I "hciconfig down" - even though the TTY is still open.
-> I did a patch a while ago which hooked in to hci_uart_{open,close} to
-> make this work, but it isn't a really good patch.
->=20
-> It would be nice to hide the TTY from user-space in the bluetooth cas=
-e,
-> and have the "hciattach" happen in the kernel, but I think hciattach
-> does extra initialisation...
->=20
-> NeilBrown
+Thanks a lot for detailed explain; it's quite clear now.
 
-
-we (the developers of the hardware) have proposed an alternative
-approach to Neil=92s implementation - for the same device and solving
-the same problem (notifying tty open/close and uart activity to the
-slave device driver), but differently.
-
-See:
-https://lkml.org/lkml/2015/6/28/91
-
-Discussion has not yet settled on which approach is better. So your
-opinion of comparing both is welcome.
-
-BR,
-Nikolaus
+Thanks,
+Leo Yan
