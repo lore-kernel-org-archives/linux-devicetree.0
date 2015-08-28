@@ -1,134 +1,54 @@
-From: Nathan Lynch <Nathan_Lynch@mentor.com>
-Subject: Re: [PATCH v2 3/4] remoteproc: Supply controller driver for ST's
- Remote Processors
-Date: Fri, 28 Aug 2015 11:24:20 -0500
-Message-ID: <55E08B34.9080102@mentor.com>
-References: <1440757911-9120-1-git-send-email-lee.jones@linaro.org>
- <1440757911-9120-4-git-send-email-lee.jones@linaro.org>
+From: Florian Fainelli <fainelli-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH v2 2/5] ARM: NSP: add minimal Northstar Plus device tree
+Date: Fri, 28 Aug 2015 09:36:42 -0700
+Message-ID: <55E08E1A.8050805@broadcom.com>
+References: <1440628530-6137-1-git-send-email-jonmason@broadcom.com> <1440628530-6137-3-git-send-email-jonmason@broadcom.com> <CAL_JsqJb+Pj7c=3Q9ViPhU_=tJxqOzEhOPALctf-zaFHQv+bWg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1440757911-9120-4-git-send-email-lee.jones@linaro.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Lee Jones <lee.jones@linaro.org>
-Cc: ohad@wizery.com, devicetree@vger.kernel.org, kernel@stlinux.com, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Ludovic Barre <ludovic.barre@st.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAL_JsqJb+Pj7c=3Q9ViPhU_=tJxqOzEhOPALctf-zaFHQv+bWg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jon Mason <jonmason-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Cc: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Kevin Hilman <khilman-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org" <bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Kapil Hali <kapilh-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 08/28/2015 05:31 AM, Lee Jones wrote:
-> diff --git a/drivers/remoteproc/Kconfig b/drivers/remoteproc/Kconfig
-> index 28c711f..72e97d7 100644
-> --- a/drivers/remoteproc/Kconfig
-> +++ b/drivers/remoteproc/Kconfig
-> @@ -77,4 +77,13 @@ config DA8XX_REMOTEPROC
->  	  It's safe to say n here if you're not interested in multimedia
->  	  offloading.
->  
-> +config ST_REMOTEPROC
-> +	tristate "ST remoteproc support"
-> +	depends on ARCH_STI
-> +	select REMOTEPROC
-> +	help
-> +	  Say y here to support ST's adjunct processors via the remote
-> +	  processor framework.
-> +	  This can be either built-in or a loadable module.
-> +
+On 28/08/15 08:41, Rob Herring wrote:
+> On Wed, Aug 26, 2015 at 5:35 PM, Jon Mason <jonmason-dY08KVG/lbpWk0Htik3J/w@public.gmane.org> wrote:
+>> Add a very minimalistic set of Northstar Plus Device Tree files which
+>> describes the SoC and the BCM958625 implementation.  The perpherials
+>> described are:
+>>
+>> ARM Cortex A9 CPU
+>> 2 8250 UARTs
+>> ARM GIC
+>> PL310 L2 Cache
+>> ARM A9 Global timer
+>>
+>> Signed-off-by: Kapil Hali <kapilh-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+>> Signed-off-by: Jon Mason <jonmason-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+>> ---
+[snip]
+>> +       clocks {
+>> +               #address-cells = <1>;
+>> +               #size-cells = <1>;
+>> +               ranges;
+>> +
+>> +               periph_clk: periph_clk {
+>> +                       compatible = "fixed-clock";
+>> +                       #clock-cells = <0>;
+>> +                       clock-frequency = <500000000>;
+>> +               };
+>> +       };
+>> +
+>> +       uart0: serial@18000300 {
+> 
+> All these devices should go under a bus node.
 
-The code uses reset_control_* APIs, so this should depend on
-RESET_CONTROLLER, no?
-
-> +/*
-> + * ST's Remote Processor Control Driver
-> + *
-> + * Copyright (C) 2015 STMicroelectronics - All Rights Reserved
-> + *
-> + * Author: Ludovic Barre <ludovic.barre@st.com>
-> + *
-> + * This program is free software; you can redistribute it and/or modify
-> + * it under the terms of the GNU General Public License as published by
-> + * the Free Software Foundation; either version 2, or (at your option)
-> + * any later version.
-> + */
-
-OK, but:
-
-> +MODULE_LICENSE("GPL v2");
-
-These are not in agreement.  You want "GPL" for MODULE_LICENSE if you
-intend v2 or later.
-
-
-> +static int st_rproc_stop(struct rproc *rproc)
-> +{
-> +	struct st_rproc *st_rproc = rproc->priv;
-> +	int ret, err = 0;
-> +
-> +	if (st_rproc->config->sw_reset) {
-> +		ret = reset_control_assert(st_rproc->sw_reset);
-> +		if (ret)
-> +			dev_err(&rproc->dev, "Failed to assert S/W Reset\n");
-> +	}
-> +
-> +	if (st_rproc->config->pwr_reset) {
-> +		err = reset_control_assert(st_rproc->pwr_reset);
-> +		if (err)
-> +			dev_err(&rproc->dev, "Failed to assert Power Reset\n");
-> +	}
-> +
-> +	clk_disable(st_rproc->clk);
-> +
-> +	return ret ?: err;
-> +}
-
-Sorry, but I think this is a stylistically inadequate response to my
-earlier comments.  At least name the status variables sw_ret and pwr_ret
-or something.  And it looks like ret could be used uninitialized.
-
-Also, do you want to unconditionally call clk_disable even if you've
-encountered errors?
-
-
-> +static int st_rproc_start(struct rproc *rproc)
-> +{
-> +	struct st_rproc *st_rproc = rproc->priv;
-> +	int err;
-> +
-> +	regmap_update_bits(st_rproc->boot_base, st_rproc->boot_offset,
-> +			   st_rproc->config->bootaddr_mask, rproc->bootaddr);
-> +
-> +	err = clk_enable(st_rproc->clk);
-> +	if (err) {
-> +		dev_err(&rproc->dev, "Failed to enable clock\n");
-> +		return err;
-> +	}
-> +
-> +	if (st_rproc->config->sw_reset) {
-> +		err = reset_control_deassert(st_rproc->sw_reset);
-> +		if (err) {
-> +			dev_err(&rproc->dev, "Failed to deassert S/W Reset\n");
-> +			return err;
-> +		}
-> +	}
-> +
-> +	if (st_rproc->config->pwr_reset) {
-> +		err = reset_control_deassert(st_rproc->pwr_reset);
-> +		if (err) {
-> +			dev_err(&rproc->dev, "Failed to deassert Power Reset\n");
-> +			return err;
-> +		}
-> +	}
-> +
-> +	dev_info(&rproc->dev, "Started from 0x%x\n", rproc->bootaddr);
-> +
-> +	return 0;
-> +}
-
-Does this want to unwind any of its operations if it encounters a failure?
+Jon, you can send a replacement patch and I would drop this one. Thanks!
+-- 
+Florian
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
