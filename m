@@ -1,153 +1,54 @@
-From: Masahiro Yamada <yamada.masahiro@socionext.com>
-Subject: Re: [PATCH 1/3] ARM: uniphier: add outer cache support
-Date: Fri, 28 Aug 2015 19:24:47 +0900
-Message-ID: <CAK7LNATWsa8AhyFGzsR0HAODmQD8yBPidTE0Lx2ACh4_PeQW9w@mail.gmail.com>
-References: <1440382692-3855-1-git-send-email-yamada.masahiro@socionext.com>
-	<1440382692-3855-2-git-send-email-yamada.masahiro@socionext.com>
-	<CACRpkdbJppuA6ZyciNAGfSgrf4M2THVHggzuZYSqORjy2JBp_A@mail.gmail.com>
+From: Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [RFC PATCH 1/7] DMA: tegra-apb: Correct runtime-pm usage
+Date: Fri, 28 Aug 2015 11:30:50 +0100
+Message-ID: <55E0385A.6070203@nvidia.com>
+References: <1439905755-25150-1-git-send-email-jonathanh@nvidia.com>
+ <55DB1AA9.7090906@nvidia.com> <20150824142143.GK13546@localhost>
+ <13590312.K3yoQT5YDc@vostro.rjw.lan> <55DC375F.1070907@nvidia.com>
+ <55DCF056.40004@intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CACRpkdbJppuA6ZyciNAGfSgrf4M2THVHggzuZYSqORjy2JBp_A@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, Jungseung Lee <js07.lee@gmail.com>, Florian Fainelli <f.fainelli@gmail.com>, Russell King <linux@arm.linux.org.uk>, Arnd Bergmann <arnd@arndb.de>, Mauro Carvalho Chehab <mchehab@osg.samsung.com>, "arm@kernel.org" <arm@kernel.org>, Jiri Slaby <jslaby@suse.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Kees Cook <keescook@chromium.org>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <u.kleine-koenig@pengutronix.de>, Joe Perches <joe@perches.com>, Rob Herring <robh+dt@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Paul Bolle <pebolle@tiscali.nl>, Greg KH <gregkh@linuxfoundation.org>, Nathan Lynch <nathan_lynch@mentor.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Maxime
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <55DCF056.40004-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: "Rafael J. Wysocki" <rafael.j.wysocki-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, "Rafael J. Wysocki" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Cc: Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Linus,
 
+On 25/08/15 23:46, Rafael J. Wysocki wrote:
+> On 8/25/2015 11:37 AM, Jon Hunter wrote:
 
-2015-08-26 22:39 GMT+09:00 Linus Walleij <linus.walleij@linaro.org>:
-> On Mon, Aug 24, 2015 at 4:18 AM, Masahiro Yamada
-> <yamada.masahiro@socionext.com> wrote:
->> This commit adds support for UniPhier outer cache controller.
->> All the UniPhier SoCs are equipped with the L2 cache, while the L3
->> cache is currently only integrated on PH1-Pro5 SoC.
->>
->> Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
->
-> Wow it is really a custom L2$ controller. Wow. Just wow. That's
-> really brave, given all the problems we've seen in l2x0.
+[snip]
 
-Looks like my company is crazy...
-ARM Ltd. people said we are the only vendor that still uses
-a custom outer cache.
+>> Vinod, thinking about this some more, I am wondering if it is just
+>> better to get rid of the suspend/resume callbacks and simply handling
+>> the state in the runtime suspend/resume callbacks. I think that would be
+>> safe too, because once the clock has been disabled, then who knows what
+>> the context state will be.
+> 
+> One caveat here: system suspend may be invoked at any time, so you need
+> to ensure that the device is properly suspended when that happens.
+> 
+> I believe you at least need a ->suspend callback for that.
 
+Thanks, makes sense.
 
+On a related note, I see a few drivers, including this DMA driver doing
+the following in the driver ->remove callback.
 
->> +UniPhier SoCs are integrated with a level 2 cache controller that resides
->> +outside of the ARM cores, some of them also have a level 3 cache controller.
->> +
->> +Required properties:
->> +- compatible: should be one of the followings:
->> +       "socionext,uniphier-l2-cache"   (L2 cache)
->> +       "socionext,uniphier-l3-cache"   (L3 cache)
->
-> Refer to and use the 3.7.3 ePAPR v1.1 specification too:
-> https://www.power.org/wp-content/uploads/2012/06/Power_ePAPR_APPROVED_v1.1.pdf
+    pm_runtime_disable(&pdev->dev);
+        !pm_runtime_status_suspended(&pdev->dev))
+            tegra_dma_runtime_suspend(&pdev->dev);
 
+I understand that the code is trying to ensure that the device is
+suspended regardless of whether rpm is enabled or not in the kernel
+config. However, looking at the pm_runtime_status_suspended() function,
+AFAICT, it will always return false above as the disable_depth will be
+greater than 0. So I am concerned that the tegra_dma_runtime_suspend()
+is called even when not needed? However, I could also be missing
+something here.
 
-I've checked it out.
-Thanks, but I had some doubts.
-
-
-
-> cache-unified and cache-level are *not* optional and should be required.
-
-
-"cache-unified" is mentioned in "3.7.3 Internal (L1) Cache Properties"
-(Table 3-8),
-but it is not in "3.8 Multi-level and Shared Caches" (Table 3-9)
-
-Are the rules in Table 3-8 also applied for L2?
-
-
-> So:
->
->> +The L2 cache must exist to use the L3 cache; adding only an L3 cache device
->> +node to the device tree causes the initialization failure of the whole outer
->> +cache system.
->> +
->> +Example:
->> +       l2-cache@500c0000 {
->> +               compatible = "socionext,uniphier-l2-cache";
->> +               reg = <0x500c0000 0x2000>, <0x503c0100 0x8>,
->> +                     <0x506c0000 0x400>;
->
-> cache-unified;
-> cache-level = <2>;
->
->> +       /* Not all of UniPhier SoCs have L3 cache */
->> +       l3-cache@500c8000 {
->> +               compatible = "socionext,uniphier-l3-cache";
->> +               reg = <0x500c8000 0x2000>, <0x503c8100 0x8>,
->> +                     <0x506c8000 0x400>;
->
-> cache-unified;
-> cache-level = <3>;
->
-> (I'm just assuming this cache is unified, anything else would be baffling.)
-
-In fact, unified/harvard is configurable thru a register of this cache
-controller.
-It is usually used as a unified cached, though.
-
-
-
-> Further the ePAPR spec optionally supports specifying things like the
-> cache size, number of sets, block size and line size, unless this can
-> be hard coded.
->
-> Yours,
-> Linus Walleij
->
-
-
-Given that cache-level specifies the level and next-level-cache
-specifies the topology,
-I think "socionext,uniphier-l*-cache" gives redundant information.
-
-The L2 and L3 cache controller look the same; they have the same register maps.
-
-The differences between them are register-base, cache-size,
-cache-sets, line-size,
-which are specified by properties.
-
-So,I am planning to use the same compatible for L2 and L3, like this:
-
-
-       l2-cache@500c0000 {
-               compatible = "socionext,uniphier-cache";
-               reg = <0x500c0000 0x2000>, <0x503c0100 0x8>,
-                     <0x506c0000 0x400>;
-               cache-unified;
-               cache-level = <2>;
-               next-level-cache = <&L2>;
-               cache-size = <0x200000>;
-               cache-sets = <256>;
-               cache-line-size = <128>;
-            };
-
-       /* Not all of UniPhier SoCs have L3 cache */
-       l3-cache@500c8000 {
-               compatible = "socionext,uniphier-cache";
-               reg = <0x500c8000 0x2000>, <0x503c8100 0x8>,
-                     <0x506c8000 0x400>;
-               cache-unified;
-               cache-level = <3>;
-               cache-size = <0x400000>;
-               cache-sets = <256>;
-               cache-line-size = <256>;
-       };
-
-
-
-The Table 3-9 in ePAPR v1.1 says
-the compatible should be "cache", but I do not think it makes sense here.
-
-
-
-
--- 
-Best Regards
-Masahiro Yamada
+Cheers
+Jon
