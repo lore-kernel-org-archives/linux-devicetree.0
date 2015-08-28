@@ -1,85 +1,119 @@
-From: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v5 0/8] arm64, numa: Add numa support for arm64 platforms.
-Date: Fri, 28 Aug 2015 16:31:50 +0200
-Message-ID: <55E070D6.8060604@gmail.com>
-References: <1439570374-4079-1-git-send-email-gkulkarni@caviumnetworks.com>
+From: Nathan Sullivan <nathan.sullivan-acOepvfBmUk@public.gmane.org>
+Subject: Re: [PATCH 1/2] usb: chipidea: add xilinx zynq platform data
+Date: Fri, 28 Aug 2015 09:42:56 -0500
+Message-ID: <20150828144256.GA30916@nathan3500-linux-VM>
+References: <1440602865-30468-1-git-send-email-nathan.sullivan@ni.com>
+ <CALHRZuqFtaRFNd9D=a+x2rZ2848ZOGYbTkSWCHxNPcW_NvocxA@mail.gmail.com>
+ <20150827043339.GA29157@shlinux2>
+ <CAGnW=BYMnOFTaMQJtLXZ9ckCEHs+gCOCQR0VQFfO4HP=SMHBDQ@mail.gmail.com>
+ <20150827143307.GA3775@nathan3500-linux-VM>
+ <20150828013011.GA15341@shlinux2>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1439570374-4079-1-git-send-email-gkulkarni-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>
+In-Reply-To: <20150828013011.GA15341@shlinux2>
+Content-Disposition: inline
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Ganapatrao Kulkarni <gkulkarni-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Will.Deacon-5wv7dgnIgG8@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, leif.lindholm-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, rfranz-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org, ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, msalter-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, steve.capper-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, hanjun.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, al.stone-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
-Cc: gpkulkarni-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+To: Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Cc: punnaiah choudary kalluri <punnaia-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, sundeep subbaraya <sundeep.lkml-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Subbaraya Sundeep Bhatta <sbhatta-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "pawel.moll-5wv7dgnIgG8@public.gmane.org" <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org" <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+On Fri, Aug 28, 2015 at 09:30:12AM +0800, Peter Chen wrote:
+> On Thu, Aug 27, 2015 at 09:33:07AM -0500, Nathan Sullivan wrote:
+> > On Thu, Aug 27, 2015 at 01:11:30PM +0530, punnaiah choudary kalluri wrote:
+> > > Hi,
+> > > 
+> > > On Thu, Aug 27, 2015 at 10:03 AM, Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org> wrote:
+> > > > On Thu, Aug 27, 2015 at 10:59:22AM +0530, sundeep subbaraya wrote:
+> > > >> Hi,
+> > > >>
+> > > >>
+> > > >> On Wed, Aug 26, 2015 at 8:57 PM, Nathan Sullivan <nathan.sullivan-acOepvfBmUk@public.gmane.org> wrote:
+> > > >> > The Xilinx Zynq udc does not need the CI_HDRC_DISABLE_STREAMING flag,
+> > > >> > unlike the default platform data.  Add platform data specific to the
+> > > >> > Zynq udc.
+> > > >> >
+> > > >> > Based on a patch by the same name from the Xilinx vendor tree.
+> > > >>
+> > > >> I am that Xilinx guy who sent this patch :). It is in Xilinx tree as
+> > > >> temporary fix and
+> > > >> I did not debug further why UDC works only when streaming is enabled.
+> > > >> Probably this is right time to post my question here.
+> > > >> I was expecting like:
+> > > >> Streaming disabled - both low bandwidth and high bandwidth systems
+> > > >> should work fine
+> > > >> Streaming enabled - only for high bandwidth systems
+> > > >> but this is not the case, Zynq UDC works only when Streaming is enabled.
+> > > >> Please correct me if I am wrong.
+> > > >
+> > > > You are right, stream mode disabled should work at anytime.
+> > > > It is so strange why zynq UDC only works when stream mode is enabled.
+> > > 
+> > > I am referring the section 8.5.2 in Synopsys usb 2.0 HS controllervDoc 2.20a,
+> > >  this is what it says about SDIS (streaming mode disable option)
+> > > 
+> > > Before activating this mode, the user must check if the TX latency
+> > > buffers per endpoint are able to
+> > > accommodate at least one entire maximum size packet. The RX buffer
+> > > size must, at least, double the TX
+> > > buffer size per endpoint. To optimize the stream disable performance,
+> > > system bus burst must be set as high
+> > > as possible.
+> > > When the stream disable mode is used, the burst size (VUSB_HS_RX_BURST
+> > > and VUSB_HS_TX_BURST)
+> > > must be a integer sub-multiple of the latency buffer size
+> > > (VUSB_HS_RX_DEPTH for RX buffer and
+> > > VUSB_HS_TX_CHAN for the TX buffer). If this is not respected the
+> > > controller will not work properly in stream
+> > > disable mode.
+> > > The stream disable mode should just be used in situations where the
+> > > available system bandwidth is low or the
+> > > system bus access latency is high, in order to avoid underruns and
+> > > overruns in the latency buffers. This works
+> > > for all types of endpoints, except for ISO endpoints.
+> > > Such a system can't ensure the real time support that the ISO
+> > > endpoints require, so the ISO endpoints are not
+> > > supported when the SDIS bit is set.
+> > > 
+> > > Definitely we need to root cause why disable streaming mode is not
+> > > working for zynq but from controller spec
+> > > point of view it is possible that controller not work properly in
+> > > stream disable mode.
+> > > 
+> > > Regards,
+> > > Punnaiah
+> > > 
+> > 
+> > Maybe the burst size isn't set correctly by default?  It does say the controller
+> > won't work correctly with stream disable set and an invalid burst size.  Looks
+> > like TX and RX burst both default to 16, per the Zynq manual.
+> > 
+> > With the stream disable bit set, the behvior we see on our hardware is
+> > that priming just stops, with an outstanding transfer in memory marked
+> > active in the status field by the controller.  This happens at random, even 
+> > when doing single transfers at a time like with g_ether set to have a queue
+> > size of 1.  With SDIS clear everything works great.  Given that the Zynq is not
+> > bandwidth constrained, it seems like SDIS clear should be the default.
+> > 
+> 
+> I suspect the possible reason is the tx buffer for each endpoint is
+> small (<=512 bytes), so it can't copy one packet (assume max packet size
+> for bulk) to tx buffer, then the prime can't be finished.
+> 
+> Would you help to dump the registers HWTXBUF ($BASE + 0x10) and DCCPARAMS
+> ($BASE + 124)?
+> 
+> tx buffer size = ((2 ^ HWTXBUF.VUSB_HS_TX_ADD) / DCCPARAMS.DEN) *
+> (DWORD_PER_BYTES)
+> 
+> DWORD_PER_BYTES is 4
+> 
+> -- 
+> 
+> Best Regards,
+> Peter Chen
 
-
-On 14/08/15 18:39, Ganapatrao Kulkarni wrote:
-> v5:
-> 	- created base verion of numa.c which creates dummy numa without using dt
-> 	  on single socket platforms. Then added patches for dt support.
-> 	- Incorporated review comments from Hanjun Guo.
->
-> v4:
-> done changes as per Arnd review comments.
->
-> v3:
-> Added changes to support numa on arm64 based platforms.
-> Tested these patches on cavium's multinode(2 node topology) platform.
-> In this patchset, defined and implemented dt bindings for numa mapping
-> for core and memory using device node property arm,associativity.
->
-> v2:
-> Defined and implemented numa map for memory, cores to node and
-> proximity distance matrix of nodes.
->
-> v1:
-> Initial patchset to support numa on arm64 platforms.
->
-> Note:
-> 	1. This patchset is tested for numa with dt on
-> 	   thunderx single socket and dual socket boards.
-> 	2. Numa DT booting needs the dt memory nodes, which are deleted in current efi-stub,
-> 	hence to try numa with dt, you need to rebase with ard's patchset.
-> 	http://git.linaro.org/people/ard.biesheuvel/linux-arm.git/shortlog/refs/heads/arm64-uefi-early-fdt-handling
->
->
-> Ganapatrao Kulkarni (4):
->    arm64, numa: adding numa support for arm64 platforms.
->    Documentation: arm64/arm: dt bindings for numa.
->    arm64, numa: adding numa support for arm64 platforms.
->    arm64, dt, thunderx: Add initial dts for Cavium Thunder SoC in 2 Node
->      topology.
->
->   Documentation/devicetree/bindings/arm/numa.txt  | 212 +++++++
->   arch/arm64/Kconfig                              |  32 +
->   arch/arm64/boot/dts/cavium/Makefile             |   2 +-
->   arch/arm64/boot/dts/cavium/thunder-88xx-2n.dts  |  78 +++
->   arch/arm64/boot/dts/cavium/thunder-88xx-2n.dtsi | 790 ++++++++++++++++++++++++
->   arch/arm64/include/asm/mmzone.h                 |  32 +
->   arch/arm64/include/asm/numa.h                   |  49 ++
->   arch/arm64/kernel/Makefile                      |   1 +
->   arch/arm64/kernel/dt_numa.c                     | 316 ++++++++++
->   arch/arm64/kernel/setup.c                       |   9 +
->   arch/arm64/kernel/smp.c                         |   3 +
->   arch/arm64/mm/Makefile                          |   1 +
->   arch/arm64/mm/init.c                            |  34 +-
->   arch/arm64/mm/numa.c                            | 563 +++++++++++++++++
->   14 files changed, 2115 insertions(+), 7 deletions(-)
->   create mode 100644 Documentation/devicetree/bindings/arm/numa.txt
->   create mode 100644 arch/arm64/boot/dts/cavium/thunder-88xx-2n.dts
->   create mode 100644 arch/arm64/boot/dts/cavium/thunder-88xx-2n.dtsi
->   create mode 100644 arch/arm64/include/asm/mmzone.h
->   create mode 100644 arch/arm64/include/asm/numa.h
->   create mode 100644 arch/arm64/kernel/dt_numa.c
->   create mode 100644 arch/arm64/mm/numa.c
->
-
-On which version is this patch-set based?
-
-Regards,
-Matthias
+HWTXBUF is 0x80060A10, DCCPARAMS is 0xE0003124.
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
