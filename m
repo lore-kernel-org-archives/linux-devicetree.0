@@ -1,46 +1,60 @@
-From: Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>
-Subject: Re: [Gta04-owner] [PATCH 0/4] UART slave device support - version 4
-Date: Fri, 28 Aug 2015 13:04:36 +0200
-Message-ID: <20150828110436.GA6857@amd>
-References: <20150511013540.5709.93626.stgit@notabene.brown>
- <CACRpkdZf2AM_7Od1kVcBxokK5CJfhnsfZ_oNSF5w7rmZmcenCg@mail.gmail.com>
- <20150812092059.361e09bc@home.neil.brown.name>
- <CD86D8CD-20D8-44EF-8245-A3E49C2D3EA7@goldelico.com>
- <20150828070201.GA23975@amd>
- <0579762D-51C2-45F0-A362-EE31215A40E8@goldelico.com>
+From: Lothar =?UTF-8?B?V2HDn21hbm4=?= <LW-bxm8fMRDkQLDiMYJYoSAnRvVK+yQ3ZXh@public.gmane.org>
+Subject: Re: [PATCH v3 1/5] input: touchscreen: add imx6ul_tsc driver
+ support
+Date: Fri, 28 Aug 2015 13:19:22 +0200
+Message-ID: <20150828131922.79693714@ipc1.ka-ro>
+References: <1440752976-9094-1-git-send-email-haibo.chen@freescale.com>
+	<1440752976-9094-2-git-send-email-haibo.chen@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <0579762D-51C2-45F0-A362-EE31215A40E8-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>
+In-Reply-To: <1440752976-9094-2-git-send-email-haibo.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: "Dr. H. Nikolaus Schaller" <hns-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>
-Cc: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, One Thousand Gnomes <gnomes-qBU/x9rampVanCEyBjwyrvXRex20P6io@public.gmane.org>, Peter Hurley <peter-WaGBZJeGNqdsbIuE7sb01tBPR1lH4CV8@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Jiri Slaby <jslaby-AlSwsSmVLrQ@public.gmane.org>, Marek Belisko <marek-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>, List for communicating with real GTA04 owners <gta04-owner-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>
+To: Haibo Chen <haibo.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Cc: dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mpa-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+Hi,
 
-> > asking "device tree maintainer opinion", and then just simply ignor=
-ing
-> > it when he does not like it, and then making promises he did not ke=
-ep.
+> Freescale i.MX6UL contains a internal touchscreen controller,
+> this patch add a driver to support this controller.
 >=20
-> Which promises did I not keep? Please be specific, instead of
+> Signed-off-by: Haibo Chen <haibo.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+> ---
+>  drivers/input/touchscreen/Kconfig      |  12 +
+>  drivers/input/touchscreen/Makefile     |   1 +
+>  drivers/input/touchscreen/imx6ul_tsc.c | 524 +++++++++++++++++++++++=
+++++++++++
+>  3 files changed, 537 insertions(+)
+>  create mode 100644 drivers/input/touchscreen/imx6ul_tsc.c
+>=20
+> diff --git a/drivers/input/touchscreen/Kconfig b/drivers/input/touchs=
+creen/Kconfig
+> index 059edeb..50a42b8 100644
+> --- a/drivers/input/touchscreen/Kconfig
+> +++ b/drivers/input/touchscreen/Kconfig
+> @@ -479,6 +479,18 @@ config TOUCHSCREEN_MTOUCH
+>  	  To compile this driver as a module, choose M here: the
+>  	  module will be called mtouch.
+> =20
+> +config TOUCHSCREEN_IMX6UL_TSC
+> +	tristate "Freescale i.MX6UL touchscreen controller"
+> +	depends on (OF && GPIOLIB) || COMPILE_TEST
+> +	help
+> +	  Say Y here if you have a Freescale i.MX6UL, and want to
+> +	  use the internal touchscreen controller.
+> +
+> +	  If unsure, say N.
+> +
+> +	  To compile this driver as a module, choose M here: the
+> +	  moduel will be called imx6ul_tsc.
+>
+s/moduel/module/
 
-You promised to shut up.
 
-> Please have a look into our RFC implementation and study it carefully
-> to learn why it is the better (IMHO more flexible, easier to maintain=
-, more
-> modular) approach. Even if you don=E2=80=99t like phandles.
+Lothar Wa=C3=9Fmann
 
-It was also NAKed by device tree maintainers.
-
-									Pavel
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses=
-/blog.html
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" i=
 n
