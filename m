@@ -1,65 +1,90 @@
-From: Chen Bough <Haibo.Chen@freescale.com>
-Subject: RE: [PATCH v6 0/6] mmc: imx: a few fixes and new feature
-Date: Fri, 28 Aug 2015 06:53:36 +0000
-Message-ID: <BY1PR03MB1388F0A45EF1A6CC38D2A4489A6E0@BY1PR03MB1388.namprd03.prod.outlook.com>
-References: <1439293111-21077-1-git-send-email-haibo.chen@freescale.com>
- <CAPDyKFriWeJTsymd+Ha0ZY+UWjpbEdKMwZgw1hA2zZhw5khPaw@mail.gmail.com>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH v2 5/5] [media] c8sectpfe: Update DT binding doc with
+ some minor fixes
+Date: Fri, 28 Aug 2015 07:57:02 +0100
+Message-ID: <20150828065702.GC4796@x1>
+References: <1440678575-21646-1-git-send-email-peter.griffin@linaro.org>
+ <1440678575-21646-6-git-send-email-peter.griffin@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <CAPDyKFriWeJTsymd+Ha0ZY+UWjpbEdKMwZgw1hA2zZhw5khPaw@mail.gmail.com>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Ulf Hansson <ulf.hansson@linaro.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, "Dong A.S." <Aisheng.Dong@freescale.com>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Fabio Estevam <Fabio.Estevam@freescale.com>, Pawe? Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-mmc <linux-mmc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Marc Kleine-Budde <mkl@pengutronix.de>, Sascha Hauer <kernel@pengutronix.de>, Kumar Gala <galak@codeaurora.org>, Johan Derycke <johan.derycke@barco.com>, Shawn Guo <shawnguo@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1440678575-21646-6-git-send-email-peter.griffin@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Peter Griffin <peter.griffin@linaro.org>
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, maxime.coquelin@st.com, srinivas.kandagatla@gmail.com, patrice.chotard@st.com, mchehab@osg.samsung.com, devicetree@vger.kernel.org, linux-media@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-VGhhbmtz77yMIFVmZmUuDQoNCg0KSGkgU2hhd24gYW5kIFNhc2NoYSwNCg0KQ2FuIHlvdSBoZWxw
-IHB1bGwgdGhlIHBhdGNoNCBpbiB5b3VyIGJyYW5jaD8gDQoNCg0KQmVzdCBSZWdhcmRzDQpIYWli
-byBDaGVuDQoNCg0KPiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBVbGYgSGFu
-c3NvbiBbbWFpbHRvOnVsZi5oYW5zc29uQGxpbmFyby5vcmddDQo+IFNlbnQ6IFR1ZXNkYXksIEF1
-Z3VzdCAyNSwgMjAxNSA4OjA2IFBNDQo+IFRvOiBDaGVuIEhhaWJvLUI1MTQyMQ0KPiBDYzogUm9i
-IEhlcnJpbmc7IFBhd2XFgiBNb2xsOyBNYXJrIFJ1dGxhbmQ7IElhbiBDYW1wYmVsbDsgS3VtYXIg
-R2FsYTsNCj4gU2hhd24gR3VvOyBTYXNjaGEgSGF1ZXI7IFJ1c3NlbGwgS2luZyAtIEFSTSBMaW51
-eDsgRG9uZyBBaXNoZW5nLUIyOTM5NjsNCj4gSm9oYW4gRGVyeWNrZTsgTWFyYyBLbGVpbmUtQnVk
-ZGU7IEVzdGV2YW0gRmFiaW8tUjQ5NDk2Ow0KPiBkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZzsg
-bGludXgta2VybmVsQHZnZXIua2VybmVsLm9yZzsgbGludXgtYXJtLQ0KPiBrZXJuZWxAbGlzdHMu
-aW5mcmFkZWFkLm9yZzsgbGludXgtbW1jDQo+IFN1YmplY3Q6IFJlOiBbUEFUQ0ggdjYgMC82XSBt
-bWM6IGlteDogYSBmZXcgZml4ZXMgYW5kIG5ldyBmZWF0dXJlDQo+IA0KPiBPbiAxMSBBdWd1c3Qg
-MjAxNSBhdCAxMzozOCwgSGFpYm8gQ2hlbiA8aGFpYm8uY2hlbkBmcmVlc2NhbGUuY29tPiB3cm90
-ZToNCj4gPiBDaGFuZ2VzIGZvciB2NjoNCj4gPiAtcmVtb3ZlIGR1cGxpY2F0ZSBjb2RlIGluIGVz
-ZGhjX3NldF91aHNfc2lnbmFsaW5nKCkuDQo+ID4gLWZpeCBhIHR5cG8gZm9yIHBhdGNoLTIuDQo+
-ID4gLW1ha2UgY29tbWl0IGxvZyBvZiBwYXRjaC0zIG1vcmUgc3BlY2lmaWMuDQo+ID4NCj4gPiBI
-YWlibyBDaGVuICg2KToNCj4gPiAgIG1tYzogc2RoY2ktZXNkaGMtaW14OiBhZGQgaW14N2Qgc3Vw
-cG9ydCBhbmQgc3VwcG9ydCBIUzQwMA0KPiA+ICAgbW1jOiBzZGhjaS1lc2RoYy1pbXg6IGFkZCB0
-dW5pbmctc3RlcCBzZXR0aW5nIHN1cHBvcnQNCj4gPiAgIG1tYzogc2RoY2ktZXNkaGMtaW14OiBh
-ZGQgaW14N2Qgc3VwcG9ydCBpbiBiaW5nZGluZyBkb2MNCj4gPiAgIEFSTTogZHRzOiBpbXg3ZC1z
-ZGI6IGFkZCBlTU1DNS4wIHN1cHBvcnQNCj4gPiAgIG1tYzogc2RoY2ktZXNkaGMtaW14OiBzZXQg
-YmFjayB0aGUgYnVyc3RfbGVuZ3RoX2VuYWJsZSBiaXQgdG8gMQ0KPiA+ICAgbW1jOiBzZGhjaS1l
-c2RoYy1pbXg6IGNoYW5nZSBkZWZhdWx0IHdhdGVybWFyayBsZXZlbCBhbmQgYnVyc3QNCj4gPiBs
-ZW5ndGgNCj4gPg0KPiA+ICAuLi4vZGV2aWNldHJlZS9iaW5kaW5ncy9tbWMvZnNsLWlteC1lc2Ro
-Yy50eHQgICAgICB8ICAgNiArKw0KPiA+ICBhcmNoL2FybS9ib290L2R0cy9pbXg3ZC1zZGIuZHRz
-ICAgICAgICAgICAgICAgICAgICB8ICAxMyArKysNCj4gPiAgZHJpdmVycy9tbWMvaG9zdC9zZGhj
-aS1lc2RoYy1pbXguYyAgICAgICAgICAgICAgICAgfCAxMTQNCj4gKysrKysrKysrKysrKysrKysr
-KystDQo+ID4gIGluY2x1ZGUvbGludXgvcGxhdGZvcm1fZGF0YS9tbWMtZXNkaGMtaW14LmggICAg
-ICAgIHwgICAxICsNCj4gPiAgNCBmaWxlcyBjaGFuZ2VkLCAxMzAgaW5zZXJ0aW9ucygrKSwgNCBk
-ZWxldGlvbnMoLSkNCj4gPg0KPiA+IC0tDQo+ID4gMS45LjENCj4gPg0KPiANCj4gSSBoYXZlIGFw
-cGxpZWQgdGhpcyBmb3IgbmV4dCAtIGV4Y2VwdCBwYXRjaDQgYXMgaXQgbmVlZHMgYW5kIGFjayBm
-cm9tIHRoZQ0KPiBJTVggU09DIG1haW50YWluZXIsIG9yIGl0IG1heSBiZSBiZXR0ZXIgdG8gdGFr
-ZSB0aGF0IHBhdGNoIHRocm91Z2ggQVJNDQo+IHNvYy4uLg0KPiANCj4gUmVnYXJkaW5nIHBhdGNo
-Mywgd2hpY2ggZG9jdW1lbnQgdGhlIG5ldyBiaW5kaW5ncyBhbmQgdGhlIGNvbXBhdGlibGUNCj4g
-c3RyaW5nLCBJIG1vdmVkIHRoaXMgdG8gYmUgdGhlIGZpcnN0IHBhdGNoIGFuZCBmaXhlZCB0aGUg
-c3BlbGxpbmcgb2YgdGhlDQo+IGNvbW1pdCBtZXNzYWdlIGhlYWRlci4NCj4gDQo+IFRoYW5rcyEN
-Cj4gDQo+IEtpbmQgcmVnYXJkcw0KPiBVZmZlDQpfX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fXwpsaW51eC1hcm0ta2VybmVsIG1haWxpbmcgbGlzdApsaW51eC1h
-cm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcv
-bWFpbG1hbi9saXN0aW5mby9saW51eC1hcm0ta2VybmVsCg==
+On Thu, 27 Aug 2015, Peter Griffin wrote:
+
+> Signed-off-by: Peter Griffin <peter.griffin@linaro.org>
+> ---
+>  .../devicetree/bindings/media/stih407-c8sectpfe.txt      | 16 ++++++=
++---------
+>  1 file changed, 7 insertions(+), 9 deletions(-)
+>=20
+> diff --git a/Documentation/devicetree/bindings/media/stih407-c8sectpf=
+e.txt b/Documentation/devicetree/bindings/media/stih407-c8sectpfe.txt
+> index e70d840..5d6438c 100644
+> --- a/Documentation/devicetree/bindings/media/stih407-c8sectpfe.txt
+> +++ b/Documentation/devicetree/bindings/media/stih407-c8sectpfe.txt
+> @@ -55,21 +55,20 @@ Example:
+>  		status =3D "okay";
+>  		reg =3D <0x08a20000 0x10000>, <0x08a00000 0x4000>;
+>  		reg-names =3D "stfe", "stfe-ram";
+> -		interrupts =3D <0 34 0>, <0 35 0>;
+> +		interrupts =3D <GIC_SPI 34 IRQ_TYPE_NONE>, <GIC_SPI 35 IRQ_TYPE_NO=
+NE>;
+>  		interrupt-names =3D "stfe-error-irq", "stfe-idle-irq";
+> -
+> -		pinctrl-names	=3D "tsin0-serial", "tsin0-parallel", "tsin3-serial"=
+,
+> -				"tsin4-serial", "tsin5-serial";
+> -
+> +		pinctrl-names	=3D "tsin0-serial",
+> +				  "tsin0-parallel",
+> +				  "tsin3-serial",
+> +				  "tsin4-serial",
+> +				  "tsin5-serial";
+>  		pinctrl-0	=3D <&pinctrl_tsin0_serial>;
+>  		pinctrl-1	=3D <&pinctrl_tsin0_parallel>;
+>  		pinctrl-2	=3D <&pinctrl_tsin3_serial>;
+>  		pinctrl-3	=3D <&pinctrl_tsin4_serial_alt3>;
+>  		pinctrl-4	=3D <&pinctrl_tsin5_serial_alt1>;
+> -
+>  		clocks =3D <&clk_s_c0_flexgen CLK_PROC_STFE>;
+> -		clock-names =3D "stfe";
+> -
+> +		clock-names =3D "c8sectpfe";
+
+Are you sure you even need this property?  I'm thinking that *-names
+properties are *usually* only required if there are more than one in a
+single property.
+
+>  		/* tsin0 is TSA on NIMA */
+>  		tsin0: port@0 {
+>  			tsin-num		=3D <0>;
+> @@ -78,7 +77,6 @@ Example:
+>  			reset-gpios		=3D <&pio15 4 GPIO_ACTIVE_HIGH>;
+>  			dvb-card		=3D <STV0367_TDA18212_NIMA_1>;
+>  		};
+> -
+
+My personal preference is to have a '\n' between nodes.
+
+>  		tsin3: port@3 {
+>  			tsin-num		=3D <3>;
+>  			serial-not-parallel;
+
+But these comments are pretty trivial, so agree or not, or fix-up or
+not, it's that big of a deal.
+
+Either way,
+  Acked-by: Lee Jones <lee.jones@linaro.org>
+
+--=20
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org =E2=94=82 Open source software for ARM SoCs
+=46ollow Linaro: Facebook | Twitter | Blog
