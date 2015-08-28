@@ -1,73 +1,105 @@
-From: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
-Subject: Re: [PATCH v6 1/2] drivers: watchdog: add a driver to support SAMA5D4
- watchdog timer
-Date: Thu, 27 Aug 2015 19:57:56 -0700
-Message-ID: <55DFCE34.3030508@roeck-us.net>
-References: <1438856146-2459-1-git-send-email-wenyou.yang@atmel.com> <1438856206-2503-1-git-send-email-wenyou.yang@atmel.com> <55C4CDEB.9020505@roeck-us.net> <B256D81BAE5131468A838E5D7A243641C9F967D2@penmbx01>
+From: Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Subject: Re: [PATCH v6] arm64: dts: Add spi bus dts
+Date: Fri, 28 Aug 2015 11:02:29 +0800
+Message-ID: <CAGS+omBBGmMzo6WeOdasMT9c-4BhKGJz1iPJjxF5vzJJ0J=Pug@mail.gmail.com>
+References: <1439782198-32396-1-git-send-email-leilk.liu@mediatek.com> <CAGS+omCFQRoH3ft2O5qPLBgngCuLPaminTys5OU6QcKmRXTyNw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=gbk;
-	format=flowed
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <B256D81BAE5131468A838E5D7A243641C9F967D2@penmbx01>
+In-Reply-To: <CAGS+omCFQRoH3ft2O5qPLBgngCuLPaminTys5OU6QcKmRXTyNw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: "Yang, Wenyou" <Wenyou.Yang-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, "wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org" <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "pawel.moll-5wv7dgnIgG8@public.gmane.org" <pawel.moll-5wv7dgnIgG8@public.gmane.org>, "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org" <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, "galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org" <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: "sylvain.rochet-ETtyaVkrhkNWk0Htik3J/w@public.gmane.org" <sylvain.rochet-ETtyaVkrhkNWk0Htik3J/w@public.gmane.org>, "Ferre, Nicolas" <Nicolas.FERRE-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, "boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org" <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Leilk Liu <leilk.liu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Cc: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "open list:OPEN FIRMWARE AND..." <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 08/27/2015 06:30 PM, Yang, Wenyou wrote:
->
->
->> -----Original Message-----
->> From: Guenter Roeck [mailto:linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org]
->> Sent: 2015=C4=EA8=D4=C27=C8=D5 23:26
->> To: Yang, Wenyou; wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org; robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org; pawel.moll@arm.=
-com;
->> mark.rutland-5wv7dgnIgG8@public.gmane.org; ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org; galak@codeauror=
-a.org
->> Cc: sylvain.rochet-ETtyaVkrhkNWk0Htik3J/w@public.gmane.org; Ferre, Nicolas; boris.brezillon@fre=
-e-
->> electrons.com; devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; linux-kernel-u79uwXL29TasMV2rI37PzA@public.gmane.org=
-org; linux-
->> watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
->> Subject: Re: [PATCH v6 1/2] drivers: watchdog: add a driver to suppo=
-rt SAMA5D4
->> watchdog timer
+Matthias,
+
+On Mon, Aug 17, 2015 at 12:32 PM, Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org> wrote:
+> On Mon, Aug 17, 2015 at 11:29 AM, Leilk Liu <leilk.liu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org> wrote:
 >>
->> On 08/06/2015 03:16 AM, Wenyou Yang wrote:
->>> >From SAMA5D4, the watchdog timer is upgrated with a new feature,
->>> which is describled as in the datasheet, "WDT_MR can be written unt=
-il
->>> a LOCKMR command is issued in WDT_CR".
->>> That is to say, as long as the bootstrap and u-boot don't issue a
->>> LOCKMR command, WDT_MR can be written more than once in the driver.
->>>
->>> So the SAMA5D4 watchdog driver's implementation is different from t=
-he
->>> at91sam9260 watchdog driver implemented in file at91sam9_wdt.c.
->>> The user application open the device file to enable the watchdog ti=
-mer
->>> hardware, and close to disable it, and set the watchdog timer timeo=
-ut
->>> by seting WDV and WDD fields of WDT_MR register, and ping the watch=
-dog
->>> by issuing WDRSTT command to WDT_CR register with hard-coded key.
->>>
->>> Signed-off-by: Wenyou Yang <wenyou.yang-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+>> This patch adds MT8173 spi bus controllers into device tree.
 >>
->> Reviewed-by: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+>> Signed-off-by: Leilk Liu <leilk.liu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 >
-> Hi Vim,
+> Reviewed-by: Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+
+The other SPI patches have already been picked up in broonie's spi tree.
+Can you pick this one into your mediatek tree?
+
+Thanks.
+-Dan
+
 >
-> Can this patch series be merged? Could you please?
->
-It is included in the pull request I sent to Wim last week.
-
-Guenter
-
-
+>> ---
+>> Change in this patch:
+>> pinctl and pad-select fields are board specific, so move to
+>> mt8173-evb.dtsi, and status = "okay".
+>> ---
+>>  arch/arm64/boot/dts/mediatek/mt8173-evb.dts | 18 ++++++++++++++++++
+>>  arch/arm64/boot/dts/mediatek/mt8173.dtsi    | 12 ++++++++++++
+>>  2 files changed, 30 insertions(+)
+>>
+>> diff --git a/arch/arm64/boot/dts/mediatek/mt8173-evb.dts b/arch/arm64/boot/dts/mediatek/mt8173-evb.dts
+>> index 4be66ca..811cb76 100644
+>> --- a/arch/arm64/boot/dts/mediatek/mt8173-evb.dts
+>> +++ b/arch/arm64/boot/dts/mediatek/mt8173-evb.dts
+>> @@ -387,6 +387,24 @@
+>>         };
+>>  };
+>>
+>> +&pio {
+>> +       spi_pins_a: spi0 {
+>> +               pins_spi {
+>> +                       pinmux = <MT8173_PIN_69_SPI_CK__FUNC_SPI_CK_0_>,
+>> +                               <MT8173_PIN_70_SPI_MI__FUNC_SPI_MI_0_>,
+>> +                               <MT8173_PIN_71_SPI_MO__FUNC_SPI_MO_0_>,
+>> +                               <MT8173_PIN_72_SPI_CS__FUNC_SPI_CS_0_>;
+>> +               };
+>> +       };
+>> +};
+>> +
+>> +&spi {
+>> +       pinctrl-names = "default";
+>> +       pinctrl-0 = <&spi_pins_a>;
+>> +       mediatek,pad-select = <0>;
+>> +       status = "okay";
+>> +};
+>> +
+>>  &uart0 {
+>>         status = "okay";
+>>  };
+>> diff --git a/arch/arm64/boot/dts/mediatek/mt8173.dtsi b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
+>> index d18ee42..3dfb6ed 100644
+>> --- a/arch/arm64/boot/dts/mediatek/mt8173.dtsi
+>> +++ b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
+>> @@ -365,6 +365,18 @@
+>>                         status = "disabled";
+>>                 };
+>>
+>> +               spi: spi@1100a000 {
+>> +                       compatible = "mediatek,mt8173-spi";
+>> +                       #address-cells = <1>;
+>> +                       #size-cells = <0>;
+>> +                       reg = <0 0x1100a000 0 0x1000>;
+>> +                       interrupts = <GIC_SPI 110 IRQ_TYPE_LEVEL_LOW>;
+>> +                       clocks = <&topckgen CLK_TOP_SPI_SEL>,
+>> +                                <&topckgen CLK_TOP_SYSPLL3_D2>;
+>> +                       clock-names = "spi-clk", "parent-clk";
+>> +                       status = "disabled";
+>> +               };
+>> +
+>>                 i2c3: i2c3@11010000 {
+>>                         compatible = "mediatek,mt8173-i2c";
+>>                         reg = <0 0x11010000 0 0x70>,
+>> --
+>> 1.8.1.1.dirty
+>>
+>> --
+>> To unsubscribe from this list: send the line "unsubscribe linux-kernel" in
+>> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+>> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>> Please read the FAQ at  http://www.tux.org/lkml/
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
