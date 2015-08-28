@@ -1,104 +1,231 @@
-From: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v5 0/8] arm64, numa: Add numa support for arm64 platforms.
-Date: Fri, 28 Aug 2015 17:36:29 +0200
-Message-ID: <55E07FFD.6030204@gmail.com>
-References: <1439570374-4079-1-git-send-email-gkulkarni@caviumnetworks.com>
- <55E070D6.8060604@gmail.com>
- <CAFpQJXUYycrvxp_p=A_pmeNUpHVs=8kYUfZP9dYDhYLqeCTZ3Q@mail.gmail.com>
+From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v2 2/5] ARM: NSP: add minimal Northstar Plus device tree
+Date: Fri, 28 Aug 2015 10:41:19 -0500
+Message-ID: <CAL_JsqJb+Pj7c=3Q9ViPhU_=tJxqOzEhOPALctf-zaFHQv+bWg@mail.gmail.com>
+References: <1440628530-6137-1-git-send-email-jonmason@broadcom.com> <1440628530-6137-3-git-send-email-jonmason@broadcom.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAFpQJXUYycrvxp_p=A_pmeNUpHVs=8kYUfZP9dYDhYLqeCTZ3Q-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <1440628530-6137-3-git-send-email-jonmason-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Ganapatrao Kulkarni <gpkulkarni-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Ganapatrao Kulkarni <gkulkarni-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Leif Lindholm <leif.lindholm-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, rfranz-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org, Ard Biesheuvel <ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "msalter-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org" <msalter-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Steve Capper <steve.capper-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Hanjun Guo <hanjun.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Al Stone <al.stone-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+To: Jon Mason <jonmason-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Cc: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Kevin Hilman <khilman-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org" <bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Kapil Hali <kapilh-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+On Wed, Aug 26, 2015 at 5:35 PM, Jon Mason <jonmason-dY08KVG/lbpWk0Htik3J/w@public.gmane.org> wrote:
+> Add a very minimalistic set of Northstar Plus Device Tree files which
+> describes the SoC and the BCM958625 implementation.  The perpherials
+> described are:
+>
+> ARM Cortex A9 CPU
+> 2 8250 UARTs
+> ARM GIC
+> PL310 L2 Cache
+> ARM A9 Global timer
+>
+> Signed-off-by: Kapil Hali <kapilh-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+> Signed-off-by: Jon Mason <jonmason-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+> ---
+>  arch/arm/boot/dts/Makefile       |   2 +
+>  arch/arm/boot/dts/bcm-nsp.dtsi   | 105 +++++++++++++++++++++++++++++++++++++++
+>  arch/arm/boot/dts/bcm958625k.dts |  57 +++++++++++++++++++++
+>  3 files changed, 164 insertions(+)
+>  create mode 100644 arch/arm/boot/dts/bcm-nsp.dtsi
+>  create mode 100644 arch/arm/boot/dts/bcm958625k.dts
+>
+> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+> index 246473a..adb5732 100644
+> --- a/arch/arm/boot/dts/Makefile
+> +++ b/arch/arm/boot/dts/Makefile
+> @@ -82,6 +82,8 @@ dtb-$(CONFIG_ARCH_BCM_CYGNUS) += \
+>  dtb-$(CONFIG_ARCH_BCM_MOBILE) += \
+>         bcm28155-ap.dtb \
+>         bcm21664-garnet.dtb
+> +dtb-$(CONFIG_ARCH_BCM_NSP) += \
+> +       bcm958625k.dtb
+>  dtb-$(CONFIG_ARCH_BERLIN) += \
+>         berlin2-sony-nsz-gs7.dtb \
+>         berlin2cd-google-chromecast.dtb \
+> diff --git a/arch/arm/boot/dts/bcm-nsp.dtsi b/arch/arm/boot/dts/bcm-nsp.dtsi
+> new file mode 100644
+> index 0000000..77f9bfc
+> --- /dev/null
+> +++ b/arch/arm/boot/dts/bcm-nsp.dtsi
+> @@ -0,0 +1,105 @@
+> +/*
+> + *  BSD LICENSE
+> + *
+> + *  Copyright(c) 2015 Broadcom Corporation.  All rights reserved.
+> + *
+> + *  Redistribution and use in source and binary forms, with or without
+> + *  modification, are permitted provided that the following conditions
+> + *  are met:
+> + *
+> + *    * Redistributions of source code must retain the above copyright
+> + *      notice, this list of conditions and the following disclaimer.
+> + *    * Redistributions in binary form must reproduce the above copyright
+> + *      notice, this list of conditions and the following disclaimer in
+> + *      the documentation and/or other materials provided with the
+> + *      distribution.
+> + *    * Neither the name of Broadcom Corporation nor the names of its
+> + *      contributors may be used to endorse or promote products derived
+> + *      from this software without specific prior written permission.
+> + *
+> + *  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+> + *  "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+> + *  LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+> + *  A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+> + *  OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+> + *  SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+> + *  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+> + *  DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+> + *  THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+> + *  (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+> + *  OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+> + */
+> +
+> +#include <dt-bindings/interrupt-controller/arm-gic.h>
+> +#include <dt-bindings/interrupt-controller/irq.h>
+> +
+> +#include "skeleton.dtsi"
+> +
+> +/ {
+> +       compatible = "brcm,nsp";
+> +       model = "Broadcom Northstar Plus SoC";
+> +       interrupt-parent = <&gic>;
+> +
+> +       cpus {
+> +               #address-cells = <1>;
+> +               #size-cells = <0>;
+> +
+> +               cpu@0 {
+> +                       device_type = "cpu";
+> +                       compatible = "arm,cortex-a9";
+> +                       next-level-cache = <&L2>;
+> +                       reg = <0x0>;
+> +               };
+> +       };
+> +
+> +       clocks {
+> +               #address-cells = <1>;
+> +               #size-cells = <1>;
+> +               ranges;
+> +
+> +               periph_clk: periph_clk {
+> +                       compatible = "fixed-clock";
+> +                       #clock-cells = <0>;
+> +                       clock-frequency = <500000000>;
+> +               };
+> +       };
+> +
+> +       uart0: serial@18000300 {
 
+All these devices should go under a bus node.
 
-On 28/08/15 16:59, Ganapatrao Kulkarni wrote:
-> On Fri, Aug 28, 2015 at 8:01 PM, Matthias Brugger
-> <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
->>
->>
->> On 14/08/15 18:39, Ganapatrao Kulkarni wrote:
->>>
->>> v5:
->>>          - created base verion of numa.c which creates dummy numa without
->>> using dt
->>>            on single socket platforms. Then added patches for dt support.
->>>          - Incorporated review comments from Hanjun Guo.
->>>
->>> v4:
->>> done changes as per Arnd review comments.
->>>
->>> v3:
->>> Added changes to support numa on arm64 based platforms.
->>> Tested these patches on cavium's multinode(2 node topology) platform.
->>> In this patchset, defined and implemented dt bindings for numa mapping
->>> for core and memory using device node property arm,associativity.
->>>
->>> v2:
->>> Defined and implemented numa map for memory, cores to node and
->>> proximity distance matrix of nodes.
->>>
->>> v1:
->>> Initial patchset to support numa on arm64 platforms.
->>>
->>> Note:
->>>          1. This patchset is tested for numa with dt on
->>>             thunderx single socket and dual socket boards.
->>>          2. Numa DT booting needs the dt memory nodes, which are deleted in
->>> current efi-stub,
->>>          hence to try numa with dt, you need to rebase with ard's patchset.
->>>
->>> http://git.linaro.org/people/ard.biesheuvel/linux-arm.git/shortlog/refs/heads/arm64-uefi-early-fdt-handling
->>>
->>>
->>> Ganapatrao Kulkarni (4):
->>>     arm64, numa: adding numa support for arm64 platforms.
->>>     Documentation: arm64/arm: dt bindings for numa.
->>>     arm64, numa: adding numa support for arm64 platforms.
->>>     arm64, dt, thunderx: Add initial dts for Cavium Thunder SoC in 2 Node
->>>       topology.
->>>
->>>    Documentation/devicetree/bindings/arm/numa.txt  | 212 +++++++
->>>    arch/arm64/Kconfig                              |  32 +
->>>    arch/arm64/boot/dts/cavium/Makefile             |   2 +-
->>>    arch/arm64/boot/dts/cavium/thunder-88xx-2n.dts  |  78 +++
->>>    arch/arm64/boot/dts/cavium/thunder-88xx-2n.dtsi | 790
->>> ++++++++++++++++++++++++
->>>    arch/arm64/include/asm/mmzone.h                 |  32 +
->>>    arch/arm64/include/asm/numa.h                   |  49 ++
->>>    arch/arm64/kernel/Makefile                      |   1 +
->>>    arch/arm64/kernel/dt_numa.c                     | 316 ++++++++++
->>>    arch/arm64/kernel/setup.c                       |   9 +
->>>    arch/arm64/kernel/smp.c                         |   3 +
->>>    arch/arm64/mm/Makefile                          |   1 +
->>>    arch/arm64/mm/init.c                            |  34 +-
->>>    arch/arm64/mm/numa.c                            | 563 +++++++++++++++++
->>>    14 files changed, 2115 insertions(+), 7 deletions(-)
->>>    create mode 100644 Documentation/devicetree/bindings/arm/numa.txt
->>>    create mode 100644 arch/arm64/boot/dts/cavium/thunder-88xx-2n.dts
->>>    create mode 100644 arch/arm64/boot/dts/cavium/thunder-88xx-2n.dtsi
->>>    create mode 100644 arch/arm64/include/asm/mmzone.h
->>>    create mode 100644 arch/arm64/include/asm/numa.h
->>>    create mode 100644 arch/arm64/kernel/dt_numa.c
->>>    create mode 100644 arch/arm64/mm/numa.c
->>>
->>
->> On which version is this patch-set based?
-> 4.2 -rc5
-
-Seems as if
-"arm64: add support for memtest" (36dd9086cb)
-is not taken into account. I wasn't able to apply the set without 
-conflicts, neither on v4.2-rc5, v4.2-rc8, nor on
-arm64-uefi-early-fdt-handling.
-
-Regards,
-Matthias
+> +               compatible = "ns16550a";
+> +               reg = <0x18000300 0x100>;
+> +               interrupts = <GIC_SPI 85 IRQ_TYPE_LEVEL_HIGH>;
+> +               clock-frequency = <62499840>;
+> +               status = "disabled";
+> +       };
+> +
+> +       uart1: serial@18000400 {
+> +               compatible = "ns16550a";
+> +               reg = <0x18000400 0x100>;
+> +               interrupts = <GIC_SPI 85 IRQ_TYPE_LEVEL_HIGH>;
+> +               clock-frequency = <62499840>;
+> +               status = "disabled";
+> +       };
+> +
+> +       gic: interrupt-controller@19021000 {
+> +               compatible = "arm,cortex-a9-gic";
+> +               #interrupt-cells = <3>;
+> +               #address-cells = <0>;
+> +               interrupt-controller;
+> +               reg = <0x19021000 0x1000>,
+> +                     <0x19020100 0x100>;
+> +       };
+> +
+> +       L2: l2-cache {
+> +               compatible = "arm,pl310-cache";
+> +               reg = <0x19022000 0x1000>;
+> +               cache-unified;
+> +               cache-level = <2>;
+> +       };
+> +
+> +       timer@19020200 {
+> +               compatible = "arm,cortex-a9-global-timer";
+> +               reg = <0x19020200 0x100>;
+> +               interrupts = <GIC_PPI 11 IRQ_TYPE_LEVEL_HIGH>;
+> +               clocks = <&periph_clk>;
+> +       };
+> +};
+> diff --git a/arch/arm/boot/dts/bcm958625k.dts b/arch/arm/boot/dts/bcm958625k.dts
+> new file mode 100644
+> index 0000000..16303db
+> --- /dev/null
+> +++ b/arch/arm/boot/dts/bcm958625k.dts
+> @@ -0,0 +1,57 @@
+> +/*
+> + *  BSD LICENSE
+> + *
+> + *  Copyright(c) 2015 Broadcom Corporation.  All rights reserved.
+> + *
+> + *  Redistribution and use in source and binary forms, with or without
+> + *  modification, are permitted provided that the following conditions
+> + *  are met:
+> + *
+> + *    * Redistributions of source code must retain the above copyright
+> + *      notice, this list of conditions and the following disclaimer.
+> + *    * Redistributions in binary form must reproduce the above copyright
+> + *      notice, this list of conditions and the following disclaimer in
+> + *      the documentation and/or other materials provided with the
+> + *      distribution.
+> + *    * Neither the name of Broadcom Corporation nor the names of its
+> + *      contributors may be used to endorse or promote products derived
+> + *      from this software without specific prior written permission.
+> + *
+> + *  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+> + *  "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+> + *  LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+> + *  A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+> + *  OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+> + *  SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+> + *  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+> + *  DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+> + *  THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+> + *  (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+> + *  OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+> + */
+> +
+> +/dts-v1/;
+> +
+> +#include "bcm-nsp.dtsi"
+> +
+> +/ {
+> +       model = "NorthStar Plus SVK (BCM958625K)";
+> +       compatible = "brcm,bcm58625", "brcm,nsp";
+> +
+> +       aliases {
+> +               serial0 = &uart0;
+> +               serial1 = &uart1;
+> +       };
+> +
+> +       chosen {
+> +               stdout-path = "serial0:115200n8";
+> +       };
+> +};
+> +
+> +&uart0 {
+> +       status = "okay";
+> +};
+> +
+> +&uart1 {
+> +       status = "okay";
+> +};
+> --
+> 1.9.1
+>
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
