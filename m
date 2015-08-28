@@ -1,75 +1,44 @@
-From: Olof Johansson <olof@lixom.net>
-Subject: Re: [PATCH 0/2 RESEND] power: reset: Add syscon reboot/poweroff
- device nodes for APM X-Gene platform
-Date: Fri, 28 Aug 2015 13:06:34 -0700
-Message-ID: <CAOesGMj7E6ux3v5_RhdCGJFVCJoA_GP0hifZCvFMYMv6x7Pu+g@mail.gmail.com>
-References: <1433272747-27114-1-git-send-email-ttnguyen@apm.com>
-	<20150714084004.GA14593@localhost>
-	<CAPw-ZT=d2=dh-Hjugo9BStCuhTp82MMapUa1EGrD01EoTOG-nA@mail.gmail.com>
-	<CAOesGMhKRxUtr6XXsZgCJVUFTFL3eHySP8y-SmEzi=R53MxLRw@mail.gmail.com>
-	<CAPw-ZTnk8cZyFyMnBMUYXuxs9=2ydqxOzm+dYsg-=9_Suq+q7A@mail.gmail.com>
-	<CAOesGMimzcUDW4e1etxZNerEusWmEtT_um8XZoT0MkFpCnTf5w@mail.gmail.com>
-	<CADaLNDmPqb73UrOaVphkywZh8mfd4sPdA6i25USLt53sZ3hFuw@mail.gmail.com>
-	<20150726183742.GA24272@localhost>
-	<CADaLNDk5FT8ENQfiMQ+++NGg3VhuiTpnQtGW0L5DMYAuDKZ27g@mail.gmail.com>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v2] ARM: dts: sun5i: Add dts file for
+ inet98v_rev2 based tablets
+Date: Fri, 28 Aug 2015 23:04:40 +0200
+Message-ID: <20150828210440.GV29389@lukather>
+References: <1440767717-10601-1-git-send-email-hdegoede@redhat.com>
+Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CADaLNDk5FT8ENQfiMQ+++NGg3VhuiTpnQtGW0L5DMYAuDKZ27g@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Duc Dang <dhdang@apm.com>
-Cc: Loc Ho <lho@apm.com>, Tai Nguyen <ttnguyen@apm.com>, "arm@kernel.org" <arm@kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "patches@apm.com" <patches@apm.com>, Jon Masters <jcm@redhat.com>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="sr8SBrQ3fbgntwtR"
+Return-path: <linux-sunxi+bncBD2ZNBF5VYJRB2MZQOXQKGQEYLPQLEY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1440767717-10601-1-git-send-email-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <http://groups.google.com/group/linux-sunxi/subscribe>
+To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Cc: Jelle van der Waa <jelle-oJJ1AqDjjO4@public.gmane.org>, Ralph Willekes <benadski-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+--sr8SBrQ3fbgntwtR
+Content-Type: text/plain; charset=UTF-8
+Content-Disposition: inline
 
-On Fri, Aug 28, 2015 at 1:00 PM, Duc Dang <dhdang@apm.com> wrote:
-> On Sun, Jul 26, 2015 at 11:37 AM, Olof Johansson <olof@lixom.net> wrote:
->>
->> On Sat, Jul 25, 2015 at 11:34:42AM -0700, Duc Dang wrote:
->> > Hi Olof,
->> >
->> > We are debating whether we should setup a company server (where we can
->> > have full control about storage, user permissions, backup, ...) or
->> > just use github.com to host our X-Gene kernel tree.
->> >
->> > Github seems already provide everything we need for a public source
->> > tree. Per your experience, what is your (and probably other
->> > maintainers) reference in git hosting server? Is there any
->> > inconvenience or difficulty for the maintainers to pull/merge code
->> > from Github versus from a company server?
->>
->> Hosting on github is fine with us in general. We do prefer to get
->> signed pull requests in particular when they come from other sources
->> than kernel.org, mostly because there's another third party involved in
->> hosting the repo and by using signed tags there's less room for anyone
->> to do bad stuff with the repository without someone noticing.
->>
->> If you host on github, please still use native git pull requests and not the
->> ones that github provides via the web interface.
->>
->> Note however, that given the total volume of patches there's no strong need for
->> you to have a public repo just to send code to us -- we're happy applying
->> patches at the volumes we're currently looking at. I can imagine other reasons
->> for why you would like to have a public repo though.
->
-> Hi Olof,
->
-> I have APM X-Gene git ready on github. According to your response
-> above, I need to
-> send a signed pull request. I created a PGP key on public server
-> (https://pgp.mit.edu/pks/lookup?search=duc+dang&op=index) and signed the tag on
-> APM X-Gene tree with my key.
->
-> Please let me know if I need anything else before sending the git pull
-> request to you.
-> My key is not signed by any maintainer yet, would you mind to arrange some
-> time next week to meet and help sign my key as well?
+On Fri, Aug 28, 2015 at 03:15:17PM +0200, Hans de Goede wrote:
+> The inet98v_rev2 is a pcb used in generic A13 based tablets. It features
+> volume buttons, a power barrel, micro-usb otg, headphone connector and
+> a power button.
+> 
+> Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 
-Yeah, I can do that, and you can get more signatures at Linaro Connect
-in case you're attending.
+Queued, thanks!
 
-(let's sort out details off-list).
+Maxime
 
-
--Olof
+-- 
+Maxime Ripard, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
+--sr8SBrQ3fbgntwtR--
