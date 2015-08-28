@@ -1,148 +1,153 @@
-From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: Userspace and Device-Tree
-Date: Fri, 28 Aug 2015 11:12:28 +0100
-Message-ID: <20150828101227.GD31748@leverpostej>
-References: <01e601d0e0f9$614450d0$23ccf270$@gmail.com>
+From: Masahiro Yamada <yamada.masahiro@socionext.com>
+Subject: Re: [PATCH 1/3] ARM: uniphier: add outer cache support
+Date: Fri, 28 Aug 2015 19:24:47 +0900
+Message-ID: <CAK7LNATWsa8AhyFGzsR0HAODmQD8yBPidTE0Lx2ACh4_PeQW9w@mail.gmail.com>
+References: <1440382692-3855-1-git-send-email-yamada.masahiro@socionext.com>
+	<1440382692-3855-2-git-send-email-yamada.masahiro@socionext.com>
+	<CACRpkdbJppuA6ZyciNAGfSgrf4M2THVHggzuZYSqORjy2JBp_A@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <01e601d0e0f9$614450d0$23ccf270$@gmail.com>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Chris R <chrisrfq-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CACRpkdbJppuA6ZyciNAGfSgrf4M2THVHggzuZYSqORjy2JBp_A@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, Jungseung Lee <js07.lee@gmail.com>, Florian Fainelli <f.fainelli@gmail.com>, Russell King <linux@arm.linux.org.uk>, Arnd Bergmann <arnd@arndb.de>, Mauro Carvalho Chehab <mchehab@osg.samsung.com>, "arm@kernel.org" <arm@kernel.org>, Jiri Slaby <jslaby@suse.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Kees Cook <keescook@chromium.org>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <u.kleine-koenig@pengutronix.de>, Joe Perches <joe@perches.com>, Rob Herring <robh+dt@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Paul Bolle <pebolle@tiscali.nl>, Greg KH <gregkh@linuxfoundation.org>, Nathan Lynch <nathan_lynch@mentor.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Maxime
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Aug 27, 2015 at 07:51:26PM +0100, Chris R wrote:
-> Hi Mark,
+Hi Linus,
 
-Hi,
 
-I've added the devicetree mailing list and a few maintainers, since this
-is a recurring class of query.
+2015-08-26 22:39 GMT+09:00 Linus Walleij <linus.walleij@linaro.org>:
+> On Mon, Aug 24, 2015 at 4:18 AM, Masahiro Yamada
+> <yamada.masahiro@socionext.com> wrote:
+>> This commit adds support for UniPhier outer cache controller.
+>> All the UniPhier SoCs are equipped with the L2 cache, while the L3
+>> cache is currently only integrated on PH1-Pro5 SoC.
+>>
+>> Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+>
+> Wow it is really a custom L2$ controller. Wow. Just wow. That's
+> really brave, given all the problems we've seen in l2x0.
 
-> Sorry to write you out-of-the-blue, but I have a question/concern that I
-> think has bearing on Linux kernel and device tree future, and your name is
-> on some posts regarding DT & userspace.
-> 
-> In this one, http://www.spinics.net/lists/devicetree/msg43917.html, you
-> state that you 'never expect to see "userspace" in a DT binding string', as
-> DT is supposed to deal strictly with the interaction of HW components.
-> 
-> If I understand things correctly (and I'm relatively new to DT having been
-> stuck with older kernels), we in the ARM/Linux world are using DT to do
-> three things:
->     1.  Specify the hardware interactions
->     2.  Remove the need for board files for each board variant
->     3.  Allow the Linux kernel to plumb drivers together using the
-> 'compatible = "<whatever>"' syntax
-> My concerns lie in number 2 and number 3, with respect to userspace.
-> 
-> In my experience (primarily embedded OMAP3, but moving on now) one of the
-> various purposes of the board file was to expose things to userspace
-> (GPIO's, power supplies, ADC's etc.) so that they could be observed and even
-> controlled from userspace.  So, I'm looking for how best to control hardware
-> from userspace but without the customized board files I'm familiar with.
-> 
-> The above cited posting refers to the power regulator driver
-> userspace-consumer.c, which is a regulator driver specifically designed to
-> allow control of a hardware component from userspace.  I believe that this
-> is a useful function to provide, and want to make use of it in my version of
-> the kernel.  Is it possible to do so without a board file and without DT?
-> If so, can you point me at some help?
+Looks like my company is crazy...
+ARM Ltd. people said we are the only vendor that still uses
+a custom outer cache.
 
-I'm not specifically aware of how to achieve this, but this is really
-down to the various subsystems to handle, rather than DT.
 
-If you want to control regulators from userspace, then the regulator
-subsystem needs to understand and expose regulators, rather than this
-being left to arbitrary drivers to expose in arbitrary ways. If drivers
-aren't exposing everything that they can, that is a driver issue.
-Likewise for GPIOs, ADCs, etc.
 
-So long as the DT describes the HW, the subsystem can then choose to
-expose the devices as it wishes, and any policy atop of that can then be
-applied in the usual manner (e.g. udev for access control, naming, etc).
+>> +UniPhier SoCs are integrated with a level 2 cache controller that resides
+>> +outside of the ARM cores, some of them also have a level 3 cache controller.
+>> +
+>> +Required properties:
+>> +- compatible: should be one of the followings:
+>> +       "socionext,uniphier-l2-cache"   (L2 cache)
+>> +       "socionext,uniphier-l3-cache"   (L3 cache)
+>
+> Refer to and use the 3.7.3 ePAPR v1.1 specification too:
+> https://www.power.org/wp-content/uploads/2012/06/Power_ePAPR_APPROVED_v1.1.pdf
 
-The only thing which may need to be in the DT are constraints on those
-resources, to make it harder for a user to accidentally destroy their
-board by over-volting a device, and so on. The same would apply to ACPI
-or any other hardware description provided to the kernel.
 
-> In this stackoverflow posting,
-> http://stackoverflow.com/questions/30008189/linux-kernel-regulator-consumer-
-> usage-from-userspace, which wanted to control a power supply from userspace,
+I've checked it out.
+Thanks, but I had some doubts.
 
-As far as I can tell from that posting, the regulator was exposed to
-userspace, but the subsystem had locked it to some particular state. I
-don't understand the precise details behind that, but the best people to
-talk to would be the maintainers of the regulator framework (Liam
-Girdwood and Mark Brown according to MAINTAINERS).
 
-> the solution they came up with was to create their own driver that exported
-> it, and then bind it in with the DT.  That doesn't really solve the
-> keeping-userspace-out-of-the-DT issue.  I think it would have been much more
-> efficient to have a standardized way to control a regulator from userspace
-> (e.g. userspace-consumer.c) and have a standardized way to have the kernel
-> bind it to the regulator.  My understanding, though, is that the new
-> standard way to get such bindings is with DT.
 
-As above, this has nothing to do with DT. I agree that the subsystems
-should expose standard interfaces for the resources they expose, but I
-don't think that it makes sense for an external file provided to the
-kernel to tell the kernel what and what not to expose to userspace --
-that's pure policy and/or implementation details.
+> cache-unified and cache-level are *not* optional and should be required.
 
-> Similarly, I'd like to be able to signal the export of a GPIO to userspace
-> (/sys/class/gpio/gpioWXY) without a customized board file.  Since we're
-> using DT to specify the hardware in a system, it would be a convenient place
-> to specify exporting GPIOs to userspace.
 
-I believe that the GPIO subsystem maintainers (Linus Walleij and
-Alexandre Courbot) were trying to make GPIO control from userspace more
-consistent (independent of DT) for a while. However I am not all that
-familiar with the GPIO subsystem and may have misunderstood some of the
-work that's going on there.
+"cache-unified" is mentioned in "3.7.3 Internal (L1) Cache Properties"
+(Table 3-8),
+but it is not in "3.8 Multi-level and Shared Caches" (Table 3-9)
 
-> I've searched for ways to expose things to userspace for several days,
-> especially GPIOs, but the device tree still looks like an obvious place to
-> this naive person.  If there's a good way to do this without DT, I'm happy
-> to do so.  I'm also happy to have DT remain purely hardware oriented, but I
-> wonder if it would make sense to put an umbrella over DT that included other
-> things than DT, such as userspace.
-> 
-> In summary, I'd like to see ways to specify the exposure of GPIOs, power
-> supplies, etc. to userspace, specified using device-tree like bindings.  If
-> the device-tree is not the place to do so, then could there be a
-> "system-tree" or something like that which would keep the DT formally
-> separate, but include it by reference and also add whatever other nodes and
-> properties that are necessary to specify things like exposing GPIO's, ADC's
-> and power supply controls?  That way we could have userspace-consumer.c
-> control the desired regulator, but not have the binding with the DT itself.
-> (By the way, it appears to me that the userspace-consumer.c driver is rather
-> orphaned without the ability to bind using a DT-like mechanism.  No updates
-> are going its way these days.)
-> 
-> Thanks for your patience and consideration,
-> 
-> Chris
-> 
-> P.S. I had another (unrelated) thought about DT.  Since DT is used to link
-> HW components together, and HW drivers make queries of the DT to make
-> bindings, would it make sense to have some kind of a DT template (i.e. small
-> .dtsi file) that corresponds to each driver reside in the directory with
-> each driver.  Board device trees would reference these templates, and
-> include references to relevant parameters that they specify.  This might
-> also help make board DT device instances more uniform between .dts files. 
+Are the rules in Table 3-8 also applied for L2?
 
-As far as I can tell, all of this is simply applying a policy atop of
-the hardware we have. We already have subsystems and udev for dealing
-with that, and we should enhance those if necessary rather than trying
-to place this in DT.
 
-Thanks,
-Mark.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> So:
+>
+>> +The L2 cache must exist to use the L3 cache; adding only an L3 cache device
+>> +node to the device tree causes the initialization failure of the whole outer
+>> +cache system.
+>> +
+>> +Example:
+>> +       l2-cache@500c0000 {
+>> +               compatible = "socionext,uniphier-l2-cache";
+>> +               reg = <0x500c0000 0x2000>, <0x503c0100 0x8>,
+>> +                     <0x506c0000 0x400>;
+>
+> cache-unified;
+> cache-level = <2>;
+>
+>> +       /* Not all of UniPhier SoCs have L3 cache */
+>> +       l3-cache@500c8000 {
+>> +               compatible = "socionext,uniphier-l3-cache";
+>> +               reg = <0x500c8000 0x2000>, <0x503c8100 0x8>,
+>> +                     <0x506c8000 0x400>;
+>
+> cache-unified;
+> cache-level = <3>;
+>
+> (I'm just assuming this cache is unified, anything else would be baffling.)
+
+In fact, unified/harvard is configurable thru a register of this cache
+controller.
+It is usually used as a unified cached, though.
+
+
+
+> Further the ePAPR spec optionally supports specifying things like the
+> cache size, number of sets, block size and line size, unless this can
+> be hard coded.
+>
+> Yours,
+> Linus Walleij
+>
+
+
+Given that cache-level specifies the level and next-level-cache
+specifies the topology,
+I think "socionext,uniphier-l*-cache" gives redundant information.
+
+The L2 and L3 cache controller look the same; they have the same register maps.
+
+The differences between them are register-base, cache-size,
+cache-sets, line-size,
+which are specified by properties.
+
+So,I am planning to use the same compatible for L2 and L3, like this:
+
+
+       l2-cache@500c0000 {
+               compatible = "socionext,uniphier-cache";
+               reg = <0x500c0000 0x2000>, <0x503c0100 0x8>,
+                     <0x506c0000 0x400>;
+               cache-unified;
+               cache-level = <2>;
+               next-level-cache = <&L2>;
+               cache-size = <0x200000>;
+               cache-sets = <256>;
+               cache-line-size = <128>;
+            };
+
+       /* Not all of UniPhier SoCs have L3 cache */
+       l3-cache@500c8000 {
+               compatible = "socionext,uniphier-cache";
+               reg = <0x500c8000 0x2000>, <0x503c8100 0x8>,
+                     <0x506c8000 0x400>;
+               cache-unified;
+               cache-level = <3>;
+               cache-size = <0x400000>;
+               cache-sets = <256>;
+               cache-line-size = <256>;
+       };
+
+
+
+The Table 3-9 in ePAPR v1.1 says
+the compatible should be "cache", but I do not think it makes sense here.
+
+
+
+
+-- 
+Best Regards
+Masahiro Yamada
