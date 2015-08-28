@@ -1,174 +1,236 @@
-From: Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Subject: Re: [RESEND PATCH v16 4/4] ARM: dts: add the support power-domain node on
- RK3288 SoCs
-Date: Fri, 28 Aug 2015 15:53:49 -0700
-Message-ID: <20150828225349.11508.41285@quantum>
-References: <1440487486-6154-1-git-send-email-wxt@rock-chips.com>
- <1440487486-6154-5-git-send-email-wxt@rock-chips.com>
- <7hfv37axhj.fsf@deeprootsystems.com>
- <CAD=FV=V6oG+9U=W_JZmqCuNo-9-5wW8ffZzG7ZE_3cnSTNAjFQ@mail.gmail.com>
- <7htwrn6l7g.fsf@deeprootsystems.com>
- <CAKdAkRS=9Dq+YpMNSjpij0Am4ZD6uUURv74OLLYf+akD=W885A@mail.gmail.com>
- <7hmvxc45w2.fsf@deeprootsystems.com>
- <CAD=FV=VTR-PBcXXX1jHNw65x_cMP9CKwVWBs+XCcFqFPp7msjA@mail.gmail.com>
- <20150828200238.30921.24441@quantum>
- <CAD=FV=UrWauwX143MSZpus=L7N__jL1dU-FwaE8BU7wi=Lu2Qg@mail.gmail.com>
+From: Jon Mason <jonmason@broadcom.com>
+Subject: [PATCH v3 2/5] ARM: NSP: add minimal Northstar Plus device tree
+Date: Fri, 28 Aug 2015 19:47:24 -0400
+Message-ID: <1440805644-18241-1-git-send-email-jonmason@broadcom.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8BIT
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAD=FV=UrWauwX143MSZpus=L7N__jL1dU-FwaE8BU7wi=Lu2Qg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Michael Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Kevin Hilman <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, =?utf-8?q?Heiko_St=C3=BCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Tomasz Figa <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "jinkun.hong" <jinkun.hong-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Olof Johansson <olof@lixom.net>, Arnd Bergmann <arnd@arndb.de>, Kevin Hilman <khilman@linaro.org>
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Florian Fainelli <f.fainelli@gmail.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, bcm-kernel-feedback-list@broadcom.com, linux-kernel@vger.kernel.org, Kapil Hali <kapilh@broadcom.com>
 List-Id: devicetree@vger.kernel.org
 
-Quoting Doug Anderson (2015-08-28 14:08:52)
-> Mike,
-> 
-> On Fri, Aug 28, 2015 at 1:02 PM, Michael Turquette
-> <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
-> > Hi Doug,
-> >
-> > Quoting Doug Anderson (2015-08-27 19:03:20)
-> >> Kevin,
-> >>
-> >> On Thu, Aug 27, 2015 at 5:24 PM, Kevin Hilman <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
-> >> >> That is not really workable: the attach and detach happen in
-> >> >> probe/remove path; if you do not have driver for the device you will
-> >> >> miss the clocks for it.
-> >> >
-> >> > And in my proposal, I suggested that clocks without drivers are
-> >> > good candidates to list in the domain, with the caveat that the be
-> >> > called out (documented) as being device clocks that are missing a
-> >> > driver, so when a driver shows up they can be moved accordingly, and in
-> >> > a way that actually describes the hardware.
-> >>
-> >> What happens if someone disables the driver using the CONFIG subsystem?
-> >
-> > Kevin asked me to chime in on this thread, as I have a half-baked idea
-> > that might solve the problem posed by your question above.
-> >
-> > One thing I have been considering for a while is a fallback compatible
-> > string that can be used for an IP block when either there is no driver
-> > loaded or no driver exists at all. Something like "generic-ip-block".
-> >
-> > The purpose of this compatible string is to allow us to model resource
-> > consumption in dts accurately, regardless of whether or not a proper
-> > driver has been written in Linux. This idea was born out of the
-> > simple-fb binding/driver discussion last year[0].
-> >
-> > Obviously such a binding would not enable any of the logic or function
-> > of that IP block; that would require a proper driver. But it would allow
-> > us to properly link system-wide resources that are consumed: the
-> > generic-ip could consume clocks and regulators, it could belong to power
-> > domains, etc. For this reason I have also thought that
-> > "generic-resource-consumer" is an accurate compatible string.
-> >
-> > This spares us from having to encode nasty details into the power domain
-> > binding, which is exactly what would happen if you needed a dedicated
-> > list of clocks in the power domain node that were not claimed by device
-> > nodes/drivers.
-> >
-> > Note that a real driver might exist for an IP block, but if that driver
-> > is disabled in Kconfig AND the corresponding dt node has this fallback
-> > compatible string, then we could be OK, from the perspective of the
-> > power domain problem.
-> 
-> OK, so that could solve the "Kconfig" problem.
-> 
-> 
-> >> What happens if this is a device that someone has set to 'status =
-> >> "disabled";' in the device tree?
-> >
-> > If someone does that, then I think we should let that break power domain
-> > transitions.
-> 
-> So if you're on a board that doesn't use EDP but uses LVDS then their
-> suspend/resume should be broken?
-> 
-> Specifically, it's my understanding that on this SoC:
-> 
-> 1. There's a single "video IO" power domain that contains things like
-> the video output processor, EDP, LVDS, HDMI, etc.
-> 
-> 2. When you turn on/off the power domain it's important to clock all
-> devices in the domain during the reset.
-> 
-> 3. If you don't clock all devices during the reset they get left in a
-> "wedged" state.
-> 
-> 4. If you try to do things like suspend/resume it will query all
-> devices.  If they've been left in the wedged state then suspend/resume
-> will be blocked.
-> 
-> ...so this problem is still not solved.
+Add a very minimalistic set of Northstar Plus Device Tree files which
+describes the SoC and the BCM958625 implementation.  The perpherials
+described are:
 
-I talked to Kevin about this and we both agree that the power domain's
-use of the clock consumer binding is totally valid. So I still think
-there might be a use for the generic-ip binding, but I also think the
-solution in this original patch also looks sane.
+ARM Cortex A9 CPU
+2 8250 UARTs
+ARM GIC
+PL310 L2 Cache
+ARM A9 Global timer
 
-A paraphrase of my discussion with Kevin is that we can think of both
-the device (EDP, LVDS) and the power domain as clock consumers, so
-basically there is nothing weird going on here. Feel free to add:
+Signed-off-by: Kapil Hali <kapilh@broadcom.com>
+Signed-off-by: Jon Mason <jonmason@broadcom.com>
+---
+ arch/arm/boot/dts/Makefile       |   2 +
+ arch/arm/boot/dts/bcm-nsp.dtsi   | 120 +++++++++++++++++++++++++++++++++++++++
+ arch/arm/boot/dts/bcm958625k.dts |  57 +++++++++++++++++++
+ 3 files changed, 179 insertions(+)
+ create mode 100644 arch/arm/boot/dts/bcm-nsp.dtsi
+ create mode 100644 arch/arm/boot/dts/bcm958625k.dts
 
-Reviewed-by: Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-
-I do also agree with Kevin that we have a lot of layering issues to
-consider here with description of PM hardware, and there are temptations
-to take the shortest route to get things working. Truly modeling
-relationships is the best way forward and we need to keep that in mind
-over the long haul.
-
-> 
-> >> Even if the device is disabled in one of those two ways, we still need
-> >> the clocks to be turned on.  ...so if we turn on/off the VIO domain we
-> >> need to turn on the EDP clock even if there's no EDP in the current
-> >> board / config.  We might turn on/off VIO for one of the other devices
-> >> in the VIO domain for one of the other devices in VIO that we are
-> >> using.
-> >
-> > I'm hesitant to mention this but I am working on a patch series to
-> > implement a clock "handoff" mechanism (also inspired by the simplefb
-> > discussion). This allows us to set a per-clock flag that tells the
-> > framework to enable that clock at registration time, and then the first
-> > clock consumer driver to come along and claim that clock inherits that
-> > clock enable reference count.
-> >
-> > I'm working on v2 that lets us set this flag from DT, but I really only
-> > plan to do this for special cases. For the normal case the flag should
-> > be set in the Linux clock provider driver. In the mean time v1 is under
-> > discussion[1].
-> 
-> In this case if we're using LVDS and HDMI on a system, we don't want
-> the EDP clock always on (that just wastes power).  We just need to
-> clock it for the power domain transition.
-> 
-> 
-> Note that nothing in the above solves the problem that not all clocks
-> for a given device need to be turned on during power domain
-> transitions.  If we're trying to describe hardware perfectly, we'd
-> really need to add to each device:
-> 
-> clocks = <clk1>, <clk2>, <clk3>, ...
-> clock-names = "name1", "name2", "name3", ...
-> clocks-for-power-domain-transition = "name2", "name3";
-> 
-> ...since perhaps the clock named "name1" isn't required for power
-> domain transitions and so shouldn't be turned on.  Note that once
-> we're going through and adding a special list, it doesn't seem that
-> different than just adding the list in the power domain node instead
-> (other than being more complex).
-
-Yes, this is a broader issue with mapping clocks onto consumer use
-cases. The same is exactly true for any consumer driver that consumes
-multiple clocks and enables/disables them differently (e.g. interface
-clocks versus functional clocks). How to convey that in DT?
-
-Regards,
-Mike
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+index 246473a..adb5732 100644
+--- a/arch/arm/boot/dts/Makefile
++++ b/arch/arm/boot/dts/Makefile
+@@ -82,6 +82,8 @@ dtb-$(CONFIG_ARCH_BCM_CYGNUS) += \
+ dtb-$(CONFIG_ARCH_BCM_MOBILE) += \
+ 	bcm28155-ap.dtb \
+ 	bcm21664-garnet.dtb
++dtb-$(CONFIG_ARCH_BCM_NSP) += \
++	bcm958625k.dtb
+ dtb-$(CONFIG_ARCH_BERLIN) += \
+ 	berlin2-sony-nsz-gs7.dtb \
+ 	berlin2cd-google-chromecast.dtb \
+diff --git a/arch/arm/boot/dts/bcm-nsp.dtsi b/arch/arm/boot/dts/bcm-nsp.dtsi
+new file mode 100644
+index 0000000..f5f494f
+--- /dev/null
++++ b/arch/arm/boot/dts/bcm-nsp.dtsi
+@@ -0,0 +1,120 @@
++/*
++ *  BSD LICENSE
++ *
++ *  Copyright(c) 2015 Broadcom Corporation.  All rights reserved.
++ *
++ *  Redistribution and use in source and binary forms, with or without
++ *  modification, are permitted provided that the following conditions
++ *  are met:
++ *
++ *    * Redistributions of source code must retain the above copyright
++ *      notice, this list of conditions and the following disclaimer.
++ *    * Redistributions in binary form must reproduce the above copyright
++ *      notice, this list of conditions and the following disclaimer in
++ *      the documentation and/or other materials provided with the
++ *      distribution.
++ *    * Neither the name of Broadcom Corporation nor the names of its
++ *      contributors may be used to endorse or promote products derived
++ *      from this software without specific prior written permission.
++ *
++ *  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
++ *  "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
++ *  LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
++ *  A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
++ *  OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
++ *  SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
++ *  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
++ *  DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
++ *  THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
++ *  (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
++ *  OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
++ */
++
++#include <dt-bindings/interrupt-controller/arm-gic.h>
++#include <dt-bindings/interrupt-controller/irq.h>
++
++#include "skeleton.dtsi"
++
++/ {
++	compatible = "brcm,nsp";
++	model = "Broadcom Northstar Plus SoC";
++	interrupt-parent = <&gic>;
++
++	mpcore {
++		compatible = "simple-bus";
++		ranges = <0x00000000 0x19020000 0x00003000>;
++		#address-cells = <1>;
++		#size-cells = <1>;
++
++		cpus {
++			#address-cells = <1>;
++			#size-cells = <0>;
++
++			cpu@0 {
++				device_type = "cpu";
++				compatible = "arm,cortex-a9";
++				next-level-cache = <&L2>;
++				reg = <0x0>;
++			};
++		};
++
++		L2: l2-cache {
++			compatible = "arm,pl310-cache";
++			reg = <0x2000 0x1000>;
++			cache-unified;
++			cache-level = <2>;
++		};
++
++		gic: interrupt-controller@19021000 {
++			compatible = "arm,cortex-a9-gic";
++			#interrupt-cells = <3>;
++			#address-cells = <0>;
++			interrupt-controller;
++			reg = <0x1000 0x1000>,
++			      <0x0100 0x100>;
++		};
++
++		timer@19020200 {
++			compatible = "arm,cortex-a9-global-timer";
++			reg = <0x0200 0x100>;
++			interrupts = <GIC_PPI 11 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&periph_clk>;
++		};
++	};
++
++	clocks {
++		#address-cells = <1>;
++		#size-cells = <1>;
++		ranges;
++
++		periph_clk: periph_clk {
++			compatible = "fixed-clock";
++			#clock-cells = <0>;
++			clock-frequency = <500000000>;
++		};
++	};
++
++	apb {
++		compatible = "arm,amba-bus", "simple-bus";
++		interrupt-parent = <&gic>;
++		ranges = <0x00000000 0x18000000 0x00001000>;
++		#address-cells = <1>;
++		#size-cells = <1>;
++
++		uart0: serial@18000300 {
++			compatible = "ns16550a";
++			reg = <0x0300 0x100>;
++			interrupts = <GIC_SPI 85 IRQ_TYPE_LEVEL_HIGH>;
++			clock-frequency = <62499840>;
++			status = "disabled";
++		};
++
++		uart1: serial@18000400 {
++			compatible = "ns16550a";
++			reg = <0x0400 0x100>;
++			interrupts = <GIC_SPI 85 IRQ_TYPE_LEVEL_HIGH>;
++			clock-frequency = <62499840>;
++			status = "disabled";
++		};
++	};
++};
+diff --git a/arch/arm/boot/dts/bcm958625k.dts b/arch/arm/boot/dts/bcm958625k.dts
+new file mode 100644
+index 0000000..16303db
+--- /dev/null
++++ b/arch/arm/boot/dts/bcm958625k.dts
+@@ -0,0 +1,57 @@
++/*
++ *  BSD LICENSE
++ *
++ *  Copyright(c) 2015 Broadcom Corporation.  All rights reserved.
++ *
++ *  Redistribution and use in source and binary forms, with or without
++ *  modification, are permitted provided that the following conditions
++ *  are met:
++ *
++ *    * Redistributions of source code must retain the above copyright
++ *      notice, this list of conditions and the following disclaimer.
++ *    * Redistributions in binary form must reproduce the above copyright
++ *      notice, this list of conditions and the following disclaimer in
++ *      the documentation and/or other materials provided with the
++ *      distribution.
++ *    * Neither the name of Broadcom Corporation nor the names of its
++ *      contributors may be used to endorse or promote products derived
++ *      from this software without specific prior written permission.
++ *
++ *  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
++ *  "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
++ *  LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
++ *  A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
++ *  OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
++ *  SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
++ *  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
++ *  DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
++ *  THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
++ *  (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
++ *  OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
++ */
++
++/dts-v1/;
++
++#include "bcm-nsp.dtsi"
++
++/ {
++	model = "NorthStar Plus SVK (BCM958625K)";
++	compatible = "brcm,bcm58625", "brcm,nsp";
++
++	aliases {
++		serial0 = &uart0;
++		serial1 = &uart1;
++	};
++
++	chosen {
++		stdout-path = "serial0:115200n8";
++	};
++};
++
++&uart0 {
++	status = "okay";
++};
++
++&uart1 {
++	status = "okay";
++};
+-- 
+1.9.1
