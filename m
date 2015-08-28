@@ -1,56 +1,111 @@
-From: Bill Pringlemeir <bpringle-rieW9WUcm8FFJ04o6PK0Fg@public.gmane.org>
-Subject: Re: [PATCH v10 2/5] mtd: nand: vf610_nfc: add hardware BCH-ECC support
-Date: Fri, 28 Aug 2015 17:14:08 -0400
-Message-ID: <BLU436-SMTP79A4D637801F08C772536AB86E0@phx.gbl>
-References: <1438594050-4595-1-git-send-email-stefan@agner.ch>
-	<1438594050-4595-3-git-send-email-stefan@agner.ch>
-	<ff2e2716578a1ae5f0c4b0e0ca8bbdc3@agner.ch>
-	<20150825195411.GJ81844@google.com>
-	<07a479863eef4c53ab2ef6ef85321680@agner.ch>
-	<20150826213448.GU81844@google.com>
+From: Kevin Hilman <khilman@kernel.org>
+Subject: Re: [RESEND PATCH v16 4/4] ARM: dts: add the support power-domain node on RK3288 SoCs
+Date: Fri, 28 Aug 2015 14:28:11 -0700
+Message-ID: <7hmvxb2jdg.fsf@deeprootsystems.com>
+References: <1440487486-6154-1-git-send-email-wxt@rock-chips.com>
+	<1440487486-6154-5-git-send-email-wxt@rock-chips.com>
+	<7hfv37axhj.fsf@deeprootsystems.com>
+	<CAD=FV=V6oG+9U=W_JZmqCuNo-9-5wW8ffZzG7ZE_3cnSTNAjFQ@mail.gmail.com>
+	<7htwrn6l7g.fsf@deeprootsystems.com>
+	<CAKdAkRS=9Dq+YpMNSjpij0Am4ZD6uUURv74OLLYf+akD=W885A@mail.gmail.com>
+	<7hmvxc45w2.fsf@deeprootsystems.com>
+	<CAD=FV=VTR-PBcXXX1jHNw65x_cMP9CKwVWBs+XCcFqFPp7msjA@mail.gmail.com>
+	<20150828200238.30921.24441@quantum>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20150826213448.GU81844-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org> (Brian Norris's message of
-	"Wed, 26 Aug 2015 14:34:48 -0700")
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>, bpringlemeir-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, sebastian-E0PNVn5OA6ohrxcnuTQ+TQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, marb-Z4QKGCRq86k@public.gmane.org, aaron-yuhzfaV+M/Wz3Dx2OeFgIA@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, albert.aribaud-iEu9NFBzPZE@public.gmane.org, klimov.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Bill Pringlemeir <bpringlemeir-ygJ1pmMJ17cAvxtiuMwx3w@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20150828200238.30921.24441@quantum> (Michael Turquette's message
+	of "Fri, 28 Aug 2015 13:02:38 -0700")
+Sender: linux-kernel-owner@vger.kernel.org
+To: Michael Turquette <mturquette@linaro.org>
+Cc: Doug Anderson <dianders@chromium.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Caesar Wang <wxt@rock-chips.com>, Heiko =?utf-8?Q?St=C3=BCbner?= <heiko@sntech.de>, Ulf Hansson <ulf.hansson@linaro.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>, Tomasz Figa <tomasz.figa@gmail.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Rob Herring <robh+dt@kernel.org>, Arnd Bergmann <arnd@arndb.de>, Linus Walleij <linus.walleij@linaro.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "jinkun.hong" <jinkun.hong@rock-chips.com>
 List-Id: devicetree@vger.kernel.org
 
+Michael Turquette <mturquette@linaro.org> writes:
 
-On 26 Aug 2015, computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org wrote:
+> Hi Doug,
+>
+> Quoting Doug Anderson (2015-08-27 19:03:20)
+>> Kevin,
+>> 
+>> On Thu, Aug 27, 2015 at 5:24 PM, Kevin Hilman <khilman@kernel.org> wrote:
+>> >> That is not really workable: the attach and detach happen in
+>> >> probe/remove path; if you do not have driver for the device you will
+>> >> miss the clocks for it.
+>> >
+>> > And in my proposal, I suggested that clocks without drivers are
+>> > good candidates to list in the domain, with the caveat that the be
+>> > called out (documented) as being device clocks that are missing a
+>> > driver, so when a driver shows up they can be moved accordingly, and in
+>> > a way that actually describes the hardware.
+>> 
+>> What happens if someone disables the driver using the CONFIG subsystem?
+>
+> Kevin asked me to chime in on this thread, as I have a half-baked idea
+> that might solve the problem posed by your question above.
+>
+> One thing I have been considering for a while is a fallback compatible
+> string that can be used for an IP block when either there is no driver
+> loaded or no driver exists at all. Something like "generic-ip-block".
+>
+> The purpose of this compatible string is to allow us to model resource
+> consumption in dts accurately, regardless of whether or not a proper
+> driver has been written in Linux. This idea was born out of the
+> simple-fb binding/driver discussion last year[0].
+>
+> Obviously such a binding would not enable any of the logic or function
+> of that IP block; that would require a proper driver. But it would allow
+> us to properly link system-wide resources that are consumed: the
+> generic-ip could consume clocks and regulators, it could belong to power
+> domains, etc. For this reason I have also thought that
+> "generic-resource-consumer" is an accurate compatible string.
+>
+> This spares us from having to encode nasty details into the power domain
+> binding, which is exactly what would happen if you needed a dedicated
+> list of clocks in the power domain node that were not claimed by device
+> nodes/drivers.
+>
+> Note that a real driver might exist for an IP block, but if that driver
+> is disabled in Kconfig AND the corresponding dt node has this fallback
+> compatible string, then we could be OK, from the perspective of the
+> power domain problem.
+>
+>> 
+>> What happens if this is a device that someone has set to 'status =
+>> "disabled";' in the device tree?
+>
+> If someone does that, then I think we should let that break power domain
+> transitions.
+>
 
-> On Wed, Aug 26, 2015 at 10:57:38AM -0700, Stefan Agner wrote:
->> When printing the ECC error count on ECC fail when reading an erased
->> NAND flash, the numbers of bit flips (stuck at zero) seem to widely
->> correlate with the number returned by the controller. While it seems
->> to correlate widely, there are exceptions, as discussed in the
->> thread: http://thread.gmane.org/gmane.linux.ports.arm.kernel/295424
+Well, the catch here is that status=disabled doesn't necessarily mean
+that the IP block isn't present.  It can mean "not used", "not needed",
+"not wired up to external iface" etc., but if the IP block is physcially
+present, then its clocks are still needed for a power domain reset.  If
+a node is marked as status=disabled, then even the fallback compatible
+doesn't help, as the fallback driver won't be probed/loaded either. :(
 
->> Maybe this is an artifact of the ECC algorithm we just
->> can't/shouldn't rely on? I am not sure where this originated, I did
->> not found any indication in the reference manual about what that
->> value contains in the error case.
+Speaking of loading, the module loading/unloading complicates this even
+further.  Even if a pm-domain is managing the clocks from a device node,
+if a driver is unloaded (and thus removed from the pm domain), the pm
+domain driver would stop managing that clock and then the domain reset
+would stop working again.  Ugh.  
 
-> Doesn't sound too reliable to me. And I'm not sure even if it was
-> reliable, that it would provide much value. We have to a lot of
-> re-counting anyway, so we might as well just be using our own
-> threshold.  Or maybe I'm missing the point.
+The more I think through all these corner cases, and also the fact that
+we never seem to be able to get a fully accurate description of how the
+SoCs actually work at this level (due to missing/poor/wrong docs), I
+think the having both the power domain and the device nodes claiming
+clocks is the most flexible solution. It's using the clock consumer
+binding in a perfectly acceptable way, and the clock fwk usecounting
+will manage usecounting etc.
 
->> Bill, do you have an idea why we used that value as threshold in
->> early implementations?
+However, I still stick by my earlier insistence that the DT nodes be
+thorougly documented though, and be very specific why the clocks are
+needed by the power domain, and especially which clocks are device
+clocks, etc.  I (and hopefully others) will be looking closely at the
+DTs that come through and make that clocks listed in the domains are
+well described.
 
->> Otherwise I also think we should just drop the use of this value.
+@Doug: thanks for taking the time to spell out the variou corner cases.
 
-Yes, using this value is not especially useful if we re-read with ECC
-disabled to count the bit flips for erased pages.   I think this is what
-Stefan has done in the 11th patch set.
-
--- 
-Married men live  longer than single men, but married  men are much more
-willing to die - Dilworth
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Kevin
