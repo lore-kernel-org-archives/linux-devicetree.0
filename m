@@ -1,63 +1,71 @@
-From: Chris Read <chrisrfq-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: Userspace and Device-Tree
-Date: Fri, 28 Aug 2015 12:32:16 -0700
-Message-ID: <CAPiN7iUahed1uoMaFzVYHrdb-yRFUiej+c9S3GjZ0D2jw2+ygw@mail.gmail.com>
-References: <01e601d0e0f9$614450d0$23ccf270$@gmail.com>
-	<20150828101227.GD31748@leverpostej>
-	<CAPiN7iV6LF6LtatzCQ5H6Nq=WivE+e4Z1OsA5cArkEZKqwPLBQ@mail.gmail.com>
-	<20150828180544.GT12027@sirena.org.uk>
-	<CAPiN7iXep-rWN5DyU1+Toso9CT7ppuNyEXX6ySU3AnxwBro2_A@mail.gmail.com>
-	<20150828185256.GW12027@sirena.org.uk>
+From: Duc Dang <dhdang@apm.com>
+Subject: Re: [PATCH 0/2 RESEND] power: reset: Add syscon reboot/poweroff
+ device nodes for APM X-Gene platform
+Date: Fri, 28 Aug 2015 13:00:03 -0700
+Message-ID: <CADaLNDk5FT8ENQfiMQ+++NGg3VhuiTpnQtGW0L5DMYAuDKZ27g@mail.gmail.com>
+References: <1433272747-27114-1-git-send-email-ttnguyen@apm.com>
+ <20150714084004.GA14593@localhost> <CAPw-ZT=d2=dh-Hjugo9BStCuhTp82MMapUa1EGrD01EoTOG-nA@mail.gmail.com>
+ <CAOesGMhKRxUtr6XXsZgCJVUFTFL3eHySP8y-SmEzi=R53MxLRw@mail.gmail.com>
+ <CAPw-ZTnk8cZyFyMnBMUYXuxs9=2ydqxOzm+dYsg-=9_Suq+q7A@mail.gmail.com>
+ <CAOesGMimzcUDW4e1etxZNerEusWmEtT_um8XZoT0MkFpCnTf5w@mail.gmail.com>
+ <CADaLNDmPqb73UrOaVphkywZh8mfd4sPdA6i25USLt53sZ3hFuw@mail.gmail.com> <20150726183742.GA24272@localhost>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20150828185256.GW12027-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20150726183742.GA24272@localhost>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Olof Johansson <olof@lixom.net>
+Cc: Loc Ho <lho@apm.com>, Tai Nguyen <ttnguyen@apm.com>, "arm@kernel.org" <arm@kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "patches@apm.com" <patches@apm.com>, Jon Masters <jcm@redhat.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Aug 28, 2015 at 11:52 AM, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
-> On Fri, Aug 28, 2015 at 11:43:19AM -0700, Chris Read wrote:
-
-> Please delete unneeded context from your replies, it makes it much
-> easier to find any new content you have added.
-Thanks.  I'll do better.
-
-> Sure, but that's just a normal driver...  ideally for these sorts of
-> connectors there'd also be a way of enumerating anything that is
-> connected (but often that's not specified).
-
-So for such a connector, would it be appropriate to have a kernel
-module that gets configured using DT data, that is intended to be
-an "enumerator" of GPIOs, in that it configures them (sets them to
-input/output, gives labels, etc.), and also exposes them to
-userspace (if specified in the configuration data)?
-
->> > A driver can instantiate a userspace consummer if it finds that useful.
+On Sun, Jul 26, 2015 at 11:37 AM, Olof Johansson <olof@lixom.net> wrote:
 >
->> There is a userspace power-regulator consumer driver (found in
->> drivers/regulator/userspace-consumer.c) that was created to do
->> just that.  It allows hooking up a userspace controlled consumer
->> to any regulator allowing control from userspace.  So far so good.
+> On Sat, Jul 25, 2015 at 11:34:42AM -0700, Duc Dang wrote:
+> > Hi Olof,
+> >
+> > We are debating whether we should setup a company server (where we can
+> > have full control about storage, user permissions, backup, ...) or
+> > just use github.com to host our X-Gene kernel tree.
+> >
+> > Github seems already provide everything we need for a public source
+> > tree. Per your experience, what is your (and probably other
+> > maintainers) reference in git hosting server? Is there any
+> > inconvenience or difficulty for the maintainers to pull/merge code
+> > from Github versus from a company server?
 >
-> No, you're missing the point.  The point is that that driver can be
-> instantiated from another device (one that describes the actual
-> hardware) if it is useful to do so.
-Perhaps I'm misunderstanding.  Is there already a board-specific
-not driver-specific way to have the userspace-consumer get attached
-to a regulator?  Can you point me at it?
+> Hosting on github is fine with us in general. We do prefer to get
+> signed pull requests in particular when they come from other sources
+> than kernel.org, mostly because there's another third party involved in
+> hosting the repo and by using signed tags there's less room for anyone
+> to do bad stuff with the repository without someone noticing.
+>
+> If you host on github, please still use native git pull requests and not the
+> ones that github provides via the web interface.
+>
+> Note however, that given the total volume of patches there's no strong need for
+> you to have a public repo just to send code to us -- we're happy applying
+> patches at the volumes we're currently looking at. I can imagine other reasons
+> for why you would like to have a public repo though.
 
-> I'd be very cautious about general drivers exposing regulators to
-> userspace at all...
+Hi Olof,
 
-Certainly most don't.  We have externally powered devices that we
-want to power on and off, though, so sometimes it's helpful.
+I have APM X-Gene git ready on github. According to your response
+above, I need to
+send a signed pull request. I created a PGP key on public server
+(https://pgp.mit.edu/pks/lookup?search=duc+dang&op=index) and signed the tag on
+APM X-Gene tree with my key.
 
-Thanks,
+Please let me know if I need anything else before sending the git pull
+request to you.
+My key is not signed by any maintainer yet, would you mind to arrange some
+time next week to meet and help sign my key as well?
 
-Chris
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>
+>
+> Thanks,
+>
+> -Olof
+
+-- 
+Thanks and regards,
+Duc Dang.
