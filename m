@@ -1,97 +1,71 @@
-From: Ganapatrao Kulkarni <gpkulkarni-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v5 0/8] arm64, numa: Add numa support for arm64 platforms.
-Date: Fri, 28 Aug 2015 20:29:05 +0530
-Message-ID: <CAFpQJXUYycrvxp_p=A_pmeNUpHVs=8kYUfZP9dYDhYLqeCTZ3Q@mail.gmail.com>
-References: <1439570374-4079-1-git-send-email-gkulkarni@caviumnetworks.com>
-	<55E070D6.8060604@gmail.com>
+From: Nathan Lynch <Nathan_Lynch@mentor.com>
+Subject: Re: [PATCH v2 4/4] remoteproc: debugfs: Add ability to boot remote
+ processor using debugfs
+Date: Fri, 28 Aug 2015 10:23:14 -0500
+Message-ID: <55E07CE2.2050704@mentor.com>
+References: <1440757911-9120-1-git-send-email-lee.jones@linaro.org>
+ <1440757911-9120-5-git-send-email-lee.jones@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <55E070D6.8060604-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Ganapatrao Kulkarni <gkulkarni-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Leif Lindholm <leif.lindholm-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, rfranz-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org, Ard Biesheuvel <ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "msalter-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org" <msalter-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Steve Capper <steve.capper-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Hanjun Guo <hanjun.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Al Stone <al.stone-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1440757911-9120-5-git-send-email-lee.jones@linaro.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Lee Jones <lee.jones@linaro.org>
+Cc: ohad@wizery.com, devicetree@vger.kernel.org, kernel@stlinux.com, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Ludovic Barre <ludovic.barre@st.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Aug 28, 2015 at 8:01 PM, Matthias Brugger
-<matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
->
->
-> On 14/08/15 18:39, Ganapatrao Kulkarni wrote:
->>
->> v5:
->>         - created base verion of numa.c which creates dummy numa without
->> using dt
->>           on single socket platforms. Then added patches for dt support.
->>         - Incorporated review comments from Hanjun Guo.
->>
->> v4:
->> done changes as per Arnd review comments.
->>
->> v3:
->> Added changes to support numa on arm64 based platforms.
->> Tested these patches on cavium's multinode(2 node topology) platform.
->> In this patchset, defined and implemented dt bindings for numa mapping
->> for core and memory using device node property arm,associativity.
->>
->> v2:
->> Defined and implemented numa map for memory, cores to node and
->> proximity distance matrix of nodes.
->>
->> v1:
->> Initial patchset to support numa on arm64 platforms.
->>
->> Note:
->>         1. This patchset is tested for numa with dt on
->>            thunderx single socket and dual socket boards.
->>         2. Numa DT booting needs the dt memory nodes, which are deleted in
->> current efi-stub,
->>         hence to try numa with dt, you need to rebase with ard's patchset.
->>
->> http://git.linaro.org/people/ard.biesheuvel/linux-arm.git/shortlog/refs/heads/arm64-uefi-early-fdt-handling
->>
->>
->> Ganapatrao Kulkarni (4):
->>    arm64, numa: adding numa support for arm64 platforms.
->>    Documentation: arm64/arm: dt bindings for numa.
->>    arm64, numa: adding numa support for arm64 platforms.
->>    arm64, dt, thunderx: Add initial dts for Cavium Thunder SoC in 2 Node
->>      topology.
->>
->>   Documentation/devicetree/bindings/arm/numa.txt  | 212 +++++++
->>   arch/arm64/Kconfig                              |  32 +
->>   arch/arm64/boot/dts/cavium/Makefile             |   2 +-
->>   arch/arm64/boot/dts/cavium/thunder-88xx-2n.dts  |  78 +++
->>   arch/arm64/boot/dts/cavium/thunder-88xx-2n.dtsi | 790
->> ++++++++++++++++++++++++
->>   arch/arm64/include/asm/mmzone.h                 |  32 +
->>   arch/arm64/include/asm/numa.h                   |  49 ++
->>   arch/arm64/kernel/Makefile                      |   1 +
->>   arch/arm64/kernel/dt_numa.c                     | 316 ++++++++++
->>   arch/arm64/kernel/setup.c                       |   9 +
->>   arch/arm64/kernel/smp.c                         |   3 +
->>   arch/arm64/mm/Makefile                          |   1 +
->>   arch/arm64/mm/init.c                            |  34 +-
->>   arch/arm64/mm/numa.c                            | 563 +++++++++++++++++
->>   14 files changed, 2115 insertions(+), 7 deletions(-)
->>   create mode 100644 Documentation/devicetree/bindings/arm/numa.txt
->>   create mode 100644 arch/arm64/boot/dts/cavium/thunder-88xx-2n.dts
->>   create mode 100644 arch/arm64/boot/dts/cavium/thunder-88xx-2n.dtsi
->>   create mode 100644 arch/arm64/include/asm/mmzone.h
->>   create mode 100644 arch/arm64/include/asm/numa.h
->>   create mode 100644 arch/arm64/kernel/dt_numa.c
->>   create mode 100644 arch/arm64/mm/numa.c
->>
->
-> On which version is this patch-set based?
-4.2 -rc5
->
-> Regards,
-> Matthias
+On 08/28/2015 05:31 AM, Lee Jones wrote:
+> +static ssize_t rproc_state_write(struct file *filp, const char __user *userbuf,
+> +				 size_t count, loff_t *ppos)
+> +{
+> +	struct rproc *rproc = filp->private_data;
+> +	char buf[2];
+> +	int ret;
+> +
+> +	ret = copy_from_user(buf, userbuf, 1);
+> +	if (ret)
+> +		return -EFAULT;
+> +
+> +	switch (buf[0]) {
+> +	case '0':
+> +		rproc_shutdown(rproc);
+> +		break;
+> +	case '1':
+> +		ret = rproc_boot(rproc);
+> +		if (ret)
+> +			dev_warn(&rproc->dev, "Boot failed: %d\n", ret);
+> +		break;
+> +	default:
+> +		dev_err(&rproc->dev, "Unrecognised option: %x\n", buf[1]);
+> +		return -EINVAL;
 
-thanks
-Ganapat
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+This prints uninitialized kernel stack contents instead of what was
+copied from user space.
+
+Is the dev_err statement really necessary anyway?
+
+
+> +	}
+> +
+> +	return count;
+> +}
+
+If rproc_boot fails, that should be reflected in the syscall result.
+
+This interface is essentially exposing the remoteproc->power refcount to
+user space; is that okay?  Seems like it makes it easy to underflow
+remoteproc->power through successive shutdown calls.
+
+The other debugfs interface in remoteproc that has a write method
+(recovery) accepts more expressive string commands as opposed to 0/1.
+It would be more consistent for this interface to take commands such as
+"boot" and "shutdown" IMO.
