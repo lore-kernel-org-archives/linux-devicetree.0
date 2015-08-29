@@ -1,53 +1,37 @@
-From: Florian Fainelli <f.fainelli@gmail.com>
-Subject: [PATCH v3 1/2] Documentation: dt: add Broadcom BCM7038 PWM controller binding
-Date: Fri, 28 Aug 2015 18:21:48 -0700
-Message-ID: <1440811309-1289-2-git-send-email-f.fainelli@gmail.com>
-References: <1440811309-1289-1-git-send-email-f.fainelli@gmail.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1440811309-1289-1-git-send-email-f.fainelli@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org
-Cc: bcm-kernel-feedback-list@broadcom.com, thierry.reding@gmail.com, devicetree@vger.kernel.org, linux-pwm@vger.kernel.org, Florian Fainelli <f.fainelli@gmail.com>
+From: Zheng Group <laura.martinez-LzLbZQhm7YyLGgsadsk2yA@public.gmane.org>
+Subject: (unknown)
+Date: Fri, 28 Aug 2015 20:09:06 -0500 (CDT)
+Message-ID: <1835807493.26346.1440810546436.JavaMail.root@mail>
+Reply-To: "zheng_group011-KN7UnAbNpbg@public.gmane.org" <zheng_group011-KN7UnAbNpbg@public.gmane.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Subject: 
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Add a binding documentation for the Broadcom BCM7038 PWM controller found in
-BCM7xxx chips.
 
-Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
----
-Changes in v3:
 
-- list 'clocks' property as mandatory
 
- .../devicetree/bindings/pwm/brcm,bcm7038-pwm.txt     | 20 ++++++++++++++++++++
- 1 file changed, 20 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/pwm/brcm,bcm7038-pwm.txt
+Greetings,
 
-diff --git a/Documentation/devicetree/bindings/pwm/brcm,bcm7038-pwm.txt b/Documentation/devicetree/bindings/pwm/brcm,bcm7038-pwm.txt
-new file mode 100644
-index 000000000000..d9254a6da5ed
---- /dev/null
-+++ b/Documentation/devicetree/bindings/pwm/brcm,bcm7038-pwm.txt
-@@ -0,0 +1,20 @@
-+Broadcom BCM7038 PWM controller (BCM7xxx Set Top Box PWM controller)
-+
-+Required properties:
-+
-+- compatible: must be "brcm,bcm7038-pwm"
-+- reg: physical base address and length for this controller
-+- #pwm-cells: should be 2. See pwm.txt in this directory for a description
-+  of the cells format
-+- clocks: a phandle to the reference clock for this block which is fed through
-+  its internal variable clock frequency generator
-+
-+
-+Example:
-+
-+	pwm: pwm@f0408000 {
-+		compatible = "brcm,bcm7038-pwm";
-+		reg = <0xf0408000 0x28>;
-+		#pwm-cells = <2>;
-+		clocks = <&upg_fixed>;
-+	};
--- 
-2.1.0
+This is an official request for Professional/consultants who will stand 
+as our regional representative to run logistics on behalf of zheng 
+Group.We are looking for a payment collection agent in USA, Canada, 
+Mexico and Europe. Salary is 10% of every payment you receive from our 
+customers. Get back to us for more details if interested. contact us for more details.
+ 
+
+NOTE!!! it have no effect on your present job.
+
+
+Respectfully
+Mr Tadashi Itoh (Human Resources)
+zheng Group
+
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
