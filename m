@@ -1,34 +1,42 @@
-From: Zheng Group <laura.martinez-LzLbZQhm7YyLGgsadsk2yA@public.gmane.org>
-Subject: (unknown)
-Date: Fri, 28 Aug 2015 20:09:06 -0500 (CDT)
-Message-ID: <1835807493.26346.1440810546436.JavaMail.root@mail>
-Reply-To: "zheng_group011-KN7UnAbNpbg@public.gmane.org" <zheng_group011-KN7UnAbNpbg@public.gmane.org>
+From: Ding Tianhong <dingtianhong-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+Subject: [PATCH 1/2] arm64: hip05-d02: Document devicetree bindings for Hisilicon Hip05-D02 Board
+Date: Sat, 29 Aug 2015 16:50:11 +0800
+Message-ID: <1440838213-9732-2-git-send-email-dingtianhong@huawei.com>
+References: <1440838213-9732-1-git-send-email-dingtianhong@huawei.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Subject: 
+In-Reply-To: <1440838213-9732-1-git-send-email-dingtianhong-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, marc.zyngier-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, rob.herring-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, haojian.zhuang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, linuxarm-hv44wF8Li93QT0dZR+AlfA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+This patch adds documentation for the devicetree bindings used by the
+DT files of Hisilicon Hip05-D02 development board.
 
+Signed-off-by: Ding Tianhong <dingtianhong-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+Signed-off-by: Kefeng Wang <wangkefeng.wang-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+---
+ Documentation/devicetree/bindings/arm/hisilicon/hisilicon.txt | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-
-Greetings,
-
-This is an official request for Professional/consultants who will stand 
-as our regional representative to run logistics on behalf of zheng 
-Group.We are looking for a payment collection agent in USA, Canada, 
-Mexico and Europe. Salary is 10% of every payment you receive from our 
-customers. Get back to us for more details if interested. contact us for more details.
+diff --git a/Documentation/devicetree/bindings/arm/hisilicon/hisilicon.txt b/Documentation/devicetree/bindings/arm/hisilicon/hisilicon.txt
+index c431c67..f98b39d 100644
+--- a/Documentation/devicetree/bindings/arm/hisilicon/hisilicon.txt
++++ b/Documentation/devicetree/bindings/arm/hisilicon/hisilicon.txt
+@@ -20,6 +20,10 @@ HiKey Board
+ Required root node properties:
+ 	- compatible = "hisilicon,hi6220-hikey", "hisilicon,hi6220";
  
-
-NOTE!!! it have no effect on your present job.
-
-
-Respectfully
-Mr Tadashi Itoh (Human Resources)
-zheng Group
++HiP05 D02 Board
++Required root node properties:
++	- compatible = "hisilicon,hip05-d02";
++
+ Hisilicon system controller
+ 
+ Required properties:
+-- 
+1.9.0
 
 
 --
