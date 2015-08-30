@@ -1,89 +1,96 @@
-From: Markus Pargmann <mpa-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: [PATCH v2 2/3] gpiolib: gpiod_hog remove separate name argument
-Date: Sun, 30 Aug 2015 09:44:45 +0200
-Message-ID: <1440920686-6892-3-git-send-email-mpa@pengutronix.de>
-References: <1440920686-6892-1-git-send-email-mpa@pengutronix.de>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1440920686-6892-1-git-send-email-mpa-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Arun Bharadwaj <arun-EiDWdcs9+yZBDgjK7y7TUQ@public.gmane.org>, =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Johan Hovold <johan-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, chrisrfq-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Markus Pargmann <mpa-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+From: ygardi@codeaurora.org
+Subject: Re: [PATCH v3 6/8] scsi: ufs: make the UFS variant a platform
+ device
+Date: Sun, 30 Aug 2015 08:43:50 -0000
+Message-ID: <c07dbe55ff782a2323cc053d89d49480.squirrel@www.codeaurora.org>
+References: <1440335381-5122-1-git-send-email-ygardi@codeaurora.org>
+    <1440335381-5122-7-git-send-email-ygardi@codeaurora.org>
+    <CAL_JsqLYeM3fbU5jHq-+7SbwHH7T80bETZpkkjR_hbg=un1BBg@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7BIT
+Return-path: <linux-scsi-owner@vger.kernel.org>
+In-Reply-To: <CAL_JsqLYeM3fbU5jHq-+7SbwHH7T80bETZpkkjR_hbg=un1BBg@mail.gmail.com>
+Sender: linux-scsi-owner@vger.kernel.org
+To: Rob Herring <robherring2@gmail.com>
+Cc: Yaniv Gardi <ygardi@codeaurora.org>, Jej B <james.bottomley@hansenpartnership.com>, Paul Bolle <pebolle@tiscali.nl>, hch@infradead.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-scsi@vger.kernel.org, linux-arm-msm <linux-arm-msm@vger.kernel.org>, Santosh Y <santoshsy@gmail.com>, linux-scsi-owner@vger.kernel.org, Subhash Jadavani <subhashj@codeaurora.org>, Gilad Broner <gbroner@codeaurora.org>, Dolev Raviv <draviv@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Vinayak Holikatti <vinholikatti@gmail.com>, "James E.J. Bottomley" <jbottomley@odin.com>, Christoph Hellwig <hch@lst.de>, Sujit Reddy Thumma <sthumma@codeaurora.org>, Raviv Shvili <rshvili@codeaur>
 List-Id: devicetree@vger.kernel.org
 
-The gpio name is now stored in the gpio descriptor, so we can simply use
-that instead of an argument to the function.
+> On Sun, Aug 23, 2015 at 8:09 AM, Yaniv Gardi <ygardi@codeaurora.org>
+> wrote:
+>> This change turns the UFS variant (SCSI_UFS_QCOM) into a UFS
+>> a platform device.
+>> In order to do so a few additional changes are required:
+>> 1. The ufshcd-pltfrm is no longer serves as a platform device.
+>>    Now it only serves as a group of platform APIs such as PM APIs
+>>    (runtime suspend/resume, system suspend/resume etc), parsers of
+>>    clocks, regulators and pm_levels from DT.
+>> 2. What used to be the old platform "probe" is now "only"
+>>    a pltfrm_init() routine, that does exactly the same, but only
+>>    being called by the new probe function of the UFS variant.
+>>
+>> Signed-off-by: Yaniv Gardi <ygardi@codeaurora.org>
+>>
+>> ---
+>>  .../devicetree/bindings/ufs/ufshcd-pltfrm.txt      |  2 +-
+>>  drivers/scsi/ufs/ufs-qcom.c                        | 78
+>> +++++++++++++++++-
+>>  drivers/scsi/ufs/ufshcd-pltfrm.c                   | 92
+>> ++++++----------------
+>>  drivers/scsi/ufs/ufshcd-pltfrm.h                   | 41 ++++++++++
+>>  drivers/scsi/ufs/ufshcd.c                          | 10 +++
+>>  drivers/scsi/ufs/ufshcd.h                          |  1 +
+>>  6 files changed, 152 insertions(+), 72 deletions(-)
+>>  create mode 100644 drivers/scsi/ufs/ufshcd-pltfrm.h
+>>
+>> diff --git a/Documentation/devicetree/bindings/ufs/ufshcd-pltfrm.txt
+>> b/Documentation/devicetree/bindings/ufs/ufshcd-pltfrm.txt
+>> index 5357919..b39e765 100644
+>> --- a/Documentation/devicetree/bindings/ufs/ufshcd-pltfrm.txt
+>> +++ b/Documentation/devicetree/bindings/ufs/ufshcd-pltfrm.txt
+>> @@ -4,7 +4,7 @@ UFSHC nodes are defined to describe on-chip UFS host
+>> controllers.
+>>  Each UFS controller instance should have its own node.
+>>
+>>  Required properties:
+>> -- compatible        : compatible list, contains "jedec,ufs-1.1"
+>> +- compatible        : compatible list, contains "jedec,ufs-1.1" or
+>> "qcom,ufshc"
+>
+> Replying again as I inadvertently dropped everyone.
+>
+> This should also have a more specific compatible string with the SOC
+> name/number in it. It may be "the same in all SOCs", but there is
+> always the possibility for bugs/limitations to be found that are
+> specific to an SOC even if all RTL versions are identical (e.g.
+> different max clock speeds). It is about making the dtb future proof,
+> not about what exactly you need today. You can keep qcom,ufshc for
+> driver matching if you want.
 
-Signed-off-by: Markus Pargmann <mpa-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
----
- drivers/gpio/gpiolib-of.c | 2 +-
- drivers/gpio/gpiolib.c    | 8 ++++----
- drivers/gpio/gpiolib.h    | 4 ++--
- 3 files changed, 7 insertions(+), 7 deletions(-)
+I see your point.
+I just would like to make sure, syntactically speaking, if what you mean
+should look like:
 
-diff --git a/drivers/gpio/gpiolib-of.c b/drivers/gpio/gpiolib-of.c
-index 48a7579dd62d..f1fe5123da28 100644
---- a/drivers/gpio/gpiolib-of.c
-+++ b/drivers/gpio/gpiolib-of.c
-@@ -232,7 +232,7 @@ static void of_gpiochip_scan_gpios(struct gpio_chip *chip)
- 				continue;
- 			}
- 
--			if (gpiod_hog(desc, name, lflags, dflags))
-+			if (gpiod_hog(desc, lflags, dflags))
- 				continue;
- 		}
- 	}
-diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
-index 872fdd3617c1..f1559fa72c36 100644
---- a/drivers/gpio/gpiolib.c
-+++ b/drivers/gpio/gpiolib.c
-@@ -2181,15 +2181,15 @@ EXPORT_SYMBOL_GPL(__gpiod_get_index_optional);
- /**
-  * gpiod_hog - Hog the specified GPIO desc given the provided flags
-  * @desc:	gpio whose value will be assigned
-- * @name:	gpio line name
-  * @lflags:	gpio_lookup_flags - returned from of_find_gpio() or
-  *		of_get_gpio_hog()
-  * @dflags:	gpiod_flags - optional GPIO initialization flags
-  */
--int gpiod_hog(struct gpio_desc *desc, const char *name,
--	      unsigned long lflags, enum gpiod_flags dflags)
-+int gpiod_hog(struct gpio_desc *desc, unsigned long lflags,
-+	      enum gpiod_flags dflags)
- {
- 	int status;
-+	const char *name = desc->name;
- 
- 	status = __gpiod_request(desc, name);
- 	if (status) {
-@@ -2211,7 +2211,7 @@ int gpiod_hog(struct gpio_desc *desc, const char *name,
- 	set_bit(FLAG_IS_HOGGED, &desc->flags);
- 
- 	pr_info("GPIO line %d (%s) hogged as %s%s\n",
--		desc_to_gpio(desc), name,
-+		desc_to_gpio(desc), desc->name,
- 		(dflags&GPIOD_FLAGS_BIT_DIR_OUT) ? "output" : "input",
- 		(dflags&GPIOD_FLAGS_BIT_DIR_OUT) ?
- 		  (dflags&GPIOD_FLAGS_BIT_DIR_VAL) ? "/high" : "/low":"");
-diff --git a/drivers/gpio/gpiolib.h b/drivers/gpio/gpiolib.h
-index 78e634d1c719..6c2aeff59f86 100644
---- a/drivers/gpio/gpiolib.h
-+++ b/drivers/gpio/gpiolib.h
-@@ -97,8 +97,8 @@ struct gpio_desc {
- 
- int gpiod_request(struct gpio_desc *desc, const char *label);
- void gpiod_free(struct gpio_desc *desc);
--int gpiod_hog(struct gpio_desc *desc, const char *name,
--		unsigned long lflags, enum gpiod_flags dflags);
-+int gpiod_hog(struct gpio_desc *desc, unsigned long lflags,
-+	      enum gpiod_flags dflags);
- 
- /*
-  * Return the GPIO number of the passed descriptor relative to its chip
--- 
-2.5.0
+compatible        : compatible list, contains "jedec,ufs-1.1" or
+                    "qcom,ufshc" for msm8994, msm8996 SOCs.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+
+
+>
+>>  - interrupts        : <interrupt mapping for UFS host controller IRQ>
+>>  - reg               : <registers mapping>
+>
+> What about phy properties? No Unipro PHY block that requires setup?
+>
+
+yes, i will add another documentation file for it.
+
+
+> Rob
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-scsi" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>
+
+
