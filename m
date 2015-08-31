@@ -1,43 +1,56 @@
-From: Maxime Coquelin <maxime.coquelin@st.com>
+From: Paul Bolle <pebolle-IWqWACnzNjzz+pZb47iToQ@public.gmane.org>
 Subject: Re: [PATCH 3/7] dmaengine: st_fdma: Add STMicroelectronics FDMA
  engine driver support
-Date: Mon, 31 Aug 2015 09:49:41 +0200
-Message-ID: <55E40715.1040204@st.com>
+Date: Mon, 31 Aug 2015 10:08:01 +0200
+Message-ID: <1441008481.8272.10.camel@tiscali.nl>
 References: <1436371888-27863-1-git-send-email-peter.griffin@linaro.org>
- <1436371888-27863-4-git-send-email-peter.griffin@linaro.org>
- <1436429872.20619.77.camel@tiscali.nl>
+	 <1436371888-27863-4-git-send-email-peter.griffin@linaro.org>
+	 <1436429872.20619.77.camel@tiscali.nl> <55E40715.1040204@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1436429872.20619.77.camel@tiscali.nl>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Paul Bolle <pebolle@tiscali.nl>, Peter Griffin <peter.griffin@linaro.org>
-Cc: lee.jones@linaro.org, devicetree@vger.kernel.org, dmaengine@vger.kernel.org, ludovic.barre@st.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, srinivas.kandagatla@gmail.com, patrice.chotard@st.com, vinod.koul@intel.com, dan.j.williams@intel.com
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <55E40715.1040204-qxv4g6HH51o@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Maxime Coquelin <maxime.coquelin-qxv4g6HH51o@public.gmane.org>, Peter Griffin <peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ludovic.barre-qxv4g6HH51o@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, srinivas.kandagatla-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, patrice.chotard-qxv4g6HH51o@public.gmane.org, vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Paul,
+Hi Maxime,
 
-On 07/09/2015 10:17 AM, Paul Bolle wrote:
->> >+static int __exit st_fdma_remove(struct platform_device *pdev)
->> >+{
->> >+	struct st_fdma_dev *fdev = platform_get_drvdata(pdev);
->> >+
->> >+	wait_for_completion(&fdev->fw_ack);
->> >+
->> >+	st_fdma_clk_disable(fdev);
->> >+
->> >+	return 0;
->> >+}
-> Since this driver is built-in only this means st_fdma_remove() can never
-> be used, right?
->
+On ma, 2015-08-31 at 09:49 +0200, Maxime Coquelin wrote:
+> On 07/09/2015 10:17 AM, Paul Bolle wrote:
+> > > > +static int __exit st_fdma_remove(struct platform_device *pdev)
+> > > > +{
+> > > > +	struct st_fdma_dev *fdev = platform_get_drvdata(pdev);
+> > > > +
+> > > > +	wait_for_completion(&fdev->fw_ack);
+> > > > +
+> > > > +	st_fdma_clk_disable(fdev);
+> > > > +
+> > > > +	return 0;
+> > > > +}
+> > Since this driver is built-in only this means st_fdma_remove() can 
+> > never be used, right?
 
-It's not because a driver is built-in only that it does not need a 
-remove callback.
-An instance can be probed/removed any time via driver's bind/unbind 
-SysFS entries.
-Am I missing something?
+> It's not because a driver is built-in only that it does not need a 
+> remove callback.
+> An instance can be probed/removed any time via driver's bind/unbind 
+> SysFS entries.
+> Am I missing something?
 
-Kind regards,
-Maxime
+(This discussion is moot because Peter already stated that a new version
+will be modular.)
+
+It follows from the __exit tag that st_fdma_remove() should never be
+part of the kernel image (in this version of the patch), doesn't it?
+
+(I don't know what happens in this situation if an unbind sysfs entry is
+used to remove a driver. I've never tried that.)
+
+
+Paul Bolle
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
