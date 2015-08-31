@@ -1,130 +1,88 @@
-From: Graham Moore <grmoore-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
-Subject: Re: [PATCH 2/2] mtd: spi-nor: Add driver for Cadence Quad SPI Flash
- Controller.
-Date: Mon, 31 Aug 2015 12:30:37 -0500
-Message-ID: <55E48F3D.3030800@opensource.altera.com>
-References: <1440148851-14621-1-git-send-email-marex@denx.de> <1440148851-14621-2-git-send-email-marex@denx.de>
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: Userspace and Device-Tree
+Date: Mon, 31 Aug 2015 19:01:40 +0100
+Message-ID: <20150831180140.GS12027@sirena.org.uk>
+References: <01e601d0e0f9$614450d0$23ccf270$@gmail.com>
+ <20150828101227.GD31748@leverpostej>
+ <CAAVeFuJCSv74HLws7Adb1fnSbxf8rR5=NYX8GG59K1nLgFs+VA@mail.gmail.com>
+ <CAPiN7iU+NzW1oYjXLsLgn7Sh=i6DPMC49WrDcpsa4XvmjpORcw@mail.gmail.com>
+ <20150831145500.GP12027@sirena.org.uk>
+ <CAPiN7iWFR2Sm8t9dUttNzwj-qZmUc-cdK69rGhG2RjD+s1gdSA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252;
-	format=flowed
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="z7r403WH++3KXERB"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1440148851-14621-2-git-send-email-marex-ynQEQJNshbs@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <CAPiN7iWFR2Sm8t9dUttNzwj-qZmUc-cdK69rGhG2RjD+s1gdSA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>
-Cc: linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Alan Tull <atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Dinh Nguyen <dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>, Vikas MANOCHA <vikas.manocha-qxv4g6HH51o@public.gmane.org>, Yves Vandervennet <yvanderv-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Chris Read <chrisrfq-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Markus Pargmann <mpa-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Marek,
 
-Having some compile issues...see below
+--z7r403WH++3KXERB
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-On 08/21/2015 04:20 AM, Marek Vasut wrote:
-> From: Graham Moore <grmoore-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
->
-> Add support for the Cadence QSPI controller. This controller is
-> present in the Altera SoCFPGA SoCs and this driver has been tested
-> on the Cyclone V SoC.
->
-> Signed-off-by: Graham Moore <grmoore-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
-> Signed-off-by: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>
+On Mon, Aug 31, 2015 at 08:53:54AM -0700, Chris Read wrote:
+> On Mon, Aug 31, 2015 at 7:55 AM, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
 
-[...]
+> > Why would this be appropriate?  Exporting a GPIO to userspace doesn't
+> > sound like a property of the hardware...
 
-> +static int cqspi_set_protocol(struct spi_nor *nor, enum spi_protocol=
- proto)
-> +{
-> +	struct cqspi_flash_pdata *f_pdata =3D nor->priv;
-> +
-> +	switch (proto) {
-> +	case SPI_PROTO_1_1_1:
-> +	case SPI_PROTO_1_1_2:
-> +	case SPI_PROTO_1_1_4:
-> +	case SPI_PROTO_1_2_2:
-> +	case SPI_PROTO_1_4_4:
-> +		f_pdata->inst_width =3D CQSPI_INST_TYPE_SINGLE;
-> +		break;
-> +	case SPI_PROTO_2_2_2:
-> +		f_pdata->inst_width =3D CQSPI_INST_TYPE_DUAL;
-> +		break;
-> +	case SPI_PROTO_4_4_4:
-> +		f_pdata->inst_width =3D CQSPI_INST_TYPE_QUAD;
-> +		break;
-> +	default:
-> +		return -EINVAL;
-> +	}
-> +
-> +	switch (proto) {
-> +	case SPI_PROTO_1_1_1:
-> +	case SPI_PROTO_1_1_2:
-> +	case SPI_PROTO_1_1_4:
-> +		f_pdata->addr_width =3D CQSPI_INST_TYPE_SINGLE;
-> +		break;
-> +	case SPI_PROTO_1_2_2:
-> +	case SPI_PROTO_2_2_2:
-> +		f_pdata->addr_width =3D CQSPI_INST_TYPE_DUAL;
-> +		break;
-> +	case SPI_PROTO_1_4_4:
-> +	case SPI_PROTO_4_4_4:
-> +		f_pdata->addr_width =3D CQSPI_INST_TYPE_QUAD;
-> +		break;
-> +	default:
-> +		return -EINVAL;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
+> You're right.  It is not strictly hardware.  But I still need a place to specify
+> this attribute in a board-dependent way. I suppose you could think of an
+> end user as a hardware component (though we have soft parts too), then
+> you'd be specifying that hardware's access to the hardware via the
+> export flag.
 
-I think you have some other patches in your tree, the above doesn't=20
-compile on l2-mtd/master:
+That doesn't really hang together - it's nothing to do with the hardware
+that this is what you want to do, someone might decide to connect an
+expansion board which would most usefully be controlled by in kernel
+drivers to exactly the same base hardware.
 
-~/l2-mtd/drivers/mtd/spi-nor/cadence-quadspi.c:701:57: warning: =91enum=
-=20
-spi_protocol=92 declared inside parameter list [enabled by default]
-~/l2-mtd/drivers/mtd/spi-nor/cadence-quadspi.c:701:57: warning: its=20
-scope is only this definition or declaration, which is probably not wha=
-t=20
-you want [enabled by default]
-~/l2-mtd/drivers/mtd/spi-nor/cadence-quadspi.c:701:70: error: parameter=
-=20
-2 (=91proto=92) has incomplete type
-~/l2-mtd/drivers/mtd/spi-nor/cadence-quadspi.c:701:12: error: function=20
-declaration isn=92t a prototype [-Werror=3Dstrict-prototypes]
-~/l2-mtd/drivers/mtd/spi-nor/cadence-quadspi.c: In function=20
-=91cqspi_set_protocol=92:
-~/l2-mtd/drivers/mtd/spi-nor/cadence-quadspi.c:706:7: error:=20
-=91SPI_PROTO_1_1_1=92 undeclared (first use in this function)
-~/l2-mtd/drivers/mtd/spi-nor/cadence-quadspi.c:706:7: note: each=20
-undeclared identifier is reported only once for each function it appear=
-s in
-~/l2-mtd/drivers/mtd/spi-nor/cadence-quadspi.c:707:7: error:=20
-=91SPI_PROTO_1_1_2=92 undeclared (first use in this function)
-~/l2-mtd/drivers/mtd/spi-nor/cadence-quadspi.c:708:7: error:=20
-=91SPI_PROTO_1_1_4=92 undeclared (first use in this function)
-~/l2-mtd/drivers/mtd/spi-nor/cadence-quadspi.c:709:7: error:=20
-=91SPI_PROTO_1_2_2=92 undeclared (first use in this function)
-~/l2-mtd/drivers/mtd/spi-nor/cadence-quadspi.c:710:7: error:=20
-=91SPI_PROTO_1_4_4=92 undeclared (first use in this function)
-~/l2-mtd/drivers/mtd/spi-nor/cadence-quadspi.c:713:7: error:=20
-=91SPI_PROTO_2_2_2=92 undeclared (first use in this function)
-~/l2-mtd/drivers/mtd/spi-nor/cadence-quadspi.c:716:7: error:=20
-=91SPI_PROTO_4_4_4=92 undeclared (first use in this function)
-~/l2-mtd/drivers/mtd/spi-nor/cadence-quadspi.c: In function=20
-=91cqspi_setup_flash=92:
-~/l2-mtd/drivers/mtd/spi-nor/cadence-quadspi.c:1087:6: error: =91struct=
-=20
-spi_nor=92 has no member named =91dn=92
-~/l2-mtd/drivers/mtd/spi-nor/cadence-quadspi.c:1096:6: error: =91struct=
-=20
-spi_nor=92 has no member named =91set_protocol=92
+> >> For the regulator case, it looks like a hogging mechanism might be
+> >> appropriate.
 
-[...]
+> > Do you mean something like the existing support for marking regulators
+> > as always enabled?
 
-Regards,
-Graham
+> No.  I was assuming that the hogging mechanism would include the
+> exporting capability from GPIOs.
+
+So when you say "hogging" what you actually mean to say is "userspace
+control"?  Please be clear in what you are saying, hogging normally just
+means a way to provide a fixed configuration rather than runtime
+configuration from userspace.  I'm sorry but I really don't think that
+doing this is something that it is sensible to have as a feature, it's
+not describing the hardware and it's an invitation to poor system
+implementations.
+
+We really need people working on these maker devices to recognise that
+Linux is a general purpose OS used on a wide ranging systems and that as
+a result we need to explicitly describe things like expansion ports in
+the DT rather than just hacking the system.  We don't want people making
+routers and similar devices to form the impression that the simple and
+idiomatic way to extend Linux is to just hack things fromm userspace.
+
+--z7r403WH++3KXERB
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQEcBAEBCAAGBQJV5JaAAAoJECTWi3JdVIfQAzYH/07CnAwQjGwJ8bDR/hiHBL3A
+Hvt9WJA8ZC51BkrDiXSTLgn7urKmi/AAYZCLUZRmHjhlaCdmRSAq5NpAND0VJFEa
+1hI40hp6DabXiwetxB1k3A9VqLSmRphfdxuloK3KSt/dbOLMP5rGy4f36ftVTZrF
+EXD5Oa1CpXNEJyZtoLXv1Bl9jI0yHQUi9moAJxcKw5AuHWJtHJSP9KD3OWuVu8Kx
+kUCfX+RPYU0NMvf3zzRtdrLNhQNTNA4aTfDD8tqcWskl1NI9Y7af8yzpJHtPweST
+/lmo0u1Xpcq+rBrnvxrimy0j+Z3T//fUZpJsRwQNYiAe4qoFvrer2ibBYVXur5U=
+=X5ZQ
+-----END PGP SIGNATURE-----
+
+--z7r403WH++3KXERB--
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
