@@ -1,172 +1,149 @@
-From: "Leizhen (ThunderTown)" <thunder.leizhen@huawei.com>
-Subject: Re: [PATCH v5 2/4] Documentation: arm64/arm: dt bindings for numa.
-Date: Mon, 31 Aug 2015 10:53:04 +0800
-Message-ID: <55E3C190.30407@huawei.com>
-References: <1439570374-4079-1-git-send-email-gkulkarni@caviumnetworks.com>
- <1439570374-4079-3-git-send-email-gkulkarni@caviumnetworks.com>
- <20150828123228.GE31748@leverpostej>
- <CAL_JsqLOpUTVeKbkJ6uPi0EYistd=BowAHdtSmaUYYDhU6c9Sg@mail.gmail.com>
- <55E17F58.5020101@huawei.com>
- <CAFpQJXWO0xT0kxWf09L_XcAOXm1Lov8i2U2BQzk-x0TStj7vBg@mail.gmail.com>
+From: punnaiah choudary kalluri <punnaia-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH 1/2] usb: chipidea: add xilinx zynq platform data
+Date: Mon, 31 Aug 2015 09:01:51 +0530
+Message-ID: <CAGnW=Ba9cycEJtx2F1pRs1ocYLT7BuLpVCTpWUrD1hB10gSz+w@mail.gmail.com>
+References: <1440602865-30468-1-git-send-email-nathan.sullivan@ni.com>
+	<CALHRZuqFtaRFNd9D=a+x2rZ2848ZOGYbTkSWCHxNPcW_NvocxA@mail.gmail.com>
+	<20150827043339.GA29157@shlinux2>
+	<CAGnW=BYMnOFTaMQJtLXZ9ckCEHs+gCOCQR0VQFfO4HP=SMHBDQ@mail.gmail.com>
+	<20150827143307.GA3775@nathan3500-linux-VM>
+	<20150828013011.GA15341@shlinux2>
+	<20150828144256.GA30916@nathan3500-linux-VM>
+	<20150831004032.GB25516@shlinux2>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <CAFpQJXWO0xT0kxWf09L_XcAOXm1Lov8i2U2BQzk-x0TStj7vBg@mail.gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Ganapatrao Kulkarni <gpkulkarni@gmail.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Will Deacon <Will.Deacon@arm.com>, Pawel Moll <Pawel.Moll@arm.com>, "al.stone@linaro.org" <al.stone@linaro.org>, Prasun Kapoor <Prasun.Kapoor@caviumnetworks.com>, Catalin Marinas <Catalin.Marinas@arm.com>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "steve.capper@linaro.org" <steve.capper@linaro.org>, "arnd@arndb.de" <arnd@arndb.de>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "msalter@redhat.com" <msalter@redhat.com>, "leif.lindholm@linaro.org" <leif.lindholm@linaro.org>, "rfranz@cavium.com" <rfranz@cavium.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "ard.biesheuvel@linaro.org" <ard.biesheuvel@linaro.org>, han
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20150831004032.GB25516@shlinux2>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Cc: Nathan Sullivan <nathan.sullivan-acOepvfBmUk@public.gmane.org>, sundeep subbaraya <sundeep.lkml-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Subbaraya Sundeep Bhatta <sbhatta-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "pawel.moll-5wv7dgnIgG8@public.gmane.org" <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org" <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-
-
-On 2015/8/29 22:56, Ganapatrao Kulkarni wrote:
-> Hi Thunder,
-> 
-> On Sat, Aug 29, 2015 at 3:16 PM, Leizhen (ThunderTown)
-> <thunder.leizhen@huawei.com> wrote:
+On Mon, Aug 31, 2015 at 6:10 AM, Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org> wrote:
+> On Fri, Aug 28, 2015 at 09:42:56AM -0500, Nathan Sullivan wrote:
+>> On Fri, Aug 28, 2015 at 09:30:12AM +0800, Peter Chen wrote:
+>> > On Thu, Aug 27, 2015 at 09:33:07AM -0500, Nathan Sullivan wrote:
+>> > > On Thu, Aug 27, 2015 at 01:11:30PM +0530, punnaiah choudary kalluri wrote:
+>> > > > Hi,
+>> > > >
+>> > > > On Thu, Aug 27, 2015 at 10:03 AM, Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org> wrote:
+>> > > > > On Thu, Aug 27, 2015 at 10:59:22AM +0530, sundeep subbaraya wrote:
+>> > > > >> Hi,
+>> > > > >>
+>> > > > >>
+>> > > > >> On Wed, Aug 26, 2015 at 8:57 PM, Nathan Sullivan <nathan.sullivan-acOepvfBmUk@public.gmane.org> wrote:
+>> > > > >> > The Xilinx Zynq udc does not need the CI_HDRC_DISABLE_STREAMING flag,
+>> > > > >> > unlike the default platform data.  Add platform data specific to the
+>> > > > >> > Zynq udc.
+>> > > > >> >
+>> > > > >> > Based on a patch by the same name from the Xilinx vendor tree.
+>> > > > >>
+>> > > > >> I am that Xilinx guy who sent this patch :). It is in Xilinx tree as
+>> > > > >> temporary fix and
+>> > > > >> I did not debug further why UDC works only when streaming is enabled.
+>> > > > >> Probably this is right time to post my question here.
+>> > > > >> I was expecting like:
+>> > > > >> Streaming disabled - both low bandwidth and high bandwidth systems
+>> > > > >> should work fine
+>> > > > >> Streaming enabled - only for high bandwidth systems
+>> > > > >> but this is not the case, Zynq UDC works only when Streaming is enabled.
+>> > > > >> Please correct me if I am wrong.
+>> > > > >
+>> > > > > You are right, stream mode disabled should work at anytime.
+>> > > > > It is so strange why zynq UDC only works when stream mode is enabled.
+>> > > >
+>> > > > I am referring the section 8.5.2 in Synopsys usb 2.0 HS controllervDoc 2.20a,
+>> > > >  this is what it says about SDIS (streaming mode disable option)
+>> > > >
+>> > > > Before activating this mode, the user must check if the TX latency
+>> > > > buffers per endpoint are able to
+>> > > > accommodate at least one entire maximum size packet. The RX buffer
+>> > > > size must, at least, double the TX
+>> > > > buffer size per endpoint. To optimize the stream disable performance,
+>> > > > system bus burst must be set as high
+>> > > > as possible.
+>> > > > When the stream disable mode is used, the burst size (VUSB_HS_RX_BURST
+>> > > > and VUSB_HS_TX_BURST)
+>> > > > must be a integer sub-multiple of the latency buffer size
+>> > > > (VUSB_HS_RX_DEPTH for RX buffer and
+>> > > > VUSB_HS_TX_CHAN for the TX buffer). If this is not respected the
+>> > > > controller will not work properly in stream
+>> > > > disable mode.
+>> > > > The stream disable mode should just be used in situations where the
+>> > > > available system bandwidth is low or the
+>> > > > system bus access latency is high, in order to avoid underruns and
+>> > > > overruns in the latency buffers. This works
+>> > > > for all types of endpoints, except for ISO endpoints.
+>> > > > Such a system can't ensure the real time support that the ISO
+>> > > > endpoints require, so the ISO endpoints are not
+>> > > > supported when the SDIS bit is set.
+>> > > >
+>> > > > Definitely we need to root cause why disable streaming mode is not
+>> > > > working for zynq but from controller spec
+>> > > > point of view it is possible that controller not work properly in
+>> > > > stream disable mode.
+>> > > >
+>> > > > Regards,
+>> > > > Punnaiah
+>> > > >
+>> > >
+>> > > Maybe the burst size isn't set correctly by default?  It does say the controller
+>> > > won't work correctly with stream disable set and an invalid burst size.  Looks
+>> > > like TX and RX burst both default to 16, per the Zynq manual.
+>> > >
+>> > > With the stream disable bit set, the behvior we see on our hardware is
+>> > > that priming just stops, with an outstanding transfer in memory marked
+>> > > active in the status field by the controller.  This happens at random, even
+>> > > when doing single transfers at a time like with g_ether set to have a queue
+>> > > size of 1.  With SDIS clear everything works great.  Given that the Zynq is not
+>> > > bandwidth constrained, it seems like SDIS clear should be the default.
+>> > >
+>> >
+>> > I suspect the possible reason is the tx buffer for each endpoint is
+>> > small (<=512 bytes), so it can't copy one packet (assume max packet size
+>> > for bulk) to tx buffer, then the prime can't be finished.
+>> >
+>> > Would you help to dump the registers HWTXBUF ($BASE + 0x10) and DCCPARAMS
+>> > ($BASE + 124)?
+>> >
+>> > tx buffer size = ((2 ^ HWTXBUF.VUSB_HS_TX_ADD) / DCCPARAMS.DEN) *
+>> > (DWORD_PER_BYTES)
+>> >
+>> > DWORD_PER_BYTES is 4
+>> >
+>> > --
+>> >
+>> > Best Regards,
+>> > Peter Chen
 >>
->>
->> On 2015/8/28 22:02, Rob Herring wrote:
->>> +benh
->>>
->>> On Fri, Aug 28, 2015 at 7:32 AM, Mark Rutland <mark.rutland@arm.com> wrote:
->>>> Hi,
->>>>
->>>> On Fri, Aug 14, 2015 at 05:39:32PM +0100, Ganapatrao Kulkarni wrote:
->>>>> DT bindings for numa map for memory, cores and IOs using
->>>>> arm,associativity device node property.
->>>>
->>>> Given this is just a copy of ibm,associativity, I'm not sure I see much
->>>> point in renaming the properties.
->>>
->>> So just keep the ibm? I'm okay with that. That would help move to
->>> common code. Alternatively, we could drop the vendor prefix and have
->>> common code just check for both.
->>>
->>
->> Hi all,
->>
->> Why not copy the method of ACPI numa? There only three elements should be configured:
->> 1) a cpu belong to which node
->> 2) a memory block belong to which node
->> 3) the distance of each two nodes
->>
->> The devicetree nodes of numa can be like below:
->> / {
->>         ...
->>
->>         numa-nodes-info {
->>                 node-name: node-description {
->>                         mem-ranges = <...>;
->>                         cpus-list = <...>;
->>                 };
->>
->>                 nodes-distance {
->>                         distance-list = <...>;
->>                 };
->>         };
->>
->>         ...
->> };
->>
-> some what similar to what your are proposing is already implemented in
-> my v2 patchset.
-> https://lwn.net/Articles/623920/
-> http://lists.infradead.org/pipermail/linux-arm-kernel/2014-November/305164.html
+>> HWTXBUF is 0x80060A10, DCCPARAMS is 0xE0003124.
+>
+> Are you sure you read correct address? Your DCCPARAMS means
+> it is host capable, but not device capable.
 
-Sorry, I have not read your old version patchsets before.
+HWTXBUF is 0x8060A10
+DCCPARAMS is 0x0000018C
 
-The basic ideas are consistent, but details are different. I think your v2 patchset may meet some problem:
+VUSB_HS_TX_ADD - 0xA
+DEN - 0xC
 
--------------------------
-+- cpu-map:	This property defines the association of range of processors
-+		(range of cpu ids) and the proximity domain to which
-+		the processor belongs.
+>From the above formula tx buffer size is 341.33 bytes.
 
-+		cpu-map = <0 7 0>,
-+			  <8 15 1>;
--------------------------
 
-1.
-I am not sure the cpu ids is logical cpu-ids in Linux or the sequence number of the CPU dt-nodes in dts.
-The former case: logical cpu-id is allocated by Linux, we can not ensure that cpu0 is the first CPU dt-node.
-The latter case: depend on Linux strictly parse CPU dt-nodes follow the sequence in dts.
+Regards,
+Punnaiah
 
-2. You should put most codes into /drivers/of/, because it can be shared with other ARCHs which base upon devicetree.
-
-Here is my detailed example:
-Examples:
-/ {
-	#address-cells = <2>;
-	#size-cells = <2>;
-
-	memory@0 {
-		device_type = "memory";
-		reg = <0x0 0x00000000 0x0 0x40000000>,
-		      <0x1 0x00000000 0x1 0x00000000>,
-		      <0x2 0x00000000 0x0 0x40000000>,
-		      <0x2 0x80000000 0x0 0x40000000>;
-	};
-
-	CPU0: cpu@10000 {
-		device_type = "cpu";
-		reg = <0x10000>;
-		...
-	};
-
-	numa-nodes-info {
-		node0: cluster0 {
-			mem-ranges = <0x0 0x00000000 0x1 0x00000000>;
-			cpus-list = <&CPU0 &CPU1>;
-		};
-
-		node1: cluster1 {
-			mem-ranges = <0x1 0x00000000 0x1 0x00000000>;
-			cpus-list = <&CPU2>;
-		};
-
-		node2: cluster2 {
-			mem-ranges = <0x2 0x00000000 0x1 0x00000000>;
-			cpus-list = <&CPU3 &CPU4 &CPU5>;
-		};
-
-		nodes-distance {
-			distance-list = <&node0 &node1 15>, <&node1 &node2 18>;
-		};
-	};
-
-> we have went to associativity property based implementation to keep it
-> more generic.
-> i do have both acpi(using linaro/hanjun's patches) and associativity
-> based implementations on our internal tree
-> and tested on thunderx platform.
-> i do see issue in creating numa mapping using ACPI for IOs(for
-> example, i am not able to create numa mapping for ITS which is on each
-> node, using ACPI tables),  since ACPI spec (tables SRAT and SLIT)
-> talks only about processor and memory.
-> however associativity is generic and you can apply on any dt node.
->> Sorry, I don't think xxx,associativity is a good method, it's hard to config, and it
->> seems hardware-dependent. Especially, when we want to support memory hot-add, it's too hard.
->> Because xxx,associativity have no obvious information about it. Like powerpc, it use another
->> property: "/ibm,dynamic-reconfiguration-memory".
->>
->> I spend almost a whole month to implement of_numa(configured by dt-nodes), base upon my opinion
->> mentioned above. If somebody are interested in it, I can send my patchset to show it.
->>
->> Regards,
->> Thunder.
->>
-> thanks
-> ganapat
-> 
-> .
-> 
+>
+> --
+>
+> Best Regards,
+> Peter Chen
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-kernel" in
+> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> Please read the FAQ at  http://www.tux.org/lkml/
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
