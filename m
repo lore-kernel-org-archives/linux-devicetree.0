@@ -1,55 +1,43 @@
-From: Sascha Hauer <s.hauer@pengutronix.de>
-Subject: [PATCH 3/3] ARM64: dts: mt8173: Add thermal/auxadc device nodes
-Date: Mon, 31 Aug 2015 09:34:06 +0200
-Message-ID: <1441006446-4558-4-git-send-email-s.hauer@pengutronix.de>
-References: <1441006446-4558-1-git-send-email-s.hauer@pengutronix.de>
+From: Maxime Coquelin <maxime.coquelin@st.com>
+Subject: Re: [PATCH 3/7] dmaengine: st_fdma: Add STMicroelectronics FDMA
+ engine driver support
+Date: Mon, 31 Aug 2015 09:49:41 +0200
+Message-ID: <55E40715.1040204@st.com>
+References: <1436371888-27863-1-git-send-email-peter.griffin@linaro.org>
+ <1436371888-27863-4-git-send-email-peter.griffin@linaro.org>
+ <1436429872.20619.77.camel@tiscali.nl>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1441006446-4558-1-git-send-email-s.hauer@pengutronix.de>
+In-Reply-To: <1436429872.20619.77.camel@tiscali.nl>
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-pm@vger.kernel.org, Zhang Rui <rui.zhang@intel.com>, Eduardo Valentin <edubezval@gmail.com>
-Cc: linux-kernel@vger.kernel.org, kernel@pengutronix.de, linux-mediatek@lists.infradead.org, linux-arm-kernel@lists.infradead.org, Matthias Brugger <matthias.bgg@gmail.com>, devicetree@vger.kernel.org, mark.rutland@arm.com, robh+dt@kernel.org, Sascha Hauer <s.hauer@pengutronix.de>
+To: Paul Bolle <pebolle@tiscali.nl>, Peter Griffin <peter.griffin@linaro.org>
+Cc: lee.jones@linaro.org, devicetree@vger.kernel.org, dmaengine@vger.kernel.org, ludovic.barre@st.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, srinivas.kandagatla@gmail.com, patrice.chotard@st.com, vinod.koul@intel.com, dan.j.williams@intel.com
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Sascha Hauer <s.hauer@pengutronix.de>
-Reviewed-by: Daniel Kurtz <djkurtz@chromium.org>
----
- arch/arm64/boot/dts/mediatek/mt8173.dtsi | 17 +++++++++++++++++
- 1 file changed, 17 insertions(+)
+Hi Paul,
 
-diff --git a/arch/arm64/boot/dts/mediatek/mt8173.dtsi b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
-index 27237a1..ddacb86 100644
---- a/arch/arm64/boot/dts/mediatek/mt8173.dtsi
-+++ b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
-@@ -151,6 +151,11 @@
- 				(GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_HIGH)>;
- 		};
- 
-+		auxadc: auxadc@11001000 {
-+			compatible = "mediatek,mt8173-auxadc";
-+			reg = <0 0x11001000 0 0x1000>;
-+		};
-+
- 		uart0: serial@11002000 {
- 			compatible = "mediatek,mt8173-uart",
- 				     "mediatek,mt6577-uart";
-@@ -186,6 +191,18 @@
- 			clocks = <&uart_clk>;
- 			status = "disabled";
- 		};
-+
-+		thermal: thermal@1100b000 {
-+			#thermal-sensor-cells = <1>;
-+			compatible = "mediatek,mt8173-thermal";
-+			reg = <0 0x1100b000 0 0x1000>;
-+			interrupts = <0 70 IRQ_TYPE_LEVEL_LOW>;
-+			clocks = <&pericfg CLK_PERI_THERM>, <&pericfg CLK_PERI_AUXADC>;
-+			clock-names = "therm", "auxadc";
-+			resets = <&pericfg MT8173_PERI_THERM_SW_RST>;
-+			mediatek,auxadc = <&auxadc>;
-+			mediatek,apmixedsys = <&apmixedsys>;
-+		};
- 	};
- };
- 
--- 
-2.5.0
+On 07/09/2015 10:17 AM, Paul Bolle wrote:
+>> >+static int __exit st_fdma_remove(struct platform_device *pdev)
+>> >+{
+>> >+	struct st_fdma_dev *fdev = platform_get_drvdata(pdev);
+>> >+
+>> >+	wait_for_completion(&fdev->fw_ack);
+>> >+
+>> >+	st_fdma_clk_disable(fdev);
+>> >+
+>> >+	return 0;
+>> >+}
+> Since this driver is built-in only this means st_fdma_remove() can never
+> be used, right?
+>
+
+It's not because a driver is built-in only that it does not need a 
+remove callback.
+An instance can be probed/removed any time via driver's bind/unbind 
+SysFS entries.
+Am I missing something?
+
+Kind regards,
+Maxime
