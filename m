@@ -1,255 +1,240 @@
-From: Franklin S Cooper Jr <fcooper@ti.com>
-Subject: [PATCH v2] Input: edt-ft5x06 - Switch to newer gpio framework
-Date: Mon, 31 Aug 2015 18:25:41 -0500
-Message-ID: <1441063541-11624-1-git-send-email-fcooper@ti.com>
+From: Jon Mason <jonmason-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Subject: [PATCH v4 2/5] ARM: NSP: add minimal Northstar Plus device tree
+Date: Mon, 31 Aug 2015 19:48:53 -0400
+Message-ID: <1441064933-6723-1-git-send-email-jonmason@broadcom.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <linux-input-owner@vger.kernel.org>
-Sender: linux-input-owner@vger.kernel.org
-To: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, dmitry.torokhov@gmail.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-input@vger.kernel.org
-Cc: Franklin S Cooper Jr <fcooper@ti.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Kevin Hilman <khilman-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Kapil Hali <kapilh-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The current/old gpio framework used doesn't properly listen to
-ACTIVE_LOW and ACTIVE_HIGH flags. The newer gpio framework takes into
-account these flags when setting gpio values.
+Add a very minimalistic set of Northstar Plus Device Tree files which
+describes the SoC and the BCM958625 implementation.  The perpherials
+described are:
 
-Since the values being outputed were base on voltage and not logic the
-values being outputted must change to refect this difference. Also use
-gpiod_set_value_cansleep since wake and reset pins can be provided by
-bus based io expanders.
+ARM Cortex A9 CPU
+2 8250 UARTs
+ARM GIC
+PL310 L2 Cache
+ARM A9 Global timer
 
-Switch from msleep(5) to udelay_range(5000,6000) to avoid check patch
-warning.
-
-Signed-off-by: Franklin S Cooper Jr <fcooper@ti.com>
+Signed-off-by: Kapil Hali <kapilh-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Signed-off-by: Jon Mason <jonmason-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
 ---
-Version 2 changes:
+ arch/arm/boot/dts/Makefile       |   2 +
+ arch/arm/boot/dts/bcm-nsp.dtsi   | 119 +++++++++++++++++++++++++++++++++++++++
+ arch/arm/boot/dts/bcm958625k.dts |  57 +++++++++++++++++++
+ 3 files changed, 178 insertions(+)
+ create mode 100644 arch/arm/boot/dts/bcm-nsp.dtsi
+ create mode 100644 arch/arm/boot/dts/bcm958625k.dts
 
-Change output value to properly reflect logic low and logic high signals of
-/RST and WAKE.
-
-Use usleep_range instead of msleep since it is not precise below 20 ms and
-also generates a checkpatch error.
-
-Remove edt_ft5x06_ts_reset since it really serves no purpose especially since
-there are no failure error codes to return using the new gpio apis.
-
- .../bindings/input/touchscreen/edt-ft5x06.txt      |   4 +-
- drivers/input/touchscreen/edt-ft5x06.c             | 132 +++++++--------------
- include/linux/input/edt-ft5x06.h                   |   4 +-
- 3 files changed, 47 insertions(+), 93 deletions(-)
-
-diff --git a/Documentation/devicetree/bindings/input/touchscreen/edt-ft5x06.txt b/Documentation/devicetree/bindings/input/touchscreen/edt-ft5x06.txt
-index 76db967..9330d4d 100644
---- a/Documentation/devicetree/bindings/input/touchscreen/edt-ft5x06.txt
-+++ b/Documentation/devicetree/bindings/input/touchscreen/edt-ft5x06.txt
-@@ -50,6 +50,6 @@ Example:
- 		pinctrl-0 = <&edt_ft5x06_pins>;
- 		interrupt-parent = <&gpio2>;
- 		interrupts = <5 0>;
--		reset-gpios = <&gpio2 6 1>;
--		wake-gpios = <&gpio4 9 0>;
-+		reset-gpios = <&gpio2 6 GPIO_ACTIVE_LOW>;
-+		wake-gpios = <&gpio4 9 GPIO_ACTIVE_HIGH>;
- 	};
-diff --git a/drivers/input/touchscreen/edt-ft5x06.c b/drivers/input/touchscreen/edt-ft5x06.c
-index 394b1de..d64d29a 100644
---- a/drivers/input/touchscreen/edt-ft5x06.c
-+++ b/drivers/input/touchscreen/edt-ft5x06.c
-@@ -91,9 +91,9 @@ struct edt_ft5x06_ts_data {
- 	u16 num_x;
- 	u16 num_y;
- 
--	int reset_pin;
--	int irq_pin;
--	int wake_pin;
-+	struct gpio_desc *reset_pin;
-+	struct gpio_desc *wake_pin;
-+	struct gpio_desc *irq_pin;
- 
- #if defined(CONFIG_DEBUG_FS)
- 	struct dentry *debug_dir;
-@@ -752,45 +752,6 @@ edt_ft5x06_ts_teardown_debugfs(struct edt_ft5x06_ts_data *tsdata)
- 
- #endif /* CONFIG_DEBUGFS */
- 
--static int edt_ft5x06_ts_reset(struct i2c_client *client,
--			struct edt_ft5x06_ts_data *tsdata)
--{
--	int error;
--
--	if (gpio_is_valid(tsdata->wake_pin)) {
--		error = devm_gpio_request_one(&client->dev,
--					tsdata->wake_pin, GPIOF_OUT_INIT_LOW,
--					"edt-ft5x06 wake");
--		if (error) {
--			dev_err(&client->dev,
--				"Failed to request GPIO %d as wake pin, error %d\n",
--				tsdata->wake_pin, error);
--			return error;
--		}
--
--		msleep(5);
--		gpio_set_value(tsdata->wake_pin, 1);
--	}
--	if (gpio_is_valid(tsdata->reset_pin)) {
--		/* this pulls reset down, enabling the low active reset */
--		error = devm_gpio_request_one(&client->dev,
--					tsdata->reset_pin, GPIOF_OUT_INIT_LOW,
--					"edt-ft5x06 reset");
--		if (error) {
--			dev_err(&client->dev,
--				"Failed to request GPIO %d as reset pin, error %d\n",
--				tsdata->reset_pin, error);
--			return error;
--		}
--
--		msleep(5);
--		gpio_set_value(tsdata->reset_pin, 1);
--		msleep(300);
--	}
--
--	return 0;
--}
--
- static int edt_ft5x06_ts_identify(struct i2c_client *client,
- 					struct edt_ft5x06_ts_data *tsdata,
- 					char *fw_version)
-@@ -931,30 +892,6 @@ edt_ft5x06_ts_set_regs(struct edt_ft5x06_ts_data *tsdata)
- 	}
- }
- 
--#ifdef CONFIG_OF
--static int edt_ft5x06_i2c_ts_probe_dt(struct device *dev,
--				struct edt_ft5x06_ts_data *tsdata)
--{
--	struct device_node *np = dev->of_node;
--
--	/*
--	 * irq_pin is not needed for DT setup.
--	 * irq is associated via 'interrupts' property in DT
--	 */
--	tsdata->irq_pin = -EINVAL;
--	tsdata->reset_pin = of_get_named_gpio(np, "reset-gpios", 0);
--	tsdata->wake_pin = of_get_named_gpio(np, "wake-gpios", 0);
--
--	return 0;
--}
--#else
--static inline int edt_ft5x06_i2c_ts_probe_dt(struct device *dev,
--					struct edt_ft5x06_ts_data *tsdata)
--{
--	return -ENODEV;
--}
--#endif
--
- static int edt_ft5x06_ts_probe(struct i2c_client *client,
- 					 const struct i2c_device_id *id)
- {
-@@ -964,6 +901,7 @@ static int edt_ft5x06_ts_probe(struct i2c_client *client,
- 	struct input_dev *input;
- 	int error;
- 	char fw_version[EDT_NAME_LEN];
-+	struct gpio_desc *gpio;
- 
- 	dev_dbg(&client->dev, "probing for EDT FT5x06 I2C\n");
- 
-@@ -973,32 +911,47 @@ static int edt_ft5x06_ts_probe(struct i2c_client *client,
- 		return -ENOMEM;
- 	}
- 
--	if (!pdata) {
--		error = edt_ft5x06_i2c_ts_probe_dt(&client->dev, tsdata);
--		if (error) {
--			dev_err(&client->dev,
--				"DT probe failed and no platform data present\n");
--			return error;
--		}
--	} else {
--		tsdata->reset_pin = pdata->reset_pin;
--		tsdata->irq_pin = pdata->irq_pin;
--		tsdata->wake_pin = -EINVAL;
-+	gpio = devm_gpiod_get_optional(&client->dev, "reset", GPIOD_OUT_HIGH);
-+	if (IS_ERR(gpio)) {
-+		error = PTR_ERR(gpio);
-+		dev_err(&client->dev,
-+			"Failed to request GPIO reset pin, error %d\n", error);
-+		return error;
- 	}
- 
--	error = edt_ft5x06_ts_reset(client, tsdata);
--	if (error)
-+	tsdata->reset_pin = gpio;
+diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+index 246473a..adb5732 100644
+--- a/arch/arm/boot/dts/Makefile
++++ b/arch/arm/boot/dts/Makefile
+@@ -82,6 +82,8 @@ dtb-$(CONFIG_ARCH_BCM_CYGNUS) += \
+ dtb-$(CONFIG_ARCH_BCM_MOBILE) += \
+ 	bcm28155-ap.dtb \
+ 	bcm21664-garnet.dtb
++dtb-$(CONFIG_ARCH_BCM_NSP) += \
++	bcm958625k.dtb
+ dtb-$(CONFIG_ARCH_BERLIN) += \
+ 	berlin2-sony-nsz-gs7.dtb \
+ 	berlin2cd-google-chromecast.dtb \
+diff --git a/arch/arm/boot/dts/bcm-nsp.dtsi b/arch/arm/boot/dts/bcm-nsp.dtsi
+new file mode 100644
+index 0000000..58aca27
+--- /dev/null
++++ b/arch/arm/boot/dts/bcm-nsp.dtsi
+@@ -0,0 +1,119 @@
++/*
++ *  BSD LICENSE
++ *
++ *  Copyright(c) 2015 Broadcom Corporation.  All rights reserved.
++ *
++ *  Redistribution and use in source and binary forms, with or without
++ *  modification, are permitted provided that the following conditions
++ *  are met:
++ *
++ *    * Redistributions of source code must retain the above copyright
++ *      notice, this list of conditions and the following disclaimer.
++ *    * Redistributions in binary form must reproduce the above copyright
++ *      notice, this list of conditions and the following disclaimer in
++ *      the documentation and/or other materials provided with the
++ *      distribution.
++ *    * Neither the name of Broadcom Corporation nor the names of its
++ *      contributors may be used to endorse or promote products derived
++ *      from this software without specific prior written permission.
++ *
++ *  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
++ *  "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
++ *  LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
++ *  A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
++ *  OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
++ *  SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
++ *  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
++ *  DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
++ *  THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
++ *  (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
++ *  OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
++ */
 +
-+	gpio = devm_gpiod_get_optional(&client->dev, "wake", GPIOD_OUT_LOW);
++#include <dt-bindings/interrupt-controller/arm-gic.h>
++#include <dt-bindings/interrupt-controller/irq.h>
 +
-+	if (IS_ERR(gpio)) {
-+		error = PTR_ERR(gpio);
-+		dev_err(&client->dev,
-+			"Failed to request GPIO wake pin, error %d\n", error);
- 		return error;
-+	}
- 
--	if (gpio_is_valid(tsdata->irq_pin)) {
--		error = devm_gpio_request_one(&client->dev, tsdata->irq_pin,
--					GPIOF_IN, "edt-ft5x06 irq");
--		if (error) {
--			dev_err(&client->dev,
--				"Failed to request GPIO %d, error %d\n",
--				tsdata->irq_pin, error);
--			return error;
--		}
-+	tsdata->wake_pin = gpio;
++#include "skeleton.dtsi"
 +
-+	gpio = devm_gpiod_get_optional(&client->dev, "irq", GPIOD_IN);
++/ {
++	compatible = "brcm,nsp";
++	model = "Broadcom Northstar Plus SoC";
++	interrupt-parent = <&gic>;
 +
-+	if (IS_ERR(gpio)) {
-+		error = PTR_ERR(gpio);
-+		dev_err(&client->dev,
-+			"Failed to request GPIO irq pin, error %d\n", error);
-+		return error;
-+	}
++	mpcore {
++		compatible = "simple-bus";
++		ranges = <0x00000000 0x19020000 0x00003000>;
++		#address-cells = <1>;
++		#size-cells = <1>;
 +
-+	tsdata->irq_pin = gpio;
++		cpus {
++			#address-cells = <1>;
++			#size-cells = <0>;
 +
-+	if (tsdata->wake_pin) {
-+		usleep_range(5000, 6000);
-+		gpiod_set_value_cansleep(tsdata->wake_pin, 1);
-+	}
++			cpu@0 {
++				device_type = "cpu";
++				compatible = "arm,cortex-a9";
++				next-level-cache = <&L2>;
++				reg = <0x0>;
++			};
++		};
 +
-+	if (tsdata->reset_pin) {
-+		usleep_range(5000, 6000);
-+		gpiod_set_value_cansleep(tsdata->reset_pin, 0);
-+		msleep(300);
- 	}
- 
- 	input = devm_input_allocate_device(&client->dev);
-@@ -1074,7 +1027,8 @@ static int edt_ft5x06_ts_probe(struct i2c_client *client,
- 
- 	dev_dbg(&client->dev,
- 		"EDT FT5x06 initialized: IRQ %d, WAKE pin %d, Reset pin %d.\n",
--		client->irq, tsdata->wake_pin, tsdata->reset_pin);
-+		client->irq, desc_to_gpio(tsdata->wake_pin),
-+		desc_to_gpio(tsdata->reset_pin));
- 
- 	return 0;
- 
-diff --git a/include/linux/input/edt-ft5x06.h b/include/linux/input/edt-ft5x06.h
-index 8a1e0d1..058473a 100644
---- a/include/linux/input/edt-ft5x06.h
-+++ b/include/linux/input/edt-ft5x06.h
-@@ -10,8 +10,8 @@
-  */
- 
- struct edt_ft5x06_platform_data {
--	int irq_pin;
--	int reset_pin;
-+	int irq_gpio;
-+	int reset_gpio;
- 
- 	/* startup defaults for operational parameters */
- 	bool use_parameters;
++		L2: l2-cache {
++			compatible = "arm,pl310-cache";
++			reg = <0x2000 0x1000>;
++			cache-unified;
++			cache-level = <2>;
++		};
++
++		gic: interrupt-controller@19021000 {
++			compatible = "arm,cortex-a9-gic";
++			#interrupt-cells = <3>;
++			#address-cells = <0>;
++			interrupt-controller;
++			reg = <0x1000 0x1000>,
++			      <0x0100 0x100>;
++		};
++
++		timer@19020200 {
++			compatible = "arm,cortex-a9-global-timer";
++			reg = <0x0200 0x100>;
++			interrupts = <GIC_PPI 11 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&periph_clk>;
++		};
++	};
++
++	clocks {
++		#address-cells = <1>;
++		#size-cells = <1>;
++		ranges;
++
++		periph_clk: periph_clk {
++			compatible = "fixed-clock";
++			#clock-cells = <0>;
++			clock-frequency = <500000000>;
++		};
++	};
++
++	axi {
++		compatible = "simple-bus";
++		ranges = <0x00000000 0x18000000 0x00001000>;
++		#address-cells = <1>;
++		#size-cells = <1>;
++
++		uart0: serial@18000300 {
++			compatible = "ns16550a";
++			reg = <0x0300 0x100>;
++			interrupts = <GIC_SPI 85 IRQ_TYPE_LEVEL_HIGH>;
++			clock-frequency = <62499840>;
++			status = "disabled";
++		};
++
++		uart1: serial@18000400 {
++			compatible = "ns16550a";
++			reg = <0x0400 0x100>;
++			interrupts = <GIC_SPI 85 IRQ_TYPE_LEVEL_HIGH>;
++			clock-frequency = <62499840>;
++			status = "disabled";
++		};
++	};
++};
+diff --git a/arch/arm/boot/dts/bcm958625k.dts b/arch/arm/boot/dts/bcm958625k.dts
+new file mode 100644
+index 0000000..16303db
+--- /dev/null
++++ b/arch/arm/boot/dts/bcm958625k.dts
+@@ -0,0 +1,57 @@
++/*
++ *  BSD LICENSE
++ *
++ *  Copyright(c) 2015 Broadcom Corporation.  All rights reserved.
++ *
++ *  Redistribution and use in source and binary forms, with or without
++ *  modification, are permitted provided that the following conditions
++ *  are met:
++ *
++ *    * Redistributions of source code must retain the above copyright
++ *      notice, this list of conditions and the following disclaimer.
++ *    * Redistributions in binary form must reproduce the above copyright
++ *      notice, this list of conditions and the following disclaimer in
++ *      the documentation and/or other materials provided with the
++ *      distribution.
++ *    * Neither the name of Broadcom Corporation nor the names of its
++ *      contributors may be used to endorse or promote products derived
++ *      from this software without specific prior written permission.
++ *
++ *  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
++ *  "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
++ *  LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
++ *  A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
++ *  OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
++ *  SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
++ *  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
++ *  DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
++ *  THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
++ *  (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
++ *  OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
++ */
++
++/dts-v1/;
++
++#include "bcm-nsp.dtsi"
++
++/ {
++	model = "NorthStar Plus SVK (BCM958625K)";
++	compatible = "brcm,bcm58625", "brcm,nsp";
++
++	aliases {
++		serial0 = &uart0;
++		serial1 = &uart1;
++	};
++
++	chosen {
++		stdout-path = "serial0:115200n8";
++	};
++};
++
++&uart0 {
++	status = "okay";
++};
++
++&uart1 {
++	status = "okay";
++};
 -- 
-2.1.4
+1.9.1
 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
