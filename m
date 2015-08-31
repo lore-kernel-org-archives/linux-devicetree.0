@@ -1,65 +1,58 @@
-From: Maxime Coquelin <maxime.coquelin-qxv4g6HH51o@public.gmane.org>
-Subject: Re: [PATCH 3/7] dmaengine: st_fdma: Add STMicroelectronics FDMA
- engine driver support
-Date: Mon, 31 Aug 2015 10:44:40 +0200
-Message-ID: <55E413F8.6070307@st.com>
-References: <1436371888-27863-1-git-send-email-peter.griffin@linaro.org>
- <1436371888-27863-4-git-send-email-peter.griffin@linaro.org>
- <1436429872.20619.77.camel@tiscali.nl> <55E40715.1040204@st.com>
- <1441008481.8272.10.camel@tiscali.nl>
+From: =?UTF-8?q?Marc=20Mar=C3=AD?= <markmb-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Subject: QEMU fw_cfg DMA interface
+Date: Mon, 31 Aug 2015 11:08:53 +0200
+Message-ID: <1441012133-8154-1-git-send-email-markmb@redhat.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1441008481.8272.10.camel-IWqWACnzNjzz+pZb47iToQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Paul Bolle <pebolle-IWqWACnzNjzz+pZb47iToQ@public.gmane.org>, Peter Griffin <peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ludovic.barre-qxv4g6HH51o@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, srinivas.kandagatla-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, patrice.chotard-qxv4g6HH51o@public.gmane.org, vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org
+To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, qemu-devel-qX2TKyscuCcdnm+yROfE0A@public.gmane.org, seabios-VcxPKcuBGKdAfugRpC6u6w@public.gmane.org
+Cc: Drew <drjones-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Stefan Hajnoczi <stefanha-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Kevin O'Connor <kevin-BG7uPxbsK//k1uMJSBkQmQ@public.gmane.org>, Gerd Hoffmann <kraxel-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Laszlo <lersek-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Rob Herring <rob.herring-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Alexander Graf <agraf-l3A5Bk7waGM@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, =?UTF-8?q?Marc=20Mar=C3=AD?= <markmb-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+Implementation of the FW CFG DMA interface.
 
+When running a Linux guest on top of QEMU, using the -kernel options, this
+is the timing improvement for x86:
 
-On 08/31/2015 10:08 AM, Paul Bolle wrote:
-> Hi Maxime,
->
-> On ma, 2015-08-31 at 09:49 +0200, Maxime Coquelin wrote:
->> On 07/09/2015 10:17 AM, Paul Bolle wrote:
->>>>> +static int __exit st_fdma_remove(struct platform_device *pdev)
->>>>> +{
->>>>> +	struct st_fdma_dev *fdev = platform_get_drvdata(pdev);
->>>>> +
->>>>> +	wait_for_completion(&fdev->fw_ack);
->>>>> +
->>>>> +	st_fdma_clk_disable(fdev);
->>>>> +
->>>>> +	return 0;
->>>>> +}
->>> Since this driver is built-in only this means st_fdma_remove() can
->>> never be used, right?
->> It's not because a driver is built-in only that it does not need a
->> remove callback.
->> An instance can be probed/removed any time via driver's bind/unbind
->> SysFS entries.
->> Am I missing something?
-> (This discussion is moot because Peter already stated that a new version
-> will be modular.)
->
-> It follows from the __exit tag that st_fdma_remove() should never be
-> part of the kernel image (in this version of the patch), doesn't it?
-Yes, you are right.
-The remove callback is relevant, but without the __exit tag.
->
-> (I don't know what happens in this situation if an unbind sysfs entry is
-> used to remove a driver. I've never tried that.)
->
->
-Not checked whether the function is omitted when built-in, but in any 
-case, I thnk remove callbacks should not be tagged with __exit.
+QEMU commit 090d0bf and SeaBIOS commit 2fc20dc
+QEMU startup time: .078
+BIOS startup time: .060
+Kernel setup time: .578
+Total time: .716
 
-Regards,
-Maxime
+QEMU with this patch series and SeaBIOS with this patch series
+QEMU startup time: .080
+BIOS startup time: .039
+Kernel setup time: .002
+Total time: .121
 
+QEMU startup time is the time between the start and the first kvm_entry.
+BIOS startup time is the time between the first kvm_entry and the start of
+function do_boot, in SeaBIOS.
+Kernel setup time is the time between the start of the function do_boot in
+SeaBIOS and the jump to the Linux kernel.
 
+As you can see, both the BIOS (because of ACPI tables and other configurations)
+and the Linux kernel boot (because of the copy to memory) are greatly
+improved with this new interface.
+
+Also, this new interface is an addon to the old interface. Both interfaces
+are compatible and interchangeable.
+
+Changes from v1:
+ - Take into account order of fields in the FWCfgDmaAccess structure
+ - Check and change endianness of FWCfgDmaAccess fields
+ - Change order of fields in the FWCfgDmaAccess structure
+ - Add FW_CFG_DMA_CTL_SKIP feature for control field
+ - Split FW_CFG_SIZE in QEMU
+ - Make FW_CFG_ID a bitmap of features
+ - Add 64 bit address support for the transfer. Trigger when writing the low
+   address, and address is 0 by default and at the end of each transfer.
+ - Align ports and addresses.
+ - Preserve old fw_cfg_comb_valid behaviour in QEMU
+ - Update documentation to reflect all these changes
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
