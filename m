@@ -1,129 +1,271 @@
-From: Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: Re: [PATCH 1/2] usb: chipidea: add xilinx zynq platform data
-Date: Mon, 31 Aug 2015 08:40:33 +0800
-Message-ID: <20150831004032.GB25516@shlinux2>
-References: <1440602865-30468-1-git-send-email-nathan.sullivan@ni.com>
- <CALHRZuqFtaRFNd9D=a+x2rZ2848ZOGYbTkSWCHxNPcW_NvocxA@mail.gmail.com>
- <20150827043339.GA29157@shlinux2>
- <CAGnW=BYMnOFTaMQJtLXZ9ckCEHs+gCOCQR0VQFfO4HP=SMHBDQ@mail.gmail.com>
- <20150827143307.GA3775@nathan3500-linux-VM>
- <20150828013011.GA15341@shlinux2>
- <20150828144256.GA30916@nathan3500-linux-VM>
+From: Jon Mason <jonmason-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH v3 2/5] ARM: NSP: add minimal Northstar Plus device tree
+Date: Sun, 30 Aug 2015 22:24:17 -0400
+Message-ID: <20150831022417.GA27066@broadcom.com>
+References: <1440805644-18241-1-git-send-email-jonmason@broadcom.com>
+ <55E0FAC4.2040108@broadcom.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20150828144256.GA30916@nathan3500-linux-VM>
+In-Reply-To: <55E0FAC4.2040108-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Nathan Sullivan <nathan.sullivan-acOepvfBmUk@public.gmane.org>
-Cc: punnaiah choudary kalluri <punnaia-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, sundeep subbaraya <sundeep.lkml-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Subbaraya Sundeep Bhatta <sbhatta-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "pawel.moll-5wv7dgnIgG8@public.gmane.org" <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org" <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Cc: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Kevin Hilman <khilman-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Kapil Hali <kapilh-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Aug 28, 2015 at 09:42:56AM -0500, Nathan Sullivan wrote:
-> On Fri, Aug 28, 2015 at 09:30:12AM +0800, Peter Chen wrote:
-> > On Thu, Aug 27, 2015 at 09:33:07AM -0500, Nathan Sullivan wrote:
-> > > On Thu, Aug 27, 2015 at 01:11:30PM +0530, punnaiah choudary kalluri wrote:
-> > > > Hi,
-> > > > 
-> > > > On Thu, Aug 27, 2015 at 10:03 AM, Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org> wrote:
-> > > > > On Thu, Aug 27, 2015 at 10:59:22AM +0530, sundeep subbaraya wrote:
-> > > > >> Hi,
-> > > > >>
-> > > > >>
-> > > > >> On Wed, Aug 26, 2015 at 8:57 PM, Nathan Sullivan <nathan.sullivan-acOepvfBmUk@public.gmane.org> wrote:
-> > > > >> > The Xilinx Zynq udc does not need the CI_HDRC_DISABLE_STREAMING flag,
-> > > > >> > unlike the default platform data.  Add platform data specific to the
-> > > > >> > Zynq udc.
-> > > > >> >
-> > > > >> > Based on a patch by the same name from the Xilinx vendor tree.
-> > > > >>
-> > > > >> I am that Xilinx guy who sent this patch :). It is in Xilinx tree as
-> > > > >> temporary fix and
-> > > > >> I did not debug further why UDC works only when streaming is enabled.
-> > > > >> Probably this is right time to post my question here.
-> > > > >> I was expecting like:
-> > > > >> Streaming disabled - both low bandwidth and high bandwidth systems
-> > > > >> should work fine
-> > > > >> Streaming enabled - only for high bandwidth systems
-> > > > >> but this is not the case, Zynq UDC works only when Streaming is enabled.
-> > > > >> Please correct me if I am wrong.
-> > > > >
-> > > > > You are right, stream mode disabled should work at anytime.
-> > > > > It is so strange why zynq UDC only works when stream mode is enabled.
-> > > > 
-> > > > I am referring the section 8.5.2 in Synopsys usb 2.0 HS controllervDoc 2.20a,
-> > > >  this is what it says about SDIS (streaming mode disable option)
-> > > > 
-> > > > Before activating this mode, the user must check if the TX latency
-> > > > buffers per endpoint are able to
-> > > > accommodate at least one entire maximum size packet. The RX buffer
-> > > > size must, at least, double the TX
-> > > > buffer size per endpoint. To optimize the stream disable performance,
-> > > > system bus burst must be set as high
-> > > > as possible.
-> > > > When the stream disable mode is used, the burst size (VUSB_HS_RX_BURST
-> > > > and VUSB_HS_TX_BURST)
-> > > > must be a integer sub-multiple of the latency buffer size
-> > > > (VUSB_HS_RX_DEPTH for RX buffer and
-> > > > VUSB_HS_TX_CHAN for the TX buffer). If this is not respected the
-> > > > controller will not work properly in stream
-> > > > disable mode.
-> > > > The stream disable mode should just be used in situations where the
-> > > > available system bandwidth is low or the
-> > > > system bus access latency is high, in order to avoid underruns and
-> > > > overruns in the latency buffers. This works
-> > > > for all types of endpoints, except for ISO endpoints.
-> > > > Such a system can't ensure the real time support that the ISO
-> > > > endpoints require, so the ISO endpoints are not
-> > > > supported when the SDIS bit is set.
-> > > > 
-> > > > Definitely we need to root cause why disable streaming mode is not
-> > > > working for zynq but from controller spec
-> > > > point of view it is possible that controller not work properly in
-> > > > stream disable mode.
-> > > > 
-> > > > Regards,
-> > > > Punnaiah
-> > > > 
-> > > 
-> > > Maybe the burst size isn't set correctly by default?  It does say the controller
-> > > won't work correctly with stream disable set and an invalid burst size.  Looks
-> > > like TX and RX burst both default to 16, per the Zynq manual.
-> > > 
-> > > With the stream disable bit set, the behvior we see on our hardware is
-> > > that priming just stops, with an outstanding transfer in memory marked
-> > > active in the status field by the controller.  This happens at random, even 
-> > > when doing single transfers at a time like with g_ether set to have a queue
-> > > size of 1.  With SDIS clear everything works great.  Given that the Zynq is not
-> > > bandwidth constrained, it seems like SDIS clear should be the default.
-> > > 
-> > 
-> > I suspect the possible reason is the tx buffer for each endpoint is
-> > small (<=512 bytes), so it can't copy one packet (assume max packet size
-> > for bulk) to tx buffer, then the prime can't be finished.
-> > 
-> > Would you help to dump the registers HWTXBUF ($BASE + 0x10) and DCCPARAMS
-> > ($BASE + 124)?
-> > 
-> > tx buffer size = ((2 ^ HWTXBUF.VUSB_HS_TX_ADD) / DCCPARAMS.DEN) *
-> > (DWORD_PER_BYTES)
-> > 
-> > DWORD_PER_BYTES is 4
-> > 
-> > -- 
-> > 
-> > Best Regards,
-> > Peter Chen
+On Fri, Aug 28, 2015 at 05:20:20PM -0700, Ray Jui wrote:
 > 
-> HWTXBUF is 0x80060A10, DCCPARAMS is 0xE0003124.
+> 
+> On 8/28/2015 4:47 PM, Jon Mason wrote:
+> > Add a very minimalistic set of Northstar Plus Device Tree files which
+> > describes the SoC and the BCM958625 implementation.  The perpherials
+> > described are:
+> > 
+> > ARM Cortex A9 CPU
+> > 2 8250 UARTs
+> > ARM GIC
+> > PL310 L2 Cache
+> > ARM A9 Global timer
+> > 
+> > Signed-off-by: Kapil Hali <kapilh-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+> > Signed-off-by: Jon Mason <jonmason-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+> > ---
+> >  arch/arm/boot/dts/Makefile       |   2 +
+> >  arch/arm/boot/dts/bcm-nsp.dtsi   | 120 +++++++++++++++++++++++++++++++++++++++
+> >  arch/arm/boot/dts/bcm958625k.dts |  57 +++++++++++++++++++
+> >  3 files changed, 179 insertions(+)
+> >  create mode 100644 arch/arm/boot/dts/bcm-nsp.dtsi
+> >  create mode 100644 arch/arm/boot/dts/bcm958625k.dts
+> > 
+> > diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+> > index 246473a..adb5732 100644
+> > --- a/arch/arm/boot/dts/Makefile
+> > +++ b/arch/arm/boot/dts/Makefile
+> > @@ -82,6 +82,8 @@ dtb-$(CONFIG_ARCH_BCM_CYGNUS) += \
+> >  dtb-$(CONFIG_ARCH_BCM_MOBILE) += \
+> >  	bcm28155-ap.dtb \
+> >  	bcm21664-garnet.dtb
+> > +dtb-$(CONFIG_ARCH_BCM_NSP) += \
+> > +	bcm958625k.dtb
+> >  dtb-$(CONFIG_ARCH_BERLIN) += \
+> >  	berlin2-sony-nsz-gs7.dtb \
+> >  	berlin2cd-google-chromecast.dtb \
+> > diff --git a/arch/arm/boot/dts/bcm-nsp.dtsi b/arch/arm/boot/dts/bcm-nsp.dtsi
+> > new file mode 100644
+> > index 0000000..f5f494f
+> > --- /dev/null
+> > +++ b/arch/arm/boot/dts/bcm-nsp.dtsi
+> > @@ -0,0 +1,120 @@
+> > +/*
+> > + *  BSD LICENSE
+> > + *
+> > + *  Copyright(c) 2015 Broadcom Corporation.  All rights reserved.
+> > + *
+> > + *  Redistribution and use in source and binary forms, with or without
+> > + *  modification, are permitted provided that the following conditions
+> > + *  are met:
+> > + *
+> > + *    * Redistributions of source code must retain the above copyright
+> > + *      notice, this list of conditions and the following disclaimer.
+> > + *    * Redistributions in binary form must reproduce the above copyright
+> > + *      notice, this list of conditions and the following disclaimer in
+> > + *      the documentation and/or other materials provided with the
+> > + *      distribution.
+> > + *    * Neither the name of Broadcom Corporation nor the names of its
+> > + *      contributors may be used to endorse or promote products derived
+> > + *      from this software without specific prior written permission.
+> > + *
+> > + *  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+> > + *  "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+> > + *  LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+> > + *  A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+> > + *  OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+> > + *  SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+> > + *  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+> > + *  DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+> > + *  THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+> > + *  (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+> > + *  OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+> > + */
+> > +
+> > +#include <dt-bindings/interrupt-controller/arm-gic.h>
+> > +#include <dt-bindings/interrupt-controller/irq.h>
+> > +
+> > +#include "skeleton.dtsi"
+> > +
+> > +/ {
+> > +	compatible = "brcm,nsp";
+> > +	model = "Broadcom Northstar Plus SoC";
+> > +	interrupt-parent = <&gic>;
+> > +
+> > +	mpcore {
+> > +		compatible = "simple-bus";
+> > +		ranges = <0x00000000 0x19020000 0x00003000>;
+> > +		#address-cells = <1>;
+> > +		#size-cells = <1>;
+> > +
+> > +		cpus {
+> > +			#address-cells = <1>;
+> > +			#size-cells = <0>;
+> > +
+> > +			cpu@0 {
+> > +				device_type = "cpu";
+> > +				compatible = "arm,cortex-a9";
+> > +				next-level-cache = <&L2>;
+> > +				reg = <0x0>;
+> > +			};
+> > +		};
+> > +
+> > +		L2: l2-cache {
+> > +			compatible = "arm,pl310-cache";
+> > +			reg = <0x2000 0x1000>;
+> > +			cache-unified;
+> > +			cache-level = <2>;
+> > +		};
+> > +
+> > +		gic: interrupt-controller@19021000 {
+> > +			compatible = "arm,cortex-a9-gic";
+> > +			#interrupt-cells = <3>;
+> > +			#address-cells = <0>;
+> > +			interrupt-controller;
+> > +			reg = <0x1000 0x1000>,
+> > +			      <0x0100 0x100>;
+> > +		};
+> > +
+> > +		timer@19020200 {
+> > +			compatible = "arm,cortex-a9-global-timer";
+> > +			reg = <0x0200 0x100>;
+> > +			interrupts = <GIC_PPI 11 IRQ_TYPE_LEVEL_HIGH>;
+> > +			clocks = <&periph_clk>;
+> > +		};
+> > +	};
+> > +
+> > +	clocks {
+> > +		#address-cells = <1>;
+> > +		#size-cells = <1>;
+> > +		ranges;
+> > +
+> > +		periph_clk: periph_clk {
+> > +			compatible = "fixed-clock";
+> > +			#clock-cells = <0>;
+> > +			clock-frequency = <500000000>;
+> > +		};
+> > +	};
+> > +
+> > +	apb {
+> > +		compatible = "arm,amba-bus", "simple-bus";
+> 
+> Should "arm,amba-bus" has a separate bus node with AMBA compatible
+> devices declared in there (e.g, pl330, spi-pl022, and etc.) in the
+> future after they are brought up? To my best knowledge, "ns16550a" UART
+> is NOT an AMBA compatible device.
 
-Are you sure you read correct address? Your DCCPARAMS means
-it is host capable, but not device capable.
+APB is an AMBA bus, so this part is accurate.  The block diagram of
+the SoC has the UARTs (and other perpherials) hanging off of the APB
+bus.  So, this organization follows the block diagram.  While the
+UART drivers are not AMBA aware, there appears to be no issues with
+this layout (as the HW/drivers come up without issue).  Unless there
+is an unforeseen issue with having non-AMBA aware devices on the DT
+AMBA bus, I would think it best to organize it to match the block
+disgram.
 
--- 
+> > +		interrupt-parent = <&gic>;
+> > +		ranges = <0x00000000 0x18000000 0x00001000>;
+> 
+> Does the 'apb' bus mean to cover all peripherals connected through APB?
+> If so, the size is only 0x1000 and that seems to be too small...
 
-Best Regards,
-Peter Chen
+This is all that is currently needed.  I was planning on expanding it
+as I added more devices.
+
+Thanks,
+Jon
+
+> > +		#address-cells = <1>;
+> > +		#size-cells = <1>;
+> > +
+> > +		uart0: serial@18000300 {
+> > +			compatible = "ns16550a";
+> > +			reg = <0x0300 0x100>;
+> > +			interrupts = <GIC_SPI 85 IRQ_TYPE_LEVEL_HIGH>;
+> > +			clock-frequency = <62499840>;
+> > +			status = "disabled";
+> > +		};
+> > +
+> > +		uart1: serial@18000400 {
+> > +			compatible = "ns16550a";
+> > +			reg = <0x0400 0x100>;
+> > +			interrupts = <GIC_SPI 85 IRQ_TYPE_LEVEL_HIGH>;
+> > +			clock-frequency = <62499840>;
+> > +			status = "disabled";
+> > +		};
+> > +	};
+> > +};
+> > diff --git a/arch/arm/boot/dts/bcm958625k.dts b/arch/arm/boot/dts/bcm958625k.dts
+> > new file mode 100644
+> > index 0000000..16303db
+> > --- /dev/null
+> > +++ b/arch/arm/boot/dts/bcm958625k.dts
+> > @@ -0,0 +1,57 @@
+> > +/*
+> > + *  BSD LICENSE
+> > + *
+> > + *  Copyright(c) 2015 Broadcom Corporation.  All rights reserved.
+> > + *
+> > + *  Redistribution and use in source and binary forms, with or without
+> > + *  modification, are permitted provided that the following conditions
+> > + *  are met:
+> > + *
+> > + *    * Redistributions of source code must retain the above copyright
+> > + *      notice, this list of conditions and the following disclaimer.
+> > + *    * Redistributions in binary form must reproduce the above copyright
+> > + *      notice, this list of conditions and the following disclaimer in
+> > + *      the documentation and/or other materials provided with the
+> > + *      distribution.
+> > + *    * Neither the name of Broadcom Corporation nor the names of its
+> > + *      contributors may be used to endorse or promote products derived
+> > + *      from this software without specific prior written permission.
+> > + *
+> > + *  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+> > + *  "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+> > + *  LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+> > + *  A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+> > + *  OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+> > + *  SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+> > + *  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+> > + *  DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+> > + *  THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+> > + *  (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+> > + *  OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+> > + */
+> > +
+> > +/dts-v1/;
+> > +
+> > +#include "bcm-nsp.dtsi"
+> > +
+> > +/ {
+> > +	model = "NorthStar Plus SVK (BCM958625K)";
+> > +	compatible = "brcm,bcm58625", "brcm,nsp";
+> > +
+> > +	aliases {
+> > +		serial0 = &uart0;
+> > +		serial1 = &uart1;
+> > +	};
+> > +
+> > +	chosen {
+> > +		stdout-path = "serial0:115200n8";
+> > +	};
+> > +};
+> > +
+> > +&uart0 {
+> > +	status = "okay";
+> > +};
+> > +
+> > +&uart1 {
+> > +	status = "okay";
+> > +};
+> > 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
