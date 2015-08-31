@@ -1,43 +1,215 @@
-From: =?UTF-8?Q?Janusz_U=c5=bcycki?= <j.uzycki-cjVIcFy54eMe9JSWTWOYM+658FiBabzs@public.gmane.org>
-Subject: [RFC PATCH] gpio-pca953x driver and PCA9536 chip
-Date: Mon, 31 Aug 2015 16:26:37 +0200
-Message-ID: <55E4641D.7050603@elpromaelectronics.com>
+From: Leo Yan <leo.yan-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 2/2] arm64: dts: add dts files for Hisilicon Hip05-D02
+ Development Board
+Date: Mon, 31 Aug 2015 22:40:19 +0800
+Message-ID: <20150831144019.GA22491@leoy-linaro>
+References: <1440838361-1468-1-git-send-email-dingtianhong@huawei.com>
+ <1440838361-1468-3-git-send-email-dingtianhong@huawei.com>
+ <20150831131244.GB6194@leoy-linaro>
+ <55E45A46.7040805@huawei.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <55E45A46.7040805-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Krzysztof Borgulski <k.borgulski-9tnw74Q4ehaHKKo6LODCOg@public.gmane.org>
+To: Ding Tianhong <dingtianhong-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, marc.zyngier-5wv7dgnIgG8@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, linuxarm-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, haojian.zhuang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, rob.herring-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+On Mon, Aug 31, 2015 at 09:44:38PM +0800, Ding Tianhong wrote:
+> On 2015/8/31 21:12, Leo Yan wrote:
+> > On Sat, Aug 29, 2015 at 04:52:41PM +0800, Ding Tianhong wrote:
+> >> Add initial dtsi file to support Hisilicon Hip05-D02 Board with
+> >> support of CPUs in four clusters and each cluster has quard Cortex=
+-A57.
+> >>
+> >> Also add dts file to support Hip05-D02 development board.
+> >>
+> >> Signed-off-by: Ding Tianhong <dingtianhong-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+> >> Signed-off-by: Kefeng Wang <wangkefeng.wang-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+> >> ---
+> >>  arch/arm64/boot/dts/hisilicon/Makefile      |   2 +-
+> >>  arch/arm64/boot/dts/hisilicon/hip05-d02.dts |  36 ++++
+> >>  arch/arm64/boot/dts/hisilicon/hip05.dtsi    | 271 +++++++++++++++=
++++++++++++++
+> >>  3 files changed, 308 insertions(+), 1 deletion(-)
+> >>  create mode 100644 arch/arm64/boot/dts/hisilicon/hip05-d02.dts
+> >>  create mode 100644 arch/arm64/boot/dts/hisilicon/hip05.dtsi
+> >>
+> >> diff --git a/arch/arm64/boot/dts/hisilicon/Makefile b/arch/arm64/b=
+oot/dts/hisilicon/Makefile
+> >> index fa81a6e..cd158b8 100644
+> >> --- a/arch/arm64/boot/dts/hisilicon/Makefile
+> >> +++ b/arch/arm64/boot/dts/hisilicon/Makefile
+> >> @@ -1,4 +1,4 @@
+> >> -dtb-$(CONFIG_ARCH_HISI) +=3D hi6220-hikey.dtb
+> >> +dtb-$(CONFIG_ARCH_HISI) +=3D hi6220-hikey.dtb hip05-d02.dtb
+> >> =20
+> >>  always		:=3D $(dtb-y)
+> >>  subdir-y	:=3D $(dts-dirs)
+> >> diff --git a/arch/arm64/boot/dts/hisilicon/hip05-d02.dts b/arch/ar=
+m64/boot/dts/hisilicon/hip05-d02.dts
+> >> new file mode 100644
+> >> index 0000000..ae34e25
+> >> --- /dev/null
+> >> +++ b/arch/arm64/boot/dts/hisilicon/hip05-d02.dts
+> >> @@ -0,0 +1,36 @@
+> >> +/**
+> >> + * dts file for Hisilicon D02 Development Board
+> >> + *
+> >> + * Copyright (C) 2014,2015 Hisilicon Ltd.
+> >> + *
+> >> + * This program is free software; you can redistribute it and/or =
+modify
+> >> + * it under the terms of the GNU General Public License version 2=
+ as
+> >> + * publishhed by the Free Software Foundation.
+> >> + *
+> >> + */
+> >> +
+> >> +/dts-v1/;
+> >> +
+> >> +#include "hip05.dtsi"
+> >> +
+> >> +/ {
+> >> +	model =3D "Hisilicon Hip05 D02 Development Board";
+> >> +	compatible =3D "hisilicon,hip05-d02";
+> >> +
+> >> +	memory@00000000 {
+> >> +		device_type =3D "memory";
+> >> +		reg =3D <0x0 0x00000000 0x0 0x80000000>;
+> >> +	};
+> >> +
+> >> +	aliases {
+> >> +		serial0 =3D &uart0;
+> >> +	};
+> >> +
+> >> +	chosen {
+> >> +		stdout-path =3D "serial0:115200n8";
+> >> +	};
+> >> +};
+> >> +
+> >> +&uart0 {
+> >> +	status =3D "ok";
+> >> +};
+> >> diff --git a/arch/arm64/boot/dts/hisilicon/hip05.dtsi b/arch/arm64=
+/boot/dts/hisilicon/hip05.dtsi
+> >> new file mode 100644
+> >> index 0000000..da12d94
+> >> --- /dev/null
+> >> +++ b/arch/arm64/boot/dts/hisilicon/hip05.dtsi
+> >> @@ -0,0 +1,271 @@
+> >> +/**
+> >> + * dts file for Hisilicon D02 Development Board
+> >> + *
+> >> + * Copyright (C) 2014,2015 Hisilicon Ltd.
+> >> + *
+> >> + * This program is free software; you can redistribute it and/or =
+modify
+> >> + * it under the terms of the GNU General Public License version 2=
+ as
+> >> + * publishhed by the Free Software Foundation.
+> >> + *
+> >> + */
+> >> +
+> >> +#include <dt-bindings/interrupt-controller/arm-gic.h>
+> >> +
+> >> +/ {
+> >> +	compatible =3D "hisilicon,hip05-d02";
+> >> +	interrupt-parent =3D <&gic>;
+> >> +	#address-cells =3D <2>;
+> >> +	#size-cells =3D <2>;
+> >> +
+> >> +	psci {
+> >> +		compatible =3D "arm,psci-0.2";
+> >> +		method =3D "smc";
+> >> +	};
+> >> +
+> >> +	cpus {
+> >> +		#address-cells =3D <1>;
+> >> +		#size-cells =3D <0>;
+> >> +
+> >> +		cpu-map {
+> >> +			cluster0 {
+> >> +				core0 {
+> >> +					cpu =3D <&cpu0>;
+> >> +				};
+> >> +				core1 {
+> >> +					cpu =3D <&cpu1>;
+> >> +				};
+> >> +				core2 {
+> >> +					cpu =3D <&cpu2>;
+> >> +				};
+> >> +				core3 {
+> >> +					cpu =3D <&cpu3>;
+> >> +				};
+> >> +			};
+> >> +			cluster1 {
+> >> +				core0 {
+> >> +					cpu =3D <&cpu4>;
+> >> +				};
+> >> +				core1 {
+> >> +					cpu =3D <&cpu5>;
+> >> +				};
+> >> +				core2 {
+> >> +					cpu =3D <&cpu6>;
+> >> +				};
+> >> +				core3 {
+> >> +					cpu =3D <&cpu7>;
+> >> +				};
+> >> +			};
+> >> +			cluster2 {
+> >> +				core0 {
+> >> +					cpu =3D <&cpu8>;
+> >> +				};
+> >> +				core1 {
+> >> +					cpu =3D <&cpu9>;
+> >> +				};
+> >> +				core2 {
+> >> +					cpu =3D <&cpu10>;
+> >> +				};
+> >> +				core3 {
+> >> +					cpu =3D <&cpu11>;
+> >> +				};
+> >> +			};
+> >> +			cluster3 {
+> >> +				core0 {
+> >> +					cpu =3D <&cpu12>;
+> >> +				};
+> >> +				core1 {
+> >> +					cpu =3D <&cpu13>;
+> >> +				};
+> >> +				core2 {
+> >> +					cpu =3D <&cpu14>;
+> >> +				};
+> >> +				core3 {
+> >> +					cpu =3D <&cpu15>;
+> >> +				};
+> >> +			};
+> >> +		};
+> >> +
+> >> +		cpu0: cpu@20000 {
+> >> +			device_type =3D "cpu";
+> >> +			compatible =3D "arm,armv8";
+> >=20
+> > Change to "arm,cortex-a57","arm,armv8"?
+> >=20
+>=20
+> Ok=EF=BC=8Cbut I think should be "hisilicon,hip05","arm,armv8".
 
-The driver sets register #02 (inversion) to 0x01 instead of 0x00 on my 
-board.
-Reason: device_pca953x_init() does not initialize val buffer because 
-NBANK() returns
-for PCA9536 ngpio=4 value 0 instead of 1.
+If the CPU is a starndard ARM core (such like CA53, CA57, etc), you
+need directly use the CPU type which has been defined in:
+Documentation/devicetree/bindings/arm/cpus.txt. So here hip05 is the
+naming code for SoC? or for the CPU customized by Hisilicon?
 
-My proposed code-patch for 3.14.17 is below.
-Because I don't work on stable/next I can't deliver complete/ready patch.
-Please for comments.
+[...]
 
-best regards
-Janusz
-
---- a/drivers/gpio/gpio-pca953x.c
-+++ b/drivers/gpio/gpio-pca953x.c
-@@ -75,7 +75,7 @@ MODULE_DEVICE_TABLE(i2c, pca953x_id);
-  #define MAX_BANK 5
-  #define BANK_SZ 8
-
--#define NBANK(chip) (chip->gpio_chip.ngpio / BANK_SZ)
-+#define NBANK(chip) DIV_ROUND_UP(chip->gpio_chip.ngpio, BANK_SZ)
-
-  struct pca953x_chip {
-         unsigned gpio_start;
+Thanks,
+Leo Yan
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
