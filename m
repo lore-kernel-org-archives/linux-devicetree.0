@@ -1,103 +1,130 @@
-From: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH] Altera Modular ADC driver device tree binding
-Date: Mon, 31 Aug 2015 18:28:17 +0100
-Message-ID: <55E48EB1.4030700@kernel.org>
-References: <1440056795-6190-1-git-send-email-cnphoon@altera.com>
+From: Graham Moore <grmoore-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
+Subject: Re: [PATCH 2/2] mtd: spi-nor: Add driver for Cadence Quad SPI Flash
+ Controller.
+Date: Mon, 31 Aug 2015 12:30:37 -0500
+Message-ID: <55E48F3D.3030800@opensource.altera.com>
+References: <1440148851-14621-1-git-send-email-marex@denx.de> <1440148851-14621-2-git-send-email-marex@denx.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1440056795-6190-1-git-send-email-cnphoon-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Chee Nouk Phoo <cnphoon-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, Michael.Hennerich-OyLXuOCK7orQT0dZR+AlfA@public.gmane.org, cnphoon.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Content-Type: text/plain; charset=windows-1252;
+	format=flowed
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1440148851-14621-2-git-send-email-marex-ynQEQJNshbs@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>
+Cc: linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Alan Tull <atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Dinh Nguyen <dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>, Vikas MANOCHA <vikas.manocha-qxv4g6HH51o@public.gmane.org>, Yves Vandervennet <yvanderv-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 20/08/15 08:46, Chee Nouk Phoo wrote:
-> From: Chee Nouk Phoon <cnphoon-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>
-> 
-> Altera Modular ADC is soft IP that wraps the hardened ADC block in a Max1
-> device. It can be configured to dual ADC mode that supports two channel
-> synchronous sampling or independent single ADCs. ADC sampled values will be
-> written into memory slots in sequence determined by a user configurable
-> sequencer block.
-> 
-> This patch adds device tree binding for Altera Modular ADC driver
-> 
-> Signed-off-by: Chee Nouk Phoon <cnphoon-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>
-> ---
->  .../bindings/iio/adc/altr,modular-adc.txt          |   63 ++++++++++++++++++++
->  1 files changed, 63 insertions(+), 0 deletions(-)
->  create mode 100755 Documentation/devicetree/bindings/iio/adc/altr,modular-adc.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/iio/adc/altr,modular-adc.txt b/Documentation/devicetree/bindings/iio/adc/altr,modular-adc.txt
-> new file mode 100755
-> index 0000000..4106cb4
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/iio/adc/altr,modular-adc.txt
-> @@ -0,0 +1,63 @@
-> +Altera Modular (Dual) ADC
+Hi Marek,
+
+Having some compile issues...see below
+
+On 08/21/2015 04:20 AM, Marek Vasut wrote:
+> From: Graham Moore <grmoore-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
+>
+> Add support for the Cadence QSPI controller. This controller is
+> present in the Altera SoCFPGA SoCs and this driver has been tested
+> on the Cyclone V SoC.
+>
+> Signed-off-by: Graham Moore <grmoore-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
+> Signed-off-by: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>
+
+[...]
+
+> +static int cqspi_set_protocol(struct spi_nor *nor, enum spi_protocol=
+ proto)
+> +{
+> +	struct cqspi_flash_pdata *f_pdata =3D nor->priv;
 > +
-> +This binding document describes both Altera Modular ADC and Altera Modular Dual
-> +ADC. Both options can be configured during generation time in Qsys. This driver
-> +only support standard sequencer with Avalon-MM sample storage with up to 64
-> +memory slots.
+> +	switch (proto) {
+> +	case SPI_PROTO_1_1_1:
+> +	case SPI_PROTO_1_1_2:
+> +	case SPI_PROTO_1_1_4:
+> +	case SPI_PROTO_1_2_2:
+> +	case SPI_PROTO_1_4_4:
+> +		f_pdata->inst_width =3D CQSPI_INST_TYPE_SINGLE;
+> +		break;
+> +	case SPI_PROTO_2_2_2:
+> +		f_pdata->inst_width =3D CQSPI_INST_TYPE_DUAL;
+> +		break;
+> +	case SPI_PROTO_4_4_4:
+> +		f_pdata->inst_width =3D CQSPI_INST_TYPE_QUAD;
+> +		break;
+> +	default:
+> +		return -EINVAL;
+> +	}
 > +
-> +Required properties:
-> +- compatible: must be one of the following strings
-> +  "altr,modular-adc": single ADC configuration
-> +  "altr,modular-dual-adc": dual ADC configuration
+> +	switch (proto) {
+> +	case SPI_PROTO_1_1_1:
+> +	case SPI_PROTO_1_1_2:
+> +	case SPI_PROTO_1_1_4:
+> +		f_pdata->addr_width =3D CQSPI_INST_TYPE_SINGLE;
+> +		break;
+> +	case SPI_PROTO_1_2_2:
+> +	case SPI_PROTO_2_2_2:
+> +		f_pdata->addr_width =3D CQSPI_INST_TYPE_DUAL;
+> +		break;
+> +	case SPI_PROTO_1_4_4:
+> +	case SPI_PROTO_4_4_4:
+> +		f_pdata->addr_width =3D CQSPI_INST_TYPE_QUAD;
+> +		break;
+> +	default:
+> +		return -EINVAL;
+> +	}
 > +
-> +- reg: Address and length of the register set for the device. It contains the
-> +  information of registers in the same order as described by reg-names
+> +	return 0;
+> +}
 > +
-> +- reg-names: Should contain the reg names
-> +  "sequencer_csr": register region for adc sequencer block
-> +  "sample_store_csr": register region for sample store block
-> +
-> +- interrupts: interrupt line for ADC
-> +
-> +- altr,adc-mode : ADC configuration
-> +  1: single ADC mode
-> +  2: dual ADC mode
-> +
-> +- altr,adc-slot-count : specify number of conversion slot in use
-> +
-> +- altr,adc<ADC index>-slot-sequence-<slot index>: specify ADC channel 
-> +  conversion sequence
-> +  <ADC index>: instantiated ADC number
-> +  <slot index>: slot index for ADC memory slot
-> +
-> +- altr,adc-number : specify ADC number when single ADC mode is selected
-> +  1: 1st ADC
-> +  2: 2nd ACD
-> +
-> +Example: single ADC
-> +modular_adc_0: adc@0x20000200 {
-> +  compatible = "altr,modular-adc";
-> +  reg = <0x20000000 0x00000008>,
-> +    <0x20000200 0x00000200>;
-> +  reg-names = "sequencer_csr", "sample_store_csr";
-> +  interrupt-parent = <&cpu>;
-> +  interrupts = <8>;
-> +  altr,adc-mode = <1>;
-> +  altr,adc-slot-count = <2>;
-> +  altr,adc1-slot-sequence-1 = <1>;
-> +  altr,adc-number = <1>;
-> +};
-> +
-> +Example: dual ADC
-> +modular_adc_1: adc@0x18002200 {
-> +  compatible = "altr,modular-dual-adc";
-> +  reg = <0x18002000 0x00000008>,
-> +    <0x18002200 0x00000200>;
-> +  reg-names = "sequencer_csr", "sample_store_csr";
-> +  interrupt-parent = <&cpu>;
-> +  interrupts = <8>;
-> +  altr,adc-mode = <2>;
-> +  altr,adc-slot-count = <1>;
-> +  altr,adc1-slot-sequence-1 = <6>;
-> +  altr,adc2-slot-sequence-1 = <6>;
-> +};
-> \ No newline at end of file
-> 
+
+I think you have some other patches in your tree, the above doesn't=20
+compile on l2-mtd/master:
+
+~/l2-mtd/drivers/mtd/spi-nor/cadence-quadspi.c:701:57: warning: =91enum=
+=20
+spi_protocol=92 declared inside parameter list [enabled by default]
+~/l2-mtd/drivers/mtd/spi-nor/cadence-quadspi.c:701:57: warning: its=20
+scope is only this definition or declaration, which is probably not wha=
+t=20
+you want [enabled by default]
+~/l2-mtd/drivers/mtd/spi-nor/cadence-quadspi.c:701:70: error: parameter=
+=20
+2 (=91proto=92) has incomplete type
+~/l2-mtd/drivers/mtd/spi-nor/cadence-quadspi.c:701:12: error: function=20
+declaration isn=92t a prototype [-Werror=3Dstrict-prototypes]
+~/l2-mtd/drivers/mtd/spi-nor/cadence-quadspi.c: In function=20
+=91cqspi_set_protocol=92:
+~/l2-mtd/drivers/mtd/spi-nor/cadence-quadspi.c:706:7: error:=20
+=91SPI_PROTO_1_1_1=92 undeclared (first use in this function)
+~/l2-mtd/drivers/mtd/spi-nor/cadence-quadspi.c:706:7: note: each=20
+undeclared identifier is reported only once for each function it appear=
+s in
+~/l2-mtd/drivers/mtd/spi-nor/cadence-quadspi.c:707:7: error:=20
+=91SPI_PROTO_1_1_2=92 undeclared (first use in this function)
+~/l2-mtd/drivers/mtd/spi-nor/cadence-quadspi.c:708:7: error:=20
+=91SPI_PROTO_1_1_4=92 undeclared (first use in this function)
+~/l2-mtd/drivers/mtd/spi-nor/cadence-quadspi.c:709:7: error:=20
+=91SPI_PROTO_1_2_2=92 undeclared (first use in this function)
+~/l2-mtd/drivers/mtd/spi-nor/cadence-quadspi.c:710:7: error:=20
+=91SPI_PROTO_1_4_4=92 undeclared (first use in this function)
+~/l2-mtd/drivers/mtd/spi-nor/cadence-quadspi.c:713:7: error:=20
+=91SPI_PROTO_2_2_2=92 undeclared (first use in this function)
+~/l2-mtd/drivers/mtd/spi-nor/cadence-quadspi.c:716:7: error:=20
+=91SPI_PROTO_4_4_4=92 undeclared (first use in this function)
+~/l2-mtd/drivers/mtd/spi-nor/cadence-quadspi.c: In function=20
+=91cqspi_setup_flash=92:
+~/l2-mtd/drivers/mtd/spi-nor/cadence-quadspi.c:1087:6: error: =91struct=
+=20
+spi_nor=92 has no member named =91dn=92
+~/l2-mtd/drivers/mtd/spi-nor/cadence-quadspi.c:1096:6: error: =91struct=
+=20
+spi_nor=92 has no member named =91set_protocol=92
+
+[...]
+
+Regards,
+Graham
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
