@@ -1,66 +1,116 @@
-From: Loc Ho <lho-qTEPVZfXA3Y@public.gmane.org>
-Subject: Re: [PATCH v4 0/4] edac: Add L3/SoC support to the APM X-Gene SoC
- EDAC driver
-Date: Mon, 31 Aug 2015 14:26:11 -0700
-Message-ID: <CAPw-ZTm_n6o2jXc5LuSZLrdZy3ZCmJmrRAP6S+7S-EO2ZAGANg@mail.gmail.com>
-References: <1439534769-22811-1-git-send-email-lho@apm.com>
+From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v3 2/5] ARM: NSP: add minimal Northstar Plus device tree
+Date: Mon, 31 Aug 2015 16:49:10 -0500
+Message-ID: <CAL_JsqL1=WoaidMgLN4exvhF7bYr4FNGmtMgYO8e-c=NxP3JbQ@mail.gmail.com>
+References: <1440805644-18241-1-git-send-email-jonmason@broadcom.com>
+ <55E0FAC4.2040108@broadcom.com> <20150831022417.GA27066@broadcom.com>
+ <55E3FFB5.6090703@broadcom.com> <20150831194404.GA28848@broadcom.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1439534769-22811-1-git-send-email-lho-qTEPVZfXA3Y@public.gmane.org>
+In-Reply-To: <20150831194404.GA28848-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Doug Thompson <dougthompson-aS9lmoZGLiVWk0Htik3J/w@public.gmane.org>, Borislav Petkov <bp-Gina5bIWoIWzQB+pC5nmwQ@public.gmane.org>, Mauro Carvalho Chehab <mchehab-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, linux-edac-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Jon Masters <jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, "patches-qTEPVZfXA3Y@public.gmane.org" <patches-qTEPVZfXA3Y@public.gmane.org>, Loc Ho <lho-qTEPVZfXA3Y@public.gmane.org>
+To: Jon Mason <jonmason-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Cc: Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Kevin Hilman <khilman-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org" <bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Kapil Hali <kapilh-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Borislav,
+On Mon, Aug 31, 2015 at 2:44 PM, Jon Mason <jonmason-dY08KVG/lbpWk0Htik3J/w@public.gmane.org> wrote:
+> On Mon, Aug 31, 2015 at 12:18:13AM -0700, Ray Jui wrote:
+>>
+>>
+>> On 8/30/2015 7:24 PM, Jon Mason wrote:
+>> > On Fri, Aug 28, 2015 at 05:20:20PM -0700, Ray Jui wrote:
+>> >>
+>> >>
+>> >> On 8/28/2015 4:47 PM, Jon Mason wrote:
+>> >>> Add a very minimalistic set of Northstar Plus Device Tree files which
+>> >>> describes the SoC and the BCM958625 implementation.  The perpherials
+>> >>> described are:
+>> >>>
+>> >>> ARM Cortex A9 CPU
+>> >>> 2 8250 UARTs
+>> >>> ARM GIC
+>> >>> PL310 L2 Cache
+>> >>> ARM A9 Global timer
 
-Are you okay with this version to pull in for 4.3 release?
+[...]
 
--Loc
+>> >>> + apb {
+>> >>> +         compatible = "arm,amba-bus", "simple-bus";
+>> >>
+>> >> Should "arm,amba-bus" has a separate bus node with AMBA compatible
+>> >> devices declared in there (e.g, pl330, spi-pl022, and etc.) in the
+>> >> future after they are brought up? To my best knowledge, "ns16550a" UART
+>> >> is NOT an AMBA compatible device.
 
-On Thu, Aug 13, 2015 at 11:46 PM, Loc Ho <lho-qTEPVZfXA3Y@public.gmane.org> wrote:
-> v4:
-> * Remove function for EDAC debugfs node and replace with export variable
-> * Switch the driver to use the exported edac_debugfs variable
-> * Revert the if statement logic for function as necessary
-> * Remove un-necessary code in debugfs creation functions
+IIRC, "arm,amba-bus" is not documented nor used. It isn't really
+needed as there is no s/w visible feature to an AMBA bus. There are
+also multiple flavors of AMBA buses, so it is pretty meaningless.
+
+>> > APB is an AMBA bus, so this part is accurate.  The block diagram of
+>> > the SoC has the UARTs (and other perpherials) hanging off of the APB
+>> > bus.  So, this organization follows the block diagram.
+>>
+>> Okay so the "apb" node can be used for amba compatible devices
+>> (arm,amba-bus) and/or simple platform devices (simple-bus). I guess
+>> that's fine and I now see that there are some other dtsi also doing it
+>> this way.
+
+I think what is meant here by "amba compatible devices" is really ARM
+Primecell peripherals which are the ARM IP with standard ID registers.
+These are designated by "arm,primecell" compatible strings for the
+device not the bus compatible string.
+
+>>
+>> > While the
+>> > UART drivers are not AMBA aware, there appears to be no issues with
+>> > this layout (as the HW/drivers come up without issue). Unless there
+>> > is an unforeseen issue with having non-AMBA aware devices on the DT
+>> > AMBA bus, I would think it best to organize it to match the block
+>> > disgram.
+>> >
+>>
+>> UART runs fine because you also have "simple-bus" listed as the
+>> compatible string so uart is populated as standard platform device.
+>>
+>> >>> +         interrupt-parent = <&gic>;
+>> >>> +         ranges = <0x00000000 0x18000000 0x00001000>;
+>> >>
+>> >> Does the 'apb' bus mean to cover all peripherals connected through APB?
+>> >> If so, the size is only 0x1000 and that seems to be too small...
+>> >
+>> > This is all that is currently needed.  I was planning on expanding it
+>> > as I added more devices.
+>>
+>> Sure.
+>>
+>> I haven't checked the datahsheet but based on the layout (which seems
+>> quite similar to Cygnus), I assume the range for these devices should be
+>> 0x18000000 - 0x18ffffff? Just want to make sure there are no other
+>> devices come before 0x18000000 so you don't need to change all these reg
+>> offsets in the future.
 >
-> v3:
-> * Add an function to retrieve the EDAC debugfs node
-> * Move all debugfs node under EDAC code debugfs node
-> * Update L3 to check for v1 errata
-> * Rename error label for L3/SoC add routines
-> * Re-structure SoC EDAC functions for code readability
-> * Inline the function xgene_edac_soc_mem_data
-> * Remove un-necessary { }
+> Based on the devices listed in the block diagram (and not including
+> those on the AXI bus):
+> i2c 0x18038000
+> spi 0x18027200
+> gpio 0x18000060
+> pwm 0x18031000
+> wdt 0x18039000
 >
-> v2:
-> * Update binding documentation accordingly
-> * Change all single bit defines to BIT(x)
-> * Add support for L3 version 1 and 2 HW's
-> * Change to use debug file system for error injection
-> * In L3/SoC instance add function, allocate EDAC context after all
->   initalization successed
-> * Support raw or detail info for SoC EDAC error reporting
+> and a few others.
 >
-> v1:
-> * Add L3/SoC support to the APM X-Gene SoC EDAC driver
-> ---
-> Loc Ho (4):
->   edac: Export edac_debugfs
->   Documentation: Update the APM X-Gene SoC EDAC DTS binding for L3/SoC
->     subnodes
->   edac: Add L3/SoC EDAC support to the APM X-Gene SoC EDAC driver
->   arm64: Add L3/SoC DT subnodes to the APM X-Gene SoC EDAC node
->
->  .../devicetree/bindings/edac/apm-xgene-edac.txt    |   23 +
->  arch/arm64/boot/dts/apm/apm-storm.dtsi             |   10 +
->  drivers/edac/edac_core.h                           |    1 +
->  drivers/edac/edac_mc_sysfs.c                       |    5 +-
->  drivers/edac/xgene_edac.c                          | 1169 ++++++++++++++++----
->  5 files changed, 1012 insertions(+), 196 deletions(-)
->
+> Looking at the sources, all the ARM IP is 0x19000000 and the rest is
+> 0x18000000.  The only part that is a little harry is the clocks, which
+> have BCM and ARM (which causes the addresses to be both 0x19000000 and
+> 0x18000000).  But, we can handle that when we upstream that part (which
+> should be very soon).
+
+If you can tell that 0x19000000 is a separate bus at some level, then
+it makes sense to separate it. You can't always tell without detailed
+internal bus diagrams.
+
+Rob
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
