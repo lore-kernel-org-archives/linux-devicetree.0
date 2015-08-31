@@ -1,411 +1,135 @@
-From: Ding Tianhong <dingtianhong-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH 2/2] arm64: dts: add dts files for Hisilicon Hip05-D02
- Development Board
-Date: Mon, 31 Aug 2015 21:44:38 +0800
-Message-ID: <55E45A46.7040805@huawei.com>
-References: <1440838361-1468-1-git-send-email-dingtianhong@huawei.com> <1440838361-1468-3-git-send-email-dingtianhong@huawei.com> <20150831131244.GB6194@leoy-linaro>
+From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [RFC PATCH 0/5] DT binding documents using text markup
+Date: Mon, 31 Aug 2015 09:05:00 -0500
+Message-ID: <CAL_JsqJ7C4JtjGjFJjLQpLEdzbs2rw0K0TzVNB2VjOz4Sr9Nbw@mail.gmail.com>
+References: <1440739433-6799-1-git-send-email-mporter@konsulko.com>
+ <CAL_Jsq+qCJfLYxVfyQ4gAxPWLZ2=WNa0H21+cRcBi7dGVG0PMA@mail.gmail.com> <20150828171323.GA24203@beef>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20150831131244.GB6194@leoy-linaro>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Leo Yan <leo.yan-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, marc.zyngier-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, rob.herring-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, haojian.zhuang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, linuxarm-hv44wF8Li93QT0dZR+AlfA@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-spec-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20150828171323.GA24203@beef>
+Sender: devicetree-spec-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Matt Porter <mporter-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
+Cc: Devicetree List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Devicetree Spec List <devicetree-spec-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Behan Webster <behanw-k/hB3zQhLwledRVtV/plodBPR1lH4CV8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 2015/8/31 21:12, Leo Yan wrote:
-> On Sat, Aug 29, 2015 at 04:52:41PM +0800, Ding Tianhong wrote:
->> Add initial dtsi file to support Hisilicon Hip05-D02 Board with
->> support of CPUs in four clusters and each cluster has quard Cortex-A=
-57.
+On Fri, Aug 28, 2015 at 12:13 PM, Matt Porter <mporter-OWPKS81ov/FWk0Htik3J/w@public.gmane.org> wrote:
+> On Fri, Aug 28, 2015 at 09:26:17AM -0500, Rob Herring wrote:
+>> On Fri, Aug 28, 2015 at 12:23 AM, Matt Porter <mporter-OWPKS81ov/FWk0Htik3J/w@public.gmane.org> wrote:
+>> > During the Device Tree microconference at Linux Plumbers 2015, we had
+>> > a short discussion about how to improve DT Binding Documentation. A
+
+[...]
+
+>> > One caveat with YAML is it does not tolerate tabs. Yes, I said it.
+>> > No tabs! This can be managed with proper editor modes and also with
+>> > helper scripts to strip tabs to aid in people passing planned
+>> > checkpatch.pl checks that would run YAML DT Binding specific tag
+>> > validators for new bindings.
 >>
->> Also add dts file to support Hip05-D02 development board.
+>> What do parsers do with tabs? Throw an error?
+>
+> Yes, they throw an error. Keep in mind that most of what I used to start
+> are general purpose conversion tools on top of a particular scripting
+> languages's high level binding to libyaml. The error output leaves a
+> bit to be desired for our use case. In any case, when I was developing
+> the skeleton.yaml I used the yaml script from
+> https://github.com/ryo/yamltools to catch all these syntax errors I
+> was inserting..like tabs. the PyYaml binding being used in my PoC
+> dtgendoc does the same thing but I don't gracefully handle those
+> errors like we could.
+>
+>> Beyond tabs, how do we check files can be parsed both generically and
+>> for any binding specific requirements. We now need a schema for
+>> checking the schema. We need some equivalent to compile testing.
+>
+> Right. So, I think what you are touching on is something I should
+> have expanded on in the TODO list. Basically, we need a scripted
+> tool that we run from checkpatch.pl that 1) reads the .yaml and
+> validates the YAML itself (that comes for free in the high level
+> parsers) reporting errors in a sensical manner 2) validates our
+> DT binding specific tags
+
+We all know that no one runs checkpatch.pl. ;) I really want the basic
+checking of the doc files to run from make (and run by 0-day). The
+tool dependency could be an issue though. However, DocBook builds from
+make and I don't think many people check that regularly. Then there is
+using the binding docs to check dts files. That should probably be
+part of the dtb building.
+
+> Now, I would caution about trying to do too much on Day 1 or we
+> could end up back at the "never doing anything" stage.
+
+Certainly, but I would like to have a plan for what Day 2 and 3 look like.
+
+> It would
+> be an improvement to simply check that the basic tags exist as
+> shown in the [R] or [O] fields in the documentation. One thing
+> I should point out is that I carefully avoided marking some tags
+> as [R] where existing bindings don't have them...even if logically,
+> a description should be required on every binding. The idea here
+> is to avoid updating content at the same time that we are updating
+> the format. Rather, I think it would be better to get the base
+> format updated, then come back with a janitorial team and add
+> descriptions (since now we can generate a worklist of those
+> bindings missing a top-level description) and systematically
+> fix those and review with the appropriate maintainers.
+
+Yes. Any checking would be a great improvement.
+
+[...]
+
+>> > When we decide on a text markup format that is acceptable, then the
+>> > next step is to convert all the bindings. That process would start
+>> > with the complete set of generic bindings as they will be referenced
+>> > by the actual device bindings.
 >>
->> Signed-off-by: Ding Tianhong <dingtianhong-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
->> Signed-off-by: Kefeng Wang <wangkefeng.wang-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
->> ---
->>  arch/arm64/boot/dts/hisilicon/Makefile      |   2 +-
->>  arch/arm64/boot/dts/hisilicon/hip05-d02.dts |  36 ++++
->>  arch/arm64/boot/dts/hisilicon/hip05.dtsi    | 271 +++++++++++++++++=
-+++++++++++
->>  3 files changed, 308 insertions(+), 1 deletion(-)
->>  create mode 100644 arch/arm64/boot/dts/hisilicon/hip05-d02.dts
->>  create mode 100644 arch/arm64/boot/dts/hisilicon/hip05.dtsi
->>
->> diff --git a/arch/arm64/boot/dts/hisilicon/Makefile b/arch/arm64/boo=
-t/dts/hisilicon/Makefile
->> index fa81a6e..cd158b8 100644
->> --- a/arch/arm64/boot/dts/hisilicon/Makefile
->> +++ b/arch/arm64/boot/dts/hisilicon/Makefile
->> @@ -1,4 +1,4 @@
->> -dtb-$(CONFIG_ARCH_HISI) +=3D hi6220-hikey.dtb
->> +dtb-$(CONFIG_ARCH_HISI) +=3D hi6220-hikey.dtb hip05-d02.dtb
->> =20
->>  always		:=3D $(dtb-y)
->>  subdir-y	:=3D $(dts-dirs)
->> diff --git a/arch/arm64/boot/dts/hisilicon/hip05-d02.dts b/arch/arm6=
-4/boot/dts/hisilicon/hip05-d02.dts
->> new file mode 100644
->> index 0000000..ae34e25
->> --- /dev/null
->> +++ b/arch/arm64/boot/dts/hisilicon/hip05-d02.dts
->> @@ -0,0 +1,36 @@
->> +/**
->> + * dts file for Hisilicon D02 Development Board
->> + *
->> + * Copyright (C) 2014,2015 Hisilicon Ltd.
->> + *
->> + * This program is free software; you can redistribute it and/or mo=
-dify
->> + * it under the terms of the GNU General Public License version 2 a=
-s
->> + * publishhed by the Free Software Foundation.
->> + *
->> + */
->> +
->> +/dts-v1/;
->> +
->> +#include "hip05.dtsi"
->> +
->> +/ {
->> +	model =3D "Hisilicon Hip05 D02 Development Board";
->> +	compatible =3D "hisilicon,hip05-d02";
->> +
->> +	memory@00000000 {
->> +		device_type =3D "memory";
->> +		reg =3D <0x0 0x00000000 0x0 0x80000000>;
->> +	};
->> +
->> +	aliases {
->> +		serial0 =3D &uart0;
->> +	};
->> +
->> +	chosen {
->> +		stdout-path =3D "serial0:115200n8";
->> +	};
->> +};
->> +
->> +&uart0 {
->> +	status =3D "ok";
->> +};
->> diff --git a/arch/arm64/boot/dts/hisilicon/hip05.dtsi b/arch/arm64/b=
-oot/dts/hisilicon/hip05.dtsi
->> new file mode 100644
->> index 0000000..da12d94
->> --- /dev/null
->> +++ b/arch/arm64/boot/dts/hisilicon/hip05.dtsi
->> @@ -0,0 +1,271 @@
->> +/**
->> + * dts file for Hisilicon D02 Development Board
->> + *
->> + * Copyright (C) 2014,2015 Hisilicon Ltd.
->> + *
->> + * This program is free software; you can redistribute it and/or mo=
-dify
->> + * it under the terms of the GNU General Public License version 2 a=
-s
->> + * publishhed by the Free Software Foundation.
->> + *
->> + */
->> +
->> +#include <dt-bindings/interrupt-controller/arm-gic.h>
->> +
->> +/ {
->> +	compatible =3D "hisilicon,hip05-d02";
->> +	interrupt-parent =3D <&gic>;
->> +	#address-cells =3D <2>;
->> +	#size-cells =3D <2>;
->> +
->> +	psci {
->> +		compatible =3D "arm,psci-0.2";
->> +		method =3D "smc";
->> +	};
->> +
->> +	cpus {
->> +		#address-cells =3D <1>;
->> +		#size-cells =3D <0>;
->> +
->> +		cpu-map {
->> +			cluster0 {
->> +				core0 {
->> +					cpu =3D <&cpu0>;
->> +				};
->> +				core1 {
->> +					cpu =3D <&cpu1>;
->> +				};
->> +				core2 {
->> +					cpu =3D <&cpu2>;
->> +				};
->> +				core3 {
->> +					cpu =3D <&cpu3>;
->> +				};
->> +			};
->> +			cluster1 {
->> +				core0 {
->> +					cpu =3D <&cpu4>;
->> +				};
->> +				core1 {
->> +					cpu =3D <&cpu5>;
->> +				};
->> +				core2 {
->> +					cpu =3D <&cpu6>;
->> +				};
->> +				core3 {
->> +					cpu =3D <&cpu7>;
->> +				};
->> +			};
->> +			cluster2 {
->> +				core0 {
->> +					cpu =3D <&cpu8>;
->> +				};
->> +				core1 {
->> +					cpu =3D <&cpu9>;
->> +				};
->> +				core2 {
->> +					cpu =3D <&cpu10>;
->> +				};
->> +				core3 {
->> +					cpu =3D <&cpu11>;
->> +				};
->> +			};
->> +			cluster3 {
->> +				core0 {
->> +					cpu =3D <&cpu12>;
->> +				};
->> +				core1 {
->> +					cpu =3D <&cpu13>;
->> +				};
->> +				core2 {
->> +					cpu =3D <&cpu14>;
->> +				};
->> +				core3 {
->> +					cpu =3D <&cpu15>;
->> +				};
->> +			};
->> +		};
->> +
->> +		cpu0: cpu@20000 {
->> +			device_type =3D "cpu";
->> +			compatible =3D "arm,armv8";
->=20
-> Change to "arm,cortex-a57","arm,armv8"?
->=20
+>> You are going to do that for everyone, right? ;)
+>
+> Let's just say that I'm banking on others helping here once we have
+> a format agreed upon. If we can hold the binding doc schema definition
+> initially to just define tags for content that already exists in our
+> textual binding docs, the effort for conversion is tolerable. To give
+> an example, that phy-bindings.txt, it took 15 minutes to convert and
+> and pass through the yaml parser and dtgendoc. The reason is that it's
+> pure reformatting work. It doesn't take any special knowledge of the
+> hardware and it doesn't involve reviewing dts files to extra
+> additional information. Some of the annoyances can be streamlined
+> like tab stripping and handling the two space indentation to make
+> this process faster. One of my next things is to get a simple tool
+> going that reports problems with conversions, essentially what I
+> said was needed to integrate with checkpatch, so this process of
+> conversion is even faster. Trivial peripheral bindings like eeprom.txt
+> can be done in 5 minutes or so right now.
 
-Ok=EF=BC=8Cbut I think should be "hisilicon,hip05","arm,armv8".
+What if instead of using the docs as a starting point, we use dts
+files as a starting point? They give us something parse-able that we
+can do some automation with.
 
->> +			reg =3D <0x20000>;
->> +			enable-method =3D "psci";
->> +		};
->> +
->> +		cpu1: cpu@20001 {
->> +			device_type =3D "cpu";
->> +			compatible =3D "arm,armv8";
->> +			reg =3D <0x20001>;
->> +			enable-method =3D "psci";
->> +		};
->> +
->> +		cpu2: cpu@20002 {
->> +			device_type =3D "cpu";
->> +			compatible =3D "arm,armv8";
->> +			reg =3D <0x20002>;
->> +			enable-method =3D "psci";
->> +		};
->> +
->> +		cpu3: cpu@20003 {
->> +			device_type =3D "cpu";
->> +			compatible =3D "arm,armv8";
->> +			reg =3D <0x20003>;
->> +			enable-method =3D "psci";
->> +		};
->> +
->> +		cpu4: cpu@20100 {
->> +			device_type =3D "cpu";
->> +			compatible =3D "arm,armv8";
->> +			reg =3D <0x20100>;
->> +			enable-method =3D "psci";
->> +		};
->> +
->> +		cpu5: cpu@20101 {
->> +			device_type =3D "cpu";
->> +			compatible =3D "arm,armv8";
->> +			reg =3D <0x20101>;
->> +			enable-method =3D "psci";
->> +		};
->> +
->> +		cpu6: cpu@20102 {
->> +			device_type =3D "cpu";
->> +			compatible =3D "arm,armv8";
->> +			reg =3D <0x20102>;
->> +			enable-method =3D "psci";
->> +		};
->> +
->> +		cpu7: cpu@20103 {
->> +			device_type =3D "cpu";
->> +			compatible =3D "arm,armv8";
->> +			reg =3D <0x20103>;
->> +			enable-method =3D "psci";
->> +		};
->> +
->> +		cpu8: cpu@20200 {
->> +			device_type =3D "cpu";
->> +			compatible =3D "arm,armv8";
->> +			reg =3D <0x20200>;
->> +			enable-method =3D "psci";
->> +		};
->> +
->> +		cpu9: cpu@20201 {
->> +			device_type =3D "cpu";
->> +			compatible =3D "arm,armv8";
->> +			reg =3D <0x20201>;
->> +			enable-method =3D "psci";
->> +		};
->> +
->> +		cpu10: cpu@20202 {
->> +			device_type =3D "cpu";
->> +			compatible =3D "arm,armv8";
->> +			reg =3D <0x20202>;
->> +			enable-method =3D "psci";
->> +		};
->> +
->> +		cpu11: cpu@20203 {
->> +			device_type =3D "cpu";
->> +			compatible =3D "arm,armv8";
->> +			reg =3D <0x20203>;
->> +			enable-method =3D "psci";
->> +		};
->> +
->> +		cpu12: cpu@20300 {
->> +			device_type =3D "cpu";
->> +			compatible =3D "arm,armv8";
->> +			reg =3D <0x20300>;
->> +			enable-method =3D "psci";
->> +		};
->> +
->> +		cpu13: cpu@20301 {
->> +			device_type =3D "cpu";
->> +			compatible =3D "arm,armv8";
->> +			reg =3D <0x20301>;
->> +			enable-method =3D "psci";
->> +		};
->> +
->> +		cpu14: cpu@20302 {
->> +			device_type =3D "cpu";
->> +			compatible =3D "arm,armv8";
->> +			reg =3D <0x20302>;
->> +			enable-method =3D "psci";
->> +		};
->> +
->> +		cpu15: cpu@20303 {
->> +			device_type =3D "cpu";
->> +			compatible =3D "arm,armv8";
->> +			reg =3D <0x20303>;
->> +			enable-method =3D "psci";
->> +		};
->> +	};
->> +
->> +	gic: interrupt-controller@8d000000 {
->> +		compatible =3D "arm,gic-v3";
->> +                #interrupt-cells =3D <3>;
->> +                #address-cells =3D <2>;
->> +                #size-cells =3D <2>;
->> +                ranges;
->> +                interrupt-controller;
->> +                #redistributor-regions =3D <1>;
->> +                redistributor-stride =3D <0x0 0x30000>;
->> +		reg =3D <0x0 0x8d000000 0 0x10000>,	/* GICD */
->> +		      <0x0 0x8d100000 0 0x300000>,	/* GICR */
->> +		      <0x0 0xfe000000 0 0x10000>,	/* GICC */
->> +		      <0x0 0xfe010000 0 0x10000>,       /* GICH */
->> +		      <0x0 0xfe020000 0 0x10000>;       /* GICV */
->> +		interrupts =3D <GIC_PPI 9 (GIC_CPU_MASK_SIMPLE(8) | IRQ_TYPE_LEVE=
-L_HIGH)>;
->> +
->> +		its_totems: interrupt-controller@8c000000 {
->> +			compatible =3D "arm,gic-v3-its";
->> +			msi-controller;
->> +			reg =3D <0x0 0x8c000000 0x0 0x1000000>;
->> +		};
->> +	};
->> +
->> +	timer {
->> +		compatible =3D "arm,armv8-timer";
->> +		interrupts =3D <GIC_PPI 13 (GIC_CPU_MASK_SIMPLE(8) | IRQ_TYPE_LEV=
-EL_LOW)>,
->> +			     <GIC_PPI 14 (GIC_CPU_MASK_SIMPLE(8) | IRQ_TYPE_LEVEL_LOW)>,
->> +			     <GIC_PPI 11 (GIC_CPU_MASK_SIMPLE(8) | IRQ_TYPE_LEVEL_LOW)>,
->> +			     <GIC_PPI 10 (GIC_CPU_MASK_SIMPLE(8) | IRQ_TYPE_LEVEL_LOW)>;
->=20
-> Here have a question:
-> In devcie tree binding file: Documentation/devicetree/bindings/arm/gi=
-c.txt,
-> it only considers for maximum 8 cpus. So will we need change the
-> binding file and also use GIC_CPU_MASK_SIMPLE(16) for 16 cores?
->=20
+Additionaly, perhaps we can do a mass conversion of all the doc files
+from txt to yaml where all the current text is converted to comments
+and we fill in boilerplate and whatever we can convert with some
+automation? The downside here would be it will be hard to tell which
+conversions are complete.
 
-Looks like should updtate gic.txt and use the GIC_CPU_MASK_SIMPLE(16) f=
-or 16 cores.
+Putting both together, we could then fairly easily for example extract
+compatible strings from dts files, lookup which doc file they are in
+and fill in the compatible string info.
 
-Ding
+> If we decide we must have tags like "type:" in the initial binding
+> doc schema definition *and* we must add that content in each
+> conversion, then this becomes more time consuming to validate that
+> information against working dts files. IMHO, we'd be better off
+> to get the base format straight, addressing missing pieces like
+> all the compatible permutations, and convert them all with
+> just that content. After that, we come back and add new content
+> features like type: tagging. I'm trying to find a reasonable
+> place to do this incrementally since the volume of bindings to
+> convert is enormous.
 
->> +	};
->> +
->> +	pmu {
->> +		compatible =3D "arm,armv8-pmuv3";
->> +		interrupts =3D <GIC_PPI 7 IRQ_TYPE_LEVEL_HIGH>;
->> +	};
->> +
->> +	soc {
->> +		compatible =3D "simple-bus";
->> +		#address-cells =3D <2>;
->> +		#size-cells =3D <2>;
->> +		ranges;
->> +
->> +		refclk200mhz: refclk200mhz {
->> +			compatible =3D "fixed-clock";
->> +			#clock-cells =3D <0>;
->> +			clock-frequency =3D <200000000>;
->> +		};
->> +
->> +		uart0: uart@80300000 {
->> +			compatible =3D "snps,dw-apb-uart";
->> +			reg =3D <0x0 0x80300000 0x0 0x10000>;
->> +			interrupts =3D <GIC_SPI 317 IRQ_TYPE_LEVEL_HIGH>;
->> +			clocks =3D <&refclk200mhz>;
->> +			clock-names =3D "apb_pclk";
->> +			reg-shift =3D <2>;
->> +			reg-io-width =3D <4>;
->> +			status =3D "disabled";
->> +		};
->> +
->> +		uart1: uart@80310000 {
->> +			compatible =3D "snps,dw-apb-uart";
->> +			reg =3D <0x0 0x80310000 0x0 0x10000>;
->> +			interrupts =3D <GIC_SPI 318 IRQ_TYPE_LEVEL_HIGH>;
->> +			clocks =3D <&refclk200mhz>;
->> +			clock-names =3D "apb_pclk";
->> +			reg-shift =3D <2>;
->> +			reg-io-width =3D <4>;
->> +			status =3D "disabled";
->> +		};
->> +	};
->> +};
->> --=20
->> 1.9.0
->>
->>
->>
->> _______________________________________________
->> linux-arm-kernel mailing list
->> linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
->> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
->=20
-> .
->=20
+I wouldn't say we have to add it, but we need to maintain type info.
 
+Are you proposing we can actually validate dts files on day 1? That I
+would expect to come later.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Rob
