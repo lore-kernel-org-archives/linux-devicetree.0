@@ -1,120 +1,109 @@
-Return-Path: <linux-arm-kernel-bounces+robherring2=gmail.com@lists.infradead.org>
-Date: Fri, 7 Aug 2015 18:51:27 +0100
-From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH 2/2] net, thunder, bgx: Add support for ACPI binding.
-Message-ID: <20150807175127.GB12013@leverpostej>
-References: <1438907590-29649-1-git-send-email-ddaney.cavm@gmail.com>
- <1438907590-29649-3-git-send-email-ddaney.cavm@gmail.com>
- <20150807140106.GE7646@leverpostej>
- <55C4ECC6.7050908@caviumnetworks.com>
-MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <55C4ECC6.7050908@caviumnetworks.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+robherring2=gmail.com@lists.infradead.org
-To: David Daney <ddaney@caviumnetworks.com>
-Cc: "rob.herring@linaro.org" <rob.herring@linaro.org>, "linux-mips@linux-mips.org" <linux-mips@linux-mips.org>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, David Daney <david.daney@cavium.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Tomasz Nowicki <tomasz.nowicki@linaro.org>, Robert Richter <rrichter@cavium.com>, "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>, "devicetree@vger.kernel.org" <deviectree@vger.kernel.org>, David Daney <ddaney.cavm@gmail.com>, "grant.likely@linaro.org" <grant.likely@linaro.org>, Sunil Goutham <sgoutham@cavium.com>, "David S. Miller" <davem@davemloft.net>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
-List-ID: <devicetree@vger.kernel.org>
+From: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>
+Subject: Re: [PATCH 2/2] mtd: spi-nor: Add driver for Cadence Quad SPI Flash Controller.
+Date: Tue, 1 Sep 2015 00:36:22 +0200
+Message-ID: <201509010036.22605.marex@denx.de>
+References: <1440148851-14621-1-git-send-email-marex@denx.de> <1440148851-14621-2-git-send-email-marex@denx.de> <55E48F3D.3030800@opensource.altera.com>
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <55E48F3D.3030800-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Graham Moore <grmoore-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
+Cc: linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Alan Tull <atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Dinh Nguyen <dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>, Vikas MANOCHA <vikas.manocha-qxv4g6HH51o@public.gmane.org>, Yves Vandervennet <yvanderv-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+List-Id: devicetree@vger.kernel.org
 
-[Correcting the devicetree list address, which I typo'd in my original
-reply]
+On Monday, August 31, 2015 at 07:30:37 PM, Graham Moore wrote:
+> Hi Marek,
 
-> >> +static const char * const addr_propnames[] = {
-> >> +	"mac-address",
-> >> +	"local-mac-address",
-> >> +	"address",
-> >> +};
-> >
-> > If these are going to be generally necessary, then we should get them
-> > adopted as standardised _DSD properties (ideally just one of them).
-> 
-> As far as I can tell, and please correct me if I am wrong, ACPI-6.0 
-> doesn't contemplate MAC addresses.
-> 
-> Today we are using "mac-address", which is an Integer containing the MAC 
-> address in its lowest order 48 bits in Little-Endian byte order.
-> 
-> The hardware and ACPI tables are here today, and we would like to 
-> support it.  If some future ACPI specification specifies a standard way 
-> to do this, we will probably adapt the code to do this in a standard manner.
-> 
-> 
-> >
-> > [...]
-> >
-> >> +static acpi_status bgx_acpi_register_phy(acpi_handle handle,
-> >> +					 u32 lvl, void *context, void **rv)
-> >> +{
-> >> +	struct acpi_reference_args args;
-> >> +	const union acpi_object *prop;
-> >> +	struct bgx *bgx = context;
-> >> +	struct acpi_device *adev;
-> >> +	struct device *phy_dev;
-> >> +	u32 phy_id;
-> >> +
-> >> +	if (acpi_bus_get_device(handle, &adev))
-> >> +		goto out;
-> >> +
-> >> +	SET_NETDEV_DEV(&bgx->lmac[bgx->lmac_count].netdev, &bgx->pdev->dev);
-> >> +
-> >> +	acpi_get_mac_address(adev, bgx->lmac[bgx->lmac_count].mac);
-> >> +
-> >> +	bgx->lmac[bgx->lmac_count].lmacid = bgx->lmac_count;
-> >> +
-> >> +	if (acpi_dev_get_property_reference(adev, "phy-handle", 0, &args))
-> >> +		goto out;
-> >> +
-> >> +	if (acpi_dev_get_property(args.adev, "phy-channel", ACPI_TYPE_INTEGER, &prop))
-> >> +		goto out;
-> >
-> > Likewise for any inter-device properties, so that we can actually handle
-> > them in a generic fashion, and avoid / learn from the mistakes we've
-> > already handled with DT.
-> 
-> This is the fallacy of the ACPI is superior to DT argument.  The 
-> specification of PHY topology and MAC addresses is well standardized in 
-> DT, there is no question about what the proper way to specify it is. 
-> Under ACPI, it is the Wild West, there is no specification, so each 
-> system design is forced to invent something, and everybody comes up with 
-> an incompatible implementation.
+Hi Graham,
 
-Indeed.
+> Having some compile issues...see below
+>=20
+> On 08/21/2015 04:20 AM, Marek Vasut wrote:
+> > From: Graham Moore <grmoore-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
+> >=20
+> > Add support for the Cadence QSPI controller. This controller is
+> > present in the Altera SoCFPGA SoCs and this driver has been tested
+> > on the Cyclone V SoC.
+> >=20
+> > Signed-off-by: Graham Moore <grmoore-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
+> > Signed-off-by: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>
+>=20
+> [...]
+>=20
+> > +static int cqspi_set_protocol(struct spi_nor *nor, enum spi_protoc=
+ol
+> > proto) +{
+> > +	struct cqspi_flash_pdata *f_pdata =3D nor->priv;
+> > +
+> > +	switch (proto) {
+> > +	case SPI_PROTO_1_1_1:
+> > +	case SPI_PROTO_1_1_2:
+> > +	case SPI_PROTO_1_1_4:
+> > +	case SPI_PROTO_1_2_2:
+> > +	case SPI_PROTO_1_4_4:
+> > +		f_pdata->inst_width =3D CQSPI_INST_TYPE_SINGLE;
+> > +		break;
+> > +	case SPI_PROTO_2_2_2:
+> > +		f_pdata->inst_width =3D CQSPI_INST_TYPE_DUAL;
+> > +		break;
+> > +	case SPI_PROTO_4_4_4:
+> > +		f_pdata->inst_width =3D CQSPI_INST_TYPE_QUAD;
+> > +		break;
+> > +	default:
+> > +		return -EINVAL;
+> > +	}
+> > +
+> > +	switch (proto) {
+> > +	case SPI_PROTO_1_1_1:
+> > +	case SPI_PROTO_1_1_2:
+> > +	case SPI_PROTO_1_1_4:
+> > +		f_pdata->addr_width =3D CQSPI_INST_TYPE_SINGLE;
+> > +		break;
+> > +	case SPI_PROTO_1_2_2:
+> > +	case SPI_PROTO_2_2_2:
+> > +		f_pdata->addr_width =3D CQSPI_INST_TYPE_DUAL;
+> > +		break;
+> > +	case SPI_PROTO_1_4_4:
+> > +	case SPI_PROTO_4_4_4:
+> > +		f_pdata->addr_width =3D CQSPI_INST_TYPE_QUAD;
+> > +		break;
+> > +	default:
+> > +		return -EINVAL;
+> > +	}
+> > +
+> > +	return 0;
+> > +}
+> > +
+>=20
+> I think you have some other patches in your tree, the above doesn't
+> compile on l2-mtd/master:
+>=20
+> ~/l2-mtd/drivers/mtd/spi-nor/cadence-quadspi.c:701:57: warning: =E2=80=
+=98enum
+> spi_protocol=E2=80=99 declared inside parameter list [enabled by defa=
+ult]
+> ~/l2-mtd/drivers/mtd/spi-nor/cadence-quadspi.c:701:57: warning: its
+> scope is only this definition or declaration, which is probably not w=
+hat
+> you want [enabled by default]
+> ~/l2-mtd/drivers/mtd/spi-nor/cadence-quadspi.c:701:70: error: paramet=
+er
+> 2 (=E2=80=98proto=E2=80=99) has incomplete type
 
-If ACPI is going to handle it, it should handle it properly. I really
-don't see the point in bodging properties together in a less standard
-manner than DT, especially for inter-device relationships.
+It's in the V7 changelog, you need:
 
-Doing so is painful for _everyone_, and it's extremely unlikely that
-other ACPI-aware OSs will actually support these custom descriptions,
-making this Linux-specific, and breaking the rationale for using ACPI in
-the first place -- a standard that says "just do non-standard stuff" is
-not a usable standard.
+mtd: spi-nor: notify (Q)SPI controller about protocol change
 
-For intra-device properties, we should standardise what we can, but
-vendor-specific stuff is ok -- this can be self-contained within a
-driver.
+Also, since V8, you will need:
 
-For inter-device relationships ACPI _must_ gain a better model of
-componentised devices. It's simply unworkable otherwise, and as you
-point out it's fallacious to say that because ACPI is being used that
-something is magically industry standard, portable, etc.
+mtd: spi-nor: Decouple SPI NOR's device_node from controller device
 
-This is not your problem in particular; the entire handling of _DSD so
-far is a joke IMO.
-
-Thanks,
-Mark.
-
-_______________________________________________
-linux-arm-kernel mailing list
-linux-arm-kernel@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+They're both in the linux-mtd list, so feel free to pick them from ther=
+e.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
