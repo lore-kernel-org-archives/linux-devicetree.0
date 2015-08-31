@@ -1,74 +1,103 @@
 From: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v5 2/2] dt: Document Holt HI-8435 bindings
-Date: Mon, 31 Aug 2015 18:02:29 +0100
-Message-ID: <55E488A5.7000604@kernel.org>
-References: <1440772029-3022-1-git-send-email-vladimir.barinov@cogentembedded.com>
- <1440772100-3115-1-git-send-email-vladimir.barinov@cogentembedded.com>
+Subject: Re: [PATCH] Altera Modular ADC driver device tree binding
+Date: Mon, 31 Aug 2015 18:28:17 +0100
+Message-ID: <55E48EB1.4030700@kernel.org>
+References: <1440056795-6190-1-git-send-email-cnphoon@altera.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=windows-1252
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1440772100-3115-1-git-send-email-vladimir.barinov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+In-Reply-To: <1440056795-6190-1-git-send-email-cnphoon-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>
 Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Vladimir Barinov <vladimir.barinov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
-Cc: Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Peter Meerwald <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, cory.tusar-J6Z/VSE8EyIAspv4Qr0y0gC/G2K4zDHf@public.gmane.org
+To: Chee Nouk Phoo <cnphoon-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, Michael.Hennerich-OyLXuOCK7orQT0dZR+AlfA@public.gmane.org, cnphoon.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 28/08/15 15:28, Vladimir Barinov wrote:
-> These bindings can be used to register Holt HI-8435 threshold detector
+On 20/08/15 08:46, Chee Nouk Phoo wrote:
+> From: Chee Nouk Phoon <cnphoon-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>
 > 
-> Signed-off-by: Vladimir Barinov <vladimir.barinov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
-This is now trivial so I'm taking it.
-
-Applied to the togreg branch of iio.git
-
-Thanks,
-
-Jonathan
+> Altera Modular ADC is soft IP that wraps the hardened ADC block in a Max1
+> device. It can be configured to dual ADC mode that supports two channel
+> synchronous sampling or independent single ADCs. ADC sampled values will be
+> written into memory slots in sequence determined by a user configurable
+> sequencer block.
+> 
+> This patch adds device tree binding for Altera Modular ADC driver
+> 
+> Signed-off-by: Chee Nouk Phoon <cnphoon-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>
 > ---
-> Changes in version 2:
-> - renamed file name hi-843x.txt to hi8435.txt
-> - removed hi-8436,hi-8436,hi-8437
-> - removed holt,debounce-soft field
-> - renamed holt,debounc-soft-delay to holt,debounce-interval
-> - renamed mr-gpio to reset-gpios
-> Changes in version 3:
-> - none
-> Changes in version 4:
-> - removed debounce_interval property
-> - removed reset-gpios to use GPIO descriptor API
-> Changes in version 5:
-> - none
+>  .../bindings/iio/adc/altr,modular-adc.txt          |   63 ++++++++++++++++++++
+>  1 files changed, 63 insertions(+), 0 deletions(-)
+>  create mode 100755 Documentation/devicetree/bindings/iio/adc/altr,modular-adc.txt
 > 
->  .../devicetree/bindings/iio/adc/hi8435.txt          | 21 +++++++++++++++++++++
->  1 file changed, 21 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/iio/adc/hi8435.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/iio/adc/hi8435.txt b/Documentation/devicetree/bindings/iio/adc/hi8435.txt
-> new file mode 100644
-> index 0000000..3b0348c
+> diff --git a/Documentation/devicetree/bindings/iio/adc/altr,modular-adc.txt b/Documentation/devicetree/bindings/iio/adc/altr,modular-adc.txt
+> new file mode 100755
+> index 0000000..4106cb4
 > --- /dev/null
-> +++ b/Documentation/devicetree/bindings/iio/adc/hi8435.txt
-> @@ -0,0 +1,21 @@
-> +Holt Integrated Circuits HI-8435 threshold detector bindings
+> +++ b/Documentation/devicetree/bindings/iio/adc/altr,modular-adc.txt
+> @@ -0,0 +1,63 @@
+> +Altera Modular (Dual) ADC
+> +
+> +This binding document describes both Altera Modular ADC and Altera Modular Dual
+> +ADC. Both options can be configured during generation time in Qsys. This driver
+> +only support standard sequencer with Avalon-MM sample storage with up to 64
+> +memory slots.
 > +
 > +Required properties:
-> + - compatible: should be "holt,hi8435"
-> + - reg: spi chip select number for the device
+> +- compatible: must be one of the following strings
+> +  "altr,modular-adc": single ADC configuration
+> +  "altr,modular-dual-adc": dual ADC configuration
 > +
-> +Recommended properties:
-> + - spi-max-frequency: definition as per
-> +		Documentation/devicetree/bindings/spi/spi-bus.txt
+> +- reg: Address and length of the register set for the device. It contains the
+> +  information of registers in the same order as described by reg-names
 > +
-> +Optional properties:
-> + - gpios: GPIO used for controlling the reset pin
+> +- reg-names: Should contain the reg names
+> +  "sequencer_csr": register region for adc sequencer block
+> +  "sample_store_csr": register region for sample store block
 > +
-> +Example:
-> +sensor@0 {
-> +	compatible = "holt,hi8435";
-> +	reg = <0>;
-> +	gpios = <&gpio6 1 0>;
+> +- interrupts: interrupt line for ADC
 > +
-> +	spi-max-frequency = <1000000>;
+> +- altr,adc-mode : ADC configuration
+> +  1: single ADC mode
+> +  2: dual ADC mode
+> +
+> +- altr,adc-slot-count : specify number of conversion slot in use
+> +
+> +- altr,adc<ADC index>-slot-sequence-<slot index>: specify ADC channel 
+> +  conversion sequence
+> +  <ADC index>: instantiated ADC number
+> +  <slot index>: slot index for ADC memory slot
+> +
+> +- altr,adc-number : specify ADC number when single ADC mode is selected
+> +  1: 1st ADC
+> +  2: 2nd ACD
+> +
+> +Example: single ADC
+> +modular_adc_0: adc@0x20000200 {
+> +  compatible = "altr,modular-adc";
+> +  reg = <0x20000000 0x00000008>,
+> +    <0x20000200 0x00000200>;
+> +  reg-names = "sequencer_csr", "sample_store_csr";
+> +  interrupt-parent = <&cpu>;
+> +  interrupts = <8>;
+> +  altr,adc-mode = <1>;
+> +  altr,adc-slot-count = <2>;
+> +  altr,adc1-slot-sequence-1 = <1>;
+> +  altr,adc-number = <1>;
 > +};
+> +
+> +Example: dual ADC
+> +modular_adc_1: adc@0x18002200 {
+> +  compatible = "altr,modular-dual-adc";
+> +  reg = <0x18002000 0x00000008>,
+> +    <0x18002200 0x00000200>;
+> +  reg-names = "sequencer_csr", "sample_store_csr";
+> +  interrupt-parent = <&cpu>;
+> +  interrupts = <8>;
+> +  altr,adc-mode = <2>;
+> +  altr,adc-slot-count = <1>;
+> +  altr,adc1-slot-sequence-1 = <6>;
+> +  altr,adc2-slot-sequence-1 = <6>;
+> +};
+> \ No newline at end of file
 > 
