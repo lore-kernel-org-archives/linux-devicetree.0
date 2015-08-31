@@ -1,148 +1,143 @@
 From: punnaiah choudary kalluri <punnaia-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH 1/2] usb: chipidea: add xilinx zynq platform data
-Date: Mon, 31 Aug 2015 09:01:51 +0530
-Message-ID: <CAGnW=Ba9cycEJtx2F1pRs1ocYLT7BuLpVCTpWUrD1hB10gSz+w@mail.gmail.com>
-References: <1440602865-30468-1-git-send-email-nathan.sullivan@ni.com>
-	<CALHRZuqFtaRFNd9D=a+x2rZ2848ZOGYbTkSWCHxNPcW_NvocxA@mail.gmail.com>
-	<20150827043339.GA29157@shlinux2>
-	<CAGnW=BYMnOFTaMQJtLXZ9ckCEHs+gCOCQR0VQFfO4HP=SMHBDQ@mail.gmail.com>
-	<20150827143307.GA3775@nathan3500-linux-VM>
-	<20150828013011.GA15341@shlinux2>
-	<20150828144256.GA30916@nathan3500-linux-VM>
-	<20150831004032.GB25516@shlinux2>
+Subject: Re: [PATCH v4 1/2] Documentation: dt: Add Xilinx zynqmp dma device
+ tree binding documentation
+Date: Mon, 31 Aug 2015 09:07:00 +0530
+Message-ID: <CAGnW=Ba4PjsEXaxeSPNRgLCNBX02BwnxAfxrRQEwighpC9NOjg@mail.gmail.com>
+References: <1438831173-8761-1-git-send-email-punnaia@xilinx.com>
+	<CAL_Jsq+261JzSorbgEyQ4BFCHbsFsBaJQnpWJX-G=SX3yhqZJw@mail.gmail.com>
+	<CAGnW=BbS0V-avm+oV-V5J0995YUXwP9v0uZFwc4i9587u1SDTg@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20150831004032.GB25516@shlinux2>
+In-Reply-To: <CAGnW=BbS0V-avm+oV-V5J0995YUXwP9v0uZFwc4i9587u1SDTg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Cc: Nathan Sullivan <nathan.sullivan-acOepvfBmUk@public.gmane.org>, sundeep subbaraya <sundeep.lkml-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Subbaraya Sundeep Bhatta <sbhatta-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "pawel.moll-5wv7dgnIgG8@public.gmane.org" <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org" <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Punnaiah Choudary Kalluri <punnaiah.choudary.kalluri-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Dan Williams <dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Punnaiah Choudary <kpc528-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Aug 31, 2015 at 6:10 AM, Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org> wrote:
-> On Fri, Aug 28, 2015 at 09:42:56AM -0500, Nathan Sullivan wrote:
->> On Fri, Aug 28, 2015 at 09:30:12AM +0800, Peter Chen wrote:
->> > On Thu, Aug 27, 2015 at 09:33:07AM -0500, Nathan Sullivan wrote:
->> > > On Thu, Aug 27, 2015 at 01:11:30PM +0530, punnaiah choudary kalluri wrote:
->> > > > Hi,
->> > > >
->> > > > On Thu, Aug 27, 2015 at 10:03 AM, Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org> wrote:
->> > > > > On Thu, Aug 27, 2015 at 10:59:22AM +0530, sundeep subbaraya wrote:
->> > > > >> Hi,
->> > > > >>
->> > > > >>
->> > > > >> On Wed, Aug 26, 2015 at 8:57 PM, Nathan Sullivan <nathan.sullivan-acOepvfBmUk@public.gmane.org> wrote:
->> > > > >> > The Xilinx Zynq udc does not need the CI_HDRC_DISABLE_STREAMING flag,
->> > > > >> > unlike the default platform data.  Add platform data specific to the
->> > > > >> > Zynq udc.
->> > > > >> >
->> > > > >> > Based on a patch by the same name from the Xilinx vendor tree.
->> > > > >>
->> > > > >> I am that Xilinx guy who sent this patch :). It is in Xilinx tree as
->> > > > >> temporary fix and
->> > > > >> I did not debug further why UDC works only when streaming is enabled.
->> > > > >> Probably this is right time to post my question here.
->> > > > >> I was expecting like:
->> > > > >> Streaming disabled - both low bandwidth and high bandwidth systems
->> > > > >> should work fine
->> > > > >> Streaming enabled - only for high bandwidth systems
->> > > > >> but this is not the case, Zynq UDC works only when Streaming is enabled.
->> > > > >> Please correct me if I am wrong.
->> > > > >
->> > > > > You are right, stream mode disabled should work at anytime.
->> > > > > It is so strange why zynq UDC only works when stream mode is enabled.
->> > > >
->> > > > I am referring the section 8.5.2 in Synopsys usb 2.0 HS controllervDoc 2.20a,
->> > > >  this is what it says about SDIS (streaming mode disable option)
->> > > >
->> > > > Before activating this mode, the user must check if the TX latency
->> > > > buffers per endpoint are able to
->> > > > accommodate at least one entire maximum size packet. The RX buffer
->> > > > size must, at least, double the TX
->> > > > buffer size per endpoint. To optimize the stream disable performance,
->> > > > system bus burst must be set as high
->> > > > as possible.
->> > > > When the stream disable mode is used, the burst size (VUSB_HS_RX_BURST
->> > > > and VUSB_HS_TX_BURST)
->> > > > must be a integer sub-multiple of the latency buffer size
->> > > > (VUSB_HS_RX_DEPTH for RX buffer and
->> > > > VUSB_HS_TX_CHAN for the TX buffer). If this is not respected the
->> > > > controller will not work properly in stream
->> > > > disable mode.
->> > > > The stream disable mode should just be used in situations where the
->> > > > available system bandwidth is low or the
->> > > > system bus access latency is high, in order to avoid underruns and
->> > > > overruns in the latency buffers. This works
->> > > > for all types of endpoints, except for ISO endpoints.
->> > > > Such a system can't ensure the real time support that the ISO
->> > > > endpoints require, so the ISO endpoints are not
->> > > > supported when the SDIS bit is set.
->> > > >
->> > > > Definitely we need to root cause why disable streaming mode is not
->> > > > working for zynq but from controller spec
->> > > > point of view it is possible that controller not work properly in
->> > > > stream disable mode.
->> > > >
->> > > > Regards,
->> > > > Punnaiah
->> > > >
->> > >
->> > > Maybe the burst size isn't set correctly by default?  It does say the controller
->> > > won't work correctly with stream disable set and an invalid burst size.  Looks
->> > > like TX and RX burst both default to 16, per the Zynq manual.
->> > >
->> > > With the stream disable bit set, the behvior we see on our hardware is
->> > > that priming just stops, with an outstanding transfer in memory marked
->> > > active in the status field by the controller.  This happens at random, even
->> > > when doing single transfers at a time like with g_ether set to have a queue
->> > > size of 1.  With SDIS clear everything works great.  Given that the Zynq is not
->> > > bandwidth constrained, it seems like SDIS clear should be the default.
->> > >
->> >
->> > I suspect the possible reason is the tx buffer for each endpoint is
->> > small (<=512 bytes), so it can't copy one packet (assume max packet size
->> > for bulk) to tx buffer, then the prime can't be finished.
->> >
->> > Would you help to dump the registers HWTXBUF ($BASE + 0x10) and DCCPARAMS
->> > ($BASE + 124)?
->> >
->> > tx buffer size = ((2 ^ HWTXBUF.VUSB_HS_TX_ADD) / DCCPARAMS.DEN) *
->> > (DWORD_PER_BYTES)
->> >
->> > DWORD_PER_BYTES is 4
->> >
->> > --
->> >
->> > Best Regards,
->> > Peter Chen
+On Tue, Aug 25, 2015 at 12:16 PM, punnaiah choudary kalluri
+<punnaia-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org> wrote:
+> Hi Rob,
+>
+> On Tue, Aug 25, 2015 at 12:23 AM, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+>> On Wed, Aug 5, 2015 at 10:19 PM, Punnaiah Choudary Kalluri
+>> <punnaiah.choudary.kalluri-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org> wrote:
+>>> Device-tree binding documentation for Xilinx zynqmp dma engine used in
+>>> Zynq UltraScale+ MPSoC.
+>>>
+>>> Signed-off-by: Punnaiah Choudary Kalluri <punnaia-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+>>> ---
+>>> Changes in v4:
+>>> - None
+>>> Changes in v3:
+>>> - None
+>>> Changes in v2:
+>>> - None
+>>> ---
+>>>  .../devicetree/bindings/dma/xilinx/zynqmp_dma.txt  |   61 ++++++++++++++++++++
+>>>  1 files changed, 61 insertions(+), 0 deletions(-)
+>>>  create mode 100644 Documentation/devicetree/bindings/dma/xilinx/zynqmp_dma.txt
+>>>
+>>> diff --git a/Documentation/devicetree/bindings/dma/xilinx/zynqmp_dma.txt b/Documentation/devicetree/bindings/dma/xilinx/zynqmp_dma.txt
+>>> new file mode 100644
+>>> index 0000000..e4f92b9
+>>> --- /dev/null
+>>> +++ b/Documentation/devicetree/bindings/dma/xilinx/zynqmp_dma.txt
+>>> @@ -0,0 +1,61 @@
+>>> +Xilinx ZynqMP DMA engine, it does support memory to memory transfers,
+>>> +memory to device and device to memory transfers. It also has flow
+>>> +control and rate control support for slave/peripheral dma access.
+>>> +
+>>> +Required properties:
+>>> +- compatible: Should be "xlnx,zynqmp-dma-1.0"
+>>> +- #dma-cells: Should be <1>, a single cell holding a line request number
+>>> +- reg: Memory map for module access
+>>> +- interrupt-parent: Interrupt controller the interrupt is routed through
+>>> +- interrupts: Should contain DMA channel interrupt
+>>> +- xlnx,bus-width: AXI buswidth in bits. Should contain 128 or 64
+>>> +
+>>> +Optional properties:
+>>> +- xlnx,include-sg: Indicates the controller to operate in simple or scatter
+>>> +                  gather dma mode
+>>> +- xlnx,ratectrl: Scheduling interval in terms of clock cycles for
+>>> +                source AXI transaction
+>>> +- xlnx,overfetch: Tells whether the channel is allowed to over fetch the data
+>>> +- xlnx,src-issue: Number of AXI outstanding transactions on source side
+>>> +- xlnx,desc-axi-cohrnt: Tells whether the AXI transactions generated for the
+>>> +                       descriptor read are marked Non-coherent
+>>> +- xlnx,src-axi-cohrnt: Tells whether the AXI transactions generated for the
+>>> +                       source descriptor payload are marked Non-coherent
+>>> +- xlnx,dst-axi-cohrnt: Tells whether the AXI transactions generated for the
+>>> +                       dst descriptor payload are marked Non-coherent
 >>
->> HWTXBUF is 0x80060A10, DCCPARAMS is 0xE0003124.
+>> Do you really need 3? dma-coherent property doesn't work for you?
+>>
+>> Not that it should dictate the binding, but the kernel doesn't support
+>> a device needing both coherent and non-coherent DMA ops.
 >
-> Are you sure you read correct address? Your DCCPARAMS means
-> it is host capable, but not device capable.
+> I will get back to you shortly on this
 
-HWTXBUF is 0x8060A10
-DCCPARAMS is 0x0000018C
+Yes. dma-coherent property works. I will modify the bindings.
 
-VUSB_HS_TX_ADD - 0xA
-DEN - 0xC
-
->From the above formula tx buffer size is 341.33 bytes.
-
-
-Regards,
+Thanks,
 Punnaiah
-
 >
-> --
+>>
+>>> +- xlnx,desc-axi-qos: AXI QOS bits to be used for descriptor fetch
+>>> +- xlnx,src-axi-qos: AXI QOS bits to be used for data read
+>>> +- xlnx,dst-axi-qos: AXI QOS bits to be used for data write
+>>> +- xlnx,desc-axi-cache: AXI cache bits to be used for descriptor fetch.
+>>> +- xlnx,desc-axi-cache: AXI cache bits to be used for data read
+>>> +- xlnx,desc-axi-cache: AXI cache bits to be used for data write
+>>
+>> These signals are generally part of the coherent or not setting. This
+>> allows for potentially invalid combinations.
+>>
+>> Plus you have a copy/paste error.
 >
-> Best Regards,
-> Peter Chen
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-kernel" in
-> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
-> Please read the FAQ at  http://www.tux.org/lkml/
+> I will fix this.
+>
+> Thanks,
+> Punnaiah
+>>
+>>> +- xlnx,src-burst-len: AXI length for data read. Support only power of 2 values
+>>> +                     i.e 1,2,4,8 and 16
+>>> +- xlnx,dst-burst-len: AXI length for data write. Support only power of 2 values
+>>> +                     i.e 1,2,4,8 and 16
+>>> +
+>>> +Example:
+>>> +++++++++
+>>> +fpd_dma_chan1: dma@FD500000 {
+>>> +       compatible = "xlnx,zynqmp-dma-1.0";
+>>> +       reg = <0x0 0xFD500000 0x1000>;
+>>> +       #dma_cells = <1>;
+>>> +       interrupt-parent = <&gic>;
+>>> +       interrupts = <0 117 4>;
+>>> +       xlnx,bus-width = <128>;
+>>> +       xlnx,include-sg;
+>>> +       xlnx,overfetch;
+>>> +       xlnx,ratectrl = <0>;
+>>> +       xlnx,src-issue = <16>;
+>>> +       xlnx,desc-axi-cohrnt;
+>>> +       xlnx,src-axi-cohrnt;
+>>> +       xlnx,dst-axi-cohrnt;
+>>> +       xlnx,desc-axi-qos = <0>;
+>>> +       xlnx,desc-axi-cache = <0>;
+>>> +       xlnx,src-axi-qos = <0>;
+>>> +       xlnx,src-axi-cache = <2>;
+>>> +       xlnx,dst-axi-qos = <0>;
+>>> +       xlnx,dst-axi-cache = <2>;
+>>> +       xlnx,src-burst-len = <4>;
+>>> +       xlnx,dst-burst-len = <4>;
+>>> +};
+>>> --
+>>> 1.7.4
+>>>
+>>>
+>>> _______________________________________________
+>>> linux-arm-kernel mailing list
+>>> linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+>>> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
