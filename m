@@ -1,109 +1,130 @@
-From: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>
-Subject: Re: [PATCH 2/2] mtd: spi-nor: Add driver for Cadence Quad SPI Flash Controller.
-Date: Tue, 1 Sep 2015 00:36:22 +0200
-Message-ID: <201509010036.22605.marex@denx.de>
-References: <1440148851-14621-1-git-send-email-marex@denx.de> <1440148851-14621-2-git-send-email-marex@denx.de> <55E48F3D.3030800@opensource.altera.com>
+From: Jon Mason <jonmason-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH v3 2/5] ARM: NSP: add minimal Northstar Plus device tree
+Date: Mon, 31 Aug 2015 19:00:09 -0400
+Message-ID: <20150831230009.GA29316@broadcom.com>
+References: <1440805644-18241-1-git-send-email-jonmason@broadcom.com>
+ <55E0FAC4.2040108@broadcom.com>
+ <20150831022417.GA27066@broadcom.com>
+ <55E3FFB5.6090703@broadcom.com>
+ <20150831194404.GA28848@broadcom.com>
+ <CAL_JsqL1=WoaidMgLN4exvhF7bYr4FNGmtMgYO8e-c=NxP3JbQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: Text/Plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain; charset="us-ascii"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <55E48F3D.3030800-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <CAL_JsqL1=WoaidMgLN4exvhF7bYr4FNGmtMgYO8e-c=NxP3JbQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Graham Moore <grmoore-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
-Cc: linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Alan Tull <atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Dinh Nguyen <dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>, Vikas MANOCHA <vikas.manocha-qxv4g6HH51o@public.gmane.org>, Yves Vandervennet <yvanderv-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Kevin Hilman <khilman-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org" <bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Kapil Hali <kapilh-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Monday, August 31, 2015 at 07:30:37 PM, Graham Moore wrote:
-> Hi Marek,
-
-Hi Graham,
-
-> Having some compile issues...see below
->=20
-> On 08/21/2015 04:20 AM, Marek Vasut wrote:
-> > From: Graham Moore <grmoore-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
-> >=20
-> > Add support for the Cadence QSPI controller. This controller is
-> > present in the Altera SoCFPGA SoCs and this driver has been tested
-> > on the Cyclone V SoC.
-> >=20
-> > Signed-off-by: Graham Moore <grmoore-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
-> > Signed-off-by: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>
->=20
+On Mon, Aug 31, 2015 at 04:49:10PM -0500, Rob Herring wrote:
+> On Mon, Aug 31, 2015 at 2:44 PM, Jon Mason <jonmason-dY08KVG/lbpWk0Htik3J/w@public.gmane.org> wrote:
+> > On Mon, Aug 31, 2015 at 12:18:13AM -0700, Ray Jui wrote:
+> >>
+> >>
+> >> On 8/30/2015 7:24 PM, Jon Mason wrote:
+> >> > On Fri, Aug 28, 2015 at 05:20:20PM -0700, Ray Jui wrote:
+> >> >>
+> >> >>
+> >> >> On 8/28/2015 4:47 PM, Jon Mason wrote:
+> >> >>> Add a very minimalistic set of Northstar Plus Device Tree files which
+> >> >>> describes the SoC and the BCM958625 implementation.  The perpherials
+> >> >>> described are:
+> >> >>>
+> >> >>> ARM Cortex A9 CPU
+> >> >>> 2 8250 UARTs
+> >> >>> ARM GIC
+> >> >>> PL310 L2 Cache
+> >> >>> ARM A9 Global timer
+> 
 > [...]
->=20
-> > +static int cqspi_set_protocol(struct spi_nor *nor, enum spi_protoc=
-ol
-> > proto) +{
-> > +	struct cqspi_flash_pdata *f_pdata =3D nor->priv;
-> > +
-> > +	switch (proto) {
-> > +	case SPI_PROTO_1_1_1:
-> > +	case SPI_PROTO_1_1_2:
-> > +	case SPI_PROTO_1_1_4:
-> > +	case SPI_PROTO_1_2_2:
-> > +	case SPI_PROTO_1_4_4:
-> > +		f_pdata->inst_width =3D CQSPI_INST_TYPE_SINGLE;
-> > +		break;
-> > +	case SPI_PROTO_2_2_2:
-> > +		f_pdata->inst_width =3D CQSPI_INST_TYPE_DUAL;
-> > +		break;
-> > +	case SPI_PROTO_4_4_4:
-> > +		f_pdata->inst_width =3D CQSPI_INST_TYPE_QUAD;
-> > +		break;
-> > +	default:
-> > +		return -EINVAL;
-> > +	}
-> > +
-> > +	switch (proto) {
-> > +	case SPI_PROTO_1_1_1:
-> > +	case SPI_PROTO_1_1_2:
-> > +	case SPI_PROTO_1_1_4:
-> > +		f_pdata->addr_width =3D CQSPI_INST_TYPE_SINGLE;
-> > +		break;
-> > +	case SPI_PROTO_1_2_2:
-> > +	case SPI_PROTO_2_2_2:
-> > +		f_pdata->addr_width =3D CQSPI_INST_TYPE_DUAL;
-> > +		break;
-> > +	case SPI_PROTO_1_4_4:
-> > +	case SPI_PROTO_4_4_4:
-> > +		f_pdata->addr_width =3D CQSPI_INST_TYPE_QUAD;
-> > +		break;
-> > +	default:
-> > +		return -EINVAL;
-> > +	}
-> > +
-> > +	return 0;
-> > +}
-> > +
->=20
-> I think you have some other patches in your tree, the above doesn't
-> compile on l2-mtd/master:
->=20
-> ~/l2-mtd/drivers/mtd/spi-nor/cadence-quadspi.c:701:57: warning: =E2=80=
-=98enum
-> spi_protocol=E2=80=99 declared inside parameter list [enabled by defa=
-ult]
-> ~/l2-mtd/drivers/mtd/spi-nor/cadence-quadspi.c:701:57: warning: its
-> scope is only this definition or declaration, which is probably not w=
-hat
-> you want [enabled by default]
-> ~/l2-mtd/drivers/mtd/spi-nor/cadence-quadspi.c:701:70: error: paramet=
-er
-> 2 (=E2=80=98proto=E2=80=99) has incomplete type
+> 
+> >> >>> + apb {
+> >> >>> +         compatible = "arm,amba-bus", "simple-bus";
+> >> >>
+> >> >> Should "arm,amba-bus" has a separate bus node with AMBA compatible
+> >> >> devices declared in there (e.g, pl330, spi-pl022, and etc.) in the
+> >> >> future after they are brought up? To my best knowledge, "ns16550a" UART
+> >> >> is NOT an AMBA compatible device.
+> 
+> IIRC, "arm,amba-bus" is not documented nor used. It isn't really
+> needed as there is no s/w visible feature to an AMBA bus. There are
+> also multiple flavors of AMBA buses, so it is pretty meaningless.
+> 
+> >> > APB is an AMBA bus, so this part is accurate.  The block diagram of
+> >> > the SoC has the UARTs (and other perpherials) hanging off of the APB
+> >> > bus.  So, this organization follows the block diagram.
+> >>
+> >> Okay so the "apb" node can be used for amba compatible devices
+> >> (arm,amba-bus) and/or simple platform devices (simple-bus). I guess
+> >> that's fine and I now see that there are some other dtsi also doing it
+> >> this way.
+> 
+> I think what is meant here by "amba compatible devices" is really ARM
+> Primecell peripherals which are the ARM IP with standard ID registers.
+> These are designated by "arm,primecell" compatible strings for the
+> device not the bus compatible string.
 
-It's in the V7 changelog, you need:
+Okay, based on this and the comments above, I'll remove all references
+to the amba bus and just make a simple bus called AXI (off which all
+of the prepherials will be located).
 
-mtd: spi-nor: notify (Q)SPI controller about protocol change
+Thanks,
+Jon
 
-Also, since V8, you will need:
-
-mtd: spi-nor: Decouple SPI NOR's device_node from controller device
-
-They're both in the linux-mtd list, so feel free to pick them from ther=
-e.
+> 
+> >>
+> >> > While the
+> >> > UART drivers are not AMBA aware, there appears to be no issues with
+> >> > this layout (as the HW/drivers come up without issue). Unless there
+> >> > is an unforeseen issue with having non-AMBA aware devices on the DT
+> >> > AMBA bus, I would think it best to organize it to match the block
+> >> > disgram.
+> >> >
+> >>
+> >> UART runs fine because you also have "simple-bus" listed as the
+> >> compatible string so uart is populated as standard platform device.
+> >>
+> >> >>> +         interrupt-parent = <&gic>;
+> >> >>> +         ranges = <0x00000000 0x18000000 0x00001000>;
+> >> >>
+> >> >> Does the 'apb' bus mean to cover all peripherals connected through APB?
+> >> >> If so, the size is only 0x1000 and that seems to be too small...
+> >> >
+> >> > This is all that is currently needed.  I was planning on expanding it
+> >> > as I added more devices.
+> >>
+> >> Sure.
+> >>
+> >> I haven't checked the datahsheet but based on the layout (which seems
+> >> quite similar to Cygnus), I assume the range for these devices should be
+> >> 0x18000000 - 0x18ffffff? Just want to make sure there are no other
+> >> devices come before 0x18000000 so you don't need to change all these reg
+> >> offsets in the future.
+> >
+> > Based on the devices listed in the block diagram (and not including
+> > those on the AXI bus):
+> > i2c 0x18038000
+> > spi 0x18027200
+> > gpio 0x18000060
+> > pwm 0x18031000
+> > wdt 0x18039000
+> >
+> > and a few others.
+> >
+> > Looking at the sources, all the ARM IP is 0x19000000 and the rest is
+> > 0x18000000.  The only part that is a little harry is the clocks, which
+> > have BCM and ARM (which causes the addresses to be both 0x19000000 and
+> > 0x18000000).  But, we can handle that when we upstream that part (which
+> > should be very soon).
+> 
+> If you can tell that 0x19000000 is a separate bus at some level, then
+> it makes sense to separate it. You can't always tell without detailed
+> internal bus diagrams.
+> 
+> Rob
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
