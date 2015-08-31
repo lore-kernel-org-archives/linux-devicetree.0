@@ -1,90 +1,193 @@
-From: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>
-Subject: [PATCH 2/2] ARM: dts: am437x-gp-evm: Add pinctrl states for usb
-Date: Mon, 31 Aug 2015 21:09:09 +0530
-Message-ID: <4a8a072030c2a82867c6548627739146681b35a5.1441029572.git.nsekhar@ti.com>
-References: <cover.1441029572.git.nsekhar@ti.com>
+From: Rob Herring <robherring2@gmail.com>
+Subject: Re: [PATCH 1/4] dt-binding: gpio: Add Qualcomm SMSM device tree documentation
+Date: Mon, 31 Aug 2015 10:43:01 -0500
+Message-ID: <CAL_Jsq+WmENn6zbc-ju7d3De4ewBtOe8Hm7JGXvUxfqwpz=iTA@mail.gmail.com>
+References: <1440697078-4106-1-git-send-email-bjorn.andersson@sonymobile.com> <1440697078-4106-2-git-send-email-bjorn.andersson@sonymobile.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <cover.1441029572.git.nsekhar-l0cyMroinI0@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Device Tree Mailing List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Linux OMAP Mailing List <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linux ARM Mailing List <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <1440697078-4106-2-git-send-email-bjorn.andersson@sonymobile.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Bjorn Andersson <bjorn.andersson@sonymobile.com>
+Cc: Alexandre Courbot <gnurou@gmail.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Linus Walleij <linus.walleij@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Dave Gerlach <d-gerlach-l0cyMroinI0@public.gmane.org>
+On Thu, Aug 27, 2015 at 12:37 PM, Bjorn Andersson
+<bjorn.andersson@sonymobile.com> wrote:
+> This documents a device tree binding for exposing the Qualcomm Shared
+> Memory State Machine as a set of gpio- and interrupt-controllers.
+>
+> Signed-off-by: Bjorn Andersson <bjorn.andersson@sonymobile.com>
+> ---
+>  .../devicetree/bindings/gpio/qcom,smsm.txt         | 114 +++++++++++++++++++++
 
-Add pinctrl default and sleep states for each usb device.
-The only pin that can be controlled is USB_DRVVBUS, this
-must be set to MUX_MODE7 (gpio) during sleep to conserve
-power.
+>  drivers/gpio/Kconfig                               |   8 ++
+>  drivers/gpio/Makefile                              |   1 +
 
-Signed-off-by: Dave Gerlach <d-gerlach-l0cyMroinI0@public.gmane.org>
-[nsekhar-l0cyMroinI0@public.gmane.org: move pins to core dwc3]
-Signed-off-by: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>
----
- arch/arm/boot/dts/am437x-gp-evm.dts | 30 ++++++++++++++++++++++++++++++
- 1 file changed, 30 insertions(+)
+Presumably this goes in patch 2.
 
-diff --git a/arch/arm/boot/dts/am437x-gp-evm.dts b/arch/arm/boot/dts/am437x-gp-evm.dts
-index 84aa30c3235a..2e990a5f9e95 100644
---- a/arch/arm/boot/dts/am437x-gp-evm.dts
-+++ b/arch/arm/boot/dts/am437x-gp-evm.dts
-@@ -409,6 +409,30 @@
- 			0x234 (PIN_OUTPUT_PULLDOWN | MUX_MODE0) /* uart3_rtsn.uart3_rtsn */
- 		>;
- 	};
-+
-+	usb1_pins_default: usb1_pins_default {
-+		pinctrl-single,pins = <
-+			0x2c0 (DS0_PULL_UP_DOWN_EN | PIN_INPUT_PULLDOWN | MUX_MODE0)
-+		>;
-+	};
-+
-+	usb1_pins_sleep: usb1_pins_sleep {
-+		pinctrl-single,pins = <
-+			0x2c0 (DS0_PULL_UP_DOWN_EN | PIN_INPUT_PULLDOWN | MUX_MODE7)
-+		>;
-+	};
-+
-+	usb2_pins_default: usb2_pins_default {
-+		pinctrl-single,pins = <
-+			0x2c4 (DS0_PULL_UP_DOWN_EN | PIN_INPUT_PULLDOWN | MUX_MODE0)
-+		>;
-+	};
-+
-+	usb2_pins_sleep: usb2_pins_sleep {
-+		pinctrl-single,pins = <
-+			0x2c4 (DS0_PULL_UP_DOWN_EN | PIN_INPUT_PULLDOWN | MUX_MODE7)
-+		>;
-+	};
- };
- 
- &i2c0 {
-@@ -615,6 +639,9 @@
- &usb1 {
- 	dr_mode = "peripheral";
- 	status = "okay";
-+	pinctrl-names = "default", "sleep";
-+	pinctrl-0 = <&usb1_pins_default>;
-+	pinctrl-1 = <&usb1_pins_sleep>;
- };
- 
- &usb2_phy2 {
-@@ -624,6 +651,9 @@
- &usb2 {
- 	dr_mode = "host";
- 	status = "okay";
-+	pinctrl-names = "default", "sleep";
-+	pinctrl-0 = <&usb2_pins_default>;
-+	pinctrl-1 = <&usb2_pins_sleep>;
- };
- 
- &mac {
--- 
-2.4.4.408.g16da57c
+>  3 files changed, 123 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/gpio/qcom,smsm.txt
+>
+> diff --git a/Documentation/devicetree/bindings/gpio/qcom,smsm.txt b/Documentation/devicetree/bindings/gpio/qcom,smsm.txt
+> new file mode 100644
+> index 000000000000..06201ba76594
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/gpio/qcom,smsm.txt
+> @@ -0,0 +1,114 @@
+> +Qualcomm Shared Memory State Machine
+> +
+> +The Shared Memory State Machine facilitates broadcasting of single bit state
+> +information between the processors in a Qualcomm SoC. Each processor is
+> +assigned 32 bits of state that can be modified. A processor can through a
+> +matrix of bitmaps signal subscription of notifications upon changes to a
+> +certain bit owned by a certain remote processor.
 
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Are all the bits s/w driven, but somehow fixed in their functional definition?
+
+> +This document defines the binding for a driver that implements and exposes this
+> +a GPIO controller and a set of interrupt controllers.
+
+I imagine Linus will have thoughts about that.
+
+> +
+> +- compatible:
+> +       Usage: required
+> +       Value type: <string>
+> +       Definition: must be one of:
+> +                   "qcom,smsm"
+
+There are not versions of the h/w?
+
+> +
+> +- qcom,ipc-N:
+> +       Usage: required
+> +       Value type: <prop-encoded-array>
+> +       Definition: three entries specifying the outgoing ipc bit used for
+> +                   signaling the N:th remote processor
+> +                   - phandle to a syscon node representing the apcs registers
+> +                   - u32 representing offset to the register within the syscon
+> +                   - u32 representing the ipc bit within the register
+> +
+> +- qcom,local-host:
+> +       Usage: optional
+> +       Value type: <u32>
+> +       Definition: identifier of the local processor in the list of hosts, or
+> +                   in other words specifier of the column in the subscription
+> +                   matrix representing the local processor
+> +                   defaults to host 0
+> +
+> +- #address-cells:
+> +       Usage: required
+> +       Value type: <u32>
+> +       Definition: must be 1
+> +
+> +- #size-cells:
+> +       Usage: required
+> +       Value type: <u32>
+> +       Definition: must be 0
+> +
+> += SUBNODES
+> +Each processor's state bits are described by a subnode of the smsm device node.
+> +A node can either be a gpio-controller - denoting the local processors bits -
+> +or an interrupt-controller - denoting a remote processors state bits.  The node
+> +names are not important.
+> +
+> +- reg:
+> +       Usage: required
+> +       Value type: <u32>
+> +       Definition: specifies the offset, in words, of the first bit for this
+> +                   entry
+> +
+> +- gpio-controller:
+> +       Usage: required for local entry
+> +       Value type: <empty>
+> +       Definition: marks the entry as a gpio-controller and the state bits to
+> +                   belong to the local processor
+> +
+> +- #gpio-cells:
+> +       Usage: required for local entry
+> +       Value type: <u32>
+> +       Definition: must be 2 - denotes bit number and GPIO flags
+> +
+> +- interrupt-controller:
+> +       Usage: required for remote entries
+> +       Value type: <empty>
+> +       Definition: marks the entry as a interrupt-controller and the state bits
+> +                   to belong to a remote processor
+> +
+> +- #interrupt-cells:
+> +       Usage: required for remote entries
+> +       Value type: <u32>
+> +       Definition: must be 2 - denotes bit number and IRQ flags
+> +
+> +- interrupts:
+> +       Usage: required for remote entries
+> +       Value type: <prop-encoded-array>
+> +       Definition: one entry specifying remote IRQ used by the remote processor
+> +                   to signal changes of its state bits
+> +
+> +
+> += EXAMPLE
+> +The following example shows the SMEM setup for controlling properties of the
+> +wireless processor, defined from the 8974 apps processor's point-of-view. It
+> +encompasses one outbound entry and the outgoing interrupt for the wireless
+> +processor.
+> +
+> +smsm {
+> +       compatible = "qcom,smsm";
+> +
+> +       #address-cells = <1>;
+> +       #size-cells = <0>;
+> +
+> +       qcom,ipc-3 = <&apcs 8 19>;
+> +
+> +       apps_smsm: apps@0 {
+> +               reg = <0>;
+> +
+> +               gpio-controller;
+> +               #gpio-cells = <2>;
+> +       };
+> +
+> +       wcnss_smsm: wcnss@7 {
+> +               reg = <7>;
+> +               interrupts = <0 144 1>;
+> +
+> +               interrupt-controller;
+> +               #interrupt-cells = <2>;
+> +       };
+> +};
+> diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
+> index b4fc9e4d24c6..0e57b60faae8 100644
+> --- a/drivers/gpio/Kconfig
+> +++ b/drivers/gpio/Kconfig
+> @@ -354,6 +354,14 @@ config GPIO_PXA
+>         help
+>           Say yes here to support the PXA GPIO device
+>
+> +config GPIO_QCOM_SMSM
+> +       bool "Qualcomm Shared Memory State Machine"
+> +       depends on QCOM_SMEM
+> +       help
+> +         Say yes here to support the Qualcomm Shared Memory State Machine.
+> +         The state machine is represented by bits in shared memory and is
+> +         exposed to the system as GPIOs.
+> +
+>  config GPIO_RCAR
+>         tristate "Renesas R-Car GPIO"
+>         depends on ARM && (ARCH_SHMOBILE || COMPILE_TEST)
+> diff --git a/drivers/gpio/Makefile b/drivers/gpio/Makefile
+> index f79a7c482a99..0fd213892403 100644
+> --- a/drivers/gpio/Makefile
+> +++ b/drivers/gpio/Makefile
+> @@ -75,6 +75,7 @@ obj-$(CONFIG_GPIO_PCF857X)    += gpio-pcf857x.o
+>  obj-$(CONFIG_GPIO_PCH)         += gpio-pch.o
+>  obj-$(CONFIG_GPIO_PL061)       += gpio-pl061.o
+>  obj-$(CONFIG_GPIO_PXA)         += gpio-pxa.o
+> +obj-$(CONFIG_GPIO_QCOM_SMSM)   += gpio-qcom-smsm.o
+>  obj-$(CONFIG_GPIO_RC5T583)     += gpio-rc5t583.o
+>  obj-$(CONFIG_GPIO_RDC321X)     += gpio-rdc321x.o
+>  obj-$(CONFIG_GPIO_RCAR)                += gpio-rcar.o
+> --
+> 1.8.2.2
+>
