@@ -1,64 +1,48 @@
-From: Peter Griffin <peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: [PATCH v4 0/6] [media] c8sectpfe: Various fixups
-Date: Tue,  1 Sep 2015 11:48:08 +0100
-Message-ID: <1441104494-10468-1-git-send-email-peter.griffin@linaro.org>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, srinivas.kandagatla-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, maxime.coquelin-qxv4g6HH51o@public.gmane.org, patrice.chotard-qxv4g6HH51o@public.gmane.org, mchehab-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org
-Cc: peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, valentinrothberg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, hugues.fruchet-qxv4g6HH51o@public.gmane.org
+From: Peter Griffin <peter.griffin@linaro.org>
+Subject: [PATCH v4 1/6] ARM: DT: STi: stihxxx-b2120: Add pulse-width properties to ssc2 & ssc3
+Date: Tue,  1 Sep 2015 11:48:09 +0100
+Message-ID: <1441104494-10468-2-git-send-email-peter.griffin@linaro.org>
+References: <1441104494-10468-1-git-send-email-peter.griffin@linaro.org>
+Return-path: <linux-media-owner@vger.kernel.org>
+In-Reply-To: <1441104494-10468-1-git-send-email-peter.griffin@linaro.org>
+Sender: linux-media-owner@vger.kernel.org
+To: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, srinivas.kandagatla@gmail.com, maxime.coquelin@st.com, patrice.chotard@st.com, mchehab@osg.samsung.com
+Cc: peter.griffin@linaro.org, lee.jones@linaro.org, linux-media@vger.kernel.org, devicetree@vger.kernel.org, valentinrothberg@gmail.com, hugues.fruchet@st.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Mauro,
+Adding these properties makes the I2C bus to the demodulators much
+more reliable, and we no longer suffer from I2C errors when tuning.
 
-This series includes a couple of fixes for the c8sectpfe Linux dvb driver.
+Signed-off-by: Peter Griffin <peter.griffin@linaro.org>
+Acked-by: Lee Jones <lee.jones@linaro.org>
+---
+ arch/arm/boot/dts/stihxxx-b2120.dtsi | 10 ++++++++--
+ 1 file changed, 8 insertions(+), 2 deletions(-)
 
-One was caused by omitting a patch from the original c8sectpfe series which
-defined the ssc2 and ssc3 dt nodes, which was then used by the later DT patch.
-This patch is included, along with the original patch which you reverted.
-
-Also Valentin Rothberg spotted LIBELF32 Kconfig symbol I was selecting in the
-Kconfig, this isn't required upstream and is left over legacy so I've removed
-it.
-
-Also included are some fixups spotted by Lee Jones.
-
-Changes since v3:
- - Collect up more acks
- - Change binding to "reset-gpio"
- - highlight dtb incompatability in commit message
-
-Changes since v2:
- - Add some "\n" and other formatting fixes
- - 'Suggested by' should be in chronological order
- - Simplify load_slim_core_fw loop
-
-Changes since v1:
- - Various formating patches to DT node
- - Update to reset-gpios
- - Use GPIO_ACTIVE_HIGH, GIC_SPI and IRQ_TYPE_NONE defines
-
-kind regards,
-
-Peter.
-
-Peter Griffin (6):
-  ARM: DT: STi: stihxxx-b2120: Add pulse-width properties to ssc2 & ssc3
-  ARM: DT: STi: STiH407: Add c8sectpfe LinuxDVB DT node.
-  [media] c8sectpfe: Remove select on undefined LIBELF_32
-  [media] c8sectpfe: Update binding to reset-gpio
-  [media] c8sectpfe: Update DT binding doc with some minor fixes
-  [media] c8sectpfe: Simplify for loop in load_slim_core_fw
-
- .../bindings/media/stih407-c8sectpfe.txt           | 20 +++++-----
- arch/arm/boot/dts/stihxxx-b2120.dtsi               | 45 +++++++++++++++++++++-
- drivers/media/platform/sti/c8sectpfe/Kconfig       |  1 -
- .../media/platform/sti/c8sectpfe/c8sectpfe-core.c  |  9 +++--
- 4 files changed, 58 insertions(+), 17 deletions(-)
-
+diff --git a/arch/arm/boot/dts/stihxxx-b2120.dtsi b/arch/arm/boot/dts/stihxxx-b2120.dtsi
+index f589fe4..62994ae 100644
+--- a/arch/arm/boot/dts/stihxxx-b2120.dtsi
++++ b/arch/arm/boot/dts/stihxxx-b2120.dtsi
+@@ -27,12 +27,18 @@
+ 			};
+ 		};
+ 
+-		i2c@9842000 {
++		ssc2: i2c@9842000 {
+ 			status = "okay";
++			clock-frequency = <100000>;
++			st,i2c-min-scl-pulse-width-us = <0>;
++			st,i2c-min-sda-pulse-width-us = <5>;
+ 		};
+ 
+-		i2c@9843000 {
++		ssc3: i2c@9843000 {
+ 			status = "okay";
++			clock-frequency = <100000>;
++			st,i2c-min-scl-pulse-width-us = <0>;
++			st,i2c-min-sda-pulse-width-us = <5>;
+ 		};
+ 
+ 		i2c@9844000 {
 -- 
 1.9.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
