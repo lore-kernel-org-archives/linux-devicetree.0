@@ -1,173 +1,122 @@
-From: Yakir Yang <ykk-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Subject: [PATCH v4 16/16] drm: bridge: analogix/dp: add edid modes parse in get_modes method
-Date: Tue,  1 Sep 2015 14:20:18 +0800
-Message-ID: <1441088418-25922-1-git-send-email-ykk@rock-chips.com>
-References: <1441086371-24838-1-git-send-email-ykk@rock-chips.com>
+From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2 4/4] remoteproc: debugfs: Add ability to boot remote
+ processor using debugfs
+Date: Tue, 1 Sep 2015 08:41:09 +0100
+Message-ID: <20150901074109.GH4796@x1>
+References: <1440757911-9120-1-git-send-email-lee.jones@linaro.org>
+ <1440757911-9120-5-git-send-email-lee.jones@linaro.org>
+ <55E097A8.4080305@gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1441086371-24838-1-git-send-email-ykk-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <55E097A8.4080305-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Jingoo Han <jingoohan1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Inki Dae <inki.dae-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, joe-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org, Kukjin Kim <kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Mark Yao <mark.yao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Cc: Russell King <rmk+kernel-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, djkurtz-F7+t8E8rja9Wk0Htik3J/w@public.gmane.org, dianders-F7+t8E8rja9Wk0Htik3J/w@public.gmane.org, seanpaul-F7+t8E8rja9Wk0Htik3J/w@public.gmane.org, ajaynumb-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Andrzej Hajda <a.hajda-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Kyungmin Park <kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Gustavo Padovan <gustavo.padovan-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>, Andy Yan <andy.yan-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Yakir Yang <ykk-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ohad-Ix1uc/W3ht7QT0dZR+AlfA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-F5mvAk5X5gdBDgjK7y7TUQ@public.gmane.org, Nathan_Lynch-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org, Ludovic Barre <ludovic.barre-qxv4g6HH51o@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Display Port monitor could support kinds of mode which indicate
-in monitor edid, not just one single display resolution which
-defined in panel or devivetree property display timing.
+On Fri, 28 Aug 2015, Florian Fainelli wrote:
+> On 28/08/15 03:31, Lee Jones wrote:
+> > This functionality is especially useful during the testing phase.  =
+When
+> > used in conjunction with Mailbox's Test Framework we can trivially =
+conduct
+> > end-to-end testing i.e. boot co-processor, send and receive message=
+s to
+> > the co-processor, then shut it down again (repeat as required).
+>=20
+> This does not strike me as a particularly well defined nor suitable
+> interface for controlling a remote processor's state. I know you are
+> just extending the existing debugfs interface here, but someone ought=
+ to
+> remove that piece of code and make it a proper character device or
+> netlink or whatever that allows someone to get proper signaling of
+> what's going on with the remote processor state by polling or listeni=
+ng
+> to a socket.
 
-Signed-off-by: Yakir Yang <ykk-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
----
-Changes in v4:
-- Call drm_panel_prepare() in .get_modes function, ensure panel should
-  power on before driver try to read edid message.
+Please don't confuse this debugging interface as a solid means by
+which to control co-processors.  It's in DebugFS for a reason.  The
+idea of this feature is for driver writers to control *easily*
+control co-processors for testing purposes only.
 
-Changes in v3:
-- Add edid modes parse support
+DebugFS will be disabled in production images.
 
-Changes in v2: None
+> What's the intended use case behind debugfs for this after all? Is yo=
+ur
+> application expected to keep reading the state file in a loop until i=
+t
+> is happy and reads "running", how is that not racy by nature?
 
- drivers/gpu/drm/bridge/analogix/analogix_dp_core.c | 31 ++++++++-------
- drivers/gpu/drm/bridge/analogix/analogix_dp_core.h | 46 +++++++++++-----------
- 2 files changed, 40 insertions(+), 37 deletions(-)
+There is no 'application'.  One of the key wins for DebugFS is that
+driver writers don't have to write applications during the testing
+phase.  Using a character device instead would be a mistake IMO.
 
-diff --git a/drivers/gpu/drm/bridge/analogix/analogix_dp_core.c b/drivers/gpu/drm/bridge/analogix/analogix_dp_core.c
-index 499ec57..c71e5f6 100644
---- a/drivers/gpu/drm/bridge/analogix/analogix_dp_core.c
-+++ b/drivers/gpu/drm/bridge/analogix/analogix_dp_core.c
-@@ -111,7 +111,7 @@ static unsigned char analogix_dp_calc_edid_check_sum(unsigned char *edid_data)
- 
- static int analogix_dp_read_edid(struct analogix_dp_device *dp)
- {
--	unsigned char edid[EDID_BLOCK_LENGTH * 2];
-+	unsigned char *edid = dp->edid;
- 	unsigned int extend_block = 0;
- 	unsigned char sum;
- 	unsigned char test_vector;
-@@ -908,12 +908,6 @@ static void analogix_dp_commit(struct analogix_dp_device *dp)
- 			DRM_ERROR("failed to disable the panel\n");
- 	}
- 
--	ret = analogix_dp_handle_edid(dp);
--	if (ret) {
--		dev_err(dp->dev, "unable to handle edid\n");
--		return;
--	}
--
- 	ret = analogix_dp_set_link_train(dp, dp->video_info.max_lane_count,
- 					 dp->video_info.max_link_rate);
- 	if (ret) {
-@@ -972,8 +966,24 @@ static int analogix_dp_get_modes(struct drm_connector *connector)
- {
- 	struct analogix_dp_device *dp = connector_to_dp(connector);
- 	struct analogix_dp_plat_data *plat_data = dp->plat_data;
-+	struct edid *edid = (struct edid *)dp->edid;
- 	int num_modes = 0;
- 
-+	if (dp->plat_data && dp->plat_data->panel) {
-+		if (drm_panel_prepare(dp->plat_data->panel)) {
-+			DRM_ERROR("failed to setup the panel\n");
-+			return -EINVAL;
-+		}
-+	}
-+
-+	if (analogix_dp_handle_edid(dp)) {
-+		dev_err(dp->dev, "unable to handle edid\n");
-+		return -EINVAL;
-+	}
-+
-+	drm_mode_connector_update_edid_property(connector, edid);
-+	num_modes += drm_add_edid_modes(connector, edid);
-+
- 	if (plat_data && plat_data->panel)
- 		num_modes += drm_panel_get_modes(plat_data->panel);
- 
-@@ -1055,13 +1065,6 @@ static void analogix_dp_bridge_enable(struct drm_bridge *bridge)
- 	if (dp->dpms_mode == DRM_MODE_DPMS_ON)
- 		return;
- 
--	if (dp->plat_data && dp->plat_data->panel) {
--		if (drm_panel_prepare(dp->plat_data->panel)) {
--			DRM_ERROR("failed to setup the panel\n");
--			return;
--		}
--	}
--
- 	if (dp->plat_data && dp->plat_data->power_on)
- 		dp->plat_data->power_on(dp->plat_data);
- 
-diff --git a/drivers/gpu/drm/bridge/analogix/analogix_dp_core.h b/drivers/gpu/drm/bridge/analogix/analogix_dp_core.h
-index 6960ab3..5348b1b 100644
---- a/drivers/gpu/drm/bridge/analogix/analogix_dp_core.h
-+++ b/drivers/gpu/drm/bridge/analogix/analogix_dp_core.h
-@@ -20,6 +20,28 @@
- #define MAX_CR_LOOP 5
- #define MAX_EQ_LOOP 5
- 
-+/* I2C EDID Chip ID, Slave Address */
-+#define I2C_EDID_DEVICE_ADDR			0x50
-+#define I2C_E_EDID_DEVICE_ADDR			0x30
-+
-+#define EDID_BLOCK_LENGTH			0x80
-+#define EDID_HEADER_PATTERN			0x00
-+#define EDID_EXTENSION_FLAG			0x7e
-+#define EDID_CHECKSUM				0x7f
-+
-+/* DP_MAX_LANE_COUNT */
-+#define DPCD_ENHANCED_FRAME_CAP(x)		(((x) >> 7) & 0x1)
-+#define DPCD_MAX_LANE_COUNT(x)			((x) & 0x1f)
-+
-+/* DP_LANE_COUNT_SET */
-+#define DPCD_LANE_COUNT_SET(x)			((x) & 0x1f)
-+
-+/* DP_TRAINING_LANE0_SET */
-+#define DPCD_PRE_EMPHASIS_SET(x)		(((x) & 0x3) << 3)
-+#define DPCD_PRE_EMPHASIS_GET(x)		(((x) >> 3) & 0x3)
-+#define DPCD_VOLTAGE_SWING_SET(x)		(((x) & 0x3) << 0)
-+#define DPCD_VOLTAGE_SWING_GET(x)		(((x) >> 0) & 0x3)
-+
- enum link_rate_type {
- 	LINK_RATE_1_62GBPS = DP_LINK_BW_1_62,
- 	LINK_RATE_2_70GBPS = DP_LINK_BW_2_7,
-@@ -161,6 +183,7 @@ struct analogix_dp_device {
- 	int			dpms_mode;
- 	int			hpd_gpio;
- 	bool                    need_force_hpd;
-+	unsigned char           edid[EDID_BLOCK_LENGTH * 2];
- 
- 	struct analogix_dp_plat_data *plat_data;
- };
-@@ -260,27 +283,4 @@ int analogix_dp_is_video_stream_on(struct analogix_dp_device *dp);
- void analogix_dp_config_video_slave_mode(struct analogix_dp_device *dp);
- void analogix_dp_enable_scrambling(struct analogix_dp_device *dp);
- void analogix_dp_disable_scrambling(struct analogix_dp_device *dp);
--
--/* I2C EDID Chip ID, Slave Address */
--#define I2C_EDID_DEVICE_ADDR			0x50
--#define I2C_E_EDID_DEVICE_ADDR			0x30
--
--#define EDID_BLOCK_LENGTH			0x80
--#define EDID_HEADER_PATTERN			0x00
--#define EDID_EXTENSION_FLAG			0x7e
--#define EDID_CHECKSUM				0x7f
--
--/* DP_MAX_LANE_COUNT */
--#define DPCD_ENHANCED_FRAME_CAP(x)		(((x) >> 7) & 0x1)
--#define DPCD_MAX_LANE_COUNT(x)			((x) & 0x1f)
--
--/* DP_LANE_COUNT_SET */
--#define DPCD_LANE_COUNT_SET(x)			((x) & 0x1f)
--
--/* DP_TRAINING_LANE0_SET */
--#define DPCD_PRE_EMPHASIS_SET(x)		(((x) & 0x3) << 3)
--#define DPCD_PRE_EMPHASIS_GET(x)		(((x) >> 3) & 0x3)
--#define DPCD_VOLTAGE_SWING_SET(x)		(((x) & 0x3) << 0)
--#define DPCD_VOLTAGE_SWING_GET(x)		(((x) >> 0) & 0x3)
--
- #endif /* _ANALOGIX_DP_CORE_H */
--- 
-2.1.2
+> > Signed-off-by: Ludovic Barre <ludovic.barre-qxv4g6HH51o@public.gmane.org>
+> > Signed-off-by: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> > ---
+> >  drivers/remoteproc/remoteproc_debugfs.c | 29 +++++++++++++++++++++=
+++++++++
+> >  1 file changed, 29 insertions(+)
+> >=20
+> > diff --git a/drivers/remoteproc/remoteproc_debugfs.c b/drivers/remo=
+teproc/remoteproc_debugfs.c
+> > index 9d30809..464470d 100644
+> > --- a/drivers/remoteproc/remoteproc_debugfs.c
+> > +++ b/drivers/remoteproc/remoteproc_debugfs.c
+> > @@ -88,8 +88,37 @@ static ssize_t rproc_state_read(struct file *fil=
+p, char __user *userbuf,
+> >  	return simple_read_from_buffer(userbuf, count, ppos, buf, i);
+> >  }
+> > =20
+> > +static ssize_t rproc_state_write(struct file *filp, const char __u=
+ser *userbuf,
+> > +				 size_t count, loff_t *ppos)
+> > +{
+> > +	struct rproc *rproc =3D filp->private_data;
+> > +	char buf[2];
+> > +	int ret;
+> > +
+> > +	ret =3D copy_from_user(buf, userbuf, 1);
+> > +	if (ret)
+> > +		return -EFAULT;
+> > +
+> > +	switch (buf[0]) {
+> > +	case '0':
+> > +		rproc_shutdown(rproc);
+> > +		break;
+> > +	case '1':
+> > +		ret =3D rproc_boot(rproc);
+> > +		if (ret)
+> > +			dev_warn(&rproc->dev, "Boot failed: %d\n", ret);
+> > +		break;
+> > +	default:
+> > +		dev_err(&rproc->dev, "Unrecognised option: %x\n", buf[1]);
+> > +		return -EINVAL;
+> > +	}
+> > +
+> > +	return count;
+> > +}
+> > +
+> >  static const struct file_operations rproc_state_ops =3D {
+> >  	.read =3D rproc_state_read,
+> > +	.write =3D rproc_state_write,
+> >  	.open =3D simple_open,
+> >  	.llseek	=3D generic_file_llseek,
+> >  };
+> >=20
+>=20
+>=20
 
-
+--=20
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org =E2=94=82 Open source software for ARM SoCs
+=46ollow Linaro: Facebook | Twitter | Blog
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
