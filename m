@@ -1,72 +1,55 @@
-From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [RFC PATCH 0/5] DT binding documents using text markup
-Date: Tue, 1 Sep 2015 13:24:17 -0500
-Message-ID: <CAL_Jsq+7NQdZivTpwRDwcGrCzpcQQoV5gvSkjz3NNOWNXdBhMA@mail.gmail.com>
-References: <1440739433-6799-1-git-send-email-mporter@konsulko.com>
- <CAL_Jsq+qCJfLYxVfyQ4gAxPWLZ2=WNa0H21+cRcBi7dGVG0PMA@mail.gmail.com>
- <20150828171323.GA24203@beef> <CA+bK7J4Ha55oFhCYDnUcBu8ZHCP3ReB6B=7Y9Fw7CknxPcaoWQ@mail.gmail.com>
- <55E5E1E2.6040607@gmail.com> <CA+bK7J6kErnKPHs=r+X9T8KBn45HptPmtMe31CoapunKpuY34Q@mail.gmail.com>
+From: "Andrew F. Davis" <afd@ti.com>
+Subject: Re: [PATCH 02/13] power: bq24257: Add dead battery reporting
+Date: Tue, 1 Sep 2015 14:33:11 -0500
+Message-ID: <55E5FD77.10100@ti.com>
+References: <1441073435-12349-1-git-send-email-dannenberg@ti.com>
+ <1441073435-12349-3-git-send-email-dannenberg@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-spec-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CA+bK7J6kErnKPHs=r+X9T8KBn45HptPmtMe31CoapunKpuY34Q-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-spec-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Tim Bird <tbird20d-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Matt Porter <mporter-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Devicetree List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Devicetree Spec List <devicetree-spec-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Behan Webster <behanw-k/hB3zQhLwledRVtV/plodBPR1lH4CV8@public.gmane.org>
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <1441073435-12349-3-git-send-email-dannenberg@ti.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: Andreas Dannenberg <dannenberg@ti.com>, Sebastian Reichel <sre@kernel.org>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, David Woodhouse <dwmw2@infradead.org>, Laurentiu Palcu <laurentiu.palcu@intel.com>, Krzysztof Kozlowski <k.kozlowski.k@gmail.com>
+Cc: linux-pm@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Sep 1, 2015 at 1:03 PM, Tim Bird <tbird20d-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> On Tue, Sep 1, 2015 at 10:35 AM, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
->> On 9/1/2015 10:14 AM, Tim Bird wrote:
->>> On Fri, Aug 28, 2015 at 10:13 AM, Matt Porter <mporter-OWPKS81ov/FWk0Htik3J/w@public.gmane.org> wrote:
->>
->> < snip >
->>
->>>>
->>>> But to answer your question, if we get a format I'll do
->>>> conversions and hope I'm not alone.
->>>
->>> I'm sure others will help out.  I will, and I'm pretty sure we can get
->>> some conversion sprints set up at conferences (I know I can set aside
->>> some time or resources at ELC in the spring - it might be too late for
->>> ELCE in October to set up a scheduled block of time, but we can start
->>> getting the word out.)  As I said in my other e-mail, one doesn't have
->>> to be a kernel coder to do this, and the conversions should be pretty
->>> straight-forward.
->>>  -- Tim
->>>
->>
->> A conversion sprint at ELCE sounds like a good idea if we can find a
->> good time to schedule it.  I can help, so there will be at least two
->> of us who can help people as they encounter issues.
+On 08/31/2015 09:10 PM, Andreas Dannenberg wrote:
+> A missing/disconnected battery is now reported as dead rather than an
+> unspecified failure via the charger's sysfs health property.
 >
-> Even if we don't find a block of time, we can do something like
-> announce a "contest", ask people to do something in their spare time,
-> and find some way to get them a raffle ticket if they submit a patch
-> with a conversion.  Then hold an extra prize drawing during the
-> closing session, with just those raffle tickets, and give someone a
-> nice award for contributing.  Of course, there's always the adage that
-> you should be careful what you measure and reward...  We don't want a
-> flood of crappy conversions, with a time constraint on the review.
-> I'll think some more about this.  An alternative would be to have a
-> contest announced ahead of the event, with enough time for people to
-> submit and get reviewed.
+> $ cat health
+> Dead
 
-Sounds like a review nightmare. That's another reason why as much
-automated conversion we can do, the better.
+Poor cat :(
 
-> By the way - I presume the new docs will replace the existing ones,
-> but I could imagine wanting to have them live side-by-side
-> temporarily.  Any thoughts on this?  Will file name or location
-> changes be allowed during the conversion?
+>
+> Signed-off-by: Andreas Dannenberg <dannenberg@ti.com>
+> ---
+>   drivers/power/bq24257_charger.c | 4 ++++
+>   1 file changed, 4 insertions(+)
+>
+> diff --git a/drivers/power/bq24257_charger.c b/drivers/power/bq24257_charger.c
+> index db81356..0b34528 100644
+> --- a/drivers/power/bq24257_charger.c
+> +++ b/drivers/power/bq24257_charger.c
+> @@ -274,6 +274,10 @@ static int bq24257_power_supply_get_property(struct power_supply *psy,
+>   			val->intval = POWER_SUPPLY_HEALTH_SAFETY_TIMER_EXPIRE;
+>   			break;
+>
+> +		case FAULT_NO_BAT:
+> +			val->intval = POWER_SUPPLY_HEALTH_DEAD;
+> +			break;
+> +
 
-I proposed some ideas earlier in the thread. Either we can have both
-side by side or do a mass conversion to YAML making the existing doc a
-comment (add # prefix).
+I think the best thing to do would be to return -ENODEV as suggested by
+power_supply_sysfs.c:305. Also you should probably add the POWER_SUPPLY_PROP_PRESENT
+property check and set intval to 0 when there is no battery.
 
-Any renames/moving should be separate (there's some clean-up I'd like
-to there as well). Exact rules depend on the approach, but we need to
-be able to tell which bindings conversions are not started, in
-progress, or complete.
+Regards,
+Andrew
 
-Rob
+>   		default:
+>   			val->intval = POWER_SUPPLY_HEALTH_UNSPEC_FAILURE;
+>   			break;
+>
