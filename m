@@ -1,143 +1,95 @@
-From: Heiko Stuebner <heiko@sntech.de>
-Subject: Re: [PATCH v4 08/16] drm: rockchip/dp: add rockchip platform dp driver
-Date: Tue, 01 Sep 2015 16:24:04 +0200
-Message-ID: <2919897.nbhB5Cifed@phil>
-References: <1441086371-24838-1-git-send-email-ykk@rock-chips.com> <1441087288-25404-1-git-send-email-ykk@rock-chips.com>
+From: Cyrille Pitchen <cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH linux-next v9 0/3] mfd: flexcom: add a driver for Flexcom
+Date: Tue, 1 Sep 2015 16:46:40 +0200
+Message-ID: <cover.1441118159.git.cyrille.pitchen@atmel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <1441087288-25404-1-git-send-email-ykk@rock-chips.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Yakir Yang <ykk@rock-chips.com>
-Cc: Thierry Reding <treding@nvidia.com>, Jingoo Han <jingoohan1@gmail.com>, Inki Dae <inki.dae@samsung.com>, joe@perches.com, Kukjin Kim <kgene@kernel.org>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, Mark Yao <mark.yao@rock-chips.com>, Russell King <rmk+kernel@arm.linux.org.uk>, djkurtz@chromium.com, dianders@chromium.com, seanpaul@chromium.com, ajaynumb@gmail.com, Andrzej Hajda <a.hajda@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, David Airlie <airlied@linux.ie>, Gustavo Padovan <gustavo.padovan@collabora.co.uk>, Andy Yan <andy.yan@rock-chips.com>, Kumar Gala <galak@codeaurora.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Kishon Vijay Abraham I <kishon@ti.com>, architt@codeaurora.org, robherring2@gmail.com, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-kernel
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org, boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Cyrille Pitchen <cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Am Dienstag, 1. September 2015, 14:01:28 schrieb Yakir Yang:
-> Rockchip have three clocks for dp controller, we leave pclk_edp
-> to analogix_dp driver control, and keep the sclk_edp_24m and
-> sclk_edp in platform driver.
-> 
-> Signed-off-by: Yakir Yang <ykk@rock-chips.com>
-> ---
-> Changes in v4:
-> - Remove some deprecated DT properties in rockchip dp document.
-> 
-> Changes in v3:
-> - Take Thierry Reding and Heiko suggest, leave "sclk_edp_24m" to rockchip
->   dp phy driver which name to "24m", and leave "sclk_edp" to analogix dp
->   core driver which name to "dp", and leave "pclk_edp" to rockchip dp
-> platform driver which name to "pclk".
-> - Take Heiko suggest, add devicetree binding document.
-> - Take Heiko suggest, remove "rockchip,panel" DT property, take use of
-> remote point to get panel node.
-> - Add the new function point analogix_dp_platdata.get_modes init.
-> 
-> Changes in v2:
-> - Take Heiko suggest, get panel node with remote-endpoint method,
->   and create devicetree binding for driver.
-> - Remove the clock enable/disbale with "sclk_edp" & "sclk_edp_24m",
->   leave those clock to rockchip dp phy driver.
-> 
->  .../bindings/video/analogix_dp-rockchip.txt        |  74 ++++
->  drivers/gpu/drm/rockchip/Kconfig                   |   9 +
->  drivers/gpu/drm/rockchip/Makefile                  |   1 +
->  drivers/gpu/drm/rockchip/analogix_dp-rockchip.c    | 389
-> +++++++++++++++++++++ 4 files changed, 473 insertions(+)
->  create mode 100644
-> Documentation/devicetree/bindings/video/analogix_dp-rockchip.txt create
-> mode 100644 drivers/gpu/drm/rockchip/analogix_dp-rockchip.c
-> 
-> diff --git
-> a/Documentation/devicetree/bindings/video/analogix_dp-rockchip.txt
-> b/Documentation/devicetree/bindings/video/analogix_dp-rockchip.txt new file
-> mode 100644
-> index 0000000..502483e
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/video/analogix_dp-rockchip.txt
-> @@ -0,0 +1,74 @@
-> +Rockchip RK3288 specific extensions to the Analogix Display Port
-> +================================
-> +
-> +Required properties:
-> +- compatible: "rockchip,rk3288-edp";
-> +
-> +- reg: physical base address of the controller and length
-> +
-> +- clocks: from common clock binding: handle to dp clock.
-> +	  of memory mapped region.
-> +
-> +- clock-names: from common clock binding:
-> +	       Required elements: "dp" "pclk"
-> +
-> +- resets: Must contain an entry for each entry in reset-names.
-> +	  See ../reset/reset.txt for details.
-> +
-> +- reset-names: Must include the name "dp"
-> +
-> +- rockchip,grf: this soc should set GRF regs, so need get grf here.
-> +
-> +- ports: contain a port node with endpoint definitions as defined in
-> +  Documentation/devicetree/bindings/media/video-interfaces.txt.
-> +
-> +
-> +For the below properties, please refer to Analogix DP binding document:
-> + * Documentation/devicetree/bindings/drm/bridge/analogix_dp.txt
-> +- phys (required)
-> +- phy-names (required)
-> +- hpd-gpios (optional)
-> +---------------------------------------------------------------------------
-> ---- +
-> +Example:
-> +	dp-controller: dp@ff970000 {
-> +		compatible = "rockchip,rk3288-dp";
-> +		reg = <0xff970000 0x4000>;
-> +		interrupts = <GIC_SPI 98 IRQ_TYPE_LEVEL_HIGH>;
-> +		clocks = <&cru SCLK_EDP>, <&cru PCLK_EDP_CTRL>;
-> +		clock-names = "dp", "pclk";
-> +		phys = <&dp_phy>;
-> +		phy-names = "dp";
-> +
-> +		rockchip,grf = <&grf>;
-> +		resets = <&cru 111>;
-> +		reset-names = "dp";
-> +
-> +		status = "disabled";
-> +
-> +		ports {
-> +			edp_in: port {
-> +				#address-cells = <1>;
-> +				#size-cells = <0>;
-> +				edp_in_vopb: endpoint@0 {
-> +					reg = <0>;
-> +					remote-endpoint = <&vopb_out_edp>;
-> +				};
-> +				edp_in_vopl: endpoint@1 {
-> +					reg = <1>;
-> +					remote-endpoint = <&vopl_out_edp>;
-> +				};
-> +			};
-> +
-> +			edp_out: port@1 {
-> +				reg = <1>;
-> +				#address-cells = <1>;
-> +				#size-cells = <0>;
-> +				edp_out_panel: endpoint {
-> +					reg = <0>;
-> +					remote-endpoint = <&panel_in_edp>
-> +				};
-> +			};
-> +		};
-> +	};
-> +
-just a nit right now, because "git am" mentioned it:
+ChangeLog
 
-git am \[PATCH\ v4\ 08_16\]\ drm_rockchip_dp_add\ rockchip\ platform\ dp\ 
-driver.mbox 
-[...]/linux-rockchip/.git/rebase-apply/patch:108: new blank line at EOF.
-+
+v9:
+- go back to v5 (use the new "atmel,flexcom-mode" DT property).
+- fix the name of the spi node in the DT example: from spi@f8034400 to
+  spi@400
+- align the fields of the struct platform_driver atmel_flexcom_driver as
+  suggested by Lee Jones.
 
-meaning you're adding an empty line at the end :-)
+v8:
+- fix the name of the spi node in the DT example: from spi@f8034400 to
+  spi@2,0
+- use the return code of op_property_read_u32_index() instead of -EINVAL
+  to report error.
+- add Acked-by from Nicolas Ferre
 
+v7:
+- read the operating mode from the very first u32 of the reg property from
+  the first available child node (should be unique).
+- update the DT bindings documentation accordingly.
 
-Heiko
+v6:
+- select the operating mode according to the "compatible" DT property of
+  the first available child node (should be unique).
+- remove the "atmel,flexcom-mode" DT property so the need of a header file
+  defining macros for the possible values of this deprecated property.
+
+v5:
+- create a header file containing macros used by DT bindings
+- use numeric constants instead of strings to select the Flexcom mode
+- change the license to "GPL v2"
+- update the DT binding documentation to make it more readable and add
+  references to USART, SPI and I2C DT binding documentations. remove the
+  useless label in the Example section.
+- change the register prefix from FX_ to FLEX_ to match the Flexcom
+  programmer datasheet.
+- rename some variables to make them more understandable.
+
+v4:
+- check clk_prepare_enable() return code in atmel_flexcom_probe()
+- add a commit message to the DT binding patch
+
+v3:
+- remove MODULE_ALIAS()
+- add Acked-by from Boris Brezillon and Alexandre Belloni
+
+v2:
+- enhance the documentation of DT bindings and change the way the "ranges"
+  property is used.
+- replace __raw_readl() and __raw_writel() by readl() and writel().
+- change the module license to "GPL" for v2 or later
+- print the selected flexcom mode after the hardware version
+
+v1:
+This series of patches a support to the Atmel Flexcom, a wrapper which
+integrates an USART, a SPI controller and a TWI controller. Only one
+peripheral can be used at a time. The active function is selected though
+the Flexcom Mode Register.
+
+Cyrille Pitchen (3):
+  mfd: atmel-flexcom: create include file with macros used by DT
+    bindings
+  mfd: devicetree: add bindings for Atmel Flexcom
+  mfd: atmel-flexcom: add a driver for Atmel Flexible Serial
+    Communication Unit
+
+ .../devicetree/bindings/mfd/atmel-flexcom.txt      |  67 +++++++++++++
+ drivers/mfd/Kconfig                                |  11 +++
+ drivers/mfd/Makefile                               |   1 +
+ drivers/mfd/atmel-flexcom.c                        | 104 +++++++++++++++++++++
+ include/dt-bindings/mfd/atmel-flexcom.h            |  16 ++++
+ 5 files changed, 199 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/mfd/atmel-flexcom.txt
+ create mode 100644 drivers/mfd/atmel-flexcom.c
+ create mode 100644 include/dt-bindings/mfd/atmel-flexcom.h
+
+-- 
+1.8.2.2
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
