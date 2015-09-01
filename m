@@ -1,41 +1,44 @@
-From: Alban Bedel <albeu-GANU6spQydw@public.gmane.org>
-Subject: [PATCH 0/4] MIPS: ath79: Add USB support on the TL-WR1043ND
-Date: Tue,  1 Sep 2015 17:23:10 +0200
-Message-ID: <1441120994-31476-1-git-send-email-albeu@free.fr>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Alban Bedel <albeu-GANU6spQydw@public.gmane.org>
+From: Alban Bedel <albeu@free.fr>
+Subject: [PATCH 1/4] devicetree: Add bindings for the ATH79 USB phy
+Date: Tue,  1 Sep 2015 17:23:11 +0200
+Message-ID: <1441120994-31476-2-git-send-email-albeu@free.fr>
+References: <1441120994-31476-1-git-send-email-albeu@free.fr>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1441120994-31476-1-git-send-email-albeu@free.fr>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-mips@linux-mips.org
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Ralf Baechle <ralf@linux-mips.org>, Kishon Vijay Abraham I <kishon@ti.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Alban Bedel <albeu@free.fr>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-
-this serie add a driver for the USB phy on the ATH79 SoCs and enable the
-USB port on the TL-WR1043ND. The phy controller is really trivial as it
-only use reset lines.
-
-Alban
-
-Alban Bedel (4):
-  devicetree: Add bindings for the ATH79 USB phy
-  phy: Add a driver for the ATH79 USB phy
-  MIPS: ath79: Add the EHCI controller and USB phy to the AR9132 dtsi
-  MIPS: ath79: Enable the USB port on the TL-WR1043ND
-
- .../devicetree/bindings/phy/phy-ath79-usb.txt      |  18 ++++
- arch/mips/boot/dts/qca/ar9132.dtsi                 |  24 +++++
- arch/mips/boot/dts/qca/ar9132_tl_wr1043nd_v1.dts   |   4 +
- drivers/phy/Kconfig                                |   8 ++
- drivers/phy/Makefile                               |   1 +
- drivers/phy/phy-ath79-usb.c                        | 115 +++++++++++++++++++++
- 6 files changed, 170 insertions(+)
+Signed-off-by: Alban Bedel <albeu@free.fr>
+---
+ .../devicetree/bindings/phy/phy-ath79-usb.txt          | 18 ++++++++++++++++++
+ 1 file changed, 18 insertions(+)
  create mode 100644 Documentation/devicetree/bindings/phy/phy-ath79-usb.txt
- create mode 100644 drivers/phy/phy-ath79-usb.c
 
+diff --git a/Documentation/devicetree/bindings/phy/phy-ath79-usb.txt b/Documentation/devicetree/bindings/phy/phy-ath79-usb.txt
+new file mode 100644
+index 0000000..cafe219
+--- /dev/null
++++ b/Documentation/devicetree/bindings/phy/phy-ath79-usb.txt
+@@ -0,0 +1,18 @@
++* Atheros AR71XX/9XXX USB PHY
++
++Required properties:
++- compatible: "qca,ar7100-usb-phy"
++- #phys-cells: should be 0
++- reset-names: "usb-phy"[, "usb-suspend-override"]
++- resets: references to the reset controllers
++
++Example:
++
++	usb-phy {
++		compatible = "qca,ar7100-usb-phy";
++
++		reset-names = "usb-phy", "usb-suspend-override";
++		resets = <&rst 4>, <&rst 3>;
++
++		#phy-cells = <0>;
++	};
 -- 
 2.0.0
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
