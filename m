@@ -1,36 +1,466 @@
-From: Martin Kepplinger <martink-1KBjaw7Xf1+zQB+pC5nmwQ@public.gmane.org>
-Subject: [PATCH 6/6] iio: mma8452: leave sysfs namings to the iio core
-Date: Tue,  1 Sep 2015 13:45:13 +0200
-Message-ID: <1441107913-4112-7-git-send-email-martink@posteo.de>
-References: <1441107913-4112-1-git-send-email-martink@posteo.de>
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1441107913-4112-1-git-send-email-martink-1KBjaw7Xf1+zQB+pC5nmwQ@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, knaack.h-Mmb7MZpHnFY@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org, mfuzzey-mB3Nsq4MPf1BDgjK7y7TUQ@public.gmane.org, roberta.dobrescu-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, christoph.muellner-SN7IsUiht6C/RdPyistoZJqQE7yCjDx5@public.gmane.org, Martin Kepplinger <martink-1KBjaw7Xf1+zQB+pC5nmwQ@public.gmane.org>, Martin Kepplinger <martin.kepplinger-SN7IsUiht6C/RdPyistoZJqQE7yCjDx5@public.gmane.org>
+From: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+Subject: Re: [PATCH] ARM: dts: Add exynos5422-odroidxu4 board
+Date: Tue, 1 Sep 2015 21:00:43 +0900
+Message-ID: <55E5936B.3050003@samsung.com>
+References: <1440993365-26896-1-git-send-email-k.kozlowski@samsung.com>
+ <55E56646.2070106@osg.samsung.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <55E56646.2070106@osg.samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Javier Martinez Canillas <javier@osg.samsung.com>, Kukjin Kim <kgene@kernel.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org
+Cc: Anand Moon <linux.amoon@gmail.com>, Chanwoo Choi <cw00.choi@samsung.com>, Inki Dae <inki.dae@samsung.com>, p.marczak@samsung.com, Marek Szyprowski <m.szyprowski@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-This doesn't actually change anything since the core names the sysfs folder
-for the iio event attributes "events" anyways. It only leaves the job to the
-core.
+W dniu 01.09.2015 o 17:48, Javier Martinez Canillas pisze:
+> Hello Krzysztof,
+> 
+> The patch looks good to me, I just have one small comment.
+> 
+> On 08/31/2015 05:56 AM, Krzysztof Kozlowski wrote:
+>> Add Hardkernel Odroid XU4 board Device Tree sources. The board differs
+>> from Odroid XU3 and XU3-Lite by:
+>> 1. No green and red leds (except standard red power led).
+>> 2. No audio codec.
+>> 3. Two USB3 ports in host mode (no micro USB3 connector for OTG).
+>> 4. Realtek RTL8153-CG gigabit network adapter (instead of SMSC9514).
+>> 5. Additional connector with IO ports (I2S_0, I2C_5).
+>> 6. No DisplayPort.
+>> 7. No TI INA231 power measurement sensors.
+>>
+>> Signed-off-by: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+>> ---
+>>  arch/arm/boot/dts/Makefile                         |  1 +
+>>  arch/arm/boot/dts/exynos5422-odroidxu3-audio.dtsi  | 56 ++++++++++++++
+>>  arch/arm/boot/dts/exynos5422-odroidxu3-common.dtsi | 90 +---------------------
+>>  arch/arm/boot/dts/exynos5422-odroidxu3-lite.dts    | 52 +++++++++++++
+>>  arch/arm/boot/dts/exynos5422-odroidxu3.dts         | 52 +++++++++++++
+>>  arch/arm/boot/dts/exynos5422-odroidxu4.dts         | 48 ++++++++++++
+>>  6 files changed, 210 insertions(+), 89 deletions(-)
+>>  create mode 100644 arch/arm/boot/dts/exynos5422-odroidxu3-audio.dtsi
+>>  create mode 100644 arch/arm/boot/dts/exynos5422-odroidxu4.dts
+>>
+>> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+>> index 233159d2eaab..3d27fe34647f 100644
+>> --- a/arch/arm/boot/dts/Makefile
+>> +++ b/arch/arm/boot/dts/Makefile
+>> @@ -123,6 +123,7 @@ dtb-$(CONFIG_ARCH_EXYNOS5) += \
+>>  	exynos5420-smdk5420.dtb \
+>>  	exynos5422-odroidxu3.dtb \
+>>  	exynos5422-odroidxu3-lite.dtb \
+>> +	exynos5422-odroidxu4.dtb \
+>>  	exynos5440-sd5v1.dtb \
+>>  	exynos5440-ssdk5440.dtb \
+>>  	exynos5800-peach-pi.dtb
+>> diff --git a/arch/arm/boot/dts/exynos5422-odroidxu3-audio.dtsi b/arch/arm/boot/dts/exynos5422-odroidxu3-audio.dtsi
+>> new file mode 100644
+>> index 000000000000..eee16a820484
+>> --- /dev/null
+>> +++ b/arch/arm/boot/dts/exynos5422-odroidxu3-audio.dtsi
+>> @@ -0,0 +1,56 @@
+>> +/*
+>> + * Hardkernel Odroid XU3 Audio Codec device tree source
+>> + *
+>> + * Copyright (c) 2015 Krzysztof Kozlowski
+>> + * Copyright (c) 2014 Collabora Ltd.
+>> + * Copyright (c) 2013 Samsung Electronics Co., Ltd.
+>> + *		http://www.samsung.com
+>> + *
+>> + * This program is free software; you can redistribute it and/or modify
+>> + * it under the terms of the GNU General Public License version 2 as
+>> + * published by the Free Software Foundation.
+>> +*/
+>> +
+>> +/ {
+>> +	sound: sound {
+>> +		compatible = "simple-audio-card";
+>> +
+>> +		simple-audio-card,name = "Odroid-XU3";
+>> +		simple-audio-card,widgets =
+>> +			"Headphone", "Headphone Jack",
+>> +			"Speakers", "Speakers";
+>> +		simple-audio-card,routing =
+>> +			"Headphone Jack", "HPL",
+>> +			"Headphone Jack", "HPR",
+>> +			"Headphone Jack", "MICBIAS",
+>> +			"IN1", "Headphone Jack",
+>> +			"Speakers", "SPKL",
+>> +			"Speakers", "SPKR";
+>> +
+>> +		simple-audio-card,format = "i2s";
+>> +		simple-audio-card,bitclock-master = <&link0_codec>;
+>> +		simple-audio-card,frame-master = <&link0_codec>;
+>> +
+>> +		simple-audio-card,cpu {
+>> +			sound-dai = <&i2s0 0>;
+>> +			system-clock-frequency = <19200000>;
+>> +		};
+>> +
+>> +		link0_codec: simple-audio-card,codec {
+>> +			sound-dai = <&max98090>;
+>> +			clocks = <&i2s0 CLK_I2S_CDCLK>;
+>> +		};
+>> +	};
+>> +};
+>> +
+>> +&hsi2c_5 {
+>> +	max98090: max98090@10 {
+>> +		compatible = "maxim,max98090";
+>> +		reg = <0x10>;
+>> +		interrupt-parent = <&gpx3>;
+>> +		interrupts = <2 0>;
+>> +		clocks = <&i2s0 CLK_I2S_CDCLK>;
+>> +		clock-names = "mclk";
+>> +		#sound-dai-cells = <0>;
+>> +	};
+> 
+> Shouldn't this node also include the status = "okay" ?
 
-Signed-off-by: Martin Kepplinger <martin.kepplinger-SN7IsUiht6C/RdPyistoZJqQE7yCjDx5@public.gmane.org>
-Signed-off-by: Christoph Muellner <christoph.muellner-SN7IsUiht6C/RdPyistoZJqQE7yCjDx5@public.gmane.org>
----
- drivers/iio/accel/mma8452.c | 1 -
- 1 file changed, 1 deletion(-)
+Let me answer to this in next comment.
 
-diff --git a/drivers/iio/accel/mma8452.c b/drivers/iio/accel/mma8452.c
-index 15d50c9..1eccc2d 100644
---- a/drivers/iio/accel/mma8452.c
-+++ b/drivers/iio/accel/mma8452.c
-@@ -772,7 +772,6 @@ static struct attribute *mma8452_event_attributes[] = {
- 
- static struct attribute_group mma8452_event_attribute_group = {
- 	.attrs = mma8452_event_attributes,
--	.name = "events",
- };
- 
- #define MMA8452_CHANNEL(axis, idx, bits) { \
--- 
-2.1.4
+> 
+>> +};
+>> diff --git a/arch/arm/boot/dts/exynos5422-odroidxu3-common.dtsi b/arch/arm/boot/dts/exynos5422-odroidxu3-common.dtsi
+>> index dd8bc86d9de4..52c34d8e791f 100644
+>> --- a/arch/arm/boot/dts/exynos5422-odroidxu3-common.dtsi
+>> +++ b/arch/arm/boot/dts/exynos5422-odroidxu3-common.dtsi
+>> @@ -46,70 +46,6 @@
+>>  		reset-gpios = <&gpd1 0 1>;
+>>  	};
+>>  
+>> -	pwmleds {
+>> -		compatible = "pwm-leds";
+>> -
+>> -		greenled {
+>> -			label = "green:mmc0";
+>> -			pwms = <&pwm 1 2000000 0>;
+>> -			pwm-names = "pwm1";
+>> -			/*
+>> -			 * Green LED is much brighter than the others
+>> -			 * so limit its max brightness
+>> -			 */
+>> -			max_brightness = <127>;
+>> -			linux,default-trigger = "mmc0";
+>> -		};
+>> -
+>> -		blueled {
+>> -			label = "blue:heartbeat";
+>> -			pwms = <&pwm 2 2000000 0>;
+>> -			pwm-names = "pwm2";
+>> -			max_brightness = <255>;
+>> -			linux,default-trigger = "heartbeat";
+>> -		};
+>> -	};
+>> -
+>> -	gpioleds {
+>> -		compatible = "gpio-leds";
+>> -		redled {
+>> -			label = "red:microSD";
+>> -			gpios = <&gpx2 3 GPIO_ACTIVE_HIGH>;
+>> -			default-state = "off";
+>> -			linux,default-trigger = "mmc1";
+>> -		};
+>> -	};
+>> -
+>> -	sound: sound {
+>> -		compatible = "simple-audio-card";
+>> -
+>> -		simple-audio-card,name = "Odroid-XU3";
+>> -		simple-audio-card,widgets =
+>> -			"Headphone", "Headphone Jack",
+>> -			"Speakers", "Speakers";
+>> -		simple-audio-card,routing =
+>> -			"Headphone Jack", "HPL",
+>> -			"Headphone Jack", "HPR",
+>> -			"Headphone Jack", "MICBIAS",
+>> -			"IN1", "Headphone Jack",
+>> -			"Speakers", "SPKL",
+>> -			"Speakers", "SPKR";
+>> -
+>> -		simple-audio-card,format = "i2s";
+>> -		simple-audio-card,bitclock-master = <&link0_codec>;
+>> -		simple-audio-card,frame-master = <&link0_codec>;
+>> -
+>> -		simple-audio-card,cpu {
+>> -			sound-dai = <&i2s0 0>;
+>> -			system-clock-frequency = <19200000>;
+>> -		};
+>> -
+>> -		link0_codec: simple-audio-card,codec {
+>> -			sound-dai = <&max98090>;
+>> -			clocks = <&i2s0 CLK_I2S_CDCLK>;
+>> -		};
+>> -	};
+>> -
+>>  	fan0: pwm-fan {
+>>  		compatible = "pwm-fan";
+>>  		pwms = <&pwm 0 20972 0>;
+>> @@ -378,15 +314,6 @@
+>>  
+>>  &hsi2c_5 {
+>>  	status = "okay";
+> 
+> since I believe for the Odroid XU4 we would like this to be disabled.
+> The only I2C device in this I2C bus is the max98090 codec which is
+> not present in the XU4.
+
+hsi2c_5 and i2s_0 are not used by board directly but are connected to
+external connector:
+http://www.hardkernel.com/main/products/prdt_info.php?g_code=G143452239825&tab_idx=2
+
+This is the 12pin GPIO/I2C/I2S connector in bottom-right corner of board
+view.
+
+This is why I left this and is2_0 enabled on Odroid XU4 - I assumed
+someone may connect something to it. However I have doubts if it is
+usable in such state: without respective addresses and interrupts. In
+the same time OF_OVERLAY should customize it properly.
+
+What do you think?
+
+Thanks for review,
+Best regards,
+Krzysztof
+
+> 
+>> -	max98090: max98090@10 {
+>> -		compatible = "maxim,max98090";
+>> -		reg = <0x10>;
+>> -		interrupt-parent = <&gpx3>;
+>> -		interrupts = <2 0>;
+>> -		clocks = <&i2s0 CLK_I2S_CDCLK>;
+>> -		clock-names = "mclk";
+>> -		#sound-dai-cells = <0>;
+>> -	};
+>>  };
+>>  
+>>  &i2c_2 {
+>> @@ -464,19 +391,6 @@
+>>  	};
+>>  };
+>>  
+>> -&pwm {
+>> -	/*
+>> -	 * PWM 0 -- fan
+>> -	 * PWM 1 -- Green LED
+>> -	 * PWM 2 -- Blue LED
+>> -	 * PWM 3 -- on MIPI connector for backlight
+>> -	 */
+>> -	pinctrl-0 = <&pwm0_out &pwm1_out &pwm2_out &pwm3_out>;
+>> -	pinctrl-names = "default";
+>> -	samsung,pwm-outputs = <0>;
+>> -	status = "okay";
+>> -};
+>> -
+>>  &tmu_cpu0 {
+>>  	vtmu-supply = <&ldo7_reg>;
+>>  	status = "okay";
+>> @@ -512,9 +426,7 @@
+>>  	dr_mode = "host";
+>>  };
+>>  
+>> -&usbdrd_dwc3_1 {
+>> -	dr_mode = "otg";
+>> -};
+>> +/* usbdrd_dwc3_1 mode customized in each board */
+>>  
+>>  &usbdrd3_0 {
+>>  	vdd33-supply = <&ldo9_reg>;
+>> diff --git a/arch/arm/boot/dts/exynos5422-odroidxu3-lite.dts b/arch/arm/boot/dts/exynos5422-odroidxu3-lite.dts
+>> index c06882bbb822..379cd61178ee 100644
+>> --- a/arch/arm/boot/dts/exynos5422-odroidxu3-lite.dts
+>> +++ b/arch/arm/boot/dts/exynos5422-odroidxu3-lite.dts
+>> @@ -13,8 +13,60 @@
+>>  
+>>  /dts-v1/;
+>>  #include "exynos5422-odroidxu3-common.dtsi"
+>> +#include "exynos5422-odroidxu3-audio.dtsi"
+>>  
+>>  / {
+>>  	model = "Hardkernel Odroid XU3 Lite";
+>>  	compatible = "hardkernel,odroid-xu3-lite", "samsung,exynos5800", "samsung,exynos5";
+>> +
+>> +	pwmleds {
+>> +		compatible = "pwm-leds";
+>> +
+>> +		greenled {
+>> +			label = "green:mmc0";
+>> +			pwms = <&pwm 1 2000000 0>;
+>> +			pwm-names = "pwm1";
+>> +			/*
+>> +			 * Green LED is much brighter than the others
+>> +			 * so limit its max brightness
+>> +			 */
+>> +			max_brightness = <127>;
+>> +			linux,default-trigger = "mmc0";
+>> +		};
+>> +
+>> +		blueled {
+>> +			label = "blue:heartbeat";
+>> +			pwms = <&pwm 2 2000000 0>;
+>> +			pwm-names = "pwm2";
+>> +			max_brightness = <255>;
+>> +			linux,default-trigger = "heartbeat";
+>> +		};
+>> +	};
+>> +
+>> +	gpioleds {
+>> +		compatible = "gpio-leds";
+>> +		redled {
+>> +			label = "red:microSD";
+>> +			gpios = <&gpx2 3 GPIO_ACTIVE_HIGH>;
+>> +			default-state = "off";
+>> +			linux,default-trigger = "mmc1";
+>> +		};
+>> +	};
+>> +};
+>> +
+>> +&pwm {
+>> +	/*
+>> +	 * PWM 0 -- fan
+>> +	 * PWM 1 -- Green LED
+>> +	 * PWM 2 -- Blue LED
+>> +	 * PWM 3 -- on MIPI connector for backlight
+>> +	 */
+>> +	pinctrl-0 = <&pwm0_out &pwm1_out &pwm2_out &pwm3_out>;
+>> +	pinctrl-names = "default";
+>> +	samsung,pwm-outputs = <0>;
+>> +	status = "okay";
+>> +};
+>> +
+>> +&usbdrd_dwc3_1 {
+>> +	dr_mode = "otg";
+>>  };
+>> diff --git a/arch/arm/boot/dts/exynos5422-odroidxu3.dts b/arch/arm/boot/dts/exynos5422-odroidxu3.dts
+>> index 78e6a502f320..c7509690131d 100644
+>> --- a/arch/arm/boot/dts/exynos5422-odroidxu3.dts
+>> +++ b/arch/arm/boot/dts/exynos5422-odroidxu3.dts
+>> @@ -12,10 +12,45 @@
+>>  
+>>  /dts-v1/;
+>>  #include "exynos5422-odroidxu3-common.dtsi"
+>> +#include "exynos5422-odroidxu3-audio.dtsi"
+>>  
+>>  / {
+>>  	model = "Hardkernel Odroid XU3";
+>>  	compatible = "hardkernel,odroid-xu3", "samsung,exynos5800", "samsung,exynos5";
+>> +
+>> +	pwmleds {
+>> +		compatible = "pwm-leds";
+>> +
+>> +		greenled {
+>> +			label = "green:mmc0";
+>> +			pwms = <&pwm 1 2000000 0>;
+>> +			pwm-names = "pwm1";
+>> +			/*
+>> +			 * Green LED is much brighter than the others
+>> +			 * so limit its max brightness
+>> +			 */
+>> +			max_brightness = <127>;
+>> +			linux,default-trigger = "mmc0";
+>> +		};
+>> +
+>> +		blueled {
+>> +			label = "blue:heartbeat";
+>> +			pwms = <&pwm 2 2000000 0>;
+>> +			pwm-names = "pwm2";
+>> +			max_brightness = <255>;
+>> +			linux,default-trigger = "heartbeat";
+>> +		};
+>> +	};
+>> +
+>> +	gpioleds {
+>> +		compatible = "gpio-leds";
+>> +		redled {
+>> +			label = "red:microSD";
+>> +			gpios = <&gpx2 3 GPIO_ACTIVE_HIGH>;
+>> +			default-state = "off";
+>> +			linux,default-trigger = "mmc1";
+>> +		};
+>> +	};
+>>  };
+>>  
+>>  &i2c_0 {
+>> @@ -49,3 +84,20 @@
+>>  		shunt-resistor = <10000>;
+>>  	};
+>>  };
+>> +
+>> +&pwm {
+>> +	/*
+>> +	 * PWM 0 -- fan
+>> +	 * PWM 1 -- Green LED
+>> +	 * PWM 2 -- Blue LED
+>> +	 * PWM 3 -- on MIPI connector for backlight
+>> +	 */
+>> +	pinctrl-0 = <&pwm0_out &pwm1_out &pwm2_out &pwm3_out>;
+>> +	pinctrl-names = "default";
+>> +	samsung,pwm-outputs = <0>;
+>> +	status = "okay";
+>> +};
+>> +
+>> +&usbdrd_dwc3_1 {
+>> +	dr_mode = "otg";
+>> +};
+>> diff --git a/arch/arm/boot/dts/exynos5422-odroidxu4.dts b/arch/arm/boot/dts/exynos5422-odroidxu4.dts
+>> new file mode 100644
+>> index 000000000000..087c485b6084
+>> --- /dev/null
+>> +++ b/arch/arm/boot/dts/exynos5422-odroidxu4.dts
+>> @@ -0,0 +1,48 @@
+>> +/*
+>> + * Hardkernel Odroid XU4 board device tree source
+>> + *
+>> + * Copyright (c) 2015 Krzysztof Kozlowski
+>> + * Copyright (c) 2014 Collabora Ltd.
+>> + * Copyright (c) 2013 Samsung Electronics Co., Ltd.
+>> + *		http://www.samsung.com
+>> + *
+>> + * This program is free software; you can redistribute it and/or modify
+>> + * it under the terms of the GNU General Public License version 2 as
+>> + * published by the Free Software Foundation.
+>> +*/
+>> +
+>> +/dts-v1/;
+>> +#include "exynos5422-odroidxu3-common.dtsi"
+>> +
+>> +/ {
+>> +	model = "Hardkernel Odroid XU4";
+>> +	compatible = "hardkernel,odroid-xu4", "samsung,exynos5800", \
+>> +		     "samsung,exynos5";
+>> +
+>> +	pwmleds {
+>> +		compatible = "pwm-leds";
+>> +
+>> +		blueled {
+>> +			label = "blue:heartbeat";
+>> +			pwms = <&pwm 2 2000000 0>;
+>> +			pwm-names = "pwm2";
+>> +			max_brightness = <255>;
+>> +			linux,default-trigger = "heartbeat";
+>> +		};
+>> +	};
+>> +};
+>> +
+>> +&pwm {
+>> +	/*
+>> +	 * PWM 0 -- fan
+>> +	 * PWM 2 -- Blue LED
+>> +	 */
+>> +	pinctrl-0 = <&pwm0_out &pwm2_out>;
+>> +	pinctrl-names = "default";
+>> +	samsung,pwm-outputs = <0>;
+>> +	status = "okay";
+>> +};
+>> +
+>> +&usbdrd_dwc3_1 {
+>> +	dr_mode = "host";
+>> +};
+>>
+> 
+> Reviewed-by: Javier Martinez Canillas <javier@osg.samsung.com>
+> 
+> Best regards,
+> 
