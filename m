@@ -1,122 +1,63 @@
-From: Martin Kepplinger <martink@posteo.de>
-Subject: [PATCH 3/6] iio: mma8452: add freefall / motion interrupt source
-Date: Tue,  1 Sep 2015 13:45:10 +0200
-Message-ID: <1441107913-4112-4-git-send-email-martink@posteo.de>
-References: <1441107913-4112-1-git-send-email-martink@posteo.de>
+From: Rob Herring <robherring2@gmail.com>
+Subject: Re: [PATCH v3 4/6] [media] c8sectpfe: Update binding to reset-gpios
+Date: Tue, 1 Sep 2015 06:54:41 -0500
+Message-ID: <CAL_JsqLccRKCnASOK-tAUn=ifZpQ3hCEJ1eg1hmrei=3vEpzFA@mail.gmail.com>
+References: <1440784362-31217-1-git-send-email-peter.griffin@linaro.org>
+ <1440784362-31217-5-git-send-email-peter.griffin@linaro.org> <CABxcv=nM7MBK2EcD1-YK5y0J1hBtxV+6Wu812C23pNkAzigu7g@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1441107913-4112-1-git-send-email-martink@posteo.de>
+In-Reply-To: <CABxcv=nM7MBK2EcD1-YK5y0J1hBtxV+6Wu812C23pNkAzigu7g@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: jic23@kernel.org, knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net, mfuzzey@parkeon.com, roberta.dobrescu@gmail.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org
-Cc: devicetree@vger.kernel.org, linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, christoph.muellner@theobroma-systems.com, Martin Kepplinger <martink@posteo.de>, Martin Kepplinger <martin.kepplinger@theobroma-systems.com>
+To: Javier Martinez Canillas <javier@dowhile0.org>
+Cc: Peter Griffin <peter.griffin@linaro.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Linux Kernel <linux-kernel@vger.kernel.org>, Srinivas Kandagatla <srinivas.kandagatla@gmail.com>, Maxime Coquelin <maxime.coquelin@st.com>, Patrice Chotard <patrice.chotard@st.com>, Mauro Carvalho Chehab <mchehab@osg.samsung.com>, Lee Jones <lee.jones@linaro.org>, "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Valentin Rothberg <valentinrothberg@gmail.com>, hugues.fruchet@st.com
 List-Id: devicetree@vger.kernel.org
 
-This adds the freefall / motion interrupt source definitions to the driver.
-It is used in this series' next patch, for chips that don't support the
-transient interrupt source.
+On Tue, Sep 1, 2015 at 3:32 AM, Javier Martinez Canillas
+<javier@dowhile0.org> wrote:
+> Hello Peter,
+>
+> On Fri, Aug 28, 2015 at 7:52 PM, Peter Griffin <peter.griffin@linaro.org> wrote:
+>> gpio.txt documents that GPIO properties should be named
+>> "[<name>-]gpios", with <name> being the purpose of this
+>> GPIO for the device.
+>>
+>> This change has been done as one atomic commit.
+>>
+>> Signed-off-by: Peter Griffin <peter.griffin@linaro.org>
+>> Acked-by: Lee Jones <lee.jones@linaro.org>
+>> ---
+>>  Documentation/devicetree/bindings/media/stih407-c8sectpfe.txt | 6 +++---
+>>  arch/arm/boot/dts/stihxxx-b2120.dtsi                          | 4 ++--
+>>  drivers/media/platform/sti/c8sectpfe/c8sectpfe-core.c         | 2 +-
+>>  3 files changed, 6 insertions(+), 6 deletions(-)
+>>
+>> diff --git a/Documentation/devicetree/bindings/media/stih407-c8sectpfe.txt b/Documentation/devicetree/bindings/media/stih407-c8sectpfe.txt
+>> index d4def76..e70d840 100644
+>> --- a/Documentation/devicetree/bindings/media/stih407-c8sectpfe.txt
+>> +++ b/Documentation/devicetree/bindings/media/stih407-c8sectpfe.txt
+>> @@ -35,7 +35,7 @@ Required properties (tsin (child) node):
+>>
+>>  - tsin-num     : tsin id of the InputBlock (must be between 0 to 6)
+>>  - i2c-bus      : phandle to the I2C bus DT node which the demodulators & tuners on this tsin channel are connected.
+>> -- rst-gpio     : reset gpio for this tsin channel.
+>> +- reset-gpios  : reset gpio for this tsin channel.
+>
+> The documentation is a bit outdated, the GPIO subsystem supports both
+> -gpio and -gpios, see commit:
+>
+> dd34c37aa3e8 ("gpio: of: Allow -gpio suffix for property names")
 
-Signed-off-by: Martin Kepplinger <martin.kepplinger@theobroma-systems.com>
-Signed-off-by: Christoph Muellner <christoph.muellner@theobroma-systems.com>
----
- drivers/iio/accel/mma8452.c | 44 ++++++++++++++++++++++++++++++++++++--------
- 1 file changed, 36 insertions(+), 8 deletions(-)
+Yes, because we have lots of them.
 
-diff --git a/drivers/iio/accel/mma8452.c b/drivers/iio/accel/mma8452.c
-index 7b2ab17..6b1a862 100644
---- a/drivers/iio/accel/mma8452.c
-+++ b/drivers/iio/accel/mma8452.c
-@@ -42,6 +42,16 @@
- #define  MMA8452_DATA_CFG_HPF_MASK		BIT(4)
- #define MMA8452_HP_FILTER_CUTOFF		0x0f
- #define  MMA8452_HP_FILTER_CUTOFF_SEL_MASK	GENMASK(1, 0)
-+#define MMA8452_FF_MT_CFG			0x15
-+#define  MMA8452_FF_MT_CFG_OAE			BIT(6)
-+#define  MMA8452_FF_MT_CFG_ELE			BIT(7)
-+#define MMA8452_FF_MT_SRC			0x16
-+#define  MMA8452_FF_MT_SRC_XHE			BIT(1)
-+#define  MMA8452_FF_MT_SRC_YHE			BIT(3)
-+#define  MMA8452_FF_MT_SRC_ZHE			BIT(5)
-+#define MMA8452_FF_MT_THS			0x17
-+#define  MMA8452_FF_MT_THS_MASK			0x7f
-+#define MMA8452_FF_MT_COUNT			0x18
- #define MMA8452_TRANSIENT_CFG			0x1d
- #define  MMA8452_TRANSIENT_CFG_HPF_BYP		BIT(0)
- #define  MMA8452_TRANSIENT_CFG_CHAN(chan)	BIT(chan + 1)
-@@ -69,6 +79,7 @@
- #define MMA8452_MAX_REG				0x31
- 
- #define  MMA8452_INT_DRDY			BIT(0)
-+#define  MMA8452_INT_FF_MT			BIT(2)
- #define  MMA8452_INT_TRANS			BIT(5)
- 
- #define  MMA8452_DEVICE_ID			0x2a
-@@ -613,7 +624,8 @@ static int mma8452_write_event_config(struct iio_dev *indio_dev,
- 	else
- 		val &= ~BIT(chan->scan_index + chip->ev_cfg_chan_shift);
- 
--	val |= MMA8452_TRANSIENT_CFG_ELE;
-+	val |= chip->ev_cfg_ele;
-+	val |= MMA8452_FF_MT_CFG_OAE;
- 
- 	return mma8452_change_config(data, chip->ev_cfg, val);
- }
-@@ -654,6 +666,7 @@ static irqreturn_t mma8452_interrupt(int irq, void *p)
- {
- 	struct iio_dev *indio_dev = p;
- 	struct mma8452_data *data = iio_priv(indio_dev);
-+	const struct mma_chip_info *chip = data->chip_info;
- 	int ret = IRQ_NONE;
- 	int src;
- 
-@@ -666,7 +679,10 @@ static irqreturn_t mma8452_interrupt(int irq, void *p)
- 		ret = IRQ_HANDLED;
- 	}
- 
--	if (src & MMA8452_INT_TRANS) {
-+	if ((src & MMA8452_INT_TRANS &&
-+	     chip->ev_src == MMA8452_TRANSIENT_SRC) ||
-+	    (src & MMA8452_INT_FF_MT &&
-+	     chip->ev_src == MMA8452_FF_MT_SRC)) {
- 		mma8452_transient_interrupt(indio_dev);
- 		ret = IRQ_HANDLED;
- 	}
-@@ -728,6 +744,16 @@ static const struct iio_event_spec mma8452_transient_event[] = {
- 	},
- };
- 
-+static const struct iio_event_spec mma8452_motion_event[] = {
-+	{
-+		.type = IIO_EV_TYPE_MAG,
-+		.dir = IIO_EV_DIR_RISING,
-+		.mask_separate = BIT(IIO_EV_INFO_ENABLE),
-+		.mask_shared_by_type = BIT(IIO_EV_INFO_VALUE) |
-+					BIT(IIO_EV_INFO_PERIOD)
-+	},
-+};
-+
- /*
-  * Threshold is configured in fixed 8G/127 steps regardless of
-  * currently selected scale for measurement.
-@@ -1013,13 +1039,15 @@ static int mma8452_probe(struct i2c_client *client,
- 
- 	if (client->irq) {
- 		/*
--		 * Although we enable the transient interrupt source once and
--		 * for all here the transient event detection itself is not
--		 * enabled until userspace asks for it by
--		 * mma8452_write_event_config()
-+		 * Although we enable the interrupt sources once and for
-+		 * all here the event detection itself is not enabled until
-+		 * userspace asks for it by mma8452_write_event_config()
- 		 */
--		int supported_interrupts = MMA8452_INT_DRDY | MMA8452_INT_TRANS;
--		int enabled_interrupts = MMA8452_INT_TRANS;
-+		int supported_interrupts = MMA8452_INT_DRDY |
-+					   MMA8452_INT_TRANS |
-+					   MMA8452_INT_FF_MT;
-+		int enabled_interrupts = MMA8452_INT_TRANS |
-+					 MMA8452_INT_FF_MT;
- 
- 		/* Assume wired to INT1 pin */
- 		ret = i2c_smbus_write_byte_data(client,
--- 
-2.1.4
+> So it makes sense to me to use -gpio instead of -gpios in this case
+> since is a single GPIO. Also rst is already a descriptive name since
+> that's how many datasheets name a reset pin. I'm not saying I'm
+> against this patch, just pointing out since the commit message is a
+> bit misleading.
+
+I believe that this has been discussed at length and it was decided
+that new bindings should use "-gpios" even for 1. Just like "clocks"
+is always plural.
+
+Rob
