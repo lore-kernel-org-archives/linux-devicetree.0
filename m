@@ -1,85 +1,53 @@
-From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [GIT PULL] DeviceTree for 4.3
-Date: Tue, 1 Sep 2015 16:20:13 -0500
-Message-ID: <CAL_JsqLCzSXMxV3QyFRWcnvksjZNZeNETtht6qY62vcHMzHHSQ@mail.gmail.com>
+From: "santosh.shilimkar-QHcLZuEGTsvQT0dZR+AlfA@public.gmane.org" <santosh.shilimkar-QHcLZuEGTsvQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH] ARM: dts: keystone: use one to one address translations
+ under netcp
+Date: Tue, 01 Sep 2015 14:19:20 -0700
+Message-ID: <55E61658.9010207@oracle.com>
+References: <1441139324-29296-1-git-send-email-w-kwok2@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1441139324-29296-1-git-send-email-w-kwok2-l0cyMroinI0@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Linus Torvalds <torvalds-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>
-Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: WingMan Kwok <w-kwok2-l0cyMroinI0@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ssantosh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Cc: m-karicheri2-l0cyMroinI0@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Linus,
+On 9/1/15 1:28 PM, WingMan Kwok wrote:
+> Network subsystem NetCP in Keystone-2 devices includes some HW blocks
+> that are memory mapped to ranges outside that of the NetCP itself.
+> Thus address space of a child node of the NetCP node needs to be
+> mapped 1:1 onto the parent address space.  Hence empty ranges
+> should be used under the NetCP node.
+>
+> Signed-off-by: WingMan Kwok <w-kwok2-l0cyMroinI0@public.gmane.org>
+> ---
+>   arch/arm/boot/dts/k2e-netcp.dtsi  |    8 +++-----
+>   arch/arm/boot/dts/k2hk-netcp.dtsi |   14 ++++++--------
+>   arch/arm/boot/dts/k2l-netcp.dtsi  |    8 +++-----
+>   3 files changed, 12 insertions(+), 18 deletions(-)
+>
+> diff --git a/arch/arm/boot/dts/k2e-netcp.dtsi b/arch/arm/boot/dts/k2e-netcp.dtsi
+> index b13b3c9..e103ed9 100644
+> --- a/arch/arm/boot/dts/k2e-netcp.dtsi
+> +++ b/arch/arm/boot/dts/k2e-netcp.dtsi
+> @@ -111,9 +111,7 @@ netcp: netcp@24000000 {
+>   	compatible = "ti,netcp-1.0";
+>   	#address-cells = <1>;
+>   	#size-cells = <1>;
+> -
+> -	/* NetCP address range */
+> -	ranges = <0 0x24000000 0x1000000>;
+> +	ranges;
+>
+What blocks are we talking here. We need to increase the
+range if the current range isn't covering entire NETCP
+address space. Removing range isn't a solution.
 
-Please pull. A small set of changes this cycle even by DT standards.
-However, there is a significant change here with Grant stepping down
-as maintainer. His contributions as maintainer have been invaluable to
-the kernel community, and I thank him for that as well as his guidance
-over the years.
+Regards,
+Santosh
 
-Rob
-
-
-The following changes since commit cbfe8fa6cd672011c755c3cd85c9ffd4e2d10a6f:
-
-  Linux 4.2-rc4 (2015-07-26 12:26:21 -0700)
-
-are available in the git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/robh/linux.git
-tags/devicetree-for-4.3
-
-for you to fetch changes up to c8fb70a3e8dd60e31c4422bae85783cf1733f038:
-
-  MAINTAINERS: Add Frank Rowand as DT maintainer (2015-09-01 08:18:12 -0500)
-
-----------------------------------------------------------------
-DeviceTree updates for 4.3:
-- Adding Frank Rowand as DT maintainer in preparation for Grant's
-  retirement.
-- Generic MSI binding documentation and a few other minor doc updates
-- Fix long standing issue with DT platorm device unregistration
-- Fix loop forever bug in of_find_matching_node_by_address()
-
-----------------------------------------------------------------
-David Daney (1):
-      of/address: Don't loop forever in of_find_matching_node_by_address().
-
-Geert Uytterhoeven (1):
-      of: Add vendor prefix for JEDEC Solid State Technology Association
-
-Grant Likely (2):
-      drivercore: Fix unregistration path of platform devices
-      MAINTAINERS: Add Frank Rowand as DT maintainer
-
-Hauke Mehrtens (1):
-      of/platform: add function to populate default bus
-
-Mark Rutland (1):
-      Docs: dt: add generic MSI bindings
-
-Mugunthan V N (1):
-      Documentation: DT: cpsw: document missing compatible
-
-Robert Jarzmik (1):
-      mtd: nand: pxa3xx: add optional dma for pxa architecture
-
-Thierry Reding (1):
-      of: Add vendor prefix for Sharp Corporation
-
- .../bindings/interrupt-controller/msi.txt          | 135 +++++++++++++++++++++
- .../devicetree/bindings/mtd/pxa3xx-nand.txt        |   3 +
- Documentation/devicetree/bindings/net/cpsw.txt     |   6 +-
- .../devicetree/bindings/vendor-prefixes.txt        |   2 +
- MAINTAINERS                                        |   3 +-
- drivers/base/platform.c                            |   8 +-
- drivers/of/address.c                               |   6 +-
- drivers/of/platform.c                              |   9 ++
- include/linux/of_platform.h                        |   9 ++
- 9 files changed, 170 insertions(+), 11 deletions(-)
- create mode 100644
-Documentation/devicetree/bindings/interrupt-controller/msi.txt
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
