@@ -1,251 +1,48 @@
-From: Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH v4 2/5] ARM: NSP: add minimal Northstar Plus device tree
-Date: Tue, 1 Sep 2015 08:28:01 -0700
-Message-ID: <55E5C401.6090705@broadcom.com>
-References: <1441064933-6723-1-git-send-email-jonmason@broadcom.com>
+From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH] ARM: dts: DRA7: fix a typo in ethernet
+Date: Tue, 1 Sep 2015 08:50:06 -0700
+Message-ID: <20150901155005.GM4215@atomide.com>
+References: <1440529069-7882-1-git-send-email-vishalm@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1441064933-6723-1-git-send-email-jonmason-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1440529069-7882-1-git-send-email-vishalm-l0cyMroinI0@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jon Mason <jonmason-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Kevin Hilman <khilman-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Kapil Hali <kapilh-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+To: Vishal Mahaveer <vishalm-l0cyMroinI0@public.gmane.org>
+Cc: =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mugunthan V N <mugunthanvnm-l0cyMroinI0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-
-
-On 8/31/2015 4:48 PM, Jon Mason wrote:
-> Add a very minimalistic set of Northstar Plus Device Tree files which
-> describes the SoC and the BCM958625 implementation.  The perpherials
-> described are:
+* Vishal Mahaveer <vishalm-l0cyMroinI0@public.gmane.org> [150825 12:01]:
+> Register address in name of the node is wrong
 > 
-> ARM Cortex A9 CPU
-> 2 8250 UARTs
-> ARM GIC
-> PL310 L2 Cache
-> ARM A9 Global timer
-> 
-> Signed-off-by: Kapil Hali <kapilh-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-> Signed-off-by: Jon Mason <jonmason-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+> Signed-off-by: Vishal Mahaveer <vishalm-l0cyMroinI0@public.gmane.org>
+> Acked-by: Mugunthan V N <mugunthanvnm-l0cyMroinI0@public.gmane.org>
+
+Thanks applying into omap-for-v4.3/fixes.
+
+Tony
+
 > ---
->  arch/arm/boot/dts/Makefile       |   2 +
->  arch/arm/boot/dts/bcm-nsp.dtsi   | 119 +++++++++++++++++++++++++++++++++++++++
->  arch/arm/boot/dts/bcm958625k.dts |  57 +++++++++++++++++++
->  3 files changed, 178 insertions(+)
->  create mode 100644 arch/arm/boot/dts/bcm-nsp.dtsi
->  create mode 100644 arch/arm/boot/dts/bcm958625k.dts
+>  arch/arm/boot/dts/dra7.dtsi |    2 +-
+>  1 files changed, 1 insertions(+), 1 deletions(-)
 > 
-> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-> index 246473a..adb5732 100644
-> --- a/arch/arm/boot/dts/Makefile
-> +++ b/arch/arm/boot/dts/Makefile
-> @@ -82,6 +82,8 @@ dtb-$(CONFIG_ARCH_BCM_CYGNUS) += \
->  dtb-$(CONFIG_ARCH_BCM_MOBILE) += \
->  	bcm28155-ap.dtb \
->  	bcm21664-garnet.dtb
-> +dtb-$(CONFIG_ARCH_BCM_NSP) += \
-> +	bcm958625k.dtb
->  dtb-$(CONFIG_ARCH_BERLIN) += \
->  	berlin2-sony-nsz-gs7.dtb \
->  	berlin2cd-google-chromecast.dtb \
-> diff --git a/arch/arm/boot/dts/bcm-nsp.dtsi b/arch/arm/boot/dts/bcm-nsp.dtsi
-> new file mode 100644
-> index 0000000..58aca27
-> --- /dev/null
-> +++ b/arch/arm/boot/dts/bcm-nsp.dtsi
-> @@ -0,0 +1,119 @@
-> +/*
-> + *  BSD LICENSE
-> + *
-> + *  Copyright(c) 2015 Broadcom Corporation.  All rights reserved.
-> + *
-> + *  Redistribution and use in source and binary forms, with or without
-> + *  modification, are permitted provided that the following conditions
-> + *  are met:
-> + *
-> + *    * Redistributions of source code must retain the above copyright
-> + *      notice, this list of conditions and the following disclaimer.
-> + *    * Redistributions in binary form must reproduce the above copyright
-> + *      notice, this list of conditions and the following disclaimer in
-> + *      the documentation and/or other materials provided with the
-> + *      distribution.
-> + *    * Neither the name of Broadcom Corporation nor the names of its
-> + *      contributors may be used to endorse or promote products derived
-> + *      from this software without specific prior written permission.
-> + *
-> + *  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
-> + *  "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
-> + *  LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
-> + *  A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
-> + *  OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
-> + *  SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
-> + *  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
-> + *  DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
-> + *  THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
-> + *  (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
-> + *  OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-> + */
-> +
-> +#include <dt-bindings/interrupt-controller/arm-gic.h>
-> +#include <dt-bindings/interrupt-controller/irq.h>
-> +
-> +#include "skeleton.dtsi"
-> +
-> +/ {
-> +	compatible = "brcm,nsp";
-> +	model = "Broadcom Northstar Plus SoC";
-> +	interrupt-parent = <&gic>;
-> +
-> +	mpcore {
-> +		compatible = "simple-bus";
-> +		ranges = <0x00000000 0x19020000 0x00003000>;
-> +		#address-cells = <1>;
-> +		#size-cells = <1>;
-> +
-> +		cpus {
-> +			#address-cells = <1>;
-> +			#size-cells = <0>;
-> +
-> +			cpu@0 {
-> +				device_type = "cpu";
-> +				compatible = "arm,cortex-a9";
-> +				next-level-cache = <&L2>;
-> +				reg = <0x0>;
-> +			};
-> +		};
-> +
-> +		L2: l2-cache {
-> +			compatible = "arm,pl310-cache";
-> +			reg = <0x2000 0x1000>;
-> +			cache-unified;
-> +			cache-level = <2>;
-> +		};
-> +
-> +		gic: interrupt-controller@19021000 {
-> +			compatible = "arm,cortex-a9-gic";
-> +			#interrupt-cells = <3>;
-> +			#address-cells = <0>;
-> +			interrupt-controller;
-> +			reg = <0x1000 0x1000>,
-> +			      <0x0100 0x100>;
-> +		};
-> +
-> +		timer@19020200 {
-> +			compatible = "arm,cortex-a9-global-timer";
-> +			reg = <0x0200 0x100>;
-> +			interrupts = <GIC_PPI 11 IRQ_TYPE_LEVEL_HIGH>;
-> +			clocks = <&periph_clk>;
-> +		};
-> +	};
-> +
-> +	clocks {
-> +		#address-cells = <1>;
-> +		#size-cells = <1>;
-> +		ranges;
-> +
-> +		periph_clk: periph_clk {
-> +			compatible = "fixed-clock";
-> +			#clock-cells = <0>;
-> +			clock-frequency = <500000000>;
-> +		};
-> +	};
-> +
-> +	axi {
-> +		compatible = "simple-bus";
-> +		ranges = <0x00000000 0x18000000 0x00001000>;
-> +		#address-cells = <1>;
-> +		#size-cells = <1>;
-> +
-> +		uart0: serial@18000300 {
-> +			compatible = "ns16550a";
-> +			reg = <0x0300 0x100>;
-> +			interrupts = <GIC_SPI 85 IRQ_TYPE_LEVEL_HIGH>;
-> +			clock-frequency = <62499840>;
-> +			status = "disabled";
-> +		};
-> +
-> +		uart1: serial@18000400 {
-> +			compatible = "ns16550a";
-> +			reg = <0x0400 0x100>;
-> +			interrupts = <GIC_SPI 85 IRQ_TYPE_LEVEL_HIGH>;
-> +			clock-frequency = <62499840>;
-> +			status = "disabled";
-> +		};
-> +	};
-> +};
-> diff --git a/arch/arm/boot/dts/bcm958625k.dts b/arch/arm/boot/dts/bcm958625k.dts
-> new file mode 100644
-> index 0000000..16303db
-> --- /dev/null
-> +++ b/arch/arm/boot/dts/bcm958625k.dts
-> @@ -0,0 +1,57 @@
-> +/*
-> + *  BSD LICENSE
-> + *
-> + *  Copyright(c) 2015 Broadcom Corporation.  All rights reserved.
-> + *
-> + *  Redistribution and use in source and binary forms, with or without
-> + *  modification, are permitted provided that the following conditions
-> + *  are met:
-> + *
-> + *    * Redistributions of source code must retain the above copyright
-> + *      notice, this list of conditions and the following disclaimer.
-> + *    * Redistributions in binary form must reproduce the above copyright
-> + *      notice, this list of conditions and the following disclaimer in
-> + *      the documentation and/or other materials provided with the
-> + *      distribution.
-> + *    * Neither the name of Broadcom Corporation nor the names of its
-> + *      contributors may be used to endorse or promote products derived
-> + *      from this software without specific prior written permission.
-> + *
-> + *  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
-> + *  "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
-> + *  LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
-> + *  A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
-> + *  OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
-> + *  SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
-> + *  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
-> + *  DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
-> + *  THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
-> + *  (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
-> + *  OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-> + */
-> +
-> +/dts-v1/;
-> +
-> +#include "bcm-nsp.dtsi"
-> +
-> +/ {
-> +	model = "NorthStar Plus SVK (BCM958625K)";
-> +	compatible = "brcm,bcm58625", "brcm,nsp";
-> +
-> +	aliases {
-> +		serial0 = &uart0;
-> +		serial1 = &uart1;
-> +	};
-> +
-> +	chosen {
-> +		stdout-path = "serial0:115200n8";
-> +	};
-> +};
-> +
-> +&uart0 {
-> +	status = "okay";
-> +};
-> +
-> +&uart1 {
-> +	status = "okay";
-> +};
+> diff --git a/arch/arm/boot/dts/dra7.dtsi b/arch/arm/boot/dts/dra7.dtsi
+> index 1e29ccf..9a20d46 100644
+> --- a/arch/arm/boot/dts/dra7.dtsi
+> +++ b/arch/arm/boot/dts/dra7.dtsi
+> @@ -1398,7 +1398,7 @@
+>  			ti,irqs-safe-map = <0>;
+>  		};
+>  
+> -		mac: ethernet@4a100000 {
+> +		mac: ethernet@48484000 {
+>  			compatible = "ti,cpsw";
+>  			ti,hwmods = "gmac";
+>  			clocks = <&dpll_gmac_ck>, <&gmac_gmii_ref_clk_div>;
+> -- 
+> 1.7.4.1
 > 
-
-Looks good to me!
-
-Reviewed-by: Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-
-Thanks,
-
-Ray
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
