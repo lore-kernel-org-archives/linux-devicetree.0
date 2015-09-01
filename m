@@ -1,445 +1,88 @@
-From: Javier Martinez Canillas <javier@osg.samsung.com>
-Subject: Re: [PATCH] ARM: dts: Add exynos5422-odroidxu4 board
-Date: Tue, 1 Sep 2015 10:48:06 +0200
-Message-ID: <55E56646.2070106@osg.samsung.com>
-References: <1440993365-26896-1-git-send-email-k.kozlowski@samsung.com>
+From: Peter Griffin <peter.griffin@linaro.org>
+Subject: Re: [STLinux Kernel] [PATCH v2 2/4] remoteproc: dt: Provide bindings
+ for ST's Remote Processor Controller driver
+Date: Tue, 1 Sep 2015 09:58:25 +0100
+Message-ID: <20150901085825.GC30542@griffinp-ThinkPad-X1-Carbon-2nd>
+References: <1440757911-9120-1-git-send-email-lee.jones@linaro.org>
+ <1440757911-9120-3-git-send-email-lee.jones@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <1440993365-26896-1-git-send-email-k.kozlowski@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Krzysztof Kozlowski <k.kozlowski@samsung.com>, Kukjin Kim <kgene@kernel.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org
-Cc: Anand Moon <linux.amoon@gmail.com>, Chanwoo Choi <cw00.choi@samsung.com>, Inki Dae <inki.dae@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>, p.marczak@samsung.com
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1440757911-9120-3-git-send-email-lee.jones@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Lee Jones <lee.jones@linaro.org>
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, ohad@wizery.com, devicetree@vger.kernel.org, kernel@stlinux.com, Nathan_Lynch@mentor.com
 List-Id: devicetree@vger.kernel.org
 
-Hello Krzysztof,
+Hi Lee,
 
-The patch looks good to me, I just have one small comment.
+On Fri, 28 Aug 2015, Lee Jones wrote:
 
-On 08/31/2015 05:56 AM, Krzysztof Kozlowski wrote:
-> Add Hardkernel Odroid XU4 board Device Tree sources. The board differs
-> from Odroid XU3 and XU3-Lite by:
-> 1. No green and red leds (except standard red power led).
-> 2. No audio codec.
-> 3. Two USB3 ports in host mode (no micro USB3 connector for OTG).
-> 4. Realtek RTL8153-CG gigabit network adapter (instead of SMSC9514).
-> 5. Additional connector with IO ports (I2S_0, I2C_5).
-> 6. No DisplayPort.
-> 7. No TI INA231 power measurement sensors.
-> 
-> Signed-off-by: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+> Signed-off-by: Ludovic Barre <ludovic.barre@st.com>
+> Signed-off-by: Lee Jones <lee.jones@linaro.org>
 > ---
->  arch/arm/boot/dts/Makefile                         |  1 +
->  arch/arm/boot/dts/exynos5422-odroidxu3-audio.dtsi  | 56 ++++++++++++++
->  arch/arm/boot/dts/exynos5422-odroidxu3-common.dtsi | 90 +---------------------
->  arch/arm/boot/dts/exynos5422-odroidxu3-lite.dts    | 52 +++++++++++++
->  arch/arm/boot/dts/exynos5422-odroidxu3.dts         | 52 +++++++++++++
->  arch/arm/boot/dts/exynos5422-odroidxu4.dts         | 48 ++++++++++++
->  6 files changed, 210 insertions(+), 89 deletions(-)
->  create mode 100644 arch/arm/boot/dts/exynos5422-odroidxu3-audio.dtsi
->  create mode 100644 arch/arm/boot/dts/exynos5422-odroidxu4.dts
+>  .../devicetree/bindings/remoteproc/st-rproc.txt    | 35 ++++++++++++++++++++++
+>  1 file changed, 35 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/remoteproc/st-rproc.txt
+
+The patch documening the DT bindings should be ordered before the patch which adds
+the DT node to aid reviewing.
 > 
-> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-> index 233159d2eaab..3d27fe34647f 100644
-> --- a/arch/arm/boot/dts/Makefile
-> +++ b/arch/arm/boot/dts/Makefile
-> @@ -123,6 +123,7 @@ dtb-$(CONFIG_ARCH_EXYNOS5) += \
->  	exynos5420-smdk5420.dtb \
->  	exynos5422-odroidxu3.dtb \
->  	exynos5422-odroidxu3-lite.dtb \
-> +	exynos5422-odroidxu4.dtb \
->  	exynos5440-sd5v1.dtb \
->  	exynos5440-ssdk5440.dtb \
->  	exynos5800-peach-pi.dtb
-> diff --git a/arch/arm/boot/dts/exynos5422-odroidxu3-audio.dtsi b/arch/arm/boot/dts/exynos5422-odroidxu3-audio.dtsi
+> diff --git a/Documentation/devicetree/bindings/remoteproc/st-rproc.txt b/Documentation/devicetree/bindings/remoteproc/st-rproc.txt
 > new file mode 100644
-> index 000000000000..eee16a820484
+> index 0000000..fbd7d78
 > --- /dev/null
-> +++ b/arch/arm/boot/dts/exynos5422-odroidxu3-audio.dtsi
-> @@ -0,0 +1,56 @@
-> +/*
-> + * Hardkernel Odroid XU3 Audio Codec device tree source
-> + *
-> + * Copyright (c) 2015 Krzysztof Kozlowski
-> + * Copyright (c) 2014 Collabora Ltd.
-> + * Copyright (c) 2013 Samsung Electronics Co., Ltd.
-> + *		http://www.samsung.com
-> + *
-> + * This program is free software; you can redistribute it and/or modify
-> + * it under the terms of the GNU General Public License version 2 as
-> + * published by the Free Software Foundation.
-> +*/
+> +++ b/Documentation/devicetree/bindings/remoteproc/st-rproc.txt
+> @@ -0,0 +1,35 @@
+> +STMicroelectronics Remote Processor
+> +-----------------------------------
 > +
-> +/ {
-> +	sound: sound {
-> +		compatible = "simple-audio-card";
+> +This binding provides support for adjunct processors found on ST SoCs.
 > +
-> +		simple-audio-card,name = "Odroid-XU3";
-> +		simple-audio-card,widgets =
-> +			"Headphone", "Headphone Jack",
-> +			"Speakers", "Speakers";
-> +		simple-audio-card,routing =
-> +			"Headphone Jack", "HPL",
-> +			"Headphone Jack", "HPR",
-> +			"Headphone Jack", "MICBIAS",
-> +			"IN1", "Headphone Jack",
-> +			"Speakers", "SPKL",
-> +			"Speakers", "SPKR";
+> +The remote processors can be controlled from the bootloader or the primary OS.
+> +If the bootloader starts a remote processor processor the primary OS must detect
+> +its state and act accordingly.
 > +
-> +		simple-audio-card,format = "i2s";
-> +		simple-audio-card,bitclock-master = <&link0_codec>;
-> +		simple-audio-card,frame-master = <&link0_codec>;
-> +
-> +		simple-audio-card,cpu {
-> +			sound-dai = <&i2s0 0>;
-> +			system-clock-frequency = <19200000>;
-> +		};
-> +
-> +		link0_codec: simple-audio-card,codec {
-> +			sound-dai = <&max98090>;
-> +			clocks = <&i2s0 CLK_I2S_CDCLK>;
-> +		};
-> +	};
-> +};
-> +
-> +&hsi2c_5 {
-> +	max98090: max98090@10 {
-> +		compatible = "maxim,max98090";
-> +		reg = <0x10>;
-> +		interrupt-parent = <&gpx3>;
-> +		interrupts = <2 0>;
-> +		clocks = <&i2s0 CLK_I2S_CDCLK>;
-> +		clock-names = "mclk";
-> +		#sound-dai-cells = <0>;
-> +	};
+> +Required properties:
+> +- compatible		Should be one of:
+> +				"st,st231-rproc"
+> +				"st,st40-rproc"
 
-Shouldn't this node also include the status = "okay" ?
+st40-proc isn't used anywhere. The stih407 doesn't have a ST40 copro, and
+looking in the vendor tree remoteproc support isn't present for stih415/6 which
+are the the only upstream SoC's to have a ST40 co-pro.
 
-> +};
-> diff --git a/arch/arm/boot/dts/exynos5422-odroidxu3-common.dtsi b/arch/arm/boot/dts/exynos5422-odroidxu3-common.dtsi
-> index dd8bc86d9de4..52c34d8e791f 100644
-> --- a/arch/arm/boot/dts/exynos5422-odroidxu3-common.dtsi
-> +++ b/arch/arm/boot/dts/exynos5422-odroidxu3-common.dtsi
-> @@ -46,70 +46,6 @@
->  		reset-gpios = <&gpd1 0 1>;
->  	};
->  
-> -	pwmleds {
-> -		compatible = "pwm-leds";
-> -
-> -		greenled {
-> -			label = "green:mmc0";
-> -			pwms = <&pwm 1 2000000 0>;
-> -			pwm-names = "pwm1";
-> -			/*
-> -			 * Green LED is much brighter than the others
-> -			 * so limit its max brightness
-> -			 */
-> -			max_brightness = <127>;
-> -			linux,default-trigger = "mmc0";
-> -		};
-> -
-> -		blueled {
-> -			label = "blue:heartbeat";
-> -			pwms = <&pwm 2 2000000 0>;
-> -			pwm-names = "pwm2";
-> -			max_brightness = <255>;
-> -			linux,default-trigger = "heartbeat";
-> -		};
-> -	};
-> -
-> -	gpioleds {
-> -		compatible = "gpio-leds";
-> -		redled {
-> -			label = "red:microSD";
-> -			gpios = <&gpx2 3 GPIO_ACTIVE_HIGH>;
-> -			default-state = "off";
-> -			linux,default-trigger = "mmc1";
-> -		};
-> -	};
-> -
-> -	sound: sound {
-> -		compatible = "simple-audio-card";
-> -
-> -		simple-audio-card,name = "Odroid-XU3";
-> -		simple-audio-card,widgets =
-> -			"Headphone", "Headphone Jack",
-> -			"Speakers", "Speakers";
-> -		simple-audio-card,routing =
-> -			"Headphone Jack", "HPL",
-> -			"Headphone Jack", "HPR",
-> -			"Headphone Jack", "MICBIAS",
-> -			"IN1", "Headphone Jack",
-> -			"Speakers", "SPKL",
-> -			"Speakers", "SPKR";
-> -
-> -		simple-audio-card,format = "i2s";
-> -		simple-audio-card,bitclock-master = <&link0_codec>;
-> -		simple-audio-card,frame-master = <&link0_codec>;
-> -
-> -		simple-audio-card,cpu {
-> -			sound-dai = <&i2s0 0>;
-> -			system-clock-frequency = <19200000>;
-> -		};
-> -
-> -		link0_codec: simple-audio-card,codec {
-> -			sound-dai = <&max98090>;
-> -			clocks = <&i2s0 CLK_I2S_CDCLK>;
-> -		};
-> -	};
-> -
->  	fan0: pwm-fan {
->  		compatible = "pwm-fan";
->  		pwms = <&pwm 0 20972 0>;
-> @@ -378,15 +314,6 @@
->  
->  &hsi2c_5 {
->  	status = "okay";
+So I think st40-rproc support can be removed.
 
-since I believe for the Odroid XU4 we would like this to be disabled.
-The only I2C device in this I2C bus is the max98090 codec which is
-not present in the XU4.
+> +- reg			Size and length of reserved co-processor memory
+> +- resets		Reset lines (See: ../reset/reset.txt)
+> +- reset-names		Must be "sw_reset" and "pwr_reset"
 
-> -	max98090: max98090@10 {
-> -		compatible = "maxim,max98090";
-> -		reg = <0x10>;
-> -		interrupt-parent = <&gpx3>;
-> -		interrupts = <2 0>;
-> -		clocks = <&i2s0 CLK_I2S_CDCLK>;
-> -		clock-names = "mclk";
-> -		#sound-dai-cells = <0>;
-> -	};
->  };
->  
->  &i2c_2 {
-> @@ -464,19 +391,6 @@
->  	};
->  };
->  
-> -&pwm {
-> -	/*
-> -	 * PWM 0 -- fan
-> -	 * PWM 1 -- Green LED
-> -	 * PWM 2 -- Blue LED
-> -	 * PWM 3 -- on MIPI connector for backlight
-> -	 */
-> -	pinctrl-0 = <&pwm0_out &pwm1_out &pwm2_out &pwm3_out>;
-> -	pinctrl-names = "default";
-> -	samsung,pwm-outputs = <0>;
-> -	status = "okay";
-> -};
-> -
->  &tmu_cpu0 {
->  	vtmu-supply = <&ldo7_reg>;
->  	status = "okay";
-> @@ -512,9 +426,7 @@
->  	dr_mode = "host";
->  };
->  
-> -&usbdrd_dwc3_1 {
-> -	dr_mode = "otg";
-> -};
-> +/* usbdrd_dwc3_1 mode customized in each board */
->  
->  &usbdrd3_0 {
->  	vdd33-supply = <&ldo9_reg>;
-> diff --git a/arch/arm/boot/dts/exynos5422-odroidxu3-lite.dts b/arch/arm/boot/dts/exynos5422-odroidxu3-lite.dts
-> index c06882bbb822..379cd61178ee 100644
-> --- a/arch/arm/boot/dts/exynos5422-odroidxu3-lite.dts
-> +++ b/arch/arm/boot/dts/exynos5422-odroidxu3-lite.dts
-> @@ -13,8 +13,60 @@
->  
->  /dts-v1/;
->  #include "exynos5422-odroidxu3-common.dtsi"
-> +#include "exynos5422-odroidxu3-audio.dtsi"
->  
->  / {
->  	model = "Hardkernel Odroid XU3 Lite";
->  	compatible = "hardkernel,odroid-xu3-lite", "samsung,exynos5800", "samsung,exynos5";
-> +
-> +	pwmleds {
-> +		compatible = "pwm-leds";
-> +
-> +		greenled {
-> +			label = "green:mmc0";
-> +			pwms = <&pwm 1 2000000 0>;
-> +			pwm-names = "pwm1";
-> +			/*
-> +			 * Green LED is much brighter than the others
-> +			 * so limit its max brightness
-> +			 */
-> +			max_brightness = <127>;
-> +			linux,default-trigger = "mmc0";
-> +		};
-> +
-> +		blueled {
-> +			label = "blue:heartbeat";
-> +			pwms = <&pwm 2 2000000 0>;
-> +			pwm-names = "pwm2";
-> +			max_brightness = <255>;
-> +			linux,default-trigger = "heartbeat";
-> +		};
-> +	};
-> +
-> +	gpioleds {
-> +		compatible = "gpio-leds";
-> +		redled {
-> +			label = "red:microSD";
-> +			gpios = <&gpx2 3 GPIO_ACTIVE_HIGH>;
-> +			default-state = "off";
-> +			linux,default-trigger = "mmc1";
-> +		};
-> +	};
-> +};
-> +
-> +&pwm {
-> +	/*
-> +	 * PWM 0 -- fan
-> +	 * PWM 1 -- Green LED
-> +	 * PWM 2 -- Blue LED
-> +	 * PWM 3 -- on MIPI connector for backlight
-> +	 */
-> +	pinctrl-0 = <&pwm0_out &pwm1_out &pwm2_out &pwm3_out>;
-> +	pinctrl-names = "default";
-> +	samsung,pwm-outputs = <0>;
-> +	status = "okay";
-> +};
-> +
-> +&usbdrd_dwc3_1 {
-> +	dr_mode = "otg";
->  };
-> diff --git a/arch/arm/boot/dts/exynos5422-odroidxu3.dts b/arch/arm/boot/dts/exynos5422-odroidxu3.dts
-> index 78e6a502f320..c7509690131d 100644
-> --- a/arch/arm/boot/dts/exynos5422-odroidxu3.dts
-> +++ b/arch/arm/boot/dts/exynos5422-odroidxu3.dts
-> @@ -12,10 +12,45 @@
->  
->  /dts-v1/;
->  #include "exynos5422-odroidxu3-common.dtsi"
-> +#include "exynos5422-odroidxu3-audio.dtsi"
->  
->  / {
->  	model = "Hardkernel Odroid XU3";
->  	compatible = "hardkernel,odroid-xu3", "samsung,exynos5800", "samsung,exynos5";
-> +
-> +	pwmleds {
-> +		compatible = "pwm-leds";
-> +
-> +		greenled {
-> +			label = "green:mmc0";
-> +			pwms = <&pwm 1 2000000 0>;
-> +			pwm-names = "pwm1";
-> +			/*
-> +			 * Green LED is much brighter than the others
-> +			 * so limit its max brightness
-> +			 */
-> +			max_brightness = <127>;
-> +			linux,default-trigger = "mmc0";
-> +		};
-> +
-> +		blueled {
-> +			label = "blue:heartbeat";
-> +			pwms = <&pwm 2 2000000 0>;
-> +			pwm-names = "pwm2";
-> +			max_brightness = <255>;
-> +			linux,default-trigger = "heartbeat";
-> +		};
-> +	};
-> +
-> +	gpioleds {
-> +		compatible = "gpio-leds";
-> +		redled {
-> +			label = "red:microSD";
-> +			gpios = <&gpx2 3 GPIO_ACTIVE_HIGH>;
-> +			default-state = "off";
-> +			linux,default-trigger = "mmc1";
-> +		};
-> +	};
->  };
->  
->  &i2c_0 {
-> @@ -49,3 +84,20 @@
->  		shunt-resistor = <10000>;
->  	};
->  };
-> +
-> +&pwm {
-> +	/*
-> +	 * PWM 0 -- fan
-> +	 * PWM 1 -- Green LED
-> +	 * PWM 2 -- Blue LED
-> +	 * PWM 3 -- on MIPI connector for backlight
-> +	 */
-> +	pinctrl-0 = <&pwm0_out &pwm1_out &pwm2_out &pwm3_out>;
-> +	pinctrl-names = "default";
-> +	samsung,pwm-outputs = <0>;
-> +	status = "okay";
-> +};
-> +
-> +&usbdrd_dwc3_1 {
-> +	dr_mode = "otg";
-> +};
-> diff --git a/arch/arm/boot/dts/exynos5422-odroidxu4.dts b/arch/arm/boot/dts/exynos5422-odroidxu4.dts
-> new file mode 100644
-> index 000000000000..087c485b6084
-> --- /dev/null
-> +++ b/arch/arm/boot/dts/exynos5422-odroidxu4.dts
-> @@ -0,0 +1,48 @@
-> +/*
-> + * Hardkernel Odroid XU4 board device tree source
-> + *
-> + * Copyright (c) 2015 Krzysztof Kozlowski
-> + * Copyright (c) 2014 Collabora Ltd.
-> + * Copyright (c) 2013 Samsung Electronics Co., Ltd.
-> + *		http://www.samsung.com
-> + *
-> + * This program is free software; you can redistribute it and/or modify
-> + * it under the terms of the GNU General Public License version 2 as
-> + * published by the Free Software Foundation.
-> +*/
-> +
-> +/dts-v1/;
-> +#include "exynos5422-odroidxu3-common.dtsi"
-> +
-> +/ {
-> +	model = "Hardkernel Odroid XU4";
-> +	compatible = "hardkernel,odroid-xu4", "samsung,exynos5800", \
-> +		     "samsung,exynos5";
-> +
-> +	pwmleds {
-> +		compatible = "pwm-leds";
-> +
-> +		blueled {
-> +			label = "blue:heartbeat";
-> +			pwms = <&pwm 2 2000000 0>;
-> +			pwm-names = "pwm2";
-> +			max_brightness = <255>;
-> +			linux,default-trigger = "heartbeat";
-> +		};
-> +	};
-> +};
-> +
-> +&pwm {
-> +	/*
-> +	 * PWM 0 -- fan
-> +	 * PWM 2 -- Blue LED
-> +	 */
-> +	pinctrl-0 = <&pwm0_out &pwm2_out>;
-> +	pinctrl-names = "default";
-> +	samsung,pwm-outputs = <0>;
-> +	status = "okay";
-> +};
-> +
-> +&usbdrd_dwc3_1 {
-> +	dr_mode = "host";
-> +};
-> 
+pwr_reset isn't used by any of the st231 co-processors. It seems to
+be related to ST40 support which I don't think is required upstream.
+Removing it would make the driver a fair bit smaller.
 
-Reviewed-by: Javier Martinez Canillas <javier@osg.samsung.com>
+> +- clocks		Clock for co-processor (See: ../clock/clock-bindings.txt)
+> +- clock-names		Must be "rproc_clk"
 
-Best regards,
--- 
-Javier Martinez Canillas
-Open Source Group
-Samsung Research America
+I can't see any co-pro which uses more than one clock, so clock-names looks
+superflous.
+
+> +- clock-frequency	Clock frequency to set co-processor at if the bootloader
+> +			hasn't already done so
+> +- st,syscfg-boot	The register that holds the boot vector for the co-processor
+
+I would prefer to see this binding match how most other sti drivers reference syscfg
+registers which is: -
+
+st,syscfg       = <&syscfg_core 0xf4>;
+
+Description: phandle of sysconfig bank plus integer array containing register offsets.
+
+It also means it is easily extendable if more than one syscfg register is
+required in the future to boot a co-pro.
+
+regards,
+
+Peter.
