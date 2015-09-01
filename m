@@ -1,88 +1,105 @@
-From: Javier Martinez Canillas <javier@dowhile0.org>
-Subject: Re: [PATCH v3 4/6] [media] c8sectpfe: Update binding to reset-gpios
-Date: Tue, 1 Sep 2015 14:30:30 +0200
-Message-ID: <CABxcv==BDJw60Nb2pPSJkM0Ea7PKuMkDeKT1Awu+=WBTXrcAgw@mail.gmail.com>
-References: <1440784362-31217-1-git-send-email-peter.griffin@linaro.org>
-	<1440784362-31217-5-git-send-email-peter.griffin@linaro.org>
-	<CABxcv=nM7MBK2EcD1-YK5y0J1hBtxV+6Wu812C23pNkAzigu7g@mail.gmail.com>
-	<CAL_JsqLccRKCnASOK-tAUn=ifZpQ3hCEJ1eg1hmrei=3vEpzFA@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-media-owner@vger.kernel.org>
-In-Reply-To: <CAL_JsqLccRKCnASOK-tAUn=ifZpQ3hCEJ1eg1hmrei=3vEpzFA@mail.gmail.com>
-Sender: linux-media-owner@vger.kernel.org
-To: Rob Herring <robherring2@gmail.com>
-Cc: Peter Griffin <peter.griffin@linaro.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Linux Kernel <linux-kernel@vger.kernel.org>, Srinivas Kandagatla <srinivas.kandagatla@gmail.com>, Maxime Coquelin <maxime.coquelin@st.com>, Patrice Chotard <patrice.chotard@st.com>, Mauro Carvalho Chehab <mchehab@osg.samsung.com>, Lee Jones <lee.jones@linaro.org>, "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Valentin Rothberg <valentinrothberg@gmail.com>, hugues.fruchet@st.com, Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>
+From: Sanchayan Maity <maitysanchayan@gmail.com>
+Subject: [PATCH v5 0/3] Add support for touchscreen on Colibri VF50
+Date: Tue,  1 Sep 2015 18:06:52 +0530
+Message-ID: <cover.1441110400.git.maitysanchayan@gmail.com>
+Return-path: <linux-input-owner@vger.kernel.org>
+Sender: linux-input-owner@vger.kernel.org
+To: dmitry.torokhov@gmail.com, linux-input@vger.kernel.org, devicetree@vger.kernel.org
+Cc: shawnguo@kernel.org, stefan@agner.ch, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Sanchayan Maity <maitysanchayan@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-[adding GPIO maintainers to cc list]
+Hello,
 
-Hello Rob,
+The patchset adds support for 4 wire touchscreen on Toradex Colibri
+VF50 modules.
 
-On Tue, Sep 1, 2015 at 1:54 PM, Rob Herring <robherring2@gmail.com> wrote:
-> On Tue, Sep 1, 2015 at 3:32 AM, Javier Martinez Canillas
-> <javier@dowhile0.org> wrote:
->> Hello Peter,
->>
->> On Fri, Aug 28, 2015 at 7:52 PM, Peter Griffin <peter.griffin@linaro.org> wrote:
->>> gpio.txt documents that GPIO properties should be named
->>> "[<name>-]gpios", with <name> being the purpose of this
->>> GPIO for the device.
->>>
->>> This change has been done as one atomic commit.
->>>
->>> Signed-off-by: Peter Griffin <peter.griffin@linaro.org>
->>> Acked-by: Lee Jones <lee.jones@linaro.org>
->>> ---
->>>  Documentation/devicetree/bindings/media/stih407-c8sectpfe.txt | 6 +++---
->>>  arch/arm/boot/dts/stihxxx-b2120.dtsi                          | 4 ++--
->>>  drivers/media/platform/sti/c8sectpfe/c8sectpfe-core.c         | 2 +-
->>>  3 files changed, 6 insertions(+), 6 deletions(-)
->>>
->>> diff --git a/Documentation/devicetree/bindings/media/stih407-c8sectpfe.txt b/Documentation/devicetree/bindings/media/stih407-c8sectpfe.txt
->>> index d4def76..e70d840 100644
->>> --- a/Documentation/devicetree/bindings/media/stih407-c8sectpfe.txt
->>> +++ b/Documentation/devicetree/bindings/media/stih407-c8sectpfe.txt
->>> @@ -35,7 +35,7 @@ Required properties (tsin (child) node):
->>>
->>>  - tsin-num     : tsin id of the InputBlock (must be between 0 to 6)
->>>  - i2c-bus      : phandle to the I2C bus DT node which the demodulators & tuners on this tsin channel are connected.
->>> -- rst-gpio     : reset gpio for this tsin channel.
->>> +- reset-gpios  : reset gpio for this tsin channel.
->>
->> The documentation is a bit outdated, the GPIO subsystem supports both
->> -gpio and -gpios, see commit:
->>
->> dd34c37aa3e8 ("gpio: of: Allow -gpio suffix for property names")
->
-> Yes, because we have lots of them.
->
+Thanks Dmitry and Stefan for your feedback.
 
-Yes, I know that was the motivation for that change.
+Changes since v4:
+1. Add missing header file for gpio consumer.
+2. Purge unneeded gpio descriptor entry in struct
+3. Do not cast from void * pointer in IRQ bh
+4. Make sure to have the gpio ym inactive and pinmux in ADC state
+on close
+5. Return error codes directly instead of assigning and returning
+6. Fix leaking of IIO channels and install devm action earlier
+7. Make sure that correct number of ADC channels are specified
+8. Improve DT documentation
+9. Also include DT pressure property in our evaluation board dts file
 
->> So it makes sense to me to use -gpio instead of -gpios in this case
->> since is a single GPIO. Also rst is already a descriptive name since
->> that's how many datasheets name a reset pin. I'm not saying I'm
->> against this patch, just pointing out since the commit message is a
->> bit misleading.
->
-> I believe that this has been discussed at length and it was decided
-> that new bindings should use "-gpios" even for 1. Just like "clocks"
-> is always plural.
->
+Changes since v3:
+1. Add a #define for the average readings measurement.
+2. Instead of configuring gpios every open, configure them on request.
+3. Use a memory barrier and synchronize irq call to make sure IRQ is
+not running past close.
+4. Drop inline for vf50_ts_get_gpiod
+5. Convert "ret" to "error"
+6. Use devm_add_action to add a function for releasing iio channels and
+drop remove completely.
+7. Kill __set_bits()
+8. Instead of requesting for pen irq as gpio and then irq, use the
+interrupts property for DT and let it be handled automatically. Anyways
+we never read it's state.
+9. Just use IRQF_ONESHOT here, rely on the platform/OF to read and set up
+the trigger properly (via "interrupts" property).
 
-The documentation doesn't reflect that decision though. If new
-bindings are supposed to be using -gpios rather than -gpio even when a
-single GPIO is used, then
-Documentation/devicetree/bindings/gpio/gpio.txt and
-Documentation/gpio/board.txt should say that <function>-gpio is also
-supported for backward compatibility but that is deprecated and should
-not be used.
+Changes since v2:
+1. Fix pin multiplexing for pins in idle state. Configuration of the
+pen detect pull up viz. PTA19__GPIO_9 resulted in generation of pen
+irq's on a continuous basis.
+2. Fix pinmux of the ADC pins as per the recommended pinmux in TRM.
+3. Use a threaded irq handler instead of a irq handler plus workqueue
+approach.
+4. Use a low level trigger with oneshot flag specifier instead of the
+previous falling edge triggered irq's. This coupled with the fix in
+point 1 fixes the previous continuous spurious irq generation bug.
+5. Change/fix the TS measurement logic to account for the fact that
+iio_channel_read_raw might actually return an error. To be more
+specific use break instead of continue and take care to close the
+FET's in case of channel read error.
+6. Drop the first patch "Add io-channel-cells property for ADC node"
+as it has already been applied.
+7. Move the iio channel get call again at the start. Having it in
+the end resulted in crashes sometimes when iio was not probed and
+the ts device got probed and opened earlier.
 
-Otherwise when looking the code it seems that is just that the
-documentation is outdated and that both -gpio or -gpios can be used.
+Changes since v1:
+1. Fix/drop comments
+2. Use an inline function for multiple gpiod_get calls in probe
+3. Remove the pull up in the pinmux specified in DT for touchctrl_gpios
+4. Add the io-channel-cells property before status property.
+5. Add GPIOLIB as dependency in the Kconfig file
 
-> Rob
+Version 4 of the patchset can be found here
+https://lkml.org/lkml/2015/8/21/339
 
-Best regards,
-Javier
+Version 3 of the patchset can be found here
+https://lkml.org/lkml/2015/8/5/173
+
+Version 2 of the patchset can be found here
+https://www.mail-archive.com/linux-input@vger.kernel.org/msg18090.html
+
+Version 1 of the patchset can be found here
+https://lkml.org/lkml/2015/6/30/103
+
+Regards,
+Sanchayan.
+
+Sanchayan Maity (3):
+  ARM: dts: vf500-colibri: Add device tree node for touchscreen support
+  input: Add DT binding documentation for Colibri VF50 touchscreen
+  touchscreen: colibri-vf50-ts: Add touchscreen support for Colibri VF50
+
+ .../bindings/input/touchscreen/colibri-vf50-ts.txt |  36 ++
+ arch/arm/boot/dts/vf500-colibri-eval-v3.dts        |   5 +
+ arch/arm/boot/dts/vf500-colibri.dtsi               |  47 +++
+ drivers/input/touchscreen/Kconfig                  |  12 +
+ drivers/input/touchscreen/Makefile                 |   1 +
+ drivers/input/touchscreen/colibri-vf50-ts.c        | 381 +++++++++++++++++++++
+ 6 files changed, 482 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/input/touchscreen/colibri-vf50-ts.txt
+ create mode 100644 drivers/input/touchscreen/colibri-vf50-ts.c
+
+-- 
+2.5.0
+
