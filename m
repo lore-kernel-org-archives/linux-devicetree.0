@@ -1,51 +1,64 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH v2 2/4] remoteproc: dt: Provide bindings for ST's Remote
- Processor Controller driver
-Date: Tue, 1 Sep 2015 11:41:45 +0100
-Message-ID: <20150901104145.GS4796@x1>
-References: <1440757911-9120-1-git-send-email-lee.jones@linaro.org>
- <1440757911-9120-3-git-send-email-lee.jones@linaro.org>
- <CAL_JsqLuF2iAJhzjDh5CL-RgYk+H+N+D05wsWqUT01zvq9SOxA@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAL_JsqLuF2iAJhzjDh5CL-RgYk+H+N+D05wsWqUT01zvq9SOxA@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robherring2@gmail.com>
-Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Ohad Ben-Cohen <ohad@wizery.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, kernel@stlinux.com, Nathan Lynch <Nathan_Lynch@mentor.com>, Ludovic Barre <ludovic.barre@st.com>
+From: Peter Griffin <peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: [PATCH v4 0/6] [media] c8sectpfe: Various fixups
+Date: Tue,  1 Sep 2015 11:48:08 +0100
+Message-ID: <1441104494-10468-1-git-send-email-peter.griffin@linaro.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, srinivas.kandagatla-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, maxime.coquelin-qxv4g6HH51o@public.gmane.org, patrice.chotard-qxv4g6HH51o@public.gmane.org, mchehab-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org
+Cc: peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, valentinrothberg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, hugues.fruchet-qxv4g6HH51o@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 31 Aug 2015, Rob Herring wrote:
+Hi Mauro,
 
-> On Fri, Aug 28, 2015 at 5:31 AM, Lee Jones <lee.jones@linaro.org> wro=
-te:
-> > Signed-off-by: Ludovic Barre <ludovic.barre@st.com>
-> > Signed-off-by: Lee Jones <lee.jones@linaro.org>
-> > ---
-> >  .../devicetree/bindings/remoteproc/st-rproc.txt    | 35 ++++++++++=
-++++++++++++
-> >  1 file changed, 35 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/remoteproc/st=
--rproc.txt
-> >
-> > diff --git a/Documentation/devicetree/bindings/remoteproc/st-rproc.=
-txt b/Documentation/devicetree/bindings/remoteproc/st-rproc.txt
-> > new file mode 100644
-> > index 0000000..fbd7d78
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/remoteproc/st-rproc.txt
-> > @@ -0,0 +1,35 @@
-> > +STMicroelectronics Remote Processor
->=20
-> "remote processor" is what STM datasheets call them? This seems like
-> Linux naming is leaking in here.
+This series includes a couple of fixes for the c8sectpfe Linux dvb driver.
 
-That's what this directory is called and the other binding within it.
+One was caused by omitting a patch from the original c8sectpfe series which
+defined the ssc2 and ssc3 dt nodes, which was then used by the later DT patch.
+This patch is included, along with the original patch which you reverted.
 
---=20
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-=46ollow Linaro: Facebook | Twitter | Blog
+Also Valentin Rothberg spotted LIBELF32 Kconfig symbol I was selecting in the
+Kconfig, this isn't required upstream and is left over legacy so I've removed
+it.
+
+Also included are some fixups spotted by Lee Jones.
+
+Changes since v3:
+ - Collect up more acks
+ - Change binding to "reset-gpio"
+ - highlight dtb incompatability in commit message
+
+Changes since v2:
+ - Add some "\n" and other formatting fixes
+ - 'Suggested by' should be in chronological order
+ - Simplify load_slim_core_fw loop
+
+Changes since v1:
+ - Various formating patches to DT node
+ - Update to reset-gpios
+ - Use GPIO_ACTIVE_HIGH, GIC_SPI and IRQ_TYPE_NONE defines
+
+kind regards,
+
+Peter.
+
+Peter Griffin (6):
+  ARM: DT: STi: stihxxx-b2120: Add pulse-width properties to ssc2 & ssc3
+  ARM: DT: STi: STiH407: Add c8sectpfe LinuxDVB DT node.
+  [media] c8sectpfe: Remove select on undefined LIBELF_32
+  [media] c8sectpfe: Update binding to reset-gpio
+  [media] c8sectpfe: Update DT binding doc with some minor fixes
+  [media] c8sectpfe: Simplify for loop in load_slim_core_fw
+
+ .../bindings/media/stih407-c8sectpfe.txt           | 20 +++++-----
+ arch/arm/boot/dts/stihxxx-b2120.dtsi               | 45 +++++++++++++++++++++-
+ drivers/media/platform/sti/c8sectpfe/Kconfig       |  1 -
+ .../media/platform/sti/c8sectpfe/c8sectpfe-core.c  |  9 +++--
+ 4 files changed, 58 insertions(+), 17 deletions(-)
+
+-- 
+1.9.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
