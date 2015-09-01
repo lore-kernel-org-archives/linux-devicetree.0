@@ -1,107 +1,62 @@
-From: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
-Subject: for_each_xxx_of_node() - lots of refcounting bugs
-Date: Tue, 1 Sep 2015 12:07:44 +0100
-Message-ID: <20150901110743.GJ21084@n2100.arm.linux.org.uk>
+From: Mugunthan V N <mugunthanvnm-l0cyMroinI0@public.gmane.org>
+Subject: [PATCH] ARM: DTS: dra72-evm: remove cpsw gpio hogging and add select-slave-gpio
+Date: Tue, 1 Sep 2015 17:00:40 +0530
+Message-ID: <1441107040-6105-1-git-send-email-mugunthanvnm@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: "David S . Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mugunthan V N <mugunthanvnm-l0cyMroinI0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Consider the following loop:
+Since GPIO hogging fails to through error when booting with
+gpio-pcf857x as module and NFS root filesystem. So by having
+select-slave-gpio, it throw error to user so that the used can
+make gpio-pcf857x as inbuilt for NFS. When using mmc/ramdisk as
+root fs, cpsw will probe defer and re-probes again when
+gpio-pcf857x module is inserted and ethernet becomes operational.
 
-	for_each_child_of_node(&pdev->dev.of_node, child) {
-		if (some_condition)
-			break;
-	}
+Signed-off-by: Mugunthan V N <mugunthanvnm-l0cyMroinI0@public.gmane.org>
+---
 
-The use of for_each_..._of_node() leads people to believe that it's
-like other for_each_...() loops - the continue and break statements
-can be used.
+This patch depends on driver changes [1] and tested on DRA72x, logs [2]
 
-However, with OF, "break" can't be used without disrupting the
-reference counting on the nodes.  This is because:
+[1]: http://patchwork.ozlabs.org/patch/512783/
+[2]: http://pastebin.ubuntu.com/12244652/
 
-#define for_each_child_of_node(parent, child) \
-        for (child = of_get_next_child(parent, NULL); child != NULL; \
-             child = of_get_next_child(parent, child))
+---
+ arch/arm/boot/dts/dra72-evm.dts | 7 +------
+ 1 file changed, 1 insertion(+), 6 deletions(-)
 
-of_get_next_child() takes a reference on the node it's about to return,
-while dropping the reference on the node passed into it.  In the case
-of the last iteration, where of_get_next_child() returns NULL, the
-previous child will have its reference dropped, resulting in no child
-nodes having a reference held.
-
-However, if a 'break' statement is used, the reference on the current
-child is not dropped unless code explicitly drops it.
-
-We have code which does exactly this kind of thing:
-
-        for_each_child_of_node(cpus, cpu) {
-                /*
-                 * A device tree containing CPU nodes with missing "reg"
-                 * properties is considered invalid to build the
-                 * cpu_logical_map.
-                 */
-                if (of_property_read_u32(cpu, "reg", &hwid)) {
-                        pr_debug(" * %s missing reg property\n",
-                                     cpu->full_name);
-                        return;
-                }
-
-                /*
-                 * 8 MSBs must be set to 0 in the DT since the reg property
-                 * defines the MPIDR[23:0].
-                 */
-                if (hwid & ~MPIDR_HWID_BITMASK)
-                        return;
-... more return statements
-
-        for_each_child_of_node(np, np0) {
-                struct device_node *fc;
-                int i;
-
-                res = of_dev_hwmod_lookup(np0, oh, &i, &fc);
-                if (res == 0) {
-                        *found = fc;
-                        *index = i;
-                        return 0;
-
-        for_each_child_of_node(parent, np) {
-                pd = kzalloc(sizeof(*pd), GFP_KERNEL);
-                if (!pd)
-                        return -ENOMEM;
-
-Virtually _all_ uses of for_each_child_of_node() in the kernel today
-where the loop is terminated early leak a reference on the child node.
-Even some of the drivers/of code does it:
-
-	... for_each_child_of_node(root, child) {
-                if (!of_match_node(matches, child))
-                        continue;
-                rc = of_platform_bus_create(child, matches, NULL, parent, false);
-                if (rc)
-                        break;
-        }
-
-This pretty much shows the danger of using macros which hide details
-like this from the programmer - it leads to the assumption that it's
-fine to use 'break' and 'return' without any further consideration,
-because that's what you can do in standard C loops.  The fact that
-these loops are actually more complex than that is hidden behind the
-macro, and thus gets forgotten.
-
-We could go around and fix all these sites, but that's not going to
-stop this continuing to happen into the future.  So, fixing the
-existing bugs is not a fix at all, it's a papering over of a more
-fundamental problem here.
-
+diff --git a/arch/arm/boot/dts/dra72-evm.dts b/arch/arm/boot/dts/dra72-evm.dts
+index be9a89b..96d1bd3 100644
+--- a/arch/arm/boot/dts/dra72-evm.dts
++++ b/arch/arm/boot/dts/dra72-evm.dts
+@@ -343,12 +343,6 @@
+ 		interrupts = <11 IRQ_TYPE_EDGE_FALLING>;
+ 		interrupt-controller;
+ 		#interrupt-cells = <2>;
+-
+-		cpsw_sel_s0 {
+-			gpio-hog;
+-			gpios = <4 GPIO_ACTIVE_HIGH>;
+-			output-low;
+-		};
+ 	};
+ };
+ 
+@@ -578,6 +572,7 @@
+ 	pinctrl-0 = <&cpsw_default>;
+ 	pinctrl-1 = <&cpsw_sleep>;
+ 	slaves = <1>;
++	select-slave-gpio = <&pcf_gpio_21 4 GPIO_ACTIVE_HIGH>;
+ };
+ 
+ &cpsw_emac0 {
 -- 
-FTTC broadband for 0.8mile line: currently at 9.6Mbps down 400kbps up
-according to speedtest.net.
+2.5.0.474.g3a9835b
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
