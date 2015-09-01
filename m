@@ -1,240 +1,220 @@
-From: Jon Mason <jonmason-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Subject: [PATCH v4 2/5] ARM: NSP: add minimal Northstar Plus device tree
-Date: Mon, 31 Aug 2015 19:48:53 -0400
-Message-ID: <1441064933-6723-1-git-send-email-jonmason@broadcom.com>
+From: Ding Tianhong <dingtianhong-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH 2/2] arm64: dts: add dts files for Hisilicon Hip05-D02
+ Development Board
+Date: Tue, 1 Sep 2015 09:14:12 +0800
+Message-ID: <55E4FBE4.3010808@huawei.com>
+References: <1440838361-1468-1-git-send-email-dingtianhong@huawei.com> <1440838361-1468-3-git-send-email-dingtianhong@huawei.com> <20150831131244.GB6194@leoy-linaro> <55E45A46.7040805@huawei.com> <20150831144019.GA22491@leoy-linaro>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20150831144019.GA22491@leoy-linaro>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Kevin Hilman <khilman-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Kapil Hali <kapilh-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+To: Leo Yan <leo.yan-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, marc.zyngier-5wv7dgnIgG8@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, linuxarm-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, haojian.zhuang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, rob.herring-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Add a very minimalistic set of Northstar Plus Device Tree files which
-describes the SoC and the BCM958625 implementation.  The perpherials
-described are:
+On 2015/8/31 22:40, Leo Yan wrote:
+> On Mon, Aug 31, 2015 at 09:44:38PM +0800, Ding Tianhong wrote:
+>> On 2015/8/31 21:12, Leo Yan wrote:
+>>> On Sat, Aug 29, 2015 at 04:52:41PM +0800, Ding Tianhong wrote:
+>>>> Add initial dtsi file to support Hisilicon Hip05-D02 Board with
+>>>> support of CPUs in four clusters and each cluster has quard Cortex=
+-A57.
+>>>>
+>>>> Also add dts file to support Hip05-D02 development board.
+>>>>
+>>>> Signed-off-by: Ding Tianhong <dingtianhong-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+>>>> Signed-off-by: Kefeng Wang <wangkefeng.wang-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+>>>> ---
+>>>>  arch/arm64/boot/dts/hisilicon/Makefile      |   2 +-
+>>>>  arch/arm64/boot/dts/hisilicon/hip05-d02.dts |  36 ++++
+>>>>  arch/arm64/boot/dts/hisilicon/hip05.dtsi    | 271 +++++++++++++++=
++++++++++++++
+>>>>  3 files changed, 308 insertions(+), 1 deletion(-)
+>>>>  create mode 100644 arch/arm64/boot/dts/hisilicon/hip05-d02.dts
+>>>>  create mode 100644 arch/arm64/boot/dts/hisilicon/hip05.dtsi
+>>>>
+>>>> diff --git a/arch/arm64/boot/dts/hisilicon/Makefile b/arch/arm64/b=
+oot/dts/hisilicon/Makefile
+>>>> index fa81a6e..cd158b8 100644
+>>>> --- a/arch/arm64/boot/dts/hisilicon/Makefile
+>>>> +++ b/arch/arm64/boot/dts/hisilicon/Makefile
+>>>> @@ -1,4 +1,4 @@
+>>>> -dtb-$(CONFIG_ARCH_HISI) +=3D hi6220-hikey.dtb
+>>>> +dtb-$(CONFIG_ARCH_HISI) +=3D hi6220-hikey.dtb hip05-d02.dtb
+>>>> =20
+>>>>  always		:=3D $(dtb-y)
+>>>>  subdir-y	:=3D $(dts-dirs)
+>>>> diff --git a/arch/arm64/boot/dts/hisilicon/hip05-d02.dts b/arch/ar=
+m64/boot/dts/hisilicon/hip05-d02.dts
+>>>> new file mode 100644
+>>>> index 0000000..ae34e25
+>>>> --- /dev/null
+>>>> +++ b/arch/arm64/boot/dts/hisilicon/hip05-d02.dts
+>>>> @@ -0,0 +1,36 @@
+>>>> +/**
+>>>> + * dts file for Hisilicon D02 Development Board
+>>>> + *
+>>>> + * Copyright (C) 2014,2015 Hisilicon Ltd.
+>>>> + *
+>>>> + * This program is free software; you can redistribute it and/or =
+modify
+>>>> + * it under the terms of the GNU General Public License version 2=
+ as
+>>>> + * publishhed by the Free Software Foundation.
+>>>> + *
+>>>> + */
+>>>> +
+>>>> +/dts-v1/;
+>>>> +
+>>>> +#include "hip05.dtsi"
+>>>> +
+>>>> +/ {
+>>>> +	model =3D "Hisilicon Hip05 D02 Development Board";
+>>>> +	compatible =3D "hisilicon,hip05-d02";
+>>>> +
+>>>> +	memory@00000000 {
+>>>> +		device_type =3D "memory";
+>>>> +		reg =3D <0x0 0x00000000 0x0 0x80000000>;
+>>>> +	};
+>>>> +
+>>>> +	aliases {
+>>>> +		serial0 =3D &uart0;
+>>>> +	};
+>>>> +
+>>>> +	chosen {
+>>>> +		stdout-path =3D "serial0:115200n8";
+>>>> +	};
+>>>> +};
+>>>> +
+>>>> +&uart0 {
+>>>> +	status =3D "ok";
+>>>> +};
+>>>> diff --git a/arch/arm64/boot/dts/hisilicon/hip05.dtsi b/arch/arm64=
+/boot/dts/hisilicon/hip05.dtsi
+>>>> new file mode 100644
+>>>> index 0000000..da12d94
+>>>> --- /dev/null
+>>>> +++ b/arch/arm64/boot/dts/hisilicon/hip05.dtsi
+>>>> @@ -0,0 +1,271 @@
+>>>> +/**
+>>>> + * dts file for Hisilicon D02 Development Board
+>>>> + *
+>>>> + * Copyright (C) 2014,2015 Hisilicon Ltd.
+>>>> + *
+>>>> + * This program is free software; you can redistribute it and/or =
+modify
+>>>> + * it under the terms of the GNU General Public License version 2=
+ as
+>>>> + * publishhed by the Free Software Foundation.
+>>>> + *
+>>>> + */
+>>>> +
+>>>> +#include <dt-bindings/interrupt-controller/arm-gic.h>
+>>>> +
+>>>> +/ {
+>>>> +	compatible =3D "hisilicon,hip05-d02";
+>>>> +	interrupt-parent =3D <&gic>;
+>>>> +	#address-cells =3D <2>;
+>>>> +	#size-cells =3D <2>;
+>>>> +
+>>>> +	psci {
+>>>> +		compatible =3D "arm,psci-0.2";
+>>>> +		method =3D "smc";
+>>>> +	};
+>>>> +
+>>>> +	cpus {
+>>>> +		#address-cells =3D <1>;
+>>>> +		#size-cells =3D <0>;
+>>>> +
+>>>> +		cpu-map {
+>>>> +			cluster0 {
+>>>> +				core0 {
+>>>> +					cpu =3D <&cpu0>;
+>>>> +				};
+>>>> +				core1 {
+>>>> +					cpu =3D <&cpu1>;
+>>>> +				};
+>>>> +				core2 {
+>>>> +					cpu =3D <&cpu2>;
+>>>> +				};
+>>>> +				core3 {
+>>>> +					cpu =3D <&cpu3>;
+>>>> +				};
+>>>> +			};
+>>>> +			cluster1 {
+>>>> +				core0 {
+>>>> +					cpu =3D <&cpu4>;
+>>>> +				};
+>>>> +				core1 {
+>>>> +					cpu =3D <&cpu5>;
+>>>> +				};
+>>>> +				core2 {
+>>>> +					cpu =3D <&cpu6>;
+>>>> +				};
+>>>> +				core3 {
+>>>> +					cpu =3D <&cpu7>;
+>>>> +				};
+>>>> +			};
+>>>> +			cluster2 {
+>>>> +				core0 {
+>>>> +					cpu =3D <&cpu8>;
+>>>> +				};
+>>>> +				core1 {
+>>>> +					cpu =3D <&cpu9>;
+>>>> +				};
+>>>> +				core2 {
+>>>> +					cpu =3D <&cpu10>;
+>>>> +				};
+>>>> +				core3 {
+>>>> +					cpu =3D <&cpu11>;
+>>>> +				};
+>>>> +			};
+>>>> +			cluster3 {
+>>>> +				core0 {
+>>>> +					cpu =3D <&cpu12>;
+>>>> +				};
+>>>> +				core1 {
+>>>> +					cpu =3D <&cpu13>;
+>>>> +				};
+>>>> +				core2 {
+>>>> +					cpu =3D <&cpu14>;
+>>>> +				};
+>>>> +				core3 {
+>>>> +					cpu =3D <&cpu15>;
+>>>> +				};
+>>>> +			};
+>>>> +		};
+>>>> +
+>>>> +		cpu0: cpu@20000 {
+>>>> +			device_type =3D "cpu";
+>>>> +			compatible =3D "arm,armv8";
+>>>
+>>> Change to "arm,cortex-a57","arm,armv8"?
+>>>
+>>
+>> Ok=EF=BC=8Cbut I think should be "hisilicon,hip05","arm,armv8".
+>=20
+> If the CPU is a starndard ARM core (such like CA53, CA57, etc), you
+> need directly use the CPU type which has been defined in:
+> Documentation/devicetree/bindings/arm/cpus.txt. So here hip05 is the
+> naming code for SoC? or for the CPU customized by Hisilicon?
+>=20
+> [...]
 
-ARM Cortex A9 CPU
-2 8250 UARTs
-ARM GIC
-PL310 L2 Cache
-ARM A9 Global timer
+Hip05 is the name for SoC.
 
-Signed-off-by: Kapil Hali <kapilh-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Signed-off-by: Jon Mason <jonmason-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
----
- arch/arm/boot/dts/Makefile       |   2 +
- arch/arm/boot/dts/bcm-nsp.dtsi   | 119 +++++++++++++++++++++++++++++++++++++++
- arch/arm/boot/dts/bcm958625k.dts |  57 +++++++++++++++++++
- 3 files changed, 178 insertions(+)
- create mode 100644 arch/arm/boot/dts/bcm-nsp.dtsi
- create mode 100644 arch/arm/boot/dts/bcm958625k.dts
+>=20
+> Thanks,
+> Leo Yan
+>=20
+> .
+>=20
 
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index 246473a..adb5732 100644
---- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -82,6 +82,8 @@ dtb-$(CONFIG_ARCH_BCM_CYGNUS) += \
- dtb-$(CONFIG_ARCH_BCM_MOBILE) += \
- 	bcm28155-ap.dtb \
- 	bcm21664-garnet.dtb
-+dtb-$(CONFIG_ARCH_BCM_NSP) += \
-+	bcm958625k.dtb
- dtb-$(CONFIG_ARCH_BERLIN) += \
- 	berlin2-sony-nsz-gs7.dtb \
- 	berlin2cd-google-chromecast.dtb \
-diff --git a/arch/arm/boot/dts/bcm-nsp.dtsi b/arch/arm/boot/dts/bcm-nsp.dtsi
-new file mode 100644
-index 0000000..58aca27
---- /dev/null
-+++ b/arch/arm/boot/dts/bcm-nsp.dtsi
-@@ -0,0 +1,119 @@
-+/*
-+ *  BSD LICENSE
-+ *
-+ *  Copyright(c) 2015 Broadcom Corporation.  All rights reserved.
-+ *
-+ *  Redistribution and use in source and binary forms, with or without
-+ *  modification, are permitted provided that the following conditions
-+ *  are met:
-+ *
-+ *    * Redistributions of source code must retain the above copyright
-+ *      notice, this list of conditions and the following disclaimer.
-+ *    * Redistributions in binary form must reproduce the above copyright
-+ *      notice, this list of conditions and the following disclaimer in
-+ *      the documentation and/or other materials provided with the
-+ *      distribution.
-+ *    * Neither the name of Broadcom Corporation nor the names of its
-+ *      contributors may be used to endorse or promote products derived
-+ *      from this software without specific prior written permission.
-+ *
-+ *  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
-+ *  "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
-+ *  LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
-+ *  A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
-+ *  OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
-+ *  SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
-+ *  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
-+ *  DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
-+ *  THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
-+ *  (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
-+ *  OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-+ */
-+
-+#include <dt-bindings/interrupt-controller/arm-gic.h>
-+#include <dt-bindings/interrupt-controller/irq.h>
-+
-+#include "skeleton.dtsi"
-+
-+/ {
-+	compatible = "brcm,nsp";
-+	model = "Broadcom Northstar Plus SoC";
-+	interrupt-parent = <&gic>;
-+
-+	mpcore {
-+		compatible = "simple-bus";
-+		ranges = <0x00000000 0x19020000 0x00003000>;
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+
-+		cpus {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+
-+			cpu@0 {
-+				device_type = "cpu";
-+				compatible = "arm,cortex-a9";
-+				next-level-cache = <&L2>;
-+				reg = <0x0>;
-+			};
-+		};
-+
-+		L2: l2-cache {
-+			compatible = "arm,pl310-cache";
-+			reg = <0x2000 0x1000>;
-+			cache-unified;
-+			cache-level = <2>;
-+		};
-+
-+		gic: interrupt-controller@19021000 {
-+			compatible = "arm,cortex-a9-gic";
-+			#interrupt-cells = <3>;
-+			#address-cells = <0>;
-+			interrupt-controller;
-+			reg = <0x1000 0x1000>,
-+			      <0x0100 0x100>;
-+		};
-+
-+		timer@19020200 {
-+			compatible = "arm,cortex-a9-global-timer";
-+			reg = <0x0200 0x100>;
-+			interrupts = <GIC_PPI 11 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&periph_clk>;
-+		};
-+	};
-+
-+	clocks {
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		ranges;
-+
-+		periph_clk: periph_clk {
-+			compatible = "fixed-clock";
-+			#clock-cells = <0>;
-+			clock-frequency = <500000000>;
-+		};
-+	};
-+
-+	axi {
-+		compatible = "simple-bus";
-+		ranges = <0x00000000 0x18000000 0x00001000>;
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+
-+		uart0: serial@18000300 {
-+			compatible = "ns16550a";
-+			reg = <0x0300 0x100>;
-+			interrupts = <GIC_SPI 85 IRQ_TYPE_LEVEL_HIGH>;
-+			clock-frequency = <62499840>;
-+			status = "disabled";
-+		};
-+
-+		uart1: serial@18000400 {
-+			compatible = "ns16550a";
-+			reg = <0x0400 0x100>;
-+			interrupts = <GIC_SPI 85 IRQ_TYPE_LEVEL_HIGH>;
-+			clock-frequency = <62499840>;
-+			status = "disabled";
-+		};
-+	};
-+};
-diff --git a/arch/arm/boot/dts/bcm958625k.dts b/arch/arm/boot/dts/bcm958625k.dts
-new file mode 100644
-index 0000000..16303db
---- /dev/null
-+++ b/arch/arm/boot/dts/bcm958625k.dts
-@@ -0,0 +1,57 @@
-+/*
-+ *  BSD LICENSE
-+ *
-+ *  Copyright(c) 2015 Broadcom Corporation.  All rights reserved.
-+ *
-+ *  Redistribution and use in source and binary forms, with or without
-+ *  modification, are permitted provided that the following conditions
-+ *  are met:
-+ *
-+ *    * Redistributions of source code must retain the above copyright
-+ *      notice, this list of conditions and the following disclaimer.
-+ *    * Redistributions in binary form must reproduce the above copyright
-+ *      notice, this list of conditions and the following disclaimer in
-+ *      the documentation and/or other materials provided with the
-+ *      distribution.
-+ *    * Neither the name of Broadcom Corporation nor the names of its
-+ *      contributors may be used to endorse or promote products derived
-+ *      from this software without specific prior written permission.
-+ *
-+ *  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
-+ *  "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
-+ *  LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
-+ *  A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
-+ *  OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
-+ *  SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
-+ *  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
-+ *  DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
-+ *  THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
-+ *  (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
-+ *  OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-+ */
-+
-+/dts-v1/;
-+
-+#include "bcm-nsp.dtsi"
-+
-+/ {
-+	model = "NorthStar Plus SVK (BCM958625K)";
-+	compatible = "brcm,bcm58625", "brcm,nsp";
-+
-+	aliases {
-+		serial0 = &uart0;
-+		serial1 = &uart1;
-+	};
-+
-+	chosen {
-+		stdout-path = "serial0:115200n8";
-+	};
-+};
-+
-+&uart0 {
-+	status = "okay";
-+};
-+
-+&uart1 {
-+	status = "okay";
-+};
--- 
-1.9.1
 
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
