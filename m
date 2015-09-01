@@ -1,55 +1,86 @@
-From: Viet Nga Dao <vndao@altera.com>
-Subject: Re: [PATCH] [PATCH v5] mtd:spi-nor: Add Altera Quad SPI Driver
-Date: Tue, 1 Sep 2015 15:41:15 +0800
-Message-ID: <CAN1oZWz3O=ebu5o2k5CW0=i87dfMaBKfEEC7fgQ6=Ak3k+3qDQ@mail.gmail.com>
-References: <1440053705-3836-1-git-send-email-vndao@altera.com>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH v2 4/4] remoteproc: debugfs: Add ability to boot remote
+ processor using debugfs
+Date: Tue, 1 Sep 2015 08:48:07 +0100
+Message-ID: <20150901074807.GI4796@x1>
+References: <1440757911-9120-1-git-send-email-lee.jones@linaro.org>
+ <1440757911-9120-5-git-send-email-lee.jones@linaro.org>
+ <55E07CE2.2050704@mentor.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1440053705-3836-1-git-send-email-vndao@altera.com>
+Content-Disposition: inline
+In-Reply-To: <55E07CE2.2050704@mentor.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: David Woodhouse <dwmw2@infradead.org>, Brian Norris <computersforpeace@gmail.com>
-Cc: "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, nga_chi86 <ngachi86@gmail.com>
+To: Nathan Lynch <Nathan_Lynch@mentor.com>
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, kernel@stlinux.com, ohad@wizery.com, devicetree@vger.kernel.org, Ludovic Barre <ludovic.barre@st.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Aug 20, 2015 at 2:55 PM,  <vndao@altera.com> wrote:
-> From: VIET NGA DAO <vndao@altera.com>
->
-> Altera Quad SPI Controller is a soft IP which enables access to
-> Altera EPCS and EPCQ flash chips. This patch adds driver
-> for these devices.
->
-> Signed-off-by: VIET NGA DAO <vndao@altera.com>
->
-> ---
-> v5:
-> - Remove Micron support
-> - Add multiple flashes probe failure handle
->
-> v4:
-> - Add more flash devices support ( EPCQL and Micron)
-> - Remove redundant messages
-> - Change EPCQ_OPCODE_ID to NON_EPCS_OPCODE_ID
-> - Replace get_flash_name to altera_quadspi_scan
-> - Remove clk related parts
-> - Remove altera_quadspi_plat
-> - Change device tree reg name and remove opcode-id
->
-> v3:
-> - Change altera_epcq driver name to altera_quadspi for more generic name
-> - Implement flash name searching in altera_quadspi.c instead of spi-nor
-> - Edit the altra quadspi info table in spi-nor
-> - Remove wait_til_ready in all read,write, erase, lock, unlock functions
-> - Merge .h and .c into 1 file
->
-> v2:
-> - Change to spi_nor structure
-> - Add lock and unlock functions for spi_nor
-> - Simplify the altera_epcq_lock function
-> - Replace reg by compatible in device tree
-> ---
+On Fri, 28 Aug 2015, Nathan Lynch wrote:
 
-Hi, i decided to wait for the hardware fixed and tested before
-submitting new patch.
-Thanks for all for your reviews and comments.
-Viet Nga
+> On 08/28/2015 05:31 AM, Lee Jones wrote:
+> > +static ssize_t rproc_state_write(struct file *filp, const char __u=
+ser *userbuf,
+> > +				 size_t count, loff_t *ppos)
+> > +{
+> > +	struct rproc *rproc =3D filp->private_data;
+> > +	char buf[2];
+> > +	int ret;
+> > +
+> > +	ret =3D copy_from_user(buf, userbuf, 1);
+> > +	if (ret)
+> > +		return -EFAULT;
+> > +
+> > +	switch (buf[0]) {
+> > +	case '0':
+> > +		rproc_shutdown(rproc);
+> > +		break;
+> > +	case '1':
+> > +		ret =3D rproc_boot(rproc);
+> > +		if (ret)
+> > +			dev_warn(&rproc->dev, "Boot failed: %d\n", ret);
+> > +		break;
+> > +	default:
+> > +		dev_err(&rproc->dev, "Unrecognised option: %x\n", buf[1]);
+> > +		return -EINVAL;
+>=20
+> This prints uninitialized kernel stack contents instead of what was
+> copied from user space.
+
+Yes, you're right.  I will conduct a better test of the failure path
+here.=20
+
+> Is the dev_err statement really necessary anyway?
+
+Yes.  As I described in my other mail, this interface is for Kernel
+Engineers, who read the kernel log.
+
+> > +	}
+> > +
+> > +	return count;
+> > +}
+>=20
+> If rproc_boot fails, that should be reflected in the syscall result.
+>=20
+> This interface is essentially exposing the remoteproc->power refcount=
+ to
+> user space; is that okay?  Seems like it makes it easy to underflow
+> remoteproc->power through successive shutdown calls.
+
+If the subsystem is suseptable to underruns someone should think about
+adding protection against imbalances in the 'core'.
+
+> The other debugfs interface in remoteproc that has a write method
+> (recovery) accepts more expressive string commands as opposed to 0/1.
+> It would be more consistent for this interface to take commands such =
+as
+> "boot" and "shutdown" IMO.
+
+Agreed.
+
+--=20
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org =E2=94=82 Open source software for ARM SoCs
+=46ollow Linaro: Facebook | Twitter | Blog
