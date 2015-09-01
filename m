@@ -1,265 +1,88 @@
-From: Andreas Dannenberg <dannenberg@ti.com>
-Subject: Re: [PATCH 08/13] power: bq24257: Extend scope of mutex protection
-Date: Tue, 1 Sep 2015 17:15:30 -0500
-Message-ID: <20150901221530.GD17234@beast>
-References: <1441073435-12349-1-git-send-email-dannenberg@ti.com>
- <1441073435-12349-9-git-send-email-dannenberg@ti.com>
- <55E60BE5.5030308@ti.com>
+From: Chris Read <chrisrfq-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: Userspace and Device-Tree
+Date: Tue, 1 Sep 2015 15:19:44 -0700
+Message-ID: <CAPiN7iWq0EN+Pph82MHvNKn2pUNEh3Vs4ymjMpdB212x2fq0sQ@mail.gmail.com>
+References: <01e601d0e0f9$614450d0$23ccf270$@gmail.com>
+	<20150828101227.GD31748@leverpostej>
+	<CAAVeFuJCSv74HLws7Adb1fnSbxf8rR5=NYX8GG59K1nLgFs+VA@mail.gmail.com>
+	<CAPiN7iU+NzW1oYjXLsLgn7Sh=i6DPMC49WrDcpsa4XvmjpORcw@mail.gmail.com>
+	<20150831145500.GP12027@sirena.org.uk>
+	<CAPiN7iWFR2Sm8t9dUttNzwj-qZmUc-cdK69rGhG2RjD+s1gdSA@mail.gmail.com>
+	<20150831180140.GS12027@sirena.org.uk>
+	<CAPiN7iWWAxhg6YQ8BjYHh+Gu8bvQrntvT4QGV+oDe4KAnb1nvg@mail.gmail.com>
+	<20150901201755.GZ5313@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Return-path: <linux-pm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <55E60BE5.5030308@ti.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: "Andrew F. Davis" <afd@ti.com>
-Cc: Sebastian Reichel <sre@kernel.org>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, David Woodhouse <dwmw2@infradead.org>, Laurentiu Palcu <laurentiu.palcu@intel.com>, Krzysztof Kozlowski <k.kozlowski.k@gmail.com>, linux-pm@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20150901201755.GZ5313-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Markus Pargmann <mpa-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Sep 01, 2015 at 03:34:45PM -0500, Andrew F. Davis wrote:
-> On 08/31/2015 09:10 PM, Andreas Dannenberg wrote:
-> >This commit extends the use of the existing mutex to pave the way for
-> >using direct device access inside sysfs getter/setter routines in a
-> >way that the access during interrupts and timer routines does not
-> >interfere with device access by the CPU or between multiple cores.
-> >
-> >This also addresses a potential race condition that could be caused
-> >by bq24257_irq_handler_thread() and bq24257_iilimit_autoset() accessing
-> >the device simultaneously.
-> >
-> >Signed-off-by: Andreas Dannenberg <dannenberg@ti.com>
-> >---
-> >  drivers/power/bq24257_charger.c | 60 ++++++++++++++++++++++++-----------------
-> >  1 file changed, 35 insertions(+), 25 deletions(-)
-> >
-> >diff --git a/drivers/power/bq24257_charger.c b/drivers/power/bq24257_charger.c
-> >index 2271a88..ad3fd2d 100644
-> >--- a/drivers/power/bq24257_charger.c
-> >+++ b/drivers/power/bq24257_charger.c
-> >@@ -99,7 +99,7 @@ struct bq24257_device {
-> >  	struct bq24257_init_data init_data;
-> >  	struct bq24257_state state;
-> >
-> >-	struct mutex lock; /* protect state data */
-> >+	struct mutex lock; /* protect device access and state data */
-> >
-> 
-> I think it would make more sense to make a different lock for the device access. Protecting
-> unrelated things with the same lock can lead to unnecessary blocks.
+On Tue, Sep 1, 2015 at 1:17 PM, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
+>> .......we have the application software act like drivers in
+>> cases where high speed isn't required (such as GPIOs and switching
+>> on/off power supplies).
+>
+> Yeah, so the power supplies bit is not something we want to encourage.
 
-Andrew- thanks for spending time analyzing the patch series.
+I agree with you (in almost all situations).
 
-Actually the extension of the scope of the mutex seemed to fit almost
-naturally into the existing code as the device status (register
-contents) I'm opening more access to is just as important "state" as the
-driver-maintained "struct bq24257_state state" data that I need to
-maintain together. I can either do that by extending the existing mutex
-scope, or by creating a new mutex like you suggested which I think would
-essentially need to be a superset of the existing mutex for the purposes
-of the patched driver.
+>> From what I see the standard kernel allows exposing GPIOs to userspace.
+>> There are kernel calls to do so.  It seems to be recognized as an important
+>> feature.  The standard kernel also has a regulator-consumer whose whole
+>> purpose is to expose control of a regulator to userspace.  So it looks like
+>> such userspace control is intended.
+>
+> At least in the case of regulators those are specifically for use in
+> board file cases, they should never have direct DT bindings.
 
-Also it was rather easy to extend because almost all of the use of the
-mutex were in functions directly called from the IRQ routine (and only
-from there) such as bq24257_state_changed() and
-bq24257_handle_state_change() so I just had to wrap them at that level,
-also protecting the device access functions contained there, effectively
-killing two birds with one stone.
+My understanding, is that we're trying very hard to avoid having any board
+files, and that DT use was intended to facilitate getting away from them.
+Perhaps my interpretation of the need to avoid board files is extreme?
 
-The bq24257_hw_init() on the other hand only needed mutex protection
-when called from bq24257_resume() and I moved that up to the caller.
+>> ..... I'd like
+>> to have a way to use the same kernel for all our boards, and have a
+>> configuration that can be provided that will expose the required ones.
+>
+> So one thing you could do here is have your connector have a driver that
+> handles what it knows about for the cases where that's useful and just
+> punts everything else to userspace.  That way you don't need to actually
+> write the kernel code for every last thing and can still punt to
+> userspace but don't need to have a DT that represents the actual
+> hardware.
+>
+> I don't know if other people think that makes sense though.
 
-> 
-> >  	bool in_ilimit_autoset_disable;
-> >  	bool pg_gpio_disable;
-> >@@ -268,10 +268,10 @@ static int bq24257_power_supply_get_property(struct power_supply *psy,
-> >  {
-> >  	struct bq24257_device *bq = power_supply_get_drvdata(psy);
-> >  	struct bq24257_state state;
-> >+	int ret = 0;
-> >
-> >  	mutex_lock(&bq->lock);
-> >  	state = bq->state;
-> >-	mutex_unlock(&bq->lock);
-> >
-> 
-> Like here, this makes it very obvious what data the lock is protecting, wrapping this whole
-> block doesn't make much sense to me as all the subsequent reads are from the thread-local data.
-> I see in another patch in this series you do add a device read, but that read could be locked
-> by itself (with the device access lock) so we don't block this whole function when execution
-> may not even go down the path with the read.
+That's a very intriguing idea to me.  Let me see if I understand your
+suggestion fully.
 
-Yes you are right it's not needed here but rather was added in
-preparation for the later inclusion of functions such as for supporting
-POWER_SUPPLY_PROP_INPUT_CURRENT_LIMIT do direct device access so that's
-just how I split up my overall edits into patches. Also I figured
-having the entire statement wrapped doesn't really hurt and enables
-easier additional extensions involving device access. In fact, it was
-also done out of consistency with all the other sysfs getter/setter
-routines in the final combined patched driver..
+It would involve creating a kernel module (not really a driver, since
+it doesn't actually control hardware) as well as modifications to the DT.
 
-Thanks,
+In the DT we'd create a hardware description of a connector, which
+indicates all the signals, etc. that come to it.  Signals which are
+connected to other devices and are thus fully described elsewhere
+would simply be referenced.  Nothing new would happen with those
+signals via DT and kernel module.
 
+However, signals that are not described elsewhere could be qualified
+in the DT as appropriate for the hardware connector.  For GPIO's that
+could include direction, level, name, etc.  Since those signals aren't
+mated internally with any other hardware they would automatically be
+exposed to userspace.  The new kernel module would be responsible
+for configuring the newly described hardware as well as doing the
+exposing to userspace.
+
+That sounds quite workable to me.  It might get more complicated
+than I'd prefer, especially if there are more things than GPIOs (such
+as ADCs, DACs, etc.) that might come to the connector previously
+unconfigured.  But I think the idea is sound--and it keeps the DT in
+the hardware rather than the userspace business, which is what we
+want.  It also sounds like it might be broadly applicable, and have
+interest far beyond me.
 --
-Andreas Dannenberg
-Texas Instruments Inc
-
-> 
-> Regards,
-> Andrew
-> 
-> >  	switch (psp) {
-> >  	case POWER_SUPPLY_PROP_STATUS:
-> >@@ -351,10 +351,12 @@ static int bq24257_power_supply_get_property(struct power_supply *psy,
-> >  		break;
-> >
-> >  	default:
-> >-		return -EINVAL;
-> >+		ret = -EINVAL;
-> >  	}
-> >
-> >-	return 0;
-> >+	mutex_unlock(&bq->lock);
-> >+
-> >+	return ret;
-> >  }
-> >
-> >  static int bq24257_get_chip_state(struct bq24257_device *bq,
-> >@@ -401,15 +403,9 @@ static int bq24257_get_chip_state(struct bq24257_device *bq,
-> >  static bool bq24257_state_changed(struct bq24257_device *bq,
-> >  				  struct bq24257_state *new_state)
-> >  {
-> >-	int ret;
-> >-
-> >-	mutex_lock(&bq->lock);
-> >-	ret = (bq->state.status != new_state->status ||
-> >-	       bq->state.fault != new_state->fault ||
-> >-	       bq->state.power_good != new_state->power_good);
-> >-	mutex_unlock(&bq->lock);
-> >-
-> >-	return ret;
-> >+	return bq->state.status != new_state->status ||
-> >+			bq->state.fault != new_state->fault ||
-> >+			bq->state.power_good != new_state->power_good;
-> >  }
-> >
-> >  enum bq24257_loop_status {
-> >@@ -532,7 +528,9 @@ static void bq24257_iilimit_setup_work(struct work_struct *work)
-> >  	struct bq24257_device *bq = container_of(work, struct bq24257_device,
-> >  						 iilimit_setup_work.work);
-> >
-> >+	mutex_lock(&bq->lock);
-> >  	bq24257_iilimit_autoset(bq);
-> >+	mutex_unlock(&bq->lock);
-> >  }
-> >
-> >  static void bq24257_handle_state_change(struct bq24257_device *bq,
-> >@@ -543,9 +541,7 @@ static void bq24257_handle_state_change(struct bq24257_device *bq,
-> >  	bool reset_iilimit = false;
-> >  	bool config_iilimit = false;
-> >
-> >-	mutex_lock(&bq->lock);
-> >  	old_state = bq->state;
-> >-	mutex_unlock(&bq->lock);
-> >
-> >  	/*
-> >  	 * Handle BQ2425x state changes observing whether the D+/D- based input
-> >@@ -600,25 +596,30 @@ static irqreturn_t bq24257_irq_handler_thread(int irq, void *private)
-> >  	struct bq24257_device *bq = private;
-> >  	struct bq24257_state state;
-> >
-> >+	mutex_lock(&bq->lock);
-> >+
-> >  	ret = bq24257_get_chip_state(bq, &state);
-> >  	if (ret < 0)
-> >-		return IRQ_HANDLED;
-> >+		goto out;
-> >
-> >  	if (!bq24257_state_changed(bq, &state))
-> >-		return IRQ_HANDLED;
-> >+		goto out;
-> >
-> >  	dev_dbg(bq->dev, "irq(state changed): status/fault/pg = %d/%d/%d\n",
-> >  		state.status, state.fault, state.power_good);
-> >
-> >  	bq24257_handle_state_change(bq, &state);
-> >-
-> >-	mutex_lock(&bq->lock);
-> >  	bq->state = state;
-> >+
-> >  	mutex_unlock(&bq->lock);
-> >
-> >  	power_supply_changed(bq->charger);
-> >
-> >  	return IRQ_HANDLED;
-> >+
-> >+out:
-> >+	mutex_unlock(&bq->lock);
-> >+	return IRQ_HANDLED;
-> >  }
-> >
-> >  static int bq24257_hw_init(struct bq24257_device *bq)
-> >@@ -658,9 +659,7 @@ static int bq24257_hw_init(struct bq24257_device *bq)
-> >  	if (ret < 0)
-> >  		return ret;
-> >
-> >-	mutex_lock(&bq->lock);
-> >  	bq->state = state;
-> >-	mutex_unlock(&bq->lock);
-> >
-> >  	if (bq->in_ilimit_autoset_disable) {
-> >  		dev_dbg(bq->dev, "manually setting iilimit = %d\n",
-> >@@ -1002,11 +1001,15 @@ static int bq24257_suspend(struct device *dev)
-> >  	if (!bq->in_ilimit_autoset_disable)
-> >  		cancel_delayed_work_sync(&bq->iilimit_setup_work);
-> >
-> >+	mutex_lock(&bq->lock);
-> >+
-> >  	/* reset all registers to default (and activate standalone mode) */
-> >  	ret = bq24257_field_write(bq, F_RESET, 1);
-> >  	if (ret < 0)
-> >  		dev_err(bq->dev, "Cannot reset chip to standalone mode.\n");
-> >
-> >+	mutex_unlock(&bq->lock);
-> >+
-> >  	return ret;
-> >  }
-> >
-> >@@ -1015,24 +1018,31 @@ static int bq24257_resume(struct device *dev)
-> >  	int ret;
-> >  	struct bq24257_device *bq = dev_get_drvdata(dev);
-> >
-> >+	mutex_lock(&bq->lock);
-> >+
-> >  	ret = regcache_drop_region(bq->rmap, BQ24257_REG_1, BQ24257_REG_7);
-> >  	if (ret < 0)
-> >-		return ret;
-> >+		goto err;
-> >
-> >  	ret = bq24257_field_write(bq, F_RESET, 0);
-> >  	if (ret < 0)
-> >-		return ret;
-> >+		goto err;
-> >
-> >  	ret = bq24257_hw_init(bq);
-> >  	if (ret < 0) {
-> >  		dev_err(bq->dev, "Cannot init chip after resume.\n");
-> >-		return ret;
-> >+		goto err;
-> >  	}
-> >
-> >+	mutex_unlock(&bq->lock);
-> >+
-> >  	/* signal userspace, maybe state changed while suspended */
-> >  	power_supply_changed(bq->charger);
-> >-
-> >  	return 0;
-> >+
-> >+err:
-> >+	mutex_unlock(&bq->lock);
-> >+	return ret;
-> >  }
-> >  #endif
-> >
-> >
-> 
-> -- 
-> Andrew F. Davis
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
