@@ -1,115 +1,107 @@
-From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [STLinux Kernel] [PATCH v2 2/4] remoteproc: dt: Provide bindings
- for ST's Remote Processor Controller driver
-Date: Tue, 1 Sep 2015 10:14:49 +0100
-Message-ID: <20150901091449.GQ4796@x1>
-References: <1440757911-9120-1-git-send-email-lee.jones@linaro.org>
- <1440757911-9120-3-git-send-email-lee.jones@linaro.org>
- <20150901085825.GC30542@griffinp-ThinkPad-X1-Carbon-2nd>
+From: Javier Martinez Canillas <javier-0uQlZySMnqxg9hUCZPvPmw@public.gmane.org>
+Subject: Re: [PATCH v3 4/6] [media] c8sectpfe: Update binding to reset-gpios
+Date: Tue, 1 Sep 2015 11:16:05 +0200
+Message-ID: <CABxcv==iC+mkVGKi_9LSidPjFa2WTooARMCOcWW1Nyr80UYJgw@mail.gmail.com>
+References: <1440784362-31217-1-git-send-email-peter.griffin@linaro.org>
+	<1440784362-31217-5-git-send-email-peter.griffin@linaro.org>
+	<CABxcv=nM7MBK2EcD1-YK5y0J1hBtxV+6Wu812C23pNkAzigu7g@mail.gmail.com>
+	<20150901090916.GM4796@x1>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20150901085825.GC30542@griffinp-ThinkPad-X1-Carbon-2nd>
+In-Reply-To: <20150901090916.GM4796@x1>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Peter Griffin <peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ohad-Ix1uc/W3ht7QT0dZR+AlfA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-F5mvAk5X5gdBDgjK7y7TUQ@public.gmane.org, Nathan_Lynch-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org
+To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Peter Griffin <peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Linux Kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, srinivas.kandagatla-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, maxime.coquelin-qxv4g6HH51o@public.gmane.org, patrice.chotard-qxv4g6HH51o@public.gmane.org, Mauro Carvalho Chehab <mchehab-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, valentinrothberg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, hugues.fruchet-qxv4g6HH51o@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 01 Sep 2015, Peter Griffin wrote:
+Hello Lee,
 
-> Hi Lee,
->=20
-> On Fri, 28 Aug 2015, Lee Jones wrote:
->=20
-> > Signed-off-by: Ludovic Barre <ludovic.barre-qxv4g6HH51o@public.gmane.org>
-> > Signed-off-by: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> > ---
-> >  .../devicetree/bindings/remoteproc/st-rproc.txt    | 35 ++++++++++=
-++++++++++++
-> >  1 file changed, 35 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/remoteproc/st=
--rproc.txt
->=20
-> The patch documening the DT bindings should be ordered before the pat=
-ch which adds
-> the DT node to aid reviewing.
-> >=20
-> > diff --git a/Documentation/devicetree/bindings/remoteproc/st-rproc.=
-txt b/Documentation/devicetree/bindings/remoteproc/st-rproc.txt
-> > new file mode 100644
-> > index 0000000..fbd7d78
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/remoteproc/st-rproc.txt
-> > @@ -0,0 +1,35 @@
-> > +STMicroelectronics Remote Processor
-> > +-----------------------------------
-> > +
-> > +This binding provides support for adjunct processors found on ST S=
-oCs.
-> > +
-> > +The remote processors can be controlled from the bootloader or the=
- primary OS.
-> > +If the bootloader starts a remote processor processor the primary =
-OS must detect
-> > +its state and act accordingly.
-> > +
-> > +Required properties:
-> > +- compatible		Should be one of:
-> > +				"st,st231-rproc"
-> > +				"st,st40-rproc"
->=20
-> st40-proc isn't used anywhere. The stih407 doesn't have a ST40 copro,=
- and
-> looking in the vendor tree remoteproc support isn't present for stih4=
-15/6 which
-> are the the only upstream SoC's to have a ST40 co-pro.
->=20
-> So I think st40-rproc support can be removed.
->=20
-> > +- reg			Size and length of reserved co-processor memory
-> > +- resets		Reset lines (See: ../reset/reset.txt)
-> > +- reset-names		Must be "sw_reset" and "pwr_reset"
->=20
-> pwr_reset isn't used by any of the st231 co-processors. It seems to
-> be related to ST40 support which I don't think is required upstream.
-> Removing it would make the driver a fair bit smaller.
->=20
-> > +- clocks		Clock for co-processor (See: ../clock/clock-bindings.txt=
-)
-> > +- clock-names		Must be "rproc_clk"
->=20
-> I can't see any co-pro which uses more than one clock, so clock-names=
- looks
-> superflous.
->=20
-> > +- clock-frequency	Clock frequency to set co-processor at if the bo=
-otloader
-> > +			hasn't already done so
-> > +- st,syscfg-boot	The register that holds the boot vector for the c=
-o-processor
->=20
-> I would prefer to see this binding match how most other sti drivers r=
-eference syscfg
-> registers which is: -
->=20
-> st,syscfg       =3D <&syscfg_core 0xf4>;
->=20
-> Description: phandle of sysconfig bank plus integer array containing =
-register offsets.
->=20
-> It also means it is easily extendable if more than one syscfg registe=
-r is
-> required in the future to boot a co-pro.
+On Tue, Sep 1, 2015 at 11:09 AM, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote=
+:
+> On Tue, 01 Sep 2015, Javier Martinez Canillas wrote:
+>> On Fri, Aug 28, 2015 at 7:52 PM, Peter Griffin <peter.griffin@linaro=
+=2Eorg> wrote:
+>> > gpio.txt documents that GPIO properties should be named
+>> > "[<name>-]gpios", with <name> being the purpose of this
+>> > GPIO for the device.
+>> >
+>> > This change has been done as one atomic commit.
+>> >
+>> > Signed-off-by: Peter Griffin <peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+>> > Acked-by: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+>> > ---
+>> >  Documentation/devicetree/bindings/media/stih407-c8sectpfe.txt | 6=
+ +++---
+>> >  arch/arm/boot/dts/stihxxx-b2120.dtsi                          | 4=
+ ++--
+>> >  drivers/media/platform/sti/c8sectpfe/c8sectpfe-core.c         | 2=
+ +-
+>> >  3 files changed, 6 insertions(+), 6 deletions(-)
+>> >
+>> > diff --git a/Documentation/devicetree/bindings/media/stih407-c8sec=
+tpfe.txt b/Documentation/devicetree/bindings/media/stih407-c8sectpfe.tx=
+t
+>> > index d4def76..e70d840 100644
+>> > --- a/Documentation/devicetree/bindings/media/stih407-c8sectpfe.tx=
+t
+>> > +++ b/Documentation/devicetree/bindings/media/stih407-c8sectpfe.tx=
+t
+>> > @@ -35,7 +35,7 @@ Required properties (tsin (child) node):
+>> >
+>> >  - tsin-num     : tsin id of the InputBlock (must be between 0 to =
+6)
+>> >  - i2c-bus      : phandle to the I2C bus DT node which the demodul=
+ators & tuners on this tsin channel are connected.
+>> > -- rst-gpio     : reset gpio for this tsin channel.
+>> > +- reset-gpios  : reset gpio for this tsin channel.
+>>
+>> The documentation is a bit outdated, the GPIO subsystem supports bot=
+h
+>> -gpio and -gpios, see commit:
+>>
+>> dd34c37aa3e8 ("gpio: of: Allow -gpio suffix for property names")
+>>
+>> So it makes sense to me to use -gpio instead of -gpios in this case
+>> since is a single GPIO. Also rst is already a descriptive name since
+>> that's how many datasheets name a reset pin. I'm not saying I'm
+>> against this patch, just pointing out since the commit message is a
+>> bit misleading.
+>
+> As I suggested this patch, I feel I must comment.
+>
+> My order of preference would be:
+>
+>  reset-gpio
+>  reset-gpios
+>  rst-gpio
+>  rst-gpios
+>
+> This current patch is No2, so it's okay to stay IMHO.
+>
 
-Ack.  Good points, will fix.
+If the property is being changed anyways, why not going with No1 then?
 
---=20
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-=46ollow Linaro: Facebook | Twitter | Blog
+As I said, I'm not against the patch but I think the commit message
+has to be reworded since implies that the problem is that the -gpio
+sufix is being used instead of -gpios. But since both are supported by
+the GPIO subsystem, the commit should mention that "reset" is more
+clear and easier to read than "rst" or something along those lines.
+
+BTW, I just posted a patch for the GPIO doc to mention that -gpio is
+also supported:
+
+https://patchwork.kernel.org/patch/7103761/
+
+> --
+> Lee Jones
+> Linaro STMicroelectronics Landing Team Lead
+> Linaro.org =E2=94=82 Open source software for ARM SoCs
+> Follow Linaro: Facebook | Twitter | Blog
+
+Best regards,
+Javier
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" i=
 n
