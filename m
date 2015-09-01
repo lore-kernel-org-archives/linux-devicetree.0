@@ -1,139 +1,38 @@
-From: "Andrew F. Davis" <afd@ti.com>
-Subject: Re: [PATCH 07/13] power: bq24257: Add VINDPM voltage threshold
- setting support
-Date: Tue, 1 Sep 2015 15:48:57 -0500
-Message-ID: <55E60F39.5080508@ti.com>
-References: <1441073435-12349-1-git-send-email-dannenberg@ti.com>
- <1441073435-12349-8-git-send-email-dannenberg@ti.com>
+From: Heiko Stuebner <heiko@sntech.de>
+Subject: Re: [PATCH v4 10/16] phy: Add driver for rockchip Display Port PHY
+Date: Tue, 01 Sep 2015 22:58:59 +0200
+Message-ID: <3270549.qIHk1CAA0Y@phil>
+References: <1441086371-24838-1-git-send-email-ykk@rock-chips.com> <1441087455-25533-1-git-send-email-ykk@rock-chips.com> <5077044.NGUl9gjQon@phil>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <1441073435-12349-8-git-send-email-dannenberg@ti.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Andreas Dannenberg <dannenberg@ti.com>, Sebastian Reichel <sre@kernel.org>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, David Woodhouse <dwmw2@infradead.org>, Laurentiu Palcu <laurentiu.palcu@intel.com>, Krzysztof Kozlowski <k.kozlowski.k@gmail.com>
-Cc: linux-pm@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <5077044.NGUl9gjQon@phil>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Yakir Yang <ykk@rock-chips.com>
+Cc: Thierry Reding <treding@nvidia.com>, Jingoo Han <jingoohan1@gmail.com>, Inki Dae <inki.dae@samsung.com>, joe@perches.com, Kukjin Kim <kgene@kernel.org>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, Mark Yao <mark.yao@rock-chips.com>, Russell King <rmk+kernel@arm.linux.org.uk>, djkurtz@chromium.com, dianders@chromium.com, seanpaul@chromium.com, ajaynumb@gmail.com, Andrzej Hajda <a.hajda@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, David Airlie <airlied@linux.ie>, Gustavo Padovan <gustavo.padovan@collabora.co.uk>, Andy Yan <andy.yan@rock-chips.com>, Kumar Gala <galak@codeaurora.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Kishon Vijay Abraham I <kishon@ti.com>, architt@codeaurora.org, robherring2@gmail.com, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-kernel
 List-Id: devicetree@vger.kernel.org
 
-On 08/31/2015 09:10 PM, Andreas Dannenberg wrote:
-> A new optional device property called "ti,vindpm-voltage" is introduced
-> to allow configuring the input voltage threshold for the devices'
-> dynamic power path management feature. In short, it can be used to
-> prevent the input voltage from dropping below a certain value as current
-> is drawn to charge the battery or supply the system.
->
-> Signed-off-by: Andreas Dannenberg <dannenberg@ti.com>
-> ---
->   drivers/power/bq24257_charger.c | 44 ++++++++++++++++++++++++++++++++++++++++-
->   1 file changed, 43 insertions(+), 1 deletion(-)
->
-> diff --git a/drivers/power/bq24257_charger.c b/drivers/power/bq24257_charger.c
-> index c6bb2b5..2271a88 100644
-> --- a/drivers/power/bq24257_charger.c
-> +++ b/drivers/power/bq24257_charger.c
-> @@ -70,6 +70,7 @@ struct bq24257_init_data {
->   	u8 iterm;	/* termination current */
->   	u8 in_ilimit;	/* input current limit */
->   	u8 vovp;	/* over voltage protection voltage */
-> +	u8 vindpm;	/* VDMP input threshold voltage */
->   	bool in_ilimit_autoset_disable;	/* auto-detect of input current limit */
->   	bool pg_gpio_disable; /* use of a dedicated pin for Power Good */
->   };
-> @@ -203,6 +204,13 @@ static const u32 bq24257_vovp_map[] = {
->
->   #define BQ24257_VOVP_MAP_SIZE		ARRAY_SIZE(bq24257_vovp_map)
->
-> +static const u32 bq24257_vindpm_map[] = {
-> +	4200000, 4280000, 4360000, 4440000, 4520000, 4600000, 4680000,
-> +	4760000
-> +};
-> +
-> +#define BQ24257_VINDPM_MAP_SIZE		ARRAY_SIZE(bq24257_vindpm_map)
-> +
->   static int bq24257_field_read(struct bq24257_device *bq,
->   			      enum bq24257_fields field_id)
->   {
-> @@ -433,6 +441,17 @@ enum bq24257_vovp {
->   	VOVP_10500
->   };
->
-> +enum bq24257_vindpm {
-> +	VINDPM_4200,
-> +	VINDPM_4280,
-> +	VINDPM_4360,
-> +	VINDPM_4440,
-> +	VINDPM_4520,
-> +	VINDPM_4600,
-> +	VINDPM_4680,
-> +	VINDPM_4760
-> +};
-> +
->   enum bq24257_port_type {
->   	PORT_TYPE_DCP,		/* Dedicated Charging Port */
->   	PORT_TYPE_CDP,		/* Charging Downstream Port */
-> @@ -615,7 +634,8 @@ static int bq24257_hw_init(struct bq24257_device *bq)
->   		{F_ICHG, bq->init_data.ichg},
->   		{F_VBAT, bq->init_data.vbat},
->   		{F_ITERM, bq->init_data.iterm},
-> -		{F_VOVP, bq->init_data.vovp}
-> +		{F_VOVP, bq->init_data.vovp},
-> +		{F_VINDPM, bq->init_data.vindpm}
+Hi Yakir,
 
-Small comment, even though the last comma is not needed it helps so you
-don't have a patch that removes and re-adds a line to add the comma
-every time you rearrange or add to a list like above.
+small nit more below
 
-Regards,
-Andrew
+Am Dienstag, 1. September 2015, 18:51:16 schrieb Heiko Stuebner:
+> Am Dienstag, 1. September 2015, 14:04:15 schrieb Yakir Yang:
+> > +- clocks: from common clock binding: handle to dp clock.
+> > +	of memory mapped region.
+> > +- clock-names: from common clock binding:
+> > +	Required elements: "sclk_dp" "sclk_dp_24m"
+> > +
+> > +- rockchip,grf: this soc should set GRF regs, so need get grf here.
+> > +- #phy-cells : from the generic PHY bindings, must be 0;
+> > +
+> > +Example:
+> > +
+> > +edp_phy: phy@ff770274 {
+> 
+> edp_phy: edp-phy {
+> 
+> > +	compatilble = "rockchip,rk3288-dp-phy";
 
->   	};
->
->   	/*
-> @@ -649,6 +669,7 @@ static int bq24257_hw_init(struct bq24257_device *bq)
->   		/* program fixed input current limit */
->   		ret = bq24257_field_write(bq, F_IILIMIT,
->   					  bq->init_data.in_ilimit);
-> +
->   		if (ret < 0)
->   			return ret;
->   	} else if (!state.power_good)
-> @@ -696,10 +717,23 @@ static ssize_t bq24257_show_ovp_voltage(struct device *dev,
->   			bq24257_vovp_map[bq->init_data.vovp]);
->   }
->
-> +static ssize_t bq24257_show_vindpm_voltage(struct device *dev,
-> +					   struct device_attribute *attr,
-> +					   char *buf)
-> +{
-> +	struct power_supply *psy = dev_get_drvdata(dev);
-> +	struct bq24257_device *bq = power_supply_get_drvdata(psy);
-> +
-> +	return scnprintf(buf, PAGE_SIZE, "%d\n",
-> +			bq24257_vindpm_map[bq->init_data.vindpm]);
-> +}
-> +
->   static DEVICE_ATTR(ovp_voltage, S_IRUGO, bq24257_show_ovp_voltage, NULL);
-> +static DEVICE_ATTR(vindpm_voltage, S_IRUGO, bq24257_show_vindpm_voltage, NULL);
->
->   static struct attribute *bq24257_charger_attr[] = {
->   	&dev_attr_ovp_voltage.attr,
-> +	&dev_attr_vindpm_voltage.attr,
->   	NULL,
->   };
->
-> @@ -792,6 +826,14 @@ static int bq24257_fw_probe(struct bq24257_device *bq)
->   		bq->init_data.vovp = bq24257_find_idx(property,
->   				bq24257_vovp_map, BQ24257_VOVP_MAP_SIZE);
->
-> +	ret = device_property_read_u32(bq->dev, "ti,vindpm-voltage",
-> +				       &property);
-> +	if (ret < 0)
-> +		bq->init_data.vindpm = VINDPM_4360;
-> +	else
-> +		bq->init_data.vindpm = bq24257_find_idx(property,
-> +				bq24257_vindpm_map, BQ24257_VINDPM_MAP_SIZE);
-> +
->   	bq->init_data.in_ilimit_autoset_disable = device_property_read_bool(
->   			bq->dev, "ti,in-ilimit-autoset-disable");
->
->
+typo: compatible
