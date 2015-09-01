@@ -1,66 +1,52 @@
-From: Stanimir Varbanov <svarbanov@mm-sol.com>
-Subject: Re: [PATCH 1/4] dt-binding: gpio: Add Qualcomm SMSM device tree documentation
-Date: Tue, 01 Sep 2015 11:18:56 +0300
-Message-ID: <55E55F70.5050703@mm-sol.com>
-References: <1440697078-4106-1-git-send-email-bjorn.andersson@sonymobile.com> <1440697078-4106-2-git-send-email-bjorn.andersson@sonymobile.com>
+From: Peter Griffin <peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [STLinux Kernel] [PATCH v2 1/4] ARM: STiH407: Add nodes for
+ RemoteProc
+Date: Tue, 1 Sep 2015 09:28:12 +0100
+Message-ID: <20150901082812.GB30542@griffinp-ThinkPad-X1-Carbon-2nd>
+References: <1440757911-9120-1-git-send-email-lee.jones@linaro.org>
+ <1440757911-9120-2-git-send-email-lee.jones@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1440697078-4106-2-git-send-email-bjorn.andersson@sonymobile.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Bjorn Andersson <bjorn.andersson@sonymobile.com>, Alexandre Courbot <gnurou@gmail.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Linus Walleij <linus.walleij@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>
-Cc: devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1440757911-9120-2-git-send-email-lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ohad-Ix1uc/W3ht7QT0dZR+AlfA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-F5mvAk5X5gdBDgjK7y7TUQ@public.gmane.org, Nathan_Lynch-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 08/27/2015 08:37 PM, Bjorn Andersson wrote:
-> This documents a device tree binding for exposing the Qualcomm Shared
-> Memory State Machine as a set of gpio- and interrupt-controllers.
-> 
-> Signed-off-by: Bjorn Andersson <bjorn.andersson@sonymobile.com>
+Hi Lee,
+
+On Fri, 28 Aug 2015, Lee Jones wrote:
+
+> Signed-off-by: Ludovic Barre <ludovic.barre-qxv4g6HH51o@public.gmane.org>
+> Signed-off-by: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 > ---
->  .../devicetree/bindings/gpio/qcom,smsm.txt         | 114 +++++++++++++++++++++
-
-<snip>
-
-> += EXAMPLE
-> +The following example shows the SMEM setup for controlling properties of the
-> +wireless processor, defined from the 8974 apps processor's point-of-view. It
-> +encompasses one outbound entry and the outgoing interrupt for the wireless
-> +processor.
+>  arch/arm/boot/dts/stih407-family.dtsi | 48 +++++++++++++++++++++++++++++++++++
+>  1 file changed, 48 insertions(+)
+> 
+> diff --git a/arch/arm/boot/dts/stih407-family.dtsi b/arch/arm/boot/dts/stih407-family.dtsi
+> index 33daa49..89a363c 100644
+> --- a/arch/arm/boot/dts/stih407-family.dtsi
+> +++ b/arch/arm/boot/dts/stih407-family.dtsi
+> @@ -608,5 +608,53 @@
+>  			status		= "okay";
+>  			tx-only;
+>  		};
 > +
-> +smsm {
-> +	compatible = "qcom,smsm";
-> +
-> +	#address-cells = <1>;
-> +	#size-cells = <0>;
-> +
-> +	qcom,ipc-3 = <&apcs 8 19>;
+> +		st231_gp0: st231-gp0@0 {
+> +			compatible = "st,st231-rproc";
+> +			reg = <0x40000000 0x01000000>;
+> +			reg-names = "carveout";
+> +			resets = <&softreset STIH407_ST231_GP0_SOFTRESET>;
 
-Can we use something more descriptive here, for example
+Support for these co-processor reset lines does not exist upstream. So
+this series as it stands won't compile.
 
-qcom,ipc-rpm = <&apcs 8 19>;
-
-and replace these magic numbers with defines?
-
-> +
-> +	apps_smsm: apps@0 {
-> +		reg = <0>;
-> +
-> +		gpio-controller;
-> +		#gpio-cells = <2>;
-> +	};
-> +
-> +	wcnss_smsm: wcnss@7 {
-> +		reg = <7>;
-> +		interrupts = <0 144 1>;
-> +
-> +		interrupt-controller;
-> +		#interrupt-cells = <2>;
-> +	};
-> +};
-
-
--- 
 regards,
-Stan
+
+Peter.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
