@@ -1,39 +1,102 @@
-From: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH v5 1/4] arm64, numa: adding numa support for arm64
- platforms.
-Date: Thu, 3 Sep 2015 11:13:28 +0100
-Message-ID: <20150903101328.GB877@arm.com>
-References: <1439570374-4079-1-git-send-email-gkulkarni@caviumnetworks.com>
- <1439570374-4079-2-git-send-email-gkulkarni@caviumnetworks.com>
- <CAFpQJXXiU3LcUWvjP8r4pHUysYe7X4DJBvjhXzf+p4qaJdBVWA@mail.gmail.com>
+From: Chee Nouk Phoo <cnphoon@altera.com>
+Subject: [[PATCH v2] 1/2] Altera Modular ADC driver device binding
+Date: Tue, 1 Sep 2015 14:49:58 -0700
+Message-ID: <1441144199-20231-2-git-send-email-cnphoon@altera.com>
+References: <1441144199-20231-1-git-send-email-cnphoon@altera.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <CAFpQJXXiU3LcUWvjP8r4pHUysYe7X4DJBvjhXzf+p4qaJdBVWA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Ganapatrao Kulkarni <gpkulkarni-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Ganapatrao Kulkarni <gkulkarni-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>, Catalin Marinas <Catalin.Marinas-5wv7dgnIgG8@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Leif Lindholm <leif.lindholm-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "rfranz-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org" <rfranz-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>, Ard Biesheuvel <ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "msalter-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org" <msalter-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Steve Capper <steve.capper-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "hanjun.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <hanjun.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Al Stone <al.stone-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "Prasun.Kapoor-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org" <Prasun.Kapoor-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>, Robert
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1441144199-20231-1-git-send-email-cnphoon@altera.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Cc: lars@metafoo.de, Michael.Hennerich@analog.com, cnphoon.linux@gmail.com, cnphoon@altera.com
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Sep 03, 2015 at 10:52:02AM +0100, Ganapatrao Kulkarni wrote:
-> On Fri, Aug 14, 2015 at 10:09 PM, Ganapatrao Kulkarni
-> <gkulkarni-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org> wrote:
-> > Adding numa support for arm64 based platforms.
-> > This patch adds by default the dummy numa node and
-> > maps all memory and cpus to node 0.
-> > using this patch, numa can be simulated on single node arm64 platforms.
-> >
-> > Signed-off-by: Ganapatrao Kulkarni <gkulkarni-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>
+From: Chee Nouk Phoon <cnphoon@altera.com>
 
-[trimmed ~850 lines of context]
+Altera Modular ADC is soft IP that wraps the hardened ADC block in a Max10
+device. It can be configured to dual ADC mode that supports two channel
+synchronous sampling or independent single ADCs. ADC sampled values will be
+written into memory slots in sequence determined by a user configurable
+sequencer block.
 
-> can you please review this patch.
+This patch adds Altera Modular ADC driver device tree binding
 
-It's the middle of the merge window, please be patient.
+Signed-off-by: Chee Nouk Phoon <cnphoon@altera.com>
+---
+ .../bindings/iio/adc/altr,modular-adc.txt          |   63 ++++++++++++++++++++
+ 1 files changed, 63 insertions(+), 0 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/iio/adc/altr,modular-adc.txt
 
-Will
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/Documentation/devicetree/bindings/iio/adc/altr,modular-adc.txt b/Documentation/devicetree/bindings/iio/adc/altr,modular-adc.txt
+new file mode 100644
+index 0000000..faafcac
+--- /dev/null
++++ b/Documentation/devicetree/bindings/iio/adc/altr,modular-adc.txt
+@@ -0,0 +1,63 @@
++Altera Modular (Dual) ADC
++
++This binding document describes both Altera Modular ADC and Altera Modular Dual
++ADC. Both options can be configured during generation time in Qsys. This driver
++only supports standard sequencer with Avalon-MM sample storage with up to 64
++memory slots.
++
++Required properties:
++- compatible: must be one of the following strings
++  "altr,modular-adc-1.0": single ADC configuration
++  "altr,modular-dual-adc-1.0": dual ADC configuration
++
++- reg: Address and length of the register set for the device. It contains the
++  information of registers in the same order as described by reg-names
++
++- reg-names: Should contain the reg names
++  "sequencer_csr": register region for adc sequencer block
++  "sample_store_csr": register region for sample store block
++
++- interrupts: interrupt line for ADC
++
++- altr,adc-mode : ADC configuration
++  1: single ADC mode
++  2: dual ADC mode
++
++- altr,adc-slot-count : specify number of conversion slot in use
++
++- altr,adc<ADC index>-slot-sequence-<slot index>: specify ADC channel
++  conversion sequence
++  <ADC index>: instantiated ADC number
++  <slot index>: slot index for ADC memory slot
++
++- altr,adc-number : specify ADC number when single ADC mode is selected
++  1: 1st ADC
++  2: 2nd ACD
++
++Example: single ADC
++modular_adc_0: adc@0x20000200 {
++  compatible = "altr,modular-adc";
++  reg = <0x20000000 0x00000008>,
++    <0x20000200 0x00000200>;
++  reg-names = "sequencer_csr", "sample_store_csr";
++  interrupt-parent = <&cpu>;
++  interrupts = <8>;
++  altr,adc-mode = <1>;
++  altr,adc-slot-count = <2>;
++  altr,adc1-slot-sequence-1 = <1>;
++  altr,adc-number = <1>;
++};
++
++Example: dual ADC
++modular_adc_1: adc@0x18002200 {
++  compatible = "altr,modular-dual-adc";
++  reg = <0x18002000 0x00000008>,
++    <0x18002200 0x00000200>;
++  reg-names = "sequencer_csr", "sample_store_csr";
++  interrupt-parent = <&cpu>;
++  interrupts = <8>;
++  altr,adc-mode = <2>;
++  altr,adc-slot-count = <1>;
++  altr,adc1-slot-sequence-1 = <6>;
++  altr,adc2-slot-sequence-1 = <6>;
++};
+\ No newline at end of file
+-- 
+1.7.1
