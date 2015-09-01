@@ -1,81 +1,120 @@
-From: Bjorn Andersson <bjorn.andersson-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>
-Subject: Re: [PATCH 1/4] dt-binding: gpio: Add Qualcomm SMSM device tree
- documentation
-Date: Tue, 1 Sep 2015 14:50:29 -0700
-Message-ID: <20150901215029.GK13472@usrtlx11787.corpusers.net>
-References: <1440697078-4106-1-git-send-email-bjorn.andersson@sonymobile.com>
- <1440697078-4106-2-git-send-email-bjorn.andersson@sonymobile.com>
- <55E55F70.5050703@mm-sol.com>
+From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: for_each_xxx_of_node() - lots of refcounting bugs
+Date: Tue, 1 Sep 2015 17:00:55 -0500
+Message-ID: <CAL_JsqJE5seB=5-9_QJBFG1=ipDr_osQJusOSk00VZzwhs=CDA@mail.gmail.com>
+References: <20150901110743.GJ21084@n2100.arm.linux.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <55E55F70.5050703-NEYub+7Iv8PQT0dZR+AlfA@public.gmane.org>
+In-Reply-To: <20150901110743.GJ21084-l+eeeJia6m9vn6HldHNs0ANdhmdF6hFW@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stanimir Varbanov <svarbanov-NEYub+7Iv8PQT0dZR+AlfA@public.gmane.org>
-Cc: Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue 01 Sep 01:18 PDT 2015, Stanimir Varbanov wrote:
+On Tue, Sep 1, 2015 at 6:07 AM, Russell King - ARM Linux
+<linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org> wrote:
+> Consider the following loop:
+>
+>         for_each_child_of_node(&pdev->dev.of_node, child) {
+>                 if (some_condition)
+>                         break;
+>         }
+>
+> The use of for_each_..._of_node() leads people to believe that it's
+> like other for_each_...() loops - the continue and break statements
+> can be used.
+>
+> However, with OF, "break" can't be used without disrupting the
+> reference counting on the nodes.  This is because:
+>
+> #define for_each_child_of_node(parent, child) \
+>         for (child = of_get_next_child(parent, NULL); child != NULL; \
+>              child = of_get_next_child(parent, child))
+>
+> of_get_next_child() takes a reference on the node it's about to return,
+> while dropping the reference on the node passed into it.  In the case
+> of the last iteration, where of_get_next_child() returns NULL, the
+> previous child will have its reference dropped, resulting in no child
+> nodes having a reference held.
+>
+> However, if a 'break' statement is used, the reference on the current
+> child is not dropped unless code explicitly drops it.
+>
+> We have code which does exactly this kind of thing:
+>
+>         for_each_child_of_node(cpus, cpu) {
+>                 /*
+>                  * A device tree containing CPU nodes with missing "reg"
+>                  * properties is considered invalid to build the
+>                  * cpu_logical_map.
+>                  */
+>                 if (of_property_read_u32(cpu, "reg", &hwid)) {
+>                         pr_debug(" * %s missing reg property\n",
+>                                      cpu->full_name);
+>                         return;
+>                 }
+>
+>                 /*
+>                  * 8 MSBs must be set to 0 in the DT since the reg property
+>                  * defines the MPIDR[23:0].
+>                  */
+>                 if (hwid & ~MPIDR_HWID_BITMASK)
+>                         return;
+> ... more return statements
+>
+>         for_each_child_of_node(np, np0) {
+>                 struct device_node *fc;
+>                 int i;
+>
+>                 res = of_dev_hwmod_lookup(np0, oh, &i, &fc);
+>                 if (res == 0) {
+>                         *found = fc;
+>                         *index = i;
+>                         return 0;
+>
+>         for_each_child_of_node(parent, np) {
+>                 pd = kzalloc(sizeof(*pd), GFP_KERNEL);
+>                 if (!pd)
+>                         return -ENOMEM;
+>
+> Virtually _all_ uses of for_each_child_of_node() in the kernel today
+> where the loop is terminated early leak a reference on the child node.
+> Even some of the drivers/of code does it:
+>
+>         ... for_each_child_of_node(root, child) {
+>                 if (!of_match_node(matches, child))
+>                         continue;
+>                 rc = of_platform_bus_create(child, matches, NULL, parent, false);
+>                 if (rc)
+>                         break;
+>         }
+>
+> This pretty much shows the danger of using macros which hide details
+> like this from the programmer - it leads to the assumption that it's
+> fine to use 'break' and 'return' without any further consideration,
+> because that's what you can do in standard C loops.  The fact that
+> these loops are actually more complex than that is hidden behind the
+> macro, and thus gets forgotten.
+>
+> We could go around and fix all these sites, but that's not going to
+> stop this continuing to happen into the future.  So, fixing the
+> existing bugs is not a fix at all, it's a papering over of a more
+> fundamental problem here.
 
-> On 08/27/2015 08:37 PM, Bjorn Andersson wrote:
-> > This documents a device tree binding for exposing the Qualcomm Shared
-> > Memory State Machine as a set of gpio- and interrupt-controllers.
-> > 
-> > Signed-off-by: Bjorn Andersson <bjorn.andersson-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>
-> > ---
-> >  .../devicetree/bindings/gpio/qcom,smsm.txt         | 114 +++++++++++++++++++++
-> 
-> <snip>
-> 
-> > += EXAMPLE
-> > +The following example shows the SMEM setup for controlling properties of the
-> > +wireless processor, defined from the 8974 apps processor's point-of-view. It
-> > +encompasses one outbound entry and the outgoing interrupt for the wireless
-> > +processor.
-> > +
-> > +smsm {
-> > +	compatible = "qcom,smsm";
-> > +
-> > +	#address-cells = <1>;
-> > +	#size-cells = <0>;
-> > +
-> > +	qcom,ipc-3 = <&apcs 8 19>;
-> 
-> Can we use something more descriptive here, for example
-> 
-> qcom,ipc-rpm = <&apcs 8 19>;
+Yes, the ref counting for DT in general is difficult to get right and
+needs to be redesigned. Geert did a checker and even the core and
+unittests have 44 errors[1]. However, it is a nop in most cases, and
+it only really matters on IBM pSeries and only for certain nodes on
+those AIUI. We've had some discussions about it before, but no one has
+come up with a solution. Managing this at a node level is probably too
+fine grained when most nodes don't need ref counting. The implicit get
+and explicit put are also a problem IMO. We need to be able to look at
+code and see the calls are balanced.
 
-Not really, because in the view of smsm we don't now which host the rpm
-would represent. But most likely 3 would mean WCNSS, per the enum in
-caf.
+Rob
 
-> 
-> and replace these magic numbers with defines?
-> 
-
-I don't know what those defines would be named, what you have here is
-bit 19 in the 8th byte - straight from the register documentation.
-
-> > +
-> > +	apps_smsm: apps@0 {
-> > +		reg = <0>;
-> > +
-> > +		gpio-controller;
-> > +		#gpio-cells = <2>;
-> > +	};
-> > +
-> > +	wcnss_smsm: wcnss@7 {
-> > +		reg = <7>;
-> > +		interrupts = <0 144 1>;
-> > +
-> > +		interrupt-controller;
-> > +		#interrupt-cells = <2>;
-> > +	};
-> > +};
-
-Regards,
-Bjorn
+[1] https://lkml.org/lkml/2015/1/23/437
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
