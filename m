@@ -1,57 +1,66 @@
-From: Peter Griffin <peter.griffin@linaro.org>
-Subject: Re: [STLinux Kernel] [PATCH v2 3/4] remoteproc: Supply controller
- driver for ST's Remote Processors
-Date: Tue, 1 Sep 2015 09:17:00 +0100
-Message-ID: <20150901081700.GA30542@griffinp-ThinkPad-X1-Carbon-2nd>
-References: <1440757911-9120-1-git-send-email-lee.jones@linaro.org>
- <1440757911-9120-4-git-send-email-lee.jones@linaro.org>
- <55E08B34.9080102@mentor.com>
- <20150901075538.GJ4796@x1>
+From: Stanimir Varbanov <svarbanov@mm-sol.com>
+Subject: Re: [PATCH 1/4] dt-binding: gpio: Add Qualcomm SMSM device tree documentation
+Date: Tue, 01 Sep 2015 11:18:56 +0300
+Message-ID: <55E55F70.5050703@mm-sol.com>
+References: <1440697078-4106-1-git-send-email-bjorn.andersson@sonymobile.com> <1440697078-4106-2-git-send-email-bjorn.andersson@sonymobile.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20150901075538.GJ4796@x1>
+In-Reply-To: <1440697078-4106-2-git-send-email-bjorn.andersson@sonymobile.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Lee Jones <lee.jones@linaro.org>
-Cc: Nathan Lynch <Nathan_Lynch@mentor.com>, ohad@wizery.com, devicetree@vger.kernel.org, kernel@stlinux.com, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+To: Bjorn Andersson <bjorn.andersson@sonymobile.com>, Alexandre Courbot <gnurou@gmail.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Linus Walleij <linus.walleij@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>
+Cc: devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-
-On Tue, 01 Sep 2015, Lee Jones wrote:
-
-> On Fri, 28 Aug 2015, Nathan Lynch wrote:
+On 08/27/2015 08:37 PM, Bjorn Andersson wrote:
+> This documents a device tree binding for exposing the Qualcomm Shared
+> Memory State Machine as a set of gpio- and interrupt-controllers.
 > 
-> > On 08/28/2015 05:31 AM, Lee Jones wrote:
-> > > diff --git a/drivers/remoteproc/Kconfig b/drivers/remoteproc/Kconfig
-> > > index 28c711f..72e97d7 100644
-> > > --- a/drivers/remoteproc/Kconfig
-> > > +++ b/drivers/remoteproc/Kconfig
-> > > @@ -77,4 +77,13 @@ config DA8XX_REMOTEPROC
-> > >  	  It's safe to say n here if you're not interested in multimedia
-> > >  	  offloading.
-> > >  
-> > > +config ST_REMOTEPROC
-> > > +	tristate "ST remoteproc support"
-> > > +	depends on ARCH_STI
-> > > +	select REMOTEPROC
-> > > +	help
-> > > +	  Say y here to support ST's adjunct processors via the remote
-> > > +	  processor framework.
-> > > +	  This can be either built-in or a loadable module.
-> > > +
-> > 
-> > The code uses reset_control_* APIs, so this should depend on
-> > RESET_CONTROLLER, no?
-> 
-> There's no need to explicitly depend on RESET_CONTROLLER.
-> 
-> With !RESET_CONTROLLER the user is WARN()ed about using the reset_*
-> API.
+> Signed-off-by: Bjorn Andersson <bjorn.andersson@sonymobile.com>
+> ---
+>  .../devicetree/bindings/gpio/qcom,smsm.txt         | 114 +++++++++++++++++++++
 
-ARCH_STI selects RESET_CONTROLLER, so it will always be enabled.
+<snip>
 
+> += EXAMPLE
+> +The following example shows the SMEM setup for controlling properties of the
+> +wireless processor, defined from the 8974 apps processor's point-of-view. It
+> +encompasses one outbound entry and the outgoing interrupt for the wireless
+> +processor.
+> +
+> +smsm {
+> +	compatible = "qcom,smsm";
+> +
+> +	#address-cells = <1>;
+> +	#size-cells = <0>;
+> +
+> +	qcom,ipc-3 = <&apcs 8 19>;
+
+Can we use something more descriptive here, for example
+
+qcom,ipc-rpm = <&apcs 8 19>;
+
+and replace these magic numbers with defines?
+
+> +
+> +	apps_smsm: apps@0 {
+> +		reg = <0>;
+> +
+> +		gpio-controller;
+> +		#gpio-cells = <2>;
+> +	};
+> +
+> +	wcnss_smsm: wcnss@7 {
+> +		reg = <7>;
+> +		interrupts = <0 144 1>;
+> +
+> +		interrupt-controller;
+> +		#interrupt-cells = <2>;
+> +	};
+> +};
+
+
+-- 
 regards,
-
-Peter.
+Stan
