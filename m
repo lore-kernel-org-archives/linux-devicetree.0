@@ -1,144 +1,229 @@
-From: Tim Bird <tbird20d-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [RFC PATCH 0/5] DT binding documents using text markup
-Date: Tue, 1 Sep 2015 10:14:06 -0700
-Message-ID: <CA+bK7J4Ha55oFhCYDnUcBu8ZHCP3ReB6B=7Y9Fw7CknxPcaoWQ@mail.gmail.com>
+From: Matt Porter <mporter-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
+Subject: Re: [RFC PATCH 2/5] Documentation: dt-bindings: add example DT
+ binding document
+Date: Tue, 1 Sep 2015 13:30:20 -0400
+Message-ID: <20150901173020.GJ24203@beef>
 References: <1440739433-6799-1-git-send-email-mporter@konsulko.com>
-	<CAL_Jsq+qCJfLYxVfyQ4gAxPWLZ2=WNa0H21+cRcBi7dGVG0PMA@mail.gmail.com>
-	<20150828171323.GA24203@beef>
+ <1440739433-6799-3-git-send-email-mporter@konsulko.com>
+ <CAL_Jsq+FE4MCCfZC5hDhQBmM1gHibY82S9a8PC1GwsnWsPNxkg@mail.gmail.com>
+ <20150828174937.GB24203@beef>
+ <CAL_JsqJy21yBGe161MrTEC1kL4UD=h+skH=mPm-vjwZ7yEHoUA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-spec-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20150828171323.GA24203@beef>
+Content-Disposition: inline
+In-Reply-To: <CAL_JsqJy21yBGe161MrTEC1kL4UD=h+skH=mPm-vjwZ7yEHoUA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-spec-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Matt Porter <mporter-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
-Cc: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Devicetree List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Devicetree Spec List <devicetree-spec-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Behan Webster <behanw-k/hB3zQhLwledRVtV/plodBPR1lH4CV8@public.gmane.org>
+To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Devicetree List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Devicetree Spec List <devicetree-spec-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Behan Webster <behanw-k/hB3zQhLwledRVtV/plodBPR1lH4CV8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Aug 28, 2015 at 10:13 AM, Matt Porter <mporter-OWPKS81ov/FWk0Htik3J/w@public.gmane.org> wrote:
+On Fri, Aug 28, 2015 at 01:55:11PM -0500, Rob Herring wrote:
+> On Fri, Aug 28, 2015 at 12:49 PM, Matt Porter <mporter-OWPKS81ov/FWk0Htik3J/w@public.gmane.org> wrote:
+> > On Fri, Aug 28, 2015 at 09:53:06AM -0500, Rob Herring wrote:
+> >> On Fri, Aug 28, 2015 at 12:23 AM, Matt Porter <mporter-OWPKS81ov/FWk0Htik3J/w@public.gmane.org> wrote:
+> >> > Add a skeleton DT binding document that serves as the canonical
+> >> > example for implementing YAML-based DT bindings documentation.
+> >> > The skeleton binding illustrates use of all fields and variations
+> >> > described in the dt-binding-format.txt documentation.
+> >> >
+> >> > Signed-off-by: Matt Porter <mporter-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
+> >> > ---
+> >> >  Documentation/devicetree/bindings/skeleton.yaml | 98 +++++++++++++++++++++++++
+> >> >  1 file changed, 98 insertions(+)
+> >> >  create mode 100644 Documentation/devicetree/bindings/skeleton.yaml
+> >> >
+> >> > diff --git a/Documentation/devicetree/bindings/skeleton.yaml b/Documentation/devicetree/bindings/skeleton.yaml
+> >> > new file mode 100644
+> >> > index 0000000..175965f
+> >> > --- /dev/null
+> >> > +++ b/Documentation/devicetree/bindings/skeleton.yaml
+> >> > @@ -0,0 +1,98 @@
+> >> > +%YAML 1.2
+> >> > +---
+> >> > +id: skel-device
+> >> > +
+> >> > +title: Skeleton Device
+> >> > +
+> >> > +maintainer:
+> >> > +  - name: Skeleton Person <skel-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> >>
+> >> We'd want to tie this into get_maintainers.pl obviously.
+> >
+> > Right, I broke my rule of "no new tags for content we don't already
+> > have" by adding this. It stems out of the discussion at LPC where
+> > Mark suggested we could avoid the core bindings being moved by adding
+> > maintainer info into the binding itself.
+> 
+> If you stated that rule, I missed it...
 
-> Now, I would caution about trying to do too much on Day 1 or we
-> could end up back at the "never doing anything" stage.
+Mental list of rules I made for my initial cut at this. I was trying
+really hard to have this be a cut and paste reformatting to start and
+then see where comments take us.
 
-I strongly agree with that (despite my having just sent a bunch of comments
-on the binding format document).
+> > This is an area where more docs are needed. Ideally, on the first pass
+> > conversion we would not attempt to populate these. I had considered
+> > that we *could* only add maintainer: tags on core bindings to and
+> > adjust get_maintainers.pl to use that info to override the standard
+> > directory-based info if it exists. I don't think it's necessary to add
+> > a specific maintainer for all of the peripheral bindings if the default
+> > is the subsystem maintainer and the dt list. We could at least start
+> > directing core binding discussion to the -spec list which is where I
+> > think you'd like it.
+> 
+> Yes, certainly this can solve my problem around handling core bindings.
+> 
+> Some subsystem maintainers require a driver have a maintainer. We
+> could certainly enforce that too. We could probably automatically
+> populate this with the original author as a starting point. OTOH,
+> bindings should not change frequently.
 
-> It would
-> be an improvement to simply check that the basic tags exist as
-> shown in the [R] or [O] fields in the documentation. One thing
-> I should point out is that I carefully avoided marking some tags
-> as [R] where existing bindings don't have them...even if logically,
-> a description should be required on every binding. The idea here
-> is to avoid updating content at the same time that we are updating
-> the format.
+Populating with the original author seems easy enough.
 
-I strongly agree with this as well.  I think that the goal for the first
-pass should be "no lost text".  That is, if it doesn't convert into something
-in the binding format, it should still be preserved somewhere, for evaluation
-and formatting on a subsequent pass.
+> >> > +description: >
+> >> > +  The Skeleton Device binding represents the SK11 device produced by
+> >> > +  the Skeleton Corporation. The binding can also support compatible
+> >> > +  clones made by second source vendors.
+> >> > +
+> >> > +compatible:
+> >> > +  - name: "skel,sk11"
+> >> > +  - name: "faux,fx11"
+> >>
+> >> Is this an OR or AND? We need both.
+> >
+> > True, this only covers the OR case atm.
+> >
+> >> The complicated case is "one of {specific names} followed by {generic name}."
+> >
+> > I need to rethink these. I do have deprecated: tag for that case and
+> > possibly "name:" gets split to "generic:" and "specific:" and we can
+> > then do the right thing.
+> >
+> > For the above I would have:
+> >
+> > compatible:
+> >   - specific: "skel,sk11"
+> >   - specific: "faux,fx11"
+> 
+> This can still be an AND or OR relationship.
 
-> Rather, I think it would be better to get the base
-> format updated, then come back with a janitorial team and add
-> descriptions (since now we can generate a worklist of those
-> bindings missing a top-level description) and systematically
-> fix those and review with the appropriate maintainers.
+Ok, so this might need to be sequences of and: and or:
+key value pairs to reflect the combinations.
 
-Agreed.  It will be very useful, once we get our first pass done, to
-be able to find: 1) documents not converted yet, 2) property definitions
-that are missing certain fields, 3) things that could still be formatted,
-from text that is remaining in the description strings or other free-form text.
-This should be easy to script.
+> > and something like the Allwinner simple framebuffer would be:
+> >
+> > compatible:
+> >   - generic: "simple-framebuffer"
+> >   - specific: "allwinner,simple-framebuffer"
+> >
+> > where our validator would insist on seeing one of the specific: tags
+> > along with the generic: tag. A lot of bindings, given current doc
+> > patterns would just have two tags like above.
+> 
+> We could follow Pantelis' suggestion and do C style logic expressions:
+> 
+> name: ("chip1-ipblock" || "chip2-ipblock") && "generic-ipblock"
 
->> An example such as checking that compatible strings are documented as
->> checkpatch.pl does would be nice. Roughly, that would be just list all
->> compatible values.
->
-> Ok, so my comments above were strictly about a validator for the
-> binding doc submission itself. I can add an example based on your
-> checkpatch.pl to adapt it to the .yaml compatible tags.
->
->> > The scope of the initial YAML DT Binding format was specifically
->> > limited to supporting *only* the content we have in bindings today.
->> > The idea here is to propose and agree on something that will take
->> > us just a few steps in the right direction. If we move *all* current
->> > binding content to a machine parseable format, additional features
->> > can be added with more automation and scripting. As it stands today,
->> > because of the inconsistency of the wording of the files, we can't
->> > add a lot of new features to the content until we convert what we
->> > have today into a standard format.
->> >
->> > With that said, it should be noted that some new features such as
->> > "type" tags to indicate cell types could be added to support
->> > additional DTS validation beyond what the current content supports.
->> > Another possibility is adding "range" type information to validate
->> > the legal values for a cell.
->> >
->> > This series is broken up into three major parts:
->> >
->> > 1) The documentation defining the YAML DT binding format
->> > 2) A skeleton device binding example illustrating use of this format
->> > 3) Some real binding conversions (eeprom.txt, phy-bindings.txt, and
->> >    ti-phy.txt
->> >
->> > As a proof of concept of what can be done with a proper machine
->> > readable DT binding source file, there's a simple markdown document
->> > generator at https://github.com/konsulko/dtgendoc. Also, to see
->> > actual output from the generator, the generated markdown from those
->> > bindings is viewable at https://github.com/konsulko/dtgendoc/wiki
->>
->> Nice.
->>
->> > There's a lot of other possibilities for validation tools using
->> > only the data we have today in the bindings. In addition, Frank
->> > Rowand covered some DT debug techniques that would benefit from
->> > the binding documentation being 100% reliably searchable.
->> >
->> > I found it useful to see a side-by-side view of a converted doc
->> > versus the original content, so here's a screenshot of eeprom.txt
->> > vs. eeprom.yaml:
->> > https://github.com/konsulko/dtgendoc/wiki#eepromtxt-vs-eepromyaml
->> >
->> > When we decide on a text markup format that is acceptable, then the
->> > next step is to convert all the bindings. That process would start
->> > with the complete set of generic bindings as they will be referenced
->> > by the actual device bindings.
->>
->> You are going to do that for everyone, right? ;)
->
-> Let's just say that I'm banking on others helping here once we have
-> a format agreed upon. If we can hold the binding doc schema definition
-> initially to just define tags for content that already exists in our
-> textual binding docs, the effort for conversion is tolerable. To give
-> an example, that phy-bindings.txt, it took 15 minutes to convert and
-> and pass through the yaml parser and dtgendoc. The reason is that it's
-> pure reformatting work. It doesn't take any special knowledge of the
-> hardware and it doesn't involve reviewing dts files to extra
-> additional information. Some of the annoyances can be streamlined
-> like tab stripping and handling the two space indentation to make
-> this process faster. One of my next things is to get a simple tool
-> going that reports problems with conversions, essentially what I
-> said was needed to integrate with checkpatch, so this process of
-> conversion is even faster. Trivial peripheral bindings like eeprom.txt
-> can be done in 5 minutes or so right now.
->
-> If we decide we must have tags like "type:" in the initial binding
-> doc schema definition *and* we must add that content in each
-> conversion, then this becomes more time consuming to validate that
-> information against working dts files. IMHO, we'd be better off
-> to get the base format straight, addressing missing pieces like
-> all the compatible permutations, and convert them all with
-> just that content. After that, we come back and add new content
-> features like type: tagging. I'm trying to find a reasonable
-> place to do this incrementally since the volume of bindings to
-> convert is enormous.
->
-> But to answer your question, if we get a format I'll do
-> conversions and hope I'm not alone.
+That might work. More specialized parsing, but it probably is needed
+to handle property values ranges anyway.
 
-I'm sure others will help out.  I will, and I'm pretty sure we can get
-some conversion sprints set up at conferences (I know I can set aside
-some time or resources at ELC in the spring - it might be too late for
-ELCE in October to set up a scheduled block of time, but we can start
-getting the word out.)  As I said in my other e-mail, one doesn't have
-to be a kernel coder to do this, and the conversions should be pretty
-straight-forward.
- -- Tim
+> >> > +    description: A clone of the original sk11 device
+> >> > +
+> >> > +required:
+> >> > +  - name: "reg"
+> >>
+> >> We definitely need type info from the start.
+> >
+> > Are you sure? Ugh.
+> >
+> > My big contention here is that we don't carry that content in the
+> > docs today so we shouldn't try to add it in the initial conversion.
+> 
+> What? We have that all over the place. Boolean properties, phandles, etc.
+
+I mean that it's not always explicitly called out in peripheral
+DT bindings...it's inconsistently documented. I think that by properly
+documenting this in the generic bindings as you are suggesting and
+getting those properties by reference, the task of documenting these
+won't be so bad.
+
+> > I think you are right in that we should have it documented in the
+> > schema but I'm concerned that we make the starting conversion
+> > effort too large by adding type info to all converted docs.
+> 
+> How we do the conversion certainly needs to be worked out. However,
+> first we need some sort of agreement that yes this looks promising
+> before we spend too much time on it. We need to wait for all the YAML
+> haters to come out of hiding. :) Once the direction is settled, then
+
+I was expecting the YAML haters by now, I'll give it another few days.
+:)
+
+> we can iron out the details of the structure. Finally, then we can
+> determine how to do the conversion. Just because we define how type
+> information looks doesn't mean it has to be there day 1.
+
+Agreed.
+ 
+> > I think we gain a lot even without at the start, but I understand
+> > why we need it and how it will help reduce the review firehose
+> > with the associated validation tools.
+> >
+> >>
+> >> > +    description: chip select address of skeleton device
+> >> > +    reference: spi-slave
+> >>
+> >> I would like to not have to list properties if the inherited binding
+> >> lists it. The problem is we need to say how many cells and the order
+> >> (not a problem here, but for mmio devices).
+> >
+> > Yeah, make sense.
+> >
+> >> Perhaps we can list the reference at the top level for the node
+> >> instead of for every property.
+> >
+> > That's a good point. I was wondering if per prop references would
+> > get unwieldy once we actually add them into all the converted docs.
+> > There's a huge number of existing docs without proper references.
+> 
+> Yes, in many cases they are implied. It should be simple enough to
+> generate the list though whether they point to the doc file or just
+> list the properties.
+
+Ok.
+
+> 
+> >
+> > Ok, I'll take a look at collecting references per group of properties.
+> >
+> >>
+> >> > +  - name: "spi-max-frequency"
+> >> > +    description: >
+> >> > +      Maximum SPI clocking speed of skeleton device in Hz, must be
+> >> > +      1000000
+> >> > +    reference: spi-slave
+> >>
+> >> Rather than listing the property and having constraint in description,
+> >> perhaps we could add constraints like this:
+> >>
+> >> - spi-max-frequency-range: 1000000 1000000
+> >>
+> >> Or groups of constraints:
+> >>
+> >> - spi-max-frequency-constraints:
+> >>   range: 1000000 1000000
+> >>   some-other-constraint: <value>
+> >
+> > I was hoping to avoid this to start due to my argument for keeping it
+> > simple for the first pass at conversion. However, the latter looks
+> > flexible enough. We have cases with enumerated values as well to handle
+> > the require some thought.
+> 
+> We can always add constraints as a second step, but I'd like to define
+> the structure at least.
+
+Ok, this sounds reasonable, I'm goling to take a stab at reorganizing
+the format based on the big areas of references, property types, and
+property constraints.
+
+-Matt
