@@ -1,62 +1,208 @@
-From: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
-Subject: Re: [PATCH v11 2/5] mtd: nand: vf610_nfc: add hardware BCH-ECC
- support
-Date: Tue, 01 Sep 2015 09:55:48 -0700
-Message-ID: <575f176ee9d5e6d785ed2352887d5336@agner.ch>
-References: <1440722100-25388-1-git-send-email-stefan@agner.ch>
- <1440722100-25388-3-git-send-email-stefan@agner.ch>
+From: Tim Bird <tbird20d-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [RFC PATCH 1/5] Documentation: dt-bindings: add documentation on
+ new DT binding format
+Date: Tue, 1 Sep 2015 09:59:14 -0700
+Message-ID: <CA+bK7J76Z6H4gh-UXxMWqUYrdRx1GYKFkAAtDUszpT_8k=RCQw@mail.gmail.com>
+References: <1440739433-6799-1-git-send-email-mporter@konsulko.com>
+	<1440739433-6799-2-git-send-email-mporter@konsulko.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1440722100-25388-3-git-send-email-stefan-XLVq0VzYD2Y@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
-Cc: sebastian-E0PNVn5OA6ohrxcnuTQ+TQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, marb-Z4QKGCRq86k@public.gmane.org, aaron-yuhzfaV+M/Wz3Dx2OeFgIA@public.gmane.org, bpringlemeir-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, albert.aribaud-iEu9NFBzPZE@public.gmane.org, klimov.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Bill Pringlemeir <bpringlemeir-ygJ1pmMJ17cAvxtiuMwx3w@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-spec-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1440739433-6799-2-git-send-email-mporter-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
+Sender: devicetree-spec-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Matt Porter <mporter-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
+Cc: Devicetree List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Devicetree Spec List <devicetree-spec-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Behan Webster <behanw-k/hB3zQhLwledRVtV/plodBPR1lH4CV8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 2015-08-27 17:34, Stefan Agner wrote:
-> +static inline int vf610_nfc_correct_data(struct mtd_info *mtd, uint8_t *dat,
-> +					 uint8_t *oob, int page)
-> +{
-> +	struct vf610_nfc *nfc = mtd_to_nfc(mtd);
-> +	u32 ecc_status_off = NFC_MAIN_AREA(0) + ECC_SRAM_ADDR + ECC_STATUS;
-> +	u8 ecc_status;
-> +	u8 ecc_count;
-> +	int flips;
-> +	int flips_threshold = nfc->chip.ecc.strength / 2;
+On Thu, Aug 27, 2015 at 10:23 PM, Matt Porter <mporter-OWPKS81ov/FWk0Htik3J/w@public.gmane.org> wrote:
+> Documentation explaining the syntax and format of the YAML-based DT binding
+> documentation.
+>
+> Signed-off-by: Matt Porter <mporter-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
+> ---
+>  .../devicetree/bindings/dt-binding-format.txt      | 106 +++++++++++++++++++++
+>  1 file changed, 106 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/dt-binding-format.txt
+>
+> diff --git a/Documentation/devicetree/bindings/dt-binding-format.txt b/Documentation/devicetree/bindings/dt-binding-format.txt
+> new file mode 100644
+> index 0000000..f9acc22
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/dt-binding-format.txt
+> @@ -0,0 +1,106 @@
+> +--------------------------
+> +Device Tree Binding Format
+> +--------------------------
 > +
-> +	ecc_status = vf610_nfc_read(nfc, ecc_status_off) & 0xff;
-> +	ecc_count = ecc_status & ECC_STATUS_ERR_COUNT;
+> +Background
+> +----------
 > +
-> +	if (!(ecc_status & ECC_STATUS_MASK))
-> +		return ecc_count;
+> +DT bindings historically were written as text in prose format which
+> +led to issues in usability of that source documentation. Some of
+> +these issues include the need to programmatically process binding
+> +source documentation to do DTS validation, perform mass updates to
+> +format/style, and to generate publishable documentation in HTML or
+> +PDF form.
 > +
-> +	/* Read OOB without ECC unit enabled */
-> +	vf610_nfc_command(mtd, NAND_CMD_READOOB, 0, page);
-> +	vf610_nfc_read_buf(mtd, oob, mtd->oobsize);
+> +Overview
+> +--------
 > +
-> +	/*
-> +	 * On an erased page, bit count (including OOB) should be zero or
-> +	 * at least less then half of the ECC strength.
-> +	 */
-> +	flips = count_written_bits(dat, nfc->chip.ecc.size, flips_threshold);
-> +	flips += count_written_bits(oob, mtd->oobsize, flips_threshold);
+> +The DT binding format is based on the YAML text markup language.
+> +Although there are many text markup options available, YAML
+> +fulfills all requirements considered for a DT binding source format
+> +which include:
 > +
-> +	if (unlikely(flips > flips_threshold))
-> +		return -EINVAL;
+> +1) Must be human readable
+> +2) Must be easily translated to other data formats (XML, JSON, etc).
+> +3) Must have sufficient tools and libraries to enable developers to
+> +   build new tools for DT binding processing
+> +4) Must have a complete spec to refer to syntax
 > +
-> +	/* Erased page. */
-> +	memset(dat, 0xff, nfc->chip.ecc.size);
-> +	memset(oob, 0xff, mtd->oobsize);
-> +	return 0;
+> +YAML is documentated in the specification found at
+> +http://www.yaml.org/spec/1.2/spec.html
+> +
+> +The required YAML DT binding tag format and syntax are defined in
+> +the following sections.
+> +
+> +YAML DT Binding Syntax
+> +----------------------
+> +
+> +* Lines starting with "#" are comments and not part of the binding itself
+> +* "%YAML 1.2" starts a file, indicating the version of YAML in use
 
-I guess I should return the amount of bitflips here. Will send out a v12
-today.
+I think it would be good to specify a DT Binding Format version as well.
+I would expect we may expand the syntax, or we may alter it, so it
+would be good to have a number for our specific syntax.  This would
+help in some circumstances, if we make multiple passes over the
+documents to achieve our conversion.  Maybe this should be added
+below.
 
---
-Stefan
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> +* "---" starts a binding document
+> +* "..." ends a binding document
+> +* Multiple binding documents may exist in a single file
+> +* Tabs are not permitted
+> +* Scope is denoted by indentation of two spaces
+> +* Key value pairs are denoted by "key: value"
+> +* Sequences are denoted by "- "
+> +* Scalar values may convert newlines to spaces and preserve blank
+> +  lines for long description formatting using ">"
+> +* Scalar values may escape all reserved characters and preserve
+> +  newlines by using "|" to denote literal style
+> +
+> +For additional information on YAML syntax, refer to the specification
+> +at http://www.yaml.org/spec/1.2/spec.html
+> +
+> +YAML DT Binding Format
+> +----------------------
+> +
+> +The following YAML types are supported in the DT binding format:
+> +
+
+Based on my comment above, I recommend:
+[R] binding-format: 1
+
+> +* [R] id: unique identifier in property form (e.g. skel-device)
+> +
+> +* [R] title: title of the binding
+> +
+> +* [O] maintainer: sequence of maintainers
+> +      [R] name: name and email of maintainer or mailing list in RFC822
+> +                form.
+> +
+> +* [O] description: full description of the binding
+> +
+> +* [O] compatible: sequence of valid compatible descriptors
+> +      [R] name: the compatible string surrounded in double quotes
+> +      [O] deprecated: a deprecated compatible string surrounded in
+> +                      double quotes
+> +      [O] description: description of the compatible string
+
+compatible is a property like all the others, and I think it's confusing
+to have it in a separate section.  For example, when listing other
+properties, the "name:" field specifies the property name, but for
+the compatible section the "name:" field specifies the possible values
+for the compatible property.  This is (at least to me) quite confusing.
+
+Can we make this a regular property, with an option 'deprecated' attribute.
+I guess we may need to distinguish between deprecated properties and
+deprecated vales of properties.
+The above 'deprecated' specifies deprecated values for the compatible
+property, while
+the section below specifies deprecated properties.  I don't see a way
+to indicate a deprecated
+value for a still-existing property, but that may be too much detail for now.
+
+
+> +* [O] required: sequence of required properties:
+> +      [R] name: name of the property surrounded in double quotes
+> +      [R] description: description of the property
+> +      [O] reference: optional reference to a binding id
+
+I would recommend we add types and value constraints to the
+binding schema:
+
+[O] type: type of value for this property, and if specified must be
+one of the following (without quotes):
+"string", "number", "array", "phandle"
+[O] value constraint: specifies a limit on the value for a property.
+This can be specified as English text, or be a range or choice constraint.
+The latter two should be expressed with the following exact english
+phrases (without quotes):
+"must be in the range x to y, inclusive"
+where x and y are numbers
+"must be one of <choice 1>, <choice 2>, ..."
+where <choice x> is a string, which should be quoted
+if it includes a comma.
+
+Any other constraint is expressed in free-form English text
+
+I would recommend adding these to this binding schema doc, but
+not requiring them on the first conversion pass of the docs.
+
+Basically my idea is that you want the each pass over the binding
+documents to be as painless as possible.  Every time a user encounters
+something they're not sure about, it will slow them down.  There will
+be lots of ambiguous situations, and we want the process to be as
+lossless as possible, so I would recommend a strategy of doing as
+much as people can, and if in doubt just put any outstanding text
+in the descriptions.  The descriptions will always be free-form text,
+and we can come along later and convert these to types, constraints,
+as we see fit.
+
+> +* [O] optional: sequence of optional properties:
+> +      [R] name: name of the property surrounded in double quotes
+> +      [R] description: description of the property
+> +      [O] reference: optional reference to a binding id
+> +
+> +* [O] deprecated: sequence of deprecated properties:
+> +      [R] name: name of the property surrounded in double quotes
+> +      [R] description: description of the property
+> +      [O] reference: optional reference to a binding id
+> +
+> +* [R] example: sequence of examples:
+> +      [R] dts: DT source of example usage. The example text must use
+> +               literal style ("|") so that it retains indentation and
+> +               newlines.
+> +      [O] description: description of the example
+> +
+
+I'd recommend having a top-level notes section:
+* [O] note: any other notes about this node that are not covered by
+preceding property descriptions.
+
+> +Note: [R] and [O] denote required and optional fields, respectively.
+
+I'd put this note before the format description.
+
+ -- Tim
+
+> +
+> +Skeleton Binding
+> +----------------
+> +
+> +The skeleton.yaml binding found in the top of the DT binding tree
+> +is the canonical example of syntax and format to use when writing
+> +a DT binding document. It is maintained with the latest formatting
+> +conventions, making it the best starting point when writing a new DT
+> +binding.
+> --
