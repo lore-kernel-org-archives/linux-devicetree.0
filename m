@@ -1,179 +1,62 @@
-From: Andreas Dannenberg <dannenberg@ti.com>
-Subject: Re: [PATCH 03/13] power: bq24257: Add basic support for
- bq24250/bq24251
-Date: Tue, 1 Sep 2015 16:24:49 -0500
-Message-ID: <20150901212445.GC17234@beast>
-References: <1441073435-12349-1-git-send-email-dannenberg@ti.com>
- <1441073435-12349-4-git-send-email-dannenberg@ti.com>
- <55E60129.1000706@ti.com>
+From: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Subject: Re: [PATCH v4 0/16] Add Analogix Core Display Port Driver
+Date: Tue, 01 Sep 2015 23:47:35 +0200
+Message-ID: <3233920.KG0buE86B2@phil>
+References: <1441086371-24838-1-git-send-email-ykk@rock-chips.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Return-path: <linux-pm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <55E60129.1000706@ti.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: "Andrew F. Davis" <afd@ti.com>
-Cc: Sebastian Reichel <sre@kernel.org>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, David Woodhouse <dwmw2@infradead.org>, Laurentiu Palcu <laurentiu.palcu@intel.com>, Krzysztof Kozlowski <k.kozlowski.k@gmail.com>, linux-pm@vger.kernel.org, devicetree@vger.kernel.org
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+In-Reply-To: <1441086371-24838-1-git-send-email-ykk-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
+List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
+Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Yakir Yang <ykk-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Cc: Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, Andrzej Hajda <a.hajda-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Gustavo Padovan <gustavo.padovan-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>, architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, seanpaul-F7+t8E8rja9Wk0Htik3J/w@public.gmane.org, djkurtz-F7+t8E8rja9Wk0Htik3J/w@public.gmane.org, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Kukjin Kim <kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Russell King <rmk+kernel-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Inki Dae <inki.dae-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, joe-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, dianders-F7+t8E8rja9Wk0Htik3J/w@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Mark Yao <mark.yao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Jingoo Han <jingoohan1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Kyungmin
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Sep 01, 2015 at 02:48:57PM -0500, Andrew F. Davis wrote:
-> On 08/31/2015 09:10 PM, Andreas Dannenberg wrote:
-> >This patch adds basic support for bq24250 and bq24251 which are very
-> >similar to the bq24257 the driver was originally written for. Basic
-> >support means the ability to select a device through Kconfig, DT and
-> >ACPI, an instance variable allowing to check which chip is active, and
-> >the reporting back of the selected device through the
-> >POWER_SUPPLY_PROP_MODEL_NAME power supply sysfs property.
-> >
-> >This patch by itself is not sufficient to actually use those two added
-> >devices in a real-world setting due to some feature differences which
-> >are addressed by other patches in this series.
-> >
-> >Signed-off-by: Andreas Dannenberg <dannenberg@ti.com>
-> >---
-> >  drivers/power/Kconfig           |  5 +++--
-> >  drivers/power/bq24257_charger.c | 34 +++++++++++++++++++++++++++++++---
-> >  2 files changed, 34 insertions(+), 5 deletions(-)
-> >
-> >diff --git a/drivers/power/Kconfig b/drivers/power/Kconfig
-> >index 08beeed..0a2b033 100644
-> >--- a/drivers/power/Kconfig
-> >+++ b/drivers/power/Kconfig
-> >@@ -396,11 +396,12 @@ config CHARGER_BQ24190
-> >  	  Say Y to enable support for the TI BQ24190 battery charger.
-> >
-> >  config CHARGER_BQ24257
-> >-	tristate "TI BQ24257 battery charger driver"
-> >+	tristate "TI BQ24250/251/257 battery charger driver"
-> >  	depends on I2C && GPIOLIB
-> >  	depends on REGMAP_I2C
-> >  	help
-> >-	  Say Y to enable support for the TI BQ24257 battery charger.
-> >+	  Say Y to enable support for the TI BQ24250, BQ24251, and BQ24257 battery
-> >+	  chargers.
+Hi Yakir,
+
+Am Dienstag, 1. September 2015, 13:46:11 schrieb Yakir Yang:
+>    The Samsung Exynos eDP controller and Rockchip RK3288 eDP controller
+> share the same IP, so a lot of parts can be re-used. I split the common
+> code into bridge directory, then rk3288 and exynos only need to keep
+> some platform code. Cause I can't find the exact IP name of exynos dp
+> controller, so I decide to name dp core driver with "analogix" which I
+> find in rk3288 eDP TRM ;)
 > 
-> I don't see this done very often, perhaps the additional devices make this
-> driver a good candidate for a rename? BQ2425X?
-
-The patch series is made in a way to ensure 100% compatibility of the
-patched driver vs. the original driver so I chose to not touch
-definitions and filenames (in case you implied this) which seems to
-follow the general trend. I've seen earlier discussion and somebody
-explained that no matter how hard you try you will never be able to have
-a naming convention that's completely future-proof.
-
-Personally in my own code I tend to refactor filenames and such as I
-refactor the actual code to keep things neat... but then, I know the
-scope of where that code is used very well so I can avoid breakage.
-
-Thanks,
-
---
-Andreas Dannenberg
-Texas Instruments Inc
-
+> Beyond that, there are three light registers setting differents bewteen
+> exynos and rk3288.
+> 1. RK3288 have five special pll resigters which not indicata in exynos
+>    dp controller.
+> 2. The address of DP_PHY_PD(dp phy power manager register) are different
+>    between rk3288 and exynos.
+> 3. Rk3288 and exynos have different setting with AUX_HW_RETRY_CTL(dp debug
+>    register).
 > 
-> Regards,
-> Andrew
-> 
-> >
-> >  config CHARGER_BQ24735
-> >  	tristate "TI BQ24735 battery charger support"
-> >diff --git a/drivers/power/bq24257_charger.c b/drivers/power/bq24257_charger.c
-> >index 0b34528..45232bd 100644
-> >--- a/drivers/power/bq24257_charger.c
-> >+++ b/drivers/power/bq24257_charger.c
-> >@@ -13,6 +13,10 @@
-> >   * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> >   * GNU General Public License for more details.
-> >   *
-> >+ * Datasheets:
-> >+ * http://www.ti.com/product/bq24250
-> >+ * http://www.ti.com/product/bq24251
-> >+ * http://www.ti.com/product/bq24257
-> >   */
-> >
-> >  #include <linux/module.h>
-> >@@ -41,6 +45,12 @@
-> >
-> >  #define BQ24257_ILIM_SET_DELAY		1000	/* msec */
-> >
-> >+enum bq2425x_chip {
-> >+	BQ24250,
-> >+	BQ24251,
-> >+	BQ24257,
-> >+};
-> >+
-> >  enum bq24257_fields {
-> >  	F_WD_FAULT, F_WD_EN, F_STAT, F_FAULT,			    /* REG 1 */
-> >  	F_RESET, F_IILIMIT, F_EN_STAT, F_EN_TERM, F_CE, F_HZ_MODE,  /* REG 2 */
-> >@@ -71,6 +81,9 @@ struct bq24257_device {
-> >  	struct device *dev;
-> >  	struct power_supply *charger;
-> >
-> >+	enum bq2425x_chip chip;
-> >+	char chip_name[I2C_NAME_SIZE];
-> >+
-> >  	struct regmap *rmap;
-> >  	struct regmap_field *rmap_fields[F_MAX_FIELDS];
-> >
-> >@@ -250,6 +263,10 @@ static int bq24257_power_supply_get_property(struct power_supply *psy,
-> >  		val->strval = BQ24257_MANUFACTURER;
-> >  		break;
-> >
-> >+	case POWER_SUPPLY_PROP_MODEL_NAME:
-> >+		val->strval = bq->chip_name;
-> >+		break;
-> >+
-> >  	case POWER_SUPPLY_PROP_ONLINE:
-> >  		val->intval = state.power_good;
-> >  		break;
-> >@@ -574,6 +591,7 @@ static int bq24257_hw_init(struct bq24257_device *bq)
-> >
-> >  static enum power_supply_property bq24257_power_supply_props[] = {
-> >  	POWER_SUPPLY_PROP_MANUFACTURER,
-> >+	POWER_SUPPLY_PROP_MODEL_NAME,
-> >  	POWER_SUPPLY_PROP_STATUS,
-> >  	POWER_SUPPLY_PROP_ONLINE,
-> >  	POWER_SUPPLY_PROP_HEALTH,
-> >@@ -686,6 +704,8 @@ static int bq24257_probe(struct i2c_client *client,
-> >
-> >  	bq->client = client;
-> >  	bq->dev = dev;
-> >+	bq->chip = (enum bq2425x_chip)id->driver_data;
-> >+	strncpy(bq->chip_name, id->name, I2C_NAME_SIZE);
-> >
-> >  	mutex_init(&bq->lock);
-> >
-> >@@ -828,19 +848,27 @@ static const struct dev_pm_ops bq24257_pm = {
-> >  };
-> >
-> >  static const struct i2c_device_id bq24257_i2c_ids[] = {
-> >-	{ "bq24257", 0 },
-> >+	{ "bq24250", BQ24250 },
-> >+	{ "bq24251", BQ24251 },
-> >+	{ "bq24257", BQ24257 },
-> >  	{},
-> >  };
-> >  MODULE_DEVICE_TABLE(i2c, bq24257_i2c_ids);
-> >
-> >  static const struct of_device_id bq24257_of_match[] = {
-> >-	{ .compatible = "ti,bq24257", },
-> >+	{
-> >+		.compatible = "ti,bq24250",
-> >+		.compatible = "ti,bq24251",
-> >+		.compatible = "ti,bq24257",
-> >+	},
-> >  	{ },
-> >  };
-> >  MODULE_DEVICE_TABLE(of, bq24257_of_match);
-> >
-> >  static const struct acpi_device_id bq24257_acpi_match[] = {
-> >-	{"BQ242570", 0},
-> >+	{ "BQ242500", BQ24250 },
-> >+	{ "BQ242510", BQ24251 },
-> >+	{ "BQ242570", BQ24257 },
-> >  	{},
-> >  };
-> >  MODULE_DEVICE_TABLE(acpi, bq24257_acpi_match);
-> >
+> I have verified this series on two kinds of rockchip platform board, one
+> is rk3288 sdk board which connect with a 2K display port monitor, the other
+> is google jerry chromebook which connect with a eDP screen "cnm,n116bgeea2",
+> both of them works rightlly.
+
+it looks like during the rebase something did go wrong and I found some issues 
+I mentioned in the replies to individual patches.
+
+I did prepare a branch based on mainline [0] with both the old and the new edp 
+driver - rk3288_veyron_defconfig build both drivers into the image.
+
+While the old driver still works, I wasn't able to make the new one work yet 
+... the drm core does find the connector, but not that anything is connected 
+to it. I'll try to dig deeper tomorrow, but maybe you'll see anything 
+interesting before then.
+
+
+Heiko
+
+[0] https://github.com/mmind/linux-rockchip/tree/tmp/edp-with-veyron
