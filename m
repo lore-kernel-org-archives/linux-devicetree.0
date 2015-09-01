@@ -1,124 +1,225 @@
-From: WingMan Kwok <w-kwok2-l0cyMroinI0@public.gmane.org>
-Subject: [PATCH] ARM: dts: keystone: use one to one address translations under netcp
-Date: Tue, 1 Sep 2015 16:28:44 -0400
-Message-ID: <1441139324-29296-1-git-send-email-w-kwok2@ti.com>
+From: "Andrew F. Davis" <afd@ti.com>
+Subject: Re: [PATCH 08/13] power: bq24257: Extend scope of mutex protection
+Date: Tue, 1 Sep 2015 15:34:45 -0500
+Message-ID: <55E60BE5.5030308@ti.com>
+References: <1441073435-12349-1-git-send-email-dannenberg@ti.com>
+ <1441073435-12349-9-git-send-email-dannenberg@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ssantosh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
-Cc: m-karicheri2-l0cyMroinI0@public.gmane.org, WingMan Kwok <w-kwok2-l0cyMroinI0@public.gmane.org>
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <1441073435-12349-9-git-send-email-dannenberg@ti.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: Andreas Dannenberg <dannenberg@ti.com>, Sebastian Reichel <sre@kernel.org>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, David Woodhouse <dwmw2@infradead.org>, Laurentiu Palcu <laurentiu.palcu@intel.com>, Krzysztof Kozlowski <k.kozlowski.k@gmail.com>
+Cc: linux-pm@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Network subsystem NetCP in Keystone-2 devices includes some HW blocks
-that are memory mapped to ranges outside that of the NetCP itself.
-Thus address space of a child node of the NetCP node needs to be
-mapped 1:1 onto the parent address space.  Hence empty ranges
-should be used under the NetCP node.
+On 08/31/2015 09:10 PM, Andreas Dannenberg wrote:
+> This commit extends the use of the existing mutex to pave the way for
+> using direct device access inside sysfs getter/setter routines in a
+> way that the access during interrupts and timer routines does not
+> interfere with device access by the CPU or between multiple cores.
+>
+> This also addresses a potential race condition that could be caused
+> by bq24257_irq_handler_thread() and bq24257_iilimit_autoset() accessing
+> the device simultaneously.
+>
+> Signed-off-by: Andreas Dannenberg <dannenberg@ti.com>
+> ---
+>   drivers/power/bq24257_charger.c | 60 ++++++++++++++++++++++++-----------------
+>   1 file changed, 35 insertions(+), 25 deletions(-)
+>
+> diff --git a/drivers/power/bq24257_charger.c b/drivers/power/bq24257_charger.c
+> index 2271a88..ad3fd2d 100644
+> --- a/drivers/power/bq24257_charger.c
+> +++ b/drivers/power/bq24257_charger.c
+> @@ -99,7 +99,7 @@ struct bq24257_device {
+>   	struct bq24257_init_data init_data;
+>   	struct bq24257_state state;
+>
+> -	struct mutex lock; /* protect state data */
+> +	struct mutex lock; /* protect device access and state data */
+>
 
-Signed-off-by: WingMan Kwok <w-kwok2-l0cyMroinI0@public.gmane.org>
----
- arch/arm/boot/dts/k2e-netcp.dtsi  |    8 +++-----
- arch/arm/boot/dts/k2hk-netcp.dtsi |   14 ++++++--------
- arch/arm/boot/dts/k2l-netcp.dtsi  |    8 +++-----
- 3 files changed, 12 insertions(+), 18 deletions(-)
+I think it would make more sense to make a different lock for the device access. Protecting
+unrelated things with the same lock can lead to unnecessary blocks.
 
-diff --git a/arch/arm/boot/dts/k2e-netcp.dtsi b/arch/arm/boot/dts/k2e-netcp.dtsi
-index b13b3c9..e103ed9 100644
---- a/arch/arm/boot/dts/k2e-netcp.dtsi
-+++ b/arch/arm/boot/dts/k2e-netcp.dtsi
-@@ -111,9 +111,7 @@ netcp: netcp@24000000 {
- 	compatible = "ti,netcp-1.0";
- 	#address-cells = <1>;
- 	#size-cells = <1>;
--
--	/* NetCP address range */
--	ranges = <0 0x24000000 0x1000000>;
-+	ranges;
- 
- 	clocks = <&papllclk>, <&clkcpgmac>, <&chipclk12>;
- 	dma-coherent;
-@@ -127,10 +125,10 @@ netcp: netcp@24000000 {
- 		#address-cells = <1>;
- 		#size-cells = <1>;
- 		ranges;
--		gbe@200000 { /* ETHSS */
-+		gbe@24200000 { /* ETHSS */
- 			label = "netcp-gbe";
- 			compatible = "ti,netcp-gbe-9";
--			reg = <0x200000 0x900>, <0x220000 0x20000>;
-+			reg = <0x24200000 0x900>, <0x24220000 0x20000>;
- 			/* enable-ale; */
- 			tx-queue = <896>;
- 			tx-channel = "nettx";
-diff --git a/arch/arm/boot/dts/k2hk-netcp.dtsi b/arch/arm/boot/dts/k2hk-netcp.dtsi
-index 77a32c3..3b885f5 100644
---- a/arch/arm/boot/dts/k2hk-netcp.dtsi
-+++ b/arch/arm/boot/dts/k2hk-netcp.dtsi
-@@ -127,9 +127,7 @@ netcp: netcp@2000000 {
- 	compatible = "ti,netcp-1.0";
- 	#address-cells = <1>;
- 	#size-cells = <1>;
--
--	/* NetCP address range */
--	ranges  = <0 0x2000000 0x100000>;
-+	ranges;
- 
- 	clocks = <&papllclk>, <&clkcpgmac>, <&chipclk12>;
- 	dma-coherent;
-@@ -140,15 +138,15 @@ netcp: netcp@2000000 {
- 	ti,navigator-dma-names = "netrx0", "netrx1", "nettx";
- 
- 	netcp-devices {
--		ranges;
- 		#address-cells = <1>;
- 		#size-cells = <1>;
--		gbe@90000 { /* ETHSS */
--			#address-cells = <1>;
--			#size-cells = <1>;
-+		ranges;
-+		gbe@2090000 { /* ETHSS */
- 			label = "netcp-gbe";
- 			compatible = "ti,netcp-gbe";
--			reg = <0x90000 0x300>, <0x90400 0x400>, <0x90800 0x700>;
-+			reg = <0x02090000 0x300>,
-+			      <0x02090400 0x400>,
-+			      <0x02090800 0x700>;
- 			/* enable-ale; */
- 			tx-queue = <648>;
- 			tx-channel = "nettx";
-diff --git a/arch/arm/boot/dts/k2l-netcp.dtsi b/arch/arm/boot/dts/k2l-netcp.dtsi
-index 6b95284..97ae805 100644
---- a/arch/arm/boot/dts/k2l-netcp.dtsi
-+++ b/arch/arm/boot/dts/k2l-netcp.dtsi
-@@ -110,9 +110,7 @@ netcp: netcp@26000000 {
- 	compatible = "ti,netcp-1.0";
- 	#address-cells = <1>;
- 	#size-cells = <1>;
--
--	/* NetCP address range */
--	ranges = <0 0x26000000 0x1000000>;
-+	ranges;
- 
- 	clocks = <&papllclk>, <&clkcpgmac>, <&chipclk12>;
- 	dma-coherent;
-@@ -126,10 +124,10 @@ netcp: netcp@26000000 {
- 		#address-cells = <1>;
- 		#size-cells = <1>;
- 		ranges;
--		gbe@200000 { /* ETHSS */
-+		gbe@26200000 { /* ETHSS */
- 			label = "netcp-gbe";
- 			compatible = "ti,netcp-gbe-5";
--			reg = <0x200000 0x900>, <0x220000 0x20000>;
-+			reg = <0x26200000 0x900>, <0x26220000 0x20000>;
- 			/* enable-ale; */
- 			tx-queue = <896>;
- 			tx-channel = "nettx";
+>   	bool in_ilimit_autoset_disable;
+>   	bool pg_gpio_disable;
+> @@ -268,10 +268,10 @@ static int bq24257_power_supply_get_property(struct power_supply *psy,
+>   {
+>   	struct bq24257_device *bq = power_supply_get_drvdata(psy);
+>   	struct bq24257_state state;
+> +	int ret = 0;
+>
+>   	mutex_lock(&bq->lock);
+>   	state = bq->state;
+> -	mutex_unlock(&bq->lock);
+>
+
+Like here, this makes it very obvious what data the lock is protecting, wrapping this whole
+block doesn't make much sense to me as all the subsequent reads are from the thread-local data.
+I see in another patch in this series you do add a device read, but that read could be locked
+by itself (with the device access lock) so we don't block this whole function when execution
+may not even go down the path with the read.
+
+Regards,
+Andrew
+
+>   	switch (psp) {
+>   	case POWER_SUPPLY_PROP_STATUS:
+> @@ -351,10 +351,12 @@ static int bq24257_power_supply_get_property(struct power_supply *psy,
+>   		break;
+>
+>   	default:
+> -		return -EINVAL;
+> +		ret = -EINVAL;
+>   	}
+>
+> -	return 0;
+> +	mutex_unlock(&bq->lock);
+> +
+> +	return ret;
+>   }
+>
+>   static int bq24257_get_chip_state(struct bq24257_device *bq,
+> @@ -401,15 +403,9 @@ static int bq24257_get_chip_state(struct bq24257_device *bq,
+>   static bool bq24257_state_changed(struct bq24257_device *bq,
+>   				  struct bq24257_state *new_state)
+>   {
+> -	int ret;
+> -
+> -	mutex_lock(&bq->lock);
+> -	ret = (bq->state.status != new_state->status ||
+> -	       bq->state.fault != new_state->fault ||
+> -	       bq->state.power_good != new_state->power_good);
+> -	mutex_unlock(&bq->lock);
+> -
+> -	return ret;
+> +	return bq->state.status != new_state->status ||
+> +			bq->state.fault != new_state->fault ||
+> +			bq->state.power_good != new_state->power_good;
+>   }
+>
+>   enum bq24257_loop_status {
+> @@ -532,7 +528,9 @@ static void bq24257_iilimit_setup_work(struct work_struct *work)
+>   	struct bq24257_device *bq = container_of(work, struct bq24257_device,
+>   						 iilimit_setup_work.work);
+>
+> +	mutex_lock(&bq->lock);
+>   	bq24257_iilimit_autoset(bq);
+> +	mutex_unlock(&bq->lock);
+>   }
+>
+>   static void bq24257_handle_state_change(struct bq24257_device *bq,
+> @@ -543,9 +541,7 @@ static void bq24257_handle_state_change(struct bq24257_device *bq,
+>   	bool reset_iilimit = false;
+>   	bool config_iilimit = false;
+>
+> -	mutex_lock(&bq->lock);
+>   	old_state = bq->state;
+> -	mutex_unlock(&bq->lock);
+>
+>   	/*
+>   	 * Handle BQ2425x state changes observing whether the D+/D- based input
+> @@ -600,25 +596,30 @@ static irqreturn_t bq24257_irq_handler_thread(int irq, void *private)
+>   	struct bq24257_device *bq = private;
+>   	struct bq24257_state state;
+>
+> +	mutex_lock(&bq->lock);
+> +
+>   	ret = bq24257_get_chip_state(bq, &state);
+>   	if (ret < 0)
+> -		return IRQ_HANDLED;
+> +		goto out;
+>
+>   	if (!bq24257_state_changed(bq, &state))
+> -		return IRQ_HANDLED;
+> +		goto out;
+>
+>   	dev_dbg(bq->dev, "irq(state changed): status/fault/pg = %d/%d/%d\n",
+>   		state.status, state.fault, state.power_good);
+>
+>   	bq24257_handle_state_change(bq, &state);
+> -
+> -	mutex_lock(&bq->lock);
+>   	bq->state = state;
+> +
+>   	mutex_unlock(&bq->lock);
+>
+>   	power_supply_changed(bq->charger);
+>
+>   	return IRQ_HANDLED;
+> +
+> +out:
+> +	mutex_unlock(&bq->lock);
+> +	return IRQ_HANDLED;
+>   }
+>
+>   static int bq24257_hw_init(struct bq24257_device *bq)
+> @@ -658,9 +659,7 @@ static int bq24257_hw_init(struct bq24257_device *bq)
+>   	if (ret < 0)
+>   		return ret;
+>
+> -	mutex_lock(&bq->lock);
+>   	bq->state = state;
+> -	mutex_unlock(&bq->lock);
+>
+>   	if (bq->in_ilimit_autoset_disable) {
+>   		dev_dbg(bq->dev, "manually setting iilimit = %d\n",
+> @@ -1002,11 +1001,15 @@ static int bq24257_suspend(struct device *dev)
+>   	if (!bq->in_ilimit_autoset_disable)
+>   		cancel_delayed_work_sync(&bq->iilimit_setup_work);
+>
+> +	mutex_lock(&bq->lock);
+> +
+>   	/* reset all registers to default (and activate standalone mode) */
+>   	ret = bq24257_field_write(bq, F_RESET, 1);
+>   	if (ret < 0)
+>   		dev_err(bq->dev, "Cannot reset chip to standalone mode.\n");
+>
+> +	mutex_unlock(&bq->lock);
+> +
+>   	return ret;
+>   }
+>
+> @@ -1015,24 +1018,31 @@ static int bq24257_resume(struct device *dev)
+>   	int ret;
+>   	struct bq24257_device *bq = dev_get_drvdata(dev);
+>
+> +	mutex_lock(&bq->lock);
+> +
+>   	ret = regcache_drop_region(bq->rmap, BQ24257_REG_1, BQ24257_REG_7);
+>   	if (ret < 0)
+> -		return ret;
+> +		goto err;
+>
+>   	ret = bq24257_field_write(bq, F_RESET, 0);
+>   	if (ret < 0)
+> -		return ret;
+> +		goto err;
+>
+>   	ret = bq24257_hw_init(bq);
+>   	if (ret < 0) {
+>   		dev_err(bq->dev, "Cannot init chip after resume.\n");
+> -		return ret;
+> +		goto err;
+>   	}
+>
+> +	mutex_unlock(&bq->lock);
+> +
+>   	/* signal userspace, maybe state changed while suspended */
+>   	power_supply_changed(bq->charger);
+> -
+>   	return 0;
+> +
+> +err:
+> +	mutex_unlock(&bq->lock);
+> +	return ret;
+>   }
+>   #endif
+>
+>
+
 -- 
-1.7.9.5
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Andrew F. Davis
