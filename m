@@ -1,65 +1,59 @@
 From: Tim Bird <tbird20d-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [RFC PATCH 5/5] Documentation: dt-bindings: phy: add YAML TI PHY binding
-Date: Tue, 1 Sep 2015 10:42:25 -0700
-Message-ID: <CA+bK7J5jz0wxgA-0jY4LFUWWoTk4YzGaGSQZsdF83BnomoBx6w@mail.gmail.com>
+Subject: Re: [RFC PATCH 0/5] DT binding documents using text markup
+Date: Tue, 1 Sep 2015 11:03:50 -0700
+Message-ID: <CA+bK7J6kErnKPHs=r+X9T8KBn45HptPmtMe31CoapunKpuY34Q@mail.gmail.com>
 References: <1440739433-6799-1-git-send-email-mporter@konsulko.com>
-	<1440739433-6799-6-git-send-email-mporter@konsulko.com>
+	<CAL_Jsq+qCJfLYxVfyQ4gAxPWLZ2=WNa0H21+cRcBi7dGVG0PMA@mail.gmail.com>
+	<20150828171323.GA24203@beef>
+	<CA+bK7J4Ha55oFhCYDnUcBu8ZHCP3ReB6B=7Y9Fw7CknxPcaoWQ@mail.gmail.com>
+	<55E5E1E2.6040607@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-spec-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1440739433-6799-6-git-send-email-mporter-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
+In-Reply-To: <55E5E1E2.6040607-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-spec-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Matt Porter <mporter-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
-Cc: Devicetree List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Devicetree Spec List <devicetree-spec-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Behan Webster <behanw-k/hB3zQhLwledRVtV/plodBPR1lH4CV8@public.gmane.org>
+To: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Matt Porter <mporter-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Devicetree List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Devicetree Spec List <devicetree-spec-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Behan Webster <behanw-k/hB3zQhLwledRVtV/plodBPR1lH4CV8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Aug 27, 2015 at 10:23 PM, Matt Porter <mporter-OWPKS81ov/FWk0Htik3J/w@public.gmane.org> wrote:
-> Convert the ti-phy.txt binding to standard YAML DT binding
-> format. This binding references the YAML generic PHY binding.
+On Tue, Sep 1, 2015 at 10:35 AM, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> On 9/1/2015 10:14 AM, Tim Bird wrote:
+>> On Fri, Aug 28, 2015 at 10:13 AM, Matt Porter <mporter-OWPKS81ov/FWk0Htik3J/w@public.gmane.org> wrote:
 >
-> Signed-off-by: Matt Porter <mporter-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
-> ---
->  Documentation/devicetree/bindings/phy/ti-phy.yaml | 166 ++++++++++++++++++++++
->  1 file changed, 166 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/phy/ti-phy.yaml
+> < snip >
 >
-> diff --git a/Documentation/devicetree/bindings/phy/ti-phy.yaml b/Documentation/devicetree/bindings/phy/ti-phy.yaml
-> new file mode 100644
-> index 0000000..ec93501
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/phy/ti-phy.yaml
-> @@ -0,0 +1,166 @@
-> +%YAML 1.2
-> +---
-> +id: omap-control-phy
-> +
-> +title: OMAP Control PHY
-> +
-> +compatible:
-> +  - name: "ti,control-phy-otghs"
-> +    description: if it has otghs_control mailbox register as on OMAP4.
-> +  - name: "ti,control-phy-usb2"
-> +    description: if it has Power down bit in control_dev_conf register
-> +                 e.g. USB2_PHY on OMAP5.
-> +  - name: "ti,control-phy-pipe3"
-> +    description: if it has DPLL and individual Rx & Tx power control
-> +                 e.g. USB3 PHY and SATA PHY on OMAP5.
-> +  - name: "ti,control-phy-pcie"
-> +    description: for pcie to support external clock for pcie and to
-> +                 set PCS delay value. e.g. PCIE PHY in DRA7x
-> +  - name: "ti,control-phy-usb2-dra7"
-> +    description: if it has power down register like USB2 PHY on DRA7
-> +                 DRA7 platform.
-> +  - name: "ti,control-phy-usb2-am437"
-> +    description: if it has power down register like USB2 PHY on AM437
-> +                 platform.
+>>>
+>>> But to answer your question, if we get a format I'll do
+>>> conversions and hope I'm not alone.
+>>
+>> I'm sure others will help out.  I will, and I'm pretty sure we can get
+>> some conversion sprints set up at conferences (I know I can set aside
+>> some time or resources at ELC in the spring - it might be too late for
+>> ELCE in October to set up a scheduled block of time, but we can start
+>> getting the word out.)  As I said in my other e-mail, one doesn't have
+>> to be a kernel coder to do this, and the conversions should be pretty
+>> straight-forward.
+>>  -- Tim
+>>
+>
+> A conversion sprint at ELCE sounds like a good idea if we can find a
+> good time to schedule it.  I can help, so there will be at least two
+> of us who can help people as they encounter issues.
 
-I'm confused.  If these descriptions are multi-line, don't they need the '>'
-syntax?
+Even if we don't find a block of time, we can do something like
+announce a "contest", ask people to do something in their spare time,
+and find some way to get them a raffle ticket if they submit a patch
+with a conversion.  Then hold an extra prize drawing during the
+closing session, with just those raffle tickets, and give someone a
+nice award for contributing.  Of course, there's always the adage that
+you should be careful what you measure and reward...  We don't want a
+flood of crappy conversions, with a time constraint on the review.
+I'll think some more about this.  An alternative would be to have a
+contest announced ahead of the event, with enough time for people to
+submit and get reviewed.
 
-Also, I'm still confused by the "name:" field in this section.  These are
-possible *values* for the compatible property, not the name of the field,
-as all other property descriptions are.
-
-...
+By the way - I presume the new docs will replace the existing ones,
+but I could imagine wanting to have them live side-by-side
+temporarily.  Any thoughts on this?  Will file name or location
+changes be allowed during the conversion?
  -- Tim
