@@ -1,105 +1,69 @@
-From: Andreas Dannenberg <dannenberg@ti.com>
-Subject: [PATCH 13/13] dt: power: bq24257-charger: Cover additional devices
-Date: Mon, 31 Aug 2015 21:10:35 -0500
-Message-ID: <1441073435-12349-14-git-send-email-dannenberg@ti.com>
-References: <1441073435-12349-1-git-send-email-dannenberg@ti.com>
+From: Badola Nikhil <nikhil.badola-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: RE: [PATCH 1/3][v2] Documentation: dt: dwc3: Add
+ snps,quirk-frame-length-adjustment property
+Date: Tue, 1 Sep 2015 03:26:54 +0000
+Message-ID: <SN1PR0301MB1629F5CC8EA6FD8A489872A9F36A0@SN1PR0301MB1629.namprd03.prod.outlook.com>
+References: <1439785413-27152-1-git-send-email-nikhil.badola@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <1441073435-12349-1-git-send-email-dannenberg@ti.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Sebastian Reichel <sre@kernel.org>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, David Woodhouse <dwmw2@infradead.org>, Laurentiu Palcu <laurentiu.palcu@intel.com>, Krzysztof Kozlowski <k.kozlowski.k@gmail.com>
-Cc: linux-pm@vger.kernel.org, devicetree@vger.kernel.org, Andreas Dannenberg <dannenberg@ti.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1439785413-27152-1-git-send-email-nikhil.badola-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: "balbi-l0cyMroinI0@public.gmane.org" <balbi-l0cyMroinI0@public.gmane.org>
+Cc: "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Badola Nikhil <nikhil.badola-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Extend the bq24257 charger's device tree documentation to cover the
-bq24250 and bq24257 devices as well as recent feature additions.
+> -----Original Message-----
+> From: Nikhil Badola [mailto:nikhil.badola-KZfg59tc24xl57MIdRCFDg@public.gmane.org]
+> Sent: Monday, August 17, 2015 9:54 AM
+> To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; linux-
+> usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> Cc: balbi-l0cyMroinI0@public.gmane.org; Badola Nikhil-B46172 <nikhil.badola-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+> Subject: [PATCH 1/3][v2] Documentation: dt: dwc3: Add snps,quirk-frame-
+> length-adjustment property
+> 
+> Add snps,quirk-frame-length-adjustment property which provides value for
+> post silicon frame length adjustment
+> 
+> Signed-off-by: Nikhil Badola <nikhil.badola-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+> ---
+> Changes for v2
+> 	- changed quirk name as well description
+> 
+>  Documentation/devicetree/bindings/usb/dwc3.txt | 3 +++
+>  1 file changed, 3 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/usb/dwc3.txt
+> b/Documentation/devicetree/bindings/usb/dwc3.txt
+> index 0815eac..8c7d585 100644
+> --- a/Documentation/devicetree/bindings/usb/dwc3.txt
+> +++ b/Documentation/devicetree/bindings/usb/dwc3.txt
+> @@ -40,6 +40,9 @@ Optional properties:
+>   - snps,hird-threshold: HIRD threshold
+>   - snps,hsphy_interface: High-Speed PHY interface selection between "utmi"
+> for
+>     UTMI+ and "ulpi" for ULPI when the DWC_USB3_HSPHY_INTERFACE has
+> value 3.
+> + - snps,quirk-frame-length-adjustment: Value for GFLADJ_30MHZ field of
+> GFLADJ
+> +	register for post-silicon frame length adjustment when the
+> +	fladj_30mhz_sdbnd signal is invalid or incorrect.
+> 
+>  This is usually a subnode to DWC3 glue to which it is connected.
+> 
+> --
+> 2.1.0
 
-Signed-off-by: Andreas Dannenberg <dannenberg@ti.com>
----
- .../devicetree/bindings/power/bq24257.txt          | 59 ++++++++++++++++++++--
- 1 file changed, 55 insertions(+), 4 deletions(-)
+Hi Felipe,
 
-diff --git a/Documentation/devicetree/bindings/power/bq24257.txt b/Documentation/devicetree/bindings/power/bq24257.txt
-index 5c9d394..36b115c 100644
---- a/Documentation/devicetree/bindings/power/bq24257.txt
-+++ b/Documentation/devicetree/bindings/power/bq24257.txt
-@@ -2,20 +2,71 @@ Binding for TI bq24257 Li-Ion Charger
- 
- Required properties:
- - compatible: Should contain one of the following:
-+ * "ti,bq24250"
-+ * "ti,bq24251"
-  * "ti,bq24257"
--- reg:			   integer, i2c address of the device.
-+- reg: integer, i2c address of the device.
-+- stat-gpio: GPIO used for the devices STAT_IN pin. Alternatively the pin can
-+    also be defined through the standard interrupt definition properties (see
-+    optional properties section below). Only use one method.
-+- pg-gpio: GPIO used for the device PG (Power Good) pin. This pin is not
-+    available on all devices and therefore only required on applicable devices.
-+    However it is also possible to explicitly disable the use of this pin
-+    through the optional property "ti,pg-gpio-disable" (see below) if desired.
-+    In this case the "pg-gpio" property is no longer required.
- - ti,battery-regulation-voltage: integer, maximum charging voltage in uV.
--- ti,charge-current:	   integer, maximum charging current in uA.
--- ti,termination-current:  integer, charge will be terminated when current in
--			   constant-voltage phase drops below this value (in uA).
-+- ti,charge-current: integer, maximum charging current in uA.
-+- ti,termination-current: integer, charge will be terminated when current in
-+    constant-voltage phase drops below this value (in uA).
-+
-+Optional properties:
-+- ti,in-ilimit-autoset-disable: If this boolean property is present it disables
-+    the automatic setting of the input current limit. This property is also set
-+    implicitly on devices without charger type detection. If this property is
-+    provided the input current limit should be set manually through
-+    "ti,in-limit-current".
-+- ti,in-limit-current: The maximum current to be drawn from the charger's input
-+    (in uA). Use this for devices that don't have charger type detection or if
-+    you have have set "ti,in-ilimit-autoset-disable".
-+- ti,vovp-voltage: Configures the over voltage protection voltage (in uV).
-+- ti,vindpm-voltage:  Configures the threshold input voltage for the dynamic
-+    power path management (in uV).
-+- ti,pg-gpio-disable: If this boolean property is provided a software-based
-+    approach for power good determination is used. Note that the PG-pin based
-+    approach is generally preferable.
-+- ti,timer-2x-enable: If this boolean property is provided the device's safety
-+    timer is extended by a factor of two.
-+- interrupt-parent: Should be the phandle for the interrupt controller. Use in
-+    conjunction with "interrupts" and only in case "stat-gpio" is not used.
-+- interrupts: Interrupt mapping for GPIO IRQ (configure for both edges). Use in
-+    conjunction with "interrupt-parent" and only in case "stat-gpio" is not
-+    used.
- 
- Example:
- 
- bq24257 {
- 	compatible = "ti,bq24257";
- 	reg = <0x6a>;
-+	stat-gpio = <&gpio1 16 GPIO_ACTIVE_HIGH>;
-+	pg-gpio = <&gpio1 28 GPIO_ACTIVE_HIGH>;
- 
- 	ti,battery-regulation-voltage = <4200000>;
- 	ti,charge-current = <1000000>;
- 	ti,termination-current = <50000>;
- };
-+
-+Example:
-+
-+bq24250 {
-+	compatible = "ti,bq24250";
-+	reg = <0x6a>;
-+	interrupt-parent = <&gpio1>;
-+	interrupts = <16 IRQ_TYPE_EDGE_BOTH>;
-+
-+	ti,battery-regulation-voltage = <4200000>;
-+	ti,charge-current = <500000>;
-+	ti,termination-current = <50000>;
-+	ti,in-limit-current = <900000>;
-+	ti,vovp-voltage = <9500000>;
-+	ti,vindpm-voltage = <4440000>;
-+};
--- 
-1.9.1
+I have incorporated the review comments provided by you. 
+Could you please provide me review comments, if any, on this 2nd version of patch set.
 
+Thanks,
+Nikhil
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
