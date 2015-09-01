@@ -1,7 +1,7 @@
 From: Peter Griffin <peter.griffin@linaro.org>
-Subject: [PATCH v4 2/6] ARM: DT: STi: STiH407: Add c8sectpfe LinuxDVB DT node.
-Date: Tue,  1 Sep 2015 11:48:10 +0100
-Message-ID: <1441104494-10468-3-git-send-email-peter.griffin@linaro.org>
+Subject: [PATCH v4 4/6] [media] c8sectpfe: Update binding to reset-gpio
+Date: Tue,  1 Sep 2015 11:48:12 +0100
+Message-ID: <1441104494-10468-5-git-send-email-peter.griffin@linaro.org>
 References: <1441104494-10468-1-git-send-email-peter.griffin@linaro.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1441104494-10468-1-git-send-email-peter.griffin@linaro.org>
@@ -10,67 +10,85 @@ To: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, srinivas
 Cc: peter.griffin@linaro.org, lee.jones@linaro.org, linux-media@vger.kernel.org, devicetree@vger.kernel.org, valentinrothberg@gmail.com, hugues.fruchet@st.com
 List-Id: devicetree@vger.kernel.org
 
-This patch adds in the required DT node for the c8sectpfe
-Linux DVB demux driver which allows the tsin channels
-to be used on an upstream kernel.
+reset-gpio is more clear than rst-gpio.
+
+This change has been done as one atomic commit but it
+does breaks compatability with older dtbs.
 
 Signed-off-by: Peter Griffin <peter.griffin@linaro.org>
 Acked-by: Lee Jones <lee.jones@linaro.org>
 ---
- arch/arm/boot/dts/stihxxx-b2120.dtsi | 35 +++++++++++++++++++++++++++++++++++
- 1 file changed, 35 insertions(+)
+ Documentation/devicetree/bindings/media/stih407-c8sectpfe.txt | 6 +++---
+ arch/arm/boot/dts/stihxxx-b2120.dtsi                          | 4 ++--
+ drivers/media/platform/sti/c8sectpfe/c8sectpfe-core.c         | 2 +-
+ 3 files changed, 6 insertions(+), 6 deletions(-)
 
+diff --git a/Documentation/devicetree/bindings/media/stih407-c8sectpfe.txt b/Documentation/devicetree/bindings/media/stih407-c8sectpfe.txt
+index d4def76..84ae9d1 100644
+--- a/Documentation/devicetree/bindings/media/stih407-c8sectpfe.txt
++++ b/Documentation/devicetree/bindings/media/stih407-c8sectpfe.txt
+@@ -35,7 +35,7 @@ Required properties (tsin (child) node):
+ 
+ - tsin-num	: tsin id of the InputBlock (must be between 0 to 6)
+ - i2c-bus	: phandle to the I2C bus DT node which the demodulators & tuners on this tsin channel are connected.
+-- rst-gpio	: reset gpio for this tsin channel.
++- reset-gpio	: reset gpio for this tsin channel.
+ 
+ Optional properties (tsin (child) node):
+ 
+@@ -75,7 +75,7 @@ Example:
+ 			tsin-num		= <0>;
+ 			serial-not-parallel;
+ 			i2c-bus			= <&ssc2>;
+-			rst-gpio		= <&pio15 4 0>;
++			reset-gpio		= <&pio15 4 GPIO_ACTIVE_HIGH>;
+ 			dvb-card		= <STV0367_TDA18212_NIMA_1>;
+ 		};
+ 
+@@ -83,7 +83,7 @@ Example:
+ 			tsin-num		= <3>;
+ 			serial-not-parallel;
+ 			i2c-bus			= <&ssc3>;
+-			rst-gpio		= <&pio15 7 0>;
++			reset-gpio		= <&pio15 7 GPIO_ACTIVE_HIGH>;
+ 			dvb-card		= <STV0367_TDA18212_NIMB_1>;
+ 		};
+ 	};
 diff --git a/arch/arm/boot/dts/stihxxx-b2120.dtsi b/arch/arm/boot/dts/stihxxx-b2120.dtsi
-index 62994ae..f9fca10 100644
+index f9fca10..b940934 100644
 --- a/arch/arm/boot/dts/stihxxx-b2120.dtsi
 +++ b/arch/arm/boot/dts/stihxxx-b2120.dtsi
-@@ -6,6 +6,9 @@
+@@ -6,8 +6,8 @@
   * it under the terms of the GNU General Public License version 2 as
   * published by the Free Software Foundation.
   */
-+
-+#include <dt-bindings/clock/stih407-clks.h>
-+#include <dt-bindings/media/c8sectpfe.h>
+-
+ #include <dt-bindings/clock/stih407-clks.h>
++#include <dt-bindings/gpio/gpio.h>
+ #include <dt-bindings/media/c8sectpfe.h>
  / {
  	soc {
- 		sbc_serial0: serial@9530000 {
-@@ -85,5 +88,37 @@
- 			status = "okay";
+@@ -116,7 +116,7 @@
+ 				tsin-num	= <0>;
+ 				serial-not-parallel;
+ 				i2c-bus		= <&ssc2>;
+-				rst-gpio	= <&pio15 4 GPIO_ACTIVE_HIGH>;
++				reset-gpio	= <&pio15 4 GPIO_ACTIVE_HIGH>;
+ 				dvb-card	= <STV0367_TDA18212_NIMA_1>;
+ 			};
  		};
+diff --git a/drivers/media/platform/sti/c8sectpfe/c8sectpfe-core.c b/drivers/media/platform/sti/c8sectpfe/c8sectpfe-core.c
+index 3a91093..e19c6b4 100644
+--- a/drivers/media/platform/sti/c8sectpfe/c8sectpfe-core.c
++++ b/drivers/media/platform/sti/c8sectpfe/c8sectpfe-core.c
+@@ -822,7 +822,7 @@ static int c8sectpfe_probe(struct platform_device *pdev)
+ 		}
+ 		of_node_put(i2c_bus);
  
-+		demux@08a20000 {
-+			compatible	= "st,stih407-c8sectpfe";
-+			status		= "okay";
-+			reg		= <0x08a20000 0x10000>,
-+					  <0x08a00000 0x4000>;
-+			reg-names	= "c8sectpfe", "c8sectpfe-ram";
-+			interrupts	= <GIC_SPI 34 IRQ_TYPE_NONE>,
-+					  <GIC_SPI 35 IRQ_TYPE_NONE>;
-+			interrupt-names	= "c8sectpfe-error-irq",
-+					  "c8sectpfe-idle-irq";
-+			pinctrl-0	= <&pinctrl_tsin0_serial>;
-+			pinctrl-1	= <&pinctrl_tsin0_parallel>;
-+			pinctrl-2	= <&pinctrl_tsin3_serial>;
-+			pinctrl-3	= <&pinctrl_tsin4_serial_alt3>;
-+			pinctrl-4	= <&pinctrl_tsin5_serial_alt1>;
-+			pinctrl-names	= "tsin0-serial",
-+					  "tsin0-parallel",
-+					  "tsin3-serial",
-+					  "tsin4-serial",
-+					  "tsin5-serial";
-+			clocks		= <&clk_s_c0_flexgen CLK_PROC_STFE>;
-+			clock-names	= "c8sectpfe";
-+
-+			/* tsin0 is TSA on NIMA */
-+			tsin0: port@0 {
-+				tsin-num	= <0>;
-+				serial-not-parallel;
-+				i2c-bus		= <&ssc2>;
-+				rst-gpio	= <&pio15 4 GPIO_ACTIVE_HIGH>;
-+				dvb-card	= <STV0367_TDA18212_NIMA_1>;
-+			};
-+		};
- 	};
- };
+-		tsin->rst_gpio = of_get_named_gpio(child, "rst-gpio", 0);
++		tsin->rst_gpio = of_get_named_gpio(child, "reset-gpio", 0);
+ 
+ 		ret = gpio_is_valid(tsin->rst_gpio);
+ 		if (!ret) {
 -- 
 1.9.1
