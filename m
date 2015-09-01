@@ -1,7 +1,7 @@
 From: Alban Bedel <albeu@free.fr>
-Subject: [PATCH 3/4] MIPS: ath79: Add the EHCI controller and USB phy to the AR9132 dtsi
-Date: Tue,  1 Sep 2015 17:23:13 +0200
-Message-ID: <1441120994-31476-4-git-send-email-albeu@free.fr>
+Subject: [PATCH 4/4] MIPS: ath79: Enable the USB port on the TL-WR1043ND
+Date: Tue,  1 Sep 2015 17:23:14 +0200
+Message-ID: <1441120994-31476-5-git-send-email-albeu@free.fr>
 References: <1441120994-31476-1-git-send-email-albeu@free.fr>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1441120994-31476-1-git-send-email-albeu@free.fr>
@@ -12,48 +12,23 @@ List-Id: devicetree@vger.kernel.org
 
 Signed-off-by: Alban Bedel <albeu@free.fr>
 ---
- arch/mips/boot/dts/qca/ar9132.dtsi | 24 ++++++++++++++++++++++++
- 1 file changed, 24 insertions(+)
+ arch/mips/boot/dts/qca/ar9132_tl_wr1043nd_v1.dts | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/arch/mips/boot/dts/qca/ar9132.dtsi b/arch/mips/boot/dts/qca/ar9132.dtsi
-index fb7734e..665ee84 100644
---- a/arch/mips/boot/dts/qca/ar9132.dtsi
-+++ b/arch/mips/boot/dts/qca/ar9132.dtsi
-@@ -125,6 +125,21 @@
+diff --git a/arch/mips/boot/dts/qca/ar9132_tl_wr1043nd_v1.dts b/arch/mips/boot/dts/qca/ar9132_tl_wr1043nd_v1.dts
+index 003015a..cd51199 100644
+--- a/arch/mips/boot/dts/qca/ar9132_tl_wr1043nd_v1.dts
++++ b/arch/mips/boot/dts/qca/ar9132_tl_wr1043nd_v1.dts
+@@ -35,6 +35,10 @@
  			};
  		};
  
 +		ehci@1b000100 {
-+			compatible = "qca,ar7100-ehci", "generic-ehci";
-+			reg = <0x1b000100 0x100>;
-+
-+			interrupts = <3>;
-+			resets = <&rst 5>;
-+
-+			has-transaction-translator;
-+
-+			phy-names = "usb";
-+			phys = <&usb_phy>;
-+
-+			status = "disabled";
++			status = "okay";
 +		};
 +
  		spi@1f000000 {
- 			compatible = "qca,ar9132-spi", "qca,ar7100-spi";
- 			reg = <0x1f000000 0x10>;
-@@ -138,4 +153,13 @@
- 			#size-cells = <0>;
- 		};
- 	};
-+
-+	usb_phy: usb-phy {
-+		compatible = "qca,ar7100-usb-phy";
-+
-+		reset-names = "usb-phy", "usb-suspend-override";
-+		resets = <&rst 4>, <&rst 3>;
-+
-+		#phy-cells = <0>;
-+	};
- };
+ 			status = "okay";
+ 			num-cs = <1>;
 -- 
 2.0.0
