@@ -1,108 +1,101 @@
-From: Sascha Hauer <s.hauer@pengutronix.de>
-Subject: Re: [PATCH 1/3] dt-bindings: thermal: Add binding document for
- Mediatek thermal controller
-Date: Tue, 1 Sep 2015 07:26:04 +0200
-Message-ID: <20150901052604.GU5161@pengutronix.de>
-References: <1441006446-4558-1-git-send-email-s.hauer@pengutronix.de>
- <1441006446-4558-2-git-send-email-s.hauer@pengutronix.de>
+From: Bjorn Andersson <bjorn.andersson@sonymobile.com>
+Subject: Re: [PATCH 1/4] dt-binding: gpio: Add Qualcomm SMSM device tree
+ documentation
+Date: Mon, 31 Aug 2015 22:26:39 -0700
+Message-ID: <20150901052639.GF13472@usrtlx11787.corpusers.net>
+References: <1440697078-4106-1-git-send-email-bjorn.andersson@sonymobile.com>
+ <1440697078-4106-2-git-send-email-bjorn.andersson@sonymobile.com>
+ <CAL_Jsq+WmENn6zbc-ju7d3De4ewBtOe8Hm7JGXvUxfqwpz=iTA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-pm-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1441006446-4558-2-git-send-email-s.hauer@pengutronix.de>
-Sender: linux-pm-owner@vger.kernel.org
-To: linux-pm@vger.kernel.org, Zhang Rui <rui.zhang@intel.com>, Eduardo Valentin <edubezval@gmail.com>
-Cc: linux-kernel@vger.kernel.org, kernel@pengutronix.de, linux-mediatek@lists.infradead.org, linux-arm-kernel@lists.infradead.org, Matthias Brugger <matthias.bgg@gmail.com>, devicetree@vger.kernel.org, mark.rutland@arm.com, robh+dt@kernel.org
+In-Reply-To: <CAL_Jsq+WmENn6zbc-ju7d3De4ewBtOe8Hm7JGXvUxfqwpz=iTA@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robherring2@gmail.com>
+Cc: Alexandre Courbot <gnurou@gmail.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Linus Walleij <linus.walleij@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Aug 31, 2015 at 09:34:04AM +0200, Sascha Hauer wrote:
-> Signed-off-by: Sascha Hauer <s.hauer@pengutronix.de>
-> Reviewed-by: Daniel Kurtz <djkurtz@chromium.org>
+On Mon 31 Aug 08:43 PDT 2015, Rob Herring wrote:
 
-Uh, still forgot the commit log. Will add something like:
-
-This adds the device tree binding documentation for the mediatek thermal
-controller found on Mediatek MT8173 and other SoCs.
-
-Sascha
-
-> ---
->  .../bindings/thermal/mediatek-thermal.txt          | 38 ++++++++++++++++++++++
->  include/dt-bindings/thermal/mt8173.h               | 13 ++++++++
->  2 files changed, 51 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/thermal/mediatek-thermal.txt
->  create mode 100644 include/dt-bindings/thermal/mt8173.h
+> On Thu, Aug 27, 2015 at 12:37 PM, Bjorn Andersson
+> <bjorn.andersson@sonymobile.com> wrote:
+> > This documents a device tree binding for exposing the Qualcomm Shared
+> > Memory State Machine as a set of gpio- and interrupt-controllers.
+> >
+> > Signed-off-by: Bjorn Andersson <bjorn.andersson@sonymobile.com>
+> > ---
+> >  .../devicetree/bindings/gpio/qcom,smsm.txt         | 114 +++++++++++++++++++++
 > 
-> diff --git a/Documentation/devicetree/bindings/thermal/mediatek-thermal.txt b/Documentation/devicetree/bindings/thermal/mediatek-thermal.txt
-> new file mode 100644
-> index 0000000..1697375
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/thermal/mediatek-thermal.txt
-> @@ -0,0 +1,38 @@
-> +* Mediatek Thermal
-> +
-> +This describes the device tree binding for the Mediatek thermal controller
-> +which measures the on-SoC temperatures. This device does not have its own ADC,
-> +instead it directly controls the AUXADC via AHB bus accesses. For this reason
-> +this device needs phandles to the AUXADC. Also it controls a mux in the
-> +apmixedsys register space via AHB bus accesses, so a phandle to the APMIXEDSYS
-> +is also needed.
-> +
-> +Required properties:
-> +- compatible: "mediatek,mt8173-thermal"
-> +- reg: Address range of the thermal controller
-> +- interrupts: IRQ for the thermal controller
-> +- clocks, clock-names: Clocks needed for the thermal controller. required
-> +                       clocks are:
-> +		       "therm":	 Main clock needed for register access
-> +		       "auxadc": The AUXADC clock
-> +- resets: Reference to the reset controller controlling the thermal controller.
-> +- mediatek,auxadc: A phandle to the AUXADC which the thermal controller uses
-> +- mediatek,apmixedsys: A phandle to the APMIXEDSYS controller.
-> +- #thermal-sensor-cells : Should be 1. See ./thermal.txt for a description. See
-> +			  include/dt-bindings/thermal/mt8173.h for valid sensor
-> +			  numbers.
-> +
-> +Example:
-> +
-> +	thermal: thermal@1100b000 {
-> +		#thermal-sensor-cells = <1>;
-> +		compatible = "mediatek,mt8173-thermal";
-> +		reg = <0 0x1100b000 0 0x1000>;
-> +		interrupts = <0 70 IRQ_TYPE_LEVEL_LOW>;
-> +		clocks = <&pericfg CLK_PERI_THERM>, <&pericfg CLK_PERI_AUXADC>;
-> +		clock-names = "therm", "auxadc";
-> +		resets = <&pericfg MT8173_PERI_THERM_SW_RST>;
-> +		reset-names = "therm";
-> +		mediatek,auxadc = <&auxadc>;
-> +		mediatek,apmixedsys = <&apmixedsys>;
-> +	};
-> diff --git a/include/dt-bindings/thermal/mt8173.h b/include/dt-bindings/thermal/mt8173.h
-> new file mode 100644
-> index 0000000..692e74c
-> --- /dev/null
-> +++ b/include/dt-bindings/thermal/mt8173.h
-> @@ -0,0 +1,13 @@
-> +/*
-> + * This header provides constants for mediatek,mt8173-thermal
-> + */
-> +
-> +#ifndef _DT_BINDINGS_THERMAL_MEDIATEK_MT8173_H
-> +#define _DT_BINDINGS_THERMAL_MEDIATEK_MT8173_H
-> +
-> +#define MT8173_THERMAL_ZONE_CA53	0
-> +#define MT8173_THERMAL_ZONE_CA57	1
-> +#define MT8173_THERMAL_ZONE_GPU		2
-> +#define MT8173_THERMAL_ZONE_CORE	3
-> +
-> +#endif /* _DT_BINDINGS_THERMAL_MEDIATEK_MT8173_H */
-> -- 
-> 2.5.0
+> >  drivers/gpio/Kconfig                               |   8 ++
+> >  drivers/gpio/Makefile                              |   1 +
 > 
+> Presumably this goes in patch 2.
 > 
 
--- 
-Pengutronix e.K.                           |                             |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+Of course, my git-fu let me down.
+
+> >  3 files changed, 123 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/gpio/qcom,smsm.txt
+> >
+> > diff --git a/Documentation/devicetree/bindings/gpio/qcom,smsm.txt b/Documentation/devicetree/bindings/gpio/qcom,smsm.txt
+> > new file mode 100644
+> > index 000000000000..06201ba76594
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/gpio/qcom,smsm.txt
+> > @@ -0,0 +1,114 @@
+> > +Qualcomm Shared Memory State Machine
+> > +
+> > +The Shared Memory State Machine facilitates broadcasting of single bit state
+> > +information between the processors in a Qualcomm SoC. Each processor is
+> > +assigned 32 bits of state that can be modified. A processor can through a
+> > +matrix of bitmaps signal subscription of notifications upon changes to a
+> > +certain bit owned by a certain remote processor.
+> 
+> Are all the bits s/w driven, but somehow fixed in their functional definition?
+> 
+
+There's a wide range of systems implementing this, but I think it's all
+software. The definition of the individual bits used to be defined by
+one large enum, but it looks like Qualcomm ran out of bits and started
+to re-use them.
+
+But the functions are always well defined for a given platform.
+
+> > +This document defines the binding for a driver that implements and exposes this
+> > +a GPIO controller and a set of interrupt controllers.
+> 
+> I imagine Linus will have thoughts about that.
+> 
+
+Looking forward to hearing his comments :)
+
+I have not been able to find any other suitable framework to expose this
+functionality with and I am hoping to not be forced to create a new one
+as this one fits the purpose well.
+
+> > +
+> > +- compatible:
+> > +       Usage: required
+> > +       Value type: <string>
+> > +       Definition: must be one of:
+> > +                   "qcom,smsm"
+> 
+> There are not versions of the h/w?
+> 
+
+There are basically 2 versions; the original version comprised the
+application cpu and the modem cpu, sometime around 2008-2009 this was
+replaced with something called "N-way SMSM" - i.e. this implementation.
+The only change since then is in the number of entries and number of
+hosts - which we can determine in runtime if it's not compatible with
+the original sizes.
+
+
+So I have not been able to find any reasons to be more specific.
+
+
+Thanks for taking a look.
+
+Regards,
+Bjorn
