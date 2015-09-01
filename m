@@ -1,79 +1,63 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH v3 4/6] [media] c8sectpfe: Update binding to reset-gpios
-Date: Tue, 1 Sep 2015 10:09:16 +0100
-Message-ID: <20150901090916.GM4796@x1>
-References: <1440784362-31217-1-git-send-email-peter.griffin@linaro.org>
- <1440784362-31217-5-git-send-email-peter.griffin@linaro.org>
- <CABxcv=nM7MBK2EcD1-YK5y0J1hBtxV+6Wu812C23pNkAzigu7g@mail.gmail.com>
+From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [STLinux Kernel] [PATCH v2 1/4] ARM: STiH407: Add nodes for
+ RemoteProc
+Date: Tue, 1 Sep 2015 10:11:37 +0100
+Message-ID: <20150901091137.GN4796@x1>
+References: <1440757911-9120-1-git-send-email-lee.jones@linaro.org>
+ <1440757911-9120-2-git-send-email-lee.jones@linaro.org>
+ <20150901082812.GB30542@griffinp-ThinkPad-X1-Carbon-2nd>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-media-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <CABxcv=nM7MBK2EcD1-YK5y0J1hBtxV+6Wu812C23pNkAzigu7g@mail.gmail.com>
-Sender: linux-media-owner@vger.kernel.org
-To: Javier Martinez Canillas <javier@dowhile0.org>
-Cc: Peter Griffin <peter.griffin@linaro.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Linux Kernel <linux-kernel@vger.kernel.org>, srinivas.kandagatla@gmail.com, maxime.coquelin@st.com, patrice.chotard@st.com, Mauro Carvalho Chehab <mchehab@osg.samsung.com>, linux-media@vger.kernel.org, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, valentinrothberg@gmail.com, hugues.fruchet@st.com
+In-Reply-To: <20150901082812.GB30542@griffinp-ThinkPad-X1-Carbon-2nd>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Peter Griffin <peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ohad-Ix1uc/W3ht7QT0dZR+AlfA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-F5mvAk5X5gdBDgjK7y7TUQ@public.gmane.org, Nathan_Lynch-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 01 Sep 2015, Javier Martinez Canillas wrote:
-> On Fri, Aug 28, 2015 at 7:52 PM, Peter Griffin <peter.griffin@linaro.=
-org> wrote:
-> > gpio.txt documents that GPIO properties should be named
-> > "[<name>-]gpios", with <name> being the purpose of this
-> > GPIO for the device.
-> >
-> > This change has been done as one atomic commit.
-> >
-> > Signed-off-by: Peter Griffin <peter.griffin@linaro.org>
-> > Acked-by: Lee Jones <lee.jones@linaro.org>
+On Tue, 01 Sep 2015, Peter Griffin wrote:
+> On Fri, 28 Aug 2015, Lee Jones wrote:
+>=20
+> > Signed-off-by: Ludovic Barre <ludovic.barre-qxv4g6HH51o@public.gmane.org>
+> > Signed-off-by: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 > > ---
-> >  Documentation/devicetree/bindings/media/stih407-c8sectpfe.txt | 6 =
-+++---
-> >  arch/arm/boot/dts/stihxxx-b2120.dtsi                          | 4 =
-++--
-> >  drivers/media/platform/sti/c8sectpfe/c8sectpfe-core.c         | 2 =
-+-
-> >  3 files changed, 6 insertions(+), 6 deletions(-)
-> >
-> > diff --git a/Documentation/devicetree/bindings/media/stih407-c8sect=
-pfe.txt b/Documentation/devicetree/bindings/media/stih407-c8sectpfe.txt
-> > index d4def76..e70d840 100644
-> > --- a/Documentation/devicetree/bindings/media/stih407-c8sectpfe.txt
-> > +++ b/Documentation/devicetree/bindings/media/stih407-c8sectpfe.txt
-> > @@ -35,7 +35,7 @@ Required properties (tsin (child) node):
-> >
-> >  - tsin-num     : tsin id of the InputBlock (must be between 0 to 6=
-)
-> >  - i2c-bus      : phandle to the I2C bus DT node which the demodula=
-tors & tuners on this tsin channel are connected.
-> > -- rst-gpio     : reset gpio for this tsin channel.
-> > +- reset-gpios  : reset gpio for this tsin channel.
+> >  arch/arm/boot/dts/stih407-family.dtsi | 48 +++++++++++++++++++++++=
+++++++++++++
+> >  1 file changed, 48 insertions(+)
+> >=20
+> > diff --git a/arch/arm/boot/dts/stih407-family.dtsi b/arch/arm/boot/=
+dts/stih407-family.dtsi
+> > index 33daa49..89a363c 100644
+> > --- a/arch/arm/boot/dts/stih407-family.dtsi
+> > +++ b/arch/arm/boot/dts/stih407-family.dtsi
+> > @@ -608,5 +608,53 @@
+> >  			status		=3D "okay";
+> >  			tx-only;
+> >  		};
+> > +
+> > +		st231_gp0: st231-gp0@0 {
+> > +			compatible =3D "st,st231-rproc";
+> > +			reg =3D <0x40000000 0x01000000>;
+> > +			reg-names =3D "carveout";
+> > +			resets =3D <&softreset STIH407_ST231_GP0_SOFTRESET>;
 >=20
-> The documentation is a bit outdated, the GPIO subsystem supports both
-> -gpio and -gpios, see commit:
->=20
-> dd34c37aa3e8 ("gpio: of: Allow -gpio suffix for property names")
->=20
-> So it makes sense to me to use -gpio instead of -gpios in this case
-> since is a single GPIO. Also rst is already a descriptive name since
-> that's how many datasheets name a reset pin. I'm not saying I'm
-> against this patch, just pointing out since the commit message is a
-> bit misleading.
+> Support for these co-processor reset lines does not exist upstream. S=
+o
+> this series as it stands won't compile.
 
-As I suggested this patch, I feel I must comment.
-
-My order of preference would be:
-
- reset-gpio
- reset-gpios
- rst-gpio
- rst-gpios
-
-This current patch is No2, so it's okay to stay IMHO.
+That's true.  I have the support as part of some DEBUG patches I have
+in my branch.  Are you aware of a plan for these, or should I upstream
+them myself as part of this set?
 
 --=20
 Lee Jones
 Linaro STMicroelectronics Landing Team Lead
 Linaro.org =E2=94=82 Open source software for ARM SoCs
 =46ollow Linaro: Facebook | Twitter | Blog
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
