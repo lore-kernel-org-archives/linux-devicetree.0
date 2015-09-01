@@ -1,115 +1,143 @@
-From: "Maciej S. Szmigiero" <mail-APzI5cXaD1zVlRWJc41N0YvC60bnQu0Y@public.gmane.org>
-Subject: [PATCH][RESEND] drm: panel-simple: add URT UMSH-8596MD-xT panel support
-Date: Tue, 01 Sep 2015 15:50:27 +0200
-Message-ID: <55E5AD23.8070309@maciej.szmigiero.name>
+From: Heiko Stuebner <heiko@sntech.de>
+Subject: Re: [PATCH v4 08/16] drm: rockchip/dp: add rockchip platform dp driver
+Date: Tue, 01 Sep 2015 16:24:04 +0200
+Message-ID: <2919897.nbhB5Cifed@phil>
+References: <1441086371-24838-1-git-send-email-ykk@rock-chips.com> <1441087288-25404-1-git-send-email-ykk@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
-Cc: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <1441087288-25404-1-git-send-email-ykk@rock-chips.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Yakir Yang <ykk@rock-chips.com>
+Cc: Thierry Reding <treding@nvidia.com>, Jingoo Han <jingoohan1@gmail.com>, Inki Dae <inki.dae@samsung.com>, joe@perches.com, Kukjin Kim <kgene@kernel.org>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, Mark Yao <mark.yao@rock-chips.com>, Russell King <rmk+kernel@arm.linux.org.uk>, djkurtz@chromium.com, dianders@chromium.com, seanpaul@chromium.com, ajaynumb@gmail.com, Andrzej Hajda <a.hajda@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, David Airlie <airlied@linux.ie>, Gustavo Padovan <gustavo.padovan@collabora.co.uk>, Andy Yan <andy.yan@rock-chips.com>, Kumar Gala <galak@codeaurora.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Kishon Vijay Abraham I <kishon@ti.com>, architt@codeaurora.org, robherring2@gmail.com, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-kernel
 List-Id: devicetree@vger.kernel.org
 
-This patch adds support for United Radiant Technology
-UMSH-8596MD-xT 7.0" WVGA TFT LCD panels
-(both LVDS and parallel versions) to DRM
-panel-simple driver.
+Am Dienstag, 1. September 2015, 14:01:28 schrieb Yakir Yang:
+> Rockchip have three clocks for dp controller, we leave pclk_edp
+> to analogix_dp driver control, and keep the sclk_edp_24m and
+> sclk_edp in platform driver.
+> 
+> Signed-off-by: Yakir Yang <ykk@rock-chips.com>
+> ---
+> Changes in v4:
+> - Remove some deprecated DT properties in rockchip dp document.
+> 
+> Changes in v3:
+> - Take Thierry Reding and Heiko suggest, leave "sclk_edp_24m" to rockchip
+>   dp phy driver which name to "24m", and leave "sclk_edp" to analogix dp
+>   core driver which name to "dp", and leave "pclk_edp" to rockchip dp
+> platform driver which name to "pclk".
+> - Take Heiko suggest, add devicetree binding document.
+> - Take Heiko suggest, remove "rockchip,panel" DT property, take use of
+> remote point to get panel node.
+> - Add the new function point analogix_dp_platdata.get_modes init.
+> 
+> Changes in v2:
+> - Take Heiko suggest, get panel node with remote-endpoint method,
+>   and create devicetree binding for driver.
+> - Remove the clock enable/disbale with "sclk_edp" & "sclk_edp_24m",
+>   leave those clock to rockchip dp phy driver.
+> 
+>  .../bindings/video/analogix_dp-rockchip.txt        |  74 ++++
+>  drivers/gpu/drm/rockchip/Kconfig                   |   9 +
+>  drivers/gpu/drm/rockchip/Makefile                  |   1 +
+>  drivers/gpu/drm/rockchip/analogix_dp-rockchip.c    | 389
+> +++++++++++++++++++++ 4 files changed, 473 insertions(+)
+>  create mode 100644
+> Documentation/devicetree/bindings/video/analogix_dp-rockchip.txt create
+> mode 100644 drivers/gpu/drm/rockchip/analogix_dp-rockchip.c
+> 
+> diff --git
+> a/Documentation/devicetree/bindings/video/analogix_dp-rockchip.txt
+> b/Documentation/devicetree/bindings/video/analogix_dp-rockchip.txt new file
+> mode 100644
+> index 0000000..502483e
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/video/analogix_dp-rockchip.txt
+> @@ -0,0 +1,74 @@
+> +Rockchip RK3288 specific extensions to the Analogix Display Port
+> +================================
+> +
+> +Required properties:
+> +- compatible: "rockchip,rk3288-edp";
+> +
+> +- reg: physical base address of the controller and length
+> +
+> +- clocks: from common clock binding: handle to dp clock.
+> +	  of memory mapped region.
+> +
+> +- clock-names: from common clock binding:
+> +	       Required elements: "dp" "pclk"
+> +
+> +- resets: Must contain an entry for each entry in reset-names.
+> +	  See ../reset/reset.txt for details.
+> +
+> +- reset-names: Must include the name "dp"
+> +
+> +- rockchip,grf: this soc should set GRF regs, so need get grf here.
+> +
+> +- ports: contain a port node with endpoint definitions as defined in
+> +  Documentation/devicetree/bindings/media/video-interfaces.txt.
+> +
+> +
+> +For the below properties, please refer to Analogix DP binding document:
+> + * Documentation/devicetree/bindings/drm/bridge/analogix_dp.txt
+> +- phys (required)
+> +- phy-names (required)
+> +- hpd-gpios (optional)
+> +---------------------------------------------------------------------------
+> ---- +
+> +Example:
+> +	dp-controller: dp@ff970000 {
+> +		compatible = "rockchip,rk3288-dp";
+> +		reg = <0xff970000 0x4000>;
+> +		interrupts = <GIC_SPI 98 IRQ_TYPE_LEVEL_HIGH>;
+> +		clocks = <&cru SCLK_EDP>, <&cru PCLK_EDP_CTRL>;
+> +		clock-names = "dp", "pclk";
+> +		phys = <&dp_phy>;
+> +		phy-names = "dp";
+> +
+> +		rockchip,grf = <&grf>;
+> +		resets = <&cru 111>;
+> +		reset-names = "dp";
+> +
+> +		status = "disabled";
+> +
+> +		ports {
+> +			edp_in: port {
+> +				#address-cells = <1>;
+> +				#size-cells = <0>;
+> +				edp_in_vopb: endpoint@0 {
+> +					reg = <0>;
+> +					remote-endpoint = <&vopb_out_edp>;
+> +				};
+> +				edp_in_vopl: endpoint@1 {
+> +					reg = <1>;
+> +					remote-endpoint = <&vopl_out_edp>;
+> +				};
+> +			};
+> +
+> +			edp_out: port@1 {
+> +				reg = <1>;
+> +				#address-cells = <1>;
+> +				#size-cells = <0>;
+> +				edp_out_panel: endpoint {
+> +					reg = <0>;
+> +					remote-endpoint = <&panel_in_edp>
+> +				};
+> +			};
+> +		};
+> +	};
+> +
+just a nit right now, because "git am" mentioned it:
 
-Signed-off-by: Maciej Szmigiero <mail-APzI5cXaD1zVlRWJc41N0YvC60bnQu0Y@public.gmane.org>
----
-This is a resend without changes.
+git am \[PATCH\ v4\ 08_16\]\ drm_rockchip_dp_add\ rockchip\ platform\ dp\ 
+driver.mbox 
+[...]/linux-rockchip/.git/rebase-apply/patch:108: new blank line at EOF.
++
 
-diff --git a/Documentation/devicetree/bindings/panel/urt,umsh-8596md.txt b/Documentation/devicetree/bindings/panel/urt,umsh-8596md.txt
-new file mode 100644
-index 0000000..2990e6b
---- /dev/null
-+++ b/Documentation/devicetree/bindings/panel/urt,umsh-8596md.txt
-@@ -0,0 +1,11 @@
-+United Radiant Technology UMSH-8596MD-xT 7.0" WVGA TFT LCD panel
-+
-+Supported are LVDS versions (-11T, -19T) and parallel ones
-+(-T, -1T, -7T, -20T).
-+
-+Required properties:
-+- compatible: should be "urt,umsh-8596md-lvds" for LVDS versions,
-+  "urt,umsh-8596md-parallel" for parallel ones.
-+
-+This binding is compatible with the simple-panel binding, which is specified
-+in simple-panel.txt in this directory.
-diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
-index 66a33ae..234ce41 100644
---- a/Documentation/devicetree/bindings/vendor-prefixes.txt
-+++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
-@@ -213,6 +213,7 @@ toshiba	Toshiba Corporation
- toumaz	Toumaz
- tplink	TP-LINK Technologies Co., Ltd.
- truly	Truly Semiconductors Limited
-+urt	United Radiant Technology Corporation
- usi	Universal Scientific Industrial Co., Ltd.
- v3	V3 Semiconductor
- variscite	Variscite Ltd.
-diff --git a/drivers/gpu/drm/panel/panel-simple.c b/drivers/gpu/drm/panel/panel-simple.c
-index f94201b..be47fd7 100644
---- a/drivers/gpu/drm/panel/panel-simple.c
-+++ b/drivers/gpu/drm/panel/panel-simple.c
-@@ -1036,6 +1036,42 @@ static const struct panel_desc shelly_sca07010_bfn_lnn = {
- 	.bus_format = MEDIA_BUS_FMT_RGB666_1X18,
- };
- 
-+static const struct display_timing urt_umsh_8596md_timing = {
-+	.pixelclock = { 33260000, 33260000, 33260000 },
-+	.hactive = { 800, 800, 800 },
-+	.hfront_porch = { 41, 41, 41 },
-+	.hback_porch = { 216 - 128, 216 - 128, 216 - 128 },
-+	.hsync_len = { 71, 128, 128 },
-+	.vactive = { 480, 480, 480 },
-+	.vfront_porch = { 10, 10, 10 },
-+	.vback_porch = { 35 - 2, 35 - 2, 35 - 2 },
-+	.vsync_len = { 2, 2, 2 },
-+	.flags = DISPLAY_FLAGS_DE_HIGH | DISPLAY_FLAGS_PIXDATA_NEGEDGE |
-+		DISPLAY_FLAGS_HSYNC_LOW | DISPLAY_FLAGS_VSYNC_LOW,
-+};
-+
-+static const struct panel_desc urt_umsh_8596md_lvds = {
-+	.timings = &urt_umsh_8596md_timing,
-+	.num_timings = 1,
-+	.bpc = 6,
-+	.size = {
-+		.width = 152,
-+		.height = 91,
-+	},
-+	.bus_format = MEDIA_BUS_FMT_RGB666_1X7X3_SPWG,
-+};
-+
-+static const struct panel_desc urt_umsh_8596md_parallel = {
-+	.timings = &urt_umsh_8596md_timing,
-+	.num_timings = 1,
-+	.bpc = 6,
-+	.size = {
-+		.width = 152,
-+		.height = 91,
-+	},
-+	.bus_format = MEDIA_BUS_FMT_RGB666_1X18,
-+};
-+
- static const struct of_device_id platform_of_match[] = {
- 	{
- 		.compatible = "ampire,am800480r3tmqwa1h",
-@@ -1125,6 +1161,12 @@ static const struct of_device_id platform_of_match[] = {
- 		.compatible = "shelly,sca07010-bfn-lnn",
- 		.data = &shelly_sca07010_bfn_lnn,
- 	}, {
-+		.compatible = "urt,umsh-8596md-lvds",
-+		.data = &urt_umsh_8596md_lvds,
-+	}, {
-+		.compatible = "urt,umsh-8596md-parallel",
-+		.data = &urt_umsh_8596md_parallel,
-+	}, {
- 		/* sentinel */
- 	}
- };
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+meaning you're adding an empty line at the end :-)
+
+
+Heiko
