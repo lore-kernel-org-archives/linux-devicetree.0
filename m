@@ -1,63 +1,36 @@
-From: Rob Herring <robherring2@gmail.com>
-Subject: Re: [PATCH v3 4/6] [media] c8sectpfe: Update binding to reset-gpios
-Date: Tue, 1 Sep 2015 06:54:41 -0500
-Message-ID: <CAL_JsqLccRKCnASOK-tAUn=ifZpQ3hCEJ1eg1hmrei=3vEpzFA@mail.gmail.com>
-References: <1440784362-31217-1-git-send-email-peter.griffin@linaro.org>
- <1440784362-31217-5-git-send-email-peter.griffin@linaro.org> <CABxcv=nM7MBK2EcD1-YK5y0J1hBtxV+6Wu812C23pNkAzigu7g@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CABxcv=nM7MBK2EcD1-YK5y0J1hBtxV+6Wu812C23pNkAzigu7g@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Javier Martinez Canillas <javier@dowhile0.org>
-Cc: Peter Griffin <peter.griffin@linaro.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Linux Kernel <linux-kernel@vger.kernel.org>, Srinivas Kandagatla <srinivas.kandagatla@gmail.com>, Maxime Coquelin <maxime.coquelin@st.com>, Patrice Chotard <patrice.chotard@st.com>, Mauro Carvalho Chehab <mchehab@osg.samsung.com>, Lee Jones <lee.jones@linaro.org>, "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Valentin Rothberg <valentinrothberg@gmail.com>, hugues.fruchet@st.com
+From: Martin Kepplinger <martink-1KBjaw7Xf1+zQB+pC5nmwQ@public.gmane.org>
+Subject: [PATCH 6/6] iio: mma8452: leave sysfs namings to the iio core
+Date: Tue,  1 Sep 2015 13:45:13 +0200
+Message-ID: <1441107913-4112-7-git-send-email-martink@posteo.de>
+References: <1441107913-4112-1-git-send-email-martink@posteo.de>
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1441107913-4112-1-git-send-email-martink-1KBjaw7Xf1+zQB+pC5nmwQ@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, knaack.h-Mmb7MZpHnFY@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org, mfuzzey-mB3Nsq4MPf1BDgjK7y7TUQ@public.gmane.org, roberta.dobrescu-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, christoph.muellner-SN7IsUiht6C/RdPyistoZJqQE7yCjDx5@public.gmane.org, Martin Kepplinger <martink-1KBjaw7Xf1+zQB+pC5nmwQ@public.gmane.org>, Martin Kepplinger <martin.kepplinger-SN7IsUiht6C/RdPyistoZJqQE7yCjDx5@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Sep 1, 2015 at 3:32 AM, Javier Martinez Canillas
-<javier@dowhile0.org> wrote:
-> Hello Peter,
->
-> On Fri, Aug 28, 2015 at 7:52 PM, Peter Griffin <peter.griffin@linaro.org> wrote:
->> gpio.txt documents that GPIO properties should be named
->> "[<name>-]gpios", with <name> being the purpose of this
->> GPIO for the device.
->>
->> This change has been done as one atomic commit.
->>
->> Signed-off-by: Peter Griffin <peter.griffin@linaro.org>
->> Acked-by: Lee Jones <lee.jones@linaro.org>
->> ---
->>  Documentation/devicetree/bindings/media/stih407-c8sectpfe.txt | 6 +++---
->>  arch/arm/boot/dts/stihxxx-b2120.dtsi                          | 4 ++--
->>  drivers/media/platform/sti/c8sectpfe/c8sectpfe-core.c         | 2 +-
->>  3 files changed, 6 insertions(+), 6 deletions(-)
->>
->> diff --git a/Documentation/devicetree/bindings/media/stih407-c8sectpfe.txt b/Documentation/devicetree/bindings/media/stih407-c8sectpfe.txt
->> index d4def76..e70d840 100644
->> --- a/Documentation/devicetree/bindings/media/stih407-c8sectpfe.txt
->> +++ b/Documentation/devicetree/bindings/media/stih407-c8sectpfe.txt
->> @@ -35,7 +35,7 @@ Required properties (tsin (child) node):
->>
->>  - tsin-num     : tsin id of the InputBlock (must be between 0 to 6)
->>  - i2c-bus      : phandle to the I2C bus DT node which the demodulators & tuners on this tsin channel are connected.
->> -- rst-gpio     : reset gpio for this tsin channel.
->> +- reset-gpios  : reset gpio for this tsin channel.
->
-> The documentation is a bit outdated, the GPIO subsystem supports both
-> -gpio and -gpios, see commit:
->
-> dd34c37aa3e8 ("gpio: of: Allow -gpio suffix for property names")
+This doesn't actually change anything since the core names the sysfs folder
+for the iio event attributes "events" anyways. It only leaves the job to the
+core.
 
-Yes, because we have lots of them.
+Signed-off-by: Martin Kepplinger <martin.kepplinger-SN7IsUiht6C/RdPyistoZJqQE7yCjDx5@public.gmane.org>
+Signed-off-by: Christoph Muellner <christoph.muellner-SN7IsUiht6C/RdPyistoZJqQE7yCjDx5@public.gmane.org>
+---
+ drivers/iio/accel/mma8452.c | 1 -
+ 1 file changed, 1 deletion(-)
 
-> So it makes sense to me to use -gpio instead of -gpios in this case
-> since is a single GPIO. Also rst is already a descriptive name since
-> that's how many datasheets name a reset pin. I'm not saying I'm
-> against this patch, just pointing out since the commit message is a
-> bit misleading.
-
-I believe that this has been discussed at length and it was decided
-that new bindings should use "-gpios" even for 1. Just like "clocks"
-is always plural.
-
-Rob
+diff --git a/drivers/iio/accel/mma8452.c b/drivers/iio/accel/mma8452.c
+index 15d50c9..1eccc2d 100644
+--- a/drivers/iio/accel/mma8452.c
++++ b/drivers/iio/accel/mma8452.c
+@@ -772,7 +772,6 @@ static struct attribute *mma8452_event_attributes[] = {
+ 
+ static struct attribute_group mma8452_event_attribute_group = {
+ 	.attrs = mma8452_event_attributes,
+-	.name = "events",
+ };
+ 
+ #define MMA8452_CHANNEL(axis, idx, bits) { \
+-- 
+2.1.4
