@@ -1,88 +1,91 @@
-From: Chris Read <chrisrfq-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: Userspace and Device-Tree
-Date: Tue, 1 Sep 2015 15:19:44 -0700
-Message-ID: <CAPiN7iWq0EN+Pph82MHvNKn2pUNEh3Vs4ymjMpdB212x2fq0sQ@mail.gmail.com>
-References: <01e601d0e0f9$614450d0$23ccf270$@gmail.com>
-	<20150828101227.GD31748@leverpostej>
-	<CAAVeFuJCSv74HLws7Adb1fnSbxf8rR5=NYX8GG59K1nLgFs+VA@mail.gmail.com>
-	<CAPiN7iU+NzW1oYjXLsLgn7Sh=i6DPMC49WrDcpsa4XvmjpORcw@mail.gmail.com>
-	<20150831145500.GP12027@sirena.org.uk>
-	<CAPiN7iWFR2Sm8t9dUttNzwj-qZmUc-cdK69rGhG2RjD+s1gdSA@mail.gmail.com>
-	<20150831180140.GS12027@sirena.org.uk>
-	<CAPiN7iWWAxhg6YQ8BjYHh+Gu8bvQrntvT4QGV+oDe4KAnb1nvg@mail.gmail.com>
-	<20150901201755.GZ5313@sirena.org.uk>
+From: Adrian Alonso <aalonso@freescale.com>
+Subject: [PATCH v2 1/8] pinctrl: freescale: imx: fix system crash if enable two pinctl instances
+Date: Tue, 1 Sep 2015 17:49:06 -0500
+Message-ID: <1441147753-13239-1-git-send-email-aalonso@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20150901201755.GZ5313-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Markus Pargmann <mpa-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Content-Type: text/plain
+Return-path: <linux-gpio-owner@vger.kernel.org>
+Sender: linux-gpio-owner@vger.kernel.org
+To: linux-arm-kernel@lists.infradead.org, shawn.guo@linaro.org, shawnguo@kernel.org, linus.walleij@linaro.org, lznuaa@gmail.com
+Cc: linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, robh+dt@kernel.org, Anson.Huang@freescale.com, Frank.Li@freescale.com, yibin.gong@freescale.com, nitin.garg@freescale.com
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Sep 1, 2015 at 1:17 PM, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
->> .......we have the application software act like drivers in
->> cases where high speed isn't required (such as GPIOs and switching
->> on/off power supplies).
->
-> Yeah, so the power supplies bit is not something we want to encourage.
+From: Robin Gong <b38343@freescale.com>
 
-I agree with you (in almost all situations).
+Fix system chrash caused by groups whose number is smaller than the number
+of groups of the last pinctl instance which is not initialized.
 
->> From what I see the standard kernel allows exposing GPIOs to userspace.
->> There are kernel calls to do so.  It seems to be recognized as an important
->> feature.  The standard kernel also has a regulator-consumer whose whole
->> purpose is to expose control of a regulator to userspace.  So it looks like
->> such userspace control is intended.
->
-> At least in the case of regulators those are specifically for use in
-> board file cases, they should never have direct DT bindings.
+iMX7D supports two iomux controllers (iomuxc-lpsr and iomuxc) on probing
+the second instance (iomuxc) the chrash below occurs.
 
-My understanding, is that we're trying very hard to avoid having any board
-files, and that DT use was intended to facilitate getting away from them.
-Perhaps my interpretation of the need to avoid board files is extreme?
+Uncompressing Linux... done, booting the kernel.
+[    0.000000] Booting Linux on physical CPU 0x0
+[    0.000000] Linux version 4.2.0-next-20150901-00006-gebfa43c (aalonso@bluefly)
+[    0.000000] CPU: ARMv7 Processor [410fc075] revision 5 (ARMv7)
+[    0.000000] CPU: PIPT / VIPT nonaliasing data cache, VIPT aliasin instruction cache
+[    0.000000] Machine model: Freescale i.MX7 SabreSD Board
+[    0.661012] [<802a6cb0>] (strcmp) from [<802cc80c>] (imx_dt_node_to_map+0x58/0x208)
+[    0.668879] [<802cc80c>] (imx_dt_node_to_map) from [<802cbe24>] (pinctrl_dt_to_map+0x174/0x2b0)
+[    0.677654] [<802cbe24>] (pinctrl_dt_to_map) from [<802c8f18>] (pinctrl_get+0x100/0x424)
+[    0.685878] [<802c8f18>] (pinctrl_get) from [<802c9510>] (pinctrl_register+0x26c/0x480)
+[    0.694104] [<802c9510>] (pinctrl_register) from [<802ccf3c>] (imx_pinctrl_probe+0x580/0x6e8)
+[    0.702706] [<802ccf3c>] (imx_pinctrl_probe) from [<80351b58>] (platform_drv_probe+0x44/0xa4)
+[    0.711455] [<80351b58>] (platform_drv_probe) from [<803503ec>] (driver_probe_device+0x174/0x2b4)
+[    0.720405] [<803503ec>] (driver_probe_device) from [<803505fc>] (__driver_attach+0x8c/0x90)
+[    0.728982] [<803505fc>] (__driver_attach) from [<8034e930>] (bus_for_each_dev+0x6c/0xa0)
+[    0.737381] [<8034e930>] (bus_for_each_dev) from [<8034fb88>] (bus_add_driver+0x148/0x1f0)
+[    0.745804] [<8034fb88>] (bus_add_driver) from [<80350c00>] (driver_register+0x78/0xf8)
+[    0.753880] [<80350c00>] (driver_register) from [<800097d0>] (do_one_initcall+0x8c/0x1d4)
+[    0.762282] [<800097d0>] (do_one_initcall) from [<80987dac>] (kernel_init_freeable+0x144/0x1e4)
+[    0.771061] [<80987dac>] (kernel_init_freeable) from [<806d9c7c>] (kernel_init+0x8/0xe8)
+[    0.779285] [<806d9c7c>] (kernel_init) from [<8000f628>] (ret_from_fork+0x14/0x2c)
+[    0.786981] Code: e3520000 e5e32001 1afffffb e12fff1e (e4d03001)
 
->> ..... I'd like
->> to have a way to use the same kernel for all our boards, and have a
->> configuration that can be provided that will expose the required ones.
->
-> So one thing you could do here is have your connector have a driver that
-> handles what it knows about for the cases where that's useful and just
-> punts everything else to userspace.  That way you don't need to actually
-> write the kernel code for every last thing and can still punt to
-> userspace but don't need to have a DT that represents the actual
-> hardware.
->
-> I don't know if other people think that makes sense though.
+Signed-off-by: Robin Gong <b38343@freescale.com>
+Signed-off-by: Adrian Alonso <aalonso@freescale.com>
+---
+Chages for V2:
+- Reorder patch series
+- Add platform boot up information on kernel error
+- Move gpr_index to imx_pinctrl_soc_info
 
-That's a very intriguing idea to me.  Let me see if I understand your
-suggestion fully.
+ drivers/pinctrl/freescale/pinctrl-imx.c | 3 +--
+ drivers/pinctrl/freescale/pinctrl-imx.h | 1 +
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
-It would involve creating a kernel module (not really a driver, since
-it doesn't actually control hardware) as well as modifications to the DT.
+diff --git a/drivers/pinctrl/freescale/pinctrl-imx.c b/drivers/pinctrl/freescale/pinctrl-imx.c
+index d7b98ba..95db9e8 100644
+--- a/drivers/pinctrl/freescale/pinctrl-imx.c
++++ b/drivers/pinctrl/freescale/pinctrl-imx.c
+@@ -580,7 +580,6 @@ static int imx_pinctrl_parse_functions(struct device_node *np,
+ 	struct device_node *child;
+ 	struct imx_pmx_func *func;
+ 	struct imx_pin_group *grp;
+-	static u32 grp_index;
+ 	u32 i = 0;
+ 
+ 	dev_dbg(info->dev, "parse function(%d): %s\n", index, np->name);
+@@ -599,7 +598,7 @@ static int imx_pinctrl_parse_functions(struct device_node *np,
+ 
+ 	for_each_child_of_node(np, child) {
+ 		func->groups[i] = child->name;
+-		grp = &info->groups[grp_index++];
++		grp = &info->groups[info->grp_index++];
+ 		imx_pinctrl_parse_groups(child, grp, info, i++);
+ 	}
+ 
+diff --git a/drivers/pinctrl/freescale/pinctrl-imx.h b/drivers/pinctrl/freescale/pinctrl-imx.h
+index 49e55d3..26f8f1c 100644
+--- a/drivers/pinctrl/freescale/pinctrl-imx.h
++++ b/drivers/pinctrl/freescale/pinctrl-imx.h
+@@ -81,6 +81,7 @@ struct imx_pinctrl_soc_info {
+ 	struct imx_pmx_func *functions;
+ 	unsigned int nfunctions;
+ 	unsigned int flags;
++	u32 grp_index;
+ };
+ 
+ #define SHARE_MUX_CONF_REG	0x1
+-- 
+2.1.4
 
-In the DT we'd create a hardware description of a connector, which
-indicates all the signals, etc. that come to it.  Signals which are
-connected to other devices and are thus fully described elsewhere
-would simply be referenced.  Nothing new would happen with those
-signals via DT and kernel module.
-
-However, signals that are not described elsewhere could be qualified
-in the DT as appropriate for the hardware connector.  For GPIO's that
-could include direction, level, name, etc.  Since those signals aren't
-mated internally with any other hardware they would automatically be
-exposed to userspace.  The new kernel module would be responsible
-for configuring the newly described hardware as well as doing the
-exposing to userspace.
-
-That sounds quite workable to me.  It might get more complicated
-than I'd prefer, especially if there are more things than GPIOs (such
-as ADCs, DACs, etc.) that might come to the connector previously
-unconfigured.  But I think the idea is sound--and it keeps the DT in
-the hardware rather than the userspace business, which is what we
-want.  It also sounds like it might be broadly applicable, and have
-interest far beyond me.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
