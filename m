@@ -1,101 +1,33 @@
-From: Bjorn Andersson <bjorn.andersson@sonymobile.com>
-Subject: Re: [PATCH 1/4] dt-binding: gpio: Add Qualcomm SMSM device tree
- documentation
-Date: Mon, 31 Aug 2015 22:26:39 -0700
-Message-ID: <20150901052639.GF13472@usrtlx11787.corpusers.net>
-References: <1440697078-4106-1-git-send-email-bjorn.andersson@sonymobile.com>
- <1440697078-4106-2-git-send-email-bjorn.andersson@sonymobile.com>
- <CAL_Jsq+WmENn6zbc-ju7d3De4ewBtOe8Hm7JGXvUxfqwpz=iTA@mail.gmail.com>
+From: Songjun Wu <songjun.wu@atmel.com>
+Subject: [PATCH 0/2] ASoC: atmel-classd: add the Audio Class D Amplifier
+Date: Tue, 1 Sep 2015 13:41:39 +0800
+Message-ID: <1441086101-15303-1-git-send-email-songjun.wu@atmel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAL_Jsq+WmENn6zbc-ju7d3De4ewBtOe8Hm7JGXvUxfqwpz=iTA@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robherring2@gmail.com>
-Cc: Alexandre Courbot <gnurou@gmail.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Linus Walleij <linus.walleij@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: nicolas.ferre@atmel.com, lgirdwood@gmail.com, broonie@kernel.org, perex@perex.cz, tiwai@suse.com, linux-kernel@vger.kernel.org, alsa-devel@alsa-project.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org
+Cc: Songjun Wu <songjun.wu@atmel.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon 31 Aug 08:43 PDT 2015, Rob Herring wrote:
+The Audio Class D Amplifier driver includes two parts.
+1) Driver code to implement the Audio Class D Amplifier function. 
+2) Device tree binding document, it describes how to add the Audio
+Class D Amplifier in device tree.
 
-> On Thu, Aug 27, 2015 at 12:37 PM, Bjorn Andersson
-> <bjorn.andersson@sonymobile.com> wrote:
-> > This documents a device tree binding for exposing the Qualcomm Shared
-> > Memory State Machine as a set of gpio- and interrupt-controllers.
-> >
-> > Signed-off-by: Bjorn Andersson <bjorn.andersson@sonymobile.com>
-> > ---
-> >  .../devicetree/bindings/gpio/qcom,smsm.txt         | 114 +++++++++++++++++++++
-> 
-> >  drivers/gpio/Kconfig                               |   8 ++
-> >  drivers/gpio/Makefile                              |   1 +
-> 
-> Presumably this goes in patch 2.
-> 
+Songjun Wu (2):
+  ASoC: atmel-classd: add the Audio Class D Amplifier code
+  ASoC: atmel-classd: DT binding for Class D audio amplifier driver
 
-Of course, my git-fu let me down.
+ .../devicetree/bindings/sound/atmel-classd.txt     |   73 ++
+ sound/soc/atmel/Kconfig                            |    9 +
+ sound/soc/atmel/Makefile                           |    2 +
+ sound/soc/atmel/atmel-classd.c                     |  801 ++++++++++++++++++++
+ sound/soc/atmel/atmel-classd.h                     |  120 +++
+ 5 files changed, 1005 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/sound/atmel-classd.txt
+ create mode 100644 sound/soc/atmel/atmel-classd.c
+ create mode 100644 sound/soc/atmel/atmel-classd.h
 
-> >  3 files changed, 123 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/gpio/qcom,smsm.txt
-> >
-> > diff --git a/Documentation/devicetree/bindings/gpio/qcom,smsm.txt b/Documentation/devicetree/bindings/gpio/qcom,smsm.txt
-> > new file mode 100644
-> > index 000000000000..06201ba76594
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/gpio/qcom,smsm.txt
-> > @@ -0,0 +1,114 @@
-> > +Qualcomm Shared Memory State Machine
-> > +
-> > +The Shared Memory State Machine facilitates broadcasting of single bit state
-> > +information between the processors in a Qualcomm SoC. Each processor is
-> > +assigned 32 bits of state that can be modified. A processor can through a
-> > +matrix of bitmaps signal subscription of notifications upon changes to a
-> > +certain bit owned by a certain remote processor.
-> 
-> Are all the bits s/w driven, but somehow fixed in their functional definition?
-> 
-
-There's a wide range of systems implementing this, but I think it's all
-software. The definition of the individual bits used to be defined by
-one large enum, but it looks like Qualcomm ran out of bits and started
-to re-use them.
-
-But the functions are always well defined for a given platform.
-
-> > +This document defines the binding for a driver that implements and exposes this
-> > +a GPIO controller and a set of interrupt controllers.
-> 
-> I imagine Linus will have thoughts about that.
-> 
-
-Looking forward to hearing his comments :)
-
-I have not been able to find any other suitable framework to expose this
-functionality with and I am hoping to not be forced to create a new one
-as this one fits the purpose well.
-
-> > +
-> > +- compatible:
-> > +       Usage: required
-> > +       Value type: <string>
-> > +       Definition: must be one of:
-> > +                   "qcom,smsm"
-> 
-> There are not versions of the h/w?
-> 
-
-There are basically 2 versions; the original version comprised the
-application cpu and the modem cpu, sometime around 2008-2009 this was
-replaced with something called "N-way SMSM" - i.e. this implementation.
-The only change since then is in the number of entries and number of
-hosts - which we can determine in runtime if it's not compatible with
-the original sizes.
-
-
-So I have not been able to find any reasons to be more specific.
-
-
-Thanks for taking a look.
-
-Regards,
-Bjorn
+-- 
+1.7.9.5
