@@ -1,101 +1,109 @@
-From: Marc =?UTF-8?B?TWFyw60=?= <markmb-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH v2] QEMU fw_cfg DMA interface documentation
-Date: Wed, 2 Sep 2015 10:33:11 +0200
-Message-ID: <20150902103311.5335d469@markmb_rh>
-References: <1441012133-8154-1-git-send-email-markmb@redhat.com>
-	<1441012303-8261-1-git-send-email-markmb@redhat.com>
-	<CAJSP0QXgiMo0ahzRQ=2iMXVmiO+R27Re17c966LX1T_Q=Rdgow@mail.gmail.com>
+From: Thierry Reding <treding@nvidia.com>
+Subject: Re: [PATCH v4 09/16] drm: rockchip: add bpc and color mode setting
+Date: Wed, 2 Sep 2015 10:34:46 +0200
+Message-ID: <20150902083445.GA24654@ulmo.nvidia.com>
+References: <1441086371-24838-1-git-send-email-ykk@rock-chips.com>
+ <1441087308-25455-1-git-send-email-ykk@rock-chips.com>
+ <120097760.HO2inCimVA@phil>
+ <55E659AC.9000402@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAJSP0QXgiMo0ahzRQ=2iMXVmiO+R27Re17c966LX1T_Q=Rdgow-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stefan Hajnoczi <stefanha-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Drew <drjones-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Kevin O'Connor <kevin-BG7uPxbsK//k1uMJSBkQmQ@public.gmane.org>, Gerd Hoffmann <kraxel-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Laszlo <lersek-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Rob Herring <rob.herring-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Alexander Graf <agraf-l3A5Bk7waGM@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="d6Gm4EdcadzBjdND"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <55E659AC.9000402@rock-chips.com>
+Content-Disposition: inline
+Sender: linux-kernel-owner@vger.kernel.org
+To: Yakir Yang <ykk@rock-chips.com>
+Cc: Heiko Stuebner <heiko@sntech.de>, Jingoo Han <jingoohan1@gmail.com>, Inki Dae <inki.dae@samsung.com>, joe@perches.com, Kukjin Kim <kgene@kernel.org>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, Mark Yao <mark.yao@rock-chips.com>, Russell King <rmk+kernel@arm.linux.org.uk>, djkurtz@chromium.com, dianders@chromium.com, seanpaul@chromium.com, ajaynumb@gmail.com, Andrzej Hajda <a.hajda@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, David Airlie <airlied@linux.ie>, Gustavo Padovan <gustavo.padovan@collabora.co.uk>, Andy Yan <andy.yan@rock-chips.com>, Kumar Gala <galak@codeaurora.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Kishon Vijay Abraham I <kishon@ti.com>, architt@codeaurora.org, robherring2@gmail.com, dri-devel@lists.freedesktop.org, devicetree@vger.kern
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 2 Sep 2015 09:20:12 +0100
-Stefan Hajnoczi <stefanha-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+--d6Gm4EdcadzBjdND
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> On Mon, Aug 31, 2015 at 10:11 AM, Marc Mar=C3=AD <markmb-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org> =
-wrote:
-> > Add fw_cfg DMA interface specfication in the fw_cfg documentation.
-> >
-> > Signed-off-by: Marc Mar=C3=AD <markmb-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-> > ---
-> >  Documentation/devicetree/bindings/arm/fw-cfg.txt | 51
-> > +++++++++++++++++++++++- 1 file changed, 50 insertions(+), 1
-> > deletion(-)
-> >
-> > diff --git a/Documentation/devicetree/bindings/arm/fw-cfg.txt
-> > b/Documentation/devicetree/bindings/arm/fw-cfg.txt index
-> > 953fb64..766ddbe 100644 ---
-> > a/Documentation/devicetree/bindings/arm/fw-cfg.txt +++
-> > b/Documentation/devicetree/bindings/arm/fw-cfg.txt @@ -45,6 +45,53
-> > @@ blob to be read from the data register has size 4, and it is to
-> > be interpreted as a uint32_t value in little endian byte order. The
-> > current value (corresponding to the above outer protocol) is zero.
-> >
-> > +If bit 1 of the feature bitmap is set, the DMA interface is
-> > present. This +can be used through the 64-bit wide address register=
-=2E
-> > +
-> > +The address register is in big-endian format. The value for the
-> > register is 0 +at startup and after an operation. A write to the
-> > lower half triggers an +operation. This means, that operations with
-> > 32-bit addresses can be triggered +with just one write, whereas
-> > operations with 64-bit addresses can be triggered +with one 64-bit
-> > write or two 32-bit writes, starting with the higher part. +
-> > +In this register, a physical RAM address to a FWCfgDmaAccess
-> > structure should +be written. This is the format of the
-> > FWCfgDmaAccess structure: +
-> > +typedef struct FWCfgDmaAccess {
-> > +    uint32_t control;
-> > +    uint32_t length;
-> > +    uint64_t address;
-> > +} FWCfgDmaAccess;
+On Wed, Sep 02, 2015 at 10:06:36AM +0800, Yakir Yang wrote:
+> =E5=9C=A8 09/02/2015 05:00 AM, Heiko Stuebner =E5=86=99=E9=81=93:
+> >Am Dienstag, 1. September 2015, 14:01:48 schrieb Yakir Yang:
+[...]
+> >>diff --git a/drivers/gpu/drm/rockchip/rockchip_drm_vop.c
+> >>b/drivers/gpu/drm/rockchip/rockchip_drm_vop.c index 34b78e7..5d7f9b6 10=
+0644
+> >>--- a/drivers/gpu/drm/rockchip/rockchip_drm_vop.c
+> >>+++ b/drivers/gpu/drm/rockchip/rockchip_drm_vop.c
+> >>@@ -811,14 +811,41 @@ static const struct drm_plane_funcs vop_plane_fun=
+cs =3D
+> >>{
+> >>
+> >>  int rockchip_drm_crtc_mode_config(struct drm_crtc *crtc,
+> >>  				  int connector_type,
+> >>-				  int out_mode)
+> >>+				  int bpc, int color)
+> >>  {
+> >>  	struct vop *vop =3D to_vop(crtc);
+> >>-
+> >>  	vop->connector_type =3D connector_type;
+> >>  	vop->connector_out_mode =3D out_mode;
+> >this line should probably go away, as the source var "out_mode" does not=
+ exist
+> >in the function params any more, making the compilation break, and is set
+> >below anyway.
 >=20
-> I think including the selector field would be nice to avoid extra
-> register accesses, but I'm not that familiar with fw_cfg so maybe
-> there's a reason not to include that field.
-
-It's just simplicity. If you want to read a few times from the same
-field (like in ACPI tables, read the data size and then the data), you
-need a way to enable and disable the selector and manage the current
-offset for that entry. This is already provided with the "old"
-interface.
-
-Moreover, if, for some reason, both systems are being used
-simultaneously, some way of interacting both selectors and offsets is
-needed.
-
-I think the overhead of writing the selector apart is not that big,
-compared to the trouble of adding a new one.
-
-Thanks
-Marc
-=20
-> > +The fields of the structure are in big endian mode, and the field
-> > at the lowest +address is the "control" field.
-> > +
-> > +The "control" field has the following bits:
-> > + - Bit 0: Error
-> > + - Bit 1: Read
-> > + - Bit 2: Skip
-> > +
-> > +When an operation is triggered, if the "control" field has bit 1
-> > set, a read +operation will be performed. "length" bytes for the
-> > current selector and +offset will be copied into the address
-> > specified by the "address" field.
+> Sorry for the failed, there are must be a problem when I backport those c=
+ode
+> to chrome-3.14 to verify.
 >=20
-> Minor clarification:
-> s/address/physical RAM address/
->=20
-> Reviewed-by: Stefan Hajnoczi <stefanha-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+> Thanks a lot, I would update next version soon.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+*sigh*
+
+I get the feeling that you're going about upstreaming the wrong way. If
+you post patches to upstream mailing lists and you expect people to
+apply those patches, then your target is the upstream kernel. So you
+should be basing all of your work on top of a recent release candidate
+directly from Linus or some recent version of linux-next.
+
+Your current approach is already making people waste time trying to
+build the patches and fail because you've been testing on something
+other than mainline or linux-next.
+
+At the very least your code must compile when applied against a recent
+upstream tree. I would also expect you to make sure the code works at
+runtime, though, contrary to build testing, not everybody will be able
+to verify that you've actually done so. It is ultimately your platform
+maintainer's (i.e. Heiko's) responsibility to ensure that because they
+will get to deal with user complaints if people can't run an upstream
+kernel on the devices.
+
+I realize that the upstream kernel isn't what's going to end up in
+products later on, but that doesn't change the fact that you're
+submitting code for inclusion in the mainline tree. If you need to
+backport code to some ChromeOS tree, then that should be done after
+you've verified that things build and run upstream. Doing so makes life
+a lot easier for your upstream maintainers, and that in turn makes it
+more likely to get your code merged.
+
+Thierry
+
+--d6Gm4EdcadzBjdND
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQIcBAABCAAGBQJV5rSiAAoJEN0jrNd/PrOh6MAP/iyH9u6icnoveJighTWuyBZU
+hZKI/TpTPFLN1tPJnUdbpdtCfx0K6Dq22hnyB6XNWMPKaI0nTdUS/MZh8QicxNVa
+C3jk153jouiiMq8BbsbibVuXRnYCe6mpLZ5rPRer93TURgduu7lclOHfvLj5+vRg
+PMb5vRcG0JTANDeE9GBgaSH73DqFzH9Lhb+dj+fQlcyZvOJrq2i5ZkRVR36bLRzm
+pPxWYN7sVsSmN4GDlqZreXBVE3GEPkpnXq98O9OE5z/Ih3c7oO+CBBlVdv+APxD+
+Rj7Ae0YShdJrnFw0W48/nUwMBpFg4otnuXMRm/2DX2KVPjsTPYDBbPuodwFIIaci
+ocwmdAS5JYBg4SFt5lIFF3cAC51Y5xvqgMAeorhFHcqCHU4gveJqzCno4I54zpIk
+YdnDGomi4qXoa6AE/9BnuJgzVuIXBEm2B2jIJyAj0mB5doPc2sy3+23fEFCbL/4E
+hJdVcMZAid+Sm4l5wULW2prYu9EH6gaYiX8/x5j6nEO5XKwV8URcKVouikW7D+BG
+n73qVvpveOcnBMZMmr0DRMQORVlOWTGssXwzdEkEqGc7GViFTfF3ZWBzkLg2ys+U
+I0/lMYn7cMDZnrlVl/a+ck7SqELkKP0Th6QK15tCkpGd/skH1V0DrV+XmN2ftlPn
+w7elaisXMdZXkpk2kYL9
+=4CKn
+-----END PGP SIGNATURE-----
+
+--d6Gm4EdcadzBjdND--
