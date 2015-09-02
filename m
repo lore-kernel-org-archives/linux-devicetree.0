@@ -1,51 +1,91 @@
-From: Douglas Anderson <dianders@chromium.org>
-Subject: [PATCH] ARM: dts: Add the hdmi-ddc pinctrl settings for rk3288
-Date: Wed,  2 Sep 2015 14:54:22 -0700
-Message-ID: <1441230862-17376-1-git-send-email-dianders@chromium.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Heiko Stuebner <heiko@sntech.de>
-Cc: linux-rockchip@lists.infradead.org, ykk@rock-chips.com, mark.yao@rock-chips.com, briannorris@chromium.org, amstan@chromium.org, Douglas Anderson <dianders@chromium.org>, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+From: Alexandru M Stan <amstan-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Subject: [PATCH] ARM: dts: rk3288: pull up cts lines
+Date: Wed,  2 Sep 2015 15:20:06 -0700
+Message-ID: <1441232406-32628-1-git-send-email-amstan@chromium.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Cc: Neil Hendin <nhending-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Douglas Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Jeffy Chen <jeffy.chen-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Alexandru M Stan <amstan-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The pins for i2c5 can either be configured as "I2C5" which means that
-they're controlled by the normal RK3288 I2C controller or as "EDP / HDMI
-I2C".  It's unclear why EDP is referenced here since apparently setting
-the mux to this position enables I2C communication using the dw_hdmi
-block with a patch like <https://patchwork.kernel.org/patch/7098101/>.
+The flow control lines from a user accessible UART are optional,
+the user might not have anything connected to those pins.
+In order to prevent random interrupts happening and noise affecting
+that pin it should be pulled up.
 
-There appear to be some reasons why using the builtin I2C controller in
-dw_hdmi is better than using the normal RK3288 I2C controller, so boards
-based on rk3288 might eventually want to use this pinmux if it's known
-to work.
+Note that the default state for those pins on the rk3288 is pulled up,
+so this patch merely restores them.
 
-Once driver support in dw_hdmi lands, boards would use this by selecting
-this pinctrl for the HDMI block and then _not_ specifying a ddc-i2c-bus
-and _not_ setting the status to "okay" for i2c5 (which uses the same
-pins).
-
-Signed-off-by: Douglas Anderson <dianders@chromium.org>
+Suggested-by: Neil Hendin <nhendin-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Signed-off-by: Alexandru M Stan <amstan-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
 ---
- arch/arm/boot/dts/rk3288.dtsi | 7 +++++++
- 1 file changed, 7 insertions(+)
+ arch/arm/boot/dts/rk3288.dtsi | 16 ++++++++--------
+ 1 file changed, 8 insertions(+), 8 deletions(-)
 
 diff --git a/arch/arm/boot/dts/rk3288.dtsi b/arch/arm/boot/dts/rk3288.dtsi
-index 906e938..055b488 100644
+index 906e938..a059367 100644
 --- a/arch/arm/boot/dts/rk3288.dtsi
 +++ b/arch/arm/boot/dts/rk3288.dtsi
-@@ -923,6 +923,13 @@
- 			#interrupt-cells = <2>;
+@@ -1211,11 +1211,11 @@
+ 			};
+ 
+ 			uart0_cts: uart0-cts {
+-				rockchip,pins = <4 18 RK_FUNC_1 &pcfg_pull_none>;
++				rockchip,pins = <4 18 RK_FUNC_1 &pcfg_pull_up>;
+ 			};
+ 
+ 			uart0_rts: uart0-rts {
+-				rockchip,pins = <4 19 RK_FUNC_1 &pcfg_pull_none>;
++				rockchip,pins = <4 19 RK_FUNC_1 &pcfg_pull_up>;
+ 			};
  		};
  
-+		hdmi {
-+			hdmi_ddc: hdmi-ddc {
-+				rockchip,pins = <7 19 RK_FUNC_2 &pcfg_pull_none>,
-+						<7 20 RK_FUNC_2 &pcfg_pull_none>;
-+			};
-+		};
-+
- 		pcfg_pull_up: pcfg-pull-up {
- 			bias-pull-up;
+@@ -1226,11 +1226,11 @@
+ 			};
+ 
+ 			uart1_cts: uart1-cts {
+-				rockchip,pins = <5 10 RK_FUNC_1 &pcfg_pull_none>;
++				rockchip,pins = <5 10 RK_FUNC_1 &pcfg_pull_up>;
+ 			};
+ 
+ 			uart1_rts: uart1-rts {
+-				rockchip,pins = <5 11 RK_FUNC_1 &pcfg_pull_none>;
++				rockchip,pins = <5 11 RK_FUNC_1 &pcfg_pull_up>;
+ 			};
  		};
+ 
+@@ -1249,11 +1249,11 @@
+ 			};
+ 
+ 			uart3_cts: uart3-cts {
+-				rockchip,pins = <7 9 RK_FUNC_1 &pcfg_pull_none>;
++				rockchip,pins = <7 9 RK_FUNC_1 &pcfg_pull_up>;
+ 			};
+ 
+ 			uart3_rts: uart3-rts {
+-				rockchip,pins = <7 10 RK_FUNC_1 &pcfg_pull_none>;
++				rockchip,pins = <7 10 RK_FUNC_1 &pcfg_pull_up>;
+ 			};
+ 		};
+ 
+@@ -1264,11 +1264,11 @@
+ 			};
+ 
+ 			uart4_cts: uart4-cts {
+-				rockchip,pins = <5 14 3 &pcfg_pull_none>;
++				rockchip,pins = <5 14 3 &pcfg_pull_up>;
+ 			};
+ 
+ 			uart4_rts: uart4-rts {
+-				rockchip,pins = <5 15 3 &pcfg_pull_none>;
++				rockchip,pins = <5 15 3 &pcfg_pull_up>;
+ 			};
+ 		};
+ 
 -- 
 2.5.0.457.gab17608
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
