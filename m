@@ -1,139 +1,216 @@
-From: santosh shilimkar <santosh.shilimkar@oracle.com>
-Subject: Re: [PATCH] ARM: dts: keystone: use one to one address translations
- under netcp
-Date: Wed, 2 Sep 2015 10:24:36 -0700
-Message-ID: <55E730D4.6040102@oracle.com>
-References: <1441139324-29296-1-git-send-email-w-kwok2@ti.com>
- <55E61658.9010207@oracle.com>
- <230CBA6E4B6B6B418E8730AC28E6FC7E04221776@DFLE11.ent.ti.com>
- <55E71AB3.7070406@oracle.com> <55E7255A.8060402@ti.com>
+From: Peter Griffin <peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 3/7] dmaengine: st_fdma: Add STMicroelectronics FDMA
+ engine driver support
+Date: Wed, 2 Sep 2015 18:42:20 +0100
+Message-ID: <20150902174220.GC15477@griffinp-ThinkPad-X1-Carbon-2nd>
+References: <1436371888-27863-1-git-send-email-peter.griffin@linaro.org>
+ <1436371888-27863-4-git-send-email-peter.griffin@linaro.org>
+ <20150819154007.GB13546@localhost>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <55E7255A.8060402@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Murali Karicheri <m-karicheri2@ti.com>, "Kwok, WingMan" <w-kwok2@ti.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "galak@codeaurora.org" <galak@codeaurora.org>, "linux@arm.linux.org.uk" <linux@arm.linux.org.uk>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "ssantosh@kernel.org" <ssantosh@kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20150819154007.GB13546@localhost>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, srinivas.kandagatla-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, maxime.coquelin-qxv4g6HH51o@public.gmane.org, patrice.chotard-qxv4g6HH51o@public.gmane.org, dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ludovic.barre-qxv4g6HH51o@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 9/2/2015 9:35 AM, Murali Karicheri wrote:
-> Santosh,
->
-> On 09/02/2015 11:50 AM, santosh shilimkar wrote:
->> On 9/2/2015 8:31 AM, Kwok, WingMan wrote:
->>>
->>>
->>>> -----Original Message-----
->>>> From: santosh.shilimkar@oracle.com
->>>> [mailto:santosh.shilimkar@oracle.com]
->>>> Sent: Tuesday, September 01, 2015 5:19 PM
->>>> To: Kwok, WingMan; robh+dt@kernel.org; pawel.moll@arm.com;
->>>> mark.rutland@arm.com; ijc+devicetree@hellion.org.uk;
->>>> galak@codeaurora.org;
->>>> linux@arm.linux.org.uk; devicetree@vger.kernel.org; linux-arm-
->>>> kernel@lists.infradead.org; linux-kernel@vger.kernel.org;
->>>> ssantosh@kernel.org
->>>> Cc: Karicheri, Muralidharan
->>>> Subject: Re: [PATCH] ARM: dts: keystone: use one to one address
->>>> translations
->>>> under netcp
->>>>
->>>> On 9/1/15 1:28 PM, WingMan Kwok wrote:
->>>>> Network subsystem NetCP in Keystone-2 devices includes some HW blocks
->>>>> that are memory mapped to ranges outside that of the NetCP itself.
->>>>> Thus address space of a child node of the NetCP node needs to be
->>>>> mapped 1:1 onto the parent address space.  Hence empty ranges
->>>>> should be used under the NetCP node.
->>>>>
->>>>> Signed-off-by: WingMan Kwok <w-kwok2@ti.com>
->>>>> ---
->>>>>    arch/arm/boot/dts/k2e-netcp.dtsi  |    8 +++-----
->>>>>    arch/arm/boot/dts/k2hk-netcp.dtsi |   14 ++++++--------
->>>>>    arch/arm/boot/dts/k2l-netcp.dtsi  |    8 +++-----
->>>>>    3 files changed, 12 insertions(+), 18 deletions(-)
->>>>>
->>>>> diff --git a/arch/arm/boot/dts/k2e-netcp.dtsi b/arch/arm/boot/dts/k2e-
->>>> netcp.dtsi
->>>>> index b13b3c9..e103ed9 100644
->>>>> --- a/arch/arm/boot/dts/k2e-netcp.dtsi
->>>>> +++ b/arch/arm/boot/dts/k2e-netcp.dtsi
->>>>> @@ -111,9 +111,7 @@ netcp: netcp@24000000 {
->>>>>        compatible = "ti,netcp-1.0";
->>>>>        #address-cells = <1>;
->>>>>        #size-cells = <1>;
->>>>> -
->>>>> -    /* NetCP address range */
->>>>> -    ranges = <0 0x24000000 0x1000000>;
->>>>> +    ranges;
->>>>>
->>>> What blocks are we talking here. We need to increase the
->>>> range if the current range isn't covering entire NETCP
->>>> address space. Removing range isn't a solution.
->>>>
->>>
->>> The Serdes.  It is a HW block inside the NetCP but its address
->>> space starts from 0x0232a000.  We can change the base in the
->>> ranges property to include the serdes.  But then offsets of
->>> other HW blocks that are within the NetCP address range will be
->>> relative to this new base and are not as documented in the HW
->>> user guides.
->>>
->> I suspected the same. I know back then we started with SERDES code
->> with NETCP but as you already know, its a separate block which
->> is needed for NIC card to work. Its more of phy and hence its
->> having different address space is not surprising.
->
-> Using Phy interface is not acceptable to the subsystem maintainer based
-> on the communication I had on this. Also the Phy here is tighly coupled
-> with the hardware block it is working with. So this model is not right
-> for SerDes driver as it require additional enhancements as described
-> below if needs to be used.
->
-Thanks for update on that.
+Hi Vinod,
 
-> The serdes initialization procedure requires checking the status in the
-> hardware block (PCIe, 1G or 10G) and then taking corrective action. This
-> means a Phy driver would require mapping of related hw address space
-> (PCIe, 1G and 10G) as well which is already mapped by the hardware
-> driver(PCIe, 1G and 10G). One solution is to treat this as a libray
-> function that can be called from the respective hardware device driver.
->   A device node of h/w device (PCIe or 1G) in such as looks like
->
-Or SerDes driver can embed the status reg address space.
-This is read only access so should be fine.
+Thanks for reviewing.
 
-> pcie {
->
->      serdes@someaddress {
->          reg = <address of serdes>;
->      }
-> }
->
-> hw driver will call ks2_serdes_init(node, hw_base_address) to initialize
-> the serdes. Other APIs can be added to enable/disable lane or shutdown
-> etc. The libary will be added to drivers/soc/ti/ and used by various
-> device drivers to initialize and use the phy. As the serdes is slightly
-> integrated with the hardware block, IMO, this is a better approach than
-> using the phy model. The API definitions will be added to
-> include/linux/soc/ti/ folder.
->
-Serdes Driver with its status register address space might solve this
-sharing problem. Library might work but we should try to have driver
-considering there is a physical device. I don't have strong opinion
-on drivers vs library.
+On Wed, 19 Aug 2015, Vinod Koul wrote:
 
+> On Wed, Jul 08, 2015 at 05:11:24PM +0100, Peter Griffin wrote:
+> > +static int
+> > +st_fdma_elf_sanity_check(struct st_fdma_dev *fdev, const struct firmware *fw)
+> > +{
+> > +	const char *fw_name = fdev->pdata->fw_name;
+> > +	struct elf32_hdr *ehdr;
+> > +	char class;
+> > +
+> > +	if (!fw) {
+> > +		dev_err(fdev->dev, "failed to load %s\n", fw_name);
+> > +		return -EINVAL;
+> > +	}
+> > +
+> > +	if (fw->size < sizeof(struct elf32_hdr)) {
+> sizeof(*ehdr) ?
 
-> The SerDes will use the firmware interface to download and configure the
-> hardware block to use with PCIe/1G/10G/SRIO. I queried the linux forum
-> on this and the response was that firmware interface can be used for
-> this. The patch will be using the firmware interface instead of
-> embedding magic values in the serdes driver.
->
-Firmware interface usage seems to be correct way.
-Thanks for giving the details. It helped me to get better picture.
+Ok fixed in v2.
 
-Regards,
-Santosh
+> 
+> > +		dev_err(fdev->dev, "Image is too small\n");
+> > +		return -EINVAL;
+> > +	}
+> > +
+> > +	ehdr = (struct elf32_hdr *)fw->data;
+> > +
+> > +	/* We only support ELF32 at this point */
+> > +	class = ehdr->e_ident[EI_CLASS];
+> > +	if (class != ELFCLASS32) {
+> > +		dev_err(fdev->dev, "Unsupported class: %d\n", class);
+> > +		return -EINVAL;
+> > +	}
+> > +
+> > +	if (ehdr->e_ident[EI_DATA] != ELFDATA2LSB) {
+> > +		dev_err(fdev->dev, "Unsupported firmware endianness\n");
+> would be worth printing the value for debug
 
-Regards,
-Santosh
+Fixed in v2
+
+> 
+> > +		return -EINVAL;
+> > +	}
+> > +
+> > +	if (fw->size < ehdr->e_shoff + sizeof(struct elf32_shdr)) {
+> > +		dev_err(fdev->dev, "Image is too small\n");
+> Again printing size helps when you get a log trace and have no idea why size
+> was small. Similar one other places
+
+Fixed in v2
+
+> 
+> 
+> > +		dst = st_fdma_seg_to_mem(fdev, da, memsz);
+> > +		if (!dst) {
+> > +			dev_err(dev, "bad phdr da 0x%x mem 0x%x\n", da, memsz);
+> > +			break;
+> > +		}
+> > +
+> > +		if (phdr->p_filesz)
+> > +			memcpy(dst, elf_data + phdr->p_offset, filesz);
+> > +
+> > +		if (memsz > filesz)
+> > +			memset(dst + filesz, 0, memsz - filesz);
+> > +
+> > +		mem_loaded++;
+> > +	}
+> > +
+> > +	return (mem_loaded != fdev->drvdata->num_mem) ? -EINVAL : 0;
+> so you are not expecting any segment with PT_LOAD otherwise this check will
+> fail as num_mem is assigned from e_phnum.
+
+That is correct.
+
+> Also perhaps EIO will be better return?
+
+Updated to -EIO in v2.
+
+> 
+> > +}
+> > +
+> > +static void st_fdma_enable(struct st_fdma_dev *fdev)
+> > +{
+> > +	unsigned long hw_id, hw_ver, fw_rev;
+> > +	u32 val;
+> > +
+> > +	/* disable CPU pipeline clock & reset cpu pipeline */
+> > +	val = FDMA_CLK_GATE_DIS | FDMA_CLK_GATE_RESET;
+> > +	fdma_write(fdev, val, CLK_GATE);
+> 
+> empty line here
+
+Removed in v2.
+
+> 
+> > +	/* disable SLIM core STBus sync */
+> > +	fdma_write(fdev, FDMA_STBUS_SYNC_DIS, STBUS_SYNC);
+> > +	/* enable cpu pipeline clock */
+> > +	fdma_write(fdev, !FDMA_CLK_GATE_DIS, CLK_GATE);
+> > +
+> > +	/* clear int & cmd mailbox */
+> > +	fdma_write(fdev, ~0UL, INT_CLR);
+> > +	fdma_write(fdev, ~0UL, CMD_CLR);
+> 
+> here too
+
+Removed in v2.
+> 
+> > +static int st_fdma_get_fw(struct st_fdma_dev *fdev)
+> > +{
+> > +	int ret;
+> > +
+> > +	init_completion(&fdev->fw_ack);
+> > +	atomic_set(&fdev->fw_loaded, 0);
+> > +
+> > +	ret = request_firmware_nowait(THIS_MODULE, FW_ACTION_HOTPLUG,
+> > +				      fdev->pdata->fw_name, fdev->dev,
+> > +				      GFP_KERNEL, fdev, st_fdma_fw_cb);
+> 
+> Isn't doing this in device probe too stringent and holding up load...
+
+No I don't think so, as we are using the _nowait variant which is
+asynchronous and sleeps for the smallest period possible so as not
+to increase boot time of built-in code.
+
+We could use GFP_ATOMIC which means request_firmware_nowait can't sleep
+at all. Although no other drivers which use request_firmware_nowait
+in their probe functions do that which I can see.
+
+> 
+> > +	fdesc = st_fdma_alloc_desc(fchan, sg_len);
+> > +	if (!fdesc) {
+> > +		dev_err(fchan->fdev->dev, "no memory for desc\n");
+> > +		return NULL;
+> > +	}
+> > +
+> > +	fdesc->iscyclic = false;
+> > +
+> > +	for_each_sg(sgl, sg, sg_len, i) {
+> > +		hw_node = fdesc->node[i].desc;
+> > +
+> > +		hw_node->next = fdesc->node[(i + 1) % sg_len].pdesc;
+> > +		hw_node->control = NODE_CTRL_REQ_MAP_DREQ(fchan->dreq_line);
+> > +
+> > +		if (direction == DMA_MEM_TO_DEV) {
+> > +			hw_node->control |= NODE_CTRL_SRC_INCR;
+> > +			hw_node->control |= NODE_CTRL_DST_STATIC;
+> > +			hw_node->saddr = sg_dma_address(sg);
+> > +			hw_node->daddr = fchan->cfg.dev_addr;
+> > +		} else {
+> > +			hw_node->control |= NODE_CTRL_SRC_STATIC;
+> > +			hw_node->control |= NODE_CTRL_DST_INCR;
+> > +			hw_node->saddr = fchan->cfg.dev_addr;
+> > +			hw_node->daddr = sg_dma_address(sg);
+> > +		}
+> > +
+> > +		hw_node->nbytes = sg_dma_len(sg);
+> > +		hw_node->generic.length = sg_dma_len(sg);
+> > +		hw_node->generic.sstride = 0;
+> > +		hw_node->generic.dstride = 0;
+> 
+> This looks quite similar to previous one, I think some bits can be reused
+
+Will abstract out common parts in v2.
+
+> 
+> > +static int st_fdma_slave_config(struct dma_chan *chan,
+> > +				struct dma_slave_config *slave_cfg)
+> > +{
+> > +	u32 maxburst = 0, addr = 0;
+> > +	enum dma_slave_buswidth width;
+> > +	struct st_fdma_chan *fchan = to_st_fdma_chan(chan);
+> > +	int ch_id = fchan->vchan.chan.chan_id;
+> > +	struct st_fdma_dev *fdev = fchan->fdev;
+> > +
+> > +	if (slave_cfg->direction == DMA_DEV_TO_MEM) {
+> 
+> This is depreciated, you can't use direction here. Please save the fields and
+> then use them in prep_ call
+
+Ok, will save the fields and use in prep_ calls in v2.
+
+> 
+> Also this is quite big patch, consider splitting it up for faster review
+
+Will split into smaller patches in v2.
+
+regards,
+
+Peter.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
