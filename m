@@ -1,62 +1,34 @@
-From: "Kwok, WingMan" <w-kwok2-l0cyMroinI0@public.gmane.org>
-Subject: RE: [PATCH] ARM: dts: keystone: use one to one address translations
- under netcp
-Date: Wed, 2 Sep 2015 15:31:18 +0000
-Message-ID: <230CBA6E4B6B6B418E8730AC28E6FC7E04221776@DFLE11.ent.ti.com>
-References: <1441139324-29296-1-git-send-email-w-kwok2@ti.com>
- <55E61658.9010207@oracle.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <55E61658.9010207-QHcLZuEGTsvQT0dZR+AlfA@public.gmane.org>
-Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: "santosh.shilimkar-QHcLZuEGTsvQT0dZR+AlfA@public.gmane.org" <santosh.shilimkar-QHcLZuEGTsvQT0dZR+AlfA@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "pawel.moll-5wv7dgnIgG8@public.gmane.org" <pawel.moll-5wv7dgnIgG8@public.gmane.org>, "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org" <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, "galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org" <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org" <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "ssantosh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <ssantosh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: "Karicheri, Muralidharan" <m-karicheri2-l0cyMroinI0@public.gmane.org>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: [PATCH v3 1/6] ARM: STi: Add DT defines for co-processor reset lines
+Date: Wed,  2 Sep 2015 16:38:04 +0100
+Message-ID: <1441208289-17330-2-git-send-email-lee.jones@linaro.org>
+References: <1441208289-17330-1-git-send-email-lee.jones@linaro.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1441208289-17330-1-git-send-email-lee.jones@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc: kernel@stlinux.com, ohad@wizery.com, devicetree@vger.kernel.org, Nathan_Lynch@mentor.com, f.fainelli@gmail.com, Lee Jones <lee.jones@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogc2FudG9zaC5zaGlsaW1r
-YXJAb3JhY2xlLmNvbSBbbWFpbHRvOnNhbnRvc2guc2hpbGlta2FyQG9yYWNsZS5jb21dDQo+IFNl
-bnQ6IFR1ZXNkYXksIFNlcHRlbWJlciAwMSwgMjAxNSA1OjE5IFBNDQo+IFRvOiBLd29rLCBXaW5n
-TWFuOyByb2JoK2R0QGtlcm5lbC5vcmc7IHBhd2VsLm1vbGxAYXJtLmNvbTsNCj4gbWFyay5ydXRs
-YW5kQGFybS5jb207IGlqYytkZXZpY2V0cmVlQGhlbGxpb24ub3JnLnVrOyBnYWxha0Bjb2RlYXVy
-b3JhLm9yZzsNCj4gbGludXhAYXJtLmxpbnV4Lm9yZy51azsgZGV2aWNldHJlZUB2Z2VyLmtlcm5l
-bC5vcmc7IGxpbnV4LWFybS0NCj4ga2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmc7IGxpbnV4LWtl
-cm5lbEB2Z2VyLmtlcm5lbC5vcmc7IHNzYW50b3NoQGtlcm5lbC5vcmcNCj4gQ2M6IEthcmljaGVy
-aSwgTXVyYWxpZGhhcmFuDQo+IFN1YmplY3Q6IFJlOiBbUEFUQ0hdIEFSTTogZHRzOiBrZXlzdG9u
-ZTogdXNlIG9uZSB0byBvbmUgYWRkcmVzcyB0cmFuc2xhdGlvbnMNCj4gdW5kZXIgbmV0Y3ANCj4g
-DQo+IE9uIDkvMS8xNSAxOjI4IFBNLCBXaW5nTWFuIEt3b2sgd3JvdGU6DQo+ID4gTmV0d29yayBz
-dWJzeXN0ZW0gTmV0Q1AgaW4gS2V5c3RvbmUtMiBkZXZpY2VzIGluY2x1ZGVzIHNvbWUgSFcgYmxv
-Y2tzDQo+ID4gdGhhdCBhcmUgbWVtb3J5IG1hcHBlZCB0byByYW5nZXMgb3V0c2lkZSB0aGF0IG9m
-IHRoZSBOZXRDUCBpdHNlbGYuDQo+ID4gVGh1cyBhZGRyZXNzIHNwYWNlIG9mIGEgY2hpbGQgbm9k
-ZSBvZiB0aGUgTmV0Q1Agbm9kZSBuZWVkcyB0byBiZQ0KPiA+IG1hcHBlZCAxOjEgb250byB0aGUg
-cGFyZW50IGFkZHJlc3Mgc3BhY2UuICBIZW5jZSBlbXB0eSByYW5nZXMNCj4gPiBzaG91bGQgYmUg
-dXNlZCB1bmRlciB0aGUgTmV0Q1Agbm9kZS4NCj4gPg0KPiA+IFNpZ25lZC1vZmYtYnk6IFdpbmdN
-YW4gS3dvayA8dy1rd29rMkB0aS5jb20+DQo+ID4gLS0tDQo+ID4gICBhcmNoL2FybS9ib290L2R0
-cy9rMmUtbmV0Y3AuZHRzaSAgfCAgICA4ICsrKy0tLS0tDQo+ID4gICBhcmNoL2FybS9ib290L2R0
-cy9rMmhrLW5ldGNwLmR0c2kgfCAgIDE0ICsrKysrKy0tLS0tLS0tDQo+ID4gICBhcmNoL2FybS9i
-b290L2R0cy9rMmwtbmV0Y3AuZHRzaSAgfCAgICA4ICsrKy0tLS0tDQo+ID4gICAzIGZpbGVzIGNo
-YW5nZWQsIDEyIGluc2VydGlvbnMoKyksIDE4IGRlbGV0aW9ucygtKQ0KPiA+DQo+ID4gZGlmZiAt
-LWdpdCBhL2FyY2gvYXJtL2Jvb3QvZHRzL2syZS1uZXRjcC5kdHNpIGIvYXJjaC9hcm0vYm9vdC9k
-dHMvazJlLQ0KPiBuZXRjcC5kdHNpDQo+ID4gaW5kZXggYjEzYjNjOS4uZTEwM2VkOSAxMDA2NDQN
-Cj4gPiAtLS0gYS9hcmNoL2FybS9ib290L2R0cy9rMmUtbmV0Y3AuZHRzaQ0KPiA+ICsrKyBiL2Fy
-Y2gvYXJtL2Jvb3QvZHRzL2syZS1uZXRjcC5kdHNpDQo+ID4gQEAgLTExMSw5ICsxMTEsNyBAQCBu
-ZXRjcDogbmV0Y3BAMjQwMDAwMDAgew0KPiA+ICAgCWNvbXBhdGlibGUgPSAidGksbmV0Y3AtMS4w
-IjsNCj4gPiAgIAkjYWRkcmVzcy1jZWxscyA9IDwxPjsNCj4gPiAgIAkjc2l6ZS1jZWxscyA9IDwx
-PjsNCj4gPiAtDQo+ID4gLQkvKiBOZXRDUCBhZGRyZXNzIHJhbmdlICovDQo+ID4gLQlyYW5nZXMg
-PSA8MCAweDI0MDAwMDAwIDB4MTAwMDAwMD47DQo+ID4gKwlyYW5nZXM7DQo+ID4NCj4gV2hhdCBi
-bG9ja3MgYXJlIHdlIHRhbGtpbmcgaGVyZS4gV2UgbmVlZCB0byBpbmNyZWFzZSB0aGUNCj4gcmFu
-Z2UgaWYgdGhlIGN1cnJlbnQgcmFuZ2UgaXNuJ3QgY292ZXJpbmcgZW50aXJlIE5FVENQDQo+IGFk
-ZHJlc3Mgc3BhY2UuIFJlbW92aW5nIHJhbmdlIGlzbid0IGEgc29sdXRpb24uDQo+IA0KDQpUaGUg
-U2VyZGVzLiAgSXQgaXMgYSBIVyBibG9jayBpbnNpZGUgdGhlIE5ldENQIGJ1dCBpdHMgYWRkcmVz
-cw0Kc3BhY2Ugc3RhcnRzIGZyb20gMHgwMjMyYTAwMC4gIFdlIGNhbiBjaGFuZ2UgdGhlIGJhc2Ug
-aW4gdGhlDQpyYW5nZXMgcHJvcGVydHkgdG8gaW5jbHVkZSB0aGUgc2VyZGVzLiAgQnV0IHRoZW4g
-b2Zmc2V0cyBvZg0Kb3RoZXIgSFcgYmxvY2tzIHRoYXQgYXJlIHdpdGhpbiB0aGUgTmV0Q1AgYWRk
-cmVzcyByYW5nZSB3aWxsIGJlDQpyZWxhdGl2ZSB0byB0aGlzIG5ldyBiYXNlIGFuZCBhcmUgbm90
-IGFzIGRvY3VtZW50ZWQgaW4gdGhlIEhXDQp1c2VyIGd1aWRlcy4NCg0KUmVnYXJkcw0KV2luZ01h
-bg0K
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Signed-off-by: Lee Jones <lee.jones@linaro.org>
+---
+ include/dt-bindings/reset-controller/stih407-resets.h | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+diff --git a/include/dt-bindings/reset-controller/stih407-resets.h b/include/dt-bindings/reset-controller/stih407-resets.h
+index 02d4328..4ab3a1c 100644
+--- a/include/dt-bindings/reset-controller/stih407-resets.h
++++ b/include/dt-bindings/reset-controller/stih407-resets.h
+@@ -52,6 +52,10 @@
+ #define STIH407_KEYSCAN_SOFTRESET	26
+ #define STIH407_USB2_PORT0_SOFTRESET	27
+ #define STIH407_USB2_PORT1_SOFTRESET	28
++#define STIH407_ST231_AUD_SOFTRESET	29
++#define STIH407_ST231_DMU_SOFTRESET	30
++#define STIH407_ST231_GP0_SOFTRESET	31
++#define STIH407_ST231_GP1_SOFTRESET	32
+ 
+ /* Picophy reset defines */
+ #define STIH407_PICOPHY0_RESET		0
+-- 
+1.9.1
