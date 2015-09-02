@@ -1,55 +1,47 @@
-From: Yakir Yang <ykk-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Subject: Re: [PATCH v4 10/16] phy: Add driver for rockchip Display Port PHY
-Date: Wed, 02 Sep 2015 09:46:28 +0800
-Message-ID: <55E654F4.4000306@rock-chips.com>
-References: <1441086371-24838-1-git-send-email-ykk@rock-chips.com> <1441087455-25533-1-git-send-email-ykk@rock-chips.com> <5077044.NGUl9gjQon@phil> <3270549.qIHk1CAA0Y@phil>
+From: Leo Yan <leo.yan@linaro.org>
+Subject: Re: [PATCH v3 4/5] clk: Hi6220: add stub clock driver
+Date: Wed, 2 Sep 2015 09:52:35 +0800
+Message-ID: <20150902015235.GA7763@leoy-linaro>
+References: <1438564418-15948-1-git-send-email-leo.yan@linaro.org>
+ <1438564418-15948-5-git-send-email-leo.yan@linaro.org>
+ <CAMAWPa8dNOipiFFv96J5XvP1Qs7ysHBD6_-RpMGqCEdPAKxHAA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
-	format=flowed
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <3270549.qIHk1CAA0Y@phil>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Cc: Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Jingoo Han <jingoohan1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Inki Dae <inki.dae-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, joe-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org, Kukjin Kim <kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Mark Yao <mark.yao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Russell King <rmk+kernel-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, djkurtz-F7+t8E8rja9Wk0Htik3J/w@public.gmane.org, dianders-F7+t8E8rja9Wk0Htik3J/w@public.gmane.org, seanpaul-F7+t8E8rja9Wk0Htik3J/w@public.gmane.org, ajaynumb-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Andrzej Hajda <a.hajda-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Kyungmin Park <kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Gustavo Padovan <gustavo.padovan-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>, Andy Yan <andy.yan-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-clk-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAMAWPa8dNOipiFFv96J5XvP1Qs7ysHBD6_-RpMGqCEdPAKxHAA@mail.gmail.com>
+Sender: linux-clk-owner@vger.kernel.org
+To: Kevin Hilman <khilman@kernel.org>
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Wei Xu <xuwei5@hisilicon.com>, Haojian Zhuang <haojian.zhuang@linaro.org>, Bintian Wang <bintian.wang@huawei.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, lkml <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, linux-clk@vger.kernel.org, Guodong Xu <guodong.xu@linaro.org>, Jian Zhang <zhangjian001@hisilicon.com>, Zhenwei Wang <Zhenwei.wang@hisilicon.com>, Haoju Mo <mohaoju@hisilicon.com>, Dan Zhao <dan.zhao@hisilicon.com>, sunzhaosheng@hisilicon.co
 List-Id: devicetree@vger.kernel.org
 
-Hi Heiko,
+Hi Kevin,
 
-=E5=9C=A8 09/02/2015 04:58 AM, Heiko Stuebner =E5=86=99=E9=81=93:
-> Hi Yakir,
->
-> small nit more below
->
-> Am Dienstag, 1. September 2015, 18:51:16 schrieb Heiko Stuebner:
->> Am Dienstag, 1. September 2015, 14:04:15 schrieb Yakir Yang:
->>> +- clocks: from common clock binding: handle to dp clock.
->>> +	of memory mapped region.
->>> +- clock-names: from common clock binding:
->>> +	Required elements: "sclk_dp" "sclk_dp_24m"
->>> +
->>> +- rockchip,grf: this soc should set GRF regs, so need get grf here=
-=2E
->>> +- #phy-cells : from the generic PHY bindings, must be 0;
->>> +
->>> +Example:
->>> +
->>> +edp_phy: phy@ff770274 {
->> edp_phy: edp-phy {
->>
->>> +	compatilble =3D "rockchip,rk3288-dp-phy";
-> typo: compatible
+On Tue, Sep 01, 2015 at 05:28:03PM -0700, Kevin Hilman wrote:
+> On Sun, Aug 2, 2015 at 6:13 PM, Leo Yan <leo.yan@linaro.org> wrote:
+> > On Hi6220, there have some clocks which can use mailbox channel to send
+> > messages to power controller to change frequency; this includes CPU, GPU
+> > and DDR clocks.
+> >
+> > For dynamic frequency scaling, firstly need write the frequency value to
+> > SRAM region, and then send message to mailbox to trigger power controller
+> > to handle this requirement. This driver will use syscon APIs to pass SRAM
+> > memory region and use common mailbox APIs for channels accessing.
+> >
+> > This init driver will support cpu frequency change firstly.
+> >
+> > Signed-off-by: Leo Yan <leo.yan@linaro.org>
+> 
+> The kernelci.org build/boot bot detected boot failures in
+> linux-next[1], and the failure was bisected down to this patch (landed
+> in linux-next as commit c1628a2c416da947f5afac615d53189250fa49cb.
+> 
+> I verifed that reverting this commit on top of next-20150901 gets the
+> hikey booting again.
 
-Aha, thanks.
+Thanks for reporting. This issue has been confirmed at my side, it's
+caused by the patch have added dependency with MAILBOX, will fix this
+issue and send patch.
 
-- Yakir
->
->
->
-
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Thanks,
+Leo Yan
