@@ -1,69 +1,106 @@
-From: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
-Subject: Re: [PATCH v2] ARM: shmobile: silk: add SDHI1 DT support
-Date: Wed, 2 Sep 2015 11:29:36 +0900
-Message-ID: <20150902022936.GA18115@verge.net.au>
-References: <10037494.4LD4T2QGPX@wasted.cogentembedded.com>
- <2757472.iuyUyRzJ3z@wasted.cogentembedded.com>
- <20150812012652.GH15957@verge.net.au>
- <55D790A5.1050008@cogentembedded.com>
- <55D7A3A1.9020009@cogentembedded.com>
+From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v4 3/4] of: overlay: add per overlay sysfs attributes
+Date: Tue, 1 Sep 2015 21:35:18 -0500
+Message-ID: <CAL_JsqK0oqqj6D-GOj0H32krUtGMg=-dK+c_uzqYt-wD7sY8qw@mail.gmail.com>
+References: <1434137896-13806-1-git-send-email-pantelis.antoniou@konsulko.com> <1434137896-13806-4-git-send-email-pantelis.antoniou@konsulko.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <55D7A3A1.9020009-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
-Cc: linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-api-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1434137896-13806-4-git-send-email-pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
+Sender: linux-api-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
+Cc: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, Matt Porter <mporter-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Koen Kooi <koen-QLwJDigV5abLmq1fohREcCpxlwaOVQ5f@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-api-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-api-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Pantelis Antoniou <panto-wVdstyuyKrO8r51toPun2/C9HSW9iNxf@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Aug 22, 2015 at 01:18:09AM +0300, Sergei Shtylyov wrote:
-> On 08/21/2015 11:57 PM, Sergei Shtylyov wrote:
-> 
-> >>>Define the SILK board dependent part of the SDHI1 (connected to micro-SD slot)
-> >>>device nodes along with the necessary voltage regulators.
-> >>>
-> >>>Based on the original patch by Vladimir Barinov
-> >>><vladimir.barinov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>.
-> >>>
-> >>>Signed-off-by: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
-> >>>
-> >>>---
-> >>>This patch is against 'renesas-devel-20150810-v4.2-rc6' tag of Simon Horman's
-> >>>'renesas.git' repo plus the R8A7794/SILK QSPI patches just re-posted. It needs
-> >>>the R8A7794 GPIO patches in order to compile.
-> >>>
-> >>>Changes in version 2:
-> >>>- removed not working SDHI0 stuff, renamed the patch;
-> >>>- replaced SDHI1's "wp-gpios" property with "disable-wp".
-> >>
-> >>I am wondering if you could explain the motivation for the "disable-wp"
-> >>update
-> >
-> >    Please see the comment in mmc_sd_get_ro().
-> >
-> >>and weather it is appropriate for other r8a779* dts files.
-> >
-> >    In case of micro-SD slots, yes.
-> 
->    The MMC binding document says it should only be specified if the
-> controller has WP detection logic. We, so far, seem to have been replying on
-> the GPIOs despite this logic is present (according to the R-Car gen2 SDHI
-> manuals I have). The driver will first call mmc_gpio_get_ro() and when that
-> fails due to "wp-gpios" not being specified, it proceeds to reading the
-> register but that is forbidden by TMIO_MMC_WRPROTECT_DISABLE flag set for
-> the R-Car gen1/2 chips, so 0 is always returned from tmio_mmc_get_ro().
-> There seems to be no point in going that far (and doing the runtime PM
-> dances) --
-> and MMC_CAP2_NO_WRITE_PROTECT (set when "disable-wp" is specified) prohibits
-> doing that...
+On Fri, Jun 12, 2015 at 2:38 PM, Pantelis Antoniou
+<pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org> wrote:
+> The two default overlay attributes are:
+>
+> * A targets sysfs attribute listing the targets of the installed
+> overlay. The targets list the path on the kernel's device tree
+> where each overlay fragment is applied to
+>
+> * A per overlay can_remove sysfs attribute that reports whether
+> the overlay can be removed or not due to another overlapping overlay.
 
-That sounds reasonable to me.
-Some more questions from my side:
+What will a user do with this information? Can this just be debugfs?
+Don't we already have the targets in the overlay itself? If we are
+going to provide some overlay info, shouldn't we provide all of it
+(i.e. the FDT). For example, what do we do on a kexec?
 
-* What is the status of this patch
-* Can you prepare patches for r8a779* dts files for micro-SD slots?
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Rob
+
+> Signed-off-by: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
+> ---
+>  drivers/of/overlay.c | 53 ++++++++++++++++++++++++++++++++++++++++++++++++++++
+>  1 file changed, 53 insertions(+)
+>
+> diff --git a/drivers/of/overlay.c b/drivers/of/overlay.c
+> index 37ec858..747568f 100644
+> --- a/drivers/of/overlay.c
+> +++ b/drivers/of/overlay.c
+> @@ -373,8 +373,61 @@ static const struct attribute *overlay_global_attrs[] = {
+>         NULL
+>  };
+>
+> +static ssize_t can_remove_show(struct kobject *kobj,
+> +               struct kobj_attribute *attr, char *buf)
+> +{
+> +       struct of_overlay *ov = kobj_to_overlay(kobj);
+> +
+> +       return snprintf(buf, PAGE_SIZE, "%d\n", overlay_removal_is_ok(ov));
+> +}
+> +
+> +static ssize_t targets_show(struct kobject *kobj,
+> +               struct kobj_attribute *attr, char *buf)
+> +{
+> +       struct of_overlay *ov = kobj_to_overlay(kobj);
+> +       struct of_overlay_info *ovinfo;
+> +       char *s, *e;
+> +       ssize_t ret;
+> +       int i, len;
+> +
+> +       s = buf;
+> +       e = buf + PAGE_SIZE;
+> +
+> +       mutex_lock(&of_mutex);
+> +
+> +       /* targets */
+> +       for (i = 0; i < ov->count; i++) {
+> +               ovinfo = &ov->ovinfo_tab[i];
+> +
+> +               len = snprintf(s, e - s, "%s\n",
+> +                               of_node_full_name(ovinfo->target));
+> +               if (len == 0) {
+> +                       ret = -ENOSPC;
+> +                       goto err;
+> +               }
+> +               s += len;
+> +       }
+> +
+> +       /* the buffer is zero terminated */
+> +       ret = s - buf;
+> +err:
+> +       mutex_unlock(&of_mutex);
+> +       return ret;
+> +}
+> +
+> +static struct kobj_attribute can_remove_attr = __ATTR_RO(can_remove);
+> +static struct kobj_attribute targets_attr = __ATTR_RO(targets);
+> +
+> +static struct attribute *overlay_attrs[] = {
+> +       &can_remove_attr.attr,
+> +       &targets_attr.attr,
+> +       NULL
+> +};
+> +
+>  static struct kobj_type of_overlay_ktype = {
+>         .release = of_overlay_release,
+> +       .sysfs_ops = &kobj_sysfs_ops,   /* default kobj sysfs ops */
+> +       .default_attrs = overlay_attrs,
+>  };
+>
+>  static struct kset *ov_kset;
+> --
+> 1.7.12
+>
