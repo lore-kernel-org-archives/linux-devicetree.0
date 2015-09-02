@@ -1,62 +1,253 @@
-From: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Subject: Re: [RFC PATCH 2/5] Documentation: dt-bindings: add example DT
- binding document
-Date: Wed, 2 Sep 2015 10:45:13 +0200
-Message-ID: <55E6B719.6080203@atmel.com>
-References: <1440739433-6799-1-git-send-email-mporter@konsulko.com>
- <1440739433-6799-3-git-send-email-mporter@konsulko.com>
- <CAL_Jsq+FE4MCCfZC5hDhQBmM1gHibY82S9a8PC1GwsnWsPNxkg@mail.gmail.com>
- <CA+bK7J4x2vY-tzUFWjM9KFMtvE+qW6jzmz=ZxWU9L8Mpe8Lduw@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-spec-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CA+bK7J4x2vY-tzUFWjM9KFMtvE+qW6jzmz=ZxWU9L8Mpe8Lduw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-spec-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Tim Bird <tbird20d-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Matt Porter <mporter-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Devicetree List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Devicetree Spec List <devicetree-spec-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Behan Webster <behanw-k/hB3zQhLwledRVtV/plodBPR1lH4CV8@public.gmane.org>
+From: Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Subject: [PATCH v17 0/4] ARM: rk3288: Add PM Domain support
+Date: Wed,  2 Sep 2015 16:59:36 +0800
+Message-ID: <1441184380-13827-1-git-send-email-wxt@rock-chips.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, khilman-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+Cc: ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org, mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Le 01/09/2015 19:35, Tim Bird a =C3=A9crit :
-> On Fri, Aug 28, 2015 at 7:53 AM, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> =
-wrote:
->> On Fri, Aug 28, 2015 at 12:23 AM, Matt Porter <mporter-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>=
- wrote:
-> ...
->>> +example:
->>> +  - dts: |
->>> +      sk11@0 {
->>> +              compatible =3D "skel,sk11";
->>> +              reg =3D <0>;
->>> +              spi-max-frequency =3D <1000000>;
->>> +              spi-cs-high;
->>> +      };
->>
->> At least in this example, we could generate it. Examples are nice, b=
-ut
->> we have dts files full of examples already. I get a fair number of
->> "fix the example" patches, so maybe we should eliminate the simple
->> ones.
->=20
-> I would hesitate to eliminate examples.  I've been saved by them on
-> a few occasions, when the dts files only had one or two instances
-> of a type of binding, somewhat different from each other, and the exa=
-mple helped
-> break the tie.  If there's something wrong with the example, it's a s=
-ign
-> of an out-of-date binding doc, just as much as if the text were wrong=
-=2E
-> It ought to be possible to validate the example versus the binding do=
-c
-> (as Pantelis says), so ultimately we should be able to catch errors h=
-ere
-> as well.
+Thank you all for providing inputs and comments on previous versions of
+this patchset.
+Especially thanks to the (Kevin, Heiko, Dmitry, Doug, ULF, Michael....).
 
-I back Tim's advice.
-Example are so important that I regularly find myself thinking "ah-ha,
-okay that's supposed to work like that" after having read the binding
-documentation.
+Add power domain drivers based on generic power domain for
+Rockchip platform, and support RK3288 SoCs.
 
-Bye,
---=20
-Nicolas Ferre
+Verified on url =
+    https://chromium.googlesource.com/chromiumos/third_party/kernel/+/v3.14
+    localhost / # cat /sys/kernel/debug/pm_genpd/pm_genpd_summary
+    domain                      status         slaves
+    /device                      runtime        status
+    ----------------------------------------------------------------------
+    pd_video                        off
+    /devices/ff9a0800.iommu                     suspended
+    /devices/ff9a0000.video-codec               suspended
+    pd_vio                          on
+    /devices/ff930300.iommu                     suspended
+    /devices/ff940300.iommu                     suspended
+    /devices/ff930000.vop                       suspended
+    /devices/ff940000.vop                       suspended
+    /devices/ff980000.hdmi                      unsupported
+    /devices/rockchip-edp                       unsupported
+    pd_hevc                         off
+    pd_gpu                          off
+    /devices/ffa30000.gpu                       suspended
+
+    The following is the easy example.
+
+    vopb: vop@ff930000 {
+        compatible = "rockchip,rk3288-vop";
+        ...
+        iommus = <&vopb_mmu>;
+        power-domains = <&power RK3288_PD_VIO>;
+        status = "disabled";
+        ...
+    };
+
+    vopb_mmu: iommu@ff930300 {
+        compatible = "rockchip,iommu";
+        ...
+        interrupt-names = "vopb_mmu";
+        power-domains = <&power RK3288_PD_VIO>;
+        #iommu-cells = <0>;
+        status = "disabled";
+        ...
+    };
+
+    vopl: vop@ff940000 {
+        compatible = "rockchip,rk3288-vop";
+        reg = <0xff940000 0x19c>;
+        ...
+        iommus = <&vopl_mmu>;
+        power-domains = <&power RK3288_PD_VIO>;
+        status = "disabled";
+        ...
+    };
+
+    vopl_mmu: iommu@ff940300 {
+        compatible = "rockchip,iommu";
+        ...
+        interrupt-names = "vopl_mmu";
+        power-domains = <&power RK3288_PD_VIO>;
+        #iommu-cells = <0>;
+        status = "disabled";
+    };
+
+    Others, we can verify this driver for the EDP.
+    We can apply the following these patchs.
+
+    6967631 New          [v2,1/8] drm: exynos/dp: fix code style
+    6967741 New          [v2,2/8] drm: exynos/dp: convert to drm bridge mode
+    6967801 New          [v2,3/8] drm: bridge: analogix_dp: split exynos dp driver to bridge dir
+    6967791 New          [v2,4/8] drm: rockchip/dp: add rockchip platform dp driver
+    6968031 New          [v2,5/8] drm: bridge/analogix_dp: add platform device type support
+    6968141 New          [v2,6/8] drm: bridge: analogix_dp: add some rk3288 special registers setting
+    6967941 New          [v2,7/8] drm: bridge: analogix_dp: try force hpd after plug in lookup failed
+    6967971 New          [v2,8/8] drm: bridge/analogix_dp: expand the delay time for hpd detect
+
+    There is a recent addition from Linus Walleij,
+    called simple-mfd [a] that is supposed to get added real early for kernel 4.2
+
+    [a]:
+    https://git.kernel.org/cgit/linux/kernel/git/linusw/linux-integrator.git/commit/?id=fcf294c020ff7ee4e3b1e96159e4dc7a17ad5
+
+    Here is my branch, Tested by chromeos-3.14 and next-kernel.
+
+    f54144e ARM: dts: add the support power-domain node on RK3288 SoCs
+    acf07d3 soc: rockchip: power-domain: Add power domain driver
+    8cc2139 ARM: power-domain: rockchip: add all the domain type on RK3288 SoCs
+    7114c12 dt-bindings: add document of Rockchip power domains
+    ae98207 Merge tag 'pm+acpi-4.3-rc1' of git://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm
+    f1a3c0b Merge tag 'devicetree-for-4.3' of git://git.kernel.org/pub/scm/linux/kernel/git/robh/linux
+    089b669 Merge branch 'for-next' of git://git.kernel.org/pub/scm/linux/kernel/git/jikos/trivial
+    45c680b Merge branch 'for-linus' of git://git.kernel.org/pub/scm/linux/kernel/git/jikos/livepatching
+    851328f Merge branch 'for-linus' of git://git.kernel.org/pub/scm/linux/kernel/git/jikos/hid
+    ......
+
+
+Changes in v17:
+- add the decription in detail for RK3288 SoCs.
+- delete the ugly chart in the commit.
+- (re)defining config for ROCKCHIP.
+- remove clocks of the HDMI ctrl.
+- update the description.
+- add Reviewed-by: Michale.
+
+Changes in v16:
+- remove the pmu node.
+- Add more domain decription.
+- the driver type from tristate to bool.
+- Letter misspelled.
+- As Ulf suggestion, remove #include <linux/clk-provider.h>,
+  use "%pC" as the formatting string for the dev_dbg().
+- As the Ulf suggestion, set the genpd->flags to assign the
+  ->stop|start() callbacks.
+- Manually copy the problem in patch v15.
+- rebase the description.
+
+Changes in v15:
+- change the comment.
+- As the kevin suggestion, put the power-domain driver into driver/soc/vendor.
+- As Heiko suggestion, Patch 1: binding doc, 2: binding-header, 3: driver,
+  4: dts-changes.
+- return -ENXIO --> return -ENODEV.
+- As Tomasz remarked previously the dts should represent the hardware
+  and the power-domains are part of the pmu.
+
+Changes in v14:
+- does not need to set an owner,remove the "THIS_MODULE".
+- Remove essential clocks from rk3288 PD_VIO domain, Some clocks are
+  essential for the system health and should not be turned down.
+  However there is no owner for them so if they listed as belonging to power
+  domain we'll try toggling them up and down during power domain transition.
+  As a result we either fail to suspend or resume the system.
+
+Changes in v13:
+- Remove essential clocks from rk3288 PD_VIO domain Some clocks are essential
+  for the system health and should not be turned down. However there is no owner
+  for them so if they listed as belonging to power domain we'll try toggling them
+  up and down during power domain.
+- Device drivers expect their devices to be powered on before their
+  probing code is invoked. To achieve that we should start with
+  power domains powered on (we may turn them off later once all devices enable
+  runtime powermanagment and go idle).
+- This change switches Rockchip power domain driver to use updated
+  device_attach and device_detach API.
+- set the gpu/core power domain power delay time.
+- fix enumerating PM clocks for devices.
+- fix use after free We can't use clk after we did clk_put(clk).
+
+Changes in v12:
+- fix the title doamin->domain.
+- updated device_attach and device_detach API,otherwise it will
+  compile fail on next kernel.
+
+Changes in v11:
+- fix pm_genpd_init(&pd->genpd, NULL, false).
+
+Changes in v10:
+- this switches over domain infos to use masks instead of recomputing
+  them each time and also gets rid of custom domain translator and
+  uses standard onecell on.
+- fix missing the #include <dt-bindings/power-domain/rk3288.h>.
+- remove the notes.
+
+Changes in v9:
+- add document decription.
+- fix v8 changes as follows:
+- This reconciles the v2 and v7 code so that we power domain have lists of clocks
+  they trigger on and off during power transitions and independently from power
+  domains clocks. We attach clocks to devices comprising power domain and prepare
+  them so they are turn on and off by runtime PM.
+- add rockchip_pm_add_one_domain() to control domains.
+- add pd_start/pd_stop interface to control clocks.
+- add decription for power-doamin node.
+
+Changes in v8:
+- document go back to v2.
+- This reconciles the v2 and v7 code so that we power domain have
+  lists of clocks they toggle on and off during power transitions
+  and independently from power domains clocks we attach clocks to
+  devices comprising power domain and prepare them so they are
+  turn on and off by runtime PM.
+- DTS go back to v2.
+
+Changes in v7:
+ - Delete unused variables
+
+Changes in v6:
+- delete pmu_lock.
+- modify dev_lock using mutex.
+- pm_clk_resume(pd->dev) change to pm_clk_resume(ed->dev).
+- pm_clk_suspend(pd->dev) change to pm_clk_suspend(ed->dev).
+- add devm_kfree(pd->dev, de) in rockchip_pm_domain_detach_dev.
+
+Changes in v5:
+- delete idle_lock.
+- add timeout in rockchip_pmu_set_idle_request().
+
+Changes in v4:
+- use list storage dev.
+
+Changes in v3:
+- DT structure has changed.
+- change use pm_clk_resume() and pm_clk_suspend().
+- Decomposition power-controller, changed to multiple controller
+  (gpu-power-controller, hevc-power-controller).
+
+Changes in v2:
+- move clocks to "optional".
+- remove the "pd->pd.of_node = np".
+- make pd_vio clocks all one entry per line and alphabetize.
+- power: power-controller move back to pinctrl: pinctrl.
+
+Caesar Wang (4):
+  dt-bindings: add document of Rockchip power domains
+  ARM: power-domain: rockchip: add all the domain type on RK3288 SoCs
+  soc: rockchip: power-domain: Add power domain driver
+  ARM: dts: add the support power-domain node on RK3288 SoCs
+
+ .../bindings/soc/rockchip/power_domain.txt         | 114 +++++
+ arch/arm/boot/dts/rk3288.dtsi                      |  58 ++-
+ drivers/soc/Kconfig                                |   1 +
+ drivers/soc/Makefile                               |   1 +
+ drivers/soc/rockchip/Kconfig                       |  14 +
+ drivers/soc/rockchip/Makefile                      |   4 +
+ drivers/soc/rockchip/pm_domains.c                  | 485 +++++++++++++++++++++
+ include/dt-bindings/power-domain/rk3288.h          |  31 ++
+ 8 files changed, 707 insertions(+), 1 deletion(-)
+ create mode 100644 Documentation/devicetree/bindings/soc/rockchip/power_domain.txt
+ create mode 100644 drivers/soc/rockchip/Kconfig
+ create mode 100644 drivers/soc/rockchip/Makefile
+ create mode 100644 drivers/soc/rockchip/pm_domains.c
+ create mode 100644 include/dt-bindings/power-domain/rk3288.h
+
+-- 
+1.9.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
