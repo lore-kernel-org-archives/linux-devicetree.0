@@ -1,51 +1,95 @@
-From: Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: Userspace and Device-Tree
-Date: Wed, 2 Sep 2015 21:29:57 +0900
-Message-ID: <CAAVeFuJsM_gDNHNqSRi2iHNAzMHAiw0-y5V1pRce4SD8OgY11Q@mail.gmail.com>
-References: <01e601d0e0f9$614450d0$23ccf270$@gmail.com> <20150828101227.GD31748@leverpostej>
- <CAAVeFuJCSv74HLws7Adb1fnSbxf8rR5=NYX8GG59K1nLgFs+VA@mail.gmail.com>
- <CAPiN7iU+NzW1oYjXLsLgn7Sh=i6DPMC49WrDcpsa4XvmjpORcw@mail.gmail.com>
- <20150831145500.GP12027@sirena.org.uk> <CAPiN7iWFR2Sm8t9dUttNzwj-qZmUc-cdK69rGhG2RjD+s1gdSA@mail.gmail.com>
- <20150831180140.GS12027@sirena.org.uk> <CAPiN7iWWAxhg6YQ8BjYHh+Gu8bvQrntvT4QGV+oDe4KAnb1nvg@mail.gmail.com>
+From: Rob Herring <robherring2@gmail.com>
+Subject: Re: [PATCH v5 6/8] scsi: ufs: make the UFS variant a platform device
+Date: Wed, 2 Sep 2015 08:14:01 -0500
+Message-ID: <CAL_JsqL8GKa+YPzFHaL=5_x5Pt7WpveU_y87hPO17pO-oXGs=A@mail.gmail.com>
+References: <1441182744-28477-1-git-send-email-ygardi@codeaurora.org> <1441182744-28477-7-git-send-email-ygardi@codeaurora.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAPiN7iWWAxhg6YQ8BjYHh+Gu8bvQrntvT4QGV+oDe4KAnb1nvg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Chris Read <chrisrfq-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Markus Pargmann <mpa-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Return-path: <linux-scsi-owner@vger.kernel.org>
+In-Reply-To: <1441182744-28477-7-git-send-email-ygardi@codeaurora.org>
+Sender: linux-scsi-owner@vger.kernel.org
+To: Yaniv Gardi <ygardi@codeaurora.org>
+Cc: Jej B <James.Bottomley@hansenpartnership.com>, Paul Bolle <pebolle@tiscali.nl>, hch@infradead.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-scsi@vger.kernel.org, linux-arm-msm <linux-arm-msm@vger.kernel.org>, Santosh Y <santoshsy@gmail.com>, linux-scsi-owner@vger.kernel.org, Subhash Jadavani <subhashj@codeaurora.org>, Gilad Broner <gbroner@codeaurora.org>, Dolev Raviv <draviv@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Vinayak Holikatti <vinholikatti@gmail.com>, "James E.J. Bottomley" <JBottomley@odin.com>, Christoph Hellwig <hch@lst.de>, Sujit Reddy Thumma <sthumma@codeaurora.org>, Raviv Shvili <rshvili@codeaurora.org>, Sahitya Tummala <stummala@codeaurora.org>, open list:OPEN F
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Sep 1, 2015 at 4:20 AM, Chris Read <chrisrfq-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> From what I see the standard kernel allows exposing GPIOs to userspace.
-> There are kernel calls to do so.  It seems to be recognized as an important
-> feature.  The standard kernel also has a regulator-consumer whose whole
-> purpose is to expose control of a regulator to userspace.  So it looks like
-> such userspace control is intended.
+On Wed, Sep 2, 2015 at 3:32 AM, Yaniv Gardi <ygardi@codeaurora.org> wrote:
+> This change turns the UFS variant (SCSI_UFS_QCOM) into a UFS
+> a platform device.
+> In order to do so a few additional changes are required:
+> 1. The ufshcd-pltfrm is no longer serves as a platform device.
+>    Now it only serves as a group of platform APIs such as PM APIs
+>    (runtime suspend/resume, system suspend/resume etc), parsers of
+>    clocks, regulators and pm_levels from DT.
+> 2. What used to be the old platform "probe" is now "only"
+>    a pltfrm_init() routine, that does exactly the same, but only
+>    being called by the new probe function of the UFS variant.
 >
-> My concern is that, while these features are appropriate to expose in
-> userspace, I can't expose them using what are now the standard ways
-> (i.e. without a board file or customized driver for each board).  I'd like
-> to have a way to use the same kernel for all our boards, and have a
-> configuration that can be provided that will expose the required ones.
->
-> It may be possible to make it a set of kernel command line parameters,
-> which would then be customized for each board.  There are, no doubt,
-> still other ways to accomplish this board-specific customization.
-> However, since there is already a board-specific mechanism to do
-> kernel driver/module configuration (i.e. DT), it seemed like a good idea
-> to piggy-back on it.
->
-> Obviously exporting to userspace isn't a hardware configuration
-> parameter, but the mechanism of hooking up and configuring drivers
-> that DT uses looks to me like the most efficient way implement this.
+> Signed-off-by: Yaniv Gardi <ygardi@codeaurora.org>
 
-Since the GPIO sysfs allows you to request any GPIO that is not
-claimed by a kernel driver from userspace, is there a reason why you
-cannot simply run board-specific init scripts that request and
-configure the GPIOs you need? Once GPIO naming is merged, this should
-be as elegant as it gets for what you want to do.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+[...]
+
+> diff --git a/drivers/scsi/ufs/ufs-qcom.c b/drivers/scsi/ufs/ufs-qcom.c
+> index 329ac84..5179250 100644
+> --- a/drivers/scsi/ufs/ufs-qcom.c
+> +++ b/drivers/scsi/ufs/ufs-qcom.c
+> @@ -19,6 +19,7 @@
+>
+>  #include <linux/phy/phy-qcom-ufs.h>
+>  #include "ufshcd.h"
+> +#include "ufshcd-pltfrm.h"
+>  #include "unipro.h"
+>  #include "ufs-qcom.h"
+>  #include "ufshci.h"
+> @@ -1036,7 +1037,7 @@ void ufs_qcom_clk_scale_notify(struct ufs_hba *hba)
+>   * The variant operations configure the necessary controller and PHY
+>   * handshake during initialization.
+>   */
+> -static const struct ufs_hba_variant_ops ufs_hba_qcom_vops = {
+> +static struct ufs_hba_variant_ops ufs_hba_qcom_vops = {
+>         .name                   = "qcom",
+>         .init                   = ufs_qcom_init,
+>         .exit                   = ufs_qcom_exit,
+> @@ -1050,4 +1051,75 @@ static const struct ufs_hba_variant_ops ufs_hba_qcom_vops = {
+>         .resume                 = ufs_qcom_resume,
+>  };
+>
+> +/**
+> + * ufs_qcom_probe - probe routine of the driver
+> + * @pdev: pointer to Platform device handle
+> + *
+> + * Always return 0
+> + */
+> +static int ufs_qcom_probe(struct platform_device *pdev)
+> +{
+> +       int err;
+> +       struct device *dev = &pdev->dev;
+> +       struct ufs_hba *hba;
+> +
+> +       /* Perform generic probe */
+> +       err = ufshcd_pltfrm_init(pdev, &ufs_hba_qcom_vops);
+> +       if (err) {
+> +               dev_err(dev, "ufshcd_pltfrm_init() failed %d\n", err);
+> +               goto out;
+> +       }
+> +
+
+All of this:
+
+> +       hba = platform_get_drvdata(pdev);
+> +
+> +       return 0;
+> +
+> +dealloc_host:
+> +       /* disconnect the bind between the qcom host and the hba */
+> +       ufshcd_set_variant(hba, NULL);
+> +       ufshcd_dealloc_host(hba);
+
+To this is dead code. You should get a warning that dealloc_host is
+unused. Please check and fix all warnings.
+
+Rob
+
+> +out:
+> +       return err;
+> +}
+> +
