@@ -1,192 +1,93 @@
-From: Kevin Hilman <khilman-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v17 1/4] dt-bindings: add document of Rockchip power domains
-Date: Wed, 02 Sep 2015 11:12:52 -0700
-Message-ID: <7hr3mgpu57.fsf@linaro.org>
-References: <1441184380-13827-1-git-send-email-wxt@rock-chips.com>
-	<1441184380-13827-2-git-send-email-wxt@rock-chips.com>
+From: santosh shilimkar <santosh.shilimkar-QHcLZuEGTsvQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH] ARM: dts: keystone: use one to one address translations
+ under netcp
+Date: Wed, 2 Sep 2015 11:25:41 -0700
+Message-ID: <55E73F25.2050608@oracle.com>
+References: <1441139324-29296-1-git-send-email-w-kwok2@ti.com>
+ <55E61658.9010207@oracle.com>
+ <230CBA6E4B6B6B418E8730AC28E6FC7E04221776@DFLE11.ent.ti.com>
+ <55E71AB3.7070406@oracle.com> <55E7255A.8060402@ti.com>
+ <55E730D4.6040102@oracle.com> <55E738AE.9000207@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1441184380-13827-2-git-send-email-wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org> (Caesar
-	Wang's message of "Wed, 2 Sep 2015 16:59:37 +0800")
+In-Reply-To: <55E738AE.9000207-l0cyMroinI0@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Cc: heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, "jinkun.hong" <jinkun.hong-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+To: Murali Karicheri <m-karicheri2-l0cyMroinI0@public.gmane.org>, "Kwok, WingMan" <w-kwok2-l0cyMroinI0@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "pawel.moll-5wv7dgnIgG8@public.gmane.org" <pawel.moll-5wv7dgnIgG8@public.gmane.org>, "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org" <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, "galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org" <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org" <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "ssantosh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <ssantosh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org> writes:
+9/2/2015 10:58 AM, Murali Karicheri wrote:
+> On 09/02/2015 01:24 PM, santosh shilimkar wrote:
+>> On 9/2/2015 9:35 AM, Murali Karicheri wrote:
+>>> Santosh,
+>>>
+>
+> ---Cut-------------------
+>
+>>>> I suspected the same. I know back then we started with SERDES code
+>>>> with NETCP but as you already know, its a separate block which
+>>>> is needed for NIC card to work. Its more of phy and hence its
+>>>> having different address space is not surprising.
+>>>
+>>> Using Phy interface is not acceptable to the subsystem maintainer based
+>>> on the communication I had on this. Also the Phy here is tighly coupled
+>>> with the hardware block it is working with. So this model is not right
+>>> for SerDes driver as it require additional enhancements as described
+>>> below if needs to be used.
+>>>
+>> Thanks for update on that.
+>>
+>>> The serdes initialization procedure requires checking the status in the
+>>> hardware block (PCIe, 1G or 10G) and then taking corrective action. This
+>>> means a Phy driver would require mapping of related hw address space
+>>> (PCIe, 1G and 10G) as well which is already mapped by the hardware
+>>> driver(PCIe, 1G and 10G). One solution is to treat this as a libray
+>>> function that can be called from the respective hardware device driver.
+>>>   A device node of h/w device (PCIe or 1G) in such as looks like
+>>>
+>> Or SerDes driver can embed the status reg address space.
+>> This is read only access so should be fine.
+>>
+>>> pcie {
+>>>
+>>>      serdes@someaddress {
+>>>          reg = <address of serdes>;
+>>>      }
+>>> }
+>>>
+>>> hw driver will call ks2_serdes_init(node, hw_base_address) to initialize
+>>> the serdes. Other APIs can be added to enable/disable lane or shutdown
+>>> etc. The libary will be added to drivers/soc/ti/ and used by various
+>>> device drivers to initialize and use the phy. As the serdes is slightly
+>>> integrated with the hardware block, IMO, this is a better approach than
+>>> using the phy model. The API definitions will be added to
+>>> include/linux/soc/ti/ folder.
+>>>
+>> Serdes Driver with its status register address space might solve this
+>> sharing problem. Library might work but we should try to have driver
+>> considering there is a physical device. I don't have strong opinion
+>> on drivers vs library.
+>>
+>
+> In addition to checking status in the SerDes, it needs to also check the
+> status of the associated hardware block (PCIe, 1G, 10G etc). So this
+> means, same needs to be mapped twice, first by the above hardware device
+> drivers and then by the serdes driver which causes problem. My point is
+> since they both are tightly coupled, a libary is a better option. That
+> way the mapped address can be passed to the serdes API to perform the
+> required task, instead of using Phy API which doesn't allow us to do the
+> same. If SerDes h/w can be brought up independently, the Phy model fits
+> well.
+>
+As I said, I don't have strong preference and fine with library approach.
+I suggest you do a RFC to take this further. Include Arnd on CC for
+that.
 
-> This add the necessary binding documentation for the power domains
-> found on Rockchip SoCs.
->
-> Signed-off-by: jinkun.hong <jinkun.hong-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-> Signed-off-by: Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
->
-> ---
->
-> Changes in v17:
-> - add the decription in detail for RK3288 SoCs.
->
-> Changes in v16:
-> - remove the pmu node.
->
-> Changes in v15: None
-> Changes in v14: None
-> Changes in v13: None
-> Changes in v12: None
-> Changes in v11: None
-> Changes in v10: None
-> Changes in v9:
-> - add document decription.
->
-> Changes in v8:
-> - document go back to v2.
->
-> Changes in v7: None
-> Changes in v6: None
-> Changes in v5: None
-> Changes in v4: None
-> Changes in v3:
-> - DT structure has changed.
->
-> Changes in v2:
-> - move clocks to "optional".
->
->  .../bindings/soc/rockchip/power_domain.txt         | 114 +++++++++++++++++++++
->  1 file changed, 114 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/soc/rockchip/power_domain.txt
->
-> diff --git
-> a/Documentation/devicetree/bindings/soc/rockchip/power_domain.txt
-> b/Documentation/devicetree/bindings/soc/rockchip/power_domain.txt
-> new file mode 100644
-> index 0000000..4cf6b27
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/soc/rockchip/power_domain.txt
-> @@ -0,0 +1,114 @@
-> +* Rockchip Power Domains
-> +
-> +Rockchip processors include support for multiple power domains which can be
-> +powered up/down by software based on different application scenes to save power.
-> +
-> +Required properties for power domain controller:
-> +- compatible: Should be one of the following.
-> +	"rockchip,rk3288-power-controller" - for RK3288 SoCs.
-> +- #power-domain-cells: Number of cells in a power-domain specifier.
-> +	Should be 1 for multiple PM domains.
-> +- #address-cells: Should be 1.
-> +- #size-cells: Should be 0.
-> +
-> +Required properties for power domain sub nodes:
-> +- reg: index of the power domain, should use macros in:
-> +	"include/dt-bindings/power-domain/rk3288.h" - for RK3288 type power domain.
-> +- clocks (optional): phandles to clocks which need to be enabled while power domain
-> +	switches state.
-> +
-> +Example:
-> +
-> +	power: power-controller {
-> +		compatible = "rockchip,rk3288-power-controller";
-> +		#power-domain-cells = <1>;
-> +		#address-cells = <1>;
-> +		#size-cells = <0>;
-> +
-> +		pd_gpu {
-> +			reg = <RK3288_PD_GPU>;
-> +			clocks = <&cru ACLK_GPU>;
-> +		};
-> +	};
-> +
-> +Node of a device using power domains must have a power-domains property,
-> +containing a phandle to the power device node and an index specifying which
-> +power domain to use.
-> +The index should use macros in:
-> +	"include/dt-bindings/power-domain/rk3288.h" - for rk3288 type power domain.
-> +
-> +Example of the node using power domain:
-> +
-> +	node {
-> +		/* ... */
-> +		power-domains = <&power RK3288_PD_GPU>;
-> +		/* ... */
-> +	};
-> +
-> +Others, all the device clocks being listed in the power-domains itself.
-> +All the device clocks are included in someone domians that need to enable
-> +before you operate them.
-> +
-> +As the chip designs for PM hardware. We need turn on the noc clocks,
-> +if we are operating the "pd_vio" domain to enter the idle status.
-> +
-> +As the following described in detail for every device be included in domains
-> +on RK3288 SoCs.
+Regards,
+Santosh
 
-IMO, the below isn't really detailed enough, and also, the details
-should be in the .dts file itself, not in the binding doc.
 
-In particular, it's not obvious from the current series which of the
-clocks are device clocks, and which are other/parent/infrastructure
-clocks needed for the synchronous reset.
-
-Kevin
-
-> +	/* GPU's ACLK_GPU on the ACLK_GPU_NIU */
-> +	pd_gpu {
-> +		reg = <RK3288_PD_GPU>;
-> +		clocks = <&cru ACLK_GPU>;
-> +	};
-> +
-> +	/* HEVC AXI clocks */
-> +	pd_hevc {
-> +		reg = <RK3288_PD_HEVC>;
-> +		clocks = <&cru ACLK_HEVC>,
-> +		<&cru SCLK_HEVC_CABAC>,
-> +		<&cru SCLK_HEVC_CORE>,
-> +		<&cru HCLK_HEVC>;
-> +	};
-> +
-> +	/*
-> +	 * RGA, VOP, MIPI, LVDS, EDP..., says the ACLK* on the ACLK_VIO_NIU,
-> +	 * others are on the HCLK_VIO_NIU.
-> +	 */
-> +	pd_vio {
-> +		reg = <RK3288_PD_VIO>;
-> +		clocks = <&cru ACLK_IEP>,
-> +		<&cru ACLK_ISP>,
-> +		<&cru ACLK_RGA>,
-> +		<&cru ACLK_VIP>,
-> +		<&cru ACLK_VOP0>,
-> +		<&cru ACLK_VOP1>,
-> +		<&cru DCLK_VOP0>,
-> +		<&cru DCLK_VOP1>,
-> +		<&cru HCLK_IEP>,
-> +		<&cru HCLK_ISP>,
-> +		<&cru HCLK_RGA>,
-> +		<&cru HCLK_VIP>,
-> +		<&cru HCLK_VOP0>,
-> +		<&cru HCLK_VOP1>,
-> +		<&cru PCLK_EDP_CTRL>,
-> +		<&cru PCLK_HDMI_CTRL>,
-> +		<&cru PCLK_LVDS_PHY>,
-> +		<&cru PCLK_MIPI_CSI>,
-> +		<&cru PCLK_MIPI_DSI0>,
-> +		<&cru PCLK_MIPI_DSI1>,
-> +		<&cru SCLK_EDP_24M>,
-> +		<&cru SCLK_EDP>,
-> +		<&cru SCLK_ISP_JPE>,
-> +		<&cru SCLK_ISP>,
-> +		<&cru SCLK_RGA>;
-> +	};
-> +
-> +	/*
-> +	 * Video's ACLK_VCODEC on the ACLK_VCODEC_NIU, Video's HCLK_VCODEC,
-> +	 * on the HCLK_VCODEC_NIU.
-> +	 */
-> +	pd_video {
-> +		reg = <RK3288_PD_VIDEO>;
-> +		clocks = <&cru ACLK_VCODEC>,
-> +		<&cru HCLK_VCODEC>;
-> +	};
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
