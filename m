@@ -1,202 +1,476 @@
 From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v4 14/16] drm: bridge: analogix/dp: try force hpd after
- plug in lookup failed
-Date: Wed, 2 Sep 2015 15:17:57 -0500
-Message-ID: <CAL_JsqJDALnjVaVoEqGGsSLeE31m3MKOfbSoZ3M+g+zPZR2MFg@mail.gmail.com>
-References: <1441086371-24838-1-git-send-email-ykk@rock-chips.com> <1441088079-25809-1-git-send-email-ykk@rock-chips.com>
+Subject: Re: [PATCH v7 6/8] scsi: ufs: make the UFS variant a platform device
+Date: Wed, 2 Sep 2015 15:33:30 -0500
+Message-ID: <CAL_JsqKg5B_k8JSY=Bd=gSNAOQYbd+r=JZQzjFjMdNE0b+92XQ@mail.gmail.com>
+References: <1441205138-12664-1-git-send-email-ygardi@codeaurora.org> <1441205138-12664-7-git-send-email-ygardi@codeaurora.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1441088079-25809-1-git-send-email-ykk-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+In-Reply-To: <1441205138-12664-7-git-send-email-ygardi-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Yakir Yang <ykk-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Cc: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Jingoo Han <jingoohan1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Inki Dae <inki.dae-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Joe Perches <joe-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org>, Kukjin Kim <kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Mark Yao <mark.yao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Russell King <rmk+kernel-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, djkurtz-F7+t8E8rja9Wk0Htik3J/w@public.gmane.org, dianders-F7+t8E8rja9Wk0Htik3J/w@public.gmane.org, seanpaul-F7+t8E8rja9Wk0Htik3J/w@public.gmane.org, Ajay kumar <ajaynumb-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Andrzej Hajda <a.hajda-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Kyungmin Park <kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Gustavo Padovan <gustavo.padovan-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>, Andy Yan <andy.yan-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, dri-devel <dri-devel-PD4FTy7X32mqWrfYKbYh0A@public.gmane.org>
+To: Yaniv Gardi <ygardi-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: Jej B <James.Bottomley-JuX6DAaQMKPCXq6kfMZ53/egYHeGw8Jk@public.gmane.org>, Paul Bolle <pebolle-IWqWACnzNjzz+pZb47iToQ@public.gmane.org>, hch-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-scsi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm <linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Santosh Y <santoshsy-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-scsi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Subhash Jadavani <subhashj-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Gilad Broner <gbroner-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Dolev Raviv <draviv-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Vinayak Holikatti <vinholikatti-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "James E.J. Bottomley" <JBottomley-wo1vFcy6AUs@public.gmane.org>, Christoph Hellwig <hch-jcswGhMUV9g@public.gmane.org>, Sujit Reddy Thumma <sthumma-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Raviv Shvili <rshvili-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Sahitya Tummala <stummala-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, open list:OPEN F
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Sep 1, 2015 at 1:14 AM, Yakir Yang <ykk-TNX95d0MmH7DzftRWevZcw@public.gmane.org> wrote:
-> Some edp screen do not have hpd signal, so we can't just return
-> failed when hpd plug in detect failed.
+On Wed, Sep 2, 2015 at 9:45 AM, Yaniv Gardi <ygardi-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org> wrote:
+> This change turns the UFS variant (SCSI_UFS_QCOM) into a UFS
+> a platform device.
+> In order to do so a few additional changes are required:
+> 1. The ufshcd-pltfrm is no longer serves as a platform device.
+>    Now it only serves as a group of platform APIs such as PM APIs
+>    (runtime suspend/resume, system suspend/resume etc), parsers of
+>    clocks, regulators and pm_levels from DT.
+> 2. What used to be the old platform "probe" is now "only"
+>    a pltfrm_init() routine, that does exactly the same, but only
+>    being called by the new probe function of the UFS variant.
+>
+> Signed-off-by: Yaniv Gardi <ygardi-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 
-This is a property of the panel (or connector perhaps), so this
-property should be located there. At least, it is a common issue and
-not specific to this chip. We could have an HDMI connector and failed
-to hook up HPD for example. A connector node is also where hpd-gpios
-should be located instead (and are already defined by
-../bindings/video/hdmi-connector.txt). Perhaps we need a eDP connector
-binding, too.
+Reviewed-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 
-Are there any eDP panels which don't have EDID and need panel details in DT?
+I may or may not get around to providing an ack or reviewed-by for the
+rest of the series, but it's not required either.
 
 Rob
 
-> This is an hardware property, so we need add a devicetree property
-> "analogix,need-force-hpd" to indicate this sutiation.
 >
-> Signed-off-by: Yakir Yang <ykk-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 > ---
-> Changes in v4: None
-> Changes in v3:
-> - Add "analogix,need-force-hpd" to indicate whether driver need foce
->   hpd when hpd detect failed.
+>  Documentation/devicetree/bindings/ufs/ufs-qcom.txt | 57 +++++++++++++
+>  .../devicetree/bindings/ufs/ufshcd-pltfrm.txt      |  4 +-
+>  drivers/scsi/ufs/ufs-qcom.c                        | 62 +++++++++++++-
+>  drivers/scsi/ufs/ufshcd-pltfrm.c                   | 98 ++++++----------------
+>  drivers/scsi/ufs/ufshcd-pltfrm.h                   | 41 +++++++++
+>  drivers/scsi/ufs/ufshcd.c                          | 10 +++
+>  drivers/scsi/ufs/ufshcd.h                          |  1 +
+>  7 files changed, 199 insertions(+), 74 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/ufs/ufs-qcom.txt
+>  create mode 100644 drivers/scsi/ufs/ufshcd-pltfrm.h
 >
-> Changes in v2: None
->
->  .../devicetree/bindings/drm/bridge/analogix_dp.txt |  4 ++-
->  .../bindings/video/analogix_dp-rockchip.txt        |  1 +
->  .../devicetree/bindings/video/exynos_dp.txt        |  1 +
->  drivers/gpu/drm/bridge/analogix/analogix_dp_core.c | 36 +++++++++++++++++++---
->  drivers/gpu/drm/bridge/analogix/analogix_dp_core.h |  2 ++
->  drivers/gpu/drm/bridge/analogix/analogix_dp_reg.c  |  9 ++++++
->  6 files changed, 47 insertions(+), 6 deletions(-)
->
-> diff --git a/Documentation/devicetree/bindings/drm/bridge/analogix_dp.txt b/Documentation/devicetree/bindings/drm/bridge/analogix_dp.txt
-> index f54dc3e..c310367 100644
-> --- a/Documentation/devicetree/bindings/drm/bridge/analogix_dp.txt
-> +++ b/Documentation/devicetree/bindings/drm/bridge/analogix_dp.txt
-> @@ -22,6 +22,9 @@ Required properties for dp-controller:
->                 from general PHY binding: Should be "dp".
->
->  Optional properties for dp-controller:
-> +       -analogix,need-force-hpd:
-> +               Indicate driver need force hpd when hpd detect failed, this
-> +               is used for some eDP screen which don't have hpd signal.
->         -hpd-gpios:
->                 Hotplug detect GPIO.
->                 Indicates which GPIO should be used for hotplug detection
-> @@ -31,7 +34,6 @@ Optional properties for dp-controller:
->                 * Documentation/devicetree/bindings/video/exynos_dp.txt
->                 * Documentation/devicetree/bindings/video/analogix_dp-rockchip.txt
->
-> -
->  [1]: Documentation/devicetree/bindings/media/video-interfaces.txt
->  -------------------------------------------------------------------------------
->
-> diff --git a/Documentation/devicetree/bindings/video/analogix_dp-rockchip.txt b/Documentation/devicetree/bindings/video/analogix_dp-rockchip.txt
-> index 502483e..8b9ed7d 100644
-> --- a/Documentation/devicetree/bindings/video/analogix_dp-rockchip.txt
-> +++ b/Documentation/devicetree/bindings/video/analogix_dp-rockchip.txt
-> @@ -28,6 +28,7 @@ For the below properties, please refer to Analogix DP binding document:
->  - phys (required)
->  - phy-names (required)
->  - hpd-gpios (optional)
-> +- analogix,need-force-hpd (optional)
->  -------------------------------------------------------------------------------
->
->  Example:
-> diff --git a/Documentation/devicetree/bindings/video/exynos_dp.txt b/Documentation/devicetree/bindings/video/exynos_dp.txt
-> index ea03b3a..4f06e80 100644
-> --- a/Documentation/devicetree/bindings/video/exynos_dp.txt
-> +++ b/Documentation/devicetree/bindings/video/exynos_dp.txt
-> @@ -41,6 +41,7 @@ For the below properties, please refer to Analogix DP binding document:
->         -phys (required)
->         -phy-names (required)
->         -hpd-gpios (optional)
-> +       -analogix,need-force-hpd (optional)
->         -video interfaces (optional)
->
->  Deprecated properties for DisplayPort:
-> diff --git a/drivers/gpu/drm/bridge/analogix/analogix_dp_core.c b/drivers/gpu/drm/bridge/analogix/analogix_dp_core.c
-> index f7227ec..e6b328a 100644
-> --- a/drivers/gpu/drm/bridge/analogix/analogix_dp_core.c
-> +++ b/drivers/gpu/drm/bridge/analogix/analogix_dp_core.c
-> @@ -63,15 +63,38 @@ static int analogix_dp_detect_hpd(struct analogix_dp_device *dp)
->  {
->         int timeout_loop = 0;
->
-> -       while (analogix_dp_get_plug_in_status(dp) != 0) {
-> +       while (timeout_loop < DP_TIMEOUT_LOOP_COUNT) {
-> +               if (analogix_dp_get_plug_in_status(dp) == 0)
-> +                       return 0;
+> diff --git a/Documentation/devicetree/bindings/ufs/ufs-qcom.txt b/Documentation/devicetree/bindings/ufs/ufs-qcom.txt
+> new file mode 100644
+> index 0000000..452e4ef
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/ufs/ufs-qcom.txt
+> @@ -0,0 +1,57 @@
+> +* Qualcomm Technologies Inc Universal Flash Storage (UFS) PHY
 > +
->                 timeout_loop++;
-> -               if (DP_TIMEOUT_LOOP_COUNT < timeout_loop) {
-> -                       dev_err(dp->dev, "failed to get hpd plug status\n");
-> -                       return -ETIMEDOUT;
-> -               }
->                 usleep_range(10, 11);
->         }
+> +UFSPHY nodes are defined to describe on-chip UFS PHY hardware macro.
+> +Each UFS PHY node should have its own node.
+> +
+> +To bind UFS PHY with UFS host controller, the controller node should
+> +contain a phandle reference to UFS PHY node.
+> +
+> +Required properties:
+> +- compatible        : compatible list, contains "qcom,ufs-phy-qmp-20nm"
+> +                     or "qcom,ufs-phy-qmp-14nm" according to the relevant phy in use.
+> +- reg               : should contain PHY register address space (mandatory),
+> +- reg-names         : indicates various resources passed to driver (via reg proptery) by name.
+> +                      Required "reg-names" is "phy_mem".
+> +- #phy-cells        : This property shall be set to 0
+> +- vdda-phy-supply   : phandle to main PHY supply for analog domain
+> +- vdda-pll-supply   : phandle to PHY PLL and Power-Gen block power supply
+> +- clocks           : List of phandle and clock specifier pairs
+> +- clock-names       : List of clock input name strings sorted in the same
+> +                     order as the clocks property. "ref_clk_src", "ref_clk",
+> +                     "tx_iface_clk" & "rx_iface_clk" are mandatory but
+> +                     "ref_clk_parent" is optional
+> +
+> +Optional properties:
+> +- vdda-phy-max-microamp : specifies max. load that can be drawn from phy supply
+> +- vdda-pll-max-microamp : specifies max. load that can be drawn from pll supply
+> +- vddp-ref-clk-supply   : phandle to UFS device ref_clk pad power supply
+> +- vddp-ref-clk-max-microamp : specifies max. load that can be drawn from this supply
+> +- vddp-ref-clk-always-on : specifies if this supply needs to be kept always on
+> +
+> +Example:
+> +
+> +       ufsphy1: ufsphy@0xfc597000 {
+> +               compatible = "qcom,ufs-phy-qmp-20nm";
+> +               reg = <0xfc597000 0x800>;
+> +               reg-names = "phy_mem";
+> +               #phy-cells = <0>;
+> +               vdda-phy-supply = <&pma8084_l4>;
+> +               vdda-pll-supply = <&pma8084_l12>;
+> +               vdda-phy-max-microamp = <50000>;
+> +               vdda-pll-max-microamp = <1000>;
+> +               clock-names = "ref_clk_src",
+> +                       "ref_clk_parent",
+> +                       "ref_clk",
+> +                       "tx_iface_clk",
+> +                       "rx_iface_clk";
+> +               clocks = <&clock_rpm clk_ln_bb_clk>,
+> +                       <&clock_gcc clk_pcie_1_phy_ldo >,
+> +                       <&clock_gcc clk_ufs_phy_ldo>,
+> +                       <&clock_gcc clk_gcc_ufs_tx_cfg_clk>,
+> +                       <&clock_gcc clk_gcc_ufs_rx_cfg_clk>;
+> +       };
+> +
+> +       ufshc@0xfc598000 {
+> +               ...
+> +               phys = <&ufsphy1>;
+> +       };
+> diff --git a/Documentation/devicetree/bindings/ufs/ufshcd-pltfrm.txt b/Documentation/devicetree/bindings/ufs/ufshcd-pltfrm.txt
+> index 5357919..c0f10d3 100644
+> --- a/Documentation/devicetree/bindings/ufs/ufshcd-pltfrm.txt
+> +++ b/Documentation/devicetree/bindings/ufs/ufshcd-pltfrm.txt
+> @@ -4,7 +4,9 @@ UFSHC nodes are defined to describe on-chip UFS host controllers.
+>  Each UFS controller instance should have its own node.
 >
-> +       /*
-> +        * Some edp screen do not have hpd signal, so we can't just
-> +        * return failed when hpd plug in detect failed, DT property
-> +        * "need-force-hpd" would indicate whether driver need this.
-> +        */
-> +       if (!dp->need_force_hpd)
-> +               return -ETIMEDOUT;
-> +
-> +       /*
-> +        * The eDP TRM indicate that if HPD_STATUS(RO) is 0, AUX CH
-> +        * will not work, so we need to give a force hpd action to
-> +        * set HPD_STATUS manually.
-> +        */
-> +       dev_dbg(dp->dev, "failed to get hpd plug status, try to force hpd\n");
-> +
-> +       analogix_dp_force_hpd(dp);
-> +
-> +       if (analogix_dp_get_plug_in_status(dp) != 0) {
-> +               dev_err(dp->dev, "failed to get hpd plug in status\n");
-> +               return -EINVAL;
-> +       }
-> +
-> +       dev_dbg(dp->dev, "success to get plug in status after force hpd\n");
-> +
->         return 0;
->  }
+>  Required properties:
+> -- compatible        : compatible list, contains "jedec,ufs-1.1"
+> +- compatible        : compatible list, contains "jedec,ufs-1.1" or
+> +                     "qcom,msm8994-ufshc" or "qcom,msm8996-ufshc"
+> +                     followed by "qcom,ufshc"
+>  - interrupts        : <interrupt mapping for UFS host controller IRQ>
+>  - reg               : <registers mapping>
 >
-> @@ -1287,6 +1310,9 @@ int analogix_dp_bind(struct device *dev, struct drm_device *drm_dev,
->         if (IS_ERR(dp->reg_base))
->                 return PTR_ERR(dp->reg_base);
+> diff --git a/drivers/scsi/ufs/ufs-qcom.c b/drivers/scsi/ufs/ufs-qcom.c
+> index 329ac84..b275a9a 100644
+> --- a/drivers/scsi/ufs/ufs-qcom.c
+> +++ b/drivers/scsi/ufs/ufs-qcom.c
+> @@ -19,6 +19,7 @@
 >
-> +       dp->need_force_hpd =
-> +               of_property_read_bool(dev->of_node, "analogix,need-force-hpd");
-> +
->         dp->hpd_gpio = of_get_named_gpio(dev->of_node, "hpd-gpios", 0);
->         if (gpio_is_valid(dp->hpd_gpio))
->                 dp->hpd_gpio = of_get_named_gpio(dev->of_node,
-> diff --git a/drivers/gpu/drm/bridge/analogix/analogix_dp_core.h b/drivers/gpu/drm/bridge/analogix/analogix_dp_core.h
-> index d8945e2..6960ab3 100644
-> --- a/drivers/gpu/drm/bridge/analogix/analogix_dp_core.h
-> +++ b/drivers/gpu/drm/bridge/analogix/analogix_dp_core.h
-> @@ -160,6 +160,7 @@ struct analogix_dp_device {
->         struct phy              *phy;
->         int                     dpms_mode;
->         int                     hpd_gpio;
-> +       bool                    need_force_hpd;
->
->         struct analogix_dp_plat_data *plat_data;
+>  #include <linux/phy/phy-qcom-ufs.h>
+>  #include "ufshcd.h"
+> +#include "ufshcd-pltfrm.h"
+>  #include "unipro.h"
+>  #include "ufs-qcom.h"
+>  #include "ufshci.h"
+> @@ -1036,7 +1037,7 @@ void ufs_qcom_clk_scale_notify(struct ufs_hba *hba)
+>   * The variant operations configure the necessary controller and PHY
+>   * handshake during initialization.
+>   */
+> -static const struct ufs_hba_variant_ops ufs_hba_qcom_vops = {
+> +static struct ufs_hba_variant_ops ufs_hba_qcom_vops = {
+>         .name                   = "qcom",
+>         .init                   = ufs_qcom_init,
+>         .exit                   = ufs_qcom_exit,
+> @@ -1050,4 +1051,63 @@ static const struct ufs_hba_variant_ops ufs_hba_qcom_vops = {
+>         .resume                 = ufs_qcom_resume,
 >  };
-> @@ -180,6 +181,7 @@ void analogix_dp_set_analog_power_down(struct analogix_dp_device *dp,
->                                        bool enable);
->  void analogix_dp_init_analog_func(struct analogix_dp_device *dp);
->  void analogix_dp_init_hpd(struct analogix_dp_device *dp);
-> +void analogix_dp_force_hpd(struct analogix_dp_device *dp);
->  enum dp_irq_type analogix_dp_get_irq_type(struct analogix_dp_device *dp);
->  void analogix_dp_clear_hotplug_interrupts(struct analogix_dp_device *dp);
->  void analogix_dp_reset_aux(struct analogix_dp_device *dp);
-> diff --git a/drivers/gpu/drm/bridge/analogix/analogix_dp_reg.c b/drivers/gpu/drm/bridge/analogix/analogix_dp_reg.c
-> index 15346fe..3086afc 100644
-> --- a/drivers/gpu/drm/bridge/analogix/analogix_dp_reg.c
-> +++ b/drivers/gpu/drm/bridge/analogix/analogix_dp_reg.c
-> @@ -365,6 +365,15 @@ void analogix_dp_init_hpd(struct analogix_dp_device *dp)
->         writel(reg, dp->reg_base + ANALOGIX_DP_SYS_CTL_3);
->  }
 >
-> +void analogix_dp_force_hpd(struct analogix_dp_device *dp)
+> +/**
+> + * ufs_qcom_probe - probe routine of the driver
+> + * @pdev: pointer to Platform device handle
+> + *
+> + * Return zero for success and non-zero for failure
+> + */
+> +static int ufs_qcom_probe(struct platform_device *pdev)
 > +{
-> +       u32 reg;
+> +       int err;
+> +       struct device *dev = &pdev->dev;
 > +
-> +       reg = readl(dp->reg_base + ANALOGIX_DP_SYS_CTL_3);
-> +       reg = (F_HPD | HPD_CTRL);
-> +       writel(reg, dp->reg_base + ANALOGIX_DP_SYS_CTL_3);
+> +       /* Perform generic probe */
+> +       err = ufshcd_pltfrm_init(pdev, &ufs_hba_qcom_vops);
+> +       if (err)
+> +               dev_err(dev, "ufshcd_pltfrm_init() failed %d\n", err);
+> +
+> +       return err;
 > +}
 > +
->  enum dp_irq_type analogix_dp_get_irq_type(struct analogix_dp_device *dp)
+> +/**
+> + * ufs_qcom_remove - set driver_data of the device to NULL
+> + * @pdev: pointer to platform device handle
+> + *
+> + * Always return 0
+> + */
+> +static int ufs_qcom_remove(struct platform_device *pdev)
+> +{
+> +       struct ufs_hba *hba =  platform_get_drvdata(pdev);
+> +
+> +       pm_runtime_get_sync(&(pdev)->dev);
+> +       ufshcd_remove(hba);
+> +       return 0;
+> +}
+> +
+> +static const struct of_device_id ufs_qcom_of_match[] = {
+> +       { .compatible = "qcom,ufshc"},
+> +       {},
+> +};
+> +
+> +static const struct dev_pm_ops ufs_qcom_pm_ops = {
+> +       .suspend        = ufshcd_pltfrm_suspend,
+> +       .resume         = ufshcd_pltfrm_resume,
+> +       .runtime_suspend = ufshcd_pltfrm_runtime_suspend,
+> +       .runtime_resume  = ufshcd_pltfrm_runtime_resume,
+> +       .runtime_idle    = ufshcd_pltfrm_runtime_idle,
+> +};
+> +
+> +static struct platform_driver ufs_qcom_pltform = {
+> +       .probe  = ufs_qcom_probe,
+> +       .remove = ufs_qcom_remove,
+> +       .shutdown = ufshcd_pltfrm_shutdown,
+> +       .driver = {
+> +               .name   = "ufshcd-qcom",
+> +               .pm     = &ufs_qcom_pm_ops,
+> +               .of_match_table = of_match_ptr(ufs_qcom_of_match),
+> +       },
+> +};
+> +module_platform_driver(ufs_qcom_pltform);
+> +
+>  MODULE_LICENSE("GPL v2");
+> diff --git a/drivers/scsi/ufs/ufshcd-pltfrm.c b/drivers/scsi/ufs/ufshcd-pltfrm.c
+> index 7db9564..9714f2a 100644
+> --- a/drivers/scsi/ufs/ufshcd-pltfrm.c
+> +++ b/drivers/scsi/ufs/ufshcd-pltfrm.c
+> @@ -38,20 +38,7 @@
+>  #include <linux/of.h>
+>
+>  #include "ufshcd.h"
+> -
+> -static const struct of_device_id ufs_of_match[];
+> -static struct ufs_hba_variant_ops *get_variant_ops(struct device *dev)
+> -{
+> -       if (dev->of_node) {
+> -               const struct of_device_id *match;
+> -
+> -               match = of_match_node(ufs_of_match, dev->of_node);
+> -               if (match)
+> -                       return (struct ufs_hba_variant_ops *)match->data;
+> -       }
+> -
+> -       return NULL;
+> -}
+> +#include "ufshcd-pltfrm.h"
+>
+>  static int ufshcd_parse_clock_info(struct ufs_hba *hba)
 >  {
->         u32 reg;
+> @@ -245,10 +232,11 @@ out:
+>   * Returns 0 if successful
+>   * Returns non-zero otherwise
+>   */
+> -static int ufshcd_pltfrm_suspend(struct device *dev)
+> +int ufshcd_pltfrm_suspend(struct device *dev)
+>  {
+>         return ufshcd_system_suspend(dev_get_drvdata(dev));
+>  }
+> +EXPORT_SYMBOL_GPL(ufshcd_pltfrm_suspend);
+>
+>  /**
+>   * ufshcd_pltfrm_resume - resume power management function
+> @@ -257,43 +245,47 @@ static int ufshcd_pltfrm_suspend(struct device *dev)
+>   * Returns 0 if successful
+>   * Returns non-zero otherwise
+>   */
+> -static int ufshcd_pltfrm_resume(struct device *dev)
+> +int ufshcd_pltfrm_resume(struct device *dev)
+>  {
+>         return ufshcd_system_resume(dev_get_drvdata(dev));
+>  }
+> +EXPORT_SYMBOL_GPL(ufshcd_pltfrm_resume);
+>
+> -static int ufshcd_pltfrm_runtime_suspend(struct device *dev)
+> +int ufshcd_pltfrm_runtime_suspend(struct device *dev)
+>  {
+>         return ufshcd_runtime_suspend(dev_get_drvdata(dev));
+>  }
+> -static int ufshcd_pltfrm_runtime_resume(struct device *dev)
+> +EXPORT_SYMBOL_GPL(ufshcd_pltfrm_runtime_suspend);
+> +
+> +int ufshcd_pltfrm_runtime_resume(struct device *dev)
+>  {
+>         return ufshcd_runtime_resume(dev_get_drvdata(dev));
+>  }
+> -static int ufshcd_pltfrm_runtime_idle(struct device *dev)
+> +EXPORT_SYMBOL_GPL(ufshcd_pltfrm_runtime_resume);
+> +
+> +int ufshcd_pltfrm_runtime_idle(struct device *dev)
+>  {
+>         return ufshcd_runtime_idle(dev_get_drvdata(dev));
+>  }
+> -#else /* !CONFIG_PM */
+> -#define ufshcd_pltfrm_suspend  NULL
+> -#define ufshcd_pltfrm_resume   NULL
+> -#define ufshcd_pltfrm_runtime_suspend  NULL
+> -#define ufshcd_pltfrm_runtime_resume   NULL
+> -#define ufshcd_pltfrm_runtime_idle     NULL
+> +EXPORT_SYMBOL_GPL(ufshcd_pltfrm_runtime_idle);
+> +
+>  #endif /* CONFIG_PM */
+>
+> -static void ufshcd_pltfrm_shutdown(struct platform_device *pdev)
+> +void ufshcd_pltfrm_shutdown(struct platform_device *pdev)
+>  {
+>         ufshcd_shutdown((struct ufs_hba *)platform_get_drvdata(pdev));
+>  }
+> +EXPORT_SYMBOL_GPL(ufshcd_pltfrm_shutdown);
+>
+>  /**
+> - * ufshcd_pltfrm_probe - probe routine of the driver
+> + * ufshcd_pltfrm_init - probe routine of the driver
+>   * @pdev: pointer to Platform device handle
+> + * @vops: pointer to variant ops
+>   *
+>   * Returns 0 on success, non-zero value on failure
+>   */
+> -static int ufshcd_pltfrm_probe(struct platform_device *pdev)
+> +int ufshcd_pltfrm_init(struct platform_device *pdev,
+> +                      struct ufs_hba_variant_ops *vops)
+>  {
+>         struct ufs_hba *hba;
+>         void __iomem *mmio_base;
+> @@ -321,19 +313,19 @@ static int ufshcd_pltfrm_probe(struct platform_device *pdev)
+>                 goto out;
+>         }
+>
+> -       hba->vops = get_variant_ops(&pdev->dev);
+> +       hba->vops = vops;
+>
+>         err = ufshcd_parse_clock_info(hba);
+>         if (err) {
+>                 dev_err(&pdev->dev, "%s: clock parse failed %d\n",
+>                                 __func__, err);
+> -               goto out;
+> +               goto dealloc_host;
+>         }
+>         err = ufshcd_parse_regulator_info(hba);
+>         if (err) {
+>                 dev_err(&pdev->dev, "%s: regulator init failed %d\n",
+>                                 __func__, err);
+> -               goto out;
+> +               goto dealloc_host;
+>         }
+>
+>         pm_runtime_set_active(&pdev->dev);
+> @@ -352,50 +344,12 @@ static int ufshcd_pltfrm_probe(struct platform_device *pdev)
+>  out_disable_rpm:
+>         pm_runtime_disable(&pdev->dev);
+>         pm_runtime_set_suspended(&pdev->dev);
+> +dealloc_host:
+> +       ufshcd_dealloc_host(hba);
+>  out:
+>         return err;
+>  }
+> -
+> -/**
+> - * ufshcd_pltfrm_remove - remove platform driver routine
+> - * @pdev: pointer to platform device handle
+> - *
+> - * Returns 0 on success, non-zero value on failure
+> - */
+> -static int ufshcd_pltfrm_remove(struct platform_device *pdev)
+> -{
+> -       struct ufs_hba *hba =  platform_get_drvdata(pdev);
+> -
+> -       pm_runtime_get_sync(&(pdev)->dev);
+> -       ufshcd_remove(hba);
+> -       return 0;
+> -}
+> -
+> -static const struct of_device_id ufs_of_match[] = {
+> -       { .compatible = "jedec,ufs-1.1"},
+> -       {},
+> -};
+> -
+> -static const struct dev_pm_ops ufshcd_dev_pm_ops = {
+> -       .suspend        = ufshcd_pltfrm_suspend,
+> -       .resume         = ufshcd_pltfrm_resume,
+> -       .runtime_suspend = ufshcd_pltfrm_runtime_suspend,
+> -       .runtime_resume  = ufshcd_pltfrm_runtime_resume,
+> -       .runtime_idle    = ufshcd_pltfrm_runtime_idle,
+> -};
+> -
+> -static struct platform_driver ufshcd_pltfrm_driver = {
+> -       .probe  = ufshcd_pltfrm_probe,
+> -       .remove = ufshcd_pltfrm_remove,
+> -       .shutdown = ufshcd_pltfrm_shutdown,
+> -       .driver = {
+> -               .name   = "ufshcd",
+> -               .pm     = &ufshcd_dev_pm_ops,
+> -               .of_match_table = ufs_of_match,
+> -       },
+> -};
+> -
+> -module_platform_driver(ufshcd_pltfrm_driver);
+> +EXPORT_SYMBOL_GPL(ufshcd_pltfrm_init);
+>
+>  MODULE_AUTHOR("Santosh Yaragnavi <santosh.sy-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>");
+>  MODULE_AUTHOR("Vinayak Holikatti <h.vinayak-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>");
+> diff --git a/drivers/scsi/ufs/ufshcd-pltfrm.h b/drivers/scsi/ufs/ufshcd-pltfrm.h
+> new file mode 100644
+> index 0000000..df64c41
+> --- /dev/null
+> +++ b/drivers/scsi/ufs/ufshcd-pltfrm.h
+> @@ -0,0 +1,41 @@
+> +/* Copyright (c) 2015, The Linux Foundation. All rights reserved.
+> + *
+> + * This program is free software; you can redistribute it and/or modify
+> + * it under the terms of the GNU General Public License version 2 and
+> + * only version 2 as published by the Free Software Foundation.
+> + *
+> + * This program is distributed in the hope that it will be useful,
+> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
+> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+> + * GNU General Public License for more details.
+> + *
+> + */
+> +
+> +#ifndef UFSHCD_PLTFRM_H_
+> +#define UFSHCD_PLTFRM_H_
+> +
+> +#include "ufshcd.h"
+> +
+> +int ufshcd_pltfrm_init(struct platform_device *pdev,
+> +                      struct ufs_hba_variant_ops *vops);
+> +void ufshcd_pltfrm_shutdown(struct platform_device *pdev);
+> +
+> +#ifdef CONFIG_PM
+> +
+> +int ufshcd_pltfrm_suspend(struct device *dev);
+> +int ufshcd_pltfrm_resume(struct device *dev);
+> +int ufshcd_pltfrm_runtime_suspend(struct device *dev);
+> +int ufshcd_pltfrm_runtime_resume(struct device *dev);
+> +int ufshcd_pltfrm_runtime_idle(struct device *dev);
+> +
+> +#else /* !CONFIG_PM */
+> +
+> +#define ufshcd_pltfrm_suspend  NULL
+> +#define ufshcd_pltfrm_resume   NULL
+> +#define ufshcd_pltfrm_runtime_suspend  NULL
+> +#define ufshcd_pltfrm_runtime_resume   NULL
+> +#define ufshcd_pltfrm_runtime_idle     NULL
+> +
+> +#endif /* CONFIG_PM */
+> +
+> +#endif /* UFSHCD_PLTFRM_H_ */
+> diff --git a/drivers/scsi/ufs/ufshcd.c b/drivers/scsi/ufs/ufshcd.c
+> index 9e79c33..2ef9834 100644
+> --- a/drivers/scsi/ufs/ufshcd.c
+> +++ b/drivers/scsi/ufs/ufshcd.c
+> @@ -5348,6 +5348,16 @@ void ufshcd_remove(struct ufs_hba *hba)
+>  EXPORT_SYMBOL_GPL(ufshcd_remove);
+>
+>  /**
+> + * ufshcd_dealloc_host - deallocate Host Bus Adapter (HBA)
+> + * @hba: pointer to Host Bus Adapter (HBA)
+> + */
+> +void ufshcd_dealloc_host(struct ufs_hba *hba)
+> +{
+> +       scsi_host_put(hba->host);
+> +}
+> +EXPORT_SYMBOL_GPL(ufshcd_dealloc_host);
+> +
+> +/**
+>   * ufshcd_set_dma_mask - Set dma mask based on the controller
+>   *                      addressing capability
+>   * @hba: per adapter instance
+> diff --git a/drivers/scsi/ufs/ufshcd.h b/drivers/scsi/ufs/ufshcd.h
+> index ce75626..f2aa47e 100644
+> --- a/drivers/scsi/ufs/ufshcd.h
+> +++ b/drivers/scsi/ufs/ufshcd.h
+> @@ -576,6 +576,7 @@ static inline void ufshcd_rmwl(struct ufs_hba *hba, u32 mask, u32 val, u32 reg)
+>  }
+>
+>  int ufshcd_alloc_host(struct device *, struct ufs_hba **);
+> +void ufshcd_dealloc_host(struct ufs_hba *);
+>  int ufshcd_init(struct ufs_hba * , void __iomem * , unsigned int);
+>  void ufshcd_remove(struct ufs_hba *);
+>
 > --
-> 2.1.2
+> 1.8.5.2
 >
->
+> --
+> QUALCOMM ISRAEL, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
