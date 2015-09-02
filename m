@@ -1,52 +1,43 @@
-From: Alexandru M Stan <amstan@chromium.org>
-Subject: [PATCH v2 2/2] ARM: dts: rockchip: Remove specific cts pullup from veyron
-Date: Wed,  2 Sep 2015 16:27:59 -0700
-Message-ID: <1441236479-4941-3-git-send-email-amstan@chromium.org>
+From: Doug Anderson <dianders@chromium.org>
+Subject: Re: [PATCH v2 1/2] ARM: dts: rockchip: pull up cts lines on rk3288
+Date: Wed, 2 Sep 2015 16:34:38 -0700
+Message-ID: <CAD=FV=XRLnz3FTbwg1u2Jwg=a3dim6vwLk0yGc9kK=RGYDvxXw@mail.gmail.com>
 References: <1441236479-4941-1-git-send-email-amstan@chromium.org>
+	<1441236479-4941-2-git-send-email-amstan@chromium.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1441236479-4941-1-git-send-email-amstan@chromium.org>
+In-Reply-To: <1441236479-4941-2-git-send-email-amstan@chromium.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Heiko Stuebner <heiko@sntech.de>
-Cc: Romain Perier <romain.perier@gmail.com>, FUKAUMI Naoki <naobsd@gmail.com>, Neil Hendin <nhendin@chromium.org>, Douglas Anderson <dianders@chromium.org>, Jeffy Chen <jeffy.chen@rock-chips.com>, Caesar Wang <wxt@rock-chips.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org, linux-arm-kernel@lists.infradead.org, Alexandru M Stan <amstan@chromium.org>
+To: Alexandru M Stan <amstan@chromium.org>
+Cc: Heiko Stuebner <heiko@sntech.de>, Romain Perier <romain.perier@gmail.com>, FUKAUMI Naoki <naobsd@gmail.com>, Neil Hendin <nhendin@chromium.org>, Jeffy Chen <jeffy.chen@rock-chips.com>, Caesar Wang <wxt@rock-chips.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-With the previous patch ("rk3288: pull up cts lines") this is redundant,
-I sent that patch for the same reason this existed here, so the lines don't
-wiggle randomly when disconnected.
+Alex,
 
-Signed-off-by: Alexandru M Stan <amstan@chromium.org>
----
-Changes in v2:
-- Restrict changes only to cts pin, leave rts alone
-- CC people with the firefly board
-- New patch removing redundant pullup code from veyron
-- cover letter
+On Wed, Sep 2, 2015 at 4:27 PM, Alexandru M Stan <amstan@chromium.org> wrote:
+> The flow control lines from a user accessible UART are optional,
+> the user might not have anything connected to those pins.
+> In order to prevent random interrupts happening and noise affecting
+> the cts pin should be pulled up.
+>
+> Note that the default state for that pin on the rk3288 is pulled up,
+> so this patch merely restores them.
+>
+> This is similar to what we're already doing with the RX pin,
+> so it should be safe. At worst it might be a slightly higher power usage
+> (through ~50 kohms) when the cts is low.
+>
+> Suggested-by: Neil Hendin <nhendin@chromium.org>
+> Signed-off-by: Alexandru M Stan <amstan@chromium.org>
+> ---
+> Changes in v2: None
 
- arch/arm/boot/dts/rk3288-veyron.dtsi | 12 ------------
- 1 file changed, 12 deletions(-)
+Probably not entirely true.  ;)
 
-diff --git a/arch/arm/boot/dts/rk3288-veyron.dtsi b/arch/arm/boot/dts/rk3288-veyron.dtsi
-index 2fa7a0d..2b5d2e2 100644
---- a/arch/arm/boot/dts/rk3288-veyron.dtsi
-+++ b/arch/arm/boot/dts/rk3288-veyron.dtsi
-@@ -543,18 +543,6 @@
- 		};
- 	};
- 
--	/*
--	 * On Marvell-based hardware this is a no-connect.  Make sure we enable
--	 * the pullup so that the line doesn't float.  The pullup shouldn't
--	 * hurt on Broadcom-based hardware since the other side is actively
--	 * driving this signal.  As proof: we've already got a pullup on RX.
--	 */
--	uart0 {
--		uart0_cts: uart0-cts {
--			rockchip,pins = <4 18 RK_FUNC_1 &pcfg_pull_up>;
--		};
--	};
--
- 	write-protect {
- 		fw_wp_ap: fw-wp-ap {
- 			rockchip,pins = <7 6 RK_FUNC_GPIO &pcfg_pull_none>;
--- 
-2.5.0.457.gab17608
+>  arch/arm/boot/dts/rk3288.dtsi | 8 ++++----
+>  1 file changed, 4 insertions(+), 4 deletions(-)
+
+Looks good to me.
+
+Reviewed-by: Douglas Anderson <dianders@chromium.org>
