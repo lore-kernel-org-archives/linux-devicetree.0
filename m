@@ -1,94 +1,62 @@
-From: santosh shilimkar <santosh.shilimkar-QHcLZuEGTsvQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH] ARM: dts: keystone: use one to one address translations
- under netcp
-Date: Wed, 2 Sep 2015 11:25:41 -0700
-Message-ID: <55E73F25.2050608@oracle.com>
-References: <1441139324-29296-1-git-send-email-w-kwok2@ti.com>
- <55E61658.9010207@oracle.com>
- <230CBA6E4B6B6B418E8730AC28E6FC7E04221776@DFLE11.ent.ti.com>
- <55E71AB3.7070406@oracle.com> <55E7255A.8060402@ti.com>
- <55E730D4.6040102@oracle.com> <55E738AE.9000207@ti.com>
+From: Kevin Hilman <khilman@linaro.org>
+Subject: Re: [PATCH v17 3/4] soc: rockchip: power-domain: Add power domain driver
+Date: Wed, 02 Sep 2015 11:28:13 -0700
+Message-ID: <7hbndkptfm.fsf@linaro.org>
+References: <1441184380-13827-1-git-send-email-wxt@rock-chips.com>
+	<1441184380-13827-4-git-send-email-wxt@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <55E738AE.9000207-l0cyMroinI0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Murali Karicheri <m-karicheri2-l0cyMroinI0@public.gmane.org>, "Kwok, WingMan" <w-kwok2-l0cyMroinI0@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "pawel.moll-5wv7dgnIgG8@public.gmane.org" <pawel.moll-5wv7dgnIgG8@public.gmane.org>, "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org" <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, "galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org" <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org" <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "ssantosh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <ssantosh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1441184380-13827-4-git-send-email-wxt@rock-chips.com> (Caesar
+	Wang's message of "Wed, 2 Sep 2015 16:59:39 +0800")
+Sender: linux-kernel-owner@vger.kernel.org
+To: Caesar Wang <wxt@rock-chips.com>
+Cc: heiko@sntech.de, ulf.hansson@linaro.org, devicetree@vger.kernel.org, linux@arm.linux.org.uk, arnd@arndb.de, ijc+devicetree@hellion.org.uk, linux-kernel@vger.kernel.org, linus.walleij@linaro.org, dmitry.torokhov@gmail.com, dianders@chromium.org, tomasz.figa@gmail.com, linux-rockchip@lists.infradead.org, robh+dt@kernel.org, galak@codeaurora.org, linux-arm-kernel@lists.infradead.org, mturquette@baylibre.com, "jinkun.hong" <jinkun.hong@rock-chips.com>
 List-Id: devicetree@vger.kernel.org
 
-9/2/2015 10:58 AM, Murali Karicheri wrote:
-> On 09/02/2015 01:24 PM, santosh shilimkar wrote:
->> On 9/2/2015 9:35 AM, Murali Karicheri wrote:
->>> Santosh,
->>>
->
-> ---Cut-------------------
->
->>>> I suspected the same. I know back then we started with SERDES code
->>>> with NETCP but as you already know, its a separate block which
->>>> is needed for NIC card to work. Its more of phy and hence its
->>>> having different address space is not surprising.
->>>
->>> Using Phy interface is not acceptable to the subsystem maintainer based
->>> on the communication I had on this. Also the Phy here is tighly coupled
->>> with the hardware block it is working with. So this model is not right
->>> for SerDes driver as it require additional enhancements as described
->>> below if needs to be used.
->>>
->> Thanks for update on that.
->>
->>> The serdes initialization procedure requires checking the status in the
->>> hardware block (PCIe, 1G or 10G) and then taking corrective action. This
->>> means a Phy driver would require mapping of related hw address space
->>> (PCIe, 1G and 10G) as well which is already mapped by the hardware
->>> driver(PCIe, 1G and 10G). One solution is to treat this as a libray
->>> function that can be called from the respective hardware device driver.
->>>   A device node of h/w device (PCIe or 1G) in such as looks like
->>>
->> Or SerDes driver can embed the status reg address space.
->> This is read only access so should be fine.
->>
->>> pcie {
->>>
->>>      serdes@someaddress {
->>>          reg = <address of serdes>;
->>>      }
->>> }
->>>
->>> hw driver will call ks2_serdes_init(node, hw_base_address) to initialize
->>> the serdes. Other APIs can be added to enable/disable lane or shutdown
->>> etc. The libary will be added to drivers/soc/ti/ and used by various
->>> device drivers to initialize and use the phy. As the serdes is slightly
->>> integrated with the hardware block, IMO, this is a better approach than
->>> using the phy model. The API definitions will be added to
->>> include/linux/soc/ti/ folder.
->>>
->> Serdes Driver with its status register address space might solve this
->> sharing problem. Library might work but we should try to have driver
->> considering there is a physical device. I don't have strong opinion
->> on drivers vs library.
->>
->
-> In addition to checking status in the SerDes, it needs to also check the
-> status of the associated hardware block (PCIe, 1G, 10G etc). So this
-> means, same needs to be mapped twice, first by the above hardware device
-> drivers and then by the serdes driver which causes problem. My point is
-> since they both are tightly coupled, a libary is a better option. That
-> way the mapped address can be passed to the serdes API to perform the
-> required task, instead of using Phy API which doesn't allow us to do the
-> same. If SerDes h/w can be brought up independently, the Phy model fits
-> well.
->
-As I said, I don't have strong preference and fine with library approach.
-I suggest you do a RFC to take this further. Include Arnd on CC for
-that.
+Caesar Wang <wxt@rock-chips.com> writes:
 
-Regards,
-Santosh
+> This driver is found on RK3288 SoCs.
+>
+> In order to meet high performance and low power requirements, a power
+> management unit is designed or saving power when RK3288 in low power
+> mode.
+> The RK3288 PMU is dedicated for managing the power of the whole chip.
+>
+> PMU can work in the Low Power Mode by setting bit[0] of PMU_PWRMODE_CON
+> register. After setting the register, PMU would enter the Low Power mode.
+> In the low power mode, pmu will auto power on/off the specified power
+> domain, send idle req to specified power domain, shut down/up pll and
+> so on. All of above are configurable by setting corresponding registers.
+>
+> Signed-off-by: jinkun.hong <jinkun.hong@rock-chips.com>
+> Signed-off-by: Caesar Wang <wxt@rock-chips.com>
+
+[...]
+
+> +static void rockchip_pm_remove_one_domain(struct rockchip_pm_domain *pd)
+> +{
+> +	int i;
+> +
+> +	for (i = 0; i < pd->num_clks; i++) {
+> +		clk_unprepare(pd->clks[i]);
+> +		clk_put(pd->clks[i]);
+> +	}
 
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+You don't set pd->num_clks = 0 here, which means other places that
+iterate over the clocks might race with this and try to use clocks that
+have been unprepared/put.
+
+This might be over-paranoid, but in particular, this could race with
+rockchip_pd_power().
+
+Also not setting the pd->num_clks to zero would be a problem for a
+power-controller that is configured as a module which could be unloaded
+and reloaded (I know that doesn't really work now, but it will
+eventually, I hope.)
+
+Maybe use the mutex here?  It should at least protect the zeroing of
+pm->num_clks.
+
+Kevin
