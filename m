@@ -1,103 +1,50 @@
-From: Murali Karicheri <m-karicheri2-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH] ARM: dts: keystone: use one to one address translations
- under netcp
-Date: Wed, 2 Sep 2015 13:58:06 -0400
-Message-ID: <55E738AE.9000207@ti.com>
-References: <1441139324-29296-1-git-send-email-w-kwok2@ti.com> <55E61658.9010207@oracle.com> <230CBA6E4B6B6B418E8730AC28E6FC7E04221776@DFLE11.ent.ti.com> <55E71AB3.7070406@oracle.com> <55E7255A.8060402@ti.com> <55E730D4.6040102@oracle.com>
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 1/6] regulator: pbias: program pbias register offset in
+ pbias driver
+Date: Wed, 2 Sep 2015 19:06:54 +0100
+Message-ID: <20150902180654.GD5313@sirena.org.uk>
+References: <1441190853-7133-1-git-send-email-kishon@ti.com>
+ <1441190853-7133-2-git-send-email-kishon@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="yKkOmjQZXRsvHRX8"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <55E730D4.6040102-QHcLZuEGTsvQT0dZR+AlfA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1441190853-7133-2-git-send-email-kishon-l0cyMroinI0@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: santosh shilimkar <santosh.shilimkar-QHcLZuEGTsvQT0dZR+AlfA@public.gmane.org>, "Kwok, WingMan" <w-kwok2-l0cyMroinI0@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "pawel.moll-5wv7dgnIgG8@public.gmane.org" <pawel.moll-5wv7dgnIgG8@public.gmane.org>, "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org" <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, "galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org" <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org" <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "ssantosh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <ssantosh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+To: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
+Cc: tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, nsekhar-l0cyMroinI0@public.gmane.org, ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 09/02/2015 01:24 PM, santosh shilimkar wrote:
-> On 9/2/2015 9:35 AM, Murali Karicheri wrote:
->> Santosh,
->>
 
----Cut-------------------
+--yKkOmjQZXRsvHRX8
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
->>> I suspected the same. I know back then we started with SERDES code
->>> with NETCP but as you already know, its a separate block which
->>> is needed for NIC card to work. Its more of phy and hence its
->>> having different address space is not surprising.
->>
->> Using Phy interface is not acceptable to the subsystem maintainer based
->> on the communication I had on this. Also the Phy here is tighly coupled
->> with the hardware block it is working with. So this model is not right
->> for SerDes driver as it require additional enhancements as described
->> below if needs to be used.
->>
-> Thanks for update on that.
->
->> The serdes initialization procedure requires checking the status in the
->> hardware block (PCIe, 1G or 10G) and then taking corrective action. This
->> means a Phy driver would require mapping of related hw address space
->> (PCIe, 1G and 10G) as well which is already mapped by the hardware
->> driver(PCIe, 1G and 10G). One solution is to treat this as a libray
->> function that can be called from the respective hardware device driver.
->>   A device node of h/w device (PCIe or 1G) in such as looks like
->>
-> Or SerDes driver can embed the status reg address space.
-> This is read only access so should be fine.
->
->> pcie {
->>
->>      serdes@someaddress {
->>          reg = <address of serdes>;
->>      }
->> }
->>
->> hw driver will call ks2_serdes_init(node, hw_base_address) to initialize
->> the serdes. Other APIs can be added to enable/disable lane or shutdown
->> etc. The libary will be added to drivers/soc/ti/ and used by various
->> device drivers to initialize and use the phy. As the serdes is slightly
->> integrated with the hardware block, IMO, this is a better approach than
->> using the phy model. The API definitions will be added to
->> include/linux/soc/ti/ folder.
->>
-> Serdes Driver with its status register address space might solve this
-> sharing problem. Library might work but we should try to have driver
-> considering there is a physical device. I don't have strong opinion
-> on drivers vs library.
->
+On Wed, Sep 02, 2015 at 04:17:28PM +0530, Kishon Vijay Abraham I wrote:
+> Add separate compatible strings for every platform and populate the
+> pbias register offset in the driver data.
+> This helps avoid depending on the dt for pbias register offset.
 
-In addition to checking status in the SerDes, it needs to also check the 
-status of the associated hardware block (PCIe, 1G, 10G etc). So this 
-means, same needs to be mapped twice, first by the above hardware device 
-drivers and then by the serdes driver which causes problem. My point is 
-since they both are tightly coupled, a libary is a better option. That 
-way the mapped address can be passed to the serdes API to perform the 
-required task, instead of using Phy API which doesn't allow us to do the 
-same. If SerDes h/w can be brought up independently, the Phy model fits 
-well.
+Can you respin with Tony's comment please and I'll apply?
 
-Murali
->
->> The SerDes will use the firmware interface to download and configure the
->> hardware block to use with PCIe/1G/10G/SRIO. I queried the linux forum
->> on this and the response was that firmware interface can be used for
->> this. The patch will be using the firmware interface instead of
->> embedding magic values in the serdes driver.
->>
-> Firmware interface usage seems to be correct way.
-> Thanks for giving the details. It helped me to get better picture.
->
-> Regards,
-> Santosh
->
-> Regards,
-> Santosh
->
->
+--yKkOmjQZXRsvHRX8
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
 
--- 
-Murali Karicheri
-Linux Kernel, Keystone
+iQEcBAEBCAAGBQJV5zq+AAoJECTWi3JdVIfQOTwH/0rKzNXEmTRwVG7+a7Ui662i
+ic6zzg0bSG0I20MuxJBQyPd0u5eY9mspJQNwPRUxGpr2nqvgwSf6zo1+60qG6szq
+YxmOCroSj4Kp8wEPlLinqsolMnL8Gje5TnetR28pPgm5XstJYiSe7x2XGR3DCPh8
+NBcbWNu5NYmuVcPff7dQjmabzST6r/QGsBhZsijwid4c8MaXoHXprvvj4XMl3pPA
+2F1CP1j6x3oLSSdYU+vG/xh2wIQUQnZ+E927fF2o9FpJEUt16MK9Q1sWTaHvq7Kv
+ppHB4wBkc4bto31pRFPgSPSgLwrjBr+woCtSdkgreXJfugr4Pn/sPNVYFFUMmtA=
+=eMLU
+-----END PGP SIGNATURE-----
+
+--yKkOmjQZXRsvHRX8--
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
