@@ -1,82 +1,69 @@
-From: Yakir Yang <ykk@rock-chips.com>
-Subject: Re: [PATCH v4 0/16] Add Analogix Core Display Port Driver
-Date: Wed, 02 Sep 2015 10:15:41 +0800
-Message-ID: <55E65BCD.7090804@rock-chips.com>
-References: <1441086371-24838-1-git-send-email-ykk@rock-chips.com> <3233920.KG0buE86B2@phil>
+From: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
+Subject: Re: [PATCH v2] ARM: shmobile: silk: add SDHI1 DT support
+Date: Wed, 2 Sep 2015 11:29:36 +0900
+Message-ID: <20150902022936.GA18115@verge.net.au>
+References: <10037494.4LD4T2QGPX@wasted.cogentembedded.com>
+ <2757472.iuyUyRzJ3z@wasted.cogentembedded.com>
+ <20150812012652.GH15957@verge.net.au>
+ <55D790A5.1050008@cogentembedded.com>
+ <55D7A3A1.9020009@cogentembedded.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
-	format=flowed
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <3233920.KG0buE86B2@phil>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Heiko Stuebner <heiko@sntech.de>
-Cc: Thierry Reding <treding@nvidia.com>, Jingoo Han <jingoohan1@gmail.com>, Inki Dae <inki.dae@samsung.com>, joe@perches.com, Kukjin Kim <kgene@kernel.org>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, Mark Yao <mark.yao@rock-chips.com>, Russell King <rmk+kernel@arm.linux.org.uk>, djkurtz@chromium.com, dianders@chromium.com, seanpaul@chromium.com, ajaynumb@gmail.com, Andrzej Hajda <a.hajda@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, David Airlie <airlied@linux.ie>, Gustavo Padovan <gustavo.padovan@collabora.co.uk>, Andy Yan <andy.yan@rock-chips.com>, Kumar Gala <galak@codeaurora.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Kishon Vijay Abraham I <kishon@ti.com>, architt@codeaurora.org, robherring2@gmail.com, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-kernel
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <55D7A3A1.9020009-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+Cc: linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Heiko,
+On Sat, Aug 22, 2015 at 01:18:09AM +0300, Sergei Shtylyov wrote:
+> On 08/21/2015 11:57 PM, Sergei Shtylyov wrote:
+> 
+> >>>Define the SILK board dependent part of the SDHI1 (connected to micro-SD slot)
+> >>>device nodes along with the necessary voltage regulators.
+> >>>
+> >>>Based on the original patch by Vladimir Barinov
+> >>><vladimir.barinov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>.
+> >>>
+> >>>Signed-off-by: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+> >>>
+> >>>---
+> >>>This patch is against 'renesas-devel-20150810-v4.2-rc6' tag of Simon Horman's
+> >>>'renesas.git' repo plus the R8A7794/SILK QSPI patches just re-posted. It needs
+> >>>the R8A7794 GPIO patches in order to compile.
+> >>>
+> >>>Changes in version 2:
+> >>>- removed not working SDHI0 stuff, renamed the patch;
+> >>>- replaced SDHI1's "wp-gpios" property with "disable-wp".
+> >>
+> >>I am wondering if you could explain the motivation for the "disable-wp"
+> >>update
+> >
+> >    Please see the comment in mmc_sd_get_ro().
+> >
+> >>and weather it is appropriate for other r8a779* dts files.
+> >
+> >    In case of micro-SD slots, yes.
+> 
+>    The MMC binding document says it should only be specified if the
+> controller has WP detection logic. We, so far, seem to have been replying on
+> the GPIOs despite this logic is present (according to the R-Car gen2 SDHI
+> manuals I have). The driver will first call mmc_gpio_get_ro() and when that
+> fails due to "wp-gpios" not being specified, it proceeds to reading the
+> register but that is forbidden by TMIO_MMC_WRPROTECT_DISABLE flag set for
+> the R-Car gen1/2 chips, so 0 is always returned from tmio_mmc_get_ro().
+> There seems to be no point in going that far (and doing the runtime PM
+> dances) --
+> and MMC_CAP2_NO_WRITE_PROTECT (set when "disable-wp" is specified) prohibits
+> doing that...
 
-=E5=9C=A8 09/02/2015 05:47 AM, Heiko Stuebner =E5=86=99=E9=81=93:
-> Hi Yakir,
->
-> Am Dienstag, 1. September 2015, 13:46:11 schrieb Yakir Yang:
->>     The Samsung Exynos eDP controller and Rockchip RK3288 eDP contro=
-ller
->> share the same IP, so a lot of parts can be re-used. I split the com=
-mon
->> code into bridge directory, then rk3288 and exynos only need to keep
->> some platform code. Cause I can't find the exact IP name of exynos d=
-p
->> controller, so I decide to name dp core driver with "analogix" which=
- I
->> find in rk3288 eDP TRM ;)
->>
->> Beyond that, there are three light registers setting differents bewt=
-een
->> exynos and rk3288.
->> 1. RK3288 have five special pll resigters which not indicata in exyn=
-os
->>     dp controller.
->> 2. The address of DP_PHY_PD(dp phy power manager register) are diffe=
-rent
->>     between rk3288 and exynos.
->> 3. Rk3288 and exynos have different setting with AUX_HW_RETRY_CTL(dp=
- debug
->>     register).
->>
->> I have verified this series on two kinds of rockchip platform board,=
- one
->> is rk3288 sdk board which connect with a 2K display port monitor, th=
-e other
->> is google jerry chromebook which connect with a eDP screen "cnm,n116=
-bgeea2",
->> both of them works rightlly.
-> it looks like during the rebase something did go wrong and I found so=
-me issues
-> I mentioned in the replies to individual patches.
->
-> I did prepare a branch based on mainline [0] with both the old and th=
-e new edp
-> driver - rk3288_veyron_defconfig build both drivers into the image.
->
-> While the old driver still works, I wasn't able to make the new one w=
-ork yet
-> ... the drm core does find the connector, but not that anything is co=
-nnected
-> to it. I'll try to dig deeper tomorrow, but maybe you'll see anything
-> interesting before then.
+That sounds reasonable to me.
+Some more questions from my side:
 
-Many thanks for your comment and debug, I would rebase on your
-"edp-with-veyron" branch and fix the broken, make sure v6 would
-work rightly at least in your side and my side.
-
-- Yakir
-
->
-> Heiko
->
-> [0] https://github.com/mmind/linux-rockchip/tree/tmp/edp-with-veyron
->
->
->
->
+* What is the status of this patch
+* Can you prepare patches for r8a779* dts files for micro-SD slots?
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
