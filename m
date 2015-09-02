@@ -1,49 +1,52 @@
-From: Daniel Kurtz <djkurtz@chromium.org>
-Subject: Re: [RESEND PATCH 0/3 v6] Add Mediatek MT8173 cpufreq driver
-Date: Wed, 2 Sep 2015 14:45:56 +0800
-Message-ID: <CAGS+omAtiALWTjVJS4wNatXVLqZRSOk3m29QQvW=fQWs7Hs5ng@mail.gmail.com>
-References: <1439803465-19683-1-git-send-email-pi-cheng.chen@linaro.org>
- <20150826021659.GD8784@linux> <CALx668V2herrp6XOtCDR7nNvFhd7DLLMjXmr86cjfCOQ_cgmrw@mail.gmail.com>
- <22538895.vrRgZUmQTV@vostro.rjw.lan>
+From: Vaibhav Hiremath <vaibhav.hiremath-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH-v5 RESEND 0/5] i2c: pxa: Add support for PXA910 family of
+ device
+Date: Wed, 2 Sep 2015 12:17:42 +0530
+Message-ID: <55E69B8E.8040704@linaro.org>
+References: <1440395978-9065-1-git-send-email-vaibhav.hiremath@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <22538895.vrRgZUmQTV@vostro.rjw.lan>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Matthias Brugger <matthias.bgg@gmail.com>
-Cc: Pi-Cheng Chen <pi-cheng.chen@linaro.org>, Viresh Kumar <viresh.kumar@linaro.org>, Mark Rutland <mark.rutland@arm.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Michael Turquette <mturquette@baylibre.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, Linaro Kernel Mailman List <linaro-kernel@lists.linaro.org>, linux-mediatek@lists.infradead.org
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1440395978-9065-1-git-send-email-vaibhav.hiremath-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, robert.jarzmik-GANU6spQydw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Matthias,
 
-On Fri, Aug 28, 2015 at 10:06 PM, Rafael J. Wysocki <rjw@rjwysocki.net> wrote:
-> On Wednesday, August 26, 2015 02:53:39 PM Pi-Cheng Chen wrote:
->> On Wed, Aug 26, 2015 at 10:16 AM, Viresh Kumar <viresh.kumar@linaro.org> wrote:
->> > On 26-08-15, 09:25, Pi-Cheng Chen wrote:
->> >> The [3/3] is based on Mediatek SoC maintainer tree[1] and the patch which
->> >> introduce a new clock type[2] consumed by MT8173 cpufreq driver. So it will
->> >> cause some conflicts if it goes through your tree. I am not sure how this
->> >> should be handled, but should it be merged through Mediatek SoC maintainer
->> >> tree?
->> >
->> > Just get that applied to MTK tree, it doesn't have any dependency on
->> > rest of the patches for build/boot. The only thing is that cpufreq
->> > wouldn't work and it will work as soon as Rafael's and MTK's trees are
->> > merged by Linus.
->>
->> Thanks for your explanation.
->>
->> @Rafael, Would you please apply [1,2] to your tree?
+On Monday 24 August 2015 11:29 AM, Vaibhav Hiremath wrote:
+> Sorry for not following up on this aggressively, was quit busy with some
+> other stuff. Resending this patch with Robert's Tested-By.
 >
-> Applied, thanks!
+>
+> This patch-series is subset of the original patch-series, submitted
+> on 14 Jul 2015.
+> Link to Original Patch-series - https://lkml.org/lkml/2015/7/14/80
+>
+> The first six patches have been already queued up for upstream. So this
+> patch-series is respin of remaining 5 patches.
+>
+> Testing:
+>    - Basic testing on PMIC device on I2C-0 interface
+>    - Boot tested on platform based on PXA1928
+>    - Read few registers of PMIC (RTC, ID, etc...) during boot
+>
+> V4 => V5
+> =======
+> Link to V3: https://lkml.org/lkml/2015/7/14/80
+>    - Dropped First 6 patches as they are already accepted, queued for upstream
+>    - Fixed a bug in PATCH [5/5], where for non PXA910 devices it as resulting into
+>      NULL pointer dereference.
+>
+>
 
-Can you please apply [3] from this set to your dts tree?
 
-> --
-> I speak only for myself.
-> Rafael J. Wysocki, Intel Open Source Technology Center.
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-kernel" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
-> Please read the FAQ at  http://www.tux.org/lkml/
+Any update on this? This series is waiting since long time now.
+
+Wolfram,
+I know you wanted to have more discussion on DT properties & changes.
+And I would be more happy to discuss.
+
+Thanks,
+Vaibhav
