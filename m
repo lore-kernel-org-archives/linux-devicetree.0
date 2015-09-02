@@ -1,55 +1,42 @@
-From: Doug Anderson <dianders@chromium.org>
-Subject: Re: [PATCH] ARM: dts: rk3288: pull up cts lines
-Date: Wed, 2 Sep 2015 15:57:30 -0700
-Message-ID: <CAD=FV=WEc4tSn7HhFkVWRJwb7Z33Kq4u3ubsYKb2xyJLAQrVPg@mail.gmail.com>
-References: <1441232406-32628-1-git-send-email-amstan@chromium.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1441232406-32628-1-git-send-email-amstan@chromium.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Alexandru M Stan <amstan@chromium.org>
-Cc: Heiko Stuebner <heiko@sntech.de>, Jeffy Chen <jeffy.chen@rock-chips.com>, Caesar Wang <wxt@rock-chips.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Neil Hendin <nhendin@chromium.org>
+From: Alexandru M Stan <amstan-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Subject: [PATCH v2 0/2] ARM: dts: rockchip: pull up cts lines
+Date: Wed,  2 Sep 2015 16:27:57 -0700
+Message-ID: <1441236479-4941-1-git-send-email-amstan@chromium.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Cc: Romain Perier <romain.perier-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, FUKAUMI Naoki <naobsd-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Neil Hendin <nhendin-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Douglas Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Jeffy Chen <jeffy.chen-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Alexandru M Stan <amstan-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Alex,
+The flow control lines from a user accessible UART are optional,
+the user might not have anything connected to those pins.
+In order to prevent random interrupts happening and noise affecting
+the cts pin should be pulled up.
 
-On Wed, Sep 2, 2015 at 3:20 PM, Alexandru M Stan <amstan@chromium.org> wrote:
-> The flow control lines from a user accessible UART are optional,
-> the user might not have anything connected to those pins.
-> In order to prevent random interrupts happening and noise affecting
-> that pin it should be pulled up.
->
-> Note that the default state for those pins on the rk3288 is pulled up,
-> so this patch merely restores them.
->
-> Suggested-by: Neil Hendin <nhendin@chromium.org>
-> Signed-off-by: Alexandru M Stan <amstan@chromium.org>
-> ---
->  arch/arm/boot/dts/rk3288.dtsi | 16 ++++++++--------
->  1 file changed, 8 insertions(+), 8 deletions(-)
->
-> diff --git a/arch/arm/boot/dts/rk3288.dtsi b/arch/arm/boot/dts/rk3288.dtsi
-> index 906e938..a059367 100644
-> --- a/arch/arm/boot/dts/rk3288.dtsi
-> +++ b/arch/arm/boot/dts/rk3288.dtsi
-> @@ -1211,11 +1211,11 @@
->                         };
->
->                         uart0_cts: uart0-cts {
-> -                               rockchip,pins = <4 18 RK_FUNC_1 &pcfg_pull_none>;
-> +                               rockchip,pins = <4 18 RK_FUNC_1 &pcfg_pull_up>;
->                         };
->
->                         uart0_rts: uart0-rts {
-> -                               rockchip,pins = <4 19 RK_FUNC_1 &pcfg_pull_none>;
-> +                               rockchip,pins = <4 19 RK_FUNC_1 &pcfg_pull_up>;
+The only boards affected (that care about uart*_cts ) are the veyron
+chromeos devices and the firefly. Veyron already has something like that,
+which I now have to remove in the second patch. Firefly uses uart0_cts
+for the wifi chip communications, same thing as veyron, so it should be
+fine having it.
 
-I would probably do just CTS.  That would match the TX / RX lines
-where the RX is pulled but not the TX.
+Changes in v2:
+- Restrict changes only to cts pin, leave rts alone
+- CC people with the firefly board
+- New patch removing redundant pullup code from veyron
+- cover letter
 
-You might also mention in the commit message that this really should
-be safe since we're already doing something similar for RX.
+Alexandru M Stan (2):
+  ARM: dts: rockchip: pull up cts lines on rk3288
+  ARM: dts: rockchip: Remove specific cts pullup from veyron
 
+ arch/arm/boot/dts/rk3288-veyron.dtsi | 12 ------------
+ arch/arm/boot/dts/rk3288.dtsi        |  8 ++++----
+ 2 files changed, 4 insertions(+), 16 deletions(-)
 
--Doug
+-- 
+2.5.0.457.gab17608
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
