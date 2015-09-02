@@ -1,66 +1,55 @@
-From: Rob Herring <robherring2@gmail.com>
-Subject: Re: [PATCH v4 2/2] dt: power: st: Provide bindings for ST's OPPs
-Date: Wed, 2 Sep 2015 13:58:36 -0500
-Message-ID: <CAL_JsqKMGp+3Z+oO6E0YYzjTCb=-R_QM=YF=B33NWayWmV057A@mail.gmail.com>
-References: <20150811080023.GB5509@linux> <20150811093039.GA18282@x1>
- <20150811100941.GG5509@linux> <20150811115425.GE18282@x1> <20150811120124.GH5509@linux>
- <20150811132756.GG18282@x1> <20150811142812.GJ5509@linux> <20150811151736.GO18282@x1>
- <20150812110841.GC20238@linux> <20150826120628.GZ19409@x1> <20150902080639.GA26744@linux>
+From: Josh Boyer <jwboyer-rxtnV0ftBwyoClj4AeEUq9i2O/JbrIOy@public.gmane.org>
+Subject: [PATCH] ARM: dts: Fix Makefile target for
+ sun4i-a10-itead-iteaduino-plus
+Date: Wed, 2 Sep 2015 16:18:12 -0400
+Message-ID: <20150902201812.GC464@hansolo.redhat.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20150902080639.GA26744@linux>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Viresh Kumar <viresh.kumar@linaro.org>
-Cc: Lee Jones <lee.jones@linaro.org>, Stephen Boyd <sboyd@codeaurora.org>, Nishanth Menon <nm@ti.com>, kernel@stlinux.com, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, Rafael Wysocki <rjw@rjwysocki.net>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Sebastian Reichel <sre@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Arnd Bergmann <arnd.bergmann@linaro.org>, Ajit Pal Singh <ajitpal.singh@st.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
+Cc: Josef Gajdusek <atx-MwjtXicnQwU@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Sep 2, 2015 at 3:06 AM, Viresh Kumar <viresh.kumar@linaro.org> wrote:
-> On 26-08-15, 13:06, Lee Jones wrote:
->> On Wed, 12 Aug 2015, Viresh Kumar wrote:
->>
->> > On 11-08-15, 16:17, Lee Jones wrote:
->> > > This would work if we only had a single variable to contend with, but
->> > > what I showed you in my previous example is that we have 3 variables
->> > > to consider; cut (version), pcode and substrate.
->> > >
->> > > Using the two (simple) examples I provided, how would your suggestion
->> > > look in our case?
->> >
->> > So the solution I gave is for picking the microvolt based on pcode.
->> > The other two (cut, substrate) aren't about picking microvolt, but if
->> > the OPP is available or not. Right?
->>
->> 'pcode', 'cut' and 'substrate' all determine whether a given set of
->> OPPs an be used on the running platform.  I do not believe that you
->> can differentiate between them.
->>
->> > If these terms are generic enough, then we can add something similar
->> > to what you have added..
->>
->> If it makes it easier, you can treat them as version numbers 2.2.1
->> <pcode.cut.substrate>, but I don't see how this can help.  Obviously
->> this becomes more difficult when you add wild cards to the OPPs, where
->> a particular OPP would be suitable for all cuts for example.
->>
->> If you still think you can come up with a generic method to lay out
->> CPUFreq OPP nodes that will satisfy all vendors and not be a mass of
->> 10's of separate nodes, then great.  Again, I'm struggling to see how
->> that might be possible.
->>
->> What I believe we shouldn't do, is have this blocked forever for the
->> sake of adding a couple of vendor properties however.
->
-> I agree and can understand the pain you are feeling..
->
-> @Rob/Stephen: Please close this thread soon and let Lee get his work
-> done :)
+linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Bcc: 
+Subject: [PATCH] ARM: dts: Fix Makefile target for sun4i-a10-itead-iteaduino-plus
+Reply-To: 
 
-What do you expect here? It is your job to close it. Ultimately, this
-will be your problem to deal with. If you have 10 different vendors
-doing selection of OPPs in 10 different ways you will not be able to
-change that easily later. Maybe if you can't come up with something
-common, then this should just not go into DT. You can always look at
-how to do this in a common way and move from the kernel to DT later.
+ommit 79ae3e66f8d (ARM: dts: sun4i: Add Iteaduino Plus A10) added a new
+make target for the sun4i-a10-itead-iteaduino-plus dts file, but mistakenly
+used .dts instead of the correct .dtb suffix.  This resulted in a build error
+like:
 
-Rob
+	scripts/Makefile.dtbinst:42: target 'sun4i-a10-itead-iteaduino-plus.dts' doesn't match the target pattern
+
+when doing a make dtbs_install.
+
+Fix it to use the proper file name.
+
+Signed-off-by: Josh Boyer <jwboyer-rxtnV0ftBwyoClj4AeEUq9i2O/JbrIOy@public.gmane.org>
+---
+ arch/arm/boot/dts/Makefile | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+index 233159d2eaab..bb8fa023d574 100644
+--- a/arch/arm/boot/dts/Makefile
++++ b/arch/arm/boot/dts/Makefile
+@@ -578,7 +578,7 @@ dtb-$(CONFIG_MACH_SUN4I) += \
+ 	sun4i-a10-hackberry.dtb \
+ 	sun4i-a10-hyundai-a7hd.dtb \
+ 	sun4i-a10-inet97fv2.dtb \
+-	sun4i-a10-itead-iteaduino-plus.dts \
++	sun4i-a10-itead-iteaduino-plus.dtb \
+ 	sun4i-a10-jesurun-q5.dtb \
+ 	sun4i-a10-marsboard.dtb \
+ 	sun4i-a10-mini-xplus.dtb \
+-- 
+2.4.3
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
