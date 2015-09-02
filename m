@@ -1,34 +1,62 @@
 From: Lee Jones <lee.jones@linaro.org>
-Subject: [PATCH v3 1/6] ARM: STi: Add DT defines for co-processor reset lines
-Date: Wed,  2 Sep 2015 16:38:04 +0100
-Message-ID: <1441208289-17330-2-git-send-email-lee.jones@linaro.org>
+Subject: [PATCH v3 2/6] remoteproc: dt: Provide bindings for ST's Remote Processor Controller driver
+Date: Wed,  2 Sep 2015 16:38:05 +0100
+Message-ID: <1441208289-17330-3-git-send-email-lee.jones@linaro.org>
 References: <1441208289-17330-1-git-send-email-lee.jones@linaro.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1441208289-17330-1-git-send-email-lee.jones@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc: kernel@stlinux.com, ohad@wizery.com, devicetree@vger.kernel.org, Nathan_Lynch@mentor.com, f.fainelli@gmail.com, Lee Jones <lee.jones@linaro.org>
+Cc: kernel@stlinux.com, ohad@wizery.com, devicetree@vger.kernel.org, Nathan_Lynch@mentor.com, f.fainelli@gmail.com, Lee Jones <lee.jones@linaro.org>, Ludovic Barre <ludovic.barre@st.com>
 List-Id: devicetree@vger.kernel.org
 
+Signed-off-by: Ludovic Barre <ludovic.barre@st.com>
 Signed-off-by: Lee Jones <lee.jones@linaro.org>
 ---
- include/dt-bindings/reset-controller/stih407-resets.h | 4 ++++
- 1 file changed, 4 insertions(+)
+ .../devicetree/bindings/remoteproc/st-rproc.txt    | 35 ++++++++++++++++++++++
+ 1 file changed, 35 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/remoteproc/st-rproc.txt
 
-diff --git a/include/dt-bindings/reset-controller/stih407-resets.h b/include/dt-bindings/reset-controller/stih407-resets.h
-index 02d4328..4ab3a1c 100644
---- a/include/dt-bindings/reset-controller/stih407-resets.h
-+++ b/include/dt-bindings/reset-controller/stih407-resets.h
-@@ -52,6 +52,10 @@
- #define STIH407_KEYSCAN_SOFTRESET	26
- #define STIH407_USB2_PORT0_SOFTRESET	27
- #define STIH407_USB2_PORT1_SOFTRESET	28
-+#define STIH407_ST231_AUD_SOFTRESET	29
-+#define STIH407_ST231_DMU_SOFTRESET	30
-+#define STIH407_ST231_GP0_SOFTRESET	31
-+#define STIH407_ST231_GP1_SOFTRESET	32
- 
- /* Picophy reset defines */
- #define STIH407_PICOPHY0_RESET		0
+diff --git a/Documentation/devicetree/bindings/remoteproc/st-rproc.txt b/Documentation/devicetree/bindings/remoteproc/st-rproc.txt
+new file mode 100644
+index 0000000..c3848f6
+--- /dev/null
++++ b/Documentation/devicetree/bindings/remoteproc/st-rproc.txt
+@@ -0,0 +1,35 @@
++STMicroelectronics Co-Processor Bindings
++----------------------------------------
++
++This binding provides support for adjunct processors found on ST SoCs.
++
++Co-processors can be controlled from the bootloader or the primary OS. If
++the bootloader starts a co-processor, the primary OS must detect its state
++and act accordingly.
++
++Required properties:
++- compatible		Should be one of:
++				"st,st231-rproc"
++				"st,st40-rproc"
++- reg			Size and length of reserved co-processor memory
++- resets		Reset lines (See: ../reset/reset.txt)
++- reset-names		Must be "sw_reset" and "pwr_reset"
++- clocks		Clock for co-processor (See: ../clock/clock-bindings.txt)
++- clock-frequency	Clock frequency to set co-processor at if the bootloader
++			hasn't already done so
++- st,syscfg		System configuration register which holds the boot vector
++			for the co-processor
++				1st cell: Phandle to syscon block
++				2nd cell: Boot vector register offset
++
++Example:
++
++	st231-audio@bae00000 {
++		compatible	= "st,st231-rproc";
++		reg		= <0xbae00000 0x01000000>;
++		resets		= <&softreset STIH407_ST231_AUD_SOFTRESET>;
++		reset-names	= "sw_reset";
++		clocks		= <&clk_s_c0_flexgen CLK_ST231_AUD_0>;
++		clock-frequency	= <600000000>;
++		st,syscfg	= <&syscfg_core 0x228>;
++	};
 -- 
 1.9.1
