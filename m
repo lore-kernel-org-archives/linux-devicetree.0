@@ -1,422 +1,145 @@
-From: Ding Tianhong <dingtianhong@huawei.com>
-Subject: Re: [PATCH 2/2] arm64: dts: add dts files for Hisilicon Hip05-D02
- Development Board
-Date: Wed, 2 Sep 2015 12:28:01 +0800
-Message-ID: <55E67AD1.2010405@huawei.com>
-References: <1440838361-1468-1-git-send-email-dingtianhong@huawei.com>	<1440838361-1468-3-git-send-email-dingtianhong@huawei.com>	<20150831131244.GB6194@leoy-linaro> <55E45A46.7040805@huawei.com>
+From: Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH 13/13] dt: power: bq24257-charger: Cover additional devices
+Date: Wed, 2 Sep 2015 14:24:05 +0900
+Message-ID: <CAJKOXPeyMeUUon0E9Fhm18SHJEaQPEbGAWwU+MKwgt-30AXHiA@mail.gmail.com>
+References: <1441073435-12349-1-git-send-email-dannenberg@ti.com>
+	<1441073435-12349-14-git-send-email-dannenberg@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <55E45A46.7040805@huawei.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Leo Yan <leo.yan@linaro.org>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, marc.zyngier@arm.com, catalin.marinas@arm.com, will.deacon@arm.com, linux-kernel@vger.kernel.org, linuxarm@huawei.com, robh+dt@kernel.org, haojian.zhuang@linaro.org, galak@codeaurora.org, zhangfei.gao@linaro.org, rob.herring@linaro.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1441073435-12349-14-git-send-email-dannenberg-l0cyMroinI0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Andreas Dannenberg <dannenberg-l0cyMroinI0@public.gmane.org>
+Cc: Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Dmitry Eremin-Solenikov <dbaryshkov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Laurentiu Palcu <laurentiu.palcu-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi=EF=BC=8CMarc=EF=BC=9A
+2015-09-01 11:10 GMT+09:00 Andreas Dannenberg <dannenberg-l0cyMroinI0@public.gmane.org>:
+> Extend the bq24257 charger's device tree documentation to cover the
+> bq24250 and bq24257 devices as well as recent feature additions.
+>
+> Signed-off-by: Andreas Dannenberg <dannenberg-l0cyMroinI0@public.gmane.org>
+> ---
+>  .../devicetree/bindings/power/bq24257.txt          | 59 ++++++++++++++++++++--
+>  1 file changed, 55 insertions(+), 4 deletions(-)
+>
+> diff --git a/Documentation/devicetree/bindings/power/bq24257.txt b/Documentation/devicetree/bindings/power/bq24257.txt
+> index 5c9d394..36b115c 100644
+> --- a/Documentation/devicetree/bindings/power/bq24257.txt
+> +++ b/Documentation/devicetree/bindings/power/bq24257.txt
+> @@ -2,20 +2,71 @@ Binding for TI bq24257 Li-Ion Charger
+>
+>  Required properties:
+>  - compatible: Should contain one of the following:
+> + * "ti,bq24250"
+> + * "ti,bq24251"
+>   * "ti,bq24257"
+> -- reg:                    integer, i2c address of the device.
+> +- reg: integer, i2c address of the device.
+> +- stat-gpio: GPIO used for the devices STAT_IN pin. Alternatively the pin can
+> +    also be defined through the standard interrupt definition properties (see
+> +    optional properties section below). Only use one method.
 
-Can you check this, I am not sure whether the GIC_CPU_MASK_SIMPLE(xx) i=
-s used for gic-v3, maybe we should remove it, thanks.
+Preferred suffix should be "gpios":
+Documentation/devicetree/bindings/gpio/gpio.txt
 
-Ding
+> +- pg-gpio: GPIO used for the device PG (Power Good) pin. This pin is not
+> +    available on all devices and therefore only required on applicable devices.
+> +    However it is also possible to explicitly disable the use of this pin
+> +    through the optional property "ti,pg-gpio-disable" (see below) if desired.
+> +    In this case the "pg-gpio" property is no longer required.
+>  - ti,battery-regulation-voltage: integer, maximum charging voltage in uV.
+> -- ti,charge-current:      integer, maximum charging current in uA.
+> -- ti,termination-current:  integer, charge will be terminated when current in
+> -                          constant-voltage phase drops below this value (in uA).
+> +- ti,charge-current: integer, maximum charging current in uA.
+> +- ti,termination-current: integer, charge will be terminated when current in
+> +    constant-voltage phase drops below this value (in uA).
+> +
+> +Optional properties:
+> +- ti,in-ilimit-autoset-disable: If this boolean property is present it disables
 
-On 2015/8/31 21:44, Ding Tianhong wrote:
-> On 2015/8/31 21:12, Leo Yan wrote:
->> On Sat, Aug 29, 2015 at 04:52:41PM +0800, Ding Tianhong wrote:
->>> Add initial dtsi file to support Hisilicon Hip05-D02 Board with
->>> support of CPUs in four clusters and each cluster has quard Cortex-=
-A57.
->>>
->>> Also add dts file to support Hip05-D02 development board.
->>>
->>> Signed-off-by: Ding Tianhong <dingtianhong@huawei.com>
->>> Signed-off-by: Kefeng Wang <wangkefeng.wang@huawei.com>
->>> ---
->>>  arch/arm64/boot/dts/hisilicon/Makefile      |   2 +-
->>>  arch/arm64/boot/dts/hisilicon/hip05-d02.dts |  36 ++++
->>>  arch/arm64/boot/dts/hisilicon/hip05.dtsi    | 271 ++++++++++++++++=
-++++++++++++
->>>  3 files changed, 308 insertions(+), 1 deletion(-)
->>>  create mode 100644 arch/arm64/boot/dts/hisilicon/hip05-d02.dts
->>>  create mode 100644 arch/arm64/boot/dts/hisilicon/hip05.dtsi
->>>
->>> diff --git a/arch/arm64/boot/dts/hisilicon/Makefile b/arch/arm64/bo=
-ot/dts/hisilicon/Makefile
->>> index fa81a6e..cd158b8 100644
->>> --- a/arch/arm64/boot/dts/hisilicon/Makefile
->>> +++ b/arch/arm64/boot/dts/hisilicon/Makefile
->>> @@ -1,4 +1,4 @@
->>> -dtb-$(CONFIG_ARCH_HISI) +=3D hi6220-hikey.dtb
->>> +dtb-$(CONFIG_ARCH_HISI) +=3D hi6220-hikey.dtb hip05-d02.dtb
->>> =20
->>>  always		:=3D $(dtb-y)
->>>  subdir-y	:=3D $(dts-dirs)
->>> diff --git a/arch/arm64/boot/dts/hisilicon/hip05-d02.dts b/arch/arm=
-64/boot/dts/hisilicon/hip05-d02.dts
->>> new file mode 100644
->>> index 0000000..ae34e25
->>> --- /dev/null
->>> +++ b/arch/arm64/boot/dts/hisilicon/hip05-d02.dts
->>> @@ -0,0 +1,36 @@
->>> +/**
->>> + * dts file for Hisilicon D02 Development Board
->>> + *
->>> + * Copyright (C) 2014,2015 Hisilicon Ltd.
->>> + *
->>> + * This program is free software; you can redistribute it and/or m=
-odify
->>> + * it under the terms of the GNU General Public License version 2 =
-as
->>> + * publishhed by the Free Software Foundation.
->>> + *
->>> + */
->>> +
->>> +/dts-v1/;
->>> +
->>> +#include "hip05.dtsi"
->>> +
->>> +/ {
->>> +	model =3D "Hisilicon Hip05 D02 Development Board";
->>> +	compatible =3D "hisilicon,hip05-d02";
->>> +
->>> +	memory@00000000 {
->>> +		device_type =3D "memory";
->>> +		reg =3D <0x0 0x00000000 0x0 0x80000000>;
->>> +	};
->>> +
->>> +	aliases {
->>> +		serial0 =3D &uart0;
->>> +	};
->>> +
->>> +	chosen {
->>> +		stdout-path =3D "serial0:115200n8";
->>> +	};
->>> +};
->>> +
->>> +&uart0 {
->>> +	status =3D "ok";
->>> +};
->>> diff --git a/arch/arm64/boot/dts/hisilicon/hip05.dtsi b/arch/arm64/=
-boot/dts/hisilicon/hip05.dtsi
->>> new file mode 100644
->>> index 0000000..da12d94
->>> --- /dev/null
->>> +++ b/arch/arm64/boot/dts/hisilicon/hip05.dtsi
->>> @@ -0,0 +1,271 @@
->>> +/**
->>> + * dts file for Hisilicon D02 Development Board
->>> + *
->>> + * Copyright (C) 2014,2015 Hisilicon Ltd.
->>> + *
->>> + * This program is free software; you can redistribute it and/or m=
-odify
->>> + * it under the terms of the GNU General Public License version 2 =
-as
->>> + * publishhed by the Free Software Foundation.
->>> + *
->>> + */
->>> +
->>> +#include <dt-bindings/interrupt-controller/arm-gic.h>
->>> +
->>> +/ {
->>> +	compatible =3D "hisilicon,hip05-d02";
->>> +	interrupt-parent =3D <&gic>;
->>> +	#address-cells =3D <2>;
->>> +	#size-cells =3D <2>;
->>> +
->>> +	psci {
->>> +		compatible =3D "arm,psci-0.2";
->>> +		method =3D "smc";
->>> +	};
->>> +
->>> +	cpus {
->>> +		#address-cells =3D <1>;
->>> +		#size-cells =3D <0>;
->>> +
->>> +		cpu-map {
->>> +			cluster0 {
->>> +				core0 {
->>> +					cpu =3D <&cpu0>;
->>> +				};
->>> +				core1 {
->>> +					cpu =3D <&cpu1>;
->>> +				};
->>> +				core2 {
->>> +					cpu =3D <&cpu2>;
->>> +				};
->>> +				core3 {
->>> +					cpu =3D <&cpu3>;
->>> +				};
->>> +			};
->>> +			cluster1 {
->>> +				core0 {
->>> +					cpu =3D <&cpu4>;
->>> +				};
->>> +				core1 {
->>> +					cpu =3D <&cpu5>;
->>> +				};
->>> +				core2 {
->>> +					cpu =3D <&cpu6>;
->>> +				};
->>> +				core3 {
->>> +					cpu =3D <&cpu7>;
->>> +				};
->>> +			};
->>> +			cluster2 {
->>> +				core0 {
->>> +					cpu =3D <&cpu8>;
->>> +				};
->>> +				core1 {
->>> +					cpu =3D <&cpu9>;
->>> +				};
->>> +				core2 {
->>> +					cpu =3D <&cpu10>;
->>> +				};
->>> +				core3 {
->>> +					cpu =3D <&cpu11>;
->>> +				};
->>> +			};
->>> +			cluster3 {
->>> +				core0 {
->>> +					cpu =3D <&cpu12>;
->>> +				};
->>> +				core1 {
->>> +					cpu =3D <&cpu13>;
->>> +				};
->>> +				core2 {
->>> +					cpu =3D <&cpu14>;
->>> +				};
->>> +				core3 {
->>> +					cpu =3D <&cpu15>;
->>> +				};
->>> +			};
->>> +		};
->>> +
->>> +		cpu0: cpu@20000 {
->>> +			device_type =3D "cpu";
->>> +			compatible =3D "arm,armv8";
->>
->> Change to "arm,cortex-a57","arm,armv8"?
->>
->=20
-> Ok=EF=BC=8Cbut I think should be "hisilicon,hip05","arm,armv8".
->=20
->>> +			reg =3D <0x20000>;
->>> +			enable-method =3D "psci";
->>> +		};
->>> +
->>> +		cpu1: cpu@20001 {
->>> +			device_type =3D "cpu";
->>> +			compatible =3D "arm,armv8";
->>> +			reg =3D <0x20001>;
->>> +			enable-method =3D "psci";
->>> +		};
->>> +
->>> +		cpu2: cpu@20002 {
->>> +			device_type =3D "cpu";
->>> +			compatible =3D "arm,armv8";
->>> +			reg =3D <0x20002>;
->>> +			enable-method =3D "psci";
->>> +		};
->>> +
->>> +		cpu3: cpu@20003 {
->>> +			device_type =3D "cpu";
->>> +			compatible =3D "arm,armv8";
->>> +			reg =3D <0x20003>;
->>> +			enable-method =3D "psci";
->>> +		};
->>> +
->>> +		cpu4: cpu@20100 {
->>> +			device_type =3D "cpu";
->>> +			compatible =3D "arm,armv8";
->>> +			reg =3D <0x20100>;
->>> +			enable-method =3D "psci";
->>> +		};
->>> +
->>> +		cpu5: cpu@20101 {
->>> +			device_type =3D "cpu";
->>> +			compatible =3D "arm,armv8";
->>> +			reg =3D <0x20101>;
->>> +			enable-method =3D "psci";
->>> +		};
->>> +
->>> +		cpu6: cpu@20102 {
->>> +			device_type =3D "cpu";
->>> +			compatible =3D "arm,armv8";
->>> +			reg =3D <0x20102>;
->>> +			enable-method =3D "psci";
->>> +		};
->>> +
->>> +		cpu7: cpu@20103 {
->>> +			device_type =3D "cpu";
->>> +			compatible =3D "arm,armv8";
->>> +			reg =3D <0x20103>;
->>> +			enable-method =3D "psci";
->>> +		};
->>> +
->>> +		cpu8: cpu@20200 {
->>> +			device_type =3D "cpu";
->>> +			compatible =3D "arm,armv8";
->>> +			reg =3D <0x20200>;
->>> +			enable-method =3D "psci";
->>> +		};
->>> +
->>> +		cpu9: cpu@20201 {
->>> +			device_type =3D "cpu";
->>> +			compatible =3D "arm,armv8";
->>> +			reg =3D <0x20201>;
->>> +			enable-method =3D "psci";
->>> +		};
->>> +
->>> +		cpu10: cpu@20202 {
->>> +			device_type =3D "cpu";
->>> +			compatible =3D "arm,armv8";
->>> +			reg =3D <0x20202>;
->>> +			enable-method =3D "psci";
->>> +		};
->>> +
->>> +		cpu11: cpu@20203 {
->>> +			device_type =3D "cpu";
->>> +			compatible =3D "arm,armv8";
->>> +			reg =3D <0x20203>;
->>> +			enable-method =3D "psci";
->>> +		};
->>> +
->>> +		cpu12: cpu@20300 {
->>> +			device_type =3D "cpu";
->>> +			compatible =3D "arm,armv8";
->>> +			reg =3D <0x20300>;
->>> +			enable-method =3D "psci";
->>> +		};
->>> +
->>> +		cpu13: cpu@20301 {
->>> +			device_type =3D "cpu";
->>> +			compatible =3D "arm,armv8";
->>> +			reg =3D <0x20301>;
->>> +			enable-method =3D "psci";
->>> +		};
->>> +
->>> +		cpu14: cpu@20302 {
->>> +			device_type =3D "cpu";
->>> +			compatible =3D "arm,armv8";
->>> +			reg =3D <0x20302>;
->>> +			enable-method =3D "psci";
->>> +		};
->>> +
->>> +		cpu15: cpu@20303 {
->>> +			device_type =3D "cpu";
->>> +			compatible =3D "arm,armv8";
->>> +			reg =3D <0x20303>;
->>> +			enable-method =3D "psci";
->>> +		};
->>> +	};
->>> +
->>> +	gic: interrupt-controller@8d000000 {
->>> +		compatible =3D "arm,gic-v3";
->>> +                #interrupt-cells =3D <3>;
->>> +                #address-cells =3D <2>;
->>> +                #size-cells =3D <2>;
->>> +                ranges;
->>> +                interrupt-controller;
->>> +                #redistributor-regions =3D <1>;
->>> +                redistributor-stride =3D <0x0 0x30000>;
->>> +		reg =3D <0x0 0x8d000000 0 0x10000>,	/* GICD */
->>> +		      <0x0 0x8d100000 0 0x300000>,	/* GICR */
->>> +		      <0x0 0xfe000000 0 0x10000>,	/* GICC */
->>> +		      <0x0 0xfe010000 0 0x10000>,       /* GICH */
->>> +		      <0x0 0xfe020000 0 0x10000>;       /* GICV */
->>> +		interrupts =3D <GIC_PPI 9 (GIC_CPU_MASK_SIMPLE(8) | IRQ_TYPE_LEV=
-EL_HIGH)>;
->>> +
->>> +		its_totems: interrupt-controller@8c000000 {
->>> +			compatible =3D "arm,gic-v3-its";
->>> +			msi-controller;
->>> +			reg =3D <0x0 0x8c000000 0x0 0x1000000>;
->>> +		};
->>> +	};
->>> +
->>> +	timer {
->>> +		compatible =3D "arm,armv8-timer";
->>> +		interrupts =3D <GIC_PPI 13 (GIC_CPU_MASK_SIMPLE(8) | IRQ_TYPE_LE=
-VEL_LOW)>,
->>> +			     <GIC_PPI 14 (GIC_CPU_MASK_SIMPLE(8) | IRQ_TYPE_LEVEL_LOW)>=
-,
->>> +			     <GIC_PPI 11 (GIC_CPU_MASK_SIMPLE(8) | IRQ_TYPE_LEVEL_LOW)>=
-,
->>> +			     <GIC_PPI 10 (GIC_CPU_MASK_SIMPLE(8) | IRQ_TYPE_LEVEL_LOW)>=
-;
->>
->> Here have a question:
->> In devcie tree binding file: Documentation/devicetree/bindings/arm/g=
-ic.txt,
->> it only considers for maximum 8 cpus. So will we need change the
->> binding file and also use GIC_CPU_MASK_SIMPLE(16) for 16 cores?
->>
->=20
-> Looks like should updtate gic.txt and use the GIC_CPU_MASK_SIMPLE(16)=
- for 16 cores.
->=20
-> Ding
->=20
->>> +	};
->>> +
->>> +	pmu {
->>> +		compatible =3D "arm,armv8-pmuv3";
->>> +		interrupts =3D <GIC_PPI 7 IRQ_TYPE_LEVEL_HIGH>;
->>> +	};
->>> +
->>> +	soc {
->>> +		compatible =3D "simple-bus";
->>> +		#address-cells =3D <2>;
->>> +		#size-cells =3D <2>;
->>> +		ranges;
->>> +
->>> +		refclk200mhz: refclk200mhz {
->>> +			compatible =3D "fixed-clock";
->>> +			#clock-cells =3D <0>;
->>> +			clock-frequency =3D <200000000>;
->>> +		};
->>> +
->>> +		uart0: uart@80300000 {
->>> +			compatible =3D "snps,dw-apb-uart";
->>> +			reg =3D <0x0 0x80300000 0x0 0x10000>;
->>> +			interrupts =3D <GIC_SPI 317 IRQ_TYPE_LEVEL_HIGH>;
->>> +			clocks =3D <&refclk200mhz>;
->>> +			clock-names =3D "apb_pclk";
->>> +			reg-shift =3D <2>;
->>> +			reg-io-width =3D <4>;
->>> +			status =3D "disabled";
->>> +		};
->>> +
->>> +		uart1: uart@80310000 {
->>> +			compatible =3D "snps,dw-apb-uart";
->>> +			reg =3D <0x0 0x80310000 0x0 0x10000>;
->>> +			interrupts =3D <GIC_SPI 318 IRQ_TYPE_LEVEL_HIGH>;
->>> +			clocks =3D <&refclk200mhz>;
->>> +			clock-names =3D "apb_pclk";
->>> +			reg-shift =3D <2>;
->>> +			reg-io-width =3D <4>;
->>> +			status =3D "disabled";
->>> +		};
->>> +	};
->>> +};
->>> --=20
->>> 1.9.0
->>>
->>>
->>>
->>> _______________________________________________
->>> linux-arm-kernel mailing list
->>> linux-arm-kernel@lists.infradead.org
->>> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
->>
->> .
->>
->=20
->=20
-> _______________________________________________
-> linuxarm mailing list
-> linuxarm@huawei.com
-> http://rnd-openeuler.huawei.com/mailman/listinfo/linuxarm
->=20
+I thought "ilimit" is a typo but apparently not :) . The names of this
+property and "ti,in-limit-current" below are quite obfuscated. I am
+thinking about different names but first I would like to understand
+the feature: what do you mean by "automatic setting of the input
+current limit"? Like adjusting the limit of possible current to given
+charger type?
+
+> +    the automatic setting of the input current limit. This property is also set
+> +    implicitly on devices without charger type detection. If this property is
+> +    provided the input current limit should be set manually through
+> +    "ti,in-limit-current".
+> +- ti,in-limit-current: The maximum current to be drawn from the charger's input
+> +    (in uA). Use this for devices that don't have charger type detection or if
+> +    you have have set "ti,in-ilimit-autoset-disable".
+> +- ti,vovp-voltage: Configures the over voltage protection voltage (in uV).
+> +- ti,vindpm-voltage:  Configures the threshold input voltage for the dynamic
+> +    power path management (in uV).
+
+I think the leading 'v' could be removed, so "ti,ovp-voltage" and
+"ti,in-dpm-voltage"?
+
+> +- ti,pg-gpio-disable: If this boolean property is provided a software-based
+> +    approach for power good determination is used. Note that the PG-pin based
+> +    approach is generally preferable.
+
+That's confusing. If someone does not want to use pg-gpio then he
+could just skip the "pg-gpio" property?
+
+> +- ti,timer-2x-enable: If this boolean property is provided the device's safety
+> +    timer is extended by a factor of two.
+
+Boolean properties like this have disadvantage - they cannot be
+overridden. Also extending them is difficult (e.g. for some next
+device the timer could have value of 4). Usually it is better to have
+a value-based property with "0" meaning default or disabled.
+
+Also please look at existing bindings:
+$ git grep "ti," Documentation/devicetree/bindings/power
+Maybe you could reuse some? Each of these existing and new bindings
+are made generic (not device specific) so they should be reused.
+
+Best regards,
+Krzysztof
+
+> +- interrupt-parent: Should be the phandle for the interrupt controller. Use in
+> +    conjunction with "interrupts" and only in case "stat-gpio" is not used.
+> +- interrupts: Interrupt mapping for GPIO IRQ (configure for both edges). Use in
+> +    conjunction with "interrupt-parent" and only in case "stat-gpio" is not
+> +    used.
+>
+>  Example:
+>
+>  bq24257 {
+>         compatible = "ti,bq24257";
+>         reg = <0x6a>;
+> +       stat-gpio = <&gpio1 16 GPIO_ACTIVE_HIGH>;
+> +       pg-gpio = <&gpio1 28 GPIO_ACTIVE_HIGH>;
+>
+>         ti,battery-regulation-voltage = <4200000>;
+>         ti,charge-current = <1000000>;
+>         ti,termination-current = <50000>;
+>  };
+> +
+> +Example:
+> +
+> +bq24250 {
+> +       compatible = "ti,bq24250";
+> +       reg = <0x6a>;
+> +       interrupt-parent = <&gpio1>;
+> +       interrupts = <16 IRQ_TYPE_EDGE_BOTH>;
+> +
+> +       ti,battery-regulation-voltage = <4200000>;
+> +       ti,charge-current = <500000>;
+> +       ti,termination-current = <50000>;
+> +       ti,in-limit-current = <900000>;
+> +       ti,vovp-voltage = <9500000>;
+> +       ti,vindpm-voltage = <4440000>;
+> +};
+> --
+> 1.9.1
+>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
