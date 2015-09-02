@@ -1,43 +1,74 @@
-From: Emil Velikov <emil.l.velikov@gmail.com>
-Subject: Re: [PATCH v4 03/16] drm: bridge: analogix/dp: split exynos dp driver
- to bridge dir
-Date: Wed, 2 Sep 2015 15:50:37 +0100
-Message-ID: <CACvgo53pZUtSLRGVMYPs1s4QPBrAr3j=xoZ1t23tPv202bzfyg@mail.gmail.com>
-References: <1441086371-24838-1-git-send-email-ykk@rock-chips.com>
-	<1441086598-24995-1-git-send-email-ykk@rock-chips.com>
+From: Peter Griffin <peter.griffin@linaro.org>
+Subject: Re: [PATCH v3 4/6] [media] c8sectpfe: Update binding to reset-gpios
+Date: Wed, 2 Sep 2015 16:03:01 +0100
+Message-ID: <20150902150301.GA15477@griffinp-ThinkPad-X1-Carbon-2nd>
+References: <1440784362-31217-1-git-send-email-peter.griffin@linaro.org>
+ <1440784362-31217-5-git-send-email-peter.griffin@linaro.org>
+ <CABxcv=nM7MBK2EcD1-YK5y0J1hBtxV+6Wu812C23pNkAzigu7g@mail.gmail.com>
+ <CAL_JsqLccRKCnASOK-tAUn=ifZpQ3hCEJ1eg1hmrei=3vEpzFA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <1441086598-24995-1-git-send-email-ykk@rock-chips.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Yakir Yang <ykk@rock-chips.com>
-Cc: Heiko Stuebner <heiko@sntech.de>, Thierry Reding <treding@nvidia.com>, Jingoo Han <jingoohan1@gmail.com>, Inki Dae <inki.dae@samsung.com>, joe@perches.com, Kukjin Kim <kgene@kernel.org>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, Mark Yao <mark.yao@rock-chips.com>, ML dri-devel <dri-devel@lists.freedesktop.org>, Andrzej Hajda <a.hajda@samsung.com>, Gustavo Padovan <gustavo.padovan@collabora.co.uk>, "moderated list:ARM/S5P EXYNOS AR..." <linux-samsung-soc@vger.kernel.org>, seanpaul@chromium.com, djkurtz@chromium.com, Kishon Vijay Abraham I <kishon@ti.com>, linux-rockchip@lists.infradead.org, robherring2@gmail.com, Russell King <rmk+kernel@arm.linux.org.uk>, devicetree@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <robh+dt@kernel.org>, dianders@chromium.com, linux-arm-kernel@lists.infradead.org, Linu
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAL_JsqLccRKCnASOK-tAUn=ifZpQ3hCEJ1eg1hmrei=3vEpzFA@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robherring2@gmail.com>
+Cc: Javier Martinez Canillas <javier@dowhile0.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Linux Kernel <linux-kernel@vger.kernel.org>, Srinivas Kandagatla <srinivas.kandagatla@gmail.com>, Maxime Coquelin <maxime.coquelin@st.com>, Patrice Chotard <patrice.chotard@st.com>, Mauro Carvalho Chehab <mchehab@osg.samsung.com>, Lee Jones <lee.jones@linaro.org>, "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Valentin Rothberg <valentinrothberg@gmail.com>, hugues.fruchet@st.com
 List-Id: devicetree@vger.kernel.org
 
-[Dropping the CC list]
+Hi Rob,
 
-Hi Yakir Yang,
+On Tue, 01 Sep 2015, Rob Herring wrote:
 
-On 1 September 2015 at 06:49, Yakir Yang <ykk@rock-chips.com> wrote:
-> Split the dp core driver from exynos directory to bridge
-> directory, and rename the core driver to analogix_dp_*,
-> leave the platform code to analogix_dp-exynos.
->
-> Signed-off-by: Yakir Yang <ykk@rock-chips.com>
-> ---
-> Changes in v4:
-> - Take Rob suggest, update "analogix,hpd-gpios" to "hpd-gpios" DT propery.
-> - Take Jingoo suggest, rename "analogix_dp-exynos.c" file name to "exynos_dp.c"
-> - Take Archit suggest, create a separate folder for analogix code in bridge/
->
-"Take X suggest", is grammatically incorrect. You should use
-"suggestion(s)" or alternatively use the following approach.
+> On Tue, Sep 1, 2015 at 3:32 AM, Javier Martinez Canillas
+> <javier@dowhile0.org> wrote:
+> > Hello Peter,
+> >
+> > On Fri, Aug 28, 2015 at 7:52 PM, Peter Griffin <peter.griffin@linaro.org> wrote:
+> >> gpio.txt documents that GPIO properties should be named
+> >> "[<name>-]gpios", with <name> being the purpose of this
+> >> GPIO for the device.
+> >>
+> >> This change has been done as one atomic commit.
+> >>
+> >> Signed-off-by: Peter Griffin <peter.griffin@linaro.org>
+> >> Acked-by: Lee Jones <lee.jones@linaro.org>
+> >> ---
+> >>  Documentation/devicetree/bindings/media/stih407-c8sectpfe.txt | 6 +++---
+> >>  arch/arm/boot/dts/stihxxx-b2120.dtsi                          | 4 ++--
+> >>  drivers/media/platform/sti/c8sectpfe/c8sectpfe-core.c         | 2 +-
+> >>  3 files changed, 6 insertions(+), 6 deletions(-)
+> >>
+> >> diff --git a/Documentation/devicetree/bindings/media/stih407-c8sectpfe.txt b/Documentation/devicetree/bindings/media/stih407-c8sectpfe.txt
+> >> index d4def76..e70d840 100644
+> >> --- a/Documentation/devicetree/bindings/media/stih407-c8sectpfe.txt
+> >> +++ b/Documentation/devicetree/bindings/media/stih407-c8sectpfe.txt
+> >> @@ -35,7 +35,7 @@ Required properties (tsin (child) node):
+> >>
+> >>  - tsin-num     : tsin id of the InputBlock (must be between 0 to 6)
+> >>  - i2c-bus      : phandle to the I2C bus DT node which the demodulators & tuners on this tsin channel are connected.
+> >> -- rst-gpio     : reset gpio for this tsin channel.
+> >> +- reset-gpios  : reset gpio for this tsin channel.
+> >
+> > The documentation is a bit outdated, the GPIO subsystem supports both
+> > -gpio and -gpios, see commit:
+> >
+> > dd34c37aa3e8 ("gpio: of: Allow -gpio suffix for property names")
+> 
+> Yes, because we have lots of them.
+> 
+> > So it makes sense to me to use -gpio instead of -gpios in this case
+> > since is a single GPIO. Also rst is already a descriptive name since
+> > that's how many datasheets name a reset pin. I'm not saying I'm
+> > against this patch, just pointing out since the commit message is a
+> > bit misleading.
+> 
+> I believe that this has been discussed at length and it was decided
+> that new bindings should use "-gpios" even for 1. Just like "clocks"
+> is always plural.
 
-- Create a separate folder for analogix code in bridge/ (Archit)
+Doh! Ok I will change back again to 'reset-gpios'.
 
-Cheers,
-Emil
+regards,
 
-P.S. Why do you resend the whole series (some 10+ patches) when only a
-few patches have been changed ? Are all the patches changed whist
-missing that information (vX: rebase on top of A)
+Peter.
