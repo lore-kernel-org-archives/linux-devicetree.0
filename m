@@ -1,67 +1,55 @@
-From: Bjorn Helgaas <bhelgaas@google.com>
-Subject: Re: [PATCH v2 1/4] of/pci: Add of_pci_check_probe_only to parse
- "linux,pci-probe-only"
-Date: Wed, 2 Sep 2015 17:23:25 -0500
-Message-ID: <20150902222325.GD829@google.com>
-References: <1439569159-10051-1-git-send-email-marc.zyngier@arm.com>
- <1439569159-10051-2-git-send-email-marc.zyngier@arm.com>
- <CAL_JsqL7VPB6nc-zRYm_73ZSgYVq_+a6sW_XZZ_LRaUXf4jTng@mail.gmail.com>
+From: Doug Anderson <dianders@chromium.org>
+Subject: Re: [PATCH] ARM: dts: rk3288: pull up cts lines
+Date: Wed, 2 Sep 2015 15:57:30 -0700
+Message-ID: <CAD=FV=WEc4tSn7HhFkVWRJwb7Z33Kq4u3ubsYKb2xyJLAQrVPg@mail.gmail.com>
+References: <1441232406-32628-1-git-send-email-amstan@chromium.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-pci-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAL_JsqL7VPB6nc-zRYm_73ZSgYVq_+a6sW_XZZ_LRaUXf4jTng@mail.gmail.com>
-Sender: linux-pci-owner@vger.kernel.org
-To: Rob Herring <robherring2@gmail.com>
-Cc: Marc Zyngier <marc.zyngier@arm.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Paul Mackerras <paulus@samba.org>, Michael Ellerman <mpe@ellerman.id.au>, Will Deacon <will.deacon@arm.com>, Suravee Suthikulpanit <Suravee.Suthikulpanit@amd.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, Alexander Graf <agraf@suse.de>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, linuxppc-dev <linuxppc-dev@lists.ozlabs.org>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1441232406-32628-1-git-send-email-amstan@chromium.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Alexandru M Stan <amstan@chromium.org>
+Cc: Heiko Stuebner <heiko@sntech.de>, Jeffy Chen <jeffy.chen@rock-chips.com>, Caesar Wang <wxt@rock-chips.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Neil Hendin <nhendin@chromium.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Aug 14, 2015 at 04:08:10PM -0500, Rob Herring wrote:
-> On Fri, Aug 14, 2015 at 11:19 AM, Marc Zyngier <marc.zyngier@arm.com> wrote:
-> > Both pci-host-generic and Pseries parse the "linux,pci-probe-only"
-> > to engage the PCI_PROBE_ONLY mode, and both have a subtle bug that
-> > can be triggered if the property has no parameter.
-> 
-> Humm, I bet we could break a lot of machines if we fixed the core code
-> to properly make pp->value NULL when there is no value.
-> 
-> > Provide a generic implementation that can be used by both.
-> >
-> > Signed-off-by: Marc Zyngier <marc.zyngier@arm.com>
-> > ---
-> >  drivers/of/of_pci.c    | 30 ++++++++++++++++++++++++++++++
-> >  include/linux/of_pci.h |  3 +++
-> >  2 files changed, 33 insertions(+)
-> >
-> > diff --git a/drivers/of/of_pci.c b/drivers/of/of_pci.c
-> > index 5751dc5..a4e29ff 100644
-> > --- a/drivers/of/of_pci.c
-> > +++ b/drivers/of/of_pci.c
-> > @@ -118,6 +118,36 @@ int of_get_pci_domain_nr(struct device_node *node)
-> >  EXPORT_SYMBOL_GPL(of_get_pci_domain_nr);
-> >
-> >  /**
-> > + * of_pci_check_probe_only - Setup probe only mode if linux,pci-probe-only
-> > + *                           is present and valid
-> > + *
-> > + * @node: device tree node that may contain the property (usually "chosen")
-> > + *
-> > + */
-> > +void of_pci_check_probe_only(struct device_node *node)
-> > +{
-> > +       const int *prop;
-> > +       int len;
-> > +
-> > +       if (!node)
-> > +               return;
-> > +
-> > +       prop = of_get_property(node, "linux,pci-probe-only", &len);
-> 
-> It is preferred to use of_property_read_u32 to avoid just these types
-> of problems.
+Alex,
 
-I don't know enough OF to really understand this, but I infer that
-this is a suggestion for improving the patch.  Should I be waiting for
-a v3 series?
+On Wed, Sep 2, 2015 at 3:20 PM, Alexandru M Stan <amstan@chromium.org> wrote:
+> The flow control lines from a user accessible UART are optional,
+> the user might not have anything connected to those pins.
+> In order to prevent random interrupts happening and noise affecting
+> that pin it should be pulled up.
+>
+> Note that the default state for those pins on the rk3288 is pulled up,
+> so this patch merely restores them.
+>
+> Suggested-by: Neil Hendin <nhendin@chromium.org>
+> Signed-off-by: Alexandru M Stan <amstan@chromium.org>
+> ---
+>  arch/arm/boot/dts/rk3288.dtsi | 16 ++++++++--------
+>  1 file changed, 8 insertions(+), 8 deletions(-)
+>
+> diff --git a/arch/arm/boot/dts/rk3288.dtsi b/arch/arm/boot/dts/rk3288.dtsi
+> index 906e938..a059367 100644
+> --- a/arch/arm/boot/dts/rk3288.dtsi
+> +++ b/arch/arm/boot/dts/rk3288.dtsi
+> @@ -1211,11 +1211,11 @@
+>                         };
+>
+>                         uart0_cts: uart0-cts {
+> -                               rockchip,pins = <4 18 RK_FUNC_1 &pcfg_pull_none>;
+> +                               rockchip,pins = <4 18 RK_FUNC_1 &pcfg_pull_up>;
+>                         };
+>
+>                         uart0_rts: uart0-rts {
+> -                               rockchip,pins = <4 19 RK_FUNC_1 &pcfg_pull_none>;
+> +                               rockchip,pins = <4 19 RK_FUNC_1 &pcfg_pull_up>;
 
-Bjorn
+I would probably do just CTS.  That would match the TX / RX lines
+where the RX is pulled but not the TX.
+
+You might also mention in the commit message that this really should
+be safe since we're already doing something similar for RX.
+
+
+-Doug
