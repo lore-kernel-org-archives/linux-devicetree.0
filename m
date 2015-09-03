@@ -1,70 +1,49 @@
-From: Punit Agrawal <punit.agrawal@arm.com>
-Subject: Re: [PATCH v2 05/10] Documentation: add DT bindings for ARM SCPI sensors
-Date: Thu, 03 Sep 2015 16:08:06 +0100
-Message-ID: <9hhsi6vilrd.fsf@e105922-lin.cambridge.arm.com>
-References: <1438615378-14241-1-git-send-email-punit.agrawal@arm.com>
-	<1438615378-14241-6-git-send-email-punit.agrawal@arm.com>
+From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH 0/4] omap: Fix broken address translation for pbias
+Date: Thu, 3 Sep 2015 08:10:06 -0700
+Message-ID: <20150903151005.GU4215@atomide.com>
+References: <1441279673-28105-1-git-send-email-kishon@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <1438615378-14241-6-git-send-email-punit.agrawal@arm.com> (Punit
-	Agrawal's message of "Mon, 3 Aug 2015 16:22:53 +0100")
-Sender: linux-pm-owner@vger.kernel.org
-To: linux-pm@vger.kernel.org
-Cc: lm-sensors@lm-sensors.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, liviu.dudau@arm.com, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Sudeep Holla <sudeep.holla@arm.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1441279673-28105-1-git-send-email-kishon-l0cyMroinI0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
+Cc: t-kristo-l0cyMroinI0@public.gmane.org, bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, nsekhar-l0cyMroinI0@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Punit Agrawal <punit.agrawal@arm.com> writes:
+* Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org> [150903 04:31]:
+> pbias device stopped having memory resource after
+> "ARM: dts: <platform>: add minimal l4 bus layout with control module
+> support" got merged. This results in platform_get_resource returning
+> -EINVAL in pbias driver. This is because address translation fails
+> while trying to convert the address to resource which happens
+> during the device creation process during boot up.
+> 
+> Even though after [1], reg property in pbias dt node is un-used,
+> it might be an issue if we plan to use it at a later point of time.
+> 
+> Patch series is created on top of [1].
+> 
+> [1] -> https://lkml.org/lkml/2015/9/3/51
+> 
+> Verified the address in omap4 panda, omap5 uevm and dra72 boards.
 
-> The System Control Processor (SCP) provides access to SoC sensors via
-> the System Control and Power Interface (SCPI) Message Protocol. Add
-> bindings to allow probing of these sensors. Also support referencing
-> of the sensors for setting up thermal zones via the thermal DT
-> bindings.
->
-> Signed-off-by: Punit Agrawal <punit.agrawal@arm.com>
-> Cc: Rob Herring <robh+dt@kernel.org>
-> Cc: Mark Rutland <mark.rutland@arm.com>
-> Cc: Sudeep Holla <sudeep.holla@arm.com>
+Your other series is obviously needed for v4.3.. But seems these
+are also needed for stable? If so, which versions, v4.2+?
 
-Gentle ping for the bindings review.
+Can you please just do a single patch with multiple Fixes tags
+as they fix regression for multiple commits? Doing tons of one
+liner patches for the same thing just creates commit log noise..
 
-> ---
->  Documentation/devicetree/bindings/arm/arm,scpi.txt | 15 +++++++++++++++
->  1 file changed, 15 insertions(+)
->
-> diff --git a/Documentation/devicetree/bindings/arm/arm,scpi.txt b/Documentation/devicetree/bindings/arm/arm,scpi.txt
-> index e309249..8ead68a 100644
-> --- a/Documentation/devicetree/bindings/arm/arm,scpi.txt
-> +++ b/Documentation/devicetree/bindings/arm/arm,scpi.txt
-> @@ -72,8 +72,18 @@ Required sub-node properties:
->  - compatible : should be "arm,juno-scp-shmem" for Non-secure SRAM based
->  	       shared memory on Juno platforms
->  
-> +Sensor bindings for the sensors based on SCPI Message Protocol
-> +--------------------------------------------------------------
-> +SCPI provides an API to access the various sensors on the SoC.
-> +
-> +Required properties:
-> +- compatible : should be "arm,scpi-sensors".
-> +- #thermal-sensor-cells: should be set to 1. This property follows the
-> +			 thermal device tree bindings[2].
-> +
->  [0] http://community.arm.com/servlet/JiveServlet/download/8401-45-18326/DUI0922B_scp_message_interface.pdf
->  [1] Documentation/devicetree/bindings/clock/clock-bindings.txt
-> +[2] Documentation/devicetree/bindings/thermal/thermal.txt
->  
->  Example:
->  
-> @@ -122,6 +132,11 @@ scpi_protocol: scpi@2e000000 {
->  			clock-output-names = "pxlclk0", "pxlclk1";
->  		};
->  	};
-> +
-> +	scpi_sensors0: sensors {
-> +		compatible = "arm,scpi-sensors";
-> +		#thermal-sensor-cells = <1>;
-> +	};
->  };
->  
->  cpu@0 {
+Remember to not Cc stable when posting, I'll add that tag when
+committing if needed.
+
+Regards,
+
+Tony
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
