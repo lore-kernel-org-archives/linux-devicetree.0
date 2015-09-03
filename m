@@ -1,38 +1,39 @@
-From: "santosh.shilimkar@oracle.com" <santosh.shilimkar@oracle.com>
-Subject: Re: [PATCH] ARM: dts: keystone: use one to one address translations
- under netcp
-Date: Thu, 03 Sep 2015 07:48:56 -0700
-Message-ID: <55E85DD8.4070102@oracle.com>
-References: <1441139324-29296-1-git-send-email-w-kwok2@ti.com> <55E61658.9010207@oracle.com> <230CBA6E4B6B6B418E8730AC28E6FC7E04221776@DFLE11.ent.ti.com> <55E71AB3.7070406@oracle.com> <20150903142645.GS4215@atomide.com>
+From: Tony Lindgren <tony@atomide.com>
+Subject: Re: [PATCH v2 0/6] regulator: Fix pbias regulator enable
+Date: Thu, 3 Sep 2015 08:04:53 -0700
+Message-ID: <20150903150452.GT4215@atomide.com>
+References: <1441263042-12942-1-git-send-email-kishon@ti.com>
+ <CAPDyKFrVR+vvmxm43hGimjqo4pcFa1pfDuNNENXU-tk_qXo2=w@mail.gmail.com>
+ <55E81117.2040900@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20150903142645.GS4215@atomide.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Tony Lindgren <tony@atomide.com>
-Cc: "Kwok, WingMan" <w-kwok2@ti.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "galak@codeaurora.org" <galak@codeaurora.org>, "linux@arm.linux.org.uk" <linux@arm.linux.org.uk>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "ssantosh@kernel.org" <ssantosh@kernel.org>, "Karicheri, Muralidharan" <m-karicheri2@ti.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-mmc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <55E81117.2040900@ti.com>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Kishon Vijay Abraham I <kishon@ti.com>
+Cc: Ulf Hansson <ulf.hansson@linaro.org>, Olof Johansson <olof@lixom.net>, Mark Brown <broonie@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-mmc <linux-mmc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, =?utf-8?B?UGF3ZcWC?= Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Benoit Cousson <bcousson@baylibre.com>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Liam Girdwood <lgirdwood@gmail.com>, linux-omap <linux-omap@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Sekhar Nori <nsekhar@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-On 9/3/15 7:26 AM, Tony Lindgren wrote:
-> * santosh shilimkar <santosh.shilimkar@oracle.com> [150902 08:55]:
->>
->> I suspected the same. I know back then we started with SERDES code
->> with NETCP but as you already know, its a separate block which
->> is needed for NIC card to work. Its more of phy and hence its
->> having different address space is not surprising.
->
-> The point Santosh is making here though is that any drivers
-> tinkering with registers belonging to a separate hardware block
-> is a recipe for a long term maintenance nightmare with mysterious
-> bugs popping up as things are not clocked or powered properly
-> or become racy with other drivers.
->
-> Each hardware block needs to have it's own driver and then the
-> drivers can communicate using some Linux generic APIs like clock,
-> regulator, phy, or mailbox frameworks.
->
-Right !!
+* Kishon Vijay Abraham I <kishon@ti.com> [150903 02:25]:
+> On Thursday 03 September 2015 01:09 PM, Ulf Hansson wrote:
+> > 
+> > Finally, perhaps it's better if we queue this through my mmc tree
+> > since we would then be able to avoid the regression - if I put
+> > $subject patchset before [1], right? Then I need an ack from Mark for
+> > the regulator patch.
+> > Please tell me if you guys prefer another way.
+
+That works for me too. Or Mark can set up an immutable signed
+branch that you can merge in, up to you guys.
+
+It's still going to break git bisect for booting but
+removes the regression when mergeing to mainline.
+
+I'd squash all the one liner dts changes into a single
+patch though when applying to cut down on the commit
+noise.
 
 Regards,
-Santosh
+
+Tony
