@@ -1,50 +1,118 @@
-From: Marc Zyngier <marc.zyngier@arm.com>
-Subject: [PATCH v3 4/4] arm64: dts: Drop linux,
- pci-probe-only from the Seattle DTS
-Date: Thu,  3 Sep 2015 13:16:16 +0100
-Message-ID: <1441282576-7304-5-git-send-email-marc.zyngier@arm.com>
-References: <1441282576-7304-1-git-send-email-marc.zyngier@arm.com>
+From: Ulf Hansson <ulf.hansson@linaro.org>
+Subject: Re: [PATCH v2 5/7] staging: board: Add support for devices with
+ complex dependencies
+Date: Thu, 3 Sep 2015 14:53:56 +0200
+Message-ID: <CAPDyKFqouMeTKuXyyohH-VDmWXH+TiLNDT-7MKFa_-TqeF2WSw@mail.gmail.com>
+References: <1434530336-15073-1-git-send-email-geert+renesas@glider.be>
+	<1434530336-15073-6-git-send-email-geert+renesas@glider.be>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1441282576-7304-1-git-send-email-marc.zyngier@arm.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Benjamin Herrenschmidt <benh@kernel.crashing.org>, Paul Mackerras <paulus@samba.org>, Michael Ellerman <mpe@ellerman.id.au>, Will Deacon <will.deacon@arm.com>, Bjorn Helgaas <bhelgaas@google.com>, Suravee Suthikulpanit <Suravee.Suthikulpanit@amd.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>
-Cc: devicetree@vger.kernel.org, linux-pci@vger.kernel.org, Alexander Graf <agraf@suse.de>, linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <1434530336-15073-6-git-send-email-geert+renesas@glider.be>
+Sender: linux-sh-owner@vger.kernel.org
+To: Geert Uytterhoeven <geert+renesas@glider.be>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Simon Horman <horms+renesas@verge.net.au>, Magnus Damm <damm+renesas@opensource.se>, Arnd Bergmann <arnd@arndb.de>, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>, Marc Zyngier <marc.zyngier@arm.com>, devel@driverdev.osuosl.org, Linux-sh list <linux-sh@vger.kernel.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-The linux,pci-probe-only property mandates an argument to indicate
-whether or not to engage the "probe-only" mode, but the Seattle
-DTS just provides a naked property, which is illegal.
+On 17 June 2015 at 10:38, Geert Uytterhoeven <geert+renesas@glider.be> wrote:
+> Add support for easy registering of one ore more platform devices that
+> may:
+>   - need clocks that are described in DT,
+>   - be part of a PM Domain.
+>
+> All these dependencies are optional.
+>
+> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> ---
+> v2:
+>   - Drop support for pinctrl, use standard pinctrl in DT instead,
+>   - Drop support for configured GPIOs, use "gpio-hog" in DT instead,
+>   - Use clk_add_alias() instead of open coding,
+>   - Update for changed function names,
+>   - Drop RFC status.
+> ---
+>  drivers/staging/board/board.c | 56 +++++++++++++++++++++++++++++++++++++++++++
+>  drivers/staging/board/board.h | 20 ++++++++++++++++
+>  2 files changed, 76 insertions(+)
+>
+> diff --git a/drivers/staging/board/board.c b/drivers/staging/board/board.c
+> index 8712f566b31196e0..29d456e29f38feac 100644
+> --- a/drivers/staging/board/board.c
+> +++ b/drivers/staging/board/board.c
+> @@ -9,6 +9,7 @@
+>
+>  #define pr_fmt(fmt)    "board_staging: "  fmt
+>
+> +#include <linux/clkdev.h>
+>  #include <linux/init.h>
+>  #include <linux/irq.h>
+>  #include <linux/device.h>
+> @@ -16,6 +17,8 @@
+>  #include <linux/of.h>
+>  #include <linux/of_address.h>
+>  #include <linux/of_irq.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/pm_domain.h>
+>
+>  #include "board.h"
+>
+> @@ -118,3 +121,56 @@ void __init board_staging_gic_fixup_resources(struct resource *res,
+>         for (i = 0; i < nres; i++)
+>                 gic_fixup_resource(&res[i]);
+>  }
+> +
+> +int __init board_staging_register_clock(const struct board_staging_clk *bsc)
+> +{
+> +       int error;
+> +
+> +       pr_debug("Aliasing clock %s for con_id %s dev_id %s\n", bsc->clk,
+> +                bsc->con_id, bsc->dev_id);
+> +       error = clk_add_alias(bsc->con_id, bsc->dev_id, bsc->clk, NULL);
+> +       if (error)
+> +               pr_err("Failed to alias clock %s (%d)\n", bsc->clk, error);
+> +
+> +       return error;
+> +}
+> +
+> +int __init board_staging_register_device(const struct board_staging_dev *dev)
+> +{
+> +       struct platform_device *pdev = dev->pdev;
+> +       unsigned int i;
+> +       int error;
+> +
+> +       pr_debug("Trying to register device %s\n", pdev->name);
+> +       if (board_staging_dt_node_available(pdev->resource,
+> +                                           pdev->num_resources)) {
+> +               pr_warn("Skipping %s, already in DT\n", pdev->name);
+> +               return -EEXIST;
+> +       }
+> +
+> +       board_staging_gic_fixup_resources(pdev->resource, pdev->num_resources);
+> +
+> +       for (i = 0; i < dev->nclocks; i++)
+> +               board_staging_register_clock(&dev->clocks[i]);
+> +
+> +       error = platform_device_register(pdev);
+> +       if (error) {
+> +               pr_err("Failed to register device %s (%d)\n", pdev->name,
+> +                      error);
+> +               return error;
+> +       }
+> +
+> +       if (dev->domain)
+> +               __pm_genpd_name_add_device(dev->domain, &pdev->dev, NULL);
 
-Also, it turns out that the board is perfectly happy without
-probe-only, so let's drop this altogether.
+Urgh, this managed to slip through my filters.
 
-Signed-off-by: Marc Zyngier <marc.zyngier@arm.com>
----
- arch/arm64/boot/dts/amd/amd-overdrive.dts | 1 -
- 1 file changed, 1 deletion(-)
+It seems like we almost managed to remove all users of the
+"..._name_add..." APIs for genpd. If hasn't been for $subject patch.
+:-)
 
-diff --git a/arch/arm64/boot/dts/amd/amd-overdrive.dts b/arch/arm64/boot/dts/amd/amd-overdrive.dts
-index 564a3f7..128fa94 100644
---- a/arch/arm64/boot/dts/amd/amd-overdrive.dts
-+++ b/arch/arm64/boot/dts/amd/amd-overdrive.dts
-@@ -14,7 +14,6 @@
- 
- 	chosen {
- 		stdout-path = &serial0;
--		linux,pci-probe-only;
- 	};
- };
- 
--- 
-2.1.4
+Now, I realize this is already too late here, but let's try to fix
+this before it turns into a bigger issue.
+
+Geert, do you think it's possible to convert into using the non-named
+bases APIs?
+
+Kind regards
+Uffe
