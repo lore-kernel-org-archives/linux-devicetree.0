@@ -1,87 +1,69 @@
-From: Peter Griffin <peter.griffin@linaro.org>
-Subject: [PATCH v5 2/6] ARM: DT: STi: STiH407: Add c8sectpfe LinuxDVB DT node.
-Date: Thu,  3 Sep 2015 18:59:50 +0100
-Message-ID: <1441303194-28211-3-git-send-email-peter.griffin@linaro.org>
-References: <1441303194-28211-1-git-send-email-peter.griffin@linaro.org>
+From: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: for_each_xxx_of_node() - lots of refcounting bugs
+Date: Thu, 03 Sep 2015 11:26:59 -0700
+Message-ID: <55E890F3.3030505@gmail.com>
+References: <20150901110743.GJ21084@n2100.arm.linux.org.uk> <CAL_JsqJE5seB=5-9_QJBFG1=ipDr_osQJusOSk00VZzwhs=CDA@mail.gmail.com>
+Reply-To: frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1441303194-28211-1-git-send-email-peter.griffin@linaro.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, srinivas.kandagatla@gmail.com, maxime.coquelin@st.com, patrice.chotard@st.com, mchehab@osg.samsung.com
-Cc: peter.griffin@linaro.org, devicetree@vger.kernel.org, lee.jones@linaro.org, hugues.fruchet@st.com, linux-media@vger.kernel.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAL_JsqJE5seB=5-9_QJBFG1=ipDr_osQJusOSk00VZzwhs=CDA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch adds in the required DT node for the c8sectpfe
-Linux DVB demux driver which allows the tsin channels
-to be used on an upstream kernel.
+On 9/1/2015 3:00 PM, Rob Herring wrote:
+> On Tue, Sep 1, 2015 at 6:07 AM, Russell King - ARM Linux
+> <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org> wrote:
+>> Consider the following loop:
+>>
+>>         for_each_child_of_node(&pdev->dev.of_node, child) {
+>>                 if (some_condition)
+>>                         break;
+>>         }
+>>
+>> The use of for_each_..._of_node() leads people to believe that it's
+>> like other for_each_...() loops - the continue and break statements
+>> can be used.
+>>
+>> However, with OF, "break" can't be used without disrupting the
+>> reference counting on the nodes.  This is because:
 
-Signed-off-by: Peter Griffin <peter.griffin@linaro.org>
-Acked-by: Lee Jones <lee.jones@linaro.org>
----
- arch/arm/boot/dts/stihxxx-b2120.dtsi | 35 +++++++++++++++++++++++++++++++++++
- 1 file changed, 35 insertions(+)
+< snip - nice explanation of the situation >
 
-diff --git a/arch/arm/boot/dts/stihxxx-b2120.dtsi b/arch/arm/boot/dts/stihxxx-b2120.dtsi
-index 62994ae..f9fca10 100644
---- a/arch/arm/boot/dts/stihxxx-b2120.dtsi
-+++ b/arch/arm/boot/dts/stihxxx-b2120.dtsi
-@@ -6,6 +6,9 @@
-  * it under the terms of the GNU General Public License version 2 as
-  * published by the Free Software Foundation.
-  */
-+
-+#include <dt-bindings/clock/stih407-clks.h>
-+#include <dt-bindings/media/c8sectpfe.h>
- / {
- 	soc {
- 		sbc_serial0: serial@9530000 {
-@@ -85,5 +88,37 @@
- 			status = "okay";
- 		};
- 
-+		demux@08a20000 {
-+			compatible	= "st,stih407-c8sectpfe";
-+			status		= "okay";
-+			reg		= <0x08a20000 0x10000>,
-+					  <0x08a00000 0x4000>;
-+			reg-names	= "c8sectpfe", "c8sectpfe-ram";
-+			interrupts	= <GIC_SPI 34 IRQ_TYPE_NONE>,
-+					  <GIC_SPI 35 IRQ_TYPE_NONE>;
-+			interrupt-names	= "c8sectpfe-error-irq",
-+					  "c8sectpfe-idle-irq";
-+			pinctrl-0	= <&pinctrl_tsin0_serial>;
-+			pinctrl-1	= <&pinctrl_tsin0_parallel>;
-+			pinctrl-2	= <&pinctrl_tsin3_serial>;
-+			pinctrl-3	= <&pinctrl_tsin4_serial_alt3>;
-+			pinctrl-4	= <&pinctrl_tsin5_serial_alt1>;
-+			pinctrl-names	= "tsin0-serial",
-+					  "tsin0-parallel",
-+					  "tsin3-serial",
-+					  "tsin4-serial",
-+					  "tsin5-serial";
-+			clocks		= <&clk_s_c0_flexgen CLK_PROC_STFE>;
-+			clock-names	= "c8sectpfe";
-+
-+			/* tsin0 is TSA on NIMA */
-+			tsin0: port@0 {
-+				tsin-num	= <0>;
-+				serial-not-parallel;
-+				i2c-bus		= <&ssc2>;
-+				rst-gpio	= <&pio15 4 GPIO_ACTIVE_HIGH>;
-+				dvb-card	= <STV0367_TDA18212_NIMA_1>;
-+			};
-+		};
- 	};
- };
--- 
-1.9.1
+>> We could go around and fix all these sites, but that's not going to
+>> stop this continuing to happen into the future.  So, fixing the
+>> existing bugs is not a fix at all, it's a papering over of a more
+>> fundamental problem here.
+> 
+> Yes, the ref counting for DT in general is difficult to get right and
+> needs to be redesigned. Geert did a checker and even the core and
+> unittests have 44 errors[1]. However, it is a nop in most cases, and
+> it only really matters on IBM pSeries and only for certain nodes on
+> those AIUI. We've had some discussions about it before, but no one has
+> come up with a solution. Managing this at a node level is probably too
+> fine grained when most nodes don't need ref counting. The implicit get
+> and explicit put are also a problem IMO. We need to be able to look at
+> code and see the calls are balanced.
+> 
+> Rob
+> 
+> [1] https://lkml.org/lkml/2015/1/23/437
+
+I agree with all of the above.  I do not think that chasing after all
+the broken sites is a long term solution.
+
+But I have been poking at this a little bit this year.  I have some run
+time debug data that collects where the refcounts are modified and what
+the resulting values are.  In the unlikely case that someone has a short
+term refcount issue and needs to fix the broken refcount of a specific
+DT object as a temporary work around, I can share my hack tools.
+
+-Frank
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
