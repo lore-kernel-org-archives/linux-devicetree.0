@@ -1,35 +1,101 @@
-From: Doug Anderson <dianders@chromium.org>
-Subject: Re: [PATCH] ARM: dts: Add ddc i2c reference to veyron
-Date: Thu, 3 Sep 2015 14:00:26 -0700
-Message-ID: <CAD=FV=WkFPitTsagQa+94DAWujzYECVqk7fO+OUdrfFq3bWTuQ@mail.gmail.com>
-References: <1441229148-12095-1-git-send-email-dianders@chromium.org>
+From: Stephen Boyd <sboyd@codeaurora.org>
+Subject: Re: [PATCH] firmware: qcom: scm: Convert to platform driver
+Date: Thu, 3 Sep 2015 14:33:22 -0700
+Message-ID: <20150903213322.GI15099@codeaurora.org>
+References: <1437431152-6730-1-git-send-email-agross@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1441229148-12095-1-git-send-email-dianders@chromium.org>
+Content-Disposition: inline
+In-Reply-To: <1437431152-6730-1-git-send-email-agross@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Heiko Stuebner <heiko@sntech.de>
-Cc: "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>, Alexandru Stan <amstan@chromium.org>, Brian Norris <briannorris@chromium.org>, Yakir Yang <ykk@rock-chips.com>, =?UTF-8?B?5aea5pm65oOF?= <mark.yao@rock-chips.com>, Douglas Anderson <dianders@chromium.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: Andy Gross <agross@codeaurora.org>
+Cc: linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Bjorn Andersson <bjorn.andersson@sonymobile.com>, devicetree@vger.kernel.org, Rob Clark <robdclark@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-
-On Wed, Sep 2, 2015 at 2:25 PM, Douglas Anderson <dianders@chromium.org> wrote:
-> The ddc-i2c-bus property was missing from the veyron dtsi file since
-> downstream the ddc-i2c-bus was still being specified in rk3288.dtsi and
-> nobody noticed when the veyron dtsi was sent upstream.  Add it.
->
-> Signed-off-by: Douglas Anderson <dianders@chromium.org>
+On 07/20, Andy Gross wrote:
+> This patch creates a platform driver for the SCM so that we can adequately
+> manage resources.  This removes clients having to carry the necessary
+> clocks to use the SCM resources.
+> 
+> Signed-off-by: Andy Gross <agross@codeaurora.org>
 > ---
-> Note: I noticed that this was wrong but I don't currently have
-> graphics up and running on upstream on veyron.  Posting this anyway
-> since it's pretty clear that it's needed.  If someone else wants to
-> try it out that'd be nice, otherwise I'll put it on my list to figure
-> out how to get myself setup for graphics upstream.  ;)
 
-OK, I've used Heiko's "somewhat stable" branch to test this against
-something very close to mainline.
+It would be nice if we could use this platform device for doing
+the DMAish memory allocations that we do in this driver too. I
+guess one complication there is that we would need to allocate
+memory with the DMA APIs before CPUs are brought up
+(early_initcall level).
 
-Without my patch I can't read the HDMI EDID.  With my patch I can.  :)
+> diff --git a/drivers/firmware/qcom_scm.c b/drivers/firmware/qcom_scm.c
+> index 45c008d..5dd0514 100644
+> --- a/drivers/firmware/qcom_scm.c
+> +++ b/drivers/firmware/qcom_scm.c
+> @@ -15,14 +15,57 @@
+>   * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
+>   * 02110-1301, USA.
+>   */
+> -
+> +#include <linux/platform_device.h>
+> +#include <linux/module.h>
+> +#include <linux/platform_device.h>
 
--Doug
+This include is here twice.
+
+>  #include <linux/cpumask.h>
+>  #include <linux/export.h>
+>  #include <linux/types.h>
+>  #include <linux/qcom_scm.h>
+> +#include <linux/of.h>
+> +#include <linux/clk.h>
+>  
+[...]
+> +
+> +/**
+> + * qcom_scm_is_available() - Checks if SCM is available
+> + */
+> +bool qcom_scm_is_available(void)
+> +{
+> +	return !!__scm;
+> +}
+> +EXPORT_SYMBOL(qcom_scm_is_available);
+> +
+> +static int qcom_scm_remove(struct platform_device *pdev)
+> +{
+> +	__scm = NULL;
+> +
+> +	return 0;
+> +}
+
+Maybe we just shouldn't allow this? The firmware isn't going
+anywhere at runtime, and this driver is currently marked as
+bool in the Kconfig.
+
+> +
+> +static const struct of_device_id qcom_scm_dt_match[] = {
+> +	{ .compatible = "qcom,scm",},
+> +	{},
+> +};
+> +
+> +MODULE_DEVICE_TABLE(of, qcom_scm_dt_match);
+> +
+> +static struct platform_driver qcom_scm_driver = {
+> +	.driver = {
+> +		.name	= "scm",
+
+Maybe 'qcom_scm' ?
+
+> +		.of_match_table = qcom_scm_dt_match,
+> +	},
+> +	.probe = qcom_scm_probe,
+> +	.remove = qcom_scm_remove,
+> +};
+> +
+> +module_platform_driver(qcom_scm_driver);
+
+Isn't there some sort of builtin_platform_driver() macro for
+builtin modules?
+
+-- 
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project
