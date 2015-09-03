@@ -1,77 +1,58 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 2/2] ASoC: atmel-classd: DT binding for Class D audio
- amplifier driver
-Date: Thu, 3 Sep 2015 12:43:16 +0100
-Message-ID: <20150903114316.GV12027@sirena.org.uk>
-References: <1441086101-15303-1-git-send-email-songjun.wu@atmel.com>
- <1441086101-15303-3-git-send-email-songjun.wu@atmel.com>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="B52KEoKdbCpY/p3k"
+From: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
+Subject: [PATCH v3 0/4] PCI: arm64/powerpc: Fix parsing of linux,pci-probe-only
+Date: Thu,  3 Sep 2015 13:16:12 +0100
+Message-ID: <1441282576-7304-1-git-send-email-marc.zyngier@arm.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1441086101-15303-3-git-send-email-songjun.wu-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Songjun Wu <songjun.wu-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Cc: nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, perex-/Fr2/VpizcU@public.gmane.org, tiwai-IBi9RG/b67k@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, Paul Mackerras <paulus-eUNUBHrolfbYtjvyW6yDsg@public.gmane.org>, Michael Ellerman <mpe-Gsx/Oe8HsFggBc27wqDAHg@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Suravee Suthikulpanit <Suravee.Suthikulpanit-5C7GfCeVMHo@public.gmane.org>, Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Alexander Graf <agraf-l3A5Bk7waGM@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+The pci-host-generic driver parses the linux,pci-probe-only property,
+and assumes that it will have a boolean parameter.
 
---B52KEoKdbCpY/p3k
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Turns out that the Seattle DTS file has a naked "linux,pci-probe-only"
+property, which leads to the driver dereferencing some unsuspecting
+memory location. Nothing really bad happens (we end up reading some
+other bit of DT, fortunately), but that not a reason to keep it this
+way. Turns out that the Pseries code (where this code was lifted from)
+may suffer from the same issue.
 
-On Tue, Sep 01, 2015 at 01:41:41PM +0800, Songjun Wu wrote:
+The first patch introduces a common (and fixed) version of that check
+that can be used by drivers and architectures that require it. The two
+following patches change the pci-host-generic driver and the powerpc
+code to use it.
 
-> +classd: classd@fc048000 {
-> +		compatible = "atmel,sama5d2-classd";
-> +		reg = <0xfc048000 0x100>;
-> +		interrupts = <59 IRQ_TYPE_LEVEL_HIGH 7>;
-> +		dmas = <&dma0
-> +			(AT91_XDMAC_DT_MEM_IF(0) | AT91_XDMAC_DT_PER_IF(1)
-> +			| AT91_XDMAC_DT_PERID(47))>;
-> +		dma-names = "tx";
-> +		clocks = <&classd_clk>, <&classd_gclk>, <&audio_pll_pmc>;
-> +		clock-names = "pclk", "gclk", "aclk";
-> +
-> +		pinctrl-names = "default";
-> +		pinctrl-0 = <&pinctrl_classd_default>;
-> +		atmel,pwm-type = "diff";
-> +		atmel,non-overlap-time = <10>;
-> +};
+Finally, the bad property is removed from the Seatle DTS, because it
+is simply not necessary (it actually prevents me from using SR-IOV,
+which otherwise runs fine without the probe-only thing).
 
-> +Example:
-> +sound {
-> +		compatible = "atmel,asoc-classd";
-> +
-> +		atmel,model = "classd @ SAMA5D2-Xplained";
-> +		atmel,audio-platform = <&classd>;
-> +		atmel,audio-cpu-dai-name = "fc048000.classd";
-> +		atmel,audio-codec = <&classd>;
-> +};
+This has been tested on the offending Seattle board.
 
-Why is this a separate DT node?  It seems that this IP is entirely self
-contained so I'm not clear why we need a separate node for the card, the
-card is usually a separate node because it ties together multiple
-different devices in the system but that's not the case here.
+* From v2:
+  - Use of_property_read_u32 to safely read the property (Rob)
+  - Add a log message to indicate when we enable probe-only
+    (probably quite useful for debugging)
 
---B52KEoKdbCpY/p3k
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+* From v1:
+  - Consolidate the parsing in of_pci.c (Bjorn)
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
+Marc Zyngier (4):
+  of/pci: Add of_pci_check_probe_only to parse "linux,pci-probe-only"
+  PCI: pci-host-generic: Fix lookup of linux,pci-probe-only property
+  powerpc: PCI: Fix lookup of linux,pci-probe-only property
+  arm64: dts: Drop linux,pci-probe-only from the Seattle DTS
 
-iQEcBAEBCAAGBQJV6DJTAAoJECTWi3JdVIfQr/UH/0v02BuUxvvl8B3FsLgfC030
-36b+leJfTzV4x+omYNXF1kRVNOQ0imERJ76KlDk6MKVfIk6XftO2LYcJpsJBqIrM
-QMyy0fiDk2GlQAA2aU3RkJ5HuOp4WJy2cavdk2ivkYleTSrxyws+SWDwa3zU/+xh
-ejgMlq37Vs3XH+MgKsiXeZXbXyvtKVtSZxqZwIgXpJx/m9QpXaAWTII87p0yIGcG
-y9CBpfgPKab5WFqzpD8cPzNy5ziAtXJD7OOUbk/iTcfU1EuFZynEWTkahQlO7ldr
-0iFoh9Umb9UDQjMJF9S1jb2dPqaEBO84QFpaAJg2JIdyp1V4DyohlmqxCKZyZi4=
-=wNKq
------END PGP SIGNATURE-----
+ arch/arm64/boot/dts/amd/amd-overdrive.dts |  1 -
+ arch/powerpc/platforms/pseries/setup.c    | 14 ++------------
+ drivers/of/of_pci.c                       | 31 +++++++++++++++++++++++++++++++
+ drivers/pci/host/pci-host-generic.c       |  9 +--------
+ include/linux/of_pci.h                    |  3 +++
+ 5 files changed, 37 insertions(+), 21 deletions(-)
 
---B52KEoKdbCpY/p3k--
+-- 
+2.1.4
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
