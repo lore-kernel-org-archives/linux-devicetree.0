@@ -1,187 +1,357 @@
-From: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-Subject: Re: [PATCH 13/13] dt: power: bq24257-charger: Cover additional devices
-Date: Thu, 03 Sep 2015 10:57:12 +0900
-Message-ID: <55E7A8F8.7050300@samsung.com>
-References: <1441073435-12349-1-git-send-email-dannenberg@ti.com>
- <1441073435-12349-14-git-send-email-dannenberg@ti.com>
- <CAJKOXPeyMeUUon0E9Fhm18SHJEaQPEbGAWwU+MKwgt-30AXHiA@mail.gmail.com>
- <20150902140332.GA24076@borg> <55E7A2E8.2060306@samsung.com>
- <20150903014741.GA25605@borg>
+From: Yakir Yang <ykk@rock-chips.com>
+Subject: Re: [PATCH v4 10/16] phy: Add driver for rockchip Display Port PHY
+Date: Thu, 03 Sep 2015 11:25:00 +0800
+Message-ID: <55E7BD8C.5070803@rock-chips.com>
+References: <1441086371-24838-1-git-send-email-ykk@rock-chips.com> <1441087455-25533-1-git-send-email-ykk@rock-chips.com> <CAL_JsqJG3wGO3PC2raWvc588rrwF-zHD9+3WwBJxEwntm19k7Q@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-reply-to: <20150903014741.GA25605@borg>
-Sender: linux-pm-owner@vger.kernel.org
-To: Andreas Dannenberg <dannenberg@ti.com>
-Cc: Sebastian Reichel <sre@kernel.org>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, David Woodhouse <dwmw2@infradead.org>, Laurentiu Palcu <laurentiu.palcu@intel.com>, linux-pm@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=utf-8;
+	format=flowed
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <CAL_JsqJG3wGO3PC2raWvc588rrwF-zHD9+3WwBJxEwntm19k7Q@mail.gmail.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Rob Herring <robherring2@gmail.com>
+Cc: Heiko Stuebner <heiko@sntech.de>, Thierry Reding <treding@nvidia.com>, Jingoo Han <jingoohan1@gmail.com>, Inki Dae <inki.dae@samsung.com>, Joe Perches <joe@perches.com>, Kukjin Kim <kgene@kernel.org>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, Mark Yao <mark.yao@rock-chips.com>, Russell King <rmk+kernel@arm.linux.org.uk>, djkurtz@chromium.com, dianders@chromium.com, seanpaul@chromium.com, Ajay kumar <ajaynumb@gmail.com>, Andrzej Hajda <a.hajda@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, David Airlie <airlied@linux.ie>, Gustavo Padovan <gustavo.padovan@collabora.co.uk>, Andy Yan <andy.yan@rock-chips.com>, Kumar Gala <galak@codeaurora.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Kishon Vijay Abraham I <kishon@ti.com>, architt@codeaurora.org, dri-devel <dri-devel@lists.freedes>
 List-Id: devicetree@vger.kernel.org
 
-On 03.09.2015 10:47, Andreas Dannenberg wrote:
-> On Thu, Sep 03, 2015 at 10:31:20AM +0900, Krzysztof Kozlowski wrote:
->>> Yes that's right. Some of the chargers can check the USB D+/D- lines to
->>> determine what kind of charger is attached (DCP, CDP, SDP, other) - see
->>> bq24257 device datasheet for more info:
->>> http://www.ti.com/product/bq24257
->>>
->>> And this feature is being used in the original driver Laurentiu
->>> developed. However this detection mechanism (or any detection mechanism
->>> in general) may not always be appropriate hence the new property to
->>> disable it and manually provide an input current limit of how much can
->>> be drawn from the charger. Plus it's needed for devices that don't have
->>> the D+/D- detection feature.
+Hi Rob,
+
+=E5=9C=A8 09/02/2015 09:27 PM, Rob Herring =E5=86=99=E9=81=93:
+> On Tue, Sep 1, 2015 at 1:04 AM, Yakir Yang <ykk@rock-chips.com> wrote=
+:
+>> This phy driver would control the Rockchip DisplayPort module
+>> phy clock and phy power, it is relate to analogix_dp-rockchip
+>> dp driver. If you want DP works rightly on rockchip platform,
+>> then you should select both of them.
 >>
->> Thanks for explanation. How about leaving only "ti,in-limit-current"
->> (get rid of "ti,in-ilimit-autoset-disable"). If it is present then the
->> autodetection/autoset would be disabled.
-> 
-> I had it separated out to make the DT declarations more explicit (so one
-> would immediately "see" that autoset is disabled) but other than that
-> there is no reason why this couldn't get folded together. Will change.
-> 
->>> Yes I was thinking about this but then went with something that closely
->>> reflects the device datasheets to maximize correlation. Removing the 'v'
->>> would make it look cleaner and more universal and I suppose it's not to
->>> far of a stretch for someone to associate "ti,ovp-voltag" with the VOVP
->>> bit field in the devices register map. So let's change it.
+>> Signed-off-by: Yakir Yang <ykk@rock-chips.com>
+>> ---
+>> Changes in v4:
+>> - Take Kishon suggest, add commit message, and remove the redundant
+>>    rockchip_dp_phy_init() function, move those code to probe() metho=
+d.
+>>    And remove driver .owner number.
 >>
->> Thanks. Bindings don't have to follow naming convention of company's
->> datasheet.
-> 
-> Ok.
-> 
->>> Yes that's right. Somebody might chose to do so because they don't want
->>> to sacrifice the extra pin. And I need to accommodate for devices that
->>> don't have a PG pin so the logic behind this had to be implemented
->>> anyways. I just made it accessible. What about I work on improving that
->>> explanation hopefully to make it less confusing.
+>> Changes in v3:
+>> - Take Heiko suggest, add rockchip dp phy driver,
+>>    collect the phy clocks and power control.
 >>
->> I still don't get why you need extra "ti,pg-gpio-disable" property. It
->> could work like this:
->> 1. Get rid of "ti,pg-gpio-disable" and make "pg-gpio" optional.
->> 2. If it is present, use it.
->> 3. If it is not present, use software based approach (the same as
->> setting "ti,pg-gpio-disable" previously).
+>> Changes in v2: None
 >>
->> Would that work?
-> 
-> Similar to the earlier comment - the idea was to have it more explicit.
-> Plus, the original driver would hard-fail when the "pg-gpio" pin is not
-> provided (since it was essential for that driver's ability to function).
-> If I change to automatically fallback to the SW solution such an error
-> case would in theory not be 100% backward compatible. I could however
-> more clearly indicate/log which method is being used (dev_info) so
-> somebody rummaging through the logs would still see it. Will simplify.
+>>   .../devicetree/bindings/phy/rockchip-dp-phy.txt    |  26 ++++
+> It is preferred that you split binding doc's from driver changes.
 
-Right, the kernel's backward compatibility has to be preserved. However
-for bindings I am not sure.
+Okay, done.
 
-Let's assume booting on device with bq24257.
-1. Old kernel booted with a DTB which doesn't have "pg-gpio" would print
-error (probe would fail).
-2. New kernel booted in the same situation (1) would assume GPIOs have
-to be disabled.
-
-3. Old kernel booted with your previous solution (DTB containing both
-"pg-gpio" and "ti,pg-gpio-disable") would work fine ignoring the
-"disable" property.
-4. New kernel in the same situation (3) would disable GPIOs.
-
-There is a difference between (1) and (3). New DTB is not backward
-compatible with old kernels for existing bq24257 devices.
-
-Am I understanding this correctly?
-
-Best regards,
-Krzysztof
-
-
-
-> 
->>> When I looked through the Kernel headers I found the boolean property
->>> parse function and figured that's probably what I should be using. But
->>> as I was implementing it I had similar concerns to what you mentioned.
->>> If it's general practice to prefer the value based properties I'll be
->>> happy to change that.
+>>   drivers/phy/Kconfig                                |   7 +
+>>   drivers/phy/Makefile                               |   1 +
+>>   drivers/phy/phy-rockchip-dp.c                      | 166 +++++++++=
+++++++++++++
+>>   4 files changed, 200 insertions(+)
+>>   create mode 100644 Documentation/devicetree/bindings/phy/rockchip-=
+dp-phy.txt
+>>   create mode 100644 drivers/phy/phy-rockchip-dp.c
 >>
->> Usually the boolean is a good choice but here you used it for a
->> numerical property. You are preparing a generic TI bindings so it is
->> wise to think about other future drivers. Would they have other values
->> for timer factor? Would you want to set it in common board DTSI and
->> override it in some one specific child DTS?
-> 
-> Thanks again for the additional comments and the pointers.
-> 
-> Regards,
-> 
-> --
-> Andreas Dannenberg
-> Texas Instruments Inc
-> 
-> 
->>
->> Best regards,
->> Krzysztof
->>
->>>
->>>>
->>>> Also please look at existing bindings:
->>>> $ git grep "ti," Documentation/devicetree/bindings/power
->>>> Maybe you could reuse some? Each of these existing and new bindings
->>>> are made generic (not device specific) so they should be reused.
->>>
->>> Already spent time with existing bqXXXXX drivers to see if I can recycle
->>> properties. Will give it another run-through to make sure there is
->>> maximum re-use.
->>>
->>> Thanks,
->>>
->>> --
->>> Andreas Dannenberg
->>> Texas Instruments Inc
->>>
->>>>
->>>> Best regards,
->>>> Krzysztof
->>>>
->>>>> +- interrupt-parent: Should be the phandle for the interrupt controller. Use in
->>>>> +    conjunction with "interrupts" and only in case "stat-gpio" is not used.
->>>>> +- interrupts: Interrupt mapping for GPIO IRQ (configure for both edges). Use in
->>>>> +    conjunction with "interrupt-parent" and only in case "stat-gpio" is not
->>>>> +    used.
->>>>>
->>>>>  Example:
->>>>>
->>>>>  bq24257 {
->>>>>         compatible = "ti,bq24257";
->>>>>         reg = <0x6a>;
->>>>> +       stat-gpio = <&gpio1 16 GPIO_ACTIVE_HIGH>;
->>>>> +       pg-gpio = <&gpio1 28 GPIO_ACTIVE_HIGH>;
->>>>>
->>>>>         ti,battery-regulation-voltage = <4200000>;
->>>>>         ti,charge-current = <1000000>;
->>>>>         ti,termination-current = <50000>;
->>>>>  };
->>>>> +
->>>>> +Example:
->>>>> +
->>>>> +bq24250 {
->>>>> +       compatible = "ti,bq24250";
->>>>> +       reg = <0x6a>;
->>>>> +       interrupt-parent = <&gpio1>;
->>>>> +       interrupts = <16 IRQ_TYPE_EDGE_BOTH>;
->>>>> +
->>>>> +       ti,battery-regulation-voltage = <4200000>;
->>>>> +       ti,charge-current = <500000>;
->>>>> +       ti,termination-current = <50000>;
->>>>> +       ti,in-limit-current = <900000>;
->>>>> +       ti,vovp-voltage = <9500000>;
->>>>> +       ti,vindpm-voltage = <4440000>;
->>>>> +};
->>>>> --
->>>>> 1.9.1
->>>>>
->>>
->>
-> 
+>> diff --git a/Documentation/devicetree/bindings/phy/rockchip-dp-phy.t=
+xt b/Documentation/devicetree/bindings/phy/rockchip-dp-phy.txt
+>> new file mode 100644
+>> index 0000000..5de1088
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/phy/rockchip-dp-phy.txt
+>> @@ -0,0 +1,26 @@
+>> +Rockchip Soc Seroes Display Port PHY
+>> +------------------------------------
+>> +
+>> +Required properties:
+>> +- compatible : should be one of the following supported values:
+>> +        - "rockchip.rk3288-dp-phy"
+>> +
+>> +- reg : a list of registers used by phy driver
+> Please state the size of the list and order of what each entry if mor=
+e than one.
 
+Just like Heiko remind, I don't need the reg number anymore,
+"rockchip,grf" is enough for this driver.
+
+Anyway thanks :-)
+
+>> +- clocks: from common clock binding: handle to dp clock.
+>> +       of memory mapped region.
+>> +- clock-names: from common clock binding:
+>> +       Required elements: "sclk_dp" "sclk_dp_24m"
+>> +
+>> +- rockchip,grf: this soc should set GRF regs, so need get grf here.
+> I have no idea what GRF means.
+
+GRF is an module of our IC chip, the full name is General Register File=
+s.
+I would rather to pick some words from our TRM.
+
+The general register file will be used to do static set by software, wh=
+ich
+is composed of many registers for system control.
+
+>
+>> +- #phy-cells : from the generic PHY bindings, must be 0;
+>> +
+>> +Example:
+>> +
+>> +edp_phy: phy@ff770274 {
+>> +       compatilble =3D "rockchip,rk3288-dp-phy";
+>> +       reg =3D <0xff770274 4>;
+>> +       rockchip,grf =3D <&grf>;
+>> +       clocks =3D <&cru SCLK_EDP_24M>;
+>> +       clock-names =3D "24m";
+>> +       #phy-cells =3D <0>;
+>> +}
+>> diff --git a/drivers/phy/Kconfig b/drivers/phy/Kconfig
+>> index 47da573..8f2bc4f 100644
+>> --- a/drivers/phy/Kconfig
+>> +++ b/drivers/phy/Kconfig
+>> @@ -310,6 +310,13 @@ config PHY_ROCKCHIP_USB
+>>          help
+>>            Enable this to support the Rockchip USB 2.0 PHY.
+>>
+>> +config PHY_ROCKCHIP_DP
+>> +       tristate "Rockchip Display Port PHY Driver"
+>> +       depends on ARCH_ROCKCHIP && OF
+>> +       select GENERIC_PHY
+>> +       help
+>> +         Enable this to support the Rockchip Display Port PHY.
+>> +
+>>   config PHY_ST_SPEAR1310_MIPHY
+>>          tristate "ST SPEAR1310-MIPHY driver"
+>>          select GENERIC_PHY
+>> diff --git a/drivers/phy/Makefile b/drivers/phy/Makefile
+>> index a5b18c1..e281f35 100644
+>> --- a/drivers/phy/Makefile
+>> +++ b/drivers/phy/Makefile
+>> @@ -34,6 +34,7 @@ phy-exynos-usb2-$(CONFIG_PHY_S5PV210_USB2)    +=3D=
+ phy-s5pv210-usb2.o
+>>   obj-$(CONFIG_PHY_EXYNOS5_USBDRD)       +=3D phy-exynos5-usbdrd.o
+>>   obj-$(CONFIG_PHY_QCOM_APQ8064_SATA)    +=3D phy-qcom-apq8064-sata.=
+o
+>>   obj-$(CONFIG_PHY_ROCKCHIP_USB) +=3D phy-rockchip-usb.o
+>> +obj-$(CONFIG_PHY_ROCKCHIP_DP)          +=3D phy-rockchip-dp.o
+>>   obj-$(CONFIG_PHY_QCOM_IPQ806X_SATA)    +=3D phy-qcom-ipq806x-sata.=
+o
+>>   obj-$(CONFIG_PHY_ST_SPEAR1310_MIPHY)   +=3D phy-spear1310-miphy.o
+>>   obj-$(CONFIG_PHY_ST_SPEAR1340_MIPHY)   +=3D phy-spear1340-miphy.o
+>> diff --git a/drivers/phy/phy-rockchip-dp.c b/drivers/phy/phy-rockchi=
+p-dp.c
+>> new file mode 100644
+>> index 0000000..e9a726e
+>> --- /dev/null
+>> +++ b/drivers/phy/phy-rockchip-dp.c
+>> @@ -0,0 +1,166 @@
+>> +/*
+>> + * Rockchip DP PHY driver
+>> + *
+>> + * Copyright (C) 2015 FuZhou Rockchip Co., Ltd.
+>> + * Author: Yakir Yang <ykk@@rock-chips.com>
+>> + *
+>> + * This program is free software; you can redistribute it and/or mo=
+dify
+>> + * it under the terms of the GNU General Public License as publishe=
+d by
+>> + * the Free Software Foundation; either version 2 of the License.
+>> + */
+>> +
+>> +#include <linux/io.h>
+>> +#include <linux/kernel.h>
+>> +#include <linux/module.h>
+>> +#include <linux/of.h>
+>> +#include <linux/of_address.h>
+>> +#include <linux/clk.h>
+>> +#include <linux/phy/phy.h>
+>> +#include <linux/regmap.h>
+>> +#include <linux/mfd/syscon.h>
+>> +#include <linux/platform_device.h>
+>> +
+>> +#define GRF_SOC_CON12                   0x0274
+>> +#define GRF_EDP_REF_CLK_SEL_INTER       BIT(4)
+>> +
+>> +#define DP_PHY_SIDDQ_WRITE_EN           BIT(21)
+>> +#define DP_PHY_SIDDQ_ON                 0
+>> +#define DP_PHY_SIDDQ_OFF                BIT(5)
+>> +
+>> +struct rockchip_dp_phy {
+>> +       struct device  *dev;
+>> +       struct regmap  *grf;
+>> +       void __iomem   *regs;
+>> +       struct clk     *phy_24m;
+>> +};
+>> +
+>> +static int rockchip_dp_phy_clk_enable(struct rockchip_dp_phy *dp)
+>> +{
+>> +       int ret =3D 0;
+>> +
+>> +       ret =3D clk_set_rate(dp->phy_24m, 24000000);
+> Do you need to do this every time? This can go in probe.
+
+Yeah, it could move to probe, thanks.
+
+>> +       if (ret < 0) {
+>> +               dev_err(dp->dev, "cannot set clock phy_24m %d\n", re=
+t);
+>> +               return ret;
+>> +       }
+>> +
+>> +       ret =3D clk_prepare_enable(dp->phy_24m);
+>> +       if (ret < 0) {
+>> +               dev_err(dp->dev, "cannot enable clock phy_24m %d\n",=
+ ret);
+>> +               return ret;
+>> +       }
+>> +
+>> +       return 0;
+>> +}
+>> +
+>> +static int rockchip_dp_phy_clk_disable(struct rockchip_dp_phy *dp)
+>> +{
+>> +       clk_disable_unprepare(dp->phy_24m);
+>> +
+>> +       return 0;
+>> +}
+>> +
+>> +static int rockchip_set_phy_state(struct phy *phy, bool enable)
+>> +{
+>> +       struct rockchip_dp_phy *dp =3D phy_get_drvdata(phy);
+>> +
+>> +       if (enable) {
+>> +               rockchip_dp_phy_clk_enable(dp);
+>> +               writel(DP_PHY_SIDDQ_WRITE_EN | DP_PHY_SIDDQ_ON, dp->=
+regs);
+>> +       } else {
+>> +               rockchip_dp_phy_clk_disable(dp);
+>> +               writel(DP_PHY_SIDDQ_WRITE_EN | DP_PHY_SIDDQ_OFF, dp-=
+>regs);
+>> +       }
+>> +
+>> +       return 0;
+>> +}
+> I would just inline all 3 of these functions. The wrappers don't
+> doesn't do anything, but add 2 levels of function calls.
+
+After move clk_set_rate to probe, I would rather to remove those
+wrappers just operate in power_on/power_off directly.  :)
+
+>
+>> +
+>> +static int rockchip_dp_phy_power_on(struct phy *phy)
+>> +{
+>> +       return rockchip_set_phy_state(phy, true);
+>> +}
+>> +
+>> +static int rockchip_dp_phy_power_off(struct phy *phy)
+>> +{
+>> +       return rockchip_set_phy_state(phy, false);
+>> +}
+>> +
+>> +static struct phy_ops rockchip_dp_phy_ops =3D {
+>> +       .power_on       =3D rockchip_dp_phy_power_on,
+>> +       .power_off      =3D rockchip_dp_phy_power_off,
+>> +       .owner          =3D THIS_MODULE,
+>> +};
+>> +
+>> +static int rockchip_dp_phy_probe(struct platform_device *pdev)
+>> +{
+>> +       struct device *dev =3D &pdev->dev;
+>> +       struct device_node *np =3D dev->of_node;
+>> +       struct phy_provider *phy_provider;
+>> +       struct rockchip_dp_phy *dp;
+>> +       struct resource *res;
+>> +       struct phy *phy;
+>> +       int ret;
+>> +
+>> +       dp =3D devm_kzalloc(dev, sizeof(*dp), GFP_KERNEL);
+>> +       if (IS_ERR(dp))
+>> +               return -ENOMEM;
+>> +
+>> +       dp->dev =3D dev;
+>> +
+>> +       res =3D platform_get_resource(pdev, IORESOURCE_MEM, 0);
+>> +       dp->regs =3D devm_ioremap_resource(dev, res);
+>> +       if (IS_ERR(dp->regs))
+>> +               return PTR_ERR(dp->regs);
+>> +
+>> +       dp->phy_24m =3D devm_clk_get(dev, "24m");
+>> +       if (IS_ERR(dp->phy_24m)) {
+>> +               dev_err(dev, "cannot get clock 24m\n");
+>> +               return PTR_ERR(dp->phy_24m);
+>> +       }
+> The binding says there are 2 clocks.
+
+Oh... Document have been little bit old. I used to handle
+two kinds of clocks in phy driver in v2, and take Thierry
+and Heiko suggest to reduce to one clock in v3, but forget
+to improved the Document at the same time.
+
++- clock-names: from common clock binding:
++       Required elements: "sclk_dp" "sclk_dp_24m"
+
+should be
+
++- clock-names: from common clock binding:
++       Required elements: "24m"
+
+Thanks for your point out.
+
+>> +
+>> +       dp->grf =3D syscon_regmap_lookup_by_phandle(np, "rockchip,gr=
+f");
+>> +       if (IS_ERR(dp->grf)) {
+>> +               dev_err(dev, "rk3288-dp needs rockchip,grf property\=
+n");
+>> +               return PTR_ERR(dp->grf);
+>> +       }
+>> +
+>> +       ret =3D regmap_write(dp->grf, GRF_SOC_CON12,
+>> +                          GRF_EDP_REF_CLK_SEL_INTER |
+>> +                          (GRF_EDP_REF_CLK_SEL_INTER << 16));
+>> +       if (ret !=3D 0) {
+>> +               dev_err(dp->dev, "Could not config GRF edp ref clk: =
+%d\n", ret);
+>> +               return ret;
+>> +       }
+>> +
+>> +       phy =3D devm_phy_create(dev, NULL, &rockchip_dp_phy_ops, NUL=
+L);
+>> +       if (IS_ERR(phy)) {
+>> +               dev_err(dev, "failed to create phy\n");
+>> +               return PTR_ERR(phy);
+>> +       }
+>> +       phy_set_drvdata(phy, dp);
+>> +
+>> +       phy_provider =3D devm_of_phy_provider_register(dev, of_phy_s=
+imple_xlate);
+>> +
+>> +       return PTR_ERR_OR_ZERO(phy_provider);
+>> +}
+>> +
+>> +static const struct of_device_id rockchip_dp_phy_dt_ids[] =3D {
+>> +       { .compatible =3D "rockchip,rk3288-dp-phy" },
+>> +       {}
+>> +};
+>> +
+>> +MODULE_DEVICE_TABLE(of, rockchip_dp_phy_dt_ids);
+>> +
+>> +static struct platform_driver rockchip_dp_phy_driver =3D {
+>> +       .probe          =3D rockchip_dp_phy_probe,
+>> +       .driver         =3D {
+>> +               .name   =3D "rockchip-dp-phy",
+>> +               .of_match_table =3D rockchip_dp_phy_dt_ids,
+>> +       },
+>> +};
+>> +
+>> +module_platform_driver(rockchip_dp_phy_driver);
+>> +
+>> +MODULE_AUTHOR("Yakir Yang <ykk@rock-chips.com>");
+>> +MODULE_DESCRIPTION("Rockchip DP PHY driver");
+>> +MODULE_LICENSE("GPL v2");
+>> --
+>> 2.1.2
+>>
+>>
+>
+>
