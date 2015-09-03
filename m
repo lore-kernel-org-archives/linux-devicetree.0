@@ -1,79 +1,98 @@
-From: Doug Anderson <dianders@chromium.org>
-Subject: Re: [PATCH] ARM: dts: Add ddc i2c reference to veyron
-Date: Thu, 3 Sep 2015 09:04:19 -0700
-Message-ID: <CAD=FV=XdP9T29drocB_WkNKrDif9Qwrdjt2C4=AwQk9rey3yLg@mail.gmail.com>
-References: <1441229148-12095-1-git-send-email-dianders@chromium.org>
-	<CAL_JsqLLPCy6OpsP4NNjUA6+UxeTC-zGjGPPU+MLhUqFXSSGJQ@mail.gmail.com>
-	<20150903082210.GU21084@n2100.arm.linux.org.uk>
-	<CAL_JsqL838-somj-o2QtxRA9bXon5dHijx22v0mVowqyhKgoUQ@mail.gmail.com>
-	<20150903151854.GA21084@n2100.arm.linux.org.uk>
-	<CAL_JsqLKbW2ur1US1DCAcJeDYzq8f1L3vO9C8TitAqGt9tAusQ@mail.gmail.com>
+From: Andreas Dannenberg <dannenberg@ti.com>
+Subject: Re: [PATCH 13/13] dt: power: bq24257-charger: Cover additional
+ devices
+Date: Thu, 3 Sep 2015 11:09:26 -0500
+Message-ID: <20150903160926.GA26659@borg>
+References: <1441073435-12349-1-git-send-email-dannenberg@ti.com>
+ <1441073435-12349-14-git-send-email-dannenberg@ti.com>
+ <CAJKOXPeyMeUUon0E9Fhm18SHJEaQPEbGAWwU+MKwgt-30AXHiA@mail.gmail.com>
+ <20150902140332.GA24076@borg>
+ <55E7A2E8.2060306@samsung.com>
+ <20150903014741.GA25605@borg>
+ <55E7A8F8.7050300@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAL_JsqLKbW2ur1US1DCAcJeDYzq8f1L3vO9C8TitAqGt9tAusQ@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robherring2@gmail.com>
-Cc: Russell King - ARM Linux <linux@arm.linux.org.uk>, Heiko Stuebner <heiko@sntech.de>, "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>, Alexandru Stan <amstan@chromium.org>, Brian Norris <briannorris@chromium.org>, Yakir Yang <ykk@rock-chips.com>, =?UTF-8?B?5aea5pm65oOF?= <mark.yao@rock-chips.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Return-path: <linux-pm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <55E7A8F8.7050300@samsung.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+Cc: Sebastian Reichel <sre@kernel.org>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, David Woodhouse <dwmw2@infradead.org>, Laurentiu Palcu <laurentiu.palcu@intel.com>, linux-pm@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+On Thu, Sep 03, 2015 at 10:57:12AM +0900, Krzysztof Kozlowski wrote:
+> On 03.09.2015 10:47, Andreas Dannenberg wrote:
+> > On Thu, Sep 03, 2015 at 10:31:20AM +0900, Krzysztof Kozlowski wrote:
+> >> I still don't get why you need extra "ti,pg-gpio-disable" property. It
+> >> could work like this:
+> >> 1. Get rid of "ti,pg-gpio-disable" and make "pg-gpio" optional.
+> >> 2. If it is present, use it.
+> >> 3. If it is not present, use software based approach (the same as
+> >> setting "ti,pg-gpio-disable" previously).
+> >>
+> >> Would that work?
+> > 
+> > Similar to the earlier comment - the idea was to have it more explicit.
+> > Plus, the original driver would hard-fail when the "pg-gpio" pin is not
+> > provided (since it was essential for that driver's ability to function).
+> > If I change to automatically fallback to the SW solution such an error
+> > case would in theory not be 100% backward compatible. I could however
+> > more clearly indicate/log which method is being used (dev_info) so
+> > somebody rummaging through the logs would still see it. Will simplify.
+> 
+> Right, the kernel's backward compatibility has to be preserved. However
+> for bindings I am not sure.
 
-On Thu, Sep 3, 2015 at 8:46 AM, Rob Herring <robherring2@gmail.com> wrote:
-> On Thu, Sep 3, 2015 at 10:18 AM, Russell King - ARM Linux
-> <linux@arm.linux.org.uk> wrote:
->> On Thu, Sep 03, 2015 at 09:46:38AM -0500, Rob Herring wrote:
->>> Yes, that is fairly common (ADV75xx is same), and we would not
->>> describe an I2C bus in DT in that case. Same with HPD directly handled
->>> vs. a GPIO line. That is no different than what Doug has said:
->>> ddc-i2c-bus is present if using the SOC's I2C host and absent if using
->>> the HDMI block's DDC functionality. I'm only questioning the location
->>> of the property.
->>
->> No, I don't think that's what Doug wants.  Doug wants the bridge's
->> internal I2C host to be exposed, so he can number it through a DT
->> alias.
->
-> See his earlier reply and other patch[1] which states once the dw_hdmi
-> built-in I2C controller support is added in mainline, then this
-> property is not needed. For now, the SOC's general purpose I2C
-> controller is used.
->
-> Rob
->
-> [1] https://lkml.org/lkml/2015/9/2/571
+Hi Krzysztof. Please see pages 3-5 in the below PDF, that's what I had
+in mind. Maybe I mis-interpreted it or there is newer information.
+http://events.linuxfoundation.org/sites/events/files/slides/petazzoni-dt-as-stable-abi-fairy-tale.pdf
 
-Hmmm, I think we're getting all mixed up here.  To summarize:
+With the proposed changes, while the existing bindings (strings) would
+stay the same, the failure behavior in one specific use case would be
+slightly different. The question is, where should we draw the line for
+compatibility? I would argue in this case the general usage is not
+affected so it should be OK making the change/simplification you propose
+(getting rid of "ti,pg-gpio-disable"). 
+ 
+> Let's assume booting on device with bq24257.
+> 1. Old kernel booted with a DTB which doesn't have "pg-gpio" would print
+> error (probe would fail).
+> 2. New kernel booted in the same situation (1) would assume GPIOs have
+> to be disabled.
+> 
+> 3. Old kernel booted with your previous solution (DTB containing both
+> "pg-gpio" and "ti,pg-gpio-disable") would work fine ignoring the
+> "disable" property.
+> 4. New kernel in the same situation (3) would disable GPIOs.
+> 
+> There is a difference between (1) and (3). New DTB is not backward
+> compatible with old kernels for existing bq24257 devices.
+> 
+> Am I understanding this correctly?
 
-1. On rk3288 you can mux the same pins on the SoC to _either_ be
-controlled by a generic rk3288 i2c controller (i2c5) or controlled by
-the dw_hdmi's i2c block.
+Well almost. I think the difference between case 1 and 3 isn't really an
+issue from a use case point of view. The case I was trying to describe
+is as follows (let's call it case 5):
 
-2. At the moment, there's no code in mainline to handle the dw_hdmi's i2c block.
+5. An old DTB not containing "pg-gpio" (or with that property being
+misconfigured) is booted with the new Kernel. The boot will succeed as
+the SW approach for PG detection gets invoked automatically.
 
-3. Right now there _is_ code in mainline to handle specifying
-"ddc-i2c-bus" and have it point to the generic rk3288 i2c controller.
-
-4. So in mainline if you want to read an EDID, you've got to configure
-the pinmux as "i2c5" and add a "ddc-i2c-bus" reference to the HDMI
-section of the device tree.  That's what most rk3288 boards do and (as
-far as I understand) matches existing bindings.  The only reason
-veyron didn't have this reference was due to a small oversight when
-sending the DTS file upstream.
-
-5. There are apparently benefits to using the builtin i2c controller
-in dw_hdmi.  There's an outstanding patch add code to support the
-dw_hdmi's i2c block.
-
-6. Once you start using the dw_hdmi's i2c block with the currently
-posted patch against mainline (to do this you not only need the patch
-but you need to remove the ddc-i2c-bus property, set the pinmux, and
-disable i2c5) then you'll see a bonafide i2c bus exposed to Linux.  In
-my case this stole i2c0 away from the builtin SoC I2C bus and caused
-the SoC I2C bus to fail to probe.  Doh.
-
-7. I was trying to solve #6 by adding an "of_node" to the i2c bus
-which allowed me to give it a (non-conflicting) bus ID.
+The difference now is between (1) and (5). If in (5) somebody specifies
+"pg-gpio" they would want to explicitly use this pin and be notified if
+the respective setup fails. My proposal earlier for this was to output
+through dev_info() during driver probe whether an actual GPIO pin is
+being used for power-good detection or whether the fall-back SW
+algorithm has been invoked. This way, at least there is a notification.
 
 
--Doug
+
+Thanks and Regards,
+
+--
+Andreas Dannenberg
+Texas Instruments Inc
+
+> 
+> Best regards,
+> Krzysztof
