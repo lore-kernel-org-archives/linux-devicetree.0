@@ -1,77 +1,98 @@
-From: Joe Perches <joe@perches.com>
-Subject: Re: [PATCH v4 01/16] drm: exynos/dp: fix code style
-Date: Wed, 02 Sep 2015 22:57:58 -0700
-Message-ID: <1441259878.12163.75.camel@perches.com>
-References: <1441086371-24838-1-git-send-email-ykk@rock-chips.com>
-	 <1441086399-24889-1-git-send-email-ykk@rock-chips.com>
-	 <55E79297.3050203@samsung.com> <55E7D4E4.6070808@rock-chips.com>
-	 <55E7D5EB.1060505@samsung.com> <55E7DBA7.90504@rock-chips.com>
+From: Mugunthan V N <mugunthanvnm@ti.com>
+Subject: [net-next PATCH v2] drivers: net: cpsw: Add support to make gpio drive which slave connected to phy
+Date: Thu, 3 Sep 2015 11:31:55 +0530
+Message-ID: <1441260115-16219-1-git-send-email-mugunthanvnm@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <55E7DBA7.90504@rock-chips.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Yakir Yang <ykk@rock-chips.com>
-Cc: Krzysztof Kozlowski <k.kozlowski@samsung.com>, Heiko Stuebner <heiko@sntech.de>, Thierry Reding <treding@nvidia.com>, Jingoo Han <jingoohan1@gmail.com>, Inki Dae <inki.dae@samsung.com>, Kukjin Kim <kgene@kernel.org>, Mark Yao <mark.yao@rock-chips.com>, Russell King <rmk+kernel@arm.linux.org.uk>, djkurtz@chromium.com, dianders@chromium.com, seanpaul@chromium.com, ajaynumb@gmail.com, Andrzej Hajda <a.hajda@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, David Airlie <airlied@linux.ie>, Gustavo Padovan <gustavo.padovan@collabora.co.uk>, Andy Yan <andy.yan@rock-chips.com>, Kumar Gala <galak@codeaurora.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Kishon Vijay Abraham I <kishon@ti.com>, architt@codeaurora.org, robherring2@gmail.com, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.o
+Content-Type: text/plain
+Return-path: <netdev-owner@vger.kernel.org>
+Sender: netdev-owner@vger.kernel.org
+To: netdev@vger.kernel.org
+Cc: "David S . Miller" <davem@davemloft.net>, Tony Lindgren <tony@atomide.com>, Sekhar Nori <nsekhar@ti.com>, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, Mugunthan V N <mugunthanvnm@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 2015-09-03 at 13:33 +0800, Yakir Yang wrote:
-[]
-> >>>> diff --git a/drivers/gpu/drm/exynos/exynos_dp_core.c
-[]
-> >>>> @@ -155,24 +156,22 @@ static int exynos_dp_read_edid(struct
-> >>>> exynos_dp_device *dp)
-> >>>>            }
-> >>>>              exynos_dp_read_byte_from_dpcd(dp, DP_TEST_REQUEST,
-> >>>> -                    &test_vector);
-> >>>> +                          &test_vector);
-> >>>>            if (test_vector & DP_TEST_LINK_EDID_READ) {
-> >>>> -            exynos_dp_write_byte_to_dpcd(dp,
-> >>>> -                DP_TEST_EDID_CHECKSUM,
-> >>>> +            exynos_dp_write_byte_to_dpcd(
-> >>>> +                dp, DP_TEST_EDID_CHECKSUM,
-> >>>>                    edid[EDID_BLOCK_LENGTH + EDID_CHECKSUM]);
-> >>>> -            exynos_dp_write_byte_to_dpcd(dp,
-> >>>> -                DP_TEST_RESPONSE,
-> >>>> +            exynos_dp_write_byte_to_dpcd(
-> >>>> +                dp, DP_TEST_RESPONSE,
-> >>>>                    DP_TEST_EDID_CHECKSUM_WRITE);
-> >>> To me, missing argument after opening parenthesis, looks worse. I would
-> >>> prefer:
-> >>>
-> >>>              exynos_dp_write_byte_to_dpcd(dp,
-> >>>
-> >>> Why you moved the 'dp' argument to new line?
-> >> Hmm... Just like style tool indicate, no more warning after
-> >> that change.
-> >>
-> >> For now, I would like to follow the original style, just improved
-> >> some obvious style problem.  :-)
-> > What was the checkpatch warning that said 'dp' has to move to new line?
-> > I tried this and I don't see it.
-> 
-> checkpatch haven't remind me that put dp to new line would fix
-> this warning, this just come from my experiments. And I works,
-> no more warnings from checkpatch, so I toke this style.
+In DRA72x EVM, by default slave 1 is connected to the onboard
+phy, but slave 2 pins are also muxed with video input module
+which is controlled by pcf857x gpio and currently to select slave
+0 to connect to phy gpio hogging is used, but with
+omap2plus_defconfig the pcf857x gpio is built as module. So when
+using NFS on DRA72x EVM, board doesn't boot as gpio hogging do
+not set proper gpio state to connect slave 0 to phy as it is
+built as module and you do not see any errors for not setting
+gpio and just mentions dhcp reply not got.
 
-Checkpatch isn't a great arbiter of style.
-It's just a brainless tool.
+To solve this issue, introducing "mode-gpio" in DT when gpio
+based muxing is required. This will throw a warning when gpio
+get fails and returns probe defer. When gpio-pcf857x module is
+installed, cpsw probes again and ethernet becomes functional.
+Verified this on DRA72x with pcf as module and ramdisk.
 
-Always use your instead of anything brainless.
+Signed-off-by: Mugunthan V N <mugunthanvnm@ti.com>
+---
 
-If it were code I was writing, I'd ignore 80 columns warnings
-where appropriate.
+Changes from initial version:
+* Updated the gpio dt naming to be more generic.
 
-These are long function names and long macro defines, so it's
-inappropriate to use 80 columns as a guiding style.
+This patch is texted on DRA72x, Logs [1] and pushed a branch [2]
 
-I'd write:
+[1]: http://pastebin.ubuntu.com/12260767/
+[2]: git://git.ti.com/~mugunthanvnm/ti-linux-kernel/linux.git cpsw-gpio-optional-v2
 
-		exynos_dp_read_byte_from_dpcd(dp, DP_TEST_REQUEST, &test_vector);
-		if (test_vector & DP_TEST_LINK_EDID_READ) {
-			exynos_dp_write_byte_to_dpcd(dp, DP_TEST_EDID_CHECKSUM,
-						     edid[EDID_BLOCK_LENGTH + EDID_CHECKSUM]);
-			exynos_dp_write_byte_to_dpcd(dp, DP_TEST_RESPONSE,
-						     DP_TEST_EDID_CHECKSUM_WRITE);
-		}
+---
+ Documentation/devicetree/bindings/net/cpsw.txt | 7 +++++++
+ drivers/net/ethernet/ti/cpsw.c                 | 9 +++++++++
+ 2 files changed, 16 insertions(+)
+
+diff --git a/Documentation/devicetree/bindings/net/cpsw.txt b/Documentation/devicetree/bindings/net/cpsw.txt
+index 33fe846..dfe3e0b 100644
+--- a/Documentation/devicetree/bindings/net/cpsw.txt
++++ b/Documentation/devicetree/bindings/net/cpsw.txt
+@@ -26,6 +26,13 @@ Optional properties:
+ - dual_emac		: Specifies Switch to act as Dual EMAC
+ - syscon		: Phandle to the system control device node, which is
+ 			  the control module device of the am33x
++- mode-gpio		: Should be added if a gpio line is required to
++			  be driven so that cpsw data lines can be
++			  connected to the phy via selective mux. For
++			  example in dra72x-evm, pcf gpio has to be
++			  driven low so that cpsw slave 0 and phy
++			  data lines are connected via mux.
++
+ 
+ Slave Properties:
+ Required properties:
+diff --git a/drivers/net/ethernet/ti/cpsw.c b/drivers/net/ethernet/ti/cpsw.c
+index 8fc90f1..90ae3f9 100644
+--- a/drivers/net/ethernet/ti/cpsw.c
++++ b/drivers/net/ethernet/ti/cpsw.c
+@@ -29,6 +29,7 @@
+ #include <linux/workqueue.h>
+ #include <linux/delay.h>
+ #include <linux/pm_runtime.h>
++#include <linux/gpio.h>
+ #include <linux/of.h>
+ #include <linux/of_net.h>
+ #include <linux/of_device.h>
+@@ -2207,6 +2208,7 @@ static int cpsw_probe(struct platform_device *pdev)
+ 	void __iomem			*ss_regs;
+ 	struct resource			*res, *ss_res;
+ 	const struct of_device_id	*of_id;
++	struct gpio_desc		*mode;
+ 	u32 slave_offset, sliver_offset, slave_size;
+ 	int ret = 0, i;
+ 	int irq;
+@@ -2232,6 +2234,13 @@ static int cpsw_probe(struct platform_device *pdev)
+ 		goto clean_ndev_ret;
+ 	}
+ 
++	mode = devm_gpiod_get_optional(&pdev->dev, "mode", GPIOD_OUT_LOW);
++	if (IS_ERR(mode)) {
++		ret = PTR_ERR(mode);
++		dev_err(&pdev->dev, "gpio request failed, ret %d\n", ret);
++		goto clean_ndev_ret;
++	}
++
+ 	/*
+ 	 * This may be required here for child devices.
+ 	 */
+-- 
+2.5.1.522.g7aa67f6
