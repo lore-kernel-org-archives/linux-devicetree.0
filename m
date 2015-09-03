@@ -1,54 +1,52 @@
-From: Tomeu Vizoso <tomeu.vizoso-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
-Subject: Re: [PATCH] ARM: ux500: fix typo in regulator names
-Date: Thu, 3 Sep 2015 15:38:10 +0200
-Message-ID: <CAAObsKA8bYFe903SP1M+fRW4XRNuUbheLM+gwt_0vVM5M_db+w@mail.gmail.com>
-References: <1438777340-27511-1-git-send-email-tomeu.vizoso@collabora.com>
+From: Heiko Stuebner <heiko@sntech.de>
+Subject: Re: [PATCH v4 10/16] phy: Add driver for rockchip Display Port PHY
+Date: Thu, 03 Sep 2015 15:52:48 +0200
+Message-ID: <3242714.Wxby7z5YyH@phil>
+References: <1441086371-24838-1-git-send-email-ykk@rock-chips.com> <CAL_JsqJG3wGO3PC2raWvc588rrwF-zHD9+3WwBJxEwntm19k7Q@mail.gmail.com> <55E7BD8C.5070803@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1438777340-27511-1-git-send-email-tomeu.vizoso-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Cc: Tomeu Vizoso <tomeu.vizoso-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <55E7BD8C.5070803@rock-chips.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Yakir Yang <ykk@rock-chips.com>
+Cc: Rob Herring <robherring2@gmail.com>, Thierry Reding <treding@nvidia.com>, Jingoo Han <jingoohan1@gmail.com>, Inki Dae <inki.dae@samsung.com>, Joe Perches <joe@perches.com>, Kukjin Kim <kgene@kernel.org>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, Mark Yao <mark.yao@rock-chips.com>, Russell King <rmk+kernel@arm.linux.org.uk>, djkurtz@chromium.com, dianders@chromium.com, seanpaul@chromium.com, Ajay kumar <ajaynumb@gmail.com>, Andrzej Hajda <a.hajda@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, David Airlie <airlied@linux.ie>, Gustavo Padovan <gustavo.padovan@collabora.co.uk>, Andy Yan <andy.yan@rock-chips.com>, Kumar Gala <galak@codeaurora.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Kishon Vijay Abraham I <kishon@ti.com>, architt@codeaurora.org, dri-devel <dri-devel@lists.free>
 List-Id: devicetree@vger.kernel.org
 
-On 5 August 2015 at 14:22, Tomeu Vizoso <tomeu.vizoso-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org> wrote:
-> Apparently an extra _reg suffix was appended to the end of the names of
-> regulators ab8500_ext2_reg and ab8500_ext3_reg.
+Am Donnerstag, 3. September 2015, 11:25:00 schrieb Yakir Yang:
+> =E5=9C=A8 09/02/2015 09:27 PM, Rob Herring =E5=86=99=E9=81=93:
+> > On Tue, Sep 1, 2015 at 1:04 AM, Yakir Yang <ykk@rock-chips.com> wro=
+te:
+> >> +- clocks: from common clock binding: handle to dp clock.
+> >> +       of memory mapped region.
+> >> +- clock-names: from common clock binding:
+> >> +       Required elements: "sclk_dp" "sclk_dp_24m"
+> >> +
+> >> +- rockchip,grf: this soc should set GRF regs, so need get grf her=
+e.
+> >=20
+> > I have no idea what GRF means.
+>=20
+> GRF is an module of our IC chip, the full name is General Register Fi=
+les.
+> I would rather to pick some words from our TRM.
+>=20
+> The general register file will be used to do static set by software, =
+which
+> is composed of many registers for system control.
 
-Just pinging in case there's any interest in getting this fixed.
+The general register files are present on all Rockchip SoCs I've seen s=
+o far=20
+and really are just an aggregation of registers for settings and status=
+=20
+indications, ranging from memory stuff, dma-controller settings, usb-ph=
+y and=20
+settings for a lot of other phys, etc.
 
-Regards,
+The most prevalent description in dt-bindings is currently:
 
-Tomeu
+- rockchip,grf: phandle to the syscon managing the "general register fi=
+les"
 
-> Signed-off-by: Tomeu Vizoso <tomeu.vizoso-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
-> ---
->  arch/arm/boot/dts/ste-snowball.dts | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
->
-> diff --git a/arch/arm/boot/dts/ste-snowball.dts b/arch/arm/boot/dts/ste-snowball.dts
-> index 32a5ccb14e7e..07c0e346942c 100644
-> --- a/arch/arm/boot/dts/ste-snowball.dts
-> +++ b/arch/arm/boot/dts/ste-snowball.dts
-> @@ -360,11 +360,11 @@
->                                                 regulator-name = "ab8500-ext-supply1";
->                                         };
->
-> -                                       ab8500_ext2_reg_reg: ab8500_ext2 {
-> +                                       ab8500_ext2_reg: ab8500_ext2 {
->                                                 regulator-name = "ab8500-ext-supply2";
->                                         };
->
-> -                                       ab8500_ext3_reg_reg: ab8500_ext3 {
-> +                                       ab8500_ext3_reg: ab8500_ext3 {
->                                                 regulator-name = "ab8500-ext-supply3";
->                                         };
->                                 };
-> --
-> 2.4.3
->
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+
+Heiko
