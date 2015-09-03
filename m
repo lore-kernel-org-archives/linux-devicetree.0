@@ -1,115 +1,78 @@
-From: Teresa Remmet <t.remmet@phytec.de>
-Subject: [PATCH 2/2] ARM: dts: am335x-wega: Clean up regulators
-Date: Thu, 3 Sep 2015 14:00:07 +0200
-Message-ID: <1441281607-35457-2-git-send-email-t.remmet@phytec.de>
-References: <1441281607-35457-1-git-send-email-t.remmet@phytec.de>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1441281607-35457-1-git-send-email-t.remmet@phytec.de>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 2/2] ASoC: atmel-classd: DT binding for Class D audio
+ amplifier driver
+Date: Thu, 3 Sep 2015 12:43:16 +0100
+Message-ID: <20150903114316.GV12027@sirena.org.uk>
+References: <1441086101-15303-1-git-send-email-songjun.wu@atmel.com>
+ <1441086101-15303-3-git-send-email-songjun.wu@atmel.com>
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="B52KEoKdbCpY/p3k"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1441086101-15303-3-git-send-email-songjun.wu-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Songjun Wu <songjun.wu-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Cc: nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, perex-/Fr2/VpizcU@public.gmane.org, tiwai-IBi9RG/b67k@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Cleaned up the regulators on the wega board. Created a simple bus,
-renamed the regulators according to the schematics and added missing
-regulator on wega.
 
-Signed-off-by: Teresa Remmet <t.remmet@phytec.de>
----
- arch/arm/boot/dts/am335x-phycore-som.dtsi | 36 ++++++++++++++++---------------
- arch/arm/boot/dts/am335x-wega.dtsi        | 13 ++++++++++-
- 2 files changed, 31 insertions(+), 18 deletions(-)
+--B52KEoKdbCpY/p3k
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-diff --git a/arch/arm/boot/dts/am335x-phycore-som.dtsi b/arch/arm/boot/dts/am335x-phycore-som.dtsi
-index 5dd084f..2f43e45 100644
---- a/arch/arm/boot/dts/am335x-phycore-som.dtsi
-+++ b/arch/arm/boot/dts/am335x-phycore-som.dtsi
-@@ -29,8 +29,17 @@
- 		reg = <0x80000000 0x10000000>; /* 256 MB */
- 	};
- 
--	vbat: fixedregulator@0 {
--		compatible = "regulator-fixed";
-+	regulators {
-+		compatible = "simple-bus";
-+
-+		vcc5v: fixedregulator@0 {
-+			compatible = "regulator-fixed";
-+			regulator-name = "vcc5v";
-+			regulator-min-microvolt = <5000000>;
-+			regulator-max-microvolt = <5000000>;
-+			regulator-boot-on;
-+			regulator-always-on;
-+		};
- 	};
- };
- 
-@@ -233,14 +242,14 @@
- #include "tps65910.dtsi"
- 
- &tps {
--	vcc1-supply = <&vbat>;
--	vcc2-supply = <&vbat>;
--	vcc3-supply = <&vbat>;
--	vcc4-supply = <&vbat>;
--	vcc5-supply = <&vbat>;
--	vcc6-supply = <&vbat>;
--	vcc7-supply = <&vbat>;
--	vccio-supply = <&vbat>;
-+	vcc1-supply = <&vcc5v>;
-+	vcc2-supply = <&vcc5v>;
-+	vcc3-supply = <&vcc5v>;
-+	vcc4-supply = <&vcc5v>;
-+	vcc5-supply = <&vcc5v>;
-+	vcc6-supply = <&vcc5v>;
-+	vcc7-supply = <&vcc5v>;
-+	vccio-supply = <&vcc5v>;
- 
- 	regulators {
- 		vrtc_reg: regulator@0 {
-@@ -311,13 +320,6 @@
- 	};
- };
- 
--&vbat {
--	regulator-name = "vbat";
--	regulator-min-microvolt = <5000000>;
--	regulator-max-microvolt = <5000000>;
--	regulator-boot-on;
--};
--
- /* SPI Busses */
- &am33xx_pinmux {
- 	spi0_pins: pinmux_spi0 {
-diff --git a/arch/arm/boot/dts/am335x-wega.dtsi b/arch/arm/boot/dts/am335x-wega.dtsi
-index 5e541bd..2cecb39 100644
---- a/arch/arm/boot/dts/am335x-wega.dtsi
-+++ b/arch/arm/boot/dts/am335x-wega.dtsi
-@@ -11,6 +11,17 @@
- 	model = "Phytec AM335x phyBOARD-WEGA";
- 	compatible = "phytec,am335x-wega", "phytec,am335x-phycore-som", "ti,am33xx";
- 
-+	regulators {
-+		compatible = "simple-bus";
-+
-+		vcc3v3: fixedregulator@1 {
-+			compatible = "regulator-fixed";
-+			regulator-name = "vcc3v3";
-+			regulator-min-microvolt = <3300000>;
-+			regulator-max-microvolt = <3300000>;
-+			regulator-boot-on;
-+		};
-+	};
- };
- 
- /* CAN Busses */
-@@ -80,7 +91,7 @@
- };
- 
- &mmc1 {
--	vmmc-supply = <&vmmc_reg>;
-+	vmmc-supply = <&vcc3v3>;
- 	bus-width = <4>;
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&mmc1_pins>;
--- 
-1.9.1
+On Tue, Sep 01, 2015 at 01:41:41PM +0800, Songjun Wu wrote:
+
+> +classd: classd@fc048000 {
+> +		compatible = "atmel,sama5d2-classd";
+> +		reg = <0xfc048000 0x100>;
+> +		interrupts = <59 IRQ_TYPE_LEVEL_HIGH 7>;
+> +		dmas = <&dma0
+> +			(AT91_XDMAC_DT_MEM_IF(0) | AT91_XDMAC_DT_PER_IF(1)
+> +			| AT91_XDMAC_DT_PERID(47))>;
+> +		dma-names = "tx";
+> +		clocks = <&classd_clk>, <&classd_gclk>, <&audio_pll_pmc>;
+> +		clock-names = "pclk", "gclk", "aclk";
+> +
+> +		pinctrl-names = "default";
+> +		pinctrl-0 = <&pinctrl_classd_default>;
+> +		atmel,pwm-type = "diff";
+> +		atmel,non-overlap-time = <10>;
+> +};
+
+> +Example:
+> +sound {
+> +		compatible = "atmel,asoc-classd";
+> +
+> +		atmel,model = "classd @ SAMA5D2-Xplained";
+> +		atmel,audio-platform = <&classd>;
+> +		atmel,audio-cpu-dai-name = "fc048000.classd";
+> +		atmel,audio-codec = <&classd>;
+> +};
+
+Why is this a separate DT node?  It seems that this IP is entirely self
+contained so I'm not clear why we need a separate node for the card, the
+card is usually a separate node because it ties together multiple
+different devices in the system but that's not the case here.
+
+--B52KEoKdbCpY/p3k
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQEcBAEBCAAGBQJV6DJTAAoJECTWi3JdVIfQr/UH/0v02BuUxvvl8B3FsLgfC030
+36b+leJfTzV4x+omYNXF1kRVNOQ0imERJ76KlDk6MKVfIk6XftO2LYcJpsJBqIrM
+QMyy0fiDk2GlQAA2aU3RkJ5HuOp4WJy2cavdk2ivkYleTSrxyws+SWDwa3zU/+xh
+ejgMlq37Vs3XH+MgKsiXeZXbXyvtKVtSZxqZwIgXpJx/m9QpXaAWTII87p0yIGcG
+y9CBpfgPKab5WFqzpD8cPzNy5ziAtXJD7OOUbk/iTcfU1EuFZynEWTkahQlO7ldr
+0iFoh9Umb9UDQjMJF9S1jb2dPqaEBO84QFpaAJg2JIdyp1V4DyohlmqxCKZyZi4=
+=wNKq
+-----END PGP SIGNATURE-----
+
+--B52KEoKdbCpY/p3k--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
