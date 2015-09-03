@@ -1,102 +1,101 @@
-From: Chee Nouk Phoo <cnphoon@altera.com>
-Subject: [[PATCH v2] 1/2] Altera Modular ADC driver device binding
-Date: Tue, 1 Sep 2015 14:49:58 -0700
-Message-ID: <1441144199-20231-2-git-send-email-cnphoon@altera.com>
-References: <1441144199-20231-1-git-send-email-cnphoon@altera.com>
+From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH 2/2] MIPS: ath79: add irq chip ar7240-misc-intc
+Date: Thu, 3 Sep 2015 11:23:56 +0100
+Message-ID: <20150903102355.GA10583@leverpostej>
+References: <1441251262-13335-1-git-send-email-lynxis@fe80.eu>
+ <1441251262-13335-3-git-send-email-lynxis@fe80.eu>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1441144199-20231-1-git-send-email-cnphoon@altera.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-Cc: lars@metafoo.de, Michael.Hennerich@analog.com, cnphoon.linux@gmail.com, cnphoon@altera.com
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1441251262-13335-3-git-send-email-lynxis-qyMx1GtpvWw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Alexander Couzens <lynxis-qyMx1GtpvWw@public.gmane.org>
+Cc: "linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org" <linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, Alban Bedel <albeu-GANU6spQydw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Chee Nouk Phoon <cnphoon@altera.com>
+On Thu, Sep 03, 2015 at 04:34:22AM +0100, Alexander Couzens wrote:
+> The ar7240 misc irq chip use ack handler
+> instead of ack_mask handler. All new ath79 chips use
+> the ar7240 misc irq chip
+> 
+> Signed-off-by: Alexander Couzens <lynxis-qyMx1GtpvWw@public.gmane.org>
+> ---
+>  .../interrupt-controller/qca,ath79-misc-intc.txt       | 18 +++++++++++++++++-
+>  arch/mips/ath79/irq.c                                  | 10 ++++++++++
+>  2 files changed, 27 insertions(+), 1 deletion(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/interrupt-controller/qca,ath79-misc-intc.txt b/Documentation/devicetree/bindings/interrupt-controller/qca,ath79-misc-intc.txt
+> index 391717a..56ccaf3 100644
+> --- a/Documentation/devicetree/bindings/interrupt-controller/qca,ath79-misc-intc.txt
+> +++ b/Documentation/devicetree/bindings/interrupt-controller/qca,ath79-misc-intc.txt
+> @@ -4,7 +4,7 @@ The MISC interrupt controller is a secondary controller for lower priority
+>  interrupt.
+>  
+>  Required Properties:
+> -- compatible: has to be "qca,<soctype>-cpu-intc", "qca,ar7100-misc-intc"
+> +- compatible: has to be "qca,<soctype>-cpu-intc", "qca,ar{7100,7240}-misc-intc"
 
-Altera Modular ADC is soft IP that wraps the hardened ADC block in a Max10
-device. It can be configured to dual ADC mode that supports two channel
-synchronous sampling or independent single ADCs. ADC sampled values will be
-written into memory slots in sequence determined by a user configurable
-sequencer block.
+Please list those strings separately, in full, such that they can be
+searched for. Otherwise the addition looks fine to me.
 
-This patch adds Altera Modular ADC driver device tree binding
+Mark.
 
-Signed-off-by: Chee Nouk Phoon <cnphoon@altera.com>
----
- .../bindings/iio/adc/altr,modular-adc.txt          |   63 ++++++++++++++++++++
- 1 files changed, 63 insertions(+), 0 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/iio/adc/altr,modular-adc.txt
-
-diff --git a/Documentation/devicetree/bindings/iio/adc/altr,modular-adc.txt b/Documentation/devicetree/bindings/iio/adc/altr,modular-adc.txt
-new file mode 100644
-index 0000000..faafcac
---- /dev/null
-+++ b/Documentation/devicetree/bindings/iio/adc/altr,modular-adc.txt
-@@ -0,0 +1,63 @@
-+Altera Modular (Dual) ADC
-+
-+This binding document describes both Altera Modular ADC and Altera Modular Dual
-+ADC. Both options can be configured during generation time in Qsys. This driver
-+only supports standard sequencer with Avalon-MM sample storage with up to 64
-+memory slots.
-+
-+Required properties:
-+- compatible: must be one of the following strings
-+  "altr,modular-adc-1.0": single ADC configuration
-+  "altr,modular-dual-adc-1.0": dual ADC configuration
-+
-+- reg: Address and length of the register set for the device. It contains the
-+  information of registers in the same order as described by reg-names
-+
-+- reg-names: Should contain the reg names
-+  "sequencer_csr": register region for adc sequencer block
-+  "sample_store_csr": register region for sample store block
-+
-+- interrupts: interrupt line for ADC
-+
-+- altr,adc-mode : ADC configuration
-+  1: single ADC mode
-+  2: dual ADC mode
-+
-+- altr,adc-slot-count : specify number of conversion slot in use
-+
-+- altr,adc<ADC index>-slot-sequence-<slot index>: specify ADC channel
-+  conversion sequence
-+  <ADC index>: instantiated ADC number
-+  <slot index>: slot index for ADC memory slot
-+
-+- altr,adc-number : specify ADC number when single ADC mode is selected
-+  1: 1st ADC
-+  2: 2nd ACD
-+
-+Example: single ADC
-+modular_adc_0: adc@0x20000200 {
-+  compatible = "altr,modular-adc";
-+  reg = <0x20000000 0x00000008>,
-+    <0x20000200 0x00000200>;
-+  reg-names = "sequencer_csr", "sample_store_csr";
-+  interrupt-parent = <&cpu>;
-+  interrupts = <8>;
-+  altr,adc-mode = <1>;
-+  altr,adc-slot-count = <2>;
-+  altr,adc1-slot-sequence-1 = <1>;
-+  altr,adc-number = <1>;
-+};
-+
-+Example: dual ADC
-+modular_adc_1: adc@0x18002200 {
-+  compatible = "altr,modular-dual-adc";
-+  reg = <0x18002000 0x00000008>,
-+    <0x18002200 0x00000200>;
-+  reg-names = "sequencer_csr", "sample_store_csr";
-+  interrupt-parent = <&cpu>;
-+  interrupts = <8>;
-+  altr,adc-mode = <2>;
-+  altr,adc-slot-count = <1>;
-+  altr,adc1-slot-sequence-1 = <6>;
-+  altr,adc2-slot-sequence-1 = <6>;
-+};
-\ No newline at end of file
--- 
-1.7.1
+>    as fallback
+>  - reg: Base address and size of the controllers memory area
+>  - interrupt-parent: phandle of the parent interrupt controller.
+> @@ -13,6 +13,9 @@ Required Properties:
+>  - #interrupt-cells : Specifies the number of cells needed to encode interrupt
+>  		     source, should be 1
+>  
+> +Compatible fallback depends on the SoC. Use ar7100 for ar71xx and ar913x,
+> +use ar7240 for all other SoCs.
+> +
+>  Please refer to interrupts.txt in this directory for details of the common
+>  Interrupt Controllers bindings used by client devices.
+>  
+> @@ -28,3 +31,16 @@ Example:
+>  		interrupt-controller;
+>  		#interrupt-cells = <1>;
+>  	};
+> +
+> +Another example:
+> +
+> +	interrupt-controller@18060010 {
+> +		compatible = "qca,ar9331-misc-intc", qca,ar7240-misc-intc";
+> +		reg = <0x18060010 0x4>;
+> +
+> +		interrupt-parent = <&cpuintc>;
+> +		interrupts = <6>;
+> +
+> +		interrupt-controller;
+> +		#interrupt-cells = <1>;
+> +	};
+> diff --git a/arch/mips/ath79/irq.c b/arch/mips/ath79/irq.c
+> index 1917f55..7b38958 100644
+> --- a/arch/mips/ath79/irq.c
+> +++ b/arch/mips/ath79/irq.c
+> @@ -320,6 +320,16 @@ static int __init ar7100_misc_intc_of_init(
+>  IRQCHIP_DECLARE(ar7100_misc_intc, "qca,ar7100-misc-intc",
+>  		ar7100_misc_intc_of_init);
+>  
+> +static int __init ar7240_misc_intc_of_init(
+> +	struct device_node *node, struct device_node *parent)
+> +{
+> +	ath79_misc_irq_chip.irq_ack = ar724x_misc_irq_ack;
+> +	return ath79_misc_intc_of_init(node, parent);
+> +}
+> +
+> +IRQCHIP_DECLARE(ar7240_misc_intc, "qca,ar7240-misc-intc",
+> +		ar7240_misc_intc_of_init);
+> +
+>  static int __init ar79_cpu_intc_of_init(
+>  	struct device_node *node, struct device_node *parent)
+>  {
+> -- 
+> 2.4.0
+> 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
