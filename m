@@ -1,101 +1,43 @@
-From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH 2/2] MIPS: ath79: add irq chip ar7240-misc-intc
-Date: Thu, 3 Sep 2015 11:23:56 +0100
-Message-ID: <20150903102355.GA10583@leverpostej>
-References: <1441251262-13335-1-git-send-email-lynxis@fe80.eu>
- <1441251262-13335-3-git-send-email-lynxis@fe80.eu>
+From: Kishon Vijay Abraham I <kishon@ti.com>
+Subject: [PATCH 1/4] ARM: dts: omap24xx: fix address translation for pbias
+Date: Thu, 3 Sep 2015 16:57:50 +0530
+Message-ID: <1441279673-28105-2-git-send-email-kishon@ti.com>
+References: <1441279673-28105-1-git-send-email-kishon@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1441251262-13335-3-git-send-email-lynxis-qyMx1GtpvWw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Alexander Couzens <lynxis-qyMx1GtpvWw@public.gmane.org>
-Cc: "linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org" <linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, Alban Bedel <albeu-GANU6spQydw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1441279673-28105-1-git-send-email-kishon@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: t-kristo@ti.com, bcousson@baylibre.com, tony@atomide.com, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc: linux@arm.linux.org.uk, nsekhar@ti.com, kishon@ti.com
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Sep 03, 2015 at 04:34:22AM +0100, Alexander Couzens wrote:
-> The ar7240 misc irq chip use ack handler
-> instead of ack_mask handler. All new ath79 chips use
-> the ar7240 misc irq chip
-> 
-> Signed-off-by: Alexander Couzens <lynxis-qyMx1GtpvWw@public.gmane.org>
-> ---
->  .../interrupt-controller/qca,ath79-misc-intc.txt       | 18 +++++++++++++++++-
->  arch/mips/ath79/irq.c                                  | 10 ++++++++++
->  2 files changed, 27 insertions(+), 1 deletion(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/interrupt-controller/qca,ath79-misc-intc.txt b/Documentation/devicetree/bindings/interrupt-controller/qca,ath79-misc-intc.txt
-> index 391717a..56ccaf3 100644
-> --- a/Documentation/devicetree/bindings/interrupt-controller/qca,ath79-misc-intc.txt
-> +++ b/Documentation/devicetree/bindings/interrupt-controller/qca,ath79-misc-intc.txt
-> @@ -4,7 +4,7 @@ The MISC interrupt controller is a secondary controller for lower priority
->  interrupt.
->  
->  Required Properties:
-> -- compatible: has to be "qca,<soctype>-cpu-intc", "qca,ar7100-misc-intc"
-> +- compatible: has to be "qca,<soctype>-cpu-intc", "qca,ar{7100,7240}-misc-intc"
+commit <72b10ac00eb1> ("ARM: dts: omap24xx: add minimal l4 bus
+layout with control module support") moved pbias_regulator dt node
+from being a child node of ocp to be the child node of
+scm_conf. Since scm_conf doesn't have the 'ranges' property,
+address translation fails while trying to convert the address
+to resource. Fix it here.
 
-Please list those strings separately, in full, such that they can be
-searched for. Otherwise the addition looks fine to me.
+Fixes: 72b10ac00eb1 ("ARM: dts: omap24xx: add minimal l4 bus
+layout with control module support")
 
-Mark.
+Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+---
+ arch/arm/boot/dts/omap2430.dtsi |    1 +
+ 1 file changed, 1 insertion(+)
 
->    as fallback
->  - reg: Base address and size of the controllers memory area
->  - interrupt-parent: phandle of the parent interrupt controller.
-> @@ -13,6 +13,9 @@ Required Properties:
->  - #interrupt-cells : Specifies the number of cells needed to encode interrupt
->  		     source, should be 1
->  
-> +Compatible fallback depends on the SoC. Use ar7100 for ar71xx and ar913x,
-> +use ar7240 for all other SoCs.
-> +
->  Please refer to interrupts.txt in this directory for details of the common
->  Interrupt Controllers bindings used by client devices.
->  
-> @@ -28,3 +31,16 @@ Example:
->  		interrupt-controller;
->  		#interrupt-cells = <1>;
->  	};
-> +
-> +Another example:
-> +
-> +	interrupt-controller@18060010 {
-> +		compatible = "qca,ar9331-misc-intc", qca,ar7240-misc-intc";
-> +		reg = <0x18060010 0x4>;
-> +
-> +		interrupt-parent = <&cpuintc>;
-> +		interrupts = <6>;
-> +
-> +		interrupt-controller;
-> +		#interrupt-cells = <1>;
-> +	};
-> diff --git a/arch/mips/ath79/irq.c b/arch/mips/ath79/irq.c
-> index 1917f55..7b38958 100644
-> --- a/arch/mips/ath79/irq.c
-> +++ b/arch/mips/ath79/irq.c
-> @@ -320,6 +320,16 @@ static int __init ar7100_misc_intc_of_init(
->  IRQCHIP_DECLARE(ar7100_misc_intc, "qca,ar7100-misc-intc",
->  		ar7100_misc_intc_of_init);
->  
-> +static int __init ar7240_misc_intc_of_init(
-> +	struct device_node *node, struct device_node *parent)
-> +{
-> +	ath79_misc_irq_chip.irq_ack = ar724x_misc_irq_ack;
-> +	return ath79_misc_intc_of_init(node, parent);
-> +}
-> +
-> +IRQCHIP_DECLARE(ar7240_misc_intc, "qca,ar7240-misc-intc",
-> +		ar7240_misc_intc_of_init);
-> +
->  static int __init ar79_cpu_intc_of_init(
->  	struct device_node *node, struct device_node *parent)
->  {
-> -- 
-> 2.4.0
-> 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/arch/arm/boot/dts/omap2430.dtsi b/arch/arm/boot/dts/omap2430.dtsi
+index 3961a6f..798dda0 100644
+--- a/arch/arm/boot/dts/omap2430.dtsi
++++ b/arch/arm/boot/dts/omap2430.dtsi
+@@ -56,6 +56,7 @@
+ 					reg = <0x270 0x240>;
+ 					#address-cells = <1>;
+ 					#size-cells = <1>;
++					ranges = <0 0x270 0x240>;
+ 
+ 					scm_clocks: clocks {
+ 						#address-cells = <1>;
+-- 
+1.7.9.5
