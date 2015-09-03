@@ -1,64 +1,41 @@
-From: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH linux-next v9 1/3] mfd: atmel-flexcom: create include file
- with macros used by DT bindings
-Date: Thu, 3 Sep 2015 17:42:17 +0200
-Message-ID: <55E86A59.7060107@atmel.com>
-References: <cover.1441118159.git.cyrille.pitchen@atmel.com>
- <69844d8092ccbcaef6a3a24d39127ca432462d69.1441118159.git.cyrille.pitchen@atmel.com>
+From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Subject: Re: [PATCH v2 1/6] ARM: dts: ifc6410: Add pwrseq support for WLAN
+Date: Thu, 03 Sep 2015 16:45:53 +0100
+Message-ID: <55E86B31.3010604@linaro.org>
+References: <1439903069-19752-1-git-send-email-srinivas.kandagatla@linaro.org> <1439903212-19931-1-git-send-email-srinivas.kandagatla@linaro.org> <55DCDF19.4070901@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <69844d8092ccbcaef6a3a24d39127ca432462d69.1441118159.git.cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Cyrille Pitchen <cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <55DCDF19.4070901@codeaurora.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Stephen Boyd <sboyd@codeaurora.org>
+Cc: agross@codeaurora.org, linux-arm-msm@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Russell King <linux@arm.linux.org.uk>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Le 01/09/2015 16:46, Cyrille Pitchen a =E9crit :
-> This patch defines some macros to be used as value for the
-> "atmel,flexcom-mode" DT property. This value is then written into
-> the Operating Mode (OPMODE) bit field of the Flexcom Mode Register.
->=20
-> Signed-off-by: Cyrille Pitchen <cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-
-Acked-by: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-
-> ---
->  include/dt-bindings/mfd/atmel-flexcom.h | 16 ++++++++++++++++
->  1 file changed, 16 insertions(+)
->  create mode 100644 include/dt-bindings/mfd/atmel-flexcom.h
->=20
-> diff --git a/include/dt-bindings/mfd/atmel-flexcom.h b/include/dt-bin=
-dings/mfd/atmel-flexcom.h
-> new file mode 100644
-> index 000000000000..6728f2851b4d
-> --- /dev/null
-> +++ b/include/dt-bindings/mfd/atmel-flexcom.h
-> @@ -0,0 +1,16 @@
-> +/*
-> + * This header provides macros for Atmel Flexcom DT bindings.
-> + *
-> + * Copyright (C) 2015 Cyrille Pitchen <cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-> + *
-> + * GPLv2 only
-> + */
-> +
-> +#ifndef __DT_BINDINGS_ATMEL_FLEXCOM_H__
-> +#define __DT_BINDINGS_ATMEL_FLEXCOM_H__
-> +
-> +#define ATMEL_FLEXCOM_MODE_USART	1
-> +#define ATMEL_FLEXCOM_MODE_SPI		2
-> +#define ATMEL_FLEXCOM_MODE_TWI		3
-> +
-> +#endif /* __DT_BINDINGS_ATMEL_FLEXCOM_H__ */
->=20
 
 
---=20
-Nicolas Ferre
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+On 25/08/15 22:33, Stephen Boyd wrote:
+> On 08/18/2015 06:06 AM, Srinivas Kandagatla wrote:
+>> @@ -10,6 +11,20 @@
+>>           serial1 = &gsbi6_serial;
+>>       };
+>> +    pwrseq {
+>> +        #address-cells = <1>;
+>> +        #size-cells = <1>;
+>> +        ranges;
+>
+> Why do we need any of these three properties?
+>
+Yep, you are right I will remove it and give it a try.
+
+>> +        compatible = "simple-bus";
+>> +
+>> +        sdcc4_pwrseq: sdcc4_pwrseq {
+>> +            pinctrl-names = "default";
+>> +            pinctrl-0 = <&wlan_default_gpios>;
+>> +            compatible = "mmc-pwrseq-simple";
+>> +            reset-gpios = <&pm8921_gpio 43 GPIO_ACTIVE_LOW>;
+>
+> Especially because this node doesn't have a reg property.
+>
