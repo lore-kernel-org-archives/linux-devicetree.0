@@ -1,97 +1,64 @@
-From: Peter Griffin <peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [STLinux Kernel] [PATCH v3 5/6] ARM: STiH407: Add nodes for
- RemoteProc
-Date: Thu, 3 Sep 2015 16:26:38 +0100
-Message-ID: <20150903152638.GD7093@griffinp-ThinkPad-X1-Carbon-2nd>
-References: <1441208289-17330-1-git-send-email-lee.jones@linaro.org>
- <1441208289-17330-6-git-send-email-lee.jones@linaro.org>
+From: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH linux-next v9 1/3] mfd: atmel-flexcom: create include file
+ with macros used by DT bindings
+Date: Thu, 3 Sep 2015 17:42:17 +0200
+Message-ID: <55E86A59.7060107@atmel.com>
+References: <cover.1441118159.git.cyrille.pitchen@atmel.com>
+ <69844d8092ccbcaef6a3a24d39127ca432462d69.1441118159.git.cyrille.pitchen@atmel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1441208289-17330-6-git-send-email-lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+In-Reply-To: <69844d8092ccbcaef6a3a24d39127ca432462d69.1441118159.git.cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ohad-Ix1uc/W3ht7QT0dZR+AlfA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, kernel-F5mvAk5X5gdBDgjK7y7TUQ@public.gmane.org, Nathan_Lynch-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org
+To: Cyrille Pitchen <cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Lee,
+Le 01/09/2015 16:46, Cyrille Pitchen a =E9crit :
+> This patch defines some macros to be used as value for the
+> "atmel,flexcom-mode" DT property. This value is then written into
+> the Operating Mode (OPMODE) bit field of the Flexcom Mode Register.
+>=20
+> Signed-off-by: Cyrille Pitchen <cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
 
-On Wed, 02 Sep 2015, Lee Jones wrote:
+Acked-by: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
 
-> Signed-off-by: Ludovic Barre <ludovic.barre-qxv4g6HH51o@public.gmane.org>
-> Signed-off-by: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 > ---
->  arch/arm/boot/dts/stih407-family.dtsi | 40 +++++++++++++++++++++++++++++++++++
->  1 file changed, 40 insertions(+)
-> 
-> diff --git a/arch/arm/boot/dts/stih407-family.dtsi b/arch/arm/boot/dts/stih407-family.dtsi
-> index 33daa49..1c31918 100644
-> --- a/arch/arm/boot/dts/stih407-family.dtsi
-> +++ b/arch/arm/boot/dts/stih407-family.dtsi
-> @@ -608,5 +608,45 @@
->  			status		= "okay";
->  			tx-only;
->  		};
+>  include/dt-bindings/mfd/atmel-flexcom.h | 16 ++++++++++++++++
+>  1 file changed, 16 insertions(+)
+>  create mode 100644 include/dt-bindings/mfd/atmel-flexcom.h
+>=20
+> diff --git a/include/dt-bindings/mfd/atmel-flexcom.h b/include/dt-bin=
+dings/mfd/atmel-flexcom.h
+> new file mode 100644
+> index 000000000000..6728f2851b4d
+> --- /dev/null
+> +++ b/include/dt-bindings/mfd/atmel-flexcom.h
+> @@ -0,0 +1,16 @@
+> +/*
+> + * This header provides macros for Atmel Flexcom DT bindings.
+> + *
+> + * Copyright (C) 2015 Cyrille Pitchen <cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+> + *
+> + * GPLv2 only
+> + */
 > +
-> +		st231_gp0: st231-gp0@40000000 {
-> +			compatible	= "st,st231-rproc";
-> +			reg		= <0x40000000 0x01000000>;
-> +			resets		= <&softreset STIH407_ST231_GP0_SOFTRESET>;
-> +			reset-names	= "sw_reset";
-> +			clocks		= <&clk_s_c0_flexgen CLK_ST231_GP_0>;
-> +			clock-frequency	= <600000000>;
-> +			st,syscfg	= <&syscfg_core 0x22c>;
-> +		};
+> +#ifndef __DT_BINDINGS_ATMEL_FLEXCOM_H__
+> +#define __DT_BINDINGS_ATMEL_FLEXCOM_H__
 > +
-> +		st231_gp1: st231-gp1@41000000 {
-> +			compatible	= "st,st231-rproc";
-> +			reg		= <0x41000000 0x01000000>;
-> +			resets		= <&softreset STIH407_ST231_GP1_SOFTRESET>;
-> +			reset-names	= "sw_reset";
-> +			clocks		= <&clk_s_c0_flexgen CLK_ST231_GP_1>;
-> +			clock-frequency = <600000000>;
-> +			st,syscfg	= <&syscfg_core 0x220>;
-> +		};
+> +#define ATMEL_FLEXCOM_MODE_USART	1
+> +#define ATMEL_FLEXCOM_MODE_SPI		2
+> +#define ATMEL_FLEXCOM_MODE_TWI		3
 > +
-> +		st231_audio: st231-audio@42000000 {
-> +			compatible	= "st,st231-rproc";
-> +			reg		= <0x42000000 0x01000000>;
-> +			resets		= <&softreset STIH407_ST231_AUD_SOFTRESET>;
-> +			reset-names	= "sw_reset";
-> +			clocks		= <&clk_s_c0_flexgen CLK_ST231_AUD_0>;
-> +			clock-frequency	= <600000000>;
-> +			st,syscfg	= <&syscfg_core 0x228>;
-> +		};
-> +
-> +		st231_dmu: st231-dmu@43000000 {
-> +			compatible	= "st,st231-rproc";
-> +			reg		= <0x43000000 0x01000000>;
-> +			resets		= <&softreset STIH407_ST231_DMU_SOFTRESET>;
-> +			reset-names	= "sw_reset";
-> +			clocks		= <&clk_s_c0_flexgen CLK_ST231_DMU>;
+> +#endif /* __DT_BINDINGS_ATMEL_FLEXCOM_H__ */
+>=20
 
-Thinking more about this more, I believe you will actually need to support enabling
-and setting the frequency on a list of clocks.
 
-The reason being that for the video ST231 for example you also need to enable
-CLK_VID_DMU. This clock clocks the DeltaMU hw used by the video ST231 for
-video decoding. I suspect if the video firmware is loading and working correctly
-with this patchset, then it is most likely because the clock is being enabled
-by the bootloader and not being disabled by CCF due to our platform booting
-with clk_ignore_unused.
-
-When yours (or Mikes) critical clock patches get merged, and we stop booting with
-"clk_ignore_unused" you will find it no longer works.
-
-I'm not aware of other hw which is used by the audio of gp ST231, but as the driver
-also covers ST40 and potentially other co-processors in the future, having a list
-of clocks seems nicely extendable to cover other permutations.
-
-regards,
-
-Peter.
+--=20
+Nicolas Ferre
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
