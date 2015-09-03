@@ -1,101 +1,96 @@
-From: Stephen Boyd <sboyd@codeaurora.org>
-Subject: Re: [PATCH] firmware: qcom: scm: Convert to platform driver
-Date: Thu, 3 Sep 2015 14:33:22 -0700
-Message-ID: <20150903213322.GI15099@codeaurora.org>
-References: <1437431152-6730-1-git-send-email-agross@codeaurora.org>
+From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: st_fdma: Firmware filename in DT?
+Date: Thu, 3 Sep 2015 16:45:35 -0500
+Message-ID: <CAL_JsqKQqbAQCPR6xuR2Ke5gEdX4kQYb29-W3qNaZqjM_JBoYg@mail.gmail.com>
+References: <20150903144944.GC7093@griffinp-ThinkPad-X1-Carbon-2nd>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1437431152-6730-1-git-send-email-agross@codeaurora.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Andy Gross <agross@codeaurora.org>
-Cc: linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Bjorn Andersson <bjorn.andersson@sonymobile.com>, devicetree@vger.kernel.org, Rob Clark <robdclark@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-spec-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20150903144944.GC7093@griffinp-ThinkPad-X1-Carbon-2nd>
+Sender: devicetree-spec-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Peter Griffin <peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Maxime Coquelin <maxime.coquelin-qxv4g6HH51o@public.gmane.org>, Patrice Chotard <patrice.chotard-qxv4g6HH51o@public.gmane.org>, Ludovic Barre <ludovic.barre-qxv4g6HH51o@public.gmane.org>, "devicetree-spec-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-spec-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 07/20, Andy Gross wrote:
-> This patch creates a platform driver for the SCM so that we can adequately
-> manage resources.  This removes clients having to carry the necessary
-> clocks to use the SCM resources.
-> 
-> Signed-off-by: Andy Gross <agross@codeaurora.org>
-> ---
++devicetree-spec as a good question to separate from the fire hose.
 
-It would be nice if we could use this platform device for doing
-the DMAish memory allocations that we do in this driver too. I
-guess one complication there is that we would need to allocate
-memory with the DMA APIs before CPUs are brought up
-(early_initcall level).
+On Thu, Sep 3, 2015 at 9:49 AM, Peter Griffin <peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+> Hi Rob, Pawel, Mark, Ian and Kumar,
+>
+> Quick question regarding this series here
+> https://lkml.org/lkml/2015/7/8/832. and the proposed
+> st,fw-name binding.
 
-> diff --git a/drivers/firmware/qcom_scm.c b/drivers/firmware/qcom_scm.c
-> index 45c008d..5dd0514 100644
-> --- a/drivers/firmware/qcom_scm.c
-> +++ b/drivers/firmware/qcom_scm.c
-> @@ -15,14 +15,57 @@
->   * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
->   * 02110-1301, USA.
->   */
-> -
-> +#include <linux/platform_device.h>
-> +#include <linux/module.h>
-> +#include <linux/platform_device.h>
+Thanks for looking at the bigger picture.
 
-This include is here twice.
+> What are the rules with putting firmware names into DT?
 
->  #include <linux/cpumask.h>
->  #include <linux/export.h>
->  #include <linux/types.h>
->  #include <linux/qcom_scm.h>
-> +#include <linux/of.h>
-> +#include <linux/clk.h>
->  
-[...]
-> +
-> +/**
-> + * qcom_scm_is_available() - Checks if SCM is available
-> + */
-> +bool qcom_scm_is_available(void)
-> +{
-> +	return !!__scm;
-> +}
-> +EXPORT_SYMBOL(qcom_scm_is_available);
-> +
-> +static int qcom_scm_remove(struct platform_device *pdev)
-> +{
-> +	__scm = NULL;
-> +
-> +	return 0;
-> +}
+Whatever you can sneak in without DT maintainers noticing...
 
-Maybe we just shouldn't allow this? The firmware isn't going
-anywhere at runtime, and this driver is currently marked as
-bool in the Kconfig.
+> Is it allowed?
 
-> +
-> +static const struct of_device_id qcom_scm_dt_match[] = {
-> +	{ .compatible = "qcom,scm",},
-> +	{},
-> +};
-> +
-> +MODULE_DEVICE_TABLE(of, qcom_scm_dt_match);
-> +
-> +static struct platform_driver qcom_scm_driver = {
-> +	.driver = {
-> +		.name	= "scm",
+They are already there as you have found, so yes. But should they be
+allowed? Possibly. I'm not saying no, but do have some concerns.
 
-Maybe 'qcom_scm' ?
+> If yes, is it worth having a generic binding?
 
-> +		.of_match_table = qcom_scm_dt_match,
-> +	},
-> +	.probe = qcom_scm_probe,
-> +	.remove = qcom_scm_remove,
-> +};
-> +
-> +module_platform_driver(qcom_scm_driver);
+If we decide it is a good idea, then yes. It doesn't look that hard to
+arrive at something common.
 
-Isn't there some sort of builtin_platform_driver() macro for
-builtin modules?
+Strictly speaking, the firmware name is just an agreed upon name
+between the kernel and userspace. So why tie that into DT? Would other
+OS's use it or want something different? What if we started including
+paths in the names like <soc>/<firmware file>? Now we are imposing a
+directory structure on the OS filesystem.
 
--- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project
+We'd also need to consider firmware that is needed to boot. In that
+case, we could include firmware binary directly in the dtb. I think
+that has been done before, but not in any standard way. u-boot FIT
+images happen to be DTBs containing mostly binary blobs.
+
+> From what I can see TI are using: -
+>     ti,pm-firmware in wkup_m3_rproc.c
+>
+> and Freescale are using: -
+>     fsl,sdma-ram-script-name in imx-sdma.c
+>
+> So other platforms seem to be putting firmware names into DT,
+> there are probably other examples.
+>
+> Most other STi drivers keep the firmware name in the C code, which is
+> usually my first preference. However with fdma it is more complicated
+> as there are seperate firmware files for each instance of the IP block.
+>
+> Currently also the same IP block "fdma_mpe31" is used on a number
+> of different SoC's but each firmware is named: -
+>
+>  fdma_<SoC>_<instancenum>.elf
+>
+> e.g. fdma_STiH407_0.elf
+>
+> So currently all we need to provide is a different firmware name in DT
+> for the new SoC and the driver "just works".
+>
+> Presumably the alternative would be to add a whole bunch of compatibles
+> in the driver for each SoC, where the only difference from a
+> functional point of view would be to help build the correct string for
+> the firmware filename. However I'm also then wondering what the best way
+> would be to find out the instance name of the IP.
+
+If the name/path is Linux specific, then that is probably what we should do.
+
+You could perhaps make a policy that firmware files be named by
+compatible string. So rather than translating from matching compatible
+to an arbitrary file name, you enforce file name is "<vendor>,<ip
+block>.fw" or something. I know we don't have policy in the kernel,
+but we already have it with hardcoded file names and search paths.
+
+> We could do it by parsing the node name e.g. fdma0-audio, or by adding
+> a "instance" DT property to the node?
+
+Generally we try to avoid caring about node names. Having some index
+or numbering also comes up which we also try to avoid. Generally, if
+you care about which instance you use for something, then there is
+some property you care about and should add.
+
+Rob
