@@ -1,87 +1,202 @@
-From: Stefan Agner <stefan@agner.ch>
-Subject: [PATCH v12 3/5] mtd: nand: vf610_nfc: add device tree bindings
-Date: Wed,  2 Sep 2015 18:06:35 -0700
-Message-ID: <1441242397-870-4-git-send-email-stefan@agner.ch>
-References: <1441242397-870-1-git-send-email-stefan@agner.ch>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1441242397-870-1-git-send-email-stefan@agner.ch>
-Sender: linux-kernel-owner@vger.kernel.org
-To: dwmw2@infradead.org, computersforpeace@gmail.com
-Cc: sebastian@breakpoint.cc, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, shawn.guo@linaro.org, kernel@pengutronix.de, boris.brezillon@free-electrons.com, marb@ixxat.de, aaron@tastycactus.com, bpringlemeir@gmail.com, linux-mtd@lists.infradead.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, albert.aribaud@3adev.fr, klimov.linux@gmail.com, Stefan Agner <stefan@agner.ch>, Bill Pringlemeir <bpringlemeir@nbsps.com>
+From: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+Subject: Re: [PATCH 13/13] dt: power: bq24257-charger: Cover additional devices
+Date: Thu, 03 Sep 2015 10:31:20 +0900
+Message-ID: <55E7A2E8.2060306@samsung.com>
+References: <1441073435-12349-1-git-send-email-dannenberg@ti.com>
+ <1441073435-12349-14-git-send-email-dannenberg@ti.com>
+ <CAJKOXPeyMeUUon0E9Fhm18SHJEaQPEbGAWwU+MKwgt-30AXHiA@mail.gmail.com>
+ <20150902140332.GA24076@borg>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-reply-to: <20150902140332.GA24076@borg>
+Sender: linux-pm-owner@vger.kernel.org
+To: Andreas Dannenberg <dannenberg@ti.com>
+Cc: Sebastian Reichel <sre@kernel.org>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, David Woodhouse <dwmw2@infradead.org>, Laurentiu Palcu <laurentiu.palcu@intel.com>, linux-pm@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Bill Pringlemeir <bpringlemeir@nbsps.com>
-Acked-by: Shawn Guo <shawnguo@kernel.org>
-Signed-off-by: Stefan Agner <stefan@agner.ch>
----
- .../devicetree/bindings/mtd/vf610-nfc.txt          | 59 ++++++++++++++++++++++
- 1 file changed, 59 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/mtd/vf610-nfc.txt
+On 02.09.2015 23:03, Andreas Dannenberg wrote:
+> Hi Krzysztof, thanks for your feedback... comments below.
+> 
+> On Wed, Sep 02, 2015 at 02:24:05PM +0900, Krzysztof Kozlowski wrote:
+>> 2015-09-01 11:10 GMT+09:00 Andreas Dannenberg <dannenberg@ti.com>:
+>>> --- a/Documentation/devicetree/bindings/power/bq24257.txt
+>>> +++ b/Documentation/devicetree/bindings/power/bq24257.txt
+>>> @@ -2,20 +2,71 @@ Binding for TI bq24257 Li-Ion Charger
+>>>
+>>>  Required properties:
+>>>  - compatible: Should contain one of the following:
+>>> + * "ti,bq24250"
+>>> + * "ti,bq24251"
+>>>   * "ti,bq24257"
+>>> -- reg:                    integer, i2c address of the device.
+>>> +- reg: integer, i2c address of the device.
+>>> +- stat-gpio: GPIO used for the devices STAT_IN pin. Alternatively the pin can
+>>> +    also be defined through the standard interrupt definition properties (see
+>>> +    optional properties section below). Only use one method.
+>>
+>> Preferred suffix should be "gpios":
+>> Documentation/devicetree/bindings/gpio/gpio.txt
+> 
+> Did not know this. Thanks for pointing to the src document. Will fix.
+> 
+>>> +Optional properties:
+>>> +- ti,in-ilimit-autoset-disable: If this boolean property is present it disables
+>>
+>> I thought "ilimit" is a typo but apparently not :) . The names of this
+>> property and "ti,in-limit-current" below are quite obfuscated. I am
+>> thinking about different names but first I would like to understand
+>> the feature: what do you mean by "automatic setting of the input
+>> current limit"? Like adjusting the limit of possible current to given
+>> charger type?
+> 
+> Yes that's right. Some of the chargers can check the USB D+/D- lines to
+> determine what kind of charger is attached (DCP, CDP, SDP, other) - see
+> bq24257 device datasheet for more info:
+> http://www.ti.com/product/bq24257
+> 
+> And this feature is being used in the original driver Laurentiu
+> developed. However this detection mechanism (or any detection mechanism
+> in general) may not always be appropriate hence the new property to
+> disable it and manually provide an input current limit of how much can
+> be drawn from the charger. Plus it's needed for devices that don't have
+> the D+/D- detection feature.
 
-diff --git a/Documentation/devicetree/bindings/mtd/vf610-nfc.txt b/Documentation/devicetree/bindings/mtd/vf610-nfc.txt
-new file mode 100644
-index 0000000..6be4871
---- /dev/null
-+++ b/Documentation/devicetree/bindings/mtd/vf610-nfc.txt
-@@ -0,0 +1,59 @@
-+Freescale's NAND flash controller (NFC)
-+
-+This variant of the Freescale NAND flash controller (NFC) can be found on
-+Vybrid (vf610), MPC5125, MCF54418 and Kinetis K70.
-+
-+Required properties:
-+- compatible: Should be set to "fsl,vf610-nfc".
-+- reg: address range of the NFC.
-+- interrupts: interrupt of the NFC.
-+- #address-cells: shall be set to 1. Encode the nand CS.
-+- #size-cells : shall be set to 0.
-+- assigned-clocks: main clock from the SoC, for Vybrid <&clks VF610_CLK_NFC>;
-+- assigned-clock-rates: The NAND bus timing is derived from this clock
-+    rate and should not exceed maximum timing for any NAND memory chip
-+    in a board stuffing. Typical NAND memory timings derived from this
-+    clock are found in the SoC hardware reference manual. Furthermore,
-+    there might be restrictions on maximum rates when using hardware ECC.
-+
-+- #address-cells, #size-cells : Must be present if the device has sub-nodes
-+  representing partitions.
-+
-+Required children nodes:
-+Children nodes represent the available nand chips. Currently the driver can
-+only handle one NAND chip.
-+
-+Required properties:
-+- compatible: Should be set to "fsl,vf610-nfc-cs".
-+- nand-bus-width: see nand.txt
-+- nand-ecc-mode: see nand.txt
-+
-+Required properties for hardware ECC:
-+- nand-ecc-strength: supported strengths are 24 and 32 bit (see nand.txt)
-+- nand-ecc-step-size: step size equals page size, currently only 2k pages are
-+    supported
-+- nand-on-flash-bbt: see nand.txt
-+
-+Example:
-+
-+	nfc: nand@400e0000 {
-+		compatible = "fsl,vf610-nfc";
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		reg = <0x400e0000 0x4000>;
-+		interrupts = <GIC_SPI 83 IRQ_TYPE_LEVEL_HIGH>;
-+		clocks = <&clks VF610_CLK_NFC>;
-+		clock-names = "nfc";
-+		assigned-clocks = <&clks VF610_CLK_NFC>;
-+		assigned-clock-rates = <33000000>;
-+
-+		nand@0 {
-+			compatible = "fsl,vf610-nfc-nandcs";
-+			reg = <0>;
-+			nand-bus-width = <8>;
-+			nand-ecc-mode = "hw";
-+			nand-ecc-strength = <32>;
-+			nand-ecc-step-size = <2048>;
-+			nand-on-flash-bbt;
-+		};
-+	};
--- 
-2.5.1
+Thanks for explanation. How about leaving only "ti,in-limit-current"
+(get rid of "ti,in-ilimit-autoset-disable"). If it is present then the
+autodetection/autoset would be disabled.
+
+> 
+>>
+>>> +    the automatic setting of the input current limit. This property is also set
+>>> +    implicitly on devices without charger type detection. If this property is
+>>> +    provided the input current limit should be set manually through
+>>> +    "ti,in-limit-current".
+>>> +- ti,in-limit-current: The maximum current to be drawn from the charger's input
+>>> +    (in uA). Use this for devices that don't have charger type detection or if
+>>> +    you have have set "ti,in-ilimit-autoset-disable".
+>>> +- ti,vovp-voltage: Configures the over voltage protection voltage (in uV).
+>>> +- ti,vindpm-voltage:  Configures the threshold input voltage for the dynamic
+>>> +    power path management (in uV).
+>>
+>> I think the leading 'v' could be removed, so "ti,ovp-voltage" and
+>> "ti,in-dpm-voltage"?
+> 
+> Yes I was thinking about this but then went with something that closely
+> reflects the device datasheets to maximize correlation. Removing the 'v'
+> would make it look cleaner and more universal and I suppose it's not to
+> far of a stretch for someone to associate "ti,ovp-voltag" with the VOVP
+> bit field in the devices register map. So let's change it.
+
+Thanks. Bindings don't have to follow naming convention of company's
+datasheet.
+
+> 
+>>
+>>> +- ti,pg-gpio-disable: If this boolean property is provided a software-based
+>>> +    approach for power good determination is used. Note that the PG-pin based
+>>> +    approach is generally preferable.
+>>
+>> That's confusing. If someone does not want to use pg-gpio then he
+>> could just skip the "pg-gpio" property?
+> 
+> Yes that's right. Somebody might chose to do so because they don't want
+> to sacrifice the extra pin. And I need to accommodate for devices that
+> don't have a PG pin so the logic behind this had to be implemented
+> anyways. I just made it accessible. What about I work on improving that
+> explanation hopefully to make it less confusing.
+
+I still don't get why you need extra "ti,pg-gpio-disable" property. It
+could work like this:
+1. Get rid of "ti,pg-gpio-disable" and make "pg-gpio" optional.
+2. If it is present, use it.
+3. If it is not present, use software based approach (the same as
+setting "ti,pg-gpio-disable" previously).
+
+Would that work?
+
+>>
+>>> +- ti,timer-2x-enable: If this boolean property is provided the device's safety
+>>> +    timer is extended by a factor of two.
+>>
+>> Boolean properties like this have disadvantage - they cannot be
+>> overridden. Also extending them is difficult (e.g. for some next
+>> device the timer could have value of 4). Usually it is better to have
+>> a value-based property with "0" meaning default or disabled.
+> 
+> When I looked through the Kernel headers I found the boolean property
+> parse function and figured that's probably what I should be using. But
+> as I was implementing it I had similar concerns to what you mentioned.
+> If it's general practice to prefer the value based properties I'll be
+> happy to change that.
+
+Usually the boolean is a good choice but here you used it for a
+numerical property. You are preparing a generic TI bindings so it is
+wise to think about other future drivers. Would they have other values
+for timer factor? Would you want to set it in common board DTSI and
+override it in some one specific child DTS?
+
+Best regards,
+Krzysztof
+
+> 
+>>
+>> Also please look at existing bindings:
+>> $ git grep "ti," Documentation/devicetree/bindings/power
+>> Maybe you could reuse some? Each of these existing and new bindings
+>> are made generic (not device specific) so they should be reused.
+> 
+> Already spent time with existing bqXXXXX drivers to see if I can recycle
+> properties. Will give it another run-through to make sure there is
+> maximum re-use.
+> 
+> Thanks,
+> 
+> --
+> Andreas Dannenberg
+> Texas Instruments Inc
+> 
+>>
+>> Best regards,
+>> Krzysztof
+>>
+>>> +- interrupt-parent: Should be the phandle for the interrupt controller. Use in
+>>> +    conjunction with "interrupts" and only in case "stat-gpio" is not used.
+>>> +- interrupts: Interrupt mapping for GPIO IRQ (configure for both edges). Use in
+>>> +    conjunction with "interrupt-parent" and only in case "stat-gpio" is not
+>>> +    used.
+>>>
+>>>  Example:
+>>>
+>>>  bq24257 {
+>>>         compatible = "ti,bq24257";
+>>>         reg = <0x6a>;
+>>> +       stat-gpio = <&gpio1 16 GPIO_ACTIVE_HIGH>;
+>>> +       pg-gpio = <&gpio1 28 GPIO_ACTIVE_HIGH>;
+>>>
+>>>         ti,battery-regulation-voltage = <4200000>;
+>>>         ti,charge-current = <1000000>;
+>>>         ti,termination-current = <50000>;
+>>>  };
+>>> +
+>>> +Example:
+>>> +
+>>> +bq24250 {
+>>> +       compatible = "ti,bq24250";
+>>> +       reg = <0x6a>;
+>>> +       interrupt-parent = <&gpio1>;
+>>> +       interrupts = <16 IRQ_TYPE_EDGE_BOTH>;
+>>> +
+>>> +       ti,battery-regulation-voltage = <4200000>;
+>>> +       ti,charge-current = <500000>;
+>>> +       ti,termination-current = <50000>;
+>>> +       ti,in-limit-current = <900000>;
+>>> +       ti,vovp-voltage = <9500000>;
+>>> +       ti,vindpm-voltage = <4440000>;
+>>> +};
+>>> --
+>>> 1.9.1
+>>>
+> 
+
