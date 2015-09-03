@@ -1,88 +1,58 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH] ARM: dts: Fix Makefile target for
- sun4i-a10-itead-iteaduino-plus
-Date: Thu, 3 Sep 2015 23:57:29 +0200
-Message-ID: <20150903215729.GH31584@lukather>
-References: <20150902201812.GC464@hansolo.redhat.com>
+From: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Subject: Re: [PATCH] ARM: dts: Add ddc i2c reference to veyron
+Date: Fri, 04 Sep 2015 00:01:35 +0200
+Message-ID: <5450060.vCTDljrI7r@phil>
+References: <1441229148-12095-1-git-send-email-dianders@chromium.org> <CAD=FV=WkFPitTsagQa+94DAWujzYECVqk7fO+OUdrfFq3bWTuQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="Uu2n37VG4rOBDVuR"
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20150902201812.GC464-dHPIJuKSOV0f7BdofF/totBPR1lH4CV8@public.gmane.org>
+In-Reply-To: <CAD=FV=WkFPitTsagQa+94DAWujzYECVqk7fO+OUdrfFq3bWTuQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Josh Boyer <jwboyer-rxtnV0ftBwyoClj4AeEUq9i2O/JbrIOy@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Josef Gajdusek <atx-MwjtXicnQwU@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Cc: "open list:ARM/Rockchip SoC..." <linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Alexandru Stan <amstan-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Yakir Yang <ykk-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, =?utf-8?B?5aea5pm65oOF?= <mark.yao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+Am Donnerstag, 3. September 2015, 14:00:26 schrieb Doug Anderson:
+> Hi,
+> 
+> On Wed, Sep 2, 2015 at 2:25 PM, Douglas Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org> 
+wrote:
+> > The ddc-i2c-bus property was missing from the veyron dtsi file since
+> > downstream the ddc-i2c-bus was still being specified in rk3288.dtsi and
+> > nobody noticed when the veyron dtsi was sent upstream.  Add it.
+> > 
+> > Signed-off-by: Douglas Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+> > ---
+> > Note: I noticed that this was wrong but I don't currently have
+> > graphics up and running on upstream on veyron.  Posting this anyway
+> > since it's pretty clear that it's needed.  If someone else wants to
+> > try it out that'd be nice, otherwise I'll put it on my list to figure
+> > out how to get myself setup for graphics upstream.  ;)
+> 
+> OK, I've used Heiko's "somewhat stable" branch to test this against
+> something very close to mainline.
 
---Uu2n37VG4rOBDVuR
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+for people playing along, that is [0]. Essentially bleeding edge mainline + 
+some backports from other maintainer trees +the last bits in the works, like 
+the eDP support.
 
-Hi Josh
+> Without my patch I can't read the HDMI EDID.  With my patch I can.  :)
 
-On Wed, Sep 02, 2015 at 04:18:12PM -0400, Josh Boyer wrote:
-> linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> Bcc:=20
-> Subject: [PATCH] ARM: dts: Fix Makefile target for sun4i-a10-itead-iteadu=
-ino-plus
-> Reply-To:=20
+The change follows the current dt-binding in the kernel for the (rockchip-
+variant of the) dw_hdmi, so if nobody keeps protesting loudly, I'd like to 
+pick this up to get the hdmi on Veyron devices going.
 
-Hmmm, something went wrong with your mail header.
+And I guess we'll remove this again (also in the other boards), once the 
+dw_hdmi-internal i2c stuff is included - so this should be temporary as Rob 
+hoped.
 
-> ommit 79ae3e66f8d (ARM: dts: sun4i: Add Iteaduino Plus A10) added a new
 
-Missing opening "C"
+Heiko
 
-> make target for the sun4i-a10-itead-iteaduino-plus dts file, but mistaken=
-ly
-> used .dts instead of the correct .dtb suffix.  This resulted in a build e=
-rror
-> like:
->=20
-> 	scripts/Makefile.dtbinst:42: target 'sun4i-a10-itead-iteaduino-plus.dts'=
- doesn't match the target pattern
->=20
-> when doing a make dtbs_install.
->=20
-> Fix it to use the proper file name.
->=20
-> Signed-off-by: Josh Boyer <jwboyer-rxtnV0ftBwyoClj4AeEUq9i2O/JbrIOy@public.gmane.org>
 
-Apart from that, it looks fine, thanks!
+[0] https://github.com/mmind/linux-rockchip/tree/v4.2-rockchip-somewhat-stable
 
-Maxime
-
---=20
-Maxime Ripard, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
-
---Uu2n37VG4rOBDVuR
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBAgAGBQJV6MJJAAoJEBx+YmzsjxAggZ0QAMEF2xBm1ah38+Ng8kg5C4Pd
-XtrTqo4oJYkJlh0dYvItZK3eDlHIKrtsRPZhqDiY0ZXEuNnKjv+fzIErv9eCIp1p
-vkSEE5VpZzptoRpIPzHdhVXb0FStDKwibXmKFawRk3TU7KPoMpXWcgkEZu1F4gWd
-HZskKa4wj397jhs4c8FpNuw4ewAUBfWUAV/8xJX79SrU0e6ET7REk+BVHhzZmJQp
-+Hs4ODsg8Qis6EBBEZqhnLHKftIqTzbP3aqzNjeh8/EcP6p/TwFwJzGwErobRSk0
-LCXfxK+Mr7OGQnTxoycZoRq7vbISyVLtsdmNJ/3PWiQSUplBpgz79oEgqKbE/sCE
-anF+P2KTSvCC5+t267DIaLKmjkEJBd8Va6Ci9DICaQYQhF8gfm2V3FjIxTHocJKB
-OxxWamv9LYvTXb206ApQi0UmF0D/a5U75thCZYJjK81WeftNxMQUeCBTD6lnj6dO
-NhByB3wT0+w4Q5tp0hAuAKoxI7QrorUye7exZFmL9mxhVap4wUI0yKWKONHLrwve
-rzFItZMIxuGa37TfORuii7/5XwVJo5BCU8zSQU24FeROruUMNvbKIcnRlZUpbwaU
-OBmfdC3ViIJcMda0gC8MDtbAVXI8oABKnLFwzErWzDyDIDg3wz0sHZ8hyPc+gKHh
-UuF9J6eGIfq70yLJ+Ssf
-=MY6m
------END PGP SIGNATURE-----
-
---Uu2n37VG4rOBDVuR--
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
