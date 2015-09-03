@@ -1,90 +1,76 @@
-From: Alexander Couzens <lynxis-qyMx1GtpvWw@public.gmane.org>
-Subject: [PATCH 2/2] MIPS: ath79: add irq chip ar7240-misc-intc
-Date: Thu,  3 Sep 2015 05:34:22 +0200
-Message-ID: <1441251262-13335-3-git-send-email-lynxis@fe80.eu>
-References: <1441251262-13335-1-git-send-email-lynxis@fe80.eu>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1441251262-13335-1-git-send-email-lynxis-qyMx1GtpvWw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org
-Cc: Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, Alban Bedel <albeu-GANU6spQydw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Alexander Couzens <lynxis-qyMx1GtpvWw@public.gmane.org>
+From: Yakir Yang <ykk@rock-chips.com>
+Subject: Re: [PATCH v4 03/16] drm: bridge: analogix/dp: split exynos dp driver
+ to bridge dir
+Date: Thu, 03 Sep 2015 11:55:14 +0800
+Message-ID: <55E7C4A2.6000504@rock-chips.com>
+References: <1441086371-24838-1-git-send-email-ykk@rock-chips.com>	<1441086598-24995-1-git-send-email-ykk@rock-chips.com> <CACvgo53pZUtSLRGVMYPs1s4QPBrAr3j=xoZ1t23tPv202bzfyg@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8;
+	format=flowed
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <CACvgo53pZUtSLRGVMYPs1s4QPBrAr3j=xoZ1t23tPv202bzfyg@mail.gmail.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Emil Velikov <emil.l.velikov@gmail.com>
+Cc: Heiko Stuebner <heiko@sntech.de>, Thierry Reding <treding@nvidia.com>, Jingoo Han <jingoohan1@gmail.com>, Inki Dae <inki.dae@samsung.com>, joe@perches.com, Kukjin Kim <kgene@kernel.org>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, Mark Yao <mark.yao@rock-chips.com>, ML dri-devel <dri-devel@lists.freedesktop.org>, Andrzej Hajda <a.hajda@samsung.com>, Gustavo Padovan <gustavo.padovan@collabora.co.uk>, "moderated list:ARM/S5P EXYNOS AR..." <linux-samsung-soc@vger.kernel.org>, seanpaul@chromium.com, djkurtz@chromium.com, Kishon Vijay Abraham I <kishon@ti.com>, linux-rockchip@lists.infradead.org, robherring2@gmail.com, Russell King <rmk+kernel@arm.linux.org.uk>, devicetree@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <robh+dt@kernel.org>, dianders@chromium.com, linux-arm-kernel@lists.infradead.org, Linu
 List-Id: devicetree@vger.kernel.org
 
-The ar7240 misc irq chip use ack handler
-instead of ack_mask handler. All new ath79 chips use
-the ar7240 misc irq chip
+Hi Emil,
 
-Signed-off-by: Alexander Couzens <lynxis-qyMx1GtpvWw@public.gmane.org>
----
- .../interrupt-controller/qca,ath79-misc-intc.txt       | 18 +++++++++++++++++-
- arch/mips/ath79/irq.c                                  | 10 ++++++++++
- 2 files changed, 27 insertions(+), 1 deletion(-)
+=E5=9C=A8 09/02/2015 10:50 PM, Emil Velikov =E5=86=99=E9=81=93:
+> [Dropping the CC list]
 
-diff --git a/Documentation/devicetree/bindings/interrupt-controller/qca,ath79-misc-intc.txt b/Documentation/devicetree/bindings/interrupt-controller/qca,ath79-misc-intc.txt
-index 391717a..56ccaf3 100644
---- a/Documentation/devicetree/bindings/interrupt-controller/qca,ath79-misc-intc.txt
-+++ b/Documentation/devicetree/bindings/interrupt-controller/qca,ath79-misc-intc.txt
-@@ -4,7 +4,7 @@ The MISC interrupt controller is a secondary controller for lower priority
- interrupt.
- 
- Required Properties:
--- compatible: has to be "qca,<soctype>-cpu-intc", "qca,ar7100-misc-intc"
-+- compatible: has to be "qca,<soctype>-cpu-intc", "qca,ar{7100,7240}-misc-intc"
-   as fallback
- - reg: Base address and size of the controllers memory area
- - interrupt-parent: phandle of the parent interrupt controller.
-@@ -13,6 +13,9 @@ Required Properties:
- - #interrupt-cells : Specifies the number of cells needed to encode interrupt
- 		     source, should be 1
- 
-+Compatible fallback depends on the SoC. Use ar7100 for ar71xx and ar913x,
-+use ar7240 for all other SoCs.
-+
- Please refer to interrupts.txt in this directory for details of the common
- Interrupt Controllers bindings used by client devices.
- 
-@@ -28,3 +31,16 @@ Example:
- 		interrupt-controller;
- 		#interrupt-cells = <1>;
- 	};
-+
-+Another example:
-+
-+	interrupt-controller@18060010 {
-+		compatible = "qca,ar9331-misc-intc", qca,ar7240-misc-intc";
-+		reg = <0x18060010 0x4>;
-+
-+		interrupt-parent = <&cpuintc>;
-+		interrupts = <6>;
-+
-+		interrupt-controller;
-+		#interrupt-cells = <1>;
-+	};
-diff --git a/arch/mips/ath79/irq.c b/arch/mips/ath79/irq.c
-index 1917f55..7b38958 100644
---- a/arch/mips/ath79/irq.c
-+++ b/arch/mips/ath79/irq.c
-@@ -320,6 +320,16 @@ static int __init ar7100_misc_intc_of_init(
- IRQCHIP_DECLARE(ar7100_misc_intc, "qca,ar7100-misc-intc",
- 		ar7100_misc_intc_of_init);
- 
-+static int __init ar7240_misc_intc_of_init(
-+	struct device_node *node, struct device_node *parent)
-+{
-+	ath79_misc_irq_chip.irq_ack = ar724x_misc_irq_ack;
-+	return ath79_misc_intc_of_init(node, parent);
-+}
-+
-+IRQCHIP_DECLARE(ar7240_misc_intc, "qca,ar7240-misc-intc",
-+		ar7240_misc_intc_of_init);
-+
- static int __init ar79_cpu_intc_of_init(
- 	struct device_node *node, struct device_node *parent)
- {
--- 
-2.4.0
+Hmm...Don't understand what this means. If you can explain, that
+would be better, so I would not miss your suggest.  :-)
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> Hi Yakir Yang,
+>
+> On 1 September 2015 at 06:49, Yakir Yang <ykk@rock-chips.com> wrote:
+>> Split the dp core driver from exynos directory to bridge
+>> directory, and rename the core driver to analogix_dp_*,
+>> leave the platform code to analogix_dp-exynos.
+>>
+>> Signed-off-by: Yakir Yang <ykk@rock-chips.com>
+>> ---
+>> Changes in v4:
+>> - Take Rob suggest, update "analogix,hpd-gpios" to "hpd-gpios" DT pr=
+opery.
+>> - Take Jingoo suggest, rename "analogix_dp-exynos.c" file name to "e=
+xynos_dp.c"
+>> - Take Archit suggest, create a separate folder for analogix code in=
+ bridge/
+>>
+> "Take X suggest", is grammatically incorrect. You should use
+> "suggestion(s)" or alternatively use the following approach.
+>
+> - Create a separate folder for analogix code in bridge/ (Archit)
+
+Thanks for your correct. I prefer to take the last one  ;)
+
+> Cheers,
+> Emil
+>
+> P.S. Why do you resend the whole series (some 10+ patches) when only =
+a
+> few patches have been changed ? Are all the patches changed whist
+> missing that information (vX: rebase on top of A)
+
+Yes, those 10+ patches do base on the previous changes, specially when =
+I
+rebase my series on the latest linux-next branch.
+
+Besides, I don't know that how to send parts of this series, and keep t=
+he
+unrelated patches no send. For example if the [v4 03/16] ~ [v4 10/16]
+need  update to v5, and [v4 11/16] ~ [v4 16/16] keep in v4.
+So should I only send the [v5 03/16]  ~ [v5 10/16], no need to send and
+update [v4 11/16] ~ [v4 16/16] to v5 ?
+
+If so I think it would be difficult for guys to comment, cause they=20
+can't see
+the whole series in one reply list .   ;)
+
+Thanks,
+- Yakir
+>
+>
