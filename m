@@ -1,93 +1,35 @@
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: Re: [PATCHv4 2/5] net: phy: extend fixed driver with
- fixed_phy_register()
-Date: Thu, 3 Sep 2015 22:55:25 +0300
-Message-ID: <55E8A5AD.4050908@cogentembedded.com>
-References: <1400249647-4643-1-git-send-email-thomas.petazzoni@free-electrons.com>
- <1400249647-4643-3-git-send-email-thomas.petazzoni@free-electrons.com>
- <55E89D83.1090401@cogentembedded.com> <55E8A17C.5010401@cogentembedded.com>
- <55E8A1AB.305@openwrt.org>
+From: Doug Anderson <dianders@chromium.org>
+Subject: Re: [PATCH] ARM: dts: Add ddc i2c reference to veyron
+Date: Thu, 3 Sep 2015 14:00:26 -0700
+Message-ID: <CAD=FV=WkFPitTsagQa+94DAWujzYECVqk7fO+OUdrfFq3bWTuQ@mail.gmail.com>
+References: <1441229148-12095-1-git-send-email-dianders@chromium.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <55E8A1AB.305@openwrt.org>
-Sender: netdev-owner@vger.kernel.org
-To: Florian Fainelli <florian@openwrt.org>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org, devicetree@vger.kernel.org
-Cc: Tawfik Bayouk <tawfik@marvell.com>, Nadav Haklai <nadavh@marvell.com>, Lior Amsalem <alior@marvell.com>, Gregory Clement <gregory.clement@free-electrons.com>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, linux-arm-kernel@lists.infradead.org, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Sascha Hauer <s.hauer@pengutronix.de>, Christian Gmeiner <christian.gmeiner@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1441229148-12095-1-git-send-email-dianders@chromium.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Heiko Stuebner <heiko@sntech.de>
+Cc: "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>, Alexandru Stan <amstan@chromium.org>, Brian Norris <briannorris@chromium.org>, Yakir Yang <ykk@rock-chips.com>, =?UTF-8?B?5aea5pm65oOF?= <mark.yao@rock-chips.com>, Douglas Anderson <dianders@chromium.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 09/03/2015 10:38 PM, Florian Fainelli wrote:
+Hi,
 
->>>> The existing fixed_phy_add() function has several drawbacks that
->>>> prevents it from being used as is for OF-based declaration of fixed
->>>> PHYs:
->>>>
->>>>    * The address of the PHY on the fake bus needs to be passed, while a
->>>>      dynamic allocation is desired.
->>>>
->>>>    * Since the phy_device instantiation is post-poned until the next
->>>>      mdiobus scan, there is no way to associate the fixed PHY with its
->>>>      OF node, which later prevents of_phy_connect() from finding this
->>>>      fixed PHY from a given OF node.
->>>>
->>>> To solve this, this commit introduces fixed_phy_register(), which will
->>>> allocate an available PHY address, add the PHY using fixed_phy_add()
->>>> and instantiate the phy_device structure associated with the provided
->>>> OF node.
->>>>
->>>> Signed-off-by: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
->>>> Acked-by: Florian Fainelli <f.fainelli@gmail.com>
->>>> Acked-by: Grant Likely <grant.likely@linaro.org>
->>>> ---
->>>>    drivers/net/phy/fixed.c   | 61
->>>> +++++++++++++++++++++++++++++++++++++++++++++++
->>>>    include/linux/phy_fixed.h | 11 +++++++++
->>>>    2 files changed, 72 insertions(+)
->>>>
->>>> diff --git a/drivers/net/phy/fixed.c b/drivers/net/phy/fixed.c
->>>> index e41546d..d60d875 100644
->>>> --- a/drivers/net/phy/fixed.c
->>>> +++ b/drivers/net/phy/fixed.c
->>> [...]
->>>> @@ -203,6 +204,66 @@ err_regs:
->>> [...]
->>>> +int fixed_phy_register(unsigned int irq,
->>>> +               struct fixed_phy_status *status,
->>>> +               struct device_node *np)
->>>> +{
->>>> +    struct fixed_mdio_bus *fmb = &platform_fmb;
->>>> +    struct phy_device *phy;
->>>> +    int phy_addr;
->>>> +    int ret;
->>>> +
->>>> +    /* Get the next available PHY address, up to PHY_MAX_ADDR */
->>>> +    spin_lock(&phy_fixed_addr_lock);
->>>> +    if (phy_fixed_addr == PHY_MAX_ADDR) {
->>>> +        spin_unlock(&phy_fixed_addr_lock);
->>>> +        return -ENOSPC;
->>>> +    }
->>>> +    phy_addr = phy_fixed_addr++;
->>>> +    spin_unlock(&phy_fixed_addr_lock);
->>>> +
->>>> +    ret = fixed_phy_add(PHY_POLL, phy_addr, status);
->>>
->>>      Was rummaging in the fixed_phy driver and a bug sprang right at
->>> me: 'phy'
->>
->>     Sorry, s/phy/irq/ of course. Just noticed. :-/
+On Wed, Sep 2, 2015 at 2:25 PM, Douglas Anderson <dianders@chromium.org> wrote:
+> The ddc-i2c-bus property was missing from the veyron dtsi file since
+> downstream the ddc-i2c-bus was still being specified in rk3288.dtsi and
+> nobody noticed when the veyron dtsi was sent upstream.  Add it.
+>
+> Signed-off-by: Douglas Anderson <dianders@chromium.org>
+> ---
+> Note: I noticed that this was wrong but I don't currently have
+> graphics up and running on upstream on veyron.  Posting this anyway
+> since it's pretty clear that it's needed.  If someone else wants to
+> try it out that'd be nice, otherwise I'll put it on my list to figure
+> out how to get myself setup for graphics upstream.  ;)
 
-    I've reported the bug on #miplsinux, there I used the correct word. :-)
+OK, I've used Heiko's "somewhat stable" branch to test this against
+something very close to mainline.
 
-> Ok, that makes sense then, and yes, this "irq" argument should have been
-> passed down to fixed_phy_add(). Might be worth adding a WARN_ON(irq !=
-> PHY_POLL) just to catch callers that expect something else.
+Without my patch I can't read the HDMI EDID.  With my patch I can.  :)
 
-    In-tree callers all seem to pass PHY_POLL to fixed_phy_register(). Do we 
-care about out of tree stuff?
-
-> Thanks!
-> --
-> Florian
-
-MBR, Sergei
+-Doug
