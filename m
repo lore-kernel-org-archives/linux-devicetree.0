@@ -1,52 +1,43 @@
-From: "Suthikulpanit, Suravee" <suravee.suthikulpanit@amd.com>
-Subject: Re: [PATCH v3 4/4] arm64: dts: Drop linux,pci-probe-only from the
- Seattle DTS
-Date: Thu, 3 Sep 2015 21:19:40 +0700
-Message-ID: <55E856FC.4040006@amd.com>
-References: <1441282576-7304-1-git-send-email-marc.zyngier@arm.com>
- <1441282576-7304-5-git-send-email-marc.zyngier@arm.com>
+From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH] ARM: dts: keystone: use one to one address translations
+ under netcp
+Date: Thu, 3 Sep 2015 07:26:46 -0700
+Message-ID: <20150903142645.GS4215@atomide.com>
+References: <1441139324-29296-1-git-send-email-w-kwok2@ti.com>
+ <55E61658.9010207@oracle.com>
+ <230CBA6E4B6B6B418E8730AC28E6FC7E04221776@DFLE11.ent.ti.com>
+ <55E71AB3.7070406@oracle.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1441282576-7304-5-git-send-email-marc.zyngier@arm.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Marc Zyngier <marc.zyngier@arm.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Paul Mackerras <paulus@samba.org>, Michael Ellerman <mpe@ellerman.id.au>, Will Deacon <will.deacon@arm.com>, Bjorn Helgaas <bhelgaas@google.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>
-Cc: Alexander Graf <agraf@suse.de>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linuxppc-dev@lists.ozlabs.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <55E71AB3.7070406-QHcLZuEGTsvQT0dZR+AlfA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: santosh shilimkar <santosh.shilimkar-QHcLZuEGTsvQT0dZR+AlfA@public.gmane.org>
+Cc: "Kwok, WingMan" <w-kwok2-l0cyMroinI0@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "pawel.moll-5wv7dgnIgG8@public.gmane.org" <pawel.moll-5wv7dgnIgG8@public.gmane.org>, "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org" <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, "galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org" <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org" <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "ssantosh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <ssantosh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "Karicheri, Muralidharan" <m-karicheri2-l0cyMroinI0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Marc
+* santosh shilimkar <santosh.shilimkar-QHcLZuEGTsvQT0dZR+AlfA@public.gmane.org> [150902 08:55]:
+>
+> I suspected the same. I know back then we started with SERDES code
+> with NETCP but as you already know, its a separate block which
+> is needed for NIC card to work. Its more of phy and hence its
+> having different address space is not surprising.
 
-On 9/3/2015 7:16 PM, Marc Zyngier wrote:
-> The linux,pci-probe-only property mandates an argument to indicate
-> whether or not to engage the "probe-only" mode, but the Seattle
-> DTS just provides a naked property, which is illegal.
->
-> Also, it turns out that the board is perfectly happy without
-> probe-only, so let's drop this altogether.
->
-> Signed-off-by: Marc Zyngier <marc.zyngier@arm.com>
-> ---
->   arch/arm64/boot/dts/amd/amd-overdrive.dts | 1 -
->   1 file changed, 1 deletion(-)
->
-> diff --git a/arch/arm64/boot/dts/amd/amd-overdrive.dts b/arch/arm64/boot/dts/amd/amd-overdrive.dts
-> index 564a3f7..128fa94 100644
-> --- a/arch/arm64/boot/dts/amd/amd-overdrive.dts
-> +++ b/arch/arm64/boot/dts/amd/amd-overdrive.dts
-> @@ -14,7 +14,6 @@
->
->   	chosen {
->   		stdout-path = &serial0;
-> -		linux,pci-probe-only;
->   	};
->   };
->
->
+The point Santosh is making here though is that any drivers
+tinkering with registers belonging to a separate hardware block
+is a recipe for a long term maintenance nightmare with mysterious
+bugs popping up as things are not clocked or powered properly
+or become racy with other drivers.
 
-Thanks, I was planning to do this as well. The embedded DT in the UEFI 
-FW will soon remove this property.
+Each hardware block needs to have it's own driver and then the
+drivers can communicate using some Linux generic APIs like clock,
+regulator, phy, or mailbox frameworks.
 
-Acked-by: Suravee Suthikulpanit <Suravee.Suthikulpanit@amd.com>
+Regards,
 
-Suravee
+Tony
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
