@@ -1,194 +1,52 @@
-From: Peter Griffin <peter.griffin@linaro.org>
-Subject: Re: [PATCH 5/7] ARM: STi: DT: STiH407: Add FDMA driver and xbar
- driver dt nodes.
-Date: Thu, 3 Sep 2015 15:12:11 +0100
-Message-ID: <20150903141211.GA5120@griffinp-ThinkPad-X1-Carbon-2nd>
-References: <1436371888-27863-1-git-send-email-peter.griffin@linaro.org>
- <1436371888-27863-6-git-send-email-peter.griffin@linaro.org>
- <20150826074620.GV19409@x1>
+From: "Suthikulpanit, Suravee" <suravee.suthikulpanit@amd.com>
+Subject: Re: [PATCH v3 4/4] arm64: dts: Drop linux,pci-probe-only from the
+ Seattle DTS
+Date: Thu, 3 Sep 2015 21:19:40 +0700
+Message-ID: <55E856FC.4040006@amd.com>
+References: <1441282576-7304-1-git-send-email-marc.zyngier@arm.com>
+ <1441282576-7304-5-git-send-email-marc.zyngier@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20150826074620.GV19409@x1>
+In-Reply-To: <1441282576-7304-5-git-send-email-marc.zyngier@arm.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Lee Jones <lee.jones@linaro.org>
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, srinivas.kandagatla@gmail.com, maxime.coquelin@st.com, patrice.chotard@st.com, vinod.koul@intel.com, dan.j.williams@intel.com, devicetree@vger.kernel.org, dmaengine@vger.kernel.org, ludovic.barre@st.com
+To: Marc Zyngier <marc.zyngier@arm.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Paul Mackerras <paulus@samba.org>, Michael Ellerman <mpe@ellerman.id.au>, Will Deacon <will.deacon@arm.com>, Bjorn Helgaas <bhelgaas@google.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>
+Cc: Alexander Graf <agraf@suse.de>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linuxppc-dev@lists.ozlabs.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Lee,
+Hi Marc
 
-On Wed, 26 Aug 2015, Lee Jones wrote:
+On 9/3/2015 7:16 PM, Marc Zyngier wrote:
+> The linux,pci-probe-only property mandates an argument to indicate
+> whether or not to engage the "probe-only" mode, but the Seattle
+> DTS just provides a naked property, which is illegal.
+>
+> Also, it turns out that the board is perfectly happy without
+> probe-only, so let's drop this altogether.
+>
+> Signed-off-by: Marc Zyngier <marc.zyngier@arm.com>
+> ---
+>   arch/arm64/boot/dts/amd/amd-overdrive.dts | 1 -
+>   1 file changed, 1 deletion(-)
+>
+> diff --git a/arch/arm64/boot/dts/amd/amd-overdrive.dts b/arch/arm64/boot/dts/amd/amd-overdrive.dts
+> index 564a3f7..128fa94 100644
+> --- a/arch/arm64/boot/dts/amd/amd-overdrive.dts
+> +++ b/arch/arm64/boot/dts/amd/amd-overdrive.dts
+> @@ -14,7 +14,6 @@
+>
+>   	chosen {
+>   		stdout-path = &serial0;
+> -		linux,pci-probe-only;
+>   	};
+>   };
+>
+>
 
-> On Wed, 08 Jul 2015, Peter Griffin wrote:
->=20
-> > These nodes are required to get the fdma and xbar driver working
-> > on STiH407 based silicon.
-> >=20
-> > Signed-off-by: Peter Griffin <peter.griffin@linaro.org>
-> > ---
-> >  arch/arm/boot/dts/stih407-family.dtsi | 59 +++++++++++++++++++++++=
-++++++++++++
-> >  1 file changed, 59 insertions(+)
-> >=20
-> > diff --git a/arch/arm/boot/dts/stih407-family.dtsi b/arch/arm/boot/=
-dts/stih407-family.dtsi
-> > index 838b812..b6d9e20 100644
-> > --- a/arch/arm/boot/dts/stih407-family.dtsi
-> > +++ b/arch/arm/boot/dts/stih407-family.dtsi
-> > @@ -565,5 +565,64 @@
-> >  						  <&phy_port2 PHY_TYPE_USB3>;
-> >  			};
-> >  		};
-> > +
-> > +		xbar0: fdma-xbar-mpe@0 {
->=20
-> The unit address should match the one in the reg property.
+Thanks, I was planning to do this as well. The embedded DT in the UEFI 
+FW will soon remove this property.
 
-Will fix in v2.
+Acked-by: Suravee Suthikulpanit <Suravee.Suthikulpanit@amd.com>
 
->=20
-> > +			compatible =3D "st,fdma-xbar-1.0";
->=20
-> Is that a version number in the compatible string?
-
-Yes it is the version number of the IP.
-
->=20
-> > +			reg =3D <0x8e80000 0x1000>;
-> > +			dma-requests =3D <79>;
-> > +			#st,fdma-xbar-cells =3D <1>;
->=20
-> Why can't FDMA use the generic DMA properties?
-
-Well the FDMA controller does, but this is a seperate piece of hw
-which is really a router rather than a controller.
-
-However I plan on temporarily removing xbar from this series,
-as I think it should be re-worked to use the of_dma_router_register
-and friends provided by the TI xbar driver.
-
-It looks like the two xbar hw are serving a very similar purpose,
-so once that re-work is done it can also use generic DMA propoerties
-as I believe using that framework it will get registered as a controlle=
-r.
->=20
-> > +		};
-> > +
-> > +		fdma0: fdma-audio@0 {
->=20
-> Same comment as above.
-
-Will fix in v2.
-
->=20
-> > +			compatible =3D "st,fdma_mpe31";
->=20
-> DT doesn't usually like underscores.
-
-Obviously I can trivially change it, but out of interest is there
-a technical reason for doing so? Clearly it works OK with
-an underscore and a quick grep reveals a lot of ste, and some tegra
-and vexpress compatibles using underscore as well.
-
->=20
-> > +			reg =3D <0x8e20000 0x20000>;
-> > +			interrupts =3D <GIC_SPI 5 IRQ_TYPE_NONE>;
-> > +			dma-channels =3D <16>;
-> > +			#dma-cells =3D <3>;
-> > +			st,fw-name =3D "fdma_STiH407_0.elf";
->=20
-> I've bought this up before somewhere (although there doesn't appear t=
-o
-> be a Firmware Maintainer), surely we should define a generic binding
-> for passing firmware names?  Many vendors are going to require it.
-
-A generic binding would certainly be useful.
-
-=46rom what I can see TI are using: -
-
-    ti,pm-firmware in wkup_m3_rproc.c
-
-and Freescale are using: -
-
-fsl,sdma-ram-script-name in imx-sdma.c
-
-So other platforms are putting it in device tree, there are probably ot=
-her
-examples.
-
-Most other STi drivers keep the firmware name in the C code, which is
-usually my first preference. However with fdma it is more comlicated
-as there is a seperate firmware file for each instance of the IP block.
-
-I will see if there is a way to remove this from DT and keep it in
-the driver.
-
->=20
-> > +			clocks =3D <&clk_s_c0_flexgen CLK_FDMA>,
-> > +				 <&clk_s_c0_flexgen CLK_EXT2F_A9>,
-> > +				 <&clk_s_c0_flexgen CLK_EXT2F_A9>,
-> > +				 <&clk_s_c0_flexgen CLK_EXT2F_A9>;
-> > +			clock-names =3D "fdma_slim",
-> > +				      "fdma_hi",
-> > +				      "fdma_low",
-> > +				      "fdma_ic";
-> > +		};
-> > +
-> > +		fdma1: fdma-app@1 {
->=20
-> As above.
-
-Will fix
->=20
-> > +			compatible =3D "st,fdma_mpe31";
->=20
-> As above.
-
-Will fix
->=20
-> > +			reg =3D <0x8e40000 0x20000>;
-> > +			interrupts =3D <GIC_SPI 7 IRQ_TYPE_NONE>;
-> > +			dma-channels =3D <16>;
-> > +			#dma-cells =3D <3>;
-> > +			st,fdma-xbar =3D <&xbar0 0>;
-> > +			st,fw-name =3D "fdma_STiH407_1.elf";
-> > +			clocks =3D <&clk_s_c0_flexgen CLK_FDMA>,
-> > +				 <&clk_s_c0_flexgen CLK_TX_ICN_DMU>,
-> > +				 <&clk_s_c0_flexgen CLK_TX_ICN_DMU>,
-> > +				 <&clk_s_c0_flexgen CLK_EXT2F_A9>;
-> > +			clock-names =3D "fdma_slim",
-> > +				      "fdma_hi",
-> > +				      "fdma_low",
-> > +				      "fdma_ic";
-> > +		};
-> > +
-> > +		fdma2: fdma-free_running@2 {
-> > +			compatible =3D "st,fdma_mpe31";
-> > +			reg =3D <0x8e60000 0x20000>;
-> > +			interrupts =3D <GIC_SPI 9 IRQ_TYPE_NONE>;
-> > +			dma-channels =3D <16>;
-> > +			#dma-cells =3D <3>;
-> > +			st,fw-name =3D "fdma_STiH407_2.elf";
-> > +			clocks =3D <&clk_s_c0_flexgen CLK_FDMA>,
-> > +				 <&clk_s_c0_flexgen CLK_EXT2F_A9>,
-> > +				 <&clk_s_c0_flexgen CLK_TX_ICN_DISP_0>,
-> > +				 <&clk_s_c0_flexgen CLK_EXT2F_A9>;
-> > +			clock-names =3D "fdma_slim",
-> > +				      "fdma_hi",
-> > +				      "fdma_low",
-> > +				      "fdma_ic";
-> > +		};
-> >  	};
-> >  };
->=20
-> --=20
-> Lee Jones
-> Linaro STMicroelectronics Landing Team Lead
-> Linaro.org =E2=94=82 Open source software for ARM SoCs
-> Follow Linaro: Facebook | Twitter | Blog
-
-regards,
-
-Peter.
+Suravee
