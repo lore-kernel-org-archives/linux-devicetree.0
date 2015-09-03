@@ -1,191 +1,263 @@
-From: Suman Anna <s-anna-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH 2/2] iommu/omap: Add support for configuring dsp iommus on
-	DRA7xx
-Date: Thu, 3 Sep 2015 17:57:59 -0500
-Message-ID: <55E8D077.3050108@ti.com>
-References: <1437522936-19758-1-git-send-email-s-anna@ti.com>
-	<1437522936-19758-3-git-send-email-s-anna@ti.com>
-	<20150722052600.GF17550@atomide.com> <55AFC34E.4000603@ti.com>
-	<20150723072455.GC16878@atomide.com> <55B114DF.8070800@ti.com>
-	<20150724043056.GG16878@atomide.com> <55B266CE.9070202@ti.com>
-	<20150728061426.GL16878@atomide.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-In-Reply-To: <20150728061426.GL16878-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Cc: Ohad Ben-Cohen <ohad-Ix1uc/W3ht7QT0dZR+AlfA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+From: Gilad Avidov <gavidov@codeaurora.org>
+Subject: [PATCH] spmi-pmic-arb: support configurable number of peripherals
+Date: Thu,  3 Sep 2015 17:20:51 -0600
+Message-ID: <1441322451-30149-1-git-send-email-gavidov@codeaurora.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: gavidov@codeaurora.org, sdharia@codeaurora.org, mlocke@codeaurora.org, linux-arm-msm@vger.kernel.org, gregkh@linuxfoundation.org, svarbanov@mm-sol.com, wsa@the-dreams.de, devicetree@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org, iivanov@mm-sol.com, agross@codeaurora.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Tony,
+The current driver implementation supports only 128 peripherals.
+Adding support for configurable number of peripherals since the
+spmi-pmic-arb v2 HW has sub-versions which support from 128 to 512
+PMIC peripherals.
 
-Sorry for the long delay in getting back on this. I will repost the
-series once 4.3-rc1 is out, but at the moment I do not think any changes
-are required. Let me know if you still need any additional details.
+Signed-off-by: Gilad Avidov <gavidov@codeaurora.org>
+Reviewed-by: Sagar Dharia <sdharia@codeaurora.org>
+---
+ .../bindings/spmi/qcom,spmi-pmic-arb.txt           | 34 ++++++++-
+ drivers/spmi/spmi-pmic-arb.c                       | 88 ++++++++++++++--------
+ 2 files changed, 91 insertions(+), 31 deletions(-)
 
->>>> On 07/23/2015 02:24 AM, Tony Lindgren wrote:
->>>>> * Suman Anna <s-anna-l0cyMroinI0@public.gmane.org> [150722 09:25]:
->>>>>> On 07/22/2015 12:26 AM, Tony Lindgren wrote:
->>>>>>>
->>>>>>> I don't like using syscon for tinkering directly with SoC registers.
->>>>>>
->>>>>> This is not a SoC-level register, but a register within a sub-module of
->>>>>> the DSP processor sub-system. The DSP_SYSTEM sub-module in general is
->>>>>> described in Section 5.3.3 of the TRM [1], and it implements different
->>>>>> functionalities like the PRCM handshaking, wakeup logic and DSP
->>>>>> subsystem top-level configuration. It is a module present within the DSP
->>>>>> processor sub-system, so can only be accessed when the sub-system is
->>>>>> clocked and the appropriate reset is released.
->>>>>
->>>>> OK so if it's specific to the DSP driver along the lines of sysc and
->>>>> syss registers.
->>>>
->>>> There will be those registers too within the MMU config register space,
->>>> even for DRA7xx MMUs. This is different, think of it like a register in
->>>> the Control module except that it is present within the DSP sub-system
->>>> instead of at the SoC level.
->>>
->>> And what is taking care of pm_runtime_get here to ensure the module
->>> is powered and clocked?
->>
->> pm_runtime_get_sync is indeed getting invoked, its just the current
->> patch doesn't include the code block that invokes it. The function that
->> invokes omap2_iommu_enable does so after a call to the
->> pm_runtime_get_sync() call.
-> 
-> OK 
-> 
->>> I think you are missing a layer here and it's the Linux kernel side
->>> device driver for DSP that initializes things.
->>
->> We already have separate drivers for MMUs (omap-iommu) and the processor
->> management (omap-rproc). The former manages all the low-level
->> programming sequences for the MMUs, while the latter manages the
->> low-level reset etc, and is a client user of the respective IOMMU
->> device. Both integrate into the respective frameworks. The IOMMU API
->> invocations are handled in the remoteproc core, with the OMAP remoteproc
->> driver publishing itself as having an MMU with the remoteproc core. The
->> IOMMU API invoke the appropriate iommu_ops.
->>
->> You can lookup the functions rproc_enable_iommu()/rproc_disable_iommu()
->> in the remoteproc core. The IOMMU enabling sequences happen within the
->> iommu_attach_device() API. The call flow is
->> iommu_attach_device()->omap_iommu_attach_dev()->omap_iommu_attach()->
->> iommu_enable()->
->>    omap_device_deassert_hardreset, pm_runtime_get_sync, omap2_iommu_enable.
-> 
-> OK. The thing to check here is that you have a separate device driver
-> for each sysc/syss device registers. This is because each hardware module
-> can be independently clocked and idled. Otherwise things will break at
-> some point. And no "things are configured for autoidle" or "we're not
-> doing PM is not a good excuse here" :)
-> 
-> Can you please check that? If the remoteproc driver and iommu driver
-> are tinkering with registers in separate hardware modules, we have
-> a layering violation. My guess is that we have at least two hardware
-> modules involved here, one for the iommu and one for the DSP device.
-
-Only the IOMMU has a SYSC/SYSS device register. It has both a soft-reset
-as well as a hard-reset line. The IOMMU stays in reset, and its state
-machine/programming is controlled through the remoteproc driver. The
-clock source is also single clock going into the remote processor
-subsystem, and split up internally to feed the memories and the
-processors. For the PRCM to auto-gate the clocks, we also need the
-processor to be executing a IDLE (DSPs) or WFI/WFE (Cortex M3/M4s). Just
-the IOMMU will allow the OCP idle because of the associated sysc/syss
-registers. Depending on the remote processor, there might be a separate
-internal module (like the DSPs usually have a separate SYSC module), but
-that programming is left to the software running on the DSP.
-
->  
->>>>> Typically we handle these registers by mapping them to the PM runtime
->>>>> functions for the interconnect so we can reset and idle the hardware
->>>>> modules even if there is no driver, see for example
->>>>> omap54xx_mmu_dsp_hwmod.
->>>>
->>>> I haven't yet submitted the DRA7xx hwmods, but they will look almost
->>>> exactly like the OMAP5 ones. The reset and idle on these are in general
->>>> not effective at boot time since these are also controlled by a
->>>> hard-reset line, so that's left to the drivers to deal with it through
->>>> the omap_device_deassert_hardreset API.
->>>
->>> If the MMU configuration is one time init, it may make sense to add
->>> it to the hwmod reset function. However, if the Linux kernel side
->>> driver needs to configure things depending on the DSP firmware, it
->>> should be done in the kernel side device driver.
->>
->> The MMU configuration comes into picture whenever the remoteproc driver
->> is being booted and shut down, and also during suspend (no support for
->> this yet in mainline on OMAP rproc). Today, the hwmod
->> _enable/_idle/reset functions alone are not enough to power on the OMAP
->> remoteproc/iommus. We need sequencing calls to both
->> omap_device_assert/_deassert_hardreset (done through pdata-quirks) and
->> pm_runtime API to achieve this.
-> 
-> Right and that's why I'm worried that we have multiple hardware modules
-> involved :)  
->  
->>>>>>> We should use some Linux generic framework for configuring these
->>>>>>> bits to avoid nasty dependencies between various hardware modules
->>>>>>> on the SoC.
->>>>>>>
->>>>>>> What does DSP_SYS_MMU_CONFIG register do? It seems it's probably
->>>>>>> a regulator or a gate clock? If so, it should be set up as a
->>>>>>> regulator or a clock and then the omap-iommu driver can just
->>>>>>> use regulator or clcok framework to request the resource.
->>>>>>
->>>>>> No, its neither. It is a control bit that dictates whether the
->>>>>> processor/EDMA addresses go through the respective MMU or not. The
->>>>>> register currently has 4 bits (bit 0 in each nibble), one each for
->>>>>> enabling each MMU and requesting an MMU abort on each. The MMU
->>>>>> integration and enablement notes are detailed in Section 5.3.6 of the
->>>>>> TRM [1], and the DSP_SYS_MMU_CONFIG register layout is in Table 5-28
->>>>>> (Page 1641).
->>>>>
->>>>> OK yeah seems like it should be handled by the DSP driver during
->>>>> probe after doing pm_runtime_get. Then the driver can configure
->>>>> things like IOMMU and load firmware. Or am I missing something here?
->>>>
->>>> The DSP (remoteproc) driver uses the generic IOMMU API, and all the
->>>> IOMMU enabling sequence is transparent to the DSP driver. So, any
->>>> configuration/enabling sequence specific to the IOMMU has to be handled
->>>> within the respective IOMMU platform driver that gets integrated into
->>>> the IOMMU API.
->>>
->>> To me it seems you still need a DSP kernel driver to manage the
->>> DSP hardware for PM runtime. I don't see how iommu and remoteproc
->>> alone would be sufficient here. You end up sprinkling DSP driver
->>> specific code to the iommu and remoteproc layers.
->>
->> I am not sure what you envision to be in this DSP kernel driver, because
->> all the needed functionality is already handled by existing drivers. The
->> OMAP remoteproc driver is the kernel driver to deal with the device
->> management for both IPUs and DSPs on OMAP4, OMAP5 and DRA7 (DT support
->> to be added).
-> 
-> OK maybe check the syss/sysc registers involved here for each hardware
-> module here and which driver tinkers with which registers? This will
-> make things a lot easier in the long run for sure.
-
-The OMAP remoteproc driver typically deals with only the reset registers
-and another register in the Control module for programming the boot
-address for the DSPs. You can look up the OMAP4 hwmod data for
-reference. There is currently a .prcm.omap4.modulemode set for these,
-and I have a patch to remove those. I haven't yet posted it yet [1],
-because OMAP remoteprocs are still not bootable on mainline.
-
-regards
-Suman
-
-[1]
-http://git.ti.com/gitweb/?p=rpmsg/remoteproc.git;a=commit;h=0dd2a6a2d8869ee6cec92f75d70663259a41c11f
+diff --git a/Documentation/devicetree/bindings/spmi/qcom,spmi-pmic-arb.txt b/Documentation/devicetree/bindings/spmi/qcom,spmi-pmic-arb.txt
+index e16b9b5..fba7915 100644
+--- a/Documentation/devicetree/bindings/spmi/qcom,spmi-pmic-arb.txt
++++ b/Documentation/devicetree/bindings/spmi/qcom,spmi-pmic-arb.txt
+@@ -42,7 +42,11 @@ Required properties:
+     cell 4: interrupt flags indicating level-sense information, as defined in
+             dt-bindings/interrupt-controller/irq.h
+ 
+-Example:
++Optional properties:
++- qcom,max-peripherals : number of PMIC peripherals (same as maximum APID)
++			 supported by HW. Default (minimum supported) is 128.
++
++Example V1 PMIC-Arbiter:
+ 
+ 	spmi {
+ 		compatible = "qcom,spmi-pmic-arb";
+@@ -62,4 +66,32 @@ Example:
+ 
+ 		interrupt-controller;
+ 		#interrupt-cells = <4>;
++
++		qcom,max-peripherals = <256>;
++	};
++
++Example V2 PMIC-Arbiter:
++
++	spmi_bus: qcom,spmi@200f000 {
++		compatible = "qcom,spmi-pmic-arb";
++		reg-names = "core", "chnls", "obsrvr", "intr", "cnfg";
++		reg = <0x200f000 0x1000>,
++			<0x2400000 0x400000>,
++			<0x2c00000 0x400000>,
++			<0x3800000 0x200000>,
++			<0x200a000 0x2100>;
++
++		interrupt-names = "periph_irq";
++		interrupts = <0 190 0>;
++
++		qcom,ee = <0>;
++		qcom,channel = <0>;
++
++		#address-cells = <2>;
++		#size-cells = <0>;
++
++		interrupt-controller;
++		#interrupt-cells = <4>;
++
++		qcom,max-peripherals = <256>;
+ 	};
+diff --git a/drivers/spmi/spmi-pmic-arb.c b/drivers/spmi/spmi-pmic-arb.c
+index d7119db..ae0f05d 100644
+--- a/drivers/spmi/spmi-pmic-arb.c
++++ b/drivers/spmi/spmi-pmic-arb.c
+@@ -47,9 +47,8 @@
+ #define SPMI_MAPPING_BIT_IS_1_FLAG(X)	(((X) >> 8) & 0x1)
+ #define SPMI_MAPPING_BIT_IS_1_RESULT(X)	(((X) >> 0) & 0xFF)
+ 
+-#define SPMI_MAPPING_TABLE_LEN		255
+ #define SPMI_MAPPING_TABLE_TREE_DEPTH	16	/* Maximum of 16-bits */
+-#define PPID_TO_CHAN_TABLE_SZ		BIT(12)	/* PPID is 12bit chan is 1byte*/
++#define PMIC_ARB_MAX_PPID		BIT(12) /* PPID is 12bit */
+ 
+ /* Ownership Table */
+ #define SPMI_OWNERSHIP_TABLE_REG(N)	(0x0700 + (4 * (N)))
+@@ -84,9 +83,8 @@ enum pmic_arb_cmd_op_code {
+ 	PMIC_ARB_OP_ZERO_WRITE = 16,
+ };
+ 
+-/* Maximum number of support PMIC peripherals */
+-#define PMIC_ARB_MAX_PERIPHS		256
+-#define PMIC_ARB_MAX_CHNL		128
++/* Default (can override in config) max number of support PMIC peripherals */
++#define PMIC_ARB_MAX_APID_DEFAULT	128
+ #define PMIC_ARB_PERIPH_ID_VALID	(1 << 15)
+ #define PMIC_ARB_TIMEOUT_US		100
+ #define PMIC_ARB_MAX_TRANS_BYTES	(8)
+@@ -110,12 +108,16 @@ struct pmic_arb_ver_ops;
+  * @channel:		execution environment channel to use for accesses.
+  * @irq:		PMIC ARB interrupt.
+  * @ee:			the current Execution Environment
+- * @min_apid:		minimum APID (used for bounding IRQ search)
+- * @max_apid:		maximum APID
++ * @min_irq_apid:	minimum APID with requested IRQ (used for bounding IRQ
++ *                      search).
++ * @max_irq_apid:	maximum APID with requested IRQ (used for bounding IRQ
++ *                      search).
++ * max_apid:		maximum APID supported by HW.
+  * @mapping_table:	in-memory copy of PPID -> APID mapping table.
+  * @domain:		irq domain object for PMIC IRQ domain
+  * @spmic:		SPMI controller object
+- * @apid_to_ppid:	in-memory copy of APID -> PPID mapping table.
++ * @irq_apid_to_ppid:	table which keeps track of APID -> PPID mapping for
++			peripherals which IRQ was requested for.
+  * @ver_ops:		version dependent operations.
+  * @ppid_to_chan	in-memory copy of PPID -> channel (APID) mapping table.
+  *			v2 only.
+@@ -129,14 +131,15 @@ struct spmi_pmic_arb_dev {
+ 	u8			channel;
+ 	int			irq;
+ 	u8			ee;
+-	u8			min_apid;
+-	u8			max_apid;
+-	u32			mapping_table[SPMI_MAPPING_TABLE_LEN];
++	u16			min_irq_apid;
++	u16			max_irq_apid;
++	u16			max_apid;
++	u32			*mapping_table;
+ 	struct irq_domain	*domain;
+ 	struct spmi_controller	*spmic;
+-	u16			apid_to_ppid[256];
++	u16			*irq_apid_to_ppid;
+ 	const struct pmic_arb_ver_ops *ver_ops;
+-	u8			*ppid_to_chan;
++	u16			*ppid_to_chan;
+ };
+ 
+ /**
+@@ -444,7 +447,7 @@ static void periph_interrupt(struct spmi_pmic_arb_dev *pa, u8 apid)
+ 		id = ffs(status) - 1;
+ 		status &= ~(1 << id);
+ 		irq = irq_find_mapping(pa->domain,
+-				       pa->apid_to_ppid[apid] << 16
++				       pa->irq_apid_to_ppid[apid] << 16
+ 				     | id << 8
+ 				     | apid);
+ 		generic_handle_irq(irq);
+@@ -456,8 +459,8 @@ static void pmic_arb_chained_irq(unsigned int irq, struct irq_desc *desc)
+ 	struct spmi_pmic_arb_dev *pa = irq_get_handler_data(irq);
+ 	struct irq_chip *chip = irq_get_chip(irq);
+ 	void __iomem *intr = pa->intr;
+-	int first = pa->min_apid >> 5;
+-	int last = pa->max_apid >> 5;
++	int first = pa->min_irq_apid >> 5;
++	int last = pa->max_irq_apid >> 5;
+ 	u32 status;
+ 	int i, id;
+ 
+@@ -655,13 +658,13 @@ static int qpnpint_irq_domain_dt_translate(struct irq_domain *d,
+ 	if (err)
+ 		return err;
+ 
+-	pa->apid_to_ppid[apid] = spec.slave << 8 | spec.per;
++	pa->irq_apid_to_ppid[apid] = spec.slave << 8 | spec.per;
+ 
+ 	/* Keep track of {max,min}_apid for bounding search during interrupt */
+-	if (apid > pa->max_apid)
+-		pa->max_apid = apid;
+-	if (apid < pa->min_apid)
+-		pa->min_apid = apid;
++	if (apid > pa->max_irq_apid)
++		pa->max_irq_apid = apid;
++	if (apid < pa->min_irq_apid)
++		pa->min_irq_apid = apid;
+ 
+ 	*out_hwirq = spec.slave << 24
+ 		   | spec.per   << 16
+@@ -794,6 +797,7 @@ static int spmi_pmic_arb_probe(struct platform_device *pdev)
+ 
+ 	pa = spmi_controller_get_drvdata(ctrl);
+ 	pa->spmic = ctrl;
++	pa->max_apid = PMIC_ARB_MAX_APID_DEFAULT;
+ 
+ 	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "core");
+ 	core = devm_ioremap_resource(&ctrl->dev, res);
+@@ -813,7 +817,7 @@ static int spmi_pmic_arb_probe(struct platform_device *pdev)
+ 		pa->wr_base = core;
+ 		pa->rd_base = core;
+ 	} else {
+-		u8  chan;
++		u16 chan;
+ 		u16 ppid;
+ 		u32 regval;
+ 
+@@ -836,16 +840,24 @@ static int spmi_pmic_arb_probe(struct platform_device *pdev)
+ 		}
+ 
+ 		pa->ppid_to_chan = devm_kzalloc(&ctrl->dev,
+-					PPID_TO_CHAN_TABLE_SZ, GFP_KERNEL);
++						PMIC_ARB_MAX_PPID *
++						sizeof(*pa->ppid_to_chan),
++						GFP_KERNEL);
+ 		if (!pa->ppid_to_chan) {
+ 			err = -ENOMEM;
+ 			goto err_put_ctrl;
+ 		}
++
++		err = of_property_read_u32(pdev->dev.of_node,
++					   "qcom,max-peripherals", &regval);
++		if (!err)
++			pa->max_apid = regval;
++
+ 		/*
+ 		 * PMIC_ARB_REG_CHNL is a table in HW mapping channel to ppid.
+ 		 * ppid_to_chan is an in-memory invert of that table.
+ 		 */
+-		for (chan = 0; chan < PMIC_ARB_MAX_CHNL; ++chan) {
++		for (chan = 0; chan < pa->max_apid ; ++chan) {
+ 			regval = readl_relaxed(core + PMIC_ARB_REG_CHNL(chan));
+ 			if (!regval)
+ 				continue;
+@@ -903,14 +915,30 @@ static int spmi_pmic_arb_probe(struct platform_device *pdev)
+ 
+ 	pa->ee = ee;
+ 
+-	for (i = 0; i < ARRAY_SIZE(pa->mapping_table); ++i)
+-		pa->mapping_table[i] = readl_relaxed(
+-				pa->cnfg + SPMI_MAPPING_TABLE_REG(i));
++	pa->irq_apid_to_ppid = devm_kzalloc(&ctrl->dev, pa->max_apid *
++					    sizeof(*pa->irq_apid_to_ppid),
++					    GFP_KERNEL);
++	if (!pa->irq_apid_to_ppid) {
++		err = -ENOMEM;
++		goto err_put_ctrl;
++	}
++
++	pa->mapping_table = devm_kzalloc(&ctrl->dev,
++					(pa->max_apid - 1) * sizeof(u32),
++					GFP_KERNEL);
++	if (!pa->mapping_table) {
++		err = -ENOMEM;
++		goto err_put_ctrl;
++	}
++
++	for (i = 0; i < (pa->max_apid - 1); ++i)
++		pa->mapping_table[i] = readl_relaxed(pa->cnfg +
++						  SPMI_MAPPING_TABLE_REG(i));
+ 
+-	/* Initialize max_apid/min_apid to the opposite bounds, during
++	/* Initialize max_irq_apid/min_irq_apid to the opposite bounds, during
+ 	 * the irq domain translation, we are sure to update these */
+-	pa->max_apid = 0;
+-	pa->min_apid = PMIC_ARB_MAX_PERIPHS - 1;
++	pa->max_irq_apid = 0;
++	pa->min_irq_apid = pa->max_apid - 1;
+ 
+ 	platform_set_drvdata(pdev, ctrl);
+ 	raw_spin_lock_init(&pa->lock);
+-- 
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+hosted by The Linux Foundation
