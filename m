@@ -1,154 +1,100 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 1/2] ASoC: atmel-classd: add the Audio Class D Amplifier
- code
-Date: Thu, 3 Sep 2015 12:37:16 +0100
-Message-ID: <20150903113716.GU12027@sirena.org.uk>
-References: <1441086101-15303-1-git-send-email-songjun.wu@atmel.com>
- <1441086101-15303-2-git-send-email-songjun.wu@atmel.com>
+From: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
+Subject: Re: Myir AM437x Rico board support for Linux 4.1 kernel
+Date: Thu, 3 Sep 2015 14:40:15 +0300
+Message-ID: <55E8319F.6030002@ti.com>
+References: <201508251539.41234.ppisa4lists@pikron.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="FStV/iabqQx856sH"
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1441086101-15303-2-git-send-email-songjun.wu-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+In-Reply-To: <201508251539.41234.ppisa4lists-hnFyeMMZ0rvQT0dZR+AlfA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Songjun Wu <songjun.wu-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Cc: nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, perex-/Fr2/VpizcU@public.gmane.org, tiwai-IBi9RG/b67k@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Pavel Pisa <ppisa4lists-hnFyeMMZ0rvQT0dZR+AlfA@public.gmane.org>, linux-arm-kernel-xIg/pKzrS19vn6HldHNs0ANdhmdF6hFW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Dan Murphy <DMurphy-l0cyMroinI0@public.gmane.org>, support-0A6ZgDe55FJWk0Htik3J/w@public.gmane.org, =?UTF-8?Q?Beno=c3=aet_Cousson?= <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Kevin Su <kevin.su-0A6ZgDe55FJWk0Htik3J/w@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
++Tony, Tomi, linux-omap
 
---FStV/iabqQx856sH
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Hi Pavel,
 
-On Tue, Sep 01, 2015 at 01:41:40PM +0800, Songjun Wu wrote:
+On 25/08/15 16:39, Pavel Pisa wrote:
+> Hello everybody,
+> 
+> I have been asked to help with Linux on Myir Rico board.
+> I have decided to try actual stable kernel from Ti tree
+> 
+>   git://git.ti.com/ti-linux-kernel/ti-linux-kernel.git
+>      branch ti-linux-4.1.y
+> 
+> instead of delivered dated 3.12.10 one to solve some issues
+> and have chance to port possible enhancements to mainline.
+> 
+> I have successfully prepared environment which loads kernel
+> over TFTP and boot actual Debian Jessie armhf from NFS export.
+> 
+> Because I have not found up to date device tree for this
+> board I have analyzed delivered sources against best matching
+> Ti kernel and then prepared DTS which works on the board
+> and I want to know if somebody works on this support, can help
+> to finish/better tune parameters and if there is chance
+> that configs are included into mainline or some other public
+> repository. Because I do not know who is working on this support
+> and who is right maintainer I send only pointers to my files.
 
-> +static const char * const mono_text[] = {
-> +	"stereo", "mono"
-> +};
-> +
-> +static SOC_ENUM_SINGLE_DECL(classd_mono_enum,
-> +			CLASSD_INTPMR, CLASSD_INTPMR_MONO_SHIFT,
-> +			mono_text);
+Tony Lindgren is the OMAP platform maintainer and you must
+include linux-omap mailing list in in the discussion.
 
-This looks like it should be a simple Switch control called something
-like "Stereo Switch" or "Mono Switch".
+> 
+> http://cmp.felk.cvut.cz/~pisa/arm/myir-rico/am437x-myir-ricoboard.dts
+>  based on Ti am437x-gp-evm.dts
+> 
+> http://cmp.felk.cvut.cz/~pisa/arm/myir-rico/am437x-myir-ricoboard-hdmi.dts
+>  based on Ti am437x-gp-evm-hdmi.dts
+> 
+> http://cmp.felk.cvut.cz/~pisa/arm/myir-rico/am437x-myir-ricoboard_defconfig
+> 
+> If there is interrest for discussion and inclusion, I send usual
+> inlined GIT patches series.
 
-> +static const char * const deemp_text[] = {
-> +	"disabled", "enabled"
-> +};
-> +
-> +static SOC_ENUM_SINGLE_DECL(classd_deemp_enum,
-> +			CLASSD_INTPMR, CLASSD_INTPMR_DEEMP_SHIFT,
-> +			deemp_text);
+Please send patches for the new board so that we can review.
 
-Similarly this looks like it should be "Deemph Switch".
+> 
+> As for DTS, I expect that the regulators section does not match correctly
+> Rico board HW but it works for what client company needs
+>   evm_v3_3d: fixedregulator-v3_3d
+>   vtt_fixed: fixedregulator-vtt
+> 
+> Ethernet, serials, cameras, local MTD, SDcard and most of other devices works.
+> SPI Flash does not work. I have not invested time to that.
+> 
+> The client needs to connect special camera (infrared) to the VPFE so I have
+> spent some time on AM437x VPFE support enhancement.
+> 
+> I have added V4L2_PIX_FMT_Y10 pixel format and some minimal/stub 
+> implementation of vpfe_enum_frameintervals, vpfe_g_parm, vvpfe_s_parm, 
+> pfe_s_parm and I would be happy if my work can help to somebody other
+> as well. But work has been driven strict deadline to provide working
+> solution in one week so if there is interrest then most has to be
+> rewritten/clean up.
+> 
+> Generally, I am quite pleased by Ti's Linux tree state and support.
+> That week has been my first time with AM chips we used other archs
+> (powerpc and multiple i.MXs for most of our other projects till now).
+> 
+> Probably off topic for these lists but what are suggested options
+> for graphic configuration when Qt4/E or Qt5 is run on framebuffer.
+> Is it better to use CONFIG_DRM_OMAP or CONFIG_FB_OMAP2 ?
+> Is SGX driver available for 4.1 Linux kernel (reply offlist, please,
+> if proprietary only)? Are there other possibilities how to use
+> OMAP AM437xx hardware to accelerate video color and formats
+> transformations? Can be VPFE planes used somehow to embed
+> video in Qt application? I, personally, prefer strongly
+> opensource only options but target company has probably minimal
+> requirements in this area.
 
-> +static const char * const eqcfg_bass_text[] = {
-> +	"-12 dB", "-6 dB", "0 dB", "+6 dB", "+12 dB"
-> +};
+Tomi might be able to answer video related questions.
 
-> +static const unsigned int eqcfg_bass_value[] = {
-> +	CLASSD_INTPMR_EQCFG_B_CUT_12,
-> +	CLASSD_INTPMR_EQCFG_B_CUT_6, CLASSD_INTPMR_EQCFG_FLAT,
-> +	CLASSD_INTPMR_EQCFG_B_BOOST_6, CLASSD_INTPMR_EQCFG_B_BOOST_12
-> +};
-
-This should be a Volume control with TLV information, as should the
-following few controls.
-
-> +static const struct snd_kcontrol_new atmel_classd_snd_controls[] = {
-> +SOC_SINGLE_TLV("Left Volume", CLASSD_INTPMR,
-> +		CLASSD_INTPMR_ATTL_SHIFT, 78, 1, classd_digital_tlv),
-> +
-> +SOC_SINGLE_TLV("Right Volume", CLASSD_INTPMR,
-> +		CLASSD_INTPMR_ATTR_SHIFT, 78, 1, classd_digital_tlv),
-
-This should be a single stereo control rather than separate left and
-right controls.
-
-> +static const char * const pwm_type[] = {
-> +	"single-ended", "differential"
-> +};
-
-The normal style for ALSA controls is to capitalise strings so
-"Single ended" and "Differential".
-
-> +	if (pdata->non_overlap_enable) {
-> +		val |= (CLASSD_MR_NON_OVERLAP_EN
-> +			<< CLASSD_MR_NON_OVERLAP_SHIFT);
-> +
-> +		mask |= CLASSD_MR_NOVR_VAL_MASK;
-> +		switch (pdata->non_overlap_time) {
-> +		case 5:
-> +			val |= (CLASSD_MR_NOVR_VAL_5NS
-> +				<< CLASSD_MR_NOVR_VAL_SHIFT);
-> +			break;
-> +		case 10:
-> +			val |= (CLASSD_MR_NOVR_VAL_10NS
-> +				<< CLASSD_MR_NOVR_VAL_SHIFT);
-> +			break;
-> +		case 15:
-> +			val |= (CLASSD_MR_NOVR_VAL_15NS
-> +				<< CLASSD_MR_NOVR_VAL_SHIFT);
-> +			break;
-> +		case 20:
-> +			val |= (CLASSD_MR_NOVR_VAL_20NS
-> +				<< CLASSD_MR_NOVR_VAL_SHIFT);
-> +			break;
-> +		default:
-> +			val |= (CLASSD_MR_NOVR_VAL_10NS
-> +				<< CLASSD_MR_NOVR_VAL_SHIFT);
-> +			break;
-> +		}
-
-I'd expect at least a warning if the user trys to specify an invalid
-value (if they didn't specify any value then I'd expect the DT parsing
-function to assign the default value).
-
-> +static struct regmap *atmel_classd_codec_get_remap(struct device *dev)
-> +{
-> +	struct atmel_classd *dd = dev_get_drvdata(dev);
-> +
-> +	return dd->regmap;
-> +}
-
-Can you just use dev_get_regmap()?
-
-> +static int atmel_classd_codec_dai_startup(struct snd_pcm_substream *substream,
-> +				struct snd_soc_dai *codec_dai)
-> +{
-> +	struct atmel_classd *dd = snd_soc_dai_get_drvdata(codec_dai);
-> +
-> +	clk_prepare_enable(dd->aclk);
-> +	clk_prepare_enable(dd->gclk);
-
-Should check for errors here.
-
-> +	dev_info(dev,
-> +		"Atmel Class D Amplifier (CLASSD) device at 0x%p (irq %d)\n",
-> +		io_base, dd->irq);
-
-This is a bit noisy and not really based on interaction with the
-hardware...  dev_dbg() seems better.
-
---FStV/iabqQx856sH
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQEcBAEBCAAGBQJV6DDoAAoJECTWi3JdVIfQp4UH/R13DZen1lTRfy7fR6vz5XWn
-C/Y+r/QulvRpfNf4pzZNDEMKJ6cdKbzOMyvPvA6FfasMVwm9wjPfgb00DbKTJ9NS
-FFGbLBNrboqX9XydhDB2eenxBFqaUJwnyZdPAnZU1xj1WaCv2KhUoLRMIidm9g/v
-kmrK1JV9GHVkjZfjYIsUP9OkYgB5ckQqm3fMvVi64m/fXMT1xSOJYX++MfIlRK/x
-R3VTRTxVSTbRoCJF2GvD4xljsNf5jia94mX3A2QSAkCktLfIgg2HRHkVG7XDUTar
-0/vO7wdC1bMLDWs3cnmUpXlRfz+ohGX4eq2xVZXZ3AGJqILp+xFxHvIMnB6IHvg=
-=vkfw
------END PGP SIGNATURE-----
-
---FStV/iabqQx856sH--
+cheers,
+-roger
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
