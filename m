@@ -1,39 +1,70 @@
-From: Tony Lindgren <tony@atomide.com>
-Subject: Re: [PATCH v2 0/6] regulator: Fix pbias regulator enable
-Date: Thu, 3 Sep 2015 08:04:53 -0700
-Message-ID: <20150903150452.GT4215@atomide.com>
-References: <1441263042-12942-1-git-send-email-kishon@ti.com>
- <CAPDyKFrVR+vvmxm43hGimjqo4pcFa1pfDuNNENXU-tk_qXo2=w@mail.gmail.com>
- <55E81117.2040900@ti.com>
+From: Punit Agrawal <punit.agrawal@arm.com>
+Subject: Re: [PATCH v2 05/10] Documentation: add DT bindings for ARM SCPI sensors
+Date: Thu, 03 Sep 2015 16:08:06 +0100
+Message-ID: <9hhsi6vilrd.fsf@e105922-lin.cambridge.arm.com>
+References: <1438615378-14241-1-git-send-email-punit.agrawal@arm.com>
+	<1438615378-14241-6-git-send-email-punit.agrawal@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-mmc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <55E81117.2040900@ti.com>
-Sender: linux-mmc-owner@vger.kernel.org
-To: Kishon Vijay Abraham I <kishon@ti.com>
-Cc: Ulf Hansson <ulf.hansson@linaro.org>, Olof Johansson <olof@lixom.net>, Mark Brown <broonie@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-mmc <linux-mmc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, =?utf-8?B?UGF3ZcWC?= Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Benoit Cousson <bcousson@baylibre.com>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Liam Girdwood <lgirdwood@gmail.com>, linux-omap <linux-omap@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Sekhar Nori <nsekhar@ti.com>
+Content-Type: text/plain
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <1438615378-14241-6-git-send-email-punit.agrawal@arm.com> (Punit
+	Agrawal's message of "Mon, 3 Aug 2015 16:22:53 +0100")
+Sender: linux-pm-owner@vger.kernel.org
+To: linux-pm@vger.kernel.org
+Cc: lm-sensors@lm-sensors.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, liviu.dudau@arm.com, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Sudeep Holla <sudeep.holla@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-* Kishon Vijay Abraham I <kishon@ti.com> [150903 02:25]:
-> On Thursday 03 September 2015 01:09 PM, Ulf Hansson wrote:
-> > 
-> > Finally, perhaps it's better if we queue this through my mmc tree
-> > since we would then be able to avoid the regression - if I put
-> > $subject patchset before [1], right? Then I need an ack from Mark for
-> > the regulator patch.
-> > Please tell me if you guys prefer another way.
+Punit Agrawal <punit.agrawal@arm.com> writes:
 
-That works for me too. Or Mark can set up an immutable signed
-branch that you can merge in, up to you guys.
+> The System Control Processor (SCP) provides access to SoC sensors via
+> the System Control and Power Interface (SCPI) Message Protocol. Add
+> bindings to allow probing of these sensors. Also support referencing
+> of the sensors for setting up thermal zones via the thermal DT
+> bindings.
+>
+> Signed-off-by: Punit Agrawal <punit.agrawal@arm.com>
+> Cc: Rob Herring <robh+dt@kernel.org>
+> Cc: Mark Rutland <mark.rutland@arm.com>
+> Cc: Sudeep Holla <sudeep.holla@arm.com>
 
-It's still going to break git bisect for booting but
-removes the regression when mergeing to mainline.
+Gentle ping for the bindings review.
 
-I'd squash all the one liner dts changes into a single
-patch though when applying to cut down on the commit
-noise.
-
-Regards,
-
-Tony
+> ---
+>  Documentation/devicetree/bindings/arm/arm,scpi.txt | 15 +++++++++++++++
+>  1 file changed, 15 insertions(+)
+>
+> diff --git a/Documentation/devicetree/bindings/arm/arm,scpi.txt b/Documentation/devicetree/bindings/arm/arm,scpi.txt
+> index e309249..8ead68a 100644
+> --- a/Documentation/devicetree/bindings/arm/arm,scpi.txt
+> +++ b/Documentation/devicetree/bindings/arm/arm,scpi.txt
+> @@ -72,8 +72,18 @@ Required sub-node properties:
+>  - compatible : should be "arm,juno-scp-shmem" for Non-secure SRAM based
+>  	       shared memory on Juno platforms
+>  
+> +Sensor bindings for the sensors based on SCPI Message Protocol
+> +--------------------------------------------------------------
+> +SCPI provides an API to access the various sensors on the SoC.
+> +
+> +Required properties:
+> +- compatible : should be "arm,scpi-sensors".
+> +- #thermal-sensor-cells: should be set to 1. This property follows the
+> +			 thermal device tree bindings[2].
+> +
+>  [0] http://community.arm.com/servlet/JiveServlet/download/8401-45-18326/DUI0922B_scp_message_interface.pdf
+>  [1] Documentation/devicetree/bindings/clock/clock-bindings.txt
+> +[2] Documentation/devicetree/bindings/thermal/thermal.txt
+>  
+>  Example:
+>  
+> @@ -122,6 +132,11 @@ scpi_protocol: scpi@2e000000 {
+>  			clock-output-names = "pxlclk0", "pxlclk1";
+>  		};
+>  	};
+> +
+> +	scpi_sensors0: sensors {
+> +		compatible = "arm,scpi-sensors";
+> +		#thermal-sensor-cells = <1>;
+> +	};
+>  };
+>  
+>  cpu@0 {
