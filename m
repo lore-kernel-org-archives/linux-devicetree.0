@@ -1,33 +1,89 @@
-From: Rob Herring <robherring2@gmail.com>
-Subject: Re: [PATCH v4 14/16] drm: bridge: analogix/dp: try force hpd after
- plug in lookup failed
-Date: Thu, 3 Sep 2015 16:55:59 -0500
-Message-ID: <CAL_Jsq+F=eE6vU3f-bHrrSCD9GCoh80Nf-5=Qm73QgGDW1Np=w@mail.gmail.com>
-References: <1441086371-24838-1-git-send-email-ykk@rock-chips.com>
- <1441088079-25809-1-git-send-email-ykk@rock-chips.com> <CAL_JsqJDALnjVaVoEqGGsSLeE31m3MKOfbSoZ3M+g+zPZR2MFg@mail.gmail.com>
- <20150903084735.GB3784@ulmo.nvidia.com>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH] ARM: dts: Fix Makefile target for
+ sun4i-a10-itead-iteaduino-plus
+Date: Thu, 3 Sep 2015 23:57:29 +0200
+Message-ID: <20150903215729.GH31584@lukather>
+References: <20150902201812.GC464@hansolo.redhat.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <20150903084735.GB3784@ulmo.nvidia.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Thierry Reding <treding@nvidia.com>
-Cc: Yakir Yang <ykk@rock-chips.com>, Heiko Stuebner <heiko@sntech.de>, Jingoo Han <jingoohan1@gmail.com>, Inki Dae <inki.dae@samsung.com>, Joe Perches <joe@perches.com>, Kukjin Kim <kgene@kernel.org>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, Mark Yao <mark.yao@rock-chips.com>, Russell King <rmk+kernel@arm.linux.org.uk>, djkurtz@chromium.com, dianders@chromium.com, seanpaul@chromium.com, Ajay kumar <ajaynumb@gmail.com>, Andrzej Hajda <a.hajda@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, David Airlie <airlied@linux.ie>, Gustavo Padovan <gustavo.padovan@collabora.co.uk>, Andy Yan <andy.yan@rock-chips.com>, Kumar Gala <galak@codeaurora.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Kishon Vijay Abraham I <kishon@ti.com>, architt@codeaurora.org, dri-devel <dri-devel@lists.freedesktop.>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="Uu2n37VG4rOBDVuR"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20150902201812.GC464-dHPIJuKSOV0f7BdofF/totBPR1lH4CV8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Josh Boyer <jwboyer-rxtnV0ftBwyoClj4AeEUq9i2O/JbrIOy@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Josef Gajdusek <atx-MwjtXicnQwU@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Sep 3, 2015 at 3:47 AM, Thierry Reding <treding@nvidia.com> wrote:
-> On Wed, Sep 02, 2015 at 03:17:57PM -0500, Rob Herring wrote:
-> [...]
->> Are there any eDP panels which don't have EDID and need panel details in DT?
->
-> Most panels need information other than EDID. They typically have some
-> requirements regarding the power up sequence that aren't to be found
-> anywhere in EDID or detectable by some other mechanism. A decision was
-> therefore made a long time ago to require panels to be listed in DT with
-> a specific compatible string. That way all of these details can be
-> stashed away in drivers that know how to deal with these kinds of
-> details.
 
-I guess I was being hopeful that eDP was improving that situation.
+--Uu2n37VG4rOBDVuR
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Rob
+Hi Josh
+
+On Wed, Sep 02, 2015 at 04:18:12PM -0400, Josh Boyer wrote:
+> linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> Bcc:=20
+> Subject: [PATCH] ARM: dts: Fix Makefile target for sun4i-a10-itead-iteadu=
+ino-plus
+> Reply-To:=20
+
+Hmmm, something went wrong with your mail header.
+
+> ommit 79ae3e66f8d (ARM: dts: sun4i: Add Iteaduino Plus A10) added a new
+
+Missing opening "C"
+
+> make target for the sun4i-a10-itead-iteaduino-plus dts file, but mistaken=
+ly
+> used .dts instead of the correct .dtb suffix.  This resulted in a build e=
+rror
+> like:
+>=20
+> 	scripts/Makefile.dtbinst:42: target 'sun4i-a10-itead-iteaduino-plus.dts'=
+ doesn't match the target pattern
+>=20
+> when doing a make dtbs_install.
+>=20
+> Fix it to use the proper file name.
+>=20
+> Signed-off-by: Josh Boyer <jwboyer-rxtnV0ftBwyoClj4AeEUq9i2O/JbrIOy@public.gmane.org>
+
+Apart from that, it looks fine, thanks!
+
+Maxime
+
+--=20
+Maxime Ripard, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
+
+--Uu2n37VG4rOBDVuR
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBAgAGBQJV6MJJAAoJEBx+YmzsjxAggZ0QAMEF2xBm1ah38+Ng8kg5C4Pd
+XtrTqo4oJYkJlh0dYvItZK3eDlHIKrtsRPZhqDiY0ZXEuNnKjv+fzIErv9eCIp1p
+vkSEE5VpZzptoRpIPzHdhVXb0FStDKwibXmKFawRk3TU7KPoMpXWcgkEZu1F4gWd
+HZskKa4wj397jhs4c8FpNuw4ewAUBfWUAV/8xJX79SrU0e6ET7REk+BVHhzZmJQp
++Hs4ODsg8Qis6EBBEZqhnLHKftIqTzbP3aqzNjeh8/EcP6p/TwFwJzGwErobRSk0
+LCXfxK+Mr7OGQnTxoycZoRq7vbISyVLtsdmNJ/3PWiQSUplBpgz79oEgqKbE/sCE
+anF+P2KTSvCC5+t267DIaLKmjkEJBd8Va6Ci9DICaQYQhF8gfm2V3FjIxTHocJKB
+OxxWamv9LYvTXb206ApQi0UmF0D/a5U75thCZYJjK81WeftNxMQUeCBTD6lnj6dO
+NhByB3wT0+w4Q5tp0hAuAKoxI7QrorUye7exZFmL9mxhVap4wUI0yKWKONHLrwve
+rzFItZMIxuGa37TfORuii7/5XwVJo5BCU8zSQU24FeROruUMNvbKIcnRlZUpbwaU
+OBmfdC3ViIJcMda0gC8MDtbAVXI8oABKnLFwzErWzDyDIDg3wz0sHZ8hyPc+gKHh
+UuF9J6eGIfq70yLJ+Ssf
+=MY6m
+-----END PGP SIGNATURE-----
+
+--Uu2n37VG4rOBDVuR--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
