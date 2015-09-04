@@ -1,117 +1,73 @@
-From: Andy Gross <agross@codeaurora.org>
-Subject: Re: [PATCH] firmware: qcom: scm: Convert to platform driver
-Date: Fri, 4 Sep 2015 15:34:25 -0500
-Message-ID: <20150904203425.GA31824@qualcomm.com>
-References: <1437431152-6730-1-git-send-email-agross@codeaurora.org>
- <20150903213322.GI15099@codeaurora.org>
+From: Murali Karicheri <m-karicheri2@ti.com>
+Subject: [PATCH 1/2] soc: ti: display firmware file name as part of boot log
+Date: Fri, 4 Sep 2015 17:00:05 -0400
+Message-ID: <1441400405-13229-1-git-send-email-m-karicheri2@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20150903213322.GI15099@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Stephen Boyd <sboyd@codeaurora.org>
-Cc: linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Bjorn Andersson <bjorn.andersson@sonymobile.com>, devicetree@vger.kernel.org, Rob Clark <robdclark@gmail.com>
+To: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, ssantosh@kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Sep 03, 2015 at 02:33:22PM -0700, Stephen Boyd wrote:
-> On 07/20, Andy Gross wrote:
-> > This patch creates a platform driver for the SCM so that we can adequately
-> > manage resources.  This removes clients having to carry the necessary
-> > clocks to use the SCM resources.
-> > 
-> > Signed-off-by: Andy Gross <agross@codeaurora.org>
-> > ---
-> 
-> It would be nice if we could use this platform device for doing
-> the DMAish memory allocations that we do in this driver too. I
-> guess one complication there is that we would need to allocate
-> memory with the DMA APIs before CPUs are brought up
-> (early_initcall level).
+To help the user, print the PDSP file name as part of
+knav_queue_load_pdsp(). This will be useful for users to know what
+version of the firmware is loaded to PDSP. Also update the
+document for the location of the QMSS accumulator PDSP firmware.
 
-Yeah that's one thing we could do but we'd have to defer the memory stuff until
-it's used the first time (specific calls require it).
+Signed-off-by: Murali Karicheri <m-karicheri2@ti.com>
+---
+ .../bindings/soc/ti/keystone-navigator-qmss.txt      | 20 +++++++++++++++++++-
+ drivers/soc/ti/knav_qmss_queue.c                     |  3 +++
+ 2 files changed, 22 insertions(+), 1 deletion(-)
 
-> 
-> > diff --git a/drivers/firmware/qcom_scm.c b/drivers/firmware/qcom_scm.c
-> > index 45c008d..5dd0514 100644
-> > --- a/drivers/firmware/qcom_scm.c
-> > +++ b/drivers/firmware/qcom_scm.c
-> > @@ -15,14 +15,57 @@
-> >   * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
-> >   * 02110-1301, USA.
-> >   */
-> > -
-> > +#include <linux/platform_device.h>
-> > +#include <linux/module.h>
-> > +#include <linux/platform_device.h>
-> 
-> This include is here twice.
-> 
-> >  #include <linux/cpumask.h>
-> >  #include <linux/export.h>
-> >  #include <linux/types.h>
-> >  #include <linux/qcom_scm.h>
-> > +#include <linux/of.h>
-> > +#include <linux/clk.h>
-> >  
-> [...]
-> > +
-> > +/**
-> > + * qcom_scm_is_available() - Checks if SCM is available
-> > + */
-> > +bool qcom_scm_is_available(void)
-> > +{
-> > +	return !!__scm;
-> > +}
-> > +EXPORT_SYMBOL(qcom_scm_is_available);
-> > +
-> > +static int qcom_scm_remove(struct platform_device *pdev)
-> > +{
-> > +	__scm = NULL;
-> > +
-> > +	return 0;
-> > +}
-> 
-> Maybe we just shouldn't allow this? The firmware isn't going
-> anywhere at runtime, and this driver is currently marked as
-> bool in the Kconfig.
-
-Fair enough.
-
-> 
-> > +
-> > +static const struct of_device_id qcom_scm_dt_match[] = {
-> > +	{ .compatible = "qcom,scm",},
-> > +	{},
-> > +};
-> > +
-> > +MODULE_DEVICE_TABLE(of, qcom_scm_dt_match);
-> > +
-> > +static struct platform_driver qcom_scm_driver = {
-> > +	.driver = {
-> > +		.name	= "scm",
-> 
-> Maybe 'qcom_scm' ?
-
-yeah i should have used that.
-
-> 
-> > +		.of_match_table = qcom_scm_dt_match,
-> > +	},
-> > +	.probe = qcom_scm_probe,
-> > +	.remove = qcom_scm_remove,
-> > +};
-> > +
-> > +module_platform_driver(qcom_scm_driver);
-> 
-> Isn't there some sort of builtin_platform_driver() macro for
-> builtin modules?
-
-I'll take a look and convert.
-
-
+diff --git a/Documentation/devicetree/bindings/soc/ti/keystone-navigator-qmss.txt b/Documentation/devicetree/bindings/soc/ti/keystone-navigator-qmss.txt
+index d8e8cdb..a91ee0b 100644
+--- a/Documentation/devicetree/bindings/soc/ti/keystone-navigator-qmss.txt
++++ b/Documentation/devicetree/bindings/soc/ti/keystone-navigator-qmss.txt
+@@ -221,7 +221,7 @@ qmss: qmss@2a40000 {
+ 		#size-cells = <1>;
+ 		ranges;
+ 		pdsp0@0x2a10000 {
+-			firmware = "keystone/qmss_pdsp_acc48_k2_le_1_0_0_8.fw";
++			firmware = "k2_qmss_pdsp_acc48_k2_le_1_0_0_9.bin";
+ 			reg = <0x2a10000 0x1000>,
+ 			      <0x2a0f000 0x100>,
+ 			      <0x2a0c000 0x3c8>,
+@@ -230,3 +230,21 @@ qmss: qmss@2a40000 {
+ 		};
+ 	};
+ }; /* qmss */
++
++Accumulator QMSS Channel using PDSP firmware
++============================================
++The QMSS PDSP firmware support accumulator channel that can monitor a single
++queue or multiple contiguous queues. drivers/soc/ti/knav_qmss_acc.c is the
++driver that interface with the accumulator PDSP. This configures
++accumulator channels defined in DTS (example above) to monitor 1 or 32 queues
++per channel. More description on the firmware is available in CPPI/QMSS Low
++Level Driver document (docs/CPPI_QMSS_LLD_SDS.pdf) at
++	git://git.ti.com/keystone-rtos/qmss-lld.git
++
++k2_qmss_pdsp_acc48_k2_le_1_0_0_9.fw firmware supports upto 48 accumulator
++channels. This firmware is available under firmware folder of the above repo
++under the name acc48_le.bin. To use copy the firmware image to lib/firmware
++folder of the initramfs or ubifs file system as
++k2_qmss_pdsp_acc48_k2_le_1_0_0_9.fw and boot up the kernel. User would see
++"firmware file ks2_qmss_pdsp_acc48_k2_le_1_0_0_9.bin downloaded for PDSP" in
++the boot up log if loading of firmware to PDSP is successful.
+diff --git a/drivers/soc/ti/knav_qmss_queue.c b/drivers/soc/ti/knav_qmss_queue.c
+index 6d8646d..f26ce99 100644
+--- a/drivers/soc/ti/knav_qmss_queue.c
++++ b/drivers/soc/ti/knav_qmss_queue.c
+@@ -1526,6 +1526,9 @@ static int knav_queue_load_pdsp(struct knav_device *kdev,
+ 			pdsp->firmware, pdsp->name);
+ 		return ret;
+ 	}
++	dev_info(kdev->dev, "firmware file %s downloaded for PDSP\n",
++		 pdsp->firmware);
++
+ 	writel_relaxed(pdsp->id + 1, pdsp->command + 0x18);
+ 	/* download the firmware */
+ 	fwdata = (u32 *)fw->data;
 -- 
-Qualcomm Innovation Center, Inc.
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+1.9.1
