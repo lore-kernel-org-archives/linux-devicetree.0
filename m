@@ -1,59 +1,91 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: st_fdma: Firmware filename in DT?
-Date: Fri, 4 Sep 2015 15:04:38 +0200
-Message-ID: <201509041504.38412.arnd@arndb.de>
-References: <20150903144944.GC7093@griffinp-ThinkPad-X1-Carbon-2nd> <20150904092005.GA2990@griffinp-ThinkPad-X1-Carbon-2nd> <20150904102130.GA4796@x1>
+From: Laurentiu Palcu <laurentiu.palcu@intel.com>
+Subject: Re: [PATCH 02/13] power: bq24257: Add dead battery reporting
+Date: Fri, 4 Sep 2015 16:28:05 +0300
+Message-ID: <20150904132805.GA22335@lpalcu-desk>
+References: <1441073435-12349-1-git-send-email-dannenberg@ti.com>
+ <1441073435-12349-3-git-send-email-dannenberg@ti.com>
+ <55E5FD77.10100@ti.com>
+ <20150901210446.GB17234@beast>
+ <55E615AA.8080807@ti.com>
 Mime-Version: 1.0
-Content-Type: Text/Plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-spec-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20150904102130.GA4796@x1>
-Sender: devicetree-spec-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Peter Griffin <peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Maxime Coquelin <maxime.coquelin-qxv4g6HH51o@public.gmane.org>, Patrice Chotard <patrice.chotard-qxv4g6HH51o@public.gmane.org>, Ludovic Barre <ludovic.barre-qxv4g6HH51o@public.gmane.org>, "devicetree-spec-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-spec-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-pm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <55E615AA.8080807@ti.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: "Andrew F. Davis" <afd@ti.com>
+Cc: Andreas Dannenberg <dannenberg@ti.com>, Sebastian Reichel <sre@kernel.org>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, David Woodhouse <dwmw2@infradead.org>, Krzysztof Kozlowski <k.kozlowski.k@gmail.com>, linux-pm@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Friday 04 September 2015, Lee Jones wrote:
-> > > If we flip it the other way round, some subsystems derive the fir=
-mware
-> > > name from the 'node name'.  For instance, our zeroth General Purp=
-ose
-> > > Co-Processor RemoteProc driver has a corresponding node called
-> > > 'st231-gp0@40000000'.  RemoteProc adds an 'rproc-' prefix and a '=
--fw'
-> > > suffix and et voil=C3=A0, we load file:
-> > >=20
-> > >   lib/firmware/rproc-st231-gp0-fw
-> >=20
-> > IMO deriving from the node name seems fragile. Also imposing a linu=
-x'ism
-> > "rproc" prefix on the firmware name doesn't seem correct as the fir=
-mwares
-> > can be shared across OS's. Although this is how remoteproc subsys c=
-ore
-> > is currently working. It seems a generic DT firmware binding would =
-actually
-> > be most useful for the remoteproc subsystem.
->=20
-> The "rproc-%s-fw", where %s =3D=3D driver name, is only a fall-back. =
- The
-> RProc driver is welcome to supply a different firmware name if it
-> desires.  This is where I think a generic 'firmware' property would b=
-e
-> of use.
+On Tue, Sep 01, 2015 at 04:16:26PM -0500, Andrew F. Davis wrote:
+> 
+> 
+> On 09/01/2015 04:04 PM, Andreas Dannenberg wrote:
+> >Andrew- thanks for your feeback. Answers below...
+> >
+> >On Tue, Sep 01, 2015 at 02:33:11PM -0500, Andrew F. Davis wrote:
+> >>On 08/31/2015 09:10 PM, Andreas Dannenberg wrote:
+> >>>A missing/disconnected battery is now reported as dead rather than an
+> >>>unspecified failure via the charger's sysfs health property.
+> >>>
+> >>>$ cat health
+> >>>Dead
+> >>
+> >>Poor cat :(
+> >>
+> >
+> >I had to laugh pretty hard when I saw that getting printed onto the
+> >console for the first time so I had to include it here.
+> >
+> >>>
+> >>>Signed-off-by: Andreas Dannenberg <dannenberg@ti.com>
+> >>>---
+> >>>  drivers/power/bq24257_charger.c | 4 ++++
+> >>>  1 file changed, 4 insertions(+)
+> >>>
+> >>>diff --git a/drivers/power/bq24257_charger.c b/drivers/power/bq24257_charger.c
+> >>>index db81356..0b34528 100644
+> >>>--- a/drivers/power/bq24257_charger.c
+> >>>+++ b/drivers/power/bq24257_charger.c
+> >>>@@ -274,6 +274,10 @@ static int bq24257_power_supply_get_property(struct power_supply *psy,
+> >>>  			val->intval = POWER_SUPPLY_HEALTH_SAFETY_TIMER_EXPIRE;
+> >>>  			break;
+> >>>
+> >>>+		case FAULT_NO_BAT:
+> >>>+			val->intval = POWER_SUPPLY_HEALTH_DEAD;
+> >>>+			break;
+> >>>+
+> >>
+> >>I think the best thing to do would be to return -ENODEV as suggested by
+> >>power_supply_sysfs.c:305. Also you should probably add the POWER_SUPPLY_PROP_PRESENT
+> >>property check and set intval to 0 when there is no battery.
+> >
+> >Good find with -ENODEV. However in this case here the power supply is
+> >really a combination of a charger and a battery (which could be split
+> >out accordingly but that's a different story). If I were to report
+> >-ENODEV I would basically say the entire power supply is gone which is
+> >not correct IMHO. Even with a missing battery a system is typically
+> >functional as it gets powered through USB and the charger IC is still
+> >there and functioning. So I think I would either leave the reporting
+> >as *_DEAD or skip the patch. I'm curious if there are additional
+> >opinions.
+> >
+> 
+> It looks like returning -ENODEV for one property would not mark the whole
+> device gone, just POWER_SUPPLY_PROP_HEALTH, but I guess that depends on
+> what user-space does with the info. I would think that this is what
+> POWER_SUPPLY_PROP_PRESENT is for but different drivers seem to use it for
+> different things. Anyway, reporting DEAD for a missing battery is probably
+> not the most correct option, maybe drop the patch ( for the cat's sake :) ).
+I'm also in favor of dropping this patch for the same reasons. Also,
+since the latest phones/tablets do not allow battery removal, it's
+highly unlikely we'll even hit this case nowadays. Perhaps, we could use
+DEAD if the battery did not charge and the safety timer expired?
+But, if one alters iilimit and sets a limit that's too low for the
+battery to charge in time, that doesn't mean the battery is dead... :/
 
-The firmware file name is agreed on between the device driver and the
-file system, so encoding the linux driver name in it seems appropriate.
+That's the main reason I'm so reluctant on having properties like charge
+current, charge voltage, or even input current limit, writable in
+sysfs.
 
-Generally speaking, I'd say a good policy would be to try basing
-the firmware name on the "compatible" property strings. That property
-already contains a hierarchical list of models, which makes it particul=
-arly
-easy to have firmware files for specific models or those that are share=
-d
-across multiple variations if necessary. Just ask for the most specific
-compatible string first and try the more specific compatible strings
-(with an appropriate prefix and/or postfix added by the driver) until
-a file is found.
-
-	Arnd
+laurentiu
