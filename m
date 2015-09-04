@@ -1,43 +1,47 @@
-From: David Daney <ddaney.cavm@gmail.com>
-Subject: [PATCH] of_pci_irq: Silence bogus "of_irq_parse_pci() failed ..." messages.
-Date: Fri,  4 Sep 2015 12:12:06 -0700
-Message-ID: <1441393926-23225-1-git-send-email-ddaney.cavm@gmail.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Grant Likely <grant.likely@linaro.org>
-Cc: David Daney <david.daney@cavium.com>
+From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v4 1/4] of/pci: Add of_pci_check_probe_only to parse "linux,pci-probe-only"
+Date: Fri, 4 Sep 2015 14:19:53 -0500
+Message-ID: <CAL_JsqKjXqgCvzUcTZkCfgpvub6uh_XzLTfyHpgSZzh4dJaOEg@mail.gmail.com>
+References: <1441385411-7624-1-git-send-email-marc.zyngier@arm.com> <1441385411-7624-2-git-send-email-marc.zyngier@arm.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1441385411-7624-2-git-send-email-marc.zyngier-5wv7dgnIgG8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
+Cc: Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, Paul Mackerras <paulus-eUNUBHrolfbYtjvyW6yDsg@public.gmane.org>, Michael Ellerman <mpe-Gsx/Oe8HsFggBc27wqDAHg@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Suravee Suthikulpanit <Suravee.Suthikulpanit-5C7GfCeVMHo@public.gmane.org>, Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Alexander Graf <agraf-l3A5Bk7waGM@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linuxppc-dev <linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: David Daney <david.daney@cavium.com>
+On Fri, Sep 4, 2015 at 11:50 AM, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org> wrote:
+> Both pci-host-generic and Pseries parse the "linux,pci-probe-only"
+> property to engage the PCI_PROBE_ONLY mode, and both have a subtle
+> bug that can be triggered if the property has no parameter.
+>
+> Provide a generic, safe implementation that can be used by both.
+>
+> Signed-off-by: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
+> ---
+>  drivers/of/of_pci.c    | 28 ++++++++++++++++++++++++++++
+>  include/linux/of_pci.h |  3 +++
+>  2 files changed, 31 insertions(+)
+>
+> diff --git a/drivers/of/of_pci.c b/drivers/of/of_pci.c
+> index 5751dc5..5dd4966 100644
+> --- a/drivers/of/of_pci.c
+> +++ b/drivers/of/of_pci.c
+> @@ -118,6 +118,34 @@ int of_get_pci_domain_nr(struct device_node *node)
+>  EXPORT_SYMBOL_GPL(of_get_pci_domain_nr);
+>
+>  /**
+> + * of_pci_check_probe_only - Setup probe only mode if linux,pci-probe-only
+> + *                           is present and valid
+> + *
+> + * @node: device tree node that may contain the property (usually "chosen")
 
-It is perfectly legitimate for a PCI device to have an
-PCI_INTERRUPT_PIN value of zero.  This happens if the device doesn't
-use interrupts, or on PCIe devices, where only MSI/MSI-X are
-supported.
+This line should be removed. Perhaps Bjorn will fix it up.
 
-Silence the annoying "of_irq_parse_pci() failed with rc=-19" error
-messages by making them conditional on !-ENODEV (which can only be
-produced in the PCI_INTERRUPT_PIN == 0 case).
-
-Signed-off-by: David Daney <david.daney@cavium.com>
----
- drivers/of/of_pci_irq.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/of/of_pci_irq.c b/drivers/of/of_pci_irq.c
-index 1710d9d..33d242a 100644
---- a/drivers/of/of_pci_irq.c
-+++ b/drivers/of/of_pci_irq.c
-@@ -106,7 +106,9 @@ int of_irq_parse_and_map_pci(const struct pci_dev *dev, u8 slot, u8 pin)
- 
- 	ret = of_irq_parse_pci(dev, &oirq);
- 	if (ret) {
--		dev_err(&dev->dev, "of_irq_parse_pci() failed with rc=%d\n", ret);
-+		if (ret != -ENODEV)
-+			dev_err(&dev->dev,
-+				"of_irq_parse_pci() failed with rc=%d\n", ret);
- 		return 0; /* Proper return code 0 == NO_IRQ */
- 	}
- 
--- 
-1.7.11.7
+Rob
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
