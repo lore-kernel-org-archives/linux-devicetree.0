@@ -1,89 +1,58 @@
-From: Jagan Teki <jteki-oRp2ZoJdM/RWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH 1/5] spi: introduce mmap read support for spi flash devices
-Date: Fri, 4 Sep 2015 16:55:33 +0530
-Message-ID: <CAD6G_RT8Q+Uyp1ZjzHf54Tno1wHm0SmLKEwRAe2gkdp772FD9A@mail.gmail.com>
-References: <1441355402-6837-1-git-send-email-vigneshr@ti.com>
-	<1441355402-6837-2-git-send-email-vigneshr@ti.com>
+From: Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH] ARM: ux500: fix typo in regulator names
+Date: Fri, 4 Sep 2015 13:48:30 +0200
+Message-ID: <CAPDyKFqRz1QyfWXzcDde0J9Fc7gTZWQOFGNzU=2cg1JnMyrL+g@mail.gmail.com>
+References: <1438777340-27511-1-git-send-email-tomeu.vizoso@collabora.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1441355402-6837-2-git-send-email-vigneshr-l0cyMroinI0@public.gmane.org>
-Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Vignesh R <vigneshr-l0cyMroinI0@public.gmane.org>
-Cc: Benoit Cousson <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, hramrach-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1438777340-27511-1-git-send-email-tomeu.vizoso-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Tomeu Vizoso <tomeu.vizoso-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
+Cc: "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 4 September 2015 at 13:59, Vignesh R <vigneshr-l0cyMroinI0@public.gmane.org> wrote:
-> In addition to providing direct access to SPI bus, some spi controller
-> hardwares (like ti-qspi) provide special memory mapped port
-> to accesses SPI flash devices in order to increase read performance.
-> This means the controller can automatically send the SPI signals
-> required to read data from the SPI flash device.
-> For this, spi controller needs to know flash specific information like
-> read command to use, dummy bytes and address width. Once these settings
-> are populated in hardware registers, any read accesses to flash's memory
-> map region(SoC specific) through memcpy or mem-to-mem DMA copy will be
-> handled by controller hardware. The hardware will automatically generate
-> spi signals required to read data from flash and present it to CPU or
-> DMA engine.
+On 5 August 2015 at 14:22, Tomeu Vizoso <tomeu.vizoso-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org> wrote:
+> Apparently an extra _reg suffix was appended to the end of the names of
+> regulators ab8500_ext2_reg and ab8500_ext3_reg.
 >
-> Introduce spi_mtd_mmap_read() method to support memory mapped read
-> over SPI flash devices. SPI master drivers can implement this method to
-> support memory mapped read interfaces. m25p80 flash driver and other
-> flash drivers can call this to request memory mapped read. The interface
-> should only be used mtd flashes and cannot be used with other spi devices.
->
-> Signed-off-by: Vignesh R <vigneshr-l0cyMroinI0@public.gmane.org>
+> Signed-off-by: Tomeu Vizoso <tomeu.vizoso-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
+
+You should probably include Linus Walleij as he is the maintainer of ux500.
+
+Acked-by: Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+
 > ---
->  include/linux/spi/spi.h | 21 +++++++++++++++++++++
->  1 file changed, 21 insertions(+)
+>  arch/arm/boot/dts/ste-snowball.dts | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
 >
-> diff --git a/include/linux/spi/spi.h b/include/linux/spi/spi.h
-> index d673072346f2..b74a3f169fc2 100644
-> --- a/include/linux/spi/spi.h
-> +++ b/include/linux/spi/spi.h
-> @@ -293,6 +293,23 @@ static inline void spi_unregister_driver(struct spi_driver *sdrv)
->   * @handle_err: the subsystem calls the driver to handle an error that occurs
->   *             in the generic implementation of transfer_one_message().
->   * @unprepare_message: undo any work done by prepare_message().
-> + * @spi_mtd_mmap_read: some spi-controller hardwares provide memory
-> + *                     mapped interface to communicate with mtd flashes.
-> + *                     For this, spi  controller needs to know flash
-> + *                     memory settings like read command to use, dummy
-> + *                     bytes and address width. Once these settings are
-> + *                     populated in hardware registers, any read
-> + *                     accesses to flash's memory map region(as defined
-> + *                     by SoC) through memcpy or mem-to-mem DMA copy
-> + *                     will be handled by controller hardware. The
-> + *                     hardware will automatically generate spi signals
-> + *                     required to read data from flash and present it
-> + *                     to CPU or DMA. SPI master drivers can use this
-> + *                     callback to implement memory mapped read
-> + *                     interface. Flash driver (like m25p80) requests
-> + *                     memory mapped read via this method. The interface
-> + *                     should  only be used mtd flashes and cannot be
-> + *                     used with other spi devices.
->   * @cs_gpios: Array of GPIOs to use as chip select lines; one per CS
->   *     number. Any individual value may be -ENOENT for CS lines that
->   *     are not GPIOs (driven by the SPI controller itself).
-> @@ -438,6 +455,10 @@ struct spi_master {
->                                struct spi_message *message);
->         int (*unprepare_message)(struct spi_master *master,
->                                  struct spi_message *message);
-> +       int (*spi_mtd_mmap_read)(struct  spi_device *spi,
-> +                                loff_t from, size_t len, size_t *retlen,
-> +                                u_char *buf, u8 read_opcode,
-> +                                u8 addr_width, u8 dummy_bytes);
-
-This looks un-manageable to know spi core or master knows what are the
-command or opcode used by spi-nor flash and also I think mmap support
-seems to be flash related or any justification this is spi bus
-master/controller feature?
-
-thanks!
--- 
-Jagan | openedev.
+> diff --git a/arch/arm/boot/dts/ste-snowball.dts b/arch/arm/boot/dts/ste-snowball.dts
+> index 32a5ccb14e7e..07c0e346942c 100644
+> --- a/arch/arm/boot/dts/ste-snowball.dts
+> +++ b/arch/arm/boot/dts/ste-snowball.dts
+> @@ -360,11 +360,11 @@
+>                                                 regulator-name = "ab8500-ext-supply1";
+>                                         };
+>
+> -                                       ab8500_ext2_reg_reg: ab8500_ext2 {
+> +                                       ab8500_ext2_reg: ab8500_ext2 {
+>                                                 regulator-name = "ab8500-ext-supply2";
+>                                         };
+>
+> -                                       ab8500_ext3_reg_reg: ab8500_ext3 {
+> +                                       ab8500_ext3_reg: ab8500_ext3 {
+>                                                 regulator-name = "ab8500-ext-supply3";
+>                                         };
+>                                 };
+> --
+> 2.4.3
+>
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-kernel" in
+> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> Please read the FAQ at  http://www.tux.org/lkml/
 --
-To unsubscribe from this list: send the line "unsubscribe linux-spi" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
