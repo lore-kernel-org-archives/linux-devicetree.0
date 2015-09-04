@@ -1,53 +1,83 @@
-From: =?UTF-8?Q?Janusz_U=c5=bcycki?= <j.uzycki-cjVIcFy54eMe9JSWTWOYM+658FiBabzs@public.gmane.org>
-Subject: Re: [RFC] gpio-pca953x driver and PCA9536 chip
-Date: Fri, 4 Sep 2015 11:33:26 +0200
-Message-ID: <55E96566.7000502@elpromaelectronics.com>
-References: <55E4641D.7050603@elpromaelectronics.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8;
-	format=flowed
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <55E4641D.7050603-cjVIcFy54eMe9JSWTWOYM+658FiBabzs@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Krzysztof Borgulski <k.borgulski-9tnw74Q4ehaHKKo6LODCOg@public.gmane.org>
+From: kernel-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org
+Subject: [PATCH v5 0/6] bcm2835: auxiliar device support for spi
+Date: Fri,  4 Sep 2015 09:41:44 +0000
+Message-ID: <1441359711-2800-1-git-send-email-kernel@martin.sperl.org>
+Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Lee Jones <lee-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Martin Sperl <kernel-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+From: Martin Sperl <kernel-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org>
 
+The BCM2835 contains 3 auxiliar devices:
+* spi1
+* spi2
+* uart1
 
-W dniu 2015-08-31 o 16:26, Janusz U=C5=BCycki pisze:
-> Hi,
->
-> The driver sets register #02 (inversion) to 0x01 instead of 0x00 on m=
-y=20
-> board.
-> Reason: device_pca953x_init() does not initialize val buffer because=20
-> NBANK() returns
-> for PCA9536 ngpio=3D4 value 0 instead of 1.
->
-> My proposed code-patch for 3.14.17 is below.
-> Because I don't work on stable/next I can't deliver complete/ready pa=
-tch.
-> Please for comments.
->
-> best regards
-> Janusz
->
-> --- a/drivers/gpio/gpio-pca953x.c
-> +++ b/drivers/gpio/gpio-pca953x.c
-> @@ -75,7 +75,7 @@ MODULE_DEVICE_TABLE(i2c, pca953x_id);
->  #define MAX_BANK 5
->  #define BANK_SZ 8
->
-> -#define NBANK(chip) (chip->gpio_chip.ngpio / BANK_SZ)
-> +#define NBANK(chip) DIV_ROUND_UP(chip->gpio_chip.ngpio, BANK_SZ)
->
->  struct pca953x_chip {
->         unsigned gpio_start;
+All of those 3 devices are enabled/disabled via a shared register,
+which is set by default to be disabled.
+
+Access to this register needs to get serialized.
+
+So after several iterations of discussions with the following ideas:
+* syscon - device tree should describe HW not drivers to use -
+           'compatiblity = "brcm,bcm2835-aux-enable", "syscon";'
+           is not acceptable
+* regulator - it is not necessarily a regulator or a power gate
+              that is implemented in HW, so it is not valid to use
+              this framework
+
+The recommendation was made to create a new minimal API in soc
+just for access to this shared enable/disable register.
+
+This patch-series implements:
+* the bcm2835-auxiliar device enable/disable api in soc.
+* the bcm2835-auxiliar spi device driver
+
+The uart1 device driver (ns16550 based) is not implemented so far
+but would be using the same API.
+
+Both spi and uart drivers can run with shared interrupts,
+so there is no need for an interrupt-controller to get implemented.
+
+Martin Sperl (6):
+  soc: bcm2835: auxiliar devices enable infrastructure
+  ARM: bcm2835: add DT for the bcm2835 auxiliar devices
+  dt/bindings: bcm2835: add binding documentation for bcm2835-aux
+  spi: bcm2835: new driver implementing auxiliar spi1/spi2 on the
+    bcm2835 soc
+  ARM: bcm2835: enable building of spi-bcm2835aux driver in default
+    config
+  dt/bindings: bcm2835: Add binding documentation for auxiliar spi
+    devices
+
+ .../bindings/soc/bcm/brcm,bcm2835-aux.txt          |   27 +
+ .../bindings/spi/brcm,bcm2835-aux-spi.txt          |   47 ++
+ arch/arm/boot/dts/bcm2835.dtsi                     |   37 ++
+ arch/arm/configs/bcm2835_defconfig                 |    1 +
+ drivers/soc/Kconfig                                |    1 +
+ drivers/soc/Makefile                               |    1 +
+ drivers/soc/bcm/Kconfig                            |   11 +
+ drivers/soc/bcm/Makefile                           |    1 +
+ drivers/soc/bcm/bcm2835-aux.c                      |  154 ++++++
+ drivers/spi/Kconfig                                |   12 +
+ drivers/spi/Makefile                               |    1 +
+ drivers/spi/spi-bcm2835aux.c                       |  514 ++++++++++++++++++++
+ include/linux/soc/bcm/bcm2835-aux.h                |   23 +
+ 13 files changed, 830 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/soc/bcm/brcm,bcm2835-aux.txt
+ create mode 100644 Documentation/devicetree/bindings/spi/brcm,bcm2835-aux-spi.txt
+ create mode 100644 drivers/soc/bcm/Kconfig
+ create mode 100644 drivers/soc/bcm/Makefile
+ create mode 100644 drivers/soc/bcm/bcm2835-aux.c
+ create mode 100644 drivers/spi/spi-bcm2835aux.c
+ create mode 100644 include/linux/soc/bcm/bcm2835-aux.h
 
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
+1.7.10.4
+
+--
+To unsubscribe from this list: send the line "unsubscribe linux-spi" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
