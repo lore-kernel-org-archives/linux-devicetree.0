@@ -1,98 +1,65 @@
 From: Marc Zyngier <marc.zyngier@arm.com>
-Subject: [PATCH v4 1/4] of/pci: Add of_pci_check_probe_only to parse "linux,
- pci-probe-only"
-Date: Fri,  4 Sep 2015 17:50:08 +0100
-Message-ID: <1441385411-7624-2-git-send-email-marc.zyngier@arm.com>
+Subject: [PATCH v4 3/4] powerpc: PCI: Fix lookup of linux,pci-probe-only property
+Date: Fri,  4 Sep 2015 17:50:10 +0100
+Message-ID: <1441385411-7624-4-git-send-email-marc.zyngier@arm.com>
 References: <1441385411-7624-1-git-send-email-marc.zyngier@arm.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1441385411-7624-1-git-send-email-marc.zyngier@arm.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+Sender: linux-kernel-owner@vger.kernel.org
 To: Benjamin Herrenschmidt <benh@kernel.crashing.org>, Paul Mackerras <paulus@samba.org>, Michael Ellerman <mpe@ellerman.id.au>, Will Deacon <will.deacon@arm.com>, Bjorn Helgaas <bhelgaas@google.com>, Suravee Suthikulpanit <Suravee.Suthikulpanit@amd.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>
-Cc: devicetree@vger.kernel.org, linux-pci@vger.kernel.org, Alexander Graf <agraf@suse.de>, linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org
+Cc: Alexander Graf <agraf@suse.de>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linuxppc-dev@lists.ozlabs.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Both pci-host-generic and Pseries parse the "linux,pci-probe-only"
-property to engage the PCI_PROBE_ONLY mode, and both have a subtle
-bug that can be triggered if the property has no parameter.
+When find_and_init_phbs() looks for the probe-only property, it seems
+to trust the firmware to be correctly written, and assumes that there
+is a parameter to the property.
 
-Provide a generic, safe implementation that can be used by both.
+It is conceivable that the firmware could not be that perfect, and it
+could expose this property naked (at least one arm64 platform seems to
+exhibit this exact behaviour). The setup code the ends up making
+a decision based on whatever the property pointer points to, which
+is likely to be junk.
+
+Instead, switch to the common of_pci.c implementation that doesn't
+suffer from this problem and ignore the property if the firmware
+couldn't make up its mind.
 
 Signed-off-by: Marc Zyngier <marc.zyngier@arm.com>
 ---
- drivers/of/of_pci.c    | 28 ++++++++++++++++++++++++++++
- include/linux/of_pci.h |  3 +++
- 2 files changed, 31 insertions(+)
+ arch/powerpc/platforms/pseries/setup.c | 14 ++------------
+ 1 file changed, 2 insertions(+), 12 deletions(-)
 
-diff --git a/drivers/of/of_pci.c b/drivers/of/of_pci.c
-index 5751dc5..5dd4966 100644
---- a/drivers/of/of_pci.c
-+++ b/drivers/of/of_pci.c
-@@ -118,6 +118,34 @@ int of_get_pci_domain_nr(struct device_node *node)
- EXPORT_SYMBOL_GPL(of_get_pci_domain_nr);
+diff --git a/arch/powerpc/platforms/pseries/setup.c b/arch/powerpc/platforms/pseries/setup.c
+index 39a74fa..6016709 100644
+--- a/arch/powerpc/platforms/pseries/setup.c
++++ b/arch/powerpc/platforms/pseries/setup.c
+@@ -40,6 +40,7 @@
+ #include <linux/seq_file.h>
+ #include <linux/root_dev.h>
+ #include <linux/of.h>
++#include <linux/of_pci.h>
+ #include <linux/kexec.h>
  
- /**
-+ * of_pci_check_probe_only - Setup probe only mode if linux,pci-probe-only
-+ *                           is present and valid
-+ *
-+ * @node: device tree node that may contain the property (usually "chosen")
-+ *
-+ */
-+void of_pci_check_probe_only(void)
-+{
-+	u32 val;
-+	int ret;
-+
-+	ret = of_property_read_u32(of_chosen, "linux,pci-probe-only", &val);
-+	if (ret) {
-+		if (ret == -ENODATA || ret == -EOVERFLOW)
-+			pr_warn("linux,pci-probe-only without valid value, ignoring\n");
-+		return;
-+	}
-+
-+	if (val)
-+		pci_add_flags(PCI_PROBE_ONLY);
-+	else
-+		pci_clear_flags(PCI_PROBE_ONLY);
-+
-+	pr_info("PCI: PROBE_ONLY %sabled\n", val ? "en" : "dis");
-+}
-+EXPORT_SYMBOL_GPL(of_pci_check_probe_only);
-+
-+/**
-  * of_pci_dma_configure - Setup DMA configuration
-  * @dev: ptr to pci_dev struct of the PCI device
-  *
-diff --git a/include/linux/of_pci.h b/include/linux/of_pci.h
-index 29fd3fe..38c0533 100644
---- a/include/linux/of_pci.h
-+++ b/include/linux/of_pci.h
-@@ -17,6 +17,7 @@ int of_irq_parse_and_map_pci(const struct pci_dev *dev, u8 slot, u8 pin);
- int of_pci_parse_bus_range(struct device_node *node, struct resource *res);
- int of_get_pci_domain_nr(struct device_node *node);
- void of_pci_dma_configure(struct pci_dev *pci_dev);
-+void of_pci_check_probe_only(void);
- #else
- static inline int of_irq_parse_pci(const struct pci_dev *pdev, struct of_phandle_args *out_irq)
- {
-@@ -53,6 +54,8 @@ of_get_pci_domain_nr(struct device_node *node)
+ #include <asm/mmu.h>
+@@ -495,18 +496,7 @@ static void __init find_and_init_phbs(void)
+ 	 * PCI_PROBE_ONLY and PCI_REASSIGN_ALL_BUS can be set via properties
+ 	 * in chosen.
+ 	 */
+-	if (of_chosen) {
+-		const int *prop;
+-
+-		prop = of_get_property(of_chosen,
+-				"linux,pci-probe-only", NULL);
+-		if (prop) {
+-			if (*prop)
+-				pci_add_flags(PCI_PROBE_ONLY);
+-			else
+-				pci_clear_flags(PCI_PROBE_ONLY);
+-		}
+-	}
++	of_pci_check_probe_only();
  }
  
- static inline void of_pci_dma_configure(struct pci_dev *pci_dev) { }
-+
-+static inline void of_pci_check_probe_only(void) { }
- #endif
- 
- #if defined(CONFIG_OF_ADDRESS)
+ static void __init pSeries_setup_arch(void)
 -- 
 2.1.4
