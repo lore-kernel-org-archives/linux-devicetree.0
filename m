@@ -1,130 +1,74 @@
-From: Shubhrajyoti Datta <shubhrajyoti.datta-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [[PATCH v2] 2/2] Altera Modular ADC driver support
-Date: Fri, 4 Sep 2015 17:51:21 +0530
-Message-ID: <CAKfKVtH1_wb2MLEgw0uf61tcoC7P2Uz6hC_GmP8vRakLnArB=A@mail.gmail.com>
-References: <1441144199-20231-1-git-send-email-cnphoon@altera.com>
-	<1441144199-20231-3-git-send-email-cnphoon@altera.com>
+From: Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v3 0/2] regulator: Fix pbias regulator enable
+Date: Fri, 4 Sep 2015 14:44:55 +0200
+Message-ID: <CAPDyKFqCYx0JfXGq0T-44034UcR=v8nvKp7Fww=Zxa7N-z_vFg@mail.gmail.com>
+References: <1441368025-21182-1-git-send-email-kishon@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1441144199-20231-3-git-send-email-cnphoon-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Chee Nouk Phoo <cnphoon-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>
-Cc: linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Michael.Hennerich-OyLXuOCK7orQT0dZR+AlfA@public.gmane.org, cnphoon.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1441368025-21182-1-git-send-email-kishon-l0cyMroinI0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
+Cc: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-mmc <linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, =?UTF-8?Q?Pawe=C5=82_Moll?= <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Benoit Cousson <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-omap <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-> +static int alt_modular_adc_probe(struct platform_device *pdev)
-> +{
-> +       struct altera_adc *adc;
-> +       struct device_node *np = pdev->dev.of_node;
-> +       struct iio_dev *indio_dev;
-> +       struct resource *mem;
-> +       int ret;
-> +
-> +       if (!np)
-> +               return -ENODEV;
-> +
-> +       indio_dev = iio_device_alloc(sizeof(struct altera_adc));
-> +       if (!indio_dev) {
-> +               dev_err(&pdev->dev, "failed allocating iio device\n");
-> +               return -ENOMEM;
-> +       }
-> +
-> +       adc = iio_priv(indio_dev);
-> +
-> +       mem = platform_get_resource_byname(pdev, IORESOURCE_MEM,
-> +               "sequencer_csr");
-> +       adc->seq_regs = devm_ioremap_resource(&pdev->dev, mem);
-> +       if (IS_ERR(adc->seq_regs)) {
-> +               ret = PTR_ERR(adc->seq_regs);
-> +               goto err_iio;
-> +       }
-> +
-> +       mem = platform_get_resource_byname(pdev, IORESOURCE_MEM,
-> +               "sample_store_csr");
-> +       adc->sample_regs = devm_ioremap_resource(&pdev->dev, mem);
-> +       if (IS_ERR(adc->sample_regs)) {
-> +               ret = PTR_ERR(adc->sample_regs);
-> +               goto err_iio;
-> +       }
-> +
-> +       ret = alt_modular_adc_parse_dt(indio_dev, &pdev->dev);
-> +       if (ret < 0) {
-> +               dev_err(&pdev->dev, "failed to parse device tree\n");
-> +               goto err_iio;
-> +       }
-> +
-> +       ret = alt_modular_adc_channel_init(indio_dev);
-> +       if (ret < 0) {
-> +               dev_err(&pdev->dev, "failed initialize ADC channels\n");
-> +               goto err_iio;
-> +       }
-> +
-> +       platform_set_drvdata(pdev, indio_dev);
-> +
-> +       indio_dev->name = dev_name(&pdev->dev);
-> +       indio_dev->dev.parent = &pdev->dev;
-> +       indio_dev->dev.of_node = pdev->dev.of_node;
-> +       indio_dev->info = &adc_iio_info;
-> +       indio_dev->modes = INDIO_DIRECT_MODE;
-> +       indio_dev->num_channels = adc->slot_count;
-> +
-> +       ret = iio_device_register(indio_dev);
-> +       if (ret)
-> +               goto err_iio;
-> +
-> +       /* Disable Interrupt */
-> +       writel_relaxed(0, (adc->sample_regs + ADC_IER_REG));
-
-Why disable interrupts?
-
-> +
-> +       /* Start Continuous Sampling */
-> +       writel_relaxed((ADC_RUN_MSK), (adc->seq_regs + ADC_CMD_REG));
-> +
-> +       return 0;
-> +
-> +
-> +err_iio:
-> +       iio_device_free(indio_dev);
-> +       return ret;
-> +}
-> +
-> +static int alt_modular_adc_remove(struct platform_device *pdev)
-> +{
-> +       struct iio_dev *indio_dev = platform_get_drvdata(pdev);
-> +       struct altera_adc *adc = iio_priv(indio_dev);
-> +
-> +       /* Stop ADC */
-> +       writel((ADC_STOP_MSK), (adc->seq_regs + ADC_CMD_REG));
-> +
-> +       /* Unregister ADC */
-> +       iio_device_unregister(indio_dev);
-> +
-> +       return 0;
-> +}
-> +
-> +static struct platform_driver altr_modular_adc_driver = {
-> +       .probe          = alt_modular_adc_probe,
-> +       .remove         = alt_modular_adc_remove,
-> +       .driver         = {
-> +               .name   = "alt-modular-adc",
-> +               .owner  = THIS_MODULE,
-> +               .of_match_table = alt_modular_adc_match,
-> +       },
-> +};
-> +
-> +
-> +module_platform_driver(altr_modular_adc_driver);
-> +
-> +MODULE_DESCRIPTION("Altera Modular ADC Driver");
-> +MODULE_AUTHOR("Chee Nouk Phoon <cnphoon-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>");
-> +MODULE_LICENSE("GPL v2");
-> --
-> 1.7.1
+On 4 September 2015 at 14:00, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org> wrote:
+> vsel_reg and enable_reg of the pbias regulator descriptor should actually
+> have the offset from syscon.
+>
+> However after
+> "ARM: dts: <platform>: add minimal l4 bus layout with control module
+> support"
+> vsel_reg and enable_reg started to have the absolute address because
+> of address translation that happens due to pbias node made as the
+> child node of syscon. This breaks the pbias regulator enable.
+>
+> This series adds the 'offset' to be populated in vsel_reg and enable_reg
+> in the pbias driver itself.
+>
+> Changes from v2:
+> *) Squashed all the dt patches into a single patch
+>
+> Changes from v1:
+> *) Fixed Tony's review comments on adding a 'comment' for adding offset in
+>    the driver and adding a warning for using platform_get_resource.
+> *) Added Tony's Acked-by.
+>
+> Tested these patches against mmc -next in omap4 panda, omap3 beagle xm,
+> dra72 and omap5 uevm
+>
+> Kishon Vijay Abraham I (2):
+>   regulator: pbias: program pbias register offset in pbias driver
+>   ARM: dts: <omap2/3/4/5/dra7>: use "ti,pbias-<platform>" compatible
+>     string for pbias
+>
+>  .../bindings/regulator/pbias-regulator.txt         |    7 ++-
+>  arch/arm/boot/dts/dra7.dtsi                        |    2 +-
+>  arch/arm/boot/dts/omap2430.dtsi                    |    2 +-
+>  arch/arm/boot/dts/omap3.dtsi                       |    2 +-
+>  arch/arm/boot/dts/omap4.dtsi                       |    2 +-
+>  arch/arm/boot/dts/omap5.dtsi                       |    2 +-
+>  drivers/regulator/pbias-regulator.c                |   56 +++++++++++++++++---
+>  7 files changed, 61 insertions(+), 12 deletions(-)
 >
 > --
-> To unsubscribe from this list: send the line "unsubscribe linux-kernel" in
-> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
-> Please read the FAQ at  http://www.tux.org/lkml/
+> 1.7.9.5
+>
+
+Okay, just to be clear on the way forward. I spoked with Mark Brown
+offlist, and he will/has picked up the regulator patch and will send
+it as fix for the 4.3 rc[n].
+
+Regarding the ARM patch here, I guess Tony might as well handle it and
+send through arm-soc, especially since the regression won't be fixed
+within my mmc tree anyway.
+
+So, I am going to leave my next branch as is - and thus relying on
+that the regression for OMAP will be fixed in some the 4.3 rc[n].
+
+Kind regards
+Uffe
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
