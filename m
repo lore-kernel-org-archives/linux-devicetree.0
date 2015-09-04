@@ -1,39 +1,39 @@
 From: Nikhil Badola <nikhil.badola-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: [PATCH 1/3][v4] Documentation: dt: dwc3: Add snps,quirk-frame-length-adjustment property
-Date: Fri, 4 Sep 2015 10:14:54 +0530
-Message-ID: <1441341894-17327-1-git-send-email-nikhil.badola@freescale.com>
+Subject: [PATCH 3/3][v4] arm: dts: ls1021a: Add quirk for Erratum A009116
+Date: Fri, 4 Sep 2015 10:16:56 +0530
+Message-ID: <1441342016-17428-1-git-send-email-nikhil.badola@freescale.com>
 Mime-Version: 1.0
 Content-Type: text/plain
 Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: balbi-l0cyMroinI0@public.gmane.org, Nikhil Badola <nikhil.badola-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Nikhil Badola <nikhil.badola-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Add snps,quirk-frame-length-adjustment property which provides value
-for post silicon frame length adjustment
+Add "snps,quirk-frame-length-adjustment" property to
+USB3 node for erratum A009116. This property provides
+value of GFLADJ_30MHZ for post silicon frame length
+adjustment.
 
 Signed-off-by: Nikhil Badola <nikhil.badola-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 ---
 Changes for v4: None
 
- Documentation/devicetree/bindings/usb/dwc3.txt | 3 +++
- 1 file changed, 3 insertions(+)
+ arch/arm/boot/dts/ls1021a.dtsi | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/Documentation/devicetree/bindings/usb/dwc3.txt b/Documentation/devicetree/bindings/usb/dwc3.txt
-index 0815eac..8c7d585 100644
---- a/Documentation/devicetree/bindings/usb/dwc3.txt
-+++ b/Documentation/devicetree/bindings/usb/dwc3.txt
-@@ -40,6 +40,9 @@ Optional properties:
-  - snps,hird-threshold: HIRD threshold
-  - snps,hsphy_interface: High-Speed PHY interface selection between "utmi" for
-    UTMI+ and "ulpi" for ULPI when the DWC_USB3_HSPHY_INTERFACE has value 3.
-+ - snps,quirk-frame-length-adjustment: Value for GFLADJ_30MHZ field of GFLADJ
-+	register for post-silicon frame length adjustment when the
-+	fladj_30mhz_sdbnd signal is invalid or incorrect.
- 
- This is usually a subnode to DWC3 glue to which it is connected.
- 
+diff --git a/arch/arm/boot/dts/ls1021a.dtsi b/arch/arm/boot/dts/ls1021a.dtsi
+index c70bb27..50ac0d4 100644
+--- a/arch/arm/boot/dts/ls1021a.dtsi
++++ b/arch/arm/boot/dts/ls1021a.dtsi
+@@ -404,6 +404,7 @@
+ 			reg = <0x0 0x3100000 0x0 0x10000>;
+ 			interrupts = <GIC_SPI 93 IRQ_TYPE_LEVEL_HIGH>;
+ 			dr_mode = "host";
++			snps,quirk-frame-length-adjustment = <0x20>;
+ 		};
+ 	};
+ };
 -- 
 2.1.0
 
