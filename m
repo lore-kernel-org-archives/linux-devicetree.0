@@ -1,70 +1,130 @@
-From: Tomeu Vizoso <tomeu.vizoso-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
-Subject: Re: [PATCH] ARM: ux500: fix typo in regulator names
-Date: Fri, 4 Sep 2015 14:15:36 +0200
-Message-ID: <CAAObsKBK-EFCxufr3C=bLRd6G=U9OUwigXYZ=roD8YG=jK7Aug@mail.gmail.com>
-References: <1438777340-27511-1-git-send-email-tomeu.vizoso@collabora.com> <CAPDyKFqRz1QyfWXzcDde0J9Fc7gTZWQOFGNzU=2cg1JnMyrL+g@mail.gmail.com>
+From: Shubhrajyoti Datta <shubhrajyoti.datta-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [[PATCH v2] 2/2] Altera Modular ADC driver support
+Date: Fri, 4 Sep 2015 17:51:21 +0530
+Message-ID: <CAKfKVtH1_wb2MLEgw0uf61tcoC7P2Uz6hC_GmP8vRakLnArB=A@mail.gmail.com>
+References: <1441144199-20231-1-git-send-email-cnphoon@altera.com>
+	<1441144199-20231-3-git-send-email-cnphoon@altera.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAPDyKFqRz1QyfWXzcDde0J9Fc7gTZWQOFGNzU=2cg1JnMyrL+g-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1441144199-20231-3-git-send-email-cnphoon-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Chee Nouk Phoo <cnphoon-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>
+Cc: linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Michael.Hennerich-OyLXuOCK7orQT0dZR+AlfA@public.gmane.org, cnphoon.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 4 September 2015 at 13:48, Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
-> On 5 August 2015 at 14:22, Tomeu Vizoso <tomeu.vizoso-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org> wrote:
->> Apparently an extra _reg suffix was appended to the end of the names of
->> regulators ab8500_ext2_reg and ab8500_ext3_reg.
->>
->> Signed-off-by: Tomeu Vizoso <tomeu.vizoso-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
+> +static int alt_modular_adc_probe(struct platform_device *pdev)
+> +{
+> +       struct altera_adc *adc;
+> +       struct device_node *np = pdev->dev.of_node;
+> +       struct iio_dev *indio_dev;
+> +       struct resource *mem;
+> +       int ret;
+> +
+> +       if (!np)
+> +               return -ENODEV;
+> +
+> +       indio_dev = iio_device_alloc(sizeof(struct altera_adc));
+> +       if (!indio_dev) {
+> +               dev_err(&pdev->dev, "failed allocating iio device\n");
+> +               return -ENOMEM;
+> +       }
+> +
+> +       adc = iio_priv(indio_dev);
+> +
+> +       mem = platform_get_resource_byname(pdev, IORESOURCE_MEM,
+> +               "sequencer_csr");
+> +       adc->seq_regs = devm_ioremap_resource(&pdev->dev, mem);
+> +       if (IS_ERR(adc->seq_regs)) {
+> +               ret = PTR_ERR(adc->seq_regs);
+> +               goto err_iio;
+> +       }
+> +
+> +       mem = platform_get_resource_byname(pdev, IORESOURCE_MEM,
+> +               "sample_store_csr");
+> +       adc->sample_regs = devm_ioremap_resource(&pdev->dev, mem);
+> +       if (IS_ERR(adc->sample_regs)) {
+> +               ret = PTR_ERR(adc->sample_regs);
+> +               goto err_iio;
+> +       }
+> +
+> +       ret = alt_modular_adc_parse_dt(indio_dev, &pdev->dev);
+> +       if (ret < 0) {
+> +               dev_err(&pdev->dev, "failed to parse device tree\n");
+> +               goto err_iio;
+> +       }
+> +
+> +       ret = alt_modular_adc_channel_init(indio_dev);
+> +       if (ret < 0) {
+> +               dev_err(&pdev->dev, "failed initialize ADC channels\n");
+> +               goto err_iio;
+> +       }
+> +
+> +       platform_set_drvdata(pdev, indio_dev);
+> +
+> +       indio_dev->name = dev_name(&pdev->dev);
+> +       indio_dev->dev.parent = &pdev->dev;
+> +       indio_dev->dev.of_node = pdev->dev.of_node;
+> +       indio_dev->info = &adc_iio_info;
+> +       indio_dev->modes = INDIO_DIRECT_MODE;
+> +       indio_dev->num_channels = adc->slot_count;
+> +
+> +       ret = iio_device_register(indio_dev);
+> +       if (ret)
+> +               goto err_iio;
+> +
+> +       /* Disable Interrupt */
+> +       writel_relaxed(0, (adc->sample_regs + ADC_IER_REG));
+
+Why disable interrupts?
+
+> +
+> +       /* Start Continuous Sampling */
+> +       writel_relaxed((ADC_RUN_MSK), (adc->seq_regs + ADC_CMD_REG));
+> +
+> +       return 0;
+> +
+> +
+> +err_iio:
+> +       iio_device_free(indio_dev);
+> +       return ret;
+> +}
+> +
+> +static int alt_modular_adc_remove(struct platform_device *pdev)
+> +{
+> +       struct iio_dev *indio_dev = platform_get_drvdata(pdev);
+> +       struct altera_adc *adc = iio_priv(indio_dev);
+> +
+> +       /* Stop ADC */
+> +       writel((ADC_STOP_MSK), (adc->seq_regs + ADC_CMD_REG));
+> +
+> +       /* Unregister ADC */
+> +       iio_device_unregister(indio_dev);
+> +
+> +       return 0;
+> +}
+> +
+> +static struct platform_driver altr_modular_adc_driver = {
+> +       .probe          = alt_modular_adc_probe,
+> +       .remove         = alt_modular_adc_remove,
+> +       .driver         = {
+> +               .name   = "alt-modular-adc",
+> +               .owner  = THIS_MODULE,
+> +               .of_match_table = alt_modular_adc_match,
+> +       },
+> +};
+> +
+> +
+> +module_platform_driver(altr_modular_adc_driver);
+> +
+> +MODULE_DESCRIPTION("Altera Modular ADC Driver");
+> +MODULE_AUTHOR("Chee Nouk Phoon <cnphoon-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>");
+> +MODULE_LICENSE("GPL v2");
+> --
+> 1.7.1
 >
-> You should probably include Linus Walleij as he is the maintainer of ux500.
-
-Thanks, maybe the file should be added to MAINTAINERS?
-
-Regards,
-
-Tomeu
-
-> Acked-by: Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
->
->> ---
->>  arch/arm/boot/dts/ste-snowball.dts | 4 ++--
->>  1 file changed, 2 insertions(+), 2 deletions(-)
->>
->> diff --git a/arch/arm/boot/dts/ste-snowball.dts b/arch/arm/boot/dts/ste-snowball.dts
->> index 32a5ccb14e7e..07c0e346942c 100644
->> --- a/arch/arm/boot/dts/ste-snowball.dts
->> +++ b/arch/arm/boot/dts/ste-snowball.dts
->> @@ -360,11 +360,11 @@
->>                                                 regulator-name = "ab8500-ext-supply1";
->>                                         };
->>
->> -                                       ab8500_ext2_reg_reg: ab8500_ext2 {
->> +                                       ab8500_ext2_reg: ab8500_ext2 {
->>                                                 regulator-name = "ab8500-ext-supply2";
->>                                         };
->>
->> -                                       ab8500_ext3_reg_reg: ab8500_ext3 {
->> +                                       ab8500_ext3_reg: ab8500_ext3 {
->>                                                 regulator-name = "ab8500-ext-supply3";
->>                                         };
->>                                 };
->> --
->> 2.4.3
->>
->> --
->> To unsubscribe from this list: send the line "unsubscribe linux-kernel" in
->> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
->> More majordomo info at  http://vger.kernel.org/majordomo-info.html
->> Please read the FAQ at  http://www.tux.org/lkml/
 > --
 > To unsubscribe from this list: send the line "unsubscribe linux-kernel" in
 > the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 > More majordomo info at  http://vger.kernel.org/majordomo-info.html
 > Please read the FAQ at  http://www.tux.org/lkml/
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
