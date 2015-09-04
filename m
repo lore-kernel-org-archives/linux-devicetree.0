@@ -1,96 +1,39 @@
-From: kernel@martin.sperl.org
-Subject: [PATCH v5 2/6] ARM: bcm2835: add DT for the bcm2835 auxiliar devices
-Date: Fri,  4 Sep 2015 09:41:46 +0000
-Message-ID: <1441359711-2800-3-git-send-email-kernel@martin.sperl.org>
-References: <1441359711-2800-1-git-send-email-kernel@martin.sperl.org>
+From: dawei chien <dawei.chien-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Subject: Re: thermal: mediatek: Add cpu power cooling model
+Date: Fri, 4 Sep 2015 18:00:37 +0800
+Message-ID: <1441360837.18285.6.camel@mtksdaap41>
+References: <1441357309-61669-1-git-send-email-dawei.chien@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1441359711-2800-1-git-send-email-kernel@martin.sperl.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Stephen Warren <swarren@wwwdotorg.org>, Lee Jones <lee@kernel.org>, Russell King <linux@arm.linux.org.uk>, Mark Brown <broonie@kernel.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org, linux-rpi-kernel@lists.infradead.org, linux-spi@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc: Martin Sperl <kernel@martin.sperl.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1441357309-61669-1-git-send-email-dawei.chien-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, "Rafael J. Wysocki" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Eddie Huang <eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Howard Chen <howard.chen-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Yingjoe Chen <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Martin Sperl <kernel@martin.sperl.org>
+Sorry, forgot to add Rafael and Viresh as reviewer.
 
-Add device tree definitions for auxiliar bcm2835 devices:
-* spi1
-* spi2
-* uart1
+On Fri, 2015-09-04 at 17:01 +0800, Dawei Chien wrote:
+> Use Intelligent Power Allocation (IPA) technical to add
+> static/dynamic power model for binding CPU thermal zone.
+> The power allocator governor allocates power budget to control
+> CPU temperature.
+> 
+> Dawei.Chien (2):
+>   thermal: mediatek: Add cpu power cooling model.
+>   arm64: dts: mt8173: Add thermal zone node for mt8173.
+> 
+>  arch/arm64/boot/dts/mediatek/mt8173.dtsi |   44 ++++++++++++++
+>  drivers/cpufreq/mt8173-cpufreq.c         |   97 ++++++++++++++++++++++++++----
+>  2 files changed, 130 insertions(+), 11 deletions(-)
+> 
+> --
+> 1.7.9.5
+> 
 
-This also include a device to get used by the relevant
-device-drivers (via a shared register) to enable/disable
-the HW-block.
 
-The aux-interrupt-register (0x7e21500) is intentionally left
-out of scope, so that in the future it is still possible to
-implement a separate interrupt-driver - if deemed necessary.
-
-The spi (and also uart) drivers are able to use shared interrupts,
-so there is no real need for an interrupt driver.
-
-Signed-off-by: Martin Sperl <kernel@martin.sperl.org>
----
- arch/arm/boot/dts/bcm2835.dtsi |   37 +++++++++++++++++++++++++++++++++++++
- 1 file changed, 37 insertions(+)
-
-diff --git a/arch/arm/boot/dts/bcm2835.dtsi b/arch/arm/boot/dts/bcm2835.dtsi
-index 301c73f..4e6fc61 100644
---- a/arch/arm/boot/dts/bcm2835.dtsi
-+++ b/arch/arm/boot/dts/bcm2835.dtsi
-@@ -158,6 +158,43 @@
- 		arm-pmu {
- 			compatible = "arm,arm1176-pmu";
- 		};
-+
-+		aux_enable: aux_enable@0x7e215004 {
-+			compatible = "brcm,bcm2835-aux";
-+			reg = <0x7e215004 0x04>;
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+		};
-+
-+		uart1: uart@7e215040 {
-+			compatible = "brcm,bcm2835-aux-uart";
-+			reg = <0x7e215040 0x40>;
-+			interrupts = <1 29>;
-+			brcm,aux-enable = <&aux_enable 1>;
-+			status = "disabled";
-+		};
-+
-+		spi1: spi@7e215080 {
-+			compatible = "brcm,bcm2835-aux-spi";
-+			reg = <0x7e215080 0x40>;
-+			brcm,aux-enable = <&aux_enable 2>;
-+			interrupts = <1 29>;
-+			clocks = <&clk_spi>;
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			status = "disabled";
-+		};
-+
-+		spi2: spi@7e2150c0 {
-+			compatible = "brcm,bcm2835-aux-spi";
-+			reg = <0x7e2150c0 0x40>;
-+			brcm,aux-enable = <&aux_enable 4>;
-+			interrupts = <1 29>;
-+			clocks = <&clk_spi>;
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			status = "disabled";
-+		};
- 	};
-
- 	clocks {
 --
-1.7.10.4
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
