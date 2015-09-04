@@ -1,74 +1,142 @@
-From: Murali Karicheri <m-karicheri2@ti.com>
-Subject: [PATCH v1 1/2] soc: ti: display firmware file name as part of boot log
-Date: Fri, 4 Sep 2015 17:46:38 -0400
-Message-ID: <1441403199-10936-1-git-send-email-m-karicheri2@ti.com>
+From: David Daney <ddaney-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH 2/3] Docs: dt: Add PCI MSI map bindings
+Date: Fri, 4 Sep 2015 15:33:35 -0700
+Message-ID: <55EA1C3F.1030300@caviumnetworks.com>
+References: <1437670365-20704-1-git-send-email-mark.rutland@arm.com>
+	<1437670365-20704-3-git-send-email-mark.rutland@arm.com>
+	<55B5E8C1.4030707@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk, ssantosh@kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+In-Reply-To: <55B5E8C1.4030707-5wv7dgnIgG8@public.gmane.org>
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "tirumalesh.chalamarla-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org" <tirumalesh.chalamarla-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>, "Richter, Robert" <Robert.Richter-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>, "Chintakuntla, Radha" <Radha.Chintakuntla-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>
+Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Lorenzo Pieralisi <Lorenzo.Pieralisi-5wv7dgnIgG8@public.gmane.org>, "arnd-r2nGTMty4D4@public.gmane.org" <arnd-r2nGTMty4D4@public.gmane.org>, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org" <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, "laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org" <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, "thunder.leizhen-hv44wF8Li93QT0dZR+AlfA@public.gmane.org" <thunder.leizhen-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, "treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org" <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "majun258-hv44wF8Li93QT0dZR+AlfA@public.gmane.org" <majun258-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-To help the user, print the PDSP file name as part of
-knav_queue_load_pdsp(). This will be useful for users to know what
-version of the firmware is loaded to PDSP. Also update the
-document for the location of the QMSS accumulator PDSP firmware.
+Hi Mark,
 
-Signed-off-by: Murali Karicheri <m-karicheri2@ti.com>
----
- v1 : fixed firmware file names in documentation
- .../bindings/soc/ti/keystone-navigator-qmss.txt      | 20 +++++++++++++++++++-
- drivers/soc/ti/knav_qmss_queue.c                     |  3 +++
- 2 files changed, 22 insertions(+), 1 deletion(-)
+First of all:  Thanks for working on this.
 
-diff --git a/Documentation/devicetree/bindings/soc/ti/keystone-navigator-qmss.txt b/Documentation/devicetree/bindings/soc/ti/keystone-navigator-qmss.txt
-index d8e8cdb..ca0a1a7 100644
---- a/Documentation/devicetree/bindings/soc/ti/keystone-navigator-qmss.txt
-+++ b/Documentation/devicetree/bindings/soc/ti/keystone-navigator-qmss.txt
-@@ -221,7 +221,7 @@ qmss: qmss@2a40000 {
- 		#size-cells = <1>;
- 		ranges;
- 		pdsp0@0x2a10000 {
--			firmware = "keystone/qmss_pdsp_acc48_k2_le_1_0_0_8.fw";
-+			firmware = "k2_qmss_pdsp_acc48_k2_le_1_0_0_9.bin";
- 			reg = <0x2a10000 0x1000>,
- 			      <0x2a0f000 0x100>,
- 			      <0x2a0c000 0x3c8>,
-@@ -230,3 +230,21 @@ qmss: qmss@2a40000 {
- 		};
- 	};
- }; /* qmss */
-+
-+Accumulator QMSS Channel using PDSP firmware
-+============================================
-+The QMSS PDSP firmware support accumulator channel that can monitor a single
-+queue or multiple contiguous queues. drivers/soc/ti/knav_qmss_acc.c is the
-+driver that interface with the accumulator PDSP. This configures
-+accumulator channels defined in DTS (example above) to monitor 1 or 32 queues
-+per channel. More description on the firmware is available in CPPI/QMSS Low
-+Level Driver document (docs/CPPI_QMSS_LLD_SDS.pdf) at
-+	git://git.ti.com/keystone-rtos/qmss-lld.git
-+
-+k2_qmss_pdsp_acc48_k2_le_1_0_0_9.bin firmware supports upto 48 accumulator
-+channels. This firmware is available under firmware folder of the above repo
-+under the name acc48_le.bin. To use copy the firmware image to lib/firmware
-+folder of the initramfs or ubifs file system as
-+k2_qmss_pdsp_acc48_k2_le_1_0_0_9.bin and boot up the kernel. User would see
-+"firmware file ks2_qmss_pdsp_acc48_k2_le_1_0_0_9.bin downloaded for PDSP" in
-+the boot up log if loading of firmware to PDSP is successful.
-diff --git a/drivers/soc/ti/knav_qmss_queue.c b/drivers/soc/ti/knav_qmss_queue.c
-index 6d8646d..f26ce99 100644
---- a/drivers/soc/ti/knav_qmss_queue.c
-+++ b/drivers/soc/ti/knav_qmss_queue.c
-@@ -1526,6 +1526,9 @@ static int knav_queue_load_pdsp(struct knav_device *kdev,
- 			pdsp->firmware, pdsp->name);
- 		return ret;
- 	}
-+	dev_info(kdev->dev, "firmware file %s downloaded for PDSP\n",
-+		 pdsp->firmware);
-+
- 	writel_relaxed(pdsp->id + 1, pdsp->command + 0x18);
- 	/* download the firmware */
- 	fwdata = (u32 *)fw->data;
--- 
-1.9.1
+I now have a prototype implementation for irq-gic-v3-its.c that is using 
+this binding on Cavium's ThunderX platform.
+
+Q: Have you guys had any more thoughts on this that might require 
+changing the binding?
+
+If not, I will be sending out my patches for your consideration.
+
+Thanks,
+David Daney
+
+On 07/27/2015 01:16 AM, Marc Zyngier wrote:
+> On 23/07/15 17:52, Mark Rutland wrote:
+>> Currently msi-parent is used by a few bindings to describe the
+>> relationship between a PCI root complex and a single MSI controller, but
+>> this property does not have a generic binding document.
+>>
+>> Additionally, msi-parent is insufficient to describe more complex
+>> relationships between MSI controllers and devices under a root complex,
+>> where devices may be able to target multiple MSI controllers, or where
+>> MSI controllers use (non-probeable) sideband information to distinguish
+>> devices.
+>>
+>> This patch adds a generic binding for mapping PCI devices to MSI
+>> controllers. This document covers msi-parent, and a new msi-map property
+>> (specific to PCI*) which may be used to map devices (identified by their
+>> Requester ID) to sideband data for each MSI controller that they may
+>> target.
+>>
+>> Signed-off-by: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+
+Acked-by: David Daney <david.daney-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
+
+
+>> ---
+>>   Documentation/devicetree/bindings/pci/pci-msi.txt | 220 ++++++++++++++++++++++
+>>   1 file changed, 220 insertions(+)
+>>   create mode 100644 Documentation/devicetree/bindings/pci/pci-msi.txt
+>>
+>> diff --git a/Documentation/devicetree/bindings/pci/pci-msi.txt b/Documentation/devicetree/bindings/pci/pci-msi.txt
+>> new file mode 100644
+>> index 0000000..9b3cc81
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/pci/pci-msi.txt
+>> @@ -0,0 +1,220 @@
+>> +This document describes the generic device tree binding for describing the
+>> +relationship between PCI devices and MSI controllers.
+>> +
+>> +Each PCI device under a root complex is uniquely identified by its Requester ID
+>> +(AKA RID). A Requester ID is a triplet of a Bus number, Device number, and
+>> +Function number.
+>> +
+>> +For the purpose of this document, when treated as a numeric value, a RID is
+>> +formatted such that:
+>> +
+>> +* Bits [15:8] are the Bus number.
+>> +* Bits [7:3] are the Device number.
+>> +* Bits [2:0] are the Function number.
+>> +* Any other bits required for padding must be zero.
+>> +
+>> +MSIs may be distinguished in part through the use of sideband data accompanying
+>> +writes. In the case of PCI devices, this sideband data may be derived from the
+>> +Requester ID. A mechanism is required to associate a device with both the MSI
+>> +controllers it can address, and the sideband data that will be associated with
+>> +its writes to those controllers.
+>> +
+>> +For generic MSI bindings, see
+>> +Documentation/devicetree/bindings/interrupt-controller/msi.txt.
+>> +
+>> +
+>> +PCI root complex
+>> +================
+>> +
+>> +Optional properties
+>> +-------------------
+>> +
+>> +- msi-map: Maps a Requester ID to an MSI controller and associated
+>> +  msi-specifier data. The property is an arbitrary number of tuples of
+>> +  (rid-base,msi-controller,msi-base,length), where:
+>> +
+>> +  * rid-base is a single cell describing the first RID matched by the entry.
+>> +
+>> +  * msi-controller is a single phandle to an MSI controller
+>> +
+>> +  * msi-base is an msi-specifier describing the msi-specifier produced for the
+>> +    first RID matched by the entry.
+>> +
+>> +  * length is a single cell describing how many consecutive RIDs are matched
+>> +    following the rid-base.
+>> +
+>> +  Any RID r in the interval [rid-base, rid-base + length) is associated with
+>> +  the listed msi-controller, with the msi-specifier (r - rid-base + msi-base).
+>> +
+>> +- msi-map-mask: A mask to be applied to each Requester ID prior to being mapped
+>> +  to an msi-specifier per the msi-map property.
+>> +
+>> +- msi-parent: Describes the MSI parent of the root complex itself. Where
+>> +  the root complex and MSI controller do not pass sideband data with MSI
+>> +  writes, this property may be used to describe the MSI controller(s)
+>> +  used by PCI devices under the root complex, if defined as such in the
+>> +  binding for the root complex.
+>
+> Right, this is where I'd expect some details about #msi-cells. Is it
+> meant to be ignored? The lack of symmetry between the PCI and non-PCI
+> use cases feels a bit inelegant (not to mention that it precludes having
+> an unified parser for both cases).
+>
+> This otherwise looks good to me.
+>
+> Thanks,
+>
+> 	M.
+>
