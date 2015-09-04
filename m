@@ -1,65 +1,34 @@
-From: Marc Zyngier <marc.zyngier@arm.com>
-Subject: [PATCH v4 3/4] powerpc: PCI: Fix lookup of linux,pci-probe-only property
-Date: Fri,  4 Sep 2015 17:50:10 +0100
-Message-ID: <1441385411-7624-4-git-send-email-marc.zyngier@arm.com>
-References: <1441385411-7624-1-git-send-email-marc.zyngier@arm.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1441385411-7624-1-git-send-email-marc.zyngier@arm.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Benjamin Herrenschmidt <benh@kernel.crashing.org>, Paul Mackerras <paulus@samba.org>, Michael Ellerman <mpe@ellerman.id.au>, Will Deacon <will.deacon@arm.com>, Bjorn Helgaas <bhelgaas@google.com>, Suravee Suthikulpanit <Suravee.Suthikulpanit@amd.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>
-Cc: Alexander Graf <agraf@suse.de>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linuxppc-dev@lists.ozlabs.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org
+From: Li Yang <leoli@freescale.com>
+Subject: Re: [PATCH v2 03/10] Documentation/dts: Add bindings for QIXIS FPGA
+ controller found on FSL boards
+Date: Fri, 4 Sep 2015 11:56:54 -0500
+Message-ID: <CADRPPNR11BD4WfXTWoQ28rZCd_BJuhdWu49E6jjpO29CH2s5Ow@mail.gmail.com>
+References: <1441349872-4560-1-git-send-email-bhupesh.sharma@freescale.com>
+	<1441349872-4560-4-git-send-email-bhupesh.sharma@freescale.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <1441349872-4560-4-git-send-email-bhupesh.sharma@freescale.com>
+Sender: linux-clk-owner@vger.kernel.org
+To: Bhupesh Sharma <bhupesh.sharma@freescale.com>
+Cc: Arnd Bergmann <arnd@arndb.de>, Mark Rutland <mark.rutland@arm.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, marc.zyngier@arm.com, linux-clk@vger.kernel.org, Catalin.Marinas@arm.com, will.deacon@arm.com, olof@lixom.net, bhupesh.linux@gmail.com, Jaiprakash Singh <b44839@freescale.com>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-When find_and_init_phbs() looks for the probe-only property, it seems
-to trust the firmware to be correctly written, and assumes that there
-is a parameter to the property.
+On Fri, Sep 4, 2015 at 1:57 AM, Bhupesh Sharma
+<bhupesh.sharma@freescale.com> wrote:
+> This patch adds bindings for QIXIS FPGA controller found on FSL boards.
 
-It is conceivable that the firmware could not be that perfect, and it
-could expose this property naked (at least one arm64 platform seems to
-exhibit this exact behaviour). The setup code the ends up making
-a decision based on whatever the property pointer points to, which
-is likely to be junk.
+A general comment: when you are updating the device tree bindings.
+You should cc the devicetree@vger.kernel.org mailing list.
 
-Instead, switch to the common of_pci.c implementation that doesn't
-suffer from this problem and ignore the property if the firmware
-couldn't make up its mind.
+>
+> Some Freescale boards like LS2080AQDS/LS2080ARDB have an on-board FPGA/CPLD
+> connected to the IFC controller. The bindings specified in this patch
+> cater to those on-board FPGA/CPLD controllers.
 
-Signed-off-by: Marc Zyngier <marc.zyngier@arm.com>
----
- arch/powerpc/platforms/pseries/setup.c | 14 ++------------
- 1 file changed, 2 insertions(+), 12 deletions(-)
+We already have the binding defined in
+Documentation/devicetree/bindings/powerpc/fsl/board.txt.  We probably
+should just move it to a more generic location.
 
-diff --git a/arch/powerpc/platforms/pseries/setup.c b/arch/powerpc/platforms/pseries/setup.c
-index 39a74fa..6016709 100644
---- a/arch/powerpc/platforms/pseries/setup.c
-+++ b/arch/powerpc/platforms/pseries/setup.c
-@@ -40,6 +40,7 @@
- #include <linux/seq_file.h>
- #include <linux/root_dev.h>
- #include <linux/of.h>
-+#include <linux/of_pci.h>
- #include <linux/kexec.h>
- 
- #include <asm/mmu.h>
-@@ -495,18 +496,7 @@ static void __init find_and_init_phbs(void)
- 	 * PCI_PROBE_ONLY and PCI_REASSIGN_ALL_BUS can be set via properties
- 	 * in chosen.
- 	 */
--	if (of_chosen) {
--		const int *prop;
--
--		prop = of_get_property(of_chosen,
--				"linux,pci-probe-only", NULL);
--		if (prop) {
--			if (*prop)
--				pci_add_flags(PCI_PROBE_ONLY);
--			else
--				pci_clear_flags(PCI_PROBE_ONLY);
--		}
--	}
-+	of_pci_check_probe_only();
- }
- 
- static void __init pSeries_setup_arch(void)
--- 
-2.1.4
+Regards,
+Leo
