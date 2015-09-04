@@ -1,105 +1,110 @@
-From: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-Subject: Re: [PATCH 13/13] dt: power: bq24257-charger: Cover additional devices
-Date: Fri, 04 Sep 2015 08:50:57 +0900
-Message-ID: <55E8DCE1.5080000@samsung.com>
-References: <1441073435-12349-1-git-send-email-dannenberg@ti.com>
- <1441073435-12349-14-git-send-email-dannenberg@ti.com>
- <CAJKOXPeyMeUUon0E9Fhm18SHJEaQPEbGAWwU+MKwgt-30AXHiA@mail.gmail.com>
- <20150902140332.GA24076@borg> <55E7A2E8.2060306@samsung.com>
- <20150903014741.GA25605@borg> <55E7A8F8.7050300@samsung.com>
- <20150903160926.GA26659@borg>
+From: Stephen Boyd <sboyd@codeaurora.org>
+Subject: Re: [PATCH] spmi-pmic-arb: support configurable number of peripherals
+Date: Thu, 3 Sep 2015 17:16:30 -0700
+Message-ID: <20150904001630.GJ15099@codeaurora.org>
+References: <1441322451-30149-1-git-send-email-gavidov@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-reply-to: <20150903160926.GA26659@borg>
-Sender: linux-pm-owner@vger.kernel.org
-To: Andreas Dannenberg <dannenberg@ti.com>
-Cc: Sebastian Reichel <sre@kernel.org>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, David Woodhouse <dwmw2@infradead.org>, Laurentiu Palcu <laurentiu.palcu@intel.com>, linux-pm@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1441322451-30149-1-git-send-email-gavidov@codeaurora.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Gilad Avidov <gavidov@codeaurora.org>
+Cc: sdharia@codeaurora.org, mlocke@codeaurora.org, linux-arm-msm@vger.kernel.org, gregkh@linuxfoundation.org, svarbanov@mm-sol.com, wsa@the-dreams.de, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, iivanov@mm-sol.com, agross@codeaurora.org
 List-Id: devicetree@vger.kernel.org
 
-On 04.09.2015 01:09, Andreas Dannenberg wrote:
-> On Thu, Sep 03, 2015 at 10:57:12AM +0900, Krzysztof Kozlowski wrote:
->> On 03.09.2015 10:47, Andreas Dannenberg wrote:
->>> On Thu, Sep 03, 2015 at 10:31:20AM +0900, Krzysztof Kozlowski wrote:
->>>> I still don't get why you need extra "ti,pg-gpio-disable" property. It
->>>> could work like this:
->>>> 1. Get rid of "ti,pg-gpio-disable" and make "pg-gpio" optional.
->>>> 2. If it is present, use it.
->>>> 3. If it is not present, use software based approach (the same as
->>>> setting "ti,pg-gpio-disable" previously).
->>>>
->>>> Would that work?
->>>
->>> Similar to the earlier comment - the idea was to have it more explicit.
->>> Plus, the original driver would hard-fail when the "pg-gpio" pin is not
->>> provided (since it was essential for that driver's ability to function).
->>> If I change to automatically fallback to the SW solution such an error
->>> case would in theory not be 100% backward compatible. I could however
->>> more clearly indicate/log which method is being used (dev_info) so
->>> somebody rummaging through the logs would still see it. Will simplify.
->>
->> Right, the kernel's backward compatibility has to be preserved. However
->> for bindings I am not sure.
-> 
-> Hi Krzysztof. Please see pages 3-5 in the below PDF, that's what I had
-> in mind. Maybe I mis-interpreted it or there is newer information.
-> http://events.linuxfoundation.org/sites/events/files/slides/petazzoni-dt-as-stable-abi-fairy-tale.pdf
-
-I think our case is not covered there. I am talking about backward
-compatibility of DTB with older kernels, not about backward
-compatibility of kernel.
-
-AFAIR this is not a requirement so you can change the behaviour of DTB
-(backward compatibility of kernel is fully preserved).
-
-> 
-> With the proposed changes, while the existing bindings (strings) would
-> stay the same, the failure behavior in one specific use case would be
-> slightly different. The question is, where should we draw the line for
-> compatibility? I would argue in this case the general usage is not
-> affected so it should be OK making the change/simplification you propose
-> (getting rid of "ti,pg-gpio-disable"). 
-
-If we don't care about using newer DTB with older kernel then there is
-no compatibility line to draw. You can safely change the behaviour.
-
+On 09/03, Gilad Avidov wrote:
+> +			 supported by HW. Default (minimum supported) is 128.
+> +
+> +Example V1 PMIC-Arbiter:
 >  
->> Let's assume booting on device with bq24257.
->> 1. Old kernel booted with a DTB which doesn't have "pg-gpio" would print
->> error (probe would fail).
->> 2. New kernel booted in the same situation (1) would assume GPIOs have
->> to be disabled.
->>
->> 3. Old kernel booted with your previous solution (DTB containing both
->> "pg-gpio" and "ti,pg-gpio-disable") would work fine ignoring the
->> "disable" property.
->> 4. New kernel in the same situation (3) would disable GPIOs.
->>
->> There is a difference between (1) and (3). New DTB is not backward
->> compatible with old kernels for existing bq24257 devices.
->>
->> Am I understanding this correctly?
-> 
-> Well almost. I think the difference between case 1 and 3 isn't really an
-> issue from a use case point of view. The case I was trying to describe
-> is as follows (let's call it case 5):
-> 
-> 5. An old DTB not containing "pg-gpio" (or with that property being
-> misconfigured) is booted with the new Kernel. The boot will succeed as
-> the SW approach for PG detection gets invoked automatically.
-> 
-> The difference now is between (1) and (5). If in (5) somebody specifies
-> "pg-gpio" they would want to explicitly use this pin and be notified if
-> the respective setup fails. My proposal earlier for this was to output
-> through dev_info() during driver probe whether an actual GPIO pin is
-> being used for power-good detection or whether the fall-back SW
-> algorithm has been invoked. This way, at least there is a notification.
+>  	spmi {
+>  		compatible = "qcom,spmi-pmic-arb";
+> @@ -62,4 +66,32 @@ Example:
+>  
+>  		interrupt-controller;
+>  		#interrupt-cells = <4>;
+> +
+> +		qcom,max-peripherals = <256>;
 
-I think I understand. IMHO if pg-gpio is specified and it fails (like
-GPIO is invalid) the kernel should not switch to SW mode. This should be
-all-or-nothing and described in a specific way: iff pg-gpio is missing
-then SW mode would be used because that was the intention of developer.
+If it's v1 isn't it always 128? So having 256 here is just
+confusing.
 
-Best regards,
-Krzysztof
+> +	};
+> +
+> @@ -129,14 +131,15 @@ struct spmi_pmic_arb_dev {
+>  	u8			channel;
+>  	int			irq;
+>  	u8			ee;
+> -	u8			min_apid;
+> -	u8			max_apid;
+> -	u32			mapping_table[SPMI_MAPPING_TABLE_LEN];
+> +	u16			min_irq_apid;
+> +	u16			max_irq_apid;
+> +	u16			max_apid;
+> +	u32			*mapping_table;
+>  	struct irq_domain	*domain;
+>  	struct spmi_controller	*spmic;
+> -	u16			apid_to_ppid[256];
+> +	u16			*irq_apid_to_ppid;
+
+Please drop all this renaming noise, or at the least, put it in a
+different patch. More than half the patch is just changing the
+names of these variables for what seems like no reason.
+
+>  	const struct pmic_arb_ver_ops *ver_ops;
+> -	u8			*ppid_to_chan;
+> +	u16			*ppid_to_chan;
+>  };
+>  
+>  	struct spmi_pmic_arb_dev *pa = irq_get_handler_data(irq);
+>  	struct irq_chip *chip = irq_get_chip(irq);
+>  	void __iomem *intr = pa->intr;
+> -	int first = pa->min_apid >> 5;
+> -	int last = pa->max_apid >> 5;
+> +	int first = pa->min_irq_apid >> 5;
+> +	int last = pa->max_irq_apid >> 5;
+>  	u32 status;
+>  	int i, id;
+>  
+> @@ -903,14 +915,30 @@ static int spmi_pmic_arb_probe(struct platform_device *pdev)
+>  
+>  	pa->ee = ee;
+>  
+> -	for (i = 0; i < ARRAY_SIZE(pa->mapping_table); ++i)
+> -		pa->mapping_table[i] = readl_relaxed(
+> -				pa->cnfg + SPMI_MAPPING_TABLE_REG(i));
+> +	pa->irq_apid_to_ppid = devm_kzalloc(&ctrl->dev, pa->max_apid *
+> +					    sizeof(*pa->irq_apid_to_ppid),
+> +					    GFP_KERNEL);
+> +	if (!pa->irq_apid_to_ppid) {
+> +		err = -ENOMEM;
+> +		goto err_put_ctrl;
+> +	}
+> +
+> +	pa->mapping_table = devm_kzalloc(&ctrl->dev,
+> +					(pa->max_apid - 1) * sizeof(u32),
+> +					GFP_KERNEL);
+> +	if (!pa->mapping_table) {
+> +		err = -ENOMEM;
+> +		goto err_put_ctrl;
+> +	}
+> +
+> +	for (i = 0; i < (pa->max_apid - 1); ++i)
+> +		pa->mapping_table[i] = readl_relaxed(pa->cnfg +
+> +						  SPMI_MAPPING_TABLE_REG(i));
+
+Maybe we should stop doing this during probe and always allocate
+an empty cache of size 128 on v1 and 512 on v2 chips? So when
+we're searching through the mapping table we can cache the value
+from the register if the entry isn't 0. This delays the
+processing to when we're mapping irqs, hopefully speeding up
+probe for the case where you have a handful of irqs to map.
+
+The DT property wouldn't be necessary then. Arguably it's being
+added there to optimize the size of the mapping table and isn't
+really necessary otherwise.
+
+-- 
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project
