@@ -1,141 +1,43 @@
-From: Alexey Klimov <klimov.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v12 1/5] mtd: nand: vf610_nfc: Freescale NFC for VF610,
- MPC5125 and others
-Date: Fri, 4 Sep 2015 07:10:10 +0300
-Message-ID: <CALW4P+LDwFnCjOorh7iCr8TrUnync7a_zkdZ4Hp_91=60AtUQw@mail.gmail.com>
-References: <1441242397-870-1-git-send-email-stefan@agner.ch>
-	<1441242397-870-2-git-send-email-stefan@agner.ch>
+From: Nikhil Badola <nikhil.badola-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: [PATCH 1/3][v4] Documentation: dt: dwc3: Add snps,quirk-frame-length-adjustment property
+Date: Fri, 4 Sep 2015 10:14:54 +0530
+Message-ID: <1441341894-17327-1-git-send-email-nikhil.badola@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1441242397-870-2-git-send-email-stefan-XLVq0VzYD2Y@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
-Cc: David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, sebastian-E0PNVn5OA6ohrxcnuTQ+TQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, marb-Z4QKGCRq86k@public.gmane.org, aaron-yuhzfaV+M/Wz3Dx2OeFgIA@public.gmane.org, Bill Pringlemeir <bpringlemeir-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, albert.aribaud-iEu9NFBzPZE@public.gmane.org, Bill Pringlemeir <bpringlemeir-ygJ1pmMJ17cAvxtiuMwx3w@public.gmane.org>
+Content-Type: text/plain
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: balbi-l0cyMroinI0@public.gmane.org, Nikhil Badola <nikhil.badola-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Stefan,
+Add snps,quirk-frame-length-adjustment property which provides value
+for post silicon frame length adjustment
 
-just few very small comments.
+Signed-off-by: Nikhil Badola <nikhil.badola-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+---
+Changes for v4: None
 
-On Thu, Sep 3, 2015 at 4:06 AM, Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org> wrote:
+ Documentation/devicetree/bindings/usb/dwc3.txt | 3 +++
+ 1 file changed, 3 insertions(+)
 
-[..]
+diff --git a/Documentation/devicetree/bindings/usb/dwc3.txt b/Documentation/devicetree/bindings/usb/dwc3.txt
+index 0815eac..8c7d585 100644
+--- a/Documentation/devicetree/bindings/usb/dwc3.txt
++++ b/Documentation/devicetree/bindings/usb/dwc3.txt
+@@ -40,6 +40,9 @@ Optional properties:
+  - snps,hird-threshold: HIRD threshold
+  - snps,hsphy_interface: High-Speed PHY interface selection between "utmi" for
+    UTMI+ and "ulpi" for ULPI when the DWC_USB3_HSPHY_INTERFACE has value 3.
++ - snps,quirk-frame-length-adjustment: Value for GFLADJ_30MHZ field of GFLADJ
++	register for post-silicon frame length adjustment when the
++	fladj_30mhz_sdbnd signal is invalid or incorrect.
+ 
+ This is usually a subnode to DWC3 glue to which it is connected.
+ 
+-- 
+2.1.0
 
-> --- /dev/null
-> +++ b/drivers/mtd/nand/vf610_nfc.c
-
-[..]
-
-> +static inline u32 vf610_nfc_read(struct vf610_nfc *nfc, uint reg)
-> +{
-> +       return readl(nfc->regs + reg);
-> +}
-> +
-> +static inline void vf610_nfc_write(struct vf610_nfc *nfc, uint reg, u32 val)
-> +{
-> +       writel(val, nfc->regs + reg);
-> +}
-> +
-> +static inline void vf610_nfc_set(struct vf610_nfc *nfc, uint reg, u32 bits)
-> +{
-> +       vf610_nfc_write(nfc, reg, vf610_nfc_read(nfc, reg) | bits);
-> +}
-> +
-> +static inline void vf610_nfc_clear(struct vf610_nfc *nfc, uint reg, u32 bits)
-> +{
-> +       vf610_nfc_write(nfc, reg, vf610_nfc_read(nfc, reg) & ~bits);
-> +}
-> +
-> +static inline void vf610_nfc_set_field(struct vf610_nfc *nfc, u32 reg,
-> +                                      u32 mask, u32 shift, u32 val)
-> +{
-> +       vf610_nfc_write(nfc, reg,
-> +                       (vf610_nfc_read(nfc, reg) & (~mask)) | val << shift);
-> +}
-> +
-> +static inline void vf610_nfc_memcpy(void *dst, const void __iomem *src,
-> +                                   size_t n)
-> +{
-> +       /*
-> +        * Use this accessor for the internal SRAM buffers. On the ARM
-> +        * Freescale Vybrid SoC it's known that the driver can treat
-> +        * the SRAM buffer as if it's memory. Other platform might need
-> +        * to treat the buffers differently.
-> +        *
-> +        * For the time being, use memcpy
-> +        */
-> +       memcpy(dst, src, n);
-> +}
-> +
-> +/* Clear flags for upcoming command */
-> +static inline void vf610_nfc_clear_status(struct vf610_nfc *nfc)
-> +{
-> +       u32 tmp = vf610_nfc_read(nfc, NFC_IRQ_STATUS);
-> +
-> +       tmp |= CMD_DONE_CLEAR_BIT | IDLE_CLEAR_BIT;
-> +       vf610_nfc_write(nfc, NFC_IRQ_STATUS, tmp);
-> +}
-
-There is general intention on maillists that I see sometimes is to
-make people get rid of
-'inline' for static functions in *.c files and let compiler decide how
-to optimize that.
-
-
-> +static int vf610_nfc_probe(struct platform_device *pdev)
-> +{
-> +       struct vf610_nfc *nfc;
-> +       struct resource *res;
-> +       struct mtd_info *mtd;
-> +       struct nand_chip *chip;
-> +       struct device_node *child;
-> +       const struct of_device_id *of_id;
-> +       int err = 0;
-
-According to usage you don't need to initialize err to zero here.
-
-> +       int irq;
-> +
-> +       nfc = devm_kzalloc(&pdev->dev, sizeof(*nfc), GFP_KERNEL);
-> +       if (!nfc)
-> +               return -ENOMEM;
-> +
-> +       nfc->dev = &pdev->dev;
-> +       mtd = &nfc->mtd;
-> +       chip = &nfc->chip;
-> +
-> +       mtd->priv = chip;
-> +       mtd->owner = THIS_MODULE;
-> +       mtd->dev.parent = nfc->dev;
-> +       mtd->name = DRV_NAME;
-> +
-> +       irq = platform_get_irq(pdev, 0);
-> +       if (irq <= 0)
-> +               return -EINVAL;
-> +
-> +       res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> +       nfc->regs = devm_ioremap_resource(nfc->dev, res);
-> +       if (IS_ERR(nfc->regs))
-> +               return PTR_ERR(nfc->regs);
-> +
-> +       nfc->clk = devm_clk_get(&pdev->dev, NULL);
-> +       if (IS_ERR(nfc->clk))
-> +               return PTR_ERR(nfc->clk);
-> +
-> +       err = clk_prepare_enable(nfc->clk);
-> +       if (err) {
-> +               dev_err(nfc->dev, "Unable to enable clock!\n");
-> +               return err;
-> +       }
-
-After fixing that feel free to use:
-
-Reviewed-by: Alexey Klimov <klimov.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-
-Thanks,
-Alexey Klimov
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
