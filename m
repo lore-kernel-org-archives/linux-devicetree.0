@@ -1,168 +1,199 @@
-From: Warner Losh <imp-uzTCJ5RojNnQT0dZR+AlfA@public.gmane.org>
-Subject: Re: st_fdma: Firmware filename in DT?
-Date: Fri, 4 Sep 2015 08:36:44 -0600
-Message-ID: <E3D6542F-E788-4936-A3B1-E17549205B9E@bsdimp.com>
-References: <20150903144944.GC7093@griffinp-ThinkPad-X1-Carbon-2nd> <20150904092005.GA2990@griffinp-ThinkPad-X1-Carbon-2nd> <20150904102130.GA4796@x1> <201509041504.38412.arnd@arndb.de> <20150904132617.GB4796@x1> <CAL_Jsq+XpBV+BMMq1gYnvKtv6O5mjqVw6zsP4G-4Za3cQm9PzQ@mail.gmail.com> <20150904135407.GC4796@x1>
-Mime-Version: 1.0 (Mac OS X Mail 8.2 \(2104\))
-Content-Type: multipart/signed; boundary="Apple-Mail=_2AD83DE0-7D5A-4868-BBBB-0F8B38722614"; protocol="application/pgp-signature"; micalg=pgp-sha512
-Return-path: <devicetree-spec-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20150904135407.GC4796@x1>
-Sender: devicetree-spec-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Peter Griffin <peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Maxime Coquelin <maxime.coquelin-qxv4g6HH51o@public.gmane.org>, Patrice Chotard <patrice.chotard-qxv4g6HH51o@public.gmane.org>, Ludovic Barre <ludovic.barre-qxv4g6HH51o@public.gmane.org>, "devicetree-spec-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-spec-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH v2 5/7] staging: board: Add support for devices with
+ complex dependencies
+Date: Fri, 4 Sep 2015 17:03:02 +0200 (CEST)
+Message-ID: <alpine.DEB.2.10.1509041616140.8359@ayla.of.borg>
+References: <1434530336-15073-1-git-send-email-geert+renesas@glider.be> <1434530336-15073-6-git-send-email-geert+renesas@glider.be> <CAPDyKFqouMeTKuXyyohH-VDmWXH+TiLNDT-7MKFa_-TqeF2WSw@mail.gmail.com> <CAMuHMdUiH+WZnPtnM-HNs-SpZ8ZxULiKeAiTC1ONTJoP3YMXKg@mail.gmail.com>
+ <CAPDyKFriANthZbDcAQT8WXM2Z857p9+-UZB+woss04ZwM-97ZA@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: TEXT/PLAIN; charset=US-ASCII
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <CAPDyKFriANthZbDcAQT8WXM2Z857p9+-UZB+woss04ZwM-97ZA@mail.gmail.com>
+Sender: linux-sh-owner@vger.kernel.org
+To: Ulf Hansson <ulf.hansson@linaro.org>
+Cc: Geert Uytterhoeven <geert+renesas@glider.be>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Simon Horman <horms+renesas@verge.net.au>, Magnus Damm <damm+renesas@opensource.se>, Arnd Bergmann <arnd@arndb.de>, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>, Marc Zyngier <marc.zyngier@arm.com>, driverdevel <devel@driverdev.osuosl.org>, Linux-sh list <linux-sh@vger.kernel.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
+	Hi Ulf,
 
---Apple-Mail=_2AD83DE0-7D5A-4868-BBBB-0F8B38722614
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain;
-	charset=utf-8
+On Fri, 4 Sep 2015, Ulf Hansson wrote:
+> On 3 September 2015 at 15:35, Geert Uytterhoeven <geert@linux-m68k.org> wrote:
+> > On Thu, Sep 3, 2015 at 2:53 PM, Ulf Hansson <ulf.hansson@linaro.org> wrote:
+> >> On 17 June 2015 at 10:38, Geert Uytterhoeven <geert+renesas@glider.be> wrote:
+> >>> Add support for easy registering of one ore more platform devices that
+> >>> may:
+> >>>   - need clocks that are described in DT,
+> >>>   - be part of a PM Domain.
+> >
+> >>> diff --git a/drivers/staging/board/board.c b/drivers/staging/board/board.c
+> >>> index 8712f566b31196e0..29d456e29f38feac 100644
+> >>> --- a/drivers/staging/board/board.c
+> >>> +++ b/drivers/staging/board/board.c
+> >
+> >>> +int __init board_staging_register_device(const struct board_staging_dev *dev)
+> >>> +{
+> >>> +       struct platform_device *pdev = dev->pdev;
+> >>> +       unsigned int i;
+> >>> +       int error;
+> >>> +
+> >>> +       pr_debug("Trying to register device %s\n", pdev->name);
+> >>> +       if (board_staging_dt_node_available(pdev->resource,
+> >>> +                                           pdev->num_resources)) {
+> >>> +               pr_warn("Skipping %s, already in DT\n", pdev->name);
+> >>> +               return -EEXIST;
+> >>> +       }
+> >>> +
+> >>> +       board_staging_gic_fixup_resources(pdev->resource, pdev->num_resources);
+> >>> +
+> >>> +       for (i = 0; i < dev->nclocks; i++)
+> >>> +               board_staging_register_clock(&dev->clocks[i]);
+> >>> +
+> >>> +       error = platform_device_register(pdev);
+> >>> +       if (error) {
+> >>> +               pr_err("Failed to register device %s (%d)\n", pdev->name,
+> >>> +                      error);
+> >>> +               return error;
+> >>> +       }
+> >>> +
+> >>> +       if (dev->domain)
+> >>> +               __pm_genpd_name_add_device(dev->domain, &pdev->dev, NULL);
+> >>
+> >> Urgh, this managed to slip through my filters.
+> >>
+> >> It seems like we almost managed to remove all users of the
+> >> "..._name_add..." APIs for genpd. If hasn't been for $subject patch.
+> >> :-)
+> >>
+> >> Now, I realize this is already too late here, but let's try to fix
+> >> this before it turns into a bigger issue.
+> >>
+> >> Geert, do you think it's possible to convert into using the non-named
+> >> bases APIs?
+> >
+> > That will be difficult. This code is meant to use drivers that are not yet
+> > DT-aware on DT-based systems. Hence it uses platform devices with named PM
+> > domains, while the PM domains are described in DT.
+> > I don't think there's another way to look up a PM domain by name, is there?
+> 
+> As a matter of fact there are, especially for those genpds that has
+> been created through DT as in this case. The API to use is
+> of_genpd_get_from_provider() to find the struct generic_pm_domain.
 
+Thanks!
 
-> On Sep 4, 2015, at 7:54 AM, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
->=20
-> On Fri, 04 Sep 2015, Rob Herring wrote:
->=20
->> On Fri, Sep 4, 2015 at 8:26 AM, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> =
-wrote:
->>> On Fri, 04 Sep 2015, Arnd Bergmann wrote:
->>>=20
->>>> On Friday 04 September 2015, Lee Jones wrote:
->>>>>>> If we flip it the other way round, some subsystems derive the =
-firmware
->>>>>>> name from the 'node name'.  For instance, our zeroth General =
-Purpose
->>>>>>> Co-Processor RemoteProc driver has a corresponding node called
->>>>>>> 'st231-gp0@40000000'.  RemoteProc adds an 'rproc-' prefix and a =
-'-fw'
->>>>>>> suffix and et voil=C3=A0, we load file:
->>>>>>>=20
->>>>>>>  lib/firmware/rproc-st231-gp0-fw
->>>>>>=20
->>>>>> IMO deriving from the node name seems fragile. Also imposing a =
-linux'ism
->>>>>> "rproc" prefix on the firmware name doesn't seem correct as the =
-firmwares
->>>>>> can be shared across OS's. Although this is how remoteproc subsys =
-core
->>>>>> is currently working. It seems a generic DT firmware binding =
-would actually
->>>>>> be most useful for the remoteproc subsystem.
->>>>>=20
->>>>> The "rproc-%s-fw", where %s =3D=3D driver name, is only a =
-fall-back.  The
->>>>> RProc driver is welcome to supply a different firmware name if it
->>>>> desires.  This is where I think a generic 'firmware' property =
-would be
->>>>> of use.
->>>>=20
->>>> The firmware file name is agreed on between the device driver and =
-the
->>>> file system, so encoding the linux driver name in it seems =
-appropriate.
->>>>=20
->>>> Generally speaking, I'd say a good policy would be to try basing
->>>> the firmware name on the "compatible" property strings. That =
-property
->>>> already contains a hierarchical list of models, which makes it =
-particularly
->>>> easy to have firmware files for specific models or those that are =
-shared
->>>> across multiple variations if necessary. Just ask for the most =
-specific
->>>> compatible string first and try the more specific compatible =
-strings
->>>> (with an appropriate prefix and/or postfix added by the driver) =
-until
->>>> a file is found.
->>>=20
->>> It depends what you mean by "basing the firmware name on the
->>> \"compatible\" property" here.  If you mean actually renaming the
->>> firmware binary file to match a driver's compatible string, that's
->>> absolutely out of the question.  Firmwares are not only OS agnostic,
->>> but are also independent of any H/W description language a =
-particular
->>> OS or platform might be using.  Using DT'isums to rename these
->>> binaries is not logical.
->>>=20
->>> However, if you mean simply match on compatible string and supply =
-the
->>> name from within the driver, that's closer to the mark (as then we =
-can
->>> at least keep it in-house [kernel]), but it's still not particularly
->>> practical for the aforementioned reasons mentioned by Peter earlier.
->>>=20
->>> Why not just create a new 'firmware' property?  Simples! [0]
->>=20
->> Someone give me some evidence that other OS's use or will use the =
-same
->> names. Does *BSD use linux-firmware would be enough. With the
->> complaints I get that bindings are just Linux driver properties, I'm
->> not inclined to take this. Having a filename does imply the OS has a
->> filesystem and drivers can access the filesystem which may not always
->> be true.
->=20
-> Peter already provided a real-world example of multiple OSes using the
-> same Firmware based on his experience at ST.  Any vendor using this =
-API
-> who doesn't _soley_ use Linux is likely to use the same firmware files
-> across all platforms.  The co-processor's jobs don't often change just
-> because the platform is running a different OS.
->=20
-> I don't know enough about the inner workings of other Operating
-> Systems to comment on your final statement, but if they can get
-> access to the filesystem them they'll need the name too.  If they
-> don't have access to the firmware file, then they don't require the
-> property and it becomes unused by them.  That's not an issue is it?
+> Yes, I do realize that you need to manage the parsing of the domain
+> name to make sure it's the one you want, but I would rather keep that
+> "hack" in this driver than in the generic API.
 
-Based on my experience with FreeBSD and different firmware and
-such, I=E2=80=99d have to agree with Peter. FreeBSD often uses the =
-vendor
-supplied firmware, just like Linux, because that firmware establishes
-the ABI for talking to the device. This ABI is typically OS agnostic,
-and when it isn=E2=80=99t that=E2=80=99s more the exception than the =
-rule.
+OK. It turned out not to be that complex, cfr. the patch below.
+For now this supports PM domains with "#power-domain-cells = <0>" only,
+but of course it can be extended if the need arises.
 
-As for =E2=80=98not all OSes provide a filesystem=E2=80=99 Sure, but who =
-cares. While
-the filesystem provides a natural mapping of the property to the
-binary data to load (e.g. os-firmware-path + =E2=80=9C/=E2=80=9C + =
-property-name), that=E2=80=99s
-not the only way to map names to binary blobs. FreeBSD itself allows
-one to compile firmware images into the kernel, and those images
-are addressed / found by name, even though no filesystem is involved
-based on what the driver desires to load. I would imagine that an OS
-minimal enough to not support a filesystem would run into this sort
-of issue often enough to provide a mechanism similar to FreeBSD. Failing
-that, I=E2=80=99d imagine driver writers would compile images into their
-drivers on such a system and use the name to pick which one to load.
+I've also tried:
 
-Warner
+    np = of_find_compatible_node(NULL, NULL, "renesas,sysc-rmobile");
+    np = of_find_node_by_name(np, "a4lc");
 
---Apple-Mail=_2AD83DE0-7D5A-4868-BBBB-0F8B38722614
-Content-Transfer-Encoding: 7bit
-Content-Disposition: attachment;
-	filename=signature.asc
-Content-Type: application/pgp-signature;
-	name=signature.asc
-Content-Description: Message signed with OpenPGP using GPGMail
+(the second step is needed because of the domain hierarchy in DT), but that
+would require adding the compatible string to struct board_staging_dev,
+and doesn't work if you have multiple identical power providers.
 
------BEGIN PGP SIGNATURE-----
-Comment: GPGTools - https://gpgtools.org
+I hope you like it?
 
-iQIcBAEBCgAGBQJV6ax8AAoJEGwc0Sh9sBEASGUQAI16yUZkqvmCvjQ8hGIeyzRZ
-3vQFwh1dhzH/BO+8OIyKhxIaljHQrZ+/LzobvcPauGL3/iiNZMkM0EtR0dbV5i2Y
-ezqXOiQBXpPcVmuVrHcfDwyamMKoqzcfL1V1bwqUCaEcLp3QsS176B7iaVGN6PKC
-F+Bkwu32t105CQ6vcXSdiKyBsadxkfd3RjIKE3MapIJUI95vtXUXlOeqLt+NkTpn
-wGhZcoxw3iu37PjgUMZfxS2o/nKXyUuz5zXblHDPLw8QxV2/PrbSjwxj+ZhrHvIo
-FAcYmrn1rkhqYVzOMAhxzbnZeks/ghNZbT+uS5bgQqHgG3BCM2JUqXUHdnDrDlm1
-ivdztt0etxMCPm8UyS2eax7WWBR56kMnkErieNUn3AhrD6eSrEn0h9/hCUY9TdmJ
-qeyDyJ2atn1LiF7FM/06HlGfpQbSuVdCNurkfv7k/OpXqcDLZV/Qni5bqNHTcTEa
-VIxVWHEU8ErRW98LG5J695pbmdzjlc4eE3tjSWNmGb/q5CvHMSgoczg910MDRfo+
-Qj5cpSmuHqk6jybC1bESR6wfcccym+WRQ4FuZRrAc38CDUHHHrhk8G7p36hCgl0R
-EKaFyvSyMsiQBkqQbWDLOAfUcqLiBFeKPiQ6D38TlwGN4KNq8509AG402M4iQKfM
-do6kQDQjtkmLSi7Tyey6
-=Mc7w
------END PGP SIGNATURE-----
+>From 5fb11904845eb929a5b3382a9d5153c151cde1cf Mon Sep 17 00:00:00 2001
+From: Geert Uytterhoeven <geert+renesas@glider.be>
+Date: Fri, 4 Sep 2015 16:52:33 +0200
+Subject: [PATCH/RFC] staging: board: Migrate away from
+ __pm_genpd_name_add_device()
 
---Apple-Mail=_2AD83DE0-7D5A-4868-BBBB-0F8B38722614--
+The named genpd APIs are deprecated. Hence convert the board staging
+code from using genpd names to DT node paths.
+
+For now this supports PM domains with "#power-domain-cells = <0>" only.
+
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+---
+ drivers/staging/board/armadillo800eva.c |  2 +-
+ drivers/staging/board/board.c           | 36 ++++++++++++++++++++++++++++++++-
+ 2 files changed, 36 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/staging/board/armadillo800eva.c b/drivers/staging/board/armadillo800eva.c
+index 0165591a52443c46..912c96b0536def7c 100644
+--- a/drivers/staging/board/armadillo800eva.c
++++ b/drivers/staging/board/armadillo800eva.c
+@@ -91,7 +91,7 @@ static const struct board_staging_dev armadillo800eva_devices[] __initconst = {
+ 		.pdev		= &lcdc0_device,
+ 		.clocks		= lcdc0_clocks,
+ 		.nclocks	= ARRAY_SIZE(lcdc0_clocks),
+-		.domain		= "a4lc",
++		.domain		= "/system-controller@e6180000/pm-domains/c5/a4lc@1"
+ 	},
+ };
+ 
+diff --git a/drivers/staging/board/board.c b/drivers/staging/board/board.c
+index 29d456e29f38feac..3eb5eb8f069c236d 100644
+--- a/drivers/staging/board/board.c
++++ b/drivers/staging/board/board.c
+@@ -135,6 +135,40 @@ int __init board_staging_register_clock(const struct board_staging_clk *bsc)
+ 	return error;
+ }
+ 
++#ifdef CONFIG_PM_GENERIC_DOMAINS_OF
++static int board_staging_add_dev_domain(struct platform_device *pdev,
++					const char *domain)
++{
++	struct of_phandle_args pd_args;
++	struct generic_pm_domain *pd;
++	struct device_node *np;
++
++	np = of_find_node_by_path(domain);
++	if (!np) {
++		pr_err("Cannot find domain node %s\n", domain);
++		return -ENOENT;
++	}
++
++	pd_args.np = np;
++	pd_args.args_count = 0;
++	pd = of_genpd_get_from_provider(&pd_args);
++	if (IS_ERR(pd)) {
++		pr_err("Cannot find genpd %s (%ld)\n", domain, PTR_ERR(pd));
++		return PTR_ERR(pd);
++
++	}
++	pr_debug("Found genpd %s for device %s\n", pd->name, pdev->name);
++
++	return pm_genpd_add_device(pd, &pdev->dev);
++}
++#else
++static inline int board_staging_add_dev_domain(struct platform_device *pdev,
++					       const char *domain)
++{
++	return 0;
++}
++#endif
++
+ int __init board_staging_register_device(const struct board_staging_dev *dev)
+ {
+ 	struct platform_device *pdev = dev->pdev;
+@@ -161,7 +195,7 @@ int __init board_staging_register_device(const struct board_staging_dev *dev)
+ 	}
+ 
+ 	if (dev->domain)
+-		__pm_genpd_name_add_device(dev->domain, &pdev->dev, NULL);
++		board_staging_add_dev_domain(pdev, dev->domain);
+ 
+ 	return error;
+ }
+-- 
+1.9.1
+
+Gr{oetje,eeting}s,
+
+						Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+							    -- Linus Torvalds
