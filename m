@@ -1,176 +1,113 @@
-From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: st_fdma: Firmware filename in DT?
-Date: Fri, 4 Sep 2015 11:21:30 +0100
-Message-ID: <20150904102130.GA4796@x1>
-References: <20150903144944.GC7093@griffinp-ThinkPad-X1-Carbon-2nd>
- <CAL_JsqKQqbAQCPR6xuR2Ke5gEdX4kQYb29-W3qNaZqjM_JBoYg@mail.gmail.com>
- <20150904065916.GZ4796@x1>
- <20150904092005.GA2990@griffinp-ThinkPad-X1-Carbon-2nd>
+From: Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH v2 1/2] i2c: davinci: Optimize clock generation on
+ Keystone SoC
+Date: Fri, 4 Sep 2015 13:29:01 +0300
+Message-ID: <55E9726D.3090209@ti.com>
+References: <55D6F38F.3050306@nokia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-spec-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20150904092005.GA2990@griffinp-ThinkPad-X1-Carbon-2nd>
-Sender: devicetree-spec-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Peter Griffin <peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Maxime Coquelin <maxime.coquelin-qxv4g6HH51o@public.gmane.org>, Patrice Chotard <patrice.chotard-qxv4g6HH51o@public.gmane.org>, Ludovic Barre <ludovic.barre-qxv4g6HH51o@public.gmane.org>, "devicetree-spec-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-spec-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <55D6F38F.3050306-xNZwKgViW5gAvxtiuMwx3w@public.gmane.org>
+Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Alexander Sverdlin <alexander.sverdlin-xNZwKgViW5gAvxtiuMwx3w@public.gmane.org>, Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "Karicheri, Muralidharan" <m-karicheri2-l0cyMroinI0@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>, Kevin Hilman <khilman-1D3HCaltpLuhEniVeURVKkEOCMrvLtNR@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Hemanth Guruva Reddy <hemanth.guruva_reddy-xNZwKgViW5gAvxtiuMwx3w@public.gmane.org>, Lukasz Gemborowski <lukasz.gemborowski-xNZwKgViW5gAvxtiuMwx3w@public.gmane.org>, Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 04 Sep 2015, Peter Griffin wrote:
-> On Fri, 04 Sep 2015, Lee Jones wrote:
-> > [...]
-> >=20
-> > > > If yes, is it worth having a generic binding?
-> > >=20
-> > > If we decide it is a good idea, then yes. It doesn't look that ha=
-rd to
-> > > arrive at something common.
-> > >=20
-> > > Strictly speaking, the firmware name is just an agreed upon name
-> > > between the kernel and userspace. So why tie that into DT? Would =
-other
-> > > OS's use it or want something different? What if we started inclu=
-ding
-> > > paths in the names like <soc>/<firmware file>? Now we are imposin=
-g a
-> > > directory structure on the OS filesystem.
-> >=20
-> > In Linux we have a standard place for firmwares, so the path should
-> > not be required.  I certainly agree that DT is no place for absolut=
-e
-> > paths or OS'isums.
-> >=20
-> > [...]
-> >=20
-> > > > Presumably the alternative would be to add a whole bunch of com=
-patibles
-> > > > in the driver for each SoC, where the only difference from a
-> > > > functional point of view would be to help build the correct str=
-ing for
-> > > > the firmware filename. However I'm also then wondering what the=
- best way
-> > > > would be to find out the instance name of the IP.
-> > >=20
-> > > If the name/path is Linux specific, then that is probably what we=
- should do.
-> > >=20
-> > > You could perhaps make a policy that firmware files be named by
-> > > compatible string. So rather than translating from matching compa=
-tible
-> > > to an arbitrary file name, you enforce file name is "<vendor>,<ip
-> > > block>.fw" or something. I know we don't have policy in the kerne=
-l,
-> > > but we already have it with hardcoded file names and search paths=
-=2E
-> >=20
-> > Absolutely not.  Firmwares have no direct link to DT or platforms t=
-hat
-> > run DT specifically.  They are carried by most platforms these days=
-=2E
-> > Insisting on firmwares using a DT compatible string format is way o=
-ff.
-> >=20
-> > If we flip it the other way round, some subsystems derive the firmw=
-are
-> > name from the 'node name'.  For instance, our zeroth General Purpos=
-e
-> > Co-Processor RemoteProc driver has a corresponding node called
-> > 'st231-gp0@40000000'.  RemoteProc adds an 'rproc-' prefix and a '-f=
-w'
-> > suffix and et voil=C3=A0, we load file:
-> >=20
-> >   lib/firmware/rproc-st231-gp0-fw
->=20
-> IMO deriving from the node name seems fragile. Also imposing a linux'=
-ism
-> "rproc" prefix on the firmware name doesn't seem correct as the firmw=
-ares
-> can be shared across OS's. Although this is how remoteproc subsys cor=
-e
-> is currently working. It seems a generic DT firmware binding would ac=
-tually
-> be most useful for the remoteproc subsystem.
+On 08/21/2015 12:46 PM, Alexander Sverdlin wrote:
+> According to "KeyStone Architecture Inter-IC Control Bus User Guide", fixed
+> additive part of frequency divisors (referred as "d" in the code and datasheet)
+> always equals to 6, independent of module clock prescaler.
+>
+>                           module clock frequency
+> master clock frequency = ----------------------
+>                           (ICCL + 6) + (ICCH + 6)
+>
+> It was not the case with original Davinci IP. Introduce new compatible property
+> "ti,keystone-i2c", which triggers special handling in the driver.
+>
+> Without this change Keystone-based systems (having 204.8MHz input clock) choose
+> prescaler 29 (PSC=28). Using d=5 in this case leads to bus bitrate ~353kHz
+> instead of requested 400kHz. After correction, assuming d=6 bus rate is ~392kHz.
+> This gives ~11% transfer rate increase.
 
-The "rproc-%s-fw", where %s =3D=3D driver name, is only a fall-back.  T=
-he
-RProc driver is welcome to supply a different firmware name if it
-desires.  This is where I think a generic 'firmware' property would be
-of use.
+Thanks Alexander.
+Reviewed-by: Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>
 
-> I guess I should also comment about this on the ST remoteproc thread.
->=20
-> I'm curious though as to how the ST remoteproc driver then loads the =
-firmware,
-> as that name doesn't look like a video or audio firmware filename tha=
-t I've
-> seen shipped from ST. IIRC Usually it is named something like
->=20
-> vid_firmware-stih407.elf or audio_firmware-bd-stih407.elf
+>
+> Signed-off-by: Alexander Sverdlin <alexander.sverdlin-xNZwKgViW5gAvxtiuMwx3w@public.gmane.org>
+> Tested-by: Hemanth Guruva Reddy <hemanth.guruva_reddy-xNZwKgViW5gAvxtiuMwx3w@public.gmane.org>
+> Tested-by: Lukasz Gemborowski <lukasz.gemborowski-xNZwKgViW5gAvxtiuMwx3w@public.gmane.org>
+> ---
+>   .../devicetree/bindings/i2c/i2c-davinci.txt        |    6 +++---
+>   drivers/i2c/busses/i2c-davinci.c                   |    8 ++++++++
+>   2 files changed, 11 insertions(+), 3 deletions(-)
+>
+> Changes in v2:
+> - Introducing new "compatible" property "ti,keystone-i2c" instead of guessing
+>    silicon revision from ID registers
+>
+> diff --git a/Documentation/devicetree/bindings/i2c/i2c-davinci.txt b/Documentation/devicetree/bindings/i2c/i2c-davinci.txt
+> index a4e1cbc..5b123e0 100644
+> --- a/Documentation/devicetree/bindings/i2c/i2c-davinci.txt
+> +++ b/Documentation/devicetree/bindings/i2c/i2c-davinci.txt
+> @@ -1,10 +1,10 @@
+> -* Texas Instruments Davinci I2C
+> +* Texas Instruments Davinci/Keystone I2C
+>
+>   This file provides information, what the device node for the
+> -davinci i2c interface contain.
+> +davinci/keystone i2c interface contains.
+>
+>   Required properties:
+> -- compatible: "ti,davinci-i2c";
+> +- compatible: "ti,davinci-i2c" or "ti,keystone-i2c";
+>   - reg : Offset and length of the register set for the device
+>
+>   Recommended properties :
+> diff --git a/drivers/i2c/busses/i2c-davinci.c b/drivers/i2c/busses/i2c-davinci.c
+> index 3fbb9a0..c5628a4 100644
+> --- a/drivers/i2c/busses/i2c-davinci.c
+> +++ b/drivers/i2c/busses/i2c-davinci.c
+> @@ -181,6 +181,7 @@ static void i2c_davinci_calc_clk_dividers(struct davinci_i2c_dev *dev)
+>   	u32 clkh;
+>   	u32 clkl;
+>   	u32 input_clock = clk_get_rate(dev->clk);
+> +	struct device_node *of_node = dev->dev->of_node;
+>
+>   	/* NOTE: I2C Clock divider programming info
+>   	 * As per I2C specs the following formulas provide prescaler
+> @@ -196,6 +197,9 @@ static void i2c_davinci_calc_clk_dividers(struct davinci_i2c_dev *dev)
+>   	 * where if PSC == 0, d = 7,
+>   	 *       if PSC == 1, d = 6
+>   	 *       if PSC > 1 , d = 5
+> +	 *
+> +	 * Note:
+> +	 * d is always 6 on Keystone I2C controller
+>   	 */
+>
+>   	/* get minimum of 7 MHz clock, but max of 12 MHz */
+> @@ -204,6 +208,9 @@ static void i2c_davinci_calc_clk_dividers(struct davinci_i2c_dev *dev)
+>   		psc++;	/* better to run under spec than over */
+>   	d = (psc >= 2) ? 5 : 7 - psc;
+>
+> +	if (of_node && of_device_is_compatible(of_node, "ti,keystone-i2c"))
+> +		d = 6;
+> +
+>   	clk = ((input_clock / (psc + 1)) / (pdata->bus_freq * 1000));
+>   	/* Avoid driving the bus too fast because of rounding errors above */
+>   	if (input_clock / (psc + 1) / clk > pdata->bus_freq * 1000)
+> @@ -726,6 +733,7 @@ static struct i2c_algorithm i2c_davinci_algo = {
+>
+>   static const struct of_device_id davinci_i2c_of_match[] = {
+>   	{.compatible = "ti,davinci-i2c", },
+> +	{.compatible = "ti,keystone-i2c", },
+>   	{},
+>   };
+>   MODULE_DEVICE_TABLE(of, davinci_i2c_of_match);
+>
 
-This driver came direct from ST.  I'm using their conventions as a
-default, although I would be happy to conduct some investigation into
-how this works for releases and suggest a better interface.  The only
-reason I mentioned it here was because this is how others are using
-other SS which are similar in some way.  Same for the Firmware SS I
-guess.
 
-In my unbiased PoV, I'd much prefer the name was derived from a
-predefined properly.
-
-> IMO we should be treating the firmware as a blackbox, and for me that=
- also
-> includes the filename it is shipped with. Linux drivers making up the=
-ir own
-> firmware names based on the name of their subsystem doesn't seem like=
- a
-> good way forward to me.
-
-I guess the driver author was just using the fall-back convention for
-testing.  I'm pretty sure RemoteProc isn't being shipped in products
-yet.
-
-> Presumably to test this driver you have to rename the firmwares
-> locally on your machine?
-
-The firmware that was provided to conduct testing was already named as
-expected by the driver, but yes, if we were to test the firmwares you
-mentioned they would either have to be renamed, or those names would
-have to be provided to the RemoteProc SS in a different way.
-
-> > > > We could do it by parsing the node name e.g. fdma0-audio, or by=
- adding
-> > > > a "instance" DT property to the node?
-> > >=20
-> > > Generally we try to avoid caring about node names. Having some in=
-dex
-> > > or numbering also comes up which we also try to avoid. Generally,=
- if
-> > > you care about which instance you use for something, then there i=
-s
-> > > some property you care about and should add.
-> >=20
-> > Right, the alternative is a property like the ones already used.
-> > However, as these are becoming more prevalent I suggested
-> > standardising the property to avoid all these vendor specific firmw=
-are
-> > properties cluttering up the place.
->=20
-> I agree a proliferation of vendor specific firmware properties isn't
-> s good way forward.
->=20
-> >   firmware =3D "firmwarename.fw";
-> > OR
-> >   firmware-name =3D "firmwarename.fw";
-> >=20
-> > ... seems appropriate.
->=20
-> Either of those is fine with me.
-
-Just need a DT nod and I'll happily code it up.
-
---=20
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-=46ollow Linaro: Facebook | Twitter | Blog
+-- 
+regards,
+-grygorii
