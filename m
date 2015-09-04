@@ -1,47 +1,53 @@
-From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v4 1/4] of/pci: Add of_pci_check_probe_only to parse "linux,pci-probe-only"
-Date: Fri, 4 Sep 2015 14:19:53 -0500
-Message-ID: <CAL_JsqKjXqgCvzUcTZkCfgpvub6uh_XzLTfyHpgSZzh4dJaOEg@mail.gmail.com>
-References: <1441385411-7624-1-git-send-email-marc.zyngier@arm.com> <1441385411-7624-2-git-send-email-marc.zyngier@arm.com>
+From: Sharma Bhupesh <bhupesh.sharma@freescale.com>
+Subject: RE: [PATCH v2 03/10] Documentation/dts: Add bindings for QIXIS FPGA
+ controller found on FSL boards
+Date: Fri, 4 Sep 2015 20:16:42 +0000
+Message-ID: <BY1PR0301MB1303E56B5462BCD0C77C7E4D82570@BY1PR0301MB1303.namprd03.prod.outlook.com>
+References: <1441349872-4560-1-git-send-email-bhupesh.sharma@freescale.com>
+ <1441349872-4560-4-git-send-email-bhupesh.sharma@freescale.com>
+ <CADRPPNR11BD4WfXTWoQ28rZCd_BJuhdWu49E6jjpO29CH2s5Ow@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1441385411-7624-2-git-send-email-marc.zyngier-5wv7dgnIgG8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
-Cc: Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, Paul Mackerras <paulus-eUNUBHrolfbYtjvyW6yDsg@public.gmane.org>, Michael Ellerman <mpe-Gsx/Oe8HsFggBc27wqDAHg@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Suravee Suthikulpanit <Suravee.Suthikulpanit-5C7GfCeVMHo@public.gmane.org>, Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Alexander Graf <agraf-l3A5Bk7waGM@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linuxppc-dev <linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <CADRPPNR11BD4WfXTWoQ28rZCd_BJuhdWu49E6jjpO29CH2s5Ow@mail.gmail.com>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Li Leo <LeoLi@freescale.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Singh Jaiprakash <jaiprakash.singh@freescale.com>, Arnd Bergmann <arnd@arndb.de>, "marc.zyngier@arm.com" <marc.zyngier@arm.com>, "Catalin.Marinas@arm.com" <Catalin.Marinas@arm.com>, "will.deacon@arm.com" <will.deacon@arm.com>, "olof@lixom.net" <olof@lixom.net>, "bhupesh.linux@gmail.com" <bhupesh.linux@gmail.com>, "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Sep 4, 2015 at 11:50 AM, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org> wrote:
-> Both pci-host-generic and Pseries parse the "linux,pci-probe-only"
-> property to engage the PCI_PROBE_ONLY mode, and both have a subtle
-> bug that can be triggered if the property has no parameter.
->
-> Provide a generic, safe implementation that can be used by both.
->
-> Signed-off-by: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
-> ---
->  drivers/of/of_pci.c    | 28 ++++++++++++++++++++++++++++
->  include/linux/of_pci.h |  3 +++
->  2 files changed, 31 insertions(+)
->
-> diff --git a/drivers/of/of_pci.c b/drivers/of/of_pci.c
-> index 5751dc5..5dd4966 100644
-> --- a/drivers/of/of_pci.c
-> +++ b/drivers/of/of_pci.c
-> @@ -118,6 +118,34 @@ int of_get_pci_domain_nr(struct device_node *node)
->  EXPORT_SYMBOL_GPL(of_get_pci_domain_nr);
->
->  /**
-> + * of_pci_check_probe_only - Setup probe only mode if linux,pci-probe-only
-> + *                           is present and valid
-> + *
-> + * @node: device tree node that may contain the property (usually "chosen")
+> From: pku.leo@gmail.com [mailto:pku.leo@gmail.com]
+> Sent: Friday, September 04, 2015 10:27 PM
+> On Fri, Sep 4, 2015 at 1:57 AM, Bhupesh Sharma
+> <bhupesh.sharma@freescale.com> wrote:
+> > This patch adds bindings for QIXIS FPGA controller found on FSL boards.
+> 
+> A general comment: when you are updating the device tree bindings.
+> You should cc the devicetree@vger.kernel.org mailing list.
+> 
+> >
+> > Some Freescale boards like LS2080AQDS/LS2080ARDB have an on-board
+> > FPGA/CPLD connected to the IFC controller. The bindings specified in
+> > this patch cater to those on-board FPGA/CPLD controllers.
+> 
+> We already have the binding defined in
+> Documentation/devicetree/bindings/powerpc/fsl/board.txt.  We probably
+> should just move it to a more generic location.
 
-This line should be removed. Perhaps Bjorn will fix it up.
+Consolidation of powerpc and ARM bindings is something that needs to be
+targeted by a separate patch-series, perhaps in future.
 
-Rob
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+There are a number of duplications that can be looked into, but I don't
+think this patchset should depend on that.
+
+Regards,
+Bhupesh
