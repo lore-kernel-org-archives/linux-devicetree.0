@@ -1,110 +1,103 @@
-From: Stephen Boyd <sboyd@codeaurora.org>
-Subject: Re: [PATCH] spmi-pmic-arb: support configurable number of peripherals
-Date: Thu, 3 Sep 2015 17:16:30 -0700
-Message-ID: <20150904001630.GJ15099@codeaurora.org>
-References: <1441322451-30149-1-git-send-email-gavidov@codeaurora.org>
+From: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+Subject: Re: [PATCH v4 11/16] drm: bridge: analogix/dp: add platform device
+ type support
+Date: Fri, 04 Sep 2015 09:36:12 +0900
+Message-ID: <55E8E77C.4020305@samsung.com>
+References: <1441086371-24838-1-git-send-email-ykk@rock-chips.com>
+ <1441087620-25586-1-git-send-email-ykk@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1441322451-30149-1-git-send-email-gavidov@codeaurora.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Gilad Avidov <gavidov@codeaurora.org>
-Cc: sdharia@codeaurora.org, mlocke@codeaurora.org, linux-arm-msm@vger.kernel.org, gregkh@linuxfoundation.org, svarbanov@mm-sol.com, wsa@the-dreams.de, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, iivanov@mm-sol.com, agross@codeaurora.org
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <1441087620-25586-1-git-send-email-ykk@rock-chips.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Yakir Yang <ykk@rock-chips.com>, Heiko Stuebner <heiko@sntech.de>, Thierry Reding <treding@nvidia.com>, Jingoo Han <jingoohan1@gmail.com>, Inki Dae <inki.dae@samsung.com>, joe@perches.com, Kukjin Kim <kgene@kernel.org>, Mark Yao <mark.yao@rock-chips.com>
+Cc: Russell King <rmk+kernel@arm.linux.org.uk>, djkurtz@chromium.com, dianders@chromium.com, seanpaul@chromium.com, ajaynumb@gmail.com, Andrzej Hajda <a.hajda@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, David Airlie <airlied@linux.ie>, Gustavo Padovan <gustavo.padovan@collabora.co.uk>, Andy Yan <andy.yan@rock-chips.com>, Kumar Gala <galak@codeaurora.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Kishon Vijay Abraham I <kishon@ti.com>, architt@codeaurora.org, robherring2@gmail.com, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-rockchip@lists.infradead.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 09/03, Gilad Avidov wrote:
-> +			 supported by HW. Default (minimum supported) is 128.
+On 01.09.2015 15:07, Yakir Yang wrote:
+
+Empty commit message. Please explain here why you want to add platform
+device type support.
+
+Actually the title is confusing. You are not adding support for platform
+device types but rather adding a field containing type of device.
+
+
+> Signed-off-by: Yakir Yang <ykk@rock-chips.com>
+> ---
+> Changes in v4: None
+> Changes in v3: None
+> Changes in v2:
+> - Add GNU license v2 declared and samsung copyright
+> 
+>  drivers/gpu/drm/exynos/exynos_dp.c              |  1 +
+>  drivers/gpu/drm/rockchip/analogix_dp-rockchip.c |  1 +
+>  include/drm/bridge/analogix_dp.h                | 16 ++++++++++++++++
+>  3 files changed, 18 insertions(+)
+> 
+> diff --git a/drivers/gpu/drm/exynos/exynos_dp.c b/drivers/gpu/drm/exynos/exynos_dp.c
+> index 6060d2c..40ef727 100644
+> --- a/drivers/gpu/drm/exynos/exynos_dp.c
+> +++ b/drivers/gpu/drm/exynos/exynos_dp.c
+> @@ -224,6 +224,7 @@ static int exynos_dp_bind(struct device *dev, struct device *master, void *data)
+>  	dp->dev = dev;
+>  	dp->drm_dev = drm_dev;
+>  
+> +	dp->plat_data.dev_type = EXYNOS_DP;
+>  	dp->plat_data.power_on = exynos_dp_poweron;
+>  	dp->plat_data.power_off = exynos_dp_poweroff;
+>  	dp->plat_data.get_modes = exynos_dp_get_modes;
+> diff --git a/drivers/gpu/drm/rockchip/analogix_dp-rockchip.c b/drivers/gpu/drm/rockchip/analogix_dp-rockchip.c
+> index efea045..4934271 100644
+> --- a/drivers/gpu/drm/rockchip/analogix_dp-rockchip.c
+> +++ b/drivers/gpu/drm/rockchip/analogix_dp-rockchip.c
+> @@ -293,6 +293,7 @@ static int rockchip_dp_bind(struct device *dev, struct device *master,
+>  		return ret;
+>  	}
+>  
+> +	dp->plat_data.dev_type = RK3288_DP;
+>  	dp->plat_data.attach = NULL;
+>  	dp->plat_data.get_modes = NULL;
+>  	dp->plat_data.power_on = rockchip_dp_poweron;
+> diff --git a/include/drm/bridge/analogix_dp.h b/include/drm/bridge/analogix_dp.h
+> index 8b4ffad..7209a64 100644
+> --- a/include/drm/bridge/analogix_dp.h
+> +++ b/include/drm/bridge/analogix_dp.h
+> @@ -1,9 +1,25 @@
+> +/*
+> + * Analogix Core DP (Display Port) interface driver.
+> + *
+> + * Copyright (C) 2012 Samsung Electronics Co., Ltd.
+> + *
+> + * This program is free software; you can redistribute it and/or modify it
+> + * under the terms of the GNU General Public License as published by the
+> + * Free Software Foundation; either version 2 of the License, or (at your
+> + * option) any later version.
+> + */
+
+Two questions:
+1. Why this change is here? I would rather expect it at patch 3/16 when
+you created this file... That is the usual time for adding copyrights.
+
+2. Does this file contains previous Samsung work?
+
+Best regards,
+Krzysztof
+
+>  #ifndef _ANALOGIX_DP_H_
+>  #define _ANALOGIX_DP_H_
+>  
+>  #include <drm/drm_crtc.h>
+>  
+> +enum analogix_dp_devtype {
+> +	EXYNOS_DP,
+> +	RK3288_DP,
+> +};
 > +
-> +Example V1 PMIC-Arbiter:
+>  struct analogix_dp_plat_data {
+> +	enum analogix_dp_devtype dev_type;
+>  	struct drm_panel *panel;
 >  
->  	spmi {
->  		compatible = "qcom,spmi-pmic-arb";
-> @@ -62,4 +66,32 @@ Example:
->  
->  		interrupt-controller;
->  		#interrupt-cells = <4>;
-> +
-> +		qcom,max-peripherals = <256>;
-
-If it's v1 isn't it always 128? So having 256 here is just
-confusing.
-
-> +	};
-> +
-> @@ -129,14 +131,15 @@ struct spmi_pmic_arb_dev {
->  	u8			channel;
->  	int			irq;
->  	u8			ee;
-> -	u8			min_apid;
-> -	u8			max_apid;
-> -	u32			mapping_table[SPMI_MAPPING_TABLE_LEN];
-> +	u16			min_irq_apid;
-> +	u16			max_irq_apid;
-> +	u16			max_apid;
-> +	u32			*mapping_table;
->  	struct irq_domain	*domain;
->  	struct spmi_controller	*spmic;
-> -	u16			apid_to_ppid[256];
-> +	u16			*irq_apid_to_ppid;
-
-Please drop all this renaming noise, or at the least, put it in a
-different patch. More than half the patch is just changing the
-names of these variables for what seems like no reason.
-
->  	const struct pmic_arb_ver_ops *ver_ops;
-> -	u8			*ppid_to_chan;
-> +	u16			*ppid_to_chan;
->  };
->  
->  	struct spmi_pmic_arb_dev *pa = irq_get_handler_data(irq);
->  	struct irq_chip *chip = irq_get_chip(irq);
->  	void __iomem *intr = pa->intr;
-> -	int first = pa->min_apid >> 5;
-> -	int last = pa->max_apid >> 5;
-> +	int first = pa->min_irq_apid >> 5;
-> +	int last = pa->max_irq_apid >> 5;
->  	u32 status;
->  	int i, id;
->  
-> @@ -903,14 +915,30 @@ static int spmi_pmic_arb_probe(struct platform_device *pdev)
->  
->  	pa->ee = ee;
->  
-> -	for (i = 0; i < ARRAY_SIZE(pa->mapping_table); ++i)
-> -		pa->mapping_table[i] = readl_relaxed(
-> -				pa->cnfg + SPMI_MAPPING_TABLE_REG(i));
-> +	pa->irq_apid_to_ppid = devm_kzalloc(&ctrl->dev, pa->max_apid *
-> +					    sizeof(*pa->irq_apid_to_ppid),
-> +					    GFP_KERNEL);
-> +	if (!pa->irq_apid_to_ppid) {
-> +		err = -ENOMEM;
-> +		goto err_put_ctrl;
-> +	}
-> +
-> +	pa->mapping_table = devm_kzalloc(&ctrl->dev,
-> +					(pa->max_apid - 1) * sizeof(u32),
-> +					GFP_KERNEL);
-> +	if (!pa->mapping_table) {
-> +		err = -ENOMEM;
-> +		goto err_put_ctrl;
-> +	}
-> +
-> +	for (i = 0; i < (pa->max_apid - 1); ++i)
-> +		pa->mapping_table[i] = readl_relaxed(pa->cnfg +
-> +						  SPMI_MAPPING_TABLE_REG(i));
-
-Maybe we should stop doing this during probe and always allocate
-an empty cache of size 128 on v1 and 512 on v2 chips? So when
-we're searching through the mapping table we can cache the value
-from the register if the entry isn't 0. This delays the
-processing to when we're mapping irqs, hopefully speeding up
-probe for the case where you have a handful of irqs to map.
-
-The DT property wouldn't be necessary then. Arguably it's being
-added there to optimize the size of the mapping table and isn't
-really necessary otherwise.
-
--- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project
+>  	int (*power_on)(struct analogix_dp_plat_data *);
+> 
