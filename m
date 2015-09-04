@@ -1,126 +1,92 @@
-From: Jacek Anaszewski <j.anaszewski@samsung.com>
-Subject: Re: [PATCH 3/3] devicetree: Add led-backlight binding
-Date: Fri, 04 Sep 2015 17:03:36 +0200
-Message-ID: <55E9B2C8.1020407@samsung.com>
-References: <1440502442-19531-1-git-send-email-tomi.valkeinen@ti.com>
- <1440502442-19531-4-git-send-email-tomi.valkeinen@ti.com>
- <55DC700C.4030802@samsung.com> <55DC8C9D.4050007@ti.com>
- <55DD65BE.4050308@samsung.com> <55DD82C4.50405@ti.com>
- <55DD8D4A.8010507@samsung.com>
- <CAL_JsqK=QiNk=ZEqJ=T6_rHbjnHq7UY9=ZtWg1HLoU=qdSn8Gg@mail.gmail.com>
+From: Andreas Dannenberg <dannenberg@ti.com>
+Subject: Re: [PATCH 02/13] power: bq24257: Add dead battery reporting
+Date: Fri, 4 Sep 2015 10:08:38 -0500
+Message-ID: <20150904150838.GA28221@borg>
+References: <1441073435-12349-1-git-send-email-dannenberg@ti.com>
+ <1441073435-12349-3-git-send-email-dannenberg@ti.com>
+ <55E5FD77.10100@ti.com>
+ <20150901210446.GB17234@beast>
+ <55E615AA.8080807@ti.com>
+ <20150904132805.GA22335@lpalcu-desk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-leds-owner@vger.kernel.org>
-In-reply-to: <CAL_JsqK=QiNk=ZEqJ=T6_rHbjnHq7UY9=ZtWg1HLoU=qdSn8Gg@mail.gmail.com>
-Sender: linux-leds-owner@vger.kernel.org
-To: Rob Herring <robherring2@gmail.com>
-Cc: Tomi Valkeinen <tomi.valkeinen@ti.com>, Jingoo Han <jingoohan1@gmail.com>, Lee Jones <lee.jones@linaro.org>, Linux LED Subsystem <linux-leds@vger.kernel.org>, "linux-fbdev@vger.kernel.org" <linux-fbdev@vger.kernel.org>, Andrew Lunn <andrew@lunn.ch>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Return-path: <linux-pm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20150904132805.GA22335@lpalcu-desk>
+Sender: linux-pm-owner@vger.kernel.org
+To: Laurentiu Palcu <laurentiu.palcu@intel.com>
+Cc: "Andrew F. Davis" <afd@ti.com>, Sebastian Reichel <sre@kernel.org>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, David Woodhouse <dwmw2@infradead.org>, Krzysztof Kozlowski <k.kozlowski.k@gmail.com>, linux-pm@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 09/01/2015 01:12 AM, Rob Herring wrote:
-> On Wed, Aug 26, 2015 at 4:56 AM, Jacek Anaszewski
-> <j.anaszewski@samsung.com> wrote:
->> On 08/26/2015 11:11 AM, Tomi Valkeinen wrote:
->>>
->>>
->>>
->>> On 26/08/15 10:07, Jacek Anaszewski wrote:
->>>>
->>>> On 08/25/2015 05:41 PM, Tomi Valkeinen wrote:
->>>>>
->>>>>
->>>>>
->>>>> On 25/08/15 16:39, Jacek Anaszewski wrote:
->>>>>
->>>>>>> +Example:
->>>>>>> +
->>>>>>> +    backlight {
->>>>>>> +        compatible = "led-backlight";
->>>>>>> +        leds = <&backlight_led>;
->>>>>>> +
->>>>>>> +        brightness-levels = <0 4 8 16 32 64 128 255>;
->>>>>>
->>>>>>
->>>>>> brightness level is not a suitable unit for describing LED brightness
->>>>>> in a Device Tree, as it is not a physical unit. We have
->>>>>> led-max-microamp
->>>>>> property for this, expressed in microamperes, please refer to [0] from
->>>>>> linux-next.
->>>>>
->>>>>
->>>>> Hmm, ok, but what should the driver do with microamperes? As far as I
->>>>> see, "enum led_brightness" (which is between 0-255) is used to set the
->>>>> brightness to LEDs. I don't see any function accepting microamperes.
->>>>
->>>>
->>>> This is implementation detail. You can convert microamperes to
->>>> enum led_brightness in the driver. Please refer to the discussion [1].
->>>
->>>
->>> The led_set_brightness() takes "enum led_brightness", so I don't
->>> understand what this driver would do with the microampere value. It
->>> could, of course, do an arbitrary conversion, say, direct mapping of the
->>> mA value to brightness, but that would just confuse things further.
->>
->>
->> OK, I was looking at the problem from LED-centric perspective. Indeed,
->> backlight subsystem has no other way to pass brightness to the LED
->> subsystem than in the form of levels. However, the last word belongs
->> to DT maintainer in this matter.
->>
->> Cc'ing devicetree@vger.kernel.org.
->
-> I don't have a simple answer for you...
->
-> There was a similar discussion for pm8941-wled and
-> "default-brightness-level" units[1]. The conclusion was it should be
-> units matching the h/w so that there is no conversion between
-> bootloader and OS units to h/w units. That principle probably applies
-> here.
->
-> If the brightness levels are non-linear, then you need a translation
-> from percent to h/w level. What's needed here for h/w levels depends
-> on whether the brightness control is PWM, current control or both. For
-> PWM, units of the PWM control makes sense. For current control, units
-> of microamps probably makes sense. I don't know what you do with both,
-> but I have seen that h/w (FSL PMICs).
->
-> This all certainly needs some more work on defining some common
-> binding. We already have some bindings for backlights with the LED and
-> PWM bindings (perhaps incomplete?). Do we need another way here? This
-> also introduces possibility of multiple ways to define GPIO controlled
-> backlights: gpio -> gpio-leds ->  led-backlight or gpio ->
-> gpio-backlight. We don't want that...
->
-> This problem is not really specific at all to backlights, but applies
-> to all LEDs. Some LEDs you may not have control beyond on/off or
-> really care about fine-grained control of level, but they are really
-> no different. The main unique thing about backlights is what display
-> are they associated with.
+On Fri, Sep 04, 2015 at 04:28:05PM +0300, Laurentiu Palcu wrote:
+> On Tue, Sep 01, 2015 at 04:16:26PM -0500, Andrew F. Davis wrote:
+> > On 09/01/2015 04:04 PM, Andreas Dannenberg wrote:
+> > >>>  drivers/power/bq24257_charger.c | 4 ++++
+> > >>>  1 file changed, 4 insertions(+)
+> > >>>
+> > >>>diff --git a/drivers/power/bq24257_charger.c b/drivers/power/bq24257_charger.c
+> > >>>index db81356..0b34528 100644
+> > >>>--- a/drivers/power/bq24257_charger.c
+> > >>>+++ b/drivers/power/bq24257_charger.c
+> > >>>@@ -274,6 +274,10 @@ static int bq24257_power_supply_get_property(struct power_supply *psy,
+> > >>>  			val->intval = POWER_SUPPLY_HEALTH_SAFETY_TIMER_EXPIRE;
+> > >>>  			break;
+> > >>>
+> > >>>+		case FAULT_NO_BAT:
+> > >>>+			val->intval = POWER_SUPPLY_HEALTH_DEAD;
+> > >>>+			break;
+> > >>>+
+> > >>
+> > >>I think the best thing to do would be to return -ENODEV as suggested by
+> > >>power_supply_sysfs.c:305. Also you should probably add the POWER_SUPPLY_PROP_PRESENT
+> > >>property check and set intval to 0 when there is no battery.
+> > >
+> > >Good find with -ENODEV. However in this case here the power supply is
+> > >really a combination of a charger and a battery (which could be split
+> > >out accordingly but that's a different story). If I were to report
+> > >-ENODEV I would basically say the entire power supply is gone which is
+> > >not correct IMHO. Even with a missing battery a system is typically
+> > >functional as it gets powered through USB and the charger IC is still
+> > >there and functioning. So I think I would either leave the reporting
+> > >as *_DEAD or skip the patch. I'm curious if there are additional
+> > >opinions.
+> > >
+> > 
+> > It looks like returning -ENODEV for one property would not mark the whole
+> > device gone, just POWER_SUPPLY_PROP_HEALTH, but I guess that depends on
+> > what user-space does with the info. I would think that this is what
+> > POWER_SUPPLY_PROP_PRESENT is for but different drivers seem to use it for
+> > different things. Anyway, reporting DEAD for a missing battery is probably
+> > not the most correct option, maybe drop the patch ( for the cat's sake :) ).
+> I'm also in favor of dropping this patch for the same reasons. Also,
+> since the latest phones/tablets do not allow battery removal, it's
+> highly unlikely we'll even hit this case nowadays. Perhaps, we could use
 
-Some time ago I was trying to add common LEDs DT properties that would
-have defined brightness in levels, but other people insisted on
-microamperes [1]. The discussion was focused on flash LEDs, where
-currents are significantly greater and there is risk of hardware
-damage in case underrated LED is connected [2]. Having the property in
-microamperes removes the need for consulting documentation to check
-current value for given brightness level.
+Hi Laurentiu, ok I'll drop it. Understood about the unlikeliness of a
+battery removal for most devices using LiIon during runtime but a more
+granular reporting would help in case there is an issue with the HW
+itself (loose contact, manufacturing defect in the battery, etc.)
 
-As it was mentioned earlier in this thread, this approach is not
-suitable for PWM driven leds, and they have their own bindings,
-which allow for describing brightness in levels. Probably we
-should add some note to the common LEDs DT bindings that would
-state explicitly that such exceptions are allowed.
+> DEAD if the battery did not charge and the safety timer expired?
+> But, if one alters iilimit and sets a limit that's too low for the
+> battery to charge in time, that doesn't mean the battery is dead... :/
 
-In case of backlights which are built upon LED class devices we could
-stick to brightness levels, as a LED class driver will assert
-brightness level to the leds-max-microamp value anyway.
+Yeah unless there is a specific register bit or some very specific
+guidance in a device datasheet as how to detect a truly dead battery I
+would be a bit hesitant trying to interpret device register values to
+derive to such a conclusion. Sometimes algorithms which seem simple are
+only simple because one doesn't consider all the corner cases initially
+:)
 
+> That's the main reason I'm so reluctant on having properties like charge
+> current, charge voltage, or even input current limit, writable in
+> sysfs.
 
-[1] http://www.spinics.net/lists/linux-leds/msg03416.html
-[2] http://patchwork.ozlabs.org/patch/456622/
+Agreed from a safety perspective. And if someone really wants to play
+with fire (pun intended) they can always change the driver in their own
+copy of the Kernel.
 
--- 
-Best Regards,
-Jacek Anaszewski
+--
+Andreas Dannenberg
+Texas Instruments Inc
+
