@@ -1,73 +1,60 @@
-From: Jon Masters <jcm@redhat.com>
-Subject: _DSD standardization note (WAS: Re: [PATCH 2/2] net, thunder, bgx:
- Add support for ACPI binding.)
-Date: Sat, 05 Sep 2015 16:00:37 -0400
-Message-ID: <55EB49E5.5040206@redhat.com>
-References: <1438907590-29649-1-git-send-email-ddaney.cavm@gmail.com>	<1438907590-29649-3-git-send-email-ddaney.cavm@gmail.com>	<20150807140106.GE7646@leverpostej>	<55C4ECC6.7050908@caviumnetworks.com>	<20150807175127.GB12013@leverpostej>	<CAJZ5v0gc=bo3ayO7aWq19Hh_205YC52wqXGbbM5vxR1atXm+oA@mail.gmail.com>	<55C5494D.5010903@caviumnetworks.com> <CAJZ5v0iNqRsrpwzWY5o97R1S+Dr-CzRPg3Cymt1q4v5gvABCQA@mail.gmail.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [RFC PATCH] gpio-pca953x driver and PCA9536 chip
+Date: Sat, 5 Sep 2015 23:15:05 +0200
+Message-ID: <CACRpkdZcju7tpoi9+R4Bb98FEJNSfmYaRyLp7YF2ZT+hjkAMVA@mail.gmail.com>
+References: <55E4641D.7050603@elpromaelectronics.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <CAJZ5v0iNqRsrpwzWY5o97R1S+Dr-CzRPg3Cymt1q4v5gvABCQA@mail.gmail.com>
-Sender: netdev-owner@vger.kernel.org
-To: "Rafael J. Wysocki" <rafael@kernel.org>, David Daney <ddaney@caviumnetworks.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, David Daney <ddaney.cavm@gmail.com>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "rob.herring@linaro.org" <rob.herring@linaro.org>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, "David S. Miller" <davem@davemloft.net>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-mips@linux-mips.org" <linux-mips@linux-mips.org>, David Daney <david.daney@cavium.com>, Tomasz Nowicki <tomasz.nowicki@linaro.org>, Robert Richter <rrichter@cavium.com>, "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>, Sunil Goutham <sgoutham@cavium.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <55E4641D.7050603@elpromaelectronics.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: =?UTF-8?Q?Janusz_U=C5=BCycki?= <j.uzycki@elpromaelectronics.com>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Grygorii Strashko <grygorii.strashko@ti.com>, Joshua Scott <joshua.scott@alliedtelesis.co.nz>, Toby Smith <toby@tismith.id.au>
+Cc: Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Krzysztof Borgulski <k.borgulski@elproma.com.pl>
 List-Id: devicetree@vger.kernel.org
 
-Following up on this thread after finally seeing it...figured I would
-send something just for the archive mainly (we discussed this in person
-recently at a few different events and I think are aligned already).
+Adding linux-gpio and some people that have been patching
+this driver to TO-line.
 
-On 08/07/2015 08:28 PM, Rafael J. Wysocki wrote:
-> Hi David,
-> 
-> On Sat, Aug 8, 2015 at 2:11 AM, David Daney <ddaney@caviumnetworks.com> wrote:
->> On 08/07/2015 05:05 PM, Rafael J. Wysocki wrote:
-> 
-> [cut]
-> 
->>>
->>> It is actually useful to people as far as I can say.
->>>
->>> Also, if somebody is going to use properties with ACPI, why whould
->>> they use a different set of properties with DT?
+Grygorii et al, does this look correct? Anyone who can test and
+send a patch for mainline?
 
-Generally speaking, if there's a net new thing to handle, there is of
-course no particular problem with using DT as an inspiration, but we
-need to be conscious of the fact that Linux isn't the only Operating
-System that may need to support these bindings, so the correct thing (as
-stated by many of you, and below, and in person also recently - so we
-are aligned) is to get this (the MAC address binding for _DSD in ACPI)
-standardized properly through UEFI where everyone who has a vest OS
-interest beyond Linux can also have their own involvement as well. As
-discussed, that doesn't make it part of ACPI6.0, just a binding.
+Yours,
+Linus Walleij
 
-FWIW I made a decision on the Red Hat end that in our guidelines to
-partners for ARM RHEL(SA - Server for ARM) builds we would not generally
-endorse any use of _DSD, with the exception of the MAC address binding
-being discussed here. In that case, I realized I had not been fully
-prescriptive enough with the vendors building early hw in that I should
-have realized this would happen and have required that they do this the
-right way. MAC IP should be more sophisticated such that it can handle
-being reset even after the firmware has loaded its MAC address(es).
-Platform flash storage separate from UEFI variable storage (which is
-being abused to contain too much now that DXE drivers then load into the
-ACPI tables prior to exiting Boot Services, etc.) should contain the
-actual MAC address(es), as it is done on other arches, and it should not
-be necessary to communicate this via ACPI tables to begin with (that's a
-cost saving embedded concept that should not happen on server systems in
-the general case). I have already had several unannounced future designs
-adjusted in light of this _DSD usage.
-
-In the case of providing MAC address information (only) by _DSD, I
-connected the initial ARMv8 SoC silicon vendors who needed to use such a
-hack to ensure they were using the same properties, and will followup
-off list to ensure Cavium are looped into that. But, we do need to get
-the _DSD property for MAC address provision standardized through UEFI
-properly as an official binding rather than just a link on the website,
-and then we need to be extremely careful not to grow any further
-dependence upon _DSD elsewhere. Generally, if you're using that approach
-on a server system (other than for this MAC case), your firmware or
-design (or both) need to be modified to not use _DSD.
-
-Jon.
+On Mon, Aug 31, 2015 at 4:26 PM, Janusz U=C5=BCycki
+<j.uzycki@elpromaelectronics.com> wrote:
+> Hi,
+>
+> The driver sets register #02 (inversion) to 0x01 instead of 0x00 on m=
+y
+> board.
+> Reason: device_pca953x_init() does not initialize val buffer because =
+NBANK()
+> returns
+> for PCA9536 ngpio=3D4 value 0 instead of 1.
+>
+> My proposed code-patch for 3.14.17 is below.
+> Because I don't work on stable/next I can't deliver complete/ready pa=
+tch.
+> Please for comments.
+>
+> best regards
+> Janusz
+>
+> --- a/drivers/gpio/gpio-pca953x.c
+> +++ b/drivers/gpio/gpio-pca953x.c
+> @@ -75,7 +75,7 @@ MODULE_DEVICE_TABLE(i2c, pca953x_id);
+>  #define MAX_BANK 5
+>  #define BANK_SZ 8
+>
+> -#define NBANK(chip) (chip->gpio_chip.ngpio / BANK_SZ)
+> +#define NBANK(chip) DIV_ROUND_UP(chip->gpio_chip.ngpio, BANK_SZ)
+>
+>  struct pca953x_chip {
+>         unsigned gpio_start;
+--
+To unsubscribe from this list: send the line "unsubscribe linux-gpio" i=
+n
+the body of a message to majordomo@vger.kernel.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
