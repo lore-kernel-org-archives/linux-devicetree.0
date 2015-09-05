@@ -1,43 +1,28 @@
-From: Ding Tianhong <dingtianhong@huawei.com>
-Subject: [PATCH 0/2] arm64: Support Hisilicon Hip05-D02 board
-Date: Sat, 5 Sep 2015 10:58:57 +0800
-Message-ID: <1441421939-6236-1-git-send-email-dingtianhong@huawei.com>
+From: "santosh.shilimkar@oracle.com" <santosh.shilimkar@oracle.com>
+Subject: Re: [PATCH v1 1/2] soc: ti: display firmware file name as part of
+ boot log
+Date: Fri, 4 Sep 2015 23:53:35 -0400
+Message-ID: <55EA673F.8010904@oracle.com>
+References: <1441403199-10936-1-git-send-email-m-karicheri2@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1441403199-10936-1-git-send-email-m-karicheri2@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, catalin.marinas@arm.com, will.deacon@arm.com, devicetree@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, marc.zyngier@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, rob.herring@linaro.org, haojian.zhuang@linaro.org, zhangfei.gao@linaro.org, xuwei5@hisilicon.com, leo.yan@linaro.org, zhizhou.zh@gmail.com, linuxarm@huawei.com
+To: Murali Karicheri <m-karicheri2@ti.com>, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk, ssantosh@kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hip05-D02 Development Board is based on Cortex-A57, this patchset
-contains initial support for Hip05-D02 Soc and Board. Initial support
-is minimal and includes just the arch configuration, device tree
-configuration.
+On 9/4/15 5:46 PM, Murali Karicheri wrote:
+> To help the user, print the PDSP file name as part of
+> knav_queue_load_pdsp(). This will be useful for users to know what
+> version of the firmware is loaded to PDSP. Also update the
+> document for the location of the QMSS accumulator PDSP firmware.
+>
+> Signed-off-by: Murali Karicheri <m-karicheri2@ti.com>
+> ---
 
-PSCI is enabled in device tree and there is no problem to boot all the
-16 cores, and the CPU hotplug is also working now, you can download and
-compile the latest firmware based on the following link to run this
-patch set.
+Looks fine. Will pick both the patches.
 
-https://github.com/hisilicon/estuary/blob/master/README
-
-v1->v2:
-- 1. Change the compatible name for per CPU.
-  2. Remove the GIC_CPU_MASK_SIMPLE(xx) which is not used for gicv3
-     from hip05.dtsi.
-
-Ding Tianhong (2):
-  arm64: hip05-d02: Document devicetree bindings for Hisilicon Hip05-D02
-    Board
-  arm64: dts: add dts files for Hisilicon Hip05-D02 Development Board
-
- .../bindings/arm/hisilicon/hisilicon.txt           |   4 +
- arch/arm64/boot/dts/hisilicon/Makefile             |   2 +-
- arch/arm64/boot/dts/hisilicon/hip05-d02.dts        |  36 +++
- arch/arm64/boot/dts/hisilicon/hip05.dtsi           | 271 +++++++++++++++++++++
- 4 files changed, 312 insertions(+), 1 deletion(-)
- create mode 100644 arch/arm64/boot/dts/hisilicon/hip05-d02.dts
- create mode 100644 arch/arm64/boot/dts/hisilicon/hip05.dtsi
-
--- 
-1.9.0
+Regards,
+Santosh
