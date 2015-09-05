@@ -1,44 +1,43 @@
-From: Ding Tianhong <dingtianhong-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH 1/2] arm64: hip05-d02: Document devicetree bindings for Hisilicon Hip05-D02 Board
-Date: Sat, 5 Sep 2015 10:58:58 +0800
-Message-ID: <1441421939-6236-2-git-send-email-dingtianhong@huawei.com>
-References: <1441421939-6236-1-git-send-email-dingtianhong@huawei.com>
+From: Ding Tianhong <dingtianhong@huawei.com>
+Subject: [PATCH 0/2] arm64: Support Hisilicon Hip05-D02 board
+Date: Sat, 5 Sep 2015 10:58:57 +0800
+Message-ID: <1441421939-6236-1-git-send-email-dingtianhong@huawei.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1441421939-6236-1-git-send-email-dingtianhong-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, marc.zyngier-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, rob.herring-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, haojian.zhuang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, leo.yan-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, zhizhou.zh-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linuxarm-hv44wF8Li93QT0dZR+AlfA@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, catalin.marinas@arm.com, will.deacon@arm.com, devicetree@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, marc.zyngier@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, rob.herring@linaro.org, haojian.zhuang@linaro.org, zhangfei.gao@linaro.org, xuwei5@hisilicon.com, leo.yan@linaro.org, zhizhou.zh@gmail.com, linuxarm@huawei.com
 List-Id: devicetree@vger.kernel.org
 
-This patch adds documentation for the devicetree bindings used by the
-DT files of Hisilicon Hip05-D02 development board.
+Hip05-D02 Development Board is based on Cortex-A57, this patchset
+contains initial support for Hip05-D02 Soc and Board. Initial support
+is minimal and includes just the arch configuration, device tree
+configuration.
 
-Signed-off-by: Ding Tianhong <dingtianhong-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
----
- Documentation/devicetree/bindings/arm/hisilicon/hisilicon.txt | 4 ++++
- 1 file changed, 4 insertions(+)
+PSCI is enabled in device tree and there is no problem to boot all the
+16 cores, and the CPU hotplug is also working now, you can download and
+compile the latest firmware based on the following link to run this
+patch set.
 
-diff --git a/Documentation/devicetree/bindings/arm/hisilicon/hisilicon.txt b/Documentation/devicetree/bindings/arm/hisilicon/hisilicon.txt
-index c431c67..f98b39d 100644
---- a/Documentation/devicetree/bindings/arm/hisilicon/hisilicon.txt
-+++ b/Documentation/devicetree/bindings/arm/hisilicon/hisilicon.txt
-@@ -20,6 +20,10 @@ HiKey Board
- Required root node properties:
- 	- compatible = "hisilicon,hi6220-hikey", "hisilicon,hi6220";
- 
-+HiP05 D02 Board
-+Required root node properties:
-+	- compatible = "hisilicon,hip05-d02";
-+
- Hisilicon system controller
- 
- Required properties:
+https://github.com/hisilicon/estuary/blob/master/README
+
+v1->v2:
+- 1. Change the compatible name for per CPU.
+  2. Remove the GIC_CPU_MASK_SIMPLE(xx) which is not used for gicv3
+     from hip05.dtsi.
+
+Ding Tianhong (2):
+  arm64: hip05-d02: Document devicetree bindings for Hisilicon Hip05-D02
+    Board
+  arm64: dts: add dts files for Hisilicon Hip05-D02 Development Board
+
+ .../bindings/arm/hisilicon/hisilicon.txt           |   4 +
+ arch/arm64/boot/dts/hisilicon/Makefile             |   2 +-
+ arch/arm64/boot/dts/hisilicon/hip05-d02.dts        |  36 +++
+ arch/arm64/boot/dts/hisilicon/hip05.dtsi           | 271 +++++++++++++++++++++
+ 4 files changed, 312 insertions(+), 1 deletion(-)
+ create mode 100644 arch/arm64/boot/dts/hisilicon/hip05-d02.dts
+ create mode 100644 arch/arm64/boot/dts/hisilicon/hip05.dtsi
+
 -- 
 1.9.0
-
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
