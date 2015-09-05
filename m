@@ -1,497 +1,424 @@
 From: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [[PATCH v2] 2/2] Altera Modular ADC driver support
-Date: Sat, 5 Sep 2015 16:47:21 +0100
-Message-ID: <55EB0E89.60402@kernel.org>
-References: <1441144199-20231-1-git-send-email-cnphoon@altera.com>
- <1441144199-20231-3-git-send-email-cnphoon@altera.com>
+Subject: Re: [PATCH 1/6] iio: mma8452: refactor for seperating chip specific
+ data
+Date: Sat, 5 Sep 2015 17:52:23 +0100
+Message-ID: <55EB1DC7.7090003@kernel.org>
+References: <1441107913-4112-1-git-send-email-martink@posteo.de>
+ <1441107913-4112-2-git-send-email-martink@posteo.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=windows-1252
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1441144199-20231-3-git-send-email-cnphoon-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>
+In-Reply-To: <1441107913-4112-2-git-send-email-martink-1KBjaw7Xf1+zQB+pC5nmwQ@public.gmane.org>
 Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Chee Nouk Phoo <cnphoon-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, Michael.Hennerich-OyLXuOCK7orQT0dZR+AlfA@public.gmane.org, cnphoon.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+To: Martin Kepplinger <martink-1KBjaw7Xf1+zQB+pC5nmwQ@public.gmane.org>, knaack.h-Mmb7MZpHnFY@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org, mfuzzey-mB3Nsq4MPf1BDgjK7y7TUQ@public.gmane.org, roberta.dobrescu-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, christoph.muellner-SN7IsUiht6C/RdPyistoZJqQE7yCjDx5@public.gmane.org, Martin Kepplinger <martin.kepplinger-SN7IsUiht6C/RdPyistoZJqQE7yCjDx5@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 01/09/15 22:49, Chee Nouk Phoo wrote:
-> From: Chee Nouk Phoon <cnphoon-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>
+On 01/09/15 12:45, Martin Kepplinger wrote:
+> This adds a struct mma_chip_info to hold data that will remain specific to
+> the chip in use. It is provided during probe() and linked in
+> struct of_device_id.
 > 
-> Altera Modular ADC is soft IP that wraps the hardened ADC block in a Max10
-> device. It can be configured to dual ADC mode that supports two channel
-> synchronous sampling or independent single ADCs. ADC sampled values will be
-> written into memory slots in sequence determined by a user configurable
-> sequencer block.
+> Also this suggests that the driver is called "mma8452" and now handles the
+> MMA8452Q device, but is not limited to it.
 > 
-> This patch adds Altera Modular ADC driver support
-> 
-> Signed-off-by: Chee Nouk Phoon <cnphoon-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>
-Sorry, I wrote a review of version 1 but for some reason seem not have
-sent it.  Anyhow, will comment on this version now.
+> Signed-off-by: Martin Kepplinger <martin.kepplinger-SN7IsUiht6C/RdPyistoZJqQE7yCjDx5@public.gmane.org>
+> Signed-off-by: Christoph Muellner <christoph.muellner-SN7IsUiht6C/RdPyistoZJqQE7yCjDx5@public.gmane.org>
+Looks very nice to me. Very clear resulting code.
 
-I'm feeling rather guilty about this as there are a number of elements
-in this driver that are major issues and I meant to get back to you on
-them over a week ago!  Oops.
+Peter.  This is your driver so will give you time to take a look at this (or
+tell me you don't want to / haven't got time if you like and I'll take
+it as is!)
 
-Anyhow, big ones in here are unusual uses of the ABI.  One point to note
-is that if you ever add any ABI not documented in Documentation/ABI/testing/*
-then you MUST document it as part of your patch.  It saves a lot
-of time whilst the reviewer figures out what the ABI being presented
-actually is.
-
-Dual ADCs should not have their two elements passed out through a single
-sysfs attribute.  If you need to maintain their relationship it must
-be done by using the buffered interface not the sysfs one.  Doing it
-any other way leads to inconsistent and confusing userspace ABI which
-would be a disaster.
-
-Extended naming (tied up with the above) has very limited use cases and
-must be documented.  It confuses userspace applications by encoding
-information in a freeform way within the attribute name. As such the
-form must be clearly documented and justified.  The use case here is
-not justified.
-
-Anyhow, whilst these sound major, the driver is actually in pretty good
-shape and the other stuff is minor tidy ups / formatting suggestions.
-
-Thanks,
+If we'd been towards the end of the cycle I might have gone with it without
+waiting, but we have plenty of time now so lets not rush!
 
 Jonathan
 > ---
->  drivers/iio/adc/Kconfig           |   11 ++
->  drivers/iio/adc/Makefile          |    1 +
->  drivers/iio/adc/alt_modular_adc.c |  322 +++++++++++++++++++++++++++++++++++++
->  3 files changed, 334 insertions(+), 0 deletions(-)
->  mode change 100644 => 100755 drivers/iio/adc/Kconfig
->  create mode 100755 drivers/iio/adc/alt_modular_adc.c
+>  drivers/iio/accel/mma8452.c | 183 ++++++++++++++++++++++++++++++++------------
+>  1 file changed, 134 insertions(+), 49 deletions(-)
 > 
-> diff --git a/drivers/iio/adc/Kconfig b/drivers/iio/adc/Kconfig
-> old mode 100644
-> new mode 100755
-> index 50c103d..e1a67cb
-> --- a/drivers/iio/adc/Kconfig
-> +++ b/drivers/iio/adc/Kconfig
-> @@ -118,6 +118,17 @@ config AD799X
->  	  To compile this driver as a module, choose M here: the module will be
->  	  called ad799x.
+> diff --git a/drivers/iio/accel/mma8452.c b/drivers/iio/accel/mma8452.c
+> index b921d84..f28428fa 100644
+> --- a/drivers/iio/accel/mma8452.c
+> +++ b/drivers/iio/accel/mma8452.c
+> @@ -22,6 +22,7 @@
+>  #include <linux/iio/triggered_buffer.h>
+>  #include <linux/iio/events.h>
+>  #include <linux/delay.h>
+> +#include <linux/of_device.h>
 >  
-> +config ALT_MODULAR_ADC
-> +	tristate "Altera Modular ADC driver"
-> +	select ANON_INODES
+>  #define MMA8452_STATUS				0x00
+>  #define  MMA8452_STATUS_DRDY			(BIT(2) | BIT(1) | BIT(0))
+> @@ -74,6 +75,52 @@ struct mma8452_data {
+>  	struct mutex lock;
+>  	u8 ctrl_reg1;
+>  	u8 data_cfg;
+> +	const struct mma_chip_info *chip_info;
+> +};
 > +
-> +	help
-> +	  Say yes here to have support for Altera Modular ADC. The driver
-> +	  supports both Altera Modular ADC and Altera Modular Dual ADC.
-> +
-> +	  The driver can also be build as a module. If so the module will be
-> +	  called alt_modular_adc.
-> +
->  config AT91_ADC
->  	tristate "Atmel AT91 ADC"
->  	depends on ARCH_AT91
-> diff --git a/drivers/iio/adc/Makefile b/drivers/iio/adc/Makefile
-> index a096210..d7f10e0 100644
-> --- a/drivers/iio/adc/Makefile
-> +++ b/drivers/iio/adc/Makefile
-> @@ -38,3 +38,4 @@ obj-$(CONFIG_VF610_ADC) += vf610_adc.o
->  obj-$(CONFIG_VIPERBOARD_ADC) += viperboard_adc.o
->  xilinx-xadc-y := xilinx-xadc-core.o xilinx-xadc-events.o
->  obj-$(CONFIG_XILINX_XADC) += xilinx-xadc.o
-> +obj-$(CONFIG_ALT_MODULAR_ADC) += alt_modular_adc.o
-> diff --git a/drivers/iio/adc/alt_modular_adc.c b/drivers/iio/adc/alt_modular_adc.c
-> new file mode 100755
-> index 0000000..3d2d870
-> --- /dev/null
-> +++ b/drivers/iio/adc/alt_modular_adc.c
-> @@ -0,0 +1,322 @@
-> +/*
-> + * Copyright (C) 2015 Altera Corporation. All rights reserved.
+> +/**
+> + * struct mma_chip_info - chip specific data for Freescale's accelerometers
+> + * @chip_id:			WHO_AM_I register's value
+> + * @channels:			struct iio_chan_spec matching the device's
+> + *				capabilities
+> + * @num_channels:		number of channels
+> + * @mma_scales:			scale factors for converting register values
+> + *				to m/s^2; 3 modes: 2g, 4g, 8g; 2 integers
+> + *				per mode: m/s^2 and micro m/s^2
+> + * @ev_cfg:			event config register address
+> + * @ev_cfg_ele:			latch bit in event config register
+> + * @ev_cfg_chan_shift:		number of the bit to enable events in X
+> + *				direction; in event config register
+> + * @ev_src:			event source register address
+> + * @ev_src_xe:			bit in event source register that indicates
+> + *				an event in X direction
+> + * @ev_src_ye:			bit in event source register that indicates
+> + *				an event in Y direction
+> + * @ev_src_ze:			bit in event source register that indicates
+> + *				an event in Z direction
+> + * @ev_ths:			event threshold register address
+> + * @ev_ths_mask:		mask for the threshold value
+> + * @ev_count:			event count (period) register address
 > + *
-> + * This program is free software; you can redistribute it and/or modify
-> + * it under the terms and conditions of the GNU General Public License,
-> + * version 2, as published by the Free Software Foundation.
-> + *
-> + * This program is distributed in the hope it will be useful, but WITHOUT
-> + * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-> + * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
-> + * more details.
-> + *
-> + * You should have received a copy of the GNU General Public License along with
-> + * this program.  If not, see <http://www.gnu.org/licenses/>.
+> + * Since not all chips supported by the driver support comparing high pass
+> + * filtered data for events (interrupts), different interrupt sources are
+> + * used for different chips and the relevant registers are included here.
 > + */
+> +struct mma_chip_info {
+> +	u8 chip_id;
+> +	const struct iio_chan_spec *channels;
+> +	int num_channels;
+> +	const int mma_scales[3][2];
+> +	u8 ev_cfg;
+> +	u8 ev_cfg_ele;
+> +	u8 ev_cfg_chan_shift;
+> +	u8 ev_src;
+> +	u8 ev_src_xe;
+> +	u8 ev_src_ye;
+> +	u8 ev_src_ze;
+> +	u8 ev_ths;
+> +	u8 ev_ths_mask;
+> +	u8 ev_count;
+>  };
+>  
+>  static int mma8452_drdy(struct mma8452_data *data)
+> @@ -143,16 +190,6 @@ static const int mma8452_samp_freq[8][2] = {
+>  	{6, 250000}, {1, 560000}
+>  };
+>  
+> -/*
+> - * Hardware has fullscale of -2G, -4G, -8G corresponding to raw value -2048
+> - * The userspace interface uses m/s^2 and we declare micro units
+> - * So scale factor is given by:
+> - *	g * N * 1000000 / 2048 for N = 2, 4, 8 and g = 9.80665
+> - */
+> -static const int mma8452_scales[3][2] = {
+> -	{0, 9577}, {0, 19154}, {0, 38307}
+> -};
+> -
+>  /* Datasheet table 35  (step time vs sample frequency) */
+>  static const int mma8452_transient_time_step_us[8] = {
+>  	1250,
+> @@ -189,8 +226,11 @@ static ssize_t mma8452_show_scale_avail(struct device *dev,
+>  					struct device_attribute *attr,
+>  					char *buf)
+>  {
+> -	return mma8452_show_int_plus_micros(buf, mma8452_scales,
+> -					    ARRAY_SIZE(mma8452_scales));
+> +	struct mma8452_data *data = iio_priv(i2c_get_clientdata(
+> +					     to_i2c_client(dev)));
 > +
-> +#include <linux/device.h>
-> +#include <linux/err.h>
-> +#include <linux/io.h>
-> +#include <linux/kernel.h>
-> +#include <linux/module.h>
-> +#include <linux/of.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/slab.h>
-> +
-> +#include <linux/iio/iio.h>
-> +
-> +/* Constant Definitions */
-Please prefix all constants iwth ALT_MODULAR_ADC_ or similar
-to avoid potential name clashes in the future.
-
-> +#define MAX_SLOT		64
-> +#define MAX_ADC			2
-> +#define MAX_CHANNEL		18
-> +#define MODE_SINGLE_ADC		1
-> +#define MODE_DUAL_ADC		2
-> +#define ADC_BITS		12
-> +#define ADC_STORE_BITS		16
-> +#define ADC_MAX_STR_SIZE        20
-> +
-> +/* Register Definitions */
-> +#define ADC_CMD_REG		0x0
-> +#define ADC_IER_REG		0x100
-> +#define ADC_ISR_REG		0x104
-> +
-> +#define ADC_RUN_MSK		0x1
-> +#define ADC_SINGLE_MKS		0x2
-> +#define ADC_STOP_MSK		0x0
-> +#define ADC_LOW_MSK		0xFFF
-> +#define ADC_HIGH_MSK		0xFFF0000
-> +
-I'd like to see kernel-doc description fo this structure.
-It's not immediately obvious what all the parts are!
-
-> +struct altera_adc {
-> +	void __iomem		*seq_regs;
-> +	void __iomem		*sample_regs;
-> +
-> +	unsigned int		mode;
-> +	unsigned int		slot_count;
-> +	unsigned int		slot_sequence[MAX_ADC][MAX_SLOT];
-Without looking at the bindings doc, it's not obvious what adc_number.
-I'd prefer enough local docs to make that clear!
-> +	unsigned int		adc_number;
+> +	return mma8452_show_int_plus_micros(buf, data->chip_info->mma_scales,
+> +		ARRAY_SIZE(data->chip_info->mma_scales));
+>  }
+>  
+>  static ssize_t mma8452_show_hp_cutoff_avail(struct device *dev,
+> @@ -221,9 +261,8 @@ static int mma8452_get_samp_freq_index(struct mma8452_data *data,
+>  
+>  static int mma8452_get_scale_index(struct mma8452_data *data, int val, int val2)
+>  {
+> -	return mma8452_get_int_plus_micros_index(mma8452_scales,
+> -						 ARRAY_SIZE(mma8452_scales),
+> -						 val, val2);
+> +	return mma8452_get_int_plus_micros_index(data->chip_info->mma_scales,
+> +			ARRAY_SIZE(data->chip_info->mma_scales), val, val2);
+>  }
+>  
+>  static int mma8452_get_hp_filter_index(struct mma8452_data *data,
+> @@ -270,14 +309,15 @@ static int mma8452_read_raw(struct iio_dev *indio_dev,
+>  		if (ret < 0)
+>  			return ret;
+>  
+> -		*val = sign_extend32(be16_to_cpu(buffer[chan->scan_index]) >> 4,
+> -				     11);
+> +		*val = sign_extend32(be16_to_cpu(
+> +			buffer[chan->scan_index]) >> chan->scan_type.shift,
+> +			chan->scan_type.realbits - 1);
+>  
+>  		return IIO_VAL_INT;
+>  	case IIO_CHAN_INFO_SCALE:
+>  		i = data->data_cfg & MMA8452_DATA_CFG_FS_MASK;
+> -		*val = mma8452_scales[i][0];
+> -		*val2 = mma8452_scales[i][1];
+> +		*val = data->chip_info->mma_scales[i][0];
+> +		*val2 = data->chip_info->mma_scales[i][1];
+>  
+>  		return IIO_VAL_INT_PLUS_MICRO;
+>  	case IIO_CHAN_INFO_SAMP_FREQ:
+> @@ -439,17 +479,17 @@ static int mma8452_read_thresh(struct iio_dev *indio_dev,
+>  	switch (info) {
+>  	case IIO_EV_INFO_VALUE:
+>  		ret = i2c_smbus_read_byte_data(data->client,
+> -					       MMA8452_TRANSIENT_THS);
+> +					       data->chip_info->ev_ths);
+>  		if (ret < 0)
+>  			return ret;
+>  
+> -		*val = ret & MMA8452_TRANSIENT_THS_MASK;
+> +		*val = ret & data->chip_info->ev_ths_mask;
+>  
+>  		return IIO_VAL_INT;
+>  
+>  	case IIO_EV_INFO_PERIOD:
+>  		ret = i2c_smbus_read_byte_data(data->client,
+> -					       MMA8452_TRANSIENT_COUNT);
+> +					       data->chip_info->ev_count);
+>  		if (ret < 0)
+>  			return ret;
+>  
+> @@ -497,7 +537,8 @@ static int mma8452_write_thresh(struct iio_dev *indio_dev,
+>  		if (val < 0 || val > MMA8452_TRANSIENT_THS_MASK)
+>  			return -EINVAL;
+>  
+> -		return mma8452_change_config(data, MMA8452_TRANSIENT_THS, val);
+> +		return mma8452_change_config(data, data->chip_info->ev_ths,
+> +					     val);
+>  
+>  	case IIO_EV_INFO_PERIOD:
+>  		steps = (val * USEC_PER_SEC + val2) /
+> @@ -507,7 +548,7 @@ static int mma8452_write_thresh(struct iio_dev *indio_dev,
+>  		if (steps < 0 || steps > 0xff)
+>  			return -EINVAL;
+>  
+> -		return mma8452_change_config(data, MMA8452_TRANSIENT_COUNT,
+> +		return mma8452_change_config(data, data->chip_info->ev_count,
+>  					     steps);
+>  
+>  	case IIO_EV_INFO_HIGH_PASS_FILTER_3DB:
+> @@ -538,13 +579,15 @@ static int mma8452_read_event_config(struct iio_dev *indio_dev,
+>  				     enum iio_event_direction dir)
+>  {
+>  	struct mma8452_data *data = iio_priv(indio_dev);
+> +	const struct mma_chip_info *chip = data->chip_info;
+>  	int ret;
+>  
+> -	ret = i2c_smbus_read_byte_data(data->client, MMA8452_TRANSIENT_CFG);
+> +	ret = i2c_smbus_read_byte_data(data->client,
+> +				       data->chip_info->ev_cfg);
+>  	if (ret < 0)
+>  		return ret;
+>  
+> -	return ret & MMA8452_TRANSIENT_CFG_CHAN(chan->scan_index) ? 1 : 0;
+> +	return !!(ret & BIT(chan->scan_index + chip->ev_cfg_chan_shift));
+>  }
+>  
+>  static int mma8452_write_event_config(struct iio_dev *indio_dev,
+> @@ -554,20 +597,21 @@ static int mma8452_write_event_config(struct iio_dev *indio_dev,
+>  				      int state)
+>  {
+>  	struct mma8452_data *data = iio_priv(indio_dev);
+> +	const struct mma_chip_info *chip = data->chip_info;
+>  	int val;
+>  
+> -	val = i2c_smbus_read_byte_data(data->client, MMA8452_TRANSIENT_CFG);
+> +	val = i2c_smbus_read_byte_data(data->client, chip->ev_cfg);
+>  	if (val < 0)
+>  		return val;
+>  
+>  	if (state)
+> -		val |= MMA8452_TRANSIENT_CFG_CHAN(chan->scan_index);
+> +		val |= BIT(chan->scan_index + chip->ev_cfg_chan_shift);
+>  	else
+> -		val &= ~MMA8452_TRANSIENT_CFG_CHAN(chan->scan_index);
+> +		val &= ~BIT(chan->scan_index + chip->ev_cfg_chan_shift);
+>  
+>  	val |= MMA8452_TRANSIENT_CFG_ELE;
+>  
+> -	return mma8452_change_config(data, MMA8452_TRANSIENT_CFG, val);
+> +	return mma8452_change_config(data, chip->ev_cfg, val);
+>  }
+>  
+>  static void mma8452_transient_interrupt(struct iio_dev *indio_dev)
+> @@ -576,25 +620,25 @@ static void mma8452_transient_interrupt(struct iio_dev *indio_dev)
+>  	s64 ts = iio_get_time_ns();
+>  	int src;
+>  
+> -	src = i2c_smbus_read_byte_data(data->client, MMA8452_TRANSIENT_SRC);
+> +	src = i2c_smbus_read_byte_data(data->client, data->chip_info->ev_src);
+>  	if (src < 0)
+>  		return;
+>  
+> -	if (src & MMA8452_TRANSIENT_SRC_XTRANSE)
+> +	if (src & data->chip_info->ev_src_xe)
+>  		iio_push_event(indio_dev,
+>  			       IIO_MOD_EVENT_CODE(IIO_ACCEL, 0, IIO_MOD_X,
+>  						  IIO_EV_TYPE_MAG,
+>  						  IIO_EV_DIR_RISING),
+>  			       ts);
+>  
+> -	if (src & MMA8452_TRANSIENT_SRC_YTRANSE)
+> +	if (src & data->chip_info->ev_src_ye)
+>  		iio_push_event(indio_dev,
+>  			       IIO_MOD_EVENT_CODE(IIO_ACCEL, 0, IIO_MOD_Y,
+>  						  IIO_EV_TYPE_MAG,
+>  						  IIO_EV_DIR_RISING),
+>  			       ts);
+>  
+> -	if (src & MMA8452_TRANSIENT_SRC_ZTRANSE)
+> +	if (src & data->chip_info->ev_src_ze)
+>  		iio_push_event(indio_dev,
+>  			       IIO_MOD_EVENT_CODE(IIO_ACCEL, 0, IIO_MOD_Z,
+>  						  IIO_EV_TYPE_MAG,
+> @@ -696,7 +740,7 @@ static struct attribute_group mma8452_event_attribute_group = {
+>  	.name = "events",
+>  };
+>  
+> -#define MMA8452_CHANNEL(axis, idx) { \
+> +#define MMA8452_CHANNEL(axis, idx, bits) { \
+>  	.type = IIO_ACCEL, \
+>  	.modified = 1, \
+>  	.channel2 = IIO_MOD_##axis, \
+> @@ -708,9 +752,9 @@ static struct attribute_group mma8452_event_attribute_group = {
+>  	.scan_index = idx, \
+>  	.scan_type = { \
+>  		.sign = 's', \
+> -		.realbits = 12, \
+> +		.realbits = (bits), \
+>  		.storagebits = 16, \
+> -		.shift = 4, \
+> +		.shift = 16 - (bits), \
+>  		.endianness = IIO_BE, \
+>  	}, \
+>  	.event_spec = mma8452_transient_event, \
+> @@ -718,12 +762,42 @@ static struct attribute_group mma8452_event_attribute_group = {
+>  }
+>  
+>  static const struct iio_chan_spec mma8452_channels[] = {
+> -	MMA8452_CHANNEL(X, 0),
+> -	MMA8452_CHANNEL(Y, 1),
+> -	MMA8452_CHANNEL(Z, 2),
+> +	MMA8452_CHANNEL(X, 0, 12),
+> +	MMA8452_CHANNEL(Y, 1, 12),
+> +	MMA8452_CHANNEL(Z, 2, 12),
+>  	IIO_CHAN_SOFT_TIMESTAMP(3),
+>  };
+>  
+> +enum {
+> +	mma8452,
 > +};
 > +
-> +static int alt_modular_adc_read_raw(struct iio_dev *indio_dev,
-> +				struct iio_chan_spec const *chan,
-> +				int *val,
-> +				int *val2,
-> +				long mask)
-> +{
-> +	struct altera_adc *adc = iio_priv(indio_dev);
-> +	int ret = -EINVAL;
-> +	u32 value;
-> +
-> +	if (mask != IIO_CHAN_INFO_RAW)
-> +		return -EINVAL;
-> +
-> +	value = readl_relaxed(adc->sample_regs + (chan->address * 4));
-> +
-> +	if (adc->mode == MODE_SINGLE_ADC) {
-> +		*val = (value & ADC_LOW_MSK);
-> +		ret = IIO_VAL_INT;
-> +	} else if (adc->mode == MODE_DUAL_ADC) {
-> +		*val = (value & ADC_LOW_MSK);
-> +		*val2 = ((value & ADC_HIGH_MSK) >> 16);
-
-No.  This is not part of the ABI and is absolutely not the intent.
-You can't pass two separate ADC readings from different channels through
-the sysfs interface like this.  It's been requested a number of times
-but the write way to do this is to implement the buffered interface
-and push the out that way.  One sysfs attribute, one value is the rule!
-The exceptions are for element that have no meaning whatsoever on their own
-(such as quaternions) where any given element has no scale without the rest.
-That is not true here.
-
-> +		ret = IIO_VAL_INT_MULTIPLE;
-> +	}
-> +
-> +	return ret;
-> +}
-> +
-> +static const struct iio_info adc_iio_info = {
-> +	.read_raw = &alt_modular_adc_read_raw,
-> +	.driver_module = THIS_MODULE,
-> +};
-> +
-> +static int alt_modular_adc_channel_init(struct iio_dev *indio_dev)
-> +{
-> +	struct altera_adc *adc = iio_priv(indio_dev);
-> +	struct iio_chan_spec *chan_array;
-> +	struct iio_chan_spec *chan;
-> +	char **channel_name;
-> +	int i;
-> +
-> +	chan_array = devm_kzalloc(&indio_dev->dev, (adc->slot_count *
-> +		sizeof(*chan_array)), GFP_KERNEL);
-> +	if (chan_array == NULL)
-> +		return -ENOMEM;
-> +
-> +	channel_name = devm_kzalloc(&indio_dev->dev, adc->slot_count,
-> +		GFP_KERNEL);
-> +	if (channel_name == NULL)
-> +		return -ENOMEM;
-> +
-> +	for (i = 0; i < adc->slot_count; i++) {
-> +		channel_name[i] = devm_kzalloc(&indio_dev->dev,
-> +				ADC_MAX_STR_SIZE, GFP_KERNEL);
-No need to do this here, use devm_kasprintf as suggested below.
-If not I think you could easily have combined this loop with the one
-below simplifying the code.
-
-> +		if (channel_name == NULL)
-> +			return -ENOMEM;
-> +	}
-> +
-> +	chan = chan_array;
-> +	for (i = 0; i < adc->slot_count; i++, chan++) {
-> +		chan->type = IIO_VOLTAGE;
-> +		chan->indexed = 1;
-> +		chan->channel = i;
-> +		chan->address = i;
-No need to set address if it is always being set to the same
-value as channel.  Channel is available everywhere address is so
-just use that value.
-
-> +
-> +		/* Construct iio sysfs name*/
-> +		if (adc->mode == MODE_SINGLE_ADC) {
-Use kasprintf and you can skip the earlier allocation of channel_name[i]
-plus allocate exactly what is needed.
-> +			snprintf(channel_name[i], ADC_MAX_STR_SIZE,
-> +				"adc%d-ch%d",
-> +				adc->adc_number,
-> +				adc->slot_sequence[0][i]);
-> +		} else if (adc->mode == MODE_DUAL_ADC) {
-> +			snprintf(channel_name[i], ADC_MAX_STR_SIZE,
-> +				"adc1-ch%d_adc2-ch%d",
-> +				adc->slot_sequence[0][i],
-> +				adc->slot_sequence[1][i]);
-> +		} else {
-> +			return -EINVAL;
-> +		}
-> +
-> +		chan->datasheet_name = channel_name[i];
-> +		chan->extend_name = channel_name[i];
-You are making use of extend_name in an unusual way.
-1) This results in non standard ABI so should be documented under
-Documentation/ABI/testing/sysfs-bus-iio*
-2) The naming here makes me think you are abusing the abi and pushing two
-channels through the same sysfs attribute.  Don't do that.  If you need
-to clearly capture two channels together then implement the buffered
-interface (chardev reading of 'scans' - groups of channels captured at
-a similar time) rather than abusing the simpler sysfs route.
-> +		chan->scan_index = i;
-You aren't providing buffered access yet so don't bother filling in
-scan_index or scan_type fo rhte channels (they are unusued).
-> +		chan->scan_type.sign = 'u';
-> +		chan->scan_type.realbits = ADC_BITS;
-> +		chan->scan_type.storagebits = ADC_STORE_BITS;
-> +		chan->scan_type.endianness = IIO_CPU;
-> +		chan->info_mask_separate = BIT(IIO_CHAN_INFO_RAW);
-> +	}
-> +
-> +	indio_dev->channels = chan_array;
-Might as well just use indio_dev->channels directly rather than
-having the local variable.
-
-> +
-> +	return 0;
-> +}
-> +
-> +static const struct of_device_id alt_modular_adc_match[] = {
-> +	{ .compatible = "altr,modular-adc-1.0" },
-> +	{ .compatible = "altr,modular-dual-adc-1.0" },
-> +	{ /* Sentinel */ }
-> +};
-> +MODULE_DEVICE_TABLE(of, alt_modular_adc_match);
-> +
-> +static int alt_modular_adc_parse_dt(struct iio_dev *indio_dev,
-> +				struct device *dev)
-> +{
-> +	struct altera_adc *adc = iio_priv(indio_dev);
-> +	struct device_node *np = dev->of_node;
-> +	u32 value;
-> +	int ret, i, j;
-> +	char str[50];
-> +
-> +	ret = of_property_read_u32(np, "altr,adc-mode", &value);
-> +	if (ret < 0)
-> +		return ret;
-> +	if (value == 0 || value > MAX_ADC) {
-> +		dev_err(dev, "Invalid ADC mode value");
-> +		return -EINVAL;
-> +	}
-> +	adc->mode = value;
-> +
-> +	ret = of_property_read_u32(np, "altr,adc-slot-count", &value);
-> +	if (ret < 0)
-> +		return ret;
-> +	if (value == 0 || value > MAX_SLOT) {
-> +		dev_err(dev, "Invalid ADC slot count value");
-> +		return -EINVAL;
-> +	}
-> +	adc->slot_count = value;
-> +
-> +	ret = of_property_read_u32(np, "altr,adc-number", &value);
-> +	if (ret < 0)
-> +		return ret;
-> +	if (value == 0 || value > MAX_ADC) {
-> +		dev_err(dev, "Invalid ADC number value");
-> +		return -EINVAL;
-> +	}
-> +	adc->adc_number = value;
-> +
-> +	/* Device tree lookup for channels for each memory slots */
-> +	for (j = 0; j < adc->mode; j++) {
-> +		for (i = 0; i < adc->slot_count; i++) {
-> +			str[0] = '\0';
-> +
-> +			snprintf(str, sizeof(str),
-> +				"altr,adc%d-slot-sequence-%d",
-> +				(j + 1), (i + 1));
-> +
-> +			ret = of_property_read_u32(np, str, &value);
-> +			if (ret < 0)
-> +				return ret;
-> +			if (value > MAX_CHANNEL) {
-> +				dev_err(dev, "Invalid ADC channel value");
-> +				return -EINVAL;
-> +			}
-> +			adc->slot_sequence[j][i] = value;
-> +		}
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static int alt_modular_adc_probe(struct platform_device *pdev)
-> +{
-> +	struct altera_adc *adc;
-> +	struct device_node *np = pdev->dev.of_node;
-> +	struct iio_dev *indio_dev;
-> +	struct resource *mem;
-> +	int ret;
-> +
-> +	if (!np)
-> +		return -ENODEV;
-> +
-> +	indio_dev = iio_device_alloc(sizeof(struct altera_adc));
-Convention has become sizeof(*adc) as it makes the connection slightly
-more explicit.
-
-> +	if (!indio_dev) {
-> +		dev_err(&pdev->dev, "failed allocating iio device\n");
-> +		return -ENOMEM;
-> +	}
-> +
-> +	adc = iio_priv(indio_dev);
-> +
-> +	mem = platform_get_resource_byname(pdev, IORESOURCE_MEM,
-> +		"sequencer_csr");
-> +	adc->seq_regs = devm_ioremap_resource(&pdev->dev, mem);
-> +	if (IS_ERR(adc->seq_regs)) {
-> +		ret = PTR_ERR(adc->seq_regs);
-> +		goto err_iio;
-> +	}
-> +
-> +	mem = platform_get_resource_byname(pdev, IORESOURCE_MEM,
-> +		"sample_store_csr");
-> +	adc->sample_regs = devm_ioremap_resource(&pdev->dev, mem);
-> +	if (IS_ERR(adc->sample_regs)) {
-> +		ret = PTR_ERR(adc->sample_regs);
-> +		goto err_iio;
-> +	}
-> +
-> +	ret = alt_modular_adc_parse_dt(indio_dev, &pdev->dev);
-> +	if (ret < 0) {
-> +		dev_err(&pdev->dev, "failed to parse device tree\n");
-> +		goto err_iio;
-> +	}
-> +
-> +	ret = alt_modular_adc_channel_init(indio_dev);
-> +	if (ret < 0) {
-> +		dev_err(&pdev->dev, "failed initialize ADC channels\n");
-> +		goto err_iio;
-> +	}
-> +
-> +	platform_set_drvdata(pdev, indio_dev);
-> +
-> +	indio_dev->name = dev_name(&pdev->dev);
-> +	indio_dev->dev.parent = &pdev->dev;
-> +	indio_dev->dev.of_node = pdev->dev.of_node;
-> +	indio_dev->info = &adc_iio_info;
-> +	indio_dev->modes = INDIO_DIRECT_MODE;
-> +	indio_dev->num_channels = adc->slot_count;
-> +
-> +	ret = iio_device_register(indio_dev);
-> +	if (ret)
-> +		goto err_iio;
-> +
-> +	/* Disable Interrupt */
-> +	writel_relaxed(0, (adc->sample_regs + ADC_IER_REG));
-Given we don't seem to handle interrupts anywhere I'd expect the device
-to have come up with this disabled, but if it doesn't, this definitely
-belongs a lot earlier than here.
-> +
-> +	/* Start Continuous Sampling */
-> +	writel_relaxed((ADC_RUN_MSK), (adc->seq_regs + ADC_CMD_REG));
-
-I'm not sure it makes sense to do either of these last two steps
-after the userspace interface is started by the iio_device_register
-call.
-
-> +
-> +	return 0;
-> +
-Only 1 blank line here please (pretty much always considered enough
-in kernel coding style).
-> +
-> +err_iio:
-> +	iio_device_free(indio_dev);
-> +	return ret;
-> +}
-> +
-> +static int alt_modular_adc_remove(struct platform_device *pdev)
-> +{
-> +	struct iio_dev *indio_dev = platform_get_drvdata(pdev);
-> +	struct altera_adc *adc = iio_priv(indio_dev);
-> +
-
-If you don't unregister the iio_device first there is a clear
-race condition with userspace requests hitting after you've
-stopped the ADC but before the interfaces have been removed / marked
-as going away by that unregister call.
-
-> +	/* Stop ADC */
-> +	writel((ADC_STOP_MSK), (adc->seq_regs + ADC_CMD_REG));
-
-Still  an excess of brackets.  You don't need them around a lot
-of these arguments.  We can reasonably assume they don't contain
-any malicious elements that could lead to it doing other than the
-obvious.
-	writel(ADC_STOP_MSK, adc->seq_regs + ADC_CMD_REG);
-will be fine (similar cases elsewhere in the driver).
-
-> +
-> +	/* Unregister ADC */
-> +	iio_device_unregister(indio_dev);
-> +
-> +	return 0;
-> +}
-> +
-> +static struct platform_driver altr_modular_adc_driver = {
-> +	.probe		= alt_modular_adc_probe,
-> +	.remove		= alt_modular_adc_remove,
-> +	.driver		= {
-> +		.name	= "alt-modular-adc",
-> +		.owner	= THIS_MODULE,
-> +		.of_match_table = alt_modular_adc_match,
+> +static const struct mma_chip_info mma_chip_info_table[] = {
+> +	[mma8452] = {
+> +		.chip_id = MMA8452_DEVICE_ID,
+> +		.channels = mma8452_channels,
+> +		.num_channels = ARRAY_SIZE(mma8452_channels),
+> +		/*
+> +		 * Hardware has fullscale of -2G, -4G, -8G corresponding to
+> +		 * raw value -2048 for 12 bit or -512 for 10 bit.
+> +		 * The userspace interface uses m/s^2 and we declare micro units
+> +		 * So scale factor for 12 bit here is given by:
+> +		 *	g * N * 1000000 / 2048 for N = 2, 4, 8 and g=9.80665
+> +		 */
+> +		.mma_scales = { {0, 9577}, {0, 19154}, {0, 38307} },
+> +		.ev_cfg = MMA8452_TRANSIENT_CFG,
+> +		.ev_cfg_ele = MMA8452_TRANSIENT_CFG_ELE,
+> +		.ev_cfg_chan_shift = 1,
+> +		.ev_src = MMA8452_TRANSIENT_SRC,
+> +		.ev_src_xe = MMA8452_TRANSIENT_SRC_XTRANSE,
+> +		.ev_src_ye = MMA8452_TRANSIENT_SRC_YTRANSE,
+> +		.ev_src_ze = MMA8452_TRANSIENT_SRC_ZTRANSE,
+> +		.ev_ths = MMA8452_TRANSIENT_THS,
+> +		.ev_ths_mask = MMA8452_TRANSIENT_THS_MASK,
+> +		.ev_count = MMA8452_TRANSIENT_COUNT,
 > +	},
 > +};
 > +
+>  static struct attribute *mma8452_attributes[] = {
+>  	&iio_dev_attr_sampling_frequency_available.dev_attr.attr,
+>  	&iio_dev_attr_in_accel_scale_available.dev_attr.attr,
+> @@ -841,12 +915,19 @@ static int mma8452_reset(struct i2c_client *client)
+>  	return -ETIMEDOUT;
+>  }
+>  
+> +static const struct of_device_id mma8452_dt_ids[] = {
+> +	{ .compatible = "fsl,mma8452", .data = &mma_chip_info_table[mma8452] },
+> +	{ }
+> +};
+> +MODULE_DEVICE_TABLE(of, mma8452_dt_ids);
 > +
-> +module_platform_driver(altr_modular_adc_driver);
+>  static int mma8452_probe(struct i2c_client *client,
+>  			 const struct i2c_device_id *id)
+>  {
+>  	struct mma8452_data *data;
+>  	struct iio_dev *indio_dev;
+>  	int ret;
+> +	const struct of_device_id *match;
+>  
+>  	ret = i2c_smbus_read_byte_data(client, MMA8452_WHO_AM_I);
+>  	if (ret < 0)
+> @@ -854,6 +935,12 @@ static int mma8452_probe(struct i2c_client *client,
+>  	if (ret != MMA8452_DEVICE_ID)
+>  		return -ENODEV;
+>  
+> +	match = of_match_device(mma8452_dt_ids, &client->dev);
+> +	if (!match) {
+> +		dev_err(&client->dev, "unknown device model\n");
+> +		return -ENODEV;
+> +	}
 > +
-> +MODULE_DESCRIPTION("Altera Modular ADC Driver");
-> +MODULE_AUTHOR("Chee Nouk Phoon <cnphoon-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>");
-> +MODULE_LICENSE("GPL v2");
+>  	indio_dev = devm_iio_device_alloc(&client->dev, sizeof(*data));
+>  	if (!indio_dev)
+>  		return -ENOMEM;
+> @@ -861,14 +948,18 @@ static int mma8452_probe(struct i2c_client *client,
+>  	data = iio_priv(indio_dev);
+>  	data->client = client;
+>  	mutex_init(&data->lock);
+> +	data->chip_info = match->data;
+> +
+> +	dev_info(&client->dev, "registering %s accelerometer; ID 0x%x\n",
+> +		 match->compatible, data->chip_info->chip_id);
+>  
+>  	i2c_set_clientdata(client, indio_dev);
+>  	indio_dev->info = &mma8452_info;
+>  	indio_dev->name = id->name;
+>  	indio_dev->dev.parent = &client->dev;
+>  	indio_dev->modes = INDIO_DIRECT_MODE;
+> -	indio_dev->channels = mma8452_channels;
+> -	indio_dev->num_channels = ARRAY_SIZE(mma8452_channels);
+> +	indio_dev->channels = data->chip_info->channels;
+> +	indio_dev->num_channels = data->chip_info->num_channels;
+>  	indio_dev->available_scan_masks = mma8452_scan_masks;
+>  
+>  	ret = mma8452_reset(client);
+> @@ -987,17 +1078,11 @@ static SIMPLE_DEV_PM_OPS(mma8452_pm_ops, mma8452_suspend, mma8452_resume);
+>  #endif
+>  
+>  static const struct i2c_device_id mma8452_id[] = {
+> -	{ "mma8452", 0 },
+> +	{ "mma8452", mma8452 },
+>  	{ }
+>  };
+>  MODULE_DEVICE_TABLE(i2c, mma8452_id);
+>  
+> -static const struct of_device_id mma8452_dt_ids[] = {
+> -	{ .compatible = "fsl,mma8452" },
+> -	{ }
+> -};
+> -MODULE_DEVICE_TABLE(of, mma8452_dt_ids);
+> -
+>  static struct i2c_driver mma8452_driver = {
+>  	.driver = {
+>  		.name	= "mma8452",
 > 
