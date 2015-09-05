@@ -1,28 +1,52 @@
-From: "santosh.shilimkar@oracle.com" <santosh.shilimkar@oracle.com>
-Subject: Re: [PATCH v1 1/2] soc: ti: display firmware file name as part of
- boot log
-Date: Fri, 4 Sep 2015 23:53:35 -0400
-Message-ID: <55EA673F.8010904@oracle.com>
-References: <1441403199-10936-1-git-send-email-m-karicheri2@ti.com>
+From: Sharma Bhupesh <bhupesh.sharma@freescale.com>
+Subject: RE: [PATCH v2 03/10] Documentation/dts: Add bindings for QIXIS FPGA
+ controller found on FSL boards
+Date: Sat, 5 Sep 2015 08:11:59 +0000
+Message-ID: <BY1PR0301MB130339BD3B988DC938AA524482560@BY1PR0301MB1303.namprd03.prod.outlook.com>
+References: <1441349872-4560-1-git-send-email-bhupesh.sharma@freescale.com>
+	<1441349872-4560-4-git-send-email-bhupesh.sharma@freescale.com>
+	<CADRPPNR11BD4WfXTWoQ28rZCd_BJuhdWu49E6jjpO29CH2s5Ow@mail.gmail.com>
+	<BY1PR0301MB1303E56B5462BCD0C77C7E4D82570@BY1PR0301MB1303.namprd03.prod.outlook.com>
+ <CADRPPNQFxqNqgvrL9eVhaDX-SYRJxmGDd87zu_XHDHY6afiu3g@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1441403199-10936-1-git-send-email-m-karicheri2@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Murali Karicheri <m-karicheri2@ti.com>, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk, ssantosh@kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <CADRPPNQFxqNqgvrL9eVhaDX-SYRJxmGDd87zu_XHDHY6afiu3g@mail.gmail.com>
+Content-Language: en-US
+Sender: linux-clk-owner@vger.kernel.org
+To: Li Leo <LeoLi@freescale.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Singh Jaiprakash <jaiprakash.singh@freescale.com>, Arnd Bergmann <arnd@arndb.de>, "marc.zyngier@arm.com" <marc.zyngier@arm.com>, "Catalin.Marinas@arm.com" <Catalin.Marinas@arm.com>, "will.deacon@arm.com" <will.deacon@arm.com>, "olof@lixom.net" <olof@lixom.net>, "bhupesh.linux@gmail.com" <bhupesh.linux@gmail.com>, "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On 9/4/15 5:46 PM, Murali Karicheri wrote:
-> To help the user, print the PDSP file name as part of
-> knav_queue_load_pdsp(). This will be useful for users to know what
-> version of the firmware is loaded to PDSP. Also update the
-> document for the location of the QMSS accumulator PDSP firmware.
->
-> Signed-off-by: Murali Karicheri <m-karicheri2@ti.com>
-> ---
-
-Looks fine. Will pick both the patches.
-
-Regards,
-Santosh
+PiBGcm9tOiBwa3UubGVvQGdtYWlsLmNvbSBbbWFpbHRvOnBrdS5sZW9AZ21haWwuY29tXQ0KPiBT
+ZW50OiBTYXR1cmRheSwgU2VwdGVtYmVyIDA1LCAyMDE1IDI6NDMgQU0NCj4gT24gRnJpLCBTZXAg
+NCwgMjAxNSBhdCAzOjE2IFBNLCBTaGFybWEgQmh1cGVzaA0KPiA8Ymh1cGVzaC5zaGFybWFAZnJl
+ZXNjYWxlLmNvbT4gd3JvdGU6DQo+ID4+IEZyb206IHBrdS5sZW9AZ21haWwuY29tIFttYWlsdG86
+cGt1Lmxlb0BnbWFpbC5jb21dDQo+ID4+IFNlbnQ6IEZyaWRheSwgU2VwdGVtYmVyIDA0LCAyMDE1
+IDEwOjI3IFBNIE9uIEZyaSwgU2VwIDQsIDIwMTUgYXQgMTo1Nw0KPiA+PiBBTSwgQmh1cGVzaCBT
+aGFybWEgPGJodXBlc2guc2hhcm1hQGZyZWVzY2FsZS5jb20+IHdyb3RlOg0KPiA+PiA+IFRoaXMg
+cGF0Y2ggYWRkcyBiaW5kaW5ncyBmb3IgUUlYSVMgRlBHQSBjb250cm9sbGVyIGZvdW5kIG9uIEZT
+TA0KPiBib2FyZHMuDQo+ID4+DQo+ID4+IEEgZ2VuZXJhbCBjb21tZW50OiB3aGVuIHlvdSBhcmUg
+dXBkYXRpbmcgdGhlIGRldmljZSB0cmVlIGJpbmRpbmdzLg0KPiA+PiBZb3Ugc2hvdWxkIGNjIHRo
+ZSBkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyBtYWlsaW5nIGxpc3QuDQo+ID4+DQo+ID4+ID4N
+Cj4gPj4gPiBTb21lIEZyZWVzY2FsZSBib2FyZHMgbGlrZSBMUzIwODBBUURTL0xTMjA4MEFSREIg
+aGF2ZSBhbiBvbi1ib2FyZA0KPiA+PiA+IEZQR0EvQ1BMRCBjb25uZWN0ZWQgdG8gdGhlIElGQyBj
+b250cm9sbGVyLiBUaGUgYmluZGluZ3Mgc3BlY2lmaWVkDQo+ID4+ID4gaW4gdGhpcyBwYXRjaCBj
+YXRlciB0byB0aG9zZSBvbi1ib2FyZCBGUEdBL0NQTEQgY29udHJvbGxlcnMuDQo+ID4+DQo+ID4+
+IFdlIGFscmVhZHkgaGF2ZSB0aGUgYmluZGluZyBkZWZpbmVkIGluDQo+ID4+IERvY3VtZW50YXRp
+b24vZGV2aWNldHJlZS9iaW5kaW5ncy9wb3dlcnBjL2ZzbC9ib2FyZC50eHQuICBXZSBwcm9iYWJs
+eQ0KPiA+PiBzaG91bGQganVzdCBtb3ZlIGl0IHRvIGEgbW9yZSBnZW5lcmljIGxvY2F0aW9uLg0K
+PiA+DQo+ID4gQ29uc29saWRhdGlvbiBvZiBwb3dlcnBjIGFuZCBBUk0gYmluZGluZ3MgaXMgc29t
+ZXRoaW5nIHRoYXQgbmVlZHMgdG8NCj4gPiBiZSB0YXJnZXRlZCBieSBhIHNlcGFyYXRlIHBhdGNo
+LXNlcmllcywgcGVyaGFwcyBpbiBmdXR1cmUuDQo+ID4NCj4gPiBUaGVyZSBhcmUgYSBudW1iZXIg
+b2YgZHVwbGljYXRpb25zIHRoYXQgY2FuIGJlIGxvb2tlZCBpbnRvLCBidXQgSQ0KPiA+IGRvbid0
+IHRoaW5rIHRoaXMgcGF0Y2hzZXQgc2hvdWxkIGRlcGVuZCBvbiB0aGF0Lg0KPiANCj4gVGhlcmUg
+bWlnaHQgYmUgc29tZSBkdXBsaWNhdGlvbiwgYnV0IHdlIHNob3VsZG4ndCBiZSBhZGRpbmcgbW9y
+ZS4gIDopIEkNCj4gd291bGQgcmF0aGVyIHlvdSBkaXJlY3RseSB1cGRhdGluZyB0aGF0IGZpbGUg
+dGhhbiBjcmVhdGluZyBhIG5ldyBmaWxlDQo+IGV2ZW4gdGhvdWdoIHRoZSBvcmlnaW5hbCBvbmUg
+d2FzIGluIGEgd3JvbmcgZGlyZWN0b3J5Lg0KPiANCg0KSU1PIGEgUG93ZXJQQyBiaW5kaW5nIHVw
+ZGF0ZSBtYWtlcyBubyBzZW5zZSBpbiBhIEFSTSBtYWNoaW5lIHBhdGNoc2V0IHNlbnQNCm9uIGEg
+YXJtIHNwZWNpZmljIG1haWxpbmcgbGlzdC4NCg0KSSB3b3VsZCBsaWtlIHRvIHdhaXQgdG8gaGVh
+ciB3aGF0IG1haW50YWluZXJzIGhhdmUgdG8gc2F5IG9uIHRoZSBzYW1lLg0KDQpSZWdhcmRzLA0K
+Qmh1cGVzaA0K
