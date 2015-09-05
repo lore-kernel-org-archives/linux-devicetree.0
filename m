@@ -1,124 +1,137 @@
-From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH 3/3] ARM: dts: sun5i: Add dts file for q8
- formfactor a13 based tablets
-Date: Sat,  5 Sep 2015 16:55:53 +0200
-Message-ID: <1441464953-26351-3-git-send-email-hdegoede@redhat.com>
-References: <1441464953-26351-1-git-send-email-hdegoede@redhat.com>
-Reply-To: hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org
+From: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [[PATCH v2] 1/2] Altera Modular ADC driver device binding
+Date: Sat, 5 Sep 2015 16:12:02 +0100
+Message-ID: <55EB0642.5060107@kernel.org>
+References: <1441144199-20231-1-git-send-email-cnphoon@altera.com>
+ <1441144199-20231-2-git-send-email-cnphoon@altera.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBDRZXY4CYYORB74EVSXQKGQENMSKMWY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <1441464953-26351-1-git-send-email-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <http://groups.google.com/group/linux-sunxi/subscribe>
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1441144199-20231-2-git-send-email-cnphoon-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Chee Nouk Phoo <cnphoon-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, Michael.Hennerich-OyLXuOCK7orQT0dZR+AlfA@public.gmane.org, cnphoon.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This commits adds a generic dts file for q8 formfactor a13 based tablets.
+On 01/09/15 22:49, Chee Nouk Phoo wrote:
+> From: Chee Nouk Phoon <cnphoon-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>
+> 
+> Altera Modular ADC is soft IP that wraps the hardened ADC block in a Max10
+> device. It can be configured to dual ADC mode that supports two channel
+> synchronous sampling or independent single ADCs. ADC sampled values will be
+> written into memory slots in sequence determined by a user configurable
+> sequencer block.
+> 
+> This patch adds Altera Modular ADC driver device tree binding
+I think the convention is still to explicitly cc all device tree maintainers on bindings
+patches (added).
 
-The tablets ship in many variants, with the difference mainly being the
-touchscreen controller / accelerometer / wifi chip used.
+A few bits and pieces in line.  Basically I'd like more explanation + examples to
+make it clear what is going on.  This hardware has some unusual corners
+(inherent in being a highly configurable bit of IP) so perhaps needs more than
+we would normally expect in the way of description
 
-The wifi is USB based, and thus not listed in devicetree.
+Thanks,
 
-The touchscreen controller / accelerometer may turn out to be a problem
-once we add support for those. We can either do something with devicetree
-overlays, or add sun5i-a13-<touchscreen>-<accelerometer>.dts files. The
-latter is what the android mod community is doing with firmware images.
+Jonathan
+> 
+> Signed-off-by: Chee Nouk Phoon <cnphoon-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>
+> ---
+>  .../bindings/iio/adc/altr,modular-adc.txt          |   63 ++++++++++++++++++++
+>  1 files changed, 63 insertions(+), 0 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/iio/adc/altr,modular-adc.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/iio/adc/altr,modular-adc.txt b/Documentation/devicetree/bindings/iio/adc/altr,modular-adc.txt
+> new file mode 100644
+> index 0000000..faafcac
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/iio/adc/altr,modular-adc.txt
+> @@ -0,0 +1,63 @@
+> +Altera Modular (Dual) ADC
+> +
+> +This binding document describes both Altera Modular ADC and Altera Modular Dual
+> +ADC. Both options can be configured during generation time in Qsys. This driver
+> +only supports standard sequencer with Avalon-MM sample storage with up to 64
+> +memory slots.
+> +
+> +Required properties:
+> +- compatible: must be one of the following strings
+> +  "altr,modular-adc-1.0": single ADC configuration
+> +  "altr,modular-dual-adc-1.0": dual ADC configuration
+> +
+> +- reg: Address and length of the register set for the device. It contains the
+> +  information of registers in the same order as described by reg-names
+> +
+> +- reg-names: Should contain the reg names
+> +  "sequencer_csr": register region for adc sequencer block
+> +  "sample_store_csr": register region for sample store block
+> +
+> +- interrupts: interrupt line for ADC
+Normal to add a cross reference here to the standard interrupt binding
+docs (as there are loads of ways of specifying an interrupt!)
+> +
+> +- altr,adc-mode : ADC configuration
+> +  1: single ADC mode
+> +  2: dual ADC mode
+I'd guess this is only relevant if the compatible is the dual-adc version?
+Please document that if so.
+> +
+> +- altr,adc-slot-count : specify number of conversion slot in use
+slots  Could you add an example below of multiple slots in use?
+Would make it clearer what is going on here and what the expected
+syntax is for the bindings.
 
-This dts was tested with an a13 q8 tablet with a pcb labelled: "94V-0",
-silead gsl1680 touchscreen controller and a mc32x0 accelerometer.
+> +
+> +- altr,adc<ADC index>-slot-sequence-<slot index>: specify ADC channel
+> +  conversion sequence
+> +  <ADC index>: instantiated ADC number
+> +  <slot index>: slot index for ADC memory slot
+What for does the value take?
 
-Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
----
- arch/arm/boot/dts/Makefile                |  1 +
- arch/arm/boot/dts/sun5i-a13-q8-tablet.dts | 60 +++++++++++++++++++++++++++++++
- 2 files changed, 61 insertions(+)
- create mode 100644 arch/arm/boot/dts/sun5i-a13-q8-tablet.dts
+> +
+> +- altr,adc-number : specify ADC number when single ADC mode is selected
+> +  1: 1st ADC
+> +  2: 2nd ACD
+ADC
 
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index c08883c..6d43044 100644
---- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -573,6 +573,7 @@ dtb-$(CONFIG_MACH_SUN5I) += \
- 	sun5i-a13-inet-98v-rev2.dtb \
- 	sun5i-a13-olinuxino.dtb \
- 	sun5i-a13-olinuxino-micro.dtb \
-+	sun5i-a13-q8-tablet.dtb \
- 	sun5i-a13-utoo-p66.dtb \
- 	sun5i-r8-chip.dtb
- dtb-$(CONFIG_MACH_SUN6I) += \
-diff --git a/arch/arm/boot/dts/sun5i-a13-q8-tablet.dts b/arch/arm/boot/dts/sun5i-a13-q8-tablet.dts
-new file mode 100644
-index 0000000..72e93ac
---- /dev/null
-+++ b/arch/arm/boot/dts/sun5i-a13-q8-tablet.dts
-@@ -0,0 +1,60 @@
-+/*
-+ * Copyright 2015 Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-+ *
-+ * This file is dual-licensed: you can use it either under the terms
-+ * of the GPL or the X11 license, at your option. Note that this dual
-+ * licensing only applies to this file, and not this project as a
-+ * whole.
-+ *
-+ *  a) This file is free software; you can redistribute it and/or
-+ *     modify it under the terms of the GNU General Public License as
-+ *     published by the Free Software Foundation; either version 2 of the
-+ *     License, or (at your option) any later version.
-+ *
-+ *     This file is distributed in the hope that it will be useful,
-+ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ *     GNU General Public License for more details.
-+ *
-+ * Or, alternatively,
-+ *
-+ *  b) Permission is hereby granted, free of charge, to any person
-+ *     obtaining a copy of this software and associated documentation
-+ *     files (the "Software"), to deal in the Software without
-+ *     restriction, including without limitation the rights to use,
-+ *     copy, modify, merge, publish, distribute, sublicense, and/or
-+ *     sell copies of the Software, and to permit persons to whom the
-+ *     Software is furnished to do so, subject to the following
-+ *     conditions:
-+ *
-+ *     The above copyright notice and this permission notice shall be
-+ *     included in all copies or substantial portions of the Software.
-+ *
-+ *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-+ *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
-+ *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-+ *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
-+ *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
-+ *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-+ *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-+ *     OTHER DEALINGS IN THE SOFTWARE.
-+ */
-+
-+/dts-v1/;
-+#include "sun5i-a13.dtsi"
-+#include "sun5i-q8-common.dtsi"
-+
-+/ {
-+	model = "Q8 A13 Tablet";
-+	compatible = "allwinner,q8-a13", "allwinner,sun5i-a13";
-+};
-+
-+&reg_ldo3 {
-+	regulator-min-microvolt = <3300000>;
-+	regulator-max-microvolt = <3300000>;
-+	regulator-name = "vcc-wifi";
-+};
-+
-+&usbphy {
-+	usb1_vbus-supply = <&reg_ldo3>;
-+};
--- 
-2.4.3
+> +
+> +Example: single ADC
+> +modular_adc_0: adc@0x20000200 {
+> +  compatible = "altr,modular-adc";
+> +  reg = <0x20000000 0x00000008>,
+> +    <0x20000200 0x00000200>;
+> +  reg-names = "sequencer_csr", "sample_store_csr";
+> +  interrupt-parent = <&cpu>;
+> +  interrupts = <8>;
+> +  altr,adc-mode = <1>;
+> +  altr,adc-slot-count = <2>;
+> +  altr,adc1-slot-sequence-1 = <1>;
+> +  altr,adc-number = <1>;
+> +};
+> +
+> +Example: dual ADC
+> +modular_adc_1: adc@0x18002200 {
+> +  compatible = "altr,modular-dual-adc";
+> +  reg = <0x18002000 0x00000008>,
+> +    <0x18002200 0x00000200>;
+> +  reg-names = "sequencer_csr", "sample_store_csr";
+> +  interrupt-parent = <&cpu>;
+> +  interrupts = <8>;
+> +  altr,adc-mode = <2>;
+> +  altr,adc-slot-count = <1>;
+These needs some comments to explain the settings.
+There is more here than simply dual vs single ADCs.  Perhaps
+even a more complex example with multipel slots in use would
+clarify things?  As I understand it the slot sequencing is baked
+into the fpga logic and not configurable at runtime?
+Perhaps add some detail of that in this document as well to make it
+easier to review.
+
+> +  altr,adc1-slot-sequence-1 = <6>;
+> +  altr,adc2-slot-sequence-1 = <6>;
+> +};
+There's a hint here.  There should be a new line at the end of the file ;)
+
+> \ No newline at end of file
+> 
