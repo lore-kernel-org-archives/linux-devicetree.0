@@ -1,79 +1,359 @@
-From: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH] of_pci_irq: Silence bogus "of_irq_parse_pci() failed
- ..." messages.
-Date: Fri, 04 Sep 2015 19:38:29 -0700
-Message-ID: <55EA55A5.3030606@gmail.com>
-References: <1441393926-23225-1-git-send-email-ddaney.cavm@gmail.com> <55EA41E3.5010103@gmail.com> <55EA480C.6090306@gmail.com>
-Reply-To: frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+From: Ding Tianhong <dingtianhong@huawei.com>
+Subject: [PATCH 2/2] arm64: dts: add dts files for Hisilicon Hip05-D02 Development Board
+Date: Sat, 5 Sep 2015 10:58:59 +0800
+Message-ID: <1441421939-6236-3-git-send-email-dingtianhong@huawei.com>
+References: <1441421939-6236-1-git-send-email-dingtianhong@huawei.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <55EA480C.6090306-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: David Daney <ddaney.cavm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, David Daney <david.daney-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1441421939-6236-1-git-send-email-dingtianhong@huawei.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, catalin.marinas@arm.com, will.deacon@arm.com, devicetree@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, marc.zyngier@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, rob.herring@linaro.org, haojian.zhuang@linaro.org, zhangfei.gao@linaro.org, xuwei5@hisilicon.com, leo.yan@linaro.org, zhizhou.zh@gmail.com, linuxarm@huawei.com
 List-Id: devicetree@vger.kernel.org
 
-On 9/4/2015 6:40 PM, David Daney wrote:
-> On 09/04/2015 06:14 PM, Frank Rowand wrote:
->> On 9/4/2015 12:12 PM, David Daney wrote:
->>> From: David Daney <david.daney-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
->>>
->>> It is perfectly legitimate for a PCI device to have an
->>> PCI_INTERRUPT_PIN value of zero.  This happens if the device doesn't
->>> use interrupts, or on PCIe devices, where only MSI/MSI-X are
->>> supported.
->>>
->>> Silence the annoying "of_irq_parse_pci() failed with rc=-19" error
->>> messages by making them conditional on !-ENODEV (which can only be
->>> produced in the PCI_INTERRUPT_PIN == 0 case).
->>>
->>> Signed-off-by: David Daney <david.daney-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
->>> ---
->>>   drivers/of/of_pci_irq.c | 4 +++-
->>>   1 file changed, 3 insertions(+), 1 deletion(-)
->>>
->>> diff --git a/drivers/of/of_pci_irq.c b/drivers/of/of_pci_irq.c
->>> index 1710d9d..33d242a 100644
->>> --- a/drivers/of/of_pci_irq.c
->>> +++ b/drivers/of/of_pci_irq.c
->>> @@ -106,7 +106,9 @@ int of_irq_parse_and_map_pci(const struct pci_dev *dev, u8 slot, u8 pin)
->>>
->>>       ret = of_irq_parse_pci(dev, &oirq);
->>>       if (ret) {
->>> -        dev_err(&dev->dev, "of_irq_parse_pci() failed with rc=%d\n", ret);
->>> +        if (ret != -ENODEV)
->>> +            dev_err(&dev->dev,
->>> +                "of_irq_parse_pci() failed with rc=%d\n", ret);
->>>           return 0; /* Proper return code 0 == NO_IRQ */
->>>       }
->>>
->>>
->>
->> It is not safe to assume that the functions that of_irq_parse_pci() calls
->> will never be modified to return -ENODEV, thus resulting in of_irq_parse_pci()
->> returning -ENODEV for a reason other than PCI_INTERRUPT_PIN == 0.
->>
-> 
-> Since the current implementation *only ever* returns -ENODEV for PCI_INTERRUPT_PIN == 0, we could just document that behavior, and not hack up the APIs by adding a second return channel from the function.
+Add initial dtsi file to support Hisilicon Hip05-D02 Board with
+support of CPUs in four clusters and each cluster has quard Cortex-A57.
 
-And for each function that of_irq_parse_pci() calls and returns status from the
-function call you would need to document that behavior, and so on recursively.
+Also add dts file to support Hip05-D02 development board.
 
-For example, you would need to document of_irq_parse_one().  And that returns status
-from more function calls, so you would need to document of_irq_parse_oldworld(),
-of_parse_phandle_with_args(), of_irq_parse_raw(), and then anything they call.
-> 
-> The additional change on top of my patch would be to add a comment describing this behavior.
-> 
-> David Daney.
+Signed-off-by: Ding Tianhong <dingtianhong@huawei.com>
+Signed-off-by: Kefeng Wang <wangkefeng.wang@huawei.com>
+---
+ arch/arm64/boot/dts/hisilicon/Makefile      |   2 +-
+ arch/arm64/boot/dts/hisilicon/hip05-d02.dts |  36 ++++
+ arch/arm64/boot/dts/hisilicon/hip05.dtsi    | 271 ++++++++++++++++++++++++++++
+ 3 files changed, 308 insertions(+), 1 deletion(-)
+ create mode 100644 arch/arm64/boot/dts/hisilicon/hip05-d02.dts
+ create mode 100644 arch/arm64/boot/dts/hisilicon/hip05.dtsi
 
-< snip >
-
--Frank
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/arch/arm64/boot/dts/hisilicon/Makefile b/arch/arm64/boot/dts/hisilicon/Makefile
+index fa81a6e..cd158b8 100644
+--- a/arch/arm64/boot/dts/hisilicon/Makefile
++++ b/arch/arm64/boot/dts/hisilicon/Makefile
+@@ -1,4 +1,4 @@
+-dtb-$(CONFIG_ARCH_HISI) += hi6220-hikey.dtb
++dtb-$(CONFIG_ARCH_HISI) += hi6220-hikey.dtb hip05-d02.dtb
+ 
+ always		:= $(dtb-y)
+ subdir-y	:= $(dts-dirs)
+diff --git a/arch/arm64/boot/dts/hisilicon/hip05-d02.dts b/arch/arm64/boot/dts/hisilicon/hip05-d02.dts
+new file mode 100644
+index 0000000..ae34e25
+--- /dev/null
++++ b/arch/arm64/boot/dts/hisilicon/hip05-d02.dts
+@@ -0,0 +1,36 @@
++/**
++ * dts file for Hisilicon D02 Development Board
++ *
++ * Copyright (C) 2014,2015 Hisilicon Ltd.
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License version 2 as
++ * publishhed by the Free Software Foundation.
++ *
++ */
++
++/dts-v1/;
++
++#include "hip05.dtsi"
++
++/ {
++	model = "Hisilicon Hip05 D02 Development Board";
++	compatible = "hisilicon,hip05-d02";
++
++	memory@00000000 {
++		device_type = "memory";
++		reg = <0x0 0x00000000 0x0 0x80000000>;
++	};
++
++	aliases {
++		serial0 = &uart0;
++	};
++
++	chosen {
++		stdout-path = "serial0:115200n8";
++	};
++};
++
++&uart0 {
++	status = "ok";
++};
+diff --git a/arch/arm64/boot/dts/hisilicon/hip05.dtsi b/arch/arm64/boot/dts/hisilicon/hip05.dtsi
+new file mode 100644
+index 0000000..92d00f4
+--- /dev/null
++++ b/arch/arm64/boot/dts/hisilicon/hip05.dtsi
+@@ -0,0 +1,271 @@
++/**
++ * dts file for Hisilicon D02 Development Board
++ *
++ * Copyright (C) 2014,2015 Hisilicon Ltd.
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License version 2 as
++ * publishhed by the Free Software Foundation.
++ *
++ */
++
++#include <dt-bindings/interrupt-controller/arm-gic.h>
++
++/ {
++	compatible = "hisilicon,hip05-d02";
++	interrupt-parent = <&gic>;
++	#address-cells = <2>;
++	#size-cells = <2>;
++
++	psci {
++		compatible = "arm,psci-0.2";
++		method = "smc";
++	};
++
++	cpus {
++		#address-cells = <1>;
++		#size-cells = <0>;
++
++		cpu-map {
++			cluster0 {
++				core0 {
++					cpu = <&cpu0>;
++				};
++				core1 {
++					cpu = <&cpu1>;
++				};
++				core2 {
++					cpu = <&cpu2>;
++				};
++				core3 {
++					cpu = <&cpu3>;
++				};
++			};
++			cluster1 {
++				core0 {
++					cpu = <&cpu4>;
++				};
++				core1 {
++					cpu = <&cpu5>;
++				};
++				core2 {
++					cpu = <&cpu6>;
++				};
++				core3 {
++					cpu = <&cpu7>;
++				};
++			};
++			cluster2 {
++				core0 {
++					cpu = <&cpu8>;
++				};
++				core1 {
++					cpu = <&cpu9>;
++				};
++				core2 {
++					cpu = <&cpu10>;
++				};
++				core3 {
++					cpu = <&cpu11>;
++				};
++			};
++			cluster3 {
++				core0 {
++					cpu = <&cpu12>;
++				};
++				core1 {
++					cpu = <&cpu13>;
++				};
++				core2 {
++					cpu = <&cpu14>;
++				};
++				core3 {
++					cpu = <&cpu15>;
++				};
++			};
++		};
++
++		cpu0: cpu@20000 {
++			device_type = "cpu";
++			compatible = "hisilicon,hip05", "arm,armv8";
++			reg = <0x20000>;
++			enable-method = "psci";
++		};
++
++		cpu1: cpu@20001 {
++			device_type = "cpu";
++			compatible = "hisilicon,hip05", "arm,armv8";
++			reg = <0x20001>;
++			enable-method = "psci";
++		};
++
++		cpu2: cpu@20002 {
++			device_type = "cpu";
++			compatible = "hisilicon,hip05", "arm,armv8";
++			reg = <0x20002>;
++			enable-method = "psci";
++		};
++
++		cpu3: cpu@20003 {
++			device_type = "cpu";
++			compatible = "hisilicon,hip05", "arm,armv8";
++			reg = <0x20003>;
++			enable-method = "psci";
++		};
++
++		cpu4: cpu@20100 {
++			device_type = "cpu";
++			compatible = "hisilicon,hip05", "arm,armv8";
++			reg = <0x20100>;
++			enable-method = "psci";
++		};
++
++		cpu5: cpu@20101 {
++			device_type = "cpu";
++			compatible = "hisilicon,hip05", "arm,armv8";
++			reg = <0x20101>;
++			enable-method = "psci";
++		};
++
++		cpu6: cpu@20102 {
++			device_type = "cpu";
++			compatible = "hisilicon,hip05", "arm,armv8";
++			reg = <0x20102>;
++			enable-method = "psci";
++		};
++
++		cpu7: cpu@20103 {
++			device_type = "cpu";
++			compatible = "hisilicon,hip05", "arm,armv8";
++			reg = <0x20103>;
++			enable-method = "psci";
++		};
++
++		cpu8: cpu@20200 {
++			device_type = "cpu";
++			compatible = "hisilicon,hip05", "arm,armv8";
++			reg = <0x20200>;
++			enable-method = "psci";
++		};
++
++		cpu9: cpu@20201 {
++			device_type = "cpu";
++			compatible = "hisilicon,hip05", "arm,armv8";
++			reg = <0x20201>;
++			enable-method = "psci";
++		};
++
++		cpu10: cpu@20202 {
++			device_type = "cpu";
++			compatible = "hisilicon,hip05", "arm,armv8";
++			reg = <0x20202>;
++			enable-method = "psci";
++		};
++
++		cpu11: cpu@20203 {
++			device_type = "cpu";
++			compatible = "hisilicon,hip05", "arm,armv8";
++			reg = <0x20203>;
++			enable-method = "psci";
++		};
++
++		cpu12: cpu@20300 {
++			device_type = "cpu";
++			compatible = "hisilicon,hip05", "arm,armv8";
++			reg = <0x20300>;
++			enable-method = "psci";
++		};
++
++		cpu13: cpu@20301 {
++			device_type = "cpu";
++			compatible = "hisilicon,hip05", "arm,armv8";
++			reg = <0x20301>;
++			enable-method = "psci";
++		};
++
++		cpu14: cpu@20302 {
++			device_type = "cpu";
++			compatible = "hisilicon,hip05", "arm,armv8";
++			reg = <0x20302>;
++			enable-method = "psci";
++		};
++
++		cpu15: cpu@20303 {
++			device_type = "cpu";
++			compatible = "hisilicon,hip05", "arm,armv8";
++			reg = <0x20303>;
++			enable-method = "psci";
++		};
++	};
++
++	gic: interrupt-controller@8d000000 {
++		compatible = "arm,gic-v3";
++                #interrupt-cells = <3>;
++                #address-cells = <2>;
++                #size-cells = <2>;
++                ranges;
++                interrupt-controller;
++                #redistributor-regions = <1>;
++                redistributor-stride = <0x0 0x30000>;
++		reg = <0x0 0x8d000000 0 0x10000>,	/* GICD */
++		      <0x0 0x8d100000 0 0x300000>,	/* GICR */
++		      <0x0 0xfe000000 0 0x10000>,	/* GICC */
++		      <0x0 0xfe010000 0 0x10000>,       /* GICH */
++		      <0x0 0xfe020000 0 0x10000>;       /* GICV */
++		interrupts = <GIC_PPI 9 IRQ_TYPE_LEVEL_HIGH>;
++
++		its_totems: interrupt-controller@8c000000 {
++			compatible = "arm,gic-v3-its";
++			msi-controller;
++			reg = <0x0 0x8c000000 0x0 0x1000000>;
++		};
++	};
++
++	timer {
++		compatible = "arm,armv8-timer";
++		interrupts = <GIC_PPI 13 IRQ_TYPE_LEVEL_LOW>,
++			     <GIC_PPI 14 IRQ_TYPE_LEVEL_LOW>,
++			     <GIC_PPI 11 IRQ_TYPE_LEVEL_LOW>,
++			     <GIC_PPI 10 IRQ_TYPE_LEVEL_LOW>;
++	};
++
++	pmu {
++		compatible = "arm,armv8-pmuv3";
++		interrupts = <GIC_PPI 7 IRQ_TYPE_LEVEL_HIGH>;
++	};
++
++	soc {
++		compatible = "simple-bus";
++		#address-cells = <2>;
++		#size-cells = <2>;
++		ranges;
++
++		refclk200mhz: refclk200mhz {
++			compatible = "fixed-clock";
++			#clock-cells = <0>;
++			clock-frequency = <200000000>;
++		};
++
++		uart0: uart@80300000 {
++			compatible = "snps,dw-apb-uart";
++			reg = <0x0 0x80300000 0x0 0x10000>;
++			interrupts = <GIC_SPI 317 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&refclk200mhz>;
++			clock-names = "apb_pclk";
++			reg-shift = <2>;
++			reg-io-width = <4>;
++			status = "disabled";
++		};
++
++		uart1: uart@80310000 {
++			compatible = "snps,dw-apb-uart";
++			reg = <0x0 0x80310000 0x0 0x10000>;
++			interrupts = <GIC_SPI 318 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&refclk200mhz>;
++			clock-names = "apb_pclk";
++			reg-shift = <2>;
++			reg-io-width = <4>;
++			status = "disabled";
++		};
++	};
++};
+-- 
+1.9.0
