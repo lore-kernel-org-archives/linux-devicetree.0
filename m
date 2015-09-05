@@ -1,228 +1,213 @@
-From: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH 2/2] arm64: dts: add dts files for Hisilicon Hip05-D02
- Development Board
-Date: Sat, 5 Sep 2015 10:28:07 +0100
-Message-ID: <20150905102807.18941767@arm.com>
-References: <1441421939-6236-1-git-send-email-dingtianhong@huawei.com>
-	<1441421939-6236-3-git-send-email-dingtianhong@huawei.com>
+From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Subject: [PATCH 2/3] ARM: dts: sun5i: Add sun5i-q8-common.dtsi
+Date: Sat,  5 Sep 2015 16:55:52 +0200
+Message-ID: <1441464953-26351-2-git-send-email-hdegoede@redhat.com>
+References: <1441464953-26351-1-git-send-email-hdegoede@redhat.com>
+Reply-To: hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1441421939-6236-3-git-send-email-dingtianhong-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Ding Tianhong <dingtianhong-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, rob.herring-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, haojian.zhuang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, leo.yan-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, zhizhou.zh-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linuxarm-hv44wF8Li93QT0dZR+AlfA@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sunxi+bncBDRZXY4CYYORB7UEVSXQKGQE75XJF7Q-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <1441464953-26351-1-git-send-email-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <http://groups.google.com/group/linux-sunxi/subscribe>
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sat, 5 Sep 2015 10:58:59 +0800
-Ding Tianhong <dingtianhong-hv44wF8Li93QT0dZR+AlfA@public.gmane.org> wrote:
+This is the sun5i / a13 version of sun8i-q8-common.dtsi for use in dts
+files for a13 q8 based tablets. Compared to sun8i this uses uart1 for the
+serial console, and PG0 for card-detect for mmc0.
 
-> Add initial dtsi file to support Hisilicon Hip05-D02 Board with
-> support of CPUs in four clusters and each cluster has quard Cortex-A57.
-> 
-> Also add dts file to support Hip05-D02 development board.
-> 
-> Signed-off-by: Ding Tianhong <dingtianhong-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
-> Signed-off-by: Kefeng Wang <wangkefeng.wang-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
-> ---
->  arch/arm64/boot/dts/hisilicon/Makefile      |   2 +-
->  arch/arm64/boot/dts/hisilicon/hip05-d02.dts |  36 ++++
->  arch/arm64/boot/dts/hisilicon/hip05.dtsi    | 271 ++++++++++++++++++++++++++++
->  3 files changed, 308 insertions(+), 1 deletion(-)
->  create mode 100644 arch/arm64/boot/dts/hisilicon/hip05-d02.dts
->  create mode 100644 arch/arm64/boot/dts/hisilicon/hip05.dtsi
-> 
-> diff --git a/arch/arm64/boot/dts/hisilicon/Makefile b/arch/arm64/boot/dts/hisilicon/Makefile
-> index fa81a6e..cd158b8 100644
-> --- a/arch/arm64/boot/dts/hisilicon/Makefile
-> +++ b/arch/arm64/boot/dts/hisilicon/Makefile
-> @@ -1,4 +1,4 @@
-> -dtb-$(CONFIG_ARCH_HISI) += hi6220-hikey.dtb
-> +dtb-$(CONFIG_ARCH_HISI) += hi6220-hikey.dtb hip05-d02.dtb
->  
->  always		:= $(dtb-y)
->  subdir-y	:= $(dts-dirs)
-> diff --git a/arch/arm64/boot/dts/hisilicon/hip05-d02.dts b/arch/arm64/boot/dts/hisilicon/hip05-d02.dts
-> new file mode 100644
-> index 0000000..ae34e25
-> --- /dev/null
-> +++ b/arch/arm64/boot/dts/hisilicon/hip05-d02.dts
-> @@ -0,0 +1,36 @@
-> +/**
-> + * dts file for Hisilicon D02 Development Board
-> + *
-> + * Copyright (C) 2014,2015 Hisilicon Ltd.
-> + *
-> + * This program is free software; you can redistribute it and/or modify
-> + * it under the terms of the GNU General Public License version 2 as
-> + * publishhed by the Free Software Foundation.
-> + *
-> + */
-> +
-> +/dts-v1/;
-> +
-> +#include "hip05.dtsi"
-> +
-> +/ {
-> +	model = "Hisilicon Hip05 D02 Development Board";
-> +	compatible = "hisilicon,hip05-d02";
-> +
-> +	memory@00000000 {
-> +		device_type = "memory";
-> +		reg = <0x0 0x00000000 0x0 0x80000000>;
-> +	};
-> +
-> +	aliases {
-> +		serial0 = &uart0;
-> +	};
-> +
-> +	chosen {
-> +		stdout-path = "serial0:115200n8";
-> +	};
-> +};
-> +
-> +&uart0 {
-> +	status = "ok";
-> +};
-> diff --git a/arch/arm64/boot/dts/hisilicon/hip05.dtsi b/arch/arm64/boot/dts/hisilicon/hip05.dtsi
-> new file mode 100644
-> index 0000000..92d00f4
-> --- /dev/null
-> +++ b/arch/arm64/boot/dts/hisilicon/hip05.dtsi
-> @@ -0,0 +1,271 @@
-> +/**
-> + * dts file for Hisilicon D02 Development Board
-> + *
-> + * Copyright (C) 2014,2015 Hisilicon Ltd.
-> + *
-> + * This program is free software; you can redistribute it and/or modify
-> + * it under the terms of the GNU General Public License version 2 as
-> + * publishhed by the Free Software Foundation.
-> + *
-> + */
-> +
-> +#include <dt-bindings/interrupt-controller/arm-gic.h>
-> +
-> +/ {
-> +	compatible = "hisilicon,hip05-d02";
-> +	interrupt-parent = <&gic>;
-> +	#address-cells = <2>;
-> +	#size-cells = <2>;
-> +
-> +	psci {
-> +		compatible = "arm,psci-0.2";
-> +		method = "smc";
-> +	};
-> +
-> +	cpus {
-> +		#address-cells = <1>;
-> +		#size-cells = <0>;
-> +
-> +		cpu-map {
-> +			cluster0 {
-> +				core0 {
-> +					cpu = <&cpu0>;
-> +				};
-> +				core1 {
-> +					cpu = <&cpu1>;
-> +				};
-> +				core2 {
-> +					cpu = <&cpu2>;
-> +				};
-> +				core3 {
-> +					cpu = <&cpu3>;
-> +				};
-> +			};
-> +			cluster1 {
-> +				core0 {
-> +					cpu = <&cpu4>;
-> +				};
-> +				core1 {
-> +					cpu = <&cpu5>;
-> +				};
-> +				core2 {
-> +					cpu = <&cpu6>;
-> +				};
-> +				core3 {
-> +					cpu = <&cpu7>;
-> +				};
-> +			};
-> +			cluster2 {
-> +				core0 {
-> +					cpu = <&cpu8>;
-> +				};
-> +				core1 {
-> +					cpu = <&cpu9>;
-> +				};
-> +				core2 {
-> +					cpu = <&cpu10>;
-> +				};
-> +				core3 {
-> +					cpu = <&cpu11>;
-> +				};
-> +			};
-> +			cluster3 {
-> +				core0 {
-> +					cpu = <&cpu12>;
-> +				};
-> +				core1 {
-> +					cpu = <&cpu13>;
-> +				};
-> +				core2 {
-> +					cpu = <&cpu14>;
-> +				};
-> +				core3 {
-> +					cpu = <&cpu15>;
-> +				};
-> +			};
-> +		};
-> +
-> +		cpu0: cpu@20000 {
-> +			device_type = "cpu";
-> +			compatible = "hisilicon,hip05", "arm,armv8";
+This also adds pmic and otg support, which both use the same config on
+all known q8 a13 devices. This is not present in sun5i-q8-common.dtsi
+because pmic / otg support for sun8i has not yet been merged.
 
-Your cover letter says: "Hip05-D02 Development Board is based on
-Cortex-A57". So "hisilicon,hip05" has nothing to do here. This should
-read "arm,cortex-a57" (the SoC name is irrelevant for a cpu node).
+Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+---
+ arch/arm/boot/dts/sun5i-q8-common.dtsi | 170 +++++++++++++++++++++++++++++++++
+ 1 file changed, 170 insertions(+)
+ create mode 100644 arch/arm/boot/dts/sun5i-q8-common.dtsi
 
-Apparently I'm not the first one to mention that to you, so please
-address this in your next version.
-
-[...]
-
-> +	gic: interrupt-controller@8d000000 {
-> +		compatible = "arm,gic-v3";
-> +                #interrupt-cells = <3>;
-> +                #address-cells = <2>;
-> +                #size-cells = <2>;
-> +                ranges;
-> +                interrupt-controller;
-> +                #redistributor-regions = <1>;
-> +                redistributor-stride = <0x0 0x30000>;
-
-Really? You redistributors are 192kB apart?
-
-> +		reg = <0x0 0x8d000000 0 0x10000>,	/* GICD */
-> +		      <0x0 0x8d100000 0 0x300000>,	/* GICR */
-> +		      <0x0 0xfe000000 0 0x10000>,	/* GICC */
-> +		      <0x0 0xfe010000 0 0x10000>,       /* GICH */
-> +		      <0x0 0xfe020000 0 0x10000>;       /* GICV */
-> +		interrupts = <GIC_PPI 9 IRQ_TYPE_LEVEL_HIGH>;
-> +
-> +		its_totems: interrupt-controller@8c000000 {
-> +			compatible = "arm,gic-v3-its";
-> +			msi-controller;
-> +			reg = <0x0 0x8c000000 0x0 0x1000000>;
-
-Why is the ITS region that big? It should normally only be 128kB.
-
-Thanks,
-
-	M.
+diff --git a/arch/arm/boot/dts/sun5i-q8-common.dtsi b/arch/arm/boot/dts/sun5i-q8-common.dtsi
+new file mode 100644
+index 0000000..0641d68
+--- /dev/null
++++ b/arch/arm/boot/dts/sun5i-q8-common.dtsi
+@@ -0,0 +1,170 @@
++/*
++ * Copyright 2015 Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
++ *
++ * This file is dual-licensed: you can use it either under the terms
++ * of the GPL or the X11 license, at your option. Note that this dual
++ * licensing only applies to this file, and not this project as a
++ * whole.
++ *
++ *  a) This file is free software; you can redistribute it and/or
++ *     modify it under the terms of the GNU General Public License as
++ *     published by the Free Software Foundation; either version 2 of the
++ *     License, or (at your option) any later version.
++ *
++ *     This file is distributed in the hope that it will be useful,
++ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
++ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ *     GNU General Public License for more details.
++ *
++ * Or, alternatively,
++ *
++ *  b) Permission is hereby granted, free of charge, to any person
++ *     obtaining a copy of this software and associated documentation
++ *     files (the "Software"), to deal in the Software without
++ *     restriction, including without limitation the rights to use,
++ *     copy, modify, merge, publish, distribute, sublicense, and/or
++ *     sell copies of the Software, and to permit persons to whom the
++ *     Software is furnished to do so, subject to the following
++ *     conditions:
++ *
++ *     The above copyright notice and this permission notice shall be
++ *     included in all copies or substantial portions of the Software.
++ *
++ *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
++ *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
++ *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
++ *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
++ *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
++ *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
++ *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
++ *     OTHER DEALINGS IN THE SOFTWARE.
++ */
++#include "sunxi-q8-common.dtsi"
++
++/ {
++	aliases {
++		serial0 = &uart1;
++	};
++
++	chosen {
++		stdout-path = "serial0:115200n8";
++	};
++};
++
++&cpu0 {
++	cpu-supply = <&reg_dcdc2>;
++};
++
++&ehci0 {
++	status = "okay";
++};
++
++&i2c0 {
++	axp209: pmic@34 {
++		reg = <0x34>;
++		interrupts = <0>;
++	};
++};
++
++&i2c1 {
++	pcf8563: rtc@51 {
++		compatible = "nxp,pcf8563";
++		reg = <0x51>;
++	};
++};
++
++#include "axp209.dtsi"
++
++&mmc0 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&mmc0_pins_a>, <&mmc0_cd_pin_q8>;
++	vmmc-supply = <&reg_vcc3v0>;
++	bus-width = <4>;
++	cd-gpios = <&pio 6 0 GPIO_ACTIVE_HIGH>; /* PG0 */
++	cd-inverted;
++	status = "okay";
++};
++
++&otg_sram {
++	status = "okay";
++};
++
++&pio {
++	mmc0_cd_pin_q8: mmc0_cd_pin@0 {
++		allwinner,pins = "PG0";
++		allwinner,function = "gpio_in";
++		allwinner,drive = <SUN4I_PINCTRL_10_MA>;
++		allwinner,pull = <SUN4I_PINCTRL_PULL_UP>;
++	};
++
++	usb0_vbus_detect_pin: usb0_vbus_detect_pin@0 {
++		allwinner,pins = "PG1";
++		allwinner,function = "gpio_in";
++		allwinner,drive = <SUN4I_PINCTRL_10_MA>;
++		allwinner,pull = <SUN4I_PINCTRL_PULL_DOWN>;
++	};
++
++	usb0_id_detect_pin: usb0_id_detect_pin@0 {
++		allwinner,pins = "PG2";
++		allwinner,function = "gpio_in";
++		allwinner,drive = <SUN4I_PINCTRL_10_MA>;
++		allwinner,pull = <SUN4I_PINCTRL_PULL_UP>;
++	};
++
++	usb0_vbus_pin_a: usb0_vbus_pin@0 {
++		allwinner,pins = "PG12";
++		allwinner,function = "gpio_out";
++		allwinner,drive = <SUN4I_PINCTRL_10_MA>;
++		allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
++	};
++};
++
++&reg_dcdc2 {
++	regulator-always-on;
++	regulator-min-microvolt = <1000000>;
++	regulator-max-microvolt = <1500000>;
++	regulator-name = "vdd-cpu";
++};
++
++&reg_dcdc3 {
++	regulator-always-on;
++	regulator-min-microvolt = <1000000>;
++	regulator-max-microvolt = <1400000>;
++	regulator-name = "vdd-int-pll";
++};
++
++&reg_ldo1 {
++	regulator-name = "vdd-rtc";
++};
++
++&reg_ldo2 {
++	regulator-always-on;
++	regulator-min-microvolt = <3000000>;
++	regulator-max-microvolt = <3000000>;
++	regulator-name = "avcc";
++};
++
++&reg_usb0_vbus {
++	gpio = <&pio 6 12 GPIO_ACTIVE_HIGH>; /* PG12 */
++	status = "okay";
++};
++
++&uart1 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&uart1_pins_b>;
++	status = "okay";
++};
++
++&usb_otg {
++	dr_mode = "otg";
++	status = "okay";
++};
++
++&usbphy {
++	pinctrl-names = "default";
++	pinctrl-0 = <&usb0_id_detect_pin>, <&usb0_vbus_detect_pin>;
++	usb0_id_det-gpio = <&pio 6 2 GPIO_ACTIVE_HIGH>; /* PG2 */
++	usb0_vbus_det-gpio = <&pio 6 1 GPIO_ACTIVE_HIGH>; /* PG1 */
++	usb0_vbus-supply = <&reg_usb0_vbus>;
++	status = "okay";
++};
 -- 
-Jazz is not dead. It just smells funny.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+2.4.3
