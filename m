@@ -1,60 +1,76 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [RFC PATCH] gpio-pca953x driver and PCA9536 chip
-Date: Sat, 5 Sep 2015 23:15:05 +0200
-Message-ID: <CACRpkdZcju7tpoi9+R4Bb98FEJNSfmYaRyLp7YF2ZT+hjkAMVA@mail.gmail.com>
-References: <55E4641D.7050603@elpromaelectronics.com>
+From: Yakir Yang <ykk-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Subject: Re: [PATCH v4 01/16] drm: exynos/dp: fix code style
+Date: Sun, 06 Sep 2015 09:33:45 +0800
+Message-ID: <55EB97F9.3010503@rock-chips.com>
+References: <1441086371-24838-1-git-send-email-ykk@rock-chips.com>	
+ <1441086399-24889-1-git-send-email-ykk@rock-chips.com>	
+ <55E79297.3050203@samsung.com> <55E7D4E4.6070808@rock-chips.com>	
+ <55E7D5EB.1060505@samsung.com> <55E7DBA7.90504@rock-chips.com>
+ <1441259878.12163.75.camel@perches.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <55E4641D.7050603@elpromaelectronics.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: =?UTF-8?Q?Janusz_U=C5=BCycki?= <j.uzycki@elpromaelectronics.com>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Grygorii Strashko <grygorii.strashko@ti.com>, Joshua Scott <joshua.scott@alliedtelesis.co.nz>, Toby Smith <toby@tismith.id.au>
-Cc: Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Krzysztof Borgulski <k.borgulski@elproma.com.pl>
+Content-Type: text/plain; charset="utf-8"; Format="flowed"
+Content-Transfer-Encoding: base64
+Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+In-Reply-To: <1441259878.12163.75.camel-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
+List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
+Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Joe Perches <joe-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org>
+Cc: Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, Andrzej Hajda <a.hajda-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Gustavo Padovan <gustavo.padovan-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>, architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, seanpaul-F7+t8E8rja9Wk0Htik3J/w@public.gmane.org, djkurtz-F7+t8E8rja9Wk0Htik3J/w@public.gmane.org, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Kukjin Kim <kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Russell King <rmk+kernel-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Inki Dae <inki.dae-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, dianders-F7+t8E8rja9Wk0Htik3J/w@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Mark Yao <mark.yao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Jingoo Han <jingoohan1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-kernel-u79uwXL29TaqPxH82wqD4g@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Adding linux-gpio and some people that have been patching
-this driver to TO-line.
-
-Grygorii et al, does this look correct? Anyone who can test and
-send a patch for mainline?
-
-Yours,
-Linus Walleij
-
-On Mon, Aug 31, 2015 at 4:26 PM, Janusz U=C5=BCycki
-<j.uzycki@elpromaelectronics.com> wrote:
-> Hi,
->
-> The driver sets register #02 (inversion) to 0x01 instead of 0x00 on m=
-y
-> board.
-> Reason: device_pca953x_init() does not initialize val buffer because =
-NBANK()
-> returns
-> for PCA9536 ngpio=3D4 value 0 instead of 1.
->
-> My proposed code-patch for 3.14.17 is below.
-> Because I don't work on stable/next I can't deliver complete/ready pa=
-tch.
-> Please for comments.
->
-> best regards
-> Janusz
->
-> --- a/drivers/gpio/gpio-pca953x.c
-> +++ b/drivers/gpio/gpio-pca953x.c
-> @@ -75,7 +75,7 @@ MODULE_DEVICE_TABLE(i2c, pca953x_id);
->  #define MAX_BANK 5
->  #define BANK_SZ 8
->
-> -#define NBANK(chip) (chip->gpio_chip.ngpio / BANK_SZ)
-> +#define NBANK(chip) DIV_ROUND_UP(chip->gpio_chip.ngpio, BANK_SZ)
->
->  struct pca953x_chip {
->         unsigned gpio_start;
---
-To unsubscribe from this list: send the line "unsubscribe linux-gpio" i=
-n
-the body of a message to majordomo@vger.kernel.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+SGkgSm9lLAoK5ZyoIDA5LzAzLzIwMTUgMDE6NTcgUE0sIEpvZSBQZXJjaGVzIOWGmemBkzoKPiBP
+biBUaHUsIDIwMTUtMDktMDMgYXQgMTM6MzMgKzA4MDAsIFlha2lyIFlhbmcgd3JvdGU6Cj4gW10K
+Pj4+Pj4+IGRpZmYgLS1naXQgYS9kcml2ZXJzL2dwdS9kcm0vZXh5bm9zL2V4eW5vc19kcF9jb3Jl
+LmMKPiBbXQo+Pj4+Pj4gQEAgLTE1NSwyNCArMTU2LDIyIEBAIHN0YXRpYyBpbnQgZXh5bm9zX2Rw
+X3JlYWRfZWRpZChzdHJ1Y3QKPj4+Pj4+IGV4eW5vc19kcF9kZXZpY2UgKmRwKQo+Pj4+Pj4gICAg
+ICAgICAgICAgfQo+Pj4+Pj4gICAgICAgICAgICAgICBleHlub3NfZHBfcmVhZF9ieXRlX2Zyb21f
+ZHBjZChkcCwgRFBfVEVTVF9SRVFVRVNULAo+Pj4+Pj4gLSAgICAgICAgICAgICAgICAgICAgJnRl
+c3RfdmVjdG9yKTsKPj4+Pj4+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICZ0ZXN0X3ZlY3Rv
+cik7Cj4+Pj4+PiAgICAgICAgICAgICBpZiAodGVzdF92ZWN0b3IgJiBEUF9URVNUX0xJTktfRURJ
+RF9SRUFEKSB7Cj4+Pj4+PiAtICAgICAgICAgICAgZXh5bm9zX2RwX3dyaXRlX2J5dGVfdG9fZHBj
+ZChkcCwKPj4+Pj4+IC0gICAgICAgICAgICAgICAgRFBfVEVTVF9FRElEX0NIRUNLU1VNLAo+Pj4+
+Pj4gKyAgICAgICAgICAgIGV4eW5vc19kcF93cml0ZV9ieXRlX3RvX2RwY2QoCj4+Pj4+PiArICAg
+ICAgICAgICAgICAgIGRwLCBEUF9URVNUX0VESURfQ0hFQ0tTVU0sCj4+Pj4+PiAgICAgICAgICAg
+ICAgICAgICAgIGVkaWRbRURJRF9CTE9DS19MRU5HVEggKyBFRElEX0NIRUNLU1VNXSk7Cj4+Pj4+
+PiAtICAgICAgICAgICAgZXh5bm9zX2RwX3dyaXRlX2J5dGVfdG9fZHBjZChkcCwKPj4+Pj4+IC0g
+ICAgICAgICAgICAgICAgRFBfVEVTVF9SRVNQT05TRSwKPj4+Pj4+ICsgICAgICAgICAgICBleHlu
+b3NfZHBfd3JpdGVfYnl0ZV90b19kcGNkKAo+Pj4+Pj4gKyAgICAgICAgICAgICAgICBkcCwgRFBf
+VEVTVF9SRVNQT05TRSwKPj4+Pj4+ICAgICAgICAgICAgICAgICAgICAgRFBfVEVTVF9FRElEX0NI
+RUNLU1VNX1dSSVRFKTsKPj4+Pj4gVG8gbWUsIG1pc3NpbmcgYXJndW1lbnQgYWZ0ZXIgb3Blbmlu
+ZyBwYXJlbnRoZXNpcywgbG9va3Mgd29yc2UuIEkgd291bGQKPj4+Pj4gcHJlZmVyOgo+Pj4+Pgo+
+Pj4+PiAgICAgICAgICAgICAgIGV4eW5vc19kcF93cml0ZV9ieXRlX3RvX2RwY2QoZHAsCj4+Pj4+
+Cj4+Pj4+IFdoeSB5b3UgbW92ZWQgdGhlICdkcCcgYXJndW1lbnQgdG8gbmV3IGxpbmU/Cj4+Pj4g
+SG1tLi4uIEp1c3QgbGlrZSBzdHlsZSB0b29sIGluZGljYXRlLCBubyBtb3JlIHdhcm5pbmcgYWZ0
+ZXIKPj4+PiB0aGF0IGNoYW5nZS4KPj4+Pgo+Pj4+IEZvciBub3csIEkgd291bGQgbGlrZSB0byBm
+b2xsb3cgdGhlIG9yaWdpbmFsIHN0eWxlLCBqdXN0IGltcHJvdmVkCj4+Pj4gc29tZSBvYnZpb3Vz
+IHN0eWxlIHByb2JsZW0uICA6LSkKPj4+IFdoYXQgd2FzIHRoZSBjaGVja3BhdGNoIHdhcm5pbmcg
+dGhhdCBzYWlkICdkcCcgaGFzIHRvIG1vdmUgdG8gbmV3IGxpbmU/Cj4+PiBJIHRyaWVkIHRoaXMg
+YW5kIEkgZG9uJ3Qgc2VlIGl0Lgo+PiBjaGVja3BhdGNoIGhhdmVuJ3QgcmVtaW5kIG1lIHRoYXQg
+cHV0IGRwIHRvIG5ldyBsaW5lIHdvdWxkIGZpeAo+PiB0aGlzIHdhcm5pbmcsIHRoaXMganVzdCBj
+b21lIGZyb20gbXkgZXhwZXJpbWVudHMuIEFuZCBJIHdvcmtzLAo+PiBubyBtb3JlIHdhcm5pbmdz
+IGZyb20gY2hlY2twYXRjaCwgc28gSSB0b2tlIHRoaXMgc3R5bGUuCj4gQ2hlY2twYXRjaCBpc24n
+dCBhIGdyZWF0IGFyYml0ZXIgb2Ygc3R5bGUuCj4gSXQncyBqdXN0IGEgYnJhaW5sZXNzIHRvb2wu
+Cj4KPiBBbHdheXMgdXNlIHlvdXIgaW5zdGVhZCBvZiBhbnl0aGluZyBicmFpbmxlc3MuCj4KPiBJ
+ZiBpdCB3ZXJlIGNvZGUgSSB3YXMgd3JpdGluZywgSSdkIGlnbm9yZSA4MCBjb2x1bW5zIHdhcm5p
+bmdzCj4gd2hlcmUgYXBwcm9wcmlhdGUuCj4KPiBUaGVzZSBhcmUgbG9uZyBmdW5jdGlvbiBuYW1l
+cyBhbmQgbG9uZyBtYWNybyBkZWZpbmVzLCBzbyBpdCdzCj4gaW5hcHByb3ByaWF0ZSB0byB1c2Ug
+ODAgY29sdW1ucyBhcyBhIGd1aWRpbmcgc3R5bGUuCj4KPiBJJ2Qgd3JpdGU6Cj4KPiAJCWV4eW5v
+c19kcF9yZWFkX2J5dGVfZnJvbV9kcGNkKGRwLCBEUF9URVNUX1JFUVVFU1QsICZ0ZXN0X3ZlY3Rv
+cik7Cj4gCQlpZiAodGVzdF92ZWN0b3IgJiBEUF9URVNUX0xJTktfRURJRF9SRUFEKSB7Cj4gCQkJ
+ZXh5bm9zX2RwX3dyaXRlX2J5dGVfdG9fZHBjZChkcCwgRFBfVEVTVF9FRElEX0NIRUNLU1VNLAo+
+IAkJCQkJCSAgICAgZWRpZFtFRElEX0JMT0NLX0xFTkdUSCArIEVESURfQ0hFQ0tTVU1dKTsKPiAJ
+CQlleHlub3NfZHBfd3JpdGVfYnl0ZV90b19kcGNkKGRwLCBEUF9URVNUX1JFU1BPTlNFLAo+IAkJ
+CQkJCSAgICAgRFBfVEVTVF9FRElEX0NIRUNLU1VNX1dSSVRFKTsKPiAJCX0KPgoKU28uLi4ganVz
+dCBpZ25vcmUgdGhlIDgwIGNvbHVtbnMgd2FybmluZ3MuIEFjdHVhbGx5IEkgcHJlZmVyIHRvCmtl
+ZXAgdGhlIG9yaWdpbmFsIHN0eWxlIGluIHRoaXMgY2FzZS4KClRoYW5rcywKLSBZYWtpcgpdCj4K
+Pgo+CgoKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCkxp
+bnV4LXJvY2tjaGlwIG1haWxpbmcgbGlzdApMaW51eC1yb2NrY2hpcEBsaXN0cy5pbmZyYWRlYWQu
+b3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8vbGludXgtcm9j
+a2NoaXAK
