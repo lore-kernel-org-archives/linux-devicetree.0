@@ -1,65 +1,130 @@
-From: Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Subject: Re: [PATCH v17 3/4] soc: rockchip: power-domain: Add power domain
- driver
-Date: Sun, 06 Sep 2015 11:04:58 +0800
-Message-ID: <55EBAD5A.9060107@rock-chips.com>
-References: <1441184380-13827-1-git-send-email-wxt@rock-chips.com>
- <1441184380-13827-4-git-send-email-wxt@rock-chips.com>
- <7hbndkptfm.fsf@linaro.org>
+From: Yakir Yang <ykk@rock-chips.com>
+Subject: Re: [PATCH v4 11/16] drm: bridge: analogix/dp: add platform device
+ type support
+Date: Sun, 06 Sep 2015 12:07:22 +0800
+Message-ID: <55EBBBFA.3020801@rock-chips.com>
+References: <1441086371-24838-1-git-send-email-ykk@rock-chips.com> <1441087620-25586-1-git-send-email-ykk@rock-chips.com> <55E8E77C.4020305@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
-Content-Transfer-Encoding: base64
-Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-In-Reply-To: <7hbndkptfm.fsf-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
-List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: Kevin Hilman <khilman-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, "jinkun.hong" <jinkun.hong-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8;
+	format=flowed
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <55E8E77C.4020305@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Krzysztof Kozlowski <k.kozlowski@samsung.com>, Heiko Stuebner <heiko@sntech.de>, Thierry Reding <treding@nvidia.com>, Jingoo Han <jingoohan1@gmail.com>, Inki Dae <inki.dae@samsung.com>, joe@perches.com, Kukjin Kim <kgene@kernel.org>, Mark Yao <mark.yao@rock-chips.com>
+Cc: Russell King <rmk+kernel@arm.linux.org.uk>, djkurtz@chromium.com, dianders@chromium.com, seanpaul@chromium.com, ajaynumb@gmail.com, Andrzej Hajda <a.hajda@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, David Airlie <airlied@linux.ie>, Gustavo Padovan <gustavo.padovan@collabora.co.uk>, Andy Yan <andy.yan@rock-chips.com>, Kumar Gala <galak@codeaurora.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Kishon Vijay Abraham I <kishon@ti.com>, architt@codeaurora.org, robherring2@gmail.com, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-rockchip@lists.infradead.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-S2V2aW4sCgpUaGFua3MgZm9yIGhhdmluZyBhIGxvb2sgaW50byBpdC4KCgrlnKggMjAxNeW5tDA5
-5pyIMDPml6UgMDI6MjgsIEtldmluIEhpbG1hbiDlhpnpgZM6Cj4gQ2Flc2FyIFdhbmcgPHd4dEBy
-b2NrLWNoaXBzLmNvbT4gd3JpdGVzOgo+Cj4+IFRoaXMgZHJpdmVyIGlzIGZvdW5kIG9uIFJLMzI4
-OCBTb0NzLgo+Pgo+PiBJbiBvcmRlciB0byBtZWV0IGhpZ2ggcGVyZm9ybWFuY2UgYW5kIGxvdyBw
-b3dlciByZXF1aXJlbWVudHMsIGEgcG93ZXIKPj4gbWFuYWdlbWVudCB1bml0IGlzIGRlc2lnbmVk
-IG9yIHNhdmluZyBwb3dlciB3aGVuIFJLMzI4OCBpbiBsb3cgcG93ZXIKPj4gbW9kZS4KPj4gVGhl
-IFJLMzI4OCBQTVUgaXMgZGVkaWNhdGVkIGZvciBtYW5hZ2luZyB0aGUgcG93ZXIgb2YgdGhlIHdo
-b2xlIGNoaXAuCj4+Cj4+IFBNVSBjYW4gd29yayBpbiB0aGUgTG93IFBvd2VyIE1vZGUgYnkgc2V0
-dGluZyBiaXRbMF0gb2YgUE1VX1BXUk1PREVfQ09OCj4+IHJlZ2lzdGVyLiBBZnRlciBzZXR0aW5n
-IHRoZSByZWdpc3RlciwgUE1VIHdvdWxkIGVudGVyIHRoZSBMb3cgUG93ZXIgbW9kZS4KPj4gSW4g
-dGhlIGxvdyBwb3dlciBtb2RlLCBwbXUgd2lsbCBhdXRvIHBvd2VyIG9uL29mZiB0aGUgc3BlY2lm
-aWVkIHBvd2VyCj4+IGRvbWFpbiwgc2VuZCBpZGxlIHJlcSB0byBzcGVjaWZpZWQgcG93ZXIgZG9t
-YWluLCBzaHV0IGRvd24vdXAgcGxsIGFuZAo+PiBzbyBvbi4gQWxsIG9mIGFib3ZlIGFyZSBjb25m
-aWd1cmFibGUgYnkgc2V0dGluZyBjb3JyZXNwb25kaW5nIHJlZ2lzdGVycy4KPj4KPj4gU2lnbmVk
-LW9mZi1ieTogamlua3VuLmhvbmcgPGppbmt1bi5ob25nQHJvY2stY2hpcHMuY29tPgo+PiBTaWdu
-ZWQtb2ZmLWJ5OiBDYWVzYXIgV2FuZyA8d3h0QHJvY2stY2hpcHMuY29tPgo+IFsuLi5dCj4KPj4g
-K3N0YXRpYyB2b2lkIHJvY2tjaGlwX3BtX3JlbW92ZV9vbmVfZG9tYWluKHN0cnVjdCByb2NrY2hp
-cF9wbV9kb21haW4gKnBkKQo+PiArewo+PiArCWludCBpOwo+PiArCj4+ICsJZm9yIChpID0gMDsg
-aSA8IHBkLT5udW1fY2xrczsgaSsrKSB7Cj4+ICsJCWNsa191bnByZXBhcmUocGQtPmNsa3NbaV0p
-Owo+PiArCQljbGtfcHV0KHBkLT5jbGtzW2ldKTsKPj4gKwl9Cj4KPiBZb3UgZG9uJ3Qgc2V0IHBk
-LT5udW1fY2xrcyA9IDAgaGVyZSwgd2hpY2ggbWVhbnMgb3RoZXIgcGxhY2VzIHRoYXQKPiBpdGVy
-YXRlIG92ZXIgdGhlIGNsb2NrcyBtaWdodCByYWNlIHdpdGggdGhpcyBhbmQgdHJ5IHRvIHVzZSBj
-bG9ja3MgdGhhdAo+IGhhdmUgYmVlbiB1bnByZXBhcmVkL3B1dC4KCkFncmVlLCB3ZSBzaG91bGQg
-c2V0IHRoZSAicGQtPm51bV9jbG9rcz0wJyBpbiBoZXJlLgo+IFRoaXMgbWlnaHQgYmUgb3Zlci1w
-YXJhbm9pZCwgYnV0IGluIHBhcnRpY3VsYXIsIHRoaXMgY291bGQgcmFjZSB3aXRoCj4gcm9ja2No
-aXBfcGRfcG93ZXIoKS4KPgo+IEFsc28gbm90IHNldHRpbmcgdGhlIHBkLT5udW1fY2xrcyB0byB6
-ZXJvIHdvdWxkIGJlIGEgcHJvYmxlbSBmb3IgYQo+IHBvd2VyLWNvbnRyb2xsZXIgdGhhdCBpcyBj
-b25maWd1cmVkIGFzIGEgbW9kdWxlIHdoaWNoIGNvdWxkIGJlIHVubG9hZGVkCj4gYW5kIHJlbG9h
-ZGVkIChJIGtub3cgdGhhdCBkb2Vzbid0IHJlYWxseSB3b3JrIG5vdywgYnV0IGl0IHdpbGwKPiBl
-dmVudHVhbGx5LCBJIGhvcGUuKQoKWWVwLgo+Cj4gTWF5YmUgdXNlIHRoZSBtdXRleCBoZXJlPyAg
-SXQgc2hvdWxkIGF0IGxlYXN0IHByb3RlY3QgdGhlIHplcm9pbmcgb2YKPiBwbS0+bnVtX2Nsa3Mu
-CgpTb3VuZCByZXNvbmFibGUuCkRvbmUuCgotLS0KVGhhbmtzLApDYWVzYXIKPgo+IEtldmluCj4K
-PiBfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwo+IExpbnV4
-LXJvY2tjaGlwIG1haWxpbmcgbGlzdAo+IExpbnV4LXJvY2tjaGlwQGxpc3RzLmluZnJhZGVhZC5v
-cmcKPiBodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4LXJv
-Y2tjaGlwCgoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18K
-TGludXgtcm9ja2NoaXAgbWFpbGluZyBsaXN0CkxpbnV4LXJvY2tjaGlwQGxpc3RzLmluZnJhZGVh
-ZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1y
-b2NrY2hpcAo=
+Hi Krzysztof,
+
+=E5=9C=A8 09/04/2015 08:36 AM, Krzysztof Kozlowski =E5=86=99=E9=81=93:
+> On 01.09.2015 15:07, Yakir Yang wrote:
+>
+> Empty commit message. Please explain here why you want to add platfor=
+m
+> device type support.
+>
+> Actually the title is confusing. You are not adding support for platf=
+orm
+> device types but rather adding a field containing type of device.
+>
+>
+>> Signed-off-by: Yakir Yang <ykk@rock-chips.com>
+>> ---
+>> Changes in v4: None
+>> Changes in v3: None
+>> Changes in v2:
+>> - Add GNU license v2 declared and samsung copyright
+>>
+>>   drivers/gpu/drm/exynos/exynos_dp.c              |  1 +
+>>   drivers/gpu/drm/rockchip/analogix_dp-rockchip.c |  1 +
+>>   include/drm/bridge/analogix_dp.h                | 16 +++++++++++++=
++++
+>>   3 files changed, 18 insertions(+)
+>>
+>> diff --git a/drivers/gpu/drm/exynos/exynos_dp.c b/drivers/gpu/drm/ex=
+ynos/exynos_dp.c
+>> index 6060d2c..40ef727 100644
+>> --- a/drivers/gpu/drm/exynos/exynos_dp.c
+>> +++ b/drivers/gpu/drm/exynos/exynos_dp.c
+>> @@ -224,6 +224,7 @@ static int exynos_dp_bind(struct device *dev, st=
+ruct device *master, void *data)
+>>   	dp->dev =3D dev;
+>>   	dp->drm_dev =3D drm_dev;
+>>  =20
+>> +	dp->plat_data.dev_type =3D EXYNOS_DP;
+>>   	dp->plat_data.power_on =3D exynos_dp_poweron;
+>>   	dp->plat_data.power_off =3D exynos_dp_poweroff;
+>>   	dp->plat_data.get_modes =3D exynos_dp_get_modes;
+>> diff --git a/drivers/gpu/drm/rockchip/analogix_dp-rockchip.c b/drive=
+rs/gpu/drm/rockchip/analogix_dp-rockchip.c
+>> index efea045..4934271 100644
+>> --- a/drivers/gpu/drm/rockchip/analogix_dp-rockchip.c
+>> +++ b/drivers/gpu/drm/rockchip/analogix_dp-rockchip.c
+>> @@ -293,6 +293,7 @@ static int rockchip_dp_bind(struct device *dev, =
+struct device *master,
+>>   		return ret;
+>>   	}
+>>  =20
+>> +	dp->plat_data.dev_type =3D RK3288_DP;
+>>   	dp->plat_data.attach =3D NULL;
+>>   	dp->plat_data.get_modes =3D NULL;
+>>   	dp->plat_data.power_on =3D rockchip_dp_poweron;
+>> diff --git a/include/drm/bridge/analogix_dp.h b/include/drm/bridge/a=
+nalogix_dp.h
+>> index 8b4ffad..7209a64 100644
+>> --- a/include/drm/bridge/analogix_dp.h
+>> +++ b/include/drm/bridge/analogix_dp.h
+>> @@ -1,9 +1,25 @@
+>> +/*
+>> + * Analogix Core DP (Display Port) interface driver.
+>> + *
+>> + * Copyright (C) 2012 Samsung Electronics Co., Ltd.
+>> + *
+>> + * This program is free software; you can redistribute it and/or mo=
+dify it
+>> + * under the terms of the GNU General Public License as published b=
+y the
+>> + * Free Software Foundation; either version 2 of the License, or (a=
+t your
+>> + * option) any later version.
+>> + */
+> Two questions:
+> 1. Why this change is here? I would rather expect it at patch 3/16 wh=
+en
+> you created this file... That is the usual time for adding copyrights=
+=2E
+
+Yep, I should move this to 03/16.
+
+> 2. Does this file contains previous Samsung work?
+
+Hmm... I think this haven't contains the previous Samsung works,
+but I have the cover the head message from analogix_dp_core driver
+(include the copyright, but without ant author).
+
+Thanks
+- Yakir
+
+> Best regards,
+> Krzysztof
+>
+>>   #ifndef _ANALOGIX_DP_H_
+>>   #define _ANALOGIX_DP_H_
+>>  =20
+>>   #include <drm/drm_crtc.h>
+>>  =20
+>> +enum analogix_dp_devtype {
+>> +	EXYNOS_DP,
+>> +	RK3288_DP,
+>> +};
+>> +
+>>   struct analogix_dp_plat_data {
+>> +	enum analogix_dp_devtype dev_type;
+>>   	struct drm_panel *panel;
+>>  =20
+>>   	int (*power_on)(struct analogix_dp_plat_data *);
+>>
+>
+>
+>
