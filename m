@@ -1,78 +1,87 @@
-From: Yakir Yang <ykk@rock-chips.com>
-Subject: Re: [PATCH v4 09/16] drm: rockchip: add bpc and color mode setting
-Date: Sun, 06 Sep 2015 10:06:44 +0800
-Message-ID: <55EB9FB4.3020201@rock-chips.com>
-References: <1441086371-24838-1-git-send-email-ykk@rock-chips.com> <1441087308-25455-1-git-send-email-ykk@rock-chips.com> <120097760.HO2inCimVA@phil> <55E659AC.9000402@rock-chips.com> <20150902083445.GA24654@ulmo.nvidia.com> <55E6C931.9090306@rock-chips.com> <20150903083857.GA3784@ulmo.nvidia.com>
+From: Lian M.H. <Minghuan.Lian@freescale.com>
+Subject: RE: [PATCH v2 04/10] doc/bindings: Update PCIe devicetree binding
+ documentation for LS2080A
+Date: Sun, 6 Sep 2015 02:25:46 +0000
+Message-ID: <DM2PR0301MB0640B355ADF0CF1AD514B2A1E2550@DM2PR0301MB0640.namprd03.prod.outlook.com>
+References: <1441349872-4560-1-git-send-email-bhupesh.sharma@freescale.com>
+ <1441349872-4560-5-git-send-email-bhupesh.sharma@freescale.com>
+ <CADRPPNRGpzWawsqLHCiv530HbtPf+9RaPzOtvy88ftwv2ffqLQ@mail.gmail.com>
+ <BY1PR0301MB13037F8BC0A8E1E4258F58DE82570@BY1PR0301MB1303.namprd03.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8;
-	format=flowed
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <20150903083857.GA3784@ulmo.nvidia.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Thierry Reding <treding@nvidia.com>, Mark Yao <mark.yao@rock-chips.com>
-Cc: Heiko Stuebner <heiko@sntech.de>, Jingoo Han <jingoohan1@gmail.com>, Inki Dae <inki.dae@samsung.com>, joe@perches.com, Kukjin Kim <kgene@kernel.org>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, Russell King <rmk+kernel@arm.linux.org.uk>, djkurtz@chromium.com, dianders@chromium.com, seanpaul@chromium.com, ajaynumb@gmail.com, Andrzej Hajda <a.hajda@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, David Airlie <airlied@linux.ie>, Gustavo Padovan <gustavo.padovan@collabora.co.uk>, Andy Yan <andy.yan@rock-chips.com>, Kumar Gala <galak@codeaurora.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Kishon Vijay Abraham I <kishon@ti.com>, architt@codeaurora.org, robherring2@gmail.com, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-samsung-soc@vger
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <BY1PR0301MB13037F8BC0A8E1E4258F58DE82570@BY1PR0301MB1303.namprd03.prod.outlook.com>
+Content-Language: zh-CN
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Sharma Bhupesh <bhupesh.sharma@freescale.com>, Leo Li <pku.leo@gmail.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>, "marc.zyngier@arm.com" <marc.zyngier@arm.com>, "Catalin.Marinas@arm.com" <Catalin.Marinas@arm.com>, "will.deacon@arm.com" <will.deacon@arm.com>, "olof@lixom.net" <olof@lixom.net>, Bhupesh SHARMA <bhupesh.linux@gmail.com>, "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Thierry,
+Hi Bhupesh
 
-=E5=9C=A8 09/03/2015 04:38 PM, Thierry Reding =E5=86=99=E9=81=93:
-> On Wed, Sep 02, 2015 at 06:02:25PM +0800, Yakir Yang wrote:
->> =E5=9C=A8 2015/9/2 16:34, Thierry Reding =E5=86=99=E9=81=93:
-> [...]
->>> At the very least your code must compile when applied against a rec=
-ent
->>> upstream tree. I would also expect you to make sure the code works =
-at
->>> runtime, though, contrary to build testing, not everybody will be a=
-ble
->>> to verify that you've actually done so. It is ultimately your platf=
-orm
->>> maintainer's (i.e. Heiko's) responsibility to ensure that because t=
-hey
->>> will get to deal with user complaints if people can't run an upstre=
-am
->>> kernel on the devices.
->> Oh, first time to know this rule. So I should work on Heiko's github
->> kernel branch at the first time to start send upstream.
-> It's usually not necessary to rebase on a specific platform tree. Mos=
-t
-> platform trees should feed into linux-next anyway, so linux-next woul=
-d
-> be the appropriate base in almost all cases.
->
-> Note, though, that that's only true if you expect somebody else to me=
-rge
-> your code. The reason is that whoever will end up applying your patch=
-es
-> will likely apply to a tree that feeds into linux-next, and that way =
-you
-> both end up having roughly the same base.
->
-> On the other hand if you are a maintainer yourself you should be keep=
-ing
-> a branch based on the latest -rc1. That's especially important if you=
-r
-> tree feeds into linux-next, because basing on linux-next will break v=
-ery
-> horribly that way.
->
-> So for this particular case I would expect either Mark or Inki to app=
-ly
-> these patches when they're ready. Their trees should be based on the
-> latest -rc1. At least the Exynos DRM tree feeds into linux-next, so y=
-ou
-> should be fine if you use linux-next as a base.
+I agree with Leo whose suggestion is a better.
 
-Glad to know this, thanks,
-- Yakir
+Thanks,
+Minghuan 
 
->
-> Mark, have you ever considered having your tree added to linux-next?
->
-> I'm beginning to think that we need to make that a requirement for al=
-l
-> DRM drivers so that we can resolve integration issues early on rather
-> than Dave having to deal with them when he pulls code in.
->
-> Thierry
+> -----Original Message-----
+> From: Sharma Bhupesh-B45370
+> Sent: Saturday, September 05, 2015 4:20 AM
+> To: Leo Li <pku.leo@gmail.com>; Lian Minghuan-B31939
+> <Minghuan.Lian@freescale.com>
+> Cc: Arnd Bergmann <arnd@arndb.de>; Mark Rutland
+> <mark.rutland@arm.com>; linux-arm-kernel@lists.infradead.org;
+> marc.zyngier@arm.com; linux-clk@vger.kernel.org;
+> Catalin.Marinas@arm.com; will.deacon@arm.com; olof@lixom.net; Bhupesh
+> SHARMA <bhupesh.linux@gmail.com>; devicetree@vger.kernel.org
+> Subject: RE: [PATCH v2 04/10] doc/bindings: Update PCIe devicetree binding
+> documentation for LS2080A
+> 
+> > From: Leo Li [mailto:pku.leo@gmail.com]
+> > Sent: Friday, September 04, 2015 11:27 PM On Fri, Sep 4, 2015 at 1:57
+> > AM, Bhupesh Sharma <bhupesh.sharma@freescale.com> wrote:
+> > > Add the documentation for compatible string "fsl,ls2080a-pcie"
+> > > for Freescale's LS2080A platform.
+> > >
+> > > Signed-off-by: Minghuan Lian <Minghuan.Lian@freescale.com>
+> > > Signed-off-by: Bhupesh Sharma <bhupesh.sharma@freescale.com>
+> > > ---
+> > >  .../devicetree/bindings/pci/layerscape-pci.txt     |    3 ++-
+> > >  1 file changed, 2 insertions(+), 1 deletion(-)
+> > >
+> > > diff --git
+> > > a/Documentation/devicetree/bindings/pci/layerscape-pci.txt
+> > > b/Documentation/devicetree/bindings/pci/layerscape-pci.txt
+> > > index 6286f04..e72e68f 100644
+> > > --- a/Documentation/devicetree/bindings/pci/layerscape-pci.txt
+> > > +++ b/Documentation/devicetree/bindings/pci/layerscape-pci.txt
+> > > @@ -4,7 +4,8 @@ This PCIe host controller is based on the Synopsis
+> > > Designware PCIe IP  and thus inherits all the common properties
+> > > defined
+> > in designware-pcie.txt.
+> > >
+> > >  Required properties:
+> > > -- compatible: should contain the platform identifier such as
+> > "fsl,ls1021a-pcie"
+> > > +- compatible: should contain the platform identifier such as
+> > > +"fsl,ls1021a-pcie",
+> > > +  "fsl,ls2080a-pcie".
+> >
+> > Make it generic like "fsl,<chip>-pcie"
+> 
+> Minghuan, if you don't have an objection, I would like to address Leo's
+> suggestion in v3 of this series as I think it is a valid one.
+> 
+> Please share your views.
+> 
+> Regards,
+> Bhupesh
