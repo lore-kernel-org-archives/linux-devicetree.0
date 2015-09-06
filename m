@@ -1,301 +1,277 @@
-From: Caesar Wang <wxt@rock-chips.com>
-Subject: Re: [PATCH v17 1/4] dt-bindings: add document of Rockchip power domains
-Date: Sun, 06 Sep 2015 18:10:00 +0800
-Message-ID: <55EC10F8.5090100@rock-chips.com>
-References: <1441184380-13827-1-git-send-email-wxt@rock-chips.com> <1441184380-13827-2-git-send-email-wxt@rock-chips.com> <7hr3mgpu57.fsf@linaro.org>
+From: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>
+Subject: Re: [PATCH 2/2] mtd: spi-nor: Add driver for Cadence Quad SPI Flash Controller.
+Date: Sun, 6 Sep 2015 17:16:27 +0200
+Message-ID: <201509061716.27521.marex@denx.de>
+References: <1440148851-14621-1-git-send-email-marex@denx.de> <1440148851-14621-2-git-send-email-marex@denx.de> <55EA2CFD.6060300@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
-	format=flowed
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <7hr3mgpu57.fsf@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Kevin Hilman <khilman@linaro.org>
-Cc: Caesar Wang <wxt@rock-chips.com>, devicetree@vger.kernel.org, ulf.hansson@linaro.org, linux@arm.linux.org.uk, heiko@sntech.de, arnd@arndb.de, ijc+devicetree@hellion.org.uk, "jinkun.hong" <jinkun.hong@rock-chips.com>, linus.walleij@linaro.org, dmitry.torokhov@gmail.com, linux-kernel@vger.kernel.org, dianders@chromium.org, linux-rockchip@lists.infradead.org, robh+dt@kernel.org, galak@codeaurora.org, tomasz.figa@gmail.com, mturquette@baylibre.com, linux-arm-kernel@lists.infradead.org
+Content-Type: Text/Plain;
+  charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <55EA2CFD.6060300-qxv4g6HH51o@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: vikas <vikas.manocha-qxv4g6HH51o@public.gmane.org>
+Cc: "linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Graham Moore <grmoore-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>, Alan Tull <atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Dinh Nguyen <dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>, Yves Vandervennet <yvanderv-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Kevin,
+On Saturday, September 05, 2015 at 01:45:01 AM, vikas wrote:
+> Hi,
+> 
+> On 08/21/2015 02:20 AM, Marek Vasut wrote:
+> > From: Graham Moore <grmoore-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
+> > 
+> > Add support for the Cadence QSPI controller. This controller is
+> > present in the Altera SoCFPGA SoCs and this driver has been tested
+> > on the Cyclone V SoC.
+> 
+> can we add info about the modes supported/not supported like direct mode,
+> indirect etc.
 
-=E5=9C=A8 2015=E5=B9=B409=E6=9C=8803=E6=97=A5 02:12, Kevin Hilman =E5=86=
-=99=E9=81=93:
-> Caesar Wang <wxt@rock-chips.com> writes:
->
->> This add the necessary binding documentation for the power domains
->> found on Rockchip SoCs.
->>
->> Signed-off-by: jinkun.hong <jinkun.hong@rock-chips.com>
->> Signed-off-by: Caesar Wang <wxt@rock-chips.com>
->>
->> ---
->>
->> Changes in v17:
->> - add the decription in detail for RK3288 SoCs.
->>
->> Changes in v16:
->> - remove the pmu node.
->>
->> Changes in v15: None
->> Changes in v14: None
->> Changes in v13: None
->> Changes in v12: None
->> Changes in v11: None
->> Changes in v10: None
->> Changes in v9:
->> - add document decription.
->>
->> Changes in v8:
->> - document go back to v2.
->>
->> Changes in v7: None
->> Changes in v6: None
->> Changes in v5: None
->> Changes in v4: None
->> Changes in v3:
->> - DT structure has changed.
->>
->> Changes in v2:
->> - move clocks to "optional".
->>
->>   .../bindings/soc/rockchip/power_domain.txt         | 114 +++++++++=
-++++++++++++
->>   1 file changed, 114 insertions(+)
->>   create mode 100644 Documentation/devicetree/bindings/soc/rockchip/=
-power_domain.txt
->>
->> diff --git
->> a/Documentation/devicetree/bindings/soc/rockchip/power_domain.txt
->> b/Documentation/devicetree/bindings/soc/rockchip/power_domain.txt
->> new file mode 100644
->> index 0000000..4cf6b27
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/soc/rockchip/power_domain.tx=
-t
->> @@ -0,0 +1,114 @@
->> +* Rockchip Power Domains
->> +
->> +Rockchip processors include support for multiple power domains whic=
-h can be
->> +powered up/down by software based on different application scenes t=
-o save power.
->> +
->> +Required properties for power domain controller:
->> +- compatible: Should be one of the following.
->> +	"rockchip,rk3288-power-controller" - for RK3288 SoCs.
->> +- #power-domain-cells: Number of cells in a power-domain specifier.
->> +	Should be 1 for multiple PM domains.
->> +- #address-cells: Should be 1.
->> +- #size-cells: Should be 0.
->> +
->> +Required properties for power domain sub nodes:
->> +- reg: index of the power domain, should use macros in:
->> +	"include/dt-bindings/power-domain/rk3288.h" - for RK3288 type powe=
-r domain.
->> +- clocks (optional): phandles to clocks which need to be enabled wh=
-ile power domain
->> +	switches state.
->> +
->> +Example:
->> +
->> +	power: power-controller {
->> +		compatible =3D "rockchip,rk3288-power-controller";
->> +		#power-domain-cells =3D <1>;
->> +		#address-cells =3D <1>;
->> +		#size-cells =3D <0>;
->> +
->> +		pd_gpu {
->> +			reg =3D <RK3288_PD_GPU>;
->> +			clocks =3D <&cru ACLK_GPU>;
->> +		};
->> +	};
->> +
->> +Node of a device using power domains must have a power-domains prop=
-erty,
->> +containing a phandle to the power device node and an index specifyi=
-ng which
->> +power domain to use.
->> +The index should use macros in:
->> +	"include/dt-bindings/power-domain/rk3288.h" - for rk3288 type powe=
-r domain.
->> +
->> +Example of the node using power domain:
->> +
->> +	node {
->> +		/* ... */
->> +		power-domains =3D <&power RK3288_PD_GPU>;
->> +		/* ... */
->> +	};
->> +
->> +Others, all the device clocks being listed in the power-domains its=
-elf.
->> +All the device clocks are included in someone domians that need to =
-enable
->> +before you operate them.
->> +
->> +As the chip designs for PM hardware. We need turn on the noc clocks=
-,
->> +if we are operating the "pd_vio" domain to enter the idle status.
->> +
->> +As the following described in detail for every device be included i=
-n domains
->> +on RK3288 SoCs.
-> IMO, the below isn't really detailed enough, and also, the details
-> should be in the .dts file itself, not in the binding doc.
-> In particular, it's not obvious from the current series which of the
-> clocks are device clocks, and which are other/parent/infrastructure
-> clocks needed for the synchronous reset.
+It's already part of the documentation.
 
-Okay, if we add some comments in dts. Says the following example.
+> > Signed-off-by: Graham Moore <grmoore-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
+> > Signed-off-by: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>
+> > Cc: Alan Tull <atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
+> > Cc: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> > Cc: David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>
+> > Cc: Dinh Nguyen <dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
+> > Cc: Graham Moore <grmoore-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
+> > Cc: Vikas MANOCHA <vikas.manocha-qxv4g6HH51o@public.gmane.org>
+> > Cc: Yves Vandervennet <yvanderv-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
+> > Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> > ---
 
-What do you think of it?
+[...]
 
-I'm no sure if we should add these comments in dts.
-It looks like it's always awkward. We can explain in the binding doc,=20
-maybe for better reading.
-             /*
-              * Note: 'ACLK_GPU' is the GPU clock,
-              * and on the ACLK_GPU_NIU (NOC).
-              */
-             pd_gpu {
-                 reg =3D <RK3288_PD_GPU>;
-                 clocks =3D <&cru ACLK_GPU>;
-             };
+> > +#define CQSPI_REG_CMDADDRESS                   0x94
+> > +#define CQSPI_REG_CMDREADDATALOWER             0xA0
+> > +#define CQSPI_REG_CMDREADDATAUPPER             0xA4
+> > +#define CQSPI_REG_CMDWRITEDATALOWER            0xA8
+> > +#define CQSPI_REG_CMDWRITEDATAUPPER            0xAC
+> > +
+> > +/* Interrupt status bits */
+> > +#define CQSPI_REG_IRQ_MODE_ERR                 BIT(0)
+> > +#define CQSPI_REG_IRQ_UNDERFLOW                        BIT(1)
+> > +#define CQSPI_REG_IRQ_IND_COMP                 BIT(2)
+> > +#define CQSPI_REG_IRQ_IND_RD_REJECT            BIT(3)
+> > +#define CQSPI_REG_IRQ_WR_PROTECTED_ERR         BIT(4)
+> > +#define CQSPI_REG_IRQ_ILLEGAL_AHB_ERR          BIT(5)
+> 
+> remove unused MACROs.
 
-             /*
-              * Note: The following 3 are HEVC(H.265) clocks,
-              * and on the ACLK_HEVC_NIU (NOC).
-              */
-             pd_hevc {
-                 reg =3D <RK3288_PD_HEVC>;
-                 clocks =3D <&cru ACLK_HEVC>,
-                 <&cru SCLK_HEVC_CABAC>,
-                 <&cru SCLK_HEVC_CORE>;
-             };
+You mean you prefer to have incomplete definition of bits in the register
+instead of a complete one ? I cannot agree to this, sorry.
 
-             /*
-              * Note: ACLK_VCODEC/HCLK_VCODEC are VCODEC
-              * (video endecoder & decoder) clocks that on the
-              * ACLK_VCODEC_NIU and HCLK_VCODEC_NIU (NOC).
-               */
-             pd_video {
-                 reg =3D <RK3288_PD_VIDEO>;
-                 clocks =3D <&cru ACLK_VCODEC>,
-                 <&cru HCLK_VCODEC>;
-             };
+> > +#define CQSPI_REG_IRQ_WATERMARK                        BIT(6)
+> > +#define CQSPI_REG_IRQ_IND_RD_OVERFLOW          BIT(12)
+> 
+> Correct this bit name to ..IND_RD_SRAM_FULL.
 
-             /*
-              * Note: Although SCLK_* are the working clocks
-              * of device without including on the NOC, needed for
-              * synchronous reset.
-              *
-              * ACLK_IEP/ACLK_VIP/ACLK_VOP0 are on ACLK_VIO0_NIU (NOC).
-              * ACLK_ISP/ACLK_VOP1 are on ACLK_VIO1_NIU (NOC).
-               * ACLK_RGA is on ACLK_RGA_NIU (NOC).
-              * The others are on HCLK_VIO_NIU (NOC).
-              *
-              * *_IEP are the Image Enhancement Processos (IEP) clocks.
-              * *_ISP are the Image Signal Processing (ISP) clocks.
-              * *_RGA are the RGA clocks.
-              * *_VOP* are the Visual Output Processor(VOP) clocks.
-              * *_EDP* are the EDP clocks.
-              * *_LVDS_* are the LVDS clocks.
-              * *_HDMI are the HDMI clocks.
-              * *_MIPI_* are the MIPI clocks.
-              */
-             pd_vio {
-                 reg =3D <RK3288_PD_VIO>;
-                 clocks =3D <&cru ACLK_IEP>,
-                 <&cru ACLK_ISP>,
-                 <&cru ACLK_RGA>,
-                 <&cru ACLK_VIP>,
-                 <&cru ACLK_VOP0>,
-                 <&cru ACLK_VOP1>,
-                 <&cru DCLK_VOP0>,
-                 <&cru DCLK_VOP1>,
-                 <&cru HCLK_IEP>,
-                 <&cru HCLK_ISP>,
-                 <&cru HCLK_RGA>,
-                 <&cru HCLK_VIP>,
-                 <&cru HCLK_VOP0>,
-                 <&cru HCLK_VOP1>,
-                 <&cru PCLK_EDP_CTRL>,
-                 <&cru PCLK_HDMI_CTRL>,
-                 <&cru PCLK_LVDS_PHY>,
-                 <&cru PCLK_MIPI_CSI>,
-                 <&cru PCLK_MIPI_DSI0>,
-                 <&cru PCLK_MIPI_DSI1>,
-                 <&cru SCLK_EDP_24M>,
-                 <&cru SCLK_EDP>,
-                 <&cru SCLK_ISP_JPE>,
-                 <&cru SCLK_ISP>,
-                 <&cru SCLK_RGA>;
-             };
+Good catch.
+
+[...]
+
+> > +static int cqspi_wait_idle(struct cqspi_st *cqspi)
+> > +{
+> > +       const unsigned int poll_idle_retry = 3;
+> > +       unsigned int count = 0;
+> > +       unsigned long timeout;
+> > +
+> > +       timeout = jiffies + msecs_to_jiffies(CQSPI_TIMEOUT_MS);
+> > +       while (1) {
+> > +               /*
+> > +                * Read few times in succession to ensure the controller
+> > +                * is indeed idle, that is, the bit does not transition
+> > +                * low again.
+> > +                */
+> > +               if (cqspi_is_idle(cqspi))
+> > +                       count++;
+> > +               else
+> > +                       count = 0;
+> > +
+> > +               if (count >= poll_idle_retry)
+> > +                       return 0;
+> 
+> why do we need to check it 3 times ?
+
+Please see the comment above.
+
+> > +
+> > +               if (time_after(jiffies, timeout)) {
+> > +                       /* Timeout, in busy mode. */
+> > +                       dev_err(&cqspi->pdev->dev,
+> > +                               "QSPI is still busy after %dms
+> > timeout.\n", +                               CQSPI_TIMEOUT_MS);
+> > +                       return -ETIMEDOUT;
+> > +               }
+> > +
+> > +               cpu_relax();
+> > +       }
+> > +}
+> > +
+> 
+> [...]
+> 
+> > +
+> > +static int cqspi_indirect_read_execute(struct spi_nor *nor,
+> > +                                      u8 *rxbuf, const unsigned n_rx)
+> > +{
+> > +       struct cqspi_flash_pdata *f_pdata = nor->priv;
+> > +       struct cqspi_st *cqspi = f_pdata->cqspi;
+> > +       void __iomem *reg_base = cqspi->iobase;
+> > +       void __iomem *ahb_base = cqspi->ahb_base;
+> > +       unsigned int remaining = n_rx;
+> > +       unsigned int bytes_to_read = 0;
+> > +       int ret = 0;
+> > +
+> > +       writel(remaining, reg_base + CQSPI_REG_INDIRECTRDBYTES);
+> > +
+> > +       /* Clear all interrupts. */
+> > +       writel(CQSPI_IRQ_STATUS_MASK, reg_base + CQSPI_REG_IRQSTATUS);
+> > +
+> > +       writel(CQSPI_IRQ_MASK_RD, reg_base + CQSPI_REG_IRQMASK);
+> 
+> I think there is no need for separate masks for read & write. Use one mask
+> & configure it once in the init rather than configuring each time for
+> every read/write. Then in the ISR, take action as per the interrupt
+> source: read/write/error condition etc.
+
+Setting up the specific IRQ mask prevents spurious interrupts during the
+particular IO operation, so this solution looks more precise to me.
+
+> > +
+> > +       reinit_completion(&cqspi->transfer_complete);
+> > +       writel(CQSPI_REG_INDIRECTRD_START_MASK,
+> > +              reg_base + CQSPI_REG_INDIRECTRD);
+> > +
+> > +       while (remaining > 0) {
+> > +               ret =
+> > wait_for_completion_timeout(&cqspi->transfer_complete, +                
+> >                                 msecs_to_jiffies +                      
+> >                           (CQSPI_READ_TIMEOUT_MS)); +
+> > +               bytes_to_read = cqspi_get_rd_sram_level(cqspi);
+> > +
+> > +               if (!ret && bytes_to_read == 0) {
+> > +                       dev_err(nor->dev, "Indirect read timeout, no
+> > bytes\n"); +                       ret = -ETIMEDOUT;
+> > +                       goto failrd;
+> > +               }
+> > +
+> > +               while (bytes_to_read != 0) {
+> > +                       bytes_to_read *= cqspi->fifo_width;
+> > +                       bytes_to_read = bytes_to_read > remaining ?
+> > +                                       remaining : bytes_to_read;
+> > +                       readsl(ahb_base, rxbuf,
+> > DIV_ROUND_UP(bytes_to_read, 4)); +                       rxbuf +=
+> > bytes_to_read;
+> > +                       remaining -= bytes_to_read;
+> > +                       bytes_to_read = cqspi_get_rd_sram_level(cqspi);
+> > +               }
+> > +       }
+> > +
+> > +       /* Check indirect done status */
+> > +       ret = cqspi_wait_for_bit(reg_base + CQSPI_REG_INDIRECTRD,
+> > +                                CQSPI_REG_INDIRECTRD_DONE_MASK, 0);
+> > +       if (ret) {
+> > +               dev_err(nor->dev,
+> > +                       "Indirect read completion error (%i)\n", ret);
+> > +               goto failrd;
+> > +       }
+> > +
+> > +       /* Disable interrupt */
+> > +       writel(0, reg_base + CQSPI_REG_IRQMASK);
+> > +
+> > +       /* Clear indirect completion status */
+> > +       writel(CQSPI_REG_INDIRECTRD_DONE_MASK, reg_base +
+> > CQSPI_REG_INDIRECTRD); +
+> > +       return 0;
+> > +
+> > +failrd:
+> > +       /* Disable interrupt */
+> > +       writel(0, reg_base + CQSPI_REG_IRQMASK);
+> > +
+> > +       /* Cancel the indirect read */
+> > +       writel(CQSPI_REG_INDIRECTWR_CANCEL_MASK,
+> > +              reg_base + CQSPI_REG_INDIRECTRD);
+> > +       return ret;
+> > +}
+
+[...]
+
+> > +static void cqspi_controller_enable(struct cqspi_st *cqspi)
+> > +{
+> > +       void __iomem *reg_base = cqspi->iobase;
+> > +       unsigned int reg;
+> > +
+> > +       reg = readl(reg_base + CQSPI_REG_CONFIG);
+> > +       reg |= CQSPI_REG_CONFIG_ENABLE_MASK;
+> > +       writel(reg, reg_base + CQSPI_REG_CONFIG);
+> > +}
+> > +
+> > +static void cqspi_controller_disable(struct cqspi_st *cqspi)
+> > +{
+> > +       void __iomem *reg_base = cqspi->iobase;
+> > +       unsigned int reg;
+> > +
+> > +       reg = readl(reg_base + CQSPI_REG_CONFIG);
+> > +       reg &= ~CQSPI_REG_CONFIG_ENABLE_MASK;
+> > +       writel(reg, reg_base + CQSPI_REG_CONFIG);
+> > +}
+> 
+> two above function are almost same, we can have one function by adding
+> one bool arg.
+
+It makes the code less readable, but whatever.
+
+[...]
+
+> > +static void cqspi_controller_init(struct cqspi_st *cqspi)
+> > +{
+> > +       cqspi_controller_disable(cqspi);
+> > +
+> > +       /* Configure the remap address register, no remap */
+> > +       writel(0, cqspi->iobase + CQSPI_REG_REMAP);
+> > +
+> > +       /* Disable all interrupts. */
+> > +       writel(0, cqspi->iobase + CQSPI_REG_IRQMASK);
+> > +
+> > +       /* Configure the SRAM split to 1:1 . */
+> 
+> The comment is rightly using "SRAM" but the variable name "fifo_depth" is
+> misleading, change it to sram_depth.
+
+Quote from the datasheet:
+
+Defines the size of the indirect read partition in the
+SRAM, in units of SRAM locations. By default, half of
+the SRAM is reserved for indirect read operations and
+half for indirect write operations.
 
 
----
-Thanks,
-Caesar
-> Kevin
->
->> +	/* GPU's ACLK_GPU on the ACLK_GPU_NIU */
->> +	pd_gpu {
->> +		reg =3D <RK3288_PD_GPU>;
->> +		clocks =3D <&cru ACLK_GPU>;
->> +	};
->> +
->> +	/* HEVC AXI clocks */
->> +	pd_hevc {
->> +		reg =3D <RK3288_PD_HEVC>;
->> +		clocks =3D <&cru ACLK_HEVC>,
->> +		<&cru SCLK_HEVC_CABAC>,
->> +		<&cru SCLK_HEVC_CORE>,
->> +		<&cru HCLK_HEVC>;
->> +	};
->> +
->> +	/*
->> +	 * RGA, VOP, MIPI, LVDS, EDP..., says the ACLK* on the ACLK_VIO_NI=
-U,
->> +	 * others are on the HCLK_VIO_NIU.
->> +	 */
->> +	pd_vio {
->> +		reg =3D <RK3288_PD_VIO>;
->> +		clocks =3D <&cru ACLK_IEP>,
->> +		<&cru ACLK_ISP>,
->> +		<&cru ACLK_RGA>,
->> +		<&cru ACLK_VIP>,
->> +		<&cru ACLK_VOP0>,
->> +		<&cru ACLK_VOP1>,
->> +		<&cru DCLK_VOP0>,
->> +		<&cru DCLK_VOP1>,
->> +		<&cru HCLK_IEP>,
->> +		<&cru HCLK_ISP>,
->> +		<&cru HCLK_RGA>,
->> +		<&cru HCLK_VIP>,
->> +		<&cru HCLK_VOP0>,
->> +		<&cru HCLK_VOP1>,
->> +		<&cru PCLK_EDP_CTRL>,
->> +		<&cru PCLK_HDMI_CTRL>,
->> +		<&cru PCLK_LVDS_PHY>,
->> +		<&cru PCLK_MIPI_CSI>,
->> +		<&cru PCLK_MIPI_DSI0>,
->> +		<&cru PCLK_MIPI_DSI1>,
->> +		<&cru SCLK_EDP_24M>,
->> +		<&cru SCLK_EDP>,
->> +		<&cru SCLK_ISP_JPE>,
->> +		<&cru SCLK_ISP>,
->> +		<&cru SCLK_RGA>;
->> +	};
->> +
->> +	/*
->> +	 * Video's ACLK_VCODEC on the ACLK_VCODEC_NIU, Video's HCLK_VCODEC=
-,
->> +	 * on the HCLK_VCODEC_NIU.
->> +	 */
->> +	pd_video {
->> +		reg =3D <RK3288_PD_VIDEO>;
->> +		clocks =3D <&cru ACLK_VCODEC>,
->> +		<&cru HCLK_VCODEC>;
->> +	};
-> _______________________________________________
-> Linux-rockchip mailing list
-> Linux-rockchip@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-rockchip
+> > +       writel(cqspi->fifo_depth / 2, cqspi->iobase +
+> > CQSPI_REG_SRAMPARTITION); +
+> > +       /* Load indirect trigger address. */
+> 
+> remove this comment & review other comments of this function. I would
+> remove at least first two comments also of the routine.
+
+I already answered this in the previous iteration.
+
+> > +       writel(cqspi->trigger_address,
+> > +              cqspi->iobase + CQSPI_REG_INDIRECTTRIGGER);
+> > +
+> > +       /* Program read watermark -- 1/2 of the FIFO. */
+> > +       writel(cqspi->fifo_depth * cqspi->fifo_width / 2,
+> > +              cqspi->iobase + CQSPI_REG_INDIRECTRDWATERMARK);
+> > +       /* Program write watermark -- 1/8 of the FIFO. */
+> > +       writel(cqspi->fifo_depth * cqspi->fifo_width / 8,
+> > +              cqspi->iobase + CQSPI_REG_INDIRECTWRWATERMARK);
+> > +
+> > +       cqspi_controller_enable(cqspi);
+> > +}
+
+[...]
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
