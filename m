@@ -1,55 +1,232 @@
-From: Ding Tianhong <dingtianhong-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH 0/2] arm64: Support Hisilicon Hip05-D02 board
-Date: Sun, 6 Sep 2015 10:40:02 +0800
-Message-ID: <55EBA782.7080403@huawei.com>
-References: <1441421939-6236-1-git-send-email-dingtianhong@huawei.com> <20150905101854.4f5011bb@arm.com>
+From: Ding Tianhong <dingtianhong@huawei.com>
+Subject: Re: [PATCH 2/2] arm64: dts: add dts files for Hisilicon Hip05-D02
+ Development Board
+Date: Sun, 6 Sep 2015 10:47:33 +0800
+Message-ID: <55EBA945.3020501@huawei.com>
+References: <1441421939-6236-1-git-send-email-dingtianhong@huawei.com>	<1441421939-6236-3-git-send-email-dingtianhong@huawei.com> <20150905102807.18941767@arm.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20150905101854.4f5011bb-5wv7dgnIgG8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, rob.herring-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, haojian.zhuang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, leo.yan-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, zhizhou.zh-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linuxarm-hv44wF8Li93QT0dZR+AlfA@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20150905102807.18941767@arm.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Marc Zyngier <marc.zyngier@arm.com>
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, catalin.marinas@arm.com, will.deacon@arm.com, devicetree@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, rob.herring@linaro.org, haojian.zhuang@linaro.org, zhangfei.gao@linaro.org, xuwei5@hisilicon.com, leo.yan@linaro.org, zhizhou.zh@gmail.com, linuxarm@huawei.com
 List-Id: devicetree@vger.kernel.org
 
-On 2015/9/5 17:18, Marc Zyngier wrote:
-> On Sat, 5 Sep 2015 10:58:57 +0800
-> Ding Tianhong <dingtianhong-hv44wF8Li93QT0dZR+AlfA@public.gmane.org> wrote:
+On 2015/9/5 17:28, Marc Zyngier wrote:
+> On Sat, 5 Sep 2015 10:58:59 +0800
+> Ding Tianhong <dingtianhong@huawei.com> wrote:
 > 
->> Hip05-D02 Development Board is based on Cortex-A57, this patchset
->> contains initial support for Hip05-D02 Soc and Board. Initial support
->> is minimal and includes just the arch configuration, device tree
->> configuration.
+>> Add initial dtsi file to support Hisilicon Hip05-D02 Board with
+>> support of CPUs in four clusters and each cluster has quard Cortex-A57.
 >>
->> PSCI is enabled in device tree and there is no problem to boot all the
->> 16 cores, and the CPU hotplug is also working now, you can download and
->> compile the latest firmware based on the following link to run this
->> patch set.
+>> Also add dts file to support Hip05-D02 development board.
 >>
->> https://github.com/hisilicon/estuary/blob/master/README
+>> Signed-off-by: Ding Tianhong <dingtianhong@huawei.com>
+>> Signed-off-by: Kefeng Wang <wangkefeng.wang@huawei.com>
+>> ---
+>>  arch/arm64/boot/dts/hisilicon/Makefile      |   2 +-
+>>  arch/arm64/boot/dts/hisilicon/hip05-d02.dts |  36 ++++
+>>  arch/arm64/boot/dts/hisilicon/hip05.dtsi    | 271 ++++++++++++++++++++++++++++
+>>  3 files changed, 308 insertions(+), 1 deletion(-)
+>>  create mode 100644 arch/arm64/boot/dts/hisilicon/hip05-d02.dts
+>>  create mode 100644 arch/arm64/boot/dts/hisilicon/hip05.dtsi
 >>
->> v1->v2:
->> - 1. Change the compatible name for per CPU.
->>   2. Remove the GIC_CPU_MASK_SIMPLE(xx) which is not used for gicv3
->>      from hip05.dtsi.
+>> diff --git a/arch/arm64/boot/dts/hisilicon/Makefile b/arch/arm64/boot/dts/hisilicon/Makefile
+>> index fa81a6e..cd158b8 100644
+>> --- a/arch/arm64/boot/dts/hisilicon/Makefile
+>> +++ b/arch/arm64/boot/dts/hisilicon/Makefile
+>> @@ -1,4 +1,4 @@
+>> -dtb-$(CONFIG_ARCH_HISI) += hi6220-hikey.dtb
+>> +dtb-$(CONFIG_ARCH_HISI) += hi6220-hikey.dtb hip05-d02.dtb
+>>  
+>>  always		:= $(dtb-y)
+>>  subdir-y	:= $(dts-dirs)
+>> diff --git a/arch/arm64/boot/dts/hisilicon/hip05-d02.dts b/arch/arm64/boot/dts/hisilicon/hip05-d02.dts
+>> new file mode 100644
+>> index 0000000..ae34e25
+>> --- /dev/null
+>> +++ b/arch/arm64/boot/dts/hisilicon/hip05-d02.dts
+>> @@ -0,0 +1,36 @@
+>> +/**
+>> + * dts file for Hisilicon D02 Development Board
+>> + *
+>> + * Copyright (C) 2014,2015 Hisilicon Ltd.
+>> + *
+>> + * This program is free software; you can redistribute it and/or modify
+>> + * it under the terms of the GNU General Public License version 2 as
+>> + * publishhed by the Free Software Foundation.
+>> + *
+>> + */
+>> +
+>> +/dts-v1/;
+>> +
+>> +#include "hip05.dtsi"
+>> +
+>> +/ {
+>> +	model = "Hisilicon Hip05 D02 Development Board";
+>> +	compatible = "hisilicon,hip05-d02";
+>> +
+>> +	memory@00000000 {
+>> +		device_type = "memory";
+>> +		reg = <0x0 0x00000000 0x0 0x80000000>;
+>> +	};
+>> +
+>> +	aliases {
+>> +		serial0 = &uart0;
+>> +	};
+>> +
+>> +	chosen {
+>> +		stdout-path = "serial0:115200n8";
+>> +	};
+>> +};
+>> +
+>> +&uart0 {
+>> +	status = "ok";
+>> +};
+>> diff --git a/arch/arm64/boot/dts/hisilicon/hip05.dtsi b/arch/arm64/boot/dts/hisilicon/hip05.dtsi
+>> new file mode 100644
+>> index 0000000..92d00f4
+>> --- /dev/null
+>> +++ b/arch/arm64/boot/dts/hisilicon/hip05.dtsi
+>> @@ -0,0 +1,271 @@
+>> +/**
+>> + * dts file for Hisilicon D02 Development Board
+>> + *
+>> + * Copyright (C) 2014,2015 Hisilicon Ltd.
+>> + *
+>> + * This program is free software; you can redistribute it and/or modify
+>> + * it under the terms of the GNU General Public License version 2 as
+>> + * publishhed by the Free Software Foundation.
+>> + *
+>> + */
+>> +
+>> +#include <dt-bindings/interrupt-controller/arm-gic.h>
+>> +
+>> +/ {
+>> +	compatible = "hisilicon,hip05-d02";
+>> +	interrupt-parent = <&gic>;
+>> +	#address-cells = <2>;
+>> +	#size-cells = <2>;
+>> +
+>> +	psci {
+>> +		compatible = "arm,psci-0.2";
+>> +		method = "smc";
+>> +	};
+>> +
+>> +	cpus {
+>> +		#address-cells = <1>;
+>> +		#size-cells = <0>;
+>> +
+>> +		cpu-map {
+>> +			cluster0 {
+>> +				core0 {
+>> +					cpu = <&cpu0>;
+>> +				};
+>> +				core1 {
+>> +					cpu = <&cpu1>;
+>> +				};
+>> +				core2 {
+>> +					cpu = <&cpu2>;
+>> +				};
+>> +				core3 {
+>> +					cpu = <&cpu3>;
+>> +				};
+>> +			};
+>> +			cluster1 {
+>> +				core0 {
+>> +					cpu = <&cpu4>;
+>> +				};
+>> +				core1 {
+>> +					cpu = <&cpu5>;
+>> +				};
+>> +				core2 {
+>> +					cpu = <&cpu6>;
+>> +				};
+>> +				core3 {
+>> +					cpu = <&cpu7>;
+>> +				};
+>> +			};
+>> +			cluster2 {
+>> +				core0 {
+>> +					cpu = <&cpu8>;
+>> +				};
+>> +				core1 {
+>> +					cpu = <&cpu9>;
+>> +				};
+>> +				core2 {
+>> +					cpu = <&cpu10>;
+>> +				};
+>> +				core3 {
+>> +					cpu = <&cpu11>;
+>> +				};
+>> +			};
+>> +			cluster3 {
+>> +				core0 {
+>> +					cpu = <&cpu12>;
+>> +				};
+>> +				core1 {
+>> +					cpu = <&cpu13>;
+>> +				};
+>> +				core2 {
+>> +					cpu = <&cpu14>;
+>> +				};
+>> +				core3 {
+>> +					cpu = <&cpu15>;
+>> +				};
+>> +			};
+>> +		};
+>> +
+>> +		cpu0: cpu@20000 {
+>> +			device_type = "cpu";
+>> +			compatible = "hisilicon,hip05", "arm,armv8";
 > 
-> Please always indicate the version number in the email subject ("PATCH
-> v2" is the usual scheme). It makes it otherwise difficult to keep track
-> of what version I am looking at.
+> Your cover letter says: "Hip05-D02 Development Board is based on
+> Cortex-A57". So "hisilicon,hip05" has nothing to do here. This should
+> read "arm,cortex-a57" (the SoC name is irrelevant for a cpu node).
 > 
-> Thanks,
+> Apparently I'm not the first one to mention that to you, so please
+> address this in your next version.
 > 
-Miss it, fix it in next version, thanks.
+Ok.
+
+> [...]
+> 
+>> +	gic: interrupt-controller@8d000000 {
+>> +		compatible = "arm,gic-v3";
+>> +                #interrupt-cells = <3>;
+>> +                #address-cells = <2>;
+>> +                #size-cells = <2>;
+>> +                ranges;
+>> +                interrupt-controller;
+>> +                #redistributor-regions = <1>;
+>> +                redistributor-stride = <0x0 0x30000>;
+> 
+> Really? You redistributors are 192kB apart?
+
+Yes, our chip need 192kb for GICR.
+
+> 
+>> +		reg = <0x0 0x8d000000 0 0x10000>,	/* GICD */
+>> +		      <0x0 0x8d100000 0 0x300000>,	/* GICR */
+>> +		      <0x0 0xfe000000 0 0x10000>,	/* GICC */
+>> +		      <0x0 0xfe010000 0 0x10000>,       /* GICH */
+>> +		      <0x0 0xfe020000 0 0x10000>;       /* GICV */
+>> +		interrupts = <GIC_PPI 9 IRQ_TYPE_LEVEL_HIGH>;
+>> +
+>> +		its_totems: interrupt-controller@8c000000 {
+>> +			compatible = "arm,gic-v3-its";
+>> +			msi-controller;
+>> +			reg = <0x0 0x8c000000 0x0 0x1000000>;
+> 
+> Why is the ITS region that big? It should normally only be 128kB.
+> 
+Yes, No need to reserve so big memory for ITS, actually 256kb is enough, fix it in next version, thanks.
 
 Ding
 
-
+> Thanks,
+> 
 > 	M.
 > 
-
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
