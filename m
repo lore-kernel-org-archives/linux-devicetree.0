@@ -1,49 +1,32 @@
-From: Shawn Guo <shawnguo@kernel.org>
-Subject: Re: [PATCH]  ARM: dts: vfxxx: Add iio_hwmon node for ADC temperature
- channel
-Date: Sun, 6 Sep 2015 12:35:51 +0800
-Message-ID: <20150906043551.GE30746@tiger>
-References: <b639ca620369d196491a4af8739b87d580e71bf6.1438876380.git.maitysanchayan@gmail.com>
+From: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH] ARM: dts: imx6ul: add pm_power_off support
+Date: Sun, 6 Sep 2015 15:31:50 +0800
+Message-ID: <20150906073150.GH30746@tiger>
+References: <1438957713-27661-1-git-send-email-b20788@freescale.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <b639ca620369d196491a4af8739b87d580e71bf6.1438876380.git.maitysanchayan@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Sanchayan Maity <maitysanchayan@gmail.com>
-Cc: stefan@agner.ch, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+In-Reply-To: <1438957713-27661-1-git-send-email-b20788-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Anson Huang <b20788-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Aug 06, 2015 at 09:28:22PM +0530, Sanchayan Maity wrote:
-> Add iio_hwmon node to expose the temperature channel on Vybrid
-> as hardware monitor device using the iio_hwmon driver.
+On Fri, Aug 07, 2015 at 10:28:33PM +0800, Anson Huang wrote:
+> i.MX6UL can be powered off by programming SNVS.
 > 
-> Signed-off-by: Sanchayan Maity <maitysanchayan@gmail.com>
-> ---
->  arch/arm/boot/dts/vfxxx.dtsi | 5 +++++
->  1 file changed, 5 insertions(+)
+> When long press ON/OFF button(5 seconds),
+> PMIC_ON_REQ pin will be set to low and external
+> PMIC will be powered off.
 > 
-> diff --git a/arch/arm/boot/dts/vfxxx.dtsi b/arch/arm/boot/dts/vfxxx.dtsi
-> index 39173bb..0993d66 100644
-> --- a/arch/arm/boot/dts/vfxxx.dtsi
-> +++ b/arch/arm/boot/dts/vfxxx.dtsi
-> @@ -597,5 +597,10 @@
->  				status = "disabled";
->  			};
->  		};
-> +
-> +		iio_hwmon {
-> +			compatible = "iio-hwmon";
-> +			io-channels = <&adc0 16>;
-> +		};
-
-Also, what's the reason that the node is being put under
-aips-bus@40080000 (aips1)?
-
-Shawn
-
->  	};
->  };
-> -- 
-> 2.5.0
+> And system can be powered on by long press ON/OFF
+> button again.
 > 
+> Signed-off-by: Anson Huang <b20788-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+
+Applied, thanks.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
