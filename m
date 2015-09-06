@@ -1,232 +1,65 @@
-From: Ding Tianhong <dingtianhong@huawei.com>
-Subject: Re: [PATCH 2/2] arm64: dts: add dts files for Hisilicon Hip05-D02
- Development Board
-Date: Sun, 6 Sep 2015 10:47:33 +0800
-Message-ID: <55EBA945.3020501@huawei.com>
-References: <1441421939-6236-1-git-send-email-dingtianhong@huawei.com>	<1441421939-6236-3-git-send-email-dingtianhong@huawei.com> <20150905102807.18941767@arm.com>
+From: Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Subject: Re: [PATCH v17 3/4] soc: rockchip: power-domain: Add power domain
+ driver
+Date: Sun, 06 Sep 2015 11:04:58 +0800
+Message-ID: <55EBAD5A.9060107@rock-chips.com>
+References: <1441184380-13827-1-git-send-email-wxt@rock-chips.com>
+ <1441184380-13827-4-git-send-email-wxt@rock-chips.com>
+ <7hbndkptfm.fsf@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20150905102807.18941767@arm.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Marc Zyngier <marc.zyngier@arm.com>
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, catalin.marinas@arm.com, will.deacon@arm.com, devicetree@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, rob.herring@linaro.org, haojian.zhuang@linaro.org, zhangfei.gao@linaro.org, xuwei5@hisilicon.com, leo.yan@linaro.org, zhizhou.zh@gmail.com, linuxarm@huawei.com
+Content-Type: text/plain; charset="utf-8"; Format="flowed"
+Content-Transfer-Encoding: base64
+Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+In-Reply-To: <7hbndkptfm.fsf-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
+List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
+Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Kevin Hilman <khilman-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, "jinkun.hong" <jinkun.hong-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 2015/9/5 17:28, Marc Zyngier wrote:
-> On Sat, 5 Sep 2015 10:58:59 +0800
-> Ding Tianhong <dingtianhong@huawei.com> wrote:
-> 
->> Add initial dtsi file to support Hisilicon Hip05-D02 Board with
->> support of CPUs in four clusters and each cluster has quard Cortex-A57.
->>
->> Also add dts file to support Hip05-D02 development board.
->>
->> Signed-off-by: Ding Tianhong <dingtianhong@huawei.com>
->> Signed-off-by: Kefeng Wang <wangkefeng.wang@huawei.com>
->> ---
->>  arch/arm64/boot/dts/hisilicon/Makefile      |   2 +-
->>  arch/arm64/boot/dts/hisilicon/hip05-d02.dts |  36 ++++
->>  arch/arm64/boot/dts/hisilicon/hip05.dtsi    | 271 ++++++++++++++++++++++++++++
->>  3 files changed, 308 insertions(+), 1 deletion(-)
->>  create mode 100644 arch/arm64/boot/dts/hisilicon/hip05-d02.dts
->>  create mode 100644 arch/arm64/boot/dts/hisilicon/hip05.dtsi
->>
->> diff --git a/arch/arm64/boot/dts/hisilicon/Makefile b/arch/arm64/boot/dts/hisilicon/Makefile
->> index fa81a6e..cd158b8 100644
->> --- a/arch/arm64/boot/dts/hisilicon/Makefile
->> +++ b/arch/arm64/boot/dts/hisilicon/Makefile
->> @@ -1,4 +1,4 @@
->> -dtb-$(CONFIG_ARCH_HISI) += hi6220-hikey.dtb
->> +dtb-$(CONFIG_ARCH_HISI) += hi6220-hikey.dtb hip05-d02.dtb
->>  
->>  always		:= $(dtb-y)
->>  subdir-y	:= $(dts-dirs)
->> diff --git a/arch/arm64/boot/dts/hisilicon/hip05-d02.dts b/arch/arm64/boot/dts/hisilicon/hip05-d02.dts
->> new file mode 100644
->> index 0000000..ae34e25
->> --- /dev/null
->> +++ b/arch/arm64/boot/dts/hisilicon/hip05-d02.dts
->> @@ -0,0 +1,36 @@
->> +/**
->> + * dts file for Hisilicon D02 Development Board
->> + *
->> + * Copyright (C) 2014,2015 Hisilicon Ltd.
->> + *
->> + * This program is free software; you can redistribute it and/or modify
->> + * it under the terms of the GNU General Public License version 2 as
->> + * publishhed by the Free Software Foundation.
->> + *
->> + */
->> +
->> +/dts-v1/;
->> +
->> +#include "hip05.dtsi"
->> +
->> +/ {
->> +	model = "Hisilicon Hip05 D02 Development Board";
->> +	compatible = "hisilicon,hip05-d02";
->> +
->> +	memory@00000000 {
->> +		device_type = "memory";
->> +		reg = <0x0 0x00000000 0x0 0x80000000>;
->> +	};
->> +
->> +	aliases {
->> +		serial0 = &uart0;
->> +	};
->> +
->> +	chosen {
->> +		stdout-path = "serial0:115200n8";
->> +	};
->> +};
->> +
->> +&uart0 {
->> +	status = "ok";
->> +};
->> diff --git a/arch/arm64/boot/dts/hisilicon/hip05.dtsi b/arch/arm64/boot/dts/hisilicon/hip05.dtsi
->> new file mode 100644
->> index 0000000..92d00f4
->> --- /dev/null
->> +++ b/arch/arm64/boot/dts/hisilicon/hip05.dtsi
->> @@ -0,0 +1,271 @@
->> +/**
->> + * dts file for Hisilicon D02 Development Board
->> + *
->> + * Copyright (C) 2014,2015 Hisilicon Ltd.
->> + *
->> + * This program is free software; you can redistribute it and/or modify
->> + * it under the terms of the GNU General Public License version 2 as
->> + * publishhed by the Free Software Foundation.
->> + *
->> + */
->> +
->> +#include <dt-bindings/interrupt-controller/arm-gic.h>
->> +
->> +/ {
->> +	compatible = "hisilicon,hip05-d02";
->> +	interrupt-parent = <&gic>;
->> +	#address-cells = <2>;
->> +	#size-cells = <2>;
->> +
->> +	psci {
->> +		compatible = "arm,psci-0.2";
->> +		method = "smc";
->> +	};
->> +
->> +	cpus {
->> +		#address-cells = <1>;
->> +		#size-cells = <0>;
->> +
->> +		cpu-map {
->> +			cluster0 {
->> +				core0 {
->> +					cpu = <&cpu0>;
->> +				};
->> +				core1 {
->> +					cpu = <&cpu1>;
->> +				};
->> +				core2 {
->> +					cpu = <&cpu2>;
->> +				};
->> +				core3 {
->> +					cpu = <&cpu3>;
->> +				};
->> +			};
->> +			cluster1 {
->> +				core0 {
->> +					cpu = <&cpu4>;
->> +				};
->> +				core1 {
->> +					cpu = <&cpu5>;
->> +				};
->> +				core2 {
->> +					cpu = <&cpu6>;
->> +				};
->> +				core3 {
->> +					cpu = <&cpu7>;
->> +				};
->> +			};
->> +			cluster2 {
->> +				core0 {
->> +					cpu = <&cpu8>;
->> +				};
->> +				core1 {
->> +					cpu = <&cpu9>;
->> +				};
->> +				core2 {
->> +					cpu = <&cpu10>;
->> +				};
->> +				core3 {
->> +					cpu = <&cpu11>;
->> +				};
->> +			};
->> +			cluster3 {
->> +				core0 {
->> +					cpu = <&cpu12>;
->> +				};
->> +				core1 {
->> +					cpu = <&cpu13>;
->> +				};
->> +				core2 {
->> +					cpu = <&cpu14>;
->> +				};
->> +				core3 {
->> +					cpu = <&cpu15>;
->> +				};
->> +			};
->> +		};
->> +
->> +		cpu0: cpu@20000 {
->> +			device_type = "cpu";
->> +			compatible = "hisilicon,hip05", "arm,armv8";
-> 
-> Your cover letter says: "Hip05-D02 Development Board is based on
-> Cortex-A57". So "hisilicon,hip05" has nothing to do here. This should
-> read "arm,cortex-a57" (the SoC name is irrelevant for a cpu node).
-> 
-> Apparently I'm not the first one to mention that to you, so please
-> address this in your next version.
-> 
-Ok.
-
-> [...]
-> 
->> +	gic: interrupt-controller@8d000000 {
->> +		compatible = "arm,gic-v3";
->> +                #interrupt-cells = <3>;
->> +                #address-cells = <2>;
->> +                #size-cells = <2>;
->> +                ranges;
->> +                interrupt-controller;
->> +                #redistributor-regions = <1>;
->> +                redistributor-stride = <0x0 0x30000>;
-> 
-> Really? You redistributors are 192kB apart?
-
-Yes, our chip need 192kb for GICR.
-
-> 
->> +		reg = <0x0 0x8d000000 0 0x10000>,	/* GICD */
->> +		      <0x0 0x8d100000 0 0x300000>,	/* GICR */
->> +		      <0x0 0xfe000000 0 0x10000>,	/* GICC */
->> +		      <0x0 0xfe010000 0 0x10000>,       /* GICH */
->> +		      <0x0 0xfe020000 0 0x10000>;       /* GICV */
->> +		interrupts = <GIC_PPI 9 IRQ_TYPE_LEVEL_HIGH>;
->> +
->> +		its_totems: interrupt-controller@8c000000 {
->> +			compatible = "arm,gic-v3-its";
->> +			msi-controller;
->> +			reg = <0x0 0x8c000000 0x0 0x1000000>;
-> 
-> Why is the ITS region that big? It should normally only be 128kB.
-> 
-Yes, No need to reserve so big memory for ITS, actually 256kb is enough, fix it in next version, thanks.
-
-Ding
-
-> Thanks,
-> 
-> 	M.
-> 
+S2V2aW4sCgpUaGFua3MgZm9yIGhhdmluZyBhIGxvb2sgaW50byBpdC4KCgrlnKggMjAxNeW5tDA5
+5pyIMDPml6UgMDI6MjgsIEtldmluIEhpbG1hbiDlhpnpgZM6Cj4gQ2Flc2FyIFdhbmcgPHd4dEBy
+b2NrLWNoaXBzLmNvbT4gd3JpdGVzOgo+Cj4+IFRoaXMgZHJpdmVyIGlzIGZvdW5kIG9uIFJLMzI4
+OCBTb0NzLgo+Pgo+PiBJbiBvcmRlciB0byBtZWV0IGhpZ2ggcGVyZm9ybWFuY2UgYW5kIGxvdyBw
+b3dlciByZXF1aXJlbWVudHMsIGEgcG93ZXIKPj4gbWFuYWdlbWVudCB1bml0IGlzIGRlc2lnbmVk
+IG9yIHNhdmluZyBwb3dlciB3aGVuIFJLMzI4OCBpbiBsb3cgcG93ZXIKPj4gbW9kZS4KPj4gVGhl
+IFJLMzI4OCBQTVUgaXMgZGVkaWNhdGVkIGZvciBtYW5hZ2luZyB0aGUgcG93ZXIgb2YgdGhlIHdo
+b2xlIGNoaXAuCj4+Cj4+IFBNVSBjYW4gd29yayBpbiB0aGUgTG93IFBvd2VyIE1vZGUgYnkgc2V0
+dGluZyBiaXRbMF0gb2YgUE1VX1BXUk1PREVfQ09OCj4+IHJlZ2lzdGVyLiBBZnRlciBzZXR0aW5n
+IHRoZSByZWdpc3RlciwgUE1VIHdvdWxkIGVudGVyIHRoZSBMb3cgUG93ZXIgbW9kZS4KPj4gSW4g
+dGhlIGxvdyBwb3dlciBtb2RlLCBwbXUgd2lsbCBhdXRvIHBvd2VyIG9uL29mZiB0aGUgc3BlY2lm
+aWVkIHBvd2VyCj4+IGRvbWFpbiwgc2VuZCBpZGxlIHJlcSB0byBzcGVjaWZpZWQgcG93ZXIgZG9t
+YWluLCBzaHV0IGRvd24vdXAgcGxsIGFuZAo+PiBzbyBvbi4gQWxsIG9mIGFib3ZlIGFyZSBjb25m
+aWd1cmFibGUgYnkgc2V0dGluZyBjb3JyZXNwb25kaW5nIHJlZ2lzdGVycy4KPj4KPj4gU2lnbmVk
+LW9mZi1ieTogamlua3VuLmhvbmcgPGppbmt1bi5ob25nQHJvY2stY2hpcHMuY29tPgo+PiBTaWdu
+ZWQtb2ZmLWJ5OiBDYWVzYXIgV2FuZyA8d3h0QHJvY2stY2hpcHMuY29tPgo+IFsuLi5dCj4KPj4g
+K3N0YXRpYyB2b2lkIHJvY2tjaGlwX3BtX3JlbW92ZV9vbmVfZG9tYWluKHN0cnVjdCByb2NrY2hp
+cF9wbV9kb21haW4gKnBkKQo+PiArewo+PiArCWludCBpOwo+PiArCj4+ICsJZm9yIChpID0gMDsg
+aSA8IHBkLT5udW1fY2xrczsgaSsrKSB7Cj4+ICsJCWNsa191bnByZXBhcmUocGQtPmNsa3NbaV0p
+Owo+PiArCQljbGtfcHV0KHBkLT5jbGtzW2ldKTsKPj4gKwl9Cj4KPiBZb3UgZG9uJ3Qgc2V0IHBk
+LT5udW1fY2xrcyA9IDAgaGVyZSwgd2hpY2ggbWVhbnMgb3RoZXIgcGxhY2VzIHRoYXQKPiBpdGVy
+YXRlIG92ZXIgdGhlIGNsb2NrcyBtaWdodCByYWNlIHdpdGggdGhpcyBhbmQgdHJ5IHRvIHVzZSBj
+bG9ja3MgdGhhdAo+IGhhdmUgYmVlbiB1bnByZXBhcmVkL3B1dC4KCkFncmVlLCB3ZSBzaG91bGQg
+c2V0IHRoZSAicGQtPm51bV9jbG9rcz0wJyBpbiBoZXJlLgo+IFRoaXMgbWlnaHQgYmUgb3Zlci1w
+YXJhbm9pZCwgYnV0IGluIHBhcnRpY3VsYXIsIHRoaXMgY291bGQgcmFjZSB3aXRoCj4gcm9ja2No
+aXBfcGRfcG93ZXIoKS4KPgo+IEFsc28gbm90IHNldHRpbmcgdGhlIHBkLT5udW1fY2xrcyB0byB6
+ZXJvIHdvdWxkIGJlIGEgcHJvYmxlbSBmb3IgYQo+IHBvd2VyLWNvbnRyb2xsZXIgdGhhdCBpcyBj
+b25maWd1cmVkIGFzIGEgbW9kdWxlIHdoaWNoIGNvdWxkIGJlIHVubG9hZGVkCj4gYW5kIHJlbG9h
+ZGVkIChJIGtub3cgdGhhdCBkb2Vzbid0IHJlYWxseSB3b3JrIG5vdywgYnV0IGl0IHdpbGwKPiBl
+dmVudHVhbGx5LCBJIGhvcGUuKQoKWWVwLgo+Cj4gTWF5YmUgdXNlIHRoZSBtdXRleCBoZXJlPyAg
+SXQgc2hvdWxkIGF0IGxlYXN0IHByb3RlY3QgdGhlIHplcm9pbmcgb2YKPiBwbS0+bnVtX2Nsa3Mu
+CgpTb3VuZCByZXNvbmFibGUuCkRvbmUuCgotLS0KVGhhbmtzLApDYWVzYXIKPgo+IEtldmluCj4K
+PiBfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwo+IExpbnV4
+LXJvY2tjaGlwIG1haWxpbmcgbGlzdAo+IExpbnV4LXJvY2tjaGlwQGxpc3RzLmluZnJhZGVhZC5v
+cmcKPiBodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4LXJv
+Y2tjaGlwCgoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18K
+TGludXgtcm9ja2NoaXAgbWFpbGluZyBsaXN0CkxpbnV4LXJvY2tjaGlwQGxpc3RzLmluZnJhZGVh
+ZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1y
+b2NrY2hpcAo=
