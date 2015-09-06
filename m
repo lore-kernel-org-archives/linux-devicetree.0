@@ -1,124 +1,57 @@
-From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH] of_pci_irq: Silence bogus "of_irq_parse_pci() failed ..." messages.
-Date: Sun, 6 Sep 2015 15:46:41 -0500
-Message-ID: <CAL_JsqK0uW4F7HAcUMSQ-2wCvp_i3a5MTxsyW3XerHAxBrW=SQ@mail.gmail.com>
-References: <1441393926-23225-1-git-send-email-ddaney.cavm@gmail.com> <55EA41E3.5010103@gmail.com>
+From: Rob Herring <robherring2@gmail.com>
+Subject: Re: [PATCH v2 07/10] dts/ls2085a: Update DTSI to add support of
+ various peripherals
+Date: Sun, 6 Sep 2015 15:57:22 -0500
+Message-ID: <CAL_Jsq+KJU4RiK2XWcS5BezucCmup2M-pueaaJUq7O=fA3LUxw@mail.gmail.com>
+References: <1441350322-4671-1-git-send-email-bhupesh.sharma@freescale.com>
+ <CADRPPNQER9UnKLazm9C6Dd7DAkDxLb4QShK64tmtahZxJJ-t=g@mail.gmail.com> <BY1PR0301MB130306991ACB28E4C8109DD582560@BY1PR0301MB1303.namprd03.prod.outlook.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <55EA41E3.5010103-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: David Daney <ddaney.cavm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, David Daney <david.daney-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <BY1PR0301MB130306991ACB28E4C8109DD582560@BY1PR0301MB1303.namprd03.prod.outlook.com>
+Sender: linux-clk-owner@vger.kernel.org
+To: Sharma Bhupesh <bhupesh.sharma@freescale.com>
+Cc: Li Leo <LeoLi@freescale.com>, Xiaobo Xie <X.Xie@freescale.com>, Liu Gang <Gang.Liu@freescale.com>, "Lian M.H." <Minghuan.Lian@freescale.com>, Badola Nikhil <nikhil.badola@freescale.com>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Shaohui Xie <Shaohui.Xie@freescale.com>, Arnd Bergmann <arnd@arndb.de>, Huan Wang <alison.wang@freescale.com>, "marc.zyngier@arm.com" <marc.zyngier@arm.com>, "Catalin.Marinas@arm.com" <Catalin.Marinas@arm.com>, Singh Jaiprakash <jaiprakash.singh@freescale.com>, "will.deacon@arm.com" <will.deacon@arm.com>, "olof@lixom.net" <olof@lixom.net>, Scott Wood <scottwood@freescale.com>, Bhupesh SHARMA <bhupesh.linux@gmail.com>, "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "Lu Y.B." <yangbo.lu@freescale.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Sep 4, 2015 at 8:14 PM, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> On 9/4/2015 12:12 PM, David Daney wrote:
->> From: David Daney <david.daney-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
+On Sat, Sep 5, 2015 at 3:37 AM, Sharma Bhupesh
+<bhupesh.sharma@freescale.com> wrote:
+>> From: pku.leo@gmail.com [mailto:pku.leo@gmail.com]
+>> Sent: Saturday, September 05, 2015 2:33 AM
+>> On Fri, Sep 4, 2015 at 2:05 AM, Bhupesh Sharma
+>> <bhupesh.sharma@freescale.com> wrote:
+>> > This patch updates the LS2085a DTSI (DTS Include) file to add support
+>> > for various peripherals supported by FSL LS2085a SoC, for e.g.:
 >>
->> It is perfectly legitimate for a PCI device to have an
->> PCI_INTERRUPT_PIN value of zero.  This happens if the device doesn't
->> use interrupts, or on PCIe devices, where only MSI/MSI-X are
->> supported.
+>> The title and description here are still using the old LS2085 name.
+>
+> Ok.
+>
+> [snip] ..
+>
+>> > +       amba {
+>> > +               compatible = "arm,amba-bus";
+>> > +               #address-cells = <2>;
+>> > +               #size-cells = <2>;
+>> > +               ranges;
+>> > +
+>> > +               cluster1_core0_watchdog: wdt@c000000 {
+>> > +                       compatible = "arm,primecell";
 >>
->> Silence the annoying "of_irq_parse_pci() failed with rc=-19" error
->> messages by making them conditional on !-ENODEV (which can only be
->> produced in the PCI_INTERRUPT_PIN == 0 case).
->>
->> Signed-off-by: David Daney <david.daney-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
->> ---
->>  drivers/of/of_pci_irq.c | 4 +++-
->>  1 file changed, 3 insertions(+), 1 deletion(-)
->>
->> diff --git a/drivers/of/of_pci_irq.c b/drivers/of/of_pci_irq.c
->> index 1710d9d..33d242a 100644
->> --- a/drivers/of/of_pci_irq.c
->> +++ b/drivers/of/of_pci_irq.c
->> @@ -106,7 +106,9 @@ int of_irq_parse_and_map_pci(const struct pci_dev *dev, u8 slot, u8 pin)
->>
->>       ret = of_irq_parse_pci(dev, &oirq);
->>       if (ret) {
->> -             dev_err(&dev->dev, "of_irq_parse_pci() failed with rc=%d\n", ret);
->> +             if (ret != -ENODEV)
->> +                     dev_err(&dev->dev,
->> +                             "of_irq_parse_pci() failed with rc=%d\n", ret);
->>               return 0; /* Proper return code 0 == NO_IRQ */
->>       }
->>
->>
+>> Binding of Primecell requires a specific name for the device instead of
+>> just a "arm,primecell".
 >
-> It is not safe to assume that the functions that of_irq_parse_pci() calls
-> will never be modified to return -ENODEV, thus resulting in of_irq_parse_pci()
-> returning -ENODEV for a reason other than PCI_INTERRUPT_PIN == 0.
+> The sp805 driver doesn't have a compatible string like arm, sp805.
+> You can refer to 'Documentation/devicetree/bindings/wdt' for details - there is no entry for sp805 here.
 
-Yes, but we're talking about a print statement.
+Because no one wrote it yet. Please read
+Documentation/devicetree/bindings/arm/primecell.txt. If sp805 has no
+binding doc, please write one.
 
->
-> A more robust solution would be something like:
->
->
-> (1) Change of_irq_parse_pci() to _of_irq_parse_pci(), adding an argument and
-> use it to report the case of PCI_INTERRUPT_PIN == 0.
->
-> static int _of_irq_parse_pci(const struct pci_dev *pdev, struct of_phandle_args *out_irq, int *no_pin)
-> {
->
-> ...
->         *no_pin = 0;
-> ...
->         /* No pin, exit */
->         if (pin == 0) {
->                 *no_pin = 1;
->                 return -ENODEV;
->         }
-> ...
->
->
-> int of_irq_parse_pci(const struct pci_dev *pdev, struct of_phandle_args *out_irq)
-> {
->         int no_pin;
->         return _of_irq_parse_pci(pdev, out_irq, &no_pin)
-> }
->
->
-> (2) Then the fix to of_irq_parse_and_map_pci() would be:
->
->   +     int no_pin;
->>       ret = of_irq_parse_pci(dev, &oirq, &no_pin);
->>       if (ret) {
->> -             dev_err(&dev->dev, "of_irq_parse_pci() failed with rc=%d\n", ret);
->> +             if (!no_pin)
->> +                     dev_err(&dev->dev,
->> +                             "of_irq_parse_pci() failed with rc=%d\n", ret);
->>               return 0; /* Proper return code 0 == NO_IRQ */
->>       }
->
->
-> I'm not sure I like my solution, there might be a better way.
+> Instead it relies on the 'drivers/amba/bus.c' framework to invoke the probe function of the
+> sp805 wdt driver using the unique PRIMECELL identifiers of the sp805 wdt IP.
 
-I don't like it. That's way too complex for just silencing an
-erroneous error message.
-
-Perhaps just move the error message into of_irq_parse_pci and then you
-can control the print more easily. Or just change to dev_dbg would be
-okay by me.
-
-
-> I also noticed another bug while looking at of_irq_parse_pci().  It returns
-> the non-zero return value from pci_read_config_byte().  But that value is
-> one of the PCI function error values from include/linux/pci.h, such as:
->
->    #define PCIBIOS_BAD_REGISTER_NUMBER     0x87
->
-> instead of a negative errno.
-
-I was puzzled by why this is not standard error codes a while back. My
-best guess is that that there is some legacy here. Changing error
-values on widely used functions is impossible to audit. NO_IRQ being 0
-or -1 is one such case.
+Whether the kernel chooses to bind with the ID registers or compatible
+strings is up to the kernel. That is independent of the bindings.
 
 Rob
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
