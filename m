@@ -1,277 +1,260 @@
-From: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>
-Subject: Re: [PATCH 2/2] mtd: spi-nor: Add driver for Cadence Quad SPI Flash Controller.
-Date: Sun, 6 Sep 2015 17:16:27 +0200
-Message-ID: <201509061716.27521.marex@denx.de>
-References: <1440148851-14621-1-git-send-email-marex@denx.de> <1440148851-14621-2-git-send-email-marex@denx.de> <55EA2CFD.6060300@st.com>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH] ARM: dts: sun4i: Add dts file for the pov
+ protab2-ips9 tablet
+Date: Sun, 6 Sep 2015 18:30:23 +0200
+Message-ID: <20150906163023.GR31584@lukather>
+References: <1441441319-10658-1-git-send-email-hdegoede@redhat.com>
+Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
 Mime-Version: 1.0
-Content-Type: Text/Plain;
-  charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <55EA2CFD.6060300-qxv4g6HH51o@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: vikas <vikas.manocha-qxv4g6HH51o@public.gmane.org>
-Cc: "linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Graham Moore <grmoore-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>, Alan Tull <atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Dinh Nguyen <dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>, Yves Vandervennet <yvanderv-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="cYG5ZC/RuVsIq1ir"
+Return-path: <linux-sunxi+bncBD2ZNBF5VYJRBCOVWGXQKGQE6ECMZLA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1441441319-10658-1-git-send-email-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <http://groups.google.com/group/linux-sunxi/subscribe>
+To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Saturday, September 05, 2015 at 01:45:01 AM, vikas wrote:
-> Hi,
+--cYG5ZC/RuVsIq1ir
+Content-Type: text/plain; charset=UTF-8
+Content-Disposition: inline
+
+On Sat, Sep 05, 2015 at 10:21:59AM +0200, Hans de Goede wrote:
+> The Point of View protab2-ips9 is a tablet with a 9" ips 1024x768 lcd screen,
+> microsd slot, headphones, mini hdmi, mini usb b and power barrel connectors.
 > 
-> On 08/21/2015 02:20 AM, Marek Vasut wrote:
-> > From: Graham Moore <grmoore-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
-> > 
-> > Add support for the Cadence QSPI controller. This controller is
-> > present in the Altera SoCFPGA SoCs and this driver has been tested
-> > on the Cyclone V SoC.
+> It uses a rtl8188cus usb wifi chip and a RDA 5875Y bluetooth chip attached
+> to uart2. It has a bma250 accelerometer attached to i2c1 addr 0x18.
 > 
-> can we add info about the modes supported/not supported like direct mode,
-> indirect etc.
-
-It's already part of the documentation.
-
-> > Signed-off-by: Graham Moore <grmoore-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
-> > Signed-off-by: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>
-> > Cc: Alan Tull <atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
-> > Cc: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> > Cc: David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>
-> > Cc: Dinh Nguyen <dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
-> > Cc: Graham Moore <grmoore-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
-> > Cc: Vikas MANOCHA <vikas.manocha-qxv4g6HH51o@public.gmane.org>
-> > Cc: Yves Vandervennet <yvanderv-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
-> > Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> > ---
-
-[...]
-
-> > +#define CQSPI_REG_CMDADDRESS                   0x94
-> > +#define CQSPI_REG_CMDREADDATALOWER             0xA0
-> > +#define CQSPI_REG_CMDREADDATAUPPER             0xA4
-> > +#define CQSPI_REG_CMDWRITEDATALOWER            0xA8
-> > +#define CQSPI_REG_CMDWRITEDATAUPPER            0xAC
-> > +
-> > +/* Interrupt status bits */
-> > +#define CQSPI_REG_IRQ_MODE_ERR                 BIT(0)
-> > +#define CQSPI_REG_IRQ_UNDERFLOW                        BIT(1)
-> > +#define CQSPI_REG_IRQ_IND_COMP                 BIT(2)
-> > +#define CQSPI_REG_IRQ_IND_RD_REJECT            BIT(3)
-> > +#define CQSPI_REG_IRQ_WR_PROTECTED_ERR         BIT(4)
-> > +#define CQSPI_REG_IRQ_ILLEGAL_AHB_ERR          BIT(5)
+> It has a pixcir,pixcir_tangoc compatible touchscreen attached to i2c2 addr
+> 0x5c. This is not enabled in this dts, because this variant of the
+> pixcir_tangoc has separate wakeup and enable pins both of which need
+> to be driven low before the touchscreen will work. Before we can enable
+> this the pixcir driver and devicetree-bindings need to be extended to
+> support these pins.
 > 
-> remove unused MACROs.
-
-You mean you prefer to have incomplete definition of bits in the register
-instead of a complete one ? I cannot agree to this, sorry.
-
-> > +#define CQSPI_REG_IRQ_WATERMARK                        BIT(6)
-> > +#define CQSPI_REG_IRQ_IND_RD_OVERFLOW          BIT(12)
+> Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+> ---
+>  arch/arm/boot/dts/Makefile                       |   3 +-
+>  arch/arm/boot/dts/sun4i-a10-pov-protab2-ips9.dts | 209 +++++++++++++++++++++++
+>  2 files changed, 211 insertions(+), 1 deletion(-)
+>  create mode 100644 arch/arm/boot/dts/sun4i-a10-pov-protab2-ips9.dts
 > 
-> Correct this bit name to ..IND_RD_SRAM_FULL.
+> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+> index e981fd6..c08883c 100644
+> --- a/arch/arm/boot/dts/Makefile
+> +++ b/arch/arm/boot/dts/Makefile
+> @@ -561,7 +561,8 @@ dtb-$(CONFIG_MACH_SUN4I) += \
+>  	sun4i-a10-mk802.dtb \
+>  	sun4i-a10-mk802ii.dtb \
+>  	sun4i-a10-olinuxino-lime.dtb \
+> -	sun4i-a10-pcduino.dtb
+> +	sun4i-a10-pcduino.dtb \
+> +	sun4i-a10-pov-protab2-ips9.dtb
+>  dtb-$(CONFIG_MACH_SUN5I) += \
+>  	sun5i-a10s-auxtek-t003.dtb \
+>  	sun5i-a10s-auxtek-t004.dtb \
+> diff --git a/arch/arm/boot/dts/sun4i-a10-pov-protab2-ips9.dts b/arch/arm/boot/dts/sun4i-a10-pov-protab2-ips9.dts
+> new file mode 100644
+> index 0000000..223515e
+> --- /dev/null
+> +++ b/arch/arm/boot/dts/sun4i-a10-pov-protab2-ips9.dts
+> @@ -0,0 +1,209 @@
+> +/*
+> + * Copyright 2015 Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+> + *
+> + * This file is dual-licensed: you can use it either under the terms
+> + * of the GPL or the X11 license, at your option. Note that this dual
+> + * licensing only applies to this file, and not this project as a
+> + * whole.
+> + *
+> + *  a) This file is free software; you can redistribute it and/or
+> + *     modify it under the terms of the GNU General Public License as
+> + *     published by the Free Software Foundation; either version 2 of the
+> + *     License, or (at your option) any later version.
+> + *
+> + *     This file is distributed in the hope that it will be useful,
+> + *     but WITHOUT ANY WARRANTY; without even the implied warranty of
+> + *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+> + *     GNU General Public License for more details.
+> + *
+> + * Or, alternatively,
+> + *
+> + *  b) Permission is hereby granted, free of charge, to any person
+> + *     obtaining a copy of this software and associated documentation
+> + *     files (the "Software"), to deal in the Software without
+> + *     restriction, including without limitation the rights to use,
+> + *     copy, modify, merge, publish, distribute, sublicense, and/or
+> + *     sell copies of the Software, and to permit persons to whom the
+> + *     Software is furnished to do so, subject to the following
+> + *     conditions:
+> + *
+> + *     The above copyright notice and this permission notice shall be
+> + *     included in all copies or substantial portions of the Software.
+> + *
+> + *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+> + *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+> + *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+> + *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+> + *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+> + *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+> + *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+> + *     OTHER DEALINGS IN THE SOFTWARE.
+> + */
+> +
+> +/dts-v1/;
+> +#include "sun4i-a10.dtsi"
+> +#include "sunxi-common-regulators.dtsi"
+> +#include <dt-bindings/gpio/gpio.h>
+> +#include <dt-bindings/input/input.h>
+> +#include <dt-bindings/interrupt-controller/irq.h>
+> +#include <dt-bindings/pinctrl/sun4i-a10.h>
+> +
+> +/ {
+> +	model = "Point of View Protab2-IPS9";
+> +	compatible = "pov,protab2-ips9", "allwinner,sun4i-a10";
+> +
+> +	aliases {
+> +		serial0 = &uart0;
+> +	};
+> +
+> +	chosen {
+> +		stdout-path = "serial0:115200n8";
+> +	};
+> +};
+> +
+> +&cpu0 {
+> +	cpu-supply = <&reg_dcdc2>;
+> +};
+> +
+> +&ehci0 {
+> +	status = "okay";
+> +};
+> +
+> +&i2c0 {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&i2c0_pins_a>;
+> +	status = "okay";
+> +
+> +	axp209: pmic@34 {
+> +		reg = <0x34>;
+> +		interrupts = <0>;
+> +	};
+> +};
+> +
+> +#include "axp209.dtsi"
+> +
+> +&i2c1 {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&i2c1_pins_a>;
+> +	status = "okay";
+> +};
+> +
+> +&i2c2 {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&i2c2_pins_a>;
+> +	status = "okay";
+> +};
+> +
+> +&lradc {
+> +	vref-supply = <&reg_ldo2>;
+> +	status = "okay";
+> +
+> +	button@400 {
+> +		label = "Volume Up";
+> +		linux,code = <KEY_VOLUMEUP>;
+> +		channel = <0>;
+> +		voltage = <400000>;
+> +	};
+> +
+> +	button@800 {
+> +		label = "Volume Down";
+> +		linux,code = <KEY_VOLUMEDOWN>;
+> +		channel = <0>;
+> +		voltage = <800000>;
+> +	};
+> +};
+> +
+> +&mmc0 {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&mmc0_pins_a>, <&mmc0_cd_pin_reference_design>;
+> +	vmmc-supply = <&reg_vcc3v3>;
+> +	bus-width = <4>;
+> +	cd-gpios = <&pio 7 1 GPIO_ACTIVE_HIGH>; /* PH1 */
+> +	cd-inverted;
+> +	status = "okay";
+> +};
+> +
+> +&otg_sram {
+> +	status = "okay";
+> +};
+> +
+> +&pio {
+> +	usb0_id_detect_pin: usb0_id_detect_pin@0 {
+> +		allwinner,pins = "PH4";
+> +		allwinner,function = "gpio_in";
+> +		allwinner,drive = <SUN4I_PINCTRL_10_MA>;
+> +		allwinner,pull = <SUN4I_PINCTRL_PULL_UP>;
+> +	};
+> +
+> +	usb0_vbus_detect_pin: usb0_vbus_detect_pin@0 {
+> +		allwinner,pins = "PH5";
+> +		allwinner,function = "gpio_in";
+> +		allwinner,drive = <SUN4I_PINCTRL_10_MA>;
+> +		allwinner,pull = <SUN4I_PINCTRL_PULL_DOWN>;
+> +	};
+> +};
+> +
+> +&reg_dcdc2 {
+> +	regulator-always-on;
+> +	regulator-min-microvolt = <1000000>;
+> +	regulator-max-microvolt = <1400000>;
+> +	regulator-name = "vdd-cpu";
+> +};
+> +
+> +&reg_dcdc3 {
+> +	regulator-always-on;
+> +	regulator-min-microvolt = <1250000>;
+> +	regulator-max-microvolt = <1250000>;
+> +	regulator-name = "vdd-int-dll";
+> +};
+> +
+> +&reg_ldo1 {
+> +	regulator-name = "vdd-rtc";
+> +};
+> +
+> +&reg_ldo2 {
+> +	regulator-always-on;
+> +	regulator-min-microvolt = <3000000>;
+> +	regulator-max-microvolt = <3000000>;
+> +	regulator-name = "avcc";
+> +};
+> +
+> +&reg_ldo3 {
+> +	/*
+> +	 * We need to always power the camera sensor, otherwhise all access
+> +	 * to i2c1 is blocked.
+> +	 */
+> +	regulator-always-on;
+> +	regulator-min-microvolt = <2800000>;
+> +	regulator-max-microvolt = <2800000>;
+> +	regulator-name = "vdd-csi";
+> +};
 
-Good catch.
+What is connected on i2c1 ? Just the camera sensor? or it has some
+other devices there?
 
-[...]
+Maxime
 
-> > +static int cqspi_wait_idle(struct cqspi_st *cqspi)
-> > +{
-> > +       const unsigned int poll_idle_retry = 3;
-> > +       unsigned int count = 0;
-> > +       unsigned long timeout;
-> > +
-> > +       timeout = jiffies + msecs_to_jiffies(CQSPI_TIMEOUT_MS);
-> > +       while (1) {
-> > +               /*
-> > +                * Read few times in succession to ensure the controller
-> > +                * is indeed idle, that is, the bit does not transition
-> > +                * low again.
-> > +                */
-> > +               if (cqspi_is_idle(cqspi))
-> > +                       count++;
-> > +               else
-> > +                       count = 0;
-> > +
-> > +               if (count >= poll_idle_retry)
-> > +                       return 0;
-> 
-> why do we need to check it 3 times ?
-
-Please see the comment above.
-
-> > +
-> > +               if (time_after(jiffies, timeout)) {
-> > +                       /* Timeout, in busy mode. */
-> > +                       dev_err(&cqspi->pdev->dev,
-> > +                               "QSPI is still busy after %dms
-> > timeout.\n", +                               CQSPI_TIMEOUT_MS);
-> > +                       return -ETIMEDOUT;
-> > +               }
-> > +
-> > +               cpu_relax();
-> > +       }
-> > +}
-> > +
-> 
-> [...]
-> 
-> > +
-> > +static int cqspi_indirect_read_execute(struct spi_nor *nor,
-> > +                                      u8 *rxbuf, const unsigned n_rx)
-> > +{
-> > +       struct cqspi_flash_pdata *f_pdata = nor->priv;
-> > +       struct cqspi_st *cqspi = f_pdata->cqspi;
-> > +       void __iomem *reg_base = cqspi->iobase;
-> > +       void __iomem *ahb_base = cqspi->ahb_base;
-> > +       unsigned int remaining = n_rx;
-> > +       unsigned int bytes_to_read = 0;
-> > +       int ret = 0;
-> > +
-> > +       writel(remaining, reg_base + CQSPI_REG_INDIRECTRDBYTES);
-> > +
-> > +       /* Clear all interrupts. */
-> > +       writel(CQSPI_IRQ_STATUS_MASK, reg_base + CQSPI_REG_IRQSTATUS);
-> > +
-> > +       writel(CQSPI_IRQ_MASK_RD, reg_base + CQSPI_REG_IRQMASK);
-> 
-> I think there is no need for separate masks for read & write. Use one mask
-> & configure it once in the init rather than configuring each time for
-> every read/write. Then in the ISR, take action as per the interrupt
-> source: read/write/error condition etc.
-
-Setting up the specific IRQ mask prevents spurious interrupts during the
-particular IO operation, so this solution looks more precise to me.
-
-> > +
-> > +       reinit_completion(&cqspi->transfer_complete);
-> > +       writel(CQSPI_REG_INDIRECTRD_START_MASK,
-> > +              reg_base + CQSPI_REG_INDIRECTRD);
-> > +
-> > +       while (remaining > 0) {
-> > +               ret =
-> > wait_for_completion_timeout(&cqspi->transfer_complete, +                
-> >                                 msecs_to_jiffies +                      
-> >                           (CQSPI_READ_TIMEOUT_MS)); +
-> > +               bytes_to_read = cqspi_get_rd_sram_level(cqspi);
-> > +
-> > +               if (!ret && bytes_to_read == 0) {
-> > +                       dev_err(nor->dev, "Indirect read timeout, no
-> > bytes\n"); +                       ret = -ETIMEDOUT;
-> > +                       goto failrd;
-> > +               }
-> > +
-> > +               while (bytes_to_read != 0) {
-> > +                       bytes_to_read *= cqspi->fifo_width;
-> > +                       bytes_to_read = bytes_to_read > remaining ?
-> > +                                       remaining : bytes_to_read;
-> > +                       readsl(ahb_base, rxbuf,
-> > DIV_ROUND_UP(bytes_to_read, 4)); +                       rxbuf +=
-> > bytes_to_read;
-> > +                       remaining -= bytes_to_read;
-> > +                       bytes_to_read = cqspi_get_rd_sram_level(cqspi);
-> > +               }
-> > +       }
-> > +
-> > +       /* Check indirect done status */
-> > +       ret = cqspi_wait_for_bit(reg_base + CQSPI_REG_INDIRECTRD,
-> > +                                CQSPI_REG_INDIRECTRD_DONE_MASK, 0);
-> > +       if (ret) {
-> > +               dev_err(nor->dev,
-> > +                       "Indirect read completion error (%i)\n", ret);
-> > +               goto failrd;
-> > +       }
-> > +
-> > +       /* Disable interrupt */
-> > +       writel(0, reg_base + CQSPI_REG_IRQMASK);
-> > +
-> > +       /* Clear indirect completion status */
-> > +       writel(CQSPI_REG_INDIRECTRD_DONE_MASK, reg_base +
-> > CQSPI_REG_INDIRECTRD); +
-> > +       return 0;
-> > +
-> > +failrd:
-> > +       /* Disable interrupt */
-> > +       writel(0, reg_base + CQSPI_REG_IRQMASK);
-> > +
-> > +       /* Cancel the indirect read */
-> > +       writel(CQSPI_REG_INDIRECTWR_CANCEL_MASK,
-> > +              reg_base + CQSPI_REG_INDIRECTRD);
-> > +       return ret;
-> > +}
-
-[...]
-
-> > +static void cqspi_controller_enable(struct cqspi_st *cqspi)
-> > +{
-> > +       void __iomem *reg_base = cqspi->iobase;
-> > +       unsigned int reg;
-> > +
-> > +       reg = readl(reg_base + CQSPI_REG_CONFIG);
-> > +       reg |= CQSPI_REG_CONFIG_ENABLE_MASK;
-> > +       writel(reg, reg_base + CQSPI_REG_CONFIG);
-> > +}
-> > +
-> > +static void cqspi_controller_disable(struct cqspi_st *cqspi)
-> > +{
-> > +       void __iomem *reg_base = cqspi->iobase;
-> > +       unsigned int reg;
-> > +
-> > +       reg = readl(reg_base + CQSPI_REG_CONFIG);
-> > +       reg &= ~CQSPI_REG_CONFIG_ENABLE_MASK;
-> > +       writel(reg, reg_base + CQSPI_REG_CONFIG);
-> > +}
-> 
-> two above function are almost same, we can have one function by adding
-> one bool arg.
-
-It makes the code less readable, but whatever.
-
-[...]
-
-> > +static void cqspi_controller_init(struct cqspi_st *cqspi)
-> > +{
-> > +       cqspi_controller_disable(cqspi);
-> > +
-> > +       /* Configure the remap address register, no remap */
-> > +       writel(0, cqspi->iobase + CQSPI_REG_REMAP);
-> > +
-> > +       /* Disable all interrupts. */
-> > +       writel(0, cqspi->iobase + CQSPI_REG_IRQMASK);
-> > +
-> > +       /* Configure the SRAM split to 1:1 . */
-> 
-> The comment is rightly using "SRAM" but the variable name "fifo_depth" is
-> misleading, change it to sram_depth.
-
-Quote from the datasheet:
-
-Defines the size of the indirect read partition in the
-SRAM, in units of SRAM locations. By default, half of
-the SRAM is reserved for indirect read operations and
-half for indirect write operations.
-
-
-> > +       writel(cqspi->fifo_depth / 2, cqspi->iobase +
-> > CQSPI_REG_SRAMPARTITION); +
-> > +       /* Load indirect trigger address. */
-> 
-> remove this comment & review other comments of this function. I would
-> remove at least first two comments also of the routine.
-
-I already answered this in the previous iteration.
-
-> > +       writel(cqspi->trigger_address,
-> > +              cqspi->iobase + CQSPI_REG_INDIRECTTRIGGER);
-> > +
-> > +       /* Program read watermark -- 1/2 of the FIFO. */
-> > +       writel(cqspi->fifo_depth * cqspi->fifo_width / 2,
-> > +              cqspi->iobase + CQSPI_REG_INDIRECTRDWATERMARK);
-> > +       /* Program write watermark -- 1/8 of the FIFO. */
-> > +       writel(cqspi->fifo_depth * cqspi->fifo_width / 8,
-> > +              cqspi->iobase + CQSPI_REG_INDIRECTWRWATERMARK);
-> > +
-> > +       cqspi_controller_enable(cqspi);
-> > +}
-
-[...]
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+Maxime Ripard, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
+--cYG5ZC/RuVsIq1ir--
