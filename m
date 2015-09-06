@@ -1,26 +1,48 @@
-From: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 1/3] ARM: dts: imx6ul: add sram support for i.mx6ul
-Date: Sun, 6 Sep 2015 12:18:33 +0800
-Message-ID: <20150906041833.GB30746@tiger>
-References: <1438710517-6515-1-git-send-email-b20788@freescale.com>
+From: Shawn Guo <shawnguo@kernel.org>
+Subject: Re: [PATCH]  ARM: dts: vfxxx: Add iio_hwmon node for ADC temperature
+ channel
+Date: Sun, 6 Sep 2015 12:32:32 +0800
+Message-ID: <20150906043232.GD30746@tiger>
+References: <b639ca620369d196491a4af8739b87d580e71bf6.1438876380.git.maitysanchayan@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1438710517-6515-1-git-send-email-b20788-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Anson Huang <b20788-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
+In-Reply-To: <b639ca620369d196491a4af8739b87d580e71bf6.1438876380.git.maitysanchayan@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Sanchayan Maity <maitysanchayan@gmail.com>
+Cc: stefan@agner.ch, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Aug 05, 2015 at 01:48:35AM +0800, Anson Huang wrote:
-> Add SRAM support for i.MX6UL, it has 128KB ocram
-> starting from 0x900000.
+On Thu, Aug 06, 2015 at 09:28:22PM +0530, Sanchayan Maity wrote:
+> Add iio_hwmon node to expose the temperature channel on Vybrid
+> as hardware monitor device using the iio_hwmon driver.
 > 
-> Signed-off-by: Anson Huang <b20788-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+> Signed-off-by: Sanchayan Maity <maitysanchayan@gmail.com>
+> ---
+>  arch/arm/boot/dts/vfxxx.dtsi | 5 +++++
+>  1 file changed, 5 insertions(+)
+> 
+> diff --git a/arch/arm/boot/dts/vfxxx.dtsi b/arch/arm/boot/dts/vfxxx.dtsi
+> index 39173bb..0993d66 100644
+> --- a/arch/arm/boot/dts/vfxxx.dtsi
+> +++ b/arch/arm/boot/dts/vfxxx.dtsi
+> @@ -597,5 +597,10 @@
+>  				status = "disabled";
+>  			};
+>  		};
+> +
+> +		iio_hwmon {
 
-Applied all, thanks.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Hyphen rather than underscore should be used in node name.
+
+Shawn
+
+> +			compatible = "iio-hwmon";
+> +			io-channels = <&adc0 16>;
+> +		};
+>  	};
+>  };
+> -- 
+> 2.5.0
+> 
