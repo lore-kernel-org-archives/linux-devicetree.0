@@ -1,182 +1,160 @@
 From: Eric Anholt <eric@anholt.net>
-Subject: [PATCH 1/4] clk: bcm2835: Move under bcm/ with other Broadcom SoC clk drivers.
-Date: Sun,  6 Sep 2015 10:57:40 -0700
-Message-ID: <1441562263-19888-2-git-send-email-eric@anholt.net>
+Subject: [PATCH 4/4] ARM: bcm2835: Switch to using the new clock driver support.
+Date: Sun,  6 Sep 2015 10:57:43 -0700
+Message-ID: <1441562263-19888-5-git-send-email-eric@anholt.net>
 References: <1441562263-19888-1-git-send-email-eric@anholt.net>
-Return-path: <linux-clk-owner@vger.kernel.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1441562263-19888-1-git-send-email-eric@anholt.net>
-Sender: linux-clk-owner@vger.kernel.org
+Sender: linux-kernel-owner@vger.kernel.org
 To: linux-clk@vger.kernel.org
 Cc: linux-arm-kernel@lists.infradead.org, linux-rpi-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Stephen Warren <swarren@wwwdotorg.org>, Lee Jones <lee@kernel.org>, Stephen Boyd <sboyd@codeaurora.org>, Mike Turquette <mturquette@linaro.org>, devicetree@vger.kernel.org, Eric Anholt <eric@anholt.net>
 List-Id: devicetree@vger.kernel.org
 
-clk-bcm2835.c predates the drivers under bcm/, but all the new BCM
-drivers are going in there so let's follow them.
+This will give us the ability to set the pixel and HDMI state machine
+clocks for the VC4 KMS driver, change the CPU frequency, and
+potentially gate clocks in the future (once we also write a power
+domain driver).  It also gives the uart an explicit clock reference,
+so that we don't need to change the physical addresses of the old
+fixed clk_bcm2835.c clocks for Raspberry Pi 2 port.
+
+Two clocks get their frequencies updated as a result of this.  One is
+uart's apb_pclk, which was previously accidentally grabbing the fixed
+uart0_pclk due to the apb_pclk not having clk_register_clkdev()
+called.  The uart doesn't seem to do anything with apb_pclk other than
+make sure it's on, so that appears safe (also, as far as I can see,
+the apb clock is actually the same as the VPU clock).  The other is
+EMMC, which according to the docs was supposed to be in the 50-100Mhz
+range, but it turns out the firmware needed to change to running it at
+the 250Mhz core clock speed to avoid a bug in clock domain crossing.
+
+Additionally, anything using BCM2835_CLOCK_VPU will now have a correct
+clock rate if the user configures the boot-time core clock speed using
+config.txt.
 
 Signed-off-by: Eric Anholt <eric@anholt.net>
 ---
- drivers/clk/Makefile          |  1 -
- drivers/clk/bcm/Makefile      |  1 +
- drivers/clk/bcm/clk-bcm2835.c | 60 +++++++++++++++++++++++++++++++++++++++++++
- drivers/clk/clk-bcm2835.c     | 60 -------------------------------------------
- 4 files changed, 61 insertions(+), 61 deletions(-)
- create mode 100644 drivers/clk/bcm/clk-bcm2835.c
- delete mode 100644 drivers/clk/clk-bcm2835.c
+ arch/arm/boot/dts/bcm2835.dtsi | 52 +++++++++++++++++++++++-------------------
+ 1 file changed, 28 insertions(+), 24 deletions(-)
 
-diff --git a/drivers/clk/Makefile b/drivers/clk/Makefile
-index c4cf075..1bdbe9b 100644
---- a/drivers/clk/Makefile
-+++ b/drivers/clk/Makefile
-@@ -19,7 +19,6 @@ endif
- obj-$(CONFIG_MACH_ASM9260)		+= clk-asm9260.o
- obj-$(CONFIG_COMMON_CLK_AXI_CLKGEN)	+= clk-axi-clkgen.o
- obj-$(CONFIG_ARCH_AXXIA)		+= clk-axm5516.o
--obj-$(CONFIG_ARCH_BCM2835)		+= clk-bcm2835.o
- obj-$(CONFIG_COMMON_CLK_CDCE706)	+= clk-cdce706.o
- obj-$(CONFIG_ARCH_CLPS711X)		+= clk-clps711x.o
- obj-$(CONFIG_ARCH_EFM32)		+= clk-efm32gg.o
-diff --git a/drivers/clk/bcm/Makefile b/drivers/clk/bcm/Makefile
-index 8a7a477..ee2349b 100644
---- a/drivers/clk/bcm/Makefile
-+++ b/drivers/clk/bcm/Makefile
-@@ -3,4 +3,5 @@ obj-$(CONFIG_CLK_BCM_KONA)	+= clk-kona-setup.o
- obj-$(CONFIG_CLK_BCM_KONA)	+= clk-bcm281xx.o
- obj-$(CONFIG_CLK_BCM_KONA)	+= clk-bcm21664.o
- obj-$(CONFIG_COMMON_CLK_IPROC)	+= clk-iproc-armpll.o clk-iproc-pll.o clk-iproc-asiu.o
-+obj-$(CONFIG_ARCH_BCM2835)	+= clk-bcm2835.o
- obj-$(CONFIG_ARCH_BCM_CYGNUS)	+= clk-cygnus.o
-diff --git a/drivers/clk/bcm/clk-bcm2835.c b/drivers/clk/bcm/clk-bcm2835.c
-new file mode 100644
-index 0000000..6b950ca
---- /dev/null
-+++ b/drivers/clk/bcm/clk-bcm2835.c
-@@ -0,0 +1,60 @@
-+/*
-+ * Copyright (C) 2010 Broadcom
-+ * Copyright (C) 2012 Stephen Warren
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License as published by
-+ * the Free Software Foundation; either version 2 of the License, or
-+ * (at your option) any later version.
-+ *
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
-+ *
-+ * You should have received a copy of the GNU General Public License
-+ * along with this program; if not, write to the Free Software
-+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-+ */
+diff --git a/arch/arm/boot/dts/bcm2835.dtsi b/arch/arm/boot/dts/bcm2835.dtsi
+index 301c73f..a6a55b7 100644
+--- a/arch/arm/boot/dts/bcm2835.dtsi
++++ b/arch/arm/boot/dts/bcm2835.dtsi
+@@ -1,4 +1,5 @@
+ #include <dt-bindings/pinctrl/bcm2835.h>
++#include <dt-bindings/clock/bcm2835.h>
+ #include "skeleton.dtsi"
+ 
+ / {
+@@ -21,6 +22,10 @@
+ 			compatible = "brcm,bcm2835-system-timer";
+ 			reg = <0x7e003000 0x1000>;
+ 			interrupts = <1 0>, <1 1>, <1 2>, <1 3>;
++			/* This could be a reference to BCM2835_CLOCK_TIMER,
++			 * but we don't have the driver using the common clock
++			 * support yet.
++			 */
+ 			clock-frequency = <1000000>;
+ 		};
+ 
+@@ -57,6 +62,17 @@
+ 			reg = <0x7e100000 0x28>;
+ 		};
+ 
++		clocks: cprman@7e101000 {
++			compatible = "brcm,bcm2835-cprman";
++			#clock-cells = <1>;
++			reg = <0x7e101000 0x2000>;
 +
-+#include <linux/clk-provider.h>
-+#include <linux/clkdev.h>
-+#include <linux/clk/bcm2835.h>
-+#include <linux/of.h>
++			/* CPRMAN derives everything from the platform's
++			 * oscillator.
++			 */
++			clocks = <&clk_osc>;
++		};
 +
-+/*
-+ * These are fixed clocks. They're probably not all root clocks and it may
-+ * be possible to turn them on and off but until this is mapped out better
-+ * it's the only way they can be used.
-+ */
-+void __init bcm2835_init_clocks(void)
-+{
-+	struct clk *clk;
-+	int ret;
-+
-+	clk = clk_register_fixed_rate(NULL, "sys_pclk", NULL, CLK_IS_ROOT,
-+					250000000);
-+	if (IS_ERR(clk))
-+		pr_err("sys_pclk not registered\n");
-+
-+	clk = clk_register_fixed_rate(NULL, "apb_pclk", NULL, CLK_IS_ROOT,
-+					126000000);
-+	if (IS_ERR(clk))
-+		pr_err("apb_pclk not registered\n");
-+
-+	clk = clk_register_fixed_rate(NULL, "uart0_pclk", NULL, CLK_IS_ROOT,
-+					3000000);
-+	if (IS_ERR(clk))
-+		pr_err("uart0_pclk not registered\n");
-+	ret = clk_register_clkdev(clk, NULL, "20201000.uart");
-+	if (ret)
-+		pr_err("uart0_pclk alias not registered\n");
-+
-+	clk = clk_register_fixed_rate(NULL, "uart1_pclk", NULL, CLK_IS_ROOT,
-+					125000000);
-+	if (IS_ERR(clk))
-+		pr_err("uart1_pclk not registered\n");
-+	ret = clk_register_clkdev(clk, NULL, "20215000.uart");
-+	if (ret)
-+		pr_err("uart1_pclk alias not registered\n");
-+}
-diff --git a/drivers/clk/clk-bcm2835.c b/drivers/clk/clk-bcm2835.c
-deleted file mode 100644
-index 6b950ca..0000000
---- a/drivers/clk/clk-bcm2835.c
-+++ /dev/null
-@@ -1,60 +0,0 @@
--/*
-- * Copyright (C) 2010 Broadcom
-- * Copyright (C) 2012 Stephen Warren
-- *
-- * This program is free software; you can redistribute it and/or modify
-- * it under the terms of the GNU General Public License as published by
-- * the Free Software Foundation; either version 2 of the License, or
-- * (at your option) any later version.
-- *
-- * This program is distributed in the hope that it will be useful,
-- * but WITHOUT ANY WARRANTY; without even the implied warranty of
-- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-- * GNU General Public License for more details.
-- *
-- * You should have received a copy of the GNU General Public License
-- * along with this program; if not, write to the Free Software
-- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-- */
+ 		rng@7e104000 {
+ 			compatible = "brcm,bcm2835-rng";
+ 			reg = <0x7e104000 0x10>;
+@@ -96,7 +112,9 @@
+ 			compatible = "brcm,bcm2835-pl011", "arm,pl011", "arm,primecell";
+ 			reg = <0x7e201000 0x1000>;
+ 			interrupts = <2 25>;
+-			clock-frequency = <3000000>;
++			clocks = <&clocks BCM2835_CLOCK_UART>,
++				 <&clocks BCM2835_CLOCK_VPU>;
++			clock-names = "uartclk", "apb_pclk";
+ 			arm,primecell-periphid = <0x00241011>;
+ 		};
+ 
+@@ -115,7 +133,7 @@
+ 			compatible = "brcm,bcm2835-spi";
+ 			reg = <0x7e204000 0x1000>;
+ 			interrupts = <2 22>;
+-			clocks = <&clk_spi>;
++			clocks = <&clocks BCM2835_CLOCK_VPU>;
+ 			#address-cells = <1>;
+ 			#size-cells = <0>;
+ 			status = "disabled";
+@@ -125,7 +143,7 @@
+ 			compatible = "brcm,bcm2835-i2c";
+ 			reg = <0x7e205000 0x1000>;
+ 			interrupts = <2 21>;
+-			clocks = <&clk_i2c>;
++			clocks = <&clocks BCM2835_CLOCK_VPU>;
+ 			#address-cells = <1>;
+ 			#size-cells = <0>;
+ 			status = "disabled";
+@@ -135,7 +153,7 @@
+ 			compatible = "brcm,bcm2835-sdhci";
+ 			reg = <0x7e300000 0x100>;
+ 			interrupts = <2 30>;
+-			clocks = <&clk_mmc>;
++			clocks = <&clocks BCM2835_CLOCK_EMMC>;
+ 			status = "disabled";
+ 		};
+ 
+@@ -143,7 +161,7 @@
+ 			compatible = "brcm,bcm2835-i2c";
+ 			reg = <0x7e804000 0x1000>;
+ 			interrupts = <2 21>;
+-			clocks = <&clk_i2c>;
++			clocks = <&clocks BCM2835_CLOCK_VPU>;
+ 			#address-cells = <1>;
+ 			#size-cells = <0>;
+ 			status = "disabled";
+@@ -165,28 +183,14 @@
+ 		#address-cells = <1>;
+ 		#size-cells = <0>;
+ 
+-		clk_mmc: clock@0 {
+-			compatible = "fixed-clock";
+-			reg = <0>;
+-			#clock-cells = <0>;
+-			clock-output-names = "mmc";
+-			clock-frequency = <100000000>;
+-		};
 -
--#include <linux/clk-provider.h>
--#include <linux/clkdev.h>
--#include <linux/clk/bcm2835.h>
--#include <linux/of.h>
--
--/*
-- * These are fixed clocks. They're probably not all root clocks and it may
-- * be possible to turn them on and off but until this is mapped out better
-- * it's the only way they can be used.
-- */
--void __init bcm2835_init_clocks(void)
--{
--	struct clk *clk;
--	int ret;
--
--	clk = clk_register_fixed_rate(NULL, "sys_pclk", NULL, CLK_IS_ROOT,
--					250000000);
--	if (IS_ERR(clk))
--		pr_err("sys_pclk not registered\n");
--
--	clk = clk_register_fixed_rate(NULL, "apb_pclk", NULL, CLK_IS_ROOT,
--					126000000);
--	if (IS_ERR(clk))
--		pr_err("apb_pclk not registered\n");
--
--	clk = clk_register_fixed_rate(NULL, "uart0_pclk", NULL, CLK_IS_ROOT,
--					3000000);
--	if (IS_ERR(clk))
--		pr_err("uart0_pclk not registered\n");
--	ret = clk_register_clkdev(clk, NULL, "20201000.uart");
--	if (ret)
--		pr_err("uart0_pclk alias not registered\n");
--
--	clk = clk_register_fixed_rate(NULL, "uart1_pclk", NULL, CLK_IS_ROOT,
--					125000000);
--	if (IS_ERR(clk))
--		pr_err("uart1_pclk not registered\n");
--	ret = clk_register_clkdev(clk, NULL, "20215000.uart");
--	if (ret)
--		pr_err("uart1_pclk alias not registered\n");
--}
+-		clk_i2c: clock@1 {
++		/* The oscillator is the root of the clock tree. */
++		clk_osc: clock@3 {
+ 			compatible = "fixed-clock";
+-			reg = <1>;
++			reg = <3>;
+ 			#clock-cells = <0>;
+-			clock-output-names = "i2c";
+-			clock-frequency = <250000000>;
++			clock-output-names = "osc";
++			clock-frequency = <19200000>;
+ 		};
+ 
+-		clk_spi: clock@2 {
+-			compatible = "fixed-clock";
+-			reg = <2>;
+-			#clock-cells = <0>;
+-			clock-output-names = "spi";
+-			clock-frequency = <250000000>;
+-		};
+ 	};
+ };
 -- 
 2.1.4
-
