@@ -1,8 +1,8 @@
 From: Shawn Guo <shawnguo@kernel.org>
 Subject: Re: [PATCH]  ARM: dts: vfxxx: Add iio_hwmon node for ADC temperature
  channel
-Date: Sun, 6 Sep 2015 12:32:32 +0800
-Message-ID: <20150906043232.GD30746@tiger>
+Date: Sun, 6 Sep 2015 12:35:51 +0800
+Message-ID: <20150906043551.GE30746@tiger>
 References: <b639ca620369d196491a4af8739b87d580e71bf6.1438876380.git.maitysanchayan@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
@@ -33,14 +33,15 @@ On Thu, Aug 06, 2015 at 09:28:22PM +0530, Sanchayan Maity wrote:
 >  		};
 > +
 > +		iio_hwmon {
-
-Hyphen rather than underscore should be used in node name.
-
-Shawn
-
 > +			compatible = "iio-hwmon";
 > +			io-channels = <&adc0 16>;
 > +		};
+
+Also, what's the reason that the node is being put under
+aips-bus@40080000 (aips1)?
+
+Shawn
+
 >  	};
 >  };
 > -- 
