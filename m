@@ -1,104 +1,99 @@
-From: Shawn Guo <shawnguo@kernel.org>
-Subject: Re: [PATCH v2 8/8] pinctrl: freescale: imx: imx7d iomuxc-lpsr
- devicetree bindings
-Date: Mon, 7 Sep 2015 10:42:12 +0800
-Message-ID: <20150907024212.GG30746@tiger>
-References: <1441147753-13239-1-git-send-email-aalonso@freescale.com>
- <1441147753-13239-8-git-send-email-aalonso@freescale.com>
+From: Frank Rowand <frowand.list@gmail.com>
+Subject: Re: [PATCH] of_pci_irq: Silence bogus "of_irq_parse_pci() failed
+ ..." messages.
+Date: Sun, 06 Sep 2015 20:50:51 -0700
+Message-ID: <55ED099B.2000009@gmail.com>
+References: <1441393926-23225-1-git-send-email-ddaney.cavm@gmail.com> <55EA41E3.5010103@gmail.com> <CAL_JsqK0uW4F7HAcUMSQ-2wCvp_i3a5MTxsyW3XerHAxBrW=SQ@mail.gmail.com> <55ECF37D.7050401@gmail.com>
+Reply-To: frowand.list@gmail.com
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-gpio-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1441147753-13239-8-git-send-email-aalonso@freescale.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Adrian Alonso <aalonso@freescale.com>
-Cc: linux-arm-kernel@lists.infradead.org, shawn.guo@linaro.org, linus.walleij@linaro.org, lznuaa@gmail.com, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, robh+dt@kernel.org, Anson.Huang@freescale.com, Frank.Li@freescale.com, yibin.gong@freescale.com, nitin.garg@freescale.com
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <55ECF37D.7050401@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: frowand.list@gmail.com
+Cc: Rob Herring <robherring2@gmail.com>, David Daney <ddaney.cavm@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Grant Likely <grant.likely@linaro.org>, David Daney <david.daney@cavium.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Sep 01, 2015 at 05:49:13PM -0500, Adrian Alonso wrote:
-> Add iomuxc-lpsr devicetree bindings documentation
-> Provide documentation context as well an example on
-> pheriperals that could use pad from either iomuxc controller
-> supported by iMX7D SoC
+On 9/6/2015 7:16 PM, Frank Rowand wrote:
+> On 9/6/2015 1:46 PM, Rob Herring wrote:
+>> On Fri, Sep 4, 2015 at 8:14 PM, Frank Rowand <frowand.list@gmail.com> wrote:
+>>> On 9/4/2015 12:12 PM, David Daney wrote:
+>>>> From: David Daney <david.daney@cavium.com>
+>>>>
+>>>> It is perfectly legitimate for a PCI device to have an
+>>>> PCI_INTERRUPT_PIN value of zero.  This happens if the device doesn't
+>>>> use interrupts, or on PCIe devices, where only MSI/MSI-X are
+>>>> supported.
+>>>>
+>>>> Silence the annoying "of_irq_parse_pci() failed with rc=-19" error
+>>>> messages by making them conditional on !-ENODEV (which can only be
+>>>> produced in the PCI_INTERRUPT_PIN == 0 case).
+>>>>
+>>>> Signed-off-by: David Daney <david.daney@cavium.com>
+>>>> ---
+>>>>  drivers/of/of_pci_irq.c | 4 +++-
+>>>>  1 file changed, 3 insertions(+), 1 deletion(-)
+>>>>
+>>>> diff --git a/drivers/of/of_pci_irq.c b/drivers/of/of_pci_irq.c
+>>>> index 1710d9d..33d242a 100644
+>>>> --- a/drivers/of/of_pci_irq.c
+>>>> +++ b/drivers/of/of_pci_irq.c
+>>>> @@ -106,7 +106,9 @@ int of_irq_parse_and_map_pci(const struct pci_dev *dev, u8 slot, u8 pin)
+>>>>
+>>>>       ret = of_irq_parse_pci(dev, &oirq);
+>>>>       if (ret) {
+>>>> -             dev_err(&dev->dev, "of_irq_parse_pci() failed with rc=%d\n", ret);
+>>>> +             if (ret != -ENODEV)
+>>>> +                     dev_err(&dev->dev,
+>>>> +                             "of_irq_parse_pci() failed with rc=%d\n", ret);
+>>>>               return 0; /* Proper return code 0 == NO_IRQ */
+>>>>       }
+>>>>
+>>>>
+>>>
+>>> It is not safe to assume that the functions that of_irq_parse_pci() calls
+>>> will never be modified to return -ENODEV, thus resulting in of_irq_parse_pci()
+>>> returning -ENODEV for a reason other than PCI_INTERRUPT_PIN == 0.
+>>
+>> Yes, but we're talking about a print statement.
+>>
+>>>
+>>> A more robust solution would be something like:
 > 
-> Signed-off-by: Adrian Alonso <aalonso@freescale.com>
-> ---
-> Changes for V2: New patch on imx7d iomuxc-lpsr patch series
+> < snip my bad solution >
 > 
->  .../bindings/pinctrl/fsl,imx7d-pinctrl.txt         | 43 ++++++++++++++++++++++
->  1 file changed, 43 insertions(+)
+>>> I'm not sure I like my solution, there might be a better way.
+>>
+>> I don't like it. That's way too complex for just silencing an
+>> erroneous error message.
+>>
+>> Perhaps just move the error message into of_irq_parse_pci and then you
+>> can control the print more easily. Or just change to dev_dbg would be
+>> okay by me.
 > 
-> diff --git a/Documentation/devicetree/bindings/pinctrl/fsl,imx7d-pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/fsl,imx7d-pinctrl.txt
-> index 8bbf25d..c7310fc 100644
-> --- a/Documentation/devicetree/bindings/pinctrl/fsl,imx7d-pinctrl.txt
-> +++ b/Documentation/devicetree/bindings/pinctrl/fsl,imx7d-pinctrl.txt
-> @@ -1,10 +1,19 @@
->  * Freescale i.MX7 Dual IOMUX Controller
->  
-> +iMX7D supports two iomuxc controllers, fsl,imx7d-iomuxc controller is similar
-> +as previous iMX SoC generation and fsl,imx7d-iomuxc-lpsr which provides low
-> +power state rentetion capabilities on gpios that are part of iomuxc-lpsr
-> +(GPIO1_IO7..GPIO1_IO0).
+> I knew I was making it way too hard.  Yes, just move the error message
+> to of_irq_parse_pci(), where the "/* No pin, exit */" test occurs.
 
-I think the speciality of the select_input registers should be
-mentioned too.
+And this time I replied too quickly, not really thinking through my comment.
+There are several error return points in of_irq_parse_pci(), so moving the
+error message into of_irq_parse_pci() is not the answer.
 
-> +
-> +Pheriparials using pads from iomuxc-lpsr support low state retention power
-> +state, under LPSR mode GPIO's state of pads are retain.
-> +
->  Please refer to fsl,imx-pinctrl.txt in this directory for common binding part
->  and usage.
->  
->  Required properties:
->  - compatible: "fsl,imx7d-iomuxc"
-> +- compatible: "fsl-imx7d-iomuxc-lpsr"
 
-s/fsl-imx7d-iomuxc-lpsr/fsl,imx7d-iomuxc-lpsr
-
-Shawn
-
->  - fsl,pins: each entry consists of 6 integers and represents the mux and config
->    setting for one pin.  The first 5 integers <mux_reg conf_reg input_reg mux_val
->    input_val> are specified using a PIN_FUNC_ID macro, which can be found in
-> @@ -25,3 +34,37 @@ PAD_CTL_DSE_X1                  (0 << 0)
->  PAD_CTL_DSE_X2                  (1 << 0)
->  PAD_CTL_DSE_X3                  (2 << 0)
->  PAD_CTL_DSE_X4                  (3 << 0)
-> +
-> +Examples:
-> +While iomuxc-lpsr is intended to be used by dedicated peripherals to take
-> +advantages of LPSR power mode, is also possible that an IP to use pads from
-> +any of the iomux controllers. For example the I2C1 IP can use SCL pad from
-> +iomuxc-lpsr controller and SDA pad from iomuxc controller as:
-> +
-> +i2c1: i2c@30a20000 {
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&pinctrl_i2c1_1 &pinctrl_i2c1_2>;
-> +	status = "okay";
-> +};
-> +
-> +iomuxc-lpsr@302c0000 {
-> +	compatible = "fsl,imx7d-iomuxc-lpsr";
-> +	reg = <0x302c0000 0x10000>;
-> +
-> +	pinctrl_i2c1_1: i2c1grp-1 {
-> +		fsl,pins = <
-> +			MX7D_PAD_GPIO1_IO04__I2C1_SCL 0x4000007f
-> +		>;
-> +	};
-> +};
-> +
-> +iomuxc@30330000 {
-> +	compatible = "fsl,imx7d-iomuxc";
-> +	reg = <0x30330000 0x10000>;
-> +
-> +	pinctrl_i2c1_2: i2c1grp-2 {
-> +		fsl,pins = <
-> +			MX7D_PAD_I2C1_SCL__I2C1_SCL 0x4000007f
-> +		>;
-> +	};
-> +};
-> -- 
-> 2.1.4
+>>> I also noticed another bug while looking at of_irq_parse_pci().  It returns
+>>> the non-zero return value from pci_read_config_byte().  But that value is
+>>> one of the PCI function error values from include/linux/pci.h, such as:
+>>>
+>>>    #define PCIBIOS_BAD_REGISTER_NUMBER     0x87
+>>>
+>>> instead of a negative errno.
+>>
+>> I was puzzled by why this is not standard error codes a while back. My
+>> best guess is that that there is some legacy here. Changing error
+>> values on widely used functions is impossible to audit. NO_IRQ being 0
+>> or -1 is one such case.
+>>
+>> Rob
+>>
+> 
 > 
