@@ -1,67 +1,85 @@
-From: Javier Martinez Canillas <javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>
-Subject: [PATCH] ARM: dts: omap3-igep: Move eth IRQ pinmux to IGEPv2 common dtsi
-Date: Mon,  7 Sep 2015 18:24:18 +0200
-Message-ID: <1441643058-8641-1-git-send-email-javier@osg.samsung.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Ladislav Michl <ladis-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, Javier Martinez Canillas <javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>, =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Javier Martinez Canillas <javier-0uQlZySMnqxg9hUCZPvPmw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Enric Balletbo i Serra <eballetbo-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH 2/2] ASoC: atmel-classd: DT binding for
+ Class D audio amplifier driver
+Date: Mon, 7 Sep 2015 17:25:48 +0100
+Message-ID: <20150907162548.GW5313@sirena.org.uk>
+References: <1441086101-15303-1-git-send-email-songjun.wu@atmel.com>
+ <1441086101-15303-3-git-send-email-songjun.wu@atmel.com>
+ <20150903114316.GV12027@sirena.org.uk> <55EC0AFE.3080809@atmel.com>
+Mime-Version: 1.0
+Content-Type: multipart/mixed; boundary="===============0805880292835644154=="
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <55EC0AFE.3080809@atmel.com>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: "Wu, Songjun" <songjun.wu@atmel.com>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, pawel.moll@arm.com, lgirdwood@gmail.com, ijc+devicetree@hellion.org.uk, nicolas.ferre@atmel.com, linux-kernel@vger.kernel.org, tiwai@suse.com, robh+dt@kernel.org, galak@codeaurora.org
 List-Id: devicetree@vger.kernel.org
 
-Only the IGEPv2 boards have a LAN9221i chip connected to the GPMC
-so the pinmux configuration for the GPIO connected to the IRQ line
-of the LAN chip should not be defined in the IGEP common dtsi but
-in the one common to the IGEPv2 boards.
 
-While there, use the OMAP3_CORE1_IOPAD() macro for the padconf reg.
+--===============0805880292835644154==
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="dPKyTZoWbiJp7FfC"
+Content-Disposition: inline
 
-Suggested-by: Ladislav Michl <ladis-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>
-Signed-off-by: Javier Martinez Canillas <javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>
 
----
+--dPKyTZoWbiJp7FfC
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
- arch/arm/boot/dts/omap3-igep.dtsi            | 6 ------
- arch/arm/boot/dts/omap3-igep0020-common.dtsi | 6 ++++++
- 2 files changed, 6 insertions(+), 6 deletions(-)
+On Sun, Sep 06, 2015 at 05:44:30PM +0800, Wu, Songjun wrote:
+> On 9/3/2015 19:43, Mark Brown wrote:
 
-diff --git a/arch/arm/boot/dts/omap3-igep.dtsi b/arch/arm/boot/dts/omap3-igep.dtsi
-index d5e5cd449b16..2230e1c03320 100644
---- a/arch/arm/boot/dts/omap3-igep.dtsi
-+++ b/arch/arm/boot/dts/omap3-igep.dtsi
-@@ -78,12 +78,6 @@
- 		>;
- 	};
- 
--	smsc9221_pins: pinmux_smsc9221_pins {
--		pinctrl-single,pins = <
--			0x1a2 (PIN_INPUT | MUX_MODE4)		/* mcspi1_cs2.gpio_176 */
--		>;
--	};
--
- 	i2c1_pins: pinmux_i2c1_pins {
- 		pinctrl-single,pins = <
- 			0x18a (PIN_INPUT | MUX_MODE0)   /* i2c1_scl.i2c1_scl */
-diff --git a/arch/arm/boot/dts/omap3-igep0020-common.dtsi b/arch/arm/boot/dts/omap3-igep0020-common.dtsi
-index e458c2185e3c..5ad688c57a00 100644
---- a/arch/arm/boot/dts/omap3-igep0020-common.dtsi
-+++ b/arch/arm/boot/dts/omap3-igep0020-common.dtsi
-@@ -156,6 +156,12 @@
- 			OMAP3_CORE1_IOPAD(0x217a, PIN_INPUT | MUX_MODE0)	/* uart2_rx.uart2_rx */
- 		>;
- 	};
-+
-+	smsc9221_pins: pinmux_smsc9221_pins {
-+		pinctrl-single,pins = <
-+			OMAP3_CORE1_IOPAD(0x21d2, PIN_INPUT | MUX_MODE4)	/* mcspi1_cs2.gpio_176 */
-+		>;
-+	};
- };
- 
- &omap3_pmx_core2 {
--- 
-2.4.3
+> >Why is this a separate DT node?  It seems that this IP is entirely self
+> >contained so I'm not clear why we need a separate node for the card, the
+> >card is usually a separate node because it ties together multiple
+> >different devices in the system but that's not the case here.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> The classD can finish the audio function without other devices.
+> But I want to reuse the code in ASoC, leave many things(like creating PCM,
+> DMA operations) to ASoC, then the driver can only focus on how to configure
+> classD.
+> The classD IP is divided to tree parts logically, platform, CPU dai,
+> and codec, and these parts are registered to ASoC.
+
+> This separate DT node is needed in ASoC, ties these tree parts in ClassD.
+
+Sure, there's no problem at all having that structure in software but it
+should be possible to do this without having to represent this structure
+in DT.  It should be possible to register the card at the same time as
+the rest of the components rather than needing the separate device in
+the DT.
+
+--dPKyTZoWbiJp7FfC
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQEcBAEBCAAGBQJV7bqLAAoJECTWi3JdVIfQVBoH/Rw8yw1K58ndD0wfnzLwsdKs
+NGMcI/cAKZCtSEVC829ik7khw2Qf/r6arJffVRFIE0q8EF1kVvPrQa5QuRP5nyV5
+4wGLj6T5EPUJ1zre03AHr24klKaaAPp0c3EswSaUEebXNP01KyKWHcHcTSdpT6z4
+8CRWYdNvC9MeQKmYQxODNYGomkVkkULn240sltFxbBqkb2MCsAEwGMnyirXqlmBU
+6edC6C7+4+mxm+jb4dHymbPA5wUGq+T58v5ShEO4fU3NlHOYKKLtFPYjFw1PJlyC
+pxiRNC86DrSaRm7j/hX8Ewk6KUnn4FIqnoPdr6xTFQbG/Eoyy0Y+BfbgDD+hky4=
+=fDa0
+-----END PGP SIGNATURE-----
+
+--dPKyTZoWbiJp7FfC--
+
+--===============0805880292835644154==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+
+--===============0805880292835644154==--
