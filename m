@@ -1,117 +1,83 @@
-From: Vaibhav Hiremath <vaibhav.hiremath@linaro.org>
-Subject: [PATCH-v2 1/3] mmc: sdhci-pxav3: Fix tabbing issue
-Date: Mon,  7 Sep 2015 17:01:09 +0530
-Message-ID: <1441625471-16315-2-git-send-email-vaibhav.hiremath@linaro.org>
-References: <1441625471-16315-1-git-send-email-vaibhav.hiremath@linaro.org>
+From: Leilk Liu <leilk.liu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Subject: [PATCH] spi: mediatek: fix spi cs polarity error
+Date: Mon, 7 Sep 2015 19:37:57 +0800
+Message-ID: <1441625877-583-1-git-send-email-leilk.liu@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1441625471-16315-1-git-send-email-vaibhav.hiremath@linaro.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: linux-mmc@vger.kernel.org
-Cc: devicetree@vger.kernel.org, ulf.hansson@linaro.org, linux-kernel@vger.kernel.org, Vaibhav Hiremath <vaibhav.hiremath@linaro.org>, robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Leilk Liu <leilk.liu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-There were some coding style issues where spaces have been used instead
-of tabs, for example, in macro definitions, alignment of function
-declarations/definitions, etc...
+Mediatek spi HW can't set cs inactive(keep cs high) directly.
+Instead, it supplies pause mode to do it indirectly. If driver
+unsets SPI_CMD_PAUSE_MODE in CMD_REG, it also needs to reset
+internal state machine to let cs inactive at once.
 
-This patch fixes all such occurrences in the code.
-
-Signed-off-by: Vaibhav Hiremath <vaibhav.hiremath@linaro.org>
+Signed-off-by: Leilk Liu <leilk.liu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 ---
- drivers/mmc/host/sdhci-pxav3.c | 46 +++++++++++++++++++++---------------------
- 1 file changed, 23 insertions(+), 23 deletions(-)
+ drivers/spi/spi-mt65xx.c | 27 +++++++--------------------
+ 1 file changed, 7 insertions(+), 20 deletions(-)
 
-diff --git a/drivers/mmc/host/sdhci-pxav3.c b/drivers/mmc/host/sdhci-pxav3.c
-index 946d37f..7a07177 100644
---- a/drivers/mmc/host/sdhci-pxav3.c
-+++ b/drivers/mmc/host/sdhci-pxav3.c
-@@ -39,24 +39,24 @@
- #include "sdhci.h"
- #include "sdhci-pltfm.h"
- 
--#define PXAV3_RPM_DELAY_MS     50
-+#define PXAV3_RPM_DELAY_MS		50
- 
--#define SD_CLOCK_BURST_SIZE_SETUP		0x10A
--#define SDCLK_SEL	0x100
--#define SDCLK_DELAY_SHIFT	9
--#define SDCLK_DELAY_MASK	0x1f
-+#define SD_CLOCK_BURST_SIZE_SETUP	0x10A
-+#define SDCLK_SEL			0x100
-+#define  SDCLK_DELAY_SHIFT		9
-+#define  SDCLK_DELAY_MASK		0x1f
- 
--#define SD_CFG_FIFO_PARAM       0x100
--#define SDCFG_GEN_PAD_CLK_ON	(1<<6)
--#define SDCFG_GEN_PAD_CLK_CNT_MASK	0xFF
--#define SDCFG_GEN_PAD_CLK_CNT_SHIFT	24
-+#define SD_CFG_FIFO_PARAM		0x100
-+#define  SDCFG_GEN_PAD_CLK_ON		(1<<6)
-+#define  SDCFG_GEN_PAD_CLK_CNT_MASK	0xFF
-+#define  SDCFG_GEN_PAD_CLK_CNT_SHIFT	24
- 
--#define SD_SPI_MODE          0x108
--#define SD_CE_ATA_1          0x10C
-+#define SD_SPI_MODE			0x108
-+#define SD_CE_ATA_1			0x10C
- 
--#define SD_CE_ATA_2          0x10E
--#define SDCE_MISC_INT		(1<<2)
--#define SDCE_MISC_INT_EN	(1<<1)
-+#define SD_CE_ATA_2			0x10E
-+#define  SDCE_MISC_INT			(1<<2)
-+#define  SDCE_MISC_INT_EN		(1<<1)
- 
- struct sdhci_pxa {
- 	struct clk *clk_core;
-@@ -284,7 +284,7 @@ static void pxav3_set_uhs_signaling(struct sdhci_host *host, unsigned int uhs)
- 	 * FE-2946959
- 	 */
- 	if (pxa->sdio3_conf_reg) {
--		u8 reg_val  = readb(pxa->sdio3_conf_reg);
-+		u8 reg_val = readb(pxa->sdio3_conf_reg);
- 
- 		if (uhs == MMC_TIMING_UHS_SDR50 ||
- 		    uhs == MMC_TIMING_UHS_DDR50) {
-@@ -304,20 +304,20 @@ static void pxav3_set_uhs_signaling(struct sdhci_host *host, unsigned int uhs)
+diff --git a/drivers/spi/spi-mt65xx.c b/drivers/spi/spi-mt65xx.c
+index 401e2e0..ba0fc10 100644
+--- a/drivers/spi/spi-mt65xx.c
++++ b/drivers/spi/spi-mt65xx.c
+@@ -173,22 +173,6 @@ static void mtk_spi_config(struct mtk_spi *mdata,
+ 		writel(mdata->pad_sel, mdata->base + SPI_PAD_SEL_REG);
  }
  
- static const struct sdhci_ops pxav3_sdhci_ops = {
--	.set_clock = sdhci_set_clock,
--	.platform_send_init_74_clocks = pxav3_gen_init_74_clocks,
--	.get_max_clock = sdhci_pltfm_clk_get_max_clock,
--	.set_bus_width = sdhci_set_bus_width,
--	.reset = pxav3_reset,
--	.set_uhs_signaling = pxav3_set_uhs_signaling,
-+	.set_clock			= sdhci_set_clock,
-+	.platform_send_init_74_clocks	= pxav3_gen_init_74_clocks,
-+	.get_max_clock			= sdhci_pltfm_clk_get_max_clock,
-+	.set_bus_width			= sdhci_set_bus_width,
-+	.reset				= pxav3_reset,
-+	.set_uhs_signaling		= pxav3_set_uhs_signaling,
- };
+-static int mtk_spi_prepare_hardware(struct spi_master *master)
+-{
+-	struct spi_transfer *trans;
+-	struct mtk_spi *mdata = spi_master_get_devdata(master);
+-	struct spi_message *msg = master->cur_msg;
+-
+-	trans = list_first_entry(&msg->transfers, struct spi_transfer,
+-				 transfer_list);
+-	if (!trans->cs_change) {
+-		mdata->state = MTK_SPI_IDLE;
+-		mtk_spi_reset(mdata);
+-	}
+-
+-	return 0;
+-}
+-
+ static int mtk_spi_prepare_message(struct spi_master *master,
+ 				   struct spi_message *msg)
+ {
+@@ -228,11 +212,15 @@ static void mtk_spi_set_cs(struct spi_device *spi, bool enable)
+ 	struct mtk_spi *mdata = spi_master_get_devdata(spi->master);
  
- static struct sdhci_pltfm_data sdhci_pxav3_pdata = {
--	.quirks = SDHCI_QUIRK_DATA_TIMEOUT_USES_SDCLK
-+	.quirks	= SDHCI_QUIRK_DATA_TIMEOUT_USES_SDCLK
- 		| SDHCI_QUIRK_NO_ENDATTR_IN_NOPDESC
- 		| SDHCI_QUIRK_32BIT_ADMA_SIZE
- 		| SDHCI_QUIRK_CAP_CLOCK_BASE_BROKEN,
--	.ops = &pxav3_sdhci_ops,
-+	.ops	= &pxav3_sdhci_ops,
- };
+ 	reg_val = readl(mdata->base + SPI_CMD_REG);
+-	if (!enable)
++	if (!enable) {
+ 		reg_val |= SPI_CMD_PAUSE_EN;
+-	else
++		writel(reg_val, mdata->base + SPI_CMD_REG);
++	} else {
+ 		reg_val &= ~SPI_CMD_PAUSE_EN;
+-	writel(reg_val, mdata->base + SPI_CMD_REG);
++		writel(reg_val, mdata->base + SPI_CMD_REG);
++		mdata->state = MTK_SPI_IDLE;
++		mtk_spi_reset(mdata);
++	}
+ }
  
- #ifdef CONFIG_OF
+ static void mtk_spi_prepare_transfer(struct spi_master *master,
+@@ -509,7 +497,6 @@ static int mtk_spi_probe(struct platform_device *pdev)
+ 	master->mode_bits = SPI_CPOL | SPI_CPHA;
+ 
+ 	master->set_cs = mtk_spi_set_cs;
+-	master->prepare_transfer_hardware = mtk_spi_prepare_hardware;
+ 	master->prepare_message = mtk_spi_prepare_message;
+ 	master->transfer_one = mtk_spi_transfer_one;
+ 	master->can_dma = mtk_spi_can_dma;
 -- 
-1.9.1
+1.8.1.1.dirty
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
