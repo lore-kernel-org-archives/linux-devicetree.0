@@ -1,76 +1,68 @@
-From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH 1/3] Revert "ahci: added support for Freescale AHCI sata"
-Date: Mon, 7 Sep 2015 10:52:14 +0200
-Message-ID: <55ED503E.5000902@redhat.com>
-References: <1441614196-4284-1-git-send-email-Yuantian.Tang@freescale.com>
+From: maitysanchayan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Subject: Re: [PATCH]  ARM: dts: vfxxx: Add iio_hwmon node for ADC temperature
+ channel
+Date: Mon, 7 Sep 2015 14:19:11 +0530
+Message-ID: <20150907084911.GA6877@Sanchayan-Arch.toradex.int>
+References: <b639ca620369d196491a4af8739b87d580e71bf6.1438876380.git.maitysanchayan@gmail.com>
+ <20150906043232.GD30746@tiger>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1441614196-4284-1-git-send-email-Yuantian.Tang-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20150906043232.GD30746@tiger>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Yuantian.Tang-KZfg59tc24xl57MIdRCFDg@public.gmane.org
-Cc: tj-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-ide-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: stefan-XLVq0VzYD2Y@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Hi Shawn,
 
-On 07-09-15 10:23, Yuantian.Tang-KZfg59tc24xl57MIdRCFDg@public.gmane.org wrote:
-> From: Tang Yuantian <Yuantian.Tang-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
->
-> This reverts commit 5163fb62541e
-> ("ahci: added support for Freescale AHCI sata")
->
-> The reverted patch added Freescale QorIQ AHCI sata support to
-> ahci_platform driver though, but it left SoC specific settings to uboot.
-> It leads to QorIQ sata heavily depending on uboot. In order to removing
-> the dependency we first revert the old patch and then will add a new driver
-> for QorIQ SATA.
-> Since there are no LS* platforms that have been upstreamed, So
-> the revert would not break anything exists.
->
-> Signed-off-by: Tang Yuantian <Yuantian.Tang-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+On 15-09-06 12:32:32, Shawn Guo wrote:
+> On Thu, Aug 06, 2015 at 09:28:22PM +0530, Sanchayan Maity wrote:
+> > Add iio_hwmon node to expose the temperature channel on Vybrid
+> > as hardware monitor device using the iio_hwmon driver.
+> > 
+> > Signed-off-by: Sanchayan Maity <maitysanchayan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> > ---
+> >  arch/arm/boot/dts/vfxxx.dtsi | 5 +++++
+> >  1 file changed, 5 insertions(+)
+> > 
+> > diff --git a/arch/arm/boot/dts/vfxxx.dtsi b/arch/arm/boot/dts/vfxxx.dtsi
+> > index 39173bb..0993d66 100644
+> > --- a/arch/arm/boot/dts/vfxxx.dtsi
+> > +++ b/arch/arm/boot/dts/vfxxx.dtsi
+> > @@ -597,5 +597,10 @@
+> >  				status = "disabled";
+> >  			};
+> >  		};
+> > +
+> > +		iio_hwmon {
+> 
+> Hyphen rather than underscore should be used in node name.
 
-The entire series looks good to me and is:
+As per iio-bindings.txt I did this. It is the same in imx23.dtsi and imx28.dtsi.
 
-Reviewed-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+http://lxr.free-electrons.com/source/Documentation/devicetree/bindings/iio/iio-bindings.txt#L85
+http://lxr.free-electrons.com/source/arch/arm/boot/dts/imx23.dtsi#L570
+http://lxr.free-electrons.com/source/arch/arm/boot/dts/imx28.dtsi#L1246
 
-Regards,
+So should this be changed?
 
-Hans
+Thanks.
 
+- Sanchayan.
 
-> ---
->   Documentation/devicetree/bindings/ata/ahci-platform.txt | 2 --
->   drivers/ata/ahci_platform.c                             | 1 -
->   2 files changed, 3 deletions(-)
->
-> diff --git a/Documentation/devicetree/bindings/ata/ahci-platform.txt b/Documentation/devicetree/bindings/ata/ahci-platform.txt
-> index a232181..c2340ee 100644
-> --- a/Documentation/devicetree/bindings/ata/ahci-platform.txt
-> +++ b/Documentation/devicetree/bindings/ata/ahci-platform.txt
-> @@ -16,8 +16,6 @@ Required properties:
->     - "snps,dwc-ahci"
->     - "snps,exynos5440-ahci"
->     - "snps,spear-ahci"
-> -  - "fsl,qoriq-ahci" : for qoriq series socs which include ls1021, ls2085, etc.
-> -  - "fsl,<chip>-ahci" : chip could be ls1021, ls2085 etc.
->     - "generic-ahci"
->   - interrupts        : <interrupt mapping for SATA IRQ>
->   - reg               : <registers mapping>
-> diff --git a/drivers/ata/ahci_platform.c b/drivers/ata/ahci_platform.c
-> index 1befb11..04975b8 100644
-> --- a/drivers/ata/ahci_platform.c
-> +++ b/drivers/ata/ahci_platform.c
-> @@ -76,7 +76,6 @@ static const struct of_device_id ahci_of_match[] = {
->   	{ .compatible = "ibm,476gtr-ahci", },
->   	{ .compatible = "snps,dwc-ahci", },
->   	{ .compatible = "hisilicon,hisi-ahci", },
-> -	{ .compatible = "fsl,qoriq-ahci", },
->   	{},
->   };
->   MODULE_DEVICE_TABLE(of, ahci_of_match);
->
+> 
+> Shawn
+> 
+> > +			compatible = "iio-hwmon";
+> > +			io-channels = <&adc0 16>;
+> > +		};
+> >  	};
+> >  };
+> > -- 
+> > 2.5.0
+> > 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
