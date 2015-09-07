@@ -1,124 +1,145 @@
-From: Shawn Guo <shawnguo@kernel.org>
-Subject: Re: [PATCH v2 5/8] pinctrl: freescale: imx: add ZERO_OFFSET_VALID
- flag
-Date: Mon, 7 Sep 2015 09:28:31 +0800
-Message-ID: <20150907012831.GE30746@tiger>
-References: <1441147753-13239-1-git-send-email-aalonso@freescale.com>
- <1441147753-13239-5-git-send-email-aalonso@freescale.com>
+From: Yakir Yang <ykk@rock-chips.com>
+Subject: Re: [PATCH v4 11/16] drm: bridge: analogix/dp: add platform device
+ type support
+Date: Mon, 07 Sep 2015 09:47:20 +0800
+Message-ID: <55ECECA8.4000701@rock-chips.com>
+References: <1441086371-24838-1-git-send-email-ykk@rock-chips.com> <1441087620-25586-1-git-send-email-ykk@rock-chips.com> <55E8E77C.4020305@samsung.com> <55EBBBFA.3020801@rock-chips.com> <55ECD28B.40703@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-gpio-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1441147753-13239-5-git-send-email-aalonso@freescale.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Adrian Alonso <aalonso@freescale.com>
-Cc: linux-arm-kernel@lists.infradead.org, shawn.guo@linaro.org, linus.walleij@linaro.org, lznuaa@gmail.com, devicetree@vger.kernel.org, Frank.Li@freescale.com, nitin.garg@freescale.com, Anson.Huang@freescale.com, linux-gpio@vger.kernel.org, robh+dt@kernel.org, yibin.gong@freescale.com
+Content-Type: text/plain; charset=utf-8;
+	format=flowed
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <55ECD28B.40703@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Krzysztof Kozlowski <k.kozlowski@samsung.com>, Heiko Stuebner <heiko@sntech.de>, Thierry Reding <treding@nvidia.com>, Jingoo Han <jingoohan1@gmail.com>, Inki Dae <inki.dae@samsung.com>, joe@perches.com, Kukjin Kim <kgene@kernel.org>, Mark Yao <mark.yao@rock-chips.com>
+Cc: Russell King <rmk+kernel@arm.linux.org.uk>, djkurtz@chromium.com, dianders@chromium.com, seanpaul@chromium.com, ajaynumb@gmail.com, Andrzej Hajda <a.hajda@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, David Airlie <airlied@linux.ie>, Gustavo Padovan <gustavo.padovan@collabora.co.uk>, Andy Yan <andy.yan@rock-chips.com>, Kumar Gala <galak@codeaurora.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Kishon Vijay Abraham I <kishon@ti.com>, architt@codeaurora.org, robherring2@gmail.com, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-rockchip@lists.infradead.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Sep 01, 2015 at 05:49:10PM -0500, Adrian Alonso wrote:
-> - Add ZERO_OFFSET_VALID flag, on imx7d mux_conf reg
->   offset is zero for iomuxc-lspr controller
-> - Do default initialization on parse group function.
-> 
-> Signed-off-by: Adrian Alonso <aalonso@freescale.com>
+Hi Krzysztof,
 
-I do not follow why this patch is needed at all.  All the register
-validity check are done against -1, and zero offset is already supported
-by the driver in the current form.  Or am I missing anything?
+=E5=9C=A8 09/07/2015 07:55 AM, Krzysztof Kozlowski =E5=86=99=E9=81=93:
+> On 06.09.2015 13:07, Yakir Yang wrote:
+>> Hi Krzysztof,
+>>
+>> =E5=9C=A8 09/04/2015 08:36 AM, Krzysztof Kozlowski =E5=86=99=E9=81=93=
+:
+>>> On 01.09.2015 15:07, Yakir Yang wrote:
+>>>
+>>> Empty commit message. Please explain here why you want to add platf=
+orm
+>>> device type support.
+>>>
+>>> Actually the title is confusing. You are not adding support for pla=
+tform
+>>> device types but rather adding a field containing type of device.
+>>>
+>>>
+>>>> Signed-off-by: Yakir Yang <ykk@rock-chips.com>
+>>>> ---
+>>>> Changes in v4: None
+>>>> Changes in v3: None
+>>>> Changes in v2:
+>>>> - Add GNU license v2 declared and samsung copyright
+>>>>
+>>>>    drivers/gpu/drm/exynos/exynos_dp.c              |  1 +
+>>>>    drivers/gpu/drm/rockchip/analogix_dp-rockchip.c |  1 +
+>>>>    include/drm/bridge/analogix_dp.h                | 16 ++++++++++=
+++++++
+>>>>    3 files changed, 18 insertions(+)
+>>>>
+>>>> diff --git a/drivers/gpu/drm/exynos/exynos_dp.c
+>>>> b/drivers/gpu/drm/exynos/exynos_dp.c
+>>>> index 6060d2c..40ef727 100644
+>>>> --- a/drivers/gpu/drm/exynos/exynos_dp.c
+>>>> +++ b/drivers/gpu/drm/exynos/exynos_dp.c
+>>>> @@ -224,6 +224,7 @@ static int exynos_dp_bind(struct device *dev,
+>>>> struct device *master, void *data)
+>>>>        dp->dev =3D dev;
+>>>>        dp->drm_dev =3D drm_dev;
+>>>>    +    dp->plat_data.dev_type =3D EXYNOS_DP;
+>>>>        dp->plat_data.power_on =3D exynos_dp_poweron;
+>>>>        dp->plat_data.power_off =3D exynos_dp_poweroff;
+>>>>        dp->plat_data.get_modes =3D exynos_dp_get_modes;
+>>>> diff --git a/drivers/gpu/drm/rockchip/analogix_dp-rockchip.c
+>>>> b/drivers/gpu/drm/rockchip/analogix_dp-rockchip.c
+>>>> index efea045..4934271 100644
+>>>> --- a/drivers/gpu/drm/rockchip/analogix_dp-rockchip.c
+>>>> +++ b/drivers/gpu/drm/rockchip/analogix_dp-rockchip.c
+>>>> @@ -293,6 +293,7 @@ static int rockchip_dp_bind(struct device *dev=
+,
+>>>> struct device *master,
+>>>>            return ret;
+>>>>        }
+>>>>    +    dp->plat_data.dev_type =3D RK3288_DP;
+>>>>        dp->plat_data.attach =3D NULL;
+>>>>        dp->plat_data.get_modes =3D NULL;
+>>>>        dp->plat_data.power_on =3D rockchip_dp_poweron;
+>>>> diff --git a/include/drm/bridge/analogix_dp.h
+>>>> b/include/drm/bridge/analogix_dp.h
+>>>> index 8b4ffad..7209a64 100644
+>>>> --- a/include/drm/bridge/analogix_dp.h
+>>>> +++ b/include/drm/bridge/analogix_dp.h
+>>>> @@ -1,9 +1,25 @@
+>>>> +/*
+>>>> + * Analogix Core DP (Display Port) interface driver.
+>>>> + *
+>>>> + * Copyright (C) 2012 Samsung Electronics Co., Ltd.
+>>>> + *
+>>>> + * This program is free software; you can redistribute it and/or
+>>>> modify it
+>>>> + * under the terms of the GNU General Public License as published=
+ by
+>>>> the
+>>>> + * Free Software Foundation; either version 2 of the License, or =
+(at
+>>>> your
+>>>> + * option) any later version.
+>>>> + */
+>>> Two questions:
+>>> 1. Why this change is here? I would rather expect it at patch 3/16 =
+when
+>>> you created this file... That is the usual time for adding copyrigh=
+ts.
+>> Yep, I should move this to 03/16.
+>>
+>>> 2. Does this file contains previous Samsung work?
+>> Hmm... I think this haven't contains the previous Samsung works,
+>> but I have the cover the head message from analogix_dp_core driver
+>> (include the copyright, but without ant author).
+> If it does not contain Samsung's work then don't mention its copyrigh=
+ts.
 
-Shawn
+Okay,
 
-> ---
-> Changes for V2: Resend
-> 
->  drivers/pinctrl/freescale/pinctrl-imx.c | 23 +++++++++++++----------
->  drivers/pinctrl/freescale/pinctrl-imx.h |  1 +
->  2 files changed, 14 insertions(+), 10 deletions(-)
-> 
-> diff --git a/drivers/pinctrl/freescale/pinctrl-imx.c b/drivers/pinctrl/freescale/pinctrl-imx.c
-> index 95db9e8..9f019be 100644
-> --- a/drivers/pinctrl/freescale/pinctrl-imx.c
-> +++ b/drivers/pinctrl/freescale/pinctrl-imx.c
-> @@ -437,7 +437,7 @@ static void imx_pinconf_dbg_show(struct pinctrl_dev *pctldev,
->  	const struct imx_pin_reg *pin_reg = &info->pin_regs[pin_id];
->  	unsigned long config;
->  
-> -	if (!pin_reg || pin_reg->conf_reg == -1) {
-> +	if (pin_reg->conf_reg == -1) {
->  		seq_printf(s, "N/A");
->  		return;
->  	}
-> @@ -536,21 +536,29 @@ static int imx_pinctrl_parse_groups(struct device_node *np,
->  		return -ENOMEM;
->  
->  	for (i = 0; i < grp->npins; i++) {
-> -		u32 mux_reg = be32_to_cpu(*list++);
-> +		u32 mux_reg;
->  		u32 conf_reg;
->  		unsigned int pin_id;
->  		struct imx_pin_reg *pin_reg;
->  		struct imx_pin *pin = &grp->pins[i];
->  
-> +		mux_reg = be32_to_cpu(*list++);
-> +		if (!(info->flags & ZERO_OFFSET_VALID) && !mux_reg)
-> +			mux_reg = -1;
-> +
->  		if (info->flags & SHARE_MUX_CONF_REG) {
->  			conf_reg = mux_reg;
->  		} else {
->  			conf_reg = be32_to_cpu(*list++);
-> -			if (!conf_reg)
-> +			if (!(info->flags & ZERO_OFFSET_VALID) && !conf_reg)
->  				conf_reg = -1;
->  		}
->  
-> -		pin_id = mux_reg ? mux_reg / 4 : conf_reg / 4;
-> +		if (info->flags & ZERO_OFFSET_VALID)
-> +			pin_id = mux_reg / 4;
-> +		else
-> +			pin_id = mux_reg ? mux_reg / 4 : conf_reg / 4;
-> +
->  		pin_reg = &info->pin_regs[pin_id];
->  		pin->pin = pin_id;
->  		grp->pin_ids[i] = pin_id;
-> @@ -684,7 +692,7 @@ int imx_pinctrl_probe(struct platform_device *pdev,
->  {
->  	struct imx_pinctrl *ipctl;
->  	struct resource *res;
-> -	int ret, i;
-> +	int ret;
->  
->  	if (!info || !info->pins || !info->npins) {
->  		dev_err(&pdev->dev, "wrong pinctrl info\n");
-> @@ -702,11 +710,6 @@ int imx_pinctrl_probe(struct platform_device *pdev,
->  	if (!info->pin_regs)
->  		return -ENOMEM;
->  
-> -	for (i = 0; i < info->npins; i++) {
-> -		info->pin_regs[i].mux_reg = -1;
-> -		info->pin_regs[i].conf_reg = -1;
-> -	}
-> -
->  	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
->  	ipctl->base = devm_ioremap_resource(&pdev->dev, res);
->  	if (IS_ERR(ipctl->base))
-> diff --git a/drivers/pinctrl/freescale/pinctrl-imx.h b/drivers/pinctrl/freescale/pinctrl-imx.h
-> index 26f8f1c..67c07c2 100644
-> --- a/drivers/pinctrl/freescale/pinctrl-imx.h
-> +++ b/drivers/pinctrl/freescale/pinctrl-imx.h
-> @@ -85,6 +85,7 @@ struct imx_pinctrl_soc_info {
->  };
->  
->  #define SHARE_MUX_CONF_REG	0x1
-> +#define ZERO_OFFSET_VALID	0x2
->  
->  #define NO_MUX		0x0
->  #define NO_PAD		0x0
-> -- 
-> 2.1.4
-> 
-> 
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+- Yakir
+
+>
+> Best regards,
+> Krzysztof
+>
+>> Thanks
+>> - Yakir
+>>
+>>> Best regards,
+>>> Krzysztof
+>>>
+>>>>    #ifndef _ANALOGIX_DP_H_
+>>>>    #define _ANALOGIX_DP_H_
+>>>>      #include <drm/drm_crtc.h>
+>>>>    +enum analogix_dp_devtype {
+>>>> +    EXYNOS_DP,
+>>>> +    RK3288_DP,
+>>>> +};
+>>>> +
+>>>>    struct analogix_dp_plat_data {
+>>>> +    enum analogix_dp_devtype dev_type;
+>>>>        struct drm_panel *panel;
+>>>>          int (*power_on)(struct analogix_dp_plat_data *);
+>>>>
+>>>
+>>>
+>>
+>>
+>
+>
+>
