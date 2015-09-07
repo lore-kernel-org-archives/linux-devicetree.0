@@ -1,65 +1,104 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: st_fdma: Firmware filename in DT?
-Date: Mon, 07 Sep 2015 14:33:35 +0200
-Message-ID: <1638322.iN3qcjUCN8@wuerfel>
-References: <20150903144944.GC7093@griffinp-ThinkPad-X1-Carbon-2nd> <201509051125.43527.arnd@arndb.de> <55ED6733.7050807@linaro.org>
+From: Kedareswara rao Appana <appana.durga.rao@xilinx.com>
+Subject: [PATCH v6 1/2] dmaengine: Add Xilinx Central DMA DT Binding
+ Documentation
+Date: Mon, 7 Sep 2015 18:03:08 +0530
+Message-ID: <1441629188-17601-1-git-send-email-appanad@xilinx.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <devicetree-spec-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <55ED6733.7050807-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: devicetree-spec-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Daniel Thompson <daniel.thompson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Warner Losh <imp-uzTCJ5RojNnQT0dZR+AlfA@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Peter Griffin <peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Maxime Coquelin <maxime.coquelin-qxv4g6HH51o@public.gmane.org>, Patrice Chotard <patrice.chotard-qxv4g6HH51o@public.gmane.org>, Ludovic Barre <ludovic.barre-qxv4g6HH51o@public.gmane.org>, "devicetree-spec-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-spec-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: robh+dt@kernel.org, vinod.koul@intel.com, anirudh@xilinx.com, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, michal.simek@xilinx.com, soren.brinkmann@xilinx.com, appanad@xilinx.com
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Monday 07 September 2015 11:30:11 Daniel Thompson wrote:
-> >>
-> >> I would suggest "firmware-names" to be consistent with other naming
-> >> convention and because their can be more than one (either at the same
-> >> time or as fallback). It also leaves "firmware" available if we want
-> >> to have phandle's to firmware embedded in the DT at some point later.
-> >
-> > Having list of strings would certainly make this more flexible than
-> > just a single string, for the same reason as taking the list of
-> > compatible values as the base, so +1 for "firmware-names" over "firmware".
-> 
-> I was recently thinking about how DT filenames would interact with 
-> incompatible ABI changes to the firmware's register and/or wire protocol.
-> 
-> Just for example we start with f/ware ABI A and we create a mainline 
-> kernel X that supported it.
-> 
-> Vendor now releases a new firmware with ABI B and we update the mainline 
-> driver to support ABI A (to avoid breaking old userspaces) and B, 
-> eventually releasing kernel Y.
-> 
-> The question now is how kernels X and Y should use the DT to generate 
-> the filename. It is very desirable that kernels X and Y use *different* 
-> filenames because otherwise a single userspace could not support the new 
-> feature *and* boot with both X and Y.
+Device-tree binding documentation of Xilinx Central DMA Engine.
 
-Generally speaking, the kernel should shield user space from ABI
-differences in the firmware and still provide the same user space ABI
-(possibly emulated, when the newer firmware removes features of the
-old one). Can you think of a case where a device firmware directly
-defines the user ABI without having kernel visible changes?
+Signed-off-by: Kedareswara rao Appana <appanad@xilinx.com>
+---
+Changes in v6:
+- None.
+Changes in v5:
+- None.
+Changes in v4:
+- None.
+Changes in v3:
+- Used proper alignment for all the properties.
+Changes in v2:
+- Change property 'xlnx,data-width' to 'xlnx,datawidth' in the description
+  to match the implementation.
 
-> Having lists of firmwares can certainly help solve this (providing the 
-> list can be used to allow a driver to select for an ABI is supports). 
-> However I afraid I find this example argues against having filenames in 
-> DT at all because it seems odd to me that, for kernel and userspace to 
-> adopt ABI B that must wait until the DT is updated to include support 
-> for ABI B. The hardware didn't change...
+ .../devicetree/bindings/dma/xilinx/xilinx_cdma.txt | 54 ++++++++++++++++++++++
+ 1 file changed, 54 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/dma/xilinx/xilinx_cdma.txt
 
-This is not what I was thinking of for a list of file names: I would not
-want a case where the kernel might pick between multiple incompatible
-files without knowing what they are, especially if the differences
-are ABI relevant.
-
-However, being very specific would let users intentionally install a
-firmware that is only used on a particular instance of a device that
-they want to behave differently, while the generic firmware would come
-preinstalled with the normal linux-firmware package.
-
-	Arnd
+diff --git a/Documentation/devicetree/bindings/dma/xilinx/xilinx_cdma.txt b/Documentation/devicetree/bindings/dma/xilinx/xilinx_cdma.txt
+new file mode 100644
+index 0000000..8b366ce
+--- /dev/null
++++ b/Documentation/devicetree/bindings/dma/xilinx/xilinx_cdma.txt
+@@ -0,0 +1,54 @@
++Xilinx AXI CDMA engine, it does transfers between memory-mapped source
++address and a memory-mapped destination address.
++
++Required properties:
++- compatible		: Should be "xlnx,axi-cdma-1.00.a"
++- #dma-cells		: Should be <1>, see "dmas" property below
++- reg			: Should contain cdma registers location and length.
++- dma-channel child node: Should have only one channel
++
++Optional properties:
++- xlnx,include-sg	: Tells whether configured for Scatter-mode in
++			  the hardware.
++
++Required child node properties:
++- compatible		: It should be "xlnx,axi-cdma-channel".
++- interrupts		: Should contain per channel CDMA interrupts.
++- xlnx,datawidth	: Should contain the stream data width, take values
++			  {32,64...1024}.
++
++Option child node properties:
++- xlnx,include-dre	: Tells whether hardware is configured for Data
++			  Realignment Engine.
++
++Example:
++++++++++
++
++axi_cdma_0: axicdma@7e200000 {
++       compatible = "xlnx,axi-cdma-1.00.a";
++       #dma-cells = <1>;
++       reg = < 0x7e200000 0x10000 >;
++       dma-channel@7e200000 {
++               compatible = "xlnx,axi-cdma-channel";
++               interrupts = < 0 55 4 >;
++               xlnx,datawidth = <0x40>;
++       } ;
++} ;
++
++
++* DMA client
++
++Required properties:
++- dmas		: a list of <[Central DMA device phandle] [Channel ID]> pairs,
++		  where Channel ID is '0' for write/tx and '1' for read/rx
++                  channel.
++- dma-names	: a list of DMA channel names, one per "dmas" entry
++
++Example:
++++++++++
++
++cdmatest_0: cdmatest@0 {
++       compatible ="xlnx,axi-cdma-test-1.00.a";
++       dmas = <&axi_cdma_0 0>;
++       dma-names = "cdma";
++} ;
+-- 
+2.1.2
