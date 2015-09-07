@@ -1,77 +1,71 @@
-From: Rob Herring <robherring2@gmail.com>
-Subject: Re: [PATCH v2 07/10] dts/ls2085a: Update DTSI to add support of
- various peripherals
-Date: Mon, 7 Sep 2015 15:58:07 -0500
-Message-ID: <CAL_JsqK4NQ9YRQkTM=km6N+3Cb=RAM_=2TFhtkhPWprA7VNKUg@mail.gmail.com>
-References: <1441350322-4671-1-git-send-email-bhupesh.sharma@freescale.com>
- <CADRPPNQER9UnKLazm9C6Dd7DAkDxLb4QShK64tmtahZxJJ-t=g@mail.gmail.com>
- <BY1PR0301MB130306991ACB28E4C8109DD582560@BY1PR0301MB1303.namprd03.prod.outlook.com>
- <CAL_Jsq+KJU4RiK2XWcS5BezucCmup2M-pueaaJUq7O=fA3LUxw@mail.gmail.com> <BY1PR0301MB13037916637C1B6E24AC259D82550@BY1PR0301MB1303.namprd03.prod.outlook.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <BY1PR0301MB13037916637C1B6E24AC259D82550@BY1PR0301MB1303.namprd03.prod.outlook.com>
-Sender: linux-clk-owner@vger.kernel.org
-To: Sharma Bhupesh <bhupesh.sharma@freescale.com>
-Cc: Li Leo <LeoLi@freescale.com>, Xiaobo Xie <X.Xie@freescale.com>, Liu Gang <Gang.Liu@freescale.com>, "Lian M.H." <Minghuan.Lian@freescale.com>, Badola Nikhil <nikhil.badola@freescale.com>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Shaohui Xie <Shaohui.Xie@freescale.com>, Arnd Bergmann <arnd@arndb.de>, Huan Wang <alison.wang@freescale.com>, "marc.zyngier@arm.com" <marc.zyngier@arm.com>, "Catalin.Marinas@arm.com" <Catalin.Marinas@arm.com>, Singh Jaiprakash <jaiprakash.singh@freescale.com>, "will.deacon@arm.com" <will.deacon@arm.com>, "olof@lixom.net" <olof@lixom.net>, Scott Wood <scottwood@freescale.com>, Bhupesh SHARMA <bhupesh.linux@gmail.com>, "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "Lu Y.B." <yangbo.lu@freescale.com>
+From: Constantine Shulyupin <const@MakeLinux.com>
+Subject: [PATCH v3] Documentation: add Device tree bindings for hwmon/nct7802
+Date: Tue,  8 Sep 2015 01:27:47 +0300
+Message-ID: <1441664902-32360-1-git-send-email-const@MakeLinux.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Constantine Shulyupin <const@MakeLinux.com>, "open list:OPEN FIRMWARE AND FLATTENED
+	DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
+Cc: linux@roeck-us.net
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Sep 6, 2015 at 4:03 PM, Sharma Bhupesh
-<bhupesh.sharma@freescale.com> wrote:
->> From: Rob Herring [mailto:robherring2@gmail.com]
->> Sent: Monday, September 07, 2015 2:27 AM
->> On Sat, Sep 5, 2015 at 3:37 AM, Sharma Bhupesh
->> <bhupesh.sharma@freescale.com> wrote:
->> >> From: pku.leo@gmail.com [mailto:pku.leo@gmail.com]
->> >> Sent: Saturday, September 05, 2015 2:33 AM On Fri, Sep 4, 2015 at
->> >> 2:05 AM, Bhupesh Sharma <bhupesh.sharma@freescale.com> wrote:
->> >> > This patch updates the LS2085a DTSI (DTS Include) file to add
->> >> > support for various peripherals supported by FSL LS2085a SoC, for
->> e.g.:
->> >>
->> >> The title and description here are still using the old LS2085 name.
->> >
->> > Ok.
->> >
->> > [snip] ..
->> >
->> >> > +       amba {
->> >> > +               compatible = "arm,amba-bus";
->> >> > +               #address-cells = <2>;
->> >> > +               #size-cells = <2>;
->> >> > +               ranges;
->> >> > +
->> >> > +               cluster1_core0_watchdog: wdt@c000000 {
->> >> > +                       compatible = "arm,primecell";
->> >>
->> >> Binding of Primecell requires a specific name for the device instead
->> >> of just a "arm,primecell".
->> >
->> > The sp805 driver doesn't have a compatible string like arm, sp805.
->> > You can refer to 'Documentation/devicetree/bindings/wdt' for details -
->> there is no entry for sp805 here.
->>
->> Because no one wrote it yet. Please read
->> Documentation/devicetree/bindings/arm/primecell.txt. If sp805 has no
->> binding doc, please write one.
->>
->> > Instead it relies on the 'drivers/amba/bus.c' framework to invoke the
->> > probe function of the
->> > sp805 wdt driver using the unique PRIMECELL identifiers of the sp805
->> wdt IP.
->>
->> Whether the kernel chooses to bind with the ID registers or compatible
->> strings is up to the kernel. That is independent of the bindings.
->>
->
-> Right. But wouldn't the driver require DTS awareness to handle the compatible string then.
-> Shouldn't the DTS awareness added both in terms of bindings and driver handling?
+Add add Device tree bindings for registers
+which are not covered by hwmon ABI and are required to
+configure specific HW.
+---
 
-No. The OS is free to do device enumeration however it sees fit and
-that could change independent of the DT.
+Changed in v3:
+- Fixed vendor prefix
+- Added short registers description,
+  full registers description is available at
+https://www.nuvoton.com/hq/products/cloud-computing/hardware-monitors/desktop-server-series/nct7802y/
 
-Rob
+Changed in v2:
+- Removed nct7802,reg-init
+- Added registers initialization by names
 
->
-> Regards,
-> Bhupesh
+Introduced in v1:
+ - nct7802,reg-init
+
+Signed-off-by: Constantine Shulyupin <const@MakeLinux.com>
+---
+ .../devicetree/bindings/hwmon/nct7802.txt          | 28 ++++++++++++++++++++++
+ 1 file changed, 28 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/hwmon/nct7802.txt
+
+diff --git a/Documentation/devicetree/bindings/hwmon/nct7802.txt b/Documentation/devicetree/bindings/hwmon/nct7802.txt
+new file mode 100644
+index 0000000..5b4c3fe
+--- /dev/null
++++ b/Documentation/devicetree/bindings/hwmon/nct7802.txt
+@@ -0,0 +1,28 @@
++Nuvoton NCT7802Y Hardware Monitoring IC
++
++Required node properties:
++
++ - "compatible": must be "nuvoton,nct7802"
++ - "reg": I2C bus address of the device
++
++Optional properties:
++
++One byte registers:
++ - nuvoton,start - Start register at index 0x21
++ - nuvoton,mode - Mode register at index 0x22
++ - nuvoton,en_peci - PECI enable register at index 0x23
++ - nuvoton,en_fan - Fan Enable Register at index 0x24
++ - nuvoton,en_v - voltage monitor enable register
++		  at index 0x25
++
++A detailed datasheet for registers and the device is
++available at Nuvoton web site.
++
++Example nct7802 node:
++
++nct7802 {
++	compatible = "nuvoton,nct7802";
++	reg = <0x2a>;
++	nuvoton,start = <0x01>;
++	nuvoton,mode = <0x7E>; // RTD1_MD = 2
++};
+-- 
+1.9.1
