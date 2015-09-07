@@ -1,7 +1,7 @@
 From: Jonas Gorski <jogo-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>
-Subject: [PATCH 3/3] of/irq: fix guards for irq_of_parse_and_map prototype
-Date: Mon,  7 Sep 2015 14:37:17 +0200
-Message-ID: <1441629437-23769-4-git-send-email-jogo@openwrt.org>
+Subject: [PATCH 2/3] of/irq: fix guards of of_irq_find_parent and of_msi_configure
+Date: Mon,  7 Sep 2015 14:37:16 +0200
+Message-ID: <1441629437-23769-3-git-send-email-jogo@openwrt.org>
 References: <1441629437-23769-1-git-send-email-jogo@openwrt.org>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <1441629437-23769-1-git-send-email-jogo-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>
@@ -10,44 +10,65 @@ To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Since OF is now a userselectable config symbol, having OF=y but OF_IRQ=n
-is a valid combination for non-OF platforms, and OF=y does not guarantee
-anymore that OF_IRQ is enabled (or we are building for SPARC).
-
-Fixes the following build error with OF=y, IRQ_DOMAIN=n and SPI=y:
-
-drivers/built-in.o: In function `spi_register_master':
-(.text+0xc3ae): undefined reference to `irq_of_parse_and_map'
-Makefile:935: recipe for target 'vmlinux' failed
-make: *** [vmlinux] Error 1
+Only irq_of_parse_and_map is implemented differently on SPARC, so only
+that one should be protected by the CONFIG_OF guard.
 
 Signed-off-by: Jonas Gorski <jogo-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>
 ---
- include/linux/of_irq.h | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ include/linux/of_irq.h | 19 +++++++++----------
+ 1 file changed, 9 insertions(+), 10 deletions(-)
 
 diff --git a/include/linux/of_irq.h b/include/linux/of_irq.h
-index d6a6d2e..3f92bf6 100644
+index 7b81771..d6a6d2e 100644
 --- a/include/linux/of_irq.h
 +++ b/include/linux/of_irq.h
-@@ -75,7 +75,7 @@ static inline void of_msi_configure(struct device *dev, struct device_node *np)
+@@ -46,6 +46,8 @@ extern int of_irq_get(struct device_node *dev, int index);
+ extern int of_irq_get_byname(struct device_node *dev, const char *name);
+ extern int of_irq_to_resource_table(struct device_node *dev,
+ 		struct resource *res, int nr_irqs);
++extern struct device_node *of_irq_find_parent(struct device_node *child);
++extern void of_msi_configure(struct device *dev, struct device_node *np);
+ #else
+ static inline int of_irq_count(struct device_node *dev)
+ {
+@@ -64,6 +66,13 @@ static inline int of_irq_to_resource_table(struct device_node *dev,
+ {
+ 	return 0;
  }
++static inline void *of_irq_find_parent(struct device_node *child)
++{
++	return NULL;
++}
++static inline void of_msi_configure(struct device *dev, struct device_node *np)
++{
++}
  #endif
  
--#if defined(CONFIG_OF)
-+#if defined(CONFIG_OF_IRQ) || defined(CONFIG_SPARC)
- /*
-  * irq_of_parse_and_map() is used by all OF enabled platforms; but SPARC
-  * implements it differently.  However, the prototype is the same for all,
-@@ -83,7 +83,7 @@ static inline void of_msi_configure(struct device *dev, struct device_node *np)
+ #if defined(CONFIG_OF)
+@@ -73,7 +82,6 @@ static inline int of_irq_to_resource_table(struct device_node *dev,
+  * so declare it here regardless of the CONFIG_OF_IRQ setting.
   */
  extern unsigned int irq_of_parse_and_map(struct device_node *node, int index);
+-extern struct device_node *of_irq_find_parent(struct device_node *child);
  
--#else /* !CONFIG_OF */
-+#else /* !CONFIG_OF && !CONFIG_SPARC */
+ #else /* !CONFIG_OF */
  static inline unsigned int irq_of_parse_and_map(struct device_node *dev,
- 						int index)
+@@ -81,15 +89,6 @@ static inline unsigned int irq_of_parse_and_map(struct device_node *dev,
  {
+ 	return 0;
+ }
+-
+-static inline void *of_irq_find_parent(struct device_node *child)
+-{
+-	return NULL;
+-}
+-
+-static inline void of_msi_configure(struct device *dev, struct device_node *np)
+-{
+-}
+ #endif /* !CONFIG_OF */
+ 
+ #endif /* __OF_IRQ_H */
 -- 
 2.1.4
 --
