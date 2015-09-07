@@ -1,35 +1,81 @@
-From: Gerd Hoffmann <kraxel@redhat.com>
-Subject: Re: [PATCH v2] QEMU fw_cfg DMA interface documentation
-Date: Mon, 07 Sep 2015 13:08:29 +0200
-Message-ID: <1441624109.27149.18.camel@redhat.com>
-References: <1441012133-8154-1-git-send-email-markmb@redhat.com>
-	 <1441012303-8261-1-git-send-email-markmb@redhat.com>
-	 <CAJSP0QXgiMo0ahzRQ=2iMXVmiO+R27Re17c966LX1T_Q=Rdgow@mail.gmail.com>
-	 <20150902103311.5335d469@markmb_rh>
+From: Vaibhav Hiremath <vaibhav.hiremath@linaro.org>
+Subject: [PATCH-v2 0/7] mmc: sdhci-pxav3: Enable support for PXA1928 SDCHI controller
+Date: Mon,  7 Sep 2015 16:48:34 +0530
+Message-ID: <1441624721-15612-1-git-send-email-vaibhav.hiremath@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20150902103311.5335d469@markmb_rh>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Marc =?ISO-8859-1?Q?Mar=ED?= <markmb@redhat.com>
-Cc: Stefan Hajnoczi <stefanha@gmail.com>, linux-kernel <linux-kernel@vger.kernel.org>, Drew <drjones@redhat.com>, Kevin O'Connor <kevin@koconnor.net>, Laszlo <lersek@redhat.com>, Arnd Bergmann <arnd@arndb.de>, Rob Herring <rob.herring@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Alexander Graf <agraf@suse.de>, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-mmc-owner@vger.kernel.org>
+Sender: linux-mmc-owner@vger.kernel.org
+To: linux-mmc@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, robh+dt@kernel.org, ulf.hansson@linaro.org, Vaibhav Hiremath <vaibhav.hiremath@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-  Hi,
+PXA1928 SDHCI controller has few differences, for example,
 
-> It's just simplicity. If you want to read a few times from the same
-> field (like in ACPI tables, read the data size and then the data), you
-> need a way to enable and disable the selector and manage the current
-> offset for that entry. This is already provided with the "old"
-> interface.
+                         PXAxxx                    PXA1928
+                         =3D=3D=3D=3D=3D=3D                    =3D=3D=3D=
+=3D=3D=3D=3D
+ SDCLK_DELAY field       0x10A                     0x114
+ SDCLK_DELAY mask        0x1F                      0x3FF
+ SDCLK_DELAY shift        9                          8
+ SDCLK_SEL shift          8                          2 (SEL1)
 
-Could be handled with a 'select' control bit.  Only when set select
-entry and reset offset to zero.
+So this patch series introduces new compatible device_id
+(marvell,pxav3-1928-sdhci), and makes use of .data for handling
+such differences.
 
-Also: would it make sense to allow an *array* of FWCfgDmaAccess structs?
-With a 'more' bit in control we could indicate that there are more
-entries.  I'm not sure firmware would actually use that though ...
+The series also adds support like,
 
-cheers,
-  Gerd
+ - independent ->set_clock() api, as we need to enable internal clock g=
+ate
+   and TX clock
+ - pinctrl configuration based on bus speed.
+ - introduce new quirk SDHCI_QUIRK2_MUST_SET_SDHCI_BUS_POWER
+   SD_BUS_POWER & SD_BUS_VLT bit-fields are used internally to gate the
+   clocks, so it is important to configure them as part of ->set_power(=
+)
+   More detailed description is written into commit log.
+ - Enable SDHCI_QUIRK_BROKEN_TIMEOUT_VAL for PXA1928 device_id
+ - Enable SDHCI_QUIRK2_CARD_ON_NEEDS_BUS_ON quirk for pxa1928 device
+
+
+V1 =3D> V2:
+=3D=3D=3D=3D=3D=3D=3D=3D=3D
+ - Fixed typo issue (residual change remained by mistake)
+ - Added new patch updating DT binding document for pxa1928 support
+ - Added new patch enabling CARD_ON_NEEDS_BUS_ON for pxa1928 device
+
+Testing:
+I have done basic testing on both eMMC and SD card on PXA1928 based
+platform.
+
+Note: I tried to made sure that I do not break any other platform, whic=
+h
+used sdhci, except HS200 configuration.=C2=B7
+Unfortunately I do not have access to any other datasheets, where I can
+cross check the details on HS200 bit-fields. Probably someone who has
+access can confirm [PATCH 4/5], whether it impacts other platforms.
+
+Kevin Liu (1):
+  mmc: sdhci-pxav3: Fix HS200 mode support
+
+Vaibhav Hiremath (6):
+  mmc: sdhci-pxav3: Enable pxa1928 device support
+  mmc: sdhci-pxav3: binding: Add pxa1928 compatible support
+  mmc: sdhci-pxav3: Add platform specific set_clock ops
+  mmc: sdhci-pxav3: Add pinctl setting according to bus clock
+  mmc: sdhci: add new quirk for setting BUS_POWER & BUS_VLT fields
+  mmc: sdhci: enable SDHCI_QUIRK2_CARD_ON_NEEDS_BUS_ON for pxa1928
+
+ .../devicetree/bindings/mmc/sdhci-pxa.txt          |   2 +-
+ drivers/mmc/host/sdhci-pltfm.c                     |   4 +
+ drivers/mmc/host/sdhci-pxav3.c                     | 168 +++++++++++++=
+++++++--
+ drivers/mmc/host/sdhci.c                           |   3 +-
+ drivers/mmc/host/sdhci.h                           |   2 +
+ 5 files changed, 165 insertions(+), 14 deletions(-)
+
+--=20
+1.9.1
+
