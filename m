@@ -1,77 +1,60 @@
-From: Jonas Gorski <jogo-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>
-Subject: [PATCH 2/3] of/irq: fix guards of of_irq_find_parent and of_msi_configure
-Date: Mon,  7 Sep 2015 14:37:16 +0200
-Message-ID: <1441629437-23769-3-git-send-email-jogo@openwrt.org>
-References: <1441629437-23769-1-git-send-email-jogo@openwrt.org>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1441629437-23769-1-git-send-email-jogo-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: st_fdma: Firmware filename in DT?
+Date: Mon, 07 Sep 2015 14:41:17 +0200
+Message-ID: <5009480.9u9jyfIQDy@wuerfel>
+References: <20150903144944.GC7093@griffinp-ThinkPad-X1-Carbon-2nd> <201509051058.54229.arnd@arndb.de> <CANCZdfrLbbN_nGJ8WLsBHHGuM3SxGgiLgjkZ+YG4zP4BBA68YQ@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <devicetree-spec-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CANCZdfrLbbN_nGJ8WLsBHHGuM3SxGgiLgjkZ+YG4zP4BBA68YQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-spec-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Warner Losh <imp-uzTCJ5RojNnQT0dZR+AlfA@public.gmane.org>
+Cc: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Peter Griffin <peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Maxime Coquelin <maxime.coquelin-qxv4g6HH51o@public.gmane.org>, Patrice Chotard <patrice.chotard-qxv4g6HH51o@public.gmane.org>, Ludovic Barre <ludovic.barre-qxv4g6HH51o@public.gmane.org>, "devicetree-spec-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-spec-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Only irq_of_parse_and_map is implemented differently on SPARC, so only
-that one should be protected by the CONFIG_OF guard.
+On Saturday 05 September 2015 15:06:35 Warner Losh wrote:
+> On Sat, Sep 5, 2015 at 2:58 AM, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> wrote:
+> > On Friday 04 September 2015, Warner Losh wrote:
+> 
+> I understood what you were proposing. It wasn't a lack of understanding
+> that lead me to the opinion that it was a horrible policy. Despite your
+> lengthy explanation, you did nothing to address the very simple and common
+> use case of having identical hardware that none-the-less needs different
+> firmware which was my basis of the horrible brand I put on this policy.
 
-Signed-off-by: Jonas Gorski <jogo-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>
----
- include/linux/of_irq.h | 19 +++++++++----------
- 1 file changed, 9 insertions(+), 10 deletions(-)
+You must be thinking of different examples of firmware files than I
+am. We have tons of drivers that need firmware, and the reasons for
+picking a particular file over another alternative tend to be slightly
+different (most of the time, you just want the latest version).
 
-diff --git a/include/linux/of_irq.h b/include/linux/of_irq.h
-index 7b81771..d6a6d2e 100644
---- a/include/linux/of_irq.h
-+++ b/include/linux/of_irq.h
-@@ -46,6 +46,8 @@ extern int of_irq_get(struct device_node *dev, int index);
- extern int of_irq_get_byname(struct device_node *dev, const char *name);
- extern int of_irq_to_resource_table(struct device_node *dev,
- 		struct resource *res, int nr_irqs);
-+extern struct device_node *of_irq_find_parent(struct device_node *child);
-+extern void of_msi_configure(struct device *dev, struct device_node *np);
- #else
- static inline int of_irq_count(struct device_node *dev)
- {
-@@ -64,6 +66,13 @@ static inline int of_irq_to_resource_table(struct device_node *dev,
- {
- 	return 0;
- }
-+static inline void *of_irq_find_parent(struct device_node *child)
-+{
-+	return NULL;
-+}
-+static inline void of_msi_configure(struct device *dev, struct device_node *np)
-+{
-+}
- #endif
- 
- #if defined(CONFIG_OF)
-@@ -73,7 +82,6 @@ static inline int of_irq_to_resource_table(struct device_node *dev,
-  * so declare it here regardless of the CONFIG_OF_IRQ setting.
-  */
- extern unsigned int irq_of_parse_and_map(struct device_node *node, int index);
--extern struct device_node *of_irq_find_parent(struct device_node *child);
- 
- #else /* !CONFIG_OF */
- static inline unsigned int irq_of_parse_and_map(struct device_node *dev,
-@@ -81,15 +89,6 @@ static inline unsigned int irq_of_parse_and_map(struct device_node *dev,
- {
- 	return 0;
- }
--
--static inline void *of_irq_find_parent(struct device_node *child)
--{
--	return NULL;
--}
--
--static inline void of_msi_configure(struct device *dev, struct device_node *np)
--{
--}
- #endif /* !CONFIG_OF */
- 
- #endif /* __OF_IRQ_H */
--- 
-2.1.4
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Can you name a specific example you are thinking of where you want
+different firmware to be loaded on systems with identical hardware?
+
+> Also, firmware comes from vendors generally named something other
+> than FDT compat strings. Renaming firmware generally is also a
+> horrible policy that most shops frown on. It hampers traceability from
+> a deployed system back to the sources, for one and introduces one
+> more place for an 'oops' rename to go undetected until the firmware
+> is deployed.
+
+Most firmware that I can think of does not even come as a file in the
+format that Linux wants, often there is some vendor source code
+with firmware in a header file, or you dissect a windows binary
+driver to pull out the right bits.
+
+The file name gets fixed at the point at which the binary is included
+in the linux-firmware git tree.
+
+> So there needs to be a standardized way to augment local policy
+> to say 'the firmware you need for this node so that the system behaves
+> as expect in the DT is Y.'
+
+Why is that even something that is known by the boot loader? If the boot
+loader just knows what hardware you have, but a particular instance
+requires some other device firmware, that sounds like the system
+administrator would just put the special firmware file in a known
+location on the local file system (preferably not the same file name
+as the generic one).
+
+	Arnd
