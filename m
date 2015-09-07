@@ -1,97 +1,140 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: st_fdma: Firmware filename in DT?
-Date: Mon, 07 Sep 2015 17:59:32 +0200
-Message-ID: <4122797.fIgFJVcQdj@wuerfel>
-References: <20150903144944.GC7093@griffinp-ThinkPad-X1-Carbon-2nd> <1638322.iN3qcjUCN8@wuerfel> <55EDA0EB.1040501@linaro.org>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH 1/2] ASoC: atmel-classd: add the Audio
+ Class D Amplifier code
+Date: Mon, 7 Sep 2015 17:23:50 +0100
+Message-ID: <20150907162350.GV5313@sirena.org.uk>
+References: <1441086101-15303-1-git-send-email-songjun.wu@atmel.com>
+ <1441086101-15303-2-git-send-email-songjun.wu@atmel.com>
+ <20150903113716.GU12027@sirena.org.uk> <55EC0AF5.8060403@atmel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <devicetree-spec-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <55EDA0EB.1040501-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: devicetree-spec-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Daniel Thompson <daniel.thompson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Warner Losh <imp-uzTCJ5RojNnQT0dZR+AlfA@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Peter Griffin <peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Maxime Coquelin <maxime.coquelin-qxv4g6HH51o@public.gmane.org>, Patrice Chotard <patrice.chotard-qxv4g6HH51o@public.gmane.org>, Ludovic Barre <ludovic.barre-qxv4g6HH51o@public.gmane.org>, "devicetree-spec-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-spec-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: multipart/mixed; boundary="===============5867310463049268299=="
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <55EC0AF5.8060403@atmel.com>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: "Wu, Songjun" <songjun.wu@atmel.com>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, pawel.moll@arm.com, lgirdwood@gmail.com, ijc+devicetree@hellion.org.uk, nicolas.ferre@atmel.com, linux-kernel@vger.kernel.org, tiwai@suse.com, robh+dt@kernel.org, galak@codeaurora.org
 List-Id: devicetree@vger.kernel.org
 
-On Monday 07 September 2015 15:36:27 Daniel Thompson wrote:
-> On 07/09/15 13:33, Arnd Bergmann wrote:
-> > On Monday 07 September 2015 11:30:11 Daniel Thompson wrote:
->
-> > Generally speaking, the kernel should shield user space from ABI
-> > differences in the firmware and still provide the same user space ABI
-> > (possibly emulated, when the newer firmware removes features of the
-> > old one). Can you think of a case where a device firmware directly
-> > defines the user ABI without having kernel visible changes?
-> 
-> I don't mean that the firmware ABI is exposed to userspace.
-> 
-> I mean if you use the same filename for both ABIs (in /lib/firmware) 
-> then kernel X with lose functionality if it is booted with a userspace 
-> that has updated to the new firmware (maybe even crash if I can't detect 
-> at runtime the version of the firmware is has loaded). That sort of 
-> thing is the pain for distros which support booting with multiple 
-> kernels (apt-get/dnf simply won't know when it is safe to update the 
-> firmware binary).
 
-I see. This is the case I was interested in with tying the compatible
-string to the firmware blob: the compatible string tells us which
-device we are dealing with, and if that is implemented in firmware,
-then loading the firmware based on the same string will make everything
-work, while having a separate DT property can cause trouble as the
-driver now has to check two properties to find out what the ABI is.
+--===============5867310463049268299==
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="00Xftji29zlN/ZGB"
+Content-Disposition: inline
 
-Another case is where a driver knows of two firmware ABIs for the same
-hardware and the boot loader does not care which one is used. In this
-case, we also don't want to encode the firmware name in DT, but the driver
-has to know anyway, and I can see two ways of doing this:
 
-a) have version information inside of the blob. This works if the driver
-   developer also controls the image format (as is often the case).
-   Another downside is that it fails if the firmware image uses an ABI
-   that the (older) kernel does not understand.
+--00Xftji29zlN/ZGB
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-b) append the ABI version to the file name and try loading the firmware
-   for the latest interface first, then go back to increasingly older
-   file names that the driver still understands. This is already common
-   practice in some drivers, regardless of matching the file name to
-   DT.
+On Sun, Sep 06, 2015 at 05:44:21PM +0800, Wu, Songjun wrote:
+> On 9/3/2015 19:37, Mark Brown wrote:
+> >On Tue, Sep 01, 2015 at 01:41:40PM +0800, Songjun Wu wrote:
 
-> >> Having lists of firmwares can certainly help solve this (providing the
-> >> list can be used to allow a driver to select for an ABI is supports).
-> >> However I afraid I find this example argues against having filenames in
-> >> DT at all because it seems odd to me that, for kernel and userspace to
-> >> adopt ABI B that must wait until the DT is updated to include support
-> >> for ABI B. The hardware didn't change...
+> >>+static const char * const eqcfg_bass_text[] =3D {
+> >>+	"-12 dB", "-6 dB", "0 dB", "+6 dB", "+12 dB"
+> >>+};
 > >
-> > This is not what I was thinking of for a list of file names: I would not
-> > want a case where the kernel might pick between multiple incompatible
-> > files without knowing what they are, especially if the differences
-> > are ABI relevant.
-> 
-> Nor me.
-> 
-> Personally I prefer an "assertive" driver that imposes a filename for 
-> the firmwares it needs. Thus if there is an ABI change the driver writer 
-> can load a completely different firmware file without needing a DT 
-> update. That said I'm not especially invested either way.
-> 
-> However whatever solution is reached I would quite like to be able to 
-> boot kernels from either side of an ABI break from a single userspace 
-> (and get the new features when the kernel supports them).
-> 
-> 
-> > However, being very specific would let users intentionally install a
-> > firmware that is only used on a particular instance of a device that
-> > they want to behave differently, while the generic firmware would come
-> > preinstalled with the normal linux-firmware package.
-> 
-> Not sure I follow this. You mean embedding filenames in DT makes it easy 
-> to something like a vendor/reverse-engineering mode.
+> >>+static const unsigned int eqcfg_bass_value[] =3D {
+> >>+	CLASSD_INTPMR_EQCFG_B_CUT_12,
+> >>+	CLASSD_INTPMR_EQCFG_B_CUT_6, CLASSD_INTPMR_EQCFG_FLAT,
+> >>+	CLASSD_INTPMR_EQCFG_B_BOOST_6, CLASSD_INTPMR_EQCFG_B_BOOST_12
+> >>+};
 
-The example I was thinking of is drivers/net/wireless/ath/ath10k/, which
-first attempts to load the firmware image based on the specific PCI
-vendor/device/subvendor/subdevice ID, then the vendor/device tuple and
-finally falls back to just the driver name (or something similar to that,
-I haven't looked up the exact method).
+> >This should be a Volume control with TLV information, as should the
+> >following few controls.
 
-	Arnd
+> The Volume control with TLV information is not suitable for this case.
+> Bass, Medium, and treble are mutually exclusive.
+> So I think the SOC_ENUM control is suitable for this case.
+> The register layout is not very good,
+> The register is defined as below.
+> =E2=80=A2  EQCFG: Equalization Selection
+> Value Name       Description
+> 0     FLAT       Flat Response
+> 1     BBOOST12   Bass boost +12 dB
+> 2     BBOOST6    Bass boost +6 dB
+> 3     BCUT12     Bass cut -12 dB
+> 4     BCUT6      Bass cut -6 dB
+> 5     MBOOST3    Medium boost +3 dB
+> 6     MBOOST8    Medium boost +8 dB
+> 7     MCUT3      Medium cut -3 dB
+> 8     MCUT8      Medium cut -8 dB
+> 9     TBOOST12   Treble boost +12 dB
+> 10    TBOOST6    Treble boost +6 dB
+> 11    TCUT12     Treble cut -12 dB
+> 12    TCUT6      Treble cut -6 dB
+
+OK, so that's not actually what the code was doing - it had separate
+enums for bass, mid and treble.  If you make this a single enum with all
+the above options in it that seems like the best way of handling things.
+
+> >>+static const struct snd_kcontrol_new atmel_classd_snd_controls[] =3D {
+> >>+SOC_SINGLE_TLV("Left Volume", CLASSD_INTPMR,
+> >>+		CLASSD_INTPMR_ATTL_SHIFT, 78, 1, classd_digital_tlv),
+> >>+
+> >>+SOC_SINGLE_TLV("Right Volume", CLASSD_INTPMR,
+> >>+		CLASSD_INTPMR_ATTR_SHIFT, 78, 1, classd_digital_tlv),
+> >
+> >This should be a single stereo control rather than separate left and
+> >right controls.
+
+> Since the classD IP defines two register fields to control left volume and
+> right volume respectively, I think it's better to provide two controls to
+> user.
+
+No, this is really common, we combine them in Linux to present a
+consistent interface to userspace.
+
+> >>+	dev_info(dev,
+> >>+		"Atmel Class D Amplifier (CLASSD) device at 0x%p (irq %d)\n",
+> >>+		io_base, dd->irq);
+
+> >This is a bit noisy and not really based on interaction with the
+> >hardware...  dev_dbg() seems better.
+
+> This information will occur only once when linux kernel starts.
+> It shows the classD is loaded to linux kernel.
+> I think it's better to provide more information to user.
+
+This stuff all adds up and since it'll go out on the console by default
+it both makes things more noisy and slows down boot - printing on the
+serial port isn't free.  If we want to have this sort of information we
+printed we should really do it in the driver core so it appears
+consistently for all devices rather than having individual code in each
+driver.
+
+--00Xftji29zlN/ZGB
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQEcBAEBCAAGBQJV7boVAAoJECTWi3JdVIfQTeIH/RSCB5SwyrLUV06en5LRJROJ
+Drti/NZzOoqlrGCvzH+lRHS9vyzijbVyu10Op8eEuTub62b7ycUHq40tF35B+NQc
+Xcd1sk+B7tEa9hNKvBtUR4vRjbtz52GsHm2HZnLsvfh9/+GE40IbtS8zCyP/Tl9K
+rY3/z2Kab+stLkgX+uusnLIa7QvwPGmU7QloBfKCiNtwhoZAO3vGUxqtRZIuarOU
+UH183AQ9/yBKPg6+9eJmD0+hWBJp+rydtlR2noQme80MJ0rz1lmTEULSonmXm9G9
+QVOZPb929h5NZWFvQK99NenEx+JlTF6BPCvW+d5M+WAcCNQQNzH79C9Cthsozh4=
+=8G+y
+-----END PGP SIGNATURE-----
+
+--00Xftji29zlN/ZGB--
+
+--===============5867310463049268299==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+
+--===============5867310463049268299==--
