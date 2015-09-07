@@ -1,60 +1,116 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: st_fdma: Firmware filename in DT?
-Date: Mon, 07 Sep 2015 14:41:17 +0200
-Message-ID: <5009480.9u9jyfIQDy@wuerfel>
-References: <20150903144944.GC7093@griffinp-ThinkPad-X1-Carbon-2nd> <201509051058.54229.arnd@arndb.de> <CANCZdfrLbbN_nGJ8WLsBHHGuM3SxGgiLgjkZ+YG4zP4BBA68YQ@mail.gmail.com>
+From: Vaibhav Hiremath <vaibhav.hiremath-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH-v2 1/3] mmc: sdhci-pxav3: Fix tabbing issue
+Date: Mon, 7 Sep 2015 18:22:59 +0530
+Message-ID: <55ED88AB.2080102@linaro.org>
+References: <1441625471-16315-1-git-send-email-vaibhav.hiremath@linaro.org>
+ <1441625471-16315-2-git-send-email-vaibhav.hiremath@linaro.org>
+ <20150907195623.479382b2@xhacker>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <devicetree-spec-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CANCZdfrLbbN_nGJ8WLsBHHGuM3SxGgiLgjkZ+YG4zP4BBA68YQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-spec-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Warner Losh <imp-uzTCJ5RojNnQT0dZR+AlfA@public.gmane.org>
-Cc: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Peter Griffin <peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Maxime Coquelin <maxime.coquelin-qxv4g6HH51o@public.gmane.org>, Patrice Chotard <patrice.chotard-qxv4g6HH51o@public.gmane.org>, Ludovic Barre <ludovic.barre-qxv4g6HH51o@public.gmane.org>, "devicetree-spec-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-spec-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20150907195623.479382b2@xhacker>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jisheng Zhang <jszhang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
+Cc: linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Saturday 05 September 2015 15:06:35 Warner Losh wrote:
-> On Sat, Sep 5, 2015 at 2:58 AM, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> wrote:
-> > On Friday 04 September 2015, Warner Losh wrote:
-> 
-> I understood what you were proposing. It wasn't a lack of understanding
-> that lead me to the opinion that it was a horrible policy. Despite your
-> lengthy explanation, you did nothing to address the very simple and common
-> use case of having identical hardware that none-the-less needs different
-> firmware which was my basis of the horrible brand I put on this policy.
 
-You must be thinking of different examples of firmware files than I
-am. We have tons of drivers that need firmware, and the reasons for
-picking a particular file over another alternative tend to be slightly
-different (most of the time, you just want the latest version).
 
-Can you name a specific example you are thinking of where you want
-different firmware to be loaded on systems with identical hardware?
+On Monday 07 September 2015 05:26 PM, Jisheng Zhang wrote:
+> On Mon, 7 Sep 2015 17:01:09 +0530
+> Vaibhav Hiremath <vaibhav.hiremath-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+>
+>> There were some coding style issues where spaces have been used instead
+>> of tabs, for example, in macro definitions, alignment of function
+>> declarations/definitions, etc...
+>>
+>> This patch fixes all such occurrences in the code.
+>>
+>> Signed-off-by: Vaibhav Hiremath <vaibhav.hiremath-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+>> ---
+>>   drivers/mmc/host/sdhci-pxav3.c | 46 +++++++++++++++++++++---------------------
+>>   1 file changed, 23 insertions(+), 23 deletions(-)
+>>
+>> diff --git a/drivers/mmc/host/sdhci-pxav3.c b/drivers/mmc/host/sdhci-pxav3.c
+>> index 946d37f..7a07177 100644
+>> --- a/drivers/mmc/host/sdhci-pxav3.c
+>> +++ b/drivers/mmc/host/sdhci-pxav3.c
+>> @@ -39,24 +39,24 @@
+>>   #include "sdhci.h"
+>>   #include "sdhci-pltfm.h"
+>>
+>> -#define PXAV3_RPM_DELAY_MS     50
+>> +#define PXAV3_RPM_DELAY_MS		50
+>>
+>> -#define SD_CLOCK_BURST_SIZE_SETUP		0x10A
+>> -#define SDCLK_SEL	0x100
+>> -#define SDCLK_DELAY_SHIFT	9
+>> -#define SDCLK_DELAY_MASK	0x1f
+>> +#define SD_CLOCK_BURST_SIZE_SETUP	0x10A
+>> +#define SDCLK_SEL			0x100
+>> +#define  SDCLK_DELAY_SHIFT		9
+>> +#define  SDCLK_DELAY_MASK		0x1f
+>>
+>> -#define SD_CFG_FIFO_PARAM       0x100
+>> -#define SDCFG_GEN_PAD_CLK_ON	(1<<6)
+>> -#define SDCFG_GEN_PAD_CLK_CNT_MASK	0xFF
+>> -#define SDCFG_GEN_PAD_CLK_CNT_SHIFT	24
+>> +#define SD_CFG_FIFO_PARAM		0x100
+>> +#define  SDCFG_GEN_PAD_CLK_ON		(1<<6)
+>> +#define  SDCFG_GEN_PAD_CLK_CNT_MASK	0xFF
+>> +#define  SDCFG_GEN_PAD_CLK_CNT_SHIFT	24
+>>
+>> -#define SD_SPI_MODE          0x108
+>> -#define SD_CE_ATA_1          0x10C
+>> +#define SD_SPI_MODE			0x108
+>> +#define SD_CE_ATA_1			0x10C
+>>
+>> -#define SD_CE_ATA_2          0x10E
+>> -#define SDCE_MISC_INT		(1<<2)
+>> -#define SDCE_MISC_INT_EN	(1<<1)
+>> +#define SD_CE_ATA_2			0x10E
+>> +#define  SDCE_MISC_INT			(1<<2)
+>> +#define  SDCE_MISC_INT_EN		(1<<1)
+>>
+>>   struct sdhci_pxa {
+>>   	struct clk *clk_core;
+>> @@ -284,7 +284,7 @@ static void pxav3_set_uhs_signaling(struct sdhci_host *host, unsigned int uhs)
+>>   	 * FE-2946959
+>>   	 */
+>>   	if (pxa->sdio3_conf_reg) {
+>> -		u8 reg_val  = readb(pxa->sdio3_conf_reg);
+>> +		u8 reg_val = readb(pxa->sdio3_conf_reg);
+>>
+>>   		if (uhs == MMC_TIMING_UHS_SDR50 ||
+>>   		    uhs == MMC_TIMING_UHS_DDR50) {
+>> @@ -304,20 +304,20 @@ static void pxav3_set_uhs_signaling(struct sdhci_host *host, unsigned int uhs)
+>>   }
+>>
+>>   static const struct sdhci_ops pxav3_sdhci_ops = {
+>> -	.set_clock = sdhci_set_clock,
+>> -	.platform_send_init_74_clocks = pxav3_gen_init_74_clocks,
+>> -	.get_max_clock = sdhci_pltfm_clk_get_max_clock,
+>> -	.set_bus_width = sdhci_set_bus_width,
+>> -	.reset = pxav3_reset,
+>> -	.set_uhs_signaling = pxav3_set_uhs_signaling,
+>> +	.set_clock			= sdhci_set_clock,
+>> +	.platform_send_init_74_clocks	= pxav3_gen_init_74_clocks,
+>> +	.get_max_clock			= sdhci_pltfm_clk_get_max_clock,
+>> +	.set_bus_width			= sdhci_set_bus_width,
+>> +	.reset				= pxav3_reset,
+>> +	.set_uhs_signaling		= pxav3_set_uhs_signaling,
+>
+> IMHO, this is not an improvement, previous style is fine and I saw
+> such style in kernel here and there
+>
 
-> Also, firmware comes from vendors generally named something other
-> than FDT compat strings. Renaming firmware generally is also a
-> horrible policy that most shops frown on. It hampers traceability from
-> a deployed system back to the sources, for one and introduces one
-> more place for an 'oops' rename to go undetected until the firmware
-> is deployed.
+I had received feedback to use above style on different patch-series.
+And I also think this looks more clean and readable.
 
-Most firmware that I can think of does not even come as a file in the
-format that Linux wants, often there is some vendor source code
-with firmware in a header file, or you dissect a windows binary
-driver to pull out the right bits.
-
-The file name gets fixed at the point at which the binary is included
-in the linux-firmware git tree.
-
-> So there needs to be a standardized way to augment local policy
-> to say 'the firmware you need for this node so that the system behaves
-> as expect in the DT is Y.'
-
-Why is that even something that is known by the boot loader? If the boot
-loader just knows what hardware you have, but a particular instance
-requires some other device firmware, that sounds like the system
-administrator would just put the special firmware file in a known
-location on the local file system (preferably not the same file name
-as the generic one).
-
-	Arnd
+Thanks,
+Vaibhav
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
