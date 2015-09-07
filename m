@@ -1,105 +1,113 @@
-From: Gabriele Paoloni <gabriele.paoloni@huawei.com>
-Subject: RE: [PATCH v8 0/6] PCI: hisi: Add PCIe host support for HiSilicon
- SoC Hip05
-Date: Mon, 7 Sep 2015 08:17:20 +0000
-Message-ID: <EE11001F9E5DDD47B7634E2F8A612F2E1620A175@lhreml503-mbs>
-References: <1440496734-18417-1-git-send-email-wangzhou1@hisilicon.com>
+From: Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH v4 14/16] drm: bridge: analogix/dp: try force hpd after
+ plug in lookup failed
+Date: Mon, 7 Sep 2015 10:20:18 +0200
+Message-ID: <20150907082017.GB19961@ulmo.nvidia.com>
+References: <1441086371-24838-1-git-send-email-ykk@rock-chips.com>
+ <1441088079-25809-1-git-send-email-ykk@rock-chips.com>
+ <CAL_JsqJDALnjVaVoEqGGsSLeE31m3MKOfbSoZ3M+g+zPZR2MFg@mail.gmail.com>
+ <55E7CC43.7040608@rock-chips.com>
+ <20150903090421.GC3784@ulmo.nvidia.com>
+ <55EBBA0C.1030100@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="gb2312"
-Content-Transfer-Encoding: base64
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <1440496734-18417-1-git-send-email-wangzhou1@hisilicon.com>
-Content-Language: en-US
-Sender: linux-pci-owner@vger.kernel.org
-To: "Wangzhou (B)" <wangzhou1@hisilicon.com>, Bjorn Helgaas <bhelgaas@google.com>, "jingoohan1@gmail.com" <jingoohan1@gmail.com>, "pratyush.anand@gmail.com" <pratyush.anand@gmail.com>, Arnd Bergmann <arnd@arndb.de>, "linux@arm.linux.org.uk" <linux@arm.linux.org.uk>, "thomas.petazzoni@free-electrons.com" <thomas.petazzoni@free-electrons.com>, "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>, "james.morse@arm.com" <james.morse@arm.com>, "Liviu.Dudau@arm.com" <Liviu.Dudau@arm.com>, "jason@lakedaemon.net" <jason@lakedaemon.net>, "robh@kernel.org" <robh@kernel.org>
-Cc: "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, zhangjukuo <zhangjukuo@huawei.com>, qiuzhenfa <qiuzhenfa@hisilicon.com>, "liudongdong (C)" <liudongdong3@huawei.com>, qiujiang <qiujiang@huawei.com>, "xuwei (O)" <xuwei5@hisilicon.com>, "Liguozhu (Kenneth)" <liguozhu@hisilicon.com>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="ftEhullJWpWg/VHq"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <55EBBA0C.1030100-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Content-Disposition: inline
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Yakir Yang <ykk-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Cc: Russell King <rmk+kernel-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Jingoo Han <jingoohan1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Inki Dae <inki.dae-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Joe Perches <joe-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org>, Kukjin Kim <kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Mark Yao <mark.yao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, djkurtz-F7+t8E8rja9Wk0Htik3J/w@public.gmane.org, dianders-F7+t8E8rja9Wk0Htik3J/w@public.gmane.org, seanpaul-F7+t8E8rja9Wk0Htik3J/w@public.gmane.org, Ajay kumar <ajaynumb-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Andrzej Hajda <a.hajda-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Kyungmin Park <kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Gustavo Padovan <gustavo.padovan-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>, Andy Yan <andy.yan-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, dri-devel <dri-devel@lists>
 List-Id: devicetree@vger.kernel.org
 
-SGkgQmpvcm4gYW5kIGFsbA0KDQpEbyB5b3UgaGF2ZSBhbnkgY29tbWVudCBvbiB0aGlzIHBhdGNo
-c2V0PyBJIHRoaW5rIHdlIHNob3VsZCBiZSBjbG9zZSB0byBhIGZpbmFsIG9uZS4uLg0KDQpUaGFu
-a3MgYW5kIFJlZ2FyZHMNCg0KR2FiDQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4g
-RnJvbTogV2FuZ3pob3UgKEIpDQo+IFNlbnQ6IDI1IEF1Z3VzdCAyMDE1IDEwOjU5DQo+IFRvOiBC
-am9ybiBIZWxnYWFzOyBqaW5nb29oYW4xQGdtYWlsLmNvbTsgcHJhdHl1c2guYW5hbmRAZ21haWwu
-Y29tOyBBcm5kDQo+IEJlcmdtYW5uOyBsaW51eEBhcm0ubGludXgub3JnLnVrOyB0aG9tYXMucGV0
-YXp6b25pQGZyZWUtZWxlY3Ryb25zLmNvbTsNCj4gR2FicmllbGUgUGFvbG9uaTsgbG9yZW56by5w
-aWVyYWxpc2lAYXJtLmNvbTsgamFtZXMubW9yc2VAYXJtLmNvbTsNCj4gTGl2aXUuRHVkYXVAYXJt
-LmNvbTsgamFzb25AbGFrZWRhZW1vbi5uZXQ7IHJvYmhAa2VybmVsLm9yZw0KPiBDYzogbGludXgt
-cGNpQHZnZXIua2VybmVsLm9yZzsgbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3Jn
-Ow0KPiBkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZzsgemhhbmdqdWt1bzsgcWl1emhlbmZhOyBs
-aXVkb25nZG9uZyAoQyk7IHFpdWppYW5nOw0KPiB4dXdlaSAoTyk7IExpZ3Vvemh1IChLZW5uZXRo
-KTsgV2FuZ3pob3UgKEIpDQo+IFN1YmplY3Q6IFtQQVRDSCB2OCAwLzZdIFBDSTogaGlzaTogQWRk
-IFBDSWUgaG9zdCBzdXBwb3J0IGZvciBIaVNpbGljb24gU29DDQo+IEhpcDA1DQo+IA0KPiBUaGlz
-IHBhdGNoc2V0IGFkZHMgUENJZSBob3N0IHN1cHBvcnQgZm9yIEhpU2lsaWNvbiBTb0MgSGlwMDUu
-IFRoZSBQQ0llIGhvc3RzDQo+IHVzZSBQQ0llIElQIGNvcmUgZnJvbSBTeW5vcHN5cywgU28gdGhp
-cyBkcml2ZXIgaXMgYmFzZSBvbiBkZXNpZ253YXJlIFBDSWUNCj4gZHJpdmVyLg0KPiANCj4gSGlw
-MDUgaXMgYW4gQVJNdjggYXJjaGl0ZWN0dXJlIFNvQy4gSXQgc2hvdWxkIGJlIGFibGUgdG8gdXNl
-IEFSTTY0IFBDSWUgQVBJIGluDQo+IGRlc2lnbmV3YXJlIFBDSWUgZHJpdmVyLiBTbyB0aGlzIHBh
-dGNoIGFsc28gYWRkcyBBUk02NCBzdXBwb3J0IGZvciBkZXNpZ253YXJlDQo+IHBjaWUuDQo+IA0K
-PiBUaGlzIHBhdGNoc2V0IGlzIGJhc2VkIG9uIHY0LjItcmMxLg0KPiANCj4gQ2hhbmdlIGZyb20g
-djc6DQo+IC0gUmVtb3ZlIHBwLT5yb290X2J1c19uciA9IDAgaW4gZHJhN3h4LCBleHlub3MsIGlt
-eDYsIGtleXN0b25lLCBsYXllcnNjYXBlLA0KPiAgIHNwZWFyMTN4eC4gUGFzcyBwcC0+YnVzbi0+
-c3RhcnQgdG8gcGNpX2NyZWF0ZV9yb290X2J1cyBhcyByb290IGJ1cyBudW1iZXIuDQo+IC0gUmVt
-b3ZlIGJ1cy1yYW5nZSBwYXJzaW5nIGluIHBjaWUtaGlzaS5jLg0KPiANCj4gQ2hhbmdlIGZyb20g
-djY6DQo+IC0gQWRkIFByYXR5dXNoJ3MgQWNrZWQtYnkgZm9yIDEvNiBhbmQgMi82Lg0KPiAtIEFk
-ZCBKYW1lcycgVGVzdGVkLWJ5IGZvciAzLzYuDQo+IA0KPiBDaGFuZ2UgZnJvbSB2NToNCj4gLSBN
-ZXJnZSAxLzYgaW4gdGhpcyBzZXJpZXMsIGRpc2N1c3Npb24gYWJvdXQgdGhpcyBjYW4gYmUgZm91
-bmQgaW4gWzFdDQo+IA0KPiBDaGFuZ2UgZnJvbSB2NDoNCj4gLSBDaGFuZ2UgdGhlIGF1dGhvciBv
-ZiAxLzUgdG8gR2FicmllbGUuDQo+IC0gTW9kaWZ5IHByb2JsZW1zIGluIDMvNSBwb2ludGVkIGJ5
-IEJqb3JuLg0KPiAtIE1vZGlmeSBzcGVsbGluZyBwcm9ibGVtcyBpbiA0LzUuDQo+IA0KPiBDaGFu
-Z2UgZnJvbSB2MzoNCj4gLSBDaGFuZ2UgMS81IHRvIHdoYXQgR2FicmllbGUgc3VnZ2VzdGVkLg0K
-PiAtIFVzZSB3aW4tPl9fcmVzLnN0YXJ0IHRvIGdldCAqX21vZF9iYXNlIGluIDIvNSwgdGhpcyBm
-aXggYSBidWcgaW4gdjMgc2VyaWVzLg0KPiANCj4gQ2hhbmdlIGZyb20gdjI6DQo+IC0gTW92ZSBz
-dHJ1Y3QgcGNpX2RldiAqZGV2IGFuZCBzdHJ1Y3QgcGNpX3N5c19kYXRhICpzeXMgaW4NCj4gICBw
-Y2liaW9zX2FsaWduX3Jlc291cmNlIGluIDEvNS4NCj4gLSBBZGQgR2FicmllbGUncyBjb2RlcyBp
-biAyLzUgd2hpY2ggZGVsZXRlIHVubmVjZXNzYXJ5IGluZm9ybWF0aW9uIHBhcnNlIGFuZA0KPiAg
-IHVzZSBvZl9wY2lfZ2V0X2hvc3RfYnJpZGdlX3Jlc291cmNlcyBmb3IgYm90aCBBUk0zMiBhbmQg
-QVJNNjQuDQo+IC0gQWRkIG1haW50YWluZXIgcGF0Y2ggNS81Lg0KPiANCj4gQ2hhbmdlIGZyb20g
-UkZDIHYxOg0KPiAtIEFkZCAxLzQgcGF0Y2ggYnkgQXJuZCB3aGljaCByZW1vdmVzIGFsaWduX3Jl
-c291cmNlIGNhbGxiYWNrIGluIEFSTQ0KPiAgIHBjaWJpb3NfYWxpZ25fcmVzb3VyY2UuDQo+IC0g
-Q2hhbmdlIGhlYWQgZmlsZSBpbiBwY2llLWRlc2lnbndhcmUgZnJvbSBhc20vaGFyZGlycS5oIHRv
-IGxpbnV4L2hhcmRpcnEuaC4NCj4gLSBTZXQgcHAtPnJvb3RfYnVzX25yID0gMCBpbiBkcmE3eHgs
-IGV4eW5vcywgaW14Niwga2V5c3RvbmUsIGxheWVyc2NhcGUsDQo+ICAgc3BlYXIxM3h4Lg0KPiAt
-IFJlbW92ZSB1bm5lY2Vzc2FyeSBwYXJlbnRoZXNlcyBvZiBzb21lIG1hY3JvcyBpbiBwY2llLWhp
-c2kuDQo+IC0gVXNlIG1hY3JvIHRvIHJlcGxhY2Ugc29tZSBtYWdpYyB2YWx1ZXMuDQo+IC0gTWVy
-Z2UgdHdvIGxvb3BzIHRvZ2V0aGVyIGFuZCBhZGQgc29tZSBjb21tZW50cyBhYm91dCBpdCBpbiBj
-b250ZXh0X2NvbmZpZw0KPiAgIGZ1bmN0aW9uIGluIHBjaWUtaGlzaS4NCj4gLSBNb2RpZnkgc29t
-ZSB2YWx1ZSBvZiBpdGVtcyBpbiBwY2llIG5vZGUgZXhhbXBsZSBpbiBiaW5kaW5nIGRvY3VtZW50
-Lg0KPiANCj4gQ2hhbmdlIGZyb20gUkZDOg0KPiAtIGRlbGV0ZSBkd19wY2llX3NldHVwLCBkd19w
-Y2llX3NjYW5fYnVzLCBkd19wY2llX21hcF9pcnEgYW5kIHN0cnVjdCBod19wY2ksDQo+ICAgbWVy
-Z2UgcmVsYXRlZCBvcGVyYXRpb25zIGludG8gZHdfcGNpZV9ob3N0X2luaXQuDQo+IA0KPiBMaW5r
-IG9mIHY3Og0KPiAtIGh0dHA6Ly93d3cuc3Bpbmljcy5uZXQvbGlzdHMvZGV2aWNldHJlZS9tc2c5
-MDY5MC5odG1sDQo+IExpbmsgb2YgdjY6DQo+IC0gaHR0cDovL3d3dy5zcGluaWNzLm5ldC9saXN0
-cy9saW51eC1wY2kvbXNnNDM2NjkuaHRtbA0KPiBMaW5rIG9mIHY1Og0KPiAtIGh0dHA6Ly93d3cu
-c3Bpbmljcy5uZXQvbGlzdHMvZGV2aWNldHJlZS9tc2c4Nzk1OS5odG1sDQo+IExpbmsgb2YgdjQ6
-DQo+IC0gaHR0cDovL3d3dy5zcGluaWNzLm5ldC9saXN0cy9hcm0ta2VybmVsL21zZzQzMzA1MC5o
-dG1sDQo+IExpbmsgb2YgdjM6DQo+IC0gaHR0cDovL3d3dy5zcGluaWNzLm5ldC9saXN0cy9saW51
-eC1wY2kvbXNnNDI1MzkuaHRtbA0KPiBMaW5rIG9mIHYyOg0KPiAtIGh0dHA6Ly93d3cuc3Bpbmlj
-cy5uZXQvbGlzdHMvbGludXgtcGNpL21zZzQxODQ0Lmh0bWwNCj4gTGluayBvZiBSRkMgdjE6DQo+
-IC0gaHR0cDovL3d3dy5zcGluaWNzLm5ldC9saXN0cy9saW51eC1wY2kvbXNnNDEzMDUuaHRtbA0K
-PiBMaW5rIG9mIFJGQzoNCj4gLSBodHRwOi8vd3d3LnNwaW5pY3MubmV0L2xpc3RzL2xpbnV4LXBj
-aS9tc2c0MDQzNC5odG1sDQo+IA0KPiBbMV0gaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvcGlw
-ZXJtYWlsL2xpbnV4LWFybS1rZXJuZWwvMjAxNS0NCj4gSnVseS8zNTk3NDEuaHRtbA0KPiANCj4g
-DQo+IFpob3UgV2FuZyAoNCk6DQo+ICAgUENJOiBkZXNpZ253YXJlOiBBZGQgQVJNNjQgc3VwcG9y
-dA0KPiAgIFBDSTogaGlzaTogQWRkIFBDSWUgaG9zdCBzdXBwb3J0IGZvciBIaVNpbGljb24gU29D
-IEhpcDA1DQo+ICAgRG9jdW1lbnRhdGlvbjogRFQ6IEFkZCBIaVNpbGljb24gUENJZSBob3N0IGJp
-bmRpbmcNCj4gICBNQUlOVEFJTkVSUzogQWRkIHBjaWUtaGlzaSBtYWludGFpbmVyDQo+IA0KPiBn
-YWJyaWVsZSBwYW9sb25pICgyKToNCj4gICBQQ0k6IGRlc2lnbndhcmU6IG1vdmUgY2FsY3VsYXRp
-b24gb2YgYnVzIGFkZHJlc3NlcyB0byBEUkE3eHgNCj4gICBBUk0vUENJOiByZW1vdmUgYWxpZ25f
-cmVzb3VyY2UgaW4gcGNpX3N5c19kYXRhDQo+IA0KPiAgLi4uL2RldmljZXRyZWUvYmluZGluZ3Mv
-cGNpL2hpc2lsaWNvbi1wY2llLnR4dCAgICAgfCAgNDYgKysrKw0KPiAgTUFJTlRBSU5FUlMgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgfCAgIDcgKw0KPiAgYXJjaC9hcm0v
-aW5jbHVkZS9hc20vbWFjaC9wY2kuaCAgICAgICAgICAgICAgICAgICAgfCAgIDUgLQ0KPiAgYXJj
-aC9hcm0va2VybmVsL2Jpb3MzMi5jICAgICAgICAgICAgICAgICAgICAgICAgICAgfCAgMTIgKy0N
-Cj4gIGRyaXZlcnMvcGNpL2hvc3QvS2NvbmZpZyAgICAgICAgICAgICAgICAgICAgICAgICAgIHwg
-ICA4ICsNCj4gIGRyaXZlcnMvcGNpL2hvc3QvTWFrZWZpbGUgICAgICAgICAgICAgICAgICAgICAg
-ICAgIHwgICAxICsNCj4gIGRyaXZlcnMvcGNpL2hvc3QvcGNpLWRyYTd4eC5jICAgICAgICAgICAg
-ICAgICAgICAgIHwgIDEzICsrDQo+ICBkcml2ZXJzL3BjaS9ob3N0L3BjaS1rZXlzdG9uZS1kdy5j
-ICAgICAgICAgICAgICAgICB8ICAgMiArLQ0KPiAgZHJpdmVycy9wY2kvaG9zdC9wY2llLWRlc2ln
-bndhcmUuYyAgICAgICAgICAgICAgICAgfCAyMzcgKysrKysrKy0tLS0tLS0tLS0tLS0NCj4gIGRy
-aXZlcnMvcGNpL2hvc3QvcGNpZS1kZXNpZ253YXJlLmggICAgICAgICAgICAgICAgIHwgIDE0ICst
-DQo+ICBkcml2ZXJzL3BjaS9ob3N0L3BjaWUtaGlzaS5jICAgICAgICAgICAgICAgICAgICAgICB8
-IDI0Nw0KPiArKysrKysrKysrKysrKysrKysrKysNCj4gIDExIGZpbGVzIGNoYW5nZWQsIDQxMyBp
-bnNlcnRpb25zKCspLCAxNzkgZGVsZXRpb25zKC0pDQo+ICBjcmVhdGUgbW9kZSAxMDA2NDQgRG9j
-dW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3BjaS9oaXNpbGljb24tcGNpZS50eHQNCj4g
-IGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL3BjaS9ob3N0L3BjaWUtaGlzaS5jDQo+IA0KPiAt
-LQ0KPiAxLjkuMQ0KDQo=
+--ftEhullJWpWg/VHq
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Sun, Sep 06, 2015 at 11:59:08AM +0800, Yakir Yang wrote:
+> Hi Thierry,
+>=20
+> =E5=9C=A8 09/03/2015 05:04 PM, Thierry Reding =E5=86=99=E9=81=93:
+> >On Thu, Sep 03, 2015 at 12:27:47PM +0800, Yakir Yang wrote:
+> >>Hi Rob,
+> >>
+> >>=E5=9C=A8 09/03/2015 04:17 AM, Rob Herring =E5=86=99=E9=81=93:
+> >>>On Tue, Sep 1, 2015 at 1:14 AM, Yakir Yang <ykk-TNX95d0MmH7DzftRWevZcw@public.gmane.org> wrote:
+> >>>>Some edp screen do not have hpd signal, so we can't just return
+> >>>>failed when hpd plug in detect failed.
+> >>>This is a property of the panel (or connector perhaps), so this
+> >>>property should be located there. At least, it is a common issue and
+> >>>not specific to this chip. We could have an HDMI connector and failed
+> >>>to hook up HPD for example. A connector node is also where hpd-gpios
+> >>>should be located instead (and are already defined by
+> >>>../bindings/video/hdmi-connector.txt). Perhaps we need a eDP connector
+> >>>binding, too.
+> >>Yep, I agree with your front point, it is a property of panel, not spec=
+ific
+> >>to eDP controller, so this code should handle in connector logic.
+> > From your description it sounds more like this is in fact a property of
+> >the panel. Or maybe I should say "quirk". If the panel doesn't generate
+> >the HPD signal, then that should be a property of the panel, not the
+> >connector. The eDP specification mandates that connectors have a HPD
+> >signal, though it allows the "HPD conductor in the connector cable" to
+> >be omitted if not used by the source. I'd consider the cable to belong
+> >to the panel rather than the connector, so absence of HPD, either
+> >because the cable doesn't have the conductor or because the panel does
+> >not generate the signal, should be a quirk of the panel.
+> >
+> >That said you could have a panel that supports HPD connected via a cable
+> >that doesn't transmit it, so this would be a per-board variant and hence
+> >should be a device tree property rather than hard-coded in some panel
+> >driver.
+> >
+> >Conversely, if the panel isn't capable of generating an HPD signal, then
+> >I don't think it would be appropriate to make it a DT property. It would
+> >be better to hard-code it in the driver, lest someone forget to set the
+> >property in DT and get stuck with a device that isn't operational.
+>=20
+> Oh, you're right, if it's a cable quirk, then DT property would be okay, =
+if
+> it
+> is a problem of panel, then maybe hard-code in driver would be better.
+>=20
+> After look up for the document of panel "innolux,n116bge", I haven't see
+> any description of hot plug signal, and even not found in PIN ASSIGNMENT.
+> So I believe it's a panel problem, that's to say it should handle in panel
+> driver.
+
+The datasheet that I have for that panel lists HPD as pin 17. Also I
+used to have a setup with that panel and I distinctly remember hotplug
+working just fine. Perhaps this is an issue with a specific variant of
+the panel? Or perhaps this is indeed a problem with the cable that's
+connecting the panel to the board. It could be one of those cases where
+they left out the HPD conductor to save money.
+
+Thierry
+
+--ftEhullJWpWg/VHq
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQIcBAABCAAGBQJV7UjBAAoJEN0jrNd/PrOhE68P/0B1Ca2qOrOsr1K0KU/AQhsk
+DwpfyUV93vVdsTaSVyinlXsMi+Dpr3kse6y94kvLudF5r0yqMVcIHEuGwq5GkVAC
+R2KexsvfBCtdIh2vF8C2zwSwpRJBmk42kWPzgcI+/Jbal4LKSoOvn3GJhalwWMxK
+zfMhsjgb2XWFQPn7rdlHQ08z8v2ZV3njHPz/SF6aaKh5L6WZTFGRRifQcBzTzJh6
+dDZ1T+MTjcDbEjOtTThhhS9976OM9NalebudYT/VQ1HZtOTCJu4s+fX2S9fltSVk
+4TFIjgs1KXOCRB0knP6ITYOaHAZoydOnoJo/FCQClj4tiWuf4g42/lukW3oeYr3/
+fNYOqfncKtSdvavtQCUUra/PvrygiZya8AvcGRVqZub/vmyqmTmPSmS4UKOr6i+j
+lzfuoP0ubWe3gjFdJafa4kbWHd15j9+PxXKAgxhkUVt7UsWAejSQMnM4scLqy9dJ
+HwwlxL8umkt1cMng4YmAIz4EIYI4P/Uu8cA+w+RtzzK7GVNOlrudtM5PrubjU33G
+DvLTucz82biGx9B+SlTjEsYFKWPeimhwEkvzXauHmDp4AHwjS9d1I245f2FmJfLd
+bJ9i/DvHwxJ9PbdLFl7P9m1kVhc9dp6MuKb4Vkm92UPmU7X9m6ls7o+uSLWN6vx2
+/OgBPesp9l+CXunS2aL9
+=DkJC
+-----END PGP SIGNATURE-----
+
+--ftEhullJWpWg/VHq--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
