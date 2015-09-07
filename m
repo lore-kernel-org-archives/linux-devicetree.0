@@ -1,84 +1,99 @@
-From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [linux-sunxi] Re: [PATCH] ARM: dts: sun4i: Add dts file for the
- pov protab2-ips9 tablet
-Date: Mon, 7 Sep 2015 11:30:03 +0200
-Message-ID: <55ED591B.7050705@redhat.com>
-References: <1441441319-10658-1-git-send-email-hdegoede@redhat.com>
- <20150906163023.GR31584@lukather> <55ED3739.609@redhat.com>
- <1441612142.14422.34.camel@plaes.org> <55ED4F8F.6080502@redhat.com>
- <1441617262.21530.4.camel@plaes.org>
+From: Mugunthan V N <mugunthanvnm@ti.com>
+Subject: [net-next PATCH v3] drivers: net: cpsw: Add support to drive gpios for ethernet to be functional
+Date: Mon, 7 Sep 2015 15:16:44 +0530
+Message-ID: <1441619204-15403-1-git-send-email-mugunthanvnm@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1441617262.21530.4.camel-q/aMd4JkU83YtjvyW6yDsg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Priit Laes <plaes-q/aMd4JkU83YtjvyW6yDsg@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: text/plain
+Return-path: <netdev-owner@vger.kernel.org>
+Sender: netdev-owner@vger.kernel.org
+To: netdev@vger.kernel.org
+Cc: "David S . Miller" <davem@davemloft.net>, Tony Lindgren <tony@atomide.com>, Sekhar Nori <nsekhar@ti.com>, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, Mugunthan V N <mugunthanvnm@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+In DRA72x EVM, by default slave 1 is connected to the onboard
+phy, but slave 2 pins are also muxed with video input module
+which is controlled by pcf857x gpio and currently to select slave
+0 to connect to phy gpio hogging is used, but with
+omap2plus_defconfig the pcf857x gpio is built as module. So when
+using NFS on DRA72x EVM, board doesn't boot as gpio hogging do
+not set proper gpio state to connect slave 0 to phy as it is
+built as module and you do not see any errors for not setting
+gpio and just mentions dhcp reply not got.
 
-On 07-09-15 11:14, Priit Laes wrote:
-> On Mon, 2015-09-07 at 10:49 +0200, Hans de Goede wrote:
->> Hi,
->>
->> On 07-09-15 09:49, Priit Laes wrote:
->>> On Mon, 2015-09-07 at 09:05 +0200, Hans de Goede wrote:
->>>> Hi,
->>>>
->>>> On 06-09-15 18:30, Maxime Ripard wrote:
->>>>> On Sat, Sep 05, 2015 at 10:21:59AM +0200, Hans de Goede wrote:
->>>>>> The Point of View protab2-ips9 is a tablet with a 9" ips
->>>>>> 1024x768
->>>>>> lcd screen,
->>>>>> microsd slot, headphones, mini hdmi, mini usb b and power
->>>>>> barrel
->>>>>> connectors.
->>>>>>
->>>>>> It uses a rtl8188cus usb wifi chip and a RDA 5875Y bluetooth
->>>>>> chip
->>>>>> attached
->>>>>> to uart2. It has a bma250 accelerometer attached to i2c1 addr
->>>>>> 0x18.
->>>>>>
->>>
->>> [...]
->>>>>
->>>>> What is connected on i2c1 ? Just the camera sensor? or it has
->>>>> some
->>>>> other devices there?
->>>>
->>>> The bma250 accelerometer sits there, and the kernel already has a
->>>> driver
->>>> for it. That driver needs to have devicetree binding support
->>>> added,
->>>> and
->>>> then we should be able to use the accelerometer.
->>>
->>> bma250 already has devicetree support. It is used in Gemei G9
->>> tablet
->>> (sun4i-gemei-g9.dts).
->>
->> Yes I've seen that, but does it actually work? I've not tried but I
->> do not see any compatible string in the actual bma250 code in the
->> kernel,
->> so I believe that this part of the sun4i-gemei-g9.dts file does not
->> work ?
->
-> It worked (even without IRQs) when I submitted the patch. Driver itself
-> is under iio/accel/bma180.c
+To solve this issue, introducing "mode-gpios" in DT when gpio
+based muxing is required. This will throw a warning when gpio
+get fails and returns probe defer. When gpio-pcf857x module is
+installed, cpsw probes again and ethernet becomes functional.
+Verified this on DRA72x with pcf as module and ramdisk.
 
-That is really weird, because:
+Signed-off-by: Mugunthan V N <mugunthanvnm@ti.com>
+---
 
-https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git/tree/drivers/iio/accel/bma180.c
+Changes from v2:
+* Used mode-gpios, so that the driver is generic enough to handle
+  multiple gpios
 
-Does not have an of_match_table ... ??
+This patch is tested on DRA72x, Logs [1] and pushed a branch [2]
 
-Regards,
+[1]: http://pastebin.ubuntu.com/12306224/
+[2]: git://git.ti.com/~mugunthanvnm/ti-linux-kernel/linux.git cpsw-gpio-optional-v3
 
-Hans
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+---
+ Documentation/devicetree/bindings/net/cpsw.txt | 7 +++++++
+ drivers/net/ethernet/ti/cpsw.c                 | 9 +++++++++
+ 2 files changed, 16 insertions(+)
+
+diff --git a/Documentation/devicetree/bindings/net/cpsw.txt b/Documentation/devicetree/bindings/net/cpsw.txt
+index a9df21a..676ecf6 100644
+--- a/Documentation/devicetree/bindings/net/cpsw.txt
++++ b/Documentation/devicetree/bindings/net/cpsw.txt
+@@ -30,6 +30,13 @@ Optional properties:
+ - dual_emac		: Specifies Switch to act as Dual EMAC
+ - syscon		: Phandle to the system control device node, which is
+ 			  the control module device of the am33x
++- mode-gpios		: Should be added if one/multiple gpio lines are
++			  required to be driven so that cpsw data lines
++			  can be connected to the phy via selective mux.
++			  For example in dra72x-evm, pcf gpio has to be
++			  driven low so that cpsw slave 0 and phy data
++			  lines are connected via mux.
++
+ 
+ Slave Properties:
+ Required properties:
+diff --git a/drivers/net/ethernet/ti/cpsw.c b/drivers/net/ethernet/ti/cpsw.c
+index 8fc90f1..c670317 100644
+--- a/drivers/net/ethernet/ti/cpsw.c
++++ b/drivers/net/ethernet/ti/cpsw.c
+@@ -29,6 +29,7 @@
+ #include <linux/workqueue.h>
+ #include <linux/delay.h>
+ #include <linux/pm_runtime.h>
++#include <linux/gpio.h>
+ #include <linux/of.h>
+ #include <linux/of_net.h>
+ #include <linux/of_device.h>
+@@ -2207,6 +2208,7 @@ static int cpsw_probe(struct platform_device *pdev)
+ 	void __iomem			*ss_regs;
+ 	struct resource			*res, *ss_res;
+ 	const struct of_device_id	*of_id;
++	struct gpio_descs		*mode;
+ 	u32 slave_offset, sliver_offset, slave_size;
+ 	int ret = 0, i;
+ 	int irq;
+@@ -2232,6 +2234,13 @@ static int cpsw_probe(struct platform_device *pdev)
+ 		goto clean_ndev_ret;
+ 	}
+ 
++	mode = devm_gpiod_get_array_optional(&pdev->dev, "mode", GPIOD_OUT_LOW);
++	if (IS_ERR(mode)) {
++		ret = PTR_ERR(mode);
++		dev_err(&pdev->dev, "gpio request failed, ret %d\n", ret);
++		goto clean_ndev_ret;
++	}
++
+ 	/*
+ 	 * This may be required here for child devices.
+ 	 */
+-- 
+2.6.0.rc0.24.gec371ff
