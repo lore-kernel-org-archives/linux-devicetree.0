@@ -1,54 +1,28 @@
-From: Ludovic Desroches <ludovic.desroches@atmel.com>
-Subject: Re: [PATCH 0/5] New Atmel PIO4 pinctrl/gpio driver
-Date: Mon, 7 Sep 2015 15:12:10 +0200
-Message-ID: <20150907131210.GC32379@odux.rfo.atmel.com>
-References: <1439281685-3020-1-git-send-email-ludovic.desroches@atmel.com>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH 0/4] MIPS: ath79: Add USB support on the TL-WR1043ND
+Date: Mon, 07 Sep 2015 15:20:42 +0200
+Message-ID: <3589971.cbF7muh57v@wuerfel>
+References: <1441120994-31476-1-git-send-email-albeu@free.fr>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Return-path: <linux-gpio-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1439281685-3020-1-git-send-email-ludovic.desroches@atmel.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-Cc: s.hauer@pengutronix.de, linus.walleij@linaro.org, nicolas.ferre@atmel.com, alexandre.belloni@free-electrons.com, Ludovic Desroches <ludovic.desroches@atmel.com>
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1441120994-31476-1-git-send-email-albeu@free.fr>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Alban Bedel <albeu@free.fr>
+Cc: linux-mips@linux-mips.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Ralf Baechle <ralf@linux-mips.org>, Kishon Vijay Abraham I <kishon@ti.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Sascha,
+On Tuesday 01 September 2015 17:23:10 Alban Bedel wrote:
+> 
+> this serie add a driver for the USB phy on the ATH79 SoCs and enable the
+> USB port on the TL-WR1043ND. The phy controller is really trivial as it
+> only use reset lines.
+> 
 
-Any comments about this version? Maybe you missed it since you answered
-me on the RFC version. Of course I'll do the changes you requested for
-the next version (remove gpio_request_*() stuff and add macros for gpio
-muxing case).
+Is this a common thing to have? If other PHY devices are like this, we
+could instead add a simple generic PHY driver that just asserts all
+its reset lines in the order as provided, rather than making this a
+hardware specific driver that ends up getting copied several times.
 
-Thanks
-
-Ludovic
-
-On Tue, Aug 11, 2015 at 10:28:00AM +0200, Ludovic Desroches wrote:
-> Hi,
-> 
-> The Atmel PIO4 controller has been introduced with SAMA5D2 chip family. This
-> drivers manages both pinmux/pinconf and gpio stuff. It is inspired by Mediatek
-> pinctrl driver.
-> 
-> Ludovic Desroches (5):
->   pinctrl: introduce driver for Atmel PIO4 controller
->   pinctrl: dt-binding: Add DT binding documentation for Atmel PIO4
->   MAINTAINERS: Add an entry for pinctrl-at91-pio4
->   ARM: at91/dt: sama5d2: add pio controller node
->   ARM: at91/defconfig: sama5: add PIO4 controller support
-> 
->  .../bindings/pinctrl/atmel,at91-pio4-pinctrl.txt   |   90 ++
->  MAINTAINERS                                        |    7 +
->  arch/arm/boot/dts/sama5d2.dtsi                     |   14 +
->  arch/arm/mach-at91/Kconfig                         |    1 +
->  drivers/pinctrl/Kconfig                            |   13 +
->  drivers/pinctrl/Makefile                           |    1 +
->  drivers/pinctrl/pinctrl-at91-pio4.c                | 1063 ++++++++++++++++++++
->  7 files changed, 1189 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/pinctrl/atmel,at91-pio4-pinctrl.txt
->  create mode 100644 drivers/pinctrl/pinctrl-at91-pio4.c
-> 
-> -- 
-> 2.5.0
-> 
+	Arnd
