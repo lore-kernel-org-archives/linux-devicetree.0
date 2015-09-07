@@ -1,56 +1,59 @@
-From: Sanchayan Maity <maitysanchayan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH v10 4/4] nvmem: Add DT binding documentation for Vybrid OCOTP driver
-Date: Mon,  7 Sep 2015 13:51:38 +0530
-Message-ID: <1cec2239c020d4519aad38f42f09bf26b3d2854a.1441609625.git.maitysanchayan@gmail.com>
-References: <cover.1441609625.git.maitysanchayan@gmail.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <cover.1441609625.git.maitysanchayan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-In-Reply-To: <cover.1441609625.git.maitysanchayan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-References: <cover.1441609625.git.maitysanchayan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org
-Cc: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, stefan-XLVq0VzYD2Y@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Sanchayan Maity <maitysanchayan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+From: <Yuantian.Tang@freescale.com>
+Subject: [PATCH 1/3] Revert "ahci: added support for Freescale AHCI sata"
+Date: Mon, 7 Sep 2015 16:23:14 +0800
+Message-ID: <1441614196-4284-1-git-send-email-Yuantian.Tang@freescale.com>
+Mime-Version: 1.0
+Content-Type: text/plain
+Return-path: <linux-ide-owner@vger.kernel.org>
+Sender: linux-ide-owner@vger.kernel.org
+To: hdegoede@redhat.com
+Cc: tj@kernel.org, linux-ide@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Tang Yuantian <Yuantian.Tang@freescale.com>
 List-Id: devicetree@vger.kernel.org
 
-Add the devicetree bindings for the Freescale Vybrid On-Chip
-OTP driver.
+From: Tang Yuantian <Yuantian.Tang@freescale.com>
 
-Signed-off-by: Sanchayan Maity <maitysanchayan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Acked-by: Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+This reverts commit 5163fb62541e
+("ahci: added support for Freescale AHCI sata")
+
+The reverted patch added Freescale QorIQ AHCI sata support to
+ahci_platform driver though, but it left SoC specific settings to uboot.
+It leads to QorIQ sata heavily depending on uboot. In order to removing
+the dependency we first revert the old patch and then will add a new driver
+for QorIQ SATA.
+Since there are no LS* platforms that have been upstreamed, So
+the revert would not break anything exists.
+
+Signed-off-by: Tang Yuantian <Yuantian.Tang@freescale.com>
 ---
- .../devicetree/bindings/nvmem/vf610-ocotp.txt         | 19 +++++++++++++++++++
- 1 file changed, 19 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/nvmem/vf610-ocotp.txt
+ Documentation/devicetree/bindings/ata/ahci-platform.txt | 2 --
+ drivers/ata/ahci_platform.c                             | 1 -
+ 2 files changed, 3 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/nvmem/vf610-ocotp.txt b/Documentation/devicetree/bindings/nvmem/vf610-ocotp.txt
-new file mode 100644
-index 0000000..56ed481
---- /dev/null
-+++ b/Documentation/devicetree/bindings/nvmem/vf610-ocotp.txt
-@@ -0,0 +1,19 @@
-+On-Chip OTP Memory for Freescale Vybrid
-+
-+Required Properties:
-+  compatible:
-+  - "fsl,vf610-ocotp" for VF5xx/VF6xx
-+  #address-cells : Should be 1
-+  #size-cells : Should be 1
-+  reg : Address and length of OTP controller and fuse map registers
-+  clocks : ipg clock we associate with the OCOTP peripheral
-+
-+Example for Vybrid VF5xx/VF6xx:
-+
-+	ocotp: ocotp@400a5000 {
-+		compatible = "fsl,vf610-ocotp";
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		reg = <0x400a5000 0xCF0>;
-+		clocks = <&clks VF610_CLK_OCOTP>;
-+	};
+diff --git a/Documentation/devicetree/bindings/ata/ahci-platform.txt b/Documentation/devicetree/bindings/ata/ahci-platform.txt
+index a232181..c2340ee 100644
+--- a/Documentation/devicetree/bindings/ata/ahci-platform.txt
++++ b/Documentation/devicetree/bindings/ata/ahci-platform.txt
+@@ -16,8 +16,6 @@ Required properties:
+   - "snps,dwc-ahci"
+   - "snps,exynos5440-ahci"
+   - "snps,spear-ahci"
+-  - "fsl,qoriq-ahci" : for qoriq series socs which include ls1021, ls2085, etc.
+-  - "fsl,<chip>-ahci" : chip could be ls1021, ls2085 etc.
+   - "generic-ahci"
+ - interrupts        : <interrupt mapping for SATA IRQ>
+ - reg               : <registers mapping>
+diff --git a/drivers/ata/ahci_platform.c b/drivers/ata/ahci_platform.c
+index 1befb11..04975b8 100644
+--- a/drivers/ata/ahci_platform.c
++++ b/drivers/ata/ahci_platform.c
+@@ -76,7 +76,6 @@ static const struct of_device_id ahci_of_match[] = {
+ 	{ .compatible = "ibm,476gtr-ahci", },
+ 	{ .compatible = "snps,dwc-ahci", },
+ 	{ .compatible = "hisilicon,hisi-ahci", },
+-	{ .compatible = "fsl,qoriq-ahci", },
+ 	{},
+ };
+ MODULE_DEVICE_TABLE(of, ahci_of_match);
 -- 
-2.5.1
+2.1.0.27.g96db324
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
