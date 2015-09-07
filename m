@@ -1,104 +1,123 @@
-From: vikas <vikas.manocha-qxv4g6HH51o@public.gmane.org>
-Subject: Re: [PATCH 2/2] mtd: spi-nor: Add driver for Cadence Quad SPI Flash
- Controller.
-Date: Mon, 7 Sep 2015 13:27:11 -0700
-Message-ID: <55EDF31F.6010607@st.com>
-References: <1440148851-14621-1-git-send-email-marex@denx.de> <1440148851-14621-2-git-send-email-marex@denx.de> <55EA2CFD.6060300@st.com> <201509061716.27521.marex@denx.de> <55EDDDCC.7060006@st.com>
+From: Rob Herring <robherring2@gmail.com>
+Subject: Re: [PATCH v4 0/22] On-demand device probing
+Date: Mon, 7 Sep 2015 15:50:44 -0500
+Message-ID: <CAL_Jsq+E31JaPcp5ELS_ztSqgSrK7U4OzB9xNcNz01Ayrrm+Yg@mail.gmail.com>
+References: <1441628627-5143-1-git-send-email-tomeu.vizoso@collabora.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <55EDDDCC.7060006-qxv4g6HH51o@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>
-Cc: "linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Graham Moore <grmoore-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>, Alan Tull <atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Dinh Nguyen <dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>, Yves Vandervennet <yvanderv-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-acpi-owner@vger.kernel.org>
+In-Reply-To: <1441628627-5143-1-git-send-email-tomeu.vizoso@collabora.com>
+Sender: linux-acpi-owner@vger.kernel.org
+To: Tomeu Vizoso <tomeu.vizoso@collabora.com>
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Stephen Warren <swarren@wwwdotorg.org>, Javier Martinez Canillas <javier@osg.samsung.com>, Mark Brown <broonie@kernel.org>, Thierry Reding <thierry.reding@gmail.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linus Walleij <linus.walleij@linaro.org>, "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>, "linux-fbdev@vger.kernel.org" <linux-fbdev@vger.kernel.org>, Linux USB List <linux-usb@vger.kernel.org>, Felipe Balbi <balbi@ti.com>, Linux PWM List <linux-pwm@vger.kernel.org>, =?UTF-8?Q?Terje_Bergstr=C3=B6m?= <tbergstrom@nvidia.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+On Mon, Sep 7, 2015 at 7:23 AM, Tomeu Vizoso <tomeu.vizoso@collabora.co=
+m> wrote:
+> Hello,
+>
+> I have a problem with the panel on my Tegra Chromebook taking longer
+> than expected to be ready during boot (St=C3=A9phane Marchesin report=
+ed what
+> is basically the same issue in [0]), and have looked into ordered
+> probing as a better way of solving this than moving nodes around in t=
+he
+> DT or playing with initcall levels and linking order.
+>
+> While reading the thread [1] that Alexander Holler started with his
+> series to make probing order deterministic, it occurred to me that it
+> should be possible to achieve the same by probing devices as they are
+> referenced by other devices.
+>
+> This basically reuses the information that is already implicit in the
+> probe() implementations, saving us from refactoring existing drivers =
+or
+> adding information to DTBs.
+>
+> During review of v1 of this series Linus Walleij suggested that it
+> should be the device driver core to make sure that dependencies are
+> ready before probing a device. I gave this idea a try [2] but Mark Br=
+own
+> pointed out to the logic duplication between the resource acquisition
+> and dependency discovery code paths (though I think it's fairly minor=
+).
+>
+> To address that code duplication I experimented with Arnd's devm_prob=
+e
+> [3] concept of having drivers declare their dependencies instead of
+> acquiring them during probe, and while it worked [4], I don't think w=
+e
+> end up winning anything when compared to just probing devices on-dema=
+nd
+> from resource getters.
+>
+> One remaining objection is to the "sprinkling" of calls to
+> of_device_probe() in the resource getters of each subsystem, but I th=
+ink
+> it's the right thing to do given that the storage of resources is
+> currently subsystem-specific.
+>
+> We could avoid the above by moving resource storage into the core, bu=
+t I
+> don't think there's a compelling case for that.
+>
+> I have tested this on boards with Tegra, iMX.6, Exynos, Rockchip and
+> OMAP SoCs, and these patches were enough to eliminate all the deferre=
+d
+> probes (except one in PandaBoard because omap_dma_system doesn't have=
+ a
+> firmware node as of yet).
+>
+> Have submitted a branch [5] with only these patches on top of thursda=
+y's
+> linux-next to kernelci.org and I don't see any issues that could be
+> caused by them. For some reason it currently has more passes than the
+> version of -next it's based on!
+>
+> With this series I get the kernel to output to the panel in 0.5s,
+> instead of 2.8s.
+>
+> Regards,
+>
+> Tomeu
+>
+> [0] http://lists.freedesktop.org/archives/dri-devel/2014-August/06652=
+7.html
+>
+> [1] https://lkml.org/lkml/2014/5/12/452
+>
+> [2] https://lkml.org/lkml/2015/6/17/305
+>
+> [3] http://article.gmane.org/gmane.linux.ports.arm.kernel/277689
+>
+> [4] https://lkml.org/lkml/2015/7/21/441a
+>
+> [5] https://git.collabora.com/cgit/user/tomeu/linux.git/log/?h=3Don-d=
+emand-probes-v6
+>
+> [6] http://kernelci.org/boot/all/job/collabora/kernel/v4.2-11902-g25d=
+80c927f8b/
+>
+> [7] http://kernelci.org/boot/all/job/next/kernel/next-20150903/
+>
+> Changes in v4:
+> - Added bus.pre_probe callback so the probes of Primecell devices can=
+ be
+>   deferred if their device IDs cannot be yet read because of the cloc=
+k
+>   driver not having probed when they are registered. Maybe this goes
+>   overboard and the matching information should be in the DT if there=
+ is
+>   one.
 
-On 09/07/2015 11:56 AM, vikas wrote:
-> Hi,
-> 
-> On 09/06/2015 08:16 AM, Marek Vasut wrote:
->> On Saturday, September 05, 2015 at 01:45:01 AM, vikas wrote:
->>> Hi,
->>>
->>> On 08/21/2015 02:20 AM, Marek Vasut wrote:
->>>> From: Graham Moore <grmoore-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
->>>>
->>>> Add support for the Cadence QSPI controller. This controller is
->>>> present in the Altera SoCFPGA SoCs and this driver has been tested
->>>> on the Cyclone V SoC.
->>>
->>> can we add info about the modes supported/not supported like direct mode,
->>> indirect etc.
->>
->> It's already part of the documentation.
-> 
-> To be clear, add info for modes supported in the driver. e.g. Direct mode is not supported in the driver.
-> Lets add this info to help users.
-> 
->>
->>>> Signed-off-by: Graham Moore <grmoore-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
->>>> Signed-off-by: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>
->>>> Cc: Alan Tull <atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
->>>> Cc: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->>>> Cc: David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>
->>>> Cc: Dinh Nguyen <dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
->>>> Cc: Graham Moore <grmoore-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
->>>> Cc: Vikas MANOCHA <vikas.manocha-qxv4g6HH51o@public.gmane.org>
->>>> Cc: Yves Vandervennet <yvanderv-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
->>>> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
->>>> ---
->>
->> [...]
->>
->>>> +#define CQSPI_REG_CMDADDRESS                   0x94
->>>> +#define CQSPI_REG_CMDREADDATALOWER             0xA0
->>>> +#define CQSPI_REG_CMDREADDATAUPPER             0xA4
->>>> +#define CQSPI_REG_CMDWRITEDATALOWER            0xA8
->>>> +#define CQSPI_REG_CMDWRITEDATAUPPER            0xAC
->>>> +
+Seems overboard to me or at least a separate problem. Most clocks have
+to be setup before the driver model simply because timers depend on
+clocks usually.
 
-
-[...]
-
->>>> +
->>>> +       /* Clear all interrupts. */
->>>> +       writel(CQSPI_IRQ_STATUS_MASK, reg_base + CQSPI_REG_IRQSTATUS);
->>>> +
->>>> +       writel(CQSPI_IRQ_MASK_RD, reg_base + CQSPI_REG_IRQMASK);
->>>
->>> I think there is no need for separate masks for read & write. Use one mask
->>> & configure it once in the init rather than configuring each time for
->>> every read/write. Then in the ISR, take action as per the interrupt
->>> source: read/write/error condition etc.
->>
->> Setting up the specific IRQ mask prevents spurious interrupts during the
->> particular IO operation, so this solution looks more precise to me.
-> 
-> spurious interrupt ? like ?
-> 
-> Configuring interrupt at one time for read/write (preferably in init) is better software design
-> then breaking it in for every read/write.
-
-just to clarify "preferably in init" not always but yes in this case.
-
-Cheers,
-Vikas
-
-> 
->>
->>>> +
->>>> +       reinit_completion(&cqspi->transfer_complete);
->>>> +       writel(CQSPI_REG_INDIRECTRD_START_MASK,
->>>> +              reg_base + CQSPI_REG_INDIRECTRD);
->>>> +
->>>> +       while (remaining > 0) {
->>>> +               ret =
-
-[...]
+Rob
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To unsubscribe from this list: send the line "unsubscribe linux-acpi" i=
+n
+the body of a message to majordomo@vger.kernel.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
