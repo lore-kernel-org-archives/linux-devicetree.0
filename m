@@ -1,71 +1,88 @@
-From: Constantine Shulyupin <const@MakeLinux.com>
-Subject: [PATCH v3] Documentation: add Device tree bindings for hwmon/nct7802
-Date: Tue,  8 Sep 2015 01:27:47 +0300
-Message-ID: <1441664902-32360-1-git-send-email-const@MakeLinux.com>
+From: Frank Rowand <frowand.list@gmail.com>
+Subject: Re: [PATCH] of_pci_irq: Silence bogus "of_irq_parse_pci() failed
+ ..." messages.
+Date: Mon, 07 Sep 2015 16:44:58 -0700
+Message-ID: <55EE217A.5090301@gmail.com>
+References: <1441393926-23225-1-git-send-email-ddaney.cavm@gmail.com> <55EA41E3.5010103@gmail.com> <CAL_JsqK0uW4F7HAcUMSQ-2wCvp_i3a5MTxsyW3XerHAxBrW=SQ@mail.gmail.com> <55ECF37D.7050401@gmail.com> <55ED099B.2000009@gmail.com>
+Reply-To: frowand.list@gmail.com
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <55ED099B.2000009@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Constantine Shulyupin <const@MakeLinux.com>, "open list:OPEN FIRMWARE AND FLATTENED
-	DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
-Cc: linux@roeck-us.net
+To: frowand.list@gmail.com
+Cc: Rob Herring <robherring2@gmail.com>, David Daney <ddaney.cavm@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Grant Likely <grant.likely@linaro.org>, David Daney <david.daney@cavium.com>
 List-Id: devicetree@vger.kernel.org
 
-Add add Device tree bindings for registers
-which are not covered by hwmon ABI and are required to
-configure specific HW.
----
+On 9/6/2015 8:50 PM, Frank Rowand wrote:
+> On 9/6/2015 7:16 PM, Frank Rowand wrote:
+>> On 9/6/2015 1:46 PM, Rob Herring wrote:
+>>> On Fri, Sep 4, 2015 at 8:14 PM, Frank Rowand <frowand.list@gmail.com> wrote:
+>>>> On 9/4/2015 12:12 PM, David Daney wrote:
+>>>>> From: David Daney <david.daney@cavium.com>
+>>>>>
+>>>>> It is perfectly legitimate for a PCI device to have an
+>>>>> PCI_INTERRUPT_PIN value of zero.  This happens if the device doesn't
+>>>>> use interrupts, or on PCIe devices, where only MSI/MSI-X are
+>>>>> supported.
+>>>>>
+>>>>> Silence the annoying "of_irq_parse_pci() failed with rc=-19" error
+>>>>> messages by making them conditional on !-ENODEV (which can only be
+>>>>> produced in the PCI_INTERRUPT_PIN == 0 case).
+>>>>>
+>>>>> Signed-off-by: David Daney <david.daney@cavium.com>
+>>>>> ---
+>>>>>  drivers/of/of_pci_irq.c | 4 +++-
+>>>>>  1 file changed, 3 insertions(+), 1 deletion(-)
+>>>>>
+>>>>> diff --git a/drivers/of/of_pci_irq.c b/drivers/of/of_pci_irq.c
+>>>>> index 1710d9d..33d242a 100644
+>>>>> --- a/drivers/of/of_pci_irq.c
+>>>>> +++ b/drivers/of/of_pci_irq.c
+>>>>> @@ -106,7 +106,9 @@ int of_irq_parse_and_map_pci(const struct pci_dev *dev, u8 slot, u8 pin)
+>>>>>
+>>>>>       ret = of_irq_parse_pci(dev, &oirq);
+>>>>>       if (ret) {
+>>>>> -             dev_err(&dev->dev, "of_irq_parse_pci() failed with rc=%d\n", ret);
+>>>>> +             if (ret != -ENODEV)
+>>>>> +                     dev_err(&dev->dev,
+>>>>> +                             "of_irq_parse_pci() failed with rc=%d\n", ret);
+>>>>>               return 0; /* Proper return code 0 == NO_IRQ */
+>>>>>       }
+>>>>>
+>>>>>
+>>>>
+>>>> It is not safe to assume that the functions that of_irq_parse_pci() calls
+>>>> will never be modified to return -ENODEV, thus resulting in of_irq_parse_pci()
+>>>> returning -ENODEV for a reason other than PCI_INTERRUPT_PIN == 0.
+>>>
+>>> Yes, but we're talking about a print statement.
+>>>
+>>>>
+>>>> A more robust solution would be something like:
+>>
+>> < snip my bad solution >
+>>
+>>>> I'm not sure I like my solution, there might be a better way.
+>>>
+>>> I don't like it. That's way too complex for just silencing an
+>>> erroneous error message.
+>>>
+>>> Perhaps just move the error message into of_irq_parse_pci and then you
+>>> can control the print more easily. Or just change to dev_dbg would be
+>>> okay by me.
+>>
+>> I knew I was making it way too hard.  Yes, just move the error message
+>> to of_irq_parse_pci(), where the "/* No pin, exit */" test occurs.
+> 
+> And this time I replied too quickly, not really thinking through my comment.
+> There are several error return points in of_irq_parse_pci(), so moving the
+> error message into of_irq_parse_pci() is not the answer.
 
-Changed in v3:
-- Fixed vendor prefix
-- Added short registers description,
-  full registers description is available at
-https://www.nuvoton.com/hq/products/cloud-computing/hardware-monitors/desktop-server-series/nct7802y/
+                                        is not the answer unless of_irq_parse_pci()
+  is changed over to the single point of return style.
 
-Changed in v2:
-- Removed nct7802,reg-init
-- Added registers initialization by names
+I realized I should have typed the whole thought...
 
-Introduced in v1:
- - nct7802,reg-init
-
-Signed-off-by: Constantine Shulyupin <const@MakeLinux.com>
----
- .../devicetree/bindings/hwmon/nct7802.txt          | 28 ++++++++++++++++++++++
- 1 file changed, 28 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/hwmon/nct7802.txt
-
-diff --git a/Documentation/devicetree/bindings/hwmon/nct7802.txt b/Documentation/devicetree/bindings/hwmon/nct7802.txt
-new file mode 100644
-index 0000000..5b4c3fe
---- /dev/null
-+++ b/Documentation/devicetree/bindings/hwmon/nct7802.txt
-@@ -0,0 +1,28 @@
-+Nuvoton NCT7802Y Hardware Monitoring IC
-+
-+Required node properties:
-+
-+ - "compatible": must be "nuvoton,nct7802"
-+ - "reg": I2C bus address of the device
-+
-+Optional properties:
-+
-+One byte registers:
-+ - nuvoton,start - Start register at index 0x21
-+ - nuvoton,mode - Mode register at index 0x22
-+ - nuvoton,en_peci - PECI enable register at index 0x23
-+ - nuvoton,en_fan - Fan Enable Register at index 0x24
-+ - nuvoton,en_v - voltage monitor enable register
-+		  at index 0x25
-+
-+A detailed datasheet for registers and the device is
-+available at Nuvoton web site.
-+
-+Example nct7802 node:
-+
-+nct7802 {
-+	compatible = "nuvoton,nct7802";
-+	reg = <0x2a>;
-+	nuvoton,start = <0x01>;
-+	nuvoton,mode = <0x7E>; // RTD1_MD = 2
-+};
--- 
-1.9.1
+-Frank
