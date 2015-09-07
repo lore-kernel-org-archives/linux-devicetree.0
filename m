@@ -1,216 +1,340 @@
-From: Ulf Hansson <ulf.hansson@linaro.org>
-Subject: Re: [PATCH v2 5/7] staging: board: Add support for devices with
- complex dependencies
-Date: Mon, 7 Sep 2015 13:45:05 +0200
-Message-ID: <CAPDyKFrRhaShh9x8jxsGFdtFF8_VEF4=GCFEmKR-m7fVD4ZyRQ@mail.gmail.com>
-References: <1434530336-15073-1-git-send-email-geert+renesas@glider.be>
-	<1434530336-15073-6-git-send-email-geert+renesas@glider.be>
-	<CAPDyKFqouMeTKuXyyohH-VDmWXH+TiLNDT-7MKFa_-TqeF2WSw@mail.gmail.com>
-	<CAMuHMdUiH+WZnPtnM-HNs-SpZ8ZxULiKeAiTC1ONTJoP3YMXKg@mail.gmail.com>
-	<CAPDyKFriANthZbDcAQT8WXM2Z857p9+-UZB+woss04ZwM-97ZA@mail.gmail.com>
-	<alpine.DEB.2.10.1509041616140.8359@ayla.of.borg>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <alpine.DEB.2.10.1509041616140.8359@ayla.of.borg>
-Sender: linux-pm-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Geert Uytterhoeven <geert+renesas@glider.be>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Simon Horman <horms+renesas@verge.net.au>, Magnus Damm <damm+renesas@opensource.se>, Arnd Bergmann <arnd@arndb.de>, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>, Marc Zyngier <marc.zyngier@arm.com>, driverdevel <devel@driverdev.osuosl.org>, Linux-sh list <linux-sh@vger.kernel.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+From: "Ivan T. Ivanov" <ivan.ivanov@linaro.org>
+Subject: [PATCH v4] usb: chipidea: Use extcon framework for VBUS and ID detect
+Date: Mon,  7 Sep 2015 14:45:25 +0300
+Message-ID: <1441626325-20983-1-git-send-email-ivan.ivanov@linaro.org>
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Peter Chen <Peter.Chen@freescale.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Antoine Tenart <antoine.tenart@free-electrons.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org, linux-arm-msm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 4 September 2015 at 17:03, Geert Uytterhoeven <geert@linux-m68k.org> wrote:
->         Hi Ulf,
->
-> On Fri, 4 Sep 2015, Ulf Hansson wrote:
->> On 3 September 2015 at 15:35, Geert Uytterhoeven <geert@linux-m68k.org> wrote:
->> > On Thu, Sep 3, 2015 at 2:53 PM, Ulf Hansson <ulf.hansson@linaro.org> wrote:
->> >> On 17 June 2015 at 10:38, Geert Uytterhoeven <geert+renesas@glider.be> wrote:
->> >>> Add support for easy registering of one ore more platform devices that
->> >>> may:
->> >>>   - need clocks that are described in DT,
->> >>>   - be part of a PM Domain.
->> >
->> >>> diff --git a/drivers/staging/board/board.c b/drivers/staging/board/board.c
->> >>> index 8712f566b31196e0..29d456e29f38feac 100644
->> >>> --- a/drivers/staging/board/board.c
->> >>> +++ b/drivers/staging/board/board.c
->> >
->> >>> +int __init board_staging_register_device(const struct board_staging_dev *dev)
->> >>> +{
->> >>> +       struct platform_device *pdev = dev->pdev;
->> >>> +       unsigned int i;
->> >>> +       int error;
->> >>> +
->> >>> +       pr_debug("Trying to register device %s\n", pdev->name);
->> >>> +       if (board_staging_dt_node_available(pdev->resource,
->> >>> +                                           pdev->num_resources)) {
->> >>> +               pr_warn("Skipping %s, already in DT\n", pdev->name);
->> >>> +               return -EEXIST;
->> >>> +       }
->> >>> +
->> >>> +       board_staging_gic_fixup_resources(pdev->resource, pdev->num_resources);
->> >>> +
->> >>> +       for (i = 0; i < dev->nclocks; i++)
->> >>> +               board_staging_register_clock(&dev->clocks[i]);
->> >>> +
->> >>> +       error = platform_device_register(pdev);
->> >>> +       if (error) {
->> >>> +               pr_err("Failed to register device %s (%d)\n", pdev->name,
->> >>> +                      error);
->> >>> +               return error;
->> >>> +       }
->> >>> +
->> >>> +       if (dev->domain)
->> >>> +               __pm_genpd_name_add_device(dev->domain, &pdev->dev, NULL);
->> >>
->> >> Urgh, this managed to slip through my filters.
->> >>
->> >> It seems like we almost managed to remove all users of the
->> >> "..._name_add..." APIs for genpd. If hasn't been for $subject patch.
->> >> :-)
->> >>
->> >> Now, I realize this is already too late here, but let's try to fix
->> >> this before it turns into a bigger issue.
->> >>
->> >> Geert, do you think it's possible to convert into using the non-named
->> >> bases APIs?
->> >
->> > That will be difficult. This code is meant to use drivers that are not yet
->> > DT-aware on DT-based systems. Hence it uses platform devices with named PM
->> > domains, while the PM domains are described in DT.
->> > I don't think there's another way to look up a PM domain by name, is there?
->>
->> As a matter of fact there are, especially for those genpds that has
->> been created through DT as in this case. The API to use is
->> of_genpd_get_from_provider() to find the struct generic_pm_domain.
->
-> Thanks!
->
->> Yes, I do realize that you need to manage the parsing of the domain
->> name to make sure it's the one you want, but I would rather keep that
->> "hack" in this driver than in the generic API.
->
-> OK. It turned out not to be that complex, cfr. the patch below.
-> For now this supports PM domains with "#power-domain-cells = <0>" only,
-> but of course it can be extended if the need arises.
->
-> I've also tried:
->
->     np = of_find_compatible_node(NULL, NULL, "renesas,sysc-rmobile");
->     np = of_find_node_by_name(np, "a4lc");
->
-> (the second step is needed because of the domain hierarchy in DT), but that
-> would require adding the compatible string to struct board_staging_dev,
-> and doesn't work if you have multiple identical power providers.
->
-> I hope you like it?
->
-> From 5fb11904845eb929a5b3382a9d5153c151cde1cf Mon Sep 17 00:00:00 2001
-> From: Geert Uytterhoeven <geert+renesas@glider.be>
-> Date: Fri, 4 Sep 2015 16:52:33 +0200
-> Subject: [PATCH/RFC] staging: board: Migrate away from
->  __pm_genpd_name_add_device()
->
-> The named genpd APIs are deprecated. Hence convert the board staging
-> code from using genpd names to DT node paths.
->
-> For now this supports PM domains with "#power-domain-cells = <0>" only.
->
-> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+On recent Qualcomm platforms VBUS and ID lines are not routed to
+USB PHY LINK controller. Use extcon framework to receive connect
+and disconnect ID and VBUS notification.
 
-Geert, thanks for posting this patch!
+Signed-off-by: Ivan T. Ivanov <ivan.ivanov@linaro.org>
+---
 
-I wonder whether we could get this sent for the 4.3 rc[n], since that
-would enable us to remove some of the named based API for genpd
-through Rafael's linux-pm tree during this release cycle.
+Changes sice v3 [1]:
 
-Reviewed-by: Ulf Hansson <ulf.hansson@linaro.org>
+* Migrate to new extcon framework API
+* Address comments from Peter Chen.
 
-Kind regards
-Uffe
+Tested DRD role with "qcom,ci-hdrc" and "qcom,usb-8x16-phy" on DB410c
 
-> ---
->  drivers/staging/board/armadillo800eva.c |  2 +-
->  drivers/staging/board/board.c           | 36 ++++++++++++++++++++++++++++++++-
->  2 files changed, 36 insertions(+), 2 deletions(-)
->
-> diff --git a/drivers/staging/board/armadillo800eva.c b/drivers/staging/board/armadillo800eva.c
-> index 0165591a52443c46..912c96b0536def7c 100644
-> --- a/drivers/staging/board/armadillo800eva.c
-> +++ b/drivers/staging/board/armadillo800eva.c
-> @@ -91,7 +91,7 @@ static const struct board_staging_dev armadillo800eva_devices[] __initconst = {
->                 .pdev           = &lcdc0_device,
->                 .clocks         = lcdc0_clocks,
->                 .nclocks        = ARRAY_SIZE(lcdc0_clocks),
-> -               .domain         = "a4lc",
-> +               .domain         = "/system-controller@e6180000/pm-domains/c5/a4lc@1"
->         },
->  };
->
-> diff --git a/drivers/staging/board/board.c b/drivers/staging/board/board.c
-> index 29d456e29f38feac..3eb5eb8f069c236d 100644
-> --- a/drivers/staging/board/board.c
-> +++ b/drivers/staging/board/board.c
-> @@ -135,6 +135,40 @@ int __init board_staging_register_clock(const struct board_staging_clk *bsc)
->         return error;
->  }
->
-> +#ifdef CONFIG_PM_GENERIC_DOMAINS_OF
-> +static int board_staging_add_dev_domain(struct platform_device *pdev,
-> +                                       const char *domain)
-> +{
-> +       struct of_phandle_args pd_args;
-> +       struct generic_pm_domain *pd;
-> +       struct device_node *np;
-> +
-> +       np = of_find_node_by_path(domain);
-> +       if (!np) {
-> +               pr_err("Cannot find domain node %s\n", domain);
-> +               return -ENOENT;
-> +       }
-> +
-> +       pd_args.np = np;
-> +       pd_args.args_count = 0;
-> +       pd = of_genpd_get_from_provider(&pd_args);
-> +       if (IS_ERR(pd)) {
-> +               pr_err("Cannot find genpd %s (%ld)\n", domain, PTR_ERR(pd));
-> +               return PTR_ERR(pd);
-> +
-> +       }
-> +       pr_debug("Found genpd %s for device %s\n", pd->name, pdev->name);
-> +
-> +       return pm_genpd_add_device(pd, &pdev->dev);
-> +}
-> +#else
-> +static inline int board_staging_add_dev_domain(struct platform_device *pdev,
-> +                                              const char *domain)
-> +{
-> +       return 0;
-> +}
-> +#endif
-> +
->  int __init board_staging_register_device(const struct board_staging_dev *dev)
->  {
->         struct platform_device *pdev = dev->pdev;
-> @@ -161,7 +195,7 @@ int __init board_staging_register_device(const struct board_staging_dev *dev)
->         }
->
->         if (dev->domain)
-> -               __pm_genpd_name_add_device(dev->domain, &pdev->dev, NULL);
-> +               board_staging_add_dev_domain(pdev, dev->domain);
->
->         return error;
->  }
-> --
-> 1.9.1
->
-> Gr{oetje,eeting}s,
->
->                                                 Geert
->
-> --
-> Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
->
-> In personal conversations with technical people, I call myself a hacker. But
-> when I'm talking to journalists I just say "programmer" or something like that.
->                                                             -- Linus Torvalds
+[1] https://lkml.org/lkml/2015/6/2/333
+
+ .../devicetree/bindings/usb/ci-hdrc-usb2.txt       |   6 +
+ drivers/usb/chipidea/Kconfig                       |   1 +
+ drivers/usb/chipidea/core.c                        | 125 +++++++++++++++++++++
+ drivers/usb/chipidea/otg.c                         |  39 ++++++-
+ include/linux/usb/chipidea.h                       |  23 ++++
+ 5 files changed, 193 insertions(+), 1 deletion(-)
+
+diff --git a/Documentation/devicetree/bindings/usb/ci-hdrc-usb2.txt b/Documentation/devicetree/bindings/usb/ci-hdrc-usb2.txt
+index d71ef07bca5d..aea7d0af5fd6 100644
+--- a/Documentation/devicetree/bindings/usb/ci-hdrc-usb2.txt
++++ b/Documentation/devicetree/bindings/usb/ci-hdrc-usb2.txt
+@@ -45,6 +45,11 @@ Optional properties:
+   (4 bytes), This register represents the maximum length of a the burst
+   in 32-bit words while moving data from the USB bus to system memory,
+   changing this value takes effect only the SBUSCFG.AHBBRST is 0.
++- extcon: phandles to external connector devices. First phandle should point to
++  external connector, which provide "USB" cable events, the second should point
++  to external connector device, which provide "USB-HOST" cable events. If one
++  of the external connector devices is not required, empty <0> phandle should
++  be specified.
+
+ Example:
+
+@@ -61,4 +66,5 @@ Example:
+ 		ahb-burst-config = <0x0>;
+ 		tx-burst-size-dword = <0x10>; /* 64 bytes */
+ 		rx-burst-size-dword = <0x10>;
++		extcon = <0>, <&usb_id>;
+ 	};
+diff --git a/drivers/usb/chipidea/Kconfig b/drivers/usb/chipidea/Kconfig
+index 5ce3f1d6a6ed..5619b8ca3bf3 100644
+--- a/drivers/usb/chipidea/Kconfig
++++ b/drivers/usb/chipidea/Kconfig
+@@ -1,6 +1,7 @@
+ config USB_CHIPIDEA
+ 	tristate "ChipIdea Highspeed Dual Role Controller"
+ 	depends on ((USB_EHCI_HCD && USB_GADGET) || (USB_EHCI_HCD && !USB_GADGET) || (!USB_EHCI_HCD && USB_GADGET)) && HAS_DMA
++	select EXTCON
+ 	help
+ 	  Say Y here if your system has a dual role high speed USB
+ 	  controller based on ChipIdea silicon IP. Currently, only the
+diff --git a/drivers/usb/chipidea/core.c b/drivers/usb/chipidea/core.c
+index 3feebf7f31f0..573c2876b263 100644
+--- a/drivers/usb/chipidea/core.c
++++ b/drivers/usb/chipidea/core.c
+@@ -47,6 +47,7 @@
+ #include <linux/delay.h>
+ #include <linux/device.h>
+ #include <linux/dma-mapping.h>
++#include <linux/extcon.h>
+ #include <linux/phy/phy.h>
+ #include <linux/platform_device.h>
+ #include <linux/module.h>
+@@ -602,9 +603,45 @@ static irqreturn_t ci_irq(int irq, void *data)
+ 	return ret;
+ }
+
++static int ci_vbus_notifier(struct notifier_block *nb, unsigned long event,
++			    void *ptr)
++{
++	struct ci_hdrc_cable *vbus = container_of(nb, struct ci_hdrc_cable, nb);
++	struct ci_hdrc *ci = vbus->ci;
++
++	if (event)
++		vbus->state = true;
++	else
++		vbus->state = false;
++
++	vbus->changed = true;
++
++	ci_irq(ci->irq, ci);
++	return NOTIFY_DONE;
++}
++
++static int ci_id_notifier(struct notifier_block *nb, unsigned long event,
++			  void *ptr)
++{
++	struct ci_hdrc_cable *id = container_of(nb, struct ci_hdrc_cable, nb);
++	struct ci_hdrc *ci = id->ci;
++
++	if (event)
++		id->state = false;
++	else
++		id->state = true;
++
++	id->changed = true;
++
++	ci_irq(ci->irq, ci);
++	return NOTIFY_DONE;
++}
++
+ static int ci_get_platdata(struct device *dev,
+ 		struct ci_hdrc_platform_data *platdata)
+ {
++	struct extcon_dev *ext_vbus, *ext_id;
++	struct ci_hdrc_cable *cable;
+ 	int ret;
+
+ 	if (!platdata->phy_mode)
+@@ -695,9 +732,91 @@ static int ci_get_platdata(struct device *dev,
+ 		platdata->flags |= CI_HDRC_OVERRIDE_RX_BURST;
+ 	}
+
++	ext_id = ERR_PTR(-ENODEV);
++	ext_vbus = ERR_PTR(-ENODEV);
++	if (of_property_read_bool(dev->of_node, "extcon")) {
++		/* Each one of them is not mandatory */
++		ext_vbus = extcon_get_edev_by_phandle(dev, 0);
++		if (IS_ERR(ext_vbus) && PTR_ERR(ext_vbus) != -ENODEV)
++			return PTR_ERR(ext_vbus);
++
++		ext_id = extcon_get_edev_by_phandle(dev, 1);
++		if (IS_ERR(ext_id) && PTR_ERR(ext_id) != -ENODEV)
++			return PTR_ERR(ext_id);
++	}
++
++	cable = &platdata->vbus_extcon;
++	cable->nb.notifier_call = ci_vbus_notifier;
++	cable->edev = ext_vbus;
++
++	if (!IS_ERR(ext_vbus)) {
++		ret = extcon_get_cable_state_(cable->edev, EXTCON_USB);
++		if (ret)
++			cable->state = true;
++		else
++			cable->state = false;
++	}
++
++	cable = &platdata->id_extcon;
++	cable->nb.notifier_call = ci_id_notifier;
++	cable->edev = ext_id;
++
++	if (!IS_ERR(ext_id)) {
++		ret = extcon_get_cable_state_(cable->edev, EXTCON_USB_HOST);
++		if (ret)
++			cable->state = false;
++		else
++			cable->state = true;
++	}
+ 	return 0;
+ }
+
++static int ci_extcon_register(struct ci_hdrc *ci)
++{
++	struct ci_hdrc_cable *id, *vbus;
++	int ret;
++
++	id = &ci->platdata->id_extcon;
++	id->ci = ci;
++	if (!IS_ERR(id->edev)) {
++		ret = extcon_register_notifier(id->edev, EXTCON_USB_HOST,
++					       &id->nb);
++		if (ret < 0) {
++			dev_err(ci->dev, "register ID failed\n");
++			return ret;
++		}
++	}
++
++	vbus = &ci->platdata->vbus_extcon;
++	vbus->ci = ci;
++	if (!IS_ERR(vbus->edev)) {
++		ret = extcon_register_notifier(vbus->edev, EXTCON_USB,
++					       &vbus->nb);
++		if (ret < 0) {
++			extcon_unregister_notifier(id->edev, EXTCON_USB_HOST,
++						   &id->nb);
++			dev_err(ci->dev, "register VBUS failed\n");
++			return ret;
++		}
++	}
++
++	return 0;
++}
++
++static void ci_extcon_unregister(struct ci_hdrc *ci)
++{
++	struct ci_hdrc_cable *cable;
++
++	cable = &ci->platdata->id_extcon;
++	if (!IS_ERR(cable->edev))
++		extcon_unregister_notifier(cable->edev, EXTCON_USB_HOST,
++					   &cable->nb);
++
++	cable = &ci->platdata->vbus_extcon;
++	if (!IS_ERR(cable->edev))
++		extcon_unregister_notifier(cable->edev, EXTCON_USB, &cable->nb);
++}
++
+ static DEFINE_IDA(ci_ida);
+
+ struct platform_device *ci_hdrc_add_device(struct device *dev,
+@@ -921,6 +1040,10 @@ static int ci_hdrc_probe(struct platform_device *pdev)
+ 	if (ret)
+ 		goto stop;
+
++	ret = ci_extcon_register(ci);
++	if (ret)
++		goto stop;
++
+ 	if (ci->supports_runtime_pm) {
+ 		pm_runtime_set_active(&pdev->dev);
+ 		pm_runtime_enable(&pdev->dev);
+@@ -938,6 +1061,7 @@ static int ci_hdrc_probe(struct platform_device *pdev)
+ 	if (!ret)
+ 		return 0;
+
++	ci_extcon_unregister(ci);
+ stop:
+ 	ci_role_destroy(ci);
+ deinit_phy:
+@@ -957,6 +1081,7 @@ static int ci_hdrc_remove(struct platform_device *pdev)
+ 	}
+
+ 	dbg_remove_files(ci);
++	ci_extcon_unregister(ci);
+ 	ci_role_destroy(ci);
+ 	ci_hdrc_enter_lpm(ci, true);
+ 	ci_usb_phy_exit(ci);
+diff --git a/drivers/usb/chipidea/otg.c b/drivers/usb/chipidea/otg.c
+index ad6c87a4653c..ab4bd0c2d4ef 100644
+--- a/drivers/usb/chipidea/otg.c
++++ b/drivers/usb/chipidea/otg.c
+@@ -30,7 +30,44 @@
+  */
+ u32 hw_read_otgsc(struct ci_hdrc *ci, u32 mask)
+ {
+-	return hw_read(ci, OP_OTGSC, mask);
++	struct ci_hdrc_cable *cable;
++	u32 val = hw_read(ci, OP_OTGSC, mask);
++
++	/*
++	 * If using extcon framework for VBUS and/or ID signal
++	 * detection overwrite OTGSC register value
++	 */
++	cable = &ci->platdata->vbus_extcon;
++	if (!IS_ERR(cable->edev)) {
++		if (cable->changed)
++			val |= OTGSC_BSVIS;
++		else
++			val &= ~OTGSC_BSVIS;
++
++		cable->changed = false;
++
++		if (cable->state)
++			val |= OTGSC_BSV;
++		else
++			val &= ~OTGSC_BSV;
++	}
++
++	cable = &ci->platdata->id_extcon;
++	if (!IS_ERR(cable->edev)) {
++		if (cable->changed)
++			val |= OTGSC_IDIS;
++		else
++			val &= ~OTGSC_IDIS;
++
++		cable->changed = false;
++
++		if (cable->state)
++			val |= OTGSC_ID;
++		else
++			val &= ~OTGSC_ID;
++	}
++
++	return val;
+ }
+
+ /**
+diff --git a/include/linux/usb/chipidea.h b/include/linux/usb/chipidea.h
+index a41833cd184c..c5cddc6901d0 100644
+--- a/include/linux/usb/chipidea.h
++++ b/include/linux/usb/chipidea.h
+@@ -5,9 +5,28 @@
+ #ifndef __LINUX_USB_CHIPIDEA_H
+ #define __LINUX_USB_CHIPIDEA_H
+
++#include <linux/extcon.h>
+ #include <linux/usb/otg.h>
+
+ struct ci_hdrc;
++
++/**
++ * struct ci_hdrc_cable - structure for external connector cable state tracking
++ * @state: current state of the line
++ * @changed: set to true when extcon event happen
++ * @edev: device which generate events
++ * @ci: driver state of the chipidea device
++ * @nb: hold event notification callback
++ * @conn: used for notification registration
++ */
++struct ci_hdrc_cable {
++	bool				state;
++	bool				changed;
++	struct extcon_dev		*edev;
++	struct ci_hdrc			*ci;
++	struct notifier_block		nb;
++};
++
+ struct ci_hdrc_platform_data {
+ 	const char	*name;
+ 	/* offset of the capability registers */
+@@ -48,6 +67,10 @@ struct ci_hdrc_platform_data {
+ 	u32			ahb_burst_config;
+ 	u32			tx_burst_size;
+ 	u32			rx_burst_size;
++
++	/* VBUS and ID signal state tracking, using extcon framework */
++	struct ci_hdrc_cable		vbus_extcon;
++	struct ci_hdrc_cable		id_extcon;
+ };
+
+ /* Default offset of capability registers */
+--
+1.9.1
