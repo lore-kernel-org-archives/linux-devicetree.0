@@ -1,99 +1,136 @@
-From: Frank Rowand <frowand.list@gmail.com>
-Subject: Re: [PATCH] of_pci_irq: Silence bogus "of_irq_parse_pci() failed
- ..." messages.
-Date: Sun, 06 Sep 2015 20:50:51 -0700
-Message-ID: <55ED099B.2000009@gmail.com>
-References: <1441393926-23225-1-git-send-email-ddaney.cavm@gmail.com> <55EA41E3.5010103@gmail.com> <CAL_JsqK0uW4F7HAcUMSQ-2wCvp_i3a5MTxsyW3XerHAxBrW=SQ@mail.gmail.com> <55ECF37D.7050401@gmail.com>
-Reply-To: frowand.list@gmail.com
+From: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+Subject: Re: [PATCH] power: bq24261_charger: Add support for TI BQ24261 charger
+Date: Mon, 7 Sep 2015 12:57:56 +0900
+Message-ID: <CAJKOXPfDu+LxoiQrV+CsqUbEVwYb1Zmk-m9y-L_1JxrB6ouS0g@mail.gmail.com>
+References: <1441560187-23611-1-git-send-email-ramakrishna.pallala@intel.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <55ECF37D.7050401@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: frowand.list@gmail.com
-Cc: Rob Herring <robherring2@gmail.com>, David Daney <ddaney.cavm@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Grant Likely <grant.likely@linaro.org>, David Daney <david.daney@cavium.com>
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <1441560187-23611-1-git-send-email-ramakrishna.pallala@intel.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: Ramakrishna Pallala <ramakrishna.pallala@intel.com>
+Cc: linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, Sebastian Reichel <sre@kernel.org>, Jenny TC <jenny.tc@intel.com>, Andreas Dannenberg <dannenberg@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-On 9/6/2015 7:16 PM, Frank Rowand wrote:
-> On 9/6/2015 1:46 PM, Rob Herring wrote:
->> On Fri, Sep 4, 2015 at 8:14 PM, Frank Rowand <frowand.list@gmail.com> wrote:
->>> On 9/4/2015 12:12 PM, David Daney wrote:
->>>> From: David Daney <david.daney@cavium.com>
->>>>
->>>> It is perfectly legitimate for a PCI device to have an
->>>> PCI_INTERRUPT_PIN value of zero.  This happens if the device doesn't
->>>> use interrupts, or on PCIe devices, where only MSI/MSI-X are
->>>> supported.
->>>>
->>>> Silence the annoying "of_irq_parse_pci() failed with rc=-19" error
->>>> messages by making them conditional on !-ENODEV (which can only be
->>>> produced in the PCI_INTERRUPT_PIN == 0 case).
->>>>
->>>> Signed-off-by: David Daney <david.daney@cavium.com>
->>>> ---
->>>>  drivers/of/of_pci_irq.c | 4 +++-
->>>>  1 file changed, 3 insertions(+), 1 deletion(-)
->>>>
->>>> diff --git a/drivers/of/of_pci_irq.c b/drivers/of/of_pci_irq.c
->>>> index 1710d9d..33d242a 100644
->>>> --- a/drivers/of/of_pci_irq.c
->>>> +++ b/drivers/of/of_pci_irq.c
->>>> @@ -106,7 +106,9 @@ int of_irq_parse_and_map_pci(const struct pci_dev *dev, u8 slot, u8 pin)
->>>>
->>>>       ret = of_irq_parse_pci(dev, &oirq);
->>>>       if (ret) {
->>>> -             dev_err(&dev->dev, "of_irq_parse_pci() failed with rc=%d\n", ret);
->>>> +             if (ret != -ENODEV)
->>>> +                     dev_err(&dev->dev,
->>>> +                             "of_irq_parse_pci() failed with rc=%d\n", ret);
->>>>               return 0; /* Proper return code 0 == NO_IRQ */
->>>>       }
->>>>
->>>>
->>>
->>> It is not safe to assume that the functions that of_irq_parse_pci() calls
->>> will never be modified to return -ENODEV, thus resulting in of_irq_parse_pci()
->>> returning -ENODEV for a reason other than PCI_INTERRUPT_PIN == 0.
->>
->> Yes, but we're talking about a print statement.
->>
->>>
->>> A more robust solution would be something like:
-> 
-> < snip my bad solution >
-> 
->>> I'm not sure I like my solution, there might be a better way.
->>
->> I don't like it. That's way too complex for just silencing an
->> erroneous error message.
->>
->> Perhaps just move the error message into of_irq_parse_pci and then you
->> can control the print more easily. Or just change to dev_dbg would be
->> okay by me.
-> 
-> I knew I was making it way too hard.  Yes, just move the error message
-> to of_irq_parse_pci(), where the "/* No pin, exit */" test occurs.
+2015-09-07 2:23 GMT+09:00 Ramakrishna Pallala <ramakrishna.pallala@intel.com>:
+>
+> Add new charger driver support for BQ24261 charger IC.
+>
+> BQ24261 charger driver relies on extcon notifications to get the
+> charger cable type and based on that it will set the charging parameters.
+>
+> Signed-off-by: Ramakrishna Pallala <ramakrishna.pallala@intel.com>
+> Signed-off-by: Jennt TC <jenny.tc@intel.com>
+> ---
+>  .../devicetree/bindings/power/bq24261.txt          |   37 +
+>  drivers/power/Kconfig                              |    6 +
+>  drivers/power/Makefile                             |    1 +
+>  drivers/power/bq24261_charger.c                    | 1208 ++++++++++++++++++++
+>  include/linux/power/bq24261_charger.h              |   27 +
+>  5 files changed, 1279 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/power/bq24261.txt
+>  create mode 100644 drivers/power/bq24261_charger.c
+>  create mode 100644 include/linux/power/bq24261_charger.h
+>
+> diff --git a/Documentation/devicetree/bindings/power/bq24261.txt b/Documentation/devicetree/bindings/power/bq24261.txt
+> new file mode 100644
+> index 0000000..25fc5c4
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/power/bq24261.txt
+> @@ -0,0 +1,37 @@
+> +Binding for TI bq24261 Li-Ion Charger
 
-And this time I replied too quickly, not really thinking through my comment.
-There are several error return points in of_irq_parse_pci(), so moving the
-error message into of_irq_parse_pci() is not the answer.
+Please split the bindings into separate patch (the first patch in patchset).
+
+> +
+> +Required properties:
+> +- compatible: Should contain one of the following:
+> +    * "ti,bq24261"
+> +- reg: integer, i2c address of the device.
+> +- ti,charge-current: integer, default charging current (in mA);
+> +- ti,charge-voltage: integer, default charging voltage (in mV);
+> +- ti,termination-current: integer, charge will be terminated when current in
+> +    constant-voltage phase drops below this value (in mA);
+> +- ti,max-charge-current: integer, maximum charging current (in mA);
+> +- ti,max-charge-voltage: integer, maximum charging voltage (in mV);
+> +- ti,min-charge-temperature: integer, minimum charging temperature (in DegC);
+> +- ti,max-charge-temperature: integer, maximum charging temperature (in DegC).
+
+Before accepting "[PATCH 13/13] dt: power: bq24257-charger: Cover
+additional devices"
+http://www.spinics.net/lists/devicetree/msg92134.html
+
+could you and Andreas figure out common bindings? Look at this:
+
++- ti,charge-current: integer, maximum charging current in uA.
++- ti,charge-current: integer, default charging current (in mA);
+
+Different meaning and different units. This is madness! :)
+
+In the same time you are adding TI-common bindings (not device
+specific, there is no prefix) so I would expect exactly the same
+bindings if it is possible.
 
 
->>> I also noticed another bug while looking at of_irq_parse_pci().  It returns
->>> the non-zero return value from pci_read_config_byte().  But that value is
->>> one of the PCI function error values from include/linux/pci.h, such as:
->>>
->>>    #define PCIBIOS_BAD_REGISTER_NUMBER     0x87
->>>
->>> instead of a negative errno.
->>
->> I was puzzled by why this is not standard error codes a while back. My
->> best guess is that that there is some legacy here. Changing error
->> values on widely used functions is impossible to audit. NO_IRQ being 0
->> or -1 is one such case.
->>
->> Rob
->>
-> 
-> 
+> +
+> +Optional properties:
+> +- ti,thermal-sensing: boolean, if present thermal regulation will be enabled;
+
+What is the requirement for thermal-sensing? Can it be enabled always?
+If yes, then this is not really a hardware property.
+
+> +- ti,enable-user-write: boolean, if present driver will allow the user space
+> +    to control the charging current and voltage through sysfs;
+
+This is not DT property. It does not describe hardware.
+
+Best regards,
+Krzysztof
+
+> +
+> +Example:
+> +
+> +bq25890 {
+> +        compatible = "ti,bq24261
+> +        reg = <0x6b>;
+> +
+> +        ti,charge-current = <1000>;
+> +        ti,charge-voltage = <4200>;
+> +        ti,termination-current = <128>;
+> +        ti,max-charge-current = <3000>;
+> +        ti,max-charge-voltage = <4350>;
+> +        ti,min-charge-temperature = <0>;
+> +        ti,max-charge-temperature = <60>;
+> +
+> +        ti,thermal-sensing;
+> +        ti,enable-user-write;
+> +};
+> diff --git a/drivers/power/Kconfig b/drivers/power/Kconfig
+> index f8758d6..cd47d0d 100644
+> --- a/drivers/power/Kconfig
+> +++ b/drivers/power/Kconfig
+> @@ -396,6 +396,12 @@ config CHARGER_BQ24190
+>         help
+>           Say Y to enable support for the TI BQ24190 battery charger.
+>
+> +config CHARGER_BQ24261
+> +       tristate "TI BQ24261 charger driver"
+> +       depends on I2C && EXTCON
+> +       help
+> +         Say Y here to enable support for TI BQ24261 battery charger.
+> +
+>  config CHARGER_BQ24257
+>         tristate "TI BQ24257 battery charger driver"
+>         depends on I2C
+> diff --git a/drivers/power/Makefile b/drivers/power/Makefile
+> index 5752ce8..bec8409 100644
+> --- a/drivers/power/Makefile
+> +++ b/drivers/power/Makefile
+> @@ -59,6 +59,7 @@ obj-$(CONFIG_CHARGER_MAX8997) += max8997_charger.o
+>  obj-$(CONFIG_CHARGER_MAX8998)  += max8998_charger.o
+>  obj-$(CONFIG_CHARGER_BQ2415X)  += bq2415x_charger.o
+>  obj-$(CONFIG_CHARGER_BQ24190)  += bq24190_charger.o
+> +obj-$(CONFIG_CHARGER_BQ24261)  += bq24261_charger.o
+>  obj-$(CONFIG_CHARGER_BQ24257)  += bq24257_charger.o
+>  obj-$(CONFIG_CHARGER_BQ24735)  += bq24735-charger.o
+>  obj-$(CONFIG_CHARGER_BQ25890)  += bq25890_charger.o
