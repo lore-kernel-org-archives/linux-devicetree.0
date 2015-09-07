@@ -1,45 +1,96 @@
-From: Michael Ellerman <mpe@ellerman.id.au>
-Subject: Re: [PATCH v4 3/4] powerpc: PCI: Fix lookup of linux,pci-probe-only
- property
-Date: Mon, 07 Sep 2015 18:59:43 +1000
-Message-ID: <1441616383.8979.4.camel@ellerman.id.au>
-References: <1441385411-7624-1-git-send-email-marc.zyngier@arm.com>
-	 <1441385411-7624-4-git-send-email-marc.zyngier@arm.com>
+From: Thierry Reding <treding@nvidia.com>
+Subject: Re: [PATCH v4 14/16] drm: bridge: analogix/dp: try force hpd after
+ plug in lookup failed
+Date: Mon, 7 Sep 2015 11:01:53 +0200
+Message-ID: <20150907090151.GD19961@ulmo.nvidia.com>
+References: <1441086371-24838-1-git-send-email-ykk@rock-chips.com>
+ <1441088079-25809-1-git-send-email-ykk@rock-chips.com>
+ <CAL_JsqJDALnjVaVoEqGGsSLeE31m3MKOfbSoZ3M+g+zPZR2MFg@mail.gmail.com>
+ <55E7CC43.7040608@rock-chips.com>
+ <20150903090421.GC3784@ulmo.nvidia.com>
+ <20150904102003.GE21084@n2100.arm.linux.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <1441385411-7624-4-git-send-email-marc.zyngier@arm.com>
-Sender: linux-pci-owner@vger.kernel.org
-To: Marc Zyngier <marc.zyngier@arm.com>
-Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>, Paul Mackerras <paulus@samba.org>, Will Deacon <will.deacon@arm.com>, Bjorn Helgaas <bhelgaas@google.com>, Suravee Suthikulpanit <Suravee.Suthikulpanit@amd.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, Alexander Graf <agraf@suse.de>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linuxppc-dev@lists.ozlabs.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, Anton Blanchard <anton@samba.org>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="3Pql8miugIZX0722"
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <20150904102003.GE21084@n2100.arm.linux.org.uk>
+Content-Disposition: inline
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Russell King - ARM Linux <linux@arm.linux.org.uk>
+Cc: Yakir Yang <ykk@rock-chips.com>, Rob Herring <robherring2@gmail.com>, Heiko Stuebner <heiko@sntech.de>, Jingoo Han <jingoohan1@gmail.com>, Inki Dae <inki.dae@samsung.com>, Joe Perches <joe@perches.com>, Kukjin Kim <kgene@kernel.org>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, Mark Yao <mark.yao@rock-chips.com>, djkurtz@chromium.com, dianders@chromium.com, seanpaul@chromium.com, Ajay kumar <ajaynumb@gmail.com>, Andrzej Hajda <a.hajda@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, David Airlie <airlied@linux.ie>, Gustavo Padovan <gustavo.padovan@collabora.co.uk>, Andy Yan <andy.yan@rock-chips.com>, Kumar Gala <galak@codeaurora.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Kishon Vijay Abraham I <kishon@ti.com>, architt@codeaurora.org, dri-devel <dri-devel@lists.freede>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 2015-09-04 at 17:50 +0100, Marc Zyngier wrote:
-> When find_and_init_phbs() looks for the probe-only property, it seems
-> to trust the firmware to be correctly written, and assumes that there
-> is a parameter to the property.
-> 
-> It is conceivable that the firmware could not be that perfect, and it
-> could expose this property naked (at least one arm64 platform seems to
-> exhibit this exact behaviour). The setup code the ends up making
-> a decision based on whatever the property pointer points to, which
-> is likely to be junk.
-> 
-> Instead, switch to the common of_pci.c implementation that doesn't
-> suffer from this problem and ignore the property if the firmware
-> couldn't make up its mind.
-> 
-> Signed-off-by: Marc Zyngier <marc.zyngier@arm.com>
-> ---
->  arch/powerpc/platforms/pseries/setup.c | 14 ++------------
+--3Pql8miugIZX0722
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Thanks.
+On Fri, Sep 04, 2015 at 11:20:03AM +0100, Russell King - ARM Linux wrote:
+> On Thu, Sep 03, 2015 at 11:04:40AM +0200, Thierry Reding wrote:
+> > Conversely, if the panel isn't capable of generating an HPD signal, then
+> > I don't think it would be appropriate to make it a DT property. It would
+> > be better to hard-code it in the driver, lest someone forget to set the
+> > property in DT and get stuck with a device that isn't operational.
+>=20
+> There is another way to deal with this: DRM supports the idea of connector
+> forcing - where you can force the connector to think that it's connected
+> or disconnected.
 
-I can't find any powerpc machine that is currently using this, or much info on
-what ever did use it, so I think it's pretty low impact, and the change looks
-sane.
+Yes, this could work well for RGB/LVDS or DSI connectors perhaps. For
+eDP there is added complexity because the HPD interrupt function is also
+used to signal loss of link integrity. That is, after receiving an HPD
+interrupt you are supposed to retrain the link (or at least check the
+link status to see if the interrupt cause is loss of integrity). While
+the eDP specification makes HPD optional, it also says that if HPD isn't
+available, then the source must use polling to monitor link integrity
+instead.
 
-Acked-by: Michael Ellerman <mpe@ellerman.id.au>
+DRM does provide a mechanism for that as well. You can set the
+connector's ->polled field to DRM_CONNECTOR_POLL_CONNECT |
+DRM_CONNECTOR_POLL_DISCONNECT and have the core actively poll for the
+connector status (i.e. call ->detect() every 100 ms).
 
-cheers
+I think use of polling would be more appropriate in case of eDP.
+
+> One of the problems is that not many ARM DRM drivers implement it - maybe
+> it should be a requirement for code to be accepted? :)
+
+I suspect that many drivers may roll their own. In fact I'm guilty of
+that myself. On Tegra we have a default implementation for outputs which
+will default to the state of an HPD GPIO where available and fall back
+to "always connected" for outputs that have a panel connected. Outputs
+that have a separate mechanism to signal hotplug detection (such as DP)
+simply use a custom ->detect() implementation.
+
+The overhead of rolling one's own is almost zero and connector forcing
+has the disadvantage of being available via sysfs and debugfs, so the
+default set by drivers could be overwritten by users at runtime with no
+easy way back.
+
+Given the above I'm not sure enforcing connector forcing would be
+beneficial.
+
+Thierry
+
+--3Pql8miugIZX0722
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQIcBAABCAAGBQJV7VJ9AAoJEN0jrNd/PrOhfgkP/RlwOrDrAwZXU15zGH3SOz/G
+OCsdQLfpLsfIaTBMTwZcuvdjSzLGJ1b3agE/F7D1SrZHFEZDnh0A7yobFaXwjPgP
+kH0iP7Hi+sKdkxcJQZSFYlI57yHOlK2fEDzokmLidsevAn2Yf9W0o+2QwF7yOiTF
+tZfDWdPET6pqT+DtZOcONS9oMInyW9m4czUY1qa7dAhkJcy/492BeMTyrwO9PWt9
+BWnkG8gPk0op4dJ7OAo0rCxpmNpQSwXDemHXwj08jMdTI5fGWfjgX8kZk+Tm9AQ4
+KoQpENmI6xU+kdv7RdsDeWDIm7/FUUzqQdCiRBOhpZBQqUYAXZPDkfVpC7ukLyYR
+Mz0aQqrEhvERKywkBlYldX7Pg54Ia0ZQKaPK5koX8bvA0QnFSiUmNJl0bt8Y42F4
+xDaTCS679V7izzMt1mlHtqG35XEJvvNgQJHbiSMtmsGlXJMmMkFJHrMwe/it2msu
+iW4QmCs3oZliYXnLngBMV4tmz9/lMLfhDRT3TfSyhwBX9QK9muGXVCz9DlTNYbYa
+Wqpdk3myXyJYyLaaZgJXTcyUB91egwtWQEowSoVJCIoBzNiR75VzulxcvbnL5ERQ
+jsTFT9YQSUgQqe/dz45er5Leh/TeFe/BthCB+liKnePb96mZtCZMCbJFHY/xAkZi
+JM5ZU3FwUhwRqn4PE2wF
+=rg7+
+-----END PGP SIGNATURE-----
+
+--3Pql8miugIZX0722--
