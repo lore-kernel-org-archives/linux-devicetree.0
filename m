@@ -1,145 +1,105 @@
-From: Thierry Reding <treding@nvidia.com>
-Subject: Re: [PATCH v4 03/16] drm: bridge: analogix/dp: split exynos dp
- driver to bridge dir
-Date: Mon, 7 Sep 2015 10:11:53 +0200
-Message-ID: <20150907081152.GA19961@ulmo.nvidia.com>
-References: <1441086371-24838-1-git-send-email-ykk@rock-chips.com>
- <2618155.E00Pak1qvi@phil>
- <CAL_JsqLvOOF0Wk=E1kz0rWXg0+6ay0=4OTbCpjdGCfL7_qFN8Q@mail.gmail.com>
- <3704589.SqgGPobGdG@phil>
+From: Gabriele Paoloni <gabriele.paoloni@huawei.com>
+Subject: RE: [PATCH v8 0/6] PCI: hisi: Add PCIe host support for HiSilicon
+ SoC Hip05
+Date: Mon, 7 Sep 2015 08:17:20 +0000
+Message-ID: <EE11001F9E5DDD47B7634E2F8A612F2E1620A175@lhreml503-mbs>
+References: <1440496734-18417-1-git-send-email-wangzhou1@hisilicon.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="KsGdsel6WgEHnImy"
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <3704589.SqgGPobGdG@phil>
-Content-Disposition: inline
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Heiko Stuebner <heiko@sntech.de>
-Cc: Rob Herring <robherring2@gmail.com>, Yakir Yang <ykk@rock-chips.com>, Jingoo Han <jingoohan1@gmail.com>, Inki Dae <inki.dae@samsung.com>, Joe Perches <joe@perches.com>, Kukjin Kim <kgene@kernel.org>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, Mark Yao <mark.yao@rock-chips.com>, Russell King <rmk+kernel@arm.linux.org.uk>, Ajay kumar <ajaynumb@gmail.com>, Andrzej Hajda <a.hajda@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, David Airlie <airlied@linux.ie>, Gustavo Padovan <gustavo.padovan@collabora.co.uk>, Andy Yan <andy.yan@rock-chips.com>, Kumar Gala <galak@codeaurora.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Pawel Moll <pawel.moll@arm.com>, Kishon Vijay Abraham I <kishon@ti.com>, architt@codeaurora.org, dri-devel <dri-devel@lists.freedesktop.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-kernel@vger.kernel
+Content-Type: text/plain; charset="gb2312"
+Content-Transfer-Encoding: base64
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <1440496734-18417-1-git-send-email-wangzhou1@hisilicon.com>
+Content-Language: en-US
+Sender: linux-pci-owner@vger.kernel.org
+To: "Wangzhou (B)" <wangzhou1@hisilicon.com>, Bjorn Helgaas <bhelgaas@google.com>, "jingoohan1@gmail.com" <jingoohan1@gmail.com>, "pratyush.anand@gmail.com" <pratyush.anand@gmail.com>, Arnd Bergmann <arnd@arndb.de>, "linux@arm.linux.org.uk" <linux@arm.linux.org.uk>, "thomas.petazzoni@free-electrons.com" <thomas.petazzoni@free-electrons.com>, "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>, "james.morse@arm.com" <james.morse@arm.com>, "Liviu.Dudau@arm.com" <Liviu.Dudau@arm.com>, "jason@lakedaemon.net" <jason@lakedaemon.net>, "robh@kernel.org" <robh@kernel.org>
+Cc: "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, zhangjukuo <zhangjukuo@huawei.com>, qiuzhenfa <qiuzhenfa@hisilicon.com>, "liudongdong (C)" <liudongdong3@huawei.com>, qiujiang <qiujiang@huawei.com>, "xuwei (O)" <xuwei5@hisilicon.com>, "Liguozhu (Kenneth)" <liguozhu@hisilicon.com>
 List-Id: devicetree@vger.kernel.org
 
---KsGdsel6WgEHnImy
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Fri, Sep 04, 2015 at 11:29:30PM +0200, Heiko Stuebner wrote:
-> Am Freitag, 4. September 2015, 16:06:02 schrieb Rob Herring:
-> > On Tue, Sep 1, 2015 at 3:46 PM, Heiko Stuebner <heiko@sntech.de> wrote:
-> > > Am Dienstag, 1. September 2015, 13:49:58 schrieb Yakir Yang:
-> > >> Split the dp core driver from exynos directory to bridge
-> > >> directory, and rename the core driver to analogix_dp_*,
-> > >> leave the platform code to analogix_dp-exynos.
-> > >>=20
-> > >> Signed-off-by: Yakir Yang <ykk@rock-chips.com>
-> > >=20
-> > > [...]
-> > >=20
-> > >> diff --git a/drivers/gpu/drm/exynos/exynos_dp_core.c
-> > >> b/drivers/gpu/drm/bridge/analogix/analogix_dp_core.c similarity inde=
-x 50%
-> > >> rename from drivers/gpu/drm/exynos/exynos_dp_core.c
-> > >> rename to drivers/gpu/drm/bridge/analogix/analogix_dp_core.c
-> > >> index bed0252..7d62f22 100644
-> > >> --- a/drivers/gpu/drm/exynos/exynos_dp_core.c
-> > >> +++ b/drivers/gpu/drm/bridge/analogix/analogix_dp_core.c
-> > >=20
-> > > [...]
-> > >=20
-> > >>       connector->polled =3D DRM_CONNECTOR_POLL_HPD;
-> > >>      =20
-> > >>       ret =3D drm_connector_init(dp->drm_dev, connector,
-> > >>=20
-> > >> -                              &exynos_dp_connector_funcs,
-> > >> +                              &analogix_dp_connector_funcs,
-> > >>=20
-> > >>                                DRM_MODE_CONNECTOR_eDP);
-> > >>      =20
-> > >>       if (ret) {
-> > >>      =20
-> > >>               DRM_ERROR("Failed to initialize connector with drm\n");
-> > >>               return ret;
-> > >>      =20
-> > >>       }
-> > >>=20
-> > >> -     drm_connector_helper_add(connector,
-> > >> &exynos_dp_connector_helper_funcs); +   =20
-> > >> drm_connector_helper_add(connector,
-> > >> +                              &analogix_dp_connector_helper_funcs);
-> > >>=20
-> > >>       drm_connector_register(connector);
-> > >=20
-> > > this should only run on exynos, as we're doing all our connector
-> > > registration in the core driver after all components are bound, so I
-> > > guess something like>=20
-> > > the following is needed:
-> > >        if (dp->plat_data && dp->plat_data->dev_type =3D=3D EXYNOS_DP)
-> > >       =20
-> > >                drm_connector_register(connector);
-> >=20
-> > Yuck!
-> >=20
-> > Surely there is a better way. From what I've seen of DRM, I have no
-> > doubt this is needed, but really a better solution is needed. Surely
-> > there can be a more generic way for the driver to determine if it
-> > should handle the connector or not. This seems like a common problem
-> > including one I have seen. What I'm working on has onchip DSI encoder
-> > -> ADV7533 -> HDMI. The DSI encoder can also have a direct attached
-> > panel. So I have to check for a bridge in the encoder driver and only
-> > register the connector for the panel if a bridge is not attached.
->=20
-> I'm also only a part-time drm meddler, so things may be inaccurate.
->=20
-> This conditional is not meant to prevent the registration of the dp conne=
-ctor,=20
-> only delay it for non-exynos drms. The connector registration does publis=
-h it=20
-> to userspace, so like i.MX we're doing that for all connectors at the sam=
-e=20
-> time after all components are bound - to also make x11 happy. Exynos on t=
-he=20
-> other hand seems to register its connectors individually and I'm not sure=
- if=20
-> they would be willing to change that.
->=20
-> see d3007dabeff4 ("drm/rockchip: register all connectors after bind") or=
-=20
-> simply rockchip_drm_drv.c line 178.
->=20
-> and e355e7dd607b ("imx-drm: delay publishing sysfs connector entries")
-
-There really shouldn't be a reason for both drivers to behave
-differently in this case. Gustavo has done a lot of work on cleaning up
-the Exynos driver lately, so perhaps you should sync up with him to see
-if this is something that he can integrate with his changes.
-
-If you can't reach an agreement and Exynos must keep the exact behaviour
-as it has now, then perhaps a better option would be to have the
-Analogix core driver not register the connector but rather leave that up
-to users of the helpers. Then you don't have to clutter the core driver
-with this type of platform-specific data.
-
-Thierry
-
---KsGdsel6WgEHnImy
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQIcBAABCAAGBQJV7UbFAAoJEN0jrNd/PrOhhQEP/jHH4mCsHQhN5TM93ToODSaX
-PPIfSGotJwJRb4aerJlBmOJe/TttR3E0gN5C+c7YwTMcUJzAz7I/ORMJtfKrkqiF
-3n0EnWu/ni0FQoZWInV5+vwnRWaChZ1/yGlTmQSd8APlxQdojvOSjkMFG6EVWU8t
-0A1xPjetuUwkdHP3T2RRAkPHt6KDgc/EF0z71kDgs7vOkF4hhEqNCXk8k+NSEYpr
-wh/RUU70Us+MzsoQMypnOBredfsjrKoJXI/iEBVVzBbtg5//GQqNPDuG8eFzKrZy
-Xv0pxG8PCmVmZX+dDT73Foh3m7h2/zqzOFaXqXjx9101ZgldlfgFCTYE1Mybtfo7
-f6rS4cE4n2JsebYSa5sR5i5nlIkLF2v2GtfQpT9EWn1pKlTq6PIvBhGfUtFTWsYZ
-Wu8mYK/88PYtgOj64OV8KuylZrGFVoT6H/BZPlEmvea56Pyw3yAxcDOS40GaQFTi
-J2OWghSDhdWa3C6q333ZOILtG61Ik1PaDvynEQF51thkh/6L+8wlmh2pWLSWAT0E
-PtQJbX6AnuOS7LWDTOWMEMK/0UJsLZ2fc/kg8A7YXizqQJZO1uxOI8VqO2wJPX/Y
-jh8lc2ad0ztXqCd0v0pS7su4RYaxjomT3YLxIhUkFz4zZUpiZG9EjqLYCtJUYEqM
-kyHGsK+eVeiLZw/ukWae
-=a4je
------END PGP SIGNATURE-----
-
---KsGdsel6WgEHnImy--
+SGkgQmpvcm4gYW5kIGFsbA0KDQpEbyB5b3UgaGF2ZSBhbnkgY29tbWVudCBvbiB0aGlzIHBhdGNo
+c2V0PyBJIHRoaW5rIHdlIHNob3VsZCBiZSBjbG9zZSB0byBhIGZpbmFsIG9uZS4uLg0KDQpUaGFu
+a3MgYW5kIFJlZ2FyZHMNCg0KR2FiDQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4g
+RnJvbTogV2FuZ3pob3UgKEIpDQo+IFNlbnQ6IDI1IEF1Z3VzdCAyMDE1IDEwOjU5DQo+IFRvOiBC
+am9ybiBIZWxnYWFzOyBqaW5nb29oYW4xQGdtYWlsLmNvbTsgcHJhdHl1c2guYW5hbmRAZ21haWwu
+Y29tOyBBcm5kDQo+IEJlcmdtYW5uOyBsaW51eEBhcm0ubGludXgub3JnLnVrOyB0aG9tYXMucGV0
+YXp6b25pQGZyZWUtZWxlY3Ryb25zLmNvbTsNCj4gR2FicmllbGUgUGFvbG9uaTsgbG9yZW56by5w
+aWVyYWxpc2lAYXJtLmNvbTsgamFtZXMubW9yc2VAYXJtLmNvbTsNCj4gTGl2aXUuRHVkYXVAYXJt
+LmNvbTsgamFzb25AbGFrZWRhZW1vbi5uZXQ7IHJvYmhAa2VybmVsLm9yZw0KPiBDYzogbGludXgt
+cGNpQHZnZXIua2VybmVsLm9yZzsgbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3Jn
+Ow0KPiBkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZzsgemhhbmdqdWt1bzsgcWl1emhlbmZhOyBs
+aXVkb25nZG9uZyAoQyk7IHFpdWppYW5nOw0KPiB4dXdlaSAoTyk7IExpZ3Vvemh1IChLZW5uZXRo
+KTsgV2FuZ3pob3UgKEIpDQo+IFN1YmplY3Q6IFtQQVRDSCB2OCAwLzZdIFBDSTogaGlzaTogQWRk
+IFBDSWUgaG9zdCBzdXBwb3J0IGZvciBIaVNpbGljb24gU29DDQo+IEhpcDA1DQo+IA0KPiBUaGlz
+IHBhdGNoc2V0IGFkZHMgUENJZSBob3N0IHN1cHBvcnQgZm9yIEhpU2lsaWNvbiBTb0MgSGlwMDUu
+IFRoZSBQQ0llIGhvc3RzDQo+IHVzZSBQQ0llIElQIGNvcmUgZnJvbSBTeW5vcHN5cywgU28gdGhp
+cyBkcml2ZXIgaXMgYmFzZSBvbiBkZXNpZ253YXJlIFBDSWUNCj4gZHJpdmVyLg0KPiANCj4gSGlw
+MDUgaXMgYW4gQVJNdjggYXJjaGl0ZWN0dXJlIFNvQy4gSXQgc2hvdWxkIGJlIGFibGUgdG8gdXNl
+IEFSTTY0IFBDSWUgQVBJIGluDQo+IGRlc2lnbmV3YXJlIFBDSWUgZHJpdmVyLiBTbyB0aGlzIHBh
+dGNoIGFsc28gYWRkcyBBUk02NCBzdXBwb3J0IGZvciBkZXNpZ253YXJlDQo+IHBjaWUuDQo+IA0K
+PiBUaGlzIHBhdGNoc2V0IGlzIGJhc2VkIG9uIHY0LjItcmMxLg0KPiANCj4gQ2hhbmdlIGZyb20g
+djc6DQo+IC0gUmVtb3ZlIHBwLT5yb290X2J1c19uciA9IDAgaW4gZHJhN3h4LCBleHlub3MsIGlt
+eDYsIGtleXN0b25lLCBsYXllcnNjYXBlLA0KPiAgIHNwZWFyMTN4eC4gUGFzcyBwcC0+YnVzbi0+
+c3RhcnQgdG8gcGNpX2NyZWF0ZV9yb290X2J1cyBhcyByb290IGJ1cyBudW1iZXIuDQo+IC0gUmVt
+b3ZlIGJ1cy1yYW5nZSBwYXJzaW5nIGluIHBjaWUtaGlzaS5jLg0KPiANCj4gQ2hhbmdlIGZyb20g
+djY6DQo+IC0gQWRkIFByYXR5dXNoJ3MgQWNrZWQtYnkgZm9yIDEvNiBhbmQgMi82Lg0KPiAtIEFk
+ZCBKYW1lcycgVGVzdGVkLWJ5IGZvciAzLzYuDQo+IA0KPiBDaGFuZ2UgZnJvbSB2NToNCj4gLSBN
+ZXJnZSAxLzYgaW4gdGhpcyBzZXJpZXMsIGRpc2N1c3Npb24gYWJvdXQgdGhpcyBjYW4gYmUgZm91
+bmQgaW4gWzFdDQo+IA0KPiBDaGFuZ2UgZnJvbSB2NDoNCj4gLSBDaGFuZ2UgdGhlIGF1dGhvciBv
+ZiAxLzUgdG8gR2FicmllbGUuDQo+IC0gTW9kaWZ5IHByb2JsZW1zIGluIDMvNSBwb2ludGVkIGJ5
+IEJqb3JuLg0KPiAtIE1vZGlmeSBzcGVsbGluZyBwcm9ibGVtcyBpbiA0LzUuDQo+IA0KPiBDaGFu
+Z2UgZnJvbSB2MzoNCj4gLSBDaGFuZ2UgMS81IHRvIHdoYXQgR2FicmllbGUgc3VnZ2VzdGVkLg0K
+PiAtIFVzZSB3aW4tPl9fcmVzLnN0YXJ0IHRvIGdldCAqX21vZF9iYXNlIGluIDIvNSwgdGhpcyBm
+aXggYSBidWcgaW4gdjMgc2VyaWVzLg0KPiANCj4gQ2hhbmdlIGZyb20gdjI6DQo+IC0gTW92ZSBz
+dHJ1Y3QgcGNpX2RldiAqZGV2IGFuZCBzdHJ1Y3QgcGNpX3N5c19kYXRhICpzeXMgaW4NCj4gICBw
+Y2liaW9zX2FsaWduX3Jlc291cmNlIGluIDEvNS4NCj4gLSBBZGQgR2FicmllbGUncyBjb2RlcyBp
+biAyLzUgd2hpY2ggZGVsZXRlIHVubmVjZXNzYXJ5IGluZm9ybWF0aW9uIHBhcnNlIGFuZA0KPiAg
+IHVzZSBvZl9wY2lfZ2V0X2hvc3RfYnJpZGdlX3Jlc291cmNlcyBmb3IgYm90aCBBUk0zMiBhbmQg
+QVJNNjQuDQo+IC0gQWRkIG1haW50YWluZXIgcGF0Y2ggNS81Lg0KPiANCj4gQ2hhbmdlIGZyb20g
+UkZDIHYxOg0KPiAtIEFkZCAxLzQgcGF0Y2ggYnkgQXJuZCB3aGljaCByZW1vdmVzIGFsaWduX3Jl
+c291cmNlIGNhbGxiYWNrIGluIEFSTQ0KPiAgIHBjaWJpb3NfYWxpZ25fcmVzb3VyY2UuDQo+IC0g
+Q2hhbmdlIGhlYWQgZmlsZSBpbiBwY2llLWRlc2lnbndhcmUgZnJvbSBhc20vaGFyZGlycS5oIHRv
+IGxpbnV4L2hhcmRpcnEuaC4NCj4gLSBTZXQgcHAtPnJvb3RfYnVzX25yID0gMCBpbiBkcmE3eHgs
+IGV4eW5vcywgaW14Niwga2V5c3RvbmUsIGxheWVyc2NhcGUsDQo+ICAgc3BlYXIxM3h4Lg0KPiAt
+IFJlbW92ZSB1bm5lY2Vzc2FyeSBwYXJlbnRoZXNlcyBvZiBzb21lIG1hY3JvcyBpbiBwY2llLWhp
+c2kuDQo+IC0gVXNlIG1hY3JvIHRvIHJlcGxhY2Ugc29tZSBtYWdpYyB2YWx1ZXMuDQo+IC0gTWVy
+Z2UgdHdvIGxvb3BzIHRvZ2V0aGVyIGFuZCBhZGQgc29tZSBjb21tZW50cyBhYm91dCBpdCBpbiBj
+b250ZXh0X2NvbmZpZw0KPiAgIGZ1bmN0aW9uIGluIHBjaWUtaGlzaS4NCj4gLSBNb2RpZnkgc29t
+ZSB2YWx1ZSBvZiBpdGVtcyBpbiBwY2llIG5vZGUgZXhhbXBsZSBpbiBiaW5kaW5nIGRvY3VtZW50
+Lg0KPiANCj4gQ2hhbmdlIGZyb20gUkZDOg0KPiAtIGRlbGV0ZSBkd19wY2llX3NldHVwLCBkd19w
+Y2llX3NjYW5fYnVzLCBkd19wY2llX21hcF9pcnEgYW5kIHN0cnVjdCBod19wY2ksDQo+ICAgbWVy
+Z2UgcmVsYXRlZCBvcGVyYXRpb25zIGludG8gZHdfcGNpZV9ob3N0X2luaXQuDQo+IA0KPiBMaW5r
+IG9mIHY3Og0KPiAtIGh0dHA6Ly93d3cuc3Bpbmljcy5uZXQvbGlzdHMvZGV2aWNldHJlZS9tc2c5
+MDY5MC5odG1sDQo+IExpbmsgb2YgdjY6DQo+IC0gaHR0cDovL3d3dy5zcGluaWNzLm5ldC9saXN0
+cy9saW51eC1wY2kvbXNnNDM2NjkuaHRtbA0KPiBMaW5rIG9mIHY1Og0KPiAtIGh0dHA6Ly93d3cu
+c3Bpbmljcy5uZXQvbGlzdHMvZGV2aWNldHJlZS9tc2c4Nzk1OS5odG1sDQo+IExpbmsgb2YgdjQ6
+DQo+IC0gaHR0cDovL3d3dy5zcGluaWNzLm5ldC9saXN0cy9hcm0ta2VybmVsL21zZzQzMzA1MC5o
+dG1sDQo+IExpbmsgb2YgdjM6DQo+IC0gaHR0cDovL3d3dy5zcGluaWNzLm5ldC9saXN0cy9saW51
+eC1wY2kvbXNnNDI1MzkuaHRtbA0KPiBMaW5rIG9mIHYyOg0KPiAtIGh0dHA6Ly93d3cuc3Bpbmlj
+cy5uZXQvbGlzdHMvbGludXgtcGNpL21zZzQxODQ0Lmh0bWwNCj4gTGluayBvZiBSRkMgdjE6DQo+
+IC0gaHR0cDovL3d3dy5zcGluaWNzLm5ldC9saXN0cy9saW51eC1wY2kvbXNnNDEzMDUuaHRtbA0K
+PiBMaW5rIG9mIFJGQzoNCj4gLSBodHRwOi8vd3d3LnNwaW5pY3MubmV0L2xpc3RzL2xpbnV4LXBj
+aS9tc2c0MDQzNC5odG1sDQo+IA0KPiBbMV0gaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvcGlw
+ZXJtYWlsL2xpbnV4LWFybS1rZXJuZWwvMjAxNS0NCj4gSnVseS8zNTk3NDEuaHRtbA0KPiANCj4g
+DQo+IFpob3UgV2FuZyAoNCk6DQo+ICAgUENJOiBkZXNpZ253YXJlOiBBZGQgQVJNNjQgc3VwcG9y
+dA0KPiAgIFBDSTogaGlzaTogQWRkIFBDSWUgaG9zdCBzdXBwb3J0IGZvciBIaVNpbGljb24gU29D
+IEhpcDA1DQo+ICAgRG9jdW1lbnRhdGlvbjogRFQ6IEFkZCBIaVNpbGljb24gUENJZSBob3N0IGJp
+bmRpbmcNCj4gICBNQUlOVEFJTkVSUzogQWRkIHBjaWUtaGlzaSBtYWludGFpbmVyDQo+IA0KPiBn
+YWJyaWVsZSBwYW9sb25pICgyKToNCj4gICBQQ0k6IGRlc2lnbndhcmU6IG1vdmUgY2FsY3VsYXRp
+b24gb2YgYnVzIGFkZHJlc3NlcyB0byBEUkE3eHgNCj4gICBBUk0vUENJOiByZW1vdmUgYWxpZ25f
+cmVzb3VyY2UgaW4gcGNpX3N5c19kYXRhDQo+IA0KPiAgLi4uL2RldmljZXRyZWUvYmluZGluZ3Mv
+cGNpL2hpc2lsaWNvbi1wY2llLnR4dCAgICAgfCAgNDYgKysrKw0KPiAgTUFJTlRBSU5FUlMgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgfCAgIDcgKw0KPiAgYXJjaC9hcm0v
+aW5jbHVkZS9hc20vbWFjaC9wY2kuaCAgICAgICAgICAgICAgICAgICAgfCAgIDUgLQ0KPiAgYXJj
+aC9hcm0va2VybmVsL2Jpb3MzMi5jICAgICAgICAgICAgICAgICAgICAgICAgICAgfCAgMTIgKy0N
+Cj4gIGRyaXZlcnMvcGNpL2hvc3QvS2NvbmZpZyAgICAgICAgICAgICAgICAgICAgICAgICAgIHwg
+ICA4ICsNCj4gIGRyaXZlcnMvcGNpL2hvc3QvTWFrZWZpbGUgICAgICAgICAgICAgICAgICAgICAg
+ICAgIHwgICAxICsNCj4gIGRyaXZlcnMvcGNpL2hvc3QvcGNpLWRyYTd4eC5jICAgICAgICAgICAg
+ICAgICAgICAgIHwgIDEzICsrDQo+ICBkcml2ZXJzL3BjaS9ob3N0L3BjaS1rZXlzdG9uZS1kdy5j
+ICAgICAgICAgICAgICAgICB8ICAgMiArLQ0KPiAgZHJpdmVycy9wY2kvaG9zdC9wY2llLWRlc2ln
+bndhcmUuYyAgICAgICAgICAgICAgICAgfCAyMzcgKysrKysrKy0tLS0tLS0tLS0tLS0NCj4gIGRy
+aXZlcnMvcGNpL2hvc3QvcGNpZS1kZXNpZ253YXJlLmggICAgICAgICAgICAgICAgIHwgIDE0ICst
+DQo+ICBkcml2ZXJzL3BjaS9ob3N0L3BjaWUtaGlzaS5jICAgICAgICAgICAgICAgICAgICAgICB8
+IDI0Nw0KPiArKysrKysrKysrKysrKysrKysrKysNCj4gIDExIGZpbGVzIGNoYW5nZWQsIDQxMyBp
+bnNlcnRpb25zKCspLCAxNzkgZGVsZXRpb25zKC0pDQo+ICBjcmVhdGUgbW9kZSAxMDA2NDQgRG9j
+dW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3BjaS9oaXNpbGljb24tcGNpZS50eHQNCj4g
+IGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL3BjaS9ob3N0L3BjaWUtaGlzaS5jDQo+IA0KPiAt
+LQ0KPiAxLjkuMQ0KDQo=
