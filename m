@@ -1,309 +1,490 @@
-From: vikas <vikas.manocha-qxv4g6HH51o@public.gmane.org>
-Subject: Re: [PATCH 2/2] mtd: spi-nor: Add driver for Cadence Quad SPI Flash
- Controller.
-Date: Mon, 7 Sep 2015 11:56:12 -0700
-Message-ID: <55EDDDCC.7060006@st.com>
-References: <1440148851-14621-1-git-send-email-marex@denx.de> <1440148851-14621-2-git-send-email-marex@denx.de> <55EA2CFD.6060300@st.com> <201509061716.27521.marex@denx.de>
+From: Ariel D'Alessandro <ariel@vanguardiasur.com.ar>
+Subject: Re: [PATCH v3 2/2] pwm: Add Broadcom BCM7038 PWM controller support
+Date: Mon, 7 Sep 2015 16:15:27 -0300
+Message-ID: <55EDE24F.7020402@vanguardiasur.com.ar>
+References: <1440811309-1289-1-git-send-email-f.fainelli@gmail.com>
+ <1440811309-1289-3-git-send-email-f.fainelli@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <201509061716.27521.marex-ynQEQJNshbs@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>
-Cc: "linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Graham Moore <grmoore-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>, Alan Tull <atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Dinh Nguyen <dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>, Yves Vandervennet <yvanderv-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1440811309-1289-3-git-send-email-f.fainelli@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Florian Fainelli <f.fainelli@gmail.com>, linux-kernel@vger.kernel.org
+Cc: bcm-kernel-feedback-list@broadcom.com, thierry.reding@gmail.com, devicetree@vger.kernel.org, linux-pwm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Hi Florian,
 
-On 09/06/2015 08:16 AM, Marek Vasut wrote:
-> On Saturday, September 05, 2015 at 01:45:01 AM, vikas wrote:
->> Hi,
->>
->> On 08/21/2015 02:20 AM, Marek Vasut wrote:
->>> From: Graham Moore <grmoore-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
->>>
->>> Add support for the Cadence QSPI controller. This controller is
->>> present in the Altera SoCFPGA SoCs and this driver has been tested
->>> on the Cyclone V SoC.
->>
->> can we add info about the modes supported/not supported like direct mode,
->> indirect etc.
-> 
-> It's already part of the documentation.
+I wrote some observations below that maybe can be useful.
 
-To be clear, add info for modes supported in the driver. e.g. Direct mode is not supported in the driver.
-Lets add this info to help users.
+El 28/08/15 a las 22:21, Florian Fainelli escribi=F3:
+> Add support for the BCM7038-style PWM controller found in all BCM7xxx=
+ STB SoCs.
+> This controller has a hardcoded 2 channels per controller, and cascad=
+es a
+> variable frequency generator on top of a fixed frequency generator wh=
+ich offers
+> a range of a 148ns period all the way to ~622ms periods.
+>=20
+> Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+> ---
+> Changes in v3:
+>=20
+> - make clock mandatory
+> - removed a remaining div64_u64 use
+>=20
+> hanges in v2:
+>=20
+> - properly format comments
+> - utilize do_div instead of div64_u64
+> - avoid using a "done" variable for the while loop
+> - utilize a parameterized register accessor
+> - remove a bunch of unnecessary assignments
+> - provide a module author
+> - update depends to build on BMIPS_GENERIC (the other user)
+> - removed artificial padding
+> - removed used only once variable: dn
+> - utilize devm_ioremap_resource
+> - do not print success message
+> - removed THIS_MODULE from platform_driver structure
+>=20
+>  drivers/pwm/Kconfig       |  10 ++
+>  drivers/pwm/Makefile      |   1 +
+>  drivers/pwm/pwm-brcmstb.c | 324 ++++++++++++++++++++++++++++++++++++=
+++++++++++
+>  3 files changed, 335 insertions(+)
+>  create mode 100644 drivers/pwm/pwm-brcmstb.c
+>=20
+> diff --git a/drivers/pwm/Kconfig b/drivers/pwm/Kconfig
+> index b1541f40fd8d..363c22b22071 100644
+> --- a/drivers/pwm/Kconfig
+> +++ b/drivers/pwm/Kconfig
+> @@ -111,6 +111,16 @@ config PWM_CLPS711X
+>  	  To compile this driver as a module, choose M here: the module
+>  	  will be called pwm-clps711x.
+> =20
+> +config PWM_BRCMSTB
+> +	tristate "Broadcom STB PWM support"
+> +	depends on ARCH_BRCMSTB || BMIPS_GENERIC
+> +	help
+> +	  Generic PWM framework driver for the Broadcom Set-top-Box
+> +	  SoCs (BCM7xxx).
+> +
+> +	  To compile this driver as a module, choose M Here: the module
+> +	  will be called pwm-brcmstb.c.
+> +
+>  config PWM_EP93XX
+>  	tristate "Cirrus Logic EP93xx PWM support"
+>  	depends on ARCH_EP93XX
+> diff --git a/drivers/pwm/Makefile b/drivers/pwm/Makefile
+> index ec50eb5b5a8f..dc7b1b82d47e 100644
+> --- a/drivers/pwm/Makefile
+> +++ b/drivers/pwm/Makefile
+> @@ -7,6 +7,7 @@ obj-$(CONFIG_PWM_ATMEL_TCB)	+=3D pwm-atmel-tcb.o
+>  obj-$(CONFIG_PWM_BCM_KONA)	+=3D pwm-bcm-kona.o
+>  obj-$(CONFIG_PWM_BCM2835)	+=3D pwm-bcm2835.o
+>  obj-$(CONFIG_PWM_BFIN)		+=3D pwm-bfin.o
+> +obj-$(CONFIG_PWM_BRCMSTB)	+=3D pwm-brcmstb.o
+>  obj-$(CONFIG_PWM_CLPS711X)	+=3D pwm-clps711x.o
+>  obj-$(CONFIG_PWM_EP93XX)	+=3D pwm-ep93xx.o
+>  obj-$(CONFIG_PWM_FSL_FTM)	+=3D pwm-fsl-ftm.o
+> diff --git a/drivers/pwm/pwm-brcmstb.c b/drivers/pwm/pwm-brcmstb.c
+> new file mode 100644
+> index 000000000000..9ea73755f281
+> --- /dev/null
+> +++ b/drivers/pwm/pwm-brcmstb.c
+> @@ -0,0 +1,324 @@
+> +/*
+> + * Broadcom BCM7038 PWM driver
+> + * Author: Florian Fainelli
+> + *
+> + * Copyright (C) 2015 Broadcom Corporation
+> + *
+> + * This program is free software; you can redistribute it and/or mod=
+ify
+> + * it under the terms of the GNU General Public License as published=
+ by
+> + * the Free Software Foundation; either version 2 of the License, or
+> + * (at your option) any later version.
+> + *
+> + * This program is distributed in the hope that it will be useful,
+> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
+> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+> + * GNU General Public License for more details.
+> + */
+> +
+> +#define pr_fmt(fmt)	KBUILD_MODNAME ": " fmt
+> +
+> +#include <linux/clk.h>
+> +#include <linux/export.h>
+> +#include <linux/init.h>
+> +#include <linux/io.h>
+> +#include <linux/kernel.h>
+> +#include <linux/module.h>
+> +#include <linux/of.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/pwm.h>
+> +
+> +#define PWM_CTRL		0x00
+> +#define  CTRL_START		BIT(0)
+> +#define  CTRL_OEB		BIT(1)
+> +#define  CTRL_FORCE_HIGH	BIT(2)
+> +#define  CTRL_OPENDRAIN		BIT(3)
+> +#define  CTRL_CHAN_OFFS		4
+> +
+> +#define PWM_CTRL2		0x04
+> +#define  CTRL2_OUT_SELECT	BIT(0)
+> +
+> +#define PWM_CWORD_MSB		0x08
+> +#define PWM_CWORD_LSB		0x0C
+> +
+> +#define PWM_CH_SIZE		0x8
+> +
+> +/* Number of bits for the CWORD value */
+> +#define CWORD_BIT_SIZE		16
+> +
+> +/*
+> + * Maximum control word value allowed when variable-frequency PWM is=
+ used as a
+> + * clock for the constant-frequency PMW.
+> + */
+> +#define CONST_VAR_F_MAX		32768
+> +#define CONST_VAR_F_MIN		1
+> +
+> +#define PWM_ON(ch)		(0x18 + ((ch) * PWM_CH_SIZE))
+> +#define  PWM_ON_MIN		1
+> +#define PWM_PERIOD(ch)		(0x1C + ((ch) * PWM_CH_SIZE))
+> +#define  PWM_PERIOD_MIN		0
+> +
+> +#define PWM_ON_PERIOD_MAX	0xff
+> +
+> +struct brcmstb_pwm_dev {
+> +	void __iomem *base;
+> +	struct clk *clk;
+> +	struct pwm_chip chip;
+> +};
+> +
+> +static inline u32 pwm_readl(struct brcmstb_pwm_dev *p, u32 off)
 
-> 
->>> Signed-off-by: Graham Moore <grmoore-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
->>> Signed-off-by: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>
->>> Cc: Alan Tull <atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
->>> Cc: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->>> Cc: David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>
->>> Cc: Dinh Nguyen <dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
->>> Cc: Graham Moore <grmoore-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
->>> Cc: Vikas MANOCHA <vikas.manocha-qxv4g6HH51o@public.gmane.org>
->>> Cc: Yves Vandervennet <yvanderv-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
->>> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
->>> ---
-> 
-> [...]
-> 
->>> +#define CQSPI_REG_CMDADDRESS                   0x94
->>> +#define CQSPI_REG_CMDREADDATALOWER             0xA0
->>> +#define CQSPI_REG_CMDREADDATAUPPER             0xA4
->>> +#define CQSPI_REG_CMDWRITEDATALOWER            0xA8
->>> +#define CQSPI_REG_CMDWRITEDATAUPPER            0xAC
->>> +
->>> +/* Interrupt status bits */
->>> +#define CQSPI_REG_IRQ_MODE_ERR                 BIT(0)
->>> +#define CQSPI_REG_IRQ_UNDERFLOW                        BIT(1)
->>> +#define CQSPI_REG_IRQ_IND_COMP                 BIT(2)
->>> +#define CQSPI_REG_IRQ_IND_RD_REJECT            BIT(3)
->>> +#define CQSPI_REG_IRQ_WR_PROTECTED_ERR         BIT(4)
->>> +#define CQSPI_REG_IRQ_ILLEGAL_AHB_ERR          BIT(5)
->>
->> remove unused MACROs.
-> 
-> You mean you prefer to have incomplete definition of bits in the register
-> instead of a complete one ? I cannot agree to this, sorry.
-> 
->>> +#define CQSPI_REG_IRQ_WATERMARK                        BIT(6)
->>> +#define CQSPI_REG_IRQ_IND_RD_OVERFLOW          BIT(12)
->>
->> Correct this bit name to ..IND_RD_SRAM_FULL.
-> 
-> Good catch.
-> 
-> [...]
-> 
->>> +static int cqspi_wait_idle(struct cqspi_st *cqspi)
->>> +{
->>> +       const unsigned int poll_idle_retry = 3;
->>> +       unsigned int count = 0;
->>> +       unsigned long timeout;
->>> +
->>> +       timeout = jiffies + msecs_to_jiffies(CQSPI_TIMEOUT_MS);
->>> +       while (1) {
->>> +               /*
->>> +                * Read few times in succession to ensure the controller
->>> +                * is indeed idle, that is, the bit does not transition
->>> +                * low again.
->>> +                */
->>> +               if (cqspi_is_idle(cqspi))
->>> +                       count++;
->>> +               else
->>> +                       count = 0;
->>> +
->>> +               if (count >= poll_idle_retry)
->>> +                       return 0;
->>
->> why do we need to check it 3 times ?
-> 
-> Please see the comment above.
+The function name 'pwm_readl' sounds to be very common. It might be
+better to use a prefix here, don't you think? Maybe brcmstb_pwm_readl?
 
-don't use the comments to explain what code is doing. Add info why it is being done & how this solution fixes it.
-The point is if is some soc bug, it should be handled differently.
+> +{
+> +	if (IS_ENABLED(CONFIG_MIPS) && IS_ENABLED(CONFIG_CPU_BIG_ENDIAN))
+> +		return __raw_readl(p->base + off);
+> +	else
+> +		return readl_relaxed(p->base + off);
+> +}
+> +
+> +static inline void pwm_writel(struct brcmstb_pwm_dev *p, u32 val, u3=
+2 off)
 
-> 
->>> +
->>> +               if (time_after(jiffies, timeout)) {
->>> +                       /* Timeout, in busy mode. */
->>> +                       dev_err(&cqspi->pdev->dev,
->>> +                               "QSPI is still busy after %dms
->>> timeout.\n", +                               CQSPI_TIMEOUT_MS);
->>> +                       return -ETIMEDOUT;
->>> +               }
->>> +
->>> +               cpu_relax();
->>> +       }
->>> +}
->>> +
->>
->> [...]
->>
->>> +
->>> +static int cqspi_indirect_read_execute(struct spi_nor *nor,
->>> +                                      u8 *rxbuf, const unsigned n_rx)
->>> +{
->>> +       struct cqspi_flash_pdata *f_pdata = nor->priv;
->>> +       struct cqspi_st *cqspi = f_pdata->cqspi;
->>> +       void __iomem *reg_base = cqspi->iobase;
->>> +       void __iomem *ahb_base = cqspi->ahb_base;
->>> +       unsigned int remaining = n_rx;
->>> +       unsigned int bytes_to_read = 0;
->>> +       int ret = 0;
->>> +
->>> +       writel(remaining, reg_base + CQSPI_REG_INDIRECTRDBYTES);
->>> +
->>> +       /* Clear all interrupts. */
->>> +       writel(CQSPI_IRQ_STATUS_MASK, reg_base + CQSPI_REG_IRQSTATUS);
->>> +
->>> +       writel(CQSPI_IRQ_MASK_RD, reg_base + CQSPI_REG_IRQMASK);
->>
->> I think there is no need for separate masks for read & write. Use one mask
->> & configure it once in the init rather than configuring each time for
->> every read/write. Then in the ISR, take action as per the interrupt
->> source: read/write/error condition etc.
-> 
-> Setting up the specific IRQ mask prevents spurious interrupts during the
-> particular IO operation, so this solution looks more precise to me.
+Same as before here.
 
-spurious interrupt ? like ?
+> +{
+> +	if (IS_ENABLED(CONFIG_MIPS) && IS_ENABLED(CONFIG_CPU_BIG_ENDIAN))
+> +		__raw_writel(val, p->base + off);
+> +	else
+> +		writel_relaxed(val, p->base + off);
+> +}
+> +
+> +static inline struct brcmstb_pwm_dev *to_brcmstb_pwm(struct pwm_chip=
+ *ch)
+> +{
+> +	return container_of(ch, struct brcmstb_pwm_dev, chip);
+> +}
+> +
+> +/*
+> + * Fv is derived from the variable frequency output. The variable fr=
+equency
+> + * output is configured using this formula:
+> + *
+> + * W =3D cword, if cword < 2 ^ 15 else 16-bit 2's complement of cwor=
+d
+> + *
+> + * Fv =3D W x 2 ^ -16 x 27Mhz (reference clock)
+> + *
+> + * The period is: (period + 1) / Fv and "on" time is on / (period + =
+1)
+> + *
+> + * The PWM core framework specifies that the "duty_ns" parameter is =
+in fact the
+> + * "on" time, so this translates directly into our HW programming he=
+re.
+> + */
+> +static int brcmstb_pwm_config(struct pwm_chip *chip, struct pwm_devi=
+ce *pwm,
+> +			      int duty_ns, int period_ns)
+> +{
+> +	struct brcmstb_pwm_dev *b =3D to_brcmstb_pwm(chip);
+> +	unsigned long pc, dc, cword =3D CONST_VAR_F_MAX;
+> +	unsigned int ch =3D pwm->hwpwm;
+> +	u64 val, rate;
+> +	u32 reg;
+> +
+> +	/*
+> +	 * If asking for a duty_ns equal to period_ns, we need to substract
+> +	 * the period value by 1 to make it shorter than the "on" time and
+> +	 * produce a flat 100% duty cycle signal, and max out the "on" time
+> +	 */
+> +	if (duty_ns =3D=3D period_ns) {
+> +		dc =3D PWM_ON_PERIOD_MAX;
+> +		pc =3D PWM_ON_PERIOD_MAX - 1;
+> +		goto done;
+> +	}
+> +
+> +	while (1) {
+> +		/*
+> +		 * Calculate the base rate from base frequency and current
+> +		 * cword
+> +		 */
+> +		rate =3D (u64)clk_get_rate(b->clk) * (u64)cword;
+> +		do_div(rate, 1 << CWORD_BIT_SIZE);
+> +
+> +		val =3D period_ns * rate;
+> +		do_div(val, NSEC_PER_SEC);
+> +		pc =3D val;
+> +
+> +		val =3D (duty_ns + 1) * rate;
+> +		do_div(val, NSEC_PER_SEC);
+> +		dc =3D val;
+> +
+> +		/*
+> +		 * We can be called with separate duty and period updates,
+> +		 * so do not reject dc =3D=3D 0 right away
+> +		 */
+> +		if (pc =3D=3D PWM_PERIOD_MIN ||
+> +		   (dc < PWM_ON_MIN && duty_ns))
 
-Configuring interrupt at one time for read/write (preferably in init) is better software design
-then breaking it in for every read/write.
+No break needed here, this expression can be written on a single line
+increasing readability.
 
-> 
->>> +
->>> +       reinit_completion(&cqspi->transfer_complete);
->>> +       writel(CQSPI_REG_INDIRECTRD_START_MASK,
->>> +              reg_base + CQSPI_REG_INDIRECTRD);
->>> +
->>> +       while (remaining > 0) {
->>> +               ret =
->>> wait_for_completion_timeout(&cqspi->transfer_complete, +                
->>>                                 msecs_to_jiffies +                      
->>>                           (CQSPI_READ_TIMEOUT_MS)); +
->>> +               bytes_to_read = cqspi_get_rd_sram_level(cqspi);
->>> +
->>> +               if (!ret && bytes_to_read == 0) {
->>> +                       dev_err(nor->dev, "Indirect read timeout, no
->>> bytes\n"); +                       ret = -ETIMEDOUT;
->>> +                       goto failrd;
->>> +               }
->>> +
->>> +               while (bytes_to_read != 0) {
->>> +                       bytes_to_read *= cqspi->fifo_width;
->>> +                       bytes_to_read = bytes_to_read > remaining ?
->>> +                                       remaining : bytes_to_read;
->>> +                       readsl(ahb_base, rxbuf,
->>> DIV_ROUND_UP(bytes_to_read, 4)); +                       rxbuf +=
->>> bytes_to_read;
->>> +                       remaining -= bytes_to_read;
->>> +                       bytes_to_read = cqspi_get_rd_sram_level(cqspi);
->>> +               }
->>> +       }
->>> +
->>> +       /* Check indirect done status */
->>> +       ret = cqspi_wait_for_bit(reg_base + CQSPI_REG_INDIRECTRD,
->>> +                                CQSPI_REG_INDIRECTRD_DONE_MASK, 0);
->>> +       if (ret) {
->>> +               dev_err(nor->dev,
->>> +                       "Indirect read completion error (%i)\n", ret);
->>> +               goto failrd;
->>> +       }
->>> +
->>> +       /* Disable interrupt */
->>> +       writel(0, reg_base + CQSPI_REG_IRQMASK);
->>> +
->>> +       /* Clear indirect completion status */
->>> +       writel(CQSPI_REG_INDIRECTRD_DONE_MASK, reg_base +
->>> CQSPI_REG_INDIRECTRD); +
->>> +       return 0;
->>> +
->>> +failrd:
->>> +       /* Disable interrupt */
->>> +       writel(0, reg_base + CQSPI_REG_IRQMASK);
->>> +
->>> +       /* Cancel the indirect read */
->>> +       writel(CQSPI_REG_INDIRECTWR_CANCEL_MASK,
->>> +              reg_base + CQSPI_REG_INDIRECTRD);
->>> +       return ret;
->>> +}
-> 
-> [...]
-> 
->>> +static void cqspi_controller_enable(struct cqspi_st *cqspi)
->>> +{
->>> +       void __iomem *reg_base = cqspi->iobase;
->>> +       unsigned int reg;
->>> +
->>> +       reg = readl(reg_base + CQSPI_REG_CONFIG);
->>> +       reg |= CQSPI_REG_CONFIG_ENABLE_MASK;
->>> +       writel(reg, reg_base + CQSPI_REG_CONFIG);
->>> +}
->>> +
->>> +static void cqspi_controller_disable(struct cqspi_st *cqspi)
->>> +{
->>> +       void __iomem *reg_base = cqspi->iobase;
->>> +       unsigned int reg;
->>> +
->>> +       reg = readl(reg_base + CQSPI_REG_CONFIG);
->>> +       reg &= ~CQSPI_REG_CONFIG_ENABLE_MASK;
->>> +       writel(reg, reg_base + CQSPI_REG_CONFIG);
->>> +}
->>
->> two above function are almost same, we can have one function by adding
->> one bool arg.
-> 
-> It makes the code less readable, but whatever.
+> +			return -EINVAL;
+> +
+> +		/* We converged on a calculation */
+> +		if (pc <=3D PWM_ON_PERIOD_MAX && dc <=3D PWM_ON_PERIOD_MAX)
+> +			break;
+> +
+> +		/*
+> +		 * The cword needs to be a power of 2 for the variable
+> +		 * frequency generator to output a 50% duty cycle variable
+> +		 * frequency which is used as input clock to the fixed
+> +		 * frequency generator.
+> +		 */
+> +		cword >>=3D 1;
+> +
+> +		/*
+> +		 * Desired periods are too large, we do not have a divider
+> +		 * for them
+> +		 */
+> +		if (cword < CONST_VAR_F_MIN)
+> +			return -EINVAL;
+> +	}
+> +
+> +done:
+> +	/*
+> +	 * Configure the defined "cword" value to have the variable frequen=
+cy
+> +	 * generator output a base frequency for the constant frequency
+> +	 * generator to derive from.
+> +	 */
+> +	pwm_writel(b, cword >> 8, PWM_CWORD_MSB + ch * PWM_CH_SIZE);
+> +	pwm_writel(b, cword & 0xff, PWM_CWORD_LSB + ch * PWM_CH_SIZE);
+> +
+> +	/* Select constant frequency signal output */
+> +	reg =3D pwm_readl(b, PWM_CTRL2);
+> +	reg |=3D (CTRL2_OUT_SELECT << (ch * CTRL_CHAN_OFFS));
 
-simple code is good but not simpler :-)
+A nitpick here, outer parenthesis can be avoided.
 
-> 
-> [...]
-> 
->>> +static void cqspi_controller_init(struct cqspi_st *cqspi)
->>> +{
->>> +       cqspi_controller_disable(cqspi);
->>> +
->>> +       /* Configure the remap address register, no remap */
->>> +       writel(0, cqspi->iobase + CQSPI_REG_REMAP);
->>> +
->>> +       /* Disable all interrupts. */
->>> +       writel(0, cqspi->iobase + CQSPI_REG_IRQMASK);
->>> +
->>> +       /* Configure the SRAM split to 1:1 . */
->>
->> The comment is rightly using "SRAM" but the variable name "fifo_depth" is
->> misleading, change it to sram_depth.
-> 
-> Quote from the datasheet:
-> 
-> Defines the size of the indirect read partition in the
-> SRAM, in units of SRAM locations. By default, half of
-> the SRAM is reserved for indirect read operations and
-> half for indirect write operations.
+> +	pwm_writel(b, reg, PWM_CTRL2);
 
-good, that explains it is sram depth not fifo depth.
+This read-modify-write sequence may be protected by some locking
+mechanism. Notice that, as written in the docs: "PWM core does not
+enforce any locking to pwm_enable(), pwm_disable() and pwm_config()".
 
-> 
-> 
->>> +       writel(cqspi->fifo_depth / 2, cqspi->iobase +
->>> CQSPI_REG_SRAMPARTITION); +
->>> +       /* Load indirect trigger address. */
->>
->> remove this comment & review other comments of this function. I would
->> remove at least first two comments also of the routine.
-> 
-> I already answered this in the previous iteration.
+> +
+> +	/* Configure on and period value */
+> +	pwm_writel(b, pc, PWM_PERIOD(ch));
+> +	pwm_writel(b, dc, PWM_ON(ch));
+> +
+> +	return 0;
+> +}
+> +
+> +static inline void brcmstb_pwm_enable_set(struct brcmstb_pwm_dev *b,
+> +					  unsigned int ch, bool enable)
+> +{
+> +	unsigned int ofs =3D ch * CTRL_CHAN_OFFS;
+> +	u32 reg;
+> +
+> +	reg =3D pwm_readl(b, PWM_CTRL);
+> +	if (enable) {
+> +		reg &=3D ~(CTRL_OEB << ofs);
+> +		reg |=3D ((CTRL_START | CTRL_OPENDRAIN) << ofs);
 
-I don't agree on this commentary of code, loading a value in register & then adding "loading value in register".
-I stop here for this point, not worth more discussion.
+Nit, outer parenthesis can be avoided.
 
-Cheers,
-Vikas
+> +	} else {
+> +		reg &=3D ~((CTRL_START | CTRL_OPENDRAIN) << ofs);
+> +		reg |=3D (CTRL_OEB << ofs);
 
-> 
->>> +       writel(cqspi->trigger_address,
->>> +              cqspi->iobase + CQSPI_REG_INDIRECTTRIGGER);
->>> +
->>> +       /* Program read watermark -- 1/2 of the FIFO. */
->>> +       writel(cqspi->fifo_depth * cqspi->fifo_width / 2,
->>> +              cqspi->iobase + CQSPI_REG_INDIRECTRDWATERMARK);
->>> +       /* Program write watermark -- 1/8 of the FIFO. */
->>> +       writel(cqspi->fifo_depth * cqspi->fifo_width / 8,
->>> +              cqspi->iobase + CQSPI_REG_INDIRECTWRWATERMARK);
->>> +
->>> +       cqspi_controller_enable(cqspi);
->>> +}
-> 
-> [...]
-> .
-> 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Also here.
+
+> +	}
+> +	pwm_writel(b, reg, PWM_CTRL);
+
+Again, R-M-W sequence may be protected by some locking mechanism.
+
+> +}
+> +
+> +static int brcmstb_pwm_enable(struct pwm_chip *chip, struct pwm_devi=
+ce *pwm)
+> +{
+> +	struct brcmstb_pwm_dev *b =3D to_brcmstb_pwm(chip);
+> +
+> +	brcmstb_pwm_enable_set(b, pwm->hwpwm, true);
+> +
+> +	return 0;
+> +}
+> +
+> +static void brcmstb_pwm_disable(struct pwm_chip *chip, struct pwm_de=
+vice *pwm)
+> +{
+> +	struct brcmstb_pwm_dev *b =3D to_brcmstb_pwm(chip);
+> +
+> +	brcmstb_pwm_enable_set(b, pwm->hwpwm, false);
+> +}
+> +
+> +static const struct pwm_ops brcmstb_pwm_ops =3D {
+> +	.config	=3D brcmstb_pwm_config,
+> +	.enable	=3D brcmstb_pwm_enable,
+> +	.disable =3D brcmstb_pwm_disable,
+> +	.owner =3D THIS_MODULE,
+> +};
+> +
+> +static const struct of_device_id brcmstb_pwm_of_match[] =3D {
+> +	{ .compatible =3D "brcm,bcm7038-pwm", },
+> +	{ /* sentinel */ }
+> +};
+> +
+> +static int brcmstb_pwm_probe(struct platform_device *pdev)
+> +{
+> +	struct brcmstb_pwm_dev *p;
+> +	struct resource *r;
+> +	int ret;
+> +
+> +	p =3D devm_kzalloc(&pdev->dev, sizeof(*p), GFP_KERNEL);
+> +	if (!p)
+> +		return -ENOMEM;
+> +
+> +	/*
+> +	 * Try to grab the clock and its rate, if not available, default
+> +	 * to the base 27Mhz clock domain this block comes from.
+> +	 */
+> +	p->clk =3D devm_clk_get(&pdev->dev, NULL);
+> +	if (IS_ERR(p->clk)) {
+> +		dev_err(&pdev->dev, "failed to obtain clock\n");
+> +		return PTR_ERR(p->clk);
+> +	}
+> +
+> +	clk_prepare_enable(p->clk);
+> +
+> +	platform_set_drvdata(pdev, p);
+> +
+> +	p->chip.dev =3D &pdev->dev;
+> +	p->chip.ops =3D &brcmstb_pwm_ops;
+> +	/* Dynamically assign a PWM base */
+> +	p->chip.base =3D -1;
+> +	/* Static number of PWM channels for this controller */
+> +	p->chip.npwm =3D 2;
+> +	p->chip.can_sleep =3D true;
+> +
+> +	r =3D platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> +	p->base =3D devm_ioremap_resource(&pdev->dev, r);
+> +	if (!p->base)
+> +		return -ENOMEM;
+
+I think you're missing some cleanup routine here. You have a previous
+call to clk_prepare_enable(), so you may have a call to
+clk_disable_unprepare() here in order to exit cleanly.
+
+> +
+> +	ret =3D pwmchip_add(&p->chip);
+> +	if (ret)
+> +		dev_err(&pdev->dev, "failed to add PWM chip %d\n", ret);
+
+Cleanup needed here too.
+
+> +
+> +	return ret;
+> +}
+> +
+> +static int brcmstb_pwm_remove(struct platform_device *pdev)
+> +{
+> +	struct brcmstb_pwm_dev *p =3D platform_get_drvdata(pdev);
+> +
+> +	clk_disable_unprepare(p->clk);
+> +
+> +	return pwmchip_remove(&p->chip);
+
+AFAIK, pwmchip_remove() may return busy if the PWM chip provides a PWM
+device that is still requested, so you shouldn't disable the clock
+before you ensure the PWM chip has been successfuly removed.
+
+It think you could do something like:
+
+	ret =3D pwmchip_remove(&p->chip);
+	if (ret)
+		return ret;
+
+	clk_disable_unprepare(p->clk);
+	return 0;
+
+> +}
+> +
+> +#ifdef CONFIG_PM_SLEEP
+> +static int brcmstb_pwm_suspend(struct device *d)
+> +{
+> +	struct platform_device *pdev =3D to_platform_device(d);
+> +	struct brcmstb_pwm_dev *p =3D platform_get_drvdata(pdev);
+> +
+> +	clk_disable(p->clk);
+> +
+> +	return 0;
+> +}
+> +
+> +static int brcmstb_pwm_resume(struct device *d)
+> +{
+> +	struct platform_device *pdev =3D to_platform_device(d);
+> +	struct brcmstb_pwm_dev *p =3D platform_get_drvdata(pdev);
+> +
+> +	clk_enable(p->clk);
+> +
+> +	return 0;
+> +}
+> +#endif
+> +
+> +static SIMPLE_DEV_PM_OPS(brcmstb_pwm_pm_ops,
+> +			 brcmstb_pwm_suspend, brcmstb_pwm_resume);
+> +
+> +static struct platform_driver brcmstb_pwm_driver =3D {
+> +	.probe	=3D brcmstb_pwm_probe,
+> +	.remove	=3D brcmstb_pwm_remove,
+> +	.driver	=3D {
+> +		.name =3D "pwm-brcmstb",
+> +		.of_match_table =3D brcmstb_pwm_of_match,
+> +		.pm =3D &brcmstb_pwm_pm_ops,
+> +	},
+> +};
+> +module_platform_driver(brcmstb_pwm_driver);
+> +
+> +MODULE_AUTHOR("Florian Fainelli <f.fainelli@gmail.com>");
+> +MODULE_DESCRIPTION("Broadcom STB PWM driver");
+> +MODULE_ALIAS("platform:pwm-brcmstb");
+> +MODULE_LICENSE("GPL");
+>=20
+
+--=20
+Ariel D'Alessandro, VanguardiaSur
+www.vanguardiasur.com.ar
