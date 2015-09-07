@@ -1,356 +1,201 @@
-From: Duan Andy <fugang.duan@freescale.com>
-Subject: RE: [PATCH v2 2/8] ARM: imx: imx7d-pinfunc: add gpio1 pad iomux
- settings
-Date: Mon, 7 Sep 2015 02:18:50 +0000
-Message-ID: <BN3PR0301MB12190C5C3BC528D81767EAFCF5540@BN3PR0301MB1219.namprd03.prod.outlook.com>
-References: <1441147753-13239-1-git-send-email-aalonso@freescale.com>
- <1441147753-13239-2-git-send-email-aalonso@freescale.com>
- <20150907010112.GD30746@tiger>
+From: Yakir Yang <ykk-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Subject: Re: [PATCH v4 03/16] drm: bridge: analogix/dp: split exynos dp driver
+ to bridge dir
+Date: Mon, 07 Sep 2015 10:27:25 +0800
+Message-ID: <55ECF60D.4060208@rock-chips.com>
+References: <1441086371-24838-1-git-send-email-ykk@rock-chips.com> <1441086598-24995-1-git-send-email-ykk@rock-chips.com> <55E79B41.6010301@samsung.com> <55E7DAE1.6070308@rock-chips.com> <55E8E8BE.8010300@samsung.com> <55EBF024.3070304@rock-chips.com> <55ECD8CB.7060408@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <20150907010112.GD30746@tiger>
-Content-Language: en-US
-Sender: linux-gpio-owner@vger.kernel.org
-To: Shawn Guo <shawnguo@kernel.org>, Alonso Adrian <aalonso@freescale.com>
-Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "shawn.guo@linaro.org" <shawn.guo@linaro.org>, "linus.walleij@linaro.org" <linus.walleij@linaro.org>, "lznuaa@gmail.com" <lznuaa@gmail.com>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, Huang Anson <Anson.Huang@freescale.com>, Li Frank <Frank.Li@freescale.com>, Yibin Gong <yibin.gong@freescale.com>, Nitin Garg <nitin.garg@freescale.com>
+Content-Type: text/plain; charset=utf-8;
+	format=flowed
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <55ECD8CB.7060408-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Jingoo Han <jingoohan1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Inki Dae <inki.dae-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, joe-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org, Kukjin Kim <kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Yao <mark.yao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Cc: Russell King <rmk+kernel-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, djkurtz-F7+t8E8rja9Wk0Htik3J/w@public.gmane.org, dianders-F7+t8E8rja9Wk0Htik3J/w@public.gmane.org, seanpaul-F7+t8E8rja9Wk0Htik3J/w@public.gmane.org, ajaynumb-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Andrzej Hajda <a.hajda-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Kyungmin Park <kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Gustavo Padovan <gustavo.padovan-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>, Andy Yan <andy.yan-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: Shawn Guo <shawnguo@kernel.org> Sent: Monday, September 07, 2015 9:01 AM
-> To: Alonso Lazcano Adrian-B38018
-> Cc: linux-arm-kernel@lists.infradead.org; shawn.guo@linaro.org;
-> linus.walleij@linaro.org; lznuaa@gmail.com; linux-gpio@vger.kernel.org;
-> devicetree@vger.kernel.org; robh+dt@kernel.org; Huang Yongcai-B20788; Li
-> Frank-B20596; Gong Yibin-B38343; Garg Nitin-B37173; Duan Fugang-B38611
-> Subject: Re: [PATCH v2 2/8] ARM: imx: imx7d-pinfunc: add gpio1 pad iomux
-> settings
-> 
-> On Tue, Sep 01, 2015 at 05:49:07PM -0500, Adrian Alonso wrote:
-> > - Add imx7 SoC GPIO1 pad iomuxc settings
-> >   <mux_reg conf_reg input_reg mux_mode input_val>
-> > - Fix UART input select daisy chain setting values
-> >
-> > Signed-off-by: Adrian Alonso <aalonso@freescale.com>
-> 
-> Fugang has a patch [1] doing the same thing.  You guys please coordinate
-> on this.
-> 
-> Shawn
-> 
+Hi Krzysztof,
 
-Shawn, pls get this patch and drop my patch since the patch also includes two uart pads setting change that is more overall for pinfunc change.
+=E5=9C=A8 09/07/2015 08:22 AM, Krzysztof Kozlowski =E5=86=99=E9=81=93:
+> On 06.09.2015 16:49, Yakir Yang wrote:
+>> Hi Krzysztof,
+>>
+>> =E5=9C=A8 09/04/2015 08:41 AM, Krzysztof Kozlowski =E5=86=99=E9=81=93=
+:
+>>> On 03.09.2015 14:30, Yakir Yang wrote:
+>>>> Hi Krzysztof,
+>>>>
+>>>> =E5=9C=A8 09/03/2015 08:58 AM, Krzysztof Kozlowski =E5=86=99=E9=81=
+=93:
+>>>>> On 01.09.2015 14:49, Yakir Yang wrote:
+>>>>>> Split the dp core driver from exynos directory to bridge
+>>>>>> directory, and rename the core driver to analogix_dp_*,
+>>>>>> leave the platform code to analogix_dp-exynos.
+>>>>>>
+>>>>>> Signed-off-by: Yakir Yang <ykk-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+>>>>>> ---
+>>>>>> Changes in v4:
+>>>>>> - Take Rob suggest, update "analogix,hpd-gpios" to "hpd-gpios" D=
+T
+>>>>>> propery.
+>>>>>> - Take Jingoo suggest, rename "analogix_dp-exynos.c" file name t=
+o
+>>>>>> "exynos_dp.c"
+>>>>>> - Take Archit suggest, create a separate folder for analogix cod=
+e in
+>>>>>> bridge/
+>>>>>>
+>>>>>> Changes in v3:
+>>>>>> - Take Thierry Reding suggest, move exynos's video_timing code
+>>>>>>      to analogix_dp-exynos platform driver, add get_modes method
+>>>>>>      to struct analogix_dp_plat_data.
+>>>>>> - Take Heiko suggest, rename some "samsung*" dts propery to
+>>>>>> "analogix*".
+>>>>>>
+>>>>>> Changes in v2:
+>>>>>> - Take Jingoo Han suggest, remove new copyright
+>>>>>> - Fix compiled failed dut to analogix_dp_device misspell
+>> [.....]
+>>
+>>>>>> -static int exynos_dp_bridge_attach(struct drm_bridge *bridge)
+>>>>>> +static int analogix_dp_bridge_attach(struct drm_bridge *bridge)
+>>>>>>     {
+>>>>>> -    struct exynos_dp_device *dp =3D bridge->driver_private;
+>>>>>> -    struct drm_encoder *encoder =3D &dp->encoder;
+>>>>>> +    struct analogix_dp_device *dp =3D bridge->driver_private;
+>>>>>> +    struct drm_encoder *encoder =3D dp->encoder;
+>>>>>>         struct drm_connector *connector =3D &dp->connector;
+>>>>>>         int ret;
+>>>>>>     -    /* Pre-empt DP connector creation if there's a bridge *=
+/
+>>>>>> -    if (dp->ptn_bridge) {
+>>>>>> -        ret =3D exynos_drm_attach_lcd_bridge(dp, encoder);
+>>>>>> -        if (!ret)
+>>>>>> -            return 0;
+>>>>>> +    if (!bridge->encoder) {
+>>>>>> +        DRM_ERROR("Parent encoder object not found");
+>>>>>> +        return -ENODEV;
+>>>>>>         }
+>>>>>>     +    encoder->bridge =3D bridge;
+>>>>>> +
+>>>>>>         connector->polled =3D DRM_CONNECTOR_POLL_HPD;
+>>>>>>           ret =3D drm_connector_init(dp->drm_dev, connector,
+>>>>>> -                 &exynos_dp_connector_funcs,
+>>>>>> +                 &analogix_dp_connector_funcs,
+>>>>>>                      DRM_MODE_CONNECTOR_eDP);
+>>>>>>         if (ret) {
+>>>>>>             DRM_ERROR("Failed to initialize connector with drm\n=
+");
+>>>>>>             return ret;
+>>>>>>         }
+>>>>>>     -    drm_connector_helper_add(connector,
+>>>>>> &exynos_dp_connector_helper_funcs);
+>>>>>> +    drm_connector_helper_add(connector,
+>>>>>> +                 &analogix_dp_connector_helper_funcs);
+>>>>>>         drm_connector_register(connector);
+>>>>>>         drm_mode_connector_attach_encoder(connector, encoder);
+>>>>>>     -    if (dp->panel)
+>>>>>> -        ret =3D drm_panel_attach(dp->panel, &dp->connector);
+>>>>>> +    if (dp->plat_data && dp->plat_data->panel) {
+>>>>>> +        ret =3D drm_panel_attach(dp->plat_data->panel, &dp->con=
+nector);
+>>>>>> +        if (ret) {
+>>>>>> +            DRM_ERROR("Failed to attach panel\n");
+>>>>>> +            return ret;
+>>>>>> +        }
+>>>>>> +    }
+>>>>>> +
+>>>>>> +    /*
+>>>>>> +     * This should be the end of attach function, caused
+>>>>>> +     * we should ensure dp bridge could attach first.
+>>>>>> +     */
+>>>>>> +     if (dp->plat_data && dp->plat_data->attach) {
+>>>>>> +         ret =3D dp->plat_data->attach(dp->plat_data, bridge);
+>>>>>> +         if (ret) {
+>>>>>> +             DRM_ERROR("Failed at platform attch func\n");
+>>>>> Two new error paths appeared here and above. Don't you have to
+>>>>> cleanup something? I don't know, just wondering...
+>>>> Hmm... I think both panel & platform_attch need ERROR remind when
+>>>> it failed. But if it still need clean, I though it should clean th=
+e
+>>>> platform attch
+>>>> error,
+>>>> this is not relate to DRM directly, just analogix driver logic, so
+>>>> code would like,
+>>>>
+>>>> -    if (dp->panel)
+>>>> -        ret =3D drm_panel_attach(dp->panel, &dp->connector);
+>>>> +    if (dp->plat_data && dp->plat_data->panel) {
+>>>> +        ret =3D drm_panel_attach(dp->plat_data->panel, &dp->conne=
+ctor);
+>>>> +        if (ret) {
+>>>> +            DRM_ERROR("Failed to attach panel\n");
+>>>> +            return ret;
+>>>> +        }
+>>>> +    }
+>>>>
+>>>> +    /*
+>>>> +     * This should be the end of attach function, caused
+>>>> +     * we should ensure dp bridge could attach first.
+>>>> +     */
+>>>> +     if (dp->plat_data && dp->plat_data->attach) {
+>>>> +         ret =3D dp->plat_data->attach(dp->plat_data, bridge);
+>>>>
+>>>>             return ret;
+>>> I am lost... the code looks the same. What did you change?
+>> I just remove the DRM_ERROR after dp->plat_data->attach(),
+>> maybe I should paste the change that rebase on this patch,
+>> here are they,
+>>
+>>      /*
+>>       * This should be the end of attach function, caused
+>>       * we should ensure dp bridge could attach first.
+>>       */
+>> -     if (dp->plat_data && dp->plat_data->attach) {
+>> +     if (dp->plat_data && dp->plat_data->attach)
+>>             ret =3D dp->plat_data->attach(dp->plat_data, bridge);
+>> -          if (ret) {
+>> -              DRM_ERROR("Failed at platform attch func\n");
+>> -              return ret;
+>> -          }
+>> -      }
+>>
+>> -    return 0;
+>> +   return ret;
+>>
+>>
+>> If this haven't meet your comment, I maybe start to think that
+>> your comment  "Two new error paths appeared here and above"
+>> indicated that those two function is the same.
+>>      "dp->plat_data->attach(dp->plat_data, bridge); "
+>>      "drm_panel_attach(dp->plat_data->panel, &dp->connector); "
+> I wasn't talking about error message but rather about possible need o=
+f
+> clean up in error path. Previously there was only drm_panel_attach().
+> Now you have two of them (drm_panel_attach() and
+> dp->plat_data->attach()). If the second fails don't you have to clean=
+ up
+> before exit? I don't know, just asking.
 
-Regards.
+Oh... Sorry about missing your words. Yes,=20
+drm_panel_detach(dp->plat_data->panel)
+was missed in this error path.
 
-> [1]
-> http://thread.gmane.org/gmane.linux.ports.arm.kernel/435713/focus=435716
-> 
-> > ---
-> > Chages for V2: Fix tab+space identation
-> >
-> >  arch/arm/boot/dts/imx7d-pinfunc.h | 122
-> > +++++++++++++++++++++++++++++++++++++-
-> >  1 file changed, 119 insertions(+), 3 deletions(-)
-> >
-> > diff --git a/arch/arm/boot/dts/imx7d-pinfunc.h
-> > b/arch/arm/boot/dts/imx7d-pinfunc.h
-> > index a8d8149..eeda783 100644
-> > --- a/arch/arm/boot/dts/imx7d-pinfunc.h
-> > +++ b/arch/arm/boot/dts/imx7d-pinfunc.h
-> > @@ -15,6 +15,122 @@
-> >   * <mux_reg conf_reg input_reg mux_mode input_val>
-> >   */
-> >
-> > +#define MX7D_PAD_GPIO1_IO00__GPIO1_IO0
-> 0x0000 0x0030 0x0000 0x0 0x0
-> > +#define MX7D_PAD_GPIO1_IO00__PWM4_OUT
-> 0x0000 0x0030 0x0000 0x1 0x0
-> > +#define MX7D_PAD_GPIO1_IO00__WDOD1_WDOG_ANY
-> 0x0000 0x0030 0x0000 0x2 0x0
-> > +#define MX7D_PAD_GPIO1_IO00__WDOD1_WDOG_B
-> 0x0000 0x0030 0x0000 0x3 0x0
-> > +#define MX7D_PAD_GPIO1_IO00__WDOD1_WDOG__RST_B_DEB
-> 0x0000 0x0030 0x0000 0x4 0x0
-> > +#define MX7D_PAD_GPIO1_IO01__GPIO1_IO1
-> 0x0004 0x0034 0x0000 0x0 0x0
-> > +#define MX7D_PAD_GPIO1_IO01__PWM1_OUT
-> 0x0004 0x0034 0x0000 0x1 0x0
-> > +#define MX7D_PAD_GPIO1_IO01__CCM_ENET_REF_CLK3
-> 0x0004 0x0034 0x0000 0x2 0x0
-> > +#define MX7D_PAD_GPIO1_IO01__SAI1_MCLK
-> 0x0004 0x0034 0x0000 0x3 0x0
-> > +#define MX7D_PAD_GPIO1_IO01__ANATOP_24M_OUT
-> 0x0004 0x0034 0x0000 0x4 0x0
-> > +#define MX7D_PAD_GPIO1_IO01__OBSERVE0_OUT
-> 0x0004 0x0034 0x0000 0x6 0x0
-> > +#define MX7D_PAD_GPIO1_IO02__GPIO1_IO2
-> 0x0008 0x0038 0x0000 0x0 0x0
-> > +#define MX7D_PAD_GPIO1_IO02__PWM2_OUT
-> 0x0008 0x0038 0x0000 0x1 0x0
-> > +#define MX7D_PAD_GPIO1_IO02__CCM_ENET_REF_CLK1
-> 0x0008 0x0038 0x0564 0x2 0x3
-> > +#define MX7D_PAD_GPIO1_IO02__SAI2_MCLK
-> 0x0008 0x0038 0x0000 0x3 0x0
-> > +#define MX7D_PAD_GPIO1_IO02__CCM_CLKO1
-> 0x0008 0x0038 0x0000 0x5 0x0
-> > +#define MX7D_PAD_GPIO1_IO02__OBSERVE1_OUT
-> 0x0008 0x0038 0x0000 0x6 0x0
-> > +#define MX7D_PAD_GPIO1_IO02__USB_OTG1_ID
-> 0x0008 0x0038 0x0734 0x7 0x3
-> > +#define MX7D_PAD_GPIO1_IO03__GPIO1_IO3
-> 0x000C 0x003C 0x0000 0x0 0x0
-> > +#define MX7D_PAD_GPIO1_IO03__PWM3_OUT
-> 0x000C 0x003C 0x0000 0x1 0x0
-> > +#define MX7D_PAD_GPIO1_IO03__CCM_ENET_REF_CLK2
-> 0x000C 0x003C 0x0570 0x2 0x3
-> > +#define MX7D_PAD_GPIO1_IO03__SAI3_MCLK
-> 0x000C 0x003C 0x0000 0x3 0x0
-> > +#define MX7D_PAD_GPIO1_IO03__CCM_CLKO2
-> 0x000C 0x003C 0x0000 0x5 0x0
-> > +#define MX7D_PAD_GPIO1_IO03__OBSERVE2_OUT
-> 0x000C 0x003C 0x0000 0x6 0x0
-> > +#define MX7D_PAD_GPIO1_IO03__USB_OTG2_ID
-> 0x000C 0x003C 0x0730 0x7 0x3
-> > +#define MX7D_PAD_GPIO1_IO04__GPIO1_IO4
-> 0x0010 0x0040 0x0000 0x0 0x0
-> > +#define MX7D_PAD_GPIO1_IO04__USB_OTG1_OC
-> 0x0010 0x0040 0x072C 0x1 0x1
-> > +#define MX7D_PAD_GPIO1_IO04__FLEXTIMER1_CH4
-> 0x0010 0x0040 0x0594 0x2 0x1
-> > +#define MX7D_PAD_GPIO1_IO04__UART5_CTS_B
-> 0x0010 0x0040 0x0710 0x3 0x4
-> > +#define MX7D_PAD_GPIO1_IO04__I2C1_SCL
-> 0x0010 0x0040 0x05D4 0x4 0x2
-> > +#define MX7D_PAD_GPIO1_IO04__OBSERVE3_OUT
-> 0x0010 0x0040 0x0000 0x6 0x0
-> > +#define MX7D_PAD_GPIO1_IO05__GPIO1_IO5
-> 0x0014 0x0044 0x0000 0x0 0x0
-> > +#define MX7D_PAD_GPIO1_IO05__USB_OTG1_PWR
-> 0x0014 0x0044 0x0000 0x1 0x0
-> > +#define MX7D_PAD_GPIO1_IO05__FLEXTIMER1_CH5
-> 0x0014 0x0044 0x0598 0x2 0x1
-> > +#define MX7D_PAD_GPIO1_IO05__UART5_RTS_B
-> 0x0014 0x0044 0x0710 0x3 0x5
-> > +#define MX7D_PAD_GPIO1_IO05__I2C1_SDA
-> 0x0014 0x0044 0x05D8 0x4 0x2
-> > +#define MX7D_PAD_GPIO1_IO05__OBSERVE4_OUT
-> 0x0014 0x0044 0x0000 0x6 0x0
-> > +#define MX7D_PAD_GPIO1_IO06__GPIO1_IO6
-> 0x0018 0x0048 0x0000 0x0 0x0
-> > +#define MX7D_PAD_GPIO1_IO06__USB_OTG2_OC
-> 0x0018 0x0048 0x0728 0x1 0x1
-> > +#define MX7D_PAD_GPIO1_IO06__FLEXTIMER1_CH6
-> 0x0018 0x0048 0x059C 0x2 0x1
-> > +#define MX7D_PAD_GPIO1_IO06__UART5_RX_DATA
-> 0x0018 0x0048 0x0714 0x3 0x4
-> > +#define MX7D_PAD_GPIO1_IO06__I2C2_SCL
-> 0x0018 0x0048 0x05DC 0x4 0x2
-> > +#define MX7D_PAD_GPIO1_IO06__CCM_WAIT
-> 0x0018 0x0048 0x0000 0x5 0x0
-> > +#define MX7D_PAD_GPIO1_IO06__KPP_ROW4
-> 0x0018 0x0048 0x0624 0x6 0x1
-> > +#define MX7D_PAD_GPIO1_IO07__GPIO1_IO7
-> 0x001C 0x004C 0x0000 0x0 0x0
-> > +#define MX7D_PAD_GPIO1_IO07__USB_OTG2_PWR
-> 0x001C 0x004C 0x0000 0x1 0x0
-> > +#define MX7D_PAD_GPIO1_IO07__FLEXTIMER1_CH7
-> 0x001C 0x004C 0x05A0 0x2 0x1
-> > +#define MX7D_PAD_GPIO1_IO07__UART5_TX_DATA
-> 0x001C 0x004C 0x0714 0x3 0x5
-> > +#define MX7D_PAD_GPIO1_IO07__I2C2_SDA
-> 0x001C 0x004C 0x05E0 0x4 0x2
-> > +#define MX7D_PAD_GPIO1_IO07__CCM_STOP
-> 0x001C 0x004C 0x0000 0x5 0x0
-> > +#define MX7D_PAD_GPIO1_IO07__KPP_COL4
-> 0x001C 0x004C 0x0604 0x6 0x1
-> > +#define MX7D_PAD_GPIO1_IO08__GPIO1_IO8
-> 0x0014 0x026C 0x0000 0x0 0x0
-> > +#define MX7D_PAD_GPIO1_IO08__SD1_VSELECT
-> 0x0014 0x026C 0x0000 0x1 0x0
-> > +#define MX7D_PAD_GPIO1_IO08__WDOG1_WDOG_B
-> 0x0014 0x026C 0x0000 0x2 0x0
-> > +#define MX7D_PAD_GPIO1_IO08__UART3_DCE_RX
-> 0x0014 0x026C 0x0704 0x3 0x0
-> > +#define MX7D_PAD_GPIO1_IO08__UART3_DTE_TX
-> 0x0014 0x026C 0x0000 0x3 0x0
-> > +#define MX7D_PAD_GPIO1_IO08__I2C3_SCL
-> 0x0014 0x026C 0x05E4 0x4 0x0
-> > +#define MX7D_PAD_GPIO1_IO08__KPP_COL5
-> 0x0014 0x026C 0x0608 0x6 0x0
-> > +#define MX7D_PAD_GPIO1_IO08__PWM1_OUT
-> 0x0014 0x026C 0x0000 0x7 0x0
-> > +#define MX7D_PAD_GPIO1_IO09__GPIO1_IO9
-> 0x0018 0x0270 0x0000 0x0 0x0
-> > +#define MX7D_PAD_GPIO1_IO09__SD1_LCTL
-> 0x0018 0x0270 0x0000 0x1 0x0
-> > +#define MX7D_PAD_GPIO1_IO09__CCM_ENET_REF_CLK3
-> 0x0018 0x0270 0x0000 0x2 0x0
-> > +#define MX7D_PAD_GPIO1_IO09__UART3_DCE_TX
-> 0x0018 0x0270 0x0000 0x3 0x0
-> > +#define MX7D_PAD_GPIO1_IO09__UART3_DTE_RX
-> 0x0018 0x0270 0x0704 0x3 0x1
-> > +#define MX7D_PAD_GPIO1_IO09__I2C3_SDA
-> 0x0018 0x0270 0x05E8 0x4 0x0
-> > +#define MX7D_PAD_GPIO1_IO09__CCM_PMIC_READY
-> 0x0018 0x0270 0x04F4 0x5 0x0
-> > +#define MX7D_PAD_GPIO1_IO09__KPP_ROW5
-> 0x0018 0x0270 0x0628 0x6 0x0
-> > +#define MX7D_PAD_GPIO1_IO09__PWM2_OUT
-> 0x0018 0x0270 0x0000 0x7 0x0
-> > +#define MX7D_PAD_GPIO1_IO10__GPIO1_IO10
-> 0x001C 0x0274 0x0000 0x0 0x0
-> > +#define MX7D_PAD_GPIO1_IO10__SD2_LCTL
-> 0x001C 0x0274 0x0000 0x1 0x0
-> > +#define MX7D_PAD_GPIO1_IO10__ENET1_MDIO
-> 0x001C 0x0274 0x0568 0x2 0x0
-> > +#define MX7D_PAD_GPIO1_IO10__UART3_DCE_RTS
-> 0x001C 0x0274 0x0700 0x3 0x0
-> > +#define MX7D_PAD_GPIO1_IO10__UART3_DTE_CTS
-> 0x001C 0x0274 0x0000 0x3 0x0
-> > +#define MX7D_PAD_GPIO1_IO10__I2C4_SCL
-> 0x001C 0x0274 0x05EC 0x4 0x0
-> > +#define MX7D_PAD_GPIO1_IO10__FLEXTIMER1_PHA
-> 0x001C 0x0274 0x05A4 0x5 0x0
-> > +#define MX7D_PAD_GPIO1_IO10__KPP_COL6
-> 0x001C 0x0274 0x060C 0x6 0x0
-> > +#define MX7D_PAD_GPIO1_IO10__PWM3_OUT
-> 0x001C 0x0274 0x0000 0x7 0x0
-> > +#define MX7D_PAD_GPIO1_IO11__GPIO1_IO11
-> 0x0020 0x0278 0x0000 0x0 0x0
-> > +#define MX7D_PAD_GPIO1_IO11__SD3_LCTL
-> 0x0020 0x0278 0x0000 0x1 0x0
-> > +#define MX7D_PAD_GPIO1_IO11__ENET1_MDC
-> 0x0020 0x0278 0x0000 0x2 0x0
-> > +#define MX7D_PAD_GPIO1_IO11__UART3_DCE_CTS
-> 0x0020 0x0278 0x0000 0x3 0x0
-> > +#define MX7D_PAD_GPIO1_IO11__UART3_DTE_RTS
-> 0x0020 0x0278 0x0700 0x3 0x1
-> > +#define MX7D_PAD_GPIO1_IO11__I2C4_SDA
-> 0x0020 0x0278 0x05F0 0x4 0x0
-> > +#define MX7D_PAD_GPIO1_IO11__FLEXTIMER1_PHB
-> 0x0020 0x0278 0x05A8 0x5 0x0
-> > +#define MX7D_PAD_GPIO1_IO11__KPP_ROW6
-> 0x0020 0x0278 0x062C 0x6 0x0
-> > +#define MX7D_PAD_GPIO1_IO11__PWM4_OUT
-> 0x0020 0x0278 0x0000 0x7 0x0
-> > +#define MX7D_PAD_GPIO1_IO12__GPIO1_IO12
-> 0x0024 0x027C 0x0000 0x0 0x0
-> > +#define MX7D_PAD_GPIO1_IO12__SD2_VSELECT
-> 0x0024 0x027C 0x0000 0x1 0x0
-> > +#define MX7D_PAD_GPIO1_IO12__CCM_ENET_REF_CLK1
-> 0x0024 0x027C 0x0564 0x2 0x0
-> > +#define MX7D_PAD_GPIO1_IO12__FLEXCAN1_RX
-> 0x0024 0x027C 0x04DC 0x3 0x0
-> > +#define MX7D_PAD_GPIO1_IO12__CM4_NMI
-> 0x0024 0x027C 0x0000 0x4 0x0
-> > +#define MX7D_PAD_GPIO1_IO12__CCM_EXT_CLK1
-> 0x0024 0x027C 0x04E4 0x5 0x0
-> > +#define MX7D_PAD_GPIO1_IO12__SNVS_VIO_5
-> 0x0024 0x027C 0x0000 0x6 0x0
-> > +#define MX7D_PAD_GPIO1_IO12__USB_OTG1_ID
-> 0x0024 0x027C 0x0734 0x7 0x0
-> > +#define MX7D_PAD_GPIO1_IO13__GPIO1_IO13
-> 0x0028 0x0280 0x0000 0x0 0x0
-> > +#define MX7D_PAD_GPIO1_IO13__SD3_VSELECT
-> 0x0028 0x0280 0x0000 0x1 0x0
-> > +#define MX7D_PAD_GPIO1_IO13__CCM_ENET_REF_CLK2
-> 0x0028 0x0280 0x0570 0x2 0x0
-> > +#define MX7D_PAD_GPIO1_IO13__FLEXCAN1_TX
-> 0x0028 0x0280 0x0000 0x3 0x0
-> > +#define MX7D_PAD_GPIO1_IO13__CCM_PMIC_READY
-> 0x0028 0x0280 0x04F4 0x4 0x1
-> > +#define MX7D_PAD_GPIO1_IO13__CCM_EXT_CLK2
-> 0x0028 0x0280 0x04E8 0x5 0x0
-> > +#define MX7D_PAD_GPIO1_IO13__SNVS_VIO_5_CTL
-> 0x0028 0x0280 0x0000 0x6 0x0
-> > +#define MX7D_PAD_GPIO1_IO13__USB_OTG2_ID
-> 0x0028 0x0280 0x0730 0x7 0x0
-> > +#define MX7D_PAD_GPIO1_IO14__GPIO1_IO14
-> 0x002C 0x0284 0x0000 0x0 0x0
-> > +#define MX7D_PAD_GPIO1_IO14__SD3_CD_B
-> 0x002C 0x0284 0x0738 0x1 0x0
-> > +#define MX7D_PAD_GPIO1_IO14__ENET2_MDIO
-> 0x002C 0x0284 0x0574 0x2 0x0
-> > +#define MX7D_PAD_GPIO1_IO14__FLEXCAN2_RX
-> 0x002C 0x0284 0x04E0 0x3 0x0
-> > +#define MX7D_PAD_GPIO1_IO14__WDOG3_WDOG_B
-> 0x002C 0x0284 0x0000 0x4 0x0
-> > +#define MX7D_PAD_GPIO1_IO14__CCM_EXT_CLK3
-> 0x002C 0x0284 0x04EC 0x5 0x0
-> > +#define MX7D_PAD_GPIO1_IO14__SDMA_EXT_EVENT0
-> 0x002C 0x0284 0x06D8 0x6 0x0
-> > +#define MX7D_PAD_GPIO1_IO15__GPIO1_IO15
-> 0x0030 0x0288 0x0000 0x0 0x0
-> > +#define MX7D_PAD_GPIO1_IO15__SD3_WP
-> 0x0030 0x0288 0x073C 0x1 0x0
-> > +#define MX7D_PAD_GPIO1_IO15__ENET2_MDC
-> 0x0030 0x0288 0x0000 0x2 0x0
-> > +#define MX7D_PAD_GPIO1_IO15__FLEXCAN2_TX
-> 0x0030 0x0288 0x0000 0x3 0x0
-> > +#define MX7D_PAD_GPIO1_IO15__WDOG4_WDOG_B
-> 0x0030 0x0288 0x0000 0x4 0x0
-> > +#define MX7D_PAD_GPIO1_IO15__CCM_EXT_CLK4
-> 0x0030 0x0288 0x04F0 0x5 0x0
-> > +#define MX7D_PAD_GPIO1_IO15__SDMA_EXT_EVENT1
-> 0x0030 0x0288 0x06DC 0x6 0x0
-> >  #define MX7D_PAD_EPDC_DATA00__EPDC_DATA0
-> 0x0034 0x02A4 0x0000 0x0 0x0
-> >  #define MX7D_PAD_EPDC_DATA00__SIM1_PORT2_TRXD
-> 0x0034 0x02A4 0x0000 0x1 0x0
-> >  #define MX7D_PAD_EPDC_DATA00__QSPI_A_DATA0
-> 0x0034 0x02A4 0x0000 0x2 0x0
-> > @@ -453,7 +569,7 @@
-> >  #define MX7D_PAD_LCD_DATA23__EIM_ADDR26
-> 0x0124 0x0394 0x0000 0x4 0x0
-> >  #define MX7D_PAD_LCD_DATA23__GPIO3_IO28
-> 0x0124 0x0394 0x0000 0x5 0x0
-> >  #define MX7D_PAD_LCD_DATA23__I2C4_SDA
-> 0x0124 0x0394 0x05F0 0x6 0x1
-> > -#define MX7D_PAD_UART1_RX_DATA__UART1_DCE_RX
-> 0x0128 0x0398 0x0000 0x0 0x0
-> > +#define MX7D_PAD_UART1_RX_DATA__UART1_DCE_RX
-> 0x0128 0x0398 0x06F4 0x0 0x0
-> >  #define MX7D_PAD_UART1_RX_DATA__UART1_DTE_TX
-> 0x0128 0x0398 0x0000 0x0 0x0
-> >  #define MX7D_PAD_UART1_RX_DATA__I2C1_SCL
-> 0x0128 0x0398 0x05D4 0x1 0x0
-> >  #define MX7D_PAD_UART1_RX_DATA__CCM_PMIC_READY
-> 0x0128 0x0398 0x0000 0x2 0x0
-> > @@ -469,7 +585,7 @@
-> >  #define MX7D_PAD_UART1_TX_DATA__ENET2_1588_EVENT0_OUT
-> 0x012C 0x039C 0x0000 0x4 0x0
-> >  #define MX7D_PAD_UART1_TX_DATA__GPIO4_IO1
-> 0x012C 0x039C 0x0000 0x5 0x0
-> >  #define MX7D_PAD_UART1_TX_DATA__ENET1_MDC
-> 0x012C 0x039C 0x0000 0x6 0x0
-> > -#define MX7D_PAD_UART2_RX_DATA__UART2_DCE_RX
-> 0x0130 0x03A0 0x0000 0x0 0x0
-> > +#define MX7D_PAD_UART2_RX_DATA__UART2_DCE_RX
-> 0x0130 0x03A0 0x06FC 0x0 0x2
-> >  #define MX7D_PAD_UART2_RX_DATA__UART2_DTE_TX
-> 0x0130 0x03A0 0x0000 0x0 0x0
-> >  #define MX7D_PAD_UART2_RX_DATA__I2C2_SCL
-> 0x0130 0x03A0 0x05DC 0x1 0x0
-> >  #define MX7D_PAD_UART2_RX_DATA__SAI3_RX_BCLK
-> 0x0130 0x03A0 0x0000 0x2 0x0
-> > @@ -501,7 +617,7 @@
-> >  #define MX7D_PAD_UART3_TX_DATA__ENET1_1588_EVENT0_OUT
-> 0x013C 0x03AC 0x0000 0x4 0x0
-> >  #define MX7D_PAD_UART3_TX_DATA__GPIO4_IO5
-> 0x013C 0x03AC 0x0000 0x5 0x0
-> >  #define MX7D_PAD_UART3_TX_DATA__SD2_LCTL
-> 0x013C 0x03AC 0x0000 0x6 0x0
-> > -#define MX7D_PAD_UART3_RTS_B__UART3_DCE_RTS
-> 0x0140 0x03B0 0x0000 0x0 0x0
-> > +#define MX7D_PAD_UART3_RTS_B__UART3_DCE_RTS
-> 0x0140 0x03B0 0x0700 0x0 0x2
-> >  #define MX7D_PAD_UART3_RTS_B__UART3_DTE_CTS
-> 0x0140 0x03B0 0x0000 0x0 0x0
-> >  #define MX7D_PAD_UART3_RTS_B__USB_OTG2_OC
-> 0x0140 0x03B0 0x0728 0x1 0x0
-> >  #define MX7D_PAD_UART3_RTS_B__SAI3_TX_DATA0
-> 0x0140 0x03B0 0x0000 0x2 0x0
-> > --
-> > 2.1.4
-> >
+Thanks,
+- Yakir
+
+>
+> Best regards,
+> Krzysztof
+>
+>
+>
+>
+
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
