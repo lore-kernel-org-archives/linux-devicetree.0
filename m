@@ -1,117 +1,95 @@
-From: Adriana Reus <adriana.reus-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v6 2/2] devicetree: Add documentation for UPISEMI us5182d
- ALS and Proximity sensor
-Date: Mon, 07 Sep 2015 16:59:58 +0300
-Message-ID: <55ED985E.8070806@intel.com>
-References: <1440065534-8601-1-git-send-email-adriana.reus@intel.com> <1440065534-8601-3-git-send-email-adriana.reus@intel.com> <55DF71A5.1010705@kernel.org> <CAL_Jsq+uvhaE77yXqKGXF_p6gAV5F+rPwnT547ym-o23=3fR+w@mail.gmail.com>
+From: Daniel Thompson <daniel.thompson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: st_fdma: Firmware filename in DT?
+Date: Mon, 7 Sep 2015 15:36:27 +0100
+Message-ID: <55EDA0EB.1040501@linaro.org>
+References: <20150903144944.GC7093@griffinp-ThinkPad-X1-Carbon-2nd>
+ <201509051125.43527.arnd@arndb.de> <55ED6733.7050807@linaro.org>
+ <1638322.iN3qcjUCN8@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset=windows-1252; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAL_Jsq+uvhaE77yXqKGXF_p6gAV5F+rPwnT547ym-o23=3fR+w-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Peter Meerwald <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, daniel.baluta-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, "linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Return-path: <devicetree-spec-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1638322.iN3qcjUCN8@wuerfel>
+Sender: devicetree-spec-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Warner Losh <imp-uzTCJ5RojNnQT0dZR+AlfA@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Peter Griffin <peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Maxime Coquelin <maxime.coquelin-qxv4g6HH51o@public.gmane.org>, Patrice Chotard <patrice.chotard-qxv4g6HH51o@public.gmane.org>, Ludovic Barre <ludovic.barre-qxv4g6HH51o@public.gmane.org>, "devicetree-spec-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-spec-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Thanks for your feedback, some comments inline.
+On 07/09/15 13:33, Arnd Bergmann wrote:
+> On Monday 07 September 2015 11:30:11 Daniel Thompson wrote:
+>>>>
+>>>> I would suggest "firmware-names" to be consistent with other naming
+>>>> convention and because their can be more than one (either at the same
+>>>> time or as fallback). It also leaves "firmware" available if we want
+>>>> to have phandle's to firmware embedded in the DT at some point later.
+>>>
+>>> Having list of strings would certainly make this more flexible than
+>>> just a single string, for the same reason as taking the list of
+>>> compatible values as the base, so +1 for "firmware-names" over "firmware".
+>>
+>> I was recently thinking about how DT filenames would interact with
+>> incompatible ABI changes to the firmware's register and/or wire protocol.
+>>
+>> Just for example we start with f/ware ABI A and we create a mainline
+>> kernel X that supported it.
+>>
+>> Vendor now releases a new firmware with ABI B and we update the mainline
+>> driver to support ABI A (to avoid breaking old userspaces) and B,
+>> eventually releasing kernel Y.
+>>
+>> The question now is how kernels X and Y should use the DT to generate
+>> the filename. It is very desirable that kernels X and Y use *different*
+>> filenames because otherwise a single userspace could not support the new
+>> feature *and* boot with both X and Y.
+>
+> Generally speaking, the kernel should shield user space from ABI
+> differences in the firmware and still provide the same user space ABI
+> (possibly emulated, when the newer firmware removes features of the
+> old one). Can you think of a case where a device firmware directly
+> defines the user ABI without having kernel visible changes?
 
-On 31.08.2015 18:38, Rob Herring wrote:
-> On Thu, Aug 27, 2015 at 3:23 PM, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
->> On 20/08/15 11:12, Adriana Reus wrote:
->>> Added entries in i2c/vendor-prefixes for the us5182d als and proximity sensor.
->>> Also added a documentation file for this sensor's properties.
->>>
->>> Signed-off-by: Adriana Reus <adriana.reus-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
->> This isn't that trivial so I'd like some device tree maintainer
->> input if possible.
->
-> It seems fairly reasonable to me. Would other ALS or proximity sensors
-> need similar properties?
-The "glass-coef" is intended to compensate for the material (glass) that 
-may be covering the sensor if it's integrated in a phone, tablet etc. I 
-chose 1000 as resolution for this scaling factor (i'll add a more 
-detailed description). So possibly similar properties could be used for 
-other als sensors as well.
+I don't mean that the firmware ABI is exposed to userspace.
 
-The last 3 tuning parameters are specific to this particular sensor.
+I mean if you use the same filename for both ABIs (in /lib/firmware) 
+then kernel X with lose functionality if it is booted with a userspace 
+that has updated to the new firmware (maybe even crash if I can't detect 
+at runtime the version of the firmware is has loaded). That sort of 
+thing is the pain for distros which support booting with multiple 
+kernels (apt-get/dnf simply won't know when it is safe to update the 
+firmware binary).
+
+
+>> Having lists of firmwares can certainly help solve this (providing the
+>> list can be used to allow a driver to select for an ABI is supports).
+>> However I afraid I find this example argues against having filenames in
+>> DT at all because it seems odd to me that, for kernel and userspace to
+>> adopt ABI B that must wait until the DT is updated to include support
+>> for ABI B. The hardware didn't change...
 >
->> For now I've backed out the driver from my tree (given timing we have
->> loads of time to sort this out!)
->>
->> Anyhow, anyone device tree related able to take a look at this.
->>
->> Adriana, btw these should be cc'd to the device tree maintainers in
->> the first place (now added).
->>
->> Jonathan
->>> ---
->>>   .../devicetree/bindings/iio/light/us5182d.txt      | 23 ++++++++++++++++++++++
->>>   .../devicetree/bindings/vendor-prefixes.txt        |  1 +
->>>   2 files changed, 24 insertions(+)
->>>   create mode 100644 Documentation/devicetree/bindings/iio/light/us5182d.txt
->>>
->>> diff --git a/Documentation/devicetree/bindings/iio/light/us5182d.txt b/Documentation/devicetree/bindings/iio/light/us5182d.txt
->>> new file mode 100644
->>> index 0000000..7785c56
->>> --- /dev/null
->>> +++ b/Documentation/devicetree/bindings/iio/light/us5182d.txt
->>> @@ -0,0 +1,23 @@
->>> +* UPISEMI us5182d I2C ALS and Proximity sensor
->>> +
->>> +Required properties:
->>> +- compatible: must be "upisemi,usd5182"
->>> +- reg: the I2C address of the device
->>> +
->>> +Optional properties:
->
-> Do you expect certain defaults if not present? Some description of how
-> all these values are determined would be useful.
-Yes, if not present they will fall back to default values - the values 
-in the example.
-- the glass-coef one is 1000 by default - so no glass compensation by 
-default (lux = lux * 1000/1000)
-- the others were determined experimentally - by fine tuning starting 
-from the default values in those registers).
->
->
->>> +- upisemi,glass-coef: glass attenuation factor
->>> +- upisemi,dark-ths: array of thresholds (adc counts) corresponding to every scale
->
-> What is the size of the array and valid range of values?
->
-> Be specific this is 16-bit property.
-Ok, I'll add this info in a following patch set.
->
->>> +- upisemi,upper-dark-gain: tuning factor(4 int and 4 fractional bits - Q4.4) applied when light > threshold
->>> +- upisemi,lower-dark-gain: tuning factor(4 int and 4 fractional bits - Q4.4) applied when light < threshold
->
-> Be specific this is an 8-bit property.
-ok
->
->>> +
->>> +Example:
->>> +
->>> +    usd5182@39 {
->>> +                compatible = "upisemi,usd5182";
->>> +                reg = <0x39>;
->>> +                upisemi,glass-coef = < 1000 >;
->>> +                upisemi,dark-ths = /bits/ 16 <170 200 512 512 800 2000 4000 8000>;
->>> +                upisemi,upper-dark-gain = /bits/ 8 <0x00>;
->>> +                upisemi,lower-dark-gain = /bits/ 8 <0x16>;
->>> +    };
->>> +
->>> diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
->>> index d444757..5b40bab 100644
->>> --- a/Documentation/devicetree/bindings/vendor-prefixes.txt
->>> +++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
->>> @@ -211,6 +211,7 @@ toshiba   Toshiba Corporation
->>>   toumaz       Toumaz
->>>   tplink       TP-LINK Technologies Co., Ltd.
->>>   truly        Truly Semiconductors Limited
->>> +upisemi      uPI Semiconductor Corp.
->>>   usi  Universal Scientific Industrial Co., Ltd.
->>>   v3   V3 Semiconductor
->>>   variscite    Variscite Ltd.
->>>
->>
+> This is not what I was thinking of for a list of file names: I would not
+> want a case where the kernel might pick between multiple incompatible
+> files without knowing what they are, especially if the differences
+> are ABI relevant.
+
+Nor me.
+
+Personally I prefer an "assertive" driver that imposes a filename for 
+the firmwares it needs. Thus if there is an ABI change the driver writer 
+can load a completely different firmware file without needing a DT 
+update. That said I'm not especially invested either way.
+
+However whatever solution is reached I would quite like to be able to 
+boot kernels from either side of an ABI break from a single userspace 
+(and get the new features when the kernel supports them).
+
+
+> However, being very specific would let users intentionally install a
+> firmware that is only used on a particular instance of a device that
+> they want to behave differently, while the generic firmware would come
+> preinstalled with the normal linux-firmware package.
+
+Not sure I follow this. You mean embedding filenames in DT makes it easy 
+to something like a vendor/reverse-engineering mode.
+
+
+Daniel.
