@@ -1,73 +1,104 @@
-From: Enric Balletbo Serra <eballetbo@gmail.com>
-Subject: Re: [PATCH] ARM: dts: omap3-igep: Move eth IRQ pinmux to IGEPv2
- common dtsi
-Date: Mon, 7 Sep 2015 21:39:38 +0200
-Message-ID: <CAFqH_50Hbzu1WDV7O3_jnUKVZ2Hhg_0PvV9jR_R1PkhfJ1MAxQ@mail.gmail.com>
-References: <1441643058-8641-1-git-send-email-javier@osg.samsung.com>
+From: vikas <vikas.manocha-qxv4g6HH51o@public.gmane.org>
+Subject: Re: [PATCH 2/2] mtd: spi-nor: Add driver for Cadence Quad SPI Flash
+ Controller.
+Date: Mon, 7 Sep 2015 13:27:11 -0700
+Message-ID: <55EDF31F.6010607@st.com>
+References: <1440148851-14621-1-git-send-email-marex@denx.de> <1440148851-14621-2-git-send-email-marex@denx.de> <55EA2CFD.6060300@st.com> <201509061716.27521.marex@denx.de> <55EDDDCC.7060006@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1441643058-8641-1-git-send-email-javier@osg.samsung.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Javier Martinez Canillas <javier@osg.samsung.com>
-Cc: linux-kernel@vger.kernel.org, Ladislav Michl <ladis@linux-mips.org>, =?UTF-8?Q?Beno=C3=AEt_Cousson?= <bcousson@baylibre.com>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, Javier Martinez Canillas <javier@dowhile0.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Kumar Gala <galak@codeaurora.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <robh+dt@kernel.org>, Tony Lindgren <tony@atomide.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@arm.linux.org.uk>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <55EDDDCC.7060006-qxv4g6HH51o@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>
+Cc: "linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Graham Moore <grmoore-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>, Alan Tull <atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Dinh Nguyen <dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>, Yves Vandervennet <yvanderv-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-2015-09-07 18:24 GMT+02:00 Javier Martinez Canillas <javier@osg.samsung.com>:
-> Only the IGEPv2 boards have a LAN9221i chip connected to the GPMC
-> so the pinmux configuration for the GPIO connected to the IRQ line
-> of the LAN chip should not be defined in the IGEP common dtsi but
-> in the one common to the IGEPv2 boards.
->
-> While there, use the OMAP3_CORE1_IOPAD() macro for the padconf reg.
->
-> Suggested-by: Ladislav Michl <ladis@linux-mips.org>
-> Signed-off-by: Javier Martinez Canillas <javier@osg.samsung.com>
->
-> ---
->
->  arch/arm/boot/dts/omap3-igep.dtsi            | 6 ------
->  arch/arm/boot/dts/omap3-igep0020-common.dtsi | 6 ++++++
->  2 files changed, 6 insertions(+), 6 deletions(-)
->
-> diff --git a/arch/arm/boot/dts/omap3-igep.dtsi b/arch/arm/boot/dts/omap3-igep.dtsi
-> index d5e5cd449b16..2230e1c03320 100644
-> --- a/arch/arm/boot/dts/omap3-igep.dtsi
-> +++ b/arch/arm/boot/dts/omap3-igep.dtsi
-> @@ -78,12 +78,6 @@
->                 >;
->         };
->
-> -       smsc9221_pins: pinmux_smsc9221_pins {
-> -               pinctrl-single,pins = <
-> -                       0x1a2 (PIN_INPUT | MUX_MODE4)           /* mcspi1_cs2.gpio_176 */
-> -               >;
-> -       };
-> -
->         i2c1_pins: pinmux_i2c1_pins {
->                 pinctrl-single,pins = <
->                         0x18a (PIN_INPUT | MUX_MODE0)   /* i2c1_scl.i2c1_scl */
-> diff --git a/arch/arm/boot/dts/omap3-igep0020-common.dtsi b/arch/arm/boot/dts/omap3-igep0020-common.dtsi
-> index e458c2185e3c..5ad688c57a00 100644
-> --- a/arch/arm/boot/dts/omap3-igep0020-common.dtsi
-> +++ b/arch/arm/boot/dts/omap3-igep0020-common.dtsi
-> @@ -156,6 +156,12 @@
->                         OMAP3_CORE1_IOPAD(0x217a, PIN_INPUT | MUX_MODE0)        /* uart2_rx.uart2_rx */
->                 >;
->         };
-> +
-> +       smsc9221_pins: pinmux_smsc9221_pins {
-> +               pinctrl-single,pins = <
-> +                       OMAP3_CORE1_IOPAD(0x21d2, PIN_INPUT | MUX_MODE4)        /* mcspi1_cs2.gpio_176 */
-> +               >;
-> +       };
->  };
->
->  &omap3_pmx_core2 {
-> --
-> 2.4.3
->
+Hi,
 
-Looks good to me.
+On 09/07/2015 11:56 AM, vikas wrote:
+> Hi,
+> 
+> On 09/06/2015 08:16 AM, Marek Vasut wrote:
+>> On Saturday, September 05, 2015 at 01:45:01 AM, vikas wrote:
+>>> Hi,
+>>>
+>>> On 08/21/2015 02:20 AM, Marek Vasut wrote:
+>>>> From: Graham Moore <grmoore-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
+>>>>
+>>>> Add support for the Cadence QSPI controller. This controller is
+>>>> present in the Altera SoCFPGA SoCs and this driver has been tested
+>>>> on the Cyclone V SoC.
+>>>
+>>> can we add info about the modes supported/not supported like direct mode,
+>>> indirect etc.
+>>
+>> It's already part of the documentation.
+> 
+> To be clear, add info for modes supported in the driver. e.g. Direct mode is not supported in the driver.
+> Lets add this info to help users.
+> 
+>>
+>>>> Signed-off-by: Graham Moore <grmoore-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
+>>>> Signed-off-by: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>
+>>>> Cc: Alan Tull <atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
+>>>> Cc: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+>>>> Cc: David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>
+>>>> Cc: Dinh Nguyen <dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
+>>>> Cc: Graham Moore <grmoore-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
+>>>> Cc: Vikas MANOCHA <vikas.manocha-qxv4g6HH51o@public.gmane.org>
+>>>> Cc: Yves Vandervennet <yvanderv-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
+>>>> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+>>>> ---
+>>
+>> [...]
+>>
+>>>> +#define CQSPI_REG_CMDADDRESS                   0x94
+>>>> +#define CQSPI_REG_CMDREADDATALOWER             0xA0
+>>>> +#define CQSPI_REG_CMDREADDATAUPPER             0xA4
+>>>> +#define CQSPI_REG_CMDWRITEDATALOWER            0xA8
+>>>> +#define CQSPI_REG_CMDWRITEDATAUPPER            0xAC
+>>>> +
 
-Acked-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+
+[...]
+
+>>>> +
+>>>> +       /* Clear all interrupts. */
+>>>> +       writel(CQSPI_IRQ_STATUS_MASK, reg_base + CQSPI_REG_IRQSTATUS);
+>>>> +
+>>>> +       writel(CQSPI_IRQ_MASK_RD, reg_base + CQSPI_REG_IRQMASK);
+>>>
+>>> I think there is no need for separate masks for read & write. Use one mask
+>>> & configure it once in the init rather than configuring each time for
+>>> every read/write. Then in the ISR, take action as per the interrupt
+>>> source: read/write/error condition etc.
+>>
+>> Setting up the specific IRQ mask prevents spurious interrupts during the
+>> particular IO operation, so this solution looks more precise to me.
+> 
+> spurious interrupt ? like ?
+> 
+> Configuring interrupt at one time for read/write (preferably in init) is better software design
+> then breaking it in for every read/write.
+
+just to clarify "preferably in init" not always but yes in this case.
+
+Cheers,
+Vikas
+
+> 
+>>
+>>>> +
+>>>> +       reinit_completion(&cqspi->transfer_complete);
+>>>> +       writel(CQSPI_REG_INDIRECTRD_START_MASK,
+>>>> +              reg_base + CQSPI_REG_INDIRECTRD);
+>>>> +
+>>>> +       while (remaining > 0) {
+>>>> +               ret =
+
+[...]
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
