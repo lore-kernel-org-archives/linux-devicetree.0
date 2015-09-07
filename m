@@ -1,31 +1,54 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [PATCH v6 1/2] dmaengine: Add Xilinx Central DMA DT Binding Documentation
-Date: Mon, 07 Sep 2015 14:55:54 +0200
-Message-ID: <1986807.ieBkZICvCQ@wuerfel>
-References: <1441629188-17601-1-git-send-email-appanad@xilinx.com>
+From: Ludovic Desroches <ludovic.desroches@atmel.com>
+Subject: Re: [PATCH 0/5] New Atmel PIO4 pinctrl/gpio driver
+Date: Mon, 7 Sep 2015 15:12:10 +0200
+Message-ID: <20150907131210.GC32379@odux.rfo.atmel.com>
+References: <1439281685-3020-1-git-send-email-ludovic.desroches@atmel.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1441629188-17601-1-git-send-email-appanad-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Kedareswara rao Appana <appana.durga.rao-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, anirudh-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, appanad-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-gpio-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1439281685-3020-1-git-send-email-ludovic.desroches@atmel.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Cc: s.hauer@pengutronix.de, linus.walleij@linaro.org, nicolas.ferre@atmel.com, alexandre.belloni@free-electrons.com, Ludovic Desroches <ludovic.desroches@atmel.com>
 List-Id: devicetree@vger.kernel.org
 
-On Monday 07 September 2015 18:03:08 Kedareswara rao Appana wrote:
-> +- dma-channel child node: Should have only one channel
+Hi Sascha,
+
+Any comments about this version? Maybe you missed it since you answered
+me on the RFC version. Of course I'll do the changes you requested for
+the next version (remove gpio_request_*() stuff and add macros for gpio
+muxing case).
+
+Thanks
+
+Ludovic
+
+On Tue, Aug 11, 2015 at 10:28:00AM +0200, Ludovic Desroches wrote:
+> Hi,
 > 
-
-What is the point of the child node if there is only one instance?
-
-Could you just fold this into the main node instead?
-
-(Sorry jumping in here without looking at the previous versions, I
-just returned to work from my parental leave).
-
-	Arnd
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> The Atmel PIO4 controller has been introduced with SAMA5D2 chip family. This
+> drivers manages both pinmux/pinconf and gpio stuff. It is inspired by Mediatek
+> pinctrl driver.
+> 
+> Ludovic Desroches (5):
+>   pinctrl: introduce driver for Atmel PIO4 controller
+>   pinctrl: dt-binding: Add DT binding documentation for Atmel PIO4
+>   MAINTAINERS: Add an entry for pinctrl-at91-pio4
+>   ARM: at91/dt: sama5d2: add pio controller node
+>   ARM: at91/defconfig: sama5: add PIO4 controller support
+> 
+>  .../bindings/pinctrl/atmel,at91-pio4-pinctrl.txt   |   90 ++
+>  MAINTAINERS                                        |    7 +
+>  arch/arm/boot/dts/sama5d2.dtsi                     |   14 +
+>  arch/arm/mach-at91/Kconfig                         |    1 +
+>  drivers/pinctrl/Kconfig                            |   13 +
+>  drivers/pinctrl/Makefile                           |    1 +
+>  drivers/pinctrl/pinctrl-at91-pio4.c                | 1063 ++++++++++++++++++++
+>  7 files changed, 1189 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/pinctrl/atmel,at91-pio4-pinctrl.txt
+>  create mode 100644 drivers/pinctrl/pinctrl-at91-pio4.c
+> 
+> -- 
+> 2.5.0
+> 
