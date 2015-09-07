@@ -1,22 +1,18 @@
 From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 Subject: Re: Re: [PATCH] ARM: dts: sun4i: Add dts file for the
  pov protab2-ips9 tablet
-Date: Mon, 7 Sep 2015 22:52:16 +0200
-Message-ID: <20150907205216.GW31584@lukather>
+Date: Mon, 7 Sep 2015 22:56:03 +0200
+Message-ID: <20150907205603.GX31584@lukather>
 References: <1441441319-10658-1-git-send-email-hdegoede@redhat.com>
  <20150906163023.GR31584@lukather>
  <55ED3739.609@redhat.com>
- <1441612142.14422.34.camel@plaes.org>
- <55ED4F8F.6080502@redhat.com>
- <1441617262.21530.4.camel@plaes.org>
- <55ED591B.7050705@redhat.com>
 Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="JaUdphvQ2+4F/M7k"
-Return-path: <linux-sunxi+bncBD2ZNBF5VYJRBAPSW6XQKGQEKQPUMSI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+	protocol="application/pgp-signature"; boundary="kUoBhQsr7LsiFken"
+Return-path: <linux-sunxi+bncBD2ZNBF5VYJRBZHTW6XQKGQE7AA4EEI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <55ED591B.7050705-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+In-Reply-To: <55ED3739.609-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Archive: <http://groups.google.com/group/linux-sunxi
@@ -24,47 +20,45 @@ Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
  <http://groups.google.com/group/linux-sunxi/subscribe>
-To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Cc: Priit Laes <plaes-q/aMd4JkU83YtjvyW6yDsg@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
---JaUdphvQ2+4F/M7k
+--kUoBhQsr7LsiFken
 Content-Type: text/plain; charset=UTF-8
 Content-Disposition: inline
 
-Hi,
-
-On Mon, Sep 07, 2015 at 11:30:03AM +0200, Hans de Goede wrote:
-> >>>bma250 already has devicetree support. It is used in Gemei G9
-> >>>tablet (sun4i-gemei-g9.dts).
-> >>
-> >>Yes I've seen that, but does it actually work? I've not tried but
-> >>I do not see any compatible string in the actual bma250 code in
-> >>the kernel, so I believe that this part of the sun4i-gemei-g9.dts
-> >>file does not work ?
+On Mon, Sep 07, 2015 at 09:05:29AM +0200, Hans de Goede wrote:
+> >>+&reg_ldo3 {
+> >>+	/*
+> >>+	 * We need to always power the camera sensor, otherwhise all access
+> >>+	 * to i2c1 is blocked.
+> >>+	 */
+> >>+	regulator-always-on;
+> >>+	regulator-min-microvolt = <2800000>;
+> >>+	regulator-max-microvolt = <2800000>;
+> >>+	regulator-name = "vdd-csi";
+> >>+};
 > >
-> >It worked (even without IRQs) when I submitted the patch. Driver
-> >itself is under iio/accel/bma180.c
+> >What is connected on i2c1 ? Just the camera sensor? or it has some
+> >other devices there?
 > 
-> That is really weird, because:
-> 
-> https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git/tree/drivers/iio/accel/bma180.c
-> 
-> Does not have an of_match_table ... ??
+> The bma250 accelerometer sits there, and the kernel already has a driver
+> for it. That driver needs to have devicetree binding support added, and
+> then we should be able to use the accelerometer.
 
-Not really, when using DT, i2c will set the i2c_client name to the
-device part of the compatible [1] [2], and then if the of_device_id
-lookup fails, will fallback to matching the i2c_client name to the
-i2c_device_id [3]. Which in our case matches.
+Ok, so if this regulator is disable, you can't access the other
+devices as well, right? Do you know why? Is it the regulator providing
+the pull-up voltage?
 
+I'd still like Wolfram's insight on this one. Wolfram, do you have a
+suggestion and / or a comment on how to deal with such a case?
+
+Thanks,
 Maxime
-
-[1] http://lxr.free-electrons.com/source/drivers/i2c/i2c-core.c#L1281
-[2] http://lxr.free-electrons.com/source/drivers/i2c/i2c-core.c#L969
-[3] http://lxr.free-electrons.com/source/drivers/i2c/i2c-core.c#L461
 
 -- 
 Maxime Ripard, Free Electrons
 Embedded Linux, Kernel and Android engineering
 http://free-electrons.com
---JaUdphvQ2+4F/M7k--
+--kUoBhQsr7LsiFken--
