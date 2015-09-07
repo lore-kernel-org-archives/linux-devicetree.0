@@ -1,347 +1,147 @@
-From: <Yuantian.Tang@freescale.com>
-Subject: [PATCH 3/3 v2] ahci: added a new driver for supporting Freescale AHCI sata
-Date: Mon, 7 Sep 2015 16:23:16 +0800
-Message-ID: <1441614196-4284-3-git-send-email-Yuantian.Tang@freescale.com>
-References: <1441614196-4284-1-git-send-email-Yuantian.Tang@freescale.com>
+From: Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH v4 14/16] drm: bridge: analogix/dp: try force hpd after
+ plug in lookup failed
+Date: Mon, 7 Sep 2015 10:39:18 +0200
+Message-ID: <20150907083916.GC19961@ulmo.nvidia.com>
+References: <1441086371-24838-1-git-send-email-ykk@rock-chips.com>
+ <1441088079-25809-1-git-send-email-ykk@rock-chips.com>
+ <CAL_JsqJDALnjVaVoEqGGsSLeE31m3MKOfbSoZ3M+g+zPZR2MFg@mail.gmail.com>
+ <55E7CC43.7040608@rock-chips.com>
+ <CAL_JsqKoyZOAA7yzSATA-Ys8N1q9Edi-3ctPU09UVeV=7sTWTg@mail.gmail.com>
+ <55EBF757.20108@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1441614196-4284-1-git-send-email-Yuantian.Tang@freescale.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: hdegoede@redhat.com
-Cc: tj@kernel.org, linux-ide@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Tang Yuantian <Yuantian.Tang@freescale.com>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="XMCwj5IQnwKtuyBG"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <55EBF757.20108-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Content-Disposition: inline
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Yakir Yang <ykk-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Cc: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Jingoo Han <jingoohan1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Inki Dae <inki.dae-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Joe Perches <joe-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org>, Kukjin Kim <kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Mark Yao <mark.yao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Russell King <rmk+kernel-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, djkurtz-F7+t8E8rja9Wk0Htik3J/w@public.gmane.org, dianders-F7+t8E8rja9Wk0Htik3J/w@public.gmane.org, seanpaul-F7+t8E8rja9Wk0Htik3J/w@public.gmane.org, Ajay kumar <ajaynumb-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Andrzej Hajda <a.hajda-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Kyungmin Park <kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Gustavo Padovan <gustavo.padovan-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>, Andy Yan <andy.yan-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, dri-devel <dri-devel@>
 List-Id: devicetree@vger.kernel.org
 
-From: Tang Yuantian <Yuantian.Tang@freescale.com>
+--XMCwj5IQnwKtuyBG
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Currently Freescale QorIQ series SATA is supported by ahci_platform
-driver. Some SoC specific settings have been put in uboot. So whether
-SATA works or not heavily depends on uboot.
-This patch will add a new driver to support QorIQ sata which removes
-the dependency on any other boot loader.
-Freescale QorIQ series sata, like ls1021a ls2085a ls1043a, is
-compatible with serial ATA 3.0 and AHCI 1.3 specification.
+On Sun, Sep 06, 2015 at 04:20:39PM +0800, Yakir Yang wrote:
+> Hi Rob,
+>=20
+> =E5=9C=A8 09/05/2015 05:46 AM, Rob Herring =E5=86=99=E9=81=93:
+> >On Wed, Sep 2, 2015 at 11:27 PM, Yakir Yang <ykk-TNX95d0MmH7DzftRWevZcw@public.gmane.org> wrote:
+> >>Hi Rob,
+> >>
+> >>=E5=9C=A8 09/03/2015 04:17 AM, Rob Herring =E5=86=99=E9=81=93:
+> >>>On Tue, Sep 1, 2015 at 1:14 AM, Yakir Yang <ykk-TNX95d0MmH7DzftRWevZcw@public.gmane.org> wrote:
+> >>>>Some edp screen do not have hpd signal, so we can't just return
+> >>>>failed when hpd plug in detect failed.
+> >>>This is a property of the panel (or connector perhaps), so this
+> >>>property should be located there. At least, it is a common issue and
+> >>>not specific to this chip. We could have an HDMI connector and failed
+> >>>to hook up HPD for example. A connector node is also where hpd-gpios
+> >>>should be located instead (and are already defined by
+> >>>../bindings/video/hdmi-connector.txt). Perhaps we need a eDP connector
+> >>>binding, too.
+> >>
+> >>Yep, I agree with your front point, it is a property of panel, not spec=
+ific
+> >>to eDP controller, so this code should handle in connector logic.
+> >>
+> >>But another question, if we just leave this property to connector,
+> >>then we would need to parse this property in analogix_dp-rockchip.c,
+> >>and then make an hook in analogix_dp_core.c driver. This is not nice,
+> >>and if there are some coming platform which alse want to use analogix_dp
+> >>code and meet this "no-hpd" situation,  then they would need duplicate
+> >>to parse this property and fill the hook in analogix_dp_core.c driver.
+> >>So it's little bit conflict  :-)
+> >Ideally, you would be able to just retrieve this quirk from the
+> >connector or panel. Getting this property from your node vs. the port
+> >you are attached to should not be much harder. Either the connector
+> >struct can have this info or there can be a DT function that can walk
+> >the graph and get it. Just don't open code the graph traversal in your
+> >driver.
+> >
+> >>Beside I can not understand your example very well. Do you mean
+> >>that there are some HDMI monitor which also do not have HPD
+> >>signal (just like some eDP panel do not have hpd too), and then
+> >>the "hpd-gpios" ? Hmm... I don't know how the "hpd-gpios" want
+> >>to help in this case, would you mind show some sample code  :-D
+> >I don't know that there is h/w, but it is always possible HPD is not
+> >hooked up or hooked up incorrectly some how.
+> >
+> >If there is no HPD support, then hpd-gpios is not going to help you.
+> >
+> >I think there are 3 cases to handle:
+> >- HPD handled by bridge chip - The bridge driver knows it has this
+> >capability. No DT properties are needed and no HPD properties on the
+> >connector node imply the bridge chip should handle HPD functions.
+> >- HPD handled by GPIO line (or some other block) - Indicated by
+> >hpd-gpios present
+> >- No or broken HPD - Indicated by "hpd-force" property.
+>=20
+> Oh, I think the first/second case isn't suitable in this case, my panel
+> "cnm,n116bgeea2" haven't included HPD signal.
 
-Signed-off-by: Yuantian Tang <Yuantian.Tang@freescale.com>
----
-v2:
-	- address Hans' comments
+Note that if your panel doesn't signal HPD you're supposed to poll the
+sink to make sure you catch loss of link integrity. I've always found it
+odd that people would want to save a couple of bucks on the HPD signal
+conductor when that means that you will consume more power because you
+need to periodically poll the link for integrity.
 
- drivers/ata/Kconfig      |   9 ++
- drivers/ata/Makefile     |   1 +
- drivers/ata/ahci_qoriq.c | 272 +++++++++++++++++++++++++++++++++++++++++++++++
- 3 files changed, 282 insertions(+)
- create mode 100644 drivers/ata/ahci_qoriq.c
+> >>>Are there any eDP panels which don't have EDID and need panel details =
+in
+> >>>DT?
+> >>
+> >>Oh, I think you want to collect some info that belong to panel
+> >>property but no indicate in panel EDID message, so those can
+> >>be collect in eDP connector binding, is it right ?
+> >Yes, and as Thierry pointed out we may need to know the exact panel even.
+>=20
+> Yeah, just like I reply to Thierry, this is a panel quirk. And he suggest=
+ we
+> should
+> handle this in panel driver, but I have no idea how to handle this in com=
+mon
+> panel
+> driver.   :)
 
-diff --git a/drivers/ata/Kconfig b/drivers/ata/Kconfig
-index 15e40ee..6aaa3f8 100644
---- a/drivers/ata/Kconfig
-+++ b/drivers/ata/Kconfig
-@@ -175,6 +175,15 @@ config AHCI_XGENE
- 	help
- 	 This option enables support for APM X-Gene SoC SATA host controller.
- 
-+config AHCI_QORIQ
-+	tristate "Freescale QorIQ AHCI SATA support"
-+	depends on OF
-+	help
-+	  This option enables support for the Freescale QorIQ AHCI SoC's
-+	  onboard AHCI SATA.
-+
-+	  If unsure, say N.
-+
- config SATA_FSL
- 	tristate "Freescale 3.0Gbps SATA support"
- 	depends on FSL_SOC
-diff --git a/drivers/ata/Makefile b/drivers/ata/Makefile
-index af70919..af45eff 100644
---- a/drivers/ata/Makefile
-+++ b/drivers/ata/Makefile
-@@ -19,6 +19,7 @@ obj-$(CONFIG_AHCI_SUNXI)	+= ahci_sunxi.o libahci.o libahci_platform.o
- obj-$(CONFIG_AHCI_ST)		+= ahci_st.o libahci.o libahci_platform.o
- obj-$(CONFIG_AHCI_TEGRA)	+= ahci_tegra.o libahci.o libahci_platform.o
- obj-$(CONFIG_AHCI_XGENE)	+= ahci_xgene.o libahci.o libahci_platform.o
-+obj-$(CONFIG_AHCI_QORIQ)	+= ahci_qoriq.o libahci.o libahci_platform.o
- 
- # SFF w/ custom DMA
- obj-$(CONFIG_PDC_ADMA)		+= pdc_adma.o
-diff --git a/drivers/ata/ahci_qoriq.c b/drivers/ata/ahci_qoriq.c
-new file mode 100644
-index 0000000..e5e4988
---- /dev/null
-+++ b/drivers/ata/ahci_qoriq.c
-@@ -0,0 +1,272 @@
-+/*
-+ * Freescale QorIQ AHCI SATA platform driver
-+ *
-+ * Copyright 2015 Freescale, Inc.
-+ *   Tang Yuantian <Yuantian.Tang@freescale.com>
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License as published by
-+ * the Free Software Foundation; either version 2, or (at your option)
-+ * any later version.
-+ */
-+
-+#include <linux/kernel.h>
-+#include <linux/module.h>
-+#include <linux/pm.h>
-+#include <linux/ahci_platform.h>
-+#include <linux/device.h>
-+#include <linux/of_address.h>
-+#include <linux/of.h>
-+#include <linux/of_device.h>
-+#include <linux/platform_device.h>
-+#include <linux/libata.h>
-+#include "ahci.h"
-+
-+#define DRV_NAME "ahci-qoriq"
-+
-+/* port register definition */
-+#define PORT_PHY1	0xA8
-+#define PORT_PHY2	0xAC
-+#define PORT_PHY3	0xB0
-+#define PORT_PHY4	0xB4
-+#define PORT_PHY5	0xB8
-+#define PORT_TRANS	0xC8
-+
-+/* port register default value */
-+#define AHCI_PORT_PHY_1_CFG	0xa003fffe
-+#define AHCI_PORT_PHY_2_CFG	0x28183411
-+#define AHCI_PORT_PHY_3_CFG	0x0e081004
-+#define AHCI_PORT_PHY_4_CFG	0x00480811
-+#define AHCI_PORT_PHY_5_CFG	0x192c96a4
-+#define AHCI_PORT_TRANS_CFG	0x08000025
-+
-+#define SATA_ECC_DISABLE	0x00020000
-+
-+enum ahci_qoriq_type {
-+	AHCI_LS1021A,
-+	AHCI_LS1043A,
-+	AHCI_LS2085A,
-+};
-+
-+struct ahci_qoriq_priv {
-+	struct ccsr_ahci *reg_base;
-+	enum ahci_qoriq_type type;
-+	void __iomem *ecc_addr;
-+};
-+
-+static const struct of_device_id ahci_qoriq_of_match[] = {
-+	{ .compatible = "fsl,ls1021a-ahci", .data = (void *)AHCI_LS1021A},
-+	{ .compatible = "fsl,ls1043a-ahci", .data = (void *)AHCI_LS1043A},
-+	{ .compatible = "fsl,ls2085a-ahci", .data = (void *)AHCI_LS2085A},
-+	{},
-+};
-+MODULE_DEVICE_TABLE(of, ahci_qoriq_of_match);
-+
-+static int ahci_qoriq_hardreset(struct ata_link *link, unsigned int *class,
-+			  unsigned long deadline)
-+{
-+	const unsigned long *timing = sata_ehc_deb_timing(&link->eh_context);
-+	void __iomem *port_mmio = ahci_port_base(link->ap);
-+	u32 px_cmd, px_is, px_val;
-+	struct ata_port *ap = link->ap;
-+	struct ahci_port_priv *pp = ap->private_data;
-+	struct ahci_host_priv *hpriv = ap->host->private_data;
-+	struct ahci_qoriq_priv *qoriq_priv = hpriv->plat_data;
-+	u8 *d2h_fis = pp->rx_fis + RX_FIS_D2H_REG;
-+	struct ata_taskfile tf;
-+	bool online;
-+	int rc;
-+
-+	DPRINTK("ENTER\n");
-+
-+	ahci_stop_engine(ap);
-+
-+	/*
-+	 * There is a errata on ls1021a Rev1.0 and Rev2.0 which is:
-+	 * A-009042: The device detection initialization sequence
-+	 * mistakenly resets some registers.
-+	 *
-+	 * Workaround for this is:
-+	 * The software should read and store PxCMD and PxIS values
-+	 * before issuing the device detection initialization sequence.
-+	 * After the sequence is complete, software should restore the
-+	 * PxCMD and PxIS with the stored values.
-+	 */
-+	if (qoriq_priv->type == AHCI_LS1021A) {
-+		px_cmd = readl(port_mmio + PORT_CMD);
-+		px_is = readl(port_mmio + PORT_IRQ_STAT);
-+	}
-+
-+	/* clear D2H reception area to properly wait for D2H FIS */
-+	ata_tf_init(link->device, &tf);
-+	tf.command = ATA_BUSY;
-+	ata_tf_to_fis(&tf, 0, 0, d2h_fis);
-+
-+	rc = sata_link_hardreset(link, timing, deadline, &online,
-+				 ahci_check_ready);
-+
-+	/* restore the PxCMD and PxIS on ls1021 */
-+	if (qoriq_priv->type == AHCI_LS1021A) {
-+		px_val = readl(port_mmio + PORT_CMD);
-+		if (px_val != px_cmd)
-+			writel(px_cmd, port_mmio + PORT_CMD);
-+
-+		px_val = readl(port_mmio + PORT_IRQ_STAT);
-+		if (px_val != px_is)
-+			writel(px_is, port_mmio + PORT_IRQ_STAT);
-+	}
-+
-+	hpriv->start_engine(ap);
-+
-+	if (online)
-+		*class = ahci_dev_classify(ap);
-+
-+	DPRINTK("EXIT, rc=%d, class=%u\n", rc, *class);
-+	return rc;
-+}
-+
-+static struct ata_port_operations ahci_qoriq_ops = {
-+	.inherits	= &ahci_ops,
-+	.hardreset	= ahci_qoriq_hardreset,
-+};
-+
-+static const struct ata_port_info ahci_qoriq_port_info = {
-+	.flags		= AHCI_FLAG_COMMON | ATA_FLAG_NCQ,
-+	.pio_mask	= ATA_PIO4,
-+	.udma_mask	= ATA_UDMA6,
-+	.port_ops	= &ahci_qoriq_ops,
-+};
-+
-+static struct scsi_host_template ahci_qoriq_sht = {
-+	AHCI_SHT(DRV_NAME),
-+};
-+
-+static int ahci_qoriq_phy_init(struct ahci_host_priv *hpriv)
-+{
-+	struct ahci_qoriq_priv *qpriv = hpriv->plat_data;
-+	void __iomem *reg_base = hpriv->mmio;
-+
-+	switch (qpriv->type) {
-+	case AHCI_LS1021A:
-+		writel(SATA_ECC_DISABLE, qpriv->ecc_addr);
-+		writel(AHCI_PORT_PHY_1_CFG, reg_base + PORT_PHY1);
-+		writel(AHCI_PORT_PHY_2_CFG, reg_base + PORT_PHY2);
-+		writel(AHCI_PORT_PHY_3_CFG, reg_base + PORT_PHY3);
-+		writel(AHCI_PORT_PHY_4_CFG, reg_base + PORT_PHY4);
-+		writel(AHCI_PORT_PHY_5_CFG, reg_base + PORT_PHY5);
-+		writel(AHCI_PORT_TRANS_CFG, reg_base + PORT_TRANS);
-+		break;
-+
-+	case AHCI_LS1043A:
-+	case AHCI_LS2085A:
-+		writel(AHCI_PORT_PHY_1_CFG, reg_base + PORT_PHY1);
-+		break;
-+	}
-+
-+	return 0;
-+}
-+
-+static int ahci_qoriq_probe(struct platform_device *pdev)
-+{
-+	struct device_node *np = pdev->dev.of_node;
-+	struct device *dev = &pdev->dev;
-+	struct ahci_host_priv *hpriv;
-+	struct ahci_qoriq_priv *qoriq_priv;
-+	const struct of_device_id *of_id;
-+	struct resource *res;
-+	int rc;
-+
-+	hpriv = ahci_platform_get_resources(pdev);
-+	if (IS_ERR(hpriv))
-+		return PTR_ERR(hpriv);
-+
-+	of_id = of_match_node(ahci_qoriq_of_match, np);
-+	if (!of_id)
-+		return -ENODEV;
-+
-+	qoriq_priv = devm_kzalloc(dev, sizeof(*qoriq_priv), GFP_KERNEL);
-+	if (!qoriq_priv)
-+		return -ENOMEM;
-+
-+	qoriq_priv->type = (enum ahci_qoriq_type)of_id->data;
-+
-+	if (qoriq_priv->type == AHCI_LS1021A) {
-+		res = platform_get_resource_byname(pdev, IORESOURCE_MEM,
-+				"sata-ecc");
-+		qoriq_priv->ecc_addr = devm_ioremap_resource(dev, res);
-+		if (IS_ERR(qoriq_priv->ecc_addr))
-+			return PTR_ERR(qoriq_priv->ecc_addr);
-+	}
-+
-+	rc = ahci_platform_enable_resources(hpriv);
-+	if (rc)
-+		return rc;
-+
-+	hpriv->plat_data = qoriq_priv;
-+	rc = ahci_qoriq_phy_init(hpriv);
-+	if (rc)
-+		goto disable_resources;
-+
-+	rc = ahci_platform_init_host(pdev, hpriv, &ahci_qoriq_port_info,
-+				     &ahci_qoriq_sht);
-+	if (rc)
-+		goto disable_resources;
-+
-+	return 0;
-+
-+disable_resources:
-+	ahci_platform_disable_resources(hpriv);
-+
-+	return rc;
-+}
-+
-+#ifdef CONFIG_PM_SLEEP
-+static int ahci_qoriq_resume(struct device *dev)
-+{
-+	struct ata_host *host = dev_get_drvdata(dev);
-+	struct ahci_host_priv *hpriv = host->private_data;
-+	int rc;
-+
-+	rc = ahci_platform_enable_resources(hpriv);
-+	if (rc)
-+		return rc;
-+
-+	rc = ahci_qoriq_phy_init(hpriv);
-+	if (rc)
-+		goto disable_resources;
-+
-+	rc = ahci_platform_resume_host(dev);
-+	if (rc)
-+		goto disable_resources;
-+
-+	/* We resumed so update PM runtime state */
-+	pm_runtime_disable(dev);
-+	pm_runtime_set_active(dev);
-+	pm_runtime_enable(dev);
-+
-+	return 0;
-+
-+disable_resources:
-+	ahci_platform_disable_resources(hpriv);
-+
-+	return rc;
-+}
-+#endif
-+
-+static SIMPLE_DEV_PM_OPS(ahci_qoriq_pm_ops, ahci_platform_suspend,
-+			 ahci_qoriq_resume);
-+
-+static struct platform_driver ahci_qoriq_driver = {
-+	.probe = ahci_qoriq_probe,
-+	.remove = ata_platform_remove_one,
-+	.driver = {
-+		.name = DRV_NAME,
-+		.of_match_table = ahci_qoriq_of_match,
-+		.pm = &ahci_qoriq_pm_ops,
-+	},
-+};
-+module_platform_driver(ahci_qoriq_driver);
-+
-+MODULE_DESCRIPTION("Freescale QorIQ AHCI SATA platform driver");
-+MODULE_AUTHOR("Tang Yuantian <Yuantian.Tang@freescale.com>");
-+MODULE_LICENSE("GPL");
--- 
-2.1.0.27.g96db324
+Like I said in another subthread, this panel does have an HPD line in a
+variant that I've used in the past. So if your variant doesn't have the
+HPD line, we're dealing with quirks within the same family of panels.
+That would make this some sort of quirk, and I'm not sure if there is a
+standard way for defining quirks in DT. Rob, do you know of any
+precedent for this?
+
+I suppose we could always add a variant-specific compatible string that
+would allow this quirk to be encoded in the driver, though I'm not sure
+if the model string in datasheets has enough detail to tell them apart.
+
+Thierry
+
+--XMCwj5IQnwKtuyBG
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQIcBAABCAAGBQJV7U0yAAoJEN0jrNd/PrOhdwEP/18HFrEGDwU/m9okI56Ou1X8
+2ZIM5d2eK1+MDXTWoQsdAdd3uI2+Rt1gCjmalSBmAbOCqBuNTx3Y1OTJ6TgGdcPW
+/cdAoasKReOqCb5XOm2q+92tCbtCpA4htYEGBIwkwlPbm0krPzCO1FUMlkYzzDQx
+anNfpYsRJPDDMv6ebBVicBZuFobhp5xSUoUajQvrsESm9EBXlI0xeLuw4f6HltBX
+rEmz/KePlkNajjgKzC7sab3kAyRWgzbSdt4VgKm92HDvQPkK84SfzT/H1rmLwkyk
+KxRSWicF3o2/xFLlfikGQLKiO+k1gzIveEOO8RuIZTObF6xc/ePz1wMdQtfB0CzI
+pcH4xcRf8byU1mZeSsIa1aSOiHS1cBNpMsSdOCM3vr6L9ssA1OYXmPgZLoy7pcn+
+WKKdOFNLC/VHG+B0VxlP7WyvLBURA0zQfYwPol6VESogdkbKfoNyGUbjkN7AdwHc
+dinPAIc2w+/aeIHXlGsEpxMpSBibJh+LdL/kyAAGoMMXBlPvmrYxo0oMxHXXL2Ph
+i4eWyJO6MkGrDZkOMPieRkxenl4U2M4P4cr9HeyajL/IAvENP66S9E+IRF5zHnf0
+/IzOTw4augIeSeQpTYKNTeVg0SBi9jBCFPTWd+weaNBg5C5t27DhJxkZtd9wVyRK
+yfO1RRKg2fKgkMrNmOa4
+=y65I
+-----END PGP SIGNATURE-----
+
+--XMCwj5IQnwKtuyBG--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
