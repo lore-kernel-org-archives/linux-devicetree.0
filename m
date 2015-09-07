@@ -1,64 +1,77 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: Re: [PATCH] ARM: dts: sun4i: Add dts file for the
- pov protab2-ips9 tablet
-Date: Mon, 7 Sep 2015 22:56:03 +0200
-Message-ID: <20150907205603.GX31584@lukather>
-References: <1441441319-10658-1-git-send-email-hdegoede@redhat.com>
- <20150906163023.GR31584@lukather>
- <55ED3739.609@redhat.com>
-Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
+From: Rob Herring <robherring2@gmail.com>
+Subject: Re: [PATCH v2 07/10] dts/ls2085a: Update DTSI to add support of
+ various peripherals
+Date: Mon, 7 Sep 2015 15:58:07 -0500
+Message-ID: <CAL_JsqK4NQ9YRQkTM=km6N+3Cb=RAM_=2TFhtkhPWprA7VNKUg@mail.gmail.com>
+References: <1441350322-4671-1-git-send-email-bhupesh.sharma@freescale.com>
+ <CADRPPNQER9UnKLazm9C6Dd7DAkDxLb4QShK64tmtahZxJJ-t=g@mail.gmail.com>
+ <BY1PR0301MB130306991ACB28E4C8109DD582560@BY1PR0301MB1303.namprd03.prod.outlook.com>
+ <CAL_Jsq+KJU4RiK2XWcS5BezucCmup2M-pueaaJUq7O=fA3LUxw@mail.gmail.com> <BY1PR0301MB13037916637C1B6E24AC259D82550@BY1PR0301MB1303.namprd03.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="kUoBhQsr7LsiFken"
-Return-path: <linux-sunxi+bncBD2ZNBF5VYJRBZHTW6XQKGQE7AA4EEI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <55ED3739.609-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <http://groups.google.com/group/linux-sunxi/subscribe>
-To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <BY1PR0301MB13037916637C1B6E24AC259D82550@BY1PR0301MB1303.namprd03.prod.outlook.com>
+Sender: linux-clk-owner@vger.kernel.org
+To: Sharma Bhupesh <bhupesh.sharma@freescale.com>
+Cc: Li Leo <LeoLi@freescale.com>, Xiaobo Xie <X.Xie@freescale.com>, Liu Gang <Gang.Liu@freescale.com>, "Lian M.H." <Minghuan.Lian@freescale.com>, Badola Nikhil <nikhil.badola@freescale.com>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Shaohui Xie <Shaohui.Xie@freescale.com>, Arnd Bergmann <arnd@arndb.de>, Huan Wang <alison.wang@freescale.com>, "marc.zyngier@arm.com" <marc.zyngier@arm.com>, "Catalin.Marinas@arm.com" <Catalin.Marinas@arm.com>, Singh Jaiprakash <jaiprakash.singh@freescale.com>, "will.deacon@arm.com" <will.deacon@arm.com>, "olof@lixom.net" <olof@lixom.net>, Scott Wood <scottwood@freescale.com>, Bhupesh SHARMA <bhupesh.linux@gmail.com>, "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "Lu Y.B." <yangbo.lu@freescale.com>
 List-Id: devicetree@vger.kernel.org
 
---kUoBhQsr7LsiFken
-Content-Type: text/plain; charset=UTF-8
-Content-Disposition: inline
+On Sun, Sep 6, 2015 at 4:03 PM, Sharma Bhupesh
+<bhupesh.sharma@freescale.com> wrote:
+>> From: Rob Herring [mailto:robherring2@gmail.com]
+>> Sent: Monday, September 07, 2015 2:27 AM
+>> On Sat, Sep 5, 2015 at 3:37 AM, Sharma Bhupesh
+>> <bhupesh.sharma@freescale.com> wrote:
+>> >> From: pku.leo@gmail.com [mailto:pku.leo@gmail.com]
+>> >> Sent: Saturday, September 05, 2015 2:33 AM On Fri, Sep 4, 2015 at
+>> >> 2:05 AM, Bhupesh Sharma <bhupesh.sharma@freescale.com> wrote:
+>> >> > This patch updates the LS2085a DTSI (DTS Include) file to add
+>> >> > support for various peripherals supported by FSL LS2085a SoC, for
+>> e.g.:
+>> >>
+>> >> The title and description here are still using the old LS2085 name.
+>> >
+>> > Ok.
+>> >
+>> > [snip] ..
+>> >
+>> >> > +       amba {
+>> >> > +               compatible = "arm,amba-bus";
+>> >> > +               #address-cells = <2>;
+>> >> > +               #size-cells = <2>;
+>> >> > +               ranges;
+>> >> > +
+>> >> > +               cluster1_core0_watchdog: wdt@c000000 {
+>> >> > +                       compatible = "arm,primecell";
+>> >>
+>> >> Binding of Primecell requires a specific name for the device instead
+>> >> of just a "arm,primecell".
+>> >
+>> > The sp805 driver doesn't have a compatible string like arm, sp805.
+>> > You can refer to 'Documentation/devicetree/bindings/wdt' for details -
+>> there is no entry for sp805 here.
+>>
+>> Because no one wrote it yet. Please read
+>> Documentation/devicetree/bindings/arm/primecell.txt. If sp805 has no
+>> binding doc, please write one.
+>>
+>> > Instead it relies on the 'drivers/amba/bus.c' framework to invoke the
+>> > probe function of the
+>> > sp805 wdt driver using the unique PRIMECELL identifiers of the sp805
+>> wdt IP.
+>>
+>> Whether the kernel chooses to bind with the ID registers or compatible
+>> strings is up to the kernel. That is independent of the bindings.
+>>
+>
+> Right. But wouldn't the driver require DTS awareness to handle the compatible string then.
+> Shouldn't the DTS awareness added both in terms of bindings and driver handling?
 
-On Mon, Sep 07, 2015 at 09:05:29AM +0200, Hans de Goede wrote:
-> >>+&reg_ldo3 {
-> >>+	/*
-> >>+	 * We need to always power the camera sensor, otherwhise all access
-> >>+	 * to i2c1 is blocked.
-> >>+	 */
-> >>+	regulator-always-on;
-> >>+	regulator-min-microvolt = <2800000>;
-> >>+	regulator-max-microvolt = <2800000>;
-> >>+	regulator-name = "vdd-csi";
-> >>+};
-> >
-> >What is connected on i2c1 ? Just the camera sensor? or it has some
-> >other devices there?
-> 
-> The bma250 accelerometer sits there, and the kernel already has a driver
-> for it. That driver needs to have devicetree binding support added, and
-> then we should be able to use the accelerometer.
+No. The OS is free to do device enumeration however it sees fit and
+that could change independent of the DT.
 
-Ok, so if this regulator is disable, you can't access the other
-devices as well, right? Do you know why? Is it the regulator providing
-the pull-up voltage?
+Rob
 
-I'd still like Wolfram's insight on this one. Wolfram, do you have a
-suggestion and / or a comment on how to deal with such a case?
-
-Thanks,
-Maxime
-
--- 
-Maxime Ripard, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
---kUoBhQsr7LsiFken--
+>
+> Regards,
+> Bhupesh
