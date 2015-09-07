@@ -1,57 +1,48 @@
-From: Sanchayan Maity <maitysanchayan@gmail.com>
-Subject: [PATCH v10 1/4] clk: clk-vf610: Add clock for Vybrid OCOTP controller
-Date: Mon,  7 Sep 2015 13:51:35 +0530
-Message-ID: <ca85ab571ba312ea75a4d33543e5dbb8745e7190.1441609625.git.maitysanchayan@gmail.com>
+From: Sanchayan Maity <maitysanchayan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH v10 2/4] ARM: dts: vfxxx: Add OCOTP node
+Date: Mon,  7 Sep 2015 13:51:36 +0530
+Message-ID: <8db23e3773adeb05aa6764bf4666a544495a8e28.1441609625.git.maitysanchayan@gmail.com>
 References: <cover.1441609625.git.maitysanchayan@gmail.com>
-Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <cover.1441609625.git.maitysanchayan@gmail.com>
-In-Reply-To: <cover.1441609625.git.maitysanchayan@gmail.com>
-References: <cover.1441609625.git.maitysanchayan@gmail.com>
-Sender: linux-clk-owner@vger.kernel.org
-To: srinivas.kandagatla@linaro.org, gregkh@linuxfoundation.org
-Cc: maxime.ripard@free-electrons.com, devicetree@vger.kernel.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, stefan@agner.ch, shawnguo@kernel.org, kernel@pengutronix.de, Sanchayan Maity <maitysanchayan@gmail.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <cover.1441609625.git.maitysanchayan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+In-Reply-To: <cover.1441609625.git.maitysanchayan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+References: <cover.1441609625.git.maitysanchayan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org
+Cc: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, stefan-XLVq0VzYD2Y@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Sanchayan Maity <maitysanchayan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Add clock support for Vybrid On-Chip One Time Programmable
-(OCOTP) controller.
+Add device tree node for the On-Chip One Time Programmable
+controller (OCOTP) on the Vybrid platform.
 
-While the OCOTP block does not require explicit clock gating,
-for programming the OCOTP timing register the clock rate of
-ipg clock is required for timing calculations related to fuse
-and shadow register read sequence. We explicitly specify the
-ipg clock for OCOTP as a result.
-
-Signed-off-by: Sanchayan Maity <maitysanchayan@gmail.com>
+Signed-off-by: Sanchayan Maity <maitysanchayan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 ---
- drivers/clk/imx/clk-vf610.c             | 1 +
- include/dt-bindings/clock/vf610-clock.h | 3 ++-
- 2 files changed, 3 insertions(+), 1 deletion(-)
+ arch/arm/boot/dts/vfxxx.dtsi | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/drivers/clk/imx/clk-vf610.c b/drivers/clk/imx/clk-vf610.c
-index bff45ea..d1b1c95 100644
---- a/drivers/clk/imx/clk-vf610.c
-+++ b/drivers/clk/imx/clk-vf610.c
-@@ -387,6 +387,7 @@ static void __init vf610_clocks_init(struct device_node *ccm_node)
+diff --git a/arch/arm/boot/dts/vfxxx.dtsi b/arch/arm/boot/dts/vfxxx.dtsi
+index 2f4b04d..140d81e 100644
+--- a/arch/arm/boot/dts/vfxxx.dtsi
++++ b/arch/arm/boot/dts/vfxxx.dtsi
+@@ -403,6 +403,14 @@
+ 				status = "disabled";
+ 			};
  
- 	clk[VF610_CLK_SNVS] = imx_clk_gate2("snvs-rtc", "ipg_bus", CCM_CCGR6, CCM_CCGRx_CGn(7));
- 	clk[VF610_CLK_DAP] = imx_clk_gate("dap", "platform_bus", CCM_CCSR, 24);
-+	clk[VF610_CLK_OCOTP] = imx_clk_gate("ocotp", "ipg_bus", CCM_CCGR6, CCM_CCGRx_CGn(5));
- 
- 	imx_check_clocks(clk, ARRAY_SIZE(clk));
- 
-diff --git a/include/dt-bindings/clock/vf610-clock.h b/include/dt-bindings/clock/vf610-clock.h
-index d197634..56c16aa 100644
---- a/include/dt-bindings/clock/vf610-clock.h
-+++ b/include/dt-bindings/clock/vf610-clock.h
-@@ -194,6 +194,7 @@
- #define VF610_PLL7_BYPASS		181
- #define VF610_CLK_SNVS			182
- #define VF610_CLK_DAP			183
--#define VF610_CLK_END			184
-+#define VF610_CLK_OCOTP         184
-+#define VF610_CLK_END			185
- 
- #endif /* __DT_BINDINGS_CLOCK_VF610_H */
++			ocotp: ocotp@400a5000 {
++				compatible = "fsl,vf610-ocotp";
++				#address-cells = <1>;
++				#size-cells = <1>;
++				reg = <0x400a5000 0xCF0>;
++				clocks = <&clks VF610_CLK_OCOTP>;
++			};
++
+ 			snvs0: snvs@400a7000 {
+ 			    compatible = "fsl,sec-v4.0-mon", "simple-bus";
+ 				#address-cells = <1>;
 -- 
 2.5.1
 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
