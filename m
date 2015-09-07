@@ -1,76 +1,41 @@
-From: Grygorii Strashko <grygorii.strashko@ti.com>
-Subject: Re: [RFC PATCH] gpio-pca953x driver and PCA9536 chip
-Date: Mon, 7 Sep 2015 15:36:10 +0300
-Message-ID: <55ED84BA.9090202@ti.com>
-References: <55E4641D.7050603@elpromaelectronics.com>
- <CACRpkdZcju7tpoi9+R4Bb98FEJNSfmYaRyLp7YF2ZT+hjkAMVA@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <CACRpkdZcju7tpoi9+R4Bb98FEJNSfmYaRyLp7YF2ZT+hjkAMVA@mail.gmail.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>, =?UTF-8?Q?Janusz_U=c5=bcycki?= <j.uzycki@elpromaelectronics.com>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Joshua Scott <joshua.scott@alliedtelesis.co.nz>, Toby Smith <toby@tismith.id.au>, Gregory Clement <gregory.clement@free-electrons.com>
-Cc: Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Krzysztof Borgulski <k.borgulski@elproma.com.pl>
+From: Jonas Gorski <jogo-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>
+Subject: [PATCH 0/3] of/irq: fix guards and dummies for OF=y and OF_IRQ=n
+Date: Mon,  7 Sep 2015 14:37:14 +0200
+Message-ID: <1441629437-23769-1-git-send-email-jogo@openwrt.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 09/06/2015 12:15 AM, Linus Walleij wrote:
-> Adding linux-gpio and some people that have been patching
-> this driver to TO-line.
->=20
-> Grygorii et al, does this look correct? Anyone who can test and
-> send a patch for mainline?
->=20
-> Yours,
-> Linus Walleij
->=20
-> On Mon, Aug 31, 2015 at 4:26 PM, Janusz U=C5=BCycki
-> <j.uzycki@elpromaelectronics.com> wrote:
->> Hi,
->>
->> The driver sets register #02 (inversion) to 0x01 instead of 0x00 on =
-my
->> board.
->> Reason: device_pca953x_init() does not initialize val buffer because=
- NBANK()
->> returns
->> for PCA9536 ngpio=3D4 value 0 instead of 1.
->>
->> My proposed code-patch for 3.14.17 is below.
->> Because I don't work on stable/next I can't deliver complete/ready p=
-atch.
->> Please for comments.
->>
->> best regards
->> Janusz
->>
->> --- a/drivers/gpio/gpio-pca953x.c
->> +++ b/drivers/gpio/gpio-pca953x.c
->> @@ -75,7 +75,7 @@ MODULE_DEVICE_TABLE(i2c, pca953x_id);
->>   #define MAX_BANK 5
->>   #define BANK_SZ 8
->>
->> -#define NBANK(chip) (chip->gpio_chip.ngpio / BANK_SZ)
->> +#define NBANK(chip) DIV_ROUND_UP(chip->gpio_chip.ngpio, BANK_SZ)
->>
->>   struct pca953x_chip {
->>          unsigned gpio_start;
+Historically OF was only selectable by arch code, which usually also used
+IRQ_DOMAIN, thus making OF_IRQ and OF interchangeable for !SPARC.
 
-Seems yes, but I can't test it - have no such HW now.
-As per code, NBANK(chip) expected to return number of 8-bit banks, but =
-now
-it returns NBANK-1.
+Since OF is now a user selectable symbol, it is now easy to create a
+situation where OF=y and OF_IRQ=n, by not enabling IRQ_DOMAIN on e.g.
+x86.
 
-Additional info:
-- Corresponding code was changed by  Gregory CLEMENT
-  commit: f5f0b7aa897ebf6b0d077356a787526212460dd7
+This causes linking errors as for a few functions the prototype guard
+was OF, which is too broad and does not catch all combinations. Recently
+added of_msi_configure is even missing a dummy implementation.
 
+The following three patches fix these issues by shuffling the prototypes
+and dummy implementations around (adding one where necessary), and make
+the guard for irq_of_parse_and_map more specific.
 
---=20
-regards,
--grygorii
+Based on devicetree/next.
+
+Jonas Gorski (3):
+  of/irq: add a dummy of_msi_configure if OF_IRQ=n
+  of/irq: fix guards of of_irq_find_parent and of_msi_configure
+  of/irq: fix guards for irq_of_parse_and_map prototype
+
+ include/linux/of_irq.h | 19 +++++++++++--------
+ 1 file changed, 11 insertions(+), 8 deletions(-)
+
+-- 
+2.1.4
 --
-To unsubscribe from this list: send the line "unsubscribe linux-gpio" i=
-n
-the body of a message to majordomo@vger.kernel.org
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
