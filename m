@@ -1,71 +1,48 @@
-From: Vaibhav Hiremath <vaibhav.hiremath@linaro.org>
-Subject: Re: [PATCH-v2 5/7] mmc: sdhci-pxav3: Fix HS200 mode support
-Date: Tue, 8 Sep 2015 15:05:51 +0530
-Message-ID: <55EEABF7.5010407@linaro.org>
-References: <1441624721-15612-1-git-send-email-vaibhav.hiremath@linaro.org>
- <1441624721-15612-6-git-send-email-vaibhav.hiremath@linaro.org>
- <20150908145348.6ce640b1@xhacker>
+From: "Wu, Songjun" <songjun.wu@atmel.com>
+Subject: Re: [PATCH 2/2] ASoC: atmel-classd: DT binding for Class D audio
+ amplifier driver
+Date: Tue, 8 Sep 2015 17:36:13 +0800
+Message-ID: <55EEAC0D.7010003@atmel.com>
+References: <1441086101-15303-1-git-send-email-songjun.wu@atmel.com>
+ <1441086101-15303-3-git-send-email-songjun.wu@atmel.com>
+ <20150903114316.GV12027@sirena.org.uk> <55EC0AFE.3080809@atmel.com>
+ <20150907162548.GW5313@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Type: text/plain; charset="windows-1252"; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-mmc-owner@vger.kernel.org>
-In-Reply-To: <20150908145348.6ce640b1@xhacker>
-Sender: linux-mmc-owner@vger.kernel.org
-To: Jisheng Zhang <jszhang@marvell.com>
-Cc: linux-mmc@vger.kernel.org, devicetree@vger.kernel.org, ulf.hansson@linaro.org, Tim Wang <wangtt@marvell.com>, linux-kernel@vger.kernel.org, robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org, Kevin Liu <kliu5@marvell.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20150907162548.GW5313@sirena.org.uk>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Mark Brown <broonie@kernel.org>
+Cc: nicolas.ferre@atmel.com, lgirdwood@gmail.com, perex@perex.cz, tiwai@suse.com, linux-kernel@vger.kernel.org, alsa-devel@alsa-project.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
 
 
-On Tuesday 08 September 2015 12:23 PM, Jisheng Zhang wrote:
-> On Mon, 7 Sep 2015 16:48:39 +0530
-> Vaibhav Hiremath <vaibhav.hiremath@linaro.org> wrote:
+On 9/8/2015 00:25, Mark Brown wrote:
+> On Sun, Sep 06, 2015 at 05:44:30PM +0800, Wu, Songjun wrote:
+>> On 9/3/2015 19:43, Mark Brown wrote:
 >
->> From: Kevin Liu <kliu5@marvell.com>
->>
->> IN case of MMC HS200 mode, current code does not enable
->> SD_CE_ATA_2.MMC_HS200 & SD_CE_ATA_2.MMC_CARD bit configurations.
->>
->> So this patch updates the above bit fields correctly.
->>
->> Signed-off-by: Tim Wang <wangtt@marvell.com>
->> Signed-off-by: Kevin Liu <kliu5@marvell.com>
->> Signed-off-by: Vaibhav Hiremath <vaibhav.hiremath@linaro.org>
->> ---
->> Note: Unfortunately I do not have access to any other datasheets
->> which uses sdhci-pxav3 driver, so quite not sure whether this would
->> break any existing platform, probably NOT, as I do not see any
->> references for this change.
->> If anyone can confirm that would be really great.
->>
->>   drivers/mmc/host/sdhci-pxav3.c | 17 +++++++++++++++++
->>   1 file changed, 17 insertions(+)
->>
->> diff --git a/drivers/mmc/host/sdhci-pxav3.c b/drivers/mmc/host/sdhci-pxav3.c
->> index d933f75..6978810 100644
->> --- a/drivers/mmc/host/sdhci-pxav3.c
->> +++ b/drivers/mmc/host/sdhci-pxav3.c
->> @@ -57,6 +57,8 @@
->>   #define SD_CE_ATA_1			0x10C
->>
->>   #define SD_CE_ATA_2			0x10E
->> +#define  SD_CE_ATA2_HS200_EN		BIT(10)
->> +#define  SD_CE_ATA2_MMC_MODE		BIT(12)
->>   #define  SDCE_MISC_INT			BIT(2)
->>   #define  SDCE_MISC_INT_EN		BIT(1)
->>
->> @@ -330,6 +332,17 @@ static int pxav3_select_pinstate(struct sdhci_host *host, unsigned int uhs)
->>   	return pinctrl_select_state(pxa->pinctrl, pinctrl);
->>   }
->>
->> +static int pxav3_select_hs200(struct sdhci_host *host)
+>>> Why is this a separate DT node?  It seems that this IP is entirely self
+>>> contained so I'm not clear why we need a separate node for the card, the
+>>> card is usually a separate node because it ties together multiple
+>>> different devices in the system but that's not the case here.
 >
-> I didn't see why we need the return value, make it void would be better?
+>> The classD can finish the audio function without other devices.
+>> But I want to reuse the code in ASoC, leave many things(like creating PCM,
+>> DMA operations) to ASoC, then the driver can only focus on how to configure
+>> classD.
+>> The classD IP is divided to tree parts logically, platform, CPU dai,
+>> and codec, and these parts are registered to ASoC.
 >
-
-Fair enough.
-Will fix it in next version.
-
-
-Thanks,
-Vaibhav
+>> This separate DT node is needed in ASoC, ties these tree parts in ClassD.
+>
+> Sure, there's no problem at all having that structure in software but it
+> should be possible to do this without having to represent this structure
+> in DT.  It should be possible to register the card at the same time as
+> the rest of the components rather than needing the separate device in
+> the DT.
+>
+Do you mean using a single entry in the DT for the whole classD system 
+and instantiate ASoC components from it.
+For now, there are two entry, they could be combined to one entry.
