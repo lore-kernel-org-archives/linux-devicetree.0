@@ -1,37 +1,60 @@
-From: Enric Balletbo i Serra <eballetbo-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCHv2 1/3] of: Add vendor prefix for Analogix Semiconductor, Inc.
-Date: Tue,  8 Sep 2015 09:25:06 +0200
-Message-ID: <1441697106-3813-1-git-send-email-enric.balletbo@collabora.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devel-gWbeCf7V1WCQmaza687I9mD2FQJk+8+b@public.gmane.org
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, airlied-cv59FeDIM0c@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, sjoerd.simons-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org, javier-0uQlZySMnqxg9hUCZPvPmw@public.gmane.org, span-RZiUC8FWO7+l5r2w9Jh5Rg@public.gmane.org, nathan.chung-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org
+From: Enric Balletbo i Serra <eballetbo@gmail.com>
+Subject: [PATCHv2 2/3] devicetree: Add new ANX7814 SlimPort transmitter binding.
+Date: Tue,  8 Sep 2015 09:25:20 +0200
+Message-ID: <1441697120-3876-1-git-send-email-enric.balletbo@collabora.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, devel@driverdev.osuosl.org
+Cc: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, airlied@linux.ie, gregkh@linuxfoundation.org, sjoerd.simons@collabora.co.uk, javier@dowhile0.org, span@analogixsemi.com, nathan.chung@mediatek.com
 List-Id: devicetree@vger.kernel.org
 
-Analogix Semiconductor develops analog and mixed-signal devices for digital
-media and communications interconnect applications.
+The ANX7814 is an ultra-low power Full-HD (1080p60) SlimPort transmitter
+designed for portable devices.
 
-Signed-off-by: Enric Balletbo i Serra <enric.balletbo-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
+You can add support to your board with current binding.
+
+Example:
+
+	anx7814: anx7814@38 {
+		compatible = "analogix,anx7814";
+		reg = <0x38>;
+		pd-gpios = <&gpio0 1 GPIO_ACTIVE_HIGH>;
+		reset-gpios = <&gpio0 2 GPIO_ACTIVE_HIGH>;
+	};
+
+Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
 ---
- Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
- 1 file changed, 1 insertion(+)
+ .../devicetree/bindings/video/anx7814.txt          | 22 ++++++++++++++++++++++
+ 1 file changed, 22 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/video/anx7814.txt
 
-diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
-index ac5f0c3..e914a02 100644
---- a/Documentation/devicetree/bindings/vendor-prefixes.txt
-+++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
-@@ -22,6 +22,7 @@ ampire	Ampire Co., Ltd.
- ams	AMS AG
- amstaos	AMS-Taos Inc.
- apm	Applied Micro Circuits Corporation (APM)
-+analogix	Analogix Semiconductor, Inc.
- aptina	Aptina Imaging
- arasan	Arasan Chip Systems
- arm	ARM Ltd.
+diff --git a/Documentation/devicetree/bindings/video/anx7814.txt b/Documentation/devicetree/bindings/video/anx7814.txt
+new file mode 100644
+index 0000000..a8cc746
+--- /dev/null
++++ b/Documentation/devicetree/bindings/video/anx7814.txt
+@@ -0,0 +1,22 @@
++Analogix ANX7814 SlimPort (Full-HD Transmitter)
++-----------------------------------------------
++
++The ANX7814 is an ultra-low power Full-HD (1080p60) SlimPort transmitter
++designed for portable devices.
++
++Required properties:
++
++ - compatible	: "analogix,anx7814"
++ - reg		: I2C address of the device
++ - pd-gpios	: Which GPIO to use for power down
++ - reset-gpios	: Which GPIO to use for reset
++
++Example:
++
++	anx7814: anx7814@38 {
++		compatible = "analogix,anx7814";
++		reg = <0x38>;
++		pd-gpios = <&gpio0 1 GPIO_ACTIVE_HIGH>;
++		reset-gpios = <&gpio0 2 GPIO_ACTIVE_HIGH>;
++	};
++
 -- 
 2.1.0
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
