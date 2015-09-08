@@ -1,132 +1,70 @@
-From: Jisheng Zhang <jszhang@marvell.com>
-Subject: Re: [PATCH-v2 4/7] mmc: sdhci-pxav3: Add pinctl setting according
- to bus clock
-Date: Tue, 8 Sep 2015 14:54:39 +0800
-Message-ID: <20150908145439.046dfe0d@xhacker>
-References: <1441624721-15612-1-git-send-email-vaibhav.hiremath@linaro.org>
-	<1441624721-15612-5-git-send-email-vaibhav.hiremath@linaro.org>
+From: Enric Balletbo i Serra <eballetbo@gmail.com>
+Subject: [PATCHv2 0/3] Add initial support for slimport anx78xx
+Date: Tue,  8 Sep 2015 09:24:16 +0200
+Message-ID: <1441697056-3733-1-git-send-email-enric.balletbo@collabora.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-mmc-owner@vger.kernel.org>
-In-Reply-To: <1441624721-15612-5-git-send-email-vaibhav.hiremath@linaro.org>
-Sender: linux-mmc-owner@vger.kernel.org
-To: Vaibhav Hiremath <vaibhav.hiremath@linaro.org>
-Cc: linux-mmc@vger.kernel.org, devicetree@vger.kernel.org, ulf.hansson@linaro.org, linux-kernel@vger.kernel.org, robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org, Kevin Liu <kliu5@marvell.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, devel@driverdev.osuosl.org
+Cc: mark.rutland@arm.com, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, gregkh@linuxfoundation.org, sjoerd.simons@collabora.co.uk, robh+dt@kernel.org, span@analogixsemi.com, galak@codeaurora.org, javier@dowhile0.org, nathan.chung@mediatek.com
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 7 Sep 2015 16:48:38 +0530
-Vaibhav Hiremath <vaibhav.hiremath@linaro.org> wrote:
-
-> Different bus clock may need different pin setting.
-> For example, fast bus clock like 208Mhz need pin drive fast
-> while slow bus clock prefer pin drive slow to guarantee
-> signal quality.
-> 
-> So this patch creates two states,
->   - Default (slow/normal) pin state
->   - And fast pin state for higher freq bus speed.
-> 
-> And selection of pin state is done based on timing mode.
-> 
-> Signed-off-by: Vaibhav Hiremath <vaibhav.hiremath@linaro.org>
-> Signed-off-by: Kevin Liu <kliu5@marvell.com>
-> ---
->  drivers/mmc/host/sdhci-pxav3.c | 45 +++++++++++++++++++++++++++++++++++++++++-
->  1 file changed, 44 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/mmc/host/sdhci-pxav3.c b/drivers/mmc/host/sdhci-pxav3.c
-> index c2b2b78..d933f75 100644
-> --- a/drivers/mmc/host/sdhci-pxav3.c
-> +++ b/drivers/mmc/host/sdhci-pxav3.c
-> @@ -35,6 +35,7 @@
->  #include <linux/pm.h>
->  #include <linux/pm_runtime.h>
->  #include <linux/mbus.h>
-> +#include <linux/pinctrl/consumer.h>
->  
->  #include "sdhci.h"
->  #include "sdhci-pltfm.h"
-> @@ -92,6 +93,10 @@ struct sdhci_pxa {
->  	void __iomem *io_pwr_reg;
->  	void __iomem *io_pwr_lock_reg;
->  	struct sdhci_pxa_data *data;
-> +
-> +	struct pinctrl *pinctrl;
-> +	struct pinctrl_state *pins_default;
-> +	struct pinctrl_state *pins_fast;
->  };
->  
->  static struct sdhci_pxa_data pxav3_data_v1 = {
-> @@ -298,6 +303,33 @@ static void pxav3_gen_init_74_clocks(struct sdhci_host *host, u8 power_mode)
->  	pxa->power_mode = power_mode;
->  }
->  
-> +static int pxav3_select_pinstate(struct sdhci_host *host, unsigned int uhs)
-> +{
-> +	struct sdhci_pltfm_host *pltfm_host = sdhci_priv(host);
-> +	struct sdhci_pxa *pxa = pltfm_host->priv;
-> +	struct pinctrl_state *pinctrl;
-> +
-> +	if (IS_ERR(pxa->pinctrl) ||
-> +		IS_ERR(pxa->pins_default) ||
-> +		IS_ERR(pxa->pins_fast))
-> +		return -EINVAL;
-> +
-> +	switch (uhs) {
-> +	case MMC_TIMING_UHS_SDR50:
-> +	case MMC_TIMING_UHS_SDR104:
-> +	case MMC_TIMING_MMC_HS200:
-> +	case MMC_TIMING_MMC_HS400:
-
-Are you sure this IP can support HS400?
-
-> +		pinctrl = pxa->pins_fast;
-> +		break;
-> +	default:
-> +		/* back to default state for other legacy timing */
-> +		pinctrl = pxa->pins_default;
-> +		break;
-> +	}
-> +
-> +	return pinctrl_select_state(pxa->pinctrl, pinctrl);
-> +}
-> +
->  static void pxav3_set_uhs_signaling(struct sdhci_host *host, unsigned int uhs)
->  {
->  	struct sdhci_pltfm_host *pltfm_host = sdhci_priv(host);
-> @@ -353,6 +385,8 @@ static void pxav3_set_uhs_signaling(struct sdhci_host *host, unsigned int uhs)
->  	dev_dbg(mmc_dev(host->mmc),
->  		"%s uhs = %d, ctrl_2 = %04X\n",
->  		__func__, uhs, ctrl_2);
-> +
-> +	pxav3_select_pinstate(host, uhs);
->  }
->  
->  static void pxav3_voltage_switch(struct sdhci_host *host,
-> @@ -416,7 +450,6 @@ static void pxav3_set_clock(struct sdhci_host *host, unsigned int clock)
->  		/* TX internal clock selection */
->  		pxav3_set_tx_clock(host);
->  	}
-> -
->  }
->  
->  static const struct sdhci_ops pxav3_sdhci_ops = {
-> @@ -586,6 +619,16 @@ static int sdhci_pxav3_probe(struct platform_device *pdev)
->  		}
->  	}
->  
-> +	pxa->pinctrl = devm_pinctrl_get(dev);
-> +	if (!IS_ERR(pxa->pinctrl)) {
-> +		pxa->pins_default = pinctrl_lookup_state(pxa->pinctrl, "default");
-> +		if (IS_ERR(pxa->pins_default))
-> +			dev_err(dev, "could not get default pinstate\n");
-> +		pxa->pins_fast = pinctrl_lookup_state(pxa->pinctrl, "fast");
-> +		if (IS_ERR(pxa->pins_fast))
-> +			dev_info(dev, "could not get fast pinstate\n");
-> +	}
-> +
->  	pm_runtime_get_noresume(&pdev->dev);
->  	pm_runtime_set_active(&pdev->dev);
->  	pm_runtime_set_autosuspend_delay(&pdev->dev, PXAV3_RPM_DELAY_MS);
-
+SGkgYWxsLAoKVGhlIGZvbGxvd2luZyBzZXJpZXMgYWRkIGluaXRpYWwgc3VwcG9ydCBmb3IgdGhl
+IFNsaW1wb3J0IEFOWDc4MTQgdHJhbnNtaXR0ZXIsIGEKdWx0cmEtbG93IHBvd2VyIEZ1bGwtSEQg
+KDEwODBwNjApIHRyYW5zbWl0dGVyIGRlc2lnbmVkIGZvciBwb3J0YWJsZSBkZXZpY2UuCgpUaGUg
+ZHJpdmVyIHdhcyBvcmlnaW5hbGx5IGNyZWF0ZWQgYW5kIGJhc2VkIGZyb20gdGhlIHdvcmsgb2Yg
+SnVuaHVhIFhpYSBmcm9tCkFuYWxvZ2l4LiBUaGlzIGRyaXZlciBpcyBhIHJlZmFjdG9yIG9mIHRo
+ZSBvcmlnaW5hbCBkcml2ZXIgYW5kIGZpeGVzIGRpZmZlcmVudApjb2Rpbmcgc3R5bGUgbGluZXMs
+IGFuZCBkaWZmZXJlbnQgZXJyb3JzL3dhcm5pbmdzIHJlcG9ydGVkIGJ5IGNoZWNrcGF0Y2guIEFs
+c28KdGhlcmUgd2VyZSB0aGluZ3MgdGhhdCBJIG5vdGljZWQgdGhhdCB3ZSBuZWVkIHRvIGNoYW5n
+ZSBsaWtlOgoKIC0gQ29udmVydCB0aGUgbnVtYmVyZWQgR1BJTyBBUEkgdG8gdGhlIG5ldyBkZXNj
+cmlwdG9yIGJhc2VkIEdQSU8gQVBJLgogLSBSZXZpZXcgdGhlIERUIGJpbmRpbmcKIC0gQWRkIG1p
+c3NpbmcgTU9EVUxFX0RFVklDRV9UQUJMRShvZiwgLi4uKTsKIC0gRml4IE1ha2VmaWxlcyBhbmQg
+S2NvbmZpZyB0byBidWlsZCBjb25kaXRpb25hbGx5LgogLSBVc2UgU0lNUExFX0RFVl9QTV9PUFMo
+KSBpbnN0ZWFkIG9mIHRoZSBkZXByZWNhdGVkIGkyYyAuc3VzcGVuZCBhbmQKICAucmVzdW1lIGNh
+bGxiYWNrcy4KIC0gTW92ZSB0byB1c2UgbWFuYWdlZCBkZXZpY2UgcmVzb3VyY2VzLgogLSBSZW1v
+dmUgZGVhZC91bnVzZWQgY29kZS4KIC0gQW5kIG90aGVycyAuLi4KClRoaXMgaXMgc2VyaWVzIGlz
+IGEgZmlyc3QgYXR0ZW1wdCBhbmQgd2lsbCBoYXZlIG1pc3Rha2Ugc28gYWxsIGNvbW1lbnRzIGFu
+ZApzdWdnZXN0aW9ucyBhcmUgd2VsY29tZWQuCgpDaGFuZ2VzIHNpbmNlIHYxOgoKIC0gQXMgcmVx
+dWVzdGVkIGJ5IEdyZWcsIG1vdmUgZnJvbSBzdGFnaW5nIHRvIGEgc3Vic3lzdGVtLgoKVG8gYmUg
+aG9uZXN0IEknbSBub3Qgc3VyZSBpZiBncHUvZHJtL2kyYyBpcyB0aGUgcHJvcGVyIHN1YnN5c3Rl
+bSBmb3IgdGhpcyBkcml2ZXIKc28gcGxlYXNlIGZlZWwgZnJlZSB0byBjb3JyZWN0IG1lLgoKQmVz
+dCByZWdhcmRzLAoKRW5yaWMgQmFsbGV0Ym8gaSBTZXJyYSAoMyk6CiAgb2Y6IEFkZCB2ZW5kb3Ig
+cHJlZml4IGZvciBBbmFsb2dpeCBTZW1pY29uZHVjdG9yLCBJbmMuCiAgZGV2aWNldHJlZTogQWRk
+IG5ldyBBTlg3ODE0IFNsaW1Qb3J0IHRyYW5zbWl0dGVyIGJpbmRpbmcuCiAgZHJtL2kyYzogYW54
+Nzh4eDogQWRkIGFueDc4MTQgZHJpdmVyIHN1cHBvcnQgYnkgYW5hbG9naXguCgogLi4uL2Rldmlj
+ZXRyZWUvYmluZGluZ3MvdmVuZG9yLXByZWZpeGVzLnR4dCAgICAgICAgfCAgICAxICsKIC4uLi9k
+ZXZpY2V0cmVlL2JpbmRpbmdzL3ZpZGVvL2FueDc4MTQudHh0ICAgICAgICAgIHwgICAyMiArCiBk
+cml2ZXJzL2dwdS9kcm0vaTJjL0tjb25maWcgICAgICAgICAgICAgICAgICAgICAgICB8ICAgIDIg
+KwogZHJpdmVycy9ncHUvZHJtL2kyYy9NYWtlZmlsZSAgICAgICAgICAgICAgICAgICAgICAgfCAg
+ICAyICsKIGRyaXZlcnMvZ3B1L2RybS9pMmMvYW54Nzh4eC9LY29uZmlnICAgICAgICAgICAgICAg
+IHwgICAgNyArCiBkcml2ZXJzL2dwdS9kcm0vaTJjL2FueDc4eHgvTWFrZWZpbGUgICAgICAgICAg
+ICAgICB8ICAgIDQgKwogZHJpdmVycy9ncHUvZHJtL2kyYy9hbng3OHh4L3NsaW1wb3J0LmMgICAg
+ICAgICAgICAgfCAgMzAxICsrCiBkcml2ZXJzL2dwdS9kcm0vaTJjL2FueDc4eHgvc2xpbXBvcnQu
+aCAgICAgICAgICAgICB8ICAgNDkgKwogZHJpdmVycy9ncHUvZHJtL2kyYy9hbng3OHh4L3NsaW1w
+b3J0X3R4X2Rydi5jICAgICAgfCAzMzM1ICsrKysrKysrKysrKysrKysrKysrCiBkcml2ZXJzL2dw
+dS9kcm0vaTJjL2FueDc4eHgvc2xpbXBvcnRfdHhfZHJ2LmggICAgICB8ICAyNTQgKysKIGRyaXZl
+cnMvZ3B1L2RybS9pMmMvYW54Nzh4eC9zbGltcG9ydF90eF9yZWcuaCAgICAgIHwgIDc4NiArKysr
+KwogMTEgZmlsZXMgY2hhbmdlZCwgNDc2MyBpbnNlcnRpb25zKCspCiBjcmVhdGUgbW9kZSAxMDA2
+NDQgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3ZpZGVvL2FueDc4MTQudHh0CiBj
+cmVhdGUgbW9kZSAxMDA2NDQgZHJpdmVycy9ncHUvZHJtL2kyYy9hbng3OHh4L0tjb25maWcKIGNy
+ZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL2dwdS9kcm0vaTJjL2FueDc4eHgvTWFrZWZpbGUKIGNy
+ZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL2dwdS9kcm0vaTJjL2FueDc4eHgvc2xpbXBvcnQuYwog
+Y3JlYXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMvZ3B1L2RybS9pMmMvYW54Nzh4eC9zbGltcG9ydC5o
+CiBjcmVhdGUgbW9kZSAxMDA2NDQgZHJpdmVycy9ncHUvZHJtL2kyYy9hbng3OHh4L3NsaW1wb3J0
+X3R4X2Rydi5jCiBjcmVhdGUgbW9kZSAxMDA2NDQgZHJpdmVycy9ncHUvZHJtL2kyYy9hbng3OHh4
+L3NsaW1wb3J0X3R4X2Rydi5oCiBjcmVhdGUgbW9kZSAxMDA2NDQgZHJpdmVycy9ncHUvZHJtL2ky
+Yy9hbng3OHh4L3NsaW1wb3J0X3R4X3JlZy5oCgotLSAKMi4xLjAKCl9fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJp
+LWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3Jn
+L21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
