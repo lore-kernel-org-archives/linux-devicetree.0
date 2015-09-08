@@ -1,59 +1,67 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH 2/2] ASoC: atmel-classd: DT binding for Class D audio
- amplifier driver
-Date: Tue, 8 Sep 2015 13:23:40 +0100
-Message-ID: <20150908122340.GC9751@sirena.org.uk>
-References: <1441086101-15303-1-git-send-email-songjun.wu@atmel.com>
- <1441086101-15303-3-git-send-email-songjun.wu@atmel.com>
- <20150903114316.GV12027@sirena.org.uk>
- <55EC0AFE.3080809@atmel.com>
- <20150907162548.GW5313@sirena.org.uk>
- <55EEAC0D.7010003@atmel.com>
+From: Andrey Danin <danindrey@mail.ru>
+Subject: Re: [PATCH v3 1/4] i2c: tegra: implement slave mode
+Date: Tue, 8 Sep 2015 15:31:39 +0300
+Message-ID: <55EED52B.8080701@mail.ru>
+References: <1437424546-30405-1-git-send-email-danindrey@mail.ru>
+ <1437424546-30405-2-git-send-email-danindrey@mail.ru>
+ <20150724092720.GA1597@katana> <55B210F4.6030700@mail.ru>
+ <20150724105251.GA22787@katana> <55D5C4AA.2000307@mail.ru>
+ <20150908114621.GB15793@katana>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="LwW0XdcUbUexiWVK"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <55EEAC0D.7010003@atmel.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: "Wu, Songjun" <songjun.wu@atmel.com>
-Cc: nicolas.ferre@atmel.com, lgirdwood@gmail.com, perex@perex.cz, tiwai@suse.com, linux-kernel@vger.kernel.org, alsa-devel@alsa-project.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
+In-Reply-To: <20150908114621.GB15793@katana>
+List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
+List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
+List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
+List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
+List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
+Errors-To: driverdev-devel-bounces@linuxdriverproject.org
+Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
+To: Wolfram Sang <wsa@the-dreams.de>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, ac100@lists.launchpad.net, Russell King <linux@arm.linux.org.uk>, Pawel Moll <pawel.moll@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Julian Andres Klode <jak@jak-linux.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Laxman Dewangan <ldewangan@nvidia.com>, Thierry Reding <thierry.reding@gmail.com>, linux-i2c@vger.kernel.org, Kumar Gala <galak@codeaurora.org>, linux-tegra@vger.kernel.org, devel@linuxdriverproject.org, Alexandre Courbot <gnurou@gmail.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
+Wolfram, thanks!
 
---LwW0XdcUbUexiWVK
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+On 08.09.2015 14:46, Wolfram Sang wrote:
+>
+>> Sorry for the long delay. I tried to analyze the issue. Attached patch works
+>> on AC100 (Misha Komarovsky helped me with testing).
+>>
+>> Wolfram could you please try the patch with your environment?
+>
+> No change, sadly. I don't get slave interrupts.
 
-On Tue, Sep 08, 2015 at 05:36:13PM +0800, Wu, Songjun wrote:
-> On 9/8/2015 00:25, Mark Brown wrote:
+Slave ISR is called only if slave device is registered on a bus. Do you 
+get master interrupts ?
 
-> >Sure, there's no problem at all having that structure in software but it
-> >should be possible to do this without having to represent this structure
-> >in DT.  It should be possible to register the card at the same time as
-> >the rest of the components rather than needing the separate device in
-> >the DT.
+>> Init function is called multuple times. If I2C controller works
+>> in slave mode, then driver must keep slave registers otherwise
+>> slave configuration will be reseted.
+>
+> This patch does not tackle the main issue, though. There should not be a
+> "slave mode" for the controller.
 
-> Do you mean using a single entry in the DT for the whole classD system and
-> instantiate ASoC components from it.
-> For now, there are two entry, they could be combined to one entry.
+Looks like my commit message is not clear enough :(
+ >> If I2C controller works in slave mode, then ...
+I mean something like this:
+"If slave functionality is enabled, then ..."
 
-Yes, exactly.
+> It can be a master and slave
+> simultaneously and should do the right thing depending on what's
+> happening on the bus. The Tegra2 manual I have says "The Master can
+> address the internal slave (for basic testing) or an external 7-bit or
+> 10-bit addressed Slave device." So even a loopback should be possible
+> (if we trust the manual ;)).
 
---LwW0XdcUbUexiWVK
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+Slave logic is not enabled by default (we don't set up proper 
+configuration and slave address). We can enable it by default but it is 
+useless without driver that will handle requests.
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQEcBAEBCAAGBQJV7tNLAAoJECTWi3JdVIfQebkH/26ALcNiCvJg3/suSEiUT7GV
-gW9WOAddVliWYj8NMbhcAnX3Fg+gLmbZiftDzjNFb4gwIowiHn//Z9m5AqThZ/wq
-1oaraRqS6XG/TIOqTRIERQrc+bHCI3B546WSisWzPy9yP9DCix8m1IweSA8QupGl
-+xdn+srLBV3EpN80+Ut6YExT1dVOlcpwoqYZzDPlqSVeY2yeCYM8A3HupggwXZnZ
-1SGpfI7iBuQcqWxLKVH2w4ctg5tPGoEopQe8tXf7SF8ii4QMA6C0Dnjv7fmMlfMY
-Ogyu0Dy/pmV/IUYpDPI8HDbE7MRNBcCnOXJ9OSG33wkSXuV+N6F2+fCDgbEyYXY=
-=ajMg
------END PGP SIGNATURE-----
-
---LwW0XdcUbUexiWVK--
+We used i2cdetect on the I2C bus where master NVEC controller is 
+connected. i2cdetect found devices on the bus. Also keyboard and mouse 
+was running fine after that (slave logic was not disabled).
