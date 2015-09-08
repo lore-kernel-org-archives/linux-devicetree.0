@@ -1,79 +1,104 @@
-From: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
-Subject: Re: [PATCH v5 0/2] dtc: Dynamic DT support
-Date: Tue, 8 Sep 2015 14:00:24 +1000
-Message-ID: <20150908040024.GC24774@voom.redhat.com>
-References: <1440614674-7055-1-git-send-email-pantelis.antoniou@konsulko.com>
+From: Chunfeng Yun <chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Subject: [PATCH v7 0/5] Mediatek xHCI support
+Date: Tue, 8 Sep 2015 14:17:58 +0800
+Message-ID: <1441693083-8440-1-git-send-email-chunfeng.yun@mediatek.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="xo44VMWPx7vlQ2+2"
-Return-path: <devicetree-compiler-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1440614674-7055-1-git-send-email-pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-compiler-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
-Cc: Jon Loeliger <jdl-CYoMK+44s/E@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Jan Luebbe <jlu-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Matt Porter <mporter-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, devicetree-compiler-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mathias Nyman <mathias.nyman-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, Chunfeng Yun <chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, John Crispin <blogic-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>, Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+The patch supports MediaTek's xHCI controller.
 
---xo44VMWPx7vlQ2+2
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+There are some differences from xHCI spec:
+1. The interval is specified in 250 * 8ns increments for Interrupt Moderation
+Interval(IMODI) of the Interrupter Moderation(IMOD) register, it is 8 times as
+much as that defined in xHCI spec.
 
-On Wed, Aug 26, 2015 at 09:44:32PM +0300, Pantelis Antoniou wrote:
-> Enable the generation of symbol & fixup information for
-> use with dynamic DT loading.
->=20
-> Changes since v4:
-> * Rebase to latest dtc version.
-> * Completely redesigned the generation of resolution data.
-> Now instead of being generated as part of blob generation
-> they are created in the live tree.
-> * Consequently the patchset is much smaller.
-> * Added -A auto-label alias generation option.
-> * Addressed maintainer comments.
-> * Added syntactic sugar for overlays in the form of .dtsi
-> * Added /dts-v1/ /plugin/ preferred plugin form and deprecate
-> the previous form (although still works for backward compatibility)
->=20
-> Changes since v3:
-> * Rebase to latest dtc version.
->=20
-> Changes since v2:
-> * Split single patch to a patchset.
-> * Updated to dtc mainline.
-> * Changed __local_fixups__ format
-> * Clean up for better legibility.
+2. For the value of TD Size in Normal TRB, MTK's xHCI controller defines a
+number of packets that remain to be transferred for a TD after processing all
+Max packets in all previous TRBs,that means don't include the current TRB's,
+but in xHCI spec it includes the current ones.
 
-Sorry it's taken me so long to get to this.  I was sick after the
-conference, and then had backlog of day-job work to do.  I haven't had
-time to look at this yet, but I haven't forgotten it.
+3. To minimize the scheduling effort for synchronous endpoints in xHC, the MTK
+architecture defines some extra SW scheduling parameters for HW. According to
+these parameters provided by SW, the xHC can easily decide whether a
+synchronous endpoint should be scheduled in a specific uFrame. The extra SW
+scheduling parameters are put into reserved DWs in Slot and Endpoint Context.
+And a bandwidth scheduler algorithm is added to support such feature.
 
---=20
-David Gibson			| I'll have my music baroque, and my code
-david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _other_
-				| _way_ _around_!
-http://www.ozlabs.org/~dgibson
+A usb3.0 phy driver is also added which used by mt65xx SoCs platform, it
+supports two usb2.0 ports and one usb3.0 port.
 
---xo44VMWPx7vlQ2+2
-Content-Type: application/pgp-signature
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
+Change in v7:
+1. remove xHCI timing setting which only for FPGA
+2. revise xHCI scheduler algorithms
+3. replace "usb" by "USB" in xHCI binding file
 
-iQIcBAEBAgAGBQJV7l1YAAoJEGw4ysog2bOSBOkP/jr0uyS0cmh80ZKigbLwtEhG
-V3Av4UgISkCrLPmfo2+7Ply86Xw2pC3p+Zpqt73tFGwyzLbmjYPbuTaI0+ijBYdU
-RbZfcZtUtsm36vzjEPx0q3HZf0/jjOUGdKPuJxCqTl55D2Mk6gbF0HZ26DRhSMdq
-V6HRGzf5I3Q/9elyIBBLJXJBwNPo/TwMU7U3mP+dPf4YvgRKupwqSm8Pbn9hheom
-lvjR4xZTikK274i+n4fuHqKIer9OAzZMYy5ozYMna/nJmqnpnhBshoQsyLWVdTKg
-8jZJTMprTyWZ8aIDFC7VpE4U56hU3DsapXSn7tfetrKskKMQtkAnu2YlzX/zh9xV
-bf3H75ZabSjLwq8cEt+giUxX9SA9DVzTrtzDWBBnDQfMYivJIOzgn859KRGAq7Re
-Hv2HNkiSfskfYstdvU9FyS873b18C2HO2syccJK54qjaM+43JEroAqROkB1tXBwp
-4oxM9X4RYNRGzo/yKsu1bn7sXrYTrGIMZaBWFlOqobHLWAsDES8OVYiFHaKND/nN
-aNNMUCpkV1ubWHqFGweWCaiD60m/tW4MCrMgFwwN3CV1dE0t9JCmS5jq9V/m0EZu
-vHdGVwvUg1HhbnYvRdKfgI6kHc70UBxGGc46XmxnzBbOPVXH2rhsaQP7zKYP9BMt
-a/x/CtEkijGa2YDpCG6l
-=9NOP
------END PGP SIGNATURE-----
+Change in v6:
+1. get register base address of port in probe instead of of_xlate
+2. enable clock in phy_init instead of probe
 
---xo44VMWPx7vlQ2+2--
+
+Change in v5:
+1. descripte more exactly for each specifiers in xHCI binding
+2. make use of new multi-phy feature for phy driver
+
+Change in v4:
+1. descripte more exactly for each specifiers in binding file
+2. use BIT() to define a bit mask mcro
+
+Change in v3:
+1. implement generic phy
+2. move opperations for IPPC and wakeup from phy driver to xHCI driver
+3. seperate quirk functions into a single C file to fix up dependence issue
+
+Change in v2:
+1. Rebase to 4.2-rc1
+2. Remove probe phy before add usb_hcd patch from this series due to 4.2-rc1
+   already fix this issue
+3. add xhci mac clocks
+4. add suspend/resume
+5. support remote wakeup
+
+Chunfeng Yun (5):
+  dt-bindings: Add usb3.0 phy binding for MT65xx SoCs
+  dt-bindings: Add a binding for Mediatek xHCI host controller
+  usb: phy: add usb3.0 phy driver for mt65xx SoCs
+  xhci: mediatek: support MTK xHCI host controller
+  arm64: dts: mediatek: add xHCI & usb phy for mt8173
+
+ .../devicetree/bindings/phy/phy-mt65xx-usb.txt     |  69 ++
+ .../devicetree/bindings/usb/mt8173-xhci.txt        |  52 ++
+ arch/arm64/boot/dts/mediatek/mt8173-evb.dts        |  16 +
+ arch/arm64/boot/dts/mediatek/mt8173.dtsi           |  44 ++
+ drivers/phy/Kconfig                                |   9 +
+ drivers/phy/Makefile                               |   1 +
+ drivers/phy/phy-mt65xx-usb3.c                      | 456 ++++++++++++
+ drivers/usb/host/Kconfig                           |   9 +
+ drivers/usb/host/Makefile                          |   4 +
+ drivers/usb/host/xhci-mtk-sch.c                    | 449 ++++++++++++
+ drivers/usb/host/xhci-mtk.c                        | 765 +++++++++++++++++++++
+ drivers/usb/host/xhci-mtk.h                        | 121 ++++
+ drivers/usb/host/xhci-ring.c                       |  35 +-
+ drivers/usb/host/xhci.c                            |  19 +-
+ drivers/usb/host/xhci.h                            |   1 +
+ 15 files changed, 2043 insertions(+), 7 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/phy/phy-mt65xx-usb.txt
+ create mode 100644 Documentation/devicetree/bindings/usb/mt8173-xhci.txt
+ create mode 100644 drivers/phy/phy-mt65xx-usb3.c
+ create mode 100644 drivers/usb/host/xhci-mtk-sch.c
+ create mode 100644 drivers/usb/host/xhci-mtk.c
+ create mode 100644 drivers/usb/host/xhci-mtk.h
+
+--
+1.8.1.1.dirty
+
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
