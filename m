@@ -1,94 +1,79 @@
-From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH v3] Documentation: add Device tree bindings for
- hwmon/nct7802
-Date: Tue, 8 Sep 2015 13:47:51 +0100
-Message-ID: <20150908124751.GB20562@leverpostej>
-References: <1441664902-32360-1-git-send-email-const@MakeLinux.com>
- <20150908093812.GA19039@leverpostej>
- <CAE7jHC8tdQCj-qcToBd+y017WZwMMeODGmm4uinMX=nL4yrSKw@mail.gmail.com>
+From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [linux-sunxi] Re: [PATCH] ARM: dts: sun4i: Add dts file for the
+ pov protab2-ips9 tablet
+Date: Tue, 8 Sep 2015 14:49:33 +0200
+Message-ID: <55EED95D.20004@redhat.com>
+References: <1441441319-10658-1-git-send-email-hdegoede@redhat.com>
+ <20150906163023.GR31584@lukather> <55ED3739.609@redhat.com>
+ <20150907205603.GX31584@lukather> <55EE9230.70209@redhat.com>
+ <CAGb2v64BGPP9Fs0gM0ghJZ0tO8QdGZD9GfpquGCGKiZCeTkyww@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <CAE7jHC8tdQCj-qcToBd+y017WZwMMeODGmm4uinMX=nL4yrSKw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <CAGb2v64BGPP9Fs0gM0ghJZ0tO8QdGZD9GfpquGCGKiZCeTkyww-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Constantine Shulyupin <const-XSqIthwXjGBDPfheJLI6IQ@public.gmane.org>
-Cc: "linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org" <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Sep 08, 2015 at 01:07:30PM +0100, Constantine Shulyupin wrote:
-> >> Add add Device tree bindings for registers
-> >> which are not covered by hwmon ABI and are required to
-> >> configure specific HW.
-> >
-> > This doesn't really answer my question [1] of why you need these.
-> >
-> > We generally don't encode register values unless there's no other way to
-> > describe the device. Why can we not describe the physical properties of
-> > the device that make these values necessary?
-> >
-> ....
-> > That said, as above I don't believe that these properties make sense
-> > as they are. I think this needs properties that describe the HW, rather
-> > than exposing the intricacies of the programming interface.
-> ....
-> > Thanks,
-> > Mark.
-> >
-> > [1] http://lkml.kernel.org/r/20150907123531.GA11540@leverpostej
-> >
-> 
-> Sources of the driver:
-> 
-> Let's see to register MODE.
-> Excerpt from datasheet:
-> 
-> 7.2.32 Mode Selection Register
-> Location : Index 22h
-> Type : Read/Write
-> Power on default value : 7Fh
-> BIT; NAME; FUNC.:
-> 0,1 RTD1_MD : 00=Closed , 01=Current mode , 10=Thermistor mode ,
-> 11=Voltage sense
-> 2,3 RTD2_MD : 00=Closed , 01=Current mode , 10=Thermistor mode ,
-> 11=Voltage sense
-> 4,5 RTD3_MD : 00=Closed , 01=Reserved , 10=Thermistor mode , 11=Voltage sense
-> 6 EnLTD : 1 indicates the LTD function enabled
-> 
-> The register defines sensors types (Closed, Current mode, Thermistor
-> mode, Voltage sense).
-> Essential sensors will not work properly with wrong configuration.
+Hi,
 
-Sure, but why do you need _raw_ register values?
+On 09/08/2015 10:40 AM, Chen-Yu Tsai wrote:
+> On Tue, Sep 8, 2015 at 3:45 PM, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org> wrote:
+>> Hi,
+>>
+>> On 07-09-15 22:56, Maxime Ripard wrote:
+>>>
+>>> On Mon, Sep 07, 2015 at 09:05:29AM +0200, Hans de Goede wrote:
+>>>>>>
+>>>>>> +&reg_ldo3 {
+>>>>>> +       /*
+>>>>>> +        * We need to always power the camera sensor, otherwhise all
+>>>>>> access
+>>>>>> +        * to i2c1 is blocked.
+>>>>>> +        */
+>>>>>> +       regulator-always-on;
+>>>>>> +       regulator-min-microvolt = <2800000>;
+>>>>>> +       regulator-max-microvolt = <2800000>;
+>>>>>> +       regulator-name = "vdd-csi";
+>>>>>> +};
+>>>>>
+>>>>>
+>>>>> What is connected on i2c1 ? Just the camera sensor? or it has some
+>>>>> other devices there?
+>>>>
+>>>>
+>>>> The bma250 accelerometer sits there, and the kernel already has a driver
+>>>> for it. That driver needs to have devicetree binding support added, and
+>>>> then we should be able to use the accelerometer.
+>>>
+>>>
+>>> Ok, so if this regulator is disable, you can't access the other
+>>> devices as well, right?
+>>
+>>
+>> Right, the controller reports the bus as being stuck.
+>>
+>>> Do you know why? Is it the regulator providing
+>>> the pull-up voltage?
+>>
+>>
+>> I've tried enabling the pull ups on the SoC i2c pins, so I do not think
+>> that it is that, it seems that somehow when not powered the camera sensor is
+>> actively keeping the lines low. Either it has multiple power planes, or
+>> it is using normally-on fet-s between ground and its i2c lines.
+>
+> FYI the reference designs use one regulator to power the pull-ups, VCC-PX
+> (X for X pin group), and VDDIO (IO power)on the camera sensors. AVDD, DVDD
+> (actual power) for the sensors are another (or more) regulators.
 
-Why can you not encode this in the DT in a manner that describes what is
-connected to this device, then have the kernel figure out any particular
-values that need to be poked into registers?
+But that is a A23 or some such generation thing, right? This is an A10 based
+tablet!
 
-That'll be easier to read, and it's far more likely people will get
-things correct in a dts.
+Regards,
 
-Mark.
-
-> It is board or platform depended configuration. It should be
-> configured on boot only.
-> Usually hwmon drivers are managed with utility lm-sensors via
-> Documentation/hwmon/sysfs-interface. By design sensor type should be
-> defined by platform data and lm-sensors only displays it.
-> 
-> Also MODE registers defines visibility temperature and input attributes:
-> 
-> https://git.kernel.org/cgit/linux/kernel/git/mpe/linux-next.git/tree/drivers/hwmon/nct7802.c#n532
-> 
-> https://git.kernel.org/cgit/linux/kernel/git/mpe/linux-next.git/tree/drivers/hwmon/nct7802.c#n641
-> 
-> Mark, does above answers your question?
-> What do you propose?
-> 
-> -- 
-> Thanks
-> Constantine
-> 
+Hans
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
