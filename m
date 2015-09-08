@@ -1,153 +1,87 @@
-From: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-Subject: Re: [PATCH v2 13/13] dt: power: bq2425x-charger: Cover additional
- devices
-Date: Wed, 09 Sep 2015 13:58:09 +0900
-Message-ID: <55EFBC61.1050405@samsung.com>
-References: <1441757557-7266-1-git-send-email-dannenberg@ti.com>
- <1441757557-7266-14-git-send-email-dannenberg@ti.com>
- <55EF7CDA.9030505@samsung.com> <20150909024841.GB32255@beast>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 2/2] fbdev: ssd1307fb: add ssd1309 support
+Date: Tue, 8 Sep 2015 18:02:50 -0500
+Message-ID: <55EF691A.5050801@kernel.org>
+References: <1441739991-4676-1-git-send-email-o.schinagl@ultimaker.com>
+ <1441739991-4676-3-git-send-email-o.schinagl@ultimaker.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=windows-1252
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-reply-to: <20150909024841.GB32255@beast>
-Sender: linux-pm-owner@vger.kernel.org
-To: Andreas Dannenberg <dannenberg@ti.com>
-Cc: Sebastian Reichel <sre@kernel.org>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, David Woodhouse <dwmw2@infradead.org>, Laurentiu Palcu <laurentiu.palcu@intel.com>, Ramakrishna Pallala <ramakrishna.pallala@intel.com>, linux-pm@vger.kernel.org, devicetree@vger.kernel.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1441739991-4676-3-git-send-email-o.schinagl-U3FVU11NWA554TAoqtyWWQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Olliver Schinagl <o.schinagl-U3FVU11NWA554TAoqtyWWQ@public.gmane.org>, Olliver Schinagl <oliver-dxLnbx3+1qmEVqv0pETR8A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
+Cc: Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>, =?UTF-8?Q?Thomas_Niederpr=c3=bcm?= <niederp-PRwTpj6vllL6m1q2wEL4bg@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Prabhakar Lad <prabhakar.csengg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 09.09.2015 11:48, Andreas Dannenberg wrote:
-> On Wed, Sep 09, 2015 at 09:27:06AM +0900, Krzysztof Kozlowski wrote:
->> On 09.09.2015 09:12, Andreas Dannenberg wrote:
->>> Extend the bq2425x charger's device tree documentation to cover the
->>> bq24250 and bq24257 devices as well as recent feature additions.
->>>
->>> Signed-off-by: Andreas Dannenberg <dannenberg@ti.com>
->>
->> Hi,
->>
->> Thanks for updates. Everything pointed previous looks good. After
->> looking at Ramakrishna Pallala's (Cc-ed) patch ("power: bq24261_charger:
->> Add support for TI BQ24261 charger") I have only one comment below.
+On 09/08/2015 02:19 PM, Olliver Schinagl wrote:
+> The ssd1307fb driver supports a lot of chips from the ssd130xfb series.
+> This patch adds the ssd1309 chip, a 128x64 OLED driver chip. It is very
+> similar to the other chips and only has some definitions added to
+> support it.
 > 
-> Thanks for all your efforts and time checking those patches!
+> Signed-off-by: Olliver Schinagl <o.schinagl-U3FVU11NWA554TAoqtyWWQ@public.gmane.org>
+
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+
+> ---
+>  Documentation/devicetree/bindings/video/ssd1307fb.txt |  3 ++-
+>  drivers/video/fbdev/ssd1307fb.c                       | 11 +++++++++++
+>  2 files changed, 13 insertions(+), 1 deletion(-)
 > 
->>
->>> ---
->>>  .../devicetree/bindings/power/bq24257.txt          | 21 -------
->>>  .../devicetree/bindings/power/bq2425x.txt          | 70 ++++++++++++++++++++++
->>>  2 files changed, 70 insertions(+), 21 deletions(-)
->>>  delete mode 100644 Documentation/devicetree/bindings/power/bq24257.txt
->>>  create mode 100644 Documentation/devicetree/bindings/power/bq2425x.txt
->>>
->>> diff --git a/Documentation/devicetree/bindings/power/bq24257.txt b/Documentation/devicetree/bindings/power/bq24257.txt
->>> deleted file mode 100644
->>> index 5c9d394..0000000
->>> --- a/Documentation/devicetree/bindings/power/bq24257.txt
->>> +++ /dev/null
->>> @@ -1,21 +0,0 @@
->>> -Binding for TI bq24257 Li-Ion Charger
->>> -
->>> -Required properties:
->>> -- compatible: Should contain one of the following:
->>> - * "ti,bq24257"
->>> -- reg:			   integer, i2c address of the device.
->>> -- ti,battery-regulation-voltage: integer, maximum charging voltage in uV.
->>> -- ti,charge-current:	   integer, maximum charging current in uA.
->>> -- ti,termination-current:  integer, charge will be terminated when current in
->>> -			   constant-voltage phase drops below this value (in uA).
->>> -
->>> -Example:
->>> -
->>> -bq24257 {
->>> -	compatible = "ti,bq24257";
->>> -	reg = <0x6a>;
->>> -
->>> -	ti,battery-regulation-voltage = <4200000>;
->>> -	ti,charge-current = <1000000>;
->>> -	ti,termination-current = <50000>;
->>> -};
->>> diff --git a/Documentation/devicetree/bindings/power/bq2425x.txt b/Documentation/devicetree/bindings/power/bq2425x.txt
->>> new file mode 100644
->>> index 0000000..3e171c3
->>> --- /dev/null
->>> +++ b/Documentation/devicetree/bindings/power/bq2425x.txt
->>> @@ -0,0 +1,70 @@
->>> +Binding for TI bq2425x Li-Ion Charger
->>> +
->>> +Required properties:
->>> +- compatible: Should contain one of the following:
->>> + * "ti,bq24250"
->>> + * "ti,bq24251"
->>> + * "ti,bq24257"
->>> +- reg: integer, i2c address of the device.
->>> +- stat-gpios: GPIO used for the devices STAT_IN pin. Alternatively the pin can
->>> +    also be defined through the standard interrupt definition properties (see
->>> +    optional properties section below). Only use one method.
->>> +- ti,battery-regulation-voltage: integer, maximum charging voltage in uV.
->>> +- ti,charge-current: integer, maximum charging current in uA.
->>> +- ti,termination-current: integer, charge will be terminated when current in
->>> +    constant-voltage phase drops below this value (in uA).
->>> +
->>> +Optional properties:
->>> +- pg-gpios: GPIO used for connecting the bq2425x device PG (Power Good) pin.
->>> +    This pin is not available on all devices however it should be used if
->>> +    possible as this is the recommended way to obtain the charger's input PG
->>> +    state. If this pin is not specified a software-based approach for PG
->>> +    detection is used.
->>> +- ti,current-limit: The maximum current to be drawn from the charger's input
->>> +    (in uA). If this property is not specified a USB D+/D- signal based charger
->>> +    type detection is used (if available) and the input limit current is set
->>> +    accordingly. If the D+/D- based detection is not available on a given device
->>> +    a default of 500,000 is used (=500mA).
->>
->> I understand this is different property than "ti,charge-current:
->> integer, default charging current (in mA)" from bq24261_charger patch?
+> diff --git a/Documentation/devicetree/bindings/video/ssd1307fb.txt b/Documentation/devicetree/bindings/video/ssd1307fb.txt
+> index d1be78d..eb31ed4 100644
+> --- a/Documentation/devicetree/bindings/video/ssd1307fb.txt
+> +++ b/Documentation/devicetree/bindings/video/ssd1307fb.txt
+> @@ -2,7 +2,8 @@
+>  
+>  Required properties:
+>    - compatible: Should be "solomon,<chip>fb-<bus>". The only supported bus for
+> -    now is i2c, and the supported chips are ssd1305, ssd1306 and ssd1307.
+> +    now is i2c, and the supported chips are ssd1305, ssd1306, ssd1307 and
+> +    ssd1309.
+>    - reg: Should contain address of the controller on the I2C bus. Most likely
+>           0x3c or 0x3d
+>    - pwm: Should contain the pwm to use according to the OF device tree PWM
+> diff --git a/drivers/video/fbdev/ssd1307fb.c b/drivers/video/fbdev/ssd1307fb.c
+> index 339615c..8fc7960 100644
+> --- a/drivers/video/fbdev/ssd1307fb.c
+> +++ b/drivers/video/fbdev/ssd1307fb.c
+> @@ -495,6 +495,12 @@ static struct ssd1307fb_deviceinfo ssd1307fb_ssd1307_deviceinfo = {
+>  	.need_pwm = 1,
+>  };
+>  
+> +static struct ssd1307fb_deviceinfo ssd1307fb_ssd1309_deviceinfo = {
+> +	.default_vcomh = 0x34,
+> +	.default_dclk_div = 1,
+> +	.default_dclk_frq = 10,
+> +};
+> +
+>  static const struct of_device_id ssd1307fb_of_match[] = {
+>  	{
+>  		.compatible = "solomon,ssd1305fb-i2c",
+> @@ -508,6 +514,10 @@ static const struct of_device_id ssd1307fb_of_match[] = {
+>  		.compatible = "solomon,ssd1307fb-i2c",
+>  		.data = (void *)&ssd1307fb_ssd1307_deviceinfo,
+>  	},
+> +	{
+> +		.compatible = "solomon,ssd1309fb-i2c",
+> +		.data = (void *)&ssd1307fb_ssd1309_deviceinfo,
+> +	},
+>  	{},
+>  };
+>  MODULE_DEVICE_TABLE(of, ssd1307fb_of_match);
+> @@ -708,6 +718,7 @@ static const struct i2c_device_id ssd1307fb_i2c_id[] = {
+>  	{ "ssd1305fb", 0 },
+>  	{ "ssd1306fb", 0 },
+>  	{ "ssd1307fb", 0 },
+> +	{ "ssd1309fb", 0 },
+>  	{ }
+>  };
+>  MODULE_DEVICE_TABLE(i2c, ssd1307fb_i2c_id);
 > 
-> Correct this is what "ti,current-limit" is for. And I borrowed that
-> definition from bq2415x_charger.c where it's used in the same context.
-> The reason for this property to exist is for systems where the external
-> power supply does more than just charging the battery, such as supplying
-> the system while it's charging or after it has finished charging. All
-> this only makes sense of course if the "ti,current-limit" is larger than
-> "ti,charge-current".
-> 
-> And if you see a few lines above the bq24257 driver also has a
-> "ti,charge-current" property. And yes this is what actually controls how
-> much current is delivered to the battery.
 
-Right, I missed that one. Everything is clear now.
-
-So we have different bindings. Existing ones:
-bq2415x.txt - ti,charge-current - maximum charging current in mA
-bq24257.txt - ti,charge-current - maximum charging current in uA
-bq25890.txt - ti,charge-current - maximum charging current in uA
-bq24735.txt - ti,charge-current - charge current (?) in mA
-bq2415x.txt - ti,current-limit  - maximum current to be drawn in mA
-
-New bindings:
-ti,charge-current (bq24261) - default charge current in mA
-ti,max-charge-current (bq24261) - maximum charging current in mA
-ti,current-limit (bq2425x) - maximum current to be drawn in uA
-
-
-Damn it... It's a mess. And there is no device prefixes...
-
-The bq24261's bindings look most sensible (max prefix for max charge
-current) but they are not compatible with existing bindings for
-different devices.
-
-There is no way to unify or make consistent all of these bindings.
-However one could try to add new stuff in a more sensible way. For
-example how about (for bq2425x-charger and bq24261_charger... BTW notice
-even the difference in using underscore and hyphen!):
-
-ti,charge-current - maximum charging current in uA
-(that one must be supported, it's for existing bq24257 devices)
-ti,default-charge-current (bq24261) - default charge current in *uA*
-ti,current-limit (bq2425x) - maximum current to be drawn in *uA*
-
-
-Best regards,
-Krzysztof
-
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
