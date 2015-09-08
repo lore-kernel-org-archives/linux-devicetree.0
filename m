@@ -1,80 +1,99 @@
-From: Matt Porter <mporter-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
-Subject: Re: [RFC PATCH 2/5] Documentation: dt-bindings: add example DT
- binding document
-Date: Tue, 8 Sep 2015 11:06:29 -0400
-Message-ID: <20150908150629.GL17267@beef>
-References: <1440739433-6799-1-git-send-email-mporter@konsulko.com>
- <1440739433-6799-3-git-send-email-mporter@konsulko.com>
- <CAL_Jsq+FE4MCCfZC5hDhQBmM1gHibY82S9a8PC1GwsnWsPNxkg@mail.gmail.com>
- <CA+bK7J4x2vY-tzUFWjM9KFMtvE+qW6jzmz=ZxWU9L8Mpe8Lduw@mail.gmail.com>
- <55E6B719.6080203@atmel.com>
+From: Vaibhav Hiremath <vaibhav.hiremath-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH-v2 4/7] mmc: sdhci-pxav3: Add pinctl setting according to
+ bus clock
+Date: Tue, 8 Sep 2015 20:37:11 +0530
+Message-ID: <55EEF99F.1020904@linaro.org>
+References: <1441624721-15612-1-git-send-email-vaibhav.hiremath@linaro.org>
+ <1441624721-15612-5-git-send-email-vaibhav.hiremath@linaro.org>
+ <CACRpkdY59roEBgUd9TR39yNgfhw393+WmHQQAeLkOEZLChOcWQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-spec-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <55E6B719.6080203-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-spec-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Cc: Tim Bird <tbird20d-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Devicetree List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Devicetree Spec List <devicetree-spec-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Behan Webster <behanw-k/hB3zQhLwledRVtV/plodBPR1lH4CV8@public.gmane.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CACRpkdY59roEBgUd9TR39yNgfhw393+WmHQQAeLkOEZLChOcWQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: "linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Kevin Liu <kliu5-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Sep 02, 2015 at 10:45:13AM +0200, Nicolas Ferre wrote:
-> Le 01/09/2015 19:35, Tim Bird a =E9crit :
-> > On Fri, Aug 28, 2015 at 7:53 AM, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org=
-> wrote:
-> >> On Fri, Aug 28, 2015 at 12:23 AM, Matt Porter <mporter-OWPKS81ov/HQFizaE/u3fw@public.gmane.org=
-m> wrote:
-> > ...
-> >>> +example:
-> >>> +  - dts: |
-> >>> +      sk11@0 {
-> >>> +              compatible =3D "skel,sk11";
-> >>> +              reg =3D <0>;
-> >>> +              spi-max-frequency =3D <1000000>;
-> >>> +              spi-cs-high;
-> >>> +      };
-> >>
-> >> At least in this example, we could generate it. Examples are nice,=
- but
-> >> we have dts files full of examples already. I get a fair number of
-> >> "fix the example" patches, so maybe we should eliminate the simple
-> >> ones.
-> >=20
-> > I would hesitate to eliminate examples.  I've been saved by them on
-> > a few occasions, when the dts files only had one or two instances
-> > of a type of binding, somewhat different from each other, and the e=
-xample helped
-> > break the tie.  If there's something wrong with the example, it's a=
- sign
-> > of an out-of-date binding doc, just as much as if the text were wro=
-ng.
-> > It ought to be possible to validate the example versus the binding =
-doc
-> > (as Pantelis says), so ultimately we should be able to catch errors=
- here
-> > as well.
->=20
-> I back Tim's advice.
-> Example are so important that I regularly find myself thinking "ah-ha=
-,
-> okay that's supposed to work like that" after having read the binding
-> documentation.
 
-See my comments on Tim's post. In summary, we'd retain the complex type
-examples but allow the trivial ones to not bother with it in explicit
-source. OTOH, this would have to be a final change in the conversion
-process, most likely, because we need all the type: and constraints:
-tags present in order to generate a working example.
 
-Of course, that's the same info necessary to validate a dts as well.
+On Tuesday 08 September 2015 08:12 PM, Linus Walleij wrote:
+> On Mon, Sep 7, 2015 at 1:18 PM, Vaibhav Hiremath
+> <vaibhav.hiremath-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+>
+>> Different bus clock may need different pin setting.
+>> For example, fast bus clock like 208Mhz need pin drive fast
+>> while slow bus clock prefer pin drive slow to guarantee
+>> signal quality.
+>>
+>> So this patch creates two states,
+>>    - Default (slow/normal) pin state
+>>    - And fast pin state for higher freq bus speed.
+>>
+>> And selection of pin state is done based on timing mode.
+>>
+>> Signed-off-by: Vaibhav Hiremath <vaibhav.hiremath-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+>> Signed-off-by: Kevin Liu <kliu5-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
+> (...)
+>> +       pxa->pinctrl = devm_pinctrl_get(dev);
+>> +       if (!IS_ERR(pxa->pinctrl)) {
+>> +               pxa->pins_default = pinctrl_lookup_state(pxa->pinctrl, "default");
+>> +               if (IS_ERR(pxa->pins_default))
+>> +                       dev_err(dev, "could not get default pinstate\n");
+>> +               pxa->pins_fast = pinctrl_lookup_state(pxa->pinctrl, "fast");
+>> +               if (IS_ERR(pxa->pins_fast))
+>> +                       dev_info(dev, "could not get fast pinstate\n");
+>> +       }
+>
+> This is exactly how I think it should be used from a pin control
+> point of view.
+>
+> If you depended on CONFIG_PM you could use
+> pinctrl_pm_select_default_state() but for this simple scenario
+> this is fine.
+>
+> Reviewed-by: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+>  From a pinctrl point of view.
+>
 
-Perhaps it's best to look at this as the automated conversion process
-that Rob suggested. That is, we'll have the current text (including
-all examples) brought into the .yaml file as comments. So we aren't
-eliminating examples. Later, if those examples are too trivial to
-bother capturing as above, we simply remove and one can dump an example
-via a doc generator not unlike my markdown example (which can spit out
-pasteable text).
 
--Matt
+Thanks for your review.
+
+Linus,
+
+I agree this is how it should be used.
+But I still have one small doubt on expectation from
+devm_pinctrl_get() function.
+
+
+If pinctrl properties are not populated in Devicetree node,
+then, shouldn't devm_pinctrl_get() return error ?
+I followed the code flow, and it seems even if pinctrl properties are
+not populated in DT node, the devm_pinctrl_get() returns valid
+pointer to "struct pinctrl", isn't this against the expectation of the
+call?
+
+
+Code flow -
+
+devm_pinctrl_get()
+...
+--> creat_pinctrl()
+--> pinctrl_dt_to_map()
+...
+
+
+
+pinctrl_dt_to_map() iterates for pinctrl-x (x = 0,1,...) and if it
+founds the entry then it parses the node. If it doesn't find any
+pinctrl property then also it returns 0. and subsequently rreturns
+handle to "struct pinctrl" for the device. Why is so?
+
+
+Thanks,
+Vaibhav
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
