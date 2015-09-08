@@ -1,72 +1,69 @@
-From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Subject: Re: Re: [PATCH] ARM: dts: sun4i: Add dts file for the
- pov protab2-ips9 tablet
-Date: Tue, 8 Sep 2015 09:48:48 +0200
-Message-ID: <55EE92E0.1010805@redhat.com>
-References: <1441441319-10658-1-git-send-email-hdegoede@redhat.com>
- <20150906163023.GR31584@lukather> <55ED3739.609@redhat.com>
- <1441612142.14422.34.camel@plaes.org> <55ED4F8F.6080502@redhat.com>
- <1441617262.21530.4.camel@plaes.org> <55ED591B.7050705@redhat.com>
- <20150907205216.GW31584@lukather>
-Reply-To: hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org
+From: Paul Osmialowski <pawelo@king.net.pl>
+Subject: Re: [PATCH 7/9] arm: twr-k70f120m: IOMUX driver for Kinetis SoC
+Date: Tue, 8 Sep 2015 10:04:19 +0200 (CEST)
+Message-ID: <alpine.LNX.2.00.1509080953390.31192@localhost.localdomain>
+References: <1435094387-20146-1-git-send-email-pawelo@king.net.pl>
+ <1435094387-20146-8-git-send-email-pawelo@king.net.pl>
+ <CACRpkdYHBt7YJWM3Bg8ENfw7uL4fuENqW+g8YaO+P6UPBCX4HQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Return-path: <linux-sunxi+bncBDRZXY4CYYORBZNFXKXQKGQEG6EOVWY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <20150907205216.GW31584@lukather>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <http://groups.google.com/group/linux-sunxi/subscribe>
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Priit Laes <plaes-q/aMd4JkU83YtjvyW6yDsg@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <CACRpkdYHBt7YJWM3Bg8ENfw7uL4fuENqW+g8YaO+P6UPBCX4HQ@mail.gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Stephen Boyd <sboyd@codeaurora.org>, Michael Turquette <mturquette@baylibre.com>, Stefan Agner <stefan@agner.ch>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Jiri Slaby <jslaby@suse.cz>, linux-clk@vger.kernel.org, Kees Cook <keescook@chromium.org>, Russell King <linux@arm.linux.org.uk>, Nicolas Pitre <nico@linaro.org>, Magnus Damm <damm+renesas@opensource.se>, Uwe Kleine-Koenig <u.kleine-koenig@pengutronix.de>, Dave Martin <Dave.Martin@arm.com>, Guenter Roeck <linux@roeck-us.net>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Paul Osmialowski <pawelo@king.net.pl>, Sascha Hauer <kernel@pengutronix.de>, Arnd Bergmann <arnd@arndb.de>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Jingchang Lu <jingchang.lu@freescale.com>, Hao
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Hi Linus,
 
-On 07-09-15 22:52, Maxime Ripard wrote:
-> Hi,
->
-> On Mon, Sep 07, 2015 at 11:30:03AM +0200, Hans de Goede wrote:
->>>>> bma250 already has devicetree support. It is used in Gemei G9
->>>>> tablet (sun4i-gemei-g9.dts).
->>>>
->>>> Yes I've seen that, but does it actually work? I've not tried but
->>>> I do not see any compatible string in the actual bma250 code in
->>>> the kernel, so I believe that this part of the sun4i-gemei-g9.dts
->>>> file does not work ?
->>>
->>> It worked (even without IRQs) when I submitted the patch. Driver
->>> itself is under iio/accel/bma180.c
->>
->> That is really weird, because:
->>
->> https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git/tree/drivers/iio/accel/bma180.c
->>
->> Does not have an of_match_table ... ??
->
-> Not really, when using DT, i2c will set the i2c_client name to the
-> device part of the compatible [1] [2], and then if the of_device_id
-> lookup fails, will fallback to matching the i2c_client name to the
-> i2c_device_id [3]. Which in our case matches.
->
-> Maxime
->
-> [1] http://lxr.free-electrons.com/source/drivers/i2c/i2c-core.c#L1281
-> [2] http://lxr.free-electrons.com/source/drivers/i2c/i2c-core.c#L969
-> [3] http://lxr.free-electrons.com/source/drivers/i2c/i2c-core.c#L461
+On Tue, 14 Jul 2015, Linus Walleij wrote:
 
-Hmm, not sure whether that is a useful feature or an ugly hack :)
+> OK...
+> 
+> I want Shawn and Sascha to look at this as they worked with
+> other Freescale pin controllers. Especially I want to know if this
+> is a sibling to the other Freescale controllers or a separate hardware.
+> 
+> If it is *not* a sibling I will *insist* that it use more generic pin
+> control bindings and move away from the older Freescale-specific
+> stuff.
 
-It is sorta unexpected either way. But I can make good use of this to
-enable the accelerometer and maybe also some touchscreens on a bunch of
-boards I have.
+No one answered me about that. However, I looked at other Freescale 
+pinctrl drivers and realised that no one of them (IMX, IMX1, MXS) is 
+similar to what I need to do for Kinetis, also positions of configuration 
+bits differ significantly.
 
-Still should we rely on this? This means relying on Linux kernel behavior,
-rather then something documented in Documentation/devicetree/bindings/...
+> 
+> There exist generic pin config bindings, see
+> Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt
+> 
+> I suggest to to function+group paring and then use generic pin config
+> with this driver unless it is a very close sibling to the existing Freescale
+> pin controllers.
+> 
+> Hint: if it is a sibling, it should share code with them.
+> 
+> There are several drivers doing generic pin control/pin config in the kernel
+> tree.
+> 
 
-Regards,
+I tried to analyze few of the drivers (e.g. zynq family) and can't find 
+how can I assing clock gate (clock device) to each port (PORTA, PORTB, 
+PORTC,...) which is required for Kinetis. Is generic pin control capable 
+to express that requirement or is it a time to desing my own pinctrl 
+driver (maybe somewhat improved than the one I presented so far)?
 
-Hans
+This pinctrl component is somwehat critical part of BSP. Until it is not 
+sorted, I don't see a point in releasing what was developed so far.
+
+Best regards,
+Paul
