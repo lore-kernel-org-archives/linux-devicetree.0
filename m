@@ -1,93 +1,109 @@
-From: Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Subject: [PATCH v18 2/4] ARM: power-domain: rockchip: add all the domain type on RK3288 SoCs
-Date: Tue,  8 Sep 2015 14:18:21 +0800
-Message-ID: <1441693103-26712-3-git-send-email-wxt@rock-chips.com>
+From: Caesar Wang <wxt@rock-chips.com>
+Subject: [PATCH v18 1/4] dt-bindings: add document of Rockchip power domains
+Date: Tue,  8 Sep 2015 14:18:20 +0800
+Message-ID: <1441693103-26712-2-git-send-email-wxt@rock-chips.com>
 References: <1441693103-26712-1-git-send-email-wxt@rock-chips.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1441693103-26712-1-git-send-email-wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: khilman-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1441693103-26712-1-git-send-email-wxt@rock-chips.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: khilman@linaro.org, heiko@sntech.de
+Cc: devicetree@vger.kernel.org, ulf.hansson@linaro.org, linux@arm.linux.org.uk, arnd@arndb.de, ijc+devicetree@hellion.org.uk, linus.walleij@linaro.org, dmitry.torokhov@gmail.com, linux-kernel@vger.kernel.org, dianders@chromium.org, linux-rockchip@lists.infradead.org, robh+dt@kernel.org, tomasz.figa@gmail.com, mturquette@baylibre.com, linux-arm-kernel@lists.infradead.org, Caesar Wang <wxt@rock-chips.com>, "jinkun.hong" <jinkun.hong@rock-chips.com>
 List-Id: devicetree@vger.kernel.org
 
-According to a description from TRM, add all the power domains.
+This add the necessary binding documentation for the power domains
+found on Rockchip SoCs.
 
-At the moment, we can support some domains on RK3288.
-We can add more types on RK3288 in the future, that's need to do.
-
-Signed-off-by: Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Signed-off-by: jinkun.hong <jinkun.hong@rock-chips.com>
+Signed-off-by: Caesar Wang <wxt@rock-chips.com>
 
 ---
 
-Changes in v18: None
+Changes in v18:
+- remove the notes of domains from dt-binding.
+
 Changes in v17:
-- delete the ugly chart in the commit.
+- add the decription in detail for RK3288 SoCs.
 
 Changes in v16:
-- Add more domain decription.
+- remove the pmu node.
 
-Changes in v15:
-- change the comment.
-
+Changes in v15: None
 Changes in v14: None
 Changes in v13: None
 Changes in v12: None
 Changes in v11: None
 Changes in v10: None
-Changes in v9: None
-Changes in v8: None
+Changes in v9:
+- add document decription.
+
+Changes in v8:
+- document go back to v2.
+
 Changes in v7: None
 Changes in v6: None
 Changes in v5: None
 Changes in v4: None
-Changes in v3: None
-Changes in v2: None
+Changes in v3:
+- DT structure has changed.
 
- include/dt-bindings/power-domain/rk3288.h | 31 +++++++++++++++++++++++++++++++
- 1 file changed, 31 insertions(+)
- create mode 100644 include/dt-bindings/power-domain/rk3288.h
+Changes in v2:
+- move clocks to "optional".
 
-diff --git a/include/dt-bindings/power-domain/rk3288.h b/include/dt-bindings/power-domain/rk3288.h
+ .../bindings/soc/rockchip/power_domain.txt         | 46 ++++++++++++++++++++++
+ 1 file changed, 46 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/soc/rockchip/power_domain.txt
+
+diff --git a/Documentation/devicetree/bindings/soc/rockchip/power_domain.txt b/Documentation/devicetree/bindings/soc/rockchip/power_domain.txt
 new file mode 100644
-index 0000000..db5e810
+index 0000000..4be3418
 --- /dev/null
-+++ b/include/dt-bindings/power-domain/rk3288.h
-@@ -0,0 +1,31 @@
-+#ifndef __DT_BINDINGS_POWER_DOMAIN_RK3288_H__
-+#define __DT_BINDINGS_POWER_DOMAIN_RK3288_H__
++++ b/Documentation/devicetree/bindings/soc/rockchip/power_domain.txt
+@@ -0,0 +1,46 @@
++* Rockchip Power Domains
 +
-+/**
-+ * RK3288 Power Domain and Voltage Domain Summary.
-+ */
++Rockchip processors include support for multiple power domains which can be
++powered up/down by software based on different application scenes to save power.
 +
-+/* VD_CORE */
-+#define RK3288_PD_A17_0		0
-+#define RK3288_PD_A17_1		1
-+#define RK3288_PD_A17_2		2
-+#define RK3288_PD_A17_3		3
-+#define RK3288_PD_SCU		4
-+#define RK3288_PD_DEBUG		5
-+#define RK3288_PD_MEM		6
++Required properties for power domain controller:
++- compatible: Should be one of the following.
++	"rockchip,rk3288-power-controller" - for RK3288 SoCs.
++- #power-domain-cells: Number of cells in a power-domain specifier.
++	Should be 1 for multiple PM domains.
++- #address-cells: Should be 1.
++- #size-cells: Should be 0.
 +
-+/* VD_LOGIC */
-+#define RK3288_PD_BUS		7
-+#define RK3288_PD_PERI		8
-+#define RK3288_PD_VIO		9
-+#define RK3288_PD_ALIVE		10
-+#define RK3288_PD_HEVC		11
-+#define RK3288_PD_VIDEO		12
++Required properties for power domain sub nodes:
++- reg: index of the power domain, should use macros in:
++	"include/dt-bindings/power-domain/rk3288.h" - for RK3288 type power domain.
++- clocks (optional): phandles to clocks which need to be enabled while power domain
++	switches state.
 +
-+/* VD_GPU */
-+#define RK3288_PD_GPU		13
++Example:
 +
-+/* VD_PMU */
-+#define RK3288_PD_PMU		14
++	power: power-controller {
++		compatible = "rockchip,rk3288-power-controller";
++		#power-domain-cells = <1>;
++		#address-cells = <1>;
++		#size-cells = <0>;
 +
-+#endif
---
++		pd_gpu {
++			reg = <RK3288_PD_GPU>;
++			clocks = <&cru ACLK_GPU>;
++		};
++	};
++
++Node of a device using power domains must have a power-domains property,
++containing a phandle to the power device node and an index specifying which
++power domain to use.
++The index should use macros in:
++	"include/dt-bindings/power-domain/rk3288.h" - for rk3288 type power domain.
++
++Example of the node using power domain:
++
++	node {
++		/* ... */
++		power-domains = <&power RK3288_PD_GPU>;
++		/* ... */
++	};
+-- 
 1.9.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
