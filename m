@@ -1,118 +1,121 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v7 1/5] dt-bindings: Add usb3.0 phy binding for MT65xx SoCs
-Date: Tue, 8 Sep 2015 19:16:48 -0500
-Message-ID: <55EF7A70.1080701@kernel.org>
-References: <1441693083-8440-1-git-send-email-chunfeng.yun@mediatek.com>
- <1441693083-8440-2-git-send-email-chunfeng.yun@mediatek.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH linux-next v9 2/3] mfd: devicetree: add bindings for Atmel
+ Flexcom
+Date: Tue, 8 Sep 2015 18:40:57 -0500
+Message-ID: <55EF7209.8060407@kernel.org>
+References: <cover.1441118159.git.cyrille.pitchen@atmel.com>
+ <90fa2e0ded92567a29c996658153d833aaa5e411.1441118159.git.cyrille.pitchen@atmel.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-In-Reply-To: <1441693083-8440-2-git-send-email-chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mediatek>,
- <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-mediatek/>
-List-Post: <mailto:linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mediatek>,
- <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "Linux-mediatek" <linux-mediatek-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: Chunfeng Yun <chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Mathias Nyman <mathias.nyman-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, John Crispin <blogic-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <90fa2e0ded92567a29c996658153d833aaa5e411.1441118159.git.cyrille.pitchen@atmel.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Cyrille Pitchen <cyrille.pitchen@atmel.com>, nicolas.ferre@atmel.com, boris.brezillon@free-electrons.com, alexandre.belloni@free-electrons.com, sameo@linux.intel.com, lee.jones@linaro.org
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, linux-kernel@vger.kernel.org, robh+dt@kernel.org, galak@codeaurora.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 09/08/2015 01:17 AM, Chunfeng Yun wrote:
-> add a DT binding documentation of usb3.0 phy for MT65xx
-> SoCs from Mediatek.
+On 09/01/2015 09:46 AM, Cyrille Pitchen wrote:
+> This patch documents the DT bindings for the Atmel Flexcom which will be
+> introduced by sama5d2x SoCs. These bindings will be used by the actual
+> Flexcom driver to be sent in another patch.
 > 
-> Signed-off-by: Chunfeng Yun <chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+> Signed-off-by: Cyrille Pitchen <cyrille.pitchen@atmel.com>
+> Acked-by: Boris Brezillon <boris.brezillon@free-electrons.com>
+> Acked-by: Alexandre Belloni <alexandre.belloni@free-electrons.com>
 
-One comment, otherwise:
-
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+A few comments, but in general looks fine.
 
 > ---
->  .../devicetree/bindings/phy/phy-mt65xx-usb.txt     | 69 ++++++++++++++++++++++
->  1 file changed, 69 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/phy/phy-mt65xx-usb.txt
+>  .../devicetree/bindings/mfd/atmel-flexcom.txt      | 67 ++++++++++++++++++++++
+>  1 file changed, 67 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/mfd/atmel-flexcom.txt
 > 
-> diff --git a/Documentation/devicetree/bindings/phy/phy-mt65xx-usb.txt b/Documentation/devicetree/bindings/phy/phy-mt65xx-usb.txt
+> diff --git a/Documentation/devicetree/bindings/mfd/atmel-flexcom.txt b/Documentation/devicetree/bindings/mfd/atmel-flexcom.txt
 > new file mode 100644
-> index 0000000..5812d20
+> index 000000000000..fc3511e41542
 > --- /dev/null
-> +++ b/Documentation/devicetree/bindings/phy/phy-mt65xx-usb.txt
-> @@ -0,0 +1,69 @@
-> +mt65xx USB3.0 PHY binding
-> +--------------------------
+> +++ b/Documentation/devicetree/bindings/mfd/atmel-flexcom.txt
+> @@ -0,0 +1,67 @@
+> +* Device tree bindings for Atmel Flexcom (Flexible Serial Communication Unit)
 > +
-> +This binding describes a usb3.0 phy for mt65xx platforms of Medaitek SoC.
-> +
-> +Required properties (controller (parent) node):
-> + - compatible	: should be "mediatek,mt8173-u3phy"
-> + - reg		: offset and length of register for phy, exclude port's
-> +		  register.
-> + - clocks	: a list of phandle + clock-specifier pairs, one for each
-> +		  entry in clock-names
-> + - clock-names	: must contain
-> +		  "u3phya_ref": for reference clock of usb3.0 analog phy.
-> +
-> +Required nodes	: a sub-node is required for each port the controller
-> +		  provides. Address range information including the usual
-> +		  'reg' property is used inside these nodes to describe
-> +		  the controller's topology. These nodes are translated
-> +		  by the driver's .xlate() function.
+> +The Atmel Flexcom is just a wrapper which embeds a SPI controller, an I2C
+> +controller and an USART. Only one function can be used at a time and is chosen
+> +at boot time according to the device tree.
 
-The last sentence is Linux specific. Please remove.
+Doesn't the board design choose (unless pins go to a header)?
 
 > +
-> +Required properties (port (child) node):
-> +- reg		: address and length of the register set for the port.
-> +- #phy-cells	: should be 1 (See second example)
-> +		  cell after port phandle is phy type from:
-> +			- PHY_TYPE_USB2
-> +			- PHY_TYPE_USB3
+> +Required properties:
+> +- compatible:		Should be "atmel,sama5d2-flexcom"
+> +- reg:			Should be the offset/length value for Flexcom dedicated
+> +			I/O registers (without USART, TWI or SPI registers).
+> +- clocks:		Should be the Flexcom peripheral clock from PMC.
+> +- #address-cells:	Should be <1>
+> +- #size-cells:		Should be <1>
+> +- ranges:		Should be one range for the full I/O register region
+> +			(including USART, TWI and SPI registers).
+> +- atmel,flexcom-mode:	Should be one of the 3 following macros as defined in
+> +			include/dt-bindings/mfd/atmel-flexcom.h:
+> +			- ATMEL_FLEXCOM_MODE_USART for USART
+> +			- ATMEL_FLEXCOM_MODE_SPI for SPI
+> +			- ATMEL_FLEXCOM_MODE_TWI for I2C
+> +
+> +Required child:
+> +a single child device of type matching the "atmel,flexcom-mode" property.
+
+Okay, but why not allow all children and use "status"?
+
+> +
+> +The reg property of this child should be:
+> +- <0x200 0x200> for USART
+> +- <0x400 0x200> for SPI
+> +- <0x600 0x200> for I2C
+> +
+> +The phandle provided by the clocks property of the child is the same as one for
+> +the Flexcom parent.
+> +
+> +Other properties remain unchanged. See documentation of the respective device:
+> +- ../serial/atmel-usart.txt
+> +- ../spi/spi_atmel.txt
+> +- ../i2c/i2c-at91.txt
 > +
 > +Example:
 > +
-> +u3phy: usb-phy@11290000 {
-> +	compatible = "mediatek,mt8173-u3phy";
-> +	reg = <0 0x11290000 0 0x800>;
-> +	clocks = <&apmixedsys CLK_APMIXED_REF2USB_TX>;
-> +	clock-names = "u3phya_ref";
-> +	#address-cells = <2>;
-> +	#size-cells = <2>;
-> +	ranges;
-> +	status = "okay";
+> +flexcom@f8034000 {
+> +	compatible = "atmel,sama5d2-flexcom";
+> +	reg = <0xf8034000 0x200>;
+> +	clocks = <&flx0_clk>;
+> +	#address-cells = <1>;
+> +	#size-cells = <1>;
+> +	ranges = <0x0 0xf8034000 0x800>;
+> +	atmel,flexcom-mode = <ATMEL_FLEXCOM_MODE_SPI>;
 > +
-> +	phy_port0: port@11290800 {
-> +		reg = <0 0x11290800 0 0x800>;
-> +		#phy-cells = <1>;
-> +		status = "okay";
+> +	spi@400 {
+> +		compatible = "atmel,at91rm9200-spi";
+> +		reg = <0x400 0x200>;
+> +		interrupts = <19 IRQ_TYPE_LEVEL_HIGH 7>;
+> +		pinctrl-names = "default";
+> +		pinctrl-0 = <&pinctrl_flx0_default>;
+> +		#address-cells = <1>;
+> +		#size-cells = <0>;
+> +		clocks = <&flx0_clk>;
+> +		clock-names = "spi_clk";
+> +		atmel,fifo-size = <32>;
+> +
+> +		mtd_dataflash@0 {
+> +			compatible = "atmel,at25f512b";
+> +			reg = <0>;
+> +			spi-max-frequency = <20000000>;
+> +		};
 > +	};
-> +
-> +	phy_port1: port@11291000 {
-> +		reg = <0 0x11291000 0 0x800>;
-> +		#phy-cells = <1>;
-> +		status = "okay";
-> +	};
-> +};
-> +
-> +Specifying phy control of devices
-> +---------------------------------
-> +
-> +Device nodes should specify the configuration required in their "phys"
-> +property, containing a phandle to the phy port node and a device type;
-> +phy-names for each port are optional.
-> +
-> +Example:
-> +
-> +#include <dt-bindings/phy/phy.h>
-> +
-> +usb30: usb@11270000 {
-> +	...
-> +	phys = <&phy_port0 PHY_TYPE_USB3>;
-> +	phy-names = "usb3-0";
-> +	...
 > +};
 > 
