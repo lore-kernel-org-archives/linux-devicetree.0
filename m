@@ -1,159 +1,132 @@
-From: Florian Fainelli <f.fainelli@gmail.com>
-Subject: Re: [PATCH v3 2/2] pwm: Add Broadcom BCM7038 PWM controller support
-Date: Tue, 08 Sep 2015 09:56:57 -0700
-Message-ID: <55EF1359.70109@gmail.com>
-References: <1440811309-1289-1-git-send-email-f.fainelli@gmail.com> <1440811309-1289-3-git-send-email-f.fainelli@gmail.com> <55EDE24F.7020402@vanguardiasur.com.ar>
+From: Leif Lindholm <leif.lindholm-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [RFC 3/5] acpi/serial: add DBG2 earlycon support
+Date: Tue, 8 Sep 2015 18:03:07 +0100
+Message-ID: <20150908170307.GP10728@bivouac.eciton.net>
+References: <1441716217-23786-1-git-send-email-leif.lindholm@linaro.org>
+ <1441716217-23786-4-git-send-email-leif.lindholm@linaro.org>
+ <20150908130951.GE20562@leverpostej>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <55EDE24F.7020402@vanguardiasur.com.ar>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Ariel D'Alessandro <ariel@vanguardiasur.com.ar>, Florian Fainelli <f.fainelli@gmail.com>, linux-kernel@vger.kernel.org
-Cc: bcm-kernel-feedback-list@broadcom.com, thierry.reding@gmail.com, devicetree@vger.kernel.org, linux-pwm@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20150908130951.GE20562@leverpostej>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-acpi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-acpi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "al.stone-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <al.stone-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "torez-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org" <torez-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, "jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org" <jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, "graeme.gregory-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <graeme.gregory-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linaro-acpi-cunTk1MwBs8s++Sfvej+rw@public.gmane.org" <linaro-acpi-cunTk1MwBs8s++Sfvej+rw@public.gmane.org>, "lv.zheng-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org" <lv.zheng-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 07/09/15 12:15, Ariel D'Alessandro wrote:
-> Hi Florian,
->=20
-> I wrote some observations below that maybe can be useful.
->=20
-> El 28/08/15 a las 22:21, Florian Fainelli escribi=C3=B3:
->> Add support for the BCM7038-style PWM controller found in all BCM7xx=
-x STB SoCs.
->> This controller has a hardcoded 2 channels per controller, and casca=
-des a
->> variable frequency generator on top of a fixed frequency generator w=
-hich offers
->> a range of a 148ns period all the way to ~622ms periods.
->>
->> Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+On Tue, Sep 08, 2015 at 02:09:51PM +0100, Mark Rutland wrote:
+> On Tue, Sep 08, 2015 at 01:43:35PM +0100, Leif Lindholm wrote:
+> > The ACPI DBG2 table defines a debug console. Add support for parsing it
+> > and using it to select earlycon destination when no arguments provided.
+> > 
+> > Signed-off-by: Leif Lindholm <leif.lindholm-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> 
+> [...]
+> 
+> > diff --git a/drivers/acpi/console.c b/drivers/acpi/console.c
+> > new file mode 100644
+> > index 0000000..a985890
+> > --- /dev/null
+> > +++ b/drivers/acpi/console.c
+> > @@ -0,0 +1,103 @@
+> > +/*
+> > + * Copyright (c) 2012, Intel Corporation
+> > + * Copyright (c) 2015, Linaro Ltd.
+> > + *
+> > + * This program is free software; you can redistribute it and/or modify
+> > + * it under the terms of the GNU General Public License version 2 as
+> > + * published by the Free Software Foundation.
+> > + *
+> > + */
+> > +
+> > +#define DEBUG
+> 
+> Why?
 
-NB: you can trim your replies so we do not have to skip through lengthy
-uncommented parts of the patch.
+Kept around from Lv Zheng's 2012 set. Will drop.
 
-[snip]
+> > +#define pr_fmt(fmt) "ACPI: " KBUILD_MODNAME ": " fmt
+> > +
+> > +#include <linux/acpi.h>
+> > +#include <linux/kernel.h>
+> > +#include <linux/serial_core.h>
+> > +
+> > +#define NUM_ELEMS(x) (sizeof(x) / sizeof(*x))
+> 
+> Use ARRAY_SIZE (from kernel.h).
 
->> +
->> +static inline u32 pwm_readl(struct brcmstb_pwm_dev *p, u32 off)
->=20
-> The function name 'pwm_readl' sounds to be very common. It might be
-> better to use a prefix here, don't you think? Maybe brcmstb_pwm_readl=
-?
+I was sure there was something like that, but my grep-fu failed me.
+Will fix.
 
-Sure, if that makes it clearer, these are local and inlined, so the
-chances for getting a namespace conflict are very thin, but fair enough=
-,
-will rename to match the rest of the functions.
+> > +
+> > +#ifdef CONFIG_SERIAL_EARLYCON
+> > +static int use_earlycon __initdata;
+> > +static int __init setup_acpi_earlycon(char *buf)
+> > +{
+> > +	if (!buf)
+> > +		use_earlycon = 1;
+> > +
+> > +	return 0;
+> > +}
+> > +early_param("earlycon", setup_acpi_earlycon);
+> 
+> It seems a shame to add this after folding the OF case into the earlycon
+> code. What necessitates this being a separate early_param? Why is it too
+> early to parse DBG2?
 
-[snip]
+Currently, we don't even know where our ACPI tables are  at this point
+(efi_init() is called two functions after parse_early_param() in
+setup_arch). More specifically, because acpi_boot_table_init() is
+called even later than that.
 
->> +		/*
->> +		 * We can be called with separate duty and period updates,
->> +		 * so do not reject dc =3D=3D 0 right away
->> +		 */
->> +		if (pc =3D=3D PWM_PERIOD_MIN ||
->> +		   (dc < PWM_ON_MIN && duty_ns))
->=20
-> No break needed here, this expression can be written on a single line
-> increasing readability.
->=20
->> +			return -EINVAL;
->> +
->> +		/* We converged on a calculation */
->> +		if (pc <=3D PWM_ON_PERIOD_MAX && dc <=3D PWM_ON_PERIOD_MAX)
->> +			break;
->> +
->> +		/*
->> +		 * The cword needs to be a power of 2 for the variable
->> +		 * frequency generator to output a 50% duty cycle variable
->> +		 * frequency which is used as input clock to the fixed
->> +		 * frequency generator.
->> +		 */
->> +		cword >>=3D 1;
->> +
->> +		/*
->> +		 * Desired periods are too large, we do not have a divider
->> +		 * for them
->> +		 */
->> +		if (cword < CONST_VAR_F_MIN)
->> +			return -EINVAL;
->> +	}
->> +
->> +done:
->> +	/*
->> +	 * Configure the defined "cword" value to have the variable freque=
-ncy
->> +	 * generator output a base frequency for the constant frequency
->> +	 * generator to derive from.
->> +	 */
->> +	pwm_writel(b, cword >> 8, PWM_CWORD_MSB + ch * PWM_CH_SIZE);
->> +	pwm_writel(b, cword & 0xff, PWM_CWORD_LSB + ch * PWM_CH_SIZE);
->> +
->> +	/* Select constant frequency signal output */
->> +	reg =3D pwm_readl(b, PWM_CTRL2);
->> +	reg |=3D (CTRL2_OUT_SELECT << (ch * CTRL_CHAN_OFFS));
->=20
-> A nitpick here, outer parenthesis can be avoided.
->=20
->> +	pwm_writel(b, reg, PWM_CTRL2);
->=20
-> This read-modify-write sequence may be protected by some locking
-> mechanism. Notice that, as written in the docs: "PWM core does not
-> enforce any locking to pwm_enable(), pwm_disable() and pwm_config()".
+If we moved both of those earlier, we could drop the extra earlycon
+param handling for ACPI. That would of course reduce the ability to
+have dynamically configurable debug messages for both of these.
 
-Right, I will add required locking here, thanks!
+> [...]
+> 
+> > diff --git a/drivers/tty/serial/earlycon.c b/drivers/tty/serial/earlycon.c
+> > index 2bda09a..c063cbb 100644
+> > --- a/drivers/tty/serial/earlycon.c
+> > +++ b/drivers/tty/serial/earlycon.c
+> > @@ -13,6 +13,7 @@
+> >  
+> >  #define pr_fmt(fmt)	KBUILD_MODNAME ": " fmt
+> >  
+> > +#include <linux/acpi.h>
+> >  #include <linux/console.h>
+> >  #include <linux/kernel.h>
+> >  #include <linux/init.h>
+> > @@ -184,12 +185,16 @@ static int __init param_setup_earlycon(char *buf)
+> >  	int err;
+> >  
+> >  	/*
+> > -	 * Just 'earlycon' is a valid param for devicetree earlycons;
+> > -	 * don't generate a warning from parse_early_params() in that case
+> > +	 * Just 'earlycon' is a valid param for devicetree or ACPI earlycons;
+> > +	 * ACPI cannot be parsed yet, so return without action if enabled.
+> > +	 * Otherwise, attempt initialization using DT.
+> >  	 */
+> > -	if (!buf || !buf[0])
+> > -		if (IS_ENABLED(CONFIG_OF_FLATTREE))
+> > +	if (!buf || !buf[0]) {
+> > +		if (!acpi_disabled)
+> > +			return 0;
+> > +		else if (IS_ENABLED(CONFIG_OF_FLATTREE))
+> >  			return early_init_dt_scan_chosen_serial();
+> > +	}
+> 
+> It would be much nicer if we could handle the ACPI earlycon parsing in
+> the same place. As above, I assume I'm missing something that prevents
+> that.
 
-[snip]
+I don't disagree.
 
->> +	r =3D platform_get_resource(pdev, IORESOURCE_MEM, 0);
->> +	p->base =3D devm_ioremap_resource(&pdev->dev, r);
->> +	if (!p->base)
->> +		return -ENOMEM;
->=20
-> I think you're missing some cleanup routine here. You have a previous
-> call to clk_prepare_enable(), so you may have a call to
-> clk_disable_unprepare() here in order to exit cleanly.
+/
+    Leif
 
-Good catch yes.
-
->=20
->> +
->> +	ret =3D pwmchip_add(&p->chip);
->> +	if (ret)
->> +		dev_err(&pdev->dev, "failed to add PWM chip %d\n", ret);
->=20
-> Cleanup needed here too.
->=20
->> +
->> +	return ret;
->> +}
->> +
->> +static int brcmstb_pwm_remove(struct platform_device *pdev)
->> +{
->> +	struct brcmstb_pwm_dev *p =3D platform_get_drvdata(pdev);
->> +
->> +	clk_disable_unprepare(p->clk);
->> +
->> +	return pwmchip_remove(&p->chip);
->=20
-> AFAIK, pwmchip_remove() may return busy if the PWM chip provides a PW=
-M
-> device that is still requested, so you shouldn't disable the clock
-> before you ensure the PWM chip has been successfuly removed.
-
-Absolutely.
-
->=20
-> It think you could do something like:
->=20
-> 	ret =3D pwmchip_remove(&p->chip);
-> 	if (ret)
-> 		return ret;
->=20
-> 	clk_disable_unprepare(p->clk);
-> 	return 0;
->=20
-
---=20
-=46lorian
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
