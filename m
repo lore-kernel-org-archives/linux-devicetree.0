@@ -1,52 +1,108 @@
-From: Li Yang <leoli@freescale.com>
-Subject: Re: [PATCH v2 04/10] doc/bindings: Update PCIe devicetree binding
- documentation for LS2080A
-Date: Tue, 8 Sep 2015 15:06:16 -0500
-Message-ID: <CADRPPNR-cSSQC5sLMmoqcxX46J6hdULa_V4v2BK7T8s8pcX0cg@mail.gmail.com>
-References: <1441349872-4560-1-git-send-email-bhupesh.sharma@freescale.com>
-	<1441349872-4560-5-git-send-email-bhupesh.sharma@freescale.com>
-	<80094129.LHZFOe1ZPU@wuerfel>
+From: Tony Lindgren <tony@atomide.com>
+Subject: Re: [net-next PATCH v3] drivers: net: cpsw: Add support to drive
+ gpios for ethernet to be functional
+Date: Tue, 8 Sep 2015 13:06:18 -0700
+Message-ID: <20150908200618.GF4215@atomide.com>
+References: <1441619204-15403-1-git-send-email-mugunthanvnm@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <80094129.LHZFOe1ZPU@wuerfel>
-Sender: linux-clk-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>, devicetree@vger.kernel.org
-Cc: Bhupesh Sharma <bhupesh.sharma@freescale.com>, Mark Rutland <mark.rutland@arm.com>, marc.zyngier@arm.com, Catalin.Marinas@arm.com, will.deacon@arm.com, Minghuan Lian <Minghuan.Lian@freescale.com>, olof@lixom.net, bhupesh.linux@gmail.com, linux-clk@vger.kernel.org, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <netdev-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1441619204-15403-1-git-send-email-mugunthanvnm@ti.com>
+Sender: netdev-owner@vger.kernel.org
+To: Mugunthan V N <mugunthanvnm@ti.com>
+Cc: netdev@vger.kernel.org, "David S . Miller" <davem@davemloft.net>, Sekhar Nori <nsekhar@ti.com>, linux-omap@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Sep 7, 2015 at 6:32 AM, Arnd Bergmann <arnd@arndb.de> wrote:
-> On Friday 04 September 2015 12:27:46 Bhupesh Sharma wrote:
->> @@ -4,7 +4,8 @@ This PCIe host controller is based on the Synopsis Designware PCIe IP
->>  and thus inherits all the common properties defined in designware-pcie.txt.
->>
->>  Required properties:
->> -- compatible: should contain the platform identifier such as "fsl,ls1021a-pcie"
->> +- compatible: should contain the platform identifier such as "fsl,ls1021a-pcie",
->> +  "fsl,ls2080a-pcie".
->>  - reg: base addresses and lengths of the PCIe controller
->>  - interrupts: A list of interrupt outputs of the controller. Must contain an
->>    entry for each entry in the interrupt-names property.
->>
->
-> Are the two PCIe hosts mutually compatible? If they are, you should mandate
-> one of the strings as the base model for identification, with the additional
-> model being optional for identification of the specific SoC.
+* Mugunthan V N <mugunthanvnm@ti.com> [150907 02:50]:
+> In DRA72x EVM, by default slave 1 is connected to the onboard
+> phy, but slave 2 pins are also muxed with video input module
+> which is controlled by pcf857x gpio and currently to select slave
+> 0 to connect to phy gpio hogging is used, but with
+> omap2plus_defconfig the pcf857x gpio is built as module. So when
+> using NFS on DRA72x EVM, board doesn't boot as gpio hogging do
+> not set proper gpio state to connect slave 0 to phy as it is
+> built as module and you do not see any errors for not setting
+> gpio and just mentions dhcp reply not got.
+> 
+> To solve this issue, introducing "mode-gpios" in DT when gpio
+> based muxing is required. This will throw a warning when gpio
+> get fails and returns probe defer. When gpio-pcf857x module is
+> installed, cpsw probes again and ethernet becomes functional.
+> Verified this on DRA72x with pcf as module and ramdisk.
+> 
+> Signed-off-by: Mugunthan V N <mugunthanvnm@ti.com>
 
-It seems that controllers on these chips are not exactly the same.
-They will get different driver data by matching the compatible
-strings.  Probably we could define a more generic compatible string,
-such as "fsl,layerscape-pcie" or "fsl,ls-pcie".
+Acked-by: Tony Lindgren <tony@atomide.com>
 
->
-> It would also be good to add a string with the specific version number of the
-> designware PCIe block that is being used there.
-
-The binding has mentioned to reference the designware-pcie.txt.  But
-it might be more clear to mention the designware compatible string
-"snps,dw-pcie" again in the compatible part.  Currently there is no
-version number defined in the designware-pcie binding.  It might be
-hard to get this information for some SoCs.
-
-Regards,
-Leo
+> ---
+> 
+> Changes from v2:
+> * Used mode-gpios, so that the driver is generic enough to handle
+>   multiple gpios
+> 
+> This patch is tested on DRA72x, Logs [1] and pushed a branch [2]
+> 
+> [1]: http://pastebin.ubuntu.com/12306224/
+> [2]: git://git.ti.com/~mugunthanvnm/ti-linux-kernel/linux.git cpsw-gpio-optional-v3
+> 
+> ---
+>  Documentation/devicetree/bindings/net/cpsw.txt | 7 +++++++
+>  drivers/net/ethernet/ti/cpsw.c                 | 9 +++++++++
+>  2 files changed, 16 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/net/cpsw.txt b/Documentation/devicetree/bindings/net/cpsw.txt
+> index a9df21a..676ecf6 100644
+> --- a/Documentation/devicetree/bindings/net/cpsw.txt
+> +++ b/Documentation/devicetree/bindings/net/cpsw.txt
+> @@ -30,6 +30,13 @@ Optional properties:
+>  - dual_emac		: Specifies Switch to act as Dual EMAC
+>  - syscon		: Phandle to the system control device node, which is
+>  			  the control module device of the am33x
+> +- mode-gpios		: Should be added if one/multiple gpio lines are
+> +			  required to be driven so that cpsw data lines
+> +			  can be connected to the phy via selective mux.
+> +			  For example in dra72x-evm, pcf gpio has to be
+> +			  driven low so that cpsw slave 0 and phy data
+> +			  lines are connected via mux.
+> +
+>  
+>  Slave Properties:
+>  Required properties:
+> diff --git a/drivers/net/ethernet/ti/cpsw.c b/drivers/net/ethernet/ti/cpsw.c
+> index 8fc90f1..c670317 100644
+> --- a/drivers/net/ethernet/ti/cpsw.c
+> +++ b/drivers/net/ethernet/ti/cpsw.c
+> @@ -29,6 +29,7 @@
+>  #include <linux/workqueue.h>
+>  #include <linux/delay.h>
+>  #include <linux/pm_runtime.h>
+> +#include <linux/gpio.h>
+>  #include <linux/of.h>
+>  #include <linux/of_net.h>
+>  #include <linux/of_device.h>
+> @@ -2207,6 +2208,7 @@ static int cpsw_probe(struct platform_device *pdev)
+>  	void __iomem			*ss_regs;
+>  	struct resource			*res, *ss_res;
+>  	const struct of_device_id	*of_id;
+> +	struct gpio_descs		*mode;
+>  	u32 slave_offset, sliver_offset, slave_size;
+>  	int ret = 0, i;
+>  	int irq;
+> @@ -2232,6 +2234,13 @@ static int cpsw_probe(struct platform_device *pdev)
+>  		goto clean_ndev_ret;
+>  	}
+>  
+> +	mode = devm_gpiod_get_array_optional(&pdev->dev, "mode", GPIOD_OUT_LOW);
+> +	if (IS_ERR(mode)) {
+> +		ret = PTR_ERR(mode);
+> +		dev_err(&pdev->dev, "gpio request failed, ret %d\n", ret);
+> +		goto clean_ndev_ret;
+> +	}
+> +
+>  	/*
+>  	 * This may be required here for child devices.
+>  	 */
+> -- 
+> 2.6.0.rc0.24.gec371ff
+> 
