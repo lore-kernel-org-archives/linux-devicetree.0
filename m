@@ -1,7 +1,7 @@
 From: Chunfeng Yun <chunfeng.yun@mediatek.com>
-Subject: [PATCH v7 5/5] arm64: dts: mediatek: add xHCI & usb phy for mt8173
-Date: Tue, 8 Sep 2015 14:18:03 +0800
-Message-ID: <1441693083-8440-6-git-send-email-chunfeng.yun@mediatek.com>
+Subject: [PATCH v7 1/5] dt-bindings: Add usb3.0 phy binding for MT65xx SoCs
+Date: Tue, 8 Sep 2015 14:17:59 +0800
+Message-ID: <1441693083-8440-2-git-send-email-chunfeng.yun@mediatek.com>
 References: <1441693083-8440-1-git-send-email-chunfeng.yun@mediatek.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -12,113 +12,89 @@ To: Mathias Nyman <mathias.nyman@intel.com>
 Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, Felipe Balbi <balbi@ti.com>, Chunfeng Yun <chunfeng.yun@mediatek.com>, Sascha Hauer <s.hauer@pengutronix.de>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Roger Quadros <rogerq@ti.com>, linux-usb@vger.kernel.org, linux-mediatek@lists.infradead.org, John Crispin <blogic@openwrt.org>, Daniel Kurtz <djkurtz@chromium.org>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, Kishon Vijay Abraham I <kishon@ti.com>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 List-Id: devicetree@vger.kernel.org
 
-add xHCI and phy drivers for MT8173-EVB
+add a DT binding documentation of usb3.0 phy for MT65xx
+SoCs from Mediatek.
 
 Signed-off-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
 ---
- arch/arm64/boot/dts/mediatek/mt8173-evb.dts | 16 +++++++++++
- arch/arm64/boot/dts/mediatek/mt8173.dtsi    | 44 +++++++++++++++++++++++++++++
- 2 files changed, 60 insertions(+)
+ .../devicetree/bindings/phy/phy-mt65xx-usb.txt     | 69 ++++++++++++++++++++++
+ 1 file changed, 69 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/phy/phy-mt65xx-usb.txt
 
-diff --git a/arch/arm64/boot/dts/mediatek/mt8173-evb.dts b/arch/arm64/boot/dts/mediatek/mt8173-evb.dts
-index f433c21..112f3f3 100644
---- a/arch/arm64/boot/dts/mediatek/mt8173-evb.dts
-+++ b/arch/arm64/boot/dts/mediatek/mt8173-evb.dts
-@@ -13,6 +13,7 @@
-  */
- 
- /dts-v1/;
-+#include <dt-bindings/gpio/gpio.h>
- #include "mt8173.dtsi"
- 
- / {
-@@ -32,6 +33,15 @@
- 	};
- 
- 	chosen { };
+diff --git a/Documentation/devicetree/bindings/phy/phy-mt65xx-usb.txt b/Documentation/devicetree/bindings/phy/phy-mt65xx-usb.txt
+new file mode 100644
+index 0000000..5812d20
+--- /dev/null
++++ b/Documentation/devicetree/bindings/phy/phy-mt65xx-usb.txt
+@@ -0,0 +1,69 @@
++mt65xx USB3.0 PHY binding
++--------------------------
 +
-+	usb_p1_vbus: regulator@0 {
-+		compatible = "regulator-fixed";
-+		regulator-name = "usb_vbus";
-+		regulator-min-microvolt = <5000000>;
-+		regulator-max-microvolt = <5000000>;
-+		gpio = <&pio 130 GPIO_ACTIVE_HIGH>;
-+		enable-active-high;
++This binding describes a usb3.0 phy for mt65xx platforms of Medaitek SoC.
++
++Required properties (controller (parent) node):
++ - compatible	: should be "mediatek,mt8173-u3phy"
++ - reg		: offset and length of register for phy, exclude port's
++		  register.
++ - clocks	: a list of phandle + clock-specifier pairs, one for each
++		  entry in clock-names
++ - clock-names	: must contain
++		  "u3phya_ref": for reference clock of usb3.0 analog phy.
++
++Required nodes	: a sub-node is required for each port the controller
++		  provides. Address range information including the usual
++		  'reg' property is used inside these nodes to describe
++		  the controller's topology. These nodes are translated
++		  by the driver's .xlate() function.
++
++Required properties (port (child) node):
++- reg		: address and length of the register set for the port.
++- #phy-cells	: should be 1 (See second example)
++		  cell after port phandle is phy type from:
++			- PHY_TYPE_USB2
++			- PHY_TYPE_USB3
++
++Example:
++
++u3phy: usb-phy@11290000 {
++	compatible = "mediatek,mt8173-u3phy";
++	reg = <0 0x11290000 0 0x800>;
++	clocks = <&apmixedsys CLK_APMIXED_REF2USB_TX>;
++	clock-names = "u3phya_ref";
++	#address-cells = <2>;
++	#size-cells = <2>;
++	ranges;
++	status = "okay";
++
++	phy_port0: port@11290800 {
++		reg = <0 0x11290800 0 0x800>;
++		#phy-cells = <1>;
++		status = "okay";
 +	};
- };
- 
- &pwrap {
-@@ -211,3 +221,9 @@
- &uart0 {
- 	status = "okay";
- };
 +
-+&usb30 {
-+	vusb33-supply = <&mt6397_vusb_reg>;
-+	vbus-supply = <&usb_p1_vbus>;
-+	mediatek,wakeup-src = <1>;
++	phy_port1: port@11291000 {
++		reg = <0 0x11291000 0 0x800>;
++		#phy-cells = <1>;
++		status = "okay";
++	};
 +};
-diff --git a/arch/arm64/boot/dts/mediatek/mt8173.dtsi b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
-index 0696f8f..a51380e 100644
---- a/arch/arm64/boot/dts/mediatek/mt8173.dtsi
-+++ b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
-@@ -14,6 +14,8 @@
- #include <dt-bindings/clock/mt8173-clk.h>
- #include <dt-bindings/interrupt-controller/irq.h>
- #include <dt-bindings/interrupt-controller/arm-gic.h>
++
++Specifying phy control of devices
++---------------------------------
++
++Device nodes should specify the configuration required in their "phys"
++property, containing a phandle to the phy port node and a device type;
++phy-names for each port are optional.
++
++Example:
++
 +#include <dt-bindings/phy/phy.h>
-+#include <dt-bindings/power/mt8173-power.h>
- #include <dt-bindings/reset-controller/mt8173-resets.h>
- #include "mt8173-pinfunc.h"
- 
-@@ -393,6 +395,48 @@
- 			#size-cells = <0>;
- 			status = "disabled";
- 		};
 +
-+		usb30: usb@11270000 {
-+			compatible = "mediatek,mt8173-xhci";
-+			reg = <0 0x11270000 0 0x1000>,
-+			      <0 0x11280700 0 0x0100>;
-+			interrupts = <GIC_SPI 115 IRQ_TYPE_LEVEL_LOW>;
-+			power-domains = <&scpsys MT8173_POWER_DOMAIN_USB>;
-+			clocks = <&topckgen CLK_TOP_USB30_SEL>,
-+				 <&pericfg CLK_PERI_USB0>,
-+				 <&pericfg CLK_PERI_USB1>;
-+			clock-names = "sys_ck",
-+				      "wakeup_deb_p0",
-+				      "wakeup_deb_p1";
-+			phys = <&phy_port0 PHY_TYPE_USB3>,
-+			       <&phy_port1 PHY_TYPE_USB2>;
-+			usb3-lpm-capable;
-+			mediatek,syscon-wakeup = <&pericfg>;
-+			status = "okay";
-+		};
-+
-+		u3phy: usb-phy@11290000 {
-+			compatible = "mediatek,mt8173-u3phy";
-+			reg = <0 0x11290000 0 0x800>;
-+			clocks = <&apmixedsys CLK_APMIXED_REF2USB_TX>;
-+			clock-names = "u3phya_ref";
-+			#address-cells = <2>;
-+			#size-cells = <2>;
-+			ranges;
-+			status = "okay";
-+
-+			phy_port0: port@11290800 {
-+				reg = <0 0x11290800 0 0x800>;
-+				#phy-cells = <1>;
-+				status = "okay";
-+			};
-+
-+			phy_port1: port@11291000 {
-+				reg = <0 0x11291000 0 0x800>;
-+				#phy-cells = <1>;
-+				status = "okay";
-+			};
-+		};
- 	};
- };
- 
++usb30: usb@11270000 {
++	...
++	phys = <&phy_port0 PHY_TYPE_USB3>;
++	phy-names = "usb3-0";
++	...
++};
 -- 
 1.8.1.1.dirty
