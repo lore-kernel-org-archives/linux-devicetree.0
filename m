@@ -1,94 +1,109 @@
-From: "Wu, Songjun" <songjun.wu@atmel.com>
-Subject: Re: [PATCH 1/2] ASoC: atmel-classd: add the Audio
- Class D Amplifier code
-Date: Tue, 8 Sep 2015 17:36:01 +0800
-Message-ID: <55EEAC01.3080409@atmel.com>
-References: <1441086101-15303-1-git-send-email-songjun.wu@atmel.com>
- <1441086101-15303-2-git-send-email-songjun.wu@atmel.com>
- <20150903113716.GU12027@sirena.org.uk> <55EC0AF5.8060403@atmel.com>
- <20150907162350.GV5313@sirena.org.uk>
+From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH v3] Documentation: add Device tree bindings for
+ hwmon/nct7802
+Date: Tue, 8 Sep 2015 10:38:12 +0100
+Message-ID: <20150908093812.GA19039@leverpostej>
+References: <1441664902-32360-1-git-send-email-const@MakeLinux.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
-Content-Transfer-Encoding: base64
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <20150907162350.GV5313@sirena.org.uk>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Mark Brown <broonie@kernel.org>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, pawel.moll@arm.com, lgirdwood@gmail.com, ijc+devicetree@hellion.org.uk, nicolas.ferre@atmel.com, linux-kernel@vger.kernel.org, tiwai@suse.com, robh+dt@kernel.org, galak@codeaurora.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1441664902-32360-1-git-send-email-const-GkuDRZ1haSFDPfheJLI6IQ@public.gmane.org>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Constantine Shulyupin <const-XSqIthwXjGBDPfheJLI6IQ@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org" <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-CgpPbiA5LzgvMjAxNSAwMDoyMywgTWFyayBCcm93biB3cm90ZToKPiBPbiBTdW4sIFNlcCAwNiwg
-MjAxNSBhdCAwNTo0NDoyMVBNICswODAwLCBXdSwgU29uZ2p1biB3cm90ZToKPj4gT24gOS8zLzIw
-MTUgMTk6MzcsIE1hcmsgQnJvd24gd3JvdGU6Cj4+PiBPbiBUdWUsIFNlcCAwMSwgMjAxNSBhdCAw
-MTo0MTo0MFBNICswODAwLCBTb25nanVuIFd1IHdyb3RlOgo+Cj4+Pj4gK3N0YXRpYyBjb25zdCBj
-aGFyICogY29uc3QgZXFjZmdfYmFzc190ZXh0W10gPSB7Cj4+Pj4gKwkiLTEyIGRCIiwgIi02IGRC
-IiwgIjAgZEIiLCAiKzYgZEIiLCAiKzEyIGRCIgo+Pj4+ICt9Owo+Pj4KPj4+PiArc3RhdGljIGNv
-bnN0IHVuc2lnbmVkIGludCBlcWNmZ19iYXNzX3ZhbHVlW10gPSB7Cj4+Pj4gKwlDTEFTU0RfSU5U
-UE1SX0VRQ0ZHX0JfQ1VUXzEyLAo+Pj4+ICsJQ0xBU1NEX0lOVFBNUl9FUUNGR19CX0NVVF82LCBD
-TEFTU0RfSU5UUE1SX0VRQ0ZHX0ZMQVQsCj4+Pj4gKwlDTEFTU0RfSU5UUE1SX0VRQ0ZHX0JfQk9P
-U1RfNiwgQ0xBU1NEX0lOVFBNUl9FUUNGR19CX0JPT1NUXzEyCj4+Pj4gK307Cj4KPj4+IFRoaXMg
-c2hvdWxkIGJlIGEgVm9sdW1lIGNvbnRyb2wgd2l0aCBUTFYgaW5mb3JtYXRpb24sIGFzIHNob3Vs
-ZCB0aGUKPj4+IGZvbGxvd2luZyBmZXcgY29udHJvbHMuCj4KPj4gVGhlIFZvbHVtZSBjb250cm9s
-IHdpdGggVExWIGluZm9ybWF0aW9uIGlzIG5vdCBzdWl0YWJsZSBmb3IgdGhpcyBjYXNlLgo+PiBC
-YXNzLCBNZWRpdW0sIGFuZCB0cmVibGUgYXJlIG11dHVhbGx5IGV4Y2x1c2l2ZS4KPj4gU28gSSB0
-aGluayB0aGUgU09DX0VOVU0gY29udHJvbCBpcyBzdWl0YWJsZSBmb3IgdGhpcyBjYXNlLgo+PiBU
-aGUgcmVnaXN0ZXIgbGF5b3V0IGlzIG5vdCB2ZXJ5IGdvb2QsCj4+IFRoZSByZWdpc3RlciBpcyBk
-ZWZpbmVkIGFzIGJlbG93Lgo+PiDigKIgIEVRQ0ZHOiBFcXVhbGl6YXRpb24gU2VsZWN0aW9uCj4+
-IFZhbHVlIE5hbWUgICAgICAgRGVzY3JpcHRpb24KPj4gMCAgICAgRkxBVCAgICAgICBGbGF0IFJl
-c3BvbnNlCj4+IDEgICAgIEJCT09TVDEyICAgQmFzcyBib29zdCArMTIgZEIKPj4gMiAgICAgQkJP
-T1NUNiAgICBCYXNzIGJvb3N0ICs2IGRCCj4+IDMgICAgIEJDVVQxMiAgICAgQmFzcyBjdXQgLTEy
-IGRCCj4+IDQgICAgIEJDVVQ2ICAgICAgQmFzcyBjdXQgLTYgZEIKPj4gNSAgICAgTUJPT1NUMyAg
-ICBNZWRpdW0gYm9vc3QgKzMgZEIKPj4gNiAgICAgTUJPT1NUOCAgICBNZWRpdW0gYm9vc3QgKzgg
-ZEIKPj4gNyAgICAgTUNVVDMgICAgICBNZWRpdW0gY3V0IC0zIGRCCj4+IDggICAgIE1DVVQ4ICAg
-ICAgTWVkaXVtIGN1dCAtOCBkQgo+PiA5ICAgICBUQk9PU1QxMiAgIFRyZWJsZSBib29zdCArMTIg
-ZEIKPj4gMTAgICAgVEJPT1NUNiAgICBUcmVibGUgYm9vc3QgKzYgZEIKPj4gMTEgICAgVENVVDEy
-ICAgICBUcmVibGUgY3V0IC0xMiBkQgo+PiAxMiAgICBUQ1VUNiAgICAgIFRyZWJsZSBjdXQgLTYg
-ZEIKPgo+IE9LLCBzbyB0aGF0J3Mgbm90IGFjdHVhbGx5IHdoYXQgdGhlIGNvZGUgd2FzIGRvaW5n
-IC0gaXQgaGFkIHNlcGFyYXRlCj4gZW51bXMgZm9yIGJhc3MsIG1pZCBhbmQgdHJlYmxlLiAgSWYg
-eW91IG1ha2UgdGhpcyBhIHNpbmdsZSBlbnVtIHdpdGggYWxsCj4gdGhlIGFib3ZlIG9wdGlvbnMg
-aW4gaXQgdGhhdCBzZWVtcyBsaWtlIHRoZSBiZXN0IHdheSBvZiBoYW5kbGluZyB0aGluZ3MuCj4K
-QSBzaW5nbGUgZW51bSBzZWVtcyBub3QgdmVyeSBmcmllbmRseSB0byB1c2VyLCB0aGVyZSBhcmUg
-dHJlZSBFUXMsIGJhc3MsIAptZWRpdW0gYW5kIHRyZWJsZS4KU28gSSBjcmVhdGUgdHJlZSBlbnVt
-IGNvbnRyb2xzIHRvIGNvbnRyb2wgdGhyZWUgRVFzLgpUaGUgJ2dldCcgZnVuY3Rpb24gaXMgcmVw
-bGFjZWQgYnkgJ2NsYXNzZF9nZXRfZXFfZW51bScsIGlmIHVzZXIgb3BlcmF0ZXMgCm9uZSBvZiB0
-aGUgdHJlZSBFUSBjb250cm9scywgdGhlIG90aGVyIHR3byBFUXMgd2lsbCBzaG93IDAgZEIuCgo+
-Pj4+ICtzdGF0aWMgY29uc3Qgc3RydWN0IHNuZF9rY29udHJvbF9uZXcgYXRtZWxfY2xhc3NkX3Nu
-ZF9jb250cm9sc1tdID0gewo+Pj4+ICtTT0NfU0lOR0xFX1RMVigiTGVmdCBWb2x1bWUiLCBDTEFT
-U0RfSU5UUE1SLAo+Pj4+ICsJCUNMQVNTRF9JTlRQTVJfQVRUTF9TSElGVCwgNzgsIDEsIGNsYXNz
-ZF9kaWdpdGFsX3RsdiksCj4+Pj4gKwo+Pj4+ICtTT0NfU0lOR0xFX1RMVigiUmlnaHQgVm9sdW1l
-IiwgQ0xBU1NEX0lOVFBNUiwKPj4+PiArCQlDTEFTU0RfSU5UUE1SX0FUVFJfU0hJRlQsIDc4LCAx
-LCBjbGFzc2RfZGlnaXRhbF90bHYpLAo+Pj4KPj4+IFRoaXMgc2hvdWxkIGJlIGEgc2luZ2xlIHN0
-ZXJlbyBjb250cm9sIHJhdGhlciB0aGFuIHNlcGFyYXRlIGxlZnQgYW5kCj4+PiByaWdodCBjb250
-cm9scy4KPgo+PiBTaW5jZSB0aGUgY2xhc3NEIElQIGRlZmluZXMgdHdvIHJlZ2lzdGVyIGZpZWxk
-cyB0byBjb250cm9sIGxlZnQgdm9sdW1lIGFuZAo+PiByaWdodCB2b2x1bWUgcmVzcGVjdGl2ZWx5
-LCBJIHRoaW5rIGl0J3MgYmV0dGVyIHRvIHByb3ZpZGUgdHdvIGNvbnRyb2xzIHRvCj4+IHVzZXIu
-Cj4KPiBObywgdGhpcyBpcyByZWFsbHkgY29tbW9uLCB3ZSBjb21iaW5lIHRoZW0gaW4gTGludXgg
-dG8gcHJlc2VudCBhCj4gY29uc2lzdGVudCBpbnRlcmZhY2UgdG8gdXNlcnNwYWNlLgo+CkkgdGhp
-bmsgY2FyZWZ1bGx5LCB5b3VyIHN1Z2dlc3Rpb24gaXMgcmVhc29uYWJsZS4KVGhlIGNvZGUgd2ls
-bCBiZSBtb2RpZmllZCwgY29tYmluZSB0aGUgbGVmdCBhbmQgcmlnaHQgdG8gYSBzaW5nbGUgc3Rl
-cmVvIApjb250cm9sLgpUaGFuayB5b3UuCgo+Pj4+ICsJZGV2X2luZm8oZGV2LAo+Pj4+ICsJCSJB
-dG1lbCBDbGFzcyBEIEFtcGxpZmllciAoQ0xBU1NEKSBkZXZpY2UgYXQgMHglcCAoaXJxICVkKVxu
-IiwKPj4+PiArCQlpb19iYXNlLCBkZC0+aXJxKTsKPgo+Pj4gVGhpcyBpcyBhIGJpdCBub2lzeSBh
-bmQgbm90IHJlYWxseSBiYXNlZCBvbiBpbnRlcmFjdGlvbiB3aXRoIHRoZQo+Pj4gaGFyZHdhcmUu
-Li4gIGRldl9kYmcoKSBzZWVtcyBiZXR0ZXIuCj4KPj4gVGhpcyBpbmZvcm1hdGlvbiB3aWxsIG9j
-Y3VyIG9ubHkgb25jZSB3aGVuIGxpbnV4IGtlcm5lbCBzdGFydHMuCj4+IEl0IHNob3dzIHRoZSBj
-bGFzc0QgaXMgbG9hZGVkIHRvIGxpbnV4IGtlcm5lbC4KPj4gSSB0aGluayBpdCdzIGJldHRlciB0
-byBwcm92aWRlIG1vcmUgaW5mb3JtYXRpb24gdG8gdXNlci4KPgo+IFRoaXMgc3R1ZmYgYWxsIGFk
-ZHMgdXAgYW5kIHNpbmNlIGl0J2xsIGdvIG91dCBvbiB0aGUgY29uc29sZSBieSBkZWZhdWx0Cj4g
-aXQgYm90aCBtYWtlcyB0aGluZ3MgbW9yZSBub2lzeSBhbmQgc2xvd3MgZG93biBib290IC0gcHJp
-bnRpbmcgb24gdGhlCj4gc2VyaWFsIHBvcnQgaXNuJ3QgZnJlZS4gIElmIHdlIHdhbnQgdG8gaGF2
-ZSB0aGlzIHNvcnQgb2YgaW5mb3JtYXRpb24gd2UKPiBwcmludGVkIHdlIHNob3VsZCByZWFsbHkg
-ZG8gaXQgaW4gdGhlIGRyaXZlciBjb3JlIHNvIGl0IGFwcGVhcnMKPiBjb25zaXN0ZW50bHkgZm9y
-IGFsbCBkZXZpY2VzIHJhdGhlciB0aGFuIGhhdmluZyBpbmRpdmlkdWFsIGNvZGUgaW4gZWFjaAo+
-IGRyaXZlci4KPgpBY2NlcHQsIHRoZSBjb2RlIHdpbGwgYmUgbW9kaWZpZWQgdG8gZGV2X2RiZygp
-LgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpBbHNhLWRl
-dmVsIG1haWxpbmcgbGlzdApBbHNhLWRldmVsQGFsc2EtcHJvamVjdC5vcmcKaHR0cDovL21haWxt
-YW4uYWxzYS1wcm9qZWN0Lm9yZy9tYWlsbWFuL2xpc3RpbmZvL2Fsc2EtZGV2ZWwK
+On Mon, Sep 07, 2015 at 11:27:47PM +0100, Constantine Shulyupin wrote:
+> Add add Device tree bindings for registers
+> which are not covered by hwmon ABI and are required to
+> configure specific HW.
+
+This doesn't really answer my question [1] of why you need these.
+
+We generally don't encode register values unless there's no other way to
+describe the device. Why can we not describe the physical properties of
+the device that make these values necessary?
+
+Could you please Cc me on the entire series in future? The driver code
+is helpful context.
+
+> ---
+> 
+> Changed in v3:
+> - Fixed vendor prefix
+> - Added short registers description,
+>   full registers description is available at
+> https://www.nuvoton.com/hq/products/cloud-computing/hardware-monitors/desktop-server-series/nct7802y/
+
+This seems to require registration, which is unfortuante (and
+familiar)...
+
+> 
+> Changed in v2:
+> - Removed nct7802,reg-init
+> - Added registers initialization by names
+> 
+> Introduced in v1:
+>  - nct7802,reg-init
+> 
+> Signed-off-by: Constantine Shulyupin <const-GkuDRZ1haSFDPfheJLI6IQ@public.gmane.org>
+> ---
+>  .../devicetree/bindings/hwmon/nct7802.txt          | 28 ++++++++++++++++++++++
+>  1 file changed, 28 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/hwmon/nct7802.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/hwmon/nct7802.txt b/Documentation/devicetree/bindings/hwmon/nct7802.txt
+> new file mode 100644
+> index 0000000..5b4c3fe
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/hwmon/nct7802.txt
+> @@ -0,0 +1,28 @@
+> +Nuvoton NCT7802Y Hardware Monitoring IC
+> +
+> +Required node properties:
+> +
+> + - "compatible": must be "nuvoton,nct7802"
+> + - "reg": I2C bus address of the device
+> +
+> +Optional properties:
+> +
+> +One byte registers:
+> + - nuvoton,start - Start register at index 0x21
+> + - nuvoton,mode - Mode register at index 0x22
+> + - nuvoton,en_peci - PECI enable register at index 0x23
+> + - nuvoton,en_fan - Fan Enable Register at index 0x24
+> + - nuvoton,en_v - voltage monitor enable register
+> +		  at index 0x25
+
+Minor nit I missed last time, but s/_/-/ in property names.
+
+That said, as above I don't believe that these properties make sense
+as they are. I think this needs properties that describe the HW, rather
+than exposing the intricacies of the programming interface.
+
+> +
+> +A detailed datasheet for registers and the device is
+> +available at Nuvoton web site.
+> +
+> +Example nct7802 node:
+> +
+> +nct7802 {
+> +	compatible = "nuvoton,nct7802";
+> +	reg = <0x2a>;
+> +	nuvoton,start = <0x01>;
+> +	nuvoton,mode = <0x7E>; // RTD1_MD = 2
+> +};
+> -- 
+> 1.9.1
+
+Thanks,
+Mark.
+
+[1] http://lkml.kernel.org/r/20150907123531.GA11540@leverpostej
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
