@@ -1,45 +1,57 @@
-From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [RFC 5/5] HACK: serial: move pl011 initcall to device_initcall
-Date: Tue, 8 Sep 2015 13:56:08 +0100
-Message-ID: <20150908125608.GD20562@leverpostej>
-References: <1441716217-23786-1-git-send-email-leif.lindholm@linaro.org>
- <1441716217-23786-6-git-send-email-leif.lindholm@linaro.org>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH 2/4] gpio: qcom-smsm: Add driver for Qualcomm SMSM
+Date: Tue, 8 Sep 2015 14:58:31 +0200
+Message-ID: <CACRpkdZv02gUrc-rOaO9HpygmHu-6=s5ABQaqPwyhLYJw_LJtg@mail.gmail.com>
+References: <1440697078-4106-1-git-send-email-bjorn.andersson@sonymobile.com>
+	<1440697078-4106-3-git-send-email-bjorn.andersson@sonymobile.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-acpi-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1441716217-23786-6-git-send-email-leif.lindholm@linaro.org>
-Content-Language: en-US
-Sender: linux-acpi-owner@vger.kernel.org
-To: Leif Lindholm <leif.lindholm@linaro.org>
-Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>, "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "al.stone@linaro.org" <al.stone@linaro.org>, "torez@redhat.com" <torez@redhat.com>, "jcm@redhat.com" <jcm@redhat.com>, "graeme.gregory@linaro.org" <graeme.gregory@linaro.org>, "linaro-acpi@lists.linaro.org" <linaro-acpi@lists.linaro.org>, "lv.zheng@intel.com" <lv.zheng@intel.com>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1440697078-4106-3-git-send-email-bjorn.andersson@sonymobile.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Bjorn Andersson <bjorn.andersson@sonymobile.com>
+Cc: Alexandre Courbot <gnurou@gmail.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Sep 08, 2015 at 01:43:37PM +0100, Leif Lindholm wrote:
-> ---
->  drivers/tty/serial/amba-pl011.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/tty/serial/amba-pl011.c b/drivers/tty/serial/amba-pl011.c
-> index 452dbba..31cf985 100644
-> --- a/drivers/tty/serial/amba-pl011.c
-> +++ b/drivers/tty/serial/amba-pl011.c
-> @@ -2806,7 +2806,7 @@ static void __exit pl011_exit(void)
->   * While this can be a module, if builtin it's most likely the console
->   * So let's leave module_exit but move module_init to an earlier place
->   */
-> -arch_initcall(pl011_init);
-> +device_initcall(pl011_init);
->  module_exit(pl011_exit);
+On Thu, Aug 27, 2015 at 7:37 PM, Bjorn Andersson
+<bjorn.andersson@sonymobile.com> wrote:
 
-What's the ordering constraint that you're trying to solve with this?
+> This driver exposed the Qualcomm Shared Memory State Machine bits as
+> GPIOs to the system.
+>
+> Signed-off-by: Bjorn Andersson <bjorn.andersson@sonymobile.com>
+(...)
+> +/*
+> + * This driver implements the Qualcomm Shared Memory State Machine, a mechanism
+> + * for communicating single bit state information to remote processors.
+> + *
+> + * The implementation is based on two sections of shared memory; the first
+> + * holding the state bits and the second holding a matrix of subscription bits.
+> + *
+> + * The state bits are structured in entries of 32 bits, each belonging to one
+> + * system in the SoC. The entry belonging to the local system is considered
+> + * read-write, while the rest should be considered read-only.
+> + *
+> + * The subscription matrix consists of N bitmaps per entry, denoting interest
+> + * in updates of the entry for each of the N hosts. Upon updating a state bit
+> + * each host's subscription bitmap should be queried and the remote system
+> + * should be interrupted if they request so.
+> + *
+> + * The subscription matrix is laid out in entry-major order:
+> + * entry0: [host0 ... hostN]
+> + *     .
+> + *     .
+> + * entryM: [host0 ... hostN]
+> + *
+> + * A third, optional, shared memory region might contain information regarding
+> + * the number of entries in the state bitmap as well as number of columns in
+> + * the subscription matrix.
+> + */
 
-The cover didn't mention anything, and there's no commit message.
+This does seem like a real bad fit to GPIO for me, sorry.
 
-Mark.
+IMO this is drivers/soc/qcom, using regmap and possibly
+regmap IRQs-material.
 
->  
->  MODULE_AUTHOR("ARM Ltd/Deep Blue Solutions Ltd");
-> -- 
-> 2.1.4
-> 
+Yours,
+Linus Walleij
