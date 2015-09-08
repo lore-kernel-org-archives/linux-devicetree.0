@@ -1,15 +1,16 @@
 From: Alonso Adrian <aalonso@freescale.com>
-Subject: Re: [PATCH v2 5/8] pinctrl: freescale: imx: add ZERO_OFFSET_VALID flag
-Date: Tue, 8 Sep 2015 16:05:32 +0000
-Message-ID: <BN3PR03MB1509E4893244D963FDA21707A8530@BN3PR03MB1509.namprd03.prod.outlook.com>
+Subject: Re: [PATCH v2 6/8] pinctrl: freescale: imx: add shared input select
+ reg support
+Date: Tue, 8 Sep 2015 16:13:45 +0000
+Message-ID: <BN3PR03MB1509E06698F166EFE98FE0D2A8530@BN3PR03MB1509.namprd03.prod.outlook.com>
 References: <1441147753-13239-1-git-send-email-aalonso@freescale.com>
- <1441147753-13239-5-git-send-email-aalonso@freescale.com>,
- <20150907012831.GE30746@tiger>
+ <1441147753-13239-6-git-send-email-aalonso@freescale.com>,
+ <20150907021257.GF30746@tiger>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20150907012831.GE30746@tiger>
+In-Reply-To: <20150907021257.GF30746@tiger>
 Content-Language: en-US
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
@@ -26,122 +27,130 @@ List-Id: devicetree@vger.kernel.org
 
 Hi Shawn,
 
-See comments below
+See comments below.
 
 Regards
+Adrian
 ________________________________________
 From: Shawn Guo <shawnguo@kernel.org>
-Sent: Sunday, September 6, 2015 8:28 PM
+Sent: Sunday, September 6, 2015 9:12 PM
 To: Alonso Lazcano Adrian-B38018
-Cc: linux-arm-kernel@lists.infradead.org; shawn.guo@linaro.org; linus.walleij@linaro.org; lznuaa@gmail.com; devicetree@vger.kernel.org; Li Frank-B20596; Garg Nitin-B37173; Huang Yongcai-B20788; linux-gpio@vger.kernel.org; robh+dt@kernel.org; Gong Yibin-B38343
-Subject: Re: [PATCH v2 5/8] pinctrl: freescale: imx: add ZERO_OFFSET_VALID flag
+Cc: linux-arm-kernel@lists.infradead.org; shawn.guo@linaro.org; linus.walleij@linaro.org; lznuaa@gmail.com; linux-gpio@vger.kernel.org; devicetree@vger.kernel.org; robh+dt@kernel.org; Huang Yongcai-B20788; Li Frank-B20596; Gong Yibin-B38343; Garg Nitin-B37173
+Subject: Re: [PATCH v2 6/8] pinctrl: freescale: imx: add shared input select reg support
 
-On Tue, Sep 01, 2015 at 05:49:10PM -0500, Adrian Alonso wrote:
-> - Add ZERO_OFFSET_VALID flag, on imx7d mux_conf reg
->   offset is zero for iomuxc-lspr controller
-> - Do default initialization on parse group function.
+On Tue, Sep 01, 2015 at 05:49:11PM -0500, Adrian Alonso wrote:
+> - Add shared input select register support
+> - imx7d has two iomux controllers iomuxc and iomuxc-lpsr
+>   which share select_input register for daisy chain settings
 >
 > Signed-off-by: Adrian Alonso <aalonso@freescale.com>
-
-I do not follow why this patch is needed at all.  All the register
-validity check are done against -1, and zero offset is already supported
-by the driver in the current form.  Or am I missing anything?
-
-Shawn
-
 > ---
 > Changes for V2: Resend
 >
->  drivers/pinctrl/freescale/pinctrl-imx.c | 23 +++++++++++++----------
+>  drivers/pinctrl/freescale/pinctrl-imx.c | 28 +++++++++++++++++++++++++++-
 >  drivers/pinctrl/freescale/pinctrl-imx.h |  1 +
->  2 files changed, 14 insertions(+), 10 deletions(-)
+>  2 files changed, 28 insertions(+), 1 deletion(-)
 >
 > diff --git a/drivers/pinctrl/freescale/pinctrl-imx.c b/drivers/pinctrl/freescale/pinctrl-imx.c
-> index 95db9e8..9f019be 100644
+> index 9f019be..597319d 100644
 > --- a/drivers/pinctrl/freescale/pinctrl-imx.c
 > +++ b/drivers/pinctrl/freescale/pinctrl-imx.c
-> @@ -437,7 +437,7 @@ static void imx_pinconf_dbg_show(struct pinctrl_dev *pctldev,
->       const struct imx_pin_reg *pin_reg = &info->pin_regs[pin_id];
->       unsigned long config;
->
-> -     if (!pin_reg || pin_reg->conf_reg == -1) {
-> +     if (pin_reg->conf_reg == -1) {
->               seq_printf(s, "N/A");
->               return;
->       }
-> @@ -536,21 +536,29 @@ static int imx_pinctrl_parse_groups(struct device_node *np,
->               return -ENOMEM;
->
->       for (i = 0; i < grp->npins; i++) {
-> -             u32 mux_reg = be32_to_cpu(*list++);
-> +             u32 mux_reg;
->               u32 conf_reg;
->               unsigned int pin_id;
->               struct imx_pin_reg *pin_reg;
->               struct imx_pin *pin = &grp->pins[i];
->
-> +             mux_reg = be32_to_cpu(*list++);
-> +             if (!(info->flags & ZERO_OFFSET_VALID) && !mux_reg)
-> +                     mux_reg = -1;
-> +
->               if (info->flags & SHARE_MUX_CONF_REG) {
->                       conf_reg = mux_reg;
->               } else {
->                       conf_reg = be32_to_cpu(*list++);
-> -                     if (!conf_reg)
-> +                     if (!(info->flags & ZERO_OFFSET_VALID) && !conf_reg)
->                               conf_reg = -1;
->               }
->
-[Adrian] The below assignment is the important thing that this patch does,
-it allows the pad_id to be zero and match the pad id's according to the mux_reg offset.
-> -             pin_id = mux_reg ? mux_reg / 4 : conf_reg / 4;
-> +             if (info->flags & ZERO_OFFSET_VALID)
-> +                     pin_id = mux_reg / 4;
-> +             else
-> +                     pin_id = mux_reg ? mux_reg / 4 : conf_reg / 4;
-> +
->               pin_reg = &info->pin_regs[pin_id];
->               pin->pin = pin_id;
->               grp->pin_ids[i] = pin_id;
-> @@ -684,7 +692,7 @@ int imx_pinctrl_probe(struct platform_device *pdev,
->  {
->       struct imx_pinctrl *ipctl;
->       struct resource *res;
-> -     int ret, i;
-> +     int ret;
->
->       if (!info || !info->pins || !info->npins) {
->               dev_err(&pdev->dev, "wrong pinctrl info\n");
-> @@ -702,11 +710,6 @@ int imx_pinctrl_probe(struct platform_device *pdev,
->       if (!info->pin_regs)
->               return -ENOMEM;
->
-> -     for (i = 0; i < info->npins; i++) {
-> -             info->pin_regs[i].mux_reg = -1;
-> -             info->pin_regs[i].conf_reg = -1;
-> -     }
-> -
->       res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
->       ipctl->base = devm_ioremap_resource(&pdev->dev, res);
->       if (IS_ERR(ipctl->base))
-> diff --git a/drivers/pinctrl/freescale/pinctrl-imx.h b/drivers/pinctrl/freescale/pinctrl-imx.h
-> index 26f8f1c..67c07c2 100644
-> --- a/drivers/pinctrl/freescale/pinctrl-imx.h
-> +++ b/drivers/pinctrl/freescale/pinctrl-imx.h
-> @@ -85,6 +85,7 @@ struct imx_pinctrl_soc_info {
+> @@ -18,6 +18,7 @@
+>  #include <linux/module.h>
+>  #include <linux/of.h>
+>  #include <linux/of_device.h>
+> +#include <linux/of_address.h>
+>  #include <linux/pinctrl/machine.h>
+>  #include <linux/pinctrl/pinconf.h>
+>  #include <linux/pinctrl/pinctrl.h>
+> @@ -39,6 +40,7 @@ struct imx_pinctrl {
+>       struct device *dev;
+>       struct pinctrl_dev *pctl;
+>       void __iomem *base;
+> +     void __iomem *input_sel_base;
+>       const struct imx_pinctrl_soc_info *info;
 >  };
 >
+> @@ -254,7 +256,12 @@ static int imx_pmx_set(struct pinctrl_dev *pctldev, unsigned selector,
+>                        * Regular select input register can never be at offset
+>                        * 0, and we only print register value for regular case.
+>                        */
+> -                     writel(pin->input_val, ipctl->base + pin->input_reg);
+> +                     if (info->flags & SHARE_INPUT_SELECT_REG)
+
+This can be replaced by a NULL checking on input_sel_base.
+[Adrian] Yes, but I will prefer to keep this flag check instead to keep code consisten on how to handle
+special cases, that way is easier to spot when input select register is shared.
+
+> +                             writel(pin->input_val, ipctl->input_sel_base +
+> +                                             pin->input_reg);
+> +                     else
+> +                             writel(pin->input_val, ipctl->base +
+> +                                             pin->input_reg);
+>                       dev_dbg(ipctl->dev,
+>                               "==>select_input: offset 0x%x val 0x%x\n",
+>                               pin->input_reg, pin->input_val);
+> @@ -690,6 +697,8 @@ static int imx_pinctrl_probe_dt(struct platform_device *pdev,
+>  int imx_pinctrl_probe(struct platform_device *pdev,
+>                     struct imx_pinctrl_soc_info *info)
+>  {
+> +     struct device_node *dev_np = pdev->dev.of_node;
+> +     struct device_node *np;
+>       struct imx_pinctrl *ipctl;
+>       struct resource *res;
+>       int ret;
+> @@ -715,6 +724,23 @@ int imx_pinctrl_probe(struct platform_device *pdev,
+>       if (IS_ERR(ipctl->base))
+>               return PTR_ERR(ipctl->base);
+>
+> +     if (info->flags & SHARE_INPUT_SELECT_REG) {
+> +             np = of_get_child_by_name(dev_np->parent, "iomuxc");
+
+This doesn't scale well.  First of all, we do not generally recommend
+searching node by name, because most of time node name is not enforced
+to be stable, and some nodes are named quite arbitrarily.  Secondly, we
+do not know if the hardware people will move select_input registers to
+somewhere else than IOMUXC in the future.
+
+Hence, I suggest you have a device tree phandle pointing the device
+where select_input registers are located.  In that case, flag
+SHARE_INPUT_SELECT_REG can even be saved completely.
+[Adrian] Agree, let me rework this :)
+> +             if (np) {
+> +                     ipctl->input_sel_base = of_iomap(np, 0);
+> +                     if (IS_ERR(ipctl->input_sel_base)) {
+> +                             of_node_put(np);
+> +                             dev_err(&pdev->dev,
+> +                                    "iomuxc base address not found\n");
+> +                             return PTR_ERR(ipctl->input_sel_base);
+> +                     }
+> +             } else {
+> +                     dev_err(&pdev->dev, "iomuxc device node not foud\n");
+
+s/foud/found
+
+Shawn
+
+> +                     return -EINVAL;
+> +             }
+> +             of_node_put(np);
+> +     }
+> +
+>       imx_pinctrl_desc.name = dev_name(&pdev->dev);
+>       imx_pinctrl_desc.pins = info->pins;
+>       imx_pinctrl_desc.npins = info->npins;
+> diff --git a/drivers/pinctrl/freescale/pinctrl-imx.h b/drivers/pinctrl/freescale/pinctrl-imx.h
+> index 67c07c2..d11a827 100644
+> --- a/drivers/pinctrl/freescale/pinctrl-imx.h
+> +++ b/drivers/pinctrl/freescale/pinctrl-imx.h
+> @@ -86,6 +86,7 @@ struct imx_pinctrl_soc_info {
+>
 >  #define SHARE_MUX_CONF_REG   0x1
-> +#define ZERO_OFFSET_VALID    0x2
+>  #define ZERO_OFFSET_VALID    0x2
+> +#define SHARE_INPUT_SELECT_REG       0x4
 >
 >  #define NO_MUX               0x0
 >  #define NO_PAD               0x0
 > --
 > 2.1.4
 >
->
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
