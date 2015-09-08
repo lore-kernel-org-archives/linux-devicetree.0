@@ -1,109 +1,67 @@
-From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [RFC 3/5] acpi/serial: add DBG2 earlycon support
-Date: Tue, 8 Sep 2015 14:09:51 +0100
-Message-ID: <20150908130951.GE20562@leverpostej>
-References: <1441716217-23786-1-git-send-email-leif.lindholm@linaro.org>
- <1441716217-23786-4-git-send-email-leif.lindholm@linaro.org>
+From: Gary Bisson <gary.bisson-Q5RJGjKts06CY9SHAMCTRUEOCMrvLtNR@public.gmane.org>
+Subject: Re: [PATCH 1/4] ARM: dts: imx6dql-nitrogen6x: add touchscreen support
+Date: Tue, 8 Sep 2015 15:12:57 +0200
+Message-ID: <CAAMH-yuubf1mDJ5YvUwOysXFGTxAEh7g915RJRo24oPfgU=RjQ@mail.gmail.com>
+References: <1441645069-27263-1-git-send-email-gary.bisson@boundarydevices.com>
+	<1441645069-27263-2-git-send-email-gary.bisson@boundarydevices.com>
+	<1441695483.3241.5.camel@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1441716217-23786-4-git-send-email-leif.lindholm@linaro.org>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Leif Lindholm <leif.lindholm@linaro.org>
-Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>, "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "al.stone@linaro.org" <al.stone@linaro.org>, "torez@redhat.com" <torez@redhat.com>, "jcm@redhat.com" <jcm@redhat.com>, "graeme.gregory@linaro.org" <graeme.gregory@linaro.org>, "linaro-acpi@lists.linaro.org" <linaro-acpi@lists.linaro.org>, "lv.zheng@intel.com" <lv.zheng@intel.com>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1441695483.3241.5.camel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Fabio Estevam <fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Troy Kisky <troy.kisky-Q5RJGjKts06CY9SHAMCTRUEOCMrvLtNR@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Sep 08, 2015 at 01:43:35PM +0100, Leif Lindholm wrote:
-> The ACPI DBG2 table defines a debug console. Add support for parsing it
-> and using it to select earlycon destination when no arguments provided.
-> 
-> Signed-off-by: Leif Lindholm <leif.lindholm@linaro.org>
+Hi Philipp,
 
-[...]
+On Tue, Sep 8, 2015 at 8:58 AM, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org> wrote:
+> Hi Gary,
+>
+> Am Montag, den 07.09.2015, 18:57 +0200 schrieb Gary Bisson:
+>> This patch adds the different touchscreens that can be connected using
+>> the displays available for this board.
+>> http://boundarydevices.com/product-category/displays/
+>>
+>> Signed-off-by: Gary Bisson <gary.bisson-Q5RJGjKts06CY9SHAMCTRUEOCMrvLtNR@public.gmane.org>
+>> ---
+>>  arch/arm/boot/dts/imx6qdl-nitrogen6x.dtsi | 16 ++++++++++++++++
+>>  1 file changed, 16 insertions(+)
+>>
+>> diff --git a/arch/arm/boot/dts/imx6qdl-nitrogen6x.dtsi b/arch/arm/boot/dts/imx6qdl-nitrogen6x.dtsi
+>> index ad16dce..ec9da5e 100644
+>> --- a/arch/arm/boot/dts/imx6qdl-nitrogen6x.dtsi
+>> +++ b/arch/arm/boot/dts/imx6qdl-nitrogen6x.dtsi
+>> @@ -284,6 +284,22 @@
+>>       pinctrl-names = "default";
+>>       pinctrl-0 = <&pinctrl_i2c3>;
+>>       status = "okay";
+>> +
+>> +     egalax_ts@04 {
+>> +             compatible = "eeti,egalax_ts";
+>> +             reg = <0x04>;
+>> +             interrupt-parent = <&gpio1>;
+>> +             interrupts = <9 2>;
+>
+> Please use IRQ_TYPE_EDGE_FALLING here.
+>
+>> +             wakeup-gpios = <&gpio1 9 0>;
+>
+> And that would be GPIO_ACTIVE_HIGH. Should this be changed to
+> GPIO_ACTIVE_LOW instead? From other device tree files and from what the
+> driver does, it looks as if a wakeup is issued by forcing a falling edge
+> on the IRQ pin.
 
-> diff --git a/drivers/acpi/console.c b/drivers/acpi/console.c
-> new file mode 100644
-> index 0000000..a985890
-> --- /dev/null
-> +++ b/drivers/acpi/console.c
-> @@ -0,0 +1,103 @@
-> +/*
-> + * Copyright (c) 2012, Intel Corporation
-> + * Copyright (c) 2015, Linaro Ltd.
-> + *
-> + * This program is free software; you can redistribute it and/or modify
-> + * it under the terms of the GNU General Public License version 2 as
-> + * published by the Free Software Foundation.
-> + *
-> + */
-> +
-> +#define DEBUG
+You're right it should be GPIO_ACTIVE_LOW instead for both nodes. I'll
+update it for v2 and track down the hardcoded values for the 2 boards
+this series adds.
 
-Why?
+Thanks for the feedback.
 
-> +#define pr_fmt(fmt) "ACPI: " KBUILD_MODNAME ": " fmt
-> +
-> +#include <linux/acpi.h>
-> +#include <linux/kernel.h>
-> +#include <linux/serial_core.h>
-> +
-> +#define NUM_ELEMS(x) (sizeof(x) / sizeof(*x))
-
-Use ARRAY_SIZE (from kernel.h).
-
-> +
-> +#ifdef CONFIG_SERIAL_EARLYCON
-> +static int use_earlycon __initdata;
-> +static int __init setup_acpi_earlycon(char *buf)
-> +{
-> +	if (!buf)
-> +		use_earlycon = 1;
-> +
-> +	return 0;
-> +}
-> +early_param("earlycon", setup_acpi_earlycon);
-
-It seems a shame to add this after folding the OF case into the earlycon
-code. What necessitates this being a separate early_param? Why is it too
-early to parse DBG2?
-
-[...]
-
-> diff --git a/drivers/tty/serial/earlycon.c b/drivers/tty/serial/earlycon.c
-> index 2bda09a..c063cbb 100644
-> --- a/drivers/tty/serial/earlycon.c
-> +++ b/drivers/tty/serial/earlycon.c
-> @@ -13,6 +13,7 @@
->  
->  #define pr_fmt(fmt)	KBUILD_MODNAME ": " fmt
->  
-> +#include <linux/acpi.h>
->  #include <linux/console.h>
->  #include <linux/kernel.h>
->  #include <linux/init.h>
-> @@ -184,12 +185,16 @@ static int __init param_setup_earlycon(char *buf)
->  	int err;
->  
->  	/*
-> -	 * Just 'earlycon' is a valid param for devicetree earlycons;
-> -	 * don't generate a warning from parse_early_params() in that case
-> +	 * Just 'earlycon' is a valid param for devicetree or ACPI earlycons;
-> +	 * ACPI cannot be parsed yet, so return without action if enabled.
-> +	 * Otherwise, attempt initialization using DT.
->  	 */
-> -	if (!buf || !buf[0])
-> -		if (IS_ENABLED(CONFIG_OF_FLATTREE))
-> +	if (!buf || !buf[0]) {
-> +		if (!acpi_disabled)
-> +			return 0;
-> +		else if (IS_ENABLED(CONFIG_OF_FLATTREE))
->  			return early_init_dt_scan_chosen_serial();
-> +	}
-
-It would be much nicer if we could handle the ACPI earlycon parsing in
-the same place. As above, I assume I'm missing something that prevents
-that.
-
-Mark.
+Regards,
+Gary
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
