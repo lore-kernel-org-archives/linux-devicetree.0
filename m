@@ -1,52 +1,79 @@
 From: Gary Bisson <gary.bisson-Q5RJGjKts06CY9SHAMCTRUEOCMrvLtNR@public.gmane.org>
-Subject: [PATCH v2 1/9] ARM: dts: imx6dql-nitrogen6x: add touchscreen support
-Date: Tue,  8 Sep 2015 16:34:38 +0200
-Message-ID: <1441722886-22798-2-git-send-email-gary.bisson@boundarydevices.com>
+Subject: [PATCH v2 0/9] ARM: dts: update Boundary Devices boards support
+Date: Tue,  8 Sep 2015 16:34:37 +0200
+Message-ID: <1441722886-22798-1-git-send-email-gary.bisson@boundarydevices.com>
 References: <1441645069-27263-1-git-send-email-gary.bisson@boundarydevices.com>
- <1441722886-22798-1-git-send-email-gary.bisson@boundarydevices.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1441722886-22798-1-git-send-email-gary.bisson-Q5RJGjKts06CY9SHAMCTRUEOCMrvLtNR@public.gmane.org>
+In-Reply-To: <1441645069-27263-1-git-send-email-gary.bisson-Q5RJGjKts06CY9SHAMCTRUEOCMrvLtNR@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 Cc: shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Gary Bisson <gary.bisson-Q5RJGjKts06CY9SHAMCTRUEOCMrvLtNR@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch adds the different touchscreens that can be connected using
-the displays available for this board.
-http://boundarydevices.com/product-category/displays/
+Hi all,
 
-Signed-off-by: Gary Bisson <gary.bisson-Q5RJGjKts06CY9SHAMCTRUEOCMrvLtNR@public.gmane.org>
----
- arch/arm/boot/dts/imx6qdl-nitrogen6x.dtsi | 16 ++++++++++++++++
- 1 file changed, 16 insertions(+)
+This series is a follow-up to the previous series that added LCD display
+support.
+http://lists.infradead.org/pipermail/linux-arm-kernel/2015-August/364425.html
 
-diff --git a/arch/arm/boot/dts/imx6qdl-nitrogen6x.dtsi b/arch/arm/boot/dts/imx6qdl-nitrogen6x.dtsi
-index ad16dce..24b667d 100644
---- a/arch/arm/boot/dts/imx6qdl-nitrogen6x.dtsi
-+++ b/arch/arm/boot/dts/imx6qdl-nitrogen6x.dtsi
-@@ -284,6 +284,22 @@
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&pinctrl_i2c3>;
- 	status = "okay";
-+
-+	egalax_ts@04 {
-+		compatible = "eeti,egalax_ts";
-+		reg = <0x04>;
-+		interrupt-parent = <&gpio1>;
-+		interrupts = <9 IRQ_TYPE_EDGE_FALLING>;
-+		wakeup-gpios = <&gpio1 9 GPIO_ACTIVE_LOW>;
-+	};
-+
-+	ft5x06_ts@38 {
-+		compatible = "edt,edt-ft5x06";
-+		reg = <0x38>;
-+		interrupt-parent = <&gpio1>;
-+		interrupts = <9 IRQ_TYPE_EDGE_FALLING>;
-+		wakeup-gpios = <&gpio1 9 GPIO_ACTIVE_LOW>;
-+	};
- };
- 
- &iomuxc {
+This one aims at adding touchscreen and WiFi support for Nitrogen6x as well as
+adding two boards: Nitrogen6_Max and Nit6xlite.
+
+It also takes care of updating the licenses to be GPLv2/X11.
+
+The series has been tested against linux-next tag next-20150908.
+
+Note that imx_v6_v7_defconfig has been used with the following additions:
+CONFIG_TOUCHSCREEN_EDT_FT5X06=y
+CONFIG_I2C_MUX_GPIO=y
+CONFIG_RTC_DRV_M41T80=y
+
+Modifications:
+v1->v2:
+- Add Boundary Devices Inc. to vendor prefixes
+- Relicense devices trees to GPLv2/X11 as suggested by Fabio for:
+  - Nitrogen6x
+  - SabreLite
+  - Nit6xLite
+  - Nitrogen6_MAX
+- Change manufacturer to Boundary Devices as suggested by Fabio for:
+  - Nitrogen6x
+  - Nit6xLite
+  - Nitrogen6_MAX
+- Fixed missing macros for gpio/irq values as suggested by Philipp.
+
+Regards,
+Gary
+
+Gary Bisson (9):
+  ARM: dts: imx6dql-nitrogen6x: add touchscreen support
+  ARM: dts: imx6qdl-nitrogen6x: add wifi wl1271 support
+  ARM: dts: imx6qdl-nitrogen6x: relicense under GPLv2/X11
+  ARM: dts: imx6qdl-sabrelite: relicense under GPLv2/X11
+  of: Add Boundary Devices Inc. vendor prefix
+  ARM: dts: imx6q-nitrogen6x: change manufacturer to Boundary Devices
+  ARM: dts: imx6dl-nitrogen6x: change manufacturer to Boundary Devices
+  ARM: dts: imx: add Boundary Devices Nitrogen6_Max board
+  ARM: dts: imx: add Boundary Devices Nitrogen6_Lite board
+
+ .../devicetree/bindings/vendor-prefixes.txt        |   1 +
+ arch/arm/boot/dts/Makefile                         |   2 +
+ arch/arm/boot/dts/imx6dl-nit6xlite.dts             |  49 +++
+ arch/arm/boot/dts/imx6dl-nitrogen6x.dts            |  44 +-
+ arch/arm/boot/dts/imx6dl-sabrelite.dts             |  40 +-
+ arch/arm/boot/dts/imx6q-nitrogen6_max.dts          |  53 +++
+ arch/arm/boot/dts/imx6q-nitrogen6x.dts             |  44 +-
+ arch/arm/boot/dts/imx6q-sabrelite.dts              |  40 +-
+ ...6qdl-nitrogen6x.dtsi => imx6qdl-nit6xlite.dtsi} | 465 ++++++++++++---------
+ ...-nitrogen6x.dtsi => imx6qdl-nitrogen6_max.dtsi} | 437 +++++++++++++++----
+ arch/arm/boot/dts/imx6qdl-nitrogen6x.dtsi          | 111 ++++-
+ arch/arm/boot/dts/imx6qdl-sabrelite.dtsi           |  40 +-
+ 12 files changed, 1013 insertions(+), 313 deletions(-)
+ create mode 100644 arch/arm/boot/dts/imx6dl-nit6xlite.dts
+ create mode 100644 arch/arm/boot/dts/imx6q-nitrogen6_max.dts
+ copy arch/arm/boot/dts/{imx6qdl-nitrogen6x.dtsi => imx6qdl-nit6xlite.dtsi} (51%)
+ copy arch/arm/boot/dts/{imx6qdl-nitrogen6x.dtsi => imx6qdl-nitrogen6_max.dtsi} (53%)
+
 -- 
 2.5.1
 
