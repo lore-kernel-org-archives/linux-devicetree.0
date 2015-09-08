@@ -1,65 +1,143 @@
-From: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH v5 0/2] dtc: Dynamic DT support
-Date: Tue, 8 Sep 2015 09:43:56 +0300
-Message-ID: <B94B72BA-28A4-4FF6-A7B9-D11C2635E39F@konsulko.com>
-References: <1440614674-7055-1-git-send-email-pantelis.antoniou@konsulko.com> <20150908040024.GC24774@voom.redhat.com>
-Mime-Version: 1.0 (Mac OS X Mail 8.2 \(2104\))
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-compiler-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20150908040024.GC24774-1s0os16eZneny3qCrzbmXA@public.gmane.org>
-Sender: devicetree-compiler-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
-Cc: Jon Loeliger <jdl-CYoMK+44s/E@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Jan Luebbe <jlu-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Matt Porter <mporter-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, devicetree-compiler-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Jisheng Zhang <jszhang@marvell.com>
+Subject: Re: [PATCH-v2 4/7] mmc: sdhci-pxav3: Add pinctl setting according
+ to bus clock
+Date: Tue, 8 Sep 2015 14:52:54 +0800
+Message-ID: <20150908145254.6807dffc@xhacker>
+References: <1441624721-15612-1-git-send-email-vaibhav.hiremath@linaro.org>
+	<1441624721-15612-5-git-send-email-vaibhav.hiremath@linaro.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <1441624721-15612-5-git-send-email-vaibhav.hiremath@linaro.org>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Vaibhav Hiremath <vaibhav.hiremath@linaro.org>
+Cc: linux-mmc@vger.kernel.org, devicetree@vger.kernel.org, ulf.hansson@linaro.org, linux-kernel@vger.kernel.org, robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org, Kevin Liu <kliu5@marvell.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi David,
+On Mon, 7 Sep 2015 16:48:38 +0530
+Vaibhav Hiremath <vaibhav.hiremath@linaro.org> wrote:
 
-> On Sep 8, 2015, at 07:00 , David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>=
- wrote:
->=20
-> On Wed, Aug 26, 2015 at 09:44:32PM +0300, Pantelis Antoniou wrote:
->> Enable the generation of symbol & fixup information for
->> use with dynamic DT loading.
->>=20
->> Changes since v4:
->> * Rebase to latest dtc version.
->> * Completely redesigned the generation of resolution data.
->> Now instead of being generated as part of blob generation
->> they are created in the live tree.
->> * Consequently the patchset is much smaller.
->> * Added -A auto-label alias generation option.
->> * Addressed maintainer comments.
->> * Added syntactic sugar for overlays in the form of .dtsi
->> * Added /dts-v1/ /plugin/ preferred plugin form and deprecate
->> the previous form (although still works for backward compatibility)
->>=20
->> Changes since v3:
->> * Rebase to latest dtc version.
->>=20
->> Changes since v2:
->> * Split single patch to a patchset.
->> * Updated to dtc mainline.
->> * Changed __local_fixups__ format
->> * Clean up for better legibility.
->=20
-> Sorry it's taken me so long to get to this.  I was sick after the
-> conference, and then had backlog of day-job work to do.  I haven't ha=
-d
-> time to look at this yet, but I haven't forgotten it.
->=20
+> Different bus clock may need different pin setting.
+> For example, fast bus clock like 208Mhz need pin drive fast
+> while slow bus clock prefer pin drive slow to guarantee
+> signal quality.
+> 
+> So this patch creates two states,
+>   - Default (slow/normal) pin state
+>   - And fast pin state for higher freq bus speed.
+> 
+> And selection of pin state is done based on timing mode.
+> 
+> Signed-off-by: Vaibhav Hiremath <vaibhav.hiremath@linaro.org>
+> Signed-off-by: Kevin Liu <kliu5@marvell.com>
+> ---
+>  drivers/mmc/host/sdhci-pxav3.c | 45 +++++++++++++++++++++++++++++++++++++++++-
+>  1 file changed, 44 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/mmc/host/sdhci-pxav3.c b/drivers/mmc/host/sdhci-pxav3.c
+> index c2b2b78..d933f75 100644
+> --- a/drivers/mmc/host/sdhci-pxav3.c
+> +++ b/drivers/mmc/host/sdhci-pxav3.c
+> @@ -35,6 +35,7 @@
+>  #include <linux/pm.h>
+>  #include <linux/pm_runtime.h>
+>  #include <linux/mbus.h>
+> +#include <linux/pinctrl/consumer.h>
+>  
+>  #include "sdhci.h"
+>  #include "sdhci-pltfm.h"
+> @@ -92,6 +93,10 @@ struct sdhci_pxa {
+>  	void __iomem *io_pwr_reg;
+>  	void __iomem *io_pwr_lock_reg;
+>  	struct sdhci_pxa_data *data;
+> +
+> +	struct pinctrl *pinctrl;
+> +	struct pinctrl_state *pins_default;
+> +	struct pinctrl_state *pins_fast;
+>  };
+>  
+>  static struct sdhci_pxa_data pxav3_data_v1 = {
+> @@ -298,6 +303,33 @@ static void pxav3_gen_init_74_clocks(struct sdhci_host *host, u8 power_mode)
+>  	pxa->power_mode = power_mode;
+>  }
+>  
+> +static int pxav3_select_pinstate(struct sdhci_host *host, unsigned int uhs)
+> +{
+> +	struct sdhci_pltfm_host *pltfm_host = sdhci_priv(host);
+> +	struct sdhci_pxa *pxa = pltfm_host->priv;
+> +	struct pinctrl_state *pinctrl;
+> +
+> +	if (IS_ERR(pxa->pinctrl) ||
+> +		IS_ERR(pxa->pins_default) ||
+> +		IS_ERR(pxa->pins_fast))
+> +		return -EINVAL;
+> +
+> +	switch (uhs) {
+> +	case MMC_TIMING_UHS_SDR50:
+> +	case MMC_TIMING_UHS_SDR104:
+> +	case MMC_TIMING_MMC_HS200:
+> +	case MMC_TIMING_MMC_HS400:
+> +		pinctrl = pxa->pins_fast;
+> +		break;
+> +	default:
+> +		/* back to default state for other legacy timing */
+> +		pinctrl = pxa->pins_default;
+> +		break;
+> +	}
+> +
+> +	return pinctrl_select_state(pxa->pinctrl, pinctrl);
+> +}
+> +
+>  static void pxav3_set_uhs_signaling(struct sdhci_host *host, unsigned int uhs)
+>  {
+>  	struct sdhci_pltfm_host *pltfm_host = sdhci_priv(host);
+> @@ -353,6 +385,8 @@ static void pxav3_set_uhs_signaling(struct sdhci_host *host, unsigned int uhs)
+>  	dev_dbg(mmc_dev(host->mmc),
+>  		"%s uhs = %d, ctrl_2 = %04X\n",
+>  		__func__, uhs, ctrl_2);
+> +
+> +	pxav3_select_pinstate(host, uhs);
 
-No worries.
+return pxav3_select_pinstate(host, uhs);?
 
-Conference flu is a real killer.
+And could we ignore this call for those SDHCI hosts that don't need it?
 
-Regards
+>  }
+>  
+>  static void pxav3_voltage_switch(struct sdhci_host *host,
+> @@ -416,7 +450,6 @@ static void pxav3_set_clock(struct sdhci_host *host, unsigned int clock)
+>  		/* TX internal clock selection */
+>  		pxav3_set_tx_clock(host);
+>  	}
+> -
 
-=E2=80=94 Pantelis
+why not fix this in patch 3?
 
-> --=20
-> David Gibson			| I'll have my music baroque, and my code
-> david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _o=
-ther_
-> 				| _way_ _around_!
-> http://www.ozlabs.org/~dgibson
+>  }
+>  
+>  static const struct sdhci_ops pxav3_sdhci_ops = {
+> @@ -586,6 +619,16 @@ static int sdhci_pxav3_probe(struct platform_device *pdev)
+>  		}
+>  	}
+>  
+> +	pxa->pinctrl = devm_pinctrl_get(dev);
+
+could we ignore this for those SDHCI hosts that don't need it?
+
+> +	if (!IS_ERR(pxa->pinctrl)) {
+> +		pxa->pins_default = pinctrl_lookup_state(pxa->pinctrl, "default");
+> +		if (IS_ERR(pxa->pins_default))
+> +			dev_err(dev, "could not get default pinstate\n");
+
+Why those SDHCI hosts that don't need pinctl setting should got this error?
+
+> +		pxa->pins_fast = pinctrl_lookup_state(pxa->pinctrl, "fast");
+> +		if (IS_ERR(pxa->pins_fast))
+> +			dev_info(dev, "could not get fast pinstate\n");
+> +	}
+> +
+>  	pm_runtime_get_noresume(&pdev->dev);
+>  	pm_runtime_set_active(&pdev->dev);
+>  	pm_runtime_set_autosuspend_delay(&pdev->dev, PXAV3_RPM_DELAY_MS);
+
