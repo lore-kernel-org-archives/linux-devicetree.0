@@ -1,98 +1,71 @@
-From: Vaibhav Hiremath <vaibhav.hiremath-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH-v2 4/7] mmc: sdhci-pxav3: Add pinctl setting according to
- bus clock
-Date: Tue, 8 Sep 2015 20:37:11 +0530
-Message-ID: <55EEF99F.1020904@linaro.org>
-References: <1441624721-15612-1-git-send-email-vaibhav.hiremath@linaro.org>
- <1441624721-15612-5-git-send-email-vaibhav.hiremath@linaro.org>
- <CACRpkdY59roEBgUd9TR39yNgfhw393+WmHQQAeLkOEZLChOcWQ@mail.gmail.com>
+From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH] ARM: dts: keystone: use one to one address translations
+ under netcp
+Date: Tue, 8 Sep 2015 08:13:52 -0700
+Message-ID: <20150908151351.GE4215@atomide.com>
+References: <1441139324-29296-1-git-send-email-w-kwok2@ti.com>
+ <55E61658.9010207@oracle.com>
+ <230CBA6E4B6B6B418E8730AC28E6FC7E04221776@DFLE11.ent.ti.com>
+ <55E71AB3.7070406@oracle.com>
+ <20150903142645.GS4215@atomide.com>
+ <55E89CF8.4050700@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CACRpkdY59roEBgUd9TR39yNgfhw393+WmHQQAeLkOEZLChOcWQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <55E89CF8.4050700-l0cyMroinI0@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: "linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Kevin Liu <kliu5-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
+To: Murali Karicheri <m-karicheri2-l0cyMroinI0@public.gmane.org>
+Cc: santosh shilimkar <santosh.shilimkar-QHcLZuEGTsvQT0dZR+AlfA@public.gmane.org>, "Kwok, WingMan" <w-kwok2-l0cyMroinI0@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "pawel.moll-5wv7dgnIgG8@public.gmane.org" <pawel.moll-5wv7dgnIgG8@public.gmane.org>, "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org" <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, "galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org" <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org" <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "ssantosh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <ssantosh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+* Murali Karicheri <m-karicheri2-l0cyMroinI0@public.gmane.org> [150903 12:21]:
+> Tony,
+> On 09/03/2015 10:26 AM, Tony Lindgren wrote:
+> >* santosh shilimkar <santosh.shilimkar-QHcLZuEGTsvQT0dZR+AlfA@public.gmane.org> [150902 08:55]:
+> >>
+> >>I suspected the same. I know back then we started with SERDES code
+> >>with NETCP but as you already know, its a separate block which
+> >>is needed for NIC card to work. Its more of phy and hence its
+> >>having different address space is not surprising.
+> >
+> >The point Santosh is making here though is that any drivers
+> >tinkering with registers belonging to a separate hardware block
+> >is a recipe for a long term maintenance nightmare with mysterious
+> 
+> That is what we want to avoid as well. If I interpret your statement
+> correctly, you don't want SerDes driver update the register of say SGMII,
+> right? But we will have to based on the hardware design. So it can't be a
+> standalone device driver IMO and it has to be part of the respective
+> peripheral device driver.
 
+If it's a separate target on the interconnect it should be a separate
+driver. Depending on the SoC version these targets can move around
+as we've seen.
 
-On Tuesday 08 September 2015 08:12 PM, Linus Walleij wrote:
-> On Mon, Sep 7, 2015 at 1:18 PM, Vaibhav Hiremath
-> <vaibhav.hiremath-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
->
->> Different bus clock may need different pin setting.
->> For example, fast bus clock like 208Mhz need pin drive fast
->> while slow bus clock prefer pin drive slow to guarantee
->> signal quality.
->>
->> So this patch creates two states,
->>    - Default (slow/normal) pin state
->>    - And fast pin state for higher freq bus speed.
->>
->> And selection of pin state is done based on timing mode.
->>
->> Signed-off-by: Vaibhav Hiremath <vaibhav.hiremath-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
->> Signed-off-by: Kevin Liu <kliu5-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
-> (...)
->> +       pxa->pinctrl = devm_pinctrl_get(dev);
->> +       if (!IS_ERR(pxa->pinctrl)) {
->> +               pxa->pins_default = pinctrl_lookup_state(pxa->pinctrl, "default");
->> +               if (IS_ERR(pxa->pins_default))
->> +                       dev_err(dev, "could not get default pinstate\n");
->> +               pxa->pins_fast = pinctrl_lookup_state(pxa->pinctrl, "fast");
->> +               if (IS_ERR(pxa->pins_fast))
->> +                       dev_info(dev, "could not get fast pinstate\n");
->> +       }
->
-> This is exactly how I think it should be used from a pin control
-> point of view.
->
-> If you depended on CONFIG_PM you could use
-> pinctrl_pm_select_default_state() but for this simple scenario
-> this is fine.
->
-> Reviewed-by: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
->  From a pinctrl point of view.
->
+> >bugs popping up as things are not clocked or powered properly
+> >or become racy with other drivers.
+> >
+> >Each hardware block needs to have it's own driver and then the
+> >drivers can communicate using some Linux generic APIs like clock,
+> >regulator, phy, or mailbox frameworks.
+> 
+> That depends on what your definition of a hardware block is. Inside NetCP,
+> there are many hardware blocks that work together to provide the NIC
+> functionality, and SerDes is one of them. Where ever possible, we have
+> separate drivers :- knav qmss, knav pkt dma, ethss, mdio etc. Ethss driver
+> manages Eth subsystem that includes SGMII and SerDes. Unfortunately SerDes
+> is tightly integrated with ethss and taking it out as a separate driver (Say
+> Phy) is not a good idea. We will posting an RFC for this soon and probably
+> we can discuss it more then.
 
+A separate target on the interconnect is the best criteria to use
+here. This is because two targets may or may not share some resources
+and can get rearranged depending on the SoC.
 
-Thanks for your review.
+Regards,
 
-Linus,
-
-I agree this is how it should be used.
-But I still have one small doubt on expectation from
-devm_pinctrl_get() function.
-
-
-If pinctrl properties are not populated in Devicetree node,
-then, shouldn't devm_pinctrl_get() return error ?
-I followed the code flow, and it seems even if pinctrl properties are
-not populated in DT node, the devm_pinctrl_get() returns valid
-pointer to "struct pinctrl", isn't this against the expectation of the
-call?
-
-
-Code flow -
-
-devm_pinctrl_get()
-...
---> creat_pinctrl()
---> pinctrl_dt_to_map()
-...
-
-
-
-pinctrl_dt_to_map() iterates for pinctrl-x (x = 0,1,...) and if it
-founds the entry then it parses the node. If it doesn't find any
-pinctrl property then also it returns 0. and subsequently rreturns
-handle to "struct pinctrl" for the device. Why is so?
-
-
-Thanks,
-Vaibhav
+Tony
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
