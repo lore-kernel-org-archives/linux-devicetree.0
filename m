@@ -1,137 +1,143 @@
-From: Alex Smith <alex.smith@imgtec.com>
-Subject: [PATCH v5 4/4] MIPS: dts: jz4780/ci20: Add NEMC, BCH and NAND device tree nodes
-Date: Tue, 8 Sep 2015 10:10:53 +0100
-Message-ID: <1441703453-2838-5-git-send-email-alex.smith@imgtec.com>
-References: <1441703453-2838-1-git-send-email-alex.smith@imgtec.com>
+From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Subject: Re: [PATCH v6 3/6] pci:host: Add Altera PCIe host controller driver
+Date: Tue, 8 Sep 2015 10:19:44 +0100
+Message-ID: <20150908091944.GE29293@red-moon>
+References: <1441103408-8433-1-git-send-email-lftan@altera.com>
+ <1441103408-8433-4-git-send-email-lftan@altera.com>
+ <20150901163304.GA9769@red-moon>
+ <CAFiDJ58WCjTNkU5PWtbHxj+-0oWNg1T+psfE-OaJD+4k-DBb-A@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1441703453-2838-1-git-send-email-alex.smith@imgtec.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-mtd@lists.infradead.org
-Cc: Alex Smith <alex@alex-smith.me.uk>, Alex Smith <alex.smith@imgtec.com>, Zubair Lutfullah Kakakhel <Zubair.Kakakhel@imgtec.com>, David Woodhouse <dwmw2@infradead.org>, Brian Norris <computersforpeace@gmail.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mips@linux-mips.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-doc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAFiDJ58WCjTNkU5PWtbHxj+-0oWNg1T+psfE-OaJD+4k-DBb-A@mail.gmail.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Ley Foon Tan <lftan@altera.com>
+Cc: Bjorn Helgaas <bhelgaas@google.com>, Russell King <linux@arm.linux.org.uk>, Marc Zyngier <Marc.Zyngier@arm.com>, Arnd Bergmann <arnd@arndb.de>, Dinh Nguyen <dinguyen@opensource.altera.com>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <Pawel.Moll@arm.com>, Mark Rutland <Mark.Rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-Add device tree nodes for the NEMC and BCH to the JZ4780 device tree,
-and make use of them in the Ci20 device tree to add a node for the
-board's NAND.
+On Fri, Sep 04, 2015 at 09:29:14AM +0100, Ley Foon Tan wrote:
+> On Wed, Sep 2, 2015 at 12:33 AM, Lorenzo Pieralisi
+> <lorenzo.pieralisi@arm.com> wrote:
 
-Note that since the pinctrl driver is not yet upstream, this includes
-neither pin configuration nor busy/write-protect GPIO pins for the
-NAND. Use of the NAND relies on the boot loader to have left the pins
-configured in a usable state, which should be the case when booted
-from the NAND.
+[...]
 
-Signed-off-by: Alex Smith <alex.smith@imgtec.com>
-Cc: Zubair Lutfullah Kakakhel <Zubair.Kakakhel@imgtec.com>
-Cc: David Woodhouse <dwmw2@infradead.org>
-Cc: Brian Norris <computersforpeace@gmail.com>
-Cc: linux-mtd@lists.infradead.org
-Cc: devicetree@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
-Cc: linux-mips@linux-mips.org
----
-v4 -> v5:
- - New patch adding DT nodes for the NAND so that the driver can be
-   tested.
----
- arch/mips/boot/dts/ingenic/ci20.dts    | 51 ++++++++++++++++++++++++++++++++++
- arch/mips/boot/dts/ingenic/jz4780.dtsi | 26 +++++++++++++++++
- 2 files changed, 77 insertions(+)
+> > > +static bool altera_pcie_valid_config(struct altera_pcie *pcie,
+> > > +                                    struct pci_bus *bus, int dev)
+> > > +{
+> > > +       /* If there is no link, then there is no device */
+> > > +       if (bus->number != pcie->root_bus_nr) {
+> > > +               if (!altera_pcie_link_is_up(pcie))
+> > > +                       return false;
+> > > +       }
+> >
+> > Can you explain to pls me why you have to check this for every config
+> > transaction ? Isn't it something that can prevent probing the
+> > host controller altogether ?
+> In our PCIe hardware spec, it stated that software should check the
+> link status before issuing a configuration request to downstream
+> ports.
+> BTW, other pci controllers have similar implementation as well, eg: dw
+> pci, mvebu pci.
 
-diff --git a/arch/mips/boot/dts/ingenic/ci20.dts b/arch/mips/boot/dts/ingenic/ci20.dts
-index 9fcb9e7d1f57..c0c8a64a3522 100644
---- a/arch/mips/boot/dts/ingenic/ci20.dts
-+++ b/arch/mips/boot/dts/ingenic/ci20.dts
-@@ -42,3 +42,54 @@
- &uart4 {
- 	status = "okay";
- };
-+
-+&nemc {
-+	status = "okay";
-+
-+	nand: nand@1 {
-+		compatible = "ingenic,jz4780-nand";
-+		reg = <1 0 0x1000000>;
-+
-+		ingenic,nemc-tAS = <10>;
-+		ingenic,nemc-tAH = <5>;
-+		ingenic,nemc-tBP = <10>;
-+		ingenic,nemc-tAW = <15>;
-+		ingenic,nemc-tSTRV = <100>;
-+
-+		ingenic,bch-controller = <&bch>;
-+		ingenic,ecc-size = <1024>;
-+		ingenic,ecc-strength = <24>;
-+
-+		#address-cells = <2>;
-+		#size-cells = <2>;
-+
-+		partition@0 {
-+			label = "u-boot-spl";
-+			reg = <0x0 0x0 0x0 0x800000>;
-+		};
-+
-+		partition@0x800000 {
-+			label = "u-boot";
-+			reg = <0x0 0x800000 0x0 0x200000>;
-+		};
-+
-+		partition@0xa00000 {
-+			label = "u-boot-env";
-+			reg = <0x0 0xa00000 0x0 0x200000>;
-+		};
-+
-+		partition@0xc00000 {
-+			label = "boot";
-+			reg = <0x0 0xc00000 0x0 0x4000000>;
-+		};
-+
-+		partition@0x8c00000 {
-+			label = "system";
-+			reg = <0x0 0x4c00000 0x1 0xfb400000>;
-+		};
-+	};
-+};
-+
-+&bch {
-+	status = "okay";
-+};
-diff --git a/arch/mips/boot/dts/ingenic/jz4780.dtsi b/arch/mips/boot/dts/ingenic/jz4780.dtsi
-index 65389f602733..b868b429add2 100644
---- a/arch/mips/boot/dts/ingenic/jz4780.dtsi
-+++ b/arch/mips/boot/dts/ingenic/jz4780.dtsi
-@@ -108,4 +108,30 @@
- 
- 		status = "disabled";
- 	};
-+
-+	nemc: nemc@13410000 {
-+		compatible = "ingenic,jz4780-nemc";
-+		reg = <0x13410000 0x10000>;
-+		#address-cells = <2>;
-+		#size-cells = <1>;
-+		ranges = <1 0 0x1b000000 0x1000000
-+			  2 0 0x1a000000 0x1000000
-+			  3 0 0x19000000 0x1000000
-+			  4 0 0x18000000 0x1000000
-+			  5 0 0x17000000 0x1000000
-+			  6 0 0x16000000 0x1000000>;
-+
-+		clocks = <&cgu JZ4780_CLK_NEMC>;
-+
-+		status = "disabled";
-+	};
-+
-+	bch: bch@134d0000 {
-+		compatible = "ingenic,jz4780-bch";
-+		reg = <0x134d0000 0x10000>;
-+
-+		clocks = <&cgu JZ4780_CLK_BCH>;
-+
-+		status = "disabled";
-+	};
- };
--- 
-2.5.0
+Understood, thanks.
+
+[...]
+
+> > > +static int tlp_read_packet(struct altera_pcie *pcie, u32 *value)
+> > > +{
+> > > +       u8 loop;
+> > > +       struct tlp_rp_regpair_t tlp_rp_regdata;
+> > > +
+> > > +       for (loop = 0; loop < TLP_LOOP; loop++) {
+> > > +               tlp_read_rx(pcie, &tlp_rp_regdata);
+> > > +               if (tlp_rp_regdata.ctrl & RP_RXCPL_EOP) {
+> > > +                       if (value)
+> > > +                               *value = tlp_rp_regdata.reg0;
+> > > +                       return PCIBIOS_SUCCESSFUL;
+> > > +               }
+> > > +               udelay(5);
+> >
+> > Could you comment please on the chosen udelay/TLP_LOOP values (ie how
+> > did you come up with them) ?
+> For udelay value, we just want to have small delay between each read.
+
+I would explain how you chose the value, in particular if it can
+affect next generation hosts sharing the same driver.
+
+> For TLP_LOOP value, minimum 2 loops to read tlp headers and 1 loop to
+> read data payload. So, we choose to poll 10 loops for maximum.
+
+Add it to a comment.
+
+[...]
+
+> > > +static int altera_pcie_probe(struct platform_device *pdev)
+> > > +{
+> > > +       struct altera_pcie *pcie;
+> > > +       struct pci_bus *bus;
+> > > +       int ret;
+> > > +
+> > > +       pcie = devm_kzalloc(&pdev->dev, sizeof(*pcie), GFP_KERNEL);
+> > > +       if (!pcie)
+> > > +               return -ENOMEM;
+> > > +
+> > > +       pcie->pdev = pdev;
+> > > +
+> > > +       ret = altera_pcie_parse_dt(pcie);
+> > > +       if (ret) {
+> > > +               dev_err(&pdev->dev, "Parsing DT failed\n");
+> > > +               return ret;
+> > > +       }
+> > > +
+> > > +       INIT_LIST_HEAD(&pcie->resources);
+> > > +
+> > > +       ret = altera_pcie_parse_request_of_pci_ranges(pcie);
+> > > +       if (ret) {
+> > > +               dev_err(&pdev->dev, "Failed add resources\n");
+> > > +               return ret;
+> > > +       }
+> > > +
+> > > +       ret = altera_pcie_init_irq_domain(pcie);
+> > > +       if (ret) {
+> > > +               dev_err(&pdev->dev, "Failed creating IRQ Domain\n");
+> > > +               return ret;
+> > > +       }
+> > > +
+> > > +       pcie->root_bus_nr = 0;
+> >
+> > Nit: It is already 0.
+> Okay. Will remove it.
+> >
+> > > +
+> > > +       /* clear all interrupts */
+> > > +       cra_writel(pcie, P2A_INT_STS_ALL, P2A_INT_STATUS);
+> > > +       /* enable all interrupts */
+> > > +       cra_writel(pcie, P2A_INT_ENA_ALL, P2A_INT_ENABLE);
+> > > +
+> > > +       bus = pci_scan_root_bus(&pdev->dev, pcie->root_bus_nr, &altera_pcie_ops,
+> > > +                               pcie, &pcie->resources);
+> > > +       if (!bus)
+> > > +               return -ENOMEM;
+> > > +
+> > > +       pci_fixup_irqs(pci_common_swizzle, of_irq_parse_and_map_pci);
+> > > +       pci_assign_unassigned_bus_resources(bus);
+> >
+> > I think you are missing a call to pcie_bus_configure_settings(),
+> > see drivers/pci/host/pci-host-generic.c
+> Other pci controller drivers like xgene and iproc don't call to this
+> function, but it call in
+> arch/arm/kernel/bios32.c:pci_common_init_dev().
+> Do we really need this?
+
+It is there to provide a way to configure the system MPS, through
+command line parameters, it is always a good idea to have it and
+it should be part of your driver so that you can tune it in case
+the MPS is misconfigured or you want to apply a specific configuration
+for a given system.
+
+Have a look at pcie_bus_config and how it is used in
+pcie_bus_configure_settings(), that would clarify further.
+
+Thanks,
+Lorenzo
