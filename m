@@ -1,130 +1,62 @@
-From: Vaibhav Hiremath <vaibhav.hiremath@linaro.org>
-Subject: Re: [PATCH-v2 4/7] mmc: sdhci-pxav3: Add pinctl setting according to
- bus clock
-Date: Tue, 8 Sep 2015 17:47:40 +0530
-Message-ID: <55EED1E4.9030904@linaro.org>
-References: <1441624721-15612-1-git-send-email-vaibhav.hiremath@linaro.org>
- <1441624721-15612-5-git-send-email-vaibhav.hiremath@linaro.org>
- <20150908145254.6807dffc@xhacker> <55EEABB1.8010806@linaro.org>
- <20150908175220.6b81efda@xhacker> <55EEB23A.50805@linaro.org>
- <20150908180451.4c8bd26c@xhacker>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH 0/4] Qualcomm Shared Memory State Machines
+Date: Tue, 8 Sep 2015 14:20:14 +0200
+Message-ID: <CACRpkdb-624MauE4sS0mqxarXRRaS3sEB2aMzeRNZw945xhMnA@mail.gmail.com>
+References: <1440697078-4106-1-git-send-email-bjorn.andersson@sonymobile.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20150908180451.4c8bd26c@xhacker>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Jisheng Zhang <jszhang@marvell.com>
-Cc: linux-mmc@vger.kernel.org, devicetree@vger.kernel.org, ulf.hansson@linaro.org, linux-kernel@vger.kernel.org, robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org, Linus Walleij <linus.walleij@linaro.org>, Kevin Liu <kliu5@marvell.com>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <1440697078-4106-1-git-send-email-bjorn.andersson@sonymobile.com>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Bjorn Andersson <bjorn.andersson@sonymobile.com>, Mark Brown <broonie@linaro.org>
+Cc: Alexandre Courbot <gnurou@gmail.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
+On Thu, Aug 27, 2015 at 7:37 PM, Bjorn Andersson
+<bjorn.andersson@sonymobile.com> wrote:
 
+Let's discuss this a bit, looping in Mark Brown.
 
-On Tuesday 08 September 2015 03:34 PM, Jisheng Zhang wrote:
-> On Tue, 8 Sep 2015 15:32:34 +0530
-> Vaibhav Hiremath <vaibhav.hiremath@linaro.org> wrote:
->
->>
->>
->> On Tuesday 08 September 2015 03:22 PM, Jisheng Zhang wrote:
->>> On Tue, 8 Sep 2015 15:04:41 +0530
->>> Vaibhav Hiremath <vaibhav.hiremath@linaro.org> wrote:
->>>
+> As some of these states on some platforms are passed as physical signals
+> instead, the two drivers are modelled as gpio- and interrupt-controllers -
+> providing a nice abstraction both in device tree sense and Linux implementation
+> sense.
 
-<snip>
+I have unfortunately repeatedly encountered an argument of the type
+"GPIO has nice infrastructure so let's call X 'a kind of GPIO' so
+we can use that nice infrastructure".
 
->>>>>>     static const struct sdhci_ops pxav3_sdhci_ops = {
->>>>>> @@ -586,6 +619,16 @@ static int sdhci_pxav3_probe(struct platform_device *pdev)
->>>>>>     		}
->>>>>>     	}
->>>>>>
->>>>>> +	pxa->pinctrl = devm_pinctrl_get(dev);
->>>>>
->>>>> could we ignore this for those SDHCI hosts that don't need it?
->>>>>
->>>>
->>>> Again, no need to introduce flags here. This is standard call and
->>>> handled properly. So for the platforms not using this, it really should
->>>> not matter.
->>>> Also, lookup is getting executed only when pinctrl is populated.
->>>>
->>>> So I do not see any need here.
->>>>
->>>>>> +	if (!IS_ERR(pxa->pinctrl)) {
->>>>>> +		pxa->pins_default = pinctrl_lookup_state(pxa->pinctrl, "default");
->>>>>> +		if (IS_ERR(pxa->pins_default))
->>>>>> +			dev_err(dev, "could not get default pinstate\n");
->>>>>
->>>>> Why those SDHCI hosts that don't need pinctl setting should got this error?
->>>>>
->>>>
->>>> It won't.
->>>
->>> It does. On Marvell Berlin SoCs, I got
->>>
->>> [    1.070000] sdhci-pxav3 f7ab0800.sdhci: could not get default pinstate
->>> [    1.080000] sdhci-pxav3 f7ab0800.sdhci: could not get fast pinstate
->>>
->>>
->>>
->>>>
->>>> If Host does not need pinctrl, the execution would never reach this
->>>> point.
->>>> The if condition check would handle it, isn't it?
->>>>
->>>> 	pxa->pinctrl = devm_pinctrl_get(dev);
->>>
->>> It seems this function always succeed...
->>>
->>
->> Not always.
->> I would succeed only if you have pinctrl defined in DT for this device.
->
-> Yes, that's what I thought, but I got
->
-> [    1.070000] sdhci-pxav3 f7ab0800.sdhci: could not get default pinstate
-> [    1.080000] sdhci-pxav3 f7ab0800.sdhci: could not get fast pinstate
->
-> there's no pinctrl for f7ab0800.sdhci. Am I missing somthing?
->
-> Thanks,
-> Jisheng
->
->>
->> And if you have pinctrl defined, isn't it is expected to have "default"
->> pin state to be always present?
->> And if answer is yes here, then it is fair to be prompting error for it.
->>
->>>   From another side, we may have default pin in dts, for example: pin muxed between
->>> emmc and nandflash. But we don't have fast pinstate, so we at least need the
->>> flag to fast pinstate. Otherwise, in such platforms, we could get something like
->>>
->>
->> That is exactly the reason behind keeping it as dev_info.
->>
->>> [    1.000000] sdhci-pxav3 f7ab0000.sdhci: get default pinstate
->>> [    1.000000] sdhci-pxav3 f7ab0000.sdhci: could not get fast pinstate
->>>
->>>
+I'm not pleased with something that is not really general purpose
+input/output being called GPIO. It fits badly with the GPIO subsystem
+when we support things like open drain and cross-mappings to
+the pin control subsystem that will never be applicable to these
+new users. It's more like "special purpose input/output" or
+something.
 
-I did some invastigation here on the execution flow,
-and you know what, you are right here.
+This happened with syscon LEDs for example, and was the reason
+I implemented syscon-leds. The original proposal was to say the LEDs
+register was "a kind of GPIO" on top of regmap and then use gpio-leds
+on top of that. Instead I insisted it was a syscon/regmap and the
+LEDs go directly to that, bypassing one layer of abstraction.
 
-It seems, devm_pinctrl_get() always returns valid pinctrl pointer, even
-though the DT property is not populated.
+I also imagine creating syscon-keys.c for input from arbitrary keys
+in a syscon register actually. Just didn't get around to that yet.
 
-The return value from I did some invastigation () should have been 
-treated differently, but it is not. Instead it creates the
-"struct pinctrl" and return back to the driver.
+I also see some of the stuff GPIO does out-of-the-box being useful,
+for example in MFD: some of these are interrupt controllers and
+basically duplicate the kind of code I have in gpiolib for
+GPIOLIB_IRQCHIP.
 
-I am looping Linus Walleji here, probably he can comment/confirm on
-this.
+So we need to figure out what is really needed.
 
+While sparsely documented: what about regmap (maybe in the
+form of syscon) and drivers/base/regmap/regmap-irq.c for the
+interrupt handling?
 
-Thanks,
-Vaibhav
+I cannot claim to understand regmap-irq.c, but I just intuitively
+think it deserves consideration, such that drivers who need one
+of these misc registers can read/write their bits with regmap
+accessors and also get IRQs by way of regmap-irq.
 
-
->> Thanks,
->> Vaibhav
->
+Yours,
+Linus Walleij
