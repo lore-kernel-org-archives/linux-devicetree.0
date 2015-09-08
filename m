@@ -1,54 +1,53 @@
 From: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
-Subject: Re: st_fdma: Firmware filename in DT?
-Date: Tue, 8 Sep 2015 12:57:01 +1000
-Message-ID: <20150908025701.GA24774@voom.redhat.com>
-References: <20150903144944.GC7093@griffinp-ThinkPad-X1-Carbon-2nd>
- <CAL_JsqKQqbAQCPR6xuR2Ke5gEdX4kQYb29-W3qNaZqjM_JBoYg@mail.gmail.com>
+Subject: Re: [PATCH v5 0/2] dtc: Dynamic DT support
+Date: Tue, 8 Sep 2015 14:00:24 +1000
+Message-ID: <20150908040024.GC24774@voom.redhat.com>
+References: <1440614674-7055-1-git-send-email-pantelis.antoniou@konsulko.com>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="jI8keyz6grp/JLjh"
-Return-path: <devicetree-spec-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+	protocol="application/pgp-signature"; boundary="xo44VMWPx7vlQ2+2"
+Return-path: <devicetree-compiler-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <CAL_JsqKQqbAQCPR6xuR2Ke5gEdX4kQYb29-W3qNaZqjM_JBoYg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-spec-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Peter Griffin <peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Maxime Coquelin <maxime.coquelin-qxv4g6HH51o@public.gmane.org>, Patrice Chotard <patrice.chotard-qxv4g6HH51o@public.gmane.org>, Ludovic Barre <ludovic.barre-qxv4g6HH51o@public.gmane.org>, "devicetree-spec-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-spec-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1440614674-7055-1-git-send-email-pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
+Sender: devicetree-compiler-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
+Cc: Jon Loeliger <jdl-CYoMK+44s/E@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Jan Luebbe <jlu-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Matt Porter <mporter-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, devicetree-compiler-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
 
---jI8keyz6grp/JLjh
+--xo44VMWPx7vlQ2+2
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, Sep 03, 2015 at 04:45:35PM -0500, Rob Herring wrote:
-> +devicetree-spec as a good question to separate from the fire hose.
+On Wed, Aug 26, 2015 at 09:44:32PM +0300, Pantelis Antoniou wrote:
+> Enable the generation of symbol & fixup information for
+> use with dynamic DT loading.
 >=20
-> On Thu, Sep 3, 2015 at 9:49 AM, Peter Griffin <peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> =
-wrote:
-> > Hi Rob, Pawel, Mark, Ian and Kumar,
-> >
-> > Quick question regarding this series here
-> > https://lkml.org/lkml/2015/7/8/832. and the proposed
-> > st,fw-name binding.
+> Changes since v4:
+> * Rebase to latest dtc version.
+> * Completely redesigned the generation of resolution data.
+> Now instead of being generated as part of blob generation
+> they are created in the live tree.
+> * Consequently the patchset is much smaller.
+> * Added -A auto-label alias generation option.
+> * Addressed maintainer comments.
+> * Added syntactic sugar for overlays in the form of .dtsi
+> * Added /dts-v1/ /plugin/ preferred plugin form and deprecate
+> the previous form (although still works for backward compatibility)
 >=20
-> Thanks for looking at the bigger picture.
+> Changes since v3:
+> * Rebase to latest dtc version.
 >=20
-> > What are the rules with putting firmware names into DT?
->=20
-> Whatever you can sneak in without DT maintainers noticing...
->=20
-> > Is it allowed?
->=20
-> They are already there as you have found, so yes. But should they be
-> allowed? Possibly. I'm not saying no, but do have some concerns.
+> Changes since v2:
+> * Split single patch to a patchset.
+> * Updated to dtc mainline.
+> * Changed __local_fixups__ format
+> * Clean up for better legibility.
 
-I think this is a genuine edge case.  A firmware name isn't strictly
-speaking hardware description, but if the names exist in some "well
-known" OS independent namespace, then it's a reasonable thing to be
-specified in the device tree.
-
-That said, I have some concerns on points, see later replies to the thread.
+Sorry it's taken me so long to get to this.  I was sick after the
+conference, and then had backlog of day-job work to do.  I haven't had
+time to look at this yet, but I haven't forgotten it.
 
 --=20
 David Gibson			| I'll have my music baroque, and my code
@@ -56,25 +55,25 @@ david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _other_
 				| _way_ _around_!
 http://www.ozlabs.org/~dgibson
 
---jI8keyz6grp/JLjh
+--xo44VMWPx7vlQ2+2
 Content-Type: application/pgp-signature
 
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v1
 
-iQIcBAEBAgAGBQJV7k58AAoJEGw4ysog2bOS0zcQAOa7S6y5s2x8CnjCuUuf7o9a
-v83OzRK8DRFgGgrI5xXfp/z6NZOoKwgmwmnGvUQIo8xL8HbiyzU5xUuVKcCE4wvQ
-m7nC12I+0v2AMFX/04D9gQHLR/+M7Jfx3B+eDHvUJT+89tuGiKjlsbltFAP3n+PR
-cB89j5w8UwyIikGD5P3Q+NxRrBHSFX37fuwB4d5ayWziMCQYgQQsCIwv7jvmw7Ph
-8eIAeDmLwlcydijy0w/ycyxGnnu/q2GiV51xYQNulwEEjoMiecksnoeY/Np6Mqzh
-C2HMPKf8NQ4+WJLS//uwkeXhipNF8BJ0KZy6GSJG05D9ae9T+5Ex0cckjjayLR1x
-u274SNTnSeez0Y4n5M+BWBMYpZrZhNeLsMnbTo191Dh3hDdghal3Fh8/1U/wEIxE
-c6gWVGIs8XkuhpWXwp45FfGs7Wk2jPDWhdSl0KDpEphHRXnCOnvz/8fi5ZIa/gv5
-ZuCIZwVPL/hO+cyw4zdVGxEPY2TC+RMWGchthB0oURyovYx9lQoLMiOPxD1dDXkJ
-5D6C4clSei81DWnwbnvxea3jESPYT9kxl0kkF1oIcl5HFvKpACTSZ4DiotVANoi/
-nyWnZdm2ccnAviAyzJusfQq4x/JJfB1+Ldj8kkGt+RZKq6Sv3xuO+FS5KklBbU1r
-eBKKRj0NSTUYstxdGYKb
-=T+mD
+iQIcBAEBAgAGBQJV7l1YAAoJEGw4ysog2bOSBOkP/jr0uyS0cmh80ZKigbLwtEhG
+V3Av4UgISkCrLPmfo2+7Ply86Xw2pC3p+Zpqt73tFGwyzLbmjYPbuTaI0+ijBYdU
+RbZfcZtUtsm36vzjEPx0q3HZf0/jjOUGdKPuJxCqTl55D2Mk6gbF0HZ26DRhSMdq
+V6HRGzf5I3Q/9elyIBBLJXJBwNPo/TwMU7U3mP+dPf4YvgRKupwqSm8Pbn9hheom
+lvjR4xZTikK274i+n4fuHqKIer9OAzZMYy5ozYMna/nJmqnpnhBshoQsyLWVdTKg
+8jZJTMprTyWZ8aIDFC7VpE4U56hU3DsapXSn7tfetrKskKMQtkAnu2YlzX/zh9xV
+bf3H75ZabSjLwq8cEt+giUxX9SA9DVzTrtzDWBBnDQfMYivJIOzgn859KRGAq7Re
+Hv2HNkiSfskfYstdvU9FyS873b18C2HO2syccJK54qjaM+43JEroAqROkB1tXBwp
+4oxM9X4RYNRGzo/yKsu1bn7sXrYTrGIMZaBWFlOqobHLWAsDES8OVYiFHaKND/nN
+aNNMUCpkV1ubWHqFGweWCaiD60m/tW4MCrMgFwwN3CV1dE0t9JCmS5jq9V/m0EZu
+vHdGVwvUg1HhbnYvRdKfgI6kHc70UBxGGc46XmxnzBbOPVXH2rhsaQP7zKYP9BMt
+a/x/CtEkijGa2YDpCG6l
+=9NOP
 -----END PGP SIGNATURE-----
 
---jI8keyz6grp/JLjh--
+--xo44VMWPx7vlQ2+2--
