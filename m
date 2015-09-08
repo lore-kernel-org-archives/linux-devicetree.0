@@ -1,70 +1,37 @@
-From: Enric Balletbo i Serra <eballetbo@gmail.com>
-Subject: [PATCHv2 0/3] Add initial support for slimport anx78xx
-Date: Tue,  8 Sep 2015 09:24:16 +0200
-Message-ID: <1441697056-3733-1-git-send-email-enric.balletbo@collabora.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, devel@driverdev.osuosl.org
-Cc: mark.rutland@arm.com, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, gregkh@linuxfoundation.org, sjoerd.simons@collabora.co.uk, robh+dt@kernel.org, span@analogixsemi.com, galak@codeaurora.org, javier@dowhile0.org, nathan.chung@mediatek.com
+From: Enric Balletbo i Serra <eballetbo-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCHv2 1/3] of: Add vendor prefix for Analogix Semiconductor, Inc.
+Date: Tue,  8 Sep 2015 09:25:06 +0200
+Message-ID: <1441697106-3813-1-git-send-email-enric.balletbo@collabora.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devel-gWbeCf7V1WCQmaza687I9mD2FQJk+8+b@public.gmane.org
+Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, airlied-cv59FeDIM0c@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, sjoerd.simons-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org, javier-0uQlZySMnqxg9hUCZPvPmw@public.gmane.org, span-RZiUC8FWO7+l5r2w9Jh5Rg@public.gmane.org, nathan.chung-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-SGkgYWxsLAoKVGhlIGZvbGxvd2luZyBzZXJpZXMgYWRkIGluaXRpYWwgc3VwcG9ydCBmb3IgdGhl
-IFNsaW1wb3J0IEFOWDc4MTQgdHJhbnNtaXR0ZXIsIGEKdWx0cmEtbG93IHBvd2VyIEZ1bGwtSEQg
-KDEwODBwNjApIHRyYW5zbWl0dGVyIGRlc2lnbmVkIGZvciBwb3J0YWJsZSBkZXZpY2UuCgpUaGUg
-ZHJpdmVyIHdhcyBvcmlnaW5hbGx5IGNyZWF0ZWQgYW5kIGJhc2VkIGZyb20gdGhlIHdvcmsgb2Yg
-SnVuaHVhIFhpYSBmcm9tCkFuYWxvZ2l4LiBUaGlzIGRyaXZlciBpcyBhIHJlZmFjdG9yIG9mIHRo
-ZSBvcmlnaW5hbCBkcml2ZXIgYW5kIGZpeGVzIGRpZmZlcmVudApjb2Rpbmcgc3R5bGUgbGluZXMs
-IGFuZCBkaWZmZXJlbnQgZXJyb3JzL3dhcm5pbmdzIHJlcG9ydGVkIGJ5IGNoZWNrcGF0Y2guIEFs
-c28KdGhlcmUgd2VyZSB0aGluZ3MgdGhhdCBJIG5vdGljZWQgdGhhdCB3ZSBuZWVkIHRvIGNoYW5n
-ZSBsaWtlOgoKIC0gQ29udmVydCB0aGUgbnVtYmVyZWQgR1BJTyBBUEkgdG8gdGhlIG5ldyBkZXNj
-cmlwdG9yIGJhc2VkIEdQSU8gQVBJLgogLSBSZXZpZXcgdGhlIERUIGJpbmRpbmcKIC0gQWRkIG1p
-c3NpbmcgTU9EVUxFX0RFVklDRV9UQUJMRShvZiwgLi4uKTsKIC0gRml4IE1ha2VmaWxlcyBhbmQg
-S2NvbmZpZyB0byBidWlsZCBjb25kaXRpb25hbGx5LgogLSBVc2UgU0lNUExFX0RFVl9QTV9PUFMo
-KSBpbnN0ZWFkIG9mIHRoZSBkZXByZWNhdGVkIGkyYyAuc3VzcGVuZCBhbmQKICAucmVzdW1lIGNh
-bGxiYWNrcy4KIC0gTW92ZSB0byB1c2UgbWFuYWdlZCBkZXZpY2UgcmVzb3VyY2VzLgogLSBSZW1v
-dmUgZGVhZC91bnVzZWQgY29kZS4KIC0gQW5kIG90aGVycyAuLi4KClRoaXMgaXMgc2VyaWVzIGlz
-IGEgZmlyc3QgYXR0ZW1wdCBhbmQgd2lsbCBoYXZlIG1pc3Rha2Ugc28gYWxsIGNvbW1lbnRzIGFu
-ZApzdWdnZXN0aW9ucyBhcmUgd2VsY29tZWQuCgpDaGFuZ2VzIHNpbmNlIHYxOgoKIC0gQXMgcmVx
-dWVzdGVkIGJ5IEdyZWcsIG1vdmUgZnJvbSBzdGFnaW5nIHRvIGEgc3Vic3lzdGVtLgoKVG8gYmUg
-aG9uZXN0IEknbSBub3Qgc3VyZSBpZiBncHUvZHJtL2kyYyBpcyB0aGUgcHJvcGVyIHN1YnN5c3Rl
-bSBmb3IgdGhpcyBkcml2ZXIKc28gcGxlYXNlIGZlZWwgZnJlZSB0byBjb3JyZWN0IG1lLgoKQmVz
-dCByZWdhcmRzLAoKRW5yaWMgQmFsbGV0Ym8gaSBTZXJyYSAoMyk6CiAgb2Y6IEFkZCB2ZW5kb3Ig
-cHJlZml4IGZvciBBbmFsb2dpeCBTZW1pY29uZHVjdG9yLCBJbmMuCiAgZGV2aWNldHJlZTogQWRk
-IG5ldyBBTlg3ODE0IFNsaW1Qb3J0IHRyYW5zbWl0dGVyIGJpbmRpbmcuCiAgZHJtL2kyYzogYW54
-Nzh4eDogQWRkIGFueDc4MTQgZHJpdmVyIHN1cHBvcnQgYnkgYW5hbG9naXguCgogLi4uL2Rldmlj
-ZXRyZWUvYmluZGluZ3MvdmVuZG9yLXByZWZpeGVzLnR4dCAgICAgICAgfCAgICAxICsKIC4uLi9k
-ZXZpY2V0cmVlL2JpbmRpbmdzL3ZpZGVvL2FueDc4MTQudHh0ICAgICAgICAgIHwgICAyMiArCiBk
-cml2ZXJzL2dwdS9kcm0vaTJjL0tjb25maWcgICAgICAgICAgICAgICAgICAgICAgICB8ICAgIDIg
-KwogZHJpdmVycy9ncHUvZHJtL2kyYy9NYWtlZmlsZSAgICAgICAgICAgICAgICAgICAgICAgfCAg
-ICAyICsKIGRyaXZlcnMvZ3B1L2RybS9pMmMvYW54Nzh4eC9LY29uZmlnICAgICAgICAgICAgICAg
-IHwgICAgNyArCiBkcml2ZXJzL2dwdS9kcm0vaTJjL2FueDc4eHgvTWFrZWZpbGUgICAgICAgICAg
-ICAgICB8ICAgIDQgKwogZHJpdmVycy9ncHUvZHJtL2kyYy9hbng3OHh4L3NsaW1wb3J0LmMgICAg
-ICAgICAgICAgfCAgMzAxICsrCiBkcml2ZXJzL2dwdS9kcm0vaTJjL2FueDc4eHgvc2xpbXBvcnQu
-aCAgICAgICAgICAgICB8ICAgNDkgKwogZHJpdmVycy9ncHUvZHJtL2kyYy9hbng3OHh4L3NsaW1w
-b3J0X3R4X2Rydi5jICAgICAgfCAzMzM1ICsrKysrKysrKysrKysrKysrKysrCiBkcml2ZXJzL2dw
-dS9kcm0vaTJjL2FueDc4eHgvc2xpbXBvcnRfdHhfZHJ2LmggICAgICB8ICAyNTQgKysKIGRyaXZl
-cnMvZ3B1L2RybS9pMmMvYW54Nzh4eC9zbGltcG9ydF90eF9yZWcuaCAgICAgIHwgIDc4NiArKysr
-KwogMTEgZmlsZXMgY2hhbmdlZCwgNDc2MyBpbnNlcnRpb25zKCspCiBjcmVhdGUgbW9kZSAxMDA2
-NDQgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3ZpZGVvL2FueDc4MTQudHh0CiBj
-cmVhdGUgbW9kZSAxMDA2NDQgZHJpdmVycy9ncHUvZHJtL2kyYy9hbng3OHh4L0tjb25maWcKIGNy
-ZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL2dwdS9kcm0vaTJjL2FueDc4eHgvTWFrZWZpbGUKIGNy
-ZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL2dwdS9kcm0vaTJjL2FueDc4eHgvc2xpbXBvcnQuYwog
-Y3JlYXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMvZ3B1L2RybS9pMmMvYW54Nzh4eC9zbGltcG9ydC5o
-CiBjcmVhdGUgbW9kZSAxMDA2NDQgZHJpdmVycy9ncHUvZHJtL2kyYy9hbng3OHh4L3NsaW1wb3J0
-X3R4X2Rydi5jCiBjcmVhdGUgbW9kZSAxMDA2NDQgZHJpdmVycy9ncHUvZHJtL2kyYy9hbng3OHh4
-L3NsaW1wb3J0X3R4X2Rydi5oCiBjcmVhdGUgbW9kZSAxMDA2NDQgZHJpdmVycy9ncHUvZHJtL2ky
-Yy9hbng3OHh4L3NsaW1wb3J0X3R4X3JlZy5oCgotLSAKMi4xLjAKCl9fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJp
-LWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3Jn
-L21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+Analogix Semiconductor develops analog and mixed-signal devices for digital
+media and communications interconnect applications.
+
+Signed-off-by: Enric Balletbo i Serra <enric.balletbo-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
+---
+ Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
+index ac5f0c3..e914a02 100644
+--- a/Documentation/devicetree/bindings/vendor-prefixes.txt
++++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
+@@ -22,6 +22,7 @@ ampire	Ampire Co., Ltd.
+ ams	AMS AG
+ amstaos	AMS-Taos Inc.
+ apm	Applied Micro Circuits Corporation (APM)
++analogix	Analogix Semiconductor, Inc.
+ aptina	Aptina Imaging
+ arasan	Arasan Chip Systems
+ arm	ARM Ltd.
+-- 
+2.1.0
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
