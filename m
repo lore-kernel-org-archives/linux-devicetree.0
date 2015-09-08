@@ -1,39 +1,50 @@
 From: Olliver Schinagl <o.schinagl-U3FVU11NWA554TAoqtyWWQ@public.gmane.org>
-Subject: [PATCH 0/2] SSD1307fb updates
-Date: Tue,  8 Sep 2015 21:19:49 +0200
-Message-ID: <1441739991-4676-1-git-send-email-o.schinagl@ultimaker.com>
+Subject: [PATCH 1/2] fbdev: ssd1307fb: alphabetize headers
+Date: Tue,  8 Sep 2015 21:19:50 +0200
+Message-ID: <1441739991-4676-2-git-send-email-o.schinagl@ultimaker.com>
+References: <1441739991-4676-1-git-send-email-o.schinagl@ultimaker.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1441739991-4676-1-git-send-email-o.schinagl-U3FVU11NWA554TAoqtyWWQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: Olliver Schinagl <oliver-dxLnbx3+1qmEVqv0pETR8A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
-Cc: Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>, =?UTF-8?q?Thomas=20Niederpr=C3=BCm?= <niederp-PRwTpj6vllL6m1q2wEL4bg@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Prabhakar Lad <prabhakar.csengg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Olliver Schinagl <o.schinagl-U3FVU11NWA554TAoqtyWWQ@public.gmane.org>
+Cc: Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>, =?UTF-8?q?Thomas=20Niederpr=C3=BCm?= <niederp-PRwTpj6vllL6m1q2wEL4bg@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Prabhakar Lad <prabhakar.csengg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Having a few ssd1309 128x64 OLED displays laying around, I added support for it to the existing 1307fb driver. While doing this I noticed the headers where out of order so I fixed those as well.
+From: Olliver Schinagl <oliver-dxLnbx3+1qmEVqv0pETR8A@public.gmane.org>
 
-For this specific display, the following can be used in a i2c node for example.
+This patch sorts the headers on ssd1307fb driver.
 
-	ssd1309: oled@3c {
-		compatible = "solomon,ssd1309fb-i2c";
-		pinctrl-names = "default";
-		pinctrl-0 = <&oled_pins>;
-		reg = <0x3c>;
-		reset-gpios = <&pio 8 13 GPIO_ACTIVE_HIGH>;
-		solomon,width = <128>;
-		solomon,height = <64>;
-		solomon,com-invdir;
-		solomon,page-offset = <0>;
-		solomon,prechargep1 = <2>;
-		solomon,prechargep2 = <8>;
-	};
+Signed-off-by: Olliver Schinagl <oliver-dxLnbx3+1qmEVqv0pETR8A@public.gmane.org>
+---
+ drivers/video/fbdev/ssd1307fb.c | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
-Olliver Schinagl (2):
-  fbdev: ssd1307fb: alphabetize headers
-  fbdev: ssd1307fb: add ssd1309 support
-
- .../devicetree/bindings/video/ssd1307fb.txt         |  3 ++-
- drivers/video/fbdev/ssd1307fb.c                     | 21 ++++++++++++++++-----
- 2 files changed, 18 insertions(+), 6 deletions(-)
-
+diff --git a/drivers/video/fbdev/ssd1307fb.c b/drivers/video/fbdev/ssd1307fb.c
+index 3e153c0..339615c 100644
+--- a/drivers/video/fbdev/ssd1307fb.c
++++ b/drivers/video/fbdev/ssd1307fb.c
+@@ -6,16 +6,16 @@
+  * Licensed under the GPLv2 or later.
+  */
+ 
+-#include <linux/module.h>
+ #include <linux/backlight.h>
+-#include <linux/kernel.h>
+-#include <linux/i2c.h>
++#include <linux/delay.h>
+ #include <linux/fb.h>
+-#include <linux/uaccess.h>
++#include <linux/i2c.h>
++#include <linux/kernel.h>
++#include <linux/module.h>
+ #include <linux/of_device.h>
+ #include <linux/of_gpio.h>
+ #include <linux/pwm.h>
+-#include <linux/delay.h>
++#include <linux/uaccess.h>
+ 
+ #define SSD1307FB_DATA			0x40
+ #define SSD1307FB_COMMAND		0x80
 -- 
 2.1.4
 
