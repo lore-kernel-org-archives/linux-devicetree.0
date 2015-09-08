@@ -1,179 +1,82 @@
 From: Matt Porter <mporter-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
-Subject: Re: [RFC PATCH 0/5] DT binding documents using text markup
-Date: Tue, 8 Sep 2015 09:42:42 -0400
-Message-ID: <20150908134242.GB17267@beef>
+Subject: Re: [RFC PATCH 5/5] Documentation: dt-bindings: phy: add YAML TI PHY
+ binding
+Date: Tue, 8 Sep 2015 09:47:00 -0400
+Message-ID: <20150908134700.GC17267@beef>
 References: <1440739433-6799-1-git-send-email-mporter@konsulko.com>
- <CA+bK7J5MriF95d2OGAZRT8PyJkK_x5r1J1yPq2Ke=SZkit6xHA@mail.gmail.com>
+ <1440739433-6799-6-git-send-email-mporter@konsulko.com>
+ <CA+bK7J5jz0wxgA-0jY4LFUWWoTk4YzGaGSQZsdF83BnomoBx6w@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-spec-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <CA+bK7J5MriF95d2OGAZRT8PyJkK_x5r1J1yPq2Ke=SZkit6xHA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-spec-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+In-Reply-To: <CA+bK7J5jz0wxgA-0jY4LFUWWoTk4YzGaGSQZsdF83BnomoBx6w-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: Tim Bird <tbird20d-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Cc: Devicetree List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Devicetree Spec List <devicetree-spec-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Behan Webster <behanw-k/hB3zQhLwledRVtV/plodBPR1lH4CV8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Sep 01, 2015 at 09:14:24AM -0700, Tim Bird wrote:
+On Tue, Sep 01, 2015 at 10:42:25AM -0700, Tim Bird wrote:
 > On Thu, Aug 27, 2015 at 10:23 PM, Matt Porter <mporter-OWPKS81ov/FWk0Htik3J/w@public.gmane.org> wrote:
-> > During the Device Tree microconference at Linux Plumbers 2015, we had
-> > a short discussion about how to improve DT Binding Documentation. A
-> > number of issues were raised (again, as these things have been
-> > discussed in the past) including:
+> > Convert the ti-phy.txt binding to standard YAML DT binding
+> > format. This binding references the YAML generic PHY binding.
 > >
-> >         * Inconsistency between binding documents due to prose text
-> >           format.
-> >         * Inability to reliably machine read bindings for mass update
-> >           or search.
-> >         * Bit rot of bindings as new conventions are agreed upon but
-> >           only new bindings are changed.
+> > Signed-off-by: Matt Porter <mporter-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
+> > ---
+> >  Documentation/devicetree/bindings/phy/ti-phy.yaml | 166 ++++++++++++++++++++++
+> >  1 file changed, 166 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/phy/ti-phy.yaml
 > >
-> > Grant Likely probably summed up the issue best with "...as long as
-> > bindings are human readable, we'll have issues...".
-> I'd rephrase that to "... as long as bindings are not machine readable,
-> we'll have issues...".  Human readable and machine readable are not
-> mutually exclusive.  XML is not, IMHO, human readable, but YAML looks
-> pretty good, so I think it's a good choice.
-
-Yes, that's exactly what I hoped to find with this experiment...that
-we can have both.
-
-> > The context
-> > of that comment was, of course, regarding our current documents
-> > written in very inconsistent prose style. When the topic of needing
-> > the bindings in a rigid format was raised, there was general head
-> > nodding that this was needed. It was noted that this has been
-> > discussed many times before and nothing has been done.
-> >
-> > My proposed solution to the problem is to convert all DT bindings
-> > a rigid text markup format. In choosing a text markup language my
-> > requirements were:
-> >
-> >         1) Human readable
-> >         2) Well documented
-> >         3) Easy to translate to other data formats
-> >         4) Well supported by tools and libraries
-> >
-> > After looking at a number of markup options, YAML stood out as the
-> > one that meets all of these requirements. The YAML syntax is adopted
-> > in many projects specifically because of the high level of readability.
-> > A comprehensive spec is at http://www.yaml.org/spec/1.2/spec.html.
-> > There's a number of tools to convert between YAML and other popular
-> > data formats such as JSON and XML. XML was cited by Behan Webster
-> > during the microconference as an important data format as the type
-> > of developers that may produce comprehensive DTS Binding validation
-> > tools will want to use XML. Every major scripting language has a
-> > high level binding to the low level libyaml C library to facilitate
-> > handling of YAML data files.
-> >
-> > One caveat with YAML is it does not tolerate tabs. Yes, I said it.
-> > No tabs! This can be managed with proper editor modes and also with
-> > helper scripts to strip tabs to aid in people passing planned
-> > checkpatch.pl checks that would run YAML DT Binding specific tag
-> > validators for new bindings.
+> > diff --git a/Documentation/devicetree/bindings/phy/ti-phy.yaml b/Documentation/devicetree/bindings/phy/ti-phy.yaml
+> > new file mode 100644
+> > index 0000000..ec93501
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/phy/ti-phy.yaml
+> > @@ -0,0 +1,166 @@
+> > +%YAML 1.2
+> > +---
+> > +id: omap-control-phy
+> > +
+> > +title: OMAP Control PHY
+> > +
+> > +compatible:
+> > +  - name: "ti,control-phy-otghs"
+> > +    description: if it has otghs_control mailbox register as on OMAP4.
+> > +  - name: "ti,control-phy-usb2"
+> > +    description: if it has Power down bit in control_dev_conf register
+> > +                 e.g. USB2_PHY on OMAP5.
+> > +  - name: "ti,control-phy-pipe3"
+> > +    description: if it has DPLL and individual Rx & Tx power control
+> > +                 e.g. USB3 PHY and SATA PHY on OMAP5.
+> > +  - name: "ti,control-phy-pcie"
+> > +    description: for pcie to support external clock for pcie and to
+> > +                 set PCS delay value. e.g. PCIE PHY in DRA7x
+> > +  - name: "ti,control-phy-usb2-dra7"
+> > +    description: if it has power down register like USB2 PHY on DRA7
+> > +                 DRA7 platform.
+> > +  - name: "ti,control-phy-usb2-am437"
+> > +    description: if it has power down register like USB2 PHY on AM437
+> > +                 platform.
 > 
-> This will be an endless source of pain.  Based on your examples,
-> it looks like we only need a very small subset of YAML.  I'd be willing
-> to write a parser for the language, but we might lose the ability to
-> do conversions to other formats.  It depends on how comprehensive
-> and automatic the helper scripts to strip tabs would be.
+> I'm confused.  If these descriptions are multi-line, don't they need the '>'
+> syntax?
 
-We need something to validate that a binding meets our binding
-schema so it shouldn't a huge problem to have it warn and by option,
-reformat the binding with tabs stripped. Having an appropriate mode
-available for vim/emacs would go a long way to helping here too.
+Consider that a bug ;) Yes, they should have '>'. Since I'm just using
+the default core yaml schema validator this is perfectly legal when I
+run it through yaml. It would mess up formating when output to a
+document.
 
-> > The scope of the initial YAML DT Binding format was specifically
-> > limited to supporting *only* the content we have in bindings today.
-> > The idea here is to propose and agree on something that will take
-> > us just a few steps in the right direction. If we move *all* current
-> > binding content to a machine parseable format, additional features
-> > can be added with more automation and scripting. As it stands today,
-> > because of the inconsistency of the wording of the files, we can't
-> > add a lot of new features to the content until we convert what we
-> > have today into a standard format.
-> >
-> > With that said, it should be noted that some new features such as
-> > "type" tags to indicate cell types could be added to support
-> > additional DTS validation beyond what the current content supports.
-> > Another possibility is adding "range" type information to validate
-> > the legal values for a cell.
-> 
-> I would recommend we add type and something for value constraints.
-> Even if we don't add populate those immediately, I think thinking
-> through some of the possible uses will be helpful to avoid doing
-> something dumb.
-> 'choices' or 'enums' seem frequently used.  I see lots of "must be one
-> of..." in the binding docs I read.
 
-Yes, so definitely after initial feedback, we're going to define some kind
-of type and constraint tags. Whether we use C-like expressions for
-constraints or something else is still up for debate.
+> Also, I'm still confused by the "name:" field in this section.  These are
+> possible *values* for the compatible property, not the name of the field,
+> as all other property descriptions are.
 
-And as you point out (and Rob also did) we need some type of AND and
-OR expressions for constraint enums which also include the regular
-case of defining how compatibles must be handled (e.g. one of the
-specific strings AND the generic string).
-
-> 
-> Another important thing to document would be a 'superclass' or
-> 'inherit-from' attribute, for things that are of a specific type (i2c,
-> regulator, clock, etc.)
-
-There's an attempt at that with the reference tag. Based on this and
-other comments we'll expand that usage to inherit all the properties
-from a generic binding (a 'superclass' as used above) rather than
-repeating those within each peripheral binding document.
-
-> > This series is broken up into three major parts:
-> >
-> > 1) The documentation defining the YAML DT binding format
-> > 2) A skeleton device binding example illustrating use of this format
-> > 3) Some real binding conversions (eeprom.txt, phy-bindings.txt, and
-> >    ti-phy.txt
-> >
-> > As a proof of concept of what can be done with a proper machine
-> > readable DT binding source file, there's a simple markdown document
-> > generator at https://github.com/konsulko/dtgendoc. Also, to see
-> > actual output from the generator, the generated markdown from those
-> > bindings is viewable at https://github.com/konsulko/dtgendoc/wiki
-> >
-> > There's a lot of other possibilities for validation tools using
-> > only the data we have today in the bindings. In addition, Frank
-> > Rowand covered some DT debug techniques that would benefit from
-> > the binding documentation being 100% reliably searchable.
-> >
-> > I found it useful to see a side-by-side view of a converted doc
-> > versus the original content, so here's a screenshot of eeprom.txt
-> > vs. eeprom.yaml:
-> > https://github.com/konsulko/dtgendoc/wiki#eepromtxt-vs-eepromyaml
-> >
-> > When we decide on a text markup format that is acceptable, then the
-> > next step is to convert all the bindings. That process would start
-> > with the complete set of generic bindings as they will be referenced
-> > by the actual device bindings.
-> 
-> Although there are a lot of files to convert, I think the job is manageable,
-> and can be done with conversion sprints at conferences and the like.
-> You don't have to be a kernel 'C' coder to do a conversion, so I think
-> a lot of non-traditional contributers can help out.  I'm already
-> thinking about what could be done at an Embedded Linux Conference.
-
-I think this would be great and completely agree that it allows a lot of
-people to get involved. If we can get to a tolerable schema in the next
-month then we should be ready for some f2f conversion hacking at ELCE.
-
-> One thing that would help would be a conversion guide.  It would have
-> things like: "if you see this type of language, put that in the
-> description, some examples are ..."
-
-Ok, that's very good. I'll add to the TODO list that we need to have
-this is our guidelines document. I think most of this will fall out
-initially in agreeing on our format/schema and then whatever we
-miss can be added as we do the large scale conversion of bindings.
-
-> I'll have more comments on individual patches.
-
-Thanks for reviewing!
+Ok, so that's a legacy artifact of several incarnations of these tags
+before I posted initially. I agree, it should be "string" or "value",
+probably the latter as you suggest.
 
 -Matt
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
