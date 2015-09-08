@@ -1,62 +1,77 @@
-From: Jagan Teki <jteki-oRp2ZoJdM/RWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH 3/3] arm64: dts: mt8173: Add nor flash node
-Date: Tue, 8 Sep 2015 17:23:32 +0530
-Message-ID: <CAD6G_RTR2r8ETMQ14uGosRn-85sssvVsFT4BjK9SkVSfMkG8Dw@mail.gmail.com>
-References: <1441705796-11365-1-git-send-email-bayi.cheng@mediatek.com>
-	<1441705796-11365-4-git-send-email-bayi.cheng@mediatek.com>
+From: Constantine Shulyupin <const-XSqIthwXjGBDPfheJLI6IQ@public.gmane.org>
+Subject: Re: [PATCH v3] Documentation: add Device tree bindings for hwmon/nct7802
+Date: Tue, 8 Sep 2015 15:07:30 +0300
+Message-ID: <CAE7jHC8tdQCj-qcToBd+y017WZwMMeODGmm4uinMX=nL4yrSKw@mail.gmail.com>
+References: <1441664902-32360-1-git-send-email-const@MakeLinux.com>
+	<20150908093812.GA19039@leverpostej>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1441705796-11365-4-git-send-email-bayi.cheng-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+In-Reply-To: <20150908093812.GA19039@leverpostej>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Bayi Cheng <bayi.cheng-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Cc: David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org" <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 8 September 2015 at 15:19, Bayi Cheng <bayi.cheng-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org> wrote:
-> Add Mediatek nor flash node
+>> Add add Device tree bindings for registers
+>> which are not covered by hwmon ABI and are required to
+>> configure specific HW.
 >
-> Signed-off-by: Bayi Cheng <bayi.cheng-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-> ---
->  arch/arm64/boot/dts/mediatek/mt8173.dtsi | 10 ++++++++++
->  1 file changed, 10 insertions(+)
+> This doesn't really answer my question [1] of why you need these.
 >
-> diff --git a/arch/arm64/boot/dts/mediatek/mt8173.dtsi b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
-> index d18ee42..a14f005 100644
-> --- a/arch/arm64/boot/dts/mediatek/mt8173.dtsi
-> +++ b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
-> @@ -365,6 +365,16 @@
->                         status = "disabled";
->                 };
+> We generally don't encode register values unless there's no other way to
+> describe the device. Why can we not describe the physical properties of
+> the device that make these values necessary?
 >
-> +               nor_flash: nor@1100d000 {
-
-Based on the comments from 1/3 - this notation needs to be change something like
-qspi0: quadspi@1100d000
-
-> +                       compatible = "mediatek,mt8173-nor";
-> +                       reg = <0 0x1100d000 0 0xe0>;
-> +                       clocks = <&pericfg CLK_PERI_SPI>,
-> +                                <&topckgen CLK_TOP_AXI_SEL>,
-> +                                <&topckgen CLK_TOP_UNIVPLL2_D8>,
-> +                                <&topckgen CLK_TOP_SPINFI_IFR_SEL>;
-> +                       clock-names = "spi_clk", "axi_clk", "mux_clk", "sf_clk";
-> +               };
-> +
->                 i2c3: i2c3@11010000 {
->                         compatible = "mediatek,mt8173-i2c";
->                         reg = <0 0x11010000 0 0x70>,
-> --
-> 1.8.1.1.dirty
+....
+> That said, as above I don't believe that these properties make sense
+> as they are. I think this needs properties that describe the HW, rather
+> than exposing the intricacies of the programming interface.
+....
+> Thanks,
+> Mark.
+>
+> [1] http://lkml.kernel.org/r/20150907123531.GA11540@leverpostej
 >
 
-thanks!
+Sources of the driver:
+
+Let's see to register MODE.
+Excerpt from datasheet:
+
+7.2.32 Mode Selection Register
+Location : Index 22h
+Type : Read/Write
+Power on default value : 7Fh
+BIT; NAME; FUNC.:
+0,1 RTD1_MD : 00=Closed , 01=Current mode , 10=Thermistor mode ,
+11=Voltage sense
+2,3 RTD2_MD : 00=Closed , 01=Current mode , 10=Thermistor mode ,
+11=Voltage sense
+4,5 RTD3_MD : 00=Closed , 01=Reserved , 10=Thermistor mode , 11=Voltage sense
+6 EnLTD : 1 indicates the LTD function enabled
+
+The register defines sensors types (Closed, Current mode, Thermistor
+mode, Voltage sense).
+Essential sensors will not work properly with wrong configuration.
+It is board or platform depended configuration. It should be
+configured on boot only.
+Usually hwmon drivers are managed with utility lm-sensors via
+Documentation/hwmon/sysfs-interface. By design sensor type should be
+defined by platform data and lm-sensors only displays it.
+
+Also MODE registers defines visibility temperature and input attributes:
+
+https://git.kernel.org/cgit/linux/kernel/git/mpe/linux-next.git/tree/drivers/hwmon/nct7802.c#n532
+
+https://git.kernel.org/cgit/linux/kernel/git/mpe/linux-next.git/tree/drivers/hwmon/nct7802.c#n641
+
+Mark, does above answers your question?
+What do you propose?
+
 -- 
-Jagan | openedev.
-
-
-
-Sent with MailTrack
+Thanks
+Constantine
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
