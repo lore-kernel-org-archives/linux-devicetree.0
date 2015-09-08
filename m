@@ -1,65 +1,51 @@
-From: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
-Subject: Re: [PATCH v2 1/9] ARM: dts: imx6dql-nitrogen6x: add touchscreen
- support
-Date: Tue, 8 Sep 2015 21:33:57 +0100
-Message-ID: <20150908203357.GD21084@n2100.arm.linux.org.uk>
-References: <1441645069-27263-1-git-send-email-gary.bisson@boundarydevices.com>
- <1441722886-22798-1-git-send-email-gary.bisson@boundarydevices.com>
- <1441722886-22798-2-git-send-email-gary.bisson@boundarydevices.com>
- <1441723760.3241.26.camel@pengutronix.de>
+From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH 2/3] ARM: dts: sun5i: Add sun5i-q8-common.dtsi
+Date: Tue, 8 Sep 2015 23:26:51 +0200
+Message-ID: <55EF529B.80401@redhat.com>
+References: <1441464953-26351-1-git-send-email-hdegoede@redhat.com>
+ <1441464953-26351-2-git-send-email-hdegoede@redhat.com>
+ <20150908143320.GB31584@lukather>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1441723760.3241.26.camel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+In-Reply-To: <20150908143320.GB31584@lukather>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: Gary Bisson <gary.bisson-Q5RJGjKts06CY9SHAMCTRUEOCMrvLtNR@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Sep 08, 2015 at 04:49:20PM +0200, Philipp Zabel wrote:
-> Am Dienstag, den 08.09.2015, 16:34 +0200 schrieb Gary Bisson:
-> > This patch adds the different touchscreens that can be connected using
-> > the displays available for this board.
-> > http://boundarydevices.com/product-category/displays/
-> > 
-> > Signed-off-by: Gary Bisson <gary.bisson-Q5RJGjKts06CY9SHAMCTRUEOCMrvLtNR@public.gmane.org>
-> > ---
-> >  arch/arm/boot/dts/imx6qdl-nitrogen6x.dtsi | 16 ++++++++++++++++
-> >  1 file changed, 16 insertions(+)
-> > 
-> > diff --git a/arch/arm/boot/dts/imx6qdl-nitrogen6x.dtsi b/arch/arm/boot/dts/imx6qdl-nitrogen6x.dtsi
-> > index ad16dce..24b667d 100644
-> > --- a/arch/arm/boot/dts/imx6qdl-nitrogen6x.dtsi
-> > +++ b/arch/arm/boot/dts/imx6qdl-nitrogen6x.dtsi
-> > @@ -284,6 +284,22 @@
-> >  	pinctrl-names = "default";
-> >  	pinctrl-0 = <&pinctrl_i2c3>;
-> >  	status = "okay";
-> > +
-> > +	egalax_ts@04 {
-> 
-> I'd prefer to use generic names for the nodes, such as "touchscreen@04",
-> and "touchscreen@38" below.
+Hi,
 
-ePAPR actually says that the node name should be the general class of
-the device, and recommending that it should be generic:
+On 09/08/2015 04:33 PM, Maxime Ripard wrote:
+> On Sat, Sep 05, 2015 at 04:55:52PM +0200, Hans de Goede wrote:
+>> This is the sun5i / a13 version of sun8i-q8-common.dtsi for use in dts
+>> files for a13 q8 based tablets. Compared to sun8i this uses uart1 for the
+>> serial console, and PG0 for card-detect for mmc0.
+>>
+>> This also adds pmic and otg support, which both use the same config on
+>> all known q8 a13 devices. This is not present in sun5i-q8-common.dtsi
+>> because pmic / otg support for sun8i has not yet been merged.
+>>
+>> Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+>
+> Are we going to have any user but the one you posted in the patch 3
+> planned?
 
-2.2.1.1 Node Name Requirements
-...
-The node-name shall start with a lower or uppercase character and should
-describe the general class of device.
+Depends on what I can get my hands on / what is in the post atm.
 
-2.2.2 Generic Names Recommendation
-The name of a node should be somewhat generic, reflecting the function of
-the device and not its precise programming model. If appropriate, the name
-should be one of the following choices: ...
+One difference in fex files of different 18 variants is how the usb wifi is
+powered, either via a gpio or via ldo3. Also there are differences in which
+accelerometer is used, so eventually I expect there to be several users
+of this dtsi.
 
-It would be nice if more bindings followed this.
+I've bought several second hand q8 formfactor tablets on the internet lately,
+when they arrive and I get around to work on them a second user may show
+up soon.
 
--- 
-FTTC broadband for 0.8mile line: currently at 9.6Mbps down 400kbps up
-according to speedtest.net.
+Regards,
+
+Hans
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
