@@ -1,56 +1,42 @@
-From: Bayi Cheng <bayi.cheng@mediatek.com>
-Subject: [PATCH 1/3] doc: dt: add documentation for Mediatek spi-nor controller
-Date: Tue, 8 Sep 2015 17:49:54 +0800
-Message-ID: <1441705796-11365-2-git-send-email-bayi.cheng@mediatek.com>
-References: <1441705796-11365-1-git-send-email-bayi.cheng@mediatek.com>
+From: Bayi Cheng <bayi.cheng-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Subject: [PATCH 0/3] Mediatek SPI-NOR flash driver
+Date: Tue, 8 Sep 2015 17:49:53 +0800
+Message-ID: <1441705796-11365-1-git-send-email-bayi.cheng@mediatek.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1441705796-11365-1-git-send-email-bayi.cheng@mediatek.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: David Woodhouse <dwmw2@infradead.org>, Brian Norris <computersforpeace@gmail.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Matthias Brugger <matthias.bgg@gmail.com>, Daniel Kurtz <djkurtz@chromium.org>, Sascha Hauer <s.hauer@pengutronix.de>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org, Bayi Cheng <bayi.cheng@mediatek.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Add device tree binding documentation for serial flash with
-Mediatek serial flash controller
+The patch supports MediaTek's NOR flash controller.
+The NOR flash controller is specifically for spi nor flash,
+and it is more stable and faster than SPI bus, the MTK
+NOR controller not only support single mode but also support
+dual mode and quad mode.
 
-Signed-off-by: Bayi Cheng <bayi.cheng@mediatek.com>
----
- Documentation/devicetree/bindings/mtd/mtk_nor.txt | 25 +++++++++++++++++++++++
- 1 file changed, 25 insertions(+)
+This series is based on v4.2-rc1 and l2-mtd.git
+(git://git.infradead.org/l2-mtd.git)
+
+Bayi Cheng (3):
+  doc: dt: add documentation for Mediatek spi-nor controller
+  mtd: mtk-nor: mtk serial flash controller driver
+  arm64: dts: mt8173: Add nor flash node
+
+ Documentation/devicetree/bindings/mtd/mtk_nor.txt |  25 +
+ arch/arm64/boot/dts/mediatek/mt8173.dtsi          |  10 +
+ drivers/mtd/spi-nor/Kconfig                       |   7 +
+ drivers/mtd/spi-nor/Makefile                      |   1 +
+ drivers/mtd/spi-nor/mtk_nor.c                     | 533 ++++++++++++++++++++++
+ 5 files changed, 576 insertions(+)
  create mode 100644 Documentation/devicetree/bindings/mtd/mtk_nor.txt
+ create mode 100644 drivers/mtd/spi-nor/mtk_nor.c
 
-diff --git a/Documentation/devicetree/bindings/mtd/mtk_nor.txt b/Documentation/devicetree/bindings/mtd/mtk_nor.txt
-new file mode 100644
-index 0000000..0eca0cd
---- /dev/null
-+++ b/Documentation/devicetree/bindings/mtd/mtk_nor.txt
-@@ -0,0 +1,25 @@
-+* MTD SPI nor driver for MTK MT81xx (and similar) serial flash controller
-+
-+MTK MT81xx serial flash controller is designed for serial Flash device.
-+It supports one Flash device with signal mode, dual mode and quad mode.
-+
-+Required properties:
-+- compatible: should be "mediatek,mt8173-nor";
-+- reg: physical base address and length of the controller's register
-+- clocks: spi nor source clock
-+- clock-names: "spi_clk", "axi_clk", "mux_clk", "sf_clk"
-+
-+See Documentation/devicetree/bindings/clock/clock-bindings.txt
-+and Documentation/mtd/spi-nor.txt for details.
-+
-+Example:
-+nor_flash: nor@1100d000 {
-+	compatible = "mediatek,mt8173-nor";
-+	reg = <0 0x1100d000 0 0xe0>;
-+	clocks = <&pericfg CLK_PERI_SPI>,
-+		 <&topckgen CLK_TOP_AXI_SEL>,
-+		 <&topckgen CLK_TOP_UNIVPLL2_D8>,
-+		 <&topckgen CLK_TOP_SPINFI_IFR_SEL>;
-+	clock-names = "spi_clk", "axi_clk", "mux_clk", "sf_clk";
-+};
-+
--- 
+--
 1.8.1.1.dirty
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
