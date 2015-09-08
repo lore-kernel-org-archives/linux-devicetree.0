@@ -1,28 +1,19 @@
-From: Alonso Adrian <aalonso@freescale.com>
-Subject: Re: [PATCH v2 6/8] pinctrl: freescale: imx: add shared input select
- reg support
-Date: Tue, 8 Sep 2015 16:13:45 +0000
-Message-ID: <BN3PR03MB1509E06698F166EFE98FE0D2A8530@BN3PR03MB1509.namprd03.prod.outlook.com>
+From: Alonso Adrian <aalonso-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: Re: [PATCH v2 8/8] pinctrl: freescale: imx: imx7d iomuxc-lpsr
+ devicetree bindings
+Date: Tue, 8 Sep 2015 16:15:58 +0000
+Message-ID: <BN3PR03MB1509B275680CB6F23ED8D25CA8530@BN3PR03MB1509.namprd03.prod.outlook.com>
 References: <1441147753-13239-1-git-send-email-aalonso@freescale.com>
- <1441147753-13239-6-git-send-email-aalonso@freescale.com>,
- <20150907021257.GF30746@tiger>
+ <1441147753-13239-8-git-send-email-aalonso@freescale.com>,<20150907024212.GG30746@tiger>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20150907021257.GF30746@tiger>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7BIT
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20150907024212.GG30746@tiger>
 Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Shawn Guo <shawnguo@kernel.org>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Li Frank <Frank.Li@freescale.com>, Nitin Garg <nitin.garg@freescale.com>, "linus.walleij@linaro.org" <linus.walleij@linaro.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "lznuaa@gmail.com" <lznuaa@gmail.com>, "shawn.guo@linaro.org" <shawn.guo@linaro.org>, Huang Anson <Anson.Huang@freescale.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Yibin Gong <yibin.gong@freescale.com>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "lznuaa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <lznuaa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Huang Anson <Anson.Huang-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Li Frank <Frank.Li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Yibin Gong <yibin.gong-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Nitin Garg <nitin.garg-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
 Hi Shawn,
@@ -32,125 +23,101 @@ See comments below.
 Regards
 Adrian
 ________________________________________
-From: Shawn Guo <shawnguo@kernel.org>
-Sent: Sunday, September 6, 2015 9:12 PM
+From: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Sent: Sunday, September 6, 2015 9:42 PM
 To: Alonso Lazcano Adrian-B38018
-Cc: linux-arm-kernel@lists.infradead.org; shawn.guo@linaro.org; linus.walleij@linaro.org; lznuaa@gmail.com; linux-gpio@vger.kernel.org; devicetree@vger.kernel.org; robh+dt@kernel.org; Huang Yongcai-B20788; Li Frank-B20596; Gong Yibin-B38343; Garg Nitin-B37173
-Subject: Re: [PATCH v2 6/8] pinctrl: freescale: imx: add shared input select reg support
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org; shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org; linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org; lznuaa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org; linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org; Huang Yongcai-B20788; Li Frank-B20596; Gong Yibin-B38343; Garg Nitin-B37173
+Subject: Re: [PATCH v2 8/8] pinctrl: freescale: imx: imx7d iomuxc-lpsr devicetree bindings
 
-On Tue, Sep 01, 2015 at 05:49:11PM -0500, Adrian Alonso wrote:
-> - Add shared input select register support
-> - imx7d has two iomux controllers iomuxc and iomuxc-lpsr
->   which share select_input register for daisy chain settings
+On Tue, Sep 01, 2015 at 05:49:13PM -0500, Adrian Alonso wrote:
+> Add iomuxc-lpsr devicetree bindings documentation
+> Provide documentation context as well an example on
+> pheriperals that could use pad from either iomuxc controller
+> supported by iMX7D SoC
 >
-> Signed-off-by: Adrian Alonso <aalonso@freescale.com>
+> Signed-off-by: Adrian Alonso <aalonso-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 > ---
-> Changes for V2: Resend
+> Changes for V2: New patch on imx7d iomuxc-lpsr patch series
 >
->  drivers/pinctrl/freescale/pinctrl-imx.c | 28 +++++++++++++++++++++++++++-
->  drivers/pinctrl/freescale/pinctrl-imx.h |  1 +
->  2 files changed, 28 insertions(+), 1 deletion(-)
+>  .../bindings/pinctrl/fsl,imx7d-pinctrl.txt         | 43 ++++++++++++++++++++++
+>  1 file changed, 43 insertions(+)
 >
-> diff --git a/drivers/pinctrl/freescale/pinctrl-imx.c b/drivers/pinctrl/freescale/pinctrl-imx.c
-> index 9f019be..597319d 100644
-> --- a/drivers/pinctrl/freescale/pinctrl-imx.c
-> +++ b/drivers/pinctrl/freescale/pinctrl-imx.c
-> @@ -18,6 +18,7 @@
->  #include <linux/module.h>
->  #include <linux/of.h>
->  #include <linux/of_device.h>
-> +#include <linux/of_address.h>
->  #include <linux/pinctrl/machine.h>
->  #include <linux/pinctrl/pinconf.h>
->  #include <linux/pinctrl/pinctrl.h>
-> @@ -39,6 +40,7 @@ struct imx_pinctrl {
->       struct device *dev;
->       struct pinctrl_dev *pctl;
->       void __iomem *base;
-> +     void __iomem *input_sel_base;
->       const struct imx_pinctrl_soc_info *info;
->  };
+> diff --git a/Documentation/devicetree/bindings/pinctrl/fsl,imx7d-pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/fsl,imx7d-pinctrl.txt
+> index 8bbf25d..c7310fc 100644
+> --- a/Documentation/devicetree/bindings/pinctrl/fsl,imx7d-pinctrl.txt
+> +++ b/Documentation/devicetree/bindings/pinctrl/fsl,imx7d-pinctrl.txt
+> @@ -1,10 +1,19 @@
+>  * Freescale i.MX7 Dual IOMUX Controller
 >
-> @@ -254,7 +256,12 @@ static int imx_pmx_set(struct pinctrl_dev *pctldev, unsigned selector,
->                        * Regular select input register can never be at offset
->                        * 0, and we only print register value for regular case.
->                        */
-> -                     writel(pin->input_val, ipctl->base + pin->input_reg);
-> +                     if (info->flags & SHARE_INPUT_SELECT_REG)
+> +iMX7D supports two iomuxc controllers, fsl,imx7d-iomuxc controller is similar
+> +as previous iMX SoC generation and fsl,imx7d-iomuxc-lpsr which provides low
+> +power state rentetion capabilities on gpios that are part of iomuxc-lpsr
+> +(GPIO1_IO7..GPIO1_IO0).
 
-This can be replaced by a NULL checking on input_sel_base.
-[Adrian] Yes, but I will prefer to keep this flag check instead to keep code consisten on how to handle
-special cases, that way is easier to spot when input select register is shared.
+I think the speciality of the select_input registers should be
+mentioned too.
+[Adrian] Agree will add notes for shared select input.
 
-> +                             writel(pin->input_val, ipctl->input_sel_base +
-> +                                             pin->input_reg);
-> +                     else
-> +                             writel(pin->input_val, ipctl->base +
-> +                                             pin->input_reg);
->                       dev_dbg(ipctl->dev,
->                               "==>select_input: offset 0x%x val 0x%x\n",
->                               pin->input_reg, pin->input_val);
-> @@ -690,6 +697,8 @@ static int imx_pinctrl_probe_dt(struct platform_device *pdev,
->  int imx_pinctrl_probe(struct platform_device *pdev,
->                     struct imx_pinctrl_soc_info *info)
->  {
-> +     struct device_node *dev_np = pdev->dev.of_node;
-> +     struct device_node *np;
->       struct imx_pinctrl *ipctl;
->       struct resource *res;
->       int ret;
-> @@ -715,6 +724,23 @@ int imx_pinctrl_probe(struct platform_device *pdev,
->       if (IS_ERR(ipctl->base))
->               return PTR_ERR(ipctl->base);
+> +
+> +Pheriparials using pads from iomuxc-lpsr support low state retention power
+> +state, under LPSR mode GPIO's state of pads are retain.
+> +
+>  Please refer to fsl,imx-pinctrl.txt in this directory for common binding part
+>  and usage.
 >
-> +     if (info->flags & SHARE_INPUT_SELECT_REG) {
-> +             np = of_get_child_by_name(dev_np->parent, "iomuxc");
+>  Required properties:
+>  - compatible: "fsl,imx7d-iomuxc"
+> +- compatible: "fsl-imx7d-iomuxc-lpsr"
 
-This doesn't scale well.  First of all, we do not generally recommend
-searching node by name, because most of time node name is not enforced
-to be stable, and some nodes are named quite arbitrarily.  Secondly, we
-do not know if the hardware people will move select_input registers to
-somewhere else than IOMUXC in the future.
-
-Hence, I suggest you have a device tree phandle pointing the device
-where select_input registers are located.  In that case, flag
-SHARE_INPUT_SELECT_REG can even be saved completely.
-[Adrian] Agree, let me rework this :)
-> +             if (np) {
-> +                     ipctl->input_sel_base = of_iomap(np, 0);
-> +                     if (IS_ERR(ipctl->input_sel_base)) {
-> +                             of_node_put(np);
-> +                             dev_err(&pdev->dev,
-> +                                    "iomuxc base address not found\n");
-> +                             return PTR_ERR(ipctl->input_sel_base);
-> +                     }
-> +             } else {
-> +                     dev_err(&pdev->dev, "iomuxc device node not foud\n");
-
-s/foud/found
-
+s/fsl-imx7d-iomuxc-lpsr/fsl,imx7d-iomuxc-lpsr
+[Adrian] Will fix this, thanks.
 Shawn
 
-> +                     return -EINVAL;
-> +             }
-> +             of_node_put(np);
-> +     }
+>  - fsl,pins: each entry consists of 6 integers and represents the mux and config
+>    setting for one pin.  The first 5 integers <mux_reg conf_reg input_reg mux_val
+>    input_val> are specified using a PIN_FUNC_ID macro, which can be found in
+> @@ -25,3 +34,37 @@ PAD_CTL_DSE_X1                  (0 << 0)
+>  PAD_CTL_DSE_X2                  (1 << 0)
+>  PAD_CTL_DSE_X3                  (2 << 0)
+>  PAD_CTL_DSE_X4                  (3 << 0)
 > +
->       imx_pinctrl_desc.name = dev_name(&pdev->dev);
->       imx_pinctrl_desc.pins = info->pins;
->       imx_pinctrl_desc.npins = info->npins;
-> diff --git a/drivers/pinctrl/freescale/pinctrl-imx.h b/drivers/pinctrl/freescale/pinctrl-imx.h
-> index 67c07c2..d11a827 100644
-> --- a/drivers/pinctrl/freescale/pinctrl-imx.h
-> +++ b/drivers/pinctrl/freescale/pinctrl-imx.h
-> @@ -86,6 +86,7 @@ struct imx_pinctrl_soc_info {
->
->  #define SHARE_MUX_CONF_REG   0x1
->  #define ZERO_OFFSET_VALID    0x2
-> +#define SHARE_INPUT_SELECT_REG       0x4
->
->  #define NO_MUX               0x0
->  #define NO_PAD               0x0
+> +Examples:
+> +While iomuxc-lpsr is intended to be used by dedicated peripherals to take
+> +advantages of LPSR power mode, is also possible that an IP to use pads from
+> +any of the iomux controllers. For example the I2C1 IP can use SCL pad from
+> +iomuxc-lpsr controller and SDA pad from iomuxc controller as:
+> +
+> +i2c1: i2c@30a20000 {
+> +     pinctrl-names = "default";
+> +     pinctrl-0 = <&pinctrl_i2c1_1 &pinctrl_i2c1_2>;
+> +     status = "okay";
+> +};
+> +
+> +iomuxc-lpsr@302c0000 {
+> +     compatible = "fsl,imx7d-iomuxc-lpsr";
+> +     reg = <0x302c0000 0x10000>;
+> +
+> +     pinctrl_i2c1_1: i2c1grp-1 {
+> +             fsl,pins = <
+> +                     MX7D_PAD_GPIO1_IO04__I2C1_SCL 0x4000007f
+> +             >;
+> +     };
+> +};
+> +
+> +iomuxc@30330000 {
+> +     compatible = "fsl,imx7d-iomuxc";
+> +     reg = <0x30330000 0x10000>;
+> +
+> +     pinctrl_i2c1_2: i2c1grp-2 {
+> +             fsl,pins = <
+> +                     MX7D_PAD_I2C1_SCL__I2C1_SCL 0x4000007f
+> +             >;
+> +     };
+> +};
 > --
 > 2.1.4
 >
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
