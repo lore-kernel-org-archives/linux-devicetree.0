@@ -1,88 +1,66 @@
-From: Frank Rowand <frowand.list@gmail.com>
-Subject: Re: [PATCH] of_pci_irq: Silence bogus "of_irq_parse_pci() failed
- ..." messages.
-Date: Mon, 07 Sep 2015 16:44:58 -0700
-Message-ID: <55EE217A.5090301@gmail.com>
-References: <1441393926-23225-1-git-send-email-ddaney.cavm@gmail.com> <55EA41E3.5010103@gmail.com> <CAL_JsqK0uW4F7HAcUMSQ-2wCvp_i3a5MTxsyW3XerHAxBrW=SQ@mail.gmail.com> <55ECF37D.7050401@gmail.com> <55ED099B.2000009@gmail.com>
-Reply-To: frowand.list@gmail.com
+From: Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 4/4] ARM: dts: imx: add Boundary Devices Nitrogen6_Lite board
+Date: Mon, 7 Sep 2015 22:08:14 -0300
+Message-ID: <CAOMZO5Bb5TwtV4=C4jtU9KpuwtYSdYcSCgQVMMOY0FMf7hZx8w@mail.gmail.com>
+References: <1441645069-27263-1-git-send-email-gary.bisson@boundarydevices.com>
+	<1441645069-27263-5-git-send-email-gary.bisson@boundarydevices.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <55ED099B.2000009@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: frowand.list@gmail.com
-Cc: Rob Herring <robherring2@gmail.com>, David Daney <ddaney.cavm@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Grant Likely <grant.likely@linaro.org>, David Daney <david.daney@cavium.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1441645069-27263-5-git-send-email-gary.bisson-Q5RJGjKts06CY9SHAMCTRUEOCMrvLtNR@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Gary Bisson <gary.bisson-Q5RJGjKts06CY9SHAMCTRUEOCMrvLtNR@public.gmane.org>
+Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Fabio Estevam <fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Troy Kisky <troy.kisky-Q5RJGjKts06CY9SHAMCTRUEOCMrvLtNR@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 9/6/2015 8:50 PM, Frank Rowand wrote:
-> On 9/6/2015 7:16 PM, Frank Rowand wrote:
->> On 9/6/2015 1:46 PM, Rob Herring wrote:
->>> On Fri, Sep 4, 2015 at 8:14 PM, Frank Rowand <frowand.list@gmail.com> wrote:
->>>> On 9/4/2015 12:12 PM, David Daney wrote:
->>>>> From: David Daney <david.daney@cavium.com>
->>>>>
->>>>> It is perfectly legitimate for a PCI device to have an
->>>>> PCI_INTERRUPT_PIN value of zero.  This happens if the device doesn't
->>>>> use interrupts, or on PCIe devices, where only MSI/MSI-X are
->>>>> supported.
->>>>>
->>>>> Silence the annoying "of_irq_parse_pci() failed with rc=-19" error
->>>>> messages by making them conditional on !-ENODEV (which can only be
->>>>> produced in the PCI_INTERRUPT_PIN == 0 case).
->>>>>
->>>>> Signed-off-by: David Daney <david.daney@cavium.com>
->>>>> ---
->>>>>  drivers/of/of_pci_irq.c | 4 +++-
->>>>>  1 file changed, 3 insertions(+), 1 deletion(-)
->>>>>
->>>>> diff --git a/drivers/of/of_pci_irq.c b/drivers/of/of_pci_irq.c
->>>>> index 1710d9d..33d242a 100644
->>>>> --- a/drivers/of/of_pci_irq.c
->>>>> +++ b/drivers/of/of_pci_irq.c
->>>>> @@ -106,7 +106,9 @@ int of_irq_parse_and_map_pci(const struct pci_dev *dev, u8 slot, u8 pin)
->>>>>
->>>>>       ret = of_irq_parse_pci(dev, &oirq);
->>>>>       if (ret) {
->>>>> -             dev_err(&dev->dev, "of_irq_parse_pci() failed with rc=%d\n", ret);
->>>>> +             if (ret != -ENODEV)
->>>>> +                     dev_err(&dev->dev,
->>>>> +                             "of_irq_parse_pci() failed with rc=%d\n", ret);
->>>>>               return 0; /* Proper return code 0 == NO_IRQ */
->>>>>       }
->>>>>
->>>>>
->>>>
->>>> It is not safe to assume that the functions that of_irq_parse_pci() calls
->>>> will never be modified to return -ENODEV, thus resulting in of_irq_parse_pci()
->>>> returning -ENODEV for a reason other than PCI_INTERRUPT_PIN == 0.
->>>
->>> Yes, but we're talking about a print statement.
->>>
->>>>
->>>> A more robust solution would be something like:
->>
->> < snip my bad solution >
->>
->>>> I'm not sure I like my solution, there might be a better way.
->>>
->>> I don't like it. That's way too complex for just silencing an
->>> erroneous error message.
->>>
->>> Perhaps just move the error message into of_irq_parse_pci and then you
->>> can control the print more easily. Or just change to dev_dbg would be
->>> okay by me.
->>
->> I knew I was making it way too hard.  Yes, just move the error message
->> to of_irq_parse_pci(), where the "/* No pin, exit */" test occurs.
-> 
-> And this time I replied too quickly, not really thinking through my comment.
-> There are several error return points in of_irq_parse_pci(), so moving the
-> error message into of_irq_parse_pci() is not the answer.
+Hi Gary,
 
-                                        is not the answer unless of_irq_parse_pci()
-  is changed over to the single point of return style.
+On Mon, Sep 7, 2015 at 1:57 PM, Gary Bisson
+<gary.bisson-Q5RJGjKts06CY9SHAMCTRUEOCMrvLtNR@public.gmane.org> wrote:
 
-I realized I should have typed the whole thought...
+> --- /dev/null
+> +++ b/arch/arm/boot/dts/imx6dl-nit6xlite.dts
+> @@ -0,0 +1,21 @@
+> +/*
+> + * Copyright 2015 Boundary Devices, Inc.
+> + * Copyright 2012 Freescale Semiconductor, Inc.
+> + * Copyright 2011 Linaro Ltd.
+> + *
+> + * The code contained herein is licensed under the GNU General Public
+> + * License. You may obtain a copy of the GNU General Public License
+> + * Version 2 or later at the following locations:
 
--Frank
+Could you do this dual license GPLv2/X11?
+
+Take a look at arch/arm/boot/dts/imx6qdl-cubox-i.dtsi for a reference.
+
+> + *
+> + * http://www.opensource.org/licenses/gpl-license.html
+> + * http://www.gnu.org/copyleft/gpl.html
+> + */
+> +
+> +/dts-v1/;
+> +#include "imx6dl.dtsi"
+> +#include "imx6qdl-nit6xlite.dtsi"
+> +
+> +/ {
+> +       model = "Freescale i.MX6 Solo Nitrogen6_Lite Board";
+> +       compatible = "fsl,imx6dl-nit6xlite", "fsl,imx6dl";
+
+As this board is manufactured by Boundary Devices and not by Freescale
+shouldn't this be:
+
+       model = "Boundary Devices i.MX6 Solo Nitrogen6_Lite Board";
+       compatible = "boundarydevices,imx6dl-nit6xlite", "fsl,imx6dl";
+
+Then you can add the symbol for Boundary Devices at
+Documentation/devicetree/bindings/vendor-prefixes.txt in a separate
+patch.
+
+Regards,
+
+Fabio Estevam
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
