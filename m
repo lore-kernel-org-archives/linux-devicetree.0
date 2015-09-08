@@ -1,597 +1,105 @@
-From: Bayi Cheng <bayi.cheng-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Subject: [PATCH 2/3] mtd: mtk-nor: mtk serial flash controller driver
-Date: Tue, 8 Sep 2015 17:49:55 +0800
-Message-ID: <1441705796-11365-3-git-send-email-bayi.cheng@mediatek.com>
-References: <1441705796-11365-1-git-send-email-bayi.cheng@mediatek.com>
+From: Vaibhav Hiremath <vaibhav.hiremath@linaro.org>
+Subject: Re: [PATCH-v2 4/7] mmc: sdhci-pxav3: Add pinctl setting according to
+ bus clock
+Date: Tue, 8 Sep 2015 15:24:27 +0530
+Message-ID: <55EEB053.4080109@linaro.org>
+References: <1441624721-15612-1-git-send-email-vaibhav.hiremath@linaro.org>
+ <1441624721-15612-5-git-send-email-vaibhav.hiremath@linaro.org>
+ <20150908145439.046dfe0d@xhacker>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1441705796-11365-1-git-send-email-bayi.cheng-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Bayi Cheng <bayi.cheng-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <20150908145439.046dfe0d@xhacker>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Jisheng Zhang <jszhang@marvell.com>
+Cc: linux-mmc@vger.kernel.org, devicetree@vger.kernel.org, ulf.hansson@linaro.org, linux-kernel@vger.kernel.org, robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org, Kevin Liu <kliu5@marvell.com>
 List-Id: devicetree@vger.kernel.org
 
-add spi nor flash driver for mediatek controller
 
-Signed-off-by: Bayi Cheng <bayi.cheng-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
----
- drivers/mtd/spi-nor/Kconfig   |   7 +
- drivers/mtd/spi-nor/Makefile  |   1 +
- drivers/mtd/spi-nor/mtk_nor.c | 533 ++++++++++++++++++++++++++++++++++++++++++
- 3 files changed, 541 insertions(+)
- create mode 100644 drivers/mtd/spi-nor/mtk_nor.c
 
-diff --git a/drivers/mtd/spi-nor/Kconfig b/drivers/mtd/spi-nor/Kconfig
-index 89bf4c1..f433890 100644
---- a/drivers/mtd/spi-nor/Kconfig
-+++ b/drivers/mtd/spi-nor/Kconfig
-@@ -7,6 +7,13 @@ menuconfig MTD_SPI_NOR
- 
- if MTD_SPI_NOR
- 
-+config MTD_MT81xx_NOR
-+	tristate "Support SPI flash Controller MTD_MT81xx_NOR"
-+	help
-+	  This enables access to SPI Nor flash, using MTD_MT81XX_NOR controller.
-+	  This controller does nor support generic SPI BUS, It only supports
-+	  SPI NOR Flash.
-+
- config MTD_SPI_NOR_USE_4K_SECTORS
- 	bool "Use small 4096 B erase sectors"
- 	default y
-diff --git a/drivers/mtd/spi-nor/Makefile b/drivers/mtd/spi-nor/Makefile
-index e53333e..2f4fe62 100644
---- a/drivers/mtd/spi-nor/Makefile
-+++ b/drivers/mtd/spi-nor/Makefile
-@@ -1,3 +1,4 @@
-+obj-$(CONFIG_MTD_MT81xx_NOR)	+= mtk_nor.o
- obj-$(CONFIG_MTD_SPI_NOR)	+= spi-nor.o
- obj-$(CONFIG_SPI_FSL_QUADSPI)	+= fsl-quadspi.o
- obj-$(CONFIG_SPI_NXP_SPIFI)	+= nxp-spifi.o
-diff --git a/drivers/mtd/spi-nor/mtk_nor.c b/drivers/mtd/spi-nor/mtk_nor.c
-new file mode 100644
-index 0000000..e675fb6
---- /dev/null
-+++ b/drivers/mtd/spi-nor/mtk_nor.c
-@@ -0,0 +1,533 @@
-+/*
-+ * Copyright (c) 2015 MediaTek Inc.
-+ * Author: Bayi.Cheng <bayi.cheng-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 as
-+ * published by the Free Software Foundation.
-+ *
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
-+ */
-+
-+#include <linux/clk.h>
-+#include <linux/delay.h>
-+#include <linux/device.h>
-+#include <linux/init.h>
-+#include <linux/io.h>
-+#include <linux/iopoll.h>
-+#include <linux/ioport.h>
-+#include <linux/math64.h>
-+#include <linux/module.h>
-+#include <linux/mtd/mtd.h>
-+#include <linux/mutex.h>
-+#include <linux/of.h>
-+#include <linux/of_device.h>
-+#include <linux/of_gpio.h>
-+#include <linux/pinctrl/consumer.h>
-+#include <linux/platform_device.h>
-+#include <linux/slab.h>
-+#include <linux/mtd/mtd.h>
-+#include <linux/mtd/partitions.h>
-+#include <linux/mtd/spi-nor.h>
-+
-+#define MTK_NOR_CMD_REG			0x00
-+#define MTK_NOR_CNT_REG			0x04
-+#define MTK_NOR_RDSR_REG		0x08
-+#define MTK_NOR_RDATA_REG		0x0c
-+#define MTK_NOR_RADR0_REG		0x10
-+#define MTK_NOR_RADR1_REG		0x14
-+#define MTK_NOR_RADR2_REG		0x18
-+#define MTK_NOR_WDATA_REG		0x1c
-+#define MTK_NOR_PRGDATA0_REG		0x20
-+#define MTK_NOR_PRGDATA1_REG		0x24
-+#define MTK_NOR_PRGDATA2_REG		0x28
-+#define MTK_NOR_PRGDATA3_REG		0x2c
-+#define MTK_NOR_PRGDATA4_REG		0x30
-+#define MTK_NOR_PRGDATA5_REG		0x34
-+#define MTK_NOR_SHREG0_REG		0x38
-+#define MTK_NOR_SHREG1_REG		0x3c
-+#define MTK_NOR_SHREG2_REG		0x40
-+#define MTK_NOR_SHREG3_REG		0x44
-+#define MTK_NOR_SHREG4_REG		0x48
-+#define MTK_NOR_SHREG5_REG		0x4c
-+#define MTK_NOR_SHREG6_REG		0x50
-+#define MTK_NOR_SHREG7_REG		0x54
-+#define MTK_NOR_SHREG8_REG		0x58
-+#define MTK_NOR_SHREG9_REG		0x5c
-+#define MTK_NOR_FLHCFG_REG		0x84
-+#define MTK_NOR_PP_DATA_REG		0x98
-+#define MTK_NOR_PREBUF_STUS_REG		0x9c
-+#define MTK_NOR_INTRSTUS_REG		0xa8
-+#define MTK_NOR_INTREN_REG		0xac
-+#define MTK_NOR_TIME_REG		0x94
-+#define MTK_NOR_CHKSUM_CTL_REG		0xb8
-+#define MTK_NOR_CHKSUM_REG		0xbc
-+#define MTK_NOR_CMD2_REG		0xc0
-+#define MTK_NOR_WRPROT_REG		0xc4
-+#define MTK_NOR_RADR3_REG		0xc8
-+#define MTK_NOR_DUAL_REG		0xcc
-+#define MTK_NOR_DELSEL0_REG		0xa0
-+#define MTK_NOR_DELSEL1_REG		0xa4
-+#define MTK_NOR_DELSEL2_REG		0xd0
-+#define MTK_NOR_DELSEL3_REG		0xd4
-+#define MTK_NOR_DELSEL4_REG		0xd8
-+#define MTK_NOR_CFG1_REG		0x60
-+#define MTK_NOR_CFG2_REG		0x64
-+#define MTK_NOR_CFG3_REG		0x68
-+#define MTK_NOR_STATUS0_REG		0x70
-+#define MTK_NOR_STATUS1_REG		0x74
-+#define MTK_NOR_STATUS2_REG		0x78
-+#define MTK_NOR_STATUS3_REG		0x7c
-+/* commands for mtk nor controller */
-+#define MTK_NOR_READ_CMD		0x0
-+#define MTK_NOR_RDSR_CMD		0x2
-+#define MTK_NOR_PRG_CMD			0x4
-+#define MTK_NOR_WR_CMD			0x10
-+#define MTK_NOR_WRSR_CMD		0x20
-+#define MTK_NOR_PIO_READ_CMD		0x81
-+#define MTK_NOR_WR_BUF_ENABLE		0x1
-+#define MTK_NOR_WR_BUF_DISABLE		0x0
-+#define MTK_NOR_ENABLE_SF_CMD		0x30
-+#define MTK_NOR_DUAD_ADDR_EN		0x8
-+#define MTK_NOR_QUAD_READ_EN		0x4
-+#define MTK_NOR_DUAL_ADDR_EN		0x2
-+#define MTK_NOR_DUAL_READ_EN		0x1
-+#define MTK_NOR_DUAL_DISABLE		0x0
-+#define MTK_NOR_FAST_READ		0x1
-+
-+#define SFLASH_WRBUF_SIZE		128
-+#define MAX_FLASHCOUNT			1
-+#define SFLASHHWNAME_LEN		12
-+#define SFLASH_MAX_DMA_SIZE		(1024 * 8)
-+
-+#define LoWord(d)		((u16)(d & 0x0000ffffL))
-+#define HiWord(d)		((u16)((d >> 16) & 0x0000ffffL))
-+#define LoByte(w)		((u8)(w & 0x00ff))
-+#define HiByte(w)		((u8)(((w) >> 8) & 0x00ff))
-+#define LOCAL_BUF_SIZE		(SFLASH_MAX_DMA_SIZE * 20)
-+
-+struct mt8173_nor {
-+	struct mtd_info mtd;
-+	struct spi_nor nor;
-+	struct device *dev;
-+	void __iomem *base;	/* nor flash base address */
-+	struct clk *spi_clk;
-+	struct clk *src_axi_clk;
-+	struct clk *sf_mux_clk;
-+	struct clk *nor_clk;
-+};
-+
-+static void mt8173_nor_set_read_mode(struct mt8173_nor *mt8173_nor)
-+{
-+	struct spi_nor *nor = &mt8173_nor->nor;
-+
-+	switch (nor->flash_read) {
-+	case SPI_NOR_FAST:
-+		writeb(SPINOR_OP_READ_FAST, mt8173_nor->base +
-+		       MTK_NOR_PRGDATA3_REG);
-+		writeb(MTK_NOR_FAST_READ, mt8173_nor->base +
-+		       MTK_NOR_CFG1_REG);
-+		break;
-+	case SPI_NOR_DUAL:
-+		writeb(SPINOR_OP_READ_1_1_2, mt8173_nor->base +
-+		       MTK_NOR_PRGDATA3_REG);
-+		writeb(MTK_NOR_DUAL_READ_EN, mt8173_nor->base +
-+		       MTK_NOR_DUAL_REG);
-+		break;
-+	case SPI_NOR_QUAD:
-+		writeb(SPINOR_OP_READ_1_1_4, mt8173_nor->base +
-+		       MTK_NOR_PRGDATA3_REG);
-+		writeb(MTK_NOR_QUAD_READ_EN, mt8173_nor->base +
-+		       MTK_NOR_DUAL_REG);
-+		break;
-+	default:
-+		writeb(SPINOR_OP_READ, mt8173_nor->base +
-+		       MTK_NOR_PRGDATA3_REG);
-+		writeb(MTK_NOR_DUAL_DISABLE, mt8173_nor->base +
-+		       MTK_NOR_DUAL_REG);
-+		break;
-+	}
-+}
-+
-+static int mt8173_nor_polling_reg(struct mt8173_nor *mt8173_nor, int compare)
-+{
-+	int reg, ret;
-+
-+	ret =  readl_poll_timeout(mt8173_nor->base + MTK_NOR_CMD_REG, reg,
-+				  !(reg & compare), 100, 10000);
-+	if (ret)
-+		dev_err(mt8173_nor->dev, "compare val%02X timeout!\n", compare);
-+	return ret;
-+}
-+
-+static int mt8173_nor_execute_cmd(struct mt8173_nor *mt8173_nor, u8 cmdval)
-+{
-+	u8 val = cmdval & 0x1f;
-+
-+	writeb(cmdval, mt8173_nor->base + MTK_NOR_CMD_REG);
-+	return mt8173_nor_polling_reg(mt8173_nor, val);
-+}
-+
-+static int mt8173_nor_set_cmd(struct mt8173_nor *mt8173_nor, int addr,
-+			      int len, int op)
-+{
-+	writeb(op, mt8173_nor->base + MTK_NOR_PRGDATA5_REG);
-+	/* reset the following register */
-+	writeb(LoByte(HiWord(addr)), mt8173_nor->base + MTK_NOR_PRGDATA4_REG);
-+	writeb(HiByte(LoWord(addr)), mt8173_nor->base + MTK_NOR_PRGDATA3_REG);
-+	writeb(LoByte(LoWord(addr)), mt8173_nor->base + MTK_NOR_PRGDATA2_REG);
-+	writeb(len, mt8173_nor->base + MTK_NOR_CNT_REG);
-+	return mt8173_nor_execute_cmd(mt8173_nor, MTK_NOR_PRG_CMD);
-+}
-+
-+static int mt8173_nor_get_para(struct mt8173_nor *mt8173_nor, u8 *buf, int len)
-+{
-+	if (len > 1) {
-+		/* read JEDEC ID need 4 bytes commands */
-+		mt8173_nor_set_cmd(mt8173_nor, 0, 32, SPINOR_OP_RDID);
-+		buf[2] = readb(mt8173_nor->base + MTK_NOR_SHREG0_REG);
-+		buf[1] = readb(mt8173_nor->base + MTK_NOR_SHREG1_REG);
-+		buf[0] = readb(mt8173_nor->base + MTK_NOR_SHREG2_REG);
-+	} else {
-+		if (mt8173_nor_execute_cmd(mt8173_nor, MTK_NOR_RDSR_CMD)) {
-+			dev_err(mt8173_nor->dev, "read status failed!\n");
-+			return -EINVAL;
-+		}
-+		*buf = readb(mt8173_nor->base + MTK_NOR_RDSR_REG);
-+	}
-+	return 0;
-+}
-+
-+/* cmd1 sent to nor flash, cmd2 write to nor controller */
-+static int mt8173_nor_set_para(struct mt8173_nor *mt8173_nor, int cmd1,
-+			       int cmd2)
-+{
-+	if (mt8173_nor_set_cmd(mt8173_nor, 0, 8, SPINOR_OP_WREN)) {
-+		dev_err(mt8173_nor->dev,
-+			"write enable failed in write protect!\n");
-+		return -EINVAL;
-+	}
-+	writeb(cmd1, mt8173_nor->base + MTK_NOR_PRGDATA5_REG);
-+	writeb(8, mt8173_nor->base + MTK_NOR_CNT_REG);
-+	if (mt8173_nor_execute_cmd(mt8173_nor, cmd2)) {
-+		dev_err(mt8173_nor->dev, "execute cmd failed!\n");
-+		return -EINVAL;
-+	}
-+	return 0;
-+}
-+
-+static int mt8173_nor_write_buffer_enable(struct mt8173_nor *mt8173_nor)
-+{
-+	u8 reg, ret;
-+
-+	writel(MTK_NOR_WR_BUF_ENABLE, mt8173_nor->base + MTK_NOR_CFG2_REG);
-+	ret =  readb_poll_timeout(mt8173_nor->base + MTK_NOR_CFG2_REG, reg,
-+				  0x01 == (reg & 0x01), 100, 10000);
-+	if (ret)
-+		dev_err(mt8173_nor->dev, "timeout!\n");
-+	return ret;
-+}
-+
-+static int mt8173_nor_write_buffer_disable(struct mt8173_nor *mt8173_nor)
-+{
-+	u8 reg, ret;
-+
-+	writel(MTK_NOR_WR_BUF_DISABLE, mt8173_nor->base + MTK_NOR_CFG2_REG);
-+	ret =  readb_poll_timeout(mt8173_nor->base + MTK_NOR_CFG2_REG, reg,
-+				  MTK_NOR_WR_BUF_DISABLE == (reg & 0xf), 100,
-+				  10000);
-+	if (ret)
-+		dev_err(mt8173_nor->dev, "compare timeout!\n");
-+	return ret;
-+}
-+
-+static int mt8173_nor_erase_sector(struct spi_nor *nor, loff_t offset)
-+{
-+	struct mt8173_nor *mt8173_nor = nor->priv;
-+
-+	if (mt8173_nor_set_cmd(mt8173_nor, 0, 8, SPINOR_OP_WREN)) {
-+		dev_err(mt8173_nor->dev,
-+			"write enable failed in erase sector!\n");
-+		return -EINVAL;
-+	}
-+
-+	mt8173_nor_set_cmd(mt8173_nor, (int)offset, 32, SPINOR_OP_BE_4K);
-+	return 0;
-+}
-+
-+static int mt8173_nor_read_hw(struct mt8173_nor *mt8173_nor, int addr, int len,
-+			      int *retlen, u8 *buf)
-+{
-+	int ret = 0, i;
-+
-+	mt8173_nor_set_read_mode(mt8173_nor);
-+	writeb(HiByte(HiWord(addr)), mt8173_nor->base + MTK_NOR_RADR3_REG);
-+	writeb(LoByte(HiWord(addr)), mt8173_nor->base + MTK_NOR_RADR2_REG);
-+	writeb(HiByte(LoWord(addr)), mt8173_nor->base + MTK_NOR_RADR1_REG);
-+	writeb(LoByte(LoWord(addr)), mt8173_nor->base + MTK_NOR_RADR0_REG);
-+
-+	for (i = 0; i < len; i++, (*retlen)++) {
-+		if (mt8173_nor_execute_cmd(mt8173_nor, MTK_NOR_PIO_READ_CMD)) {
-+			dev_err(mt8173_nor->dev, "read flash failed!\n");
-+			return -EINVAL;
-+		}
-+		buf[i] = readb(mt8173_nor->base + MTK_NOR_RDATA_REG);
-+	}
-+	return ret;
-+}
-+
-+static int mt8173_nor_read(struct spi_nor *nor, loff_t from, size_t len,
-+			   size_t *retlen, u_char *buf)
-+{
-+	struct mt8173_nor *mt8173_nor = nor->priv;
-+
-+	return mt8173_nor_read_hw(mt8173_nor, (int)from, (int)len,
-+				 (int *)retlen, (u8 *)buf);
-+}
-+
-+static int mt8173_nor_write_single_byte(struct mt8173_nor *mt8173_nor,
-+					int u4addr, u8 u1data)
-+{
-+	if (u4addr >= mt8173_nor->mtd.size) {
-+		dev_err(mt8173_nor->dev, "invalid write address!\n");
-+		return -EINVAL;
-+	}
-+
-+	writeb(u1data, mt8173_nor->base + MTK_NOR_WDATA_REG);
-+	writeb(LoByte(HiWord(u4addr)), mt8173_nor->base + MTK_NOR_RADR2_REG);
-+	writeb(HiByte(LoWord(u4addr)), mt8173_nor->base + MTK_NOR_RADR1_REG);
-+	writeb(LoByte(LoWord(u4addr)), mt8173_nor->base + MTK_NOR_RADR0_REG);
-+
-+	if (mt8173_nor_execute_cmd(mt8173_nor, MTK_NOR_WR_CMD)) {
-+		dev_err(mt8173_nor->dev, "write byte offset%08x\n", u4addr);
-+		return -EINVAL;
-+	}
-+	return 0;
-+}
-+
-+static int mt8173_nor_write_buffer(struct mt8173_nor *mt8173_nor, int u4addr,
-+				   int u4len, const u8 *buf)
-+{
-+	int i, j, bufidx, data;
-+
-+	if (!buf)
-+		return -EINVAL;
-+
-+	writeb(LoByte(HiWord(u4addr)), mt8173_nor->base + MTK_NOR_RADR2_REG);
-+	writeb(HiByte(LoWord(u4addr)), mt8173_nor->base + MTK_NOR_RADR1_REG);
-+	writeb(LoByte(LoWord(u4addr)), mt8173_nor->base + MTK_NOR_RADR0_REG);
-+
-+	bufidx = 0;
-+	for (i = 0; i < u4len; i += 4) {
-+		for (j = 0; j < 4; j++) {
-+			(*((u8 *)&data + j)) = buf[bufidx];
-+			bufidx++;
-+		}
-+		writel(data, mt8173_nor->base + MTK_NOR_PP_DATA_REG);
-+	}
-+
-+	if (mt8173_nor_execute_cmd(mt8173_nor, MTK_NOR_WR_CMD)) {
-+		dev_err(mt8173_nor->dev, "write buffer offset:%08x\n", u4addr);
-+		return -EINVAL;
-+	}
-+	return 0;
-+}
-+
-+static void mt8173_nor_write(struct spi_nor *nor, loff_t to, size_t len,
-+			     size_t *retlen, const u_char *buf)
-+{
-+	struct mt8173_nor *mt8173_nor = nor->priv;
-+	size_t i;
-+
-+	if (nor->page_size == len) {
-+		if (mt8173_nor_write_buffer_enable(mt8173_nor))
-+			dev_err(mt8173_nor->dev, "write buffer enable failed !\n");
-+		while (len > 0) {
-+			mt8173_nor_write_buffer(mt8173_nor, to,
-+						SFLASH_WRBUF_SIZE, buf);
-+			len -= SFLASH_WRBUF_SIZE;
-+			to += SFLASH_WRBUF_SIZE;
-+			buf += SFLASH_WRBUF_SIZE;
-+			(*retlen) += SFLASH_WRBUF_SIZE;
-+		}
-+		if (mt8173_nor_write_buffer_disable(mt8173_nor))
-+			dev_err(mt8173_nor->dev, "write buffer disable failed !\n");
-+	} else {
-+		for (i = 0; i < len; i++,  (*retlen)++) {
-+			if (mt8173_nor_write_single_byte(mt8173_nor, to, *buf))
-+				dev_err(mt8173_nor->dev, "write byte failed !\n");
-+			to++;
-+			buf++;
-+		}
-+	}
-+}
-+
-+static int mt8173_nor_read_reg(struct spi_nor *nor, u8 opcode, u8 *buf, int len)
-+{
-+	int ret = 0;
-+	struct mt8173_nor *mt8173_nor = nor->priv;
-+	/* mtk nor controller haven't supoort SPINOR_OP_RDCR */
-+	if (opcode == SPINOR_OP_RDID || opcode == SPINOR_OP_RDSR)
-+		ret = mt8173_nor_get_para(mt8173_nor, buf, len);
-+	else
-+		dev_warn(mt8173_nor->dev, "invalid cmd %d\n", opcode);
-+
-+	return ret;
-+}
-+
-+static int mt8173_nor_write_reg(struct spi_nor *nor, u8 opcode, u8 *buf,
-+				int len, int write_enable)
-+{
-+	int ret, cmd_to_nor, cmd_to_controller;
-+	struct mt8173_nor *mt8173_nor = nor->priv;
-+
-+	if (opcode == SPINOR_OP_WRSR || opcode == SPINOR_OP_CHIP_ERASE) {
-+		if (len > 0) {
-+			cmd_to_nor = *buf;
-+			cmd_to_controller = MTK_NOR_WRSR_CMD;
-+		} else {
-+			cmd_to_nor = opcode;
-+			cmd_to_controller = MTK_NOR_PRG_CMD;
-+		}
-+		ret = mt8173_nor_set_para(mt8173_nor, cmd_to_nor,
-+					  cmd_to_controller);
-+	} else if (opcode == SPINOR_OP_WREN || opcode == SPINOR_OP_WRDI) {
-+		ret = mt8173_nor_set_cmd(mt8173_nor, 0, 8, opcode);
-+	} else {
-+		dev_warn(mt8173_nor->dev, "have not support cmd %d\n", opcode);
-+		ret = -EINVAL;
-+	}
-+	return ret;
-+}
-+
-+static int __init mtk_nor_init(struct mt8173_nor *mt8173_nor,
-+			       struct mtd_part_parser_data ppdata)
-+{
-+	int ret;
-+	struct spi_nor *nor;
-+	struct mtd_info *mtd;
-+
-+	writel(MTK_NOR_ENABLE_SF_CMD, mt8173_nor->base + MTK_NOR_WRPROT_REG);
-+	nor = &mt8173_nor->nor;
-+	mtd = &mt8173_nor->mtd;
-+	nor->mtd = mt8173_nor->mtd;
-+	nor->dev = mt8173_nor->dev;
-+	nor->priv = mt8173_nor;
-+	mtd->priv = nor;
-+
-+	/* fill the hooks to spi nor */
-+	nor->read = mt8173_nor_read;
-+	nor->read_reg = mt8173_nor_read_reg;
-+	nor->write = mt8173_nor_write;
-+	nor->write_reg = mt8173_nor_write_reg;
-+	nor->erase = mt8173_nor_erase_sector;
-+	nor->mtd.owner = THIS_MODULE;
-+	nor->mtd.name = "mtk_nor";
-+	/* initialized with NULL */
-+	ret = spi_nor_scan(nor, NULL, SPI_NOR_DUAL);
-+	if (ret) {
-+		dev_err(mt8173_nor->dev, "spi_nor_scan failed !\n");
-+		return -EINVAL;
-+	}
-+	dev_dbg(mt8173_nor->dev, "mtd->size :0x%llx!\n", mtd->size);
-+	ret = mtd_device_parse_register(&nor->mtd, NULL, &ppdata, NULL, 0);
-+
-+	return ret;
-+}
-+
-+static int mtk_nor_drv_probe(struct platform_device *pdev)
-+{
-+	struct device_node *np = pdev->dev.of_node;
-+	struct mtd_part_parser_data ppdata;
-+	struct resource *res;
-+	int ret;
-+	struct mt8173_nor *mt8173_nor = devm_kzalloc(&pdev->dev,
-+		sizeof(*mt8173_nor), GFP_KERNEL);
-+
-+	if (!pdev->dev.of_node) {
-+		dev_err(&pdev->dev, "No DT found\n");
-+		return -EINVAL;
-+	}
-+
-+	if (!mt8173_nor)
-+		return -ENOMEM;
-+	platform_set_drvdata(pdev, mt8173_nor);
-+
-+	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-+	mt8173_nor->base = devm_ioremap_resource(&pdev->dev, res);
-+	if (IS_ERR(mt8173_nor->base)) {
-+		ret = PTR_ERR(mt8173_nor->base);
-+		goto nor_free;
-+	}
-+
-+	mt8173_nor->spi_clk = devm_clk_get(&pdev->dev, "spi_clk");
-+	if (IS_ERR(mt8173_nor->spi_clk)) {
-+		ret = PTR_ERR(mt8173_nor->spi_clk);
-+		goto nor_free;
-+	}
-+
-+	mt8173_nor->src_axi_clk = devm_clk_get(&pdev->dev, "axi_clk");
-+	if (IS_ERR(mt8173_nor->src_axi_clk)) {
-+		ret = PTR_ERR(mt8173_nor->src_axi_clk);
-+		goto nor_free;
-+	}
-+
-+	mt8173_nor->sf_mux_clk = devm_clk_get(&pdev->dev, "mux_clk");
-+	if (IS_ERR(mt8173_nor->sf_mux_clk)) {
-+		ret = PTR_ERR(mt8173_nor->sf_mux_clk);
-+		goto nor_free;
-+	}
-+
-+	mt8173_nor->nor_clk = devm_clk_get(&pdev->dev, "sf_clk");
-+	if (IS_ERR(mt8173_nor->nor_clk)) {
-+		ret = PTR_ERR(mt8173_nor->nor_clk);
-+		goto nor_free;
-+	}
-+
-+	mt8173_nor->dev = &pdev->dev;
-+	clk_prepare_enable(mt8173_nor->spi_clk);
-+	clk_prepare_enable(mt8173_nor->src_axi_clk);
-+	clk_prepare_enable(mt8173_nor->sf_mux_clk);
-+	clk_prepare_enable(mt8173_nor->nor_clk);
-+	clk_set_parent(mt8173_nor->nor_clk, mt8173_nor->sf_mux_clk);
-+
-+	ppdata.of_node = np;
-+	ret = mtk_nor_init(mt8173_nor, ppdata);
-+
-+nor_free:
-+	return ret;
-+}
-+
-+static int mtk_nor_drv_remove(struct platform_device *pdev)
-+{
-+	struct mt8173_nor *mt8173_nor = platform_get_drvdata(pdev);
-+
-+	clk_disable_unprepare(mt8173_nor->spi_clk);
-+	clk_disable_unprepare(mt8173_nor->src_axi_clk);
-+	clk_disable_unprepare(mt8173_nor->sf_mux_clk);
-+	clk_disable_unprepare(mt8173_nor->nor_clk);
-+	mtd_device_unregister(&mt8173_nor->mtd);
-+	return 0;
-+}
-+
-+static const struct of_device_id mtk_nor_of_ids[] = {
-+	{ .compatible = "mediatek,mt8173-nor"},
-+	{ /* sentinel */ }
-+};
-+MODULE_DEVICE_TABLE(of, mtk_nor_of_ids);
-+
-+static struct platform_driver mtk_nor_driver = {
-+	.probe = mtk_nor_drv_probe,
-+	.remove = mtk_nor_drv_remove,
-+	.driver = {
-+		.name = "mtk-nor",
-+		.of_match_table = mtk_nor_of_ids,
-+	},
-+};
-+
-+module_platform_driver(mtk_nor_driver);
-+MODULE_LICENSE("GPL v2");
-+MODULE_DESCRIPTION("MediaTek SPI NOR Flash Driver");
--- 
-1.8.1.1.dirty
+On Tuesday 08 September 2015 12:24 PM, Jisheng Zhang wrote:
+> On Mon, 7 Sep 2015 16:48:38 +0530
+> Vaibhav Hiremath <vaibhav.hiremath@linaro.org> wrote:
+>
+>> Different bus clock may need different pin setting.
+>> For example, fast bus clock like 208Mhz need pin drive fast
+>> while slow bus clock prefer pin drive slow to guarantee
+>> signal quality.
+>>
+>> So this patch creates two states,
+>>    - Default (slow/normal) pin state
+>>    - And fast pin state for higher freq bus speed.
+>>
+>> And selection of pin state is done based on timing mode.
+>>
+>> Signed-off-by: Vaibhav Hiremath <vaibhav.hiremath@linaro.org>
+>> Signed-off-by: Kevin Liu <kliu5@marvell.com>
+>> ---
+>>   drivers/mmc/host/sdhci-pxav3.c | 45 +++++++++++++++++++++++++++++++++++++++++-
+>>   1 file changed, 44 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/drivers/mmc/host/sdhci-pxav3.c b/drivers/mmc/host/sdhci-pxav3.c
+>> index c2b2b78..d933f75 100644
+>> --- a/drivers/mmc/host/sdhci-pxav3.c
+>> +++ b/drivers/mmc/host/sdhci-pxav3.c
+>> @@ -35,6 +35,7 @@
+>>   #include <linux/pm.h>
+>>   #include <linux/pm_runtime.h>
+>>   #include <linux/mbus.h>
+>> +#include <linux/pinctrl/consumer.h>
+>>
+>>   #include "sdhci.h"
+>>   #include "sdhci-pltfm.h"
+>> @@ -92,6 +93,10 @@ struct sdhci_pxa {
+>>   	void __iomem *io_pwr_reg;
+>>   	void __iomem *io_pwr_lock_reg;
+>>   	struct sdhci_pxa_data *data;
+>> +
+>> +	struct pinctrl *pinctrl;
+>> +	struct pinctrl_state *pins_default;
+>> +	struct pinctrl_state *pins_fast;
+>>   };
+>>
+>>   static struct sdhci_pxa_data pxav3_data_v1 = {
+>> @@ -298,6 +303,33 @@ static void pxav3_gen_init_74_clocks(struct sdhci_host *host, u8 power_mode)
+>>   	pxa->power_mode = power_mode;
+>>   }
+>>
+>> +static int pxav3_select_pinstate(struct sdhci_host *host, unsigned int uhs)
+>> +{
+>> +	struct sdhci_pltfm_host *pltfm_host = sdhci_priv(host);
+>> +	struct sdhci_pxa *pxa = pltfm_host->priv;
+>> +	struct pinctrl_state *pinctrl;
+>> +
+>> +	if (IS_ERR(pxa->pinctrl) ||
+>> +		IS_ERR(pxa->pins_default) ||
+>> +		IS_ERR(pxa->pins_fast))
+>> +		return -EINVAL;
+>> +
+>> +	switch (uhs) {
+>> +	case MMC_TIMING_UHS_SDR50:
+>> +	case MMC_TIMING_UHS_SDR104:
+>> +	case MMC_TIMING_MMC_HS200:
+>> +	case MMC_TIMING_MMC_HS400:
+>
+> Are you sure this IP can support HS400?
+>
+>> +		pinctrl = pxa->pins_fast;
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+
+No it does not.
+
+The reason I put it here is,
+code under discussion is related to pinctrl configuration, so for all
+higher bus speed mode we want to set pins into fast mode.
+
+And from hs400 perspective, I would expect it must get handled much
+before than this stage and should not reach here at all.
+
+So this portion of the code is complete in itself.
+
+I hope I clarified your doubt.
+
+Thanks,
+Vaibhav
