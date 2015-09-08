@@ -1,89 +1,80 @@
-From: Greg KH <gregkh@linuxfoundation.org>
-Subject: Re: [PATCH 1/3] sysfs: Fix is_visible() support for binary attributes
-Date: Tue, 8 Sep 2015 12:10:02 -0700
-Message-ID: <20150908191002.GB10156@kroah.com>
-References: <1441714066-5599-1-git-send-email-emilio.lopez@collabora.co.uk>
- <1441714066-5599-2-git-send-email-emilio.lopez@collabora.co.uk>
- <20150908153013.GA6758@roeck-us.net>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20150908153013.GA6758@roeck-us.net>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Guenter Roeck <linux@roeck-us.net>
-Cc: Emilio =?iso-8859-1?Q?L=F3pez?= <emilio.lopez@collabora.co.uk>, olof@lixom.net, kgene@kernel.org, k.kozlowski@samsung.com, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org
+From: Olliver Schinagl <o.schinagl-U3FVU11NWA554TAoqtyWWQ@public.gmane.org>
+Subject: [PATCH 2/2] fbdev: ssd1307fb: add ssd1309 support
+Date: Tue,  8 Sep 2015 21:19:51 +0200
+Message-ID: <1441739991-4676-3-git-send-email-o.schinagl@ultimaker.com>
+References: <1441739991-4676-1-git-send-email-o.schinagl@ultimaker.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1441739991-4676-1-git-send-email-o.schinagl-U3FVU11NWA554TAoqtyWWQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Olliver Schinagl <oliver-dxLnbx3+1qmEVqv0pETR8A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
+Cc: Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>, =?UTF-8?q?Thomas=20Niederpr=C3=BCm?= <niederp-PRwTpj6vllL6m1q2wEL4bg@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Prabhakar Lad <prabhakar.csengg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Olliver Schinagl <o.schinagl-U3FVU11NWA554TAoqtyWWQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Sep 08, 2015 at 08:30:13AM -0700, Guenter Roeck wrote:
-> Emilio,
->=20
-> On Tue, Sep 08, 2015 at 09:07:44AM -0300, Emilio L=F3pez wrote:
-> > According to the sysfs header file:
-> >=20
-> >     "The returned value will replace static permissions defined in
-> >      struct attribute or struct bin_attribute."
-> >=20
-> > but this isn't the case, as is_visible is only called on
-> > struct attribute only. This patch adds the code paths required
-> > to support is_visible() on binary attributes.
-> >=20
-> > Signed-off-by: Emilio L=F3pez <emilio.lopez@collabora.co.uk>
-> > ---
-> >  fs/sysfs/group.c | 22 ++++++++++++++++++----
-> >  1 file changed, 18 insertions(+), 4 deletions(-)
-> >=20
-> > diff --git a/fs/sysfs/group.c b/fs/sysfs/group.c
-> > index 39a0199..eb6996a 100644
-> > --- a/fs/sysfs/group.c
-> > +++ b/fs/sysfs/group.c
-> > @@ -37,10 +37,10 @@ static int create_files(struct kernfs_node *par=
-ent, struct kobject *kobj,
-> >  {
-> >  	struct attribute *const *attr;
-> >  	struct bin_attribute *const *bin_attr;
-> > -	int error =3D 0, i;
-> > +	int error =3D 0, i =3D 0;
-> > =20
-> >  	if (grp->attrs) {
-> > -		for (i =3D 0, attr =3D grp->attrs; *attr && !error; i++, attr++)=
- {
-> > +		for (attr =3D grp->attrs; *attr && !error; i++, attr++) {
-> >  			umode_t mode =3D (*attr)->mode;
-> > =20
-> >  			/*
-> > @@ -73,13 +73,27 @@ static int create_files(struct kernfs_node *par=
-ent, struct kobject *kobj,
-> >  	}
-> > =20
-> >  	if (grp->bin_attrs) {
-> > -		for (bin_attr =3D grp->bin_attrs; *bin_attr; bin_attr++) {
-> > +		for (bin_attr =3D grp->bin_attrs; *bin_attr; i++, bin_attr++) {
-> > +			umode_t mode =3D (*bin_attr)->attr.mode;
-> > +
-> >  			if (update)
-> >  				kernfs_remove_by_name(parent,
-> >  						(*bin_attr)->attr.name);
-> > +			if (grp->is_visible) {
-> > +				mode =3D grp->is_visible(kobj,
-> > +						       &(*bin_attr)->attr, i);
->=20
-> With this, if 'n' is the number of non-binary attributes,
->=20
-> for i < n:
-> 	The index passed to is_visible points to a non-binary attribute.
-> for i >=3D n:
-> 	The index passed to is_visible points to the (index - n)th binary
-> 	attribute.
->=20
-> Unless I am missing something, this is not explained anywhere, but it=
- is
-> not entirely trivial to understand. I think it should be documented.
+The ssd1307fb driver supports a lot of chips from the ssd130xfb series.
+This patch adds the ssd1309 chip, a 128x64 OLED driver chip. It is very
+similar to the other chips and only has some definitions added to
+support it.
 
-I agree, make i the number of the bin attribute and that should solve
-this issue.
+Signed-off-by: Olliver Schinagl <o.schinagl-U3FVU11NWA554TAoqtyWWQ@public.gmane.org>
+---
+ Documentation/devicetree/bindings/video/ssd1307fb.txt |  3 ++-
+ drivers/video/fbdev/ssd1307fb.c                       | 11 +++++++++++
+ 2 files changed, 13 insertions(+), 1 deletion(-)
 
-thanks,
+diff --git a/Documentation/devicetree/bindings/video/ssd1307fb.txt b/Documentation/devicetree/bindings/video/ssd1307fb.txt
+index d1be78d..eb31ed4 100644
+--- a/Documentation/devicetree/bindings/video/ssd1307fb.txt
++++ b/Documentation/devicetree/bindings/video/ssd1307fb.txt
+@@ -2,7 +2,8 @@
+ 
+ Required properties:
+   - compatible: Should be "solomon,<chip>fb-<bus>". The only supported bus for
+-    now is i2c, and the supported chips are ssd1305, ssd1306 and ssd1307.
++    now is i2c, and the supported chips are ssd1305, ssd1306, ssd1307 and
++    ssd1309.
+   - reg: Should contain address of the controller on the I2C bus. Most likely
+          0x3c or 0x3d
+   - pwm: Should contain the pwm to use according to the OF device tree PWM
+diff --git a/drivers/video/fbdev/ssd1307fb.c b/drivers/video/fbdev/ssd1307fb.c
+index 339615c..8fc7960 100644
+--- a/drivers/video/fbdev/ssd1307fb.c
++++ b/drivers/video/fbdev/ssd1307fb.c
+@@ -495,6 +495,12 @@ static struct ssd1307fb_deviceinfo ssd1307fb_ssd1307_deviceinfo = {
+ 	.need_pwm = 1,
+ };
+ 
++static struct ssd1307fb_deviceinfo ssd1307fb_ssd1309_deviceinfo = {
++	.default_vcomh = 0x34,
++	.default_dclk_div = 1,
++	.default_dclk_frq = 10,
++};
++
+ static const struct of_device_id ssd1307fb_of_match[] = {
+ 	{
+ 		.compatible = "solomon,ssd1305fb-i2c",
+@@ -508,6 +514,10 @@ static const struct of_device_id ssd1307fb_of_match[] = {
+ 		.compatible = "solomon,ssd1307fb-i2c",
+ 		.data = (void *)&ssd1307fb_ssd1307_deviceinfo,
+ 	},
++	{
++		.compatible = "solomon,ssd1309fb-i2c",
++		.data = (void *)&ssd1307fb_ssd1309_deviceinfo,
++	},
+ 	{},
+ };
+ MODULE_DEVICE_TABLE(of, ssd1307fb_of_match);
+@@ -708,6 +718,7 @@ static const struct i2c_device_id ssd1307fb_i2c_id[] = {
+ 	{ "ssd1305fb", 0 },
+ 	{ "ssd1306fb", 0 },
+ 	{ "ssd1307fb", 0 },
++	{ "ssd1309fb", 0 },
+ 	{ }
+ };
+ MODULE_DEVICE_TABLE(i2c, ssd1307fb_i2c_id);
+-- 
+2.1.4
 
-greg k-h
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
