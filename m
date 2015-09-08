@@ -1,44 +1,52 @@
 From: Justin Chen <justinpopo6-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH 0/2 v3 ] watchdog: driver for BCM7038 and newer chips.
-Date: Tue, 8 Sep 2015 10:45:46 -0700
-Message-ID: <1441734348-11138-1-git-send-email-justinpopo6@gmail.com>
+Subject: [PATCH 1/2 v3] watchdog: bcm7038: add device tree binding documentation
+Date: Tue, 8 Sep 2015 10:45:47 -0700
+Message-ID: <1441734348-11138-2-git-send-email-justinpopo6@gmail.com>
+References: <1441734348-11138-1-git-send-email-justinpopo6@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1441734348-11138-1-git-send-email-justinpopo6-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, justinpopo6-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, bcm-kernel-feedback-list-dY08KVG/lbp8UrSeD/g0lQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This driver is for a watchdog block contained in all Broadcom Set-top
-Box chips since BCM7038. BCM7038 was made public during the 2004 CES,
-and since then, many chips use this watchdog block including some cable
-modem chips.
+Add device tree binding documentation for the watchdog hardware block
+on bcm7038 and newer SoCs.
 
-Changes since v2:
-Added clk_disable_unprepare if watchdog fails to register.
-
-Changes since v1:
-Removed clock-frequency because it brought unnecessary complexity to the
-driver.
-Renamed a few variables.
-
-Patch 1: watchdog device tree binding documentation
-
-Patch 2: watchdog driver
-
-Justin Chen (2):
-  watchdog: bcm7038: add device tree binding documentation
-  watchdog: Watchdog driver for Broadcom Set-Top Box
-
- .../bindings/watchdog/brcm,bcm7038-wdt.txt         |  19 ++
- drivers/watchdog/Kconfig                           |   8 +
- drivers/watchdog/Makefile                          |   1 +
- drivers/watchdog/bcm7038_wdt.c                     | 237 +++++++++++++++++++++
- 4 files changed, 265 insertions(+)
+Signed-off-by: Justin Chen <justinpopo6-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Acked-by: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+---
+ .../devicetree/bindings/watchdog/brcm,bcm7038-wdt.txt | 19 +++++++++++++++++++
+ 1 file changed, 19 insertions(+)
  create mode 100644 Documentation/devicetree/bindings/watchdog/brcm,bcm7038-wdt.txt
- create mode 100644 drivers/watchdog/bcm7038_wdt.c
 
+diff --git a/Documentation/devicetree/bindings/watchdog/brcm,bcm7038-wdt.txt b/Documentation/devicetree/bindings/watchdog/brcm,bcm7038-wdt.txt
+new file mode 100644
+index 0000000..39e5cf5
+--- /dev/null
++++ b/Documentation/devicetree/bindings/watchdog/brcm,bcm7038-wdt.txt
+@@ -0,0 +1,19 @@
++BCM7038 Watchdog timer
++
++Required properties:
++
++- compatible : should be "brcm,bcm7038-wdt"
++- reg : Specifies base physical address and size of the registers.
++
++Optional properties:
++
++- clocks: The clock running the watchdog. If no clock is found the
++	  driver will default to 27000000 HZ.
++
++Example:
++
++watchdog {
++	compatible = "brcm,bcm7038-wdt";
++	clocks = <&upg_fixed>;
++	reg = <0xf040a7e8 0x16>;
++};
 -- 
 2.1.0
 
