@@ -1,35 +1,88 @@
-From: Mark Salter <msalter@redhat.com>
-Subject: Re: [Linaro-acpi] [RFC 3/5] acpi/serial: add DBG2 earlycon support
-Date: Tue, 08 Sep 2015 13:53:27 -0400
-Message-ID: <1441734807.5459.18.camel@redhat.com>
-References: <1441716217-23786-1-git-send-email-leif.lindholm@linaro.org>
-	 <1441716217-23786-4-git-send-email-leif.lindholm@linaro.org>
-	 <1441730339.5459.8.camel@redhat.com>
-	 <20150908171744.GQ10728@bivouac.eciton.net>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-acpi-owner@vger.kernel.org>
-In-Reply-To: <20150908171744.GQ10728@bivouac.eciton.net>
-Sender: linux-acpi-owner@vger.kernel.org
-To: Leif Lindholm <leif.lindholm@linaro.org>
-Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-serial@vger.kernel.org, linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org, linaro-acpi@lists.linaro.org, jcm@redhat.com, torez@redhat.com, lv.zheng@intel.com
+From: David Daney <ddaney.cavm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH v2] of_pci_irq: Silence bogus "of_irq_parse_pci() failed ..." messages.
+Date: Tue,  8 Sep 2015 11:28:31 -0700
+Message-ID: <1441736911-2445-1-git-send-email-ddaney.cavm@gmail.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: David Daney <david.daney-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 2015-09-08 at 18:17 +0100, Leif Lindholm wrote:
-> > >      */
-> > > -   if (!buf || !buf[0])
-> > > -           if (IS_ENABLED(CONFIG_OF_FLATTREE))
-> > > +   if (!buf || !buf[0]) {
-> > > +           if (!acpi_disabled)
-> > 
-> > How do we know for sure that "acpi" has been parsed before "earlycon"?
-> 
-> Because "arch" comes before "drivers" in kernel image link order.
-> *twitch*
-> Yes, not the best argument ever.
-> 
+From: David Daney <david.daney-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
 
-I don't think that matters. Things are parsed in order they are
-found on cmdline (except for early vs late distinction).
+It is perfectly legitimate for a PCI device to have an
+PCI_INTERRUPT_PIN value of zero.  This happens if the device doesn't
+use interrupts, or on PCIe devices, where only MSI/MSI-X are
+supported.
 
+Silence the annoying "of_irq_parse_pci() failed with rc=-19" error
+messages by moving the printing code into of_irq_parse_pci(), and only
+emitting the message for cases where PCI_INTERRUPT_PIN == 0 is not the
+cause for an early exit.
+
+Signed-off-by: David Daney <david.daney-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
+---
+Changes in v2: Move the print function in to of_irq_parse_pci() at a
+common error exit point (as suggested by Frank Rowand).
+
+
+ drivers/of/of_pci_irq.c | 17 ++++++++++-------
+ 1 file changed, 10 insertions(+), 7 deletions(-)
+
+diff --git a/drivers/of/of_pci_irq.c b/drivers/of/of_pci_irq.c
+index 1710d9d..0be8b65 100644
+--- a/drivers/of/of_pci_irq.c
++++ b/drivers/of/of_pci_irq.c
+@@ -38,8 +38,8 @@ int of_irq_parse_pci(const struct pci_dev *pdev, struct of_phandle_args *out_irq
+ 	 */
+ 	rc = pci_read_config_byte(pdev, PCI_INTERRUPT_PIN, &pin);
+ 	if (rc != 0)
+-		return rc;
+-	/* No pin, exit */
++		goto err;
++	/* No pin, exit with no error message. */
+ 	if (pin == 0)
+ 		return -ENODEV;
+ 
+@@ -53,8 +53,10 @@ int of_irq_parse_pci(const struct pci_dev *pdev, struct of_phandle_args *out_irq
+ 			ppnode = pci_bus_to_OF_node(pdev->bus);
+ 
+ 			/* No node for host bridge ? give up */
+-			if (ppnode == NULL)
+-				return -EINVAL;
++			if (ppnode == NULL) {
++				rc = -EINVAL;
++				goto err;
++			}
+ 		} else {
+ 			/* We found a P2P bridge, check if it has a node */
+ 			ppnode = pci_device_to_OF_node(ppdev);
+@@ -87,6 +89,9 @@ int of_irq_parse_pci(const struct pci_dev *pdev, struct of_phandle_args *out_irq
+ 	laddr[0] = cpu_to_be32((pdev->bus->number << 16) | (pdev->devfn << 8));
+ 	laddr[1] = laddr[2] = cpu_to_be32(0);
+ 	return of_irq_parse_raw(laddr, out_irq);
++err:
++	dev_err(&pdev->dev, "of_irq_parse_pci() failed with rc=%d\n", rc);
++	return rc;
+ }
+ EXPORT_SYMBOL_GPL(of_irq_parse_pci);
+ 
+@@ -105,10 +110,8 @@ int of_irq_parse_and_map_pci(const struct pci_dev *dev, u8 slot, u8 pin)
+ 	int ret;
+ 
+ 	ret = of_irq_parse_pci(dev, &oirq);
+-	if (ret) {
+-		dev_err(&dev->dev, "of_irq_parse_pci() failed with rc=%d\n", ret);
++	if (ret)
+ 		return 0; /* Proper return code 0 == NO_IRQ */
+-	}
+ 
+ 	return irq_create_of_mapping(&oirq);
+ }
+-- 
+1.7.11.7
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
