@@ -1,62 +1,66 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH 0/4] Qualcomm Shared Memory State Machines
-Date: Tue, 8 Sep 2015 14:20:14 +0200
-Message-ID: <CACRpkdb-624MauE4sS0mqxarXRRaS3sEB2aMzeRNZw945xhMnA@mail.gmail.com>
-References: <1440697078-4106-1-git-send-email-bjorn.andersson@sonymobile.com>
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 1/2] ASoC: atmel-classd: add the Audio Class D Amplifier
+ code
+Date: Tue, 8 Sep 2015 13:23:22 +0100
+Message-ID: <20150908122322.GB9751@sirena.org.uk>
+References: <1441086101-15303-1-git-send-email-songjun.wu@atmel.com>
+ <1441086101-15303-2-git-send-email-songjun.wu@atmel.com>
+ <20150903113716.GU12027@sirena.org.uk>
+ <55EC0AF5.8060403@atmel.com>
+ <20150907162350.GV5313@sirena.org.uk>
+ <55EEAC01.3080409@atmel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <1440697078-4106-1-git-send-email-bjorn.andersson@sonymobile.com>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Bjorn Andersson <bjorn.andersson@sonymobile.com>, Mark Brown <broonie@linaro.org>
-Cc: Alexandre Courbot <gnurou@gmail.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="TRYliJ5NKNqkz5bu"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <55EEAC01.3080409-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: "Wu, Songjun" <songjun.wu-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Cc: nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, perex-/Fr2/VpizcU@public.gmane.org, tiwai-IBi9RG/b67k@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Aug 27, 2015 at 7:37 PM, Bjorn Andersson
-<bjorn.andersson@sonymobile.com> wrote:
 
-Let's discuss this a bit, looping in Mark Brown.
+--TRYliJ5NKNqkz5bu
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-> As some of these states on some platforms are passed as physical signals
-> instead, the two drivers are modelled as gpio- and interrupt-controllers -
-> providing a nice abstraction both in device tree sense and Linux implementation
-> sense.
+On Tue, Sep 08, 2015 at 05:36:01PM +0800, Wu, Songjun wrote:
+> On 9/8/2015 00:23, Mark Brown wrote:
 
-I have unfortunately repeatedly encountered an argument of the type
-"GPIO has nice infrastructure so let's call X 'a kind of GPIO' so
-we can use that nice infrastructure".
+> >OK, so that's not actually what the code was doing - it had separate
+> >enums for bass, mid and treble.  If you make this a single enum with all
+> >the above options in it that seems like the best way of handling things.
 
-I'm not pleased with something that is not really general purpose
-input/output being called GPIO. It fits badly with the GPIO subsystem
-when we support things like open drain and cross-mappings to
-the pin control subsystem that will never be applicable to these
-new users. It's more like "special purpose input/output" or
-something.
+> A single enum seems not very friendly to user, there are tree EQs, bass,
+> medium and treble.
+> So I create tree enum controls to control three EQs.
+> The 'get' function is replaced by 'classd_get_eq_enum', if user operates one
+> of the tree EQ controls, the other two EQs will show 0 dB.
 
-This happened with syscon LEDs for example, and was the reason
-I implemented syscon-leds. The original proposal was to say the LEDs
-register was "a kind of GPIO" on top of regmap and then use gpio-leds
-on top of that. Instead I insisted it was a syscon/regmap and the
-LEDs go directly to that, bypassing one layer of abstraction.
+If you want to have three controls you need to write code so that the
+user can only change one of them from 0dB at once, returning an error
+otherwise.  That was why it looked like they were three separate
+controls.
 
-I also imagine creating syscon-keys.c for input from arbitrary keys
-in a syscon register actually. Just didn't get around to that yet.
+--TRYliJ5NKNqkz5bu
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
-I also see some of the stuff GPIO does out-of-the-box being useful,
-for example in MFD: some of these are interrupt controllers and
-basically duplicate the kind of code I have in gpiolib for
-GPIOLIB_IRQCHIP.
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
 
-So we need to figure out what is really needed.
+iQEcBAEBCAAGBQJV7tM5AAoJECTWi3JdVIfQKqIH/22hJUT52wnFU/jo8UE02BLw
+rMTV0xZxlrEAfahlOkyWT+uNoqMlfUzpZwLZrZzQAEtkFLBYK3bXfa33BOoGltwP
+bb+cNodMq+bzZFtcTi8Fgpb+qrcomA9na3A1xpFr3a5Z9rtBGKa5lMfOPZX6FDyG
+4ZRK6X4OGtLphcXr7v4X14MTvwDCelTSZMsW6qMdAZTuc5gCj4f75A0vmNy7sqO9
+GZwilt8IuJzJutX1yXJrpSTVWJd8y+RXhTXYOVpx+Xcppqv9zriX+IlG8cmittEn
+32EsUApDdfeNdFQHJ+XJAbkIQOaWqjCxt1nXQ0Q7o2YpIUqs/yNevsOCpQUFCrc=
+=wPID
+-----END PGP SIGNATURE-----
 
-While sparsely documented: what about regmap (maybe in the
-form of syscon) and drivers/base/regmap/regmap-irq.c for the
-interrupt handling?
-
-I cannot claim to understand regmap-irq.c, but I just intuitively
-think it deserves consideration, such that drivers who need one
-of these misc registers can read/write their bits with regmap
-accessors and also get IRQs by way of regmap-irq.
-
-Yours,
-Linus Walleij
+--TRYliJ5NKNqkz5bu--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
