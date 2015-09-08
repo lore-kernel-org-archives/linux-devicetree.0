@@ -1,50 +1,40 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH 2/3] ARM: dts: sun5i: Add sun5i-q8-common.dtsi
-Date: Tue, 8 Sep 2015 16:33:20 +0200
-Message-ID: <20150908143320.GB31584@lukather>
-References: <1441464953-26351-1-git-send-email-hdegoede@redhat.com>
- <1441464953-26351-2-git-send-email-hdegoede@redhat.com>
-Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="XeHo0rFSNt4mQX/E"
-Return-path: <linux-sunxi+bncBD2ZNBF5VYJRBMPDXOXQKGQEUF26THA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1441464953-26351-2-git-send-email-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <http://groups.google.com/group/linux-sunxi/subscribe>
-To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Gary Bisson <gary.bisson-Q5RJGjKts06CY9SHAMCTRUEOCMrvLtNR@public.gmane.org>
+Subject: [PATCH v2 6/9] ARM: dts: imx6q-nitrogen6x: change manufacturer to Boundary Devices
+Date: Tue,  8 Sep 2015 16:34:43 +0200
+Message-ID: <1441722886-22798-7-git-send-email-gary.bisson@boundarydevices.com>
+References: <1441645069-27263-1-git-send-email-gary.bisson@boundarydevices.com>
+ <1441722886-22798-1-git-send-email-gary.bisson@boundarydevices.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1441722886-22798-1-git-send-email-gary.bisson-Q5RJGjKts06CY9SHAMCTRUEOCMrvLtNR@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Gary Bisson <gary.bisson-Q5RJGjKts06CY9SHAMCTRUEOCMrvLtNR@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
---XeHo0rFSNt4mQX/E
-Content-Type: text/plain; charset=UTF-8
-Content-Disposition: inline
+Signed-off-by: Gary Bisson <gary.bisson-Q5RJGjKts06CY9SHAMCTRUEOCMrvLtNR@public.gmane.org>
+---
+ arch/arm/boot/dts/imx6q-nitrogen6x.dts | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-On Sat, Sep 05, 2015 at 04:55:52PM +0200, Hans de Goede wrote:
-> This is the sun5i / a13 version of sun8i-q8-common.dtsi for use in dts
-> files for a13 q8 based tablets. Compared to sun8i this uses uart1 for the
-> serial console, and PG0 for card-detect for mmc0.
-> 
-> This also adds pmic and otg support, which both use the same config on
-> all known q8 a13 devices. This is not present in sun5i-q8-common.dtsi
-> because pmic / otg support for sun8i has not yet been merged.
-> 
-> Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-
-Are we going to have any user but the one you posted in the patch 3
-planned?
-
-Thanks,
-Maxime
-
+diff --git a/arch/arm/boot/dts/imx6q-nitrogen6x.dts b/arch/arm/boot/dts/imx6q-nitrogen6x.dts
+index 8088cfc..d168633 100644
+--- a/arch/arm/boot/dts/imx6q-nitrogen6x.dts
++++ b/arch/arm/boot/dts/imx6q-nitrogen6x.dts
+@@ -46,8 +46,8 @@
+ #include "imx6qdl-nitrogen6x.dtsi"
+ 
+ / {
+-	model = "Freescale i.MX6 Quad Nitrogen6x Board";
+-	compatible = "fsl,imx6q-nitrogen6x", "fsl,imx6q";
++	model = "Boundary Devices i.MX6 Quad Nitrogen6x Board";
++	compatible = "boundary,imx6q-nitrogen6x", "fsl,imx6q";
+ };
+ 
+ &sata {
 -- 
-Maxime Ripard, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
---XeHo0rFSNt4mQX/E--
+2.5.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
