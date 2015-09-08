@@ -1,66 +1,68 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 1/2 v3] watchdog: bcm7038: add device tree binding
- documentation
-Date: Tue, 8 Sep 2015 18:03:34 -0500
-Message-ID: <55EF6946.7080108@kernel.org>
-References: <1441734348-11138-1-git-send-email-justinpopo6@gmail.com>
- <1441734348-11138-2-git-send-email-justinpopo6@gmail.com>
+Subject: Re: [PATCH linux-next v5 4/5] Documentation: atmel-quadspi: add
+ binding file for Atmel QSPI driver
+Date: Tue, 8 Sep 2015 18:29:20 -0500
+Message-ID: <55EF6F50.5020006@kernel.org>
+References: <cover.1440580764.git.cyrille.pitchen@atmel.com>
+ <793cb906c79eed821cf9b47e79dc1b54a7a5dbd0.1440580764.git.cyrille.pitchen@atmel.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=windows-1252
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1441734348-11138-2-git-send-email-justinpopo6@gmail.com>
+In-Reply-To: <793cb906c79eed821cf9b47e79dc1b54a7a5dbd0.1440580764.git.cyrille.pitchen@atmel.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Justin Chen <justinpopo6@gmail.com>, linux-kernel@vger.kernel.org
-Cc: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@roeck-us.net, devicetree@vger.kernel.org, wim@iguana.be, linux-watchdog@vger.kernel.org, bcm-kernel-feedback-list@broadcomc.com
+To: Cyrille Pitchen <cyrille.pitchen@atmel.com>, nicolas.ferre@atmel.com, broonie@kernel.org, linux-spi@vger.kernel.org, dwmw2@infradead.org, computersforpeace@gmail.com, zajec5@gmail.com, beanhuo@micron.com, juhosg@openwrt.org, marex@denx.de, shijie.huang@intel.com, ben@decadent.org.uk
+Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux-mtd@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 09/08/2015 12:45 PM, Justin Chen wrote:
-> Add device tree binding documentation for the watchdog hardware block
-> on bcm7038 and newer SoCs.
+On 08/26/2015 07:30 AM, Cyrille Pitchen wrote:
+> This patch documents the DT bindings for the driver of the Atmel QSPI
+> controller embedded inside sama5d2x SoCs.
 > 
-> Signed-off-by: Justin Chen <justinpopo6@gmail.com>
-> Acked-by: Guenter Roeck <linux@roeck-us.net>
-
-Some minor comments, otherwise:
+> Signed-off-by: Cyrille Pitchen <cyrille.pitchen@atmel.com>
+> Acked-by: Nicolas Ferre <nicolas.ferre@atmel.com>
+> Acked-by: Marek Vasut <marex@denx.de>
 
 Acked-by: Rob Herring <robh@kernel.org>
 
-
 > ---
->  .../devicetree/bindings/watchdog/brcm,bcm7038-wdt.txt | 19 +++++++++++++++++++
->  1 file changed, 19 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/watchdog/brcm,bcm7038-wdt.txt
+>  .../devicetree/bindings/mtd/atmel-quadspi.txt      | 29 ++++++++++++++++++++++
+>  1 file changed, 29 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/mtd/atmel-quadspi.txt
 > 
-> diff --git a/Documentation/devicetree/bindings/watchdog/brcm,bcm7038-wdt.txt b/Documentation/devicetree/bindings/watchdog/brcm,bcm7038-wdt.txt
+> diff --git a/Documentation/devicetree/bindings/mtd/atmel-quadspi.txt b/Documentation/devicetree/bindings/mtd/atmel-quadspi.txt
 > new file mode 100644
-> index 0000000..39e5cf5
+> index 000000000000..0b8d545bb198
 > --- /dev/null
-> +++ b/Documentation/devicetree/bindings/watchdog/brcm,bcm7038-wdt.txt
-> @@ -0,0 +1,19 @@
-> +BCM7038 Watchdog timer
+> +++ b/Documentation/devicetree/bindings/mtd/atmel-quadspi.txt
+> @@ -0,0 +1,29 @@
+> +* Atmel Quad Serial Peripheral Interface (QSPI)
 > +
 > +Required properties:
-> +
-> +- compatible : should be "brcm,bcm7038-wdt"
-> +- reg : Specifies base physical address and size of the registers.
-> +
-> +Optional properties:
-> +
-> +- clocks: The clock running the watchdog. If no clock is found the
-> +	  driver will default to 27000000 HZ.
-
-s/HZ/Hz/
-
+> +- compatible:     should be "atmel,sama5d2-qspi"
+> +- reg:            the first contains the register location and length,
+> +                  the second contains the memory mapping address and length
+> +- interrupts:     should contain the interrupt for the device
+> +- clocks:         the phandle of the clock needed by the QSPI controller
+> +- #address-cells: should be <1>
+> +- #size-cells:    should be <0>
 > +
 > +Example:
 > +
-> +watchdog {
-
-This should have a unit address (watchdog@f040a7e8).
-
-> +	compatible = "brcm,bcm7038-wdt";
-> +	clocks = <&upg_fixed>;
-> +	reg = <0xf040a7e8 0x16>;
+> +spi@f0020000 {
+> +	compatible = "atmel,sama5d2-qspi";
+> +	reg = <0xf0020000 0x100>,
+> +	      <0xd0000000 0x8000000>;
+> +	interrupts = <52 IRQ_TYPE_LEVEL_HIGH 7>;
+> +	clocks = <&spi0_clk>;
+> +	#address-cells = <1>;
+> +	#size-cells = <0>;
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&pinctrl_spi0_default>;
+> +	status = "okay";
+> +
+> +	m25p80@0 {
+> +		...
+> +	};
 > +};
 > 
