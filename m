@@ -1,361 +1,268 @@
-From: Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: Re: [PATCH v4] usb: chipidea: Use extcon framework for VBUS and ID
- detect
-Date: Tue, 8 Sep 2015 17:39:07 +0800
-Message-ID: <20150908093906.GE7802@shlinux2>
-References: <1441626325-20983-1-git-send-email-ivan.ivanov@linaro.org>
+From: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
+Subject: Re: [RFC PATCH 1/5] Documentation: dt-bindings: add documentation on
+ new DT binding format
+Date: Tue, 8 Sep 2015 17:55:05 +1000
+Message-ID: <20150908075505.GF24774@voom.redhat.com>
+References: <1440739433-6799-1-git-send-email-mporter@konsulko.com>
+ <1440739433-6799-2-git-send-email-mporter@konsulko.com>
+ <CA+bK7J76Z6H4gh-UXxMWqUYrdRx1GYKFkAAtDUszpT_8k=RCQw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="juZjCTNxrMaZdGZC"
+Return-path: <devicetree-spec-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1441626325-20983-1-git-send-email-ivan.ivanov-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: "Ivan T. Ivanov" <ivan.ivanov-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Antoine Tenart <antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+In-Reply-To: <CA+bK7J76Z6H4gh-UXxMWqUYrdRx1GYKFkAAtDUszpT_8k=RCQw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-spec-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Tim Bird <tbird20d-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Matt Porter <mporter-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Devicetree List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Devicetree Spec List <devicetree-spec-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Behan Webster <behanw-k/hB3zQhLwledRVtV/plodBPR1lH4CV8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Sep 07, 2015 at 02:45:25PM +0300, Ivan T. Ivanov wrote:
-> On recent Qualcomm platforms VBUS and ID lines are not routed to
-> USB PHY LINK controller. Use extcon framework to receive connect
-> and disconnect ID and VBUS notification.
-> 
-> Signed-off-by: Ivan T. Ivanov <ivan.ivanov-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 
-I will queue it for next rc1, thanks.
+--juZjCTNxrMaZdGZC
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Peter
-> ---
-> 
-> Changes sice v3 [1]:
-> 
-> * Migrate to new extcon framework API
-> * Address comments from Peter Chen.
-> 
-> Tested DRD role with "qcom,ci-hdrc" and "qcom,usb-8x16-phy" on DB410c
-> 
-> [1] https://lkml.org/lkml/2015/6/2/333
-> 
->  .../devicetree/bindings/usb/ci-hdrc-usb2.txt       |   6 +
->  drivers/usb/chipidea/Kconfig                       |   1 +
->  drivers/usb/chipidea/core.c                        | 125 +++++++++++++++++++++
->  drivers/usb/chipidea/otg.c                         |  39 ++++++-
->  include/linux/usb/chipidea.h                       |  23 ++++
->  5 files changed, 193 insertions(+), 1 deletion(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/usb/ci-hdrc-usb2.txt b/Documentation/devicetree/bindings/usb/ci-hdrc-usb2.txt
-> index d71ef07bca5d..aea7d0af5fd6 100644
-> --- a/Documentation/devicetree/bindings/usb/ci-hdrc-usb2.txt
-> +++ b/Documentation/devicetree/bindings/usb/ci-hdrc-usb2.txt
-> @@ -45,6 +45,11 @@ Optional properties:
->    (4 bytes), This register represents the maximum length of a the burst
->    in 32-bit words while moving data from the USB bus to system memory,
->    changing this value takes effect only the SBUSCFG.AHBBRST is 0.
-> +- extcon: phandles to external connector devices. First phandle should point to
-> +  external connector, which provide "USB" cable events, the second should point
-> +  to external connector device, which provide "USB-HOST" cable events. If one
-> +  of the external connector devices is not required, empty <0> phandle should
-> +  be specified.
-> 
->  Example:
-> 
-> @@ -61,4 +66,5 @@ Example:
->  		ahb-burst-config = <0x0>;
->  		tx-burst-size-dword = <0x10>; /* 64 bytes */
->  		rx-burst-size-dword = <0x10>;
-> +		extcon = <0>, <&usb_id>;
->  	};
-> diff --git a/drivers/usb/chipidea/Kconfig b/drivers/usb/chipidea/Kconfig
-> index 5ce3f1d6a6ed..5619b8ca3bf3 100644
-> --- a/drivers/usb/chipidea/Kconfig
-> +++ b/drivers/usb/chipidea/Kconfig
-> @@ -1,6 +1,7 @@
->  config USB_CHIPIDEA
->  	tristate "ChipIdea Highspeed Dual Role Controller"
->  	depends on ((USB_EHCI_HCD && USB_GADGET) || (USB_EHCI_HCD && !USB_GADGET) || (!USB_EHCI_HCD && USB_GADGET)) && HAS_DMA
-> +	select EXTCON
->  	help
->  	  Say Y here if your system has a dual role high speed USB
->  	  controller based on ChipIdea silicon IP. Currently, only the
-> diff --git a/drivers/usb/chipidea/core.c b/drivers/usb/chipidea/core.c
-> index 3feebf7f31f0..573c2876b263 100644
-> --- a/drivers/usb/chipidea/core.c
-> +++ b/drivers/usb/chipidea/core.c
-> @@ -47,6 +47,7 @@
->  #include <linux/delay.h>
->  #include <linux/device.h>
->  #include <linux/dma-mapping.h>
-> +#include <linux/extcon.h>
->  #include <linux/phy/phy.h>
->  #include <linux/platform_device.h>
->  #include <linux/module.h>
-> @@ -602,9 +603,45 @@ static irqreturn_t ci_irq(int irq, void *data)
->  	return ret;
->  }
-> 
-> +static int ci_vbus_notifier(struct notifier_block *nb, unsigned long event,
-> +			    void *ptr)
-> +{
-> +	struct ci_hdrc_cable *vbus = container_of(nb, struct ci_hdrc_cable, nb);
-> +	struct ci_hdrc *ci = vbus->ci;
-> +
-> +	if (event)
-> +		vbus->state = true;
-> +	else
-> +		vbus->state = false;
-> +
-> +	vbus->changed = true;
-> +
-> +	ci_irq(ci->irq, ci);
-> +	return NOTIFY_DONE;
-> +}
-> +
-> +static int ci_id_notifier(struct notifier_block *nb, unsigned long event,
-> +			  void *ptr)
-> +{
-> +	struct ci_hdrc_cable *id = container_of(nb, struct ci_hdrc_cable, nb);
-> +	struct ci_hdrc *ci = id->ci;
-> +
-> +	if (event)
-> +		id->state = false;
-> +	else
-> +		id->state = true;
-> +
-> +	id->changed = true;
-> +
-> +	ci_irq(ci->irq, ci);
-> +	return NOTIFY_DONE;
-> +}
-> +
->  static int ci_get_platdata(struct device *dev,
->  		struct ci_hdrc_platform_data *platdata)
->  {
-> +	struct extcon_dev *ext_vbus, *ext_id;
-> +	struct ci_hdrc_cable *cable;
->  	int ret;
-> 
->  	if (!platdata->phy_mode)
-> @@ -695,9 +732,91 @@ static int ci_get_platdata(struct device *dev,
->  		platdata->flags |= CI_HDRC_OVERRIDE_RX_BURST;
->  	}
-> 
-> +	ext_id = ERR_PTR(-ENODEV);
-> +	ext_vbus = ERR_PTR(-ENODEV);
-> +	if (of_property_read_bool(dev->of_node, "extcon")) {
-> +		/* Each one of them is not mandatory */
-> +		ext_vbus = extcon_get_edev_by_phandle(dev, 0);
-> +		if (IS_ERR(ext_vbus) && PTR_ERR(ext_vbus) != -ENODEV)
-> +			return PTR_ERR(ext_vbus);
-> +
-> +		ext_id = extcon_get_edev_by_phandle(dev, 1);
-> +		if (IS_ERR(ext_id) && PTR_ERR(ext_id) != -ENODEV)
-> +			return PTR_ERR(ext_id);
-> +	}
-> +
-> +	cable = &platdata->vbus_extcon;
-> +	cable->nb.notifier_call = ci_vbus_notifier;
-> +	cable->edev = ext_vbus;
-> +
-> +	if (!IS_ERR(ext_vbus)) {
-> +		ret = extcon_get_cable_state_(cable->edev, EXTCON_USB);
-> +		if (ret)
-> +			cable->state = true;
-> +		else
-> +			cable->state = false;
-> +	}
-> +
-> +	cable = &platdata->id_extcon;
-> +	cable->nb.notifier_call = ci_id_notifier;
-> +	cable->edev = ext_id;
-> +
-> +	if (!IS_ERR(ext_id)) {
-> +		ret = extcon_get_cable_state_(cable->edev, EXTCON_USB_HOST);
-> +		if (ret)
-> +			cable->state = false;
-> +		else
-> +			cable->state = true;
-> +	}
->  	return 0;
->  }
-> 
-> +static int ci_extcon_register(struct ci_hdrc *ci)
-> +{
-> +	struct ci_hdrc_cable *id, *vbus;
-> +	int ret;
-> +
-> +	id = &ci->platdata->id_extcon;
-> +	id->ci = ci;
-> +	if (!IS_ERR(id->edev)) {
-> +		ret = extcon_register_notifier(id->edev, EXTCON_USB_HOST,
-> +					       &id->nb);
-> +		if (ret < 0) {
-> +			dev_err(ci->dev, "register ID failed\n");
-> +			return ret;
-> +		}
-> +	}
-> +
-> +	vbus = &ci->platdata->vbus_extcon;
-> +	vbus->ci = ci;
-> +	if (!IS_ERR(vbus->edev)) {
-> +		ret = extcon_register_notifier(vbus->edev, EXTCON_USB,
-> +					       &vbus->nb);
-> +		if (ret < 0) {
-> +			extcon_unregister_notifier(id->edev, EXTCON_USB_HOST,
-> +						   &id->nb);
-> +			dev_err(ci->dev, "register VBUS failed\n");
-> +			return ret;
-> +		}
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static void ci_extcon_unregister(struct ci_hdrc *ci)
-> +{
-> +	struct ci_hdrc_cable *cable;
-> +
-> +	cable = &ci->platdata->id_extcon;
-> +	if (!IS_ERR(cable->edev))
-> +		extcon_unregister_notifier(cable->edev, EXTCON_USB_HOST,
-> +					   &cable->nb);
-> +
-> +	cable = &ci->platdata->vbus_extcon;
-> +	if (!IS_ERR(cable->edev))
-> +		extcon_unregister_notifier(cable->edev, EXTCON_USB, &cable->nb);
-> +}
-> +
->  static DEFINE_IDA(ci_ida);
-> 
->  struct platform_device *ci_hdrc_add_device(struct device *dev,
-> @@ -921,6 +1040,10 @@ static int ci_hdrc_probe(struct platform_device *pdev)
->  	if (ret)
->  		goto stop;
-> 
-> +	ret = ci_extcon_register(ci);
-> +	if (ret)
-> +		goto stop;
-> +
->  	if (ci->supports_runtime_pm) {
->  		pm_runtime_set_active(&pdev->dev);
->  		pm_runtime_enable(&pdev->dev);
-> @@ -938,6 +1061,7 @@ static int ci_hdrc_probe(struct platform_device *pdev)
->  	if (!ret)
->  		return 0;
-> 
-> +	ci_extcon_unregister(ci);
->  stop:
->  	ci_role_destroy(ci);
->  deinit_phy:
-> @@ -957,6 +1081,7 @@ static int ci_hdrc_remove(struct platform_device *pdev)
->  	}
-> 
->  	dbg_remove_files(ci);
-> +	ci_extcon_unregister(ci);
->  	ci_role_destroy(ci);
->  	ci_hdrc_enter_lpm(ci, true);
->  	ci_usb_phy_exit(ci);
-> diff --git a/drivers/usb/chipidea/otg.c b/drivers/usb/chipidea/otg.c
-> index ad6c87a4653c..ab4bd0c2d4ef 100644
-> --- a/drivers/usb/chipidea/otg.c
-> +++ b/drivers/usb/chipidea/otg.c
-> @@ -30,7 +30,44 @@
->   */
->  u32 hw_read_otgsc(struct ci_hdrc *ci, u32 mask)
->  {
-> -	return hw_read(ci, OP_OTGSC, mask);
-> +	struct ci_hdrc_cable *cable;
-> +	u32 val = hw_read(ci, OP_OTGSC, mask);
-> +
-> +	/*
-> +	 * If using extcon framework for VBUS and/or ID signal
-> +	 * detection overwrite OTGSC register value
-> +	 */
-> +	cable = &ci->platdata->vbus_extcon;
-> +	if (!IS_ERR(cable->edev)) {
-> +		if (cable->changed)
-> +			val |= OTGSC_BSVIS;
-> +		else
-> +			val &= ~OTGSC_BSVIS;
-> +
-> +		cable->changed = false;
-> +
-> +		if (cable->state)
-> +			val |= OTGSC_BSV;
-> +		else
-> +			val &= ~OTGSC_BSV;
-> +	}
-> +
-> +	cable = &ci->platdata->id_extcon;
-> +	if (!IS_ERR(cable->edev)) {
-> +		if (cable->changed)
-> +			val |= OTGSC_IDIS;
-> +		else
-> +			val &= ~OTGSC_IDIS;
-> +
-> +		cable->changed = false;
-> +
-> +		if (cable->state)
-> +			val |= OTGSC_ID;
-> +		else
-> +			val &= ~OTGSC_ID;
-> +	}
-> +
-> +	return val;
->  }
-> 
->  /**
-> diff --git a/include/linux/usb/chipidea.h b/include/linux/usb/chipidea.h
-> index a41833cd184c..c5cddc6901d0 100644
-> --- a/include/linux/usb/chipidea.h
-> +++ b/include/linux/usb/chipidea.h
-> @@ -5,9 +5,28 @@
->  #ifndef __LINUX_USB_CHIPIDEA_H
->  #define __LINUX_USB_CHIPIDEA_H
-> 
-> +#include <linux/extcon.h>
->  #include <linux/usb/otg.h>
-> 
->  struct ci_hdrc;
-> +
-> +/**
-> + * struct ci_hdrc_cable - structure for external connector cable state tracking
-> + * @state: current state of the line
-> + * @changed: set to true when extcon event happen
-> + * @edev: device which generate events
-> + * @ci: driver state of the chipidea device
-> + * @nb: hold event notification callback
-> + * @conn: used for notification registration
-> + */
-> +struct ci_hdrc_cable {
-> +	bool				state;
-> +	bool				changed;
-> +	struct extcon_dev		*edev;
-> +	struct ci_hdrc			*ci;
-> +	struct notifier_block		nb;
-> +};
-> +
->  struct ci_hdrc_platform_data {
->  	const char	*name;
->  	/* offset of the capability registers */
-> @@ -48,6 +67,10 @@ struct ci_hdrc_platform_data {
->  	u32			ahb_burst_config;
->  	u32			tx_burst_size;
->  	u32			rx_burst_size;
-> +
-> +	/* VBUS and ID signal state tracking, using extcon framework */
-> +	struct ci_hdrc_cable		vbus_extcon;
-> +	struct ci_hdrc_cable		id_extcon;
->  };
-> 
->  /* Default offset of capability registers */
-> --
-> 1.9.1
-> 
+On Tue, Sep 01, 2015 at 09:59:14AM -0700, Tim Bird wrote:
+> On Thu, Aug 27, 2015 at 10:23 PM, Matt Porter <mporter-OWPKS81ov/FWk0Htik3J/w@public.gmane.org> wrot=
+e:
+> > Documentation explaining the syntax and format of the YAML-based DT bin=
+ding
+> > documentation.
+> >
+> > Signed-off-by: Matt Porter <mporter-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
+> > ---
+> >  .../devicetree/bindings/dt-binding-format.txt      | 106 +++++++++++++=
+++++++++
+> >  1 file changed, 106 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/dt-binding-format=
+=2Etxt
+> >
+> > diff --git a/Documentation/devicetree/bindings/dt-binding-format.txt b/=
+Documentation/devicetree/bindings/dt-binding-format.txt
+> > new file mode 100644
+> > index 0000000..f9acc22
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/dt-binding-format.txt
+> > @@ -0,0 +1,106 @@
+> > +--------------------------
+> > +Device Tree Binding Format
+> > +--------------------------
+> > +
+> > +Background
+> > +----------
+> > +
+> > +DT bindings historically were written as text in prose format which
+> > +led to issues in usability of that source documentation. Some of
+> > +these issues include the need to programmatically process binding
+> > +source documentation to do DTS validation, perform mass updates to
+> > +format/style, and to generate publishable documentation in HTML or
+> > +PDF form.
+> > +
+> > +Overview
+> > +--------
+> > +
+> > +The DT binding format is based on the YAML text markup language.
+> > +Although there are many text markup options available, YAML
+> > +fulfills all requirements considered for a DT binding source format
+> > +which include:
+> > +
+> > +1) Must be human readable
+> > +2) Must be easily translated to other data formats (XML, JSON, etc).
+> > +3) Must have sufficient tools and libraries to enable developers to
+> > +   build new tools for DT binding processing
+> > +4) Must have a complete spec to refer to syntax
+> > +
+> > +YAML is documentated in the specification found at
+> > +http://www.yaml.org/spec/1.2/spec.html
+> > +
+> > +The required YAML DT binding tag format and syntax are defined in
+> > +the following sections.
+> > +
+> > +YAML DT Binding Syntax
+> > +----------------------
+> > +
+> > +* Lines starting with "#" are comments and not part of the binding its=
+elf
+> > +* "%YAML 1.2" starts a file, indicating the version of YAML in use
+>=20
+> I think it would be good to specify a DT Binding Format version as well.
+> I would expect we may expand the syntax, or we may alter it, so it
+> would be good to have a number for our specific syntax.  This would
+> help in some circumstances, if we make multiple passes over the
+> documents to achieve our conversion.  Maybe this should be added
+> below.
 
--- 
+Good point.  In fact, I think it's absolutely essential that we
+include that.  This is a complicated business and we're bound to make
+mistakes in the binding definition format - a version number gives us
+a way to fix them without requiring changing all the existing bindings
+at once.
 
-Best Regards,
-Peter Chen
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+[snip]
+> > +* [O] compatible: sequence of valid compatible descriptors
+> > +      [R] name: the compatible string surrounded in double quotes
+> > +      [O] deprecated: a deprecated compatible string surrounded in
+> > +                      double quotes
+> > +      [O] description: description of the compatible string
+>=20
+> compatible is a property like all the others, and I think it's confusing
+> to have it in a separate section.  For example, when listing other
+> properties, the "name:" field specifies the property name, but for
+> the compatible section the "name:" field specifies the possible values
+> for the compatible property.  This is (at least to me) quite confusing.
+>=20
+> Can we make this a regular property, with an option 'deprecated' attribut=
+e.
+> I guess we may need to distinguish between deprecated properties and
+> deprecated vales of properties.
+> The above 'deprecated' specifies deprecated values for the compatible
+> property, while
+> the section below specifies deprecated properties.  I don't see a way
+> to indicate a deprecated
+> value for a still-existing property, but that may be too much detail for =
+now.
+
+So, I think folding compatible in with the rest is a mistake.  There
+are two important distinctions between compatible and the other
+property descriptions:
+
+1) (See my other post for context) The most important is that
+compatible is the "key" for the binding.  It's what lets you know the
+binding is in play, rather than just saying what the requirements are
+once you know it's a relevant binding.
+
+2) The condition we're typically listing for compatible is that it
+must contain the given compatible string - it's valid and common to
+also have additional compatible strings (e.g. for the future,
+backwards-compatible revision of this device).  For most other
+properties we're describing the *whole* value it should have.
+
+Eventually I think we'll want a general way of expressing such
+"equals" versus "contains" conditions, but that's a pretty hard
+problem, so for the first cut I think it's reasonable to special case
+'compatible'.
+
+
+Incidentally, note that it would also be quite common for 'compatible'
+to appear in *both* the "key" and the requirements.  e.g. the binding
+for "foo,bardev-revision-b" could require that compatible also list
+"foo,bardev-revision-a" if it's backwards compatible.
+
+> > +* [O] required: sequence of required properties:
+> > +      [R] name: name of the property surrounded in double quotes
+> > +      [R] description: description of the property
+> > +      [O] reference: optional reference to a binding id
+>=20
+> I would recommend we add types and value constraints to the
+> binding schema:
+>=20
+> [O] type: type of value for this property, and if specified must be
+> one of the following (without quotes):
+> "string", "number", "array", "phandle"
+
+It might be worth re-using the type names used in old OF documents
+here.  Although "prop-encoded-array" tends to cover an awful lot there.
+
+> [O] value constraint: specifies a limit on the value for a property.
+> This can be specified as English text, or be a range or choice constraint.
+> The latter two should be expressed with the following exact english
+> phrases (without quotes):
+> "must be in the range x to y, inclusive"
+> where x and y are numbers
+> "must be one of <choice 1>, <choice 2>, ..."
+> where <choice x> is a string, which should be quoted
+> if it includes a comma.
+>=20
+> Any other constraint is expressed in free-form English text
+
+Requiring exact english phrases when we're already have a flexible
+encoding scheme with YAML is pretty horrid.
+
+I'd suggest instead that English constraints just go in the
+description.  We can add new fields for specific types of machine
+verifiable constraints as we implement them (e.g. "max", "min",
+"allowed-values").
+
+> I would recommend adding these to this binding schema doc, but
+> not requiring them on the first conversion pass of the docs.
+>=20
+> Basically my idea is that you want the each pass over the binding
+> documents to be as painless as possible.  Every time a user encounters
+> something they're not sure about, it will slow them down.  There will
+> be lots of ambiguous situations, and we want the process to be as
+> lossless as possible, so I would recommend a strategy of doing as
+> much as people can, and if in doubt just put any outstanding text
+> in the descriptions.  The descriptions will always be free-form text,
+> and we can come along later and convert these to types, constraints,
+> as we see fit.
+>=20
+> > +* [O] optional: sequence of optional properties:
+> > +      [R] name: name of the property surrounded in double quotes
+> > +      [R] description: description of the property
+> > +      [O] reference: optional reference to a binding id
+> > +
+> > +* [O] deprecated: sequence of deprecated properties:
+> > +      [R] name: name of the property surrounded in double quotes
+> > +      [R] description: description of the property
+> > +      [O] reference: optional reference to a binding id
+> > +
+> > +* [R] example: sequence of examples:
+> > +      [R] dts: DT source of example usage. The example text must use
+> > +               literal style ("|") so that it retains indentation and
+> > +               newlines.
+> > +      [O] description: description of the example
+> > +
+>=20
+> I'd recommend having a top-level notes section:
+> * [O] note: any other notes about this node that are not covered by
+> preceding property descriptions.
+
+Good call.  Although I'd suggest "description" to match the name used
+elsewhere.
+
+> > +Note: [R] and [O] denote required and optional fields, respectively.
+>=20
+> I'd put this note before the format description.
+>=20
+>  -- Tim
+>=20
+> > +
+> > +Skeleton Binding
+> > +----------------
+> > +
+> > +The skeleton.yaml binding found in the top of the DT binding tree
+> > +is the canonical example of syntax and format to use when writing
+> > +a DT binding document. It is maintained with the latest formatting
+> > +conventions, making it the best starting point when writing a new DT
+> > +binding.
+> > --
+
+--=20
+David Gibson			| I'll have my music baroque, and my code
+david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _other_
+				| _way_ _around_!
+http://www.ozlabs.org/~dgibson
+
+--juZjCTNxrMaZdGZC
+Content-Type: application/pgp-signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBAgAGBQJV7pRZAAoJEGw4ysog2bOSzZoQAIOyylaKSeveOQshDcWZ/BgI
+wBpGozCwVZ9KWan1bM+Hiz1DBQDbxE5U4H608hQN+a8vMNpG93DrJ4OzPjMgvNjv
+PzBf51XFGeg6KRQExvmWMXvpTblWRLoRe6VeJrc20egHrZT5RuvbUjF9TLPXk2Cq
+rdt2KgUlJHwwUphi23j21N7iWBsRh2DlMQnpwOJt3et8ht2zhrmAwt2PDUWhZAW2
+9zB116Tw/vmewOFKyUQFzTRni7UJK9AX7fqBdZ04kgFYHUkfol69PcwI10Senypf
+y9UvgcyUrqPD9ulk3eHf3mnkeFVQYnGbFQsiyS24aROB7hSS9O1ai4l0OmX+KOge
+q3wEKZIAYvWVWSHVGmg4IMYR/TOF62NQmLOKPSIk4nbi07BsQBwBYCmfoiJNcm55
+SqCcfJGzVRhFUtx2OjuRukYcp0iMpsn3TkzrOZh5rkq+eRCunoW4CTavTyltu2rh
+Rkei2BXUXWm8pCwl2FDx4URxk7ZbDWoV55UtpLdIN0BPH0Uiuy1NG7PXN7Ga5hCw
+e936J++baru39+vQQfxWxKR+Y4i9bBWl3OGXZ/RgEqCIOS1ihyuLx4G6gxrDIQFF
+G+8CPiF6PWgn8P/GDdlVM+5Yb3BXz2CkWddhBGBABZ5R27eea5BSVLdn+2T+85x4
+B8l+f8DUgH4DrH2f06oX
+=3DlH
+-----END PGP SIGNATURE-----
+
+--juZjCTNxrMaZdGZC--
