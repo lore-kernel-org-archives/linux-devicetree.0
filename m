@@ -1,58 +1,73 @@
-From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH-v2 4/7] mmc: sdhci-pxav3: Add pinctl setting according to
- bus clock
-Date: Tue, 8 Sep 2015 16:42:38 +0200
-Message-ID: <CACRpkdY59roEBgUd9TR39yNgfhw393+WmHQQAeLkOEZLChOcWQ@mail.gmail.com>
-References: <1441624721-15612-1-git-send-email-vaibhav.hiremath@linaro.org>
-	<1441624721-15612-5-git-send-email-vaibhav.hiremath@linaro.org>
+From: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: Re: [PATCH v2 1/9] ARM: dts: imx6dql-nitrogen6x: add touchscreen
+ support
+Date: Tue, 08 Sep 2015 16:49:20 +0200
+Message-ID: <1441723760.3241.26.camel@pengutronix.de>
+References: <1441645069-27263-1-git-send-email-gary.bisson@boundarydevices.com>
+	 <1441722886-22798-1-git-send-email-gary.bisson@boundarydevices.com>
+	 <1441722886-22798-2-git-send-email-gary.bisson@boundarydevices.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1441624721-15612-5-git-send-email-vaibhav.hiremath-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+In-Reply-To: <1441722886-22798-2-git-send-email-gary.bisson-Q5RJGjKts06CY9SHAMCTRUEOCMrvLtNR@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Vaibhav Hiremath <vaibhav.hiremath-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: "linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Kevin Liu <kliu5-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
+To: Gary Bisson <gary.bisson-Q5RJGjKts06CY9SHAMCTRUEOCMrvLtNR@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Sep 7, 2015 at 1:18 PM, Vaibhav Hiremath
-<vaibhav.hiremath-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+Am Dienstag, den 08.09.2015, 16:34 +0200 schrieb Gary Bisson:
+> This patch adds the different touchscreens that can be connected using
+> the displays available for this board.
+> http://boundarydevices.com/product-category/displays/
+> 
+> Signed-off-by: Gary Bisson <gary.bisson-Q5RJGjKts06CY9SHAMCTRUEOCMrvLtNR@public.gmane.org>
+> ---
+>  arch/arm/boot/dts/imx6qdl-nitrogen6x.dtsi | 16 ++++++++++++++++
+>  1 file changed, 16 insertions(+)
+> 
+> diff --git a/arch/arm/boot/dts/imx6qdl-nitrogen6x.dtsi b/arch/arm/boot/dts/imx6qdl-nitrogen6x.dtsi
+> index ad16dce..24b667d 100644
+> --- a/arch/arm/boot/dts/imx6qdl-nitrogen6x.dtsi
+> +++ b/arch/arm/boot/dts/imx6qdl-nitrogen6x.dtsi
+> @@ -284,6 +284,22 @@
+>  	pinctrl-names = "default";
+>  	pinctrl-0 = <&pinctrl_i2c3>;
+>  	status = "okay";
+> +
+> +	egalax_ts@04 {
 
-> Different bus clock may need different pin setting.
-> For example, fast bus clock like 208Mhz need pin drive fast
-> while slow bus clock prefer pin drive slow to guarantee
-> signal quality.
->
-> So this patch creates two states,
->   - Default (slow/normal) pin state
->   - And fast pin state for higher freq bus speed.
->
-> And selection of pin state is done based on timing mode.
->
-> Signed-off-by: Vaibhav Hiremath <vaibhav.hiremath-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> Signed-off-by: Kevin Liu <kliu5-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
-(...)
-> +       pxa->pinctrl = devm_pinctrl_get(dev);
-> +       if (!IS_ERR(pxa->pinctrl)) {
-> +               pxa->pins_default = pinctrl_lookup_state(pxa->pinctrl, "default");
-> +               if (IS_ERR(pxa->pins_default))
-> +                       dev_err(dev, "could not get default pinstate\n");
-> +               pxa->pins_fast = pinctrl_lookup_state(pxa->pinctrl, "fast");
-> +               if (IS_ERR(pxa->pins_fast))
-> +                       dev_info(dev, "could not get fast pinstate\n");
-> +       }
+I'd prefer to use generic names for the nodes, such as "touchscreen@04",
+and "touchscreen@38" below.
 
-This is exactly how I think it should be used from a pin control
-point of view.
+> +		compatible = "eeti,egalax_ts";
+> +		reg = <0x04>;
+> +		interrupt-parent = <&gpio1>;
+> +		interrupts = <9 IRQ_TYPE_EDGE_FALLING>;
+> +		wakeup-gpios = <&gpio1 9 GPIO_ACTIVE_LOW>;
+> +	};
+> +
+> +	ft5x06_ts@38 {
+> +		compatible = "edt,edt-ft5x06";
+> +		reg = <0x38>;
+> +		interrupt-parent = <&gpio1>;
+> +		interrupts = <9 IRQ_TYPE_EDGE_FALLING>;
+> +		wakeup-gpios = <&gpio1 9 GPIO_ACTIVE_LOW>;
 
-If you depended on CONFIG_PM you could use
-pinctrl_pm_select_default_state() but for this simple scenario
-this is fine.
+This should be wake-gpios and GPIO_ACTIVE_HIGH according to the other
+users.
 
-Reviewed-by: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
->From a pinctrl point of view.
+> +	};
+>  };
+>  
+>  &iomuxc {
 
-Yours,
-Linus Walleij
+With those changes,
+Acked-by: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+
+regards
+Philipp
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
