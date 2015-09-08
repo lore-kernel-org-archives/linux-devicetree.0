@@ -1,93 +1,124 @@
-From: Chunfeng Yun <chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Subject: [PATCH v7 2/5] dt-bindings: Add a binding for Mediatek xHCI host
- controller
-Date: Tue, 8 Sep 2015 14:18:00 +0800
-Message-ID: <1441693083-8440-3-git-send-email-chunfeng.yun@mediatek.com>
+From: Chunfeng Yun <chunfeng.yun@mediatek.com>
+Subject: [PATCH v7 5/5] arm64: dts: mediatek: add xHCI & usb phy for mt8173
+Date: Tue, 8 Sep 2015 14:18:03 +0800
+Message-ID: <1441693083-8440-6-git-send-email-chunfeng.yun@mediatek.com>
 References: <1441693083-8440-1-git-send-email-chunfeng.yun@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-In-Reply-To: <1441693083-8440-1-git-send-email-chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mediatek>,
- <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-mediatek/>
-List-Post: <mailto:linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mediatek>,
- <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "Linux-mediatek" <linux-mediatek-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: Mathias Nyman <mathias.nyman-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Chunfeng Yun <chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, John Crispin <blogic-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1441693083-8440-1-git-send-email-chunfeng.yun@mediatek.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Mathias Nyman <mathias.nyman@intel.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, Felipe Balbi <balbi@ti.com>, Chunfeng Yun <chunfeng.yun@mediatek.com>, Sascha Hauer <s.hauer@pengutronix.de>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Roger Quadros <rogerq@ti.com>, linux-usb@vger.kernel.org, linux-mediatek@lists.infradead.org, John Crispin <blogic@openwrt.org>, Daniel Kurtz <djkurtz@chromium.org>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, Kishon Vijay Abraham I <kishon@ti.com>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 List-Id: devicetree@vger.kernel.org
 
-add a DT binding documentation of xHCI host controller for the
-MT8173 SoC from Mediatek.
+add xHCI and phy drivers for MT8173-EVB
 
-Signed-off-by: Chunfeng Yun <chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Signed-off-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
 ---
- .../devicetree/bindings/usb/mt8173-xhci.txt        | 52 ++++++++++++++++++++++
- 1 file changed, 52 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/usb/mt8173-xhci.txt
+ arch/arm64/boot/dts/mediatek/mt8173-evb.dts | 16 +++++++++++
+ arch/arm64/boot/dts/mediatek/mt8173.dtsi    | 44 +++++++++++++++++++++++++++++
+ 2 files changed, 60 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/usb/mt8173-xhci.txt b/Documentation/devicetree/bindings/usb/mt8173-xhci.txt
-new file mode 100644
-index 0000000..d851bf1
---- /dev/null
-+++ b/Documentation/devicetree/bindings/usb/mt8173-xhci.txt
-@@ -0,0 +1,52 @@
-+MT8173 xHCI
+diff --git a/arch/arm64/boot/dts/mediatek/mt8173-evb.dts b/arch/arm64/boot/dts/mediatek/mt8173-evb.dts
+index f433c21..112f3f3 100644
+--- a/arch/arm64/boot/dts/mediatek/mt8173-evb.dts
++++ b/arch/arm64/boot/dts/mediatek/mt8173-evb.dts
+@@ -13,6 +13,7 @@
+  */
+ 
+ /dts-v1/;
++#include <dt-bindings/gpio/gpio.h>
+ #include "mt8173.dtsi"
+ 
+ / {
+@@ -32,6 +33,15 @@
+ 	};
+ 
+ 	chosen { };
 +
-+The device node for Mediatek SOC USB3.0 host controller
++	usb_p1_vbus: regulator@0 {
++		compatible = "regulator-fixed";
++		regulator-name = "usb_vbus";
++		regulator-min-microvolt = <5000000>;
++		regulator-max-microvolt = <5000000>;
++		gpio = <&pio 130 GPIO_ACTIVE_HIGH>;
++		enable-active-high;
++	};
+ };
+ 
+ &pwrap {
+@@ -211,3 +221,9 @@
+ &uart0 {
+ 	status = "okay";
+ };
 +
-+Required properties:
-+ - compatible : should contain "mediatek,mt8173-xhci"
-+ - reg : specifies physical base address and size of the registers,
-+	the first one for MAC, the second for IPPC
-+ - interrupts : interrupt used by the controller
-+ - power-domains : a phandle to USB power domain node to control USB's
-+	mtcmos
-+ - vusb33-supply : regulator of USB avdd3.3v
-+
-+ - clocks : a list of phandle + clock-specifier pairs, one for each
-+	entry in clock-names
-+ - clock-names : must contain
-+	"sys_ck": for clock of xHCI MAC
-+	"wakeup_deb_p0": for USB wakeup debounce clock of port0
-+	"wakeup_deb_p0": for USB wakeup debounce clock of port1
-+
-+ - phys : a list of phandle + phy specifier pairs
-+ - usb3-lpm-capable : supports USB3.0 LPM
-+ - mediatek,syscon-wakeup : phandle to syscon used to access USB wakeup
-+	control register
-+ - mediatek,wakeup-src : 1: ip sleep wakeup mode; 2: line state wakeup
-+	mode; Others means don't enable wakeup source of USB
-+
-+Optional properties:
-+ - vbus-supply : reference to the VBUS regulator;
-+
-+Example:
-+usb30: usb@11270000 {
-+	compatible = "mediatek,mt8173-xhci";
-+	reg = <0 0x11270000 0 0x1000>,
-+	      <0 0x11280700 0 0x0100>;
-+	interrupts = <GIC_SPI 115 IRQ_TYPE_LEVEL_LOW>;
-+	power-domains = <&scpsys MT8173_POWER_DOMAIN_USB>;
-+	clocks = <&topckgen CLK_TOP_USB30_SEL>,
-+		 <&pericfg CLK_PERI_USB0>,
-+		 <&pericfg CLK_PERI_USB1>;
-+	clock-names = "sys_ck",
-+		      "wakeup_deb_p0",
-+		      "wakeup_deb_p1";
-+	phys = <&phy_port0 PHY_TYPE_USB3>,
-+	       <&phy_port1 PHY_TYPE_USB2>;
++&usb30 {
 +	vusb33-supply = <&mt6397_vusb_reg>;
 +	vbus-supply = <&usb_p1_vbus>;
-+	usb3-lpm-capable;
-+	mediatek,syscon-wakeup = <&pericfg>;
 +	mediatek,wakeup-src = <1>;
-+	status = "okay";
 +};
+diff --git a/arch/arm64/boot/dts/mediatek/mt8173.dtsi b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
+index 0696f8f..a51380e 100644
+--- a/arch/arm64/boot/dts/mediatek/mt8173.dtsi
++++ b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
+@@ -14,6 +14,8 @@
+ #include <dt-bindings/clock/mt8173-clk.h>
+ #include <dt-bindings/interrupt-controller/irq.h>
+ #include <dt-bindings/interrupt-controller/arm-gic.h>
++#include <dt-bindings/phy/phy.h>
++#include <dt-bindings/power/mt8173-power.h>
+ #include <dt-bindings/reset-controller/mt8173-resets.h>
+ #include "mt8173-pinfunc.h"
+ 
+@@ -393,6 +395,48 @@
+ 			#size-cells = <0>;
+ 			status = "disabled";
+ 		};
++
++		usb30: usb@11270000 {
++			compatible = "mediatek,mt8173-xhci";
++			reg = <0 0x11270000 0 0x1000>,
++			      <0 0x11280700 0 0x0100>;
++			interrupts = <GIC_SPI 115 IRQ_TYPE_LEVEL_LOW>;
++			power-domains = <&scpsys MT8173_POWER_DOMAIN_USB>;
++			clocks = <&topckgen CLK_TOP_USB30_SEL>,
++				 <&pericfg CLK_PERI_USB0>,
++				 <&pericfg CLK_PERI_USB1>;
++			clock-names = "sys_ck",
++				      "wakeup_deb_p0",
++				      "wakeup_deb_p1";
++			phys = <&phy_port0 PHY_TYPE_USB3>,
++			       <&phy_port1 PHY_TYPE_USB2>;
++			usb3-lpm-capable;
++			mediatek,syscon-wakeup = <&pericfg>;
++			status = "okay";
++		};
++
++		u3phy: usb-phy@11290000 {
++			compatible = "mediatek,mt8173-u3phy";
++			reg = <0 0x11290000 0 0x800>;
++			clocks = <&apmixedsys CLK_APMIXED_REF2USB_TX>;
++			clock-names = "u3phya_ref";
++			#address-cells = <2>;
++			#size-cells = <2>;
++			ranges;
++			status = "okay";
++
++			phy_port0: port@11290800 {
++				reg = <0 0x11290800 0 0x800>;
++				#phy-cells = <1>;
++				status = "okay";
++			};
++
++			phy_port1: port@11291000 {
++				reg = <0 0x11291000 0 0x800>;
++				#phy-cells = <1>;
++				status = "okay";
++			};
++		};
+ 	};
+ };
+ 
 -- 
 1.8.1.1.dirty
