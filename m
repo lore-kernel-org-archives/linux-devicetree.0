@@ -1,108 +1,66 @@
-From: Tony Lindgren <tony@atomide.com>
-Subject: Re: [net-next PATCH v3] drivers: net: cpsw: Add support to drive
- gpios for ethernet to be functional
-Date: Tue, 8 Sep 2015 13:06:18 -0700
-Message-ID: <20150908200618.GF4215@atomide.com>
-References: <1441619204-15403-1-git-send-email-mugunthanvnm@ti.com>
+From: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+Subject: Re: [PATCH v2 1/9] ARM: dts: imx6dql-nitrogen6x: add touchscreen
+ support
+Date: Tue, 8 Sep 2015 21:33:57 +0100
+Message-ID: <20150908203357.GD21084@n2100.arm.linux.org.uk>
+References: <1441645069-27263-1-git-send-email-gary.bisson@boundarydevices.com>
+ <1441722886-22798-1-git-send-email-gary.bisson@boundarydevices.com>
+ <1441722886-22798-2-git-send-email-gary.bisson@boundarydevices.com>
+ <1441723760.3241.26.camel@pengutronix.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <netdev-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1441619204-15403-1-git-send-email-mugunthanvnm@ti.com>
-Sender: netdev-owner@vger.kernel.org
-To: Mugunthan V N <mugunthanvnm@ti.com>
-Cc: netdev@vger.kernel.org, "David S . Miller" <davem@davemloft.net>, Sekhar Nori <nsekhar@ti.com>, linux-omap@vger.kernel.org, devicetree@vger.kernel.org
+In-Reply-To: <1441723760.3241.26.camel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: Gary Bisson <gary.bisson-Q5RJGjKts06CY9SHAMCTRUEOCMrvLtNR@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-* Mugunthan V N <mugunthanvnm@ti.com> [150907 02:50]:
-> In DRA72x EVM, by default slave 1 is connected to the onboard
-> phy, but slave 2 pins are also muxed with video input module
-> which is controlled by pcf857x gpio and currently to select slave
-> 0 to connect to phy gpio hogging is used, but with
-> omap2plus_defconfig the pcf857x gpio is built as module. So when
-> using NFS on DRA72x EVM, board doesn't boot as gpio hogging do
-> not set proper gpio state to connect slave 0 to phy as it is
-> built as module and you do not see any errors for not setting
-> gpio and just mentions dhcp reply not got.
+On Tue, Sep 08, 2015 at 04:49:20PM +0200, Philipp Zabel wrote:
+> Am Dienstag, den 08.09.2015, 16:34 +0200 schrieb Gary Bisson:
+> > This patch adds the different touchscreens that can be connected using
+> > the displays available for this board.
+> > http://boundarydevices.com/product-category/displays/
+> > 
+> > Signed-off-by: Gary Bisson <gary.bisson-Q5RJGjKts06CY9SHAMCTRUEOCMrvLtNR@public.gmane.org>
+> > ---
+> >  arch/arm/boot/dts/imx6qdl-nitrogen6x.dtsi | 16 ++++++++++++++++
+> >  1 file changed, 16 insertions(+)
+> > 
+> > diff --git a/arch/arm/boot/dts/imx6qdl-nitrogen6x.dtsi b/arch/arm/boot/dts/imx6qdl-nitrogen6x.dtsi
+> > index ad16dce..24b667d 100644
+> > --- a/arch/arm/boot/dts/imx6qdl-nitrogen6x.dtsi
+> > +++ b/arch/arm/boot/dts/imx6qdl-nitrogen6x.dtsi
+> > @@ -284,6 +284,22 @@
+> >  	pinctrl-names = "default";
+> >  	pinctrl-0 = <&pinctrl_i2c3>;
+> >  	status = "okay";
+> > +
+> > +	egalax_ts@04 {
 > 
-> To solve this issue, introducing "mode-gpios" in DT when gpio
-> based muxing is required. This will throw a warning when gpio
-> get fails and returns probe defer. When gpio-pcf857x module is
-> installed, cpsw probes again and ethernet becomes functional.
-> Verified this on DRA72x with pcf as module and ramdisk.
-> 
-> Signed-off-by: Mugunthan V N <mugunthanvnm@ti.com>
+> I'd prefer to use generic names for the nodes, such as "touchscreen@04",
+> and "touchscreen@38" below.
 
-Acked-by: Tony Lindgren <tony@atomide.com>
+ePAPR actually says that the node name should be the general class of
+the device, and recommending that it should be generic:
 
-> ---
-> 
-> Changes from v2:
-> * Used mode-gpios, so that the driver is generic enough to handle
->   multiple gpios
-> 
-> This patch is tested on DRA72x, Logs [1] and pushed a branch [2]
-> 
-> [1]: http://pastebin.ubuntu.com/12306224/
-> [2]: git://git.ti.com/~mugunthanvnm/ti-linux-kernel/linux.git cpsw-gpio-optional-v3
-> 
-> ---
->  Documentation/devicetree/bindings/net/cpsw.txt | 7 +++++++
->  drivers/net/ethernet/ti/cpsw.c                 | 9 +++++++++
->  2 files changed, 16 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/net/cpsw.txt b/Documentation/devicetree/bindings/net/cpsw.txt
-> index a9df21a..676ecf6 100644
-> --- a/Documentation/devicetree/bindings/net/cpsw.txt
-> +++ b/Documentation/devicetree/bindings/net/cpsw.txt
-> @@ -30,6 +30,13 @@ Optional properties:
->  - dual_emac		: Specifies Switch to act as Dual EMAC
->  - syscon		: Phandle to the system control device node, which is
->  			  the control module device of the am33x
-> +- mode-gpios		: Should be added if one/multiple gpio lines are
-> +			  required to be driven so that cpsw data lines
-> +			  can be connected to the phy via selective mux.
-> +			  For example in dra72x-evm, pcf gpio has to be
-> +			  driven low so that cpsw slave 0 and phy data
-> +			  lines are connected via mux.
-> +
->  
->  Slave Properties:
->  Required properties:
-> diff --git a/drivers/net/ethernet/ti/cpsw.c b/drivers/net/ethernet/ti/cpsw.c
-> index 8fc90f1..c670317 100644
-> --- a/drivers/net/ethernet/ti/cpsw.c
-> +++ b/drivers/net/ethernet/ti/cpsw.c
-> @@ -29,6 +29,7 @@
->  #include <linux/workqueue.h>
->  #include <linux/delay.h>
->  #include <linux/pm_runtime.h>
-> +#include <linux/gpio.h>
->  #include <linux/of.h>
->  #include <linux/of_net.h>
->  #include <linux/of_device.h>
-> @@ -2207,6 +2208,7 @@ static int cpsw_probe(struct platform_device *pdev)
->  	void __iomem			*ss_regs;
->  	struct resource			*res, *ss_res;
->  	const struct of_device_id	*of_id;
-> +	struct gpio_descs		*mode;
->  	u32 slave_offset, sliver_offset, slave_size;
->  	int ret = 0, i;
->  	int irq;
-> @@ -2232,6 +2234,13 @@ static int cpsw_probe(struct platform_device *pdev)
->  		goto clean_ndev_ret;
->  	}
->  
-> +	mode = devm_gpiod_get_array_optional(&pdev->dev, "mode", GPIOD_OUT_LOW);
-> +	if (IS_ERR(mode)) {
-> +		ret = PTR_ERR(mode);
-> +		dev_err(&pdev->dev, "gpio request failed, ret %d\n", ret);
-> +		goto clean_ndev_ret;
-> +	}
-> +
->  	/*
->  	 * This may be required here for child devices.
->  	 */
-> -- 
-> 2.6.0.rc0.24.gec371ff
-> 
+2.2.1.1 Node Name Requirements
+...
+The node-name shall start with a lower or uppercase character and should
+describe the general class of device.
+
+2.2.2 Generic Names Recommendation
+The name of a node should be somewhat generic, reflecting the function of
+the device and not its precise programming model. If appropriate, the name
+should be one of the following choices: ...
+
+It would be nice if more bindings followed this.
+
+-- 
+FTTC broadband for 0.8mile line: currently at 9.6Mbps down 400kbps up
+according to speedtest.net.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
