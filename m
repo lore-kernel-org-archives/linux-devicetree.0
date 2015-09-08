@@ -1,100 +1,61 @@
-From: Guenter Roeck <linux@roeck-us.net>
-Subject: Re: [PATCH 1/3] sysfs: Fix is_visible() support for binary attributes
-Date: Tue, 8 Sep 2015 12:30:52 -0700
-Message-ID: <20150908193052.GA11106@roeck-us.net>
-References: <1441714066-5599-1-git-send-email-emilio.lopez@collabora.co.uk>
- <1441714066-5599-2-git-send-email-emilio.lopez@collabora.co.uk>
- <20150908153013.GA6758@roeck-us.net>
- <20150908191002.GB10156@kroah.com>
+From: Alexander Holler <holler-SXC+2es9fhnfWeYVQQPykw@public.gmane.org>
+Subject: Re: [PATCH 15/16] mtd: mtdcore: fix initcall level
+Date: Tue, 8 Sep 2015 21:36:01 +0200
+Message-ID: <55EF38A1.2040201@ahsoftware.de>
+References: <1440592108-3740-1-git-send-email-holler@ahsoftware.de>
+ <1440592108-3740-16-git-send-email-holler@ahsoftware.de>
+ <20150901211938.GJ81844@google.com> <55E68A72.30909@ahsoftware.de>
+ <55E91746.4060502@ahsoftware.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20150908191002.GB10156@kroah.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Greg KH <gregkh@linuxfoundation.org>
-Cc: Emilio =?iso-8859-1?Q?L=F3pez?= <emilio.lopez@collabora.co.uk>, olof@lixom.net, kgene@kernel.org, k.kozlowski@samsung.com, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <55E91746.4060502-SXC+2es9fhnfWeYVQQPykw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Greg KH <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Russel King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Tomeu Vizoso <tomeu.vizoso-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Sep 08, 2015 at 12:10:02PM -0700, Greg KH wrote:
-> On Tue, Sep 08, 2015 at 08:30:13AM -0700, Guenter Roeck wrote:
-> > Emilio,
-> >=20
-> > On Tue, Sep 08, 2015 at 09:07:44AM -0300, Emilio L=F3pez wrote:
-> > > According to the sysfs header file:
-> > >=20
-> > >     "The returned value will replace static permissions defined i=
-n
-> > >      struct attribute or struct bin_attribute."
-> > >=20
-> > > but this isn't the case, as is_visible is only called on
-> > > struct attribute only. This patch adds the code paths required
-> > > to support is_visible() on binary attributes.
-> > >=20
-> > > Signed-off-by: Emilio L=F3pez <emilio.lopez@collabora.co.uk>
-> > > ---
-> > >  fs/sysfs/group.c | 22 ++++++++++++++++++----
-> > >  1 file changed, 18 insertions(+), 4 deletions(-)
-> > >=20
-> > > diff --git a/fs/sysfs/group.c b/fs/sysfs/group.c
-> > > index 39a0199..eb6996a 100644
-> > > --- a/fs/sysfs/group.c
-> > > +++ b/fs/sysfs/group.c
-> > > @@ -37,10 +37,10 @@ static int create_files(struct kernfs_node *p=
-arent, struct kobject *kobj,
-> > >  {
-> > >  	struct attribute *const *attr;
-> > >  	struct bin_attribute *const *bin_attr;
-> > > -	int error =3D 0, i;
-> > > +	int error =3D 0, i =3D 0;
-> > > =20
-> > >  	if (grp->attrs) {
-> > > -		for (i =3D 0, attr =3D grp->attrs; *attr && !error; i++, attr+=
-+) {
-> > > +		for (attr =3D grp->attrs; *attr && !error; i++, attr++) {
-> > >  			umode_t mode =3D (*attr)->mode;
-> > > =20
-> > >  			/*
-> > > @@ -73,13 +73,27 @@ static int create_files(struct kernfs_node *p=
-arent, struct kobject *kobj,
-> > >  	}
-> > > =20
-> > >  	if (grp->bin_attrs) {
-> > > -		for (bin_attr =3D grp->bin_attrs; *bin_attr; bin_attr++) {
-> > > +		for (bin_attr =3D grp->bin_attrs; *bin_attr; i++, bin_attr++) =
-{
-> > > +			umode_t mode =3D (*bin_attr)->attr.mode;
-> > > +
-> > >  			if (update)
-> > >  				kernfs_remove_by_name(parent,
-> > >  						(*bin_attr)->attr.name);
-> > > +			if (grp->is_visible) {
-> > > +				mode =3D grp->is_visible(kobj,
-> > > +						       &(*bin_attr)->attr, i);
-> >=20
-> > With this, if 'n' is the number of non-binary attributes,
-> >=20
-> > for i < n:
-> > 	The index passed to is_visible points to a non-binary attribute.
-> > for i >=3D n:
-> > 	The index passed to is_visible points to the (index - n)th binary
-> > 	attribute.
-> >=20
-> > Unless I am missing something, this is not explained anywhere, but =
-it is
-> > not entirely trivial to understand. I think it should be documented=
-=2E
->=20
-> I agree, make i the number of the bin attribute and that should solve
-> this issue.
->=20
-No, that would conflict with the "normal" use of is_visible for non-bin=
-ary
-attributes, and make the index all but useless, since the is_visible fu=
-nction
-would have to search through all the attributes anyway to figure out wh=
-ich one
-is being checked.
+Am 04.09.2015 um 06:00 schrieb Alexander Holler:
+> Am 02.09.2015 um 07:34 schrieb Alexander Holler:
+>> Am 01.09.2015 um 23:19 schrieb Brian Norris:
+>>> Hi Alexander,
+>>>
+>>> No judgment here for the rest of this series, but for this patch:
+>>>
+>>> On Wed, Aug 26, 2015 at 02:28:27PM +0200, Alexander Holler wrote:
+>>>> The mtd-core has to be initialized before other dependent mtd-drivers,
+>>>> otherwise a crash might occur.
+>>>>
+>>>> Currently mtd_init() is called in the initcall-level device, which is
+>>>> the
+>>>> same level where most mtd-drivers will end up. By luck this seemed to
+>>>> have
+>>>> been called most of the time before other mtd-drivers without having
+>>>> been
+>>>> explicitly enforced.
+>>>
+>>> I can't really speak for the original authors, but it does not appear to
+>>> be entirely "by luck." Link order was one of the de facto ways to get
+>>> this ordering (though it's not really a great one), and mtdcore was
+>>> always linked first within the drivers/mtd/ directory structure.
+>>>
+>>> But that's just background, I think this is worth fixing anyway. It
+>>> could, for instance, become a problem if drivers are located outside
+>>> drivers/mtd/; I see random board files in arch/ that register with MTD,
+>>> and I'm actually not sure how they have never tripped on this.
 
-Guenter
+As I've just had a look at my patches in order to clean up the patch for 
+parallel initialization (to post it here too):
+
+drivers/mtd/ofparts.c has the same problem. In order to let the 
+NAND-driver see the partitions defined in the DT I had to move this into 
+another initcall level (fs sync) too.
+
+Regards,
+
+Alexander Holler
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
