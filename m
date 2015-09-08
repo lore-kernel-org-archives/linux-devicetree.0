@@ -1,74 +1,93 @@
-From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: Re: Re: [PATCH] ARM: dts: sun4i: Add dts file for the
- pov protab2-ips9 tablet
-Date: Tue, 8 Sep 2015 16:40:05 +0800
-Message-ID: <CAGb2v64BGPP9Fs0gM0ghJZ0tO8QdGZD9GfpquGCGKiZCeTkyww@mail.gmail.com>
-References: <1441441319-10658-1-git-send-email-hdegoede@redhat.com>
- <20150906163023.GR31584@lukather> <55ED3739.609@redhat.com>
- <20150907205603.GX31584@lukather> <55EE9230.70209@redhat.com>
-Reply-To: wens-jdAy2FN1RRM@public.gmane.org
+From: Nicolas Boichat <drinkcat@chromium.org>
+Subject: Re: [PATCH v7] arm64: dts: Add spi bus dts
+Date: Tue, 8 Sep 2015 16:59:05 +0800
+Message-ID: <CANMq1KBhg4j15=ik7F2MwgmyAQZgSz3QYWLivOhd8ZFuDfjHGA@mail.gmail.com>
+References: <1441028659-19068-1-git-send-email-leilk.liu@mediatek.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBCMILY6JWQBBB7V5XKXQKGQE5Q72BDY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <55EE9230.70209-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <http://groups.google.com/group/linux-sunxi/subscribe>
-To: Hans De Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1441028659-19068-1-git-send-email-leilk.liu@mediatek.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Leilk Liu <leilk.liu@mediatek.com>
+Cc: Matthias Brugger <matthias.bgg@gmail.com>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Sascha Hauer <s.hauer@pengutronix.de>, linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org, Mark Brown <broonie@kernel.org>, linux-mediatek@lists.infradead.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Sep 8, 2015 at 3:45 PM, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org> wrote:
-> Hi,
->
-> On 07-09-15 22:56, Maxime Ripard wrote:
->>
->> On Mon, Sep 07, 2015 at 09:05:29AM +0200, Hans de Goede wrote:
->>>>>
->>>>> +&reg_ldo3 {
->>>>> +       /*
->>>>> +        * We need to always power the camera sensor, otherwhise all
->>>>> access
->>>>> +        * to i2c1 is blocked.
->>>>> +        */
->>>>> +       regulator-always-on;
->>>>> +       regulator-min-microvolt = <2800000>;
->>>>> +       regulator-max-microvolt = <2800000>;
->>>>> +       regulator-name = "vdd-csi";
->>>>> +};
->>>>
->>>>
->>>> What is connected on i2c1 ? Just the camera sensor? or it has some
->>>> other devices there?
->>>
->>>
->>> The bma250 accelerometer sits there, and the kernel already has a driver
->>> for it. That driver needs to have devicetree binding support added, and
->>> then we should be able to use the accelerometer.
->>
->>
->> Ok, so if this regulator is disable, you can't access the other
->> devices as well, right?
->
->
-> Right, the controller reports the bus as being stuck.
->
->> Do you know why? Is it the regulator providing
->> the pull-up voltage?
->
->
-> I've tried enabling the pull ups on the SoC i2c pins, so I do not think
-> that it is that, it seems that somehow when not powered the camera sensor is
-> actively keeping the lines low. Either it has multiple power planes, or
-> it is using normally-on fet-s between ground and its i2c lines.
+On Mon, Aug 31, 2015 at 9:44 PM, Leilk Liu <leilk.liu@mediatek.com> wrote:
+> This patch adds MT8173 spi bus controllers into device tree.
 
-FYI the reference designs use one regulator to power the pull-ups, VCC-PX
-(X for X pin group), and VDDIO (IO power)on the camera sensors. AVDD, DVDD
-(actual power) for the sensors are another (or more) regulators.
+The corresponding SPI driver has already been merged in
+git://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git .
 
+> Signed-off-by: Leilk Liu <leilk.liu@mediatek.com>
 
-ChenYu
+Reviewed-and-Tested-by: Nicolas Boichat <drinkcat@chromium.org>
+
+> ---
+> Change in this patch:
+> 1. fix spi clock flow usage error.
+> ---
+>  arch/arm64/boot/dts/mediatek/mt8173-evb.dts | 18 ++++++++++++++++++
+>  arch/arm64/boot/dts/mediatek/mt8173.dtsi    | 13 +++++++++++++
+>  2 files changed, 31 insertions(+)
+>
+> diff --git a/arch/arm64/boot/dts/mediatek/mt8173-evb.dts b/arch/arm64/boot/dts/mediatek/mt8173-evb.dts
+> index 4be66ca..811cb76 100644
+> --- a/arch/arm64/boot/dts/mediatek/mt8173-evb.dts
+> +++ b/arch/arm64/boot/dts/mediatek/mt8173-evb.dts
+> @@ -387,6 +387,24 @@
+>         };
+>  };
+>
+> +&pio {
+> +       spi_pins_a: spi0 {
+> +               pins_spi {
+> +                       pinmux = <MT8173_PIN_69_SPI_CK__FUNC_SPI_CK_0_>,
+> +                               <MT8173_PIN_70_SPI_MI__FUNC_SPI_MI_0_>,
+> +                               <MT8173_PIN_71_SPI_MO__FUNC_SPI_MO_0_>,
+> +                               <MT8173_PIN_72_SPI_CS__FUNC_SPI_CS_0_>;
+> +               };
+> +       };
+> +};
+> +
+> +&spi {
+> +       pinctrl-names = "default";
+> +       pinctrl-0 = <&spi_pins_a>;
+> +       mediatek,pad-select = <0>;
+> +       status = "okay";
+> +};
+> +
+>  &uart0 {
+>         status = "okay";
+>  };
+> diff --git a/arch/arm64/boot/dts/mediatek/mt8173.dtsi b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
+> index d18ee42..fcb4860 100644
+> --- a/arch/arm64/boot/dts/mediatek/mt8173.dtsi
+> +++ b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
+> @@ -365,6 +365,19 @@
+>                         status = "disabled";
+>                 };
+>
+> +               spi: spi@1100a000 {
+> +                       compatible = "mediatek,mt8173-spi";
+> +                       #address-cells = <1>;
+> +                       #size-cells = <0>;
+> +                       reg = <0 0x1100a000 0 0x1000>;
+> +                       interrupts = <GIC_SPI 110 IRQ_TYPE_LEVEL_LOW>;
+> +                       clocks = <&topckgen CLK_TOP_SYSPLL3_D2>,
+> +                                <&topckgen CLK_TOP_SPI_SEL>,
+> +                                <&pericfg CLK_PERI_SPI0>;
+> +                       clock-names = "parent-clk", "sel-clk", "spi-clk";
+> +                       status = "disabled";
+> +               };
+> +
+>                 i2c3: i2c3@11010000 {
+>                         compatible = "mediatek,mt8173-i2c";
+>                         reg = <0 0x11010000 0 0x70>,
+> --
+> 1.8.1.1.dirty
+>
+>
+> _______________________________________________
+> Linux-mediatek mailing list
+> Linux-mediatek@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-mediatek
