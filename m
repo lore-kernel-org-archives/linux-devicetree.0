@@ -1,54 +1,41 @@
-From: Olliver Schinagl <o.schinagl-U3FVU11NWA554TAoqtyWWQ@public.gmane.org>
-Subject: [PATCH 1/2] fbdev: ssd1307fb: alphabetize headers
-Date: Tue,  8 Sep 2015 21:19:50 +0200
-Message-ID: <1441739991-4676-2-git-send-email-o.schinagl@ultimaker.com>
-References: <1441739991-4676-1-git-send-email-o.schinagl@ultimaker.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1441739991-4676-1-git-send-email-o.schinagl-U3FVU11NWA554TAoqtyWWQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Olliver Schinagl <oliver-dxLnbx3+1qmEVqv0pETR8A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
-Cc: Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>, =?UTF-8?q?Thomas=20Niederpr=C3=BCm?= <niederp-PRwTpj6vllL6m1q2wEL4bg@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Prabhakar Lad <prabhakar.csengg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Stephen Boyd <sboyd@codeaurora.org>
+Subject: Re: [PATCH 1/4] clk: bcm2835: Move under bcm/ with other Broadcom
+ SoC clk drivers.
+Date: Tue, 8 Sep 2015 12:22:57 -0700
+Message-ID: <20150908192257.GQ15099@codeaurora.org>
+References: <1441562263-19888-1-git-send-email-eric@anholt.net>
+ <1441562263-19888-2-git-send-email-eric@anholt.net>
+ <20150907064838.GE4796@x1>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-clk-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20150907064838.GE4796@x1>
+Sender: linux-clk-owner@vger.kernel.org
+To: Lee Jones <lee@kernel.org>
+Cc: Eric Anholt <eric@anholt.net>, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-rpi-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Stephen Warren <swarren@wwwdotorg.org>, Mike Turquette <mturquette@linaro.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-From: Olliver Schinagl <oliver-dxLnbx3+1qmEVqv0pETR8A@public.gmane.org>
+On 09/07, Lee Jones wrote:
+> On Sun, 06 Sep 2015, Eric Anholt wrote:
+> 
+> > clk-bcm2835.c predates the drivers under bcm/, but all the new BCM
+> > drivers are going in there so let's follow them.
+> > 
+> > Signed-off-by: Eric Anholt <eric@anholt.net>
+> > ---
+> >  drivers/clk/Makefile          |  1 -
+> >  drivers/clk/bcm/Makefile      |  1 +
+> >  drivers/clk/bcm/clk-bcm2835.c | 60 +++++++++++++++++++++++++++++++++++++++++++
+> >  drivers/clk/clk-bcm2835.c     | 60 -------------------------------------------
+> 
+> You need to resubmit this with `git format-patch -M`.
 
-This patch sorts the headers on ssd1307fb driver.
+You don't have to. It would have been nice if it was formatted
+with -M so that review is easier, but we can always apply the
+patch and then check the result to make sure things look the
+same.
 
-Signed-off-by: Olliver Schinagl <oliver-dxLnbx3+1qmEVqv0pETR8A@public.gmane.org>
----
- drivers/video/fbdev/ssd1307fb.c | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
-
-diff --git a/drivers/video/fbdev/ssd1307fb.c b/drivers/video/fbdev/ssd1307fb.c
-index 3e153c0..339615c 100644
---- a/drivers/video/fbdev/ssd1307fb.c
-+++ b/drivers/video/fbdev/ssd1307fb.c
-@@ -6,16 +6,16 @@
-  * Licensed under the GPLv2 or later.
-  */
- 
--#include <linux/module.h>
- #include <linux/backlight.h>
--#include <linux/kernel.h>
--#include <linux/i2c.h>
-+#include <linux/delay.h>
- #include <linux/fb.h>
--#include <linux/uaccess.h>
-+#include <linux/i2c.h>
-+#include <linux/kernel.h>
-+#include <linux/module.h>
- #include <linux/of_device.h>
- #include <linux/of_gpio.h>
- #include <linux/pwm.h>
--#include <linux/delay.h>
-+#include <linux/uaccess.h>
- 
- #define SSD1307FB_DATA			0x40
- #define SSD1307FB_COMMAND		0x80
 -- 
-2.1.4
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project
