@@ -1,114 +1,96 @@
-From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: Re: Re: [PATCH] ARM: dts: sun4i: Add dts file for the
- pov protab2-ips9 tablet
-Date: Tue, 8 Sep 2015 21:14:31 +0800
-Message-ID: <CAGb2v66h4Gwidz4yU8h9wiSsU=XX2URWWK715rJsQRB8Sob0Uw@mail.gmail.com>
-References: <1441441319-10658-1-git-send-email-hdegoede@redhat.com>
- <20150906163023.GR31584@lukather> <55ED3739.609@redhat.com>
- <20150907205603.GX31584@lukather> <55EE9230.70209@redhat.com>
- <CAGb2v64BGPP9Fs0gM0ghJZ0tO8QdGZD9GfpquGCGKiZCeTkyww@mail.gmail.com> <55EED95D.20004@redhat.com>
-Reply-To: wens-jdAy2FN1RRM@public.gmane.org
+From: Hanjun Guo <hanjun.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v5 2/4] Documentation: arm64/arm: dt bindings for numa.
+Date: Tue, 08 Sep 2015 21:27:05 +0800
+Message-ID: <55EEE229.7070301@linaro.org>
+References: <1439570374-4079-1-git-send-email-gkulkarni@caviumnetworks.com>	<1439570374-4079-3-git-send-email-gkulkarni@caviumnetworks.com>	<20150828123228.GE31748@leverpostej>	<CAL_JsqLOpUTVeKbkJ6uPi0EYistd=BowAHdtSmaUYYDhU6c9Sg@mail.gmail.com>	<55E17F58.5020101@huawei.com> <CAFpQJXWO0xT0kxWf09L_XcAOXm1Lov8i2U2BQzk-x0TStj7vBg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBCMILY6JWQBBBT56XOXQKGQEZTWIK6A-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <55EED95D.20004-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <http://groups.google.com/group/linux-sunxi/subscribe>
-To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAFpQJXWO0xT0kxWf09L_XcAOXm1Lov8i2U2BQzk-x0TStj7vBg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Ganapatrao Kulkarni <gpkulkarni-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "Leizhen (ThunderTown)" <thunder.leizhen-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+Cc: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "steve.capper-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <steve.capper-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "arnd-r2nGTMty4D4@public.gmane.org" <arnd-r2nGTMty4D4@public.gmane.org>, "al.stone-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <al.stone-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Catalin Marinas <Catalin.Marinas-5wv7dgnIgG8@public.gmane.org>, "ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org" <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, "leif.lindholm-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <leif.lindholm-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "rfranz-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org" <rfranz-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, "msalter-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org" <msalter-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, "grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org" <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Ganapatrao Kulkarni <gkulkarni-M3mlKVOIwJVv6pq1l3V1OWGXanvQGlWp@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Sep 8, 2015 at 8:49 PM, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org> wrote:
-> Hi,
+Hi Ganapatrao,
+
+On 08/29/2015 10:56 PM, Ganapatrao Kulkarni wrote:
+> Hi Thunder,
 >
->
-> On 09/08/2015 10:40 AM, Chen-Yu Tsai wrote:
->>
->> On Tue, Sep 8, 2015 at 3:45 PM, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org> wrote:
->>>
->>> Hi,
->>>
->>> On 07-09-15 22:56, Maxime Ripard wrote:
->>>>
->>>>
->>>> On Mon, Sep 07, 2015 at 09:05:29AM +0200, Hans de Goede wrote:
->>>>>>>
->>>>>>>
->>>>>>> +&reg_ldo3 {
->>>>>>> +       /*
->>>>>>> +        * We need to always power the camera sensor, otherwhise all
->>>>>>> access
->>>>>>> +        * to i2c1 is blocked.
->>>>>>> +        */
->>>>>>> +       regulator-always-on;
->>>>>>> +       regulator-min-microvolt = <2800000>;
->>>>>>> +       regulator-max-microvolt = <2800000>;
->>>>>>> +       regulator-name = "vdd-csi";
->>>>>>> +};
->>>>>>
->>>>>>
->>>>>>
->>>>>> What is connected on i2c1 ? Just the camera sensor? or it has some
->>>>>> other devices there?
->>>>>
->>>>>
->>>>>
->>>>> The bma250 accelerometer sits there, and the kernel already has a
->>>>> driver
->>>>> for it. That driver needs to have devicetree binding support added, and
->>>>> then we should be able to use the accelerometer.
->>>>
->>>>
->>>>
->>>> Ok, so if this regulator is disable, you can't access the other
->>>> devices as well, right?
->>>
->>>
->>>
->>> Right, the controller reports the bus as being stuck.
->>>
->>>> Do you know why? Is it the regulator providing
->>>> the pull-up voltage?
->>>
->>>
->>>
->>> I've tried enabling the pull ups on the SoC i2c pins, so I do not think
->>> that it is that, it seems that somehow when not powered the camera sensor
->>> is
->>> actively keeping the lines low. Either it has multiple power planes, or
->>> it is using normally-on fet-s between ground and its i2c lines.
+> On Sat, Aug 29, 2015 at 3:16 PM, Leizhen (ThunderTown)
+> <thunder.leizhen-hv44wF8Li93QT0dZR+AlfA@public.gmane.org> wrote:
 >>
 >>
->> FYI the reference designs use one regulator to power the pull-ups, VCC-PX
->> (X for X pin group), and VDDIO (IO power)on the camera sensors. AVDD, DVDD
->> (actual power) for the sensors are another (or more) regulators.
->
->
-> But that is a A23 or some such generation thing, right? This is an A10 based
-> tablet!
+>> On 2015/8/28 22:02, Rob Herring wrote:
+>>> +benh
+>>>
+>>> On Fri, Aug 28, 2015 at 7:32 AM, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org> wrote:
+>>>> Hi,
+>>>>
+>>>> On Fri, Aug 14, 2015 at 05:39:32PM +0100, Ganapatrao Kulkarni wrote:
+>>>>> DT bindings for numa map for memory, cores and IOs using
+>>>>> arm,associativity device node property.
+>>>>
+>>>> Given this is just a copy of ibm,associativity, I'm not sure I see much
+>>>> point in renaming the properties.
+>>>
+>>> So just keep the ibm? I'm okay with that. That would help move to
+>>> common code. Alternatively, we could drop the vendor prefix and have
+>>> common code just check for both.
+>>>
+>>
+>> Hi all,
+>>
+>> Why not copy the method of ACPI numa? There only three elements should be configured:
+>> 1) a cpu belong to which node
+>> 2) a memory block belong to which node
+>> 3) the distance of each two nodes
+>>
+>> The devicetree nodes of numa can be like below:
+>> / {
+>>          ...
+>>
+>>          numa-nodes-info {
+>>                  node-name: node-description {
+>>                          mem-ranges = <...>;
+>>                          cpus-list = <...>;
+>>                  };
+>>
+>>                  nodes-distance {
+>>                          distance-list = <...>;
+>>                  };
+>>          };
+>>
+>>          ...
+>> };
+>>
+> some what similar to what your are proposing is already implemented in
+> my v2 patchset.
+> https://lwn.net/Articles/623920/
+> http://lists.infradead.org/pipermail/linux-arm-kernel/2014-November/305164.html
+> we have went to associativity property based implementation to keep it
+> more generic.
+> i do have both acpi(using linaro/hanjun's patches) and associativity
+> based implementations on our internal tree
+> and tested on thunderx platform.
 
-A13 reference design from
+Great thanks!
 
-   https://github.com/OLIMEX/OLINUXINO/blob/master/HARDWARE/A13-PDFs/a13-sch.pdf
+> i do see issue in creating numa mapping using ACPI for IOs(for
+> example, i am not able to create numa mapping for ITS which is on each
+> node, using ACPI tables),  since ACPI spec (tables SRAT and SLIT)
+> talks only about processor and memory.
 
-also has it, but instead of outputs from the AXP223, it's using
-discrete regulator
-ICs, such as the LP3992 shown in the design. These are likely GPIO enabled.
+I'm not sure why the ITS needs to know the NUMA domain, for my
+understanding, the interrupt will route to the correct NUMA domain
+using setting the affinity, ITS will configured to route it to
+the right GICR(cpu), so I think the ITS don't need to know which
+NUMA node belonging to, correct me if I missed something.
 
-Looking at some A13 fex files, each camera sensor has a reset GPIO, but the two
-share the same power GPIO, which likely enables the regulator.
-
-A10 should be similar, considering they use the same PMIC, and are likely to
-need external regulators for all the voltages required.
-
-My point is that the camera sensors require like 2~3 supplies, and VDDIO seems
-to be shared between the sensors (if there are 2), the external pull-ups, and
-sometimes power to the SoC pin group (if there is a power pin for them).
-
-
-ChenYu
+Thanks
+Hanjun
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
