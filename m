@@ -1,93 +1,55 @@
-From: Nicolas Boichat <drinkcat@chromium.org>
-Subject: Re: [PATCH v7] arm64: dts: Add spi bus dts
-Date: Tue, 8 Sep 2015 16:59:05 +0800
-Message-ID: <CANMq1KBhg4j15=ik7F2MwgmyAQZgSz3QYWLivOhd8ZFuDfjHGA@mail.gmail.com>
-References: <1441028659-19068-1-git-send-email-leilk.liu@mediatek.com>
+From: Alex Smith <alex.smith-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+Subject: [PATCH v5 0/4] mtd: nand: jz4780: Add NAND and BCH drivers
+Date: Tue, 8 Sep 2015 10:10:49 +0100
+Message-ID: <1441703453-2838-1-git-send-email-alex.smith@imgtec.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1441028659-19068-1-git-send-email-leilk.liu@mediatek.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Leilk Liu <leilk.liu@mediatek.com>
-Cc: Matthias Brugger <matthias.bgg@gmail.com>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Sascha Hauer <s.hauer@pengutronix.de>, linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org, Mark Brown <broonie@kernel.org>, linux-mediatek@lists.infradead.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: Alex Smith <alex-oucj9GSTHrKwpo/f3jThPQ@public.gmane.org>, Alex Smith <alex.smith-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Zubair Lutfullah Kakakhel <Zubair.Kakakhel-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Aug 31, 2015 at 9:44 PM, Leilk Liu <leilk.liu@mediatek.com> wrote:
-> This patch adds MT8173 spi bus controllers into device tree.
+Hi,
 
-The corresponding SPI driver has already been merged in
-git://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git .
+This series adds support for the BCH controller and NAND devices on
+the Ingenic JZ4780 SoC.
 
-> Signed-off-by: Leilk Liu <leilk.liu@mediatek.com>
+Tested on the MIPS Creator Ci20 board. All dependencies are now in
+mainline.
 
-Reviewed-and-Tested-by: Nicolas Boichat <drinkcat@chromium.org>
+This version of the series is based on current mainline (pre 4.3-rc1).
 
-> ---
-> Change in this patch:
-> 1. fix spi clock flow usage error.
-> ---
->  arch/arm64/boot/dts/mediatek/mt8173-evb.dts | 18 ++++++++++++++++++
->  arch/arm64/boot/dts/mediatek/mt8173.dtsi    | 13 +++++++++++++
->  2 files changed, 31 insertions(+)
->
-> diff --git a/arch/arm64/boot/dts/mediatek/mt8173-evb.dts b/arch/arm64/boot/dts/mediatek/mt8173-evb.dts
-> index 4be66ca..811cb76 100644
-> --- a/arch/arm64/boot/dts/mediatek/mt8173-evb.dts
-> +++ b/arch/arm64/boot/dts/mediatek/mt8173-evb.dts
-> @@ -387,6 +387,24 @@
->         };
->  };
->
-> +&pio {
-> +       spi_pins_a: spi0 {
-> +               pins_spi {
-> +                       pinmux = <MT8173_PIN_69_SPI_CK__FUNC_SPI_CK_0_>,
-> +                               <MT8173_PIN_70_SPI_MI__FUNC_SPI_MI_0_>,
-> +                               <MT8173_PIN_71_SPI_MO__FUNC_SPI_MO_0_>,
-> +                               <MT8173_PIN_72_SPI_CS__FUNC_SPI_CS_0_>;
-> +               };
-> +       };
-> +};
-> +
-> +&spi {
-> +       pinctrl-names = "default";
-> +       pinctrl-0 = <&spi_pins_a>;
-> +       mediatek,pad-select = <0>;
-> +       status = "okay";
-> +};
-> +
->  &uart0 {
->         status = "okay";
->  };
-> diff --git a/arch/arm64/boot/dts/mediatek/mt8173.dtsi b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
-> index d18ee42..fcb4860 100644
-> --- a/arch/arm64/boot/dts/mediatek/mt8173.dtsi
-> +++ b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
-> @@ -365,6 +365,19 @@
->                         status = "disabled";
->                 };
->
-> +               spi: spi@1100a000 {
-> +                       compatible = "mediatek,mt8173-spi";
-> +                       #address-cells = <1>;
-> +                       #size-cells = <0>;
-> +                       reg = <0 0x1100a000 0 0x1000>;
-> +                       interrupts = <GIC_SPI 110 IRQ_TYPE_LEVEL_LOW>;
-> +                       clocks = <&topckgen CLK_TOP_SYSPLL3_D2>,
-> +                                <&topckgen CLK_TOP_SPI_SEL>,
-> +                                <&pericfg CLK_PERI_SPI0>;
-> +                       clock-names = "parent-clk", "sel-clk", "spi-clk";
-> +                       status = "disabled";
-> +               };
-> +
->                 i2c3: i2c3@11010000 {
->                         compatible = "mediatek,mt8173-i2c";
->                         reg = <0 0x11010000 0 0x70>,
-> --
-> 1.8.1.1.dirty
->
->
-> _______________________________________________
-> Linux-mediatek mailing list
-> Linux-mediatek@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-mediatek
+Review and feedback welcome.
+
+Thanks,
+Alex
+
+Alex Smith (4):
+  mtd: nand: increase ready wait timeout and report timeouts
+  dt-bindings: binding for jz4780-{nand,bch}
+  mtd: nand: jz4780: driver for NAND devices on JZ4780 SoCs
+  MIPS: dts: jz4780/ci20: Add NEMC, BCH and NAND device tree nodes
+
+ .../bindings/mtd/ingenic,jz4780-nand.txt           |  57 ++++
+ arch/mips/boot/dts/ingenic/ci20.dts                |  51 +++
+ arch/mips/boot/dts/ingenic/jz4780.dtsi             |  26 ++
+ drivers/mtd/nand/Kconfig                           |   7 +
+ drivers/mtd/nand/Makefile                          |   1 +
+ drivers/mtd/nand/jz4780_bch.c                      | 348 +++++++++++++++++++
+ drivers/mtd/nand/jz4780_bch.h                      |  42 +++
+ drivers/mtd/nand/jz4780_nand.c                     | 378 +++++++++++++++++++++
+ drivers/mtd/nand/nand_base.c                       |  14 +-
+ 9 files changed, 921 insertions(+), 3 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/mtd/ingenic,jz4780-nand.txt
+ create mode 100644 drivers/mtd/nand/jz4780_bch.c
+ create mode 100644 drivers/mtd/nand/jz4780_bch.h
+ create mode 100644 drivers/mtd/nand/jz4780_nand.c
+
+-- 
+2.5.0
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
