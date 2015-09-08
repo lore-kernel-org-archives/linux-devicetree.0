@@ -1,64 +1,179 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH 0/4] Qualcomm Shared Memory State Machines
-Date: Tue, 8 Sep 2015 14:32:40 +0100
-Message-ID: <20150908133240.GE9751@sirena.org.uk>
-References: <1440697078-4106-1-git-send-email-bjorn.andersson@sonymobile.com>
- <CACRpkdb-624MauE4sS0mqxarXRRaS3sEB2aMzeRNZw945xhMnA@mail.gmail.com>
+From: Matt Porter <mporter-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
+Subject: Re: [RFC PATCH 0/5] DT binding documents using text markup
+Date: Tue, 8 Sep 2015 09:42:42 -0400
+Message-ID: <20150908134242.GB17267@beef>
+References: <1440739433-6799-1-git-send-email-mporter@konsulko.com>
+ <CA+bK7J5MriF95d2OGAZRT8PyJkK_x5r1J1yPq2Ke=SZkit6xHA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="a+b56+3nqLzpiR9O"
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-spec-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <CACRpkdb-624MauE4sS0mqxarXRRaS3sEB2aMzeRNZw945xhMnA@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Bjorn Andersson <bjorn.andersson@sonymobile.com>, Alexandre Courbot <gnurou@gmail.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+In-Reply-To: <CA+bK7J5MriF95d2OGAZRT8PyJkK_x5r1J1yPq2Ke=SZkit6xHA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-spec-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Tim Bird <tbird20d-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Devicetree List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Devicetree Spec List <devicetree-spec-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Behan Webster <behanw-k/hB3zQhLwledRVtV/plodBPR1lH4CV8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+On Tue, Sep 01, 2015 at 09:14:24AM -0700, Tim Bird wrote:
+> On Thu, Aug 27, 2015 at 10:23 PM, Matt Porter <mporter-OWPKS81ov/FWk0Htik3J/w@public.gmane.org> wrote:
+> > During the Device Tree microconference at Linux Plumbers 2015, we had
+> > a short discussion about how to improve DT Binding Documentation. A
+> > number of issues were raised (again, as these things have been
+> > discussed in the past) including:
+> >
+> >         * Inconsistency between binding documents due to prose text
+> >           format.
+> >         * Inability to reliably machine read bindings for mass update
+> >           or search.
+> >         * Bit rot of bindings as new conventions are agreed upon but
+> >           only new bindings are changed.
+> >
+> > Grant Likely probably summed up the issue best with "...as long as
+> > bindings are human readable, we'll have issues...".
+> I'd rephrase that to "... as long as bindings are not machine readable,
+> we'll have issues...".  Human readable and machine readable are not
+> mutually exclusive.  XML is not, IMHO, human readable, but YAML looks
+> pretty good, so I think it's a good choice.
 
---a+b56+3nqLzpiR9O
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Yes, that's exactly what I hoped to find with this experiment...that
+we can have both.
 
-On Tue, Sep 08, 2015 at 02:20:14PM +0200, Linus Walleij wrote:
-> On Thu, Aug 27, 2015 at 7:37 PM, Bjorn Andersson
-> <bjorn.andersson@sonymobile.com> wrote:
+> > The context
+> > of that comment was, of course, regarding our current documents
+> > written in very inconsistent prose style. When the topic of needing
+> > the bindings in a rigid format was raised, there was general head
+> > nodding that this was needed. It was noted that this has been
+> > discussed many times before and nothing has been done.
+> >
+> > My proposed solution to the problem is to convert all DT bindings
+> > a rigid text markup format. In choosing a text markup language my
+> > requirements were:
+> >
+> >         1) Human readable
+> >         2) Well documented
+> >         3) Easy to translate to other data formats
+> >         4) Well supported by tools and libraries
+> >
+> > After looking at a number of markup options, YAML stood out as the
+> > one that meets all of these requirements. The YAML syntax is adopted
+> > in many projects specifically because of the high level of readability.
+> > A comprehensive spec is at http://www.yaml.org/spec/1.2/spec.html.
+> > There's a number of tools to convert between YAML and other popular
+> > data formats such as JSON and XML. XML was cited by Behan Webster
+> > during the microconference as an important data format as the type
+> > of developers that may produce comprehensive DTS Binding validation
+> > tools will want to use XML. Every major scripting language has a
+> > high level binding to the low level libyaml C library to facilitate
+> > handling of YAML data files.
+> >
+> > One caveat with YAML is it does not tolerate tabs. Yes, I said it.
+> > No tabs! This can be managed with proper editor modes and also with
+> > helper scripts to strip tabs to aid in people passing planned
+> > checkpatch.pl checks that would run YAML DT Binding specific tag
+> > validators for new bindings.
+> 
+> This will be an endless source of pain.  Based on your examples,
+> it looks like we only need a very small subset of YAML.  I'd be willing
+> to write a parser for the language, but we might lose the ability to
+> do conversions to other formats.  It depends on how comprehensive
+> and automatic the helper scripts to strip tabs would be.
 
-> Let's discuss this a bit, looping in Mark Brown.
+We need something to validate that a binding meets our binding
+schema so it shouldn't a huge problem to have it warn and by option,
+reformat the binding with tabs stripped. Having an appropriate mode
+available for vim/emacs would go a long way to helping here too.
 
-Please don't send upstream discussions ot my work address.
+> > The scope of the initial YAML DT Binding format was specifically
+> > limited to supporting *only* the content we have in bindings today.
+> > The idea here is to propose and agree on something that will take
+> > us just a few steps in the right direction. If we move *all* current
+> > binding content to a machine parseable format, additional features
+> > can be added with more automation and scripting. As it stands today,
+> > because of the inconsistency of the wording of the files, we can't
+> > add a lot of new features to the content until we convert what we
+> > have today into a standard format.
+> >
+> > With that said, it should be noted that some new features such as
+> > "type" tags to indicate cell types could be added to support
+> > additional DTS validation beyond what the current content supports.
+> > Another possibility is adding "range" type information to validate
+> > the legal values for a cell.
+> 
+> I would recommend we add type and something for value constraints.
+> Even if we don't add populate those immediately, I think thinking
+> through some of the possible uses will be helpful to avoid doing
+> something dumb.
+> 'choices' or 'enums' seem frequently used.  I see lots of "must be one
+> of..." in the binding docs I read.
 
-> While sparsely documented: what about regmap (maybe in the
-> form of syscon) and drivers/base/regmap/regmap-irq.c for the
-> interrupt handling?
+Yes, so definitely after initial feedback, we're going to define some kind
+of type and constraint tags. Whether we use C-like expressions for
+constraints or something else is still up for debate.
 
-> I cannot claim to understand regmap-irq.c, but I just intuitively
-> think it deserves consideration, such that drivers who need one
-> of these misc registers can read/write their bits with regmap
-> accessors and also get IRQs by way of regmap-irq.
+And as you point out (and Rob also did) we need some type of AND and
+OR expressions for constraint enums which also include the regular
+case of defining how compatibles must be handled (e.g. one of the
+specific strings AND the generic string).
 
-Well, all it's doing is exporting a simple register based interrupt
-controller based on regmap.  There's not a lot to document.  If you're
-using it with a system controller you'd probably want to implement
-support for handling interrupts directly in the primary handler rather
-than using a threaded handler.  Alternatively if there's no cache or no
-overlap between interrupt registers and other registers then just using
-the genirq MMIO code should do the trick.
+> 
+> Another important thing to document would be a 'superclass' or
+> 'inherit-from' attribute, for things that are of a specific type (i2c,
+> regulator, clock, etc.)
 
---a+b56+3nqLzpiR9O
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+There's an attempt at that with the reference tag. Based on this and
+other comments we'll expand that usage to inherit all the properties
+from a generic binding (a 'superclass' as used above) rather than
+repeating those within each peripheral binding document.
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
+> > This series is broken up into three major parts:
+> >
+> > 1) The documentation defining the YAML DT binding format
+> > 2) A skeleton device binding example illustrating use of this format
+> > 3) Some real binding conversions (eeprom.txt, phy-bindings.txt, and
+> >    ti-phy.txt
+> >
+> > As a proof of concept of what can be done with a proper machine
+> > readable DT binding source file, there's a simple markdown document
+> > generator at https://github.com/konsulko/dtgendoc. Also, to see
+> > actual output from the generator, the generated markdown from those
+> > bindings is viewable at https://github.com/konsulko/dtgendoc/wiki
+> >
+> > There's a lot of other possibilities for validation tools using
+> > only the data we have today in the bindings. In addition, Frank
+> > Rowand covered some DT debug techniques that would benefit from
+> > the binding documentation being 100% reliably searchable.
+> >
+> > I found it useful to see a side-by-side view of a converted doc
+> > versus the original content, so here's a screenshot of eeprom.txt
+> > vs. eeprom.yaml:
+> > https://github.com/konsulko/dtgendoc/wiki#eepromtxt-vs-eepromyaml
+> >
+> > When we decide on a text markup format that is acceptable, then the
+> > next step is to convert all the bindings. That process would start
+> > with the complete set of generic bindings as they will be referenced
+> > by the actual device bindings.
+> 
+> Although there are a lot of files to convert, I think the job is manageable,
+> and can be done with conversion sprints at conferences and the like.
+> You don't have to be a kernel 'C' coder to do a conversion, so I think
+> a lot of non-traditional contributers can help out.  I'm already
+> thinking about what could be done at an Embedded Linux Conference.
 
-iQEcBAEBCAAGBQJV7uN4AAoJECTWi3JdVIfQraIH/1Qb2LpNGPv3mQzYqd+w44pr
-apmdAHxP49zNPIXm+GbK/4glJW9pUml4qW0qzRKMoig6C4svUXJf+SdnvtxgnBLN
-bO6hiICwTNVPm/hDLvZl6trAfaKkPnevCPo/iJFfXCkbI+Hynx0D5hD4jftdFJpP
-PMwBSntKXbO/fWIieFcWgprpSV8QX/D9ZcizkVMgrgMioyNHcUmyKIKXNPfjS40W
-pbbGr6Bi5MMIMIVgDBDAbg+xEUIwRq8x3VufcrIFeJ9sbwG04/4TUMgYmZagi6Ry
-MXFck1WwCaYUpwb17ETUxUr7jO3ONgtxwonWSfEmoZ26q51yPifHWrLgjhVGxVc=
-=J1NQ
------END PGP SIGNATURE-----
+I think this would be great and completely agree that it allows a lot of
+people to get involved. If we can get to a tolerable schema in the next
+month then we should be ready for some f2f conversion hacking at ELCE.
 
---a+b56+3nqLzpiR9O--
+> One thing that would help would be a conversion guide.  It would have
+> things like: "if you see this type of language, put that in the
+> description, some examples are ..."
+
+Ok, that's very good. I'll add to the TODO list that we need to have
+this is our guidelines document. I think most of this will fall out
+initially in agreeing on our format/schema and then whatever we
+miss can be added as we do the large scale conversion of bindings.
+
+> I'll have more comments on individual patches.
+
+Thanks for reviewing!
+
+-Matt
