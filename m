@@ -1,68 +1,64 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH linux-next v5 4/5] Documentation: atmel-quadspi: add
- binding file for Atmel QSPI driver
-Date: Tue, 8 Sep 2015 18:29:20 -0500
-Message-ID: <55EF6F50.5020006@kernel.org>
-References: <cover.1440580764.git.cyrille.pitchen@atmel.com>
- <793cb906c79eed821cf9b47e79dc1b54a7a5dbd0.1440580764.git.cyrille.pitchen@atmel.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH linux-next v9 1/3] mfd: atmel-flexcom: create include file
+ with macros used by DT bindings
+Date: Tue, 8 Sep 2015 18:33:19 -0500
+Message-ID: <55EF703F.2030806@kernel.org>
+References: <cover.1441118159.git.cyrille.pitchen@atmel.com>
+ <69844d8092ccbcaef6a3a24d39127ca432462d69.1441118159.git.cyrille.pitchen@atmel.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=windows-1252
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <793cb906c79eed821cf9b47e79dc1b54a7a5dbd0.1440580764.git.cyrille.pitchen@atmel.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Cyrille Pitchen <cyrille.pitchen@atmel.com>, nicolas.ferre@atmel.com, broonie@kernel.org, linux-spi@vger.kernel.org, dwmw2@infradead.org, computersforpeace@gmail.com, zajec5@gmail.com, beanhuo@micron.com, juhosg@openwrt.org, marex@denx.de, shijie.huang@intel.com, ben@decadent.org.uk
-Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux-mtd@lists.infradead.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <69844d8092ccbcaef6a3a24d39127ca432462d69.1441118159.git.cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Cyrille Pitchen <cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org, boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 08/26/2015 07:30 AM, Cyrille Pitchen wrote:
-> This patch documents the DT bindings for the driver of the Atmel QSPI
-> controller embedded inside sama5d2x SoCs.
+On 09/01/2015 09:46 AM, Cyrille Pitchen wrote:
+> This patch defines some macros to be used as value for the
+> "atmel,flexcom-mode" DT property. This value is then written into
+> the Operating Mode (OPMODE) bit field of the Flexcom Mode Register.
 > 
-> Signed-off-by: Cyrille Pitchen <cyrille.pitchen@atmel.com>
-> Acked-by: Nicolas Ferre <nicolas.ferre@atmel.com>
-> Acked-by: Marek Vasut <marex@denx.de>
+> Signed-off-by: Cyrille Pitchen <cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
 
-Acked-by: Rob Herring <robh@kernel.org>
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+
+In the future, you can combine headers with the binding doc as they are
+part of the binding.
+
+Rob
 
 > ---
->  .../devicetree/bindings/mtd/atmel-quadspi.txt      | 29 ++++++++++++++++++++++
->  1 file changed, 29 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/mtd/atmel-quadspi.txt
+>  include/dt-bindings/mfd/atmel-flexcom.h | 16 ++++++++++++++++
+>  1 file changed, 16 insertions(+)
+>  create mode 100644 include/dt-bindings/mfd/atmel-flexcom.h
 > 
-> diff --git a/Documentation/devicetree/bindings/mtd/atmel-quadspi.txt b/Documentation/devicetree/bindings/mtd/atmel-quadspi.txt
+> diff --git a/include/dt-bindings/mfd/atmel-flexcom.h b/include/dt-bindings/mfd/atmel-flexcom.h
 > new file mode 100644
-> index 000000000000..0b8d545bb198
+> index 000000000000..6728f2851b4d
 > --- /dev/null
-> +++ b/Documentation/devicetree/bindings/mtd/atmel-quadspi.txt
-> @@ -0,0 +1,29 @@
-> +* Atmel Quad Serial Peripheral Interface (QSPI)
+> +++ b/include/dt-bindings/mfd/atmel-flexcom.h
+> @@ -0,0 +1,16 @@
+> +/*
+> + * This header provides macros for Atmel Flexcom DT bindings.
+> + *
+> + * Copyright (C) 2015 Cyrille Pitchen <cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+> + *
+> + * GPLv2 only
+> + */
 > +
-> +Required properties:
-> +- compatible:     should be "atmel,sama5d2-qspi"
-> +- reg:            the first contains the register location and length,
-> +                  the second contains the memory mapping address and length
-> +- interrupts:     should contain the interrupt for the device
-> +- clocks:         the phandle of the clock needed by the QSPI controller
-> +- #address-cells: should be <1>
-> +- #size-cells:    should be <0>
+> +#ifndef __DT_BINDINGS_ATMEL_FLEXCOM_H__
+> +#define __DT_BINDINGS_ATMEL_FLEXCOM_H__
 > +
-> +Example:
+> +#define ATMEL_FLEXCOM_MODE_USART	1
+> +#define ATMEL_FLEXCOM_MODE_SPI		2
+> +#define ATMEL_FLEXCOM_MODE_TWI		3
 > +
-> +spi@f0020000 {
-> +	compatible = "atmel,sama5d2-qspi";
-> +	reg = <0xf0020000 0x100>,
-> +	      <0xd0000000 0x8000000>;
-> +	interrupts = <52 IRQ_TYPE_LEVEL_HIGH 7>;
-> +	clocks = <&spi0_clk>;
-> +	#address-cells = <1>;
-> +	#size-cells = <0>;
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&pinctrl_spi0_default>;
-> +	status = "okay";
-> +
-> +	m25p80@0 {
-> +		...
-> +	};
-> +};
+> +#endif /* __DT_BINDINGS_ATMEL_FLEXCOM_H__ */
 > 
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
