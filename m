@@ -1,77 +1,132 @@
-From: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: Re: [PATCH 1/4] ARM: dts: imx6dql-nitrogen6x: add touchscreen
- support
-Date: Tue, 08 Sep 2015 08:58:03 +0200
-Message-ID: <1441695483.3241.5.camel@pengutronix.de>
-References: <1441645069-27263-1-git-send-email-gary.bisson@boundarydevices.com>
-	 <1441645069-27263-2-git-send-email-gary.bisson@boundarydevices.com>
+From: Jisheng Zhang <jszhang@marvell.com>
+Subject: Re: [PATCH-v2 4/7] mmc: sdhci-pxav3: Add pinctl setting according
+ to bus clock
+Date: Tue, 8 Sep 2015 14:54:39 +0800
+Message-ID: <20150908145439.046dfe0d@xhacker>
+References: <1441624721-15612-1-git-send-email-vaibhav.hiremath@linaro.org>
+	<1441624721-15612-5-git-send-email-vaibhav.hiremath@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="US-ASCII"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1441645069-27263-2-git-send-email-gary.bisson-Q5RJGjKts06CY9SHAMCTRUEOCMrvLtNR@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Gary Bisson <gary.bisson-Q5RJGjKts06CY9SHAMCTRUEOCMrvLtNR@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, troy.kisky-Q5RJGjKts06CY9SHAMCTRUEOCMrvLtNR@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <1441624721-15612-5-git-send-email-vaibhav.hiremath@linaro.org>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Vaibhav Hiremath <vaibhav.hiremath@linaro.org>
+Cc: linux-mmc@vger.kernel.org, devicetree@vger.kernel.org, ulf.hansson@linaro.org, linux-kernel@vger.kernel.org, robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org, Kevin Liu <kliu5@marvell.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Gary,
+On Mon, 7 Sep 2015 16:48:38 +0530
+Vaibhav Hiremath <vaibhav.hiremath@linaro.org> wrote:
 
-Am Montag, den 07.09.2015, 18:57 +0200 schrieb Gary Bisson:
-> This patch adds the different touchscreens that can be connected using
-> the displays available for this board.
-> http://boundarydevices.com/product-category/displays/
+> Different bus clock may need different pin setting.
+> For example, fast bus clock like 208Mhz need pin drive fast
+> while slow bus clock prefer pin drive slow to guarantee
+> signal quality.
 > 
-> Signed-off-by: Gary Bisson <gary.bisson-Q5RJGjKts06CY9SHAMCTRUEOCMrvLtNR@public.gmane.org>
+> So this patch creates two states,
+>   - Default (slow/normal) pin state
+>   - And fast pin state for higher freq bus speed.
+> 
+> And selection of pin state is done based on timing mode.
+> 
+> Signed-off-by: Vaibhav Hiremath <vaibhav.hiremath@linaro.org>
+> Signed-off-by: Kevin Liu <kliu5@marvell.com>
 > ---
->  arch/arm/boot/dts/imx6qdl-nitrogen6x.dtsi | 16 ++++++++++++++++
->  1 file changed, 16 insertions(+)
+>  drivers/mmc/host/sdhci-pxav3.c | 45 +++++++++++++++++++++++++++++++++++++++++-
+>  1 file changed, 44 insertions(+), 1 deletion(-)
 > 
-> diff --git a/arch/arm/boot/dts/imx6qdl-nitrogen6x.dtsi b/arch/arm/boot/dts/imx6qdl-nitrogen6x.dtsi
-> index ad16dce..ec9da5e 100644
-> --- a/arch/arm/boot/dts/imx6qdl-nitrogen6x.dtsi
-> +++ b/arch/arm/boot/dts/imx6qdl-nitrogen6x.dtsi
-> @@ -284,6 +284,22 @@
->  	pinctrl-names = "default";
->  	pinctrl-0 = <&pinctrl_i2c3>;
->  	status = "okay";
+> diff --git a/drivers/mmc/host/sdhci-pxav3.c b/drivers/mmc/host/sdhci-pxav3.c
+> index c2b2b78..d933f75 100644
+> --- a/drivers/mmc/host/sdhci-pxav3.c
+> +++ b/drivers/mmc/host/sdhci-pxav3.c
+> @@ -35,6 +35,7 @@
+>  #include <linux/pm.h>
+>  #include <linux/pm_runtime.h>
+>  #include <linux/mbus.h>
+> +#include <linux/pinctrl/consumer.h>
+>  
+>  #include "sdhci.h"
+>  #include "sdhci-pltfm.h"
+> @@ -92,6 +93,10 @@ struct sdhci_pxa {
+>  	void __iomem *io_pwr_reg;
+>  	void __iomem *io_pwr_lock_reg;
+>  	struct sdhci_pxa_data *data;
 > +
-> +	egalax_ts@04 {
-> +		compatible = "eeti,egalax_ts";
-> +		reg = <0x04>;
-> +		interrupt-parent = <&gpio1>;
-> +		interrupts = <9 2>;
-
-Please use IRQ_TYPE_EDGE_FALLING here.
-
-> +		wakeup-gpios = <&gpio1 9 0>;
-
-And that would be GPIO_ACTIVE_HIGH. Should this be changed to
-GPIO_ACTIVE_LOW instead? From other device tree files and from what the
-driver does, it looks as if a wakeup is issued by forcing a falling edge
-on the IRQ pin.
-
-> +	};
-> +
-> +	ft5x06_ts@38 {
-> +		compatible = "edt,edt-ft5x06";
-> +		reg = <0x38>;
-> +		interrupt-parent = <&gpio1>;
-> +		interrupts = <9 2>;
-
-IRQ_TYPE_EDGE_FALLING
-
-> +		wakeup-gpios = <&gpio1 9 0>;
-
-GPIO_ACTIVE_HIGH
-
-> +	};
+> +	struct pinctrl *pinctrl;
+> +	struct pinctrl_state *pins_default;
+> +	struct pinctrl_state *pins_fast;
 >  };
+>  
+>  static struct sdhci_pxa_data pxav3_data_v1 = {
+> @@ -298,6 +303,33 @@ static void pxav3_gen_init_74_clocks(struct sdhci_host *host, u8 power_mode)
+>  	pxa->power_mode = power_mode;
+>  }
+>  
+> +static int pxav3_select_pinstate(struct sdhci_host *host, unsigned int uhs)
+> +{
+> +	struct sdhci_pltfm_host *pltfm_host = sdhci_priv(host);
+> +	struct sdhci_pxa *pxa = pltfm_host->priv;
+> +	struct pinctrl_state *pinctrl;
+> +
+> +	if (IS_ERR(pxa->pinctrl) ||
+> +		IS_ERR(pxa->pins_default) ||
+> +		IS_ERR(pxa->pins_fast))
+> +		return -EINVAL;
+> +
+> +	switch (uhs) {
+> +	case MMC_TIMING_UHS_SDR50:
+> +	case MMC_TIMING_UHS_SDR104:
+> +	case MMC_TIMING_MMC_HS200:
+> +	case MMC_TIMING_MMC_HS400:
 
-best regards
-Philipp
+Are you sure this IP can support HS400?
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> +		pinctrl = pxa->pins_fast;
+> +		break;
+> +	default:
+> +		/* back to default state for other legacy timing */
+> +		pinctrl = pxa->pins_default;
+> +		break;
+> +	}
+> +
+> +	return pinctrl_select_state(pxa->pinctrl, pinctrl);
+> +}
+> +
+>  static void pxav3_set_uhs_signaling(struct sdhci_host *host, unsigned int uhs)
+>  {
+>  	struct sdhci_pltfm_host *pltfm_host = sdhci_priv(host);
+> @@ -353,6 +385,8 @@ static void pxav3_set_uhs_signaling(struct sdhci_host *host, unsigned int uhs)
+>  	dev_dbg(mmc_dev(host->mmc),
+>  		"%s uhs = %d, ctrl_2 = %04X\n",
+>  		__func__, uhs, ctrl_2);
+> +
+> +	pxav3_select_pinstate(host, uhs);
+>  }
+>  
+>  static void pxav3_voltage_switch(struct sdhci_host *host,
+> @@ -416,7 +450,6 @@ static void pxav3_set_clock(struct sdhci_host *host, unsigned int clock)
+>  		/* TX internal clock selection */
+>  		pxav3_set_tx_clock(host);
+>  	}
+> -
+>  }
+>  
+>  static const struct sdhci_ops pxav3_sdhci_ops = {
+> @@ -586,6 +619,16 @@ static int sdhci_pxav3_probe(struct platform_device *pdev)
+>  		}
+>  	}
+>  
+> +	pxa->pinctrl = devm_pinctrl_get(dev);
+> +	if (!IS_ERR(pxa->pinctrl)) {
+> +		pxa->pins_default = pinctrl_lookup_state(pxa->pinctrl, "default");
+> +		if (IS_ERR(pxa->pins_default))
+> +			dev_err(dev, "could not get default pinstate\n");
+> +		pxa->pins_fast = pinctrl_lookup_state(pxa->pinctrl, "fast");
+> +		if (IS_ERR(pxa->pins_fast))
+> +			dev_info(dev, "could not get fast pinstate\n");
+> +	}
+> +
+>  	pm_runtime_get_noresume(&pdev->dev);
+>  	pm_runtime_set_active(&pdev->dev);
+>  	pm_runtime_set_autosuspend_delay(&pdev->dev, PXAV3_RPM_DELAY_MS);
+
