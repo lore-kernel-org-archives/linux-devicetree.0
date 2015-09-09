@@ -1,76 +1,172 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH-v2 4/7] mmc: sdhci-pxav3: Add pinctl setting according to
- bus clock
-Date: Wed, 9 Sep 2015 10:39:46 +0200
-Message-ID: <CACRpkdaQc8bH923D1bvoj2+2Puq8sSaLLf5Y8cHKbAKziOwJMg@mail.gmail.com>
-References: <1441624721-15612-1-git-send-email-vaibhav.hiremath@linaro.org>
-	<1441624721-15612-5-git-send-email-vaibhav.hiremath@linaro.org>
-	<CACRpkdY59roEBgUd9TR39yNgfhw393+WmHQQAeLkOEZLChOcWQ@mail.gmail.com>
-	<55EEF99F.1020904@linaro.org>
+From: Charles Keepax <ckeepax@opensource.wolfsonmicro.com>
+Subject: [PATCH RESEND 2/5] extcon: arizona: Add support for new ADC value headphone detect
+Date: Wed, 9 Sep 2015 09:34:47 +0100
+Message-ID: <1441787690-30148-2-git-send-email-ckeepax@opensource.wolfsonmicro.com>
+References: <1441787690-30148-1-git-send-email-ckeepax@opensource.wolfsonmicro.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-mmc-owner@vger.kernel.org>
-In-Reply-To: <55EEF99F.1020904@linaro.org>
-Sender: linux-mmc-owner@vger.kernel.org
-To: Vaibhav Hiremath <vaibhav.hiremath@linaro.org>, Stephen Warren <swarren@wwwdotorg.org>
-Cc: "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Ulf Hansson <ulf.hansson@linaro.org>, Kevin Liu <kliu5@marvell.com>
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1441787690-30148-1-git-send-email-ckeepax@opensource.wolfsonmicro.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: cw00.choi@samsung.com, lee.jones@linaro.org
+Cc: myungjoo.ham@samsung.com, sameo@linux.intel.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, patches@opensource.wolfsonmicro.com
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Sep 8, 2015 at 5:07 PM, Vaibhav Hiremath
-<vaibhav.hiremath@linaro.org> wrote:
+Newer devices give users the option to make the 3/4 pole jack
+determination using a software comparison rather than a hardware one.
+This patch adds support for this functionality.
 
-> But I still have one small doubt on expectation from
-> devm_pinctrl_get() function.
->
-> If pinctrl properties are not populated in Devicetree node,
-> then, shouldn't devm_pinctrl_get() return error ?
-> I followed the code flow, and it seems even if pinctrl properties are
-> not populated in DT node, the devm_pinctrl_get() returns valid
-> pointer to "struct pinctrl", isn't this against the expectation of the
-> call?
->
->
-> Code flow -
->
-> devm_pinctrl_get()
-> ...
-> --> creat_pinctrl()
+Signed-off-by: Charles Keepax <ckeepax@opensource.wolfsonmicro.com>
+---
+ drivers/extcon/extcon-arizona.c |   67 +++++++++++++++++++++++++++++++++++---
+ 1 files changed, 61 insertions(+), 6 deletions(-)
 
-That is the spelling mistake Dennis Ritchie and Ken Thompson
-wish they had avoided in the first syscall interface :D
-
-> --> pinctrl_dt_to_map()
-> ...
->
-> pinctrl_dt_to_map() iterates for pinctrl-x (x = 0,1,...) and if it
-> founds the entry then it parses the node. If it doesn't find any
-> pinctrl property then also it returns 0. and subsequently rreturns
-> handle to "struct pinctrl" for the device. Why is so?
-
-So pinctrl_dt_to_map() returns 0 if there are no maps in the
-device tree.
-
-This is correct: there may be systems that have a mixture
-of device tree and platform data, and in that case the code
-needs to continue after calling pinctrl_dt_to_map() because
-else it bails out before coming to the loop in
-create_pinctrl() where we iterate over the static maps.
-
-So after the loop in create_pinctrl() it should be possible
-to return something like -ENOENT if we didn't find
-anything. The device core pinctrl handling in
-drivers/base/pinctrl.c seems to cope with it.
-
-It's a semantic change so we would need to test to toss
-it in and see what happens on some different systems
-but in principe I think you're right. What we get if there is
-no state is basically a dummy pinctrl that does nothing.
-
-Do you wanna make a patch for this?
-
-(Looping in Stephen Warren so he can tell if I miss something
-obviously evident in the design that require stubs to
-be present.)
-
-Yours,
-Linus Walleij
+diff --git a/drivers/extcon/extcon-arizona.c b/drivers/extcon/extcon-arizona.c
+index 4b9f09c..f372156 100644
+--- a/drivers/extcon/extcon-arizona.c
++++ b/drivers/extcon/extcon-arizona.c
+@@ -48,6 +48,10 @@
+ #define HPDET_DEBOUNCE 500
+ #define DEFAULT_MICD_TIMEOUT 2000
+ 
++#define QUICK_HEADPHONE_MAX_OHM 3
++#define MICROPHONE_MIN_OHM      1257
++#define MICROPHONE_MAX_OHM      30000
++
+ #define MICD_DBTIME_TWO_READINGS 2
+ #define MICD_DBTIME_FOUR_READINGS 4
+ 
+@@ -117,12 +121,15 @@ static const struct arizona_micd_range micd_default_ranges[] = {
+ 	{ .max = 430, .key = BTN_5 },
+ };
+ 
++/* The number of levels in arizona_micd_levels valid for button thresholds */
++#define ARIZONA_NUM_MICD_BUTTON_LEVELS 64
++
+ static const int arizona_micd_levels[] = {
+ 	3, 6, 8, 11, 13, 16, 18, 21, 23, 26, 28, 31, 34, 36, 39, 41, 44, 46,
+ 	49, 52, 54, 57, 60, 62, 65, 67, 70, 73, 75, 78, 81, 83, 89, 94, 100,
+ 	105, 111, 116, 122, 127, 139, 150, 161, 173, 186, 196, 209, 220, 245,
+ 	270, 295, 321, 348, 375, 402, 430, 489, 550, 614, 681, 752, 903, 1071,
+-	1257,
++	1257, 30000,
+ };
+ 
+ static const unsigned int arizona_cable[] = {
+@@ -270,6 +277,7 @@ static void arizona_start_mic(struct arizona_extcon_info *info)
+ 	struct arizona *arizona = info->arizona;
+ 	bool change;
+ 	int ret;
++	unsigned int mode;
+ 
+ 	/* Microphone detection can't use idle mode */
+ 	pm_runtime_get(info->dev);
+@@ -295,9 +303,14 @@ static void arizona_start_mic(struct arizona_extcon_info *info)
+ 		regmap_write(arizona->regmap, 0x80, 0x0);
+ 	}
+ 
++	if (info->detecting && arizona->pdata.micd_software_compare)
++		mode = ARIZONA_ACCDET_MODE_ADC;
++	else
++		mode = ARIZONA_ACCDET_MODE_MIC;
++
+ 	regmap_update_bits(arizona->regmap,
+ 			   ARIZONA_ACCESSORY_DETECT_MODE_1,
+-			   ARIZONA_ACCDET_MODE_MASK, ARIZONA_ACCDET_MODE_MIC);
++			   ARIZONA_ACCDET_MODE_MASK, mode);
+ 
+ 	arizona_extcon_pulse_micbias(info);
+ 
+@@ -804,6 +817,37 @@ static void arizona_micd_detect(struct work_struct *work)
+ 		return;
+ 	}
+ 
++	if (info->detecting && arizona->pdata.micd_software_compare) {
++		/* Must disable MICD before we read the ADCVAL */
++		regmap_update_bits(arizona->regmap, ARIZONA_MIC_DETECT_1,
++				   ARIZONA_MICD_ENA, 0);
++		ret = regmap_read(arizona->regmap, ARIZONA_MIC_DETECT_4, &val);
++		if (ret != 0) {
++			dev_err(arizona->dev,
++				"Failed to read MICDET_ADCVAL: %d\n",
++				ret);
++			mutex_unlock(&info->lock);
++			return;
++		}
++
++		dev_dbg(arizona->dev, "MICDET_ADCVAL: %x\n", val);
++
++		val &= ARIZONA_MICDET_ADCVAL_MASK;
++		if (val < ARRAY_SIZE(arizona_micd_levels))
++			val = arizona_micd_levels[val];
++		else
++			val = INT_MAX;
++
++		if (val <= QUICK_HEADPHONE_MAX_OHM)
++			val = ARIZONA_MICD_STS | ARIZONA_MICD_LVL_0;
++		else if (val <= MICROPHONE_MIN_OHM)
++			val = ARIZONA_MICD_STS | ARIZONA_MICD_LVL_1;
++		else if (val <= MICROPHONE_MAX_OHM)
++			val = ARIZONA_MICD_STS | ARIZONA_MICD_LVL_8;
++		else
++			val = ARIZONA_MICD_LVL_8;
++	}
++
+ 	for (i = 0; i < 10 && !(val & MICD_LVL_0_TO_8); i++) {
+ 		ret = regmap_read(arizona->regmap, ARIZONA_MIC_DETECT_3, &val);
+ 		if (ret != 0) {
+@@ -932,10 +976,17 @@ static void arizona_micd_detect(struct work_struct *work)
+ 	}
+ 
+ handled:
+-	if (info->detecting)
++	if (info->detecting) {
++		if (arizona->pdata.micd_software_compare)
++			regmap_update_bits(arizona->regmap,
++					   ARIZONA_MIC_DETECT_1,
++					   ARIZONA_MICD_ENA,
++					   ARIZONA_MICD_ENA);
++
+ 		queue_delayed_work(system_power_efficient_wq,
+ 				   &info->micd_timeout_work,
+ 				   msecs_to_jiffies(info->micd_timeout));
++	}
+ 
+ 	pm_runtime_mark_last_busy(info->dev);
+ 	mutex_unlock(&info->lock);
+@@ -1162,6 +1213,9 @@ static int arizona_extcon_device_get_pdata(struct arizona *arizona)
+ 	pdata->micd_force_micbias = device_property_read_bool(arizona->dev,
+ 						"wlf,micd-force-micbias");
+ 
++	pdata->micd_software_compare = device_property_read_bool(arizona->dev,
++						"wlf,micd-software-compare");
++
+ 	return 0;
+ }
+ 
+@@ -1335,7 +1389,8 @@ static int arizona_extcon_probe(struct platform_device *pdev)
+ 		break;
+ 	}
+ 
+-	BUILD_BUG_ON(ARRAY_SIZE(arizona_micd_levels) != 0x40);
++	BUILD_BUG_ON(ARRAY_SIZE(arizona_micd_levels) <
++		     ARIZONA_NUM_MICD_BUTTON_LEVELS);
+ 
+ 	if (arizona->pdata.num_micd_ranges) {
+ 		info->micd_ranges = pdata->micd_ranges;
+@@ -1368,11 +1423,11 @@ static int arizona_extcon_probe(struct platform_device *pdev)
+ 
+ 	/* Set up all the buttons the user specified */
+ 	for (i = 0; i < info->num_micd_ranges; i++) {
+-		for (j = 0; j < ARRAY_SIZE(arizona_micd_levels); j++)
++		for (j = 0; j < ARIZONA_NUM_MICD_BUTTON_LEVELS; j++)
+ 			if (arizona_micd_levels[j] >= info->micd_ranges[i].max)
+ 				break;
+ 
+-		if (j == ARRAY_SIZE(arizona_micd_levels)) {
++		if (j == ARIZONA_NUM_MICD_BUTTON_LEVELS) {
+ 			dev_err(arizona->dev, "Unsupported MICD level %d\n",
+ 				info->micd_ranges[i].max);
+ 			ret = -EINVAL;
+-- 
+1.7.2.5
