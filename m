@@ -1,97 +1,107 @@
-From: =?UTF-8?Q?Emilio_L=c3=b3pez?= <emilio.lopez@collabora.co.uk>
-Subject: Re: [PATCH 1/3] sysfs: Fix is_visible() support for binary attributes
-Date: Wed, 9 Sep 2015 10:14:46 -0300
-Message-ID: <55F030C6.80504@collabora.co.uk>
-References: <1441714066-5599-1-git-send-email-emilio.lopez@collabora.co.uk>
- <1441714066-5599-2-git-send-email-emilio.lopez@collabora.co.uk>
- <20150908153013.GA6758@roeck-us.net> <20150908191002.GB10156@kroah.com>
- <20150908193052.GA11106@roeck-us.net> <55EF82A4.5000502@collabora.co.uk>
- <55EF86F8.3060406@roeck-us.net> <20150909035850.GA5497@kroah.com>
- <55EFB1B5.1060703@roeck-us.net>
+From: Cyrille Pitchen <cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH linux-next v6 0/8] add driver for Atmel QSPI controller
+Date: Wed, 9 Sep 2015 15:24:10 +0200
+Message-ID: <cover.1441803609.git.cyrille.pitchen@atmel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252;
-	format=flowed
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <55EFB1B5.1060703@roeck-us.net>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Guenter Roeck <linux@roeck-us.net>, Greg KH <gregkh@linuxfoundation.org>
-Cc: olof@lixom.net, kgene@kernel.org, k.kozlowski@samsung.com, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org
+Content-Type: text/plain
+Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, beanhuo-AL4WhLSQfzjQT0dZR+AlfA@public.gmane.org, juhosg-p3rKhJxN3npAfugRpC6u6w@public.gmane.org, marex-ynQEQJNshbs@public.gmane.org, ben-/+tVBieCtBitmTQ+vhA3Yw@public.gmane.org
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Cyrille Pitchen <cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 09/09/15 01:12, Guenter Roeck wrote:
-> On 09/08/2015 08:58 PM, Greg KH wrote:
->> On Tue, Sep 08, 2015 at 06:10:16PM -0700, Guenter Roeck wrote:
->>> Hi Emilio,
->>>
->>> On 09/08/2015 05:51 PM, Emilio L=F3pez wrote:
->>>> Hi Greg & Guenter,
->>>>
->>> [ ... ]
->>>>>>>
->>>>>>> Unless I am missing something, this is not explained anywhere,
->>>>>>> but it is
->>>>>>> not entirely trivial to understand. I think it should be docume=
-nted.
->>>>
->>>> I agree. I couldn't find any mention of what this int was supposed
->>>> to be by looking at Documentation/ (is_visible is not even mention=
-ed
->>>> :/) or include/linux/sysfs.h. Once we settle on something I'll
->>>> document it before sending a v2.
->>>>
->>> In the include file ? No strong preference, though.
->>>
->>>> By the way, I wrote a quick coccinelle script to match is_visible(=
-)
->>>> users which reference the index (included below), and it found
->>>> references to drivers which do not seem to use any binary
->>>> attributes, so I believe changing the index meaning shouldn't be a=
-n
->>>> issue.
->>>>
->>> Good.
->>>
->>>>>> I agree, make i the number of the bin attribute and that should =
-solve
->>>>>> this issue.
->>>>>>
->>>>> No, that would conflict with the "normal" use of is_visible for
->>>>> non-binary
->>>>> attributes, and make the index all but useless, since the
->>>>> is_visible function
->>>>> would have to search through all the attributes anyway to figure
->>>>> out which one
->>>>> is being checked.
->>>>
->>>> Yeah, using the same indexes would be somewhat pointless, although
->>>> not many seem to be using it anyway (only 14 files matched). Other=
-s
->>>> seem to be comparing the attr* instead. An alternative would be to
->>>> use negative indexes for binary attributes and positive indexes fo=
-r
->>>> normal attributes.
->>>>
->>> ... and I probably wrote or reviewed a significant percentage of
->>> those ;-).
->>>
->>> Using negative numbers for binary attributes is an interesting idea=
-=2E
->>> Kind of unusual, though. Greg, any thoughts on that ?
->>
->> Ick, no, that's a mess, maybe we just could drop the index alltogeth=
-er?
->>
->
-> No, please don't. Having to manually compare dozens of index pointers
-> would be
-> even more of a mess.
+ChangeLog
 
-So, what about keeping it the way it is in the patch, and documenting i=
-t=20
-thoroughly? Otherwise, we could introduce another "is_bin_visible"=20
-function to do this same thing but just on binary attributes, but I'd=20
-rather not add a new function pointer if possible.
+v6:
+- add new patch which tries to read the JEDEC ID with different SPI protocols
+  and different commands: 0x9f (SPI-1-1-1), 0xaf (SPI-4-4-4) and finally
+  0xaf (SPI-2-2-2).
+- remove the set_protocol() hook from struct spi_nor and add 4 new members
+  instead of type enum spi_protocol:
+  read_proto, write_proto, erase_proto, reg_proto.
+  The relevant protocol value should be checked by the driver specific read(),
+  write(), erase(), read_reg() and write_reg() hook implementations.
+- remove unused hooks: write_xfer() and read_xfer().
+- tune the op code for read, write and erase commands depending on the memory
+  manufacturer.
+- remove some previously added "Acked-by" since the protocol switch strategy
+  has been changed but not discussed yet.
 
-Cheers,
-Emilio
+v5:
+- remove unused inline functions qspi_read[bw]() and qspi_write[bw](),
+  keep only qspi_readl() and qspi_writel().
+- use reinit_completion() instead of init_completion() during run time,
+  call init_completion() once for all in the probe().
+- add a dev_warn() when trying to tune the number of dummy cycles for
+  spi-nor of a not supported manufacturer then fall back to the default
+  framework value.
+- reword some comments.
+- add "Acked-by: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>" for patches 1 and 4.
+- add "Acked-by: Bean Huo <beanhuo-AL4WhLSQfzjQT0dZR+AlfA@public.gmane.org>" for patch 1.
+
+v4:
+- add "OF && HAS_DMA" dependency in Kconfig for Atmel Quad SPI driver.
+- return -ENOMEM instead of the return code of dma_mapping_error() as this
+  function returns a boolean on ARM achitecture.
+- add "Acked-by: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>" for Atmel Quad
+  SPI driver and its DT binding documentation.
+
+v3:
+- reword the comment which explains that spi_nor_set_protocol() is used by
+  the spi-nor framework to notify lower layers, especially the (Q)SPI
+  controller about a protocol change.
+- change the definitions of register/bitfield macros in the Atmel QSPI
+  controller driver: get rid of concatenation operator and use BIT and
+  GENMASK macros when possible.
+- use #define[SPACE] instead of #define[TAB]
+
+v2:
+- remove the patches to set the "latency code" of Spansion QSPI memories
+  (support of Spansion memories may be submitted in later series).
+- rename "qspi" node into "spi" in the DT example to fit ePAPR standard.
+- remove the useless "qspi0" label from the DT node example.
+- remove the leading 0 from the size of the second memory region to make
+  it consistent with the size of the first memory region.
+- indent the DT bindings documentation to make it more readable.
+- remove the useless ".bus	= &platform_bus_type," line from the
+  platform driver definition.
+
+v1:
+
+This series of patches add support for the new Atmel QSPI controller
+embedded inside sama5d2x SoCs.
+
+These patches were first developped for linux-3.18-at91 and tested on a
+sama5d27 Xplained ultra board, which embeds a Micron n25q128a13 QSPI NOR
+flash memory. Then the series was adapted for mainline.
+
+Cyrille Pitchen (8):
+  mtd: spi-nor: read JEDEC ID with multiple I/O protocols
+  mtd: spi-nor: remove unused read_xfer/write_xfer hooks
+  mtd: spi-nor: update the SPI protocol when enabling manufacturer Quad
+    mode
+  mtd: spi-nor: use optimized commands for read/write/erase operations
+  Documentation: mtd: add a DT property to set the number of dummy
+    cycles
+  mtd: spi-nor: allow to tune the number of dummy cycles
+  Documentation: atmel-quadspi: add binding file for Atmel QSPI driver
+  mtd: atmel-quadspi: add driver for Atmel QSPI controller
+
+ .../devicetree/bindings/mtd/atmel-quadspi.txt      |  29 +
+ .../devicetree/bindings/mtd/jedec,spi-nor.txt      |   6 +
+ drivers/mtd/spi-nor/Kconfig                        |   7 +
+ drivers/mtd/spi-nor/Makefile                       |   1 +
+ drivers/mtd/spi-nor/atmel-quadspi.c                | 889 +++++++++++++++++++++
+ drivers/mtd/spi-nor/spi-nor.c                      | 356 +++++++--
+ include/linux/mtd/spi-nor.h                        |  63 +-
+ 7 files changed, 1269 insertions(+), 82 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/mtd/atmel-quadspi.txt
+ create mode 100644 drivers/mtd/spi-nor/atmel-quadspi.c
+
+-- 
+1.8.2.2
+
+--
+To unsubscribe from this list: send the line "unsubscribe linux-spi" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
