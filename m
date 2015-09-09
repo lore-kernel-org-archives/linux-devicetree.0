@@ -1,60 +1,37 @@
 From: Matt Ranostay <mranostay-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [RFC v3 2/4] iio: resistance: add IIO_RESISTANCE channel type
-Date: Tue,  8 Sep 2015 23:13:38 -0700
-Message-ID: <1441779220-8834-3-git-send-email-mranostay@gmail.com>
-References: <1441779220-8834-1-git-send-email-mranostay@gmail.com>
+Subject: [RFC v3 0/4] iio: new chemical sensor framework and channel types
+Date: Tue,  8 Sep 2015 23:13:36 -0700
+Message-ID: <1441779220-8834-1-git-send-email-mranostay@gmail.com>
 Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1441779220-8834-1-git-send-email-mranostay-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org
 Cc: linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Matt Ranostay <mranostay-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Matt Ranostay <mranostay-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
----
- Documentation/ABI/testing/sysfs-bus-iio | 7 +++++++
- drivers/iio/industrialio-core.c         | 1 +
- include/uapi/linux/iio/types.h          | 1 +
- 3 files changed, 9 insertions(+)
+Changes from RFC v2:
+* Proper usage of IIO_CHAN_INFO_OFFSET values for VOC and CO2 channels
+* Return CO2 offset that combines the 400 ppm offset and -13 value correction
 
-diff --git a/Documentation/ABI/testing/sysfs-bus-iio b/Documentation/ABI/testing/sysfs-bus-iio
-index 48080b7..0f683ed 100644
---- a/Documentation/ABI/testing/sysfs-bus-iio
-+++ b/Documentation/ABI/testing/sysfs-bus-iio
-@@ -1466,3 +1466,10 @@ KernelVersion:	4.3
- Contact:	linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
- Description:
- 		Raw (unscaled no offset etc.) precentage reading of a substance.
-+
-+What:		/sys/bus/iio/devices/iio:deviceX/in_resistance_raw
-+What:		/sys/bus/iio/devices/iio:deviceX/in_resistanceX_raw
-+KernelVersion:	4.3
-+Contact:	linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-+Description:
-+		Raw (unscaled no offset etc.) resistance reading in ohms.
-diff --git a/drivers/iio/industrialio-core.c b/drivers/iio/industrialio-core.c
-index 58a60a1..d61a363 100644
---- a/drivers/iio/industrialio-core.c
-+++ b/drivers/iio/industrialio-core.c
-@@ -76,6 +76,7 @@ static const char * const iio_chan_type_name_spec[] = {
- 	[IIO_DISTANCE] = "distance",
- 	[IIO_VELOCITY] = "velocity",
- 	[IIO_CONCENTRATION] = "concentration",
-+	[IIO_RESISTANCE] = "resistance",
- };
- 
- static const char * const iio_modifier_names[] = {
-diff --git a/include/uapi/linux/iio/types.h b/include/uapi/linux/iio/types.h
-index c5a0e3f..d58319c 100644
---- a/include/uapi/linux/iio/types.h
-+++ b/include/uapi/linux/iio/types.h
-@@ -36,6 +36,7 @@ enum iio_chan_type {
- 	IIO_DISTANCE,
- 	IIO_VELOCITY,
- 	IIO_CONCENTRATION,
-+	IIO_RESISTANCE,
- };
- 
- enum iio_modifier {
+Matt Ranostay (4):
+  iio: chemical: Add IIO_CONCENTRATION channel type
+  iio: resistance: add IIO_RESISTANCE channel type
+  devicetree: add SGX Sensortech vendor id
+  iio: chemical: add SGX VZ89x VOC sensor support
+
+ Documentation/ABI/testing/sysfs-bus-iio            |  14 ++
+ .../ABI/testing/sysfs-bus-iio-chemical-vz89x       |  30 +++
+ .../devicetree/bindings/i2c/trivial-devices.txt    |   1 +
+ .../devicetree/bindings/vendor-prefixes.txt        |   1 +
+ drivers/iio/Kconfig                                |   1 +
+ drivers/iio/Makefile                               |   1 +
+ drivers/iio/chemical/Makefile                      |   6 +
+ drivers/iio/chemical/vz89x.c                       | 245 +++++++++++++++++++++
+ drivers/iio/industrialio-core.c                    |   2 +
+ include/uapi/linux/iio/types.h                     |   2 +
+ 10 files changed, 303 insertions(+)
+ create mode 100644 Documentation/ABI/testing/sysfs-bus-iio-chemical-vz89x
+ create mode 100644 drivers/iio/chemical/Makefile
+ create mode 100644 drivers/iio/chemical/vz89x.c
+
 -- 
 1.9.1
