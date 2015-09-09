@@ -1,53 +1,171 @@
-From: Andreas Dannenberg <dannenberg@ti.com>
-Subject: Re: [PATCH] power: bq24261_charger: Add support for TI BQ24261
- charger
-Date: Wed, 9 Sep 2015 12:31:48 -0500
-Message-ID: <20150909173147.GA9887@beast>
-References: <1441560187-23611-1-git-send-email-ramakrishna.pallala@intel.com>
- <CAJKOXPfDu+LxoiQrV+CsqUbEVwYb1Zmk-m9y-L_1JxrB6ouS0g@mail.gmail.com>
- <20150909022617.GA32255@beast>
- <55EFB2C7.30800@samsung.com>
+From: Frank Rowand <frowand.list@gmail.com>
+Subject: Re: [PATCH v2] of_pci_irq: Silence bogus "of_irq_parse_pci() failed
+ ..." messages.
+Date: Wed, 09 Sep 2015 10:37:47 -0700
+Message-ID: <55F06E6B.3020500@gmail.com>
+References: <1441736911-2445-1-git-send-email-ddaney.cavm@gmail.com>
+Reply-To: frowand.list@gmail.com
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Return-path: <linux-pm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <55EFB2C7.30800@samsung.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Krzysztof Kozlowski <k.kozlowski@samsung.com>, laurentiu.palcu@intel.com
-Cc: Ramakrishna Pallala <ramakrishna.pallala@intel.com>, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, Sebastian Reichel <sre@kernel.org>, Jenny TC <jenny.tc@intel.com>
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1441736911-2445-1-git-send-email-ddaney.cavm@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: David Daney <ddaney.cavm@gmail.com>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Grant Likely <grant.likely@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Sep 09, 2015 at 01:17:11PM +0900, Krzysztof Kozlowski wrote:
-> On 09.09.2015 11:26, Andreas Dannenberg wrote:
-> > Krzysztof, good observation! In bq2425x_charger.c (formerly known as
-> > bq24257_charger.c :) that I worked on the unit used was uA. At that time
-> > I did a quick check and there didn't seem to be a clear standard whether
-> > to use the "micro" or "milli" units - different drivers use different
-> > units. However there seems to be a tendency for the TI drivers to prefer
-> > "milli" (bq2415x_charger.c, bq24735-charger.c)
-> > 
-> > Personally I think "milli" units are more appropriate for chargers since
-> > they provide sufficient granularity and the numbers don't become too big
-> > (try typing a voltage in the Volt-range in uV, it's very easy to get the
-> > number of 0s wrong). However since the driver was already there I left
-> > that aspect alone to preserve compatibility.
+On 9/8/2015 11:28 AM, David Daney wrote:
+
+> From: David Daney <david.daney@cavium.com>
+
 > 
-> I am fine with both units but milli indeed seems easier to judge by fast
-> looking and less error-prone. Whatever you choose - choose the same one. :)
 
-Ok sounds good. If so, I could go ahead and change the units in the
-bq2425x_charger.c over to mA and mV? It would be a bit labor some and I
-also want to see what Laurentiu thinks but this way we could have most
-of those TI charger drivers use the same units (the new bq24261 driver
-Ram posted also uses mA/mV). Except bq25890_charger.c.... that would
-still use uA/uV....
+> It is perfectly legitimate for a PCI device to have an
 
-Laurentiu -- what made you chose the "micro" units for bq24257_charger.c
-and bq25890_charger.c?
+> PCI_INTERRUPT_PIN value of zero.  This happens if the device doesn't
 
-Thanks,
+> use interrupts, or on PCIe devices, where only MSI/MSI-X are
 
---
-Andreas Dannenberg
-Texas Instruments Inc
+> supported.
 
+> 
+
+> Silence the annoying "of_irq_parse_pci() failed with rc=-19" error
+
+> messages by moving the printing code into of_irq_parse_pci(), and only
+
+> emitting the message for cases where PCI_INTERRUPT_PIN == 0 is not the
+
+> cause for an early exit.
+
+> 
+
+> Signed-off-by: David Daney <david.daney@cavium.com>
+
+> ---
+
+> Changes in v2: Move the print function in to of_irq_parse_pci() at a
+
+> common error exit point (as suggested by Frank Rowand).
+
+> 
+
+> 
+
+>  drivers/of/of_pci_irq.c | 17 ++++++++++-------
+
+>  1 file changed, 10 insertions(+), 7 deletions(-)
+
+> 
+
+> diff --git a/drivers/of/of_pci_irq.c b/drivers/of/of_pci_irq.c
+
+> index 1710d9d..0be8b65 100644
+
+> --- a/drivers/of/of_pci_irq.c
+
+> +++ b/drivers/of/of_pci_irq.c
+
+> @@ -38,8 +38,8 @@ int of_irq_parse_pci(const struct pci_dev *pdev, struct of_phandle_args *out_irq
+
+>  	 */
+
+>  	rc = pci_read_config_byte(pdev, PCI_INTERRUPT_PIN, &pin);
+
+>  	if (rc != 0)
+
+> -		return rc;
+
+> -	/* No pin, exit */
+
+> +		goto err;
+
+> +	/* No pin, exit with no error message. */
+
+>  	if (pin == 0)
+
+>  		return -ENODEV;
+
+>  
+
+> @@ -53,8 +53,10 @@ int of_irq_parse_pci(const struct pci_dev *pdev, struct of_phandle_args *out_irq
+
+>  			ppnode = pci_bus_to_OF_node(pdev->bus);
+
+>  
+
+>  			/* No node for host bridge ? give up */
+
+> -			if (ppnode == NULL)
+
+> -				return -EINVAL;
+
+> +			if (ppnode == NULL) {
+
+> +				rc = -EINVAL;
+
+> +				goto err;
+
+> +			}
+
+>  		} else {
+
+>  			/* We found a P2P bridge, check if it has a node */
+
+>  			ppnode = pci_device_to_OF_node(ppdev);
+
+> @@ -87,6 +89,9 @@ int of_irq_parse_pci(const struct pci_dev *pdev, struct of_phandle_args *out_irq
+
+>  	laddr[0] = cpu_to_be32((pdev->bus->number << 16) | (pdev->devfn << 8));
+
+>  	laddr[1] = laddr[2] = cpu_to_be32(0);
+
+
+>  	return of_irq_parse_raw(laddr, out_irq);
+
+
+should be:
+
+        rc = of_irq_parse_raw(laddr, out_irq);
+        if (rc)
+                goto err;
+        return 0;
+
+> +err:
+
+> +	dev_err(&pdev->dev, "of_irq_parse_pci() failed with rc=%d\n", rc);
+
+> +	return rc;
+
+>  }
+
+>  EXPORT_SYMBOL_GPL(of_irq_parse_pci);
+
+>  
+
+> @@ -105,10 +110,8 @@ int of_irq_parse_and_map_pci(const struct pci_dev *dev, u8 slot, u8 pin)
+
+>  	int ret;
+
+>  
+
+>  	ret = of_irq_parse_pci(dev, &oirq);
+
+> -	if (ret) {
+
+> -		dev_err(&dev->dev, "of_irq_parse_pci() failed with rc=%d\n", ret);
+
+> +	if (ret)
+
+>  		return 0; /* Proper return code 0 == NO_IRQ */
+
+> -	}
+
+>  
+
+>  	return irq_create_of_mapping(&oirq);
+
+>  }
+
+> 
