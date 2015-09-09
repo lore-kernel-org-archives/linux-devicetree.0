@@ -1,98 +1,111 @@
-From: Alban <albeu-GANU6spQydw@public.gmane.org>
-Subject: Re: [PATCH v2 2/2] MIPS: ath79: add irq chip ar7240-misc-intc
-Date: Wed, 9 Sep 2015 15:54:39 +0200
-Message-ID: <20150909155439.11ecab81@avionic-0020>
-References: <1441790178-9573-1-git-send-email-lynxis@fe80.eu>
-	<1441790178-9573-3-git-send-email-lynxis@fe80.eu>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v7 1/5] dt-bindings: Add usb3.0 phy binding for MT65xx
+ SoCs
+Date: Wed, 9 Sep 2015 08:58:26 -0500
+Message-ID: <55F03B02.5000604@kernel.org>
+References: <1441693083-8440-1-git-send-email-chunfeng.yun@mediatek.com>
+ <1441693083-8440-2-git-send-email-chunfeng.yun@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=windows-1252
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1441790178-9573-3-git-send-email-lynxis-qyMx1GtpvWw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Alexander Couzens <lynxis-qyMx1GtpvWw@public.gmane.org>
-Cc: Alban <albeu-GANU6spQydw@public.gmane.org>, linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1441693083-8440-2-git-send-email-chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Chunfeng Yun <chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Mathias Nyman <mathias.nyman-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, John Crispin <blogic-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>, Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed,  9 Sep 2015 11:16:18 +0200
-Alexander Couzens <lynxis-qyMx1GtpvWw@public.gmane.org> wrote:
-
-> The ar7240 misc irq chip use ack handler
-> instead of ack_mask handler. All new ath79 chips use
-> the ar7240 misc irq chip
+On 09/08/2015 01:17 AM, Chunfeng Yun wrote:
+> add a DT binding documentation of usb3.0 phy for MT65xx
+> SoCs from Mediatek.
 > 
-> Signed-off-by: Alexander Couzens <lynxis-qyMx1GtpvWw@public.gmane.org>
+> Signed-off-by: Chunfeng Yun <chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+
 > ---
->  .../interrupt-controller/qca,ath79-misc-intc.txt     | 20 ++++++++++++++++++--
->  arch/mips/ath79/irq.c                                | 10 ++++++++++
->  2 files changed, 28 insertions(+), 2 deletions(-)
+>  .../devicetree/bindings/phy/phy-mt65xx-usb.txt     | 69 ++++++++++++++++++++++
+>  1 file changed, 69 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/phy/phy-mt65xx-usb.txt
 > 
-> diff --git a/Documentation/devicetree/bindings/interrupt-controller/qca,ath79-misc-intc.txt b/Documentation/devicetree/bindings/interrupt-controller/qca,ath79-misc-intc.txt
-> index 391717a..ec96b1f 100644
-> --- a/Documentation/devicetree/bindings/interrupt-controller/qca,ath79-misc-intc.txt
-> +++ b/Documentation/devicetree/bindings/interrupt-controller/qca,ath79-misc-intc.txt
-> @@ -4,8 +4,8 @@ The MISC interrupt controller is a secondary controller for lower priority
->  interrupt.
->  
->  Required Properties:
-> -- compatible: has to be "qca,<soctype>-cpu-intc", "qca,ar7100-misc-intc"
-> -  as fallback
-> +- compatible: has to be "qca,<soctype>-cpu-intc", "qca,ar7100-misc-intc" or
-> +  "qca,<soctype>-cpu-intc", "qca,ar7240-misc-intc"
->  - reg: Base address and size of the controllers memory area
->  - interrupt-parent: phandle of the parent interrupt controller.
->  - interrupts: Interrupt specifier for the controllers interrupt.
-> @@ -13,6 +13,9 @@ Required Properties:
->  - #interrupt-cells : Specifies the number of cells needed to encode interrupt
->  		     source, should be 1
->  
-> +Compatible fallback depends on the SoC. Use ar7100 for ar71xx and ar913x,
-> +use ar7240 for all other SoCs.
+> diff --git a/Documentation/devicetree/bindings/phy/phy-mt65xx-usb.txt b/Documentation/devicetree/bindings/phy/phy-mt65xx-usb.txt
+> new file mode 100644
+> index 0000000..5812d20
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/phy/phy-mt65xx-usb.txt
+> @@ -0,0 +1,69 @@
+> +mt65xx USB3.0 PHY binding
+> +--------------------------
 > +
->  Please refer to interrupts.txt in this directory for details of the common
->  Interrupt Controllers bindings used by client devices.
->  
-> @@ -28,3 +31,16 @@ Example:
->  		interrupt-controller;
->  		#interrupt-cells = <1>;
->  	};
+> +This binding describes a usb3.0 phy for mt65xx platforms of Medaitek SoC.
 > +
-> +Another example:
+> +Required properties (controller (parent) node):
+> + - compatible	: should be "mediatek,mt8173-u3phy"
+> + - reg		: offset and length of register for phy, exclude port's
+> +		  register.
+> + - clocks	: a list of phandle + clock-specifier pairs, one for each
+> +		  entry in clock-names
+> + - clock-names	: must contain
+> +		  "u3phya_ref": for reference clock of usb3.0 analog phy.
 > +
-> +	interrupt-controller@18060010 {
-> +		compatible = "qca,ar9331-misc-intc", qca,ar7240-misc-intc";
-> +		reg = <0x18060010 0x4>;
+> +Required nodes	: a sub-node is required for each port the controller
+> +		  provides. Address range information including the usual
+> +		  'reg' property is used inside these nodes to describe
+> +		  the controller's topology. These nodes are translated
+> +		  by the driver's .xlate() function.
 > +
-> +		interrupt-parent = <&cpuintc>;
-> +		interrupts = <6>;
+> +Required properties (port (child) node):
+> +- reg		: address and length of the register set for the port.
+> +- #phy-cells	: should be 1 (See second example)
+> +		  cell after port phandle is phy type from:
+> +			- PHY_TYPE_USB2
+> +			- PHY_TYPE_USB3
 > +
-> +		interrupt-controller;
-> +		#interrupt-cells = <1>;
+> +Example:
+> +
+> +u3phy: usb-phy@11290000 {
+> +	compatible = "mediatek,mt8173-u3phy";
+> +	reg = <0 0x11290000 0 0x800>;
+> +	clocks = <&apmixedsys CLK_APMIXED_REF2USB_TX>;
+> +	clock-names = "u3phya_ref";
+> +	#address-cells = <2>;
+> +	#size-cells = <2>;
+> +	ranges;
+> +	status = "okay";
+> +
+> +	phy_port0: port@11290800 {
+> +		reg = <0 0x11290800 0 0x800>;
+> +		#phy-cells = <1>;
+> +		status = "okay";
 > +	};
-> diff --git a/arch/mips/ath79/irq.c b/arch/mips/ath79/irq.c
-> index c9c0124..fd58f8b 100644
-> --- a/arch/mips/ath79/irq.c
-> +++ b/arch/mips/ath79/irq.c
-> @@ -319,6 +319,16 @@ static int __init ar7100_misc_intc_of_init(
->  IRQCHIP_DECLARE(ar7100_misc_intc, "qca,ar7100-misc-intc",
->  		ar7100_misc_intc_of_init);
->  
-> +static int __init ar7240_misc_intc_of_init(
-> +	struct device_node *node, struct device_node *parent)
-> +{
-> +	ath79_misc_irq_chip.irq_ack = ar724x_misc_irq_ack;
-> +	return ath79_misc_intc_of_init(node, parent);
-> +}
 > +
-> +IRQCHIP_DECLARE(ar7240_misc_intc, "qca,ar7240-misc-intc",
-> +		ar7240_misc_intc_of_init);
+> +	phy_port1: port@11291000 {
+> +		reg = <0 0x11291000 0 0x800>;
+> +		#phy-cells = <1>;
+> +		status = "okay";
+> +	};
+> +};
 > +
->  static int __init ar79_cpu_intc_of_init(
->  	struct device_node *node, struct device_node *parent)
->  {
+> +Specifying phy control of devices
+> +---------------------------------
+> +
+> +Device nodes should specify the configuration required in their "phys"
+> +property, containing a phandle to the phy port node and a device type;
+> +phy-names for each port are optional.
+> +
+> +Example:
+> +
+> +#include <dt-bindings/phy/phy.h>
+> +
+> +usb30: usb@11270000 {
+> +	...
+> +	phys = <&phy_port0 PHY_TYPE_USB3>;
+> +	phy-names = "usb3-0";
+> +	...
+> +};
+> 
 
-Acked-by: Alban Bedel <albeu-GANU6spQydw@public.gmane.org>
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
