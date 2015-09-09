@@ -1,126 +1,101 @@
-From: Alexander Holler <holler@ahsoftware.de>
-Subject: [PATCH 2/2] deps: avoid multiple calls to memmove by just setting duplicates to 0
-Date: Wed,  9 Sep 2015 20:35:25 +0200
-Message-ID: <1441823725-8869-3-git-send-email-holler@ahsoftware.de>
-References: <55E961DA.5040009@ahsoftware.de>
- <1441823725-8869-1-git-send-email-holler@ahsoftware.de>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1441823725-8869-1-git-send-email-holler@ahsoftware.de>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org
-Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Greg KH <gregkh@linuxfoundation.org>, Russel King <linux@arm.linux.org.uk>, Andrew Morton <akpm@linux-foundation.org>, Grant Likely <grant.likely@linaro.org>, Tomeu Vizoso <tomeu.vizoso@collabora.com>, Alexander Holler <holler@ahsoftware.de>
+From: Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: Re: [PATCH 1/2] fsl: Add binding for RCPM
+Date: Wed, 9 Sep 2015 14:56:39 -0500
+Message-ID: <1441828599.29081.36.camel@freescale.com>
+References: <1441780967-30879-1-git-send-email-dongsheng.wang@freescale.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1441780967-30879-1-git-send-email-dongsheng.wang-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Dongsheng Wang <dongsheng.wang-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, jason.jin-KZfg59tc24xl57MIdRCFDg@public.gmane.org, chenhui.zhao-KZfg59tc24xl57MIdRCFDg@public.gmane.org, yuantian.tang-KZfg59tc24xl57MIdRCFDg@public.gmane.org, alison.wang-KZfg59tc24xl57MIdRCFDg@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Besides make the code (almost unmeasurable) faster, this makes the
-ugly looking loop I've used to remove duplicates cleaner.
-Disadvantage is that the ordered array now contains 'holes' and the
-number of elements in the array doesn't really match the number
-of ordered elements. But this only makes a difference for debugging.
+On Wed, 2015-09-09 at 14:42 +0800, Dongsheng Wang wrote:
+> From: Wang Dongsheng <dongsheng.wang-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+> 
+> RCPM is the Run Control and Power Management module performs all
+> device-level tasks associated with device run control and power
+> management.
+> 
+> Add this for freescale powerpc platform and layerscape platform.
+> 
+> Signed-off-by: Chenhui Zhao <chenhui.zhao-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+> Signed-off-by: Tang Yuantian <Yuantian.Tang-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+> Signed-off-by: Wang Dongsheng <dongsheng.wang-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+> 
+> diff --git a/Documentation/devicetree/bindings/soc/fsl/rcpm.txt 
+> b/Documentation/devicetree/bindings/soc/fsl/rcpm.txt
+> new file mode 100644
+> index 0000000..284070c
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/soc/fsl/rcpm.txt
+> @@ -0,0 +1,64 @@
+> +* Run Control and Power Management
+> +-------------------------------------------
+> +The RCPM performs all device-level tasks associated with device run control
+> +and power management.
+> +
+> +Required properites:
+> +  - reg : Offset and length of the register set of RCPM block.
+> +  - compatible : Sould contain a chip-specific RCPM block compatible string
+> +     and (if applicable) may contain a chassis-version RCPM compatible string.
+> +     Chip-specific strings are of the form "fsl,<chip>-rcpm", such as:
+> +     * "fsl,p2041-rcpm"
+> +     * "fsl,p3041-rcpm"
+> +     * "fsl,p4080-rcpm"
+> +     * "fsl,p5020-rcpm"
+> +     * "fsl,p5040-rcpm"
+> +     * "fsl,t4240-rcpm"
+> +     * "fsl,b4420-rcpm"
+> +     * "fsl,b4860-rcpm"
+> +
+> +     Chassis-version strings are of the form "fsl,qoriq-rcpm-<version>",
+> +     such as:
+> +     * "fsl,qoriq-rcpm-1.0": for chassis 1.0 rcpm
+> +     * "fsl,qoriq-rcpm-2.0": for chassis 2.0 rcpm
+> +     * "fsl,qoriq-rcpm-2.1": for chassis 2.1 rcpm
+> +
+> +All references to "1.0" and "2.0" refer to the QorIQ chassis version to
+> +which the chip complies.
+> +Chassis Version              Example Chips
+> +---------------              -------------------------------
+> +1.0                          p4080, p5020, p5040, p2041, p3041
+> +2.0                          t4240, b4860, b4420
+> +2.1                          t1040, ls1021
+> +
+> +Example:
+> +The RCPM node for T4240:
+> +     rcpm:  global-utilities@e2000{
+> +             compatible = "fsl,t4240-rcpm", "fsl,qoriq-rcpm-2.0";
+> +             reg = <0xe2000 0x1000>;
+> +     };
+> +
+> +The RCPM node for P4080:
+> +     rcpm:  global-utilities@e2000{
+> +             compatible = "fsl,qoriq-rcpm-1.0";
+> +             reg = <0xe2000 0x1000>;
+> +     };
 
-This patch also adds an of_node_put() for duplicate dt nodes, something
-I previously had forgotten.
+I would avoid putting the p4080 example in the binding, as we don't want to 
+make it look like it's OK to leave out the specific chip compatible.
 
-Signed-off-by: Alexander Holler <holler@ahsoftware.de>
----
- drivers/of/of_dependencies.c | 34 ++++++++++++++++++++--------------
- 1 file changed, 20 insertions(+), 14 deletions(-)
+> +* Freescale RCPM Wakeup Source Device Tree Bindings
+> +-------------------------------------------
+> +Required rcpm-wakeup property should be added to a device node if the 
+> device
+> +can be used as a wakeup source.
+> +
+> +  - rcpm-wakeup: should contain a pointer to the rcpm node and the
+> +     corresponding bit of device in the register.
 
-diff --git a/drivers/of/of_dependencies.c b/drivers/of/of_dependencies.c
-index 85cef84..ac0c0f5 100644
---- a/drivers/of/of_dependencies.c
-+++ b/drivers/of/of_dependencies.c
-@@ -323,21 +323,20 @@ static bool __init all_compatibles_same(struct device_node *node1,
- /*
-  * The order is based on devices but we are calling drivers.
-  * Therefor the order contains some drivers more than once.
-- * Remove the duplicates.
-+ * Disable the duplicates by setting them to 0.
-  */
--static void __init of_init_remove_duplicates(void)
-+static void __init of_init_disable_duplicates(void)
- {
- 	unsigned i, j;
- 
- 	for (i = 1; i < order.count; ++i)
- 		for (j = 0; j < i; ++j) {
-+			if (!order.order[j])
-+				continue;
- 			if (all_compatibles_same(order.order[j],
- 							order.order[i])) {
--				--order.count;
--				memmove(&order.order[i], &order.order[i+1],
--					(order.count - i) *
--						sizeof(order.order[0]));
--				--i;
-+				of_node_put(order.order[i]);
-+				order.order[i] = 0;
- 				break;
- 			}
- 		}
-@@ -416,7 +415,8 @@ static void __init build_tgroups(void)
- 	unsigned dist = 0;
- 
- 	for (i = 0; i < order.count; ++i) {
--		if (distance[order.order[i]->phandle] != dist) {
-+		if (order.order[i] &&
-+				distance[order.order[i]->phandle] != dist) {
- 			dist = distance[order.order[i]->phandle];
- 			count_groups++;
- 			tgroup[count_groups].start = i;
-@@ -436,6 +436,8 @@ static void __init of_init_print_order(void)
- 
- 	pr_info("Initialization order:\n");
- 	for (i = 0; i < order.count; ++i) {
-+		if (!order.order[i])
-+			continue;
- #ifdef CONFIG_OF_DEPENDENCIES_PARALLEL
- 		pr_info("init %u 0x%x (group %u)", i,
- 			order.order[i]->phandle,
-@@ -496,10 +498,10 @@ static int __init of_init_build_order(void)
- 
- #ifdef CONFIG_OF_DEPENDENCIES_PARALLEL
- 	build_order_by_distance();
--	of_init_remove_duplicates();
-+	of_init_disable_duplicates();
- 	build_tgroups();
- #else
--	of_init_remove_duplicates();
-+	of_init_disable_duplicates();
- #endif
- 
- #ifdef CONFIG_OF_DEPENDENCIES_PRINT_INIT_ORDER
-@@ -516,7 +518,8 @@ static void __init of_init_free_order(void)
- 	unsigned i;
- 
- 	for (i = 0; i < order.count; ++i)
--		of_node_put(order.order[i]);
-+		if (order.order[i])
-+			of_node_put(order.order[i]);
- 	order.count = 0;
- 	/* remove_new_phandles(); */
- }
-@@ -593,8 +596,10 @@ static int __init initcall_thread(void *thread_nr)
- 		start = atomic_read(&ostart);
- 		count = atomic_read(&ocount);
- 		while ((i = atomic_dec_return(&shared_counter)) >= 0)
--			init_if_matched(order.order[start + count - 1 - i],
--					(unsigned)thread_nr);
-+			if (order.order[start + count - 1 - i])
-+				init_if_matched(
-+					order.order[start + count - 1 - i],
-+					 (unsigned)thread_nr);
- 		prepare_to_wait(&group_waitqueue, &wait, TASK_UNINTERRUPTIBLE);
- 		if (!atomic_dec_and_test(&count_initcall_threads)) {
- 			schedule();
-@@ -629,7 +634,8 @@ static void __init of_init_drivers_non_threaded(void)
- 
- 	if (!of_init_build_order()) {
- 		for (i = 0; i < order.count; ++i)
--			init_if_matched(order.order[i], 0);
-+			if (order.order[i])
-+				init_if_matched(order.order[i], 0);
- 		of_init_free_order();
- 	}
- 	ac = __annotated_initcall_start;
--- 
-2.1.0
+The corresponding bit in *what* register?
+
+-Scott
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
