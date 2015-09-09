@@ -1,287 +1,274 @@
-From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH 3/3] ARM: dts: sun4i: Add dts file for iNet-1
- based tablets
-Date: Wed,  9 Sep 2015 10:23:24 +0200
-Message-ID: <1441787004-4660-3-git-send-email-hdegoede@redhat.com>
-References: <1441787004-4660-1-git-send-email-hdegoede@redhat.com>
-Reply-To: hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org
+From: Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v4 2/2] dt: power: st: Provide bindings for ST's OPPs
+Date: Wed, 9 Sep 2015 14:00:31 +0530
+Message-ID: <20150909083031.GB5266@linux>
+References: <20150811120124.GH5509@linux>
+ <20150811132756.GG18282@x1>
+ <20150811142812.GJ5509@linux>
+ <20150811151736.GO18282@x1>
+ <20150812110841.GC20238@linux>
+ <20150826120628.GZ19409@x1>
+ <20150902080639.GA26744@linux>
+ <CAL_JsqKMGp+3Z+oO6E0YYzjTCb=-R_QM=YF=B33NWayWmV057A@mail.gmail.com>
+ <20150909062722.GA5266@linux>
+ <20150909075930.GB3260@x1>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBDRZXY4CYYORBA6ZX6XQKGQEP4FIIIY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <1441787004-4660-1-git-send-email-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <http://groups.google.com/group/linux-sunxi/subscribe>
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20150909075930.GB3260@x1>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>, kernel-F5mvAk5X5gdBDgjK7y7TUQ@public.gmane.org, "linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Dmitry Eremin-Solenikov <dbaryshkov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rafael Wysocki <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Arnd Bergmann <arnd.bergmann-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Ajit Pal Singh <ajitpal.singh-qxv4g6HH51o@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The iNet-tek iNet-1 PCB is a PCB found in various generic 10.1" 1024x600
-A10 based tablets such as the Point of View Protab2 XXL and the
-Cherry M1007.
+On 09-09-15, 08:59, Lee Jones wrote:
+> Thanks for doing this Viresh.  I appreciate your efforts.
 
-This patch has been tested on both rev2 and rev5 of this board / these
-tablets.
+I wanted to get this sorted out, before we meet face to face :)
 
-It comes with a rtl8188cus usb wifi connected to ehci1, focal ft5406ee8
-touchscreen connected to i2c2 addr 0x38, bosch bma 250 accelerometer
-connected to i2c1 addr 0x18 and the usual connectors: headphone,
-mini hdmi, power-barrel, mini-usb and a micro-sd slot.
+> > -------------------------8<-------------------------
+> > From: Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> > Date: Wed, 9 Sep 2015 11:47:37 +0530
+> > Subject: [PATCH] PM / OPP: Add "opp-cuts" and "opp-supply-version" bindings
+> > 
+> > For many platforms it is unknown until runtime, about which OPPs should
+> > be used or if used what should be voltage range for the supplies for a
+> > particular frequency. And this mostly depends on the version of the
+> > device or hardware, for which the OPPs are getting used.
+> > 
+> > This patch adds two new OPP bindings to get this solved.
+> > 
+> > 1. "opp-cuts": The purpose of this binding is to allow the platform to
+> >    identify the valid OPPs based on the different levels of versions
+> >    with which the hardware is identified.
+> 
+> "cuts" is a very specific name for such a generic property.
 
-Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
----
- arch/arm/boot/dts/Makefile            |   1 +
- arch/arm/boot/dts/sun4i-a10-inet1.dts | 226 ++++++++++++++++++++++++++++++++++
- 2 files changed, 227 insertions(+)
- create mode 100644 arch/arm/boot/dts/sun4i-a10-inet1.dts
+I agree... I wasn't concerned much about naming on the first try and
+so just wrote it quickly enough to get an overall idea ..
 
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index c7b96be..746c7ba 100644
---- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -553,6 +553,7 @@ dtb-$(CONFIG_MACH_SUN4I) += \
- 	sun4i-a10-gemei-g9.dtb \
- 	sun4i-a10-hackberry.dtb \
- 	sun4i-a10-hyundai-a7hd.dtb \
-+	sun4i-a10-inet1.dtb \
- 	sun4i-a10-inet97fv2.dtb \
- 	sun4i-a10-inet9f-rev03.dtb \
- 	sun4i-a10-itead-iteaduino-plus.dtb \
-diff --git a/arch/arm/boot/dts/sun4i-a10-inet1.dts b/arch/arm/boot/dts/sun4i-a10-inet1.dts
-new file mode 100644
-index 0000000..487ce63
---- /dev/null
-+++ b/arch/arm/boot/dts/sun4i-a10-inet1.dts
-@@ -0,0 +1,226 @@
-+/*
-+ * Copyright 2015 Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-+ *
-+ * This file is dual-licensed: you can use it either under the terms
-+ * of the GPL or the X11 license, at your option. Note that this dual
-+ * licensing only applies to this file, and not this project as a
-+ * whole.
-+ *
-+ *  a) This file is free software; you can redistribute it and/or
-+ *     modify it under the terms of the GNU General Public License as
-+ *     published by the Free Software Foundation; either version 2 of the
-+ *     License, or (at your option) any later version.
-+ *
-+ *     This file is distributed in the hope that it will be useful,
-+ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ *     GNU General Public License for more details.
-+ *
-+ * Or, alternatively,
-+ *
-+ *  b) Permission is hereby granted, free of charge, to any person
-+ *     obtaining a copy of this software and associated documentation
-+ *     files (the "Software"), to deal in the Software without
-+ *     restriction, including without limitation the rights to use,
-+ *     copy, modify, merge, publish, distribute, sublicense, and/or
-+ *     sell copies of the Software, and to permit persons to whom the
-+ *     Software is furnished to do so, subject to the following
-+ *     conditions:
-+ *
-+ *     The above copyright notice and this permission notice shall be
-+ *     included in all copies or substantial portions of the Software.
-+ *
-+ *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-+ *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
-+ *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-+ *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
-+ *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
-+ *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-+ *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-+ *     OTHER DEALINGS IN THE SOFTWARE.
-+ */
-+
-+/dts-v1/;
-+#include "sun4i-a10.dtsi"
-+#include "sunxi-common-regulators.dtsi"
-+#include <dt-bindings/gpio/gpio.h>
-+#include <dt-bindings/input/input.h>
-+#include <dt-bindings/interrupt-controller/irq.h>
-+#include <dt-bindings/pinctrl/sun4i-a10.h>
-+
-+/ {
-+	model = "iNet-1";
-+	compatible = "inet-tek,inet1", "allwinner,sun4i-a10";
-+
-+	aliases {
-+		serial0 = &uart0;
-+	};
-+
-+	chosen {
-+		stdout-path = "serial0:115200n8";
-+	};
-+};
-+
-+&cpu0 {
-+	cpu-supply = <&reg_dcdc2>;
-+};
-+
-+&ehci0  {
-+	status = "okay";
-+};
-+
-+&ehci1 {
-+	status = "okay";
-+};
-+
-+&i2c0 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&i2c0_pins_a>;
-+	status = "okay";
-+
-+	axp209: pmic@34 {
-+		reg = <0x34>;
-+		interrupts = <0>;
-+	};
-+};
-+
-+#include "axp209.dtsi"
-+
-+&i2c1 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&i2c1_pins_a>;
-+	status = "okay";
-+
-+	/* Accelerometer */
-+	bma250@18 {
-+		compatible = "bosch,bma250";
-+		reg = <0x18>;
-+		interrupt-parent = <&pio>;
-+		interrupts = <7 0 IRQ_TYPE_EDGE_RISING>; /* PH0 / EINT0 */
-+	};
-+};
-+
-+&i2c2 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&i2c2_pins_a>;
-+	status = "okay";
-+};
-+
-+&lradc {
-+	vref-supply = <&reg_ldo2>;
-+	status = "okay";
-+
-+	button@200 {
-+		label = "Volume Up";
-+		linux,code = <KEY_VOLUMEUP>;
-+		channel = <0>;
-+		voltage = <200000>;
-+	};
-+
-+	button@1000 {
-+		label = "Volume Down";
-+		linux,code = <KEY_VOLUMEDOWN>;
-+		channel = <0>;
-+		voltage = <1000000>;
-+	};
-+
-+	button@1200 {
-+		label = "Home";
-+		linux,code = <KEY_HOMEPAGE>;
-+		channel = <0>;
-+		voltage = <1200000>;
-+	};
-+};
-+
-+&mmc0 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&mmc0_pins_a>, <&mmc0_cd_pin_reference_design>;
-+	vmmc-supply = <&reg_vcc3v3>;
-+	bus-width = <4>;
-+	cd-gpios = <&pio 7 1 GPIO_ACTIVE_HIGH>; /* PH1 */
-+	cd-inverted;
-+	status = "okay";
-+};
-+
-+&ohci0  {
-+	status = "okay";
-+};
-+
-+&otg_sram {
-+	status = "okay";
-+};
-+
-+&pio {
-+	usb0_id_detect_pin: usb0_id_detect_pin@0 {
-+		allwinner,pins = "PH4";
-+		allwinner,function = "gpio_in";
-+		allwinner,drive = <SUN4I_PINCTRL_10_MA>;
-+		allwinner,pull = <SUN4I_PINCTRL_PULL_UP>;
-+	};
-+
-+	usb0_vbus_detect_pin: usb0_vbus_detect_pin@0 {
-+		allwinner,pins = "PH5";
-+		allwinner,function = "gpio_in";
-+		allwinner,drive = <SUN4I_PINCTRL_10_MA>;
-+		allwinner,pull = <SUN4I_PINCTRL_PULL_DOWN>;
-+	};
-+};
-+
-+&reg_dcdc2 {
-+	regulator-always-on;
-+	regulator-min-microvolt = <1000000>;
-+	regulator-max-microvolt = <1400000>;
-+	regulator-name = "vdd-cpu";
-+};
-+
-+&reg_dcdc3 {
-+	regulator-always-on;
-+	regulator-min-microvolt = <1250000>;
-+	regulator-max-microvolt = <1250000>;
-+	regulator-name = "vdd-int-dll";
-+};
-+
-+&reg_ldo1 {
-+	regulator-name = "vdd-rtc";
-+};
-+
-+&reg_ldo2 {
-+	regulator-always-on;
-+	regulator-min-microvolt = <3000000>;
-+	regulator-max-microvolt = <3000000>;
-+	regulator-name = "avcc";
-+};
-+
-+&reg_usb0_vbus {
-+	status = "okay";
-+};
-+
-+&reg_usb1_vbus {
-+	status = "okay";
-+};
-+
-+&reg_usb2_vbus {
-+	status = "okay";
-+};
-+
-+&uart0 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&uart0_pins_a>;
-+	status = "okay";
-+};
-+
-+&usb_otg {
-+	dr_mode = "otg";
-+	status = "okay";
-+};
-+
-+&usbphy {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&usb0_id_detect_pin>, <&usb0_vbus_detect_pin>;
-+	usb0_id_det-gpio = <&pio 7 4 GPIO_ACTIVE_HIGH>; /* PH4 */
-+	usb0_vbus_det-gpio = <&pio 7 5 GPIO_ACTIVE_HIGH>; /* PH5 */
-+	usb0_vbus-supply = <&reg_usb0_vbus>;
-+	usb1_vbus-supply = <&reg_usb1_vbus>;
-+	usb2_vbus-supply = <&reg_usb2_vbus>;
-+	status = "okay";
-+};
+> You are using the format I suggested weeks ago, which I like.
+
+I must have missed that :(
+
+> 
+> So how about:
+> 
+> opp-hw-version:
+> 	User defined array containing a hierarchy of version numbers.
+> 
+> E.g: Taking kernel version v2.6.19 for instance:
+> 	<2, 6, 19>;
+> 
+> E.g: Representing Major 2 Minor 0, Cuts ALL and Substrate 5:
+> 	<2, 0, 0xffffffff, 5>;
+
+At least what I suggested in my attempt here is a bit different than
+what you might be thinking. For example, consider a case with single
+level of hierarchy, say cuts. And that the SoC has got 10 different
+cuts, and we name them 0-9. So, the values I was looking to fill to
+the opp-hw-version field is like: (1 << version_num). So, if an OPP
+supports version 2, 5 and 7, the value will be 0x000000A4. i.e. with
+the respective bit positions set. And by this way only 0xffffffff can
+mean all versions ..
+
+> > 2. "opp-supply-name": The purpose of this binding is to allow the
+> >    platform to select the voltage range of the power supplies, for a
+> >    valid OPP.
+> 
+> Did you mean 'opp-supply-version', like in the example below?
+
+Urg. Yeah.
+
+> I suggest '-name' would be better than '-version'.
+
+So, its not name of the supply really, but a virtual name given to the
+voltage-range which we need to pick based on the hardware version.
+
+> I guess this is a Qcom specific feature.  I'll let Stephen comment.
+
+No. So, my plan was to use this instead of the st,avs & pcode thing
+you have got in your bindings. So, instead of 'slow' and 'fast' from
+my example, it will have the corresponding strings for pcode numbers.
+And at runtime the platform will pass a string to the OPP library, to
+activate/add OPPs only for a specific opp-supply-version.
+
+Maybe we can name it 'opp-supply-range-name'..
+
+> > Both of these can be used together, as well as independently.
+> > 
+> > Signed-off-by: Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> > ---
+> >  Documentation/devicetree/bindings/opp/opp.txt | 90 +++++++++++++++++++++++++++
+> >  1 file changed, 90 insertions(+)
+> > 
+> > diff --git a/Documentation/devicetree/bindings/opp/opp.txt b/Documentation/devicetree/bindings/opp/opp.txt
+> > index c56a6b1a44ef..def75f7a3614 100644
+> > --- a/Documentation/devicetree/bindings/opp/opp.txt
+> > +++ b/Documentation/devicetree/bindings/opp/opp.txt
+> > @@ -98,6 +98,13 @@ This describes the OPPs belonging to a device. This node can have following
+> >    information. But for multiple power-supplies, this must be set to pass
+> >    triplet style values.
+> >  
+> > +- opp-supply-version: One or more strings describing version of the supplies on
+> 
+> What kind of supplies?  Supplies to me means regulator supplies, which
+> I fear would be too easily confused with the regulator '*-supply'
+> property.
+
+Yeah, its more like opp-supply-range-names ..
+
+> > +  the platform. This is useful for the cases, where the platform wants to select
+> > +  the voltage range for supplies at runtime, based on the specific version of
+> > +  the hardware. There should be one entry in opp-microvolt array, for each
+> > +  string present here. OPPs for the device must be configured, only for a single
+> > +  version of the supplies.
+> > +
+> >  - status: Marks the OPP table enabled/disabled.
+> >  
+> >  
+> > @@ -144,6 +151,16 @@ properties.
+> >  - opp-suspend: Marks the OPP to be used during device suspend. Only one OPP in
+> >    the table should have this.
+> >  
+> > +- opp-cuts: Variable length field that contains versions/cuts/substrate of the
+> 
+> I'd remove any mention of cuts and substrate versions here.
+
+I agree, but probably keep the same in example code to make it simple
+to understand.
+
+> > +  hardware for which the OPP is supported. Should contain entry per level of
+> > +  version type. For example: a platform with three levels of versions (cuts
+> > +  substrate pcode), this field should be like <X Y Z>, where X corresponds to
+> > +  different cuts, Y corresponds to different substrates and Z corresponds to
+> > +  different pcodes the OPP supports. Each bit of the value corresponds to a
+> 
+> s/bit/cell/
+
+No. Its like each bit of the 32 bit cell corresponds ... 
+
+> > +  particular version of the level, and so we can have maximum 32 different
+> > +  values of any level. A value of 0xFFFFFFFF means that all the versions of the
+> > +  level are supported.
+
+> > +	opp_table {
+> > +		compatible = "operating-points-v2";
+> > +		status = "okay";
+> > +		opp-shared;
+> > +
+> > +		opp00 {
+> > +			/*
+> > +			 * Supports all substrate and pcode versions for 0xf
+> > +			 * cuts, i.e. only first four cuts.
+> > +			 */
+> > +			opp-cuts = <0xf 0xffffffff 0xffffffff>
+> 
+> This does not avoid our issue, as it insists we have an OPP node per
+> permutation.  That's (pcodes * cuts * substrate) nodes, which if we
+> support 16 pcodes, 4 cuts and 5 substrates is </me takes shoes and
+> socks off to count> 320 nodes.  This IMHO is too many to write/
+> maintain and is the nucleus of our issue.
+
+Not with the bitwise logic I just tried to explain. Obviously we are
+doing all this to avoid writing so many nodes.
+
+> If we could index into opp-microvolt however (please see below), this
+> would reduce down to (cuts * substrates) nodes, which if taking the
+> example above would only result in a more manageable 20 nodes.
+
+I don't want 20 nodes but only ONE. And in your case, you may only
+want to use pcode in the opp-supply-range-name property. But its fine
+if you want to enable/disable some OPPs based on that as well :)
+
+> > +			opp-hz = /bits/ 64 <600000000>;
+> > +			...
+> 
+> It's still worth putting the opp-microvolt property in these nodes.
+
+Okay, but I didn't wanted to confuse in the sense that opp-cuts
+doesn't have anything to do with opp-microvolt..
+
+> > +		};
+> > +
+> > +		opp01 {
+> > +			/*
+> > +			 * Supports all substrate and pcode versions for 0x20
+> > +			 * cuts, i.e. only the 6th cut.
+> > +			 */
+> 
+> Not sure what you mean by 6th cut?
+
+Bit number 6th, i.e. 0x20.
+
+> > +			opp-cuts = <0x20 0xffffffff 0xffffffff>
+> > +			opp-hz = /bits/ 64 <800000000>;
+> > +			...
+> > +		};
+> > +	};
+> > +};
+> > +
+> > +Example 7: Multiple voltage-ranges (opp-supply-version) per supply
+> > +(example: device with 2 supplies: vcc0 and vcc1, with two possible ranges of
+> > +voltages: slow and fast)
+> > +
+> > +/ {
+> > +	cpus {
+> > +		cpu@0 {
+> > +			compatible = "arm,cortex-a7";
+> > +			...
+> > +
+> > +			vcc0-supply = <&cpu_supply0>;
+> > +			vcc1-supply = <&cpu_supply1>;
+> > +			operating-points-v2 = <&cpu0_opp_table>;
+> > +		};
+> > +	};
+> > +
+> > +	cpu0_opp_table: opp_table0 {
+> > +		compatible = "operating-points-v2";
+> > +		supply-names = "vcc0", "vcc1";
+> > +		opp-supply-version = "slow", "fast";
+> 
+> You've broken your own convention.  In the explanation above you say,
+> "There should be one entry in opp-microvolt array, for each string
+> present here."  However, you seem to have 4 arrays of values in
+> opp-microvolt below.  I guess (supply-names * opp-supply-version)
+> gives you the 4 in your example, but the docs bear no mention of
+> this.
+> 
+> Then each of those 4 entries are actually arrays?  What are they?  Are
+> they user defined?  If so, then that's great.  In our driver we can
+> choose to index by 'pcode', then our node count gets reduced
+> dramatically and our problems are solved. \o/
+
+Not really. So this is the logic (I perhaps need to write the
+paragraph in the bindings in a better way):
+1. A regulator's voltage can be supplied as <target> or <target min max> now.
+2. For each regulator we need to have an array of size mentioned above.
+
+Now this is what I call as ONE entry.
+
+For each opp-supply-range-name string, we need a copy of this..
+
+> > +		opp-shared;
+> > +
+> > +		opp00 {
+> > +			opp-hz = /bits/ 64 <1000000000>;
+> > +			opp-microvolt = <900000 915000 925000>, /* Supply vcc0: slow */
+> > +					<910000 925000 935000>, /* Supply vcc1: slow */
+
+So this is one entry for two regulators in the form <target min max>, and it
+belongs to the opp-supply-range-name 'slow'.
+
+> > +					<970000 975000 985000>, /* Supply vcc0: fast */
+> > +					<960000 965000 975000>; /* Supply vcc1: fast */
+
+And this one is for 'fast'.
+
 -- 
-2.4.3
+viresh
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
