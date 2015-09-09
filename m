@@ -1,57 +1,106 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH v2 04/10] doc/bindings: Update PCIe devicetree binding documentation for LS2080A
-Date: Wed, 09 Sep 2015 11:07:14 +0200
-Message-ID: <5383634.Mln7J3sdWP@wuerfel>
-References: <1441349872-4560-1-git-send-email-bhupesh.sharma@freescale.com> <80094129.LHZFOe1ZPU@wuerfel> <CADRPPNR-cSSQC5sLMmoqcxX46J6hdULa_V4v2BK7T8s8pcX0cg@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <CADRPPNR-cSSQC5sLMmoqcxX46J6hdULa_V4v2BK7T8s8pcX0cg@mail.gmail.com>
-Sender: linux-clk-owner@vger.kernel.org
-To: linux-arm-kernel@lists.infradead.org
-Cc: Li Yang <leoli@freescale.com>, devicetree@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, Bhupesh Sharma <bhupesh.sharma@freescale.com>, Catalin.Marinas@arm.com, olof@lixom.net, will.deacon@arm.com, Minghuan Lian <Minghuan.Lian@freescale.com>, marc.zyngier@arm.com, bhupesh.linux@gmail.com, linux-clk@vger.kernel.org
+From: Hans de Goede <hdegoede@redhat.com>
+Subject: [PATCH 2/4] devicetree: bindings: Add header file with evdev type and abs/rel code defines
+Date: Wed,  9 Sep 2015 11:11:24 +0200
+Message-ID: <1441789886-5868-2-git-send-email-hdegoede@redhat.com>
+References: <1441789886-5868-1-git-send-email-hdegoede@redhat.com>
+Return-path: <linux-input-owner@vger.kernel.org>
+In-Reply-To: <1441789886-5868-1-git-send-email-hdegoede@redhat.com>
+Sender: linux-input-owner@vger.kernel.org
+To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc: Maxime Ripard <maxime.ripard@free-electrons.com>, linux-input@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree <devicetree@vger.kernel.org>, linux-sunxi@googlegroups.com, Hans de Goede <hdegoede@redhat.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tuesday 08 September 2015 15:06:16 Li Yang wrote:
-> On Mon, Sep 7, 2015 at 6:32 AM, Arnd Bergmann <arnd@arndb.de> wrote:
-> > On Friday 04 September 2015 12:27:46 Bhupesh Sharma wrote:
-> >> @@ -4,7 +4,8 @@ This PCIe host controller is based on the Synopsis Designware PCIe IP
-> >>  and thus inherits all the common properties defined in designware-pcie.txt.
-> >>
-> >>  Required properties:
-> >> -- compatible: should contain the platform identifier such as "fsl,ls1021a-pcie"
-> >> +- compatible: should contain the platform identifier such as "fsl,ls1021a-pcie",
-> >> +  "fsl,ls2080a-pcie".
-> >>  - reg: base addresses and lengths of the PCIe controller
-> >>  - interrupts: A list of interrupt outputs of the controller. Must contain an
-> >>    entry for each entry in the interrupt-names property.
-> >>
-> >
-> > Are the two PCIe hosts mutually compatible? If they are, you should mandate
-> > one of the strings as the base model for identification, with the additional
-> > model being optional for identification of the specific SoC.
-> 
-> It seems that controllers on these chips are not exactly the same.
-> They will get different driver data by matching the compatible
-> strings.  Probably we could define a more generic compatible string,
-> such as "fsl,layerscape-pcie" or "fsl,ls-pcie".
-> 
-> >
-> > It would also be good to add a string with the specific version number of the
-> > designware PCIe block that is being used there.
-> 
-> The binding has mentioned to reference the designware-pcie.txt.  But
-> it might be more clear to mention the designware compatible string
-> "snps,dw-pcie" again in the compatible part.  Currently there is no
-> version number defined in the designware-pcie binding.  It might be
-> hard to get this information for some SoCs.
+This header provides evdev constants for linux,code, and linux,input-*
+properties.
 
-For most of them, the information is available and then it should be
-added. Obviously if you can't find it out, it's hard to guess and
-you have to leave it out for that particular chip.
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+---
+ include/dt-bindings/input/evdev.h | 76 +++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 76 insertions(+)
+ create mode 100644 include/dt-bindings/input/evdev.h
 
-A lot of devices also have some internal version register that you
-can read out.
+diff --git a/include/dt-bindings/input/evdev.h b/include/dt-bindings/input/evdev.h
+new file mode 100644
+index 0000000..c1f7e0d
+--- /dev/null
++++ b/include/dt-bindings/input/evdev.h
+@@ -0,0 +1,76 @@
++/*
++ * This header provides evdev constants for linux,code, and linux,input-*
++ * properties.
++ */
++
++#ifndef _DT_BINDINGS_INPUT_LINUX_H
++#define _DT_BINDINGS_INPUT_LINUX_H
++
++/*
++ * Event types
++ */
++
++#define EV_SYN			0x00
++#define EV_KEY			0x01
++#define EV_REL			0x02
++#define EV_ABS			0x03
++#define EV_MSC			0x04
++#define EV_SW			0x05
++#define EV_LED			0x11
++#define EV_SND			0x12
++#define EV_REP			0x14
++#define EV_FF			0x15
++#define EV_PWR			0x16
++#define EV_FF_STATUS		0x17
++#define EV_MAX			0x1f
++
++/*
++ * Relative axes
++ */
++
++#define REL_X			0x00
++#define REL_Y			0x01
++#define REL_Z			0x02
++#define REL_RX			0x03
++#define REL_RY			0x04
++#define REL_RZ			0x05
++#define REL_HWHEEL		0x06
++#define REL_DIAL		0x07
++#define REL_WHEEL		0x08
++#define REL_MISC		0x09
++#define REL_MAX			0x0f
++
++/*
++ * Absolute axes
++ */
++
++#define ABS_X			0x00
++#define ABS_Y			0x01
++#define ABS_Z			0x02
++#define ABS_RX			0x03
++#define ABS_RY			0x04
++#define ABS_RZ			0x05
++#define ABS_THROTTLE		0x06
++#define ABS_RUDDER		0x07
++#define ABS_WHEEL		0x08
++#define ABS_GAS			0x09
++#define ABS_BRAKE		0x0a
++#define ABS_HAT0X		0x10
++#define ABS_HAT0Y		0x11
++#define ABS_HAT1X		0x12
++#define ABS_HAT1Y		0x13
++#define ABS_HAT2X		0x14
++#define ABS_HAT2Y		0x15
++#define ABS_HAT3X		0x16
++#define ABS_HAT3Y		0x17
++#define ABS_PRESSURE		0x18
++#define ABS_DISTANCE		0x19
++#define ABS_TILT_X		0x1a
++#define ABS_TILT_Y		0x1b
++#define ABS_TOOL_WIDTH		0x1c
++
++#define ABS_VOLUME		0x20
++
++#define ABS_MISC		0x28
++
++#endif /* _DT_BINDINGS_INPUT_LINUX_H */
+-- 
+2.4.3
 
-	Arnd
