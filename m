@@ -1,95 +1,78 @@
-From: Sharma Bhupesh <bhupesh.sharma@freescale.com>
-Subject: RE: [PATCH v2 07/10] dts/ls2085a: Update DTSI to add support of
- various peripherals
-Date: Wed, 9 Sep 2015 03:55:56 +0000
-Message-ID: <BY1PR0301MB13039907260EE04523FB278882520@BY1PR0301MB1303.namprd03.prod.outlook.com>
-References: <1441350322-4671-1-git-send-email-bhupesh.sharma@freescale.com>
- <CADRPPNQER9UnKLazm9C6Dd7DAkDxLb4QShK64tmtahZxJJ-t=g@mail.gmail.com>
- <BY1PR0301MB130306991ACB28E4C8109DD582560@BY1PR0301MB1303.namprd03.prod.outlook.com>
- <CAL_Jsq+KJU4RiK2XWcS5BezucCmup2M-pueaaJUq7O=fA3LUxw@mail.gmail.com>
- <BY1PR0301MB13037916637C1B6E24AC259D82550@BY1PR0301MB1303.namprd03.prod.outlook.com>
- <CAL_JsqK4NQ9YRQkTM=km6N+3Cb=RAM_=2TFhtkhPWprA7VNKUg@mail.gmail.com>
+From: Greg KH <gregkh@linuxfoundation.org>
+Subject: Re: [PATCH 1/3] sysfs: Fix is_visible() support for binary attributes
+Date: Tue, 8 Sep 2015 20:58:50 -0700
+Message-ID: <20150909035850.GA5497@kroah.com>
+References: <1441714066-5599-1-git-send-email-emilio.lopez@collabora.co.uk>
+ <1441714066-5599-2-git-send-email-emilio.lopez@collabora.co.uk>
+ <20150908153013.GA6758@roeck-us.net>
+ <20150908191002.GB10156@kroah.com>
+ <20150908193052.GA11106@roeck-us.net>
+ <55EF82A4.5000502@collabora.co.uk>
+ <55EF86F8.3060406@roeck-us.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <CAL_JsqK4NQ9YRQkTM=km6N+3Cb=RAM_=2TFhtkhPWprA7VNKUg@mail.gmail.com>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Rob Herring <robherring2@gmail.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Bhupesh SHARMA <bhupesh.linux@gmail.com>, Shaohui Xie <Shaohui.Xie@freescale.com>, Arnd Bergmann <arnd@arndb.de>, Huan Wang <alison.wang@freescale.com>, "marc.zyngier@arm.com" <marc.zyngier@arm.com>, "Catalin.Marinas@arm.com" <Catalin.Marinas@arm.com>, Singh Jaiprakash <jaiprakash.singh@freescale.com>, "will.deacon@arm.com" <will.deacon@arm.com>, Scott Wood <scottwood@freescale.com>, "Lian M.H." <Minghuan.Lian@freescale.com>, Liu Gang <Gang.Liu@freescale.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "olof@lixom.net" <olof@lixom.net>, Badola Nikhil <nikhil.badola@freescale.com>, Li Leo <LeoLi@freescale.com>, "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>, Xiaobo Xie <X.Xie@freescale.com>, "Lu Y.B." <yangbo.lu@freescale.com>
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <55EF86F8.3060406@roeck-us.net>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Guenter Roeck <linux@roeck-us.net>
+Cc: Emilio =?iso-8859-1?Q?L=F3pez?= <emilio.lopez@collabora.co.uk>, olof@lixom.net, kgene@kernel.org, k.kozlowski@samsung.com, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-> From: Rob Herring [mailto:robherring2@gmail.com]
-> Sent: Tuesday, September 08, 2015 2:28 AM
-> On Sun, Sep 6, 2015 at 4:03 PM, Sharma Bhupesh
-> <bhupesh.sharma@freescale.com> wrote:
-> >> From: Rob Herring [mailto:robherring2@gmail.com]
-> >> Sent: Monday, September 07, 2015 2:27 AM On Sat, Sep 5, 2015 at 3:37
-> >> AM, Sharma Bhupesh <bhupesh.sharma@freescale.com> wrote:
-> >> >> From: pku.leo@gmail.com [mailto:pku.leo@gmail.com]
-> >> >> Sent: Saturday, September 05, 2015 2:33 AM On Fri, Sep 4, 2015 at
-> >> >> 2:05 AM, Bhupesh Sharma <bhupesh.sharma@freescale.com> wrote:
-> >> >> > This patch updates the LS2085a DTSI (DTS Include) file to add
-> >> >> > support for various peripherals supported by FSL LS2085a SoC,
-> >> >> > for
-> >> e.g.:
-> >> >>
-> >> >> The title and description here are still using the old LS2085 name.
-> >> >
-> >> > Ok.
-> >> >
-> >> > [snip] ..
-> >> >
-> >> >> > +       amba {
-> >> >> > +               compatible = "arm,amba-bus";
-> >> >> > +               #address-cells = <2>;
-> >> >> > +               #size-cells = <2>;
-> >> >> > +               ranges;
-> >> >> > +
-> >> >> > +               cluster1_core0_watchdog: wdt@c000000 {
-> >> >> > +                       compatible = "arm,primecell";
-> >> >>
-> >> >> Binding of Primecell requires a specific name for the device
-> >> >> instead of just a "arm,primecell".
-> >> >
-> >> > The sp805 driver doesn't have a compatible string like arm, sp805.
-> >> > You can refer to 'Documentation/devicetree/bindings/wdt' for
-> >> > details -
-> >> there is no entry for sp805 here.
-> >>
-> >> Because no one wrote it yet. Please read
-> >> Documentation/devicetree/bindings/arm/primecell.txt. If sp805 has no
-> >> binding doc, please write one.
-> >>
-> >> > Instead it relies on the 'drivers/amba/bus.c' framework to invoke
-> >> > the probe function of the
-> >> > sp805 wdt driver using the unique PRIMECELL identifiers of the
-> >> > sp805
-> >> wdt IP.
-> >>
-> >> Whether the kernel chooses to bind with the ID registers or
-> >> compatible strings is up to the kernel. That is independent of the
-> bindings.
-> >>
+On Tue, Sep 08, 2015 at 06:10:16PM -0700, Guenter Roeck wrote:
+> Hi Emilio,
+>=20
+> On 09/08/2015 05:51 PM, Emilio L=F3pez wrote:
+> >Hi Greg & Guenter,
 > >
-> > Right. But wouldn't the driver require DTS awareness to handle the
-> compatible string then.
-> > Shouldn't the DTS awareness added both in terms of bindings and driver
-> handling?
-> 
-> No. The OS is free to do device enumeration however it sees fit and that
-> could change independent of the DT.
- 
-Ok. Will address this in v3 of this patchset then.
+> [ ... ]
+> >>>>
+> >>>>Unless I am missing something, this is not explained anywhere, bu=
+t it is
+> >>>>not entirely trivial to understand. I think it should be document=
+ed.
+> >
+> >I agree. I couldn't find any mention of what this int was supposed t=
+o be by looking at Documentation/ (is_visible is not even mentioned :/)=
+ or include/linux/sysfs.h. Once we settle on something I'll document it=
+ before sending a v2.
+> >
+> In the include file ? No strong preference, though.
+>=20
+> >By the way, I wrote a quick coccinelle script to match is_visible() =
+users which reference the index (included below), and it found referenc=
+es to drivers which do not seem to use any binary attributes, so I beli=
+eve changing the index meaning shouldn't be an issue.
+> >
+> Good.
+>=20
+> >>>I agree, make i the number of the bin attribute and that should so=
+lve
+> >>>this issue.
+> >>>
+> >>No, that would conflict with the "normal" use of is_visible for non=
+-binary
+> >>attributes, and make the index all but useless, since the is_visibl=
+e function
+> >>would have to search through all the attributes anyway to figure ou=
+t which one
+> >>is being checked.
+> >
+> >Yeah, using the same indexes would be somewhat pointless, although n=
+ot many seem to be using it anyway (only 14 files matched). Others seem=
+ to be comparing the attr* instead. An alternative would be to use nega=
+tive indexes for binary attributes and positive indexes for normal attr=
+ibutes.
+> >
+> ... and I probably wrote or reviewed a significant percentage of thos=
+e ;-).
+>=20
+> Using negative numbers for binary attributes is an interesting idea.
+> Kind of unusual, though. Greg, any thoughts on that ?
 
-Regards,
-Bhupesh
+Ick, no, that's a mess, maybe we just could drop the index alltogether?
+
+thanks,
+
+greg k-h
