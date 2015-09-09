@@ -1,82 +1,71 @@
-From: Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH] clk: shmobile: div6: Make clock-output-names optional
-Date: Wed,  9 Sep 2015 14:58:26 +0200
-Message-ID: <1441803506-30749-1-git-send-email-geert+renesas@glider.be>
-Return-path: <linux-sh-owner@vger.kernel.org>
-Sender: linux-sh-owner@vger.kernel.org
-To: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>
-Cc: linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-sh@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>
+From: Lothar =?UTF-8?B?V2HDn21hbm4=?= <LW-bxm8fMRDkQLDiMYJYoSAnRvVK+yQ3ZXh@public.gmane.org>
+Subject: Re: [PATCH 2/3] mtd: mtk-nor: mtk serial flash controller driver
+Date: Wed, 9 Sep 2015 15:00:50 +0200
+Message-ID: <20150909150050.44d2b197@ipc1.ka-ro>
+References: <1441705796-11365-1-git-send-email-bayi.cheng@mediatek.com>
+	<1441705796-11365-3-git-send-email-bayi.cheng@mediatek.com>
+	<20150909063701.GD18700@pengutronix.de>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20150909063701.GD18700-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: Bayi Cheng <bayi.cheng-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Renesas DIV6 clocks provide a single clock output.  Hence make the
-"clock-output-names" DT property optional instead of mandatory. In case
-the DT property is omitted the DT node name will be used.
+Hi,
 
-Rename the variable "name" to "clk_name" to make the code more similar
-with fixed-factor-clock.c, and to avoid a conflict with a nested local
-variable while we're at it.
+> > +	writeb(len, mt8173_nor->base + MTK_NOR_CNT_REG);
+> > +	return mt8173_nor_execute_cmd(mt8173_nor, MTK_NOR_PRG_CMD);
+> > +}
+> > +
+> > +static int mt8173_nor_get_para(struct mt8173_nor *mt8173_nor, u8 *=
+buf, int len)
+> > +{
+> > +	if (len > 1) {
+> > +		/* read JEDEC ID need 4 bytes commands */
+> > +		mt8173_nor_set_cmd(mt8173_nor, 0, 32, SPINOR_OP_RDID);
+> > +		buf[2] =3D readb(mt8173_nor->base + MTK_NOR_SHREG0_REG);
+> > +		buf[1] =3D readb(mt8173_nor->base + MTK_NOR_SHREG1_REG);
+> > +		buf[0] =3D readb(mt8173_nor->base + MTK_NOR_SHREG2_REG);
+> > +	} else {
+> > +		if (mt8173_nor_execute_cmd(mt8173_nor, MTK_NOR_RDSR_CMD)) {
+> > +			dev_err(mt8173_nor->dev, "read status failed!\n");
+> > +			return -EINVAL;
+> > +		}
+> > +		*buf =3D readb(mt8173_nor->base + MTK_NOR_RDSR_REG);
+> > +	}
+> > +	return 0;
+> > +}
+> > +
+> > +/* cmd1 sent to nor flash, cmd2 write to nor controller */
+> > +static int mt8173_nor_set_para(struct mt8173_nor *mt8173_nor, int =
+cmd1,
+> > +			       int cmd2)
+> > +{
+> > +	if (mt8173_nor_set_cmd(mt8173_nor, 0, 8, SPINOR_OP_WREN)) {
+> > +		dev_err(mt8173_nor->dev,
+> > +			"write enable failed in write protect!\n");
+> > +		return -EINVAL;
+> > +	}
+> > +	writeb(cmd1, mt8173_nor->base + MTK_NOR_PRGDATA5_REG);
+> > +	writeb(8, mt8173_nor->base + MTK_NOR_CNT_REG);
+> > +	if (mt8173_nor_execute_cmd(mt8173_nor, cmd2)) {
+> > +		dev_err(mt8173_nor->dev, "execute cmd failed!\n");
+>=20
+> mt8173_nor_execute_cmd() will already have printed an error message.
+>=20
+And mt8173_nor_execute_cmd()/mt8173_nor_set_cmd() returned an error
+code which should be promoted to the caller rather than
+inventing a new one.
+The same for other instances of this code fragment.
 
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
----
- .../devicetree/bindings/clock/renesas,cpg-div6-clocks.txt   |  4 ++++
- drivers/clk/shmobile/clk-div6.c                             | 13 +++----------
- 2 files changed, 7 insertions(+), 10 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/clock/renesas,cpg-div6-clocks.txt b/Documentation/devicetree/bindings/clock/renesas,cpg-div6-clocks.txt
-index e1bdf14ac2dfdab2..361315db3d8cfb58 100644
---- a/Documentation/devicetree/bindings/clock/renesas,cpg-div6-clocks.txt
-+++ b/Documentation/devicetree/bindings/clock/renesas,cpg-div6-clocks.txt
-@@ -21,6 +21,10 @@ Required Properties:
-     clocks must be specified.  For clocks with multiple parents, invalid
-     settings must be specified as "<0>".
-   - #clock-cells: Must be 0
-+
-+
-+Optional Properties:
-+
-   - clock-output-names: The name of the clock as a free-form string
- 
- 
-diff --git a/drivers/clk/shmobile/clk-div6.c b/drivers/clk/shmobile/clk-div6.c
-index b4c8d6746f68a7b8..57016ff9c585fc6e 100644
---- a/drivers/clk/shmobile/clk-div6.c
-+++ b/drivers/clk/shmobile/clk-div6.c
-@@ -178,10 +178,9 @@ static void __init cpg_div6_clock_init(struct device_node *np)
- 	const char **parent_names;
- 	struct clk_init_data init;
- 	struct div6_clock *clock;
--	const char *name;
-+	const char *clk_name = np->name;
- 	struct clk *clk;
- 	unsigned int i;
--	int ret;
- 
- 	clock = kzalloc(sizeof(*clock), GFP_KERNEL);
- 	if (!clock)
-@@ -215,13 +214,7 @@ static void __init cpg_div6_clock_init(struct device_node *np)
- 	clock->div = (clk_readl(clock->reg) & CPG_DIV6_DIV_MASK) + 1;
- 
- 	/* Parse the DT properties. */
--	ret = of_property_read_string(np, "clock-output-names", &name);
--	if (ret < 0) {
--		pr_err("%s: failed to get %s DIV6 clock output name\n",
--		       __func__, np->name);
--		goto error;
--	}
--
-+	of_property_read_string(np, "clock-output-names", &clk_name);
- 
- 	for (i = 0, valid_parents = 0; i < num_parents; i++) {
- 		const char *name = of_clk_get_parent_name(np, i);
-@@ -255,7 +248,7 @@ static void __init cpg_div6_clock_init(struct device_node *np)
- 	}
- 
- 	/* Register the clock. */
--	init.name = name;
-+	init.name = clk_name;
- 	init.ops = &cpg_div6_clock_ops;
- 	init.flags = CLK_IS_BASIC;
- 	init.parent_names = parent_names;
--- 
-1.9.1
-
+Lothar Wa=C3=9Fmann
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
