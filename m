@@ -1,94 +1,79 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 1/3] ARM: uniphier: add outer cache support
-Date: Tue, 8 Sep 2015 19:06:27 -0500
-Message-ID: <55EF7803.2010004@kernel.org>
-References: <1440382692-3855-1-git-send-email-yamada.masahiro@socionext.com>
- <1440382692-3855-2-git-send-email-yamada.masahiro@socionext.com>
- <CACRpkdbJppuA6ZyciNAGfSgrf4M2THVHggzuZYSqORjy2JBp_A@mail.gmail.com>
- <CAK7LNATWsa8AhyFGzsR0HAODmQD8yBPidTE0Lx2ACh4_PeQW9w@mail.gmail.com>
- <CACRpkdan0+rywnSR8Rs=aw63QAm3nN99ujqPcZwfpoh4_Dwc-w@mail.gmail.com>
+Subject: Re: [PATCHv2 2/3] devicetree: Add new ANX7814 SlimPort transmitter
+ binding.
+Date: Tue, 8 Sep 2015 19:40:41 -0500
+Message-ID: <55EF8009.6070009@kernel.org>
+References: <1441697120-3876-1-git-send-email-enric.balletbo@collabora.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CACRpkdan0+rywnSR8Rs=aw63QAm3nN99ujqPcZwfpoh4_Dwc-w@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>, Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Jungseung Lee <js07.lee@gmail.com>, Florian Fainelli <f.fainelli@gmail.com>, Russell King <linux@arm.linux.org.uk>, Arnd Bergmann <arnd@arndb.de>, Mauro Carvalho Chehab <mchehab@osg.samsung.com>, "arm@kernel.org" <arm@kernel.org>, Jiri Slaby <jslaby@suse.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Kees Cook <keescook@chromium.org>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>, Joe Perches <joe@perches.com>, Rob Herring <robh+dt@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Paul Bolle <pebolle@tiscali.nl>, Greg KH <gregkh@linuxfoundation.org>, Nathan Lynch <nathan_lynch@mentor.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>Maxime Coquelin <m>
+Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
+In-Reply-To: <1441697120-3876-1-git-send-email-enric.balletbo@collabora.com>
+List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
+List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
+List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
+List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
+List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
+Errors-To: driverdev-devel-bounces@linuxdriverproject.org
+Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
+To: Enric Balletbo i Serra <eballetbo@gmail.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, devel@driverdev.osuosl.org
+Cc: mark.rutland@arm.com, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, airlied@linux.ie, gregkh@linuxfoundation.org, sjoerd.simons@collabora.co.uk, robh+dt@kernel.org, span@analogixsemi.com, galak@codeaurora.org, javier@dowhile0.org, nathan.chung@mediatek.com
 List-Id: devicetree@vger.kernel.org
 
-On 09/08/2015 08:09 AM, Linus Walleij wrote:
-> On Fri, Aug 28, 2015 at 12:24 PM, Masahiro Yamada
-> <yamada.masahiro@socionext.com> wrote:
->> 2015-08-26 22:39 GMT+09:00 Linus Walleij <linus.walleij@linaro.org>:
+On 09/08/2015 02:25 AM, Enric Balletbo i Serra wrote:
+> The ANX7814 is an ultra-low power Full-HD (1080p60) SlimPort transmitter
+> designed for portable devices.
 > 
->>> cache-unified and cache-level are *not* optional and should be required.
->>
->> "cache-unified" is mentioned in "3.7.3 Internal (L1) Cache Properties"
->> (Table 3-8),
->> but it is not in "3.8 Multi-level and Shared Caches" (Table 3-9)
->>
->> Are the rules in Table 3-8 also applied for L2?
+> You can add support to your board with current binding.
 > 
-> Your guess is as good as mine unless someone involved in
-> actually writing that spec says something :/
+> Example:
+> 
+> 	anx7814: anx7814@38 {
+> 		compatible = "analogix,anx7814";
+> 		reg = <0x38>;
+> 		pd-gpios = <&gpio0 1 GPIO_ACTIVE_HIGH>;
+> 		reset-gpios = <&gpio0 2 GPIO_ACTIVE_HIGH>;
+> 	};
+> 
+> Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+> ---
+>  .../devicetree/bindings/video/anx7814.txt          | 22 ++++++++++++++++++++++
+>  1 file changed, 22 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/video/anx7814.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/video/anx7814.txt b/Documentation/devicetree/bindings/video/anx7814.txt
+> new file mode 100644
+> index 0000000..a8cc746
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/video/anx7814.txt
+> @@ -0,0 +1,22 @@
+> +Analogix ANX7814 SlimPort (Full-HD Transmitter)
+> +-----------------------------------------------
+> +
+> +The ANX7814 is an ultra-low power Full-HD (1080p60) SlimPort transmitter
+> +designed for portable devices.
+> +
+> +Required properties:
+> +
+> + - compatible	: "analogix,anx7814"
+> + - reg		: I2C address of the device
+> + - pd-gpios	: Which GPIO to use for power down
+> + - reset-gpios	: Which GPIO to use for reset
+> +
+> +Example:
+> +
+> +	anx7814: anx7814@38 {
+> +		compatible = "analogix,anx7814";
+> +		reg = <0x38>;
+> +		pd-gpios = <&gpio0 1 GPIO_ACTIVE_HIGH>;
+> +		reset-gpios = <&gpio0 2 GPIO_ACTIVE_HIGH>;
 
-Maybe you'd have to be crazy to have Harvard cache for 2nd+ level. I've
-got no clue. Doesn't hurt to have it.
-
-> 
->>> (I'm just assuming this cache is unified, anything else would be baffling.)
->>
->> In fact, unified/harvard is configurable thru a register of this cache
->> controller.
-> 
-> Jesus Christ.
-
-Hardware designers either hate software folks or ensure our job security.
-
-> 
->> It is usually used as a unified cached, though.
-> 
-> I would, too.
-> 
->> So,I am planning to use the same compatible for L2 and L3, like this:
->>
->>
->>        l2-cache@500c0000 {
->>                compatible = "socionext,uniphier-cache";
->>                reg = <0x500c0000 0x2000>, <0x503c0100 0x8>,
->>                      <0x506c0000 0x400>;
->>                cache-unified;
->>                cache-level = <2>;
->>                next-level-cache = <&L2>;
-
-Next level of the L2 is the L2?
-
->>                cache-size = <0x200000>;
->>                cache-sets = <256>;
->>                cache-line-size = <128>;
->>             };
->>
->>        /* Not all of UniPhier SoCs have L3 cache */
->>        l3-cache@500c8000 {
->>                compatible = "socionext,uniphier-cache";
->>                reg = <0x500c8000 0x2000>, <0x503c8100 0x8>,
->>                      <0x506c8000 0x400>;
->>                cache-unified;
->>                cache-level = <3>;
->>                cache-size = <0x400000>;
->>                cache-sets = <256>;
->>                cache-line-size = <256>;
->>        };
-> 
-> This LooksGoodToMe.
-> 
->> The Table 3-9 in ePAPR v1.1 says
->> the compatible should be "cache", but I do not think it makes sense here.
-> 
-> Agree.
-
-It could be useful for finding all cache nodes, but we've generally
-failed to use it, so at this point it doesn't matter.
+No ports needed for describing data connections?
 
 Rob
+
+> +	};
+> +
+> 
