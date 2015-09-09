@@ -1,87 +1,44 @@
-From: Charles Keepax <ckeepax@opensource.wolfsonmicro.com>
-Subject: [PATCH RESEND 3/5] mfd: arizona: Add register bits for general purpose switch
-Date: Wed, 9 Sep 2015 09:34:48 +0100
-Message-ID: <1441787690-30148-3-git-send-email-ckeepax@opensource.wolfsonmicro.com>
-References: <1441787690-30148-1-git-send-email-ckeepax@opensource.wolfsonmicro.com>
+From: Alexander Stein <alexanders83-S0/GAf8tV78@public.gmane.org>
+Subject: Re: [PATCH v5 0/6] bcm2835: auxiliar device support for spi
+Date: Wed, 09 Sep 2015 11:00:43 +0200
+Message-ID: <2757852.TDqE8OEVr2@ws-stein>
+References: <1441359711-2800-1-git-send-email-kernel@martin.sperl.org> <87h9n4weg8.fsf@eliezer.anholt.net>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1441787690-30148-1-git-send-email-ckeepax@opensource.wolfsonmicro.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: cw00.choi@samsung.com, lee.jones@linaro.org
-Cc: myungjoo.ham@samsung.com, sameo@linux.intel.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, patches@opensource.wolfsonmicro.com
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <87h9n4weg8.fsf-omZaPlIz5HhaEpDpdNBo/KxOck334EZe@public.gmane.org>
+Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>, kernel-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Lee Jones <lee-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-The switch is typically used in conjunction with the MICDET clamp in
-order to suppress pops and clicks associated with jack insertion.
+Hi,
+On Tuesday 08 September 2015 18:48:07, Eric Anholt wrote:
+> I finally had a chance to sit down and look at what the hardware's doing
+> with the enable bit (also, I've read a whole lot more of the hardware
+> now, so I'm a lot faster at answering questions like this).  The enable
+> bits are a clock gate off of the VPU clock.
 
-Signed-off-by: Charles Keepax <ckeepax@opensource.wolfsonmicro.com>
-Acked-by: Lee Jones <lee.jones@linaro.org>
----
- drivers/mfd/wm5110-tables.c           |    2 ++
- include/linux/mfd/arizona/pdata.h     |    3 +++
- include/linux/mfd/arizona/registers.h |    8 ++++++++
- 3 files changed, 13 insertions(+), 0 deletions(-)
+Are any hardware documents about such things available (in public)?
 
-diff --git a/drivers/mfd/wm5110-tables.c b/drivers/mfd/wm5110-tables.c
-index dd27872..acb3bb2 100644
---- a/drivers/mfd/wm5110-tables.c
-+++ b/drivers/mfd/wm5110-tables.c
-@@ -1472,6 +1472,7 @@ static const struct reg_default wm5110_reg_default[] = {
- 	{ 0x00000C04, 0xA101 },    /* R3076  - GPIO5 CTRL */
- 	{ 0x00000C0F, 0x0400 },    /* R3087  - IRQ CTRL 1 */
- 	{ 0x00000C10, 0x1000 },    /* R3088  - GPIO Debounce Config */
-+	{ 0x00000C18, 0x0000 },    /* R3096  - GP Switch 1 */
- 	{ 0x00000C20, 0x8002 },    /* R3104  - Misc Pad Ctrl 1 */
- 	{ 0x00000C21, 0x8001 },    /* R3105  - Misc Pad Ctrl 2 */
- 	{ 0x00000C22, 0x0000 },    /* R3106  - Misc Pad Ctrl 3 */
-@@ -2524,6 +2525,7 @@ static bool wm5110_readable_register(struct device *dev, unsigned int reg)
- 	case ARIZONA_GPIO5_CTRL:
- 	case ARIZONA_IRQ_CTRL_1:
- 	case ARIZONA_GPIO_DEBOUNCE_CONFIG:
-+	case ARIZONA_GP_SWITCH_1:
- 	case ARIZONA_MISC_PAD_CTRL_1:
- 	case ARIZONA_MISC_PAD_CTRL_2:
- 	case ARIZONA_MISC_PAD_CTRL_3:
-diff --git a/include/linux/mfd/arizona/pdata.h b/include/linux/mfd/arizona/pdata.h
-index f030a32..e76577b 100644
---- a/include/linux/mfd/arizona/pdata.h
-+++ b/include/linux/mfd/arizona/pdata.h
-@@ -182,6 +182,9 @@ struct arizona_pdata {
- 
- 	/** GPIO for primary IRQ (used for edge triggered emulation) */
- 	int irq_gpio;
-+
-+	/** General purpose switch control */
-+	unsigned int gpsw;
- };
- 
- #endif
-diff --git a/include/linux/mfd/arizona/registers.h b/include/linux/mfd/arizona/registers.h
-index 3f3bb2b..e96644c 100644
---- a/include/linux/mfd/arizona/registers.h
-+++ b/include/linux/mfd/arizona/registers.h
-@@ -869,6 +869,7 @@
- #define ARIZONA_GPIO5_CTRL                       0xC04
- #define ARIZONA_IRQ_CTRL_1                       0xC0F
- #define ARIZONA_GPIO_DEBOUNCE_CONFIG             0xC10
-+#define ARIZONA_GP_SWITCH_1                      0xC18
- #define ARIZONA_MISC_PAD_CTRL_1                  0xC20
- #define ARIZONA_MISC_PAD_CTRL_2                  0xC21
- #define ARIZONA_MISC_PAD_CTRL_3                  0xC22
-@@ -4573,6 +4574,13 @@
- #define ARIZONA_GP_DBTIME_WIDTH                       4  /* GP_DBTIME - [15:12] */
- 
- /*
-+ * R3096 (0xC18) - GP Switch 1
-+ */
-+#define ARIZONA_SW1_MODE_MASK                    0x0003  /* SW1_MODE - [1:0] */
-+#define ARIZONA_SW1_MODE_SHIFT                        0  /* SW1_MODE - [1:0] */
-+#define ARIZONA_SW1_MODE_WIDTH                        2  /* SW1_MODE - [1:0] */
-+
-+/*
-  * R3104 (0xC20) - Misc Pad Ctrl 1
-  */
- #define ARIZONA_LDO1ENA_PD                       0x8000  /* LDO1ENA_PD */
--- 
-1.7.2.5
+> I knocked together the enable bits as a clock gate driver, since I'd
+> just written very similar code for the audio domain clock driver (and I
+> assume you are grumpy about how much time you've spent on this one
+> stupid register).  It's up at
+> https://github.com/anholt/linux/tree/bcm2835-clock-aux and I can submit
+> it if you like the result.  I've compile tested it only, but I'm hoping
+> you could just drop your aux SPI driver on top of it and have things
+> work.
+
+IMHO line 45 (https://github.com/anholt/linux/commit/facb4ba917a1b9f6c2ee0cea7d529acf55f584dd#diff-1b6f753c132811b3f6d70f5b31866950R45) should be like this
+> onecell->clks = kzalloc(sizeof(*onecell->clks) * BCM2835_AUX_CLOCK_COUNT, GFP_KERNEL);
+or you will only allocate a single struct clk*.
+
+Best regards,
+Alexander
+
+--
+To unsubscribe from this list: send the line "unsubscribe linux-spi" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
