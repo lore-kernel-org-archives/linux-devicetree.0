@@ -1,111 +1,43 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v7 1/5] dt-bindings: Add usb3.0 phy binding for MT65xx
- SoCs
-Date: Wed, 9 Sep 2015 08:58:26 -0500
-Message-ID: <55F03B02.5000604@kernel.org>
-References: <1441693083-8440-1-git-send-email-chunfeng.yun@mediatek.com>
- <1441693083-8440-2-git-send-email-chunfeng.yun@mediatek.com>
+From: Tejun Heo <tj@kernel.org>
+Subject: Re: [PATCH] ahci: qoriq: fixed using uninitialized variable warnings
+Date: Wed, 9 Sep 2015 10:01:30 -0400
+Message-ID: <20150909140130.GB22909@mtj.duckdns.org>
+References: <1441790182-20248-1-git-send-email-Yuantian.Tang@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1441693083-8440-2-git-send-email-chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Chunfeng Yun <chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Mathias Nyman <mathias.nyman-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, John Crispin <blogic-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>, Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-ide-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1441790182-20248-1-git-send-email-Yuantian.Tang@freescale.com>
+Sender: linux-ide-owner@vger.kernel.org
+To: Yuantian.Tang@freescale.com
+Cc: hdegoede@redhat.com, linux-ide@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 09/08/2015 01:17 AM, Chunfeng Yun wrote:
-> add a DT binding documentation of usb3.0 phy for MT65xx
-> SoCs from Mediatek.
+On Wed, Sep 09, 2015 at 05:16:22PM +0800, Yuantian.Tang@freescale.com wrote:
+> From: Tang Yuantian <Yuantian.Tang@freescale.com>
 > 
-> Signed-off-by: Chunfeng Yun <chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-
-> ---
->  .../devicetree/bindings/phy/phy-mt65xx-usb.txt     | 69 ++++++++++++++++++++++
->  1 file changed, 69 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/phy/phy-mt65xx-usb.txt
+> kbuild test robot reports the warnings:
+> drivers/ata/ahci_qoriq.c: In function 'ahci_qoriq_hardreset':
+> >> include/asm-generic/io.h:163:2: warning: 'px_is' may be used
+> >> uninitialized in this function [-Wuninitialized]
+> drivers/ata/ahci_qoriq.c:70:14: note: 'px_is' was declared here
+> >> include/asm-generic/io.h:163:2: warning: 'px_cmd' may be used
+> >> uninitialized in this function [-Wuninitialized]
+> drivers/ata/ahci_qoriq.c:70:6: note: 'px_cmd' was declared here
 > 
-> diff --git a/Documentation/devicetree/bindings/phy/phy-mt65xx-usb.txt b/Documentation/devicetree/bindings/phy/phy-mt65xx-usb.txt
-> new file mode 100644
-> index 0000000..5812d20
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/phy/phy-mt65xx-usb.txt
-> @@ -0,0 +1,69 @@
-> +mt65xx USB3.0 PHY binding
-> +--------------------------
-> +
-> +This binding describes a usb3.0 phy for mt65xx platforms of Medaitek SoC.
-> +
-> +Required properties (controller (parent) node):
-> + - compatible	: should be "mediatek,mt8173-u3phy"
-> + - reg		: offset and length of register for phy, exclude port's
-> +		  register.
-> + - clocks	: a list of phandle + clock-specifier pairs, one for each
-> +		  entry in clock-names
-> + - clock-names	: must contain
-> +		  "u3phya_ref": for reference clock of usb3.0 analog phy.
-> +
-> +Required nodes	: a sub-node is required for each port the controller
-> +		  provides. Address range information including the usual
-> +		  'reg' property is used inside these nodes to describe
-> +		  the controller's topology. These nodes are translated
-> +		  by the driver's .xlate() function.
-> +
-> +Required properties (port (child) node):
-> +- reg		: address and length of the register set for the port.
-> +- #phy-cells	: should be 1 (See second example)
-> +		  cell after port phandle is phy type from:
-> +			- PHY_TYPE_USB2
-> +			- PHY_TYPE_USB3
-> +
-> +Example:
-> +
-> +u3phy: usb-phy@11290000 {
-> +	compatible = "mediatek,mt8173-u3phy";
-> +	reg = <0 0x11290000 0 0x800>;
-> +	clocks = <&apmixedsys CLK_APMIXED_REF2USB_TX>;
-> +	clock-names = "u3phya_ref";
-> +	#address-cells = <2>;
-> +	#size-cells = <2>;
-> +	ranges;
-> +	status = "okay";
-> +
-> +	phy_port0: port@11290800 {
-> +		reg = <0 0x11290800 0 0x800>;
-> +		#phy-cells = <1>;
-> +		status = "okay";
-> +	};
-> +
-> +	phy_port1: port@11291000 {
-> +		reg = <0 0x11291000 0 0x800>;
-> +		#phy-cells = <1>;
-> +		status = "okay";
-> +	};
-> +};
-> +
-> +Specifying phy control of devices
-> +---------------------------------
-> +
-> +Device nodes should specify the configuration required in their "phys"
-> +property, containing a phandle to the phy port node and a device type;
-> +phy-names for each port are optional.
-> +
-> +Example:
-> +
-> +#include <dt-bindings/phy/phy.h>
-> +
-> +usb30: usb@11270000 {
-> +	...
-> +	phys = <&phy_port0 PHY_TYPE_USB3>;
-> +	phy-names = "usb3-0";
-> +	...
-> +};
-> 
+> This patch fixed it by assigning 0 to px_is and px_cmd variables.
+> This patch also remove line 'struct ccsr_ahci *reg_base' which is
+> not referred by any other codes and thus a dead one.
 
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Hmm... I think the problem here is that the complier can't know
+whether qoriq_priv->type would change across intervening function
+calls.  Maybe a better solution is caching the type in a local
+variable so that the compiler can tell that those two tests will
+always move together?  It generally isn't a good idea to clear
+variables unnecessarily as that can hide actual bugs that compiler can
+detect.
+
+Thanks.
+
+-- 
+tejun
