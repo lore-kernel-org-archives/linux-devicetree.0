@@ -1,46 +1,40 @@
-From: Olliver Schinagl <o.schinagl-U3FVU11NWA554TAoqtyWWQ@public.gmane.org>
-Subject: [PATCH 2/5] dts: sunxi: correct vendor prefix on OLinuXino a10s micro
-Date: Wed,  9 Sep 2015 11:25:12 +0200
-Message-ID: <1441790715-11957-3-git-send-email-o.schinagl@ultimaker.com>
-References: <1441790715-11957-1-git-send-email-o.schinagl@ultimaker.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1441790715-11957-1-git-send-email-o.schinagl-U3FVU11NWA554TAoqtyWWQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Olliver Schinagl <oliver-dxLnbx3+1qmEVqv0pETR8A@public.gmane.org>
+From: Olliver Schinagl <o.schinagl@ultimaker.com>
+Subject: [PATCH 0/5] Add eeprom to the Olimex series of boards
+Date: Wed,  9 Sep 2015 11:25:10 +0200
+Message-ID: <1441790715-11957-1-git-send-email-o.schinagl@ultimaker.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Maxime Ripard <maxime.ripard@free-electrons.com>
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Olliver Schinagl <o.schinagl@ultimaker.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Olliver Schinagl <oliver-dxLnbx3+1qmEVqv0pETR8A@public.gmane.org>
+Some of the olimex series of boards feature a permanently connected eeprom on
+i2c-1. This patch series adds them on all the boards that have them according
+to the spec-sheets.
 
-The OLinuXino A10S micro features an eeprom. According to the eeprom.txt
-binding document, we should use the manufacturer and 'at' is not the
-proper manufacturer id according to the vendor-prefixes.
+I explicitly added my personal --Tested-by to boards I actually tested. There
+are two boards, that according to the sheets have them as well and physically
+inspecting the boards shows them clearly, I did not actually test them on
+those the boards that are missing the --Tested-by. So while it generally
+should be safe to merge those patches as well, if someone with those boards
+could add a --Tested-by that'd be great.
 
-This patch takes the proper vendor-prefix and uses it for the eeprom
-node.
+Additionally, it brings the eeprom on the OLinuXino a10s in line with the rest
+and now follows the binding documentation.
 
---Signed-off-by: Olliver Schinagl <oliver-dxLnbx3+1qmEVqv0pETR8A@public.gmane.org>
----
- arch/arm/boot/dts/sun5i-a10s-olinuxino-micro.dts | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Olliver Schinagl (5):
+  dts: sunxi: add eeprom to A10 OLinuXino Lime board
+  dts: sunxi: correct vendor prefix on OLinuXino a10s micro
+  dts: sunxi: add eeprom to A20 OLinuXino Lime board
+  dts: sunxi: add eeprom to A20 OLinuXino Lime2 board
+  dts: sunxi: add eeprom to A20 OLinuXino micro board
 
-diff --git a/arch/arm/boot/dts/sun5i-a10s-olinuxino-micro.dts b/arch/arm/boot/dts/sun5i-a10s-olinuxino-micro.dts
-index a7e19e4..49a1be6 100644
---- a/arch/arm/boot/dts/sun5i-a10s-olinuxino-micro.dts
-+++ b/arch/arm/boot/dts/sun5i-a10s-olinuxino-micro.dts
-@@ -104,7 +104,7 @@
- 	status = "okay";
- 
- 	at24@50 {
--		compatible = "at,24c16";
-+		compatible = "atmel,24c16";
- 		pagesize = <16>;
- 		reg = <0x50>;
- 		read-only;
+ arch/arm/boot/dts/sun4i-a10-olinuxino-lime.dts   | 12 ++++++++++++
+ arch/arm/boot/dts/sun5i-a10s-olinuxino-micro.dts |  2 +-
+ arch/arm/boot/dts/sun7i-a20-olinuxino-lime.dts   | 12 ++++++++++++
+ arch/arm/boot/dts/sun7i-a20-olinuxino-lime2.dts  |  6 ++++++
+ arch/arm/boot/dts/sun7i-a20-olinuxino-micro.dts  |  6 ++++++
+ 5 files changed, 37 insertions(+), 1 deletion(-)
+
 -- 
 2.1.4
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
