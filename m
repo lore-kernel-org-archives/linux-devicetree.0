@@ -1,242 +1,171 @@
-From: Eric Anholt <eric@anholt.net>
-Subject: Re: [PATCH v5 4/6] spi: bcm2835: new driver implementing auxiliar spi1/spi2 on the bcm2835 soc
-Date: Tue, 08 Sep 2015 19:20:15 -0700
-Message-ID: <87fv2o1ggw.fsf@eliezer.anholt.net>
-References: <1441359711-2800-1-git-send-email-kernel@martin.sperl.org> <1441359711-2800-5-git-send-email-kernel@martin.sperl.org>
+From: Andreas Dannenberg <dannenberg@ti.com>
+Subject: Re: [PATCH] power: bq24261_charger: Add support for TI BQ24261
+ charger
+Date: Tue, 8 Sep 2015 21:26:18 -0500
+Message-ID: <20150909022617.GA32255@beast>
+References: <1441560187-23611-1-git-send-email-ramakrishna.pallala@intel.com>
+ <CAJKOXPfDu+LxoiQrV+CsqUbEVwYb1Zmk-m9y-L_1JxrB6ouS0g@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; boundary="=-=-=";
-	micalg=pgp-sha512; protocol="application/pgp-signature"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1441359711-2800-5-git-send-email-kernel@martin.sperl.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Stephen Warren <swarren@wwwdotorg.org>, Lee Jones <lee@kernel.org>, Russell King <linux@arm.linux.org.uk>, Mark Brown <broonie@kernel.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org, linux-rpi-kernel@lists.infradead.org, linux-spi@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc: Martin Sperl <kernel@martin.sperl.org>
+Content-Type: text/plain; charset="us-ascii"
+Return-path: <linux-pm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAJKOXPfDu+LxoiQrV+CsqUbEVwYb1Zmk-m9y-L_1JxrB6ouS0g@mail.gmail.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+Cc: Ramakrishna Pallala <ramakrishna.pallala@intel.com>, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, Sebastian Reichel <sre@kernel.org>, Jenny TC <jenny.tc@intel.com>
 List-Id: devicetree@vger.kernel.org
 
---=-=-=
-Content-Type: text/plain
-Content-Transfer-Encoding: quoted-printable
+On Mon, Sep 07, 2015 at 12:57:56PM +0900, Krzysztof Kozlowski wrote:
+> 2015-09-07 2:23 GMT+09:00 Ramakrishna Pallala <ramakrishna.pallala@intel.com>:
+> >
+> > Add new charger driver support for BQ24261 charger IC.
+> >
+> > BQ24261 charger driver relies on extcon notifications to get the
+> > charger cable type and based on that it will set the charging parameters.
+> >
+> > Signed-off-by: Ramakrishna Pallala <ramakrishna.pallala@intel.com>
+> > Signed-off-by: Jennt TC <jenny.tc@intel.com>
+> > ---
+> >  .../devicetree/bindings/power/bq24261.txt          |   37 +
+> >  drivers/power/Kconfig                              |    6 +
+> >  drivers/power/Makefile                             |    1 +
+> >  drivers/power/bq24261_charger.c                    | 1208 ++++++++++++++++++++
+> >  include/linux/power/bq24261_charger.h              |   27 +
+> >  5 files changed, 1279 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/power/bq24261.txt
+> >  create mode 100644 drivers/power/bq24261_charger.c
+> >  create mode 100644 include/linux/power/bq24261_charger.h
+> >
+> > diff --git a/Documentation/devicetree/bindings/power/bq24261.txt b/Documentation/devicetree/bindings/power/bq24261.txt
+> > new file mode 100644
+> > index 0000000..25fc5c4
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/power/bq24261.txt
+> > @@ -0,0 +1,37 @@
+> > +Binding for TI bq24261 Li-Ion Charger
+> 
+> Please split the bindings into separate patch (the first patch in patchset).
+> 
+> > +
+> > +Required properties:
+> > +- compatible: Should contain one of the following:
+> > +    * "ti,bq24261"
+> > +- reg: integer, i2c address of the device.
+> > +- ti,charge-current: integer, default charging current (in mA);
+> > +- ti,charge-voltage: integer, default charging voltage (in mV);
+> > +- ti,termination-current: integer, charge will be terminated when current in
+> > +    constant-voltage phase drops below this value (in mA);
+> > +- ti,max-charge-current: integer, maximum charging current (in mA);
+> > +- ti,max-charge-voltage: integer, maximum charging voltage (in mV);
+> > +- ti,min-charge-temperature: integer, minimum charging temperature (in DegC);
+> > +- ti,max-charge-temperature: integer, maximum charging temperature (in DegC).
+> 
+> Before accepting "[PATCH 13/13] dt: power: bq24257-charger: Cover
+> additional devices"
+> http://www.spinics.net/lists/devicetree/msg92134.html
+> 
+> could you and Andreas figure out common bindings? Look at this:
+> 
+> +- ti,charge-current: integer, maximum charging current in uA.
+> +- ti,charge-current: integer, default charging current (in mA);
+> 
+> Different meaning and different units. This is madness! :)
+> 
+> In the same time you are adding TI-common bindings (not device
+> specific, there is no prefix) so I would expect exactly the same
+> bindings if it is possible.
 
-kernel@martin.sperl.org writes:
+Krzysztof, good observation! In bq2425x_charger.c (formerly known as
+bq24257_charger.c :) that I worked on the unit used was uA. At that time
+I did a quick check and there didn't seem to be a clear standard whether
+to use the "micro" or "milli" units - different drivers use different
+units. However there seems to be a tendency for the TI drivers to prefer
+"milli" (bq2415x_charger.c, bq24735-charger.c)
 
-> From: Martin Sperl <kernel@martin.sperl.org>
->
-> Implements spi master driver for the 2 auxiliar spi devices
-> supported by the bcm2835 SOC.
->
-> The driver does not implement native chip-selects but uses
-> framework provided aribtrary GPIO-chip-selects.
->
-> Requires soc-bcm2835-aux enable api to enable/disable HW blocks.
->
-> Signed-off-by: Martin Sperl <kernel@martin.sperl.org>
-> ---
->  drivers/spi/Kconfig          |   12 +
->  drivers/spi/Makefile         |    1 +
->  drivers/spi/spi-bcm2835aux.c |  514 ++++++++++++++++++++++++++++++++++++=
-++++++
->  3 files changed, 527 insertions(+)
->  create mode 100644 drivers/spi/spi-bcm2835aux.c
->
-> Changelog:
-> 	v4->v5: added error-handling and deferred probing support
-> 		moved change to default-config to a separate patch
-> 		fixed Kconfig to add the correct dependency
+Personally I think "milli" units are more appropriate for chargers since
+they provide sufficient granularity and the numbers don't become too big
+(try typing a voltage in the Volt-range in uV, it's very easy to get the
+number of 0s wrong). However since the driver was already there I left
+that aspect alone to preserve compatibility.
 
-Review comments as a diff, so you can git-am and squash them in if you
-like.  If you take them all, you can add "Acked-by: Eric Anholt
-<eric@anholt.net>".
+> > +
+> > +Optional properties:
+> > +- ti,thermal-sensing: boolean, if present thermal regulation will be enabled;
+> 
+> What is the requirement for thermal-sensing? Can it be enabled always?
+> If yes, then this is not really a hardware property.
+> 
+> > +- ti,enable-user-write: boolean, if present driver will allow the user space
+> > +    to control the charging current and voltage through sysfs;
+> 
+> This is not DT property. It does not describe hardware.
 
-I didn't know anything about SPI before tonight, but I've looked through
-what you did and it looks solid when compared to the hardware docs I've
-got.  The only functional comment I had that's not in my diff is that
-you could probably reduce the transfer overhead by knowing that there
-are 4 dwords in the transfer and receive FIFOs, so I think you could
-write more before checking if you had to stop.
+I take responsibility for this one :) In an earlier thread we were
+discussing that it will be better to prevent sysfs write access to
+"dangerous" charger parameters (charge voltage, current, ...) but I
+argued that such access might still be desirable during development and
+debug, and that a DT property could be used to allow such write access
+(with the default being the charger properties being made read-only) -
+this way giving the best of both worlds. However then when I updated the
+bq24157_charger.c driver I ended up not really needing and implementing
+this feature.
 
-From=20e082c3b5ea32d3eb1a40b7f9b5a822ba307cf886 Mon Sep 17 00:00:00 2001
-From: Eric Anholt <eric@anholt.net>
-Date: Tue, 8 Sep 2015 17:51:08 -0700
-Subject: [PATCH] spi: Changes for Martin's aux spi driver.
+Out of curiosity, if it against best-practice to expose non hardware
+properties, how would one best address the above use case? Compile time
+switch? A sysfs property that allows write-enabling the other sysfs
+properties (doesn't sound right). Or...?
 
-The intention is for these to be review fixes squashed into his commit of t=
-he driver.
+--
+Andreas Dannenberg
+Texas Instruments Inc
 
-=2D Reset has to happen before the clock gate is disabled, since
-  register writes wouldn't take effect.
-
-=2D Typo fixes.
-
-=2D Dropped unnecessary regs/defines.
-
-=2D Dropped custom clock enable/disable, assuming we use the aux clock
-  driver instead.
-
-Signed-off-by: Eric Anholt <eric@anholt.net>
-=2D--
- drivers/spi/Kconfig          |  5 ++---
- drivers/spi/spi-bcm2835aux.c | 45 ++++++----------------------------------=
-----
- 2 files changed, 8 insertions(+), 42 deletions(-)
-
-diff --git a/drivers/spi/Kconfig b/drivers/spi/Kconfig
-index cdb3dba..20854d4 100644
-=2D-- a/drivers/spi/Kconfig
-+++ b/drivers/spi/Kconfig
-@@ -89,16 +89,15 @@ config SPI_BCM2835
- 	  not supported.
-=20
- config SPI_BCM2835AUX
-=2D	tristate "BCM2835 SPI auxiliar controller"
-+	tristate "BCM2835 SPI auxiliary controller"
- 	depends on ARCH_BCM2835 || COMPILE_TEST
- 	depends on GPIOLIB
-=2D	select SOC_BCM2835_AUX
- 	help
- 	  This selects a driver for the Broadcom BCM2835 SPI aux master.
-=20
- 	  The BCM2835 contains two types of SPI master controller; the
- 	  "universal SPI master", and the regular SPI controller.
-=2D	  This driver is for the universal/auxiliar SPI controller.
-+	  This driver is for the universal/auxiliary SPI controller.
-=20
- config SPI_BFIN5XX
- 	tristate "SPI controller driver for ADI Blackfin5xx"
-diff --git a/drivers/spi/spi-bcm2835aux.c b/drivers/spi/spi-bcm2835aux.c
-index d968647..3451ecb 100644
-=2D-- a/drivers/spi/spi-bcm2835aux.c
-+++ b/drivers/spi/spi-bcm2835aux.c
-@@ -1,5 +1,5 @@
- /*
-=2D * Driver for Broadcom BCM2835 SPI Controllers
-+ * Driver for Broadcom BCM2835 auxiliary SPI Controllers
-  *
-  * the driver does not rely on the native chipselects at all
-  * but only uses the gpio type chipselects
-@@ -26,7 +26,6 @@
- #include <linux/interrupt.h>
- #include <linux/io.h>
- #include <linux/kernel.h>
-=2D#include <linux/soc/bcm/bcm2835-aux.h>
- #include <linux/module.h>
- #include <linux/of.h>
- #include <linux/of_address.h>
-@@ -38,27 +37,10 @@
- #include <linux/spinlock.h>
-=20
- /*
-=2D * shared aux registers between spi1/spi2 and uart1
-=2D *
-=2D * these defines could go to a separate module if needed
-=2D * so that it can also get used with the uart1 implementation
-=2D * when it materializes.
-=2D */
-=2D
-=2D/* the AUX register offsets */
-=2D#define BCM2835_AUX_IRQ		0x00
-=2D#define BCM2835_AUX_ENABLE	0x04
-=2D
-=2D/* the AUX Bitfield identical for both register */
-=2D#define BCM2835_AUX_BIT_UART	0x00000001
-=2D#define BCM2835_AUX_BIT_SPI1	0x00000002
-=2D#define BCM2835_AUX_BIT_SPI2	0x00000004
-=2D
-=2D/*
-  * spi register defines
-  *
-  * note there is garbage in the "official" documentation,
-=2D * so somedata taken from the file:
-+ * so some data is taken from the file:
-  *   brcm_usrlib/dag/vmcsx/vcinclude/bcm2708_chip/aux_io.h
-  * inside of:
-  *   http://www.broadcom.com/docs/support/videocore/Brcm_Android_ICS_Graph=
-ics_Stack.tar.gz
-@@ -113,9 +95,6 @@
- #define BCM2835_AUX_SPI_MODE_BITS (SPI_CPOL | SPI_CPHA | SPI_CS_HIGH \
- 				  | SPI_NO_CS)
-=20
-=2D#define DRV_NAME	"spi-bcm2835aux"
-=2D#define ENABLE_PROPERTY "brcm,aux-enable"
-=2D
- struct bcm2835aux_spi {
- 	void __iomem *regs;
- 	struct clk *clk;
-@@ -450,26 +429,17 @@ static int bcm2835aux_spi_probe(struct platform_devic=
-e *pdev)
- 		goto out_clk_disable;
- 	}
-=20
-=2D	/* enable HW block */
-=2D	err =3D bcm2835aux_enable(&pdev->dev, ENABLE_PROPERTY);
-=2D	if (err) {
-=2D		dev_err(&pdev->dev, "could not enable aux: %d\n", err);
-=2D		goto out_clk_disable;
-=2D	}
-=2D
- 	/* reset SPI-HW block */
- 	bcm2835aux_spi_reset_hw(bs);
-=20
- 	err =3D devm_spi_register_master(&pdev->dev, master);
- 	if (err) {
- 		dev_err(&pdev->dev, "could not register SPI master: %d\n", err);
-=2D		goto out_hw_disable;
-+		goto out_clk_disable;
- 	}
-=20
- 	return 0;
-=20
-=2Dout_hw_disable:
-=2D	bcm2835aux_disable(&pdev->dev, ENABLE_PROPERTY);
- out_clk_disable:
- 	clk_disable_unprepare(bs->clk);
- out_master_put:
-@@ -482,13 +452,10 @@ static int bcm2835aux_spi_remove(struct platform_devi=
-ce *pdev)
- 	struct spi_master *master =3D platform_get_drvdata(pdev);
- 	struct bcm2835aux_spi *bs =3D spi_master_get_devdata(master);
-=20
-=2D	/* Clear FIFOs, and disable the HW block */
-=2D	clk_disable_unprepare(bs->clk);
-=2D
- 	bcm2835aux_spi_reset_hw(bs);
-=20
-=2D	/* disable HW block */
-=2D	bcm2835aux_disable(&pdev->dev, ENABLE_PROPERTY);
-+	/* Clear FIFOs, and disable the HW block */
-+	clk_disable_unprepare(bs->clk);
-=20
- 	return 0;
- }
-@@ -501,7 +468,7 @@ MODULE_DEVICE_TABLE(of, bcm2835aux_spi_match);
-=20
- static struct platform_driver bcm2835aux_spi_driver =3D {
- 	.driver		=3D {
-=2D		.name		=3D DRV_NAME,
-+		.name		=3D "spi-bcm2835aux",
- 		.of_match_table	=3D bcm2835aux_spi_match,
- 	},
- 	.probe		=3D bcm2835aux_spi_probe,
-=2D-=20
-2.1.4
-
---=-=-=
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBCgAGBQJV75dfAAoJELXWKTbR/J7oqQsP/ROhEuFjOkjxInAAc/B5SqS4
-PFvcfLnSIOf7Kxnm7iUd65ar5HwqqkDhnfBOkaqHdGmVRwjSeEUBcZe0cjGjYUgv
-tjDYAjqr6OOIGQ0WDbEfn1SmHhMS3O/D9alv119IJ41tmnrhxS0MvO+geaNga5+4
-6BHFWZ1Hh6yeHPb/za6oqiE2ZtNJXDKK/PEcmItJdzhg6DQEWFlGX9XCkkljeD8U
-/0i8OGpqWc3Nm6yfrVW2QLY5oEfrbIqu6od2oOdbG/MzxI8VNgOT+1PTpPoUepYv
-FIGjhFW2uRRlDR+2PWy34sLSwu4lbvL8g7xXR4L/jj+4/pQirGSw8GFYjgIPQM9W
-Mh4FkuN2SxewsI+reayyHSdYEb4UM3Be+gQym/nG+MUDFi8XC0VbEnjo4fHQbVp5
-tlWTWSqgj/0PcW5DqELA9DyjKheQqY+DOh2kmBBKW2qFAgAFOtjJFf9gH90bcZ5Z
-djnn4gGCv81Il5RdPPj6CVGRYjSQOeGlZkVNG6DfqwLGAyQIjigajIFN0RsxhKYI
-LckH8K9fJWxGhIiEmajhwOJrD1D1Joj+unNmo+TmweGNOpKVWwyOw7s6H+EhhvCA
-3r2C9k3KY+e8fLsmeNuNC1ltpefCUMD8nZox40NUCFjCJvo0+LtIT65CwGEKSObo
-x6xP3jH0Av5VUdI6eo/M
-=3c8N
------END PGP SIGNATURE-----
---=-=-=--
+> Best regards,
+> Krzysztof
+> 
+> > +
+> > +Example:
+> > +
+> > +bq25890 {
+> > +        compatible = "ti,bq24261
+> > +        reg = <0x6b>;
+> > +
+> > +        ti,charge-current = <1000>;
+> > +        ti,charge-voltage = <4200>;
+> > +        ti,termination-current = <128>;
+> > +        ti,max-charge-current = <3000>;
+> > +        ti,max-charge-voltage = <4350>;
+> > +        ti,min-charge-temperature = <0>;
+> > +        ti,max-charge-temperature = <60>;
+> > +
+> > +        ti,thermal-sensing;
+> > +        ti,enable-user-write;
+> > +};
+> > diff --git a/drivers/power/Kconfig b/drivers/power/Kconfig
+> > index f8758d6..cd47d0d 100644
+> > --- a/drivers/power/Kconfig
+> > +++ b/drivers/power/Kconfig
+> > @@ -396,6 +396,12 @@ config CHARGER_BQ24190
+> >         help
+> >           Say Y to enable support for the TI BQ24190 battery charger.
+> >
+> > +config CHARGER_BQ24261
+> > +       tristate "TI BQ24261 charger driver"
+> > +       depends on I2C && EXTCON
+> > +       help
+> > +         Say Y here to enable support for TI BQ24261 battery charger.
+> > +
+> >  config CHARGER_BQ24257
+> >         tristate "TI BQ24257 battery charger driver"
+> >         depends on I2C
+> > diff --git a/drivers/power/Makefile b/drivers/power/Makefile
+> > index 5752ce8..bec8409 100644
+> > --- a/drivers/power/Makefile
+> > +++ b/drivers/power/Makefile
+> > @@ -59,6 +59,7 @@ obj-$(CONFIG_CHARGER_MAX8997) += max8997_charger.o
+> >  obj-$(CONFIG_CHARGER_MAX8998)  += max8998_charger.o
+> >  obj-$(CONFIG_CHARGER_BQ2415X)  += bq2415x_charger.o
+> >  obj-$(CONFIG_CHARGER_BQ24190)  += bq24190_charger.o
+> > +obj-$(CONFIG_CHARGER_BQ24261)  += bq24261_charger.o
+> >  obj-$(CONFIG_CHARGER_BQ24257)  += bq24257_charger.o
+> >  obj-$(CONFIG_CHARGER_BQ24735)  += bq24735-charger.o
+> >  obj-$(CONFIG_CHARGER_BQ25890)  += bq25890_charger.o
