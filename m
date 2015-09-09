@@ -1,48 +1,77 @@
-From: Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
-Subject: Re: [PATCH] of: add vendor prefix for Socionext Inc.
-Date: Wed, 9 Sep 2015 13:10:01 +0900
-Message-ID: <CAK7LNAT7CrSX-spOVOEsDwjGiXRcKe_C+TCkUx=_rjRmBwbFiQ@mail.gmail.com>
-References: <1438163133-4539-1-git-send-email-yamada.masahiro@socionext.com>
-	<20150824065724.GB3247@x1>
-	<CAL_JsqLjV+m+nRd7aW1GWg-rzwO+ndzAPxCUcRTatzaq+RvHQw@mail.gmail.com>
+From: Guenter Roeck <linux@roeck-us.net>
+Subject: Re: [PATCH 1/3] sysfs: Fix is_visible() support for binary attributes
+Date: Tue, 08 Sep 2015 21:12:37 -0700
+Message-ID: <55EFB1B5.1060703@roeck-us.net>
+References: <1441714066-5599-1-git-send-email-emilio.lopez@collabora.co.uk> <1441714066-5599-2-git-send-email-emilio.lopez@collabora.co.uk> <20150908153013.GA6758@roeck-us.net> <20150908191002.GB10156@kroah.com> <20150908193052.GA11106@roeck-us.net> <55EF82A4.5000502@collabora.co.uk> <55EF86F8.3060406@roeck-us.net> <20150909035850.GA5497@kroah.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAL_JsqLjV+m+nRd7aW1GWg-rzwO+ndzAPxCUcRTatzaq+RvHQw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Hayato Suzuki <hytszk-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Kuninori Morimoto <kuninori.morimoto.gx-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Arnaud Ebalard <arno-LkuqDEemtHBg9hUCZPvPmw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Antony Pavlov <antonynpavlov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Content-Type: text/plain; charset=windows-1252;
+	format=flowed
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <20150909035850.GA5497@kroah.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Greg KH <gregkh@linuxfoundation.org>
+Cc: =?windows-1252?Q?Emilio_L=F3pez?= <emilio.lopez@collabora.co.uk>, olof@lixom.net, kgene@kernel.org, k.kozlowski@samsung.com, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Lee, Rob,
-
-2015-08-25 0:11 GMT+09:00 Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>:
-> On Mon, Aug 24, 2015 at 1:57 AM, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
->> On Wed, 29 Jul 2015, Masahiro Yamada wrote:
+On 09/08/2015 08:58 PM, Greg KH wrote:
+> On Tue, Sep 08, 2015 at 06:10:16PM -0700, Guenter Roeck wrote:
+>> Hi Emilio,
 >>
->>> Signed-off-by: Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
->>> ---
+>> On 09/08/2015 05:51 PM, Emilio L=F3pez wrote:
+>>> Hi Greg & Guenter,
 >>>
->>>  Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
->>>  1 file changed, 1 insertion(+)
+>> [ ... ]
+>>>>>>
+>>>>>> Unless I am missing something, this is not explained anywhere, b=
+ut it is
+>>>>>> not entirely trivial to understand. I think it should be documen=
+ted.
+>>>
+>>> I agree. I couldn't find any mention of what this int was supposed =
+to be by looking at Documentation/ (is_visible is not even mentioned :/=
+) or include/linux/sysfs.h. Once we settle on something I'll document i=
+t before sending a v2.
+>>>
+>> In the include file ? No strong preference, though.
 >>
->> Patch has been around for nearly a month and is pretty trivial, so I'm
->> just going to go ahead an apply it.
+>>> By the way, I wrote a quick coccinelle script to match is_visible()=
+ users which reference the index (included below), and it found referen=
+ces to drivers which do not seem to use any binary attributes, so I bel=
+ieve changing the index meaning shouldn't be an issue.
+>>>
+>> Good.
+>>
+>>>>> I agree, make i the number of the bin attribute and that should s=
+olve
+>>>>> this issue.
+>>>>>
+>>>> No, that would conflict with the "normal" use of is_visible for no=
+n-binary
+>>>> attributes, and make the index all but useless, since the is_visib=
+le function
+>>>> would have to search through all the attributes anyway to figure o=
+ut which one
+>>>> is being checked.
+>>>
+>>> Yeah, using the same indexes would be somewhat pointless, although =
+not many seem to be using it anyway (only 14 files matched). Others see=
+m to be comparing the attr* instead. An alternative would be to use neg=
+ative indexes for binary attributes and positive indexes for normal att=
+ributes.
+>>>
+>> ... and I probably wrote or reviewed a significant percentage of tho=
+se ;-).
+>>
+>> Using negative numbers for binary attributes is an interesting idea.
+>> Kind of unusual, though. Greg, any thoughts on that ?
 >
-> Okay. I just added it now going thru my backlog, but will drop it.
+> Ick, no, that's a mess, maybe we just could drop the index alltogethe=
+r?
 >
-> Rob
->
 
-So, where has this patch gone?
+No, please don't. Having to manually compare dozens of index pointers w=
+ould be
+even more of a mess.
 
-I've not seen it anywhere.
-
-
--- 
-Best Regards
-Masahiro Yamada
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Guenter
