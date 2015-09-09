@@ -1,100 +1,118 @@
-From: Dongsheng Wang <dongsheng.wang-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: [PATCH 1/2] fsl: Add binding for RCPM
-Date: Wed, 9 Sep 2015 14:42:46 +0800
-Message-ID: <1441780967-30879-1-git-send-email-dongsheng.wang@freescale.com>
+From: Ley Foon Tan <lftan-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH v6 3/6] pci:host: Add Altera PCIe host controller driver
+Date: Wed, 9 Sep 2015 14:49:06 +0800
+Message-ID: <CAFiDJ58i0enTGbV=xf8q8rKGg6oREXkvwu0cT4Jfz01ozbKQ7g@mail.gmail.com>
+References: <1441103408-8433-1-git-send-email-lftan@altera.com>
+	<1441103408-8433-4-git-send-email-lftan@altera.com>
+	<20150901163304.GA9769@red-moon>
+	<CAFiDJ58WCjTNkU5PWtbHxj+-0oWNg1T+psfE-OaJD+4k-DBb-A@mail.gmail.com>
+	<20150908091944.GE29293@red-moon>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20150908091944.GE29293@red-moon>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, jason.jin-KZfg59tc24xl57MIdRCFDg@public.gmane.org, chenhui.zhao-KZfg59tc24xl57MIdRCFDg@public.gmane.org, yuantian.tang-KZfg59tc24xl57MIdRCFDg@public.gmane.org, alison.wang-KZfg59tc24xl57MIdRCFDg@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Wang Dongsheng <dongsheng.wang-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Tang Yuantian <Yuantian.Tang-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+To: Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
+Cc: Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Marc Zyngier <Marc.Zyngier-5wv7dgnIgG8@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Dinh Nguyen <dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>, "linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Wang Dongsheng <dongsheng.wang-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+On Tue, Sep 8, 2015 at 5:19 PM, Lorenzo Pieralisi
+<lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org> wrote:
+> On Fri, Sep 04, 2015 at 09:29:14AM +0100, Ley Foon Tan wrote:
+>> On Wed, Sep 2, 2015 at 12:33 AM, Lorenzo Pieralisi
+>> <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org> wrote:
+>
+> [...]
+>
+>> > > +static bool altera_pcie_valid_config(struct altera_pcie *pcie,
+>> > > +                                    struct pci_bus *bus, int dev)
+>> > > +{
+>> > > +       /* If there is no link, then there is no device */
+>> > > +       if (bus->number != pcie->root_bus_nr) {
+>> > > +               if (!altera_pcie_link_is_up(pcie))
+>> > > +                       return false;
+>> > > +       }
+>> >
+>> > Can you explain to pls me why you have to check this for every config
+>> > transaction ? Isn't it something that can prevent probing the
+>> > host controller altogether ?
+>> In our PCIe hardware spec, it stated that software should check the
+>> link status before issuing a configuration request to downstream
+>> ports.
+>> BTW, other pci controllers have similar implementation as well, eg: dw
+>> pci, mvebu pci.
+>
+> Understood, thanks.
+>
+> [...]
+>
+>> > > +static int tlp_read_packet(struct altera_pcie *pcie, u32 *value)
+>> > > +{
+>> > > +       u8 loop;
+>> > > +       struct tlp_rp_regpair_t tlp_rp_regdata;
+>> > > +
+>> > > +       for (loop = 0; loop < TLP_LOOP; loop++) {
+>> > > +               tlp_read_rx(pcie, &tlp_rp_regdata);
+>> > > +               if (tlp_rp_regdata.ctrl & RP_RXCPL_EOP) {
+>> > > +                       if (value)
+>> > > +                               *value = tlp_rp_regdata.reg0;
+>> > > +                       return PCIBIOS_SUCCESSFUL;
+>> > > +               }
+>> > > +               udelay(5);
+>> >
+>> > Could you comment please on the chosen udelay/TLP_LOOP values (ie how
+>> > did you come up with them) ?
+>> For udelay value, we just want to have small delay between each read.
+>
+> I would explain how you chose the value, in particular if it can
+> affect next generation hosts sharing the same driver.
+Actually, we don't have any calculation to choose the value. Just want
+to give small relaxation between each read.
+It is request from Marc in previous review.
+>
+>> For TLP_LOOP value, minimum 2 loops to read tlp headers and 1 loop to
+>> read data payload. So, we choose to poll 10 loops for maximum.
+>
+> Add it to a comment.
+Okay.
+>
+[...]
+>> >
+>> > > +
+>> > > +       /* clear all interrupts */
+>> > > +       cra_writel(pcie, P2A_INT_STS_ALL, P2A_INT_STATUS);
+>> > > +       /* enable all interrupts */
+>> > > +       cra_writel(pcie, P2A_INT_ENA_ALL, P2A_INT_ENABLE);
+>> > > +
+>> > > +       bus = pci_scan_root_bus(&pdev->dev, pcie->root_bus_nr, &altera_pcie_ops,
+>> > > +                               pcie, &pcie->resources);
+>> > > +       if (!bus)
+>> > > +               return -ENOMEM;
+>> > > +
+>> > > +       pci_fixup_irqs(pci_common_swizzle, of_irq_parse_and_map_pci);
+>> > > +       pci_assign_unassigned_bus_resources(bus);
+>> >
+>> > I think you are missing a call to pcie_bus_configure_settings(),
+>> > see drivers/pci/host/pci-host-generic.c
+>> Other pci controller drivers like xgene and iproc don't call to this
+>> function, but it call in
+>> arch/arm/kernel/bios32.c:pci_common_init_dev().
+>> Do we really need this?
+>
+> It is there to provide a way to configure the system MPS, through
+> command line parameters, it is always a good idea to have it and
+> it should be part of your driver so that you can tune it in case
+> the MPS is misconfigured or you want to apply a specific configuration
+> for a given system.
+>
+> Have a look at pcie_bus_config and how it is used in
+> pcie_bus_configure_settings(), that would clarify further.
+Thanks for explanation. I will add it.
 
-RCPM is the Run Control and Power Management module performs all
-device-level tasks associated with device run control and power
-management.
+Thanks.
 
-Add this for freescale powerpc platform and layerscape platform.
-
-Signed-off-by: Chenhui Zhao <chenhui.zhao-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Signed-off-by: Tang Yuantian <Yuantian.Tang-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Signed-off-by: Wang Dongsheng <dongsheng.wang-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-
-diff --git a/Documentation/devicetree/bindings/soc/fsl/rcpm.txt b/Documentation/devicetree/bindings/soc/fsl/rcpm.txt
-new file mode 100644
-index 0000000..284070c
---- /dev/null
-+++ b/Documentation/devicetree/bindings/soc/fsl/rcpm.txt
-@@ -0,0 +1,64 @@
-+* Run Control and Power Management
-+-------------------------------------------
-+The RCPM performs all device-level tasks associated with device run control
-+and power management.
-+
-+Required properites:
-+  - reg : Offset and length of the register set of RCPM block.
-+  - compatible : Sould contain a chip-specific RCPM block compatible string
-+	and (if applicable) may contain a chassis-version RCPM compatible string.
-+	Chip-specific strings are of the form "fsl,<chip>-rcpm", such as:
-+	* "fsl,p2041-rcpm"
-+	* "fsl,p3041-rcpm"
-+	* "fsl,p4080-rcpm"
-+	* "fsl,p5020-rcpm"
-+	* "fsl,p5040-rcpm"
-+	* "fsl,t4240-rcpm"
-+	* "fsl,b4420-rcpm"
-+	* "fsl,b4860-rcpm"
-+
-+	Chassis-version strings are of the form "fsl,qoriq-rcpm-<version>",
-+	such as:
-+	* "fsl,qoriq-rcpm-1.0": for chassis 1.0 rcpm
-+	* "fsl,qoriq-rcpm-2.0": for chassis 2.0 rcpm
-+	* "fsl,qoriq-rcpm-2.1": for chassis 2.1 rcpm
-+
-+All references to "1.0" and "2.0" refer to the QorIQ chassis version to
-+which the chip complies.
-+Chassis Version		Example Chips
-+---------------		-------------------------------
-+1.0				p4080, p5020, p5040, p2041, p3041
-+2.0				t4240, b4860, b4420
-+2.1				t1040, ls1021
-+
-+Example:
-+The RCPM node for T4240:
-+	rcpm: global-utilities@e2000 {
-+		compatible = "fsl,t4240-rcpm", "fsl,qoriq-rcpm-2.0";
-+		reg = <0xe2000 0x1000>;
-+	};
-+
-+The RCPM node for P4080:
-+	rcpm: global-utilities@e2000 {
-+		compatible = "fsl,qoriq-rcpm-1.0";
-+		reg = <0xe2000 0x1000>;
-+	};
-+
-+* Freescale RCPM Wakeup Source Device Tree Bindings
-+-------------------------------------------
-+Required rcpm-wakeup property should be added to a device node if the device
-+can be used as a wakeup source.
-+
-+  - rcpm-wakeup: should contain a pointer to the rcpm node and the
-+	corresponding bit of device in the register.
-+
-+Example:
-+	lpuart0: serial@2950000 {
-+		compatible = "fsl,ls1021a-lpuart";
-+		reg = <0x0 0x2950000 0x0 0x1000>;
-+		interrupts = <GIC_SPI 80 IRQ_TYPE_LEVEL_HIGH>;
-+		clocks = <&sysclk>;
-+		clock-names = "ipg";
-+		rcpm-wakeup = <&rcpm 0x0 0x40000000>;
-+		status = "disabled";
-+	};
--- 
-2.1.0.27.g96db324
-
+Regards
+Ley Foon
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
