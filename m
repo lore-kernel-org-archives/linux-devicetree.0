@@ -1,43 +1,64 @@
-From: "Wu, Songjun" <songjun.wu-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 2/2] ASoC: atmel-classd: DT binding for Class D audio
- amplifier driver
-Date: Wed, 9 Sep 2015 11:16:19 +0800
-Message-ID: <55EFA483.8000804@atmel.com>
-References: <1441086101-15303-1-git-send-email-songjun.wu@atmel.com>
- <1441086101-15303-3-git-send-email-songjun.wu@atmel.com>
- <20150903114316.GV12027@sirena.org.uk> <55EC0AFE.3080809@atmel.com>
- <20150907162548.GW5313@sirena.org.uk> <55EEAC0D.7010003@atmel.com>
- <20150908122340.GC9751@sirena.org.uk>
+From: Sharma Bhupesh <bhupesh.sharma@freescale.com>
+Subject: RE: [PATCH v2 04/10] doc/bindings: Update PCIe devicetree binding
+ documentation for LS2080A
+Date: Wed, 9 Sep 2015 03:45:31 +0000
+Message-ID: <BY1PR0301MB130337BA5B78D1887FE1880C82520@BY1PR0301MB1303.namprd03.prod.outlook.com>
+References: <1441349872-4560-1-git-send-email-bhupesh.sharma@freescale.com>
+ <1441349872-4560-5-git-send-email-bhupesh.sharma@freescale.com>
+ <80094129.LHZFOe1ZPU@wuerfel>
+ <CADRPPNR-cSSQC5sLMmoqcxX46J6hdULa_V4v2BK7T8s8pcX0cg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20150908122340.GC9751-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, perex-/Fr2/VpizcU@public.gmane.org, tiwai-IBi9RG/b67k@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <CADRPPNR-cSSQC5sLMmoqcxX46J6hdULa_V4v2BK7T8s8pcX0cg@mail.gmail.com>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Li Leo <LeoLi@freescale.com>, Arnd Bergmann <arnd@arndb.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, "marc.zyngier@arm.com" <marc.zyngier@arm.com>, "Catalin.Marinas@arm.com" <Catalin.Marinas@arm.com>, "will.deacon@arm.com" <will.deacon@arm.com>, "Lian M.H." <Minghuan.Lian@freescale.com>, "olof@lixom.net" <olof@lixom.net>, "bhupesh.linux@gmail.com" <bhupesh.linux@gmail.com>, "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
+> From: pku.leo@gmail.com [mailto:pku.leo@gmail.com]
+> Sent: Wednesday, September 09, 2015 1:36 AM
+> On Mon, Sep 7, 2015 at 6:32 AM, Arnd Bergmann <arnd@arndb.de> wrote:
+> > On Friday 04 September 2015 12:27:46 Bhupesh Sharma wrote:
+> >> @@ -4,7 +4,8 @@ This PCIe host controller is based on the Synopsis
+> >> Designware PCIe IP  and thus inherits all the common properties
+> defined in designware-pcie.txt.
+> >>
+> >>  Required properties:
+> >> -- compatible: should contain the platform identifier such as
+> "fsl,ls1021a-pcie"
+> >> +- compatible: should contain the platform identifier such as
+> >> +"fsl,ls1021a-pcie",
+> >> +  "fsl,ls2080a-pcie".
+> >>  - reg: base addresses and lengths of the PCIe controller
+> >>  - interrupts: A list of interrupt outputs of the controller. Must
+> contain an
+> >>    entry for each entry in the interrupt-names property.
+> >>
+> >
+> > Are the two PCIe hosts mutually compatible? If they are, you should
+> > mandate one of the strings as the base model for identification, with
+> > the additional model being optional for identification of the specific
+> SoC.
+> 
+> It seems that controllers on these chips are not exactly the same.
+> They will get different driver data by matching the compatible strings.
+> Probably we could define a more generic compatible string, such as
+> "fsl,layerscape-pcie" or "fsl,ls-pcie".
 
+Yes, Minghaun captured the differences in the two versions in the v1 review
+discussion for the DTS here:
+http://lists.infradead.org/pipermail/linux-arm-kernel/2015-April/338343.html
 
-On 9/8/2015 20:23, Mark Brown wrote:
-> On Tue, Sep 08, 2015 at 05:36:13PM +0800, Wu, Songjun wrote:
->> On 9/8/2015 00:25, Mark Brown wrote:
->
->>> Sure, there's no problem at all having that structure in software but it
->>> should be possible to do this without having to represent this structure
->>> in DT.  It should be possible to register the card at the same time as
->>> the rest of the components rather than needing the separate device in
->>> the DT.
->
->> Do you mean using a single entry in the DT for the whole classD system and
->> instantiate ASoC components from it.
->> For now, there are two entry, they could be combined to one entry.
->
-> Yes, exactly.
->
-Accept. the two entries will be combined to one entry.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Regards,
+Bhupesh
