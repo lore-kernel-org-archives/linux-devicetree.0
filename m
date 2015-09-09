@@ -1,7 +1,7 @@
 From: Olliver Schinagl <o.schinagl-U3FVU11NWA554TAoqtyWWQ@public.gmane.org>
-Subject: [PATCH 4/5] dts: sunxi: add eeprom to A20 OLinuXino Lime2 board
-Date: Wed,  9 Sep 2015 11:25:14 +0200
-Message-ID: <1441790715-11957-5-git-send-email-o.schinagl@ultimaker.com>
+Subject: [PATCH 3/5] dts: sunxi: add eeprom to A20 OLinuXino Lime board
+Date: Wed,  9 Sep 2015 11:25:13 +0200
+Message-ID: <1441790715-11957-4-git-send-email-o.schinagl@ultimaker.com>
 References: <1441790715-11957-1-git-send-email-o.schinagl@ultimaker.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <1441790715-11957-1-git-send-email-o.schinagl-U3FVU11NWA554TAoqtyWWQ@public.gmane.org>
@@ -12,32 +12,38 @@ List-Id: devicetree@vger.kernel.org
 
 From: Olliver Schinagl <oliver-dxLnbx3+1qmEVqv0pETR8A@public.gmane.org>
 
-The Olimex A20 OLinuXino Lime2 features an eeprom that is always on the
+The Olimex A20 OLinuXino Lime features an eeprom that is always on the
 board. This patch adds it to the dts.
 
 --Tested-by: Olliver Schinagl <oliver-dxLnbx3+1qmEVqv0pETR8A@public.gmane.org>
 --Signed-off-by: Olliver Schinagl <oliver-dxLnbx3+1qmEVqv0pETR8A@public.gmane.org>
 ---
- arch/arm/boot/dts/sun7i-a20-olinuxino-lime2.dts | 6 ++++++
- 1 file changed, 6 insertions(+)
+ arch/arm/boot/dts/sun7i-a20-olinuxino-lime.dts | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
 
-diff --git a/arch/arm/boot/dts/sun7i-a20-olinuxino-lime2.dts b/arch/arm/boot/dts/sun7i-a20-olinuxino-lime2.dts
-index 8acff78..467ce8b 100644
---- a/arch/arm/boot/dts/sun7i-a20-olinuxino-lime2.dts
-+++ b/arch/arm/boot/dts/sun7i-a20-olinuxino-lime2.dts
-@@ -170,6 +170,12 @@
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&i2c1_pins_a>;
- 	status = "okay";
+diff --git a/arch/arm/boot/dts/sun7i-a20-olinuxino-lime.dts b/arch/arm/boot/dts/sun7i-a20-olinuxino-lime.dts
+index 769726d..6710d25 100644
+--- a/arch/arm/boot/dts/sun7i-a20-olinuxino-lime.dts
++++ b/arch/arm/boot/dts/sun7i-a20-olinuxino-lime.dts
+@@ -117,6 +117,18 @@
+ 	};
+ };
+ 
++&i2c1 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&i2c1_pins_a>;
++	status = "okay";
 +
 +	eeprom: eeprom@50 {
 +		compatible = "atmel,24c16";
 +		reg = <0x50>;
 +		pagesize = <16>;
 +	};
- };
- 
++};
++
  &mmc0 {
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&mmc0_pins_a>, <&mmc0_cd_pin_reference_design>;
 -- 
 2.1.4
 
