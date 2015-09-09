@@ -1,72 +1,57 @@
-From: Alexander Couzens <lynxis-qyMx1GtpvWw@public.gmane.org>
-Subject: Re: [PATCH 1/2] MIPS: ath79: set missing irq ack handler for
- ar7100-misc-intc irq chip
-Date: Wed, 9 Sep 2015 11:04:06 +0200
-Message-ID: <20150909110406.2e4a4f97@lazus.yip>
-References: <1441251262-13335-1-git-send-email-lynxis@fe80.eu>
-	<1441251262-13335-2-git-send-email-lynxis@fe80.eu>
-	<20150903103245.21dc9dd7@avionic-0020>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH v2 04/10] doc/bindings: Update PCIe devicetree binding documentation for LS2080A
+Date: Wed, 09 Sep 2015 11:07:14 +0200
+Message-ID: <5383634.Mln7J3sdWP@wuerfel>
+References: <1441349872-4560-1-git-send-email-bhupesh.sharma@freescale.com> <80094129.LHZFOe1ZPU@wuerfel> <CADRPPNR-cSSQC5sLMmoqcxX46J6hdULa_V4v2BK7T8s8pcX0cg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
- boundary="Sig_/mTYCrXriuVUD985kG3i33J3"; protocol="application/pgp-signature"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20150903103245.21dc9dd7@avionic-0020>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Alban <albeu-GANU6spQydw@public.gmane.org>
-Cc: linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <CADRPPNR-cSSQC5sLMmoqcxX46J6hdULa_V4v2BK7T8s8pcX0cg@mail.gmail.com>
+Sender: linux-clk-owner@vger.kernel.org
+To: linux-arm-kernel@lists.infradead.org
+Cc: Li Yang <leoli@freescale.com>, devicetree@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, Bhupesh Sharma <bhupesh.sharma@freescale.com>, Catalin.Marinas@arm.com, olof@lixom.net, will.deacon@arm.com, Minghuan Lian <Minghuan.Lian@freescale.com>, marc.zyngier@arm.com, bhupesh.linux@gmail.com, linux-clk@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
---Sig_/mTYCrXriuVUD985kG3i33J3
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Tuesday 08 September 2015 15:06:16 Li Yang wrote:
+> On Mon, Sep 7, 2015 at 6:32 AM, Arnd Bergmann <arnd@arndb.de> wrote:
+> > On Friday 04 September 2015 12:27:46 Bhupesh Sharma wrote:
+> >> @@ -4,7 +4,8 @@ This PCIe host controller is based on the Synopsis Designware PCIe IP
+> >>  and thus inherits all the common properties defined in designware-pcie.txt.
+> >>
+> >>  Required properties:
+> >> -- compatible: should contain the platform identifier such as "fsl,ls1021a-pcie"
+> >> +- compatible: should contain the platform identifier such as "fsl,ls1021a-pcie",
+> >> +  "fsl,ls2080a-pcie".
+> >>  - reg: base addresses and lengths of the PCIe controller
+> >>  - interrupts: A list of interrupt outputs of the controller. Must contain an
+> >>    entry for each entry in the interrupt-names property.
+> >>
+> >
+> > Are the two PCIe hosts mutually compatible? If they are, you should mandate
+> > one of the strings as the base model for identification, with the additional
+> > model being optional for identification of the specific SoC.
+> 
+> It seems that controllers on these chips are not exactly the same.
+> They will get different driver data by matching the compatible
+> strings.  Probably we could define a more generic compatible string,
+> such as "fsl,layerscape-pcie" or "fsl,ls-pcie".
+> 
+> >
+> > It would also be good to add a string with the specific version number of the
+> > designware PCIe block that is being used there.
+> 
+> The binding has mentioned to reference the designware-pcie.txt.  But
+> it might be more clear to mention the designware compatible string
+> "snps,dw-pcie" again in the compatible part.  Currently there is no
+> version number defined in the designware-pcie binding.  It might be
+> hard to get this information for some SoCs.
 
-On Thu, 3 Sep 2015 10:32:45 +0200
-Alban <albeu-GANU6spQydw@public.gmane.org> wrote:
+For most of them, the information is available and then it should be
+added. Obviously if you can't find it out, it's hard to guess and
+you have to leave it out for that particular chip.
 
-> > -IRQCHIP_DECLARE(ath79_misc_intc, "qca,ar7100-misc-intc",
-> > -		ath79_misc_intc_of_init);
-> > +
-> > +static int __init ar7100_misc_intc_of_init(
-> > +	struct device_node *node, struct device_node *parent)
-> > +{
-> > +	pr_info("IRQ: Setup ar7100 misc IRQ controller from
-> > devicetree.\n");
->=20
-> Debug left over?
+A lot of devices also have some internal version register that you
+can read out.
 
-I'll remove it in next patch. I added it because you mentioned a log
-message in your last review.
-
-> On Mon, 10 Aug 2015 20:11:14 +0200
-> Alban <albeu-GANU6spQydw@public.gmane.org> wrote:
->> Mon, 10 Aug 2015 20:11:14 +0200
->> A log message would be nice. IMHO it should mention that the ACK
->> callbacks have been missed when introducing OF support.
-
---Sig_/mTYCrXriuVUD985kG3i33J3
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQIcBAEBCAAGBQJV7/YHAAoJEMKenaag34YEPbQQAJZIno5m8B629KfceUaaVgwA
-I0q9PVcRBxr7mLW/DXdj/fsTLQ+A0XjuvdTqzxWTRo1SmhFlg/6oobw8w2+7QqJv
-CJSFP2l7cd12RYEKWbn7SpkfRgSJZ06T2cgVQUnSvZfqD4796YjLVmxBub1xH6N+
-L0Xz7X8OjnHpEbrtXmxOPA34qZyGbgx3lf1IbVRWrgyuEJTLP7NqQZdYwS4cH9gf
-l7eqTmfj+TpTZTn6iB5at1+a6zw1r6ay/vDGwBDScZoZcFnk9qSqf5x2YOiceBPj
-BaBx3EmXGrSCeZfdW3H4FcHXlEDPVAooc7TbR3T8dC1pKys8euCzaAfvQ2SEi2GH
-P9iYC9sQ/2ThoQyJrOv/eNW8ftQvqaek89aND3o1lQZQT/wwFbWcnk1l55GvPvyF
-lfcL/DcVwcd0hvXy2qqlq6va3++e+HWsE8u4yS7i/rluX6lzBC/Iwk6c0MNOgzNi
-sbHBV0sk1R1geFE5si38zz91YXhntU0pmAnA4QRWlr7HJbBhy/+llirew4sidem9
-u+h5YCU79xJ6JJr2WaoMJz7DFEFeAJlROem9x8L3pRBiGpTzUQcM5vU+P5g6Gnh3
-bSOJGhpxxuLjStBM2hqZGGGCLq4l6biBva8pmzy0FoTqobitS/3hrIKOxgp/3bz6
-cJQ3NLbgk6OOpnfOU2oK
-=gOkz
------END PGP SIGNATURE-----
-
---Sig_/mTYCrXriuVUD985kG3i33J3--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+	Arnd
