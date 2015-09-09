@@ -1,95 +1,46 @@
-From: Alexander Couzens <lynxis@fe80.eu>
-Subject: [PATCH v2 2/2] MIPS: ath79: add irq chip ar7240-misc-intc
-Date: Wed,  9 Sep 2015 11:16:18 +0200
-Message-ID: <1441790178-9573-3-git-send-email-lynxis@fe80.eu>
-References: <1441790178-9573-1-git-send-email-lynxis@fe80.eu>
-Return-path: <linux-mips-bounce@linux-mips.org>
-In-Reply-To: <1441790178-9573-1-git-send-email-lynxis@fe80.eu>
-Sender: linux-mips-bounce@linux-mips.org
-Errors-to: linux-mips-bounce@linux-mips.org
-List-help: <mailto:ecartis@linux-mips.org?Subject=help>
-List-unsubscribe: <mailto:ecartis@linux-mips.org?subject=unsubscribe%20linux-mips>
-List-software: Ecartis version 1.0.0
-List-subscribe: <mailto:ecartis@linux-mips.org?subject=subscribe%20linux-mips>
-List-owner: <mailto:ralf@linux-mips.org>
-List-post: <mailto:linux-mips@linux-mips.org>
-List-archive: <http://www.linux-mips.org/archives/linux-mips/>
-To: linux-mips@linux-mips.org
-Cc: Ralf Baechle <ralf@linux-mips.org>, Alban Bedel <albeu@free.fr>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org, Alexander Couzens <lynxis@fe80.eu>
+From: Olliver Schinagl <o.schinagl-U3FVU11NWA554TAoqtyWWQ@public.gmane.org>
+Subject: [PATCH 2/5] dts: sunxi: correct vendor prefix on OLinuXino a10s micro
+Date: Wed,  9 Sep 2015 11:25:12 +0200
+Message-ID: <1441790715-11957-3-git-send-email-o.schinagl@ultimaker.com>
+References: <1441790715-11957-1-git-send-email-o.schinagl@ultimaker.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1441790715-11957-1-git-send-email-o.schinagl-U3FVU11NWA554TAoqtyWWQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Olliver Schinagl <oliver-dxLnbx3+1qmEVqv0pETR8A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The ar7240 misc irq chip use ack handler
-instead of ack_mask handler. All new ath79 chips use
-the ar7240 misc irq chip
+From: Olliver Schinagl <oliver-dxLnbx3+1qmEVqv0pETR8A@public.gmane.org>
 
-Signed-off-by: Alexander Couzens <lynxis@fe80.eu>
+The OLinuXino A10S micro features an eeprom. According to the eeprom.txt
+binding document, we should use the manufacturer and 'at' is not the
+proper manufacturer id according to the vendor-prefixes.
+
+This patch takes the proper vendor-prefix and uses it for the eeprom
+node.
+
+--Signed-off-by: Olliver Schinagl <oliver-dxLnbx3+1qmEVqv0pETR8A@public.gmane.org>
 ---
- .../interrupt-controller/qca,ath79-misc-intc.txt     | 20 ++++++++++++++++++--
- arch/mips/ath79/irq.c                                | 10 ++++++++++
- 2 files changed, 28 insertions(+), 2 deletions(-)
+ arch/arm/boot/dts/sun5i-a10s-olinuxino-micro.dts | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/Documentation/devicetree/bindings/interrupt-controller/qca,ath79-misc-intc.txt b/Documentation/devicetree/bindings/interrupt-controller/qca,ath79-misc-intc.txt
-index 391717a..ec96b1f 100644
---- a/Documentation/devicetree/bindings/interrupt-controller/qca,ath79-misc-intc.txt
-+++ b/Documentation/devicetree/bindings/interrupt-controller/qca,ath79-misc-intc.txt
-@@ -4,8 +4,8 @@ The MISC interrupt controller is a secondary controller for lower priority
- interrupt.
+diff --git a/arch/arm/boot/dts/sun5i-a10s-olinuxino-micro.dts b/arch/arm/boot/dts/sun5i-a10s-olinuxino-micro.dts
+index a7e19e4..49a1be6 100644
+--- a/arch/arm/boot/dts/sun5i-a10s-olinuxino-micro.dts
++++ b/arch/arm/boot/dts/sun5i-a10s-olinuxino-micro.dts
+@@ -104,7 +104,7 @@
+ 	status = "okay";
  
- Required Properties:
--- compatible: has to be "qca,<soctype>-cpu-intc", "qca,ar7100-misc-intc"
--  as fallback
-+- compatible: has to be "qca,<soctype>-cpu-intc", "qca,ar7100-misc-intc" or
-+  "qca,<soctype>-cpu-intc", "qca,ar7240-misc-intc"
- - reg: Base address and size of the controllers memory area
- - interrupt-parent: phandle of the parent interrupt controller.
- - interrupts: Interrupt specifier for the controllers interrupt.
-@@ -13,6 +13,9 @@ Required Properties:
- - #interrupt-cells : Specifies the number of cells needed to encode interrupt
- 		     source, should be 1
- 
-+Compatible fallback depends on the SoC. Use ar7100 for ar71xx and ar913x,
-+use ar7240 for all other SoCs.
-+
- Please refer to interrupts.txt in this directory for details of the common
- Interrupt Controllers bindings used by client devices.
- 
-@@ -28,3 +31,16 @@ Example:
- 		interrupt-controller;
- 		#interrupt-cells = <1>;
- 	};
-+
-+Another example:
-+
-+	interrupt-controller@18060010 {
-+		compatible = "qca,ar9331-misc-intc", qca,ar7240-misc-intc";
-+		reg = <0x18060010 0x4>;
-+
-+		interrupt-parent = <&cpuintc>;
-+		interrupts = <6>;
-+
-+		interrupt-controller;
-+		#interrupt-cells = <1>;
-+	};
-diff --git a/arch/mips/ath79/irq.c b/arch/mips/ath79/irq.c
-index c9c0124..fd58f8b 100644
---- a/arch/mips/ath79/irq.c
-+++ b/arch/mips/ath79/irq.c
-@@ -319,6 +319,16 @@ static int __init ar7100_misc_intc_of_init(
- IRQCHIP_DECLARE(ar7100_misc_intc, "qca,ar7100-misc-intc",
- 		ar7100_misc_intc_of_init);
- 
-+static int __init ar7240_misc_intc_of_init(
-+	struct device_node *node, struct device_node *parent)
-+{
-+	ath79_misc_irq_chip.irq_ack = ar724x_misc_irq_ack;
-+	return ath79_misc_intc_of_init(node, parent);
-+}
-+
-+IRQCHIP_DECLARE(ar7240_misc_intc, "qca,ar7240-misc-intc",
-+		ar7240_misc_intc_of_init);
-+
- static int __init ar79_cpu_intc_of_init(
- 	struct device_node *node, struct device_node *parent)
- {
+ 	at24@50 {
+-		compatible = "at,24c16";
++		compatible = "atmel,24c16";
+ 		pagesize = <16>;
+ 		reg = <0x50>;
+ 		read-only;
 -- 
-2.4.0
+2.1.4
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
