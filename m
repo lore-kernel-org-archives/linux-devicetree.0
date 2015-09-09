@@ -1,118 +1,193 @@
-From: Cyrille Pitchen <cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH linux-next v6 1/8] mtd: spi-nor: read JEDEC ID with
- multiple I/O protocols
-Date: Wed, 9 Sep 2015 17:55:22 +0200
-Message-ID: <55F0566A.7060501@atmel.com>
-References: <cover.1441803609.git.cyrille.pitchen@atmel.com>
- <735e22efa25f6529bf8ed4a709c18a719176714b.1441803609.git.cyrille.pitchen@atmel.com>
- <201509091559.40948.marex@denx.de>
+From: Viresh Kumar <viresh.kumar@linaro.org>
+Subject: Re: [PATCH v4 2/2] dt: power: st: Provide bindings for ST's OPPs
+Date: Wed, 9 Sep 2015 21:32:12 +0530
+Message-ID: <20150909160212.GJ5266@linux>
+References: <20150811142812.GJ5509@linux>
+ <20150811151736.GO18282@x1>
+ <20150812110841.GC20238@linux>
+ <20150826120628.GZ19409@x1>
+ <20150902080639.GA26744@linux>
+ <CAL_JsqKMGp+3Z+oO6E0YYzjTCb=-R_QM=YF=B33NWayWmV057A@mail.gmail.com>
+ <20150909062722.GA5266@linux>
+ <20150909075930.GB3260@x1>
+ <20150909083031.GB5266@linux>
+ <20150909133930.GE3260@x1>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <201509091559.40948.marex-ynQEQJNshbs@public.gmane.org>
-Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>
-Cc: nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, beanhuo-AL4WhLSQfzjQT0dZR+AlfA@public.gmane.org, juhosg-p3rKhJxN3npAfugRpC6u6w@public.gmane.org, ben-/+tVBieCtBitmTQ+vhA3Yw@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-pm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20150909133930.GE3260@x1>
+Sender: linux-pm-owner@vger.kernel.org
+To: Lee Jones <lee.jones@linaro.org>
+Cc: Rob Herring <robherring2@gmail.com>, Stephen Boyd <sboyd@codeaurora.org>, Nishanth Menon <nm@ti.com>, kernel@stlinux.com, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, Rafael Wysocki <rjw@rjwysocki.net>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Sebastian Reichel <sre@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Arnd Bergmann <arnd.bergmann@linaro.org>, Ajit Pal Singh <ajitpal.singh@st.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Marek,
+On 09-09-15, 14:39, Lee Jones wrote:
+> Okay, I see what you mean.  Sound fine, although only allows up to 31
+> versions.  Not an issue for us I don't think, but could be for other
+> vendors.  Taking a recent example, the kernel recently went up to
+> v2.6.39 and some of the stable releases have gone up to v3.4.108.
+> Depends what you wish to support.
 
-Le 09/09/2015 15:59, Marek Vasut a =E9crit :
-> On Wednesday, September 09, 2015 at 03:24:11 PM, Cyrille Pitchen wrot=
-e:
->> When their quad or dual I/O mode is enabled, Micron and Macronix spi=
--nor
->> memories don't reply to the regular Read ID (0x9f) command. Instead =
-they
->> reply to a new dedicated command Read ID Multiple I/O (0xaf).
->>
->> If the Read ID (0x9f) command fails (the read ID is all 1's or all 0=
-'s),
->> then the Read ID Multiple I/O (0xaf) is used, first with SPI 4-4-4 p=
-rotocol
->> (supported by both Micron and Macronix memories), lately with SPI-2-=
-2-2
->> protocol (supported only by Micron memories).
->>
->> Signed-off-by: Cyrille Pitchen <cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
->> ---
->>  drivers/mtd/spi-nor/spi-nor.c | 28 +++++++++++++++++++++++++++-
->>  include/linux/mtd/spi-nor.h   | 23 +++++++++++++++++++++--
->>  2 files changed, 48 insertions(+), 3 deletions(-)
->>
->> diff --git a/drivers/mtd/spi-nor/spi-nor.c b/drivers/mtd/spi-nor/spi=
--nor.c
->> index f59aedfe1462..80a0db078aaa 100644
->> --- a/drivers/mtd/spi-nor/spi-nor.c
->> +++ b/drivers/mtd/spi-nor/spi-nor.c
->> @@ -703,8 +703,9 @@ static const struct flash_info spi_nor_ids[] =3D=
- {
->>
->>  static const struct flash_info *spi_nor_read_id(struct spi_nor *nor=
-)
->>  {
->> -	int			tmp;
->> +	int			i, tmp;
->>  	u8			id[SPI_NOR_MAX_ID_LEN];
->> +	enum spi_protocol	proto[2] =3D {SPI_PROTO_4_4_4, SPI_PROTO_2_2_2};
->>  	const struct flash_info	*info;
->>
->>  	tmp =3D nor->read_reg(nor, SPINOR_OP_RDID, id, SPI_NOR_MAX_ID_LEN)=
-;
->> @@ -713,6 +714,25 @@ static const struct flash_info *spi_nor_read_id=
-(struct
->> spi_nor *nor) return ERR_PTR(tmp);
->>  	}
->>
->> +	/* Special case for Micron/Macronix qspi nor. */
->> +	for (i =3D 0; i < ARRAY_SIZE(proto); ++i) {
->> +		if (!((id[0] =3D=3D 0xff && id[1] =3D=3D 0xff && id[2] =3D=3D 0xf=
-f) ||
->> +		      (id[0] =3D=3D 0x00 && id[1] =3D=3D 0x00 && id[2] =3D=3D 0x0=
-0)))
->> +			break;
->> +
->> +		nor->erase_proto =3D proto[i];
->> +		nor->read_proto =3D proto[i];
->> +		nor->write_proto =3D proto[i];
->> +		nor->reg_proto =3D proto[i];
->> +		tmp =3D nor->read_reg(nor, SPINOR_OP_MIO_RDID,
->> +				    id, SPI_NOR_MAX_ID_LEN);
->> +		if (tmp < 0) {
->> +			dev_dbg(nor->dev,
->> +				" error %d reading JEDEC ID (MULTI IO)\n", tmp);
->=20
-> Don't you have one space too much in front of the " error" ?
->=20
+Oh, that is always expandable. No one is stopping a platform to have
+hw-versions as: cuts_part1 cuts_part2 cuts_part3, and that will give
+us 96 bits :)
 
-Probably, I've just copied and pasted the dev_dbg() message few lines a=
-bove when
-the regular SPINOR_OP_RDID fails, then appended the "(MULTI IO)" string=
- to make
-think consistent but I don't mind removing the leading space.
+> > So, its not name of the supply really, but a virtual name given to the
+> > voltage-range which we need to pick based on the hardware version.
+> 
+> We usually call these 'names'; reg-names, clock-names, pinctrl-names,
+> phy-names, dma-names, etc.
 
-	tmp =3D nor->read_reg(nor, SPINOR_OP_RDID, id, SPI_NOR_MAX_ID_LEN);
-	if (tmp < 0) {
-		dev_dbg(nor->dev, " error %d reading JEDEC ID\n", tmp);
-		return ERR_PTR(tmp);
-	}
+Probably (opp-)supply-range-name suits well.
 
->> +			return ERR_PTR(tmp);
->> +		}
->> +	}
->> +
->>  	for (tmp =3D 0; tmp < ARRAY_SIZE(spi_nor_ids) - 1; tmp++) {
->>  		info =3D &spi_nor_ids[tmp];
->>  		if (info->id_len) {
->=20
-> [...]
->=20
+> > > I guess this is a Qcom specific feature.  I'll let Stephen comment.
+> > 
+> > No. So, my plan was to use this instead of the st,avs & pcode thing
+> > you have got in your bindings. So, instead of 'slow' and 'fast' from
+> > my example, it will have the corresponding strings for pcode numbers.
+> > And at runtime the platform will pass a string to the OPP library, to
+> > activate/add OPPs only for a specific opp-supply-version.
+> 
+> So you're using it to index into a 2 dimensional array of opp-hz's.
 
-Best Regards,
+s/opp-hz's/opp-microvolt
 
-Cyrille
---
-To unsubscribe from this list: send the line "unsubscribe linux-spi" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 
+> Eek!
+
+:)
+
+> > I don't want 20 nodes but only ONE. And in your case, you may only
+> > want to use pcode in the opp-supply-range-name property. But its fine
+> > if you want to enable/disable some OPPs based on that as well :)
+> 
+> I'm not seeing how this can be achieved with 1 node.
+> 
+> I guess you mean one node per frequency?
+
+Within an OPP table, OPP-nodes must have unique frequencies. i.e.
+two nodes can't have same frequency.
+
+In simple terms (mapping to your case) it is going to be like:
+opp-table will have this:
+opp-supply-range-names = "avs1", "avs2", ... , "avsn";
+
+Each OPP node will have
+opp-microvolt = <AVS1-volt>, <AVS2-volt>, <AVS3-volt> ... <AVSN-volt>;
+
+The platform with tell opp core to use avsX and OPP core will take
+care of rest.
+
+> > Not really. So this is the logic (I perhaps need to write the
+> > paragraph in the bindings in a better way):
+> > 1. A regulator's voltage can be supplied as <target> or <target min max> now.
+> 
+> Understood.  I don't think we'll be using that, but if it's useful to
+> others, then fine.
+
+Bindings for this are already present in kernel, so this wasn't new.
+
+> > 2. For each regulator we need to have an array of size mentioned above.
+> 
+> Using 2 properties to index in a 2D array like this look scarily like
+> it'll be prone to all sorts of fumbling errors.
+> 
+> The complexity of all this will reduce massively by having a separate
+> node per <regulator>-supply.  Using the same nodes for this is
+> squeezing too much into a single node.  I was put off as soon as I saw
+> you using 2D arrays in DT.
+
+So for the pcode thing, probably a separate entry like:
+opp-microvolt-pcode0 can be added to make things easy. opp-microvolts
+bindings are already added to support multiple regulators, and I don't
+really want to touch that again :)
+
+> > Now this is what I call as ONE entry.
+> > 
+> > For each opp-supply-range-name string, we need a copy of this..
+> 
+> Fortunately for us we'll only have single celled opp-microvolt
+> properties.
+
+Haha. FWIW, you can't use voltage-tolerance with OPP-v2 bindings as
+the triplets have replaced it. Just in case you were planning to use
+that :)
+
+> So I think our offering would look like this:
+> 
+> cpus {
+> 	cpu@0 {
+> 		compatible = "arm,cortex-a7";
+> 		vcc-supply = <&cpu_supply0>;
+> 		operating-points-v2 = <&cpu0_opp_table>;
+> 	};
+> };
+> 
+> cpu0_opp_table: opp_table0 {
+> 	compatible = "operating-points-v2";
+> 	opp-microvolt-names = "1", "2",  "3",  "4",  "5",  "6",  "7",  "8"
+> 			      "9", "10", "11", "12", "13", "14", "15", "16";
+> 
+> 	opp0 {
+> 		/*                  Major       Minor       Substrate */
+> 		/*                  all         all         all       */
+> 		opp-supported-hw = <0xffffffff  0xffffffff  0xffffffff>
+> 		opp-hz           = <1000000000>;
+> 		opp-microvolt    = <900000>, <915000>, <915000>, <925000>,
+> 				   <925000>, <925000>, <935000>, <945000>,
+> 				   <945000>, <945000>, <945000>, <955000>,
+> 				   <956000>, <975000>, <975000>, <975000>,
+> 	};
+
+So this is based of the solution I proposed. But if we were to choose
+the one you gave, it will be:
+
+                opp-microvolt-1 = <900000>;
+                opp-microvolt-2 = <915000>;
+                opp-microvolt-3 = <915000>;
+                opp-microvolt-4 = <925000>;
+                opp-microvolt-5 = <925000>;
+                opp-microvolt-6 = <925000>;
+                opp-microvolt-7 = <935000>;
+                opp-microvolt-8 = <945000>;
+                opp-microvolt-9 = <945000>;
+                opp-microvolt-10 = <945000>;
+                opp-microvolt-11 = <945000>;
+                opp-microvolt-12 = <955000>;
+                opp-microvolt-13 = <956000>;
+                opp-microvolt-14 = <975000>;
+                opp-microvolt-15 = <975000>;
+                opp-microvolt-16 = <975000>;
+
+> 	opp1 {
+> 		/*                  Major  Minor  Substrate */
+> 		/*                  2      1 & 2  all       */
+> 		opp-supported-hw = <0x2    0x3    0xffffffff>
+> 		opp-hz           = <1100000000>;
+> 		opp-microvolt    = <900000>, <915000>, <915000>, <925000>,
+> 				   <925000>, <925000>, <935000>, <945000>,
+> 				   <945000>, <945000>, <945000>, <955000>,
+> 				   <956000>, <975000>, <975000>, <975000>,
+> 	};
+> 
+> 	opp2 {
+> 		/*                  Major  Minor  Substrate */
+> 		/*                  2      5      4 & 5 & 6 */
+> 		opp-supported-hw = <0x2    0x10   0x38>
+> 		opp-hz           = <1200000000>;
+> 		opp-microvolt    = <900000>, <915000>, <915000>, <925000>,
+> 				   <925000>, <925000>, <935000>, <945000>,
+> 				   <945000>, <945000>, <945000>, <955000>,
+> 				   <956000>, <975000>, <975000>, <975000>,
+> 	};
+> };
+> 
+> Or have I got the wrong end of the stick?
+> 
+> NB: Note the suggested new property names.
+
+Yeah, all looks fine to me.
+
+-- 
+viresh
