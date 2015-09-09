@@ -1,68 +1,58 @@
-From: Hans de Goede <hdegoede@redhat.com>
-Subject: Re: [PATCH] ahci: qoriq: fixed using uninitialized variable warnings
-Date: Wed, 9 Sep 2015 12:57:19 +0200
-Message-ID: <55F0108F.30609@redhat.com>
-References: <1441790182-20248-1-git-send-email-Yuantian.Tang@freescale.com>
+From: Vaibhav Hiremath <vaibhav.hiremath-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH-v2 2/7] mmc: sdhci-pxav3: binding: Add pxa1928 compatible
+ support
+Date: Wed, 9 Sep 2015 16:34:59 +0530
+Message-ID: <55F0125B.6040500@linaro.org>
+References: <1441624721-15612-1-git-send-email-vaibhav.hiremath@linaro.org>
+ <1441624721-15612-3-git-send-email-vaibhav.hiremath@linaro.org>
+ <55EF740A.1020204@kernel.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=windows-1252; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-ide-owner@vger.kernel.org>
-In-Reply-To: <1441790182-20248-1-git-send-email-Yuantian.Tang@freescale.com>
-Sender: linux-ide-owner@vger.kernel.org
-To: Yuantian.Tang@freescale.com
-Cc: tj@kernel.org, linux-ide@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <55EF740A.1020204-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-
-On 09-09-15 11:16, Yuantian.Tang@freescale.com wrote:
-> From: Tang Yuantian <Yuantian.Tang@freescale.com>
->
-> kbuild test robot reports the warnings:
-> drivers/ata/ahci_qoriq.c: In function 'ahci_qoriq_hardreset':
->>> include/asm-generic/io.h:163:2: warning: 'px_is' may be used
->>> uninitialized in this function [-Wuninitialized]
-> drivers/ata/ahci_qoriq.c:70:14: note: 'px_is' was declared here
->>> include/asm-generic/io.h:163:2: warning: 'px_cmd' may be used
->>> uninitialized in this function [-Wuninitialized]
-> drivers/ata/ahci_qoriq.c:70:6: note: 'px_cmd' was declared here
->
-> This patch fixed it by assigning 0 to px_is and px_cmd variables.
-> This patch also remove line 'struct ccsr_ahci *reg_base' which is
-> not referred by any other codes and thus a dead one.
->
-> Signed-off-by: Tang Yuantian <Yuantian.Tang@freescale.com>
-
-LGTM: Acked-by: Hans de Goede <hdegoede@redhat.com>
-
-Regards,
-
-Hans
 
 
-> ---
->   drivers/ata/ahci_qoriq.c | 3 +--
->   1 file changed, 1 insertion(+), 2 deletions(-)
+On Wednesday 09 September 2015 05:19 AM, Rob Herring wrote:
+> On 09/07/2015 06:18 AM, Vaibhav Hiremath wrote:
+>> With support for pxa1928 family of devices , this patch
+>> updates the binding document with compatible property
+>> of "marvell,pxav3-1928-sdhci".
+>>
+>> Signed-off-by: Vaibhav Hiremath <vaibhav.hiremath-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+>> ---
+>>   Documentation/devicetree/bindings/mmc/sdhci-pxa.txt | 2 +-
+>>   1 file changed, 1 insertion(+), 1 deletion(-)
+>>
+>> diff --git a/Documentation/devicetree/bindings/mmc/sdhci-pxa.txt b/Documentation/devicetree/bindings/mmc/sdhci-pxa.txt
+>> index 3d1b449..29edcf5 100644
+>> --- a/Documentation/devicetree/bindings/mmc/sdhci-pxa.txt
+>> +++ b/Documentation/devicetree/bindings/mmc/sdhci-pxa.txt
+>> @@ -5,7 +5,7 @@ and the properties used by the sdhci-pxav2 and sdhci-pxav3 drivers.
+>>
+>>   Required properties:
+>>   - compatible: Should be "mrvl,pxav2-mmc", "mrvl,pxav3-mmc" or
+>> -  "marvell,armada-380-sdhci".
+>> +  "marvell,armada-380-sdhci" or "marvell,pxav3-1928-sdhci".
 >
-> diff --git a/drivers/ata/ahci_qoriq.c b/drivers/ata/ahci_qoriq.c
-> index e5e4988..f790852 100644
-> --- a/drivers/ata/ahci_qoriq.c
-> +++ b/drivers/ata/ahci_qoriq.c
-> @@ -49,7 +49,6 @@ enum ahci_qoriq_type {
->   };
+> v3 is implied by pxa1928. So I'd just do "marvell,pxa1928-sdhci" to
+> better match the chip name.
 >
->   struct ahci_qoriq_priv {
-> -	struct ccsr_ahci *reg_base;
->   	enum ahci_qoriq_type type;
->   	void __iomem *ecc_addr;
->   };
-> @@ -67,7 +66,7 @@ static int ahci_qoriq_hardreset(struct ata_link *link, unsigned int *class,
->   {
->   	const unsigned long *timing = sata_ehc_deb_timing(&link->eh_context);
->   	void __iomem *port_mmio = ahci_port_base(link->ap);
-> -	u32 px_cmd, px_is, px_val;
-> +	u32 px_cmd = 0, px_is = 0, px_val;
->   	struct ata_port *ap = link->ap;
->   	struct ahci_port_priv *pp = ap->private_data;
->   	struct ahci_host_priv *hpriv = ap->host->private_data;
->
+
+Ok, No issues.
+
+I followed the existing "armada-380-sdhci" naming style.
+Will correct it in next version.
+
+
+Thanks,
+Vaibhav
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
