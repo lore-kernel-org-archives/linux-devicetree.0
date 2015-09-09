@@ -1,144 +1,152 @@
 From: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-Subject: Re: [PATCH] power: bq24261_charger: Add support for TI BQ24261 charger
-Date: Wed, 09 Sep 2015 13:17:11 +0900
-Message-ID: <55EFB2C7.30800@samsung.com>
-References: <1441560187-23611-1-git-send-email-ramakrishna.pallala@intel.com>
- <CAJKOXPfDu+LxoiQrV+CsqUbEVwYb1Zmk-m9y-L_1JxrB6ouS0g@mail.gmail.com>
- <20150909022617.GA32255@beast>
+Subject: Re: [PATCH v2 13/13] dt: power: bq2425x-charger: Cover additional
+ devices
+Date: Wed, 09 Sep 2015 13:58:09 +0900
+Message-ID: <55EFBC61.1050405@samsung.com>
+References: <1441757557-7266-1-git-send-email-dannenberg@ti.com>
+ <1441757557-7266-14-git-send-email-dannenberg@ti.com>
+ <55EF7CDA.9030505@samsung.com> <20150909024841.GB32255@beast>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=windows-1252
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-pm-owner@vger.kernel.org>
-In-reply-to: <20150909022617.GA32255@beast>
+In-reply-to: <20150909024841.GB32255@beast>
 Sender: linux-pm-owner@vger.kernel.org
 To: Andreas Dannenberg <dannenberg@ti.com>
-Cc: Ramakrishna Pallala <ramakrishna.pallala@intel.com>, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, Sebastian Reichel <sre@kernel.org>, Jenny TC <jenny.tc@intel.com>
+Cc: Sebastian Reichel <sre@kernel.org>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, David Woodhouse <dwmw2@infradead.org>, Laurentiu Palcu <laurentiu.palcu@intel.com>, Ramakrishna Pallala <ramakrishna.pallala@intel.com>, linux-pm@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 09.09.2015 11:26, Andreas Dannenberg wrote:
-> On Mon, Sep 07, 2015 at 12:57:56PM +0900, Krzysztof Kozlowski wrote:
->> 2015-09-07 2:23 GMT+09:00 Ramakrishna Pallala <ramakrishna.pallala@intel.com>:
+On 09.09.2015 11:48, Andreas Dannenberg wrote:
+> On Wed, Sep 09, 2015 at 09:27:06AM +0900, Krzysztof Kozlowski wrote:
+>> On 09.09.2015 09:12, Andreas Dannenberg wrote:
+>>> Extend the bq2425x charger's device tree documentation to cover the
+>>> bq24250 and bq24257 devices as well as recent feature additions.
 >>>
->>> Add new charger driver support for BQ24261 charger IC.
->>>
->>> BQ24261 charger driver relies on extcon notifications to get the
->>> charger cable type and based on that it will set the charging parameters.
->>>
->>> Signed-off-by: Ramakrishna Pallala <ramakrishna.pallala@intel.com>
->>> Signed-off-by: Jennt TC <jenny.tc@intel.com>
+>>> Signed-off-by: Andreas Dannenberg <dannenberg@ti.com>
+>>
+>> Hi,
+>>
+>> Thanks for updates. Everything pointed previous looks good. After
+>> looking at Ramakrishna Pallala's (Cc-ed) patch ("power: bq24261_charger:
+>> Add support for TI BQ24261 charger") I have only one comment below.
+> 
+> Thanks for all your efforts and time checking those patches!
+> 
+>>
 >>> ---
->>>  .../devicetree/bindings/power/bq24261.txt          |   37 +
->>>  drivers/power/Kconfig                              |    6 +
->>>  drivers/power/Makefile                             |    1 +
->>>  drivers/power/bq24261_charger.c                    | 1208 ++++++++++++++++++++
->>>  include/linux/power/bq24261_charger.h              |   27 +
->>>  5 files changed, 1279 insertions(+)
->>>  create mode 100644 Documentation/devicetree/bindings/power/bq24261.txt
->>>  create mode 100644 drivers/power/bq24261_charger.c
->>>  create mode 100644 include/linux/power/bq24261_charger.h
+>>>  .../devicetree/bindings/power/bq24257.txt          | 21 -------
+>>>  .../devicetree/bindings/power/bq2425x.txt          | 70 ++++++++++++++++++++++
+>>>  2 files changed, 70 insertions(+), 21 deletions(-)
+>>>  delete mode 100644 Documentation/devicetree/bindings/power/bq24257.txt
+>>>  create mode 100644 Documentation/devicetree/bindings/power/bq2425x.txt
 >>>
->>> diff --git a/Documentation/devicetree/bindings/power/bq24261.txt b/Documentation/devicetree/bindings/power/bq24261.txt
+>>> diff --git a/Documentation/devicetree/bindings/power/bq24257.txt b/Documentation/devicetree/bindings/power/bq24257.txt
+>>> deleted file mode 100644
+>>> index 5c9d394..0000000
+>>> --- a/Documentation/devicetree/bindings/power/bq24257.txt
+>>> +++ /dev/null
+>>> @@ -1,21 +0,0 @@
+>>> -Binding for TI bq24257 Li-Ion Charger
+>>> -
+>>> -Required properties:
+>>> -- compatible: Should contain one of the following:
+>>> - * "ti,bq24257"
+>>> -- reg:			   integer, i2c address of the device.
+>>> -- ti,battery-regulation-voltage: integer, maximum charging voltage in uV.
+>>> -- ti,charge-current:	   integer, maximum charging current in uA.
+>>> -- ti,termination-current:  integer, charge will be terminated when current in
+>>> -			   constant-voltage phase drops below this value (in uA).
+>>> -
+>>> -Example:
+>>> -
+>>> -bq24257 {
+>>> -	compatible = "ti,bq24257";
+>>> -	reg = <0x6a>;
+>>> -
+>>> -	ti,battery-regulation-voltage = <4200000>;
+>>> -	ti,charge-current = <1000000>;
+>>> -	ti,termination-current = <50000>;
+>>> -};
+>>> diff --git a/Documentation/devicetree/bindings/power/bq2425x.txt b/Documentation/devicetree/bindings/power/bq2425x.txt
 >>> new file mode 100644
->>> index 0000000..25fc5c4
+>>> index 0000000..3e171c3
 >>> --- /dev/null
->>> +++ b/Documentation/devicetree/bindings/power/bq24261.txt
->>> @@ -0,0 +1,37 @@
->>> +Binding for TI bq24261 Li-Ion Charger
->>
->> Please split the bindings into separate patch (the first patch in patchset).
->>
+>>> +++ b/Documentation/devicetree/bindings/power/bq2425x.txt
+>>> @@ -0,0 +1,70 @@
+>>> +Binding for TI bq2425x Li-Ion Charger
 >>> +
 >>> +Required properties:
 >>> +- compatible: Should contain one of the following:
->>> +    * "ti,bq24261"
+>>> + * "ti,bq24250"
+>>> + * "ti,bq24251"
+>>> + * "ti,bq24257"
 >>> +- reg: integer, i2c address of the device.
->>> +- ti,charge-current: integer, default charging current (in mA);
->>> +- ti,charge-voltage: integer, default charging voltage (in mV);
+>>> +- stat-gpios: GPIO used for the devices STAT_IN pin. Alternatively the pin can
+>>> +    also be defined through the standard interrupt definition properties (see
+>>> +    optional properties section below). Only use one method.
+>>> +- ti,battery-regulation-voltage: integer, maximum charging voltage in uV.
+>>> +- ti,charge-current: integer, maximum charging current in uA.
 >>> +- ti,termination-current: integer, charge will be terminated when current in
->>> +    constant-voltage phase drops below this value (in mA);
->>> +- ti,max-charge-current: integer, maximum charging current (in mA);
->>> +- ti,max-charge-voltage: integer, maximum charging voltage (in mV);
->>> +- ti,min-charge-temperature: integer, minimum charging temperature (in DegC);
->>> +- ti,max-charge-temperature: integer, maximum charging temperature (in DegC).
->>
->> Before accepting "[PATCH 13/13] dt: power: bq24257-charger: Cover
->> additional devices"
->> http://www.spinics.net/lists/devicetree/msg92134.html
->>
->> could you and Andreas figure out common bindings? Look at this:
->>
->> +- ti,charge-current: integer, maximum charging current in uA.
->> +- ti,charge-current: integer, default charging current (in mA);
->>
->> Different meaning and different units. This is madness! :)
->>
->> In the same time you are adding TI-common bindings (not device
->> specific, there is no prefix) so I would expect exactly the same
->> bindings if it is possible.
-> 
-> Krzysztof, good observation! In bq2425x_charger.c (formerly known as
-> bq24257_charger.c :) that I worked on the unit used was uA. At that time
-> I did a quick check and there didn't seem to be a clear standard whether
-> to use the "micro" or "milli" units - different drivers use different
-> units. However there seems to be a tendency for the TI drivers to prefer
-> "milli" (bq2415x_charger.c, bq24735-charger.c)
-> 
-> Personally I think "milli" units are more appropriate for chargers since
-> they provide sufficient granularity and the numbers don't become too big
-> (try typing a voltage in the Volt-range in uV, it's very easy to get the
-> number of 0s wrong). However since the driver was already there I left
-> that aspect alone to preserve compatibility.
-
-I am fine with both units but milli indeed seems easier to judge by fast
-looking and less error-prone. Whatever you choose - choose the same one. :)
-
-
+>>> +    constant-voltage phase drops below this value (in uA).
 >>> +
 >>> +Optional properties:
->>> +- ti,thermal-sensing: boolean, if present thermal regulation will be enabled;
+>>> +- pg-gpios: GPIO used for connecting the bq2425x device PG (Power Good) pin.
+>>> +    This pin is not available on all devices however it should be used if
+>>> +    possible as this is the recommended way to obtain the charger's input PG
+>>> +    state. If this pin is not specified a software-based approach for PG
+>>> +    detection is used.
+>>> +- ti,current-limit: The maximum current to be drawn from the charger's input
+>>> +    (in uA). If this property is not specified a USB D+/D- signal based charger
+>>> +    type detection is used (if available) and the input limit current is set
+>>> +    accordingly. If the D+/D- based detection is not available on a given device
+>>> +    a default of 500,000 is used (=500mA).
 >>
->> What is the requirement for thermal-sensing? Can it be enabled always?
->> If yes, then this is not really a hardware property.
->>
->>> +- ti,enable-user-write: boolean, if present driver will allow the user space
->>> +    to control the charging current and voltage through sysfs;
->>
->> This is not DT property. It does not describe hardware.
+>> I understand this is different property than "ti,charge-current:
+>> integer, default charging current (in mA)" from bq24261_charger patch?
 > 
-> I take responsibility for this one :) In an earlier thread we were
-> discussing that it will be better to prevent sysfs write access to
-> "dangerous" charger parameters (charge voltage, current, ...) but I
-> argued that such access might still be desirable during development and
-> debug, and that a DT property could be used to allow such write access
-> (with the default being the charger properties being made read-only) -
-> this way giving the best of both worlds. However then when I updated the
-> bq24157_charger.c driver I ended up not really needing and implementing
-> this feature.
+> Correct this is what "ti,current-limit" is for. And I borrowed that
+> definition from bq2415x_charger.c where it's used in the same context.
+> The reason for this property to exist is for systems where the external
+> power supply does more than just charging the battery, such as supplying
+> the system while it's charging or after it has finished charging. All
+> this only makes sense of course if the "ti,current-limit" is larger than
+> "ti,charge-current".
 > 
-> Out of curiosity, if it against best-practice to expose non hardware
-> properties, how would one best address the above use case? Compile time
-> switch? A sysfs property that allows write-enabling the other sysfs
-> properties (doesn't sound right). Or...?
+> And if you see a few lines above the bq24257 driver also has a
+> "ti,charge-current" property. And yes this is what actually controls how
+> much current is delivered to the battery.
 
-Device Tree describes only the hardware configuration. This means that
-it does not fully replaces platform data. Definitely DT should not be
-used to configure debug options.
+Right, I missed that one. Everything is clear now.
 
-AFAIU, you have some board (always the same type of board) and:
-1. during development you want to enable certain sysfs dangerous
-operation/feature,
-2. for production use you want to disable this feature?
+So we have different bindings. Existing ones:
+bq2415x.txt - ti,charge-current - maximum charging current in mA
+bq24257.txt - ti,charge-current - maximum charging current in uA
+bq25890.txt - ti,charge-current - maximum charging current in uA
+bq24735.txt - ti,charge-current - charge current (?) in mA
+bq2415x.txt - ti,current-limit  - maximum current to be drawn in mA
 
-This means that the "feature" would be present in mainline kernel always
-so it is not possible to disallow the use of it. For example if this was
-implemented in DT, the user could replace a DT with different one.
+New bindings:
+ti,charge-current (bq24261) - default charge current in mA
+ti,max-charge-current (bq24261) - maximum charging current in mA
+ti,current-limit (bq2425x) - maximum current to be drawn in uA
 
-Assuming that this feature should be in mainline kernel at all, then
-probably compile time option is the best way. Some subsystems don't
-offer dangerous operations (e.g. setting voltage for regulators or force
-suspending devices) but they provide certain development drivers which
-expose such interfaces. Such cases should be rather done per subsystem,
-not per device.
+
+Damn it... It's a mess. And there is no device prefixes...
+
+The bq24261's bindings look most sensible (max prefix for max charge
+current) but they are not compatible with existing bindings for
+different devices.
+
+There is no way to unify or make consistent all of these bindings.
+However one could try to add new stuff in a more sensible way. For
+example how about (for bq2425x-charger and bq24261_charger... BTW notice
+even the difference in using underscore and hyphen!):
+
+ti,charge-current - maximum charging current in uA
+(that one must be supported, it's for existing bq24257 devices)
+ti,default-charge-current (bq24261) - default charge current in *uA*
+ti,current-limit (bq2425x) - maximum current to be drawn in *uA*
+
 
 Best regards,
 Krzysztof
