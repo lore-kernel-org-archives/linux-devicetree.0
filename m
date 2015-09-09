@@ -1,44 +1,72 @@
-From: Alexander Stein <alexanders83-S0/GAf8tV78@public.gmane.org>
-Subject: Re: [PATCH v5 0/6] bcm2835: auxiliar device support for spi
-Date: Wed, 09 Sep 2015 11:00:43 +0200
-Message-ID: <2757852.TDqE8OEVr2@ws-stein>
-References: <1441359711-2800-1-git-send-email-kernel@martin.sperl.org> <87h9n4weg8.fsf@eliezer.anholt.net>
+From: Alexander Couzens <lynxis-qyMx1GtpvWw@public.gmane.org>
+Subject: Re: [PATCH 1/2] MIPS: ath79: set missing irq ack handler for
+ ar7100-misc-intc irq chip
+Date: Wed, 9 Sep 2015 11:04:06 +0200
+Message-ID: <20150909110406.2e4a4f97@lazus.yip>
+References: <1441251262-13335-1-git-send-email-lynxis@fe80.eu>
+	<1441251262-13335-2-git-send-email-lynxis@fe80.eu>
+	<20150903103245.21dc9dd7@avionic-0020>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <87h9n4weg8.fsf-omZaPlIz5HhaEpDpdNBo/KxOck334EZe@public.gmane.org>
-Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>, kernel-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Lee Jones <lee-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ boundary="Sig_/mTYCrXriuVUD985kG3i33J3"; protocol="application/pgp-signature"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20150903103245.21dc9dd7@avionic-0020>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Alban <albeu-GANU6spQydw@public.gmane.org>
+Cc: linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-On Tuesday 08 September 2015 18:48:07, Eric Anholt wrote:
-> I finally had a chance to sit down and look at what the hardware's doing
-> with the enable bit (also, I've read a whole lot more of the hardware
-> now, so I'm a lot faster at answering questions like this).  The enable
-> bits are a clock gate off of the VPU clock.
+--Sig_/mTYCrXriuVUD985kG3i33J3
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Are any hardware documents about such things available (in public)?
+On Thu, 3 Sep 2015 10:32:45 +0200
+Alban <albeu-GANU6spQydw@public.gmane.org> wrote:
 
-> I knocked together the enable bits as a clock gate driver, since I'd
-> just written very similar code for the audio domain clock driver (and I
-> assume you are grumpy about how much time you've spent on this one
-> stupid register).  It's up at
-> https://github.com/anholt/linux/tree/bcm2835-clock-aux and I can submit
-> it if you like the result.  I've compile tested it only, but I'm hoping
-> you could just drop your aux SPI driver on top of it and have things
-> work.
+> > -IRQCHIP_DECLARE(ath79_misc_intc, "qca,ar7100-misc-intc",
+> > -		ath79_misc_intc_of_init);
+> > +
+> > +static int __init ar7100_misc_intc_of_init(
+> > +	struct device_node *node, struct device_node *parent)
+> > +{
+> > +	pr_info("IRQ: Setup ar7100 misc IRQ controller from
+> > devicetree.\n");
+>=20
+> Debug left over?
 
-IMHO line 45 (https://github.com/anholt/linux/commit/facb4ba917a1b9f6c2ee0cea7d529acf55f584dd#diff-1b6f753c132811b3f6d70f5b31866950R45) should be like this
-> onecell->clks = kzalloc(sizeof(*onecell->clks) * BCM2835_AUX_CLOCK_COUNT, GFP_KERNEL);
-or you will only allocate a single struct clk*.
+I'll remove it in next patch. I added it because you mentioned a log
+message in your last review.
 
-Best regards,
-Alexander
+> On Mon, 10 Aug 2015 20:11:14 +0200
+> Alban <albeu-GANU6spQydw@public.gmane.org> wrote:
+>> Mon, 10 Aug 2015 20:11:14 +0200
+>> A log message would be nice. IMHO it should mention that the ACK
+>> callbacks have been missed when introducing OF support.
 
+--Sig_/mTYCrXriuVUD985kG3i33J3
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQIcBAEBCAAGBQJV7/YHAAoJEMKenaag34YEPbQQAJZIno5m8B629KfceUaaVgwA
+I0q9PVcRBxr7mLW/DXdj/fsTLQ+A0XjuvdTqzxWTRo1SmhFlg/6oobw8w2+7QqJv
+CJSFP2l7cd12RYEKWbn7SpkfRgSJZ06T2cgVQUnSvZfqD4796YjLVmxBub1xH6N+
+L0Xz7X8OjnHpEbrtXmxOPA34qZyGbgx3lf1IbVRWrgyuEJTLP7NqQZdYwS4cH9gf
+l7eqTmfj+TpTZTn6iB5at1+a6zw1r6ay/vDGwBDScZoZcFnk9qSqf5x2YOiceBPj
+BaBx3EmXGrSCeZfdW3H4FcHXlEDPVAooc7TbR3T8dC1pKys8euCzaAfvQ2SEi2GH
+P9iYC9sQ/2ThoQyJrOv/eNW8ftQvqaek89aND3o1lQZQT/wwFbWcnk1l55GvPvyF
+lfcL/DcVwcd0hvXy2qqlq6va3++e+HWsE8u4yS7i/rluX6lzBC/Iwk6c0MNOgzNi
+sbHBV0sk1R1geFE5si38zz91YXhntU0pmAnA4QRWlr7HJbBhy/+llirew4sidem9
+u+h5YCU79xJ6JJr2WaoMJz7DFEFeAJlROem9x8L3pRBiGpTzUQcM5vU+P5g6Gnh3
+bSOJGhpxxuLjStBM2hqZGGGCLq4l6biBva8pmzy0FoTqobitS/3hrIKOxgp/3bz6
+cJQ3NLbgk6OOpnfOU2oK
+=gOkz
+-----END PGP SIGNATURE-----
+
+--Sig_/mTYCrXriuVUD985kG3i33J3--
 --
-To unsubscribe from this list: send the line "unsubscribe linux-spi" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
