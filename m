@@ -1,52 +1,53 @@
-From: Murali Karicheri <m-karicheri2@ti.com>
-Subject: Re: [PATCH v1 1/2] soc: ti: display firmware file name as part of
- boot log
-Date: Wed, 9 Sep 2015 13:23:23 -0400
-Message-ID: <55F06B0B.5020100@ti.com>
-References: <1441403199-10936-1-git-send-email-m-karicheri2@ti.com> <55EA673F.8010904@oracle.com> <55F06075.6050405@ti.com> <55F06879.3060000@oracle.com>
+From: Andreas Dannenberg <dannenberg@ti.com>
+Subject: Re: [PATCH] power: bq24261_charger: Add support for TI BQ24261
+ charger
+Date: Wed, 9 Sep 2015 12:31:48 -0500
+Message-ID: <20150909173147.GA9887@beast>
+References: <1441560187-23611-1-git-send-email-ramakrishna.pallala@intel.com>
+ <CAJKOXPfDu+LxoiQrV+CsqUbEVwYb1Zmk-m9y-L_1JxrB6ouS0g@mail.gmail.com>
+ <20150909022617.GA32255@beast>
+ <55EFB2C7.30800@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <55F06879.3060000@oracle.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: "santosh.shilimkar@oracle.com" <santosh.shilimkar@oracle.com>, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk, ssantosh@kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="us-ascii"
+Return-path: <linux-pm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <55EFB2C7.30800@samsung.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: Krzysztof Kozlowski <k.kozlowski@samsung.com>, laurentiu.palcu@intel.com
+Cc: Ramakrishna Pallala <ramakrishna.pallala@intel.com>, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, Sebastian Reichel <sre@kernel.org>, Jenny TC <jenny.tc@intel.com>
 List-Id: devicetree@vger.kernel.org
 
-On 09/09/2015 01:12 PM, santosh.shilimkar@oracle.com wrote:
-> On 9/9/15 9:38 AM, Murali Karicheri wrote:
->> On 09/04/2015 11:53 PM, santosh.shilimkar@oracle.com wrote:
->>> On 9/4/15 5:46 PM, Murali Karicheri wrote:
->>>> To help the user, print the PDSP file name as part of
->>>> knav_queue_load_pdsp(). This will be useful for users to know what
->>>> version of the firmware is loaded to PDSP. Also update the
->>>> document for the location of the QMSS accumulator PDSP firmware.
->>>>
->>>> Signed-off-by: Murali Karicheri <m-karicheri2@ti.com>
->>>> ---
->>>
->>> Looks fine. Will pick both the patches.
->>>
->>
->> Thanks Santhosh.
->>
->> Is there a requirement to add the firmware to linux-firmware.git. Right
->> now I have provided link to ti git repo that has the firmware. I have
->> the patch ready in case this is required. Do you know?
->>
-> Standard distro's will look for linux-firmware.git as a source to get
-> the firmware files used by kernel so yes, you should add these firmware
-> files to that repo.
-Ok. Will send a patch for this.
+On Wed, Sep 09, 2015 at 01:17:11PM +0900, Krzysztof Kozlowski wrote:
+> On 09.09.2015 11:26, Andreas Dannenberg wrote:
+> > Krzysztof, good observation! In bq2425x_charger.c (formerly known as
+> > bq24257_charger.c :) that I worked on the unit used was uA. At that time
+> > I did a quick check and there didn't seem to be a clear standard whether
+> > to use the "micro" or "milli" units - different drivers use different
+> > units. However there seems to be a tendency for the TI drivers to prefer
+> > "milli" (bq2415x_charger.c, bq24735-charger.c)
+> > 
+> > Personally I think "milli" units are more appropriate for chargers since
+> > they provide sufficient granularity and the numbers don't become too big
+> > (try typing a voltage in the Volt-range in uV, it's very easy to get the
+> > number of 0s wrong). However since the driver was already there I left
+> > that aspect alone to preserve compatibility.
+> 
+> I am fine with both units but milli indeed seems easier to judge by fast
+> looking and less error-prone. Whatever you choose - choose the same one. :)
 
-Murali
->
-> Regards,
-> Santosh
->
->
+Ok sounds good. If so, I could go ahead and change the units in the
+bq2425x_charger.c over to mA and mV? It would be a bit labor some and I
+also want to see what Laurentiu thinks but this way we could have most
+of those TI charger drivers use the same units (the new bq24261 driver
+Ram posted also uses mA/mV). Except bq25890_charger.c.... that would
+still use uA/uV....
 
+Laurentiu -- what made you chose the "micro" units for bq24257_charger.c
+and bq25890_charger.c?
 
--- 
-Murali Karicheri
-Linux Kernel, Keystone
+Thanks,
+
+--
+Andreas Dannenberg
+Texas Instruments Inc
+
