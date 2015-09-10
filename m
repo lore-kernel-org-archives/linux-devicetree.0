@@ -1,75 +1,84 @@
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [PATCHv2 2/3] devicetree: Add new ANX7814 SlimPort transmitter
- binding.
-Date: Thu, 10 Sep 2015 18:37:57 +0300
-Message-ID: <2441988.GBbudkNyP4@avalon>
-References: <1441697120-3876-1-git-send-email-enric.balletbo@collabora.com>
- <55EF8009.6070009@kernel.org>
- <CAFqH_50BZPNbKhQrT+8fNEeFHUsGF0Bzdn-TKMzDTtF9ftetYg@mail.gmail.com>
+From: =?UTF-8?Q?Noralf_Tr=c3=b8nnes?= <noralf@tronnes.org>
+Subject: Re: [PATCH v5 0/6] bcm2835: auxiliar device support for spi
+Date: Thu, 10 Sep 2015 17:48:33 +0200
+Message-ID: <55F1A651.5090102@tronnes.org>
+References: <1441359711-2800-1-git-send-email-kernel@martin.sperl.org>
+ <87h9n4weg8.fsf@eliezer.anholt.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <CAFqH_50BZPNbKhQrT+8fNEeFHUsGF0Bzdn-TKMzDTtF9ftetYg@mail.gmail.com>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: dri-devel@lists.freedesktop.org
-Cc: devel@driverdev.osuosl.org, Rob Herring <robh@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-kernel@vger.kernel.org, Sjoerd Simons <sjoerd.simons@collabora.co.uk>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, span@analogixsemi.com, Kumar Gala <galak@codeaurora.org>, Mark Rutland <mark.rutland@arm.com>, Javier Martinez Canillas <javier@dowhile0.org>, Nathan Chung <nathan.chung@mediatek.com>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <87h9n4weg8.fsf@eliezer.anholt.net>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Eric Anholt <eric@anholt.net>, kernel@martin.sperl.org, Stephen Warren <swarren@wwwdotorg.org>, Lee Jones <lee@kernel.org>, Russell King <linux@arm.linux.org.uk>, Mark Brown <broonie@kernel.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org, linux-rpi-kernel@lists.infradead.org, linux-spi@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Phil <phil@raspberrypi.org>
 List-Id: devicetree@vger.kernel.org
 
-SGkgRW5yaWMsCgpPbiBUaHVyc2RheSAxMCBTZXB0ZW1iZXIgMjAxNSAxNjoxMTowMyBFbnJpYyBC
-YWxsZXRibyBTZXJyYSB3cm90ZToKPiAyMDE1LTA5LTA5IDI6NDAgR01UKzAyOjAwIFJvYiBIZXJy
-aW5nIDxyb2JoQGtlcm5lbC5vcmc+Ogo+ID4gT24gMDkvMDgvMjAxNSAwMjoyNSBBTSwgRW5yaWMg
-QmFsbGV0Ym8gaSBTZXJyYSB3cm90ZToKPiA+PiBUaGUgQU5YNzgxNCBpcyBhbiB1bHRyYS1sb3cg
-cG93ZXIgRnVsbC1IRCAoMTA4MHA2MCkgU2xpbVBvcnQgdHJhbnNtaXR0ZXIKPiA+PiBkZXNpZ25l
-ZCBmb3IgcG9ydGFibGUgZGV2aWNlcy4KPiA+PiAKPiA+PiBZb3UgY2FuIGFkZCBzdXBwb3J0IHRv
-IHlvdXIgYm9hcmQgd2l0aCBjdXJyZW50IGJpbmRpbmcuCj4gPj4gCj4gPj4gRXhhbXBsZToKPiA+
-PiAgICAgICBhbng3ODE0OiBhbng3ODE0QDM4IHsKPiA+PiAgICAgICAgICAgICAgIGNvbXBhdGli
-bGUgPSAiYW5hbG9naXgsYW54NzgxNCI7Cj4gPj4gICAgICAgICAgICAgICByZWcgPSA8MHgzOD47
-Cj4gPj4gICAgICAgICAgICAgICBwZC1ncGlvcyA9IDwmZ3BpbzAgMSBHUElPX0FDVElWRV9ISUdI
-PjsKPiA+PiAgICAgICAgICAgICAgIHJlc2V0LWdwaW9zID0gPCZncGlvMCAyIEdQSU9fQUNUSVZF
-X0hJR0g+Owo+ID4+ICAgICAgIH07Cj4gPj4gCj4gPj4gU2lnbmVkLW9mZi1ieTogRW5yaWMgQmFs
-bGV0Ym8gaSBTZXJyYSA8ZW5yaWMuYmFsbGV0Ym9AY29sbGFib3JhLmNvbT4KPiA+PiAtLS0KPiA+
-PiAKPiA+PiAgLi4uL2RldmljZXRyZWUvYmluZGluZ3MvdmlkZW8vYW54NzgxNC50eHQgICAgICAg
-ICAgfCAyMiArKysrKysrKysrKysrKysrCj4gPj4gIDEgZmlsZSBjaGFuZ2VkLCAyMiBpbnNlcnRp
-b25zKCspCj4gPj4gIGNyZWF0ZSBtb2RlIDEwMDY0NCBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUv
-YmluZGluZ3MvdmlkZW8vYW54NzgxNC50eHQKPiA+PiAKPiA+PiBkaWZmIC0tZ2l0IGEvRG9jdW1l
-bnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3ZpZGVvL2FueDc4MTQudHh0Cj4gPj4gYi9Eb2N1
-bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvdmlkZW8vYW54NzgxNC50eHQgbmV3IGZpbGUg
-bW9kZQo+ID4+IDEwMDY0NAo+ID4+IGluZGV4IDAwMDAwMDAuLmE4Y2M3NDYKPiA+PiAtLS0gL2Rl
-di9udWxsCj4gPj4gKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3ZpZGVv
-L2FueDc4MTQudHh0Cj4gPj4gQEAgLTAsMCArMSwyMiBAQAo+ID4+ICtBbmFsb2dpeCBBTlg3ODE0
-IFNsaW1Qb3J0IChGdWxsLUhEIFRyYW5zbWl0dGVyKQo+ID4+ICstLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLQo+ID4+ICsKPiA+PiArVGhlIEFOWDc4MTQgaXMg
-YW4gdWx0cmEtbG93IHBvd2VyIEZ1bGwtSEQgKDEwODBwNjApIFNsaW1Qb3J0IHRyYW5zbWl0dGVy
-Cj4gPj4gK2Rlc2lnbmVkIGZvciBwb3J0YWJsZSBkZXZpY2VzLgo+ID4+ICsKPiA+PiArUmVxdWly
-ZWQgcHJvcGVydGllczoKPiA+PiArCj4gPj4gKyAtIGNvbXBhdGlibGUgICAgICAgIDogImFuYWxv
-Z2l4LGFueDc4MTQiCj4gPj4gKyAtIHJlZyAgICAgICAgICAgICAgIDogSTJDIGFkZHJlc3Mgb2Yg
-dGhlIGRldmljZQo+ID4+ICsgLSBwZC1ncGlvcyAgOiBXaGljaCBHUElPIHRvIHVzZSBmb3IgcG93
-ZXIgZG93bgo+ID4+ICsgLSByZXNldC1ncGlvcyAgICAgICA6IFdoaWNoIEdQSU8gdG8gdXNlIGZv
-ciByZXNldAo+ID4+ICsKPiA+PiArRXhhbXBsZToKPiA+PiArCj4gPj4gKyAgICAgYW54NzgxNDog
-YW54NzgxNEAzOCB7Cj4gPj4gKyAgICAgICAgICAgICBjb21wYXRpYmxlID0gImFuYWxvZ2l4LGFu
-eDc4MTQiOwo+ID4+ICsgICAgICAgICAgICAgcmVnID0gPDB4Mzg+Owo+ID4+ICsgICAgICAgICAg
-ICAgcGQtZ3Bpb3MgPSA8JmdwaW8wIDEgR1BJT19BQ1RJVkVfSElHSD47Cj4gPj4gKyAgICAgICAg
-ICAgICByZXNldC1ncGlvcyA9IDwmZ3BpbzAgMiBHUElPX0FDVElWRV9ISUdIPjsKPiA+IAo+ID4g
-Tm8gcG9ydHMgbmVlZGVkIGZvciBkZXNjcmliaW5nIGRhdGEgY29ubmVjdGlvbnM/Cj4gCj4gSU1I
-TyBJJ20gbm90IHN1cmUgaWYgdGhpcyBpcyBhcHBsaWNhYmxlIGhlcmUsIGluIHRoaXMgY2FzZSB0
-aGUgYnJpZGdlCj4gaXMgdHJhbnNwYXJlbnQgc28gaXQncyBub3QgcmVxdWlyZWQgYW5vdGhlciBk
-ZXZpY2Ugbm9kZS4gRm9yIGV4YW1wbGUsCj4gSSd2ZSBhbiBldmFsdWF0aW9uIGJvYXJkLCB3aHJl
-IEkgY29ubmVjdCBpbiBvbmUgc2lkZSBhbiBIRE1JIGlucHV0Cj4gc2lnbmFsIGFuIGluIHRoZSBv
-dGhlciBzaWRlIGEgRFAgbW9uaXRvciwgdGhlIGRyaXZlciBvbmx5IGNvbmZpZ3VyZXMKPiB0aGUg
-Y2hpcCBhbmQgd2FpdHMgZm9yIGRpZmZlcmVudCBldmVudHMgKGNhYmxlIHBsdWcsIGNhYmxlIHVu
-cGx1ZywgZXRjCj4gLi4pCgpCdXQgd2hhdCBpZiB0aGUgY2hpcCBpcyBjb25uZWN0ZWQgdG8gYSBk
-aXNwbGF5IGNvbnRyb2xsZXIsIGZvciBpbnN0YW5jZSB0byB0aGUgCkhETUkgb3V0cHV0IG9mIGFu
-IFNvQyA/IElzIHRoYXQgYSB1c2UgY2FzZSBmb3IgdGhlIGhhcmR3YXJlID8KCi0tIApSZWdhcmRz
-LAoKTGF1cmVudCBQaW5jaGFydAoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRl
-c2t0b3Aub3JnCmh0dHA6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9k
-cmktZGV2ZWwK
+
+Den 09.09.2015 03:48, skrev Eric Anholt:
+> kernel@martin.sperl.org writes:
+>
+>> From: Martin Sperl <kernel@martin.sperl.org>
+>>
+>> The BCM2835 contains 3 auxiliar devices:
+>> * spi1
+>> * spi2
+>> * uart1
+>>
+>> All of those 3 devices are enabled/disabled via a shared register,
+>> which is set by default to be disabled.
+>>
+>> Access to this register needs to get serialized.
+>>
+>> So after several iterations of discussions with the following ideas:
+>> * syscon - device tree should describe HW not drivers to use -
+>>             'compatiblity = "brcm,bcm2835-aux-enable", "syscon";'
+>>             is not acceptable
+>> * regulator - it is not necessarily a regulator or a power gate
+>>                that is implemented in HW, so it is not valid to use
+>>                this framework
+>>
+>> The recommendation was made to create a new minimal API in soc
+>> just for access to this shared enable/disable register.
+>>
+>> This patch-series implements:
+>> * the bcm2835-auxiliar device enable/disable api in soc.
+>> * the bcm2835-auxiliar spi device driver
+>>
+>> The uart1 device driver (ns16550 based) is not implemented so far
+>> but would be using the same API.
+>>
+>> Both spi and uart drivers can run with shared interrupts,
+>> so there is no need for an interrupt-controller to get implemented.
+> I finally had a chance to sit down and look at what the hardware's doing
+> with the enable bit (also, I've read a whole lot more of the hardware
+> now, so I'm a lot faster at answering questions like this).  The enable
+> bits are a clock gate off of the VPU clock.
+>
+> I knocked together the enable bits as a clock gate driver, since I'd
+> just written very similar code for the audio domain clock driver (and I
+> assume you are grumpy about how much time you've spent on this one
+> stupid register).  It's up at
+> https://github.com/anholt/linux/tree/bcm2835-clock-aux and I can submit
+> it if you like the result.  I've compile tested it only, but I'm hoping
+> you could just drop your aux SPI driver on top of it and have things
+> work.
+>
+
+This looks interesting.
+But there's a challenge with the uart1 and the 8250 driver.
+
+Phil Elwell has this to say:
+This means that that UART1 isn't an exact clone of a 8250 UART.
+In a particular, the clock divisor is calculated differently.
+A standard 8250 derives the baud rate as clock/(divisor16),
+whereas the BCM2835 mini UART uses clock/(divisor8). This means
+that if you want to use the standard driver then you need to lie
+about the clock frequency, providing a value is twice the real
+value, in order for a suitable divisor to be calculated.
+
+Ref: https://github.com/raspberrypi/linux/pull/1008#issuecomment-139234607
+
+So either we need a new uart1 driver or a doubled clock freq. somehow.
+
+
+Noralf.
