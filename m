@@ -1,82 +1,92 @@
-From: "Jan Beulich" <JBeulich-IBi9RG/b67k@public.gmane.org>
-Subject: Re: [PATCH] efi/libstub/fdt: Standardize the names of EFI stub
- parameters
-Date: Thu, 10 Sep 2015 09:06:32 -0600
-Message-ID: <55F1B89802000078000A1C9B@prv-mh.provo.novell.com>
-References: <1441874516-11364-1-git-send-email-zhaoshenglong@huawei.com>
- <20150910095208.GA29293@leverpostej>
- <alpine.DEB.2.02.1509101116580.2672@kaball.uk.xensource.com>
- <20150910112418.GC29293@leverpostej>
- <alpine.DEB.2.02.1509101223580.2672@kaball.uk.xensource.com>
- <55F199DD02000078000A1B1E@prv-mh.provo.novell.com>
- <20150910145331.GJ29293@leverpostej>
+From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH 2/3] ARM: dts: sun5i: Add sun5i-q8-common.dtsi
+Date: Thu, 10 Sep 2015 17:05:39 +0200
+Message-ID: <55F19C43.2000601@redhat.com>
+References: <1441464953-26351-1-git-send-email-hdegoede@redhat.com>
+ <1441464953-26351-2-git-send-email-hdegoede@redhat.com>
+ <20150908143320.GB31584@lukather> <55EF529B.80401@redhat.com>
+ <20150909140156.GC9885@lukather>
+Reply-To: hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 8BIT
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20150910145331.GJ29293@leverpostej>
-Content-Disposition: inline
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: "Ian.Campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org" <Ian.Campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>, "julien.grall-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org" <julien.grall-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>, Stefano Stabellini <stefano.stabellini-mvvWK6WmYclDPfheJLI6IQ@public.gmane.org>, "freebsd-arm-h+KGxgPPiopAfugRpC6u6w@public.gmane.org" <freebsd-arm-h+KGxgPPiopAfugRpC6u6w@public.gmane.org>, "peter.huangpeng-hv44wF8Li93QT0dZR+AlfA@public.gmane.org" <peter.huangpeng-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, Shannon Zhao <zhaoshenglong-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, "matt.fleming-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org" <matt.fleming-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, "ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "christoffer.dall-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <christoffer.dall-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "leif.lindholm-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <leif.lindholm-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "shannon.zhao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <shannon.zhao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "xen-devel-GuqFBffKawuEi8DpZVb4nw@public.gmane.org" <xen-devel-GuqFBffKawuEi8DpZVb4nw@public.gmane.org>, "daniel.kiper-QHcLZuEGTsvQT0dZR+AlfA@public.gmane.org" <daniel.kiper-QHcLZuEGTsvQT0dZR+AlfA@public.gmane.org>, Konrad Rzeszutek Wilk <konrad.wilk-QHcLZuEGTsvQT0dZR+AlfA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Return-path: <linux-sunxi+bncBDRZXY4CYYORBSNYY2XQKGQEIAJCC4A-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <20150909140156.GC9885@lukather>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <http://groups.google.com/group/linux-sunxi/subscribe>
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
->>> On 10.09.15 at 16:53, <mark.rutland-5wv7dgnIgG8@public.gmane.org> wrote:
-> On Thu, Sep 10, 2015 at 01:55:25PM +0100, Jan Beulich wrote:
->> >>> On 10.09.15 at 13:37, <stefano.stabellini-mvvWK6WmYclDPfheJLI6IQ@public.gmane.org> wrote:
->> > On Thu, 10 Sep 2015, Mark Rutland wrote:
->> >> Why can't Xen give a virtual EFI interface to Dom0 / guests? e.g.
->> >> create pages of RuntimeServicesCode that are trivial assembly shims
->> >> doing hypercalls, and plumb these into the virtual EFI memory map and
->> >> tables?
->> >> 
->> >> That would keep things sane for any guest, allow for easy addition of
->> >> EFI features, and you could even enter the usual EFI entry point,
->> >> simulate ExitBootServices(), SetVirtualAddressMap(), and allow the guest
->> >> to make things sane for itself...
->> > 
->> > That's the way it was done on x86 and now we have common code both in
->> > Linux (drivers/xen/efi.c) and Xen (xen/common/efi) which implement this
->> > scheme.  Switching to a different solution for ARM, would mean diverging
->> > with x86, which is not nice, or reimplementing the x86 solution too,
->> > which is expensive.
->> > 
->> > BTW I think that the idea you proposed was actually considered at the
->> > time and deemed hard to implement, if I recall correctly.
->> 
->> Considering that the EFI support is just for Dom0, and Dom0 (at
->> the time) had to be PV anyway, it was the more natural solution to
->> expose the interface via hypercalls, the more that this allows better
->> control over what is and primarily what is not being exposed to
->> Dom0. With the wrapper approach we'd be back to the same
->> problem (discussed elsewhere) of which EFI version to surface: The
->> host one would impose potentially missing extensions, while the
->> most recent hypervisor known one might imply hiding valuable
->> information from Dom0. Plus there are incompatible changes like
->> the altered meaning of EFI_MEMORY_WP in 2.5.
-> 
-> I'm not sure I follow how hypercalls solve any impedance mismatch here;
-> you're still expecting Dom0 to call up to Xen in order to perform calls,
-> and all I suggested was a different location for those hypercalls.
-> 
-> If Xen is happy to make such calls blindly, why does it matter if the
-> hypercall was in the kernel binary or an external shim?
+Hi,
 
-Because there could be new entries in SystemTable->RuntimeServices
-(expected and blindly but validly called by the kernel). Even worse
-(because likely harder to deal with) would be new fields in other
-structures.
+On 09-09-15 16:01, Maxime Ripard wrote:
+> On Tue, Sep 08, 2015 at 11:26:51PM +0200, Hans de Goede wrote:
+>> Hi,
+>>
+>> On 09/08/2015 04:33 PM, Maxime Ripard wrote:
+>>> On Sat, Sep 05, 2015 at 04:55:52PM +0200, Hans de Goede wrote:
+>>>> This is the sun5i / a13 version of sun8i-q8-common.dtsi for use in dts
+>>>> files for a13 q8 based tablets. Compared to sun8i this uses uart1 for the
+>>>> serial console, and PG0 for card-detect for mmc0.
+>>>>
+>>>> This also adds pmic and otg support, which both use the same config on
+>>>> all known q8 a13 devices. This is not present in sun5i-q8-common.dtsi
+>>>> because pmic / otg support for sun8i has not yet been merged.
+>>>>
+>>>> Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+>>>
+>>> Are we going to have any user but the one you posted in the patch 3
+>>> planned?
+>>
+>> Depends on what I can get my hands on / what is in the post atm.
+>>
+>> One difference in fex files of different 18 variants is how the usb wifi is
+>> powered, either via a gpio or via ldo3. Also there are differences in which
+>> accelerometer is used, so eventually I expect there to be several users
+>> of this dtsi.
+>
+> But no difference in the SoC used (A13 vs A10s)?
+>
+> I'm not sure having 18 DTs for a single board name is going to be
+> really helpful.
 
-> Incompatible changes are a spec problem regardless of how this is
-> handled.
+Sorry I meant to write q8 not 18 :)
 
-Not necessarily - we don't expose the memory map (we'd have to
-if we were to mimic EFI for Dom0), and hence the mentioned issue
-doesn't exist in our model.
+>It would be something to be supported by some quirks
+> mechanism, instead of having to require the user to pick the right one.
 
-Jan
+Agreed, which is why I added a generic sun5i-a13-q8-tablet.dts, which
+can then later be extended with quirks and such to get all the different
+variants supported. Which I guess means that the contents of
+sun5i-q8-common.dtsi can be folded into sun5i-a13-q8-tablet.dts, otoh
+we may have some special cases which do require a separate dts and
+having sun5i-q8-common.dtsi follows the same scheme as used for the
+a23 / a33 tablets. In the future we should probably also add
+sun8i-a23-q8-tablet.dts and sun8i-a33-q8-tablet.dts files and make
+the existing ones just empty files with a single #include for
+compatibility.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+If possible I would like to at least have you queue up the default
+sun5i-a13-q8-tablet.dts so that we've a dts file for a13 based tablets
+which at least gets the basics going.
+
+Either in its current form, or with it and sun5i-q8-common.dtsi
+squashed together. If you want a squashed version let me know and
+I'll do a resend.
+
+Are you coming to ELCE ? I think the both of us should go to:
+
+http://lceeu2015.sched.org/event/999c45c7fe78824a88269f35539c7e5c#.VfGcCLPYqlM
+
+(Device Tree NG BoF) and try to hash out a solution for this there,
+the quirks / variants stuff sounds good, but I wonder how far along
+that is ?
+
+Regards,
+
+Hans
