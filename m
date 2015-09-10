@@ -1,41 +1,81 @@
-From: Laurentiu Palcu <laurentiu.palcu-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v2 08/13] power: bq24257: Add charge type setting support
-Date: Thu, 10 Sep 2015 16:56:22 +0300
-Message-ID: <20150910135622.GJ21512@lpalcu-desk>
-References: <1441757557-7266-1-git-send-email-dannenberg@ti.com>
- <1441757557-7266-9-git-send-email-dannenberg@ti.com>
+From: "Tirdea, Irina" <irina.tirdea@intel.com>
+Subject: RE: [PATCH v3 1/5] Input: goodix - reset device at init
+Date: Thu, 10 Sep 2015 14:04:56 +0000
+Message-ID: <1F3AC3675D538145B1661F571FE1805F2F0C9F85@irsmsx105.ger.corp.intel.com>
+References: <1435595304-4840-1-git-send-email-irina.tirdea@intel.com>
+	 <1435595304-4840-2-git-send-email-irina.tirdea@intel.com>
+	 <1435679809.2612.13.camel@hadess.net>
+	 <1F3AC3675D538145B1661F571FE1805F2F0AC0D3@irsmsx105.ger.corp.intel.com>
+ <1441818159.27328.30.camel@hadess.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1441757557-7266-9-git-send-email-dannenberg-l0cyMroinI0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Andreas Dannenberg <dannenberg-l0cyMroinI0@public.gmane.org>
-Cc: Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Dmitry Eremin-Solenikov <dbaryshkov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1441818159.27328.30.camel@hadess.net>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Bastien Nocera <hadess@hadess.net>, "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "Purdila, Octavian" <octavian.purdila@intel.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Sep 08, 2015 at 07:12:32PM -0500, Andreas Dannenberg wrote:
-> The bq2425x devices support charging with a configurable charge current
-> i_chg or a specific fixed low-current in what's called Low Charge mode.
-> This patch exposes access to the Low Charge mode through a POWER_
-> SUPPLY_PROP_CHARGE_TYPE sysfs property value of POWER_SUPPLY_CHARGE_
-> TYPE_TRICKLE. It also allows to completely disable charging if desired
-> by setting the property to POWER_SUPPLY_CHARGE_TYPE_NONE. Normal
-> charging with the configured i_chg current is activated through
-> POWER_SUPPLY_CHARGE_TYPE_FAST (default).
-> 
-> Signed-off-by: Andreas Dannenberg <dannenberg-l0cyMroinI0@public.gmane.org>
-
-I have some questions here. Are there any cases in the wild, when
-userspace selects the charging type (apart from testing purposes)? And
-if yes, how is userspace supposed to detect/decide when to switch from
-trickle to fast?
-
-I have the strange feeling that we're adding properties that will never
-be used... Other people's opinions are welcomed too.
-
-laurentiu
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogQmFzdGllbiBOb2NlcmEg
+W21haWx0bzpoYWRlc3NAaGFkZXNzLm5ldF0NCj4gU2VudDogMDkgU2VwdGVtYmVyLCAyMDE1IDIw
+OjAzDQo+IFRvOiBUaXJkZWEsIElyaW5hOyBsaW51eC1pbnB1dEB2Z2VyLmtlcm5lbC5vcmcNCj4g
+Q2M6IGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc7IFJvYiBIZXJyaW5nOyBQYXdlbCBNb2xs
+OyBJYW4gQ2FtcGJlbGw7IEt1bWFyIEdhbGE7IFB1cmRpbGEsIE9jdGF2aWFuOyBEbWl0cnkgVG9y
+b2tob3Y7IE1hcmsNCj4gUnV0bGFuZDsgZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5vcmcNCj4gU3Vi
+amVjdDogUmU6IFtQQVRDSCB2MyAxLzVdIElucHV0OiBnb29kaXggLSByZXNldCBkZXZpY2UgYXQg
+aW5pdA0KPiANCj4gT24gVGh1LCAyMDE1LTA3LTMwIGF0IDExOjI3ICswMDAwLCBUaXJkZWEsIEly
+aW5hIHdyb3RlOg0KPiA+IEkgY2FuIHNlbmQgc29tZSBhZGRpdGlvbmFsIHBhdGNoZXMgdGhhdCB3
+aWxsIHNpbXBsaWZ5IHRlc3RpbmcgdGhlDQo+ID4gY29uZmlndXJhdGlvbiB1cGRhdGUgdG8gdGhl
+IEdvb2RpeCBkZXZpY2UuIEkgdGhpbmsgdGhpcyBmZWF0dXJlIGlzDQo+ID4gdGhlIGVhc2llc3QN
+Cj4gPiB0byB0ZXN0IHNvIHdlIGNhbiBkZXRlcm1pbmUgaWYgd3JpdGluZyB0byB0aGUgaW50ZXJy
+dXB0IHBpbiBhY3R1YWxseQ0KPiA+IHdvcmtzLg0KPiA+IEhvd2V2ZXIsIGV2ZW4gaWYgaXQgaXMg
+YSBCSU9TIHByb2JsZW0gYW5kIHRoZSBjb2RlIHdpbGwgd29yaywgdGhlDQo+ID4gd2FybmluZw0K
+PiA+IHdpbGwgc3RpbGwgYmUgcHJpbnRlZCBpbiBkbWVzZy4NCj4gDQo+IA0KPiBTb21laG93IG1p
+c3NlZCB0aGlzIG1haWwgYmVmb3JlIHJlcGx5aW5nIHRvIHRoZSBjdXJyZW50IHBhdGNoc2V0LiBJ
+J2QNCj4gYmUgZmluZSB3aXRoIHRoYXQsIHRob3VnaCBpdCdzIHN0aWxsIG5vdCBjbGVhciB0byBt
+ZSB3aGV0aGVyIHRoZQ0KPiBCSU9TL2hhcmR3YXJlIGlzIGF0IGZhdWx0LCBvciB0aGUgY29kZSB0
+aGF0J3MgYmVpbmcgYWRkZWQgdG8gdGhlIGRyaXZlcg0KPiA7KQ0KPiANCg0KVGhlIHJlc2V0IHBy
+b2NlZHVyZSBpcyBkZXNjcmliZWQgaW4gdGhlIEdvb2RpeCBHVDkxMSBkYXRhc2hlZXQgWzFdIGFu
+ZCBpcw0KdXNlZCBmb3IgcG93ZXItb24gcmVzZXQgYW5kIHBvd2VyIG1hbmFnZW1lbnQuIFRoZSBw
+b3dlci1vbiBzZXF1ZW5jZQ0KaXMgZGVzY3JpYmVkIGluIGNoYXB0ZXIgNi4xLiBJMkMgVGltaW5n
+LCBpbiB0aGUgUG93ZXItb24gVGltaW5nIGRpYWdyYW0uDQpUaGUgc2VxdWVuY2UgZm9yIHB1dHRp
+bmcgdGhlIGRldmljZSB0byBzbGVlcCBpcyBkZXNjcmliZWQgaW4gY2hhcHRlcg0KNy4xLiBPcGVy
+YXRpbmcgTW9kZXMsIGMpIFNsZWVwIG1vZGUuIFRoZXNlIHNlcXVlbmNlcyB1c2UgdGhlIGludGVy
+cnVwdA0KcGluIGFzIG91dHB1dC4NCg0KVGhlIHdhcm5pbmcgeW91IG1lbnRpb25lZCBjb21lcyBm
+cm9tIHRoZSBmb2xsb3dpbmcgY29kZSBpbiB0aGUgZ29vZGl4DQpkcml2ZXIsIHdoaWNoIHNldHMg
+dGhlIGludGVycnVwdCB0byBiZSB1c2VkIGFzIG91dHB1dDoNCg0KKyAgICAgICBlcnJvciA9IGdw
+aW9kX2RpcmVjdGlvbl9vdXRwdXQodHMtPmdwaW9kX2ludCwgdHMtPmNsaWVudC0+YWRkciA9PSAw
+eDE0KTsNCg0KVGhlIGdwaW9kX2RpcmVjdGlvbl9vdXRwdXQoKSBjYWxsIGVuZHMgdXAgaW4gZHJp
+dmVycy9waW5jdHJsL2ludGVsL3BpbmN0cmwtYmF5dHJhaWwuYzoNCi8qDQogKiBCZWZvcmUgbWFr
+aW5nIGFueSBkaXJlY3Rpb24gbW9kaWZpY2F0aW9ucywgZG8gYSBjaGVjayBpZiBncGlvDQogKiBp
+cyBzZXQgZm9yIGRpcmVjdCBJUlEuICBPbiBiYXl0cmFpbCwgc2V0dGluZyBHUElPIHRvIG91dHB1
+dCBkb2VzDQogKiBub3QgbWFrZSBzZW5zZSwgc28gbGV0J3MgYXQgbGVhc3Qgd2FybiB0aGUgY2Fs
+bGVyIGJlZm9yZSB0aGV5IHNob290DQogKiB0aGVtc2VsdmVzIGluIHRoZSBmb290Lg0KICovDQpX
+QVJOKHJlYWRsKGNvbmZfcmVnKSAmIEJZVF9ESVJFQ1RfSVJRX0VOLA0KCSJQb3RlbnRpYWwgRXJy
+b3I6IFNldHRpbmcgR1BJTyB3aXRoIGRpcmVjdF9pcnFfZW4gdG8gb3V0cHV0Iik7DQoNClNvIHRo
+ZSBwcm9ibGVtIGNvbWVzIGZyb20gdXNpbmcgdGhlIGdwaW8gaW50ZXJydXB0IHBpbiBhcyBvdXRw
+dXQsIHdoaWNoIA0Kc2hvdWxkIG5vdCB3b3JrIG9uIEJheXRyYWlsIGlmIEJZVF9ESVJFQ1RfSVJR
+X0VOIGlzIHNldCBieSBCSU9TLg0KVGhlIGFib3ZlIHdhcm5pbmcgaXMgaW50cm9kdWNlZCBhbmQg
+ZGlzY3Vzc2VkIGluIFsyXSBhbmQgWzNdLiBBcyBJIG1lbnRpb25lZCwNCnRoaXMgY291bGQgYmUg
+YSByZWFsIEhXIGlzc3VlIG9yIHRoZSBCSU9TIHNldHMgQllUX0RJUkVDVF9JUlFfRU4gd2hlbg0K
+aXQgc2hvdWxkIG5vdC4gSSBoYXZlIGFsc28gdGVzdGVkIHRoZXNlIHBhdGNoZXMgb24gYSBCYXl0
+cmFpbCBwbGFyZm9ybQ0KKHRoYXQgdXNlcyB0aGUgc2FtZSBwaW5jdHJsIGRyaXZlciksIGJ1dCBJ
+IGRpZCBub3Qgc2VlIGFueSBpc3N1ZXMgc2luY2UNCkJZVF9ESVJFQ1RfSVJRX0VOIGlzIG5vdCBz
+ZXQgaW4gbXkgY2FzZSBmb3IgdGhlIGludGVycnVwdCBncGlvIHBpbi4NCg0KVG8gZGV0ZXJtaW5l
+IGlmIHVzaW5nIHRoZSBpbnRlcnJ1cHQgcGluIGFzIG91dHB1dCB3b3JrcywgeW91IGNhbiB0ZXN0
+IHVwZGF0aW5nDQp0aGUgZ29vZGl4IGNvbmZpZ3VyYXRpb24gWzRdLiBOb3JtYWxseSBpZiBzb21l
+dGhpbmcgZ29lcyB3cm9uZyB3aXRoIHRoZSByZXNldA0KcHJvY2VkdXJlLCB0aGUgY29uZmlndXJh
+dGlvbiB3aWxsIG5vdCBiZSB1cGRhdGVkLiBUbyBtYWtlIHRoYXQgZWFzaWVyLCBJIGhhdmUNCmFs
+cmVhZHkgaW5jbHVkZWQgYSBzeXNmcyBpbnRlcmZhY2UgdG8gZHVtcCB0aGUgY3VycmVudCBjb25m
+aWd1cmF0aW9uIFs1XSBhbmQNCmEgc2NyaXB0IHRvIGhlbHAgZ2VuZXJhdGUgYSBuZXcgY29uZmln
+dXJhdGlvbiBbNl0gKHdpdGggZGV0YWlscyBvbiBob3cgdG8gdXNlIGl0DQppbiB0aGUgY29tbWl0
+IG1lc3NhZ2UpLiBQbGVhc2UgbGV0IG1lIGtub3cgaWYgeW91IG5lZWQgc29tZXRoaW5nIG1vcmUg
+dG8NCnRlc3QgdGhpcy4NCg0KVGhhbmtzLA0KSXJpbmENCg0KWzFdIGh0dHBzOi8vZHJpdmUuZ29v
+Z2xlLmNvbS9hL2ludGVsLmNvbS9mb2xkZXJ2aWV3P2lkPTBCeENWT1FTM1p5bUdmbUp5WTJSS2JF
+NVhiVmxLTmxrdFZUbHdWMGx4TkVkeGQyZHplV1pFUjA5NGNtSlBWbk14TjFGMFl6Zw0KWzJdIGh0
+dHBzOi8vbGttbC5vcmcvbGttbC8yMDE0LzYvMi82NTQNClszXSBodHRwczovL2xrbWwub3JnL2xr
+bWwvMjAxNC85LzE4LzEyOQ0KWzRdIGh0dHBzOi8vbGttbC5vcmcvbGttbC8yMDE1LzkvNy8zMzkN
+Cls1XSBodHRwczovL2xrbWwub3JnL2xrbWwvMjAxNS85LzcvMzM3DQpbNl0gaHR0cHM6Ly9sa21s
+Lm9yZy9sa21sLzIwMTUvNy8zMS83MDYNCg0K
