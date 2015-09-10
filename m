@@ -1,149 +1,86 @@
-From: Andreas Dannenberg <dannenberg@ti.com>
-Subject: Re: [PATCH v2 02/13] power: bq24257: Add basic support for
- bq24250/bq24251
-Date: Thu, 10 Sep 2015 11:19:44 -0500
-Message-ID: <20150910161944.GA16768@borg>
-References: <1441757557-7266-1-git-send-email-dannenberg@ti.com>
- <1441757557-7266-3-git-send-email-dannenberg@ti.com>
- <20150910124210.GD21512@lpalcu-desk>
+From: Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [PATCH] efi/libstub/fdt: Standardize the names of EFI stub
+ parameters
+Date: Thu, 10 Sep 2015 17:23:02 +0100
+Message-ID: <20150910162302.GN29293@leverpostej>
+References: <1441874516-11364-1-git-send-email-zhaoshenglong@huawei.com>
+ <20150910095208.GA29293@leverpostej>
+ <alpine.DEB.2.02.1509101116580.2672@kaball.uk.xensource.com>
+ <20150910112418.GC29293@leverpostej>
+ <alpine.DEB.2.02.1509101223580.2672@kaball.uk.xensource.com>
+ <20150910121514.GE29293@leverpostej>
+ <alpine.DEB.2.02.1509101429480.2672@kaball.uk.xensource.com>
+ <20150910144938.GI29293@leverpostej>
+ <alpine.DEB.2.02.1509101655020.2672@kaball.uk.xensource.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Return-path: <linux-pm-owner@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-doc-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20150910124210.GD21512@lpalcu-desk>
-Sender: linux-pm-owner@vger.kernel.org
-To: Laurentiu Palcu <laurentiu.palcu@intel.com>
-Cc: Sebastian Reichel <sre@kernel.org>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, David Woodhouse <dwmw2@infradead.org>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, linux-pm@vger.kernel.org, devicetree@vger.kernel.org
+In-Reply-To: <alpine.DEB.2.02.1509101655020.2672@kaball.uk.xensource.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Stefano Stabellini <stefano.stabellini@eu.citrix.com>
+Cc: Shannon Zhao <zhaoshenglong@huawei.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-efi@vger.kernel.org" <linux-efi@vger.kernel.org>, "Ian.Campbell@citrix.com" <Ian.Campbell@citrix.com>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "ard.biesheuvel@linaro.org" <ard.biesheuvel@linaro.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "leif.lindholm@linaro.org" <leif.lindholm@linaro.org>, "xen-devel@lists.xen.org" <xen-devel@lists.xen.org>, "julien.grall@citrix.com" <julien.grall@citrix.com>, "freebsd-arm@freebsd.org" <freebsd-arm@freebsd.org>, "matt.fleming@intel.com" <matt.fleming@intel.com>, "christoffer.dall@linaro.org" <christoffer.dall@linaro.org>, "jbeulich@suse.com" <jbeulich@suse.com>, "peter.huangpeng@huawei.com" <peter.huangpeng@>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Sep 10, 2015 at 03:42:11PM +0300, Laurentiu Palcu wrote:
-> On Tue, Sep 08, 2015 at 07:12:26PM -0500, Andreas Dannenberg wrote:
-> [...]
-> >  
-> >  #include <linux/module.h>
-> > @@ -41,6 +45,18 @@
-> >  
-> >  #define BQ24257_ILIM_SET_DELAY		1000	/* msec */
-> >  
-> > +enum bq2425x_chip {
-> > +	BQ24250,
-> > +	BQ24251,
-> > +	BQ24257,
-> > +};
-> > +
-> > +static const char *bq2425x_chip_name[] = {
-> static const char *const bq2425x_chip_name[]
+> > C) When you could go:
+> > 
+> >    DT -> Discover Xen -> Xen-specific stuff -> Xen-specific EFI/ACPI discovery
 > 
-> That's safer and it also makes checkpatch happy.
+> I take you mean discovering Xen with the usual Xen hypervisor node on
+> device tree. I think that C) is a good option actually. I like it. Not
+> sure why we didn't think about this earlier. Is there anything EFI or
+> ACPI which is needed before Xen support is discovered by
+> arch/arm64/kernel/setup.c:setup_arch -> xen_early_init()?
 
-Ok changed.
+Currently lots (including the memory map). With the stuff to support
+SPCR, the ACPI discovery would be moved before xen_early_init().
 
-> > +	"bq24250",
-> > +	"bq24251",
-> > +	"bq24257",
-> > +};
-> > +
-> >  enum bq24257_fields {
-> >  	F_WD_FAULT, F_WD_EN, F_STAT, F_FAULT,			    /* REG 1 */
-> >  	F_RESET, F_IILIMIT, F_EN_STAT, F_EN_TERM, F_CE, F_HZ_MODE,  /* REG 2 */
-> > @@ -71,6 +87,8 @@ struct bq24257_device {
-> >  	struct device *dev;
-> >  	struct power_supply *charger;
-> >  
-> > +	enum bq2425x_chip chip;
-> > +
-> >  	struct regmap *rmap;
-> >  	struct regmap_field *rmap_fields[F_MAX_FIELDS];
-> >  
-> > @@ -250,6 +268,10 @@ static int bq24257_power_supply_get_property(struct power_supply *psy,
-> >  		val->strval = BQ24257_MANUFACTURER;
-> >  		break;
-> >  
-> > +	case POWER_SUPPLY_PROP_MODEL_NAME:
-> > +		val->strval = bq2425x_chip_name[bq->chip];
-> > +		break;
-> > +
-> >  	case POWER_SUPPLY_PROP_ONLINE:
-> >  		val->intval = state.power_good;
-> >  		break;
-> > @@ -570,6 +592,7 @@ static int bq24257_hw_init(struct bq24257_device *bq)
-> >  
-> >  static enum power_supply_property bq24257_power_supply_props[] = {
-> >  	POWER_SUPPLY_PROP_MANUFACTURER,
-> > +	POWER_SUPPLY_PROP_MODEL_NAME,
-> >  	POWER_SUPPLY_PROP_STATUS,
-> >  	POWER_SUPPLY_PROP_ONLINE,
-> >  	POWER_SUPPLY_PROP_HEALTH,
-> > @@ -667,6 +690,7 @@ static int bq24257_probe(struct i2c_client *client,
-> >  {
-> >  	struct i2c_adapter *adapter = to_i2c_adapter(client->dev.parent);
-> >  	struct device *dev = &client->dev;
-> > +	const struct acpi_device_id *acpi_id;
-> >  	struct bq24257_device *bq;
-> >  	int ret;
-> >  	int i;
-> > @@ -683,6 +707,18 @@ static int bq24257_probe(struct i2c_client *client,
-> >  	bq->client = client;
-> >  	bq->dev = dev;
-> >  
-> > +	if (ACPI_HANDLE(dev)) {
-> > +		acpi_id = acpi_match_device(dev->driver->acpi_match_table,
-> > +				&client->dev);
-> > +		if (!acpi_id) {
-> > +			dev_err(dev, "Failed to match ACPI device\n");
-> > +			return -ENODEV;
-> > +		}
-> > +		bq->chip = (enum bq2425x_chip)acpi_id->driver_data;
-> > +	} else {
-> > +		bq->chip = (enum bq2425x_chip)id->driver_data;
-> > +	}
-> > +
-> >  	mutex_init(&bq->lock);
-> >  
-> >  	bq->rmap = devm_regmap_init_i2c(client, &bq24257_regmap_config);
-> > @@ -824,19 +860,27 @@ static const struct dev_pm_ops bq24257_pm = {
-> >  };
-> >  
-> >  static const struct i2c_device_id bq24257_i2c_ids[] = {
-> > -	{ "bq24257", 0 },
-> > +	{ "bq24250", BQ24250 },
-> > +	{ "bq24251", BQ24251 },
-> > +	{ "bq24257", BQ24257 },
-> >  	{},
-> >  };
-> >  MODULE_DEVICE_TABLE(i2c, bq24257_i2c_ids);
-> >  
-> >  static const struct of_device_id bq24257_of_match[] = {
-> > -	{ .compatible = "ti,bq24257", },
-> > +	{
-> > +		.compatible = "ti,bq24250",
-> > +		.compatible = "ti,bq24251",
-> > +		.compatible = "ti,bq24257",
-> > +	},
-> Maybe you wanted:
-> 	{ .compatible = "ti,bq24250", },
-> 	{ .compatible = "ti,bq24251", },
-> 	{ .compatible = "ti,bq24252", },
+> If not, we could just go for this. A lot of complexity would go away.
 
-Yes that's what I wanted. Interestingly in my testing the device
-configured in the device tree was identified correctly, but I suppose
-this worked because of some other fallback mechanism (maybe using the
-i2c_device_id?). Anyways it's fixed now.
+I suspect this would still be fairly complex, but would at least prevent
+the Xen-specific EFI handling from adversely affecting the native case.
 
-> >  	{ },
-> >  };
+> > D) If you want to be generic:
+> >    EFI -> EFI application -> EFI tables -> ACPI tables -> Xen-specific stuff
+> >           \------------------------------------------/
+> > 	   (virtualize these, provide shims to Dom0, but handle
+> > 	    everything in Xen itself)
 > 
-> BTW, ACPI enumeration works fine. I tested the series on my setup
-> (before starting to review the patches :D).
+> I think that this is good in theory but could turn out to be a lot of
+> work in practice. We could probably virtualize the RuntimeServices but
+> the BootServices are troublesome.
 
-Thanks for going the extra mile and testing ACPI support, I really
-appreciate it. I should get my MinnowBoard on Saturday (it'll make for a
-fun weekend!) so I should be able to do such testing for this and other
-TI drivers myself.
+What's troublesome with the boot services?
 
---
-Andreas Dannenberg
-Texas Instruments Inc
+What can't be simulated?
 
-> 
-> laurentiu
+> > E) Partially-generic option:
+> >    EFI -> EFI application -> Xen detected by registered GUID -> Xen-specific EFI bootloader stuff -> OS in Xen-specific configuration
+> > 
+> > 
+> > > > > In any case this should be separate from the shim ABI discussion.
+> > > > 
+> > > > I disagree; I think this is very much relevant to the ABI discussion.
+> > > > That's not to say that I insist on a particular approach, but I think
+> > > > that they need to be considered together.
+> > > 
+> > > Let's suppose Xen didn't expose any RuntimeServices at all, would that
+> > > make it easier to discuss about the EFI stub parameters?
+> > 
+> > It would simply the protocol specific to Xen, certainly.
+> > 
+> > > In the grant scheme of things, they are not that important, as Ian
+> > > wrote what is important is how to pass the RSDP.
+> > 
+> > Unfortunately we're still going to have to care about this eventually,
+> > even if for something like kexec. So we still need to spec out the state
+> > of things if this is going to be truly generic.
+>  
+> Fair enough. My position is that if we restrict this to RuntimeServices,
+> it might be possible, but I still prefer C).
+
+Regardless of what we do we still need a well-defined state here, which
+brings us back to the initial problem eventually.
+
+Thanks,
+Mark.
