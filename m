@@ -1,82 +1,181 @@
-From: Stefano Stabellini <stefano.stabellini@eu.citrix.com>
-Subject: Re: [PATCH] efi/libstub/fdt: Standardize the names of EFI stub
- parameters
-Date: Thu, 10 Sep 2015 11:19:51 +0100
-Message-ID: <alpine.DEB.2.02.1509101116580.2672@kaball.uk.xensource.com>
-References: <1441874516-11364-1-git-send-email-zhaoshenglong@huawei.com>
- <20150910095208.GA29293@leverpostej>
+From: Jonas Gorski <jogo-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>
+Subject: Re: [PATCH linux-next v6 1/8] mtd: spi-nor: read JEDEC ID with
+ multiple I/O protocols
+Date: Thu, 10 Sep 2015 12:25:24 +0200
+Message-ID: <CAOiHx==-v6Pz-_OWB5Nae9nvq35kpAMDCBskXuZCWrUNAnwkLQ@mail.gmail.com>
+References: <cover.1441803609.git.cyrille.pitchen@atmel.com> <735e22efa25f6529bf8ed4a709c18a719176714b.1441803609.git.cyrille.pitchen@atmel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20150910095208.GA29293@leverpostej>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mark Rutland <mark.rutland@arm.com>
-Cc: Shannon Zhao <zhaoshenglong@huawei.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-efi@vger.kernel.org" <linux-efi@vger.kernel.org>, "Ian.Campbell@citrix.com" <Ian.Campbell@citrix.com>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "ard.biesheuvel@linaro.org" <ard.biesheuvel@linaro.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "leif.lindholm@linaro.org" <leif.lindholm@linaro.org>, "xen-devel@lists.xen.org" <xen-devel@lists.xen.org>, "julien.grall@citrix.com" <julien.grall@citrix.com>, "freebsd-arm@freebsd.org" <freebsd-arm@freebsd.org>, "matt.fleming@intel.com" <matt.fleming@intel.com>, "christoffer.dall@linaro.org" <christoffer.dall@linaro.org>, "jbeulich@suse.com" <jbeulich@suse.com>, "peter.huangpeng@huawei.com" <peter.huangpeng@>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <735e22efa25f6529bf8ed4a709c18a719176714b.1441803609.git.cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Cyrille Pitchen <cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Cc: nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "Bean Huo (beanhuo)" <beanhuo-AL4WhLSQfzjQT0dZR+AlfA@public.gmane.org>, Gabor Juhos <juhosg-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>, =?UTF-8?B?TWFyZWsgVmHFoXV0?= <marex-ynQEQJNshbs@public.gmane.org>, Ben Hutchings <ben-/+tVBieCtBitmTQ+vhA3Yw@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, MTD Maling List <linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 10 Sep 2015, Mark Rutland wrote:
-> Hi,
-> 
-> I'm not necessarily opposed to the renaming, but I think that this is
-> the least important thing to standardize for this to work.
-> 
-> On Thu, Sep 10, 2015 at 09:41:56AM +0100, Shannon Zhao wrote:
-> > From: Shannon Zhao <shannon.zhao@linaro.org>
-> > 
-> > These EFI stub parameters are used to internal communication between EFI
-> > stub and Linux kernel and EFI stub creates these parameters. But for Xen
-> > on ARM when booting with UEFI, Xen will create a minimal DT providing
-> > these parameters for Dom0 and Dom0 is not only Linux kernel, but also
-> > other OS (such as FreeBSD) which will be used in the future.
-> 
-> Currently the Linux EFI stub and kernel have a symbiotic relationship,
-> because they're intimately coupled and we don't have kexec (yet) on EFI
-> platforms to loosen that coupling.
-> 
-> If an agent other than the (kernel-specific) stub is going to provide
-> this to the kernel, then we need more specified than just the property
-> names.
-> 
-> That at least includes the following:
-> 
-> * The state of boot services (we currently have the EFI stub call
->   ExitBootServices(), and I believe this is crucial to the plan for
->   kexec).
-> 
-> * The state of the address map (we currently have the EFI stub call
->   SetVirtualAddressMap()).
-> 
-> * The virtual address range(s) that SetVirtualAddressMap() may map
->   elements to (this logic is currently in the EFI stub, and this matches
->   the expectations of the kernel that it is tied to).
-> 
-> > So here we plan to standardize the names by dropping the prefix
-> > "linux," and make them common to other OS. Also this will not break
-> > the compatibility since these parameters are used to internal
-> > communication between EFI stub and kernel.
-> 
-> For the moment this is true, but will not be once we have kexec, so
-> there's a dependency (or anti-dependency) there.
-> 
-> > Signed-off-by: Shannon Zhao <shannon.zhao@linaro.org>
-> > ---
-> > Look at [1] for the discussion about this in Xen ML. The purpose of this
-> > patch is to standardize the names to make Linux ARM kernel work on Xen
-> > with UEFI. Also it hopes other OS(e.g. FreeBSD), which will be used as
-> > Dom0 on Xen, could support this mechanism as well.
-> > 
-> > [1]http://lists.xenproject.org/archives/html/xen-devel/2015-08/msg02250.html
-> 
-> Per this post, it looks like to pass a DTB to the kernel Xen already
-> needs to know it's a Linux kernel...
-> 
-> I wasn't aware that there was a common standard for arm(64) kernels
-> other than a PE/COFF EFI application.
-> 
-> Does Xen not talk to EFI itself and/or give the kernel a virtual EFI
-> interface?
+Hi,
 
-Xen talks to EFI itself but the interface provided to dom0 is somewhat
-different: there are no BootServices (Xen calls ExitBootServices before
-running the kernel), and the RuntimeServices go via hypercalls (see
-drivers/xen/efi.c).
+On Wed, Sep 9, 2015 at 3:24 PM, Cyrille Pitchen
+<cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org> wrote:
+> When their quad or dual I/O mode is enabled, Micron and Macronix spi-nor
+> memories don't reply to the regular Read ID (0x9f) command. Instead they
+> reply to a new dedicated command Read ID Multiple I/O (0xaf).
+>
+> If the Read ID (0x9f) command fails (the read ID is all 1's or all 0's),
+> then the Read ID Multiple I/O (0xaf) is used, first with SPI 4-4-4 protocol
+> (supported by both Micron and Macronix memories), lately with SPI-2-2-2
+> protocol (supported only by Micron memories).
+>
+> Signed-off-by: Cyrille Pitchen <cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+> ---
+>  drivers/mtd/spi-nor/spi-nor.c | 28 +++++++++++++++++++++++++++-
+>  include/linux/mtd/spi-nor.h   | 23 +++++++++++++++++++++--
+>  2 files changed, 48 insertions(+), 3 deletions(-)
+>
+> diff --git a/drivers/mtd/spi-nor/spi-nor.c b/drivers/mtd/spi-nor/spi-nor.c
+> index f59aedfe1462..80a0db078aaa 100644
+> --- a/drivers/mtd/spi-nor/spi-nor.c
+> +++ b/drivers/mtd/spi-nor/spi-nor.c
+> @@ -703,8 +703,9 @@ static const struct flash_info spi_nor_ids[] = {
+>
+>  static const struct flash_info *spi_nor_read_id(struct spi_nor *nor)
+>  {
+> -       int                     tmp;
+> +       int                     i, tmp;
+>         u8                      id[SPI_NOR_MAX_ID_LEN];
+> +       enum spi_protocol       proto[2] = {SPI_PROTO_4_4_4, SPI_PROTO_2_2_2};
+>         const struct flash_info *info;
+>
+>         tmp = nor->read_reg(nor, SPINOR_OP_RDID, id, SPI_NOR_MAX_ID_LEN);
+> @@ -713,6 +714,25 @@ static const struct flash_info *spi_nor_read_id(struct spi_nor *nor)
+>                 return ERR_PTR(tmp);
+>         }
+>
+> +       /* Special case for Micron/Macronix qspi nor. */
+> +       for (i = 0; i < ARRAY_SIZE(proto); ++i) {
+> +               if (!((id[0] == 0xff && id[1] == 0xff && id[2] == 0xff) ||
+> +                     (id[0] == 0x00 && id[1] == 0x00 && id[2] == 0x00)))
+> +                       break;
+
+you should probably do something like
+
+               if (proto == SPI_PROTO_2_2_2 && !(nor->flags & SPI_NOR_DUAL))
+                              continue;
+
+               if (proto == SPI_PROTO_4_4_4 && !(nor->flags & SPI_NOR_QUAD))
+                              continue;
+> +
+> +               nor->erase_proto = proto[i];
+> +               nor->read_proto = proto[i];
+> +               nor->write_proto = proto[i];
+> +               nor->reg_proto = proto[i];
+> +               tmp = nor->read_reg(nor, SPINOR_OP_MIO_RDID,
+> +                                   id, SPI_NOR_MAX_ID_LEN);
+
+Not sure if it has any releveance that the MIO_RDID commands can only
+return the first three id bytes, and not the full id.
+
+> +               if (tmp < 0) {
+> +                       dev_dbg(nor->dev,
+> +                               " error %d reading JEDEC ID (MULTI IO)\n", tmp);
+> +                       return ERR_PTR(tmp);
+
+Or continue here, as the controller might return an error if it does
+not support the protocol.
+
+> +               }
+> +       }
+> +
+>         for (tmp = 0; tmp < ARRAY_SIZE(spi_nor_ids) - 1; tmp++) {
+>                 info = &spi_nor_ids[tmp];
+>                 if (info->id_len) {
+> @@ -1013,6 +1033,12 @@ int spi_nor_scan(struct spi_nor *nor, const char *name, enum read_mode mode)
+>         if (ret)
+>                 return ret;
+>
+> +       /* Reset SPI protocol for all commands */
+> +       nor->erase_proto = SPI_PROTO_1_1_1;
+> +       nor->read_proto = SPI_PROTO_1_1_1;
+> +       nor->write_proto = SPI_PROTO_1_1_1;
+> +       nor->reg_proto = SPI_PROTO_1_1_1;
+> +
+>         if (name)
+>                 info = spi_nor_match_id(name);
+>         /* Try to auto-detect if chip name wasn't specified or not found */
+> diff --git a/include/linux/mtd/spi-nor.h b/include/linux/mtd/spi-nor.h
+> index e5409524bb0a..66a5f144728a 100644
+> --- a/include/linux/mtd/spi-nor.h
+> +++ b/include/linux/mtd/spi-nor.h
+> @@ -57,8 +57,9 @@
+>  #define SPINOR_OP_BRWR         0x17    /* Bank register write */
+>
+>  /* Used for Micron flashes only. */
+> -#define SPINOR_OP_RD_EVCR      0x65    /* Read EVCR register */
+> -#define SPINOR_OP_WD_EVCR      0x61    /* Write EVCR register */
+> +#define SPINOR_OP_MIO_RDID     0xaf    /* Multiple I/O Read JEDEC ID */
+> +#define SPINOR_OP_RD_EVCR      0x65    /* Read EVCR register */
+> +#define SPINOR_OP_WD_EVCR      0x61    /* Write EVCR register */
+>
+>  /* Status Register bits. */
+>  #define SR_WIP                 1       /* Write in progress */
+> @@ -87,6 +88,16 @@ enum read_mode {
+>         SPI_NOR_QUAD,
+>  };
+>
+> +enum spi_protocol {
+> +       SPI_PROTO_1_1_1,        /* SPI */
+> +       SPI_PROTO_1_1_2,        /* Dual Output */
+> +       SPI_PROTO_1_1_4,        /* Quad Output */
+> +       SPI_PROTO_1_2_2,        /* Dual IO */
+> +       SPI_PROTO_1_4_4,        /* Quad IO */
+> +       SPI_PROTO_2_2_2,        /* Dual Command */
+> +       SPI_PROTO_4_4_4,        /* Quad Command */
+> +};
+
+I wonder if the spi-nor controller should somehow store which of these
+protocols it can support, so we can check for support before using any
+of the dual/quad (i/o) commands.
+
+Also I think you should split out the new readid command usage from
+the rest of the SPI_PROTO stuff, as they are only semirelated.
+
+And for good definsive programming, you should first make the spi-nor
+controller drivers aware of the protocol stuff before starting to use
+it, else you risk breaking controllers silently.
+
+
+> +
+>  /**
+>   * struct spi_nor_xfer_cfg - Structure for defining a Serial Flash transfer
+>   * @wren:              command for "Write Enable", or 0x00 for not required
+> @@ -142,6 +153,10 @@ enum spi_nor_option_flags {
+>   * @sst_write_second:  used by the SST write operation
+>   * @flags:             flag options for the current SPI-NOR (SNOR_F_*)
+>   * @cfg:               used by the read_xfer/write_xfer
+> + * @erase_proto:       the SPI protocol used by erase operations
+> + * @read_proto:                the SPI protocol used by read operations
+> + * @write_proto:       the SPI protocol used by write operations
+> + * @reg_proto          the SPI protocol used by read_reg/write_reg operations
+>   * @cmd_buf:           used by the write_reg
+>   * @prepare:           [OPTIONAL] do some preparations for the
+>   *                     read/write/erase/lock/unlock operations
+> @@ -169,6 +184,10 @@ struct spi_nor {
+>         u8                      read_opcode;
+>         u8                      read_dummy;
+>         u8                      program_opcode;
+> +       enum spi_protocol       erase_proto;
+> +       enum spi_protocol       read_proto;
+> +       enum spi_protocol       write_proto;
+> +       enum spi_protocol       reg_proto;
+>         enum read_mode          flash_read;
+>         bool                    sst_write_second;
+>         u32                     flags;
+
+
+
+Regards
+Jonas
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
