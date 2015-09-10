@@ -1,70 +1,70 @@
-From: Julien Grall <julien.grall-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH] efi/libstub/fdt: Standardize the names of EFI stub parameters
-Date: Thu, 10 Sep 2015 12:48:05 +0100
-Message-ID: <55F16DF5.1080705@citrix.com>
-References: <1441874516-11364-1-git-send-email-zhaoshenglong@huawei.com>
- <20150910123251.7e0810d1@bender.Home>
+From: Charles Keepax <ckeepax@opensource.wolfsonmicro.com>
+Subject: [PATCH 1/6] mfd: arizona: Add TST_CAP bits for headphone detection
+Date: Thu, 10 Sep 2015 12:41:42 +0100
+Message-ID: <1441885307-24499-1-git-send-email-ckeepax@opensource.wolfsonmicro.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20150910123251.7e0810d1-I/y7IllHY3//9pzu0YdTqQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Andrew Turner <andrew-/GQUgJ3qWXsIvnNNuaVxrw@public.gmane.org>, Shannon Zhao <zhaoshenglong-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-efi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ian.campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org, ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, stefano.stabellini-mvvWK6WmYclDPfheJLI6IQ@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, leif.lindholm-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, xen-devel-GuqFBffKawuEi8DpZVb4nw@public.gmane.org, freebsd-arm-h+KGxgPPiopAfugRpC6u6w@public.gmane.org, matt.fleming-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, christoffer.dall-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, jbeulich-IBi9RG/b67k@public.gmane.org, peter.huangpeng-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, shannon.zhao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, Roger Pau Monne <roger.pau-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: cw00.choi@samsung.com, lee.jones@linaro.org
+Cc: myungjoo.ham@samsung.com, sameo@linux.intel.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, patches@opensource.wolfsonmicro.com
 List-Id: devicetree@vger.kernel.org
 
-On 10/09/15 12:32, Andrew Turner wrote:
-> On Thu, 10 Sep 2015 16:41:56 +0800
-> Shannon Zhao <zhaoshenglong-hv44wF8Li93QT0dZR+AlfA@public.gmane.org> wrote:
-> 
->> From: Shannon Zhao <shannon.zhao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
->>
->> These EFI stub parameters are used to internal communication between
->> EFI stub and Linux kernel and EFI stub creates these parameters. But
->> for Xen on ARM when booting with UEFI, Xen will create a minimal DT
->> providing these parameters for Dom0 and Dom0 is not only Linux
->> kernel, but also other OS (such as FreeBSD) which will be used in the
->> future. So here we plan to standardize the names by dropping the
->> prefix "linux," and make them common to other OS. Also this will not
->> break the compatibility since these parameters are used to internal
->> communication between EFI stub and kernel.
-> 
-> It is unlikely FreeBSD will use this property when booting ad Xen dom0.
-> The kernel expects to be passed a data structure to find boot this
-> information.
-> 
-> My preference would be to have the FreeBSD loader load the xen binary,
-> the FreeBSD kernel, and set up these data structs before passing
-> control to Xen, with the information it needs to boot the kernel. My
-> understanding is this is how it is done on x86.
+On Florida some additional settings are required to get accurate
+measurements at the top end of the headphone detection range. This patch
+adds the bits required for this.
 
-Well, AFAICT, there is no FreeBSD specific code in Xen for x86. We are
-faking a multiboot module which contains all the informations.
+Signed-off-by: Charles Keepax <ckeepax@opensource.wolfsonmicro.com>
+---
+ drivers/mfd/wm5110-tables.c           |    2 ++
+ include/linux/mfd/arizona/registers.h |    8 ++++++++
+ 2 files changed, 10 insertions(+), 0 deletions(-)
 
-I know that the bootloader is at least involved, I don't remember if
-there is some code in FreeBSD to read this boot module. I've CCed Roger
-to confirm.
-
-> I can see a few issues with this where, for example, the device tree or
-> ACPI tables need to be modified, but these should be solvable.
-
-Xen has to modify the firmware table in order to remove everything that
-it's used by itself (UART, virtual GIC...).
-
-So we would need to modify the FreeBSD data structure to pass the new
-DT/ACPI. Does the metadata are standardize? I.e is it stable from
-accross FreeBSD version?
-
-Anyway, I'd like to avoid any FreeBSD specific code in Xen, and even any
-OS specific code in Xen. It's better if we keep a common interface for
-everyone.
-
-Regards,
-
+diff --git a/drivers/mfd/wm5110-tables.c b/drivers/mfd/wm5110-tables.c
+index acb3bb2..78032e8 100644
+--- a/drivers/mfd/wm5110-tables.c
++++ b/drivers/mfd/wm5110-tables.c
+@@ -1908,6 +1908,7 @@ static bool wm5110_readable_register(struct device *dev, unsigned int reg)
+ 	case ARIZONA_HP1_SHORT_CIRCUIT_CTRL:
+ 	case ARIZONA_HP2_SHORT_CIRCUIT_CTRL:
+ 	case ARIZONA_HP3_SHORT_CIRCUIT_CTRL:
++	case ARIZONA_HP_TEST_CTRL_1:
+ 	case ARIZONA_AIF1_BCLK_CTRL:
+ 	case ARIZONA_AIF1_TX_PIN_CTRL:
+ 	case ARIZONA_AIF1_RX_PIN_CTRL:
+@@ -2853,6 +2854,7 @@ static bool wm5110_volatile_register(struct device *dev, unsigned int reg)
+ 	case ARIZONA_INPUT_ENABLES_STATUS:
+ 	case ARIZONA_OUTPUT_STATUS_1:
+ 	case ARIZONA_RAW_OUTPUT_STATUS_1:
++	case ARIZONA_HP_TEST_CTRL_1:
+ 	case ARIZONA_SLIMBUS_RX_PORT_STATUS:
+ 	case ARIZONA_SLIMBUS_TX_PORT_STATUS:
+ 	case ARIZONA_INTERRUPT_STATUS_1:
+diff --git a/include/linux/mfd/arizona/registers.h b/include/linux/mfd/arizona/registers.h
+index e96644c..fe1b5d0 100644
+--- a/include/linux/mfd/arizona/registers.h
++++ b/include/linux/mfd/arizona/registers.h
+@@ -237,6 +237,7 @@
+ #define ARIZONA_HP1_SHORT_CIRCUIT_CTRL           0x4A0
+ #define ARIZONA_HP2_SHORT_CIRCUIT_CTRL           0x4A1
+ #define ARIZONA_HP3_SHORT_CIRCUIT_CTRL           0x4A2
++#define ARIZONA_HP_TEST_CTRL_1                   0x4A4
+ #define ARIZONA_SPK_CTRL_2                       0x4B5
+ #define ARIZONA_SPK_CTRL_3                       0x4B6
+ #define ARIZONA_DAC_COMP_1                       0x4DC
+@@ -3548,6 +3549,13 @@
+ #define ARIZONA_HP3_SC_ENA_WIDTH                      1  /* HP3_SC_ENA */
+ 
+ /*
++ * R1188 (0x4A4) HP Test Ctrl 1
++ */
++#define ARIZONA_HP1_TST_CAP_SEL_MASK             0x0003  /* HP1_TST_CAP_SEL - [1:0] */
++#define ARIZONA_HP1_TST_CAP_SEL_SHIFT                 0  /* HP1_TST_CAP_SEL - [1:0] */
++#define ARIZONA_HP1_TST_CAP_SEL_WIDTH                 2  /* HP1_TST_CAP_SEL - [1:0] */
++
++/*
+  * R1244 (0x4DC) - DAC comp 1
+  */
+ #define ARIZONA_OUT_COMP_COEFF_MASK              0xFFFF  /* OUT_COMP_COEFF - [15:0] */
 -- 
-Julien Grall
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+1.7.2.5
