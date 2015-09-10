@@ -1,101 +1,95 @@
-From: Stefano Stabellini <stefano.stabellini-mvvWK6WmYclDPfheJLI6IQ@public.gmane.org>
-Subject: Re: [PATCH] efi/libstub/fdt: Standardize the names of EFI stub
- parameters
-Date: Thu, 10 Sep 2015 14:52:25 +0100
-Message-ID: <alpine.DEB.2.02.1509101429480.2672@kaball.uk.xensource.com>
-References: <1441874516-11364-1-git-send-email-zhaoshenglong@huawei.com>
- <20150910095208.GA29293@leverpostej>
- <alpine.DEB.2.02.1509101116580.2672@kaball.uk.xensource.com>
- <20150910112418.GC29293@leverpostej>
- <alpine.DEB.2.02.1509101223580.2672@kaball.uk.xensource.com>
- <20150910121514.GE29293@leverpostej>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: Re: [PATCH] ARM: dts: sun4i: Add dts file for the
+ pov protab2-ips9 tablet
+Date: Thu, 10 Sep 2015 15:56:10 +0200
+Message-ID: <20150910135610.GI9885@lukather>
+References: <1441441319-10658-1-git-send-email-hdegoede@redhat.com>
+ <20150906163023.GR31584@lukather>
+ <55ED3739.609@redhat.com>
+ <1441612142.14422.34.camel@plaes.org>
+ <55ED4F8F.6080502@redhat.com>
+ <1441617262.21530.4.camel@plaes.org>
+ <55ED591B.7050705@redhat.com>
+ <20150907205216.GW31584@lukather>
+ <55EE92E0.1010805@redhat.com>
+Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Return-path: <linux-efi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20150910121514.GE29293@leverpostej>
-Sender: linux-efi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: Stefano Stabellini <stefano.stabellini-mvvWK6WmYclDPfheJLI6IQ@public.gmane.org>, Shannon Zhao <zhaoshenglong-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-efi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-efi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "Ian.Campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org" <Ian.Campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>, "linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "leif.lindholm-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <leif.lindholm-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "xen-devel-GuqFBffKawuEi8DpZVb4nw@public.gmane.org" <xen-devel-GuqFBffKawuEi8DpZVb4nw@public.gmane.org>, "julien.grall-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org" <julien.grall-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>, "freebsd-arm-h+KGxgPPiopAfugRpC6u6w@public.gmane.org" <freebsd-arm-h+KGxgPPiopAfugRpC6u6w@public.gmane.org>, "matt.fleming-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org" <matt.fleming-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, "christoffer.dall-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <christoffer.dall-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "jbeulich-IBi9RG/b67k@public.gmane.org" <jbeulich@su>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="svExV93C05KqedWb"
+Return-path: <linux-sunxi+bncBD2ZNBF5VYJRB64XY2XQKGQERRIOUQI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <55EE92E0.1010805-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <http://groups.google.com/group/linux-sunxi/subscribe>
+To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Cc: Priit Laes <plaes-q/aMd4JkU83YtjvyW6yDsg@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 10 Sep 2015, Mark Rutland wrote:
-> On Thu, Sep 10, 2015 at 12:37:57PM +0100, Stefano Stabellini wrote:
-> > On Thu, 10 Sep 2015, Mark Rutland wrote:
-> > > > > Does Xen not talk to EFI itself and/or give the kernel a virtual EFI
-> > > > > interface?
-> > > > 
-> > > > Xen talks to EFI itself but the interface provided to dom0 is somewhat
-> > > > different: there are no BootServices (Xen calls ExitBootServices before
-> > > > running the kernel), and the RuntimeServices go via hypercalls (see
-> > > > drivers/xen/efi.c).
-> > > 
-> > > That's somewhat hideous; a non Xen-aware OS wouild presumably die if
-> > > trying to use any runtime services the normal way? I'm not keen on
-> > > describing things that the OS cannot use.
-> >  
-> > I agree that is somewhat hideous, but a non-Xen aware OS traditionally
-> > has never been able to even boot as Dom0. On ARM it can, but it still
-> > wouldn't be very useful (one couldn't use it to start other guests).
+--svExV93C05KqedWb
+Content-Type: text/plain; charset=UTF-8
+Content-Disposition: inline
+
+On Tue, Sep 08, 2015 at 09:48:48AM +0200, Hans de Goede wrote:
+> Hi,
 > 
-> Sure, but it feels odd to provide the usual information in this manner
-> if it cannot be used. If you require Xen-specific code to make things
-> work, I would imagine this information could be dciscovered in a
-> Xen-specific manner.
-
-We need ACPI (or Device Tree) to find that Xen is available on the
-platform, so we cannot use Xen-specific code to get the ACPI tables.
-
-
-> > > Why can't Xen give a virtual EFI interface to Dom0 / guests? e.g.
-> > > create pages of RuntimeServicesCode that are trivial assembly shims
-> > > doing hypercalls, and plumb these into the virtual EFI memory map and
-> > > tables?
-> > > 
-> > > That would keep things sane for any guest, allow for easy addition of
-> > > EFI features, and you could even enter the usual EFI entry point,
-> > > simulate ExitBootServices(), SetVirtualAddressMap(), and allow the guest
-> > > to make things sane for itself...
-> > 
-> > That's the way it was done on x86 and now we have common code both in
-> > Linux (drivers/xen/efi.c) and Xen (xen/common/efi) which implement this
-> > scheme.
+> On 07-09-15 22:52, Maxime Ripard wrote:
+> >Hi,
+> >
+> >On Mon, Sep 07, 2015 at 11:30:03AM +0200, Hans de Goede wrote:
+> >>>>>bma250 already has devicetree support. It is used in Gemei G9
+> >>>>>tablet (sun4i-gemei-g9.dts).
+> >>>>
+> >>>>Yes I've seen that, but does it actually work? I've not tried but
+> >>>>I do not see any compatible string in the actual bma250 code in
+> >>>>the kernel, so I believe that this part of the sun4i-gemei-g9.dts
+> >>>>file does not work ?
+> >>>
+> >>>It worked (even without IRQs) when I submitted the patch. Driver
+> >>>itself is under iio/accel/bma180.c
+> >>
+> >>That is really weird, because:
+> >>
+> >>https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git/tree/drivers/iio/accel/bma180.c
+> >>
+> >>Does not have an of_match_table ... ??
+> >
+> >Not really, when using DT, i2c will set the i2c_client name to the
+> >device part of the compatible [1] [2], and then if the of_device_id
+> >lookup fails, will fallback to matching the i2c_client name to the
+> >i2c_device_id [3]. Which in our case matches.
+> >
+> >Maxime
+> >
+> >[1] http://lxr.free-electrons.com/source/drivers/i2c/i2c-core.c#L1281
+> >[2] http://lxr.free-electrons.com/source/drivers/i2c/i2c-core.c#L969
+> >[3] http://lxr.free-electrons.com/source/drivers/i2c/i2c-core.c#L461
 > 
-> This code is not currently used on arm. It might live in a location
-> where it may be shared, but that doesn't mean that it's common code yet.
+> Hmm, not sure whether that is a useful feature or an ugly hack :)
 
-Yeah, but that was clearly the intention.
+Don't shoot the messenger :)
 
+But I don't know either.
 
-> > Switching to a different solution for ARM, would mean diverging
-> > with x86, which is not nice, or reimplementing the x86 solution too,
-> > which is expensive.
-> > 
-> > BTW I think that the idea you proposed was actually considered at the
-> > time and deemed hard to implement, if I recall correctly.
+> It is sorta unexpected either way. But I can make good use of this to
+> enable the accelerometer and maybe also some touchscreens on a bunch of
+> boards I have.
 > 
-> I appreciate that divergence is painful. We already diverge in other
-> respects (e.g. lack of PV page tables) because things that used to be
-> the case on x86 never applied to ARM.
-> 
-> It would be interesting to see why that was the case for x86, and
-> whether that applies to ARM.
+> Still should we rely on this? This means relying on Linux kernel behavior,
+> rather then something documented in Documentation/devicetree/bindings/...
 
-I have been a big advocate of doing things differently, and more
-cleanly, on ARM, but in this case the code is already non-arch specific.
-We are not talking about pagetables, which of course cannot be reused
-as-is even if we wanted to.
+AFAIK, the behaviour isn't going away, there's been a few patches to
+remove the need for i2c_device_id, and they've all been nacked, so I'd
+say we can use it as is.
 
-For once, I think we should follow the x86 way, for convenience and for
-the reasons brought up by Jan.
+Maxime
 
-
-> > In any case this should be separate from the shim ABI discussion.
-> 
-> I disagree; I think this is very much relevant to the ABI discussion.
-> That's not to say that I insist on a particular approach, but I think
-> that they need to be considered together.
-
-Let's suppose Xen didn't expose any RuntimeServices at all, would that
-make it easier to discuss about the EFI stub parameters?  In the grant
-scheme of things, they are not that important, as Ian wrote what is
-important is how to pass the RSDP.
+-- 
+Maxime Ripard, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
+--svExV93C05KqedWb--
