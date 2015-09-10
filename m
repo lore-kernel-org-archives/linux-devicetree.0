@@ -1,179 +1,33 @@
-From: chenfeng <puck.chen@hisilicon.com>
-Subject: Re: [RESEND PATCH 3/3] reset: hi6220: Reset driver for hisilicon
- hi6220 SoC
-Date: Thu, 10 Sep 2015 18:49:24 +0800
-Message-ID: <55F16034.3090100@hisilicon.com>
-References: <1441865490-104686-1-git-send-email-puck.chen@hisilicon.com>
- <1441865490-104686-3-git-send-email-puck.chen@hisilicon.com>
- <1441878044.3280.31.camel@pengutronix.de>
+From: "Leizhen (ThunderTown)" <thunder.leizhen@huawei.com>
+Subject: Re: [PATCH v2 0/1] of: to support binding numa node to specified
+ device
+Date: Thu, 10 Sep 2015 19:06:14 +0800
+Message-ID: <55F16426.5010801@huawei.com>
+References: <1440475702-7720-1-git-send-email-thunder.leizhen@huawei.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset="windows-1252"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1441878044.3280.31.camel@pengutronix.de>
+In-Reply-To: <1440475702-7720-1-git-send-email-thunder.leizhen@huawei.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Philipp Zabel <p.zabel@pengutronix.de>
-Cc: linux-kernel@vger.kernel.org, dan.zhao@hisilicon.com, w.f@huawei.com, haojian.zhuang@linaro.org, bintian.wang@huawei.com, devicetree@vger.kernel.org
+To: Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, devicetree <devicetree@vger.kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-kernel <linux-kernel@vger.kernel.org>
+Cc: Zefan Li <lizefan@huawei.com>, Xinwei Hu <huxinwei@huawei.com>, Tianhong Ding <dingtianhong@huawei.com>, Hanjun Guo <guohanjun@huawei.com>
 List-Id: devicetree@vger.kernel.org
 
-Zabel,
-Thanks for review.
+Sorry, missed version number in title.
 
 
-On 2015/9/10 17:40, Philipp Zabel wrote:
-> Am Donnerstag, den 10.09.2015, 14:11 +0800 schrieb Chen Feng:
->> Add reset driver for hi6220-hikey board,this driver supply deassert
->> of IP. on hi6220 SoC.
->>
->> Signed-off-by: Chen Feng <puck.chen@hisilicon.com>
->> ---
->>  drivers/reset/Kconfig                  |  1 +
->>  drivers/reset/Makefile                 |  1 +
->>  drivers/reset/hisilicon/Kconfig        |  5 +++
->>  drivers/reset/hisilicon/Makefile       |  1 +
->>  drivers/reset/hisilicon/hi6220_reset.c | 74 ++++++++++++++++++++++++++++++++++
->>  5 files changed, 82 insertions(+)
->>  create mode 100644 drivers/reset/hisilicon/Kconfig
->>  create mode 100644 drivers/reset/hisilicon/Makefile
->>  create mode 100644 drivers/reset/hisilicon/hi6220_reset.c
->>
->> diff --git a/drivers/reset/Kconfig b/drivers/reset/Kconfig
->> index 0615f50..df37212 100644
->> --- a/drivers/reset/Kconfig
->> +++ b/drivers/reset/Kconfig
->> @@ -13,3 +13,4 @@ menuconfig RESET_CONTROLLER
->>  	  If unsure, say no.
->>  
->>  source "drivers/reset/sti/Kconfig"
->> +source "drivers/reset/hisilicon/Kconfig"
->> diff --git a/drivers/reset/Makefile b/drivers/reset/Makefile
->> index 157d421..331d7b2 100644
->> --- a/drivers/reset/Makefile
->> +++ b/drivers/reset/Makefile
->> @@ -3,3 +3,4 @@ obj-$(CONFIG_ARCH_SOCFPGA) += reset-socfpga.o
->>  obj-$(CONFIG_ARCH_BERLIN) += reset-berlin.o
->>  obj-$(CONFIG_ARCH_SUNXI) += reset-sunxi.o
->>  obj-$(CONFIG_ARCH_STI) += sti/
->> +obj-$(CONFIG_ARCH_HISI) += hisilicon/
->> diff --git a/drivers/reset/hisilicon/Kconfig b/drivers/reset/hisilicon/Kconfig
->> new file mode 100644
->> index 0000000..bceed14
->> --- /dev/null
->> +++ b/drivers/reset/hisilicon/Kconfig
->> @@ -0,0 +1,5 @@
->> +config COMMON_RESET_HI6220
->> +	tristate "Hi6220 Clock Driver"
+On 2015/8/25 12:08, Zhen Lei wrote:
+> Changelog:
+> v1 -> v2:
+> In patch v1, binding numa node to specified device only take effect for dt-nodes
+> directly of root. Patch v2 removed this limitation, we can binding numa node to
+> any specified device in devicetree.
 > 
-> "Clock"? Should probably be "Reset".
+> Zhen Lei (1):
+>   of: to support binding numa node to specified device in devicetree
 > 
->> +	depends on (ARCH_HISI && RESET_CONTROLLER)
->> +	help
->> +	  Build the Hisilicon Hi6220 reset driver.
->> diff --git a/drivers/reset/hisilicon/Makefile b/drivers/reset/hisilicon/Makefile
->> new file mode 100644
->> index 0000000..c932f86
->> --- /dev/null
->> +++ b/drivers/reset/hisilicon/Makefile
->> @@ -0,0 +1 @@
->> +obj-$(CONFIG_COMMON_RESET_HI6220) += hi6220_reset.o
->> diff --git a/drivers/reset/hisilicon/hi6220_reset.c b/drivers/reset/hisilicon/hi6220_reset.c
->> new file mode 100644
->> index 0000000..a88fc57
->> --- /dev/null
->> +++ b/drivers/reset/hisilicon/hi6220_reset.c
->> @@ -0,0 +1,74 @@
->> +/*
->> + * Hisilicon Hi6220 reset controller driver
->> + *
->> + * Copyright (c) 2015 Hisilicon Limited.
->> + *
->> + * Author: Feng Chen <puck.chen@hisilicon.com>
->> + *
->> + * This program is free software; you can redistribute it and/or modify
->> + * it under the terms of the GNU General Public License version 2 as
->> + * published by the Free Software Foundation.
->> + */
->> +
->> +#include <linux/init.h>
->> +#include <linux/bitops.h>
->> +#include <linux/io.h>
->> +#include <linux/of.h>
->> +#include <linux/of_address.h>
->> +#include <linux/reset-controller.h>
->> +#include <linux/reset.h>
->> +
->> +static void __iomem *src_base;
->> +static DEFINE_SPINLOCK(reset_lock);
->> +
->> +static int hi6220_reset_module(struct reset_controller_dev *rc_dev,
->> +		unsigned long idx)
->> +{
->> +	unsigned long timeout;
->> +	unsigned long flags;
->> +	int bit;
->> +	u32 val;
->> +
->> +	int bank = idx >> 8;
->> +	int offset = idx & 0xff;
->> +
->> +	spin_lock_irqsave(&reset_lock, flags);
->> +
->> +	val = readl(src_base + (bank * 0x10));
->> +	writel(val | BIT(offset), src_base + (bank * 0x10));
-> 
-> Are these registers write-once, otherwise any reason not to implement
-> reset_assert, too?
-> 
->> +	spin_unlock_irqrestore(&reset_lock, flags);
->> +
->> +	return 0;
->> +
->> +}
->> +
->> +static struct reset_control_ops hi6220_reset_ops = {
->> +	.deassert = hi6220_reset_module,
->> +};
->> +
->> +static struct reset_controller_dev hi6220_reset_dev = {
->> +	.ops = &hi6220_reset_ops,
->> +	.nr_resets = 0xffff,
-> 
-> This can't be correct, you only have 4 KiB register space.
-> 
->> +};
->> +
->> +static void __init hi6220_reset_init(void)
->> +{
->> +	struct device_node *np;
->> +	struct reset_control *test = NULL;
->> +
->> +	np = of_find_compatible_node(NULL, NULL, "hisilicon,hisi_reset_ctl");
-> 
-> Better use "hisilicon,hi6220-reset-ctl" instead.
-> 
-
-Totally agree!
-
->> +	if (!np) {
->> +		pr_err("find reset node in dts error!\n");
->> +		return;
->> +	}
->> +	src_base = of_iomap(np, 0);
->> +	WARN_ON(!src_base);
->> +
->> +	hi6220_reset_dev.of_node = np;
->> +	if (IS_ENABLED(CONFIG_RESET_CONTROLLER))
->> +		reset_controller_register(&hi6220_reset_dev);
->> +}
->> +
->> +postcore_initcall(hi6220_reset_init);
->> +
-> 
-> Drop this empty line.
-> 
-> best regards
-> Philipp
-> 
-> 
-> .
+>  drivers/base/core.c |  2 +-
+>  drivers/of/device.c | 11 ++++++-----
+>  2 files changed, 7 insertions(+), 6 deletions(-)
 > 
