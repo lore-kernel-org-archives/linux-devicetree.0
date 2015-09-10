@@ -1,143 +1,187 @@
-From: Florian Fainelli <florian-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>
-Subject: Re: [PATCH 2/2] spi/bcm63xx: add support for probing through devicetree
-Date: Thu, 10 Sep 2015 12:19:39 -0700
-Message-ID: <55F1D7CB.9020804@openwrt.org>
-References: <1441898975-22540-1-git-send-email-jogo@openwrt.org> <1441898975-22540-3-git-send-email-jogo@openwrt.org>
+From: Adrian Alonso <aalonso-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: [PATCH v3 2/8] ARM: imx: imx7d-pinfunc: add gpio1 pad iomux settings
+Date: Thu, 10 Sep 2015 14:21:42 -0500
+Message-ID: <1441912908-21946-2-git-send-email-aalonso@freescale.com>
+References: <1441912908-21946-1-git-send-email-aalonso@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1441898975-22540-3-git-send-email-jogo-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>
-Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jonas Gorski <jogo-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1441912908-21946-1-git-send-email-aalonso-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, lznuaa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Cc: linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Anson.Huang-KZfg59tc24xl57MIdRCFDg@public.gmane.org, Frank.Li-KZfg59tc24xl57MIdRCFDg@public.gmane.org, yibin.gong-KZfg59tc24xl57MIdRCFDg@public.gmane.org, nitin.garg-KZfg59tc24xl57MIdRCFDg@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 10/09/15 08:29, Jonas Gorski wrote:
-> Add required binding support to probe through device tree.
-> 
-> Use the compatible instead of the resource size for identifiying the
-> block type, and allow reducing the number of cs lines through OF.
+- Add imx7 SoC GPIO1 pad iomuxc settings
+  <mux_reg conf_reg input_reg mux_mode input_val>
+- Fix UART input select daisy chain setting values
 
-This looks good to me, since this builds on top of your other 6 patches,
-the end-result might be different, especially if we end-up using
-platform_device_id as suggested. Other than that:
+Signed-off-by: Adrian Alonso <aalonso-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+---
+Chages for V2: Fix tab+space identation
+Chages for V3: Resend
 
-Reviewed-by: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+ arch/arm/boot/dts/imx7d-pinfunc.h | 122 +++++++++++++++++++++++++++++++++++++-
+ 1 file changed, 119 insertions(+), 3 deletions(-)
 
-Thanks for doing this!
-
-> 
-> Signed-off-by: Jonas Gorski <jogo-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>
-> ---
->  drivers/spi/spi-bcm63xx.c | 56 +++++++++++++++++++++++++++++++++++------------
->  1 file changed, 42 insertions(+), 14 deletions(-)
-> 
-> diff --git a/drivers/spi/spi-bcm63xx.c b/drivers/spi/spi-bcm63xx.c
-> index 42f33bc..ec094b1 100644
-> --- a/drivers/spi/spi-bcm63xx.c
-> +++ b/drivers/spi/spi-bcm63xx.c
-> @@ -26,6 +26,7 @@
->  #include <linux/completion.h>
->  #include <linux/err.h>
->  #include <linux/pm_runtime.h>
-> +#include <linux/of.h>
->  
->  /* BCM 6338/6348 SPI core */
->  #define SPI_6348_RSET_SIZE		64
-> @@ -465,6 +466,12 @@ static const unsigned long bcm6358_spi_reg_offsets[] = {
->  	[SPI_MSG_DATA_SIZE]	= SPI_6358_MSG_DATA_SIZE,
->  };
->  
-> +static const struct of_device_id bcm63xx_spi_of_match[] = {
-> +	{ .compatible = "brcm,bcm6348-spi", .data = &bcm6348_spi_reg_offsets },
-> +	{ .compatible = "brcm,bcm6358-spi", .data = &bcm6358_spi_reg_offsets },
-> +	{ },
-> +};
-> +
->  static int bcm63xx_spi_probe(struct platform_device *pdev)
->  {
->  	struct resource *r;
-> @@ -474,6 +481,7 @@ static int bcm63xx_spi_probe(struct platform_device *pdev)
->  	struct clk *clk;
->  	struct bcm63xx_spi *bs;
->  	int ret;
-> +	u32 num_cs = BCM63XX_SPI_MAX_CS;
->  
->  	irq = platform_get_irq(pdev, 0);
->  	if (irq < 0) {
-> @@ -516,27 +524,46 @@ static int bcm63xx_spi_probe(struct platform_device *pdev)
->  		goto out_err;
->  	}
->  
-> -	master->bus_num = BCM63XX_SPI_BUS_NUM;
-> -	master->num_chipselect = BCM63XX_SPI_MAX_CS;
->  	master->transfer_one_message = bcm63xx_spi_transfer_one;
->  	master->mode_bits = MODEBITS;
->  	master->bits_per_word_mask = SPI_BPW_MASK(8);
->  	master->auto_runtime_pm = true;
->  
-> -	switch (resource_size(r)) {
-> -	case SPI_6348_RSET_SIZE:
-> -		bs->reg_offsets = bcm6348_spi_reg_offsets;
-> -		break;
-> -	case SPI_6358_RSET_SIZE:
-> -		bs->reg_offsets = bcm6358_spi_reg_offsets;
-> -		break;
-> -	default:
-> -		ret = -EINVAL;
-> -		dev_err(dev, "unsupported register size: %i\n",
-> -			resource_size(r));
-> -		goto out_err;
-> +	if (dev->of_node) {
-> +		const struct of_device_id *match;
-> +
-> +		match = of_match_node(bcm63xx_spi_of_match, dev->of_node);
-> +		if (!match) {
-> +			ret = -EINVAL;
-> +			goto out_err;
-> +		}
-> +		bs->reg_offsets = match->data;
-> +		master->dev.of_node = dev->of_node;
-> +		of_property_read_u32(dev->of_node, "num-cs", &num_cs);
-> +		if (num_cs > BCM63XX_SPI_MAX_CS) {
-> +			dev_warn(dev, "unsupported number of cs (%i), reducing to 8\n",
-> +				 num_cs);
-> +			num_cs = BCM63XX_SPI_MAX_CS;
-> +		}
-> +	} else {
-> +		master->bus_num = BCM63XX_SPI_BUS_NUM;
-> +
-> +		switch (resource_size(r)) {
-> +		case SPI_6348_RSET_SIZE:
-> +			bs->reg_offsets = bcm6348_spi_reg_offsets;
-> +			break;
-> +		case SPI_6358_RSET_SIZE:
-> +			bs->reg_offsets = bcm6358_spi_reg_offsets;
-> +			break;
-> +		default:
-> +			ret = -EINVAL;
-> +			dev_err(dev, "unsupported register size: %i\n",
-> +				resource_size(r));
-> +			goto out_err;
-> +		}
->  	}
->  
-> +	master->num_chipselect = num_cs;
->  	bs->msg_type_shift = bs->reg_offsets[SPI_MSG_TYPE_SHIFT];
->  	bs->msg_ctl_width = bs->reg_offsets[SPI_MSG_CTL_WIDTH];
->  	bs->fifo_size = bs->reg_offsets[SPI_MSG_DATA_SIZE];
-> @@ -621,6 +648,7 @@ static struct platform_driver bcm63xx_spi_driver = {
->  	.driver = {
->  		.name	= "bcm63xx-spi",
->  		.pm	= &bcm63xx_spi_pm_ops,
-> +		.of_match_table = bcm63xx_spi_of_match,
->  	},
->  	.probe		= bcm63xx_spi_probe,
->  	.remove		= bcm63xx_spi_remove,
-> 
+diff --git a/arch/arm/boot/dts/imx7d-pinfunc.h b/arch/arm/boot/dts/imx7d-pinfunc.h
+index a8d8149..eeda783 100644
+--- a/arch/arm/boot/dts/imx7d-pinfunc.h
++++ b/arch/arm/boot/dts/imx7d-pinfunc.h
+@@ -15,6 +15,122 @@
+  * <mux_reg conf_reg input_reg mux_mode input_val>
+  */
+ 
++#define MX7D_PAD_GPIO1_IO00__GPIO1_IO0                            0x0000 0x0030 0x0000 0x0 0x0
++#define MX7D_PAD_GPIO1_IO00__PWM4_OUT                             0x0000 0x0030 0x0000 0x1 0x0
++#define MX7D_PAD_GPIO1_IO00__WDOD1_WDOG_ANY                       0x0000 0x0030 0x0000 0x2 0x0
++#define MX7D_PAD_GPIO1_IO00__WDOD1_WDOG_B                         0x0000 0x0030 0x0000 0x3 0x0
++#define MX7D_PAD_GPIO1_IO00__WDOD1_WDOG__RST_B_DEB                0x0000 0x0030 0x0000 0x4 0x0
++#define MX7D_PAD_GPIO1_IO01__GPIO1_IO1                            0x0004 0x0034 0x0000 0x0 0x0
++#define MX7D_PAD_GPIO1_IO01__PWM1_OUT                             0x0004 0x0034 0x0000 0x1 0x0
++#define MX7D_PAD_GPIO1_IO01__CCM_ENET_REF_CLK3                    0x0004 0x0034 0x0000 0x2 0x0
++#define MX7D_PAD_GPIO1_IO01__SAI1_MCLK                            0x0004 0x0034 0x0000 0x3 0x0
++#define MX7D_PAD_GPIO1_IO01__ANATOP_24M_OUT                       0x0004 0x0034 0x0000 0x4 0x0
++#define MX7D_PAD_GPIO1_IO01__OBSERVE0_OUT                         0x0004 0x0034 0x0000 0x6 0x0
++#define MX7D_PAD_GPIO1_IO02__GPIO1_IO2                            0x0008 0x0038 0x0000 0x0 0x0
++#define MX7D_PAD_GPIO1_IO02__PWM2_OUT                             0x0008 0x0038 0x0000 0x1 0x0
++#define MX7D_PAD_GPIO1_IO02__CCM_ENET_REF_CLK1                    0x0008 0x0038 0x0564 0x2 0x3
++#define MX7D_PAD_GPIO1_IO02__SAI2_MCLK                            0x0008 0x0038 0x0000 0x3 0x0
++#define MX7D_PAD_GPIO1_IO02__CCM_CLKO1                            0x0008 0x0038 0x0000 0x5 0x0
++#define MX7D_PAD_GPIO1_IO02__OBSERVE1_OUT                         0x0008 0x0038 0x0000 0x6 0x0
++#define MX7D_PAD_GPIO1_IO02__USB_OTG1_ID                          0x0008 0x0038 0x0734 0x7 0x3
++#define MX7D_PAD_GPIO1_IO03__GPIO1_IO3                            0x000C 0x003C 0x0000 0x0 0x0
++#define MX7D_PAD_GPIO1_IO03__PWM3_OUT                             0x000C 0x003C 0x0000 0x1 0x0
++#define MX7D_PAD_GPIO1_IO03__CCM_ENET_REF_CLK2                    0x000C 0x003C 0x0570 0x2 0x3
++#define MX7D_PAD_GPIO1_IO03__SAI3_MCLK                            0x000C 0x003C 0x0000 0x3 0x0
++#define MX7D_PAD_GPIO1_IO03__CCM_CLKO2                            0x000C 0x003C 0x0000 0x5 0x0
++#define MX7D_PAD_GPIO1_IO03__OBSERVE2_OUT                         0x000C 0x003C 0x0000 0x6 0x0
++#define MX7D_PAD_GPIO1_IO03__USB_OTG2_ID                          0x000C 0x003C 0x0730 0x7 0x3
++#define MX7D_PAD_GPIO1_IO04__GPIO1_IO4                            0x0010 0x0040 0x0000 0x0 0x0
++#define MX7D_PAD_GPIO1_IO04__USB_OTG1_OC                          0x0010 0x0040 0x072C 0x1 0x1
++#define MX7D_PAD_GPIO1_IO04__FLEXTIMER1_CH4                       0x0010 0x0040 0x0594 0x2 0x1
++#define MX7D_PAD_GPIO1_IO04__UART5_CTS_B                          0x0010 0x0040 0x0710 0x3 0x4
++#define MX7D_PAD_GPIO1_IO04__I2C1_SCL                             0x0010 0x0040 0x05D4 0x4 0x2
++#define MX7D_PAD_GPIO1_IO04__OBSERVE3_OUT                         0x0010 0x0040 0x0000 0x6 0x0
++#define MX7D_PAD_GPIO1_IO05__GPIO1_IO5                            0x0014 0x0044 0x0000 0x0 0x0
++#define MX7D_PAD_GPIO1_IO05__USB_OTG1_PWR                         0x0014 0x0044 0x0000 0x1 0x0
++#define MX7D_PAD_GPIO1_IO05__FLEXTIMER1_CH5                       0x0014 0x0044 0x0598 0x2 0x1
++#define MX7D_PAD_GPIO1_IO05__UART5_RTS_B                          0x0014 0x0044 0x0710 0x3 0x5
++#define MX7D_PAD_GPIO1_IO05__I2C1_SDA                             0x0014 0x0044 0x05D8 0x4 0x2
++#define MX7D_PAD_GPIO1_IO05__OBSERVE4_OUT                         0x0014 0x0044 0x0000 0x6 0x0
++#define MX7D_PAD_GPIO1_IO06__GPIO1_IO6                            0x0018 0x0048 0x0000 0x0 0x0
++#define MX7D_PAD_GPIO1_IO06__USB_OTG2_OC                          0x0018 0x0048 0x0728 0x1 0x1
++#define MX7D_PAD_GPIO1_IO06__FLEXTIMER1_CH6                       0x0018 0x0048 0x059C 0x2 0x1
++#define MX7D_PAD_GPIO1_IO06__UART5_RX_DATA                        0x0018 0x0048 0x0714 0x3 0x4
++#define MX7D_PAD_GPIO1_IO06__I2C2_SCL                             0x0018 0x0048 0x05DC 0x4 0x2
++#define MX7D_PAD_GPIO1_IO06__CCM_WAIT                             0x0018 0x0048 0x0000 0x5 0x0
++#define MX7D_PAD_GPIO1_IO06__KPP_ROW4                             0x0018 0x0048 0x0624 0x6 0x1
++#define MX7D_PAD_GPIO1_IO07__GPIO1_IO7                            0x001C 0x004C 0x0000 0x0 0x0
++#define MX7D_PAD_GPIO1_IO07__USB_OTG2_PWR                         0x001C 0x004C 0x0000 0x1 0x0
++#define MX7D_PAD_GPIO1_IO07__FLEXTIMER1_CH7                       0x001C 0x004C 0x05A0 0x2 0x1
++#define MX7D_PAD_GPIO1_IO07__UART5_TX_DATA                        0x001C 0x004C 0x0714 0x3 0x5
++#define MX7D_PAD_GPIO1_IO07__I2C2_SDA                             0x001C 0x004C 0x05E0 0x4 0x2
++#define MX7D_PAD_GPIO1_IO07__CCM_STOP                             0x001C 0x004C 0x0000 0x5 0x0
++#define MX7D_PAD_GPIO1_IO07__KPP_COL4                             0x001C 0x004C 0x0604 0x6 0x1
++#define MX7D_PAD_GPIO1_IO08__GPIO1_IO8                            0x0014 0x026C 0x0000 0x0 0x0
++#define MX7D_PAD_GPIO1_IO08__SD1_VSELECT                          0x0014 0x026C 0x0000 0x1 0x0
++#define MX7D_PAD_GPIO1_IO08__WDOG1_WDOG_B                         0x0014 0x026C 0x0000 0x2 0x0
++#define MX7D_PAD_GPIO1_IO08__UART3_DCE_RX                         0x0014 0x026C 0x0704 0x3 0x0
++#define MX7D_PAD_GPIO1_IO08__UART3_DTE_TX                         0x0014 0x026C 0x0000 0x3 0x0
++#define MX7D_PAD_GPIO1_IO08__I2C3_SCL                             0x0014 0x026C 0x05E4 0x4 0x0
++#define MX7D_PAD_GPIO1_IO08__KPP_COL5                             0x0014 0x026C 0x0608 0x6 0x0
++#define MX7D_PAD_GPIO1_IO08__PWM1_OUT                             0x0014 0x026C 0x0000 0x7 0x0
++#define MX7D_PAD_GPIO1_IO09__GPIO1_IO9                            0x0018 0x0270 0x0000 0x0 0x0
++#define MX7D_PAD_GPIO1_IO09__SD1_LCTL                             0x0018 0x0270 0x0000 0x1 0x0
++#define MX7D_PAD_GPIO1_IO09__CCM_ENET_REF_CLK3                    0x0018 0x0270 0x0000 0x2 0x0
++#define MX7D_PAD_GPIO1_IO09__UART3_DCE_TX                         0x0018 0x0270 0x0000 0x3 0x0
++#define MX7D_PAD_GPIO1_IO09__UART3_DTE_RX                         0x0018 0x0270 0x0704 0x3 0x1
++#define MX7D_PAD_GPIO1_IO09__I2C3_SDA                             0x0018 0x0270 0x05E8 0x4 0x0
++#define MX7D_PAD_GPIO1_IO09__CCM_PMIC_READY                       0x0018 0x0270 0x04F4 0x5 0x0
++#define MX7D_PAD_GPIO1_IO09__KPP_ROW5                             0x0018 0x0270 0x0628 0x6 0x0
++#define MX7D_PAD_GPIO1_IO09__PWM2_OUT                             0x0018 0x0270 0x0000 0x7 0x0
++#define MX7D_PAD_GPIO1_IO10__GPIO1_IO10                           0x001C 0x0274 0x0000 0x0 0x0
++#define MX7D_PAD_GPIO1_IO10__SD2_LCTL                             0x001C 0x0274 0x0000 0x1 0x0
++#define MX7D_PAD_GPIO1_IO10__ENET1_MDIO                           0x001C 0x0274 0x0568 0x2 0x0
++#define MX7D_PAD_GPIO1_IO10__UART3_DCE_RTS                        0x001C 0x0274 0x0700 0x3 0x0
++#define MX7D_PAD_GPIO1_IO10__UART3_DTE_CTS                        0x001C 0x0274 0x0000 0x3 0x0
++#define MX7D_PAD_GPIO1_IO10__I2C4_SCL                             0x001C 0x0274 0x05EC 0x4 0x0
++#define MX7D_PAD_GPIO1_IO10__FLEXTIMER1_PHA                       0x001C 0x0274 0x05A4 0x5 0x0
++#define MX7D_PAD_GPIO1_IO10__KPP_COL6                             0x001C 0x0274 0x060C 0x6 0x0
++#define MX7D_PAD_GPIO1_IO10__PWM3_OUT                             0x001C 0x0274 0x0000 0x7 0x0
++#define MX7D_PAD_GPIO1_IO11__GPIO1_IO11                           0x0020 0x0278 0x0000 0x0 0x0
++#define MX7D_PAD_GPIO1_IO11__SD3_LCTL                             0x0020 0x0278 0x0000 0x1 0x0
++#define MX7D_PAD_GPIO1_IO11__ENET1_MDC                            0x0020 0x0278 0x0000 0x2 0x0
++#define MX7D_PAD_GPIO1_IO11__UART3_DCE_CTS                        0x0020 0x0278 0x0000 0x3 0x0
++#define MX7D_PAD_GPIO1_IO11__UART3_DTE_RTS                        0x0020 0x0278 0x0700 0x3 0x1
++#define MX7D_PAD_GPIO1_IO11__I2C4_SDA                             0x0020 0x0278 0x05F0 0x4 0x0
++#define MX7D_PAD_GPIO1_IO11__FLEXTIMER1_PHB                       0x0020 0x0278 0x05A8 0x5 0x0
++#define MX7D_PAD_GPIO1_IO11__KPP_ROW6                             0x0020 0x0278 0x062C 0x6 0x0
++#define MX7D_PAD_GPIO1_IO11__PWM4_OUT                             0x0020 0x0278 0x0000 0x7 0x0
++#define MX7D_PAD_GPIO1_IO12__GPIO1_IO12                           0x0024 0x027C 0x0000 0x0 0x0
++#define MX7D_PAD_GPIO1_IO12__SD2_VSELECT                          0x0024 0x027C 0x0000 0x1 0x0
++#define MX7D_PAD_GPIO1_IO12__CCM_ENET_REF_CLK1                    0x0024 0x027C 0x0564 0x2 0x0
++#define MX7D_PAD_GPIO1_IO12__FLEXCAN1_RX                          0x0024 0x027C 0x04DC 0x3 0x0
++#define MX7D_PAD_GPIO1_IO12__CM4_NMI                              0x0024 0x027C 0x0000 0x4 0x0
++#define MX7D_PAD_GPIO1_IO12__CCM_EXT_CLK1                         0x0024 0x027C 0x04E4 0x5 0x0
++#define MX7D_PAD_GPIO1_IO12__SNVS_VIO_5                           0x0024 0x027C 0x0000 0x6 0x0
++#define MX7D_PAD_GPIO1_IO12__USB_OTG1_ID                          0x0024 0x027C 0x0734 0x7 0x0
++#define MX7D_PAD_GPIO1_IO13__GPIO1_IO13                           0x0028 0x0280 0x0000 0x0 0x0
++#define MX7D_PAD_GPIO1_IO13__SD3_VSELECT                          0x0028 0x0280 0x0000 0x1 0x0
++#define MX7D_PAD_GPIO1_IO13__CCM_ENET_REF_CLK2                    0x0028 0x0280 0x0570 0x2 0x0
++#define MX7D_PAD_GPIO1_IO13__FLEXCAN1_TX                          0x0028 0x0280 0x0000 0x3 0x0
++#define MX7D_PAD_GPIO1_IO13__CCM_PMIC_READY                       0x0028 0x0280 0x04F4 0x4 0x1
++#define MX7D_PAD_GPIO1_IO13__CCM_EXT_CLK2                         0x0028 0x0280 0x04E8 0x5 0x0
++#define MX7D_PAD_GPIO1_IO13__SNVS_VIO_5_CTL                       0x0028 0x0280 0x0000 0x6 0x0
++#define MX7D_PAD_GPIO1_IO13__USB_OTG2_ID                          0x0028 0x0280 0x0730 0x7 0x0
++#define MX7D_PAD_GPIO1_IO14__GPIO1_IO14                           0x002C 0x0284 0x0000 0x0 0x0
++#define MX7D_PAD_GPIO1_IO14__SD3_CD_B                             0x002C 0x0284 0x0738 0x1 0x0
++#define MX7D_PAD_GPIO1_IO14__ENET2_MDIO                           0x002C 0x0284 0x0574 0x2 0x0
++#define MX7D_PAD_GPIO1_IO14__FLEXCAN2_RX                          0x002C 0x0284 0x04E0 0x3 0x0
++#define MX7D_PAD_GPIO1_IO14__WDOG3_WDOG_B                         0x002C 0x0284 0x0000 0x4 0x0
++#define MX7D_PAD_GPIO1_IO14__CCM_EXT_CLK3                         0x002C 0x0284 0x04EC 0x5 0x0
++#define MX7D_PAD_GPIO1_IO14__SDMA_EXT_EVENT0                      0x002C 0x0284 0x06D8 0x6 0x0
++#define MX7D_PAD_GPIO1_IO15__GPIO1_IO15                           0x0030 0x0288 0x0000 0x0 0x0
++#define MX7D_PAD_GPIO1_IO15__SD3_WP                               0x0030 0x0288 0x073C 0x1 0x0
++#define MX7D_PAD_GPIO1_IO15__ENET2_MDC                            0x0030 0x0288 0x0000 0x2 0x0
++#define MX7D_PAD_GPIO1_IO15__FLEXCAN2_TX                          0x0030 0x0288 0x0000 0x3 0x0
++#define MX7D_PAD_GPIO1_IO15__WDOG4_WDOG_B                         0x0030 0x0288 0x0000 0x4 0x0
++#define MX7D_PAD_GPIO1_IO15__CCM_EXT_CLK4                         0x0030 0x0288 0x04F0 0x5 0x0
++#define MX7D_PAD_GPIO1_IO15__SDMA_EXT_EVENT1                      0x0030 0x0288 0x06DC 0x6 0x0
+ #define MX7D_PAD_EPDC_DATA00__EPDC_DATA0                          0x0034 0x02A4 0x0000 0x0 0x0
+ #define MX7D_PAD_EPDC_DATA00__SIM1_PORT2_TRXD                     0x0034 0x02A4 0x0000 0x1 0x0
+ #define MX7D_PAD_EPDC_DATA00__QSPI_A_DATA0                        0x0034 0x02A4 0x0000 0x2 0x0
+@@ -453,7 +569,7 @@
+ #define MX7D_PAD_LCD_DATA23__EIM_ADDR26                           0x0124 0x0394 0x0000 0x4 0x0
+ #define MX7D_PAD_LCD_DATA23__GPIO3_IO28                           0x0124 0x0394 0x0000 0x5 0x0
+ #define MX7D_PAD_LCD_DATA23__I2C4_SDA                             0x0124 0x0394 0x05F0 0x6 0x1
+-#define MX7D_PAD_UART1_RX_DATA__UART1_DCE_RX                      0x0128 0x0398 0x0000 0x0 0x0
++#define MX7D_PAD_UART1_RX_DATA__UART1_DCE_RX                      0x0128 0x0398 0x06F4 0x0 0x0
+ #define MX7D_PAD_UART1_RX_DATA__UART1_DTE_TX                      0x0128 0x0398 0x0000 0x0 0x0
+ #define MX7D_PAD_UART1_RX_DATA__I2C1_SCL                          0x0128 0x0398 0x05D4 0x1 0x0
+ #define MX7D_PAD_UART1_RX_DATA__CCM_PMIC_READY                    0x0128 0x0398 0x0000 0x2 0x0
+@@ -469,7 +585,7 @@
+ #define MX7D_PAD_UART1_TX_DATA__ENET2_1588_EVENT0_OUT             0x012C 0x039C 0x0000 0x4 0x0
+ #define MX7D_PAD_UART1_TX_DATA__GPIO4_IO1                         0x012C 0x039C 0x0000 0x5 0x0
+ #define MX7D_PAD_UART1_TX_DATA__ENET1_MDC                         0x012C 0x039C 0x0000 0x6 0x0
+-#define MX7D_PAD_UART2_RX_DATA__UART2_DCE_RX                      0x0130 0x03A0 0x0000 0x0 0x0
++#define MX7D_PAD_UART2_RX_DATA__UART2_DCE_RX                      0x0130 0x03A0 0x06FC 0x0 0x2
+ #define MX7D_PAD_UART2_RX_DATA__UART2_DTE_TX                      0x0130 0x03A0 0x0000 0x0 0x0
+ #define MX7D_PAD_UART2_RX_DATA__I2C2_SCL                          0x0130 0x03A0 0x05DC 0x1 0x0
+ #define MX7D_PAD_UART2_RX_DATA__SAI3_RX_BCLK                      0x0130 0x03A0 0x0000 0x2 0x0
+@@ -501,7 +617,7 @@
+ #define MX7D_PAD_UART3_TX_DATA__ENET1_1588_EVENT0_OUT             0x013C 0x03AC 0x0000 0x4 0x0
+ #define MX7D_PAD_UART3_TX_DATA__GPIO4_IO5                         0x013C 0x03AC 0x0000 0x5 0x0
+ #define MX7D_PAD_UART3_TX_DATA__SD2_LCTL                          0x013C 0x03AC 0x0000 0x6 0x0
+-#define MX7D_PAD_UART3_RTS_B__UART3_DCE_RTS                       0x0140 0x03B0 0x0000 0x0 0x0
++#define MX7D_PAD_UART3_RTS_B__UART3_DCE_RTS                       0x0140 0x03B0 0x0700 0x0 0x2
+ #define MX7D_PAD_UART3_RTS_B__UART3_DTE_CTS                       0x0140 0x03B0 0x0000 0x0 0x0
+ #define MX7D_PAD_UART3_RTS_B__USB_OTG2_OC                         0x0140 0x03B0 0x0728 0x1 0x0
+ #define MX7D_PAD_UART3_RTS_B__SAI3_TX_DATA0                       0x0140 0x03B0 0x0000 0x2 0x0
+-- 
+2.1.4
 
 --
-To unsubscribe from this list: send the line "unsubscribe linux-spi" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
