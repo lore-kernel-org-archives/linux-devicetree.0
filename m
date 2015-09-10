@@ -1,27 +1,68 @@
-From: Laurentiu Palcu <laurentiu.palcu@intel.com>
-Subject: Re: [PATCH v2 09/13] power: bq24257: Allow input current limit sysfs
- access
-Date: Thu, 10 Sep 2015 17:06:30 +0300
-Message-ID: <20150910140630.GK21512@lpalcu-desk>
-References: <1441757557-7266-1-git-send-email-dannenberg@ti.com>
- <1441757557-7266-10-git-send-email-dannenberg@ti.com>
+From: Enric Balletbo Serra <eballetbo@gmail.com>
+Subject: Re: [PATCHv2 2/3] devicetree: Add new ANX7814 SlimPort transmitter
+ binding.
+Date: Thu, 10 Sep 2015 16:11:03 +0200
+Message-ID: <CAFqH_50BZPNbKhQrT+8fNEeFHUsGF0Bzdn-TKMzDTtF9ftetYg@mail.gmail.com>
+References: <1441697120-3876-1-git-send-email-enric.balletbo@collabora.com>
+ <55EF8009.6070009@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-pm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1441757557-7266-10-git-send-email-dannenberg@ti.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Andreas Dannenberg <dannenberg@ti.com>
-Cc: Sebastian Reichel <sre@kernel.org>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, David Woodhouse <dwmw2@infradead.org>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, linux-pm@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <55EF8009.6070009@kernel.org>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Rob Herring <robh@kernel.org>
+Cc: devel@driverdev.osuosl.org, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-kernel@vger.kernel.org, dri-devel <dri-devel@lists.freedesktop.org>, Sjoerd Simons <sjoerd.simons@collabora.co.uk>, Rob Herring <robh+dt@kernel.org>, span@analogixsemi.com, Kumar Gala <galak@codeaurora.org>, Mark Rutland <mark.rutland@arm.com>, Javier Martinez Canillas <javier@dowhile0.org>, Nathan Chung <nathan.chung@mediatek.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Sep 08, 2015 at 07:12:33PM -0500, Andreas Dannenberg wrote:
-> This patch allows reading (and writing, if the D+/D- USB signal-based
-> charger type detection is disabled) of the input current limit through
-> the POWER_SUPPLY_PROP_INPUT_CURRENT_LIMIT sysfs property. This allows
-> userspace to see what charger was detected and to re-configure the
-> maximum current drawn from the external supply at runtime based on
-> system-level knowledge or user input.
-> 
-> Signed-off-by: Andreas Dannenberg <dannenberg@ti.com>
-Reviewed-by: Laurentiu Palcu <laurentiu.palcu@intel.com>
+SGkgUm9iLAoKMjAxNS0wOS0wOSAyOjQwIEdNVCswMjowMCBSb2IgSGVycmluZyA8cm9iaEBrZXJu
+ZWwub3JnPjoKPiBPbiAwOS8wOC8yMDE1IDAyOjI1IEFNLCBFbnJpYyBCYWxsZXRibyBpIFNlcnJh
+IHdyb3RlOgo+PiBUaGUgQU5YNzgxNCBpcyBhbiB1bHRyYS1sb3cgcG93ZXIgRnVsbC1IRCAoMTA4
+MHA2MCkgU2xpbVBvcnQgdHJhbnNtaXR0ZXIKPj4gZGVzaWduZWQgZm9yIHBvcnRhYmxlIGRldmlj
+ZXMuCj4+Cj4+IFlvdSBjYW4gYWRkIHN1cHBvcnQgdG8geW91ciBib2FyZCB3aXRoIGN1cnJlbnQg
+YmluZGluZy4KPj4KPj4gRXhhbXBsZToKPj4KPj4gICAgICAgYW54NzgxNDogYW54NzgxNEAzOCB7
+Cj4+ICAgICAgICAgICAgICAgY29tcGF0aWJsZSA9ICJhbmFsb2dpeCxhbng3ODE0IjsKPj4gICAg
+ICAgICAgICAgICByZWcgPSA8MHgzOD47Cj4+ICAgICAgICAgICAgICAgcGQtZ3Bpb3MgPSA8Jmdw
+aW8wIDEgR1BJT19BQ1RJVkVfSElHSD47Cj4+ICAgICAgICAgICAgICAgcmVzZXQtZ3Bpb3MgPSA8
+JmdwaW8wIDIgR1BJT19BQ1RJVkVfSElHSD47Cj4+ICAgICAgIH07Cj4+Cj4+IFNpZ25lZC1vZmYt
+Ynk6IEVucmljIEJhbGxldGJvIGkgU2VycmEgPGVucmljLmJhbGxldGJvQGNvbGxhYm9yYS5jb20+
+Cj4+IC0tLQo+PiAgLi4uL2RldmljZXRyZWUvYmluZGluZ3MvdmlkZW8vYW54NzgxNC50eHQgICAg
+ICAgICAgfCAyMiArKysrKysrKysrKysrKysrKysrKysrCj4+ICAxIGZpbGUgY2hhbmdlZCwgMjIg
+aW5zZXJ0aW9ucygrKQo+PiAgY3JlYXRlIG1vZGUgMTAwNjQ0IERvY3VtZW50YXRpb24vZGV2aWNl
+dHJlZS9iaW5kaW5ncy92aWRlby9hbng3ODE0LnR4dAo+Pgo+PiBkaWZmIC0tZ2l0IGEvRG9jdW1l
+bnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3ZpZGVvL2FueDc4MTQudHh0IGIvRG9jdW1lbnRh
+dGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3ZpZGVvL2FueDc4MTQudHh0Cj4+IG5ldyBmaWxlIG1v
+ZGUgMTAwNjQ0Cj4+IGluZGV4IDAwMDAwMDAuLmE4Y2M3NDYKPj4gLS0tIC9kZXYvbnVsbAo+PiAr
+KysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvdmlkZW8vYW54NzgxNC50eHQK
+Pj4gQEAgLTAsMCArMSwyMiBAQAo+PiArQW5hbG9naXggQU5YNzgxNCBTbGltUG9ydCAoRnVsbC1I
+RCBUcmFuc21pdHRlcikKPj4gKy0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
+LS0tLS0tLS0tCj4+ICsKPj4gK1RoZSBBTlg3ODE0IGlzIGFuIHVsdHJhLWxvdyBwb3dlciBGdWxs
+LUhEICgxMDgwcDYwKSBTbGltUG9ydCB0cmFuc21pdHRlcgo+PiArZGVzaWduZWQgZm9yIHBvcnRh
+YmxlIGRldmljZXMuCj4+ICsKPj4gK1JlcXVpcmVkIHByb3BlcnRpZXM6Cj4+ICsKPj4gKyAtIGNv
+bXBhdGlibGUgICAgICAgIDogImFuYWxvZ2l4LGFueDc4MTQiCj4+ICsgLSByZWcgICAgICAgICAg
+ICAgICA6IEkyQyBhZGRyZXNzIG9mIHRoZSBkZXZpY2UKPj4gKyAtIHBkLWdwaW9zICA6IFdoaWNo
+IEdQSU8gdG8gdXNlIGZvciBwb3dlciBkb3duCj4+ICsgLSByZXNldC1ncGlvcyAgICAgICA6IFdo
+aWNoIEdQSU8gdG8gdXNlIGZvciByZXNldAo+PiArCj4+ICtFeGFtcGxlOgo+PiArCj4+ICsgICAg
+IGFueDc4MTQ6IGFueDc4MTRAMzggewo+PiArICAgICAgICAgICAgIGNvbXBhdGlibGUgPSAiYW5h
+bG9naXgsYW54NzgxNCI7Cj4+ICsgICAgICAgICAgICAgcmVnID0gPDB4Mzg+Owo+PiArICAgICAg
+ICAgICAgIHBkLWdwaW9zID0gPCZncGlvMCAxIEdQSU9fQUNUSVZFX0hJR0g+Owo+PiArICAgICAg
+ICAgICAgIHJlc2V0LWdwaW9zID0gPCZncGlvMCAyIEdQSU9fQUNUSVZFX0hJR0g+Owo+Cj4gTm8g
+cG9ydHMgbmVlZGVkIGZvciBkZXNjcmliaW5nIGRhdGEgY29ubmVjdGlvbnM/Cj4KCklNSE8gSSdt
+IG5vdCBzdXJlIGlmIHRoaXMgaXMgYXBwbGljYWJsZSBoZXJlLCBpbiB0aGlzIGNhc2UgdGhlIGJy
+aWRnZQppcyB0cmFuc3BhcmVudCBzbyBpdCdzIG5vdCByZXF1aXJlZCBhbm90aGVyIGRldmljZSBu
+b2RlLiBGb3IgZXhhbXBsZSwKSSd2ZSBhbiBldmFsdWF0aW9uIGJvYXJkLCB3aHJlIEkgY29ubmVj
+dCBpbiBvbmUgc2lkZSBhbiBIRE1JIGlucHV0CnNpZ25hbCBhbiBpbiB0aGUgb3RoZXIgc2lkZSBh
+IERQIG1vbml0b3IsIHRoZSBkcml2ZXIgb25seSBjb25maWd1cmVzCnRoZSBjaGlwIGFuZCB3YWl0
+cyBmb3IgZGlmZmVyZW50IGV2ZW50cyAoY2FibGUgcGx1ZywgY2FibGUgdW5wbHVnLCBldGMKLi4p
+CgpDaGVlcnMsCkVucmljCgo+IFJvYgo+Cj4+ICsgICAgIH07Cj4+ICsKPj4KPgpfX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBs
+aXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cDovL2xpc3RzLmZyZWVkZXNr
+dG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
