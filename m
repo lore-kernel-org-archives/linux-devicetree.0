@@ -1,130 +1,75 @@
-From: Jonas Gorski <jogo-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>
-Subject: [PATCH 2/2] spi/bcm63xx: add support for probing through devicetree
-Date: Thu, 10 Sep 2015 17:29:35 +0200
-Message-ID: <1441898975-22540-3-git-send-email-jogo@openwrt.org>
-References: <1441898975-22540-1-git-send-email-jogo@openwrt.org>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1441898975-22540-1-git-send-email-jogo-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Florian Fainelli <florian-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Subject: Re: [PATCHv2 2/3] devicetree: Add new ANX7814 SlimPort transmitter
+ binding.
+Date: Thu, 10 Sep 2015 18:37:57 +0300
+Message-ID: <2441988.GBbudkNyP4@avalon>
+References: <1441697120-3876-1-git-send-email-enric.balletbo@collabora.com>
+ <55EF8009.6070009@kernel.org>
+ <CAFqH_50BZPNbKhQrT+8fNEeFHUsGF0Bzdn-TKMzDTtF9ftetYg@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <CAFqH_50BZPNbKhQrT+8fNEeFHUsGF0Bzdn-TKMzDTtF9ftetYg@mail.gmail.com>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: dri-devel@lists.freedesktop.org
+Cc: devel@driverdev.osuosl.org, Rob Herring <robh@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-kernel@vger.kernel.org, Sjoerd Simons <sjoerd.simons@collabora.co.uk>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, span@analogixsemi.com, Kumar Gala <galak@codeaurora.org>, Mark Rutland <mark.rutland@arm.com>, Javier Martinez Canillas <javier@dowhile0.org>, Nathan Chung <nathan.chung@mediatek.com>
 List-Id: devicetree@vger.kernel.org
 
-Add required binding support to probe through device tree.
-
-Use the compatible instead of the resource size for identifiying the
-block type, and allow reducing the number of cs lines through OF.
-
-Signed-off-by: Jonas Gorski <jogo-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>
----
- drivers/spi/spi-bcm63xx.c | 56 +++++++++++++++++++++++++++++++++++------------
- 1 file changed, 42 insertions(+), 14 deletions(-)
-
-diff --git a/drivers/spi/spi-bcm63xx.c b/drivers/spi/spi-bcm63xx.c
-index 42f33bc..ec094b1 100644
---- a/drivers/spi/spi-bcm63xx.c
-+++ b/drivers/spi/spi-bcm63xx.c
-@@ -26,6 +26,7 @@
- #include <linux/completion.h>
- #include <linux/err.h>
- #include <linux/pm_runtime.h>
-+#include <linux/of.h>
- 
- /* BCM 6338/6348 SPI core */
- #define SPI_6348_RSET_SIZE		64
-@@ -465,6 +466,12 @@ static const unsigned long bcm6358_spi_reg_offsets[] = {
- 	[SPI_MSG_DATA_SIZE]	= SPI_6358_MSG_DATA_SIZE,
- };
- 
-+static const struct of_device_id bcm63xx_spi_of_match[] = {
-+	{ .compatible = "brcm,bcm6348-spi", .data = &bcm6348_spi_reg_offsets },
-+	{ .compatible = "brcm,bcm6358-spi", .data = &bcm6358_spi_reg_offsets },
-+	{ },
-+};
-+
- static int bcm63xx_spi_probe(struct platform_device *pdev)
- {
- 	struct resource *r;
-@@ -474,6 +481,7 @@ static int bcm63xx_spi_probe(struct platform_device *pdev)
- 	struct clk *clk;
- 	struct bcm63xx_spi *bs;
- 	int ret;
-+	u32 num_cs = BCM63XX_SPI_MAX_CS;
- 
- 	irq = platform_get_irq(pdev, 0);
- 	if (irq < 0) {
-@@ -516,27 +524,46 @@ static int bcm63xx_spi_probe(struct platform_device *pdev)
- 		goto out_err;
- 	}
- 
--	master->bus_num = BCM63XX_SPI_BUS_NUM;
--	master->num_chipselect = BCM63XX_SPI_MAX_CS;
- 	master->transfer_one_message = bcm63xx_spi_transfer_one;
- 	master->mode_bits = MODEBITS;
- 	master->bits_per_word_mask = SPI_BPW_MASK(8);
- 	master->auto_runtime_pm = true;
- 
--	switch (resource_size(r)) {
--	case SPI_6348_RSET_SIZE:
--		bs->reg_offsets = bcm6348_spi_reg_offsets;
--		break;
--	case SPI_6358_RSET_SIZE:
--		bs->reg_offsets = bcm6358_spi_reg_offsets;
--		break;
--	default:
--		ret = -EINVAL;
--		dev_err(dev, "unsupported register size: %i\n",
--			resource_size(r));
--		goto out_err;
-+	if (dev->of_node) {
-+		const struct of_device_id *match;
-+
-+		match = of_match_node(bcm63xx_spi_of_match, dev->of_node);
-+		if (!match) {
-+			ret = -EINVAL;
-+			goto out_err;
-+		}
-+		bs->reg_offsets = match->data;
-+		master->dev.of_node = dev->of_node;
-+		of_property_read_u32(dev->of_node, "num-cs", &num_cs);
-+		if (num_cs > BCM63XX_SPI_MAX_CS) {
-+			dev_warn(dev, "unsupported number of cs (%i), reducing to 8\n",
-+				 num_cs);
-+			num_cs = BCM63XX_SPI_MAX_CS;
-+		}
-+	} else {
-+		master->bus_num = BCM63XX_SPI_BUS_NUM;
-+
-+		switch (resource_size(r)) {
-+		case SPI_6348_RSET_SIZE:
-+			bs->reg_offsets = bcm6348_spi_reg_offsets;
-+			break;
-+		case SPI_6358_RSET_SIZE:
-+			bs->reg_offsets = bcm6358_spi_reg_offsets;
-+			break;
-+		default:
-+			ret = -EINVAL;
-+			dev_err(dev, "unsupported register size: %i\n",
-+				resource_size(r));
-+			goto out_err;
-+		}
- 	}
- 
-+	master->num_chipselect = num_cs;
- 	bs->msg_type_shift = bs->reg_offsets[SPI_MSG_TYPE_SHIFT];
- 	bs->msg_ctl_width = bs->reg_offsets[SPI_MSG_CTL_WIDTH];
- 	bs->fifo_size = bs->reg_offsets[SPI_MSG_DATA_SIZE];
-@@ -621,6 +648,7 @@ static struct platform_driver bcm63xx_spi_driver = {
- 	.driver = {
- 		.name	= "bcm63xx-spi",
- 		.pm	= &bcm63xx_spi_pm_ops,
-+		.of_match_table = bcm63xx_spi_of_match,
- 	},
- 	.probe		= bcm63xx_spi_probe,
- 	.remove		= bcm63xx_spi_remove,
--- 
-2.1.4
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+SGkgRW5yaWMsCgpPbiBUaHVyc2RheSAxMCBTZXB0ZW1iZXIgMjAxNSAxNjoxMTowMyBFbnJpYyBC
+YWxsZXRibyBTZXJyYSB3cm90ZToKPiAyMDE1LTA5LTA5IDI6NDAgR01UKzAyOjAwIFJvYiBIZXJy
+aW5nIDxyb2JoQGtlcm5lbC5vcmc+Ogo+ID4gT24gMDkvMDgvMjAxNSAwMjoyNSBBTSwgRW5yaWMg
+QmFsbGV0Ym8gaSBTZXJyYSB3cm90ZToKPiA+PiBUaGUgQU5YNzgxNCBpcyBhbiB1bHRyYS1sb3cg
+cG93ZXIgRnVsbC1IRCAoMTA4MHA2MCkgU2xpbVBvcnQgdHJhbnNtaXR0ZXIKPiA+PiBkZXNpZ25l
+ZCBmb3IgcG9ydGFibGUgZGV2aWNlcy4KPiA+PiAKPiA+PiBZb3UgY2FuIGFkZCBzdXBwb3J0IHRv
+IHlvdXIgYm9hcmQgd2l0aCBjdXJyZW50IGJpbmRpbmcuCj4gPj4gCj4gPj4gRXhhbXBsZToKPiA+
+PiAgICAgICBhbng3ODE0OiBhbng3ODE0QDM4IHsKPiA+PiAgICAgICAgICAgICAgIGNvbXBhdGli
+bGUgPSAiYW5hbG9naXgsYW54NzgxNCI7Cj4gPj4gICAgICAgICAgICAgICByZWcgPSA8MHgzOD47
+Cj4gPj4gICAgICAgICAgICAgICBwZC1ncGlvcyA9IDwmZ3BpbzAgMSBHUElPX0FDVElWRV9ISUdI
+PjsKPiA+PiAgICAgICAgICAgICAgIHJlc2V0LWdwaW9zID0gPCZncGlvMCAyIEdQSU9fQUNUSVZF
+X0hJR0g+Owo+ID4+ICAgICAgIH07Cj4gPj4gCj4gPj4gU2lnbmVkLW9mZi1ieTogRW5yaWMgQmFs
+bGV0Ym8gaSBTZXJyYSA8ZW5yaWMuYmFsbGV0Ym9AY29sbGFib3JhLmNvbT4KPiA+PiAtLS0KPiA+
+PiAKPiA+PiAgLi4uL2RldmljZXRyZWUvYmluZGluZ3MvdmlkZW8vYW54NzgxNC50eHQgICAgICAg
+ICAgfCAyMiArKysrKysrKysrKysrKysrCj4gPj4gIDEgZmlsZSBjaGFuZ2VkLCAyMiBpbnNlcnRp
+b25zKCspCj4gPj4gIGNyZWF0ZSBtb2RlIDEwMDY0NCBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUv
+YmluZGluZ3MvdmlkZW8vYW54NzgxNC50eHQKPiA+PiAKPiA+PiBkaWZmIC0tZ2l0IGEvRG9jdW1l
+bnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3ZpZGVvL2FueDc4MTQudHh0Cj4gPj4gYi9Eb2N1
+bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvdmlkZW8vYW54NzgxNC50eHQgbmV3IGZpbGUg
+bW9kZQo+ID4+IDEwMDY0NAo+ID4+IGluZGV4IDAwMDAwMDAuLmE4Y2M3NDYKPiA+PiAtLS0gL2Rl
+di9udWxsCj4gPj4gKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3ZpZGVv
+L2FueDc4MTQudHh0Cj4gPj4gQEAgLTAsMCArMSwyMiBAQAo+ID4+ICtBbmFsb2dpeCBBTlg3ODE0
+IFNsaW1Qb3J0IChGdWxsLUhEIFRyYW5zbWl0dGVyKQo+ID4+ICstLS0tLS0tLS0tLS0tLS0tLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLQo+ID4+ICsKPiA+PiArVGhlIEFOWDc4MTQgaXMg
+YW4gdWx0cmEtbG93IHBvd2VyIEZ1bGwtSEQgKDEwODBwNjApIFNsaW1Qb3J0IHRyYW5zbWl0dGVy
+Cj4gPj4gK2Rlc2lnbmVkIGZvciBwb3J0YWJsZSBkZXZpY2VzLgo+ID4+ICsKPiA+PiArUmVxdWly
+ZWQgcHJvcGVydGllczoKPiA+PiArCj4gPj4gKyAtIGNvbXBhdGlibGUgICAgICAgIDogImFuYWxv
+Z2l4LGFueDc4MTQiCj4gPj4gKyAtIHJlZyAgICAgICAgICAgICAgIDogSTJDIGFkZHJlc3Mgb2Yg
+dGhlIGRldmljZQo+ID4+ICsgLSBwZC1ncGlvcyAgOiBXaGljaCBHUElPIHRvIHVzZSBmb3IgcG93
+ZXIgZG93bgo+ID4+ICsgLSByZXNldC1ncGlvcyAgICAgICA6IFdoaWNoIEdQSU8gdG8gdXNlIGZv
+ciByZXNldAo+ID4+ICsKPiA+PiArRXhhbXBsZToKPiA+PiArCj4gPj4gKyAgICAgYW54NzgxNDog
+YW54NzgxNEAzOCB7Cj4gPj4gKyAgICAgICAgICAgICBjb21wYXRpYmxlID0gImFuYWxvZ2l4LGFu
+eDc4MTQiOwo+ID4+ICsgICAgICAgICAgICAgcmVnID0gPDB4Mzg+Owo+ID4+ICsgICAgICAgICAg
+ICAgcGQtZ3Bpb3MgPSA8JmdwaW8wIDEgR1BJT19BQ1RJVkVfSElHSD47Cj4gPj4gKyAgICAgICAg
+ICAgICByZXNldC1ncGlvcyA9IDwmZ3BpbzAgMiBHUElPX0FDVElWRV9ISUdIPjsKPiA+IAo+ID4g
+Tm8gcG9ydHMgbmVlZGVkIGZvciBkZXNjcmliaW5nIGRhdGEgY29ubmVjdGlvbnM/Cj4gCj4gSU1I
+TyBJJ20gbm90IHN1cmUgaWYgdGhpcyBpcyBhcHBsaWNhYmxlIGhlcmUsIGluIHRoaXMgY2FzZSB0
+aGUgYnJpZGdlCj4gaXMgdHJhbnNwYXJlbnQgc28gaXQncyBub3QgcmVxdWlyZWQgYW5vdGhlciBk
+ZXZpY2Ugbm9kZS4gRm9yIGV4YW1wbGUsCj4gSSd2ZSBhbiBldmFsdWF0aW9uIGJvYXJkLCB3aHJl
+IEkgY29ubmVjdCBpbiBvbmUgc2lkZSBhbiBIRE1JIGlucHV0Cj4gc2lnbmFsIGFuIGluIHRoZSBv
+dGhlciBzaWRlIGEgRFAgbW9uaXRvciwgdGhlIGRyaXZlciBvbmx5IGNvbmZpZ3VyZXMKPiB0aGUg
+Y2hpcCBhbmQgd2FpdHMgZm9yIGRpZmZlcmVudCBldmVudHMgKGNhYmxlIHBsdWcsIGNhYmxlIHVu
+cGx1ZywgZXRjCj4gLi4pCgpCdXQgd2hhdCBpZiB0aGUgY2hpcCBpcyBjb25uZWN0ZWQgdG8gYSBk
+aXNwbGF5IGNvbnRyb2xsZXIsIGZvciBpbnN0YW5jZSB0byB0aGUgCkhETUkgb3V0cHV0IG9mIGFu
+IFNvQyA/IElzIHRoYXQgYSB1c2UgY2FzZSBmb3IgdGhlIGhhcmR3YXJlID8KCi0tIApSZWdhcmRz
+LAoKTGF1cmVudCBQaW5jaGFydAoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRl
+c2t0b3Aub3JnCmh0dHA6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9k
+cmktZGV2ZWwK
