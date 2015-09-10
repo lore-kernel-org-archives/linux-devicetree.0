@@ -1,48 +1,75 @@
-From: "Andrew F. Davis" <afd@ti.com>
-Subject: Re: [PATCH] power: bq24261_charger: Add support for TI BQ24261
- charger
-Date: Thu, 10 Sep 2015 11:42:37 -0500
-Message-ID: <55F1B2FD.4020608@ti.com>
-References: <1441560187-23611-1-git-send-email-ramakrishna.pallala@intel.com>
- <CAJKOXPfDu+LxoiQrV+CsqUbEVwYb1Zmk-m9y-L_1JxrB6ouS0g@mail.gmail.com>
- <D854C92F57B1B347B57E531E78D05EAD57904B8D@BGSMSX104.gar.corp.intel.com>
- <55F0C522.6070705@samsung.com>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH 3/3] ARM: dts: sun4i: Add dts file for iNet-1 based
+ tablets
+Date: Thu, 10 Sep 2015 18:43:21 +0200
+Message-ID: <20150910164321.GL9885@lukather>
+References: <1441787004-4660-1-git-send-email-hdegoede@redhat.com>
+ <1441787004-4660-3-git-send-email-hdegoede@redhat.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <55F0C522.6070705@samsung.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Krzysztof Kozlowski <k.kozlowski@samsung.com>, "Pallala, Ramakrishna" <ramakrishna.pallala@intel.com>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Sebastian Reichel <sre@kernel.org>, "Tc, Jenny" <jenny.tc@intel.com>, Andreas Dannenberg <dannenberg@ti.com>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="CgTrtGVSVGoxAIFj"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1441787004-4660-3-git-send-email-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 09/09/2015 06:47 PM, Krzysztof Kozlowski wrote:
->>>> +- ti,enable-user-write: boolean, if present driver will allow the user space
->>>> +    to control the charging current and voltage through sysfs;
->>>
->>> This is not DT property. It does not describe hardware.
->> We needed a mechanism to enable the sysfs writes on certain properties.
->> If DT is not the place where should it go?
->
-> DT is not the place. As I discussed later with Andreas, if you really
-> need this and if mainline is a place for that then probably this should
-> be compile option (a Kconfig symbol).
->
 
-I think this would actually be a good use for module parameters, this way
-it could still be set at boot without re-compiling.
+--CgTrtGVSVGoxAIFj
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-I think compile-time disabling sysfs properties because they are "dangerous" is
-a little bit too artificially restricting and controlling, you can set permissions
-so only root can change them already. The kernel should not be restricting root,
-I understand the fear of someone rooting a machine and remotely over charging
-a LiPo[1], but these physical limits are hardware descriptions and can and should
-be set by DT, beyond this root should have full control over their machine.
-Besides root can already just unbind your driver and issue raw I2C commands to do
-the same thing. </rant>
+On Wed, Sep 09, 2015 at 10:23:24AM +0200, Hans de Goede wrote:
+> The iNet-tek iNet-1 PCB is a PCB found in various generic 10.1" 1024x600
+> A10 based tablets such as the Point of View Protab2 XXL and the
+> Cherry M1007.
+>=20
+> This patch has been tested on both rev2 and rev5 of this board / these
+> tablets.
+>=20
+> It comes with a rtl8188cus usb wifi connected to ehci1, focal ft5406ee8
+> touchscreen connected to i2c2 addr 0x38, bosch bma 250 accelerometer
+> connected to i2c1 addr 0x18 and the usual connectors: headphone,
+> mini hdmi, power-barrel, mini-usb and a micro-sd slot.
+>=20
+> Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 
-[1] http://i.imgur.com/vszJJ.jpg
+Queued, thanks!
 
-Regards,
-Andrew
+Maxime
+
+--=20
+Maxime Ripard, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
+
+--CgTrtGVSVGoxAIFj
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBAgAGBQJV8bMpAAoJEBx+YmzsjxAgVkMP/j80vXITJr3U1QeO7ZaZksUI
+sqCfm72mRfn3kLcKxEchPk88K2iTGt/NeVzMbYlHhRdOTS3CRknETnwwrPyECcid
+ELN5ahmtum5Qg622FbBbB0/A2sMJTciHN9r99mX54G1WfQa3j4/ycyU2eBnvEXJ6
+to1BQp+XJ8GtaBABn0v2lFXJkM8avcIPm8yrVOPUCm/lps4GttxiFtb8cbfunQY+
+2WPq7vYkaDhV5uLHcV0qZz1r2gEUlWMHuizEjKDvy3cVKaURkklF7MWmNzYdYmrA
+JmHcOfBoHHy2sIfgkBWH7FPVtLOaRGg8Zoy1RaHojQXYR4aBQmbIBuk2VauxDF5I
+fL/N9welk0fY1KMCG82S8YTlF9/FMAzWJxbHpqLsN1IyGOhyGdt0goVkY745hVFH
+lRNsTTDUD0WghQC91VANJnjta5uvAFxMcUfbu5lzySoAk1qkuDhn8SQt9H698QFp
+dSST77TpFtVtfr20EbAziNT6qGAAXROe5unsEYokhfFRvceQBMOs3EGaULSVX3Sb
+ylyrAl5ZZUM1WqR/tK1XE/Htp97Vm7pL0nwb8VKuK98xu21vD30qtOX0tMogoxtB
+5vL/K6LAVhGrHNZNgBeBr0l/clFQDeKomGp0uFSuqinCIg37o0F7vvMaGLHyLjtD
+T4udrwlaIvb3fanBJ5Pf
+=7SEZ
+-----END PGP SIGNATURE-----
+
+--CgTrtGVSVGoxAIFj--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
