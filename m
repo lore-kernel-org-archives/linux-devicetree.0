@@ -1,75 +1,84 @@
-From: Laurentiu Palcu <laurentiu.palcu@intel.com>
-Subject: Re: [PATCH] power: bq24261_charger: Add support for TI BQ24261
- charger
-Date: Thu, 10 Sep 2015 17:50:26 +0300
-Message-ID: <20150910145026.GO21512@lpalcu-desk>
-References: <1441560187-23611-1-git-send-email-ramakrishna.pallala@intel.com>
- <CAJKOXPfDu+LxoiQrV+CsqUbEVwYb1Zmk-m9y-L_1JxrB6ouS0g@mail.gmail.com>
- <20150909022617.GA32255@beast>
- <55EFB2C7.30800@samsung.com>
- <20150909173147.GA9887@beast>
- <55F0C586.3010003@samsung.com>
+From: Tomeu Vizoso <tomeu.vizoso@collabora.com>
+Subject: Re: [PATCH v4 04/22] of: add function to allow probing a device from
+ a OF node
+Date: Thu, 10 Sep 2015 16:53:32 +0200
+Message-ID: <CAAObsKAgkisWtZospL-z0F7RvnqR8yQgxL74Wxrcg96jxut-mg@mail.gmail.com>
+References: <1441628627-5143-1-git-send-email-tomeu.vizoso@collabora.com>
+ <1441628627-5143-5-git-send-email-tomeu.vizoso@collabora.com> <55EF8B74.7090909@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-pm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <55F0C586.3010003@samsung.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-Cc: Andreas Dannenberg <dannenberg@ti.com>, Ramakrishna Pallala <ramakrishna.pallala@intel.com>, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, Sebastian Reichel <sre@kernel.org>, Jenny TC <jenny.tc@intel.com>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-acpi-owner@vger.kernel.org>
+In-Reply-To: <55EF8B74.7090909@kernel.org>
+Sender: linux-acpi-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Stephen Warren <swarren@wwwdotorg.org>, Javier Martinez Canillas <javier@osg.samsung.com>, Mark Brown <broonie@kernel.org>, Thierry Reding <thierry.reding@gmail.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linus Walleij <linus.walleij@linaro.org>, linux-acpi@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, Frank Rowand <frowand.list@gmail.com>, Grant Likely <grant.likely@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Sep 10, 2015 at 08:49:26AM +0900, Krzysztof Kozlowski wrote:
-> On 10.09.2015 02:31, Andreas Dannenberg wrote:
-> > On Wed, Sep 09, 2015 at 01:17:11PM +0900, Krzysztof Kozlowski wrote:
-> >> On 09.09.2015 11:26, Andreas Dannenberg wrote:
-> >>> Krzysztof, good observation! In bq2425x_charger.c (formerly known as
-> >>> bq24257_charger.c :) that I worked on the unit used was uA. At that time
-> >>> I did a quick check and there didn't seem to be a clear standard whether
-> >>> to use the "micro" or "milli" units - different drivers use different
-> >>> units. However there seems to be a tendency for the TI drivers to prefer
-> >>> "milli" (bq2415x_charger.c, bq24735-charger.c)
-> >>>
-> >>> Personally I think "milli" units are more appropriate for chargers since
-> >>> they provide sufficient granularity and the numbers don't become too big
-> >>> (try typing a voltage in the Volt-range in uV, it's very easy to get the
-> >>> number of 0s wrong). However since the driver was already there I left
-> >>> that aspect alone to preserve compatibility.
-> >>
-> >> I am fine with both units but milli indeed seems easier to judge by fast
-> >> looking and less error-prone. Whatever you choose - choose the same one. :)
-> > 
-> > Ok sounds good. If so, I could go ahead and change the units in the
-> > bq2425x_charger.c over to mA and mV?
-> 
-> Wait, these are existing bindings (for bq24257). You cannot change
-> existing binding.
-> 
-> Best regards,
-> Krzysztof
-> 
-> > It would be a bit labor some and I
-> > also want to see what Laurentiu thinks but this way we could have most
-> > of those TI charger drivers use the same units (the new bq24261 driver
-> > Ram posted also uses mA/mV). Except bq25890_charger.c.... that would
-> > still use uA/uV....
-> > 
-> > Laurentiu -- what made you chose the "micro" units for bq24257_charger.c
-> > and bq25890_charger.c?
-When I started writing the BQ24257 driver, I had a look on what existed
-already. Somehow, I don't know why, I settled on bq24190_charger which
-has all the units in uA/uV. I thought it's the de-facto standard for
-charger drivers... :/
+On 9 September 2015 at 03:29, Rob Herring <robh@kernel.org> wrote:
+> On 09/07/2015 07:23 AM, Tomeu Vizoso wrote:
+>> Walks the OF tree up and finds the closest ancestor that has a struct
+>> device associated with it, probing it if isn't bound to a driver yet.
+>>
+>> The above should ensure that the dependency represented by the passed OF
+>> node is available, because probing a device should cause its descendants
+>> to be probed as well (when they get registered).
+>>
+>> Subsystems can use this when looking up resources for drivers, to reduce
+>> the chances of deferred probes because of the probing order of devices.
+>>
+>> Signed-off-by: Tomeu Vizoso <tomeu.vizoso@collabora.com>
+>
+> Looks pretty good to me. One comment below.
+>
+> [...]
+>
+>> diff --git a/drivers/of/platform.c b/drivers/of/platform.c
+>> index baf04d7249bd..f089d95ac961 100644
+>> --- a/drivers/of/platform.c
+>> +++ b/drivers/of/platform.c
+>> @@ -269,6 +269,8 @@ static struct amba_device *of_amba_device_create(struct device_node *node,
+>>               goto err_free;
+>>       }
+>>
+>> +     node->device = &dev->dev;
+>> +
+>
+> This seems oddly placed. Can you move to patch 3?
 
-For bindings, I looked at the existing TI chips bindings and chose the
-same binding names, where possible. But for some dumb reason, I missed
-that the units already used where mainly in mA/mV and, honestly, I
-didn't even suspect units must be consistent from device to device. What
-happens if a chip needs a more fine grained setting? I agree on binding
-name consistency though: ti,charge-current (for example) should mean the
-same for all TI chargers.
+Sure, no problem. Besides this, are you ok with the rest of the series?
 
-That said, is not much we can do on the mA/uA or mV/uV front... At least
-we can agree on using the same binding names.
+Regards,
 
-laurentiu
+Tomeu
+
+>>       return dev;
+>>
+>>  err_free:
+>> diff --git a/include/linux/of_device.h b/include/linux/of_device.h
+>> index cc7dd687a89d..da8d489e73ad 100644
+>> --- a/include/linux/of_device.h
+>> +++ b/include/linux/of_device.h
+>> @@ -40,6 +40,7 @@ extern ssize_t of_device_get_modalias(struct device *dev,
+>>
+>>  extern void of_device_uevent(struct device *dev, struct kobj_uevent_env *env);
+>>  extern int of_device_uevent_modalias(struct device *dev, struct kobj_uevent_env *env);
+>> +extern void of_device_probe(struct device_node *np);
+>>
+>>  static inline void of_device_node_put(struct device *dev)
+>>  {
+>> @@ -84,6 +85,8 @@ static inline int of_device_uevent_modalias(struct device *dev,
+>>       return -ENODEV;
+>>  }
+>>
+>> +static inline void of_device_probe(struct device_node *np) { }
+>> +
+>>  static inline void of_device_node_put(struct device *dev) { }
+>>
+>>  static inline const struct of_device_id *__of_match_device(
+>>
+>
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-kernel" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> Please read the FAQ at  http://www.tux.org/lkml/
