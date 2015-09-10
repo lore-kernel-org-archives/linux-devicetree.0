@@ -1,8 +1,10 @@
 From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH 1/2] ARM: dts: sun5i: Add emac_pins_b definition
-Date: Thu, 10 Sep 2015 15:05:58 +0200
-Message-ID: <1441890359-4675-1-git-send-email-hdegoede@redhat.com>
+Subject: [PATCH 2/2] ARM: dts: sun5i: Add dts file for the Wobo i5 top set box
+Date: Thu, 10 Sep 2015 15:05:59 +0200
+Message-ID: <1441890359-4675-2-git-send-email-hdegoede@redhat.com>
+References: <1441890359-4675-1-git-send-email-hdegoede@redhat.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1441890359-4675-1-git-send-email-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 Cc: Jelle van der Waa <jelle-oJJ1AqDjjO4@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
@@ -10,37 +12,263 @@ List-Id: devicetree@vger.kernel.org
 
 From: Jelle van der Waa <jelle-oJJ1AqDjjO4@public.gmane.org>
 
-The emac pins on an A10s can also be routed to the outside through
-PORTD rather then through PORTA, add a pinctrl node for this.
+The Wobo i5 top set box is a somewhat curious A10s based top set box,
+it uses an AXP209 rather then the AXP152 usually used in combination
+with the A10s. It has an ethernet phy connected to PORTD rather then
+PORTA, and its built-in usb wifi is connected via the otg controller.
+
+This commit adds a dts file adding support for this top set box.
 
 Signed-off-by: Jelle van der Waa <jelle-oJJ1AqDjjO4@public.gmane.org>
 Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 ---
- arch/arm/boot/dts/sun5i-a10s.dtsi | 11 +++++++++++
- 1 file changed, 11 insertions(+)
+ arch/arm/boot/dts/Makefile               |   1 +
+ arch/arm/boot/dts/sun5i-a10s-wobo-i5.dts | 224 +++++++++++++++++++++++++++++++
+ 2 files changed, 225 insertions(+)
+ create mode 100644 arch/arm/boot/dts/sun5i-a10s-wobo-i5.dts
 
-diff --git a/arch/arm/boot/dts/sun5i-a10s.dtsi b/arch/arm/boot/dts/sun5i-a10s.dtsi
-index 6ff2139..45ca0c5 100644
---- a/arch/arm/boot/dts/sun5i-a10s.dtsi
-+++ b/arch/arm/boot/dts/sun5i-a10s.dtsi
-@@ -215,6 +215,17 @@
- 		allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
- 	};
- 
-+	emac_pins_b: emac0@1 {
-+		allwinner,pins = "PD6", "PD7", "PD10",
-+				"PD11", "PD12", "PD13", "PD14",
-+				"PD15", "PD18", "PD19", "PD20",
-+				"PD21", "PD22", "PD23", "PD24",
-+				"PD25", "PD26", "PD27";
-+		allwinner,function = "emac";
+diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+index 87c768b..1034922 100644
+--- a/arch/arm/boot/dts/Makefile
++++ b/arch/arm/boot/dts/Makefile
+@@ -571,6 +571,7 @@ dtb-$(CONFIG_MACH_SUN5I) += \
+ 	sun5i-a10s-mk802.dtb \
+ 	sun5i-a10s-olinuxino-micro.dtb \
+ 	sun5i-a10s-r7-tv-dongle.dtb \
++	sun5i-a10s-wobo-i5.dtb \
+ 	sun5i-a13-hsg-h702.dtb \
+ 	sun5i-a13-inet-98v-rev2.dtb \
+ 	sun5i-a13-olinuxino.dtb \
+diff --git a/arch/arm/boot/dts/sun5i-a10s-wobo-i5.dts b/arch/arm/boot/dts/sun5i-a10s-wobo-i5.dts
+new file mode 100644
+index 0000000..9fea918
+--- /dev/null
++++ b/arch/arm/boot/dts/sun5i-a10s-wobo-i5.dts
+@@ -0,0 +1,224 @@
++/*
++ * Copyright 2015 Jelle van der Waa <jelle-oJJ1AqDjjO4@public.gmane.org>
++ *
++ * This file is dual-licensed: you can use it either under the terms
++ * of the GPL or the X11 license, at your option. Note that this dual
++ * licensing only applies to this file, and not this project as a
++ * whole.
++ *
++ *  a) This file is free software; you can redistribute it and/or
++ *     modify it under the terms of the GNU General Public License as
++ *     published by the Free Software Foundation; either version 2 of the
++ *     License, or (at your option) any later version.
++ *
++ *     This file is distributed in the hope that it will be useful,
++ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
++ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ *     GNU General Public License for more details.
++ *
++ * Or, alternatively,
++ *
++ *  b) Permission is hereby granted, free of charge, to any person
++ *     obtaining a copy of this software and associated documentation
++ *     files (the "Software"), to deal in the Software without
++ *     restriction, including without limitation the rights to use,
++ *     copy, modify, merge, publish, distribute, sublicense, and/or
++ *     sell copies of the Software, and to permit persons to whom the
++ *     Software is furnished to do so, subject to the following
++ *     conditions:
++ *
++ *     The above copyright notice and this permission notice shall be
++ *     included in all copies or substantial portions of the Software.
++ *
++ *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
++ *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
++ *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
++ *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
++ *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
++ *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
++ *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
++ *     OTHER DEALINGS IN THE SOFTWARE.
++ */
++
++/dts-v1/;
++#include "sun5i-a10s.dtsi"
++#include "sunxi-common-regulators.dtsi"
++
++#include <dt-bindings/gpio/gpio.h>
++#include <dt-bindings/interrupt-controller/irq.h>
++#include <dt-bindings/pinctrl/sun4i-a10.h>
++
++/ {
++	model = "A10s-Wobo i5";
++	compatible = "wobo,a10s-wobo-i5", "allwinner,sun5i-a10s";
++
++	aliases {
++		serial0 = &uart0;
++	};
++
++	chosen {
++		stdout-path = "serial0:115200n8";
++	};
++
++	leds {
++		compatible = "gpio-leds";
++		pinctrl-names = "default";
++		pinctrl-0 = <&led_pins_wobo_i5>;
++
++		blue {
++			label = "a10s-wobo-i5:blue:usr";
++			gpios = <&pio 1 2 GPIO_ACTIVE_HIGH>;
++			default-state = "on";
++		};
++	};
++
++	reg_emac_3v3: emac-3v3 {
++		compatible = "regulator-fixed";
++		pinctrl-names = "default";
++		pinctrl-0 = <&emac_power_pin_wobo>;
++		regulator-name = "emac-3v3";
++		regulator-min-microvolt = <3300000>;
++		regulator-max-microvolt = <3300000>;
++		enable-active-high;
++		gpio = <&pio 0 2 GPIO_ACTIVE_HIGH>;
++	};
++};
++
++&cpu0 {
++	cpu-supply = <&reg_dcdc2>;
++};
++
++&ehci0 {
++	status = "okay";
++};
++
++&emac {
++	pinctrl-names = "default";
++	pinctrl-0 = <&emac_pins_b>;
++	phy = <&phy1>;
++	status = "okay";
++};
++
++&emac_sram {
++	status = "okay";
++};
++
++&i2c0 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&i2c0_pins_a>;
++	status = "okay";
++
++	axp209: pmic@34 {
++		reg = <0x34>;
++		interrupts = <0>;
++	};
++};
++
++#include "axp209.dtsi"
++
++&mdio {
++	phy-supply = <&reg_emac_3v3>;
++	status = "okay";
++
++	phy1: ethernet-phy@1 {
++		reg = <1>;
++	};
++};
++
++&mmc0 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&mmc0_pins_a>, <&mmc0_cd_pin_wobo_i5>;
++	vmmc-supply = <&reg_vcc3v3>;
++	bus-width = <4>;
++	cd-gpios = <&pio 1 3 GPIO_ACTIVE_HIGH>; /* PB3 */
++	cd-inverted;
++	status = "okay";
++};
++
++&ohci0 {
++	status = "okay";
++};
++
++&otg_sram {
++	status = "okay";
++};
++
++&pio {
++	led_pins_wobo_i5: led_pins@0 {
++		allwinner,pins = "PB2";
++		allwinner,function = "gpio_out";
 +		allwinner,drive = <SUN4I_PINCTRL_10_MA>;
 +		allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
 +	};
 +
- 	mmc1_pins_a: mmc1@0 {
- 		allwinner,pins = "PG3", "PG4", "PG5",
- 				 "PG6", "PG7", "PG8";
++	mmc0_cd_pin_wobo_i5: mmc0_cd_pin@0 {
++		allwinner,pins = "PB3";
++		allwinner,function = "gpio_in";
++		allwinner,drive = <SUN4I_PINCTRL_10_MA>;
++		allwinner,pull = <SUN4I_PINCTRL_PULL_UP>;
++	};
++
++	emac_power_pin_wobo: emac_power_pin@0 {
++		allwinner,pins = "PA02";
++		allwinner,function = "gpio_out";
++		allwinner,drive = <SUN4I_PINCTRL_10_MA>;
++		allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
++	};
++};
++
++&reg_dcdc2 {
++	regulator-always-on;
++	regulator-min-microvolt = <1000000>;
++	regulator-max-microvolt = <1400000>;
++	regulator-name = "vdd-cpu";
++};
++
++&reg_dcdc3 {
++	regulator-always-on;
++	regulator-min-microvolt = <1250000>;
++	regulator-max-microvolt = <1250000>;
++	regulator-name = "vdd-int-dll";
++};
++
++&reg_ldo1 {
++	regulator-name = "vdd-rtc";
++};
++
++&reg_ldo2 {
++	regulator-always-on;
++	regulator-min-microvolt = <3000000>;
++	regulator-max-microvolt = <3000000>;
++	regulator-name = "avcc";
++};
++
++&reg_ldo3 {
++	regulator-always-on;
++	regulator-min-microvolt = <3300000>;
++	regulator-max-microvolt = <3300000>;
++	regulator-name = "vcc-wifi";
++};
++
++&reg_usb1_vbus {
++	gpio = <&pio 6 12 GPIO_ACTIVE_HIGH>;
++	status = "okay";
++};
++
++&uart0 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&uart0_pins_a>;
++	status = "okay";
++};
++
++&usb_otg {
++	dr_mode = "host";
++	status = "okay";
++};
++
++&usb1_vbus_pin_a {
++	allwinner,pins = "PG12";
++};
++
++&usbphy {
++	usb1_vbus-supply = <&reg_usb1_vbus>;
++	status = "okay";
++};
 -- 
 2.4.3
 
