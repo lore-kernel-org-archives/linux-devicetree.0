@@ -1,176 +1,170 @@
-From: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-Subject: Re: [PATCH v2 13/13] dt: power: bq2425x-charger: Cover additional
- devices
-Date: Thu, 10 Sep 2015 09:15:09 +0900
-Message-ID: <55F0CB8D.9000507@samsung.com>
-References: <1441757557-7266-1-git-send-email-dannenberg@ti.com>
- <1441757557-7266-14-git-send-email-dannenberg@ti.com>
- <55EF7CDA.9030505@samsung.com> <20150909024841.GB32255@beast>
- <55EFBC61.1050405@samsung.com> <20150909201534.GB9887@beast>
+From: Stephen Boyd <sboyd@codeaurora.org>
+Subject: Re: [PATCH] spmi-pmic-arb: support configurable number of peripherals
+Date: Wed, 9 Sep 2015 17:30:20 -0700
+Message-ID: <20150910003020.GZ15099@codeaurora.org>
+References: <1441322451-30149-1-git-send-email-gavidov@codeaurora.org>
+ <20150904001630.GJ15099@codeaurora.org>
+ <20150904120459.034920a6@gavidov-lnx.qualcomm.com>
+ <20150905005011.GO15099@codeaurora.org>
+ <20150909173239.0f923b0e@gavidov-lnx.qualcomm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-reply-to: <20150909201534.GB9887@beast>
-Sender: linux-pm-owner@vger.kernel.org
-To: Andreas Dannenberg <dannenberg@ti.com>
-Cc: Sebastian Reichel <sre@kernel.org>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, David Woodhouse <dwmw2@infradead.org>, Laurentiu Palcu <laurentiu.palcu@intel.com>, Ramakrishna Pallala <ramakrishna.pallala@intel.com>, linux-pm@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20150909173239.0f923b0e@gavidov-lnx.qualcomm.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Gilad Avidov <gavidov@codeaurora.org>
+Cc: sdharia@codeaurora.org, mlocke@codeaurora.org, linux-arm-msm@vger.kernel.org, gregkh@linuxfoundation.org, svarbanov@mm-sol.com, wsa@the-dreams.de, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, iivanov@mm-sol.com, agross@codeaurora.org
 List-Id: devicetree@vger.kernel.org
 
-On 10.09.2015 05:15, Andreas Dannenberg wrote:
-> On Wed, Sep 09, 2015 at 01:58:09PM +0900, Krzysztof Kozlowski wrote:
->>
->> So we have different bindings. Existing ones:
->> bq2415x.txt - ti,charge-current - maximum charging current in mA
->> bq24257.txt - ti,charge-current - maximum charging current in uA
->> bq25890.txt - ti,charge-current - maximum charging current in uA
->> bq24735.txt - ti,charge-current - charge current (?) in mA
+On 09/09, Gilad Avidov wrote:
+> On Fri, 4 Sep 2015 17:50:11 -0700
+> Stephen Boyd <sboyd@codeaurora.org> wrote:
 > 
-> I just spent some time with the bq24735 datasheet and the way that
-> device appears to work is putting the user in control of the charging
-> process rather than implementing a fully automatic control loop, but
-> either way I still think it's valid to call the property
-> ti,charge-current and use a description of "maximum charging current"
-> for that device (there is no DT bindings doc however). And yes the unit
-> is mA as one can see from reverse-engineering the register settings.
-
-Just for the record: the units used by device registers are not related
-to units used in DT binding. You can use whatever you want. The driver
-should just convert them.
-
+> > On 09/04, Gilad Avidov wrote:
+> > > On Thu, 3 Sep 2015 17:16:30 -0700
+> > > Stephen Boyd <sboyd@codeaurora.org> wrote:
+> > > 
+> > > > On 09/03, Gilad Avidov wrote:
 > 
-> On a related note the datasheet for that device says you have to
-> periodically re-send the charge current setting every 44...175s to keep
-> charging with the configured current or disable the device's watchdog
-> timer. Neither of which the driver seems to do. I can probably go back
-> and get some HW and test if that driver actually works as advertised.
-> (also see http://www.ti.com/lit/ds/symlink/bq24735.pdf, Page 21)
-
-I mentioned existing bindings for reference. To show that it's a mess.
-However you cannot change them now (at least easily). You could add new
-bindings and mark old as deprecated (still they would have to be
-supported by the driver)...
-
+> I agree that the algorithm is not complicated. However, I still think
+> that just reading max of 512 registers is simpler and overhead is small.
 > 
->> bq2415x.txt - ti,current-limit  - maximum current to be drawn in mA
->>
->> New bindings:
->> ti,charge-current (bq24261) - default charge current in mA
->> ti,max-charge-current (bq24261) - maximum charging current in mA
+> > 
+> > > 
+> > > > processing to when we're mapping irqs, hopefully speeding up
+> > > > probe for the case where you have a handful of irqs to map.
+> > > 
+> > > Please note that we traverse this mapping table every time a PMIC
+> > > driver registers for an interrupt. This means that even if we speed
+> > > up the probe of pmic-arb driver we will not speed the system boot
+> > > since the probing of the PMIC drivers will register for interrupts.
+> > 
+> > Do we need to read all 512 entries for a typical system? If we do
+> > then I agree reading it all upfront is probably better, but if we
+> > only read a sparse amount of entries then we can defer it to when
 > 
-> This ti,max-charge-current is actually an interesting one. It's not a
-> device setting as it does not impact any of the device registers at all.
-> Instead, it's an artificial limit that can be set through DT that
-> prevents somebody from going into sysfs and configuring a charge current
-> higher than ti,max-charge-current. In other drivers I have seen that the
-> sysfs property reflecting that max charge current is just read-only and
-> gives you the maximum the HW is capable of. From a device point of view
-> there is nothing configurable about this property.
+> We need a many of the 512 entries since for each request_irq() we
+> traverse down the. Typically during boot pmic drivers request irqs.
+> 
+> > it's going to be used. On upstream 8974 dts files with all the
+> > devices we have in DT right now, I see 75 unique register reads
+> > during boot on apq8074 dragonboard.
+> > 
+> 
+> There are still very few of pmic driver upstreamed. However, many more
+> of them are likely to get upstreamed soon. Once all of them will be
+> active on upstream I am sure that the number of register access will
+> dramatically increase (just as it is today on Codeaurora).
 
-Hmmm, so now I wonder whether this should be a DT binding. The purpose
-of DT isn't the control of the driver like enable some stuff, set some
-value used by the driver. The DT provides information about hardware so
-the driver could properly configure the device and work with it.
+So on the latest hardware I see 33 unique register reads. That's
+on the codeaurora android tree. It seems to be less than on 8974.
+I'll have to boot up the android tree on 8974 to see how much it
+is. The patch is simple:
 
-Reason to put this into DT would be:
-For example one device configuration (device, board, connected battery)
-could handle one maximum value and the other configuration would require
-lower one. The device and its capabilities (bq24257 for example) are the
-same but configuration changes.
+diff --git a/drivers/spmi/spmi-pmic-arb.c b/drivers/spmi/spmi-pmic-arb.c
+index d7119db49cfe..8aea9f57f7af 100644
+--- a/drivers/spmi/spmi-pmic-arb.c
++++ b/drivers/spmi/spmi-pmic-arb.c
+@@ -603,6 +603,7 @@ static int search_mapping_table(struct spmi_pmic_arb_dev *pa,
+ 
+ 	for (i = 0; i < SPMI_MAPPING_TABLE_TREE_DEPTH; ++i) {
+ 		data = mapping_table[index];
++		pr_info("mapping table %d\n", index);
+ 
+ 		if (ppid & (1 << SPMI_MAPPING_BIT_INDEX(data))) {
+ 			if (SPMI_MAPPING_BIT_IS_1_FLAG(data)) {
 
 
-If all configurations of bq24261 device have the same maximum value then
-it should not be a DT property but it should be hard-coded in the driver
-instead.
+And then
 
-Ramakrishna,
-Could you describe the reason behind "ti,max-charge-current" and
-"pdata.max_cc" in bq24261 driver?
+	$ dmesg | grep "mapping table " | sort -u | wc -l
 
 > 
->> ti,current-limit (bq2425x) - maximum current to be drawn in uA
->>
->>
->> Damn it... It's a mess. And there is no device prefixes...
+> > > 
+> > > > 
+> > > > The DT property wouldn't be necessary then. Arguably it's being
+> > > > added there to optimize the size of the mapping table and isn't
+> > > > really necessary otherwise.
+> > > > 
+> > > 
+> > > We need to know this value for both memory allocation
+> > > and for stopping before reading over the bounds of the
+> > > mapping_table in HW.
+> > > 
+> > 
+> > Presumably the hardware is correct and isn't telling us to read
 > 
-> ACK :)  Let's see how we can bring a little sense into it.
->  
->> The bq24261's bindings look most sensible (max prefix for max charge
->> current) but they are not compatible with existing bindings for
->> different devices.
+> HW tells us nothing about the size of the HW mapping table.
 > 
-> Hmm I think they are compatible, it's just a question making the DT
-> bindings description for the bq24261 fit better into what's already
-> there. For example, like this:
+> > entries in the mapping table that are beyond the bounds, so
+> > stepping over the bounds of the mapping table cache isn't
+> > possible if we always make it the size of the biggest table.
+> > 
 > 
-> (1) ti,charge-current: integer, maximum charging current in mA. For this
-> device as for others this setting controls the max current the device
-> uses to charge the battery so the established description is good
-> however the general use of this property name itself is not 100%
-> accurate (too late for that).
+> The size of the table in RAM is the driver writer choice. It is
+> wasteful to have it larger then needed but no harm to stability.
+> On the flip side, reading registers beyond the HW bounds can have
+> undefined behavior. 
 
-I agree.
-
-> (2) ti,max-charge-current: Unless there is a good reason to keep it,
-> REMOVE this property (alongside ti,max-charge-voltage). Instead, have
-> the charger directly report back the maximum device charge current
-> (BQ24261_MAX_CC) via sysfs like most other charger drivers do (bq24190,
-> bq24257, bq25890, rt9455).
-
-I agree but wait for some more data from Ramakrishna.
+Sure. We could realloc the table at runtime if we really care
+about saving the space.
 
 > 
->> There is no way to unify or make consistent all of these bindings.
->> However one could try to add new stuff in a more sensible way. For
->> example how about (for bq2425x-charger and bq24261_charger... BTW notice
->> even the difference in using underscore and hyphen!):
+> > @@ -706,11 +712,37 @@ static u32 pmic_arb_offset_v1(struct
+> > spmi_pmic_arb_dev *pa, u8 sid, u16 addr) return 0x800 + 0x80 *
+> > pa->channel; }
+> >  
+> > +static u16 find_chan(struct spmi_pmic_arb_dev *pa, u16 ppid)
+> > +{
+> > +	u32 regval;
+> > +	u16 chan;
+> > +	u16 _ppid;
+> > +
+> > +	for (chan = pa->last_channel; ; chan++, pa->last_channel++) {
+> > +		regval = readl_relaxed(pa->core +
+> > PMIC_ARB_REG_CHNL(chan));
+> > +		if (!regval)
+> > +			continue;
+> > +
 > 
-> :(  You are talking about the driver .name, right? I saw that too. If
-> the bq24261 charger was to change it's device name to use a hyphen at
-> least it would be consistent with bq2415x and bq2425x.
+> I'm pretty sure that caching this table is way faster then searching it
+> by reading from hw per any newly used apid. If we use 512 peripherals
+> then we will read this table 512 times.
 
-The name of file and name of driver. Most of existing bq* drivers have
-"_" in file name and "-" in driver name. So maybe use it in
-bq2425x-charger (file name: bq2425x_charger)?
-
-To prevent future issues in naming and bindings consistency maybe there
-should be a dedicated maintainer for bq/TI charger devices? Pali Rohar
-recently took care for devices related to Nokia N900 but maybe someone
-from TI should also take care of rest or all of them (if TI is
-interested in this)?
-
-> 
->> ti,charge-current - maximum charging current in uA
->> (that one must be supported, it's for existing bq24257 devices)
-> 
-> Agreed. As discussed earlier this one is pretty established -- but in
-> mA (not uA).
-
-Okay.
-
-> 
->> ti,default-charge-current (bq24261) - default charge current in *uA*
-> 
-> We don't need that. If you look where it goes (registers) this should be
-> called ti,charge-current for the bq24261 (like it already is). Exactly
-> the same name/usage as the other bqxxxx chargers. We just need to update
-> the description.
-
-Okay.
+You missed the part where we don't read this table from hardware
+more than once. We read the hw table linearly until we find the
+ppid that we were looking for, caching other values along the
+way. If that happens to be the whole table then I guess we don't
+win anything by doing it here vs. in probe, but hopefully we
+don't have to search the entire table on the first try to find
+the ppid.
 
 > 
->> ti,current-limit (bq2425x) - maximum current to be drawn in *uA*
+> > +		_ppid = (regval >> 8) & PMIC_ARB_PPID_MASK;
+> > +		pa->ppid_to_chan[_ppid] = chan | PMIC_ARB_PPID_VALID;
+> > +		if (_ppid == ppid)
+> > +			break;
+> > +	}
+> > +
+> > +	return chan;
+> > +}
+> > +
+> > +
+> >  /* v2 offset per ppid (chan) and per ee */
+> >  static u32 pmic_arb_offset_v2(struct spmi_pmic_arb_dev *pa, u8 sid,
+> > u16 addr) {
+> >  	u16 ppid = (sid << 8) | (addr >> 8);
+> > -	u8  chan = pa->ppid_to_chan[ppid];
+> > +	u16 chan;
+> > +
 > 
-> Ok. Again here my preference would be mA. Like already on the bq2415x.
-> If we can change the bq2425x driver to mA (see separate thread) we'd be
-> closer to a more unified set of properties. Otherwise we would have
-> properties with the same name but different units (is this even
-> possible?).
+> I would use PMIC_ARB_PPID_VALID here to reject access to invalid ppids.
 
-mA would be nice... but bq2425x driver must support existing device
-which means it must support existing bindings. Unfortunately the
-existing binding for bq24257 is in uA.
+Do you mean PMIC_ARB_MAX_PPID? We don't have that check now. I
+would guess that's because we assume the ppid is always valid at
+this point.
 
-Best regards,
-Krzysztof
-
+-- 
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project
