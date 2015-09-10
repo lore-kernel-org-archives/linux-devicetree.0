@@ -1,88 +1,40 @@
-From: Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
-Subject: [PATCH 1/3] clk: bcm2835: Add bindings for the auxiliary peripheral clock gates.
-Date: Thu, 10 Sep 2015 15:22:28 -0700
-Message-ID: <1441923750-19404-2-git-send-email-eric@anholt.net>
+From: Eric Anholt <eric@anholt.net>
+Subject: [PATCH 3/3] ARM: bcm2835: Add the auxiliary clocks to the device tree.
+Date: Thu, 10 Sep 2015 15:22:30 -0700
+Message-ID: <1441923750-19404-4-git-send-email-eric@anholt.net>
 References: <1441923750-19404-1-git-send-email-eric@anholt.net>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1441923750-19404-1-git-send-email-eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Lee Jones <lee-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Mike Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <1441923750-19404-1-git-send-email-eric@anholt.net>
+Sender: linux-clk-owner@vger.kernel.org
+To: linux-clk@vger.kernel.org
+Cc: linux-arm-kernel@lists.infradead.org, linux-rpi-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Stephen Warren <swarren@wwwdotorg.org>, Lee Jones <lee@kernel.org>, Stephen Boyd <sboyd@codeaurora.org>, Mike Turquette <mturquette@baylibre.com>, devicetree@vger.kernel.org, Eric Anholt <eric@anholt.net>
 List-Id: devicetree@vger.kernel.org
 
 These will be used for enabling UART1, SPI1, and SPI2.
 
-Signed-off-by: Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
+Signed-off-by: Eric Anholt <eric@anholt.net>
 ---
- .../bindings/clock/brcm,bcm2835-aux-clock.txt      | 30 ++++++++++++++++++++++
- include/dt-bindings/clock/bcm2835-aux.h            | 17 ++++++++++++
- 2 files changed, 47 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/clock/brcm,bcm2835-aux-clock.txt
- create mode 100644 include/dt-bindings/clock/bcm2835-aux.h
+ arch/arm/boot/dts/bcm2835.dtsi | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/clock/brcm,bcm2835-aux-clock.txt b/Documentation/devicetree/bindings/clock/brcm,bcm2835-aux-clock.txt
-new file mode 100644
-index 0000000..f5ce80a
---- /dev/null
-+++ b/Documentation/devicetree/bindings/clock/brcm,bcm2835-aux-clock.txt
-@@ -0,0 +1,30 @@
-+Broadcom BCM2835 auxiliary peripheral clocks
+diff --git a/arch/arm/boot/dts/bcm2835.dtsi b/arch/arm/boot/dts/bcm2835.dtsi
+index a6a55b7..7c37956 100644
+--- a/arch/arm/boot/dts/bcm2835.dtsi
++++ b/arch/arm/boot/dts/bcm2835.dtsi
+@@ -73,6 +73,13 @@
+ 			clocks = <&clk_osc>;
+ 		};
+ 
++		aux_clocks: aux-clocks@0x7e215004 {
++			compatible = "brcm,bcm2835-aux-clock";
++			#clock-cells = <1>;
++			reg = <0x7e215004 0x4>;
++			clocks = <&clocks BCM2835_CLOCK_VPU>;
++		};
 +
-+This binding uses the common clock binding:
-+    Documentation/devicetree/bindings/clock/clock-bindings.txt
-+
-+This controls the clock gating for the BCM2835 auxiliary peripherals
-+(UART, SPI1, and SPI2).
-+
-+Required properties:
-+- compatible:	Should be "brcm,bcm2835-aux-clock"
-+- #clock-cells:	Should be <1>. The permitted clock-specifier values can be
-+		  found in include/dt-bindings/clock/bcm2835-aux.h
-+- reg:		Specifies base physical address and size of the gate register
-+- clocks:	The parent clock phandle
-+
-+Example:
-+
-+	clocks: cprman@7e101000 {
-+		compatible = "brcm,bcm2835-cprman";
-+		#clock-cells = <1>;
-+		reg = <0x7e101000 0x2000>;
-+		clocks = <&clk_osc>;
-+	};
-+
-+	aux_clocks: aux-clocks@0x7e215004 {
-+		compatible = "brcm,bcm2835-aux-clock";
-+		#clock-cells = <1>;
-+		reg = <0x7e215004 0x4>;
-+		clocks = <&clocks BCM2835_CLOCK_VPU>;
-+	};
-diff --git a/include/dt-bindings/clock/bcm2835-aux.h b/include/dt-bindings/clock/bcm2835-aux.h
-new file mode 100644
-index 0000000..d91156e
---- /dev/null
-+++ b/include/dt-bindings/clock/bcm2835-aux.h
-@@ -0,0 +1,17 @@
-+/*
-+ * Copyright (C) 2015 Broadcom Corporation
-+ *
-+ * This program is free software; you can redistribute it and/or
-+ * modify it under the terms of the GNU General Public License as
-+ * published by the Free Software Foundation version 2.
-+ *
-+ * This program is distributed "as is" WITHOUT ANY WARRANTY of any
-+ * kind, whether express or implied; without even the implied warranty
-+ * of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
-+ */
-+
-+#define BCM2835_AUX_CLOCK_UART		0
-+#define BCM2835_AUX_CLOCK_SPI1		1
-+#define BCM2835_AUX_CLOCK_SPI2		2
-+#define BCM2835_AUX_CLOCK_COUNT		3
+ 		rng@7e104000 {
+ 			compatible = "brcm,bcm2835-rng";
+ 			reg = <0x7e104000 0x10>;
 -- 
 2.1.4
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
