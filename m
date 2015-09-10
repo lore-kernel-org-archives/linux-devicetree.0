@@ -1,98 +1,50 @@
-From: Wang Dongsheng <Dongsheng.Wang@freescale.com>
-Subject: RE: [PATCH 1/2] fsl: Add binding for RCPM
-Date: Thu, 10 Sep 2015 02:03:09 +0000
-Message-ID: <SN1PR0301MB16165F9EE9B7CE08A3BA68299D510@SN1PR0301MB1616.namprd03.prod.outlook.com>
-References: <1441780967-30879-1-git-send-email-dongsheng.wang@freescale.com>
- <1441828599.29081.36.camel@freescale.com>
+From: "Wu, Songjun" <songjun.wu@atmel.com>
+Subject: Re: [PATCH 1/2] ASoC: atmel-classd: add the Audio Class D Amplifier
+ code
+Date: Thu, 10 Sep 2015 10:31:04 +0800
+Message-ID: <55F0EB68.9070800@atmel.com>
+References: <1441086101-15303-1-git-send-email-songjun.wu@atmel.com>
+ <1441086101-15303-2-git-send-email-songjun.wu@atmel.com>
+ <20150903113716.GU12027@sirena.org.uk> <55EC0AF5.8060403@atmel.com>
+ <20150907162350.GV5313@sirena.org.uk> <55EEAC01.3080409@atmel.com>
+ <20150908122322.GB9751@sirena.org.uk> <55EFA478.1000109@atmel.com>
+ <20150909095245.GG9751@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
-In-Reply-To: <1441828599.29081.36.camel@freescale.com>
-Content-Language: en-US
-List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
- <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev/>
-List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
-List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
- <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
-Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
-Sender: "Linuxppc-dev"
- <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
-To: Scott Wood <scottwood@freescale.com>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "Zhao C.H." <chenhui.zhao@freescale.com>, Huan Wang <alison.wang@freescale.com>, Yuantian Tang <Yuantian.Tang@freescale.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, Jin Jason <Jason.Jin@freescale.com>, "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20150909095245.GG9751@sirena.org.uk>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Mark Brown <broonie@kernel.org>
+Cc: nicolas.ferre@atmel.com, lgirdwood@gmail.com, perex@perex.cz, tiwai@suse.com, linux-kernel@vger.kernel.org, alsa-devel@alsa-project.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-SGkgU2NvdHQsDQoNClRoYW5rcyBmb3IgeW91ciByZXZpZXcuDQoNCj4gLS0tLS1PcmlnaW5hbCBN
-ZXNzYWdlLS0tLS0NCj4gRnJvbTogV29vZCBTY290dC1CMDc0MjENCj4gU2VudDogVGh1cnNkYXks
-IFNlcHRlbWJlciAxMCwgMjAxNSAzOjU3IEFNDQo+IFRvOiBXYW5nIERvbmdzaGVuZy1CNDA1MzQN
-Cj4gQ2M6IGRldmljZXRyZWVAdmdlci5rZXJuZWwub3JnOyBsaW51eHBwYy1kZXZAbGlzdHMub3ps
-YWJzLm9yZzsgSmluIFpoZW5neGlvbmctDQo+IFI2NDE4ODsgWmhhbyBDaGVuaHVpLUIzNTMzNjsg
-VGFuZyBZdWFudGlhbi1CMjk5ODM7IFdhbmcgSHVhbi1CMTg5NjU7DQo+IHJvYmgrZHRAa2VybmVs
-Lm9yZzsgbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnDQo+IFN1YmplY3Q6IFJl
-OiBbUEFUQ0ggMS8yXSBmc2w6IEFkZCBiaW5kaW5nIGZvciBSQ1BNDQo+IA0KPiBPbiBXZWQsIDIw
-MTUtMDktMDkgYXQgMTQ6NDIgKzA4MDAsIERvbmdzaGVuZyBXYW5nIHdyb3RlOg0KPiA+IEZyb206
-IFdhbmcgRG9uZ3NoZW5nIDxkb25nc2hlbmcud2FuZ0BmcmVlc2NhbGUuY29tPg0KPiA+DQo+ID4g
-UkNQTSBpcyB0aGUgUnVuIENvbnRyb2wgYW5kIFBvd2VyIE1hbmFnZW1lbnQgbW9kdWxlIHBlcmZv
-cm1zIGFsbA0KPiA+IGRldmljZS1sZXZlbCB0YXNrcyBhc3NvY2lhdGVkIHdpdGggZGV2aWNlIHJ1
-biBjb250cm9sIGFuZCBwb3dlcg0KPiA+IG1hbmFnZW1lbnQuDQo+ID4NCj4gPiBBZGQgdGhpcyBm
-b3IgZnJlZXNjYWxlIHBvd2VycGMgcGxhdGZvcm0gYW5kIGxheWVyc2NhcGUgcGxhdGZvcm0uDQo+
-ID4NCj4gPiBTaWduZWQtb2ZmLWJ5OiBDaGVuaHVpIFpoYW8gPGNoZW5odWkuemhhb0BmcmVlc2Nh
-bGUuY29tPg0KPiA+IFNpZ25lZC1vZmYtYnk6IFRhbmcgWXVhbnRpYW4gPFl1YW50aWFuLlRhbmdA
-ZnJlZXNjYWxlLmNvbT4NCj4gPiBTaWduZWQtb2ZmLWJ5OiBXYW5nIERvbmdzaGVuZyA8ZG9uZ3No
-ZW5nLndhbmdAZnJlZXNjYWxlLmNvbT4NCj4gPg0KPiA+IGRpZmYgLS1naXQgYS9Eb2N1bWVudGF0
-aW9uL2RldmljZXRyZWUvYmluZGluZ3Mvc29jL2ZzbC9yY3BtLnR4dA0KPiA+IGIvRG9jdW1lbnRh
-dGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3NvYy9mc2wvcmNwbS50eHQNCj4gPiBuZXcgZmlsZSBt
-b2RlIDEwMDY0NA0KPiA+IGluZGV4IDAwMDAwMDAuLjI4NDA3MGMNCj4gPiAtLS0gL2Rldi9udWxs
-DQo+ID4gKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3NvYy9mc2wvcmNw
-bS50eHQNCj4gPiBAQCAtMCwwICsxLDY0IEBADQo+ID4gKyogUnVuIENvbnRyb2wgYW5kIFBvd2Vy
-IE1hbmFnZW1lbnQNCj4gPiArLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLQ0KPiA+ICtUaGUgUkNQTSBwZXJmb3JtcyBhbGwgZGV2aWNlLWxldmVsIHRhc2tzIGFzc29j
-aWF0ZWQgd2l0aCBkZXZpY2UgcnVuIGNvbnRyb2wNCj4gPiArYW5kIHBvd2VyIG1hbmFnZW1lbnQu
-DQo+ID4gKw0KPiA+ICtSZXF1aXJlZCBwcm9wZXJpdGVzOg0KPiA+ICsgIC0gcmVnIDogT2Zmc2V0
-IGFuZCBsZW5ndGggb2YgdGhlIHJlZ2lzdGVyIHNldCBvZiBSQ1BNIGJsb2NrLg0KPiA+ICsgIC0g
-Y29tcGF0aWJsZSA6IFNvdWxkIGNvbnRhaW4gYSBjaGlwLXNwZWNpZmljIFJDUE0gYmxvY2sgY29t
-cGF0aWJsZSBzdHJpbmcNCj4gPiArICAgICBhbmQgKGlmIGFwcGxpY2FibGUpIG1heSBjb250YWlu
-IGEgY2hhc3Npcy12ZXJzaW9uIFJDUE0gY29tcGF0aWJsZSBzdHJpbmcuDQo+ID4gKyAgICAgQ2hp
-cC1zcGVjaWZpYyBzdHJpbmdzIGFyZSBvZiB0aGUgZm9ybSAiZnNsLDxjaGlwPi1yY3BtIiwgc3Vj
-aCBhczoNCj4gPiArICAgICAqICJmc2wscDIwNDEtcmNwbSINCj4gPiArICAgICAqICJmc2wscDMw
-NDEtcmNwbSINCj4gPiArICAgICAqICJmc2wscDQwODAtcmNwbSINCj4gPiArICAgICAqICJmc2ws
-cDUwMjAtcmNwbSINCj4gPiArICAgICAqICJmc2wscDUwNDAtcmNwbSINCj4gPiArICAgICAqICJm
-c2wsdDQyNDAtcmNwbSINCj4gPiArICAgICAqICJmc2wsYjQ0MjAtcmNwbSINCj4gPiArICAgICAq
-ICJmc2wsYjQ4NjAtcmNwbSINCj4gPiArDQo+ID4gKyAgICAgQ2hhc3Npcy12ZXJzaW9uIHN0cmlu
-Z3MgYXJlIG9mIHRoZSBmb3JtICJmc2wscW9yaXEtcmNwbS08dmVyc2lvbj4iLA0KPiA+ICsgICAg
-IHN1Y2ggYXM6DQo+ID4gKyAgICAgKiAiZnNsLHFvcmlxLXJjcG0tMS4wIjogZm9yIGNoYXNzaXMg
-MS4wIHJjcG0NCj4gPiArICAgICAqICJmc2wscW9yaXEtcmNwbS0yLjAiOiBmb3IgY2hhc3NpcyAy
-LjAgcmNwbQ0KPiA+ICsgICAgICogImZzbCxxb3JpcS1yY3BtLTIuMSI6IGZvciBjaGFzc2lzIDIu
-MSByY3BtDQo+ID4gKw0KPiA+ICtBbGwgcmVmZXJlbmNlcyB0byAiMS4wIiBhbmQgIjIuMCIgcmVm
-ZXIgdG8gdGhlIFFvcklRIGNoYXNzaXMgdmVyc2lvbiB0bw0KPiA+ICt3aGljaCB0aGUgY2hpcCBj
-b21wbGllcy4NCj4gPiArQ2hhc3NpcyBWZXJzaW9uICAgICAgICAgICAgICBFeGFtcGxlIENoaXBz
-DQo+ID4gKy0tLS0tLS0tLS0tLS0tLSAgICAgICAgICAgICAgLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLQ0KPiA+ICsxLjAgICAgICAgICAgICAgICAgICAgICAgICAgIHA0MDgwLCBwNTAy
-MCwgcDUwNDAsIHAyMDQxLCBwMzA0MQ0KPiA+ICsyLjAgICAgICAgICAgICAgICAgICAgICAgICAg
-IHQ0MjQwLCBiNDg2MCwgYjQ0MjANCj4gPiArMi4xICAgICAgICAgICAgICAgICAgICAgICAgICB0
-MTA0MCwgbHMxMDIxDQo+ID4gKw0KPiA+ICtFeGFtcGxlOg0KPiA+ICtUaGUgUkNQTSBub2RlIGZv
-ciBUNDI0MDoNCj4gPiArICAgICByY3BtOiAgZ2xvYmFsLXV0aWxpdGllc0BlMjAwMHsNCj4gPiAr
-ICAgICAgICAgICAgIGNvbXBhdGlibGUgPSAiZnNsLHQ0MjQwLXJjcG0iLCAiZnNsLHFvcmlxLXJj
-cG0tMi4wIjsNCj4gPiArICAgICAgICAgICAgIHJlZyA9IDwweGUyMDAwIDB4MTAwMD47DQo+ID4g
-KyAgICAgfTsNCj4gPiArDQo+ID4gK1RoZSBSQ1BNIG5vZGUgZm9yIFA0MDgwOg0KPiA+ICsgICAg
-IHJjcG06ICBnbG9iYWwtdXRpbGl0aWVzQGUyMDAwew0KPiA+ICsgICAgICAgICAgICAgY29tcGF0
-aWJsZSA9ICJmc2wscW9yaXEtcmNwbS0xLjAiOw0KPiA+ICsgICAgICAgICAgICAgcmVnID0gPDB4
-ZTIwMDAgMHgxMDAwPjsNCj4gPiArICAgICB9Ow0KPiANCj4gSSB3b3VsZCBhdm9pZCBwdXR0aW5n
-IHRoZSBwNDA4MCBleGFtcGxlIGluIHRoZSBiaW5kaW5nLCBhcyB3ZSBkb24ndCB3YW50IHRvDQo+
-IG1ha2UgaXQgbG9vayBsaWtlIGl0J3MgT0sgdG8gbGVhdmUgb3V0IHRoZSBzcGVjaWZpYyBjaGlw
-IGNvbXBhdGlibGUuDQo+IA0KDQpGaW5lLCBJIHdpbGwgYWRkIHRoZSBzcGVjaWZpYyBjaGlwIGNv
-bXBhdGlibGUgaW4gdGhpcyBleGFtcGxlLg0KY29tcGF0aWJsZSA9ICJmc2wscDQwODAtcmNwbSIs
-ICJmc2wscW9yaXEtcmNwbS0xLjAiOw0KDQo+ID4gKyogRnJlZXNjYWxlIFJDUE0gV2FrZXVwIFNv
-dXJjZSBEZXZpY2UgVHJlZSBCaW5kaW5ncw0KPiA+ICstLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tDQo+ID4gK1JlcXVpcmVkIHJjcG0td2FrZXVwIHByb3BlcnR5IHNo
-b3VsZCBiZSBhZGRlZCB0byBhIGRldmljZSBub2RlIGlmIHRoZQ0KPiA+IGRldmljZQ0KPiA+ICtj
-YW4gYmUgdXNlZCBhcyBhIHdha2V1cCBzb3VyY2UuDQo+ID4gKw0KPiA+ICsgIC0gcmNwbS13YWtl
-dXA6IHNob3VsZCBjb250YWluIGEgcG9pbnRlciB0byB0aGUgcmNwbSBub2RlIGFuZCB0aGUNCj4g
-PiArICAgICBjb3JyZXNwb25kaW5nIGJpdCBvZiBkZXZpY2UgaW4gdGhlIHJlZ2lzdGVyLg0KPiAN
-Cj4gVGhlIGNvcnJlc3BvbmRpbmcgYml0IGluICp3aGF0KiByZWdpc3Rlcj8NCj4gDQoNClJDUE1f
-SVBQREVYUENSeCByZWdpc3RlciwgSSB3aWxsIGFkZCBhIGV4cGxhaW4gdG8gdGhpcy4NCg0KUmVn
-YXJkcywNCi1Eb25nc2hlbmcNCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fCkxpbnV4cHBjLWRldiBtYWlsaW5nIGxpc3QKTGludXhwcGMtZGV2QGxpc3RzLm96
-bGFicy5vcmcKaHR0cHM6Ly9saXN0cy5vemxhYnMub3JnL2xpc3RpbmZvL2xpbnV4cHBjLWRldg==
+
+
+On 9/9/2015 17:52, Mark Brown wrote:
+> On Wed, Sep 09, 2015 at 11:16:08AM +0800, Wu, Songjun wrote:
+>> On 9/8/2015 20:23, Mark Brown wrote:
+>
+>>> If you want to have three controls you need to write code so that the
+>>> user can only change one of them from 0dB at once, returning an error
+>>> otherwise.  That was why it looked like they were three separate
+>>> controls.
+>
+>> If user operates two or tree controls at the same time, for my
+>> understanding, these operations are serial actually in kernel, not parallel,
+>> and the last operation will be effective. I only write the function
+>> 'classd_get_eq_enum' to get the enumeration value, if user changes one of
+>> controls, the other controls will get 0dB. Is my understanding correct?
+>
+> Yes, that's what's going to end up happening but it's not how controls
+> are expected to behave - applications will expect changing one control
+> to leave others unaffected so it's better to return an error rather than
+> change the other control.
+>
+If application change non EQ controls, the others will be unaffected. 
+But the classD IP can only supports one EQ control at once, these three 
+EQ controls point to the same register field, if application set a 
+different EQ control, the error occurs, there will be many errors, it's 
+not very reasonable to application. The best way I think is if 
+application set one EQ control, the other EQ controls will change to 
+0dB, it's also consistent with fact.
