@@ -1,70 +1,204 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 1/4] devicetree: bindings: Update
- gpio-keys-polled with support for abs/rel axis
-Date: Thu, 10 Sep 2015 12:45:35 -0500
-Message-ID: <55F1C1BF.40207@kernel.org>
-References: <1441789886-5868-1-git-send-email-hdegoede@redhat.com>
-Reply-To: robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+From: Maxime Ripard <maxime.ripard@free-electrons.com>
+Subject: Re: [PATCH v2 1/1] ARM: dts: sun7i: Enable axp209 driver on
+ olinuxino lime2
+Date: Thu, 10 Sep 2015 20:13:15 +0200
+Message-ID: <20150910181315.GM9885@lukather>
+References: <1441805204-6037-1-git-send-email-o.schinagl@ultimaker.com>
+ <1441805204-6037-2-git-send-email-o.schinagl@ultimaker.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBD62P6P6EQIMDA6HV4CRUBF3PEL3M-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <1441789886-5868-1-git-send-email-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <http://groups.google.com/group/linux-sunxi/subscribe>
-To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="RNRUMt0ZF5Yaq/Aq"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1441805204-6037-2-git-send-email-o.schinagl@ultimaker.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Olliver Schinagl <o.schinagl@ultimaker.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 09/09/2015 04:11 AM, Hans de Goede wrote:
-> The devicetree binding for gpio-keys-polled already allows specifying
-> what type of events (key / rel / abs) a button generates when pressed.
-> 
-> But for rel / abs axis we also need to specify which value this specific
-> gpio represents.
-> 
-> One usecase is digital joysticks / direction-pads which are hooked up to
-> gpio, in this case we've left and right buttons which we want to map to
-> EV_ABS, ABS_X and we want generate events for left with a value of -1 and
-> for right with a value of +1 (and similar for up / down and ABS_Y).
 
-One minor comment, otherwise:
+--RNRUMt0ZF5Yaq/Aq
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Hi Oliver,
 
-> 
-> Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+On Wed, Sep 09, 2015 at 03:26:44PM +0200, Olliver Schinagl wrote:
+> The Olimex OLinuXino Lime2 uses the same AXP209 as was recently
+> introduced this driver for its power regulation.
+>=20
+> Signed-off-by: Olliver Schinagl <o.schinagl@ultimaker.com>
 > ---
->  Documentation/devicetree/bindings/input/gpio-keys-polled.txt | 7 ++++++-
->  1 file changed, 6 insertions(+), 1 deletion(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/input/gpio-keys-polled.txt b/Documentation/devicetree/bindings/input/gpio-keys-polled.txt
-> index 313abef..ab4b09b 100644
-> --- a/Documentation/devicetree/bindings/input/gpio-keys-polled.txt
-> +++ b/Documentation/devicetree/bindings/input/gpio-keys-polled.txt
-> @@ -13,11 +13,16 @@ Subnode properties:
->  
->  	- gpios: OF device-tree gpio specification.
->  	- label: Descriptive name of the key.
-> -	- linux,code: Keycode to emit.
-> +	- linux,code: Key / Axis code to emit.
->  
->  Optional subnode-properties:
->  	- linux,input-type: Specify event type this button/key generates.
->  	  If not specified defaults to <1> == EV_KEY.
-> +	- linux,input-value: If linux,input-type is EV_ABS or EV_REL then this
-> +	  value is send for events this button generates when pressed.
+>  arch/arm/boot/dts/sun7i-a20-olinuxino-lime2.dts | 87 +++++++++----------=
+------
+>  1 file changed, 31 insertions(+), 56 deletions(-)
+>=20
+> diff --git a/arch/arm/boot/dts/sun7i-a20-olinuxino-lime2.dts b/arch/arm/b=
+oot/dts/sun7i-a20-olinuxino-lime2.dts
+> index d5c796c..dd90a1d 100644
+> --- a/arch/arm/boot/dts/sun7i-a20-olinuxino-lime2.dts
+> +++ b/arch/arm/boot/dts/sun7i-a20-olinuxino-lime2.dts
+> @@ -71,14 +71,6 @@
+>  			default-state =3D "on";
+>  		};
+>  	};
+> -
+> -	reg_axp_ipsout: axp_ipsout {
+> -		compatible =3D "regulator-fixed";
+> -		regulator-name =3D "axp-ipsout";
+> -		regulator-min-microvolt =3D <5000000>;
+> -		regulator-max-microvolt =3D <5000000>;
+> -		regulator-always-on;
+> -	};
 
-s/send/sent/
+Why are you removing that regulator?
 
-> +	  EV_ABS axis will generate an event with a value of 0 when all
-> +	  buttons with linux,input-type == EV_ABS and linux,code == axis
-> +	  are released.
->  	- debounce-interval: Debouncing interval time in milliseconds.
->  	  If not specified defaults to 5.
->  	- gpio-key,wakeup: Boolean, button can wake-up the system.
-> 
+>  };
+> =20
+>  &ahci {
+> @@ -86,6 +78,10 @@
+>  	status =3D "okay";
+>  };
+> =20
+> +&cpu0 {
+> +	cpu-supply =3D <&reg_dcdc2>;
+> +};
+> +
+>  &ehci0 {
+>  	status =3D "okay";
+>  };
+> @@ -112,57 +108,9 @@
+>  	status =3D "okay";
+> =20
+>  	axp209: pmic@34 {
+> -		compatible =3D "x-powers,axp209";
+>  		reg =3D <0x34>;
+>  		interrupt-parent =3D <&nmi_intc>;
+>  		interrupts =3D <0 IRQ_TYPE_LEVEL_LOW>;
+> -
+> -		interrupt-controller;
+> -		#interrupt-cells =3D <1>;
+> -
+> -		acin-supply =3D <&reg_axp_ipsout>;
+> -		vin2-supply =3D <&reg_axp_ipsout>;
+> -		vin3-supply =3D <&reg_axp_ipsout>;
+> -		ldo24in-supply =3D <&reg_axp_ipsout>;
+> -		ldo3in-supply =3D <&reg_axp_ipsout>;
+
+And these supplies?
+
+> -		regulators {
+> -			vdd_rtc: ldo1 {
+> -				regulator-min-microvolt =3D <1300000>;
+> -				regulator-max-microvolt =3D <1300000>;
+> -				regulator-always-on;
+> -			};
+> -
+> -			avcc: ldo2 {
+> -				regulator-min-microvolt =3D <1800000>;
+> -				regulator-max-microvolt =3D <3300000>;
+> -				regulator-always-on;
+> -			};
+> -
+> -			vcc_csi0: ldo3 {
+> -				regulator-min-microvolt =3D <700000>;
+> -				regulator-max-microvolt =3D <3500000>;
+> -				regulator-always-on;
+> -			};
+> -
+> -			vcc_csi1: ldo4 {
+> -				regulator-min-microvolt =3D <1250000>;
+> -				regulator-max-microvolt =3D <3300000>;
+> -				regulator-always-on;
+> -			};
+> -
+> -			vdd_cpu: dcdc2 {
+> -				regulator-min-microvolt =3D <700000>;
+> -				regulator-max-microvolt =3D <2275000>;
+> -				regulator-always-on;
+> -			};
+> -
+> -			vdd_int: dcdc3 {
+> -				regulator-min-microvolt =3D <700000>;
+> -				regulator-max-microvolt =3D <3500000>;
+> -				regulator-always-on;
+> -			};
+> -		};
+>  	};
+>  };
+> =20
+> @@ -243,6 +191,33 @@
+>  	status =3D "okay";
+>  };
+> =20
+> +#include "axp209.dtsi"
+> +
+> +&reg_dcdc2 {
+> +	regulator-always-on;
+> +	regulator-min-microvolt =3D <1000000>;
+> +	regulator-max-microvolt =3D <1450000>;
+
+This is outside of the operating voltages of the CPU.
+
+> +	regulator-name =3D "vdd-cpu";
+> +};
+> +
+> +&reg_dcdc3 {
+> +	regulator-always-on;
+> +	regulator-min-microvolt =3D <1000000>;
+> +	regulator-max-microvolt =3D <1400000>;
+> +	regulator-name =3D "vdd-int-dll";
+> +};
+> +
+> +&reg_ldo1 {
+> +	regulator-name =3D "vdd-rtc";
+> +};
+> +
+> +&reg_ldo2 {
+> +	regulator-always-on;
+> +	regulator-min-microvolt =3D <3000000>;
+> +	regulator-max-microvolt =3D <3000000>;
+> +	regulator-name =3D "avcc";
+
+You're changing the boundaries, why?
+
+> +};
+> +
+>  &reg_usb0_vbus {
+>  	pinctrl-0 =3D <&usb0_vbus_pin_lime2>;
+>  	gpio =3D <&pio 2 17 GPIO_ACTIVE_HIGH>;
+> --=20
+> 2.1.4
+
+Thanks!
+Maxime
+
+--=20
+Maxime Ripard, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
+
+--RNRUMt0ZF5Yaq/Aq
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBAgAGBQJV8cg7AAoJEBx+YmzsjxAg0EAQAIveSaDlKItC69pOd/IA+8nC
+donmqr+hQjkLOP0C6fYMUqmfJJtjsQsjwJX8rXE9FKLiG/UhKTm0aCUIfyPihpiT
+rW2uhcN0th36UgNZF9F/A33bUJZEpMStmQkxpIa739RMcZZBSSOw86nFjDtUJ/o8
+2vROAgAWxjyyubCC2x5rYBQbVQF5LxZEfkZ7e72c0PLpPlDCiBv7dACQ9ZaHYsuq
++dA1TM+qCuFlWhBYWApfxdrUFRYJtX7GxBPbxwgEg+zsy1WJC6QGMZL5R2qAbakV
+KTywbKETRix1uFiNpmCgcaBNM3SoczpyPY8psD3aHDMh30sizQtuyrYqQ+SrfQeD
+heR79BNStbok34irFFyg/nGafozJnr/qyVzc0oilhyo+UeaBqWNRkvZwS5RjmBgl
+4SuFTR2ZOcYM+9bzi+3VadXkrUWqtGLTpYMBGrSYch8/X7dG+x4CLjBOomMLA8q6
+8lS1r5iuJN6Kl/uTLFGRPufK7r0MhmRw9Sd1vl9b+NHh91WfiMeYaZaYvYi6HQlg
+vNZ8iMsX5Gy6h3mXUgkq373c6Hi8QwePPXXji8yPaSVIoXMnIkyCJHjhgMbFijwA
+/s6rvbR85cFbwuMI+AqBwSbbNeVw1I194m5C5gZis2+xe7Nc+x4lynYv0Qgx5kQB
+TMhuoUZAqJlpC9fMkS6b
+=JKj9
+-----END PGP SIGNATURE-----
+
+--RNRUMt0ZF5Yaq/Aq--
