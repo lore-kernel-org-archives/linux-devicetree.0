@@ -1,134 +1,114 @@
-From: Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: Re: [PATCH 1/2] fsl: Add binding for RCPM
-Date: Thu, 10 Sep 2015 11:46:55 -0500
-Message-ID: <1441903615.2909.0.camel@freescale.com>
-References: <1441780967-30879-1-git-send-email-dongsheng.wang@freescale.com>
-	 <1441828599.29081.36.camel@freescale.com>
-	 <SN1PR0301MB16165F9EE9B7CE08A3BA68299D510@SN1PR0301MB1616.namprd03.prod.outlook.com>
+From: Phil Elwell <phil@raspberrypi.org>
+Subject: Re: [PATCH v5 0/6] bcm2835: auxiliar device support for spi
+Date: Thu, 10 Sep 2015 18:02:47 +0100
+Message-ID: <55F1B7B7.3050604@raspberrypi.org>
+References: <1441359711-2800-1-git-send-email-kernel@martin.sperl.org>
+ <87h9n4weg8.fsf@eliezer.anholt.net> <55F1A651.5090102@tronnes.org>
+ <8B777380-A2A1-475E-8A1C-942BF28EE160@martin.sperl.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <SN1PR0301MB16165F9EE9B7CE08A3BA68299D510-VLIetriUNobRRq1t3zq48ZwN6zqB+hSMnBOFsp37pqbUKgpGm//BTAC/G2K4zDHf@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Wang Dongsheng-B40534 <Dongsheng.Wang-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Jin Zhengxiong-R64188 <Jason.Jin-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Zhao Chenhui-B35336 <chenhui.zhao-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Tang Yuantian-B29983 <Yuantian.Tang-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Wang Huan-B18965 <alison.wang-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <8B777380-A2A1-475E-8A1C-942BF28EE160@martin.sperl.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Martin Sperl <kernel@martin.sperl.org>, =?UTF-8?Q?Noralf_Tr=c3=b8nnes?= <noralf@tronnes.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Ian Campbell <ijc+devicetree@hellion.org.uk>, Russell King <linux@arm.linux.org.uk>, Pawel Moll <pawel.moll@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Lee Jones <lee@kernel.org>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-spi@vger.kernel.org, Eric Anholt <eric@anholt.net>, Mark Brown <broonie@kernel.org>, linux-rpi-kernel@lists.infradead.org, Kumar Gala <galak@codeaurora.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 2015-09-09 at 21:03 -0500, Wang Dongsheng-B40534 wrote:
-> Hi Scott,
-> 
-> Thanks for your review.
-> 
-> > -----Original Message-----
-> > From: Wood Scott-B07421
-> > Sent: Thursday, September 10, 2015 3:57 AM
-> > To: Wang Dongsheng-B40534
-> > Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org; Jin 
-> > Zhengxiong-
-> > R64188; Zhao Chenhui-B35336; Tang Yuantian-B29983; Wang Huan-B18965;
-> > robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org; linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-> > Subject: Re: [PATCH 1/2] fsl: Add binding for RCPM
-> > 
-> > On Wed, 2015-09-09 at 14:42 +0800, Dongsheng Wang wrote:
-> > > From: Wang Dongsheng <dongsheng.wang-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-> > > 
-> > > RCPM is the Run Control and Power Management module performs all
-> > > device-level tasks associated with device run control and power
-> > > management.
-> > > 
-> > > Add this for freescale powerpc platform and layerscape platform.
-> > > 
-> > > Signed-off-by: Chenhui Zhao <chenhui.zhao-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-> > > Signed-off-by: Tang Yuantian <Yuantian.Tang-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-> > > Signed-off-by: Wang Dongsheng <dongsheng.wang-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-> > > 
-> > > diff --git a/Documentation/devicetree/bindings/soc/fsl/rcpm.txt
-> > > b/Documentation/devicetree/bindings/soc/fsl/rcpm.txt
-> > > new file mode 100644
-> > > index 0000000..284070c
-> > > --- /dev/null
-> > > +++ b/Documentation/devicetree/bindings/soc/fsl/rcpm.txt
-> > > @@ -0,0 +1,64 @@
-> > > +* Run Control and Power Management
-> > > +-------------------------------------------
-> > > +The RCPM performs all device-level tasks associated with device run 
-> > > control
-> > > +and power management.
-> > > +
-> > > +Required properites:
-> > > +  - reg : Offset and length of the register set of RCPM block.
-> > > +  - compatible : Sould contain a chip-specific RCPM block compatible 
-> > > string
-> > > +     and (if applicable) may contain a chassis-version RCPM compatible 
-> > > string.
-> > > +     Chip-specific strings are of the form "fsl,<chip>-rcpm", such as:
-> > > +     * "fsl,p2041-rcpm"
-> > > +     * "fsl,p3041-rcpm"
-> > > +     * "fsl,p4080-rcpm"
-> > > +     * "fsl,p5020-rcpm"
-> > > +     * "fsl,p5040-rcpm"
-> > > +     * "fsl,t4240-rcpm"
-> > > +     * "fsl,b4420-rcpm"
-> > > +     * "fsl,b4860-rcpm"
-> > > +
-> > > +     Chassis-version strings are of the form "fsl,qoriq-rcpm-
-> > > <version>",
-> > > +     such as:
-> > > +     * "fsl,qoriq-rcpm-1.0": for chassis 1.0 rcpm
-> > > +     * "fsl,qoriq-rcpm-2.0": for chassis 2.0 rcpm
-> > > +     * "fsl,qoriq-rcpm-2.1": for chassis 2.1 rcpm
-> > > +
-> > > +All references to "1.0" and "2.0" refer to the QorIQ chassis version to
-> > > +which the chip complies.
-> > > +Chassis Version              Example Chips
-> > > +---------------              -------------------------------
-> > > +1.0                          p4080, p5020, p5040, p2041, p3041
-> > > +2.0                          t4240, b4860, b4420
-> > > +2.1                          t1040, ls1021
-> > > +
-> > > +Example:
-> > > +The RCPM node for T4240:
-> > > +     rcpm:  global-utilities@e2000{
-> > > +             compatible = "fsl,t4240-rcpm", "fsl,qoriq-rcpm-2.0";
-> > > +             reg = <0xe2000 0x1000>;
-> > > +     };
-> > > +
-> > > +The RCPM node for P4080:
-> > > +     rcpm:  global-utilities@e2000{
-> > > +             compatible = "fsl,qoriq-rcpm-1.0";
-> > > +             reg = <0xe2000 0x1000>;
-> > > +     };
-> > 
-> > I would avoid putting the p4080 example in the binding, as we don't want 
-> > to
-> > make it look like it's OK to leave out the specific chip compatible.
-> > 
-> 
-> Fine, I will add the specific chip compatible in this example.
-> compatible = "fsl,p4080-rcpm", "fsl,qoriq-rcpm-1.0";
+[ Sending again in plain text ]
+Noralf pointed me at fixed-factor-clock, and that works in our
+(downstream) environment:
 
-Just drop that example.
+    soc: soc {
+        ...
+        uart1: uart@7e215040 {
+            compatible =3D "brcm,bcm2835-aux-uart", "ns16550";
+            reg =3D <0x7e215040 0x40>;
+            interrupts =3D <1 29>;
+            clocks =3D <&clk_uart1>;
+            reg-shift =3D <2>;
+            no-loopback-test;
+            status =3D "disabled";
+            };
+    };
 
-> > > +* Freescale RCPM Wakeup Source Device Tree Bindings
-> > > +-------------------------------------------
-> > > +Required rcpm-wakeup property should be added to a device node if the
-> > > device
-> > > +can be used as a wakeup source.
-> > > +
-> > > +  - rcpm-wakeup: should contain a pointer to the rcpm node and the
-> > > +     corresponding bit of device in the register.
-> > 
-> > The corresponding bit in *what* register?
-> > 
-> 
-> RCPM_IPPDEXPCRx register, I will add a explain to this.
+    clocks: clocks {
+        ...
+        clk_core: clock@2 {
+            compatible =3D "fixed-clock";
+            reg =3D <2>;
+            #clock-cells =3D <0>;
+            clock-output-names =3D "core";
+            clock-frequency =3D <250000000>;
+        };
+        ...
+        clk_uart1: clock@6 {
+            compatible =3D "fixed-factor-clock";
+            clocks =3D <&clk_core>;
+            #clock-cells =3D <0>;
+            clock-div =3D <1>;
+            clock-mult =3D <2>;
+        };
+    };
 
-How do you encode which "x" it is?
+Phil
 
--Scott
+On 10/09/2015 16:57, Martin Sperl wrote:
+>> On 10.09.2015, at 17:48, Noralf Tr=F8nnes <noralf@tronnes.org> wrote:
+>>
+>> This looks interesting.
+>> But there's a challenge with the uart1 and the 8250 driver.
+>>
+>> Phil Elwell has this to say:
+>> This means that that UART1 isn't an exact clone of a 8250 UART.
+>> In a particular, the clock divisor is calculated differently.
+>> A standard 8250 derives the baud rate as clock/(divisor16),
+>> whereas the BCM2835 mini UART uses clock/(divisor8). This means
+>> that if you want to use the standard driver then you need to lie
+>> about the clock frequency, providing a value is twice the real
+>> value, in order for a suitable divisor to be calculated.
+>>
+>> Ref: https://github.com/raspberrypi/linux/pull/1008#issuecomment-1392346=
+07
+>>
+>> So either we need a new uart1 driver or a doubled clock freq. somehow.
+> Found out the same thing and communicated it to Eric - not =
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> knowing about the different divider=85
+>
+> Martin
+
+
+
+On 10/09/2015 16:57, Martin Sperl wrote:
+>> On 10.09.2015, at 17:48, Noralf Tr=F8nnes <noralf@tronnes.org> wrote:
+>>
+>> This looks interesting.
+>> But there's a challenge with the uart1 and the 8250 driver.
+>>
+>> Phil Elwell has this to say:
+>> This means that that UART1 isn't an exact clone of a 8250 UART.
+>> In a particular, the clock divisor is calculated differently.
+>> A standard 8250 derives the baud rate as clock/(divisor16),
+>> whereas the BCM2835 mini UART uses clock/(divisor8). This means
+>> that if you want to use the standard driver then you need to lie
+>> about the clock frequency, providing a value is twice the real
+>> value, in order for a suitable divisor to be calculated.
+>>
+>> Ref: https://github.com/raspberrypi/linux/pull/1008#issuecomment-1392346=
+07
+>>
+>> So either we need a new uart1 driver or a doubled clock freq. somehow.
+> Found out the same thing and communicated it to Eric - not =
+
+> knowing about the different divider=85
+>
+> Martin
