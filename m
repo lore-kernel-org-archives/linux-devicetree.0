@@ -1,110 +1,60 @@
-From: Lian M.H. <Minghuan.Lian@freescale.com>
-Subject: RE: [PATCH v2 04/10] doc/bindings: Update PCIe devicetree binding
- documentation for LS2080A
-Date: Thu, 10 Sep 2015 01:52:59 +0000
-Message-ID: <DM2PR0301MB064012F20C5AF07E71EECF1EE2510@DM2PR0301MB0640.namprd03.prod.outlook.com>
-References: <1441349872-4560-1-git-send-email-bhupesh.sharma@freescale.com>
- <80094129.LHZFOe1ZPU@wuerfel>
- <CADRPPNR-cSSQC5sLMmoqcxX46J6hdULa_V4v2BK7T8s8pcX0cg@mail.gmail.com>
- <5383634.Mln7J3sdWP@wuerfel>
- <CADRPPNRekyv3dSEroh-n2e6p5nV7Q6tAW1VKHWn=Gqnc+MSs+g@mail.gmail.com>
+From: Yuantian Tang <Yuantian.Tang-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: RE: [PATCH 2/3] devicetree:bindings: add devicetree bindings for
+ Freescale AHCI
+Date: Thu, 10 Sep 2015 01:23:33 +0000
+Message-ID: <DM2PR03MB574940858592139F5AB3646FA510@DM2PR03MB574.namprd03.prod.outlook.com>
+References: <1441614196-4284-1-git-send-email-Yuantian.Tang@freescale.com>
+	<1441614196-4284-2-git-send-email-Yuantian.Tang@freescale.com>
+ <CADRPPNSSzWKY1P0DwyPLuTKk31YhnLxExoJX3GG+EpyWYdqSbQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <CADRPPNRekyv3dSEroh-n2e6p5nV7Q6tAW1VKHWn=Gqnc+MSs+g@mail.gmail.com>
-Content-Language: zh-CN
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Li Leo <LeoLi@freescale.com>, Arnd Bergmann <arnd@arndb.de>
-Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Sharma Bhupesh <bhupesh.sharma@freescale.com>, "Catalin.Marinas@arm.com" <Catalin.Marinas@arm.com>, "will.deacon@arm.com" <will.deacon@arm.com>, "marc.zyngier@arm.com" <marc.zyngier@arm.com>, "olof@lixom.net" <olof@lixom.net>, Bhupesh SHARMA <bhupesh.linux@gmail.com>, "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CADRPPNSSzWKY1P0DwyPLuTKk31YhnLxExoJX3GG+EpyWYdqSbQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Li Leo <LeoLi-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Cc: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, "tj-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <tj-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-ide-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-ide-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, lkml <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Leo and Bergmann,
-
-Please see my comments inline.
-
-> -----Original Message-----
-> From: pku.leo@gmail.com [mailto:pku.leo@gmail.com] On Behalf Of Li Yang
-> Sent: Thursday, September 10, 2015 7:50 AM
-> To: Arnd Bergmann <arnd@arndb.de>
-> Cc: linux-arm-kernel@lists.infradead.org; devicetree@vger.kernel.org; Mark
-> Rutland <mark.rutland@arm.com>; Sharma Bhupesh-B45370
-> <bhupesh.sharma@freescale.com>; Catalin.Marinas@arm.com;
-> olof@lixom.net; will.deacon@arm.com; Lian Minghuan-B31939
-> <Minghuan.Lian@freescale.com>; marc.zyngier@arm.com; Bhupesh SHARMA
-> <bhupesh.linux@gmail.com>; linux-clk@vger.kernel.org
-> Subject: Re: [PATCH v2 04/10] doc/bindings: Update PCIe devicetree binding
-> documentation for LS2080A
-> 
-> On Wed, Sep 9, 2015 at 4:07 AM, Arnd Bergmann <arnd@arndb.de> wrote:
-> > On Tuesday 08 September 2015 15:06:16 Li Yang wrote:
-> >> On Mon, Sep 7, 2015 at 6:32 AM, Arnd Bergmann <arnd@arndb.de> wrote:
-> >> > On Friday 04 September 2015 12:27:46 Bhupesh Sharma wrote:
-> >> >> @@ -4,7 +4,8 @@ This PCIe host controller is based on the Synopsis
-> >> >> Designware PCIe IP  and thus inherits all the common properties
-> defined in designware-pcie.txt.
-> >> >>
-> >> >>  Required properties:
-> >> >> -- compatible: should contain the platform identifier such as
-> "fsl,ls1021a-pcie"
-> >> >> +- compatible: should contain the platform identifier such as
-> >> >> +"fsl,ls1021a-pcie",
-> >> >> +  "fsl,ls2080a-pcie".
-> >> >>  - reg: base addresses and lengths of the PCIe controller
-> >> >>  - interrupts: A list of interrupt outputs of the controller. Must contain
-> an
-> >> >>    entry for each entry in the interrupt-names property.
-> >> >>
-> >> >
-> >> > Are the two PCIe hosts mutually compatible? If they are, you should
-> >> > mandate one of the strings as the base model for identification,
-> >> > with the additional model being optional for identification of the specific
-> SoC.
-> >>
-> >> It seems that controllers on these chips are not exactly the same.
-> >> They will get different driver data by matching the compatible
-> >> strings.  Probably we could define a more generic compatible string,
-> >> such as "fsl,layerscape-pcie" or "fsl,ls-pcie".
-> >>
-> >> >
-> >> > It would also be good to add a string with the specific version
-> >> > number of the designware PCIe block that is being used there.
-> >>
-> >> The binding has mentioned to reference the designware-pcie.txt.  But
-> >> it might be more clear to mention the designware compatible string
-> >> "snps,dw-pcie" again in the compatible part.  Currently there is no
-> >> version number defined in the designware-pcie binding.  It might be
-> >> hard to get this information for some SoCs.
-> >
-> > For most of them, the information is available and then it should be
-> > added. Obviously if you can't find it out, it's hard to guess and you
-> > have to leave it out for that particular chip.
-> 
-> Actually I don't know any approach to get the version number of the
-> designware block used.  Maybe they are actually using the same version of
-> the IP block, and the differences in the driver are actually caused by the
-> differences in SoC integration.
-> 
-> >
-> > A lot of devices also have some internal version register that you can
-> > read out.
-> 
-> There doesn't seem to be this kind of register for the PCIe block.
-> 
-[Lian Minghuan-B31939]  Yes. There is no register to show PCIe block version according to reference manual.
-I agree that differences in the driver are caused by the differences in SoC integration.
-
-> Minghuan,
-> 
-> Please correct me if you know more. :)
-> 
-> Regards,
-> Leo
+DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogcGt1Lmxlb0BnbWFpbC5j
+b20gW21haWx0bzpwa3UubGVvQGdtYWlsLmNvbV0gT24gQmVoYWxmIE9mIExpIFlhbmcNCj4gU2Vu
+dDogVGh1cnNkYXksIFNlcHRlbWJlciAxMCwgMjAxNSA3OjE5IEFNDQo+IFRvOiBUYW5nIFl1YW50
+aWFuLUIyOTk4MyA8WXVhbnRpYW4uVGFuZ0BmcmVlc2NhbGUuY29tPg0KPiBDYzogSGFucyBkZSBH
+b2VkZSA8aGRlZ29lZGVAcmVkaGF0LmNvbT47IHRqQGtlcm5lbC5vcmc7IGxpbnV4LQ0KPiBpZGVA
+dmdlci5rZXJuZWwub3JnOyBsa21sIDxsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnPjsNCj4g
+ZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5vcmcNCj4gU3ViamVjdDogUmU6IFtQQVRDSCAyLzNdIGRl
+dmljZXRyZWU6YmluZGluZ3M6IGFkZCBkZXZpY2V0cmVlIGJpbmRpbmdzIGZvcg0KPiBGcmVlc2Nh
+bGUgQUhDSQ0KPiANCj4gT24gTW9uLCBTZXAgNywgMjAxNSBhdCAzOjIzIEFNLCAgPFl1YW50aWFu
+LlRhbmdAZnJlZXNjYWxlLmNvbT4gd3JvdGU6DQo+ID4gRnJvbTogVGFuZyBZdWFudGlhbiA8WXVh
+bnRpYW4uVGFuZ0BmcmVlc2NhbGUuY29tPg0KPiA+DQo+ID4gYWRkcyBiaW5kaW5ncyBmb3IgRnJl
+ZXNjYWxlIFFvcklRIEFIQ0kgU0FUQSBjb250cm9sbGVyLg0KPiA+DQo+ID4gU2lnbmVkLW9mZi1i
+eTogVGFuZyBZdWFudGlhbiA8WXVhbnRpYW4uVGFuZ0BmcmVlc2NhbGUuY29tPg0KPiA+IC0tLQ0K
+PiA+ICAuLi4vZGV2aWNldHJlZS9iaW5kaW5ncy9hdGEvYWhjaS1mc2wtcW9yaXEudHh0ICAgICAg
+fCAyMQ0KPiArKysrKysrKysrKysrKysrKysrKysNCj4gPiAgMSBmaWxlIGNoYW5nZWQsIDIxIGlu
+c2VydGlvbnMoKykNCj4gPiAgY3JlYXRlIG1vZGUgMTAwNjQ0IERvY3VtZW50YXRpb24vZGV2aWNl
+dHJlZS9iaW5kaW5ncy9hdGEvYWhjaS1mc2wtDQo+IHFvcmlxLnR4dA0KPiA+DQo+ID4gZGlmZiAt
+LWdpdCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9hdGEvYWhjaS1mc2wtcW9y
+aXEudHh0DQo+IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2F0YS9haGNpLWZz
+bC1xb3JpcS50eHQNCj4gPiBuZXcgZmlsZSBtb2RlIDEwMDY0NA0KPiA+IGluZGV4IDAwMDAwMDAu
+LmI2MTRlM2INCj4gPiAtLS0gL2Rldi9udWxsDQo+ID4gKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZp
+Y2V0cmVlL2JpbmRpbmdzL2F0YS9haGNpLWZzbC1xb3JpcS50eHQNCj4gPiBAQCAtMCwwICsxLDIx
+IEBADQo+ID4gK0JpbmRpbmcgZm9yIEZyZWVzY2FsZSBRb3JJUSBBSENJIFNBVEEgQ29udHJvbGxl
+cg0KPiA+ICsNCj4gPiArUmVxdWlyZWQgcHJvcGVydGllczoNCj4gPiArICAtIHJlZzogUGh5c2lj
+YWwgYmFzZSBhZGRyZXNzIGFuZCBzaXplIG9mIHRoZSBjb250cm9sbGVyJ3MgcmVnaXN0ZXIgYXJl
+YS4NCj4gPiArICAtIGNvbXBhdGlibGU6IENvbXBhdGliaWxpdHkgc3RyaW5nLiBNdXN0IGJlICdm
+c2wsPGNoaXA+LWFoY2knLCB3aGVyZQ0KPiA+ICsgICAgY2hpcCBjb3VsZCBiZSBsczEwMjFhLCBs
+czIwODVhLCBsczEwNDNhIGV0Yy4NCj4gPiArICAtIGNsb2NrczogSW5wdXQgY2xvY2sgc3BlY2lm
+aWVyLiBSZWZlciB0byBjb21tb24gY2xvY2sgYmluZGluZ3MuDQo+ID4gKyAgLSBpbnRlcnJ1cHRz
+OiBJbnRlcnJ1cHQgc3BlY2lmaWVyLiBSZWZlciB0byBpbnRlcnJ1cHQgYmluZGluZy4NCj4gPiAr
+DQo+ID4gK09wdGlvbmFsIHByb3BlcnRpZXM6DQo+ID4gKyAgLSBkbWEtY29oZXJlbnQ6IEVuYWJs
+ZSBBQ0hJIGNvaGVyZW5jeSBETUEgb3BlcmF0aW9uLg0KPiA+ICsgIC0gcmVnLW5hbWVzOiByZWdp
+c3RlciBhcmVhIG5hbWVzIHdoZW4gdGhlcmUgYXJlIG1vcmUgdGhlbiAxIHJlZ3N0ZXINCj4gYXJl
+YS4NCj4gDQo+IEEgZmV3IHR5cG9zIGhlcmU6DQo+IHMvQUNISS9BSENJLw0KPiBzL2NvaGVyZW5j
+eS9jb2hlcmVudC8NCj4gcy90aGVuL3RoYW4vDQo+IHMvcmVnc3Rlci9yZWdpc3Rlci8NCj4gDQpD
+YW4ndCBiZWxpZXZlIHRoZXJlIGlzIHNvIG1hbnkgdHlwb3MuIFdpbGwgZml4ZWQgaW4gZm9sbG93
+LXVwIHBhdGNoLg0KDQpUaGFua3MsDQpZdWFudGlhbg0KPiBSZWdhcmRzLA0KPiBMZW8NCg==
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
