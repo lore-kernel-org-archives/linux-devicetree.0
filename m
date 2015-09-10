@@ -1,72 +1,41 @@
 From: Enric Balletbo i Serra <eballetbo@gmail.com>
-Subject: [PATCHv3 0/3] Add initial support for slimport anx78xx
-Date: Thu, 10 Sep 2015 18:35:49 +0200
-Message-ID: <1441902952-14516-1-git-send-email-enric.balletbo@collabora.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
+Subject: [PATCHv3 1/3] of: Add vendor prefix for Analogix Semiconductor, Inc.
+Date: Thu, 10 Sep 2015 18:35:50 +0200
+Message-ID: <1441902952-14516-2-git-send-email-enric.balletbo@collabora.com>
+References: <1441902952-14516-1-git-send-email-enric.balletbo@collabora.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <1441902952-14516-1-git-send-email-enric.balletbo@collabora.com>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
 To: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, devel@driverdev.osuosl.org
-Cc: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, airlied@linux.ie, gregkh@linuxfoundation.org, sjoerd.simons@collabora.co.uk, javier@dowhile0.org, span@analogixsemi.com, nathan.chung@mediatek.com, djkurtz@chromium.org, drinkcat@chromium.org, laurent.pinchart@ideasonboard.com
+Cc: mark.rutland@arm.com, drinkcat@chromium.org, laurent.pinchart@ideasonboard.com, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, gregkh@linuxfoundation.org, sjoerd.simons@collabora.co.uk, robh+dt@kernel.org, span@analogixsemi.com, galak@codeaurora.org, javier@dowhile0.org, nathan.chung@mediatek.com
 List-Id: devicetree@vger.kernel.org
 
-Hi all,
-
-This is the third version with more changes requested by Dan.
-
-The following series add initial support for the Slimport ANX7814 transmitter, a
-ultra-low power Full-HD (1080p60) transmitter designed for portable device.
-
-The driver was originally created and based from the work of Junhua Xia from
-Analogix. This driver is a refactor of the original driver and fixes different
-coding style lines, and different errors/warnings reported by checkpatch. Also
-there were things that I noticed that we need to change like:
-
- - Convert the numbered GPIO API to the new descriptor based GPIO API.
- - Review the DT binding
- - Add missing MODULE_DEVICE_TABLE(of, ...);
- - Fix Makefiles and Kconfig to build conditionally.
- - Use SIMPLE_DEV_PM_OPS() instead of the deprecated i2c .suspend and
-  .resume callbacks.
- - Move to use managed device resources.
- - Remove dead/unused code.
- - And others ...
-
-Changes since v2 (requested by Daniel Kurtz)
- - clean up the typos, and little nits requested by Dan.
- - move to the drm/bridge directory
- - rename the files, variables, types, etc. to anx78xx
- - plumb through the context struct to all functions that act on the device
- - use proper messaging (dev_ rather than pr_, _dbg/_err rather than _info)
-
-Changes since v1:
- - As requested by Greg, move from staging to a subsystem.
-
-Best regards,
-
-Enric Balletbo i Serra (3):
-  of: Add vendor prefix for Analogix Semiconductor, Inc.
-  devicetree: Add new ANX7814 SlimPort transmitter binding.
-  drm: bridge: anx78xx: Add anx78xx driver support by analogix.
-
- .../devicetree/bindings/vendor-prefixes.txt        |    1 +
- .../devicetree/bindings/video/bridge/anx7814.txt   |   22 +
- drivers/gpu/drm/bridge/Kconfig                     |    2 +
- drivers/gpu/drm/bridge/Makefile                    |    1 +
- drivers/gpu/drm/bridge/anx78xx/Kconfig             |    7 +
- drivers/gpu/drm/bridge/anx78xx/Makefile            |    4 +
- drivers/gpu/drm/bridge/anx78xx/anx78xx.h           |   44 +
- drivers/gpu/drm/bridge/anx78xx/anx78xx_main.c      |  241 ++
- drivers/gpu/drm/bridge/anx78xx/slimport_tx_drv.c   | 3198 ++++++++++++++++++++
- drivers/gpu/drm/bridge/anx78xx/slimport_tx_drv.h   |  215 ++
- drivers/gpu/drm/bridge/anx78xx/slimport_tx_reg.h   |  786 +++++
- 11 files changed, 4521 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/video/bridge/anx7814.txt
- create mode 100644 drivers/gpu/drm/bridge/anx78xx/Kconfig
- create mode 100644 drivers/gpu/drm/bridge/anx78xx/Makefile
- create mode 100644 drivers/gpu/drm/bridge/anx78xx/anx78xx.h
- create mode 100644 drivers/gpu/drm/bridge/anx78xx/anx78xx_main.c
- create mode 100644 drivers/gpu/drm/bridge/anx78xx/slimport_tx_drv.c
- create mode 100644 drivers/gpu/drm/bridge/anx78xx/slimport_tx_drv.h
- create mode 100644 drivers/gpu/drm/bridge/anx78xx/slimport_tx_reg.h
-
--- 
-2.1.0
+QW5hbG9naXggU2VtaWNvbmR1Y3RvciBkZXZlbG9wcyBhbmFsb2cgYW5kIG1peGVkLXNpZ25hbCBk
+ZXZpY2VzIGZvciBkaWdpdGFsCm1lZGlhIGFuZCBjb21tdW5pY2F0aW9ucyBpbnRlcmNvbm5lY3Qg
+YXBwbGljYXRpb25zLgoKU2lnbmVkLW9mZi1ieTogRW5yaWMgQmFsbGV0Ym8gaSBTZXJyYSA8ZW5y
+aWMuYmFsbGV0Ym9AY29sbGFib3JhLmNvbT4KQWNrZWQtYnk6IFJvYiBIZXJyaW5nIDxyb2JoQGtl
+cm5lbC5vcmc+Ci0tLQogRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3ZlbmRvci1w
+cmVmaXhlcy50eHQgfCAxICsKIDEgZmlsZSBjaGFuZ2VkLCAxIGluc2VydGlvbigrKQoKZGlmZiAt
+LWdpdCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy92ZW5kb3ItcHJlZml4ZXMu
+dHh0IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3ZlbmRvci1wcmVmaXhlcy50
+eHQKaW5kZXggYWM1ZjBjMy4uZTkxNGEwMiAxMDA2NDQKLS0tIGEvRG9jdW1lbnRhdGlvbi9kZXZp
+Y2V0cmVlL2JpbmRpbmdzL3ZlbmRvci1wcmVmaXhlcy50eHQKKysrIGIvRG9jdW1lbnRhdGlvbi9k
+ZXZpY2V0cmVlL2JpbmRpbmdzL3ZlbmRvci1wcmVmaXhlcy50eHQKQEAgLTIyLDYgKzIyLDcgQEAg
+YW1waXJlCUFtcGlyZSBDby4sIEx0ZC4KIGFtcwlBTVMgQUcKIGFtc3Rhb3MJQU1TLVRhb3MgSW5j
+LgogYXBtCUFwcGxpZWQgTWljcm8gQ2lyY3VpdHMgQ29ycG9yYXRpb24gKEFQTSkKK2FuYWxvZ2l4
+CUFuYWxvZ2l4IFNlbWljb25kdWN0b3IsIEluYy4KIGFwdGluYQlBcHRpbmEgSW1hZ2luZwogYXJh
+c2FuCUFyYXNhbiBDaGlwIFN5c3RlbXMKIGFybQlBUk0gTHRkLgotLSAKMi4xLjAKCl9fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5n
+IGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwOi8vbGlzdHMuZnJlZWRl
+c2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
