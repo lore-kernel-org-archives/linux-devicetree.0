@@ -1,50 +1,48 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH 2/3] ARM: dts: sun4i: Add dts file
- inet9f-rev03 based tablets
-Date: Thu, 10 Sep 2015 18:40:59 +0200
-Message-ID: <20150910164059.GK9885@lukather>
-References: <1441787004-4660-1-git-send-email-hdegoede@redhat.com>
- <1441787004-4660-2-git-send-email-hdegoede@redhat.com>
-Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
+From: "Andrew F. Davis" <afd@ti.com>
+Subject: Re: [PATCH] power: bq24261_charger: Add support for TI BQ24261
+ charger
+Date: Thu, 10 Sep 2015 11:42:37 -0500
+Message-ID: <55F1B2FD.4020608@ti.com>
+References: <1441560187-23611-1-git-send-email-ramakrishna.pallala@intel.com>
+ <CAJKOXPfDu+LxoiQrV+CsqUbEVwYb1Zmk-m9y-L_1JxrB6ouS0g@mail.gmail.com>
+ <D854C92F57B1B347B57E531E78D05EAD57904B8D@BGSMSX104.gar.corp.intel.com>
+ <55F0C522.6070705@samsung.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="2feizKym29CxAecD"
-Return-path: <linux-sunxi+bncBD2ZNBF5VYJRBJ7FY2XQKGQEWKTIZPQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1441787004-4660-2-git-send-email-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <http://groups.google.com/group/linux-sunxi/subscribe>
-To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <55F0C522.6070705@samsung.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Krzysztof Kozlowski <k.kozlowski@samsung.com>, "Pallala, Ramakrishna" <ramakrishna.pallala@intel.com>
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Sebastian Reichel <sre@kernel.org>, "Tc, Jenny" <jenny.tc@intel.com>, Andreas Dannenberg <dannenberg@ti.com>
 List-Id: devicetree@vger.kernel.org
 
---2feizKym29CxAecD
-Content-Type: text/plain; charset=UTF-8
-Content-Disposition: inline
+On 09/09/2015 06:47 PM, Krzysztof Kozlowski wrote:
+>>>> +- ti,enable-user-write: boolean, if present driver will allow the user space
+>>>> +    to control the charging current and voltage through sysfs;
+>>>
+>>> This is not DT property. It does not describe hardware.
+>> We needed a mechanism to enable the sysfs writes on certain properties.
+>> If DT is not the place where should it go?
+>
+> DT is not the place. As I discussed later with Andreas, if you really
+> need this and if mainline is a place for that then probably this should
+> be compile option (a Kconfig symbol).
+>
 
-On Wed, Sep 09, 2015 at 10:23:23AM +0200, Hans de Goede wrote:
-> The inet9f-rev03 pcb is specially designed for gaming tablets, such as
-> the qware tb-g100 tablet.
-> 
-> These 7" tablets feature a dpad, firebuttons and 2 joysticks on the sides
-> of the screen.
-> 
-> Besides this they have the usual connectors: power-barrel, mini usb,
-> mini hdmi, headphone and micro-sd slot.
-> 
-> Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+I think this would actually be a good use for module parameters, this way
+it could still be set at boot without re-compiling.
 
-Queued, thanks!
+I think compile-time disabling sysfs properties because they are "dangerous" is
+a little bit too artificially restricting and controlling, you can set permissions
+so only root can change them already. The kernel should not be restricting root,
+I understand the fear of someone rooting a machine and remotely over charging
+a LiPo[1], but these physical limits are hardware descriptions and can and should
+be set by DT, beyond this root should have full control over their machine.
+Besides root can already just unbind your driver and issue raw I2C commands to do
+the same thing. </rant>
 
-Maxime
+[1] http://i.imgur.com/vszJJ.jpg
 
--- 
-Maxime Ripard, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
---2feizKym29CxAecD--
+Regards,
+Andrew
