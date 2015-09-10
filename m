@@ -1,50 +1,146 @@
-From: "Wu, Songjun" <songjun.wu@atmel.com>
-Subject: Re: [PATCH 1/2] ASoC: atmel-classd: add the Audio Class D Amplifier
- code
-Date: Thu, 10 Sep 2015 10:31:04 +0800
-Message-ID: <55F0EB68.9070800@atmel.com>
-References: <1441086101-15303-1-git-send-email-songjun.wu@atmel.com>
- <1441086101-15303-2-git-send-email-songjun.wu@atmel.com>
- <20150903113716.GU12027@sirena.org.uk> <55EC0AF5.8060403@atmel.com>
- <20150907162350.GV5313@sirena.org.uk> <55EEAC01.3080409@atmel.com>
- <20150908122322.GB9751@sirena.org.uk> <55EFA478.1000109@atmel.com>
- <20150909095245.GG9751@sirena.org.uk>
+From: Chen Feng <puck.chen-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
+Subject: [PATCH 2/3] reset: hisilicon: document hisi-hi6220 reset controllers bindings
+Date: Thu, 10 Sep 2015 14:06:12 +0800
+Message-ID: <1441865173-104103-2-git-send-email-puck.chen@hisilicon.com>
+References: <1441865173-104103-1-git-send-email-puck.chen@hisilicon.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20150909095245.GG9751@sirena.org.uk>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mark Brown <broonie@kernel.org>
-Cc: nicolas.ferre@atmel.com, lgirdwood@gmail.com, perex@perex.cz, tiwai@suse.com, linux-kernel@vger.kernel.org, alsa-devel@alsa-project.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1441865173-104103-1-git-send-email-puck.chen-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: puck.chen-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: dan.zhao-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, w.f-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, haojian.zhuang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, bintian.wang-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+Add DT bindings documentation for hi6220 SoC reset controller.
 
+Signed-off-by: Chen Feng <puck.chen-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
+---
+ .../bindings/reset/hisilicon,hi6220-reset.txt      | 97 ++++++++++++++++++++++
+ arch/arm64/boot/dts/hisilicon/hi6220.dtsi          |  2 +-
+ 2 files changed, 98 insertions(+), 1 deletion(-)
+ create mode 100644 Documentation/devicetree/bindings/reset/hisilicon,hi6220-reset.txt
 
-On 9/9/2015 17:52, Mark Brown wrote:
-> On Wed, Sep 09, 2015 at 11:16:08AM +0800, Wu, Songjun wrote:
->> On 9/8/2015 20:23, Mark Brown wrote:
->
->>> If you want to have three controls you need to write code so that the
->>> user can only change one of them from 0dB at once, returning an error
->>> otherwise.  That was why it looked like they were three separate
->>> controls.
->
->> If user operates two or tree controls at the same time, for my
->> understanding, these operations are serial actually in kernel, not parallel,
->> and the last operation will be effective. I only write the function
->> 'classd_get_eq_enum' to get the enumeration value, if user changes one of
->> controls, the other controls will get 0dB. Is my understanding correct?
->
-> Yes, that's what's going to end up happening but it's not how controls
-> are expected to behave - applications will expect changing one control
-> to leave others unaffected so it's better to return an error rather than
-> change the other control.
->
-If application change non EQ controls, the others will be unaffected. 
-But the classD IP can only supports one EQ control at once, these three 
-EQ controls point to the same register field, if application set a 
-different EQ control, the error occurs, there will be many errors, it's 
-not very reasonable to application. The best way I think is if 
-application set one EQ control, the other EQ controls will change to 
-0dB, it's also consistent with fact.
+diff --git a/Documentation/devicetree/bindings/reset/hisilicon,hi6220-reset.txt b/Documentation/devicetree/bindings/reset/hisilicon,hi6220-reset.txt
+new file mode 100644
+index 0000000..8a23f50
+--- /dev/null
++++ b/Documentation/devicetree/bindings/reset/hisilicon,hi6220-reset.txt
+@@ -0,0 +1,97 @@
++Hisilicon System Reset Controller
++======================================
++
++Please also refer to reset.txt in this directory for common reset
++controller binding usage.
++
++The reset controller node must be a sub-node of the chip controller
++node on SoCs.
++
++Required properties:
++- compatible: may be "hisilicon,hisi_reset_ctl"
++- reg: should be register base and length as documented in the
++  datasheet
++- #reset-cells: 1, see below
++
++Example:
++
++	reset_ctrl: reset_ctrl@f7030304 {
++		compatible = "hisilicon,hi6220_reset_ctl";
++		reg = <0x0 0xf7030304 0x0 0x1000>;
++		#reset-cells = <1>;
++	};
++
++Specifying reset lines connected to IP modules
++==============================================
++example:
++
++        uart1: uart1@..... {
++		...
++                resets = <&reset_ctrl 0x305>;
++		...
++        };
++
++The following RESET_INDEX values are valid for hi6220 SoC:
++	PERIPH_RSTDIS0_MMC0 		= 0x000,
++	PERIPH_RSTDIS0_MMC1		= 0x001,
++	PERIPH_RSTDIS0_MMC2		= 0x002,
++	PERIPH_RSTDIS0_NANDC		= 0x003,
++	PERIPH_RSTDIS0_USBOTG_BUS	= 0x004,
++	PERIPH_RSTDIS0_POR_PICOPHY	= 0x005,
++	PERIPH_RSTDIS0_USBOTG		= 0x006,
++	PERIPH_RSTDIS0_USBOTG_32K	= 0x007,
++
++	PERIPH_RSTDIS1_HIFI		= 0x100,
++	PERIPH_RSTDIS1_DIGACODEC	= 0x105,
++
++	PERIPH_RSTEN2_IPF		= 0x200,
++	PERIPH_RSTEN2_SOCP		= 0x201,
++	PERIPH_RSTEN2_DMAC		= 0x202,
++	PERIPH_RSTEN2_SECENG		= 0x203,
++	PERIPH_RSTEN2_ABB		= 0x204,
++	PERIPH_RSTEN2_HPM0		= 0x205,
++	PERIPH_RSTEN2_HPM1		= 0x206,
++	PERIPH_RSTEN2_HPM2		= 0x207,
++	PERIPH_RSTEN2_HPM3		= 0x208,
++
++	PERIPH_RSTEN3_CSSYS		= 0x300,
++	PERIPH_RSTEN3_I2C0		= 0x301,
++	PERIPH_RSTEN3_I2C1		= 0x302,
++	PERIPH_RSTEN3_I2C2		= 0x303,
++	PERIPH_RSTEN3_I2C3		= 0x304,
++	PERIPH_RSTEN3_UART1		= 0x305,
++	PERIPH_RSTEN3_UART2		= 0x306,
++	PERIPH_RSTEN3_UART3		= 0x307,
++	PERIPH_RSTEN3_UART4		= 0x308,
++	PERIPH_RSTEN3_SSP		= 0x309,
++	PERIPH_RSTEN3_PWM		= 0x30a,
++	PERIPH_RSTEN3_BLPWM		= 0x30b,
++	PERIPH_RSTEN3_TSENSOR		= 0x30c,
++	PERIPH_RSTEN3_DAPB		= 0x312,
++	PERIPH_RSTEN3_HKADC		= 0x313,
++	PERIPH_RSTEN3_CODEC_SSI		= 0x314,
++	PERIPH_RSTEN3_PMUSSI1		= 0x316,
++
++	PERIPH_RSTEN8_RS0		= 0x400,
++	PERIPH_RSTEN8_RS2		= 0x401,
++	PERIPH_RSTEN8_RS3		= 0x402,
++	PERIPH_RSTEN8_MS0		= 0x403,
++	PERIPH_RSTEN8_MS2		= 0x405,
++	PERIPH_RSTEN8_XG2RAM0		= 0x406,
++	PERIPH_RSTEN8_X2SRAM_TZMA	= 0x407,
++	PERIPH_RSTEN8_SRAM		= 0x408,
++	PERIPH_RSTEN8_HARQ		= 0x40a,
++	PERIPH_RSTEN8_DDRC		= 0x40c,
++	PERIPH_RSTEN8_DDRC_APB		= 0x40d,
++	PERIPH_RSTEN8_DDRPACK_APB	= 0x40e,
++	PERIPH_RSTEN8_DDRT		= 0x411,
++
++	PERIPH_RSDIST9_CARM_DAP		= 0x500,
++	PERIPH_RSDIST9_CARM_ATB		= 0x501,
++	PERIPH_RSDIST9_CARM_LBUS	= 0x502,
++	PERIPH_RSDIST9_CARM_POR		= 0x503,
++	PERIPH_RSDIST9_CARM_CORE	= 0x504,
++	PERIPH_RSDIST9_CARM_DBG		= 0x505,
++	PERIPH_RSDIST9_CARM_L2		= 0x506,
++	PERIPH_RSDIST9_CARM_SOCDBG	= 0x507,
++	PERIPH_RSDIST9_CARM_ETM		= 0x508,
+diff --git a/arch/arm64/boot/dts/hisilicon/hi6220.dtsi b/arch/arm64/boot/dts/hisilicon/hi6220.dtsi
+index 09bb9d1..111537a 100644
+--- a/arch/arm64/boot/dts/hisilicon/hi6220.dtsi
++++ b/arch/arm64/boot/dts/hisilicon/hi6220.dtsi
+@@ -169,7 +169,7 @@
+ 		};
+ 
+ 		reset_ctrl: reset_ctrl@f7030304 {
+-			compatible = "hisilicon,hisi_reset_ctl";
++			compatible = "hisilicon,hi6220_reset_ctl";
+ 			reg = <0x0 0xf7030304 0x0 0x1000>;
+ 			#reset-cells = <1>;
+ 		};
+-- 
+1.9.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
