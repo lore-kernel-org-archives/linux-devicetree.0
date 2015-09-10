@@ -1,84 +1,48 @@
-From: =?UTF-8?Q?Noralf_Tr=c3=b8nnes?= <noralf@tronnes.org>
-Subject: Re: [PATCH v5 0/6] bcm2835: auxiliar device support for spi
-Date: Thu, 10 Sep 2015 17:48:33 +0200
-Message-ID: <55F1A651.5090102@tronnes.org>
-References: <1441359711-2800-1-git-send-email-kernel@martin.sperl.org>
- <87h9n4weg8.fsf@eliezer.anholt.net>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH 1/3] ARM: dts: sun4i: Fix
+ itead-iteaduino-plus reference in Makefile
+Date: Thu, 10 Sep 2015 17:55:05 +0200
+Message-ID: <20150910155505.GJ9885@lukather>
+References: <1441787004-4660-1-git-send-email-hdegoede@redhat.com>
+Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <87h9n4weg8.fsf@eliezer.anholt.net>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Eric Anholt <eric@anholt.net>, kernel@martin.sperl.org, Stephen Warren <swarren@wwwdotorg.org>, Lee Jones <lee@kernel.org>, Russell King <linux@arm.linux.org.uk>, Mark Brown <broonie@kernel.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org, linux-rpi-kernel@lists.infradead.org, linux-spi@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Phil <phil@raspberrypi.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="GlnCQLZWzqLRJED8"
+Return-path: <linux-sunxi+bncBD2ZNBF5VYJRBWWPY2XQKGQEBYVMSSQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1441787004-4660-1-git-send-email-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <http://groups.google.com/group/linux-sunxi/subscribe>
+To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+--GlnCQLZWzqLRJED8
+Content-Type: text/plain; charset=UTF-8
+Content-Disposition: inline
 
-Den 09.09.2015 03:48, skrev Eric Anholt:
-> kernel@martin.sperl.org writes:
->
->> From: Martin Sperl <kernel@martin.sperl.org>
->>
->> The BCM2835 contains 3 auxiliar devices:
->> * spi1
->> * spi2
->> * uart1
->>
->> All of those 3 devices are enabled/disabled via a shared register,
->> which is set by default to be disabled.
->>
->> Access to this register needs to get serialized.
->>
->> So after several iterations of discussions with the following ideas:
->> * syscon - device tree should describe HW not drivers to use -
->>             'compatiblity = "brcm,bcm2835-aux-enable", "syscon";'
->>             is not acceptable
->> * regulator - it is not necessarily a regulator or a power gate
->>                that is implemented in HW, so it is not valid to use
->>                this framework
->>
->> The recommendation was made to create a new minimal API in soc
->> just for access to this shared enable/disable register.
->>
->> This patch-series implements:
->> * the bcm2835-auxiliar device enable/disable api in soc.
->> * the bcm2835-auxiliar spi device driver
->>
->> The uart1 device driver (ns16550 based) is not implemented so far
->> but would be using the same API.
->>
->> Both spi and uart drivers can run with shared interrupts,
->> so there is no need for an interrupt-controller to get implemented.
-> I finally had a chance to sit down and look at what the hardware's doing
-> with the enable bit (also, I've read a whole lot more of the hardware
-> now, so I'm a lot faster at answering questions like this).  The enable
-> bits are a clock gate off of the VPU clock.
->
-> I knocked together the enable bits as a clock gate driver, since I'd
-> just written very similar code for the audio domain clock driver (and I
-> assume you are grumpy about how much time you've spent on this one
-> stupid register).  It's up at
-> https://github.com/anholt/linux/tree/bcm2835-clock-aux and I can submit
-> it if you like the result.  I've compile tested it only, but I'm hoping
-> you could just drop your aux SPI driver on top of it and have things
-> work.
->
+Hi, 
 
-This looks interesting.
-But there's a challenge with the uart1 and the 8250 driver.
+On Wed, Sep 09, 2015 at 10:23:22AM +0200, Hans de Goede wrote:
+> Tell make to build a dtb, rather then the already existing dts.
+> 
+> Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 
-Phil Elwell has this to say:
-This means that that UART1 isn't an exact clone of a 8250 UART.
-In a particular, the clock divisor is calculated differently.
-A standard 8250 derives the baud rate as clock/(divisor16),
-whereas the BCM2835 mini UART uses clock/(divisor8). This means
-that if you want to use the standard driver then you need to lie
-about the clock frequency, providing a value is twice the real
-value, in order for a suitable divisor to be calculated.
+A patch to fix that have been sent already:
+http://lists.infradead.org/pipermail/linux-arm-kernel/2015-September/367989.html
 
-Ref: https://github.com/raspberrypi/linux/pull/1008#issuecomment-139234607
+It's queued for the 4.3 fixes.
 
-So either we need a new uart1 driver or a doubled clock freq. somehow.
+Thanks!
+Maxime
 
-
-Noralf.
+-- 
+Maxime Ripard, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
+--GlnCQLZWzqLRJED8--
