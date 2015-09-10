@@ -1,86 +1,72 @@
-From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH] efi/libstub/fdt: Standardize the names of EFI stub
- parameters
-Date: Thu, 10 Sep 2015 17:23:02 +0100
-Message-ID: <20150910162302.GN29293@leverpostej>
-References: <1441874516-11364-1-git-send-email-zhaoshenglong@huawei.com>
- <20150910095208.GA29293@leverpostej>
- <alpine.DEB.2.02.1509101116580.2672@kaball.uk.xensource.com>
- <20150910112418.GC29293@leverpostej>
- <alpine.DEB.2.02.1509101223580.2672@kaball.uk.xensource.com>
- <20150910121514.GE29293@leverpostej>
- <alpine.DEB.2.02.1509101429480.2672@kaball.uk.xensource.com>
- <20150910144938.GI29293@leverpostej>
- <alpine.DEB.2.02.1509101655020.2672@kaball.uk.xensource.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-doc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <alpine.DEB.2.02.1509101655020.2672@kaball.uk.xensource.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Stefano Stabellini <stefano.stabellini@eu.citrix.com>
-Cc: Shannon Zhao <zhaoshenglong@huawei.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-efi@vger.kernel.org" <linux-efi@vger.kernel.org>, "Ian.Campbell@citrix.com" <Ian.Campbell@citrix.com>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "ard.biesheuvel@linaro.org" <ard.biesheuvel@linaro.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "leif.lindholm@linaro.org" <leif.lindholm@linaro.org>, "xen-devel@lists.xen.org" <xen-devel@lists.xen.org>, "julien.grall@citrix.com" <julien.grall@citrix.com>, "freebsd-arm@freebsd.org" <freebsd-arm@freebsd.org>, "matt.fleming@intel.com" <matt.fleming@intel.com>, "christoffer.dall@linaro.org" <christoffer.dall@linaro.org>, "jbeulich@suse.com" <jbeulich@suse.com>, "peter.huangpeng@huawei.com" <peter.huangpeng@>
+From: Enric Balletbo i Serra <eballetbo@gmail.com>
+Subject: [PATCHv3 0/3] Add initial support for slimport anx78xx
+Date: Thu, 10 Sep 2015 18:35:49 +0200
+Message-ID: <1441902952-14516-1-git-send-email-enric.balletbo@collabora.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, devel@driverdev.osuosl.org
+Cc: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, airlied@linux.ie, gregkh@linuxfoundation.org, sjoerd.simons@collabora.co.uk, javier@dowhile0.org, span@analogixsemi.com, nathan.chung@mediatek.com, djkurtz@chromium.org, drinkcat@chromium.org, laurent.pinchart@ideasonboard.com
 List-Id: devicetree@vger.kernel.org
 
-> > C) When you could go:
-> > 
-> >    DT -> Discover Xen -> Xen-specific stuff -> Xen-specific EFI/ACPI discovery
-> 
-> I take you mean discovering Xen with the usual Xen hypervisor node on
-> device tree. I think that C) is a good option actually. I like it. Not
-> sure why we didn't think about this earlier. Is there anything EFI or
-> ACPI which is needed before Xen support is discovered by
-> arch/arm64/kernel/setup.c:setup_arch -> xen_early_init()?
+Hi all,
 
-Currently lots (including the memory map). With the stuff to support
-SPCR, the ACPI discovery would be moved before xen_early_init().
+This is the third version with more changes requested by Dan.
 
-> If not, we could just go for this. A lot of complexity would go away.
+The following series add initial support for the Slimport ANX7814 transmitter, a
+ultra-low power Full-HD (1080p60) transmitter designed for portable device.
 
-I suspect this would still be fairly complex, but would at least prevent
-the Xen-specific EFI handling from adversely affecting the native case.
+The driver was originally created and based from the work of Junhua Xia from
+Analogix. This driver is a refactor of the original driver and fixes different
+coding style lines, and different errors/warnings reported by checkpatch. Also
+there were things that I noticed that we need to change like:
 
-> > D) If you want to be generic:
-> >    EFI -> EFI application -> EFI tables -> ACPI tables -> Xen-specific stuff
-> >           \------------------------------------------/
-> > 	   (virtualize these, provide shims to Dom0, but handle
-> > 	    everything in Xen itself)
-> 
-> I think that this is good in theory but could turn out to be a lot of
-> work in practice. We could probably virtualize the RuntimeServices but
-> the BootServices are troublesome.
+ - Convert the numbered GPIO API to the new descriptor based GPIO API.
+ - Review the DT binding
+ - Add missing MODULE_DEVICE_TABLE(of, ...);
+ - Fix Makefiles and Kconfig to build conditionally.
+ - Use SIMPLE_DEV_PM_OPS() instead of the deprecated i2c .suspend and
+  .resume callbacks.
+ - Move to use managed device resources.
+ - Remove dead/unused code.
+ - And others ...
 
-What's troublesome with the boot services?
+Changes since v2 (requested by Daniel Kurtz)
+ - clean up the typos, and little nits requested by Dan.
+ - move to the drm/bridge directory
+ - rename the files, variables, types, etc. to anx78xx
+ - plumb through the context struct to all functions that act on the device
+ - use proper messaging (dev_ rather than pr_, _dbg/_err rather than _info)
 
-What can't be simulated?
+Changes since v1:
+ - As requested by Greg, move from staging to a subsystem.
 
-> > E) Partially-generic option:
-> >    EFI -> EFI application -> Xen detected by registered GUID -> Xen-specific EFI bootloader stuff -> OS in Xen-specific configuration
-> > 
-> > 
-> > > > > In any case this should be separate from the shim ABI discussion.
-> > > > 
-> > > > I disagree; I think this is very much relevant to the ABI discussion.
-> > > > That's not to say that I insist on a particular approach, but I think
-> > > > that they need to be considered together.
-> > > 
-> > > Let's suppose Xen didn't expose any RuntimeServices at all, would that
-> > > make it easier to discuss about the EFI stub parameters?
-> > 
-> > It would simply the protocol specific to Xen, certainly.
-> > 
-> > > In the grant scheme of things, they are not that important, as Ian
-> > > wrote what is important is how to pass the RSDP.
-> > 
-> > Unfortunately we're still going to have to care about this eventually,
-> > even if for something like kexec. So we still need to spec out the state
-> > of things if this is going to be truly generic.
->  
-> Fair enough. My position is that if we restrict this to RuntimeServices,
-> it might be possible, but I still prefer C).
+Best regards,
 
-Regardless of what we do we still need a well-defined state here, which
-brings us back to the initial problem eventually.
+Enric Balletbo i Serra (3):
+  of: Add vendor prefix for Analogix Semiconductor, Inc.
+  devicetree: Add new ANX7814 SlimPort transmitter binding.
+  drm: bridge: anx78xx: Add anx78xx driver support by analogix.
 
-Thanks,
-Mark.
+ .../devicetree/bindings/vendor-prefixes.txt        |    1 +
+ .../devicetree/bindings/video/bridge/anx7814.txt   |   22 +
+ drivers/gpu/drm/bridge/Kconfig                     |    2 +
+ drivers/gpu/drm/bridge/Makefile                    |    1 +
+ drivers/gpu/drm/bridge/anx78xx/Kconfig             |    7 +
+ drivers/gpu/drm/bridge/anx78xx/Makefile            |    4 +
+ drivers/gpu/drm/bridge/anx78xx/anx78xx.h           |   44 +
+ drivers/gpu/drm/bridge/anx78xx/anx78xx_main.c      |  241 ++
+ drivers/gpu/drm/bridge/anx78xx/slimport_tx_drv.c   | 3198 ++++++++++++++++++++
+ drivers/gpu/drm/bridge/anx78xx/slimport_tx_drv.h   |  215 ++
+ drivers/gpu/drm/bridge/anx78xx/slimport_tx_reg.h   |  786 +++++
+ 11 files changed, 4521 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/video/bridge/anx7814.txt
+ create mode 100644 drivers/gpu/drm/bridge/anx78xx/Kconfig
+ create mode 100644 drivers/gpu/drm/bridge/anx78xx/Makefile
+ create mode 100644 drivers/gpu/drm/bridge/anx78xx/anx78xx.h
+ create mode 100644 drivers/gpu/drm/bridge/anx78xx/anx78xx_main.c
+ create mode 100644 drivers/gpu/drm/bridge/anx78xx/slimport_tx_drv.c
+ create mode 100644 drivers/gpu/drm/bridge/anx78xx/slimport_tx_drv.h
+ create mode 100644 drivers/gpu/drm/bridge/anx78xx/slimport_tx_reg.h
+
+-- 
+2.1.0
