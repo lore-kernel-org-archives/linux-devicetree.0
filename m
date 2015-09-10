@@ -1,48 +1,179 @@
-From: Jonas Gorski <jogo-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>
-Subject: Re: [PATCH linux-next v6 0/8] add driver for Atmel QSPI controller
-Date: Thu, 10 Sep 2015 12:36:26 +0200
-Message-ID: <CAOiHx=khSdd-Ro8xJ11X+hijMWjyiryfYJtJOoMoK_CrZ_m39A@mail.gmail.com>
-References: <cover.1441803609.git.cyrille.pitchen@atmel.com>
+From: chenfeng <puck.chen@hisilicon.com>
+Subject: Re: [RESEND PATCH 3/3] reset: hi6220: Reset driver for hisilicon
+ hi6220 SoC
+Date: Thu, 10 Sep 2015 18:49:24 +0800
+Message-ID: <55F16034.3090100@hisilicon.com>
+References: <1441865490-104686-1-git-send-email-puck.chen@hisilicon.com>
+ <1441865490-104686-3-git-send-email-puck.chen@hisilicon.com>
+ <1441878044.3280.31.camel@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <cover.1441803609.git.cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Cyrille Pitchen <cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Cc: nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "Bean Huo (beanhuo)" <beanhuo-AL4WhLSQfzjQT0dZR+AlfA@public.gmane.org>, Gabor Juhos <juhosg-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>, =?UTF-8?B?TWFyZWsgVmHFoXV0?= <marex-ynQEQJNshbs@public.gmane.org>, Ben Hutchings <ben-/+tVBieCtBitmTQ+vhA3Yw@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, MTD Maling List <linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1441878044.3280.31.camel@pengutronix.de>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Philipp Zabel <p.zabel@pengutronix.de>
+Cc: linux-kernel@vger.kernel.org, dan.zhao@hisilicon.com, w.f@huawei.com, haojian.zhuang@linaro.org, bintian.wang@huawei.com, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-
-On Wed, Sep 9, 2015 at 3:24 PM, Cyrille Pitchen
-<cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org> wrote:
-> This series of patches add support for the new Atmel QSPI controller
-> embedded inside sama5d2x SoCs.
->
-> These patches were first developped for linux-3.18-at91 and tested on a
-> sama5d27 Xplained ultra board, which embeds a Micron n25q128a13 QSPI NOR
-> flash memory. Then the series was adapted for mainline.
-
-All in all, this looks a lot better now compared to the previous
-version. What I'm still missing is some definsive programming to
-ensure we don't break existing users, or update the current users to
-not break. The issues I currently see are
-
-1) We don't check if a spi-nor controller actually supports a certain
-protocol, just if SPI_NOR_DUAL/_QUAD is set
-2) We currently set these new protocols, but none of the current
-spi-nor controller drivers are aware of the protocols, which has the
-possiblity of silently breaking things (or not, since they will then
-fail to read correct data)
-3) m25p80 currently uses SPI_RX_DUAL -> SPI_NOR_DUAL, but does not
-check SPI_TX_DUAL (which is required for any of the != 1_1_x
-commands). Although this is more an academical concern, as currently
-all spi controller drivers seem to support _RX_ and _TX_, never only
-one direction.
+Zabel,
+Thanks for review.
 
 
-Jonas
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+On 2015/9/10 17:40, Philipp Zabel wrote:
+> Am Donnerstag, den 10.09.2015, 14:11 +0800 schrieb Chen Feng:
+>> Add reset driver for hi6220-hikey board,this driver supply deassert
+>> of IP. on hi6220 SoC.
+>>
+>> Signed-off-by: Chen Feng <puck.chen@hisilicon.com>
+>> ---
+>>  drivers/reset/Kconfig                  |  1 +
+>>  drivers/reset/Makefile                 |  1 +
+>>  drivers/reset/hisilicon/Kconfig        |  5 +++
+>>  drivers/reset/hisilicon/Makefile       |  1 +
+>>  drivers/reset/hisilicon/hi6220_reset.c | 74 ++++++++++++++++++++++++++++++++++
+>>  5 files changed, 82 insertions(+)
+>>  create mode 100644 drivers/reset/hisilicon/Kconfig
+>>  create mode 100644 drivers/reset/hisilicon/Makefile
+>>  create mode 100644 drivers/reset/hisilicon/hi6220_reset.c
+>>
+>> diff --git a/drivers/reset/Kconfig b/drivers/reset/Kconfig
+>> index 0615f50..df37212 100644
+>> --- a/drivers/reset/Kconfig
+>> +++ b/drivers/reset/Kconfig
+>> @@ -13,3 +13,4 @@ menuconfig RESET_CONTROLLER
+>>  	  If unsure, say no.
+>>  
+>>  source "drivers/reset/sti/Kconfig"
+>> +source "drivers/reset/hisilicon/Kconfig"
+>> diff --git a/drivers/reset/Makefile b/drivers/reset/Makefile
+>> index 157d421..331d7b2 100644
+>> --- a/drivers/reset/Makefile
+>> +++ b/drivers/reset/Makefile
+>> @@ -3,3 +3,4 @@ obj-$(CONFIG_ARCH_SOCFPGA) += reset-socfpga.o
+>>  obj-$(CONFIG_ARCH_BERLIN) += reset-berlin.o
+>>  obj-$(CONFIG_ARCH_SUNXI) += reset-sunxi.o
+>>  obj-$(CONFIG_ARCH_STI) += sti/
+>> +obj-$(CONFIG_ARCH_HISI) += hisilicon/
+>> diff --git a/drivers/reset/hisilicon/Kconfig b/drivers/reset/hisilicon/Kconfig
+>> new file mode 100644
+>> index 0000000..bceed14
+>> --- /dev/null
+>> +++ b/drivers/reset/hisilicon/Kconfig
+>> @@ -0,0 +1,5 @@
+>> +config COMMON_RESET_HI6220
+>> +	tristate "Hi6220 Clock Driver"
+> 
+> "Clock"? Should probably be "Reset".
+> 
+>> +	depends on (ARCH_HISI && RESET_CONTROLLER)
+>> +	help
+>> +	  Build the Hisilicon Hi6220 reset driver.
+>> diff --git a/drivers/reset/hisilicon/Makefile b/drivers/reset/hisilicon/Makefile
+>> new file mode 100644
+>> index 0000000..c932f86
+>> --- /dev/null
+>> +++ b/drivers/reset/hisilicon/Makefile
+>> @@ -0,0 +1 @@
+>> +obj-$(CONFIG_COMMON_RESET_HI6220) += hi6220_reset.o
+>> diff --git a/drivers/reset/hisilicon/hi6220_reset.c b/drivers/reset/hisilicon/hi6220_reset.c
+>> new file mode 100644
+>> index 0000000..a88fc57
+>> --- /dev/null
+>> +++ b/drivers/reset/hisilicon/hi6220_reset.c
+>> @@ -0,0 +1,74 @@
+>> +/*
+>> + * Hisilicon Hi6220 reset controller driver
+>> + *
+>> + * Copyright (c) 2015 Hisilicon Limited.
+>> + *
+>> + * Author: Feng Chen <puck.chen@hisilicon.com>
+>> + *
+>> + * This program is free software; you can redistribute it and/or modify
+>> + * it under the terms of the GNU General Public License version 2 as
+>> + * published by the Free Software Foundation.
+>> + */
+>> +
+>> +#include <linux/init.h>
+>> +#include <linux/bitops.h>
+>> +#include <linux/io.h>
+>> +#include <linux/of.h>
+>> +#include <linux/of_address.h>
+>> +#include <linux/reset-controller.h>
+>> +#include <linux/reset.h>
+>> +
+>> +static void __iomem *src_base;
+>> +static DEFINE_SPINLOCK(reset_lock);
+>> +
+>> +static int hi6220_reset_module(struct reset_controller_dev *rc_dev,
+>> +		unsigned long idx)
+>> +{
+>> +	unsigned long timeout;
+>> +	unsigned long flags;
+>> +	int bit;
+>> +	u32 val;
+>> +
+>> +	int bank = idx >> 8;
+>> +	int offset = idx & 0xff;
+>> +
+>> +	spin_lock_irqsave(&reset_lock, flags);
+>> +
+>> +	val = readl(src_base + (bank * 0x10));
+>> +	writel(val | BIT(offset), src_base + (bank * 0x10));
+> 
+> Are these registers write-once, otherwise any reason not to implement
+> reset_assert, too?
+> 
+>> +	spin_unlock_irqrestore(&reset_lock, flags);
+>> +
+>> +	return 0;
+>> +
+>> +}
+>> +
+>> +static struct reset_control_ops hi6220_reset_ops = {
+>> +	.deassert = hi6220_reset_module,
+>> +};
+>> +
+>> +static struct reset_controller_dev hi6220_reset_dev = {
+>> +	.ops = &hi6220_reset_ops,
+>> +	.nr_resets = 0xffff,
+> 
+> This can't be correct, you only have 4 KiB register space.
+> 
+>> +};
+>> +
+>> +static void __init hi6220_reset_init(void)
+>> +{
+>> +	struct device_node *np;
+>> +	struct reset_control *test = NULL;
+>> +
+>> +	np = of_find_compatible_node(NULL, NULL, "hisilicon,hisi_reset_ctl");
+> 
+> Better use "hisilicon,hi6220-reset-ctl" instead.
+> 
+
+Totally agree!
+
+>> +	if (!np) {
+>> +		pr_err("find reset node in dts error!\n");
+>> +		return;
+>> +	}
+>> +	src_base = of_iomap(np, 0);
+>> +	WARN_ON(!src_base);
+>> +
+>> +	hi6220_reset_dev.of_node = np;
+>> +	if (IS_ENABLED(CONFIG_RESET_CONTROLLER))
+>> +		reset_controller_register(&hi6220_reset_dev);
+>> +}
+>> +
+>> +postcore_initcall(hi6220_reset_init);
+>> +
+> 
+> Drop this empty line.
+> 
+> best regards
+> Philipp
+> 
+> 
+> .
+> 
