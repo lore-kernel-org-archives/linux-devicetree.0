@@ -1,65 +1,128 @@
-From: Maxime Ripard <maxime.ripard@free-electrons.com>
-Subject: Re: [PATCH v2 0/5] Add eeprom to the Olimex series of boards
-Date: Thu, 10 Sep 2015 20:31:46 +0200
-Message-ID: <20150910183146.GO9885@lukather>
-References: <1441873881-3665-1-git-send-email-o.schinagl@ultimaker.com>
+From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Subject: Re: [PATCH 2/4] devicetree: bindings: Add header file with evdev type
+ and abs/rel code defines
+Date: Thu, 10 Sep 2015 11:34:03 -0700
+Message-ID: <CAKdAkRRFcn5+SXNfU4J+v4tcFyA1mZR1hMhT2y3QJeQJ1tTDYQ@mail.gmail.com>
+References: <1441789886-5868-1-git-send-email-hdegoede@redhat.com>
+	<1441789886-5868-2-git-send-email-hdegoede@redhat.com>
+	<55F1BCFA.5010404@kernel.org>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="xexMVKTdXPhpRiVT"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1441873881-3665-1-git-send-email-o.schinagl@ultimaker.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Olliver Schinagl <o.schinagl@ultimaker.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Olliver Schinagl <oliver@schinagl.nl>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-input-owner@vger.kernel.org>
+In-Reply-To: <55F1BCFA.5010404@kernel.org>
+Sender: linux-input-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: Hans de Goede <hdegoede@redhat.com>, Maxime Ripard <maxime.ripard@free-electrons.com>, "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, devicetree <devicetree@vger.kernel.org>, linux-sunxi <linux-sunxi@googlegroups.com>
 List-Id: devicetree@vger.kernel.org
 
+On Thu, Sep 10, 2015 at 10:25 AM, Rob Herring <robh@kernel.org> wrote:
+> On 09/09/2015 04:11 AM, Hans de Goede wrote:
+>> This header provides evdev constants for linux,code, and linux,input-*
+>> properties.
+>>
+>> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+>> ---
+>>  include/dt-bindings/input/evdev.h | 76 +++++++++++++++++++++++++++++++++++++++
+>
+> This looks fine, but please just add to input/input.h.
+>
+> Rob
+>
+>>  1 file changed, 76 insertions(+)
+>>  create mode 100644 include/dt-bindings/input/evdev.h
+>>
+>> diff --git a/include/dt-bindings/input/evdev.h b/include/dt-bindings/input/evdev.h
+>> new file mode 100644
+>> index 0000000..c1f7e0d
+>> --- /dev/null
+>> +++ b/include/dt-bindings/input/evdev.h
+>> @@ -0,0 +1,76 @@
+>> +/*
+>> + * This header provides evdev constants for linux,code, and linux,input-*
+>> + * properties.
+>> + */
+>> +
+>> +#ifndef _DT_BINDINGS_INPUT_LINUX_H
+>> +#define _DT_BINDINGS_INPUT_LINUX_H
+>> +
+>> +/*
+>> + * Event types
+>> + */
+>> +
+>> +#define EV_SYN                       0x00
+>> +#define EV_KEY                       0x01
+>> +#define EV_REL                       0x02
+>> +#define EV_ABS                       0x03
+>> +#define EV_MSC                       0x04
+>> +#define EV_SW                        0x05
+>> +#define EV_LED                       0x11
+>> +#define EV_SND                       0x12
+>> +#define EV_REP                       0x14
+>> +#define EV_FF                        0x15
+>> +#define EV_PWR                       0x16
+>> +#define EV_FF_STATUS         0x17
+>> +#define EV_MAX                       0x1f
+>> +
+>> +/*
+>> + * Relative axes
+>> + */
+>> +
+>> +#define REL_X                        0x00
+>> +#define REL_Y                        0x01
+>> +#define REL_Z                        0x02
+>> +#define REL_RX                       0x03
+>> +#define REL_RY                       0x04
+>> +#define REL_RZ                       0x05
+>> +#define REL_HWHEEL           0x06
+>> +#define REL_DIAL             0x07
+>> +#define REL_WHEEL            0x08
+>> +#define REL_MISC             0x09
+>> +#define REL_MAX                      0x0f
+>> +
+>> +/*
+>> + * Absolute axes
+>> + */
+>> +
+>> +#define ABS_X                        0x00
+>> +#define ABS_Y                        0x01
+>> +#define ABS_Z                        0x02
+>> +#define ABS_RX                       0x03
+>> +#define ABS_RY                       0x04
+>> +#define ABS_RZ                       0x05
+>> +#define ABS_THROTTLE         0x06
+>> +#define ABS_RUDDER           0x07
+>> +#define ABS_WHEEL            0x08
+>> +#define ABS_GAS                      0x09
+>> +#define ABS_BRAKE            0x0a
+>> +#define ABS_HAT0X            0x10
+>> +#define ABS_HAT0Y            0x11
+>> +#define ABS_HAT1X            0x12
+>> +#define ABS_HAT1Y            0x13
+>> +#define ABS_HAT2X            0x14
+>> +#define ABS_HAT2Y            0x15
+>> +#define ABS_HAT3X            0x16
+>> +#define ABS_HAT3Y            0x17
+>> +#define ABS_PRESSURE         0x18
+>> +#define ABS_DISTANCE         0x19
+>> +#define ABS_TILT_X           0x1a
+>> +#define ABS_TILT_Y           0x1b
+>> +#define ABS_TOOL_WIDTH               0x1c
+>> +
+>> +#define ABS_VOLUME           0x20
+>> +
+>> +#define ABS_MISC             0x28
+>> +
+>> +#endif /* _DT_BINDINGS_INPUT_LINUX_H */
+>>
+>
 
---xexMVKTdXPhpRiVT
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Actually I'd rather we removed include/dt-bindings/input/input.h and
+instead used the header file from uapi. As it is now we already
+duplicating definitions and the copy in dt-bindings is missing several
+key codes. Until we split DT bindings form the kernel code I'd rather
+have definitions in one place.
 
-On Thu, Sep 10, 2015 at 10:31:16AM +0200, Olliver Schinagl wrote:
-> Some of the olimex series of boards feature a permanently connected eepro=
-m on
-> i2c-1. This patch series adds them on all the boards that I personally ha=
-ve and
-> where tested with.
->=20
-> Additionally, it brings the eeprom on the OLinuXino a10s in line with the=
- rest
-> and now follows the binding documentation.
+Thanks.
 
-Queued all 5 patches, thanks!
-
-Maxime
-
---=20
-Maxime Ripard, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
-
---xexMVKTdXPhpRiVT
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBAgAGBQJV8cySAAoJEBx+YmzsjxAgvh4P+wWvJnFhM1gF93mkp0HzNGOF
-D+hz+icuGnHBSaFn5DIuXk8HRh9Yyx4T9r0teoROeJUd+chvnYsfQMbS16D28Oev
-7LrLU7s2OorkPaiUNWjjOd4Zjjb6G83J5bgvKtzVDV+YoGbbc15hHepfwXAmLRF/
-aFgilbbUWJpX2uRiTXvKAECwcU1t2wLOzNI0sA44R3+cbblgfoVvkAp8Sw80TEFs
-4DSuaoINo9e5zEQlUJf+Zi9TfL3dgGn25PqmRySj50mkuSJxIe+PLaSUNl8gS+XC
-xuKs1J16FbcGqSe6trUBqz0BwXDqrwS74UA+mnhkoUoDORAr/IdS5aSyxuZGdl7x
-s3/eYVKSlaLqNDt7/IaH96SVbe6pRB4LTboNevv7X4a0dTam8cdqIuhrCQheQD6d
-8XIvJZIk8E5fufkjKBGwMuQC2ccbgIr7xkqNsoRwKiFXe9LcqnYS1gh+U2ItYwTu
-xj49/mWzl2voJzmuOd24xCQ+BtzcmA+mb03JmcSlZlWgeLNlu5oNnd1Ri7IiiuXn
-YFQ8DN8p6dXTbxgDxaC+IxIyhavzBK/o523khbTQKwy39kh+VHDVEcqQjTe7GoDp
-KlFdzXhIXFw36T+mfJx1YZKt0ZvkoRdv5ojYMte+jwln4ZIm6EADF2qdhkjEQWW3
-9uucabUdaQ8us0C2vGZW
-=2YI+
------END PGP SIGNATURE-----
-
---xexMVKTdXPhpRiVT--
+-- 
+Dmitry
