@@ -1,53 +1,121 @@
-From: Andreas Dannenberg <dannenberg@ti.com>
-Subject: Re: [PATCH v2 07/13] power: bq24257: Extend scope of mutex protection
-Date: Thu, 10 Sep 2015 12:05:49 -0500
-Message-ID: <20150910170547.GB16768@borg>
-References: <1441757557-7266-1-git-send-email-dannenberg@ti.com>
- <1441757557-7266-8-git-send-email-dannenberg@ti.com>
- <20150910134309.GI21512@lpalcu-desk>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 2/4] devicetree: bindings: Add header file
+ with evdev type and abs/rel code defines
+Date: Thu, 10 Sep 2015 12:25:14 -0500
+Message-ID: <55F1BCFA.5010404@kernel.org>
+References: <1441789886-5868-1-git-send-email-hdegoede@redhat.com>
+ <1441789886-5868-2-git-send-email-hdegoede@redhat.com>
+Reply-To: robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Return-path: <linux-pm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20150910134309.GI21512@lpalcu-desk>
-Sender: linux-pm-owner@vger.kernel.org
-To: Laurentiu Palcu <laurentiu.palcu@intel.com>
-Cc: Sebastian Reichel <sre@kernel.org>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, David Woodhouse <dwmw2@infradead.org>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, linux-pm@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sunxi+bncBD62P6P6EQIP36OGV4CRUBCC4MTJE-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <1441789886-5868-2-git-send-email-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <http://groups.google.com/group/linux-sunxi/subscribe>
+To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Sep 10, 2015 at 04:43:10PM +0300, Laurentiu Palcu wrote:
-> On Tue, Sep 08, 2015 at 07:12:31PM -0500, Andreas Dannenberg wrote:
-> > This commit extends the use of the existing mutex to pave the way for
-> > using direct device access inside sysfs getter/setter routines in a
-> > way that the access during interrupts and timer routines does not
-> > interfere with device access by the CPU or between multiple cores.
-> > 
-> > This also addresses a potential race condition that could be caused
-> > by bq24257_irq_handler_thread() and bq24257_iilimit_autoset() accessing
-> > the device simultaneously.
-> What potential race? AFAIK, we're doing all the operations through
-> regmap, and regmap operations are serialized. It has its own mutex for
-> this. Unless I got it all wrong...
+On 09/09/2015 04:11 AM, Hans de Goede wrote:
+> This header provides evdev constants for linux,code, and linux,input-*
+> properties.
 > 
-> So, IMHO, you don't need to protect against simultaneous device access.
-> It's taken care of by regmap. Chip state data protection should be enough.
+> Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+> ---
+>  include/dt-bindings/input/evdev.h | 76 +++++++++++++++++++++++++++++++++++++++
 
-You are right, closely inspecting regmap.c shows that this driver indeed
-uses mutexes (and instantiates them during init if needed) which is a
-fantastic feature. The reasons for my proposed mutex changes were based
-on the assumption that there is no built-in protection. Since this
-assumption is wrong the potential race condition I pointed out in the
-original code doesn't exist and I also don't see a need despite the
-additions I make in this patch series to add/change the existing mutex
-scheme. Will drop that patch.
+This looks fine, but please just add to input/input.h.
 
-Thanks,
+Rob
 
---
-Andreas Dannenberg
-Texas Instruments Inc
-
+>  1 file changed, 76 insertions(+)
+>  create mode 100644 include/dt-bindings/input/evdev.h
 > 
-> laurentiu
-> 
+> diff --git a/include/dt-bindings/input/evdev.h b/include/dt-bindings/input/evdev.h
+> new file mode 100644
+> index 0000000..c1f7e0d
+> --- /dev/null
+> +++ b/include/dt-bindings/input/evdev.h
+> @@ -0,0 +1,76 @@
+> +/*
+> + * This header provides evdev constants for linux,code, and linux,input-*
+> + * properties.
+> + */
+> +
+> +#ifndef _DT_BINDINGS_INPUT_LINUX_H
+> +#define _DT_BINDINGS_INPUT_LINUX_H
+> +
+> +/*
+> + * Event types
+> + */
+> +
+> +#define EV_SYN			0x00
+> +#define EV_KEY			0x01
+> +#define EV_REL			0x02
+> +#define EV_ABS			0x03
+> +#define EV_MSC			0x04
+> +#define EV_SW			0x05
+> +#define EV_LED			0x11
+> +#define EV_SND			0x12
+> +#define EV_REP			0x14
+> +#define EV_FF			0x15
+> +#define EV_PWR			0x16
+> +#define EV_FF_STATUS		0x17
+> +#define EV_MAX			0x1f
+> +
+> +/*
+> + * Relative axes
+> + */
+> +
+> +#define REL_X			0x00
+> +#define REL_Y			0x01
+> +#define REL_Z			0x02
+> +#define REL_RX			0x03
+> +#define REL_RY			0x04
+> +#define REL_RZ			0x05
+> +#define REL_HWHEEL		0x06
+> +#define REL_DIAL		0x07
+> +#define REL_WHEEL		0x08
+> +#define REL_MISC		0x09
+> +#define REL_MAX			0x0f
+> +
+> +/*
+> + * Absolute axes
+> + */
+> +
+> +#define ABS_X			0x00
+> +#define ABS_Y			0x01
+> +#define ABS_Z			0x02
+> +#define ABS_RX			0x03
+> +#define ABS_RY			0x04
+> +#define ABS_RZ			0x05
+> +#define ABS_THROTTLE		0x06
+> +#define ABS_RUDDER		0x07
+> +#define ABS_WHEEL		0x08
+> +#define ABS_GAS			0x09
+> +#define ABS_BRAKE		0x0a
+> +#define ABS_HAT0X		0x10
+> +#define ABS_HAT0Y		0x11
+> +#define ABS_HAT1X		0x12
+> +#define ABS_HAT1Y		0x13
+> +#define ABS_HAT2X		0x14
+> +#define ABS_HAT2Y		0x15
+> +#define ABS_HAT3X		0x16
+> +#define ABS_HAT3Y		0x17
+> +#define ABS_PRESSURE		0x18
+> +#define ABS_DISTANCE		0x19
+> +#define ABS_TILT_X		0x1a
+> +#define ABS_TILT_Y		0x1b
+> +#define ABS_TOOL_WIDTH		0x1c
+> +
+> +#define ABS_VOLUME		0x20
+> +
+> +#define ABS_MISC		0x28
+> +
+> +#endif /* _DT_BINDINGS_INPUT_LINUX_H */
 > 
