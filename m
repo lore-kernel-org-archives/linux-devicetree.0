@@ -1,71 +1,66 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH v3 02/18] of/platform: add of_platform_probe
-Date: Fri, 11 Sep 2015 10:57:48 +0100
-Message-ID: <20150911095748.GC12027@sirena.org.uk>
-References: <1438870315-18689-1-git-send-email-tomeu.vizoso@collabora.com>
- <1438870315-18689-3-git-send-email-tomeu.vizoso@collabora.com>
- <20150807121913.GS20873@sirena.org.uk>
- <CAAObsKCrakupiZMQ9AoiWo6fDYT6Cfi_khdssUS6pv61zYS1Zg@mail.gmail.com>
- <CAAObsKAZ0kaT2TZQdMnxy9ZjHMz2jFeYQvQjrCsa90J11bOVpA@mail.gmail.com>
+From: Adam Thomson <Adam.Thomson.Opensource@diasemi.com>
+Subject: [PATCH v5 0/6] Add support for DA9150 Fuel-Gauge
+Date: Fri, 11 Sep 2015 11:05:21 +0100
+Message-ID: <cover.1441964153.git.Adam.Thomson.Opensource@diasemi.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="4bvUAv41pAMZZO4U"
-Return-path: <linux-acpi-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAAObsKAZ0kaT2TZQdMnxy9ZjHMz2jFeYQvQjrCsa90J11bOVpA@mail.gmail.com>
-Sender: linux-acpi-owner@vger.kernel.org
-To: Tomeu Vizoso <tomeu.vizoso@collabora.com>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Stephen Warren <swarren@wwwdotorg.org>, Javier Martinez Canillas <javier@osg.samsung.com>, Thierry Reding <thierry.reding@gmail.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linus Walleij <linus.walleij@linaro.org>, linux-acpi@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Lee Jones <lee.jones@linaro.org>, Samuel Ortiz <sameo@linux.intel.com>, Sebastian Reichel <sre@kernel.org>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, David Woodhouse <dwmw2@infradead.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>
+Cc: linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Support Opensource <support.opensource@diasemi.com>
 List-Id: devicetree@vger.kernel.org
 
+This patch set adds support for the Dialog DA9150 Fuel-Gauge.
 
---4bvUAv41pAMZZO4U
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+In this patch set the following is provided:
+ - MFD Core and DT bindings updates.
+ - Power Supply Fuel-Gauge support and DT bindings documentation.
 
-On Mon, Sep 07, 2015 at 02:31:06PM +0200, Tomeu Vizoso wrote:
-> On 11 August 2015 at 11:37, Tomeu Vizoso <tomeu.vizoso@collabora.com> wrote:
-> > On 7 August 2015 at 14:19, Mark Brown <broonie@kernel.org> wrote:
+This patch set is baselined against the v4.2 kernel version.
 
-> >> This sounds like it's going to break in the case where we have MFDs that
-> >> represent their functions in DT (not a pattern I'm a fan of but it's a
-> >> thing people do).  We'll walk back to the platform device for the MFD
-> >> function, try to probe it and then give up.  Perhaps that's good enough
-> >> anyway but it's not clear to me why we don't just try every parent we
-> >> find?
+Changes in v5:
+ - Rebase to v4.2
 
-> > Agreed. In the attempt at probing dependencies before a device is
-> > probed, I considered that a device's parent is also a dependency and
+Changes in v4:
+ - MFD, Power, DT: Update DT compatible & driver name strings for Fuel Gauge,
+                   in line with maintainers request.
+ - Power: Update Kconfig and Makefile to use BATTERY_* for config entry instead
+          of FG_*. Also fuel-gauge module now depends on MFD not Charger.
+ - Power: Added helper function to simplify single attribute accesses using QIF
+          interface of fuel-gauge.
+ - Power: Use of devm_* functions for IRQ and power_supply registration.
+ - Power: Added checking of result from platform_get_irq_byname().
 
-> Actually I'm not sure how we could probe the ascendants on demand, as
-> currently the parent's device lock is taken when probing so trying to
-> probe a sibling from within a probe callback will cause a deadlock.
+Changes in v3:
+ - MFD: Some tidy up of code (gotos, dropped FG header, DEFINE_RES_IRQ_NAMED)
+ - MFD & Power: Drop use of callback function for temperature reading, as
+                requested by Lee Jones.
+ - MFD (DT): Binding doc update to flesh out example text.
+ - MFD (DT): New patch to change MFD binding doc to use relative paths.
+ - MFD: New patch to use DEFINE_RES_IRQ_NAMED for all other IRQ resources.
 
-How do silbilings come into this?  There is an issue there but it's
-going to happen anyway.
+Changes in v2:
+ - Moved temp callback function prototype to be part of power fuel-gauge patch,
+   as requested by Lee Jones.
 
-> AFAICS this is only needed for USB interface devices and this
-> behaviour could be limited to them, but I don't like much assuming
-> that no USB device will ever have a dependency on a sibling (though
-> that probably won't happen ever).
+Adam Thomson (6):
+  mfd: da9150: Add support for Fuel-Gauge
+  mfd: da9150: Update DT bindings for Fuel-Gauge support
+  power: Add support for DA9150 Fuel-Gauge
+  power: da9150: Add DT bindings documentation for Fuel-Gauge
+  mfd: da9150: Use relative paths in DT bindings document
+  mfd: da9150: Use DEFINE_RES_IRQ_NAMED() help macro for IRQ resource
 
-I don't see the connection with USB here, sorry - my initial thought was
-about MFDs?
+ Documentation/devicetree/bindings/mfd/da9150.txt   |  33 +-
+ .../devicetree/bindings/power/da9150-fg.txt        |  23 +
+ drivers/mfd/da9150-core.c                          | 191 +++++--
+ drivers/power/Kconfig                              |  10 +
+ drivers/power/Makefile                             |   1 +
+ drivers/power/da9150-fg.c                          | 578 +++++++++++++++++++++
+ include/linux/mfd/da9150/core.h                    |  19 +-
+ 7 files changed, 810 insertions(+), 45 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/power/da9150-fg.txt
+ create mode 100644 drivers/power/da9150-fg.c
 
---4bvUAv41pAMZZO4U
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQEcBAEBCAAGBQJV8qWbAAoJECTWi3JdVIfQtRAIAIKSMpgbcRgxWdpNouUsNPIA
-hJ8YYMUQ3lNONrAxmnbe2ShJquLWAyDclJxktCTF5O0bUR/YBRtSsCw/VNs1QVHa
-gkef87/G3//3dKHJiKSFuBNtDoyY6sbCMTCINoJbnhIj3I9HEkdOu5jJE8jv0XwT
-Vah+s1XtZw5FxG91HPA4OlTFIFa6QUUc5PnvcfTPcazQpg6UNIf2FxjKdK5rYHcd
-obHUqJp27OFhSqs5ThH1kfvqVmwCyZ6IMyIgyyMhUW6cwmzTjbkxh64Gam4fvylP
-Ys/FqyFAz6+5YZkwsIyhq8BsDcR8Y/Kjqs1e/AnVoYzKVSzjizCUuURPBjorEt0=
-=Dg+/
------END PGP SIGNATURE-----
-
---4bvUAv41pAMZZO4U--
+--
+1.9.3
