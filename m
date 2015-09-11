@@ -1,56 +1,94 @@
-From: Martin Sperl <martin-d5rIkyn9cnPYtjvyW6yDsg@public.gmane.org>
-Subject: Re: [PATCH v2 3/4] clk: bcm2835: Add support for programming the audio domain clocks.
-Date: Fri, 11 Sep 2015 12:08:21 +0200
-Message-ID: <DA82061A-F4FF-4B05-A6B4-BFD5F3F2E52C@sperl.org>
-References: <1441922305-2298-1-git-send-email-eric@anholt.net> <1441922305-2298-3-git-send-email-eric@anholt.net>
-Mime-Version: 1.0 (Mac OS X Mail 8.2 \(2104\))
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1441922305-2298-3-git-send-email-eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
-Cc: linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mike Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+From: Adam Thomson <Adam.Thomson.Opensource@diasemi.com>
+Subject: [PATCH v5 2/6] mfd: da9150: Update DT bindings for Fuel-Gauge support
+Date: Fri, 11 Sep 2015 11:05:33 +0100
+Message-ID: <76d246fa02e5c5bc98dd3cb1bf536ee4a76bc952.1441964153.git.Adam.Thomson.Opensource@diasemi.com>
+References: <cover.1441964153.git.Adam.Thomson.Opensource@diasemi.com>
+Mime-Version: 1.0
+Content-Type: text/plain
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <cover.1441964153.git.Adam.Thomson.Opensource@diasemi.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: Lee Jones <lee.jones@linaro.org>, Samuel Ortiz <sameo@linux.intel.com>, Sebastian Reichel <sre@kernel.org>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, David Woodhouse <dwmw2@infradead.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>
+Cc: linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Support Opensource <support.opensource@diasemi.com>
 List-Id: devicetree@vger.kernel.org
 
+Signed-off-by: Adam Thomson <Adam.Thomson.Opensource@diasemi.com>
+Acked-by: Lee Jones <lee.jones@linaro.org>
+---
 
-> On 10.09.2015, at 23:58, Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org> wrote:
-> 
-> This adds support for enabling, disabling, and setting the rate of the
-> audio domain clocks.  It will be necessary for setting the pixel clock
-> for HDMI in the VC4 driver and let us write a cpufreq driver.  It will
-> also improve compatibility with user changes to the firmware's
-> config.txt, since our previous fixed clocks are unaware of it.
-> 
-> The firmware also has support for configuring the clocks through the
-> mailbox channel, but the pixel clock setup by the firmware doesn't
-> work, and it's Raspberry Pi specific anyway.  The only conflicts we
-> should have with the firmware would be if we made firmware calls that
-> result in clock management (like opening firmware V3D or ISP access,
-> which we don't support in upstream), or on hardware over-thermal or
-> under-voltage (when the firmware would rewrite PLLB to take the ARM
-> out of overclock).  If that happens, our cached .recalc_rate() results
-> would be incorrect, but that's no worse than our current state where
-> we used fixed clocks.
-> 
-> The existing fixed clocks in the code are left in place to provide
-> backwards compatibility with old device tree files.
-> 
-> Signed-off-by: Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
+Changes in v5:
+ - Rebase to v4.2
 
-This patch-sets sets the emmc clock to correct frequency - no longer
-overclocking SDCards by a factor of 2.5.
-This means booting from the eMMC on the Compute module works now
-without issues.
+Changes in v4:
+ - Update compatible string of fuel-gauge to "da9150-fuel-gauge".
+ - Node name tidy up, relating to maintainer comments on fuel-gauge DT
+   binding doc.
+ - Removed Ack to patch from Lee Jones, as this has now been modified slightly
+   and didn't want to make assumptions of approval.
 
-Note that the DT bcm2835-rpi-b-plus.dtb can get used to boot
-the compute module.
+Changes in v3:
+ - Removal of unwanted new-line.
+ - Flesh out example bindings usage.
 
-Thanks
+Changes in v2:
+ - N/A
 
-Tested-by: Martin Sperl <kernel-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org>
+ Documentation/devicetree/bindings/mfd/da9150.txt | 27 ++++++++++++++++++++----
+ 1 file changed, 23 insertions(+), 4 deletions(-)
 
+diff --git a/Documentation/devicetree/bindings/mfd/da9150.txt b/Documentation/devicetree/bindings/mfd/da9150.txt
+index d0588ea..970801d 100644
+--- a/Documentation/devicetree/bindings/mfd/da9150.txt
++++ b/Documentation/devicetree/bindings/mfd/da9150.txt
+@@ -6,6 +6,7 @@ Device			 Description
+ ------			 -----------
+ da9150-gpadc		: General Purpose ADC
+ da9150-charger		: Battery Charger
++da9150-fg		: Battery Fuel-Gauge
+
+ ======
+
+@@ -22,7 +23,7 @@ Required properties:
+ Sub-devices:
+ - da9150-gpadc: See Documentation/devicetree/bindings/iio/adc/da9150-gpadc.txt
+ - da9150-charger: See Documentation/devicetree/bindings/power/da9150-charger.txt
+-
++- da9150-fg: See Documentation/devicetree/bindings/power/da9150-fg.txt
+
+ Example:
+
+@@ -34,10 +35,28 @@ Example:
+ 		interrupt-controller;
+
+ 		gpadc: da9150-gpadc {
+-			...
++			compatible = "dlg,da9150-gpadc";
++			#io-channel-cells = <1>;
++		};
++
++		charger {
++			compatible = "dlg,da9150-charger";
++
++			io-channels = <&gpadc 0>,
++				      <&gpadc 2>,
++				      <&gpadc 8>,
++				      <&gpadc 5>;
++			io-channel-names = "CHAN_IBUS",
++					   "CHAN_VBUS",
++					   "CHAN_TJUNC",
++					   "CHAN_VBAT";
+ 		};
+
+-		da9150-charger {
+-			...
++		fuel-gauge {
++			compatible = "dlg,da9150-fuel-gauge";
++
++			dlg,update-interval = <10000>;
++			dlg,warn-soc-level = /bits/ 8 <15>;
++			dlg,crit-soc-level = /bits/ 8 <5>
+ 		};
+ 	};
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+1.9.3
+
