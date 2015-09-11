@@ -1,61 +1,71 @@
-From: bayi.cheng <bayi.cheng-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH 3/3] arm64: dts: mt8173: Add nor flash node
-Date: Fri, 11 Sep 2015 17:51:16 +0800
-Message-ID: <1441965076.23394.7.camel@mhfsdcap03>
-References: <1441705796-11365-1-git-send-email-bayi.cheng@mediatek.com>
- <1441705796-11365-4-git-send-email-bayi.cheng@mediatek.com>
- <CAD6G_RTR2r8ETMQ14uGosRn-85sssvVsFT4BjK9SkVSfMkG8Dw@mail.gmail.com>
- <CAAEAJfCg+O=b9pfndG2WfxKVk9gvcqHUL0MV4fDpHj_9CaCBbQ@mail.gmail.com>
- <55EF7346.5040607@kernel.org>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH v3 02/18] of/platform: add of_platform_probe
+Date: Fri, 11 Sep 2015 10:57:48 +0100
+Message-ID: <20150911095748.GC12027@sirena.org.uk>
+References: <1438870315-18689-1-git-send-email-tomeu.vizoso@collabora.com>
+ <1438870315-18689-3-git-send-email-tomeu.vizoso@collabora.com>
+ <20150807121913.GS20873@sirena.org.uk>
+ <CAAObsKCrakupiZMQ9AoiWo6fDYT6Cfi_khdssUS6pv61zYS1Zg@mail.gmail.com>
+ <CAAObsKAZ0kaT2TZQdMnxy9ZjHMz2jFeYQvQjrCsa90J11bOVpA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-In-Reply-To: <55EF7346.5040607-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mediatek>,
- <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-mediatek/>
-List-Post: <mailto:linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mediatek>,
- <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "Linux-mediatek" <linux-mediatek-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Ezequiel Garcia <ezequiel-30ULvvUtt6G51wMPkGsGjgyUoB5FGQPZ@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Jagan Teki <jteki-oRp2ZoJdM/RWk0Htik3J/w@public.gmane.org>, "linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="4bvUAv41pAMZZO4U"
+Return-path: <linux-acpi-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAAObsKAZ0kaT2TZQdMnxy9ZjHMz2jFeYQvQjrCsa90J11bOVpA@mail.gmail.com>
+Sender: linux-acpi-owner@vger.kernel.org
+To: Tomeu Vizoso <tomeu.vizoso@collabora.com>
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Stephen Warren <swarren@wwwdotorg.org>, Javier Martinez Canillas <javier@osg.samsung.com>, Thierry Reding <thierry.reding@gmail.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linus Walleij <linus.walleij@linaro.org>, linux-acpi@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 2015-09-08 at 18:46 -0500, Rob Herring wrote:
-> On 09/08/2015 10:18 AM, Ezequiel Garcia wrote:
-> > On 8 September 2015 at 08:53, Jagan Teki <jteki-oRp2ZoJdM/RWk0Htik3J/w@public.gmane.org> wrote:
-> >> On 8 September 2015 at 15:19, Bayi Cheng <bayi.cheng-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org> wrote:
-> >>> Add Mediatek nor flash node
-> >>>
-> >>> Signed-off-by: Bayi Cheng <bayi.cheng-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-> >>> ---
-> >>>  arch/arm64/boot/dts/mediatek/mt8173.dtsi | 10 ++++++++++
-> >>>  1 file changed, 10 insertions(+)
-> >>>
-> >>> diff --git a/arch/arm64/boot/dts/mediatek/mt8173.dtsi b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
-> >>> index d18ee42..a14f005 100644
-> >>> --- a/arch/arm64/boot/dts/mediatek/mt8173.dtsi
-> >>> +++ b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
-> >>> @@ -365,6 +365,16 @@
-> >>>                         status = "disabled";
-> >>>                 };
-> >>>
-> >>> +               nor_flash: nor@1100d000 {
-> >>
-> >> Based on the comments from 1/3 - this notation needs to be change something like
-> >> qspi0: quadspi@1100d000
-> >>
-> > 
-> > Actually, to follow ePAPR recomendations it should be named as flash@1100d000.
-> > (See ePAPR, 2.2.2 Generic Names Recommendation).
-> 
-> The flash device node should, but this is the controller which should be
-> "spi" IMO even if this is not a general purpose controller.
-> 
-> Rob
-> 
-HI Rob, Thanks for your instruct! I will fix it !
+
+--4bvUAv41pAMZZO4U
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+
+On Mon, Sep 07, 2015 at 02:31:06PM +0200, Tomeu Vizoso wrote:
+> On 11 August 2015 at 11:37, Tomeu Vizoso <tomeu.vizoso@collabora.com> wrote:
+> > On 7 August 2015 at 14:19, Mark Brown <broonie@kernel.org> wrote:
+
+> >> This sounds like it's going to break in the case where we have MFDs that
+> >> represent their functions in DT (not a pattern I'm a fan of but it's a
+> >> thing people do).  We'll walk back to the platform device for the MFD
+> >> function, try to probe it and then give up.  Perhaps that's good enough
+> >> anyway but it's not clear to me why we don't just try every parent we
+> >> find?
+
+> > Agreed. In the attempt at probing dependencies before a device is
+> > probed, I considered that a device's parent is also a dependency and
+
+> Actually I'm not sure how we could probe the ascendants on demand, as
+> currently the parent's device lock is taken when probing so trying to
+> probe a sibling from within a probe callback will cause a deadlock.
+
+How do silbilings come into this?  There is an issue there but it's
+going to happen anyway.
+
+> AFAICS this is only needed for USB interface devices and this
+> behaviour could be limited to them, but I don't like much assuming
+> that no USB device will ever have a dependency on a sibling (though
+> that probably won't happen ever).
+
+I don't see the connection with USB here, sorry - my initial thought was
+about MFDs?
+
+--4bvUAv41pAMZZO4U
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQEcBAEBCAAGBQJV8qWbAAoJECTWi3JdVIfQtRAIAIKSMpgbcRgxWdpNouUsNPIA
+hJ8YYMUQ3lNONrAxmnbe2ShJquLWAyDclJxktCTF5O0bUR/YBRtSsCw/VNs1QVHa
+gkef87/G3//3dKHJiKSFuBNtDoyY6sbCMTCINoJbnhIj3I9HEkdOu5jJE8jv0XwT
+Vah+s1XtZw5FxG91HPA4OlTFIFa6QUUc5PnvcfTPcazQpg6UNIf2FxjKdK5rYHcd
+obHUqJp27OFhSqs5ThH1kfvqVmwCyZ6IMyIgyyMhUW6cwmzTjbkxh64Gam4fvylP
+Ys/FqyFAz6+5YZkwsIyhq8BsDcR8Y/Kjqs1e/AnVoYzKVSzjizCUuURPBjorEt0=
+=Dg+/
+-----END PGP SIGNATURE-----
+
+--4bvUAv41pAMZZO4U--
