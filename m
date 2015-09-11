@@ -1,78 +1,70 @@
 From: David Daney <ddaney.cavm@gmail.com>
-Subject: [PATCH 6/6] PCI: generic: Allow bus default MSI controller to be specified.
-Date: Fri, 11 Sep 2015 16:21:59 -0700
-Message-ID: <1442013719-5001-7-git-send-email-ddaney.cavm@gmail.com>
+Subject: [PATCH 4/6] PCI: generic: Correct, and avoid overflow,
+ in bus_max calculation.
+Date: Fri, 11 Sep 2015 16:21:57 -0700
+Message-ID: <1442013719-5001-5-git-send-email-ddaney.cavm@gmail.com>
 References: <1442013719-5001-1-git-send-email-ddaney.cavm@gmail.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 In-Reply-To: <1442013719-5001-1-git-send-email-ddaney.cavm@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Grant Likely <grant.likely@linaro.org>, Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org, Will Deacon <will.deacon@arm.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, linux-arm-kernel@lists.infradead.org
 Cc: David Daney <david.daney@cavium.com>
 List-Id: devicetree@vger.kernel.org
 
 From: David Daney <david.daney@cavium.com>
 
-If the device tree node for the bus has a "msi-parent" property, use
-that as the default MSI controller for devices on the bus.  Add device
-tree binding documentation describing the new property.
+There are two problems with the bus_max calculation:
 
-This allows the pci-host-generic driver to be used in systems with
-multiple MSI controllers.
+1) The u8 data type can overflow for large config space windows.
+
+2) The calculation is incorrect for a bus range that doesn't start at
+   zero.
+
+Since the configuration space is relative to bus zero, make bus_max
+just be the size of the config window scaled by bus_shift.  Then clamp
+it to a maximum of 255, per PCI.  Use a data type of int to avoid
+overflow problems.
 
 Signed-off-by: David Daney <david.daney@cavium.com>
 ---
- .../devicetree/bindings/pci/host-generic-pci.txt          |  5 +++++
- drivers/pci/host/pci-host-generic.c                       | 15 +++++++++++++--
- 2 files changed, 18 insertions(+), 2 deletions(-)
+ drivers/pci/host/pci-host-generic.c | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/pci/host-generic-pci.txt b/Documentation/devicetree/bindings/pci/host-generic-pci.txt
-index cf3e205..daa6942 100644
---- a/Documentation/devicetree/bindings/pci/host-generic-pci.txt
-+++ b/Documentation/devicetree/bindings/pci/host-generic-pci.txt
-@@ -29,6 +29,11 @@ Properties of the host controller node:
-                    to indicate the range of bus numbers for this controller.
-                    If absent, defaults to <0 255> (i.e. all buses).
- 
-+- msi-parent     : Optional property to indicate the MSI controller associated
-+                   with devices on the bus.  If not present, the default MSI
-+                   controller is used.  This property is further discussed in
-+                   interrupt-controller/msi.txt
-+
- - #address-cells : Must be 3.
- 
- - #size-cells    : Must be 2.
 diff --git a/drivers/pci/host/pci-host-generic.c b/drivers/pci/host/pci-host-generic.c
-index 8219c0b..e0248b4 100644
+index cd6f898..fce5bf7 100644
 --- a/drivers/pci/host/pci-host-generic.c
 +++ b/drivers/pci/host/pci-host-generic.c
-@@ -225,6 +225,7 @@ static int gen_pci_probe(struct platform_device *pdev)
- 	struct device_node *np = dev->of_node;
- 	struct gen_pci *pci = devm_kzalloc(dev, sizeof(*pci), GFP_KERNEL);
- 	struct pci_bus *bus, *child;
-+	struct msi_controller *msi;
+@@ -164,7 +164,7 @@ out_release_res:
+ static int gen_pci_parse_map_cfg_windows(struct gen_pci *pci)
+ {
+ 	int err;
+-	u8 bus_max;
++	int bus_max;
+ 	resource_size_t busn;
+ 	struct resource *bus_range;
+ 	struct device *dev = pci->host.dev.parent;
+@@ -177,8 +177,9 @@ static int gen_pci_parse_map_cfg_windows(struct gen_pci *pci)
+ 	}
  
- 	if (!pci)
- 		return -ENOMEM;
-@@ -265,8 +266,18 @@ static int gen_pci_probe(struct platform_device *pdev)
- 	if (!pci_has_flag(PCI_PROBE_ONLY))
- 		pci_add_flags(PCI_REASSIGN_ALL_RSRC | PCI_REASSIGN_ALL_BUS);
+ 	/* Limit the bus-range to fit within reg */
+-	bus_max = pci->cfg.bus_range->start +
+-		  (resource_size(&pci->cfg.res) >> pci->cfg.ops.bus_shift) - 1;
++	bus_max = (resource_size(&pci->cfg.res) >> pci->cfg.ops.bus_shift) - 1;
++	if (bus_max > 255)
++		bus_max = 255;
+ 	pci->cfg.bus_range->end = min_t(resource_size_t,
+ 					pci->cfg.bus_range->end, bus_max);
  
--	bus = pci_scan_root_bus(dev, pci->cfg.bus_range->start,
--				&pci->cfg.ops.ops, pci, &pci->resources);
-+	msi = NULL;
-+	if (IS_ENABLED(CONFIG_PCI_MSI)) {
-+		struct device_node *msi_node;
-+
-+		msi_node = of_parse_phandle(np, "msi-parent", 0);
-+		if (msi_node)
-+			msi = of_pci_find_msi_chip_by_node(msi_node);
-+	}
-+
-+	bus = pci_scan_root_bus_msi(dev, pci->cfg.bus_range->start,
-+				    &pci->cfg.ops.ops, pci, &pci->resources,
-+				    msi);
- 	if (!bus) {
- 		dev_err(dev, "Scanning rootbus failed");
- 		return -ENODEV;
 -- 
 1.7.11.7
