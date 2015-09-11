@@ -1,62 +1,84 @@
-From: Tomeu Vizoso <tomeu.vizoso@collabora.com>
-Subject: Re: [PATCH v3 02/18] of/platform: add of_platform_probe
-Date: Fri, 11 Sep 2015 16:06:07 +0200
-Message-ID: <CAAObsKAaxBJUH=u-2VSDGUQ6CsqpATpF-48LHEtvd3FD3_prsQ@mail.gmail.com>
-References: <1438870315-18689-1-git-send-email-tomeu.vizoso@collabora.com>
- <1438870315-18689-3-git-send-email-tomeu.vizoso@collabora.com>
- <20150807121913.GS20873@sirena.org.uk> <CAAObsKCrakupiZMQ9AoiWo6fDYT6Cfi_khdssUS6pv61zYS1Zg@mail.gmail.com>
- <CAAObsKAZ0kaT2TZQdMnxy9ZjHMz2jFeYQvQjrCsa90J11bOVpA@mail.gmail.com> <20150911095748.GC12027@sirena.org.uk>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-acpi-owner@vger.kernel.org>
-In-Reply-To: <20150911095748.GC12027@sirena.org.uk>
-Sender: linux-acpi-owner@vger.kernel.org
-To: Mark Brown <broonie@kernel.org>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Stephen Warren <swarren@wwwdotorg.org>, Javier Martinez Canillas <javier@osg.samsung.com>, Thierry Reding <thierry.reding@gmail.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linus Walleij <linus.walleij@linaro.org>, linux-acpi@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>
+From: Peter Griffin <peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: [PATCH v2 0/9] Add support for FDMA DMA controller found on STi chipsets
+Date: Fri, 11 Sep 2015 15:14:22 +0100
+Message-ID: <1441980871-24475-1-git-send-email-peter.griffin@linaro.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, srinivas.kandagatla-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, maxime.coquelin-qxv4g6HH51o@public.gmane.org, patrice.chotard-qxv4g6HH51o@public.gmane.org, vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org
+Cc: peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 11 September 2015 at 11:57, Mark Brown <broonie@kernel.org> wrote:
-> On Mon, Sep 07, 2015 at 02:31:06PM +0200, Tomeu Vizoso wrote:
->> On 11 August 2015 at 11:37, Tomeu Vizoso <tomeu.vizoso@collabora.com> wrote:
->> > On 7 August 2015 at 14:19, Mark Brown <broonie@kernel.org> wrote:
->
->> >> This sounds like it's going to break in the case where we have MFDs that
->> >> represent their functions in DT (not a pattern I'm a fan of but it's a
->> >> thing people do).  We'll walk back to the platform device for the MFD
->> >> function, try to probe it and then give up.  Perhaps that's good enough
->> >> anyway but it's not clear to me why we don't just try every parent we
->> >> find?
->
->> > Agreed. In the attempt at probing dependencies before a device is
->> > probed, I considered that a device's parent is also a dependency and
->
->> Actually I'm not sure how we could probe the ascendants on demand, as
->> currently the parent's device lock is taken when probing so trying to
->> probe a sibling from within a probe callback will cause a deadlock.
->
-> How do silbilings come into this?  There is an issue there but it's
-> going to happen anyway.
+Hi Vinod,
 
-Once a platform device (with the platform bus as its parent) is
-retrieved from the deferred queue, both the parent and the device in
-question are locked (because of the USB stuff mentioned below). If
-that device depends on another device whose parent is the platform bus
-and we try to probe it (useless, but I don't see a good way of
-avoiding it) then we'll deadlock when device_attach locks that device.
+This patchset adds support for the Flexible Direct Memory Access (FDMA) core
+found on STi chipsets from STMicroelectronics. The FDMA is a slim (xp70) core CPU
+with a dedicated firmware. It is a general purpose DMA controller supporting
+16 independent channels and data can be moved from memory to memory or between
+memory and paced latency critical real time targets.
 
->> AFAICS this is only needed for USB interface devices and this
->> behaviour could be limited to them, but I don't like much assuming
->> that no USB device will ever have a dependency on a sibling (though
->> that probably won't happen ever).
->
-> I don't see the connection with USB here, sorry - my initial thought was
-> about MFDs?
+After some discussion with the DT maintainers I've decided not to include the
+firmware name in DT, and generate the name based on the compatible string.
+This is in keeping with how most other kernel drivers request firmware, and avoids
+a new DT firmware name binding.
 
-This commit introduced locking of a device's parent before it's
-probed, mainly for USB interfaces:
+I've also dropped the xbar support for the moment, as I believe it should be
+re-worked based on some of the xbar API's that TI recently added. As requested
+I've also split it into smaller patches to help with faster review.
 
-bf74ad5bc417 ("[PATCH] Hold the device's parent's lock during probe and remove")
+regards,
 
-Regards,
+Peter.
 
-Tomeu
+Changes since v1:
+ - split into smaller patches for easier / faster review (Vinod)
+ - new fill_hw_mode() with common code (Vinod)
+ - new config_reqctrl() called from *_prep() instead of device_config cb (Vinod)
+ - fdma-xbar support removed (Peter)
+ - rework firmware name mechanism so fwname isn't in DT (Peter / Lee)
+ - st_fdma_seg_to_mem can be static (Paul)
+ - EXPORT_SYMBOL st_fdma_filter_fn not required (Paul)
+ - s/channel/channels (vinod)
+ - better describe "Must be <3>" (vinod)
+ - sizeof(*ehdr) (vinod)
+ - print values on error debug (vinod)
+ - empty line (Vinod)
+ - Update to -EIO (Vinod)
+ - Make st_fdma tristate (Paul)
+ - Remove __exit tag from .remove (Maxime)
+ - Update MAINTAINERS rule to fdma* (Lee)
+ - Unit address should match reg property (Lee)
+
+Peter Griffin (9):
+  dmaengine: st_fdma: Add STMicroelectronics FDMA DT binding
+    documentation
+  dmaengine: st_fdma: Add st fdma platform specific header
+  dmaengine: st_fdma:  Add STMicroelectronics FDMA driver header file
+  dmaengine: st_fdma: Add STMicroelectronics FDMA engine driver support
+  dmaengine: st_fdma: Add xp70 firmware loading mechanism.
+  dmaengine: st_fdma: Add fdma suspend and resume callbacks.
+  ARM: STi: DT: STiH407: Add FDMA driver dt nodes.
+  MAINTAINERS: Add FDMA driver files to STi section.
+  ARM: multi_v7_defconfig: Enable STi FDMA driver
+
+ Documentation/devicetree/bindings/dma/st_fdma.txt |   78 ++
+ MAINTAINERS                                       |    1 +
+ arch/arm/boot/dts/stih407-family.dtsi             |   51 +
+ arch/arm/configs/multi_v7_defconfig               |    1 +
+ drivers/dma/Kconfig                               |   14 +
+ drivers/dma/Makefile                              |    1 +
+ drivers/dma/st_fdma.c                             | 1204 +++++++++++++++++++++
+ drivers/dma/st_fdma.h                             |  237 ++++
+ include/linux/platform_data/dma-st_fdma.h         |   72 ++
+ 9 files changed, 1659 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/dma/st_fdma.txt
+ create mode 100644 drivers/dma/st_fdma.c
+ create mode 100644 drivers/dma/st_fdma.h
+ create mode 100644 include/linux/platform_data/dma-st_fdma.h
+
+-- 
+1.9.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
