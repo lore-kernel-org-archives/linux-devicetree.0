@@ -1,61 +1,72 @@
-From: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Subject: [PATCHv3 3/3] devicetree: Add led-backlight binding
-Date: Fri, 11 Sep 2015 16:07:37 +0300
-Message-ID: <1441976857-26548-4-git-send-email-tomi.valkeinen@ti.com>
-References: <1441976857-26548-1-git-send-email-tomi.valkeinen@ti.com>
+From: Stefano Stabellini <stefano.stabellini-mvvWK6WmYclDPfheJLI6IQ@public.gmane.org>
+Subject: Re: [PATCH] efi/libstub/fdt: Standardize the names of EFI stub
+ parameters
+Date: Fri, 11 Sep 2015 14:14:09 +0100
+Message-ID: <alpine.DEB.2.02.1509111410180.2672@kaball.uk.xensource.com>
+References: <1441874516-11364-1-git-send-email-zhaoshenglong@huawei.com>
+ <20150910095208.GA29293@leverpostej>
+ <alpine.DEB.2.02.1509101116580.2672@kaball.uk.xensource.com>
+ <20150910112418.GC29293@leverpostej>
+ <alpine.DEB.2.02.1509101223580.2672@kaball.uk.xensource.com>
+ <20150910121514.GE29293@leverpostej>
+ <alpine.DEB.2.02.1509101429480.2672@kaball.uk.xensource.com>
+ <20150910144938.GI29293@leverpostej>
+ <alpine.DEB.2.02.1509101655020.2672@kaball.uk.xensource.com>
+ <20150910162302.GN29293@leverpostej>
+ <20150911124643.GB4530@olila.local.net-space.pl>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-leds-owner@vger.kernel.org>
-In-Reply-To: <1441976857-26548-1-git-send-email-tomi.valkeinen@ti.com>
-Sender: linux-leds-owner@vger.kernel.org
-To: Jacek Anaszewski <j.anaszewski@samsung.com>, Jingoo Han <jingoohan1@gmail.com>, Lee Jones <lee.jones@linaro.org>, linux-leds@vger.kernel.org, linux-fbdev@vger.kernel.org
-Cc: Andrew Lunn <andrew@lunn.ch>, Tomi Valkeinen <tomi.valkeinen@ti.com>, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="US-ASCII"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20150911124643.GB4530-fJNZiO034lp9pOct4yEdx/3oZC3j2Omk@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Daniel Kiper <daniel.kiper-QHcLZuEGTsvQT0dZR+AlfA@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stefano Stabellini <stefano.stabellini-mvvWK6WmYclDPfheJLI6IQ@public.gmane.org>, Shannon Zhao <zhaoshenglong-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-efi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-efi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "Ian.Campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org" <Ian.Campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>, "linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "leif.lindholm-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <leif.lindholm-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "xen-devel-GuqFBffKawuEi8DpZVb4nw@public.gmane.org" <xen-devel-GuqFBffKawuEi8DpZVb4nw@public.gmane.org>, "julien.grall-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org" <julien.grall-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>, "freebsd-arm-h+KGxgPPiopAfugRpC6u6w@public.gmane.org" <freebsd-arm-h+KGxgPPiopAfugRpC6u6w@public.gmane.org>, "matt.fleming-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org" <matt.fleming-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, "christoffer.dall-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <christoffer.dall@linaro.o>
 List-Id: devicetree@vger.kernel.org
 
-Add DT binding for led-backlight.
+On Fri, 11 Sep 2015, Daniel Kiper wrote:
+> On Thu, Sep 10, 2015 at 05:23:02PM +0100, Mark Rutland wrote:
+> > > > C) When you could go:
+> > > >
+> > > >    DT -> Discover Xen -> Xen-specific stuff -> Xen-specific EFI/ACPI discovery
+> > >
+> > > I take you mean discovering Xen with the usual Xen hypervisor node on
+> > > device tree. I think that C) is a good option actually. I like it. Not
+> > > sure why we didn't think about this earlier. Is there anything EFI or
+> > > ACPI which is needed before Xen support is discovered by
+> > > arch/arm64/kernel/setup.c:setup_arch -> xen_early_init()?
+> >
+> > Currently lots (including the memory map). With the stuff to support
+> > SPCR, the ACPI discovery would be moved before xen_early_init().
+> >
+> > > If not, we could just go for this. A lot of complexity would go away.
+> >
+> > I suspect this would still be fairly complex, but would at least prevent
+> > the Xen-specific EFI handling from adversely affecting the native case.
+> >
+> > > > D) If you want to be generic:
+> > > >    EFI -> EFI application -> EFI tables -> ACPI tables -> Xen-specific stuff
+> > > >           \------------------------------------------/
+> > > > 	   (virtualize these, provide shims to Dom0, but handle
+> > > > 	    everything in Xen itself)
+> > >
+> > > I think that this is good in theory but could turn out to be a lot of
+> > > work in practice. We could probably virtualize the RuntimeServices but
+> > > the BootServices are troublesome.
+> >
+> > What's troublesome with the boot services?
+> >
+> > What can't be simulated?
+> 
+> How do you want to access bare metal EFI boot services from dom0 if they
+> were shutdown long time ago before loading dom0 image? What do you need
+> from EFI boot services in dom0?
 
-Signed-off-by: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Cc: devicetree@vger.kernel.org
----
- .../bindings/video/backlight/led-backlight.txt     | 30 ++++++++++++++++++++++
- 1 file changed, 30 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/video/backlight/led-backlight.txt
+That's right. Trying to emulate BootServices after the real
+ExitBootServices has already been called seems like a very bad plan.
 
-diff --git a/Documentation/devicetree/bindings/video/backlight/led-backlight.txt b/Documentation/devicetree/bindings/video/backlight/led-backlight.txt
-new file mode 100644
-index 000000000000..d4621d7414bc
---- /dev/null
-+++ b/Documentation/devicetree/bindings/video/backlight/led-backlight.txt
-@@ -0,0 +1,30 @@
-+led-backlight bindings
-+
-+Required properties:
-+  - compatible: "led-backlight"
-+  - leds: phandle to a led OF node [0]
-+  - brightness-levels: Array of distinct LED brightness levels. These
-+      are in the range from 0 to 255, passed to the LED class driver.
-+  - default-brightness-level: the default brightness level (index into the
-+      array defined by the "brightness-levels" property)
-+
-+Optional properties:
-+  - power-supply: regulator for supply voltage
-+  - enable-gpios: contains a single GPIO specifier for the GPIO which enables
-+                  and disables the backlight (see GPIO binding[1])
-+
-+[0]: Documentation/devicetree/bindings/leds/common.txt
-+[1]: Documentation/devicetree/bindings/gpio/gpio.txt
-+
-+Example:
-+
-+	backlight {
-+		compatible = "led-backlight";
-+		leds = <&backlight_led>;
-+
-+		brightness-levels = <0 4 8 16 32 64 128 255>;
-+		default-brightness-level = <6>;
-+
-+		power-supply = <&vdd_bl_reg>;
-+		enable-gpios = <&gpio 58 0>;
-+	};
--- 
-2.1.4
+I think that whatever interface we come up with, would need to be past
+ExitBootServices.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
