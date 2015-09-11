@@ -1,46 +1,44 @@
 From: Charles Keepax <ckeepax@opensource.wolfsonmicro.com>
-Subject: [PATCH v2 5/6] extcon: arizona: Add device binding for second jack detect pin on GPIO5
-Date: Fri, 11 Sep 2015 13:14:17 +0100
-Message-ID: <1441973658-26234-6-git-send-email-ckeepax@opensource.wolfsonmicro.com>
-References: <1441973658-26234-1-git-send-email-ckeepax@opensource.wolfsonmicro.com>
+Subject: [PATCH v2 0/6] Arizona extcon improvements
+Date: Fri, 11 Sep 2015 13:14:12 +0100
+Message-ID: <1441973658-26234-1-git-send-email-ckeepax@opensource.wolfsonmicro.com>
 Mime-Version: 1.0
 Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1441973658-26234-1-git-send-email-ckeepax@opensource.wolfsonmicro.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: cw00.choi@samsung.com, lee.jones@linaro.org
 Cc: myungjoo.ham@samsung.com, sameo@linux.intel.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, patches@opensource.wolfsonmicro.com
 List-Id: devicetree@vger.kernel.org
 
-Some Arizona devices have the option to use the GPIO5 pin as a second
-jack detection pin. This patch adds device bindings to specify to the
-driver that it should use this pin.
+This patch series does two major things:
+ - Adds a fix that resolves an issue where the headphone
+   detection accuracy is poor at high impedances (such as
+   line loads)
+ - Adds device tree bindings for some additional jack
+   detection features specifically allowing the use of the
+   second jack detection pin on GPIO5 and support for
+   inverted polarity jack sockets
 
-Signed-off-by: Charles Keepax <ckeepax@opensource.wolfsonmicro.com>
-Acked-by: Chanwoo Choi <cw00.choi@samsung.com>
----
+Thanks,
+Charles
 
-Changes since v1:
- - Added more description in the commit message
+Charles Keepax (5):
+  mfd: arizona: Add TST_CAP bits for headphone detection
+  extcon: arizona: Additional settings to improve accuracy of HP detect
+  extcon: arizona: Add device binding for jack detect polarity
+    inversion
+  extcon: arizona: Add device binding for second jack detect pin on
+    GPIO5
+  mfd: arizona: Update DT binding documentation for jack detection
 
- drivers/extcon/extcon-arizona.c |    5 +++++
- 1 files changed, 5 insertions(+), 0 deletions(-)
+Nariman Poushin (1):
+  extcon: arizona: Ignore jd_invert for MICD_CLAMP_STS
 
-diff --git a/drivers/extcon/extcon-arizona.c b/drivers/extcon/extcon-arizona.c
-index 34b5a3b..5fbe893 100644
---- a/drivers/extcon/extcon-arizona.c
-+++ b/drivers/extcon/extcon-arizona.c
-@@ -1233,6 +1233,11 @@ static int arizona_extcon_device_get_pdata(struct arizona *arizona)
- 
- 	device_property_read_u32(arizona->dev, "wlf,gpsw", &pdata->gpsw);
- 
-+	pdata->jd_gpio5 = device_property_read_bool(arizona->dev,
-+						    "wlf,use-jd-gpio");
-+	pdata->jd_gpio5_nopull = device_property_read_bool(arizona->dev,
-+						"wlf,use-jd-gpio-nopull");
-+
- 	return 0;
- }
- 
+ Documentation/devicetree/bindings/mfd/arizona.txt |    6 ++++
+ drivers/extcon/extcon-arizona.c                   |   32 +++++++++++++++++----
+ drivers/mfd/wm5110-tables.c                       |    2 +
+ include/linux/mfd/arizona/registers.h             |    8 +++++
+ 4 files changed, 42 insertions(+), 6 deletions(-)
+
 -- 
 1.7.2.5
