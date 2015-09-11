@@ -1,95 +1,58 @@
-From: Peter Griffin <peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: [PATCH 11/11] ARM: STi: STiH407: Add spi default pinctrl groups.
-Date: Fri, 11 Sep 2015 18:06:34 +0100
-Message-ID: <1441991194-11948-12-git-send-email-peter.griffin@linaro.org>
+From: Peter Griffin <peter.griffin@linaro.org>
+Subject: [PATCH 06/11] ARM: DT: STiH407: Add NAND flash controller pin configuration
+Date: Fri, 11 Sep 2015 18:06:29 +0100
+Message-ID: <1441991194-11948-7-git-send-email-peter.griffin@linaro.org>
 References: <1441991194-11948-1-git-send-email-peter.griffin@linaro.org>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1441991194-11948-1-git-send-email-peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, srinivas.kandagatla-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, maxime.coquelin-qxv4g6HH51o@public.gmane.org, patrice.chotard-qxv4g6HH51o@public.gmane.org
-Cc: peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1441991194-11948-1-git-send-email-peter.griffin@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, srinivas.kandagatla@gmail.com, maxime.coquelin@st.com, patrice.chotard@st.com
+Cc: peter.griffin@linaro.org, lee.jones@linaro.org, devicetree@vger.kernel.org, Christophe Kerello <christophe.kerello@st.com>
 List-Id: devicetree@vger.kernel.org
 
-Now we have default pinconfig groups for each SPI
-controller ensure it is used by the SPI controller
-node.
+This patch adds NAND flash support controller pin configuration
+for STiH407 family silicon.
 
-Signed-off-by: Peter Griffin <peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Signed-off-by: Patrice Chotard <patrice.chotard@st.com>
+Signed-off-by: Christophe Kerello <christophe.kerello@st.com>
+Signed-off-by: Peter Griffin <peter.griffin@linaro.org>
 ---
- arch/arm/boot/dts/stih407-family.dtsi | 14 ++++++++++++++
- 1 file changed, 14 insertions(+)
+ arch/arm/boot/dts/stih407-pinctrl.dtsi | 23 +++++++++++++++++++++++
+ 1 file changed, 23 insertions(+)
 
-diff --git a/arch/arm/boot/dts/stih407-family.dtsi b/arch/arm/boot/dts/stih407-family.dtsi
-index 838b812..94a2fec 100644
---- a/arch/arm/boot/dts/stih407-family.dtsi
-+++ b/arch/arm/boot/dts/stih407-family.dtsi
-@@ -381,6 +381,8 @@
- 			interrupts = <GIC_SPI 113 IRQ_TYPE_LEVEL_HIGH>;
- 			clocks = <&clk_s_c0_flexgen CLK_EXT2F_A9>;
- 			clock-names = "ssc";
-+			pinctrl-names = "default";
-+			pinctrl-0 = <&pinctrl_spi1_default>;
- 
- 			status = "disabled";
+diff --git a/arch/arm/boot/dts/stih407-pinctrl.dtsi b/arch/arm/boot/dts/stih407-pinctrl.dtsi
+index d0f5fdd..cde776b 100644
+--- a/arch/arm/boot/dts/stih407-pinctrl.dtsi
++++ b/arch/arm/boot/dts/stih407-pinctrl.dtsi
+@@ -885,6 +885,29 @@
+ 					};
+ 				};
+ 			};
++
++			nand {
++				pinctrl_nand: nand {
++					st,pins {
++						nand_cs1 = <&pio40 6 ALT3 OUT>;
++						nand_cs0 = <&pio40 7 ALT3 OUT>;
++						nand_d0 = <&pio41 0 ALT3 BIDIR>;
++						nand_d1 = <&pio41 1 ALT3 BIDIR>;
++						nand_d2 = <&pio41 2 ALT3 BIDIR>;
++						nand_d3 = <&pio41 3 ALT3 BIDIR>;
++						nand_d4 = <&pio41 4 ALT3 BIDIR>;
++						nand_d5 = <&pio41 5 ALT3 BIDIR>;
++						nand_d6 = <&pio41 6 ALT3 BIDIR>;
++						nand_d7 = <&pio41 7 ALT3 BIDIR>;
++						nand_we = <&pio42 0 ALT3 OUT>;
++						nand_dqs = <&pio42 1 ALT3 OUT>;
++						nand_ale = <&pio42 2 ALT3 OUT>;
++						nand_cle = <&pio42 3 ALT3 OUT>;
++						nand_rnb = <&pio42 4 ALT3 IN>;
++						nand_oe = <&pio42 5 ALT3 OUT>;
++					};
++				};
++			};
  		};
-@@ -391,6 +393,8 @@
- 			interrupts = <GIC_SPI 114 IRQ_TYPE_LEVEL_HIGH>;
- 			clocks = <&clk_s_c0_flexgen CLK_EXT2F_A9>;
- 			clock-names = "ssc";
-+			pinctrl-names = "default";
-+			pinctrl-0 = <&pinctrl_spi2_default>;
- 
- 			status = "disabled";
- 		};
-@@ -401,6 +405,8 @@
- 			interrupts = <GIC_SPI 115 IRQ_TYPE_LEVEL_HIGH>;
- 			clocks = <&clk_s_c0_flexgen CLK_EXT2F_A9>;
- 			clock-names = "ssc";
-+			pinctrl-names = "default";
-+			pinctrl-0 = <&pinctrl_spi3_default>;
- 
- 			status = "disabled";
- 		};
-@@ -411,6 +417,8 @@
- 			interrupts = <GIC_SPI 116 IRQ_TYPE_LEVEL_HIGH>;
- 			clocks = <&clk_s_c0_flexgen CLK_EXT2F_A9>;
- 			clock-names = "ssc";
-+			pinctrl-names = "default";
-+			pinctrl-0 = <&pinctrl_spi4_default>;
- 
- 			status = "disabled";
- 		};
-@@ -422,6 +430,8 @@
- 			interrupts = <GIC_SPI 135 IRQ_TYPE_LEVEL_HIGH>;
- 			clocks = <&clk_sysin>;
- 			clock-names = "ssc";
-+			pinctrl-names = "default";
-+			pinctrl-0 = <&pinctrl_spi10_default>;
- 
- 			status = "disabled";
- 		};
-@@ -432,6 +442,8 @@
- 			interrupts = <GIC_SPI 136 IRQ_TYPE_LEVEL_HIGH>;
- 			clocks = <&clk_sysin>;
- 			clock-names = "ssc";
-+			pinctrl-names = "default";
-+			pinctrl-0 = <&pinctrl_spi11_default>;
- 
- 			status = "disabled";
- 		};
-@@ -442,6 +454,8 @@
- 			interrupts = <GIC_SPI 137 IRQ_TYPE_LEVEL_HIGH>;
- 			clocks = <&clk_sysin>;
- 			clock-names = "ssc";
-+			pinctrl-names = "default";
-+			pinctrl-0 = <&pinctrl_spi12_default>;
- 
- 			status = "disabled";
- 		};
+ 	};
+ };
 -- 
 1.9.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
