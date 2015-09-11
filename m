@@ -1,86 +1,42 @@
-From: Adam Thomson <Adam.Thomson.Opensource@diasemi.com>
-Subject: [PATCH v5 6/6] mfd: da9150: Use DEFINE_RES_IRQ_NAMED() help macro for
- IRQ resource
-Date: Fri, 11 Sep 2015 11:05:43 +0100
-Message-ID: <915ae1bb11234c2f11c1601e7a6b8887decd12ce.1441964153.git.Adam.Thomson.Opensource@diasemi.com>
-References: <cover.1441964153.git.Adam.Thomson.Opensource@diasemi.com>
-Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <cover.1441964153.git.Adam.Thomson.Opensource@diasemi.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Lee Jones <lee.jones@linaro.org>, Samuel Ortiz <sameo@linux.intel.com>, Sebastian Reichel <sre@kernel.org>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, David Woodhouse <dwmw2@infradead.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>
-Cc: linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Support Opensource <support.opensource@diasemi.com>
+From: Martin Sperl <martin-d5rIkyn9cnPYtjvyW6yDsg@public.gmane.org>
+Subject: Re: [PATCH 2/3] clk: bcm2835: Add a driver for the auxiliary peripheral clock gates.
+Date: Fri, 11 Sep 2015 12:24:50 +0200
+Message-ID: <D051D944-F10B-460F-AF10-8C177A3A7E3D@sperl.org>
+References: <1441923750-19404-1-git-send-email-eric@anholt.net> <1441923750-19404-3-git-send-email-eric@anholt.net>
+Mime-Version: 1.0 (Mac OS X Mail 8.2 \(2104\))
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1441923750-19404-3-git-send-email-eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
+Cc: linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mike Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Adam Thomson <Adam.Thomson.Opensource@diasemi.com>
-Suggested-by: Lee Jones <lee.jones@linaro.org>
-Acked-by: Lee Jones <lee.jones@linaro.org>
----
 
-Changes in v5:
- - Rebase to v4.2
+> On 11.09.2015, at 00:22, Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org> wrote:
+> 
+> There are a pair of SPI masters and a mini UART that were last minute
+> additions.  As a result, they didn't get integrated in the same way as
+> the other gates off of the VPU clock in CPRMAN.
+> 
+> Signed-off-by: Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
+> ---
 
-Changes in v4:
- - N/A
+Tested with the spi-bcm2835aux driver and it works perfectly.
+I will now post the latest incarnation of the driver for inclusion.
 
-Changes in v3:
- - Initial version.
+I have also tested with the uart1 and it works in principle.
 
-Changes in v2:
- - N/A
+Note that there is one issue (as mentioned elsewhere) with uart1:
+the 8250 serial driver has a (hardcoded) internal clock divider 16,
+while the hardware has an internal divider of 8.
 
- drivers/mfd/da9150-core.c | 35 +++++------------------------------
- 1 file changed, 5 insertions(+), 30 deletions(-)
+This results in baud rates that are a factor of 2 higher than requested.
 
-diff --git a/drivers/mfd/da9150-core.c b/drivers/mfd/da9150-core.c
-index 85ca4b5..195fdcf 100644
---- a/drivers/mfd/da9150-core.c
-+++ b/drivers/mfd/da9150-core.c
-@@ -355,39 +355,14 @@ static const struct regmap_irq_chip da9150_regmap_irq_chip = {
- };
+Tested-by: Martin Sperl <kernel-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org>
 
- static struct resource da9150_gpadc_resources[] = {
--	{
--		.name = "GPADC",
--		.start = DA9150_IRQ_GPADC,
--		.end = DA9150_IRQ_GPADC,
--		.flags = IORESOURCE_IRQ,
--	},
-+	DEFINE_RES_IRQ_NAMED(DA9150_IRQ_GPADC, "GPADC"),
- };
-
- static struct resource da9150_charger_resources[] = {
--	{
--		.name = "CHG_STATUS",
--		.start = DA9150_IRQ_CHG,
--		.end = DA9150_IRQ_CHG,
--		.flags = IORESOURCE_IRQ,
--	},
--	{
--		.name = "CHG_TJUNC",
--		.start = DA9150_IRQ_TJUNC,
--		.end = DA9150_IRQ_TJUNC,
--		.flags = IORESOURCE_IRQ,
--	},
--	{
--		.name = "CHG_VFAULT",
--		.start = DA9150_IRQ_VFAULT,
--		.end = DA9150_IRQ_VFAULT,
--		.flags = IORESOURCE_IRQ,
--	},
--	{
--		.name = "CHG_VBUS",
--		.start = DA9150_IRQ_VBUS,
--		.end = DA9150_IRQ_VBUS,
--		.flags = IORESOURCE_IRQ,
--	},
-+	DEFINE_RES_IRQ_NAMED(DA9150_IRQ_CHG, "CHG_STATUS"),
-+	DEFINE_RES_IRQ_NAMED(DA9150_IRQ_TJUNC, "CHG_TJUNC"),
-+	DEFINE_RES_IRQ_NAMED(DA9150_IRQ_VFAULT, "CHG_VFAULT"),
-+	DEFINE_RES_IRQ_NAMED(DA9150_IRQ_VBUS, "CHG_VBUS"),
- };
-
- static struct resource da9150_fg_resources[] = {
 --
-1.9.3
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
