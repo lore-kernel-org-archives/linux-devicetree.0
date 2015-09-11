@@ -1,50 +1,54 @@
-From: Charles Keepax <ckeepax-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
-Subject: [PATCH v2 4/6] extcon: arizona: Add device binding for jack detect polarity inversion
-Date: Fri, 11 Sep 2015 13:14:16 +0100
-Message-ID: <1441973658-26234-5-git-send-email-ckeepax@opensource.wolfsonmicro.com>
-References: <1441973658-26234-1-git-send-email-ckeepax@opensource.wolfsonmicro.com>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH 2/2] Documentation: gpio: Update description for X-Gene standby GPIO controller DTS binding
+Date: Fri, 11 Sep 2015 14:46:49 +0200
+Message-ID: <14280808.2Weay6QlT1@wuerfel>
+References: <1441963332-13329-1-git-send-email-yvo@apm.com> <11539535.sS04eUgSdg@wuerfel> <CAL4ahLepjn-VG9WCLEovzjwc=8fpncP6xTS68gRO2VtVaEDc1g@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1441973658-26234-1-git-send-email-ckeepax-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
-Cc: myungjoo.ham-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, patches-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <CAL4ahLepjn-VG9WCLEovzjwc=8fpncP6xTS68gRO2VtVaEDc1g@mail.gmail.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Y Vo <yvo@apm.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Phong Vo <pvo@apm.com>, Toan Le <toanle@apm.com>, Loc Ho <lho@apm.com>, Feng Kan <fkan@apm.com>, Quan Nguyen <qnguyen@apm.com>, Duc Dang <dhdang@apm.com>, patches <patches@apm.com>
 List-Id: devicetree@vger.kernel.org
 
-By default the driver expects the jackdet pin to be pulled low when a
-jack is inserted. This patch adds a device binding that allows the user
-to specify that the jackdet pin will be pulled high when a jack is
-inserted.
+On Friday 11 September 2015 18:24:47 Y Vo wrote:
+> On Fri, Sep 11, 2015 at 4:35 PM, Arnd Bergmann <arnd@arndb.de> wrote:
+> > On Friday 11 September 2015 16:22:12 Y Vo wrote:
+> >>  There are 20 GPIO pins from 0..21. There is no GPIO_DS14 or GPIO_DS15,
+> >> -only GPIO_DS8..GPIO_DS13 support interrupts. The IRQ mapping
+> >> +only GPIO_DS8..GPIO_DS13 support external interrupts. The IRQ mapping
+> >>  is currently 1-to-1 on interrupts 0x28 thru 0x2d.
+> >> +GPIO pins from GPIO_DS8 to GPIO_DS13 are configured as external interrupt
+> >> +by default. If one wish not to use any of these pins as external interrupts,
+> >> +the corresponding interrupt resource for those pins should be removed.
+> >
+> > According to this description, I fail to see how one would specify
+> > a missing interrupt for one of the pins that is not the last one in
+> > the list.
+> >
+> All GPIO_DS8..GPIO_DS13 are configured as external IRQ by default. So
+> if anyone want to use one of them as gpio mode, they can drop add the
+> sbgpio node to their DTB board-specific, and remove that GPIO from
+> interrupts property. As example below I want to leave GPIO_DS8 as gpio
+> mode, so I remove it as below:
+> 
+> /* Board-specific: exclude GPIO_DS8 to leave it as GPIO */
+> &sbgpio {
+>        interrupts =    <0x0 0x29 0x1>,         /* GPIO_DS9 */
+>                        <0x0 0x2a 0x1>,         /* GPIO_DS10 */
+>                        <0x0 0x2b 0x1>,         /* GPIO_DS11 */
+>                        <0x0 0x2c 0x1>,         /* GPIO_DS12 */
+>                        <0x0 0x2d 0x1>;         /* GPIO_DS13 */
+> }
 
-Signed-off-by: Charles Keepax <ckeepax-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
-Acked-by: Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
----
+This would be a very unusual binding, because that requires the driver
+to know the contents of the properties in advance and the driver
+cannot derive the function of an irq from the position in the array.
 
-Changes since v1:
- - Added more description in the commit message
+Please come up with another approach that is more like other drivers
+do this and that makes it possible to reuse the driver if the
+interrupt numbers change.
 
- drivers/extcon/extcon-arizona.c |    3 +++
- 1 files changed, 3 insertions(+), 0 deletions(-)
-
-diff --git a/drivers/extcon/extcon-arizona.c b/drivers/extcon/extcon-arizona.c
-index 6d030a0..34b5a3b 100644
---- a/drivers/extcon/extcon-arizona.c
-+++ b/drivers/extcon/extcon-arizona.c
-@@ -1228,6 +1228,9 @@ static int arizona_extcon_device_get_pdata(struct arizona *arizona)
- 	pdata->micd_software_compare = device_property_read_bool(arizona->dev,
- 						"wlf,micd-software-compare");
- 
-+	pdata->jd_invert = device_property_read_bool(arizona->dev,
-+						     "wlf,jd-invert");
-+
- 	device_property_read_u32(arizona->dev, "wlf,gpsw", &pdata->gpsw);
- 
- 	return 0;
--- 
-1.7.2.5
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+	Arnd
