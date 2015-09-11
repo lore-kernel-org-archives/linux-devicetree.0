@@ -1,75 +1,58 @@
-From: Y Vo <yvo@apm.com>
-Subject: Re: [PATCH 2/2] Documentation: gpio: Update description for X-Gene
- standby GPIO controller DTS binding
-Date: Fri, 11 Sep 2015 22:06:58 +0700
-Message-ID: <CAL4ahLeoeT79ct-M-Bd-O08K0Dmysas3HFmTfXUFGtHKJBRzsg@mail.gmail.com>
-References: <1441963332-13329-1-git-send-email-yvo@apm.com>
-	<14280808.2Weay6QlT1@wuerfel>
-	<CAL4ahLeF8qQJciam467P2ixrxtMPTK2J9OtaVvcjtPF=9to0BQ@mail.gmail.com>
-	<3318725.Seeb48hirI@wuerfel>
+From: Andreas Dannenberg <dannenberg@ti.com>
+Subject: Re: [PATCH v2 00/13] power: bq24257: Add support for bq24250/bq24251
+Date: Fri, 11 Sep 2015 10:06:45 -0500
+Message-ID: <20150911150645.GA18055@beast>
+References: <1441757557-7266-1-git-send-email-dannenberg@ti.com>
+ <20150910122616.GB21512@lpalcu-desk>
+ <20150910212626.GA16256@borg>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <3318725.Seeb48hirI@wuerfel>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Linus Walleij <linus.walleij@linaro.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Phong Vo <pvo@apm.com>, Toan Le <toanle@apm.com>, Loc Ho <lho@apm.com>, Feng Kan <fkan@apm.com>, Quan Nguyen <qnguyen@apm.com>, Duc Dang <dhdang@apm.com>, patches <patches@apm.com>
+Content-Type: text/plain; charset="us-ascii"
+Return-path: <linux-pm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20150910212626.GA16256@borg>
+Sender: linux-pm-owner@vger.kernel.org
+To: Laurentiu Palcu <laurentiu.palcu@intel.com>
+Cc: Sebastian Reichel <sre@kernel.org>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, David Woodhouse <dwmw2@infradead.org>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, linux-pm@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Sep 11, 2015 at 9:47 PM, Arnd Bergmann <arnd@arndb.de> wrote:
-> On Friday 11 September 2015 21:23:31 Y Vo wrote:
->> >> /* Board-specific: exclude GPIO_DS8 to leave it as GPIO */
->> >> &sbgpio {
->> >>        interrupts =    <0x0 0x29 0x1>,         /* GPIO_DS9 */
->> >>                        <0x0 0x2a 0x1>,         /* GPIO_DS10 */
->> >>                        <0x0 0x2b 0x1>,         /* GPIO_DS11 */
->> >>                        <0x0 0x2c 0x1>,         /* GPIO_DS12 */
->> >>                        <0x0 0x2d 0x1>;         /* GPIO_DS13 */
->> >> }
->> >
->> > This would be a very unusual binding, because that requires the driver
->> > to know the contents of the properties in advance and the driver
->> > cannot derive the function of an irq from the position in the array.
->> >
->> > Please come up with another approach that is more like other drivers
->> > do this and that makes it possible to reuse the driver if the
->> > interrupt numbers change.
->> The GPIO standby doesn't support interrupt controller itself, it only
->> wires the GPIO line to the external IRQ of GIC. So it is not similar
->> to other driver. Each GPIO is fixed to GIC IRQ index, and never
->> change.
->
-> That is not relevant here, what matters is just that each IRQ still
-> has a very specific function, which is basically what every driver
-> does.
->
->> Is that possible if we change to this approach:
->> - Keep all GPIO as GPIO mode by default.
->> - If anyone want to use them as interrupt, they must add the interrupt
->> node to DT specific-board below:
->>
->> Example to configure GPIO_DS11, 12, 13 as external irq:
->>
->> &sbgpio {
->>         interrupts = <0x0 0x2b 0x1>,         /* GPIO_DS11 */
->>                         <0x0 0x2c 0x1>,         /* GPIO_DS12 */
->>                         <0x0 0x2d 0x1>;         /* GPIO_DS13 */
->
-> That is exactly the same as you have in your patch. You should
-> always list all interrupts that the gpio controller is wired
-> to, whether they are used or not.
->
-> Ideally, the driver just decides at runtime how to wire that
-> mux, based on how the gpio is configured by the client driver.
-> If the client asks for an interrupt (with gpio_to_irq) and is
-> it is configured as an input, then you connect it to the GIC,
-> otherwise you leave it to be handled by the gpio chip itself.
-> Any reason you can't do that?
->
-As I just explained, the GPIO Standby doesn't support the interrupt.
-Both interrupts are came from GIC, so if the client asks for an
-interrupt, it will go to the GIC driver (not GPIO Standby driver), so
-that's my trouble. We can not implement the code to configured the
-GPIO standby at GIC driver.
+On Thu, Sep 10, 2015 at 04:26:26PM -0500, Andreas Dannenberg wrote:
+> On Thu, Sep 10, 2015 at 03:26:16PM +0300, Laurentiu Palcu wrote:
+> > On Tue, Sep 08, 2015 at 07:12:24PM -0500, Andreas Dannenberg wrote:
+> > > v2:
+[...]
+> > > - Renamed/refactored filenames/symbols from bq24257 to bq2425x to
+> > >   better reflect that multiple devices are covered. Despite initial
+> > >   hesitation I feel this is a good opportunity for some clean-up as
+> > >   the driver is still very new in the Kernel so the change should be
+> > >   low risk. This also addresses one of Andrew Davis' feedback items.
+> > >   Plus, it makes for a nice alignment with the existing bq2415x_charger
+> > >   driver.
+> > I can't say I fully agree with this rename but, on the other hand, since you
+> > work for the chip manufacturer, you probably know better what other chips
+> > (if any), with the same naming scheme, are due to be released and make
+> > sure they are registry compatible. Otherwise, it'll be fun.
+> 
+> Yes the expectation is that potential future devices will fit with minor
+> changes to the driver. I was given no indication that this wouldn't be
+> the case but I'm double-checking with the product/planning people for
+> that family.
 
->         Arnd
+Hi Laurentiu, full stop on the renaming. After double-checking with the
+responsible bq242xx engineers it turns out it will be difficult to
+maintain a family concept for the bq2425x driver moving forward (unless
+you like nested switch/case statements sprinkled throughout the driver).
+
+I feel sometimes even the most well-thought out and "future-proof"
+family naming schemes will eventually turn into nothing more than a set
+of GUIDs :) From a silicon vendor perspective there are several reasons
+for that including that the namespace for part numbers (including their
+length) is actually quite limited - a fact that's not immediately
+obvious from the outside.
+
+This being said I'll drop the renaming patch, and let's rely on folks
+using Kconfig to find and use the correct driver.
+
+--
+Andreas Dannenberg
+Texas Instruments Inc
+
