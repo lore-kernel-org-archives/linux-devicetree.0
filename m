@@ -1,64 +1,83 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH 2/2] Documentation: gpio: Update description for X-Gene standby GPIO controller DTS binding
-Date: Fri, 11 Sep 2015 18:45:34 +0200
-Message-ID: <2311005.jUde56dLfB@wuerfel>
-References: <1441963332-13329-1-git-send-email-yvo@apm.com> <3318725.Seeb48hirI@wuerfel> <CAL4ahLeoeT79ct-M-Bd-O08K0Dmysas3HFmTfXUFGtHKJBRzsg@mail.gmail.com>
+From: Peter Griffin <peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2 7/9] ARM: STi: DT: STiH407: Add FDMA driver dt nodes.
+Date: Fri, 11 Sep 2015 17:48:22 +0100
+Message-ID: <20150911164822.GA1150@griffinp-ThinkPad-X1-Carbon-2nd>
+References: <1441980871-24475-1-git-send-email-peter.griffin@linaro.org>
+ <1441980871-24475-8-git-send-email-peter.griffin@linaro.org>
+ <20150911162749.GD18779@x1>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <CAL4ahLeoeT79ct-M-Bd-O08K0Dmysas3HFmTfXUFGtHKJBRzsg@mail.gmail.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Y Vo <yvo@apm.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Phong Vo <pvo@apm.com>, Toan Le <toanle@apm.com>, Loc Ho <lho@apm.com>, Feng Kan <fkan@apm.com>, Quan Nguyen <qnguyen@apm.com>, Duc Dang <dhdang@apm.com>, patches <patches@apm.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20150911162749.GD18779@x1>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, srinivas.kandagatla-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, maxime.coquelin-qxv4g6HH51o@public.gmane.org, patrice.chotard-qxv4g6HH51o@public.gmane.org, vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Friday 11 September 2015 22:06:58 Y Vo wrote:
-> On Fri, Sep 11, 2015 at 9:47 PM, Arnd Bergmann <arnd@arndb.de> wrote:
-> > On Friday 11 September 2015 21:23:31 Y Vo wrote:
-> >> Is that possible if we change to this approach:
-> >> - Keep all GPIO as GPIO mode by default.
-> >> - If anyone want to use them as interrupt, they must add the interrupt
-> >> node to DT specific-board below:
-> >>
-> >> Example to configure GPIO_DS11, 12, 13 as external irq:
-> >>
-> >> &sbgpio {
-> >>         interrupts = <0x0 0x2b 0x1>,         /* GPIO_DS11 */
-> >>                         <0x0 0x2c 0x1>,         /* GPIO_DS12 */
-> >>                         <0x0 0x2d 0x1>;         /* GPIO_DS13 */
-> >
-> > That is exactly the same as you have in your patch. You should
-> > always list all interrupts that the gpio controller is wired
-> > to, whether they are used or not.
-> >
-> > Ideally, the driver just decides at runtime how to wire that
-> > mux, based on how the gpio is configured by the client driver.
-> > If the client asks for an interrupt (with gpio_to_irq) and is
-> > it is configured as an input, then you connect it to the GIC,
-> > otherwise you leave it to be handled by the gpio chip itself.
-> > Any reason you can't do that?
-> >
-> As I just explained, the GPIO Standby doesn't support the interrupt.
-> Both interrupts are came from GIC, so if the client asks for an
-> interrupt, it will go to the GIC driver (not GPIO Standby driver), so
-> that's my trouble. We can not implement the code to configured the
-> GPIO standby at GIC driver.
+Hi Lee,
 
-So you are saying we merged a binding that is incapable of describing
-the hardware? If that is the case, we may have to go back to
-the drawing board and come up with a working binding.
+On Fri, 11 Sep 2015, Lee Jones wrote:
 
-One part that I don't understand yet is how the driver handles
-irqs to start with, as it does not register a nested irq domain
-or irqchip, so I'm guessing that client drivers cannot actually
-use the IRQ functionality. Is that right?
+> On Fri, 11 Sep 2015, Peter Griffin wrote:
+> 
+> > These nodes are required to get the fdma driver working
+> > on STiH407 based silicon.
+> > 
+> > Signed-off-by: Peter Griffin <peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> > ---
+> >  arch/arm/boot/dts/stih407-family.dtsi | 51 +++++++++++++++++++++++++++++++++++
+> >  1 file changed, 51 insertions(+)
+> > 
+> > diff --git a/arch/arm/boot/dts/stih407-family.dtsi b/arch/arm/boot/dts/stih407-family.dtsi
+> > index 838b812..da07474b 100644
+> > --- a/arch/arm/boot/dts/stih407-family.dtsi
+> > +++ b/arch/arm/boot/dts/stih407-family.dtsi
+> > @@ -565,5 +565,56 @@
+> >  						  <&phy_port2 PHY_TYPE_USB3>;
+> >  			};
+> >  		};
+> > +
+> > +		fdma0: fdma0-audio@8e20000 {
+> 
+> I'm not familiar with the FDMA driver, so can't comment knowledgeably,
+> but the <dev> part of <dev>@<base_address> should only describe the
+> type of hardware.  I believe in this case it should just be
+> dma@08e20000.  Also notice the leading zero in the address, which I
+> believe mitigates possible confusion.  Then you be more specific with
+> the label, so something like 'fdma-audio' seems appropriate here.
 
-It also seems to me that the binding cannot distinguish between a
-line configured as an input and one that is configured as an
-interrupt, which are for other gpio chips the same thing, but
-not on this one.  Could this be rectified by using another bit
-of the second gpio cell? The low bit is used for active-high/active-low,
-so you could use the second bit for irq/input.
+Ok, can change to that format in v3.
 
-	Arnd
+> 
+> > +			compatible = "st,stih407-fdma-mpe31";
+> > +			reg = <0x8e20000 0x20000>;
+> 
+> I personally find padding up to 32bits helpful in the addresses.
+
+None of the stih407-family nodes I can see have this padding, including
+the ones merged by you.
+
+> 
+> > +			interrupts = <GIC_SPI 5 IRQ_TYPE_NONE>;
+> > +			dma-channels = <16>;
+> > +			#dma-cells = <3>;
+> > +			st,fdma-id = <0>;
+> 
+> We usually shy away from ID properties.  What is it required for in
+> this case?
+
+Yes Rob did already mention that over here, see my reply at the bottom
+http://www.spinics.net/lists/devicetree/msg92529.html.
+
+However I can't think of any other useful properties we could add
+to derive this information. The fdma controller number is used
+by the driver to generate a unique firmware filename.
+
+regards,
+
+Peter.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
