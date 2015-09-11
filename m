@@ -1,70 +1,65 @@
-From: Viresh Kumar <viresh.kumar@linaro.org>
-Subject: [PATCH 02/16] PM / OPP: Add 'opp-microvolt-triplets' binding
-Date: Fri, 11 Sep 2015 17:31:58 +0530
-Message-ID: <254dd353453a495bb0921fa23e430428484f36fa.1441972771.git.viresh.kumar@linaro.org>
-References: <cover.1441972771.git.viresh.kumar@linaro.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <cover.1441972771.git.viresh.kumar@linaro.org>
-In-Reply-To: <cover.1441972771.git.viresh.kumar@linaro.org>
-References: <cover.1441972771.git.viresh.kumar@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rafael Wysocki <rjw@rjwysocki.net>, nm@ti.com, sboyd@codeaurora.org
-Cc: linaro-kernel@lists.linaro.org, linux-pm@vger.kernel.org, rob.herring@linaro.org, lee.jones@linaro.org, Viresh Kumar <viresh.kumar@linaro.org>, devicetree@vger.kernel.org, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, open list <linux-kernel@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>, Rob Herring <robh+dt@kernel.org>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH v4 01/22] driver core: Add pre_probe callback to bus_type
+Date: Fri, 11 Sep 2015 13:04:08 +0100
+Message-ID: <20150911120408.GO12027@sirena.org.uk>
+References: <1441628627-5143-1-git-send-email-tomeu.vizoso@collabora.com>
+ <1441628627-5143-2-git-send-email-tomeu.vizoso@collabora.com>
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="/GGxXfKRHScBDXG5"
+Return-path: <linux-acpi-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1441628627-5143-2-git-send-email-tomeu.vizoso@collabora.com>
+Sender: linux-acpi-owner@vger.kernel.org
+To: Tomeu Vizoso <tomeu.vizoso@collabora.com>
+Cc: linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Stephen Warren <swarren@wwwdotorg.org>, Javier Martinez Canillas <javier@osg.samsung.com>, Thierry Reding <thierry.reding@gmail.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, linux-arm-kernel@lists.infradead.org, Dmitry Torokhov <dmitry.torokhov@gmail.com>, devicetree@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>, linux-acpi@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 List-Id: devicetree@vger.kernel.org
 
-If 'opp-microvolt' is used to specify values for multiple regulators,
-then we need this additional information to know if the values passed
-should be treated as <target> or <target min max>.
 
-This is because, DT doesn't differentiate between these two styles:
+--/GGxXfKRHScBDXG5
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-prop = <x>, <y>, <z>;
-prop = <x y z>;
+On Mon, Sep 07, 2015 at 02:23:26PM +0200, Tomeu Vizoso wrote:
 
-Cc: devicetree@vger.kernel.org
-Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
----
- Documentation/devicetree/bindings/opp/opp.txt | 14 ++++++++++++++
- 1 file changed, 14 insertions(+)
+> +	if (dev->bus && dev->bus->pre_probe) {
+> +		ret = dev->bus->pre_probe(dev);
+> +		if (ret) {
+> +			if (ret == -EPROBE_DEFER)
+> +				driver_deferred_probe_add(dev);
+> +			ret = 0;
+> +			goto out_unlock;
+> +		}
+> +	}
 
-diff --git a/Documentation/devicetree/bindings/opp/opp.txt b/Documentation/devicetree/bindings/opp/opp.txt
-index 8759bc4783ed..719603b87353 100644
---- a/Documentation/devicetree/bindings/opp/opp.txt
-+++ b/Documentation/devicetree/bindings/opp/opp.txt
-@@ -76,6 +76,16 @@ This describes the OPPs belonging to a device. This node can have following
-   present here is important, as that should match the order in which values are
-   present in 'opp-microvolt' and 'opp-microamp' properties.
- 
-+- opp-microvolt-triplets: This is a required property, only if multiple supplies
-+  are available for the device. Otherwise it is ignored.
-+
-+  'opp-microvolt' can be present in two forms: <target> or <target min max>, per
-+  power-supply. 'opp-microvolt-triplets' property is used to find the form in
-+  which 'opp-microvolt' is present.
-+
-+  If present, then 'opp-microvolt' must be present in <target min max> form,
-+  else in <target> form.
-+
- - OPP nodes: One or more OPP nodes describing voltage-current-frequency
-   combinations. Their name isn't significant but their phandle can be used to
-   reference an OPP.
-@@ -403,6 +413,8 @@ Example 4: Handling multiple regulators
- 
- 		/* OR */
- 
-+		opp-microvolt-triplets;
-+
- 		opp00 {
- 			opp-hz = /bits/ 64 <1000000000>;
- 			opp-microvolt = <970000 975000 985000>, /* Supply 0 */
-@@ -416,6 +428,8 @@ Example 4: Handling multiple regulators
- 
- 		/* OR */
- 
-+		opp-microvolt-triplets;
-+
- 		opp00 {
- 			opp-hz = /bits/ 64 <1000000000>;
- 			opp-microvolt = <970000 975000 985000>, /* Supply 0 */
--- 
-2.4.0
+So if we get an error other than -EPROBE_DEFER we silently ignore it?
+That seems surprising and at least worth a comment.
+
+> +	if (dev->bus && dev->bus->pre_probe) {
+> +		ret = dev->bus->pre_probe(dev);
+> +		if (ret) {
+> +			if (ret == -EPROBE_DEFER)
+> +				driver_deferred_probe_add(dev);
+> +			goto out;
+> +		}
+> +	}
+
+That's more what I'd expect.
+
+--/GGxXfKRHScBDXG5
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQEcBAEBCAAGBQJV8sM3AAoJECTWi3JdVIfQuAQH/0wfAhyhwtb7xaoL2MFUGJQO
+3QX063MsDiR0Ga7Shnk3m6/lCQFngh54xIrtzNzUh0ANqfE7uhWx+FhSZDx1foqX
+APfTvO1ssV8Gy6BSKj1jMGy2S3pLcifO+TRUKqssLecRsO1G9igjEX84cpbEPb2b
+TEk7osYawsNh1yWn3tWd1NPe6FgZty97uG1O6ezfCxSGW3vFrgAaq3B0ztXGVxWT
+H2kbUE3rP9kiO4IM4hcsWhxjSVRPrllqGBtIkEzKf0/G2jEcrLMI5uo+NcRtTlO5
+tsHnf3RIjeQPFKuaLogK1epn5GNXxS3O8pwP9wN3VWqsv5uAHVbAAVGyQHYPEvw=
+=xK52
+-----END PGP SIGNATURE-----
+
+--/GGxXfKRHScBDXG5--
