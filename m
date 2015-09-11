@@ -1,129 +1,77 @@
-From: Andreas Dannenberg <dannenberg@ti.com>
-Subject: [PATCH v3 07/10] power: bq24257: Add input DPM voltage threshold setting support
-Date: Fri, 11 Sep 2015 15:26:39 -0500
-Message-ID: <1442003202-1430-8-git-send-email-dannenberg@ti.com>
-References: <1442003202-1430-1-git-send-email-dannenberg@ti.com>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH v2 4/9] dmaengine: st_fdma: Add STMicroelectronics FDMA engine driver support
+Date: Fri, 11 Sep 2015 22:30:18 +0200
+Message-ID: <2502961.3gtPceE427@wuerfel>
+References: <1441980871-24475-1-git-send-email-peter.griffin@linaro.org> <1441980871-24475-5-git-send-email-peter.griffin@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <1442003202-1430-1-git-send-email-dannenberg@ti.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Sebastian Reichel <sre@kernel.org>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, David Woodhouse <dwmw2@infradead.org>, Laurentiu Palcu <laurentiu.palcu@intel.com>, Krzysztof Kozlowski <k.kozlowski@samsung.com>
-Cc: Ramakrishna Pallala <ramakrishna.pallala@intel.com>, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, Andreas Dannenberg <dannenberg@ti.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1441980871-24475-5-git-send-email-peter.griffin@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Peter Griffin <peter.griffin@linaro.org>
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, srinivas.kandagatla@gmail.com, maxime.coquelin@st.com, patrice.chotard@st.com, vinod.koul@intel.com, lee.jones@linaro.org, robh+dt@kernel.org, dmaengine@vger.kernel.org, devicetree@vger.kernel.org, Ludovic Barre <ludovic.barre@st.com>
 List-Id: devicetree@vger.kernel.org
 
-A new optional device property called "ti,in-dpm-voltage" is introduced
-to allow configuring the input voltage threshold for the devices'
-dynamic power path management (DPM) feature. In short, it can be used to
-prevent the input voltage from dropping below a certain value as current
-is drawn to charge the battery or supply the system.
+On Friday 11 September 2015 15:14:26 Peter Griffin wrote:
+> +
+> +#include "st_fdma.h"
 
-Signed-off-by: Andreas Dannenberg <dannenberg@ti.com>
----
- drivers/power/bq24257_charger.c | 44 +++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 44 insertions(+)
+Just move the contents of that file here, no other driver should
+be including it.
 
-diff --git a/drivers/power/bq24257_charger.c b/drivers/power/bq24257_charger.c
-index 47af858..84a8945 100644
---- a/drivers/power/bq24257_charger.c
-+++ b/drivers/power/bq24257_charger.c
-@@ -76,6 +76,7 @@ struct bq24257_init_data {
- 	u8 iterm;	/* termination current */
- 	u8 in_ilimit;	/* input current limit */
- 	u8 vovp;	/* over voltage protection voltage */
-+	u8 vindpm;	/* VDMP input threshold voltage */
- };
- 
- struct bq24257_state {
-@@ -206,6 +207,13 @@ static const u32 bq24257_vovp_map[] = {
- 
- #define BQ24257_VOVP_MAP_SIZE		ARRAY_SIZE(bq24257_vovp_map)
- 
-+static const u32 bq24257_vindpm_map[] = {
-+	4200000, 4280000, 4360000, 4440000, 4520000, 4600000, 4680000,
-+	4760000
-+};
-+
-+#define BQ24257_VINDPM_MAP_SIZE		ARRAY_SIZE(bq24257_vindpm_map)
-+
- static int bq24257_field_read(struct bq24257_device *bq,
- 			      enum bq24257_fields field_id)
- {
-@@ -432,6 +440,17 @@ enum bq24257_vovp {
- 	VOVP_10500
- };
- 
-+enum bq24257_vindpm {
-+	VINDPM_4200,
-+	VINDPM_4280,
-+	VINDPM_4360,
-+	VINDPM_4440,
-+	VINDPM_4520,
-+	VINDPM_4600,
-+	VINDPM_4680,
-+	VINDPM_4760
-+};
-+
- enum bq24257_port_type {
- 	PORT_TYPE_DCP,		/* Dedicated Charging Port */
- 	PORT_TYPE_CDP,		/* Charging Downstream Port */
-@@ -615,6 +634,7 @@ static int bq24257_hw_init(struct bq24257_device *bq)
- 		{F_VBAT, bq->init_data.vbat},
- 		{F_ITERM, bq->init_data.iterm},
- 		{F_VOVP, bq->init_data.vovp},
-+		{F_VINDPM, bq->init_data.vindpm},
- 	};
- 
- 	/*
-@@ -648,6 +668,7 @@ static int bq24257_hw_init(struct bq24257_device *bq)
- 		/* program fixed input current limit */
- 		ret = bq24257_field_write(bq, F_IILIMIT,
- 					  bq->init_data.in_ilimit);
-+
- 		if (ret < 0)
- 			return ret;
- 	} else if (!state.power_good)
-@@ -695,10 +716,23 @@ static ssize_t bq24257_show_ovp_voltage(struct device *dev,
- 			 bq24257_vovp_map[bq->init_data.vovp]);
- }
- 
-+static ssize_t bq24257_show_in_dpm_voltage(struct device *dev,
-+					   struct device_attribute *attr,
-+					   char *buf)
-+{
-+	struct power_supply *psy = dev_get_drvdata(dev);
-+	struct bq24257_device *bq = power_supply_get_drvdata(psy);
-+
-+	return scnprintf(buf, PAGE_SIZE, "%d\n",
-+			 bq24257_vindpm_map[bq->init_data.vindpm]);
-+}
-+
- static DEVICE_ATTR(ovp_voltage, S_IRUGO, bq24257_show_ovp_voltage, NULL);
-+static DEVICE_ATTR(in_dpm_voltage, S_IRUGO, bq24257_show_in_dpm_voltage, NULL);
- 
- static struct attribute *bq24257_charger_attr[] = {
- 	&dev_attr_ovp_voltage.attr,
-+	&dev_attr_in_dpm_voltage.attr,
- 	NULL,
- };
- 
-@@ -801,6 +835,16 @@ static int bq24257_fw_probe(struct bq24257_device *bq)
- 						      bq24257_vovp_map,
- 						      BQ24257_VOVP_MAP_SIZE);
- 
-+	ret = device_property_read_u32(bq->dev, "ti,in-dpm-voltage",
-+				       &property);
-+	if (ret < 0)
-+		bq->init_data.vindpm = VINDPM_4360;
-+	else
-+		bq->init_data.vindpm =
-+				bq24257_find_idx(property,
-+						 bq24257_vindpm_map,
-+						 BQ24257_VINDPM_MAP_SIZE);
-+
- 	return 0;
- }
- 
--- 
-1.9.1
+> +static struct dma_chan *st_fdma_of_xlate(struct of_phandle_args *dma_spec,
+> +					 struct of_dma *ofdma)
+> +{
+> +	struct st_fdma_dev *fdev = ofdma->of_dma_data;
+> +	struct st_fdma_cfg cfg;
+> +
+> +	if (dma_spec->args_count < 1)
+> +		return NULL;
+> +
+> +	cfg.of_node = dma_spec->np;
+> +	cfg.req_line = dma_spec->args[0];
+> +	cfg.req_ctrl = 0;
+> +	cfg.type = ST_FDMA_TYPE_FREE_RUN;
+> +
+> +	if (dma_spec->args_count > 1)
+> +		cfg.req_ctrl = dma_spec->args[1] & REQ_CTRL_CFG_MASK;
+> +
+> +	if (dma_spec->args_count > 2)
+> +		cfg.type = dma_spec->args[2];
 
+The binding mandates #dma-cells=<3>, so you can just return an error
+otherwise.
+
+> +	dev_dbg(fdev->dev, "xlate req_line:%d type:%d req_ctrl:%#x\n",
+> +		cfg.req_line, cfg.type, cfg.req_ctrl);
+> +
+> +	return dma_request_channel(fdev->dma_device.cap_mask,
+> +			st_fdma_filter_fn, &cfg);
+> +}
+
+Why this indirection? You should be able to just use
+dma_get_any_slave_channel() to get the first available channel and
+then configure it the same way that the filter function does.
+
+> +bool st_fdma_filter_fn(struct dma_chan *chan, void *param)
+> +{
+> +	struct st_fdma_cfg *config = param;
+> +	struct st_fdma_chan *fchan = to_st_fdma_chan(chan);
+> +
+> +	if (!param)
+> +		return false;
+> +
+> +	if (fchan->fdev->dma_device.dev->of_node != config->of_node)
+> +		return false;
+> +
+> +	fchan->cfg = *config;
+> +
+> +	return true;
+> +}
+
+Please drop this until there is a board file that references the
+function. Otherwise it's just dead code. I assume there are some
+users in arch/sh/ in a private tree?
+
+	Arnd
