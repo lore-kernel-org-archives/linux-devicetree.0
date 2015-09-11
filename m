@@ -1,146 +1,156 @@
-From: Ganapatrao Kulkarni <gpkulkarni-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v5 2/4] Documentation: arm64/arm: dt bindings for numa.
-Date: Fri, 11 Sep 2015 09:23:33 +0530
-Message-ID: <CAFpQJXX0KYiKKgxM3B467PFLS0jCakTp8A2u=QEs8_Fj4EZYBg@mail.gmail.com>
-References: <1439570374-4079-1-git-send-email-gkulkarni@caviumnetworks.com>
-	<1439570374-4079-3-git-send-email-gkulkarni@caviumnetworks.com>
-	<20150828123228.GE31748@leverpostej>
-	<CAL_JsqLOpUTVeKbkJ6uPi0EYistd=BowAHdtSmaUYYDhU6c9Sg@mail.gmail.com>
-	<55E17F58.5020101@huawei.com>
-	<CAFpQJXWO0xT0kxWf09L_XcAOXm1Lov8i2U2BQzk-x0TStj7vBg@mail.gmail.com>
-	<55EEE229.7070301@linaro.org>
-	<CAFpQJXV66dAfDMttMNTApyy1554-rvw=Q0n60BOtsp=61gJ+zQ@mail.gmail.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [RFC PATCH 2/5] Documentation: dt-bindings: add example DT
+ binding document
+Date: Thu, 10 Sep 2015 23:46:13 -0500
+Message-ID: <55F25C95.3010104@kernel.org>
+References: <1440739433-6799-1-git-send-email-mporter@konsulko.com>
+ <1440739433-6799-3-git-send-email-mporter@konsulko.com>
+ <CAL_Jsq+FE4MCCfZC5hDhQBmM1gHibY82S9a8PC1GwsnWsPNxkg@mail.gmail.com>
+ <20150910070850.GA11781@voom>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAFpQJXV66dAfDMttMNTApyy1554-rvw=Q0n60BOtsp=61gJ+zQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Hanjun Guo <hanjun.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: "Leizhen (ThunderTown)" <thunder.leizhen-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "steve.capper-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <steve.capper-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "arnd-r2nGTMty4D4@public.gmane.org" <arnd-r2nGTMty4D4@public.gmane.org>, "al.stone-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <al.stone-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Catalin Marinas <Catalin.Marinas-5wv7dgnIgG8@public.gmane.org>, "ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org" <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, "leif.lindholm-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <leif.lindholm-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "rfranz-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org" <rfranz-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, "msalter-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org" <msalter-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, "grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org" <galak@codeaurora.>
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 8bit
+Return-path: <devicetree-spec-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20150910070850.GA11781@voom>
+Sender: devicetree-spec-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
+Cc: Matt Porter <mporter-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Devicetree List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Devicetree Spec List <devicetree-spec-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Behan Webster <behanw-k/hB3zQhLwledRVtV/plodBPR1lH4CV8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Thunder,
+On 09/10/2015 02:08 AM, David Gibson wrote:
+> On Fri, Aug 28, 2015 at 09:53:06AM -0500, Rob Herring wrote:
+>> On Fri, Aug 28, 2015 at 12:23 AM, Matt Porter <mporter-OWPKS81ov/FWk0Htik3J/w@public.gmane.org> wrote:
+>>> Add a skeleton DT binding document that serves as the canonical
+>>> example for implementing YAML-based DT bindings documentation.
+>>> The skeleton binding illustrates use of all fields and variations
+>>> described in the dt-binding-format.txt documentation.
+>>>
+>>> Signed-off-by: Matt Porter <mporter-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
+>>> ---
+>>>  Documentation/devicetree/bindings/skeleton.yaml | 98 +++++++++++++++++++++++++
+>>>  1 file changed, 98 insertions(+)
+>>>  create mode 100644 Documentation/devicetree/bindings/skeleton.yaml
+>>>
+>>> diff --git a/Documentation/devicetree/bindings/skeleton.yaml b/Documentation/devicetree/bindings/skeleton.yaml
+>>> new file mode 100644
+>>> index 0000000..175965f
+>>> --- /dev/null
+>>> +++ b/Documentation/devicetree/bindings/skeleton.yaml
+>>> @@ -0,0 +1,98 @@
+>>> +%YAML 1.2
+>>> +---
+>>> +id: skel-device
+>>> +
+>>> +title: Skeleton Device
+>>> +
+>>> +maintainer:
+>>> +  - name: Skeleton Person <skel-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+>>
+>> We'd want to tie this into get_maintainers.pl obviously.
+>>
+>>> +
+>>> +description: >
+>>> +  The Skeleton Device binding represents the SK11 device produced by
+>>> +  the Skeleton Corporation. The binding can also support compatible
+>>> +  clones made by second source vendors.
+>>> +
+>>> +compatible:
+>>> +  - name: "skel,sk11"
+>>> +  - name: "faux,fx11"
+>>
+>> Is this an OR or AND? We need both.
+> 
+> Hrm.  So, from the example below it's an OR.  But.. I think the
+> considerations here change when you separate out "tag" information as
+> I've suggested elsewhere.
+> 
+> The command AND case, I can think of is where you want both
+> "foo,new-model-device" and "foo,old-model-device".  I think the first
+> belongs in the "tag", but the second in the body of the requirements.
+> 
+> The OR case demonstrated here strikes me as very poor binding design -
+> but that doesn't mean we can totally avoid it, since we do have poor
+> bindings we want to convert.
+
+I don't think so. Often "old" is a singleton, and "new" is one of
+several newer chips. It is also very common for licensed IP blocks. All
+the vendors have different quirks and possibly different versions of the
+IP. In the better cases, we can have a vendor compat for each vendor and
+then a generic compat.
 
 
-On Tue, Sep 8, 2015 at 9:57 PM, Ganapatrao Kulkarni
-<gpkulkarni-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> Hi Hanjun,
->
-> On Tue, Sep 8, 2015 at 6:57 PM, Hanjun Guo <hanjun.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
->> Hi Ganapatrao,
+> Fwiw, I think the right way to encode "OR" at least in the "tag" is to
+> pick just the preferred form, then have additional bindings tagged on
+> the alternative forms and inheriting the main binding.  I don't know
+> if that's practical in the short term though.
+> 
+>> The complicated case is "one of {specific names} followed by {generic name}."
 >>
+>>> +    description: A clone of the original sk11 device
+>>> +
+>>> +required:
+>>> +  - name: "reg"
 >>
->> On 08/29/2015 10:56 PM, Ganapatrao Kulkarni wrote:
->>>
->>> Hi Thunder,
->>>
->>> On Sat, Aug 29, 2015 at 3:16 PM, Leizhen (ThunderTown)
->>> <thunder.leizhen-hv44wF8Li93QT0dZR+AlfA@public.gmane.org> wrote:
->>>>
->>>>
->>>>
->>>> On 2015/8/28 22:02, Rob Herring wrote:
->>>>>
->>>>> +benh
->>>>>
->>>>> On Fri, Aug 28, 2015 at 7:32 AM, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
->>>>> wrote:
->>>>>>
->>>>>> Hi,
->>>>>>
->>>>>> On Fri, Aug 14, 2015 at 05:39:32PM +0100, Ganapatrao Kulkarni wrote:
->>>>>>>
->>>>>>> DT bindings for numa map for memory, cores and IOs using
->>>>>>> arm,associativity device node property.
->>>>>>
->>>>>>
->>>>>> Given this is just a copy of ibm,associativity, I'm not sure I see much
->>>>>> point in renaming the properties.
->>>>>
->>>>>
->>>>> So just keep the ibm? I'm okay with that. That would help move to
->>>>> common code. Alternatively, we could drop the vendor prefix and have
->>>>> common code just check for both.
->>>>>
->>>>
->>>> Hi all,
->>>>
->>>> Why not copy the method of ACPI numa? There only three elements should be
->>>> configured:
->>>> 1) a cpu belong to which node
->>>> 2) a memory block belong to which node
->>>> 3) the distance of each two nodes
-I too thought acpi only defines mapping for cpu and memory to numa
-nodes and no specification to define for IOs.
-however after going through the x86 implementation, i can see there is
-provision for mapping IOs to numa node in acpi.
-in x86 code, function pci_acpi_scan_root calls acpi_get_node to get
-associated node for pci bus using _PXM object.
-it imply there is entry in acpi tables to map pci bus for numa
-node(proximity domain).
-so in dt also, we should  have binding to define cpu, memory and IOs
-to node mapping.
->>>>
->>>> The devicetree nodes of numa can be like below:
->>>> / {
->>>>          ...
->>>>
->>>>          numa-nodes-info {
->>>>                  node-name: node-description {
->>>>                          mem-ranges = <...>;
->>>>                          cpus-list = <...>;
->>>>                  };
->>>>
->>>>                  nodes-distance {
->>>>                          distance-list = <...>;
->>>>                  };
->>>>          };
->>>>
->>>>          ...
->>>> };
->>>>
->>> some what similar to what your are proposing is already implemented in
->>> my v2 patchset.
->>> https://lwn.net/Articles/623920/
->>>
->>> http://lists.infradead.org/pipermail/linux-arm-kernel/2014-November/305164.html
->>> we have went to associativity property based implementation to keep it
->>> more generic.
->>> i do have both acpi(using linaro/hanjun's patches) and associativity
->>> based implementations on our internal tree
->>> and tested on thunderx platform.
+>> We definitely need type info from the start.
+> 
+> It's interesting you should mention that here, because 'reg' is
+> actually a hard case for describint the type: because it's format is
+> determined as much by the parent bus binding as this node's binding.
+
+And reg is well defined, so that's one I'm least worried about.
+
+> I suspect it will be worth special-casing "reg" in order to make
+> common bindings more compact, but again, probably not in the first
+> pass.
+
+Yes, I would fully expect reg to just be flagged as used and how many
+addresses.
+
+> 
+>>> +    description: chip select address of skeleton device
+>>> +    reference: spi-slave
 >>
+>> I would like to not have to list properties if the inherited binding
+>> lists it. The problem is we need to say how many cells and the order
+>> (not a problem here, but for mmio devices).
 >>
->> Great thanks!
+>> Perhaps we can list the reference at the top level for the node
+>> instead of for every property.
+> 
+> Yeah, I think it would be worth having a top-level "inherits" field.
+> 
+>>> +  - name: "spi-max-frequency"
+>>> +    description: >
+>>> +      Maximum SPI clocking speed of skeleton device in Hz, must be
+>>> +      1000000
+>>> +    reference: spi-slave
 >>
->>> i do see issue in creating numa mapping using ACPI for IOs(for
->>> example, i am not able to create numa mapping for ITS which is on each
->>> node, using ACPI tables),  since ACPI spec (tables SRAT and SLIT)
->>> talks only about processor and memory.
+>> Rather than listing the property and having constraint in description,
+>> perhaps we could add constraints like this:
 >>
+>> - spi-max-frequency-range: 1000000 1000000
 >>
->> I'm not sure why the ITS needs to know the NUMA domain, for my
->> understanding, the interrupt will route to the correct NUMA domain
->> using setting the affinity, ITS will configured to route it to
->> the right GICR(cpu), so I think the ITS don't need to know which
->> NUMA node belonging to, correct me if I missed something.
-> IIUC, GICR/collection is per cpu and can be mapped to numa node using
-> cpu to node mapping.
-> However there are multiple its in multi-socket platform(at-least one
-> its per socket),
-> knowing its to numa node mapping will help in routing(optimal) the
-> interrupts to  any one of GICR/collections of that node
-> Hence, we need to find which its belongs to which socket/node using dt.
-> same applies to pci bus too.
+>> Or groups of constraints:
 >>
->> Thanks
->> Hanjun
->
-> thanks
-> Ganapat
-thanks
-Ganapat
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>> - spi-max-frequency-constraints:
+>>   range: 1000000 1000000
+>>   some-other-constraint: <value>
+> 
+> Not for the first pass I think.  What I would suggest is having
+> "description" for pure informational stuff, and "constraint" or maybe
+> just "extra" for normative constraints expressed in English.
+
+At least for simple constraints, I don't see the point of manually
+converting to something still not machine parse-able. We should be able
+to figure out a syntax. Sure, there may be complex examples we just punt
+on, but we can address most common cases. But if we can't define a
+syntax, then lets do nothing until we do.
+
+> The idea here is that over time we can add new ways of expressing
+> constraints.  In the meantime tools can use the "extra" field to
+> preseve any difficult text in the current versions and at least let
+> tools know that they won't be able to check everything.
+
+Just keeping the existing doc text will preserve things.
+
+Rob
