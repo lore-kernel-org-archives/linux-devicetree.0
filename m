@@ -1,44 +1,50 @@
-From: Charles Keepax <ckeepax@opensource.wolfsonmicro.com>
-Subject: [PATCH v2 0/6] Arizona extcon improvements
-Date: Fri, 11 Sep 2015 13:14:12 +0100
-Message-ID: <1441973658-26234-1-git-send-email-ckeepax@opensource.wolfsonmicro.com>
+From: Charles Keepax <ckeepax-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
+Subject: [PATCH v2 4/6] extcon: arizona: Add device binding for jack detect polarity inversion
+Date: Fri, 11 Sep 2015 13:14:16 +0100
+Message-ID: <1441973658-26234-5-git-send-email-ckeepax@opensource.wolfsonmicro.com>
+References: <1441973658-26234-1-git-send-email-ckeepax@opensource.wolfsonmicro.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: cw00.choi@samsung.com, lee.jones@linaro.org
-Cc: myungjoo.ham@samsung.com, sameo@linux.intel.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, patches@opensource.wolfsonmicro.com
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1441973658-26234-1-git-send-email-ckeepax-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+Cc: myungjoo.ham-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, patches-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This patch series does two major things:
- - Adds a fix that resolves an issue where the headphone
-   detection accuracy is poor at high impedances (such as
-   line loads)
- - Adds device tree bindings for some additional jack
-   detection features specifically allowing the use of the
-   second jack detection pin on GPIO5 and support for
-   inverted polarity jack sockets
+By default the driver expects the jackdet pin to be pulled low when a
+jack is inserted. This patch adds a device binding that allows the user
+to specify that the jackdet pin will be pulled high when a jack is
+inserted.
 
-Thanks,
-Charles
+Signed-off-by: Charles Keepax <ckeepax-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
+Acked-by: Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+---
 
-Charles Keepax (5):
-  mfd: arizona: Add TST_CAP bits for headphone detection
-  extcon: arizona: Additional settings to improve accuracy of HP detect
-  extcon: arizona: Add device binding for jack detect polarity
-    inversion
-  extcon: arizona: Add device binding for second jack detect pin on
-    GPIO5
-  mfd: arizona: Update DT binding documentation for jack detection
+Changes since v1:
+ - Added more description in the commit message
 
-Nariman Poushin (1):
-  extcon: arizona: Ignore jd_invert for MICD_CLAMP_STS
+ drivers/extcon/extcon-arizona.c |    3 +++
+ 1 files changed, 3 insertions(+), 0 deletions(-)
 
- Documentation/devicetree/bindings/mfd/arizona.txt |    6 ++++
- drivers/extcon/extcon-arizona.c                   |   32 +++++++++++++++++----
- drivers/mfd/wm5110-tables.c                       |    2 +
- include/linux/mfd/arizona/registers.h             |    8 +++++
- 4 files changed, 42 insertions(+), 6 deletions(-)
-
+diff --git a/drivers/extcon/extcon-arizona.c b/drivers/extcon/extcon-arizona.c
+index 6d030a0..34b5a3b 100644
+--- a/drivers/extcon/extcon-arizona.c
++++ b/drivers/extcon/extcon-arizona.c
+@@ -1228,6 +1228,9 @@ static int arizona_extcon_device_get_pdata(struct arizona *arizona)
+ 	pdata->micd_software_compare = device_property_read_bool(arizona->dev,
+ 						"wlf,micd-software-compare");
+ 
++	pdata->jd_invert = device_property_read_bool(arizona->dev,
++						     "wlf,jd-invert");
++
+ 	device_property_read_u32(arizona->dev, "wlf,gpsw", &pdata->gpsw);
+ 
+ 	return 0;
 -- 
 1.7.2.5
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
