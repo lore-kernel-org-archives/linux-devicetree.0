@@ -1,59 +1,59 @@
-From: Peter Ujfalusi <peter.ujfalusi@ti.com>
-Subject: Re: [PATCH RFC 1/5] ASoC: davinci-mcasp: Set
- .symmetric_rates = 1 in snd_soc_dai_driver
-Date: Fri, 11 Sep 2015 11:48:00 +0300
-Message-ID: <55F29540.40002@ti.com>
-References: <cover.1441806963.git.jsarha@ti.com>
- <2ada475a3e0243b093a958e8bb5c465e8fb08abf.1441806963.git.jsarha@ti.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <2ada475a3e0243b093a958e8bb5c465e8fb08abf.1441806963.git.jsarha@ti.com>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Jyri Sarha <jsarha@ti.com>, linux-omap@vger.kernel.org, alsa-devel@alsa-project.org, devicetree@vger.kernel.org
-Cc: liam.r.girdwood@linux.intel.com, Li.Xiubo@freescale.com, misael.lopez@ti.com, broonie@kernel.org, bcousson@baylibre.com
+From: Shawn Lin <shawn.lin@rock-chips.com>
+Subject: [PATCH 2/2] Documentation: bindings: add description of phy for sdhci-of-arasan
+Date: Fri, 11 Sep 2015 16:55:29 +0800
+Message-ID: <1441961729-10594-1-git-send-email-shawn.lin@rock-chips.com>
+References: <1441961698-10516-1-git-send-email-shawn.lin@rock-chips.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1441961698-10516-1-git-send-email-shawn.lin@rock-chips.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Michal Simek <michal.simek@xilinx.com>, S?ren Brinkmann <soren.brinkmann@xilinx.com>, Ulf Hansson <ulf.hansson@linaro.org>
+Cc: linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org, Shawn Lin <shawn.lin@rock-chips.com>
 List-Id: devicetree@vger.kernel.org
 
-On 09/09/2015 09:27 PM, Jyri Sarha wrote:
-> The TX and RX direction share the same bit clock and frame sync, so
-> the samplerate must be the same to both directions.
+This patch adds phys and phy-names for sdhci-of-arasan as optional
+properties, and details the example as well.
 
-Acked-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
+Signed-off-by: Shawn Lin <shawn.lin@rock-chips.com>
+---
 
-> Signed-off-by: Jyri Sarha <jsarha@ti.com>
-> ---
->  sound/soc/davinci/davinci-mcasp.c | 1 +
->  1 file changed, 1 insertion(+)
-> =
+ Documentation/devicetree/bindings/mmc/arasan,sdhci.txt | 10 ++++++++--
+ 1 file changed, 8 insertions(+), 2 deletions(-)
 
-> diff --git a/sound/soc/davinci/davinci-mcasp.c b/sound/soc/davinci/davinc=
-i-mcasp.c
-> index fa0511b..bbd1987 100644
-> --- a/sound/soc/davinci/davinci-mcasp.c
-> +++ b/sound/soc/davinci/davinci-mcasp.c
-> @@ -1304,6 +1304,7 @@ static struct snd_soc_dai_driver davinci_mcasp_dai[=
-] =3D {
->  		.ops 		=3D &davinci_mcasp_dai_ops,
->  =
-
->  		.symmetric_samplebits	=3D 1,
-> +		.symmetric_rates	=3D 1,
->  	},
->  	{
->  		.name		=3D "davinci-mcasp.1",
-> =
-
-
-
--- =
-
-P=E9ter
+diff --git a/Documentation/devicetree/bindings/mmc/arasan,sdhci.txt b/Documentation/devicetree/bindings/mmc/arasan,sdhci.txt
+index da541c3..0264d5f 100644
+--- a/Documentation/devicetree/bindings/mmc/arasan,sdhci.txt
++++ b/Documentation/devicetree/bindings/mmc/arasan,sdhci.txt
+@@ -1,11 +1,12 @@
+ Device Tree Bindings for the Arasan SDHCI Controller
+ 
+-  The bindings follow the mmc[1], clock[2] and interrupt[3] bindings. Only
+-  deviations are documented here.
++  The bindings follow the mmc[1], clock[2], interrupt[3] and phy[4] bindings.
++  Only deviations are documented here.
+ 
+   [1] Documentation/devicetree/bindings/mmc/mmc.txt
+   [2] Documentation/devicetree/bindings/clock/clock-bindings.txt
+   [3] Documentation/devicetree/bindings/interrupt-controller/interrupts.txt
++  [4] Documentation/devicetree/bindings/phy/phy-bindings.txt
+ 
+ Required Properties:
+   - compatible: Compatibility string. Must be 'arasan,sdhci-8.9a' or
+@@ -16,6 +17,9 @@ Required Properties:
+   - interrupts: Interrupt specifier
+   - interrupt-parent: Phandle for the interrupt controller that services
+ 		      interrupts for this device.
++Optional Properties:
++  - phys: From PHY bindings: Phandle for the Generic PHY for arasan.
++  - phy-names:  MUST be "phy_arasan".
+ 
+ Example:
+ 	sdhci@e0100000 {
+@@ -25,4 +29,6 @@ Example:
+ 		clocks = <&clkc 21>, <&clkc 32>;
+ 		interrupt-parent = <&gic>;
+ 		interrupts = <0 24 4>;
++		phys = <&emmc_phy>;
++		phy-names = "phy_arasan";
+ 	} ;
+-- 
+2.3.7
