@@ -1,30 +1,92 @@
 From: Chanwoo Choi <cw00.choi@samsung.com>
-Subject: Re: [PATCH RESEND 4/5] extcon: arizona: Add support for general
- purpose switch
-Date: Fri, 11 Sep 2015 16:50:01 +0900
-Message-ID: <55F287A9.7000708@samsung.com>
+Subject: Re: [PATCH RESEND 5/5] mfd: arizona: Update DT doc for new mic
+ detection bindings
+Date: Fri, 11 Sep 2015 16:52:42 +0900
+Message-ID: <55F2884A.5000707@samsung.com>
 References: <1441787690-30148-1-git-send-email-ckeepax@opensource.wolfsonmicro.com>
- <1441787690-30148-4-git-send-email-ckeepax@opensource.wolfsonmicro.com>
+ <1441787690-30148-5-git-send-email-ckeepax@opensource.wolfsonmicro.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-reply-to: <1441787690-30148-4-git-send-email-ckeepax@opensource.wolfsonmicro.com>
+In-reply-to: <1441787690-30148-5-git-send-email-ckeepax@opensource.wolfsonmicro.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Charles Keepax <ckeepax@opensource.wolfsonmicro.com>, lee.jones@linaro.org
 Cc: myungjoo.ham@samsung.com, sameo@linux.intel.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, patches@opensource.wolfsonmicro.com
 List-Id: devicetree@vger.kernel.org
 
 On 2015=EB=85=84 09=EC=9B=94 09=EC=9D=BC 17:34, Charles Keepax wrote:
-> The switch is typically used in conjunction with the MICDET clamp in
-> order to suppress pops and clicks associated with jack insertion.
->=20
 > Signed-off-by: Charles Keepax <ckeepax@opensource.wolfsonmicro.com>
 > ---
->  drivers/extcon/extcon-arizona.c |    6 ++++++
->  1 files changed, 6 insertions(+), 0 deletions(-)
+>  Documentation/devicetree/bindings/mfd/arizona.txt |   21 +++++++++++=
+++++++++++
+>  include/dt-bindings/mfd/arizona.h                 |    5 +++++
+>  2 files changed, 26 insertions(+), 0 deletions(-)
+>=20
+> diff --git a/Documentation/devicetree/bindings/mfd/arizona.txt b/Docu=
+mentation/devicetree/bindings/mfd/arizona.txt
+> index a8fee60..b98a11b 100644
+> --- a/Documentation/devicetree/bindings/mfd/arizona.txt
+> +++ b/Documentation/devicetree/bindings/mfd/arizona.txt
+> @@ -73,6 +73,27 @@ Optional properties:
+>      If this node is not mentioned or if the value is unknown, then
+>      headphone detection mode is set to HPDETL.
+> =20
+> +  - wlf,micd-software-compare : Use a software comparison to determi=
+ne mic
+> +    presence
+> +  - wlf,micd-detect-debounce : Additional software microphone detect=
+ion
+> +    debounce specified in milliseconds.
+> +  - wlf,micd-pol-gpio : GPIO specifier for the GPIO controlling the =
+headset
+> +    polarity if one exists.
+> +  - wlf,micd-bias-start-time : Time allowed for MICBIAS to startup p=
+rior to
+> +    performing microphone detection, specified as per the ARIZONA_MI=
+CD_TIME_XXX
+> +    defines.
+> +  - wlf,micd-rate : Delay between successive microphone detection me=
+asurements,
+> +    specified as per the ARIZONA_MICD_TIME_XXX defines.
+> +  - wlf,micd-dbtime : Microphone detection hardware debounces specif=
+ied as the
+> +    number of measurements to take, valid values being 2 and 4.
+> +  - wlf,micd-timeout : Timeout for microphone detection, specified i=
+n
+> +    milliseconds.
+> +  - wlf,micd-force-micbias : Force MICBIAS continuously on during mi=
+crophone
+> +    detection.
+> +
+> +  - wlf,gpsw : Settings for the general purpose switch, set as one o=
+f the
+> +    ARIZONA_GPSW_XXX defines.
+> +
+>    - DCVDD-supply, MICVDD-supply : Power supplies, only need to be sp=
+ecified if
+>      they are being externally supplied. As covered in
+>      Documentation/devicetree/bindings/regulator/regulator.txt
+> diff --git a/include/dt-bindings/mfd/arizona.h b/include/dt-bindings/=
+mfd/arizona.h
+> index c40f665..dedf46f 100644
+> --- a/include/dt-bindings/mfd/arizona.h
+> +++ b/include/dt-bindings/mfd/arizona.h
+> @@ -110,4 +110,9 @@
+>  #define ARIZONA_ACCDET_MODE_HPM 4
+>  #define ARIZONA_ACCDET_MODE_ADC 7
+> =20
+> +#define ARIZONA_GPSW_OPEN           0
+> +#define ARIZONA_GPSW_CLOSED         1
+> +#define ARIZONA_GPSW_CLAMP_ENABLED  2
+> +#define ARIZONA_GPSW_CLAMP_DISABLED 3
+> +
+>  #endif
+>=20
 
-Acked-by: Chanwoo Choi <cw00.choi@samsung.com>
+Reviewed-by: Chanwoo Choi <cw00.choi@samsung.com>
+
+You may need the ack message by DT maintainer.
 
 Thanks,
 Chanwoo Choi
