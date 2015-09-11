@@ -1,127 +1,60 @@
-From: Chen Feng <puck.chen@hisilicon.com>
-Subject: [PATCH V2 2/3] reset: hisilicon: document hisi-hi6220 reset controllers bindings
-Date: Fri, 11 Sep 2015 16:18:37 +0800
-Message-ID: <1441959518-178696-2-git-send-email-puck.chen@hisilicon.com>
-References: <1441959518-178696-1-git-send-email-puck.chen@hisilicon.com>
+From: Laurentiu Palcu <laurentiu.palcu@intel.com>
+Subject: Re: [PATCH v2 00/13] power: bq24257: Add support for bq24250/bq24251
+Date: Fri, 11 Sep 2015 11:26:49 +0300
+Message-ID: <20150911082649.GQ21512@lpalcu-desk>
+References: <1441757557-7266-1-git-send-email-dannenberg@ti.com>
+ <20150910122616.GB21512@lpalcu-desk>
+ <20150910212626.GA16256@borg>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1441959518-178696-1-git-send-email-puck.chen@hisilicon.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: puck.chen@hisilicon.com, p.zabel@pengutronix.de, linux-kernel@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, xuwei5@hisilicon.com, haojian.zhuang@linaro.org, zhangfei.gao@foxmail.com
-Cc: xuyiping@hisilicon.com, bintian.wang@huawei.com, devicetree@vger.kernel.org, dan.zhao@hisilicon.com, suzhuangluan@hisilicon.com, w.f@huawei.com
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-pm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20150910212626.GA16256@borg>
+Sender: linux-pm-owner@vger.kernel.org
+To: Andreas Dannenberg <dannenberg@ti.com>
+Cc: Sebastian Reichel <sre@kernel.org>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, David Woodhouse <dwmw2@infradead.org>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, linux-pm@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Add DT bindings documentation for hi6220 SoC reset controller.
+On Thu, Sep 10, 2015 at 04:26:26PM -0500, Andreas Dannenberg wrote:
+> On Thu, Sep 10, 2015 at 03:26:16PM +0300, Laurentiu Palcu wrote:
+> > On Tue, Sep 08, 2015 at 07:12:24PM -0500, Andreas Dannenberg wrote:
+[...] 
+> > For the entire patchset, please run it through 'checkpatch --strict'.
+> > There are some minor style issues that are worth fixing.
+> 
+> Ok will do. But I'm not a big fan of --strict, especially the alignment
+> of function arguments that spill into the next line. If it is required
+> by the Kernel community (is it?) why not making --strict a default-on
+> option of checkpatch.pl or mandating it in one of the docs?
+I don't think this is required by the kernel community. However, I
+believe that fixing those style issues will make the code tidier. The
+reason this is not the default option for checkpatch is because you
+cannot always align those function arguments without exceeding the 80
+chars line limit, etc. Which is reasonable. So, wherever we can do it,
+let's, at least, try. :)
 
-Signed-off-by: Chen Feng <puck.chen@hisilicon.com>
----
- .../bindings/reset/hisilicon,hi6220-reset.txt      | 97 ++++++++++++++++++++++
- 1 file changed, 97 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/reset/hisilicon,hi6220-reset.txt
+>  
+> > Regarding the DT patch (on which I'll comment separately, after I go
+> > through the entire patchset), make sure you put it before the code
+> > implementing the binding [1].
+> > 
+> > [1] Documentation/devicetree/bindings/submitting-patches.txt
+> 
+> I had actually read this but my DT doc binding patch also renames the
+> binding file itself. So technically it isn't valid until after the
+> rename patch was applied... which is against the patch ordering... Any
+> creative idea on how to solve this?
+One idea would be to start the patchset upfront with the renaming. This
+will not introduce new bindings nor change any driver functionality, so
+it should be ok. Then introduce the new bindings and continue with the
+rest of implementation. I think this will be compliant with the DT doc
+requirements and it'll probably silence checkpatch warnings like the one
+below:
 
-diff --git a/Documentation/devicetree/bindings/reset/hisilicon,hi6220-reset.txt b/Documentation/devicetree/bindings/reset/hisilicon,hi6220-reset.txt
-new file mode 100644
-index 0000000..200dc8e
---- /dev/null
-+++ b/Documentation/devicetree/bindings/reset/hisilicon,hi6220-reset.txt
-@@ -0,0 +1,97 @@
-+Hisilicon System Reset Controller
-+======================================
-+
-+Please also refer to reset.txt in this directory for common reset
-+controller binding usage.
-+
-+The reset controller node must be a sub-node of the chip controller
-+node on SoCs.
-+
-+Required properties:
-+- compatible: may be "hisilicon,hi6220_reset_ctl"
-+- reg: should be register base and length as documented in the
-+  datasheet
-+- #reset-cells: 1, see below
-+
-+Example:
-+
-+	reset_ctrl: reset_ctrl@f7030000 {
-+		compatible = "hisilicon,hi6220_reset_ctl";
-+		reg = <0x0 0xf7030000 0x0 0x1000>;
-+		#reset-cells = <1>;
-+	};
-+
-+Specifying reset lines connected to IP modules
-+==============================================
-+example:
-+
-+        uart1: uart1@..... {
-+		...
-+                resets = <&reset_ctrl 0x305>;
-+		...
-+        };
-+
-+The following RESET_INDEX values are valid for hi6220 SoC:
-+	PERIPH_RSTDIS0_MMC0 		= 0x000,
-+	PERIPH_RSTDIS0_MMC1		= 0x001,
-+	PERIPH_RSTDIS0_MMC2		= 0x002,
-+	PERIPH_RSTDIS0_NANDC		= 0x003,
-+	PERIPH_RSTDIS0_USBOTG_BUS	= 0x004,
-+	PERIPH_RSTDIS0_POR_PICOPHY	= 0x005,
-+	PERIPH_RSTDIS0_USBOTG		= 0x006,
-+	PERIPH_RSTDIS0_USBOTG_32K	= 0x007,
-+
-+	PERIPH_RSTDIS1_HIFI		= 0x100,
-+	PERIPH_RSTDIS1_DIGACODEC	= 0x105,
-+
-+	PERIPH_RSTEN2_IPF		= 0x200,
-+	PERIPH_RSTEN2_SOCP		= 0x201,
-+	PERIPH_RSTEN2_DMAC		= 0x202,
-+	PERIPH_RSTEN2_SECENG		= 0x203,
-+	PERIPH_RSTEN2_ABB		= 0x204,
-+	PERIPH_RSTEN2_HPM0		= 0x205,
-+	PERIPH_RSTEN2_HPM1		= 0x206,
-+	PERIPH_RSTEN2_HPM2		= 0x207,
-+	PERIPH_RSTEN2_HPM3		= 0x208,
-+
-+	PERIPH_RSTEN3_CSSYS		= 0x300,
-+	PERIPH_RSTEN3_I2C0		= 0x301,
-+	PERIPH_RSTEN3_I2C1		= 0x302,
-+	PERIPH_RSTEN3_I2C2		= 0x303,
-+	PERIPH_RSTEN3_I2C3		= 0x304,
-+	PERIPH_RSTEN3_UART1		= 0x305,
-+	PERIPH_RSTEN3_UART2		= 0x306,
-+	PERIPH_RSTEN3_UART3		= 0x307,
-+	PERIPH_RSTEN3_UART4		= 0x308,
-+	PERIPH_RSTEN3_SSP		= 0x309,
-+	PERIPH_RSTEN3_PWM		= 0x30a,
-+	PERIPH_RSTEN3_BLPWM		= 0x30b,
-+	PERIPH_RSTEN3_TSENSOR		= 0x30c,
-+	PERIPH_RSTEN3_DAPB		= 0x312,
-+	PERIPH_RSTEN3_HKADC		= 0x313,
-+	PERIPH_RSTEN3_CODEC_SSI		= 0x314,
-+	PERIPH_RSTEN3_PMUSSI1		= 0x316,
-+
-+	PERIPH_RSTEN8_RS0		= 0x400,
-+	PERIPH_RSTEN8_RS2		= 0x401,
-+	PERIPH_RSTEN8_RS3		= 0x402,
-+	PERIPH_RSTEN8_MS0		= 0x403,
-+	PERIPH_RSTEN8_MS2		= 0x405,
-+	PERIPH_RSTEN8_XG2RAM0		= 0x406,
-+	PERIPH_RSTEN8_X2SRAM_TZMA	= 0x407,
-+	PERIPH_RSTEN8_SRAM		= 0x408,
-+	PERIPH_RSTEN8_HARQ		= 0x40a,
-+	PERIPH_RSTEN8_DDRC		= 0x40c,
-+	PERIPH_RSTEN8_DDRC_APB		= 0x40d,
-+	PERIPH_RSTEN8_DDRPACK_APB	= 0x40e,
-+	PERIPH_RSTEN8_DDRT		= 0x411,
-+
-+	PERIPH_RSDIST9_CARM_DAP		= 0x500,
-+	PERIPH_RSDIST9_CARM_ATB		= 0x501,
-+	PERIPH_RSDIST9_CARM_LBUS	= 0x502,
-+	PERIPH_RSDIST9_CARM_POR		= 0x503,
-+	PERIPH_RSDIST9_CARM_CORE	= 0x504,
-+	PERIPH_RSDIST9_CARM_DBG		= 0x505,
-+	PERIPH_RSDIST9_CARM_L2		= 0x506,
-+	PERIPH_RSDIST9_CARM_SOCDBG	= 0x507,
-+	PERIPH_RSDIST9_CARM_ETM		= 0x508,
--- 
-1.9.1
+WARNING: DT compatible string "ti,bq24250" appears un-documented --
+check ./Documentation/devicetree/bindings/
+
+The only downside to this is that you'll have to rework the rest of the
+patches to use the new prefixes... :/
+
+laurentiu
