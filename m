@@ -1,62 +1,91 @@
-From: Yuantian Tang <Yuantian.Tang@freescale.com>
-Subject: RE: [PATCH] ahci: qoriq: fixed using uninitialized variable warnings
-Date: Fri, 11 Sep 2015 05:27:25 +0000
-Message-ID: <DM2PR03MB5746E6637A2BC5081EC5428FA500@DM2PR03MB574.namprd03.prod.outlook.com>
-References: <1441790182-20248-1-git-send-email-Yuantian.Tang@freescale.com>
- <20150909140130.GB22909@mtj.duckdns.org>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [RFC 3/5] acpi/serial: add DBG2 earlycon support
+Date: Fri, 11 Sep 2015 00:43:48 -0500
+Message-ID: <CAL_JsqJwdSA=NJ5x4RXhh3H2um_56XmJgg+P-6hJEK7J-a4iyw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-ide-owner@vger.kernel.org>
-In-Reply-To: <20150909140130.GB22909@mtj.duckdns.org>
-Content-Language: en-US
-Sender: linux-ide-owner@vger.kernel.org
-To: Tejun Heo <tj@kernel.org>
-Cc: "hdegoede@redhat.com" <hdegoede@redhat.com>, "linux-ide@vger.kernel.org" <linux-ide@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Leif Lindholm <leif.lindholm-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-acpi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-acpi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "al.stone-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <al.stone-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "torez-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org" <torez-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, "jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org" <jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, "graeme.gregory-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <graeme.gregory-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linaro-acpi-cunTk1MwBs8s++Sfvej+rw@public.gmane.org" <linaro-acpi-cunTk1MwBs8s++Sfvej+rw@public.gmane.org>, "lv.zheng-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org" <lv.zheng-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Tejun,
+On Tue, Sep 8, 2015 at 12:03 PM, Leif Lindholm <leif.lindholm-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+> On Tue, Sep 08, 2015 at 02:09:51PM +0100, Mark Rutland wrote:
+>> On Tue, Sep 08, 2015 at 01:43:35PM +0100, Leif Lindholm wrote:
+>> > The ACPI DBG2 table defines a debug console. Add support for parsing it
+>> > and using it to select earlycon destination when no arguments provided.
+>> >
+>> > Signed-off-by: Leif Lindholm <leif.lindholm-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+>>
+>> [...]
+>>
+>> > diff --git a/drivers/acpi/console.c b/drivers/acpi/console.c
+>> > new file mode 100644
+>> > index 0000000..a985890
+>> > --- /dev/null
+>> > +++ b/drivers/acpi/console.c
+>> > @@ -0,0 +1,103 @@
+>> > +/*
+>> > + * Copyright (c) 2012, Intel Corporation
+>> > + * Copyright (c) 2015, Linaro Ltd.
+>> > + *
+>> > + * This program is free software; you can redistribute it and/or modify
+>> > + * it under the terms of the GNU General Public License version 2 as
+>> > + * published by the Free Software Foundation.
+>> > + *
+>> > + */
+>> > +
+>> > +#define DEBUG
+>>
+>> Why?
+>
+> Kept around from Lv Zheng's 2012 set. Will drop.
+>
+>> > +#define pr_fmt(fmt) "ACPI: " KBUILD_MODNAME ": " fmt
+>> > +
+>> > +#include <linux/acpi.h>
+>> > +#include <linux/kernel.h>
+>> > +#include <linux/serial_core.h>
+>> > +
+>> > +#define NUM_ELEMS(x) (sizeof(x) / sizeof(*x))
+>>
+>> Use ARRAY_SIZE (from kernel.h).
+>
+> I was sure there was something like that, but my grep-fu failed me.
+> Will fix.
+>
+>> > +
+>> > +#ifdef CONFIG_SERIAL_EARLYCON
+>> > +static int use_earlycon __initdata;
+>> > +static int __init setup_acpi_earlycon(char *buf)
+>> > +{
+>> > +   if (!buf)
+>> > +           use_earlycon = 1;
+>> > +
+>> > +   return 0;
+>> > +}
+>> > +early_param("earlycon", setup_acpi_earlycon);
+>>
+>> It seems a shame to add this after folding the OF case into the earlycon
+>> code. What necessitates this being a separate early_param? Why is it too
+>> early to parse DBG2?
+>
+> Currently, we don't even know where our ACPI tables are  at this point
+> (efi_init() is called two functions after parse_early_param() in
+> setup_arch). More specifically, because acpi_boot_table_init() is
+> called even later than that.
+>
+> If we moved both of those earlier, we could drop the extra earlycon
+> param handling for ACPI. That would of course reduce the ability to
+> have dynamically configurable debug messages for both of these.
 
-Could you please take the version 1 patch?
-The version 2 patch can't address these warnings, and the version 1 can definitely remove them.
-In this case, that would cause any hidden bugs, so no worries.
+Personally, I liked that we don't have to have the early_param
+handling globally located. I'm not sure I see the benefit of
+centralizing it especially if it doesn't even help for your case.
 
-Regards,
-Yuantian
-
-> -----Original Message-----
-> From: Tejun Heo [mailto:htejun@gmail.com] On Behalf Of Tejun Heo
-> Sent: Wednesday, September 09, 2015 10:02 PM
-> To: Tang Yuantian-B29983 <Yuantian.Tang@freescale.com>
-> Cc: hdegoede@redhat.com; linux-ide@vger.kernel.org; linux-
-> kernel@vger.kernel.org; devicetree@vger.kernel.org
-> Subject: Re: [PATCH] ahci: qoriq: fixed using uninitialized variable warnings
-> 
-> On Wed, Sep 09, 2015 at 05:16:22PM +0800, Yuantian.Tang@freescale.com
-> wrote:
-> > From: Tang Yuantian <Yuantian.Tang@freescale.com>
-> >
-> > kbuild test robot reports the warnings:
-> > drivers/ata/ahci_qoriq.c: In function 'ahci_qoriq_hardreset':
-> > >> include/asm-generic/io.h:163:2: warning: 'px_is' may be used
-> > >> uninitialized in this function [-Wuninitialized]
-> > drivers/ata/ahci_qoriq.c:70:14: note: 'px_is' was declared here
-> > >> include/asm-generic/io.h:163:2: warning: 'px_cmd' may be used
-> > >> uninitialized in this function [-Wuninitialized]
-> > drivers/ata/ahci_qoriq.c:70:6: note: 'px_cmd' was declared here
-> >
-> > This patch fixed it by assigning 0 to px_is and px_cmd variables.
-> > This patch also remove line 'struct ccsr_ahci *reg_base' which is not
-> > referred by any other codes and thus a dead one.
-> 
-> Hmm... I think the problem here is that the complier can't know whether
-> qoriq_priv->type would change across intervening function calls.  Maybe a
-> better solution is caching the type in a local variable so that the compiler can
-> tell that those two tests will always move together?  It generally isn't a good
-> idea to clear variables unnecessarily as that can hide actual bugs that compiler
-> can detect.
-> 
-> Thanks.
-> 
-> --
-> tejun
+Rob
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
