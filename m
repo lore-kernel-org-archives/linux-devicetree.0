@@ -1,72 +1,47 @@
-From: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-Subject: Re: [PATCH] power: bq24261_charger: Add support for TI BQ24261 charger
-Date: Fri, 11 Sep 2015 09:58:40 +0900
-Message-ID: <55F22740.4080003@samsung.com>
-References: <1441560187-23611-1-git-send-email-ramakrishna.pallala@intel.com>
- <CAJKOXPfDu+LxoiQrV+CsqUbEVwYb1Zmk-m9y-L_1JxrB6ouS0g@mail.gmail.com>
- <D854C92F57B1B347B57E531E78D05EAD57904B8D@BGSMSX104.gar.corp.intel.com>
- <55F0C522.6070705@samsung.com> <55F1B2FD.4020608@ti.com>
+From: Guenter Roeck <linux@roeck-us.net>
+Subject: Re: [PATCH v7 5/8] Watchdog: introduce ARM SBSA watchdog driver
+Date: Thu, 10 Sep 2015 19:05:55 -0700
+Message-ID: <20150911020555.GB15719@roeck-us.net>
+References: <=fu.wei@linaro.org>
+ <1440435683-7343-1-git-send-email-fu.wei@linaro.org>
+ <1440435683-7343-6-git-send-email-fu.wei@linaro.org>
+ <55F20461.20904@redhat.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-reply-to: <55F1B2FD.4020608@ti.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: "Andrew F. Davis" <afd@ti.com>, "Pallala, Ramakrishna" <ramakrishna.pallala@intel.com>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Sebastian Reichel <sre@kernel.org>, "Tc, Jenny" <jenny.tc@intel.com>, Andreas Dannenberg <dannenberg@ti.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <55F20461.20904@redhat.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Jon Masters <jcm@redhat.com>
+Cc: fu.wei@linaro.org, Suravee.Suthikulpanit@amd.com, hanjun.guo@linaro.org, linaro-acpi@lists.linaro.org, linux-watchdog@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, tekkamanninja@gmail.com, graeme.gregory@linaro.org, al.stone@linaro.org, arnd@arndb.de, vgandhi@codeaurora.org, wim@iguana.be, leo.duran@amd.com, corbet@lwn.net, mark.rutland@arm.com, catalin.marinas@arm.com, will.deacon@arm.com, rjw@rjwysocki.net, dyoung@redhat.com, panand@redhat.com
 List-Id: devicetree@vger.kernel.org
 
-On 11.09.2015 01:42, Andrew F. Davis wrote:
-> On 09/09/2015 06:47 PM, Krzysztof Kozlowski wrote:
->>>>> +- ti,enable-user-write: boolean, if present driver will allow the
->>>>> user space
->>>>> +    to control the charging current and voltage through sysfs;
->>>>
->>>> This is not DT property. It does not describe hardware.
->>> We needed a mechanism to enable the sysfs writes on certain properties.
->>> If DT is not the place where should it go?
->>
->> DT is not the place. As I discussed later with Andreas, if you really
->> need this and if mainline is a place for that then probably this should
->> be compile option (a Kconfig symbol).
->>
+On Thu, Sep 10, 2015 at 06:29:53PM -0400, Jon Masters wrote:
+> On 08/24/2015 01:01 PM, fu.wei@linaro.org wrote:
 > 
-> I think this would actually be a good use for module parameters, this way
-> it could still be set at boot without re-compiling.
+> > +	/*
+> > +	 * Get the frequency of system counter from the cp15 interface of ARM
+> > +	 * Generic timer. We don't need to check it, because if it returns "0",
+> > +	 * system would panic in very early stage.
+> > +	 */
+> > +	gwdt->clk = arch_timer_get_cntfrq();
 > 
-> I think compile-time disabling sysfs properties because they are
-> "dangerous" is
-> a little bit too artificially restricting and controlling, you can set
-> permissions
-> so only root can change them already. The kernel should not be
-> restricting root,
-> I understand the fear of someone rooting a machine and remotely over
-> charging
-> a LiPo[1], but these physical limits are hardware descriptions and can
-> and should
-> be set by DT, beyond this root should have full control over their machine.
-
-
-Indeed module parameters could be used for enabling/disabling debug
-options... but as fair as I understand these are for purely development
-purposes. That is why they got into DT initially, right? To allow the
-developer to play with it on the development board?
-
-This is why I am really not convinced that this should go to mainline.
-
-Anyway if it goes, then maybe compiling it out is the safest choice?
-What's the purpose of having it in kernel all the time? If this was a
-debug option, than some experienced user could turn it on and report to
-LKML with extended debug data. But it's not a debug but development option?
-
-> Besides root can already just unbind your driver and issue raw I2C
-> commands to do
-> the same thing. </rant>
+> Just thinking out loud...
 > 
-> [1] http://i.imgur.com/vszJJ.jpg
+> What happens later if we virtualize this device within KVM/QEMU/Xen and
+> then live migrate to another system in which the frequency changes?
+> 
+I don't know, but I would suspect that we might end up in all kinds of
+trouble if clocks can change like that, and not just in this driver.
+Many drivers make the assumption that clock rates are not changed
+under the hood. If it can happen, shouldn't there be a callback into
+the drivers using the affected clock(s) ?
 
-Oh, these weird sickos... That's why I am using IPoAC and always check
-the bits by myself for weird looking I2C commands. :)
+Also, it seems to me that changing a clock like that would be inherently
+unsafe. For example, what will happen if the system is stopped and migrated
+right after the clock frequency is read, but before the returned value
+is used ? Can that happen ? Or does it only happen during suspend/resume
+cycles, if it happens ?
 
-Best regards,
-Krzysztof
+Thanks,
+Guenter
