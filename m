@@ -1,161 +1,62 @@
-From: Eric Nelson <eric@nelint.com>
-Subject: [PATCH][resend] rc: gpio-ir-recv: allow flush space on idle
-Date: Fri, 11 Sep 2015 07:00:24 -0700
-Message-ID: <1441980024-1944-1-git-send-email-eric@nelint.com>
-Return-path: <linux-media-owner@vger.kernel.org>
-Sender: linux-media-owner@vger.kernel.org
-To: linux-media@vger.kernel.org
-Cc: robh+dt@kernel.org, pawel.moll@arm.com, mchehab@osg.samsung.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, patrice.chotard@st.com, fabf@skynet.be, wsa@the-dreams.de, heiko@sntech.de, devicetree@vger.kernel.org, otavio@ossystems.com.br, Eric Nelson <eric@nelint.com>
+From: Tomeu Vizoso <tomeu.vizoso@collabora.com>
+Subject: Re: [PATCH v3 02/18] of/platform: add of_platform_probe
+Date: Fri, 11 Sep 2015 16:06:07 +0200
+Message-ID: <CAAObsKAaxBJUH=u-2VSDGUQ6CsqpATpF-48LHEtvd3FD3_prsQ@mail.gmail.com>
+References: <1438870315-18689-1-git-send-email-tomeu.vizoso@collabora.com>
+ <1438870315-18689-3-git-send-email-tomeu.vizoso@collabora.com>
+ <20150807121913.GS20873@sirena.org.uk> <CAAObsKCrakupiZMQ9AoiWo6fDYT6Cfi_khdssUS6pv61zYS1Zg@mail.gmail.com>
+ <CAAObsKAZ0kaT2TZQdMnxy9ZjHMz2jFeYQvQjrCsa90J11bOVpA@mail.gmail.com> <20150911095748.GC12027@sirena.org.uk>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-acpi-owner@vger.kernel.org>
+In-Reply-To: <20150911095748.GC12027@sirena.org.uk>
+Sender: linux-acpi-owner@vger.kernel.org
+To: Mark Brown <broonie@kernel.org>
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Stephen Warren <swarren@wwwdotorg.org>, Javier Martinez Canillas <javier@osg.samsung.com>, Thierry Reding <thierry.reding@gmail.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linus Walleij <linus.walleij@linaro.org>, linux-acpi@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>
 List-Id: devicetree@vger.kernel.org
 
-Many decoders require a trailing space (period without IR illumination)
-to be delivered before completing a decode.
+On 11 September 2015 at 11:57, Mark Brown <broonie@kernel.org> wrote:
+> On Mon, Sep 07, 2015 at 02:31:06PM +0200, Tomeu Vizoso wrote:
+>> On 11 August 2015 at 11:37, Tomeu Vizoso <tomeu.vizoso@collabora.com> wrote:
+>> > On 7 August 2015 at 14:19, Mark Brown <broonie@kernel.org> wrote:
+>
+>> >> This sounds like it's going to break in the case where we have MFDs that
+>> >> represent their functions in DT (not a pattern I'm a fan of but it's a
+>> >> thing people do).  We'll walk back to the platform device for the MFD
+>> >> function, try to probe it and then give up.  Perhaps that's good enough
+>> >> anyway but it's not clear to me why we don't just try every parent we
+>> >> find?
+>
+>> > Agreed. In the attempt at probing dependencies before a device is
+>> > probed, I considered that a device's parent is also a dependency and
+>
+>> Actually I'm not sure how we could probe the ascendants on demand, as
+>> currently the parent's device lock is taken when probing so trying to
+>> probe a sibling from within a probe callback will cause a deadlock.
+>
+> How do silbilings come into this?  There is an issue there but it's
+> going to happen anyway.
 
-Since the gpio-ir-recv driver only delivers events on gpio transitions,
-a single IR symbol (caused by a quick touch on an IR remote) will not
-be properly decoded without the use of a timer to flush the tail end
-state of the IR receiver.
+Once a platform device (with the platform bus as its parent) is
+retrieved from the deferred queue, both the parent and the device in
+question are locked (because of the USB stuff mentioned below). If
+that device depends on another device whose parent is the platform bus
+and we try to probe it (useless, but I don't see a good way of
+avoiding it) then we'll deadlock when device_attach locks that device.
 
-This patch adds an optional device tree node "flush-ms" which, if
-present, will use a jiffie-based timer to complete the last pulse
-stream and allow decode.
+>> AFAICS this is only needed for USB interface devices and this
+>> behaviour could be limited to them, but I don't like much assuming
+>> that no USB device will ever have a dependency on a sibling (though
+>> that probably won't happen ever).
+>
+> I don't see the connection with USB here, sorry - my initial thought was
+> about MFDs?
 
-The "flush-ms" value should be chosen with a value that will convert
-well to jiffies (multiples of 10 are good).
+This commit introduced locking of a device's parent before it's
+probed, mainly for USB interfaces:
 
-Signed-off-by: Eric Nelson <eric@nelint.com>
----
-Re-sending with expanded CC list.
+bf74ad5bc417 ("[PATCH] Hold the device's parent's lock during probe and remove")
 
- .../devicetree/bindings/media/gpio-ir-receiver.txt |  1 +
- drivers/media/rc/gpio-ir-recv.c                    | 39 ++++++++++++++++++----
- include/media/gpio-ir-recv.h                       |  1 +
- 3 files changed, 34 insertions(+), 7 deletions(-)
+Regards,
 
-diff --git a/Documentation/devicetree/bindings/media/gpio-ir-receiver.txt b/Documentation/devicetree/bindings/media/gpio-ir-receiver.txt
-index 56e726e..13ff92d 100644
---- a/Documentation/devicetree/bindings/media/gpio-ir-receiver.txt
-+++ b/Documentation/devicetree/bindings/media/gpio-ir-receiver.txt
-@@ -6,6 +6,7 @@ Required properties:
- 
- Optional properties:
- 	- linux,rc-map-name: Linux specific remote control map name.
-+	- flush-ms: time for final flush of 'space' pulse (period with no IR)
- 
- Example node:
- 
-diff --git a/drivers/media/rc/gpio-ir-recv.c b/drivers/media/rc/gpio-ir-recv.c
-index 7dbc9ca..e3c353e 100644
---- a/drivers/media/rc/gpio-ir-recv.c
-+++ b/drivers/media/rc/gpio-ir-recv.c
-@@ -29,7 +29,9 @@
- struct gpio_rc_dev {
- 	struct rc_dev *rcdev;
- 	int gpio_nr;
-+	int flush_jiffies;
- 	bool active_low;
-+	struct timer_list flush_timer;
- };
- 
- #ifdef CONFIG_OF
-@@ -42,6 +44,7 @@ static int gpio_ir_recv_get_devtree_pdata(struct device *dev,
- 	struct device_node *np = dev->of_node;
- 	enum of_gpio_flags flags;
- 	int gpio;
-+	u32 flush_ms = 0;
- 
- 	gpio = of_get_gpio_flags(np, 0, &flags);
- 	if (gpio < 0) {
-@@ -50,6 +53,9 @@ static int gpio_ir_recv_get_devtree_pdata(struct device *dev,
- 		return gpio;
- 	}
- 
-+	of_property_read_u32(np, "flush-ms", &flush_ms);
-+	pdata->flush_jiffies = msecs_to_jiffies(flush_ms);
-+
- 	pdata->gpio_nr = gpio;
- 	pdata->active_low = (flags & OF_GPIO_ACTIVE_LOW);
- 	/* probe() takes care of map_name == NULL or allowed_protos == 0 */
-@@ -71,9 +77,8 @@ MODULE_DEVICE_TABLE(of, gpio_ir_recv_of_match);
- 
- #endif
- 
--static irqreturn_t gpio_ir_recv_irq(int irq, void *dev_id)
-+static void flush_gp(struct gpio_rc_dev *gpio_dev)
- {
--	struct gpio_rc_dev *gpio_dev = dev_id;
- 	int gval;
- 	int rc = 0;
- 	enum raw_event_type type = IR_SPACE;
-@@ -81,7 +86,7 @@ static irqreturn_t gpio_ir_recv_irq(int irq, void *dev_id)
- 	gval = gpio_get_value(gpio_dev->gpio_nr);
- 
- 	if (gval < 0)
--		goto err_get_value;
-+		return;
- 
- 	if (gpio_dev->active_low)
- 		gval = !gval;
-@@ -90,15 +95,30 @@ static irqreturn_t gpio_ir_recv_irq(int irq, void *dev_id)
- 		type = IR_PULSE;
- 
- 	rc = ir_raw_event_store_edge(gpio_dev->rcdev, type);
--	if (rc < 0)
--		goto err_get_value;
-+	if (rc >= 0)
-+		ir_raw_event_handle(gpio_dev->rcdev);
-+}
- 
--	ir_raw_event_handle(gpio_dev->rcdev);
-+static irqreturn_t gpio_ir_recv_irq(int irq, void *dev_id)
-+{
-+	struct gpio_rc_dev *gpio_dev = dev_id;
-+
-+	flush_gp(gpio_dev);
-+
-+	if (gpio_dev->flush_jiffies)
-+		mod_timer(&gpio_dev->flush_timer,
-+			  jiffies + gpio_dev->flush_jiffies);
- 
--err_get_value:
- 	return IRQ_HANDLED;
- }
- 
-+static void flush_timer(unsigned long arg)
-+{
-+	struct gpio_rc_dev *gpio_dev = (struct gpio_rc_dev *)arg;
-+
-+	flush_gp(gpio_dev);
-+}
-+
- static int gpio_ir_recv_probe(struct platform_device *pdev)
- {
- 	struct gpio_rc_dev *gpio_dev;
-@@ -152,8 +172,13 @@ static int gpio_ir_recv_probe(struct platform_device *pdev)
- 
- 	gpio_dev->rcdev = rcdev;
- 	gpio_dev->gpio_nr = pdata->gpio_nr;
-+	gpio_dev->flush_jiffies = pdata->flush_jiffies;
- 	gpio_dev->active_low = pdata->active_low;
- 
-+	init_timer(&gpio_dev->flush_timer);
-+	gpio_dev->flush_timer.function = flush_timer;
-+	gpio_dev->flush_timer.data = (unsigned long)gpio_dev;
-+
- 	rc = gpio_request(pdata->gpio_nr, "gpio-ir-recv");
- 	if (rc < 0)
- 		goto err_gpio_request;
-diff --git a/include/media/gpio-ir-recv.h b/include/media/gpio-ir-recv.h
-index 0142736..88fae78 100644
---- a/include/media/gpio-ir-recv.h
-+++ b/include/media/gpio-ir-recv.h
-@@ -17,6 +17,7 @@ struct gpio_ir_recv_platform_data {
- 	int		gpio_nr;
- 	bool		active_low;
- 	u64		allowed_protos;
-+	int		flush_jiffies;
- 	const char	*map_name;
- };
- 
--- 
-2.5.1
+Tomeu
