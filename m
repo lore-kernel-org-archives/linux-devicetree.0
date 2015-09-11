@@ -1,57 +1,108 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH v3 02/18] of/platform: add of_platform_probe
-Date: Fri, 11 Sep 2015 16:35:30 +0100
-Message-ID: <20150911153530.GM20922@sirena.org.uk>
-References: <1438870315-18689-1-git-send-email-tomeu.vizoso@collabora.com>
- <1438870315-18689-3-git-send-email-tomeu.vizoso@collabora.com>
- <20150807121913.GS20873@sirena.org.uk>
- <CAAObsKCrakupiZMQ9AoiWo6fDYT6Cfi_khdssUS6pv61zYS1Zg@mail.gmail.com>
- <CAAObsKAZ0kaT2TZQdMnxy9ZjHMz2jFeYQvQjrCsa90J11bOVpA@mail.gmail.com>
- <20150911095748.GC12027@sirena.org.uk>
- <CAAObsKAaxBJUH=u-2VSDGUQ6CsqpATpF-48LHEtvd3FD3_prsQ@mail.gmail.com>
+From: Daniel Kiper <daniel.kiper@oracle.com>
+Subject: Re: [PATCH] efi/libstub/fdt: Standardize the names of EFI stub
+ parameters
+Date: Fri, 11 Sep 2015 17:45:34 +0200
+Message-ID: <20150911154534.GD4530@olila.local.net-space.pl>
+References: <20150910112418.GC29293@leverpostej>
+ <alpine.DEB.2.02.1509101223580.2672@kaball.uk.xensource.com>
+ <20150910121514.GE29293@leverpostej>
+ <alpine.DEB.2.02.1509101429480.2672@kaball.uk.xensource.com>
+ <20150910144938.GI29293@leverpostej>
+ <alpine.DEB.2.02.1509101655020.2672@kaball.uk.xensource.com>
+ <20150910162302.GN29293@leverpostej>
+ <20150911124643.GB4530@olila.local.net-space.pl>
+ <alpine.DEB.2.02.1509111410180.2672@kaball.uk.xensource.com>
+ <CAKv+Gu9rN7_mxk0huX+34HSCC_aTWVTkUZKQMB1+9U56fRnwsA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="egxrhndXibJAPJ54"
-Return-path: <linux-acpi-owner@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-doc-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <CAAObsKAaxBJUH=u-2VSDGUQ6CsqpATpF-48LHEtvd3FD3_prsQ@mail.gmail.com>
-Sender: linux-acpi-owner@vger.kernel.org
-To: Tomeu Vizoso <tomeu.vizoso@collabora.com>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Stephen Warren <swarren@wwwdotorg.org>, Javier Martinez Canillas <javier@osg.samsung.com>, Thierry Reding <thierry.reding@gmail.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linus Walleij <linus.walleij@linaro.org>, linux-acpi@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>
+In-Reply-To: <CAKv+Gu9rN7_mxk0huX+34HSCC_aTWVTkUZKQMB1+9U56fRnwsA@mail.gmail.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Cc: Stefano Stabellini <stefano.stabellini@eu.citrix.com>, Mark Rutland <mark.rutland@arm.com>, Shannon Zhao <zhaoshenglong@huawei.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-efi@vger.kernel.org" <linux-efi@vger.kernel.org>, "Ian.Campbell@citrix.com" <Ian.Campbell@citrix.com>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "leif.lindholm@linaro.org" <leif.lindholm@linaro.org>, "xen-devel@lists.xen.org" <xen-devel@lists.xen.org>, "julien.grall@citrix.com" <julien.grall@citrix.com>, "freebsd-arm@freebsd.org" <freebsd-arm@freebsd.org>, "matt.fleming@intel.com" <matt.fleming@intel.com>, "christoffer.dall@linaro.org" <christoffer.dall@linaro.org>, "jbeulich@suse.com" <jbeulich@suse.com>, peter.hua
 List-Id: devicetree@vger.kernel.org
 
+On Fri, Sep 11, 2015 at 03:30:15PM +0200, Ard Biesheuvel wrote:
+> On 11 September 2015 at 15:14, Stefano Stabellini
+> <stefano.stabellini@eu.citrix.com> wrote:
+> > On Fri, 11 Sep 2015, Daniel Kiper wrote:
+> >> On Thu, Sep 10, 2015 at 05:23:02PM +0100, Mark Rutland wrote:
+> >> > > > C) When you could go:
+> >> > > >
+> >> > > >    DT -> Discover Xen -> Xen-specific stuff -> Xen-specific EFI/ACPI discovery
+> >> > >
+> >> > > I take you mean discovering Xen with the usual Xen hypervisor node on
+> >> > > device tree. I think that C) is a good option actually. I like it. Not
+> >> > > sure why we didn't think about this earlier. Is there anything EFI or
+> >> > > ACPI which is needed before Xen support is discovered by
+> >> > > arch/arm64/kernel/setup.c:setup_arch -> xen_early_init()?
+> >> >
+> >> > Currently lots (including the memory map). With the stuff to support
+> >> > SPCR, the ACPI discovery would be moved before xen_early_init().
+> >> >
+> >> > > If not, we could just go for this. A lot of complexity would go away.
+> >> >
+> >> > I suspect this would still be fairly complex, but would at least prevent
+> >> > the Xen-specific EFI handling from adversely affecting the native case.
+> >> >
+> >> > > > D) If you want to be generic:
+> >> > > >    EFI -> EFI application -> EFI tables -> ACPI tables -> Xen-specific stuff
+> >> > > >           \------------------------------------------/
+> >> > > >            (virtualize these, provide shims to Dom0, but handle
+> >> > > >             everything in Xen itself)
+> >> > >
+> >> > > I think that this is good in theory but could turn out to be a lot of
+> >> > > work in practice. We could probably virtualize the RuntimeServices but
+> >> > > the BootServices are troublesome.
+> >> >
+> >> > What's troublesome with the boot services?
+> >> >
+> >> > What can't be simulated?
+> >>
+> >> How do you want to access bare metal EFI boot services from dom0 if they
+> >> were shutdown long time ago before loading dom0 image? What do you need
+> >> from EFI boot services in dom0?
+> >
+> > That's right. Trying to emulate BootServices after the real
+> > ExitBootServices has already been called seems like a very bad plan.
+> >
+> > I think that whatever interface we come up with, would need to be past
+> > ExitBootServices.
+>
+> It feels like this discussion is going in circles.
+>
+> When we discussed this six months ago, we already concluded that,
+> since UEFI is the only specified way that the presence of ACPI is
+> advertised on an ARM system, we need to emulate UEFI to some extent.
+>
+> So we need the EFI system table to expose the UEFI configuration table
+> that carries the ACPI root pointer.
+>
+> Since ACPI support also relies on the UEFI memory map (I think?), we
+> need that as well.
+>
+> These two items are exactly what we pass via the UEFI DT properties,
+> so we should indeed promote the current de-facto binding to a proper
+> binding, and renaming the properties makes sense in that context.
+>
+> I agree that this should also include a description of the expected
+> state of the firmware, i.e., that ExitBootServices() has been called,
+> and that the memory map has been populated with virtual address, which
+> have been installed using SetVirtualAddressMap() if they differ from
+> the physical addresses. (The current implementation on the kernel side
+> is perfectly capable of dealing with a 1:1 mapping).
+>
+> Beyond that, there is no point in pretending to be a full UEFI
+> implementation, imo. Boot services are not required, nor are runtime
+> services (only the current EFI init code on arm needs to be modified
+> to deal with a NULL runtime services pointer)
 
---egxrhndXibJAPJ54
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Taking into account above I think that you have most of the code in place.
+Please take a look at linux/arch/x86/xen/efi.c, linux/drivers/acpi/osl.c
+and linux/drivers/xen/efi.c (maybe somewhere else). In general you should
+create ARM version of xen_efi_init() (x86 version you can find in
+linux/drivers/xen/efi.c; it is very simple thing), maybe add some
+code in a few places and voila.
 
-On Fri, Sep 11, 2015 at 04:06:07PM +0200, Tomeu Vizoso wrote:
-
-> Once a platform device (with the platform bus as its parent) is
-> retrieved from the deferred queue, both the parent and the device in
-> question are locked (because of the USB stuff mentioned below). If
-> that device depends on another device whose parent is the platform bus
-> and we try to probe it (useless, but I don't see a good way of
-> avoiding it) then we'll deadlock when device_attach locks that device.
-
-Ugh, that's nasty.  Trying to fix this would most likely devolve into
-trying to shove things onto the deferred list in the right order but
-that's definitely a very different solution with problems.
-
---egxrhndXibJAPJ54
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQEcBAEBCAAGBQJV8vTBAAoJECTWi3JdVIfQmHYH/1w26xjIUDlT4O8IxqvkyoGh
-BhTIIQWoiEWZXfJ96aNqM8l5Du35u0pac3Q12yRJr08EyTnFQmA7TQXb7yWlldoA
-1Gkd4wkWQ8/R8Kcx+wbVXUKODgEcRcoV17bOoqA8Nfyd5nVUY2xW10jMf/AwpXXR
-lm4MU0Wafx+1YnvfqcX0ZIIsSnQEcKKh5iLRsrdhjAnjXCI3qn0ZAs1abNRi+0BR
-GRa3dx0DU+eVYl1VyddlYz2LIda2SnfxSfj/E7BVDXyEuSSLd6j+TUdzZdabjjWA
-wvPtKKs7Ei7LaagpYS6JaMYyfNu2r8/uaOOcDZXjI89g2QmflY0RhyhaPpuSMgA=
-=QJVT
------END PGP SIGNATURE-----
-
---egxrhndXibJAPJ54--
+Daniel
