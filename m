@@ -1,101 +1,73 @@
 From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH 11/11] ARM: STi: STiH407: Add spi default pinctrl groups.
-Date: Fri, 11 Sep 2015 18:56:35 +0100
-Message-ID: <20150911175635.GG18779@x1>
+Subject: Re: [PATCH 10/11] ARM: DT: STiH407: Add RMII pinctrl support
+Date: Fri, 11 Sep 2015 18:57:00 +0100
+Message-ID: <20150911175700.GH18779@x1>
 References: <1441991194-11948-1-git-send-email-peter.griffin@linaro.org>
- <1441991194-11948-12-git-send-email-peter.griffin@linaro.org>
+ <1441991194-11948-11-git-send-email-peter.griffin@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1441991194-11948-12-git-send-email-peter.griffin@linaro.org>
+In-Reply-To: <1441991194-11948-11-git-send-email-peter.griffin@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Peter Griffin <peter.griffin@linaro.org>
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, srinivas.kandagatla@gmail.com, maxime.coquelin@st.com, patrice.chotard@st.com, devicetree@vger.kernel.org
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, srinivas.kandagatla@gmail.com, maxime.coquelin@st.com, patrice.chotard@st.com, devicetree@vger.kernel.org, Giuseppe Cavallaro <peppe.cavallaro@st.com>
 List-Id: devicetree@vger.kernel.org
 
 On Fri, 11 Sep 2015, Peter Griffin wrote:
 
-> Now we have default pinconfig groups for each SPI
-> controller ensure it is used by the SPI controller
-> node.
+> This patch adds the RMII pinctrl support for the Synopsys
+> MAC on STiH407 SoCs.
 >=20
+> Signed-off-by: Giuseppe Cavallaro <peppe.cavallaro@st.com>
 > Signed-off-by: Peter Griffin <peter.griffin@linaro.org>
 > ---
->  arch/arm/boot/dts/stih407-family.dtsi | 14 ++++++++++++++
->  1 file changed, 14 insertions(+)
+>  arch/arm/boot/dts/stih407-pinctrl.dtsi | 27 ++++++++++++++++++++++++=
++++
+>  1 file changed, 27 insertions(+)
 
 Acked-by: Lee Jones <lee.jones@linaro.org>
-=20
-> diff --git a/arch/arm/boot/dts/stih407-family.dtsi b/arch/arm/boot/dt=
-s/stih407-family.dtsi
-> index 838b812..94a2fec 100644
-> --- a/arch/arm/boot/dts/stih407-family.dtsi
-> +++ b/arch/arm/boot/dts/stih407-family.dtsi
-> @@ -381,6 +381,8 @@
->  			interrupts =3D <GIC_SPI 113 IRQ_TYPE_LEVEL_HIGH>;
->  			clocks =3D <&clk_s_c0_flexgen CLK_EXT2F_A9>;
->  			clock-names =3D "ssc";
-> +			pinctrl-names =3D "default";
-> +			pinctrl-0 =3D <&pinctrl_spi1_default>;
+
+> diff --git a/arch/arm/boot/dts/stih407-pinctrl.dtsi b/arch/arm/boot/d=
+ts/stih407-pinctrl.dtsi
+> index 473f2ea..e80cac5 100644
+> --- a/arch/arm/boot/dts/stih407-pinctrl.dtsi
+> +++ b/arch/arm/boot/dts/stih407-pinctrl.dtsi
+> @@ -256,6 +256,33 @@
+>  						phyclk =3D <&pio2 3 ALT1 OUT NICLK 0 CLK_A>;
+>  					};
+>  				};
+> +
+> +				pinctrl_rmii1: rmii1-0 {
+> +					st,pins {
+> +						txd0 =3D <&pio0 0 ALT1 OUT SE_NICLK_IO 0 CLK_A>;
+> +						txd1 =3D <&pio0 1 ALT1 OUT SE_NICLK_IO 0 CLK_A>;
+> +						txen =3D <&pio0 5 ALT1 OUT SE_NICLK_IO 0 CLK_A>;
+> +						mdio =3D <&pio1 0 ALT1 OUT BYPASS 0>;
+> +						mdc =3D <&pio1 1 ALT1 OUT NICLK 0 CLK_A>;
+> +						mdint =3D <&pio1 3 ALT1 IN BYPASS 0>;
+> +						rxd0 =3D <&pio1 4 ALT1 IN SE_NICLK_IO 0 CLK_B>;
+> +						rxd1 =3D <&pio1 5 ALT1 IN SE_NICLK_IO 0 CLK_B>;
+> +						rxdv =3D <&pio2 0 ALT1 IN SE_NICLK_IO 0 CLK_B>;
+> +						rx_er =3D <&pio2 1 ALT1 IN SE_NICLK_IO 0 CLK_A>;
+> +					};
+> +				};
+> +
+> +				pinctrl_rmii1_phyclk: rmii1_phyclk {
+> +					st,pins {
+> +						phyclk =3D <&pio2 3 ALT1 OUT NICLK 0 CLK_A>;
+> +					};
+> +				};
+> +
+> +				pinctrl_rmii1_phyclk_ext: rmii1_phyclk_ext {
+> +					st,pins {
+> +						phyclk =3D <&pio2 3 ALT2 IN NICLK 0 CLK_A>;
+> +					};
+> +				};
+>  			};
 > =20
->  			status =3D "disabled";
->  		};
-> @@ -391,6 +393,8 @@
->  			interrupts =3D <GIC_SPI 114 IRQ_TYPE_LEVEL_HIGH>;
->  			clocks =3D <&clk_s_c0_flexgen CLK_EXT2F_A9>;
->  			clock-names =3D "ssc";
-> +			pinctrl-names =3D "default";
-> +			pinctrl-0 =3D <&pinctrl_spi2_default>;
-> =20
->  			status =3D "disabled";
->  		};
-> @@ -401,6 +405,8 @@
->  			interrupts =3D <GIC_SPI 115 IRQ_TYPE_LEVEL_HIGH>;
->  			clocks =3D <&clk_s_c0_flexgen CLK_EXT2F_A9>;
->  			clock-names =3D "ssc";
-> +			pinctrl-names =3D "default";
-> +			pinctrl-0 =3D <&pinctrl_spi3_default>;
-> =20
->  			status =3D "disabled";
->  		};
-> @@ -411,6 +417,8 @@
->  			interrupts =3D <GIC_SPI 116 IRQ_TYPE_LEVEL_HIGH>;
->  			clocks =3D <&clk_s_c0_flexgen CLK_EXT2F_A9>;
->  			clock-names =3D "ssc";
-> +			pinctrl-names =3D "default";
-> +			pinctrl-0 =3D <&pinctrl_spi4_default>;
-> =20
->  			status =3D "disabled";
->  		};
-> @@ -422,6 +430,8 @@
->  			interrupts =3D <GIC_SPI 135 IRQ_TYPE_LEVEL_HIGH>;
->  			clocks =3D <&clk_sysin>;
->  			clock-names =3D "ssc";
-> +			pinctrl-names =3D "default";
-> +			pinctrl-0 =3D <&pinctrl_spi10_default>;
-> =20
->  			status =3D "disabled";
->  		};
-> @@ -432,6 +442,8 @@
->  			interrupts =3D <GIC_SPI 136 IRQ_TYPE_LEVEL_HIGH>;
->  			clocks =3D <&clk_sysin>;
->  			clock-names =3D "ssc";
-> +			pinctrl-names =3D "default";
-> +			pinctrl-0 =3D <&pinctrl_spi11_default>;
-> =20
->  			status =3D "disabled";
->  		};
-> @@ -442,6 +454,8 @@
->  			interrupts =3D <GIC_SPI 137 IRQ_TYPE_LEVEL_HIGH>;
->  			clocks =3D <&clk_sysin>;
->  			clock-names =3D "ssc";
-> +			pinctrl-names =3D "default";
-> +			pinctrl-0 =3D <&pinctrl_spi12_default>;
-> =20
->  			status =3D "disabled";
->  		};
+>  			pwm1 {
 
 --=20
 Lee Jones
