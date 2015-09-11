@@ -1,84 +1,99 @@
-From: Peter Griffin <peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: [PATCH v2 0/9] Add support for FDMA DMA controller found on STi chipsets
-Date: Fri, 11 Sep 2015 15:14:22 +0100
-Message-ID: <1441980871-24475-1-git-send-email-peter.griffin@linaro.org>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, srinivas.kandagatla-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, maxime.coquelin-qxv4g6HH51o@public.gmane.org, patrice.chotard-qxv4g6HH51o@public.gmane.org, vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org
-Cc: peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Peter Griffin <peter.griffin@linaro.org>
+Subject: [PATCH v2 2/9] dmaengine: st_fdma: Add st fdma platform specific header
+Date: Fri, 11 Sep 2015 15:14:24 +0100
+Message-ID: <1441980871-24475-3-git-send-email-peter.griffin@linaro.org>
+References: <1441980871-24475-1-git-send-email-peter.griffin@linaro.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1441980871-24475-1-git-send-email-peter.griffin@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, srinivas.kandagatla@gmail.com, maxime.coquelin@st.com, patrice.chotard@st.com, vinod.koul@intel.com
+Cc: peter.griffin@linaro.org, lee.jones@linaro.org, robh+dt@kernel.org, dmaengine@vger.kernel.org, devicetree@vger.kernel.org, Ludovic Barre <ludovic.barre@st.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Vinod,
-
-This patchset adds support for the Flexible Direct Memory Access (FDMA) core
-found on STi chipsets from STMicroelectronics. The FDMA is a slim (xp70) core CPU
-with a dedicated firmware. It is a general purpose DMA controller supporting
-16 independent channels and data can be moved from memory to memory or between
-memory and paced latency critical real time targets.
-
-After some discussion with the DT maintainers I've decided not to include the
-firmware name in DT, and generate the name based on the compatible string.
-This is in keeping with how most other kernel drivers request firmware, and avoids
-a new DT firmware name binding.
-
-I've also dropped the xbar support for the moment, as I believe it should be
-re-worked based on some of the xbar API's that TI recently added. As requested
-I've also split it into smaller patches to help with faster review.
-
-regards,
-
-Peter.
-
-Changes since v1:
- - split into smaller patches for easier / faster review (Vinod)
- - new fill_hw_mode() with common code (Vinod)
- - new config_reqctrl() called from *_prep() instead of device_config cb (Vinod)
- - fdma-xbar support removed (Peter)
- - rework firmware name mechanism so fwname isn't in DT (Peter / Lee)
- - st_fdma_seg_to_mem can be static (Paul)
- - EXPORT_SYMBOL st_fdma_filter_fn not required (Paul)
- - s/channel/channels (vinod)
- - better describe "Must be <3>" (vinod)
- - sizeof(*ehdr) (vinod)
- - print values on error debug (vinod)
- - empty line (Vinod)
- - Update to -EIO (Vinod)
- - Make st_fdma tristate (Paul)
- - Remove __exit tag from .remove (Maxime)
- - Update MAINTAINERS rule to fdma* (Lee)
- - Unit address should match reg property (Lee)
-
-Peter Griffin (9):
-  dmaengine: st_fdma: Add STMicroelectronics FDMA DT binding
-    documentation
-  dmaengine: st_fdma: Add st fdma platform specific header
-  dmaengine: st_fdma:  Add STMicroelectronics FDMA driver header file
-  dmaengine: st_fdma: Add STMicroelectronics FDMA engine driver support
-  dmaengine: st_fdma: Add xp70 firmware loading mechanism.
-  dmaengine: st_fdma: Add fdma suspend and resume callbacks.
-  ARM: STi: DT: STiH407: Add FDMA driver dt nodes.
-  MAINTAINERS: Add FDMA driver files to STi section.
-  ARM: multi_v7_defconfig: Enable STi FDMA driver
-
- Documentation/devicetree/bindings/dma/st_fdma.txt |   78 ++
- MAINTAINERS                                       |    1 +
- arch/arm/boot/dts/stih407-family.dtsi             |   51 +
- arch/arm/configs/multi_v7_defconfig               |    1 +
- drivers/dma/Kconfig                               |   14 +
- drivers/dma/Makefile                              |    1 +
- drivers/dma/st_fdma.c                             | 1204 +++++++++++++++++++++
- drivers/dma/st_fdma.h                             |  237 ++++
- include/linux/platform_data/dma-st_fdma.h         |   72 ++
- 9 files changed, 1659 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/dma/st_fdma.txt
- create mode 100644 drivers/dma/st_fdma.c
- create mode 100644 drivers/dma/st_fdma.h
+Signed-off-by: Ludovic Barre <ludovic.barre@st.com>
+Signed-off-by: Peter Griffin <peter.griffin@linaro.org>
+---
+ include/linux/platform_data/dma-st_fdma.h | 72 +++++++++++++++++++++++++++++++
+ 1 file changed, 72 insertions(+)
  create mode 100644 include/linux/platform_data/dma-st_fdma.h
 
+diff --git a/include/linux/platform_data/dma-st_fdma.h b/include/linux/platform_data/dma-st_fdma.h
+new file mode 100644
+index 0000000..ea2523b
+--- /dev/null
++++ b/include/linux/platform_data/dma-st_fdma.h
+@@ -0,0 +1,72 @@
++/*
++ * dma-st-fdma.h
++ *
++ * Copyright (C) 2014 STMicroelectronics
++ * Author: Ludovic Barre <Ludovic.barre@st.com>
++ * License terms:  GNU General Public License (GPL), version 2
++ */
++#ifndef __PLAT_ST_FDMA_H
++#define __PLAT_ST_FDMA_H
++
++#include <linux/dmaengine.h>
++
++/*
++ * Channel type
++ */
++enum st_fdma_type {
++	ST_FDMA_TYPE_FREE_RUN,
++	ST_FDMA_TYPE_PACED,
++};
++
++struct st_fdma_cfg {
++	struct device_node *of_node;
++	enum st_fdma_type type;
++	dma_addr_t dev_addr;
++	enum dma_transfer_direction dir;
++	int req_line; /* request line */
++	u32 req_ctrl; /* Request control */
++};
++
++#define FW_NAME_SIZE 30
++
++/**
++ * struct st_fdma_platform_data - platform specific data for FDMA engine
++ *
++ * @nr_channels:	Number of channels supported by hardware
++ * @fw_name:		The firmware name
++ */
++struct st_fdma_platform_data {
++	u32 nr_channels;
++	u32 id;
++	char fw_name[FW_NAME_SIZE];
++};
++
++/*
++ * request control bits
++ */
++#define REQ_CTRL_NUM_OPS_MASK		GENMASK(31, 24)
++#define REQ_CTRL_NUM_OPS(n)		(REQ_CTRL_NUM_OPS_MASK & ((n) << 24))
++#define REQ_CTRL_INITIATOR_MASK		BIT(22)
++#define	REQ_CTRL_INIT0			(0x0 << 22)
++#define	REQ_CTRL_INIT1			(0x1 << 22)
++#define REQ_CTRL_INC_ADDR_ON		BIT(21)
++#define REQ_CTRL_DATA_SWAP_ON		BIT(17)
++#define REQ_CTRL_WNR			BIT(14)
++#define REQ_CTRL_OPCODE_MASK		GENMASK(7, 4)
++#define REQ_CTRL_OPCODE_LD_ST1		(0x0 << 4)
++#define REQ_CTRL_OPCODE_LD_ST2		(0x1 << 4)
++#define REQ_CTRL_OPCODE_LD_ST4		(0x2 << 4)
++#define REQ_CTRL_OPCODE_LD_ST8		(0x3 << 4)
++#define REQ_CTRL_OPCODE_LD_ST16		(0x4 << 4)
++#define REQ_CTRL_OPCODE_LD_ST32		(0x5 << 4)
++#define REQ_CTRL_OPCODE_LD_ST64		(0x6 << 4)
++#define REQ_CTRL_HOLDOFF_MASK		GENMASK(2, 0)
++#define REQ_CTRL_HOLDOFF(n)		((n) & REQ_CTRL_HOLDOFF_MASK)
++
++/* bits used by client to configure request control */
++#define REQ_CTRL_CFG_MASK (REQ_CTRL_HOLDOFF_MASK | REQ_CTRL_DATA_SWAP_ON \
++			| REQ_CTRL_INC_ADDR_ON | REQ_CTRL_INITIATOR_MASK)
++
++bool st_fdma_filter_fn(struct dma_chan *chan, void *param);
++
++#endif	/* __PLAT_ST_FDMA_H */
 -- 
 1.9.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
