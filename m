@@ -1,71 +1,68 @@
-From: Stefano Stabellini <stefano.stabellini-mvvWK6WmYclDPfheJLI6IQ@public.gmane.org>
-Subject: Re: [PATCH] efi/libstub/fdt: Standardize the names of EFI stub
- parameters
-Date: Fri, 11 Sep 2015 14:14:09 +0100
-Message-ID: <alpine.DEB.2.02.1509111410180.2672@kaball.uk.xensource.com>
-References: <1441874516-11364-1-git-send-email-zhaoshenglong@huawei.com>
- <20150910095208.GA29293@leverpostej>
- <alpine.DEB.2.02.1509101116580.2672@kaball.uk.xensource.com>
- <20150910112418.GC29293@leverpostej>
- <alpine.DEB.2.02.1509101223580.2672@kaball.uk.xensource.com>
- <20150910121514.GE29293@leverpostej>
- <alpine.DEB.2.02.1509101429480.2672@kaball.uk.xensource.com>
- <20150910144938.GI29293@leverpostej>
- <alpine.DEB.2.02.1509101655020.2672@kaball.uk.xensource.com>
- <20150910162302.GN29293@leverpostej>
- <20150911124643.GB4530@olila.local.net-space.pl>
+From: Jyri Sarha <jsarha-l0cyMroinI0@public.gmane.org>
+Subject: [PATCH RFC] ASoC: simple-card: Update clocks binding for simple-card DAI subnodes
+Date: Fri, 11 Sep 2015 16:18:02 +0300
+Message-ID: <1441977482-29215-1-git-send-email-jsarha@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
+Content-Type: text/plain
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20150911124643.GB4530-fJNZiO034lp9pOct4yEdx/3oZC3j2Omk@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Daniel Kiper <daniel.kiper-QHcLZuEGTsvQT0dZR+AlfA@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stefano Stabellini <stefano.stabellini-mvvWK6WmYclDPfheJLI6IQ@public.gmane.org>, Shannon Zhao <zhaoshenglong-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-efi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-efi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "Ian.Campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org" <Ian.Campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>, "linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "leif.lindholm-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <leif.lindholm-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "xen-devel-GuqFBffKawuEi8DpZVb4nw@public.gmane.org" <xen-devel-GuqFBffKawuEi8DpZVb4nw@public.gmane.org>, "julien.grall-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org" <julien.grall-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>, "freebsd-arm-h+KGxgPPiopAfugRpC6u6w@public.gmane.org" <freebsd-arm-h+KGxgPPiopAfugRpC6u6w@public.gmane.org>, "matt.fleming-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org" <matt.fleming-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, "christoffer.dall-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <christoffer.dall@linaro.o>
+To: linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: kuninori.morimoto.gx-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org, Xiubo.Lee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, peter.ujfalusi-l0cyMroinI0@public.gmane.org, liam.r.girdwood-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, Jyri Sarha <jsarha-l0cyMroinI0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 11 Sep 2015, Daniel Kiper wrote:
-> On Thu, Sep 10, 2015 at 05:23:02PM +0100, Mark Rutland wrote:
-> > > > C) When you could go:
-> > > >
-> > > >    DT -> Discover Xen -> Xen-specific stuff -> Xen-specific EFI/ACPI discovery
-> > >
-> > > I take you mean discovering Xen with the usual Xen hypervisor node on
-> > > device tree. I think that C) is a good option actually. I like it. Not
-> > > sure why we didn't think about this earlier. Is there anything EFI or
-> > > ACPI which is needed before Xen support is discovered by
-> > > arch/arm64/kernel/setup.c:setup_arch -> xen_early_init()?
-> >
-> > Currently lots (including the memory map). With the stuff to support
-> > SPCR, the ACPI discovery would be moved before xen_early_init().
-> >
-> > > If not, we could just go for this. A lot of complexity would go away.
-> >
-> > I suspect this would still be fairly complex, but would at least prevent
-> > the Xen-specific EFI handling from adversely affecting the native case.
-> >
-> > > > D) If you want to be generic:
-> > > >    EFI -> EFI application -> EFI tables -> ACPI tables -> Xen-specific stuff
-> > > >           \------------------------------------------/
-> > > > 	   (virtualize these, provide shims to Dom0, but handle
-> > > > 	    everything in Xen itself)
-> > >
-> > > I think that this is good in theory but could turn out to be a lot of
-> > > work in practice. We could probably virtualize the RuntimeServices but
-> > > the BootServices are troublesome.
-> >
-> > What's troublesome with the boot services?
-> >
-> > What can't be simulated?
-> 
-> How do you want to access bare metal EFI boot services from dom0 if they
-> were shutdown long time ago before loading dom0 image? What do you need
-> from EFI boot services in dom0?
+The updated binding provides a way to set clock-ID and direction
+parameters for DAI drivers set_sysclk() call back.
 
-That's right. Trying to emulate BootServices after the real
-ExitBootServices has already been called seems like a very bad plan.
+Signed-off-by: Jyri Sarha <jsarha-l0cyMroinI0@public.gmane.org>
+---
+I proposed something similar about a year ago, but Mark rejected that
+at the time. This RFC is to start that discussion again. This time
+before I do any code changes.
 
-I think that whatever interface we come up with, would need to be past
-ExitBootServices.
+Best regards,
+Jyri
+
+ Documentation/devicetree/bindings/sound/simple-card.txt | 17 ++++++++++++++++-
+ 1 file changed, 16 insertions(+), 1 deletion(-)
+
+diff --git a/Documentation/devicetree/bindings/sound/simple-card.txt b/Documentation/devicetree/bindings/sound/simple-card.txt
+index cf3979e..d10bf2d 100644
+--- a/Documentation/devicetree/bindings/sound/simple-card.txt
++++ b/Documentation/devicetree/bindings/sound/simple-card.txt
+@@ -76,6 +76,7 @@ Optional CPU/CODEC subnodes properties:
+ - dai-tdm-slot-num			: Please refer to tdm-slot.txt.
+ - dai-tdm-slot-width			: Please refer to tdm-slot.txt.
+ - clocks / system-clock-frequency	: specify subnode's clock if needed.
++
+ 					  it can be specified via "clocks" if system has
+ 					  clock node (= common clock), or "system-clock-frequency"
+ 					  (if system doens't support common clock)
+@@ -83,7 +84,21 @@ Optional CPU/CODEC subnodes properties:
+ 					  enabled with clk_prepare_enable()
+ 					  in dai startup() and disabled with
+ 					  clk_disable_unprepare() in dai
+-					  shutdown().
++					  shutdown(). "system-clock-frequency" 
++					  can also be an array if more than one
++					  clock is described.
++- clock-ids				: An array of clock ID integers,
++					  preferrably defined in DT header.
++					  Each entry corresponds to the same
++					  index postion first in "clocks" and
++					  after the end of clocks array to
++					  "system-clock-frequency" array.
++- clock-dirs				: An array of integers describing
++					  clock directions: CLK_IN (= 0) or
++					  OUT (= 1). Entries in the array
++					  refer to clocks in the same way as
++					  in clock-ids property.
++
+ 
+ Example 1 - single DAI link:
+ 
+-- 
+1.9.1
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
