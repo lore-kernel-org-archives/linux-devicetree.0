@@ -1,43 +1,30 @@
-From: Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH RESEND 2/5] extcon: arizona: Add support for new ADC value
- headphone detect
-Date: Fri, 11 Sep 2015 16:49:52 +0900
-Message-ID: <55F287A0.2070406@samsung.com>
+From: Chanwoo Choi <cw00.choi@samsung.com>
+Subject: Re: [PATCH RESEND 4/5] extcon: arizona: Add support for general
+ purpose switch
+Date: Fri, 11 Sep 2015 16:50:01 +0900
+Message-ID: <55F287A9.7000708@samsung.com>
 References: <1441787690-30148-1-git-send-email-ckeepax@opensource.wolfsonmicro.com>
- <1441787690-30148-2-git-send-email-ckeepax@opensource.wolfsonmicro.com>
+ <1441787690-30148-4-git-send-email-ckeepax@opensource.wolfsonmicro.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-reply-to: <1441787690-30148-2-git-send-email-ckeepax-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Charles Keepax <ckeepax-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
-Cc: myungjoo.ham-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, patches-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-reply-to: <1441787690-30148-4-git-send-email-ckeepax@opensource.wolfsonmicro.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Charles Keepax <ckeepax@opensource.wolfsonmicro.com>, lee.jones@linaro.org
+Cc: myungjoo.ham@samsung.com, sameo@linux.intel.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, patches@opensource.wolfsonmicro.com
 List-Id: devicetree@vger.kernel.org
 
 On 2015=EB=85=84 09=EC=9B=94 09=EC=9D=BC 17:34, Charles Keepax wrote:
-> Newer devices give users the option to make the 3/4 pole jack
-> determination using a software comparison rather than a hardware one.
-> This patch adds support for this functionality.
+> The switch is typically used in conjunction with the MICDET clamp in
+> order to suppress pops and clicks associated with jack insertion.
 >=20
-> Signed-off-by: Charles Keepax <ckeepax-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
+> Signed-off-by: Charles Keepax <ckeepax@opensource.wolfsonmicro.com>
 > ---
->  drivers/extcon/extcon-arizona.c |   67 +++++++++++++++++++++++++++++=
-++++++---
->  1 files changed, 61 insertions(+), 6 deletions(-)
->=20
-> diff --git a/drivers/extcon/extcon-arizona.c b/drivers/extcon/extcon-=
-arizona.c
-> index 4b9f09c..f372156 100644
-> --- a/drivers/extcon/extcon-arizona.c
-> +++ b/drivers/extcon/extcon-arizona.c
+>  drivers/extcon/extcon-arizona.c |    6 ++++++
+>  1 files changed, 6 insertions(+), 0 deletions(-)
 
-Acked-by: Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Acked-by: Chanwoo Choi <cw00.choi@samsung.com>
 
 Thanks,
 Chanwoo Choi
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
