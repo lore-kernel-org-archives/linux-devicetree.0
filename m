@@ -1,85 +1,196 @@
-From: Chanwoo Choi <cw00.choi@samsung.com>
-Subject: Re: [PATCH 2/6] extcon: arizona: Additional settings to improve
- accuracy of HP detect
-Date: Fri, 11 Sep 2015 17:16:20 +0900
-Message-ID: <55F28DD4.3070303@samsung.com>
-References: <1441885307-24499-1-git-send-email-ckeepax@opensource.wolfsonmicro.com>
- <1441885307-24499-2-git-send-email-ckeepax@opensource.wolfsonmicro.com>
+From: Chen Feng <puck.chen-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
+Subject: [PATCH V2 3/3] reset: hi6220: Reset driver for hisilicon hi6220 SoC
+Date: Fri, 11 Sep 2015 16:18:38 +0800
+Message-ID: <1441959518-178696-3-git-send-email-puck.chen@hisilicon.com>
+References: <1441959518-178696-1-git-send-email-puck.chen@hisilicon.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-reply-to: <1441885307-24499-2-git-send-email-ckeepax@opensource.wolfsonmicro.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Charles Keepax <ckeepax@opensource.wolfsonmicro.com>, lee.jones@linaro.org
-Cc: myungjoo.ham@samsung.com, sameo@linux.intel.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, patches@opensource.wolfsonmicro.com
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1441959518-178696-1-git-send-email-puck.chen-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: puck.chen-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, haojian.zhuang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, zhangfei.gao-H32Fclmsjq1BDgjK7y7TUQ@public.gmane.org
+Cc: xuyiping-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, bintian.wang-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dan.zhao-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, suzhuangluan-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, w.f-hv44wF8Li93QT0dZR+AlfA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 2015=EB=85=84 09=EC=9B=94 10=EC=9D=BC 20:41, Charles Keepax wrote:
-> If the TST_CAP_SEL bits aren't set correctly on wm5110/8280 there wil=
-l
-> be a 100k load along side the headphones, which will affect the accur=
-ary
-> towards the very top of the detection range. This patch sets those bi=
-ts.
->=20
-> Signed-off-by: Charles Keepax <ckeepax@opensource.wolfsonmicro.com>
-> ---
->  drivers/extcon/extcon-arizona.c |   19 +++++++++++++++++--
->  1 files changed, 17 insertions(+), 2 deletions(-)
->=20
-> diff --git a/drivers/extcon/extcon-arizona.c b/drivers/extcon/extcon-=
-arizona.c
-> index b48fb29..7bfaacd 100644
-> --- a/drivers/extcon/extcon-arizona.c
-> +++ b/drivers/extcon/extcon-arizona.c
-> @@ -43,6 +43,9 @@
->  #define ARIZONA_MICD_CLAMP_MODE_JDL_GP5H 0x9
->  #define ARIZONA_MICD_CLAMP_MODE_JDH_GP5H 0xb
-> =20
-> +#define ARIZONA_TST_CAP_DEFAULT 0x3
-> +#define ARIZONA_TST_CAP_CLAMP   0x1
-> +
->  #define ARIZONA_HPDET_MAX 10000
-> =20
->  #define HPDET_DEBOUNCE 500
-> @@ -147,6 +150,7 @@ static void arizona_extcon_hp_clamp(struct arizon=
-a_extcon_info *info,
->  {
->  	struct arizona *arizona =3D info->arizona;
->  	unsigned int mask =3D 0, val =3D 0;
-> +	unsigned int cap_sel =3D 0;
->  	int ret;
-> =20
->  	switch (arizona->type) {
-> @@ -154,10 +158,21 @@ static void arizona_extcon_hp_clamp(struct ariz=
-ona_extcon_info *info,
->  	case WM8280:
->  		mask =3D ARIZONA_HP1L_SHRTO | ARIZONA_HP1L_FLWR |
->  		       ARIZONA_HP1L_SHRTI;
-> -		if (clamp)
-> +		if (clamp) {
->  			val =3D ARIZONA_HP1L_SHRTO;
-> -		else
-> +			cap_sel =3D ARIZONA_TST_CAP_CLAMP;
-> +		} else {
->  			val =3D ARIZONA_HP1L_FLWR | ARIZONA_HP1L_SHRTI;
-> +			cap_sel =3D ARIZONA_TST_CAP_DEFAULT;
-> +		}
-> +
-> +		ret =3D regmap_update_bits(arizona->regmap,
-> +					 ARIZONA_HP_TEST_CTRL_1,
-> +					 ARIZONA_HP1_TST_CAP_SEL_MASK,
-> +					 cap_sel);
-> +		if (ret !=3D 0)
-> +			dev_warn(arizona->dev,
-> +				 "Failed to set TST_CAP_SEL: %d\n", ret);
->  		break;
->  	default:
->  		mask =3D ARIZONA_RMV_SHRT_HP1L;
->=20
+Add reset driver for hi6220-hikey board,this driver supply deassert
+of IP. on hi6220 SoC.
 
-Acked-by: Chanwoo Choi <cw00.choi@samsung.com>
+Signed-off-by: Chen Feng <puck.chen-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
+---
+ drivers/reset/Kconfig                  |   1 +
+ drivers/reset/Makefile                 |   1 +
+ drivers/reset/hisilicon/Kconfig        |   5 ++
+ drivers/reset/hisilicon/Makefile       |   1 +
+ drivers/reset/hisilicon/hi6220_reset.c | 118 +++++++++++++++++++++++++++++++++
+ 5 files changed, 126 insertions(+)
+ create mode 100644 drivers/reset/hisilicon/Kconfig
+ create mode 100644 drivers/reset/hisilicon/Makefile
+ create mode 100644 drivers/reset/hisilicon/hi6220_reset.c
 
-Thanks,
-Chanwoo Choi
+diff --git a/drivers/reset/Kconfig b/drivers/reset/Kconfig
+index 0615f50..df37212 100644
+--- a/drivers/reset/Kconfig
++++ b/drivers/reset/Kconfig
+@@ -13,3 +13,4 @@ menuconfig RESET_CONTROLLER
+ 	  If unsure, say no.
+ 
+ source "drivers/reset/sti/Kconfig"
++source "drivers/reset/hisilicon/Kconfig"
+diff --git a/drivers/reset/Makefile b/drivers/reset/Makefile
+index 157d421..331d7b2 100644
+--- a/drivers/reset/Makefile
++++ b/drivers/reset/Makefile
+@@ -3,3 +3,4 @@ obj-$(CONFIG_ARCH_SOCFPGA) += reset-socfpga.o
+ obj-$(CONFIG_ARCH_BERLIN) += reset-berlin.o
+ obj-$(CONFIG_ARCH_SUNXI) += reset-sunxi.o
+ obj-$(CONFIG_ARCH_STI) += sti/
++obj-$(CONFIG_ARCH_HISI) += hisilicon/
+diff --git a/drivers/reset/hisilicon/Kconfig b/drivers/reset/hisilicon/Kconfig
+new file mode 100644
+index 0000000..26bf95a
+--- /dev/null
++++ b/drivers/reset/hisilicon/Kconfig
+@@ -0,0 +1,5 @@
++config COMMON_RESET_HI6220
++	tristate "Hi6220 Reset Driver"
++	depends on (ARCH_HISI && RESET_CONTROLLER)
++	help
++	  Build the Hisilicon Hi6220 reset driver.
+diff --git a/drivers/reset/hisilicon/Makefile b/drivers/reset/hisilicon/Makefile
+new file mode 100644
+index 0000000..c932f86
+--- /dev/null
++++ b/drivers/reset/hisilicon/Makefile
+@@ -0,0 +1 @@
++obj-$(CONFIG_COMMON_RESET_HI6220) += hi6220_reset.o
+diff --git a/drivers/reset/hisilicon/hi6220_reset.c b/drivers/reset/hisilicon/hi6220_reset.c
+new file mode 100644
+index 0000000..097133d
+--- /dev/null
++++ b/drivers/reset/hisilicon/hi6220_reset.c
+@@ -0,0 +1,118 @@
++/*
++ * Hisilicon Hi6220 reset controller driver
++ *
++ * Copyright (c) 2015 Hisilicon Limited.
++ *
++ * Author: Feng Chen <puck.chen-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License version 2 as
++ * published by the Free Software Foundation.
++ */
++
++#include <linux/init.h>
++#include <linux/bitops.h>
++#include <linux/io.h>
++#include <linux/of.h>
++#include <linux/of_address.h>
++#include <linux/reset-controller.h>
++#include <linux/reset.h>
++#include <linux/sizes.h>
++#include <linux/slab.h>
++
++#define ASSET_OFFSET            0x300
++#define DEASSET_OFFSET          0x304
++
++struct hi6220_reset_data {
++	spinlock_t			reset_lock; /*device spin-lock*/
++	void __iomem			*src_base;
++	void __iomem			*asset_base;
++	void __iomem			*deasset_base;
++	struct reset_controller_dev	rc_dev;
++};
++
++static int hi6220_reset_assert(struct reset_controller_dev *rc_dev,
++			       unsigned long idx)
++{
++	struct hi6220_reset_data *data = container_of(rc_dev,
++			struct hi6220_reset_data,
++			rc_dev);
++
++	unsigned long flags;
++	int bank = idx >> 8;
++	int offset = idx & 0xff;
++
++	spin_lock_irqsave(&data->reset_lock, flags);
++
++	writel(BIT(offset), data->asset_base + (bank * 0x10));
++
++	spin_unlock_irqrestore(&data->reset_lock, flags);
++
++	return 0;
++}
++
++static int hi6220_reset_deassert(struct reset_controller_dev *rc_dev,
++				 unsigned long idx)
++{
++	struct hi6220_reset_data *data = container_of(rc_dev,
++			struct hi6220_reset_data,
++			rc_dev);
++
++	unsigned long flags;
++	int bank = idx >> 8;
++	int offset = idx & 0xff;
++
++	spin_lock_irqsave(&data->reset_lock, flags);
++
++	writel(BIT(offset), data->deasset_base + (bank * 0x10));
++
++	spin_unlock_irqrestore(&data->reset_lock, flags);
++
++	return 0;
++}
++
++static struct reset_control_ops hi6220_reset_ops = {
++	.assert = hi6220_reset_assert,
++	.deassert = hi6220_reset_deassert,
++};
++
++static int __init hi6220_reset_init(void)
++{
++	int ret;
++	struct device_node *np;
++	struct hi6220_reset_data *data;
++
++	data = kzalloc(sizeof(*data), GFP_KERNEL);
++	if (!data)
++		return -ENOMEM;
++
++	np = of_find_compatible_node(NULL, NULL, "hisilicon,hi6220_reset_ctl");
++	if (!np) {
++		ret = -ENXIO;
++		goto err_alloc;
++	}
++	spin_lock_init(&data->reset_lock);
++	data->src_base = of_iomap(np, 0);
++	if (!data->src_base) {
++		ret = -ENOMEM;
++		goto err_alloc;
++	}
++
++	data->asset_base = data->src_base + ASSET_OFFSET;
++	data->deasset_base = data->src_base + DEASSET_OFFSET;
++	data->rc_dev.owner = THIS_MODULE;
++	data->rc_dev.nr_resets = SZ_4K;
++	data->rc_dev.ops = &hi6220_reset_ops;
++	data->rc_dev.of_node = np;
++
++	if (IS_ENABLED(CONFIG_RESET_CONTROLLER))
++		reset_controller_register(&data->rc_dev);
++
++	return 0;
++
++err_alloc:
++	kfree(data);
++	return ret;
++}
++
++postcore_initcall(hi6220_reset_init);
+-- 
+1.9.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
