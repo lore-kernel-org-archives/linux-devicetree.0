@@ -1,213 +1,160 @@
-From: Olliver Schinagl <o.schinagl-U3FVU11NWA554TAoqtyWWQ@public.gmane.org>
-Subject: Re: [PATCH v2 1/1] ARM: dts: sun7i: Enable axp209 driver on olinuxino lime2
-Date: Fri, 11 Sep 2015 08:37:36 +0200
-Message-ID: <1025948D-A8F7-4E5A-98AF-03801A53DE23@ultimaker.com>
-References: <1441805204-6037-1-git-send-email-o.schinagl@ultimaker.com> <1441805204-6037-2-git-send-email-o.schinagl@ultimaker.com> <20150910181315.GM9885@lukather> <CAGb2v67GTAM3tqOUOmUjKmWGyewJar2NWAzF4bk4g+-7Yfdm0A@mail.gmail.com>
+From: "Leizhen (ThunderTown)" <thunder.leizhen-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH v5 2/4] Documentation: arm64/arm: dt bindings for numa.
+Date: Fri, 11 Sep 2015 14:43:00 +0800
+Message-ID: <55F277F4.8040404@huawei.com>
+References: <1439570374-4079-1-git-send-email-gkulkarni@caviumnetworks.com>
+ <1439570374-4079-3-git-send-email-gkulkarni@caviumnetworks.com>
+ <20150828123228.GE31748@leverpostej>
+ <CAL_JsqLOpUTVeKbkJ6uPi0EYistd=BowAHdtSmaUYYDhU6c9Sg@mail.gmail.com>
+ <55E17F58.5020101@huawei.com>
+ <CAFpQJXWO0xT0kxWf09L_XcAOXm1Lov8i2U2BQzk-x0TStj7vBg@mail.gmail.com>
+ <55EEE229.7070301@linaro.org>
+ <CAFpQJXV66dAfDMttMNTApyy1554-rvw=Q0n60BOtsp=61gJ+zQ@mail.gmail.com>
+ <CAFpQJXX0KYiKKgxM3B467PFLS0jCakTp8A2u=QEs8_Fj4EZYBg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain;
- charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAGb2v67GTAM3tqOUOmUjKmWGyewJar2NWAzF4bk4g+-7Yfdm0A-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <CAFpQJXX0KYiKKgxM3B467PFLS0jCakTp8A2u=QEs8_Fj4EZYBg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+To: Ganapatrao Kulkarni <gpkulkarni-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Hanjun Guo <hanjun.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "steve.capper-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <steve.capper-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "arnd-r2nGTMty4D4@public.gmane.org" <arnd-r2nGTMty4D4@public.gmane.org>, "al.stone-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <al.stone-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Catalin Marinas <Catalin.Marinas-5wv7dgnIgG8@public.gmane.org>, "ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org" <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, "leif.lindholm-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <leif.lindholm-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "rfranz-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org" <rfranz-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, "msalter-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org" <msalter-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, "grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org" <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Ganapatrao Kulkarni <gkulkarni-M3mlKVOIwJVv6pq1l3V1OWGXanvQGlWp@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hey chen,
 
-On September 11, 2015 4:57:03 AM CEST, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org> wrote:
->On Fri, Sep 11, 2015 at 2:13 AM, Maxime Ripard
-><maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
->> Hi Oliver,
->>
->> On Wed, Sep 09, 2015 at 03:26:44PM +0200, Olliver Schinagl wrote:
->>> The Olimex OLinuXino Lime2 uses the same AXP209 as was recently
->>> introduced this driver for its power regulation.
->>>
->>> Signed-off-by: Olliver Schinagl <o.schinagl-U3FVU11NWA554TAoqtyWWQ@public.gmane.org>
->>> ---
->>>  arch/arm/boot/dts/sun7i-a20-olinuxino-lime2.dts | 87
->+++++++++----------------
->>>  1 file changed, 31 insertions(+), 56 deletions(-)
->>>
->>> diff --git a/arch/arm/boot/dts/sun7i-a20-olinuxino-lime2.dts
->b/arch/arm/boot/dts/sun7i-a20-olinuxino-lime2.dts
->>> index d5c796c..dd90a1d 100644
->>> --- a/arch/arm/boot/dts/sun7i-a20-olinuxino-lime2.dts
->>> +++ b/arch/arm/boot/dts/sun7i-a20-olinuxino-lime2.dts
->>> @@ -71,14 +71,6 @@
->>>                       default-state = "on";
->>>               };
->>>       };
->>> -
->>> -     reg_axp_ipsout: axp_ipsout {
->>> -             compatible = "regulator-fixed";
->>> -             regulator-name = "axp-ipsout";
->>> -             regulator-min-microvolt = <5000000>;
->>> -             regulator-max-microvolt = <5000000>;
->>> -             regulator-always-on;
->>> -     };
->>
->> Why are you removing that regulator?
->
->This is really just a placeholder, rather than an actual regulator.
->
->From the bindings:
->
->- <input>-supply: a phandle to the regulator supply node. May be
->omitted if
->                inputs are unregulated, such as using the IPSOUT output
->                  from the PMIC.
->
->
->>>  };
->>>
->>>  &ahci {
->>> @@ -86,6 +78,10 @@
->>>       status = "okay";
->>>  };
->>>
->>> +&cpu0 {
->>> +     cpu-supply = <&reg_dcdc2>;
->>> +};
->>> +
->>>  &ehci0 {
->>>       status = "okay";
->>>  };
->>> @@ -112,57 +108,9 @@
->>>       status = "okay";
->>>
->>>       axp209: pmic@34 {
->>> -             compatible = "x-powers,axp209";
->>>               reg = <0x34>;
->>>               interrupt-parent = <&nmi_intc>;
->>>               interrupts = <0 IRQ_TYPE_LEVEL_LOW>;
->>> -
->>> -             interrupt-controller;
->>> -             #interrupt-cells = <1>;
->>> -
->>> -             acin-supply = <&reg_axp_ipsout>;
->>> -             vin2-supply = <&reg_axp_ipsout>;
->>> -             vin3-supply = <&reg_axp_ipsout>;
->>> -             ldo24in-supply = <&reg_axp_ipsout>;
->>> -             ldo3in-supply = <&reg_axp_ipsout>;
->>
->> And these supplies?
->>
->>> -             regulators {
->>> -                     vdd_rtc: ldo1 {
->>> -                             regulator-min-microvolt = <1300000>;
->>> -                             regulator-max-microvolt = <1300000>;
->>> -                             regulator-always-on;
->>> -                     };
->>> -
->>> -                     avcc: ldo2 {
->>> -                             regulator-min-microvolt = <1800000>;
->>> -                             regulator-max-microvolt = <3300000>;
->>> -                             regulator-always-on;
->>> -                     };
->>> -
->>> -                     vcc_csi0: ldo3 {
->>> -                             regulator-min-microvolt = <700000>;
->>> -                             regulator-max-microvolt = <3500000>;
->>> -                             regulator-always-on;
->>> -                     };
->>> -
->>> -                     vcc_csi1: ldo4 {
->>> -                             regulator-min-microvolt = <1250000>;
->>> -                             regulator-max-microvolt = <3300000>;
->>> -                             regulator-always-on;
->>> -                     };
->>> -
->>> -                     vdd_cpu: dcdc2 {
->>> -                             regulator-min-microvolt = <700000>;
->>> -                             regulator-max-microvolt = <2275000>;
->>> -                             regulator-always-on;
->>> -                     };
->>> -
->>> -                     vdd_int: dcdc3 {
->>> -                             regulator-min-microvolt = <700000>;
->>> -                             regulator-max-microvolt = <3500000>;
->>> -                             regulator-always-on;
->>> -                     };
->>> -             };
->>>       };
->>>  };
->>>
->>> @@ -243,6 +191,33 @@
->>>       status = "okay";
->>>  };
->>>
->>> +#include "axp209.dtsi"
->>> +
->>> +&reg_dcdc2 {
->>> +     regulator-always-on;
->>> +     regulator-min-microvolt = <1000000>;
->>> +     regulator-max-microvolt = <1450000>;
->>
->> This is outside of the operating voltages of the CPU.
->>
->>> +     regulator-name = "vdd-cpu";
->>> +};
->>> +
->>> +&reg_dcdc3 {
->>> +     regulator-always-on;
->>> +     regulator-min-microvolt = <1000000>;
->>> +     regulator-max-microvolt = <1400000>;
->>> +     regulator-name = "vdd-int-dll";
->>> +};
->>> +
->>> +&reg_ldo1 {
->>> +     regulator-name = "vdd-rtc";
->>> +};
->>> +
->>> +&reg_ldo2 {
->>> +     regulator-always-on;
->>> +     regulator-min-microvolt = <3000000>;
->>> +     regulator-max-microvolt = <3000000>;
->>> +     regulator-name = "avcc";
->>
->> You're changing the boundaries, why?
->
->The old boundaries seem to be from a very old dts, where we were
->listing the regulators' supported voltage range, instead of what
->the SoC could take.
-Is it very old? just checked the cubies in maxime's sunxi next and those where still there. I actually wrote these patches ages ago and forgot to submit them whats worse is on my behave, i didn't properly check for changes. Now that you mention it however, i do recall the discussion about these values. I will update them accordingly with the correct values.
 
-Sorry,
-Olliver
+On 2015/9/11 11:53, Ganapatrao Kulkarni wrote:
+> Hi Thunder,
+> 
+> 
+> On Tue, Sep 8, 2015 at 9:57 PM, Ganapatrao Kulkarni
+> <gpkulkarni-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+>> Hi Hanjun,
+>>
+>> On Tue, Sep 8, 2015 at 6:57 PM, Hanjun Guo <hanjun.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+>>> Hi Ganapatrao,
+>>>
+>>>
+>>> On 08/29/2015 10:56 PM, Ganapatrao Kulkarni wrote:
+>>>>
+>>>> Hi Thunder,
+>>>>
+>>>> On Sat, Aug 29, 2015 at 3:16 PM, Leizhen (ThunderTown)
+>>>> <thunder.leizhen-hv44wF8Li93QT0dZR+AlfA@public.gmane.org> wrote:
+>>>>>
+>>>>>
+>>>>>
+>>>>> On 2015/8/28 22:02, Rob Herring wrote:
+>>>>>>
+>>>>>> +benh
+>>>>>>
+>>>>>> On Fri, Aug 28, 2015 at 7:32 AM, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+>>>>>> wrote:
+>>>>>>>
+>>>>>>> Hi,
+>>>>>>>
+>>>>>>> On Fri, Aug 14, 2015 at 05:39:32PM +0100, Ganapatrao Kulkarni wrote:
+>>>>>>>>
+>>>>>>>> DT bindings for numa map for memory, cores and IOs using
+>>>>>>>> arm,associativity device node property.
+>>>>>>>
+>>>>>>>
+>>>>>>> Given this is just a copy of ibm,associativity, I'm not sure I see much
+>>>>>>> point in renaming the properties.
+>>>>>>
+>>>>>>
+>>>>>> So just keep the ibm? I'm okay with that. That would help move to
+>>>>>> common code. Alternatively, we could drop the vendor prefix and have
+>>>>>> common code just check for both.
+>>>>>>
+>>>>>
+>>>>> Hi all,
+>>>>>
+>>>>> Why not copy the method of ACPI numa? There only three elements should be
+>>>>> configured:
+>>>>> 1) a cpu belong to which node
+>>>>> 2) a memory block belong to which node
+>>>>> 3) the distance of each two nodes
+> I too thought acpi only defines mapping for cpu and memory to numa
+> nodes and no specification to define for IOs.
+> however after going through the x86 implementation, i can see there is
+> provision for mapping IOs to numa node in acpi.
+> in x86 code, function pci_acpi_scan_root calls acpi_get_node to get
+> associated node for pci bus using _PXM object.
+> it imply there is entry in acpi tables to map pci bus for numa
+> node(proximity domain).
+> so in dt also, we should  have binding to define cpu, memory and IOs
+> to node mapping.
 
->
->Olliver you should explain all this in the commit log, probably
->starting with something like "update the dts to use axp209.dtsi
->, comply with axp20x bindings, and set proper voltage ranges for
->the regulators".
->
->>> +};
->>> +
->>>  &reg_usb0_vbus {
->>>       pinctrl-0 = <&usb0_vbus_pin_lime2>;
->>>       gpio = <&pio 2 17 GPIO_ACTIVE_HIGH>;
->>> --
->>> 2.1.4
->>
->> Thanks!
->> Maxime
->>
->> --
->> Maxime Ripard, Free Electrons
->> Embedded Linux, Kernel and Android engineering
->> http://free-electrons.com
->>
->> _______________________________________________
->> linux-arm-kernel mailing list
->> linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
->> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
->>
+Yes, we should implement of_node_to_nid, to support device driver use dev_to_node.
 
--- 
-Sent from my Android device with K-9 Mail. Please excuse my brevity.
+I have added description about it, in the reply to Benjamin Herrenschmidt, at 2015/8/31 9:46.
+
+
+>>>>>
+>>>>> The devicetree nodes of numa can be like below:
+>>>>> / {
+>>>>>          ...
+>>>>>
+>>>>>          numa-nodes-info {
+>>>>>                  node-name: node-description {
+>>>>>                          mem-ranges = <...>;
+>>>>>                          cpus-list = <...>;
+>>>>>                  };
+>>>>>
+>>>>>                  nodes-distance {
+>>>>>                          distance-list = <...>;
+>>>>>                  };
+>>>>>          };
+>>>>>
+>>>>>          ...
+>>>>> };
+>>>>>
+>>>> some what similar to what your are proposing is already implemented in
+>>>> my v2 patchset.
+>>>> https://lwn.net/Articles/623920/
+>>>>
+>>>> http://lists.infradead.org/pipermail/linux-arm-kernel/2014-November/305164.html
+>>>> we have went to associativity property based implementation to keep it
+>>>> more generic.
+>>>> i do have both acpi(using linaro/hanjun's patches) and associativity
+>>>> based implementations on our internal tree
+>>>> and tested on thunderx platform.
+>>>
+>>>
+>>> Great thanks!
+>>>
+>>>> i do see issue in creating numa mapping using ACPI for IOs(for
+>>>> example, i am not able to create numa mapping for ITS which is on each
+>>>> node, using ACPI tables),  since ACPI spec (tables SRAT and SLIT)
+>>>> talks only about processor and memory.
+>>>
+>>>
+>>> I'm not sure why the ITS needs to know the NUMA domain, for my
+>>> understanding, the interrupt will route to the correct NUMA domain
+>>> using setting the affinity, ITS will configured to route it to
+>>> the right GICR(cpu), so I think the ITS don't need to know which
+>>> NUMA node belonging to, correct me if I missed something.
+>> IIUC, GICR/collection is per cpu and can be mapped to numa node using
+>> cpu to node mapping.
+>> However there are multiple its in multi-socket platform(at-least one
+>> its per socket),
+>> knowing its to numa node mapping will help in routing(optimal) the
+>> interrupts to  any one of GICR/collections of that node
+>> Hence, we need to find which its belongs to which socket/node using dt.
+>> same applies to pci bus too.
+>>>
+>>> Thanks
+>>> Hanjun
+>>
+>> thanks
+>> Ganapat
+> thanks
+> Ganapat
+> 
+> .
+> 
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
