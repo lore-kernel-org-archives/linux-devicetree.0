@@ -1,76 +1,60 @@
 From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH 08/11] ARM: DT: STiH407: Add SD pinctrl config for mmc0
- controller
-Date: Fri, 11 Sep 2015 19:00:13 +0100
-Message-ID: <20150911180013.GJ18779@x1>
+Subject: Re: [PATCH 07/11] ARM: DT: STiH407: Add systrace pin configuration
+Date: Fri, 11 Sep 2015 19:00:48 +0100
+Message-ID: <20150911180048.GK18779@x1>
 References: <1441991194-11948-1-git-send-email-peter.griffin@linaro.org>
- <1441991194-11948-9-git-send-email-peter.griffin@linaro.org>
+ <1441991194-11948-8-git-send-email-peter.griffin@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1441991194-11948-9-git-send-email-peter.griffin@linaro.org>
+In-Reply-To: <1441991194-11948-8-git-send-email-peter.griffin@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Peter Griffin <peter.griffin@linaro.org>
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, srinivas.kandagatla@gmail.com, maxime.coquelin@st.com, patrice.chotard@st.com, devicetree@vger.kernel.org, Nebil BEN MEFTEH <nebil.ben-mefteh@st.com>
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, srinivas.kandagatla@gmail.com, maxime.coquelin@st.com, patrice.chotard@st.com, devicetree@vger.kernel.org, Fabrice Gasnier <fabrice.gasnier@st.com>
 List-Id: devicetree@vger.kernel.org
 
 On Fri, 11 Sep 2015, Peter Griffin wrote:
 
-> This patch adds the missing SD pinctrl config
-> for mmc/sd controller 0. This is required to enable the
-> B2144A daughter board that exposes this controller as a sd
-> slot.
+> This patch adds the pin config for systrace for
+> STiH407 family silicon.
 >=20
-> Signed-off-by: Nebil BEN MEFTEH <nebil.ben-mefteh@st.com>
-> Signed-off-by: Nebil BEN MEFTEH <nebil.ben-mefteh@st.com>
-
-Duplicate.=20
-
-> Acked-by: Giuseppe Cavallaro <peppe.cavallaro@st.com>
-> Acked-by: Patrice Chotard <patrice.chotard@st.com>
 > Signed-off-by: Patrice Chotard <patrice.chotard@st.com>
-
-Same as before -- and for all the other patches.
-
-Contrary to what I said before, the Ack is probably more correct here,
-as I would _guess_ that Nebil wrote the patch, so his SoB should stay,
-the Patrice added it to the internal tree.  Convert this to an Ack
-now, as he's not in the upstream delivery path.
-
+> Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
 > Signed-off-by: Peter Griffin <peter.griffin@linaro.org>
 > ---
->  arch/arm/boot/dts/stih407-pinctrl.dtsi | 15 +++++++++++++++
->  1 file changed, 15 insertions(+)
->=20
+>  arch/arm/boot/dts/stih407-pinctrl.dtsi | 12 ++++++++++++
+>  1 file changed, 12 insertions(+)
+
+Besides the SoBs, which are a little confusing:
+
+Acked-by: Lee Jones <lee.jones@linaro.org>
+
 > diff --git a/arch/arm/boot/dts/stih407-pinctrl.dtsi b/arch/arm/boot/d=
 ts/stih407-pinctrl.dtsi
-> index 798d901..3cd7e2a 100644
+> index cde776b..798d901 100644
 > --- a/arch/arm/boot/dts/stih407-pinctrl.dtsi
 > +++ b/arch/arm/boot/dts/stih407-pinctrl.dtsi
-> @@ -883,6 +883,21 @@
->  						emmc_d7 =3D <&pio41 7 ALT1 BIDIR_PU>;
+> @@ -658,6 +658,18 @@
 >  					};
 >  				};
-> +				pinctrl_sd0: sd0-0 {
+>  			};
+> +
+> +			systrace {
+> +				pinctrl_systrace_default: systrace-default {
 > +					st,pins {
-> +						sd_clk =3D <&pio40 6 ALT1 BIDIR>;
-> +						sd_cmd =3D <&pio40 7 ALT1 BIDIR_PU>;
-> +						sd_dat0 =3D <&pio41 0 ALT1 BIDIR_PU>;
-> +						sd_dat1 =3D <&pio41 1 ALT1 BIDIR_PU>;
-> +						sd_dat2 =3D <&pio41 2 ALT1 BIDIR_PU>;
-> +						sd_dat3 =3D <&pio41 3 ALT1 BIDIR_PU>;
-> +						sd_led =3D <&pio42 0 ALT2 OUT>;
-> +						sd_pwren =3D <&pio42 2 ALT2 OUT>;
-> +						sd_vsel =3D <&pio42 3 ALT2 OUT>;
-> +						sd_cd =3D <&pio42 4 ALT2 IN>;
-> +						sd_wp =3D <&pio42 5 ALT2 IN>;
+> +						trc_data0 =3D <&pio11 3 ALT5 OUT>;
+> +						trc_data1 =3D <&pio11 4 ALT5 OUT>;
+> +						trc_data2 =3D <&pio11 5 ALT5 OUT>;
+> +						trc_data3 =3D <&pio11 6 ALT5 OUT>;
+> +						trc_clk   =3D <&pio11 7 ALT5 OUT>;
 > +					};
 > +				};
->  			};
+> +			};
+>  		};
 > =20
->  			fsm {
+>  		pin-controller-front1 {
 
 --=20
 Lee Jones
