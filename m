@@ -1,44 +1,54 @@
 From: Peter Griffin <peter.griffin@linaro.org>
-Subject: [PATCH 00/11] ARM: STi: STiH407: Pinctrl updates
-Date: Fri, 11 Sep 2015 18:06:23 +0100
-Message-ID: <1441991194-11948-1-git-send-email-peter.griffin@linaro.org>
+Subject: [PATCH 02/11] ARM: STi: DT: STiH407: Add i2c3 alternate pin configs
+Date: Fri, 11 Sep 2015 18:06:25 +0100
+Message-ID: <1441991194-11948-3-git-send-email-peter.griffin@linaro.org>
+References: <1441991194-11948-1-git-send-email-peter.griffin@linaro.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1441991194-11948-1-git-send-email-peter.griffin@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, srinivas.kandagatla@gmail.com, maxime.coquelin@st.com, patrice.chotard@st.com
-Cc: peter.griffin@linaro.org, lee.jones@linaro.org, devicetree@vger.kernel.org
+Cc: peter.griffin@linaro.org, lee.jones@linaro.org, devicetree@vger.kernel.org, Seraphin Bonnaffe <seraphin.bonnaffe@st.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Maxime / Patrice / Srini,
+i2c3 controller can use several sets of pins depending
+on board design. This patch adds the missing alternate
+pinconfigs.
 
-This series makes a series of updates to the stih407 pinctrl groups
-and makes the upstream kernel more closely aligned in terms of pin
-configuration to the vendor kernel.
+Signed-off-by: Seraphin Bonnaffe <seraphin.bonnaffe@st.com>
+Signed-off-by: Peter Griffin <peter.griffin@linaro.org>
+---
+ arch/arm/boot/dts/stih407-pinctrl.dtsi | 14 +++++++++++++-
+ 1 file changed, 13 insertions(+), 1 deletion(-)
 
-A number of new periphs are added such as spi fsm, nand, cec0, and
-for others such as SPI the various alternate function pin muxings have
-been added. Finally for SPI the controller nodes have been updated
-to have the default pin assignment in the controller node.
-
-kind regards,
-
-Peter.
-
-Peter Griffin (11):
-  ARM: STi: DT: STiH407: Add a cec0 pin definition
-  ARM: STi: DT: STiH407: Add i2c3 alternate pin configs
-  ARM: DT: STiH407: Add SPI 3 wire and 4 wire pinctrl configs
-  ARM: DT: STiH407: Add serial3 pinctrl configuration
-  ARM: DT: STiH407: Add SPI FSM (NOR Flash) Controller pin config
-  ARM: DT: STiH407: Add NAND flash controller pin configuration
-  ARM: DT: STiH407: Add systrace pin configuration
-  ARM: DT: STiH407: Add SD pinctrl config for mmc0 controller
-  ARM: DT: STiH407: Add pinconfig for IRB UHF and IRB TX
-  ARM: DT: STiH407: Add RMII pinctrl support
-  ARM: STi: STiH407: Add spi default pinctrl groups.
-
- arch/arm/boot/dts/stih407-family.dtsi  |  14 ++
- arch/arm/boot/dts/stih407-pinctrl.dtsi | 378 ++++++++++++++++++++++++++++++++-
- 2 files changed, 387 insertions(+), 5 deletions(-)
-
+diff --git a/arch/arm/boot/dts/stih407-pinctrl.dtsi b/arch/arm/boot/dts/stih407-pinctrl.dtsi
+index d86ccc8..ce219a1 100644
+--- a/arch/arm/boot/dts/stih407-pinctrl.dtsi
++++ b/arch/arm/boot/dts/stih407-pinctrl.dtsi
+@@ -430,12 +430,24 @@
+ 			};
+ 
+ 			i2c3 {
+-				pinctrl_i2c3_default: i2c3-default {
++				pinctrl_i2c3_default: i2c3-alt1-0 {
+ 					st,pins {
+ 						sda = <&pio18 6 ALT1 BIDIR>;
+ 						scl = <&pio18 5 ALT1 BIDIR>;
+ 					};
+ 				};
++				pinctrl_i2c3_alt1_1: i2c3-alt1-1 {
++					st,pins {
++						sda = <&pio17 7 ALT1 BIDIR>;
++						scl = <&pio17 6 ALT1 BIDIR>;
++					};
++				};
++				pinctrl_i2c3_alt3_0: i2c3-alt3-0 {
++					st,pins {
++						sda = <&pio13 6 ALT3 BIDIR>;
++						scl = <&pio13 5 ALT3 BIDIR>;
++					};
++				};
+ 			};
+ 
+ 			spi0 {
 -- 
 1.9.1
