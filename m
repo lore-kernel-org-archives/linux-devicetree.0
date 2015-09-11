@@ -1,63 +1,46 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: [PATCH 2/6] hwrng: core: Simplify RNG switching from sysfs
-Date: Fri, 11 Sep 2015 21:08:26 +0100
-Message-ID: <1442002110-28733-3-git-send-email-lee.jones@linaro.org>
-References: <1442002110-28733-1-git-send-email-lee.jones@linaro.org>
+From: Andreas Dannenberg <dannenberg@ti.com>
+Subject: [PATCH v3 03/10] power: bq24257: Add bit definition for temp sense enable
+Date: Fri, 11 Sep 2015 15:26:35 -0500
+Message-ID: <1442003202-1430-4-git-send-email-dannenberg@ti.com>
+References: <1442003202-1430-1-git-send-email-dannenberg@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1442002110-28733-1-git-send-email-lee.jones@linaro.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc: devicetree@vger.kernel.org, herbert@gondor.apana.org.au, linux-crypto@vger.kernel.org, mpm@selenic.com, Lee Jones <lee.jones@linaro.org>, kernel@stlinux.com
+Content-Type: text/plain
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <1442003202-1430-1-git-send-email-dannenberg@ti.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: Sebastian Reichel <sre@kernel.org>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, David Woodhouse <dwmw2@infradead.org>, Laurentiu Palcu <laurentiu.palcu@intel.com>, Krzysztof Kozlowski <k.kozlowski@samsung.com>
+Cc: Ramakrishna Pallala <ramakrishna.pallala@intel.com>, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, Andreas Dannenberg <dannenberg@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-If we attempt to use sysfs to change the current RNG in the usual
-way i.e. issuing something like:
+Adding a missing bit definition for the sake of consistency device model
+vs. bit field representation. No change in functionality.
 
-`echo 8a8a000.rng > /sys/devices/virtual/misc/hw_random/rng_current`
-
-... it will fail because the code doesn't currently take the '\n'
-into consideration.  Well, now it does.
-
-Signed-off-by: Lee Jones <lee.jones@linaro.org>
+Signed-off-by: Andreas Dannenberg <dannenberg@ti.com>
 ---
- drivers/char/hw_random/core.c | 7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
+ drivers/power/bq24257_charger.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/char/hw_random/core.c b/drivers/char/hw_random/core.c
-index da8faf7..14dc984 100644
---- a/drivers/char/hw_random/core.c
-+++ b/drivers/char/hw_random/core.c
-@@ -316,6 +316,7 @@ static ssize_t hwrng_attr_current_store(struct device *dev,
- 					const char *buf, size_t len)
- {
- 	int err;
-+	int snip = 0;
- 	struct hwrng *rng;
+diff --git a/drivers/power/bq24257_charger.c b/drivers/power/bq24257_charger.c
+index 1b3ddfb..fdfe855 100644
+--- a/drivers/power/bq24257_charger.c
++++ b/drivers/power/bq24257_charger.c
+@@ -63,7 +63,7 @@ enum bq24257_fields {
+ 	F_VBAT, F_USB_DET,					    /* REG 3 */
+ 	F_ICHG, F_ITERM,					    /* REG 4 */
+ 	F_LOOP_STATUS, F_LOW_CHG, F_DPDM_EN, F_CE_STATUS, F_VINDPM, /* REG 5 */
+-	F_X2_TMR_EN, F_TMR, F_SYSOFF, F_TS_STAT,		    /* REG 6 */
++	F_X2_TMR_EN, F_TMR, F_SYSOFF, F_TS_EN, F_TS_STAT,	    /* REG 6 */
+ 	F_VOVP, F_CLR_VDP, F_FORCE_BATDET, F_FORCE_PTM,		    /* REG 7 */
  
- 	err = mutex_lock_interruptible(&rng_mutex);
-@@ -323,7 +324,11 @@ static ssize_t hwrng_attr_current_store(struct device *dev,
- 		return -ERESTARTSYS;
- 	err = -ENODEV;
- 	list_for_each_entry(rng, &rng_list, list) {
--		if (strcmp(rng->name, buf) == 0) {
-+
-+		if (buf[len-1] == '\n')
-+			snip = 1; /* Snip one character */
-+
-+		if (strncmp(rng->name, buf, len - snip) == 0) {
- 			err = 0;
- 			if (rng != current_rng)
- 				err = set_current_rng(rng);
+ 	F_MAX_FIELDS
+@@ -153,6 +153,7 @@ static const struct reg_field bq24257_reg_fields[] = {
+ 	[F_X2_TMR_EN]		= REG_FIELD(BQ24257_REG_6, 7, 7),
+ 	[F_TMR]			= REG_FIELD(BQ24257_REG_6, 5, 6),
+ 	[F_SYSOFF]		= REG_FIELD(BQ24257_REG_6, 4, 4),
++	[F_TS_EN]		= REG_FIELD(BQ24257_REG_6, 3, 3),
+ 	[F_TS_STAT]		= REG_FIELD(BQ24257_REG_6, 0, 2),
+ 	/* REG 7 */
+ 	[F_VOVP]		= REG_FIELD(BQ24257_REG_7, 5, 7),
 -- 
 1.9.1
+
