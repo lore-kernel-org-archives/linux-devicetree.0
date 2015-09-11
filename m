@@ -1,109 +1,111 @@
-From: Adriana Reus <adriana.reus-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v6 2/2] devicetree: Add documentation for UPISEMI us5182d
- ALS and Proximity sensor
-Date: Fri, 11 Sep 2015 14:55:46 +0300
-Message-ID: <55F2C142.8010605@intel.com>
-References: <1440065534-8601-1-git-send-email-adriana.reus@intel.com>
- <1440065534-8601-3-git-send-email-adriana.reus@intel.com>
- <55DF71A5.1010705@kernel.org>
- <CAL_Jsq+uvhaE77yXqKGXF_p6gAV5F+rPwnT547ym-o23=3fR+w@mail.gmail.com>
- <55ED985E.8070806@intel.com> <55EF85E5.5070708@gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <55EF85E5.5070708-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Peter Meerwald <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, daniel.baluta-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, "linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+From: Viresh Kumar <viresh.kumar@linaro.org>
+Subject: [PATCH 01/16] PM / OPP: Add 'supply-names' binding
+Date: Fri, 11 Sep 2015 17:31:57 +0530
+Message-ID: <2b87b162eabd1570ae2311e1ef8655acda72f678.1441972771.git.viresh.kumar@linaro.org>
+References: <cover.1441972771.git.viresh.kumar@linaro.org>
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <cover.1441972771.git.viresh.kumar@linaro.org>
+In-Reply-To: <cover.1441972771.git.viresh.kumar@linaro.org>
+References: <cover.1441972771.git.viresh.kumar@linaro.org>
+Sender: linux-pm-owner@vger.kernel.org
+To: Rafael Wysocki <rjw@rjwysocki.net>, nm@ti.com, sboyd@codeaurora.org
+Cc: linaro-kernel@lists.linaro.org, linux-pm@vger.kernel.org, rob.herring@linaro.org, lee.jones@linaro.org, Viresh Kumar <viresh.kumar@linaro.org>, Mark Brown <broonie@kernel.org>, devicetree@vger.kernel.org, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, open list <linux-kernel@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>, Rob Herring <robh+dt@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
+Regulators already have stable DT bindings, wherein the consumer (of
+supplies) will have following for each regulator/supply.
 
-Hi,
+<name>-supply: <phandle to the regulator node>;
 
-Sorry for my delayed response, answers inline.
+Current OPP bindings extend above, by transforming it into a list of
+phandles. But we missed the <name> string, which is used to identify the
+regulator.
 
-Thank you,
-Adriana
-On 09.09.2015 04:05, Rob Herring wrote:
-> On 09/07/2015 08:59 AM, Adriana Reus wrote:
->> Thanks for your feedback, some comments inline.
->>
->> On 31.08.2015 18:38, Rob Herring wrote:
->>> On Thu, Aug 27, 2015 at 3:23 PM, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
->>> wrote:
->>>> On 20/08/15 11:12, Adriana Reus wrote:
->>>>> Added entries in i2c/vendor-prefixes for the us5182d als and
->>>>> proximity sensor.
->>>>> Also added a documentation file for this sensor's properties.
->>>>>
->>>>> Signed-off-by: Adriana Reus <adriana.reus-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
->>>> This isn't that trivial so I'd like some device tree maintainer
->>>> input if possible.
->>>
->>> It seems fairly reasonable to me. Would other ALS or proximity sensors
->>> need similar properties?
->> The "glass-coef" is intended to compensate for the material (glass) that
->> may be covering the sensor if it's integrated in a phone, tablet etc. I
->> chose 1000 as resolution for this scaling factor (i'll add a more
->> detailed description). So possibly similar properties could be used for
->> other als sensors as well.
->
-> Seems like amstaos,cover-comp-gain would be doing the same thing. But it
-> is defined as an integer, so I'm not sure how that would work.
-Indeed it seems similar. I had a quick look over it and from what I 
-understand it seems to act like a straightforward scaling factor, only 
-difference being that it's an int, I opted to float for a better tuning 
-and resolution.
->
->>
->> The last 3 tuning parameters are specific to this particular sensor.
->>>
->>>> For now I've backed out the driver from my tree (given timing we have
->>>> loads of time to sort this out!)
->>>>
->>>> Anyhow, anyone device tree related able to take a look at this.
->>>>
->>>> Adriana, btw these should be cc'd to the device tree maintainers in
->>>> the first place (now added).
->>>>
->>>> Jonathan
->>>>> ---
->>>>>    .../devicetree/bindings/iio/light/us5182d.txt      | 23
->>>>> ++++++++++++++++++++++
->>>>>    .../devicetree/bindings/vendor-prefixes.txt        |  1 +
->>>>>    2 files changed, 24 insertions(+)
->>>>>    create mode 100644
->>>>> Documentation/devicetree/bindings/iio/light/us5182d.txt
->>>>>
->>>>> diff --git a/Documentation/devicetree/bindings/iio/light/us5182d.txt
->>>>> b/Documentation/devicetree/bindings/iio/light/us5182d.txt
->>>>> new file mode 100644
->>>>> index 0000000..7785c56
->>>>> --- /dev/null
->>>>> +++ b/Documentation/devicetree/bindings/iio/light/us5182d.txt
->>>>> @@ -0,0 +1,23 @@
->>>>> +* UPISEMI us5182d I2C ALS and Proximity sensor
->>>>> +
->>>>> +Required properties:
->>>>> +- compatible: must be "upisemi,usd5182"
->>>>> +- reg: the I2C address of the device
->>>>> +
->>>>> +Optional properties:
->>>
->>> Do you expect certain defaults if not present? Some description of how
->>> all these values are determined would be useful.
->> Yes, if not present they will fall back to default values - the values
->> in the example.
->> - the glass-coef one is 1000 by default - so no glass compensation by
->> default (lux = lux * 1000/1000)
->> - the others were determined experimentally - by fine tuning starting
->> from the default values in those registers).
->
-> So the default if the properties are not present is a default register
-> value or a default in the driver?
+And looking from regulators perspective, having two different ways of
+specifying regulators doesn't seem like a step forward, it also means we
+have to update every single device binding. And things will become
+complex.
 
-A default in the driver.
->
-> Rob
->
+Another way to support multiple regulators per device (in OPP V2
+bindings) is to leave regulator consumer bindings as is, and create a
+'supply-names' property in the opp-table node, which will contain a list
+of strings. The names in this list shall match 'name' from the
+'<name>-supply' strings present in the device node.
+
+The strings in this list also specify the order in which values must be
+present in 'opp-microvolt' and 'opp-microamp' properties.
+
+Cc: Mark Brown <broonie@kernel.org>
+Cc: devicetree@vger.kernel.org
+Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
+---
+ Documentation/devicetree/bindings/opp/opp.txt | 26 +++++++++++++++++++-------
+ 1 file changed, 19 insertions(+), 7 deletions(-)
+
+diff --git a/Documentation/devicetree/bindings/opp/opp.txt b/Documentation/devicetree/bindings/opp/opp.txt
+index 0cb44dc21f97..8759bc4783ed 100644
+--- a/Documentation/devicetree/bindings/opp/opp.txt
++++ b/Documentation/devicetree/bindings/opp/opp.txt
+@@ -69,6 +69,13 @@ This describes the OPPs belonging to a device. This node can have following
+ - compatible: Allow OPPs to express their compatibility. It should be:
+   "operating-points-v2".
+ 
++- supply-names: This is a required property, only if multiple supplies are
++  available for the device. Otherwise it is optional.
++
++  This list is used to pass names of all the device supplies. The order of names
++  present here is important, as that should match the order in which values are
++  present in 'opp-microvolt' and 'opp-microamp' properties.
++
+ - OPP nodes: One or more OPP nodes describing voltage-current-frequency
+   combinations. Their name isn't significant but their phandle can be used to
+   reference an OPP.
+@@ -97,8 +104,8 @@ properties.
+   Single entry is for target voltage and three entries are for <target min max>
+   voltages.
+ 
+-  Entries for multiple regulators must be present in the same order as
+-  regulators are specified in device's DT node.
++  Entries for multiple regulators must be present in the same order as their
++  names are present in 'supply-names' property of the opp-table.
+ 
+ - opp-microamp: The maximum current drawn by the device in microamperes
+   considering system specific parameters (such as transients, process, aging,
+@@ -107,10 +114,12 @@ properties.
+ 
+   Should only be set if opp-microvolt is set for the OPP.
+ 
+-  Entries for multiple regulators must be present in the same order as
+-  regulators are specified in device's DT node. If this property isn't required
+-  for few regulators, then this should be marked as zero for them. If it isn't
+-  required for any regulator, then this property need not be present.
++  Entries for multiple regulators must be present in the same order as their
++  names are present in 'supply-names' property of the opp-table.
++
++  If this property isn't required for few regulators, then this should be marked
++  as zero for them. If it isn't required for any regulator, then this property
++  need not be present.
+ 
+ - clock-latency-ns: Specifies the maximum possible transition latency (in
+   nanoseconds) for switching to this OPP from any other OPP.
+@@ -369,13 +378,16 @@ Example 4: Handling multiple regulators
+ 			compatible = "arm,cortex-a7";
+ 			...
+ 
+-			cpu-supply = <&cpu_supply0>, <&cpu_supply1>, <&cpu_supply2>;
++			vcc0-supply = <&cpu_supply0>;
++			vcc1-supply = <&cpu_supply1>;
++			vcc2-supply = <&cpu_supply2>;
+ 			operating-points-v2 = <&cpu0_opp_table>;
+ 		};
+ 	};
+ 
+ 	cpu0_opp_table: opp_table0 {
+ 		compatible = "operating-points-v2";
++		supply-names = "vcc0", "vcc1", "vcc2";
+ 		opp-shared;
+ 
+ 		opp00 {
+-- 
+2.4.0
+
