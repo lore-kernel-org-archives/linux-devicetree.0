@@ -1,51 +1,195 @@
-From: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
-Subject: Re: [PATCH v7 5/8] Watchdog: introduce ARM SBSA watchdog driver
-Date: Thu, 10 Sep 2015 19:50:04 -0700
-Message-ID: <55F2415C.1050803@roeck-us.net>
-References: <=fu.wei@linaro.org> <1440435683-7343-1-git-send-email-fu.wei@linaro.org> <1440435683-7343-6-git-send-email-fu.wei@linaro.org> <55F20461.20904@redhat.com>
+From: Chen-Yu Tsai <wens@csie.org>
+Subject: Re: [PATCH v2 1/1] ARM: dts: sun7i: Enable axp209 driver on olinuxino lime2
+Date: Fri, 11 Sep 2015 10:57:03 +0800
+Message-ID: <CAGb2v67GTAM3tqOUOmUjKmWGyewJar2NWAzF4bk4g+-7Yfdm0A@mail.gmail.com>
+References: <1441805204-6037-1-git-send-email-o.schinagl@ultimaker.com>
+ <1441805204-6037-2-git-send-email-o.schinagl@ultimaker.com> <20150910181315.GM9885@lukather>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <55F20461.20904-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jon Masters <jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, fu.wei-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, Suravee.Suthikulpanit-5C7GfCeVMHo@public.gmane.org, hanjun.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linaro-acpi-cunTk1MwBs8s++Sfvej+rw@public.gmane.org, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: tekkamanninja-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, graeme.gregory-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, al.stone-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, vgandhi-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org, leo.duran-5C7GfCeVMHo@public.gmane.org, corbet-T1hC0tSOHrs@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org, dyoung-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, panand-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20150910181315.GM9885@lukather>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Maxime Ripard <maxime.ripard@free-electrons.com>
+Cc: Olliver Schinagl <o.schinagl@ultimaker.com>, Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, Russell King <linux@arm.linux.org.uk>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-kernel <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On 09/10/2015 03:29 PM, Jon Masters wrote:
-> On 08/24/2015 01:01 PM, fu.wei-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org wrote:
+On Fri, Sep 11, 2015 at 2:13 AM, Maxime Ripard
+<maxime.ripard@free-electrons.com> wrote:
+> Hi Oliver,
 >
->> +	/*
->> +	 * Get the frequency of system counter from the cp15 interface of ARM
->> +	 * Generic timer. We don't need to check it, because if it returns "0",
->> +	 * system would panic in very early stage.
->> +	 */
->> +	gwdt->clk = arch_timer_get_cntfrq();
+> On Wed, Sep 09, 2015 at 03:26:44PM +0200, Olliver Schinagl wrote:
+>> The Olimex OLinuXino Lime2 uses the same AXP209 as was recently
+>> introduced this driver for its power regulation.
+>>
+>> Signed-off-by: Olliver Schinagl <o.schinagl@ultimaker.com>
+>> ---
+>>  arch/arm/boot/dts/sun7i-a20-olinuxino-lime2.dts | 87 +++++++++----------------
+>>  1 file changed, 31 insertions(+), 56 deletions(-)
+>>
+>> diff --git a/arch/arm/boot/dts/sun7i-a20-olinuxino-lime2.dts b/arch/arm/boot/dts/sun7i-a20-olinuxino-lime2.dts
+>> index d5c796c..dd90a1d 100644
+>> --- a/arch/arm/boot/dts/sun7i-a20-olinuxino-lime2.dts
+>> +++ b/arch/arm/boot/dts/sun7i-a20-olinuxino-lime2.dts
+>> @@ -71,14 +71,6 @@
+>>                       default-state = "on";
+>>               };
+>>       };
+>> -
+>> -     reg_axp_ipsout: axp_ipsout {
+>> -             compatible = "regulator-fixed";
+>> -             regulator-name = "axp-ipsout";
+>> -             regulator-min-microvolt = <5000000>;
+>> -             regulator-max-microvolt = <5000000>;
+>> -             regulator-always-on;
+>> -     };
 >
-> Just thinking out loud...
+> Why are you removing that regulator?
+
+This is really just a placeholder, rather than an actual regulator.
+
+>From the bindings:
+
+- <input>-supply: a phandle to the regulator supply node. May be omitted if
+                  inputs are unregulated, such as using the IPSOUT output
+                  from the PMIC.
+
+
+>>  };
+>>
+>>  &ahci {
+>> @@ -86,6 +78,10 @@
+>>       status = "okay";
+>>  };
+>>
+>> +&cpu0 {
+>> +     cpu-supply = <&reg_dcdc2>;
+>> +};
+>> +
+>>  &ehci0 {
+>>       status = "okay";
+>>  };
+>> @@ -112,57 +108,9 @@
+>>       status = "okay";
+>>
+>>       axp209: pmic@34 {
+>> -             compatible = "x-powers,axp209";
+>>               reg = <0x34>;
+>>               interrupt-parent = <&nmi_intc>;
+>>               interrupts = <0 IRQ_TYPE_LEVEL_LOW>;
+>> -
+>> -             interrupt-controller;
+>> -             #interrupt-cells = <1>;
+>> -
+>> -             acin-supply = <&reg_axp_ipsout>;
+>> -             vin2-supply = <&reg_axp_ipsout>;
+>> -             vin3-supply = <&reg_axp_ipsout>;
+>> -             ldo24in-supply = <&reg_axp_ipsout>;
+>> -             ldo3in-supply = <&reg_axp_ipsout>;
 >
-> What happens later if we virtualize this device within KVM/QEMU/Xen and
-> then live migrate to another system in which the frequency changes?
+> And these supplies?
 >
+>> -             regulators {
+>> -                     vdd_rtc: ldo1 {
+>> -                             regulator-min-microvolt = <1300000>;
+>> -                             regulator-max-microvolt = <1300000>;
+>> -                             regulator-always-on;
+>> -                     };
+>> -
+>> -                     avcc: ldo2 {
+>> -                             regulator-min-microvolt = <1800000>;
+>> -                             regulator-max-microvolt = <3300000>;
+>> -                             regulator-always-on;
+>> -                     };
+>> -
+>> -                     vcc_csi0: ldo3 {
+>> -                             regulator-min-microvolt = <700000>;
+>> -                             regulator-max-microvolt = <3500000>;
+>> -                             regulator-always-on;
+>> -                     };
+>> -
+>> -                     vcc_csi1: ldo4 {
+>> -                             regulator-min-microvolt = <1250000>;
+>> -                             regulator-max-microvolt = <3300000>;
+>> -                             regulator-always-on;
+>> -                     };
+>> -
+>> -                     vdd_cpu: dcdc2 {
+>> -                             regulator-min-microvolt = <700000>;
+>> -                             regulator-max-microvolt = <2275000>;
+>> -                             regulator-always-on;
+>> -                     };
+>> -
+>> -                     vdd_int: dcdc3 {
+>> -                             regulator-min-microvolt = <700000>;
+>> -                             regulator-max-microvolt = <3500000>;
+>> -                             regulator-always-on;
+>> -                     };
+>> -             };
+>>       };
+>>  };
+>>
+>> @@ -243,6 +191,33 @@
+>>       status = "okay";
+>>  };
+>>
+>> +#include "axp209.dtsi"
+>> +
+>> +&reg_dcdc2 {
+>> +     regulator-always-on;
+>> +     regulator-min-microvolt = <1000000>;
+>> +     regulator-max-microvolt = <1450000>;
+>
+> This is outside of the operating voltages of the CPU.
+>
+>> +     regulator-name = "vdd-cpu";
+>> +};
+>> +
+>> +&reg_dcdc3 {
+>> +     regulator-always-on;
+>> +     regulator-min-microvolt = <1000000>;
+>> +     regulator-max-microvolt = <1400000>;
+>> +     regulator-name = "vdd-int-dll";
+>> +};
+>> +
+>> +&reg_ldo1 {
+>> +     regulator-name = "vdd-rtc";
+>> +};
+>> +
+>> +&reg_ldo2 {
+>> +     regulator-always-on;
+>> +     regulator-min-microvolt = <3000000>;
+>> +     regulator-max-microvolt = <3000000>;
+>> +     regulator-name = "avcc";
+>
+> You're changing the boundaries, why?
 
-Thinking about it, this scenario would cause severe trouble. I think clocks
-(like I would assume pretty much all other hardware parameters / registers)
-need to be virtualized and must not change.
+The old boundaries seem to be from a very old dts, where we were
+listing the regulators' supported voltage range, instead of what
+the SoC could take.
 
-Example: clock is set to 100 kHz on original system, and 400 kHz on new
-system. Timeout is set to 30s, and registers are programmed accordingly.
-User space sends heartbeats every 15 seconds.
+Olliver you should explain all this in the commit log, probably
+starting with something like "update the dts to use axp209.dtsi
+, comply with axp20x bindings, and set proper voltage ranges for
+the regulators".
 
-In this scenario, the watchdog would time out after 30/4 = 7.5 seconds
-on the new system, or in other words almost immediately.
-
-This would be even worse if the original system had a clock of, say,
-10 kHz and the new system would use 400 kHz. This just doesn't work.
-
-Guenter
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>> +};
+>> +
+>>  &reg_usb0_vbus {
+>>       pinctrl-0 = <&usb0_vbus_pin_lime2>;
+>>       gpio = <&pio 2 17 GPIO_ACTIVE_HIGH>;
+>> --
+>> 2.1.4
+>
+> Thanks!
+> Maxime
+>
+> --
+> Maxime Ripard, Free Electrons
+> Embedded Linux, Kernel and Android engineering
+> http://free-electrons.com
+>
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+>
