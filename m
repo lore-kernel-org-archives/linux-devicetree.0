@@ -1,45 +1,53 @@
 From: Peter Griffin <peter.griffin@linaro.org>
-Subject: [PATCH 01/11] ARM: STi: DT: STiH407: Add a cec0 pin definition
-Date: Fri, 11 Sep 2015 18:06:24 +0100
-Message-ID: <1441991194-11948-2-git-send-email-peter.griffin@linaro.org>
+Subject: [PATCH 09/11] ARM: DT: STiH407: Add pinconfig for IRB UHF and IRB TX
+Date: Fri, 11 Sep 2015 18:06:32 +0100
+Message-ID: <1441991194-11948-10-git-send-email-peter.griffin@linaro.org>
 References: <1441991194-11948-1-git-send-email-peter.griffin@linaro.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1441991194-11948-1-git-send-email-peter.griffin@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, srinivas.kandagatla@gmail.com, maxime.coquelin@st.com, patrice.chotard@st.com
-Cc: peter.griffin@linaro.org, lee.jones@linaro.org, devicetree@vger.kernel.org, Erwan Le Ray <erwan.leray@st.com>, Nicolas Vanhaelewyn <nicolas.vanhaelewyn@st.com>
+Cc: peter.griffin@linaro.org, lee.jones@linaro.org, devicetree@vger.kernel.org, M'boumba Cedric Madianga <cedric.madianga@st.com>
 List-Id: devicetree@vger.kernel.org
 
-This pin setup provides the correct configuration in order to
-interact with the CEC HW.
+This patch adds the pinconfig for IRB TX and IRB UHF.
 
-Signed-off-by: Erwan Le Ray <erwan.leray@st.com>
-Signed-off-by: Nicolas Vanhaelewyn <nicolas.vanhaelewyn@st.com>
+Signed-off-by: M'boumba Cedric Madianga <cedric.madianga@st.com>
 Acked-by: Patrice Chotard <patrice.chotard@st.com>
 Signed-off-by: Patrice Chotard <patrice.chotard@st.com>
 Signed-off-by: Peter Griffin <peter.griffin@linaro.org>
 ---
- arch/arm/boot/dts/stih407-pinctrl.dtsi | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ arch/arm/boot/dts/stih407-pinctrl.dtsi | 18 ++++++++++++++++++
+ 1 file changed, 18 insertions(+)
 
 diff --git a/arch/arm/boot/dts/stih407-pinctrl.dtsi b/arch/arm/boot/dts/stih407-pinctrl.dtsi
-index 0a754f2..d86ccc8 100644
+index 3cd7e2a..473f2ea 100644
 --- a/arch/arm/boot/dts/stih407-pinctrl.dtsi
 +++ b/arch/arm/boot/dts/stih407-pinctrl.dtsi
-@@ -107,6 +107,14 @@
- 				st,retime-pin-mask = <0x3f>;
- 			};
- 
-+			cec0 {
-+				pinctrl_cec0_default: cec0-default {
+@@ -121,6 +121,24 @@
+ 						ir = <&pio4 0 ALT2 IN>;
+ 					};
+ 				};
++
++				pinctrl_uhf: uhf0 {
 +					st,pins {
-+						hdmi_cec = <&pio2 4 ALT1 BIDIR>;
++						ir = <&pio4 1 ALT2 IN>;
 +					};
 +				};
-+			};
 +
- 			rc {
- 				pinctrl_ir: ir0 {
- 					st,pins {
++				pinctrl_tx: tx0 {
++					st,pins {
++						tx = <&pio4 2 ALT2 OUT>;
++					};
++				};
++
++				pinctrl_tx_od: tx_od0 {
++					st,pins {
++						tx_od = <&pio4 3 ALT2 OUT>;
++					};
++				};
+ 			};
+ 
+ 			/* SBC_ASC0 - UART10 */
 -- 
 1.9.1
