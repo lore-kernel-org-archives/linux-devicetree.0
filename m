@@ -1,7 +1,7 @@
 From: David Daney <ddaney.cavm@gmail.com>
-Subject: [PATCH 1/6] PCI: Make global and export pdev_fixup_irq().
-Date: Fri, 11 Sep 2015 16:21:54 -0700
-Message-ID: <1442013719-5001-2-git-send-email-ddaney.cavm@gmail.com>
+Subject: [PATCH 6/6] PCI: generic: Allow bus default MSI controller to be specified.
+Date: Fri, 11 Sep 2015 16:21:59 -0700
+Message-ID: <1442013719-5001-7-git-send-email-ddaney.cavm@gmail.com>
 References: <1442013719-5001-1-git-send-email-ddaney.cavm@gmail.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1442013719-5001-1-git-send-email-ddaney.cavm@gmail.com>
@@ -12,53 +12,67 @@ List-Id: devicetree@vger.kernel.org
 
 From: David Daney <david.daney@cavium.com>
 
-Follow-on patch will use pdev_fixup_irq().  So, make it visible and
-export it.
+If the device tree node for the bus has a "msi-parent" property, use
+that as the default MSI controller for devices on the bus.  Add device
+tree binding documentation describing the new property.
+
+This allows the pci-host-generic driver to be used in systems with
+multiple MSI controllers.
 
 Signed-off-by: David Daney <david.daney@cavium.com>
 ---
- drivers/pci/setup-irq.c | 7 ++++---
- include/linux/pci.h     | 3 +++
- 2 files changed, 7 insertions(+), 3 deletions(-)
+ .../devicetree/bindings/pci/host-generic-pci.txt          |  5 +++++
+ drivers/pci/host/pci-host-generic.c                       | 15 +++++++++++++--
+ 2 files changed, 18 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/pci/setup-irq.c b/drivers/pci/setup-irq.c
-index 95c225b..ac7ffaf 100644
---- a/drivers/pci/setup-irq.c
-+++ b/drivers/pci/setup-irq.c
-@@ -22,9 +22,9 @@ void __weak pcibios_update_irq(struct pci_dev *dev, int irq)
- 	pci_write_config_byte(dev, PCI_INTERRUPT_LINE, irq);
- }
+diff --git a/Documentation/devicetree/bindings/pci/host-generic-pci.txt b/Documentation/devicetree/bindings/pci/host-generic-pci.txt
+index cf3e205..daa6942 100644
+--- a/Documentation/devicetree/bindings/pci/host-generic-pci.txt
++++ b/Documentation/devicetree/bindings/pci/host-generic-pci.txt
+@@ -29,6 +29,11 @@ Properties of the host controller node:
+                    to indicate the range of bus numbers for this controller.
+                    If absent, defaults to <0 255> (i.e. all buses).
  
--static void pdev_fixup_irq(struct pci_dev *dev,
--			   u8 (*swizzle)(struct pci_dev *, u8 *),
--			   int (*map_irq)(const struct pci_dev *, u8, u8))
-+void pdev_fixup_irq(struct pci_dev *dev,
-+		    u8 (*swizzle)(struct pci_dev *, u8 *),
-+		    int (*map_irq)(const struct pci_dev *, u8, u8))
- {
- 	u8 pin, slot;
- 	int irq = 0;
-@@ -56,6 +56,7 @@ static void pdev_fixup_irq(struct pci_dev *dev,
- 	   the real IRQ to use; the device does not use it. */
- 	pcibios_update_irq(dev, irq);
- }
-+EXPORT_SYMBOL_GPL(pdev_fixup_irq);
++- msi-parent     : Optional property to indicate the MSI controller associated
++                   with devices on the bus.  If not present, the default MSI
++                   controller is used.  This property is further discussed in
++                   interrupt-controller/msi.txt
++
+ - #address-cells : Must be 3.
  
- void pci_fixup_irqs(u8 (*swizzle)(struct pci_dev *, u8 *),
- 		    int (*map_irq)(const struct pci_dev *, u8, u8))
-diff --git a/include/linux/pci.h b/include/linux/pci.h
-index e90eb22..50e66ab 100644
---- a/include/linux/pci.h
-+++ b/include/linux/pci.h
-@@ -1120,6 +1120,9 @@ void pdev_enable_device(struct pci_dev *);
- int pci_enable_resources(struct pci_dev *, int mask);
- void pci_fixup_irqs(u8 (*)(struct pci_dev *, u8 *),
- 		    int (*)(const struct pci_dev *, u8, u8));
-+void pdev_fixup_irq(struct pci_dev *,
-+		    u8 (*)(struct pci_dev *, u8 *),
-+		    int (*)(const struct pci_dev *, u8, u8));
- #define HAVE_PCI_REQ_REGIONS	2
- int __must_check pci_request_regions(struct pci_dev *, const char *);
- int __must_check pci_request_regions_exclusive(struct pci_dev *, const char *);
+ - #size-cells    : Must be 2.
+diff --git a/drivers/pci/host/pci-host-generic.c b/drivers/pci/host/pci-host-generic.c
+index 8219c0b..e0248b4 100644
+--- a/drivers/pci/host/pci-host-generic.c
++++ b/drivers/pci/host/pci-host-generic.c
+@@ -225,6 +225,7 @@ static int gen_pci_probe(struct platform_device *pdev)
+ 	struct device_node *np = dev->of_node;
+ 	struct gen_pci *pci = devm_kzalloc(dev, sizeof(*pci), GFP_KERNEL);
+ 	struct pci_bus *bus, *child;
++	struct msi_controller *msi;
+ 
+ 	if (!pci)
+ 		return -ENOMEM;
+@@ -265,8 +266,18 @@ static int gen_pci_probe(struct platform_device *pdev)
+ 	if (!pci_has_flag(PCI_PROBE_ONLY))
+ 		pci_add_flags(PCI_REASSIGN_ALL_RSRC | PCI_REASSIGN_ALL_BUS);
+ 
+-	bus = pci_scan_root_bus(dev, pci->cfg.bus_range->start,
+-				&pci->cfg.ops.ops, pci, &pci->resources);
++	msi = NULL;
++	if (IS_ENABLED(CONFIG_PCI_MSI)) {
++		struct device_node *msi_node;
++
++		msi_node = of_parse_phandle(np, "msi-parent", 0);
++		if (msi_node)
++			msi = of_pci_find_msi_chip_by_node(msi_node);
++	}
++
++	bus = pci_scan_root_bus_msi(dev, pci->cfg.bus_range->start,
++				    &pci->cfg.ops.ops, pci, &pci->resources,
++				    msi);
+ 	if (!bus) {
+ 		dev_err(dev, "Scanning rootbus failed");
+ 		return -ENODEV;
 -- 
 1.7.11.7
