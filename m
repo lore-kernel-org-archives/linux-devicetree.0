@@ -1,66 +1,59 @@
-From: Peter Griffin <peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: [PATCH 10/11] ARM: DT: STiH407: Add RMII pinctrl support
-Date: Fri, 11 Sep 2015 18:06:33 +0100
-Message-ID: <1441991194-11948-11-git-send-email-peter.griffin@linaro.org>
+From: Peter Griffin <peter.griffin@linaro.org>
+Subject: [PATCH 04/11] ARM: DT: STiH407: Add serial3 pinctrl configuration
+Date: Fri, 11 Sep 2015 18:06:27 +0100
+Message-ID: <1441991194-11948-5-git-send-email-peter.griffin@linaro.org>
 References: <1441991194-11948-1-git-send-email-peter.griffin@linaro.org>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1441991194-11948-1-git-send-email-peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, srinivas.kandagatla-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, maxime.coquelin-qxv4g6HH51o@public.gmane.org, patrice.chotard-qxv4g6HH51o@public.gmane.org
-Cc: peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Giuseppe Cavallaro <peppe.cavallaro-qxv4g6HH51o@public.gmane.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1441991194-11948-1-git-send-email-peter.griffin@linaro.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, srinivas.kandagatla@gmail.com, maxime.coquelin@st.com, patrice.chotard@st.com
+Cc: peter.griffin@linaro.org, devicetree@vger.kernel.org, Fabrice Gasnier <fabrice.gasnier@st.com>, lee.jones@linaro.org, Erwan Le Ray <erwan.leray@st.com>
 List-Id: devicetree@vger.kernel.org
 
-This patch adds the RMII pinctrl support for the Synopsys
-MAC on STiH407 SoCs.
+Add missing serial 3 pinctrl config. This can be used
+on b2206 HVK, where it defaults to PIO31[3] & PIO31[4],
+alternate 1.
 
-Signed-off-by: Giuseppe Cavallaro <peppe.cavallaro-qxv4g6HH51o@public.gmane.org>
-Signed-off-by: Peter Griffin <peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Signed-off-by: Erwan Le Ray <erwan.leray@st.com>
+Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
+Acked-by: Carmelo Amoroso <carmelo.amoroso@st.com>
+Acked-by: Patrice Chotard <patrice.chotard@st.com>
+Signed-off-by: Patrice Chotard <patrice.chotard@st.com>
+Signed-off-by: Peter Griffin <peter.griffin@linaro.org>
 ---
- arch/arm/boot/dts/stih407-pinctrl.dtsi | 27 +++++++++++++++++++++++++++
- 1 file changed, 27 insertions(+)
+ arch/arm/boot/dts/stih407-pinctrl.dtsi | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
 diff --git a/arch/arm/boot/dts/stih407-pinctrl.dtsi b/arch/arm/boot/dts/stih407-pinctrl.dtsi
-index 473f2ea..e80cac5 100644
+index bb3b0c7..6c81f35 100644
 --- a/arch/arm/boot/dts/stih407-pinctrl.dtsi
 +++ b/arch/arm/boot/dts/stih407-pinctrl.dtsi
-@@ -256,6 +256,33 @@
- 						phyclk = <&pio2 3 ALT1 OUT NICLK 0 CLK_A>;
+@@ -809,6 +809,15 @@
  					};
  				};
-+
-+				pinctrl_rmii1: rmii1-0 {
-+					st,pins {
-+						txd0 = <&pio0 0 ALT1 OUT SE_NICLK_IO 0 CLK_A>;
-+						txd1 = <&pio0 1 ALT1 OUT SE_NICLK_IO 0 CLK_A>;
-+						txen = <&pio0 5 ALT1 OUT SE_NICLK_IO 0 CLK_A>;
-+						mdio = <&pio1 0 ALT1 OUT BYPASS 0>;
-+						mdc = <&pio1 1 ALT1 OUT NICLK 0 CLK_A>;
-+						mdint = <&pio1 3 ALT1 IN BYPASS 0>;
-+						rxd0 = <&pio1 4 ALT1 IN SE_NICLK_IO 0 CLK_B>;
-+						rxd1 = <&pio1 5 ALT1 IN SE_NICLK_IO 0 CLK_B>;
-+						rxdv = <&pio2 0 ALT1 IN SE_NICLK_IO 0 CLK_B>;
-+						rx_er = <&pio2 1 ALT1 IN SE_NICLK_IO 0 CLK_A>;
-+					};
-+				};
-+
-+				pinctrl_rmii1_phyclk: rmii1_phyclk {
-+					st,pins {
-+						phyclk = <&pio2 3 ALT1 OUT NICLK 0 CLK_A>;
-+					};
-+				};
-+
-+				pinctrl_rmii1_phyclk_ext: rmii1_phyclk_ext {
-+					st,pins {
-+						phyclk = <&pio2 3 ALT2 IN NICLK 0 CLK_A>;
-+					};
-+				};
  			};
++
++			serial3 {
++				pinctrl_serial3: serial3-0 {
++					st,pins {
++						tx = <&pio31 3 ALT1 OUT>;
++						rx = <&pio31 4 ALT1 IN>;
++					};
++				};
++			};
+ 		};
  
- 			pwm1 {
+ 		pin-controller-flash {
 -- 
 1.9.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
