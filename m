@@ -1,105 +1,145 @@
-From: chunfeng yun <chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH v7 2/5] dt-bindings: Add a binding for Mediatek xHCI
- host controller
-Date: Fri, 11 Sep 2015 11:39:28 +0800
-Message-ID: <1441942768.25974.4.camel@mhfsdcap03>
-References: <1441693083-8440-1-git-send-email-chunfeng.yun@mediatek.com>
-	 <1441693083-8440-3-git-send-email-chunfeng.yun@mediatek.com>
-	 <55EF7DB0.7040607@kernel.org>
+From: Ganapatrao Kulkarni <gpkulkarni-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v5 2/4] Documentation: arm64/arm: dt bindings for numa.
+Date: Fri, 11 Sep 2015 09:23:33 +0530
+Message-ID: <CAFpQJXX0KYiKKgxM3B467PFLS0jCakTp8A2u=QEs8_Fj4EZYBg@mail.gmail.com>
+References: <1439570374-4079-1-git-send-email-gkulkarni@caviumnetworks.com>
+	<1439570374-4079-3-git-send-email-gkulkarni@caviumnetworks.com>
+	<20150828123228.GE31748@leverpostej>
+	<CAL_JsqLOpUTVeKbkJ6uPi0EYistd=BowAHdtSmaUYYDhU6c9Sg@mail.gmail.com>
+	<55E17F58.5020101@huawei.com>
+	<CAFpQJXWO0xT0kxWf09L_XcAOXm1Lov8i2U2BQzk-x0TStj7vBg@mail.gmail.com>
+	<55EEE229.7070301@linaro.org>
+	<CAFpQJXV66dAfDMttMNTApyy1554-rvw=Q0n60BOtsp=61gJ+zQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <55EF7DB0.7040607-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+In-Reply-To: <CAFpQJXV66dAfDMttMNTApyy1554-rvw=Q0n60BOtsp=61gJ+zQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Mathias Nyman <mathias.nyman-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, John Crispin <blogic-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>, Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
+To: Hanjun Guo <hanjun.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: "Leizhen (ThunderTown)" <thunder.leizhen-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "steve.capper-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <steve.capper-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "arnd-r2nGTMty4D4@public.gmane.org" <arnd-r2nGTMty4D4@public.gmane.org>, "al.stone-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <al.stone-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Catalin Marinas <Catalin.Marinas-5wv7dgnIgG8@public.gmane.org>, "ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org" <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, "leif.lindholm-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <leif.lindholm-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "rfranz-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org" <rfranz-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, "msalter-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org" <msalter-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, "grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org" <galak@codeaurora.>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 2015-09-08 at 19:30 -0500, Rob Herring wrote:
-> On 09/08/2015 01:18 AM, Chunfeng Yun wrote:
-> > add a DT binding documentation of xHCI host controller for the
-> > MT8173 SoC from Mediatek.
-> > 
-> > Signed-off-by: Chunfeng Yun <chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-> > ---
-> >  .../devicetree/bindings/usb/mt8173-xhci.txt        | 52 ++++++++++++++++++++++
-> >  1 file changed, 52 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/usb/mt8173-xhci.txt
-> > 
-> > diff --git a/Documentation/devicetree/bindings/usb/mt8173-xhci.txt b/Documentation/devicetree/bindings/usb/mt8173-xhci.txt
-> > new file mode 100644
-> > index 0000000..d851bf1
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/usb/mt8173-xhci.txt
-> > @@ -0,0 +1,52 @@
-> > +MT8173 xHCI
-> > +
-> > +The device node for Mediatek SOC USB3.0 host controller
-> > +
-> > +Required properties:
-> > + - compatible : should contain "mediatek,mt8173-xhci"
-> > + - reg : specifies physical base address and size of the registers,
-> > +	the first one for MAC, the second for IPPC
-> > + - interrupts : interrupt used by the controller
-> > + - power-domains : a phandle to USB power domain node to control USB's
-> > +	mtcmos
-> > + - vusb33-supply : regulator of USB avdd3.3v
-> > +
-> > + - clocks : a list of phandle + clock-specifier pairs, one for each
-> > +	entry in clock-names
-> > + - clock-names : must contain
-> > +	"sys_ck": for clock of xHCI MAC
-> > +	"wakeup_deb_p0": for USB wakeup debounce clock of port0
-> > +	"wakeup_deb_p0": for USB wakeup debounce clock of port1
-> > +
-> > + - phys : a list of phandle + phy specifier pairs
-> > + - usb3-lpm-capable : supports USB3.0 LPM
-> > + - mediatek,syscon-wakeup : phandle to syscon used to access USB wakeup
-> > +	control register
-> 
-> Wake-up should probably be done in some generic way. That said, I don't
-> have a specific suggestion other than make it optional.
-> 
-> > + - mediatek,wakeup-src : 1: ip sleep wakeup mode; 2: line state wakeup
-> > +	mode; Others means don't enable wakeup source of USB
-> 
-> This should be optional rather than any other value meaning disabled.
-> 
-Ok, "mediatek,wakeup-src" and "mediatek,syscon-wakeup" properties will
-be put into optional.
-
-Thanks a lot
-> > +
-> > +Optional properties:
-> > + - vbus-supply : reference to the VBUS regulator;
-> > +
-> > +Example:
-> > +usb30: usb@11270000 {
-> > +	compatible = "mediatek,mt8173-xhci";
-> > +	reg = <0 0x11270000 0 0x1000>,
-> > +	      <0 0x11280700 0 0x0100>;
-> > +	interrupts = <GIC_SPI 115 IRQ_TYPE_LEVEL_LOW>;
-> > +	power-domains = <&scpsys MT8173_POWER_DOMAIN_USB>;
-> > +	clocks = <&topckgen CLK_TOP_USB30_SEL>,
-> > +		 <&pericfg CLK_PERI_USB0>,
-> > +		 <&pericfg CLK_PERI_USB1>;
-> > +	clock-names = "sys_ck",
-> > +		      "wakeup_deb_p0",
-> > +		      "wakeup_deb_p1";
-> > +	phys = <&phy_port0 PHY_TYPE_USB3>,
-> > +	       <&phy_port1 PHY_TYPE_USB2>;
-> > +	vusb33-supply = <&mt6397_vusb_reg>;
-> > +	vbus-supply = <&usb_p1_vbus>;
-> > +	usb3-lpm-capable;
-> > +	mediatek,syscon-wakeup = <&pericfg>;
-> > +	mediatek,wakeup-src = <1>;
-> > +	status = "okay";
-> > +};
-> > 
-> 
+Hi Thunder,
 
 
+On Tue, Sep 8, 2015 at 9:57 PM, Ganapatrao Kulkarni
+<gpkulkarni-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> Hi Hanjun,
+>
+> On Tue, Sep 8, 2015 at 6:57 PM, Hanjun Guo <hanjun.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+>> Hi Ganapatrao,
+>>
+>>
+>> On 08/29/2015 10:56 PM, Ganapatrao Kulkarni wrote:
+>>>
+>>> Hi Thunder,
+>>>
+>>> On Sat, Aug 29, 2015 at 3:16 PM, Leizhen (ThunderTown)
+>>> <thunder.leizhen-hv44wF8Li93QT0dZR+AlfA@public.gmane.org> wrote:
+>>>>
+>>>>
+>>>>
+>>>> On 2015/8/28 22:02, Rob Herring wrote:
+>>>>>
+>>>>> +benh
+>>>>>
+>>>>> On Fri, Aug 28, 2015 at 7:32 AM, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+>>>>> wrote:
+>>>>>>
+>>>>>> Hi,
+>>>>>>
+>>>>>> On Fri, Aug 14, 2015 at 05:39:32PM +0100, Ganapatrao Kulkarni wrote:
+>>>>>>>
+>>>>>>> DT bindings for numa map for memory, cores and IOs using
+>>>>>>> arm,associativity device node property.
+>>>>>>
+>>>>>>
+>>>>>> Given this is just a copy of ibm,associativity, I'm not sure I see much
+>>>>>> point in renaming the properties.
+>>>>>
+>>>>>
+>>>>> So just keep the ibm? I'm okay with that. That would help move to
+>>>>> common code. Alternatively, we could drop the vendor prefix and have
+>>>>> common code just check for both.
+>>>>>
+>>>>
+>>>> Hi all,
+>>>>
+>>>> Why not copy the method of ACPI numa? There only three elements should be
+>>>> configured:
+>>>> 1) a cpu belong to which node
+>>>> 2) a memory block belong to which node
+>>>> 3) the distance of each two nodes
+I too thought acpi only defines mapping for cpu and memory to numa
+nodes and no specification to define for IOs.
+however after going through the x86 implementation, i can see there is
+provision for mapping IOs to numa node in acpi.
+in x86 code, function pci_acpi_scan_root calls acpi_get_node to get
+associated node for pci bus using _PXM object.
+it imply there is entry in acpi tables to map pci bus for numa
+node(proximity domain).
+so in dt also, we should  have binding to define cpu, memory and IOs
+to node mapping.
+>>>>
+>>>> The devicetree nodes of numa can be like below:
+>>>> / {
+>>>>          ...
+>>>>
+>>>>          numa-nodes-info {
+>>>>                  node-name: node-description {
+>>>>                          mem-ranges = <...>;
+>>>>                          cpus-list = <...>;
+>>>>                  };
+>>>>
+>>>>                  nodes-distance {
+>>>>                          distance-list = <...>;
+>>>>                  };
+>>>>          };
+>>>>
+>>>>          ...
+>>>> };
+>>>>
+>>> some what similar to what your are proposing is already implemented in
+>>> my v2 patchset.
+>>> https://lwn.net/Articles/623920/
+>>>
+>>> http://lists.infradead.org/pipermail/linux-arm-kernel/2014-November/305164.html
+>>> we have went to associativity property based implementation to keep it
+>>> more generic.
+>>> i do have both acpi(using linaro/hanjun's patches) and associativity
+>>> based implementations on our internal tree
+>>> and tested on thunderx platform.
+>>
+>>
+>> Great thanks!
+>>
+>>> i do see issue in creating numa mapping using ACPI for IOs(for
+>>> example, i am not able to create numa mapping for ITS which is on each
+>>> node, using ACPI tables),  since ACPI spec (tables SRAT and SLIT)
+>>> talks only about processor and memory.
+>>
+>>
+>> I'm not sure why the ITS needs to know the NUMA domain, for my
+>> understanding, the interrupt will route to the correct NUMA domain
+>> using setting the affinity, ITS will configured to route it to
+>> the right GICR(cpu), so I think the ITS don't need to know which
+>> NUMA node belonging to, correct me if I missed something.
+> IIUC, GICR/collection is per cpu and can be mapped to numa node using
+> cpu to node mapping.
+> However there are multiple its in multi-socket platform(at-least one
+> its per socket),
+> knowing its to numa node mapping will help in routing(optimal) the
+> interrupts to  any one of GICR/collections of that node
+> Hence, we need to find which its belongs to which socket/node using dt.
+> same applies to pci bus too.
+>>
+>> Thanks
+>> Hanjun
+>
+> thanks
+> Ganapat
+thanks
+Ganapat
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
