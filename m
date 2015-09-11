@@ -1,75 +1,65 @@
-From: Y Vo <yvo@apm.com>
-Subject: Re: [PATCH 2/2] Documentation: gpio: Update description for X-Gene
- standby GPIO controller DTS binding
-Date: Fri, 11 Sep 2015 21:23:31 +0700
-Message-ID: <CAL4ahLeF8qQJciam467P2ixrxtMPTK2J9OtaVvcjtPF=9to0BQ@mail.gmail.com>
-References: <1441963332-13329-1-git-send-email-yvo@apm.com>
-	<11539535.sS04eUgSdg@wuerfel>
-	<CAL4ahLepjn-VG9WCLEovzjwc=8fpncP6xTS68gRO2VtVaEDc1g@mail.gmail.com>
-	<14280808.2Weay6QlT1@wuerfel>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH 2/2] Documentation: gpio: Update description for X-Gene standby GPIO controller DTS binding
+Date: Fri, 11 Sep 2015 16:47:28 +0200
+Message-ID: <3318725.Seeb48hirI@wuerfel>
+References: <1441963332-13329-1-git-send-email-yvo@apm.com> <14280808.2Weay6QlT1@wuerfel> <CAL4ahLeF8qQJciam467P2ixrxtMPTK2J9OtaVvcjtPF=9to0BQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
 Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <14280808.2Weay6QlT1@wuerfel>
+In-Reply-To: <CAL4ahLeF8qQJciam467P2ixrxtMPTK2J9OtaVvcjtPF=9to0BQ@mail.gmail.com>
 Sender: linux-gpio-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
+To: Y Vo <yvo@apm.com>
 Cc: Linus Walleij <linus.walleij@linaro.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Phong Vo <pvo@apm.com>, Toan Le <toanle@apm.com>, Loc Ho <lho@apm.com>, Feng Kan <fkan@apm.com>, Quan Nguyen <qnguyen@apm.com>, Duc Dang <dhdang@apm.com>, patches <patches@apm.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Sep 11, 2015 at 7:46 PM, Arnd Bergmann <arnd@arndb.de> wrote:
-> On Friday 11 September 2015 18:24:47 Y Vo wrote:
->> On Fri, Sep 11, 2015 at 4:35 PM, Arnd Bergmann <arnd@arndb.de> wrote:
->> > On Friday 11 September 2015 16:22:12 Y Vo wrote:
->> >>  There are 20 GPIO pins from 0..21. There is no GPIO_DS14 or GPIO_DS15,
->> >> -only GPIO_DS8..GPIO_DS13 support interrupts. The IRQ mapping
->> >> +only GPIO_DS8..GPIO_DS13 support external interrupts. The IRQ mapping
->> >>  is currently 1-to-1 on interrupts 0x28 thru 0x2d.
->> >> +GPIO pins from GPIO_DS8 to GPIO_DS13 are configured as external interrupt
->> >> +by default. If one wish not to use any of these pins as external interrupts,
->> >> +the corresponding interrupt resource for those pins should be removed.
->> >
->> > According to this description, I fail to see how one would specify
->> > a missing interrupt for one of the pins that is not the last one in
->> > the list.
->> >
->> All GPIO_DS8..GPIO_DS13 are configured as external IRQ by default. So
->> if anyone want to use one of them as gpio mode, they can drop add the
->> sbgpio node to their DTB board-specific, and remove that GPIO from
->> interrupts property. As example below I want to leave GPIO_DS8 as gpio
->> mode, so I remove it as below:
->>
->> /* Board-specific: exclude GPIO_DS8 to leave it as GPIO */
->> &sbgpio {
->>        interrupts =    <0x0 0x29 0x1>,         /* GPIO_DS9 */
->>                        <0x0 0x2a 0x1>,         /* GPIO_DS10 */
->>                        <0x0 0x2b 0x1>,         /* GPIO_DS11 */
->>                        <0x0 0x2c 0x1>,         /* GPIO_DS12 */
->>                        <0x0 0x2d 0x1>;         /* GPIO_DS13 */
->> }
->
-> This would be a very unusual binding, because that requires the driver
-> to know the contents of the properties in advance and the driver
-> cannot derive the function of an irq from the position in the array.
->
-> Please come up with another approach that is more like other drivers
-> do this and that makes it possible to reuse the driver if the
-> interrupt numbers change.
-The GPIO standby doesn't support interrupt controller itself, it only
-wires the GPIO line to the external IRQ of GIC. So it is not similar
-to other driver. Each GPIO is fixed to GIC IRQ index, and never
-change.
+On Friday 11 September 2015 21:23:31 Y Vo wrote:
+> >> /* Board-specific: exclude GPIO_DS8 to leave it as GPIO */
+> >> &sbgpio {
+> >>        interrupts =    <0x0 0x29 0x1>,         /* GPIO_DS9 */
+> >>                        <0x0 0x2a 0x1>,         /* GPIO_DS10 */
+> >>                        <0x0 0x2b 0x1>,         /* GPIO_DS11 */
+> >>                        <0x0 0x2c 0x1>,         /* GPIO_DS12 */
+> >>                        <0x0 0x2d 0x1>;         /* GPIO_DS13 */
+> >> }
+> >
+> > This would be a very unusual binding, because that requires the driver
+> > to know the contents of the properties in advance and the driver
+> > cannot derive the function of an irq from the position in the array.
+> >
+> > Please come up with another approach that is more like other drivers
+> > do this and that makes it possible to reuse the driver if the
+> > interrupt numbers change.
+> The GPIO standby doesn't support interrupt controller itself, it only
+> wires the GPIO line to the external IRQ of GIC. So it is not similar
+> to other driver. Each GPIO is fixed to GIC IRQ index, and never
+> change.
 
-Is that possible if we change to this approach:
-- Keep all GPIO as GPIO mode by default.
-- If anyone want to use them as interrupt, they must add the interrupt
-node to DT specific-board below:
+That is not relevant here, what matters is just that each IRQ still
+has a very specific function, which is basically what every driver
+does.
 
-Example to configure GPIO_DS11, 12, 13 as external irq:
+> Is that possible if we change to this approach:
+> - Keep all GPIO as GPIO mode by default.
+> - If anyone want to use them as interrupt, they must add the interrupt
+> node to DT specific-board below:
+> 
+> Example to configure GPIO_DS11, 12, 13 as external irq:
+> 
+> &sbgpio {
+>         interrupts = <0x0 0x2b 0x1>,         /* GPIO_DS11 */
+>                         <0x0 0x2c 0x1>,         /* GPIO_DS12 */
+>                         <0x0 0x2d 0x1>;         /* GPIO_DS13 */
 
-&sbgpio {
-        interrupts = <0x0 0x2b 0x1>,         /* GPIO_DS11 */
-                        <0x0 0x2c 0x1>,         /* GPIO_DS12 */
-                        <0x0 0x2d 0x1>;         /* GPIO_DS13 */
+That is exactly the same as you have in your patch. You should
+always list all interrupts that the gpio controller is wired
+to, whether they are used or not.
 
+Ideally, the driver just decides at runtime how to wire that
+mux, based on how the gpio is configured by the client driver.
+If the client asks for an interrupt (with gpio_to_irq) and is
+it is configured as an input, then you connect it to the GIC,
+otherwise you leave it to be handled by the gpio chip itself.
+Any reason you can't do that?
 
->         Arnd
+	Arnd
