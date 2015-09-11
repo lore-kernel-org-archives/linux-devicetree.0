@@ -1,60 +1,64 @@
-From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH] efi/libstub/fdt: Standardize the names of EFI stub
- parameters
-Date: Fri, 11 Sep 2015 17:36:05 +0100
-Message-ID: <20150911163605.GC8726@leverpostej>
-References: <1441874516-11364-1-git-send-email-zhaoshenglong@huawei.com>
- <20150910095208.GA29293@leverpostej>
- <alpine.DEB.2.02.1509101116580.2672@kaball.uk.xensource.com>
- <20150910112418.GC29293@leverpostej>
- <alpine.DEB.2.02.1509101223580.2672@kaball.uk.xensource.com>
- <55F199DD02000078000A1B1E@prv-mh.provo.novell.com>
- <20150910145331.GJ29293@leverpostej>
- <55F1B89802000078000A1C9B@prv-mh.provo.novell.com>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH 2/2] Documentation: gpio: Update description for X-Gene standby GPIO controller DTS binding
+Date: Fri, 11 Sep 2015 18:45:34 +0200
+Message-ID: <2311005.jUde56dLfB@wuerfel>
+References: <1441963332-13329-1-git-send-email-yvo@apm.com> <3318725.Seeb48hirI@wuerfel> <CAL4ahLeoeT79ct-M-Bd-O08K0Dmysas3HFmTfXUFGtHKJBRzsg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-efi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <55F1B89802000078000A1C9B-rw/UEucdPrvD8XXLLHKrIiOjQekVJEpY@public.gmane.org>
-Sender: linux-efi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jan Beulich <JBeulich-IBi9RG/b67k@public.gmane.org>
-Cc: "Ian.Campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org" <Ian.Campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>, "julien.grall-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org" <julien.grall-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>, Stefano Stabellini <stefano.stabellini-mvvWK6WmYclDPfheJLI6IQ@public.gmane.org>, "freebsd-arm-h+KGxgPPiopAfugRpC6u6w@public.gmane.org" <freebsd-arm-h+KGxgPPiopAfugRpC6u6w@public.gmane.org>, "peter.huangpeng-hv44wF8Li93QT0dZR+AlfA@public.gmane.org" <peter.huangpeng-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, Shannon Zhao <zhaoshenglong-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, "matt.fleming-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org" <matt.fleming-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, "ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "christoffer.dall-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <christoffer.dall-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "leif.lindholm-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <leif.lindholm-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "shannon.zhao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <shannon.zhao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "xen-devel-GuqFBffKawuEi8DpZVb4nw@public.gmane.org" <xen-devel-GuqFBffKawuEi8DpZVb4nw@public.gmane.org>, "daniel.kiper-QHcLZuEGTsvQT0dZR+AlfA@public.gmane.org" <daniel.kiper-QHcLZuEGTsvQT0dZR+AlfA@public.gmane.org>, Konrad Rzeszutek Wilk <konrad.wilk-QHcLZuEGTsvQT0dZR+AlfA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TaqPxH82wqD4g@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <CAL4ahLeoeT79ct-M-Bd-O08K0Dmysas3HFmTfXUFGtHKJBRzsg@mail.gmail.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Y Vo <yvo@apm.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Phong Vo <pvo@apm.com>, Toan Le <toanle@apm.com>, Loc Ho <lho@apm.com>, Feng Kan <fkan@apm.com>, Quan Nguyen <qnguyen@apm.com>, Duc Dang <dhdang@apm.com>, patches <patches@apm.com>
 List-Id: devicetree@vger.kernel.org
 
-> >> Considering that the EFI support is just for Dom0, and Dom0 (at
-> >> the time) had to be PV anyway, it was the more natural solution to
-> >> expose the interface via hypercalls, the more that this allows better
-> >> control over what is and primarily what is not being exposed to
-> >> Dom0. With the wrapper approach we'd be back to the same
-> >> problem (discussed elsewhere) of which EFI version to surface: The
-> >> host one would impose potentially missing extensions, while the
-> >> most recent hypervisor known one might imply hiding valuable
-> >> information from Dom0. Plus there are incompatible changes like
-> >> the altered meaning of EFI_MEMORY_WP in 2.5.
-> > 
-> > I'm not sure I follow how hypercalls solve any impedance mismatch here;
-> > you're still expecting Dom0 to call up to Xen in order to perform calls,
-> > and all I suggested was a different location for those hypercalls.
-> > 
-> > If Xen is happy to make such calls blindly, why does it matter if the
-> > hypercall was in the kernel binary or an external shim?
-> 
-> Because there could be new entries in SystemTable->RuntimeServices
-> (expected and blindly but validly called by the kernel). Even worse
-> (because likely harder to deal with) would be new fields in other
-> structures.
+On Friday 11 September 2015 22:06:58 Y Vo wrote:
+> On Fri, Sep 11, 2015 at 9:47 PM, Arnd Bergmann <arnd@arndb.de> wrote:
+> > On Friday 11 September 2015 21:23:31 Y Vo wrote:
+> >> Is that possible if we change to this approach:
+> >> - Keep all GPIO as GPIO mode by default.
+> >> - If anyone want to use them as interrupt, they must add the interrupt
+> >> node to DT specific-board below:
+> >>
+> >> Example to configure GPIO_DS11, 12, 13 as external irq:
+> >>
+> >> &sbgpio {
+> >>         interrupts = <0x0 0x2b 0x1>,         /* GPIO_DS11 */
+> >>                         <0x0 0x2c 0x1>,         /* GPIO_DS12 */
+> >>                         <0x0 0x2d 0x1>;         /* GPIO_DS13 */
+> >
+> > That is exactly the same as you have in your patch. You should
+> > always list all interrupts that the gpio controller is wired
+> > to, whether they are used or not.
+> >
+> > Ideally, the driver just decides at runtime how to wire that
+> > mux, based on how the gpio is configured by the client driver.
+> > If the client asks for an interrupt (with gpio_to_irq) and is
+> > it is configured as an input, then you connect it to the GIC,
+> > otherwise you leave it to be handled by the gpio chip itself.
+> > Any reason you can't do that?
+> >
+> As I just explained, the GPIO Standby doesn't support the interrupt.
+> Both interrupts are came from GIC, so if the client asks for an
+> interrupt, it will go to the GIC driver (not GPIO Standby driver), so
+> that's my trouble. We can not implement the code to configured the
+> GPIO standby at GIC driver.
 
-Any of these could cause Xen to blow up, while Xen could always provide
-a known-safe (but potentially sub-optimal) view to the kernel by
-default.
+So you are saying we merged a binding that is incapable of describing
+the hardware? If that is the case, we may have to go back to
+the drawing board and come up with a working binding.
 
-> > Incompatible changes are a spec problem regardless of how this is
-> > handled.
-> 
-> Not necessarily - we don't expose the memory map (we'd have to
-> if we were to mimic EFI for Dom0), and hence the mentioned issue
-> doesn't exist in our model.
+One part that I don't understand yet is how the driver handles
+irqs to start with, as it does not register a nested irq domain
+or irqchip, so I'm guessing that client drivers cannot actually
+use the IRQ functionality. Is that right?
 
-We have to expose _some_ memory map, so I don't follow this point.
+It also seems to me that the binding cannot distinguish between a
+line configured as an input and one that is configured as an
+interrupt, which are for other gpio chips the same thing, but
+not on this one.  Could this be rectified by using another bit
+of the second gpio cell? The low bit is used for active-high/active-low,
+so you could use the second bit for irq/input.
 
-Mark.
+	Arnd
