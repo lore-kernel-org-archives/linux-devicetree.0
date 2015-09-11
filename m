@@ -1,60 +1,43 @@
-From: Laurentiu Palcu <laurentiu.palcu@intel.com>
-Subject: Re: [PATCH v2 00/13] power: bq24257: Add support for bq24250/bq24251
-Date: Fri, 11 Sep 2015 11:26:49 +0300
-Message-ID: <20150911082649.GQ21512@lpalcu-desk>
-References: <1441757557-7266-1-git-send-email-dannenberg@ti.com>
- <20150910122616.GB21512@lpalcu-desk>
- <20150910212626.GA16256@borg>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH V2 3/3] reset: hi6220: Reset driver for hisilicon hi6220 SoC
+Date: Fri, 11 Sep 2015 10:41:24 +0200
+Message-ID: <2464506.5Jp1Wg3qfc@wuerfel>
+References: <1441959518-178696-1-git-send-email-puck.chen@hisilicon.com> <1441959518-178696-3-git-send-email-puck.chen@hisilicon.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-pm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20150910212626.GA16256@borg>
-Sender: linux-pm-owner@vger.kernel.org
-To: Andreas Dannenberg <dannenberg@ti.com>
-Cc: Sebastian Reichel <sre@kernel.org>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, David Woodhouse <dwmw2@infradead.org>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, linux-pm@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1441959518-178696-3-git-send-email-puck.chen@hisilicon.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Chen Feng <puck.chen@hisilicon.com>
+Cc: p.zabel@pengutronix.de, linux-kernel@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, xuwei5@hisilicon.com, haojian.zhuang@linaro.org, zhangfei.gao@foxmail.com, xuyiping@hisilicon.com, bintian.wang@huawei.com, devicetree@vger.kernel.org, dan.zhao@hisilicon.com, suzhuangluan@hisilicon.com, w.f@huawei.com
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Sep 10, 2015 at 04:26:26PM -0500, Andreas Dannenberg wrote:
-> On Thu, Sep 10, 2015 at 03:26:16PM +0300, Laurentiu Palcu wrote:
-> > On Tue, Sep 08, 2015 at 07:12:24PM -0500, Andreas Dannenberg wrote:
-[...] 
-> > For the entire patchset, please run it through 'checkpatch --strict'.
-> > There are some minor style issues that are worth fixing.
-> 
-> Ok will do. But I'm not a big fan of --strict, especially the alignment
-> of function arguments that spill into the next line. If it is required
-> by the Kernel community (is it?) why not making --strict a default-on
-> option of checkpatch.pl or mandating it in one of the docs?
-I don't think this is required by the kernel community. However, I
-believe that fixing those style issues will make the code tidier. The
-reason this is not the default option for checkpatch is because you
-cannot always align those function arguments without exceeding the 80
-chars line limit, etc. Which is reasonable. So, wherever we can do it,
-let's, at least, try. :)
+On Friday 11 September 2015 16:18:38 Chen Feng wrote:
+> +static int __init hi6220_reset_init(void)
+> +{
+> +	int ret;
+> +	struct device_node *np;
+> +	struct hi6220_reset_data *data;
+> +
+> +	data = kzalloc(sizeof(*data), GFP_KERNEL);
+> +	if (!data)
+> +		return -ENOMEM;
+> +
+> +	np = of_find_compatible_node(NULL, NULL, "hisilicon,hi6220_reset_ctl");
+> +	if (!np) {
+> +		ret = -ENXIO;
+> +		goto err_alloc;
+> +	}
 
->  
-> > Regarding the DT patch (on which I'll comment separately, after I go
-> > through the entire patchset), make sure you put it before the code
-> > implementing the binding [1].
-> > 
-> > [1] Documentation/devicetree/bindings/submitting-patches.txt
-> 
-> I had actually read this but my DT doc binding patch also renames the
-> binding file itself. So technically it isn't valid until after the
-> rename patch was applied... which is against the patch ordering... Any
-> creative idea on how to solve this?
-One idea would be to start the patchset upfront with the renaming. This
-will not introduce new bindings nor change any driver functionality, so
-it should be ok. Then introduce the new bindings and continue with the
-rest of implementation. I think this will be compliant with the DT doc
-requirements and it'll probably silence checkpatch warnings like the one
-below:
+Why is this not a platform driver?
 
-WARNING: DT compatible string "ti,bq24250" appears un-documented --
-check ./Documentation/devicetree/bindings/
+> +	if (IS_ENABLED(CONFIG_RESET_CONTROLLER))
+> +		reset_controller_register(&data->rc_dev);
+> +
+> +	return 0;
 
-The only downside to this is that you'll have to rework the rest of the
-patches to use the new prefixes... :/
+The Kconfig symbol already depends on RESET_CONTROLLER, so
+the IS_ENABLED() check looks redundant.
 
-laurentiu
+	Arnd
