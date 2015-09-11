@@ -1,69 +1,101 @@
-From: Jyri Sarha <jsarha-l0cyMroinI0@public.gmane.org>
-Subject: [PATCH RFC] ASoC: simple-card: Update clocks binding for simple-card DAI subnodes
-Date: Fri, 11 Sep 2015 16:18:02 +0300
-Message-ID: <1441977482-29215-1-git-send-email-jsarha@ti.com>
+From: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Subject: Re: [PATCH] efi/libstub/fdt: Standardize the names of EFI stub parameters
+Date: Fri, 11 Sep 2015 15:30:15 +0200
+Message-ID: <CAKv+Gu9rN7_mxk0huX+34HSCC_aTWVTkUZKQMB1+9U56fRnwsA@mail.gmail.com>
+References: <1441874516-11364-1-git-send-email-zhaoshenglong@huawei.com>
+	<20150910095208.GA29293@leverpostej>
+	<alpine.DEB.2.02.1509101116580.2672@kaball.uk.xensource.com>
+	<20150910112418.GC29293@leverpostej>
+	<alpine.DEB.2.02.1509101223580.2672@kaball.uk.xensource.com>
+	<20150910121514.GE29293@leverpostej>
+	<alpine.DEB.2.02.1509101429480.2672@kaball.uk.xensource.com>
+	<20150910144938.GI29293@leverpostej>
+	<alpine.DEB.2.02.1509101655020.2672@kaball.uk.xensource.com>
+	<20150910162302.GN29293@leverpostej>
+	<20150911124643.GB4530@olila.local.net-space.pl>
+	<alpine.DEB.2.02.1509111410180.2672@kaball.uk.xensource.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: kuninori.morimoto.gx-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org, Xiubo.Lee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, peter.ujfalusi-l0cyMroinI0@public.gmane.org, liam.r.girdwood-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, Jyri Sarha <jsarha-l0cyMroinI0@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <alpine.DEB.2.02.1509111410180.2672@kaball.uk.xensource.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Stefano Stabellini <stefano.stabellini@eu.citrix.com>
+Cc: Daniel Kiper <daniel.kiper@oracle.com>, Mark Rutland <mark.rutland@arm.com>, Shannon Zhao <zhaoshenglong@huawei.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-efi@vger.kernel.org" <linux-efi@vger.kernel.org>, "Ian.Campbell@citrix.com" <Ian.Campbell@citrix.com>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "leif.lindholm@linaro.org" <leif.lindholm@linaro.org>, "xen-devel@lists.xen.org" <xen-devel@lists.xen.org>, "julien.grall@citrix.com" <julien.grall@citrix.com>, "freebsd-arm@freebsd.org" <freebsd-arm@freebsd.org>, "matt.fleming@intel.com" <matt.fleming@intel.com>, "christoffer.dall@linaro.org" <christoffer.dall@linaro.org>, "jbeulich@suse.com" <jbeulich@suse.com>, peter.huangpeng@huawei.c
 List-Id: devicetree@vger.kernel.org
 
-The updated binding provides a way to set clock-ID and direction
-parameters for DAI drivers set_sysclk() call back.
+On 11 September 2015 at 15:14, Stefano Stabellini
+<stefano.stabellini@eu.citrix.com> wrote:
+> On Fri, 11 Sep 2015, Daniel Kiper wrote:
+>> On Thu, Sep 10, 2015 at 05:23:02PM +0100, Mark Rutland wrote:
+>> > > > C) When you could go:
+>> > > >
+>> > > >    DT -> Discover Xen -> Xen-specific stuff -> Xen-specific EFI/ACPI discovery
+>> > >
+>> > > I take you mean discovering Xen with the usual Xen hypervisor node on
+>> > > device tree. I think that C) is a good option actually. I like it. Not
+>> > > sure why we didn't think about this earlier. Is there anything EFI or
+>> > > ACPI which is needed before Xen support is discovered by
+>> > > arch/arm64/kernel/setup.c:setup_arch -> xen_early_init()?
+>> >
+>> > Currently lots (including the memory map). With the stuff to support
+>> > SPCR, the ACPI discovery would be moved before xen_early_init().
+>> >
+>> > > If not, we could just go for this. A lot of complexity would go away.
+>> >
+>> > I suspect this would still be fairly complex, but would at least prevent
+>> > the Xen-specific EFI handling from adversely affecting the native case.
+>> >
+>> > > > D) If you want to be generic:
+>> > > >    EFI -> EFI application -> EFI tables -> ACPI tables -> Xen-specific stuff
+>> > > >           \------------------------------------------/
+>> > > >            (virtualize these, provide shims to Dom0, but handle
+>> > > >             everything in Xen itself)
+>> > >
+>> > > I think that this is good in theory but could turn out to be a lot of
+>> > > work in practice. We could probably virtualize the RuntimeServices but
+>> > > the BootServices are troublesome.
+>> >
+>> > What's troublesome with the boot services?
+>> >
+>> > What can't be simulated?
+>>
+>> How do you want to access bare metal EFI boot services from dom0 if they
+>> were shutdown long time ago before loading dom0 image? What do you need
+>> from EFI boot services in dom0?
+>
+> That's right. Trying to emulate BootServices after the real
+> ExitBootServices has already been called seems like a very bad plan.
+>
+> I think that whatever interface we come up with, would need to be past
+> ExitBootServices.
 
-Signed-off-by: Jyri Sarha <jsarha-l0cyMroinI0@public.gmane.org>
----
-I proposed something similar about a year ago, but Mark rejected that
-at the time. This RFC is to start that discussion again. This time
-before I do any code changes.
+It feels like this discussion is going in circles.
 
-Best regards,
-Jyri
+When we discussed this six months ago, we already concluded that,
+since UEFI is the only specified way that the presence of ACPI is
+advertised on an ARM system, we need to emulate UEFI to some extent.
 
- Documentation/devicetree/bindings/sound/simple-card.txt | 17 ++++++++++++++++-
- 1 file changed, 16 insertions(+), 1 deletion(-)
+So we need the EFI system table to expose the UEFI configuration table
+that carries the ACPI root pointer.
 
-diff --git a/Documentation/devicetree/bindings/sound/simple-card.txt b/Documentation/devicetree/bindings/sound/simple-card.txt
-index cf3979e..d10bf2d 100644
---- a/Documentation/devicetree/bindings/sound/simple-card.txt
-+++ b/Documentation/devicetree/bindings/sound/simple-card.txt
-@@ -76,6 +76,7 @@ Optional CPU/CODEC subnodes properties:
- - dai-tdm-slot-num			: Please refer to tdm-slot.txt.
- - dai-tdm-slot-width			: Please refer to tdm-slot.txt.
- - clocks / system-clock-frequency	: specify subnode's clock if needed.
-+
- 					  it can be specified via "clocks" if system has
- 					  clock node (= common clock), or "system-clock-frequency"
- 					  (if system doens't support common clock)
-@@ -83,7 +84,21 @@ Optional CPU/CODEC subnodes properties:
- 					  enabled with clk_prepare_enable()
- 					  in dai startup() and disabled with
- 					  clk_disable_unprepare() in dai
--					  shutdown().
-+					  shutdown(). "system-clock-frequency" 
-+					  can also be an array if more than one
-+					  clock is described.
-+- clock-ids				: An array of clock ID integers,
-+					  preferrably defined in DT header.
-+					  Each entry corresponds to the same
-+					  index postion first in "clocks" and
-+					  after the end of clocks array to
-+					  "system-clock-frequency" array.
-+- clock-dirs				: An array of integers describing
-+					  clock directions: CLK_IN (= 0) or
-+					  OUT (= 1). Entries in the array
-+					  refer to clocks in the same way as
-+					  in clock-ids property.
-+
- 
- Example 1 - single DAI link:
- 
+Since ACPI support also relies on the UEFI memory map (I think?), we
+need that as well.
+
+These two items are exactly what we pass via the UEFI DT properties,
+so we should indeed promote the current de-facto binding to a proper
+binding, and renaming the properties makes sense in that context.
+
+I agree that this should also include a description of the expected
+state of the firmware, i.e., that ExitBootServices() has been called,
+and that the memory map has been populated with virtual address, which
+have been installed using SetVirtualAddressMap() if they differ from
+the physical addresses. (The current implementation on the kernel side
+is perfectly capable of dealing with a 1:1 mapping).
+
+Beyond that, there is no point in pretending to be a full UEFI
+implementation, imo. Boot services are not required, nor are runtime
+services (only the current EFI init code on arm needs to be modified
+to deal with a NULL runtime services pointer)
+
 -- 
-1.9.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Ard.
