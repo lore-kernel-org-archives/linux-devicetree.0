@@ -1,43 +1,59 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH V2 3/3] reset: hi6220: Reset driver for hisilicon hi6220 SoC
-Date: Fri, 11 Sep 2015 10:41:24 +0200
-Message-ID: <2464506.5Jp1Wg3qfc@wuerfel>
-References: <1441959518-178696-1-git-send-email-puck.chen@hisilicon.com> <1441959518-178696-3-git-send-email-puck.chen@hisilicon.com>
+From: Peter Ujfalusi <peter.ujfalusi@ti.com>
+Subject: Re: [PATCH RFC 1/5] ASoC: davinci-mcasp: Set
+ .symmetric_rates = 1 in snd_soc_dai_driver
+Date: Fri, 11 Sep 2015 11:48:00 +0300
+Message-ID: <55F29540.40002@ti.com>
+References: <cover.1441806963.git.jsarha@ti.com>
+ <2ada475a3e0243b093a958e8bb5c465e8fb08abf.1441806963.git.jsarha@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1441959518-178696-3-git-send-email-puck.chen@hisilicon.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Chen Feng <puck.chen@hisilicon.com>
-Cc: p.zabel@pengutronix.de, linux-kernel@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, xuwei5@hisilicon.com, haojian.zhuang@linaro.org, zhangfei.gao@foxmail.com, xuyiping@hisilicon.com, bintian.wang@huawei.com, devicetree@vger.kernel.org, dan.zhao@hisilicon.com, suzhuangluan@hisilicon.com, w.f@huawei.com
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <2ada475a3e0243b093a958e8bb5c465e8fb08abf.1441806963.git.jsarha@ti.com>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Jyri Sarha <jsarha@ti.com>, linux-omap@vger.kernel.org, alsa-devel@alsa-project.org, devicetree@vger.kernel.org
+Cc: liam.r.girdwood@linux.intel.com, Li.Xiubo@freescale.com, misael.lopez@ti.com, broonie@kernel.org, bcousson@baylibre.com
 List-Id: devicetree@vger.kernel.org
 
-On Friday 11 September 2015 16:18:38 Chen Feng wrote:
-> +static int __init hi6220_reset_init(void)
-> +{
-> +	int ret;
-> +	struct device_node *np;
-> +	struct hi6220_reset_data *data;
-> +
-> +	data = kzalloc(sizeof(*data), GFP_KERNEL);
-> +	if (!data)
-> +		return -ENOMEM;
-> +
-> +	np = of_find_compatible_node(NULL, NULL, "hisilicon,hi6220_reset_ctl");
-> +	if (!np) {
-> +		ret = -ENXIO;
-> +		goto err_alloc;
-> +	}
+On 09/09/2015 09:27 PM, Jyri Sarha wrote:
+> The TX and RX direction share the same bit clock and frame sync, so
+> the samplerate must be the same to both directions.
 
-Why is this not a platform driver?
+Acked-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
 
-> +	if (IS_ENABLED(CONFIG_RESET_CONTROLLER))
-> +		reset_controller_register(&data->rc_dev);
-> +
-> +	return 0;
+> Signed-off-by: Jyri Sarha <jsarha@ti.com>
+> ---
+>  sound/soc/davinci/davinci-mcasp.c | 1 +
+>  1 file changed, 1 insertion(+)
+> =
 
-The Kconfig symbol already depends on RESET_CONTROLLER, so
-the IS_ENABLED() check looks redundant.
+> diff --git a/sound/soc/davinci/davinci-mcasp.c b/sound/soc/davinci/davinc=
+i-mcasp.c
+> index fa0511b..bbd1987 100644
+> --- a/sound/soc/davinci/davinci-mcasp.c
+> +++ b/sound/soc/davinci/davinci-mcasp.c
+> @@ -1304,6 +1304,7 @@ static struct snd_soc_dai_driver davinci_mcasp_dai[=
+] =3D {
+>  		.ops 		=3D &davinci_mcasp_dai_ops,
+>  =
 
-	Arnd
+>  		.symmetric_samplebits	=3D 1,
+> +		.symmetric_rates	=3D 1,
+>  	},
+>  	{
+>  		.name		=3D "davinci-mcasp.1",
+> =
+
+
+
+-- =
+
+P=E9ter
