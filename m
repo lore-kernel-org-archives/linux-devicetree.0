@@ -1,92 +1,87 @@
-From: Chanwoo Choi <cw00.choi@samsung.com>
-Subject: Re: [PATCH 1/6] mfd: arizona: Add TST_CAP bits for headphone detection
-Date: Fri, 11 Sep 2015 17:12:32 +0900
-Message-ID: <55F28CF0.8020006@samsung.com>
-References: <1441885307-24499-1-git-send-email-ckeepax@opensource.wolfsonmicro.com>
+From: Harini Katakam <harini.katakam@xilinx.com>
+Subject: [RFC PATCH 1/3] net: macb: Add support for extended BD with a config option
+Date: Fri, 11 Sep 2015 13:27:36 +0530
+Message-ID: <1441958258-35441-2-git-send-email-harinik@xilinx.com>
+References: <1441958258-35441-1-git-send-email-harinik@xilinx.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-reply-to: <1441885307-24499-1-git-send-email-ckeepax@opensource.wolfsonmicro.com>
+In-Reply-To: <1441958258-35441-1-git-send-email-harinik@xilinx.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Charles Keepax <ckeepax@opensource.wolfsonmicro.com>, lee.jones@linaro.org
-Cc: myungjoo.ham@samsung.com, sameo@linux.intel.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, patches@opensource.wolfsonmicro.com
+To: nicolas.ferre@atmel.com, davem@davemloft.net, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, boris.brezillon@free-electrons.com, alexandre.belloni@free-electrons.com, harinikatakamlinux@gmail.com
+Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, harinik@xilinx.com, punnaia@xilinx.com, michals@xilinx.com, anirudh@xilinx.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Charles,
+Cadence GEM supports extended buffer descriptors.
+This patch adds a config option to enable use of extended BD.
+This adds two extra words to the TX BD and RX BD by configuring the
+necessary registers. Corresponding variables are added to the
+macb_dma_desc structure.
 
-I recommend that you make the cover-letter patches on later.
-If you better to explain the patch description on cover-letter patch,
-we will understand what is this patch-set more easily.
+Signed-off-by: Harini Katakam <harinik@xilinx.com>
+---
+ drivers/net/ethernet/cadence/Kconfig |    8 ++++++++
+ drivers/net/ethernet/cadence/macb.c  |    4 ++++
+ drivers/net/ethernet/cadence/macb.h  |    8 ++++++++
+ 3 files changed, 20 insertions(+)
 
-Thanks,
-Chanwoo Choi
-
-On 2015=EB=85=84 09=EC=9B=94 10=EC=9D=BC 20:41, Charles Keepax wrote:
-> On Florida some additional settings are required to get accurate
-> measurements at the top end of the headphone detection range. This pa=
-tch
-> adds the bits required for this.
->=20
-> Signed-off-by: Charles Keepax <ckeepax@opensource.wolfsonmicro.com>
-> ---
->  drivers/mfd/wm5110-tables.c           |    2 ++
->  include/linux/mfd/arizona/registers.h |    8 ++++++++
->  2 files changed, 10 insertions(+), 0 deletions(-)
->=20
-> diff --git a/drivers/mfd/wm5110-tables.c b/drivers/mfd/wm5110-tables.=
-c
-> index acb3bb2..78032e8 100644
-> --- a/drivers/mfd/wm5110-tables.c
-> +++ b/drivers/mfd/wm5110-tables.c
-> @@ -1908,6 +1908,7 @@ static bool wm5110_readable_register(struct dev=
-ice *dev, unsigned int reg)
->  	case ARIZONA_HP1_SHORT_CIRCUIT_CTRL:
->  	case ARIZONA_HP2_SHORT_CIRCUIT_CTRL:
->  	case ARIZONA_HP3_SHORT_CIRCUIT_CTRL:
-> +	case ARIZONA_HP_TEST_CTRL_1:
->  	case ARIZONA_AIF1_BCLK_CTRL:
->  	case ARIZONA_AIF1_TX_PIN_CTRL:
->  	case ARIZONA_AIF1_RX_PIN_CTRL:
-> @@ -2853,6 +2854,7 @@ static bool wm5110_volatile_register(struct dev=
-ice *dev, unsigned int reg)
->  	case ARIZONA_INPUT_ENABLES_STATUS:
->  	case ARIZONA_OUTPUT_STATUS_1:
->  	case ARIZONA_RAW_OUTPUT_STATUS_1:
-> +	case ARIZONA_HP_TEST_CTRL_1:
->  	case ARIZONA_SLIMBUS_RX_PORT_STATUS:
->  	case ARIZONA_SLIMBUS_TX_PORT_STATUS:
->  	case ARIZONA_INTERRUPT_STATUS_1:
-> diff --git a/include/linux/mfd/arizona/registers.h b/include/linux/mf=
-d/arizona/registers.h
-> index e96644c..fe1b5d0 100644
-> --- a/include/linux/mfd/arizona/registers.h
-> +++ b/include/linux/mfd/arizona/registers.h
-> @@ -237,6 +237,7 @@
->  #define ARIZONA_HP1_SHORT_CIRCUIT_CTRL           0x4A0
->  #define ARIZONA_HP2_SHORT_CIRCUIT_CTRL           0x4A1
->  #define ARIZONA_HP3_SHORT_CIRCUIT_CTRL           0x4A2
-> +#define ARIZONA_HP_TEST_CTRL_1                   0x4A4
->  #define ARIZONA_SPK_CTRL_2                       0x4B5
->  #define ARIZONA_SPK_CTRL_3                       0x4B6
->  #define ARIZONA_DAC_COMP_1                       0x4DC
-> @@ -3548,6 +3549,13 @@
->  #define ARIZONA_HP3_SC_ENA_WIDTH                      1  /* HP3_SC_E=
-NA */
-> =20
->  /*
-> + * R1188 (0x4A4) HP Test Ctrl 1
-> + */
-> +#define ARIZONA_HP1_TST_CAP_SEL_MASK             0x0003  /* HP1_TST_=
-CAP_SEL - [1:0] */
-> +#define ARIZONA_HP1_TST_CAP_SEL_SHIFT                 0  /* HP1_TST_=
-CAP_SEL - [1:0] */
-> +#define ARIZONA_HP1_TST_CAP_SEL_WIDTH                 2  /* HP1_TST_=
-CAP_SEL - [1:0] */
-> +
-> +/*
->   * R1244 (0x4DC) - DAC comp 1
->   */
->  #define ARIZONA_OUT_COMP_COEFF_MASK              0xFFFF  /* OUT_COMP=
-_COEFF - [15:0] */
->=20
+diff --git a/drivers/net/ethernet/cadence/Kconfig b/drivers/net/ethernet/cadence/Kconfig
+index f0bcb15..33e4198 100644
+--- a/drivers/net/ethernet/cadence/Kconfig
++++ b/drivers/net/ethernet/cadence/Kconfig
+@@ -31,4 +31,12 @@ config MACB
+ 	  To compile this driver as a module, choose M here: the module
+ 	  will be called macb.
+ 
++config MACB_EXT_BD
++	tristate "Cadence MACB/GEM extended buffer descriptor"
++	depends on HAS_DMA && MACB
++	---help---
++	  The Cadence MACB host supports use of extended buffer descriptor.
++	  This option enables additon of two extra words to TX BD and RX BD.
++	  These two extra words are currently used to obtain PTP timestamp.
++
+ endif # NET_CADENCE
+diff --git a/drivers/net/ethernet/cadence/macb.c b/drivers/net/ethernet/cadence/macb.c
+index 88c1e1a..bb2932c 100644
+--- a/drivers/net/ethernet/cadence/macb.c
++++ b/drivers/net/ethernet/cadence/macb.c
+@@ -1665,6 +1665,10 @@ static void macb_configure_dma(struct macb *bp)
+ 			dmacfg |= GEM_BIT(TXCOEN);
+ 		else
+ 			dmacfg &= ~GEM_BIT(TXCOEN);
++#ifdef CONFIG_MACB_EXT_BD
++		dmacfg |= GEM_BIT(RXBDEXT);
++		dmacfg |= GEM_BIT(TXBDEXT);
++#endif
+ 		netdev_dbg(bp->dev, "Cadence configure DMA with 0x%08x\n",
+ 			   dmacfg);
+ 		gem_writel(bp, DMACFG, dmacfg);
+diff --git a/drivers/net/ethernet/cadence/macb.h b/drivers/net/ethernet/cadence/macb.h
+index 6e1faea..58c9870 100644
+--- a/drivers/net/ethernet/cadence/macb.h
++++ b/drivers/net/ethernet/cadence/macb.h
+@@ -244,6 +244,10 @@
+ #define GEM_RXBS_SIZE		8
+ #define GEM_DDRP_OFFSET		24 /* disc_when_no_ahb */
+ #define GEM_DDRP_SIZE		1
++#define GEM_RXBDEXT_OFFSET	28 /* Extended RX BD */
++#define GEM_RXBDEXT_SIZE	1
++#define GEM_TXBDEXT_OFFSET	29 /* Extended TX BD */
++#define GEM_TXBDEXT_SIZE	1
+ 
+ 
+ /* Bitfields in NSR */
+@@ -466,6 +470,10 @@
+ struct macb_dma_desc {
+ 	u32	addr;
+ 	u32	ctrl;
++#ifdef CONFIG_MACB_EXT_BD
++	u32	tsl;
++	u32	tsh;
++#endif
+ };
+ 
+ /* DMA descriptor bitfields */
+-- 
+1.7.9.5
