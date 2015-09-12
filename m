@@ -1,205 +1,420 @@
-From: xuyiping <xuyiping@hisilicon.com>
-Subject: Re: [PATCH V2 3/3] reset: hi6220: Reset driver for hisilicon hi6220
- SoC
-Date: Sat, 12 Sep 2015 14:06:19 +0800
-Message-ID: <55F3C0DB.5070800@hisilicon.com>
-References: <1441959518-178696-1-git-send-email-puck.chen@hisilicon.com>
- <1441959518-178696-3-git-send-email-puck.chen@hisilicon.com>
+From: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 1/6] iio: mma8452: refactor for seperating chip specific
+ data
+Date: Sat, 12 Sep 2015 11:07:15 +0100
+Message-ID: <55F3F953.4030209@kernel.org>
+References: <1441107913-4112-1-git-send-email-martink@posteo.de>
+ <1441107913-4112-2-git-send-email-martink@posteo.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Type: text/plain; charset=windows-1252
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1441959518-178696-3-git-send-email-puck.chen@hisilicon.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Chen Feng <puck.chen@hisilicon.com>, p.zabel@pengutronix.de, linux-kernel@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, xuwei5@hisilicon.com, haojian.zhuang@linaro.org, zhangfei.gao@foxmail.com
-Cc: bintian.wang@huawei.com, devicetree@vger.kernel.org, dan.zhao@hisilicon.com, suzhuangluan@hisilicon.com, w.f@huawei.com
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1441107913-4112-2-git-send-email-martink-1KBjaw7Xf1+zQB+pC5nmwQ@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Martin Kepplinger <martink-1KBjaw7Xf1+zQB+pC5nmwQ@public.gmane.org>, knaack.h-Mmb7MZpHnFY@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org, mfuzzey-mB3Nsq4MPf1BDgjK7y7TUQ@public.gmane.org, roberta.dobrescu-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, christoph.muellner-SN7IsUiht6C/RdPyistoZJqQE7yCjDx5@public.gmane.org, Martin Kepplinger <martin.kepplinger-SN7IsUiht6C/RdPyistoZJqQE7yCjDx5@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+On 01/09/15 12:45, Martin Kepplinger wrote:
+> This adds a struct mma_chip_info to hold data that will remain specific to
+> the chip in use. It is provided during probe() and linked in
+> struct of_device_id.
+> 
+> Also this suggests that the driver is called "mma8452" and now handles the
+> MMA8452Q device, but is not limited to it.
+> 
+> Signed-off-by: Martin Kepplinger <martin.kepplinger-SN7IsUiht6C/RdPyistoZJqQE7yCjDx5@public.gmane.org>
+> Signed-off-by: Christoph Muellner <christoph.muellner-SN7IsUiht6C/RdPyistoZJqQE7yCjDx5@public.gmane.org>
+Applied to the togreg branch of iio.git.  Initially pushed out as testing
+for the autobuilders to play with it.
 
+Thanks,
 
-On 2015/9/11 16:18, Chen Feng wrote:
-> Add reset driver for hi6220-hikey board,this driver supply deassert
-> of IP. on hi6220 SoC.
->
-> Signed-off-by: Chen Feng <puck.chen@hisilicon.com>
+Jonathan
 > ---
->   drivers/reset/Kconfig                  |   1 +
->   drivers/reset/Makefile                 |   1 +
->   drivers/reset/hisilicon/Kconfig        |   5 ++
->   drivers/reset/hisilicon/Makefile       |   1 +
->   drivers/reset/hisilicon/hi6220_reset.c | 118 +++++++++++++++++++++++++++++++++
->   5 files changed, 126 insertions(+)
->   create mode 100644 drivers/reset/hisilicon/Kconfig
->   create mode 100644 drivers/reset/hisilicon/Makefile
->   create mode 100644 drivers/reset/hisilicon/hi6220_reset.c
->
-> diff --git a/drivers/reset/Kconfig b/drivers/reset/Kconfig
-> index 0615f50..df37212 100644
-> --- a/drivers/reset/Kconfig
-> +++ b/drivers/reset/Kconfig
-> @@ -13,3 +13,4 @@ menuconfig RESET_CONTROLLER
->   	  If unsure, say no.
->
->   source "drivers/reset/sti/Kconfig"
-> +source "drivers/reset/hisilicon/Kconfig"
-> diff --git a/drivers/reset/Makefile b/drivers/reset/Makefile
-> index 157d421..331d7b2 100644
-> --- a/drivers/reset/Makefile
-> +++ b/drivers/reset/Makefile
-> @@ -3,3 +3,4 @@ obj-$(CONFIG_ARCH_SOCFPGA) += reset-socfpga.o
->   obj-$(CONFIG_ARCH_BERLIN) += reset-berlin.o
->   obj-$(CONFIG_ARCH_SUNXI) += reset-sunxi.o
->   obj-$(CONFIG_ARCH_STI) += sti/
-> +obj-$(CONFIG_ARCH_HISI) += hisilicon/
-> diff --git a/drivers/reset/hisilicon/Kconfig b/drivers/reset/hisilicon/Kconfig
-> new file mode 100644
-> index 0000000..26bf95a
-> --- /dev/null
-> +++ b/drivers/reset/hisilicon/Kconfig
-> @@ -0,0 +1,5 @@
-> +config COMMON_RESET_HI6220
-> +	tristate "Hi6220 Reset Driver"
-> +	depends on (ARCH_HISI && RESET_CONTROLLER)
-> +	help
-> +	  Build the Hisilicon Hi6220 reset driver.
-> diff --git a/drivers/reset/hisilicon/Makefile b/drivers/reset/hisilicon/Makefile
-> new file mode 100644
-> index 0000000..c932f86
-> --- /dev/null
-> +++ b/drivers/reset/hisilicon/Makefile
-> @@ -0,0 +1 @@
-> +obj-$(CONFIG_COMMON_RESET_HI6220) += hi6220_reset.o
-> diff --git a/drivers/reset/hisilicon/hi6220_reset.c b/drivers/reset/hisilicon/hi6220_reset.c
-> new file mode 100644
-> index 0000000..097133d
-> --- /dev/null
-> +++ b/drivers/reset/hisilicon/hi6220_reset.c
-> @@ -0,0 +1,118 @@
-> +/*
-> + * Hisilicon Hi6220 reset controller driver
+>  drivers/iio/accel/mma8452.c | 183 ++++++++++++++++++++++++++++++++------------
+>  1 file changed, 134 insertions(+), 49 deletions(-)
+> 
+> diff --git a/drivers/iio/accel/mma8452.c b/drivers/iio/accel/mma8452.c
+> index b921d84..f28428fa 100644
+> --- a/drivers/iio/accel/mma8452.c
+> +++ b/drivers/iio/accel/mma8452.c
+> @@ -22,6 +22,7 @@
+>  #include <linux/iio/triggered_buffer.h>
+>  #include <linux/iio/events.h>
+>  #include <linux/delay.h>
+> +#include <linux/of_device.h>
+>  
+>  #define MMA8452_STATUS				0x00
+>  #define  MMA8452_STATUS_DRDY			(BIT(2) | BIT(1) | BIT(0))
+> @@ -74,6 +75,52 @@ struct mma8452_data {
+>  	struct mutex lock;
+>  	u8 ctrl_reg1;
+>  	u8 data_cfg;
+> +	const struct mma_chip_info *chip_info;
+> +};
+> +
+> +/**
+> + * struct mma_chip_info - chip specific data for Freescale's accelerometers
+> + * @chip_id:			WHO_AM_I register's value
+> + * @channels:			struct iio_chan_spec matching the device's
+> + *				capabilities
+> + * @num_channels:		number of channels
+> + * @mma_scales:			scale factors for converting register values
+> + *				to m/s^2; 3 modes: 2g, 4g, 8g; 2 integers
+> + *				per mode: m/s^2 and micro m/s^2
+> + * @ev_cfg:			event config register address
+> + * @ev_cfg_ele:			latch bit in event config register
+> + * @ev_cfg_chan_shift:		number of the bit to enable events in X
+> + *				direction; in event config register
+> + * @ev_src:			event source register address
+> + * @ev_src_xe:			bit in event source register that indicates
+> + *				an event in X direction
+> + * @ev_src_ye:			bit in event source register that indicates
+> + *				an event in Y direction
+> + * @ev_src_ze:			bit in event source register that indicates
+> + *				an event in Z direction
+> + * @ev_ths:			event threshold register address
+> + * @ev_ths_mask:		mask for the threshold value
+> + * @ev_count:			event count (period) register address
 > + *
-> + * Copyright (c) 2015 Hisilicon Limited.
-> + *
-> + * Author: Feng Chen <puck.chen@hisilicon.com>
-> + *
-> + * This program is free software; you can redistribute it and/or modify
-> + * it under the terms of the GNU General Public License version 2 as
-> + * published by the Free Software Foundation.
+> + * Since not all chips supported by the driver support comparing high pass
+> + * filtered data for events (interrupts), different interrupt sources are
+> + * used for different chips and the relevant registers are included here.
 > + */
+> +struct mma_chip_info {
+> +	u8 chip_id;
+> +	const struct iio_chan_spec *channels;
+> +	int num_channels;
+> +	const int mma_scales[3][2];
+> +	u8 ev_cfg;
+> +	u8 ev_cfg_ele;
+> +	u8 ev_cfg_chan_shift;
+> +	u8 ev_src;
+> +	u8 ev_src_xe;
+> +	u8 ev_src_ye;
+> +	u8 ev_src_ze;
+> +	u8 ev_ths;
+> +	u8 ev_ths_mask;
+> +	u8 ev_count;
+>  };
+>  
+>  static int mma8452_drdy(struct mma8452_data *data)
+> @@ -143,16 +190,6 @@ static const int mma8452_samp_freq[8][2] = {
+>  	{6, 250000}, {1, 560000}
+>  };
+>  
+> -/*
+> - * Hardware has fullscale of -2G, -4G, -8G corresponding to raw value -2048
+> - * The userspace interface uses m/s^2 and we declare micro units
+> - * So scale factor is given by:
+> - *	g * N * 1000000 / 2048 for N = 2, 4, 8 and g = 9.80665
+> - */
+> -static const int mma8452_scales[3][2] = {
+> -	{0, 9577}, {0, 19154}, {0, 38307}
+> -};
+> -
+>  /* Datasheet table 35  (step time vs sample frequency) */
+>  static const int mma8452_transient_time_step_us[8] = {
+>  	1250,
+> @@ -189,8 +226,11 @@ static ssize_t mma8452_show_scale_avail(struct device *dev,
+>  					struct device_attribute *attr,
+>  					char *buf)
+>  {
+> -	return mma8452_show_int_plus_micros(buf, mma8452_scales,
+> -					    ARRAY_SIZE(mma8452_scales));
+> +	struct mma8452_data *data = iio_priv(i2c_get_clientdata(
+> +					     to_i2c_client(dev)));
 > +
-> +#include <linux/init.h>
-> +#include <linux/bitops.h>
-> +#include <linux/io.h>
-> +#include <linux/of.h>
-> +#include <linux/of_address.h>
-> +#include <linux/reset-controller.h>
-> +#include <linux/reset.h>
-> +#include <linux/sizes.h>
-> +#include <linux/slab.h>
-> +
-> +#define ASSET_OFFSET            0x300
-> +#define DEASSET_OFFSET          0x304
-> +
-> +struct hi6220_reset_data {
-> +	spinlock_t			reset_lock; /*device spin-lock*/
-> +	void __iomem			*src_base;
-> +	void __iomem			*asset_base;
-> +	void __iomem			*deasset_base;
-> +	struct reset_controller_dev	rc_dev;
+> +	return mma8452_show_int_plus_micros(buf, data->chip_info->mma_scales,
+> +		ARRAY_SIZE(data->chip_info->mma_scales));
+>  }
+>  
+>  static ssize_t mma8452_show_hp_cutoff_avail(struct device *dev,
+> @@ -221,9 +261,8 @@ static int mma8452_get_samp_freq_index(struct mma8452_data *data,
+>  
+>  static int mma8452_get_scale_index(struct mma8452_data *data, int val, int val2)
+>  {
+> -	return mma8452_get_int_plus_micros_index(mma8452_scales,
+> -						 ARRAY_SIZE(mma8452_scales),
+> -						 val, val2);
+> +	return mma8452_get_int_plus_micros_index(data->chip_info->mma_scales,
+> +			ARRAY_SIZE(data->chip_info->mma_scales), val, val2);
+>  }
+>  
+>  static int mma8452_get_hp_filter_index(struct mma8452_data *data,
+> @@ -270,14 +309,15 @@ static int mma8452_read_raw(struct iio_dev *indio_dev,
+>  		if (ret < 0)
+>  			return ret;
+>  
+> -		*val = sign_extend32(be16_to_cpu(buffer[chan->scan_index]) >> 4,
+> -				     11);
+> +		*val = sign_extend32(be16_to_cpu(
+> +			buffer[chan->scan_index]) >> chan->scan_type.shift,
+> +			chan->scan_type.realbits - 1);
+>  
+>  		return IIO_VAL_INT;
+>  	case IIO_CHAN_INFO_SCALE:
+>  		i = data->data_cfg & MMA8452_DATA_CFG_FS_MASK;
+> -		*val = mma8452_scales[i][0];
+> -		*val2 = mma8452_scales[i][1];
+> +		*val = data->chip_info->mma_scales[i][0];
+> +		*val2 = data->chip_info->mma_scales[i][1];
+>  
+>  		return IIO_VAL_INT_PLUS_MICRO;
+>  	case IIO_CHAN_INFO_SAMP_FREQ:
+> @@ -439,17 +479,17 @@ static int mma8452_read_thresh(struct iio_dev *indio_dev,
+>  	switch (info) {
+>  	case IIO_EV_INFO_VALUE:
+>  		ret = i2c_smbus_read_byte_data(data->client,
+> -					       MMA8452_TRANSIENT_THS);
+> +					       data->chip_info->ev_ths);
+>  		if (ret < 0)
+>  			return ret;
+>  
+> -		*val = ret & MMA8452_TRANSIENT_THS_MASK;
+> +		*val = ret & data->chip_info->ev_ths_mask;
+>  
+>  		return IIO_VAL_INT;
+>  
+>  	case IIO_EV_INFO_PERIOD:
+>  		ret = i2c_smbus_read_byte_data(data->client,
+> -					       MMA8452_TRANSIENT_COUNT);
+> +					       data->chip_info->ev_count);
+>  		if (ret < 0)
+>  			return ret;
+>  
+> @@ -497,7 +537,8 @@ static int mma8452_write_thresh(struct iio_dev *indio_dev,
+>  		if (val < 0 || val > MMA8452_TRANSIENT_THS_MASK)
+>  			return -EINVAL;
+>  
+> -		return mma8452_change_config(data, MMA8452_TRANSIENT_THS, val);
+> +		return mma8452_change_config(data, data->chip_info->ev_ths,
+> +					     val);
+>  
+>  	case IIO_EV_INFO_PERIOD:
+>  		steps = (val * USEC_PER_SEC + val2) /
+> @@ -507,7 +548,7 @@ static int mma8452_write_thresh(struct iio_dev *indio_dev,
+>  		if (steps < 0 || steps > 0xff)
+>  			return -EINVAL;
+>  
+> -		return mma8452_change_config(data, MMA8452_TRANSIENT_COUNT,
+> +		return mma8452_change_config(data, data->chip_info->ev_count,
+>  					     steps);
+>  
+>  	case IIO_EV_INFO_HIGH_PASS_FILTER_3DB:
+> @@ -538,13 +579,15 @@ static int mma8452_read_event_config(struct iio_dev *indio_dev,
+>  				     enum iio_event_direction dir)
+>  {
+>  	struct mma8452_data *data = iio_priv(indio_dev);
+> +	const struct mma_chip_info *chip = data->chip_info;
+>  	int ret;
+>  
+> -	ret = i2c_smbus_read_byte_data(data->client, MMA8452_TRANSIENT_CFG);
+> +	ret = i2c_smbus_read_byte_data(data->client,
+> +				       data->chip_info->ev_cfg);
+>  	if (ret < 0)
+>  		return ret;
+>  
+> -	return ret & MMA8452_TRANSIENT_CFG_CHAN(chan->scan_index) ? 1 : 0;
+> +	return !!(ret & BIT(chan->scan_index + chip->ev_cfg_chan_shift));
+>  }
+>  
+>  static int mma8452_write_event_config(struct iio_dev *indio_dev,
+> @@ -554,20 +597,21 @@ static int mma8452_write_event_config(struct iio_dev *indio_dev,
+>  				      int state)
+>  {
+>  	struct mma8452_data *data = iio_priv(indio_dev);
+> +	const struct mma_chip_info *chip = data->chip_info;
+>  	int val;
+>  
+> -	val = i2c_smbus_read_byte_data(data->client, MMA8452_TRANSIENT_CFG);
+> +	val = i2c_smbus_read_byte_data(data->client, chip->ev_cfg);
+>  	if (val < 0)
+>  		return val;
+>  
+>  	if (state)
+> -		val |= MMA8452_TRANSIENT_CFG_CHAN(chan->scan_index);
+> +		val |= BIT(chan->scan_index + chip->ev_cfg_chan_shift);
+>  	else
+> -		val &= ~MMA8452_TRANSIENT_CFG_CHAN(chan->scan_index);
+> +		val &= ~BIT(chan->scan_index + chip->ev_cfg_chan_shift);
+>  
+>  	val |= MMA8452_TRANSIENT_CFG_ELE;
+>  
+> -	return mma8452_change_config(data, MMA8452_TRANSIENT_CFG, val);
+> +	return mma8452_change_config(data, chip->ev_cfg, val);
+>  }
+>  
+>  static void mma8452_transient_interrupt(struct iio_dev *indio_dev)
+> @@ -576,25 +620,25 @@ static void mma8452_transient_interrupt(struct iio_dev *indio_dev)
+>  	s64 ts = iio_get_time_ns();
+>  	int src;
+>  
+> -	src = i2c_smbus_read_byte_data(data->client, MMA8452_TRANSIENT_SRC);
+> +	src = i2c_smbus_read_byte_data(data->client, data->chip_info->ev_src);
+>  	if (src < 0)
+>  		return;
+>  
+> -	if (src & MMA8452_TRANSIENT_SRC_XTRANSE)
+> +	if (src & data->chip_info->ev_src_xe)
+>  		iio_push_event(indio_dev,
+>  			       IIO_MOD_EVENT_CODE(IIO_ACCEL, 0, IIO_MOD_X,
+>  						  IIO_EV_TYPE_MAG,
+>  						  IIO_EV_DIR_RISING),
+>  			       ts);
+>  
+> -	if (src & MMA8452_TRANSIENT_SRC_YTRANSE)
+> +	if (src & data->chip_info->ev_src_ye)
+>  		iio_push_event(indio_dev,
+>  			       IIO_MOD_EVENT_CODE(IIO_ACCEL, 0, IIO_MOD_Y,
+>  						  IIO_EV_TYPE_MAG,
+>  						  IIO_EV_DIR_RISING),
+>  			       ts);
+>  
+> -	if (src & MMA8452_TRANSIENT_SRC_ZTRANSE)
+> +	if (src & data->chip_info->ev_src_ze)
+>  		iio_push_event(indio_dev,
+>  			       IIO_MOD_EVENT_CODE(IIO_ACCEL, 0, IIO_MOD_Z,
+>  						  IIO_EV_TYPE_MAG,
+> @@ -696,7 +740,7 @@ static struct attribute_group mma8452_event_attribute_group = {
+>  	.name = "events",
+>  };
+>  
+> -#define MMA8452_CHANNEL(axis, idx) { \
+> +#define MMA8452_CHANNEL(axis, idx, bits) { \
+>  	.type = IIO_ACCEL, \
+>  	.modified = 1, \
+>  	.channel2 = IIO_MOD_##axis, \
+> @@ -708,9 +752,9 @@ static struct attribute_group mma8452_event_attribute_group = {
+>  	.scan_index = idx, \
+>  	.scan_type = { \
+>  		.sign = 's', \
+> -		.realbits = 12, \
+> +		.realbits = (bits), \
+>  		.storagebits = 16, \
+> -		.shift = 4, \
+> +		.shift = 16 - (bits), \
+>  		.endianness = IIO_BE, \
+>  	}, \
+>  	.event_spec = mma8452_transient_event, \
+> @@ -718,12 +762,42 @@ static struct attribute_group mma8452_event_attribute_group = {
+>  }
+>  
+>  static const struct iio_chan_spec mma8452_channels[] = {
+> -	MMA8452_CHANNEL(X, 0),
+> -	MMA8452_CHANNEL(Y, 1),
+> -	MMA8452_CHANNEL(Z, 2),
+> +	MMA8452_CHANNEL(X, 0, 12),
+> +	MMA8452_CHANNEL(Y, 1, 12),
+> +	MMA8452_CHANNEL(Z, 2, 12),
+>  	IIO_CHAN_SOFT_TIMESTAMP(3),
+>  };
+>  
+> +enum {
+> +	mma8452,
 > +};
 > +
-> +static int hi6220_reset_assert(struct reset_controller_dev *rc_dev,
-> +			       unsigned long idx)
-> +{
-> +	struct hi6220_reset_data *data = container_of(rc_dev,
-> +			struct hi6220_reset_data,
-> +			rc_dev);
-> +
-> +	unsigned long flags;
-> +	int bank = idx >> 8;
-> +	int offset = idx & 0xff;
-> +
-> +	spin_lock_irqsave(&data->reset_lock, flags);
-
-	the spin_lock looks useless.
-
-	it is not a "read and write" register.
-
-> +	writel(BIT(offset), data->asset_base + (bank * 0x10));
-> +
-> +	spin_unlock_irqrestore(&data->reset_lock, flags);
-> +
-> +	return 0;
-> +}
-> +
-> +static int hi6220_reset_deassert(struct reset_controller_dev *rc_dev,
-> +				 unsigned long idx)
-> +{
-> +	struct hi6220_reset_data *data = container_of(rc_dev,
-> +			struct hi6220_reset_data,
-> +			rc_dev);
-> +
-> +	unsigned long flags;
-> +	int bank = idx >> 8;
-> +	int offset = idx & 0xff;
-	
-	no need to check the idx scope ?
-	
-> +	spin_lock_irqsave(&data->reset_lock, flags);
-> +
-> +	writel(BIT(offset), data->deasset_base + (bank * 0x10));
-> +
-> +	spin_unlock_irqrestore(&data->reset_lock, flags);
-> +
-> +	return 0;
-> +}
-> +
-> +static struct reset_control_ops hi6220_reset_ops = {
-> +	.assert = hi6220_reset_assert,
-> +	.deassert = hi6220_reset_deassert,
+> +static const struct mma_chip_info mma_chip_info_table[] = {
+> +	[mma8452] = {
+> +		.chip_id = MMA8452_DEVICE_ID,
+> +		.channels = mma8452_channels,
+> +		.num_channels = ARRAY_SIZE(mma8452_channels),
+> +		/*
+> +		 * Hardware has fullscale of -2G, -4G, -8G corresponding to
+> +		 * raw value -2048 for 12 bit or -512 for 10 bit.
+> +		 * The userspace interface uses m/s^2 and we declare micro units
+> +		 * So scale factor for 12 bit here is given by:
+> +		 *	g * N * 1000000 / 2048 for N = 2, 4, 8 and g=9.80665
+> +		 */
+> +		.mma_scales = { {0, 9577}, {0, 19154}, {0, 38307} },
+> +		.ev_cfg = MMA8452_TRANSIENT_CFG,
+> +		.ev_cfg_ele = MMA8452_TRANSIENT_CFG_ELE,
+> +		.ev_cfg_chan_shift = 1,
+> +		.ev_src = MMA8452_TRANSIENT_SRC,
+> +		.ev_src_xe = MMA8452_TRANSIENT_SRC_XTRANSE,
+> +		.ev_src_ye = MMA8452_TRANSIENT_SRC_YTRANSE,
+> +		.ev_src_ze = MMA8452_TRANSIENT_SRC_ZTRANSE,
+> +		.ev_ths = MMA8452_TRANSIENT_THS,
+> +		.ev_ths_mask = MMA8452_TRANSIENT_THS_MASK,
+> +		.ev_count = MMA8452_TRANSIENT_COUNT,
+> +	},
 > +};
 > +
-> +static int __init hi6220_reset_init(void)
-> +{
-> +	int ret;
-> +	struct device_node *np;
-> +	struct hi6220_reset_data *data;
+>  static struct attribute *mma8452_attributes[] = {
+>  	&iio_dev_attr_sampling_frequency_available.dev_attr.attr,
+>  	&iio_dev_attr_in_accel_scale_available.dev_attr.attr,
+> @@ -841,12 +915,19 @@ static int mma8452_reset(struct i2c_client *client)
+>  	return -ETIMEDOUT;
+>  }
+>  
+> +static const struct of_device_id mma8452_dt_ids[] = {
+> +	{ .compatible = "fsl,mma8452", .data = &mma_chip_info_table[mma8452] },
+> +	{ }
+> +};
+> +MODULE_DEVICE_TABLE(of, mma8452_dt_ids);
 > +
-> +	data = kzalloc(sizeof(*data), GFP_KERNEL);
-> +	if (!data)
-> +		return -ENOMEM;
-> +
-> +	np = of_find_compatible_node(NULL, NULL, "hisilicon,hi6220_reset_ctl");
-> +	if (!np) {
-> +		ret = -ENXIO;
-> +		goto err_alloc;
+>  static int mma8452_probe(struct i2c_client *client,
+>  			 const struct i2c_device_id *id)
+>  {
+>  	struct mma8452_data *data;
+>  	struct iio_dev *indio_dev;
+>  	int ret;
+> +	const struct of_device_id *match;
+>  
+>  	ret = i2c_smbus_read_byte_data(client, MMA8452_WHO_AM_I);
+>  	if (ret < 0)
+> @@ -854,6 +935,12 @@ static int mma8452_probe(struct i2c_client *client,
+>  	if (ret != MMA8452_DEVICE_ID)
+>  		return -ENODEV;
+>  
+> +	match = of_match_device(mma8452_dt_ids, &client->dev);
+> +	if (!match) {
+> +		dev_err(&client->dev, "unknown device model\n");
+> +		return -ENODEV;
 > +	}
-> +	spin_lock_init(&data->reset_lock);
-> +	data->src_base = of_iomap(np, 0);
-> +	if (!data->src_base) {
-> +		ret = -ENOMEM;
-> +		goto err_alloc;
-> +	}
 > +
-> +	data->asset_base = data->src_base + ASSET_OFFSET;
-> +	data->deasset_base = data->src_base + DEASSET_OFFSET;
-> +	data->rc_dev.owner = THIS_MODULE;
-> +	data->rc_dev.nr_resets = SZ_4K;
-> +	data->rc_dev.ops = &hi6220_reset_ops;
-> +	data->rc_dev.of_node = np;
+>  	indio_dev = devm_iio_device_alloc(&client->dev, sizeof(*data));
+>  	if (!indio_dev)
+>  		return -ENOMEM;
+> @@ -861,14 +948,18 @@ static int mma8452_probe(struct i2c_client *client,
+>  	data = iio_priv(indio_dev);
+>  	data->client = client;
+>  	mutex_init(&data->lock);
+> +	data->chip_info = match->data;
 > +
-> +	if (IS_ENABLED(CONFIG_RESET_CONTROLLER))
-> +		reset_controller_register(&data->rc_dev);
-> +
-> +	return 0;
-> +
-> +err_alloc:
-	
-	
-
-> +	kfree(data);
-> +	return ret;
-> +}
-> +
-> +postcore_initcall(hi6220_reset_init);
->
+> +	dev_info(&client->dev, "registering %s accelerometer; ID 0x%x\n",
+> +		 match->compatible, data->chip_info->chip_id);
+>  
+>  	i2c_set_clientdata(client, indio_dev);
+>  	indio_dev->info = &mma8452_info;
+>  	indio_dev->name = id->name;
+>  	indio_dev->dev.parent = &client->dev;
+>  	indio_dev->modes = INDIO_DIRECT_MODE;
+> -	indio_dev->channels = mma8452_channels;
+> -	indio_dev->num_channels = ARRAY_SIZE(mma8452_channels);
+> +	indio_dev->channels = data->chip_info->channels;
+> +	indio_dev->num_channels = data->chip_info->num_channels;
+>  	indio_dev->available_scan_masks = mma8452_scan_masks;
+>  
+>  	ret = mma8452_reset(client);
+> @@ -987,17 +1078,11 @@ static SIMPLE_DEV_PM_OPS(mma8452_pm_ops, mma8452_suspend, mma8452_resume);
+>  #endif
+>  
+>  static const struct i2c_device_id mma8452_id[] = {
+> -	{ "mma8452", 0 },
+> +	{ "mma8452", mma8452 },
+>  	{ }
+>  };
+>  MODULE_DEVICE_TABLE(i2c, mma8452_id);
+>  
+> -static const struct of_device_id mma8452_dt_ids[] = {
+> -	{ .compatible = "fsl,mma8452" },
+> -	{ }
+> -};
+> -MODULE_DEVICE_TABLE(of, mma8452_dt_ids);
+> -
+>  static struct i2c_driver mma8452_driver = {
+>  	.driver = {
+>  		.name	= "mma8452",
+> 
