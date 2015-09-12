@@ -1,35 +1,25 @@
 From: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 5/7] soc: brcmstb: add wake-timer driver
-Date: Sat, 12 Sep 2015 13:00:45 -0700
-Message-ID: <55F4846D.5040304@gmail.com>
+Subject: Re: [PATCH 3/7] soc: add stubs for brcmstb SoC's
+Date: Sat, 12 Sep 2015 13:16:07 -0700
+Message-ID: <55F48807.2070809@gmail.com>
 References: <1434672696-13632-1-git-send-email-computersforpeace@gmail.com>
- <1434672696-13632-6-git-send-email-computersforpeace@gmail.com>
+ <1434672696-13632-4-git-send-email-computersforpeace@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1434672696-13632-6-git-send-email-computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+In-Reply-To: <1434672696-13632-4-git-send-email-computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Gregory Fong <gregory.0xf0-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
 Le 06/18/15 17:11, Brian Norris a =C3=A9crit :
-> Useful for waking the system from suspend after a specified period of
-> time.
+> Used on BCM7xxx Set-Top Box chips (e.g., BCM7445).
 >=20
-> This IP could potentially be supported as an RTC driver (for use with
-> the 'rtcwake' utility), but it is not battery backed, so that's not a
-> great fit. Implement a custom sysfs interface instead.
+> Signed-off-by: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 
-I would very much like to see this driver be implemented as a degenerat=
-e
-RTC driver because this sorts of maps pretty well to the "rtcwake" use
-mode, and this is a persistent clock source, and even a clock source as
-well (I would rather avoid going the MFD route to expose these 3
-"functions" though).
-
-Thanks!
+Applied to soc/next, thanks!
 --=20
 =46lorian
 --
