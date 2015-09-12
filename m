@@ -1,86 +1,205 @@
-From: Y Vo <yvo@apm.com>
-Subject: Re: [PATCH 2/2] Documentation: gpio: Update description for X-Gene
- standby GPIO controller DTS binding
-Date: Sat, 12 Sep 2015 12:55:55 +0700
-Message-ID: <CAL4ahLeuPX7viZ5=RaC92=n+jT82=Fa3tF7oH8Q=kE=PKVBSwQ@mail.gmail.com>
-References: <1441963332-13329-1-git-send-email-yvo@apm.com>
-	<3318725.Seeb48hirI@wuerfel>
-	<CAL4ahLeoeT79ct-M-Bd-O08K0Dmysas3HFmTfXUFGtHKJBRzsg@mail.gmail.com>
-	<2311005.jUde56dLfB@wuerfel>
+From: xuyiping <xuyiping@hisilicon.com>
+Subject: Re: [PATCH V2 3/3] reset: hi6220: Reset driver for hisilicon hi6220
+ SoC
+Date: Sat, 12 Sep 2015 14:06:19 +0800
+Message-ID: <55F3C0DB.5070800@hisilicon.com>
+References: <1441959518-178696-1-git-send-email-puck.chen@hisilicon.com>
+ <1441959518-178696-3-git-send-email-puck.chen@hisilicon.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <2311005.jUde56dLfB@wuerfel>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Linus Walleij <linus.walleij@linaro.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Phong Vo <pvo@apm.com>, Toan Le <toanle@apm.com>, Loc Ho <lho@apm.com>, Feng Kan <fkan@apm.com>, Quan Nguyen <qnguyen@apm.com>, Duc Dang <dhdang@apm.com>, patches <patches@apm.com>
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1441959518-178696-3-git-send-email-puck.chen@hisilicon.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Chen Feng <puck.chen@hisilicon.com>, p.zabel@pengutronix.de, linux-kernel@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, xuwei5@hisilicon.com, haojian.zhuang@linaro.org, zhangfei.gao@foxmail.com
+Cc: bintian.wang@huawei.com, devicetree@vger.kernel.org, dan.zhao@hisilicon.com, suzhuangluan@hisilicon.com, w.f@huawei.com
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Sep 11, 2015 at 11:45 PM, Arnd Bergmann <arnd@arndb.de> wrote:
-> On Friday 11 September 2015 22:06:58 Y Vo wrote:
->> On Fri, Sep 11, 2015 at 9:47 PM, Arnd Bergmann <arnd@arndb.de> wrote:
->> > On Friday 11 September 2015 21:23:31 Y Vo wrote:
->> >> Is that possible if we change to this approach:
->> >> - Keep all GPIO as GPIO mode by default.
->> >> - If anyone want to use them as interrupt, they must add the interrupt
->> >> node to DT specific-board below:
->> >>
->> >> Example to configure GPIO_DS11, 12, 13 as external irq:
->> >>
->> >> &sbgpio {
->> >>         interrupts = <0x0 0x2b 0x1>,         /* GPIO_DS11 */
->> >>                         <0x0 0x2c 0x1>,         /* GPIO_DS12 */
->> >>                         <0x0 0x2d 0x1>;         /* GPIO_DS13 */
->> >
->> > That is exactly the same as you have in your patch. You should
->> > always list all interrupts that the gpio controller is wired
->> > to, whether they are used or not.
->> >
->> > Ideally, the driver just decides at runtime how to wire that
->> > mux, based on how the gpio is configured by the client driver.
->> > If the client asks for an interrupt (with gpio_to_irq) and is
->> > it is configured as an input, then you connect it to the GIC,
->> > otherwise you leave it to be handled by the gpio chip itself.
->> > Any reason you can't do that?
->> >
->> As I just explained, the GPIO Standby doesn't support the interrupt.
->> Both interrupts are came from GIC, so if the client asks for an
->> interrupt, it will go to the GIC driver (not GPIO Standby driver), so
->> that's my trouble. We can not implement the code to configured the
->> GPIO standby at GIC driver.
->
-> So you are saying we merged a binding that is incapable of describing
-> the hardware? If that is the case, we may have to go back to
-> the drawing board and come up with a working binding.
->
-> One part that I don't understand yet is how the driver handles
-> irqs to start with, as it does not register a nested irq domain
-> or irqchip, so I'm guessing that client drivers cannot actually
-> use the IRQ functionality. Is that right?
-For our case the irq_domain is in irq-gic driver, the GPIO driver only
-is responsible to wire 2 the external irq of GIC to GPIO pin.
 
-Example for configure GPIO_DS13 as interrupt and use as button with
-the current gpio driver:
-        gpio-keys {
-                compatible = "gpio-keys";
-                button@1 {
-                        label = "POWER";
-                        linux,code = <116>;
-                        linux,input-type = <0x1>;
-                        interrupts = <0x0 0x2d 0x1>;
-                };
-        };
 
+On 2015/9/11 16:18, Chen Feng wrote:
+> Add reset driver for hi6220-hikey board,this driver supply deassert
+> of IP. on hi6220 SoC.
 >
-> It also seems to me that the binding cannot distinguish between a
-> line configured as an input and one that is configured as an
-> interrupt, which are for other gpio chips the same thing, but
-> not on this one.  Could this be rectified by using another bit
-> of the second gpio cell? The low bit is used for active-high/active-low,
-> so you could use the second bit for irq/input.
+> Signed-off-by: Chen Feng <puck.chen@hisilicon.com>
+> ---
+>   drivers/reset/Kconfig                  |   1 +
+>   drivers/reset/Makefile                 |   1 +
+>   drivers/reset/hisilicon/Kconfig        |   5 ++
+>   drivers/reset/hisilicon/Makefile       |   1 +
+>   drivers/reset/hisilicon/hi6220_reset.c | 118 +++++++++++++++++++++++++++++++++
+>   5 files changed, 126 insertions(+)
+>   create mode 100644 drivers/reset/hisilicon/Kconfig
+>   create mode 100644 drivers/reset/hisilicon/Makefile
+>   create mode 100644 drivers/reset/hisilicon/hi6220_reset.c
 >
-Do you mean #gpio-cells property and using the high bit of the second
-bit for irq/input  ?
+> diff --git a/drivers/reset/Kconfig b/drivers/reset/Kconfig
+> index 0615f50..df37212 100644
+> --- a/drivers/reset/Kconfig
+> +++ b/drivers/reset/Kconfig
+> @@ -13,3 +13,4 @@ menuconfig RESET_CONTROLLER
+>   	  If unsure, say no.
+>
+>   source "drivers/reset/sti/Kconfig"
+> +source "drivers/reset/hisilicon/Kconfig"
+> diff --git a/drivers/reset/Makefile b/drivers/reset/Makefile
+> index 157d421..331d7b2 100644
+> --- a/drivers/reset/Makefile
+> +++ b/drivers/reset/Makefile
+> @@ -3,3 +3,4 @@ obj-$(CONFIG_ARCH_SOCFPGA) += reset-socfpga.o
+>   obj-$(CONFIG_ARCH_BERLIN) += reset-berlin.o
+>   obj-$(CONFIG_ARCH_SUNXI) += reset-sunxi.o
+>   obj-$(CONFIG_ARCH_STI) += sti/
+> +obj-$(CONFIG_ARCH_HISI) += hisilicon/
+> diff --git a/drivers/reset/hisilicon/Kconfig b/drivers/reset/hisilicon/Kconfig
+> new file mode 100644
+> index 0000000..26bf95a
+> --- /dev/null
+> +++ b/drivers/reset/hisilicon/Kconfig
+> @@ -0,0 +1,5 @@
+> +config COMMON_RESET_HI6220
+> +	tristate "Hi6220 Reset Driver"
+> +	depends on (ARCH_HISI && RESET_CONTROLLER)
+> +	help
+> +	  Build the Hisilicon Hi6220 reset driver.
+> diff --git a/drivers/reset/hisilicon/Makefile b/drivers/reset/hisilicon/Makefile
+> new file mode 100644
+> index 0000000..c932f86
+> --- /dev/null
+> +++ b/drivers/reset/hisilicon/Makefile
+> @@ -0,0 +1 @@
+> +obj-$(CONFIG_COMMON_RESET_HI6220) += hi6220_reset.o
+> diff --git a/drivers/reset/hisilicon/hi6220_reset.c b/drivers/reset/hisilicon/hi6220_reset.c
+> new file mode 100644
+> index 0000000..097133d
+> --- /dev/null
+> +++ b/drivers/reset/hisilicon/hi6220_reset.c
+> @@ -0,0 +1,118 @@
+> +/*
+> + * Hisilicon Hi6220 reset controller driver
+> + *
+> + * Copyright (c) 2015 Hisilicon Limited.
+> + *
+> + * Author: Feng Chen <puck.chen@hisilicon.com>
+> + *
+> + * This program is free software; you can redistribute it and/or modify
+> + * it under the terms of the GNU General Public License version 2 as
+> + * published by the Free Software Foundation.
+> + */
+> +
+> +#include <linux/init.h>
+> +#include <linux/bitops.h>
+> +#include <linux/io.h>
+> +#include <linux/of.h>
+> +#include <linux/of_address.h>
+> +#include <linux/reset-controller.h>
+> +#include <linux/reset.h>
+> +#include <linux/sizes.h>
+> +#include <linux/slab.h>
+> +
+> +#define ASSET_OFFSET            0x300
+> +#define DEASSET_OFFSET          0x304
+> +
+> +struct hi6220_reset_data {
+> +	spinlock_t			reset_lock; /*device spin-lock*/
+> +	void __iomem			*src_base;
+> +	void __iomem			*asset_base;
+> +	void __iomem			*deasset_base;
+> +	struct reset_controller_dev	rc_dev;
+> +};
+> +
+> +static int hi6220_reset_assert(struct reset_controller_dev *rc_dev,
+> +			       unsigned long idx)
+> +{
+> +	struct hi6220_reset_data *data = container_of(rc_dev,
+> +			struct hi6220_reset_data,
+> +			rc_dev);
+> +
+> +	unsigned long flags;
+> +	int bank = idx >> 8;
+> +	int offset = idx & 0xff;
+> +
+> +	spin_lock_irqsave(&data->reset_lock, flags);
 
->         Arnd
+	the spin_lock looks useless.
+
+	it is not a "read and write" register.
+
+> +	writel(BIT(offset), data->asset_base + (bank * 0x10));
+> +
+> +	spin_unlock_irqrestore(&data->reset_lock, flags);
+> +
+> +	return 0;
+> +}
+> +
+> +static int hi6220_reset_deassert(struct reset_controller_dev *rc_dev,
+> +				 unsigned long idx)
+> +{
+> +	struct hi6220_reset_data *data = container_of(rc_dev,
+> +			struct hi6220_reset_data,
+> +			rc_dev);
+> +
+> +	unsigned long flags;
+> +	int bank = idx >> 8;
+> +	int offset = idx & 0xff;
+	
+	no need to check the idx scope ?
+	
+> +	spin_lock_irqsave(&data->reset_lock, flags);
+> +
+> +	writel(BIT(offset), data->deasset_base + (bank * 0x10));
+> +
+> +	spin_unlock_irqrestore(&data->reset_lock, flags);
+> +
+> +	return 0;
+> +}
+> +
+> +static struct reset_control_ops hi6220_reset_ops = {
+> +	.assert = hi6220_reset_assert,
+> +	.deassert = hi6220_reset_deassert,
+> +};
+> +
+> +static int __init hi6220_reset_init(void)
+> +{
+> +	int ret;
+> +	struct device_node *np;
+> +	struct hi6220_reset_data *data;
+> +
+> +	data = kzalloc(sizeof(*data), GFP_KERNEL);
+> +	if (!data)
+> +		return -ENOMEM;
+> +
+> +	np = of_find_compatible_node(NULL, NULL, "hisilicon,hi6220_reset_ctl");
+> +	if (!np) {
+> +		ret = -ENXIO;
+> +		goto err_alloc;
+> +	}
+> +	spin_lock_init(&data->reset_lock);
+> +	data->src_base = of_iomap(np, 0);
+> +	if (!data->src_base) {
+> +		ret = -ENOMEM;
+> +		goto err_alloc;
+> +	}
+> +
+> +	data->asset_base = data->src_base + ASSET_OFFSET;
+> +	data->deasset_base = data->src_base + DEASSET_OFFSET;
+> +	data->rc_dev.owner = THIS_MODULE;
+> +	data->rc_dev.nr_resets = SZ_4K;
+> +	data->rc_dev.ops = &hi6220_reset_ops;
+> +	data->rc_dev.of_node = np;
+> +
+> +	if (IS_ENABLED(CONFIG_RESET_CONTROLLER))
+> +		reset_controller_register(&data->rc_dev);
+> +
+> +	return 0;
+> +
+> +err_alloc:
+	
+	
+
+> +	kfree(data);
+> +	return ret;
+> +}
+> +
+> +postcore_initcall(hi6220_reset_init);
+>
