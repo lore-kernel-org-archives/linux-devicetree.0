@@ -1,56 +1,53 @@
-From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Subject: Re: [PATCH 1/2] pinctrl: rockchip: Define GPIO banks 7 and 8
-Date: Sat, 12 Sep 2015 12:40:37 +0200
-Message-ID: <4186674.JafPHeXURU@diego>
-References: <1442011005-4828-1-git-send-email-sjoerd.simons@collabora.co.uk>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1442011005-4828-1-git-send-email-sjoerd.simons-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sjoerd Simons <sjoerd.simons-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>
-Cc: linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Subject: [PATCH] devicetree: bindings: Extend the bma180 bindings with bma250 info
+Date: Sat, 12 Sep 2015 12:52:49 +0200
+Message-ID: <1442055169-16966-1-git-send-email-hdegoede@redhat.com>
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Peter Meerwald <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>
+Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, plaes-q/aMd4JkU83YtjvyW6yDsg@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Sjoerd,
+The bma180 / bma250 accelerometers share a driver (at least under Linux),
+so it makes sense to also have their bindings info in a single .txt.
 
-Am Samstag, 12. September 2015, 00:36:44 schrieb Sjoerd Simons:
-> Rockchip RK3288 has 9 GPIO banks (0 to 8) add definitions for the last
-> two.
-> 
-> Signed-off-by: Sjoerd Simons <sjoerd.simons-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>
-> ---
-> 
->  include/dt-bindings/pinctrl/rockchip.h | 2 ++
->  1 file changed, 2 insertions(+)
-> 
-> diff --git a/include/dt-bindings/pinctrl/rockchip.h
-> b/include/dt-bindings/pinctrl/rockchip.h index 743e66a..efc57cf 100644
-> --- a/include/dt-bindings/pinctrl/rockchip.h
-> +++ b/include/dt-bindings/pinctrl/rockchip.h
-> @@ -24,6 +24,8 @@
->  #define RK_GPIO3	3
->  #define RK_GPIO4	4
->  #define RK_GPIO6	6
-> +#define RK_GPIO7	7
-> +#define RK_GPIO8	8
-> 
->  #define RK_FUNC_GPIO	0
->  #define RK_FUNC_1	1
+This commit extends the bma180 bindings with bma250 bindings, specifically
+it specifies how the 2 seperate interrupts the bma250 has must be listed
+in devicetree. The existing bma180 driver is already fully compatible
+with the specified bindings.
 
-I'm actually not sure about these. In retrospect the RK_GPIOx -> x defines do 
-not provide any additional value compared to just having the actual value in 
-the pinctrl-nodes, so we phased them out largely for the rk3288 boards.
+Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+---
+ Documentation/devicetree/bindings/iio/accel/bma180.txt | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
 
-While looking through some boards, I saw that some slipped in for stuff that 
-gets copy'n'paste treatment most of the time, but generally we're only using 
-the real numbers on boards - and I'd like to keep it that way and phase out 
-the RK_GPIOx constants in new boards.
-
-
-Heiko
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/Documentation/devicetree/bindings/iio/accel/bma180.txt b/Documentation/devicetree/bindings/iio/accel/bma180.txt
+index c593357..4a3679d 100644
+--- a/Documentation/devicetree/bindings/iio/accel/bma180.txt
++++ b/Documentation/devicetree/bindings/iio/accel/bma180.txt
+@@ -1,10 +1,11 @@
+-* Bosch BMA180 triaxial acceleration sensor
++* Bosch BMA180 / BMA250 triaxial acceleration sensor
+ 
+ http://omapworld.com/BMA180_111_1002839.pdf
++http://ae-bst.resource.bosch.com/media/products/dokumente/bma250/bst-bma250-ds002-05.pdf
+ 
+ Required properties:
+ 
+-  - compatible : should be "bosch,bma180"
++  - compatible : should be "bosch,bma180" or "bosch,bma250"
+   - reg : the I2C address of the sensor
+ 
+ Optional properties:
+@@ -13,6 +14,9 @@ Optional properties:
+ 
+   - interrupts : interrupt mapping for GPIO IRQ, it should by configured with
+ 		flags IRQ_TYPE_LEVEL_HIGH | IRQ_TYPE_EDGE_RISING
++		For the bma250 the first interrupt listed must be the one
++		connected to the INT1 pin, the second (optional) interrupt
++		listed must be the one connected to the INT2 pin.
+ 
+ Example:
+ 
+-- 
+2.4.3
