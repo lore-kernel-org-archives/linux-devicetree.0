@@ -1,46 +1,56 @@
-From: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 6/6] iio: mma8452: leave sysfs namings to the iio core
-Date: Sat, 12 Sep 2015 11:09:45 +0100
-Message-ID: <55F3F9E9.1070009@kernel.org>
-References: <1441107913-4112-1-git-send-email-martink@posteo.de>
- <1441107913-4112-7-git-send-email-martink@posteo.de>
+From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Subject: Re: [PATCH 1/2] pinctrl: rockchip: Define GPIO banks 7 and 8
+Date: Sat, 12 Sep 2015 12:40:37 +0200
+Message-ID: <4186674.JafPHeXURU@diego>
+References: <1442011005-4828-1-git-send-email-sjoerd.simons@collabora.co.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1441107913-4112-7-git-send-email-martink-1KBjaw7Xf1+zQB+pC5nmwQ@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Martin Kepplinger <martink-1KBjaw7Xf1+zQB+pC5nmwQ@public.gmane.org>, knaack.h-Mmb7MZpHnFY@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org, mfuzzey-mB3Nsq4MPf1BDgjK7y7TUQ@public.gmane.org, roberta.dobrescu-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, christoph.muellner-SN7IsUiht6C/RdPyistoZJqQE7yCjDx5@public.gmane.org, Martin Kepplinger <martin.kepplinger-SN7IsUiht6C/RdPyistoZJqQE7yCjDx5@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1442011005-4828-1-git-send-email-sjoerd.simons-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sjoerd Simons <sjoerd.simons-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>
+Cc: linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 01/09/15 12:45, Martin Kepplinger wrote:
-> This doesn't actually change anything since the core names the sysfs folder
-> for the iio event attributes "events" anyways. It only leaves the job to the
-> core.
+Hi Sjoerd,
+
+Am Samstag, 12. September 2015, 00:36:44 schrieb Sjoerd Simons:
+> Rockchip RK3288 has 9 GPIO banks (0 to 8) add definitions for the last
+> two.
 > 
-> Signed-off-by: Martin Kepplinger <martin.kepplinger-SN7IsUiht6C/RdPyistoZJqQE7yCjDx5@public.gmane.org>
-> Signed-off-by: Christoph Muellner <christoph.muellner-SN7IsUiht6C/RdPyistoZJqQE7yCjDx5@public.gmane.org>
-Applied to the togreg branch of iio.git - initially pushed out as testing for the
-autobuilders to play with it.
-
-Thanks,
-
-Jonathan
+> Signed-off-by: Sjoerd Simons <sjoerd.simons-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>
 > ---
->  drivers/iio/accel/mma8452.c | 1 -
->  1 file changed, 1 deletion(-)
 > 
-> diff --git a/drivers/iio/accel/mma8452.c b/drivers/iio/accel/mma8452.c
-> index 15d50c9..1eccc2d 100644
-> --- a/drivers/iio/accel/mma8452.c
-> +++ b/drivers/iio/accel/mma8452.c
-> @@ -772,7 +772,6 @@ static struct attribute *mma8452_event_attributes[] = {
->  
->  static struct attribute_group mma8452_event_attribute_group = {
->  	.attrs = mma8452_event_attributes,
-> -	.name = "events",
->  };
->  
->  #define MMA8452_CHANNEL(axis, idx, bits) { \
+>  include/dt-bindings/pinctrl/rockchip.h | 2 ++
+>  1 file changed, 2 insertions(+)
 > 
+> diff --git a/include/dt-bindings/pinctrl/rockchip.h
+> b/include/dt-bindings/pinctrl/rockchip.h index 743e66a..efc57cf 100644
+> --- a/include/dt-bindings/pinctrl/rockchip.h
+> +++ b/include/dt-bindings/pinctrl/rockchip.h
+> @@ -24,6 +24,8 @@
+>  #define RK_GPIO3	3
+>  #define RK_GPIO4	4
+>  #define RK_GPIO6	6
+> +#define RK_GPIO7	7
+> +#define RK_GPIO8	8
+> 
+>  #define RK_FUNC_GPIO	0
+>  #define RK_FUNC_1	1
+
+I'm actually not sure about these. In retrospect the RK_GPIOx -> x defines do 
+not provide any additional value compared to just having the actual value in 
+the pinctrl-nodes, so we phased them out largely for the rk3288 boards.
+
+While looking through some boards, I saw that some slipped in for stuff that 
+gets copy'n'paste treatment most of the time, but generally we're only using 
+the real numbers on boards - and I'd like to keep it that way and phase out 
+the RK_GPIOx constants in new boards.
+
+
+Heiko
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
