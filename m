@@ -1,73 +1,54 @@
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: [PATCH] ARM: shmobile: r8a7794: link PCI USB devices to USB PHY
-Date: Sun, 13 Sep 2015 02:00:19 +0300
-Message-ID: <10927620.1TFu7PRvi4@wasted.cogentembedded.com>
+From: Fabio Estevam <festevam@gmail.com>
+Subject: Re: [PATCH 4/6] hwrng: st: Add support for ST's HW Random Number Generator
+Date: Sat, 12 Sep 2015 20:04:49 -0300
+Message-ID: <CAOMZO5CWywFHd1HE2=G-KEvQZpu_rJibmJL4fL5yCWRsnpi05Q@mail.gmail.com>
+References: <1442002110-28733-1-git-send-email-lee.jones@linaro.org>
+	<1442002110-28733-5-git-send-email-lee.jones@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-sh-owner@vger.kernel.org>
-Sender: linux-sh-owner@vger.kernel.org
-To: horms@verge.net.au, linux-sh@vger.kernel.org, devicetree@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org
-Cc: magnus.damm@gmail.com, linux@arm.linux.org.uk, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-crypto-owner@vger.kernel.org>
+In-Reply-To: <1442002110-28733-5-git-send-email-lee.jones@linaro.org>
+Sender: linux-crypto-owner@vger.kernel.org
+To: Lee Jones <lee.jones@linaro.org>
+Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, linux-kernel <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Herbert Xu <herbert@gondor.apana.org.au>, Pankaj Dev <pankaj.dev@st.com>, linux-crypto@vger.kernel.org, Matt Mackall <mpm@selenic.com>, kernel@stlinux.com
 List-Id: devicetree@vger.kernel.org
 
-Describe the PCI USB devices that are behind the PCI bridges, adding necessary
-links to the USB PHY device.
+On Fri, Sep 11, 2015 at 5:08 PM, Lee Jones <lee.jones@linaro.org> wrote:
 
-Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+> +       res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> +       base = devm_ioremap_resource(&pdev->dev, res);
+> +       if (IS_ERR(base))
+> +               return PTR_ERR(base);
+> +
+> +       clk = devm_clk_get(&pdev->dev, NULL);
+> +       if (!clk)
+> +               return -EINVAL;
 
----
-This patch is against 'renesas-devel-20150911v2-v4.2' tag of Simon Horman's
-'renesas.git' repo plus the R8A7794/SILK PCI USB and USB PHY support patches
-just posted.
+This should be:
 
-arch/arm/boot/dts/r8a7794.dtsi |   28 ++++++++++++++++++++++++++++
- 1 file changed, 28 insertions(+)
+    if (IS_ERR(clk))
+        return PTR_ERR(clk);
 
-Index: renesas/arch/arm/boot/dts/r8a7794.dtsi
-===================================================================
---- renesas.orig/arch/arm/boot/dts/r8a7794.dtsi
-+++ renesas/arch/arm/boot/dts/r8a7794.dtsi
-@@ -667,6 +667,20 @@
- 		interrupt-map = <0x0000 0 0 1 &gic 0 108 IRQ_TYPE_LEVEL_HIGH
- 				 0x0800 0 0 1 &gic 0 108 IRQ_TYPE_LEVEL_HIGH
- 				 0x1000 0 0 2 &gic 0 108 IRQ_TYPE_LEVEL_HIGH>;
-+
-+		usb@0,1 {
-+			reg = <0x800 0 0 0 0>;
-+			device_type = "pci";
-+			phys = <&usb0 0>;
-+			phy-names = "usb";
-+		};
-+
-+		usb@0,2 {
-+			reg = <0x1000 0 0 0 0>;
-+			device_type = "pci";
-+			phys = <&usb0 0>;
-+			phy-names = "usb";
-+		};
- 	};
- 
- 	pci1: pci@ee0d0000 {
-@@ -688,6 +702,20 @@
- 		interrupt-map = <0x0000 0 0 1 &gic 0 113 IRQ_TYPE_LEVEL_HIGH
- 				 0x0800 0 0 1 &gic 0 113 IRQ_TYPE_LEVEL_HIGH
- 				 0x1000 0 0 2 &gic 0 113 IRQ_TYPE_LEVEL_HIGH>;
-+
-+		usb@0,1 {
-+			reg = <0x800 0 0 0 0>;
-+			device_type = "pci";
-+			phys = <&usb2 0>;
-+			phy-names = "usb";
-+		};
-+
-+		usb@0,2 {
-+			reg = <0x1000 0 0 0 0>;
-+			device_type = "pci";
-+			phys = <&usb2 0>;
-+			phy-names = "usb";
-+		};
- 	};
- 
- 	usbphy: usb-phy@e6590100 {
+> +
+> +       clk_prepare_enable(clk);
 
+This may fail, so better check its return value and propagate it on error.
+
+> +
+> +       ddata->ops.priv = (unsigned long)ddata;
+> +       ddata->ops.read = st_rng_read;
+> +       ddata->ops.name = pdev->name;
+> +       ddata->base     = base;
+> +       ddata->clk      = clk;
+> +
+> +       dev_set_drvdata(&pdev->dev, ddata);
+> +
+> +       ret = hwrng_register(&ddata->ops);
+> +       if (ret) {
+> +               dev_err(&pdev->dev, "Failed to register HW RNG\n");
+> +               return ret;
+> +       }
+> +
+> +       dev_info(&pdev->dev, "Successfully registered HW RNG\n");
+
+No need to put this info.
