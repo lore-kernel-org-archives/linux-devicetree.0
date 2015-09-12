@@ -1,136 +1,102 @@
 From: David Daney <ddaney.cavm@gmail.com>
-Subject: [PATCH 3/6] PCI: generic: Quit clobbering our pci_ops.
-Date: Fri, 11 Sep 2015 16:21:56 -0700
-Message-ID: <1442013719-5001-4-git-send-email-ddaney.cavm@gmail.com>
-References: <1442013719-5001-1-git-send-email-ddaney.cavm@gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1442013719-5001-1-git-send-email-ddaney.cavm@gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+Subject: [PATCH] PCI: generic: Add support for Cavium ThunderX PCIe root complexes.
+Date: Fri, 11 Sep 2015 17:07:19 -0700
+Message-ID: <1442016439-7636-1-git-send-email-ddaney.cavm@gmail.com>
+Return-path: <linux-pci-owner@vger.kernel.org>
+Sender: linux-pci-owner@vger.kernel.org
 To: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Grant Likely <grant.likely@linaro.org>, Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org, Will Deacon <will.deacon@arm.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, linux-arm-kernel@lists.infradead.org
 Cc: David Daney <david.daney@cavium.com>
 List-Id: devicetree@vger.kernel.org
 
 From: David Daney <david.daney@cavium.com>
 
-The pci-host-generic driver keeps a global struct pci_ops which it
-then patches with the .map_bus method appropriate for the bus device.
-A problem arises when the driver is used for two different types of
-bus devices, the .map_bus method for the last device probed clobbers
-the method for all previous devices.  The result, only the last bus
-device probed has the proper .map_bus, and the others fail.
+The config space for external PCIe root complexes on some Cavium
+ThunderX SoCs is very similar to CAM and ECAM, but differs in the
+shift values that have to be applied to the bus and devfn numbers to
+compose that address window offset.  These root complexes also have
+the interesting property that there is no root bridge, so the standard
+manner of limiting scanning to only the first device doesn't work.  We
+can use the standard pci-host-generic driver if we make a minor
+addition to handle these differences, so we...
 
-Move the struct pci_ops into the bus specific structure, and
-initialize it when the bus device is probed.  Keep a copy of the
-gen_pci_cfg_bus_ops structure, instead of a pointer to a global copy,
-to future proof against the addition of bus specific elements to
-struct pci_ops.
+Add a mapping function for ThunderX PCIe root complexes with a bus
+shift of 24 and devfn shift of 16.  Ignore accesses for devices other
+than the first device on the primary bus.
+
+Document the whole thing in devicetree/bindings/pci/host-generic-pci.txt
 
 Signed-off-by: David Daney <david.daney@cavium.com>
 ---
- drivers/pci/host/pci-host-generic.c | 31 +++++++++++++++++--------------
- 1 file changed, 17 insertions(+), 14 deletions(-)
 
+This patch depends on the set I recently sent:
+https://lkml.org/lkml/2015/9/11/764
+
+ .../devicetree/bindings/pci/host-generic-pci.txt   |  5 +++-
+ drivers/pci/host/pci-host-generic.c                | 29 ++++++++++++++++++++++
+ 2 files changed, 33 insertions(+), 1 deletion(-)
+
+diff --git a/Documentation/devicetree/bindings/pci/host-generic-pci.txt b/Documentation/devicetree/bindings/pci/host-generic-pci.txt
+index daa6942..51cc1d1 100644
+--- a/Documentation/devicetree/bindings/pci/host-generic-pci.txt
++++ b/Documentation/devicetree/bindings/pci/host-generic-pci.txt
+@@ -16,7 +16,10 @@ Properties of the host controller node:
+ 
+ - compatible     : Must be "pci-host-cam-generic" or "pci-host-ecam-generic"
+                    depending on the layout of configuration space (CAM vs
+-                   ECAM respectively).
++                   ECAM respectively). Also supported is
++                   "cavium,pci-host-thunder-pem" which has bus:devfn:reg in
++                   bits 24:16:0 respectively of the PCI config space address
++                   window.
+ 
+ - device_type    : Must be "pci".
+ 
 diff --git a/drivers/pci/host/pci-host-generic.c b/drivers/pci/host/pci-host-generic.c
-index a0fb241..cd6f898 100644
+index e0248b4..a392ba2 100644
 --- a/drivers/pci/host/pci-host-generic.c
 +++ b/drivers/pci/host/pci-host-generic.c
-@@ -27,7 +27,7 @@
- 
- struct gen_pci_cfg_bus_ops {
- 	u32 bus_shift;
--	void __iomem *(*map_bus)(struct pci_bus *, unsigned int, int);
-+	struct pci_ops ops;
- };
- 
- struct gen_pci_cfg_windows {
-@@ -35,7 +35,7 @@ struct gen_pci_cfg_windows {
- 	struct resource				*bus_range;
- 	void __iomem				**win;
- 
--	const struct gen_pci_cfg_bus_ops	*ops;
-+	struct gen_pci_cfg_bus_ops		ops;
- };
- 
- /*
-@@ -65,7 +65,11 @@ static void __iomem *gen_pci_map_cfg_bus_cam(struct pci_bus *bus,
- 
- static struct gen_pci_cfg_bus_ops gen_pci_cfg_cam_bus_ops = {
- 	.bus_shift	= 16,
--	.map_bus	= gen_pci_map_cfg_bus_cam,
-+	.ops		= {
-+		.map_bus	= gen_pci_map_cfg_bus_cam,
-+		.read		= pci_generic_config_read,
-+		.write		= pci_generic_config_write,
-+	}
- };
- 
- static void __iomem *gen_pci_map_cfg_bus_ecam(struct pci_bus *bus,
-@@ -80,12 +84,11 @@ static void __iomem *gen_pci_map_cfg_bus_ecam(struct pci_bus *bus,
- 
- static struct gen_pci_cfg_bus_ops gen_pci_cfg_ecam_bus_ops = {
- 	.bus_shift	= 20,
--	.map_bus	= gen_pci_map_cfg_bus_ecam,
--};
--
--static struct pci_ops gen_pci_ops = {
--	.read	= pci_generic_config_read,
--	.write	= pci_generic_config_write,
-+	.ops		= {
-+		.map_bus	= gen_pci_map_cfg_bus_ecam,
-+		.read		= pci_generic_config_read,
-+		.write		= pci_generic_config_write,
-+	}
- };
- 
- static const struct of_device_id gen_pci_of_match[] = {
-@@ -175,7 +178,7 @@ static int gen_pci_parse_map_cfg_windows(struct gen_pci *pci)
- 
- 	/* Limit the bus-range to fit within reg */
- 	bus_max = pci->cfg.bus_range->start +
--		  (resource_size(&pci->cfg.res) >> pci->cfg.ops->bus_shift) - 1;
-+		  (resource_size(&pci->cfg.res) >> pci->cfg.ops.bus_shift) - 1;
- 	pci->cfg.bus_range->end = min_t(resource_size_t,
- 					pci->cfg.bus_range->end, bus_max);
- 
-@@ -193,7 +196,7 @@ static int gen_pci_parse_map_cfg_windows(struct gen_pci *pci)
- 	bus_range = pci->cfg.bus_range;
- 	for (busn = bus_range->start; busn <= bus_range->end; ++busn) {
- 		u32 idx = busn - bus_range->start;
--		u32 sz = 1 << pci->cfg.ops->bus_shift;
-+		u32 sz = 1 << pci->cfg.ops.bus_shift;
- 
- 		pci->cfg.win[idx] = devm_ioremap(dev,
- 						 pci->cfg.res.start + busn * sz,
-@@ -240,8 +243,7 @@ static int gen_pci_probe(struct platform_device *pdev)
+@@ -91,6 +91,32 @@ static struct gen_pci_cfg_bus_ops gen_pci_cfg_ecam_bus_ops = {
  	}
+ };
  
- 	of_id = of_match_node(gen_pci_of_match, np);
--	pci->cfg.ops = of_id->data;
--	gen_pci_ops.map_bus = pci->cfg.ops->map_bus;
-+	pci->cfg.ops = *(struct gen_pci_cfg_bus_ops *)of_id->data;
- 	pci->host.dev.parent = dev;
- 	INIT_LIST_HEAD(&pci->host.windows);
- 	INIT_LIST_HEAD(&pci->resources);
-@@ -262,7 +264,8 @@ static int gen_pci_probe(struct platform_device *pdev)
- 	if (!pci_has_flag(PCI_PROBE_ONLY))
- 		pci_add_flags(PCI_REASSIGN_ALL_RSRC | PCI_REASSIGN_ALL_BUS);
++static void __iomem *gen_pci_map_cfg_bus_thunder_pem(struct pci_bus *bus,
++						     unsigned int devfn,
++						     int where)
++{
++	struct gen_pci *pci = bus->sysdata;
++	resource_size_t idx = bus->number - pci->cfg.bus_range->start;
++
++	/*
++	 * Thunder PEM is a PCIe RC, but without a root bridge.  On
++	 * the primary bus, ignore accesses for devices other than
++	 * the first device.
++	 */
++	if (idx == 0 && (devfn & ~7u))
++		return NULL;
++	return pci->cfg.win[idx] + ((devfn << 16) | where);
++}
++
++static struct gen_pci_cfg_bus_ops gen_pci_cfg_thunder_pem_bus_ops = {
++	.bus_shift	= 24,
++	.ops		= {
++		.map_bus	= gen_pci_map_cfg_bus_thunder_pem,
++		.read		= pci_generic_config_read,
++		.write		= pci_generic_config_write,
++	}
++};
++
+ static const struct of_device_id gen_pci_of_match[] = {
+ 	{ .compatible = "pci-host-cam-generic",
+ 	  .data = &gen_pci_cfg_cam_bus_ops },
+@@ -98,6 +124,9 @@ static const struct of_device_id gen_pci_of_match[] = {
+ 	{ .compatible = "pci-host-ecam-generic",
+ 	  .data = &gen_pci_cfg_ecam_bus_ops },
  
--	bus = pci_scan_root_bus(dev, 0, &gen_pci_ops, pci, &pci->resources);
-+	bus = pci_scan_root_bus(dev, 0,
-+				&pci->cfg.ops.ops, pci, &pci->resources);
- 	if (!bus) {
- 		dev_err(dev, "Scanning rootbus failed");
- 		return -ENODEV;
++	{ .compatible = "cavium,pci-host-thunder-pem",
++	  .data = &gen_pci_cfg_thunder_pem_bus_ops },
++
+ 	{ },
+ };
+ MODULE_DEVICE_TABLE(of, gen_pci_of_match);
 -- 
 1.7.11.7
