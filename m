@@ -1,83 +1,57 @@
-From: Constantine Shulyupin <const-GkuDRZ1haSFDPfheJLI6IQ@public.gmane.org>
-Subject: [PATCH v5] Documentation: add Device tree bindings for hwmon/nct7802
-Date: Sun, 13 Sep 2015 23:16:38 +0300
-Message-ID: <1442175440-20152-1-git-send-email-const@MakeLinux.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Constantine Shulyupin <const-GkuDRZ1haSFDPfheJLI6IQ@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED
-	DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+From: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
+Subject: [PATCH 07/32] v4l: vsp1: Support VSP1 instances without any UDS
+Date: Sun, 13 Sep 2015 23:56:45 +0300
+Message-ID: <1442177830-24536-8-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
+References: <1442177830-24536-1-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <1442177830-24536-1-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
+Sender: linux-sh-owner@vger.kernel.org
+To: linux-media@vger.kernel.org
+Cc: linux-sh@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Add sensors' types configuration.
+Not all VSP1 instances include a UDS. Make the renesas,#uds DT property
+optional and accept a number of UDS equal to 0 as valid.
 
+Cc: devicetree@vger.kernel.org
+Signed-off-by: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
 ---
-Changed on v5:
-- Fixed typos
+ Documentation/devicetree/bindings/media/renesas,vsp1.txt | 3 ++-
+ drivers/media/platform/vsp1/vsp1_drv.c                   | 2 +-
+ 2 files changed, 3 insertions(+), 2 deletions(-)
 
-Changed on v4:
-- Removed registers initialization by names
-- Added properties nuvoton,sensor*-type
-
-Changed in v3:
-- Fixed vendor prefix
-- Added short registers description,
-  full registers description is available at
-https://www.nuvoton.com/hq/products/cloud-computing/hardware-monitors/desktop-server-series/nct7802y/
-
-Changed in v2:
-- Removed nct7802,reg-init
-- Added registers initialization by names
-
-Introduced in v1:
- - nct7802,reg-init
-
-Signed-off-by: Constantine Shulyupin <const-GkuDRZ1haSFDPfheJLI6IQ@public.gmane.org>
----
- .../devicetree/bindings/hwmon/nct7802.txt          | 31 ++++++++++++++++++++++
- 1 file changed, 31 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/hwmon/nct7802.txt
-
-diff --git a/Documentation/devicetree/bindings/hwmon/nct7802.txt b/Documentation/devicetree/bindings/hwmon/nct7802.txt
-new file mode 100644
-index 0000000..d9f2fda
---- /dev/null
-+++ b/Documentation/devicetree/bindings/hwmon/nct7802.txt
-@@ -0,0 +1,31 @@
-+Nuvoton NCT7802Y Hardware Monitoring IC
-+
-+Required node properties:
-+
-+ - "compatible": must be "nuvoton,nct7802"
-+ - "reg": I2C bus address of the device
-+
-+Optional string properties:
-+
-+ - nuvoton,sensor1-type
-+ - nuvoton,sensor2-type
-+ - nuvoton,sensor3-type
-+
-+Allowed values for nuvoton,sensor*-type:
-+ - "disabled"
-+ - "thermal diode"
-+ - "thermistor"
-+ - "voltage"
-+
-+Except "nuvoton,sensor3-type" can't be "thermal diode".
-+
-+Example nct7802 node:
-+
-+nct7802 {
-+	compatible = "nuvoton,nct7802";
-+	reg = <0x2a>;
-+	nuvoton,start = <0x01>;
-+	nuvoton,sensor1-type = "thermistor";
-+	nuvoton,sensor2-type = "disabled";
-+	nuvoton,sensor3-type = "voltage";
-+};
+diff --git a/Documentation/devicetree/bindings/media/renesas,vsp1.txt b/Documentation/devicetree/bindings/media/renesas,vsp1.txt
+index 87fe08abf36d..674c8c30d046 100644
+--- a/Documentation/devicetree/bindings/media/renesas,vsp1.txt
++++ b/Documentation/devicetree/bindings/media/renesas,vsp1.txt
+@@ -13,12 +13,13 @@ Required properties:
+   - clocks: A phandle + clock-specifier pair for the VSP1 functional clock.
+ 
+   - renesas,#rpf: Number of Read Pixel Formatter (RPF) modules in the VSP1.
+-  - renesas,#uds: Number of Up Down Scaler (UDS) modules in the VSP1.
+   - renesas,#wpf: Number of Write Pixel Formatter (WPF) modules in the VSP1.
+ 
+ 
+ Optional properties:
+ 
++  - renesas,#uds: Number of Up Down Scaler (UDS) modules in the VSP1. Defaults
++    to 0 if not present.
+   - renesas,has-lif: Boolean, indicates that the LCD Interface (LIF) module is
+     available.
+   - renesas,has-lut: Boolean, indicates that the Look Up Table (LUT) module is
+diff --git a/drivers/media/platform/vsp1/vsp1_drv.c b/drivers/media/platform/vsp1/vsp1_drv.c
+index de0b80e8d048..5f93cbdcb0f1 100644
+--- a/drivers/media/platform/vsp1/vsp1_drv.c
++++ b/drivers/media/platform/vsp1/vsp1_drv.c
+@@ -513,7 +513,7 @@ static int vsp1_parse_dt(struct vsp1_device *vsp1)
+ 		return -EINVAL;
+ 	}
+ 
+-	if (pdata->uds_count <= 0 || pdata->uds_count > VSP1_MAX_UDS) {
++	if (pdata->uds_count > VSP1_MAX_UDS) {
+ 		dev_err(vsp1->dev, "invalid number of UDS (%u)\n",
+ 			pdata->uds_count);
+ 		return -EINVAL;
 -- 
-1.9.1
+2.4.6
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
