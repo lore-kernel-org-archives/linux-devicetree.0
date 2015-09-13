@@ -1,46 +1,39 @@
-From: Krzysztof Kozlowski <k.kozlowski.k@gmail.com>
-Subject: [PATCH v2] ARM: dts: Fix LEDs on exynos5422-odroidxu3
-Date: Sun, 13 Sep 2015 18:32:16 +0900
-Message-ID: <1442136736-28672-1-git-send-email-k.kozlowski.k@gmail.com>
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Kukjin Kim <kgene@kernel.org>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: Krzysztof Kozlowski <k.kozlowski.k@gmail.com>
+From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
+Subject: Re: [PATCH] ARM: dts: Add the hdmi-ddc pinctrl settings for rk3288
+Date: Sun, 13 Sep 2015 13:32:34 +0200
+Message-ID: <1460847.PVSDMeWNWs@diego>
+References: <1441230862-17376-1-git-send-email-dianders@chromium.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1441230862-17376-1-git-send-email-dianders@chromium.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Douglas Anderson <dianders@chromium.org>
+Cc: linux-rockchip@lists.infradead.org, ykk@rock-chips.com, mark.yao@rock-chips.com, briannorris@chromium.org, amstan@chromium.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-The LEDs on Odroid XU3 family boards could not properly probe because PWM
-outputs were reduced only to PWM for fan. Fix it for Odroid XU3 and
-XU3-Lite boards by switching to usage of all 4 outputs (although the PWM
-for MIPI probably is redundant because board does not have MIPI
-connector available).
+Am Mittwoch, 2. September 2015, 14:54:22 schrieb Douglas Anderson:
+> The pins for i2c5 can either be configured as "I2C5" which means that
+> they're controlled by the normal RK3288 I2C controller or as "EDP / HDMI
+> I2C".  It's unclear why EDP is referenced here since apparently setting
+> the mux to this position enables I2C communication using the dw_hdmi
+> block with a patch like <https://patchwork.kernel.org/patch/7098101/>.
+> 
+> There appear to be some reasons why using the builtin I2C controller in
+> dw_hdmi is better than using the normal RK3288 I2C controller, so boards
+> based on rk3288 might eventually want to use this pinmux if it's known
+> to work.
+> 
+> Once driver support in dw_hdmi lands, boards would use this by selecting
+> this pinctrl for the HDMI block and then _not_ specifying a ddc-i2c-bus
+> and _not_ setting the status to "okay" for i2c5 (which uses the same
+> pins).
+> 
+> Signed-off-by: Douglas Anderson <dianders@chromium.org>
 
-This fixes warnings on dmesg:
-[    4.838712] samsung-pwm 12dd0000.pwm: tried to request PWM channel 1 without output
-[    4.838725] leds_pwm pwmleds: unable to request PWM for green:mmc0: -22
-[    4.838767] leds_pwm: probe of pwmleds failed with error -22
+applied to my dts branch for 4.4
 
-Signed-off-by: Krzysztof Kozlowski <k.kozlowski.k@gmail.com>
 
----
-
-Changes since v1:
-1. Do not rebase on patchset adding support for Odroid XU4 board. Rebase
-   just on current next.
----
- arch/arm/boot/dts/exynos5422-odroidxu3-common.dtsi | 1 -
- 1 file changed, 1 deletion(-)
-
-diff --git a/arch/arm/boot/dts/exynos5422-odroidxu3-common.dtsi b/arch/arm/boot/dts/exynos5422-odroidxu3-common.dtsi
-index dd8bc86d9de4..90d298dce851 100644
---- a/arch/arm/boot/dts/exynos5422-odroidxu3-common.dtsi
-+++ b/arch/arm/boot/dts/exynos5422-odroidxu3-common.dtsi
-@@ -473,7 +473,6 @@
- 	 */
- 	pinctrl-0 = <&pwm0_out &pwm1_out &pwm2_out &pwm3_out>;
- 	pinctrl-names = "default";
--	samsung,pwm-outputs = <0>;
- 	status = "okay";
- };
- 
--- 
-2.1.4
+Thanks
+Heiko
