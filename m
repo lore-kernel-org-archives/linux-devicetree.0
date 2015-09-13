@@ -1,51 +1,254 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH 2/2] ARM: dts: sun5i: Add dts file for the
- Wobo i5 top set box
-Date: Sun, 13 Sep 2015 18:10:37 +0200
-Message-ID: <20150913161037.GX9885@lukather>
-References: <1441890359-4675-1-git-send-email-hdegoede@redhat.com>
- <1441890359-4675-2-git-send-email-hdegoede@redhat.com>
-Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
+From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Subject: Re: [PATCH 2/2] ARM: dts: rockchip: Add dtb for the Radxa Rock 2 Square board
+Date: Sun, 13 Sep 2015 18:47:19 +0200
+Message-ID: <2017541.TyKd5dqpTN@diego>
+References: <1442011005-4828-1-git-send-email-sjoerd.simons@collabora.co.uk> <1442011005-4828-2-git-send-email-sjoerd.simons@collabora.co.uk>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="R9dSeJxMIUBTi9Do"
-Return-path: <linux-sunxi+bncBD2ZNBF5VYJRBEGB22XQKGQEYMSGKKY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1441890359-4675-2-git-send-email-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <http://groups.google.com/group/linux-sunxi/subscribe>
-To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Cc: Jelle van der Waa <jelle-oJJ1AqDjjO4@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1442011005-4828-2-git-send-email-sjoerd.simons-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sjoerd Simons <sjoerd.simons-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>
+Cc: linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
---R9dSeJxMIUBTi9Do
-Content-Type: text/plain; charset=UTF-8
-Content-Disposition: inline
+Hi Sjoerd,
 
-On Thu, Sep 10, 2015 at 03:05:59PM +0200, Hans de Goede wrote:
-> From: Jelle van der Waa <jelle-oJJ1AqDjjO4@public.gmane.org>
+Am Samstag, 12. September 2015, 00:36:45 schrieb Sjoerd Simons:
+> The Radxa Rock 2 Square board is a combination of the Radxa Rock 2 SoM
+> with the Square baseboard. Add a dtsi for the SoM which can be included
+> into the dts for the various baseboards (e.g. full and square) and a dts
+> for the square board.
 > 
-> The Wobo i5 top set box is a somewhat curious A10s based top set box,
-> it uses an AXP209 rather then the AXP152 usually used in combination
-> with the A10s. It has an ethernet phy connected to PORTD rather then
-> PORTA, and its built-in usb wifi is connected via the otg controller.
+> Currently supported are serial console, wired networking, hdmi output
+> and USB.
 > 
-> This commit adds a dts file adding support for this top set box.
+> Signed-off-by: Sjoerd Simons <sjoerd.simons-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>
 > 
-> Signed-off-by: Jelle van der Waa <jelle-oJJ1AqDjjO4@public.gmane.org>
-> Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+> ---
+> 
+>  arch/arm/boot/dts/Makefile                |   1 +
+>  arch/arm/boot/dts/rk3288-rock2-som.dtsi   | 267
+> ++++++++++++++++++++++++++++++ arch/arm/boot/dts/rk3288-rock2-square.dts |
+> 164 ++++++++++++++++++ 3 files changed, 432 insertions(+)
 
-Applied both, thanks!
+please add an entry to Documentation/devicetree/arm/rockchip.txt for the new 
+board too.
 
-Maxime
+Some more nitpicks below:
 
--- 
-Maxime Ripard, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
---R9dSeJxMIUBTi9Do--
+
+>  create mode 100644 arch/arm/boot/dts/rk3288-rock2-som.dtsi
+>  create mode 100644 arch/arm/boot/dts/rk3288-rock2-square.dts
+> 
+> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+> index 233159d..1ed8ec1 100644
+> --- a/arch/arm/boot/dts/Makefile
+> +++ b/arch/arm/boot/dts/Makefile
+> @@ -507,6 +507,7 @@ dtb-$(CONFIG_ARCH_ROCKCHIP) += \
+>  	rk3288-firefly-beta.dtb \
+>  	rk3288-firefly.dtb \
+>  	rk3288-r89.dtb \
+> +	rk3288-rock2-square.dtb \
+>  	rk3288-veyron-jerry.dtb \
+>  	rk3288-veyron-minnie.dtb \
+>  	rk3288-veyron-pinky.dtb \
+> diff --git a/arch/arm/boot/dts/rk3288-rock2-som.dtsi
+> b/arch/arm/boot/dts/rk3288-rock2-som.dtsi new file mode 100644
+> index 0000000..01e69e8
+> --- /dev/null
+> +++ b/arch/arm/boot/dts/rk3288-rock2-som.dtsi
+> @@ -0,0 +1,267 @@
+> +/*
+> + * This file is dual-licensed: you can use it either under the terms
+> + * of the GPL or the X11 license, at your option. Note that this dual
+> + * licensing only applies to this file, and not this project as a
+> + * whole.
+> + *
+> + *  a) This file is free software; you can redistribute it and/or
+> + *     modify it under the terms of the GNU General Public License as
+> + *     published by the Free Software Foundation; either version 2 of the
+> + *     License, or (at your option) any later version.
+> + *
+> + *     This file is distributed in the hope that it will be useful,
+> + *     but WITHOUT ANY WARRANTY; without even the implied warranty of
+> + *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+> + *     GNU General Public License for more details.
+> + *
+> + * Or, alternatively,
+> + *
+> + *  b) Permission is hereby granted, free of charge, to any person
+> + *     obtaining a copy of this software and associated documentation
+> + *     files (the "Software"), to deal in the Software without
+> + *     restriction, including without limitation the rights to use,
+> + *     copy, modify, merge, publish, distribute, sublicense, and/or
+> + *     sell copies of the Software, and to permit persons to whom the
+> + *     Software is furnished to do so, subject to the following
+> + *     conditions:
+> + *
+> + *     The above copyright notice and this permission notice shall be
+> + *     included in all copies or substantial portions of the Software.
+> + *
+> + *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+> + *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+> + *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+> + *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+> + *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+> + *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+> + *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+> + *     OTHER DEALINGS IN THE SOFTWARE.
+> + */
+> +
+> +#include <dt-bindings/pwm/pwm.h>
+> +#include "rk3288.dtsi"
+> +
+> +/ {
+> +	memory {
+> +		device_type = "memory";
+> +		reg = <0x0 0x80000000>;
+
+please swap those if possible. I try to keep the ordering like
+- compatible
+- reg
+[alphabetic sorted]
+- status
+
+for ease of reading.
+
+
+> +	};
+> +
+> +	ext_gmac: external-gmac-clock {
+> +		compatible = "fixed-clock";
+> +		#clock-cells = <0>;
+> +		clock-frequency = <125000000>;
+> +		clock-output-names = "ext_gmac";
+> +	};
+> +
+> +	vcc_sys: vsys-regulator {
+> +		compatible = "regulator-fixed";
+> +		regulator-name = "vcc_sys";
+> +		regulator-min-microvolt = <5000000>;
+> +		regulator-max-microvolt = <5000000>;
+> +		regulator-always-on;
+> +		regulator-boot-on;
+> +	};
+> +};
+> +
+> +&cpu0 {
+> +	cpu0-supply = <&vdd_cpu>;
+> +};
+> +
+> +
+
+double empty line
+
+
+> +&emmc {
+> +	broken-cd;
+[...]
+> +	non-removable;
+
+Documentation/devicetree/bindings/mmc/mmc.txt:
+"Only one of the properties in this section should be supplied"
+
+so I guess non-removable would be the most suitable
+
+
+> +	num-slots = <1>;
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&emmc_clk &emmc_cmd &emmc_pwr &emmc_bus8>;
+> +	vmmc-supply = <&vcc_io>;
+> +	status = "okay";
+> +};
+> +
+> +&gmac {
+> +	assigned-clocks = <&cru SCLK_MAC>;
+> +	assigned-clock-parents = <&ext_gmac>;
+> +	clock_in_out = "input";
+> +	phy-mode = "rgmii";
+> +	phy-supply = <&vccio_pmu>;
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&rgmii_pins &phy_rst>;
+> +	snps,reset-gpio = <&gpio4 8 GPIO_ACTIVE_LOW>;
+> +	snps,reset-active-low;
+> +	snps,reset-delays-us = <0 10000 30000>;
+> +	rx_delay = <0x10>;
+> +	tx_delay = <0x30>;
+> +};
+> +
+> +&i2c0 {
+> +	status = "okay";
+> +
+> +	act8846: act8846@5a {
+> +		compatible = "active-semi,act8846";
+> +		reg = <0x5a>;
+> +		inl1-supply = <&vcc_io>;
+> +		inl2-supply = <&vcc_sys>;
+> +		inl3-supply = <&vcc_20>;
+> +		vp1-supply = <&vcc_sys>;
+> +		vp2-supply = <&vcc_sys>;
+> +		vp3-supply = <&vcc_sys>;
+> +		vp4-supply = <&vcc_sys>;
+> +		status = "okay";
+
+you're just adding it here, so I guess it doesn't necessarily need a "status 
+okay"
+
+[...]
+
+> +	gmac {
+> +		phy_rst: phy-rst {
+> +			rockchip,pins = <RK_GPIO4 8 RK_FUNC_GPIO  &pcfg_output_high>;
+> +		};
+> +	};
+> +};
+> +
+> +
+
+double empty line
+
+
+> +&vopb {
+> +	status = "okay";
+> +};
+> +
+> +&vopb_mmu {
+> +	status = "okay";
+> +};
+> +
+> +&vopl {
+> +	status = "okay";
+> +};
+> +
+> +&vopl_mmu {
+> +	status = "okay";
+> +};
+> diff --git a/arch/arm/boot/dts/rk3288-rock2-square.dts
+> b/arch/arm/boot/dts/rk3288-rock2-square.dts new file mode 100644
+
+[...]
+
+> +	vcc_usb_host: vcc-host-regulator {
+> +		compatible = "regulator-fixed";
+> +		enable-active-high;
+> +		gpio = <&gpio0 14 GPIO_ACTIVE_HIGH>;
+> +		pinctrl-names = "default";
+> +		pinctrl-0 = <&host_vbus_drv>;
+> +		/* Always on as the rockchip usb phy doesn't have a vbus-supply
+> +		 * property */
+
+comment style is off. Either one-line, like
+	/* foo */
+or multiline
+	/*
+	  * foo
+	  */
+
+
+Heiko
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
