@@ -1,102 +1,111 @@
 From: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
-Subject: [PATCH 22/32] v4l: vsp1: Make the BRU optional
-Date: Sun, 13 Sep 2015 23:57:00 +0300
-Message-ID: <1442177830-24536-23-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
-References: <1442177830-24536-1-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
+Subject: [PATCH 03/22] drm: rcar-du: Add support for the R8A7794 DU
+Date: Mon, 14 Sep 2015 01:50:50 +0300
+Message-ID: <1442184669-30990-4-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
+References: <1442184669-30990-1-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
 Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <1442177830-24536-1-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
+In-Reply-To: <1442184669-30990-1-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
 Sender: linux-sh-owner@vger.kernel.org
-To: linux-media@vger.kernel.org
+To: dri-devel@lists.freedesktop.org
 Cc: linux-sh@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Not all VSP instances have a BRU on R-Car Gen3, make it optional. For
-backward compatibility with older DT bindings default to BRU
-availability on R-Car Gen2.
+The R8A7794 DU has a fixed output routing configuration with one RGB
+output per CRTC and thus lacks the RGB output routing register field.
 
 Cc: devicetree@vger.kernel.org
 Signed-off-by: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
 ---
- .../devicetree/bindings/media/renesas,vsp1.txt     |  3 +++
- drivers/media/platform/vsp1/vsp1.h                 |  1 +
- drivers/media/platform/vsp1/vsp1_drv.c             | 23 ++++++++++++++++------
- 3 files changed, 21 insertions(+), 6 deletions(-)
+ .../devicetree/bindings/video/renesas,du.txt       |  4 +++-
+ drivers/gpu/drm/rcar-du/rcar_du_drv.c              | 23 ++++++++++++++++++++++
+ drivers/gpu/drm/rcar-du/rcar_du_group.c            |  5 +++--
+ 3 files changed, 29 insertions(+), 3 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/media/renesas,vsp1.txt b/Documentation/devicetree/bindings/media/renesas,vsp1.txt
-index 674c8c30d046..766f034c1e45 100644
---- a/Documentation/devicetree/bindings/media/renesas,vsp1.txt
-+++ b/Documentation/devicetree/bindings/media/renesas,vsp1.txt
-@@ -20,6 +20,9 @@ Optional properties:
+diff --git a/Documentation/devicetree/bindings/video/renesas,du.txt b/Documentation/devicetree/bindings/video/renesas,du.txt
+index d05be121486f..eccd4f4867b2 100644
+--- a/Documentation/devicetree/bindings/video/renesas,du.txt
++++ b/Documentation/devicetree/bindings/video/renesas,du.txt
+@@ -7,6 +7,7 @@ Required Properties:
+     - "renesas,du-r8a7790" for R8A7790 (R-Car H2) compatible DU
+     - "renesas,du-r8a7791" for R8A7791 (R-Car M2-W) compatible DU
+     - "renesas,du-r8a7793" for R8A7793 (R-Car M2-N) compatible DU
++    - "renesas,du-r8a7794" for R8A7794 (R-Car E2) compatible DU
  
-   - renesas,#uds: Number of Up Down Scaler (UDS) modules in the VSP1. Defaults
-     to 0 if not present.
-+  - renesas,has-bru: Boolean, indicates that the Blending & ROP Unit (BRU)
-+    module is available. Defaults to true on R-Car Gen2 and false on R-Car Gen3
-+    if not present.
-   - renesas,has-lif: Boolean, indicates that the LCD Interface (LIF) module is
-     available.
-   - renesas,has-lut: Boolean, indicates that the Look Up Table (LUT) module is
-diff --git a/drivers/media/platform/vsp1/vsp1.h b/drivers/media/platform/vsp1/vsp1.h
-index 3b2b2387e085..173f9f830049 100644
---- a/drivers/media/platform/vsp1/vsp1.h
-+++ b/drivers/media/platform/vsp1/vsp1.h
-@@ -42,6 +42,7 @@ struct vsp1_uds;
- #define VSP1_HAS_LIF		(1 << 0)
- #define VSP1_HAS_LUT		(1 << 1)
- #define VSP1_HAS_SRU		(1 << 2)
-+#define VSP1_HAS_BRU		(1 << 3)
+   - reg: A list of base address and length of each memory resource, one for
+     each entry in the reg-names property.
+@@ -23,7 +24,7 @@ Required Properties:
+   - clock-names: Name of the clocks. This property is model-dependent.
+     - R8A7779 uses a single functional clock. The clock doesn't need to be
+       named.
+-    - R8A779[013] use one functional clock per channel and one clock per LVDS
++    - R8A779[0134] use one functional clock per channel and one clock per LVDS
+       encoder (if available). The functional clocks must be named "du.x" with
+       "x" being the channel numerical index. The LVDS clocks must be named
+       "lvds.x" with "x" being the LVDS encoder numerical index.
+@@ -46,6 +47,7 @@ corresponding to each DU output.
+  R8A7790 (H2)	DPAD		LVDS 0		LVDS 1
+  R8A7791 (M2-W)	DPAD		LVDS 0		-
+  R8A7793 (M2-N)	DPAD		LVDS 0		-
++ R8A7794 (E2)	DPAD 0		DPAD 1		-
  
- struct vsp1_platform_data {
- 	unsigned int features;
-diff --git a/drivers/media/platform/vsp1/vsp1_drv.c b/drivers/media/platform/vsp1/vsp1_drv.c
-index bd22457bf392..eccdacdf4f4c 100644
---- a/drivers/media/platform/vsp1/vsp1_drv.c
-+++ b/drivers/media/platform/vsp1/vsp1_drv.c
-@@ -223,13 +223,15 @@ static int vsp1_create_entities(struct vsp1_device *vsp1)
- 	}
  
- 	/* Instantiate all the entities. */
--	vsp1->bru = vsp1_bru_create(vsp1);
--	if (IS_ERR(vsp1->bru)) {
--		ret = PTR_ERR(vsp1->bru);
--		goto done;
--	}
-+	if (vsp1->pdata.features & VSP1_HAS_BRU) {
-+		vsp1->bru = vsp1_bru_create(vsp1);
-+		if (IS_ERR(vsp1->bru)) {
-+			ret = PTR_ERR(vsp1->bru);
-+			goto done;
-+		}
+ Example: R8A7790 (R-Car H2) DU
+diff --git a/drivers/gpu/drm/rcar-du/rcar_du_drv.c b/drivers/gpu/drm/rcar-du/rcar_du_drv.c
+index 90d19fb976ab..326d040515e4 100644
+--- a/drivers/gpu/drm/rcar-du/rcar_du_drv.c
++++ b/drivers/gpu/drm/rcar-du/rcar_du_drv.c
+@@ -107,11 +107,34 @@ static const struct rcar_du_device_info rcar_du_r8a7791_info = {
+ 	.num_lvds = 1,
+ };
  
--	list_add_tail(&vsp1->bru->entity.list_dev, &vsp1->entities);
-+		list_add_tail(&vsp1->bru->entity.list_dev, &vsp1->entities);
-+	}
- 
- 	vsp1->hsi = vsp1_hsit_create(vsp1, true);
- 	if (IS_ERR(vsp1->hsi)) {
-@@ -513,6 +515,8 @@ static int vsp1_parse_dt(struct vsp1_device *vsp1)
- 
- 	vsp1->info = of_device_get_match_data(vsp1->dev);
- 
-+	if (of_property_read_bool(np, "renesas,has-bru"))
-+		pdata->features |= VSP1_HAS_BRU;
- 	if (of_property_read_bool(np, "renesas,has-lif"))
- 		pdata->features |= VSP1_HAS_LIF;
- 	if (of_property_read_bool(np, "renesas,has-lut"))
-@@ -542,6 +546,13 @@ static int vsp1_parse_dt(struct vsp1_device *vsp1)
- 		return -EINVAL;
- 	}
- 
-+	/* Backward compatibility: all Gen2 VSP instances have a BRU, the
-+	 * renesas,has-bru property was thus not available. Set the HAS_BRU
-+	 * feature automatically in that case.
-+	 */
-+	if (vsp1->info->num_bru_inputs == 4)
-+		pdata->features |= VSP1_HAS_BRU;
++static const struct rcar_du_device_info rcar_du_r8a7794_info = {
++	.features = RCAR_DU_FEATURE_CRTC_IRQ_CLOCK
++		  | RCAR_DU_FEATURE_EXT_CTRL_REGS,
++	.num_crtcs = 2,
++	.routes = {
++		/* R8A7794 has two RGB outputs and one (currently unsupported)
++		 * TCON output.
++		 */
++		[RCAR_DU_OUTPUT_DPAD0] = {
++			.possible_crtcs = BIT(0),
++			.encoder_type = DRM_MODE_ENCODER_NONE,
++			.port = 0,
++		},
++		[RCAR_DU_OUTPUT_DPAD1] = {
++			.possible_crtcs = BIT(1),
++			.encoder_type = DRM_MODE_ENCODER_NONE,
++			.port = 1,
++		},
++	},
++	.num_lvds = 0,
++};
 +
- 	return 0;
- }
+ static const struct of_device_id rcar_du_of_table[] = {
+ 	{ .compatible = "renesas,du-r8a7779", .data = &rcar_du_r8a7779_info },
+ 	{ .compatible = "renesas,du-r8a7790", .data = &rcar_du_r8a7790_info },
+ 	{ .compatible = "renesas,du-r8a7791", .data = &rcar_du_r8a7791_info },
+ 	{ .compatible = "renesas,du-r8a7793", .data = &rcar_du_r8a7791_info },
++	{ .compatible = "renesas,du-r8a7794", .data = &rcar_du_r8a7794_info },
+ 	{ }
+ };
  
+diff --git a/drivers/gpu/drm/rcar-du/rcar_du_group.c b/drivers/gpu/drm/rcar-du/rcar_du_group.c
+index 7fd39a7d91c8..8e2ffe025153 100644
+--- a/drivers/gpu/drm/rcar-du/rcar_du_group.c
++++ b/drivers/gpu/drm/rcar-du/rcar_du_group.c
+@@ -49,9 +49,10 @@ static void rcar_du_group_setup_defr8(struct rcar_du_group *rgrp)
+ 	u32 defr8 = DEFR8_CODE | DEFR8_DEFE8;
+ 
+ 	/* The DEFR8 register for the first group also controls RGB output
+-	 * routing to DPAD0
++	 * routing to DPAD0 for DU instances that support it.
+ 	 */
+-	if (rgrp->index == 0)
++	if (rgrp->dev->info->routes[RCAR_DU_OUTPUT_DPAD0].possible_crtcs > 1 &&
++	    rgrp->index == 0)
+ 		defr8 |= DEFR8_DRGBS_DU(rgrp->dev->dpad0_source);
+ 
+ 	rcar_du_group_write(rgrp, DEFR8, defr8);
 -- 
 2.4.6
 
