@@ -1,156 +1,100 @@
-From: Sjoerd Simons <sjoerd.simons-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>
-Subject: Re: [PATCH 2/2] ARM: dts: rockchip: Add dtb for the Radxa Rock 2
- Square board
-Date: Mon, 14 Sep 2015 09:30:49 +0200
-Message-ID: <1442215849.8778.101.camel@collabora.co.uk>
-References: <1442011005-4828-1-git-send-email-sjoerd.simons@collabora.co.uk>
-	 <1442011005-4828-2-git-send-email-sjoerd.simons@collabora.co.uk>
-	 <CABxcv=nRjge1qMeoXt6U6McKbv30oYUhh9C417mX0B=bt9Jg-g@mail.gmail.com>
+From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Subject: Re: [PATCH v3 1/8] rsb: Add generic Reduced Serial Bus
+ (RSB) controller binding documentation
+Date: Mon, 14 Sep 2015 15:32:11 +0800
+Message-ID: <CAGb2v65dai3At24HhUY9h-dCs1jEXiwqgOMefziokJXa00Ercw@mail.gmail.com>
+References: <1439958009-14056-1-git-send-email-wens@csie.org>
+ <1439958009-14056-2-git-send-email-wens@csie.org> <CAL_JsqJA6MEtnF35ThPDgVmEZHyui39-HLsefWPQ1tzzfLAW3w@mail.gmail.com>
+Reply-To: wens-jdAy2FN1RRM@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CABxcv=nRjge1qMeoXt6U6McKbv30oYUhh9C417mX0B=bt9Jg-g-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Javier Martinez Canillas <javier-0uQlZySMnqxg9hUCZPvPmw@public.gmane.org>
-Cc: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Linux Kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sunxi+bncBCMILY6JWQBBBEPQ3GXQKGQEMKWQ75Q-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <CAL_JsqJA6MEtnF35ThPDgVmEZHyui39-HLsefWPQ1tzzfLAW3w-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <http://groups.google.com/group/linux-sunxi/subscribe>
+To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Meng Zhang <kevin-0TFLnhJekD6UEPyfVivIlAC/G2K4zDHf@public.gmane.org>, Shuge <shuge-0TFLnhJekD6UEPyfVivIlAC/G2K4zDHf@public.gmane.org>, Meng Zhang <kevin.z.m.zh-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 2015-09-14 at 01:00 +0200, Javier Martinez Canillas wrote:
-> Hello Sjoerd,
-> 
-> On Sat, Sep 12, 2015 at 12:36 AM, Sjoerd Simons
-> <sjoerd.simons-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org> wrote:
-> 
-> [snip]
-> 
-> > +
-> > +               regulators {
-> > +                       vcc_ddr: REG1 {
-> > +                               regulator-name = "VCC_DDR";
-> > +                               regulator-min-microvolt =
-> > <1200000>;
-> > +                               regulator-max-microvolt =
-> > <1200000>;
-> > +                               regulator-always-on;
-> > +                       };
-> > +
-> > +                       vcc_io: REG2 {
-> > +                               regulator-name = "VCC_IO";
-> > +                               regulator-min-microvolt =
-> > <3300000>;
-> > +                               regulator-max-microvolt =
-> > <3300000>;
-> > +                               regulator-always-on;
-> > +                       };
-> > +
-> > +                       vdd_log: REG3 {
-> > +                               regulator-name = "VDD_LOG";
-> > +                               regulator-min-microvolt =
-> > <1000000>;
-> > +                               regulator-max-microvolt =
-> > <1000000>;
-> > +                               regulator-always-on;
-> > +                       };
-> > +
-> > +                       vcc_20: REG4 {
-> > +                               regulator-name = "VCC_20";
-> > +                               regulator-min-microvolt =
-> > <2000000>;
-> > +                               regulator-max-microvolt =
-> > <2000000>;
-> > +                               regulator-always-on;
-> > +                       };
-> > +
-> > +                       vccio_sd: REG5 {
-> > +                               regulator-name = "VCCIO_SD";
-> > +                               regulator-min-microvolt =
-> > <3300000>;
-> > +                               regulator-max-microvolt =
-> > <3300000>;
-> > +                               regulator-always-on;
-> > +                       };
-> > +
-> > +                       vdd10_lcd: REG6 {
-> > +                               regulator-name = "VDD10_LCD";
-> > +                               regulator-min-microvolt =
-> > <1000000>;
-> > +                               regulator-max-microvolt =
-> > <1000000>;
-> > +                               regulator-always-on;
-> > +                       };
-> > +
-> > +                       vcca_codec: REG7 {
-> > +                               regulator-name = "VCCA_CODEC";
-> > +                               regulator-min-microvolt =
-> > <3300000>;
-> > +                               regulator-max-microvolt =
-> > <3300000>;
-> > +                               regulator-always-on;
-> > +                       };
-> > +
-> > +                       vcca_tp: REG8 {
-> > +                               regulator-name = "VCCA_TP";
-> > +                               regulator-min-microvolt =
-> > <3300000>;
-> > +                               regulator-max-microvolt =
-> > <3300000>;
-> > +                               regulator-always-on;
-> > +                       };
-> > +
-> > +                       vccio_pmu: REG9 {
-> > +                               regulator-name = "VCCIO_PMU";
-> > +                               regulator-min-microvolt =
-> > <3300000>;
-> > +                               regulator-max-microvolt =
-> > <3300000>;
-> > +                               regulator-always-on;
-> > +                       };
-> > +
-> > +                       vdd_10: REG10 {
-> > +                               regulator-name = "VDD_10";
-> > +                               regulator-min-microvolt =
-> > <1000000>;
-> > +                               regulator-max-microvolt =
-> > <1000000>;
-> > +                               regulator-always-on;
-> > +                       };
-> > +
-> > +                       vcc_18: REG11 {
-> > +                               regulator-name = "VCC_18";
-> > +                               regulator-min-microvolt =
-> > <1800000>;
-> > +                               regulator-max-microvolt =
-> > <1800000>;
-> > +                               regulator-always-on;
-> > +                       };
-> > +
-> > +                       vcc18_lcd: REG12 {
-> > +                               regulator-name = "VCC18_LCD";
-> > +                               regulator-min-microvolt =
-> > <1800000>;
-> > +                               regulator-max-microvolt =
-> > <1800000>;
-> > +                               regulator-always-on;
-> > +                       };
-> 
-> Should all these regulators really need to be always-on?
+On Mon, Aug 24, 2015 at 6:43 AM, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> On Tue, Aug 18, 2015 at 11:20 PM, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org> wrote:
+>> Reduced Serial Bus is a proprietary 2-line push-pull serial bus
+>> supporting multiple slave devices.
+>>
+>> It was developed by Allwinner, Inc. and used by Allwinner and X-Powers,
+>> Inc. for their line of PMICs and other peripheral ICs.
+>>
+>> Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+>> ---
+>>  Documentation/devicetree/bindings/rsb/rsb.txt | 50 +++++++++++++++++++++++++++
+>>  1 file changed, 50 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/rsb/rsb.txt
+>>
+>> diff --git a/Documentation/devicetree/bindings/rsb/rsb.txt b/Documentation/devicetree/bindings/rsb/rsb.txt
+>> new file mode 100644
+>> index 000000000000..0b027948ca9c
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/rsb/rsb.txt
+>> @@ -0,0 +1,50 @@
+>> +Reduced Serial Bus (RSB) Controller
+>> +
+>> +This document defines a generic set of bindings for use by RSB controllers.
+>> +A controller is modelled in device tree as a node with zero or more child
+>> +nodes, each representing a unique slave device on the bus.
+>> +
+>> +Required properties:
+>> +
+>> + - #address-cells : must be 2
+>> + - #size-cells : must be 0
+>> +
+>> +Optional properties:
+>> +
+>> + - clock-frequency : Desired bus clock frequency in Hz. Maximum is 20 MHz.
+>> +
+>> +Child nodes:
+>> +
+>> +An RSB controller node can contain zero or more child nodes representing
+>> +slave devices on the bus.  Child 'reg' properties are specified as a
+>> +runtime address, hardware address pair. The hardware address is hardwired
+>> +in the device, which can normally be found in the datasheet. The runtime
+>> +address is set by software. No 2 devices on the same bus shall have the
+>> +same runtime address.
+>> +
+>> +Valid runtime addresses - There are only 15 valid runtime addresses:
+>> +
+>> +    0x17, 0x2d, 0x3a, 0x4e, 0x59, 0x63, 0x74, 0x8b,
+>> +    0x9c, 0xa6, 0xb1, 0xc5, 0xd2, 0xe8, 0xff
+>> +
+>> +It is highly recommended that one choose the same runtime addresses as
+>> +vendor BSPs use so that a) the addresses remain the same across different
+>> +software systems, and b) addresses of supported and listed slave devices
+>> +don't conflict with unsupported or not yet listed devices.
+>
+> I fail to understand why the run-time address belongs in DT or why
+> alignment to vendor BSP matters? I can see the desire to align DTs if
+> the vendor OS was dependent on having this information. Having to
+> access the vendor OS to determine what address to pick does not seem
+> like the right way to write a DTS. It seems to me that the RSB bus
+> driver should allocate run-time addresses dynamically.
 
-Ideally not all of them, turning the ones that aren't needed off is
-definately on my list of things to do (together with the other
-pheripherals, leds, hw. keys etc). 
+I agree it seems better that the driver should allocate them dynamically.
+However my attempts to reset the runtime addresses all fail, with the
+device in question rejecting the request.
 
-For the first patch i do prefer to keep them on so we can have get some
-more testing  with this board before fine-tuning those things (fwiw,
-the rockchip evb board and others with essentially the same pmic setup
-all also have them always-on)
+I'll run some more tests. Another way would be for the driver to test
+if the device was already allocated an address, and just use that. If
+not, then just allocate one to it. The implementation is a bit more
+complicated, as there's no lookup function.
+
+But if we cannot reliably reset the runtime addresses, I don't see
+any alternative to putting the address in the DT. Most of the use cases
+we want to support are PMICs, which are initialized by the boot loader.
 
 
-
--- 
-Sjoerd Simons
-Collabora Ltd.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Regards
+ChenYu
