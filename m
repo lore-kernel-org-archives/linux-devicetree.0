@@ -1,108 +1,53 @@
-From: Jens Wiklander <jens.wiklander-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v5 1/5] arm/arm64: add smccc ARCH32
-Date: Mon, 14 Sep 2015 10:30:30 +0200
-Message-ID: <20150914083029.GA13963@ermac>
-References: <1439973629-19505-1-git-send-email-jens.wiklander@linaro.org>
- <1439973629-19505-2-git-send-email-jens.wiklander@linaro.org>
- <20150819165009.GC10297@arm.com>
- <20150820113729.GA25962@ermac>
- <20150821092430.GC30930@arm.com>
- <20150821114331.GA11701@ermac>
+From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Subject: Re: [PATCH 2/2] ARM: dts: rockchip: Add dtb for the Radxa Rock 2 Square board
+Date: Mon, 14 Sep 2015 10:47:19 +0200
+Message-ID: <7783425.5jykIre40o@diego>
+References: <1442011005-4828-1-git-send-email-sjoerd.simons@collabora.co.uk> <CABxcv==JF5QKG8qmrRRUSi4j0=7guQQJTzVzR2bgSxdtUDBv7Q@mail.gmail.com> <1442217958.8778.103.camel@collabora.co.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20150821114331.GA11701@ermac>
+In-Reply-To: <1442217958.8778.103.camel-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
-Cc: "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Kees Cook <keescook-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, "valentin.manea-hv44wF8Li93QT0dZR+AlfA@public.gmane.org" <valentin.manea-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, "javier-5MUHepqpBA1BDgjK7y7TUQ@public.gmane.org" <javier-5MUHepqpBA1BDgjK7y7TUQ@public.gmane.org>, "emmanuel.michel-qxv4g6HH51o@public.gmane.org" <emmanuel.michel-qxv4g6HH51o@public.gmane.org>, Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, "jean-michel.delorme-qxv4g6HH51o@public.gmane.org" <jean-michel.delorme-qxv4g6HH51o@public.gmane.org>, Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+To: Sjoerd Simons <sjoerd.simons-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>
+Cc: Javier Martinez Canillas <javier-0uQlZySMnqxg9hUCZPvPmw@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Linux Kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Aug 21, 2015 at 01:43:31PM +0200, Jens Wiklander wrote:
-> On Fri, Aug 21, 2015 at 10:24:30AM +0100, Will Deacon wrote:
-> > On Thu, Aug 20, 2015 at 12:37:29PM +0100, Jens Wiklander wrote:
-> > > On Wed, Aug 19, 2015 at 05:50:09PM +0100, Will Deacon wrote:
-> > > > On Wed, Aug 19, 2015 at 09:40:25AM +0100, Jens Wiklander wrote:
-> > > > > Adds helpers to do SMC based on ARM SMC Calling Convention.
-> > > > > CONFIG_HAVE_SMCCC is enabled for architectures that may support
-> > > > > the SMC instruction. It's the responsibility of the caller to
-> > > > > know if the SMC instruction is supported by the platform.
-> > > > 
-> > > > [...]
-> > > > > diff --git a/arch/arm64/kernel/smccc-call.S b/arch/arm64/kernel/smccc-call.S
-> > > > > new file mode 100644
-> > > > > index 0000000..3ce7fe8
-> > > > > --- /dev/null
-> > > > > +++ b/arch/arm64/kernel/smccc-call.S
-> > > > > @@ -0,0 +1,34 @@
-> > > > > +/*
-> > > > > + * Copyright (c) 2015, Linaro Limited
-> > > > > + *
-> > > > > + * This program is free software; you can redistribute it and/or modify
-> > > > > + * it under the terms of the GNU General Public License Version 2 as
-> > > > > + * published by the Free Software Foundation.
-> > > > > + *
-> > > > > + * This program is distributed in the hope that it will be useful,
-> > > > > + * but WITHOUT ANY WARRANTY; without even the implied warranty of
-> > > > > + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-> > > > > + * GNU General Public License for more details.
-> > > > > + *
-> > > > > + */
-> > > > > +#include <linux/linkage.h>
-> > > > > +
-> > > > > +#define SMC_PARAM_W0_OFFS      0
-> > > > > +#define SMC_PARAM_W2_OFFS      8
-> > > > > +#define SMC_PARAM_W4_OFFS      16
-> > > > > +#define SMC_PARAM_W6_OFFS      24
-> > > > > +
-> > > > > +/* void smccc_call32(struct smccc_param32 *param) */
-> > > > > +ENTRY(smccc_call32)
-> > > > > +       stp     x28, x30, [sp, #-16]!
-> > > > 
-> > > > Why are you saving lr?
-> > > 
-> > > Agree, no point in saving lr, but I still need to decrease sp with 16 to
-> > > maintain correct alignment. I'll do it with an str instruction instead.
-> > 
-> > That or pad out with xzr
-> > 
-> > > > 
-> > > > > +       mov     x28, x0
-> > > > > +       ldp     w0, w1, [x28, #SMC_PARAM_W0_OFFS]
-> > > > > +       ldp     w2, w3, [x28, #SMC_PARAM_W2_OFFS]
-> > > > > +       ldp     w4, w5, [x28, #SMC_PARAM_W4_OFFS]
-> > > > > +       ldp     w6, w7, [x28, #SMC_PARAM_W6_OFFS]
-> > > > > +       smc     #0
-> > > > > +       stp     w0, w1, [x28, #SMC_PARAM_W0_OFFS]
-> > > > > +       stp     w2, w3, [x28, #SMC_PARAM_W2_OFFS]
-> > > > > +       ldp     x28, x30, [sp], #16
-> > > > > +       ret
-> > > > > +ENDPROC(smccc_call32)
-> > > > 
-> > > > Could we deal with this like we do for PSCI instead? (see
-> > > > __invoke_psci_fn_smc). We could also then rename psci-call.S to fw-call.S
-> > > > and stick this in there too.
-> > > 
-> > > I assume you're referring to when to use "hvc" and "smc".
-> > 
-> > No, I mean use a C prototype to avoid marshalling the parameters in assembly
-> > like this. As Rutland pointed out, the return value is a bit messy, but
-> > the arguments align nicely with the PCS afaict.
+Am Montag, 14. September 2015, 10:05:58 schrieb Sjoerd Simons:
+> Hey Javier,
 > 
-> If possible I'd like the function to have the same prototype for both
-> arm and arm64. For arm it's not possible to supply more than 4
-> parameters. To fully support SMC Calling Convention we need to be able
-> to pass 8 parameters and have 4 return values. The OP-TEE driver in this
-> patch set depends on this. I don't see how we can avoid the marshalling
-> here.
+> On Mon, 2015-09-14 at 09:50 +0200, Javier Martinez Canillas wrote:
+> > Hello Sjoerd,
+> > 
+> > On Mon, Sep 14, 2015 at 9:30 AM, Sjoerd Simons
+> > 
+> > <sjoerd.simons-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org> wrote:
+> > > For the first patch i do prefer to keep them on so we can have get
+> > > some
+> > > more testing  with this board before fine-tuning those things
+> > > (fwiw,
+> > 
+> > Ok.
+> > 
+> > > the rockchip evb board and others with essentially the same pmic
+> > > setup
+> > > all also have them always-on)
+> > 
+> > Yes but I believe that's because it was easier and there are
+> > regulators on these boards that don't need to be always-on as well.
 > 
-> We could have two versions of the SMCCC functions, one simplified which
-> only uses registers and one complete like this one with marshalling.
+> Yes what i was trying to say is that it's not an uncommon to keep these
+> on for convenience while fine-tuning the device-tree setups ;)
 
-Will, what do think about this?
+Also, a lot of drivers do not yet do proper regulator handling (our drm/kms 
+driver as a prime example), so the number of regulators able to being actually 
+turned off is quite slim.
 
-Thanks,
-Jens
+So I guess I'm ok, with handling these once driver components can actually do 
+something with their supplies :-) .
+
+
+Heiko
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
