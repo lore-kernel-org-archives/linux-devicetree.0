@@ -1,82 +1,45 @@
-From: Harini Katakam <harinikatakamlinux@gmail.com>
-Subject: Re: [RFC PATCH 3/3] devicetree: macb: Add optional property tsu-clk
-Date: Mon, 14 Sep 2015 23:04:42 +0530
-Message-ID: <CAFcVEC+KKhJFW5X2ff5ZY3Tp8LRQ-8=T7X7NJ2bBL7c822KYhw@mail.gmail.com>
-References: <1441958258-35441-1-git-send-email-harinik@xilinx.com>
-	<1441958258-35441-4-git-send-email-harinik@xilinx.com>
-	<20150911165256.GT19678@xsjsorenbubuntu>
-	<CAFcVECK=EONgqPq1jt_kti-VKXPWGVj3OSnqUvo0YcR65Z+Phg@mail.gmail.com>
-	<20150914095846.0d8e2d74@bbrezillon>
-	<20150914144423.GG19678@xsjsorenbubuntu>
+From: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 6/7] ARM: brcmstb: mask GIC IRQs on suspend
+Date: Mon, 14 Sep 2015 10:42:09 -0700
+Message-ID: <20150914174209.GQ11487@google.com>
+References: <1434672696-13632-1-git-send-email-computersforpeace@gmail.com>
+ <1434672696-13632-7-git-send-email-computersforpeace@gmail.com>
+ <55F482BC.4050202@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=iso-8859-1
 Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20150914144423.GG19678@xsjsorenbubuntu>
-Sender: linux-kernel-owner@vger.kernel.org
-To: =?UTF-8?Q?S=C3=B6ren_Brinkmann?= <soren.brinkmann@xilinx.com>
-Cc: Boris Brezillon <boris.brezillon@free-electrons.com>, Harini Katakam <harini.katakam@xilinx.com>, Nicolas Ferre <nicolas.ferre@atmel.com>, davem@davemloft.net, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, alexandre.belloni@free-electrons.com, netdev@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Punnaiah Choudary Kalluri <punnaia@xilinx.com>, "michals@xilinx.com" <michals@xilinx.com>, anirudh@xilinx.com
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <55F482BC.4050202-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Gregory Fong <gregory.0xf0-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Soren/Boris,
+One more thing:
 
-On Mon, Sep 14, 2015 at 8:14 PM, S=C3=B6ren Brinkmann
-<soren.brinkmann@xilinx.com> wrote:
-> On Mon, 2015-09-14 at 09:58AM +0200, Boris Brezillon wrote:
->> Hi Harini,
->>
->> On Mon, 14 Sep 2015 09:39:05 +0530
->> Harini Katakam <harinikatakamlinux@gmail.com> wrote:
->>
->> > On Fri, Sep 11, 2015 at 10:22 PM, S=C3=B6ren Brinkmann
->> > <soren.brinkmann@xilinx.com> wrote:
->> > > Hi Harini,
->> > >
->> > > On Fri, 2015-09-11 at 01:27PM +0530, Harini Katakam wrote:
->> > >> Add TSU clock frequency to be used for 1588 support in macb dri=
-ver.
->> > >>
->> > >> Signed-off-by: Harini Katakam <harinik@xilinx.com>
->> > >> ---
->> > >>  Documentation/devicetree/bindings/net/macb.txt |    3 +++
->> > >>  1 file changed, 3 insertions(+)
->> > >>
->> > >> diff --git a/Documentation/devicetree/bindings/net/macb.txt b/D=
-ocumentation/devicetree/bindings/net/macb.txt
->> > >> index b5d7976..f7c0ea8 100644
->> > >> --- a/Documentation/devicetree/bindings/net/macb.txt
->> > >> +++ b/Documentation/devicetree/bindings/net/macb.txt
->> > >> @@ -19,6 +19,9 @@ Required properties:
->> > >>       Optional elements: 'tx_clk'
->> > >>  - clocks: Phandles to input clocks.
->> > >>
->> > >> +Optional properties:
->> > >> +- tsu-clk: Time stamp unit clock frequency used.
->> > >
->> > > Why are we not using the CCF and a clk_get_rate() in the driver?
->> > >
->> >
->> > If the clock source was only internal, we could use this
->> > approach as usual. But TSU clock can be configured to
->> > come from an external clock source or internal.
->>
->> How about declaring a fixed-rate clk [1] if it comes from an externa=
-l
->> clk, and using a clk driver for the internal clk case?
->> This way you'll be able to use the clk API (including the
->> clk_get_rate() function) instead of introducing a new way to retriev=
-e a
->> clk frequency.
->
-> Right. Also, Zynq does already support external clock inputs (actuall=
-y,
-> every clock originates from some external clock/oscillator at some
-> point). Maybe that code needs some additions to handle the TSU clock
-> too. But either way, I can't see why a clock cannot be modeled using =
-the
-> CCF.
+On Sat, Sep 12, 2015 at 12:53:32PM -0700, Florian Fainelli wrote:
+> Le 06/18/15 17:11, Brian Norris a =E9crit :
+> > Lazily-masked IRQs can cause system suspend problems (e.g., spuriou=
+s
+> > wakeups from WFI), so we need to be sure non-wakeup GIC interrupts =
+get
+> > masked, not just disabled, during system suspend.
+> >=20
+> > Signed-off-by: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+>=20
+> Dropped this patch, no longer needed as of 4.3-rc0 with
+> aec89ef72ba6c94420f599dcb684ed66937cdacf ("irqchip/gic: Enable
+> SKIP_SET_WAKE and MASK_ON_SUSPEND")
 
-Ok, I'm going to try this.
+With this patch dropped, then we really don't need
+arch/arm/mach-bcm/brcmstb.c any more, AFAICT. Unless you have more plan=
+s
+for this file, I can send a patch...
 
-Regards,
-Harini
+Brian
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
