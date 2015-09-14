@@ -1,144 +1,200 @@
-From: Y Vo <yvo@apm.com>
-Subject: Re: [PATCH 2/2] Documentation: gpio: Update description for X-Gene
- standby GPIO controller DTS binding
-Date: Mon, 14 Sep 2015 22:06:15 +0700
-Message-ID: <CAL4ahLdOtJ=W2xZbORYFi9ocnqB3oX0OzfC9zGiarBezjuxGwQ@mail.gmail.com>
-References: <1441963332-13329-1-git-send-email-yvo@apm.com>
-	<2971356.lYN9OVO6Id@wuerfel>
-	<CAL4ahLfRdfC=nReqqic=1vahgtD3-E_ncqnNhHsGw04P_HjvVA@mail.gmail.com>
-	<2516438.vcQPNoorc9@wuerfel>
+From: =?utf-8?B?U8O2cmVu?= Brinkmann <soren.brinkmann@xilinx.com>
+Subject: Re: [PATCH v2 1/2] mmc: sdhci-of-arasan: add phy support for
+ sdhci-of-arasan
+Date: Mon, 14 Sep 2015 08:07:51 -0700
+Message-ID: <20150914150751.GI19678@xsjsorenbubuntu>
+References: <1442212161-23234-1-git-send-email-shawn.lin@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <2516438.vcQPNoorc9@wuerfel>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Laxman Dewangan <ldewangan@nvidia.com>, Linus Walleij <linus.walleij@linaro.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Phong Vo <pvo@apm.com>, Toan Le <toanle@apm.com>, Loc Ho <lho@apm.com>, Feng Kan <fkan@apm.com>, Quan Nguyen <qnguyen@apm.com>, Duc Dang <dhdang@apm.com>, patches <patches@apm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-mmc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1442212161-23234-1-git-send-email-shawn.lin@rock-chips.com>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Shawn Lin <shawn.lin@rock-chips.com>
+Cc: Michal Simek <michal.simek@xilinx.com>, Ulf Hansson <ulf.hansson@linaro.org>, linux-kernel@vger.kernel.org, linux-mmc@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Sep 14, 2015 at 9:47 PM, Arnd Bergmann <arnd@arndb.de> wrote:
-> On Monday 14 September 2015 16:39:43 Y Vo wrote:
->> On Mon, Sep 14, 2015 at 4:11 PM, Arnd Bergmann <arnd@arndb.de> wrote:
->> > On Saturday 12 September 2015 12:55:55 Y Vo wrote:
->> >> On Fri, Sep 11, 2015 at 11:45 PM, Arnd Bergmann <arnd@arndb.de> wrote:
->> >> > On Friday 11 September 2015 22:06:58 Y Vo wrote:
->> >>
->> >> Example for configure GPIO_DS13 as interrupt and use as button with
->> >> the current gpio driver:
->> >>         gpio-keys {
->> >>                 compatible = "gpio-keys";
->> >>                 button@1 {
->> >>                         label = "POWER";
->> >>                         linux,code = <116>;
->> >>                         linux,input-type = <0x1>;
->> >>                         interrupts = <0x0 0x2d 0x1>;
->> >>                 };
->> >>         };
->> >
->> > Wait, this looks wrong: the gpio driver doesn't actually see
->> > the connection here and won't be able to configure the interrupt
->> > correctly. The interrupt is already owned by the gpio driver, so
->> > you cannot use it in the button node.
->>
->> In summary:
->> - Our GPIO doesn't support interrupt controller.
->> - There are 6 pins which used the external interrupt from GIC, so all
->> setup for those irqs are from gic driver. The GPIO driver only
->> configure to wire those lines.
->>
->> For your concern:
->> - That's correct: if we use that defined, the gpio driver never saw
->> the connection here (That's why it already is configued at the
->> beginning).
->> - At the first time, we tried to use the define: <&sbgpio 13 1>, it
->> means using the GPIO_DS13, it will go into the GPIO driver to setup,
->> but there is another problem which I have sent out to all of you:
->> + It will go into gpio_keys_setup_key (gpio_keys.c driver) function,
->> then set the irqflags = IRQF_TRIGGER_RISING | IRQF_TRIGGER_FALLING,
->> but the gic only support IRQ_TYPE_LEVEL_HIGH && IRQF_TRIGGER_RISING,
->> so it always returns failed at gpio_keys_setup_key function. Please
->> see the gic_set_type at gic driver.
->
-> Hmm, I see now how the event handling in the gpio-keys driver differs
-> between irq mode and gpio mode, where gpio mode relies on getting
-> a separate event for the release. This is certainly something that
-> could be changed in the gpio-keys driver as an extension, but that
-> seems to be what Laxman Dewangan did when he introduced the irq-mode.
->
->> static int gic_set_type(struct irq_data *d, unsigned int type)
->> {
->>         void __iomem *base = gic_dist_base(d);
->>         unsigned int gicirq = gic_irq(d);
->>
->>         /* Interrupt configuration for SGIs can't be changed */
->>         if (gicirq < 16)
->>                 return -EINVAL;
->>
->>         /* SPIs have restrictions on the supported types */
->>         if (gicirq >= 32 && type != IRQ_TYPE_LEVEL_HIGH &&
->>                             type != IRQ_TYPE_EDGE_RISING)
->>                 return -EINVAL;
->>
->>         return gic_configure_irq(gicirq, type, base, NULL);
->> }
->> + Another issue: in order gpio_key works it needs the status of GPIO.
->> For our chip, when the GPIO is configued as interrupt, we need to
->> access to GIC register to read the real status, it is not acceptable
->> to implement accessing GIC registers at gpio driver. The function
->> irq_get_irqchip_state(..) also doesn't work in our chip too. Because
->> it needs to access different offset.
->
-> I thought we had solved that problem long ago when you first
-> submitted the driver.
->
-> Did 1b7047edfcfb25 ("genirq: Allow the irqchip state of an IRQ to be
-> save/restored") not address the problem for you? You were on
-> Cc to that patch and should have spoken up when the code that was
-> merged was not sufficient.
+Hi Shawn,
 
-Yes, I am in this mail-list too, but I also had a issue on this, I
-think you are still in my submitted for this.
-Currently, irq_get|set_irqchip_state(..) supports access to
-GIC_DIST_ENABLE_SET, GIC_DIST_ACTIVE_SET, GIC_DIST_PENDING_SET. But
-our hw only has the valid value at SPISR register ("[PATCH v4 2/3]
-irqchip: GIC: Add support for irq_{get,set}_irqchip_state"), so I
-still can not use it.
+overall, it looks good to me. I have some questions though.
 
->
->> >> > It also seems to me that the binding cannot distinguish between a
->> >> > line configured as an input and one that is configured as an
->> >> > interrupt, which are for other gpio chips the same thing, but
->> >> > not on this one.  Could this be rectified by using another bit
->> >> > of the second gpio cell? The low bit is used for active-high/active-low,
->> >> > so you could use the second bit for irq/input.
->> >> >
->> >> Do you mean #gpio-cells property and using the high bit of the second
->> >> bit for irq/input  ?
->> >
->> > Yes, that would be an option.
->> I will look into it.
->>
->> Is there possible if:
->> - Keep GPIO8..GPIO as interrupt by default.
->> - Anyone want to use these GPIO pins as GPIO, we will re-configure
->> them to GPIO mode ?
->
-> That's not perfect but better than the patch you sent here.
-> The main disadvantage is that you end up with two references
-> to the same IRQ. It can still work, but only as long as nothing
-> tries to walk the entire DT to parse all the interrupts properties.
->
-Let me think how.
+On Mon, 2015-09-14 at 02:29PM +0800, Shawn Lin wrote:
+> This patch adds Generic PHY access for sdhci-of-arasan. Driver
+> can get PHY handler from dt-binding, and power-on/init the PHY.
+> Also we add pm ops for PHY here if CONFIG_PM_SLEEP is enabled.
+> Currently, it's just mandatory for arasan,sdhci-5.1.
+>=20
+> Signed-off-by: Shawn Lin <shawn.lin@rock-chips.com>
+>=20
+> Serise-changes: 2
+> - Keep phy as a mandatory requirement for arasan,sdhci-5.1
+>=20
+> ---
+>=20
+> Changes in v2: None
+>=20
+>  drivers/mmc/host/sdhci-of-arasan.c | 97 ++++++++++++++++++++++++++++=
+++++++++++
+>  1 file changed, 97 insertions(+)
+>=20
+> diff --git a/drivers/mmc/host/sdhci-of-arasan.c b/drivers/mmc/host/sd=
+hci-of-arasan.c
+> index 75379cb..2c13ef8 100644
+> --- a/drivers/mmc/host/sdhci-of-arasan.c
+> +++ b/drivers/mmc/host/sdhci-of-arasan.c
+> @@ -21,6 +21,7 @@
+> =20
+>  #include <linux/module.h>
+>  #include <linux/of_device.h>
+> +#include <linux/phy/phy.h>
+>  #include "sdhci-pltfm.h"
+> =20
+>  #define SDHCI_ARASAN_CLK_CTRL_OFFSET	0x2c
+> @@ -35,6 +36,7 @@
+>   */
+>  struct sdhci_arasan_data {
+>  	struct clk	*clk_ahb;
+> +	struct phy	*phy;
+>  };
+> =20
+>  static unsigned int sdhci_arasan_get_timeout_clock(struct sdhci_host=
+ *host)
+> @@ -70,6 +72,62 @@ static struct sdhci_pltfm_data sdhci_arasan_pdata =
+=3D {
+> =20
+>  #ifdef CONFIG_PM_SLEEP
+>  /**
+> +  * sdhci_arasan_suspend_phy - Suspend phy method for the driver
+> +  * @phy:        Handler of phy structure
+> +  * Returns 0 on success and error value on error
+> +  *
+> +  * Put the phy in a deactive state.
+> +  */
+> +static int sdhci_arasan_suspend_phy(struct phy *phy)
+> +{
+> +	int ret;
+> +
+> +	ret =3D phy_exit(phy);
+> +	if (ret < 0)
+> +		goto err_phy_exit;
+> +
+> +	ret =3D phy_power_off(phy);
+> +	if (ret < 0)
+> +		goto err_phy_pwr_off;
+> +
+> +	return 0;
+> +
+> +err_phy_pwr_off:
+> +	phy_power_on(phy);
+> +err_phy_exit:
+> +	phy_init(phy);
 
-> It would be ok for gpio-keys, as that does not need both the state
-> and the event together, but for other gpio users, you still need a
-> working driver that supports reading the state and getting an
-> interrupt.
->
-In irq mode, if I reconfigured that gpio pin to gpio mode, then
-reading -> the value is valid.
-Could I do that way badly ? It means switch to gpio mode to read
-value, then switch back to  irq mode.
+Just to confirm, are these actions in the error path correct? E.g.
+if the power_off() call fails, is it safe to call power_on()? Isn't
+the phy still powered on? (this would apply to other error paths too)
 
+> +	return ret;
+> +}
+> +
+> +/**
+> +  * sdhci_arasan_resume_phy - Resume phy method for the driver
+> +  * @phy:        Handler of phy structure
+> +  * Returns 0 on success and error value on error
+> +  *
+> +  * Put the phy in a active state.
+> +  */
+> +static int sdhci_arasan_resume_phy(struct phy *phy)
+> +{
+> +	int ret;
+> +
+> +	ret =3D phy_power_on(phy);
+> +	if (ret < 0)
+> +		goto err_phy_pwr_on;
+> +
+> +	ret =3D phy_init(phy);
+> +	if (ret < 0)
+> +		goto err_phy_init;
+> +
+> +	return 0;
+> +
+> +err_phy_init:
+> +	phy_exit(phy);
+> +err_phy_pwr_on:
+> +	phy_power_off(phy);
+> +	return ret;
+> +}
+> +
+> +/**
+>   * sdhci_arasan_suspend - Suspend method for the driver
+>   * @dev:	Address of the device structure
+>   * Returns 0 on success and error value on error
+> @@ -91,6 +149,12 @@ static int sdhci_arasan_suspend(struct device *de=
+v)
+>  	clk_disable(pltfm_host->clk);
+>  	clk_disable(sdhci_arasan->clk_ahb);
+> =20
+> +	if (sdhci_arasan->phy) {
+> +		ret =3D sdhci_arasan_suspend_phy(sdhci_arasan->phy);
+> +		if (ret < 0)
+> +			return ret;
+> +	}
+> +
+>  	return 0;
+>  }
+> =20
+> @@ -122,6 +186,12 @@ static int sdhci_arasan_resume(struct device *de=
+v)
+>  		return ret;
+>  	}
+> =20
+> +	if (sdhci_arasan->phy) {
+> +		ret =3D sdhci_arasan_resume_phy(sdhci_arasan->phy);
+> +		if (ret < 0)
+> +			return ret;
+> +	}
+> +
+>  	return sdhci_resume_host(host);
+>  }
+>  #endif /* ! CONFIG_PM_SLEEP */
+> @@ -166,6 +236,33 @@ static int sdhci_arasan_probe(struct platform_de=
+vice *pdev)
+>  		goto clk_dis_ahb;
+>  	}
+> =20
+> +	sdhci_arasan->phy =3D NULL;
+> +	if (of_device_is_compatible(pdev->dev.of_node,
+> +				    "arasan,sdhci-5.1")) {
+> +		sdhci_arasan->phy =3D devm_phy_get(&pdev->dev,
+> +						 "phy_arasan");
+> +		if (IS_ERR(sdhci_arasan->phy)) {
+> +			ret =3D -ENODEV;
+> +			dev_err(&pdev->dev, "No phy for arasan,sdhci-5.1.\n");
+> +			goto clk_dis_ahb;
+> +		}
+> +
+> +		ret =3D phy_power_on(sdhci_arasan->phy);
+> +		if (ret < 0) {
+> +			dev_err(&pdev->dev, "phy_power_on err.\n");
+> +			phy_power_off(sdhci_arasan->phy);
+> +			goto clk_dis_ahb;
+> +		}
+> +
+> +		ret =3D phy_init(sdhci_arasan->phy);
+> +		if (ret < 0) {
+> +			dev_err(&pdev->dev, "phy_init err.\n");
+> +			phy_exit(sdhci_arasan->phy);
+> +			phy_power_off(sdhci_arasan->phy);
+> +			goto clk_dis_ahb;
+> +		}
+> +	}
 
->         Arnd
+I assume you looked at options for having the error paths in a
+consolidated location? I guess this may be the nicest solution since al=
+l
+of this is in this conditional block?
+
+=46eel free to add my
+Acked-by: S=C3=B6ren Brinkmann <soren.brinkmann@xilinx.com>
+
+	S=C3=B6ren
