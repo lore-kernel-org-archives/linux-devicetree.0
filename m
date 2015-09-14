@@ -1,60 +1,146 @@
-From: Shannon Zhao <zhaoshenglong@huawei.com>
-Subject: Re: [PATCH] efi/libstub/fdt: Standardize the names of
-	EFI stub parameters
-Date: Mon, 14 Sep 2015 17:31:33 +0800
-Message-ID: <55F693F5.8030203@huawei.com>
-References: <20150910112418.GC29293@leverpostej>	<alpine.DEB.2.02.1509101223580.2672@kaball.uk.xensource.com>	<20150910121514.GE29293@leverpostej>	<alpine.DEB.2.02.1509101429480.2672@kaball.uk.xensource.com>	<20150910144938.GI29293@leverpostej>	<alpine.DEB.2.02.1509101655020.2672@kaball.uk.xensource.com>	<20150910162302.GN29293@leverpostej>	<20150911124643.GB4530@olila.local.net-space.pl>	<alpine.DEB.2.02.1509111410180.2672@kaball.uk.xensource.com>	<CAKv+Gu9rN7_mxk0huX+34HSCC_aTWVTkUZKQMB1+9U56fRnwsA@mail.gmail.com>	<20150911154534.GD4530@olila.local.net-space.pl>	<55F6886D.1090900@huawei.com>
-	<CAKv+Gu-xAAd=xTOh+qZvPDthgbRPLy=YwT4xfi4dS53EgJRh1Q@mail.gmail.com>
+From: Y Vo <yvo@apm.com>
+Subject: Re: [PATCH 2/2] Documentation: gpio: Update description for X-Gene
+ standby GPIO controller DTS binding
+Date: Mon, 14 Sep 2015 16:39:43 +0700
+Message-ID: <CAL4ahLfRdfC=nReqqic=1vahgtD3-E_ncqnNhHsGw04P_HjvVA@mail.gmail.com>
+References: <1441963332-13329-1-git-send-email-yvo@apm.com>
+	<2311005.jUde56dLfB@wuerfel>
+	<CAL4ahLeuPX7viZ5=RaC92=n+jT82=Fa3tF7oH8Q=kE=PKVBSwQ@mail.gmail.com>
+	<2971356.lYN9OVO6Id@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <xen-devel-bounces@lists.xen.org>
-In-Reply-To: <CAKv+Gu-xAAd=xTOh+qZvPDthgbRPLy=YwT4xfi4dS53EgJRh1Q@mail.gmail.com>
-List-Unsubscribe: <http://lists.xen.org/cgi-bin/mailman/options/xen-devel>,
-	<mailto:xen-devel-request@lists.xen.org?subject=unsubscribe>
-List-Post: <mailto:xen-devel@lists.xen.org>
-List-Help: <mailto:xen-devel-request@lists.xen.org?subject=help>
-List-Subscribe: <http://lists.xen.org/cgi-bin/mailman/listinfo/xen-devel>,
-	<mailto:xen-devel-request@lists.xen.org?subject=subscribe>
-Sender: xen-devel-bounces@lists.xen.org
-Errors-To: xen-devel-bounces@lists.xen.org
-To: Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-efi@vger.kernel.org" <linux-efi@vger.kernel.org>, "Ian.Campbell@citrix.com" <Ian.Campbell@citrix.com>, Stefano Stabellini <stefano.stabellini@eu.citrix.com>, Daniel Kiper <daniel.kiper@oracle.com>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "leif.lindholm@linaro.org" <leif.lindholm@linaro.org>, "xen-devel@lists.xen.org" <xen-devel@lists.xen.org>, "julien.grall@citrix.com" <julien.grall@citrix.com>, "freebsd-arm@freebsd.org" <freebsd-arm@freebsd.org>, "matt.fleming@intel.com" <matt.fleming@intel.com>, "christoffer.dall@linaro.org" <christoffer.dall@linaro.org>, "jbeulich@suse.com" <jbeulich@suse.com>, "peter.huangpeng@huawei.com" <peter.huangpeng@huawei.com>, linux-arm-kernel@lists.infradead
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <2971356.lYN9OVO6Id@wuerfel>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: Linus Walleij <linus.walleij@linaro.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Phong Vo <pvo@apm.com>, Toan Le <toanle@apm.com>, Loc Ho <lho@apm.com>, Feng Kan <fkan@apm.com>, Quan Nguyen <qnguyen@apm.com>, Duc Dang <dhdang@apm.com>, patches <patches@apm.com>
 List-Id: devicetree@vger.kernel.org
 
-
-
-On 2015/9/14 17:09, Ard Biesheuvel wrote:
-> On 14 September 2015 at 10:42, Shannon Zhao <zhaoshenglong@huawei.com> wrote:
-> [..]
-> 
+On Mon, Sep 14, 2015 at 4:11 PM, Arnd Bergmann <arnd@arndb.de> wrote:
+> On Saturday 12 September 2015 12:55:55 Y Vo wrote:
+>> On Fri, Sep 11, 2015 at 11:45 PM, Arnd Bergmann <arnd@arndb.de> wrote:
+>> > On Friday 11 September 2015 22:06:58 Y Vo wrote:
+>> >> On Fri, Sep 11, 2015 at 9:47 PM, Arnd Bergmann <arnd@arndb.de> wrote:
+>> >> > On Friday 11 September 2015 21:23:31 Y Vo wrote:
+>> >> >> Is that possible if we change to this approach:
+>> >> >> - Keep all GPIO as GPIO mode by default.
+>> >> >> - If anyone want to use them as interrupt, they must add the interrupt
+>> >> >> node to DT specific-board below:
+>> >> >>
+>> >> >> Example to configure GPIO_DS11, 12, 13 as external irq:
+>> >> >>
+>> >> >> &sbgpio {
+>> >> >>         interrupts = <0x0 0x2b 0x1>,         /* GPIO_DS11 */
+>> >> >>                         <0x0 0x2c 0x1>,         /* GPIO_DS12 */
+>> >> >>                         <0x0 0x2d 0x1>;         /* GPIO_DS13 */
+>> >> >
+>> >> > That is exactly the same as you have in your patch. You should
+>> >> > always list all interrupts that the gpio controller is wired
+>> >> > to, whether they are used or not.
+>> >> >
+>> >> > Ideally, the driver just decides at runtime how to wire that
+>> >> > mux, based on how the gpio is configured by the client driver.
+>> >> > If the client asks for an interrupt (with gpio_to_irq) and is
+>> >> > it is configured as an input, then you connect it to the GIC,
+>> >> > otherwise you leave it to be handled by the gpio chip itself.
+>> >> > Any reason you can't do that?
+>> >> >
+>> >> As I just explained, the GPIO Standby doesn't support the interrupt.
+>> >> Both interrupts are came from GIC, so if the client asks for an
+>> >> interrupt, it will go to the GIC driver (not GPIO Standby driver), so
+>> >> that's my trouble. We can not implement the code to configured the
+>> >> GPIO standby at GIC driver.
+>> >
+>> > So you are saying we merged a binding that is incapable of describing
+>> > the hardware? If that is the case, we may have to go back to
+>> > the drawing board and come up with a working binding.
+>> >
+>> > One part that I don't understand yet is how the driver handles
+>> > irqs to start with, as it does not register a nested irq domain
+>> > or irqchip, so I'm guessing that client drivers cannot actually
+>> > use the IRQ functionality. Is that right?
+>> For our case the irq_domain is in irq-gic driver, the GPIO driver only
+>> is responsible to wire 2 the external irq of GIC to GPIO pin.
 >>
->> It only needs to apply following patch to fix a bug in Linux kernel when
->> mapping EFI_MEMORY_RUNTIME memory.
->>
-> 
-> Could you explain why you think efi_virtmap_init() should fail if
-> there are no EFI_MEMORY_RUNTIME regions?
-> 
+>> Example for configure GPIO_DS13 as interrupt and use as button with
+>> the current gpio driver:
+>>         gpio-keys {
+>>                 compatible = "gpio-keys";
+>>                 button@1 {
+>>                         label = "POWER";
+>>                         linux,code = <116>;
+>>                         linux,input-type = <0x1>;
+>>                         interrupts = <0x0 0x2d 0x1>;
+>>                 };
+>>         };
+>
+> Wait, this looks wrong: the gpio driver doesn't actually see
+> the connection here and won't be able to configure the interrupt
+> correctly. The interrupt is already owned by the gpio driver, so
+> you cannot use it in the button node.
 
-My understanding is that if there are no EFI_MEMORY_RUNTIME regions, it
-means we can't use runtime services and should not set the bit
-EFI_RUNTIME_SERVICES of efi.flags. But if efi_virtmap_init() return
-true, the bit will be set.
+In summary:
+- Our GPIO doesn't support interrupt controller.
+- There are 6 pins which used the external interrupt from GIC, so all
+setup for those irqs are from gic driver. The GPIO driver only
+configure to wire those lines.
 
-> The absence of such regions is allowed by the spec, so
-> efi_virtmap_init() is correct imo to return success.
-> 
-Sorry, not well know about the spec. Could you point out where the spec
-says this?
+For your concern:
+- That's correct: if we use that defined, the gpio driver never saw
+the connection here (That's why it already is configued at the
+beginning).
+- At the first time, we tried to use the define: <&sbgpio 13 1>, it
+means using the GPIO_DS13, it will go into the GPIO driver to setup,
+but there is another problem which I have sent out to all of you:
++ It will go into gpio_keys_setup_key (gpio_keys.c driver) function,
+then set the irqflags = IRQF_TRIGGER_RISING | IRQF_TRIGGER_FALLING,
+but the gic only support IRQ_TYPE_LEVEL_HIGH && IRQF_TRIGGER_RISING,
+so it always returns failed at gpio_keys_setup_key function. Please
+see the gic_set_type at gic driver.
 
-> If you are trying to work around the issue where Xen does not expose
-> any Runtime Services regions, there is simply no way to do that and be
-> still UEFI compliant. I have suggested before that we should perhaps
-> tolerate this anyway, by considering the case where the EFI System
-> Table has a NULL runtime services pointer. But rigging
-> efi_virtmap_init() like this is really not the way to achieve that.
-> 
+static int gic_set_type(struct irq_data *d, unsigned int type)
+{
+        void __iomem *base = gic_dist_base(d);
+        unsigned int gicirq = gic_irq(d);
 
--- 
-Shannon
+        /* Interrupt configuration for SGIs can't be changed */
+        if (gicirq < 16)
+                return -EINVAL;
+
+        /* SPIs have restrictions on the supported types */
+        if (gicirq >= 32 && type != IRQ_TYPE_LEVEL_HIGH &&
+                            type != IRQ_TYPE_EDGE_RISING)
+                return -EINVAL;
+
+        return gic_configure_irq(gicirq, type, base, NULL);
+}
++ Another issue: in order gpio_key works it needs the status of GPIO.
+For our chip, when the GPIO is configued as interrupt, we need to
+access to GIC register to read the real status, it is not acceptable
+to implement accessing GIC registers at gpio driver. The function
+irq_get_irqchip_state(..) also doesn't work in our chip too. Because
+it needs to access different offset.
+
+>
+>> >
+>> > It also seems to me that the binding cannot distinguish between a
+>> > line configured as an input and one that is configured as an
+>> > interrupt, which are for other gpio chips the same thing, but
+>> > not on this one.  Could this be rectified by using another bit
+>> > of the second gpio cell? The low bit is used for active-high/active-low,
+>> > so you could use the second bit for irq/input.
+>> >
+>> Do you mean #gpio-cells property and using the high bit of the second
+>> bit for irq/input  ?
+>
+> Yes, that would be an option.
+I will look into it.
+
+Is there possible if:
+- Keep GPIO8..GPIO as interrupt by default.
+- Anyone want to use these GPIO pins as GPIO, we will re-configure
+them to GPIO mode ?
+
+
+>
+>         Arnd
