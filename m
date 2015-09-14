@@ -1,113 +1,202 @@
-From: Javier Martinez Canillas <javier@dowhile0.org>
-Subject: Re: [PATCH 2/2] ARM: dts: rockchip: Add dtb for the Radxa Rock 2
- Square board
-Date: Mon, 14 Sep 2015 01:00:00 +0200
-Message-ID: <CABxcv=nRjge1qMeoXt6U6McKbv30oYUhh9C417mX0B=bt9Jg-g@mail.gmail.com>
-References: <1442011005-4828-1-git-send-email-sjoerd.simons@collabora.co.uk>
-	<1442011005-4828-2-git-send-email-sjoerd.simons@collabora.co.uk>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1442011005-4828-2-git-send-email-sjoerd.simons@collabora.co.uk>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Sjoerd Simons <sjoerd.simons@collabora.co.uk>
-Cc: Heiko Stuebner <heiko@sntech.de>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Russell King <linux@arm.linux.org.uk>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Linux Kernel <linux-kernel@vger.kernel.org>, linux-rockchip@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+From: Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Subject: [PATCH v3 1/2] ARM: dts: Split audio configuration to separate
+ exynos5422-odroidxu3-audio
+Date: Mon, 14 Sep 2015 09:47:48 +0900
+Message-ID: <1442191669-3366-1-git-send-email-k.kozlowski@samsung.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Kukjin Kim <kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Javier Martinez Canillas <javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello Sjoerd,
+The Odroid XU4 board does not have audio codec so before adding DTS for
+new board split the audio codec to separate DTSI file. Include the audio codec
+DTSI in Odroid XU3 and XU3-Lite boards.
 
-On Sat, Sep 12, 2015 at 12:36 AM, Sjoerd Simons
-<sjoerd.simons@collabora.co.uk> wrote:
+Signed-off-by: Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Reviewed-by: Javier Martinez Canillas <javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>
 
-[snip]
+---
+Changes since v2:
+1. Add Javier's reviewed-by.
 
-> +
-> +               regulators {
-> +                       vcc_ddr: REG1 {
-> +                               regulator-name = "VCC_DDR";
-> +                               regulator-min-microvolt = <1200000>;
-> +                               regulator-max-microvolt = <1200000>;
-> +                               regulator-always-on;
-> +                       };
-> +
-> +                       vcc_io: REG2 {
-> +                               regulator-name = "VCC_IO";
-> +                               regulator-min-microvolt = <3300000>;
-> +                               regulator-max-microvolt = <3300000>;
-> +                               regulator-always-on;
-> +                       };
-> +
-> +                       vdd_log: REG3 {
-> +                               regulator-name = "VDD_LOG";
-> +                               regulator-min-microvolt = <1000000>;
-> +                               regulator-max-microvolt = <1000000>;
-> +                               regulator-always-on;
-> +                       };
-> +
-> +                       vcc_20: REG4 {
-> +                               regulator-name = "VCC_20";
-> +                               regulator-min-microvolt = <2000000>;
-> +                               regulator-max-microvolt = <2000000>;
-> +                               regulator-always-on;
-> +                       };
-> +
-> +                       vccio_sd: REG5 {
-> +                               regulator-name = "VCCIO_SD";
-> +                               regulator-min-microvolt = <3300000>;
-> +                               regulator-max-microvolt = <3300000>;
-> +                               regulator-always-on;
-> +                       };
-> +
-> +                       vdd10_lcd: REG6 {
-> +                               regulator-name = "VDD10_LCD";
-> +                               regulator-min-microvolt = <1000000>;
-> +                               regulator-max-microvolt = <1000000>;
-> +                               regulator-always-on;
-> +                       };
-> +
-> +                       vcca_codec: REG7 {
-> +                               regulator-name = "VCCA_CODEC";
-> +                               regulator-min-microvolt = <3300000>;
-> +                               regulator-max-microvolt = <3300000>;
-> +                               regulator-always-on;
-> +                       };
-> +
-> +                       vcca_tp: REG8 {
-> +                               regulator-name = "VCCA_TP";
-> +                               regulator-min-microvolt = <3300000>;
-> +                               regulator-max-microvolt = <3300000>;
-> +                               regulator-always-on;
-> +                       };
-> +
-> +                       vccio_pmu: REG9 {
-> +                               regulator-name = "VCCIO_PMU";
-> +                               regulator-min-microvolt = <3300000>;
-> +                               regulator-max-microvolt = <3300000>;
-> +                               regulator-always-on;
-> +                       };
-> +
-> +                       vdd_10: REG10 {
-> +                               regulator-name = "VDD_10";
-> +                               regulator-min-microvolt = <1000000>;
-> +                               regulator-max-microvolt = <1000000>;
-> +                               regulator-always-on;
-> +                       };
-> +
-> +                       vcc_18: REG11 {
-> +                               regulator-name = "VCC_18";
-> +                               regulator-min-microvolt = <1800000>;
-> +                               regulator-max-microvolt = <1800000>;
-> +                               regulator-always-on;
-> +                       };
-> +
-> +                       vcc18_lcd: REG12 {
-> +                               regulator-name = "VCC18_LCD";
-> +                               regulator-min-microvolt = <1800000>;
-> +                               regulator-max-microvolt = <1800000>;
-> +                               regulator-always-on;
-> +                       };
+Changes since v1:
+1. New patch (refactor).
+---
+ arch/arm/boot/dts/exynos5422-odroidxu3-audio.dtsi  | 61 ++++++++++++++++++++++
+ arch/arm/boot/dts/exynos5422-odroidxu3-common.dtsi | 47 -----------------
+ arch/arm/boot/dts/exynos5422-odroidxu3-lite.dts    |  1 +
+ arch/arm/boot/dts/exynos5422-odroidxu3.dts         |  1 +
+ 4 files changed, 63 insertions(+), 47 deletions(-)
+ create mode 100644 arch/arm/boot/dts/exynos5422-odroidxu3-audio.dtsi
 
-Should all these regulators really need to be always-on?
+diff --git a/arch/arm/boot/dts/exynos5422-odroidxu3-audio.dtsi b/arch/arm/boot/dts/exynos5422-odroidxu3-audio.dtsi
+new file mode 100644
+index 000000000000..9493923ec652
+--- /dev/null
++++ b/arch/arm/boot/dts/exynos5422-odroidxu3-audio.dtsi
+@@ -0,0 +1,61 @@
++/*
++ * Hardkernel Odroid XU3 Audio Codec device tree source
++ *
++ * Copyright (c) 2015 Krzysztof Kozlowski
++ * Copyright (c) 2014 Collabora Ltd.
++ * Copyright (c) 2013 Samsung Electronics Co., Ltd.
++ *		http://www.samsung.com
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License version 2 as
++ * published by the Free Software Foundation.
++*/
++
++/ {
++	sound: sound {
++		compatible = "simple-audio-card";
++
++		simple-audio-card,name = "Odroid-XU3";
++		simple-audio-card,widgets =
++			"Headphone", "Headphone Jack",
++			"Speakers", "Speakers";
++		simple-audio-card,routing =
++			"Headphone Jack", "HPL",
++			"Headphone Jack", "HPR",
++			"Headphone Jack", "MICBIAS",
++			"IN1", "Headphone Jack",
++			"Speakers", "SPKL",
++			"Speakers", "SPKR";
++
++		simple-audio-card,format = "i2s";
++		simple-audio-card,bitclock-master = <&link0_codec>;
++		simple-audio-card,frame-master = <&link0_codec>;
++
++		simple-audio-card,cpu {
++			sound-dai = <&i2s0 0>;
++			system-clock-frequency = <19200000>;
++		};
++
++		link0_codec: simple-audio-card,codec {
++			sound-dai = <&max98090>;
++			clocks = <&i2s0 CLK_I2S_CDCLK>;
++		};
++	};
++};
++
++&hsi2c_5 {
++	status = "okay";
++	max98090: max98090@10 {
++		compatible = "maxim,max98090";
++		reg = <0x10>;
++		interrupt-parent = <&gpx3>;
++		interrupts = <2 0>;
++		clocks = <&i2s0 CLK_I2S_CDCLK>;
++		clock-names = "mclk";
++		#sound-dai-cells = <0>;
++	};
++};
++
++&i2s0 {
++	status = "okay";
++};
+diff --git a/arch/arm/boot/dts/exynos5422-odroidxu3-common.dtsi b/arch/arm/boot/dts/exynos5422-odroidxu3-common.dtsi
+index 90d298dce851..2f0fb8678e9f 100644
+--- a/arch/arm/boot/dts/exynos5422-odroidxu3-common.dtsi
++++ b/arch/arm/boot/dts/exynos5422-odroidxu3-common.dtsi
+@@ -80,36 +80,6 @@
+ 		};
+ 	};
+ 
+-	sound: sound {
+-		compatible = "simple-audio-card";
+-
+-		simple-audio-card,name = "Odroid-XU3";
+-		simple-audio-card,widgets =
+-			"Headphone", "Headphone Jack",
+-			"Speakers", "Speakers";
+-		simple-audio-card,routing =
+-			"Headphone Jack", "HPL",
+-			"Headphone Jack", "HPR",
+-			"Headphone Jack", "MICBIAS",
+-			"IN1", "Headphone Jack",
+-			"Speakers", "SPKL",
+-			"Speakers", "SPKR";
+-
+-		simple-audio-card,format = "i2s";
+-		simple-audio-card,bitclock-master = <&link0_codec>;
+-		simple-audio-card,frame-master = <&link0_codec>;
+-
+-		simple-audio-card,cpu {
+-			sound-dai = <&i2s0 0>;
+-			system-clock-frequency = <19200000>;
+-		};
+-
+-		link0_codec: simple-audio-card,codec {
+-			sound-dai = <&max98090>;
+-			clocks = <&i2s0 CLK_I2S_CDCLK>;
+-		};
+-	};
+-
+ 	fan0: pwm-fan {
+ 		compatible = "pwm-fan";
+ 		pwms = <&pwm 0 20972 0>;
+@@ -376,19 +346,6 @@
+ 	};
+ };
+ 
+-&hsi2c_5 {
+-	status = "okay";
+-	max98090: max98090@10 {
+-		compatible = "maxim,max98090";
+-		reg = <0x10>;
+-		interrupt-parent = <&gpx3>;
+-		interrupts = <2 0>;
+-		clocks = <&i2s0 CLK_I2S_CDCLK>;
+-		clock-names = "mclk";
+-		#sound-dai-cells = <0>;
+-	};
+-};
+-
+ &i2c_2 {
+ 	samsung,i2c-sda-delay = <100>;
+ 	samsung,i2c-max-bus-freq = <66000>;
+@@ -400,10 +357,6 @@
+ 	};
+ };
+ 
+-&i2s0 {
+-	status = "okay";
+-};
+-
+ &mfc {
+ 	samsung,mfc-r = <0x43000000 0x800000>;
+ 	samsung,mfc-l = <0x51000000 0x800000>;
+diff --git a/arch/arm/boot/dts/exynos5422-odroidxu3-lite.dts b/arch/arm/boot/dts/exynos5422-odroidxu3-lite.dts
+index c06882bbb822..9c0cea99c996 100644
+--- a/arch/arm/boot/dts/exynos5422-odroidxu3-lite.dts
++++ b/arch/arm/boot/dts/exynos5422-odroidxu3-lite.dts
+@@ -13,6 +13,7 @@
+ 
+ /dts-v1/;
+ #include "exynos5422-odroidxu3-common.dtsi"
++#include "exynos5422-odroidxu3-audio.dtsi"
+ 
+ / {
+ 	model = "Hardkernel Odroid XU3 Lite";
+diff --git a/arch/arm/boot/dts/exynos5422-odroidxu3.dts b/arch/arm/boot/dts/exynos5422-odroidxu3.dts
+index 78e6a502f320..d8647a469a86 100644
+--- a/arch/arm/boot/dts/exynos5422-odroidxu3.dts
++++ b/arch/arm/boot/dts/exynos5422-odroidxu3.dts
+@@ -12,6 +12,7 @@
+ 
+ /dts-v1/;
+ #include "exynos5422-odroidxu3-common.dtsi"
++#include "exynos5422-odroidxu3-audio.dtsi"
+ 
+ / {
+ 	model = "Hardkernel Odroid XU3";
+-- 
+1.9.1
 
-Best regards,
-Javier
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
