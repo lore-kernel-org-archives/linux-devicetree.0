@@ -1,58 +1,66 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 02/16] PM / OPP: Add 'opp-microvolt-triplets' binding
-Date: Mon, 14 Sep 2015 15:30:29 -0500
-Message-ID: <55F72E65.6000205@kernel.org>
-References: <cover.1441972771.git.viresh.kumar@linaro.org>
- <254dd353453a495bb0921fa23e430428484f36fa.1441972771.git.viresh.kumar@linaro.org>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH] ARM: dts: sun6i: Add accelerometer on Columbus A31
+Date: Mon, 14 Sep 2015 22:35:34 +0200
+Message-ID: <20150914203534.GI4684@lukather>
+References: <1442168761-2564-1-git-send-email-hdegoede@redhat.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <254dd353453a495bb0921fa23e430428484f36fa.1441972771.git.viresh.kumar@linaro.org>
-Sender: linux-pm-owner@vger.kernel.org
-To: Viresh Kumar <viresh.kumar@linaro.org>, Rafael Wysocki <rjw@rjwysocki.net>, nm@ti.com, sboyd@codeaurora.org
-Cc: linaro-kernel@lists.linaro.org, linux-pm@vger.kernel.org, lee.jones@linaro.org, devicetree@vger.kernel.org, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, open list <linux-kernel@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="IJAclU0AInkryoed"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1442168761-2564-1-git-send-email-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Sander Vermin <sander-wENMetUwf8VmR6Xm/wNWPw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 09/11/2015 07:01 AM, Viresh Kumar wrote:
-> If 'opp-microvolt' is used to specify values for multiple regulators,
-> then we need this additional information to know if the values passed
-> should be treated as <target> or <target min max>.
 
-Can't you determine this implicitly from # of cells / # of regulators
-being either 1 or 3?
+--IJAclU0AInkryoed
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> 
-> This is because, DT doesn't differentiate between these two styles:
-> 
-> prop = <x>, <y>, <z>;
-> prop = <x y z>;
-> 
-> Cc: devicetree@vger.kernel.org
-> Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
-> ---
->  Documentation/devicetree/bindings/opp/opp.txt | 14 ++++++++++++++
->  1 file changed, 14 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/opp/opp.txt b/Documentation/devicetree/bindings/opp/opp.txt
-> index 8759bc4783ed..719603b87353 100644
-> --- a/Documentation/devicetree/bindings/opp/opp.txt
-> +++ b/Documentation/devicetree/bindings/opp/opp.txt
-> @@ -76,6 +76,16 @@ This describes the OPPs belonging to a device. This node can have following
->    present here is important, as that should match the order in which values are
->    present in 'opp-microvolt' and 'opp-microamp' properties.
->  
-> +- opp-microvolt-triplets: This is a required property, only if multiple supplies
-> +  are available for the device. Otherwise it is ignored.
-> +
-> +  'opp-microvolt' can be present in two forms: <target> or <target min max>, per
-> +  power-supply. 'opp-microvolt-triplets' property is used to find the form in
-> +  which 'opp-microvolt' is present.
-> +
-> +  If present, then 'opp-microvolt' must be present in <target min max> form,
-> +  else in <target> form.
+On Sun, Sep 13, 2015 at 08:26:01PM +0200, Hans de Goede wrote:
+> From: Sander Vermin <sander-wENMetUwf8VmR6Xm/wNWPw@public.gmane.org>
+>=20
+> Add mma8452 accelerometer to sun6i-a31-colombus.dts.
+>=20
+> Signed-off-by: Sander Vermin <sander-wENMetUwf8VmR6Xm/wNWPw@public.gmane.org>
+> Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 
-This implies that bindings currently with triplets are wrong since they
-will be missing opp-microvolt-triplets.
+Applied, thanks!
 
-Rob
+Maxime
+
+--=20
+Maxime Ripard, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
+
+--IJAclU0AInkryoed
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBAgAGBQJV9y+WAAoJEBx+YmzsjxAgeaYP/1SYvDPE4W5DQjEleOqARLfA
+5RfdAclFcUjkrhb8Ync/86iDnj0KikDaiikJVTUVR77xOAx4GJU5LeJwz7valMUe
+9f5PxoxuDpijBO8dGNYj3VPKq+WhdPGRBZvHQhmiL9OC2V0JTW7r4weQDP8wya3m
+ckXk4JFHO/fpQnPV/aSKXMs/oRwFmVXmSXdEt8gvtbENuXfn0bsWSquGaw5srO+M
+B5sKcbw+dnD8kWd91QrTnXy4PER+mN/dCgZroWkNq25iwSD44mWugN7UxuS3QJA5
+pvlGt9DBczjh6rrlN83ICdsU5v3h37Fe8Lw821cGzlykMPjVYaUQxiLFJrv6o5Ig
+O4+XjOTJNFS/ZmptPQinIDM8xUI8BKlQSaw5IPY7qgVzw/kR4OJ6c+4vRvIUW5h7
+TPP7EGoKS62Bn5GGsKJLUCYIiAEibhjBx2E6g9EEM9gmqErBVXYmnocC1yXdd5rf
+K076lqqOsTnVje3fuD6BA+h3HDkpPAcIIHwwqU+XioqZzCvSJ6AtooiDTdZ1V0sG
+6Xiv9HcAAXi/pJhnk3nbKNKMw/ylIehCmsvkrVEPo4qNg638yOOIOLPaIT3U/CS/
+H2va+cUIr7Oo0LfxlmL6GQQtP6chmnQYNEyKpNal9U1qz7onW2QlxSFsBcIcX1pv
+t/+wZfT9jz2XJDhj8kbH
+=x4TR
+-----END PGP SIGNATURE-----
+
+--IJAclU0AInkryoed--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
