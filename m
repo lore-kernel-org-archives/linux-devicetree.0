@@ -1,45 +1,65 @@
-From: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-Subject: Re: [PATCH] arm64: dts: Add BUS1 instance pinctrl support
-Date: Mon, 14 Sep 2015 14:51:43 +0900
-Message-ID: <55F6606F.3090000@samsung.com>
-References: <1440761134-27639-1-git-send-email-alim.akhtar@samsung.com>
- <55E3E95D.50003@samsung.com> <55F6563A.2030107@samsung.com>
+From: Fengguang Wu <fengguang.wu@intel.com>
+Subject: Re: [PATCH] ahci: qoriq: fixed using uninitialized variable warnings
+Date: Mon, 14 Sep 2015 12:04:56 +0800
+Message-ID: <20150914040456.GA21102@wfg-t540p.sh.intel.com>
+References: <1441790182-20248-1-git-send-email-Yuantian.Tang@freescale.com>
+ <20150909140130.GB22909@mtj.duckdns.org>
+ <DM2PR03MB5746E6637A2BC5081EC5428FA500@DM2PR03MB574.namprd03.prod.outlook.com>
+ <20150911135431.GP8114@mtj.duckdns.org>
+ <DM2PR03MB574FA9FAB46F5091AA8746CFA5D0@DM2PR03MB574.namprd03.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <55F6563A.2030107@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Alim Akhtar <alim.akhtar@samsung.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org
-Cc: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, catalin.marinas@arm.com, will.deacon@arm.com, kgene@kernel.org, gautam.vivek@samsung.com
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-ide-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <DM2PR03MB574FA9FAB46F5091AA8746CFA5D0@DM2PR03MB574.namprd03.prod.outlook.com>
+Sender: linux-ide-owner@vger.kernel.org
+To: Yuantian Tang <Yuantian.Tang@freescale.com>
+Cc: Tejun Heo <tj@kernel.org>, "hdegoede@redhat.com" <hdegoede@redhat.com>, "linux-ide@vger.kernel.org" <linux-ide@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 14.09.2015 14:08, Alim Akhtar wrote:
-> Hi
+Yuantian,
+
+It's cross compiling on ARCH=openrisc.
+
+Thanks,
+Fengguang
+
+On Mon, Sep 14, 2015 at 03:02:27AM +0000, Yuantian Tang wrote:
+> Hello Tejun,
 > 
-> On 08/31/2015 11:12 AM, Krzysztof Kozlowski wrote:
->> On 28.08.2015 20:25, Alim Akhtar wrote:
->>> This adds BUS1 instance pinctrl for exynos7 soc.
->>>
->>> Signed-off-by: Alim Akhtar <alim.akhtar@samsung.com>
->>> ---
->>>   arch/arm64/boot/dts/exynos/exynos7-pinctrl.dtsi |  111
->>> +++++++++++++++++++++++
->>>   arch/arm64/boot/dts/exynos/exynos7.dtsi         |    7 ++
->>>   2 files changed, 118 insertions(+)
->>
->> The "etc1" GPIO in my datasheet is not fully documented but the rest
->> looks good:
->>
-> Ok will send v2 and remove etc1 gpio node.
-
-You don't have to. I mentioned it only for reference that I cannot
-review the etc GPIO node because it is not mentioned in my datasheet.
-However you may have different (e.g. newer) datasheet and etc1 could be
-documented there.
-
-I applied the first version of patch some time ago (your response is
-after two weeks). Do you want me to replace it with v2?
-
-Best regards,
-Krzysztof
+> The toolchain I used is:
+> gcc version 4.8.3 20140401 (prerelease) (Linaro GCC 4.8-2014.04)
+> 
+> I have not found this warning using this tool chain with -Wuninitialized flag.
+> 
+> Regards,
+> Yuantian 
+> 
+> > -----Original Message-----
+> > From: Tejun Heo [mailto:htejun@gmail.com] On Behalf Of Tejun Heo
+> > Sent: Friday, September 11, 2015 9:55 PM
+> > To: Tang Yuantian-B29983 <Yuantian.Tang@freescale.com>
+> > Cc: hdegoede@redhat.com; linux-ide@vger.kernel.org; linux-
+> > kernel@vger.kernel.org; devicetree@vger.kernel.org; Fengguang Wu
+> > <fengguang.wu@intel.com>
+> > Subject: Re: [PATCH] ahci: qoriq: fixed using uninitialized variable warnings
+> > 
+> > Hello, Yuantian.
+> > 
+> > On Fri, Sep 11, 2015 at 05:27:25AM +0000, Yuantian Tang wrote:
+> > > Hi Tejun,
+> > >
+> > > Could you please take the version 1 patch?
+> > > The version 2 patch can't address these warnings, and the version 1 can
+> > definitely remove them.
+> > > In this case, that would cause any hidden bugs, so no worries.
+> > 
+> > Ugh... I really hate changes which are made to just work around compiler
+> > silliness.  If this is something which goes away with newer gcc, Fengguang can
+> > just make it as a known false positive.  Yuantian, which compiler are you
+> > using?
+> > 
+> > Thanks.
+> > 
+> > --
+> > tejun
