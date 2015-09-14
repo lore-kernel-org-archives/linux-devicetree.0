@@ -1,38 +1,59 @@
-From: Tejun Heo <tj@kernel.org>
-Subject: Re: [PATCH] ahci: qoriq: fixed using uninitialized variable warnings
-Date: Mon, 14 Sep 2015 12:00:41 -0400
-Message-ID: <20150914160041.GD20047@mtj.duckdns.org>
-References: <1441790182-20248-1-git-send-email-Yuantian.Tang@freescale.com>
- <DM2PR03MB574B7F5FBB2844161CD7482FA5D0@DM2PR03MB574.namprd03.prod.outlook.com>
- <20150914065432.GA25168@wfg-t540p.sh.intel.com>
- <4524877.YJljz8o2LZ@wuerfel>
+From: Punit Agrawal <punit.agrawal@arm.com>
+Subject: Re: [PATCH v3 1/5] Documentation: add DT bindings for ARM SCPI sensors
+Date: Mon, 14 Sep 2015 17:03:16 +0100
+Message-ID: <9hh7fntdm4b.fsf@e105922-lin.cambridge.arm.com>
+References: <1442235619-4029-1-git-send-email-punit.agrawal@arm.com>
+	<1442235619-4029-2-git-send-email-punit.agrawal@arm.com>
+	<20150914131448.GC7002@leverpostej>
+	<9hhh9mxf7lg.fsf@e105922-lin.cambridge.arm.com>
+	<20150914134949.GE7002@leverpostej>
+	<9hhk2rtdq1f.fsf@e105922-lin.cambridge.arm.com>
+	<20150914144330.GH7002@leverpostej>
+	<9hhfv2hdozu.fsf@e105922-lin.cambridge.arm.com>
+	<20150914151540.GI7002@leverpostej>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-ide-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <4524877.YJljz8o2LZ@wuerfel>
-Sender: linux-ide-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Fengguang Wu <fengguang.wu@intel.com>, Yuantian Tang <Yuantian.Tang@freescale.com>, "hdegoede@redhat.com" <hdegoede@redhat.com>, "linux-ide@vger.kernel.org" <linux-ide@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <20150914151540.GI7002@leverpostej> (Mark Rutland's message of
+	"Mon, 14 Sep 2015 16:15:40 +0100")
+Sender: linux-pm-owner@vger.kernel.org
+To: Mark Rutland <mark.rutland@arm.com>
+Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Sudeep Holla <Sudeep.Holla@arm.com>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "lm-sensors@lm-sensors.org" <lm-sensors@lm-sensors.org>, Liviu Dudau <Liviu.Dudau@arm.com>, "edubezval@gmail.com" <edubezval@gmail.com>, "linux@roeck-us.net" <linux@roeck-us.net>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello, Arnd.
+Mark Rutland <mark.rutland@arm.com> writes:
 
-On Mon, Sep 14, 2015 at 09:45:33AM +0200, Arnd Bergmann wrote:
-> In general, we really want to leave drivers with a COMPILE_TEST dependency
-> so they at least get cross-built on x86, ideally on all architectures.
+> On Mon, Sep 14, 2015 at 04:01:09PM +0100, Punit Agrawal wrote:
+>> Mark Rutland <mark.rutland@arm.com> writes:
+>> 
 
-Yeah, as long as it doesn't trigger silly warnings or errors on x86,
-COMPILE_TEST is usually a good idea.
+[...]
 
-> Does something like the below help? I think we really just need to help
-> gcc a little to see the obvious.
+>> 
+>> After seeing the mapping already published, I am wondering if there is
+>> any value in duplicating the information. If there are no objections,
+>> I'll update this patch to add pointers instead.
+>
+> That's fine by me. The important part is that the value is a raw Sensor
+> ID as the FW uses. So long as we state that, the IDs themselves can come
+> from whatever documentation is valid for a particular instance.
+>
+> Thanks for the info!
 
-We already tried cachine qoriq_priv->type in a local.  Not sure this
-would make much difference.  It looks like the warning goes away with
-newer gcc.  I'm inclined to just leave it as-is.
+Sure. I've updated the patch to explain what the valid cell values are
+along with a pointer to platform documentation for Juno R0 and R1.
 
-Thanks.
+I've also added an example to show usage of the sensors to create a
+thermal zone.
 
--- 
-tejun
+I'll post a new version shortly.
+
+Thanks for your having a look.
+
+>
+> Thanks,
+> Mark.
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-pm" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
