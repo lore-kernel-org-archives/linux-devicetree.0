@@ -1,74 +1,50 @@
-From: Shawn Lin <shawn.lin@rock-chips.com>
-Subject: [PATCH v2 2/2] Documentation: bindings: add description of phy for sdhci-of-arasan
-Date: Mon, 14 Sep 2015 14:29:59 +0800
-Message-ID: <1442212199-23277-1-git-send-email-shawn.lin@rock-chips.com>
-References: <1442212161-23234-1-git-send-email-shawn.lin@rock-chips.com>
-Return-path: <linux-mmc-owner@vger.kernel.org>
-In-Reply-To: <1442212161-23234-1-git-send-email-shawn.lin@rock-chips.com>
-Sender: linux-mmc-owner@vger.kernel.org
-To: =Michal Simek <michal.simek@xilinx.com>, Soren Brinkmann <soren.brinkmann@xilinx.com>, Ulf Hansson <ulf.hansson@linaro.org>
-Cc: linux-kernel@vger.kernel.org, linux-mmc@vger.kernel.org, devicetree@vger.kernel.org, Shawn Lin <shawn.lin@rock-chips.com>
+From: "Wu, Songjun" <songjun.wu-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 1/2] ASoC: atmel-classd: add the Audio Class D Amplifier
+ code
+Date: Mon, 14 Sep 2015 14:34:02 +0800
+Message-ID: <55F66A5A.7010502@atmel.com>
+References: <1441086101-15303-1-git-send-email-songjun.wu@atmel.com>
+ <1441086101-15303-2-git-send-email-songjun.wu@atmel.com>
+ <20150903113716.GU12027@sirena.org.uk> <55EC0AF5.8060403@atmel.com>
+ <20150907162350.GV5313@sirena.org.uk> <55EEAC01.3080409@atmel.com>
+ <20150908122322.GB9751@sirena.org.uk> <55EFA478.1000109@atmel.com>
+ <20150909095245.GG9751@sirena.org.uk> <55F0EB68.9070800@atmel.com>
+ <20150911103417.GF12027@sirena.org.uk>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20150911103417.GF12027-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, perex-/Fr2/VpizcU@public.gmane.org, tiwai-IBi9RG/b67k@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This patch adds phys and phy-names for sdhci-of-arasan as required
-properties for arasan,sdhci-5.1, and details the example as well.
-
-Signed-off-by: Shawn Lin <shawn.lin@rock-chips.com>
-
----
-
-Changes in v2:
-- Keep phy as a mandatory requirement for arasan,sdhci-5.1
-
- .../devicetree/bindings/mmc/arasan,sdhci.txt         | 20 ++++++++++++++++++--
- 1 file changed, 18 insertions(+), 2 deletions(-)
-
-diff --git a/Documentation/devicetree/bindings/mmc/arasan,sdhci.txt b/Documentation/devicetree/bindings/mmc/arasan,sdhci.txt
-index da541c3..31b35c3 100644
---- a/Documentation/devicetree/bindings/mmc/arasan,sdhci.txt
-+++ b/Documentation/devicetree/bindings/mmc/arasan,sdhci.txt
-@@ -1,11 +1,12 @@
- Device Tree Bindings for the Arasan SDHCI Controller
- 
--  The bindings follow the mmc[1], clock[2] and interrupt[3] bindings. Only
--  deviations are documented here.
-+  The bindings follow the mmc[1], clock[2], interrupt[3] and phy[4] bindings.
-+  Only deviations are documented here.
- 
-   [1] Documentation/devicetree/bindings/mmc/mmc.txt
-   [2] Documentation/devicetree/bindings/clock/clock-bindings.txt
-   [3] Documentation/devicetree/bindings/interrupt-controller/interrupts.txt
-+  [4] Documentation/devicetree/bindings/phy/phy-bindings.txt
- 
- Required Properties:
-   - compatible: Compatibility string. Must be 'arasan,sdhci-8.9a' or
-@@ -17,6 +18,10 @@ Required Properties:
-   - interrupt-parent: Phandle for the interrupt controller that services
- 		      interrupts for this device.
- 
-+Required Properties for "arasan,sdhci-5.1":
-+  - phys: From PHY bindings: Phandle for the Generic PHY for arasan.
-+  - phy-names:  MUST be "phy_arasan".
-+
- Example:
- 	sdhci@e0100000 {
- 		compatible = "arasan,sdhci-8.9a";
-@@ -26,3 +31,14 @@ Example:
- 		interrupt-parent = <&gic>;
- 		interrupts = <0 24 4>;
- 	} ;
-+
-+	sdhci@e2800000 {
-+		compatible = "arasan,sdhci-5.1";
-+		reg = <0xe2800000 0x1000>;
-+		clock-names = "clk_xin", "clk_ahb";
-+		clocks = <&cru 8>, <&cru 18>;
-+		interrupt-parent = <&gic>;
-+		interrupts = <0 24 4>;
-+		phys = <&emmc_phy>;
-+		phy-names = "phy_arasan";
-+	} ;
--- 
-2.3.7
 
 
+On 9/11/2015 18:34, Mark Brown wrote:
+> On Thu, Sep 10, 2015 at 10:31:04AM +0800, Wu, Songjun wrote:
+>> On 9/9/2015 17:52, Mark Brown wrote:
+>
+>>> Yes, that's what's going to end up happening but it's not how controls
+>>> are expected to behave - applications will expect changing one control
+>>> to leave others unaffected so it's better to return an error rather than
+>>> change the other control.
+>
+>> If application change non EQ controls, the others will be unaffected. But
+>> the classD IP can only supports one EQ control at once, these three EQ
+>> controls point to the same register field, if application set a different EQ
+>> control, the error occurs, there will be many errors, it's not very
+>> reasonable to application. The best way I think is if application set one EQ
+>> control, the other EQ controls will change to 0dB, it's also consistent with
+>> fact.
+>
+> There's no really good solutions here - this is why my initial
+> suggestion was to have a single enumerated control.
+>
+You are right, your suggestion is reasonable, to have a single 
+enumerated control. The second version will be made and sent soon.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
