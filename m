@@ -1,82 +1,51 @@
-From: Felipe Balbi <balbi@ti.com>
-Subject: Re: [PATCH 6/6] ARM: dts: set up trigger type for edt-ft5x06
- interrupts
-Date: Mon, 14 Sep 2015 16:24:26 -0500
-Message-ID: <20150914212426.GA9968@saruman.tx.rr.com>
-References: <5044530af510d6686e78f8dfa912d89ef824f899.1442079408.git.dmitry.torokhov@gmail.com>
- <2adcbfd1d5b237598d37edcbeec4a8dbd443f36f.1442079408.git.dmitry.torokhov@gmail.com>
-Reply-To: <balbi@ti.com>
+From: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 3/3] ARM: brcmstb: Setup BIU control registers during boot
+Date: Mon, 14 Sep 2015 14:29:30 -0700
+Message-ID: <20150914212930.GA64093@google.com>
+References: <1442260369-6575-1-git-send-email-f.fainelli@gmail.com>
+ <1442260369-6575-4-git-send-email-f.fainelli@gmail.com>
+ <20150914204833.GA53555@google.com>
+ <55F73A47.9070900@gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="mP3DRpeJDSE+ciuQ"
-Return-path: <linux-input-owner@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <2adcbfd1d5b237598d37edcbeec4a8dbd443f36f.1442079408.git.dmitry.torokhov@gmail.com>
-Sender: linux-input-owner@vger.kernel.org
-To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc: linux-input@vger.kernel.org, linux-kernel@vger.kernel.org, Franklin S Cooper Jr <fcooper@ti.com>, Maxime Ripard <maxime.ripard@free-electrons.com>, Lothar =?iso-8859-1?Q?Wa=DFmann?= <LW@KARO-electronics.de>, Tony Lindgren <tony@atomide.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <kernel@pengutronix.de>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+In-Reply-To: <55F73A47.9070900-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, gregory.0xf0-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
---mP3DRpeJDSE+ciuQ
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On Mon, Sep 14, 2015 at 02:21:11PM -0700, Florian Fainelli wrote:
+> On 14/09/15 13:48, Brian Norris wrote:
+> > On Mon, Sep 14, 2015 at 12:52:49PM -0700, Florian Fainelli wrote:
+> >> Call brcmstb_biuctrl_init() in brcmstb's init_irq machine descriptor
+> >> callback since we need to setup the Bus Interface Unit before SMP in
+> >> particular, but we also need to be able to remap registers.
+> >>
+> >> Signed-off-by: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> >> ---
+> >> +static void __init brcmstb_init_irq(void)
+> >> +{
+> >> +	irqchip_init();
+> >> +	brcmstb_biuctrl_init();
+> > 
+> > I believe you're introducing a dependency on CONFIG_SOC_BRCMSTB, but
+> > it's not represented in Kconfig. Maybe SOC_BRCMSTB shouldn't be
+> > user-selectable, and it should just be select-ed by ARCH_BRCMSTB?
+> 
+> It is thanks to your previous commit, which is why I mentioned in the
+> cover letter that this was based on the 'soc/next' branch.
+> 
+> https://github.com/Broadcom/stblinux/commit/b19826efa15f94084416d5fc7749c45eabfbee36
 
-On Sat, Sep 12, 2015 at 10:45:51AM -0700, Dmitry Torokhov wrote:
-> Now that the driver respects IRQ trigger settings from device tree, let's
-> fix them up in individual DTSes (note that the driver is still compatible
-> with older DTSes).
->=20
-> Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-> ---
->  arch/arm/boot/dts/am437x-sk-evm.dts   | 2 +-
->  arch/arm/boot/dts/imx28-tx28.dts      | 3 ++-
->  arch/arm/boot/dts/imx53-tx53-x03x.dts | 3 ++-
->  arch/arm/boot/dts/imx6qdl-tx6.dtsi    | 3 ++-
->  4 files changed, 7 insertions(+), 4 deletions(-)
->=20
-> diff --git a/arch/arm/boot/dts/am437x-sk-evm.dts b/arch/arm/boot/dts/am43=
-7x-sk-evm.dts
-> index c17097d..d83fdcd 100644
-> --- a/arch/arm/boot/dts/am437x-sk-evm.dts
-> +++ b/arch/arm/boot/dts/am437x-sk-evm.dts
-> @@ -471,7 +471,7 @@
-> =20
->  		reg =3D <0x38>;
->  		interrupt-parent =3D <&gpio0>;
-> -		interrupts =3D <31 0>;
-> +		interrupts =3D <31 IRQ_TYPE_EDGE_FALLING>;
+Hah, bad memory I have. I suppose a user-selectable option that is also
+selected by another symbol is OK if the former has few/no dependencies.
 
-for AM437x SK:
+> Thanks for taking a look though!
 
-Acked-by: Felipe Balbi <balbi@ti.com>
-
-Seems like there are no changes considering driver was always using
-IRQF_TRIGGER_FALLING.
-
---=20
-balbi
-
---mP3DRpeJDSE+ciuQ
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBAgAGBQJV9zsKAAoJEIaOsuA1yqREr4YQAIOiMHv5lyPytZQypFVO9xgy
-8nGjrXg/ewp4cdEbWTUA5U9blFk+/eFt6MEYK8+5enCsTTV952mjGh/To6L+sei9
-pqqVW6giDg7IUawnCwtwDysgotM/Ry3K5KaghSugN0gisgSdndgtTV16lRsR8BCO
-z2zmAHRtVRz56/l54LgA+jYaLtnuu049be/1722RGTHckCFEPe40CKNfut0wN7hq
-v9MEXZbYjSkcKR1RGq4f7JzqEhFFLt0qF3AtyFH5o3eNebV0fHAyh5PEIyTXQRvf
-bDAgg2tmCqWRmamWFXiD3ki3dGJPsfvoVrx2fd9KGpuSO3urufZobHlOG1GOyQUn
-JQ5jzMyoMScSZ3Uh8CkLfU8VSndk11qE12NtPZFNtK2ftg1pIf4fsjMuShPiMjXk
-pPUa0+ZUHxOb2VRVP4ckNbYru94ZPSZo/DujdMobo4NqTSUh10JpeYstcM9wrnyq
-8JwJbzvSrAMt0iREiPOdHXsCtCapVaKIF8AsoT0462dSliFhzCC3VsBk8ZShbVS6
-vj5MGT4MWpL0255mhsBEYNPRzvqQjRpI6N/7YMk/M4K1C7ayvN3p0ugB3BBDQ0Zj
-VYvxMtGSCikw4ASPLGhNuRV5zGlIYnGaWlxRHzBpZjywx+j28q3V44cim/YHBT7K
-j/nryKg5grdGuDsdVO3c
-=rSt+
------END PGP SIGNATURE-----
-
---mP3DRpeJDSE+ciuQ--
+Brian
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
