@@ -1,256 +1,86 @@
-From: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
-Subject: Re: [RFC PATCH 2/5] Documentation: dt-bindings: add example DT
- binding document
-Date: Mon, 14 Sep 2015 18:15:58 +1000
-Message-ID: <20150914081558.GM2547@voom.fritz.box>
-References: <1440739433-6799-1-git-send-email-mporter@konsulko.com>
- <1440739433-6799-3-git-send-email-mporter@konsulko.com>
- <CAL_Jsq+FE4MCCfZC5hDhQBmM1gHibY82S9a8PC1GwsnWsPNxkg@mail.gmail.com>
- <20150910070850.GA11781@voom>
- <55F25C95.3010104@kernel.org>
+From: Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [PATCH] efi/libstub/fdt: Standardize the names of EFI stub
+ parameters
+Date: Mon, 14 Sep 2015 10:25:19 +0100
+Message-ID: <20150914092518.GA10307@leverpostej>
+References: <20150910112418.GC29293@leverpostej>
+ <alpine.DEB.2.02.1509101223580.2672@kaball.uk.xensource.com>
+ <20150910121514.GE29293@leverpostej>
+ <alpine.DEB.2.02.1509101429480.2672@kaball.uk.xensource.com>
+ <20150910144938.GI29293@leverpostej>
+ <alpine.DEB.2.02.1509101655020.2672@kaball.uk.xensource.com>
+ <20150910162302.GN29293@leverpostej>
+ <20150911124643.GB4530@olila.local.net-space.pl>
+ <20150911162559.GA8726@leverpostej>
+ <20150912113655.GG4530@olila.local.net-space.pl>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="dp9QYJgVRVEW2bsm"
-Return-path: <devicetree-spec-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-doc-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <55F25C95.3010104-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Sender: devicetree-spec-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Matt Porter <mporter-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Devicetree List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Devicetree Spec List <devicetree-spec-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Behan Webster <behanw-k/hB3zQhLwledRVtV/plodBPR1lH4CV8@public.gmane.org>
+In-Reply-To: <20150912113655.GG4530@olila.local.net-space.pl>
+Sender: linux-doc-owner@vger.kernel.org
+To: Daniel Kiper <daniel.kiper@oracle.com>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-efi@vger.kernel.org" <linux-efi@vger.kernel.org>, "Ian.Campbell@citrix.com" <Ian.Campbell@citrix.com>, Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>, Stefano Stabellini <stefano.stabellini@eu.citrix.com>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "leif.lindholm@linaro.org" <leif.lindholm@linaro.org>, "xen-devel@lists.xen.org" <xen-devel@lists.xen.org>, "ard.biesheuvel@linaro.org" <ard.biesheuvel@linaro.org>, "freebsd-arm@freebsd.org" <freebsd-arm@freebsd.org>, "matt.fleming@intel.com" <matt.fleming@intel.com>, "christoffer.dall@linaro.org" <christoffer.dall@linaro.org>, "jbeulich@suse.com" <jbeulich@suse.com>, Shannon Zhao <zhaoshenglong@huawei.com>, "julien.grall@citrix.com" <julien.grall@citrix.com>, peter.huangpeng@huawei
 List-Id: devicetree@vger.kernel.org
 
+On Sat, Sep 12, 2015 at 12:36:55PM +0100, Daniel Kiper wrote:
+> On Fri, Sep 11, 2015 at 05:25:59PM +0100, Mark Rutland wrote:
+> > On Fri, Sep 11, 2015 at 01:46:43PM +0100, Daniel Kiper wrote:
+> > > On Thu, Sep 10, 2015 at 05:23:02PM +0100, Mark Rutland wrote:
+> 
+> [...]
+> 
+> > > > What's troublesome with the boot services?
+> > > >
+> > > > What can't be simulated?
+> > >
+> > > How do you want to access bare metal EFI boot services from dom0 if they
+> > > were shutdown long time ago before loading dom0 image?
+> >
+> > I don't want to.
+> >
+> > I asked "What can't be simulated?" because I assumed everything
+> > necessary/mandatory could be simulated without needinng access to any
+> > real EFI boot services.
+> >
+> > As far as I can see all that's necessary is to provide a compatible
+> > interface.
+> 
+> Could you be more precise what do you need? Please enumerate. UEFI spec has
+> more than 2500 pages and I do not think that we need all stuff in dom0.
+> 
+> > > What do you need from EFI boot services in dom0?
+> >
+> > The ability to call ExitBootServices() and SetVirtualAddressMap() on a
+> > _virtual_ address map for _virtual_ services provided by the hypervisor.
+> 
+> I am confused. Why do you need that? Please remember, EFI is owned and
+> operated by Xen hypervisor. dom0 does not have direct access to EFI.
 
---dp9QYJgVRVEW2bsm
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Let's take a step back.
 
-On Thu, Sep 10, 2015 at 11:46:13PM -0500, Rob Herring wrote:
-> On 09/10/2015 02:08 AM, David Gibson wrote:
-> > On Fri, Aug 28, 2015 at 09:53:06AM -0500, Rob Herring wrote:
-> >> On Fri, Aug 28, 2015 at 12:23 AM, Matt Porter <mporter-OWPKS81ov/FWk0Htik3J/w@public.gmane.org> w=
-rote:
-> >>> Add a skeleton DT binding document that serves as the canonical
-> >>> example for implementing YAML-based DT bindings documentation.
-> >>> The skeleton binding illustrates use of all fields and variations
-> >>> described in the dt-binding-format.txt documentation.
-> >>>
-> >>> Signed-off-by: Matt Porter <mporter-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
-> >>> ---
-> >>>  Documentation/devicetree/bindings/skeleton.yaml | 98 +++++++++++++++=
-++++++++++
-> >>>  1 file changed, 98 insertions(+)
-> >>>  create mode 100644 Documentation/devicetree/bindings/skeleton.yaml
-> >>>
-> >>> diff --git a/Documentation/devicetree/bindings/skeleton.yaml b/Docume=
-ntation/devicetree/bindings/skeleton.yaml
-> >>> new file mode 100644
-> >>> index 0000000..175965f
-> >>> --- /dev/null
-> >>> +++ b/Documentation/devicetree/bindings/skeleton.yaml
-> >>> @@ -0,0 +1,98 @@
-> >>> +%YAML 1.2
-> >>> +---
-> >>> +id: skel-device
-> >>> +
-> >>> +title: Skeleton Device
-> >>> +
-> >>> +maintainer:
-> >>> +  - name: Skeleton Person <skel-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> >>
-> >> We'd want to tie this into get_maintainers.pl obviously.
-> >>
-> >>> +
-> >>> +description: >
-> >>> +  The Skeleton Device binding represents the SK11 device produced by
-> >>> +  the Skeleton Corporation. The binding can also support compatible
-> >>> +  clones made by second source vendors.
-> >>> +
-> >>> +compatible:
-> >>> +  - name: "skel,sk11"
-> >>> +  - name: "faux,fx11"
-> >>
-> >> Is this an OR or AND? We need both.
-> >=20
-> > Hrm.  So, from the example below it's an OR.  But.. I think the
-> > considerations here change when you separate out "tag" information as
-> > I've suggested elsewhere.
-> >=20
-> > The command AND case, I can think of is where you want both
-> > "foo,new-model-device" and "foo,old-model-device".  I think the first
-> > belongs in the "tag", but the second in the body of the requirements.
-> >=20
-> > The OR case demonstrated here strikes me as very poor binding design -
-> > but that doesn't mean we can totally avoid it, since we do have poor
-> > bindings we want to convert.
->=20
-> I don't think so. Often "old" is a singleton, and "new" is one of
-> several newer chips.
+My objection here is to passing the Dom0 kernel properties as if it were
+booted with direct access to a full UEFI, then later fixing that up
+(when Xen is detected and we apply its hypercall EFI implementation).
 
-Yeah, so the trouble is bindings like that are kind of unclear
-(although you can generally figure it out by convention).  Giving AND
-and OR conditions gives more detail, but still doesn't really express
-what you want here.
+If the kernel cannot use EFI natively, why pretend to the kernel that it
+can? The hypercall implementation is _not_ EFI (though it provides
+access to some services).
 
-Supposeyou have the SK33 device, and its backwards compatible
-revisions the SK34 and SK35.  There's also the SK38, which is
-compatible with the original SK33, but not the revised versions.
+The two ways I can see providing Dom0 with EFI services are:
 
-So really, you have a cluster of related bindings:
+* Have Xen create shims for any services, in which any hypercalls live,
+  and pass these to the kernel with a virtual system table. This keeps
+  the interface to the kernel the same regardless of Xen.
 
-SK33 binding:
-	Applies when compatible contains "skel,sk33"
-	Requires compatible contain "skel,sk33"
-	Describes all the basic properties of the device
-SK34 binding:
-	Applies when compatible contains "skel,sk34"
-	Requires compatible contain "skel,sk34" AND "skel,sk33"
-	Inherits the SK33 binding
-	Describes any properties necessary for SK34 extensions
-SK35 binding
-	Applies when compatible contains "skel,sk35"
-	Requires compatible contains "skel,sk35", "skel,sk34" AND "skel,sk33"
-	Inherits the SK34 binding
-	Describes any properties for SK35 extensions
-SK38 binding
-	Applies when compatible contains "skel,sk38"
-	Requires compatible contains "skel,sk38" AND "skel,sk33"
-	Requires compatible DOES NOT contain "skel,sk34" or
-	  "skel,sk35" (arguably you don't need to specify that, though)
-	Inherits the SK33 binding
-	Describes any properties for SK38 extensions
+* Have the kernel detect Xen EFI capability via Xen, without passing the
+  usual native EFI parameters. This can then be installed into the
+  kernel in a Xen-specific manner, and we know from the outset that
+  Xen-specific caveats apply.
 
-Plus, for backwards compatibility you might have to have the:
+As per my original email, I'm not against the renaming of the stub
+parameters if we standardise the rest of the details, but I believe
+that's orthogonal to the Xen Dom0 case.
 
-SK3x binding
-	Deprecated
-	Applies when compatible contains "skel,sk3x"
-	Inherits the SK33 binding
-
-> It is also very common for licensed IP blocks. All
-> the vendors have different quirks and possibly different versions of the
-> IP. In the better cases, we can have a vendor compat for each vendor and
-> then a generic compat.
-
-So, similar considerations here.  You really have a bunch of at least
-potentially different bindings for each licensed variant, but all
-based on the core common binding.
-
-> > Fwiw, I think the right way to encode "OR" at least in the "tag" is to
-> > pick just the preferred form, then have additional bindings tagged on
-> > the alternative forms and inheriting the main binding.  I don't know
-> > if that's practical in the short term though.
-
-But, yeah, these are common cases so we need a less verbose way of
-describing it than the full version above.  At least when the
-differences between the devices don't require any new properties at
-all.
-
-I think we want to special case this for the compatible property
-though.  I thinkAND and OR conditions will be complex, while still not
-really expressing what we need for compatible.
-
-
-> >=20
-> >> The complicated case is "one of {specific names} followed by {generic =
-name}."
-> >>
-> >>> +    description: A clone of the original sk11 device
-> >>> +
-> >>> +required:
-> >>> +  - name: "reg"
-> >>
-> >> We definitely need type info from the start.
-> >=20
-> > It's interesting you should mention that here, because 'reg' is
-> > actually a hard case for describint the type: because it's format is
-> > determined as much by the parent bus binding as this node's binding.
->=20
-> And reg is well defined, so that's one I'm least worried about.
-
-True/
-
-> > I suspect it will be worth special-casing "reg" in order to make
-> > common bindings more compact, but again, probably not in the first
-> > pass.
->=20
-> Yes, I would fully expect reg to just be flagged as used and how many
-> addresses.
->=20
-> >=20
-> >>> +    description: chip select address of skeleton device
-> >>> +    reference: spi-slave
-> >>
-> >> I would like to not have to list properties if the inherited binding
-> >> lists it. The problem is we need to say how many cells and the order
-> >> (not a problem here, but for mmio devices).
-> >>
-> >> Perhaps we can list the reference at the top level for the node
-> >> instead of for every property.
-> >=20
-> > Yeah, I think it would be worth having a top-level "inherits" field.
-> >=20
-> >>> +  - name: "spi-max-frequency"
-> >>> +    description: >
-> >>> +      Maximum SPI clocking speed of skeleton device in Hz, must be
-> >>> +      1000000
-> >>> +    reference: spi-slave
-> >>
-> >> Rather than listing the property and having constraint in description,
-> >> perhaps we could add constraints like this:
-> >>
-> >> - spi-max-frequency-range: 1000000 1000000
-> >>
-> >> Or groups of constraints:
-> >>
-> >> - spi-max-frequency-constraints:
-> >>   range: 1000000 1000000
-> >>   some-other-constraint: <value>
-> >=20
-> > Not for the first pass I think.  What I would suggest is having
-> > "description" for pure informational stuff, and "constraint" or maybe
-> > just "extra" for normative constraints expressed in English.
->=20
-> At least for simple constraints, I don't see the point of manually
-> converting to something still not machine parse-able. We should be able
-> to figure out a syntax. Sure, there may be complex examples we just punt
-> on, but we can address most common cases. But if we can't define a
-> syntax, then lets do nothing until we do.
-
-Sure.
-
-> > The idea here is that over time we can add new ways of expressing
-> > constraints.  In the meantime tools can use the "extra" field to
-> > preseve any difficult text in the current versions and at least let
-> > tools know that they won't be able to check everything.
->=20
-> Just keeping the existing doc text will preserve things.
-
---=20
-David Gibson			| I'll have my music baroque, and my code
-david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _other_
-				| _way_ _around_!
-http://www.ozlabs.org/~dgibson
-
---dp9QYJgVRVEW2bsm
-Content-Type: application/pgp-signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBAgAGBQJV9oI+AAoJEGw4ysog2bOSej8P/2aALkfBq+ecAyOpZ7ao2wnV
-h2gyYhNZG6Wb/u0kZAb38sdyOlmtCK4OiUzSvEBeZ9G/qvLfbB2s9d3Fiw7shY+L
-WUsMYEYfKx+s8xyfEFaU4zrFyNWlf4U70LHBuiviMBg5NavJzICcbcpkZoXm3EaA
-4PjDbGr5cdIS9+5FRK3FLSqgu0fgUiZncMsHRfEvS5URQ7J7OJgArkKOwAIRKvf/
-Bdsb3w/6QiDHy4aWTP2PVd46SVYqvQ+4sfqmDzpstwoy8Fj/Q67AT/UO/ruasyJN
-hFsTZP7irsD4yji0MiJEEpiF1iEiGzgelwVgHBwC4Vl3W8Olt7hRYdiGbgf7vd1+
-jCXqfYDjjYHsnlqR3fy6hhwAYAbus3hXNa7PMnpjJ5NDiCA/r0OtLOm3kdbdf2nA
-/lEQQK4qyb2+X55ydrRvcwTt3TOu84IrnnF5x0OBhlCDjyQgFnfdwWcHmbyGSuIX
-XUzw+UaIMmrpqlmthvxmY7S53B62M0tkJKcAcCOgX7N3pOvWcl36RL4eQMgtKt2H
-mGYdXw9oqoDbF/45CED42+LiJ/Y+ihgGcivIGUmdBnC1HgqBgPRHW49DYqtlB982
-vl47MVDEzTn5mMCBor6+X3CBj+IdztdqdFDIaObqUZVxlL9gXxrzdA7z+GCIcFkg
-xj4v8WUXOksNdVqqxZvK
-=wJ92
------END PGP SIGNATURE-----
-
---dp9QYJgVRVEW2bsm--
+Thanks,
+Mark.
