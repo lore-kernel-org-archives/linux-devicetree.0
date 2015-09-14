@@ -1,123 +1,77 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH 2/2] Documentation: gpio: Update description for X-Gene standby GPIO controller DTS binding
-Date: Mon, 14 Sep 2015 16:47 +0200
-Message-ID: <2516438.vcQPNoorc9@wuerfel>
-References: <1441963332-13329-1-git-send-email-yvo@apm.com> <2971356.lYN9OVO6Id@wuerfel> <CAL4ahLfRdfC=nReqqic=1vahgtD3-E_ncqnNhHsGw04P_HjvVA@mail.gmail.com>
+From: Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
+Subject: Re: [PATCH 0/4] bcm2835: enable auxiliary uart1
+Date: Mon, 14 Sep 2015 10:53:16 -0400
+Message-ID: <87r3m1jbmr.fsf@eliezer.anholt.net>
+References: <1441974053-2630-1-git-send-email-kernel@martin.sperl.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <CAL4ahLfRdfC=nReqqic=1vahgtD3-E_ncqnNhHsGw04P_HjvVA@mail.gmail.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Y Vo <yvo@apm.com>, Laxman Dewangan <ldewangan@nvidia.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Phong Vo <pvo@apm.com>, Toan Le <toanle@apm.com>, Loc Ho <lho@apm.com>, Feng Kan <fkan@apm.com>, Quan Nguyen <qnguyen@apm.com>, Duc Dang <dhdang@apm.com>, patches <patches@apm.com>
+Content-Type: multipart/signed; boundary="=-=-=";
+	micalg=pgp-sha512; protocol="application/pgp-signature"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1441974053-2630-1-git-send-email-kernel-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: kernel-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Lee Jones <lee-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Jiri Slaby <jslaby-IBi9RG/b67k@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Monday 14 September 2015 16:39:43 Y Vo wrote:
-> On Mon, Sep 14, 2015 at 4:11 PM, Arnd Bergmann <arnd@arndb.de> wrote:
-> > On Saturday 12 September 2015 12:55:55 Y Vo wrote:
-> >> On Fri, Sep 11, 2015 at 11:45 PM, Arnd Bergmann <arnd@arndb.de> wrote:
-> >> > On Friday 11 September 2015 22:06:58 Y Vo wrote:
-> >>
-> >> Example for configure GPIO_DS13 as interrupt and use as button with
-> >> the current gpio driver:
-> >>         gpio-keys {
-> >>                 compatible = "gpio-keys";
-> >>                 button@1 {
-> >>                         label = "POWER";
-> >>                         linux,code = <116>;
-> >>                         linux,input-type = <0x1>;
-> >>                         interrupts = <0x0 0x2d 0x1>;
-> >>                 };
-> >>         };
-> >
-> > Wait, this looks wrong: the gpio driver doesn't actually see
-> > the connection here and won't be able to configure the interrupt
-> > correctly. The interrupt is already owned by the gpio driver, so
-> > you cannot use it in the button node.
-> 
-> In summary:
-> - Our GPIO doesn't support interrupt controller.
-> - There are 6 pins which used the external interrupt from GIC, so all
-> setup for those irqs are from gic driver. The GPIO driver only
-> configure to wire those lines.
-> 
-> For your concern:
-> - That's correct: if we use that defined, the gpio driver never saw
-> the connection here (That's why it already is configued at the
-> beginning).
-> - At the first time, we tried to use the define: <&sbgpio 13 1>, it
-> means using the GPIO_DS13, it will go into the GPIO driver to setup,
-> but there is another problem which I have sent out to all of you:
-> + It will go into gpio_keys_setup_key (gpio_keys.c driver) function,
-> then set the irqflags = IRQF_TRIGGER_RISING | IRQF_TRIGGER_FALLING,
-> but the gic only support IRQ_TYPE_LEVEL_HIGH && IRQF_TRIGGER_RISING,
-> so it always returns failed at gpio_keys_setup_key function. Please
-> see the gic_set_type at gic driver.
+--=-=-=
+Content-Type: text/plain
 
-Hmm, I see now how the event handling in the gpio-keys driver differs
-between irq mode and gpio mode, where gpio mode relies on getting
-a separate event for the release. This is certainly something that
-could be changed in the gpio-keys driver as an extension, but that
-seems to be what Laxman Dewangan did when he introduced the irq-mode.
+kernel-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org writes:
 
-> static int gic_set_type(struct irq_data *d, unsigned int type)
-> {
->         void __iomem *base = gic_dist_base(d);
->         unsigned int gicirq = gic_irq(d);
-> 
->         /* Interrupt configuration for SGIs can't be changed */
->         if (gicirq < 16)
->                 return -EINVAL;
-> 
->         /* SPIs have restrictions on the supported types */
->         if (gicirq >= 32 && type != IRQ_TYPE_LEVEL_HIGH &&
->                             type != IRQ_TYPE_EDGE_RISING)
->                 return -EINVAL;
-> 
->         return gic_configure_irq(gicirq, type, base, NULL);
-> }
-> + Another issue: in order gpio_key works it needs the status of GPIO.
-> For our chip, when the GPIO is configued as interrupt, we need to
-> access to GIC register to read the real status, it is not acceptable
-> to implement accessing GIC registers at gpio driver. The function
-> irq_get_irqchip_state(..) also doesn't work in our chip too. Because
-> it needs to access different offset.
+> From: Martin Sperl <kernel-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org>
+>
+> The bcm2835 SOC contains an auxiliary uart, which is very close
+> to the ns16550 with some differences.
+>
+> The big difference is that the uart HW is not using an internal divider
+> of 16 but 8, which results in an effictive baud-rate being twice
+> the requested baud-rate.
+>
+> The bcm2835-aux-uart is also special in such that it is enabled/disabled
+> by a gate in the clock, which is managed by the clk-bcm2835-aux
+> clock driver.
+>
+> there are 2 options:
+> * defining the clock-frequency property in the device tree to 500k
+>   instead of 250k, but this keeps the HW block disabled making the
+>   uart not work.
+> * defining a clock in the device tree, but this results in a baud rate
+>   that is twice the requested baud-rate.
+>
+> To address this this patch-set introduce a new property in the device tree
+> to define a clock divider other than 16.
+>
+> This currently just scales the clock by a factor of 16/divider.
+>
+> Note that the use of fixed-factor-clock has also been proposed as a
+> workarround, but this does not really describe the hw in the device tree
+> so another solution was needed that allows a correct representation of
+> the HW in the device tree.
 
-I thought we had solved that problem long ago when you first
-submitted the driver.
+I personally lean toward the fixed-factor-clock solution, but could go
+either way.  Serial maintainers, what do you think?
 
-Did 1b7047edfcfb25 ("genirq: Allow the irqchip state of an IRQ to be
-save/restored") not address the problem for you? You were on
-Cc to that patch and should have spoken up when the code that was
-merged was not sufficient.
+--=-=-=
+Content-Type: application/pgp-signature; name="signature.asc"
 
-> >> > It also seems to me that the binding cannot distinguish between a
-> >> > line configured as an input and one that is configured as an
-> >> > interrupt, which are for other gpio chips the same thing, but
-> >> > not on this one.  Could this be rectified by using another bit
-> >> > of the second gpio cell? The low bit is used for active-high/active-low,
-> >> > so you could use the second bit for irq/input.
-> >> >
-> >> Do you mean #gpio-cells property and using the high bit of the second
-> >> bit for irq/input  ?
-> >
-> > Yes, that would be an option.
-> I will look into it.
-> 
-> Is there possible if:
-> - Keep GPIO8..GPIO as interrupt by default.
-> - Anyone want to use these GPIO pins as GPIO, we will re-configure
-> them to GPIO mode ?
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
 
-That's not perfect but better than the patch you sent here.
-The main disadvantage is that you end up with two references
-to the same IRQ. It can still work, but only as long as nothing
-tries to walk the entire DT to parse all the interrupts properties.
-
-It would be ok for gpio-keys, as that does not need both the state
-and the event together, but for other gpio users, you still need a
-working driver that supports reading the state and getting an
-interrupt.
-
-	Arnd
+iQIcBAEBCgAGBQJV9t9cAAoJELXWKTbR/J7ol2AQAJqjMTB5xhk0nm4LnV3FhOvd
+FwlqVy0jHdNMjDqO+bxvGehczMCotdRpC6KezoI2/C490KLMN+mBTv/jUjfba73j
+l+PGB0Fx5GUfFr8XTAlNip2KeAhGiN0llVce6jKH4Ip1Ix/HTskcxyPqm5TgMazU
+YngIe3xQCehjGQnOW0ygOS1+OamV/z8yOAhV2uSbnfzMBdIRqn/u7RTa6VuDsLEj
+v/uiJSoMRm4NcacMTtMXltcYURHk1MgQtgiZMcMRqzZZc1iW3oZgr+PUkmy+QeUU
+CCcqM5qIz/4rEwz4RaiGEQWP4IXdKMYfv9hozey/YdywPfSNBknPbZXwcq83m9ns
+faXHR0ABPvp2vlOoTJWjxfAdCl1Sm51nMrblicfwV88Z2QtuJQ1HTqgKVx/LM9X7
+RVlcX9RRdtmGvNdDCm2ldHV28ygp8yYdNH7sT8P8MSDPfr+CujWTB5112wyiaTBH
+w8T3lQVZmCvM5uXAQ8ejKd7vJIOMGfA3u840K7MfJJhCfxDGtPB8G+Kb0V5+xDj2
+mobD5XHVkMBAKWE/rUuRqTNtIP+Ynhqj8VXTFA+DZRPGqpk0oqfF/p4bEcU0u6y1
+3rJjkXpFkT72ianMw4u6hW0+gYqGkklF3F4GHbmlWb7uL7P23VUgzOLUVYV57gDd
+/cxsUhtMpkzDqTpZjpXt
+=Hodz
+-----END PGP SIGNATURE-----
+--=-=-=--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
