@@ -1,64 +1,46 @@
-From: Peter Ujfalusi <peter.ujfalusi@ti.com>
-Subject: Re: [PATCH 00/11] ARM: OMAP/DTS: dra7/72-evm/beagle-x15: Audio
- support
-Date: Mon, 14 Sep 2015 11:50:40 +0300
-Message-ID: <55F68A60.6050900@ti.com>
-References: <1440400807-32274-1-git-send-email-peter.ujfalusi@ti.com>
+From: Catalin Marinas <catalin.marinas@arm.com>
+Subject: Re: [PATCH v4 5/7] Watchdog: introduce ARM SBSA watchdog driver
+Date: Mon, 14 Sep 2015 09:51:37 +0100
+Message-ID: <20150914085137.GB22991@e104818-lin.cambridge.arm.com>
+References: <=fu.wei@linaro.org>
+ <1433217907-928-1-git-send-email-fu.wei@linaro.org>
+ <1433217907-928-6-git-send-email-fu.wei@linaro.org>
+ <556F4489.6030206@codeaurora.org>
+ <20150603182503.GD6460@roeck-us.net>
+ <556F4D29.1080001@codeaurora.org>
+ <55F207FD.2030007@redhat.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1440400807-32274-1-git-send-email-peter.ujfalusi@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Tony Lindgren <tony@atomide.com>
-Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, Tero Kristo <t-kristo@ti.com>
+Content-Type: text/plain; charset=WINDOWS-1252
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <55F207FD.2030007@redhat.com>
+Content-Disposition: inline
+Sender: linux-doc-owner@vger.kernel.org
+To: Jon Masters <jcm@redhat.com>
+Cc: Timur Tabi <timur@codeaurora.org>, Guenter Roeck <linux@roeck-us.net>, fu.wei@linaro.org, Suravee.Suthikulpanit@amd.com, linaro-acpi@lists.linaro.org, linux-watchdog@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, tekkamanninja@gmail.com, graeme.gregory@linaro.org, al.stone@linaro.org, hanjun.guo@linaro.org, ashwin.chaugule@linaro.org, arnd@arndb.de, vgandhi@codeaurora.org, wim@iguana.be, leo.duran@amd.com, corbet@lwn.net, mark.rutland@arm.com, will.deacon@arm.com, rjw@rjwysocki.net
 List-Id: devicetree@vger.kernel.org
 
-Hi Tony,
+On Thu, Sep 10, 2015 at 06:45:17PM -0400, Jon Masters wrote:
+> On 06/03/2015 02:53 PM, Timur Tabi wrote:
+> > On 06/03/2015 01:25 PM, Guenter Roeck wrote:
+> >> In general the idea here would be to use a crashdump kernel, which,
+> >> when loaded, would reset the watchdog before it fires. This kernel
+> >> would then write a core dump to a specified location.
+> > 
+> > What is the mechanism for resetting the watchdog?  The only code that 
+> > knows about the hardware registers is this driver.  Does the crashdump 
+> > kernel call the watchdog stop function?
+> > 
+> >> If arm64 doesn't support a crashdump kernel, it might still be possible
+> >> to log the backtrace somewhere (eg in nvram using pstore if that is
+> >> supported via acpi or efi).
+> 
+> Just to go back and explicitly answer this, arm64 does have support for
+> crashdump, using the standard kexec/kdump approach, exactly as on x86.
 
-On 08/24/2015 10:19 AM, Peter Ujfalusi wrote:
-> Hi,
->=20
-> this series will enable analog audio (via onboard aic310x codec) for =
-dra7-evm,
-> dra72-evm and am57xx-beagle-x15 boards.
-> In these board McASP3 is connected to the codec and for the McASP3 we=
- needed to
-> have the DMA crossbar in place since the request lines are not mapped=
- by
-> default.
+Just a clarification - this is not (yet) supported in mainline, not even
+with DT.
 
-Did you had a chance to look at this series?
+-- 
+Catalin
 
-> Regars,
-> Peter
-> ---
-> Peter Ujfalusi (11):
->   ARM: OMAP: DRA7: hwmod: Add data for McASP3
->   ARM: DTS: dra7: Add McASP3 node
->   ARM: DTS: dra7-evm: Rename mmc2_3v3 supply to evm_3v3_sw
->   ARM: DTS: dra7-evm: Add fixed regulator to be used by aic3106's DVD=
-D
->   ARM: DTS: dra7-evm: Enable pcf8575 (0x26 address) on i2c2 bus
->   ARM: DTS: dra7-evm: Audio support
->   ARM: DTS: dra72-evm: Add fixed regulator representing DVDD supply f=
-or
->     aic3106
->   ARM: DTS: dra72-evm: Add gpio hog for vin6_sel_s0 to select audio
->   ARM: DTS: dra72-evm: Audio support
->   ARM: DTS: am57xx-beagle-x15: Add fixed regulator for aic3104's DVDD
->   ARM: DTS: am57xx-beagle-x15: Enable analog audio support
->=20
->  arch/arm/boot/dts/am57xx-beagle-x15.dts   |  95 ++++++++++++++++++++
->  arch/arm/boot/dts/dra7-evm.dts            | 142 ++++++++++++++++++++=
-+++++++++-
->  arch/arm/boot/dts/dra7.dtsi               |  15 ++++
->  arch/arm/boot/dts/dra72-evm.dts           | 138 ++++++++++++++++++++=
-+++++++++
->  arch/arm/mach-omap2/omap_hwmod_7xx_data.c |  41 +++++++++
->  5 files changed, 428 insertions(+), 3 deletions(-)
->=20
-
-
---=20
-P=E9ter
