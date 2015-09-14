@@ -1,57 +1,83 @@
-From: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH v7 8/8] clocksource: simplify ACPI code in arm_arch_timer.c
-Date: Mon, 14 Sep 2015 19:05:15 +0100
-Message-ID: <55F70C5B.8040508@arm.com>
-References: <=fu.wei@linaro.org>	<1440435683-7343-1-git-send-email-fu.wei@linaro.org>	<1440435683-7343-9-git-send-email-fu.wei@linaro.org>	<alpine.DEB.2.11.1508241942450.3873@nanos>	<CADyBb7sVGePKtU45_DBGd74fykAPVshmbnRQJDDOrrvoHTGcKQ@mail.gmail.com>	<alpine.DEB.2.11.1508252113590.15006@nanos>	<55DEFC54.4090904@linaro.org>	<alpine.DEB.2.11.1508271405330.15006@nanos>	<55DF025F.2050102@linaro.org>	<55DF1257.9090303@linaro.org>	<alpine.DEB.2.11.1508271539560.15006@nanos> <CADyBb7vKQq_T_P27hZQs+6-TJo2YD=QXjVseQ8dOvixwSHwL5A@mail.gmail.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH 2/5] spi: spi-ti-qspi: add mmap mode read support
+Date: Mon, 14 Sep 2015 19:26:00 +0100
+Message-ID: <20150914182600.GC12027@sirena.org.uk>
+References: <1441355402-6837-1-git-send-email-vigneshr@ti.com>
+ <1441355402-6837-3-git-send-email-vigneshr@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CADyBb7vKQq_T_P27hZQs+6-TJo2YD=QXjVseQ8dOvixwSHwL5A-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Fu Wei <fu.wei-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
-Cc: Hanjun Guo <hanjun.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Suravee Suthikulpanit <Suravee.Suthikulpanit-5C7GfCeVMHo@public.gmane.org>, Linaro ACPI Mailman List <linaro-acpi-cunTk1MwBs8s++Sfvej+rw@public.gmane.org>, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Wei Fu <tekkamanninja-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, G Gregory <graeme.gregory-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Al Stone <al.stone-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Vipul Gandhi <vgandhi-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>, Jon Masters <jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Leo Duran <leo.duran-5C7GfCeVMHo@public.gmane.org>, Jonathan Corbet <corbet-T1hC0tSOHrs@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Rafael Wysocki <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, dyoung-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, panand-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="hr8bQwfI8oPfWpHR"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1441355402-6837-3-git-send-email-vigneshr@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Vignesh R <vigneshr@ti.com>
+Cc: Benoit Cousson <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>, Russell King <linux@arm.linux.org.uk>, David Woodhouse <dwmw2@infradead.org>, Brian Norris <computersforpeace@gmail.com>, hramrach@gmail.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mtd@lists.infradead.org, linux-spi@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 27/08/15 14:51, Fu Wei wrote:
-> Hi Thomas, Hanjun
-> 
-> On 27 August 2015 at 21:40, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org> wrote:
->> On Thu, 27 Aug 2015, Hanjun Guo wrote:
->>>> [1]: https://lkml.org/lkml/2015/7/29/236
->>>>
->>>> If that is ok with you, we will introduce similar DECLARE_ thing
->>>> for clock declare.
->>
->> Yes.
-> 
-> Thanks
-> 
->>
->>> Or we can drop this patch from this patch set, and clean up this
->>> patch when the ACPI_DECLARE() infrastructure is ready for upstream.
->>
->> Works either way. I just noticed that hard coded init thing and
->> decided to rant about it :)
-> 
-> OK, good idea, this patch will be improve by DECLARE_ thing, then upstream.
-> drop this from this patchset.
-> 
-> Great thanks for your help
 
-You probably want to keep an eye on this:
+--hr8bQwfI8oPfWpHR
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-https://lwn.net/Articles/657238/
+On Fri, Sep 04, 2015 at 01:59:59PM +0530, Vignesh R wrote:
 
-which implements the necessary infrastructure. I'd appreciate if you
-could give it a go to find out if it works for you.
+> +static int ti_qspi_spi_mtd_mmap_read(struct  spi_device *spi,
+> +				     loff_t from, size_t len,
+> +				     size_t *retlen, u_char *buf,
+> +				     u8 read_opcode, u8 addr_width,
+> +				     u8 dummy_bytes)
+> +{
+> +	struct ti_qspi *qspi = spi_master_get_devdata(spi->master);
+> +	int ret = 0;
+> +
+> +	spi_bus_lock(qspi->master);
 
-Thanks,
+I suspect I'm going to see the answer to this in another patch but the
+fact that we're having to take this lock in a driver when it's an op the
+core should be calling.
 
-	M.
--- 
-Jazz is not dead. It just smells funny...
---
-To unsubscribe from this list: send the line "unsubscribe linux-watchdog" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> +	ret = pm_runtime_get_sync(qspi->dev);
+> +	if (ret < 0) {
+> +		dev_err(qspi->dev, "pm_runtime_get_sync() failed\n");
+> +		return ret;
+> +	}
+
+This would be better outside the lock, there's no need to have the lock
+before we power on and this fixes the fact that you don't release the
+lock here.
+
+> +	memcpy(buf, (__force void *)(qspi->mmap_base + from), len);
+
+The fact that you're having to cast here should be a warning that
+there's someting wrong here.  I think you're looking for
+memcpy_fromio().
+
+> @@ -479,6 +576,7 @@ static int ti_qspi_probe(struct platform_device *pdev)
+>  	master->setup = ti_qspi_setup;
+>  	master->auto_runtime_pm = true;
+>  	master->transfer_one_message = ti_qspi_start_transfer_one;
+> +	master->spi_mtd_mmap_read = ti_qspi_spi_mtd_mmap_read;
+>  	master->dev.of_node = pdev->dev.of_node;
+>  	master->bits_per_word_mask = SPI_BPW_MASK(32) | SPI_BPW_MASK(16) |
+>  				     SPI_BPW_MASK(8);
+
+Don't we need to map a resource somewhere?
+
+--hr8bQwfI8oPfWpHR
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQEcBAEBCAAGBQJV9xE3AAoJECTWi3JdVIfQfbIH/jkoRH8R/Fd2x7/W2yvrG7Q2
+V/kCmfMV3VnopEYY2NrjsdUNdxqi+vObifrhOytPmF9nRbKWU7m52WQjTSMCoWbQ
+PdaRXdJN0Jbpx7iEmCjXPefTjekiYJ/Tk6S4N/Scr/GC6ekEuiA8kPos9Y6nNhtc
+XWsdcPDOhQBLLmD6OHI5OQ+sg2THAbTsHRMjr2KlSq2wR64kaj2zAOTRMx7n2P1z
+h3NWJF57RuhNIsT+34bg55Y5pS4mr5T7d0gAS/QME0Ej1NvH9Wv/1I1UVqm5qjyL
+HRDgbrMZpKFukWivMMx2FHriuYZs7rNYPFXI/x++sunI7/5NWxyirdO7RvrzuDc=
+=gYMN
+-----END PGP SIGNATURE-----
+
+--hr8bQwfI8oPfWpHR--
