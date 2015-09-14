@@ -1,63 +1,63 @@
-From: Patrice Chotard <patrice.chotard-qxv4g6HH51o@public.gmane.org>
-Subject: Re: [PATCH 00/11] ARM: STi: STiH407: Pinctrl updates
-Date: Mon, 14 Sep 2015 14:32:42 +0200
-Message-ID: <55F6BE6A.5030506@st.com>
-References: <1441991194-11948-1-git-send-email-peter.griffin@linaro.org>
+From: =?UTF-8?q?Emilio=20L=C3=B3pez?= <emilio.lopez-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>
+Subject: [PATCH v2 0/3] platform/chrome: vboot context support
+Date: Mon, 14 Sep 2015 09:34:06 -0300
+Message-ID: <1442234049-18637-1-git-send-email-emilio.lopez@collabora.co.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1441991194-11948-1-git-send-email-peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Peter Griffin <peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, srinivas.kandagatla-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, maxime.coquelin-qxv4g6HH51o@public.gmane.org
-Cc: lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, =?UTF-8?q?Emilio=20L=C3=B3pez?= <emilio.lopez-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Peter
+Hi everyone,
 
-As already pointed by Lee, my signed-off needs to be removed from 
-several patches
-The overall series seems ok.
+This series adds support for reading and writing the verified boot cont=
+ext
+nvram space on the EC using the cros_ec sysfs interface.
 
-You can add my Acked-by
+The first patch improves is_visible() functionality, making it work
+for binary attributes as well as normal ones. This is needed so the
+sysfs group can be hidden when the EC doesn't offer any space for
+the context.
 
-Thanks
+The second patch is the actual code implementing the interface to read
+and write the context data.
 
-On 09/11/2015 07:06 PM, Peter Griffin wrote:
-> Hi Maxime / Patrice / Srini,
->
-> This series makes a series of updates to the stih407 pinctrl groups
-> and makes the upstream kernel more closely aligned in terms of pin
-> configuration to the vendor kernel.
->
-> A number of new periphs are added such as spi fsm, nand, cec0, and
-> for others such as SPI the various alternate function pin muxings have
-> been added. Finally for SPI the controller nodes have been updated
-> to have the default pin assignment in the controller node.
->
-> kind regards,
->
-> Peter.
->
-> Peter Griffin (11):
->    ARM: STi: DT: STiH407: Add a cec0 pin definition
->    ARM: STi: DT: STiH407: Add i2c3 alternate pin configs
->    ARM: DT: STiH407: Add SPI 3 wire and 4 wire pinctrl configs
->    ARM: DT: STiH407: Add serial3 pinctrl configuration
->    ARM: DT: STiH407: Add SPI FSM (NOR Flash) Controller pin config
->    ARM: DT: STiH407: Add NAND flash controller pin configuration
->    ARM: DT: STiH407: Add systrace pin configuration
->    ARM: DT: STiH407: Add SD pinctrl config for mmc0 controller
->    ARM: DT: STiH407: Add pinconfig for IRB UHF and IRB TX
->    ARM: DT: STiH407: Add RMII pinctrl support
->    ARM: STi: STiH407: Add spi default pinctrl groups.
->
->   arch/arm/boot/dts/stih407-family.dtsi  |  14 ++
->   arch/arm/boot/dts/stih407-pinctrl.dtsi | 378 ++++++++++++++++++++++++++++++++-
->   2 files changed, 387 insertions(+), 5 deletions(-)
->
+The third patch adds the DT properties on peach boards which, judging b=
+y
+the vendor tree, use the EC to store the verified boot context.
+
+The series was tested on a peach pi and was found to work OK there. As
+always, all comments and further tests are welcome :)
+
+Cheers!
+Emilio
+
+Emilio L=C3=B3pez (3):
+  sysfs: Support is_visible() on binary attributes
+  platform/chrome: Support reading/writing the vboot context
+  ARM: dts: Enable EC vboot context support on Peach boards
+
+ Documentation/devicetree/bindings/mfd/cros-ec.txt |   4 +
+ arch/arm/boot/dts/exynos5420-peach-pit.dts        |   1 +
+ arch/arm/boot/dts/exynos5800-peach-pi.dts         |   1 +
+ drivers/platform/chrome/Makefile                  |   5 +-
+ drivers/platform/chrome/cros_ec_dev.c             |   1 +
+ drivers/platform/chrome/cros_ec_vbc.c             | 137 ++++++++++++++=
+++++++++
+ fs/sysfs/group.c                                  |  17 ++-
+ include/linux/mfd/cros_ec.h                       |   1 +
+ include/linux/sysfs.h                             |  18 ++-
+ 9 files changed, 178 insertions(+), 7 deletions(-)
+ create mode 100644 drivers/platform/chrome/cros_ec_vbc.c
+
+--=20
+2.1.4
 
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
