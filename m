@@ -1,83 +1,150 @@
-From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH 00/11] ARM: OMAP/DTS: dra7/72-evm/beagle-x15: Audio
- support
-Date: Mon, 14 Sep 2015 09:28:51 -0700
-Message-ID: <20150914162851.GM4215@atomide.com>
-References: <1440400807-32274-1-git-send-email-peter.ujfalusi@ti.com>
- <55F68A60.6050900@ti.com>
+From: Fu Wei <fu.wei@linaro.org>
+Subject: Re: [PATCH v7 5/8] Watchdog: introduce ARM SBSA watchdog driver
+Date: Tue, 15 Sep 2015 01:11:43 +0800
+Message-ID: <CADyBb7tMFc85Nd0+Wm8tq7UxHizkCBe5vLtRQ6NOESCOg892VA@mail.gmail.com>
+References: <=fu.wei@linaro.org>
+	<1440435683-7343-1-git-send-email-fu.wei@linaro.org>
+	<1440435683-7343-6-git-send-email-fu.wei@linaro.org>
+	<55F20461.20904@redhat.com>
+	<55F2415C.1050803@roeck-us.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <55F68A60.6050900-l0cyMroinI0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Peter Ujfalusi <peter.ujfalusi-l0cyMroinI0@public.gmane.org>
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Tero Kristo <t-kristo-l0cyMroinI0@public.gmane.org>
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <55F2415C.1050803@roeck-us.net>
+Sender: linux-doc-owner@vger.kernel.org
+To: Guenter Roeck <linux@roeck-us.net>
+Cc: Jon Masters <jcm@redhat.com>, Suravee Suthikulpanit <Suravee.Suthikulpanit@amd.com>, Hanjun Guo <hanjun.guo@linaro.org>, Linaro ACPI Mailman List <linaro-acpi@lists.linaro.org>, linux-watchdog@vger.kernel.org, devicetree@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, linux-doc@vger.kernel.org, Wei Fu <tekkamanninja@gmail.com>, G Gregory <graeme.gregory@linaro.org>, Al Stone <al.stone@linaro.org>, Arnd Bergmann <arnd@arndb.de>, Vipul Gandhi <vgandhi@codeaurora.org>, Wim Van Sebroeck <wim@iguana.be>, Leo Duran <leo.duran@amd.com>, Jon Corbet <corbet@lwn.net>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Rafael Wysocki <rjw@rjwysocki.net>, dyoung@redhat.com, Pratyush Anand <panand@redhat.com>
 List-Id: devicetree@vger.kernel.org
 
-* Peter Ujfalusi <peter.ujfalusi-l0cyMroinI0@public.gmane.org> [150914 01:54]:
-> Hi Tony,
->=20
-> On 08/24/2015 10:19 AM, Peter Ujfalusi wrote:
-> > Hi,
-> >=20
-> > this series will enable analog audio (via onboard aic310x codec) fo=
-r dra7-evm,
-> > dra72-evm and am57xx-beagle-x15 boards.
-> > In these board McASP3 is connected to the codec and for the McASP3 =
-we needed to
-> > have the DMA crossbar in place since the request lines are not mapp=
-ed by
-> > default.
->=20
-> Did you had a chance to look at this series?
+Hi Guenter, Jon,
 
-Looks OK to me, will look at it more once we have the fixes merged.
+On 11 September 2015 at 10:50, Guenter Roeck <linux@roeck-us.net> wrote=
+:
+> On 09/10/2015 03:29 PM, Jon Masters wrote:
+>>
+>> On 08/24/2015 01:01 PM, fu.wei@linaro.org wrote:
+>>
+>>> +       /*
+>>> +        * Get the frequency of system counter from the cp15 interf=
+ace of
+>>> ARM
+>>> +        * Generic timer. We don't need to check it, because if it
+>>> returns "0",
+>>> +        * system would panic in very early stage.
+>>> +        */
+>>> +       gwdt->clk =3D arch_timer_get_cntfrq();
+>>
+>>
+>> Just thinking out loud...
+>>
+>> What happens later if we virtualize this device within KVM/QEMU/Xen =
+and
+>> then live migrate to another system in which the frequency changes?
+>>
+>
+> Thinking about it, this scenario would cause severe trouble. I think =
+clocks
+> (like I would assume pretty much all other hardware parameters / regi=
+sters)
+> need to be virtualized and must not change.
+>
+> Example: clock is set to 100 kHz on original system, and 400 kHz on n=
+ew
+> system. Timeout is set to 30s, and registers are programmed according=
+ly.
+> User space sends heartbeats every 15 seconds.
+>
+> In this scenario, the watchdog would time out after 30/4 =3D 7.5 seco=
+nds
+> on the new system, or in other words almost immediately.
+>
+> This would be even worse if the original system had a clock of, say,
+> 10 kHz and the new system would use 400 kHz. This just doesn't work.
 
-Paul may have comments on the hwmod chage, looks like you forgot
-to Cc him on it. Can you please resend that one with Paul in Cc?
+I have rechecked the SBSA spec and "Architecture Reference Manual(ARM)"=
+,
+I think we don't need to worry about "the frequency changes", let me
+explain this, but if I misunderstand something, please correct me!
 
-Regards,
+(1) what is the clock source (or reference) of SBSA watchdog timer?
+SBSA spec(2.3) has answered this well at page 23:
+---------------------------
+The Watchdog uses the Generic Timer system count value as the timebase
+against which the decision to trigger an interrupt is made.
+---------------------------
 
-Tony
-=20
-> > Regars,
-> > Peter
-> > ---
-> > Peter Ujfalusi (11):
-> >   ARM: OMAP: DRA7: hwmod: Add data for McASP3
-> >   ARM: DTS: dra7: Add McASP3 node
-> >   ARM: DTS: dra7-evm: Rename mmc2_3v3 supply to evm_3v3_sw
-> >   ARM: DTS: dra7-evm: Add fixed regulator to be used by aic3106's D=
-VDD
-> >   ARM: DTS: dra7-evm: Enable pcf8575 (0x26 address) on i2c2 bus
-> >   ARM: DTS: dra7-evm: Audio support
-> >   ARM: DTS: dra72-evm: Add fixed regulator representing DVDD supply=
- for
-> >     aic3106
-> >   ARM: DTS: dra72-evm: Add gpio hog for vin6_sel_s0 to select audio
-> >   ARM: DTS: dra72-evm: Audio support
-> >   ARM: DTS: am57xx-beagle-x15: Add fixed regulator for aic3104's DV=
-DD
-> >   ARM: DTS: am57xx-beagle-x15: Enable analog audio support
-> >=20
-> >  arch/arm/boot/dts/am57xx-beagle-x15.dts   |  95 ++++++++++++++++++=
-++
-> >  arch/arm/boot/dts/dra7-evm.dts            | 142 ++++++++++++++++++=
-+++++++++++-
-> >  arch/arm/boot/dts/dra7.dtsi               |  15 ++++
-> >  arch/arm/boot/dts/dra72-evm.dts           | 138 ++++++++++++++++++=
-+++++++++++
-> >  arch/arm/mach-omap2/omap_hwmod_7xx_data.c |  41 +++++++++
-> >  5 files changed, 428 insertions(+), 3 deletions(-)
-> >=20
->=20
->=20
-> --=20
-> P=C3=A9ter
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+(2) Can the frequency of the Generic Timer System counter be changed?
+At ARMv8 ARM,  D6.1.1 System counter :
+---------------------------
+The Generic Timer provides a system counter with the following specific=
+ation:
+=46requency
+Increments at *a fixed frequency*, typically in the range 1-50MHz.
+Can support one or more alternative operating modes in which it
+increments by larger amounts at a lower frequency, typically for
+power-saving.
+
+To support lower-power operating modes, the counter can increment by
+larger amounts at a lower frequency. For example, a 10MHz system
+counter might either increment either:
+=E2=80=A2 By 1 at 10MHz.
+=E2=80=A2 By 500 at 20kHz,
+when the system lowers the clock frequency, to reduce power consumption=
+=2E
+In this case, the counter must support transitions between
+high-frequency, high-precision operation, and lower-frequency,
+lower-precision operation, without any impact on the required accuracy
+of the counter.
+---------------------------
+So even the frequency of the Generic Timer System counter be changed
+by some reason(typically for power-saving), this won't affect the
+timeout(and pretimeout) of watchdog, the actual time will be always
+right.
+
+*we were talking about real hardware above. Now we think about virtuali=
+zation.*
+(3) if the virtual watchdog device in KVM/QEMU/Xen is migrated to
+another system in which the frequency changes, will it affect the "dog
+feeding procedure"?
+
+I don't think so.
+if the frequency changes, the frequency of System counter is changed.
+But in ARM system, System counter is a global reference for all clocks
+or timers(per-cpu and Memory-mapped).
+So if   System counter is getting faster, everything in this  virtual
+machine is getting faster, and vice versa.
+
+Now we use the example above
+if  clock is set to 100 kHz on original system, and 400 kHz on new syst=
+em.
+Timeout is set to 30s, and registers are programmed accordingly. User
+space sends heartbeats every 15 seconds.
+In this scenario, On the new system, the watchdog would time out after
+30/4 =3D 7.5 seconds.
+* User space sends heartbeats every 15/4 =3D 3.25 second now , but NOT
+15 seconds.*
+If everything goes well,  system will keep running.
+
+Hope I understand the question correctly, please  correct me if I miss
+something or said anything wrong.
+
+Great thanks for your feedback!
+
+>
+> Guenter
+>
+
+
+
+--=20
+Best regards,
+
+=46u Wei
+Software Engineer
+Red Hat Software (Beijing) Co.,Ltd.Shanghai Branch
+Ph: +86 21 61221326(direct)
+Ph: +86 186 2020 4684 (mobile)
+Room 1512, Regus One Corporate Avenue,Level 15,
+One Corporate Avenue,222 Hubin Road,Huangpu District,
+Shanghai,China 200021
