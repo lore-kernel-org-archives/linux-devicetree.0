@@ -1,62 +1,72 @@
-From: Javier Martinez Canillas <javier-0uQlZySMnqxg9hUCZPvPmw@public.gmane.org>
-Subject: Re: [PATCH 2/2] ARM: dts: rockchip: Add dtb for the Radxa Rock 2
- Square board
-Date: Mon, 14 Sep 2015 09:50:20 +0200
-Message-ID: <CABxcv==JF5QKG8qmrRRUSi4j0=7guQQJTzVzR2bgSxdtUDBv7Q@mail.gmail.com>
-References: <1442011005-4828-1-git-send-email-sjoerd.simons@collabora.co.uk>
-	<1442011005-4828-2-git-send-email-sjoerd.simons@collabora.co.uk>
-	<CABxcv=nRjge1qMeoXt6U6McKbv30oYUhh9C417mX0B=bt9Jg-g@mail.gmail.com>
-	<1442215849.8778.101.camel@collabora.co.uk>
+From: Boris Brezillon <boris.brezillon@free-electrons.com>
+Subject: Re: [RFC PATCH 3/3] devicetree: macb: Add optional property tsu-clk
+Date: Mon, 14 Sep 2015 09:58:46 +0200
+Message-ID: <20150914095846.0d8e2d74@bbrezillon>
+References: <1441958258-35441-1-git-send-email-harinik@xilinx.com>
+	<1441958258-35441-4-git-send-email-harinik@xilinx.com>
+	<20150911165256.GT19678@xsjsorenbubuntu>
+	<CAFcVECK=EONgqPq1jt_kti-VKXPWGVj3OSnqUvo0YcR65Z+Phg@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1442215849.8778.101.camel-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sjoerd Simons <sjoerd.simons-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>
-Cc: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Linux Kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAFcVECK=EONgqPq1jt_kti-VKXPWGVj3OSnqUvo0YcR65Z+Phg@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Harini Katakam <harinikatakamlinux@gmail.com>
+Cc: =?UTF-8?B?U8O2cmVu?= Brinkmann <soren.brinkmann@xilinx.com>, Harini Katakam <harini.katakam@xilinx.com>, Nicolas Ferre <nicolas.ferre@atmel.com>, davem@davemloft.net, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, alexandre.belloni@free-electrons.com, netdev@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Punnaiah Choudary Kalluri <punnaia@xilinx.com>, "michals@xilinx.com" <michals@xilinx.com>, anirudh@xilinx.com
 List-Id: devicetree@vger.kernel.org
 
-Hello Sjoerd,
+Hi Harini,
 
-On Mon, Sep 14, 2015 at 9:30 AM, Sjoerd Simons
-<sjoerd.simons-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org> wrote:
+On Mon, 14 Sep 2015 09:39:05 +0530
+Harini Katakam <harinikatakamlinux@gmail.com> wrote:
 
-[snip]
+> On Fri, Sep 11, 2015 at 10:22 PM, S=C3=B6ren Brinkmann
+> <soren.brinkmann@xilinx.com> wrote:
+> > Hi Harini,
+> >
+> > On Fri, 2015-09-11 at 01:27PM +0530, Harini Katakam wrote:
+> >> Add TSU clock frequency to be used for 1588 support in macb driver=
+=2E
+> >>
+> >> Signed-off-by: Harini Katakam <harinik@xilinx.com>
+> >> ---
+> >>  Documentation/devicetree/bindings/net/macb.txt |    3 +++
+> >>  1 file changed, 3 insertions(+)
+> >>
+> >> diff --git a/Documentation/devicetree/bindings/net/macb.txt b/Docu=
+mentation/devicetree/bindings/net/macb.txt
+> >> index b5d7976..f7c0ea8 100644
+> >> --- a/Documentation/devicetree/bindings/net/macb.txt
+> >> +++ b/Documentation/devicetree/bindings/net/macb.txt
+> >> @@ -19,6 +19,9 @@ Required properties:
+> >>       Optional elements: 'tx_clk'
+> >>  - clocks: Phandles to input clocks.
+> >>
+> >> +Optional properties:
+> >> +- tsu-clk: Time stamp unit clock frequency used.
+> >
+> > Why are we not using the CCF and a clk_get_rate() in the driver?
+> >
+>=20
+> If the clock source was only internal, we could use this
+> approach as usual. But TSU clock can be configured to
+> come from an external clock source or internal.
 
->> > +
->> > +                       vcc18_lcd: REG12 {
->> > +                               regulator-name = "VCC18_LCD";
->> > +                               regulator-min-microvolt =
->> > <1800000>;
->> > +                               regulator-max-microvolt =
->> > <1800000>;
->> > +                               regulator-always-on;
->> > +                       };
->>
->> Should all these regulators really need to be always-on?
->
-> Ideally not all of them, turning the ones that aren't needed off is
-> definately on my list of things to do (together with the other
-> pheripherals, leds, hw. keys etc).
->
-> For the first patch i do prefer to keep them on so we can have get some
-> more testing  with this board before fine-tuning those things (fwiw,
+How about declaring a fixed-rate clk [1] if it comes from an external
+clk, and using a clk driver for the internal clk case?
+This way you'll be able to use the clk API (including the
+clk_get_rate() function) instead of introducing a new way to retrieve a
+clk frequency.
 
-Ok.
+Best Regards,
 
-> the rockchip evb board and others with essentially the same pmic setup
-> all also have them always-on)
+Boris
 
-Yes but I believe that's because it was easier and there are
-regulators on these boards that don't need to be always-on as well.
+[1]http://lxr.free-electrons.com/source/Documentation/devicetree/bindin=
+gs/clock/fixed-clock.txt
 
-> --
-> Sjoerd Simons
-> Collabora Ltd.
-
-Best regards,
-Javier
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--=20
+Boris Brezillon, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
