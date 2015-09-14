@@ -1,52 +1,43 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH 1/5] spi: introduce mmap read support for spi flash
- devices
-Date: Mon, 14 Sep 2015 19:37:44 +0100
-Message-ID: <20150914183744.GF12027@sirena.org.uk>
-References: <1441355402-6837-1-git-send-email-vigneshr@ti.com>
- <1441355402-6837-2-git-send-email-vigneshr@ti.com>
+From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Subject: Re: [PATCH v18 1/4] dt-bindings: add document of Rockchip power domains
+Date: Mon, 14 Sep 2015 20:40:04 +0200
+Message-ID: <4150283.UtCYfG61Ys@diego>
+References: <1441693103-26712-1-git-send-email-wxt@rock-chips.com> <1441693103-26712-2-git-send-email-wxt@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="fC9kceC3Ynf/5ezY"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1441355402-6837-2-git-send-email-vigneshr@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Vignesh R <vigneshr@ti.com>
-Cc: Benoit Cousson <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>, Russell King <linux@arm.linux.org.uk>, David Woodhouse <dwmw2@infradead.org>, Brian Norris <computersforpeace@gmail.com>, hramrach@gmail.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mtd@lists.infradead.org, linux-spi@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1441693103-26712-2-git-send-email-wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Cc: khilman-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, "jinkun.hong" <jinkun.hong-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+Hi Caesar, Jinkun,
 
---fC9kceC3Ynf/5ezY
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Am Dienstag, 8. September 2015, 14:18:20 schrieb Caesar Wang:
+> This add the necessary binding documentation for the power domains
+> found on Rockchip SoCs.
+> 
+> Signed-off-by: jinkun.hong <jinkun.hong-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+> Signed-off-by: Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 
-On Fri, Sep 04, 2015 at 01:59:58PM +0530, Vignesh R wrote:
-> In addition to providing direct access to SPI bus, some spi controller
-> hardwares (like ti-qspi) provide special memory mapped port
-> to accesses SPI flash devices in order to increase read performance.
-> This means the controller can automatically send the SPI signals
-> required to read data from the SPI flash device.
+What is Jinkun Hong's relationship to the patches?
 
-Sorry, also meant to say here: as I kind of indicated in response to the
-flash patch I'd expect to see the SPI core know something about this and
-export an API for this which is integrated with things like the existing
-message queue.
+The issue behind this is, that Caesar is the sender of the patches and how 
+they stand right now would also be the author, but Jinkun was the first to 
+sign them off, which is normally the line of the author.
 
---fC9kceC3Ynf/5ezY
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+Please decide who gets to be author of patches 1,3 and 4. If it's Caesar, 
+we'll drop the Signed-off-by or if it's Jinkun we'll change the author.
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
+There is no big need to resend the patches, I can adapt authorship if 
+necessary.
 
-iQEcBAEBCAAGBQJV9xP3AAoJECTWi3JdVIfQVdsIAIaKztku1w9l7oUknpHXmGwH
-FpSTCB2fOR/Xc7hQAx547MKaa4GIa7F/ktQsNuDuBzxS67/zBa3gEdlizep+0yCB
-AtLpKhEIsVADiVmstVEzHsbVCeNc2W7/gN+qd+Rh4F/xsEwwzeF1vTbuU1mNaX70
-t4n0E6v24u+yVEzqEEhczoJ+4kbsIICPd4hgllVKrK0JLQtAT8BS9kmXOVajik9h
-Ldkeoc5Njh1MaYhMZ0tCXfImEzo91zZHXMfUCtrParR47HKbEgXej//NuS4/PHC3
-fLs6IGP0/o0JikbFCMzo77Sq3z2okfA6pfQ2sFa5EFbEaPJIHVu+H1S7YDlRrXs=
-=p9SY
------END PGP SIGNATURE-----
 
---fC9kceC3Ynf/5ezY--
+Thanks
+Heiko
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
