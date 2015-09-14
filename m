@@ -1,74 +1,107 @@
-From: Sean Young <sean@mess.org>
-Subject: Re: [PATCH][resend] rc: gpio-ir-recv: allow flush space on idle
-Date: Mon, 14 Sep 2015 15:54:37 +0100
-Message-ID: <20150914145436.GA23973@gofer.mess.org>
-References: <1441980024-1944-1-git-send-email-eric@nelint.com>
- <20150914100044.GA21149@gofer.mess.org>
- <55F6DAE2.6080901@nelint.com>
+From: Kieran Bingham <kieranbingham-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 1/6] Documentation: hw_random: Fix device node name
+ /dev/hw_random => /dev/hwrng
+Date: Mon, 14 Sep 2015 15:57:36 +0100
+Message-ID: <CAB3z_RrGS-z_xWWuaeJ=TJWS741EpDO9pEJuNb6TnSyO_3qOPA@mail.gmail.com>
+References: <1442002110-28733-1-git-send-email-lee.jones@linaro.org>
+	<1442002110-28733-2-git-send-email-lee.jones@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-media-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <55F6DAE2.6080901@nelint.com>
-Sender: linux-media-owner@vger.kernel.org
-To: Eric Nelson <eric@nelint.com>
-Cc: linux-media@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mchehab@osg.samsung.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, patrice.chotard@st.com, fabf@skynet.be, wsa@the-dreams.de, heiko@sntech.de, devicetree@vger.kernel.org, otavio@ossystems.com.br
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1442002110-28733-2-git-send-email-lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-F5mvAk5X5gdBDgjK7y7TUQ@public.gmane.org, mpm-VDJrAJ4Gl5ZBDgjK7y7TUQ@public.gmane.org, Herbert Xu <herbert-lOAM2aK0SrRLBo1qDEOMRrpzq4S04n8Q@public.gmane.org>, linux-crypto-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Sep 14, 2015 at 07:34:10AM -0700, Eric Nelson wrote:
-> Thanks Shawn,
-> 
-> On 09/14/2015 03:00 AM, Sean Young wrote:
-> > On Fri, Sep 11, 2015 at 07:00:24AM -0700, Eric Nelson wrote:
-> >> Many decoders require a trailing space (period without IR illumination)
-> >> to be delivered before completing a decode.
-> >>
-> >> Since the gpio-ir-recv driver only delivers events on gpio transitions,
-> >> a single IR symbol (caused by a quick touch on an IR remote) will not
-> >> be properly decoded without the use of a timer to flush the tail end
-> >> state of the IR receiver.
-> > 
-> > This is a problem other IR drivers suffer from too. It might be better
-> > to send a IR timeout event like st_rc_send_lirc_timeout() in st_rc.c,
-> > with the duration set to what the timeout was. That is what irraw 
-> > timeouts are for; much better than fake transitions.
-> > 
-> 
-> If I'm understanding this correctly, this would require modification
-> of each decoder to handle what seems to be a special case regarding
-> the GPIO IR driver (which needs an edge to trigger an interrupt).
+Hi Lee,
 
-No, this is not a special case. Many drivers do have extra code to generate
-some sort of end-of-signal message: redrat3; igorplugusb; st_rc. They don't
-handle it consistently but this should be fixed.
+On 11 September 2015 at 21:08, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+> In April 2099, commit d405640
 
-Secondly, the decoders already handle it. A timeout event matches 
-is_timing_event(), so it's processed by the decoders. The duration should 
-be set correctly.
+That's impressive ... :D
 
-> Isn't it better to have the device interface handle this in one place?
+> ("Driver Core: misc: add node name support
+> for misc devices.") inadvertently changed the device node name from
+> /dev/hw_random to /dev/hwrng.  Since 6 years has passed since the change
+> it seems unpractical to change it back now, as this node name is probably
+> considered ABI by now.  So instead, we'll just change the documentation
+> to match the current situation.
 
-> >> This patch adds an optional device tree node "flush-ms" which, if
-> >> present, will use a jiffie-based timer to complete the last pulse
-> >> stream and allow decode.
-> > 
-> > A common value for this is 100ms, I'm not sure what use it has to have
-> > it configurable. It's nice to have it exposed in rc_dev->timeout.
-> > 
-> 
-> I'm enough of a n00b regarding the details of the various decoders
-> not to know that...
-> 
-> I looked through the couple of decoders my customer was using (NEC and
-> RC6) and came up with a value of 100ms though...
-> 
-> Implementing this through DT and having the default as 0 (disabled)
-> provides an interim solution if the choice is made to change each of
-> the decoders, since I would expect that to take a while and a bunch of
-> remote control devices for testing.
+Ugh ... how messy ... but yes - I agree it may be too late to change
+back as rngd already defaults to /dev/hwrng
 
-Many other drivers use 100ms just fine and I don't remember ever seeing
-any bug reports on that.
+Perhaps you could just use your time machine to continue back in time
+to before it was used :-) In fact can I borrow it after you're done
+please :)
+
+Other than 's/2099/2009/g' - The patch is OK. All entries to
+/dev/hw_random in hw_random.txt converted,
+but outside of Documentation, drivers/char/hw_random/Kconfig also
+references /dev/hw_random ...
+
+Therefore perhaps that could be updated in this patch too?
+--
+Kieran
+
+Now available for:
+  $GREATCOMPANY add -A linuxdevs/kieranbingham/ && \
+  $GREATCOMPANY commit -m "HR: Add fantastic new employee"
 
 
-Sean
+> NB: It looks like rng-tools have already been updated.
+>
+> Signed-off-by: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> ---
+>  Documentation/hw_random.txt | 8 ++++----
+>  1 file changed, 4 insertions(+), 4 deletions(-)
+>
+> diff --git a/Documentation/hw_random.txt b/Documentation/hw_random.txt
+> index 026e237..fce1634 100644
+> --- a/Documentation/hw_random.txt
+> +++ b/Documentation/hw_random.txt
+> @@ -3,7 +3,7 @@ Introduction:
+>         The hw_random framework is software that makes use of a
+>         special hardware feature on your CPU or motherboard,
+>         a Random Number Generator (RNG).  The software has two parts:
+> -       a core providing the /dev/hw_random character device and its
+> +       a core providing the /dev/hwrng character device and its
+>         sysfs support, plus a hardware-specific driver that plugs
+>         into that core.
+>
+> @@ -14,7 +14,7 @@ Introduction:
+>
+>                 http://sourceforge.net/projects/gkernel/
+>
+> -       Those tools use /dev/hw_random to fill the kernel entropy pool,
+> +       Those tools use /dev/hwrng to fill the kernel entropy pool,
+>         which is used internally and exported by the /dev/urandom and
+>         /dev/random special files.
+>
+> @@ -32,13 +32,13 @@ Theory of operation:
+>         The rng-tools package uses such tests in "rngd", and lets you
+>         run them by hand with a "rngtest" utility.
+>
+> -       /dev/hw_random is char device major 10, minor 183.
+> +       /dev/hwrng is char device major 10, minor 183.
+>
+>         CLASS DEVICE.  There is a /sys/class/misc/hw_random node with
+>         two unique attributes, "rng_available" and "rng_current".  The
+>         "rng_available" attribute lists the hardware-specific drivers
+>         available, while "rng_current" lists the one which is currently
+> -       connected to /dev/hw_random.  If your system has more than one
+> +       connected to /dev/hwrng.  If your system has more than one
+>         RNG available, you may change the one used by writing a name from
+>         the list in "rng_available" into "rng_current".
+>
+> --
+> 1.9.1
+>
+> --
+> To unsubscribe from this list: send the line "unsubscribe devicetree" in
+> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
