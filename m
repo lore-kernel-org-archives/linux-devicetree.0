@@ -1,49 +1,45 @@
-From: Tony Lindgren <tony@atomide.com>
-Subject: Re: [PATCH 1/2] ARM: dts: am335x-phycore-som: Fix mpu voltage
-Date: Mon, 14 Sep 2015 10:26:25 -0700
-Message-ID: <20150914172625.GR4215@atomide.com>
-References: <1441281607-35457-1-git-send-email-t.remmet@phytec.de>
+From: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 6/7] ARM: brcmstb: mask GIC IRQs on suspend
+Date: Mon, 14 Sep 2015 10:29:15 -0700
+Message-ID: <20150914172915.GN11487@google.com>
+References: <1434672696-13632-1-git-send-email-computersforpeace@gmail.com>
+ <1434672696-13632-7-git-send-email-computersforpeace@gmail.com>
+ <55F482BC.4050202@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1441281607-35457-1-git-send-email-t.remmet@phytec.de>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Teresa Remmet <t.remmet@phytec.de>
-Cc: linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson@baylibre.com>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>
+In-Reply-To: <55F482BC.4050202-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Gregory Fong <gregory.0xf0-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-* Teresa Remmet <t.remmet@phytec.de> [150903 05:03]:
-> Fix the mpu voltage as it is set to low for the silicon
-> revision 2.1.
-> 
-> Signed-off-by: Teresa Remmet <t.remmet@phytec.de>
+On Sat, Sep 12, 2015 at 12:53:32PM -0700, Florian Fainelli wrote:
+> Le 06/18/15 17:11, Brian Norris a =E9crit :
+> > Lazily-masked IRQs can cause system suspend problems (e.g., spuriou=
+s
+> > wakeups from WFI), so we need to be sure non-wakeup GIC interrupts =
+get
+> > masked, not just disabled, during system suspend.
+> >=20
+> > Signed-off-by: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+>=20
+> Dropped this patch, no longer needed as of 4.3-rc0 with
 
-Applying this one into omap-for-v4.3/fixes thanks.
+Ooh, rc0! I didn't know we started doing sane numbering :)
 
-Tony
+> aec89ef72ba6c94420f599dcb684ed66937cdacf ("irqchip/gic: Enable
+> SKIP_SET_WAKE and MASK_ON_SUSPEND")
 
-> ---
->  arch/arm/boot/dts/am335x-phycore-som.dtsi | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/arch/arm/boot/dts/am335x-phycore-som.dtsi b/arch/arm/boot/dts/am335x-phycore-som.dtsi
-> index 4d28fc3..5dd084f 100644
-> --- a/arch/arm/boot/dts/am335x-phycore-som.dtsi
-> +++ b/arch/arm/boot/dts/am335x-phycore-som.dtsi
-> @@ -252,10 +252,10 @@
->  		};
->  
->  		vdd1_reg: regulator@2 {
-> -			/* VDD_MPU voltage limits 0.95V - 1.26V with +/-4% tolerance */
-> +			/* VDD_MPU voltage limits 0.95V - 1.325V with +/-4% tolerance */
->  			regulator-name = "vdd_mpu";
->  			regulator-min-microvolt = <912500>;
-> -			regulator-max-microvolt = <1312500>;
-> +			regulator-max-microvolt = <1378000>;
->  			regulator-boot-on;
->  			regulator-always-on;
->  		};
-> -- 
-> 1.9.1
-> 
+Nice! I was wanting this done for a while, but I believe this approach
+was rejected a few times before. Glad Sudeep dug to the bottom of the
+issue to argue *why* that's the right thing to do.
+
+Brian
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
