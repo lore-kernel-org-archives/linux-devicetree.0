@@ -1,171 +1,63 @@
-From: Andreas Dannenberg <dannenberg@ti.com>
-Subject: Re: [PATCH v3 01/10] dt: power: bq24257-charger: Cover additional
- devices
-Date: Mon, 14 Sep 2015 08:54:30 -0500
-Message-ID: <20150914135430.GA21442@borg>
-References: <1442003202-1430-1-git-send-email-dannenberg@ti.com>
- <1442003202-1430-2-git-send-email-dannenberg@ti.com>
- <55F66514.1080909@samsung.com>
+From: Eric Nelson <eric@nelint.com>
+Subject: Re: [PATCH][resend] rc: gpio-ir-recv: allow flush space on idle
+Date: Mon, 14 Sep 2015 07:34:10 -0700
+Message-ID: <55F6DAE2.6080901@nelint.com>
+References: <1441980024-1944-1-git-send-email-eric@nelint.com>
+ <20150914100044.GA21149@gofer.mess.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Return-path: <linux-pm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <55F66514.1080909@samsung.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-Cc: Sebastian Reichel <sre@kernel.org>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, David Woodhouse <dwmw2@infradead.org>, Laurentiu Palcu <laurentiu.palcu@intel.com>, Ramakrishna Pallala <ramakrishna.pallala@intel.com>, linux-pm@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-media-owner@vger.kernel.org>
+In-Reply-To: <20150914100044.GA21149@gofer.mess.org>
+Sender: linux-media-owner@vger.kernel.org
+To: Sean Young <sean@mess.org>
+Cc: linux-media@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mchehab@osg.samsung.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, patrice.chotard@st.com, fabf@skynet.be, wsa@the-dreams.de, heiko@sntech.de, devicetree@vger.kernel.org, otavio@ossystems.com.br
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Sep 14, 2015 at 03:11:32PM +0900, Krzysztof Kozlowski wrote:
-> On 12.09.2015 05:26, Andreas Dannenberg wrote:
-> > Extend the bq24257 charger's device tree documentation to cover the
-> > bq24250 and bq24251 devices as well feature additions.
-> > 
-> > Signed-off-by: Andreas Dannenberg <dannenberg@ti.com>
-> > ---
-> >  .../devicetree/bindings/power/bq24257.txt          | 59 ++++++++++++++++++++--
-> >  1 file changed, 54 insertions(+), 5 deletions(-)
-> > 
-> > diff --git a/Documentation/devicetree/bindings/power/bq24257.txt b/Documentation/devicetree/bindings/power/bq24257.txt
-> > index 5c9d394..4a88c96 100644
-> > --- a/Documentation/devicetree/bindings/power/bq24257.txt
-> > +++ b/Documentation/devicetree/bindings/power/bq24257.txt
-> > @@ -1,21 +1,70 @@
-> > -Binding for TI bq24257 Li-Ion Charger
-> > +Binding for TI bq24250/bq24251/bq24257 Li-Ion Charger
-> >  
-> >  Required properties:
-> >  - compatible: Should contain one of the following:
-> > + * "ti,bq24250"
-> > + * "ti,bq24251"
-> >   * "ti,bq24257"
-> > -- reg:			   integer, i2c address of the device.
-> > +- reg: integer, i2c address of the device.
-> > +- stat-gpios: GPIO used for the devices STAT_IN pin. Alternatively the pin can
-> > +    also be defined through the standard interrupt definition properties (see
-> > +    optional properties section below). Only use one method.
-> >  - ti,battery-regulation-voltage: integer, maximum charging voltage in uV.
-> > -- ti,charge-current:	   integer, maximum charging current in uA.
-> > -- ti,termination-current:  integer, charge will be terminated when current in
-> > -			   constant-voltage phase drops below this value (in uA).
-> > +- ti,charge-current: integer, maximum charging current in uA.
-> > +- ti,termination-current: integer, charge will be terminated when current in
-> > +    constant-voltage phase drops below this value (in uA).
-> > +
-> > +Optional properties:
-> > +- pg-gpios: GPIO used for connecting the bq2425x device PG (Power Good) pin.
-> > +    This pin is not available on all devices however it should be used if
-> > +    possible as this is the recommended way to obtain the charger's input PG
-> > +    state. If this pin is not specified a software-based approach for PG
-> > +    detection is used.
-> > +- ti,current-limit: The maximum current to be drawn from the charger's input
-> > +    (in uA). If this property is not specified a USB D+/D- signal based charger
-> > +    type detection is used (if available) and the input limit current is set
-> > +    accordingly. If the D+/D- based detection is not available on a given device
-> > +    a default of 500,000 is used (=500mA).
-> > +- ti,ovp-voltage: Configures the over voltage protection voltage (in uV). If
-> > +    not specified a default of 6,5000,000 (=6.5V) is used.
-> > +- ti,in-dpm-voltage: Configures the threshold input voltage for the dynamic
-> > +    power path management (in uV). If not specified a default of 4,360,000
-> > +    (=4.36V) is used.
-> > +- ti,safety-timer-2x-enable: If this property is set to 1 the device's safety
-> > +    timer is extended (slowed down) by a factor of two. Setting this property
-> > +    to 0 or not providing it will leave the safety timer at its default
-> > +    setting.
+Thanks Shawn,
+
+On 09/14/2015 03:00 AM, Sean Young wrote:
+> On Fri, Sep 11, 2015 at 07:00:24AM -0700, Eric Nelson wrote:
+>> Many decoders require a trailing space (period without IR illumination)
+>> to be delivered before completing a decode.
+>>
+>> Since the gpio-ir-recv driver only delivers events on gpio transitions,
+>> a single IR symbol (caused by a quick touch on an IR remote) will not
+>> be properly decoded without the use of a timer to flush the tail end
+>> state of the IR receiver.
 > 
-> Now I spotted the difference in this binding from previous emails.
-> Previously you made it as a boolean property. Now it is a integer
-> property for a boolean value. It is unusual. If you expect a need (or a
-> possibility of need) of:
-> 1. extending,
-> 2. overriding,
-> 3. using similar (extended) property in different drivers,
-> then it should be a real value, like:
+> This is a problem other IR drivers suffer from too. It might be better
+> to send a IR timeout event like st_rc_send_lirc_timeout() in st_rc.c,
+> with the duration set to what the timeout was. That is what irraw 
+> timeouts are for; much better than fake transitions.
 > 
-> 1. ti,safety-timer: integer, in seconds
 
-Hi Krzysztof,
+If I'm understanding this correctly, this would require modification
+of each decoder to handle what seems to be a special case regarding
+the GPIO IR driver (which needs an edge to trigger an interrupt).
 
-I thought about this as well because the device actually allows
-configuring different safety timer intervals (currently not exposed) and
-it appears that the "2x enable" could be factored in there however it's
-not as easy as it seems.  The "2x enable" is a dedicated HW feature
-that's only being used in some states of the devices and with that does
-not generally extend the safety timer under all conditions.
+Isn't it better to have the device interface handle this in one place?
 
-> 2. ti,safety-timer-ratio/multiplier: integer, supported values are: 0
-> (use default) or 2 (slow down by factor of 2)
+>> This patch adds an optional device tree node "flush-ms" which, if
+>> present, will use a jiffie-based timer to complete the last pulse
+>> stream and allow decode.
 > 
-> It is unusual and not obvious to use a integer value for boolean strict
-> property. With current solution you can actually only override it.
-
-Yes that was the sole reason behind using integer instead of boolean.
-The boolean "character" of this property was left intact because of the
-direct mapping to a device HW feature (see below). But I can certainly
-change this to ti,safety-timer-multiplier and use 0/2. This avoids the
-inaccuracy as explained above with just using ti,safety-timer (the
-corresponding underlying device property should be separate and could be
-exposed if ever needed) and still leaves room for this property to grow
-which may come in handy later.
-
-> Extending is possible but would look really weird, like:
-> 	ti,safety-timer-2x-enable = <4>; /* Heh? 4x or (4*2)x ??? */
-
+> A common value for this is 100ms, I'm not sure what use it has to have
+> it configurable. It's nice to have it exposed in rc_dev->timeout.
 > 
-> To add even more confusion: why this property has to be configured in
-> Device Tree? How it is related to the hardware? It rather looks like a
-> job for sysfs.
 
-This property maps directly to a corresponding bit in the device
-register map so yes it is related to the HW and IMHO should be
-applicable to DT. The reason for not providing write access to that bit
-via sysfs is the same as this driver doesn't have write access to other
-"critical" properties such as charge current/voltages.
+I'm enough of a n00b regarding the details of the various decoders
+not to know that...
+
+I looked through the couple of decoders my customer was using (NEC and
+RC6) and came up with a value of 100ms though...
+
+Implementing this through DT and having the default as 0 (disabled)
+provides an interim solution if the choice is made to change each of
+the decoders, since I would expect that to take a while and a bunch of
+remote control devices for testing.
 
 Regards,
 
---
-Andreas Dannenberg
-Texas Instruments Inc
 
-
-> 
-> Best regards,
-> Krzysztof
-> 
-> > +- interrupt-parent: Should be the phandle for the interrupt controller. Use in
-> > +    conjunction with "interrupts" and only in case "stat-gpios" is not used.
-> > +- interrupts: Interrupt mapping for GPIO IRQ (configure for both edges). Use in
-> > +    conjunction with "interrupt-parent" and only in case "stat-gpios" is not
-> > +    used.
-> >  
-> >  Example:
-> >  
-> >  bq24257 {
-> >  	compatible = "ti,bq24257";
-> >  	reg = <0x6a>;
-> > +	stat-gpios = <&gpio1 16 GPIO_ACTIVE_HIGH>;
-> > +	pg-gpios = <&gpio1 28 GPIO_ACTIVE_HIGH>;
-> >  
-> >  	ti,battery-regulation-voltage = <4200000>;
-> >  	ti,charge-current = <1000000>;
-> >  	ti,termination-current = <50000>;
-> >  };
-> > +
-> > +Example:
-> > +
-> > +bq24250 {
-> > +	compatible = "ti,bq24250";
-> > +	reg = <0x6a>;
-> > +	interrupt-parent = <&gpio1>;
-> > +	interrupts = <16 IRQ_TYPE_EDGE_BOTH>;
-> > +
-> > +	ti,battery-regulation-voltage = <4200000>;
-> > +	ti,charge-current = <500000>;
-> > +	ti,termination-current = <50000>;
-> > +	ti,current-limit = <900000>;
-> > +	ti,ovp-voltage = <9500000>;
-> > +	ti,in-dpm-voltage = <4440000>;
-> > +};
-> > 
-> 
+Eric
