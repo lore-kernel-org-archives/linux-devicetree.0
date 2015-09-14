@@ -1,86 +1,63 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH 4/6] hwrng: st: Add support for ST's HW Random Number
- Generator
-Date: Mon, 14 Sep 2015 08:42:34 +0100
-Message-ID: <20150914074234.GC27591@x1>
-References: <1442002110-28733-1-git-send-email-lee.jones@linaro.org>
- <1442002110-28733-5-git-send-email-lee.jones@linaro.org>
- <CAOMZO5CWywFHd1HE2=G-KEvQZpu_rJibmJL4fL5yCWRsnpi05Q@mail.gmail.com>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH] ahci: qoriq: fixed using uninitialized variable warnings
+Date: Mon, 14 Sep 2015 09:45:33 +0200
+Message-ID: <4524877.YJljz8o2LZ@wuerfel>
+References: <1441790182-20248-1-git-send-email-Yuantian.Tang@freescale.com> <DM2PR03MB574B7F5FBB2844161CD7482FA5D0@DM2PR03MB574.namprd03.prod.outlook.com> <20150914065432.GA25168@wfg-t540p.sh.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAOMZO5CWywFHd1HE2=G-KEvQZpu_rJibmJL4fL5yCWRsnpi05Q@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Fabio Estevam <festevam@gmail.com>
-Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, linux-kernel <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Herbert Xu <herbert@gondor.apana.org.au>, Pankaj Dev <pankaj.dev@st.com>, linux-crypto@vger.kernel.org, Matt Mackall <mpm@selenic.com>, kernel@stlinux.com
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-ide-owner@vger.kernel.org>
+In-Reply-To: <20150914065432.GA25168@wfg-t540p.sh.intel.com>
+Sender: linux-ide-owner@vger.kernel.org
+To: Fengguang Wu <fengguang.wu@intel.com>
+Cc: Yuantian Tang <Yuantian.Tang@freescale.com>, Tejun Heo <tj@kernel.org>, "hdegoede@redhat.com" <hdegoede@redhat.com>, "linux-ide@vger.kernel.org" <linux-ide@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sat, 12 Sep 2015, Fabio Estevam wrote:
+On Monday 14 September 2015 14:54:32 Fengguang Wu wrote:
+> On Mon, Sep 14, 2015 at 06:51:36AM +0000, Yuantian Tang wrote:
+> > The ARCH should have been ARM for this driver.
+> > Do you think this warning would go away if adding a dependency on ARM?
+> 
+> Yes, that may work.
 
-> On Fri, Sep 11, 2015 at 5:08 PM, Lee Jones <lee.jones@linaro.org> wro=
-te:
->=20
-> > +       res =3D platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> > +       base =3D devm_ioremap_resource(&pdev->dev, res);
-> > +       if (IS_ERR(base))
-> > +               return PTR_ERR(base);
-> > +
-> > +       clk =3D devm_clk_get(&pdev->dev, NULL);
-> > +       if (!clk)
-> > +               return -EINVAL;
->=20
-> This should be:
->=20
->     if (IS_ERR(clk))
->         return PTR_ERR(clk);
+In general, we really want to leave drivers with a COMPILE_TEST dependency
+so they at least get cross-built on x86, ideally on all architectures.
 
-You're right.  Will fix.
+Does something like the below help? I think we really just need to help
+gcc a little to see the obvious.
 
-> > +
-> > +       clk_prepare_enable(clk);
->=20
-> This may fail, so better check its return value and propagate it on e=
-rror.
+	Arnd
 
-Looks like the jury is out on this one.
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 
-$ git grep clk_prepare_enable | grep '=3D clk\|if (' | wc -l
-659
-$ git grep clk_prepare_enable | grep -v '=3D clk\|if (' | wc -l
-569
+diff --git a/drivers/ata/ahci_qoriq.c b/drivers/ata/ahci_qoriq.c
+index e5e498812554..fc57208d8dcd 100644
+--- a/drivers/ata/ahci_qoriq.c
++++ b/drivers/ata/ahci_qoriq.c
+@@ -75,6 +75,7 @@ static int ahci_qoriq_hardreset(struct ata_link *link, unsigned int *class,
+ 	u8 *d2h_fis = pp->rx_fis + RX_FIS_D2H_REG;
+ 	struct ata_taskfile tf;
+ 	bool online;
++	bool ls101021a_workaround = (qoriq_priv->type == AHCI_LS1021A);
+ 	int rc;
+ 
+ 	DPRINTK("ENTER\n");
+@@ -92,7 +93,7 @@ static int ahci_qoriq_hardreset(struct ata_link *link, unsigned int *class,
+ 	 * After the sequence is complete, software should restore the
+ 	 * PxCMD and PxIS with the stored values.
+ 	 */
+-	if (qoriq_priv->type == AHCI_LS1021A) {
++	if (ls101021a_workaround) {
+ 		px_cmd = readl(port_mmio + PORT_CMD);
+ 		px_is = readl(port_mmio + PORT_IRQ_STAT);
+ 	}
+@@ -106,7 +107,7 @@ static int ahci_qoriq_hardreset(struct ata_link *link, unsigned int *class,
+ 				 ahci_check_ready);
+ 
+ 	/* restore the PxCMD and PxIS on ls1021 */
+-	if (qoriq_priv->type == AHCI_LS1021A) {
++	if (ls101021a_workaround) {
+ 		px_val = readl(port_mmio + PORT_CMD);
+ 		if (px_val != px_cmd)
+ 			writel(px_cmd, port_mmio + PORT_CMD);
 
-=2E.. but it's not a problem to fix up.  Will do.
-
-> > +       ddata->ops.priv =3D (unsigned long)ddata;
-> > +       ddata->ops.read =3D st_rng_read;
-> > +       ddata->ops.name =3D pdev->name;
-> > +       ddata->base     =3D base;
-> > +       ddata->clk      =3D clk;
-> > +
-> > +       dev_set_drvdata(&pdev->dev, ddata);
-> > +
-> > +       ret =3D hwrng_register(&ddata->ops);
-> > +       if (ret) {
-> > +               dev_err(&pdev->dev, "Failed to register HW RNG\n");
-> > +               return ret;
-> > +       }
-> > +
-> > +       dev_info(&pdev->dev, "Successfully registered HW RNG\n");
->=20
-> No need to put this info.
-
-Ah, you caught me!
-
-I know these types of prints are usually deemed not useful; however,
-unless there is a failure both this driver and the core driver are
-silent, so the user doesn't know that 1 or more of these devices are
-available.  I personally like to see an entry in the bootlog for this
-kind of functionality.
-
---=20
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-=46ollow Linaro: Facebook | Twitter | Blog
