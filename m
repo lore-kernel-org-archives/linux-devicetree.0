@@ -1,56 +1,82 @@
-From: =?UTF-8?q?Emilio=20L=C3=B3pez?= <emilio.lopez@collabora.co.uk>
-Subject: [PATCH v2 3/3] ARM: dts: Enable EC vboot context support on Peach boards
-Date: Mon, 14 Sep 2015 09:34:09 -0300
-Message-ID: <1442234049-18637-4-git-send-email-emilio.lopez@collabora.co.uk>
-References: <1442234049-18637-1-git-send-email-emilio.lopez@collabora.co.uk>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1442234049-18637-1-git-send-email-emilio.lopez@collabora.co.uk>
-Sender: linux-kernel-owner@vger.kernel.org
-To: gregkh@linuxfoundation.org, olof@lixom.net, kgene@kernel.org, k.kozlowski@samsung.com, linux@roeck-us.net
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, =?UTF-8?q?Emilio=20L=C3=B3pez?= <emilio.lopez@collabora.co.uk>
+From: Punit Agrawal <punit.agrawal@arm.com>
+Subject: [PATCH v3 0/5] SCPI Sensor support
+Date: Mon, 14 Sep 2015 14:00:13 +0100
+Message-ID: <1442235619-4029-1-git-send-email-punit.agrawal@arm.com>
+Return-path: <linux-pm-owner@vger.kernel.org>
+Sender: linux-pm-owner@vger.kernel.org
+To: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+Cc: sudeep.holla@arm.com, linux-pm@vger.kernel.org, lm-sensors@lm-sensors.org, liviu.dudau@arm.com, edubezval@gmail.com, mark.rutland@arm.com, linux@roeck-us.net, linux-kernel@vger.kernel.org, robh+dt@kernel.org, Punit Agrawal <punit.agrawal@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-The Peach boards use the EC to store the vboot context information,
-so add the corresponding properties on the EC node to indicate so.
+Hi
 
-Signed-off-by: Emilio L=C3=B3pez <emilio.lopez@collabora.co.uk>
----
+The series adds support for SCPI based sensors for ARM development
+platform. In addition to supporting sensors, when a temperature sensor
+is discovered the driver registers the sensor with the thermal
+framework.
 
-Changes from v1:
- - none
+The sensor patches here have been split out from a longer series
+adding support for registering power model based cooling devices for
+the CPU via device tree. Earliers postings can be seen at [0], [1].
 
- arch/arm/boot/dts/exynos5420-peach-pit.dts | 1 +
- arch/arm/boot/dts/exynos5800-peach-pi.dts  | 1 +
- 2 files changed, 2 insertions(+)
+Patches 1-3 create a hwmon sensor driver for sensors provided by SCPI
+firmware. Patch 4 adds support for the temperature sensors to register
+with the thermal framework. This allows setting up platform thermals
+using OF thermal bindings.
 
-diff --git a/arch/arm/boot/dts/exynos5420-peach-pit.dts b/arch/arm/boot=
-/dts/exynos5420-peach-pit.dts
-index 8f4d76c..ac02fb4 100644
---- a/arch/arm/boot/dts/exynos5420-peach-pit.dts
-+++ b/arch/arm/boot/dts/exynos5420-peach-pit.dts
-@@ -935,6 +935,7 @@
- 		pinctrl-0 =3D <&ec_spi_cs &ec_irq>;
- 		reg =3D <0>;
- 		spi-max-frequency =3D <3125000>;
-+		google,has-vbc-nvram;
-=20
- 		controller-data {
- 			samsung,spi-feedback-delay =3D <1>;
-diff --git a/arch/arm/boot/dts/exynos5800-peach-pi.dts b/arch/arm/boot/=
-dts/exynos5800-peach-pi.dts
-index 7d5b386..b60dec0 100644
---- a/arch/arm/boot/dts/exynos5800-peach-pi.dts
-+++ b/arch/arm/boot/dts/exynos5800-peach-pi.dts
-@@ -898,6 +898,7 @@
- 		pinctrl-0 =3D <&ec_spi_cs &ec_irq>;
- 		reg =3D <0>;
- 		spi-max-frequency =3D <3125000>;
-+		google,has-vbc-nvram;
-=20
- 		controller-data {
- 			samsung,spi-feedback-delay =3D <1>;
---=20
-2.1.4
+The last patch adds support for the sensors in the Juno device tree.
+
+The patches depend on SCPI and mailbox patches[2] from Sudeep. The
+SCPI protocol document with details of the sensor interface can be
+found at [3].
+
+I'd like to aim for merging the patches with the SCPI changes if
+possible. The hwmon patches have been acked by Guenter. If there
+aren't any objections, I would like to request acks for the binding
+updates in Patch 1.
+
+Thanks,
+Punit
+
+Changes v2->v3
+  - split out the sensor patches (posted here)
+  - rebase onto v4.3-rc1
+  
+Changes v1->v2
+  - added documentation for the scpi-hwmon driver
+  - replaced static allocation of platform structure in scpi-hwmon.c
+    with dynamic allocation
+  - re-structured registering of thermal zones to better handle
+    error conditions
+  - reduced chattiness in scpi-hwmon.c
+  - corrected sensor numbering to align with hwmon documentation
+  - dynamic allocation of attributes and attribute groups
+
+[0] http://thread.gmane.org/gmane.linux.kernel/2002152
+[1] http://thread.gmane.org/gmane.linux.kernel/2011466
+[2] http://thread.gmane.org/gmane.linux.kernel/2009735
+[3] http://infocenter.arm.com/help/topic/com.arm.doc.dui0922b/index.html
+
+Punit Agrawal (5):
+  Documentation: add DT bindings for ARM SCPI sensors
+  firmware: arm_scpi: Extend to support sensors
+  hwmon: Support sensors exported via ARM SCP interface
+  hwmon: Support registration of thermal zones for SCP temperature
+    sensors
+  arm64: dts: Add sensor node to Juno dt
+
+ Documentation/devicetree/bindings/arm/arm,scpi.txt |  15 ++
+ Documentation/hwmon/scpi-hwmon                     |  33 +++
+ arch/arm64/boot/dts/arm/juno-base.dtsi             |   5 +
+ drivers/firmware/arm_scpi.c                        |  60 +++++
+ drivers/hwmon/Kconfig                              |   8 +
+ drivers/hwmon/Makefile                             |   1 +
+ drivers/hwmon/scpi-hwmon.c                         | 288 +++++++++++++++++++++
+ include/linux/scpi_protocol.h                      |  17 ++
+ 8 files changed, 427 insertions(+)
+ create mode 100644 Documentation/hwmon/scpi-hwmon
+ create mode 100644 drivers/hwmon/scpi-hwmon.c
+
+-- 
+2.5.0
+
