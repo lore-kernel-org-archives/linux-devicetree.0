@@ -1,36 +1,58 @@
-From: Tomeu Vizoso <tomeu.vizoso@collabora.com>
-Subject: Re: [PATCH v4 20/22] driver core: Allow deferring probes until late init
-Date: Mon, 14 Sep 2015 11:04:53 +0200
-Message-ID: <CAAObsKA24=JZH_ukwCcaQ+cCxL1BcVLZe=W54X-5V=3idogW5A@mail.gmail.com>
-References: <1441628627-5143-1-git-send-email-tomeu.vizoso@collabora.com>
- <1441628627-5143-21-git-send-email-tomeu.vizoso@collabora.com> <20150911121746.GR12027@sirena.org.uk>
+From: Alexander Sverdlin <alexander.sverdlin-xNZwKgViW5gAvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH v2] dts: keystone: Use new "ti,keystone-i2c" compatible
+Date: Mon, 14 Sep 2015 11:07:02 +0200
+Message-ID: <55F68E36.2030609@nokia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-acpi-owner@vger.kernel.org>
-In-Reply-To: <20150911121746.GR12027@sirena.org.uk>
-Sender: linux-acpi-owner@vger.kernel.org
-To: Mark Brown <broonie@kernel.org>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Stephen Warren <swarren@wwwdotorg.org>, Javier Martinez Canillas <javier@osg.samsung.com>, Thierry Reding <thierry.reding@gmail.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linus Walleij <linus.walleij@linaro.org>, linux-acpi@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>, Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, "linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.orgMark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 11 September 2015 at 14:17, Mark Brown <broonie@kernel.org> wrote:
-> On Mon, Sep 07, 2015 at 02:23:45PM +0200, Tomeu Vizoso wrote:
->> Add a field to struct device that instructs the device-driver core to
->> defer the probe of this device until the late_initcall level.
->>
->> By letting all built-in drivers to register before starting to probe, we
->> can avoid any deferred probes by probing dependencies on demand.
->
-> Is this not going to resut in massive churn as we go through and set
-> this flag for a massive proportion of drivers?  Could we mitigate this
-> by having a first pass at setting this per subsystem or something so
-> that we get a good proportion of drivers with changes in core code?
+Now as "i2c-davinci" driver has special handling for Keystone it's time to switch
+the device tree to use new "compatible" property. Old one is left for backwards-
+compatibility.
 
-I think this flag should be only set during the initial registration
-of devices (eg. acpi_device_add, of_device_add, etc), as by delaying
-the probe of those we are automatically delaying the probe of the
-rest.
+Signed-off-by: Alexander Sverdlin <alexander.sverdlin-xNZwKgViW5gAvxtiuMwx3w@public.gmane.org>
+---
 
-Regards,
+Changes in v2:
+- As suggested by Mark Rutland, kept the old "compatible" for backwards-
+  compatibility
 
-Tomeu
+ arch/arm/boot/dts/keystone.dtsi |    6 +++---
+ 1 files changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/arch/arm/boot/dts/keystone.dtsi b/arch/arm/boot/dts/keystone.dtsi
+index 72816d6..abd7455 100644
+--- a/arch/arm/boot/dts/keystone.dtsi
++++ b/arch/arm/boot/dts/keystone.dtsi
+@@ -106,7 +106,7 @@
+ 		};
+ 
+ 		i2c0: i2c@2530000 {
+-			compatible = "ti,davinci-i2c";
++			compatible = "ti,keystone-i2c", "ti,davinci-i2c";
+ 			reg = <0x02530000 0x400>;
+ 			clock-frequency = <100000>;
+ 			clocks = <&clki2c>;
+@@ -116,7 +116,7 @@
+ 		};
+ 
+ 		i2c1: i2c@2530400 {
+-			compatible = "ti,davinci-i2c";
++			compatible = "ti,keystone-i2c", "ti,davinci-i2c";
+ 			reg = <0x02530400 0x400>;
+ 			clock-frequency = <100000>;
+ 			clocks = <&clki2c>;
+@@ -126,7 +126,7 @@
+ 		};
+ 
+ 		i2c2: i2c@2530800 {
+-			compatible = "ti,davinci-i2c";
++			compatible = "ti,keystone-i2c", "ti,davinci-i2c";
+ 			reg = <0x02530800 0x400>;
+ 			clock-frequency = <100000>;
+ 			clocks = <&clki2c>;
