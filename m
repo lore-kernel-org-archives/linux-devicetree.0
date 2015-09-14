@@ -1,65 +1,80 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH] ARM: dts: sun6i: Add accelerometer on Columbus A31
-Date: Mon, 14 Sep 2015 22:35:34 +0200
-Message-ID: <20150914203534.GI4684@lukather>
-References: <1442168761-2564-1-git-send-email-hdegoede@redhat.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 1/3] Documentation: bindings: brcmstb: Document
+ write-pairing
+Date: Mon, 14 Sep 2015 15:36:41 -0500
+Message-ID: <55F72FD9.60607@kernel.org>
+References: <1442260369-6575-1-git-send-email-f.fainelli@gmail.com>
+ <1442260369-6575-2-git-send-email-f.fainelli@gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="IJAclU0AInkryoed"
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1442168761-2564-1-git-send-email-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+In-Reply-To: <1442260369-6575-2-git-send-email-f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Sander Vermin <sander-wENMetUwf8VmR6Xm/wNWPw@public.gmane.org>
+To: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, gregory.0xf0-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+On 09/14/2015 02:52 PM, Florian Fainelli wrote:
+> Document the hif-cpubiuctrl node a bit more, and add a documentation
+> entry for the optional "brcm,write-pairing" property.
+> 
+> Signed-off-by: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> ---
+>  .../devicetree/bindings/arm/bcm/brcm,brcmstb.txt          | 15 +++++++++++++++
+>  1 file changed, 15 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/arm/bcm/brcm,brcmstb.txt b/Documentation/devicetree/bindings/arm/bcm/brcm,brcmstb.txt
+> index 430608ec09f0..602fa5f308bb 100644
+> --- a/Documentation/devicetree/bindings/arm/bcm/brcm,brcmstb.txt
+> +++ b/Documentation/devicetree/bindings/arm/bcm/brcm,brcmstb.txt
+> @@ -20,6 +20,20 @@ system control is required:
+>      - compatible: "brcm,bcm<chip_id>-hif-cpubiuctrl", "syscon"
 
---IJAclU0AInkryoed
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+This has multiple chips allowed, but...
 
-On Sun, Sep 13, 2015 at 08:26:01PM +0200, Hans de Goede wrote:
-> From: Sander Vermin <sander-wENMetUwf8VmR6Xm/wNWPw@public.gmane.org>
->=20
-> Add mma8452 accelerometer to sun6i-a31-colombus.dts.
->=20
-> Signed-off-by: Sander Vermin <sander-wENMetUwf8VmR6Xm/wNWPw@public.gmane.org>
-> Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+>      - compatible: "brcm,bcm<chip_id>-hif-continuation", "syscon"
+>  
+> +hif-cpubiuctrl node
+> +-------------------
 
-Applied, thanks!
+Perhaps it is outside this context, but a description of the block would
+be nice.
 
-Maxime
+> +
+> +Required properties:
+> +
+> +    - compatible
+> +	The string should be "brcm.bcm7445-hif-cpubiuctrl", "syscon"
 
---=20
-Maxime Ripard, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
+This is just one.
 
---IJAclU0AInkryoed
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+> +
+> +Optional properties:
+> +
+> +    - brcm,write-pairing:
+> +	Boolean property, which when present indicatse that the chip
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
+s/indicatse/indicates/
 
-iQIcBAEBAgAGBQJV9y+WAAoJEBx+YmzsjxAgeaYP/1SYvDPE4W5DQjEleOqARLfA
-5RfdAclFcUjkrhb8Ync/86iDnj0KikDaiikJVTUVR77xOAx4GJU5LeJwz7valMUe
-9f5PxoxuDpijBO8dGNYj3VPKq+WhdPGRBZvHQhmiL9OC2V0JTW7r4weQDP8wya3m
-ckXk4JFHO/fpQnPV/aSKXMs/oRwFmVXmSXdEt8gvtbENuXfn0bsWSquGaw5srO+M
-B5sKcbw+dnD8kWd91QrTnXy4PER+mN/dCgZroWkNq25iwSD44mWugN7UxuS3QJA5
-pvlGt9DBczjh6rrlN83ICdsU5v3h37Fe8Lw821cGzlykMPjVYaUQxiLFJrv6o5Ig
-O4+XjOTJNFS/ZmptPQinIDM8xUI8BKlQSaw5IPY7qgVzw/kR4OJ6c+4vRvIUW5h7
-TPP7EGoKS62Bn5GGsKJLUCYIiAEibhjBx2E6g9EEM9gmqErBVXYmnocC1yXdd5rf
-K076lqqOsTnVje3fuD6BA+h3HDkpPAcIIHwwqU+XioqZzCvSJ6AtooiDTdZ1V0sG
-6Xiv9HcAAXi/pJhnk3nbKNKMw/ylIehCmsvkrVEPo4qNg638yOOIOLPaIT3U/CS/
-H2va+cUIr7Oo0LfxlmL6GQQtP6chmnQYNEyKpNal9U1qz7onW2QlxSFsBcIcX1pv
-t/+wZfT9jz2XJDhj8kbH
-=x4TR
------END PGP SIGNATURE-----
+> +	supports write-pairing.
 
---IJAclU0AInkryoed--
+What is write pairing? Please give brief description.
+
+> +
+>  example:
+>      rdb {
+>          #address-cells = <1>;
+> @@ -35,6 +49,7 @@ example:
+>          hif_cpubiuctrl: syscon@3e2400 {
+>              compatible = "brcm,bcm7445-hif-cpubiuctrl", "syscon";
+>              reg = <0x3e2400 0x5b4>;
+> +            brcm,write-pairing;
+>          };
+>  
+>          hif_continuation: syscon@452000 {
+> 
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
