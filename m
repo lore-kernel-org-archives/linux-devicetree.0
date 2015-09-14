@@ -1,80 +1,69 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 1/3] Documentation: bindings: brcmstb: Document
- write-pairing
-Date: Mon, 14 Sep 2015 15:36:41 -0500
-Message-ID: <55F72FD9.60607@kernel.org>
+From: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 3/3] ARM: brcmstb: Setup BIU control registers during boot
+Date: Mon, 14 Sep 2015 13:48:33 -0700
+Message-ID: <20150914204833.GA53555@google.com>
 References: <1442260369-6575-1-git-send-email-f.fainelli@gmail.com>
- <1442260369-6575-2-git-send-email-f.fainelli@gmail.com>
+ <1442260369-6575-4-git-send-email-f.fainelli@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1442260369-6575-2-git-send-email-f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1442260369-6575-4-git-send-email-f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, gregory.0xf0-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+To: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, gregory.0xf0-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 09/14/2015 02:52 PM, Florian Fainelli wrote:
-> Document the hif-cpubiuctrl node a bit more, and add a documentation
-> entry for the optional "brcm,write-pairing" property.
+On Mon, Sep 14, 2015 at 12:52:49PM -0700, Florian Fainelli wrote:
+> Call brcmstb_biuctrl_init() in brcmstb's init_irq machine descriptor
+> callback since we need to setup the Bus Interface Unit before SMP in
+> particular, but we also need to be able to remap registers.
 > 
 > Signed-off-by: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 > ---
->  .../devicetree/bindings/arm/bcm/brcm,brcmstb.txt          | 15 +++++++++++++++
->  1 file changed, 15 insertions(+)
+>  arch/arm/mach-bcm/brcmstb.c | 9 +++++++++
+>  1 file changed, 9 insertions(+)
 > 
-> diff --git a/Documentation/devicetree/bindings/arm/bcm/brcm,brcmstb.txt b/Documentation/devicetree/bindings/arm/bcm/brcm,brcmstb.txt
-> index 430608ec09f0..602fa5f308bb 100644
-> --- a/Documentation/devicetree/bindings/arm/bcm/brcm,brcmstb.txt
-> +++ b/Documentation/devicetree/bindings/arm/bcm/brcm,brcmstb.txt
-> @@ -20,6 +20,20 @@ system control is required:
->      - compatible: "brcm,bcm<chip_id>-hif-cpubiuctrl", "syscon"
-
-This has multiple chips allowed, but...
-
->      - compatible: "brcm,bcm<chip_id>-hif-continuation", "syscon"
+> diff --git a/arch/arm/mach-bcm/brcmstb.c b/arch/arm/mach-bcm/brcmstb.c
+> index 3a60f7ee3f0c..99a67cfb7c0d 100644
+> --- a/arch/arm/mach-bcm/brcmstb.c
+> +++ b/arch/arm/mach-bcm/brcmstb.c
+> @@ -12,11 +12,19 @@
+>   */
 >  
-> +hif-cpubiuctrl node
-> +-------------------
-
-Perhaps it is outside this context, but a description of the block would
-be nice.
-
-> +
-> +Required properties:
-> +
-> +    - compatible
-> +	The string should be "brcm.bcm7445-hif-cpubiuctrl", "syscon"
-
-This is just one.
-
-> +
-> +Optional properties:
-> +
-> +    - brcm,write-pairing:
-> +	Boolean property, which when present indicatse that the chip
-
-s/indicatse/indicates/
-
-> +	supports write-pairing.
-
-What is write pairing? Please give brief description.
-
-> +
->  example:
->      rdb {
->          #address-cells = <1>;
-> @@ -35,6 +49,7 @@ example:
->          hif_cpubiuctrl: syscon@3e2400 {
->              compatible = "brcm,bcm7445-hif-cpubiuctrl", "syscon";
->              reg = <0x3e2400 0x5b4>;
-> +            brcm,write-pairing;
->          };
+>  #include <linux/init.h>
+> +#include <linux/irqchip.h>
+>  #include <linux/of_platform.h>
+> +#include <linux/soc/brcmstb/brcmstb.h>
 >  
->          hif_continuation: syscon@452000 {
+>  #include <asm/mach-types.h>
+>  #include <asm/mach/arch.h>
+>  
+> +static void __init brcmstb_init_irq(void)
+> +{
+> +	irqchip_init();
+> +	brcmstb_biuctrl_init();
+
+I believe you're introducing a dependency on CONFIG_SOC_BRCMSTB, but
+it's not represented in Kconfig. Maybe SOC_BRCMSTB shouldn't be
+user-selectable, and it should just be select-ed by ARCH_BRCMSTB?
+
+Brian
+
+> +}
+> +
+>  static const char *const brcmstb_match[] __initconst = {
+>  	"brcm,bcm7445",
+>  	"brcm,brcmstb",
+> @@ -25,4 +33,5 @@ static const char *const brcmstb_match[] __initconst = {
+>  
+>  DT_MACHINE_START(BRCMSTB, "Broadcom STB (Flattened Device Tree)")
+>  	.dt_compat	= brcmstb_match,
+> +	.init_irq	= brcmstb_init_irq,
+>  MACHINE_END
+> -- 
+> 2.1.0
 > 
-
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
