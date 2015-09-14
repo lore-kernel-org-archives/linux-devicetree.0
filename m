@@ -1,61 +1,55 @@
-From: Matt Ranostay <mranostay@gmail.com>
-Subject: [PATCH v5 2/4] iio: resistance: add IIO_RESISTANCE channel type
-Date: Sun, 13 Sep 2015 20:26:12 -0700
-Message-ID: <1442201174-10975-3-git-send-email-mranostay@gmail.com>
-References: <1442201174-10975-1-git-send-email-mranostay@gmail.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1442201174-10975-1-git-send-email-mranostay@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: jic23@kernel.org, lars@metafoo.de, pmeerw@pmeerw.net
-Cc: linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Matt Ranostay <mranostay@gmail.com>
+From: Harini Katakam <harinikatakamlinux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [RFC PATCH 3/3] devicetree: macb: Add optional property tsu-clk
+Date: Mon, 14 Sep 2015 09:39:05 +0530
+Message-ID: <CAFcVECK=EONgqPq1jt_kti-VKXPWGVj3OSnqUvo0YcR65Z+Phg@mail.gmail.com>
+References: <1441958258-35441-1-git-send-email-harinik@xilinx.com>
+	<1441958258-35441-4-git-send-email-harinik@xilinx.com>
+	<20150911165256.GT19678@xsjsorenbubuntu>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20150911165256.GT19678@xsjsorenbubuntu>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: =?UTF-8?Q?S=C3=B6ren_Brinkmann?= <soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Cc: Harini Katakam <harini.katakam-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org" <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Punnaiah Choudary Kalluri <punnaia-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, "michals-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org" <michals-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, anirudh-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Matt Ranostay <mranostay@gmail.com>
----
- Documentation/ABI/testing/sysfs-bus-iio | 8 ++++++++
- drivers/iio/industrialio-core.c         | 1 +
- include/uapi/linux/iio/types.h          | 1 +
- 3 files changed, 10 insertions(+)
+On Fri, Sep 11, 2015 at 10:22 PM, S=C3=B6ren Brinkmann
+<soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org> wrote:
+> Hi Harini,
+>
+> On Fri, 2015-09-11 at 01:27PM +0530, Harini Katakam wrote:
+>> Add TSU clock frequency to be used for 1588 support in macb driver.
+>>
+>> Signed-off-by: Harini Katakam <harinik-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+>> ---
+>>  Documentation/devicetree/bindings/net/macb.txt |    3 +++
+>>  1 file changed, 3 insertions(+)
+>>
+>> diff --git a/Documentation/devicetree/bindings/net/macb.txt b/Docume=
+ntation/devicetree/bindings/net/macb.txt
+>> index b5d7976..f7c0ea8 100644
+>> --- a/Documentation/devicetree/bindings/net/macb.txt
+>> +++ b/Documentation/devicetree/bindings/net/macb.txt
+>> @@ -19,6 +19,9 @@ Required properties:
+>>       Optional elements: 'tx_clk'
+>>  - clocks: Phandles to input clocks.
+>>
+>> +Optional properties:
+>> +- tsu-clk: Time stamp unit clock frequency used.
+>
+> Why are we not using the CCF and a clk_get_rate() in the driver?
+>
 
-diff --git a/Documentation/ABI/testing/sysfs-bus-iio b/Documentation/ABI/testing/sysfs-bus-iio
-index 682c070..a91af51 100644
---- a/Documentation/ABI/testing/sysfs-bus-iio
-+++ b/Documentation/ABI/testing/sysfs-bus-iio
-@@ -1470,3 +1470,11 @@ KernelVersion:	4.3
- Contact:	linux-iio@vger.kernel.org
- Description:
- 		Raw (unscaled no offset etc.) percentage reading of a substance.
-+
-+What:		/sys/bus/iio/devices/iio:deviceX/in_resistance_raw
-+What:		/sys/bus/iio/devices/iio:deviceX/in_resistanceX_raw
-+KernelVersion:	4.3
-+Contact:	linux-iio@vger.kernel.org
-+Description:
-+		Raw (unscaled no offset etc.) resistance reading that can be processed
-+		into an ohm value.
-diff --git a/drivers/iio/industrialio-core.c b/drivers/iio/industrialio-core.c
-index 8eb6064..80439a6 100644
---- a/drivers/iio/industrialio-core.c
-+++ b/drivers/iio/industrialio-core.c
-@@ -76,6 +76,7 @@ static const char * const iio_chan_type_name_spec[] = {
- 	[IIO_DISTANCE] = "distance",
- 	[IIO_VELOCITY] = "velocity",
- 	[IIO_CONCENTRATION] = "concentration",
-+	[IIO_RESISTANCE] = "resistance",
- };
- 
- static const char * const iio_modifier_names[] = {
-diff --git a/include/uapi/linux/iio/types.h b/include/uapi/linux/iio/types.h
-index 1e4c4e3..7c63bd6 100644
---- a/include/uapi/linux/iio/types.h
-+++ b/include/uapi/linux/iio/types.h
-@@ -36,6 +36,7 @@ enum iio_chan_type {
- 	IIO_DISTANCE,
- 	IIO_VELOCITY,
- 	IIO_CONCENTRATION,
-+	IIO_RESISTANCE,
- };
- 
- enum iio_modifier {
--- 
-1.9.1
+If the clock source was only internal, we could use this
+approach as usual. But TSU clock can be configured to
+come from an external clock source or internal.
+
+Regards,
+Harini
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
