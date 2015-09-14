@@ -1,64 +1,129 @@
-From: Fu Wei <fu.wei-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v4 5/7] Watchdog: introduce ARM SBSA watchdog driver
-Date: Mon, 14 Sep 2015 23:27:55 +0800
-Message-ID: <CADyBb7veKjm78ur44QBKNVgxuoMZUDyzmMbiyS6crsi1Bo57Bg@mail.gmail.com>
-References: <=fu.wei@linaro.org>
-	<1433217907-928-1-git-send-email-fu.wei@linaro.org>
-	<1433217907-928-6-git-send-email-fu.wei@linaro.org>
-	<556F4489.6030206@codeaurora.org>
-	<20150603182503.GD6460@roeck-us.net>
-	<556F4D29.1080001@codeaurora.org>
-	<55F207FD.2030007@redhat.com>
-	<20150914042104.GA4682@localhost.localdomain>
+From: Guenter Roeck <linux@roeck-us.net>
+Subject: Re: [PATCH v2 1/3] sysfs: Support is_visible() on binary attributes
+Date: Mon, 14 Sep 2015 08:33:58 -0700
+Message-ID: <55F6E8E6.9030509@roeck-us.net>
+References: <1442234049-18637-1-git-send-email-emilio.lopez@collabora.co.uk>
+ <1442234049-18637-2-git-send-email-emilio.lopez@collabora.co.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20150914042104.GA4682-bi+AKbBUZKY6gyzm1THtWbp2dZbC/Bob@public.gmane.org>
-Sender: linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Pratyush Anand <panand-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Cc: Jon Masters <jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Timur Tabi <timur-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Suravee Suthikulpanit <Suravee.Suthikulpanit-5C7GfCeVMHo@public.gmane.org>, Linaro ACPI Mailman List <linaro-acpi-cunTk1MwBs8s++Sfvej+rw@public.gmane.org>, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Wei Fu <tekkamanninja-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, G Gregory <graeme.gregory-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Al Stone <al.stone-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Hanjun Guo <hanjun.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Ashwin Chaugule <ashwin.chaugule-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Vipul Gandhi <vgandhi-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>, Leo Duran <leo.duran-5C7GfCeVMHo@public.gmane.org>, Jon Corbet <corbet-T1hC0tSOHrs@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Rafael Wysocki <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>
+Content-Type: text/plain; charset=utf-8;
+	format=flowed
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <1442234049-18637-2-git-send-email-emilio.lopez@collabora.co.uk>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: =?UTF-8?Q?Emilio_L=c3=b3pez?= <emilio.lopez@collabora.co.uk>, gregkh@linuxfoundation.org, olof@lixom.net, kgene@kernel.org, k.kozlowski@samsung.com
+Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Pratyush,
-
-Great thanks for your help on some update for watchdog framework.
-
-For " Fix parent of watchdog_devices", I will update my patchset.
-For the upstreaming patchset"Sysfs status read support", will make a
-patch. But upstream it when your patchset is merged.
-
-On 14 September 2015 at 12:21, Pratyush Anand <panand-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org> wrote:
-> On 10/09/2015:06:45:17 PM, Jon Masters wrote:
->> On 06/03/2015 02:53 PM, Timur Tabi wrote:
->> > On 06/03/2015 01:25 PM, Guenter Roeck wrote:
->> >> In general the idea here would be to use a crashdump kernel, which,
->> >> when loaded, would reset the watchdog before it fires. This kernel
->> >> would then write a core dump to a specified location.
+On 09/14/2015 05:34 AM, Emilio L=C3=B3pez wrote:
+> According to the sysfs header file:
 >
-> And this is what we do in fedora or RHEL. There had been some work ongoing in
-> fedora [1][2] which will help to reset any active watchdog in kdump kernel(if
-> the watchdog driver has been registered to watchdog_class). It will eventually
-> help a watchdog on ARM64 platform as well.
+>      "The returned value will replace static permissions defined in
+>       struct attribute or struct bin_attribute."
 >
-> [1] https://lists.fedoraproject.org/pipermail/kexec/2015-September/002295.html
-> [2] https://github.com/pratyushanand/kexec-tools/commits/watchdog_fmaster
+> but this isn't the case, as is_visible is only called on struct attri=
+bute
+> only. This patch introduces a new is_bin_visible() function to implem=
+ent
+> the same functionality for binary attributes, and updates documentati=
+on
+> accordingly.
 >
-> ~Pratyush
+> Signed-off-by: Emilio L=C3=B3pez <emilio.lopez@collabora.co.uk>
 
+Nitpick below, but otherwise looks ok to me.
 
+Reviewed-by: Guenter Roeck <linux@roeck-us.net>
 
--- 
-Best regards,
+Guenter
 
-Fu Wei
-Software Engineer
-Red Hat Software (Beijing) Co.,Ltd.Shanghai Branch
-Ph: +86 21 61221326(direct)
-Ph: +86 186 2020 4684 (mobile)
-Room 1512, Regus One Corporate Avenue,Level 15,
-One Corporate Avenue,222 Hubin Road,Huangpu District,
-Shanghai,China 200021
---
-To unsubscribe from this list: send the line "unsubscribe linux-watchdog" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> ---
+>
+> Changes from v1:
+>   - Don't overload is_visible, introduce is_bin_visible instead as
+>     discussed on the list.
+>
+>   fs/sysfs/group.c      | 17 +++++++++++++++--
+>   include/linux/sysfs.h | 18 ++++++++++++++----
+>   2 files changed, 29 insertions(+), 6 deletions(-)
+>
+> diff --git a/fs/sysfs/group.c b/fs/sysfs/group.c
+> index 39a0199..51b56e6 100644
+> --- a/fs/sysfs/group.c
+> +++ b/fs/sysfs/group.c
+> @@ -73,13 +73,26 @@ static int create_files(struct kernfs_node *paren=
+t, struct kobject *kobj,
+>   	}
+>
+>   	if (grp->bin_attrs) {
+> -		for (bin_attr =3D grp->bin_attrs; *bin_attr; bin_attr++) {
+> +		for (i =3D 0, bin_attr =3D grp->bin_attrs; *bin_attr; i++, bin_att=
+r++) {
+> +			umode_t mode =3D (*bin_attr)->attr.mode;
+> +
+>   			if (update)
+>   				kernfs_remove_by_name(parent,
+>   						(*bin_attr)->attr.name);
+> +			if (grp->is_bin_visible) {
+> +				mode =3D grp->is_bin_visible(kobj, *bin_attr, i);
+> +				if (!mode)
+> +					continue;
+> +			}
+> +
+> +			WARN(mode & ~(SYSFS_PREALLOC | 0664),
+> +			     "Attribute %s: Invalid permissions 0%o\n",
+> +			     (*bin_attr)->attr.name, mode);
+> +
+> +			mode &=3D SYSFS_PREALLOC | 0664;
+
+Strictly speaking, the mode validation for binary attributes is new and=
+ logically
+separate. Should it be mentioned in the commit log, or even be a separa=
+te patch ?
+
+>   			error =3D sysfs_add_file_mode_ns(parent,
+>   					&(*bin_attr)->attr, true,
+> -					(*bin_attr)->attr.mode, NULL);
+> +					mode, NULL);
+>   			if (error)
+>   				break;
+>   		}
+> diff --git a/include/linux/sysfs.h b/include/linux/sysfs.h
+> index 9f65758..2f66050 100644
+> --- a/include/linux/sysfs.h
+> +++ b/include/linux/sysfs.h
+> @@ -64,10 +64,18 @@ do {							\
+>    *		a new subdirectory with this name.
+>    * @is_visible:	Optional: Function to return permissions associated=
+ with an
+>    *		attribute of the group. Will be called repeatedly for each
+> - *		attribute in the group. Only read/write permissions as well as
+> - *		SYSFS_PREALLOC are accepted. Must return 0 if an attribute is
+> - *		not visible. The returned value will replace static permissions
+> - *		defined in struct attribute or struct bin_attribute.
+> + *		non-binary attribute in the group. Only read/write
+> + *		permissions as well as SYSFS_PREALLOC are accepted. Must
+> + *		return 0 if an attribute is not visible. The returned value
+> + *		will replace static permissions defined in struct attribute.
+> + * @is_bin_visible:
+> + *		Optional: Function to return permissions associated with a
+> + *		binary attribute of the group. Will be called repeatedly
+> + *		for each binary attribute in the group. Only read/write
+> + *		permissions as well as SYSFS_PREALLOC are accepted. Must
+> + *		return 0 if a binary attribute is not visible. The returned
+> + *		value will replace static permissions defined in
+> + *		struct bin_attribute.
+>    * @attrs:	Pointer to NULL terminated list of attributes.
+>    * @bin_attrs:	Pointer to NULL terminated list of binary attributes=
+=2E
+>    *		Either attrs or bin_attrs or both must be provided.
+> @@ -76,6 +84,8 @@ struct attribute_group {
+>   	const char		*name;
+>   	umode_t			(*is_visible)(struct kobject *,
+>   					      struct attribute *, int);
+> +	umode_t			(*is_bin_visible)(struct kobject *,
+> +						  struct bin_attribute *, int);
+>   	struct attribute	**attrs;
+>   	struct bin_attribute	**bin_attrs;
+>   };
+>
