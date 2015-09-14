@@ -1,175 +1,82 @@
 From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH v2 2/3] mfd: s2mps11: Add manual shutdown method for
- Odroid XU3
-Date: Mon, 14 Sep 2015 09:12:12 +0100
-Message-ID: <20150914081212.GE27591@x1>
-References: <1439287746-14034-1-git-send-email-k.kozlowski.k@gmail.com>
- <1439287746-14034-3-git-send-email-k.kozlowski.k@gmail.com>
- <CAJKOXPeSH-w1zBLomLiUKqAVbGEQVvTLfGbJ-YFgZ_qw5MsC9Q@mail.gmail.com>
+Subject: Re: [PATCH v2 1/9] dmaengine: st_fdma: Add STMicroelectronics FDMA
+ DT binding documentation
+Date: Mon, 14 Sep 2015 09:19:37 +0100
+Message-ID: <20150914081937.GF27591@x1>
+References: <1441980871-24475-1-git-send-email-peter.griffin@linaro.org>
+ <1441980871-24475-2-git-send-email-peter.griffin@linaro.org>
+ <51503956.PMFrWKUjxX@wuerfel>
+ <20150912120752.GA19897@griffinp-ThinkPad-X1-Carbon-2nd>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <CAJKOXPeSH-w1zBLomLiUKqAVbGEQVvTLfGbJ-YFgZ_qw5MsC9Q@mail.gmail.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-Cc: devicetree@vger.kernel.org, Samuel Ortiz <sameo@linux.intel.com>, Kukjin Kim <kgene@kernel.org>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Sangbeom Kim <sbkim73@samsung.com>, Anand Moon <linux.amoon@gmail.com>, Javier Martinez Canillas <javier@osg.samsung.com>, Krzysztof Kozlowski <k.kozlowski.k@gmail.com>, linux-samsung-soc@vger.kernel.org
+In-Reply-To: <20150912120752.GA19897@griffinp-ThinkPad-X1-Carbon-2nd>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Peter Griffin <peter.griffin@linaro.org>
+Cc: Arnd Bergmann <arnd@arndb.de>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, srinivas.kandagatla@gmail.com, maxime.coquelin@st.com, patrice.chotard@st.com, vinod.koul@intel.com, devicetree@vger.kernel.org, robh+dt@kernel.org, dmaengine@vger.kernel.org, Ludovic Barre <ludovic.barre@st.com>
 List-Id: devicetree@vger.kernel.org
 
-On Sun, 13 Sep 2015, Krzysztof Kozlowski wrote:
-> You acked this patch. However finally it did not go through other tre=
-e
-> so maybe you could pick it up for 4.4?
+On Sat, 12 Sep 2015, Peter Griffin wrote:
+
+> Hi Arnd,
 >=20
-> If you want I could reabse and resend it.
+> On Fri, 11 Sep 2015, Arnd Bergmann wrote:
+>=20
+> > On Friday 11 September 2015 15:14:23 Peter Griffin wrote:
+> > > +- st,fdma-id	: Must contain fdma controller number
+> >=20
+> > What for?
+>=20
+> It is used by the driver to generate a unique firmware name.
+> Basically we need to know which controller instance we
+> are as each controller has a different firmware which needs
+> to be loaded.
+>=20
+> Rob did say that having a index type property is undesirable
+> over here, see my reply at the bottom
+> http://www.spinics.net/lists/devicetree/msg92529.html.
+>=20
+> However I can't think of any other useful properties we could add
+> to derive this information.
 
-Yes, please rebase and resend.
+I wouldn't use a property at all.  Why not use the compatible string?
 
-> 2015-08-11 19:09 GMT+09:00 Krzysztof Kozlowski <k.kozlowski.k@gmail.c=
-om>:
-> >
-> > On Odroid XU3 board (with S2MPS11 PMIC) the PWRHOLD bit in CTRL1
-> > register must be manually set to 0 before initiating power off sequ=
-ence.
-> >
-> > One of usual power down methods for Exynos based devices looks like=
-:
-> > 1. PWRHOLD pin of PMIC is connected to PSHOLD of Exynos.
-> > 2. Exynos holds up this pin during system operation.
-> > 3. ACOKB pin of PMIC is pulled up to VBATT and optionally to pin in
-> >    other device.
-> > 4. When PWRHOLD/PSHOLD goes low, the PMIC will turn off the power i=
-f
-> >    ACOKB goes high.
-> >
-> > On Odroid XU3 family the difference is in (3) - the ACOKB is ground=
-ed.
-> > This means that PMIC must manually set PWRHOLD field to low and the=
-n
-> > wait for signal from Application Processor (the usual change in
-> > PWRHOLD/PSHOLD pin will actually cut off the power).
-> >
-> > The patch adds respective binding allowing Odroid XU3 device to be
-> > powered off.
-> >
-> > Signed-off-by: Krzysztof Kozlowski <k.kozlowski.k@gmail.com>
-> > Reported-by: Anand Moon <linux.amoon@gmail.com>
-> > Tested-by: Anand Moon <linux.amoon@gmail.com>
-> > Reviewed-by: Javier Martinez Canillas <javier@osg.samsung.com>
-> > Acked-by: Lee Jones <lee.jones@linaro.org>
-> >
-> > ---
-> >
-> > Changes since v1:
-> > 1. Split bindings documentation to separate patch (suggested by Lee=
-).
-> > 2. Fix additional empty line (suggested by Lee).
-> > 3. Add Anand's tested-by, Javier's reviewed-by and Lee's acked-by.
-> >
-> > Patch is losely based on patch in Hardkernel repository [0] and pre=
-vious
-> > work of Anand Moon [1].
-> >
-> > [0] https://github.com/hardkernel/linux/commit/6897e62ba328bd1c8c09=
-5d918101863250cd73e7
-> > [1] http://www.spinics.net/lists/linux-samsung-soc/msg45959.html
-> > ---
-> >  drivers/mfd/sec-core.c              | 30 +++++++++++++++++++++++++=
-+++++
-> >  include/linux/mfd/samsung/core.h    |  2 ++
-> >  include/linux/mfd/samsung/s2mps11.h |  1 +
-> >  3 files changed, 33 insertions(+)
-> >
-> > diff --git a/drivers/mfd/sec-core.c b/drivers/mfd/sec-core.c
-> > index d206a3e8fe87..2d1137a7a0ee 100644
-> > --- a/drivers/mfd/sec-core.c
-> > +++ b/drivers/mfd/sec-core.c
-> > @@ -278,6 +278,8 @@ static struct sec_platform_data *sec_pmic_i2c_p=
-arse_dt_pdata(
-> >          * not parsed here.
-> >          */
-> >
-> > +       pd->manual_poweroff =3D of_property_read_bool(dev->of_node,
-> > +                                               "samsung,s2mps11-ac=
-okb-ground");
-> >         return pd;
-> >  }
-> >  #else
-> > @@ -440,6 +442,33 @@ static int sec_pmic_remove(struct i2c_client *=
-i2c)
-> >         return 0;
-> >  }
-> >
-> > +static void sec_pmic_shutdown(struct i2c_client *i2c)
-> > +{
-> > +       struct sec_pmic_dev *sec_pmic =3D i2c_get_clientdata(i2c);
-> > +       unsigned int reg, mask;
-> > +
-> > +       if (!sec_pmic->pdata->manual_poweroff)
-> > +               return;
-> > +
-> > +       switch (sec_pmic->device_type) {
-> > +       case S2MPS11X:
-> > +               reg =3D S2MPS11_REG_CTRL1;
-> > +               mask =3D S2MPS11_CTRL1_PWRHOLD_MASK;
-> > +               break;
-> > +       default:
-> > +               /*
-> > +                * Currently only one board with S2MPS11 needs this=
-, so just
-> > +                * ignore the rest.
-> > +                */
-> > +               dev_warn(sec_pmic->dev,
-> > +                       "Unsupported device %lu for manual power of=
-f\n",
-> > +                       sec_pmic->device_type);
-> > +               return;
-> > +       }
-> > +
-> > +       regmap_update_bits(sec_pmic->regmap_pmic, reg, mask, 0);
-> > +}
-> > +
-> >  #ifdef CONFIG_PM_SLEEP
-> >  static int sec_pmic_suspend(struct device *dev)
-> >  {
-> > @@ -491,6 +520,7 @@ static struct i2c_driver sec_pmic_driver =3D {
-> >         },
-> >         .probe =3D sec_pmic_probe,
-> >         .remove =3D sec_pmic_remove,
-> > +       .shutdown =3D sec_pmic_shutdown,
-> >         .id_table =3D sec_pmic_id,
-> >  };
-> >
-> > diff --git a/include/linux/mfd/samsung/core.h b/include/linux/mfd/s=
-amsung/core.h
-> > index 75115384f3fc..aa78957e092f 100644
-> > --- a/include/linux/mfd/samsung/core.h
-> > +++ b/include/linux/mfd/samsung/core.h
-> > @@ -132,6 +132,8 @@ struct sec_platform_data {
-> >         int                             buck2_init;
-> >         int                             buck3_init;
-> >         int                             buck4_init;
-> > +       /* Whether or not manually set PWRHOLD to low during shutdo=
-wn. */
-> > +       bool                            manual_poweroff;
-> >  };
-> >
-> >  /**
-> > diff --git a/include/linux/mfd/samsung/s2mps11.h b/include/linux/mf=
-d/samsung/s2mps11.h
-> > index 7981a9d77d3f..b288965e8101 100644
-> > --- a/include/linux/mfd/samsung/s2mps11.h
-> > +++ b/include/linux/mfd/samsung/s2mps11.h
-> > @@ -179,6 +179,7 @@ enum s2mps11_regulators {
-> >  #define S2MPS11_BUCK_N_VOLTAGES (S2MPS11_BUCK_VSEL_MASK + 1)
-> >  #define S2MPS11_RAMP_DELAY     25000           /* uV/us */
-> >
-> > +#define S2MPS11_CTRL1_PWRHOLD_MASK     BIT(4)
-> >
-> >  #define S2MPS11_BUCK2_RAMP_SHIFT       6
-> >  #define S2MPS11_BUCK34_RAMP_SHIFT      4
-> >
+Who chooses the naming scheme of the firmware binary?
+
+Is there any reason they can't be:
+
+  fdma_STiH407_audio.elf
+  fdma_STiH407_app.elf
+  fdma_STiH407_free_running.elf
+
+Then you can have a different compatible for each:
+
+  compatible =3D "st,stih407-fdma-mpe31-audio";
+  compatible =3D "st,stih407-fdma-mpe31-app";
+  compatible =3D "st,stih407-fdma-mpe31-free-running";
+
+[...]
+
+> > > +Example:
+> > > +
+> > > +	snd_uni_player2: snd-uni-player@2 {
+> > > +		compatible =3D "st,snd_uni_player";
+> >=20
+> > Maybe change the compatible string to "st,snd-uni-player"?
+>=20
+> Just checking the upstream driver which got merged for v4.3
+> and the compatible has changed to "st,sti-uni-player" so I
+> can update the DT doc example to use this in v3.
+>=20
+> >=20
+> > The string you use here would not be acceptable for a binding.
+>=20
+> Presumably it is the use of "underscores" in the compatible which
+> is not allowed? Is that correct?
+
+Yes.
 
 --=20
 Lee Jones
