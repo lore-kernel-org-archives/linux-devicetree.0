@@ -1,150 +1,53 @@
-From: Fu Wei <fu.wei@linaro.org>
-Subject: Re: [PATCH v7 5/8] Watchdog: introduce ARM SBSA watchdog driver
-Date: Tue, 15 Sep 2015 01:11:43 +0800
-Message-ID: <CADyBb7tMFc85Nd0+Wm8tq7UxHizkCBe5vLtRQ6NOESCOg892VA@mail.gmail.com>
-References: <=fu.wei@linaro.org>
-	<1440435683-7343-1-git-send-email-fu.wei@linaro.org>
-	<1440435683-7343-6-git-send-email-fu.wei@linaro.org>
-	<55F20461.20904@redhat.com>
-	<55F2415C.1050803@roeck-us.net>
+From: Tony Lindgren <tony@atomide.com>
+Subject: Re: [PATCH 12/17] ARM: dts: am57xx-beagle-x15: Fix regulator
+ populated in MMC1 dt node
+Date: Mon, 14 Sep 2015 10:12:42 -0700
+Message-ID: <20150914171242.GO4215@atomide.com>
+References: <1438168187-1614-1-git-send-email-kishon@ti.com>
+ <1438168187-1614-13-git-send-email-kishon@ti.com>
+ <55B92B88.1080409@ti.com>
+ <55DC0D07.7030504@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <55F2415C.1050803@roeck-us.net>
-Sender: linux-doc-owner@vger.kernel.org
-To: Guenter Roeck <linux@roeck-us.net>
-Cc: Jon Masters <jcm@redhat.com>, Suravee Suthikulpanit <Suravee.Suthikulpanit@amd.com>, Hanjun Guo <hanjun.guo@linaro.org>, Linaro ACPI Mailman List <linaro-acpi@lists.linaro.org>, linux-watchdog@vger.kernel.org, devicetree@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, linux-doc@vger.kernel.org, Wei Fu <tekkamanninja@gmail.com>, G Gregory <graeme.gregory@linaro.org>, Al Stone <al.stone@linaro.org>, Arnd Bergmann <arnd@arndb.de>, Vipul Gandhi <vgandhi@codeaurora.org>, Wim Van Sebroeck <wim@iguana.be>, Leo Duran <leo.duran@amd.com>, Jon Corbet <corbet@lwn.net>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Rafael Wysocki <rjw@rjwysocki.net>, dyoung@redhat.com, Pratyush Anand <panand@redhat.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-mmc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <55DC0D07.7030504@ti.com>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Kishon Vijay Abraham I <kishon@ti.com>
+Cc: Nishanth Menon <nm@ti.com>, ulf.hansson@linaro.org, afenkart@gmail.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mmc@vger.kernel.org, nsekhar@ti.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Guenter, Jon,
+* Kishon Vijay Abraham I <kishon@ti.com> [150824 23:40]:
+> Hi Tony,
+> 
+> On Thursday 30 July 2015 01:07 AM, Nishanth Menon wrote:
+> > On 07/29/2015 06:09 AM, Kishon Vijay Abraham I wrote:
+> >> For beagle x15, both the vdd and io lines are connected to the
+> >> same regulator (ldo1_reg). However vmmc_aux is populated to vdd_3v3.
+> >> Remove it.
+> >>
+> >> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+> >> ---
+> >>  arch/arm/boot/dts/am57xx-beagle-x15.dts |    1 -
+> >>  1 file changed, 1 deletion(-)
+> >>
+> >> diff --git a/arch/arm/boot/dts/am57xx-beagle-x15.dts b/arch/arm/boot/dts/am57xx-beagle-x15.dts
+> >> index a63bf78..d0db5c5 100644
+> >> --- a/arch/arm/boot/dts/am57xx-beagle-x15.dts
+> >> +++ b/arch/arm/boot/dts/am57xx-beagle-x15.dts
+> >> @@ -579,7 +579,6 @@
+> >>  	pinctrl-0 = <&mmc1_pins_default>;
+> >>  
+> >>  	vmmc-supply = <&ldo1_reg>;
+> >> -	vmmc_aux-supply = <&vdd_3v3>;
+> >>  	pbias-supply = <&pbias_mmc_reg>;
+> >>  	bus-width = <4>;
+> >>  	cd-gpios = <&gpio6 27 0>; /* gpio 219 */
+> >>
+> > Acked-by: Nishanth Menon <nm@ti.com>
+> 
+> Can you pick this one or you want me to resend it?
 
-On 11 September 2015 at 10:50, Guenter Roeck <linux@roeck-us.net> wrote=
-:
-> On 09/10/2015 03:29 PM, Jon Masters wrote:
->>
->> On 08/24/2015 01:01 PM, fu.wei@linaro.org wrote:
->>
->>> +       /*
->>> +        * Get the frequency of system counter from the cp15 interf=
-ace of
->>> ARM
->>> +        * Generic timer. We don't need to check it, because if it
->>> returns "0",
->>> +        * system would panic in very early stage.
->>> +        */
->>> +       gwdt->clk =3D arch_timer_get_cntfrq();
->>
->>
->> Just thinking out loud...
->>
->> What happens later if we virtualize this device within KVM/QEMU/Xen =
-and
->> then live migrate to another system in which the frequency changes?
->>
->
-> Thinking about it, this scenario would cause severe trouble. I think =
-clocks
-> (like I would assume pretty much all other hardware parameters / regi=
-sters)
-> need to be virtualized and must not change.
->
-> Example: clock is set to 100 kHz on original system, and 400 kHz on n=
-ew
-> system. Timeout is set to 30s, and registers are programmed according=
-ly.
-> User space sends heartbeats every 15 seconds.
->
-> In this scenario, the watchdog would time out after 30/4 =3D 7.5 seco=
-nds
-> on the new system, or in other words almost immediately.
->
-> This would be even worse if the original system had a clock of, say,
-> 10 kHz and the new system would use 400 kHz. This just doesn't work.
+Picking into omap-for-v4.3/fixes thanks.
 
-I have rechecked the SBSA spec and "Architecture Reference Manual(ARM)"=
-,
-I think we don't need to worry about "the frequency changes", let me
-explain this, but if I misunderstand something, please correct me!
-
-(1) what is the clock source (or reference) of SBSA watchdog timer?
-SBSA spec(2.3) has answered this well at page 23:
----------------------------
-The Watchdog uses the Generic Timer system count value as the timebase
-against which the decision to trigger an interrupt is made.
----------------------------
-
-(2) Can the frequency of the Generic Timer System counter be changed?
-At ARMv8 ARM,  D6.1.1 System counter :
----------------------------
-The Generic Timer provides a system counter with the following specific=
-ation:
-=46requency
-Increments at *a fixed frequency*, typically in the range 1-50MHz.
-Can support one or more alternative operating modes in which it
-increments by larger amounts at a lower frequency, typically for
-power-saving.
-
-To support lower-power operating modes, the counter can increment by
-larger amounts at a lower frequency. For example, a 10MHz system
-counter might either increment either:
-=E2=80=A2 By 1 at 10MHz.
-=E2=80=A2 By 500 at 20kHz,
-when the system lowers the clock frequency, to reduce power consumption=
-=2E
-In this case, the counter must support transitions between
-high-frequency, high-precision operation, and lower-frequency,
-lower-precision operation, without any impact on the required accuracy
-of the counter.
----------------------------
-So even the frequency of the Generic Timer System counter be changed
-by some reason(typically for power-saving), this won't affect the
-timeout(and pretimeout) of watchdog, the actual time will be always
-right.
-
-*we were talking about real hardware above. Now we think about virtuali=
-zation.*
-(3) if the virtual watchdog device in KVM/QEMU/Xen is migrated to
-another system in which the frequency changes, will it affect the "dog
-feeding procedure"?
-
-I don't think so.
-if the frequency changes, the frequency of System counter is changed.
-But in ARM system, System counter is a global reference for all clocks
-or timers(per-cpu and Memory-mapped).
-So if   System counter is getting faster, everything in this  virtual
-machine is getting faster, and vice versa.
-
-Now we use the example above
-if  clock is set to 100 kHz on original system, and 400 kHz on new syst=
-em.
-Timeout is set to 30s, and registers are programmed accordingly. User
-space sends heartbeats every 15 seconds.
-In this scenario, On the new system, the watchdog would time out after
-30/4 =3D 7.5 seconds.
-* User space sends heartbeats every 15/4 =3D 3.25 second now , but NOT
-15 seconds.*
-If everything goes well,  system will keep running.
-
-Hope I understand the question correctly, please  correct me if I miss
-something or said anything wrong.
-
-Great thanks for your feedback!
-
->
-> Guenter
->
-
-
-
---=20
-Best regards,
-
-=46u Wei
-Software Engineer
-Red Hat Software (Beijing) Co.,Ltd.Shanghai Branch
-Ph: +86 21 61221326(direct)
-Ph: +86 186 2020 4684 (mobile)
-Room 1512, Regus One Corporate Avenue,Level 15,
-One Corporate Avenue,222 Hubin Road,Huangpu District,
-Shanghai,China 200021
+Tony
