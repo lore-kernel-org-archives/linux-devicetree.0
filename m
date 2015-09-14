@@ -1,77 +1,74 @@
-From: Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
-Subject: Re: [PATCH 0/4] bcm2835: enable auxiliary uart1
-Date: Mon, 14 Sep 2015 10:53:16 -0400
-Message-ID: <87r3m1jbmr.fsf@eliezer.anholt.net>
-References: <1441974053-2630-1-git-send-email-kernel@martin.sperl.org>
+From: Sean Young <sean@mess.org>
+Subject: Re: [PATCH][resend] rc: gpio-ir-recv: allow flush space on idle
+Date: Mon, 14 Sep 2015 15:54:37 +0100
+Message-ID: <20150914145436.GA23973@gofer.mess.org>
+References: <1441980024-1944-1-git-send-email-eric@nelint.com>
+ <20150914100044.GA21149@gofer.mess.org>
+ <55F6DAE2.6080901@nelint.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; boundary="=-=-=";
-	micalg=pgp-sha512; protocol="application/pgp-signature"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1441974053-2630-1-git-send-email-kernel-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: kernel-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Lee Jones <lee-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Jiri Slaby <jslaby-IBi9RG/b67k@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-media-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <55F6DAE2.6080901@nelint.com>
+Sender: linux-media-owner@vger.kernel.org
+To: Eric Nelson <eric@nelint.com>
+Cc: linux-media@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mchehab@osg.samsung.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, patrice.chotard@st.com, fabf@skynet.be, wsa@the-dreams.de, heiko@sntech.de, devicetree@vger.kernel.org, otavio@ossystems.com.br
 List-Id: devicetree@vger.kernel.org
 
---=-=-=
-Content-Type: text/plain
+On Mon, Sep 14, 2015 at 07:34:10AM -0700, Eric Nelson wrote:
+> Thanks Shawn,
+> 
+> On 09/14/2015 03:00 AM, Sean Young wrote:
+> > On Fri, Sep 11, 2015 at 07:00:24AM -0700, Eric Nelson wrote:
+> >> Many decoders require a trailing space (period without IR illumination)
+> >> to be delivered before completing a decode.
+> >>
+> >> Since the gpio-ir-recv driver only delivers events on gpio transitions,
+> >> a single IR symbol (caused by a quick touch on an IR remote) will not
+> >> be properly decoded without the use of a timer to flush the tail end
+> >> state of the IR receiver.
+> > 
+> > This is a problem other IR drivers suffer from too. It might be better
+> > to send a IR timeout event like st_rc_send_lirc_timeout() in st_rc.c,
+> > with the duration set to what the timeout was. That is what irraw 
+> > timeouts are for; much better than fake transitions.
+> > 
+> 
+> If I'm understanding this correctly, this would require modification
+> of each decoder to handle what seems to be a special case regarding
+> the GPIO IR driver (which needs an edge to trigger an interrupt).
 
-kernel-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org writes:
+No, this is not a special case. Many drivers do have extra code to generate
+some sort of end-of-signal message: redrat3; igorplugusb; st_rc. They don't
+handle it consistently but this should be fixed.
 
-> From: Martin Sperl <kernel-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org>
->
-> The bcm2835 SOC contains an auxiliary uart, which is very close
-> to the ns16550 with some differences.
->
-> The big difference is that the uart HW is not using an internal divider
-> of 16 but 8, which results in an effictive baud-rate being twice
-> the requested baud-rate.
->
-> The bcm2835-aux-uart is also special in such that it is enabled/disabled
-> by a gate in the clock, which is managed by the clk-bcm2835-aux
-> clock driver.
->
-> there are 2 options:
-> * defining the clock-frequency property in the device tree to 500k
->   instead of 250k, but this keeps the HW block disabled making the
->   uart not work.
-> * defining a clock in the device tree, but this results in a baud rate
->   that is twice the requested baud-rate.
->
-> To address this this patch-set introduce a new property in the device tree
-> to define a clock divider other than 16.
->
-> This currently just scales the clock by a factor of 16/divider.
->
-> Note that the use of fixed-factor-clock has also been proposed as a
-> workarround, but this does not really describe the hw in the device tree
-> so another solution was needed that allows a correct representation of
-> the HW in the device tree.
+Secondly, the decoders already handle it. A timeout event matches 
+is_timing_event(), so it's processed by the decoders. The duration should 
+be set correctly.
 
-I personally lean toward the fixed-factor-clock solution, but could go
-either way.  Serial maintainers, what do you think?
+> Isn't it better to have the device interface handle this in one place?
 
---=-=-=
-Content-Type: application/pgp-signature; name="signature.asc"
+> >> This patch adds an optional device tree node "flush-ms" which, if
+> >> present, will use a jiffie-based timer to complete the last pulse
+> >> stream and allow decode.
+> > 
+> > A common value for this is 100ms, I'm not sure what use it has to have
+> > it configurable. It's nice to have it exposed in rc_dev->timeout.
+> > 
+> 
+> I'm enough of a n00b regarding the details of the various decoders
+> not to know that...
+> 
+> I looked through the couple of decoders my customer was using (NEC and
+> RC6) and came up with a value of 100ms though...
+> 
+> Implementing this through DT and having the default as 0 (disabled)
+> provides an interim solution if the choice is made to change each of
+> the decoders, since I would expect that to take a while and a bunch of
+> remote control devices for testing.
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
+Many other drivers use 100ms just fine and I don't remember ever seeing
+any bug reports on that.
 
-iQIcBAEBCgAGBQJV9t9cAAoJELXWKTbR/J7ol2AQAJqjMTB5xhk0nm4LnV3FhOvd
-FwlqVy0jHdNMjDqO+bxvGehczMCotdRpC6KezoI2/C490KLMN+mBTv/jUjfba73j
-l+PGB0Fx5GUfFr8XTAlNip2KeAhGiN0llVce6jKH4Ip1Ix/HTskcxyPqm5TgMazU
-YngIe3xQCehjGQnOW0ygOS1+OamV/z8yOAhV2uSbnfzMBdIRqn/u7RTa6VuDsLEj
-v/uiJSoMRm4NcacMTtMXltcYURHk1MgQtgiZMcMRqzZZc1iW3oZgr+PUkmy+QeUU
-CCcqM5qIz/4rEwz4RaiGEQWP4IXdKMYfv9hozey/YdywPfSNBknPbZXwcq83m9ns
-faXHR0ABPvp2vlOoTJWjxfAdCl1Sm51nMrblicfwV88Z2QtuJQ1HTqgKVx/LM9X7
-RVlcX9RRdtmGvNdDCm2ldHV28ygp8yYdNH7sT8P8MSDPfr+CujWTB5112wyiaTBH
-w8T3lQVZmCvM5uXAQ8ejKd7vJIOMGfA3u840K7MfJJhCfxDGtPB8G+Kb0V5+xDj2
-mobD5XHVkMBAKWE/rUuRqTNtIP+Ynhqj8VXTFA+DZRPGqpk0oqfF/p4bEcU0u6y1
-3rJjkXpFkT72ianMw4u6hW0+gYqGkklF3F4GHbmlWb7uL7P23VUgzOLUVYV57gDd
-/cxsUhtMpkzDqTpZjpXt
-=Hodz
------END PGP SIGNATURE-----
---=-=-=--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+
+Sean
