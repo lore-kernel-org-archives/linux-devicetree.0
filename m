@@ -1,46 +1,48 @@
-From: Catalin Marinas <catalin.marinas@arm.com>
-Subject: Re: [PATCH v4 5/7] Watchdog: introduce ARM SBSA watchdog driver
-Date: Mon, 14 Sep 2015 09:51:37 +0100
-Message-ID: <20150914085137.GB22991@e104818-lin.cambridge.arm.com>
-References: <=fu.wei@linaro.org>
- <1433217907-928-1-git-send-email-fu.wei@linaro.org>
- <1433217907-928-6-git-send-email-fu.wei@linaro.org>
- <556F4489.6030206@codeaurora.org>
- <20150603182503.GD6460@roeck-us.net>
- <556F4D29.1080001@codeaurora.org>
- <55F207FD.2030007@redhat.com>
+From: Keerthy <a0393675-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH 0/3] ARM: OMAP2+: Optimize soc_is calls
+Date: Mon, 14 Sep 2015 14:24:08 +0530
+Message-ID: <55F68B30.8050304@ti.com>
+References: <1441609528-20344-1-git-send-email-j-keerthy@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=WINDOWS-1252
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <55F207FD.2030007@redhat.com>
-Content-Disposition: inline
-Sender: linux-doc-owner@vger.kernel.org
-To: Jon Masters <jcm@redhat.com>
-Cc: Timur Tabi <timur@codeaurora.org>, Guenter Roeck <linux@roeck-us.net>, fu.wei@linaro.org, Suravee.Suthikulpanit@amd.com, linaro-acpi@lists.linaro.org, linux-watchdog@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, tekkamanninja@gmail.com, graeme.gregory@linaro.org, al.stone@linaro.org, hanjun.guo@linaro.org, ashwin.chaugule@linaro.org, arnd@arndb.de, vgandhi@codeaurora.org, wim@iguana.be, leo.duran@amd.com, corbet@lwn.net, mark.rutland@arm.com, will.deacon@arm.com, rjw@rjwysocki.net
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1441609528-20344-1-git-send-email-j-keerthy-l0cyMroinI0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Keerthy <j-keerthy-l0cyMroinI0@public.gmane.org>, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org
+Cc: linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Sep 10, 2015 at 06:45:17PM -0400, Jon Masters wrote:
-> On 06/03/2015 02:53 PM, Timur Tabi wrote:
-> > On 06/03/2015 01:25 PM, Guenter Roeck wrote:
-> >> In general the idea here would be to use a crashdump kernel, which,
-> >> when loaded, would reset the watchdog before it fires. This kernel
-> >> would then write a core dump to a specified location.
-> > 
-> > What is the mechanism for resetting the watchdog?  The only code that 
-> > knows about the hardware registers is this driver.  Does the crashdump 
-> > kernel call the watchdog stop function?
-> > 
-> >> If arm64 doesn't support a crashdump kernel, it might still be possible
-> >> to log the backtrace somewhere (eg in nvram using pstore if that is
-> >> supported via acpi or efi).
-> 
-> Just to go back and explicitly answer this, arm64 does have support for
-> crashdump, using the standard kexec/kdump approach, exactly as on x86.
+Hi Tony,
 
-Just a clarification - this is not (yet) supported in mainline, not even
-with DT.
+On Monday 07 September 2015 12:35 PM, Keerthy wrote:
+> The series implements optimizing soc_is calls for DRA7 and AM43XX
+> family of SoCs. Originally the soc_is calls for DRA7 involved parsing
+> device tree nodes and some repetitive string comparisons. Optimizing
+> to store the result and use the result in the subsequent calls.
+>
+> The series is boot tested on am437x-gp-evm, dra7-evm, dra72-evm.
 
--- 
-Catalin
 
+A gentle ping on this series. This series would be good to include rtc 
+hwmods selectively for non-epos evms. Let me know if you have any 
+comments on this.
+
+-Keerthy
+
+>
+> Keerthy (3):
+>    ARM: OMAP2: DRA7: Modify optimize string comparisons in soc_is calls
+>    ARM: dts: AM43x-epos-evm: Add AM438x compatible string for epos
+>    ARM: OMAP2: AM43XX: Modify optimize string comparisons in soc_is calls
+>
+>   .../devicetree/bindings/arm/omap/omap.txt          |  5 +++-
+>   arch/arm/boot/dts/am43x-epos-evm.dts               |  2 +-
+>   arch/arm/mach-omap2/id.c                           | 28 ++++++++++++++++++++++
+>   arch/arm/mach-omap2/soc.h                          | 25 +++++++++++++++----
+>   4 files changed, 53 insertions(+), 7 deletions(-)
+>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
