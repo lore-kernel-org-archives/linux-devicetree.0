@@ -1,78 +1,123 @@
-From: =?utf-8?B?U8O2cmVu?= Brinkmann <soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [RFC PATCH 3/3] devicetree: macb: Add optional property tsu-clk
-Date: Mon, 14 Sep 2015 07:44:23 -0700
-Message-ID: <20150914144423.GG19678@xsjsorenbubuntu>
-References: <1441958258-35441-1-git-send-email-harinik@xilinx.com>
- <1441958258-35441-4-git-send-email-harinik@xilinx.com>
- <20150911165256.GT19678@xsjsorenbubuntu>
- <CAFcVECK=EONgqPq1jt_kti-VKXPWGVj3OSnqUvo0YcR65Z+Phg@mail.gmail.com>
- <20150914095846.0d8e2d74@bbrezillon>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH 2/2] Documentation: gpio: Update description for X-Gene standby GPIO controller DTS binding
+Date: Mon, 14 Sep 2015 16:47 +0200
+Message-ID: <2516438.vcQPNoorc9@wuerfel>
+References: <1441963332-13329-1-git-send-email-yvo@apm.com> <2971356.lYN9OVO6Id@wuerfel> <CAL4ahLfRdfC=nReqqic=1vahgtD3-E_ncqnNhHsGw04P_HjvVA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20150914095846.0d8e2d74@bbrezillon>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Harini Katakam <harinikatakamlinux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Harini Katakam <harini.katakam-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org" <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Punnaiah Choudary Kalluri <punnaia-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, "michals-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org" <michals-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, anirudh-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <CAL4ahLfRdfC=nReqqic=1vahgtD3-E_ncqnNhHsGw04P_HjvVA@mail.gmail.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Y Vo <yvo@apm.com>, Laxman Dewangan <ldewangan@nvidia.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Phong Vo <pvo@apm.com>, Toan Le <toanle@apm.com>, Loc Ho <lho@apm.com>, Feng Kan <fkan@apm.com>, Quan Nguyen <qnguyen@apm.com>, Duc Dang <dhdang@apm.com>, patches <patches@apm.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 2015-09-14 at 09:58AM +0200, Boris Brezillon wrote:
-> Hi Harini,
->=20
-> On Mon, 14 Sep 2015 09:39:05 +0530
-> Harini Katakam <harinikatakamlinux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
->=20
-> > On Fri, Sep 11, 2015 at 10:22 PM, S=C3=B6ren Brinkmann
-> > <soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org> wrote:
-> > > Hi Harini,
-> > >
-> > > On Fri, 2015-09-11 at 01:27PM +0530, Harini Katakam wrote:
-> > >> Add TSU clock frequency to be used for 1588 support in macb driv=
-er.
-> > >>
-> > >> Signed-off-by: Harini Katakam <harinik-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-> > >> ---
-> > >>  Documentation/devicetree/bindings/net/macb.txt |    3 +++
-> > >>  1 file changed, 3 insertions(+)
-> > >>
-> > >> diff --git a/Documentation/devicetree/bindings/net/macb.txt b/Do=
-cumentation/devicetree/bindings/net/macb.txt
-> > >> index b5d7976..f7c0ea8 100644
-> > >> --- a/Documentation/devicetree/bindings/net/macb.txt
-> > >> +++ b/Documentation/devicetree/bindings/net/macb.txt
-> > >> @@ -19,6 +19,9 @@ Required properties:
-> > >>       Optional elements: 'tx_clk'
-> > >>  - clocks: Phandles to input clocks.
-> > >>
-> > >> +Optional properties:
-> > >> +- tsu-clk: Time stamp unit clock frequency used.
-> > >
-> > > Why are we not using the CCF and a clk_get_rate() in the driver?
-> > >
-> >=20
-> > If the clock source was only internal, we could use this
-> > approach as usual. But TSU clock can be configured to
-> > come from an external clock source or internal.
->=20
-> How about declaring a fixed-rate clk [1] if it comes from an external
-> clk, and using a clk driver for the internal clk case?
-> This way you'll be able to use the clk API (including the
-> clk_get_rate() function) instead of introducing a new way to retrieve=
- a
-> clk frequency.
+On Monday 14 September 2015 16:39:43 Y Vo wrote:
+> On Mon, Sep 14, 2015 at 4:11 PM, Arnd Bergmann <arnd@arndb.de> wrote:
+> > On Saturday 12 September 2015 12:55:55 Y Vo wrote:
+> >> On Fri, Sep 11, 2015 at 11:45 PM, Arnd Bergmann <arnd@arndb.de> wrote:
+> >> > On Friday 11 September 2015 22:06:58 Y Vo wrote:
+> >>
+> >> Example for configure GPIO_DS13 as interrupt and use as button with
+> >> the current gpio driver:
+> >>         gpio-keys {
+> >>                 compatible = "gpio-keys";
+> >>                 button@1 {
+> >>                         label = "POWER";
+> >>                         linux,code = <116>;
+> >>                         linux,input-type = <0x1>;
+> >>                         interrupts = <0x0 0x2d 0x1>;
+> >>                 };
+> >>         };
+> >
+> > Wait, this looks wrong: the gpio driver doesn't actually see
+> > the connection here and won't be able to configure the interrupt
+> > correctly. The interrupt is already owned by the gpio driver, so
+> > you cannot use it in the button node.
+> 
+> In summary:
+> - Our GPIO doesn't support interrupt controller.
+> - There are 6 pins which used the external interrupt from GIC, so all
+> setup for those irqs are from gic driver. The GPIO driver only
+> configure to wire those lines.
+> 
+> For your concern:
+> - That's correct: if we use that defined, the gpio driver never saw
+> the connection here (That's why it already is configued at the
+> beginning).
+> - At the first time, we tried to use the define: <&sbgpio 13 1>, it
+> means using the GPIO_DS13, it will go into the GPIO driver to setup,
+> but there is another problem which I have sent out to all of you:
+> + It will go into gpio_keys_setup_key (gpio_keys.c driver) function,
+> then set the irqflags = IRQF_TRIGGER_RISING | IRQF_TRIGGER_FALLING,
+> but the gic only support IRQ_TYPE_LEVEL_HIGH && IRQF_TRIGGER_RISING,
+> so it always returns failed at gpio_keys_setup_key function. Please
+> see the gic_set_type at gic driver.
 
-Right. Also, Zynq does already support external clock inputs (actually,
-every clock originates from some external clock/oscillator at some
-point). Maybe that code needs some additions to handle the TSU clock
-too. But either way, I can't see why a clock cannot be modeled using th=
-e
-CCF.
+Hmm, I see now how the event handling in the gpio-keys driver differs
+between irq mode and gpio mode, where gpio mode relies on getting
+a separate event for the release. This is certainly something that
+could be changed in the gpio-keys driver as an extension, but that
+seems to be what Laxman Dewangan did when he introduced the irq-mode.
 
-	S=C3=B6ren
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> static int gic_set_type(struct irq_data *d, unsigned int type)
+> {
+>         void __iomem *base = gic_dist_base(d);
+>         unsigned int gicirq = gic_irq(d);
+> 
+>         /* Interrupt configuration for SGIs can't be changed */
+>         if (gicirq < 16)
+>                 return -EINVAL;
+> 
+>         /* SPIs have restrictions on the supported types */
+>         if (gicirq >= 32 && type != IRQ_TYPE_LEVEL_HIGH &&
+>                             type != IRQ_TYPE_EDGE_RISING)
+>                 return -EINVAL;
+> 
+>         return gic_configure_irq(gicirq, type, base, NULL);
+> }
+> + Another issue: in order gpio_key works it needs the status of GPIO.
+> For our chip, when the GPIO is configued as interrupt, we need to
+> access to GIC register to read the real status, it is not acceptable
+> to implement accessing GIC registers at gpio driver. The function
+> irq_get_irqchip_state(..) also doesn't work in our chip too. Because
+> it needs to access different offset.
+
+I thought we had solved that problem long ago when you first
+submitted the driver.
+
+Did 1b7047edfcfb25 ("genirq: Allow the irqchip state of an IRQ to be
+save/restored") not address the problem for you? You were on
+Cc to that patch and should have spoken up when the code that was
+merged was not sufficient.
+
+> >> > It also seems to me that the binding cannot distinguish between a
+> >> > line configured as an input and one that is configured as an
+> >> > interrupt, which are for other gpio chips the same thing, but
+> >> > not on this one.  Could this be rectified by using another bit
+> >> > of the second gpio cell? The low bit is used for active-high/active-low,
+> >> > so you could use the second bit for irq/input.
+> >> >
+> >> Do you mean #gpio-cells property and using the high bit of the second
+> >> bit for irq/input  ?
+> >
+> > Yes, that would be an option.
+> I will look into it.
+> 
+> Is there possible if:
+> - Keep GPIO8..GPIO as interrupt by default.
+> - Anyone want to use these GPIO pins as GPIO, we will re-configure
+> them to GPIO mode ?
+
+That's not perfect but better than the patch you sent here.
+The main disadvantage is that you end up with two references
+to the same IRQ. It can still work, but only as long as nothing
+tries to walk the entire DT to parse all the interrupts properties.
+
+It would be ok for gpio-keys, as that does not need both the state
+and the event together, but for other gpio users, you still need a
+working driver that supports reading the state and getting an
+interrupt.
+
+	Arnd
