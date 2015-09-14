@@ -1,97 +1,41 @@
-From: Stefano Stabellini <stefano.stabellini-mvvWK6WmYclDPfheJLI6IQ@public.gmane.org>
-Subject: Re: [PATCH] efi/libstub/fdt: Standardize the names of EFI stub
- parameters
-Date: Mon, 14 Sep 2015 10:47:12 +0100
-Message-ID: <alpine.DEB.2.02.1509141043520.2672@kaball.uk.xensource.com>
-References: <20150910112418.GC29293@leverpostej>
- <alpine.DEB.2.02.1509101223580.2672@kaball.uk.xensource.com>
- <20150910121514.GE29293@leverpostej>
- <alpine.DEB.2.02.1509101429480.2672@kaball.uk.xensource.com>
- <20150910144938.GI29293@leverpostej>
- <alpine.DEB.2.02.1509101655020.2672@kaball.uk.xensource.com>
- <20150910162302.GN29293@leverpostej>
- <20150911124643.GB4530@olila.local.net-space.pl>
- <20150911162559.GA8726@leverpostej>
- <20150912113655.GG4530@olila.local.net-space.pl>
- <20150914092518.GA10307@leverpostej>
+From: Sean Young <sean-hENCXIMQXOg@public.gmane.org>
+Subject: Re: [PATCH][resend] rc: gpio-ir-recv: allow flush space on idle
+Date: Mon, 14 Sep 2015 11:00:44 +0100
+Message-ID: <20150914100044.GA21149@gofer.mess.org>
+References: <1441980024-1944-1-git-send-email-eric@nelint.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20150914092518.GA10307@leverpostej>
+Content-Disposition: inline
+In-Reply-To: <1441980024-1944-1-git-send-email-eric-SeqgQ6RdavfQT0dZR+AlfA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: Daniel Kiper <daniel.kiper-QHcLZuEGTsvQT0dZR+AlfA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-efi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-efi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "Ian.Campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org" <Ian.Campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>, Konrad Rzeszutek Wilk <konrad.wilk-QHcLZuEGTsvQT0dZR+AlfA@public.gmane.org>, Stefano Stabellini <stefano.stabellini-mvvWK6WmYclDPfheJLI6IQ@public.gmane.org>, "linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "leif.lindholm-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <leif.lindholm-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "xen-devel-GuqFBffKawuEi8DpZVb4nw@public.gmane.org" <xen-devel-GuqFBffKawuEi8DpZVb4nw@public.gmane.org>, "ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "freebsd-arm-h+KGxgPPiopAfugRpC6u6w@public.gmane.org" <freebsd-arm-h+KGxgPPiopAfugRpC6u6w@public.gmane.org>, "matt.fleming-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org" <matt.fleming-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, "christoffer.dall-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <christoffer.dall-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "jbeulich-IBi9RG/b67k@public.gmane.org" <jbeulich-IBi9RG/b67k@public.gmane.org>, Shannon Zhao <zhaoshenglong-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, "julien.grall-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org" <julien.gr>
+To: Eric Nelson <eric-SeqgQ6RdavfQT0dZR+AlfA@public.gmane.org>
+Cc: linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mchehab-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, patrice.chotard-qxv4g6HH51o@public.gmane.org, fabf-AgBVmzD5pcezQB+pC5nmwQ@public.gmane.org, wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, otavio-fKevB0iiKLMBZ+LybsDmbA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 14 Sep 2015, Mark Rutland wrote:
-> On Sat, Sep 12, 2015 at 12:36:55PM +0100, Daniel Kiper wrote:
-> > On Fri, Sep 11, 2015 at 05:25:59PM +0100, Mark Rutland wrote:
-> > > On Fri, Sep 11, 2015 at 01:46:43PM +0100, Daniel Kiper wrote:
-> > > > On Thu, Sep 10, 2015 at 05:23:02PM +0100, Mark Rutland wrote:
-> > 
-> > [...]
-> > 
-> > > > > What's troublesome with the boot services?
-> > > > >
-> > > > > What can't be simulated?
-> > > >
-> > > > How do you want to access bare metal EFI boot services from dom0 if they
-> > > > were shutdown long time ago before loading dom0 image?
-> > >
-> > > I don't want to.
-> > >
-> > > I asked "What can't be simulated?" because I assumed everything
-> > > necessary/mandatory could be simulated without needinng access to any
-> > > real EFI boot services.
-> > >
-> > > As far as I can see all that's necessary is to provide a compatible
-> > > interface.
-> > 
-> > Could you be more precise what do you need? Please enumerate. UEFI spec has
-> > more than 2500 pages and I do not think that we need all stuff in dom0.
-> > 
-> > > > What do you need from EFI boot services in dom0?
-> > >
-> > > The ability to call ExitBootServices() and SetVirtualAddressMap() on a
-> > > _virtual_ address map for _virtual_ services provided by the hypervisor.
-> > 
-> > I am confused. Why do you need that? Please remember, EFI is owned and
-> > operated by Xen hypervisor. dom0 does not have direct access to EFI.
+On Fri, Sep 11, 2015 at 07:00:24AM -0700, Eric Nelson wrote:
+> Many decoders require a trailing space (period without IR illumination)
+> to be delivered before completing a decode.
 > 
-> Let's take a step back.
-> 
-> My objection here is to passing the Dom0 kernel properties as if it were
-> booted with direct access to a full UEFI, then later fixing that up
-> (when Xen is detected and we apply its hypercall EFI implementation).
-> 
-> If the kernel cannot use EFI natively, why pretend to the kernel that it
-> can? The hypercall implementation is _not_ EFI (though it provides
-> access to some services).
-> 
-> The two ways I can see providing Dom0 with EFI services are:
-> 
-> * Have Xen create shims for any services, in which any hypercalls live,
->   and pass these to the kernel with a virtual system table. This keeps
->   the interface to the kernel the same regardless of Xen.
+> Since the gpio-ir-recv driver only delivers events on gpio transitions,
+> a single IR symbol (caused by a quick touch on an IR remote) will not
+> be properly decoded without the use of a timer to flush the tail end
+> state of the IR receiver.
 
-A not a fan of three-point estimates, so I am just going to say that
-"this looks like a lot of work". Also emulating services is known to be
-prone to errors.
+This is a problem other IR drivers suffer from too. It might be better
+to send a IR timeout event like st_rc_send_lirc_timeout() in st_rc.c,
+with the duration set to what the timeout was. That is what irraw 
+timeouts are for; much better than fake transitions.
+
+> This patch adds an optional device tree node "flush-ms" which, if
+> present, will use a jiffie-based timer to complete the last pulse
+> stream and allow decode.
+
+A common value for this is 100ms, I'm not sure what use it has to have
+it configurable. It's nice to have it exposed in rc_dev->timeout.
 
 
-> * Have the kernel detect Xen EFI capability via Xen, without passing the
->   usual native EFI parameters. This can then be installed into the
->   kernel in a Xen-specific manner, and we know from the outset that
->   Xen-specific caveats apply.
-
-I prefer this approach by far. In the future we might have to move the
-xen_early_init call earlier (before ACPI and EFI Runtime Services get
-initialized).
-
-
-> As per my original email, I'm not against the renaming of the stub
-> parameters if we standardise the rest of the details, but I believe
-> that's orthogonal to the Xen Dom0 case.
+Sean
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
