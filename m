@@ -1,51 +1,35 @@
-From: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 3/3] ARM: brcmstb: Setup BIU control registers during boot
-Date: Mon, 14 Sep 2015 14:29:30 -0700
-Message-ID: <20150914212930.GA64093@google.com>
-References: <1442260369-6575-1-git-send-email-f.fainelli@gmail.com>
- <1442260369-6575-4-git-send-email-f.fainelli@gmail.com>
- <20150914204833.GA53555@google.com>
- <55F73A47.9070900@gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <55F73A47.9070900-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, gregory.0xf0-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+From: Florian Fainelli <f.fainelli@gmail.com>
+Subject: [PATCH v4 0/2] pwm: Broadcom BCM7038 PWM controller (v4)
+Date: Mon, 14 Sep 2015 16:47:04 -0700
+Message-ID: <1442274426-3507-1-git-send-email-f.fainelli@gmail.com>
+Return-path: <linux-pwm-owner@vger.kernel.org>
+Sender: linux-pwm-owner@vger.kernel.org
+To: linux-kernel@vger.kernel.org
+Cc: Florian Fainelli <f.fainelli@gmail.com>, bcm-kernel-feedback-list@broadcom.com, thierry.reding@gmail.com, devicetree@vger.kernel.org, linux-pwm@vger.kernel.org, ariel@vanguardiasur.com.ar
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Sep 14, 2015 at 02:21:11PM -0700, Florian Fainelli wrote:
-> On 14/09/15 13:48, Brian Norris wrote:
-> > On Mon, Sep 14, 2015 at 12:52:49PM -0700, Florian Fainelli wrote:
-> >> Call brcmstb_biuctrl_init() in brcmstb's init_irq machine descriptor
-> >> callback since we need to setup the Bus Interface Unit before SMP in
-> >> particular, but we also need to be able to remap registers.
-> >>
-> >> Signed-off-by: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> >> ---
-> >> +static void __init brcmstb_init_irq(void)
-> >> +{
-> >> +	irqchip_init();
-> >> +	brcmstb_biuctrl_init();
-> > 
-> > I believe you're introducing a dependency on CONFIG_SOC_BRCMSTB, but
-> > it's not represented in Kconfig. Maybe SOC_BRCMSTB shouldn't be
-> > user-selectable, and it should just be select-ed by ARCH_BRCMSTB?
-> 
-> It is thanks to your previous commit, which is why I mentioned in the
-> cover letter that this was based on the 'soc/next' branch.
-> 
-> https://github.com/Broadcom/stblinux/commit/b19826efa15f94084416d5fc7749c45eabfbee36
+Hi,
 
-Hah, bad memory I have. I suppose a user-selectable option that is also
-selected by another symbol is OK if the former has few/no dependencies.
+This patch series add PWM support for the Broadcom BCM7xxx
+chips which feature one or more PWM controllers capable of
+output periods from 148ns to ~622ms using a combination of
+variable and fixed frequency settings.
 
-> Thanks for taking a look though!
+The controller does not support setting a polarity.
 
-Brian
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+This is based on Thierry's pwm/next branch.
+
+Florian Fainelli (2):
+  Documentation: dt: add Broadcom BCM7038 PWM controller binding
+  pwm: Add Broadcom BCM7038 PWM controller support
+
+ .../devicetree/bindings/pwm/brcm,bcm7038-pwm.txt   |  20 ++
+ drivers/pwm/Kconfig                                |  10 +
+ drivers/pwm/Makefile                               |   1 +
+ drivers/pwm/pwm-brcmstb.c                          | 345 +++++++++++++++++++++
+ 4 files changed, 376 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/pwm/brcm,bcm7038-pwm.txt
+ create mode 100644 drivers/pwm/pwm-brcmstb.c
+
+-- 
+2.1.0
