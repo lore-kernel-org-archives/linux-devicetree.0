@@ -1,85 +1,95 @@
-From: Daniel Kiper <daniel.kiper@oracle.com>
-Subject: Re: [PATCH] efi/libstub/fdt: Standardize the names of EFI stub
- parameters
-Date: Mon, 14 Sep 2015 14:19:36 +0200
-Message-ID: <20150914121936.GH4530@olila.local.net-space.pl>
-References: <alpine.DEB.2.02.1509101223580.2672@kaball.uk.xensource.com>
- <20150910121514.GE29293@leverpostej>
- <alpine.DEB.2.02.1509101429480.2672@kaball.uk.xensource.com>
- <20150910144938.GI29293@leverpostej>
- <alpine.DEB.2.02.1509101655020.2672@kaball.uk.xensource.com>
- <20150910162302.GN29293@leverpostej>
- <20150911124643.GB4530@olila.local.net-space.pl>
- <20150911162559.GA8726@leverpostej>
- <20150912113655.GG4530@olila.local.net-space.pl>
- <20150914092518.GA10307@leverpostej>
+From: Yong Wu <yong.wu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH v3 3/6] iommu: add ARM short descriptor page table
+	allocator.
+Date: Mon, 14 Sep 2015 20:25:00 +0800
+Message-ID: <1442233500.19588.35.camel@mhfsdcap03>
+References: <1437037475-9065-1-git-send-email-yong.wu@mediatek.com>
+	<1437037475-9065-4-git-send-email-yong.wu@mediatek.com>
+	<20150721171101.GN31095@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20150914092518.GA10307@leverpostej>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mark Rutland <mark.rutland@arm.com>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-efi@vger.kernel.org" <linux-efi@vger.kernel.org>, "Ian.Campbell@citrix.com" <Ian.Campbell@citrix.com>, Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>, Stefano Stabellini <stefano.stabellini@eu.citrix.com>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "leif.lindholm@linaro.org" <leif.lindholm@linaro.org>, "xen-devel@lists.xen.org" <xen-devel@lists.xen.org>, "ard.biesheuvel@linaro.org" <ard.biesheuvel@linaro.org>, "freebsd-arm@freebsd.org" <freebsd-arm@freebsd.org>, "matt.fleming@intel.com" <matt.fleming@intel.com>, "christoffer.dall@linaro.org" <christoffer.dall@linaro.org>, "jbeulich@suse.com" <jbeulich@suse.com>, Shannon Zhao <zhaoshenglong@huawei.com>, "julien.grall@citrix.com" <julien.grall@citrix.com>, peter.huangpeng@huawei
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+In-Reply-To: <20150721171101.GN31095-5wv7dgnIgG8@public.gmane.org>
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
+Cc: Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <Catalin.Marinas-5wv7dgnIgG8@public.gmane.org>, "cloud.chou-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org" <cloud.chou-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, "frederic.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org" <frederic.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "arnd-r2nGTMty4D4@public.gmane.org" <arnd-r2nGTMty4D4@public.gmane.org>, Tomasz Figa <tfiga-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "pebolle-IWqWACnzNjzz+pZb47iToQ@public.gmane.org" <pebolle-IWqWACnzNjzz+pZb47iToQ@public.gmane.org>, Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, "srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org" <srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org" <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, Daniel Kurtz <djkurtz-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Sasha Hauer <kernel@pen>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Sep 14, 2015 at 10:25:19AM +0100, Mark Rutland wrote:
-> On Sat, Sep 12, 2015 at 12:36:55PM +0100, Daniel Kiper wrote:
-> > On Fri, Sep 11, 2015 at 05:25:59PM +0100, Mark Rutland wrote:
-> > > On Fri, Sep 11, 2015 at 01:46:43PM +0100, Daniel Kiper wrote:
-> > > > On Thu, Sep 10, 2015 at 05:23:02PM +0100, Mark Rutland wrote:
-> >
-> > [...]
-> >
-> > > > > What's troublesome with the boot services?
-> > > > >
-> > > > > What can't be simulated?
-> > > >
-> > > > How do you want to access bare metal EFI boot services from dom0 if they
-> > > > were shutdown long time ago before loading dom0 image?
-> > >
-> > > I don't want to.
-> > >
-> > > I asked "What can't be simulated?" because I assumed everything
-> > > necessary/mandatory could be simulated without needinng access to any
-> > > real EFI boot services.
-> > >
-> > > As far as I can see all that's necessary is to provide a compatible
-> > > interface.
-> >
-> > Could you be more precise what do you need? Please enumerate. UEFI spec has
-> > more than 2500 pages and I do not think that we need all stuff in dom0.
-> >
-> > > > What do you need from EFI boot services in dom0?
-> > >
-> > > The ability to call ExitBootServices() and SetVirtualAddressMap() on a
-> > > _virtual_ address map for _virtual_ services provided by the hypervisor.
-> >
-> > I am confused. Why do you need that? Please remember, EFI is owned and
-> > operated by Xen hypervisor. dom0 does not have direct access to EFI.
->
-> Let's take a step back.
->
-> My objection here is to passing the Dom0 kernel properties as if it were
-> booted with direct access to a full UEFI, then later fixing that up
-> (when Xen is detected and we apply its hypercall EFI implementation).
->
-> If the kernel cannot use EFI natively, why pretend to the kernel that it
-> can? The hypercall implementation is _not_ EFI (though it provides
-> access to some services).
->
-> The two ways I can see providing Dom0 with EFI services are:
->
-> * Have Xen create shims for any services, in which any hypercalls live,
->   and pass these to the kernel with a virtual system table. This keeps
->   the interface to the kernel the same regardless of Xen.
->
-> * Have the kernel detect Xen EFI capability via Xen, without passing the
->   usual native EFI parameters. This can then be installed into the
->   kernel in a Xen-specific manner, and we know from the outset that
->   Xen-specific caveats apply.
+On Tue, 2015-07-21 at 18:11 +0100, Will Deacon wrote:
+[...]
+> > +static int arm_short_map(struct io_pgtable_ops *ops, unsigned long iova,
+> > +                        phys_addr_t paddr, size_t size, int prot)
+> > +{
+> > +       struct arm_short_io_pgtable *data = io_pgtable_ops_to_data(ops);
+> > +       const struct iommu_gather_ops *tlb = data->iop.cfg.tlb;
+> > +       int ret;
+> > +       arm_short_iopte pgdprot = 0, pteprot = 0;
+> > +       bool large;
+> > +
+> > +       /* If no access, then nothing to do */
+> > +       if (!(prot & (IOMMU_READ | IOMMU_WRITE)))
+> > +               return 0;
+> > +
+> > +       switch (size) {
+> > +       case SZ_4K:
+> > +       case SZ_64K:
+> > +               large = (size == SZ_64K) ? true : false;
+> > +               pteprot = __arm_short_pte_prot(data, prot, large);
+> > +               pgdprot = __arm_short_pgtable_prot(data, prot & IOMMU_NOEXEC);
+> > +               break;
+> > +
+> > +       case SZ_1M:
+> > +       case SZ_16M:
+> > +               large = (size == SZ_16M) ? true : false;
+> > +               pgdprot = __arm_short_pgd_prot(data, prot, large);
+> > +               break;
+> > +       default:
+> > +               return -EINVAL;
+> > +       }
+> > +
+> > +       if (WARN_ON((iova | paddr) & (size - 1)))
+> > +               return -EINVAL;
+> > +
+> > +       ret = _arm_short_map(data, iova, paddr, pgdprot, pteprot, large);
+> > +
+> > +       tlb->tlb_add_flush(iova, size, true, data->iop.cookie);
+> > +       tlb->tlb_sync(data->iop.cookie);
+> 
+> In _arm_short_map, it looks like you can only go from invalid -> valid,
+> so why do you need to flush the TLB here?
 
-It works on x86 in that way and I suppose that it can work in that way on ARM too.
-So, just go and reuse existing code. That is all.
+Hi Will,
+   Here is about flush-tlb after map iova, I have deleted it in v4
+following this suggestion. But We meet a problem about it.
 
-Daniel
+Take a example with JPEG. the test steps is:
+a).JPEG HW decode a picture with the source iova,like 0xfd780000.
+b).JPEG HW decode done, It will unmap the iova(write 0 in pagetable and
+flush tlb).
+c).JPEG HW decode the second picture, whose source iova is also
+0xfd780000.
+   Then our HW maybe fail due to it will auto prefetch, It may prefecth
+between the step b) and c). then the HW may fetch the pagetable content
+which has been unmapped in step b). then the HW will get the iova's
+physical address is 0, It will translation fault!
+
+    So I think our HW need flush-tlb after map iova. Could we add a
+QUIRK like "IO_PGTABLE_QUIRK_AUTO_PREFETCH_ENABLE" for it?
+If it's not allowed, we will have to add this in our internal function
+mtk_iommu_map of mtk_iommu.c.
+Thanks.
+
+> 
+> > +       return ret;
+> > +}
+> > +
+[...]
