@@ -1,58 +1,280 @@
-From: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-Subject: Re: [PATCH] arm64: dts: Add BUS1 instance pinctrl support
-Date: Mon, 14 Sep 2015 15:26:29 +0900
-Message-ID: <55F66895.7030902@samsung.com>
-References: <1440761134-27639-1-git-send-email-alim.akhtar@samsung.com>
- <55E3E95D.50003@samsung.com> <55F6563A.2030107@samsung.com>
- <55F6606F.3090000@samsung.com> <55F66641.6010209@samsung.com>
+From: Masahiro Yamada <yamada.masahiro@socionext.com>
+Subject: [PATCH v2 3/3] ARM: dts: uniphier: add outer cache controller nodes
+Date: Mon, 14 Sep 2015 15:26:32 +0900
+Message-ID: <1442211992-13177-4-git-send-email-yamada.masahiro@socionext.com>
+References: <1442211992-13177-1-git-send-email-yamada.masahiro@socionext.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <55F66641.6010209@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Alim Akhtar <alim.akhtar@samsung.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org
-Cc: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, catalin.marinas@arm.com, will.deacon@arm.com, kgene@kernel.org, gautam.vivek@samsung.com
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1442211992-13177-1-git-send-email-yamada.masahiro@socionext.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: linux-arm-kernel@lists.infradead.org, arm@kernel.org
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Russell King <linux@arm.linux.org.uk>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-kernel@vger.kernel.org, Masahiro Yamada <yamada.masahiro@socionext.com>, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-On 14.09.2015 15:16, Alim Akhtar wrote:
-> Hello,
-> 
-> On 09/14/2015 11:21 AM, Krzysztof Kozlowski wrote:
->> On 14.09.2015 14:08, Alim Akhtar wrote:
->>> Hi
->>>
->>> On 08/31/2015 11:12 AM, Krzysztof Kozlowski wrote:
->>>> On 28.08.2015 20:25, Alim Akhtar wrote:
->>>>> This adds BUS1 instance pinctrl for exynos7 soc.
->>>>>
->>>>> Signed-off-by: Alim Akhtar <alim.akhtar@samsung.com>
->>>>> ---
->>>>>    arch/arm64/boot/dts/exynos/exynos7-pinctrl.dtsi |  111
->>>>> +++++++++++++++++++++++
->>>>>    arch/arm64/boot/dts/exynos/exynos7.dtsi         |    7 ++
->>>>>    2 files changed, 118 insertions(+)
->>>>
->>>> The "etc1" GPIO in my datasheet is not fully documented but the rest
->>>> looks good:
->>>>
->>> Ok will send v2 and remove etc1 gpio node.
->>
->> You don't have to. I mentioned it only for reference that I cannot
->> review the etc GPIO node because it is not mentioned in my datasheet.
->> However you may have different (e.g. newer) datasheet and etc1 could be
->> documented there.
->>
-> Sorry for delay, I check two versions of the UM and unfortunately both
-> show incomplete entries for etc1, my downstream code has these changes
-> though.
->> I applied the first version of patch some time ago (your response is
->> after two weeks). Do you want me to replace it with v2?
->>
-> Please consider taking my v2 which I just posted.
-> Thanks again.
+Add L2 cache controller nodes for all the UniPhier SoC DTSI.
+Also, add an L3 cache controller node for PH1-Pro5 DTSI.
 
-Okay, I'll replace the patch with v2.
+Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+---
 
-Best regards,
-Krzysztof
+ arch/arm/boot/dts/uniphier-ph1-ld4.dtsi     | 13 +++++++++++++
+ arch/arm/boot/dts/uniphier-ph1-pro4.dtsi    | 14 ++++++++++++++
+ arch/arm/boot/dts/uniphier-ph1-pro5.dtsi    | 27 +++++++++++++++++++++++++++
+ arch/arm/boot/dts/uniphier-ph1-sld3.dtsi    | 14 ++++++++++++++
+ arch/arm/boot/dts/uniphier-ph1-sld8.dtsi    | 13 +++++++++++++
+ arch/arm/boot/dts/uniphier-proxstream2.dtsi | 16 ++++++++++++++++
+ 6 files changed, 97 insertions(+)
+
+diff --git a/arch/arm/boot/dts/uniphier-ph1-ld4.dtsi b/arch/arm/boot/dts/uniphier-ph1-ld4.dtsi
+index a6a185f..ae13469 100644
+--- a/arch/arm/boot/dts/uniphier-ph1-ld4.dtsi
++++ b/arch/arm/boot/dts/uniphier-ph1-ld4.dtsi
+@@ -55,6 +55,7 @@
+ 			device_type = "cpu";
+ 			compatible = "arm,cortex-a9";
+ 			reg = <0>;
++			next-level-cache = <&l2>;
+ 		};
+ 	};
+ 
+@@ -91,6 +92,18 @@
+ 			#size-cells = <1>;
+ 		};
+ 
++		l2: l2-cache@500c0000 {
++			compatible = "socionext,uniphier-system-cache";
++			reg = <0x500c0000 0x2000>, <0x503c0100 0x4>,
++			      <0x506c0000 0x400>;
++			interrupts = <0 174 4>, <0 175 4>;
++			cache-unified;
++			cache-size = <(512 * 1024)>;
++			cache-sets = <256>;
++			cache-line-size = <128>;
++			cache-level = <2>;
++		};
++
+ 		serial0: serial@54006800 {
+ 			compatible = "socionext,uniphier-uart";
+ 			status = "disabled";
+diff --git a/arch/arm/boot/dts/uniphier-ph1-pro4.dtsi b/arch/arm/boot/dts/uniphier-ph1-pro4.dtsi
+index e8bbc45..85377b2 100644
+--- a/arch/arm/boot/dts/uniphier-ph1-pro4.dtsi
++++ b/arch/arm/boot/dts/uniphier-ph1-pro4.dtsi
+@@ -56,12 +56,14 @@
+ 			device_type = "cpu";
+ 			compatible = "arm,cortex-a9";
+ 			reg = <0>;
++			next-level-cache = <&l2>;
+ 		};
+ 
+ 		cpu@1 {
+ 			device_type = "cpu";
+ 			compatible = "arm,cortex-a9";
+ 			reg = <1>;
++			next-level-cache = <&l2>;
+ 		};
+ 	};
+ 
+@@ -98,6 +100,18 @@
+ 			#size-cells = <1>;
+ 		};
+ 
++		l2: l2-cache@500c0000 {
++			compatible = "socionext,uniphier-system-cache";
++			reg = <0x500c0000 0x2000>, <0x503c0100 0x4>,
++			      <0x506c0000 0x400>;
++			interrupts = <0 174 4>, <0 175 4>;
++			cache-unified;
++			cache-size = <(768 * 1024)>;
++			cache-sets = <256>;
++			cache-line-size = <128>;
++			cache-level = <2>;
++		};
++
+ 		serial0: serial@54006800 {
+ 			compatible = "socionext,uniphier-uart";
+ 			status = "disabled";
+diff --git a/arch/arm/boot/dts/uniphier-ph1-pro5.dtsi b/arch/arm/boot/dts/uniphier-ph1-pro5.dtsi
+index 59c2b12..96da01e 100644
+--- a/arch/arm/boot/dts/uniphier-ph1-pro5.dtsi
++++ b/arch/arm/boot/dts/uniphier-ph1-pro5.dtsi
+@@ -56,12 +56,14 @@
+ 			device_type = "cpu";
+ 			compatible = "arm,cortex-a9";
+ 			reg = <0>;
++			next-level-cache = <&l2>;
+ 		};
+ 
+ 		cpu@1 {
+ 			device_type = "cpu";
+ 			compatible = "arm,cortex-a9";
+ 			reg = <1>;
++			next-level-cache = <&l2>;
+ 		};
+ 	};
+ 
+@@ -98,6 +100,31 @@
+ 			#size-cells = <1>;
+ 		};
+ 
++		l2: l2-cache@500c0000 {
++			compatible = "socionext,uniphier-system-cache";
++			reg = <0x500c0000 0x2000>, <0x503c0100 0x8>,
++			      <0x506c0000 0x400>;
++			interrupts = <0 190 4>, <0 191 4>;
++			cache-unified;
++			cache-size = <(2 * 1024 * 1024)>;
++			cache-sets = <512>;
++			cache-line-size = <128>;
++			cache-level = <2>;
++			next-level-cache = <&l3>;
++		};
++
++		l3: l3-cache@500c8000 {
++			compatible = "socionext,uniphier-system-cache";
++			reg = <0x500c8000 0x2000>, <0x503c8100 0x8>,
++			      <0x506c8000 0x400>;
++			interrupts = <0 174 4>, <0 175 4>;
++			cache-unified;
++			cache-size = <(2 * 1024 * 1024)>;
++			cache-sets = <512>;
++			cache-line-size = <256>;
++			cache-level = <3>;
++		};
++
+ 		serial0: serial@54006800 {
+ 			compatible = "socionext,uniphier-uart";
+ 			status = "disabled";
+diff --git a/arch/arm/boot/dts/uniphier-ph1-sld3.dtsi b/arch/arm/boot/dts/uniphier-ph1-sld3.dtsi
+index 3cc90cd..945b37f 100644
+--- a/arch/arm/boot/dts/uniphier-ph1-sld3.dtsi
++++ b/arch/arm/boot/dts/uniphier-ph1-sld3.dtsi
+@@ -56,12 +56,14 @@
+ 			device_type = "cpu";
+ 			compatible = "arm,cortex-a9";
+ 			reg = <0>;
++			next-level-cache = <&l2>;
+ 		};
+ 
+ 		cpu@1 {
+ 			device_type = "cpu";
+ 			compatible = "arm,cortex-a9";
+ 			reg = <1>;
++			next-level-cache = <&l2>;
+ 		};
+ 	};
+ 
+@@ -120,6 +122,18 @@
+ 			      <0x20000100 0x100>;
+ 		};
+ 
++		l2: l2-cache@500c0000 {
++			compatible = "socionext,uniphier-system-cache";
++			reg = <0x500c0000 0x2000>, <0x503c0100 0x4>,
++			      <0x506c0000 0x400>;
++			interrupts = <0 174 4>, <0 175 4>;
++			cache-unified;
++			cache-size = <(512 * 1024)>;
++			cache-sets = <256>;
++			cache-line-size = <128>;
++			cache-level = <2>;
++		};
++
+ 		serial0: serial@54006800 {
+ 			compatible = "socionext,uniphier-uart";
+ 			status = "disabled";
+diff --git a/arch/arm/boot/dts/uniphier-ph1-sld8.dtsi b/arch/arm/boot/dts/uniphier-ph1-sld8.dtsi
+index 58067df..c98428c 100644
+--- a/arch/arm/boot/dts/uniphier-ph1-sld8.dtsi
++++ b/arch/arm/boot/dts/uniphier-ph1-sld8.dtsi
+@@ -55,6 +55,7 @@
+ 			device_type = "cpu";
+ 			compatible = "arm,cortex-a9";
+ 			reg = <0>;
++			next-level-cache = <&l2>;
+ 		};
+ 	};
+ 
+@@ -91,6 +92,18 @@
+ 			#size-cells = <1>;
+ 		};
+ 
++		l2: l2-cache@500c0000 {
++			compatible = "socionext,uniphier-system-cache";
++			reg = <0x500c0000 0x2000>, <0x503c0100 0x4>,
++			      <0x506c0000 0x400>;
++			interrupts = <0 174 4>, <0 175 4>;
++			cache-unified;
++			cache-size = <(256 * 1024)>;
++			cache-sets = <256>;
++			cache-line-size = <128>;
++			cache-level = <2>;
++		};
++
+ 		serial0: serial@54006800 {
+ 			compatible = "socionext,uniphier-uart";
+ 			status = "disabled";
+diff --git a/arch/arm/boot/dts/uniphier-proxstream2.dtsi b/arch/arm/boot/dts/uniphier-proxstream2.dtsi
+index 4c7b246..ad5fb39 100644
+--- a/arch/arm/boot/dts/uniphier-proxstream2.dtsi
++++ b/arch/arm/boot/dts/uniphier-proxstream2.dtsi
+@@ -56,24 +56,28 @@
+ 			device_type = "cpu";
+ 			compatible = "arm,cortex-a9";
+ 			reg = <0>;
++			next-level-cache = <&l2>;
+ 		};
+ 
+ 		cpu@1 {
+ 			device_type = "cpu";
+ 			compatible = "arm,cortex-a9";
+ 			reg = <1>;
++			next-level-cache = <&l2>;
+ 		};
+ 
+ 		cpu@2 {
+ 			device_type = "cpu";
+ 			compatible = "arm,cortex-a9";
+ 			reg = <2>;
++			next-level-cache = <&l2>;
+ 		};
+ 
+ 		cpu@3 {
+ 			device_type = "cpu";
+ 			compatible = "arm,cortex-a9";
+ 			reg = <3>;
++			next-level-cache = <&l2>;
+ 		};
+ 	};
+ 
+@@ -110,6 +114,18 @@
+ 			#size-cells = <1>;
+ 		};
+ 
++		l2: l2-cache@500c0000 {
++			compatible = "socionext,uniphier-system-cache";
++			reg = <0x500c0000 0x2000>, <0x503c0100 0x4>,
++			      <0x506c0000 0x400>;
++			interrupts = <0 174 4>, <0 175 4>, <0 190 4>, <0 191 4>;
++			cache-unified;
++			cache-size = <(1280 * 1024)>;
++			cache-sets = <512>;
++			cache-line-size = <128>;
++			cache-level = <2>;
++		};
++
+ 		serial0: serial@54006800 {
+ 			compatible = "socionext,uniphier-uart";
+ 			status = "disabled";
+-- 
+1.9.1
