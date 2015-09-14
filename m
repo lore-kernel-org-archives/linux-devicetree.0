@@ -1,37 +1,46 @@
-From: Pratyush Anand <panand@redhat.com>
-Subject: Re: [PATCH v4 5/7] Watchdog: introduce ARM SBSA watchdog driver
-Date: Mon, 14 Sep 2015 09:51:04 +0530
-Message-ID: <20150914042104.GA4682@localhost.localdomain>
-References: <=fu.wei@linaro.org>
- <1433217907-928-1-git-send-email-fu.wei@linaro.org>
- <1433217907-928-6-git-send-email-fu.wei@linaro.org>
- <556F4489.6030206@codeaurora.org>
- <20150603182503.GD6460@roeck-us.net>
- <556F4D29.1080001@codeaurora.org>
- <55F207FD.2030007@redhat.com>
+From: Vaibhav Hiremath <vaibhav.hiremath@linaro.org>
+Subject: Re: [PATCH-v5 RESEND 2/5] i2c: pxa: enable/disable i2c module across
+ msg xfer
+Date: Mon, 14 Sep 2015 10:37:08 +0530
+Message-ID: <55F655FC.8070308@linaro.org>
+References: <1440395978-9065-1-git-send-email-vaibhav.hiremath@linaro.org>
+ <1440395978-9065-3-git-send-email-vaibhav.hiremath@linaro.org>
+ <20150911185312.GA1516@katana>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-doc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <55F207FD.2030007@redhat.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Jon Masters <jcm@redhat.com>, Timur Tabi <timur@codeaurora.org>, Guenter Roeck <linux@roeck-us.net>, fu.wei@linaro.org
-Cc: Suravee.Suthikulpanit@amd.com, linaro-acpi@lists.linaro.org, linux-watchdog@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, tekkamanninja@gmail.com, graeme.gregory@linaro.org, al.stone@linaro.org, hanjun.guo@linaro.org, ashwin.chaugule@linaro.org, arnd@arndb.de, vgandhi@codeaurora.org, wim@iguana.be, leo.duran@amd.com, corbet@lwn.net, mark.rutland@arm.com, catalin.marinas@arm.com, will.deacon@arm.com, rjw@rjwysocki.net
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20150911185312.GA1516@katana>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Wolfram Sang <wsa@the-dreams.de>
+Cc: linux-arm-kernel@lists.infradead.org, robh+dt@kernel.org, robert.jarzmik@free.fr, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-i2c@vger.kernel.org, Yi Zhang <yizhang@marvell.com>
 List-Id: devicetree@vger.kernel.org
 
-On 10/09/2015:06:45:17 PM, Jon Masters wrote:
-> On 06/03/2015 02:53 PM, Timur Tabi wrote:
-> > On 06/03/2015 01:25 PM, Guenter Roeck wrote:
-> >> In general the idea here would be to use a crashdump kernel, which,
-> >> when loaded, would reset the watchdog before it fires. This kernel
-> >> would then write a core dump to a specified location.
 
-And this is what we do in fedora or RHEL. There had been some work ongoing in
-fedora [1][2] which will help to reset any active watchdog in kdump kernel(if
-the watchdog driver has been registered to watchdog_class). It will eventually
-help a watchdog on ARM64 platform as well.
 
-[1] https://lists.fedoraproject.org/pipermail/kexec/2015-September/002295.html
-[2] https://github.com/pratyushanand/kexec-tools/commits/watchdog_fmaster
+On Saturday 12 September 2015 12:23 AM, Wolfram Sang wrote:
+> On Mon, Aug 24, 2015 at 11:29:35AM +0530, Vaibhav Hiremath wrote:
+>> From: Yi Zhang <yizhang@marvell.com>
+>>
+>> Enable i2c module/unit before transmission and disable when it
+>> finishes.
+>>
+>> why?
+>> It's because the i2c bus may be disturbed if the slave device,
+>> typically a touch, powers on.
+>
+> I am not convinced, "may disturb" is too weak for me. It would need a
+> way more detailed description of the problem which makes clear that
+> this mechanism is the only way to go forward.
+>
 
-~Pratyush
+Hmm, Ok.
+Not sure what else I can bring up here.
+
+> Can't you use Runtime PM for that?
+>
+
+I haven't tried it though, I can give a try and check.
+
+Thanks,
+Vaibhav
