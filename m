@@ -1,136 +1,55 @@
-From: "Tirdea, Irina" <irina.tirdea@intel.com>
-Subject: RE: [PATCH v5 3/9] Input: goodix - reset device at init
-Date: Tue, 15 Sep 2015 14:27:04 +0000
-Message-ID: <1F3AC3675D538145B1661F571FE1805F2F0CD269@irsmsx105.ger.corp.intel.com>
-References: <1441636583-14188-1-git-send-email-irina.tirdea@intel.com>
-	<1441636583-14188-4-git-send-email-irina.tirdea@intel.com>
- <20150915124817.8c53e274e178800edc5767bf@gmail.com>
+From: Cyrille Pitchen <cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Subject: [linux-next RFC v7 0/6] mtd: spi-nor: improve support of QSPI nor
+Date: Tue, 15 Sep 2015 17:27:58 +0200
+Message-ID: <cover.1442330503.git.cyrille.pitchen@atmel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20150915124817.8c53e274e178800edc5767bf@gmail.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Aleksei Mamlin <mamlinav@gmail.com>
-Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Bastien Nocera <hadess@hadess.net>, "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, "Purdila, Octavian" <octavian.purdila@intel.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain
+Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, beanhuo-AL4WhLSQfzjQT0dZR+AlfA@public.gmane.org, juhosg-p3rKhJxN3npAfugRpC6u6w@public.gmane.org, marex-ynQEQJNshbs@public.gmane.org, ben-/+tVBieCtBitmTQ+vhA3Yw@public.gmane.org
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Cyrille Pitchen <cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+Hi all,
 
+this series is still a work in progress though it is almost finished.
+The support of Macronix dummy code to configure the number of dummy cycles
+is still missing...
 
-> -----Original Message-----
-> From: Aleksei Mamlin [mailto:mamlinav@gmail.com]
-> Sent: 15 September, 2015 12:48
-> To: Tirdea, Irina
-> Cc: Dmitry Torokhov; Bastien Nocera; linux-input@vger.kernel.org; Mark Rutland; Purdila, Octavian; linux-kernel@vger.kernel.org;
-> devicetree@vger.kernel.org
-> Subject: Re: [PATCH v5 3/9] Input: goodix - reset device at init
-> 
-> On Mon,  7 Sep 2015 17:36:17 +0300
-> Irina Tirdea <irina.tirdea@intel.com> wrote:
-> 
-> > After power on, it is recommended that the driver resets the device.
-> > The reset procedure timing is described in the datasheet and is used
-> > at device init (before writing device configuration) and
-> > for power management. It is a sequence of setting the interrupt
-> > and reset pins high/low at specific timing intervals. This procedure
-> > also includes setting the slave address to the one specified in the
-> > ACPI/device tree.
-> >
-> > This is based on Goodix datasheets for GT911 and GT9271 and on Goodix
-> > driver gt9xx.c for Android (publicly available in Android kernel
-> > trees for various devices).
-> >
-> > For reset the driver needs to control the interrupt and
-> > reset gpio pins (configured through ACPI/device tree). For devices
-> > that do not have the gpio pins declared, the functionality depending
-> > on these pins will not be available, but the device can still be used
-> > with basic functionality.
-> >
-> > Signed-off-by: Octavian Purdila <octavian.purdila@intel.com>
-> > Signed-off-by: Irina Tirdea <irina.tirdea@intel.com>
-> > ---
-> >  .../bindings/input/touchscreen/goodix.txt          |   5 +
-> >  drivers/input/touchscreen/goodix.c                 | 136 +++++++++++++++++++++
-> >  2 files changed, 141 insertions(+)
-> >
-<snip>
-> > +/**
-> > + * goodix_reset - Reset device during power on
-> > + *
-> > + * @ts: goodix_ts_data pointer
-> > + */
-> > +static int goodix_reset(struct goodix_ts_data *ts)
-> > +{
-> > +	int error;
-> > +
-> > +	/* begin select I2C slave addr */
-> > +	error = gpiod_direction_output(ts->gpiod_rst, 0);
-> > +	if (error)
-> > +		return error;
-> > +	msleep(20);				/* T2: > 10ms */
-> > +	/* HIGH: 0x28/0x29, LOW: 0xBA/0xBB */
-> > +	error = gpiod_direction_output(ts->gpiod_int, ts->client->addr == 0x14);
-> > +	if (error)
-> > +		return error;
-> > +	usleep_range(100, 2000);		/* T3: > 100us */
-> > +	error = gpiod_direction_output(ts->gpiod_rst, 1);
-> > +	if (error)
-> > +		return error;
-> > +	usleep_range(6000, 10000);		/* T4: > 5ms */
-> > +	/* end select I2C slave addr */
-> > +	error = gpiod_direction_input(ts->gpiod_rst);
-> > +	if (error)
-> > +		return error;
-> > +	return goodix_int_sync(ts);
-> > +}
-> > +
-<snip>
-> >  /**
-> >   * goodix_read_config - Read the embedded configuration of the panel
-> >   *
-> > @@ -419,6 +542,19 @@ static int goodix_ts_probe(struct i2c_client *client,
-> >
-> >  	ts->cfg_len = goodix_get_cfg_len(id_info);
-> >
-> > +	error = goodix_get_gpio_config(ts, id);
-> > +	if (error)
-> > +		return error;
-> > +
-> > +	if (ts->gpiod_int && ts->gpiod_rst) {
-> > +		/* reset the controller */
-> > +		error = goodix_reset(ts);
-> > +		if (error) {
-> > +			dev_err(&client->dev, "Controller reset failed.\n");
-> > +			return error;
-> > +		}
-> > +	}
-> > +
-> 
-> On devices with devicetree, such as ARM tablets, we can set I2C address via DT, so driver should reset controller and set right address.
-> If we don't do this we get "I2C communication failure: -6".
->
+However I would like some feedbacks to synchronize this work with other
+mtd / spi-nor improvements as I see lots of patches on the mailing list.
 
-This is exactly what this patch tries to do. The address set in ACPI or DT will be available
-in ts->client->addr. The reset code checks for the address set by ACPI/DT and configures
-the device to use that address.
- 
-> Also, most of touchscreen drivers tries to reset controllers before start communicating, so we need do the same.
+Best Regards,
 
-Good catch! goodix_reset should be called before goodix_i2c_test. I'll send a new version with this fix.
+Cyrille
 
-Thanks,
-Irina
+Cyrille Pitchen (6):
+  mtd: spi-nor: remove unused read_xfer/write_xfer hooks
+  mtd: spi-nor: read JEDEC ID with multiple I/O protocols
+  mtd: spi-nor: set the read op code and protocol based on the
+    manufacturer
+  mtd: m25p80: add support of dual and quad spi protocols to all
+    commands
+  Documentation: atmel-quadspi: add binding file for Atmel QSPI driver
+  mtd: atmel-quadspi: add driver for Atmel QSPI controller
 
-> 
-> >  	goodix_read_config(ts);
-> >
-> >  	error = goodix_request_input_dev(ts, version_info, id_info);
-> > --
-> > 1.9.1
-> >
-> 
-> 
-> --
-> Thanks and regards,
-> Aleksei Mamlin
+ .../devicetree/bindings/mtd/atmel-quadspi.txt      |  29 +
+ drivers/mtd/devices/m25p80.c                       | 262 ++++--
+ drivers/mtd/spi-nor/Kconfig                        |   7 +
+ drivers/mtd/spi-nor/Makefile                       |   1 +
+ drivers/mtd/spi-nor/atmel-quadspi.c                | 880 +++++++++++++++++++++
+ drivers/mtd/spi-nor/fsl-quadspi.c                  |   2 +-
+ drivers/mtd/spi-nor/nxp-spifi.c                    |  13 +-
+ drivers/mtd/spi-nor/spi-nor.c                      | 603 ++++++++++++--
+ include/linux/mtd/spi-nor.h                        |  68 +-
+ 9 files changed, 1689 insertions(+), 176 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/mtd/atmel-quadspi.txt
+ create mode 100644 drivers/mtd/spi-nor/atmel-quadspi.c
+
+-- 
+1.8.2.2
+
+--
+To unsubscribe from this list: send the line "unsubscribe linux-spi" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
