@@ -1,110 +1,96 @@
-From: David Daney <ddaney@caviumnetworks.com>
-Subject: Re: [PATCH 4/6] PCI: generic: Correct, and avoid overflow, in bus_max
- calculation.
-Date: Tue, 15 Sep 2015 11:45:56 -0700
-Message-ID: <55F86764.4060502@caviumnetworks.com>
-References: <1442013719-5001-1-git-send-email-ddaney.cavm@gmail.com> <1442013719-5001-5-git-send-email-ddaney.cavm@gmail.com> <20150915174934.GL31157@arm.com> <55F85D4E.9020604@caviumnetworks.com> <20150915183500.GR31157@arm.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v2 2/2] irqchip: gic: Document optional Clock and Power
+ Domain properties
+Date: Tue, 15 Sep 2015 13:57:01 -0500
+Message-ID: <55F869FD.4090900@kernel.org>
+References: <1442261204-30931-1-git-send-email-geert+renesas@glider.be>
+ <1442261204-30931-3-git-send-email-geert+renesas@glider.be>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
+Content-Type: text/plain; charset=windows-1252
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <20150915183500.GR31157@arm.com>
-Sender: linux-pci-owner@vger.kernel.org
-To: Will Deacon <will.deacon@arm.com>
-Cc: David Daney <ddaney.cavm@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, "grant.likely@linaro.org" <grant.likely@linaro.org>, Bjorn Helgaas <bhelgaas@google.com>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, Pawel Moll <Pawel.Moll@arm.com>, Mark Rutland <Mark.Rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, David Daney <david.daney@cavium.com>, Lorenzo Pieralisi <Lorenzo.Pieralisi@arm.com>
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <1442261204-30931-3-git-send-email-geert+renesas@glider.be>
+Sender: linux-sh-owner@vger.kernel.org
+To: Geert Uytterhoeven <geert+renesas@glider.be>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Kumar Gala <galak@codeaurora.org>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, Rob Herring <robh+dt@kernel.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-sh@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 09/15/2015 11:35 AM, Will Deacon wrote:
-> On Tue, Sep 15, 2015 at 07:02:54PM +0100, David Daney wrote:
->> On 09/15/2015 10:49 AM, Will Deacon wrote:
->>> On Sat, Sep 12, 2015 at 12:21:57AM +0100, David Daney wrote:
->>>>    	/* Limit the bus-range to fit within reg */
->>>> -	bus_max = pci->cfg.bus_range->start +
->>>> -		  (resource_size(&pci->cfg.res) >> pci->cfg.ops.bus_shift) - 1;
->>>> +	bus_max = (resource_size(&pci->cfg.res) >> pci->cfg.ops.bus_shift) - 1;
->>>> +	if (bus_max > 255)
->>>> +		bus_max = 255;
->>>>    	pci->cfg.bus_range->end = min_t(resource_size_t,
->>>>    					pci->cfg.bus_range->end, bus_max);
->>>
->>> Hmm, this is changing the meaning of the bus-range property in the
->>> device-tree, which really needs to match what IEEE Std 1275-1994 requires.
->>
->> I doesn't change the bus-range.
->
-> Not directly, but pci->cfg.bus_range is a resource populated from the
-> "bus-range" property in the device-tree, so it's changing how the driver
-> uses that property.
->
->>> My understanding was that the bus-range could be used to offset the config
->>> space, which is why it's subtracted from the bus number in
->>> gen_pci_map_cfg_bus_[e]cam.
->>
->> There is an inconsistency in the current code.  The calculation of the
->> cfg.win[?] pointers is done such that the beginning of the config space
->> specified in the "reg" property corresponds to bus 0.
->
-> I don't follow you here. The mapping functions explicitly subtract the
-> start of the bus range when calculating the window offset:
->
->    resource_size_t idx = bus->number - pci->cfg.bus_range->start;
->
-> so if I have bus-range = <128 255>; then bus 128 lives at the start of
-> the configuration space described by the reg property, not bus 0.
->
-> Sorry if I'm being thick; I just can't see the inconsistency.
->
+On 09/14/2015 03:06 PM, Geert Uytterhoeven wrote:
+> Depending on the GIC variant, the GIC module has one or more clock
+> inputs. Document the optional "clocks" and "clock-names" properties,
+> and their possible values, based on the Technical Reference Manuals.
+> optional.
+> 
+> Add the optional "power-domains" property.
+> 
+> This will allow to describe in DT the relationship between the GIC and
+> the Clock and/or Power Domain topology on SoCs where this is relevant
+> and needed for proper operation.
+> 
+> Note: As the current GIC driver doesn't support Runtime PM yet, PM
+> Domain constraints must be handled elsewhere in e.g. platform code.
+> 
+> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> ---
+> Note: v1 was Acked-by: Rob Herring <robh@kernel.org>, but I didn't add
+>       it, due to the addition of clock-names.
 
-Here is the current code:
+For both: ack.
 
->> 	bus_range = pci->cfg.bus_range;
->> 	for (busn = bus_range->start; busn <= bus_range->end; ++busn) {
->> 		u32 idx = busn - bus_range->start;
+> 
+> v2:
+>   - Add "clock-names",
+>   - Document clock inputs on various GIC variants.
+> 
+> Clock inputs are based on the following documentation:
+>   - "ARM11 MPCore Processor Technical Reference Manual" (r2p0),
+>   - "Cortex-A9 MPCore Technical Reference Manual" (r4p1, r2p0),
+>   - "Cortex-A15 Technical Reference Manual" (r4p0, r2p0),
+>   - "CoreLink GIC-400 Generic Interrupt Controller Technical Reference
+>     Manual" (r0p1, r0p0),
+>   - "PrimeCell Generic Interrupt Controller (PL390) Technical Reference
+>     Manual" (r0p0).
+> 
+> I could not find clock input information in:
+>   - "ARM1176JZF Development Chip Technical Reference Manual" (r0p0),
+>   - "Cortex-A7 MPCore processors" (r0p5, r0p3).
+> 
+> Other:
+>   - "brcm,brahma-b15-gic" seems to be always used together with
+>     "arm,cortex-a15-gic".
+> 
+> No access to datasheets:
+>   - "qcom,msm-8660-qgic",
+>   - "qcom,msm-qgic2".
+> ---
+>  Documentation/devicetree/bindings/arm/gic.txt | 15 +++++++++++++++
+>  1 file changed, 15 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/arm/gic.txt b/Documentation/devicetree/bindings/arm/gic.txt
+> index 24742853ba460223..cc56021eb60babea 100644
+> --- a/Documentation/devicetree/bindings/arm/gic.txt
+> +++ b/Documentation/devicetree/bindings/arm/gic.txt
+> @@ -59,6 +59,21 @@ Optional
+>    regions, used when the GIC doesn't have banked registers. The offset is
+>    cpu-offset * cpu-nr.
+>  
+> +- clocks        : List of phandle and clock-specific pairs, one for each entry
+> +  in clock-names.
+> +- clock-names   : List of names for the GIC clock input(s). Valid clock names
+> +  depend on the GIC variant:
+> +	"ic_clk" (for "arm,arm11mp-gic")
+> +	"PERIPHCLKEN" (for "arm,cortex-a15-gic")
+> +	"PERIPHCLK", "PERIPHCLKEN" (for "arm,cortex-a9-gic")
+> +	"clk" (for "arm,gic-400")
+> +	"gclk" (for "arm,pl390")
+> +
+> +- power-domains : A phandle and PM domain specifier as defined by bindings of
+> +		  the power controller specified by phandle, used when the GIC
+> +		  is part of a Power or Clock Domain.
+> +
+> +
+>  Example:
+>  
+>  	intc: interrupt-controller@fff11000 {
+> 
 
-The index is offset by the bus range start...
-
->> 		u32 sz = 1 << pci->cfg.ops.bus_shift;
->>
->> 		pci->cfg.win[idx] = devm_ioremap(dev,
->> 						 pci->cfg.res.start + busn * sz,
->> 						 sz);
-
-But, the offset into the "reg" property is the raw bus number.
-
-
->> 		if (!pci->cfg.win[idx])
->> 			return -ENOMEM;
->> 	}
-
-
-I hope that makes it more clear.
-
-
-
-
->> The calculation that I am changing, was done such that the beginning of
->> the config space specified in the "reg" property corresponds to the
->> first bus of the "bus-range"
->>
->> Which is correct?  I assumed that the config space specified in the
->> "reg" property corresponds to bus 0.  Based on this assumption, I made
->> the bus_max calculation match.
->>
->> Due to hardware peculiarities, our bus-range starts at a non-zero bus
->> number.  So, something has to be done to make all the code agree on a
->> single interpretation of the meaning "reg" property.
->
-> I think you're the first to exercise this code, so it's definitely worth
-> us fixing whatever's going wrong.
->
->>> Also, why is your config space so large that
->>> we end up overflowing bus_max?
->>
->> It isn't.  The part of the patch that changes the type from u8 to int
->> was just to add some sanity.  The  code was easily susceptible to
->> overflow failures, it seemed best to change to int.
->
-> Can we drop this part for now if it's not actually needed?
->
-> Will
->
