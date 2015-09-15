@@ -1,54 +1,71 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: tps65023: add device tree support
-Date: Tue, 15 Sep 2015 15:29:46 +0100
-Message-ID: <20150915142946.GF11268@sirena.org.uk>
-References: <1442324035-16414-1-git-send-email-thomas.elste@imms.de>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="rWhLK7VZz0iBluhq"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1442324035-16414-1-git-send-email-thomas.elste-cSCHQGRfioA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Thomas Elste <thomas.elste-cSCHQGRfioA@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+From: Irina Tirdea <irina.tirdea@intel.com>
+Subject: [PATCH v6 0/9] Goodix touchscreen enhancements
+Date: Tue, 15 Sep 2015 17:31:14 +0300
+Message-ID: <1442327483-19407-1-git-send-email-irina.tirdea@intel.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Bastien Nocera <hadess@hadess.net>, Aleksei Mamlin <mamlinav@gmail.com>, linux-input@vger.kernel.org
+Cc: Mark Rutland <mark.rutland@arm.com>, Octavian Purdila <octavian.purdila@intel.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Irina Tirdea <irina.tirdea@intel.com>
 List-Id: devicetree@vger.kernel.org
 
+Add several enhancements to the Goodix touchscreen driver.
+This version includes a couple of fixes.
 
---rWhLK7VZz0iBluhq
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Thanks,
+Irina
 
-On Tue, Sep 15, 2015 at 03:33:54PM +0200, Thomas Elste wrote:
-> Hi all,
->=20
-> the following patch adds device tree support for TPS6502[0,1,3]
-> regulators. It is largely based on the DT code of the other TPS
-> regulator drivers and a previous patch I found here:
+Changes in v6:
+ - skip runtime power manangent calls in open/close if the device
+ACPI/DT configuration does not declare interrupt and reset gpio pins.
+ - reset the device before starting i2c communication
+ - add Bastien's ack to the first 2 patches
 
-Please don't send cover letters for single patches, if there is anything
-useful either put it in the changelog or (if it's administrative stuff)
-put it after the ---.
+Changes in v5:
+ - add some more style cleanup (reorder includes, use error instead
+of ret for return values)
+ - add runtime power management patch
 
---rWhLK7VZz0iBluhq
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+Changes in v4:
+ - use dmi quirk to determine the order of irq and reset pins
+ - use actual config length depending on device
+ - add sysfs interface to dump config
+ - initialize esd timeout from ACPI/DT propery
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
+Changes in v3:
+ - dropped the first 3 patches that got merged
+ - handle -EPROBE_DEFER and -ENOENT for gpio pins
+ - skip functionality depending on the gpio pins if the pins are not
+properly initialized from ACPI/DT (reset, write config, power management,
+ESD)
+ - dropped #ifdef CONFIG_PM_SLEEP and annotated with __maybe_unused instead
+ - use sysfs property to set ESD timeout instead of ACPI/DT property
+ - use request_firmware_nowait to read configuration firmware and use defaults
+if firmware is not found
+ - use ACPI IDs to determine the order of the GPIO pins in the ACPI tables
+(interrupt pin first or reset pin first)
 
-iQEcBAEBCAAGBQJV+CtZAAoJECTWi3JdVIfQeAsH/jiP1IKBoXso9jiZ2EMruCgh
-mHFlqT84hHGIQKzfbAQPCWw982RmvAuFpDVp/34BKuSeO1uO64TJVbdrb6IdicNa
-fGUnDE2Z7ezcnjkyNUitLh7Rnln/x5QYeBwwR1nxDJJInuxGbna9WGOzIVq5PR2S
-D7XJUkB0SgwG+A39vUTovEKr/kRRHXJ5xzAjTmtCDXA7oUVRrxZaUYjNYFbf+Ik2
-nTxDSLH3c3Rq7LalPh2FbcpaioWRyWKpvujEzXttZViJyR6aGOBKCpWXELJXPgR5
-GxdIE4uilT3saNIk9J+rhRDr3K9aVxVoa4q65AVAA/hUHG4B5ozETt77ZS4nDUg=
-=oj2i
------END PGP SIGNATURE-----
+Changes in v2:
+ - use request_firmware instead of ACPI/DT property for config
+ - dropped "input: goodix: add ACPI IDs for GT911 and GT9271" patch
+ - add ACPI DSDT excerpt in commit message where necessary
+ - add comments for suspend/resume sleep values
+ - dropped the checkpatch fixes that did not make sense
+ - added Bastien's ack to the first patch
 
---rWhLK7VZz0iBluhq--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Irina Tirdea (9):
+  Input: goodix - sort includes alphabetically
+  Input: goodix - use actual config length for each device type
+  Input: goodix - reset device at init
+  Input: goodix - write configuration data to device
+  Input: goodix - add power management support
+  Input: goodix - use goodix_i2c_write_u8 instead of i2c_master_send
+  Input: goodix - add support for ESD
+  Input: goodix - add sysfs interface to dump config
+  Input: goodix - add runtime power management support
+
+ .../bindings/input/touchscreen/goodix.txt          |  11 +
+ drivers/input/touchscreen/goodix.c                 | 721 +++++++++++++++++++--
+ 2 files changed, 690 insertions(+), 42 deletions(-)
+
+-- 
+1.9.1
