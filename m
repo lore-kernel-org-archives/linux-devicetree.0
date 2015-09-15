@@ -1,42 +1,27 @@
-From: Grazvydas Ignotas <notasas-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH] ARM: dts: omap5-uevm.dts: fix i2c5 pinctrl offsets
-Date: Wed, 16 Sep 2015 01:34:31 +0300
-Message-ID: <1442356471-13235-1-git-send-email-notasas@gmail.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Grazvydas Ignotas <notasas-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+From: Kukjin Kim <kgene@kernel.org>
+Subject: Re: [PATCH v3 1/2] ARM: dts: Split audio configuration to separateexynos5422-odroidxu3-audio
+Date: Wed, 16 Sep 2015 07:35:52 +0900
+Message-ID: <55F89D48.900@kernel.org>
+References: <1442191669-3366-1-git-send-email-k.kozlowski@samsung.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1442191669-3366-1-git-send-email-k.kozlowski@samsung.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+Cc: Kukjin Kim <kgene@kernel.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org, Javier Martinez Canillas <javier@osg.samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-The i2c5 pinctrl offsets are wrong. If the bootloader doesn't set the
-pins up, communication with tca6424a doesn't work (controller timeouts)
-and it is not possible to enable HDMI.
+On 09/14/15 09:47, Krzysztof Kozlowski wrote:
+> The Odroid XU4 board does not have audio codec so before adding DTS for
+> new board split the audio codec to separate DTSI file. Include the audio codec
+> DTSI in Odroid XU3 and XU3-Lite boards.
+> 
+> Signed-off-by: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+> Reviewed-by: Javier Martinez Canillas <javier@osg.samsung.com>
+> 
+Applied 1-2.
 
-Fixes: 9be495c42609 ("ARM: dts: omap5-evm: Add I2c pinctrl data")
-Signed-off-by: Grazvydas Ignotas <notasas-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
----
- arch/arm/boot/dts/omap5-uevm.dts | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/arch/arm/boot/dts/omap5-uevm.dts b/arch/arm/boot/dts/omap5-uevm.dts
-index 3cc8f35..3cb030f 100644
---- a/arch/arm/boot/dts/omap5-uevm.dts
-+++ b/arch/arm/boot/dts/omap5-uevm.dts
-@@ -174,8 +174,8 @@
- 
- 	i2c5_pins: pinmux_i2c5_pins {
- 		pinctrl-single,pins = <
--			0x184 (PIN_INPUT | MUX_MODE0)		/* i2c5_scl */
--			0x186 (PIN_INPUT | MUX_MODE0)		/* i2c5_sda */
-+			0x186 (PIN_INPUT | MUX_MODE0)		/* i2c5_scl */
-+			0x188 (PIN_INPUT | MUX_MODE0)		/* i2c5_sda */
- 		>;
- 	};
- 
--- 
-1.9.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Thanks,
+Kukjin
