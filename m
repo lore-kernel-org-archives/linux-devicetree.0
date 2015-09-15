@@ -1,7 +1,7 @@
 From: Archit Taneja <architt@codeaurora.org>
 Subject: Re: [RFC 0/2] drm/dsi: DSI for devices with different control bus
-Date: Tue, 15 Sep 2015 16:02:58 +0530
-Message-ID: <55F7F3DA.20702@codeaurora.org>
+Date: Tue, 15 Sep 2015 16:11:22 +0530
+Message-ID: <55F7F5D2.4090403@codeaurora.org>
 References: <1439993828.31432.28.camel@pengutronix.de>
  <20150819143452.GH15607@ulmo.nvidia.com>
  <1439995944.31432.34.camel@pengutronix.de>
@@ -24,7 +24,7 @@ List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
 Errors-To: dri-devel-bounces@lists.freedesktop.org
 Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
 To: Thierry Reding <treding@nvidia.com>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Andrzej Hajda <a.hajda@samsung.com>
+Cc: Andrzej Hajda <a.hajda@samsung.com>, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
 SGkgUm9iLCBNYXJrLAoKV2UndmUgYmVlbiB0cnlpbmcgdG8gZmlndXJlIG91dCB0aGUgcmlnaHQg
