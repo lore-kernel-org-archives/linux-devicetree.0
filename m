@@ -1,7 +1,7 @@
 From: Leo Yan <leo.yan@linaro.org>
-Subject: [PATCH v3 1/3] dt-bindings: mailbox: Document Hi6220 mailbox driver
-Date: Tue, 15 Sep 2015 22:37:55 +0800
-Message-ID: <1442327877-2620-2-git-send-email-leo.yan@linaro.org>
+Subject: [PATCH v3 3/3] arm64: dts: add Hi6220 mailbox node
+Date: Tue, 15 Sep 2015 22:37:57 +0800
+Message-ID: <1442327877-2620-4-git-send-email-leo.yan@linaro.org>
 References: <1442327877-2620-1-git-send-email-leo.yan@linaro.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1442327877-2620-1-git-send-email-leo.yan@linaro.org>
@@ -10,76 +10,74 @@ To: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutl
 Cc: Leo Yan <leo.yan@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-Document the new compatible for Hisilicon Hi6220 mailbox driver.
+On Hi6220, below memory regions in DDR have specific purpose:
+
+  0x05e0,0000 - 0x05ef,ffff: For MCU firmware using at runtime;
+  0x06df,f000 - 0x06df,ffff: For mailbox message data;
+  0x0740,f000 - 0x0740,ffff: For MCU firmware's section;
+  0x3e00,0000 - 0x3fff,ffff: For OP-TEE.
+
+This patch reserves these memory regions and add device node for
+mailbox in dts.
 
 Signed-off-by: Leo Yan <leo.yan@linaro.org>
 ---
- .../bindings/mailbox/hisilicon,hi6220-mailbox.txt  | 57 ++++++++++++++++++++++
- 1 file changed, 57 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/mailbox/hisilicon,hi6220-mailbox.txt
+ arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts | 16 ++++++++++++----
+ arch/arm64/boot/dts/hisilicon/hi6220.dtsi      |  8 ++++++++
+ 2 files changed, 20 insertions(+), 4 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/mailbox/hisilicon,hi6220-mailbox.txt b/Documentation/devicetree/bindings/mailbox/hisilicon,hi6220-mailbox.txt
-new file mode 100644
-index 0000000..3dfb0b0
---- /dev/null
-+++ b/Documentation/devicetree/bindings/mailbox/hisilicon,hi6220-mailbox.txt
-@@ -0,0 +1,57 @@
-+Hisilicon Hi6220 Mailbox Driver
-+===============================
+diff --git a/arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts b/arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts
+index e36a539..e3f4cb3 100644
+--- a/arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts
++++ b/arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts
+@@ -7,9 +7,6 @@
+ 
+ /dts-v1/;
+ 
+-/*Reserved 1MB memory for MCU*/
+-/memreserve/ 0x05e00000 0x00100000;
+-
+ #include "hi6220.dtsi"
+ 
+ / {
+@@ -24,8 +21,19 @@
+ 		stdout-path = "serial0:115200n8";
+ 	};
+ 
++	/*
++	 * Reserve below regions from memory node:
++	 *
++	 *  - 0x05e0,0000 - 0x05ef,ffff: MCU firmware runtime using
++	 *  - 0x06df,f000 - 0x06df,ffff: Mailbox message data
++	 *  - 0x0740,f000 - 0x0740,ffff: MCU firmware section
++	 *  - 0x3e00,0000 - 0x3fff,ffff: OP-TEE
++	 */
+ 	memory@0 {
+ 		device_type = "memory";
+-		reg = <0x0 0x0 0x0 0x40000000>;
++		reg = <0x00000000 0x00000000 0x00000000 0x05e00000>,
++		      <0x00000000 0x05f00000 0x00000000 0x00eff000>,
++		      <0x00000000 0x06e00000 0x00000000 0x0060f000>,
++		      <0x00000000 0x07410000 0x00000000 0x36bf0000>;
+ 	};
+ };
+diff --git a/arch/arm64/boot/dts/hisilicon/hi6220.dtsi b/arch/arm64/boot/dts/hisilicon/hi6220.dtsi
+index 3f03380..9ff25bc 100644
+--- a/arch/arm64/boot/dts/hisilicon/hi6220.dtsi
++++ b/arch/arm64/boot/dts/hisilicon/hi6220.dtsi
+@@ -167,5 +167,13 @@
+ 			clocks = <&ao_ctrl 36>, <&ao_ctrl 36>;
+ 			clock-names = "uartclk", "apb_pclk";
+ 		};
 +
-+Hisilicon Hi6220 mailbox supports up to 32 channels. Each channel
-+is unidirectional with a maximum message size of 8 words. I/O is
-+performed using register access (there is no DMA) and the cell
-+raises an interrupt when messages are received.
-+
-+Mailbox Device Node:
-+====================
-+
-+Required properties:
-+--------------------
-+- compatible:		Shall be "hisilicon,hi6220-mbox"
-+- reg:			Contains the mailbox register address range (base
-+			address and length); the first item is for IPC
-+			registers, the second item is shared buffer for
-+			slots.
-+- #mbox-cells		Common mailbox binding property to identify the number
-+			of cells required for the mailbox specifier. Should be 1.
-+- interrupts:		Contains the interrupt information for the mailbox
-+			device. The format is dependent on which interrupt
-+			controller the SoCs use.
-+
-+Example:
-+--------
-+
-+	mailbox: mailbox@F7510000 {
-+		#mbox-cells = <1>;
-+		compatible = "hisilicon,hi6220-mbox";
-+		reg = <0x0 0xF7510000 0x0 0x1000>, /* IPC_S */
-+		      <0x0 0x06DFF800 0x0 0x0800>; /* Mailbox */
-+		interrupt-parent = <&gic>;
-+		interrupts = <0 94 4>;
-+	};
-+
-+
-+Mailbox client
-+===============
-+
-+"mboxes" and the optional "mbox-names" (please see
-+Documentation/devicetree/bindings/mailbox/mailbox.txt for details). Each value
-+of the mboxes property should contain a phandle to the mailbox controller
-+device node and second argument is the channel index. It must be 0 (hardware
-+support only one channel). The equivalent "mbox-names" property value can be
-+used to give a name to the communication channel to be used by the client user.
-+
-+Example:
-+--------
-+
-+	stub_clock: stub_clock {
-+		compatible = "hisilicon,hi6220-stub-clk";
-+		hisilicon,hi6220-clk-sram = <&sram>;
-+		#clock-cells = <1>;
-+		mbox-names = "mbox-tx";
-+		mboxes = <&mailbox 1>;
-+	};
++		mailbox: mailbox@f7510000 {
++			#mbox-cells = <1>;
++			compatible = "hisilicon,hi6220-mbox";
++			reg = <0x0 0xf7510000 0x0 0x1000>, /* IPC_S */
++			      <0x0 0x06dff800 0x0 0x0800>; /* Mailbox buffer */
++			interrupts = <GIC_SPI 94 IRQ_TYPE_LEVEL_HIGH>;
++		};
+ 	};
+ };
 -- 
 1.9.1
