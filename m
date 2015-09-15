@@ -1,192 +1,69 @@
-From: Punit Agrawal <punit.agrawal@arm.com>
-Subject: [PATCH v4 4/5] hwmon: Support thermal zones registration for SCP
- temperature sensors
-Date: Tue, 15 Sep 2015 17:51:00 +0100
-Message-ID: <1442335861-7282-5-git-send-email-punit.agrawal@arm.com>
-References: <1442335861-7282-1-git-send-email-punit.agrawal@arm.com>
+From: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH 2/6] PCI: generic: Only fixup irqs for bus we are
+ creating.
+Date: Tue, 15 Sep 2015 18:36:55 +0100
+Message-ID: <20150915173654.GJ31157@arm.com>
+References: <1442013719-5001-1-git-send-email-ddaney.cavm@gmail.com>
+ <1442013719-5001-3-git-send-email-ddaney.cavm@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1442335861-7282-1-git-send-email-punit.agrawal@arm.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
-Cc: mark.rutland@arm.com, Punit Agrawal <punit.agrawal@arm.com>, liviu.dudau@arm.com, linux-kernel@vger.kernel.org, edubezval@gmail.com, robh+dt@kernel.org, sudeep.holla@arm.com, linux@roeck-us.net
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1442013719-5001-3-git-send-email-ddaney.cavm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: David Daney <ddaney.cavm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, "linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, David Daney <david.daney-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>, lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Add support to create thermal zones based on the temperature sensors
-provided by the SCP. The thermal zones can be defined using the
-thermal DT bindings and should refer to the SCP sensor id to select
-the sensor.
+Hi David,
 
-Signed-off-by: Punit Agrawal <punit.agrawal@arm.com>
-Acked-by: Guenter Roeck <linux@roeck-us.net>
-Cc: Eduardo Valentin <edubezval@gmail.com>
----
- drivers/hwmon/scpi-hwmon.c | 104 ++++++++++++++++++++++++++++++++++++++++++++-
- 1 file changed, 103 insertions(+), 1 deletion(-)
+On Sat, Sep 12, 2015 at 12:21:55AM +0100, David Daney wrote:
+> From: David Daney <david.daney-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
+> 
+> Use pci_walk_bus() to restrict the fixup irq actions to only the bus
+> being created.
+> 
+> If we create multiple buses with pci-host-generic, or there are buses
+> created by other drivers, we don't want to call pci_fixup_irqs() which
+> operates on all devices, not just the devices on the bus being added.
+> The consequence is that either the fixups are done more than once, or
+> in some cases incorrect fixups could be applied.
+> 
+> Signed-off-by: David Daney <david.daney-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
+> ---
+>  drivers/pci/host/pci-host-generic.c | 8 +++++++-
+>  1 file changed, 7 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/pci/host/pci-host-generic.c b/drivers/pci/host/pci-host-generic.c
+> index 265dd25..a0fb241 100644
+> --- a/drivers/pci/host/pci-host-generic.c
+> +++ b/drivers/pci/host/pci-host-generic.c
+> @@ -205,6 +205,12 @@ static int gen_pci_parse_map_cfg_windows(struct gen_pci *pci)
+>  	return 0;
+>  }
+>  
+> +static int gen_pci_fixup_irq_cb(struct pci_dev *dev, void *arg)
+> +{
+> +	pdev_fixup_irq(dev, pci_common_swizzle, of_irq_parse_and_map_pci);
+> +	return 0;
+> +}
+> +
+>  static int gen_pci_probe(struct platform_device *pdev)
+>  {
+>  	int err;
+> @@ -262,7 +268,7 @@ static int gen_pci_probe(struct platform_device *pdev)
+>  		return -ENODEV;
+>  	}
+>  
+> -	pci_fixup_irqs(pci_common_swizzle, of_irq_parse_and_map_pci);
+> +	pci_walk_bus(bus, gen_pci_fixup_irq_cb, NULL);
 
-diff --git a/drivers/hwmon/scpi-hwmon.c b/drivers/hwmon/scpi-hwmon.c
-index c7d1d14..2c1241b 100644
---- a/drivers/hwmon/scpi-hwmon.c
-+++ b/drivers/hwmon/scpi-hwmon.c
-@@ -20,6 +20,7 @@
- #include <linux/scpi_protocol.h>
- #include <linux/slab.h>
- #include <linux/sysfs.h>
-+#include <linux/thermal.h>
- 
- struct sensor_data {
- 	struct scpi_sensor_info info;
-@@ -29,14 +30,39 @@ struct sensor_data {
- 	char label[20];
- };
- 
-+struct scpi_thermal_zone {
-+	struct list_head list;
-+	int sensor_id;
-+	struct scpi_sensors *scpi_sensors;
-+	struct thermal_zone_device *tzd;
-+};
-+
- struct scpi_sensors {
- 	struct scpi_ops *scpi_ops;
- 	struct sensor_data *data;
-+	struct list_head thermal_zones;
- 	struct attribute **attrs;
- 	struct attribute_group group;
- 	const struct attribute_group *groups[2];
- };
- 
-+static int scpi_read_temp(void *dev, int *temp)
-+{
-+	struct scpi_thermal_zone *zone = dev;
-+	struct scpi_sensors *scpi_sensors = zone->scpi_sensors;
-+	struct scpi_ops *scpi_ops = scpi_sensors->scpi_ops;
-+	struct sensor_data *sensor = &scpi_sensors->data[zone->sensor_id];
-+	u32 value;
-+	int ret;
-+
-+	ret = scpi_ops->sensor_get_value(sensor->info.sensor_id, &value);
-+	if (ret)
-+		return ret;
-+
-+	*temp = value;
-+	return 0;
-+}
-+
- /* hwmon callback functions */
- static ssize_t
- scpi_show_sensor(struct device *dev, struct device_attribute *attr, char *buf)
-@@ -66,6 +92,24 @@ scpi_show_label(struct device *dev, struct device_attribute *attr, char *buf)
- 	return sprintf(buf, "%s\n", sensor->info.name);
- }
- 
-+static void
-+unregister_thermal_zones(struct platform_device *pdev,
-+			 struct scpi_sensors *scpi_sensors)
-+{
-+	struct list_head *pos;
-+
-+	list_for_each(pos, &scpi_sensors->thermal_zones) {
-+		struct scpi_thermal_zone *zone;
-+
-+		zone = list_entry(pos, struct scpi_thermal_zone, list);
-+		thermal_zone_of_sensor_unregister(&pdev->dev, zone->tzd);
-+	}
-+}
-+
-+static struct thermal_zone_of_device_ops scpi_sensor_ops = {
-+	.get_temp = scpi_read_temp,
-+};
-+
- static int scpi_hwmon_probe(struct platform_device *pdev)
- {
- 	u16 nr_sensors, i;
-@@ -160,10 +204,67 @@ static int scpi_hwmon_probe(struct platform_device *pdev)
- 	scpi_sensors->group.attrs = scpi_sensors->attrs;
- 	scpi_sensors->groups[0] = &scpi_sensors->group;
- 
-+	platform_set_drvdata(pdev, scpi_sensors);
-+
- 	hwdev = devm_hwmon_device_register_with_groups(dev,
- 			"scpi_sensors", scpi_sensors, scpi_sensors->groups);
- 
--	return PTR_ERR_OR_ZERO(hwdev);
-+	if (IS_ERR(hwdev))
-+		return PTR_ERR(hwdev);
-+
-+	/*
-+	 * Register the temperature sensors with the thermal framework
-+	 * to allow their usage in setting up the thermal zones from
-+	 * device tree.
-+	 *
-+	 * NOTE: Not all temperature sensors maybe used for thermal
-+	 * control
-+	 */
-+	INIT_LIST_HEAD(&scpi_sensors->thermal_zones);
-+	for (i = 0; i < nr_sensors; i++) {
-+		struct sensor_data *sensor = &scpi_sensors->data[i];
-+		struct scpi_thermal_zone *zone;
-+
-+		if (sensor->info.class != TEMPERATURE)
-+			continue;
-+
-+		zone = devm_kzalloc(dev, sizeof(*zone), GFP_KERNEL);
-+		if (!zone) {
-+			ret = -ENOMEM;
-+			goto unregister_tzd;
-+		}
-+
-+		zone->sensor_id = i;
-+		zone->scpi_sensors = scpi_sensors;
-+		zone->tzd = thermal_zone_of_sensor_register(dev, i, zone,
-+							    &scpi_sensor_ops);
-+		/*
-+		 * The call to thermal_zone_of_sensor_register returns
-+		 * an error for sensors that are not associated with
-+		 * any thermal zones or if the thermal subsystem is
-+		 * not configured.
-+		 */
-+		if (IS_ERR(zone->tzd)) {
-+			devm_kfree(dev, zone);
-+			continue;
-+		}
-+		list_add(&zone->list, &scpi_sensors->thermal_zones);
-+	}
-+
-+	return 0;
-+
-+unregister_tzd:
-+	unregister_thermal_zones(pdev, scpi_sensors);
-+	return ret;
-+}
-+
-+static int scpi_hwmon_remove(struct platform_device *pdev)
-+{
-+	struct scpi_sensors *scpi_sensors = platform_get_drvdata(pdev);
-+
-+	unregister_thermal_zones(pdev, scpi_sensors);
-+
-+	return 0;
- }
- 
- static const struct of_device_id scpi_of_match[] = {
-@@ -178,6 +279,7 @@ static struct platform_driver scpi_hwmon_platdrv = {
- 		.of_match_table = scpi_of_match,
- 	},
- 	.probe		= scpi_hwmon_probe,
-+	.remove		= scpi_hwmon_remove,
- };
- module_platform_driver(scpi_hwmon_platdrv);
- 
--- 
-2.5.1
+Any chance we could put something in the core PCI code for this? I think
+any host controller wanting to work with arm64 is potentially going to
+run into the same problem.
+
+Will
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
