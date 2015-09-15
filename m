@@ -1,30 +1,61 @@
-From: Javier Martinez Canillas <javier@dowhile0.org>
-Subject: Re: [PATCH v2 3/3] ARM: dts: Enable EC vboot context support on Peach boards
-Date: Tue, 15 Sep 2015 15:49:40 +0200
-Message-ID: <CABxcv==qZESJAjPOWLF-QiBZeCeUL9tfLmExzmBS5zX+DLd=7w@mail.gmail.com>
-References: <1442234049-18637-1-git-send-email-emilio.lopez@collabora.co.uk>
-	<1442234049-18637-4-git-send-email-emilio.lopez@collabora.co.uk>
+From: Andreas Dannenberg <dannenberg@ti.com>
+Subject: Re: [PATCH v3 01/10] dt: power: bq24257-charger: Cover additional
+ devices
+Date: Tue, 15 Sep 2015 08:57:59 -0500
+Message-ID: <20150915135751.GA27134@borg>
+References: <1442003202-1430-1-git-send-email-dannenberg@ti.com>
+ <1442003202-1430-2-git-send-email-dannenberg@ti.com>
+ <55F66514.1080909@samsung.com>
+ <20150914135430.GA21442@borg>
+ <55F7CF44.3010102@samsung.com>
+ <20150915090537.GB3166@lpalcu-desk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <1442234049-18637-4-git-send-email-emilio.lopez@collabora.co.uk>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: =?UTF-8?Q?Emilio_L=C3=B3pez?= <emilio.lopez@collabora.co.uk>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Olof Johansson <olof@lixom.net>, Kukjin Kim <kgene@kernel.org>, =?UTF-8?Q?Krzysztof_Koz=C5=82owski?= <k.kozlowski@samsung.com>, Guenter Roeck <linux@roeck-us.net>, Linux Kernel <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Return-path: <linux-pm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20150915090537.GB3166@lpalcu-desk>
+Sender: linux-pm-owner@vger.kernel.org
+To: Laurentiu Palcu <laurentiu.palcu@intel.com>
+Cc: Krzysztof Kozlowski <k.kozlowski@samsung.com>, Sebastian Reichel <sre@kernel.org>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, David Woodhouse <dwmw2@infradead.org>, Ramakrishna Pallala <ramakrishna.pallala@intel.com>, linux-pm@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hello Emilio,
+On Tue, Sep 15, 2015 at 12:05:37PM +0300, Laurentiu Palcu wrote:
+> On Tue, Sep 15, 2015 at 04:56:52PM +0900, Krzysztof Kozlowski wrote:
+[...]
+> > In this case - the 2XTMR_EN - I assume that for certain batteries or
+> > boards you want to extend the time of charging in case of special
+> > conditions?
+> 
+> FWIW, I don't see any real benefit in manually changing the 2X timer at
+> all. The default setting is decent enough. The chip will automatically
+> switch to 2X timer in certain conditions: for example, when the
+> temperature threshold is exceeded and the charge current is
+> automatically lowered. This makes sense since it'll take the battery
+> more time to charge at a lower current.
 
-On Mon, Sep 14, 2015 at 2:34 PM, Emilio L=C3=B3pez
-<emilio.lopez@collabora.co.uk> wrote:
-> The Peach boards use the EC to store the vboot context information,
-> so add the corresponding properties on the EC node to indicate so.
->
-> Signed-off-by: Emilio L=C3=B3pez <emilio.lopez@collabora.co.uk>
-> ---
+Laurentiu,
+your comment just made me go double-check the applicable datasheets and
+realize that the timer 2x extension feature is by default enabled (not
+disabled as I originally thought) which is great. With that, we do have
+good coverage for the "special" charging conditions and don't
+need to expose access to this feature at this time. Will remove it.
 
-Acked-by: Javier Martinez Canillas <javier@osg.samsung.com>
+> It would probably make more sense to add a DT property to change the
+> 'Safety Timer Time Limit' device property (which can be 0.75hrs, 6hrs,
+> 9hrs or totally disabled) than the 2XTMR.
+> 
+> I omitted both when I originally added support for this chip since the
+> 6hrs default safety timer seemed more than enough to charge a nowadays
+> battery, even at 500mA (provided by a standard USB port). But, future
+> batteries might (and probably will) have higher capacities and will take
+> longer to charge.
 
-Best regards,
-Javier
+Agreed, 6hrs should cover most use cases. And it'll be easy enough to
+add on this property when needed.
+
+Regards,
+
+--
+Andreas Dannenberg
+Texas Instruments Inc
+
