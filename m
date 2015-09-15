@@ -1,53 +1,49 @@
-From: Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 01/16] PM / OPP: Add 'supply-names' binding
-Date: Tue, 15 Sep 2015 08:17:47 +0530
-Message-ID: <20150915024747.GI32551@linux>
-References: <cover.1441972771.git.viresh.kumar@linaro.org>
- <2b87b162eabd1570ae2311e1ef8655acda72f678.1441972771.git.viresh.kumar@linaro.org>
- <55F72C97.2030306@kernel.org>
+From: "Wu, Songjun" <songjun.wu-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 2/2] ASoC: atmel-classd: DT binding for Class D audio
+ amplifier driver
+Date: Tue, 15 Sep 2015 11:11:53 +0800
+Message-ID: <55F78C79.30102@atmel.com>
+References: <1441086101-15303-1-git-send-email-songjun.wu@atmel.com>
+ <1441086101-15303-3-git-send-email-songjun.wu@atmel.com>
+ <20150903114316.GV12027@sirena.org.uk> <55EC0AFE.3080809@atmel.com>
+ <20150907162548.GW5313@sirena.org.uk> <55EEAC0D.7010003@atmel.com>
+ <20150908122340.GC9751@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <55F72C97.2030306-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+In-Reply-To: <20150908122340.GC9751-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Rafael Wysocki <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, nm-l0cyMroinI0@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linaro-kernel-cunTk1MwBs8s++Sfvej+rw@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, rob.herring-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, "Rafael J. Wysocki" <rafael.j.wysocki-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, perex-/Fr2/VpizcU@public.gmane.org, tiwai-IBi9RG/b67k@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 14-09-15, 15:22, Rob Herring wrote:
-> What if we have a 2nd device and supply rail? For example, what if the
-> L2$ has a separate rail from the cores but is linked to the OPPs.
 
-Right, so that is the case with the Mediatek SoC as well, AFAIR. How
-do we plan to treat L2 devices? For example, in the mediatek cpufreq
-driver, they change L2's supplies together with CPUs.
 
-One way to get that done, with such very closely bound devices is to
-add two regulators:
-
-cpu-supply = ...;
-l2-supply = ...;
-
-And then a property in OPP table:
-
-supply-name = "cpu", "l2";
-
-And maybe fix the order in which the supplies which be updated, based
-on the order in which entries are present in the above property.
-
-Any other way you suggest for doing that ?
-
-> Remind me of when do we have multiple regulators for a cpu?
-
-I haven't seen that yet, but its more like what I explained above.
-i.e. one for the CPU and other one for the L2 cache.
-
-But, these bindings do apply for other devices as well, where it
-should be very much possible.
-
--- 
-viresh
+On 9/8/2015 20:23, Mark Brown wrote:
+> On Tue, Sep 08, 2015 at 05:36:13PM +0800, Wu, Songjun wrote:
+>> On 9/8/2015 00:25, Mark Brown wrote:
+>
+>>> Sure, there's no problem at all having that structure in software but it
+>>> should be possible to do this without having to represent this structure
+>>> in DT.  It should be possible to register the card at the same time as
+>>> the rest of the components rather than needing the separate device in
+>>> the DT.
+>
+>> Do you mean using a single entry in the DT for the whole classD system and
+>> instantiate ASoC components from it.
+>> For now, there are two entry, they could be combined to one entry.
+>
+> Yes, exactly.
+>
+I try to use one entry, but there is a problem.
+It's about 'driver_data' in struct device.
+In function snd_soc_register_card, the parameter 'card' will be set to 
+'driver_data' by the code 'dev_set_drvdata(card->dev, card)'.
+Then some resources(eg. regmap, clock) also need be recorded by 
+'driver_data'. One entry could only has one 'driver_data'. I think the 
+best way is to create two entries, like the current dts.
+What's your opinion?
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
