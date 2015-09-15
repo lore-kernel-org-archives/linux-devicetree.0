@@ -1,1091 +1,416 @@
 From: Xinwei Kong <kong.kongxinwei@hisilicon.com>
-Subject: [PATCH RFC 5/8] drm: hisilicon: fill interface function of encoder\connector part
-Date: Tue, 15 Sep 2015 17:37:11 +0800
-Message-ID: <1442309834-21420-6-git-send-email-kong.kongxinwei@hisilicon.com>
+Subject: [PATCH RFC 2/8] drm: hisilicon: Add new DRM driver for hisilicon Soc
+Date: Tue, 15 Sep 2015 17:37:08 +0800
+Message-ID: <1442309834-21420-3-git-send-email-kong.kongxinwei@hisilicon.com>
 References: <1442309834-21420-1-git-send-email-kong.kongxinwei@hisilicon.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
 In-Reply-To: <1442309834-21420-1-git-send-email-kong.kongxinwei@hisilicon.com>
-Sender: linux-kernel-owner@vger.kernel.org
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
 To: airlied@linux.ie, corbet@lwn.net, catalin.marinas@arm.com, will.deacon@arm.com
-Cc: dri-devel@lists.freedesktop.org, linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linuxarm@huawei.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, xinliang.liu@linaro.org, andy.green@linaro.org, qijiwen@hisilicon.com, gongyu@hisilicon.com, haojian.zhuang@linaro.org, liguozhu@hisilicon.com, xuwei5@hisilicon.com, yinshengbao@hisilicon.com, yanhaifeng@hisilicon.com, ml.yang@hisilicon.com, yimin@huawei.com, w.f@huawei.com, puck.chen@hisilicon.com, bintian.wang@huawei.com, benjamin.gaignard@linaro.org, xuyiping@hisilicon.com, james.yanglong@hisilicon.com, fangdechun@hisilicon.com, kong.kongxinwei@hisilicon.com
+Cc: linux-doc@vger.kernel.org, w.f@huawei.com, linuxarm@huawei.com, dri-devel@lists.freedesktop.org, haojian.zhuang@linaro.org, benjamin.gaignard@linaro.org, james.yanglong@hisilicon.com, yinshengbao@hisilicon.com, xuyiping@hisilicon.com, yimin@huawei.com, xuwei5@hisilicon.com, qijiwen@hisilicon.com, devicetree@vger.kernel.org, bintian.wang@huawei.com, puck.chen@hisilicon.com, yanhaifeng@hisilicon.com, fangdechun@hisilicon.com, linux-arm-kernel@lists.infradead.org, andy.green@linaro.org, gongyu@hisilicon.com, linux-kernel@vger.kernel.org, ml.yang@hisilicon.com, liguozhu@hisilicon.com
 List-Id: devicetree@vger.kernel.org
 
-This patch enables the adv7533 module which is connecting hisilicon SOC
-by dsi module. while using DSI module and adv7533 module to implement the
-encoder/connector interface of DRM\KMS.
-
-Signed-off-by: Xinliang Liu <xinliang.liu@linaro.org>
-Signed-off-by: Xinwei Kong <kong.kongxinwei@hisilicon.com>
-Signed-off-by: Andy Green <andy.green@linaro.org>
-Signed-off-by: Jiwen Qi <qijiwen@hisilicon.com>
-Signed-off-by: Yu Gong <gongyu@hisilicon.com>
----
- drivers/gpu/drm/hisilicon/Kconfig              |  10 +
- drivers/gpu/drm/hisilicon/hisi_drm_connector.c |  34 ++
- drivers/gpu/drm/hisilicon/hisi_drm_connector.h |   8 +
- drivers/gpu/drm/hisilicon/hisi_drm_dsi.c       | 670 +++++++++++++++++++++++++
- drivers/gpu/drm/hisilicon/hisi_drm_encoder.c   |  52 ++
- drivers/gpu/drm/hisilicon/hisi_drm_encoder.h   |  19 +
- drivers/gpu/drm/hisilicon/hisi_dsi_reg.h       |  91 ++++
- 7 files changed, 884 insertions(+)
- create mode 100644 drivers/gpu/drm/hisilicon/hisi_dsi_reg.h
-
-diff --git a/drivers/gpu/drm/hisilicon/Kconfig b/drivers/gpu/drm/hisilicon/Kconfig
-index 60b42e4..105dbcb 100644
---- a/drivers/gpu/drm/hisilicon/Kconfig
-+++ b/drivers/gpu/drm/hisilicon/Kconfig
-@@ -7,3 +7,13 @@ config DRM_HISI
- 	  Choose this option if you have a hisilicon terminal chipset.
- 	  If M is selected the module will be called hisi-drm.
- 
-+if DRM_HISI
-+
-+config DRM_HISI_HAS_SLAVE_ENCODER
-+	bool "Support slave encoder output"
-+	default y
-+	help
-+	  Support slave encoder output device such as DSI interface connecting
-+	  HDMI converter by i2c.
-+
-+endif
-diff --git a/drivers/gpu/drm/hisilicon/hisi_drm_connector.c b/drivers/gpu/drm/hisilicon/hisi_drm_connector.c
-index 62efdc7..57ab2e8 100644
---- a/drivers/gpu/drm/hisilicon/hisi_drm_connector.c
-+++ b/drivers/gpu/drm/hisilicon/hisi_drm_connector.c
-@@ -23,8 +23,21 @@
- int hisi_drm_connector_mode_valid(struct drm_connector *connector,
- 				  struct drm_display_mode *mode)
- {
-+	struct hisi_connector *hconnector = to_hisi_connector(connector);
-+	struct drm_encoder *encoder = hconnector->encoder;
-+	struct hisi_connector_funcs *ops = hconnector->ops;
-+	struct drm_encoder_slave_funcs *sfuncs = get_slave_funcs(encoder);
- 	int ret = MODE_OK;
- 
-+	if (ops->modes_valid)
-+		ops->modes_valid(connector);
-+
-+	if (sfuncs && sfuncs->mode_valid) {
-+		ret = sfuncs->mode_valid(encoder, mode);
-+		if (ret != MODE_OK)
-+			return ret;
-+	}
-+
- 	return ret;
- }
- 
-@@ -39,8 +52,19 @@ hisi_drm_best_encoder(struct drm_connector *connector)
- 
- int hisi_drm_get_modes(struct drm_connector *connector)
- {
-+	struct hisi_connector *hconnector = to_hisi_connector(connector);
-+	struct hisi_connector_funcs *ops = hconnector->ops;
-+	struct drm_encoder *encoder = hconnector->encoder;
-+	struct drm_encoder_slave_funcs *sfuncs = get_slave_funcs(encoder);
- 	int count = 0;
- 
-+	if (ops->get_modes) {
-+		count += ops->get_modes(connector);
-+	} else {
-+		if (sfuncs && sfuncs->get_modes)
-+			count += sfuncs->get_modes(encoder, connector);
-+	}
-+
- 	return count;
- }
- 
-@@ -59,8 +83,18 @@ void hisi_drm_connector_destroy(struct drm_connector *connector)
- enum drm_connector_status
- hisi_drm_detect(struct drm_connector *connector, bool force)
- {
-+	struct hisi_connector *hconnector = to_hisi_connector(connector);
-+	struct drm_encoder *encoder = hconnector->encoder;
-+	struct hisi_connector_funcs *ops = hconnector->ops;
-+	struct drm_encoder_slave_funcs *sfuncs = get_slave_funcs(encoder);
- 	enum drm_connector_status status = connector_status_unknown;
- 
-+	if (ops->detect)
-+		ops->detect(connector);
-+
-+	if (sfuncs && sfuncs->detect)
-+		status = sfuncs->detect(encoder, connector);
-+
- 	return status;
- }
- 
-diff --git a/drivers/gpu/drm/hisilicon/hisi_drm_connector.h b/drivers/gpu/drm/hisilicon/hisi_drm_connector.h
-index 114391c..a8b8409 100644
---- a/drivers/gpu/drm/hisilicon/hisi_drm_connector.h
-+++ b/drivers/gpu/drm/hisilicon/hisi_drm_connector.h
-@@ -13,9 +13,17 @@
- #ifndef __HISI_DRM_CONNECTOR_H__
- #define __HISI_DRM_CONNECTOR_H__
- 
-+struct hisi_connector_funcs {
-+	enum drm_connector_status
-+		(*detect) (struct drm_connector *connector);
-+	int (*get_modes)(struct drm_connector *connector);
-+	int (*modes_valid)(struct drm_connector *connector);
-+};
-+
- struct hisi_connector {
- 	struct drm_connector connector;
- 	struct drm_encoder *encoder;
-+	void *ops;
- };
- 
- void hisi_drm_connector_init(struct drm_device *dev,
-diff --git a/drivers/gpu/drm/hisilicon/hisi_drm_dsi.c b/drivers/gpu/drm/hisilicon/hisi_drm_dsi.c
-index 046fd8e..8509ced 100644
---- a/drivers/gpu/drm/hisilicon/hisi_drm_dsi.c
-+++ b/drivers/gpu/drm/hisilicon/hisi_drm_dsi.c
-@@ -12,18 +12,72 @@
- 
- #include <linux/clk.h>
- #include <linux/component.h>
-+#include <video/videomode.h>
- 
- #include <drm/drm_mipi_dsi.h>
- #include <drm/drm_encoder_slave.h>
- 
- #include "hisi_drm_encoder.h"
- #include "hisi_drm_connector.h"
-+#include "hisi_dsi_reg.h"
- 
-+#define encoder_to_dsi(encoder) \
-+	container_of(encoder, struct hisi_dsi, hisi_encoder.base.base)
-+
-+#define MAX_TX_ESC_CLK		   (10)
- #define DSI_24BITS_1               (5)
-+#define DSI_NON_BURST_SYNC_PULSES  (0)
-+#define DSI_BURST_MODE    DSI_NON_BURST_SYNC_PULSES
-+
-+#define ROUND(x, y) ((x) / (y) + ((x) % (y) * 10 / (y) >= 5 ? 1 : 0))
-+
-+#define DEFAULT_MIPI_CLK_RATE   19200000
-+#define DEFAULT_MIPI_CLK_PERIOD_PS (1000000000 / (DEFAULT_MIPI_CLK_RATE / 1000))
-+
-+#define R(x) ((u32)((((u64)(x) * (u64)1000 * (u64)dsi->vm.pixelclock) / \
-+	      phy->lane_byte_clk_kHz)))
-+
-+struct mipi_phy_register {
-+	u32 clk_t_lpx;
-+	u32 clk_t_hs_prepare;
-+	u32 clk_t_hs_zero;
-+	u32 clk_t_hs_trial;
-+	u32 clk_t_wakeup;
-+	u32 data_t_lpx;
-+	u32 data_t_hs_prepare;
-+	u32 data_t_hs_zero;
-+	u32 data_t_hs_trial;
-+	u32 data_t_ta_go;
-+	u32 data_t_ta_get;
-+	u32 data_t_wakeup;
-+	u32 hstx_ckg_sel;
-+	u32 pll_fbd_div5f;
-+	u32 pll_fbd_div1f;
-+	u32 pll_fbd_2p;
-+	u32 pll_enbwt;
-+	u32 pll_fbd_p;
-+	u32 pll_fbd_s;
-+	u32 pll_pre_div1p;
-+	u32 pll_pre_p;
-+	u32 pll_vco_750M;
-+	u32 pll_lpf_rs;
-+	u32 pll_lpf_cs;
-+	u32 clklp2hs_time;
-+	u32 clkhs2lp_time;
-+	u32 lp2hs_time;
-+	u32 hs2lp_time;
-+	u32 clk_to_data_delay;
-+	u32 data_to_clk_delay;
-+	u32 lane_byte_clk_kHz;
-+	u32 clk_division;
-+	u32 burst_mode;
-+};
- 
- struct hisi_dsi {
- 	struct hisi_encoder hisi_encoder;
- 	struct hisi_connector hisi_connector;
-+	struct mipi_phy_register phy;
-+	struct videomode vm;
- 
- 	u32 lanes;
- 	u32 format;
-@@ -35,6 +89,10 @@ struct hisi_dsi {
- 
- struct hisi_dsi_context {
- 	struct hisi_dsi dsi;
-+#ifdef CONFIG_DRM_HISI_HAS_SLAVE_ENCODER
-+	struct i2c_client *client;
-+	struct drm_i2c_encoder_driver *drm_i2c_driver;
-+#endif
- 	struct clk *dsi_cfg_clk;
- 	struct drm_device *dev;
- 
-@@ -42,6 +100,578 @@ struct hisi_dsi_context {
- 	int nominal_pixel_clk_kHz;
- };
- 
-+struct dsi_phy_seq_info {
-+	u32 min_range_kHz;
-+	u32 max_range_kHz;
-+	u32 pll_vco_750M;
-+	u32 hstx_ckg_sel;
-+};
-+
-+struct dsi_phy_seq_info dphy_seq_info[] = {
-+	{   46000,    62000,   1,    7 },
-+	{   62000,    93000,   0,    7 },
-+	{   93000,   125000,   1,    6 },
-+	{  125000,   187000,   0,    6 },
-+	{  187000,   250000,   1,    5 },
-+	{  250000,   375000,   0,    5 },
-+	{  375000,   500000,   1,    4 },
-+	{  500000,   750000,   0,    4 },
-+	{  750000,  1000000,   1,    0 },
-+	{ 1000000,  1500000,   0,    0 }
-+};
-+
-+void set_dsi_phy_rate_equal_or_faster(u32 *phy_freq_kHz,
-+				      struct mipi_phy_register *phy)
-+{
-+	u32 ui = 0;
-+	u32 cfg_clk_ps = DEFAULT_MIPI_CLK_PERIOD_PS;
-+	u32 i = 0;
-+	u32 q_pll = 1;
-+	u32 m_pll = 0;
-+	u32 n_pll = 0;
-+	u32 r_pll = 1;
-+	u32 m_n = 0;
-+	u32 m_n_int = 0;
-+	u64 f_kHz;
-+	u64 temp;
-+
-+	do {
-+		f_kHz = *phy_freq_kHz;
-+
-+		/* Find the PLL clock range from the table */
-+		for (i = 0; i < ARRAY_SIZE(dphy_seq_info); i++)
-+			if (f_kHz > dphy_seq_info[i].min_range_kHz &&
-+			    f_kHz <= dphy_seq_info[i].max_range_kHz)
-+				break;
-+
-+		if (i == ARRAY_SIZE(dphy_seq_info)) {
-+			DRM_ERROR("%lldkHz out of range\n", f_kHz);
-+			return;
-+		}
-+
-+		phy->pll_vco_750M = dphy_seq_info[i].pll_vco_750M;
-+		phy->hstx_ckg_sel = dphy_seq_info[i].hstx_ckg_sel;
-+
-+		if (phy->hstx_ckg_sel <= 7 &&
-+		    phy->hstx_ckg_sel >= 4)
-+			q_pll = 0x10 >> (7 - phy->hstx_ckg_sel);
-+
-+		temp = f_kHz * (u64)q_pll * (u64)cfg_clk_ps;
-+		m_n_int = temp / (u64)1000000000;
-+		m_n = (temp % (u64)1000000000) / (u64)100000000;
-+
-+		if (m_n_int % 2 == 0) {
-+			if (m_n * 6 >= 50) {
-+				n_pll = 2;
-+				m_pll = (m_n_int + 1) * n_pll;
-+			} else if (m_n * 6 >= 30) {
-+				n_pll = 3;
-+				m_pll = m_n_int * n_pll + 2;
-+			} else {
-+				n_pll = 1;
-+				m_pll = m_n_int * n_pll;
-+			}
-+		} else {
-+			if (m_n * 6 >= 50) {
-+				n_pll = 1;
-+				m_pll = (m_n_int + 1) * n_pll;
-+			} else if (m_n * 6 >= 30) {
-+				n_pll = 1;
-+				m_pll = (m_n_int + 1) * n_pll;
-+			} else if (m_n * 6 >= 10) {
-+				n_pll = 3;
-+				m_pll = m_n_int * n_pll + 1;
-+			} else {
-+				n_pll = 2;
-+				m_pll = m_n_int * n_pll;
-+			}
-+		}
-+
-+		if (n_pll == 1) {
-+			phy->pll_fbd_p = 0;
-+			phy->pll_pre_div1p = 1;
-+		} else {
-+			phy->pll_fbd_p = n_pll;
-+			phy->pll_pre_div1p = 0;
-+		}
-+
-+		if (phy->pll_fbd_2p <= 7 && phy->pll_fbd_2p >= 4)
-+			r_pll = 0x10 >> (7 - phy->pll_fbd_2p);
-+
-+		if (m_pll == 2) {
-+			phy->pll_pre_p = 0;
-+			phy->pll_fbd_s = 0;
-+			phy->pll_fbd_div1f = 0;
-+			phy->pll_fbd_div5f = 1;
-+		} else if (m_pll >= 2 * 2 * r_pll && m_pll <= 2 * 4 * r_pll) {
-+			phy->pll_pre_p = m_pll / (2 * r_pll);
-+			phy->pll_fbd_s = 0;
-+			phy->pll_fbd_div1f = 1;
-+			phy->pll_fbd_div5f = 0;
-+		} else if (m_pll >= 2 * 5 * r_pll && m_pll <= 2 * 150 * r_pll) {
-+			if (((m_pll / (2 * r_pll)) % 2) == 0) {
-+				phy->pll_pre_p =
-+					(m_pll / (2 * r_pll)) / 2 - 1;
-+				phy->pll_fbd_s =
-+					(m_pll / (2 * r_pll)) % 2 + 2;
-+			} else {
-+				phy->pll_pre_p =
-+					(m_pll / (2 * r_pll)) / 2;
-+				phy->pll_fbd_s =
-+					(m_pll / (2 * r_pll)) % 2;
-+			}
-+			phy->pll_fbd_div1f = 0;
-+			phy->pll_fbd_div5f = 0;
-+		} else {
-+			phy->pll_pre_p = 0;
-+			phy->pll_fbd_s = 0;
-+			phy->pll_fbd_div1f = 0;
-+			phy->pll_fbd_div5f = 1;
-+		}
-+
-+		f_kHz = (u64)1000000000 * (u64)m_pll /
-+			((u64)cfg_clk_ps * (u64)n_pll * (u64)q_pll);
-+
-+		if (f_kHz >= *phy_freq_kHz)
-+			break;
-+
-+		(*phy_freq_kHz) += 10;
-+
-+	} while (1);
-+
-+	*phy_freq_kHz = f_kHz;
-+	ui = 1000000 / f_kHz;
-+
-+	phy->clk_t_lpx = ROUND(50, 8 * ui);
-+	phy->clk_t_hs_prepare = ROUND(133, 16 * ui) - 1;
-+
-+	phy->clk_t_hs_zero = ROUND(262, 8 * ui);
-+	phy->clk_t_hs_trial = 2 * (ROUND(60, 8 * ui) - 1);
-+	phy->clk_t_wakeup = ROUND(1000000, (cfg_clk_ps / 1000) - 1);
-+	if (phy->clk_t_wakeup > 0xff)
-+		phy->clk_t_wakeup = 0xff;
-+	phy->data_t_wakeup = phy->clk_t_wakeup;
-+	phy->data_t_lpx = phy->clk_t_lpx;
-+	phy->data_t_hs_prepare = ROUND(125 + 10 * ui, 16 * ui) - 1;
-+	phy->data_t_hs_zero = ROUND(105 + 6 * ui, 8 * ui);
-+	phy->data_t_hs_trial = 2 * (ROUND(60 + 4 * ui, 8 * ui) - 1);
-+	phy->data_t_ta_go = 3;
-+	phy->data_t_ta_get = 4;
-+
-+	phy->pll_enbwt = 1;
-+	phy->clklp2hs_time = ROUND(407, 8 * ui) + 12;
-+	phy->clkhs2lp_time = ROUND(105 + 12 * ui, 8 * ui);
-+	phy->lp2hs_time = ROUND(240 + 12 * ui, 8 * ui) + 1;
-+	phy->hs2lp_time = phy->clkhs2lp_time;
-+	phy->clk_to_data_delay = 1 + phy->clklp2hs_time;
-+	phy->data_to_clk_delay = ROUND(60 + 52 * ui, 8 * ui) +
-+				phy->clkhs2lp_time;
-+
-+	phy->lane_byte_clk_kHz = f_kHz / 8;
-+	phy->clk_division = phy->lane_byte_clk_kHz / MAX_TX_ESC_CLK;
-+	if (phy->lane_byte_clk_kHz % MAX_TX_ESC_CLK)
-+		phy->clk_division++;
-+
-+	phy->burst_mode = DSI_BURST_MODE;
-+}
-+
-+int dsi_mipi_init(struct hisi_dsi *dsi)
-+{
-+	struct hisi_dsi_context *ctx = dsi->ctx;
-+	struct mipi_phy_register *phy = &dsi->phy;
-+	void __iomem *base = ctx->base;
-+
-+	u32 i = 0;
-+	u32 hline_time = 0;
-+	u32 hsa_time = 0;
-+	u32 hbp_time = 0;
-+	u32 pixel_clk_kHz;
-+	u32 delay_count = 0;
-+	int refresh_nom, refresh_real;
-+	int htot, vtot, blc_hactive;
-+	int tmp, tmp1, val;
-+	bool is_ready = false;
-+
-+	/* reset Core */
-+	writel(PWR_UP_OFF, base + PWR_UP);
-+
-+	/* set lanes value */
-+	val = (dsi->lanes - 1);
-+	val |= PHY_STOP_WAIT_TIME << 8;
-+	writel(val, base + PHY_IF_CFG);
-+
-+	/* set phy clk division */
-+	writel(phy->clk_division, base + CLKMGR_CFG);
-+
-+	/* clean up phy set param */
-+	writel(0x00, base + PHY_RSTZ);
-+	writel(0x00, base + PHY_TST_CTRL0);
-+	writel(0x01, base + PHY_TST_CTRL0);
-+	writel(0x00, base + PHY_TST_CTRL0);
-+
-+	/* clock lane Timing control - TLPX */
-+	dsi_phy_tst_set(base, CLK_LPX_ADDR, phy->clk_t_lpx);
-+
-+	/* clock lane Timing control - THS-PREPARE */
-+	dsi_phy_tst_set(base, CLK_HS_PRE_ADDR, phy->clk_t_hs_prepare);
-+
-+	/* clock lane Timing control - THS-ZERO */
-+	dsi_phy_tst_set(base, CLK_HS_ZERO_ADDR, phy->clk_t_hs_zero);
-+
-+	/* clock lane Timing control - THS-TRAIL */
-+	dsi_phy_tst_set(base, CLK_HS_TRIAL_ADDR, phy->clk_t_hs_trial);
-+
-+	/* clock lane Timing control - TWAKEUP */
-+	dsi_phy_tst_set(base, CLK_WAKEUP_ADDR, phy->clk_t_wakeup);
-+
-+	/* data lane */
-+	for (i = 0; i < dsi->lanes; i++) {
-+		/* Timing control - TLPX*/
-+		dsi_phy_tst_set(base, DATA_LPX_ADDR + (i << 4),
-+				phy->data_t_lpx);
-+
-+		/* Timing control - THS-PREPARE */
-+		dsi_phy_tst_set(base, DATA_HS_PRE_ADDR + (i << 4),
-+				phy->data_t_hs_prepare);
-+
-+		/* Timing control - THS-ZERO */
-+		dsi_phy_tst_set(base, DATA_HS_ZERO_ADDR + (i << 4),
-+				phy->data_t_hs_zero);
-+
-+		/* Timing control - THS-TRAIL */
-+		dsi_phy_tst_set(base, DATA_HS_TRIAL_ADDR + (i << 4),
-+				phy->data_t_hs_trial);
-+
-+		/* Timing control - TTA-GO */
-+		dsi_phy_tst_set(base, DATA_TA_GO_ADDR + (i << 4),
-+				phy->data_t_ta_go);
-+
-+		/* Timing control - TTA-GET */
-+		dsi_phy_tst_set(base, DATA_TA_GET_ADDR + (i << 4),
-+				phy->data_t_ta_get);
-+
-+		/*  Timing control - TWAKEUP */
-+		dsi_phy_tst_set(base, DATA_WAKEUP_ADDR + (i << 4),
-+				phy->data_t_wakeup);
-+	}
-+
-+	/* physical configuration I  */
-+	dsi_phy_tst_set(base, HSTX_CKG_SEL_ADDR, phy->hstx_ckg_sel);
-+
-+	/* physical configuration pll II  */
-+	val = (phy->pll_fbd_div5f << 5) + (phy->pll_fbd_div1f << 4) +
-+				(phy->pll_fbd_2p << 1) + phy->pll_enbwt;
-+	dsi_phy_tst_set(base, PLL_FBD_DPN_ADDR, val);
-+
-+	/* physical configuration pll II  */
-+	dsi_phy_tst_set(base, PLL_FBD_P_ADDR, phy->pll_fbd_p);
-+
-+	/* physical configuration pll III  */
-+	dsi_phy_tst_set(base, PLL_FBD_S_ADDR, phy->pll_fbd_s);
-+
-+	/*physical configuration pll IV*/
-+	val = (phy->pll_pre_div1p << 7) + phy->pll_pre_p;
-+	dsi_phy_tst_set(base, PLL_PRA_DP_ADDR, val);
-+
-+	/*physical configuration pll V*/
-+	val = (phy->pll_vco_750M << 4) + (phy->pll_lpf_rs << 2) +
-+					phy->pll_lpf_cs + BIT(5);
-+	dsi_phy_tst_set(base, PLL_LPF_VOF_ADDR, val);
-+
-+	writel(0x04, base + PHY_RSTZ);
-+	udelay(1);
-+
-+	writel(0x05, base + PHY_RSTZ);
-+	udelay(1);
-+
-+	writel(0x07, base + PHY_RSTZ);
-+	usleep_range(1000, 1500);
-+
-+	while (1) {
-+		val = readl(base +  PHY_STATUS);
-+		if ((0x01 & val) || delay_count > 100) {
-+			is_ready = (delay_count < 100) ? true : false;
-+			delay_count = 0;
-+			break;
-+		}
-+
-+		udelay(1);
-+		++delay_count;
-+	}
-+
-+	if (!is_ready)
-+		DRM_INFO("phylock is not ready.\n");
-+
-+	while (1) {
-+		val = readl(base + PHY_STATUS);
-+		if ((BIT(2) & val) || delay_count > 100) {
-+			is_ready = (delay_count < 100) ? true : false;
-+			break;
-+		}
-+
-+		udelay(1);
-+		++delay_count;
-+	}
-+
-+	if (!is_ready)
-+		DRM_INFO("phystopstateclklane is not ready.\n");
-+
-+	/* DSI color mode setting */
-+	writel(0, base + DPI_VCID);
-+	writel(dsi->color_mode, base + DPI_COLOR_CODING);
-+
-+	/* DSI format and pol setting */
-+	val = dsi->date_enable_pol;
-+	val |= (dsi->vm.flags & DISPLAY_FLAGS_HSYNC_HIGH ? 0 : 1) << 0x2;
-+	val |= (dsi->vm.flags & DISPLAY_FLAGS_VSYNC_HIGH ? 0 : 1) << 0x1;
-+	writel(val, base +  DPI_CFG_POL);
-+
-+	if (dsi->format == MIPI_DSI_FMT_RGB666)
-+		writel(dsi->color_mode | BIT(9), base + DPI_COLOR_CODING);
-+
-+	/*
-+	 * The DSI IP accepts vertical timing using lines as normal,
-+	 * but horizontal timing is a mixture of pixel-clocks for the
-+	 * active region and byte-lane clocks for the blanking-related
-+	 * timings.  hfp is specified as the total hline_time in byte-
-+	 * lane clocks minus hsa, hbp and active.
-+	 */
-+
-+	htot = dsi->vm.hactive + dsi->vm.hsync_len +
-+		  dsi->vm.hfront_porch + dsi->vm.hback_porch;
-+	vtot = dsi->vm.vactive + dsi->vm.vsync_len +
-+		  dsi->vm.vfront_porch + dsi->vm.vback_porch;
-+
-+	pixel_clk_kHz = dsi->vm.pixelclock;
-+
-+	hsa_time = (dsi->vm.hsync_len * phy->lane_byte_clk_kHz) /
-+		   pixel_clk_kHz;
-+	hbp_time = (dsi->vm.hback_porch * phy->lane_byte_clk_kHz) /
-+		   pixel_clk_kHz;
-+	hline_time  = (((u64)htot * (u64)phy->lane_byte_clk_kHz)) /
-+		      pixel_clk_kHz;
-+	blc_hactive  = (((u64)dsi->vm.hactive *
-+			(u64)phy->lane_byte_clk_kHz)) / pixel_clk_kHz;
-+
-+	if ((R(hline_time) / 1000) > htot)
-+		hline_time--;
-+
-+	if ((R(hline_time) / 1000) < htot)
-+		hline_time++;
-+
-+	/* all specified in byte-lane clocks */
-+	writel(hsa_time, base + VID_HSA_TIME);
-+	writel(hbp_time, base + VID_HBP_TIME);
-+	writel(hline_time, base + VID_HLINE_TIME);
-+
-+	if (dsi->vm.vsync_len > 15)
-+		dsi->vm.vsync_len = 15;
-+
-+	writel(dsi->vm.vsync_len, base + VID_VSA_LINES);
-+	writel(dsi->vm.vback_porch, base + VID_VBP_LINES);
-+	writel(dsi->vm.vfront_porch, base + VID_VFP_LINES);
-+	writel(dsi->vm.vactive, base + VID_VACTIVE_LINES);
-+	writel(dsi->vm.hactive, base + VID_PKT_SIZE);
-+
-+	refresh_nom = ((u64)ctx->nominal_pixel_clk_kHz * 1000000) /
-+		      (htot * vtot);
-+
-+	tmp = 1000000000 / dsi->vm.pixelclock;
-+	tmp1 = 1000000000 / phy->lane_byte_clk_kHz;
-+
-+	refresh_real = ((u64)dsi->vm.pixelclock * (u64)1000000000) /
-+		      ((u64)R(hline_time) * (u64)vtot);
-+
-+	if (dsi->mode_flags & MIPI_DSI_MODE_VIDEO) {
-+		/*
-+		 * we disable this since it affects downstream
-+		 * DSI -> HDMI converter output
-+		 */
-+		writel(0x00, base + VID_MODE_CFG);
-+
-+		/*VSA/VBP/VFP max transfer byte in LP mode*/
-+		writel(0x00, base + DPI_LP_CMD_TIM);
-+		/* enable LP command transfer */
-+		writel(0x00, base + VID_MODE_CFG);
-+		/* config max read time */
-+		writel(PHY_MAX_TIME, base + PHY_TMR_CFG);
-+	}
-+
-+	/* Configure core's phy parameters */
-+	writel(0xFFF, base + BTA_TO_CNT);
-+
-+	val = 0xFF;
-+	val |= (phy->lp2hs_time) << 16;
-+	val |= (phy->hs2lp_time) << 24;
-+	writel(val, base + PHY_TMR_CFG);
-+
-+	val = phy->clklp2hs_time;
-+	val |= (phy->clkhs2lp_time) << 16;
-+	writel(val, base + PHY_TMR_LPCLK_CFG);
-+
-+	/* setting burst mode */
-+	val = phy->clk_to_data_delay;
-+	val |= (phy->data_to_clk_delay) << 8;
-+	writel(val, base + NO_CONTINUE);
-+	writel(0x00, base + VID_MODE_CFG);
-+	writel(phy->burst_mode, base + VID_MODE_CFG);
-+	writel(0x0, base + LPCLK_CTRL);
-+
-+	/* for dsi read */
-+	writel(0x0, base + PCKHDL_CFG);
-+
-+	/* Enable EOTP TX; Enable EDPI */
-+	if (dsi->mode_flags == MIPI_DSI_MODE_VIDEO)
-+		writel(dsi->vm.hactive, base + EDPI_CMD_SIZE);
-+
-+	/* DSI and D-PHY Initialization */
-+	writel(VIDEO_MODE, base + MODE_CFG);
-+	writel(0x1, base + LPCLK_CTRL);
-+
-+	writel(PWR_UP_ON, base + PWR_UP);
-+
-+	return 0;
-+}
-+
-+static void dsi_encoder_disable(struct drm_encoder *encoder)
-+{
-+	struct hisi_dsi *dsi = encoder_to_dsi(encoder);
-+	struct hisi_dsi_context *ctx = dsi->ctx;
-+	void __iomem *base = ctx->base;
-+
-+	writel(PWR_UP_OFF, base + PWR_UP);
-+	writel(0x00, base + LPCLK_CTRL);
-+	writel(0x00, base + PHY_RSTZ);
-+	clk_disable_unprepare(ctx->dsi_cfg_clk);
-+}
-+
-+static void dsi_encoder_enable(struct drm_encoder *encoder)
-+{
-+	struct hisi_dsi *dsi = encoder_to_dsi(encoder);
-+	struct hisi_dsi_context *ctx = dsi->ctx;
-+	int ret;
-+
-+	/* mipi dphy clock enable */
-+	ret = clk_prepare_enable(ctx->dsi_cfg_clk);
-+	if (ret) {
-+		DRM_ERROR("fail to enable dsi_cfg_clk: %d\n", ret);
-+		return;
-+	}
-+
-+	ret = dsi_mipi_init(dsi);
-+	if (ret) {
-+		DRM_ERROR("failed to init mipi: %d!\n", ret);
-+		return;
-+	}
-+}
-+
-+void dsi_encoder_mode_set(struct drm_encoder *encoder,
-+			  struct drm_display_mode *mode,
-+			  struct drm_display_mode *adjusted_mode)
-+{
-+	struct hisi_dsi *dsi = encoder_to_dsi(encoder);
-+	struct hisi_dsi_context *ctx = dsi->ctx;
-+	struct videomode *vm = &dsi->vm;
-+	u32 dphy_freq_kHz;
-+
-+	vm->flags = 0;
-+	vm->hactive = mode->hdisplay;
-+	vm->vactive = mode->vdisplay;
-+	vm->vfront_porch = mode->vsync_start - mode->vdisplay;
-+	vm->vback_porch = mode->vtotal - mode->vsync_end;
-+	vm->vsync_len = mode->vsync_end - mode->vsync_start;
-+	vm->hfront_porch = mode->hsync_start - mode->hdisplay;
-+	vm->hback_porch = mode->htotal - mode->hsync_end;
-+	vm->hsync_len = mode->hsync_end - mode->hsync_start;
-+
-+	vm->pixelclock = adjusted_mode->clock;
-+	ctx->nominal_pixel_clk_kHz = mode->clock;
-+	dsi->lanes = 3 + !!(vm->pixelclock >= 115000);
-+	dphy_freq_kHz = vm->pixelclock * 24 / dsi->lanes;
-+
-+	/* avoid a less-compatible DSI rate with 1.2GHz px PLL */
-+	if (dphy_freq_kHz == 600000)
-+		dphy_freq_kHz = 640000;
-+
-+	set_dsi_phy_rate_equal_or_faster(&dphy_freq_kHz, &dsi->phy);
-+
-+	if (mode->flags & DRM_MODE_FLAG_PHSYNC)
-+		vm->flags |= DISPLAY_FLAGS_HSYNC_HIGH;
-+	else if (mode->flags & DRM_MODE_FLAG_NHSYNC)
-+		vm->flags |= DISPLAY_FLAGS_HSYNC_LOW;
-+	if (mode->flags & DRM_MODE_FLAG_PVSYNC)
-+		vm->flags |= DISPLAY_FLAGS_VSYNC_HIGH;
-+	else if (mode->flags & DRM_MODE_FLAG_NVSYNC)
-+		vm->flags |= DISPLAY_FLAGS_VSYNC_LOW;
-+}
-+
-+static struct drm_display_mode mode_720p = {
-+	.name		= "1280x720",
-+	.vrefresh	= 60,
-+	.clock		= 74250,
-+	.hdisplay	= 1280,
-+	.hsync_start	= 1390,
-+	.hsync_end	= 1430,
-+	.htotal		= 1650,
-+	.vdisplay	= 720,
-+	.vsync_start	= 725,
-+	.vsync_end	= 730,
-+	.vtotal		= 750,
-+	.type		= DRM_MODE_TYPE_PREFERRED | DRM_MODE_TYPE_DRIVER,
-+	.flags		= DRM_MODE_FLAG_PHSYNC | DRM_MODE_FLAG_PVSYNC,
-+	.width_mm	= 735,
-+	.height_mm	= 420,
-+};
-+
-+/* 800x600@60 works well, so add to defaut modes */
-+static struct drm_display_mode mode_800x600 = {
-+	.name		= "800x600",
-+	.vrefresh	= 60,
-+	.clock		= 40000,
-+	.hdisplay	= 800,
-+	.hsync_start	= 840,
-+	.hsync_end	= 968,
-+	.htotal		= 1056,
-+	.vdisplay	= 600,
-+	.vsync_start	= 601,
-+	.vsync_end	= 605,
-+	.vtotal		= 628,
-+	.type		= DRM_MODE_TYPE_PREFERRED | DRM_MODE_TYPE_DRIVER,
-+	.flags		= DRM_MODE_FLAG_PHSYNC | DRM_MODE_FLAG_PVSYNC,
-+	.width_mm	= 735,
-+	.height_mm	= 420,
-+};
-+
-+static int dsi_connector_get_modes(struct drm_connector *connector)
-+{
-+	struct drm_display_mode *mode;
-+
-+	/* 1280x720@60: 720P */
-+	mode = drm_mode_duplicate(connector->dev, &mode_720p);
-+	if (!mode)
-+		DRM_ERROR("failed to create a new display mode\n");
-+
-+	drm_mode_probed_add(connector, mode);
-+
-+	/* 800x600@60 */
-+	mode = drm_mode_duplicate(connector->dev, &mode_800x600);
-+	if (!mode)
-+		DRM_ERROR("failed to create a new display mode\n");
-+	drm_mode_probed_add(connector, mode);
-+
-+	return 2;
-+}
-+
-+struct hisi_connector_funcs hisi_dsi_connector_ops = {
-+	.get_modes = dsi_connector_get_modes,
-+};
-+
-+struct hisi_encoder_funcs hisi_dsi_encoder_ops = {
-+	.mode_set = dsi_encoder_mode_set,
-+	.enable = dsi_encoder_enable,
-+	.disable = dsi_encoder_disable,
-+};
-+
- static int hisi_dsi_bind(struct device *dev, struct device *master,
- 			 void *data)
- {
-@@ -52,8 +682,23 @@ static int hisi_dsi_bind(struct device *dev, struct device *master,
- 
- 	hisi_drm_encoder_init(ctx->dev, &ctx->dsi.hisi_encoder.base.base);
- 
-+#ifdef CONFIG_DRM_HISI_HAS_SLAVE_ENCODER
-+	ret = ctx->drm_i2c_driver->encoder_init(ctx->client, ctx->dev,
-+						&ctx->dsi.hisi_encoder.base);
-+	if (ret) {
-+		DRM_ERROR("fail to init drm i2c encoder\n");
-+		return ret;
-+	}
-+
-+	if (!ctx->dsi.hisi_encoder.base.slave_funcs) {
-+		DRM_ERROR("failed check encoder function\n");
-+		return -ENODEV;
-+	}
-+#endif
-+
- 	hisi_drm_connector_init(ctx->dev, &ctx->dsi.hisi_encoder.base.base,
- 				&ctx->dsi.hisi_connector.connector);
-+
- 	return ret;
- }
- 
-@@ -102,6 +747,27 @@ static int hisi_dsi_probe(struct platform_device *pdev)
- 		return -EINVAL;
- 	}
- 
-+#ifdef CONFIG_DRM_HISI_HAS_SLAVE_ENCODER
-+	ctx->client = of_find_i2c_device_by_node(slave_node);
-+	of_node_put(slave_node);
-+	if (!ctx->client) {
-+		DRM_ERROR("failed to find slave encoder i2c client\n");
-+		return -EPROBE_DEFER;
-+	}
-+
-+	if (!ctx->client->dev.driver) {
-+		DRM_ERROR("%s: NULL client driver\n", __func__);
-+		return -EPROBE_DEFER;
-+	}
-+
-+	ctx->drm_i2c_driver = to_drm_i2c_encoder_driver(
-+		to_i2c_driver(ctx->client->dev.driver));
-+	if (IS_ERR(ctx->drm_i2c_driver)) {
-+		DRM_ERROR("failed to initialize encoder driver");
-+		return -EPROBE_DEFER;
-+	}
-+#endif
-+
- 	dsi = &ctx->dsi;
- 	dsi->ctx = ctx;
- 	dsi->lanes = 3;
-@@ -110,6 +776,10 @@ static int hisi_dsi_probe(struct platform_device *pdev)
- 	dsi->format = MIPI_DSI_FMT_RGB888;
- 	dsi->mode_flags = MIPI_DSI_MODE_VIDEO | MIPI_DSI_MODE_VIDEO_SYNC_PULSE;
- 
-+	dsi->hisi_encoder.ops = &hisi_dsi_encoder_ops;
-+	dsi->hisi_connector.encoder = &dsi->hisi_encoder.base.base;
-+	dsi->hisi_connector.ops = &hisi_dsi_connector_ops;
-+
- 	return component_add(&pdev->dev, &hisi_dsi_ops);
- }
- 
-diff --git a/drivers/gpu/drm/hisilicon/hisi_drm_encoder.c b/drivers/gpu/drm/hisilicon/hisi_drm_encoder.c
-index 89fc73d..acd73d8 100644
---- a/drivers/gpu/drm/hisilicon/hisi_drm_encoder.c
-+++ b/drivers/gpu/drm/hisilicon/hisi_drm_encoder.c
-@@ -15,18 +15,49 @@
- 
- #include "hisi_drm_encoder.h"
- 
-+#define to_hisi_encoder(encoder) \
-+	container_of(encoder, struct hisi_encoder, base.base)
-+
- void hisi_drm_encoder_disable(struct drm_encoder *encoder)
- {
-+	struct hisi_encoder *hencoder = to_hisi_encoder(encoder);
-+	struct hisi_encoder_funcs *ops = hencoder->ops;
-+	struct drm_encoder_slave_funcs *sfuncs = get_slave_funcs(encoder);
-+
-+	if (ops->enable)
-+		ops->disable(encoder);
-+
-+	if (sfuncs && sfuncs->dpms)
-+		sfuncs->dpms(encoder, DRM_MODE_DPMS_OFF);
- }
- 
- void hisi_drm_encoder_enable(struct drm_encoder *encoder)
- {
-+	struct hisi_encoder *hencoder = to_hisi_encoder(encoder);
-+	struct hisi_encoder_funcs *ops = hencoder->ops;
-+	struct drm_encoder_slave_funcs *sfuncs = get_slave_funcs(encoder);
-+
-+	if (ops->enable)
-+		ops->enable(encoder);
-+
-+	if (sfuncs && sfuncs->dpms)
-+		sfuncs->dpms(encoder, DRM_MODE_DPMS_ON);
- }
- 
- void hisi_drm_encoder_mode_set(struct drm_encoder *encoder,
- 			       struct drm_display_mode *mode,
- 			       struct drm_display_mode *adjusted_mode)
- {
-+	struct hisi_encoder *hencoder = to_hisi_encoder(encoder);
-+	struct hisi_encoder_funcs *ops = hencoder->ops;
-+	struct drm_encoder_slave_funcs *sfuncs = get_slave_funcs(encoder);
-+
-+	if (ops->mode_set)
-+		ops->mode_set(encoder, mode, adjusted_mode);
-+
-+	if (sfuncs && sfuncs->mode_set)
-+		sfuncs->mode_set(encoder, mode, adjusted_mode);
-+
- }
- 
- bool
-@@ -34,13 +65,34 @@ hisi_drm_encoder_mode_fixup(struct drm_encoder *encoder,
- 			    const struct drm_display_mode *mode,
- 			    struct drm_display_mode *adjusted_mode)
- {
-+	struct hisi_encoder *hencoder = to_hisi_encoder(encoder);
-+	struct hisi_encoder_funcs *ops = hencoder->ops;
-+	struct drm_encoder_slave_funcs *sfuncs = get_slave_funcs(encoder);
- 	bool ret = true;
- 
-+	if (ops->mode_fixup)
-+		ops->mode_fixup(encoder, mode, adjusted_mode);
-+
-+	if (sfuncs && sfuncs->mode_fixup)
-+		ret = sfuncs->mode_fixup(encoder, mode, adjusted_mode);
-+
- 	return ret;
- }
- 
- void hisi_drm_encoder_destroy(struct drm_encoder *encoder)
- {
-+	struct hisi_encoder *hencoder = to_hisi_encoder(encoder);
-+	struct hisi_encoder_funcs *ops = hencoder->ops;
-+	struct drm_encoder_slave_funcs *sfuncs = get_slave_funcs(encoder);
-+
-+	if (ops->destroy)
-+		ops->destroy(encoder);
-+
-+	/*release*/
-+	if (sfuncs && sfuncs->destroy)
-+		sfuncs->destroy(encoder);
-+
-+	drm_encoder_cleanup(encoder);
- }
- 
- static struct drm_encoder_helper_funcs hisi_encoder_helper_funcs = {
-diff --git a/drivers/gpu/drm/hisilicon/hisi_drm_encoder.h b/drivers/gpu/drm/hisilicon/hisi_drm_encoder.h
-index 31c04e4..06e4e22 100644
---- a/drivers/gpu/drm/hisilicon/hisi_drm_encoder.h
-+++ b/drivers/gpu/drm/hisilicon/hisi_drm_encoder.h
-@@ -13,10 +13,29 @@
- #ifndef __HISI_DRM_ENCODER_H__
- #define __HISI_DRM_ENCODER_H__
- 
-+struct hisi_encoder_funcs {
-+	void (*destroy)(struct drm_encoder *encoder);
-+	bool (*mode_fixup)(struct drm_encoder *encoder,
-+			   const struct drm_display_mode *mode,
-+			   struct drm_display_mode *adjusted_mode);
-+	void (*mode_set)(struct drm_encoder *encoder,
-+			 struct drm_display_mode *mode,
-+			 struct drm_display_mode *adjusted_mode);
-+	void (*enable)(struct drm_encoder *encoder);
-+	void (*disable)(struct drm_encoder *encoder);
-+};
-+
- struct hisi_encoder {
- 	struct drm_encoder_slave base;
-+	void *ops;
- };
- 
-+static inline struct drm_encoder_slave_funcs *
-+		get_slave_funcs(struct drm_encoder *enc)
-+{
-+	return to_encoder_slave(enc)->slave_funcs;
-+}
-+
- void hisi_drm_encoder_init(struct drm_device *dev, struct drm_encoder *encoder);
- 
- #endif
-diff --git a/drivers/gpu/drm/hisilicon/hisi_dsi_reg.h b/drivers/gpu/drm/hisilicon/hisi_dsi_reg.h
-new file mode 100644
-index 0000000..1ab949f
---- /dev/null
-+++ b/drivers/gpu/drm/hisilicon/hisi_dsi_reg.h
-@@ -0,0 +1,91 @@
-+/*
-+ *  Hisilicon Terminal SoCs drm driver
-+ *
-+ *  Copyright (c) 2014-2015 Hisilicon Limited.
-+ *  Author:
-+ *
-+ *  This program is free software; you can redistribute it and/or modify
-+ *  it under the terms of the GNU General Public License version 2 as
-+ *  published by the Free Software Foundation.
-+ *
-+ */
-+#ifndef __HISI_DSI_REG_H__
-+#define __HISI_DSI_REG_H__
-+
-+#define  PWR_UP_ON               (1)
-+#define  PWR_UP_OFF              (0)
-+#define  COMMAND_MODE            (1)
-+#define  VIDEO_MODE              (0)
-+#define  PHY_MAX_TIME            (0xFF)
-+
-+#define  PWR_UP                  (0x4)   /* Core power-up */
-+#define  PHY_IF_CFG              (0xA4)  /* D-PHY interface configuration */
-+#define  CLKMGR_CFG              (0x8)   /* the internal clock dividers */
-+#define  PHY_RSTZ                (0xA0)  /* D-PHY reset control */
-+#define  PHY_TST_CTRL0           (0xB4)  /* D-PHY test interface control 0 */
-+#define  PHY_TST_CTRL1           (0xB8)  /* D-PHY test interface control 1 */
-+#define  DPI_VCID                (0xC)   /* DPI virtual channel id */
-+#define  DPI_COLOR_CODING        (0x10)  /* DPI color coding */
-+#define  DPI_CFG_POL             (0x14)  /* DPI polarity configuration */
-+#define  VID_HSA_TIME            (0x48)  /* Horizontal Sync Active time */
-+#define  VID_HBP_TIME            (0x4C)  /* Horizontal Back Porch time */
-+#define  VID_HLINE_TIME          (0x50)  /* Line time */
-+#define  VID_VSA_LINES           (0x54)  /* Vertical Sync Active period */
-+#define  VID_VBP_LINES           (0x58)  /* Vertical Back Porch period */
-+#define  VID_VFP_LINES           (0x5C)  /* Vertical Front Porch period */
-+#define  VID_VACTIVE_LINES       (0x60)  /* Vertical resolution */
-+#define  VID_PKT_SIZE            (0x3C)  /* Video packet size */
-+#define  VID_MODE_CFG            (0x38)  /* Video mode configuration */
-+#define  DPI_LP_CMD_TIM          (0x18)  /* Low-power command timing config */
-+#define  PHY_TMR_CFG             (0x9C)  /* Data lanes timing configuration */
-+#define  BTA_TO_CNT              (0x8C)  /* Response timeout definition */
-+#define  PHY_TMR_LPCLK_CFG       (0x98)  /* clock lane timing configuration */
-+#define  NO_CONTINUE             (0xCC)
-+#define  LPCLK_CTRL              (0x94)  /* Low-power in clock lane */
-+#define  PCKHDL_CFG              (0x2C)  /* Packet handler configuration */
-+#define  EDPI_CMD_SIZE           (0x64)  /* Size for eDPI packets */
-+#define  MODE_CFG                (0x34)  /* Video or Command mode selection */
-+#define  PHY_STATUS              (0xB0)  /* D-PHY PPI status interface */
-+
-+#define	PHY_STOP_WAIT_TIME      (0x30)
-+#define CLK_LPX_ADDR		(0x10010)
-+#define CLK_HS_PRE_ADDR		(0x10011)
-+#define CLK_HS_ZERO_ADDR	(0x10012)
-+#define CLK_HS_TRIAL_ADDR	(0x10013)
-+#define CLK_WAKEUP_ADDR		(0x10014)
-+#define DATA_LPX_ADDR		(0x10020)
-+#define DATA_HS_PRE_ADDR        (0x10021)
-+#define DATA_HS_ZERO_ADDR       (0x10022)
-+#define DATA_HS_TRIAL_ADDR      (0x10023)
-+#define DATA_TA_GO_ADDR         (0x10024)
-+#define DATA_TA_GET_ADDR        (0x10025)
-+#define DATA_WAKEUP_ADDR        (0x10026)
-+#define HSTX_CKG_SEL_ADDR	(0x10060)
-+#define PLL_FBD_DPN_ADDR	(0x10063)
-+#define PLL_FBD_P_ADDR		(0x10064)
-+#define PLL_FBD_S_ADDR		(0x10065)
-+#define PLL_PRA_DP_ADDR		(0x10066)
-+#define PLL_LPF_VOF_ADDR	(0x10067)
-+
-+static void dsi_phy_tst_set(void __iomem *base, u32 reg_addr,
-+			    u32 reg_data)
-+{
-+	writel(reg_addr, base + PHY_TST_CTRL1);
-+	/* reg addr written at first */
-+	wmb();
-+	writel(0x02, base + PHY_TST_CTRL0);
-+	/* cmd1 sent for write */
-+	wmb();
-+	writel(0x00, base + PHY_TST_CTRL0);
-+	/* cmd2 sent for write */
-+	wmb();
-+	writel(reg_data, base + PHY_TST_CTRL1);
-+	/* Then write data */
-+	wmb();
-+	writel(0x02, base + PHY_TST_CTRL0);
-+	/* cmd2 sent for write */
-+	wmb();
-+	writel(0x00, base + PHY_TST_CTRL0);
-+}
-+
-+#endif /* __HISI_DRM_DSI_H__ */
--- 
-1.9.1
+VGhpcyBwYXRjaCBjcmVhdGVzIHRoaXMgZHJpdmVyIGl0c2VsZiBhbmQgcmVnaXN0ZXIgYWxsIHRo
+ZSBzdWItY29tcG9uZW50cwp3aGljaCBpcyBmcm9tIERUUyBpbm9kZSwgdGhpcyBkcml2ZXIgdXNl
+cyBjb21wb25lbnRzIGZyYW1ld29yayBtZWNoYW5pc20KdG8gYmluZCBhbGwgdGhlIHN1Yi1jb21w
+b25lbnRzLgoKVGhpcyBwYXRjaCBhbHNvIGludHJvZHVjZXMgYSBtZW1vcnkgbWFuYWdlciBmb3Ig
+aGlzaWxpc29uIGRybS4gQXMgY21hCmZyYW1lYnVmZmVyIGhlbHBlcnMgY2FuIG5vIG1vcmUgYmUg
+dXNlZC4KClNpZ25lZC1vZmYtYnk6IFhpbmxpYW5nIExpdSA8eGlubGlhbmcubGl1QGxpbmFyby5v
+cmc+ClNpZ25lZC1vZmYtYnk6IFhpbndlaSBLb25nIDxrb25nLmtvbmd4aW53ZWlAaGlzaWxpY29u
+LmNvbT4KU2lnbmVkLW9mZi1ieTogQW5keSBHcmVlbiA8YW5keS5ncmVlbkBsaW5hcm8ub3JnPgpT
+aWduZWQtb2ZmLWJ5OiBKaXdlbiBRaSA8cWlqaXdlbkBoaXNpbGljb24uY29tPgpTaWduZWQtb2Zm
+LWJ5OiBZdSBHb25nIDxnb25neXVAaGlzaWxpY29uLmNvbT4KLS0tCiBhcmNoL2FybTY0L2NvbmZp
+Z3MvZGVmY29uZmlnICAgICAgICAgICAgIHwgICA1ICsKIGRyaXZlcnMvZ3B1L2RybS9LY29uZmln
+ICAgICAgICAgICAgICAgICAgfCAgIDIgKwogZHJpdmVycy9ncHUvZHJtL01ha2VmaWxlICAgICAg
+ICAgICAgICAgICB8ICAgMSArCiBkcml2ZXJzL2dwdS9kcm0vaGlzaWxpY29uL0tjb25maWcgICAg
+ICAgIHwgICA5ICsrCiBkcml2ZXJzL2dwdS9kcm0vaGlzaWxpY29uL01ha2VmaWxlICAgICAgIHwg
+ICA3ICsrCiBkcml2ZXJzL2dwdS9kcm0vaGlzaWxpY29uL2hpc2lfYWRlLmMgICAgIHwgMTY2ICsr
+KysrKysrKysrKysrKysrKysrKysrKysKIGRyaXZlcnMvZ3B1L2RybS9oaXNpbGljb24vaGlzaV9k
+cm1fZHJ2LmMgfCAyMDYgKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKwogZHJpdmVycy9n
+cHUvZHJtL2hpc2lsaWNvbi9oaXNpX2RybV9kc2kuYyB8IDEzMSArKysrKysrKysrKysrKysrKysr
+KwogZHJpdmVycy9ncHUvZHJtL2hpc2lsaWNvbi9oaXNpX2RybV9mYi5jICB8IDE1NiArKysrKysr
+KysrKysrKysrKysrKysrKwogZHJpdmVycy9ncHUvZHJtL2hpc2lsaWNvbi9oaXNpX2RybV9mYi5o
+ICB8ICAyNiArKysrCiAxMCBmaWxlcyBjaGFuZ2VkLCA3MDkgaW5zZXJ0aW9ucygrKQogY3JlYXRl
+IG1vZGUgMTAwNjQ0IGRyaXZlcnMvZ3B1L2RybS9oaXNpbGljb24vS2NvbmZpZwogY3JlYXRlIG1v
+ZGUgMTAwNjQ0IGRyaXZlcnMvZ3B1L2RybS9oaXNpbGljb24vTWFrZWZpbGUKIGNyZWF0ZSBtb2Rl
+IDEwMDY0NCBkcml2ZXJzL2dwdS9kcm0vaGlzaWxpY29uL2hpc2lfYWRlLmMKIGNyZWF0ZSBtb2Rl
+IDEwMDY0NCBkcml2ZXJzL2dwdS9kcm0vaGlzaWxpY29uL2hpc2lfZHJtX2Rydi5jCiBjcmVhdGUg
+bW9kZSAxMDA2NDQgZHJpdmVycy9ncHUvZHJtL2hpc2lsaWNvbi9oaXNpX2RybV9kc2kuYwogY3Jl
+YXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMvZ3B1L2RybS9oaXNpbGljb24vaGlzaV9kcm1fZmIuYwog
+Y3JlYXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMvZ3B1L2RybS9oaXNpbGljb24vaGlzaV9kcm1fZmIu
+aAoKZGlmZiAtLWdpdCBhL2FyY2gvYXJtNjQvY29uZmlncy9kZWZjb25maWcgYi9hcmNoL2FybTY0
+L2NvbmZpZ3MvZGVmY29uZmlnCmluZGV4IDRlMTdlN2UuLmMyZWEyODAgMTAwNjQ0Ci0tLSBhL2Fy
+Y2gvYXJtNjQvY29uZmlncy9kZWZjb25maWcKKysrIGIvYXJjaC9hcm02NC9jb25maWdzL2RlZmNv
+bmZpZwpAQCAtMTQ2LDYgKzE0Niw4IEBAIENPTkZJR19MRURTX0NMQVNTPXkKIENPTkZJR19MRURT
+X1NZU0NPTj15CiBDT05GSUdfTEVEU19UUklHR0VSUz15CiBDT05GSUdfTEVEU19UUklHR0VSX0hF
+QVJUQkVBVD15CisKKwogQ09ORklHX0xFRFNfVFJJR0dFUl9DUFU9eQogQ09ORklHX1JUQ19DTEFT
+Uz15CiBDT05GSUdfUlRDX0RSVl9FRkk9eQpAQCAtMTk5LDMgKzIwMSw2IEBAIENPTkZJR19DUllQ
+VE9fR0hBU0hfQVJNNjRfQ0U9eQogQ09ORklHX0NSWVBUT19BRVNfQVJNNjRfQ0VfQ0NNPXkKIENP
+TkZJR19DUllQVE9fQUVTX0FSTTY0X0NFX0JMSz15CiBDT05GSUdfQ1JZUFRPX0FFU19BUk02NF9O
+RU9OX0JMSz15CitDT05GSUdfRFJNPXkKK0NPTkZJR19EUk1fSElTST15CisjIENPTkZJR19EUk1f
+SElTSV9GQkRFViBpcyBub3Qgc2V0CmRpZmYgLS1naXQgYS9kcml2ZXJzL2dwdS9kcm0vS2NvbmZp
+ZyBiL2RyaXZlcnMvZ3B1L2RybS9LY29uZmlnCmluZGV4IGM0NmNhMzEuLjMxZWUxMjAgMTAwNjQ0
+Ci0tLSBhL2RyaXZlcnMvZ3B1L2RybS9LY29uZmlnCisrKyBiL2RyaXZlcnMvZ3B1L2RybS9LY29u
+ZmlnCkBAIC0yNDAsMyArMjQwLDUgQEAgc291cmNlICJkcml2ZXJzL2dwdS9kcm0vc3RpL0tjb25m
+aWciCiBzb3VyY2UgImRyaXZlcnMvZ3B1L2RybS9hbWQvYW1ka2ZkL0tjb25maWciCiAKIHNvdXJj
+ZSAiZHJpdmVycy9ncHUvZHJtL2lteC9LY29uZmlnIgorCitzb3VyY2UgImRyaXZlcnMvZ3B1L2Ry
+bS9oaXNpbGljb24vS2NvbmZpZyIKZGlmZiAtLWdpdCBhL2RyaXZlcnMvZ3B1L2RybS9NYWtlZmls
+ZSBiL2RyaXZlcnMvZ3B1L2RybS9NYWtlZmlsZQppbmRleCA1NzEzZDA1Li40NzkzNmQ0IDEwMDY0
+NAotLS0gYS9kcml2ZXJzL2dwdS9kcm0vTWFrZWZpbGUKKysrIGIvZHJpdmVycy9ncHUvZHJtL01h
+a2VmaWxlCkBAIC02Nyw2ICs2Nyw3IEBAIG9iai0kKENPTkZJR19EUk1fTVNNKSArPSBtc20vCiBv
+YmotJChDT05GSUdfRFJNX1RFR1JBKSArPSB0ZWdyYS8KIG9iai0kKENPTkZJR19EUk1fU1RJKSAr
+PSBzdGkvCiBvYmotJChDT05GSUdfRFJNX0lNWCkgKz0gaW14Lworb2JqLSQoQ09ORklHX0RSTV9I
+SVNJKSArPSBoaXNpbGljb24vCiBvYmoteQkJCSs9IGkyYy8KIG9iai15CQkJKz0gcGFuZWwvCiBv
+YmoteQkJCSs9IGJyaWRnZS8KZGlmZiAtLWdpdCBhL2RyaXZlcnMvZ3B1L2RybS9oaXNpbGljb24v
+S2NvbmZpZyBiL2RyaXZlcnMvZ3B1L2RybS9oaXNpbGljb24vS2NvbmZpZwpuZXcgZmlsZSBtb2Rl
+IDEwMDY0NAppbmRleCAwMDAwMDAwLi42MGI0MmU0Ci0tLSAvZGV2L251bGwKKysrIGIvZHJpdmVy
+cy9ncHUvZHJtL2hpc2lsaWNvbi9LY29uZmlnCkBAIC0wLDAgKzEsOSBAQAorY29uZmlnIERSTV9I
+SVNJCisJdHJpc3RhdGUgIkRSTSBTdXBwb3J0IGZvciBIaXNpbGljb24gVGVybWluYWwgU29DcyBQ
+bGF0Zm9ybSIKKwlkZXBlbmRzIG9uIERSTQorCXNlbGVjdCBEUk1fS01TX0hFTFBFUgorCXNlbGVj
+dCBEUk1fR0VNX0NNQV9IRUxQRVIKKwloZWxwCisJICBDaG9vc2UgdGhpcyBvcHRpb24gaWYgeW91
+IGhhdmUgYSBoaXNpbGljb24gdGVybWluYWwgY2hpcHNldC4KKwkgIElmIE0gaXMgc2VsZWN0ZWQg
+dGhlIG1vZHVsZSB3aWxsIGJlIGNhbGxlZCBoaXNpLWRybS4KKwpkaWZmIC0tZ2l0IGEvZHJpdmVy
+cy9ncHUvZHJtL2hpc2lsaWNvbi9NYWtlZmlsZSBiL2RyaXZlcnMvZ3B1L2RybS9oaXNpbGljb24v
+TWFrZWZpbGUKbmV3IGZpbGUgbW9kZSAxMDA2NDQKaW5kZXggMDAwMDAwMC4uM2YwNDJmZAotLS0g
+L2Rldi9udWxsCisrKyBiL2RyaXZlcnMvZ3B1L2RybS9oaXNpbGljb24vTWFrZWZpbGUKQEAgLTAs
+MCArMSw3IEBACitoaXNpLWRybS15IDo9IGhpc2lfZHJtX2Rydi5vIFwKKwkgICAgICBoaXNpX2Fk
+ZS5vIFwKKwkgICAgICBoaXNpX2RybV9kc2kubyBcCisJICAgICAgaGlzaV9kcm1fZmIubyBcCisK
+K29iai0kKENPTkZJR19EUk1fSElTSSkJKz0gaGlzaS1kcm0ubworCmRpZmYgLS1naXQgYS9kcml2
+ZXJzL2dwdS9kcm0vaGlzaWxpY29uL2hpc2lfYWRlLmMgYi9kcml2ZXJzL2dwdS9kcm0vaGlzaWxp
+Y29uL2hpc2lfYWRlLmMKbmV3IGZpbGUgbW9kZSAxMDA2NDQKaW5kZXggMDAwMDAwMC4uOWI1OGQy
+MAotLS0gL2Rldi9udWxsCisrKyBiL2RyaXZlcnMvZ3B1L2RybS9oaXNpbGljb24vaGlzaV9hZGUu
+YwpAQCAtMCwwICsxLDE2NiBAQAorLyoKKyAqIEhpc2lsaWNvbiBUZXJtaW5hbCBTb0NzIGRybSBk
+cml2ZXIKKyAqCisgKiBDb3B5cmlnaHQgKGMpIDIwMTQtMjAxNSBIaXNpbGljb24gTGltaXRlZC4K
+KyAqIEF1dGhvcjogWGlud2VpIEtvbmcgPGtvbmcua29uZ3hpbndlaUBoaXNpbGljb24uY29tPiBm
+b3IgaGlzaWxpY29uCisgKgorICogVGhpcyBwcm9ncmFtIGlzIGZyZWUgc29mdHdhcmU7IHlvdSBj
+YW4gcmVkaXN0cmlidXRlIGl0IGFuZC9vciBtb2RpZnkKKyAqIGl0IHVuZGVyIHRoZSB0ZXJtcyBv
+ZiB0aGUgR05VIEdlbmVyYWwgUHVibGljIExpY2Vuc2UgdmVyc2lvbiAyIGFzCisgKiBwdWJsaXNo
+ZWQgYnkgdGhlIEZyZWUgU29mdHdhcmUgRm91bmRhdGlvbi4KKyAqCisgKi8KKworI2luY2x1ZGUg
+PGxpbnV4L2Nsay5oPgorI2luY2x1ZGUgPGxpbnV4L2NvbXBvbmVudC5oPgorCisjaW5jbHVkZSA8
+ZHJtL2RybV9nZW1fY21hX2hlbHBlci5oPgorCitzdHJ1Y3QgYWRlX2hhcmR3YXJlX2NvbnRleHQg
+eworCXZvaWQgX19pb21lbSAgKmJhc2U7CisJdm9pZCBfX2lvbWVtICAqbWVkaWFfYmFzZTsKKwor
+CWludCBpcnE7CisJdTMyIGFkZV9jb3JlX3JhdGU7CisJdTMyIG1lZGlhX25vY19yYXRlOworCisJ
+c3RydWN0IGNsayAqYWRlX2NvcmVfY2xrOworCXN0cnVjdCBjbGsgKm1lZGlhX25vY19jbGs7CisJ
+c3RydWN0IGNsayAqYWRlX3BpeF9jbGs7CisJYm9vbCBwb3dlcl9vbjsKK307CisKK3N0cnVjdCBo
+aXNpX2FkZSB7CisJc3RydWN0IGFkZV9oYXJkd2FyZV9jb250ZXh0IGN0eDsKK307CisKK3N0YXRp
+YyBpbnQgYWRlX2R0c19wYXJzZShzdHJ1Y3QgcGxhdGZvcm1fZGV2aWNlICpwZGV2LAorCQkJIHN0
+cnVjdCBhZGVfaGFyZHdhcmVfY29udGV4dCAqY3R4KQoreworCXN0cnVjdCByZXNvdXJjZSAqcmVz
+OworCXN0cnVjdCBkZXZpY2UgKmRldjsKKwlzdHJ1Y3QgZGV2aWNlX25vZGUgKm5wOworCWludCBy
+ZXQ7CisKKwlkZXYgPSAmcGRldi0+ZGV2OworCW5wICA9IGRldi0+b2Zfbm9kZTsKKworCXJlcyA9
+IHBsYXRmb3JtX2dldF9yZXNvdXJjZV9ieW5hbWUocGRldiwgSU9SRVNPVVJDRV9NRU0sICJhZGVf
+YmFzZSIpOworCWN0eC0+YmFzZSA9IGRldm1faW9yZW1hcF9yZXNvdXJjZSgmcGRldi0+ZGV2LCBy
+ZXMpOworCWlmIChJU19FUlIoY3R4LT5iYXNlKSkgeworCQlEUk1fRVJST1IoImZhaWxlZCB0byBy
+ZW1hcCBhZGUgaW8gYmFzZVxuIik7CisJCXJldHVybiAgUFRSX0VSUihjdHgtPmJhc2UpOworCX0K
+KworCXJlcyA9IHBsYXRmb3JtX2dldF9yZXNvdXJjZV9ieW5hbWUocGRldiwgSU9SRVNPVVJDRV9N
+RU0sICJtZWRpYV9iYXNlIik7CisJY3R4LT5tZWRpYV9iYXNlID0gZGV2bV9pb3JlbWFwX3Jlc291
+cmNlKCZwZGV2LT5kZXYsIHJlcyk7CisJaWYgKElTX0VSUihjdHgtPm1lZGlhX2Jhc2UpKSB7CisJ
+CURSTV9FUlJPUigiZmFpbGVkIHRvIHJlbWFwIG1lZGlhIGlvIGJhc2VcbiIpOworCQlyZXR1cm4g
+UFRSX0VSUihjdHgtPm1lZGlhX2Jhc2UpOworCX0KKworCWN0eC0+aXJxID0gcGxhdGZvcm1fZ2V0
+X2lycShwZGV2LCAwKTsKKwlpZiAoY3R4LT5pcnEgPCAwKSB7CisJCURSTV9FUlJPUigiZmFpbGVk
+IHRvIHBhcnNlIHRoZSBpcnFcbiIpOworCQlyZXR1cm4gLUVOT0RFVjsKKwl9CisKKwljdHgtPmFk
+ZV9jb3JlX2NsayA9IGRldm1fY2xrX2dldCgmcGRldi0+ZGV2LCAiY2xrX2FkZV9jb3JlIik7CisJ
+aWYgKCFjdHgtPmFkZV9jb3JlX2NsaykgeworCQlEUk1fRVJST1IoImZhaWxlZCB0byBwYXJzZSB0
+aGUgYWRlIGNvcmUgY2xvY2tcbiIpOworCQlyZXR1cm4gLUVOT0RFVjsKKwl9CisJY3R4LT5tZWRp
+YV9ub2NfY2xrID0gZGV2bV9jbGtfZ2V0KCZwZGV2LT5kZXYsCisJCQkJCSJhY2xrX2NvZGVjX2pw
+ZWdfc3JjIik7CisJaWYgKCFjdHgtPm1lZGlhX25vY19jbGspIHsKKwkJRFJNX0VSUk9SKCJmYWls
+ZWQgdG8gcGFyc2UgdGhlIGNvZGVjIGpwZWdcbiIpOworCSAgICByZXR1cm4gLUVOT0RFVjsKKwl9
+CisJY3R4LT5hZGVfcGl4X2NsayA9IGRldm1fY2xrX2dldCgmcGRldi0+ZGV2LCAiY2xrX2FkZV9w
+aXgiKTsKKwlpZiAoIWN0eC0+YWRlX3BpeF9jbGspIHsKKwkJRFJNX0VSUk9SKCJmYWlsZWQgdG8g
+cGFyc2UgdGhlIGFkZSBwaXhlbCBzcmNcbiIpOworCSAgICByZXR1cm4gLUVOT0RFVjsKKwl9CisK
+KwlyZXQgPSBvZl9wcm9wZXJ0eV9yZWFkX3UzMihucCwgImFkZV9jb3JlX2Nsa19yYXRlIiwKKwkJ
+CQkgICAmY3R4LT5hZGVfY29yZV9yYXRlKTsKKwlpZiAocmV0KSB7CisJCURSTV9FUlJPUigiZmFp
+bGVkIHRvIHBhcnNlIHRoZSBhZGUgY29yZSBjbGsgcmF0ZVxuIik7CisJICAgIHJldHVybiAtRU5P
+REVWOworCX0KKwlyZXQgPSBvZl9wcm9wZXJ0eV9yZWFkX3UzMihucCwgIm1lZGlhX25vY19jbGtf
+cmF0ZSIsCisJCQkJICAgJmN0eC0+bWVkaWFfbm9jX3JhdGUpOworCWlmIChyZXQpIHsKKwkJRFJN
+X0VSUk9SKCJmYWlsZWQgdG8gcGFyc2UgdGhlIG1lZGlhIG5vYyBjbGsgcmF0ZVxuIik7CisJCXJl
+dHVybiAtRU5PREVWOworCX0KKworCXJldHVybiAwOworfQorCitzdGF0aWMgaW50IGFkZV9iaW5k
+KHN0cnVjdCBkZXZpY2UgKmRldiwgc3RydWN0IGRldmljZSAqbWFzdGVyLCB2b2lkICpkYXRhKQor
+eworCXJldHVybiAwOworfQorCitzdGF0aWMgdm9pZCBhZGVfdW5iaW5kKHN0cnVjdCBkZXZpY2Ug
+KmRldiwgc3RydWN0IGRldmljZSAqbWFzdGVyLAorCQkgICAgICAgdm9pZCAqZGF0YSkKK3sKKwkv
+KiBkbyBub3RoaW5nICovCit9CisKK3N0YXRpYyBjb25zdCBzdHJ1Y3QgY29tcG9uZW50X29wcyBh
+ZGVfb3BzID0geworCS5iaW5kCT0gYWRlX2JpbmQsCisJLnVuYmluZAk9IGFkZV91bmJpbmQsCit9
+OworCitzdGF0aWMgaW50IGFkZV9wcm9iZShzdHJ1Y3QgcGxhdGZvcm1fZGV2aWNlICpwZGV2KQor
+eworCXN0cnVjdCBoaXNpX2FkZSAqYWRlOworCWludCByZXQ7CisKKwlhZGUgPSBkZXZtX2t6YWxs
+b2MoJnBkZXYtPmRldiwgc2l6ZW9mKCphZGUpLCBHRlBfS0VSTkVMKTsKKwlpZiAoIWFkZSkgewor
+CQlEUk1fRVJST1IoImZhaWxlZCB0byBhbGxvYyBoaXNpX2FkZVxuIik7CisJCXJldHVybiAtRU5P
+TUVNOworCX0KKworCXJldCA9IGFkZV9kdHNfcGFyc2UocGRldiwgJmFkZS0+Y3R4KTsKKwlpZiAo
+cmV0KSB7CisJCURSTV9FUlJPUigiZmFpbGVkIHRvIHBhcnNlIGFkZSBkdHMhXG4iKTsKKwkJcmV0
+dXJuIHJldDsKKwl9CisKKwlwbGF0Zm9ybV9zZXRfZHJ2ZGF0YShwZGV2LCBhZGUpOworCisJcmV0
+dXJuIGNvbXBvbmVudF9hZGQoJnBkZXYtPmRldiwgJmFkZV9vcHMpOworfQorCitzdGF0aWMgaW50
+IGFkZV9yZW1vdmUoc3RydWN0IHBsYXRmb3JtX2RldmljZSAqcGRldikKK3sKKwljb21wb25lbnRf
+ZGVsKCZwZGV2LT5kZXYsICZhZGVfb3BzKTsKKworCXJldHVybiAwOworfQorCitzdGF0aWMgY29u
+c3Qgc3RydWN0IG9mX2RldmljZV9pZCBhZGVfb2ZfbWF0Y2hbXSA9IHsKKwl7IC5jb21wYXRpYmxl
+ID0gImhpc2lsaWNvbixoaTYyMjAtYWRlIiB9LAorCXsgfQorfTsKK01PRFVMRV9ERVZJQ0VfVEFC
+TEUob2YsIGFkZV9vZl9tYXRjaCk7CisKK3N0YXRpYyBzdHJ1Y3QgcGxhdGZvcm1fZHJpdmVyIGFk
+ZV9kcml2ZXIgPSB7CisJLnByb2JlID0gYWRlX3Byb2JlLAorCS5yZW1vdmUgPSBhZGVfcmVtb3Zl
+LAorCS5kcml2ZXIgPSB7CisJCSAgIC5uYW1lID0gImhpc2ktYWRlIiwKKwkJICAgLm93bmVyID0g
+VEhJU19NT0RVTEUsCisJCSAgIC5vZl9tYXRjaF90YWJsZSA9IGFkZV9vZl9tYXRjaCwKKwl9LAor
+fTsKKworbW9kdWxlX3BsYXRmb3JtX2RyaXZlcihhZGVfZHJpdmVyKTsKKworTU9EVUxFX0FVVEhP
+UigiWGlud2VpIEtvbmcgPGtvbmcua29uZ3hpbndlaUBoaXNpbGljb24uY29tPiIpOworTU9EVUxF
+X0FVVEhPUigiWGlubGlhbmcgTGl1IDx6LmxpdXhpbmxpYW5nQGh1YXdlaS5jb20+Iik7CitNT0RV
+TEVfREVTQ1JJUFRJT04oImhpc2lsaWNvbiBTb0MgRFJNIGRyaXZlciIpOworTU9EVUxFX0xJQ0VO
+U0UoIkdQTCB2MiIpOwpkaWZmIC0tZ2l0IGEvZHJpdmVycy9ncHUvZHJtL2hpc2lsaWNvbi9oaXNp
+X2RybV9kcnYuYyBiL2RyaXZlcnMvZ3B1L2RybS9oaXNpbGljb24vaGlzaV9kcm1fZHJ2LmMKbmV3
+IGZpbGUgbW9kZSAxMDA2NDQKaW5kZXggMDAwMDAwMC4uMDk4M2FkNwotLS0gL2Rldi9udWxsCisr
+KyBiL2RyaXZlcnMvZ3B1L2RybS9oaXNpbGljb24vaGlzaV9kcm1fZHJ2LmMKQEAgLTAsMCArMSwy
+MDYgQEAKKy8qCisgKiBIaXNpbGljb24gVGVybWluYWwgU29DcyBkcm0gZHJpdmVyCisgKgorICog
+Q29weXJpZ2h0IChjKSAyMDE0LTIwMTUgSGlzaWxpY29uIExpbWl0ZWQuCisgKiBBdXRob3I6IFhp
+bndlaSBLb25nIDxrb25nLmtvbmd4aW53ZWlAaGlzaWxpY29uLmNvbT4gZm9yIGhpc2lsaWNvbgor
+ICoKKyAqIFRoaXMgcHJvZ3JhbSBpcyBmcmVlIHNvZnR3YXJlOyB5b3UgY2FuIHJlZGlzdHJpYnV0
+ZSBpdCBhbmQvb3IgbW9kaWZ5CisgKiBpdCB1bmRlciB0aGUgdGVybXMgb2YgdGhlIEdOVSBHZW5l
+cmFsIFB1YmxpYyBMaWNlbnNlIHZlcnNpb24gMiBhcworICogcHVibGlzaGVkIGJ5IHRoZSBGcmVl
+IFNvZnR3YXJlIEZvdW5kYXRpb24uCisgKgorICovCisKKyNpbmNsdWRlIDxsaW51eC9vZl9wbGF0
+Zm9ybS5oPgorI2luY2x1ZGUgPGxpbnV4L2NvbXBvbmVudC5oPgorCisjaW5jbHVkZSA8ZHJtL2Ry
+bVAuaD4KKyNpbmNsdWRlIDxkcm0vZHJtX2F0b21pY19oZWxwZXIuaD4KKyNpbmNsdWRlIDxkcm0v
+ZHJtX2dlbV9jbWFfaGVscGVyLmg+CisKKyNpbmNsdWRlICJoaXNpX2RybV9mYi5oIgorCisjZGVm
+aW5lIERSSVZFUl9OQU1FCSJoaXNpLWRybSIKKworc3RhdGljIGludCBoaXNpX2RybV91bmxvYWQo
+c3RydWN0IGRybV9kZXZpY2UgKmRldikKK3sKKwlkcm1fdmJsYW5rX2NsZWFudXAoZGV2KTsKKwlk
+cm1fbW9kZV9jb25maWdfY2xlYW51cChkZXYpOworCWRldi0+ZGV2X3ByaXZhdGUgPSBOVUxMOwor
+CisJcmV0dXJuIDA7Cit9CisKK3N0YXRpYyBjb25zdCBzdHJ1Y3QgZHJtX21vZGVfY29uZmlnX2Z1
+bmNzIGhpc2lfZHJtX21vZGVfY29uZmlnX2Z1bmNzID0geworCS5mYl9jcmVhdGUgPSBoaXNpX2Ry
+bV9mYl9jcmVhdGUsCisJLmF0b21pY19jaGVjayA9IGRybV9hdG9taWNfaGVscGVyX2NoZWNrLAor
+CS5hdG9taWNfY29tbWl0ID0gZHJtX2F0b21pY19oZWxwZXJfY29tbWl0LAorfTsKKworc3RhdGlj
+IHZvaWQgaGlzaV9kcm1fbW9kZV9jb25maWdfaW5pdChzdHJ1Y3QgZHJtX2RldmljZSAqZGV2KQor
+eworCWRldi0+bW9kZV9jb25maWcubWluX3dpZHRoID0gMDsKKwlkZXYtPm1vZGVfY29uZmlnLm1p
+bl9oZWlnaHQgPSAwOworCisJZGV2LT5tb2RlX2NvbmZpZy5tYXhfd2lkdGggPSAyMDQ4OworCWRl
+di0+bW9kZV9jb25maWcubWF4X2hlaWdodCA9IDIwNDg7CisKKwlkZXYtPm1vZGVfY29uZmlnLmZ1
+bmNzID0gJmhpc2lfZHJtX21vZGVfY29uZmlnX2Z1bmNzOworfQorCitzdGF0aWMgaW50IGhpc2lf
+ZHJtX2xvYWQoc3RydWN0IGRybV9kZXZpY2UgKmRldiwgdW5zaWduZWQgbG9uZyBmbGFncykKK3sK
+KwlpbnQgcmV0OworCisJLyogZGVidWcgc2V0dGluZworCWRybV9kZWJ1ZyA9IERSTV9VVF9EUklW
+RVJ8RFJNX1VUX0tNUzsgKi8KKworCS8qIGRldi0+bW9kZV9jb25maWcgaW5pdGlhbGl6YXRpb24g
+Ki8KKwlkcm1fbW9kZV9jb25maWdfaW5pdChkZXYpOworCWhpc2lfZHJtX21vZGVfY29uZmlnX2lu
+aXQoZGV2KTsKKworCS8qIG9ubHkgc3VwcG9ydCBvbmUgY3J0YyBub3cgKi8KKwlyZXQgPSBkcm1f
+dmJsYW5rX2luaXQoZGV2LCAxKTsKKwlpZiAocmV0KQorCQlnb3RvIG91dF9lcnI7CisKKwlyZXQg
+PSBjb21wb25lbnRfYmluZF9hbGwoZGV2LT5kZXYsIGRldik7CisJaWYgKHJldCkKKwkJZ290byBv
+dXRfZXJyOworCisJcmV0dXJuIDA7CisKK291dF9lcnI6CisJaGlzaV9kcm1fdW5sb2FkKGRldik7
+CisJcmV0dXJuIHJldDsKK30KKworc3RhdGljIGNvbnN0IHN0cnVjdCBmaWxlX29wZXJhdGlvbnMg
+aGlzaV9kcm1fZm9wcyA9IHsKKwkub3duZXIJCT0gVEhJU19NT0RVTEUsCisJLm9wZW4JCT0gZHJt
+X29wZW4sCisJLnJlbGVhc2UJPSBkcm1fcmVsZWFzZSwKKwkudW5sb2NrZWRfaW9jdGwJPSBkcm1f
+aW9jdGwsCisjaWZkZWYgQ09ORklHX0NPTVBBVAorCS5jb21wYXRfaW9jdGwJPSBkcm1fY29tcGF0
+X2lvY3RsLAorI2VuZGlmCisJLnBvbGwJCT0gZHJtX3BvbGwsCisJLnJlYWQJCT0gZHJtX3JlYWQs
+CisJLmxsc2VlawkJPSBub19sbHNlZWssCisJLm1tYXAJCT0gZHJtX2dlbV9jbWFfbW1hcCwKK307
+CisKK3N0YXRpYyBzdHJ1Y3QgZG1hX2J1ZiAqaGlzaV9kcm1fZ2VtX3ByaW1lX2V4cG9ydChzdHJ1
+Y3QgZHJtX2RldmljZSAqZGV2LAorCQkJCQkJIHN0cnVjdCBkcm1fZ2VtX29iamVjdCAqb2JqLAor
+CQkJCQkJIGludCBmbGFncykKK3sKKwkvKiB3ZSB3YW50IHRvIGJlIGFibGUgdG8gd3JpdGUgaW4g
+bW1hcHBlZCBidWZmZXIgKi8KKwlmbGFncyB8PSBPX1JEV1I7CisJcmV0dXJuIGRybV9nZW1fcHJp
+bWVfZXhwb3J0KGRldiwgb2JqLCBmbGFncyk7Cit9CisKK3N0YXRpYyBzdHJ1Y3QgZHJtX2RyaXZl
+ciBoaXNpX2RybV9kcml2ZXIgPSB7CisJLmRyaXZlcl9mZWF0dXJlcwk9IERSSVZFUl9HRU0gfCBE
+UklWRVJfTU9ERVNFVCB8IERSSVZFUl9QUklNRQorCQkJCXwgRFJJVkVSX0hBVkVfSVJRLAorCS5s
+b2FkCQkJPSBoaXNpX2RybV9sb2FkLAorCS51bmxvYWQgICAgICAgICAgICAgICAgID0gaGlzaV9k
+cm1fdW5sb2FkLAorCS5mb3BzCQkJPSAmaGlzaV9kcm1fZm9wcywKKwkuc2V0X2J1c2lkCQk9IGRy
+bV9wbGF0Zm9ybV9zZXRfYnVzaWQsCisKKwkuZ2VtX2ZyZWVfb2JqZWN0CT0gZHJtX2dlbV9jbWFf
+ZnJlZV9vYmplY3QsCisJLmdlbV92bV9vcHMJCT0gJmRybV9nZW1fY21hX3ZtX29wcywKKwkuZHVt
+Yl9jcmVhdGUJCT0gZHJtX2dlbV9jbWFfZHVtYl9jcmVhdGUsCisJLmR1bWJfbWFwX29mZnNldAk9
+IGRybV9nZW1fY21hX2R1bWJfbWFwX29mZnNldCwKKwkuZHVtYl9kZXN0cm95CQk9IGRybV9nZW1f
+ZHVtYl9kZXN0cm95LAorCisJLnByaW1lX2hhbmRsZV90b19mZAk9IGRybV9nZW1fcHJpbWVfaGFu
+ZGxlX3RvX2ZkLAorCS5wcmltZV9mZF90b19oYW5kbGUJPSBkcm1fZ2VtX3ByaW1lX2ZkX3RvX2hh
+bmRsZSwKKwkuZ2VtX3ByaW1lX2V4cG9ydAk9IGhpc2lfZHJtX2dlbV9wcmltZV9leHBvcnQsCisJ
+LmdlbV9wcmltZV9pbXBvcnQJPSBkcm1fZ2VtX3ByaW1lX2ltcG9ydCwKKwkuZ2VtX3ByaW1lX2dl
+dF9zZ190YWJsZSA9IGRybV9nZW1fY21hX3ByaW1lX2dldF9zZ190YWJsZSwKKwkuZ2VtX3ByaW1l
+X2ltcG9ydF9zZ190YWJsZSA9IGRybV9nZW1fY21hX3ByaW1lX2ltcG9ydF9zZ190YWJsZSwKKwku
+Z2VtX3ByaW1lX3ZtYXAJCT0gZHJtX2dlbV9jbWFfcHJpbWVfdm1hcCwKKwkuZ2VtX3ByaW1lX3Z1
+bm1hcAk9IGRybV9nZW1fY21hX3ByaW1lX3Z1bm1hcCwKKwkuZ2VtX3ByaW1lX21tYXAJCT0gZHJt
+X2dlbV9jbWFfcHJpbWVfbW1hcCwKKworCS5uYW1lCQkJPSAiaGlzaSIsCisJLmRlc2MJCQk9ICJI
+aXNpbGljb24gVGVybWluYWwgU29DcyBEUk0gRHJpdmVyIiwKKwkuZGF0ZQkJCT0gIjIwMTUwODMw
+IiwKKwkubWFqb3IJCQk9IDEsCisJLm1pbm9yCQkJPSAwLAorfTsKKworLyogLS0tLS0tLS0tLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
+LS0tLS0tLS0KKyAqIFBsYXRmb3JtIGRyaXZlcgorICovCisKK3N0YXRpYyBpbnQgY29tcGFyZV9v
+ZihzdHJ1Y3QgZGV2aWNlICpkZXYsIHZvaWQgKmRhdGEpCit7CisJcmV0dXJuIGRldi0+b2Zfbm9k
+ZSA9PSBkYXRhOworfQorCitzdGF0aWMgaW50IGhpc2lfZHJtX2JpbmQoc3RydWN0IGRldmljZSAq
+ZGV2KQoreworCWRtYV9zZXRfY29oZXJlbnRfbWFzayhkZXYsIERNQV9CSVRfTUFTSygzMikpOwor
+CXJldHVybiBkcm1fcGxhdGZvcm1faW5pdCgmaGlzaV9kcm1fZHJpdmVyLCB0b19wbGF0Zm9ybV9k
+ZXZpY2UoZGV2KSk7Cit9CisKK3N0YXRpYyB2b2lkIGhpc2lfZHJtX3VuYmluZChzdHJ1Y3QgZGV2
+aWNlICpkZXYpCit7CisJZHJtX3B1dF9kZXYoZGV2X2dldF9kcnZkYXRhKGRldikpOworfQorCitz
+dGF0aWMgY29uc3Qgc3RydWN0IGNvbXBvbmVudF9tYXN0ZXJfb3BzIGhpc2lfZHJtX29wcyA9IHsK
+KwkuYmluZCA9IGhpc2lfZHJtX2JpbmQsCisJLnVuYmluZCA9IGhpc2lfZHJtX3VuYmluZCwKK307
+CisKK3N0YXRpYyBpbnQgaGlzaV9kcm1fcGxhdGZvcm1fcHJvYmUoc3RydWN0IHBsYXRmb3JtX2Rl
+dmljZSAqcGRldikKK3sKKwlzdHJ1Y3QgZGV2aWNlICpkZXYgPSAmcGRldi0+ZGV2OworCXN0cnVj
+dCBkZXZpY2Vfbm9kZSAqbm9kZSA9IGRldi0+b2Zfbm9kZTsKKwlzdHJ1Y3QgZGV2aWNlX25vZGUg
+KmNoaWxkX25wOworCXN0cnVjdCBjb21wb25lbnRfbWF0Y2ggKm1hdGNoID0gTlVMTDsKKworCW9m
+X3BsYXRmb3JtX3BvcHVsYXRlKG5vZGUsIE5VTEwsIE5VTEwsIGRldik7CisKKwljaGlsZF9ucCA9
+IG9mX2dldF9uZXh0X2F2YWlsYWJsZV9jaGlsZChub2RlLCBOVUxMKTsKKwl3aGlsZSAoY2hpbGRf
+bnApIHsKKwkJY29tcG9uZW50X21hdGNoX2FkZChkZXYsICZtYXRjaCwgY29tcGFyZV9vZiwgY2hp
+bGRfbnApOworCQlvZl9ub2RlX3B1dChjaGlsZF9ucCk7CisJCWNoaWxkX25wID0gb2ZfZ2V0X25l
+eHRfYXZhaWxhYmxlX2NoaWxkKG5vZGUsIGNoaWxkX25wKTsKKwl9CisKKwlyZXR1cm4gY29tcG9u
+ZW50X21hc3Rlcl9hZGRfd2l0aF9tYXRjaChkZXYsICZoaXNpX2RybV9vcHMsIG1hdGNoKTsKKwor
+CXJldHVybiAwOworfQorCitzdGF0aWMgaW50IGhpc2lfZHJtX3BsYXRmb3JtX3JlbW92ZShzdHJ1
+Y3QgcGxhdGZvcm1fZGV2aWNlICpwZGV2KQoreworCWNvbXBvbmVudF9tYXN0ZXJfZGVsKCZwZGV2
+LT5kZXYsICZoaXNpX2RybV9vcHMpOworCW9mX3BsYXRmb3JtX2RlcG9wdWxhdGUoJnBkZXYtPmRl
+dik7CisKKwlyZXR1cm4gMDsKK30KKworc3RhdGljIGNvbnN0IHN0cnVjdCBvZl9kZXZpY2VfaWQg
+aGlzaV9kcm1fZHRfaWRzW10gPSB7CisJeyAuY29tcGF0aWJsZSA9ICJoaXNpbGljb24sZGlzcGxh
+eS1zdWJzeXN0ZW0iLCB9LAorCXsgLyogZW5kIG5vZGUgKi8gfSwKK307CitNT0RVTEVfREVWSUNF
+X1RBQkxFKG9mLCBoaXNpX2RybV9kdF9pZHMpOworCitzdGF0aWMgc3RydWN0IHBsYXRmb3JtX2Ry
+aXZlciBoaXNpX2RybV9wbGF0Zm9ybV9kcml2ZXIgPSB7CisJLnByb2JlID0gaGlzaV9kcm1fcGxh
+dGZvcm1fcHJvYmUsCisJLnJlbW92ZSA9IGhpc2lfZHJtX3BsYXRmb3JtX3JlbW92ZSwKKwkuZHJp
+dmVyID0geworCQkub3duZXIgPSBUSElTX01PRFVMRSwKKwkJLm5hbWUgPSBEUklWRVJfTkFNRSwK
+KwkJLm9mX21hdGNoX3RhYmxlID0gaGlzaV9kcm1fZHRfaWRzLAorCX0sCit9OworCittb2R1bGVf
+cGxhdGZvcm1fZHJpdmVyKGhpc2lfZHJtX3BsYXRmb3JtX2RyaXZlcik7CisKK01PRFVMRV9BVVRI
+T1IoIlhpbndlaSBLb25nIDxrb25nLmtvbmd4aW53ZWlAaGlzaWxpY29uLmNvbT4iKTsKK01PRFVM
+RV9BVVRIT1IoIlhpbmxpYW5nIExpdSA8ei5saXV4aW5saWFuZ0BodWF3ZWkuY29tPiIpOworTU9E
+VUxFX0RFU0NSSVBUSU9OKCJoaXNpbGljb24gU29DIERSTSBkcml2ZXIiKTsKK01PRFVMRV9MSUNF
+TlNFKCJHUEwgdjIiKTsKZGlmZiAtLWdpdCBhL2RyaXZlcnMvZ3B1L2RybS9oaXNpbGljb24vaGlz
+aV9kcm1fZHNpLmMgYi9kcml2ZXJzL2dwdS9kcm0vaGlzaWxpY29uL2hpc2lfZHJtX2RzaS5jCm5l
+dyBmaWxlIG1vZGUgMTAwNjQ0CmluZGV4IDAwMDAwMDAuLmE4ZGJhYWQKLS0tIC9kZXYvbnVsbAor
+KysgYi9kcml2ZXJzL2dwdS9kcm0vaGlzaWxpY29uL2hpc2lfZHJtX2RzaS5jCkBAIC0wLDAgKzEs
+MTMxIEBACisvKgorICogSGlzaWxpY29uIFRlcm1pbmFsIFNvQ3MgZHJtIGRyaXZlcgorICoKKyAq
+IENvcHlyaWdodCAoYykgMjAxNC0yMDE1IEhpc2lsaWNvbiBMaW1pdGVkLgorICogQXV0aG9yOiBY
+aW53ZWkgS29uZyA8a29uZy5rb25neGlud2VpQGhpc2lsaWNvbi5jb20+IGZvciBoaXNpbGljb24K
+KyAqCisgKiBUaGlzIHByb2dyYW0gaXMgZnJlZSBzb2Z0d2FyZTsgeW91IGNhbiByZWRpc3RyaWJ1
+dGUgaXQgYW5kL29yIG1vZGlmeQorICogaXQgdW5kZXIgdGhlIHRlcm1zIG9mIHRoZSBHTlUgR2Vu
+ZXJhbCBQdWJsaWMgTGljZW5zZSB2ZXJzaW9uIDIgYXMKKyAqIHB1Ymxpc2hlZCBieSB0aGUgRnJl
+ZSBTb2Z0d2FyZSBGb3VuZGF0aW9uLgorICoKKyAqLworCisjaW5jbHVkZSA8bGludXgvY2xrLmg+
+CisjaW5jbHVkZSA8bGludXgvY29tcG9uZW50Lmg+CisKKyNpbmNsdWRlIDxkcm0vZHJtX21pcGlf
+ZHNpLmg+CisjaW5jbHVkZSA8ZHJtL2RybV9lbmNvZGVyX3NsYXZlLmg+CisKKyNkZWZpbmUgRFNJ
+XzI0QklUU18xICAgICAgICAgICAgICAgKDUpCisKK3N0cnVjdCBoaXNpX2RzaSB7CisJdTMyIGxh
+bmVzOworCXUzMiBmb3JtYXQ7CisJdTMyIGRhdGVfZW5hYmxlX3BvbDsKKwl1MzIgbW9kZV9mbGFn
+czsKKwl1OCBjb2xvcl9tb2RlOworCXZvaWQgKmN0eDsKK307CisKK3N0cnVjdCBoaXNpX2RzaV9j
+b250ZXh0IHsKKwlzdHJ1Y3QgaGlzaV9kc2kgZHNpOworCXN0cnVjdCBjbGsgKmRzaV9jZmdfY2xr
+OworCXN0cnVjdCBkcm1fZGV2aWNlICpkZXY7CisKKwl2b2lkIF9faW9tZW0gKmJhc2U7CisJaW50
+IG5vbWluYWxfcGl4ZWxfY2xrX2tIejsKK307CisKK3N0YXRpYyBpbnQgaGlzaV9kc2lfYmluZChz
+dHJ1Y3QgZGV2aWNlICpkZXYsIHN0cnVjdCBkZXZpY2UgKm1hc3RlciwKKwkJCSB2b2lkICpkYXRh
+KQoreworCWludCByZXQgPSAwOworCisJcmV0dXJuIHJldDsKK30KKworc3RhdGljIHZvaWQgaGlz
+aV9kc2lfdW5iaW5kKHN0cnVjdCBkZXZpY2UgKmRldiwgc3RydWN0IGRldmljZSAqbWFzdGVyLAor
+CQkJICAgIHZvaWQgKmRhdGEpCit7CisJLyogZG8gbm90aGluZyAqLworfQorCitzdGF0aWMgY29u
+c3Qgc3RydWN0IGNvbXBvbmVudF9vcHMgaGlzaV9kc2lfb3BzID0geworCS5iaW5kCT0gaGlzaV9k
+c2lfYmluZCwKKwkudW5iaW5kCT0gaGlzaV9kc2lfdW5iaW5kLAorfTsKKworc3RhdGljIGludCBo
+aXNpX2RzaV9wcm9iZShzdHJ1Y3QgcGxhdGZvcm1fZGV2aWNlICpwZGV2KQoreworCXN0cnVjdCBo
+aXNpX2RzaV9jb250ZXh0ICpjdHg7CisJc3RydWN0IGhpc2lfZHNpICpkc2k7CisJc3RydWN0IHJl
+c291cmNlICpyZXM7CisJc3RydWN0IGRldmljZV9ub2RlICpzbGF2ZV9ub2RlOworCXN0cnVjdCBk
+ZXZpY2Vfbm9kZSAqbnAgPSBwZGV2LT5kZXYub2Zfbm9kZTsKKwlpbnQgcmV0OworCisJY3R4ID0g
+ZGV2bV9remFsbG9jKCZwZGV2LT5kZXYsIHNpemVvZigqY3R4KSwgR0ZQX0tFUk5FTCk7CisJaWYg
+KCFjdHgpIHsKKwkJRFJNX0VSUk9SKCJmYWlsZWQgdG8gYWxsb2NhdGUgaGlzaSBkc2kgY29udGV4
+dC5cbiIpOworCQlyZXQgPSAtRU5PTUVNOworCX0KKworCWN0eC0+ZHNpX2NmZ19jbGsgPSBkZXZt
+X2Nsa19nZXQoJnBkZXYtPmRldiwgInBjbGtfZHNpIik7CisJaWYgKElTX0VSUihjdHgtPmRzaV9j
+ZmdfY2xrKSkgeworCQlEUk1fRVJST1IoImZhaWxlZCB0byBwYXJzZSB0aGUgZHNpIGNvbmZpZyBj
+bG9ja1xuIik7CisJCXJldCA9IFBUUl9FUlIoY3R4LT5kc2lfY2ZnX2Nsayk7CisJfQorCisJcmVz
+ID0gcGxhdGZvcm1fZ2V0X3Jlc291cmNlKHBkZXYsIElPUkVTT1VSQ0VfTUVNLCAwKTsKKwljdHgt
+PmJhc2UgPSBkZXZtX2lvcmVtYXBfcmVzb3VyY2UoJnBkZXYtPmRldiwgcmVzKTsKKwlpZiAoSVNf
+RVJSKGN0eC0+YmFzZSkpIHsKKwkJRFJNX0VSUk9SKCJmYWlsZWQgdG8gcmVtYXAgZHNpIGlvIHJl
+Z2lvblxuIik7CisJCXJldCA9IFBUUl9FUlIoY3R4LT5iYXNlKTsKKwl9CisKKwlzbGF2ZV9ub2Rl
+ID0gb2ZfcGFyc2VfcGhhbmRsZShucCwgImVuY29kZXItc2xhdmUiLCAwKTsKKwlpZiAoIXNsYXZl
+X25vZGUpIHsKKwkJRFJNX0VSUk9SKCJmYWlsZWQgdG8gcGFyc2UgdGhlIHNsYXZlIGVuY29kZXIg
+bm9kZVxuIik7CisJCXJldHVybiAtRUlOVkFMOworCX0KKworCWRzaSA9ICZjdHgtPmRzaTsKKwlk
+c2ktPmN0eCA9IGN0eDsKKwlkc2ktPmxhbmVzID0gMzsKKwlkc2ktPmRhdGVfZW5hYmxlX3BvbCA9
+IDA7CisJZHNpLT5jb2xvcl9tb2RlID0gRFNJXzI0QklUU18xOworCWRzaS0+Zm9ybWF0ID0gTUlQ
+SV9EU0lfRk1UX1JHQjg4ODsKKwlkc2ktPm1vZGVfZmxhZ3MgPSBNSVBJX0RTSV9NT0RFX1ZJREVP
+IHwgTUlQSV9EU0lfTU9ERV9WSURFT19TWU5DX1BVTFNFOworCisJcmV0dXJuIGNvbXBvbmVudF9h
+ZGQoJnBkZXYtPmRldiwgJmhpc2lfZHNpX29wcyk7Cit9CisKK3N0YXRpYyBpbnQgaGlzaV9kc2lf
+cmVtb3ZlKHN0cnVjdCBwbGF0Zm9ybV9kZXZpY2UgKnBkZXYpCit7CisJY29tcG9uZW50X2RlbCgm
+cGRldi0+ZGV2LCAmaGlzaV9kc2lfb3BzKTsKKworCXJldHVybiAwOworfQorCitzdGF0aWMgY29u
+c3Qgc3RydWN0IG9mX2RldmljZV9pZCBoaXNpX2RzaV9vZl9tYXRjaFtdID0geworCXsuY29tcGF0
+aWJsZSA9ICJoaXNpbGljb24saGk2MjIwLWRzaSJ9LAorCXsgfQorfTsKK01PRFVMRV9ERVZJQ0Vf
+VEFCTEUob2YsIGhpc2lfZHNpX29mX21hdGNoKTsKKworc3RhdGljIHN0cnVjdCBwbGF0Zm9ybV9k
+cml2ZXIgaGlzaV9kc2lfZHJpdmVyID0geworCS5wcm9iZSA9IGhpc2lfZHNpX3Byb2JlLAorCS5y
+ZW1vdmUgPSBoaXNpX2RzaV9yZW1vdmUsCisJLmRyaXZlciA9IHsKKwkJLm5hbWUgPSAiaGlzaS1k
+c2kiLAorCQkub3duZXIgPSBUSElTX01PRFVMRSwKKwkJLm9mX21hdGNoX3RhYmxlID0gaGlzaV9k
+c2lfb2ZfbWF0Y2gsCisJfSwKK307CisKK21vZHVsZV9wbGF0Zm9ybV9kcml2ZXIoaGlzaV9kc2lf
+ZHJpdmVyKTsKKworTU9EVUxFX0FVVEhPUigiWGlud2VpIEtvbmcgPGtvbmcua29uZ3hpbndlaUBo
+aXNpbGljb24uY29tPiIpOworTU9EVUxFX0FVVEhPUigiWGlubGlhbmcgTGl1IDx6LmxpdXhpbmxp
+YW5nQGh1YXdlaS5jb20+Iik7CitNT0RVTEVfREVTQ1JJUFRJT04oImhpc2lsaWNvbiBTb0MgRFJN
+IGRyaXZlciIpOworTU9EVUxFX0xJQ0VOU0UoIkdQTCB2MiIpOwpkaWZmIC0tZ2l0IGEvZHJpdmVy
+cy9ncHUvZHJtL2hpc2lsaWNvbi9oaXNpX2RybV9mYi5jIGIvZHJpdmVycy9ncHUvZHJtL2hpc2ls
+aWNvbi9oaXNpX2RybV9mYi5jCm5ldyBmaWxlIG1vZGUgMTAwNjQ0CmluZGV4IDAwMDAwMDAuLjVk
+YWNlOGIKLS0tIC9kZXYvbnVsbAorKysgYi9kcml2ZXJzL2dwdS9kcm0vaGlzaWxpY29uL2hpc2lf
+ZHJtX2ZiLmMKQEAgLTAsMCArMSwxNTYgQEAKKy8qCisgKiBIaXNpbGljb24gVGVybWluYWwgU29D
+cyBkcm0gZmJkZXYgZHJpdmVyCisgKgorICogQ29weXJpZ2h0IChjKSAyMDE0LTIwMTUgSGlzaWxp
+Y29uIExpbWl0ZWQuCisgKiBBdXRob3I6IHoubGl1eGlubGlhbmdAaHVhd2VpLmNvbQorICoKKyAq
+IFRoaXMgcHJvZ3JhbSBpcyBmcmVlIHNvZnR3YXJlOyB5b3UgY2FuIHJlZGlzdHJpYnV0ZSBpdCBh
+bmQvb3IgbW9kaWZ5CisgKiBpdCB1bmRlciB0aGUgdGVybXMgb2YgdGhlIEdOVSBHZW5lcmFsIFB1
+YmxpYyBMaWNlbnNlIHZlcnNpb24gMiBhcworICogcHVibGlzaGVkIGJ5IHRoZSBGcmVlIFNvZnR3
+YXJlIEZvdW5kYXRpb24uCisgKgorICovCisKKyNpbmNsdWRlIDxkcm0vZHJtX2dlbV9jbWFfaGVs
+cGVyLmg+CisjaW5jbHVkZSA8ZHJtL2RybV9jcnRjX2hlbHBlci5oPgorCisjaW5jbHVkZSAiaGlz
+aV9kcm1fZmIuaCIKKworc3RydWN0IGhpc2lfZHJtX2ZiICp0b19oaXNpX2RybV9mYihzdHJ1Y3Qg
+ZHJtX2ZyYW1lYnVmZmVyICpmYikKK3sKKwlyZXR1cm4gY29udGFpbmVyX29mKGZiLCBzdHJ1Y3Qg
+aGlzaV9kcm1fZmIsIGZiKTsKK30KKwordm9pZCBoaXNpX2RybV9mYl9kZXN0cm95KHN0cnVjdCBk
+cm1fZnJhbWVidWZmZXIgKmZiKQoreworCXN0cnVjdCBoaXNpX2RybV9mYiAqaGlzaV9mYiA9IHRv
+X2hpc2lfZHJtX2ZiKGZiKTsKKwlpbnQgaTsKKworCWZvciAoaSA9IDA7IGkgPCA0OyBpKyspIHsK
+KwkJaWYgKGhpc2lfZmItPm9ialtpXSkKKwkJCWRybV9nZW1fb2JqZWN0X3VucmVmZXJlbmNlX3Vu
+bG9ja2VkCisJCQkJKCZoaXNpX2ZiLT5vYmpbaV0tPmJhc2UpOworCX0KKworCWRybV9mcmFtZWJ1
+ZmZlcl9jbGVhbnVwKGZiKTsKKwlrZnJlZShoaXNpX2ZiKTsKK30KKworc3RhdGljIGludCBoaXNp
+X2RybV9mYl9jcmVhdGVfaGFuZGxlKHN0cnVjdCBkcm1fZnJhbWVidWZmZXIgKmZiLAorCQkJCSAg
+ICAgc3RydWN0IGRybV9maWxlICpmaWxlX3ByaXYsCisJCQkJICAgICB1bnNpZ25lZCBpbnQgKmhh
+bmRsZSkKK3sKKwlzdHJ1Y3QgaGlzaV9kcm1fZmIgKmhpc2lfZmIgPSB0b19oaXNpX2RybV9mYihm
+Yik7CisKKwlyZXR1cm4gZHJtX2dlbV9oYW5kbGVfY3JlYXRlKGZpbGVfcHJpdiwKKwkJCSZoaXNp
+X2ZiLT5vYmpbMF0tPmJhc2UsIGhhbmRsZSk7Cit9CisKK3N0YXRpYyBpbnQgaGlzaV9kcm1fZmJf
+ZGlydHkoc3RydWN0IGRybV9mcmFtZWJ1ZmZlciAqZmIsCisJCQkgICAgIHN0cnVjdCBkcm1fZmls
+ZSAqZmlsZV9wcml2LAorCQkJICAgICB1bnNpZ25lZCBmbGFncywKKwkJCSAgICAgdW5zaWduZWQg
+Y29sb3IsCisJCQkgICAgIHN0cnVjdCBkcm1fY2xpcF9yZWN0ICpjbGlwcywKKwkJCSAgICAgdW5z
+aWduZWQgbnVtX2NsaXBzKQoreworCS8qIFRPRE8gKi8KKwlyZXR1cm4gMDsKK30KKworc3RhdGlj
+IHN0cnVjdCBkcm1fZnJhbWVidWZmZXJfZnVuY3MgaGlzaV9kcm1fZmJfZnVuY3MgPSB7CisJLmRl
+c3Ryb3kJPSBoaXNpX2RybV9mYl9kZXN0cm95LAorCS5jcmVhdGVfaGFuZGxlCT0gaGlzaV9kcm1f
+ZmJfY3JlYXRlX2hhbmRsZSwKKwkuZGlydHkJCT0gaGlzaV9kcm1fZmJfZGlydHksCit9OworCitz
+dHJ1Y3QgaGlzaV9kcm1fZmIgKmhpc2lfZHJtX2ZiX2FsbG9jKHN0cnVjdCBkcm1fZGV2aWNlICpk
+ZXYsCisJCQkJICAgICAgc3RydWN0IGRybV9tb2RlX2ZiX2NtZDIgKm1vZGVfY21kLAorCQkJCSAg
+ICAgIHN0cnVjdCBkcm1fZ2VtX2NtYV9vYmplY3QgKipvYmosCisJCQkJICAgICAgdW5zaWduZWQg
+aW50IG51bV9wbGFuZXMsIGJvb2wgaXNfZmJkZXZfZmIpCit7CisJc3RydWN0IGhpc2lfZHJtX2Zi
+ICpoaXNpX2ZiOworCWludCByZXQ7CisJaW50IGk7CisKKwloaXNpX2ZiID0ga3phbGxvYyhzaXpl
+b2YoKmhpc2lfZmIpLCBHRlBfS0VSTkVMKTsKKwlpZiAoIWhpc2lfZmIpCisJCXJldHVybiBFUlJf
+UFRSKC1FTk9NRU0pOworCisJaGlzaV9mYi0+aXNfZmJkZXZfZmIgPSBpc19mYmRldl9mYjsKKwlk
+cm1faGVscGVyX21vZGVfZmlsbF9mYl9zdHJ1Y3QoJmhpc2lfZmItPmZiLCBtb2RlX2NtZCk7CisK
+Kwlmb3IgKGkgPSAwOyBpIDwgbnVtX3BsYW5lczsgaSsrKQorCQloaXNpX2ZiLT5vYmpbaV0gPSBv
+YmpbaV07CisKKwlyZXQgPSBkcm1fZnJhbWVidWZmZXJfaW5pdChkZXYsICZoaXNpX2ZiLT5mYiwg
+Jmhpc2lfZHJtX2ZiX2Z1bmNzKTsKKwlpZiAocmV0KSB7CisJCURSTV9FUlJPUigiRmFpbGVkIHRv
+IGluaXRpYWxpemUgZnJhbWVidWZmZXI6ICVkXG4iLCByZXQpOworCQlrZnJlZShoaXNpX2ZiKTsK
+KwkJcmV0dXJuIEVSUl9QVFIocmV0KTsKKwl9CisKKwlyZXR1cm4gaGlzaV9mYjsKK30KKworLyoq
+CisgKiBoaXNpX2RybV9mYl9jcmVhdGUoKSAtIChzdHJ1Y3QgZHJtX21vZGVfY29uZmlnX2Z1bmNz
+ICopLT5mYl9jcmVhdGUgY2FsbGJhY2sKKyAqZnVuY3Rpb24KKyAqIElmIHlvdXIgaGFyZHdhcmUg
+aGFzIHNwZWNpYWwgYWxpZ25tZW50IG9yIHBpdGNoIHJlcXVpcmVtZW50cyB0aGVzZSBzaG91bGQg
+YmUKKyAqIGNoZWNrZWQgYmVmb3JlIGNhbGxpbmcgdGhpcyBmdW5jdGlvbi4KKyAqLworCitzdHJ1
+Y3QgZHJtX2ZyYW1lYnVmZmVyICpoaXNpX2RybV9mYl9jcmVhdGUoc3RydWN0IGRybV9kZXZpY2Ug
+KmRldiwKKwkJCQkJICAgc3RydWN0IGRybV9maWxlICpmaWxlX3ByaXYsCisJCQkJCSAgIHN0cnVj
+dCBkcm1fbW9kZV9mYl9jbWQyICptb2RlX2NtZCkKK3sKKwlzdHJ1Y3QgaGlzaV9kcm1fZmIgKmhp
+c2lfZmI7CisJc3RydWN0IGRybV9nZW1fY21hX29iamVjdCAqb2Jqc1s0XTsKKwlzdHJ1Y3QgZHJt
+X2dlbV9vYmplY3QgKm9iajsKKwl1bnNpZ25lZCBpbnQgaHN1YjsKKwl1bnNpZ25lZCBpbnQgdnN1
+YjsKKwlpbnQgcmV0OworCWludCBpOworCisJLyogVE9ETzogTmVlZCB0byB1c2UgaW9uIGhlYXBz
+IHRvIGNyZWF0ZSBmcmFtZSBidWZmZXI/PyAqLworCisJaHN1YiA9IGRybV9mb3JtYXRfaG9yel9j
+aHJvbWFfc3Vic2FtcGxpbmcobW9kZV9jbWQtPnBpeGVsX2Zvcm1hdCk7CisJdnN1YiA9IGRybV9m
+b3JtYXRfdmVydF9jaHJvbWFfc3Vic2FtcGxpbmcobW9kZV9jbWQtPnBpeGVsX2Zvcm1hdCk7CisK
+Kwlmb3IgKGkgPSAwOyBpIDwgZHJtX2Zvcm1hdF9udW1fcGxhbmVzKG1vZGVfY21kLT5waXhlbF9m
+b3JtYXQpOyBpKyspIHsKKwkJdW5zaWduZWQgaW50IHdpZHRoID0gbW9kZV9jbWQtPndpZHRoIC8g
+KGkgPyBoc3ViIDogMSk7CisJCXVuc2lnbmVkIGludCBoZWlnaHQgPSBtb2RlX2NtZC0+aGVpZ2h0
+IC8gKGkgPyB2c3ViIDogMSk7CisJCXVuc2lnbmVkIGludCBtaW5fc2l6ZTsKKworCQlvYmogPSBk
+cm1fZ2VtX29iamVjdF9sb29rdXAoZGV2LCBmaWxlX3ByaXYsCisJCQkJCSAgICBtb2RlX2NtZC0+
+aGFuZGxlc1tpXSk7CisJCWlmICghb2JqKSB7CisJCQlEUk1fRVJST1IoIkZhaWxlZCB0byBsb29r
+dXAgR0VNIG9iamVjdFxuIik7CisJCQlyZXQgPSAtRU5YSU87CisJCQlnb3RvIGVycl9nZW1fb2Jq
+ZWN0X3VucmVmZXJlbmNlOworCQl9CisKKwkJbWluX3NpemUgPSAoaGVpZ2h0IC0gMSkgKiBtb2Rl
+X2NtZC0+cGl0Y2hlc1tpXQorCQkgICAgICsgd2lkdGggKiBkcm1fZm9ybWF0X3BsYW5lX2NwcCht
+b2RlX2NtZC0+cGl4ZWxfZm9ybWF0LCBpKQorCQkgICAgICsgbW9kZV9jbWQtPm9mZnNldHNbaV07
+CisKKwkJaWYgKG9iai0+c2l6ZSA8IG1pbl9zaXplKSB7CisJCQlkcm1fZ2VtX29iamVjdF91bnJl
+ZmVyZW5jZV91bmxvY2tlZChvYmopOworCQkJcmV0ID0gLUVJTlZBTDsKKwkJCWdvdG8gZXJyX2dl
+bV9vYmplY3RfdW5yZWZlcmVuY2U7CisJCX0KKwkJb2Jqc1tpXSA9IHRvX2RybV9nZW1fY21hX29i
+aihvYmopOworCX0KKworCWhpc2lfZmIgPSBoaXNpX2RybV9mYl9hbGxvYyhkZXYsIG1vZGVfY21k
+LCBvYmpzLCBpLCBmYWxzZSk7CisJaWYgKElTX0VSUihoaXNpX2ZiKSkgeworCQlyZXQgPSBQVFJf
+RVJSKGhpc2lfZmIpOworCQlnb3RvIGVycl9nZW1fb2JqZWN0X3VucmVmZXJlbmNlOworCX0KKwor
+CXJldHVybiAmaGlzaV9mYi0+ZmI7CisKK2Vycl9nZW1fb2JqZWN0X3VucmVmZXJlbmNlOgorCWZv
+ciAoaS0tOyBpID49IDA7IGktLSkKKwkJZHJtX2dlbV9vYmplY3RfdW5yZWZlcmVuY2VfdW5sb2Nr
+ZWQoJm9ianNbaV0tPmJhc2UpOworCXJldHVybiBFUlJfUFRSKHJldCk7Cit9CisKZGlmZiAtLWdp
+dCBhL2RyaXZlcnMvZ3B1L2RybS9oaXNpbGljb24vaGlzaV9kcm1fZmIuaCBiL2RyaXZlcnMvZ3B1
+L2RybS9oaXNpbGljb24vaGlzaV9kcm1fZmIuaApuZXcgZmlsZSBtb2RlIDEwMDY0NAppbmRleCAw
+MDAwMDAwLi4xZGIxMjg5Ci0tLSAvZGV2L251bGwKKysrIGIvZHJpdmVycy9ncHUvZHJtL2hpc2ls
+aWNvbi9oaXNpX2RybV9mYi5oCkBAIC0wLDAgKzEsMjYgQEAKKy8qCisgKiBIaXNpbGljb24gVGVy
+bWluYWwgU29DcyBkcm0gZmJkZXYgZHJpdmVyCisgKgorICogQ29weXJpZ2h0IChjKSAyMDE0LTIw
+MTUgSGlzaWxpY29uIExpbWl0ZWQuCisgKiBBdXRob3I6IHoubGl1eGlubGlhbmdAaHVhd2VpLmNv
+bQorICoKKyAqIFRoaXMgcHJvZ3JhbSBpcyBmcmVlIHNvZnR3YXJlOyB5b3UgY2FuIHJlZGlzdHJp
+YnV0ZSBpdCBhbmQvb3IgbW9kaWZ5CisgKiBpdCB1bmRlciB0aGUgdGVybXMgb2YgdGhlIEdOVSBH
+ZW5lcmFsIFB1YmxpYyBMaWNlbnNlIHZlcnNpb24gMiBhcworICogcHVibGlzaGVkIGJ5IHRoZSBG
+cmVlIFNvZnR3YXJlIEZvdW5kYXRpb24uCisgKgorICovCisKKyNpZm5kZWYgX19ISVNJX0RSTV9G
+Ql9IX18KKyNkZWZpbmUgX19ISVNJX0RSTV9GQl9IX18KKworc3RydWN0IGhpc2lfZHJtX2ZiIHsK
+KwlzdHJ1Y3QgZHJtX2ZyYW1lYnVmZmVyCQlmYjsKKwlzdHJ1Y3QgZHJtX2dlbV9jbWFfb2JqZWN0
+CSpvYmpbNF07CisJYm9vbCBpc19mYmRldl9mYjsKK307CisKK3N0cnVjdCBkcm1fZnJhbWVidWZm
+ZXIgKmhpc2lfZHJtX2ZiX2NyZWF0ZShzdHJ1Y3QgZHJtX2RldmljZSAqZGV2LAorCQkJCQkgICBz
+dHJ1Y3QgZHJtX2ZpbGUgKmZpbGVfcHJpdiwKKwkJCQkJICAgc3RydWN0IGRybV9tb2RlX2ZiX2Nt
+ZDIgKm1vZGVfY21kKTsKKworI2VuZGlmIC8qIF9fSElTSV9EUk1fRkJfSF9fICovCi0tIAoxLjku
+MQoKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1k
+ZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwOi8v
+bGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
