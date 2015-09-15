@@ -1,196 +1,56 @@
-From: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
-Subject: [PATCH v2 1/9] phy: ti-pipe3: introduce local struct device* in probe
-Date: Tue, 15 Sep 2015 18:34:23 +0530
-Message-ID: <1442322271-26230-2-git-send-email-kishon@ti.com>
-References: <1442322271-26230-1-git-send-email-kishon@ti.com>
+From: Tomeu Vizoso <tomeu.vizoso@collabora.com>
+Subject: Re: [PATCH v4 21/22] driver core: Start processing deferred probes earlier
+Date: Tue, 15 Sep 2015 15:16:12 +0200
+Message-ID: <CAAObsKCOZ3TkQB6oKt+UmBSvUoM-kXT0Rs=FaFKs8bY76065LA@mail.gmail.com>
+References: <1441628627-5143-1-git-send-email-tomeu.vizoso@collabora.com>
+ <1441628627-5143-22-git-send-email-tomeu.vizoso@collabora.com> <20150911122423.GS12027@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1442322271-26230-1-git-send-email-kishon-l0cyMroinI0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kishon-l0cyMroinI0@public.gmane.org
-Cc: rogerq-l0cyMroinI0@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, nsekhar-l0cyMroinI0@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20150911122423.GS12027@sirena.org.uk>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Mark Brown <broonie@kernel.org>
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Stephen Warren <swarren@wwwdotorg.org>, Javier Martinez Canillas <javier@osg.samsung.com>, Thierry Reding <thierry.reding@gmail.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linus Walleij <linus.walleij@linaro.org>, linux-acpi@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 List-Id: devicetree@vger.kernel.org
 
-No functional change. Introduce local struct device pointer in
-probe and replace using &pdev->dev/phy->dev with the local
-device pointer. This is in preparation to split ti_pipe3_probe
-and add separate functions for getting mem resource, getting
-sysctrl and getting clocks.
+On 11 September 2015 at 14:24, Mark Brown <broonie@kernel.org> wrote:
+> On Mon, Sep 07, 2015 at 02:23:46PM +0200, Tomeu Vizoso wrote:
+>> Some initcalls in the late level assume that some devices will have
+>> already probed without explicitly checking for that.
+>>
+>> After the recent move to defer most device probes when they are
+>> registered, pressure increased in the late initcall level.
+>>
+>> By starting the processing of the deferred queue in device_initcall_sync
+>> we increase the chances that the initcalls mentioned before will find
+>> the devices they depend on to have already probed.
+>
+> Which cases do we have that are outside the driver model and thus
+> affected by this?  USB gadgets are one case I'm aware of, and cpufreq is
+> still problematic.  I'm wondering if it might be tractable to address
+> the actual problems with the remaining reliance on init ordering here.
 
-Signed-off-by: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
----
- drivers/phy/phy-ti-pipe3.c |   54 ++++++++++++++++++++++----------------------
- 1 file changed, 27 insertions(+), 27 deletions(-)
+Actually, I don't know of any specific case that needs this commit.
+The present series without this patch passes on all the boards in
+kernelci, but Grygorii Strashko argued for it during the review of the
+earlier version of this series:
+http://lkml.kernel.org/g/55CE3D04.8000607@ti.com
 
-diff --git a/drivers/phy/phy-ti-pipe3.c b/drivers/phy/phy-ti-pipe3.c
-index 93bc112..c511105 100644
---- a/drivers/phy/phy-ti-pipe3.c
-+++ b/drivers/phy/phy-ti-pipe3.c
-@@ -319,40 +319,41 @@ static int ti_pipe3_probe(struct platform_device *pdev)
- 	struct platform_device *control_pdev;
- 	const struct of_device_id *match;
- 	struct clk *clk;
-+	struct device *dev = &pdev->dev;
- 
--	phy = devm_kzalloc(&pdev->dev, sizeof(*phy), GFP_KERNEL);
-+	phy = devm_kzalloc(dev, sizeof(*phy), GFP_KERNEL);
- 	if (!phy)
- 		return -ENOMEM;
- 
--	phy->dev		= &pdev->dev;
-+	phy->dev		= dev;
- 
- 	if (!of_device_is_compatible(node, "ti,phy-pipe3-pcie")) {
--		match = of_match_device(ti_pipe3_id_table, &pdev->dev);
-+		match = of_match_device(ti_pipe3_id_table, dev);
- 		if (!match)
- 			return -EINVAL;
- 
- 		phy->dpll_map = (struct pipe3_dpll_map *)match->data;
- 		if (!phy->dpll_map) {
--			dev_err(&pdev->dev, "no DPLL data\n");
-+			dev_err(dev, "no DPLL data\n");
- 			return -EINVAL;
- 		}
- 
- 		res = platform_get_resource_byname(pdev, IORESOURCE_MEM,
- 						   "pll_ctrl");
--		phy->pll_ctrl_base = devm_ioremap_resource(&pdev->dev, res);
-+		phy->pll_ctrl_base = devm_ioremap_resource(dev, res);
- 		if (IS_ERR(phy->pll_ctrl_base))
- 			return PTR_ERR(phy->pll_ctrl_base);
- 
--		phy->sys_clk = devm_clk_get(phy->dev, "sysclk");
-+		phy->sys_clk = devm_clk_get(dev, "sysclk");
- 		if (IS_ERR(phy->sys_clk)) {
--			dev_err(&pdev->dev, "unable to get sysclk\n");
-+			dev_err(dev, "unable to get sysclk\n");
- 			return -EINVAL;
- 		}
- 	}
- 
--	phy->refclk = devm_clk_get(phy->dev, "refclk");
-+	phy->refclk = devm_clk_get(dev, "refclk");
- 	if (IS_ERR(phy->refclk)) {
--		dev_err(&pdev->dev, "unable to get refclk\n");
-+		dev_err(dev, "unable to get refclk\n");
- 		/* older DTBs have missing refclk in SATA PHY
- 		 * so don't bail out in case of SATA PHY.
- 		 */
-@@ -361,9 +362,9 @@ static int ti_pipe3_probe(struct platform_device *pdev)
- 	}
- 
- 	if (!of_device_is_compatible(node, "ti,phy-pipe3-sata")) {
--		phy->wkupclk = devm_clk_get(phy->dev, "wkupclk");
-+		phy->wkupclk = devm_clk_get(dev, "wkupclk");
- 		if (IS_ERR(phy->wkupclk)) {
--			dev_err(&pdev->dev, "unable to get wkupclk\n");
-+			dev_err(dev, "unable to get wkupclk\n");
- 			return PTR_ERR(phy->wkupclk);
- 		}
- 	} else {
-@@ -371,14 +372,14 @@ static int ti_pipe3_probe(struct platform_device *pdev)
- 		phy->dpll_reset_syscon = syscon_regmap_lookup_by_phandle(node,
- 							"syscon-pllreset");
- 		if (IS_ERR(phy->dpll_reset_syscon)) {
--			dev_info(&pdev->dev,
-+			dev_info(dev,
- 				 "can't get syscon-pllreset, sata dpll won't idle\n");
- 			phy->dpll_reset_syscon = NULL;
- 		} else {
- 			if (of_property_read_u32_index(node,
- 						       "syscon-pllreset", 1,
- 						       &phy->dpll_reset_reg)) {
--				dev_err(&pdev->dev,
-+				dev_err(dev,
- 					"couldn't get pllreset reg. offset\n");
- 				return -EINVAL;
- 			}
-@@ -387,30 +388,30 @@ static int ti_pipe3_probe(struct platform_device *pdev)
- 
- 	if (of_device_is_compatible(node, "ti,phy-pipe3-pcie")) {
- 
--		clk = devm_clk_get(phy->dev, "dpll_ref");
-+		clk = devm_clk_get(dev, "dpll_ref");
- 		if (IS_ERR(clk)) {
--			dev_err(&pdev->dev, "unable to get dpll ref clk\n");
-+			dev_err(dev, "unable to get dpll ref clk\n");
- 			return PTR_ERR(clk);
- 		}
- 		clk_set_rate(clk, 1500000000);
- 
--		clk = devm_clk_get(phy->dev, "dpll_ref_m2");
-+		clk = devm_clk_get(dev, "dpll_ref_m2");
- 		if (IS_ERR(clk)) {
--			dev_err(&pdev->dev, "unable to get dpll ref m2 clk\n");
-+			dev_err(dev, "unable to get dpll ref m2 clk\n");
- 			return PTR_ERR(clk);
- 		}
- 		clk_set_rate(clk, 100000000);
- 
--		clk = devm_clk_get(phy->dev, "phy-div");
-+		clk = devm_clk_get(dev, "phy-div");
- 		if (IS_ERR(clk)) {
--			dev_err(&pdev->dev, "unable to get phy-div clk\n");
-+			dev_err(dev, "unable to get phy-div clk\n");
- 			return PTR_ERR(clk);
- 		}
- 		clk_set_rate(clk, 100000000);
- 
--		phy->div_clk = devm_clk_get(phy->dev, "div-clk");
-+		phy->div_clk = devm_clk_get(dev, "div-clk");
- 		if (IS_ERR(phy->div_clk)) {
--			dev_err(&pdev->dev, "unable to get div-clk\n");
-+			dev_err(dev, "unable to get div-clk\n");
- 			return PTR_ERR(phy->div_clk);
- 		}
- 	} else {
-@@ -419,13 +420,13 @@ static int ti_pipe3_probe(struct platform_device *pdev)
- 
- 	control_node = of_parse_phandle(node, "ctrl-module", 0);
- 	if (!control_node) {
--		dev_err(&pdev->dev, "Failed to get control device phandle\n");
-+		dev_err(dev, "Failed to get control device phandle\n");
- 		return -EINVAL;
- 	}
- 
- 	control_pdev = of_find_device_by_node(control_node);
- 	if (!control_pdev) {
--		dev_err(&pdev->dev, "Failed to get control device\n");
-+		dev_err(dev, "Failed to get control device\n");
- 		return -EINVAL;
- 	}
- 
-@@ -434,7 +435,7 @@ static int ti_pipe3_probe(struct platform_device *pdev)
- 	omap_control_phy_power(phy->control_dev, 0);
- 
- 	platform_set_drvdata(pdev, phy);
--	pm_runtime_enable(phy->dev);
-+	pm_runtime_enable(dev);
- 
- 	/*
- 	 * Prevent auto-disable of refclk for SATA PHY due to Errata i783
-@@ -446,13 +447,12 @@ static int ti_pipe3_probe(struct platform_device *pdev)
- 		}
- 	}
- 
--	generic_phy = devm_phy_create(phy->dev, NULL, &ops);
-+	generic_phy = devm_phy_create(dev, NULL, &ops);
- 	if (IS_ERR(generic_phy))
- 		return PTR_ERR(generic_phy);
- 
- 	phy_set_drvdata(generic_phy, phy);
--	phy_provider = devm_of_phy_provider_register(phy->dev,
--			of_phy_simple_xlate);
-+	phy_provider = devm_of_phy_provider_register(dev, of_phy_simple_xlate);
- 	if (IS_ERR(phy_provider))
- 		return PTR_ERR(phy_provider);
- 
--- 
-1.7.9.5
+IMO it would be better to not apply this patch until the need arises,
+and even then, it may be better to make the dependencies explicit
+instead of relying on implicit ordering and messing with the link
+order.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> I'm also wondering if we might end up running into situations where this
+> makes the problem with havinng to defer probes more of an issue on some
+> systems - since we start trying earlier while we are still doing our
+> first pass initialisation we could end up deferring some device then
+> retrying it a bunch of times while going through the earlier phases of
+> init as we continue to register more devices.
+
+With the rest of the series this shouldn't happen as all/most deferred
+probes should be avoided.
+
+Regards,
+
+Tomeu
