@@ -1,49 +1,44 @@
-From: Murali Karicheri <m-karicheri2@ti.com>
-Subject: Re: [PATCH v1 1/2] soc: ti: display firmware file name as part of
- boot log
-Date: Tue, 15 Sep 2015 14:14:37 -0400
-Message-ID: <55F8600D.2070701@ti.com>
-References: <1441403199-10936-1-git-send-email-m-karicheri2@ti.com> <55EA673F.8010904@oracle.com> <55F06075.6050405@ti.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <55F06075.6050405@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: "santosh.shilimkar@oracle.com" <santosh.shilimkar@oracle.com>, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk, ssantosh@kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+From: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH v2 0/3] ARM: brcmstb: Bus Interface Unit support
+Date: Tue, 15 Sep 2015 11:14:57 -0700
+Message-ID: <1442340900-15320-1-git-send-email-f.fainelli@gmail.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, gregory.0xf0-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 09/09/2015 12:38 PM, Murali Karicheri wrote:
-> On 09/04/2015 11:53 PM, santosh.shilimkar@oracle.com wrote:
->> On 9/4/15 5:46 PM, Murali Karicheri wrote:
->>> To help the user, print the PDSP file name as part of
->>> knav_queue_load_pdsp(). This will be useful for users to know what
->>> version of the firmware is loaded to PDSP. Also update the
->>> document for the location of the QMSS accumulator PDSP firmware.
->>>
->>> Signed-off-by: Murali Karicheri <m-karicheri2@ti.com>
->>> ---
->>
->> Looks fine. Will pick both the patches.
->>
->
-> Thanks Santhosh.
->
-> Is there a requirement to add the firmware to linux-firmware.git. Right
-> now I have provided link to ti git repo that has the firmware. I have
-> the patch ready in case this is required. Do you know?
->
-> Murali
->> Regards,
->> Santosh
->>
->>
->
->
-Santosh,
+Hi all,
 
-I have checked v4.3-rc1 and I don't see it. Did you send the pull request?
+This patch series adds support for early boot time Bus Interface Unit control
+register setup which is required to occur before SMP is brought-up, but needs
+to remap registers, so init_irq() is chosen for that.
+
+This builds on top of the 'soc/next' branch at github.com/Broadcom/stblinux
+
+Major changes in v2:
+
+- updated Device Tree documentation based on Rob's feedback
+- added a better pr_fmt format for pr_* calls in biuctrl.c
+
+Florian Fainelli (3):
+  Documentation: bindings: brcmstb: Document write-pairing
+  soc: brcmstb: Add Bus Interface Unit control setup
+  ARM: brcmstb: Setup BIU control registers during boot
+
+ .../devicetree/bindings/arm/bcm/brcm,brcmstb.txt   |  20 ++++
+ arch/arm/mach-bcm/brcmstb.c                        |   9 ++
+ drivers/soc/brcmstb/Makefile                       |   2 +-
+ drivers/soc/brcmstb/biuctrl.c                      | 119 +++++++++++++++++++++
+ include/linux/soc/brcmstb/brcmstb.h                |  10 ++
+ 5 files changed, 159 insertions(+), 1 deletion(-)
+ create mode 100644 drivers/soc/brcmstb/biuctrl.c
+ create mode 100644 include/linux/soc/brcmstb/brcmstb.h
 
 -- 
-Murali Karicheri
-Linux Kernel, Keystone
+2.1.0
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
