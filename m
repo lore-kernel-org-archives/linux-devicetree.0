@@ -1,243 +1,97 @@
-From: Andreas Dannenberg <dannenberg@ti.com>
-Subject: [PATCH v4 10/10] power: bq24257: Add platform data based initialization
-Date: Tue, 15 Sep 2015 12:58:34 -0500
-Message-ID: <1442339914-25843-11-git-send-email-dannenberg@ti.com>
-References: <1442339914-25843-1-git-send-email-dannenberg@ti.com>
+From: David Daney <ddaney@caviumnetworks.com>
+Subject: Re: [PATCH 4/6] PCI: generic: Correct, and avoid overflow, in bus_max
+ calculation.
+Date: Tue, 15 Sep 2015 11:02:54 -0700
+Message-ID: <55F85D4E.9020604@caviumnetworks.com>
+References: <1442013719-5001-1-git-send-email-ddaney.cavm@gmail.com> <1442013719-5001-5-git-send-email-ddaney.cavm@gmail.com> <20150915174934.GL31157@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <1442339914-25843-1-git-send-email-dannenberg@ti.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Sebastian Reichel <sre@kernel.org>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, David Woodhouse <dwmw2@infradead.org>, Laurentiu Palcu <laurentiu.palcu@intel.com>, Krzysztof Kozlowski <k.kozlowski@samsung.com>
-Cc: Ramakrishna Pallala <ramakrishna.pallala@intel.com>, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, Andreas Dannenberg <dannenberg@ti.com>
+Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20150915174934.GL31157@arm.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Will Deacon <will.deacon@arm.com>
+Cc: David Daney <ddaney.cavm@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, "grant.likely@linaro.org" <grant.likely@linaro.org>, Bjorn Helgaas <bhelgaas@google.com>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, Pawel Moll <Pawel.Moll@arm.com>, Mark Rutland <Mark.Rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, David Daney <david.daney@cavium.com>, lorenzo.pieralisi@arm.com
 List-Id: devicetree@vger.kernel.org
 
-The patch adds a way to setup and initialize the device through the use
-of platform data with configuration options equivalent to when using
-device firmware (DT or ACPI) for systems where this is not available.
+On 09/15/2015 10:49 AM, Will Deacon wrote:
+> On Sat, Sep 12, 2015 at 12:21:57AM +0100, David Daney wrote:
+>> From: David Daney <david.daney@cavium.com>
+>>
+>> There are two problems with the bus_max calculation:
+>>
+>> 1) The u8 data type can overflow for large config space windows.
+>>
+>> 2) The calculation is incorrect for a bus range that doesn't start at
+>>     zero.
+>>
+>> Since the configuration space is relative to bus zero, make bus_max
+>> just be the size of the config window scaled by bus_shift.  Then clamp
+>> it to a maximum of 255, per PCI.  Use a data type of int to avoid
+>> overflow problems.
+>>
+>> Signed-off-by: David Daney <david.daney@cavium.com>
+>> ---
+>>   drivers/pci/host/pci-host-generic.c | 7 ++++---
+>>   1 file changed, 4 insertions(+), 3 deletions(-)
+>>
+>> diff --git a/drivers/pci/host/pci-host-generic.c b/drivers/pci/host/pci-host-generic.c
+>> index cd6f898..fce5bf7 100644
+>> --- a/drivers/pci/host/pci-host-generic.c
+>> +++ b/drivers/pci/host/pci-host-generic.c
+>> @@ -164,7 +164,7 @@ out_release_res:
+>>   static int gen_pci_parse_map_cfg_windows(struct gen_pci *pci)
+>>   {
+>>   	int err;
+>> -	u8 bus_max;
+>> +	int bus_max;
+>>   	resource_size_t busn;
+>>   	struct resource *bus_range;
+>>   	struct device *dev = pci->host.dev.parent;
+>> @@ -177,8 +177,9 @@ static int gen_pci_parse_map_cfg_windows(struct gen_pci *pci)
+>>   	}
+>>
+>>   	/* Limit the bus-range to fit within reg */
+>> -	bus_max = pci->cfg.bus_range->start +
+>> -		  (resource_size(&pci->cfg.res) >> pci->cfg.ops.bus_shift) - 1;
+>> +	bus_max = (resource_size(&pci->cfg.res) >> pci->cfg.ops.bus_shift) - 1;
+>> +	if (bus_max > 255)
+>> +		bus_max = 255;
+>>   	pci->cfg.bus_range->end = min_t(resource_size_t,
+>>   					pci->cfg.bus_range->end, bus_max);
+>
+> Hmm, this is changing the meaning of the bus-range property in the
+> device-tree, which really needs to match what IEEE Std 1275-1994 requires.
 
-Signed-off-by: Andreas Dannenberg <dannenberg@ti.com>
----
- drivers/power/bq24257_charger.c       | 117 ++++++++++++++++++++++++++++++----
- include/linux/power/bq24257_charger.h |  29 +++++++++
- 2 files changed, 135 insertions(+), 11 deletions(-)
- create mode 100644 include/linux/power/bq24257_charger.h
+I doesn't change the bus-range.
 
-diff --git a/drivers/power/bq24257_charger.c b/drivers/power/bq24257_charger.c
-index a0cb33c..fa18b1f 100644
---- a/drivers/power/bq24257_charger.c
-+++ b/drivers/power/bq24257_charger.c
-@@ -27,10 +27,13 @@
- #include <linux/gpio/consumer.h>
- #include <linux/interrupt.h>
- #include <linux/delay.h>
-+#include <linux/gpio.h>
- 
- #include <linux/acpi.h>
- #include <linux/of.h>
- 
-+#include <linux/power/bq24257_charger.h>
-+
- #define BQ24257_REG_1			0x00
- #define BQ24257_REG_2			0x01
- #define BQ24257_REG_3			0x02
-@@ -877,28 +880,112 @@ static int bq24257_power_supply_init(struct bq24257_device *bq)
- 
- static int bq24257_irq_probe(struct bq24257_device *bq)
- {
-+	struct bq24257_platform_data *pdata = bq->client->dev.platform_data;
- 	struct gpio_desc *stat_irq;
-+	int ret;
-+
-+	if (!pdata) {
-+		stat_irq = devm_gpiod_get_index(bq->dev, BQ24257_STAT_IRQ, 0,
-+						GPIOD_IN);
-+		if (IS_ERR(stat_irq)) {
-+			dev_err(bq->dev, "could not probe stat_irq pin\n");
-+			return PTR_ERR(stat_irq);
-+		}
-+	} else {
-+		if (!gpio_is_valid(pdata->stat_gpio)) {
-+			dev_err(bq->dev, "invalid stat_irq pin\n");
-+			return -EINVAL;
-+		}
- 
--	stat_irq = devm_gpiod_get_index(bq->dev, BQ24257_STAT_IRQ, 0, GPIOD_IN);
--	if (IS_ERR(stat_irq)) {
--		dev_err(bq->dev, "could not probe stat_irq pin\n");
--		return PTR_ERR(stat_irq);
-+		ret = devm_gpio_request_one(bq->dev, pdata->stat_gpio,
-+					    GPIOD_IN, BQ24257_STAT_IRQ);
-+		if (ret) {
-+			dev_err(bq->dev, "stat_irq pin request failed\n");
-+			return ret;
-+		}
-+
-+		stat_irq = gpio_to_desc(pdata->stat_gpio);
-+		if (!stat_irq) {
-+			dev_err(bq->dev,
-+				"could not get stat_irq pin descriptor\n");
-+			return -EINVAL;
-+		}
- 	}
- 
-+	dev_dbg(bq->dev, "probed stat_irq pin = %d", desc_to_gpio(stat_irq));
-+
- 	return gpiod_to_irq(stat_irq);
- }
- 
- static int bq24257_pg_gpio_probe(struct bq24257_device *bq)
- {
--	bq->pg = devm_gpiod_get_index(bq->dev, BQ24257_PG_GPIO, 0, GPIOD_IN);
--	if (IS_ERR(bq->pg)) {
--		dev_info(bq->dev, "could not probe PG pin\n");
--		return PTR_ERR(bq->pg);
-+	struct bq24257_platform_data *pdata = bq->client->dev.platform_data;
-+	int ret;
-+
-+	if (!pdata) {
-+		bq->pg = devm_gpiod_get_index(bq->dev, BQ24257_PG_GPIO, 0,
-+					      GPIOD_IN);
-+		if (IS_ERR(bq->pg)) {
-+			dev_info(bq->dev, "could not probe PG pin\n");
-+			return PTR_ERR(bq->pg);
-+		}
-+	} else {
-+		if (!gpio_is_valid(pdata->pg_gpio)) {
-+			dev_info(bq->dev, "invalid PG pin\n");
-+			return -EINVAL;
-+		}
-+
-+		ret = devm_gpio_request_one(bq->dev, pdata->pg_gpio,
-+					    GPIOD_IN, BQ24257_PG_GPIO);
-+		if (ret) {
-+			dev_info(bq->dev, "PG pin request failed\n");
-+			return ret;
-+		}
-+
-+		bq->pg = gpio_to_desc(pdata->pg_gpio);
-+		if (!bq->pg) {
-+			dev_info(bq->dev, "could not get PG pin descriptor\n");
-+			return -EINVAL;
-+		}
- 	}
- 
-+	dev_dbg(bq->dev, "probed PG pin = %d", desc_to_gpio(bq->pg));
-+
- 	return 0;
- }
- 
-+static void bq24257_pdata_probe(struct bq24257_device *bq,
-+				struct bq24257_platform_data *pdata)
-+{
-+	bq->init_data.ichg = bq24257_find_idx(pdata->ichg,
-+					      bq24257_ichg_map,
-+					      BQ24257_ICHG_MAP_SIZE);
-+
-+	bq->init_data.vbat = bq24257_find_idx(pdata->vbat,
-+					      bq24257_vbat_map,
-+					      BQ24257_VBAT_MAP_SIZE);
-+
-+	bq->init_data.iterm = bq24257_find_idx(pdata->iterm,
-+					       bq24257_iterm_map,
-+					       BQ24257_ITERM_MAP_SIZE);
-+
-+	bq->init_data.in_ilimit = bq24257_find_idx(pdata->in_ilimit,
-+						   bq24257_iilimit_map,
-+						   BQ24257_IILIMIT_MAP_SIZE);
-+
-+	bq->init_data.vovp = bq24257_find_idx(pdata->vovp,
-+					      bq24257_vovp_map,
-+					      BQ24257_VOVP_MAP_SIZE);
-+
-+	bq->init_data.vindpm = bq24257_find_idx(pdata->vindpm,
-+						bq24257_vindpm_map,
-+						BQ24257_VINDPM_MAP_SIZE);
-+
-+	bq->in_ilimit_autoset_disable = pdata->in_ilimit_autoset_disable;
-+
-+	bq->pg_gpio_disable = pdata->pg_gpio_disable;
-+}
-+
- static int bq24257_fw_probe(struct bq24257_device *bq)
- {
- 	int ret;
-@@ -974,6 +1061,7 @@ static int bq24257_probe(struct i2c_client *client,
- 	struct i2c_adapter *adapter = to_i2c_adapter(client->dev.parent);
- 	struct device *dev = &client->dev;
- 	const struct acpi_device_id *acpi_id;
-+	struct bq24257_platform_data *pdata = client->dev.platform_data;
- 	struct bq24257_device *bq;
- 	int ret;
- 	int i;
-@@ -1023,14 +1111,15 @@ static int bq24257_probe(struct i2c_client *client,
- 
- 	i2c_set_clientdata(client, bq);
- 
--	if (!dev->platform_data) {
-+	if (!pdata) {
- 		ret = bq24257_fw_probe(bq);
- 		if (ret < 0) {
- 			dev_err(dev, "Cannot read device properties.\n");
- 			return ret;
- 		}
- 	} else {
--		return -ENODEV;
-+		dev_dbg(dev, "init using platform data\n");
-+		bq24257_pdata_probe(bq, pdata);
- 	}
- 
- 	/*
-@@ -1087,7 +1176,13 @@ static int bq24257_probe(struct i2c_client *client,
- 		return ret;
- 	}
- 
--	if (client->irq <= 0)
-+	/*
-+	 * When using device firmware we either take the IRQ specified directly
-+	 * or probe for a pin named BQ24257_STAT_IRQ. In case of using platform
-+	 * data always run the IRQ pin probe function to finish IRQ and GPIO
-+	 * setup based on the stat pin specified in the platform data.
-+	 */
-+	if (client->irq <= 0 || pdata)
- 		client->irq = bq24257_irq_probe(bq);
- 
- 	if (client->irq < 0) {
-diff --git a/include/linux/power/bq24257_charger.h b/include/linux/power/bq24257_charger.h
-new file mode 100644
-index 0000000..d4f3703
---- /dev/null
-+++ b/include/linux/power/bq24257_charger.h
-@@ -0,0 +1,29 @@
-+/*
-+ * Platform data for the TI bq24257 battery charger driver.
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 as
-+ * published by the Free Software Foundation.
-+ */
-+
-+#ifndef _BQ24257_CHARGER_H_
-+#define _BQ24257_CHARGER_H_
-+
-+#include <asm/types.h>
-+#include <linux/types.h>
-+
-+struct bq24257_platform_data {
-+	u32 ichg;				       /* charge current (uA) */
-+	u32 vbat;				   /* regulation voltage (uV) */
-+	u32 iterm;				  /* termination current (uA) */
-+	u32 in_ilimit;				  /* input current limit (uA) */
-+	u32 vovp;		      /* over voltage protection voltage (uV) */
-+	u32 vindpm;			 /* VDMP input threshold voltage (uV) */
-+	bool in_ilimit_autoset_disable;	/* auto-detect of input current limit */
-+	bool pg_gpio_disable;	     /* use of a dedicated pin for Power Good */
-+
-+	int stat_gpio;				  /* stat_int (interrupt) pin */
-+	int pg_gpio;					    /* power good pin */
-+};
-+
-+#endif
--- 
-1.9.1
+>
+> My understanding was that the bus-range could be used to offset the config
+> space, which is why it's subtracted from the bus number in
+> gen_pci_map_cfg_bus_[e]cam.
 
+There is an inconsistency in the current code.  The calculation of the 
+cfg.win[?] pointers is done such that the beginning of the config space 
+specified in the "reg" property corresponds to bus 0.
+
+The calculation that I am changing, was done such that the beginning of 
+the config space specified in the "reg" property corresponds to the 
+first bus of the "bus-range"
+
+Which is correct?  I assumed that the config space specified in the 
+"reg" property corresponds to bus 0.  Based on this assumption, I made 
+the bus_max calculation match.
+
+Due to hardware peculiarities, our bus-range starts at a non-zero bus 
+number.  So, something has to be done to make all the code agree on a 
+single interpretation of the meaning "reg" property.
+
+> Also, why is your config space so large that
+> we end up overflowing bus_max?
+
+It isn't.  The part of the patch that changes the type from u8 to int 
+was just to add some sanity.  The  code was easily susceptible to 
+overflow failures, it seemed best to change to int.
+
+
+David Daney
