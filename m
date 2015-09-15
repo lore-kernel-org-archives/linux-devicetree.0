@@ -1,135 +1,140 @@
-From: Andreas Dannenberg <dannenberg@ti.com>
-Subject: [PATCH v4 08/10] power: bq24257: Allow input current limit sysfs access
-Date: Tue, 15 Sep 2015 12:58:32 -0500
-Message-ID: <1442339914-25843-9-git-send-email-dannenberg@ti.com>
-References: <1442339914-25843-1-git-send-email-dannenberg@ti.com>
+From: "Andrew F. Davis" <afd@ti.com>
+Subject: [PATCH 1/3] Documentation: tps65912: Add DT bindings for the TPS65912 PMIC
+Date: Tue, 15 Sep 2015 12:57:39 -0500
+Message-ID: <1442339861-30300-2-git-send-email-afd@ti.com>
+References: <1442339861-30300-1-git-send-email-afd@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <1442339914-25843-1-git-send-email-dannenberg@ti.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Sebastian Reichel <sre@kernel.org>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, David Woodhouse <dwmw2@infradead.org>, Laurentiu Palcu <laurentiu.palcu@intel.com>, Krzysztof Kozlowski <k.kozlowski@samsung.com>
-Cc: Ramakrishna Pallala <ramakrishna.pallala@intel.com>, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, Andreas Dannenberg <dannenberg@ti.com>
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <1442339861-30300-1-git-send-email-afd@ti.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, Samuel Ortiz <sameo@linux.intel.com>, Lee Jones <lee.jones@linaro.org>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>
+Cc: devicetree@vger.kernel.org, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, "Andrew F. Davis" <afd@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-This patch allows reading (and writing, if the D+/D- USB signal-based
-charger type detection is disabled) of the input current limit through
-the POWER_SUPPLY_PROP_INPUT_CURRENT_LIMIT sysfs property. This allows
-userspace to see what charger was detected and to re-configure the
-maximum current drawn from the external supply at runtime based on
-system-level knowledge or user input.
+The TPS65912 PMIC contains several regulators and a GPIO controller.
+Add bindings for the TPS65912 PMIC.
 
-Signed-off-by: Andreas Dannenberg <dannenberg@ti.com>
+Signed-off-by: Andrew F. Davis <afd@ti.com>
 ---
- drivers/power/bq24257_charger.c | 67 +++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 67 insertions(+)
+ .../devicetree/bindings/gpio/gpio-tps65912.txt     | 17 +++++++++
+ Documentation/devicetree/bindings/mfd/tps65912.txt | 43 ++++++++++++++++++++++
+ .../bindings/regulator/tps65912-regulator.txt      | 32 ++++++++++++++++
+ 3 files changed, 92 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/gpio/gpio-tps65912.txt
+ create mode 100644 Documentation/devicetree/bindings/mfd/tps65912.txt
+ create mode 100644 Documentation/devicetree/bindings/regulator/tps65912-regulator.txt
 
-diff --git a/drivers/power/bq24257_charger.c b/drivers/power/bq24257_charger.c
-index 84a8945..517a522 100644
---- a/drivers/power/bq24257_charger.c
-+++ b/drivers/power/bq24257_charger.c
-@@ -265,6 +265,42 @@ enum bq24257_fault {
- 	FAULT_INPUT_LDO_LOW,
- };
- 
-+static int bq24257_get_input_current_limit(struct bq24257_device *bq,
-+					   union power_supply_propval *val)
-+{
-+	int ret;
+diff --git a/Documentation/devicetree/bindings/gpio/gpio-tps65912.txt b/Documentation/devicetree/bindings/gpio/gpio-tps65912.txt
+new file mode 100644
+index 0000000..f65370b
+--- /dev/null
++++ b/Documentation/devicetree/bindings/gpio/gpio-tps65912.txt
+@@ -0,0 +1,17 @@
++* TPS65912 GPIO controller bindings
 +
-+	ret = bq24257_field_read(bq, F_IILIMIT);
-+	if (ret < 0)
-+		return ret;
++Required properties:
++ - compatible : Should be "ti,tps65912-gpio".
++ - gpio-controller : Marks the device node as a gpio controller.
++ - #gpio-cells : Should be two.  The first cell is the pin number and
++     the second cell is used to specify the gpio polarity:
++       0 = active high
++       1 = active low
 +
-+	/*
-+	 * The "External ILIM" and "Production & Test" modes are not exposed
-+	 * through this driver and not being covered by the lookup table.
-+	 * Should such a mode have become active let's return an error rather
-+	 * than exceeding the bounds of the lookup table and returning
-+	 * garbage.
-+	 */
-+	if (ret >= BQ24257_IILIMIT_MAP_SIZE)
-+		return -ENODATA;
++Example:
 +
-+	val->intval = bq24257_iilimit_map[ret];
++	gpio4: tps65912_gpio {
++		compatible = "ti,tps65912-gpio";
++		gpio-controller;
++		#gpio-cells = <2>;
++	};
+diff --git a/Documentation/devicetree/bindings/mfd/tps65912.txt b/Documentation/devicetree/bindings/mfd/tps65912.txt
+new file mode 100644
+index 0000000..081af66
+--- /dev/null
++++ b/Documentation/devicetree/bindings/mfd/tps65912.txt
+@@ -0,0 +1,43 @@
++* TPS65912 Power Management Integrated Circuit bindings
 +
-+	return 0;
-+}
++Required properties:
++ - compatible : Should be "ti,tps65912".
++ - reg : Slave address or chip select number (I2C / SPI).
++ - interrupt-parent : The parent interrupt controller.
++ - interrupts : The interrupt line the device is connected to.
++ - interrupt-controller : Marks the device node as an interrupt controller.
++ - #interrupt-cells: the number of cells to describe an IRQ, this should be 2.
++     The first cell is the IRQ number.
++     The second cell is the flags, encoded as the trigger masks from
++     Documentation/devicetree/bindings/interrupts.txt
 +
-+static int bq24257_set_input_current_limit(struct bq24257_device *bq,
-+					const union power_supply_propval *val)
-+{
-+	if (!bq->in_ilimit_autoset_disable)
-+		return -EPERM;
++Optional nodes:
++ - Regulators: Documentation/devicetree/bindings/regulator/tps65912-regulator.txt
++ - GPIO: Documentation/devicetree/bindings/gpio/gpio-tps65912.txt.
 +
-+	return bq24257_field_write(bq, F_IILIMIT,
-+				   bq24257_find_idx(val->intval,
-+						    bq24257_iilimit_map,
-+						    BQ24257_IILIMIT_MAP_SIZE));
-+}
++Example:
 +
- static int bq24257_power_supply_get_property(struct power_supply *psy,
- 					     enum power_supply_property psp,
- 					     union power_supply_propval *val)
-@@ -349,6 +385,9 @@ static int bq24257_power_supply_get_property(struct power_supply *psy,
- 		val->intval = bq24257_iterm_map[bq->init_data.iterm];
- 		break;
- 
-+	case POWER_SUPPLY_PROP_INPUT_CURRENT_LIMIT:
-+		return bq24257_get_input_current_limit(bq, val);
++	pmic: tps65912@2d {
++		compatible = "ti,tps65912";
++		reg = <0x2d>;
++		interrupt-parent = <&gpio1>;
++		interrupts = <28 IRQ_TYPE_LEVEL_LOW>;
++		interrupt-controller;
++		#interrupt-cells = <2>;
 +
- 	default:
- 		return -EINVAL;
- 	}
-@@ -356,6 +395,31 @@ static int bq24257_power_supply_get_property(struct power_supply *psy,
- 	return 0;
- }
- 
-+static int bq24257_power_supply_set_property(struct power_supply *psy,
-+					enum power_supply_property prop,
-+					const union power_supply_propval *val)
-+{
-+	struct bq24257_device *bq = power_supply_get_drvdata(psy);
++		dcdc1: regulator-dcdc1 {
++			compatible = "ti,tps65912-dcdc1";
++			regulator-name = "vdd_core";
++			regulator-min-microvolt = <912000>;
++			regulator-max-microvolt = <1144000>;
++			regulator-boot-on;
++			regulator-always-on;
++		};
++		...
 +
-+	switch (prop) {
-+	case POWER_SUPPLY_PROP_INPUT_CURRENT_LIMIT:
-+		return bq24257_set_input_current_limit(bq, val);
-+	default:
-+		return -EINVAL;
-+	}
-+}
++		gpio4: tps65912_gpio {
++			compatible = "ti,tps65912-gpio";
++			gpio-controller;
++			#gpio-cells = <2>;
++		};
++	};
+diff --git a/Documentation/devicetree/bindings/regulator/tps65912-regulator.txt b/Documentation/devicetree/bindings/regulator/tps65912-regulator.txt
+new file mode 100644
+index 0000000..a417ff7
+--- /dev/null
++++ b/Documentation/devicetree/bindings/regulator/tps65912-regulator.txt
+@@ -0,0 +1,32 @@
++* TPS65912 regulator bindings
 +
-+static int bq24257_power_supply_property_is_writeable(struct power_supply *psy,
-+					enum power_supply_property psp)
-+{
-+	switch (psp) {
-+	case POWER_SUPPLY_PROP_INPUT_CURRENT_LIMIT:
-+		return true;
-+	default:
-+		return false;
-+	}
-+}
++Required properties:
++ - compatible: Should be:
++   - "ti,tps65912-dcdc1" for DCDC1
++   - "ti,tps65912-dcdc2" for DCDC2
++   - "ti,tps65912-dcdc3" for DCDC3
++   - "ti,tps65912-dcdc4" for DCDC4
++   - "ti,tps65912-ldo1" for LDO1
++   - "ti,tps65912-ldo2" for LDO2
++   - "ti,tps65912-ldo3" for LDO3
++   - "ti,tps65912-ldo4" for LDO4
++   - "ti,tps65912-ldo5" for LDO5
++   - "ti,tps65912-ldo6" for LDO6
++   - "ti,tps65912-ldo7" for LDO7
++   - "ti,tps65912-ldo8" for LDO8
++   - "ti,tps65912-ldo9" for LDO9
++   - "ti,tps65912-ldo10" for LDO10
 +
- static int bq24257_get_chip_state(struct bq24257_device *bq,
- 				  struct bq24257_state *state)
- {
-@@ -691,6 +755,7 @@ static enum power_supply_property bq24257_power_supply_props[] = {
- 	POWER_SUPPLY_PROP_CONSTANT_CHARGE_VOLTAGE,
- 	POWER_SUPPLY_PROP_CONSTANT_CHARGE_VOLTAGE_MAX,
- 	POWER_SUPPLY_PROP_CHARGE_TERM_CURRENT,
-+	POWER_SUPPLY_PROP_INPUT_CURRENT_LIMIT,
- };
- 
- static char *bq24257_charger_supplied_to[] = {
-@@ -703,6 +768,8 @@ static const struct power_supply_desc bq24257_power_supply_desc = {
- 	.properties = bq24257_power_supply_props,
- 	.num_properties = ARRAY_SIZE(bq24257_power_supply_props),
- 	.get_property = bq24257_power_supply_get_property,
-+	.set_property = bq24257_power_supply_set_property,
-+	.property_is_writeable = bq24257_power_supply_property_is_writeable,
- };
- 
- static ssize_t bq24257_show_ovp_voltage(struct device *dev,
++Optional properties:
++ - Any optional property defined in bindings/regulator/regulator.txt
++
++Example:
++
++	xyz: regulator@0 {
++		compatible = "ti,tps65912-dcdc1";
++		regulator-name = "vdd_core";
++		regulator-min-microvolt = <912000>;
++		regulator-max-microvolt = <1144000>;
++		regulator-boot-on;
++		regulator-always-on;
++	};
 -- 
 1.9.1
 
