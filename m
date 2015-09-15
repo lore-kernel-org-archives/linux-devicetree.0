@@ -1,60 +1,119 @@
-From: Pratyush Anand <panand@redhat.com>
-Subject: Re: [PATCH v7 2/8] ARM64: add SBSA Generic Watchdog device node in
- foundation-v8.dts
-Date: Tue, 15 Sep 2015 15:14:43 +0530
-Message-ID: <20150915094443.GA3296@dhcppc13.redhat.com>
-References: <=fu.wei@linaro.org>
- <1440435683-7343-1-git-send-email-fu.wei@linaro.org>
- <1440435683-7343-3-git-send-email-fu.wei@linaro.org>
- <20150915084332.GC5767@localhost.localdomain>
+From: Xinwei Kong <kong.kongxinwei@hisilicon.com>
+Subject: [PATCH RFC 0/8] Add New DRM Driver for Hisilicon's Hi6220 SoC
+Date: Tue, 15 Sep 2015 17:37:06 +0800
+Message-ID: <1442309834-21420-1-git-send-email-kong.kongxinwei@hisilicon.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20150915084332.GC5767@localhost.localdomain>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Dave Young <dyoung@redhat.com>
-Cc: fu.wei@linaro.org, Suravee.Suthikulpanit@amd.com, hanjun.guo@linaro.org, linaro-acpi@lists.linaro.org, linux-watchdog@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, tekkamanninja@gmail.com, graeme.gregory@linaro.org, al.stone@linaro.org, arnd@arndb.de, linux@roeck-us.net, vgandhi@codeaurora.org, wim@iguana.be, jcm@redhat.com, leo.duran@amd.com, corbet@lwn.net, mark.rutland@arm.com, catalin.marinas@arm.com, will.deacon@arm.com, rjw@rjwysocki.net, Geoff Levand <geoff@infradead.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: airlied@linux.ie, corbet@lwn.net, catalin.marinas@arm.com, will.deacon@arm.com
+Cc: linux-doc@vger.kernel.org, w.f@huawei.com, linuxarm@huawei.com, dri-devel@lists.freedesktop.org, haojian.zhuang@linaro.org, benjamin.gaignard@linaro.org, james.yanglong@hisilicon.com, yinshengbao@hisilicon.com, xuyiping@hisilicon.com, yimin@huawei.com, xuwei5@hisilicon.com, qijiwen@hisilicon.com, devicetree@vger.kernel.org, bintian.wang@huawei.com, puck.chen@hisilicon.com, yanhaifeng@hisilicon.com, fangdechun@hisilicon.com, linux-arm-kernel@lists.infradead.org, andy.green@linaro.org, gongyu@hisilicon.com, linux-kernel@vger.kernel.org, ml.yang@hisilicon.com, liguozhu@hisilicon.com
 List-Id: devicetree@vger.kernel.org
 
-On 15/09/2015:04:43:32 PM, Dave Young wrote:
-> On 08/25/15 at 01:01am, fu.wei@linaro.org wrote:
-> > From: Fu Wei <fu.wei@linaro.org>
-> > 
-> > This can be a example of adding SBSA Generic Watchdog device node
-> > into some dts files for the Soc which contains SBSA Generic Watchdog.
-> > 
-> > Acked-by: Arnd Bergmann <arnd@arndb.de>
-> > Signed-off-by: Fu Wei <fu.wei@linaro.org>
-> > ---
-> >  arch/arm64/boot/dts/arm/foundation-v8.dts | 7 +++++++
-> >  1 file changed, 7 insertions(+)
-> > 
-> > diff --git a/arch/arm64/boot/dts/arm/foundation-v8.dts b/arch/arm64/boot/dts/arm/foundation-v8.dts
-> > index 4eac8dc..824431f 100644
-> > --- a/arch/arm64/boot/dts/arm/foundation-v8.dts
-> > +++ b/arch/arm64/boot/dts/arm/foundation-v8.dts
-> > @@ -237,4 +237,11 @@
-> >  			};
-> >  		};
-> >  	};
-> > +	watchdog@2a440000 {
-> > +		compatible = "arm,sbsa-gwdt";
-> > +		reg = <0x0 0x2a440000 0 0x1000>,
-> > +			<0x0 0x2a450000 0 0x1000>;
-> > +		interrupts = <0 27 4>;
-> > +		timeout-sec = <10 5>;
-> 
-> I assume 10 is timeout, 5 is pre timeout, but in the driver code the default
-> value is 30/10, I think the example dts[i] should use same default values as in code.
-> 
-> BTW, for kdump kernel Pratyush is working on kdump on wdt enabled system. 
-> Basiclly we expect one configure longer timeout, and kick it in shorter
-> period so we can get a chance to save vmcore. 10s sounds too short for the case..
-
-Specially if D-cache is not enabled in ARM64 kexec-tool/purgatory then its more
-than 2 min. Geoff has yet not agreed [1] to take D-cache support in purgatory.
-
-[1] https://www.mail-archive.com/kexec@lists.infradead.org/msg12881.html
-
-~Pratyush
+ICBUaGVzZSBwYXRjaCBzZXQgYWRkcyBhIG5ldyBkcm0gZHJpdmVyIGZvciBIaXNpbGljb24ncyBI
+aTYyMjAgU29DLgpDdXJyZW50IHRlc3RpbmcgYW5kIHN1cHBvcnQgYm9hcmQgaXMgSGlrZXkgYm9h
+cmQgd2hpY2ggaXMgb25lIG9mIExpbmFybwo5NmJvYXJkcy4gSXQgaXMgYW4gYXJtNjQgb3BlbiBz
+b3VyY2UgYm9hcmQuIEZvciBtb3JlIGluZm9ybWF0aW9uIGFib3V0CnRoaXMgYm9hcmQsIHBsZWFz
+ZSBhY2Nlc3MgaHR0cHM6Ly93d3cuOTZib2FyZHMub3JnLgoKMS4gSGFyZHdhcmUgRGV0YWlsCiAg
+VGhlIGRpc3BsYXkgc3Vic3lzdGVtIG9mIEhpNjIyMCBTb0MgaXMgc2hvd24gYXMgYmVsbG93Ogog
+Ky0tLS0tKyAgICAgICArLS0tLS0tLS0tLSsgICAgICstLS0tLSsgICAgICstLS0tLS0tLS0rCiB8
+ICAgICB8ICAgICAgIHwgICAgICAgICAgfCAgICAgfCAgICAgfCAgICAgfCAgICAgICAgIHwgICAg
+ICAgICAgICAgCQogfCBGQiAgfC0tLS0tLT58ICAgQURFICAgIHwtLS0tPnwgRFNJIHwtLS0tPnwg
+RXh0ZXJuYWx8CiB8ICAgICB8ICAgICAgIHwgICAgICAgICAgfCAgICAgfCAgICAgfCAgICAgfCAg
+SERNSSAgIHwKICstLS0tLSsgICAgICAgKy0tLS0tLS0tLS0rICAgICArLS0tLS0rICAgICArLS0t
+LS0tLS0tKwoKLSBBREUoQWR2YW5jZWQgRGlzcGxheSBFbmdpbmUpIGlzIHRoZSBkaXNwbGF5IGNv
+bnRyb2xsZXIuIEl0IGNvbnRhaW5zIDcKY2hhbm5lbHMgb3IgcGlwZXMsIDMgb3ZlcmxheSBhbmQg
+YSBMREkuCiAgLSBBIGNoYW5uZWwvcGlwZSBsb29rcyBsaWtlOiBETUEtLT5jbGlwLS0+c2NhbGUt
+LT5jdHJhbnMvY3NjLgogIC0gT3ZlcmxheSBpcyByZXNwb25zZSB0byBjb21wb3NlIHBsYW5lcyB3
+aGljaCBjb21lIGZyb20gNyBjaGFubmVscyBhbmQKICBwYXNzIGNvbXBvc2VkIGltYWdlIHRvIExE
+SS4KICAtIExESSBpcyByZXNwb25zZSB0byBnZW5lcmF0ZSB0aW1pbmdzIGFuZCBSR0IgZGF0YSBz
+dHJlYW0uCi0gRFNJIGNvbnZlcnRzIHRoZSBSR0IgZGF0YSBzdHJlYW0gZnJvbSBBREUgdG8gRFNJ
+IHBhY2tldHMuCi0gRXh0ZXJuYWwgSERNSSBtb2R1bGUgaXMgY29ubmVjdGVkIHdpdGggRFNJIGJ1
+cy4gTm93IEhpa2V5IHVzZSBhIEFESSdzCiAgQURWNzUzMyBleHRlcm5hbCBIRE1JIGNoaXAuCgoy
+LiBTb2Z0d2FyZSBEZXRhaWwKICBBYm91dCB0aGUgc29mdHdhcmUgb3JnYW5pemF0aW9uIGFuZCBp
+bXBsZW1lbnRhdGlvbiBkZXRhaWw6CldlIGhhdmUgYSBtYWluIGRybSBwbGF0Zm9ybSBkcml2ZXIg
+KGhpc2lfZHJtX2Rydi5jKSwgYWRlIHBsYXRmb3JtIGRyaXZlcgooaGlzaV9hZGUuYykgYW5kIGEg
+ZHNpIHBsYXRmb3JtIGRyaXZlciAoaGlzaV9kcm1fZHNpLmMpLiBBZGUgZHJpdmVyCmltcGxlbWVu
+dHMgdGhlIHBsYW5lIGFuZCBjcnRjIGRyaXZlciBpbnRlcmZhY2VzIGFuZCBkc2kgaW1wbGVtZW50
+cyB0aGUKZW5jb2RlciBhbmQgY29ubmVjdG9yIGRyaXZlciBpbnRlcmZhY2VzLiBXZSB0YWtlIGFk
+dmFudGFnZSBvZiBjb21wb25lbnQKZnJhbWV3b3JrIHRvIGluaXRpYWxpemUgZWFjaCBkcml2ZXIu
+CiAgSW4gb3JkZXIgdG8gc3VwcG9ydCBtdWx0aSBjb21pbmcgSGlzaWxpY29uJ3MgU29Dcywgd2Ug
+cGxhbiB0byBzZXBhcmF0ZQpjb21tb24gZHJpdmVyIGNvZGUgYW5kIFNvQyBzcGVjaWZpYyBpbXBs
+ZW1lbnRlZCBjb2RlIGFzIHBvc3NpcGxlIGFzIHdlIGNhbi4KV2UgYWJzdHJhY3QgYW4gb3BzIGZv
+ciBlYWNoIGNvbXBvbmVudChjcnRjLCBwbGFuZSwgZW5jb2RlciBhbmQgY29ubmVjdG9yKQp0byBy
+ZXVzZSB0aGUgY29tbW9uIGludGVyZmFjZSBpbXBsZW1lbnRhdGlvbiBsb2dpYyAoRklYTUU6IE5v
+dCBzdXJlIGlmIHdlCmNhbiBhY2hpZXZlIHRoaXMgdGFyZ2V0IGFuZCBpZiBpdCBpcyBnb29kIG9y
+IG5vdCkuIFRodXMsIHdlIHB1dCB0aGVzZQpjb21tb24gZHJpdmVyIGNvZGUgaW50byBoaXNpX2Ry
+bV9kcnYvY3J0Yy9wbGFuZS9lbmNvZGVyL2Nvbm5lY3Rvci5jIGZpbGVzLgoKWGlud2VpIEtvbmcg
+KDgpOgogIGR0LWJpbmRpbmdzOiBEb2N1bWVudCB0aGUgaGk2MjIwIGJpbmRpbmdzIGZvciBEUk0g
+ZHJpdmVyCiAgZHJtOiBoaXNpbGljb246IEFkZCBuZXcgRFJNIGRyaXZlciBmb3IgaGlzaWxpY29u
+IFNvYwogIGRybTogaGlzaWxpY29uOiBBZGQgdGhlIGxpbmsgdG8gRFJNL0tNUyBpbnRlcmZhY2UK
+ICBkcm06IGhpc2lsaWNvbjogZmlsbCBpbnRlcmZhY2UgZnVuY3Rpb24gb2YgcGxhbmVcY3J0YyBw
+YXJ0CiAgZHJtOiBoaXNpbGljb246IGZpbGwgaW50ZXJmYWNlIGZ1bmN0aW9uIG9mIGVuY29kZXJc
+Y29ubmVjdG9yIHBhcnQKICBkcm06IGhpc2lsaWNvbjogQWRkIHN1cHBvcnQgZm9yIGZiZGV2CiAg
+ZHJtOiBoaXNpbGljb246IEFkZCBzdXBwb3J0IGZvciB2YmxhbmsKICBkdHM6IGhpc2lsaWNvbjog
+QWRkIGRybSBkcml2ZXIgZGV2aWNlIGR0cyBjb25maWcgZm9yIEhpS2V5IGJvYXJkCgogLi4uL2Rl
+dmljZXRyZWUvYmluZGluZ3MvZ3B1L2hpc2lsaWNvbixoaTYyMjAudHh0ICAgfCAgIDY5ICsKIGFy
+Y2gvYXJtNjQvYm9vdC9kdHMvaGlzaWxpY29uL2hpNjIyMC5kdHNpICAgICAgICAgIHwgICAzNCAr
+CiBhcmNoL2FybTY0L2NvbmZpZ3MvZGVmY29uZmlnICAgICAgICAgICAgICAgICAgICAgICB8ICAg
+IDUgKwogZHJpdmVycy9ncHUvZHJtL0tjb25maWcgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+fCAgICAyICsKIGRyaXZlcnMvZ3B1L2RybS9NYWtlZmlsZSAgICAgICAgICAgICAgICAgICAgICAg
+ICAgIHwgICAgMSArCiBkcml2ZXJzL2dwdS9kcm0vaGlzaWxpY29uL0tjb25maWcgICAgICAgICAg
+ICAgICAgICB8ICAgMzIgKwogZHJpdmVycy9ncHUvZHJtL2hpc2lsaWNvbi9NYWtlZmlsZSAgICAg
+ICAgICAgICAgICAgfCAgIDEyICsKIGRyaXZlcnMvZ3B1L2RybS9oaXNpbGljb24vaGlzaV9hZGUu
+YyAgICAgICAgICAgICAgIHwgMTM2MCArKysrKysrKysrKysrKysrCiBkcml2ZXJzL2dwdS9kcm0v
+aGlzaWxpY29uL2hpc2lfYWRlX3JlZy5oICAgICAgICAgICB8ICAyMDggKysrCiBkcml2ZXJzL2dw
+dS9kcm0vaGlzaWxpY29uL2hpc2lfZHJtX2Nvbm5lY3Rvci5jICAgICB8ICAxMjggKysKIGRyaXZl
+cnMvZ3B1L2RybS9oaXNpbGljb24vaGlzaV9kcm1fY29ubmVjdG9yLmggICAgIHwgICAzMyArCiBk
+cml2ZXJzL2dwdS9kcm0vaGlzaWxpY29uL2hpc2lfZHJtX2NydGMuYyAgICAgICAgICB8ICAzMTUg
+KysrKysKIGRyaXZlcnMvZ3B1L2RybS9oaXNpbGljb24vaGlzaV9kcm1fY3J0Yy5oICAgICAgICAg
+IHwgICA2NCArCiBkcml2ZXJzL2dwdS9kcm0vaGlzaWxpY29uL2hpc2lfZHJtX2Rydi5jICAgICAg
+ICAgICB8ICAyMjAgKysrKwogZHJpdmVycy9ncHUvZHJtL2hpc2lsaWNvbi9oaXNpX2RybV9kcnYu
+aCAgICAgICAgICAgfCAgIDM2ICsKIGRyaXZlcnMvZ3B1L2RybS9oaXNpbGljb24vaGlzaV9kcm1f
+ZHNpLmMgICAgICAgICAgIHwgIDgyOSArKysrKysrKysrKysKIGRyaXZlcnMvZ3B1L2RybS9oaXNp
+bGljb24vaGlzaV9kcm1fZW5jb2Rlci5jICAgICAgIHwgIDExNyArKwogZHJpdmVycy9ncHUvZHJt
+L2hpc2lsaWNvbi9oaXNpX2RybV9lbmNvZGVyLmggICAgICAgfCAgIDQxICsKIGRyaXZlcnMvZ3B1
+L2RybS9oaXNpbGljb24vaGlzaV9kcm1fZmIuYyAgICAgICAgICAgIHwgIDE3NSArKysKIGRyaXZl
+cnMvZ3B1L2RybS9oaXNpbGljb24vaGlzaV9kcm1fZmIuaCAgICAgICAgICAgIHwgICAzMyArCiBk
+cml2ZXJzL2dwdS9kcm0vaGlzaWxpY29uL2hpc2lfZHJtX2ZiZGV2LmMgICAgICAgICB8ICAzOTUg
+KysrKysrCiBkcml2ZXJzL2dwdS9kcm0vaGlzaWxpY29uL2hpc2lfZHJtX2ZiZGV2LmggICAgICAg
+ICB8ICAgMjQgKwogZHJpdmVycy9ncHUvZHJtL2hpc2lsaWNvbi9oaXNpX2RybV9wbGFuZS5jICAg
+ICAgICAgfCAgMjU3ICsrKysKIGRyaXZlcnMvZ3B1L2RybS9oaXNpbGljb24vaGlzaV9kcm1fcGxh
+bmUuaCAgICAgICAgIHwgICA1NSArCiBkcml2ZXJzL2dwdS9kcm0vaGlzaWxpY29uL2hpc2lfZHNp
+X3JlZy5oICAgICAgICAgICB8ICAgOTEgKysKIDI1IGZpbGVzIGNoYW5nZWQsIDQ1MzYgaW5zZXJ0
+aW9ucygrKQogY3JlYXRlIG1vZGUgMTAwNjQ0IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5k
+aW5ncy9ncHUvaGlzaWxpY29uLGhpNjIyMC50eHQKIGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJz
+L2dwdS9kcm0vaGlzaWxpY29uL0tjb25maWcKIGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL2dw
+dS9kcm0vaGlzaWxpY29uL01ha2VmaWxlCiBjcmVhdGUgbW9kZSAxMDA2NDQgZHJpdmVycy9ncHUv
+ZHJtL2hpc2lsaWNvbi9oaXNpX2FkZS5jCiBjcmVhdGUgbW9kZSAxMDA2NDQgZHJpdmVycy9ncHUv
+ZHJtL2hpc2lsaWNvbi9oaXNpX2FkZV9yZWcuaAogY3JlYXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMv
+Z3B1L2RybS9oaXNpbGljb24vaGlzaV9kcm1fY29ubmVjdG9yLmMKIGNyZWF0ZSBtb2RlIDEwMDY0
+NCBkcml2ZXJzL2dwdS9kcm0vaGlzaWxpY29uL2hpc2lfZHJtX2Nvbm5lY3Rvci5oCiBjcmVhdGUg
+bW9kZSAxMDA2NDQgZHJpdmVycy9ncHUvZHJtL2hpc2lsaWNvbi9oaXNpX2RybV9jcnRjLmMKIGNy
+ZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL2dwdS9kcm0vaGlzaWxpY29uL2hpc2lfZHJtX2NydGMu
+aAogY3JlYXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMvZ3B1L2RybS9oaXNpbGljb24vaGlzaV9kcm1f
+ZHJ2LmMKIGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL2dwdS9kcm0vaGlzaWxpY29uL2hpc2lf
+ZHJtX2Rydi5oCiBjcmVhdGUgbW9kZSAxMDA2NDQgZHJpdmVycy9ncHUvZHJtL2hpc2lsaWNvbi9o
+aXNpX2RybV9kc2kuYwogY3JlYXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMvZ3B1L2RybS9oaXNpbGlj
+b24vaGlzaV9kcm1fZW5jb2Rlci5jCiBjcmVhdGUgbW9kZSAxMDA2NDQgZHJpdmVycy9ncHUvZHJt
+L2hpc2lsaWNvbi9oaXNpX2RybV9lbmNvZGVyLmgKIGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJz
+L2dwdS9kcm0vaGlzaWxpY29uL2hpc2lfZHJtX2ZiLmMKIGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2
+ZXJzL2dwdS9kcm0vaGlzaWxpY29uL2hpc2lfZHJtX2ZiLmgKIGNyZWF0ZSBtb2RlIDEwMDY0NCBk
+cml2ZXJzL2dwdS9kcm0vaGlzaWxpY29uL2hpc2lfZHJtX2ZiZGV2LmMKIGNyZWF0ZSBtb2RlIDEw
+MDY0NCBkcml2ZXJzL2dwdS9kcm0vaGlzaWxpY29uL2hpc2lfZHJtX2ZiZGV2LmgKIGNyZWF0ZSBt
+b2RlIDEwMDY0NCBkcml2ZXJzL2dwdS9kcm0vaGlzaWxpY29uL2hpc2lfZHJtX3BsYW5lLmMKIGNy
+ZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL2dwdS9kcm0vaGlzaWxpY29uL2hpc2lfZHJtX3BsYW5l
+LmgKIGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL2dwdS9kcm0vaGlzaWxpY29uL2hpc2lfZHNp
+X3JlZy5oCgotLSAKMS45LjEKCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVz
+a3RvcC5vcmcKaHR0cDovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2Ry
+aS1kZXZlbAo=
