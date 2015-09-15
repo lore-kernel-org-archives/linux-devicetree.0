@@ -1,108 +1,90 @@
-From: Viresh Kumar <viresh.kumar@linaro.org>
-Subject: Re: [PATCH 02/16] PM / OPP: Add 'opp-microvolt-triplets' binding
-Date: Tue, 15 Sep 2015 09:00:27 +0530
-Message-ID: <20150915033027.GJ32551@linux>
-References: <cover.1441972771.git.viresh.kumar@linaro.org>
- <254dd353453a495bb0921fa23e430428484f36fa.1441972771.git.viresh.kumar@linaro.org>
- <55F72E65.6000205@kernel.org>
+From: YH Huang <yh.huang@mediatek.com>
+Subject: Re: [PATCH v7 0/3] Add MediaTek display PWM driver
+Date: Tue, 15 Sep 2015 11:52:53 +0800
+Message-ID: <1442289173.11445.5.camel@mtksdaap41>
+References: <1439882875-19596-1-git-send-email-yh.huang@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-pm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <55F72E65.6000205@kernel.org>
-Sender: linux-pm-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>, Mark Brown <broonie@kernel.org>
-Cc: Rafael Wysocki <rjw@rjwysocki.net>, nm@ti.com, sboyd@codeaurora.org, linaro-kernel@lists.linaro.org, linux-pm@vger.kernel.org, lee.jones@linaro.org, devicetree@vger.kernel.org, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, open list <linux-kernel@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-pwm-owner@vger.kernel.org>
+In-Reply-To: <1439882875-19596-1-git-send-email-yh.huang@mediatek.com>
+Sender: linux-pwm-owner@vger.kernel.org
+To: Thierry Reding <thierry.reding@gmail.com>
+Cc: Matthias Brugger <matthias.bgg@gmail.com>, Mark Rutland <mark.rutland@arm.com>, "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>, srv_heupstream <srv_heupstream@mediatek.com>, Pawel Moll <pawel.moll@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, "linux-mediatek@lists.infradead.org" <linux-mediatek@lists.infradead.org>, Sascha Hauer <kernel@pengutronix.de>, Yingjoe Chen =?UTF-8?Q?=28=E9=99=B3=E8=8B=B1=E6=B4=B2=29?= <Yingjoe.Chen@mediatek.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-[+Cc Mark, I thought I cc'd him earlier, but no, I cc'd him only for
-the first patch]
-
-On 14-09-15, 15:30, Rob Herring wrote:
-> On 09/11/2015 07:01 AM, Viresh Kumar wrote:
-> > If 'opp-microvolt' is used to specify values for multiple regulators,
-> > then we need this additional information to know if the values passed
-> > should be treated as <target> or <target min max>.
+On Tue, 2015-08-18 at 15:27 +0800, YH Huang wrote:
+> This patch series add the use of display PWM driver, documentation
+> and device tree for Mediatek SoCs. The driver is used to support
+> the backlight of the panel. This is based on v4.2-rc1.
 > 
-> Can't you determine this implicitly from # of cells / # of regulators
-> being either 1 or 3?
-
-I thought the #<name>-cells property is used to pass arguments along with the
-phandle, so something like this:
-
-supply0: regulator@f8000000 {
-        regulator-cells = 1;
-        ...
-}
-
-cpu@1 {
-        cpu-supply = <&supply0 XYZ>
-}
-
-But if we can define something like:
-
-supply0: regulator@f8000000 {
-        regulator-cells or microvolt-cells = 1 or 3;
-        ...
-}
-
-And then do:
-
-cpu@1 {
-        cpu-supply = <&supply0>
-        operating-points-v2 = "&opp-table";
-}
-
-opp-table: table {
-
-        ...
-
-        opp0 {
-                opp-hz = ...;
-                ...
-                opp-microvolt = <one or three values here>
-        }
-}
-
-then it will be very simple. Also, this would mean that with multiple
-regulators, we can have one regulator supporting single microvolts
-value and other supporting tar/min/max values..
-
-> > 
-> > This is because, DT doesn't differentiate between these two styles:
-> > 
-> > prop = <x>, <y>, <z>;
-> > prop = <x y z>;
-> > 
-> > Cc: devicetree@vger.kernel.org
-> > Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
-> > ---
-> >  Documentation/devicetree/bindings/opp/opp.txt | 14 ++++++++++++++
-> >  1 file changed, 14 insertions(+)
-> > 
-> > diff --git a/Documentation/devicetree/bindings/opp/opp.txt b/Documentation/devicetree/bindings/opp/opp.txt
-> > index 8759bc4783ed..719603b87353 100644
-> > --- a/Documentation/devicetree/bindings/opp/opp.txt
-> > +++ b/Documentation/devicetree/bindings/opp/opp.txt
-> > @@ -76,6 +76,16 @@ This describes the OPPs belonging to a device. This node can have following
-> >    present here is important, as that should match the order in which values are
-> >    present in 'opp-microvolt' and 'opp-microamp' properties.
-> >  
-> > +- opp-microvolt-triplets: This is a required property, only if multiple supplies
-> > +  are available for the device. Otherwise it is ignored.
-> > +
-> > +  'opp-microvolt' can be present in two forms: <target> or <target min max>, per
-> > +  power-supply. 'opp-microvolt-triplets' property is used to find the form in
-> > +  which 'opp-microvolt' is present.
-> > +
-> > +  If present, then 'opp-microvolt' must be present in <target min max> form,
-> > +  else in <target> form.
+> The clock definitions (CLK_MM_DISP_PWM*) are added by James Liao's patch:
+> clk: mediatek: Add subsystem clocks of MT8173
 > 
-> This implies that bindings currently with triplets are wrong since they
-> will be missing opp-microvolt-triplets.
+> Change in v7:
+> 1. Add the dependency HAS_IOMEM in Kconfig.
+> 2. Revise misprints and coding style for readability.
+> 
+> Change in v6:
+> 1. Enable clocks in the pwm_enable function.
+> 2. Remove suspend/resume code since pwm-backlight driver has done the
+> same things.
+> 3. Revise some code to make it easier to read.
+> 
+> Change in v5:
+> 1. Configure PWM output via pinctrl.
+> 2. Fix the parameter name in dtsi.
+> 
+> Change in v4:
+> 1. Codebase is on v4.2-rc1.
+> 2. Add the PWM node in dtsi.
+> 3. Change the dependency in Kconfig.
+> 4. Rewrite some code for readability.
+> 
+> Change in v3:
+> 1. Add suspend/resume function.
+> 2. Fix the formula for high_width calculation.
+> 3. Rewrite some code to make it easier to read.
+> 4. Add more information in the commit message.
+> 
+> Change in v2:
+> 1. Rewrite descriptions for driver in kconfig to make it much clear.
+> 2. Rename the driver from "pwm-mediatek-disp" to "pwm-mtk-disp".
+> 3. Disable clocks in the error path.
+> 4. Change the shift values in decimal instead of hex.
+> 5. Rename and add some variables or function name for consistency and
+> readability.
+> 6. Drop unnecessary parentheses, spaces, variables and add newlines to
+> make the code easiler to read.
+> 
+> YH Huang (3):
+>   dt-bindings: pwm: add MediaTek display PWM bindings
+>   pwm: add MediaTek display PWM driver support
+>   arm64: dts: mt8173: add MT8173 display PWM driver support node
+> 
+>  .../devicetree/bindings/pwm/pwm-mtk-disp.txt       |   42 ++++
+>  arch/arm64/boot/dts/mediatek/mt8173-evb.dts        |   13 ++
+>  arch/arm64/boot/dts/mediatek/mt8173.dtsi           |   22 ++
+>  drivers/pwm/Kconfig                                |   11 +
+>  drivers/pwm/Makefile                               |    1 +
+>  drivers/pwm/pwm-mtk-disp.c                         |  232 ++++++++++++++++++++
+>  6 files changed, 321 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/pwm/pwm-mtk-disp.txt
+>  create mode 100644 drivers/pwm/pwm-mtk-disp.c
+> 
+> --
+> 1.7.9.5
+> 
+> 
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
 
-Yeah, the bindings are incomplete, but there are no users yet, which
-need the triplet thing. So, its all working just fine.
+Hi Thierry,
 
--- 
-viresh
+Will you please pick up these patches in your pwm tree?
+Should I rebase to 4.3-rc1?
+
+Regards,
+YH Huang
