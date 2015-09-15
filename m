@@ -1,85 +1,145 @@
 From: Punit Agrawal <punit.agrawal@arm.com>
-Subject: [PATCH v4 0/5] SCPI sensors support
-Date: Tue, 15 Sep 2015 17:50:56 +0100
-Message-ID: <1442335861-7282-1-git-send-email-punit.agrawal@arm.com>
+Subject: [PATCH v4 2/5] firmware: arm_scpi: Extend to support sensors
+Date: Tue, 15 Sep 2015 17:50:58 +0100
+Message-ID: <1442335861-7282-3-git-send-email-punit.agrawal@arm.com>
+References: <1442335861-7282-1-git-send-email-punit.agrawal@arm.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1442335861-7282-1-git-send-email-punit.agrawal@arm.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
 Cc: linux-kernel@vger.kernel.org, mark.rutland@arm.com, robh+dt@kernel.org, edubezval@gmail.com, sudeep.holla@arm.com, liviu.dudau@arm.com, linux@roeck-us.net, Punit Agrawal <punit.agrawal@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+ARM System Control Processor (SCP) provides an API to query and use
+the sensors available in the system. Extend the SCPI driver to support
+ sensor messages.
 
-This series adds support for SCPI based sensors for ARM development
-platform. In addition to supporting sensors, when a temperature sensor
-is discovered the driver registers the sensor with the thermal
-framework.
+Signed-off-by: Punit Agrawal <punit.agrawal@arm.com>
+Cc: Sudeep Holla <sudeep.holla@arm.com>
+---
+ drivers/firmware/arm_scpi.c   | 60 +++++++++++++++++++++++++++++++++++++++++++
+ include/linux/scpi_protocol.h | 17 ++++++++++++
+ 2 files changed, 77 insertions(+)
 
-The sensor patches here have been split out from a longer series
-adding support for registering power model based cooling devices for
-the CPU via device tree. Earliers postings can be seen at [0], [1], [2].
-
-Patches 1-3 create a hwmon sensor driver for sensors provided by SCPI
-firmware. Patch 4 adds support for the temperature sensors to register
-with the thermal framework. This allows setting up platform thermals
-using OF thermal bindings.
-
-The last patch adds support for the sensors in the Juno r0 device
-tree.
-
-The patches depend on SCPI and mailbox patches[3] from Sudeep. The
-SCPI protocol document with details of the sensor interface can be
-found at [4].
-
-I'd like to aim for merging the patches with the SCPI changes if
-possible. The hwmon patches have been acked by Guenter. If there
-aren't any objections, I would like to request acks for the binding
-updates in Patch 1.
-
-Thanks,
-Punit
-
-Changes v3 -> v4
-  - clarified binding regarding use of sensor identifier
-
-Changes v2 -> v3
-  - split out the sensor patches (posted here)
-  - rebase onto v4.3-rc1
-  
-Changes v1 -> v2
-  - added documentation for the scpi-hwmon driver
-  - replaced static allocation of platform structure in scpi-hwmon.c
-    with dynamic allocation
-  - re-structured registering of thermal zones to better handle
-    error conditions
-  - reduced chattiness in scpi-hwmon.c
-  - corrected sensor numbering to align with hwmon documentation
-  - dynamic allocation of attributes and attribute groups
-
-[0] http://thread.gmane.org/gmane.linux.kernel/2002152
-[1] http://thread.gmane.org/gmane.linux.kernel/2011466
-[2] http://thread.gmane.org/gmane.linux.power-management.general/65475
-[3] http://thread.gmane.org/gmane.linux.kernel/2009735
-[4] http://infocenter.arm.com/help/topic/com.arm.doc.dui0922b/index.html
-
-Punit Agrawal (5):
-  Documentation: add DT bindings for ARM SCPI sensors
-  firmware: arm_scpi: Extend to support sensors
-  hwmon: Support sensors exported via ARM SCP interface
-  hwmon: Support thermal zones registration for SCP temperature sensors
-  arm64: dts: Add sensor node to Juno dt
-
- Documentation/devicetree/bindings/arm/arm,scpi.txt |  38 +++
- Documentation/hwmon/scpi-hwmon                     |  33 +++
- arch/arm64/boot/dts/arm/juno-base.dtsi             |   5 +
- drivers/firmware/arm_scpi.c                        |  60 +++++
- drivers/hwmon/Kconfig                              |   8 +
- drivers/hwmon/Makefile                             |   1 +
- drivers/hwmon/scpi-hwmon.c                         | 288 +++++++++++++++++++++
- include/linux/scpi_protocol.h                      |  17 ++
- 8 files changed, 450 insertions(+)
- create mode 100644 Documentation/hwmon/scpi-hwmon
- create mode 100644 drivers/hwmon/scpi-hwmon.c
-
+diff --git a/drivers/firmware/arm_scpi.c b/drivers/firmware/arm_scpi.c
+index cb75c75..321680e 100644
+--- a/drivers/firmware/arm_scpi.c
++++ b/drivers/firmware/arm_scpi.c
+@@ -219,6 +219,21 @@ struct dvfs_set {
+ 	u8 index;
+ } __packed;
+ 
++struct sensor_capabilities {
++	__le16 sensors;
++} __packed;
++
++struct _scpi_sensor_info {
++	__le16 sensor_id;
++	u8 class;
++	u8 trigger_type;
++	char name[20];
++};
++
++struct sensor_value {
++	__le32 val;
++} __packed;
++
+ static struct scpi_drvinfo *scpi_info;
+ 
+ static int scpi_linux_errmap[SCPI_ERR_MAX] = {
+@@ -481,6 +496,48 @@ static struct scpi_dvfs_info *scpi_dvfs_get_info(u8 domain)
+ 	return info;
+ }
+ 
++static int scpi_sensor_get_capability(u16 *sensors)
++{
++	struct sensor_capabilities cap_buf;
++	int ret;
++
++	ret = scpi_send_message(SCPI_CMD_SENSOR_CAPABILITIES, NULL, 0, &cap_buf,
++				sizeof(cap_buf));
++	if (!ret)
++		*sensors = le16_to_cpu(cap_buf.sensors);
++
++	return ret;
++}
++
++static int scpi_sensor_get_info(u16 sensor_id, struct scpi_sensor_info *info)
++{
++	__le16 id = cpu_to_le16(sensor_id);
++	struct _scpi_sensor_info _info;
++	int ret;
++
++	ret = scpi_send_message(SCPI_CMD_SENSOR_INFO, &id,
++				 sizeof(id), &_info, sizeof(_info));
++	if (!ret) {
++		memcpy(info, &_info, sizeof(*info));
++		info->sensor_id = le16_to_cpu(_info.sensor_id);
++	}
++
++	return ret;
++}
++
++int scpi_sensor_get_value(u16 sensor, u32 *val)
++{
++	struct sensor_value buf;
++	int ret;
++
++	ret = scpi_send_message(SCPI_CMD_SENSOR_VALUE, &sensor, sizeof(sensor),
++				&buf, sizeof(buf));
++	if (!ret)
++		*val = le32_to_cpu(buf.val);
++
++	return ret;
++}
++
+ static struct scpi_ops scpi_ops = {
+ 	.get_version = scpi_get_version,
+ 	.clk_get_range = scpi_clk_get_range,
+@@ -489,6 +546,9 @@ static struct scpi_ops scpi_ops = {
+ 	.dvfs_get_idx = scpi_dvfs_get_idx,
+ 	.dvfs_set_idx = scpi_dvfs_set_idx,
+ 	.dvfs_get_info = scpi_dvfs_get_info,
++	.sensor_get_capability = scpi_sensor_get_capability,
++	.sensor_get_info = scpi_sensor_get_info,
++	.sensor_get_value = scpi_sensor_get_value,
+ };
+ 
+ struct scpi_ops *get_scpi_ops(void)
+diff --git a/include/linux/scpi_protocol.h b/include/linux/scpi_protocol.h
+index e7169cd..80af3cd 100644
+--- a/include/linux/scpi_protocol.h
++++ b/include/linux/scpi_protocol.h
+@@ -28,6 +28,20 @@ struct scpi_dvfs_info {
+ 	struct scpi_opp *opps;
+ };
+ 
++enum scpi_sensor_class {
++	TEMPERATURE,
++	VOLTAGE,
++	CURRENT,
++	POWER,
++};
++
++struct scpi_sensor_info {
++	u16 sensor_id;
++	u8 class;
++	u8 trigger_type;
++	char name[20];
++} __packed;
++
+ /**
+  * struct scpi_ops - represents the various operations provided
+  *	by SCP through SCPI message protocol
+@@ -52,6 +66,9 @@ struct scpi_ops {
+ 	int (*dvfs_get_idx)(u8);
+ 	int (*dvfs_set_idx)(u8, u8);
+ 	struct scpi_dvfs_info *(*dvfs_get_info)(u8);
++	int (*sensor_get_capability)(u16 *sensors);
++	int (*sensor_get_info)(u16 sensor_id, struct scpi_sensor_info *);
++	int (*sensor_get_value)(u16, u32 *);
+ };
+ 
+ #if IS_ENABLED(CONFIG_ARM_SCPI_PROTOCOL)
 -- 
 2.5.1
