@@ -1,80 +1,117 @@
-From: Zhou Wang <wangzhou1-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
-Subject: [PATCH v9 5/6] Documentation: DT: Add HiSilicon PCIe host binding
-Date: Tue, 15 Sep 2015 20:49:20 +0800
-Message-ID: <1442321361-174300-6-git-send-email-wangzhou1@hisilicon.com>
-References: <1442321361-174300-1-git-send-email-wangzhou1@hisilicon.com>
+From: Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH v3 01/10] dt: power: bq24257-charger: Cover additional devices
+Date: Tue, 15 Sep 2015 21:51:25 +0900
+Message-ID: <CAJKOXPcTiPKbWuRN+s1ndQ2M2awc9M8BOJ=k3u6vMJ3x7XHObQ@mail.gmail.com>
+References: <1442003202-1430-1-git-send-email-dannenberg@ti.com>
+	<1442003202-1430-2-git-send-email-dannenberg@ti.com>
+	<55F66514.1080909@samsung.com>
+	<20150914135430.GA21442@borg>
+	<55F7CF44.3010102@samsung.com>
+	<20150915090537.GB3166@lpalcu-desk>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1442321361-174300-1-git-send-email-wangzhou1-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
+In-Reply-To: <20150915090537.GB3166@lpalcu-desk>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, jingoohan1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, pratyush.anand-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, gabriele.paoloni-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org, james.morse-5wv7dgnIgG8@public.gmane.org, Liviu.Dudau-5wv7dgnIgG8@public.gmane.org, jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, gabriel.fernandez-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, Minghuan.Lian-KZfg59tc24xl57MIdRCFDg@public.gmane.org
-Cc: linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, zhangjukuo-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, qiuzhenfa-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, liudongdong3-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, qiujiang-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, liguozhu-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, Zhou Wang <wangzhou1-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
+To: Laurentiu Palcu <laurentiu.palcu-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Cc: Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Andreas Dannenberg <dannenberg-l0cyMroinI0@public.gmane.org>, Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Dmitry Eremin-Solenikov <dbaryshkov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Ramakrishna Pallala <ramakrishna.pallala-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This patch adds related DTS binding document for HiSilicon PCIe host driver.
+2015-09-15 18:05 GMT+09:00 Laurentiu Palcu <laurentiu.palcu-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>:
+> On Tue, Sep 15, 2015 at 04:56:52PM +0900, Krzysztof Kozlowski wrote:
+>> On 14.09.2015 22:54, Andreas Dannenberg wrote:
+>> > On Mon, Sep 14, 2015 at 03:11:32PM +0900, Krzysztof Kozlowski wrote:
+>> >>
+>> >> Now I spotted the difference in this binding from previous emails.
+>> >> Previously you made it as a boolean property. Now it is a integer
+>> >> property for a boolean value. It is unusual. If you expect a need (or a
+>> >> possibility of need) of:
+>> >> 1. extending,
+>> >> 2. overriding,
+>> >> 3. using similar (extended) property in different drivers,
+>> >> then it should be a real value, like:
+>> >>
+>> >> 1. ti,safety-timer: integer, in seconds
+>> >
+>> > Hi Krzysztof,
+>> >
+>> > I thought about this as well because the device actually allows
+>> > configuring different safety timer intervals (currently not exposed) and
+>> > it appears that the "2x enable" could be factored in there however it's
+>> > not as easy as it seems.  The "2x enable" is a dedicated HW feature
+>> > that's only being used in some states of the devices and with that does
+>> > not generally extend the safety timer under all conditions.
+>>
+>> Right, I read also the datasheet which explains it.
+>>
+>> >
+>> >> 2. ti,safety-timer-ratio/multiplier: integer, supported values are: 0
+>> >> (use default) or 2 (slow down by factor of 2)
+>> >>
+>> >> It is unusual and not obvious to use a integer value for boolean strict
+>> >> property. With current solution you can actually only override it.
+>> >
+>> > Yes that was the sole reason behind using integer instead of boolean.
+>> > The boolean "character" of this property was left intact because of the
+>> > direct mapping to a device HW feature (see below).
+>>
+>> DT serves a purpose of providing information allowing the kernel to use
+>> and configure the hardware. DT binding does not have to map device
+>> property. In the same time having a device property does not mean you
+>> create a DT binding.
+>>
+>> If such requirement of mapping property to a HW feature was valid then
+>> each driver would expose each register in DT. Sometimes platform data
+>> did this... but DT is not pdata.
+>> You're using such argument also below but this argument is not sufficient.
+>>
+>> Sufficient argument would be: this property is necessary to configure
+>> the hardware in different board configurations (so on different boards
+>> it will have different values).
+>>
+>> Example of device features not matching to DeviceTree:
+>>  - configuration changing over time:
+>> /sys/class/power/ds2760-battery.*/charge_full
+>>
+>>  - various timers:
+>> /sys/class/power_supply/max14577-charger/device/fast_charge_timer
+>>
+>>  - various thresholds:
+>> /sys/class/power_supply/max77693-charger/device/top_off_threshold_current
+>>
+>> These are strictly HW features (they map to a bit in register) but they
+>> are not related to configuring device for specific board. They serve for
+>> user-space to use the devices in different ways.
+>>
+>> In this case - the 2XTMR_EN - I assume that for certain batteries or
+>> boards you want to extend the time of charging in case of special
+>> conditions?
+>
+> FWIW, I don't see any real benefit in manually changing the 2X timer at
+> all. The default setting is decent enough. The chip will automatically
+> switch to 2X timer in certain conditions: for example, when the
+> temperature threshold is exceeded and the charge current is
+> automatically lowered. This makes sense since it'll take the battery
+> more time to charge at a lower current.
+>
+> It would probably make more sense to add a DT property to change the
+> 'Safety Timer Time Limit' device property (which can be 0.75hrs, 6hrs,
+> 9hrs or totally disabled) than the 2XTMR.
+>
+> I omitted both when I originally added support for this chip since the
+> 6hrs default safety timer seemed more than enough to charge a nowadays
+> battery, even at 500mA (provided by a standard USB port). But, future
+> batteries might (and probably will) have higher capacities and will take
+> longer to charge.
 
-Signed-off-by: Zhou Wang <wangzhou1-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
----
- .../devicetree/bindings/pci/hisilicon-pcie.txt     | 46 ++++++++++++++++++++++
- 1 file changed, 46 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/pci/hisilicon-pcie.txt
+>From my past mistakes I found that if binding is not necessary and it
+is not used (e.g. every DTS have the same value) then it will be
+easier not to add it. Bindings mean ABI so if you make a mistake then
+you will have to leave with it. Usually it is easier to add new
+bindings when they are needed.
 
-diff --git a/Documentation/devicetree/bindings/pci/hisilicon-pcie.txt b/Documentation/devicetree/bindings/pci/hisilicon-pcie.txt
-new file mode 100644
-index 0000000..2afc9d1
---- /dev/null
-+++ b/Documentation/devicetree/bindings/pci/hisilicon-pcie.txt
-@@ -0,0 +1,46 @@
-+HiSilicon PCIe host bridge DT description
-+
-+HiSilicon PCIe host controller is based on Designware PCI core.
-+It shares common functions with PCIe Designware core driver and inherits
-+common properties defined in
-+Documentation/devicetree/bindings/pci/designware-pci.txt.
-+
-+Additional properties are described here:
-+
-+Required properties:
-+- compatible: Should contain "hisilicon,hip05-pcie".
-+- reg: Should contain rc_dbi, subctrl, config registers location and length.
-+- reg-names: Must include the following entries:
-+  "rc_dbi": controller configuration registers;
-+  "subctrl": whole PCIe hosts configuration registers;
-+  "config": PCIe configuration space registers.
-+- msi-parent: Should be its_pcie which is an ITS receiving MSI interrupts.
-+- port-id: Should be 0, 1, 2 or 3.
-+
-+Optional properties:
-+- status: Either "ok" or "disabled".
-+- dma-coherent: Present if DMA operations are coherent.
-+
-+Example:
-+	pcie@0xb0080000 {
-+		compatible = "hisilicon,hip05-pcie", "snps,dw-pcie";
-+		reg = <0 0xb0080000 0 0x10000>, <0 0xb0000000 0 0x10000>,
-+		      <0x220 0x00000000 0 0x2000>;
-+		reg-names = "rc_dbi", "subctrl", "config";
-+		bus-range = <0  15>;
-+		msi-parent = <&its_pcie>;
-+		#address-cells = <3>;
-+		#size-cells = <2>;
-+		device_type = "pci";
-+		dma-coherent;
-+		ranges = <0x82000000 0 0x00000000 0x220 0x00000000 0 0x10000000>;
-+		num-lanes = <8>;
-+		port-id = <1>;
-+		#interrupts-cells = <1>;
-+		interrupts-map-mask = <0xf800 0 0 7>;
-+		interrupts-map = <0x0 0 0 1 &mbigen_pcie 1 10
-+				  0x0 0 0 2 &mbigen_pcie 2 11
-+				  0x0 0 0 3 &mbigen_pcie 3 12
-+				  0x0 0 0 4 &mbigen_pcie 4 13>;
-+		status = "ok";
-+	};
--- 
-1.9.1
-
+Best regards,
+Krzysztof
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
