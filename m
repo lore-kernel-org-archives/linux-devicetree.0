@@ -1,47 +1,86 @@
-From: David Daney <ddaney@caviumnetworks.com>
-Subject: Re: [PATCH 0/6] PCI: generic: Misc. bug fixes and enhanced support
- for MSI.
-Date: Tue, 15 Sep 2015 11:06:59 -0700
-Message-ID: <55F85E43.5070207@caviumnetworks.com>
-References: <1442013719-5001-1-git-send-email-ddaney.cavm@gmail.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH RFC 1/8] dt-bindings: Document the hi6220 bindings for DRM
+ driver
+Date: Tue, 15 Sep 2015 13:11:32 -0500
+Message-ID: <55F85F54.1020807@kernel.org>
+References: <1442309834-21420-1-git-send-email-kong.kongxinwei@hisilicon.com>
+ <1442309834-21420-2-git-send-email-kong.kongxinwei@hisilicon.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
+Content-Type: text/plain; charset=windows-1252
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <1442013719-5001-1-git-send-email-ddaney.cavm@gmail.com>
-Sender: linux-pci-owner@vger.kernel.org
-To: David Daney <ddaney.cavm@gmail.com>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Grant Likely <grant.likely@linaro.org>, Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org, Will Deacon <will.deacon@arm.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, linux-arm-kernel@lists.infradead.org, David Daney <david.daney@cavium.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1442309834-21420-2-git-send-email-kong.kongxinwei@hisilicon.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Xinwei Kong <kong.kongxinwei@hisilicon.com>, airlied@linux.ie, corbet@lwn.net, catalin.marinas@arm.com, will.deacon@arm.com
+Cc: dri-devel@lists.freedesktop.org, linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linuxarm@huawei.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, xinliang.liu@linaro.org, andy.green@linaro.org, qijiwen@hisilicon.com, gongyu@hisilicon.com, haojian.zhuang@linaro.org, liguozhu@hisilicon.com, xuwei5@hisilicon.com, yinshengbao@hisilicon.com, yanhaifeng@hisilicon.com, ml.yang@hisilicon.com, yimin@huawei.com, w.f@huawei.com, puck.chen@hisilicon.com, bintian.wang@huawei.com, benjamin.gaignard@linaro.org, xuyiping@hisilicon.com, james.yanglong@hisilicon.com, fangdechun@hisilicon.com
 List-Id: devicetree@vger.kernel.org
 
-On 09/11/2015 04:21 PM, David Daney wrote:
-> From: David Daney <david.daney@cavium.com>
->
-> While using the pci-host-generic driver to add PCI support for the
-> Cavium ThunderX processors, several bugs were discovered.  We also
-> need the ability to specify a per-bus MSI controller, so support for
-> that was added.
->
-> David Daney (6):
->    PCI: Make global and export pdev_fixup_irq().
->    PCI: generic: Only fixup irqs for bus we are creating.
->    PCI: generic: Quit clobbering our pci_ops.
->    PCI: generic: Correct, and avoid overflow, in bus_max calculation.
->    PCI: generic: Pass proper starting bus number to pci_scan_root_bus().
->    PCI: generic: Allow bus default MSI controller to be specified.
->
+On 09/15/2015 04:37 AM, Xinwei Kong wrote:
+> This adds documentation of device tree bindings for the
+> Graphics Processing Unit of hi6220 SOC.
+> 
+> Signed-off-by: Xinliang Liu <xinliang.liu@linaro.org>
+> Signed-off-by: Xinwei Kong <kong.kongxinwei@hisilicon.com>
+> Signed-off-by: Andy Green <andy.green@linaro.org>
+> Signed-off-by: Jiwen Qi <qijiwen@hisilicon.com>
+> Signed-off-by: Yu Gong <gongyu@hisilicon.com>
+> ---
+>  .../devicetree/bindings/gpu/hisilicon,hi6220.txt   | 69 ++++++++++++++++++++++
+>  1 file changed, 69 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/gpu/hisilicon,hi6220.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/gpu/hisilicon,hi6220.txt b/Documentation/devicetree/bindings/gpu/hisilicon,hi6220.txt
+> new file mode 100644
+> index 0000000..173ac63
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/gpu/hisilicon,hi6220.txt
+> @@ -0,0 +1,69 @@
+> + * Hisilicon hi6220 Graphics Processing Unit for HiKey board
+> +
+> + ** display-subsystem: Master device for binding DRM sub-components
 
-Based on feedback on this first revision of the patches, I plan on 
-sending an updated patch set in a few days.  In the mean time, keep 
-sending feedback...
+DRM is a Linuxism that doesn't belong in the binding.
 
-David Daney
+> +    This master device is parent node and it will be responsible to bind all
+> +    sub-components devices node.
 
+Are these nodes a single block in the h/w? If not, you should describe
+the connection of sub-nodes with of-graph instead.
 
+> +    - Required properties :
+> +      - compatible: "hisilicon,display-subsystem".
+> +      - #address-cells, #size-cells: Must be present if the device has sub-nodes.
+> +      - ranges: to allow probing of subdevices.
+> +      - dma-coherent: Present if dma operations are coherent.
+> +
+> + ** ade: Graphic overlay, Graphic post-processing, display timing control.
+> +    This device is child node of display-subsystem
+> +    - Required properties :
+> +      - compatible: "hisilicon,hi6220-ade".
+> +      - reg: physical base address of the ADE register and length of memory
+> +	region.
+> +      - reg-names: Should contain the reg names "ade_base" and "media_base".
+> +      - interrupt: The interrupt number to the cpu. Defines the interrupt
+> +        by ADE.
+> +      - clocks: The clocks needed by the ADE module.
+> +      - clock-names: the name of the clocks.
+> +
+> + ** dsi: support mipi dsi interface
+> +    This device is child node of display-subsystem
+> +    - Required properties :
+> +      - compatible: "hisilicon,hi6220-dsi".
+> +      - reg: physical base address of the DSI register and length of memory
+> +	region.
+> +      - clocks: The clocks needed by the DSI module.
+> +      - clock-names: the name of the clocks.
+> +      -	encoder-slave: phandles to a 'encoder-slave' subnode which DSI connect
+> +        ADV7533 in order to support hdmi display.
 
->   .../devicetree/bindings/pci/host-generic-pci.txt   |  5 ++
->   drivers/pci/host/pci-host-generic.c                | 55 +++++++++++++++-------
->   drivers/pci/setup-irq.c                            |  7 +--
->   include/linux/pci.h                                |  3 ++
->   4 files changed, 50 insertions(+), 20 deletions(-)
->
+What the ADV7533 binding looks like is still being discussed.
+"encoder-slave" is certainly DRM specific and not how it should be done.
+Most likely, this needs to use the of-graph ports.
+
+Also, the ADV7533 connection is specific to HiKey. This binding should
+just generically describe how any bridge or panel is connected.
+
+Rob
