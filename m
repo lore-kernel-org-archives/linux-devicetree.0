@@ -1,90 +1,63 @@
-From: Jaehoon Chung <jh80.chung@samsung.com>
-Subject: Re: [RFC PATCH v7 02/10] mmc: dw_mmc: use macro for HCON register
- operations
-Date: Tue, 15 Sep 2015 17:10:41 +0900
-Message-ID: <55F7D281.6080103@samsung.com>
-References: <1440379479-24308-1-git-send-email-shawn.lin@rock-chips.com>
- <1440379554-24444-1-git-send-email-shawn.lin@rock-chips.com>
+From: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH] arm: tegra: dtsi whitespace clean-up for tegra20,
+ tegra30 and tegra124
+Date: Tue, 15 Sep 2015 10:14:26 +0200
+Message-ID: <20150915081425.GB25970@ulmo.nvidia.com>
+References: <1440668688-17288-1-git-send-email-marcel.ziswiler@toradex.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <1440379554-24444-1-git-send-email-shawn.lin@rock-chips.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Shawn Lin <shawn.lin@rock-chips.com>, ulf.hansson@linaro.org
-Cc: Vineet.Gupta1@synopsys.com, Wei Xu <xuwei5@hisilicon.com>, Joachim Eastwood <manabian@gmail.com>, Alexey Brodkin <abrodkin@synopsys.com>, Kukjin Kim <kgene@kernel.org>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, Russell King <linux@arm.linux.org.uk>, Zhangfei Gao <zhangfei.gao@linaro.org>, Jun Nie <jun.nie@linaro.org>, Ralf Baechle <ralf@linux-mips.org>, Govindraj Raja <govindraj.raja@imgtec.com>, Arnd Bergmann <arnd@arndb.de>, heiko@sntech.de, dianders@chromium.org, linux-samsung-soc@vger.kernel.org, linux-mips@linux-mips.org, linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, CPGS <cpgs@samsung.com>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="3uo+9/B/ebqu+fSQ"
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1440668688-17288-1-git-send-email-marcel.ziswiler-2KBjVHiyJgBBDgjK7y7TUQ@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Marcel Ziswiler <marcel.ziswiler-2KBjVHiyJgBBDgjK7y7TUQ@public.gmane.org>
+Cc: linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi, Shawn.
 
-Looks good to me.
+--3uo+9/B/ebqu+fSQ
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Acked-by: Jaehoon Chung <jh80.chung@samsung.com>
-
-Best Regards,
-Jaehoon Chung
-
-On 08/24/2015 10:25 AM, Shawn Lin wrote:
-> This patch add some macros for HCON register operations
-> to make code more readable.
-> 
-> Signed-off-by: Shawn Lin <shawn.lin@rock-chips.com>
+On Thu, Aug 27, 2015 at 11:44:48AM +0200, Marcel Ziswiler wrote:
+> There were a few cases of eight spaces being used instead of a tab
+> character plus one case of using two spaces after an equal sign instead
+> of just one which this patch fixes.
+>=20
+> Signed-off-by: Marcel Ziswiler <marcel.ziswiler-2KBjVHiyJgBBDgjK7y7TUQ@public.gmane.org>
 > ---
-> 
-> Changes in v7: None
-> Changes in v6: None
-> Changes in v5: None
-> Changes in v4: None
-> Changes in v3: None
-> Changes in v2: None
-> 
->  drivers/mmc/host/dw_mmc.c | 6 +++---
->  drivers/mmc/host/dw_mmc.h | 3 +++
->  2 files changed, 6 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/mmc/host/dw_mmc.c b/drivers/mmc/host/dw_mmc.c
-> index 9c91983..0a3c63c 100644
-> --- a/drivers/mmc/host/dw_mmc.c
-> +++ b/drivers/mmc/host/dw_mmc.c
-> @@ -2678,7 +2678,7 @@ static void dw_mci_init_dma(struct dw_mci *host)
->  		* Check ADDR_CONFIG bit in HCON to find
->  		* IDMAC address bus width
->  		*/
-> -		addr_config = (mci_readl(host, HCON) >> 27) & 0x01;
-> +		addr_config = SDMMC_GET_ADDR_CONFIG(mci_readl(host, HCON));
->  
->  		if (addr_config == 1) {
->  			/* host supports IDMAC in 64-bit address mode */
-> @@ -3060,7 +3060,7 @@ int dw_mci_probe(struct dw_mci *host)
->  	 * Get the host data width - this assumes that HCON has been set with
->  	 * the correct values.
->  	 */
-> -	i = (mci_readl(host, HCON) >> 7) & 0x7;
-> +	i = SDMMC_GET_HDATA_WIDTH(mci_readl(host, HCON));
->  	if (!i) {
->  		host->push_data = dw_mci_push_data16;
->  		host->pull_data = dw_mci_pull_data16;
-> @@ -3142,7 +3142,7 @@ int dw_mci_probe(struct dw_mci *host)
->  	if (host->pdata->num_slots)
->  		host->num_slots = host->pdata->num_slots;
->  	else
-> -		host->num_slots = ((mci_readl(host, HCON) >> 1) & 0x1F) + 1;
-> +		host->num_slots = SDMMC_GET_SLOT_NUM(mci_readl(host, HCON));
->  
->  	/*
->  	 * Enable interrupts for command done, data over, data empty,
-> diff --git a/drivers/mmc/host/dw_mmc.h b/drivers/mmc/host/dw_mmc.h
-> index 811d467..f2a88d4 100644
-> --- a/drivers/mmc/host/dw_mmc.h
-> +++ b/drivers/mmc/host/dw_mmc.h
-> @@ -154,6 +154,9 @@
->  #define DMA_INTERFACE_GDMA		(0x2)
->  #define DMA_INTERFACE_NODMA		(0x3)
->  #define SDMMC_GET_TRANS_MODE(x)		(((x)>>16) & 0x3)
-> +#define SDMMC_GET_SLOT_NUM(x)		((((x)>>1) & 0x1F) + 1)
-> +#define SDMMC_GET_HDATA_WIDTH(x)	(((x)>>7) & 0x7)
-> +#define SDMMC_GET_ADDR_CONFIG(x)	(((x)>>27) & 0x1)
->  /* Internal DMAC interrupt defines */
->  #define SDMMC_IDMAC_INT_AI		BIT(9)
->  #define SDMMC_IDMAC_INT_NI		BIT(8)
-> 
+>=20
+>  arch/arm/boot/dts/tegra124.dtsi |  2 +-
+>  arch/arm/boot/dts/tegra20.dtsi  |  4 ++--
+>  arch/arm/boot/dts/tegra30.dtsi  | 10 +++++-----
+>  3 files changed, 8 insertions(+), 8 deletions(-)
+
+Applied with tiny fixups of the commit message.
+
+Thanks,
+Thierry
+
+--3uo+9/B/ebqu+fSQ
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQIcBAABCAAGBQJV99NhAAoJEN0jrNd/PrOh8xEP/09KMW8gUDYD3D0sEp7ORmES
+/y5sU5/hLXOgKts1IZnC3ZRTg83QtWAPnCRjlpo6b8pyoydVmB0CgHlS7JobAeGj
++8vzjb1IawBXzOrA99Q+rlZiz2ldygC+bhXqsCGjQKpN2LLN2VI0WV9ZHpR9SrU1
+dGY/gX0Jpg92btz0tG0ZjI9lU3Bs29dnBLJaETVaNYluOf6+oEgXenXzNBZYIKrz
+Dv0Zh7VJpK7G33JGYH9JwOcy2AErvQDf4H133s2tYxHBlakb6PDF/HhNd1pkWNCv
+Kuq8RSQN/6zbTPHrUOGaOKPdfrV8qaU/0v+P3sT5SDUmLy5NxRmb/iEo01pJdu4j
+52WE5V20mu44cY5xUzOvUdK5ZXDu0SIa2NnNmRQ06hQk6/iBUQXKlrc5rL8zLmEg
+cw21tqSJXZY2tG6PoHs+BRNBVRuYtbyDW8l1Oy0fz4gv5BOitHMsj1MGGdCRj5sE
+LHaSuEv5LeoGwDlusB9pougkyxsx1Lu9eXUzs0V0QCVb1YNGemv8RjKboBxzYzig
+HcTeBzD+DsonO3yS4crTDW5R314JVja2/V4kC0Yay5QZxwFAzTKb+qFEz1u33Mlq
+8TeFZZb6/kNp7ObmfCG7Zn+CeQ8pbSiyQJSRhKWiyoWlSELNaNvXIdonxYmPWYyw
+0dpNQb/zCLKJi35zmFlb
+=0YCF
+-----END PGP SIGNATURE-----
+
+--3uo+9/B/ebqu+fSQ--
