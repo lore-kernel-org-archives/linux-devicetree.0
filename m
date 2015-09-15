@@ -1,162 +1,198 @@
-From: Laurentiu Palcu <laurentiu.palcu@intel.com>
-Subject: Re: [PATCH v3 01/10] dt: power: bq24257-charger: Cover additional
- devices
-Date: Tue, 15 Sep 2015 12:05:37 +0300
-Message-ID: <20150915090537.GB3166@lpalcu-desk>
-References: <1442003202-1430-1-git-send-email-dannenberg@ti.com>
- <1442003202-1430-2-git-send-email-dannenberg@ti.com>
- <55F66514.1080909@samsung.com>
- <20150914135430.GA21442@borg>
- <55F7CF44.3010102@samsung.com>
+From: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: Re: [PATCH V3 3/3] reset: hi6220: Reset driver for hisilicon hi6220
+ SoC
+Date: Tue, 15 Sep 2015 11:11:24 +0200
+Message-ID: <1442308284.3979.33.camel@pengutronix.de>
+References: <1442289504-183550-1-git-send-email-puck.chen@hisilicon.com>
+	 <1442289504-183550-3-git-send-email-puck.chen@hisilicon.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-pm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <55F7CF44.3010102@samsung.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-Cc: Andreas Dannenberg <dannenberg@ti.com>, Sebastian Reichel <sre@kernel.org>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, David Woodhouse <dwmw2@infradead.org>, Ramakrishna Pallala <ramakrishna.pallala@intel.com>, linux-pm@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1442289504-183550-3-git-send-email-puck.chen-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Chen Feng <puck.chen-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, haojian.zhuang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, zhangfei.gao-H32Fclmsjq1BDgjK7y7TUQ@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, bintian.wang-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, xuyiping-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dan.zhao-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, suzhuangluan-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, w.f-hv44wF8Li93QT0dZR+AlfA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Sep 15, 2015 at 04:56:52PM +0900, Krzysztof Kozlowski wrote:
-> On 14.09.2015 22:54, Andreas Dannenberg wrote:
-> > On Mon, Sep 14, 2015 at 03:11:32PM +0900, Krzysztof Kozlowski wrote:
-> >> On 12.09.2015 05:26, Andreas Dannenberg wrote:
-> >>> Extend the bq24257 charger's device tree documentation to cover the
-> >>> bq24250 and bq24251 devices as well feature additions.
-> >>>
-> >>> Signed-off-by: Andreas Dannenberg <dannenberg@ti.com>
-> >>> ---
-> >>>  .../devicetree/bindings/power/bq24257.txt          | 59 ++++++++++++++++++++--
-> >>>  1 file changed, 54 insertions(+), 5 deletions(-)
-> >>>
-> >>> diff --git a/Documentation/devicetree/bindings/power/bq24257.txt b/Documentation/devicetree/bindings/power/bq24257.txt
-> >>> index 5c9d394..4a88c96 100644
-> >>> --- a/Documentation/devicetree/bindings/power/bq24257.txt
-> >>> +++ b/Documentation/devicetree/bindings/power/bq24257.txt
-> >>> @@ -1,21 +1,70 @@
-> >>> -Binding for TI bq24257 Li-Ion Charger
-> >>> +Binding for TI bq24250/bq24251/bq24257 Li-Ion Charger
-> >>>  
-> >>>  Required properties:
-> >>>  - compatible: Should contain one of the following:
-> >>> + * "ti,bq24250"
-> >>> + * "ti,bq24251"
-> >>>   * "ti,bq24257"
-> >>> -- reg:			   integer, i2c address of the device.
-> >>> +- reg: integer, i2c address of the device.
-> >>> +- stat-gpios: GPIO used for the devices STAT_IN pin. Alternatively the pin can
-> >>> +    also be defined through the standard interrupt definition properties (see
-> >>> +    optional properties section below). Only use one method.
-> >>>  - ti,battery-regulation-voltage: integer, maximum charging voltage in uV.
-> >>> -- ti,charge-current:	   integer, maximum charging current in uA.
-> >>> -- ti,termination-current:  integer, charge will be terminated when current in
-> >>> -			   constant-voltage phase drops below this value (in uA).
-> >>> +- ti,charge-current: integer, maximum charging current in uA.
-> >>> +- ti,termination-current: integer, charge will be terminated when current in
-> >>> +    constant-voltage phase drops below this value (in uA).
-> >>> +
-> >>> +Optional properties:
-> >>> +- pg-gpios: GPIO used for connecting the bq2425x device PG (Power Good) pin.
-> >>> +    This pin is not available on all devices however it should be used if
-> >>> +    possible as this is the recommended way to obtain the charger's input PG
-> >>> +    state. If this pin is not specified a software-based approach for PG
-> >>> +    detection is used.
-> >>> +- ti,current-limit: The maximum current to be drawn from the charger's input
-> >>> +    (in uA). If this property is not specified a USB D+/D- signal based charger
-> >>> +    type detection is used (if available) and the input limit current is set
-> >>> +    accordingly. If the D+/D- based detection is not available on a given device
-> >>> +    a default of 500,000 is used (=500mA).
-> >>> +- ti,ovp-voltage: Configures the over voltage protection voltage (in uV). If
-> >>> +    not specified a default of 6,5000,000 (=6.5V) is used.
-> >>> +- ti,in-dpm-voltage: Configures the threshold input voltage for the dynamic
-> >>> +    power path management (in uV). If not specified a default of 4,360,000
-> >>> +    (=4.36V) is used.
-> >>> +- ti,safety-timer-2x-enable: If this property is set to 1 the device's safety
-> >>> +    timer is extended (slowed down) by a factor of two. Setting this property
-> >>> +    to 0 or not providing it will leave the safety timer at its default
-> >>> +    setting.
-> >>
-> >> Now I spotted the difference in this binding from previous emails.
-> >> Previously you made it as a boolean property. Now it is a integer
-> >> property for a boolean value. It is unusual. If you expect a need (or a
-> >> possibility of need) of:
-> >> 1. extending,
-> >> 2. overriding,
-> >> 3. using similar (extended) property in different drivers,
-> >> then it should be a real value, like:
-> >>
-> >> 1. ti,safety-timer: integer, in seconds
-> > 
-> > Hi Krzysztof,
-> > 
-> > I thought about this as well because the device actually allows
-> > configuring different safety timer intervals (currently not exposed) and
-> > it appears that the "2x enable" could be factored in there however it's
-> > not as easy as it seems.  The "2x enable" is a dedicated HW feature
-> > that's only being used in some states of the devices and with that does
-> > not generally extend the safety timer under all conditions.
-> 
-> Right, I read also the datasheet which explains it.
-> 
-> > 
-> >> 2. ti,safety-timer-ratio/multiplier: integer, supported values are: 0
-> >> (use default) or 2 (slow down by factor of 2)
-> >>
-> >> It is unusual and not obvious to use a integer value for boolean strict
-> >> property. With current solution you can actually only override it.
-> > 
-> > Yes that was the sole reason behind using integer instead of boolean.
-> > The boolean "character" of this property was left intact because of the
-> > direct mapping to a device HW feature (see below).
-> 
-> DT serves a purpose of providing information allowing the kernel to use
-> and configure the hardware. DT binding does not have to map device
-> property. In the same time having a device property does not mean you
-> create a DT binding.
-> 
-> If such requirement of mapping property to a HW feature was valid then
-> each driver would expose each register in DT. Sometimes platform data
-> did this... but DT is not pdata.
-> You're using such argument also below but this argument is not sufficient.
-> 
-> Sufficient argument would be: this property is necessary to configure
-> the hardware in different board configurations (so on different boards
-> it will have different values).
-> 
-> Example of device features not matching to DeviceTree:
->  - configuration changing over time:
-> /sys/class/power/ds2760-battery.*/charge_full
-> 
->  - various timers:
-> /sys/class/power_supply/max14577-charger/device/fast_charge_timer
-> 
->  - various thresholds:
-> /sys/class/power_supply/max77693-charger/device/top_off_threshold_current
-> 
-> These are strictly HW features (they map to a bit in register) but they
-> are not related to configuring device for specific board. They serve for
-> user-space to use the devices in different ways.
-> 
-> In this case - the 2XTMR_EN - I assume that for certain batteries or
-> boards you want to extend the time of charging in case of special
-> conditions?
+Hi,
 
-FWIW, I don't see any real benefit in manually changing the 2X timer at
-all. The default setting is decent enough. The chip will automatically
-switch to 2X timer in certain conditions: for example, when the
-temperature threshold is exceeded and the charge current is
-automatically lowered. This makes sense since it'll take the battery
-more time to charge at a lower current.
+Am Dienstag, den 15.09.2015, 11:58 +0800 schrieb Chen Feng:
+[...]
+> diff --git a/drivers/reset/hisilicon/Kconfig b/drivers/reset/hisilicon/Kconfig
+> new file mode 100644
+> index 0000000..26bf95a
+> --- /dev/null
+> +++ b/drivers/reset/hisilicon/Kconfig
+> @@ -0,0 +1,5 @@
+> +config COMMON_RESET_HI6220
+> +	tristate "Hi6220 Reset Driver"
+> +	depends on (ARCH_HISI && RESET_CONTROLLER)
+> +	help
+> +	  Build the Hisilicon Hi6220 reset driver.
+> diff --git a/drivers/reset/hisilicon/Makefile b/drivers/reset/hisilicon/Makefile
+> new file mode 100644
+> index 0000000..c932f86
+> --- /dev/null
+> +++ b/drivers/reset/hisilicon/Makefile
+> @@ -0,0 +1 @@
+> +obj-$(CONFIG_COMMON_RESET_HI6220) += hi6220_reset.o
+> diff --git a/drivers/reset/hisilicon/hi6220_reset.c b/drivers/reset/hisilicon/hi6220_reset.c
+> new file mode 100644
+> index 0000000..3d3de94
+> --- /dev/null
+> +++ b/drivers/reset/hisilicon/hi6220_reset.c
+> @@ -0,0 +1,121 @@
+> +/*
+> + * Hisilicon Hi6220 reset controller driver
+> + *
+> + * Copyright (c) 2015 Hisilicon Limited.
+> + *
+> + * Author: Feng Chen <puck.chen-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
+> + *
+> + * This program is free software; you can redistribute it and/or modify
+> + * it under the terms of the GNU General Public License version 2 as
+> + * published by the Free Software Foundation.
+> + */
+> +
+> +#include <linux/init.h>
+> +#include <linux/bitops.h>
+> +#include <linux/of.h>
+> +#include <linux/reset-controller.h>
+> +#include <linux/reset.h>
+> +#include <linux/sizes.h>
+> +#include <linux/platform_device.h>
+> +
+> +#define ASSET_OFFSET            0x300
 
-It would probably make more sense to add a DT property to change the
-'Safety Timer Time Limit' device property (which can be 0.75hrs, 6hrs,
-9hrs or totally disabled) than the 2XTMR.
+Typo, missing 'R':
 
-I omitted both when I originally added support for this chip since the
-6hrs default safety timer seemed more than enough to charge a nowadays
-battery, even at 500mA (provided by a standard USB port). But, future
-batteries might (and probably will) have higher capacities and will take
-longer to charge.
++#define ASSERT_OFFSET            0x300
 
-laurentiu
+> +#define DEASSET_OFFSET          0x304
+
+Same here:
+
++#define DEASSERT_OFFSET          0x304
+
+> +#define to_reset_data(x) container_of(x, struct hi6220_reset_data, rc_dev)
+> +
+> +struct hi6220_reset_data {
+> +	spinlock_t			reset_lock; /*device spin-lock*/
+> +	void __iomem			*asset_base;
+> +	void __iomem			*deasset_base;
+> +	struct reset_controller_dev	rc_dev;
+> +};
+> +
+> +static int hi6220_reset_assert(struct reset_controller_dev *rc_dev,
+> +			       unsigned long idx)
+> +{
+> +	struct hi6220_reset_data *data = to_reset_data(rc_dev);
+> +
+> +	unsigned long flags;
+> +	int bank = idx >> 8;
+> +	int offset = idx & 0xff;
+> +
+> +	spin_lock_irqsave(&data->reset_lock, flags);
+
+Not necessary, the spinlock can be removed.
+
+> +	writel(BIT(offset), data->asset_base + (bank * 0x10));
+> +
+> +	spin_unlock_irqrestore(&data->reset_lock, flags);
+> +	return 0;
+> +}
+> +
+> +static int hi6220_reset_deassert(struct reset_controller_dev *rc_dev,
+> +				 unsigned long idx)
+> +{
+> +	struct hi6220_reset_data *data = to_reset_data(rc_dev);
+> +
+> +	unsigned long flags;
+> +	int bank = idx >> 8;
+> +	int offset = idx & 0xff;
+> +
+> +	spin_lock_irqsave(&data->reset_lock, flags);
+> +
+> +	writel(BIT(offset), data->deasset_base + (bank * 0x10));
+> +
+> +	spin_unlock_irqrestore(&data->reset_lock, flags);
+> +
+> +	return 0;
+> +}
+> +
+> +static struct reset_control_ops hi6220_reset_ops = {
+> +	.assert = hi6220_reset_assert,
+> +	.deassert = hi6220_reset_deassert,
+> +};
+> +
+> +static int hi6220_reset_probe(struct platform_device *pdev)
+> +{
+> +	struct hi6220_reset_data *data;
+> +	struct resource *res;
+> +	void __iomem *src_base;
+> +
+> +	data = devm_kzalloc(&pdev->dev, sizeof(*data), GFP_KERNEL);
+> +	if (!data)
+> +		return -ENOMEM;
+> +
+> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> +	src_base = devm_ioremap_resource(&pdev->dev, res);
+> +	if (IS_ERR(src_base))
+> +		return PTR_ERR(src_base);
+> +
+> +	spin_lock_init(&data->reset_lock);
+> +
+> +	data->asset_base = src_base + ASSET_OFFSET;
+> +	data->deasset_base = src_base + DEASSET_OFFSET;
+> +	data->rc_dev.nr_resets = SZ_4K;
+
+The default .of_xlate implementation checks if a given index value from
+the device tree is smaller than this value. Just set this to the largest
+valid reset index + 1, or implement .of_xlate to check that the index is
+a valid bank/offset combination.
+
+> +	data->rc_dev.ops = &hi6220_reset_ops;
+> +	data->rc_dev.of_node = pdev->dev.of_node;
+> +
+> +	reset_controller_register(&data->rc_dev);
+> +
+> +	return 0;
+> +}
+> +
+> +static const struct of_device_id hi6220_reset_match[] = {
+> +	{ .compatible = "hisilicon,hi6220_reset_ctl" },
+
+This should be:
+
++	{ .compatible = "hisilicon,hi6220-reset-ctl" },
+
+> +	{ },
+> +};
+> +
+> +static struct platform_driver hi6220_reset_driver = {
+> +	.probe = hi6220_reset_probe,
+> +	.driver = {
+> +		.name = "reset-hi6220",
+> +		.owner = THIS_MODULE,
+
+Drop this line, .owner will be set by __platform_driver_register below.
+
+> +		.of_match_table = hi6220_reset_match,
+> +	},
+> +};
+> +
+> +static int __init hi6220_reset_init(void)
+> +{
+> +	return platform_driver_register(&hi6220_reset_driver);
+
+The platform_driver_register macro expands to
+__platform_driver_register(&hi6220_reset_driver, THIS_MODULE);
+
+regards
+Philipp
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
