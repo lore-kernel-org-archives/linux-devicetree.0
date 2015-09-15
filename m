@@ -1,119 +1,256 @@
-From: Xinwei Kong <kong.kongxinwei@hisilicon.com>
-Subject: [PATCH RFC 0/8] Add New DRM Driver for Hisilicon's Hi6220 SoC
-Date: Tue, 15 Sep 2015 17:37:06 +0800
-Message-ID: <1442309834-21420-1-git-send-email-kong.kongxinwei@hisilicon.com>
+From: Aleksei Mamlin <mamlinav@gmail.com>
+Subject: Re: [PATCH v5 3/9] Input: goodix - reset device at init
+Date: Tue, 15 Sep 2015 12:48:17 +0300
+Message-ID: <20150915124817.8c53e274e178800edc5767bf@gmail.com>
+References: <1441636583-14188-1-git-send-email-irina.tirdea@intel.com>
+	<1441636583-14188-4-git-send-email-irina.tirdea@intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: airlied@linux.ie, corbet@lwn.net, catalin.marinas@arm.com, will.deacon@arm.com
-Cc: linux-doc@vger.kernel.org, w.f@huawei.com, linuxarm@huawei.com, dri-devel@lists.freedesktop.org, haojian.zhuang@linaro.org, benjamin.gaignard@linaro.org, james.yanglong@hisilicon.com, yinshengbao@hisilicon.com, xuyiping@hisilicon.com, yimin@huawei.com, xuwei5@hisilicon.com, qijiwen@hisilicon.com, devicetree@vger.kernel.org, bintian.wang@huawei.com, puck.chen@hisilicon.com, yanhaifeng@hisilicon.com, fangdechun@hisilicon.com, linux-arm-kernel@lists.infradead.org, andy.green@linaro.org, gongyu@hisilicon.com, linux-kernel@vger.kernel.org, ml.yang@hisilicon.com, liguozhu@hisilicon.com
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1441636583-14188-4-git-send-email-irina.tirdea@intel.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Irina Tirdea <irina.tirdea@intel.com>
+Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Bastien Nocera <hadess@hadess.net>, linux-input@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, Octavian Purdila <octavian.purdila@intel.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-ICBUaGVzZSBwYXRjaCBzZXQgYWRkcyBhIG5ldyBkcm0gZHJpdmVyIGZvciBIaXNpbGljb24ncyBI
-aTYyMjAgU29DLgpDdXJyZW50IHRlc3RpbmcgYW5kIHN1cHBvcnQgYm9hcmQgaXMgSGlrZXkgYm9h
-cmQgd2hpY2ggaXMgb25lIG9mIExpbmFybwo5NmJvYXJkcy4gSXQgaXMgYW4gYXJtNjQgb3BlbiBz
-b3VyY2UgYm9hcmQuIEZvciBtb3JlIGluZm9ybWF0aW9uIGFib3V0CnRoaXMgYm9hcmQsIHBsZWFz
-ZSBhY2Nlc3MgaHR0cHM6Ly93d3cuOTZib2FyZHMub3JnLgoKMS4gSGFyZHdhcmUgRGV0YWlsCiAg
-VGhlIGRpc3BsYXkgc3Vic3lzdGVtIG9mIEhpNjIyMCBTb0MgaXMgc2hvd24gYXMgYmVsbG93Ogog
-Ky0tLS0tKyAgICAgICArLS0tLS0tLS0tLSsgICAgICstLS0tLSsgICAgICstLS0tLS0tLS0rCiB8
-ICAgICB8ICAgICAgIHwgICAgICAgICAgfCAgICAgfCAgICAgfCAgICAgfCAgICAgICAgIHwgICAg
-ICAgICAgICAgCQogfCBGQiAgfC0tLS0tLT58ICAgQURFICAgIHwtLS0tPnwgRFNJIHwtLS0tPnwg
-RXh0ZXJuYWx8CiB8ICAgICB8ICAgICAgIHwgICAgICAgICAgfCAgICAgfCAgICAgfCAgICAgfCAg
-SERNSSAgIHwKICstLS0tLSsgICAgICAgKy0tLS0tLS0tLS0rICAgICArLS0tLS0rICAgICArLS0t
-LS0tLS0tKwoKLSBBREUoQWR2YW5jZWQgRGlzcGxheSBFbmdpbmUpIGlzIHRoZSBkaXNwbGF5IGNv
-bnRyb2xsZXIuIEl0IGNvbnRhaW5zIDcKY2hhbm5lbHMgb3IgcGlwZXMsIDMgb3ZlcmxheSBhbmQg
-YSBMREkuCiAgLSBBIGNoYW5uZWwvcGlwZSBsb29rcyBsaWtlOiBETUEtLT5jbGlwLS0+c2NhbGUt
-LT5jdHJhbnMvY3NjLgogIC0gT3ZlcmxheSBpcyByZXNwb25zZSB0byBjb21wb3NlIHBsYW5lcyB3
-aGljaCBjb21lIGZyb20gNyBjaGFubmVscyBhbmQKICBwYXNzIGNvbXBvc2VkIGltYWdlIHRvIExE
-SS4KICAtIExESSBpcyByZXNwb25zZSB0byBnZW5lcmF0ZSB0aW1pbmdzIGFuZCBSR0IgZGF0YSBz
-dHJlYW0uCi0gRFNJIGNvbnZlcnRzIHRoZSBSR0IgZGF0YSBzdHJlYW0gZnJvbSBBREUgdG8gRFNJ
-IHBhY2tldHMuCi0gRXh0ZXJuYWwgSERNSSBtb2R1bGUgaXMgY29ubmVjdGVkIHdpdGggRFNJIGJ1
-cy4gTm93IEhpa2V5IHVzZSBhIEFESSdzCiAgQURWNzUzMyBleHRlcm5hbCBIRE1JIGNoaXAuCgoy
-LiBTb2Z0d2FyZSBEZXRhaWwKICBBYm91dCB0aGUgc29mdHdhcmUgb3JnYW5pemF0aW9uIGFuZCBp
-bXBsZW1lbnRhdGlvbiBkZXRhaWw6CldlIGhhdmUgYSBtYWluIGRybSBwbGF0Zm9ybSBkcml2ZXIg
-KGhpc2lfZHJtX2Rydi5jKSwgYWRlIHBsYXRmb3JtIGRyaXZlcgooaGlzaV9hZGUuYykgYW5kIGEg
-ZHNpIHBsYXRmb3JtIGRyaXZlciAoaGlzaV9kcm1fZHNpLmMpLiBBZGUgZHJpdmVyCmltcGxlbWVu
-dHMgdGhlIHBsYW5lIGFuZCBjcnRjIGRyaXZlciBpbnRlcmZhY2VzIGFuZCBkc2kgaW1wbGVtZW50
-cyB0aGUKZW5jb2RlciBhbmQgY29ubmVjdG9yIGRyaXZlciBpbnRlcmZhY2VzLiBXZSB0YWtlIGFk
-dmFudGFnZSBvZiBjb21wb25lbnQKZnJhbWV3b3JrIHRvIGluaXRpYWxpemUgZWFjaCBkcml2ZXIu
-CiAgSW4gb3JkZXIgdG8gc3VwcG9ydCBtdWx0aSBjb21pbmcgSGlzaWxpY29uJ3MgU29Dcywgd2Ug
-cGxhbiB0byBzZXBhcmF0ZQpjb21tb24gZHJpdmVyIGNvZGUgYW5kIFNvQyBzcGVjaWZpYyBpbXBs
-ZW1lbnRlZCBjb2RlIGFzIHBvc3NpcGxlIGFzIHdlIGNhbi4KV2UgYWJzdHJhY3QgYW4gb3BzIGZv
-ciBlYWNoIGNvbXBvbmVudChjcnRjLCBwbGFuZSwgZW5jb2RlciBhbmQgY29ubmVjdG9yKQp0byBy
-ZXVzZSB0aGUgY29tbW9uIGludGVyZmFjZSBpbXBsZW1lbnRhdGlvbiBsb2dpYyAoRklYTUU6IE5v
-dCBzdXJlIGlmIHdlCmNhbiBhY2hpZXZlIHRoaXMgdGFyZ2V0IGFuZCBpZiBpdCBpcyBnb29kIG9y
-IG5vdCkuIFRodXMsIHdlIHB1dCB0aGVzZQpjb21tb24gZHJpdmVyIGNvZGUgaW50byBoaXNpX2Ry
-bV9kcnYvY3J0Yy9wbGFuZS9lbmNvZGVyL2Nvbm5lY3Rvci5jIGZpbGVzLgoKWGlud2VpIEtvbmcg
-KDgpOgogIGR0LWJpbmRpbmdzOiBEb2N1bWVudCB0aGUgaGk2MjIwIGJpbmRpbmdzIGZvciBEUk0g
-ZHJpdmVyCiAgZHJtOiBoaXNpbGljb246IEFkZCBuZXcgRFJNIGRyaXZlciBmb3IgaGlzaWxpY29u
-IFNvYwogIGRybTogaGlzaWxpY29uOiBBZGQgdGhlIGxpbmsgdG8gRFJNL0tNUyBpbnRlcmZhY2UK
-ICBkcm06IGhpc2lsaWNvbjogZmlsbCBpbnRlcmZhY2UgZnVuY3Rpb24gb2YgcGxhbmVcY3J0YyBw
-YXJ0CiAgZHJtOiBoaXNpbGljb246IGZpbGwgaW50ZXJmYWNlIGZ1bmN0aW9uIG9mIGVuY29kZXJc
-Y29ubmVjdG9yIHBhcnQKICBkcm06IGhpc2lsaWNvbjogQWRkIHN1cHBvcnQgZm9yIGZiZGV2CiAg
-ZHJtOiBoaXNpbGljb246IEFkZCBzdXBwb3J0IGZvciB2YmxhbmsKICBkdHM6IGhpc2lsaWNvbjog
-QWRkIGRybSBkcml2ZXIgZGV2aWNlIGR0cyBjb25maWcgZm9yIEhpS2V5IGJvYXJkCgogLi4uL2Rl
-dmljZXRyZWUvYmluZGluZ3MvZ3B1L2hpc2lsaWNvbixoaTYyMjAudHh0ICAgfCAgIDY5ICsKIGFy
-Y2gvYXJtNjQvYm9vdC9kdHMvaGlzaWxpY29uL2hpNjIyMC5kdHNpICAgICAgICAgIHwgICAzNCAr
-CiBhcmNoL2FybTY0L2NvbmZpZ3MvZGVmY29uZmlnICAgICAgICAgICAgICAgICAgICAgICB8ICAg
-IDUgKwogZHJpdmVycy9ncHUvZHJtL0tjb25maWcgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-fCAgICAyICsKIGRyaXZlcnMvZ3B1L2RybS9NYWtlZmlsZSAgICAgICAgICAgICAgICAgICAgICAg
-ICAgIHwgICAgMSArCiBkcml2ZXJzL2dwdS9kcm0vaGlzaWxpY29uL0tjb25maWcgICAgICAgICAg
-ICAgICAgICB8ICAgMzIgKwogZHJpdmVycy9ncHUvZHJtL2hpc2lsaWNvbi9NYWtlZmlsZSAgICAg
-ICAgICAgICAgICAgfCAgIDEyICsKIGRyaXZlcnMvZ3B1L2RybS9oaXNpbGljb24vaGlzaV9hZGUu
-YyAgICAgICAgICAgICAgIHwgMTM2MCArKysrKysrKysrKysrKysrCiBkcml2ZXJzL2dwdS9kcm0v
-aGlzaWxpY29uL2hpc2lfYWRlX3JlZy5oICAgICAgICAgICB8ICAyMDggKysrCiBkcml2ZXJzL2dw
-dS9kcm0vaGlzaWxpY29uL2hpc2lfZHJtX2Nvbm5lY3Rvci5jICAgICB8ICAxMjggKysKIGRyaXZl
-cnMvZ3B1L2RybS9oaXNpbGljb24vaGlzaV9kcm1fY29ubmVjdG9yLmggICAgIHwgICAzMyArCiBk
-cml2ZXJzL2dwdS9kcm0vaGlzaWxpY29uL2hpc2lfZHJtX2NydGMuYyAgICAgICAgICB8ICAzMTUg
-KysrKysKIGRyaXZlcnMvZ3B1L2RybS9oaXNpbGljb24vaGlzaV9kcm1fY3J0Yy5oICAgICAgICAg
-IHwgICA2NCArCiBkcml2ZXJzL2dwdS9kcm0vaGlzaWxpY29uL2hpc2lfZHJtX2Rydi5jICAgICAg
-ICAgICB8ICAyMjAgKysrKwogZHJpdmVycy9ncHUvZHJtL2hpc2lsaWNvbi9oaXNpX2RybV9kcnYu
-aCAgICAgICAgICAgfCAgIDM2ICsKIGRyaXZlcnMvZ3B1L2RybS9oaXNpbGljb24vaGlzaV9kcm1f
-ZHNpLmMgICAgICAgICAgIHwgIDgyOSArKysrKysrKysrKysKIGRyaXZlcnMvZ3B1L2RybS9oaXNp
-bGljb24vaGlzaV9kcm1fZW5jb2Rlci5jICAgICAgIHwgIDExNyArKwogZHJpdmVycy9ncHUvZHJt
-L2hpc2lsaWNvbi9oaXNpX2RybV9lbmNvZGVyLmggICAgICAgfCAgIDQxICsKIGRyaXZlcnMvZ3B1
-L2RybS9oaXNpbGljb24vaGlzaV9kcm1fZmIuYyAgICAgICAgICAgIHwgIDE3NSArKysKIGRyaXZl
-cnMvZ3B1L2RybS9oaXNpbGljb24vaGlzaV9kcm1fZmIuaCAgICAgICAgICAgIHwgICAzMyArCiBk
-cml2ZXJzL2dwdS9kcm0vaGlzaWxpY29uL2hpc2lfZHJtX2ZiZGV2LmMgICAgICAgICB8ICAzOTUg
-KysrKysrCiBkcml2ZXJzL2dwdS9kcm0vaGlzaWxpY29uL2hpc2lfZHJtX2ZiZGV2LmggICAgICAg
-ICB8ICAgMjQgKwogZHJpdmVycy9ncHUvZHJtL2hpc2lsaWNvbi9oaXNpX2RybV9wbGFuZS5jICAg
-ICAgICAgfCAgMjU3ICsrKysKIGRyaXZlcnMvZ3B1L2RybS9oaXNpbGljb24vaGlzaV9kcm1fcGxh
-bmUuaCAgICAgICAgIHwgICA1NSArCiBkcml2ZXJzL2dwdS9kcm0vaGlzaWxpY29uL2hpc2lfZHNp
-X3JlZy5oICAgICAgICAgICB8ICAgOTEgKysKIDI1IGZpbGVzIGNoYW5nZWQsIDQ1MzYgaW5zZXJ0
-aW9ucygrKQogY3JlYXRlIG1vZGUgMTAwNjQ0IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5k
-aW5ncy9ncHUvaGlzaWxpY29uLGhpNjIyMC50eHQKIGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJz
-L2dwdS9kcm0vaGlzaWxpY29uL0tjb25maWcKIGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL2dw
-dS9kcm0vaGlzaWxpY29uL01ha2VmaWxlCiBjcmVhdGUgbW9kZSAxMDA2NDQgZHJpdmVycy9ncHUv
-ZHJtL2hpc2lsaWNvbi9oaXNpX2FkZS5jCiBjcmVhdGUgbW9kZSAxMDA2NDQgZHJpdmVycy9ncHUv
-ZHJtL2hpc2lsaWNvbi9oaXNpX2FkZV9yZWcuaAogY3JlYXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMv
-Z3B1L2RybS9oaXNpbGljb24vaGlzaV9kcm1fY29ubmVjdG9yLmMKIGNyZWF0ZSBtb2RlIDEwMDY0
-NCBkcml2ZXJzL2dwdS9kcm0vaGlzaWxpY29uL2hpc2lfZHJtX2Nvbm5lY3Rvci5oCiBjcmVhdGUg
-bW9kZSAxMDA2NDQgZHJpdmVycy9ncHUvZHJtL2hpc2lsaWNvbi9oaXNpX2RybV9jcnRjLmMKIGNy
-ZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL2dwdS9kcm0vaGlzaWxpY29uL2hpc2lfZHJtX2NydGMu
-aAogY3JlYXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMvZ3B1L2RybS9oaXNpbGljb24vaGlzaV9kcm1f
-ZHJ2LmMKIGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL2dwdS9kcm0vaGlzaWxpY29uL2hpc2lf
-ZHJtX2Rydi5oCiBjcmVhdGUgbW9kZSAxMDA2NDQgZHJpdmVycy9ncHUvZHJtL2hpc2lsaWNvbi9o
-aXNpX2RybV9kc2kuYwogY3JlYXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMvZ3B1L2RybS9oaXNpbGlj
-b24vaGlzaV9kcm1fZW5jb2Rlci5jCiBjcmVhdGUgbW9kZSAxMDA2NDQgZHJpdmVycy9ncHUvZHJt
-L2hpc2lsaWNvbi9oaXNpX2RybV9lbmNvZGVyLmgKIGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJz
-L2dwdS9kcm0vaGlzaWxpY29uL2hpc2lfZHJtX2ZiLmMKIGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2
-ZXJzL2dwdS9kcm0vaGlzaWxpY29uL2hpc2lfZHJtX2ZiLmgKIGNyZWF0ZSBtb2RlIDEwMDY0NCBk
-cml2ZXJzL2dwdS9kcm0vaGlzaWxpY29uL2hpc2lfZHJtX2ZiZGV2LmMKIGNyZWF0ZSBtb2RlIDEw
-MDY0NCBkcml2ZXJzL2dwdS9kcm0vaGlzaWxpY29uL2hpc2lfZHJtX2ZiZGV2LmgKIGNyZWF0ZSBt
-b2RlIDEwMDY0NCBkcml2ZXJzL2dwdS9kcm0vaGlzaWxpY29uL2hpc2lfZHJtX3BsYW5lLmMKIGNy
-ZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL2dwdS9kcm0vaGlzaWxpY29uL2hpc2lfZHJtX3BsYW5l
-LmgKIGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL2dwdS9kcm0vaGlzaWxpY29uL2hpc2lfZHNp
-X3JlZy5oCgotLSAKMS45LjEKCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVz
-a3RvcC5vcmcKaHR0cDovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2Ry
-aS1kZXZlbAo=
+On Mon,  7 Sep 2015 17:36:17 +0300
+Irina Tirdea <irina.tirdea@intel.com> wrote:
+
+> After power on, it is recommended that the driver resets the device.
+> The reset procedure timing is described in the datasheet and is used
+> at device init (before writing device configuration) and
+> for power management. It is a sequence of setting the interrupt
+> and reset pins high/low at specific timing intervals. This procedure
+> also includes setting the slave address to the one specified in the
+> ACPI/device tree.
+> 
+> This is based on Goodix datasheets for GT911 and GT9271 and on Goodix
+> driver gt9xx.c for Android (publicly available in Android kernel
+> trees for various devices).
+> 
+> For reset the driver needs to control the interrupt and
+> reset gpio pins (configured through ACPI/device tree). For devices
+> that do not have the gpio pins declared, the functionality depending
+> on these pins will not be available, but the device can still be used
+> with basic functionality.
+> 
+> Signed-off-by: Octavian Purdila <octavian.purdila@intel.com>
+> Signed-off-by: Irina Tirdea <irina.tirdea@intel.com>
+> ---
+>  .../bindings/input/touchscreen/goodix.txt          |   5 +
+>  drivers/input/touchscreen/goodix.c                 | 136 +++++++++++++++++++++
+>  2 files changed, 141 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/input/touchscreen/goodix.txt b/Documentation/devicetree/bindings/input/touchscreen/goodix.txt
+> index 8ba98ee..c0715f8 100644
+> --- a/Documentation/devicetree/bindings/input/touchscreen/goodix.txt
+> +++ b/Documentation/devicetree/bindings/input/touchscreen/goodix.txt
+> @@ -12,6 +12,8 @@ Required properties:
+>   - reg			: I2C address of the chip. Should be 0x5d or 0x14
+>   - interrupt-parent	: Interrupt controller to which the chip is connected
+>   - interrupts		: Interrupt to which the chip is connected
+> + - gpios		: GPIOS the chip is connected to: first one is the
+> +			  interrupt gpio and second one the reset gpio.
+>  
+>  Example:
+>  
+> @@ -23,6 +25,9 @@ Example:
+>  			reg = <0x5d>;
+>  			interrupt-parent = <&gpio>;
+>  			interrupts = <0 0>;
+> +
+> +			gpios = <&gpio1 0 0>, /* INT */
+> +				<&gpio1 1 0>; /* RST */
+>  		};
+>  
+>  		/* ... */
+> diff --git a/drivers/input/touchscreen/goodix.c b/drivers/input/touchscreen/goodix.c
+> index 7be6eab..8edfc06 100644
+> --- a/drivers/input/touchscreen/goodix.c
+> +++ b/drivers/input/touchscreen/goodix.c
+> @@ -17,6 +17,7 @@
+>  #include <linux/acpi.h>
+>  #include <linux/delay.h>
+>  #include <linux/dmi.h>
+> +#include <linux/gpio.h>
+>  #include <linux/i2c.h>
+>  #include <linux/input.h>
+>  #include <linux/input/mt.h>
+> @@ -37,6 +38,8 @@ struct goodix_ts_data {
+>  	unsigned int int_trigger_type;
+>  	bool rotated_screen;
+>  	int cfg_len;
+> +	struct gpio_desc *gpiod_int;
+> +	struct gpio_desc *gpiod_rst;
+>  };
+>  
+>  #define GOODIX_MAX_HEIGHT		4096
+> @@ -89,6 +92,30 @@ static const struct dmi_system_id rotated_screen[] = {
+>  	{}
+>  };
+>  
+> +/*
+> + * ACPI table specifies gpio pins in this order: first rst pin and
+> + * then interrupt pin.
+> + */
+> +static const struct dmi_system_id goodix_rst_pin_first[] = {
+> +#if defined(CONFIG_DMI) && defined(CONFIG_X86)
+> +	{
+> +		.ident = "WinBook TW100",
+> +		.matches = {
+> +			DMI_MATCH(DMI_SYS_VENDOR, "WinBook"),
+> +			DMI_MATCH(DMI_PRODUCT_NAME, "TW100")
+> +		}
+> +	},
+> +	{
+> +		.ident = "WinBook TW700",
+> +		.matches = {
+> +			DMI_MATCH(DMI_SYS_VENDOR, "WinBook"),
+> +			DMI_MATCH(DMI_PRODUCT_NAME, "TW700")
+> +		},
+> +	},
+> +#endif
+> +	{}
+> +};
+> +
+>  /**
+>   * goodix_i2c_read - read data from a register of the i2c slave device.
+>   *
+> @@ -237,6 +264,102 @@ static irqreturn_t goodix_ts_irq_handler(int irq, void *dev_id)
+>  	return IRQ_HANDLED;
+>  }
+>  
+> +static int goodix_int_sync(struct goodix_ts_data *ts)
+> +{
+> +	int error;
+> +
+> +	error = gpiod_direction_output(ts->gpiod_int, 0);
+> +	if (error)
+> +		return error;
+> +	msleep(50);				/* T5: 50ms */
+> +
+> +	return gpiod_direction_input(ts->gpiod_int);
+> +}
+> +
+> +/**
+> + * goodix_reset - Reset device during power on
+> + *
+> + * @ts: goodix_ts_data pointer
+> + */
+> +static int goodix_reset(struct goodix_ts_data *ts)
+> +{
+> +	int error;
+> +
+> +	/* begin select I2C slave addr */
+> +	error = gpiod_direction_output(ts->gpiod_rst, 0);
+> +	if (error)
+> +		return error;
+> +	msleep(20);				/* T2: > 10ms */
+> +	/* HIGH: 0x28/0x29, LOW: 0xBA/0xBB */
+> +	error = gpiod_direction_output(ts->gpiod_int, ts->client->addr == 0x14);
+> +	if (error)
+> +		return error;
+> +	usleep_range(100, 2000);		/* T3: > 100us */
+> +	error = gpiod_direction_output(ts->gpiod_rst, 1);
+> +	if (error)
+> +		return error;
+> +	usleep_range(6000, 10000);		/* T4: > 5ms */
+> +	/* end select I2C slave addr */
+> +	error = gpiod_direction_input(ts->gpiod_rst);
+> +	if (error)
+> +		return error;
+> +	return goodix_int_sync(ts);
+> +}
+> +
+> +/**
+> + * goodix_get_gpio_config - Get GPIO config from ACPI/DT
+> + *
+> + * @ts: goodix_ts_data pointer
+> + */
+> +static int goodix_get_gpio_config(struct goodix_ts_data *ts,
+> +				  const struct i2c_device_id *i2c_id)
+> +{
+> +	int error;
+> +	struct device *dev;
+> +	struct gpio_desc *gpiod;
+> +	/* Default gpio pin order: irq, rst */
+> +	int irq_idx = 0, rst_idx = 1;
+> +
+> +	if (!ts->client)
+> +		return -EINVAL;
+> +	dev = &ts->client->dev;
+> +
+> +	if (dmi_check_system(goodix_rst_pin_first)) {
+> +		dev_dbg(&ts->client->dev,
+> +			"Applying 'reverse gpio pin order' quirk\n");
+> +		rst_idx = 0;
+> +		irq_idx = 1;
+> +	}
+> +
+> +	/* Get interrupt GPIO pin number */
+> +	gpiod = devm_gpiod_get_index(dev, NULL, irq_idx, GPIOD_IN);
+> +	if (IS_ERR(gpiod)) {
+> +		error = PTR_ERR(gpiod);
+> +		if (error != -EPROBE_DEFER)
+> +			dev_warn(dev, "Failed to get GPIO %d: %d\n",
+> +				 irq_idx, error);
+> +		if (error == -ENOENT)
+> +			return 0;
+> +		return error;
+> +	}
+> +	ts->gpiod_int = gpiod;
+> +
+> +	/* Get the reset line GPIO pin number */
+> +	gpiod = devm_gpiod_get_index(dev, NULL, rst_idx, GPIOD_IN);
+> +	if (IS_ERR(gpiod)) {
+> +		error = PTR_ERR(gpiod);
+> +		if (error != -EPROBE_DEFER)
+> +			dev_warn(dev, "Failed to get GPIO %d: %d\n",
+> +				 rst_idx, error);
+> +		if (error == -ENOENT)
+> +			return 0;
+> +		return error;
+> +	}
+> +	ts->gpiod_rst = gpiod;
+> +
+> +	return 0;
+> +}
+> +
+>  /**
+>   * goodix_read_config - Read the embedded configuration of the panel
+>   *
+> @@ -419,6 +542,19 @@ static int goodix_ts_probe(struct i2c_client *client,
+>  
+>  	ts->cfg_len = goodix_get_cfg_len(id_info);
+>  
+> +	error = goodix_get_gpio_config(ts, id);
+> +	if (error)
+> +		return error;
+> +
+> +	if (ts->gpiod_int && ts->gpiod_rst) {
+> +		/* reset the controller */
+> +		error = goodix_reset(ts);
+> +		if (error) {
+> +			dev_err(&client->dev, "Controller reset failed.\n");
+> +			return error;
+> +		}
+> +	}
+> +
+
+On devices with devicetree, such as ARM tablets, we can set I2C address via DT, so driver should reset controller and set right address.
+If we don't do this we get "I2C communication failure: -6".
+
+Also, most of touchscreen drivers tries to reset controllers before start communicating, so we need do the same.
+
+>  	goodix_read_config(ts);
+>  
+>  	error = goodix_request_input_dev(ts, version_info, id_info);
+> -- 
+> 1.9.1
+> 
+
+
+-- 
+Thanks and regards,
+Aleksei Mamlin
