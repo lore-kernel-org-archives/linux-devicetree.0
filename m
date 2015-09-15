@@ -1,83 +1,49 @@
-From: Leo Yan <leo.yan@linaro.org>
-Subject: [PATCH v3 3/3] arm64: dts: add Hi6220 mailbox node
-Date: Tue, 15 Sep 2015 22:37:57 +0800
-Message-ID: <1442327877-2620-4-git-send-email-leo.yan@linaro.org>
-References: <1442327877-2620-1-git-send-email-leo.yan@linaro.org>
+From: Irina Tirdea <irina.tirdea@intel.com>
+Subject: [PATCH v6 1/9] Input: goodix - sort includes alphabetically
+Date: Tue, 15 Sep 2015 17:31:15 +0300
+Message-ID: <1442327483-19407-2-git-send-email-irina.tirdea@intel.com>
+References: <1442327483-19407-1-git-send-email-irina.tirdea@intel.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1442327877-2620-1-git-send-email-leo.yan@linaro.org>
+In-Reply-To: <1442327483-19407-1-git-send-email-irina.tirdea@intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Jassi Brar <jassisinghbrar@gmail.com>, Bintian Wang <bintian.wang@huawei.com>, haojian.zhuang@linaro.org, Yiping Xu <xuyiping@hisilicon.com>, Wei Xu <xuwei5@hisilicon.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, guodong.xu@linaro.org, zhangjian001@hisilicon.com, Zhenwei Wang <Zhenwei.wang@hisilicon.com>, Haoju Mo <mohaoju@hisilicon.com>, Dan Zhao <dan.zhao@hisilicon.com>, kongfei@hisilicon.com, Guangyue Zeng <zengguangyue@hisilicon.com>, leif.lindholm@linaro.org, Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Cc: Leo Yan <leo.yan@linaro.org>
+To: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Bastien Nocera <hadess@hadess.net>, Aleksei Mamlin <mamlinav@gmail.com>, linux-input@vger.kernel.org
+Cc: Mark Rutland <mark.rutland@arm.com>, Octavian Purdila <octavian.purdila@intel.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Irina Tirdea <irina.tirdea@intel.com>
 List-Id: devicetree@vger.kernel.org
 
-On Hi6220, below memory regions in DDR have specific purpose:
-
-  0x05e0,0000 - 0x05ef,ffff: For MCU firmware using at runtime;
-  0x06df,f000 - 0x06df,ffff: For mailbox message data;
-  0x0740,f000 - 0x0740,ffff: For MCU firmware's section;
-  0x3e00,0000 - 0x3fff,ffff: For OP-TEE.
-
-This patch reserves these memory regions and add device node for
-mailbox in dts.
-
-Signed-off-by: Leo Yan <leo.yan@linaro.org>
+Signed-off-by: Irina Tirdea <irina.tirdea@intel.com>
+Acked-by: Bastien Nocera <hadess@hadess.net>
 ---
- arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts | 16 ++++++++++++----
- arch/arm64/boot/dts/hisilicon/hi6220.dtsi      |  8 ++++++++
- 2 files changed, 20 insertions(+), 4 deletions(-)
+ drivers/input/touchscreen/goodix.c | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts b/arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts
-index e36a539..e3f4cb3 100644
---- a/arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts
-+++ b/arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts
-@@ -7,9 +7,6 @@
+diff --git a/drivers/input/touchscreen/goodix.c b/drivers/input/touchscreen/goodix.c
+index e36162b..6ae28c5 100644
+--- a/drivers/input/touchscreen/goodix.c
++++ b/drivers/input/touchscreen/goodix.c
+@@ -14,18 +14,18 @@
+  * Software Foundation; version 2 of the License.
+  */
  
- /dts-v1/;
+-#include <linux/kernel.h>
++#include <linux/acpi.h>
++#include <linux/delay.h>
+ #include <linux/dmi.h>
+ #include <linux/i2c.h>
+ #include <linux/input.h>
+ #include <linux/input/mt.h>
+-#include <linux/module.h>
+-#include <linux/delay.h>
+-#include <linux/irq.h>
+ #include <linux/interrupt.h>
+-#include <linux/slab.h>
+-#include <linux/acpi.h>
++#include <linux/irq.h>
++#include <linux/kernel.h>
++#include <linux/module.h>
+ #include <linux/of.h>
++#include <linux/slab.h>
+ #include <asm/unaligned.h>
  
--/*Reserved 1MB memory for MCU*/
--/memreserve/ 0x05e00000 0x00100000;
--
- #include "hi6220.dtsi"
- 
- / {
-@@ -24,8 +21,19 @@
- 		stdout-path = "serial0:115200n8";
- 	};
- 
-+	/*
-+	 * Reserve below regions from memory node:
-+	 *
-+	 *  - 0x05e0,0000 - 0x05ef,ffff: MCU firmware runtime using
-+	 *  - 0x06df,f000 - 0x06df,ffff: Mailbox message data
-+	 *  - 0x0740,f000 - 0x0740,ffff: MCU firmware section
-+	 *  - 0x3e00,0000 - 0x3fff,ffff: OP-TEE
-+	 */
- 	memory@0 {
- 		device_type = "memory";
--		reg = <0x0 0x0 0x0 0x40000000>;
-+		reg = <0x00000000 0x00000000 0x00000000 0x05e00000>,
-+		      <0x00000000 0x05f00000 0x00000000 0x00eff000>,
-+		      <0x00000000 0x06e00000 0x00000000 0x0060f000>,
-+		      <0x00000000 0x07410000 0x00000000 0x36bf0000>;
- 	};
- };
-diff --git a/arch/arm64/boot/dts/hisilicon/hi6220.dtsi b/arch/arm64/boot/dts/hisilicon/hi6220.dtsi
-index 3f03380..9ff25bc 100644
---- a/arch/arm64/boot/dts/hisilicon/hi6220.dtsi
-+++ b/arch/arm64/boot/dts/hisilicon/hi6220.dtsi
-@@ -167,5 +167,13 @@
- 			clocks = <&ao_ctrl 36>, <&ao_ctrl 36>;
- 			clock-names = "uartclk", "apb_pclk";
- 		};
-+
-+		mailbox: mailbox@f7510000 {
-+			#mbox-cells = <1>;
-+			compatible = "hisilicon,hi6220-mbox";
-+			reg = <0x0 0xf7510000 0x0 0x1000>, /* IPC_S */
-+			      <0x0 0x06dff800 0x0 0x0800>; /* Mailbox buffer */
-+			interrupts = <GIC_SPI 94 IRQ_TYPE_LEVEL_HIGH>;
-+		};
- 	};
- };
+ struct goodix_ts_data {
 -- 
 1.9.1
