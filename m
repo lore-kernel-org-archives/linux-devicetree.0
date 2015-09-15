@@ -1,81 +1,43 @@
 From: Shengjiu Wang <shengjiu.wang@freescale.com>
-Subject: [PATCH V2 2/2] ARM: dts: imx6: change the core clock of spdif
-Date: Tue, 15 Sep 2015 18:01:02 +0800
-Message-ID: <62f5b2249f705f6543c4b727e6947c56928a096a.1442310569.git.shengjiu.wang@freescale.com>
-References: <cover.1442310569.git.shengjiu.wang@freescale.com>
+Subject: [PATCH V2 0/2]  fix clock issue for fsl,spdi
+Date: Tue, 15 Sep 2015 18:01:00 +0800
+Message-ID: <cover.1442310569.git.shengjiu.wang@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <cover.1442310569.git.shengjiu.wang@freescale.com>
-Sender: linux-kernel-owner@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: shawnguo@kernel.org, mturquette@baylibre.com, kernel@pengutronix.de, sboyd@codeaurora.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk
-Cc: linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Cc: devicetree@vger.kernel.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-As core clock is changed in clock tree, the dts also need to be
-updated.
+fix clock issue for fsl,spdi in imx6.
 
-Signed-off-by: Shengjiu Wang <shengjiu.wang@freescale.com>
----
- arch/arm/boot/dts/imx6qdl.dtsi |  2 +-
- arch/arm/boot/dts/imx6sl.dtsi  | 16 ++++++++++++++++
- arch/arm/boot/dts/imx6sx.dtsi  |  2 +-
- 3 files changed, 18 insertions(+), 2 deletions(-)
+Changes in v2:
+move the dts change to another patch
 
-diff --git a/arch/arm/boot/dts/imx6qdl.dtsi b/arch/arm/boot/dts/imx6qdl.dtsi
-index e716e6f..53044b0 100644
---- a/arch/arm/boot/dts/imx6qdl.dtsi
-+++ b/arch/arm/boot/dts/imx6qdl.dtsi
-@@ -218,7 +218,7 @@
- 					dmas = <&sdma 14 18 0>,
- 					       <&sdma 15 18 0>;
- 					dma-names = "rx", "tx";
--					clocks = <&clks IMX6QDL_CLK_SPDIF>, <&clks IMX6QDL_CLK_OSC>,
-+					clocks = <&clks IMX6QDL_CLK_SPDIF_GCLK>, <&clks IMX6QDL_CLK_OSC>,
- 						 <&clks IMX6QDL_CLK_SPDIF>, <&clks IMX6QDL_CLK_DUMMY>,
- 						 <&clks IMX6QDL_CLK_DUMMY>, <&clks IMX6QDL_CLK_DUMMY>,
- 						 <&clks IMX6QDL_CLK_DUMMY>, <&clks IMX6QDL_CLK_DUMMY>,
-diff --git a/arch/arm/boot/dts/imx6sl.dtsi b/arch/arm/boot/dts/imx6sl.dtsi
-index 320a27f..c247756 100644
---- a/arch/arm/boot/dts/imx6sl.dtsi
-+++ b/arch/arm/boot/dts/imx6sl.dtsi
-@@ -135,8 +135,24 @@
- 				ranges;
- 
- 				spdif: spdif@02004000 {
-+					compatible = "fsl,imx6sl-spdif",
-+						"fsl,imx35-spdif";
- 					reg = <0x02004000 0x4000>;
- 					interrupts = <0 52 IRQ_TYPE_LEVEL_HIGH>;
-+					dmas = <&sdma 14 18 0>,
-+						<&sdma 15 18 0>;
-+					dma-names = "rx", "tx";
-+					clocks = <&clks IMX6SL_CLK_SPDIF_GCLK>, <&clks IMX6SL_CLK_OSC>,
-+						 <&clks IMX6SL_CLK_SPDIF>, <&clks IMX6SL_CLK_DUMMY>,
-+						 <&clks IMX6SL_CLK_DUMMY>, <&clks IMX6SL_CLK_DUMMY>,
-+						 <&clks IMX6SL_CLK_IPG>, <&clks IMX6SL_CLK_DUMMY>,
-+						 <&clks IMX6SL_CLK_DUMMY>, <&clks IMX6SL_CLK_SPBA>;
-+					clock-names = "core", "rxtx0",
-+						"rxtx1", "rxtx2",
-+						"rxtx3", "rxtx4",
-+						"rxtx5", "rxtx6",
-+						"rxtx7", "dma";
-+					status = "disabled";
- 				};
- 
- 				ecspi1: ecspi@02008000 {
-diff --git a/arch/arm/boot/dts/imx6sx.dtsi b/arch/arm/boot/dts/imx6sx.dtsi
-index c94f2ea..167f77b 100644
---- a/arch/arm/boot/dts/imx6sx.dtsi
-+++ b/arch/arm/boot/dts/imx6sx.dtsi
-@@ -211,7 +211,7 @@
- 					dmas = <&sdma 14 18 0>,
- 					       <&sdma 15 18 0>;
- 					dma-names = "rx", "tx";
--					clocks = <&clks IMX6SX_CLK_SPDIF>,
-+					clocks = <&clks IMX6SX_CLK_SPDIF_GCLK>,
- 						 <&clks IMX6SX_CLK_OSC>,
- 						 <&clks IMX6SX_CLK_SPDIF>,
- 						 <&clks 0>, <&clks 0>, <&clks 0>,
+Shengjiu Wang (2):
+  clk: imx6: Add SPDIF_GCLK clock in clock tree
+  ARM: dts: imx6: change the core clock of spdif
+
+ arch/arm/boot/dts/imx6qdl.dtsi            |  2 +-
+ arch/arm/boot/dts/imx6sl.dtsi             | 16 ++++++++++++++++
+ arch/arm/boot/dts/imx6sx.dtsi             |  2 +-
+ drivers/clk/imx/clk-imx6q.c               |  4 +++-
+ drivers/clk/imx/clk-imx6sl.c              |  4 +++-
+ drivers/clk/imx/clk-imx6sx.c              |  1 +
+ include/dt-bindings/clock/imx6qdl-clock.h |  3 ++-
+ include/dt-bindings/clock/imx6sl-clock.h  |  3 ++-
+ include/dt-bindings/clock/imx6sx-clock.h  |  3 ++-
+ 9 files changed, 31 insertions(+), 7 deletions(-)
+
 -- 
 1.9.1
